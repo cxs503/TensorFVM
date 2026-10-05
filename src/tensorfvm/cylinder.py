@@ -18,6 +18,9 @@ def export_result(result, directory: Path) -> None:
     u, v = (field.detach().cpu() for field in result.cell_center_velocity())
     p = result.p.detach().cpu()
     fluid = result.fluid.detach().cpu()
+    x, y = result.x.detach().cpu(), result.y.detach().cpu()
+    if x.ndim == 1:
+        y, x = torch.meshgrid(y, x, indexing="ij")
     with (directory / "fields.csv").open("w", newline="", encoding="utf-8") as stream:
         writer = csv.writer(stream)
         writer.writerow(("x", "y", "u", "v", "p", "fluid"))
@@ -25,14 +28,33 @@ def export_result(result, directory: Path) -> None:
             for i in range(config.nx):
                 writer.writerow(
                     (
-                        (i + 0.5) * config.length / config.nx,
-                        (j + 0.5) * config.height / config.ny,
+                        float(x[j, i]),
+                        float(y[j, i]),
                         float(u[j, i]),
                         float(v[j, i]),
                         float(p[j, i]),
                         int(fluid[j, i]),
                     )
                 )
+    if config.mesh_type == "body-fitted":
+        vertices = result.mesh.vertices.detach().cpu()
+        with (directory / "nodes.csv").open("w", newline="", encoding="utf-8") as stream:
+            writer = csv.writer(stream)
+            writer.writerow(("node", "x", "y"))
+            for index, point in enumerate(vertices.reshape(-1, 2)):
+                writer.writerow((index, float(point[0]), float(point[1])))
+        with (directory / "cells.csv").open("w", newline="", encoding="utf-8") as stream:
+            writer = csv.writer(stream)
+            writer.writerow(("cell", "node0", "node1", "node2", "node3"))
+            stride = config.nx + 1
+            for j in range(config.ny):
+                for i in range(config.nx):
+                    node = j * stride + i
+                    writer.writerow((j * config.nx + i, node, node + stride,
+                                     node + stride + 1, node + 1))
+    else:
+        for name in ("nodes.csv", "cells.csv"):
+            (directory / name).unlink(missing_ok=True)
     with (directory / "history.json").open("w", encoding="utf-8") as stream:
         json.dump(result.history, stream, indent=2, allow_nan=False)
         stream.write("\n")
@@ -57,8 +79,12 @@ def main(argv=None) -> int:
     parser = argparse.ArgumentParser(
         description="PyTorch 有限体积 SIMPLE：低雷诺数二维通道圆柱绕流"
     )
-    parser.add_argument("--nx", type=int, default=defaults.nx, help="x 方向网格数")
-    parser.add_argument("--ny", type=int, default=defaults.ny, help="y 方向网格数")
+    parser.add_argument("--mesh-type", choices=("body-fitted", "cartesian"),
+                        default="body-fitted", help="默认圆柱贴体网格；cartesian 为原交错网格")
+    parser.add_argument("--nx", type=int, default=defaults.nx,
+                        help="贴体模式为周向网格数（>=8 且为4的倍数）；笛卡尔模式为x方向")
+    parser.add_argument("--ny", type=int, default=defaults.ny,
+                        help="贴体模式为径向网格数；笛卡尔模式为y方向")
     parser.add_argument(
         "--reynolds", type=float, default=defaults.reynolds, help="基于圆柱直径的 Re"
     )
@@ -83,6 +109,7 @@ def main(argv=None) -> int:
             max_iterations=args.max_iterations,
             tolerance=args.tolerance,
             device=args.device,
+            mesh_type=args.mesh_type,
         )
         result = SimpleSolver(config).solve()
         export_result(result, args.output)
