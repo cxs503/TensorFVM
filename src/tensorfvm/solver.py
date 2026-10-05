@@ -29,6 +29,7 @@ class SolverConfig:
     tolerance: float = 1e-5
     device: str = "cpu"
     pseudo_time_step: float | None = None
+    mesh_type: str = "cartesian"
 
     def __post_init__(self):
         for name in ("nx", "ny", "max_iterations"):
@@ -37,6 +38,10 @@ class SolverConfig:
                 raise ValueError(f"{name} must be an integer")
         if self.nx < 4 or self.ny < 4 or self.max_iterations < 1:
             raise ValueError("nx and ny must be >= 4; max_iterations must be positive")
+        if self.mesh_type not in ("cartesian", "body-fitted"):
+            raise ValueError("mesh_type must be cartesian or body-fitted")
+        if self.mesh_type == "body-fitted" and (self.nx < 8 or self.nx % 4):
+            raise ValueError("body-fitted nx must be >= 8 and divisible by 4")
         for name in ("length", "height", "inlet_velocity", "reynolds",
                      "density", "tolerance"):
             value = getattr(self, name)
@@ -54,12 +59,16 @@ class SolverConfig:
         radius = self.cylinder_radius
         if radius is not None and (not math.isfinite(radius) or radius < 0):
             raise ValueError("cylinder_radius must be finite and nonnegative, or None")
+        if self.mesh_type == "body-fitted" and not radius:
+            raise ValueError("body-fitted mesh requires a positive cylinder_radius")
         if radius:
             dx, dy = self.length / self.nx, self.height / self.ny
+            if self.mesh_type == "body-fitted":
+                dx = dy = 0
             if not (radius + dx < self.cylinder_x < self.length - radius - dx
                     and radius + dy < self.cylinder_y < self.height - radius - dy):
-                raise ValueError("cylinder must have at least one cell clearance from boundaries")
-            represented = any(
+                raise ValueError("cylinder must lie inside the domain with grid clearance")
+            represented = self.mesh_type == "body-fitted" or any(
                 ((i + 0.5) * dx - self.cylinder_x) ** 2
                 + ((j + 0.5) * dy - self.cylinder_y) ** 2 <= radius ** 2
                 for j in range(self.ny) for i in range(self.nx)
@@ -119,6 +128,13 @@ class SimpleSolver:
     Optional pseudo-time inertia damps iterations but is excluded from the
     reported steady momentum residual and convergence criterion.
     """
+
+    def __new__(cls, config: SolverConfig):
+        if cls is SimpleSolver and config.mesh_type == "body-fitted":
+            from .body_fitted import BodyFittedSolver
+
+            return BodyFittedSolver(config)
+        return super().__new__(cls)
 
     def __init__(self, config: SolverConfig):
         self.config = config

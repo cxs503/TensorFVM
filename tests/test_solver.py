@@ -42,6 +42,20 @@ class SolverTests(unittest.TestCase):
             c = SolverConfig(cylinder_radius=radius)
             self.assertAlmostEqual(c.viscosity, 0.1)
 
+    def test_body_fitted_configuration(self):
+        for options in ({"mesh_type": "unknown"},
+                        {"mesh_type": "body-fitted", "nx": 6},
+                        {"mesh_type": "body-fitted", "nx": 10},
+                        {"mesh_type": "body-fitted", "cylinder_radius": 0},
+                        {"mesh_type": "body-fitted", "cylinder_radius": None},
+                        {"mesh_type": "body-fitted", "cylinder_x": 0.2}):
+            with self.subTest(options=options), self.assertRaises(ValueError):
+                SolverConfig(**options)
+        config = SolverConfig(mesh_type="body-fitted", nx=8, ny=4,
+                              cylinder_radius=0.01)
+        self.assertEqual(config.mesh_type, "body-fitted")
+        self.assertEqual(SolverConfig().mesh_type, "cartesian")
+
     def test_shapes_dtype_and_result_snapshot(self):
         solver = SimpleSolver(self.cylinder_config(max_iterations=1))
         result = solver.solve()

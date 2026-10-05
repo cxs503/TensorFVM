@@ -22,6 +22,10 @@ class CylinderOutputTests(unittest.TestCase):
             config=config,
             p=field * 2,
             fluid=field.bool(),
+            x=(torch.arange(config.nx, dtype=torch.float64) + 0.5)
+              * config.length / config.nx,
+            y=(torch.arange(config.ny, dtype=torch.float64) + 0.5)
+              * config.height / config.ny,
             cell_center_velocity=lambda: (field, field * 0),
             history=[{"iteration": 1, "continuity": 1e-9, "momentum": 1e-8}],
             converged=converged,
@@ -54,6 +58,7 @@ class CylinderOutputTests(unittest.TestCase):
                     with contextlib.redirect_stdout(io.StringIO()):
                         code = main(["--nx", "20", "--ny", "10", "--output", tmp])
                 self.assertEqual(code, expected)
+                self.assertEqual(solver.call_args.args[0].mesh_type, "body-fitted")
                 summary = json.loads((Path(tmp) / "summary.json").read_text())
                 self.assertEqual(summary["converged"], converged)
 
@@ -62,6 +67,42 @@ class CylinderOutputTests(unittest.TestCase):
             with self.assertRaises(SystemExit) as error:
                 main(["--threads", "0"])
         self.assertEqual(error.exception.code, 2)
+
+    def test_cartesian_cli_remains_available(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            with patch("tensorfvm.cylinder.SimpleSolver") as solver:
+                solver.return_value.solve.return_value = self.result()
+                with contextlib.redirect_stdout(io.StringIO()):
+                    self.assertEqual(main(["--mesh-type", "cartesian",
+                                           "--output", tmp]), 0)
+                self.assertEqual(solver.call_args.args[0].mesh_type, "cartesian")
+
+    def test_fitted_coordinates_and_connectivity_export(self):
+        from tensorfvm import SimpleSolver
+
+        config = SolverConfig(nx=8, ny=4, mesh_type="body-fitted", max_iterations=1)
+        result = SimpleSolver(config).solve()
+        with tempfile.TemporaryDirectory() as tmp:
+            directory = Path(tmp)
+            export_result(result, directory)
+            with (directory / "fields.csv").open(newline="") as stream:
+                rows = list(csv.DictReader(stream))
+            self.assertEqual(len(rows), config.nx * config.ny)
+            self.assertAlmostEqual(float(rows[0]["x"]), result.x[0, 0].item())
+            self.assertAlmostEqual(float(rows[0]["y"]), result.y[0, 0].item())
+            self.assertTrue(all(row["fluid"] == "1" for row in rows))
+            with (directory / "nodes.csv").open(newline="") as stream:
+                nodes = list(csv.DictReader(stream))
+            with (directory / "cells.csv").open(newline="") as stream:
+                cells = list(csv.DictReader(stream))
+            self.assertEqual(len(nodes), (config.nx + 1) * (config.ny + 1))
+            self.assertEqual(len(cells), len(rows))
+            for cell in cells:
+                for name in ("node0", "node1", "node2", "node3"):
+                    self.assertLess(int(cell[name]), len(nodes))
+            export_result(self.result(), directory)
+            self.assertFalse((directory / "nodes.csv").exists())
+            self.assertFalse((directory / "cells.csv").exists())
 
     def test_solver_failure_has_nonzero_exit(self):
         with patch("tensorfvm.cylinder.SimpleSolver", side_effect=ValueError("bad grid")):
