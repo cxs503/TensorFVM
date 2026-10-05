@@ -1,8 +1,7 @@
-"""Polygonal O-grid and collocated conservative SIMPLE for a confined cylinder.
+"""Structured body-fitted meshes and collocated conservative SIMPLE solvers.
 
-The outer boundary is the original rectangle. Cylinder vertices lie on the
-circle, but its boundary consists of straight chord facets, not exact arcs.
-All face fluxes are oriented out of their owner cell.
+The O-grid wraps a polygonal cylinder; the C-grid wraps a NACA airfoil and joins
+the wake seam internally. All face fluxes are oriented out of their owner cell.
 """
 
 from dataclasses import dataclass
@@ -11,41 +10,144 @@ import math
 import torch
 
 
+def _naca4_profile(config):
+    """Return a closed polygonal NACA four-digit profile in physical coordinates."""
+    code = config.airfoil_code
+    camber, position, thickness = int(code[0]) / 100, int(code[1]) / 10, int(code[2:]) / 100
+    if camber and not position:
+        raise ValueError("a cambered NACA four-digit airfoil requires a nonzero camber position")
+    count = max(128, config.nx * 4)
+    chord = config.airfoil_chord
+    upper, lower = [], []
+    for i in range(count + 1):
+        x = (1 - math.cos(math.pi * i / count)) / 2
+        yt = 5 * thickness * (
+            0.2969 * math.sqrt(x) - 0.1260 * x - 0.3516 * x ** 2
+            + 0.2843 * x ** 3 - 0.1036 * x ** 4
+        )
+        if camber and x < position:
+            yc = camber / position ** 2 * (2 * position * x - x ** 2)
+            slope = 2 * camber / position ** 2 * (position - x)
+        elif camber:
+            yc = camber / (1 - position) ** 2 * (
+                (1 - 2 * position) + 2 * position * x - x ** 2
+            )
+            slope = 2 * camber / (1 - position) ** 2 * (position - x)
+        else:
+            yc = slope = 0.0
+        theta = math.atan(slope)
+        upper.append((x * chord - yt * math.sin(theta),
+                      yc * chord + yt * math.cos(theta)))
+        lower.append((x * chord + yt * math.sin(theta),
+                      yc * chord - yt * math.cos(theta)))
+    profile = list(reversed(upper)) + lower[1:]
+    return [(config.airfoil_x + x, config.airfoil_y + y) for x, y in profile]
+
+
+def _cross(a, b):
+    return a[0] * b[1] - a[1] * b[0]
+
+
 class BodyFittedMesh:
-    """An O-grid with ``nx`` circumferential and ``ny`` radial cells."""
+    """An O-grid for a cylinder or C-grid for a NACA airfoil."""
 
     def __init__(self, config):
         c = config
         if c.nx < 8 or c.nx % 4 or c.ny < 1:
             raise ValueError("body-fitted nx must be >= 8 and divisible by four")
-        r = c.cylinder_radius
-        if not r or not (r < c.cylinder_x < c.length - r
-                         and r < c.cylinder_y < c.height - r):
-            raise ValueError("body-fitted cylinder must lie strictly inside the channel")
         opts = dict(dtype=torch.float64, device=c.device)
-        center = torch.tensor([c.cylinder_x, c.cylinder_y], **opts)
-        corners = [(c.length, c.height), (0, c.height), (0, 0), (c.length, 0)]
-        angles = [math.atan2(y - c.cylinder_y, x - c.cylinder_x) for x, y in corners]
-        for i in range(1, 4):
-            while angles[i] <= angles[i - 1]:
-                angles[i] += 2 * math.pi
-        angles.append(angles[0] + 2 * math.pi)
-        theta = torch.tensor([
-            angles[k] + (angles[k + 1] - angles[k]) * i / (c.nx // 4)
-            for k in range(4) for i in range(c.nx // 4)
-        ] + [angles[-1]], **opts)
+        self.body_label = "cylinder"
+        if c.mesh_type == "c-grid":
+            profile = _naca4_profile(c)
+            if (any(x <= 0 or x >= c.length or y <= 0 or y >= c.height
+                    for x, y in profile)
+                    or not (0 < c.airfoil_x + 0.25 * c.airfoil_chord < c.length
+                            and 0 < c.airfoil_y < c.height)):
+                raise ValueError("NACA airfoil must lie strictly inside the C-grid domain")
+            self.body_label = "airfoil"
+            center_xy = (c.airfoil_x + 0.25 * c.airfoil_chord, c.airfoil_y)
+            corner_xy = [(c.length, c.height), (0, c.height), (0, 0), (c.length, 0)]
+            corner_angles = sorted(
+                math.atan2(y - center_xy[1], x - center_xy[0]) % (2 * math.pi)
+                for x, y in corner_xy
+            )
+            breaks = [0.0, *corner_angles, 2 * math.pi]
+            spans = [b - a for a, b in zip(breaks, breaks[1:])]
+            counts = [max(1, int(c.nx * span / (2 * math.pi))) for span in spans]
+            while sum(counts) < c.nx:
+                index = max(range(len(spans)),
+                            key=lambda i: c.nx * spans[i] / (2 * math.pi) - counts[i])
+                counts[index] += 1
+            while sum(counts) > c.nx:
+                candidates = [i for i, count in enumerate(counts) if count > 1]
+                index = min(candidates, key=lambda i: (
+                    c.nx * spans[i] / (2 * math.pi) - counts[i]
+                ))
+                counts[index] -= 1
+            angles = [0.0]
+            for (a, b), count in zip(zip(breaks, breaks[1:]), counts):
+                angles.extend(a + (b - a) * i / count for i in range(1, count + 1))
+            theta = torch.tensor(angles, **opts)
+            center = torch.tensor(center_xy, **opts)
+            corner_indices = [
+                min(range(c.nx + 1), key=lambda i: abs(angles[i] - angle))
+                for angle in corner_angles
+            ]
+        else:
+            r = c.cylinder_radius
+            if not r or not (r < c.cylinder_x < c.length - r
+                             and r < c.cylinder_y < c.height - r):
+                raise ValueError("body-fitted cylinder must lie strictly inside the channel")
+            center = torch.tensor([c.cylinder_x, c.cylinder_y], **opts)
+            corners = [(c.length, c.height), (0, c.height), (0, 0), (c.length, 0)]
+            angles = [math.atan2(y - c.cylinder_y, x - c.cylinder_x) for x, y in corners]
+            for i in range(1, 4):
+                while angles[i] <= angles[i - 1]:
+                    angles[i] += 2 * math.pi
+            angles.append(angles[0] + 2 * math.pi)
+            theta = torch.tensor([
+                angles[k] + (angles[k + 1] - angles[k]) * i / (c.nx // 4)
+                for k in range(4) for i in range(c.nx // 4)
+            ] + [angles[-1]], **opts)
         ray = torch.stack((theta.cos(), theta.sin()), -1)
-        tx = torch.where(ray[:, 0] > 0, (c.length - c.cylinder_x) / ray[:, 0],
-                         -c.cylinder_x / ray[:, 0])
-        ty = torch.where(ray[:, 1] > 0, (c.height - c.cylinder_y) / ray[:, 1],
-                         -c.cylinder_y / ray[:, 1])
+        tx = torch.where(ray[:, 0] > 0, (c.length - center[0]) / ray[:, 0],
+                         -center[0] / ray[:, 0])
+        ty = torch.where(ray[:, 1] > 0, (c.height - center[1]) / ray[:, 1],
+                         -center[1] / ray[:, 1])
         outer = center + torch.minimum(tx, ty)[:, None] * ray
-        # Set corners exactly, including the periodic seam.
-        for k, corner in enumerate(corners):
-            outer[k * (c.nx // 4)] = torch.tensor(corner, **opts)
+        if c.mesh_type == "c-grid":
+            # Intersect each ray from inside the airfoil with its polygonal surface.
+            inner_points = []
+            for angle in angles:
+                direction = (math.cos(angle), math.sin(angle))
+                distances = []
+                for a, b in zip(profile, profile[1:] + profile[:1]):
+                    edge = (b[0] - a[0], b[1] - a[1])
+                    denominator = _cross(direction, edge)
+                    if abs(denominator) < 1e-14:
+                        continue
+                    offset = (a[0] - center_xy[0], a[1] - center_xy[1])
+                    distance = _cross(offset, edge) / denominator
+                    fraction = _cross(offset, direction) / denominator
+                    if distance > 0 and -1e-12 <= fraction <= 1 + 1e-12:
+                        distances.append(distance)
+                if not distances:
+                    raise ValueError("could not intersect a ray with the NACA airfoil")
+                distance = min(distances)
+                inner_points.append((center_xy[0] + distance * direction[0],
+                                     center_xy[1] + distance * direction[1]))
+            inner = torch.tensor(inner_points, **opts)
+            corners = [(c.length, c.height), (0, c.height), (0, 0), (c.length, 0)]
+            for index, corner in zip(corner_indices, corners):
+                outer[index] = torch.tensor(corner, **opts)
+            inner[-1], outer[-1] = inner[0], outer[0]
+        else:
+            # Set corners exactly, including the periodic seam.
+            for k, corner in enumerate(corners):
+                outer[k * (c.nx // 4)] = torch.tensor(corner, **opts)
+            inner = center + c.cylinder_radius * ray
+            inner[-1] = inner[0]
         outer[-1] = outer[0]
-        inner = center + r * ray
-        inner[-1] = inner[0]
         t = torch.linspace(0, 1, c.ny + 1, **opts)[:, None, None]
         self.vertices = inner[None] * (1 - t) + outer[None] * t
         polygon = torch.stack((self.vertices[:-1, :-1], self.vertices[1:, :-1],
@@ -73,13 +175,15 @@ class BodyFittedMesh:
                     neighbors.append(-1)
                     endpoints.append(torch.stack((self.vertices[a], self.vertices[b])))
                     if a[0] == b[0] == 0:
-                        label = "cylinder"
+                        label = self.body_label
                     elif a[0] == b[0] == c.ny:
                         midpoint = (self.vertices[a] + self.vertices[b]) / 2
                         if abs(float(midpoint[0])) < 1e-12 * c.length:
                             label = "inlet"
                         elif abs(float(midpoint[0]) - c.length) < 1e-12 * c.length:
                             label = "outlet"
+                        elif c.mesh_type == "c-grid":
+                            label = "far-field"
                         else:
                             label = "wall"
                     else:
@@ -98,7 +202,17 @@ class BodyFittedMesh:
         self.boundary = ~self.interior
         self.masks = {name: torch.tensor([s == name for s in labels],
                                        dtype=torch.bool, device=c.device)
-                      for name in ("inlet", "outlet", "wall", "cylinder")}
+                      for name in ("inlet", "outlet", "wall", "far-field",
+                                   "cylinder", "airfoil")}
+
+
+class CGridMesh(BodyFittedMesh):
+    """A C-type mesh around a NACA four-digit airfoil with a joined wake seam."""
+
+    def __init__(self, config):
+        if config.mesh_type != "c-grid":
+            raise ValueError("CGridMesh requires mesh_type='c-grid'")
+        super().__init__(config)
 
 
 @dataclass
@@ -115,6 +229,7 @@ class BodyFittedResult:
     mesh: BodyFittedMesh
     mass_flux: torch.Tensor
     boundary_velocity: torch.Tensor
+    aerodynamic_coefficients: dict[str, float] | None = None
 
     def cell_center_velocity(self):
         return self.u, self.v
@@ -132,7 +247,8 @@ class BodyFittedSolver:
 
     def __init__(self, config):
         self.config = config
-        self.mesh = m = BodyFittedMesh(config)
+        self.mesh = m = (CGridMesh(config) if config.mesh_type == "c-grid"
+                         else BodyFittedMesh(config))
         self.o, self.n = m.owner, m.neighbor
         self.f = m.interior
         self.oi, self.ni = self.o[self.f], self.n[self.f]
@@ -156,7 +272,13 @@ class BodyFittedSolver:
             raise ValueError("mesh has nonpositive face-to-cell projected distance")
         self.T = self.S - self.k[:, None] * self.d
         self.boundary_velocity = torch.zeros_like(self.S)
-        self.boundary_velocity[m.masks["inlet"], 0] = config.inlet_velocity
+        inflow = m.masks["inlet"] | m.masks["far-field"]
+        alpha = math.radians(config.angle_of_attack)
+        freestream = torch.tensor(
+            [config.inlet_velocity * math.cos(alpha),
+             config.inlet_velocity * math.sin(alpha)], **opts
+        )
+        self.boundary_velocity[inflow] = freestream
         face_velocity = self.velocity[self.o].clone()
         fixed = m.boundary & ~m.masks["outlet"]
         face_velocity[fixed] = self.boundary_velocity[fixed]
@@ -366,6 +488,21 @@ class BodyFittedSolver:
         self.velocity -= D[:, None] * self._gradient(correction, pressure=True)
         self.p += self.config.pressure_relaxation * correction
 
+    def _aerodynamic_coefficients(self):
+        if self.config.mesh_type != "c-grid":
+            return None
+        mask = self.mesh.masks["airfoil"]
+        owners = self.o[mask]
+        velocity_gradient = self._gradient(self.velocity)
+        stress = self.config.viscosity * (
+            velocity_gradient + velocity_gradient.transpose(-1, -2)
+        )
+        traction = torch.einsum("fij,fj->fi", stress[owners], self.S[mask])
+        force = (self.p[owners, None] * self.S[mask] - traction).sum(0)
+        scale = 0.5 * self.config.density * self.config.inlet_velocity ** 2 \
+            * self.config.airfoil_chord
+        return {"drag": float(force[0] / scale), "lift": float(force[1] / scale)}
+
     @torch.no_grad()
     def step(self):
         """Advance one SIMPLE iteration and return conservative steady metrics."""
@@ -424,4 +561,5 @@ class BodyFittedSolver:
                                 self.mesh.centers[..., 1].clone(),
                                 [item.copy() for item in self.history], self.converged,
                                 self.mesh, self.mass_flux.clone(),
-                                self.boundary_velocity.clone())
+                                self.boundary_velocity.clone(),
+                                self._aerodynamic_coefficients())
