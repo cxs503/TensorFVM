@@ -128,9 +128,9 @@ class FittedSolverTests(unittest.TestCase):
         captured = {}
         correct = s._correct
 
-        def capture(flux, coefficient, d):
+        def capture(flux, coefficient, d, steady_d=None):
             captured["predicted"] = flux.clone()
-            correct(flux, coefficient, d)
+            correct(flux, coefficient, d, steady_d)
 
         with patch.object(s, "_correct", side_effect=capture):
             metrics = s.step()
@@ -188,12 +188,75 @@ class FittedSolverTests(unittest.TestCase):
         for a, b in ((steady.u, damped.u), (steady.v, damped.v), (steady.p, damped.p)):
             self.assertLess(float((a - b).abs().max()), 2e-4)
 
+    def test_velocity_relaxation_reaches_same_steady_state(self):
+        reference = BodyFittedSolver(config(tolerance=1e-6)).solve()
+        relaxed = BodyFittedSolver(config(tolerance=1e-6, velocity_relaxation=0.4)).solve()
+        self.assertTrue(reference.converged)
+        self.assertTrue(relaxed.converged, relaxed.history[-1])
+        for a, b in ((reference.u, relaxed.u), (reference.v, relaxed.v),
+                     (reference.p, relaxed.p), (reference.mass_flux, relaxed.mass_flux)):
+            self.assertLess(float((a - b).abs().max()), 2e-4)
+
+    def test_damped_pressure_response_matches_predictor_sensitivity(self):
+        s = BodyFittedSolver(config(pseudo_time_step=0.05))
+        diagonal, _, _, _ = s._momentum(s.velocity, s.p, s.mass_flux)
+        steady_d = s.volume / diagonal
+        d = s.volume * s.config.velocity_relaxation / (
+            diagonal + s.config.density * s.volume / s.config.pseudo_time_step)
+        old = s.velocity.clone()
+        flux, coefficient = s._rhie_chow(s.velocity, s.p, d, steady_d, old)
+        pressure = s.p.clone()
+        # A unit pressure relaxation exposes the actual full correction.
+        s.config.pressure_relaxation = 1
+        s._correct(flux, coefficient, d, steady_d)
+        correction = s.p - pressure
+        # Predictor memory is fixed during this linearization.
+        corrected_flux = s.mass_flux.clone()
+        s.mass_flux = (s.config.density * (s._interpolate(old) * s.S).sum(-1))
+        original_memory = s.mass_flux.clone()
+        before, _ = s._rhie_chow(old, pressure, d, steady_d, old)
+        s.mass_flux = original_memory
+        after, _ = s._rhie_chow(
+            old - d[:, None] * s._gradient(correction, pressure=True),
+            pressure + correction, d, steady_d, old)
+        self.assertTrue(torch.allclose(after - before, corrected_flux - flux,
+                                       atol=2e-11, rtol=2e-11))
+
     def test_tiny_relaxation_does_not_falsely_converge(self):
         s = BodyFittedSolver(config(velocity_relaxation=1e-8))
         s.velocity.zero_()
         metrics = s.step()
         self.assertGreater(metrics["momentum"], s.config.tolerance)
         self.assertFalse(s.converged)
+
+    def test_tiny_pseudo_time_does_not_falsely_converge(self):
+        s = BodyFittedSolver(config(pseudo_time_step=1e-8))
+        metrics = s.step()
+        self.assertGreater(metrics["momentum"], s.config.tolerance)
+        self.assertFalse(s.converged)
+
+    def test_linear_solve_checks_true_not_only_recursive_residual(self):
+        s = BodyFittedSolver(config())
+        one = torch.ones_like(s.p)
+        zero = torch.zeros_like(s.p)
+        edges = torch.zeros_like(s.k[s.f])
+        # Simulate residual drift: the recurrence claims an exact solution,
+        # but a fresh operator application does not satisfy the original RHS.
+        with patch.object(s, "_matvec", side_effect=[zero, one, zero]):
+            with self.assertRaisesRegex(RuntimeError, "did not converge"):
+                s._linear(one, edges, edges, one, zero)
+
+    def test_repeated_solve_honors_iteration_budget_and_convergence(self):
+        s = BodyFittedSolver(config(max_iterations=1))
+        first = s.solve()
+        with patch.object(s, "step", side_effect=AssertionError("unexpected iteration")):
+            repeated = s.solve()
+        self.assertEqual(len(repeated.history), 1)
+        self.assertTrue(torch.equal(first.u, repeated.u))
+        converged = BodyFittedSolver(config())
+        converged.solve()
+        with patch.object(converged, "step", side_effect=AssertionError("unexpected iteration")):
+            self.assertTrue(converged.solve().converged)
 
     def test_result_shapes_snapshots_and_iteration_limit(self):
         s = BodyFittedSolver(config(max_iterations=1))

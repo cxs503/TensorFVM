@@ -290,6 +290,13 @@ class BodyFittedSolver:
                 rho_old = rho
         if not torch.isfinite(x).all():
             raise RuntimeError("nonfinite body-fitted linear solve")
+        true_residual = torch.linalg.vector_norm(rhs - mv(x))
+        if not torch.isfinite(true_residual):
+            raise RuntimeError("nonfinite body-fitted linear residual")
+        if float(true_residual) > 10 * threshold:
+            raise RuntimeError(
+                f"body-fitted linear solve did not converge: residual "
+                f"{float(true_residual):.3g}, tolerance {10 * threshold:.3g}")
         return x
 
     def _rhie_chow(self, velocity, pressure, D, steady_D=None, old_velocity=None):
@@ -302,8 +309,9 @@ class BodyFittedSolver:
         flux = self.config.density * ((face_velocity * self.S).sum(-1)
                                       - df * normal_pressure)
         if steady_D is not None:
-            # Retain pseudo-time face-flux memory. At a fixed point its damping
-            # cancels, leaving exactly the inertia-free Rhie--Chow operator.
+            # Retain pseudo-time/under-relaxation face-flux memory. At a fixed
+            # point its damping cancels, leaving the unrelaxed, inertia-free
+            # Rhie--Chow operator.
             steady_df = self._interpolate(steady_D)
             beta = (1 - df / steady_df).clamp(0, 1)
             base = self.config.density * (self._interpolate(velocity) * self.S).sum(-1)
@@ -320,27 +328,45 @@ class BodyFittedSolver:
         coefficient[fixed] = 0
         return flux, coefficient
 
-    def _correct(self, predicted_flux, coefficient, D):
+    def _correct(self, predicted_flux, coefficient, D, steady_D=None):
         diagonal = self._sum(coefficient * 0)
         diagonal.index_add_(0, self.o, coefficient)
         diagonal.index_add_(0, self.ni, coefficient[self.f])
         rhs = -self._sum(predicted_flux)
-        def nonorthogonal(q):
-            gradient = self._interpolate(self._gradient(q, pressure=True))
-            return coefficient / self.k * (self.T * gradient).sum(-1)
+        # Pure under-relaxation has constant damping; its interpolation
+        # response cancels identically, avoiding two extra gathers per matvec.
+        nonuniform_damping = steady_D is not None and self.config.pseudo_time_step is not None
+        if nonuniform_damping:
+            beta = (1 - self._interpolate(D) / self._interpolate(steady_D)).clamp(0, 1)
+
+        def additional_flux(q):
+            gradient = self._gradient(q, pressure=True)
+            face_gradient = self._interpolate(gradient)
+            flux = -coefficient / self.k * (self.T * face_gradient).sum(-1)
+            if nonuniform_damping:
+                # Exact sensitivity of the damped predictor, including the
+                # collocated velocity correction. With nonuniform damping,
+                # interpolation and multiplication by D do not commute.
+                response = ((1 - beta)[:, None]
+                            * self._interpolate(steady_D[:, None] * gradient)
+                            - self._interpolate(D[:, None] * gradient))
+                extra = self.config.density * (response * self.S).sum(-1)
+                flux += extra.masked_fill(coefficient == 0, 0)
+            return flux
 
         def operator(q):
             return (self._matvec(q, diagonal, coefficient[self.f], coefficient[self.f])
-                    - self._sum(nonorthogonal(q)))
+                    + self._sum(additional_flux(q)))
 
         correction = self._linear(diagonal, coefficient[self.f], coefficient[self.f],
                                   rhs, torch.zeros_like(self.p), operator=operator)
         delta = correction[self.o].clone()
         delta[self.f] -= correction[self.ni]
-        self.mass_flux = predicted_flux + coefficient * delta - nonorthogonal(correction)
+        self.mass_flux = predicted_flux + coefficient * delta + additional_flux(correction)
         self.velocity -= D[:, None] * self._gradient(correction, pressure=True)
         self.p += self.config.pressure_relaxation * correction
 
+    @torch.no_grad()
     def step(self):
         """Advance one SIMPLE iteration and return conservative steady metrics."""
         c = self.config
@@ -358,9 +384,9 @@ class BodyFittedSolver:
             self.velocity[:, component] = self._linear(
                 relaxed, ao, an, rhs[:, component], old[:, component])
         D = self.volume / relaxed
-        steady_D = self.volume * c.velocity_relaxation / diagonal
+        steady_D = self.volume / diagonal
         flux, coefficient = self._rhie_chow(self.velocity, self.p, D, steady_D, old)
-        self._correct(flux, coefficient, D)
+        self._correct(flux, coefficient, D, steady_D)
         if not (torch.isfinite(self.velocity).all() and torch.isfinite(self.p).all()
                 and torch.isfinite(self.mass_flux).all()):
             raise RuntimeError("nonfinite body-fitted SIMPLE iterate")
@@ -383,7 +409,9 @@ class BodyFittedSolver:
 
     def solve(self):
         c = self.config
-        for _ in range(c.max_iterations):
+        for _ in range(max(0, c.max_iterations - len(self.history))):
+            if self.converged:
+                break
             self.step()
             if self.converged:
                 break
