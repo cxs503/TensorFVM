@@ -142,6 +142,23 @@ NACA C 型网格的压力系数和升阻力仅作数值实验输出；当前未�
 将圆柱半径设置为 0 可计算无障碍通道，此时 Re 的特征长度为通道高度。
 无障碍通道仅支持笛卡尔模式；贴体 O 型网格要求正半径且圆柱严格位于通道内部。
 
+解析 benchmark（误差 < 3%）
+--------------------------
+
+可运行三档网格的平行板 Poiseuille 验证::
+
+    python -m tensorfvm.benchmark --output results/benchmark
+
+独立检查充分发展截面的速度 L2、最大速度归一化 Linf 误差和压力梯度误差，
+仅在所有网格收敛且每项误差严格小于 3% 时返回 0，否则返回 2。
+输出包含完整数值场、残差、机器可读误差表、速度对标 CSV、
+速度/压力 SVG 云图及中文 ``report.rst``。不增加绘图库依赖。
+已运行的说明和计算云图见 `docs/benchmark/report.rst <docs/benchmark/report.rst>`_。
+这一验证仅适用于无障碍笛卡尔通道，不代表圆柱、翼型或贴体求解器精度已达标。
+
+测试
+----
+
 运行测试::
 
     python -m unittest discover -s tests -v
