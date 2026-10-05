@@ -25,16 +25,7 @@ def _naca4_profile(config):
             0.2969 * math.sqrt(x) - 0.1260 * x - 0.3516 * x ** 2
             + 0.2843 * x ** 3 - 0.1036 * x ** 4
         )
-        if camber and x < position:
-            yc = camber / position ** 2 * (2 * position * x - x ** 2)
-            slope = 2 * camber / position ** 2 * (position - x)
-        elif camber:
-            yc = camber / (1 - position) ** 2 * (
-                (1 - 2 * position) + 2 * position * x - x ** 2
-            )
-            slope = 2 * camber / (1 - position) ** 2 * (position - x)
-        else:
-            yc = slope = 0.0
+        yc, slope = _naca4_camberline(camber, position, x)
         theta = math.atan(slope)
         upper.append((x * chord - yt * math.sin(theta),
                       yc * chord + yt * math.cos(theta)))
@@ -42,6 +33,20 @@ def _naca4_profile(config):
                       yc * chord - yt * math.cos(theta)))
     profile = list(reversed(upper)) + lower[1:]
     return [(config.airfoil_x + x, config.airfoil_y + y) for x, y in profile]
+
+
+def _naca4_camberline(camber, position, x):
+    if not camber:
+        return 0.0, 0.0
+    if x < position:
+        return (camber / position ** 2 * (2 * position * x - x ** 2),
+                2 * camber / position ** 2 * (position - x))
+    return (
+        camber / (1 - position) ** 2 * (
+            (1 - 2 * position) + 2 * position * x - x ** 2
+        ),
+        2 * camber / (1 - position) ** 2 * (position - x),
+    )
 
 
 def _cross(a, b):
@@ -65,7 +70,11 @@ class BodyFittedMesh:
                             and 0 < c.airfoil_y < c.height)):
                 raise ValueError("NACA airfoil must lie strictly inside the C-grid domain")
             self.body_label = "airfoil"
-            center_xy = (c.airfoil_x + 0.25 * c.airfoil_chord, c.airfoil_y)
+            camber = int(c.airfoil_code[0]) / 100
+            position = int(c.airfoil_code[1]) / 10
+            quarter_camber, _ = _naca4_camberline(camber, position, 0.25)
+            center_xy = (c.airfoil_x + 0.25 * c.airfoil_chord,
+                         c.airfoil_y + quarter_camber * c.airfoil_chord)
             corner_xy = [(c.length, c.height), (0, c.height), (0, 0), (c.length, 0)]
             corner_angles = sorted(
                 math.atan2(y - center_xy[1], x - center_xy[0]) % (2 * math.pi)
@@ -110,10 +119,13 @@ class BodyFittedMesh:
                 for k in range(4) for i in range(c.nx // 4)
             ] + [angles[-1]], **opts)
         ray = torch.stack((theta.cos(), theta.sin()), -1)
-        tx = torch.where(ray[:, 0] > 0, (c.length - center[0]) / ray[:, 0],
-                         -center[0] / ray[:, 0])
-        ty = torch.where(ray[:, 1] > 0, (c.height - center[1]) / ray[:, 1],
-                         -center[1] / ray[:, 1])
+        tx, ty = torch.full_like(theta, math.inf), torch.full_like(theta, math.inf)
+        positive_x, negative_x = ray[:, 0] > 1e-14, ray[:, 0] < -1e-14
+        positive_y, negative_y = ray[:, 1] > 1e-14, ray[:, 1] < -1e-14
+        tx[positive_x] = (c.length - center[0]) / ray[positive_x, 0]
+        tx[negative_x] = -center[0] / ray[negative_x, 0]
+        ty[positive_y] = (c.height - center[1]) / ray[positive_y, 1]
+        ty[negative_y] = -center[1] / ray[negative_y, 1]
         outer = center + torch.minimum(tx, ty)[:, None] * ray
         if c.mesh_type == "c-grid":
             # Intersect each ray from inside the airfoil with its polygonal surface.
@@ -148,7 +160,13 @@ class BodyFittedMesh:
             inner = center + c.cylinder_radius * ray
             inner[-1] = inner[0]
         outer[-1] = outer[0]
-        t = torch.linspace(0, 1, c.ny + 1, **opts)[:, None, None]
+        eta = torch.linspace(0, 1, c.ny + 1, **opts)
+        if c.mesh_type == "c-grid":
+            stretch = 2.5
+            t = torch.expm1(stretch * eta) / math.expm1(stretch)
+        else:
+            t = eta
+        t = t[:, None, None]
         self.vertices = inner[None] * (1 - t) + outer[None] * t
         polygon = torch.stack((self.vertices[:-1, :-1], self.vertices[1:, :-1],
                                self.vertices[1:, 1:], self.vertices[:-1, 1:]), -2)
@@ -254,8 +272,13 @@ class BodyFittedSolver:
         self.oi, self.ni = self.o[self.f], self.n[self.f]
         self.count = config.nx * config.ny
         opts = dict(dtype=torch.float64, device=config.device)
+        alpha = math.radians(config.angle_of_attack)
+        freestream = torch.tensor(
+            [config.inlet_velocity * math.cos(alpha),
+             config.inlet_velocity * math.sin(alpha)], **opts
+        )
         self.velocity = torch.zeros((self.count, 2), **opts)
-        self.velocity[:, 0] = config.inlet_velocity
+        self.velocity[:] = freestream
         self.p = torch.zeros(self.count, **opts)
         self.u = self.velocity[:, 0].reshape(config.ny, config.nx)
         self.v = self.velocity[:, 1].reshape(config.ny, config.nx)
@@ -273,11 +296,6 @@ class BodyFittedSolver:
         self.T = self.S - self.k[:, None] * self.d
         self.boundary_velocity = torch.zeros_like(self.S)
         inflow = m.masks["inlet"] | m.masks["far-field"]
-        alpha = math.radians(config.angle_of_attack)
-        freestream = torch.tensor(
-            [config.inlet_velocity * math.cos(alpha),
-             config.inlet_velocity * math.sin(alpha)], **opts
-        )
         self.boundary_velocity[inflow] = freestream
         face_velocity = self.velocity[self.o].clone()
         fixed = m.boundary & ~m.masks["outlet"]
@@ -508,7 +526,8 @@ class BodyFittedSolver:
         """Advance one SIMPLE iteration and return conservative steady metrics."""
         c = self.config
         inlet_mass = c.density * c.inlet_velocity * c.height
-        force_scale = max(c.density * c.inlet_velocity ** 2 * c.height,
+        reference_length = (c.airfoil_chord if c.mesh_type == "c-grid" else c.height)
+        force_scale = max(c.density * c.inlet_velocity ** 2 * reference_length,
                           c.viscosity * c.inlet_velocity)
         old = self.velocity.clone()
         diagonal, ao, an, source = self._momentum(old, self.p, self.mass_flux)

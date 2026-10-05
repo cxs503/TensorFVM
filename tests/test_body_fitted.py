@@ -23,8 +23,16 @@ class MeshTests(unittest.TestCase):
         self.assertEqual(mesh.vertices.shape, (9, 33, 2))
         self.assertEqual(mesh.centers.shape, (8, 32, 2))
         self.assertTrue(torch.equal(mesh.vertices[:, 0], mesh.vertices[:, -1]))
+        self.assertTrue(torch.isfinite(mesh.vertices).all())
         self.assertTrue(torch.all(mesh.volumes > 0))
         self.assertTrue(torch.isfinite(mesh.centers).all())
+        first_layer = torch.linalg.vector_norm(
+            mesh.vertices[1, 0] - mesh.vertices[0, 0]
+        )
+        last_layer = torch.linalg.vector_norm(
+            mesh.vertices[-1, 0] - mesh.vertices[-2, 0]
+        )
+        self.assertLess(first_layer, last_layer)
         self.assertEqual(int(mesh.masks["airfoil"].sum()), c.nx)
         self.assertEqual(int(mesh.masks["wall"].sum()), 0)
         self.assertAlmostEqual(float(mesh.face_lengths[mesh.masks["far-field"]].sum()),
@@ -40,7 +48,7 @@ class MeshTests(unittest.TestCase):
         ))
 
     def test_cambered_naca_profile_and_closed_wake(self):
-        mesh = CGridMesh(config(mesh_type="c-grid", airfoil_code="2412",
+        mesh = CGridMesh(config(mesh_type="c-grid", airfoil_code="4412",
                                 nx=32, ny=8))
         self.assertTrue(torch.all(mesh.volumes > 0))
         airfoil = mesh.face_centers[mesh.masks["airfoil"]]
