@@ -34,6 +34,7 @@ class SolverTests(unittest.TestCase):
             {"mesh_type": "c-grid", "nx": 12},
             {"mesh_type": "c-grid", "airfoil_chord": 0},
             {"mesh_type": "c-grid", "airfoil_code": "0010"},
+            {"mesh_type": "c-grid", "angle_of_attack": 181},
         ]
         for options in invalid:
             with self.subTest(options=options), self.assertRaises(ValueError):

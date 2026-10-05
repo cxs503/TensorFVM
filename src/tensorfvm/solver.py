@@ -84,6 +84,7 @@ class SolverConfig:
                 raise ValueError("cylinder is not represented on this grid; refine the mesh")
         if (not isinstance(self.airfoil_code, str)
                 or len(self.airfoil_code) != 4
+                or not self.airfoil_code.isascii()
                 or not self.airfoil_code.isdigit()
                 or int(self.airfoil_code[2:]) == 0):
             raise ValueError("airfoil_code must be a four-digit NACA code with nonzero thickness")
@@ -94,6 +95,8 @@ class SolverConfig:
         for name in ("airfoil_x", "airfoil_y", "angle_of_attack"):
             if not math.isfinite(getattr(self, name)):
                 raise ValueError(f"{name} must be finite")
+        if not -180 <= self.angle_of_attack <= 180:
+            raise ValueError("angle_of_attack must be between -180 and 180 degrees")
         if (not math.isfinite(self.viscosity) or self.viscosity <= 0
                 or self.length / self.nx == 0 or self.height / self.ny == 0):
             raise ValueError("parameters must produce finite positive viscosity and cell sizes")
