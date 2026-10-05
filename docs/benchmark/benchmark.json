@@ -1,0 +1,76 @@
+{
+  "benchmark": "plane-poiseuille",
+  "error_limit": 0.03,
+  "python": "3.12.3",
+  "torch": "2.14.1+cu130",
+  "max_iterations": 1000,
+  "cases": [
+    {
+      "nx": 36,
+      "ny": 12,
+      "section_x": 5.083333333333333,
+      "iterations": 41,
+      "converged": true,
+      "final_residuals": {
+        "iteration": 41,
+        "continuity": 1.1684562374341667e-14,
+        "momentum": 8.469435352346895e-07,
+        "velocity_change": 2.8933689666388318e-08,
+        "mass_imbalance": 0.0
+      },
+      "errors": {
+        "velocity_l2": 0.00634358108441172,
+        "velocity_linf": 0.006801460833508179,
+        "pressure_gradient": 0.013698530170546194
+      },
+      "pressure_gradient": -11.835617637953446,
+      "reference_pressure_gradient": -12.0,
+      "passed": true
+    },
+    {
+      "nx": 72,
+      "ny": 24,
+      "section_x": 5.041666666666666,
+      "iterations": 87,
+      "converged": true,
+      "final_residuals": {
+        "iteration": 87,
+        "continuity": 1.1289323224103466e-14,
+        "momentum": 9.08071922048125e-07,
+        "velocity_change": 2.1014182629564004e-06,
+        "mass_imbalance": 0.0
+      },
+      "errors": {
+        "velocity_l2": 0.0016197093093623335,
+        "velocity_linf": 0.001738033546715868,
+        "pressure_gradient": 0.003440186472065824
+      },
+      "pressure_gradient": -11.95871776233521,
+      "reference_pressure_gradient": -12.0,
+      "passed": true
+    },
+    {
+      "nx": 144,
+      "ny": 48,
+      "section_x": 5.020833333333333,
+      "iterations": 282,
+      "converged": true,
+      "final_residuals": {
+        "iteration": 282,
+        "continuity": 1.345798472662807e-14,
+        "momentum": 9.707750322011163e-07,
+        "velocity_change": 2.2471426408543493e-06,
+        "mass_imbalance": 0.0
+      },
+      "errors": {
+        "velocity_l2": 0.0004284797647780918,
+        "velocity_linf": 0.0004796438829005489,
+        "pressure_gradient": 0.000783649795151072
+      },
+      "pressure_gradient": -11.990596202458187,
+      "reference_pressure_gradient": -12.0,
+      "passed": true
+    }
+  ],
+  "passed": true
+}
