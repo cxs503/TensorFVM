@@ -30,6 +30,7 @@ class SolverConfig:
     device: str = "cpu"
     pseudo_time_step: float | None = None
     mesh_type: str = "cartesian"
+    inlet_profile: str = "uniform"
     airfoil_code: str = "0012"
     airfoil_chord: float = 1.0
     airfoil_x: float = 1.0
@@ -45,6 +46,10 @@ class SolverConfig:
             raise ValueError("nx and ny must be >= 4; max_iterations must be positive")
         if self.mesh_type not in ("cartesian", "body-fitted", "c-grid"):
             raise ValueError("mesh_type must be cartesian, body-fitted, or c-grid")
+        if self.inlet_profile not in ("uniform", "parabolic"):
+            raise ValueError("inlet_profile must be uniform or parabolic")
+        if self.inlet_profile == "parabolic" and self.mesh_type != "body-fitted":
+            raise ValueError("parabolic inlet profile is only supported on the cylinder O-grid")
         if self.mesh_type == "body-fitted" and (self.nx < 8 or self.nx % 4):
             raise ValueError("body-fitted nx must be >= 8 and divisible by 4")
         if self.mesh_type == "c-grid" and (self.nx < 16 or self.nx % 4):

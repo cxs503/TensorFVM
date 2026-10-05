@@ -97,6 +97,10 @@ class CylinderOutputTests(unittest.TestCase):
                 cells = list(csv.DictReader(stream))
             self.assertEqual(len(nodes), (config.nx + 1) * (config.ny + 1))
             self.assertEqual(len(cells), len(rows))
+            self.assertTrue((directory / "velocity.svg").is_file())
+            self.assertTrue((directory / "pressure.svg").is_file())
+            for name in ("velocity.svg", "pressure.svg"):
+                self.assertIn("<polygon", (directory / name).read_text())
             for cell in cells:
                 for name in ("node0", "node1", "node2", "node3"):
                     self.assertLess(int(cell[name]), len(nodes))
@@ -128,6 +132,8 @@ class CylinderOutputTests(unittest.TestCase):
             summary = json.loads((directory / "summary.json").read_text())
             self.assertEqual(summary["aerodynamic_coefficients"],
                              {"drag": 0.1, "lift": 0.2})
+            self.assertTrue((directory / "velocity.svg").is_file())
+            self.assertTrue((directory / "pressure.svg").is_file())
 
     def test_solver_failure_has_nonzero_exit(self):
         with patch("tensorfvm.cylinder.SimpleSolver", side_effect=ValueError("bad grid")):
