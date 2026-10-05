@@ -163,6 +163,7 @@ class BodyFittedSolver:
         self.mass_flux = config.density * (face_velocity * self.S).sum(-1)
         self.history = []
         self.converged = False
+        self._gradient_weights = {}
 
     def _sum(self, face):
         result = torch.zeros((self.count,) + face.shape[1:], dtype=face.dtype,
@@ -184,16 +185,21 @@ class BodyFittedSolver:
             fixed = self.mesh.boundary & ~self.mesh.masks["outlet"]
             active |= fixed
             delta[fixed] = self.boundary_velocity[fixed] - q[self.o[fixed]]
-        weight = active.to(q.dtype) / (self.d * self.d).sum(-1)
-        matrix_face = weight[:, None, None] * self.d[:, :, None] * self.d[:, None, :]
-        rhs_face = weight[:, None, None] * self.d[:, :, None] * delta[:, None, :]
-        matrix = torch.zeros((self.count, 2, 2), dtype=q.dtype, device=q.device)
-        rhs = torch.zeros((self.count, 2, q.shape[1]), dtype=q.dtype, device=q.device)
-        matrix.index_add_(0, self.o, matrix_face)
-        matrix.index_add_(0, self.ni, matrix_face[self.f])
-        rhs.index_add_(0, self.o, rhs_face)
-        rhs.index_add_(0, self.ni, rhs_face[self.f])
-        gradient = torch.linalg.solve(matrix, rhs)
+        if pressure not in self._gradient_weights:
+            weight = active.to(q.dtype) / (self.d * self.d).sum(-1)
+            matrix_face = weight[:, None, None] * self.d[:, :, None] * self.d[:, None, :]
+            matrix = torch.zeros((self.count, 2, 2), dtype=q.dtype, device=q.device)
+            matrix.index_add_(0, self.o, matrix_face)
+            matrix.index_add_(0, self.ni, matrix_face[self.f])
+            inverse = torch.linalg.inv(matrix)
+            wd = weight[:, None] * self.d
+            go = torch.einsum("fij,fj->fi", inverse[self.o], wd)
+            gn = torch.einsum("fij,fj->fi", inverse[self.ni], wd[self.f])
+            self._gradient_weights[pressure] = go, gn
+        go, gn = self._gradient_weights[pressure]
+        gradient = torch.zeros((self.count, 2, q.shape[1]), dtype=q.dtype, device=q.device)
+        gradient.index_add_(0, self.o, go[:, :, None] * delta[:, None, :])
+        gradient.index_add_(0, self.ni, gn[:, :, None] * delta[self.f, None, :])
         return gradient[..., 0] if scalar else gradient
 
     def _interpolate(self, field):
@@ -231,10 +237,10 @@ class BodyFittedSolver:
         y.index_add_(0, self.ni, -an * x[self.oi])
         return y
 
-    def _linear(self, diagonal, ao, an, rhs, initial, symmetric=False):
+    def _linear(self, diagonal, ao, an, rhs, initial, symmetric=False, operator=None):
         """Diagonal-preconditioned CG or BiCGSTAB, with a true residual check."""
         x = initial.clone()
-        mv = lambda z: self._matvec(z, diagonal, ao, an)
+        mv = operator if operator is not None else lambda z: self._matvec(z, diagonal, ao, an)
         residual = rhs - mv(x)
         threshold = max(1e-12, float(torch.linalg.vector_norm(rhs)) * 1e-10)
         if float(torch.linalg.vector_norm(residual)) <= threshold:
@@ -286,7 +292,7 @@ class BodyFittedSolver:
             raise RuntimeError("nonfinite body-fitted linear solve")
         return x
 
-    def _rhie_chow(self, velocity, pressure, D, steady_D=None):
+    def _rhie_chow(self, velocity, pressure, D, steady_D=None, old_velocity=None):
         gp = self._gradient(pressure, pressure=True)
         df = self._interpolate(D)
         face_velocity = self._interpolate(velocity + D[:, None] * gp)
@@ -296,13 +302,17 @@ class BodyFittedSolver:
         flux = self.config.density * ((face_velocity * self.S).sum(-1)
                                       - df * normal_pressure)
         if steady_D is not None:
-            # Pseudo-time inertia must not change the steady spatial operator.
-            # Defer its Rhie--Chow defect while retaining the actual relaxed
-            # diagonal in the implicit pressure-correction coefficients.
-            defect = (self._interpolate((steady_D - D)[:, None] * gp)
-                      * self.S).sum(-1)
-            defect -= self._interpolate(steady_D - D) * normal_pressure
-            flux += self.config.density * defect
+            # Retain pseudo-time face-flux memory. At a fixed point its damping
+            # cancels, leaving exactly the inertia-free Rhie--Chow operator.
+            steady_df = self._interpolate(steady_D)
+            beta = (1 - df / steady_df).clamp(0, 1)
+            base = self.config.density * (self._interpolate(velocity) * self.S).sum(-1)
+            old_base = self.config.density * (
+                self._interpolate(old_velocity) * self.S).sum(-1)
+            defect = self.config.density * (
+                (self._interpolate(steady_D[:, None] * gp) * self.S).sum(-1)
+                - steady_df * normal_pressure)
+            flux = base + (1 - beta) * defect + beta * (self.mass_flux - old_base)
         fixed = self.mesh.boundary & ~self.mesh.masks["outlet"]
         flux[fixed] = self.config.density * (
             self.boundary_velocity[fixed] * self.S[fixed]).sum(-1)
@@ -315,13 +325,19 @@ class BodyFittedSolver:
         diagonal.index_add_(0, self.o, coefficient)
         diagonal.index_add_(0, self.ni, coefficient[self.f])
         rhs = -self._sum(predicted_flux)
+        def nonorthogonal(q):
+            gradient = self._interpolate(self._gradient(q, pressure=True))
+            return coefficient / self.k * (self.T * gradient).sum(-1)
+
+        def operator(q):
+            return (self._matvec(q, diagonal, coefficient[self.f], coefficient[self.f])
+                    - self._sum(nonorthogonal(q)))
+
         correction = self._linear(diagonal, coefficient[self.f], coefficient[self.f],
-                                  rhs, torch.zeros_like(self.p), symmetric=True)
-        # The implicit orthogonal correction is conservative even on a skew grid;
-        # nonorthogonal pressure flux is included in the next Rhie--Chow predictor.
+                                  rhs, torch.zeros_like(self.p), operator=operator)
         delta = correction[self.o].clone()
         delta[self.f] -= correction[self.ni]
-        self.mass_flux = predicted_flux + coefficient * delta
+        self.mass_flux = predicted_flux + coefficient * delta - nonorthogonal(correction)
         self.velocity -= D[:, None] * self._gradient(correction, pressure=True)
         self.p += self.config.pressure_relaxation * correction
 
@@ -343,7 +359,7 @@ class BodyFittedSolver:
                 relaxed, ao, an, rhs[:, component], old[:, component])
         D = self.volume / relaxed
         steady_D = self.volume * c.velocity_relaxation / diagonal
-        flux, coefficient = self._rhie_chow(self.velocity, self.p, D, steady_D)
+        flux, coefficient = self._rhie_chow(self.velocity, self.p, D, steady_D, old)
         self._correct(flux, coefficient, D)
         if not (torch.isfinite(self.velocity).all() and torch.isfinite(self.p).all()
                 and torch.isfinite(self.mass_flux).all()):
