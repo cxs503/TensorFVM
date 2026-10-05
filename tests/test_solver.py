@@ -31,6 +31,10 @@ class SolverTests(unittest.TestCase):
             {"pressure_relaxation": math.nan}, {"pressure_relaxation": -0.1},
             {"pseudo_time_step": 0}, {"pseudo_time_step": math.inf},
             {"device": "not-a-device"}, {"density": 1e308, "inlet_velocity": 1e308},
+            {"mesh_type": "c-grid", "nx": 12},
+            {"mesh_type": "c-grid", "airfoil_chord": 0},
+            {"mesh_type": "c-grid", "airfoil_code": "0010"},
+            {"mesh_type": "c-grid", "angle_of_attack": 181},
         ]
         for options in invalid:
             with self.subTest(options=options), self.assertRaises(ValueError):
@@ -55,6 +59,9 @@ class SolverTests(unittest.TestCase):
                               cylinder_radius=0.01)
         self.assertEqual(config.mesh_type, "body-fitted")
         self.assertEqual(SolverConfig().mesh_type, "cartesian")
+        airfoil = SolverConfig(mesh_type="c-grid", reynolds=100)
+        self.assertAlmostEqual(airfoil.viscosity, 0.01)
+        self.assertEqual(airfoil.airfoil_code, "0012")
 
     def test_shapes_dtype_and_result_snapshot(self):
         solver = SimpleSolver(self.cylinder_config(max_iterations=1))

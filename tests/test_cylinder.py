@@ -104,6 +104,31 @@ class CylinderOutputTests(unittest.TestCase):
             self.assertFalse((directory / "nodes.csv").exists())
             self.assertFalse((directory / "cells.csv").exists())
 
+    def test_c_grid_exports_surface_pressure_and_force_coefficients(self):
+        from tensorfvm.body_fitted import CGridMesh
+
+        config = SolverConfig(nx=32, ny=8, mesh_type="c-grid")
+        mesh = CGridMesh(config)
+        field = torch.zeros((config.ny, config.nx), dtype=torch.float64)
+        result = SimpleNamespace(
+            config=config, mesh=mesh, p=field, fluid=field.bool(),
+            x=mesh.centers[..., 0], y=mesh.centers[..., 1],
+            cell_center_velocity=lambda: (field, field),
+            history=[], converged=False,
+            aerodynamic_coefficients={"drag": 0.1, "lift": 0.2},
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            directory = Path(tmp)
+            export_result(result, directory)
+            with (directory / "airfoil.csv").open(newline="") as stream:
+                rows = list(csv.DictReader(stream))
+            self.assertEqual(len(rows), config.nx)
+            self.assertTrue(all(float(row["cp"]) == 0 for row in rows))
+            self.assertTrue((directory / "nodes.csv").exists())
+            summary = json.loads((directory / "summary.json").read_text())
+            self.assertEqual(summary["aerodynamic_coefficients"],
+                             {"drag": 0.1, "lift": 0.2})
+
     def test_solver_failure_has_nonzero_exit(self):
         with patch("tensorfvm.cylinder.SimpleSolver", side_effect=ValueError("bad grid")):
             with contextlib.redirect_stderr(io.StringIO()):
