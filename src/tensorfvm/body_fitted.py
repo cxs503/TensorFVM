@@ -298,12 +298,16 @@ class BodyFittedSolver:
         inflow = m.masks["inlet"] | m.masks["far-field"]
         self.boundary_velocity[inflow] = freestream
         if config.inlet_profile == "parabolic":
-            y = m.face_centers[m.masks["inlet"], 1]
-            self.boundary_velocity[m.masks["inlet"], 0] = (
-                6 * config.inlet_velocity * y / config.height
-                * (1 - y / config.height)
+            inlet = m.masks["inlet"]
+            endpoints = m.face_vertices[inlet, :, 1]
+            y0, y1 = endpoints[:, 0], endpoints[:, 1]
+            self.boundary_velocity[inlet, 0] = (
+                6 * config.inlet_velocity / config.height
+                * ((y1.square() - y0.square()) / (2 * config.height)
+                   - (y1.pow(3) - y0.pow(3)) / (3 * config.height ** 2))
+                / (y1 - y0)
             )
-            self.boundary_velocity[m.masks["inlet"], 1] = 0
+            self.boundary_velocity[inlet, 1] = 0
         face_velocity = self.velocity[self.o].clone()
         fixed = m.boundary & ~m.masks["outlet"]
         face_velocity[fixed] = self.boundary_velocity[fixed]

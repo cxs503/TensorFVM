@@ -7,6 +7,7 @@ import torch
 
 from tensorfvm.solver import SolverConfig
 from tensorfvm.body_fitted import BodyFittedMesh, BodyFittedSolver, CGridMesh
+from tensorfvm.benchmark_dfg import compare_dfg
 
 
 def config(**kwargs):
@@ -213,6 +214,53 @@ class FittedSolverTests(unittest.TestCase):
         self.assertTrue(torch.allclose(diagonal, expected))
         self.assertTrue(torch.equal(ao, an))
         self.assertTrue((diffusion[walls] > 0).all())
+
+    def test_parabolic_cylinder_inlet_uses_mean_velocity(self):
+        c = config(inlet_profile="parabolic", cylinder_x=0.7, cylinder_y=0.8,
+                   nx=24, ny=8, height=2, inlet_velocity=0.2)
+        s = BodyFittedSolver(c)
+        inlet = s.mesh.masks["inlet"]
+        y0, y1 = s.mesh.face_vertices[inlet, :, 1].unbind(1)
+        expected = (
+            6 * c.inlet_velocity / c.height
+            * ((y1.square() - y0.square()) / (2 * c.height)
+               - (y1.pow(3) - y0.pow(3)) / (3 * c.height ** 2))
+            / (y1 - y0)
+        )
+        self.assertTrue(torch.allclose(s.boundary_velocity[inlet, 0], expected))
+        self.assertEqual(int(torch.count_nonzero(s.boundary_velocity[inlet, 1])), 0)
+        self.assertAlmostEqual(
+            float((s.boundary_velocity[inlet, 0] * s.mesh.face_lengths[inlet]).sum()),
+            c.inlet_velocity * c.height,
+            places=12,
+        )
+
+    def test_parabolic_inlet_is_restricted_to_cylinder_o_grid(self):
+        with self.assertRaisesRegex(ValueError, "only supported"):
+            SolverConfig(inlet_profile="parabolic", mesh_type="cartesian")
+        with self.assertRaisesRegex(ValueError, "only supported"):
+            SolverConfig(inlet_profile="parabolic", mesh_type="c-grid")
+
+    def test_cylinder_force_coefficients_are_exported(self):
+        result = BodyFittedSolver(config(nx=24, ny=8, max_iterations=2)).solve()
+        self.assertEqual(set(result.aerodynamic_coefficients), {"drag", "lift"})
+        self.assertTrue(all(torch.isfinite(torch.tensor(value))
+                            for value in result.aerodynamic_coefficients.values()))
+
+    def test_dfg_acceptance_uses_strict_three_percent_drag_error(self):
+        from types import SimpleNamespace
+
+        result = SimpleNamespace(
+            aerodynamic_coefficients={"drag": 5.579535 * 1.03, "lift": 0},
+            converged=True,
+            history=[{"continuity": 0, "momentum": 0, "mass_imbalance": 0}],
+            config=SimpleNamespace(tolerance=1e-6, nx=64, ny=24),
+        )
+        self.assertFalse(compare_dfg(result)["passed"])
+        result.aerodynamic_coefficients["drag"] = 5.579535 * 1.02
+        self.assertTrue(compare_dfg(result)["passed"])
+        result.converged = False
+        self.assertFalse(compare_dfg(result)["passed"])
 
     def test_small_low_re_grid_converges_steady_residual(self):
         r = BodyFittedSolver(config(nx=24, ny=8, reynolds=5)).solve()
