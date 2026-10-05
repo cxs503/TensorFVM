@@ -66,6 +66,9 @@ class SolverConfig:
             )
             if not represented:
                 raise ValueError("cylinder is not represented on this grid; refine the mesh")
+        if (not math.isfinite(self.viscosity) or self.viscosity <= 0
+                or self.length / self.nx == 0 or self.height / self.ny == 0):
+            raise ValueError("parameters must produce finite positive viscosity and cell sizes")
         try:
             target = torch.device(self.device)
             torch.empty(0, dtype=torch.float64, device=target)
@@ -324,7 +327,8 @@ class SimpleSolver:
                                / self.config.inlet_velocity,
             "mass_imbalance": abs(outlet - inlet) / abs(inlet),
         }
-        if not all(math.isfinite(value) for value in item.values()):
+        if (not all(math.isfinite(value) for value in item.values())
+                or not torch.isfinite(self.p).all().item()):
             raise RuntimeError("non-finite SIMPLE iterate; reduce relaxation or use pseudo_time_step")
         self.history.append(item)
         self.converged = (item["continuity"] < self.config.tolerance
