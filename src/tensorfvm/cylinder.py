@@ -2,6 +2,7 @@
 
 import argparse
 import csv
+from html import escape
 import json
 from dataclasses import asdict
 from pathlib import Path
@@ -9,6 +10,64 @@ from pathlib import Path
 import torch
 
 from .solver import SimpleSolver, SolverConfig
+
+
+def _write_fitted_contour(result, values, title, destination):
+    """Write cell-constant values on the physical quadrilateral mesh to SVG."""
+    mesh = result.mesh
+    vertices = mesh.vertices.detach().cpu()
+    values = values.detach().cpu()
+    low, high = float(values.min()), float(values.max())
+    bounds = vertices.reshape(-1, 2)
+    xmin, ymin = (float(bounds[:, i].min()) for i in range(2))
+    xmax, ymax = (float(bounds[:, i].max()) for i in range(2))
+    width = 900
+    height = width * (ymax - ymin) / (xmax - xmin)
+    margin = 50
+
+    def position(point):
+        return (margin + (float(point[0]) - xmin) * width / (xmax - xmin),
+                margin + (ymax - float(point[1])) * width / (xmax - xmin))
+
+    def color(value):
+        fraction = (value - low) / (high - low) if high > low else 0.5
+        fraction = max(0.0, min(1.0, fraction))
+        return f"rgb({round(255 * fraction)},70,{round(255 * (1 - fraction))})"
+
+    parts = [
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="1000" '
+        f'height="{height + 150:g}" viewBox="0 0 1000 {height + 150:g}">',
+        '<rect width="100%" height="100%" fill="white"/>',
+        f'<text x="{margin}" y="25" font-family="sans-serif" font-size="18">'
+        f'{escape(title)}</text>',
+    ]
+    for j in range(result.config.ny):
+        for i in range(result.config.nx):
+            polygon = (vertices[j, i], vertices[j, i + 1],
+                       vertices[j + 1, i + 1], vertices[j + 1, i])
+            points = " ".join(f"{x:g},{y:g}" for x, y in map(position, polygon))
+            parts.append(
+                f'<polygon points="{points}" fill="{color(float(values[j, i]))}"/>'
+            )
+    parts.extend([
+        f'<rect x="{margin}" y="{margin}" width="{width:g}" height="{height:g}" '
+        'fill="none" stroke="black"/>',
+        f'<text x="{margin}" y="{height + 2 * margin + 15:g}" '
+        'font-family="sans-serif">x</text>',
+        '<text x="5" y="55" font-family="sans-serif">y</text>',
+    ])
+    for i in range(100):
+        parts.append(
+            f'<rect x="{margin + 9 * i}" y="{height + 2 * margin + 35:g}" '
+            f'width="9" height="15" fill="{color(low + (high - low) * i / 99)}"/>'
+        )
+    for fraction in (0, 0.25, 0.5, 0.75, 1):
+        parts.append(
+            f'<text x="{margin + width * fraction:g}" y="{height + 2 * margin + 70:g}" '
+            f'font-family="sans-serif">{low + (high - low) * fraction:.4g}</text>'
+        )
+    parts.append("</svg>")
+    destination.write_text("\n".join(parts) + "\n", encoding="utf-8")
 
 
 def export_result(result, directory: Path) -> None:
@@ -72,6 +131,19 @@ def export_result(result, directory: Path) -> None:
                 ))
     if config.mesh_type != "c-grid":
         (directory / "airfoil.csv").unlink(missing_ok=True)
+    if config.mesh_type in ("body-fitted", "c-grid"):
+        speed = torch.sqrt(u.square() + v.square()) / config.inlet_velocity
+        pressure = p / (config.density * config.inlet_velocity ** 2)
+        _write_fitted_contour(
+            result, speed, "Computed speed |V|/U", directory / "velocity.svg"
+        )
+        _write_fitted_contour(
+            result, pressure, "Computed gauge pressure p/(rho U^2)",
+            directory / "pressure.svg",
+        )
+    else:
+        for name in ("velocity.svg", "pressure.svg"):
+            (directory / name).unlink(missing_ok=True)
     with (directory / "history.json").open("w", encoding="utf-8") as stream:
         json.dump(result.history, stream, indent=2, allow_nan=False)
         stream.write("\n")
@@ -118,6 +190,9 @@ def main(argv=None) -> int:
                         help="翼型弦线 y 坐标")
     parser.add_argument("--angle-of-attack", type=float, default=defaults.angle_of_attack,
                         help="来流相对翼型弦线的攻角（度）")
+    parser.add_argument("--inlet-profile", choices=("uniform", "parabolic"),
+                        default=defaults.inlet_profile,
+                        help="入口速度剖面；parabolic 仅适用于圆柱 O 网格")
     parser.add_argument("--domain-length", type=float, default=defaults.length)
     parser.add_argument("--domain-height", type=float, default=defaults.height)
     parser.add_argument(
@@ -149,6 +224,7 @@ def main(argv=None) -> int:
             airfoil_x=args.airfoil_x,
             airfoil_y=args.airfoil_y,
             angle_of_attack=args.angle_of_attack,
+            inlet_profile=args.inlet_profile,
         )
         result = SimpleSolver(config).solve()
         export_result(result, args.output)
