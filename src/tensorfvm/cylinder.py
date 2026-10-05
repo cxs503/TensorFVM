@@ -1,4 +1,4 @@
-"""Run the confined cylinder case and export portable, cell-centred CSV data."""
+"""Run a finite-volume case and export portable, cell-centred CSV data."""
 
 import argparse
 import csv
@@ -36,7 +36,7 @@ def export_result(result, directory: Path) -> None:
                         int(fluid[j, i]),
                     )
                 )
-    if config.mesh_type == "body-fitted":
+    if config.mesh_type in ("body-fitted", "c-grid"):
         vertices = result.mesh.vertices.detach().cpu()
         with (directory / "nodes.csv").open("w", newline="", encoding="utf-8") as stream:
             writer = csv.writer(stream)
@@ -55,6 +55,23 @@ def export_result(result, directory: Path) -> None:
     else:
         for name in ("nodes.csv", "cells.csv"):
             (directory / name).unlink(missing_ok=True)
+    if config.mesh_type == "c-grid":
+        mask = result.mesh.masks["airfoil"].detach().cpu()
+        owners = result.mesh.owner.detach().cpu()[mask]
+        centers = result.mesh.face_centers.detach().cpu()[mask]
+        pressure = result.p.detach().cpu().reshape(-1)[owners]
+        scale = 0.5 * config.density * config.inlet_velocity ** 2
+        with (directory / "airfoil.csv").open("w", newline="", encoding="utf-8") as stream:
+            writer = csv.writer(stream)
+            writer.writerow(("x_over_chord", "y_over_chord", "x", "y", "p", "cp"))
+            for point, value in zip(centers, pressure):
+                writer.writerow((
+                    float((point[0] - config.airfoil_x) / config.airfoil_chord),
+                    float((point[1] - config.airfoil_y) / config.airfoil_chord),
+                    float(point[0]), float(point[1]), float(value), float(value / scale),
+                ))
+    if config.mesh_type != "c-grid":
+        (directory / "airfoil.csv").unlink(missing_ok=True)
     with (directory / "history.json").open("w", encoding="utf-8") as stream:
         json.dump(result.history, stream, indent=2, allow_nan=False)
         stream.write("\n")
@@ -65,6 +82,8 @@ def export_result(result, directory: Path) -> None:
                 "iterations": len(result.history),
                 "config": asdict(config),
                 "final_residuals": result.history[-1] if result.history else {},
+                **({"aerodynamic_coefficients": result.aerodynamic_coefficients}
+                   if getattr(result, "aerodynamic_coefficients", None) is not None else {}),
             },
             stream,
             indent=2,
@@ -77,17 +96,30 @@ def main(argv=None) -> int:
     """Command-line entry point; return 2 when the iteration limit is reached."""
     defaults = SolverConfig()
     parser = argparse.ArgumentParser(
-        description="PyTorch 有限体积 SIMPLE：低雷诺数二维通道圆柱绕流"
+        description="PyTorch 有限体积 SIMPLE：二维不可压缩流动"
     )
-    parser.add_argument("--mesh-type", choices=("body-fitted", "cartesian"),
-                        default="body-fitted", help="默认圆柱贴体网格；cartesian 为原交错网格")
+    parser.add_argument("--mesh-type", choices=("body-fitted", "cartesian", "c-grid"),
+                        default="body-fitted",
+                        help="body-fitted 为圆柱 O 网格，c-grid 为 NACA 翼型网格")
     parser.add_argument("--nx", type=int, default=defaults.nx,
-                        help="贴体模式为周向网格数（>=8 且为4的倍数）；笛卡尔模式为x方向")
+                        help="贴体模式为周向网格数（c-grid >=16，其余 >=8，均为4的倍数）")
     parser.add_argument("--ny", type=int, default=defaults.ny,
                         help="贴体模式为径向网格数；笛卡尔模式为y方向")
     parser.add_argument(
-        "--reynolds", type=float, default=defaults.reynolds, help="基于圆柱直径的 Re"
+        "--reynolds", type=float, default=defaults.reynolds,
+        help="基于圆柱直径（c-grid 时为翼型弦长）的 Re"
     )
+    parser.add_argument("--airfoil-code", default=defaults.airfoil_code,
+                        help="c-grid 使用的四位 NACA 翼型编号")
+    parser.add_argument("--airfoil-chord", type=float, default=defaults.airfoil_chord)
+    parser.add_argument("--airfoil-x", type=float, default=defaults.airfoil_x,
+                        help="翼型前缘 x 坐标")
+    parser.add_argument("--airfoil-y", type=float, default=defaults.airfoil_y,
+                        help="翼型弦线 y 坐标")
+    parser.add_argument("--angle-of-attack", type=float, default=defaults.angle_of_attack,
+                        help="来流相对翼型弦线的攻角（度）")
+    parser.add_argument("--domain-length", type=float, default=defaults.length)
+    parser.add_argument("--domain-height", type=float, default=defaults.height)
     parser.add_argument(
         "--max-iterations", type=int, default=defaults.max_iterations
     )
@@ -106,10 +138,17 @@ def main(argv=None) -> int:
             nx=args.nx,
             ny=args.ny,
             reynolds=args.reynolds,
+            length=args.domain_length,
+            height=args.domain_height,
             max_iterations=args.max_iterations,
             tolerance=args.tolerance,
             device=args.device,
             mesh_type=args.mesh_type,
+            airfoil_code=args.airfoil_code,
+            airfoil_chord=args.airfoil_chord,
+            airfoil_x=args.airfoil_x,
+            airfoil_y=args.airfoil_y,
+            angle_of_attack=args.angle_of_attack,
         )
         result = SimpleSolver(config).solve()
         export_result(result, args.output)

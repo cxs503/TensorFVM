@@ -30,6 +30,11 @@ class SolverConfig:
     device: str = "cpu"
     pseudo_time_step: float | None = None
     mesh_type: str = "cartesian"
+    airfoil_code: str = "0012"
+    airfoil_chord: float = 1.0
+    airfoil_x: float = 1.0
+    airfoil_y: float = 1.0
+    angle_of_attack: float = 0.0
 
     def __post_init__(self):
         for name in ("nx", "ny", "max_iterations"):
@@ -38,10 +43,12 @@ class SolverConfig:
                 raise ValueError(f"{name} must be an integer")
         if self.nx < 4 or self.ny < 4 or self.max_iterations < 1:
             raise ValueError("nx and ny must be >= 4; max_iterations must be positive")
-        if self.mesh_type not in ("cartesian", "body-fitted"):
-            raise ValueError("mesh_type must be cartesian or body-fitted")
+        if self.mesh_type not in ("cartesian", "body-fitted", "c-grid"):
+            raise ValueError("mesh_type must be cartesian, body-fitted, or c-grid")
         if self.mesh_type == "body-fitted" and (self.nx < 8 or self.nx % 4):
             raise ValueError("body-fitted nx must be >= 8 and divisible by 4")
+        if self.mesh_type == "c-grid" and (self.nx < 16 or self.nx % 4):
+            raise ValueError("c-grid nx must be >= 16 and divisible by 4")
         for name in ("length", "height", "inlet_velocity", "reynolds",
                      "density", "tolerance"):
             value = getattr(self, name)
@@ -61,7 +68,7 @@ class SolverConfig:
             raise ValueError("cylinder_radius must be finite and nonnegative, or None")
         if self.mesh_type == "body-fitted" and not radius:
             raise ValueError("body-fitted mesh requires a positive cylinder_radius")
-        if radius:
+        if radius and self.mesh_type != "c-grid":
             dx, dy = self.length / self.nx, self.height / self.ny
             if self.mesh_type == "body-fitted":
                 dx = dy = 0
@@ -75,6 +82,21 @@ class SolverConfig:
             )
             if not represented:
                 raise ValueError("cylinder is not represented on this grid; refine the mesh")
+        if (not isinstance(self.airfoil_code, str)
+                or len(self.airfoil_code) != 4
+                or not self.airfoil_code.isascii()
+                or not self.airfoil_code.isdigit()
+                or int(self.airfoil_code[2:]) == 0):
+            raise ValueError("airfoil_code must be a four-digit NACA code with nonzero thickness")
+        for name in ("airfoil_chord",):
+            value = getattr(self, name)
+            if not math.isfinite(value) or value <= 0:
+                raise ValueError(f"{name} must be finite and positive")
+        for name in ("airfoil_x", "airfoil_y", "angle_of_attack"):
+            if not math.isfinite(getattr(self, name)):
+                raise ValueError(f"{name} must be finite")
+        if not -180 <= self.angle_of_attack <= 180:
+            raise ValueError("angle_of_attack must be between -180 and 180 degrees")
         if (not math.isfinite(self.viscosity) or self.viscosity <= 0
                 or self.length / self.nx == 0 or self.height / self.ny == 0):
             raise ValueError("parameters must produce finite positive viscosity and cell sizes")
@@ -86,7 +108,9 @@ class SolverConfig:
 
     @property
     def viscosity(self) -> float:
-        """Dynamic viscosity; reference length is cylinder diameter or channel height."""
+        """Dynamic viscosity using cylinder diameter, airfoil chord, or channel height."""
+        if self.mesh_type == "c-grid":
+            return self.density * self.inlet_velocity * self.airfoil_chord / self.reynolds
         reference = 2 * self.cylinder_radius if self.cylinder_radius else self.height
         return self.density * self.inlet_velocity * reference / self.reynolds
 
@@ -130,7 +154,7 @@ class SimpleSolver:
     """
 
     def __new__(cls, config: SolverConfig):
-        if cls is SimpleSolver and config.mesh_type == "body-fitted":
+        if cls is SimpleSolver and config.mesh_type in ("body-fitted", "c-grid"):
             from .body_fitted import BodyFittedSolver
 
             return BodyFittedSolver(config)

@@ -1,9 +1,9 @@
 TensorFVM
 =========
 
-基于 PyTorch 的二维不可压缩、层流有限体积求解器，首个案例为
-**通道内圆柱绕流**，采用 SIMPLE 压力－速度耦合。
-支持圆柱贴体网格和原笛卡尔交错网格；不是已经验证的工程 CFD 软件。
+基于 PyTorch 的二维不可压缩、层流有限体积求解器，采用 SIMPLE
+压力－速度耦合。支持笛卡尔交错网格、圆柱 O 型贴体网格及 NACA 翼型 C
+型网格；不是已经验证的工程 CFD 软件。
 
 安装
 ----
@@ -42,6 +42,21 @@ CUDA 需安装与硬件兼容的 PyTorch，并通过 ``--device cuda`` 选择。
 原交错网格可通过 ``--mesh-type cartesian`` 选择，此时 ``nx``、``ny``
 仍为 x、y 方向的单元数。
 
+NACA 四位数翼型可使用 C 型网格计算，例如 NACA 0012 基准::
+
+    python -m tensorfvm --mesh-type c-grid --airfoil-code 0012 --reynolds 100 \
+        --nx 160 --ny 40 --domain-length 10 --domain-height 8 \
+        --airfoil-x 2 --airfoil-y 4 --output results/naca0012
+
+此模式 ``nx`` 为周向单元数（至少 16，且为 4 的倍数），``ny`` 为从翼型
+表面到外边界的径向层数。四位数 NACA 外形按解析公式生成，尾缘闭合；
+周向接缝从尾缘延伸到下游出口中点并作为内部连接处理。翼型表面无滑移，
+径向间距向翼型表面作指数聚集；入口及远场边界指定均匀来流，出口压力为零。
+``airfoil-x``、``airfoil-y``
+指定前缘和弦线位置，Re 以弦长为特征长度；``angle-of-attack`` 以度为单位，
+通过旋转来流方向设置攻角。可用 ``domain-length``、``domain-height`` 和
+翼型位置控制外边界距离。
+
 默认计算域为 4 × 2，圆柱中心 (1, 1)、半径 0.2，入口速度 1，
 密度 1，Re = 20，以圆柱直径作为特征长度，
 动力黏度由 ``mu = rho * U * (2 * radius) / Re`` 确定。
@@ -67,6 +82,8 @@ CUDA 需安装与硬件兼容的 PyTorch，并通过 ``--device cuda`` 选择。
 * 贴体模式另含 ``nodes.csv`` 和 ``cells.csv``：节点坐标与四边形连接关系，
   单元编号按 ``fields.csv`` 的行顺序排列；接缝两侧节点坐标重合。
   ``fields.csv`` 使用真实物理单元中心坐标，所有贴体单元均为流体。
+* C 型网格另含 ``airfoil.csv``（翼型表面面片坐标、邻接单元压力和压力系数 ``Cp``）；
+  ``summary.json`` 包含由离散压力及壁面剪切积分得到的升力、阻力系数。
 
 压力为以出口为参考的表压。结果可以直接用 CSV 工具后处理，
 没有额外绘图库依赖，也不使用 pickle 保存结果。
@@ -84,15 +101,17 @@ CUDA 需安装与硬件兼容的 PyTorch，并通过 ``--device cuda`` 选择。
   压力修正系数使用欠松弛后的动量对角系数。
   笛卡尔压力修正方程采用矩阵无关、对角预条件共轭梯度求解；
   贴体非正交压力修正及动量方程采用对角预条件 BiCGSTAB。
-* 不可穿透边界通量固定为零，圆柱及通道壁面还考虑切向无滑移。
+* 圆柱、翼型及通道壁面采用无滑移条件；C 型网格的远场速度固定为来流值。
 * 同时监测连续性和动量收敛；达到迭代上限仍明确报告未收敛。
 
 笛卡尔历史中的 ``continuity`` 为最大单元散度乘以通道高度、除以入口速度；
 ``momentum`` 为最大稳态离散动量方程缺陷除以对角系数和入口速度。
 贴体模式中 ``continuity`` 为最大单元净质量通量除以入口质量流量，
 ``momentum`` 为两个速度分量中较大的全域动量缺陷绝对值之和，
-除以 ``max(rho * U² * height, mu * U)``；该标准随加密可能更严格。
-``mass_imbalance`` 在两种模式下均为进出口流量之差相对入口流量的绝对值。
+除以 ``max(rho * U² * Lref, mu * U)``；通道算例 ``Lref=height``，
+C 型网格 ``Lref=airfoil_chord``。该标准随加密可能更严格。
+``mass_imbalance`` 在圆柱模式下为进出口流量差相对入口流量的绝对值；
+C 型网格为所有外边界净质量流量相对 ``rho * U * height`` 的绝对值。
 三者均小于配置容差才报告收敛，``velocity_change`` 仅作辅助诊断。
 程序接口可设置 ``pseudo_time_step`` 添加伪时间阻尼，但稳态动量残差
 不包含伪时间项，避免将小步长造成的小变化误判为稳态解。
@@ -103,13 +122,16 @@ CUDA 需安装与硬件兼容的 PyTorch，并通过 ``--device cuda`` 选择。
 当前不包含切割单元、湍流模型、非稳态涡脱落或经过验证的升阻力计算。
 高 Re 流动可能没有稳态解，不应靠增加 SIMPLE 迭代次数替代非稳态模型。
 定量使用前应进行网格无关性、充分长计算域及公开基准验证。
+NACA C 型网格的压力系数和升阻力仅作数值实验输出；当前未与公开翼型基准
+完成验证，远场位置和网格分辨率会影响结果。
 
 程序接口与测试
 --------------
 
-``tensorfvm`` 导出 ``SolverConfig``、``SimpleSolver``、``BodyFittedMesh``
-和 ``BodyFittedSolver``。程序接口为兼容旧代码，``SolverConfig`` 默认
-``mesh_type="cartesian"``；设置 ``mesh_type="body-fitted"`` 后
+``tensorfvm`` 导出 ``SolverConfig``、``SimpleSolver``、``BodyFittedMesh``,
+``CGridMesh`` 和 ``BodyFittedSolver``。程序接口为兼容旧代码，
+``SolverConfig`` 默认 ``mesh_type="cartesian"``；设置
+``mesh_type="body-fitted"`` 或 ``mesh_type="c-grid"`` 后
 ``SimpleSolver(config)`` 自动选择贴体求解器。
 修改配置可以设置几何、网格、物性、欠松弛参数及设备。
 ``SimpleSolver(config).solve()`` 返回压力、速度、流体掩码、
