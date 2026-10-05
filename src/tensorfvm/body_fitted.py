@@ -297,6 +297,13 @@ class BodyFittedSolver:
         self.boundary_velocity = torch.zeros_like(self.S)
         inflow = m.masks["inlet"] | m.masks["far-field"]
         self.boundary_velocity[inflow] = freestream
+        if config.inlet_profile == "parabolic":
+            y = m.face_centers[m.masks["inlet"], 1]
+            self.boundary_velocity[m.masks["inlet"], 0] = (
+                6 * config.inlet_velocity * y / config.height
+                * (1 - y / config.height)
+            )
+            self.boundary_velocity[m.masks["inlet"], 1] = 0
         face_velocity = self.velocity[self.o].clone()
         fixed = m.boundary & ~m.masks["outlet"]
         face_velocity[fixed] = self.boundary_velocity[fixed]
@@ -507,9 +514,11 @@ class BodyFittedSolver:
         self.p += self.config.pressure_relaxation * correction
 
     def _aerodynamic_coefficients(self):
-        if self.config.mesh_type != "c-grid":
+        if self.config.mesh_type not in ("c-grid", "body-fitted"):
             return None
-        mask = self.mesh.masks["airfoil"]
+        c = self.config
+        body = "airfoil" if c.mesh_type == "c-grid" else "cylinder"
+        mask = self.mesh.masks[body]
         owners = self.o[mask]
         velocity_gradient = self._gradient(self.velocity)
         stress = self.config.viscosity * (
@@ -517,8 +526,9 @@ class BodyFittedSolver:
         )
         traction = torch.einsum("fij,fj->fi", stress[owners], self.S[mask])
         force = (self.p[owners, None] * self.S[mask] - traction).sum(0)
-        scale = 0.5 * self.config.density * self.config.inlet_velocity ** 2 \
-            * self.config.airfoil_chord
+        reference_length = (c.airfoil_chord if body == "airfoil"
+                            else 2 * c.cylinder_radius)
+        scale = 0.5 * c.density * c.inlet_velocity ** 2 * reference_length
         return {"drag": float(force[0] / scale), "lift": float(force[1] / scale)}
 
     @torch.no_grad()
