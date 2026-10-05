@@ -6,7 +6,7 @@ from unittest.mock import patch
 import torch
 
 from tensorfvm.solver import SolverConfig
-from tensorfvm.body_fitted import BodyFittedMesh, BodyFittedSolver
+from tensorfvm.body_fitted import BodyFittedMesh, BodyFittedSolver, CGridMesh
 
 
 def config(**kwargs):
@@ -17,6 +17,36 @@ def config(**kwargs):
 
 
 class MeshTests(unittest.TestCase):
+    def test_naca_c_grid_geometry_and_boundary_partition(self):
+        c = config(mesh_type="c-grid", nx=32, ny=8, reynolds=100)
+        mesh = CGridMesh(c)
+        self.assertEqual(mesh.vertices.shape, (9, 33, 2))
+        self.assertEqual(mesh.centers.shape, (8, 32, 2))
+        self.assertTrue(torch.equal(mesh.vertices[:, 0], mesh.vertices[:, -1]))
+        self.assertTrue(torch.all(mesh.volumes > 0))
+        self.assertTrue(torch.isfinite(mesh.centers).all())
+        self.assertEqual(int(mesh.masks["airfoil"].sum()), c.nx)
+        self.assertEqual(int(mesh.masks["wall"].sum()), 0)
+        self.assertAlmostEqual(float(mesh.face_lengths[mesh.masks["far-field"]].sum()),
+                               2 * c.length, places=12)
+        self.assertAlmostEqual(float(mesh.face_lengths[mesh.masks["inlet"]].sum()),
+                               c.height, places=12)
+        self.assertAlmostEqual(float(mesh.face_lengths[mesh.masks["outlet"]].sum()),
+                               c.height, places=12)
+        self.assertEqual(int(mesh.boundary.sum()), 2 * c.nx)
+        self.assertTrue(torch.equal(
+            sum(mask.to(torch.int64) for mask in mesh.masks.values()),
+            mesh.boundary.to(torch.int64),
+        ))
+
+    def test_cambered_naca_profile_and_closed_wake(self):
+        mesh = CGridMesh(config(mesh_type="c-grid", airfoil_code="2412",
+                                nx=32, ny=8))
+        self.assertTrue(torch.all(mesh.volumes > 0))
+        airfoil = mesh.face_centers[mesh.masks["airfoil"]]
+        self.assertGreater(float(airfoil[:, 1].max()), 1)
+        self.assertTrue(torch.equal(mesh.vertices[:, 0], mesh.vertices[:, -1]))
+
     def test_exact_rectangle_corners_and_periodic_seam(self):
         c = config(cylinder_x=0.7, cylinder_y=0.8, nx=24, ny=7)
         mesh = BodyFittedMesh(c)
@@ -86,6 +116,16 @@ class MeshTests(unittest.TestCase):
 
 
 class FittedSolverTests(unittest.TestCase):
+    def test_naca_c_grid_step_produces_finite_aerodynamic_coefficients(self):
+        solver = BodyFittedSolver(config(mesh_type="c-grid", nx=32, ny=8,
+                                         reynolds=100, max_iterations=1))
+        result = solver.solve()
+        self.assertFalse(result.converged)
+        self.assertEqual(set(result.aerodynamic_coefficients), {"drag", "lift"})
+        self.assertTrue(all(torch.isfinite(torch.tensor(value))
+                            for value in result.aerodynamic_coefficients.values()))
+        self.assertTrue(torch.isfinite(result.mass_flux).all())
+
     def test_linear_pressure_gradient_and_nonorthogonal_face_derivative(self):
         s = BodyFittedSolver(config(cylinder_x=0.7, cylinder_y=0.8, nx=24))
         # This affine pressure also obeys the zero-pressure outlet reference.
