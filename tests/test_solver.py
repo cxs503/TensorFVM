@@ -33,7 +33,7 @@ class SolverTests(unittest.TestCase):
             {"device": "not-a-device"}, {"density": 1e308, "inlet_velocity": 1e308},
             {"mesh_type": "c-grid", "nx": 12},
             {"mesh_type": "c-grid", "airfoil_chord": 0},
-            {"mesh_type": "c-grid", "airfoil_code": "0010"},
+            {"mesh_type": "c-grid", "airfoil_code": "0000"},
             {"mesh_type": "c-grid", "angle_of_attack": 181},
         ]
         for options in invalid:
