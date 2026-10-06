@@ -95,7 +95,7 @@ def export_result(result, directory: Path) -> None:
                         int(fluid[j, i]),
                     )
                 )
-    if config.mesh_type in ("body-fitted", "c-grid"):
+    if config.mesh_type in ("body-fitted", "c-grid", "flat-plate"):
         vertices = result.mesh.vertices.detach().cpu()
         with (directory / "nodes.csv").open("w", newline="", encoding="utf-8") as stream:
             writer = csv.writer(stream)
@@ -131,7 +131,19 @@ def export_result(result, directory: Path) -> None:
                 ))
     if config.mesh_type != "c-grid":
         (directory / "airfoil.csv").unlink(missing_ok=True)
-    if config.mesh_type in ("body-fitted", "c-grid"):
+    if getattr(result, "nu_tilde", None) is not None:
+        nu_tilde = result.nu_tilde.detach().cpu()
+        nu_t = result.turbulent_kinematic_viscosity.detach().cpu()
+        with (directory / "turbulence.csv").open("w", newline="", encoding="utf-8") as stream:
+            writer = csv.writer(stream)
+            writer.writerow(("x", "y", "nu_tilde", "nu_t"))
+            for j in range(config.ny):
+                for i in range(config.nx):
+                    writer.writerow((float(x[j, i]), float(y[j, i]),
+                                     float(nu_tilde[j, i]), float(nu_t[j, i])))
+    else:
+        (directory / "turbulence.csv").unlink(missing_ok=True)
+    if config.mesh_type in ("body-fitted", "c-grid", "flat-plate"):
         speed = torch.sqrt(u.square() + v.square()) / config.inlet_velocity
         pressure = p / (config.density * config.inlet_velocity ** 2)
         _write_fitted_contour(
@@ -156,6 +168,8 @@ def export_result(result, directory: Path) -> None:
                 "final_residuals": result.history[-1] if result.history else {},
                 **({"aerodynamic_coefficients": result.aerodynamic_coefficients}
                    if getattr(result, "aerodynamic_coefficients", None) is not None else {}),
+                **({"surface_forces": result.surface_forces}
+                   if getattr(result, "surface_forces", None) is not None else {}),
             },
             stream,
             indent=2,

@@ -10,6 +10,7 @@ dependencies = ["torch>=2.14.1"]
 tensorfvm-cylinder = "tensorfvm.cylinder:main"
 tensorfvm-benchmark-dfg = "tensorfvm.benchmark_dfg:main"
 tensorfvm-benchmark-airfoil = "tensorfvm.benchmark_airfoil:main"
+tensorfvm-benchmark-flat-plate = "tensorfvm.benchmark_flat_plate:main"
 
 [build-system]
 requires = ["setuptools>=84"]
