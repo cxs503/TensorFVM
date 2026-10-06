@@ -301,8 +301,11 @@ class BodyFittedSolver:
             inlet = m.masks["inlet"]
             endpoints = m.face_vertices[inlet, :, 1]
             y0, y1 = endpoints[:, 0], endpoints[:, 1]
+            # Exact face average of 6 U_mean (y/H) (1-y/H).  Keeping the
+            # integral exact makes the prescribed total inlet flux rho*U*H
+            # independent of the number and placement of inlet faces.
             self.boundary_velocity[inlet, 0] = (
-                6 * config.inlet_velocity / config.height
+                6 * config.inlet_velocity
                 * ((y1.square() - y0.square()) / (2 * config.height)
                    - (y1.pow(3) - y0.pow(3)) / (3 * config.height ** 2))
                 / (y1 - y0)
@@ -393,7 +396,12 @@ class BodyFittedSolver:
         x = initial.clone()
         mv = operator if operator is not None else lambda z: self._matvec(z, diagonal, ao, an)
         residual = rhs - mv(x)
-        threshold = max(1e-12, float(torch.linalg.vector_norm(rhs)) * 1e-10)
+        # Solving each segregated equation close to machine precision is both
+        # unnecessary and, on refined highly stretched meshes, can trigger a
+        # false breakdown after the outer SIMPLE residual is already orders of
+        # magnitude larger.  This remains substantially tighter than the
+        # supported outer tolerances while avoiding round-off stagnation.
+        threshold = max(1e-10, float(torch.linalg.vector_norm(rhs)) * 1e-9)
         if float(torch.linalg.vector_norm(residual)) <= threshold:
             return x
         if symmetric:
@@ -525,15 +533,31 @@ class BodyFittedSolver:
         mask = self.mesh.masks[body]
         owners = self.o[mask]
         velocity_gradient = self._gradient(self.velocity)
+        # Reconstruct the wall gradient while enforcing the no-slip value at
+        # the actual face.  A cell-centred least-squares gradient alone
+        # under-resolves wall shear on stretched meshes and makes drag
+        # converge much more slowly than pressure and lift.
+        wall_d = self.d[mask]
+        wall_gradient = velocity_gradient[owners].clone()
+        wall_error = (-self.velocity[owners]
+                      - torch.einsum("fi,fij->fj", wall_d, wall_gradient))
+        wall_gradient += (wall_d[:, :, None] * wall_error[:, None, :]
+                          / wall_d.square().sum(-1)[:, None, None])
         stress = self.config.viscosity * (
-            velocity_gradient + velocity_gradient.transpose(-1, -2)
+            wall_gradient + wall_gradient.transpose(-1, -2)
         )
-        traction = torch.einsum("fij,fj->fi", stress[owners], self.S[mask])
+        traction = torch.einsum("fij,fj->fi", stress, self.S[mask])
         force = (self.p[owners, None] * self.S[mask] - traction).sum(0)
         reference_length = (c.airfoil_chord if body == "airfoil"
                             else 2 * c.cylinder_radius)
         scale = 0.5 * c.density * c.inlet_velocity ** 2 * reference_length
-        return {"drag": float(force[0] / scale), "lift": float(force[1] / scale)}
+        # Report aerodynamic axes, not fixed global x/y components.  They are
+        # identical for the cylinder benchmark (alpha=0), while this rotation
+        # is essential for a lifting airfoil at nonzero incidence.
+        alpha = math.radians(c.angle_of_attack if body == "airfoil" else 0.0)
+        drag = force[0] * math.cos(alpha) + force[1] * math.sin(alpha)
+        lift = -force[0] * math.sin(alpha) + force[1] * math.cos(alpha)
+        return {"drag": float(drag / scale), "lift": float(lift / scale)}
 
     @torch.no_grad()
     def step(self):
