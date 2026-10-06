@@ -13,6 +13,32 @@ from tensorfvm.runtime import DistributedRuntime, partition_slab
 from tensorfvm.solver3d import Cylinder3DConfig, Cylinder3DSolver
 
 
+def _two_rank_projection_worker(rank: int, init_file: str, output_file: str) -> None:
+    """Run a small Gloo z-slab solve and persist a test-only gathered field."""
+    torch.distributed.init_process_group(
+        backend="gloo", init_method=f"file://{init_file}", rank=rank, world_size=2
+    )
+    try:
+        config = Cylinder3DConfig(nx=32, ny=24, nz=4, max_steps=2,
+                                  pressure_iterations=12, time_step=0.001)
+        result = Cylinder3DSolver(config, runtime=DistributedRuntime.discover("cpu")).solve()
+        velocity_parts = [torch.empty_like(result.velocity) for _ in range(2)]
+        pressure_parts = [torch.empty_like(result.pressure) for _ in range(2)]
+        torch.distributed.all_gather(velocity_parts, result.velocity)
+        torch.distributed.all_gather(pressure_parts, result.pressure)
+        if rank == 0:
+            torch.save({
+                "velocity": torch.cat(velocity_parts, dim=0),
+                "pressure": torch.cat(pressure_parts, dim=0),
+                "history": result.history,
+                "force_history": result.force_history,
+                "local_shape": tuple(result.velocity.shape),
+            }, output_file)
+        torch.distributed.barrier()
+    finally:
+        torch.distributed.destroy_process_group()
+
+
 class RuntimeTests(unittest.TestCase):
     def test_balanced_slab_partitions_cover_domain(self):
         partitions = [partition_slab(10, rank, 3) for rank in range(3)]
@@ -48,6 +74,8 @@ class Cylinder3DTests(unittest.TestCase):
         result = solver.solve()
         self.assertEqual(result.velocity.shape, (4, 24, 32, 3))
         self.assertEqual(result.pressure.shape, (4, 24, 32))
+        self.assertEqual(result.partition.start, 0)
+        self.assertEqual(result.partition.stop, 4)
         self.assertTrue(torch.isfinite(result.velocity).all())
         self.assertTrue(torch.isfinite(result.pressure).all())
         self.assertGreater(torch.count_nonzero(~result.fluid).item(), 0)
@@ -68,6 +96,33 @@ class Cylinder3DTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             summary = run_benchmark(temporary, steps=2, nx=32, ny=24, nz=4)
             self.assertTrue(summary["passed"], summary)
+            self.assertEqual(summary["world_size"], 1)
+
+    @unittest.skipUnless(torch.distributed.is_available(), "requires torch.distributed")
+    def test_two_rank_z_slab_matches_single_rank_projection(self):
+        """Guard real halo/Poisson coupling against a full-domain fallback."""
+        config = Cylinder3DConfig(nx=32, ny=24, nz=4, max_steps=2,
+                                  pressure_iterations=12, time_step=0.001)
+        reference = Cylinder3DSolver(config).solve()
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            init_file = root / "gloo-init"
+            output_file = root / "distributed.pt"
+            torch.multiprocessing.spawn(_two_rank_projection_worker,
+                                        args=(str(init_file), str(output_file)), nprocs=2,
+                                        join=True)
+            distributed = torch.load(output_file, map_location="cpu", weights_only=True)
+        self.assertEqual(distributed["local_shape"], (2, 24, 32, 3))
+        self.assertTrue(torch.allclose(distributed["velocity"], reference.velocity,
+                                       rtol=0, atol=1e-13))
+        self.assertTrue(torch.allclose(distributed["pressure"], reference.pressure,
+                                       rtol=0, atol=1e-13))
+        for parallel, serial in zip(distributed["history"], reference.history):
+            for key, value in serial.items():
+                self.assertAlmostEqual(parallel[key], value, places=13, msg=key)
+        for parallel, serial in zip(distributed["force_history"], reference.force_history):
+            for key, value in serial.items():
+                self.assertAlmostEqual(parallel[key], value, places=13, msg=key)
 
 
 if __name__ == "__main__":
