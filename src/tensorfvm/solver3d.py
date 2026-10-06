@@ -31,6 +31,8 @@ class Cylinder3DConfig:
     time_step: float = 0.01
     max_steps: int = 100
     pressure_iterations: int = 200
+    pressure_relative_tolerance: float = 1e-8
+    pressure_absolute_tolerance: float = 1e-11
     smagorinsky_constant: float = 0.1
     device: str = "cpu"
 
@@ -44,6 +46,10 @@ class Cylinder3DConfig:
         for name in ("length", "height", "span", "cylinder_x", "cylinder_y",
                      "cylinder_radius", "inlet_velocity", "reynolds", "density",
                      "time_step"):
+            value = getattr(self, name)
+            if not math.isfinite(value) or value <= 0:
+                raise ValueError(f"{name} must be finite and positive")
+        for name in ("pressure_relative_tolerance", "pressure_absolute_tolerance"):
             value = getattr(self, name)
             if not math.isfinite(value) or value <= 0:
                 raise ValueError(f"{name} must be finite and positive")
@@ -66,6 +72,17 @@ class Cylinder3DConfig:
     @property
     def kinematic_viscosity(self) -> float:
         return self.inlet_velocity * self.diameter / self.reynolds
+
+
+@dataclass(frozen=True)
+class PressureSolveInfo:
+    """Globally reduced diagnostics for one distributed pressure solve."""
+
+    iterations: int
+    initial_residual: float
+    final_residual: float
+    target_residual: float
+    converged: bool
 
 
 @dataclass
@@ -111,6 +128,16 @@ class Cylinder3DSolver:
         self.velocity[..., 0] = config.inlet_velocity
         self.pressure = torch.zeros(self.mesh.fluid.shape, dtype=torch.float64,
                                     device=self.runtime.device)
+        self._pressure_unknown = self.mesh.fluid.clone()
+        # x inlet and y far-field values are derived Neumann values; the x
+        # outlet is the pressure gauge.  Only interior fluid cells are PCG
+        # unknowns, which keeps the reduced pressure operator symmetric.
+        self._pressure_unknown[:, :, 0] = False
+        self._pressure_unknown[:, :, -1] = False
+        self._pressure_unknown[:, 0] = False
+        self._pressure_unknown[:, -1] = False
+        self._pressure_diagonal = self._build_pressure_diagonal()
+        self.last_pressure_solve: PressureSolveInfo | None = None
         self.history: list[dict[str, float | int]] = []
         self.force_history: list[dict[str, float | int]] = []
         self.time = 0.0
@@ -213,20 +240,100 @@ class Cylinder3DSolver:
             ~self.mesh.fluid, 0
         )
 
-    def _pressure_projection(self, rhs: torch.Tensor) -> None:
-        """Run synchronous distributed Jacobi iterations for the pressure Poisson step."""
+    def _build_pressure_diagonal(self) -> torch.Tensor:
+        """Return the Jacobi diagonal for the reduced, symmetric pressure operator."""
         m = self.mesh
+        diagonal = torch.full_like(
+            self.pressure, 2 / m.dx ** 2 + 2 / m.dy ** 2 + 2 / m.dz ** 2
+        )
+        # At a homogeneous Neumann boundary the ghost value equals the nearest
+        # interior unknown, lowering the diagonal of the adjacent row.  The
+        # outlet and solid faces remain zero-valued Dirichlet neighbours.
+        diagonal[:, 1:-1, 1] -= 1 / m.dx ** 2
+        diagonal[:, 1, 1:-1] -= 1 / m.dy ** 2
+        diagonal[:, -2, 1:-1] -= 1 / m.dy ** 2
+        return torch.where(self._pressure_unknown, diagonal, torch.ones_like(diagonal))
+
+    def _pressure_operator(self, pressure: torch.Tensor) -> torch.Tensor:
+        """Apply ``-Laplacian`` to independent pressure unknowns across z slabs."""
+        m = self.mesh
+        constrained = pressure.clone()
+        self._apply_pressure_boundaries(constrained)
+        east, west = self._x_neighbors(constrained)
+        north, south = self._y_neighbors(constrained)
+        top, bottom = self._z_neighbors(constrained)
+        operator = ((2 / m.dx ** 2 + 2 / m.dy ** 2 + 2 / m.dz ** 2) * constrained
+                    - (east + west) / m.dx ** 2
+                    - (north + south) / m.dy ** 2
+                    - (top + bottom) / m.dz ** 2)
+        return torch.where(self._pressure_unknown, operator, torch.zeros_like(operator))
+
+    def _global_dot(self, left: torch.Tensor, right: torch.Tensor) -> torch.Tensor:
+        """Return an FP64 distributed inner product for a local z-slab vector."""
+        return self.runtime.global_sum((left * right).sum())
+
+    def _pressure_projection(self, rhs: torch.Tensor) -> PressureSolveInfo:
+        """Solve the distributed Poisson projection with preconditioned CG.
+
+        The operator has an outlet gauge and eliminated homogeneous-Neumann
+        boundary values, so its independent-fluid-cell representation is
+        symmetric positive definite.  Every operator application exchanges a z
+        halo; every Krylov scalar is globally reduced.  Reaching the configured
+        residual target is reported rather than silently assuming a fixed
+        iteration count was sufficient.
+        """
+        c = self.config
+        rhs = torch.where(self._pressure_unknown, rhs, torch.zeros_like(rhs))
+        target = -rhs
         pressure = self.pressure.clone()
-        denominator = 2 / m.dx ** 2 + 2 / m.dy ** 2 + 2 / m.dz ** 2
-        for _ in range(self.config.pressure_iterations):
-            east, west = self._x_neighbors(pressure)
-            north, south = self._y_neighbors(pressure)
-            top, bottom = self._z_neighbors(pressure)
-            update = ((east + west) / m.dx ** 2 + (north + south) / m.dy ** 2
-                      + (top + bottom) / m.dz ** 2 - rhs) / denominator
-            pressure = torch.where(m.fluid, update, torch.zeros_like(update))
-            self._apply_pressure_boundaries(pressure)
+        self._apply_pressure_boundaries(pressure)
+        residual = target - self._pressure_operator(pressure)
+        initial_residual = float(torch.sqrt(self._global_dot(residual, residual)))
+        target_residual = max(c.pressure_absolute_tolerance,
+                              c.pressure_relative_tolerance * initial_residual)
+        if not math.isfinite(initial_residual):
+            raise RuntimeError("nonfinite initial pressure residual")
+        if initial_residual <= target_residual:
+            self.pressure = pressure
+            info = PressureSolveInfo(0, initial_residual, initial_residual,
+                                     target_residual, True)
+            self.last_pressure_solve = info
+            return info
+
+        preconditioned = residual / self._pressure_diagonal
+        direction = preconditioned.clone()
+        rho = self._global_dot(residual, preconditioned)
+        final_residual = initial_residual
+        converged = False
+        iterations = 0
+        for iteration in range(1, c.pressure_iterations + 1):
+            image = self._pressure_operator(direction)
+            curvature = float(self._global_dot(direction, image))
+            if not math.isfinite(curvature) or curvature <= 0:
+                raise RuntimeError("non-positive or nonfinite pressure PCG curvature")
+            alpha = float(rho) / curvature
+            pressure = pressure + alpha * direction
+            residual = residual - alpha * image
+            final_residual = float(torch.sqrt(self._global_dot(residual, residual)))
+            iterations = iteration
+            if not math.isfinite(final_residual):
+                raise RuntimeError("nonfinite pressure PCG residual")
+            if final_residual <= target_residual:
+                converged = True
+                break
+            preconditioned = residual / self._pressure_diagonal
+            next_rho = self._global_dot(residual, preconditioned)
+            if not math.isfinite(float(next_rho)) or float(next_rho) <= 0:
+                raise RuntimeError("non-positive or nonfinite pressure PCG inner product")
+            direction = preconditioned + float(next_rho / rho) * direction
+            rho = next_rho
+
+        self._apply_pressure_boundaries(pressure)
         self.pressure = pressure
+        info = PressureSolveInfo(iterations, initial_residual, final_residual,
+                                 target_residual, converged)
+        self.last_pressure_solve = info
+        return info
 
     def _surface_force(self) -> tuple[float, float]:
         """Integrate stair-step pressure force locally and reduce it globally."""
@@ -256,7 +363,9 @@ class Cylinder3DSolver:
         laplacian = self._velocity_laplacian(old)
         tentative = old + c.time_step * (-convection + viscosity[..., None] * laplacian)
         self._apply_velocity_boundaries(tentative)
-        self._pressure_projection(c.density / c.time_step * self._divergence(tentative))
+        pressure_info = self._pressure_projection(
+            c.density / c.time_step * self._divergence(tentative)
+        )
         pressure_gradient = torch.stack((
             self._derivative(self.pressure, 2, m.dx),
             self._derivative(self.pressure, 1, m.dy),
@@ -282,6 +391,11 @@ class Cylinder3DSolver:
             "velocity_change": float(velocity_change) / c.inlet_velocity,
             "cfl": float(cfl),
             "max_eddy_viscosity": float(max_eddy_viscosity),
+            "pressure_iterations": pressure_info.iterations,
+            "pressure_initial_residual": pressure_info.initial_residual,
+            "pressure_residual": pressure_info.final_residual,
+            "pressure_target_residual": pressure_info.target_residual,
+            "pressure_converged": int(pressure_info.converged),
         }
         if not all(math.isfinite(value) for value in metric.values()):
             raise RuntimeError("nonfinite 3-D projection iterate")

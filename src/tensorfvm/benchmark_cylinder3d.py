@@ -65,19 +65,26 @@ def export_result(result, directory: Path) -> None:
 
 
 def run_benchmark(directory, steps: int = 50, nx: int = 48, ny: int = 32, nz: int = 12,
-                  runtime: DistributedRuntime | None = None, device: str = "cpu") -> dict:
+                  runtime: DistributedRuntime | None = None, device: str = "cpu",
+                  pressure_iterations: int = 150,
+                  pressure_relative_tolerance: float = 1e-8,
+                  pressure_absolute_tolerance: float = 1e-11) -> dict:
     """Run a bounded distributed Re=3900 smoke case, not a validated LES benchmark."""
     runtime = runtime or DistributedRuntime.discover(device)
-    config = Cylinder3DConfig(nx=nx, ny=ny, nz=nz, max_steps=steps,
-                              pressure_iterations=150, time_step=0.005,
-                              smagorinsky_constant=0.1, device=str(runtime.device))
+    config = Cylinder3DConfig(
+        nx=nx, ny=ny, nz=nz, max_steps=steps, pressure_iterations=pressure_iterations,
+        pressure_relative_tolerance=pressure_relative_tolerance,
+        pressure_absolute_tolerance=pressure_absolute_tolerance, time_step=0.005,
+        smagorinsky_constant=0.1, device=str(runtime.device)
+    )
     result = Cylinder3DSolver(config, runtime=runtime).solve()
     export_result(result, Path(directory))
     final = result.history[-1]
     finite = all(math.isfinite(value) for value in final.values())
-    # This smoke criterion checks finite low-CFL projection advancement and
-    # distributed data motion; it intentionally makes no Cd/St accuracy claim.
-    passed = bool(finite and final["cfl"] < 1)
+    # This smoke criterion checks finite low-CFL projection advancement,
+    # pressure-residual convergence, and distributed data motion.  It
+    # intentionally makes no Cd/St accuracy claim.
+    passed = bool(finite and final["cfl"] < 1 and final["pressure_converged"] == 1)
     return {"benchmark": "3d-cylinder-re3900-distributed-smoke", "passed": passed,
             "final": final, "steps": steps, "grid": [nx, ny, nz],
             "world_size": runtime.world_size}
@@ -90,13 +97,21 @@ def main(argv=None):
     parser.add_argument("--nx", type=int, default=48)
     parser.add_argument("--ny", type=int, default=32)
     parser.add_argument("--nz", type=int, default=12)
+    parser.add_argument("--pressure-iterations", type=int, default=150,
+                        help="maximum distributed PCG pressure iterations per physical step")
+    parser.add_argument("--pressure-relative-tolerance", type=float, default=1e-8)
+    parser.add_argument("--pressure-absolute-tolerance", type=float, default=1e-11)
     parser.add_argument("--device", default="cpu", help="cpu, cuda, or a CUDA device such as cuda:0")
     args = parser.parse_args(argv)
     torch.set_num_threads(1)
     try:
         runtime = DistributedRuntime.initialize_from_environment(args.device)
-        summary = run_benchmark(args.output, args.steps, args.nx, args.ny, args.nz,
-                                runtime=runtime)
+        summary = run_benchmark(
+            args.output, args.steps, args.nx, args.ny, args.nz, runtime=runtime,
+            pressure_iterations=args.pressure_iterations,
+            pressure_relative_tolerance=args.pressure_relative_tolerance,
+            pressure_absolute_tolerance=args.pressure_absolute_tolerance,
+        )
     except (ValueError, RuntimeError, OSError) as error:
         parser.exit(1, f"3-D cylinder case failed: {error}\n")
     if runtime.rank == 0:

@@ -248,9 +248,12 @@ Re=3900 外流圆柱 SA-URANS 诊断
 
     python -m tensorfvm.benchmark_cylinder3d --output results/cylinder-3d
 
-多 rank 使用真实 z-slab 分解：每个 rank 只保留本地速度/压力场，展向导数、
-SGS 梯度和每一次压力 Jacobi 更新都通过一层周期 halo 点对点交换跨分区耦合；
-CFL/连续性/SGS 指标和压力力会全局归约。以两 GPU 启动的示例为::
+多 rank 使用真实 z-slab 分解：每个 rank 只保留本地速度/压力场；展向导数、
+SGS 梯度和分布式压力 PCG 算子都通过一层周期 halo 点对点交换跨分区耦合。
+压力求解使用矩阵无关、对角预条件 PCG，出口 gauge 与入口/远场 Neumann 值在
+独立未知量中处理；每步输出全局初始/最终压力残差、目标、迭代数和收敛标记。
+``pressure_iterations`` 是上限，``pressure_relative_tolerance`` 与
+``pressure_absolute_tolerance`` 控制停止目标。以两 GPU 启动的示例为::
 
     torchrun --standalone --nproc-per-node=2 -m tensorfvm.benchmark_cylinder3d \
         --device cuda --nx 48 --ny 32 --nz 12 --output results/cylinder-3d-2gpu
@@ -258,10 +261,11 @@ CFL/连续性/SGS 指标和压力力会全局归约。以两 GPU 启动的示例
 CPU 可用相同命令配合 ``--device cpu``，使用 Gloo；CUDA 使用 NCCL 和
 ``LOCAL_RANK`` 设备绑定。全局 ``nz`` 必须不小于 rank 数。输出目录由中展向
 所有者写 ``midspan.csv``，rank 0 写全局历史和汇总，因而不会发生并行写冲突。
-两 rank Gloo 的自动回归会将重组后的速度、压力、全局指标和力历史与单 rank
-结果逐项比较。该 smoke case 只检查有限值、低 CFL 和并行数值一致性，**不**
-对 Re=3900 的 Cd、Cl 或 St 声称精度；阶梯圆柱、固定同步 Jacobi 压力迭代和
-短时间窗口不足以构成 LES/DES 或 GPU 扩展验证。详见
+两 rank Gloo 的自动回归会重组场并与单 rank 比较，且要求两端 PCG 达到残差目标。
+3-D smoke case 只在有限值、低 CFL、压力残差收敛和并行数值一致性同时满足时
+通过，**不**对 Re=3900 的 Cd、Cl 或 St 声称精度；阶梯圆柱、中心差分和短时间
+窗口仍不足以构成 LES/DES 或 GPU 扩展验证。当前 PCG 尚没有多重网格预条件，
+故不能将它的可执行性视为大规模性能结论。详见
 `三维与分布式架构说明 <docs/architecture/three-dimensional.rst>`_.
 
 测试

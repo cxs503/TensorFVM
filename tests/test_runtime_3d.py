@@ -20,7 +20,7 @@ def _two_rank_projection_worker(rank: int, init_file: str, output_file: str) -> 
     )
     try:
         config = Cylinder3DConfig(nx=32, ny=24, nz=4, max_steps=2,
-                                  pressure_iterations=12, time_step=0.001)
+                                  pressure_iterations=150, time_step=0.001)
         result = Cylinder3DSolver(config, runtime=DistributedRuntime.discover("cpu")).solve()
         velocity_parts = [torch.empty_like(result.velocity) for _ in range(2)]
         pressure_parts = [torch.empty_like(result.pressure) for _ in range(2)]
@@ -68,6 +68,10 @@ class Cylinder3DTests(unittest.TestCase):
             self.config(smagorinsky_constant=-0.1)
         with self.assertRaises(ValueError):
             self.config(cylinder_x=0.2)
+        with self.assertRaises(ValueError):
+            self.config(pressure_relative_tolerance=0)
+        with self.assertRaises(ValueError):
+            self.config(pressure_absolute_tolerance=float("nan"))
 
     def test_one_step_has_finite_3d_fields_and_periodic_span(self):
         solver = Cylinder3DSolver(self.config(max_steps=1))
@@ -83,6 +87,23 @@ class Cylinder3DTests(unittest.TestCase):
         self.assertTrue(all(math.isfinite(value) for value in metric.values()))
         self.assertGreaterEqual(metric["cfl"], 0)
         self.assertEqual(len(result.force_history), 1)
+        self.assertIn("pressure_residual", metric)
+        self.assertIn("pressure_converged", metric)
+
+    def test_reduced_pressure_operator_is_symmetric_positive(self):
+        solver = Cylinder3DSolver(self.config(max_steps=1))
+        generator = torch.Generator(device="cpu").manual_seed(7)
+        first = torch.randn(solver.pressure.shape, dtype=torch.float64,
+                            generator=generator).masked_fill(~solver._pressure_unknown, 0)
+        second = torch.randn(solver.pressure.shape, dtype=torch.float64,
+                             generator=generator).masked_fill(~solver._pressure_unknown, 0)
+        first_image = solver._pressure_operator(first)
+        second_image = solver._pressure_operator(second)
+        left = float(solver._global_dot(first, second_image))
+        right = float(solver._global_dot(first_image, second))
+        energy = float(solver._global_dot(first, first_image))
+        self.assertAlmostEqual(left, right, places=12)
+        self.assertGreater(energy, 0)
 
     def test_portable_midspan_export_and_smoke_case(self):
         result = Cylinder3DSolver(self.config(max_steps=1)).solve()
@@ -97,12 +118,19 @@ class Cylinder3DTests(unittest.TestCase):
             summary = run_benchmark(temporary, steps=2, nx=32, ny=24, nz=4)
             self.assertTrue(summary["passed"], summary)
             self.assertEqual(summary["world_size"], 1)
+        with tempfile.TemporaryDirectory() as temporary:
+            failed = run_benchmark(temporary, steps=1, nx=32, ny=24, nz=4,
+                                   pressure_iterations=1,
+                                   pressure_relative_tolerance=1e-12,
+                                   pressure_absolute_tolerance=1e-12)
+            self.assertFalse(failed["passed"])
+            self.assertEqual(failed["final"]["pressure_converged"], 0)
 
     @unittest.skipUnless(torch.distributed.is_available(), "requires torch.distributed")
     def test_two_rank_z_slab_matches_single_rank_projection(self):
         """Guard real halo/Poisson coupling against a full-domain fallback."""
         config = Cylinder3DConfig(nx=32, ny=24, nz=4, max_steps=2,
-                                  pressure_iterations=12, time_step=0.001)
+                                  pressure_iterations=150, time_step=0.001)
         reference = Cylinder3DSolver(config).solve()
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
@@ -113,16 +141,28 @@ class Cylinder3DTests(unittest.TestCase):
                                         join=True)
             distributed = torch.load(output_file, map_location="cpu", weights_only=True)
         self.assertEqual(distributed["local_shape"], (2, 24, 32, 3))
+        self.assertEqual(reference.history[-1]["pressure_converged"], 1)
+        self.assertEqual(distributed["history"][-1]["pressure_converged"], 1)
+        self.assertLessEqual(reference.history[-1]["pressure_residual"],
+                             reference.history[-1]["pressure_target_residual"])
         self.assertTrue(torch.allclose(distributed["velocity"], reference.velocity,
                                        rtol=0, atol=1e-13))
         self.assertTrue(torch.allclose(distributed["pressure"], reference.pressure,
-                                       rtol=0, atol=1e-13))
+                                       rtol=0, atol=1e-12))
         for parallel, serial in zip(distributed["history"], reference.history):
             for key, value in serial.items():
-                self.assertAlmostEqual(parallel[key], value, places=13, msg=key)
+                if isinstance(value, int):
+                    self.assertEqual(parallel[key], value, key)
+                else:
+                    self.assertTrue(math.isclose(parallel[key], value, rel_tol=2e-12,
+                                                 abs_tol=1e-12), key)
         for parallel, serial in zip(distributed["force_history"], reference.force_history):
             for key, value in serial.items():
-                self.assertAlmostEqual(parallel[key], value, places=13, msg=key)
+                if isinstance(value, int):
+                    self.assertEqual(parallel[key], value, key)
+                else:
+                    self.assertTrue(math.isclose(parallel[key], value, rel_tol=2e-12,
+                                                 abs_tol=1e-12), key)
 
 
 if __name__ == "__main__":
