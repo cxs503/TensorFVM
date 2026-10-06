@@ -159,6 +159,12 @@ def export_result(result, directory: Path) -> None:
     with (directory / "history.json").open("w", encoding="utf-8") as stream:
         json.dump(result.history, stream, indent=2, allow_nan=False)
         stream.write("\n")
+    if getattr(result, "force_history", None) is not None:
+        with (directory / "forces.json").open("w", encoding="utf-8") as stream:
+            json.dump(result.force_history, stream, indent=2, allow_nan=False)
+            stream.write("\n")
+    else:
+        (directory / "forces.json").unlink(missing_ok=True)
     with (directory / "summary.json").open("w", encoding="utf-8") as stream:
         json.dump(
             {

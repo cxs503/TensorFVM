@@ -164,6 +164,9 @@ class BodyFittedMesh:
         if c.mesh_type == "c-grid":
             stretch = 2.5
             t = torch.expm1(stretch * eta) / math.expm1(stretch)
+        elif c.mesh_type == "body-fitted" and c.body_fitted_stretching:
+            stretch = c.body_fitted_stretching
+            t = torch.expm1(stretch * eta) / math.expm1(stretch)
         else:
             t = eta
         t = t[:, None, None]
@@ -200,7 +203,7 @@ class BodyFittedMesh:
                             label = "inlet"
                         elif abs(float(midpoint[0]) - c.length) < 1e-12 * c.length:
                             label = "outlet"
-                        elif c.mesh_type == "c-grid":
+                        elif c.mesh_type == "c-grid" or c.outer_boundary == "far-field":
                             label = "far-field"
                         else:
                             label = "wall"
@@ -329,6 +332,7 @@ class BodyFittedResult:
     surface_forces: dict[str, dict[str, float]] | None = None
     nu_tilde: torch.Tensor | None = None
     turbulent_kinematic_viscosity: torch.Tensor | None = None
+    force_history: list[dict[str, float | int]] | None = None
 
     def cell_center_velocity(self):
         return self.u, self.v
@@ -363,6 +367,14 @@ class BodyFittedSolver:
         )
         self.velocity = torch.zeros((self.count, 2), **opts)
         self.velocity[:] = freestream
+        if config.initial_perturbation:
+            centre = m.centers.reshape(-1, 2)
+            # Deterministic antisymmetric seed breaks the mathematically exact
+            # symmetric URANS state without introducing random-number/device
+            # dependence into a shedding benchmark.
+            pattern = (torch.sin(math.pi * centre[:, 0] / config.length)
+                       * torch.sin(2 * math.pi * centre[:, 1] / config.height))
+            self.velocity[:, 1] += config.initial_perturbation * pattern
         self.p = torch.zeros(self.count, **opts)
         self.u = self.velocity[:, 0].reshape(config.ny, config.nx)
         self.v = self.velocity[:, 1].reshape(config.ny, config.nx)
@@ -400,6 +412,8 @@ class BodyFittedSolver:
         face_velocity[fixed] = self.boundary_velocity[fixed]
         self.mass_flux = config.density * (face_velocity * self.S).sum(-1)
         self.history = []
+        self.force_history = []
+        self.time = 0.0
         self.converged = False
         self._gradient_weights = {}
         self.kinematic_viscosity = config.viscosity / config.density
@@ -585,27 +599,36 @@ class BodyFittedSolver:
                             flux[m.masks["outlet"]].clamp_max(0))
         return diagonal, ao, an, source
 
-    def _turbulence_step(self):
-        """Advance SA once and return its normalized residual and update size."""
+    def _turbulence_step(self, physical_old=None):
+        """Advance SA once; ``physical_old`` activates implicit Euler URANS."""
         if self.config.turbulence_model == "laminar":
             return 0.0, 0.0
         old = self.nu_tilde.clone()
         diagonal, ao, an, source = self._sa_system(old)
+        inertia = torch.zeros_like(diagonal)
+        if physical_old is not None:
+            inertia = self.config.density * self.volume / self.config.time_step
+        alpha = self.config.turbulence_relaxation
+        relaxed = (diagonal + inertia) / alpha
+        rhs = source + (1 - alpha) * relaxed * old
+        if physical_old is not None:
+            rhs += inertia * physical_old
         # Strong wall-normal stretching can stagnate BiCGSTAB before its very
         # small inner target.  The outer SA residual below remains mandatory,
         # so an inexact transport update is retried on every SIMPLE iteration.
-        solved = self._linear(diagonal, ao, an, source, old, threshold_floor=1e-12,
+        solved = self._linear(relaxed, ao, an, rhs, old, threshold_floor=1e-12,
                               allow_inexact=True)
-        alpha = self.config.turbulence_relaxation
         self.nu_tilde = (alpha * solved + (1 - alpha) * old).clamp_min(0)
         self.turbulent_kinematic_viscosity = self._sa_eddy_viscosity(self.nu_tilde)
         diagonal, ao, an, source = self._sa_system(self.nu_tilde)
-        residual = (self._matvec(self.nu_tilde, diagonal, ao, an) - source).abs().max()
+        residual = self._matvec(self.nu_tilde, diagonal, ao, an) - source
+        if physical_old is not None:
+            residual += inertia * (self.nu_tilde - physical_old)
         scale = max(self.config.density * self.config.inlet_velocity
                     * self.config.reference_length * self.kinematic_viscosity,
                     torch.finfo(self.p.dtype).tiny)
-        return float(residual / scale), float((self.nu_tilde - old).abs().max()
-                                               / self.kinematic_viscosity)
+        return float(residual.abs().max() / scale), float((self.nu_tilde - old).abs().max()
+                                                           / self.kinematic_viscosity)
 
     def _matvec(self, x, diagonal, ao, an):
         y = diagonal * x
@@ -798,7 +821,7 @@ class BodyFittedSolver:
         return {"drag": float(drag / scale), "lift": float(lift / scale)}
 
     @torch.no_grad()
-    def step(self):
+    def _steady_step(self):
         """Advance one SIMPLE iteration and return conservative steady metrics."""
         c = self.config
         inlet_mass = c.density * c.inlet_velocity * c.height
@@ -848,13 +871,83 @@ class BodyFittedSolver:
         self.converged = max(criteria) < c.tolerance
         return metrics
 
+    def _transient_step(self):
+        """Advance one physical implicit-Euler URANS step with SIMPLE subiterations."""
+        c = self.config
+        physical_velocity = self.velocity.clone()
+        physical_nu = self.nu_tilde.clone()
+        inlet_mass = c.density * c.inlet_velocity * c.height
+        residual_length = (c.airfoil_chord if c.mesh_type == "c-grid" else
+                           c.length if c.mesh_type == "flat-plate" else c.height)
+        force_scale = max(c.density * c.inlet_velocity ** 2 * residual_length,
+                          c.viscosity * c.inlet_velocity)
+        inertia = c.density * self.volume / c.time_step
+        for inner in range(c.inner_iterations):
+            old = self.velocity.clone()
+            diagonal, ao, an, source = self._momentum(old, self.p, self.mass_flux)
+            relaxed = (diagonal + inertia) / c.velocity_relaxation
+            rhs = (source + inertia[:, None] * physical_velocity
+                   + (1 - c.velocity_relaxation) * relaxed[:, None] * old)
+            for component in range(2):
+                self.velocity[:, component] = self._linear(
+                    relaxed, ao, an, rhs[:, component], old[:, component],
+                    allow_inexact=True)
+            D = self.volume / relaxed
+            flux, coefficient = self._rhie_chow(self.velocity, self.p, D)
+            self._correct(flux, coefficient, D)
+            turbulence, turbulence_change = self._turbulence_step(physical_nu)
+            if not (torch.isfinite(self.velocity).all() and torch.isfinite(self.p).all()
+                    and torch.isfinite(self.mass_flux).all()
+                    and torch.isfinite(self.nu_tilde).all()):
+                raise RuntimeError("nonfinite transient URANS iterate")
+            diagonal, ao, an, source = self._momentum(
+                self.velocity, self.p, self.mass_flux)
+            residual = torch.stack([
+                self._matvec(self.velocity[:, k], diagonal, ao, an) - source[:, k]
+                + inertia * (self.velocity[:, k] - physical_velocity[:, k])
+                for k in range(2)
+            ], -1)
+            continuity = float(self._sum(self.mass_flux).abs().max()) / inlet_mass
+            momentum = float(residual.abs().sum(0).max()) / force_scale
+            imbalance = abs(float(self.mass_flux[self.mesh.boundary].sum())) / inlet_mass
+            criteria = (continuity, momentum, imbalance)
+            if c.turbulence_model == "spalart-allmaras":
+                criteria += (turbulence,)
+            if max(criteria) < c.tolerance:
+                break
+        self.time += c.time_step
+        metrics = dict(iteration=len(self.history) + 1, time=self.time,
+                       inner_iterations=inner + 1, continuity=continuity,
+                       momentum=momentum, mass_imbalance=imbalance,
+                       velocity_change=float((self.velocity - physical_velocity).abs().max())
+                       / c.inlet_velocity,
+                       u_residual=float(residual[:, 0].abs().sum()) / force_scale,
+                       v_residual=float(residual[:, 1].abs().sum()) / force_scale)
+        if c.turbulence_model == "spalart-allmaras":
+            metrics["turbulence"] = turbulence
+            metrics["turbulence_change"] = turbulence_change
+        self.history.append(metrics)
+        self.converged = max(criteria) < c.tolerance
+        coefficients = self._aerodynamic_coefficients()
+        if coefficients is not None:
+            self.force_history.append({"step": len(self.history), "time": self.time,
+                                       **coefficients})
+        return metrics
+
+    @torch.no_grad()
+    def step(self):
+        """Advance one steady SIMPLE iteration or one physical URANS time step."""
+        if self.config.time_step is not None:
+            return self._transient_step()
+        return self._steady_step()
+
     def solve(self):
         c = self.config
         for _ in range(max(0, c.max_iterations - len(self.history))):
-            if self.converged:
+            if c.time_step is None and self.converged:
                 break
             self.step()
-            if self.converged:
+            if c.time_step is None and self.converged:
                 break
         shape = (c.ny, c.nx)
         surface_name = ("plate" if c.mesh_type == "flat-plate" else
@@ -876,4 +969,6 @@ class BodyFittedSolver:
                                 self.nu_tilde.reshape(shape).clone()
                                 if c.turbulence_model == "spalart-allmaras" else None,
                                 self.turbulent_kinematic_viscosity.reshape(shape).clone()
-                                if c.turbulence_model == "spalart-allmaras" else None)
+                                if c.turbulence_model == "spalart-allmaras" else None,
+                                [dict(item) for item in self.force_history]
+                                if self.force_history else None)
