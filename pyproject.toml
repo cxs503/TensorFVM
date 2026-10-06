@@ -13,6 +13,7 @@ tensorfvm-benchmark-airfoil = "tensorfvm.benchmark_airfoil:main"
 tensorfvm-benchmark-flat-plate = "tensorfvm.benchmark_flat_plate:main"
 tensorfvm-benchmark-cylinder-urans = "tensorfvm.benchmark_cylinder_urans:main"
 tensorfvm-benchmark-cylinder-3d = "tensorfvm.benchmark_cylinder3d:main"
+tensorfvm-mesh-cylinder-3d = "tensorfvm.mesh_cylinder3d:main"
 
 [build-system]
 requires = ["setuptools>=84"]

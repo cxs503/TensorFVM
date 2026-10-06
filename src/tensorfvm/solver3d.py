@@ -34,6 +34,8 @@ class Cylinder3DConfig:
     pressure_relative_tolerance: float = 1e-8
     pressure_absolute_tolerance: float = 1e-11
     smagorinsky_constant: float = 0.1
+    mesh_type: str = "cartesian"
+    body_fitted_stretching: float = 2.5
     device: str = "cpu"
 
     def __post_init__(self):
@@ -55,6 +57,10 @@ class Cylinder3DConfig:
                 raise ValueError(f"{name} must be finite and positive")
         if not math.isfinite(self.smagorinsky_constant) or self.smagorinsky_constant < 0:
             raise ValueError("smagorinsky_constant must be finite and nonnegative")
+        if self.mesh_type not in ("cartesian", "body-fitted"):
+            raise ValueError("mesh_type must be 'cartesian' or 'body-fitted'")
+        if not math.isfinite(self.body_fitted_stretching) or self.body_fitted_stretching < 0:
+            raise ValueError("body_fitted_stretching must be finite and nonnegative")
         dx, dy = self.length / self.nx, self.height / self.ny
         if not (self.cylinder_radius + dx < self.cylinder_x < self.length - self.cylinder_radius - dx
                 and self.cylinder_radius + dy < self.cylinder_y < self.height - self.cylinder_radius - dy):
@@ -116,6 +122,11 @@ class Cylinder3DSolver:
     def __init__(self, config: Cylinder3DConfig, runtime: DistributedRuntime | None = None):
         self.config = config
         self.runtime = runtime or DistributedRuntime.discover(config.device)
+        if config.mesh_type != "cartesian":
+            raise NotImplementedError(
+                "Cylinder3DSolver contains only Cartesian operators; build "
+                "BodyFittedCylinderMesh3D for the 3-D O-grid geometry"
+            )
         if self.runtime.world_size > config.nz:
             raise ValueError("world_size cannot exceed the global number of z planes")
         if self.runtime.world_size > 1 and not self.runtime.distributed:
