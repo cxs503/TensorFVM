@@ -248,6 +248,18 @@ Re=3900 外流圆柱 SA-URANS 诊断
 
     python -m tensorfvm.benchmark_cylinder3d --output results/cylinder-3d
 
+三维贴体圆柱 O-grid 已作为独立网格层提供：它从二维 O-grid 横截面挤出正体积
+六面体，保留圆柱壁面、矩形远场、theta 接缝、曲面面积向量及按 z-slab 分区的
+全局节点/单元编号。可导出网格并审计体积和曲面逼近误差::
+
+    tensorfvm-mesh-cylinder-3d --output results/cylinder-3d-o-grid \
+        --nx 48 --ny 24 --nz 12 --stretching 2.5
+
+当前 ``Cylinder3DSolver`` 仍明确只支持 ``mesh_type="cartesian"``；请求贴体
+模式会 fail-fast，而不会用笛卡尔差分伪装成曲线坐标求解。贴体网格上的守恒动量、
+Rhie--Chow 和压力投影是后续数值阶段，故该命令仅生成/验证网格，不能宣称已求解
+贴体三维 Re=3900 流动。
+
 多 rank 使用真实 z-slab 分解：每个 rank 只保留本地速度/压力场；展向导数、
 SGS 梯度和分布式压力 PCG 算子都通过一层周期 halo 点对点交换跨分区耦合。
 压力求解使用矩阵无关、对角预条件 PCG，出口 gauge 与入口/远场 Neumann 值在
