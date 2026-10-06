@@ -1,0 +1,29 @@
+{
+  "benchmark": "turbulent-flat-plate-SA",
+  "reference_reynolds": 100000.0,
+  "error_limit": 0.2,
+  "reference": "Schlichting smooth fully turbulent flat plate: Cf=0.074 Re_L^(-1/5)",
+  "case": {
+    "nx": 64,
+    "ny": 56,
+    "iterations": 1421,
+    "converged": true,
+    "final_residuals": {
+      "iteration": 1421,
+      "continuity": 5.561081696590746e-09,
+      "momentum": 9.860259702173128e-06,
+      "mass_imbalance": 1.2792223700458516e-06,
+      "velocity_change": 5.549202313881452e-06,
+      "u_residual": 9.860259702173128e-06,
+      "v_residual": 2.662464435947324e-06,
+      "turbulence": 9.465823115622679e-08,
+      "turbulence_change": 7.790421786808095e-05
+    },
+    "skin_friction_coefficient": 0.006907853948334452,
+    "reference_skin_friction_coefficient": 0.007399999999999999,
+    "relative_error": 0.06650622319804685,
+    "first_cell_y_plus": 0.8118608097802142,
+    "passed": true
+  },
+  "passed": true
+}
