@@ -1,7 +1,7 @@
 [project]
 name = "tensorfvm"
 version = "0.1.0"
-description = "PyTorch finite-volume SIMPLE solver for two-dimensional incompressible flow"
+description = "PyTorch finite-volume incompressible-flow solvers with experimental distributed 3-D support"
 readme = "README.rst"
 requires-python = ">=3.10"
 dependencies = ["torch>=2.14.1"]

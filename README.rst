@@ -238,22 +238,31 @@ Re=3900 外流圆柱 SA-URANS 诊断
 当前 48×24、15 个对流时间单位的实际诊断结果已如实记录在
 `Re=3900 圆柱 URANS 报告 <docs/cylinder-urans/report.rst>`_。
 
-三维圆柱与多 GPU 架构基线
--------------------------
+三维圆柱与多 GPU 投影基线
+--------------------------
 
 三维代码以独立的 ``runtime``、``mesh3d``、``solver3d`` 与 benchmark 模块构建，
-避免将二维贴体假设隐式复制到三维。当前 ``Cylinder3DSolver`` 是可执行的三维
-笛卡尔投影/Smagorinsky SGS 基线，展向周期、圆柱固体掩码和中展向可移植输出
-均已具备::
+避免将二维贴体假设隐式复制到三维。``Cylinder3DSolver`` 是可执行的三维笛卡尔
+投影/Smagorinsky SGS 基线，展向周期、圆柱固体掩码和中展向可移植输出均已具备。
+单 rank 运行方式为::
 
     python -m tensorfvm.benchmark_cylinder3d --output results/cylinder-3d
 
-该 smoke case 只检查有限值与 CFL，不对 Re=3900 的 Cd、Cl 或 St 声称精度；
-阶梯圆柱、固定 Jacobi 压力迭代和短时间窗口不足以构成 LES/DES 验证。
-``DistributedRuntime`` 已提供 ``torchrun`` 环境发现、z-slab 划分和全局归约；
-真正的多 GPU 数值计算在 halo 交换、分布式压力求解与一致性测试完成前会明确
-拒绝运行，而不会重复完整域后伪称并行。详见
-`三维与分布式架构说明 <docs/architecture/three-dimensional.rst>`_。
+多 rank 使用真实 z-slab 分解：每个 rank 只保留本地速度/压力场，展向导数、
+SGS 梯度和每一次压力 Jacobi 更新都通过一层周期 halo 点对点交换跨分区耦合；
+CFL/连续性/SGS 指标和压力力会全局归约。以两 GPU 启动的示例为::
+
+    torchrun --standalone --nproc-per-node=2 -m tensorfvm.benchmark_cylinder3d \
+        --device cuda --nx 48 --ny 32 --nz 12 --output results/cylinder-3d-2gpu
+
+CPU 可用相同命令配合 ``--device cpu``，使用 Gloo；CUDA 使用 NCCL 和
+``LOCAL_RANK`` 设备绑定。全局 ``nz`` 必须不小于 rank 数。输出目录由中展向
+所有者写 ``midspan.csv``，rank 0 写全局历史和汇总，因而不会发生并行写冲突。
+两 rank Gloo 的自动回归会将重组后的速度、压力、全局指标和力历史与单 rank
+结果逐项比较。该 smoke case 只检查有限值、低 CFL 和并行数值一致性，**不**
+对 Re=3900 的 Cd、Cl 或 St 声称精度；阶梯圆柱、固定同步 Jacobi 压力迭代和
+短时间窗口不足以构成 LES/DES 或 GPU 扩展验证。详见
+`三维与分布式架构说明 <docs/architecture/three-dimensional.rst>`_.
 
 测试
 ----
