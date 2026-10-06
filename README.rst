@@ -4,7 +4,8 @@ TensorFVM
 基于 PyTorch 的二维不可压缩有限体积求解器，采用 SIMPLE
 压力－速度耦合。支持层流，以及实验性的 Spalart--Allmaras（SA）一方程
 RANS 闭合；网格包括笛卡尔交错网格、圆柱 O 型贴体网格、NACA 翼型 C
-型网格及高 Re 平板边界层网格。它不是已经验证的工程 CFD 软件。
+型网格及高 Re 平板边界层网格；另含实验性的三维圆柱投影/SGS 基线。
+它不是已经验证的工程 CFD 软件。
 
 安装
 ----
@@ -236,6 +237,23 @@ Re=3900 外流圆柱 SA-URANS 诊断
 可通过放宽判据掩盖的失败，而是需要更高阶对流、DES/LES 或三维计算的信号。
 当前 48×24、15 个对流时间单位的实际诊断结果已如实记录在
 `Re=3900 圆柱 URANS 报告 <docs/cylinder-urans/report.rst>`_。
+
+三维圆柱与多 GPU 架构基线
+-------------------------
+
+三维代码以独立的 ``runtime``、``mesh3d``、``solver3d`` 与 benchmark 模块构建，
+避免将二维贴体假设隐式复制到三维。当前 ``Cylinder3DSolver`` 是可执行的三维
+笛卡尔投影/Smagorinsky SGS 基线，展向周期、圆柱固体掩码和中展向可移植输出
+均已具备::
+
+    python -m tensorfvm.benchmark_cylinder3d --output results/cylinder-3d
+
+该 smoke case 只检查有限值与 CFL，不对 Re=3900 的 Cd、Cl 或 St 声称精度；
+阶梯圆柱、固定 Jacobi 压力迭代和短时间窗口不足以构成 LES/DES 验证。
+``DistributedRuntime`` 已提供 ``torchrun`` 环境发现、z-slab 划分和全局归约；
+真正的多 GPU 数值计算在 halo 交换、分布式压力求解与一致性测试完成前会明确
+拒绝运行，而不会重复完整域后伪称并行。详见
+`三维与分布式架构说明 <docs/architecture/three-dimensional.rst>`_。
 
 测试
 ----
