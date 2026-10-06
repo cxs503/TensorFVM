@@ -35,6 +35,11 @@ class SolverConfig:
     turbulence_relaxation: float = 0.5
     sa_freestream_ratio: float = 3.0
     flat_plate_stretching: float = 4.0
+    body_fitted_stretching: float = 0.0
+    outer_boundary: str = "channel"
+    time_step: float | None = None
+    inner_iterations: int = 1
+    initial_perturbation: float = 0.0
     airfoil_code: str = "0012"
     airfoil_chord: float = 1.0
     airfoil_x: float = 1.0
@@ -42,12 +47,14 @@ class SolverConfig:
     angle_of_attack: float = 0.0
 
     def __post_init__(self):
-        for name in ("nx", "ny", "max_iterations"):
+        for name in ("nx", "ny", "max_iterations", "inner_iterations"):
             value = getattr(self, name)
             if isinstance(value, bool) or not isinstance(value, int):
                 raise ValueError(f"{name} must be an integer")
         if self.nx < 4 or self.ny < 4 or self.max_iterations < 1:
             raise ValueError("nx and ny must be >= 4; max_iterations must be positive")
+        if self.inner_iterations < 1:
+            raise ValueError("inner_iterations must be positive")
         if self.mesh_type not in ("cartesian", "body-fitted", "c-grid", "flat-plate"):
             raise ValueError("mesh_type must be cartesian, body-fitted, c-grid, or flat-plate")
         if self.inlet_profile not in ("uniform", "parabolic"):
@@ -59,6 +66,10 @@ class SolverConfig:
         if (self.turbulence_model != "laminar"
                 and self.mesh_type not in ("body-fitted", "c-grid", "flat-plate")):
             raise ValueError("Spalart-Allmaras requires a body-fitted, c-grid, or flat-plate mesh")
+        if self.outer_boundary not in ("channel", "far-field"):
+            raise ValueError("outer_boundary must be channel or far-field")
+        if self.outer_boundary == "far-field" and self.mesh_type != "body-fitted":
+            raise ValueError("far-field outer_boundary is currently supported only by the cylinder O-grid")
         if self.mesh_type == "body-fitted" and (self.nx < 8 or self.nx % 4):
             raise ValueError("body-fitted nx must be >= 8 and divisible by 4")
         if self.mesh_type == "c-grid" and (self.nx < 16 or self.nx % 4):
@@ -77,9 +88,23 @@ class SolverConfig:
         if (not math.isfinite(self.flat_plate_stretching)
                 or self.flat_plate_stretching < 0):
             raise ValueError("flat_plate_stretching must be finite and nonnegative")
+        if (not math.isfinite(self.body_fitted_stretching)
+                or self.body_fitted_stretching < 0):
+            raise ValueError("body_fitted_stretching must be finite and nonnegative")
         if self.pseudo_time_step is not None:
             if not math.isfinite(self.pseudo_time_step) or self.pseudo_time_step <= 0:
                 raise ValueError("pseudo_time_step must be finite and positive")
+        if not math.isfinite(self.initial_perturbation) or self.initial_perturbation < 0:
+            raise ValueError("initial_perturbation must be finite and nonnegative")
+        if self.time_step is not None:
+            if not math.isfinite(self.time_step) or self.time_step <= 0:
+                raise ValueError("time_step must be finite and positive")
+            if self.pseudo_time_step is not None:
+                raise ValueError("time_step and pseudo_time_step cannot be used together")
+            if self.mesh_type not in ("body-fitted", "c-grid", "flat-plate"):
+                raise ValueError("time_step requires a collocated fitted mesh")
+        elif self.initial_perturbation:
+            raise ValueError("initial_perturbation requires time_step")
         if not math.isfinite(self.cylinder_x) or not math.isfinite(self.cylinder_y):
             raise ValueError("cylinder coordinates must be finite")
         radius = self.cylinder_radius
