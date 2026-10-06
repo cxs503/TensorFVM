@@ -1,0 +1,47 @@
+{
+  "benchmark": "NACA0012-Re1000-alpha4",
+  "error_limit": 0.03,
+  "reference_metadata": {
+    "airfoil": "NACA 0012",
+    "reynolds": 1000.0,
+    "angle_of_attack_degrees": 4.0,
+    "lift_coefficient": 0.205,
+    "drag_coefficient": 0.12,
+    "citation": "Di Ilio et al., Fluid flow around NACA 0012 airfoil at low-Reynolds numbers with hybrid lattice Boltzmann method (2020)",
+    "url": "https://arxiv.org/abs/2006.10487",
+    "source_location": "Figures 10 and 11"
+  },
+  "cp_acceptance": {
+    "available": false,
+    "reason": "the matching alpha=4 reference has no tabulated Cp data"
+  },
+  "case": {
+    "nx": 64,
+    "ny": 26,
+    "iterations": 523,
+    "converged": true,
+    "final_residuals": {
+      "iteration": 523,
+      "continuity": 6.535058952317208e-13,
+      "momentum": 9.804057994960239e-06,
+      "mass_imbalance": 7.978322863477771e-11,
+      "velocity_change": 4.066453207496323e-08,
+      "u_residual": 9.804057994960239e-06,
+      "v_residual": 3.785929066776404e-06
+    },
+    "computed": {
+      "lift": 0.20622498353558133,
+      "drag": 0.1209791958833993
+    },
+    "reference": {
+      "lift": 0.205,
+      "drag": 0.12
+    },
+    "relative_errors": {
+      "lift": 0.005975529441860206,
+      "drag": 0.00815996569499417
+    },
+    "passed": true
+  },
+  "passed": true
+}

@@ -222,7 +222,7 @@ class FittedSolverTests(unittest.TestCase):
         inlet = s.mesh.masks["inlet"]
         y0, y1 = s.mesh.face_vertices[inlet, :, 1].unbind(1)
         expected = (
-            6 * c.inlet_velocity / c.height
+            6 * c.inlet_velocity
             * ((y1.square() - y0.square()) / (2 * c.height)
                - (y1.pow(3) - y0.pow(3)) / (3 * c.height ** 2))
             / (y1 - y0)
