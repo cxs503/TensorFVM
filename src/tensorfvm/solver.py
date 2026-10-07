@@ -31,6 +31,15 @@ class SolverConfig:
     pseudo_time_step: float | None = None
     mesh_type: str = "cartesian"
     inlet_profile: str = "uniform"
+    turbulence_model: str = "laminar"
+    turbulence_relaxation: float = 0.5
+    sa_freestream_ratio: float = 3.0
+    flat_plate_stretching: float = 4.0
+    body_fitted_stretching: float = 0.0
+    outer_boundary: str = "channel"
+    time_step: float | None = None
+    inner_iterations: int = 1
+    initial_perturbation: float = 0.0
     airfoil_code: str = "0012"
     airfoil_chord: float = 1.0
     airfoil_x: float = 1.0
@@ -38,18 +47,29 @@ class SolverConfig:
     angle_of_attack: float = 0.0
 
     def __post_init__(self):
-        for name in ("nx", "ny", "max_iterations"):
+        for name in ("nx", "ny", "max_iterations", "inner_iterations"):
             value = getattr(self, name)
             if isinstance(value, bool) or not isinstance(value, int):
                 raise ValueError(f"{name} must be an integer")
         if self.nx < 4 or self.ny < 4 or self.max_iterations < 1:
             raise ValueError("nx and ny must be >= 4; max_iterations must be positive")
-        if self.mesh_type not in ("cartesian", "body-fitted", "c-grid"):
-            raise ValueError("mesh_type must be cartesian, body-fitted, or c-grid")
+        if self.inner_iterations < 1:
+            raise ValueError("inner_iterations must be positive")
+        if self.mesh_type not in ("cartesian", "body-fitted", "c-grid", "flat-plate"):
+            raise ValueError("mesh_type must be cartesian, body-fitted, c-grid, or flat-plate")
         if self.inlet_profile not in ("uniform", "parabolic"):
             raise ValueError("inlet_profile must be uniform or parabolic")
         if self.inlet_profile == "parabolic" and self.mesh_type != "body-fitted":
             raise ValueError("parabolic inlet profile is only supported on the cylinder O-grid")
+        if self.turbulence_model not in ("laminar", "spalart-allmaras"):
+            raise ValueError("turbulence_model must be laminar or spalart-allmaras")
+        if (self.turbulence_model != "laminar"
+                and self.mesh_type not in ("body-fitted", "c-grid", "flat-plate")):
+            raise ValueError("Spalart-Allmaras requires a body-fitted, c-grid, or flat-plate mesh")
+        if self.outer_boundary not in ("channel", "far-field"):
+            raise ValueError("outer_boundary must be channel or far-field")
+        if self.outer_boundary == "far-field" and self.mesh_type != "body-fitted":
+            raise ValueError("far-field outer_boundary is currently supported only by the cylinder O-grid")
         if self.mesh_type == "body-fitted" and (self.nx < 8 or self.nx % 4):
             raise ValueError("body-fitted nx must be >= 8 and divisible by 4")
         if self.mesh_type == "c-grid" and (self.nx < 16 or self.nx % 4):
@@ -59,13 +79,32 @@ class SolverConfig:
             value = getattr(self, name)
             if not math.isfinite(value) or value <= 0:
                 raise ValueError(f"{name} must be finite and positive")
-        for name in ("velocity_relaxation", "pressure_relaxation"):
+        for name in ("velocity_relaxation", "pressure_relaxation", "turbulence_relaxation"):
             value = getattr(self, name)
             if not math.isfinite(value) or not 0 < value <= 1:
                 raise ValueError(f"{name} must be in (0, 1]")
+        if not math.isfinite(self.sa_freestream_ratio) or self.sa_freestream_ratio < 0:
+            raise ValueError("sa_freestream_ratio must be finite and nonnegative")
+        if (not math.isfinite(self.flat_plate_stretching)
+                or self.flat_plate_stretching < 0):
+            raise ValueError("flat_plate_stretching must be finite and nonnegative")
+        if (not math.isfinite(self.body_fitted_stretching)
+                or self.body_fitted_stretching < 0):
+            raise ValueError("body_fitted_stretching must be finite and nonnegative")
         if self.pseudo_time_step is not None:
             if not math.isfinite(self.pseudo_time_step) or self.pseudo_time_step <= 0:
                 raise ValueError("pseudo_time_step must be finite and positive")
+        if not math.isfinite(self.initial_perturbation) or self.initial_perturbation < 0:
+            raise ValueError("initial_perturbation must be finite and nonnegative")
+        if self.time_step is not None:
+            if not math.isfinite(self.time_step) or self.time_step <= 0:
+                raise ValueError("time_step must be finite and positive")
+            if self.pseudo_time_step is not None:
+                raise ValueError("time_step and pseudo_time_step cannot be used together")
+            if self.mesh_type not in ("body-fitted", "c-grid", "flat-plate"):
+                raise ValueError("time_step requires a collocated fitted mesh")
+        elif self.initial_perturbation:
+            raise ValueError("initial_perturbation requires time_step")
         if not math.isfinite(self.cylinder_x) or not math.isfinite(self.cylinder_y):
             raise ValueError("cylinder coordinates must be finite")
         radius = self.cylinder_radius
@@ -73,6 +112,8 @@ class SolverConfig:
             raise ValueError("cylinder_radius must be finite and nonnegative, or None")
         if self.mesh_type == "body-fitted" and not radius:
             raise ValueError("body-fitted mesh requires a positive cylinder_radius")
+        if self.mesh_type == "flat-plate" and radius not in (None, 0):
+            raise ValueError("flat-plate mesh does not use cylinder_radius; set it to None or 0")
         if radius and self.mesh_type != "c-grid":
             dx, dy = self.length / self.nx, self.height / self.ny
             if self.mesh_type == "body-fitted":
@@ -112,12 +153,18 @@ class SolverConfig:
             raise ValueError(f"unavailable float64 device: {self.device}") from exc
 
     @property
-    def viscosity(self) -> float:
-        """Dynamic viscosity using cylinder diameter, airfoil chord, or channel height."""
+    def reference_length(self) -> float:
+        """Characteristic length used for Reynolds number and force scaling."""
         if self.mesh_type == "c-grid":
-            return self.density * self.inlet_velocity * self.airfoil_chord / self.reynolds
-        reference = 2 * self.cylinder_radius if self.cylinder_radius else self.height
-        return self.density * self.inlet_velocity * reference / self.reynolds
+            return self.airfoil_chord
+        if self.mesh_type == "flat-plate":
+            return self.length
+        return 2 * self.cylinder_radius if self.cylinder_radius else self.height
+
+    @property
+    def viscosity(self) -> float:
+        """Dynamic viscosity derived from the configured reference length."""
+        return self.density * self.inlet_velocity * self.reference_length / self.reynolds
 
 
 @dataclass
@@ -159,7 +206,7 @@ class SimpleSolver:
     """
 
     def __new__(cls, config: SolverConfig):
-        if cls is SimpleSolver and config.mesh_type in ("body-fitted", "c-grid"):
+        if cls is SimpleSolver and config.mesh_type in ("body-fitted", "c-grid", "flat-plate"):
             from .body_fitted import BodyFittedSolver
 
             return BodyFittedSolver(config)

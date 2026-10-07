@@ -1,0 +1,42 @@
+{
+  "benchmark": "external-cylinder-SA-URANS-Re3900",
+  "reference": {
+    "reynolds": 3900.0,
+    "mean_drag": 1.12,
+    "strouhal": 0.2,
+    "citation": "Parnaudeau et al. (2008), Experimental and numerical studies of the flow over a circular cylinder at Reynolds number 3900"
+  },
+  "drag_error_limit": 0.25,
+  "strouhal_error_limit": 0.2,
+  "warmup_steps": 100,
+  "case": {
+    "sample_count": 200,
+    "mean_drag": 1.1588790206871766,
+    "lift_rms": 1.070504906666032e-05,
+    "strouhal": 0.1,
+    "iterations": 300,
+    "final_residuals": {
+      "iteration": 300,
+      "time": 15.000000000000078,
+      "inner_iterations": 2,
+      "continuity": 4.88028543861419e-13,
+      "momentum": 0.002912913738130756,
+      "mass_imbalance": 8.129210267900552e-12,
+      "velocity_change": 0.0007556698739585033,
+      "u_residual": 0.0029129137381307562,
+      "v_residual": 0.0005913394943280838,
+      "turbulence": 0.025916536156307582,
+      "turbulence_change": 0.016434598319901416
+    },
+    "reference": {
+      "mean_drag": 1.12,
+      "strouhal": 0.2
+    },
+    "drag_relative_error": 0.03471341132783618,
+    "strouhal_relative_error": 0.5,
+    "periodic_lift_resolved": false,
+    "inner_steps_resolved": false,
+    "passed": false
+  },
+  "passed": false
+}
