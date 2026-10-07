@@ -1,13 +1,16 @@
-"""Structured body-fitted meshes and collocated conservative SIMPLE solvers.
+"""Body-fitted meshes and collocated conservative SIMPLE solvers.
 
 The O-grid wraps a polygonal cylinder; the C-grid wraps a NACA airfoil and joins
-the wake seam internally. All face fluxes are oriented out of their owner cell.
+the wake seam internally. The 30P30N case may also supply an unstructured Gmsh
+mesh. All face fluxes are oriented out of their owner cell.
 """
 
 from dataclasses import dataclass
 import math
 
 import torch
+
+from .backend_registry import build_mesh
 
 
 def _naca4_profile(config):
@@ -58,6 +61,7 @@ class BodyFittedMesh:
 
     def __init__(self, config):
         c = config
+        self.field_shape = (c.ny, c.nx)
         if c.nx < 8 or c.nx % 4 or c.ny < 1:
             raise ValueError("body-fitted nx must be >= 8 and divisible by four")
         opts = dict(dtype=torch.float64, device=c.device)
@@ -250,6 +254,7 @@ class FlatPlateMesh:
         if config.mesh_type != "flat-plate":
             raise ValueError("FlatPlateMesh requires mesh_type='flat-plate'")
         c = config
+        self.field_shape = (c.ny, c.nx)
         opts = dict(dtype=torch.float64, device=c.device)
         x = torch.linspace(0, c.length, c.nx + 1, **opts)
         eta = torch.linspace(0, 1, c.ny + 1, **opts)
@@ -350,15 +355,12 @@ class BodyFittedSolver:
 
     def __init__(self, config):
         self.config = config
-        self.mesh = m = (
-            CGridMesh(config) if config.mesh_type == "c-grid"
-            else FlatPlateMesh(config) if config.mesh_type == "flat-plate"
-            else BodyFittedMesh(config)
-        )
+        self.mesh = m = build_mesh(config)
         self.o, self.n = m.owner, m.neighbor
         self.f = m.interior
         self.oi, self.ni = self.o[self.f], self.n[self.f]
-        self.count = config.nx * config.ny
+        self.count = int(m.volumes.numel())
+        self.field_shape = m.field_shape
         opts = dict(dtype=torch.float64, device=config.device)
         alpha = math.radians(config.angle_of_attack)
         freestream = torch.tensor(
@@ -376,11 +378,10 @@ class BodyFittedSolver:
                        * torch.sin(2 * math.pi * centre[:, 1] / config.height))
             self.velocity[:, 1] += config.initial_perturbation * pattern
         self.p = torch.zeros(self.count, **opts)
-        self.u = self.velocity[:, 0].reshape(config.ny, config.nx)
-        self.v = self.velocity[:, 1].reshape(config.ny, config.nx)
+        self.u = self.velocity[:, 0].reshape(self.field_shape)
+        self.v = self.velocity[:, 1].reshape(self.field_shape)
         self.x, self.y = m.centers[..., 0], m.centers[..., 1]
-        self.fluid = torch.ones((config.ny, config.nx), dtype=torch.bool,
-                               device=config.device)
+        self.fluid = torch.ones(self.field_shape, dtype=torch.bool, device=config.device)
         self.volume = m.volumes.flatten()
         self.S = m.face_area_vectors
         self.d = m.face_centers - m.centers.reshape(-1, 2)[self.o]
@@ -436,10 +437,17 @@ class BodyFittedSolver:
         result.index_add_(0, self.ni, -face[self.f])
         return result
 
+    def _no_slip_faces(self):
+        """Return all body and stationary-wall faces carrying no-slip data."""
+        wall = self.mesh.masks["wall"].clone()
+        for name in ("cylinder", "airfoil", "slat", "main", "flap"):
+            if name in self.mesh.masks:
+                wall |= self.mesh.masks[name]
+        return wall
+
     def _wall_distance(self):
         """Return the exact minimum distance from each centre to a no-slip face."""
-        wall = (self.mesh.masks["wall"] | self.mesh.masks["cylinder"]
-                | self.mesh.masks["airfoil"])
+        wall = self._no_slip_faces()
         if not bool(wall.any()):
             raise ValueError("Spalart-Allmaras requires at least one no-slip wall")
         endpoints = self.mesh.face_vertices[wall]
@@ -514,7 +522,7 @@ class BodyFittedSolver:
     def _momentum(self, velocity, pressure, flux):
         c, m = self.config, self.mesh
         face_viscosity = self._interpolate(self._dynamic_viscosity)
-        no_slip = m.masks["wall"] | m.masks["cylinder"] | m.masks["airfoil"]
+        no_slip = self._no_slip_faces()
         face_viscosity[no_slip] = c.viscosity
         diffusion = face_viscosity * self.k
         diffusion[m.masks["outlet"]] = 0
@@ -552,7 +560,7 @@ class BodyFittedSolver:
         sigma, cb1, cb2, kappa = 2 / 3, 0.1355, 0.622, 0.41
         cw2, cw3 = 0.3, 2.0
         cw1 = cb1 / kappa ** 2 + (1 + cb2) / sigma
-        no_slip = m.masks["wall"] | m.masks["cylinder"] | m.masks["airfoil"]
+        no_slip = self._no_slip_faces()
         gamma = c.density * (self.kinematic_viscosity + nu_tilde.clamp_min(0)) / sigma
         face_gamma = self._interpolate(gamma)
         face_gamma[no_slip] = c.viscosity / sigma
@@ -803,15 +811,30 @@ class BodyFittedSolver:
         return (self.p[owners, None] * self.S[mask] - traction).sum(0)
 
     def _aerodynamic_coefficients(self):
-        if self.config.mesh_type not in ("c-grid", "body-fitted"):
-            return None
         c = self.config
+        if c.mesh_type == "three-element":
+            bodies = ("slat", "main", "flap")
+            scale = 0.5 * c.density * c.inlet_velocity ** 2 * c.reference_length
+            alpha = math.radians(c.angle_of_attack)
+            coefficients = {}
+            total = torch.zeros(2, dtype=self.p.dtype, device=self.p.device)
+            for body in bodies:
+                force = self._surface_force(self.mesh.masks[body])
+                total += force
+                drag = force[0] * math.cos(alpha) + force[1] * math.sin(alpha)
+                lift = -force[0] * math.sin(alpha) + force[1] * math.cos(alpha)
+                coefficients[f"{body}_drag"] = float(drag / scale)
+                coefficients[f"{body}_lift"] = float(lift / scale)
+            drag = total[0] * math.cos(alpha) + total[1] * math.sin(alpha)
+            lift = -total[0] * math.sin(alpha) + total[1] * math.cos(alpha)
+            coefficients["drag"], coefficients["lift"] = float(drag / scale), float(lift / scale)
+            return coefficients
+        if c.mesh_type not in ("c-grid", "body-fitted"):
+            return None
         body = "airfoil" if c.mesh_type == "c-grid" else "cylinder"
         mask = self.mesh.masks[body]
         force = self._surface_force(mask)
-        reference_length = (c.airfoil_chord if body == "airfoil"
-                            else 2 * c.cylinder_radius)
-        scale = 0.5 * c.density * c.inlet_velocity ** 2 * reference_length
+        scale = 0.5 * c.density * c.inlet_velocity ** 2 * c.reference_length
         # Report aerodynamic axes, not fixed global x/y components.  They are
         # identical for the cylinder benchmark (alpha=0), while this rotation
         # is essential for a lifting airfoil at nonzero incidence.
@@ -825,8 +848,7 @@ class BodyFittedSolver:
         """Advance one SIMPLE iteration and return conservative steady metrics."""
         c = self.config
         inlet_mass = c.density * c.inlet_velocity * c.height
-        residual_length = (c.airfoil_chord if c.mesh_type == "c-grid" else
-                           c.length if c.mesh_type == "flat-plate" else c.height)
+        residual_length = c.residual_length
         force_scale = max(c.density * c.inlet_velocity ** 2 * residual_length,
                           c.viscosity * c.inlet_velocity)
         old = self.velocity.clone()
@@ -877,8 +899,7 @@ class BodyFittedSolver:
         physical_velocity = self.velocity.clone()
         physical_nu = self.nu_tilde.clone()
         inlet_mass = c.density * c.inlet_velocity * c.height
-        residual_length = (c.airfoil_chord if c.mesh_type == "c-grid" else
-                           c.length if c.mesh_type == "flat-plate" else c.height)
+        residual_length = c.residual_length
         force_scale = max(c.density * c.inlet_velocity ** 2 * residual_length,
                           c.viscosity * c.inlet_velocity)
         inertia = c.density * self.volume / c.time_step
@@ -949,13 +970,23 @@ class BodyFittedSolver:
             self.step()
             if c.time_step is None and self.converged:
                 break
-        shape = (c.ny, c.nx)
-        surface_name = ("plate" if c.mesh_type == "flat-plate" else
-                        "airfoil" if c.mesh_type == "c-grid" else "cylinder")
-        surface_mask = self.mesh.masks["wall" if surface_name == "plate" else surface_name]
-        surface_force = self._surface_force(surface_mask)
-        surface_forces = {surface_name: {"x": float(surface_force[0]),
-                                         "y": float(surface_force[1])}}
+        shape = self.field_shape
+        if c.mesh_type == "three-element":
+            surface_forces = {}
+            total_force = torch.zeros(2, dtype=self.p.dtype, device=self.p.device)
+            for name in ("slat", "main", "flap"):
+                force = self._surface_force(self.mesh.masks[name])
+                total_force += force
+                surface_forces[name] = {"x": float(force[0]), "y": float(force[1])}
+            surface_forces["total"] = {"x": float(total_force[0]),
+                                        "y": float(total_force[1])}
+        else:
+            surface_name = ("plate" if c.mesh_type == "flat-plate" else
+                            "airfoil" if c.mesh_type == "c-grid" else "cylinder")
+            surface_mask = self.mesh.masks["wall" if surface_name == "plate" else surface_name]
+            surface_force = self._surface_force(surface_mask)
+            surface_forces = {surface_name: {"x": float(surface_force[0]),
+                                             "y": float(surface_force[1])}}
         return BodyFittedResult(c, self.velocity[:, 0].reshape(shape).clone(),
                                 self.velocity[:, 1].reshape(shape).clone(),
                                 self.p.reshape(shape).clone(),
