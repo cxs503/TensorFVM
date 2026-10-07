@@ -10,6 +10,8 @@ import math
 
 import torch
 
+from .backend_registry import get_backend
+
 
 @dataclass
 class SolverConfig:
@@ -45,35 +47,52 @@ class SolverConfig:
     airfoil_x: float = 1.0
     airfoil_y: float = 1.0
     angle_of_attack: float = 0.0
+    mesh_file: str | None = None
 
     def __post_init__(self):
         for name in ("nx", "ny", "max_iterations", "inner_iterations"):
             value = getattr(self, name)
             if isinstance(value, bool) or not isinstance(value, int):
                 raise ValueError(f"{name} must be an integer")
-        if self.nx < 4 or self.ny < 4 or self.max_iterations < 1:
-            raise ValueError("nx and ny must be >= 4; max_iterations must be positive")
+        if self.nx < 1 or self.ny < 1 or self.max_iterations < 1:
+            raise ValueError("nx and ny must be positive; max_iterations must be positive")
         if self.inner_iterations < 1:
             raise ValueError("inner_iterations must be positive")
-        if self.mesh_type not in ("cartesian", "body-fitted", "c-grid", "flat-plate"):
-            raise ValueError("mesh_type must be cartesian, body-fitted, c-grid, or flat-plate")
+        backend = get_backend(self.mesh_type)
+        grid_too_small = self.nx < backend.min_nx or self.ny < backend.min_ny
+        grid_multiple_mismatch = backend.structured and self.nx % backend.nx_multiple != 0
+        if grid_too_small or grid_multiple_mismatch:
+            if grid_multiple_mismatch:
+                raise ValueError(
+                    f"{backend.name} nx must be >= {backend.min_nx} and divisible by "
+                    f"{backend.nx_multiple}; ny must be >= {backend.min_ny}"
+                )
+            raise ValueError(
+                f"{backend.name} grid requires nx >= {backend.min_nx} and "
+                f"ny >= {backend.min_ny}"
+            )
+        if backend.requires_mesh_file and (
+                not isinstance(self.mesh_file, str) or not self.mesh_file.strip()):
+            raise ValueError(f"{backend.name} backend requires mesh_file")
+        if not backend.requires_mesh_file and self.mesh_file is not None:
+            raise ValueError(
+                f"mesh_file is only supported by a backend that requires an external mesh; "
+                f"{backend.name!r} does not"
+            )
         if self.inlet_profile not in ("uniform", "parabolic"):
             raise ValueError("inlet_profile must be uniform or parabolic")
-        if self.inlet_profile == "parabolic" and self.mesh_type != "body-fitted":
+        if self.inlet_profile == "parabolic" and not backend.supports_parabolic_inlet:
             raise ValueError("parabolic inlet profile is only supported on the cylinder O-grid")
         if self.turbulence_model not in ("laminar", "spalart-allmaras"):
             raise ValueError("turbulence_model must be laminar or spalart-allmaras")
-        if (self.turbulence_model != "laminar"
-                and self.mesh_type not in ("body-fitted", "c-grid", "flat-plate")):
-            raise ValueError("Spalart-Allmaras requires a body-fitted, c-grid, or flat-plate mesh")
+        if self.turbulence_model == "spalart-allmaras" and not backend.supports_spalart_allmaras:
+            raise ValueError(
+                "Spalart-Allmaras requires a solver backend that supports the model"
+            )
         if self.outer_boundary not in ("channel", "far-field"):
             raise ValueError("outer_boundary must be channel or far-field")
-        if self.outer_boundary == "far-field" and self.mesh_type != "body-fitted":
+        if self.outer_boundary == "far-field" and not backend.supports_far_field_option:
             raise ValueError("far-field outer_boundary is currently supported only by the cylinder O-grid")
-        if self.mesh_type == "body-fitted" and (self.nx < 8 or self.nx % 4):
-            raise ValueError("body-fitted nx must be >= 8 and divisible by 4")
-        if self.mesh_type == "c-grid" and (self.nx < 16 or self.nx % 4):
-            raise ValueError("c-grid nx must be >= 16 and divisible by 4")
         for name in ("length", "height", "inlet_velocity", "reynolds",
                      "density", "tolerance"):
             value = getattr(self, name)
@@ -101,8 +120,8 @@ class SolverConfig:
                 raise ValueError("time_step must be finite and positive")
             if self.pseudo_time_step is not None:
                 raise ValueError("time_step and pseudo_time_step cannot be used together")
-            if self.mesh_type not in ("body-fitted", "c-grid", "flat-plate"):
-                raise ValueError("time_step requires a collocated fitted mesh")
+            if not backend.supports_transient:
+                raise ValueError("time_step requires a transient-capable solver backend")
         elif self.initial_perturbation:
             raise ValueError("initial_perturbation requires time_step")
         if not math.isfinite(self.cylinder_x) or not math.isfinite(self.cylinder_y):
@@ -110,24 +129,26 @@ class SolverConfig:
         radius = self.cylinder_radius
         if radius is not None and (not math.isfinite(radius) or radius < 0):
             raise ValueError("cylinder_radius must be finite and nonnegative, or None")
-        if self.mesh_type == "body-fitted" and not radius:
-            raise ValueError("body-fitted mesh requires a positive cylinder_radius")
-        if self.mesh_type == "flat-plate" and radius not in (None, 0):
-            raise ValueError("flat-plate mesh does not use cylinder_radius; set it to None or 0")
-        if radius and self.mesh_type != "c-grid":
-            dx, dy = self.length / self.nx, self.height / self.ny
-            if self.mesh_type == "body-fitted":
-                dx = dy = 0
+        if backend.requires_cylinder and not radius:
+            raise ValueError(f"{backend.name} mesh requires a positive cylinder_radius")
+        if backend.forbids_cylinder and radius not in (None, 0):
+            raise ValueError(
+                f"{backend.name} mesh does not use cylinder_radius; set it to None or 0"
+            )
+        if radius and backend.uses_cylinder:
+            dx = self.length / self.nx if backend.cylinder_clearance_cells else 0.0
+            dy = self.height / self.ny if backend.cylinder_clearance_cells else 0.0
             if not (radius + dx < self.cylinder_x < self.length - radius - dx
                     and radius + dy < self.cylinder_y < self.height - radius - dy):
                 raise ValueError("cylinder must lie inside the domain with grid clearance")
-            represented = self.mesh_type == "body-fitted" or any(
-                ((i + 0.5) * dx - self.cylinder_x) ** 2
-                + ((j + 0.5) * dy - self.cylinder_y) ** 2 <= radius ** 2
-                for j in range(self.ny) for i in range(self.nx)
-            )
-            if not represented:
-                raise ValueError("cylinder is not represented on this grid; refine the mesh")
+            if backend.requires_rasterized_cylinder:
+                represented = any(
+                    ((i + 0.5) * dx - self.cylinder_x) ** 2
+                    + ((j + 0.5) * dy - self.cylinder_y) ** 2 <= radius ** 2
+                    for j in range(self.ny) for i in range(self.nx)
+                )
+                if not represented:
+                    raise ValueError("cylinder is not represented on this grid; refine the mesh")
         if (not isinstance(self.airfoil_code, str)
                 or len(self.airfoil_code) != 4
                 or not self.airfoil_code.isascii()
@@ -152,14 +173,32 @@ class SolverConfig:
         except (RuntimeError, ValueError, TypeError, AssertionError) as exc:
             raise ValueError(f"unavailable float64 device: {self.device}") from exc
 
+    def _resolve_length_rule(self, rule) -> float:
+        if callable(rule):
+            return float(rule(self))
+        if rule == "airfoil_chord":
+            return self.airfoil_chord
+        if rule in ("domain_length", "length"):
+            return self.length
+        if rule == "cylinder_or_height":
+            return 2 * self.cylinder_radius if self.cylinder_radius else self.height
+        if rule == "height":
+            return self.height
+        raise ValueError(f"backend {self.mesh_type!r} has invalid length rule {rule!r}")
+
     @property
     def reference_length(self) -> float:
         """Characteristic length used for Reynolds number and force scaling."""
-        if self.mesh_type == "c-grid":
-            return self.airfoil_chord
-        if self.mesh_type == "flat-plate":
-            return self.length
-        return 2 * self.cylinder_radius if self.cylinder_radius else self.height
+        return self._resolve_length_rule(get_backend(self.mesh_type).reference_length)
+
+    @property
+    def residual_length(self) -> float:
+        """Length scale used to normalize conservation-equation residuals."""
+        backend = get_backend(self.mesh_type)
+        rule = backend.residual_length
+        return self._resolve_length_rule(
+            backend.reference_length if rule is None else rule
+        )
 
     @property
     def viscosity(self) -> float:
@@ -206,10 +245,10 @@ class SimpleSolver:
     """
 
     def __new__(cls, config: SolverConfig):
-        if cls is SimpleSolver and config.mesh_type in ("body-fitted", "c-grid", "flat-plate"):
-            from .body_fitted import BodyFittedSolver
-
-            return BodyFittedSolver(config)
+        if cls is SimpleSolver:
+            factory = get_backend(config.mesh_type).solver_factory
+            if factory is not None:
+                return factory(config)
         return super().__new__(cls)
 
     def __init__(self, config: SolverConfig):
