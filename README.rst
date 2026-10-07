@@ -4,7 +4,8 @@ TensorFVM
 基于 PyTorch 的二维不可压缩有限体积求解器，采用 SIMPLE
 压力－速度耦合。支持层流，以及实验性的 Spalart--Allmaras（SA）一方程
 RANS 闭合；网格包括笛卡尔交错网格、圆柱 O 型贴体网格、NACA 翼型 C
-型网格及高 Re 平板边界层网格；另含实验性的三维圆柱投影/SGS 基线。
+型网格、三段翼非结构贴体网格及高 Re 平板边界层网格；另含实验性的三维圆柱
+投影/SGS 基线。
 它不是已经验证的工程 CFD 软件。
 
 安装
@@ -24,6 +25,11 @@ RANS 闭合；网格包括笛卡尔交错网格、圆柱 O 型贴体网格、NAC
 
 CUDA 需安装与硬件兼容的 PyTorch，并通过 ``--device cuda`` 选择。
 计算使用 float64；不包含可微分求解或训练接口。
+
+架构扩展接口见 ``docs/architecture.rst``：二维后端通过 ``SolverBackend`` 注册，
+网格通过 ``Mesh2D`` structural protocol 接入；当前保留既有 ``SolverConfig`` 和
+``SimpleSolver`` 调用形式。该渐进式改造不代表配置、IO、三维和案例层已经
+全部完成平台化拆分。
 
 圆柱绕流案例
 ------------
@@ -145,18 +151,20 @@ SA 高 Re 翼型验证，远场位置、近壁 y+、自由流湍流量和网格�
 程序接口与测试
 --------------
 
-``tensorfvm`` 导出 ``SolverConfig``、``SimpleSolver``、``BodyFittedMesh``,
-``CGridMesh`` 和 ``BodyFittedSolver``。程序接口为兼容旧代码，
+``tensorfvm`` 导出 ``SolverConfig``、``SimpleSolver``、``BodyFittedMesh``、
+``CGridMesh``、``ThreeElementMesh`` 和 ``BodyFittedSolver``。程序接口为兼容旧代码，
 ``SolverConfig`` 默认 ``mesh_type="cartesian"``；设置
-``mesh_type="body-fitted"``、``mesh_type="c-grid"`` 或
-``mesh_type="flat-plate"`` 后 ``SimpleSolver(config)`` 自动选择贴体/同位求解器；
-设置 ``turbulence_model="spalart-allmaras"`` 可启用实验性的 SA RANS 闭合。
+``mesh_type="body-fitted"``、``mesh_type="c-grid"``、
+``mesh_type="flat-plate"`` 或 ``mesh_type="three-element"`` 后
+``SimpleSolver(config)`` 自动选择贴体/同位求解器；三段翼模式还需通过
+``mesh_file`` 提供带命名物理边界的 Gmsh v2 ASCII 网格。设置
+``turbulence_model="spalart-allmaras"`` 可启用实验性的 SA RANS 闭合。
 修改配置可以设置几何、网格、物性、欠松弛参数及设备。
 ``SimpleSolver(config).solve()`` 返回压力、速度、流体掩码、
 残差历史及收敛状态；``cell_center_velocity()`` 在两种模式下均提供
-单元中心速度。贴体结果的 ``u``、``v``、``x``、``y`` 均为
-``(ny, nx)`` 数组；笛卡尔结果仍保留交错面速度与一维坐标。
-贴体结果通过 ``mesh`` 提供网格几何。
+单元中心速度。结构化贴体结果的 ``u``、``v``、``x``、``y`` 均为
+``(ny, nx)`` 数组；Gmsh 三段翼结果以 ``(1, n_cells)`` 形式返回单元值，
+由 ``mesh`` 提供非结构拓扑；笛卡尔结果仍保留交错面速度与一维坐标。
 将圆柱半径设置为 0 可计算无障碍通道，此时 Re 的特征长度为通道高度。
 无障碍通道仅支持笛卡尔模式；贴体 O 型网格要求正半径且圆柱严格位于通道内部。
 
@@ -202,6 +210,29 @@ NACA 0012、Re=1000、攻角 4° 数据。该攻角低于文献给出的 8° 非
 匹配的 4° 文献数据没有机器可读 Cp 表；文献给出的 Cp 曲线属于 8° 工况，
 已处于非稳态起始点，故本稳态验收不伪造 Cp 的 3% 声明。NASA 高 Re 实验
 数据也不能直接作为当前层流模型的合格目标。
+
+30P30N 三段翼公开几何算例（诊断性）
+------------------------------------
+
+增加 MDA 30P30N 的 slat、main、flap 三段独立轮廓，来自公开的
+`30P-30N Validation Case <https://github.com/linuxguy123/30P-30N-Validation-Case>`_
+（坐标与来源说明见 ``src/tensorfvm/data/30p30n/README.rst``）。运行 Re=5,000,000、
+攻角 0° 的二维 SA-RANS 诊断算例::
+
+    python -m tensorfvm.benchmark_30p30n --output results/30p30n
+
+需要额外安装 Gmsh 可执行程序来生成带近壁层的三角形/四边形网格；求解器本身
+仍只依赖 PyTorch。也可预先生成 Gmsh v2 ASCII 网格，再通过 ``--mesh-file`` 复用。
+求解器读取 ``slat``、``main``、``flap``、``inlet``、``outlet``、``far-field``
+物理边界组，并分别积分三段翼的压力与壁面剪切力。结果目录包含非结构网格、
+单元场、逐段表面 ``Cp``、残差和机器可读报告。
+
+报告将计算结果与公开验证仓库记载的 ``Cl=0.033243``、``Cd=2.167089`` 作诊断比较；
+来源对 Cd 使用的缩放记法与常规无量纲 Cd 可能相差 100 倍，代码会同时输出常规
+``Cd`` 与 ``100*Cd``，但**不据此自动宣称验证通过**。当前算例使用矩形远场域和
+二维不可压缩 SA 模型，未严格复刻风洞边界，也未包含可压缩效应；返回码 0 仅代表
+数值残差收敛。该案例用于三段几何与求解器联调，不能替代网格无关性、y+ 检查及
+严格的实验复现。
 
 高 Re 平板 SA RANS 基准（实验性）
 ---------------------------------
@@ -288,7 +319,8 @@ CPU 可用相同命令配合 ``--device cpu``，使用 Gloo；CUDA 使用 NCCL �
     python -m unittest discover -s tests -v
 
 测试覆盖输入检查、交错网格及边界、贴体几何与周期接缝、连续性和质量平衡、
-无障碍通道及小网格圆柱案例，并检查真实坐标、网格导出和命令行状态。
+无障碍通道及小网格圆柱案例，并检查真实坐标、网格导出、命令行状态，以及
+三段翼 Gmsh v2 拓扑解析、物理边界分组和几何脚本生成。
 
 许可证
 ------
