@@ -1,9 +1,11 @@
 TensorFVM
 =========
 
-基于 PyTorch 的二维不可压缩、层流有限体积求解器，采用 SIMPLE
-压力－速度耦合。支持笛卡尔交错网格、圆柱 O 型贴体网格及 NACA 翼型 C
-型网格；不是已经验证的工程 CFD 软件。
+基于 PyTorch 的二维不可压缩有限体积求解器，采用 SIMPLE
+压力－速度耦合。支持层流，以及实验性的 Spalart--Allmaras（SA）一方程
+RANS 闭合；网格包括笛卡尔交错网格、圆柱 O 型贴体网格、NACA 翼型 C
+型网格及高 Re 平板边界层网格；另含实验性的三维圆柱投影/SGS 基线。
+它不是已经验证的工程 CFD 软件。
 
 安装
 ----
@@ -84,7 +86,11 @@ NACA 四位数翼型可使用 C 型网格计算，例如 NACA 0012 基准::
   ``fields.csv`` 使用真实物理单元中心坐标，所有贴体单元均为流体。
 * C 型网格另含 ``airfoil.csv``（翼型表面面片坐标、邻接单元压力和压力系数 ``Cp``）；
   ``summary.json`` 包含由离散压力及壁面剪切积分得到的升力、阻力系数。
-* 贴体 O/C 网格另含 ``velocity.svg``、``pressure.svg``；
+* 启用 SA 时另含 ``turbulence.csv``（单元中心 ``nu_tilde``、运动学涡黏度
+  ``nu_t``），``summary.json`` 记录壁面合力和 SA 残差。
+* 物理时间推进的 URANS 结果另含 ``forces.json``：逐时间步的 ``drag``、
+  ``lift`` 及物理时间，可用于计算升力 RMS 和 Strouhal 数。
+* 贴体 O/C 及平板网格另含 ``velocity.svg``、``pressure.svg``；
   按物理四边形单元绘制速度模和无量纲表压，不需要绘图库。
 
 压力为以出口为参考的表压。结果可以直接用 CSV 工具后处理，
@@ -103,8 +109,15 @@ NACA 四位数翼型可使用 C 型网格计算，例如 NACA 0012 基准::
   压力修正系数使用欠松弛后的动量对角系数。
   笛卡尔压力修正方程采用矩阵无关、对角预条件共轭梯度求解；
   贴体非正交压力修正及动量方程采用对角预条件 BiCGSTAB。
-* 圆柱、翼型及通道壁面采用无滑移条件；C 型网格的远场速度固定为来流值。
-* 同时监测连续性和动量收敛；达到迭代上限仍明确报告未收敛。
+* 圆柱、翼型、平板及通道壁面采用无滑移条件；C 型网格和平板顶部的远场
+  速度固定为来流值。
+* SA 模式求解原始完全湍流 Spalart--Allmaras 工作变量；湍流黏度反馈到
+  动量扩散，壁面 ``nu_tilde=0``，入口/远场用 ``sa_freestream_ratio`` 指定
+  ``nu_tilde / nu``。它使用墙面解析而非壁函数。
+* 设置 ``time_step`` 可启用一阶隐式 Euler URANS：每一物理时间步执行
+  ``inner_iterations`` 次 SIMPLE 子迭代，速度和 SA 方程保留真实时间惯性；
+  它不能与 ``pseudo_time_step`` 同时使用。
+* 同时监测连续性和动量收敛；SA 模式还监测输运方程残差；达到迭代上限仍明确报告未收敛。
 
 笛卡尔历史中的 ``continuity`` 为最大单元散度乘以通道高度、除以入口速度；
 ``momentum`` 为最大稳态离散动量方程缺陷除以对角系数和入口速度。
@@ -121,11 +134,13 @@ C 型网格为所有外边界净质量流量相对 ``rho * U * height`` 的绝�
 笛卡尔模式仍通过单元中心圆形掩码表示阶梯状圆柱；
 贴体模式的圆柱为内接多边形，细化周向网格也会改变有效圆柱面积。
 一阶迎风会产生数值耗散，贴体网格不等于高阶精度或已验证的工程结果。
-当前不包含切割单元、湍流模型、非稳态涡脱落或经过验证的升阻力计算。
-高 Re 流动可能没有稳态解，不应靠增加 SIMPLE 迭代次数替代非稳态模型。
-定量使用前应进行网格无关性、充分长计算域及公开基准验证。
-NACA C 型网格的压力系数和升阻力仅作数值实验输出；当前未与公开翼型基准
-完成验证，远场位置和网格分辨率会影响结果。
+当前不包含切割单元、转捩、壁函数、可压缩修正、二阶时间格式、DES 或 LES。
+SA 仅是实验性、完全湍流的一方程 RANS 闭合。虽然可用 ``time_step`` 进行
+二维 URANS 并记录圆柱升阻力历史，但 Re=3900 尾迹本质上三维；二维 SA-URANS
+可能衰减到对称解或错误预测 Cd/St，不能以增加物理步数替代 DES/LES 或三维验证。
+定量使用前应进行网格无关性、充分长采样时间及公开基准验证。
+NACA C 型网格的压力系数和升阻力仅作数值实验输出；当前层流翼型基准不等于
+SA 高 Re 翼型验证，远场位置、近壁 y+、自由流湍流量和网格分辨率会影响结果。
 
 程序接口与测试
 --------------
@@ -133,8 +148,9 @@ NACA C 型网格的压力系数和升阻力仅作数值实验输出；当前未�
 ``tensorfvm`` 导出 ``SolverConfig``、``SimpleSolver``、``BodyFittedMesh``,
 ``CGridMesh`` 和 ``BodyFittedSolver``。程序接口为兼容旧代码，
 ``SolverConfig`` 默认 ``mesh_type="cartesian"``；设置
-``mesh_type="body-fitted"`` 或 ``mesh_type="c-grid"`` 后
-``SimpleSolver(config)`` 自动选择贴体求解器。
+``mesh_type="body-fitted"``、``mesh_type="c-grid"`` 或
+``mesh_type="flat-plate"`` 后 ``SimpleSolver(config)`` 自动选择贴体/同位求解器；
+设置 ``turbulence_model="spalart-allmaras"`` 可启用实验性的 SA RANS 闭合。
 修改配置可以设置几何、网格、物性、欠松弛参数及设备。
 ``SimpleSolver(config).solve()`` 返回压力、速度、流体掩码、
 残差历史及收敛状态；``cell_center_velocity()`` 在两种模式下均提供
@@ -186,6 +202,83 @@ NACA 0012、Re=1000、攻角 4° 数据。该攻角低于文献给出的 8° 非
 匹配的 4° 文献数据没有机器可读 Cp 表；文献给出的 Cp 曲线属于 8° 工况，
 已处于非稳态起始点，故本稳态验收不伪造 Cp 的 3% 声明。NASA 高 Re 实验
 数据也不能直接作为当前层流模型的合格目标。
+
+高 Re 平板 SA RANS 基准（实验性）
+---------------------------------
+
+SA 模型以无壁函数、近壁积分方式接入贴体求解器，支持 ``body-fitted``、
+``c-grid`` 与专用 ``flat-plate`` 网格。当前首先采用 Re_L=100000 的二维、
+零压梯度、从前缘即完全湍流的光滑平板验证；高 Re 圆柱另有下述 URANS
+诊断，但两者都不替代三维湍流验证::
+
+    python -m tensorfvm.benchmark_flat_plate --output results/flat-plate
+
+该算例以 Schlichting 平滑完全湍流平板平均摩擦关联式
+``Cf = 0.074 Re_L^(-1/5)`` 为参考，要求平均 ``Cf`` 误差严格小于 20%，
+第一单元 ``y+ < 1``，并同时收敛连续性、动量、质量平衡和 SA 输运残差。
+``turbulence.csv`` 导出 SA 工作变量 ``nu_tilde`` 及运动学涡黏度 ``nu_t``。
+这是初始模型回归而不是翼型、圆柱的高 Re 工程验证；尚不包括转捩、壁函数、
+可压缩/曲率修正，也尚未完成高 Re 翼型公开数据对标。一次实际运行的指标见
+`平板 SA benchmark 报告 <docs/flat-plate/report.rst>`_。
+
+Re=3900 外流圆柱 SA-URANS 诊断
+------------------------------
+
+圆柱 O 网格可设置 ``outer_boundary="far-field"``，将上下外边界从通道无滑移
+壁面改为均匀来流远场；``body_fitted_stretching`` 用于向圆柱表面集中径向网格。
+物理时间推进用隐式 Euler，输出逐步升阻力并从升力频谱计算 Strouhal 数::
+
+    python -m tensorfvm.benchmark_cylinder_urans --output results/cylinder-urans
+
+默认工况为 D=1、Re=3900、20D × 12D 外流域和 SA-URANS。报告比较
+``Cd=1.12``、``St=0.20`` 的公开 Re=3900 参考值，并且只有在解析出非零周期
+升力、每步内残差满足容差且 Cd/St 达到阈值时才返回 0。若二维一方程 RANS
+衰减到对称解，benchmark 会保留 ``forces.json`` 等诊断输出并返回 2；这不是
+可通过放宽判据掩盖的失败，而是需要更高阶对流、DES/LES 或三维计算的信号。
+当前 48×24、15 个对流时间单位的实际诊断结果已如实记录在
+`Re=3900 圆柱 URANS 报告 <docs/cylinder-urans/report.rst>`_。
+
+三维圆柱与多 GPU 投影基线
+--------------------------
+
+三维代码以独立的 ``runtime``、``mesh3d``、``solver3d`` 与 benchmark 模块构建，
+避免将二维贴体假设隐式复制到三维。``Cylinder3DSolver`` 是可执行的三维笛卡尔
+投影/Smagorinsky SGS 基线，展向周期、圆柱固体掩码和中展向可移植输出均已具备。
+单 rank 运行方式为::
+
+    python -m tensorfvm.benchmark_cylinder3d --output results/cylinder-3d
+
+三维贴体圆柱 O-grid 已作为独立网格层提供：它从二维 O-grid 横截面挤出正体积
+六面体，保留圆柱壁面、矩形远场、theta 接缝、曲面面积向量及按 z-slab 分区的
+全局节点/单元编号。可导出网格并审计体积和曲面逼近误差::
+
+    tensorfvm-mesh-cylinder-3d --output results/cylinder-3d-o-grid \
+        --nx 48 --ny 24 --nz 12 --stretching 2.5
+
+当前 ``Cylinder3DSolver`` 仍明确只支持 ``mesh_type="cartesian"``；请求贴体
+模式会 fail-fast，而不会用笛卡尔差分伪装成曲线坐标求解。贴体网格上的守恒动量、
+Rhie--Chow 和压力投影是后续数值阶段，故该命令仅生成/验证网格，不能宣称已求解
+贴体三维 Re=3900 流动。
+
+多 rank 使用真实 z-slab 分解：每个 rank 只保留本地速度/压力场；展向导数、
+SGS 梯度和分布式压力 PCG 算子都通过一层周期 halo 点对点交换跨分区耦合。
+压力求解使用矩阵无关、对角预条件 PCG，出口 gauge 与入口/远场 Neumann 值在
+独立未知量中处理；每步输出全局初始/最终压力残差、目标、迭代数和收敛标记。
+``pressure_iterations`` 是上限，``pressure_relative_tolerance`` 与
+``pressure_absolute_tolerance`` 控制停止目标。以两 GPU 启动的示例为::
+
+    torchrun --standalone --nproc-per-node=2 -m tensorfvm.benchmark_cylinder3d \
+        --device cuda --nx 48 --ny 32 --nz 12 --output results/cylinder-3d-2gpu
+
+CPU 可用相同命令配合 ``--device cpu``，使用 Gloo；CUDA 使用 NCCL 和
+``LOCAL_RANK`` 设备绑定。全局 ``nz`` 必须不小于 rank 数。输出目录由中展向
+所有者写 ``midspan.csv``，rank 0 写全局历史和汇总，因而不会发生并行写冲突。
+两 rank Gloo 的自动回归会重组场并与单 rank 比较，且要求两端 PCG 达到残差目标。
+3-D smoke case 只在有限值、低 CFL、压力残差收敛和并行数值一致性同时满足时
+通过，**不**对 Re=3900 的 Cd、Cl 或 St 声称精度；阶梯圆柱、中心差分和短时间
+窗口仍不足以构成 LES/DES 或 GPU 扩展验证。当前 PCG 尚没有多重网格预条件，
+故不能将它的可执行性视为大规模性能结论。详见
+`三维与分布式架构说明 <docs/architecture/three-dimensional.rst>`_.
 
 测试
 ----
