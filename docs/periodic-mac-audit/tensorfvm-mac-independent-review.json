@@ -1,0 +1,90 @@
+{
+  "cases": [
+    {
+      "device": "cpu",
+      "gradient_error": 0.0,
+      "divergence_error": 0.0,
+      "adjoint_error": 3.1086244689504383e-15,
+      "projection_error": 1.249000902703301e-16,
+      "orthogonal_energy_error_J": 2.220446049250313e-16,
+      "stress_error": 5.898059818321144e-17,
+      "stress_negative_work_identity_error": 1.4343284282652883e-16,
+      "convective_flux_error": 1.734723475976807e-17,
+      "convective_power_W": -9.594872786735572e-18,
+      "steps": [
+        {
+          "time_s": 0.001,
+          "energy_balance_defect_J": -5.642188105614565e-16,
+          "nonlinear_residual_m_s": 5.551115123125783e-17,
+          "max_divergence": 2.220446049250313e-16,
+          "energy_J": 2.553912027229077,
+          "viscous_power_W": -1.1924339422665262,
+          "convective_power_W": -6.828467859173126e-18
+        },
+        {
+          "time_s": 0.002,
+          "energy_balance_defect_J": 3.220080452281948e-16,
+          "nonlinear_residual_m_s": 2.7755575615628914e-17,
+          "max_divergence": 2.636779683484747e-16,
+          "energy_J": 2.552720290458295,
+          "viscous_power_W": -1.1917367707824256,
+          "convective_power_W": 4.692383041688199e-18
+        },
+        {
+          "time_s": 0.003,
+          "energy_balance_defect_J": 1.0646865333807654e-16,
+          "nonlinear_residual_m_s": 2.7755575615628914e-17,
+          "max_divergence": 2.498001805406602e-16,
+          "energy_J": 2.5515292503903884,
+          "viscous_power_W": -1.1910400679068187,
+          "convective_power_W": -2.0310314658053398e-18
+        }
+      ]
+    },
+    {
+      "device": "cuda",
+      "gradient_error": 1.7763568394002505e-15,
+      "divergence_error": 4.440892098500626e-16,
+      "adjoint_error": 3.1086244689504383e-15,
+      "projection_error": 1.1102230246251565e-16,
+      "orthogonal_energy_error_J": 2.220446049250313e-16,
+      "stress_error": 7.37257477290143e-17,
+      "stress_negative_work_identity_error": 1.4343284282652883e-16,
+      "convective_flux_error": 2.42861286636753e-17,
+      "convective_power_W": -9.594872786735572e-18,
+      "steps": [
+        {
+          "time_s": 0.001,
+          "energy_balance_defect_J": -5.642188105614565e-16,
+          "nonlinear_residual_m_s": 5.551115123125783e-17,
+          "max_divergence": 2.220446049250313e-16,
+          "energy_J": 2.5539120272290767,
+          "viscous_power_W": -1.1924339422665262,
+          "convective_power_W": -3.957009579931093e-18
+        },
+        {
+          "time_s": 0.002,
+          "energy_balance_defect_J": 7.660972550782574e-16,
+          "nonlinear_residual_m_s": 5.551115123125783e-17,
+          "max_divergence": 3.0531133177191805e-16,
+          "energy_J": 2.552720290458295,
+          "viscous_power_W": -1.1917367707824256,
+          "convective_power_W": -0.0
+        },
+        {
+          "time_s": 0.003,
+          "energy_balance_defect_J": 1.0646865333807654e-16,
+          "nonlinear_residual_m_s": 2.7755575615628914e-17,
+          "max_divergence": 2.220446049250313e-16,
+          "energy_J": 2.5515292503903884,
+          "viscous_power_W": -1.1910400679068187,
+          "convective_power_W": 4.6573652577950034e-18
+        }
+      ]
+    }
+  ],
+  "source_sha256": "b6b823c2c7972368a30fbba14f07d1222d062d00a9fe03c769c844407bfde5eb",
+  "auditor_sha256": "c7bbbf3da736669ec7eb39fdd061bd2931bb8703e02d3e9a2dc6df5f4ab0ea2e",
+  "physical_accuracy_qualified": false,
+  "distributed_supported": false
+}

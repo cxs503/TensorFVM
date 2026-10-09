@@ -102,3 +102,5 @@ OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 PYTHONPATH=src:. \
 
 下一步应将相容面动量拓展到真实固壁 dual CV及边界压力/黏性功，再考虑
 圆柱与移动体；不能直接把周期 FFT 边界当成上浮破冰流体后端。
+
+Independent NumPy evidence: [audit archive](../periodic-mac-audit/README.md).

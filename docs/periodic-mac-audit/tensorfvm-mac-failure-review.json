@@ -1,0 +1,25 @@
+{
+  "failure": "MAC midpoint nonlinear solve failed: residual 0.00347",
+  "config": {
+    "nx": 16,
+    "ny": 12,
+    "nz": 8,
+    "lengths_m": [
+      6.283185307179586,
+      6.283185307179586,
+      6.283185307179586
+    ],
+    "density_kg_m3": 1.0,
+    "viscosity_pa_s": 0.01,
+    "time_step_s": 0.5,
+    "nonlinear_tolerance": 1e-12,
+    "nonlinear_iterations": 4,
+    "device": "cpu"
+  },
+  "nonlinear_residual": 0.003474189753216339,
+  "rollback_exact_velocity_clock_history": true,
+  "distributed_rejected": true,
+  "physical_accuracy_qualified": false,
+  "source_sha256": "b6b823c2c7972368a30fbba14f07d1222d062d00a9fe03c769c844407bfde5eb",
+  "auditor_sha256": "a780115fec30b1ff81f478a186b4c08075f88303bfa331667c2e385789f682ec"
+}
