@@ -31,3 +31,23 @@ OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 PYTHONPATH=src python -m pytest -q tests/tes
 移动案例全局 reservoir 的累计绝对质量交换约 0.044–0.048 kg。账本闭合没有解决局部 swept-volume 质量转移；报告始终 `local_mass_conservation_qualified=false`、`temporal_convergence_qualified=false`、`physical_accuracy_qualified=false`。
 
 下一步应分别完成曲面阻力独立解析/同条件对照、固定 EOS 的误差识别和局部保守移动边界。FVM 尚未获得移动冰求解器资格。
+
+## 延长至 12 s 的独立双门资格审计
+
+新增 [developed-report.json](developed-report.json) 与独立模块，原 19 份历史报告及其 source/raw SHA 保持不变。
+
+```bash
+OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 PYTHONPATH=src python scripts/audit_developed_lbm_boundary.py --lbm-root ../TensorLBM
+OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 PYTHONPATH=src python -m pytest -q tests/test_developed_boundary_audit.py
+```
+
+按实际排除圆盘内部节点后的流体质量，逐步积分 `m_fluid*a*ramp(t_mid)*dt` 驱动冲量；对完整每步反力序列积分，独立恢复最后 0.5 s 的净流体动量起止值，并核对最终 populations。稳态必须同时满足相邻 0.5 s 力窗漂移 <1% 与反力/驱动力差 <1%。仅漂移通过时不能宣称稳态。
+
+| 实际算例 | 力窗漂移 | 反力/驱动力差 | 最后窗流体净动量率 N | 真正稳态 |
+|---|---:|---:|---:|---|
+| n32, dt=0.0005 s | 0.641766% | 4.650379% | 0.177477 | 未通过 |
+| n48, dt=0.0005 s | 0.649088% | 4.716988% | 0.179426 | 未通过 |
+| n64, dt=0.0005 s | 0.656260% | 4.788444% | 0.182139 | 未通过 |
+| n64, dt=0.00025 s | 0.654659% | 4.772500% | 0.181532 | 未通过 |
+
+四例原始场审计通过；最大相对质量误差 4.75e-12，质量阈值为 1e-11。最后窗仍存在实际流体加速。五项新增测试包含构造非负原始 populations、平坦力窗但4.5%未平衡的场，确认独立审计拒绝伪报 `steady_qualified=true`。未运行同条件 FVM 圆柱计算，物理精度与纯时间收敛仍未获资格。
