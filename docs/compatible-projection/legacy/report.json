@@ -1,0 +1,43 @@
+{
+  "legacy_commit": "7f19fcc5a7cb140c953e01f6ccd77001cee6b082",
+  "legacy_solver_source_sha256": "26eed7c675e187c5594a4b7c3ae96660d4f5c4bdf1f15c4eb6a8101b29d41618",
+  "raw_sha256": "c20f0a0d415ea5cf8ee869edab45bf6762af4fbc6ae0b2f643512574bb7db320",
+  "config": {
+    "nx": 48,
+    "ny": 32,
+    "nz": 12,
+    "length": 20.0,
+    "height": 12.0,
+    "span": 3.0,
+    "cylinder_x": 5.0,
+    "cylinder_y": 6.0,
+    "cylinder_radius": 0.5,
+    "inlet_velocity": 1.0,
+    "reynolds": 3900.0,
+    "density": 1.0,
+    "time_step": 0.005,
+    "max_steps": 1,
+    "pressure_iterations": 250,
+    "pressure_relative_tolerance": 1e-08,
+    "pressure_absolute_tolerance": 1e-11,
+    "smagorinsky_constant": 0.1,
+    "mesh_type": "cartesian",
+    "body_fitted_stretching": 2.5,
+    "device": "cpu"
+  },
+  "metric": {
+    "step": 1,
+    "time": 0.005,
+    "continuity": 0.8919979714482311,
+    "velocity_change": 0.10137527223307541,
+    "cfl": 0.01394535439733877,
+    "max_eddy_viscosity": 0.0018616505532951472,
+    "pressure_iterations": 150,
+    "pressure_initial_residual": 1662.7987149489752,
+    "pressure_residual": 1.2178786740548894e-05,
+    "pressure_target_residual": 1.6627987149489753e-05,
+    "pressure_converged": 1
+  },
+  "operator_relative_L2_difference": 0.804454725493719,
+  "physical_accuracy_qualified": false
+}
