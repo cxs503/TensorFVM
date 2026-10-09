@@ -326,3 +326,11 @@ CPU 可用相同命令配合 ``--device cpu``，使用 Gloo；CUDA 使用 NCCL �
 ------
 
 GNU GPL v3，见 LICENSE。
+
+联合平台通道交叉核验
+--------------------
+
+新增 ``python -m tensorfvm.benchmark_suite_channel``，输出三网格 SI 实际场、
+MAC 面流量、压力梯度、壁面剪切及质量守恒。结果见 ``docs/suite-channel/``。
+``scripts/compare_lbm_channel_reference.py`` 可调用独立 TensorLBM 解析 benchmark；
+两套入口/出口不同，仅共同解析验证，尚不构成移动冰流固耦合资格。
