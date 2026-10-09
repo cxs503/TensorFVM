@@ -73,3 +73,5 @@ OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 PYTHONPATH=src:. \
 
 尚未认证能量稳定性、时间/圆柱几何细化、LES统计、Cd/St、移动体、自由液面、
 三维贴体流动和柔性双向 FSI。上风输运和显式Euler仍为低阶。
+
+完整独立审计、默认失败的另一次精确复现和脚本源绑定见 [审核归档](../conservative-transport-audit/README.md)。

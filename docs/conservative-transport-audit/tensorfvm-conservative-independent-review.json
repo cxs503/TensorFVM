@@ -1,0 +1,152 @@
+{
+  "cases": [
+    {
+      "device": "cpu",
+      "steps": [
+        {
+          "time": 0.001,
+          "stress_numpy_error": 0.0,
+          "convection_numpy_error": 0.0,
+          "momentum_residual_Ns": 7.016609515630989e-13,
+          "wall_force_N": [
+            3321.0029281340903,
+            3.552713678800501e-15,
+            0.0
+          ],
+          "wall_moment_Nm": [
+            1.4210854715202004e-14,
+            4981.504392201136,
+            -19926.017568804542
+          ],
+          "face_continuity": 3.6281585791275717e-09,
+          "center_divergence": 0.19917583032757794,
+          "hypothetical_reconstruction_defect_Ns": 1.874995076923072
+        },
+        {
+          "time": 0.002,
+          "stress_numpy_error": 0.0,
+          "convection_numpy_error": 0.0,
+          "momentum_residual_Ns": 5.447309270323331e-13,
+          "wall_force_N": [
+            710.3592795900457,
+            0.0,
+            0.0
+          ],
+          "wall_moment_Nm": [
+            0.0,
+            1065.5389193850688,
+            -4262.155677540276
+          ],
+          "face_continuity": 2.766176858751135e-09,
+          "center_divergence": 0.2894139928152023,
+          "hypothetical_reconstruction_defect_Ns": 1.5571037992064853
+        },
+        {
+          "time": 0.003,
+          "stress_numpy_error": 0.0,
+          "convection_numpy_error": 0.0,
+          "momentum_residual_Ns": 4.4333980930844064e-13,
+          "wall_force_N": [
+            280.75080863940883,
+            0.0,
+            0.0
+          ],
+          "wall_moment_Nm": [
+            0.0,
+            421.1262129591132,
+            -1684.5048518364526
+          ],
+          "face_continuity": 6.572996973097656e-10,
+          "center_divergence": 0.38584841822145766,
+          "hypothetical_reconstruction_defect_Ns": 1.4061928133646697
+        }
+      ]
+    },
+    {
+      "device": "cuda",
+      "steps": [
+        {
+          "time": 0.001,
+          "stress_numpy_error": 0.0,
+          "convection_numpy_error": 0.0,
+          "momentum_residual_Ns": 9.112710586123285e-13,
+          "wall_force_N": [
+            3321.002928134034,
+            3.552713678800501e-15,
+            0.0
+          ],
+          "wall_moment_Nm": [
+            7.105427357601002e-15,
+            4981.504392201054,
+            -19926.01756880421
+          ],
+          "face_continuity": 3.6304878391762996e-09,
+          "center_divergence": 0.1991758303275733,
+          "hypothetical_reconstruction_defect_Ns": 1.8749950769230763
+        },
+        {
+          "time": 0.002,
+          "stress_numpy_error": 4.336808689942018e-19,
+          "convection_numpy_error": 0.0,
+          "momentum_residual_Ns": 8.496536807456323e-13,
+          "wall_force_N": [
+            710.3592795900795,
+            -8.881784197001252e-16,
+            0.0
+          ],
+          "wall_moment_Nm": [
+            0.0,
+            1065.5389193851192,
+            -4262.155677540479
+          ],
+          "face_continuity": 2.766976146470479e-09,
+          "center_divergence": 0.28941399281520586,
+          "hypothetical_reconstruction_defect_Ns": 1.5571037992065282
+        },
+        {
+          "time": 0.003,
+          "stress_numpy_error": 4.336808689942018e-19,
+          "convection_numpy_error": 0.0,
+          "momentum_residual_Ns": 7.911171717722709e-13,
+          "wall_force_N": [
+            280.7508086394064,
+            0.0,
+            0.0
+          ],
+          "wall_moment_Nm": [
+            0.0,
+            421.1262129591096,
+            -1684.5048518364385
+          ],
+          "face_continuity": 6.573270122656183e-10,
+          "center_divergence": 0.3858484182214603,
+          "hypothetical_reconstruction_defect_Ns": 1.406192813364691
+        }
+      ]
+    }
+  ],
+  "MMS": [
+    {
+      "device": "cpu",
+      "variable_mu_cross_component_MMS_max_error": 0.0,
+      "mu_laplacian_wrong_model_difference": 72.25
+    },
+    {
+      "device": "cuda",
+      "variable_mu_cross_component_MMS_max_error": 0.0,
+      "mu_laplacian_wrong_model_difference": 72.25
+    }
+  ],
+  "physical_accuracy_qualified": false,
+  "source_sha256": "2ab9293e9a01ba8ed33a86ec879ea32037526509cd54e56c6e3b03c66e9ed886",
+  "dependencies_sha256": {
+    "/home/jsyc/tensor-suite-development/TensorFVM/src/tensorfvm/solver3d.py": "95d4711fd52ad9f2d8dd7300a999814633de986a2d579dcc997d17aa01603a37",
+    "/home/jsyc/tensor-suite-development/TensorFVM/src/tensorfvm/runtime.py": "ff383730f34f82030f28da424819eea670f28c663d5be834f30bebc6c74a2da5",
+    "/home/jsyc/tensor-suite-development/TensorFVM/src/tensorfvm/mesh3d.py": "ad7fe310537e70dcb65a34b42b335ea8bd7f9abd2bf24453a907c7f43a2b7c56",
+    "/tmp/tensorfvm_conservative_review.py": "1bfb3ca18dc8754afaba855d320754261337c4ee73236ece2e9ed771d268cafa"
+  },
+  "raw_sha256": {
+    "/tmp/tensorfvm-conservative-raw-cpu.npz": "3525e0abd7e4bec6e28d0f97951a1aac702631be124de3a08a047184bdd4fbf2",
+    "/tmp/tensorfvm-conservative-raw-cuda.npz": "3d83a87f9c8434bcbdcf59d9e9b5e867c20ad1c80aa86bdf4d355154993d2389"
+  }
+}
