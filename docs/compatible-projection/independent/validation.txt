@@ -1,0 +1,161 @@
+{
+  "source_sha256": {
+    "src/tensorfvm/solver3d.py": "95d4711fd52ad9f2d8dd7300a999814633de986a2d579dcc997d17aa01603a37",
+    "src/tensorfvm/runtime.py": "ff383730f34f82030f28da424819eea670f28c663d5be834f30bebc6c74a2da5",
+    "src/tensorfvm/mesh3d.py": "ad7fe310537e70dcb65a34b42b335ea8bd7f9abd2bf24453a907c7f43a2b7c56",
+    "src/tensorfvm/benchmark_cylinder3d.py": "cdc762f7a39e5092599d82f68d4a4486619340805da47a401ca4dc098e7fd08e",
+    "scripts/validate_compatible_projection.py": "63ce033bde590990b80f88875df6d1b63cab4ed7614b9abcef116acc8f0219dd"
+  },
+  "cases": [
+    {
+      "device": "cpu",
+      "config": {
+        "nx": 32,
+        "ny": 24,
+        "nz": 4,
+        "length": 20.0,
+        "height": 12.0,
+        "span": 3.0,
+        "cylinder_x": 5.0,
+        "cylinder_y": 6.0,
+        "cylinder_radius": 0.5,
+        "inlet_velocity": 1.0,
+        "reynolds": 3900.0,
+        "density": 1.0,
+        "time_step": 0.001,
+        "max_steps": 3,
+        "pressure_iterations": 500,
+        "pressure_relative_tolerance": 1e-08,
+        "pressure_absolute_tolerance": 1e-11,
+        "smagorinsky_constant": 0.1,
+        "mesh_type": "cartesian",
+        "body_fitted_stretching": 2.5,
+        "device": "cpu"
+      },
+      "operators": [
+        {
+          "case": "random",
+          "gradient_error": 0.0,
+          "operator_error": 0.0,
+          "operator_norm": 1005.4294210939834
+        },
+        {
+          "case": "checkerboard",
+          "gradient_error": 0.0,
+          "operator_error": 0.0,
+          "operator_norm": 1799.1064621810795
+        }
+      ],
+      "steps": [
+        {
+          "time": 0.001,
+          "continuity": 3.63017777296748e-09,
+          "solid_face_flux_max": 0.0,
+          "face_correction_error": 1.1102230246251565e-16,
+          "global_flux": 8.510994575772202e-09,
+          "integrated_divergence": 8.510999608772862e-09
+        },
+        {
+          "time": 0.002,
+          "continuity": 3.368464739778032e-09,
+          "solid_face_flux_max": 0.0,
+          "face_correction_error": 1.1052424708953013e-16,
+          "global_flux": -7.743864216536167e-09,
+          "integrated_divergence": -7.743859316959297e-09
+        },
+        {
+          "time": 0.003,
+          "continuity": 1.8347514826877465e-10,
+          "solid_face_flux_max": 0.0,
+          "face_correction_error": 1.1080546202801855e-16,
+          "global_flux": -9.563443370552704e-10,
+          "integrated_divergence": -9.56350238652922e-10
+        }
+      ],
+      "raw_scope": "last step pressure, corrected and tentative faces"
+    },
+    {
+      "device": "cuda",
+      "config": {
+        "nx": 32,
+        "ny": 24,
+        "nz": 4,
+        "length": 20.0,
+        "height": 12.0,
+        "span": 3.0,
+        "cylinder_x": 5.0,
+        "cylinder_y": 6.0,
+        "cylinder_radius": 0.5,
+        "inlet_velocity": 1.0,
+        "reynolds": 3900.0,
+        "density": 1.0,
+        "time_step": 0.001,
+        "max_steps": 3,
+        "pressure_iterations": 500,
+        "pressure_relative_tolerance": 1e-08,
+        "pressure_absolute_tolerance": 1e-11,
+        "smagorinsky_constant": 0.1,
+        "mesh_type": "cartesian",
+        "body_fitted_stretching": 2.5,
+        "device": "cuda"
+      },
+      "operators": [
+        {
+          "case": "random",
+          "gradient_error": 1.7763568394002505e-15,
+          "operator_error": 1.4210854715202004e-14,
+          "operator_norm": 1005.4294210939834
+        },
+        {
+          "case": "checkerboard",
+          "gradient_error": 0.0,
+          "operator_error": 0.0,
+          "operator_norm": 1799.1064621810795
+        }
+      ],
+      "steps": [
+        {
+          "time": 0.001,
+          "continuity": 3.63241301100381e-09,
+          "solid_face_flux_max": 0.0,
+          "face_correction_error": 1.1796119636642288e-16,
+          "global_flux": 8.510994575772202e-09,
+          "integrated_divergence": 8.510990569228646e-09
+        },
+        {
+          "time": 0.002,
+          "continuity": 3.3692334980989225e-09,
+          "solid_face_flux_max": 0.0,
+          "face_correction_error": 1.1796119636642288e-16,
+          "global_flux": -7.74385355839513e-09,
+          "integrated_divergence": -7.743856810649587e-09
+        },
+        {
+          "time": 0.003,
+          "continuity": 1.834760260388535e-10,
+          "solid_face_flux_max": 0.0,
+          "face_correction_error": 1.1072753499687116e-16,
+          "global_flux": -9.563443370552704e-10,
+          "integrated_divergence": -9.563515061792542e-10
+        }
+      ],
+      "raw_scope": "last step pressure, corrected and tentative faces"
+    }
+  ],
+  "physical_accuracy_qualified": false,
+  "raw_sha256": {
+    "projection-raw-cpu.npz": "cf61826804fb5de99edfd894c41299712077e4946ce433fbb460ab51842db196",
+    "projection-raw-cuda.npz": "1d01ad0c422a05cd5058d8265561340d3e1ee2bd5f165ceaee1361e59b4b3e3a"
+  },
+  "legacy_failure": {
+    "legacy_commit": "7f19fcc5a7cb140c953e01f6ccd77001cee6b082",
+    "continuity": 0.8919979714482311,
+    "operator_relative_L2_difference": 0.804454725493719,
+    "raw_sha256": "c20f0a0d415ea5cf8ee869edab45bf6762af4fbc6ae0b2f643512574bb7db320",
+    "report_sha256": "3880ac86e37c797da89d79b4f20da58c9010c4474126956840508126629ce6ac",
+    "scope": "independent reconstruction of archived failure fields"
+  },
+  "torch_version": "2.14.1+cu130",
+  "numpy_version": "2.4.6",
+  "gpu_name": "NVIDIA GeForce RTX 3090"
+}

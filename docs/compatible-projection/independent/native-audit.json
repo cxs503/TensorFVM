@@ -1,0 +1,41 @@
+{
+  "native_manifest_sha256": "ef29e817a9fdc1f87ef63450c5578eaf58185dd2219e5fdf1299205507464932",
+  "cases": [
+    {
+      "case": "cpu-150-failed",
+      "all_step_passed": false,
+      "steps": 50,
+      "independent_final_continuity": 5.112458302839948e-11,
+      "independent_final_mass_imbalance": 3.1730174043786974e-12,
+      "solid_face_flux_max": 0.0,
+      "face_correction_error": 1.109138822452671e-16,
+      "failed_pressure_steps": 50
+    },
+    {
+      "case": "cpu-250",
+      "all_step_passed": true,
+      "steps": 50,
+      "independent_final_continuity": 3.4320607608055026e-12,
+      "independent_final_mass_imbalance": 4.418687638008123e-13,
+      "solid_face_flux_max": 0.0,
+      "face_correction_error": 1.1080546202801855e-16,
+      "failed_pressure_steps": 0
+    },
+    {
+      "case": "cuda-250",
+      "all_step_passed": true,
+      "steps": 50,
+      "independent_final_continuity": 3.4326879717622855e-12,
+      "independent_final_mass_imbalance": 4.42016793537429e-13,
+      "solid_face_flux_max": 0.0,
+      "face_correction_error": 1.109138822452671e-16,
+      "failed_pressure_steps": 0
+    }
+  ],
+  "physical_accuracy_qualified": false,
+  "source_sha256": {
+    "scripts/audit_native_projection.py": "bf6b2c10f8749b4897bf2195246f89e26c8d11ceb4927233341ace1b1dd75d09",
+    "scripts/validate_compatible_projection.py": "63ce033bde590990b80f88875df6d1b63cab4ed7614b9abcef116acc8f0219dd"
+  },
+  "scope": "independent final raw face reconstruction plus all-step stored-history acceptance, not independent fluid time integration"
+}

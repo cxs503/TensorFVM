@@ -40,7 +40,16 @@ OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 PYTHONPATH=src \
 ```
 
 独立 NumPy 验证与旧源复跑由另一个审查进程完成，证据与脚本在同目录及
-`scripts/validate_compatible_projection.py`；这些验证不调用生产面梯度/散度函数。
+`scripts/validate_compatible_projection.py`；独立参考值由 NumPy 重建，并与生产算子输出交叉对照。另用
+`scripts/audit_native_projection.py` 从三组原生导出场重建最终面散度、壁面零流、
+压力修正及全域通量；全步验收由保存的历史逐步检查，未宣称独立重跑全部 CFD 时间积分。
+独立报告在 `independent/report.json` 和 `independent/native-audit.json`，原场与源代码均绑定 SHA256。
+
+```bash
+OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 PYTHONPATH=src \
+  python scripts/validate_compatible_projection.py
+PYTHONPATH=src python scripts/audit_native_projection.py
+```
 
 ## 限制
 
