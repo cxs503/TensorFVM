@@ -1,0 +1,19 @@
+{
+  "audit_passed": true,
+  "reference_passed": true,
+  "cases": [
+    {
+      "height": 24,
+      "steady": true,
+      "last_drift": 8.458566855490042e-06,
+      "field_and_si_audit": true
+    },
+    {
+      "height": 48,
+      "steady": true,
+      "last_drift": 9.551551701265226e-06,
+      "field_and_si_audit": true
+    }
+  ],
+  "scope": "actual history steady criterion and stored final macroscopic fields; populations/time-average samples not stored"
+}
