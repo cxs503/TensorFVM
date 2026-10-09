@@ -334,3 +334,10 @@ GNU GPL v3，见 LICENSE。
 MAC 面流量、压力梯度、壁面剪切及质量守恒。结果见 ``docs/suite-channel/``。
 ``scripts/compare_lbm_channel_reference.py`` 可调用独立 TensorLBM 解析 benchmark；
 两套入口/出口不同，仅共同解析验证，尚不构成移动冰流固耦合资格。
+
+当前状态与正确性阻塞
+--------------------
+
+2026-10-09 的源码、原始场和 CPU/CUDA 定向审查见
+``docs/current-status-2026-10-09.md``。三维压力算子与速度投影不相容，
+PCG 收敛后连续性仍未达标；静态 SI 通道的三网格资格不能外推三维或移动体。
