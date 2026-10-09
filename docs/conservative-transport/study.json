@@ -1,0 +1,59 @@
+{
+  "schema": "tensorfvm.conservative-transport-study/1",
+  "cases": [
+    {
+      "case": "cpu",
+      "discrete_projection_passed": true,
+      "max_momentum_residual_Ns": 2.0610076145732847e-13,
+      "max_boundary_momentum_residual_Ns": 2.060920878399486e-13,
+      "max_continuity": 3.0839945076854836e-09,
+      "max_center_divergence": 0.6532868916362008,
+      "max_hypothetical_reconstruction_defect_Ns": 0.9374723076923053,
+      "cell_incompressibility_qualified": false,
+      "physical_accuracy_qualified": false
+    },
+    {
+      "case": "cuda",
+      "discrete_projection_passed": true,
+      "max_momentum_residual_Ns": 2.8711928667934927e-13,
+      "max_boundary_momentum_residual_Ns": 2.8711234778544537e-13,
+      "max_continuity": 3.079882791509614e-09,
+      "max_center_divergence": 0.6532868916362011,
+      "max_hypothetical_reconstruction_defect_Ns": 0.9374723076923084,
+      "cell_incompressibility_qualified": false,
+      "physical_accuracy_qualified": false
+    }
+  ],
+  "mms_relative_l2_errors": [
+    0.009952680834900567,
+    0.0025261993284966307,
+    0.000629644703485797
+  ],
+  "source_sha256": {
+    "src/tensorfvm/conservative3d.py": "2ab9293e9a01ba8ed33a86ec879ea32037526509cd54e56c6e3b03c66e9ed886",
+    "src/tensorfvm/solver3d.py": "95d4711fd52ad9f2d8dd7300a999814633de986a2d579dcc997d17aa01603a37",
+    "src/tensorfvm/benchmark_cylinder3d.py": "cdc762f7a39e5092599d82f68d4a4486619340805da47a401ca4dc098e7fd08e",
+    "src/tensorfvm/runtime.py": "ff383730f34f82030f28da424819eea670f28c663d5be834f30bebc6c74a2da5",
+    "src/tensorfvm/mesh3d.py": "ad7fe310537e70dcb65a34b42b335ea8bd7f9abd2bf24453a907c7f43a2b7c56",
+    "scripts/run_conservative_transport.py": "1ed3da78231eb7a6f3c2467ca87b6efaa995d35fd8bab91ae71ba649f501f44a"
+  },
+  "artifacts_sha256": {
+    "cpu/face-fields.json": "02949e43fb662a83d7b41529897f87de8bbf0c6049347544c956c18686629f9c",
+    "cpu/forces.json": "27bc57a7d02696b6f1b6769c01906e7217bd5094c6e0cdfe254f1d0c2b06dfb7",
+    "cpu/history.json": "b385ba2fc70449ec69f3bfb8438139bc1315fb5cd66f79c4fb5bbb925fd1ab66",
+    "cpu/midspan.csv": "4890af69991fefb54e2762bbaec6c98ab24131fef6fa2db18abed2c4d311ca82",
+    "cpu/summary.json": "2b18adfb0050d24b5e665684f9cece01243a91496605122f3907fd24e7e2d21c",
+    "cpu/transport-raw.json.gz": "69c8b5c3ae448f027e2f75e7dd6c6f696546f159a10c42c522c7587cf751f7a2",
+    "cpu/wall-facets.json": "8b9e46dad462239d5bc8e1913808cde8a00d66725a60f5dbb606c5c845cd9063",
+    "cuda/face-fields.json": "12d8fc5942950f65fa34cd84770be24bcd95d61f463f30c7e58123b9ec301886",
+    "cuda/forces.json": "b6cc7011a2b858e28d0337b36e33f96e64db1c0ac67ad52bf371acdd36deb548",
+    "cuda/history.json": "cd266b55541293d1b1839152742f0af1014cb5581d43575125cf1fa158a53a06",
+    "cuda/midspan.csv": "c4658df0c69cc293915df187a43b41a32db8592c76b496a6241cec83750756bd",
+    "cuda/summary.json": "7593a75259de56555aee7efe924b8754d612ab584fc61edfbb639144e43894ed",
+    "cuda/transport-raw.json.gz": "bcd447d61dcb83392fba609356e300d2c4a25e62969ca406fd310718bb28102f",
+    "cuda/wall-facets.json": "96f5289b888c5dd284b0ac7dc5e35929fb8c8a7bc4b179572ef27ee527ed1a5f",
+    "manufactured.json": "86b21201bbeb4518117594cbd25e56d3fa3867bb223150974512537f8b1a4591"
+  },
+  "physical_accuracy_qualified": false,
+  "full_mac_qualified": false
+}
