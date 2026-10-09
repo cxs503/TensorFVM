@@ -1,0 +1,176 @@
+{
+  "raw_audit_passed": true,
+  "all_accepted_steps_field_reconstructed": true,
+  "accepted_steps_verified": 210,
+  "cases": [
+    {
+      "case": "nonlinear-hard-rejected.json.gz",
+      "accepted": false,
+      "nonlinear_residual": 4.988162346140218e-05,
+      "energy_defect_J": 7.77456412524441e-05,
+      "pressure_power_W": 1.5563459508086892e-20,
+      "steps": 0,
+      "last_picard_increment_m_s": 0.00022638096626453885
+    },
+    {
+      "case": "nonlinear-rejected.json.gz",
+      "accepted": false,
+      "nonlinear_residual": 1.5834555888716295e-13,
+      "energy_defect_J": 2.9317347161050833e-13,
+      "pressure_power_W": 1.5563459508086892e-20,
+      "steps": 0,
+      "last_picard_increment_m_s": 3.600363063238632e-11
+    },
+    {
+      "case": "random-cpu.json.gz",
+      "accepted": true,
+      "nonlinear_residual": 5.551115123125783e-17,
+      "energy_defect_J": 1.0039712117215771e-16,
+      "pressure_power_W": 1.5563459508086892e-20,
+      "steps": 10,
+      "last_picard_increment_m_s": 5.6746274346153314e-14
+    },
+    {
+      "case": "random-cuda-0.json.gz",
+      "accepted": true,
+      "nonlinear_residual": 5.551115123125783e-17,
+      "energy_defect_J": 1.0039712117215771e-16,
+      "pressure_power_W": 4.6690378524260676e-20,
+      "steps": 10,
+      "last_picard_increment_m_s": 5.67323965583455e-14
+    },
+    {
+      "case": "tg-grid-16.json.gz",
+      "accepted": true,
+      "nonlinear_residual": 1.1102230246251565e-16,
+      "energy_defect_J": 5.495603971894525e-15,
+      "pressure_power_W": 1.0017592315683277e-15,
+      "steps": 40,
+      "last_picard_increment_m_s": 5.10702591327572e-15
+    },
+    {
+      "case": "tg-grid-32.json.gz",
+      "accepted": true,
+      "nonlinear_residual": 1.1102230246251565e-16,
+      "energy_defect_J": 4.440892098500626e-16,
+      "pressure_power_W": -1.1926995753213419e-17,
+      "steps": 40,
+      "last_picard_increment_m_s": 5.440092820663267e-15
+    },
+    {
+      "case": "tg-grid-8.json.gz",
+      "accepted": true,
+      "nonlinear_residual": 1.1102230246251565e-16,
+      "energy_defect_J": 7.993605777301127e-15,
+      "pressure_power_W": 6.459860040853898e-16,
+      "steps": 40,
+      "last_picard_increment_m_s": 3.9968028886505635e-15
+    },
+    {
+      "case": "tg-time-0.025.json.gz",
+      "accepted": true,
+      "nonlinear_residual": 4.440892098500626e-16,
+      "energy_defect_J": -4.463096558993129e-14,
+      "pressure_power_W": -2.006050564751598e-16,
+      "steps": 40,
+      "last_picard_increment_m_s": 1.482147737874584e-13
+    },
+    {
+      "case": "tg-time-0.05.json.gz",
+      "accepted": true,
+      "nonlinear_residual": 2.220446049250313e-16,
+      "energy_defect_J": 7.66053886991358e-15,
+      "pressure_power_W": 2.1802169941969563e-16,
+      "steps": 20,
+      "last_picard_increment_m_s": 2.353672812205332e-14
+    },
+    {
+      "case": "tg-time-0.1.json.gz",
+      "accepted": true,
+      "nonlinear_residual": 3.3306690738754696e-16,
+      "energy_defect_J": -1.9095836023552692e-14,
+      "pressure_power_W": 2.2195737814700886e-16,
+      "steps": 10,
+      "last_picard_increment_m_s": 1.509903313490213e-14
+    }
+  ],
+  "spatial_refinement": [
+    {
+      "n": 8,
+      "dt": 0.0125,
+      "time": 0.5,
+      "error": 0.005048536169002314
+    },
+    {
+      "n": 16,
+      "dt": 0.0125,
+      "time": 0.5,
+      "error": 0.0012792843992827868
+    },
+    {
+      "n": 32,
+      "dt": 0.0125,
+      "time": 0.5,
+      "error": 0.0003208634775416119
+    }
+  ],
+  "temporal_refinement": [
+    {
+      "n": 16,
+      "dt": 0.1,
+      "time": 1.0,
+      "error": 6.414573090235682e-06
+    },
+    {
+      "n": 16,
+      "dt": 0.05,
+      "time": 1.0,
+      "error": 1.6035767941453e-06
+    },
+    {
+      "n": 16,
+      "dt": 0.025,
+      "time": 1.0,
+      "error": 4.0089006287569093e-07
+    }
+  ],
+  "variable_mu_MMS": [
+    {
+      "n": 8,
+      "relative_l2_error": 0.053168046993076146
+    },
+    {
+      "n": 16,
+      "relative_l2_error": 0.013546094328558269
+    },
+    {
+      "n": 32,
+      "relative_l2_error": 0.0034027289511405637
+    }
+  ],
+  "source_sha256": {
+    "src/tensorfvm/periodic_mac.py": "b6b823c2c7972368a30fbba14f07d1222d062d00a9fe03c769c844407bfde5eb",
+    "src/tensorfvm/runtime.py": "ff383730f34f82030f28da424819eea670f28c663d5be834f30bebc6c74a2da5",
+    "scripts/run_periodic_mac.py": "67feb99a7e7ecdc4b879a26f31189740c256aa2e56fbceb386671a7d56479808"
+  },
+  "artifacts_sha256": {
+    "mms-16.json.gz": "66212ef4b9e218c92626058194dc3479164f001f9fe03671d0ee405128bccfd5",
+    "mms-32.json.gz": "e2092b463dbedb8f220dace71b7f5d51b8e885fd60231f6ddef186793454fd08",
+    "mms-8.json.gz": "3228577437257405de6b050ab2d87b86764e612be61b3f953dd5ea321e8661f8",
+    "nonlinear-hard-rejected.json.gz": "0b0a94bd8329614dcb2661291e544637bcd3bb3aa90299f5953efa8ad26d374c",
+    "nonlinear-rejected.json.gz": "c6cf6d6bd7a4ccbab5475b8f7975d2a4b9cabd26443d904699cef3c3248d53c3",
+    "random-cpu.json.gz": "4a3364f654dc8599fc8fc1713ce3ceb64680673d5f6cac0839eec9f36ac15844",
+    "random-cuda-0.json.gz": "c904642c9613a2b1efa95878696fc5eecca0f08a03415cdd147d3ae42d812313",
+    "tg-grid-16.json.gz": "09164cab843b6d4b8a689c6e257454f2ee0e385004063658d7885bd646f98a4b",
+    "tg-grid-32.json.gz": "4c46b5b21390e28b7764ccfbbe4ba353346c7b0bcef0fa79fe7196eb62b5040c",
+    "tg-grid-8.json.gz": "c4f9dceac8e4c78557568b7c29b9648e49e3ebfb66ebf212beb31044af9e9d64",
+    "tg-time-0.025.json.gz": "7df238a901345c11c41ef63c7f790cf9ac8298127749eeb345422d3d61fcea28",
+    "tg-time-0.05.json.gz": "c37f04aa29868b742047a6ead1c2b540b6b95b1ece2eb0153fc033a7e24d41d8",
+    "tg-time-0.1.json.gz": "cbe19d122f08a7cd04ab0240c31987af02a1fecd5676214fa07ede661ac8bf86"
+  },
+  "study_sha256": "3519d42f274763f60f80f6eb0b2ef75aead1feefedbc72d88cddc69b53834323",
+  "auditor_sha256": "8eb328eccd2667bb741583a605a78c6792b2ffebdc180fb5595e865792391c76",
+  "helper_sha256": "c7bbbf3da736669ec7eb39fdd061bd2931bb8703e02d3e9a2dc6df5f4ab0ea2e",
+  "physical_accuracy_qualified": false,
+  "distributed_supported": false
+}

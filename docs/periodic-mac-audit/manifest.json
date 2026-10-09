@@ -1,0 +1,21 @@
+{
+  "source_sha256": {
+    "src/tensorfvm/periodic_mac.py": "b6b823c2c7972368a30fbba14f07d1222d062d00a9fe03c769c844407bfde5eb",
+    "src/tensorfvm/runtime.py": "ff383730f34f82030f28da424819eea670f28c663d5be834f30bebc6c74a2da5",
+    "scripts/run_periodic_mac.py": "67feb99a7e7ecdc4b879a26f31189740c256aa2e56fbceb386671a7d56479808"
+  },
+  "study_sha256": "3519d42f274763f60f80f6eb0b2ef75aead1feefedbc72d88cddc69b53834323",
+  "artifacts_sha256": {
+    "README.md": "61fa8141fef13fc1fd8b925598dc63368a5363872f2256ea8c23caba1e5ea515",
+    "scripts/tensorfvm_mac_failure_review.py": "a780115fec30b1ff81f478a186b4c08075f88303bfa331667c2e385789f682ec",
+    "scripts/tensorfvm_mac_independent_review.py": "c7bbbf3da736669ec7eb39fdd061bd2931bb8703e02d3e9a2dc6df5f4ab0ea2e",
+    "scripts/tensorfvm_mac_raw_audit.py": "8eb328eccd2667bb741583a605a78c6792b2ffebdc180fb5595e865792391c76",
+    "tensorfvm-mac-failed-candidate.npz": "cf0c7f970ce3f72254778fd3d345d4132be334348bafff9922d04a4b2fa53255",
+    "tensorfvm-mac-failure-review.json": "06ac76418cc9b61cd3103aec1708959da6be6e9e0f86f5db6aaf415dc06a8b80",
+    "tensorfvm-mac-independent-review.json": "c4341ca8b0ed7b81fa3e02ab54d7467b5edffa3ba09682655c5c4a5120a8ac42",
+    "tensorfvm-mac-raw-audit.json": "cd9429467b29c1658fa4deb7c3985ffcce0ca217227b587d90f3f3ba2ec406ce",
+    "tensorfvm-mac-raw-cpu.npz": "a3ba79de03610004264d653b3b1234c4ed33836ecad18df8371e296591f702e6",
+    "tensorfvm-mac-raw-cuda.npz": "833a00cc240a284d94eab2486f6298c8275184d66061ec64773f09889a2023d8"
+  },
+  "physical_accuracy_qualified": false
+}
