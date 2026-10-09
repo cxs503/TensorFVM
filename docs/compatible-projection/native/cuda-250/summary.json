@@ -1,0 +1,56 @@
+{
+  "steps": 50,
+  "runtime": {
+    "device": "cuda:0",
+    "rank": 0,
+    "world_size": 1
+  },
+  "config": {
+    "nx": 48,
+    "ny": 32,
+    "nz": 12,
+    "length": 20.0,
+    "height": 12.0,
+    "span": 3.0,
+    "cylinder_x": 5.0,
+    "cylinder_y": 6.0,
+    "cylinder_radius": 0.5,
+    "inlet_velocity": 1.0,
+    "reynolds": 3900.0,
+    "density": 1.0,
+    "time_step": 0.005,
+    "max_steps": 50,
+    "pressure_iterations": 250,
+    "pressure_relative_tolerance": 1e-08,
+    "pressure_absolute_tolerance": 1e-11,
+    "smagorinsky_constant": 0.1,
+    "mesh_type": "cartesian",
+    "body_fitted_stretching": 2.5,
+    "device": "cuda:0"
+  },
+  "rank_zero_z_partition": {
+    "start": 0,
+    "stop": 12
+  },
+  "final": {
+    "step": 50,
+    "time": 0.2500000000000001,
+    "continuity": 3.432687944657231e-12,
+    "center_velocity_divergence": 0.08315874680308355,
+    "boundary_mass_imbalance": 4.4191733605813965e-13,
+    "velocity_change": 0.012115001667564032,
+    "cfl": 0.01468577034837397,
+    "max_eddy_viscosity": 0.0015924870786158355,
+    "pressure_iterations": 160,
+    "pressure_initial_residual": 3.2043235094178866,
+    "pressure_residual": 2.568493904585762e-08,
+    "pressure_target_residual": 3.2043235094178864e-08,
+    "pressure_converged": 1
+  },
+  "force": {
+    "step": 50,
+    "time": 0.2500000000000001,
+    "drag": 6.534445125917827,
+    "lift": 0.0
+  }
+}

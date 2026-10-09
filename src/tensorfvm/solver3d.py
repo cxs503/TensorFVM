@@ -30,7 +30,7 @@ class Cylinder3DConfig:
     density: float = 1.0
     time_step: float = 0.01
     max_steps: int = 100
-    pressure_iterations: int = 200
+    pressure_iterations: int = 250
     pressure_relative_tolerance: float = 1e-8
     pressure_absolute_tolerance: float = 1e-11
     smagorinsky_constant: float = 0.1
@@ -106,6 +106,9 @@ class Cylinder3DResult:
     force_history: list[dict[str, float | int]]
     runtime: DistributedRuntime
     partition: SlabPartition
+    face_velocity: tuple[torch.Tensor, torch.Tensor, torch.Tensor]
+    tentative_face_velocity: tuple[torch.Tensor, torch.Tensor, torch.Tensor]
+    face_masks: tuple[torch.Tensor, torch.Tensor, torch.Tensor]
 
 
 class Cylinder3DSolver:
@@ -140,19 +143,14 @@ class Cylinder3DSolver:
         self.pressure = torch.zeros(self.mesh.fluid.shape, dtype=torch.float64,
                                     device=self.runtime.device)
         self._pressure_unknown = self.mesh.fluid.clone()
-        # x inlet and y far-field values are derived Neumann values; the x
-        # outlet is the pressure gauge.  Only interior fluid cells are PCG
-        # unknowns, which keeps the reduced pressure operator symmetric.
-        self._pressure_unknown[:, :, 0] = False
-        self._pressure_unknown[:, :, -1] = False
-        self._pressure_unknown[:, 0] = False
-        self._pressure_unknown[:, -1] = False
+        self._build_face_masks()
         self._pressure_diagonal = self._build_pressure_diagonal()
         self.last_pressure_solve: PressureSolveInfo | None = None
         self.history: list[dict[str, float | int]] = []
         self.force_history: list[dict[str, float | int]] = []
         self.time = 0.0
         self._apply_velocity_boundaries(self.velocity)
+        self.face_velocity = self._predict_faces(self.velocity)
 
     def _x_neighbors(self, field: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
         return (torch.cat((field[..., 1:], field[..., -1:]), dim=-1),
@@ -216,10 +214,7 @@ class Cylinder3DSolver:
 
     def _apply_pressure_boundaries(self, pressure: torch.Tensor) -> None:
         fluid = self.mesh.fluid
-        pressure[:, :, -1] = 0  # gauge reference at outlet
-        pressure[:, :, 0] = pressure[:, :, 1]
-        pressure[:, 0] = pressure[:, 1]
-        pressure[:, -1] = pressure[:, -2]
+        # Boundary conditions live on faces; all fluid cell pressures are unknown.
         pressure.masked_fill_(~fluid, 0)
 
     def _divergence(self, velocity: torch.Tensor) -> torch.Tensor:
@@ -251,33 +246,68 @@ class Cylinder3DSolver:
             ~self.mesh.fluid, 0
         )
 
-    def _build_pressure_diagonal(self) -> torch.Tensor:
-        """Return the Jacobi diagonal for the reduced, symmetric pressure operator."""
-        m = self.mesh
-        diagonal = torch.full_like(
-            self.pressure, 2 / m.dx ** 2 + 2 / m.dy ** 2 + 2 / m.dz ** 2
-        )
-        # At a homogeneous Neumann boundary the ghost value equals the nearest
-        # interior unknown, lowering the diagonal of the adjacent row.  The
-        # outlet and solid faces remain zero-valued Dirichlet neighbours.
-        diagonal[:, 1:-1, 1] -= 1 / m.dx ** 2
-        diagonal[:, 1, 1:-1] -= 1 / m.dy ** 2
-        diagonal[:, -2, 1:-1] -= 1 / m.dy ** 2
-        return torch.where(self._pressure_unknown, diagonal, torch.ones_like(diagonal))
+    def _build_face_masks(self):
+        """Only fluid-fluid internal faces conduct pressure/normal velocity."""
+        f = self.mesh.fluid
+        self._face_x = f[..., :-1] & f[..., 1:]
+        self._face_y = f[:, :-1] & f[:, 1:]
+        following, _ = self._z_neighbors(f.to(torch.float64))
+        self._face_z = f & following.bool()
 
-    def _pressure_operator(self, pressure: torch.Tensor) -> torch.Tensor:
-        """Apply ``-Laplacian`` to independent pressure unknowns across z slabs."""
+    def _predict_faces(self, velocity):
+        f, c = self.mesh.fluid, self.config
+        ux = torch.zeros((*f.shape[:-1], f.shape[-1] + 1), dtype=torch.float64, device=f.device)
+        uy = torch.zeros((f.shape[0], f.shape[1] + 1, f.shape[2]), dtype=torch.float64, device=f.device)
+        ux[..., 1:-1] = .5 * (velocity[..., :-1, 0] + velocity[..., 1:, 0]) * self._face_x
+        uy[:, 1:-1] = .5 * (velocity[:, :-1, :, 1] + velocity[:, 1:, :, 1]) * self._face_y
+        ux[..., 0] = c.inlet_velocity * f[..., 0]
+        ux[..., -1] = velocity[..., -1, 0] * f[..., -1]
+        following, _ = self._z_neighbors(velocity[..., 2])
+        uz = .5 * (velocity[..., 2] + following) * self._face_z
+        return ux, uy, uz
+
+    def _face_gradient(self, pressure):
+        p = pressure.masked_fill(~self.mesh.fluid, 0)
         m = self.mesh
-        constrained = pressure.clone()
-        self._apply_pressure_boundaries(constrained)
-        east, west = self._x_neighbors(constrained)
-        north, south = self._y_neighbors(constrained)
-        top, bottom = self._z_neighbors(constrained)
-        operator = ((2 / m.dx ** 2 + 2 / m.dy ** 2 + 2 / m.dz ** 2) * constrained
-                    - (east + west) / m.dx ** 2
-                    - (north + south) / m.dy ** 2
-                    - (top + bottom) / m.dz ** 2)
-        return torch.where(self._pressure_unknown, operator, torch.zeros_like(operator))
+        gx = torch.zeros((*p.shape[:-1], p.shape[-1] + 1), dtype=p.dtype, device=p.device)
+        gy = torch.zeros((p.shape[0], p.shape[1] + 1, p.shape[2]), dtype=p.dtype, device=p.device)
+        gx[..., 1:-1] = (p[..., 1:] - p[..., :-1]) / m.dx * self._face_x
+        # Outlet p=0 at the physical face, half a cell from its owner.
+        gx[..., -1] = -2 * p[..., -1] / m.dx
+        gy[:, 1:-1] = (p[:, 1:] - p[:, :-1]) / m.dy * self._face_y
+        following, _ = self._z_neighbors(p)
+        gz = (following - p) / m.dz * self._face_z
+        return gx, gy, gz
+
+    def _face_divergence(self, faces):
+        ux, uy, uz = faces
+        _, preceding = self._z_neighbors(uz)
+        return ((ux[..., 1:] - ux[..., :-1]) / self.mesh.dx
+                + (uy[:, 1:] - uy[:, :-1]) / self.mesh.dy
+                + (uz - preceding) / self.mesh.dz).masked_fill(~self.mesh.fluid, 0)
+
+    def _reconstruct_velocity(self, faces):
+        ux, uy, uz = faces
+        _, preceding = self._z_neighbors(uz)
+        return torch.stack((.5 * (ux[..., 1:] + ux[..., :-1]),
+                            .5 * (uy[:, 1:] + uy[:, :-1]),
+                            .5 * (uz + preceding)), -1).masked_fill(~self.mesh.fluid[..., None], 0)
+
+    def _build_pressure_diagonal(self):
+        p = self.pressure
+        d = torch.zeros_like(p)
+        x, y = self._face_x.to(p.dtype) / self.mesh.dx**2, self._face_y.to(p.dtype) / self.mesh.dy**2
+        d[..., :-1] += x; d[..., 1:] += x
+        d[:, :-1] += y; d[:, 1:] += y
+        z = self._face_z.to(p.dtype) / self.mesh.dz**2
+        _, preceding = self._z_neighbors(z)
+        d += z + preceding
+        d[..., -1] += 2 * self.mesh.fluid[..., -1] / self.mesh.dx**2
+        return torch.where(self.mesh.fluid, d, torch.ones_like(d))
+
+    def _pressure_operator(self, pressure):
+        """SPD -D_face G_face, exactly the flux correction used by step."""
+        return -self._face_divergence(self._face_gradient(pressure))
 
     def _global_dot(self, left: torch.Tensor, right: torch.Tensor) -> torch.Tensor:
         """Return an FP64 distributed inner product for a local z-slab vector."""
@@ -286,9 +316,9 @@ class Cylinder3DSolver:
     def _pressure_projection(self, rhs: torch.Tensor) -> PressureSolveInfo:
         """Solve the distributed Poisson projection with preconditioned CG.
 
-        The operator has an outlet gauge and eliminated homogeneous-Neumann
-        boundary values, so its independent-fluid-cell representation is
-        symmetric positive definite.  Every operator application exchanges a z
+        All fluid cells are unknowns. Fluid-solid and prescribed-flow faces
+        have zero pressure-correction flux; the physical outlet face has zero
+        pressure at half a cell distance, giving a symmetric positive operator.  Every operator application exchanges a z
         halo; every Krylov scalar is globally reduced.  Reaching the configured
         residual target is reported rather than silently assuming a fixed
         iteration count was sufficient.
@@ -340,6 +370,10 @@ class Cylinder3DSolver:
             rho = next_rho
 
         self._apply_pressure_boundaries(pressure)
+        # Report the true operator residual, not only the recursively updated one.
+        true_residual = target - self._pressure_operator(pressure)
+        final_residual = float(torch.sqrt(self._global_dot(true_residual, true_residual)))
+        converged = math.isfinite(final_residual) and final_residual <= target_residual
         self.pressure = pressure
         info = PressureSolveInfo(iterations, initial_residual, final_residual,
                                  target_residual, converged)
@@ -374,18 +408,17 @@ class Cylinder3DSolver:
         laplacian = self._velocity_laplacian(old)
         tentative = old + c.time_step * (-convection + viscosity[..., None] * laplacian)
         self._apply_velocity_boundaries(tentative)
+        tentative_faces = self._predict_faces(tentative)
         pressure_info = self._pressure_projection(
-            c.density / c.time_step * self._divergence(tentative)
+            c.density / c.time_step * self._face_divergence(tentative_faces)
         )
-        pressure_gradient = torch.stack((
-            self._derivative(self.pressure, 2, m.dx),
-            self._derivative(self.pressure, 1, m.dy),
-            self._derivative(self.pressure, 0, m.dz),
-        ), -1)
-        self.velocity = tentative - c.time_step / c.density * pressure_gradient
-        self._apply_velocity_boundaries(self.velocity)
+        gradient_faces = self._face_gradient(self.pressure)
+        self.last_tentative_faces = tuple(u.clone() for u in tentative_faces)
+        self.face_velocity = tuple(u - c.time_step / c.density * g
+                                   for u, g in zip(tentative_faces, gradient_faces))
+        self.velocity = self._reconstruct_velocity(self.face_velocity)
         self.time += c.time_step
-        divergence = self._divergence(self.velocity)
+        divergence = self._face_divergence(self.face_velocity)
         velocity_change = self.runtime.global_max((self.velocity - old).abs().max())
         cfl = self.runtime.global_max(
             (c.time_step * (self.velocity[..., 0].abs() / m.dx
@@ -399,6 +432,10 @@ class Cylinder3DSolver:
             "step": len(self.history) + 1,
             "time": self.time,
             "continuity": float(max_divergence) * c.diameter / c.inlet_velocity,
+            "center_velocity_divergence": float(self.runtime.global_max(self._divergence(self.velocity).abs().max())) * c.diameter / c.inlet_velocity,
+            "boundary_mass_imbalance": float(abs(self.runtime.global_sum(
+                (self.face_velocity[0][..., -1] - self.face_velocity[0][..., 0]).sum()
+                * m.dy * m.dz))) / (c.inlet_velocity * c.height * c.span),
             "velocity_change": float(velocity_change) / c.inlet_velocity,
             "cfl": float(cfl),
             "max_eddy_viscosity": float(max_eddy_viscosity),
@@ -423,4 +460,7 @@ class Cylinder3DSolver:
                                 self.mesh.fluid.clone(), x.clone(), y.clone(), z.clone(),
                                 [dict(item) for item in self.history],
                                 [dict(item) for item in self.force_history], self.runtime,
-                                self.partition)
+                                self.partition,
+                                tuple(u.clone() for u in self.face_velocity),
+                                tuple(u.clone() for u in self.last_tentative_faces),
+                                (self._face_x.clone(), self._face_y.clone(), self._face_z.clone()))
