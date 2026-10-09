@@ -1,0 +1,164 @@
+{
+  "schema": "tensorfvm.passive-feedback-independent-audit/1",
+  "cases": {
+    "local": {
+      "initial": {
+        "kinetic_J": 0.00225,
+        "density_free_energy_J": 0.0,
+        "total_J": 0.00225
+      },
+      "accepted": {
+        "kinetic_J": 0.0016618734876026268,
+        "density_free_energy_J": 2.844043183499364e-05,
+        "total_J": 0.0016903139194376204
+      },
+      "rejected": {
+        "kinetic_J": 0.0016440468524996812,
+        "density_free_energy_J": 0.2566561640152319,
+        "total_J": 0.2583002108677316
+      },
+      "budget_J": 0.0022522500009999995,
+      "candidate_density_fraction": 0.9936351315898013,
+      "first_conversion_time_s": 0.017,
+      "accepted_time_s": 0.016,
+      "raw_state_and_budget_checks_passed": true,
+      "restart_and_rollback": "producer exact replay attestations; accepted/candidate raw histories independently cross-checked",
+      "physical_accuracy_qualified": false
+    },
+    "local-time-half": {
+      "initial": {
+        "kinetic_J": 0.00225,
+        "density_free_energy_J": 0.0,
+        "total_J": 0.00225
+      },
+      "accepted": {
+        "kinetic_J": 0.0015927444034485236,
+        "density_free_energy_J": 1.0120694299213065e-05,
+        "total_J": 0.0016028650977477367
+      },
+      "rejected": {
+        "kinetic_J": 0.0015848762668735435,
+        "density_free_energy_J": 1.029121589662326,
+        "total_J": 1.0307064659291996
+      },
+      "budget_J": 0.0022522500009999995,
+      "candidate_density_fraction": 0.9984623398423675,
+      "first_conversion_time_s": 0.0175,
+      "accepted_time_s": 0.017,
+      "raw_state_and_budget_checks_passed": true,
+      "restart_and_rollback": "producer exact replay attestations; accepted/candidate raw histories independently cross-checked",
+      "physical_accuracy_qualified": false
+    }
+  },
+  "inputs_sha256": {
+    "/data/TensorFEM/docs/assets/passive-rigid-feedback/study.json": "3bd0df30218d935b2c27cec6c96a6e5ab0a8c0092c43773236128fbc1b3256b7",
+    "TensorFEM/src/tensorfem/fluid_rigid_feedback.py": "87e6e3c6e0e0dc93a16a37a4269936cc92a683c098a3a4b1bc9e868d92be59a8",
+    "TensorFEM/src/tensorfem/point_surface_coupling.py": "f360f2e814735852965700d48d36388db4a05f98243b4ceaeda3ec63112db721",
+    "TensorFEM/src/tensorfem/surface_coupling.py": "ab28ec663225fa5d1bdc981bdb71c2350a693a3ac38d2f44e21abf5e97ffcebc",
+    "TensorFEM/src/tensorfem/plate.py": "26992717396ce0b1f1e9062ac00f62f210bd81f3e89829b521dd71f04abaadc3",
+    "TensorFEM/scripts/run_live_rigid_feedback.py": "1544775ee04cd754b2d057f62238773a3be1c5a6db880048213225c99559f9be",
+    "TensorLBM/src/tensorlbm/local_moving_boundary_2d.py": "acd46ed7158e900557abd1ca8ba6899db0c51efa8c814d8c1bb3dd856a8fc171",
+    "TensorLBM/src/tensorlbm/feedback_moving_disk.py": "2b2c5c9b04f5ad453b305de660b0031ee832197fe772e339442795321aadb516",
+    "TensorLBM/src/tensorlbm/moving_boundary_2d.py": "0d66e0afc75d84df3da2eeb0a003e90c4ed973dad2c6d58ce3b65fed40d10059",
+    "TensorLBM/src/tensorlbm/d2q9.py": "1065c3093e07dfa186d729412c4081c7e4ba0925db223e8083ff007d457adf4d",
+    "TensorLBM/src/tensorlbm/solver.py": "6cef9523e393f4d584ef01620074c945fc94e44521884ff308ce25b7b59c39b3",
+    "TensorFEM/src/tensorfem/passive_rigid_feedback.py": "1bf3761a0dc5f920c22a7f9cd62a42571f0efcc935d9a36fd9649c7dfeb2f028",
+    "TensorFEM/scripts/run_passive_rigid_feedback.py": "452651922f32104d220aa3a9d0e829e15a7051cd770df1080b0e6bcf9e151f73",
+    "/data/TensorFEM/docs/assets/passive-rigid-feedback/local.json": "6b3c5d123d30d81fd7135f39833141fc8525b72942d9c75fc1bd605fd04a2c01",
+    "/data/TensorFEM/docs/assets/passive-rigid-feedback/local-time-half.json": "598d7a7728ec502a7af817b98997db65cc71d40f010752ce43eade102bdb156c"
+  },
+  "auditor_sha256": "2f90a5018d465fe1686183848bd4b0a8961211e5a6ad426de7c6ed19283ddaf3",
+  "physical_accuracy_qualified": false,
+  "scope": "diagnostic macroscopic budget; moving-mask pressure defect remains; no full LBM entropy proof",
+  "balanced_local": {
+    "cases": {
+      "cross-grid": {
+        "mass_residual_lattice": -9.322320693172514e-12,
+        "momentum_residual_lattice": 2.327027459614328e-13,
+        "impulse": [
+          -8.68841346888311,
+          -0.4399256163359795
+        ],
+        "conversion_impulse": [
+          -1.4210854715202004e-13,
+          -1.7053025658242404e-13
+        ]
+      },
+      "co-moving": {
+        "mass_residual_lattice": -1.0913936421275139e-11,
+        "momentum_residual_lattice": 1.0889067425523535e-12,
+        "impulse": [
+          -2.336260286296719,
+          -0.4982092102776614
+        ],
+        "conversion_impulse": [
+          -1.2434497875801753e-13,
+          -1.2079226507921703e-13
+        ]
+      },
+      "periodic-wrap": {
+        "mass_residual_lattice": -9.549694368615746e-12,
+        "momentum_residual_lattice": 1.2079226507921703e-13,
+        "impulse": [
+          -8.688413468882992,
+          -0.439925616335872
+        ],
+        "conversion_impulse": [
+          -3.552713678800501e-14,
+          -5.684341886080802e-14
+        ]
+      },
+      "paired-small-disk": {
+        "mass_residual_lattice": -9.322320693172514e-12,
+        "momentum_residual_lattice": 1.3263834475196745e-12,
+        "impulse": [
+          -0.343969715880417,
+          0.004297393661048421
+        ],
+        "conversion_impulse": [
+          -1.3500311979441904e-13,
+          -1.4210854715202004e-14
+        ]
+      },
+      "co-moving-half": {
+        "mass_residual_lattice": -1.5734258340671659e-10,
+        "momentum_residual_lattice": 1.120969983503528e-11,
+        "impulse": [
+          -5.332023985239755,
+          -0.22540503925961342
+        ],
+        "conversion_impulse": [
+          1.0231815394945443e-12,
+          -1.0231815394945443e-12
+        ]
+      },
+      "step-half": {
+        "mass_residual_lattice": -1.5734258340671659e-10,
+        "momentum_residual_lattice": 2.5579538487363607e-12,
+        "impulse": [
+          -16.672183824129604,
+          -0.2596384126206872
+        ],
+        "conversion_impulse": [
+          -6.536993168992922e-13,
+          1.4210854715202004e-13
+        ]
+      }
+    },
+    "refinement_percent": 4.055073553763544,
+    "refinement_passed": false,
+    "physical_accuracy_qualified": false,
+    "co_moving_conversion_not_qualified": true,
+    "inputs_sha256": {
+      "/home/jsyc/tensor-suite-development/TensorLBM/docs/assets/balanced-local-moving-boundary/study.json": "0fe46c538b0e1b8add92466ebc4b736afb89a08497af1e7c472c783fc8319e04",
+      "/home/jsyc/tensor-suite-development/TensorLBM/docs/assets/balanced-local-moving-boundary/cross-grid.json": "c7c4d08a0fc9868020af499d04b67259bd345539a6939249120ae3a30fa891ae",
+      "/home/jsyc/tensor-suite-development/TensorLBM/src/tensorlbm/balanced_local_moving_boundary_2d.py": "3723e87e99ca8bc603d45326745fcf8089c7d571a861f25bad812afbdf73471b",
+      "/home/jsyc/tensor-suite-development/TensorLBM/src/tensorlbm/moving_boundary_2d.py": "0d66e0afc75d84df3da2eeb0a003e90c4ed973dad2c6d58ce3b65fed40d10059",
+      "/home/jsyc/tensor-suite-development/TensorLBM/docs/assets/balanced-local-moving-boundary/co-moving.json": "e1461a093de496aab347bc59f1e8d12cab152a139d33bb12299557e78b3e6dce",
+      "/home/jsyc/tensor-suite-development/TensorLBM/docs/assets/balanced-local-moving-boundary/periodic-wrap.json": "3ec98fc1195588b6fc174b116da1835fe1f5a878d5de5e53dc0b22e68373a23a",
+      "/home/jsyc/tensor-suite-development/TensorLBM/docs/assets/balanced-local-moving-boundary/paired-small-disk.json": "8c96db8684a362a5626f58b364a8ce0a79433298714e86adeebb1fe2f50ecbbd",
+      "/home/jsyc/tensor-suite-development/TensorLBM/docs/assets/balanced-local-moving-boundary/co-moving-half.json": "0bcb7854cfe96e3a6b1f31791aefd61c108384f0d7633dbd08ebc520e76df354",
+      "/home/jsyc/tensor-suite-development/TensorLBM/docs/assets/balanced-local-moving-boundary/step-half.json": "7a922fe487ece33fcc1b38148224c11f2a63ca0ff24372b32e30ecc7586a666a"
+    }
+  }
+}
