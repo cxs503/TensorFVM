@@ -1,0 +1,26 @@
+{
+  "schema": "tensorfvm.archived-conservative-audit/1",
+  "source_sha256": {
+    "src/tensorfvm/conservative3d.py": "2ab9293e9a01ba8ed33a86ec879ea32037526509cd54e56c6e3b03c66e9ed886",
+    "src/tensorfvm/solver3d.py": "95d4711fd52ad9f2d8dd7300a999814633de986a2d579dcc997d17aa01603a37",
+    "src/tensorfvm/runtime.py": "ff383730f34f82030f28da424819eea670f28c663d5be834f30bebc6c74a2da5",
+    "src/tensorfvm/mesh3d.py": "ad7fe310537e70dcb65a34b42b335ea8bd7f9abd2bf24453a907c7f43a2b7c56"
+  },
+  "artifact_sha256": {
+    "README.md": "07318b1ea061b298f80b4085c5201d1b85f698274513ea3594cb1be2a1129629",
+    "scripts/tensorfvm_conservative_distributed_default_review.py": "d3c087167ea6607f627d85f1fe3c33f4b55c3cccbc4239a97b72250307074966",
+    "scripts/tensorfvm_conservative_distributed_review.py": "19a175e44f93f00746e8962d65925563d8cd638bb2ed1270052045839a2e98fa",
+    "scripts/tensorfvm_conservative_raw_audit.py": "dd223633dc6eccdcfb3fe70b4554f739aa8a654c6b0d0905c3896b27022b1ef6",
+    "scripts/tensorfvm_conservative_review.py": "1bfb3ca18dc8754afaba855d320754261337c4ee73236ece2e9ed771d268cafa",
+    "scripts/tensorfvm_projection_independent_review.py": "3ac87c4aba70cceb9dcd830a6fb098f1350145f6cd31b8cb421647e675837067",
+    "tensorfvm-conservative-distributed-default-failure.json": "7e78f46ee3488aeba0f5800cf0794a6370f872b3cdf72b1888a741d8d8593edf",
+    "tensorfvm-conservative-distributed-default-replay.json": "f904a58d71225a3142702f3b6c9e71eb956a98321f2c21aac57b51791cd07bbf",
+    "tensorfvm-conservative-distributed-review.json": "03e3b9700817e648b035fdae561a1c4fbcc69393abd0dab86d3ac256135103c9",
+    "tensorfvm-conservative-independent-review.json": "7ae8bfc4dc633abc4f4043c5b57a2d4e748cb981ece63f7b877916caa936ec8c",
+    "tensorfvm-conservative-raw-audit.json": "6d9a540e883b41fd910ba8db1489e7c2e3ede68d9c0ca6a91258ab2aa140e895",
+    "tensorfvm-conservative-raw-cpu.npz": "3525e0abd7e4bec6e28d0f97951a1aac702631be124de3a08a047184bdd4fbf2",
+    "tensorfvm-conservative-raw-cuda.npz": "3d83a87f9c8434bcbdcf59d9e9b5e867c20ad1c80aa86bdf4d355154993d2389"
+  },
+  "physical_accuracy_qualified": false,
+  "scope": "archived independent NumPy operators/raw reconstruction and actual CPU/CUDA/Gloo comparisons; default strict distributed failure exactly reproduced and retained"
+}

@@ -1,0 +1,39 @@
+{
+  "serial_vs_two_rank_errors": {
+    "velocity": 1.4258600376793051e-11,
+    "pressure": 7.702141591181544e-09,
+    "conv": 1.0347278589506459e-13,
+    "visc": 3.712308238590367e-16,
+    "faces": 2.845453907218687e-11,
+    "body_force": 1.5598402569594327e-09,
+    "body_moment": 9.360064723296091e-09
+  },
+  "passed": false,
+  "initial_state": "spanwise sine/cosine perturbations excite real z halos",
+  "physical_accuracy_qualified": false,
+  "config": {
+    "nx": 32,
+    "ny": 24,
+    "nz": 4,
+    "length": 20.0,
+    "height": 12.0,
+    "span": 3.0,
+    "cylinder_x": 5.0,
+    "cylinder_y": 6.0,
+    "cylinder_radius": 0.5,
+    "inlet_velocity": 1.0,
+    "reynolds": 3900.0,
+    "density": 1.0,
+    "time_step": 0.001,
+    "max_steps": 3,
+    "pressure_iterations": 500,
+    "pressure_relative_tolerance": 1e-08,
+    "pressure_absolute_tolerance": 1e-11,
+    "smagorinsky_constant": 0.1,
+    "mesh_type": "cartesian",
+    "body_fitted_stretching": 2.5,
+    "device": "cpu"
+  },
+  "auditor_sha256": "d3c087167ea6607f627d85f1fe3c33f4b55c3cccbc4239a97b72250307074966",
+  "source_sha256": "2ab9293e9a01ba8ed33a86ec879ea32037526509cd54e56c6e3b03c66e9ed886"
+}

@@ -1,0 +1,75 @@
+{
+  "raw_audit_passed": true,
+  "cases": [
+    {
+      "case": "cpu",
+      "steps": 50,
+      "conv_error": 0.0,
+      "stress_error": 0.0,
+      "pressure_flux_error": 0.0,
+      "projection_error": 0.0,
+      "max_momentum_residual_Ns": 2.0610076145732847e-13,
+      "max_external_boundary_residual_Ns": 2.060920878399486e-13,
+      "last_face_continuity": 2.0158475583231805e-12,
+      "max_center_divergence": 0.6532868916362008,
+      "wall_force_N": [
+        3.0941370653879394,
+        6.938893903907228e-18,
+        0.0
+      ],
+      "wall_moment_Nm": [
+        2.7755575615628914e-17,
+        4.64120559808191,
+        -18.564822392327645
+      ]
+    },
+    {
+      "case": "cuda",
+      "steps": 50,
+      "conv_error": 0.0,
+      "stress_error": 1.734723475976807e-18,
+      "pressure_flux_error": 0.0,
+      "projection_error": 3.469446951953614e-18,
+      "max_momentum_residual_Ns": 2.8711928667934927e-13,
+      "max_external_boundary_residual_Ns": 2.8711234778544537e-13,
+      "last_face_continuity": 2.015445102476754e-12,
+      "max_center_divergence": 0.6532868916362011,
+      "wall_force_N": [
+        3.094137065387936,
+        -3.469446951953614e-18,
+        0.0
+      ],
+      "wall_moment_Nm": [
+        0.0,
+        4.6412055980819025,
+        -18.564822392327617
+      ]
+    }
+  ],
+  "MMS": [
+    {
+      "n": 32,
+      "relative_l2": 0.009952680834900567
+    },
+    {
+      "n": 64,
+      "relative_l2": 0.002526199328496632
+    },
+    {
+      "n": 128,
+      "relative_l2": 0.0006296447034857965
+    }
+  ],
+  "source_sha256": {
+    "src/tensorfvm/conservative3d.py": "2ab9293e9a01ba8ed33a86ec879ea32037526509cd54e56c6e3b03c66e9ed886",
+    "src/tensorfvm/solver3d.py": "95d4711fd52ad9f2d8dd7300a999814633de986a2d579dcc997d17aa01603a37",
+    "src/tensorfvm/benchmark_cylinder3d.py": "cdc762f7a39e5092599d82f68d4a4486619340805da47a401ca4dc098e7fd08e",
+    "src/tensorfvm/runtime.py": "ff383730f34f82030f28da424819eea670f28c663d5be834f30bebc6c74a2da5",
+    "src/tensorfvm/mesh3d.py": "ad7fe310537e70dcb65a34b42b335ea8bd7f9abd2bf24453a907c7f43a2b7c56",
+    "scripts/run_conservative_transport.py": "1ed3da78231eb7a6f3c2467ca87b6efaa995d35fd8bab91ae71ba649f501f44a"
+  },
+  "study_sha256": "5d5ee6dfeaa1c28c18e595d11d877ae790d5ed1bd968506260c77c49eb047bc9",
+  "auditor_sha256": "dd223633dc6eccdcfb3fe70b4554f739aa8a654c6b0d0905c3896b27022b1ef6",
+  "physical_accuracy_qualified": false,
+  "full_mac_qualified": false
+}

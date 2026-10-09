@@ -1,0 +1,18 @@
+{
+  "serial_vs_two_rank_errors": {
+    "velocity": 1.4258600376793051e-11,
+    "pressure": 7.702141591181544e-09,
+    "conv": 1.0347278589506459e-13,
+    "visc": 3.712308238590367e-16,
+    "faces": 2.845453907218687e-11,
+    "body_force": 1.5598402569594327e-09,
+    "body_moment": 9.360064723296091e-09
+  },
+  "passed": false,
+  "initial_state": "spanwise sine/cosine perturbations excite real z halos",
+  "physical_accuracy_qualified": false,
+  "source_sha256": "2ab9293e9a01ba8ed33a86ec879ea32037526509cd54e56c6e3b03c66e9ed886",
+  "pressure_relative_tolerance": 1e-08,
+  "pressure_iterations_budget": 500,
+  "strict_comparison_absolute_threshold": 1e-09
+}
