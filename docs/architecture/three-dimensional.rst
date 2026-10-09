@@ -189,3 +189,15 @@ smoke case：末步使用 141 次 PCG 迭代，残差 ``1.9205e-08`` 小于目�
 原场、固定区域三网格应力误差、CPU/CUDA及分布式检查详见
 ``docs/conservative-transport/README.md``。壁面牵引给出真实 facet 点、法向、
 面积及压力/黏性分力，可作为单向映射输入；不据此宣称双向流固耦合完成。
+
+独立周期 MAC 面动量基础
+----------------------
+
+``periodic_mac.PeriodicMACSolver`` 直接推进错位面上的三个动量分量，采用 dual
+CV共享中心对流、完整 cell-normal/edge-shear变黏度应力、相容周期压力投影，
+并以有真实残差门的隐式 midpoint 闭合能量。这是解决混合 cell/face 不相容
+所需的数值基础；没有通过回写调平修改 cylinder 的失败，也不修改其旧源哈希。
+实际周期3D随机curl与变μ场的 CPU/CUDA质量、动量、能量测试通过，
+Taylor–Green固定时间/网格细化约二阶；最粗8³完整应力制造解5.317%误差失败保留。
+它明确拒绝多 rank，仅周期单 rank研究内核。固壁 dual CV、开放边界压力功、
+移动体、LES统计及FSI仍需独立发展。详见 ``docs/periodic-mac/README.md``。

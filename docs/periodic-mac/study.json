@@ -1,0 +1,124 @@
+{
+  "schema": "tensorfvm.periodic-mac-study/1",
+  "cases": [
+    {
+      "case": "random-cpu",
+      "max_energy_defect_J": 1.5590827240341554e-16,
+      "max_divergence_s_inv": 1.6653345369377348e-16,
+      "max_momentum_change_Ns": 1.1952736902210734e-16,
+      "max_convective_power_W": 3.1126919016173784e-19,
+      "total_energy_change_J": -0.005555502662892398,
+      "nonlinear_all_converged": true,
+      "numerical_passed": true
+    },
+    {
+      "case": "random-cuda-0",
+      "max_energy_defect_J": 1.238158880978446e-16,
+      "max_divergence_s_inv": 1.1102230246251565e-16,
+      "max_momentum_change_Ns": 9.562189521768586e-17,
+      "max_convective_power_W": 3.1126919016173784e-19,
+      "total_energy_change_J": -0.005555502662892453,
+      "nonlinear_all_converged": true,
+      "numerical_passed": true
+    }
+  ],
+  "spatial_refinement": [
+    {
+      "n": 8,
+      "relative_l2_error": 0.005048536169002312,
+      "error_3_percent_passed": true,
+      "numerical_passed": true
+    },
+    {
+      "n": 16,
+      "relative_l2_error": 0.0012792843992827873,
+      "error_3_percent_passed": true,
+      "numerical_passed": true
+    },
+    {
+      "n": 32,
+      "relative_l2_error": 0.0003208634775416117,
+      "error_3_percent_passed": true,
+      "numerical_passed": true
+    }
+  ],
+  "temporal_refinement": [
+    {
+      "dt_s": 0.1,
+      "relative_l2_error": 6.414573090235684e-06,
+      "error_3_percent_passed": true,
+      "numerical_passed": true
+    },
+    {
+      "dt_s": 0.05,
+      "relative_l2_error": 1.6035767941453003e-06,
+      "error_3_percent_passed": true,
+      "numerical_passed": true
+    },
+    {
+      "dt_s": 0.025,
+      "relative_l2_error": 4.008900628756912e-07,
+      "error_3_percent_passed": true,
+      "numerical_passed": true
+    }
+  ],
+  "variable_mu_mms": [
+    {
+      "n": 8,
+      "relative_l2_error": 0.05316804699307619,
+      "error_3_percent_passed": false
+    },
+    {
+      "n": 16,
+      "relative_l2_error": 0.013546094328558371,
+      "error_3_percent_passed": true
+    },
+    {
+      "n": 32,
+      "relative_l2_error": 0.0034027289511405806,
+      "error_3_percent_passed": true
+    }
+  ],
+  "nonlinear_failure_rejected": true,
+  "rejection_true_residuals_m_s": [
+    1.5834555888716295e-13,
+    4.988162346140218e-05
+  ],
+  "spatial_order": [
+    1.980528109624704,
+    1.9953055386418188
+  ],
+  "temporal_order": [
+    2.0000598076063856,
+    2.0000148830486566
+  ],
+  "mms_order": [
+    1.972682526135419,
+    1.993112805929851
+  ],
+  "refinement_order_passed": true,
+  "mms_all_grids_3_percent_passed": false,
+  "mms_finest_grid_3_percent_passed": true,
+  "distributed_supported": false,
+  "physical_accuracy_qualified": false,
+  "source_sha256": {
+    "src/tensorfvm/periodic_mac.py": "b6b823c2c7972368a30fbba14f07d1222d062d00a9fe03c769c844407bfde5eb",
+    "src/tensorfvm/runtime.py": "ff383730f34f82030f28da424819eea670f28c663d5be834f30bebc6c74a2da5",
+    "scripts/run_periodic_mac.py": "67feb99a7e7ecdc4b879a26f31189740c256aa2e56fbceb386671a7d56479808"
+  },
+  "artifacts_sha256": {
+    "mms-16.json.gz": "66212ef4b9e218c92626058194dc3479164f001f9fe03671d0ee405128bccfd5",
+    "mms-32.json.gz": "e2092b463dbedb8f220dace71b7f5d51b8e885fd60231f6ddef186793454fd08",
+    "mms-8.json.gz": "3228577437257405de6b050ab2d87b86764e612be61b3f953dd5ea321e8661f8",
+    "nonlinear-hard-rejected.json.gz": "0b0a94bd8329614dcb2661291e544637bcd3bb3aa90299f5953efa8ad26d374c",
+    "nonlinear-rejected.json.gz": "c6cf6d6bd7a4ccbab5475b8f7975d2a4b9cabd26443d904699cef3c3248d53c3",
+    "random-cpu.json.gz": "4a3364f654dc8599fc8fc1713ce3ceb64680673d5f6cac0839eec9f36ac15844",
+    "random-cuda-0.json.gz": "c904642c9613a2b1efa95878696fc5eecca0f08a03415cdd147d3ae42d812313",
+    "tg-grid-16.json.gz": "09164cab843b6d4b8a689c6e257454f2ee0e385004063658d7885bd646f98a4b",
+    "tg-grid-32.json.gz": "4c46b5b21390e28b7764ccfbbe4ba353346c7b0bcef0fa79fe7196eb62b5040c",
+    "tg-grid-8.json.gz": "c4f9dceac8e4c78557568b7c29b9648e49e3ebfb66ebf212beb31044af9e9d64",
+    "tg-time-0.025.json.gz": "7df238a901345c11c41ef63c7f790cf9ac8298127749eeb345422d3d61fcea28",
+    "tg-time-0.05.json.gz": "c37f04aa29868b742047a6ead1c2b540b6b95b1ece2eb0153fc033a7e24d41d8",
+    "tg-time-0.1.json.gz": "cbe19d122f08a7cd04ab0240c31987af02a1fecd5676214fa07ede661ac8bf86"
+  }
+}
