@@ -1,0 +1,139 @@
+{
+  "schema": "tensor-suite.channel-verification/1",
+  "solver": "TensorFVM SIMPLE",
+  "reference": {
+    "height_m": 0.02,
+    "length_m": 0.12,
+    "density_kg_m3": 1000.0,
+    "kinematic_viscosity_m2_s": 1e-05,
+    "bulk_velocity_m_s": 0.0005,
+    "reynolds_height": 1.0,
+    "pressure_gradient_pa_m": -0.15,
+    "wall_shear_magnitude_pa": 0.0015
+  },
+  "boundary": {
+    "inlet": "uniform prescribed velocity",
+    "outlet": "zero gauge pressure, predicted velocity zero normal gradient",
+    "walls": "no slip, half-cell diffusion"
+  },
+  "comparison_scope": "common analytic fully developed channel reference; boundary conditions differ from periodic LBM; no joint FSI validation",
+  "moving_ice_backend_qualified": false,
+  "cases": [
+    {
+      "nx": 36,
+      "ny": 12,
+      "section_x": 0.10166666666666666,
+      "iterations": 41,
+      "converged": true,
+      "final_residuals": {
+        "iteration": 41,
+        "continuity": 9.498198149162105e-15,
+        "momentum": 8.469435354622081e-07,
+        "velocity_change": 2.8933689645571636e-08,
+        "mass_imbalance": 0.0
+      },
+      "errors": {
+        "velocity_l2": 0.006343581084411815,
+        "velocity_linf": 0.006801460833508293,
+        "pressure_gradient": 0.013698530170547415
+      },
+      "pressure_gradient": -0.14794522047441788,
+      "reference_pressure_gradient": -0.15,
+      "passed": true,
+      "mass_inlet_kg_s_per_m_depth": 0.01,
+      "mass_outlet_kg_s_per_m_depth": 0.01,
+      "relative_mass_imbalance": 0.0,
+      "max_cell_divergence_s_inv": 2.3745495372905263e-16,
+      "developed_region_length_m": 0.039999999999999994,
+      "developed_wall_force_on_fluid_n_per_m_depth": -0.00011835617405981431,
+      "developed_pressure_force_on_fluid_n_per_m_depth": 0.0001183561763795343,
+      "developed_force_balance_relative": 1.9599484050103208e-08,
+      "wall_shear_relative_linf_error": 0.013698549825190651,
+      "errors_scope": "velocity and pressure compare developed section; wall shear uses half-cell stencil"
+    },
+    {
+      "nx": 72,
+      "ny": 24,
+      "section_x": 0.10083333333333333,
+      "iterations": 87,
+      "converged": true,
+      "final_residuals": {
+        "iteration": 87,
+        "continuity": 9.052326180183146e-15,
+        "momentum": 9.080719215511874e-07,
+        "velocity_change": 2.1014182635756967e-06,
+        "mass_imbalance": 1.6940658945086004e-16
+      },
+      "errors": {
+        "velocity_l2": 0.001619709309362256,
+        "velocity_linf": 0.0017380335467155194,
+        "pressure_gradient": 0.0034401864720734476
+      },
+      "pressure_gradient": -0.14948397202918898,
+      "reference_pressure_gradient": -0.15,
+      "passed": true,
+      "mass_inlet_kg_s_per_m_depth": 0.01,
+      "mass_outlet_kg_s_per_m_depth": 0.010000000000000002,
+      "relative_mass_imbalance": 1.734723475976807e-16,
+      "max_cell_divergence_s_inv": 2.2630815450457865e-16,
+      "developed_region_length_m": 0.039999999999999994,
+      "developed_wall_force_on_fluid_n_per_m_depth": -0.00011958717570318383,
+      "developed_pressure_force_on_fluid_n_per_m_depth": 0.00011958717762335117,
+      "developed_force_balance_relative": 1.6056632309404405e-08,
+      "wall_shear_relative_linf_error": 0.0034402042283452707,
+      "errors_scope": "velocity and pressure compare developed section; wall shear uses half-cell stencil"
+    },
+    {
+      "nx": 144,
+      "ny": 48,
+      "section_x": 0.10041666666666665,
+      "iterations": 282,
+      "converged": true,
+      "final_residuals": {
+        "iteration": 282,
+        "continuity": 1.366258907867909e-14,
+        "momentum": 9.70775031652267e-07,
+        "velocity_change": 2.247142641019148e-06,
+        "mass_imbalance": 3.3881317890172e-16
+      },
+      "errors": {
+        "velocity_l2": 0.00042847976477751064,
+        "velocity_linf": 0.0004796438828995135,
+        "pressure_gradient": 0.0007836497951618782
+      },
+      "pressure_gradient": -0.1498824525307257,
+      "reference_pressure_gradient": -0.15,
+      "passed": true,
+      "mass_inlet_kg_s_per_m_depth": 0.010000000000000004,
+      "mass_outlet_kg_s_per_m_depth": 0.01,
+      "relative_mass_imbalance": 3.4694469519536127e-16,
+      "max_cell_divergence_s_inv": 3.4156472696697725e-16,
+      "developed_region_length_m": 0.039999999999999994,
+      "developed_wall_force_on_fluid_n_per_m_depth": -0.00011990595798351201,
+      "developed_pressure_force_on_fluid_n_per_m_depth": 0.00011990596202458055,
+      "developed_force_balance_relative": 3.370198165367342e-08,
+      "wall_shear_relative_linf_error": 0.0007836852611345889,
+      "errors_scope": "velocity and pressure compare developed section; wall shear uses half-cell stencil"
+    }
+  ],
+  "passed": true,
+  "git_base": "02c88c50246a7e601786ae23347198ffbf6a35f8",
+  "source_sha256": {
+    "/home/jsyc/tensor-suite-development/TensorFVM/src/tensorfvm/benchmark_suite_channel.py": "3d67be0200527764a2a65a99cf5c8e2124bdc7aa469110e8bfa7db5e43685ec6",
+    "/home/jsyc/tensor-suite-development/TensorFVM/src/tensorfvm/solver.py": "7c3613f23791c6a22825bd2ba0467e2bb84013ecaedc974901452b1864a2868e"
+  },
+  "artifact_sha256": {
+    "144x48/fields.csv": "14e384460842de8f2aa4dbca2b6acd8bd47b92f83b4638910c09edde813f17df",
+    "144x48/history.json": "1914cf2eaf1a951405a99f09b86a9087fbe7ec7894e9b3196a843365e15a9baf",
+    "144x48/si-fields.json": "bf857c1d9e591750fb80e662d30afa429cec5827c4fe84afb9801464087668bd",
+    "144x48/summary.json": "d5bdb5b9a32b5bfbf421e2758b5a8c233c9613565a1fe52277ddae29d665c0c3",
+    "36x12/fields.csv": "9fee0cdf7f41fb3df5922a14879c8f4e6a736bca8a0177d750e088f6b27e6ead",
+    "36x12/history.json": "1156dc5d31b99624d57616c4222c93ac34b1aa6e0c126f134e7cbf3d8424e9ce",
+    "36x12/si-fields.json": "5f6d457a269ae045c762738fd3c1ae150dacfe4c3e3d34fb29309b78ec899a66",
+    "36x12/summary.json": "b48bfaff214980af6b039a55d8f50ff51c6ee4f8e5fc39306b48eab0dc316cc5",
+    "72x24/fields.csv": "2e749d55deba3036cf6c365957fadaec9e248bf27fb2826d19466a31b58de883",
+    "72x24/history.json": "7c7c7de777a641ba283001f9c7a560c9b74f5f5c48de3728c65791b79454fe57",
+    "72x24/si-fields.json": "8c19481ffde8db6bfc74c59d6af3db339284f3acce7b71b79aad041eec4bcfd0",
+    "72x24/summary.json": "6bf6c928ebbf5b51898aa94521c919b6100c416474ed602644fefba193178476"
+  }
+}
