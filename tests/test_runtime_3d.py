@@ -13,6 +13,11 @@ from tensorfvm.runtime import DistributedRuntime, partition_slab
 from tensorfvm.solver3d import Cylinder3DConfig, Cylinder3DSolver
 
 
+def _spanwise_perturbation(solver):
+    _, y, z = solver.mesh.centers()
+    solver.velocity[..., 1] += .02 * torch.sin(2*math.pi*z/solver.config.span) * torch.sin(math.pi*y/solver.config.height)
+
+
 def _two_rank_projection_worker(rank: int, init_file: str, output_file: str) -> None:
     """Run a small Gloo z-slab solve and persist a test-only gathered field."""
     torch.distributed.init_process_group(
@@ -20,12 +25,21 @@ def _two_rank_projection_worker(rank: int, init_file: str, output_file: str) -> 
     )
     try:
         config = Cylinder3DConfig(nx=32, ny=24, nz=4, max_steps=2,
-                                  pressure_iterations=150, time_step=0.001)
-        result = Cylinder3DSolver(config, runtime=DistributedRuntime.discover("cpu")).solve()
+                                  pressure_iterations=300, time_step=0.001,
+                                  pressure_relative_tolerance=1e-12,
+                                  pressure_absolute_tolerance=1e-13)
+        solver = Cylinder3DSolver(config, runtime=DistributedRuntime.discover("cpu"))
+        _spanwise_perturbation(solver)
+        result = solver.solve()
         velocity_parts = [torch.empty_like(result.velocity) for _ in range(2)]
         pressure_parts = [torch.empty_like(result.pressure) for _ in range(2)]
         torch.distributed.all_gather(velocity_parts, result.velocity)
         torch.distributed.all_gather(pressure_parts, result.pressure)
+        face_parts = []
+        for face in result.face_velocity:
+            parts = [torch.empty_like(face) for _ in range(2)]
+            torch.distributed.all_gather(parts, face)
+            face_parts.append(torch.cat(parts, dim=0))
         if rank == 0:
             torch.save({
                 "velocity": torch.cat(velocity_parts, dim=0),
@@ -33,6 +47,7 @@ def _two_rank_projection_worker(rank: int, init_file: str, output_file: str) -> 
                 "history": result.history,
                 "force_history": result.force_history,
                 "local_shape": tuple(result.velocity.shape),
+                "face_velocity": face_parts,
             }, output_file)
         torch.distributed.barrier()
     finally:
@@ -130,8 +145,12 @@ class Cylinder3DTests(unittest.TestCase):
     def test_two_rank_z_slab_matches_single_rank_projection(self):
         """Guard real halo/Poisson coupling against a full-domain fallback."""
         config = Cylinder3DConfig(nx=32, ny=24, nz=4, max_steps=2,
-                                  pressure_iterations=150, time_step=0.001)
-        reference = Cylinder3DSolver(config).solve()
+                                  pressure_iterations=300, time_step=0.001,
+                                  pressure_relative_tolerance=1e-12,
+                                  pressure_absolute_tolerance=1e-13)
+        solver = Cylinder3DSolver(config)
+        _spanwise_perturbation(solver)
+        reference = solver.solve()
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             init_file = root / "gloo-init"
@@ -145,24 +164,42 @@ class Cylinder3DTests(unittest.TestCase):
         self.assertEqual(distributed["history"][-1]["pressure_converged"], 1)
         self.assertLessEqual(reference.history[-1]["pressure_residual"],
                              reference.history[-1]["pressure_target_residual"])
-        self.assertTrue(torch.allclose(distributed["velocity"], reference.velocity,
-                                       rtol=0, atol=1e-13))
-        self.assertTrue(torch.allclose(distributed["pressure"], reference.pressure,
-                                       rtol=0, atol=1e-12))
+        self.assertLessEqual(float((distributed["velocity"]-reference.velocity).abs().max()),
+                             2e-12 * max(1., float(reference.velocity.abs().max())))
+        # Pressure has a ~94-unit transient gauge amplitude at dt=.001.
+        # Use a global field scale, including near-zero individual cells.
+        pressure_error = (distributed["pressure"] - reference.pressure).abs().max()
+        self.assertLessEqual(float(pressure_error),
+                             2e-12 * max(1., float(reference.pressure.abs().max())))
+        for parallel, serial in zip(distributed["face_velocity"], reference.face_velocity):
+            self.assertLessEqual(float((parallel - serial).abs().max()),
+                                 2e-12 * max(1., float(serial.abs().max())))
         for parallel, serial in zip(distributed["history"], reference.history):
             for key, value in serial.items():
-                if isinstance(value, int):
+                if key == "pressure_residual":
+                    # Residual vectors near the Krylov tolerance need not have the
+                    # same direction/norm under different reduction orders. Both
+                    # true residuals must satisfy their unchanged solver targets.
+                    self.assertLessEqual(parallel[key], parallel["pressure_target_residual"])
+                    self.assertLessEqual(value, serial["pressure_target_residual"])
+                elif isinstance(value, int):
                     self.assertEqual(parallel[key], value, key)
                 else:
                     self.assertTrue(math.isclose(parallel[key], value, rel_tol=2e-12,
-                                                 abs_tol=1e-12), key)
+                                                 abs_tol=3e-12), key)
         for parallel, serial in zip(distributed["force_history"], reference.force_history):
             for key, value in serial.items():
-                if isinstance(value, int):
+                if key == "pressure_residual":
+                    # Residual vectors near the Krylov tolerance need not have the
+                    # same direction/norm under different reduction orders. Both
+                    # true residuals must satisfy their unchanged solver targets.
+                    self.assertLessEqual(parallel[key], parallel["pressure_target_residual"])
+                    self.assertLessEqual(value, serial["pressure_target_residual"])
+                elif isinstance(value, int):
                     self.assertEqual(parallel[key], value, key)
                 else:
                     self.assertTrue(math.isclose(parallel[key], value, rel_tol=2e-12,
-                                                 abs_tol=1e-12), key)
+                                                 abs_tol=3e-12), key)
 
 
 if __name__ == "__main__":

@@ -42,6 +42,28 @@ def export_result(result, directory: Path) -> None:
     than one competing file set per rank.
     """
     directory.mkdir(parents=True, exist_ok=True)
+    # Rank-local authoritative face fields make continuity independently replayable.
+    # z_faces are upper (+z) owner faces; across rank boundaries use the previous
+    # rank's final z face as the lower halo. x/y masks describe internal faces.
+    raw = {
+        "schema": "tensorfvm.face-projection-field/1", "config": result.config.__dict__,
+        "partition": {"start": result.partition.start, "stop": result.partition.stop,
+                      "global_nz": result.config.nz, "rank": result.runtime.rank,
+                      "world_size": result.runtime.world_size},
+        "spacing": [result.config.length/result.config.nx,
+                    result.config.height/result.config.ny,result.config.span/result.config.nz],
+        "fluid": result.fluid.detach().cpu().tolist(),
+        "pressure": result.pressure.detach().cpu().tolist(),
+        "center_velocity": result.velocity.detach().cpu().tolist(),
+        "face_velocity": [u.detach().cpu().tolist() for u in result.face_velocity],
+        "tentative_face_velocity": [u.detach().cpu().tolist() for u in result.tentative_face_velocity],
+        "internal_face_masks": [u.detach().cpu().tolist() for u in result.face_masks],
+        "final": result.history[-1], "physical_accuracy_qualified": False,
+        "boundary_conditions": "x inlet prescribed U; x outlet p=0 at half-cell; y prescribed zero normal velocity; solid zero normal flux; z periodic",
+    }
+    suffix = f"-rank{result.runtime.rank}" if result.runtime.world_size > 1 else ""
+    (directory / f"face-fields{suffix}.json").write_text(
+        json.dumps(raw, separators=(",", ":"), allow_nan=False)+"\n", encoding="utf-8")
     _write_midspan(result, directory)
     result.runtime.barrier()
     if result.runtime.rank == 0:
@@ -64,9 +86,20 @@ def export_result(result, directory: Path) -> None:
     result.runtime.barrier()
 
 
+def smoke_qualified(history):
+    """Every physical step must close discrete mass and converge its pressure solve.
+
+    1e-6 is a nondimensional numerical projection gate, not a LES accuracy bound.
+    """
+    return bool(history and all(
+        all(math.isfinite(v) for v in h.values()) and h["cfl"] < 1
+        and h["pressure_converged"] == 1 and h["continuity"] < 1e-6
+        and h["boundary_mass_imbalance"] < 1e-6 for h in history))
+
+
 def run_benchmark(directory, steps: int = 50, nx: int = 48, ny: int = 32, nz: int = 12,
                   runtime: DistributedRuntime | None = None, device: str = "cpu",
-                  pressure_iterations: int = 150,
+                  pressure_iterations: int = 250,
                   pressure_relative_tolerance: float = 1e-8,
                   pressure_absolute_tolerance: float = 1e-11) -> dict:
     """Run a bounded distributed Re=3900 smoke case, not a validated LES benchmark."""
@@ -80,14 +113,14 @@ def run_benchmark(directory, steps: int = 50, nx: int = 48, ny: int = 32, nz: in
     result = Cylinder3DSolver(config, runtime=runtime).solve()
     export_result(result, Path(directory))
     final = result.history[-1]
-    finite = all(math.isfinite(value) for value in final.values())
     # This smoke criterion checks finite low-CFL projection advancement,
     # pressure-residual convergence, and distributed data motion.  It
     # intentionally makes no Cd/St accuracy claim.
-    passed = bool(finite and final["cfl"] < 1 and final["pressure_converged"] == 1)
+    passed = smoke_qualified(result.history)
     return {"benchmark": "3d-cylinder-re3900-distributed-smoke", "passed": passed,
             "final": final, "steps": steps, "grid": [nx, ny, nz],
-            "world_size": runtime.world_size}
+            "world_size": runtime.world_size, "physical_accuracy_qualified": False,
+            "continuity_limit": 1e-6, "mass_imbalance_limit": 1e-6}
 
 
 def main(argv=None):
@@ -97,7 +130,7 @@ def main(argv=None):
     parser.add_argument("--nx", type=int, default=48)
     parser.add_argument("--ny", type=int, default=32)
     parser.add_argument("--nz", type=int, default=12)
-    parser.add_argument("--pressure-iterations", type=int, default=150,
+    parser.add_argument("--pressure-iterations", type=int, default=250,
                         help="maximum distributed PCG pressure iterations per physical step")
     parser.add_argument("--pressure-relative-tolerance", type=float, default=1e-8)
     parser.add_argument("--pressure-absolute-tolerance", type=float, default=1e-11)
