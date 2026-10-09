@@ -1,0 +1,233 @@
+{
+  "schema": "tensorfvm.independent-fourth-round-audit/1",
+  "cases": [
+    {
+      "group": "local-moving",
+      "case": "cross-grid",
+      "mass_residual_lattice": -9.094947017729282e-12,
+      "momentum_residual_lattice": 3.1086244689504383e-13,
+      "impulse": [
+        -5.924006825218653,
+        0.035338952078250885
+      ]
+    },
+    {
+      "group": "local-moving",
+      "case": "co-moving",
+      "mass_residual_lattice": -1.1141310096718371e-11,
+      "momentum_residual_lattice": 8.849587729287123e-13,
+      "impulse": [
+        0.4112878785159314,
+        -0.026481559608499183
+      ]
+    },
+    {
+      "group": "local-moving",
+      "case": "periodic-wrap",
+      "mass_residual_lattice": -9.549694368615746e-12,
+      "momentum_residual_lattice": 2.9309887850104133e-13,
+      "impulse": [
+        -5.93205457475476,
+        0.025285458815388684
+      ]
+    },
+    {
+      "group": "local-moving",
+      "case": "step-half",
+      "mass_residual_lattice": -1.5734258340671659e-10,
+      "momentum_residual_lattice": 3.1459279625778436e-12,
+      "impulse": [
+        -10.943991246560037,
+        0.6979248302260117
+      ]
+    },
+    {
+      "group": "continuum-boundary",
+      "case": "contact-16.json",
+      "mass_kg": 22.5,
+      "energy_J": 0.062464817270201756,
+      "tool_impulse_Ns": 0.3491758385371299,
+      "end_displacement_m": -0.001265085302296528
+    },
+    {
+      "group": "continuum-boundary",
+      "case": "contact-32.json",
+      "mass_kg": 22.5,
+      "energy_J": 0.06244038317339755,
+      "tool_impulse_Ns": 0.3025194319071857,
+      "end_displacement_m": -0.001213012641470966
+    },
+    {
+      "group": "continuum-boundary",
+      "case": "contact-64-half.json",
+      "mass_kg": 22.5,
+      "energy_J": 0.06248928453792332,
+      "tool_impulse_Ns": 0.27188941820562723,
+      "end_displacement_m": -0.0011013671999485638
+    },
+    {
+      "group": "continuum-boundary",
+      "case": "contact-64.json",
+      "mass_kg": 22.5,
+      "energy_J": 0.062460406942042815,
+      "tool_impulse_Ns": 0.27188701981378816,
+      "end_displacement_m": -0.0011036446344573514
+    },
+    {
+      "group": "continuum-boundary",
+      "case": "load-16.json",
+      "mass_kg": 22.5,
+      "energy_J": 0.0029836696746369648,
+      "tool_impulse_Ns": -0.3000000000000028,
+      "end_displacement_m": 0.0011934822722899923
+    },
+    {
+      "group": "continuum-boundary",
+      "case": "load-32.json",
+      "mass_kg": 22.5,
+      "energy_J": 0.002984256018963397,
+      "tool_impulse_Ns": -0.3000000000000044,
+      "end_displacement_m": 0.0011937139540992875
+    },
+    {
+      "group": "continuum-boundary",
+      "case": "load-64.json",
+      "mass_kg": 22.5,
+      "energy_J": 0.0029812395318573963,
+      "tool_impulse_Ns": -0.3000000000000039,
+      "end_displacement_m": 0.0011925027081145345
+    },
+    {
+      "group": "continuum-boundary",
+      "case": "separation-16.json",
+      "mass_kg": 22.5,
+      "energy_J": 0.0,
+      "tool_impulse_Ns": 0.0,
+      "end_displacement_m": 0.0
+    },
+    {
+      "group": "continuum-boundary",
+      "case": "separation-32.json",
+      "mass_kg": 22.5,
+      "energy_J": 0.0,
+      "tool_impulse_Ns": 0.0,
+      "end_displacement_m": 0.0
+    },
+    {
+      "group": "continuum-boundary",
+      "case": "separation-64.json",
+      "mass_kg": 22.5,
+      "energy_J": 0.0,
+      "tool_impulse_Ns": 0.0,
+      "end_displacement_m": 0.0
+    },
+    {
+      "group": "smooth-plane",
+      "case": "grid-64-half.json",
+      "mass_kg": 22.5,
+      "energy_J": 0.0013756824764097739,
+      "tool_impulse_Ns": 1.512774626295997,
+      "end_displacement_m": -0.0009783868385440965
+    },
+    {
+      "group": "smooth-plane",
+      "case": "grid-32.json",
+      "mass_kg": 22.5,
+      "energy_J": 0.0013756852781699243,
+      "tool_impulse_Ns": 1.5127779686514384,
+      "end_displacement_m": -0.000978389904451132
+    },
+    {
+      "group": "smooth-plane",
+      "case": "grid-64.json",
+      "mass_kg": 22.5,
+      "energy_J": 0.001375682472881269,
+      "tool_impulse_Ns": 1.5127746246824256,
+      "end_displacement_m": -0.0009783868493663482
+    },
+    {
+      "group": "smooth-plane",
+      "case": "grid-16.json",
+      "mass_kg": 22.5,
+      "energy_J": 0.0013756965035332809,
+      "tool_impulse_Ns": 1.512796606844543,
+      "end_displacement_m": -0.0009783905138329562
+    },
+    {
+      "group": "live-rigid-feedback",
+      "case": "local.json",
+      "final_body_impulse_Ns": [
+        0.0005435170113070767,
+        -0.07870089148700331
+      ],
+      "momentum_residual_Ns": 1.887379141862766e-14,
+      "physical_accuracy_qualified": false
+    },
+    {
+      "group": "live-rigid-feedback",
+      "case": "local-time-half.json",
+      "final_body_impulse_Ns": [
+        -0.011737521936584953,
+        -0.04223310823918861
+      ],
+      "momentum_residual_Ns": 9.751921492551219e-14,
+      "physical_accuracy_qualified": false
+    },
+    {
+      "group": "live-rigid-feedback",
+      "case": "global-reference.json",
+      "final_body_impulse_Ns": [
+        8.078596058763243e-05,
+        -0.09930315124384259
+      ],
+      "momentum_residual_Ns": 2.435445563648024e-13,
+      "physical_accuracy_qualified": false
+    }
+  ],
+  "raw_audit_passed": true,
+  "physical_accuracy_qualified": false,
+  "local_refinement_percent": 7.630160046649692,
+  "abrupt_contact_impulse_refinement_percent": 10.125766764891885,
+  "smooth_plane_dynamic_passed": true,
+  "feedback_time_eos_sensitivity_percent": 46.33719206832237,
+  "inputs_sha256": {
+    "/home/jsyc/tensor-suite-development/TensorLBM/docs/assets/local-moving-boundary/study.json": "61beec32f438f11dad436e3dcdc7581218b5a92115f1936df2ab4971a3977fee",
+    "/home/jsyc/tensor-suite-development/TensorLBM/docs/assets/local-moving-boundary/cross-grid.json": "613ec00bfffaf67d6fe7bd092339f072b227c3437fae55f1be0468256136b005",
+    "/home/jsyc/tensor-suite-development/TensorLBM/src/tensorlbm/local_moving_boundary_2d.py": "acd46ed7158e900557abd1ca8ba6899db0c51efa8c814d8c1bb3dd856a8fc171",
+    "/home/jsyc/tensor-suite-development/TensorLBM/src/tensorlbm/moving_boundary_2d.py": "0d66e0afc75d84df3da2eeb0a003e90c4ed973dad2c6d58ce3b65fed40d10059",
+    "/home/jsyc/tensor-suite-development/TensorLBM/docs/assets/local-moving-boundary/co-moving.json": "2d27c2b536ffdf98b2cf8295777de4f3854101165aeb9b8a6dbfc4345b7a9791",
+    "/home/jsyc/tensor-suite-development/TensorLBM/docs/assets/local-moving-boundary/periodic-wrap.json": "b95ce552ee824cf0301e178531976a7c32c3267c00f64fbbc1bffe4fc18f0197",
+    "/home/jsyc/tensor-suite-development/TensorLBM/docs/assets/local-moving-boundary/step-half.json": "78379745302064a5b410aa79c70c53c08980bf182474fd3d7695c5e29556d4ae",
+    "/home/jsyc/tensor-suite-development/TensorDEM/docs/coupling/continuum-boundary/study.json": "7ebf04325884a018e9030ea0be6f94c2c865bed939f3ea3aea341c7662dc0a57",
+    "/home/jsyc/tensor-suite-development/TensorDEM/src/tensordem/continuum_boundary_dem.py": "4a0d8853e8bcf90d7d425c904cacccd1e59119572676c10da424d72712b391ae",
+    "/home/jsyc/tensor-suite-development/TensorDEM/docs/coupling/continuum-boundary/contact-16.json": "a44625d691b386e7dac53779106a98ff6b0a22c9021e73c451236e055653e289",
+    "/home/jsyc/tensor-suite-development/TensorDEM/docs/coupling/continuum-boundary/contact-32.json": "d7f585f0b48e39503e9b0c80a383ddd3b3af3153a6086d193b7fe6defdcf557c",
+    "/home/jsyc/tensor-suite-development/TensorDEM/docs/coupling/continuum-boundary/contact-64-half.json": "a2bb3fd1e2a62df97970c6edfc59e1e1f3e639043ef0f8b2b1b5b890316743fb",
+    "/home/jsyc/tensor-suite-development/TensorDEM/docs/coupling/continuum-boundary/contact-64.json": "28e97ee4d5895319f6832da4ad174c0b5ccc114e19639cef219f54f4f11a65dd",
+    "/home/jsyc/tensor-suite-development/TensorDEM/docs/coupling/continuum-boundary/load-16.json": "b8dbadd1572c000d5d3d56dc220887612f347decd1aebb381be893010d820d86",
+    "/home/jsyc/tensor-suite-development/TensorDEM/docs/coupling/continuum-boundary/load-32.json": "e610a8e70844ec634123caaf5e86e5a16b213f1817d4c9a0ca874220a2d87851",
+    "/home/jsyc/tensor-suite-development/TensorDEM/docs/coupling/continuum-boundary/load-64.json": "1b88c3b4fccc50dfe6b6f86387381fcf966ab1df58092b4f5b2f7ab74de9065b",
+    "/home/jsyc/tensor-suite-development/TensorDEM/docs/coupling/continuum-boundary/separation-16.json": "7328be8d80a41fbc1564fdf51d0d32bd224992a3849974bad59768455ae13654",
+    "/home/jsyc/tensor-suite-development/TensorDEM/docs/coupling/continuum-boundary/separation-32.json": "0c1f06c52c69da94b824c705071348444248130466366b05f86e73ea6d849af4",
+    "/home/jsyc/tensor-suite-development/TensorDEM/docs/coupling/continuum-boundary/separation-64.json": "27ba580174bbf569ae1db70aba1a68e259a75b5882a44b21e573333346694a50",
+    "/home/jsyc/tensor-suite-development/TensorDEM/docs/coupling/smooth-plane/study.json": "6fb0192ec70fdc5622cc49aee19d84657069b1e7f432324e0935f5cbb6a035e8",
+    "/home/jsyc/tensor-suite-development/TensorDEM/src/tensordem/moving_plane_boundary.py": "45246c0459dd089916b2075f512f3766473195d88bc8902e283dd8fb00431e82",
+    "/home/jsyc/tensor-suite-development/TensorDEM/docs/coupling/smooth-plane/grid-64-half.json": "f2e5a5ac5f3ce46cb3ccfdd4a611815ce96db383a8cabd0dbdfa1e322afb5d61",
+    "/home/jsyc/tensor-suite-development/TensorDEM/docs/coupling/smooth-plane/grid-32.json": "1ee1260e876496107ef6e258fca638c5722a95adeb604d149f808f94598086b9",
+    "/home/jsyc/tensor-suite-development/TensorDEM/docs/coupling/smooth-plane/grid-64.json": "084af753494cedf33e16105ddc5786825c3925051ddaa4237455b0febd08b66e",
+    "/home/jsyc/tensor-suite-development/TensorDEM/docs/coupling/smooth-plane/grid-16.json": "5ec1f0e12735c0635f192bd5c96aa3a37970b0ee80b043a8dd810658dce67a28",
+    "/data/TensorFEM/docs/assets/live-rigid-feedback/study.json": "5c1bd55e6878491218f747df167517eea18e5f9163d9bfa7a42ea7b5af950b8e",
+    "/data/TensorFEM/src/tensorfem/fluid_rigid_feedback.py": "87e6e3c6e0e0dc93a16a37a4269936cc92a683c098a3a4b1bc9e868d92be59a8",
+    "/data/TensorFEM/src/tensorfem/point_surface_coupling.py": "f360f2e814735852965700d48d36388db4a05f98243b4ceaeda3ec63112db721",
+    "/data/TensorFEM/src/tensorfem/surface_coupling.py": "ab28ec663225fa5d1bdc981bdb71c2350a693a3ac38d2f44e21abf5e97ffcebc",
+    "/data/TensorFEM/src/tensorfem/plate.py": "26992717396ce0b1f1e9062ac00f62f210bd81f3e89829b521dd71f04abaadc3",
+    "/data/TensorFEM/scripts/run_live_rigid_feedback.py": "1544775ee04cd754b2d057f62238773a3be1c5a6db880048213225c99559f9be",
+    "/home/jsyc/tensor-suite-development/TensorLBM/src/tensorlbm/feedback_moving_disk.py": "2b2c5c9b04f5ad453b305de660b0031ee832197fe772e339442795321aadb516",
+    "/home/jsyc/tensor-suite-development/TensorLBM/src/tensorlbm/d2q9.py": "1065c3093e07dfa186d729412c4081c7e4ba0925db223e8083ff007d457adf4d",
+    "/home/jsyc/tensor-suite-development/TensorLBM/src/tensorlbm/solver.py": "6cef9523e393f4d584ef01620074c945fc94e44521884ff308ce25b7b59c39b3",
+    "/data/TensorFEM/docs/assets/live-rigid-feedback/local.json": "a6909e69bb27032a6a7afba72f14bb1ff1a4b86959be51708bc983974a5c2bdf",
+    "/data/TensorFEM/docs/assets/live-rigid-feedback/local-time-half.json": "7fbdca396ff51f509e1352b70b8f51519ff7f2f56f47d035db0b2bd1bf4bd422",
+    "/data/TensorFEM/docs/assets/live-rigid-feedback/global-reference.json": "097c297464a8705c4bb7153dfd01f0ccaed0819a00577f04623a1736da601782"
+  },
+  "auditor_sha256": "bc851b98a6307078b46ec323c2e46deb4aaf632201844c445947b1965ca80dea"
+}
