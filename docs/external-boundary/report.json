@@ -1,0 +1,609 @@
+{
+  "schema": "tensorfvm.external-boundary-cross-audit/1",
+  "auditor": "independent numpy; no TensorLBM imports",
+  "source_and_raw_sha256": {
+    "docs/assets/curved-boundary/study.json": "59625adbb4fbcee7b3dda1dfe88a25007c989162e1b2faabb241b2a9e69ef018",
+    "src/tensorlbm/curved_boundary_2d.py": "a826bb4bece205e43f990100ed480f0506d25ffa4630036f050e82b13cb99254",
+    "src/tensorlbm/solver.py": "6cef9523e393f4d584ef01620074c945fc94e44521884ff308ce25b7b59c39b3",
+    "src/tensorlbm/d2q9.py": "1065c3093e07dfa186d729412c4081c7e4ba0925db223e8083ff007d457adf4d",
+    "examples/curved_boundary/run.py": "dccaa0a1f75e2518e084044f3aa326ebb5492b9f61d748ef9de12c5387d8bd62",
+    "docs/assets/curved-boundary/bfl-n32-dt0.0005.json": "ae1e4b92a740461063524d1f1551ebd7c8c8aedccce6030a7524ad3907408919",
+    "docs/assets/curved-boundary/bfl-n48-dt0.0005.json": "36db7057ac708a1ac994ca398e811ec10d7939fbca6dfd14d6c282e6faac0511",
+    "docs/assets/curved-boundary/bfl-n64-dt0.0005.json": "99d02dfbde66951045884d902704a951744c0a256c819e45258081211960eefa",
+    "docs/assets/curved-boundary/bfl-n64-dt0.00025.json": "2dbeed2ffc2a88096903f9a7fa23f433f742663556ff209ebc75fce1963738ea",
+    "docs/assets/curved-boundary/staircase-n32-dt0.0005.json": "f0d72f65a844bc8ce6c9032169f05d77f473e0db95ebfcee151210ebeaeef2a1",
+    "docs/assets/curved-boundary/staircase-n48-dt0.0005.json": "c531abd1e8261e0139fafd4a9d2b38448d0b9b8c81acc2e4b741063eb12abb47",
+    "docs/assets/curved-boundary/staircase-n64-dt0.0005.json": "3074313dda08006069fa0883d5b33347b0c3c5c9f80b16f4e4f476baa5de992d",
+    "docs/assets/curved-boundary/driven-study.json": "d454185f5649adda10bbf49e43a3227d80ba62b29c120b25acfeec629338e7b2",
+    "examples/curved_boundary/driven.py": "d4ac1ed027d62426e992610feaa8f57487a167c63e4efc9fab7ed3733d344252",
+    "docs/assets/curved-boundary/driven-n32-dt0.0005.json": "8c1c9ddd193ce702895c29612beb5d5d93a6d3e26aad9116801484b53b0ce622",
+    "docs/assets/curved-boundary/driven-n48-dt0.0005.json": "e213e34a6eb98228a91e506809a5bacaff243eae57968f867d1873db025a2bf6",
+    "docs/assets/curved-boundary/driven-n64-dt0.0005.json": "3576bee5eeb8222c40acc43757422779a8f5c93433a4ce18be39b9c57d7f025a",
+    "docs/assets/curved-boundary/driven-n64-dt0.00025.json": "8f86feb0bf09c48406e4c554226c9a046d306b841acbc6417485462e3e35f7d6",
+    "examples/moving_boundary/evidence/study.json": "a98c15b254787c251fc147463b78cfd1b0baac459a29a84c1f877b7f8782b1f4",
+    "src/tensorlbm/moving_boundary_2d.py": "0d66e0afc75d84df3da2eeb0a003e90c4ed973dad2c6d58ce3b65fed40d10059",
+    "examples/moving_boundary/evidence/comoving.json": "160c2972185887fbd49017cc6cd957a992553e0afb317e369b6b347f08959453",
+    "examples/moving_boundary/evidence/moving.json": "85ebbb8d3d2e597375b4f8ebcf80d18766babc9140c6bcd5909882140406770c",
+    "examples/moving_boundary/evidence/motion-half.json": "792c4a4612c03c853ad61302043092ab98619805818c45190a4fd0a26a24498c",
+    "examples/moving_boundary/evidence/motion-quarter.json": "32467475effc5c9d879d83e590aaa07535a515205ce1a496f0041b2217e40fcb",
+    "examples/moving_boundary/evidence/time-half.json": "868a88eedab2969e0e6c63ba65ef78e15636838945557a40f897175024069898",
+    "examples/moving_boundary/evidence/time-quarter.json": "ac7abff0a5ca2b00f391fbc56d9a41059549fdb3c1c887673f6d6464da472f49",
+    "examples/moving_boundary/evidence/time-eighth.json": "1e38f2756ec12f1578bba5a48528096146a580c51cf86b8725cffb0ad6e9551f",
+    "examples/moving_boundary/evidence/time-sixteenth.json": "4a9753d85b41b4f4e0cd6267c906a69f7234e5ecd0c55444d6423a735e667267"
+  },
+  "auditor_source_sha256": "71c0dab1676dca6277087e225a64c3362ac70ba6376218ca04148d031480bc80",
+  "cases": [
+    {
+      "file": "docs/assets/curved-boundary/bfl-n32-dt0.0005.json",
+      "sound_speed_m_s": 36.08439182435161,
+      "tau": 0.53072,
+      "mach": 0.0005542562584220408,
+      "reynolds": 0.25,
+      "lattice_mass_kg": 0.1953125,
+      "lattice_impulse_Ns": 12.20703125,
+      "fluid_mass_kg": 190.82031249999406,
+      "excluded_nodes": 47,
+      "final_max_speed_m_s": 0.023263446401101454,
+      "final_max_mach": 0.000644695538013809,
+      "final_max_reynolds": 0.2907930800137682,
+      "body_impulse_Ns": [
+        0.5661801313729783,
+        7.441489854333704e-05
+      ],
+      "drive_impulse_Ns": [
+        0,
+        0
+      ],
+      "raw_momentum_error_Ns": 8.295031328486857e-12,
+      "late_window_relative_drift": null,
+      "steady_qualified": false,
+      "sensitivity_type": "transient impulse",
+      "velocity_scale_definition": "initial uniform velocity",
+      "raw_audit_passed": true,
+      "physical_accuracy_qualified": false
+    },
+    {
+      "file": "docs/assets/curved-boundary/bfl-n48-dt0.0005.json",
+      "sound_speed_m_s": 24.056261216234407,
+      "tau": 0.56912,
+      "mach": 0.0008313843876330611,
+      "reynolds": 0.25,
+      "lattice_mass_kg": 0.08680555555555555,
+      "lattice_impulse_Ns": 3.6168981481481475,
+      "fluid_mass_kg": 190.19097222221686,
+      "excluded_nodes": 113,
+      "final_max_speed_m_s": 0.026598881693606306,
+      "final_max_mach": 0.0011056947484281558,
+      "final_max_reynolds": 0.3324860211700788,
+      "body_impulse_Ns": [
+        0.5720780395804386,
+        -0.00026521256897550725
+      ],
+      "drive_impulse_Ns": [
+        0,
+        0
+      ],
+      "raw_momentum_error_Ns": 7.068789997788372e-13,
+      "late_window_relative_drift": null,
+      "steady_qualified": false,
+      "sensitivity_type": "transient impulse",
+      "velocity_scale_definition": "initial uniform velocity",
+      "raw_audit_passed": true,
+      "physical_accuracy_qualified": false
+    },
+    {
+      "file": "docs/assets/curved-boundary/bfl-n64-dt0.0005.json",
+      "sound_speed_m_s": 18.042195912175806,
+      "tau": 0.62288,
+      "mach": 0.0011085125168440815,
+      "reynolds": 0.25,
+      "lattice_mass_kg": 0.048828125,
+      "lattice_impulse_Ns": 1.52587890625,
+      "fluid_mass_kg": 190.18554687499497,
+      "excluded_nodes": 201,
+      "final_max_speed_m_s": 0.029107715470966796,
+      "final_max_mach": 0.0016133133468151405,
+      "final_max_reynolds": 0.36384644338708494,
+      "body_impulse_Ns": [
+        0.6506211022723456,
+        -0.002503835144303092
+      ],
+      "drive_impulse_Ns": [
+        0,
+        0
+      ],
+      "raw_momentum_error_Ns": 2.201105964161343e-11,
+      "late_window_relative_drift": null,
+      "steady_qualified": false,
+      "sensitivity_type": "transient impulse",
+      "velocity_scale_definition": "initial uniform velocity",
+      "raw_audit_passed": true,
+      "physical_accuracy_qualified": false
+    },
+    {
+      "file": "docs/assets/curved-boundary/bfl-n64-dt0.00025.json",
+      "sound_speed_m_s": 36.08439182435161,
+      "tau": 0.56144,
+      "mach": 0.0005542562584220408,
+      "reynolds": 0.25,
+      "lattice_mass_kg": 0.048828125,
+      "lattice_impulse_Ns": 3.0517578125,
+      "fluid_mass_kg": 190.18554687498892,
+      "excluded_nodes": 201,
+      "final_max_speed_m_s": 0.024061346445522845,
+      "final_max_mach": 0.000666807592674598,
+      "final_max_reynolds": 0.3007668305690356,
+      "body_impulse_Ns": [
+        0.5453197589652851,
+        -0.0005820229570323808
+      ],
+      "drive_impulse_Ns": [
+        0,
+        0
+      ],
+      "raw_momentum_error_Ns": 2.1163959473824434e-11,
+      "late_window_relative_drift": null,
+      "steady_qualified": false,
+      "sensitivity_type": "transient impulse",
+      "velocity_scale_definition": "initial uniform velocity",
+      "raw_audit_passed": true,
+      "physical_accuracy_qualified": false
+    },
+    {
+      "file": "docs/assets/curved-boundary/staircase-n32-dt0.0005.json",
+      "sound_speed_m_s": 36.08439182435161,
+      "tau": 0.53072,
+      "mach": 0.0005542562584220408,
+      "reynolds": 0.25,
+      "lattice_mass_kg": 0.1953125,
+      "lattice_impulse_Ns": 12.20703125,
+      "fluid_mass_kg": 190.82031249999406,
+      "excluded_nodes": 47,
+      "final_max_speed_m_s": 0.023367424026317866,
+      "final_max_mach": 0.0006475770504894119,
+      "final_max_reynolds": 0.29209280032897333,
+      "body_impulse_Ns": [
+        0.5645491661479124,
+        -0.0004675247617906965
+      ],
+      "drive_impulse_Ns": [
+        0,
+        0
+      ],
+      "raw_momentum_error_Ns": 8.550493646453106e-12,
+      "late_window_relative_drift": null,
+      "steady_qualified": false,
+      "sensitivity_type": "transient impulse",
+      "velocity_scale_definition": "initial uniform velocity",
+      "raw_audit_passed": true,
+      "physical_accuracy_qualified": false
+    },
+    {
+      "file": "docs/assets/curved-boundary/staircase-n48-dt0.0005.json",
+      "sound_speed_m_s": 24.056261216234407,
+      "tau": 0.56912,
+      "mach": 0.0008313843876330611,
+      "reynolds": 0.25,
+      "lattice_mass_kg": 0.08680555555555555,
+      "lattice_impulse_Ns": 3.6168981481481475,
+      "fluid_mass_kg": 190.19097222221686,
+      "excluded_nodes": 113,
+      "final_max_speed_m_s": 0.026736180761572786,
+      "final_max_mach": 0.001111402163505351,
+      "final_max_reynolds": 0.3342022595196598,
+      "body_impulse_Ns": [
+        0.5827725781763711,
+        -0.00424739368757459
+      ],
+      "drive_impulse_Ns": [
+        0,
+        0
+      ],
+      "raw_momentum_error_Ns": 9.362510766663945e-13,
+      "late_window_relative_drift": null,
+      "steady_qualified": false,
+      "sensitivity_type": "transient impulse",
+      "velocity_scale_definition": "initial uniform velocity",
+      "raw_audit_passed": true,
+      "physical_accuracy_qualified": false
+    },
+    {
+      "file": "docs/assets/curved-boundary/staircase-n64-dt0.0005.json",
+      "sound_speed_m_s": 18.042195912175806,
+      "tau": 0.62288,
+      "mach": 0.0011085125168440815,
+      "reynolds": 0.25,
+      "lattice_mass_kg": 0.048828125,
+      "lattice_impulse_Ns": 1.52587890625,
+      "fluid_mass_kg": 190.18554687499497,
+      "excluded_nodes": 201,
+      "final_max_speed_m_s": 0.029199584722296026,
+      "final_max_mach": 0.0016184052575657177,
+      "final_max_reynolds": 0.3649948090287003,
+      "body_impulse_Ns": [
+        0.6608285929664766,
+        -0.007297946544695253
+      ],
+      "drive_impulse_Ns": [
+        0,
+        0
+      ],
+      "raw_momentum_error_Ns": 2.221678396807647e-11,
+      "late_window_relative_drift": null,
+      "steady_qualified": false,
+      "sensitivity_type": "transient impulse",
+      "velocity_scale_definition": "initial uniform velocity",
+      "raw_audit_passed": true,
+      "physical_accuracy_qualified": false
+    },
+    {
+      "file": "docs/assets/curved-boundary/driven-n32-dt0.0005.json",
+      "sound_speed_m_s": 36.08439182435161,
+      "tau": 0.53072,
+      "mach": 0.0,
+      "reynolds": 0.0,
+      "lattice_mass_kg": 0.1953125,
+      "lattice_impulse_Ns": 12.20703125,
+      "fluid_mass_kg": 190.8203124999206,
+      "excluded_nodes": 47,
+      "final_max_speed_m_s": 0.04018551530616706,
+      "final_max_mach": 0.0011136536678178902,
+      "final_max_reynolds": 0.5023189413270882,
+      "body_impulse_Ns": [
+        2.3853866303501654,
+        -0.0002802035199990483
+      ],
+      "drive_impulse_Ns": [
+        7.155761718749698,
+        0.0
+      ],
+      "raw_momentum_error_Ns": 1.9694290642746637e-10,
+      "late_window_relative_drift": 0.07890350073936281,
+      "steady_qualified": false,
+      "sensitivity_type": "late transient window; steady requires drift < 1%",
+      "velocity_scale_definition": "zero initial velocity; Mach/Re above are initial values, not evolved flow values",
+      "raw_audit_passed": true,
+      "physical_accuracy_qualified": false
+    },
+    {
+      "file": "docs/assets/curved-boundary/driven-n48-dt0.0005.json",
+      "sound_speed_m_s": 24.056261216234407,
+      "tau": 0.56912,
+      "mach": 0.0,
+      "reynolds": 0.0,
+      "lattice_mass_kg": 0.08680555555555555,
+      "lattice_impulse_Ns": 3.6168981481481475,
+      "fluid_mass_kg": 190.19097222214813,
+      "excluded_nodes": 113,
+      "final_max_speed_m_s": 0.040179204640543774,
+      "final_max_mach": 0.0016702181722830966,
+      "final_max_reynolds": 0.5022400580067972,
+      "body_impulse_Ns": [
+        2.352667674978199,
+        -0.0029791448907603504
+      ],
+      "drive_impulse_Ns": [
+        7.132161458333112,
+        0.0
+      ],
+      "raw_momentum_error_Ns": 1.3928858066947214e-10,
+      "late_window_relative_drift": 0.07970348818925554,
+      "steady_qualified": false,
+      "sensitivity_type": "late transient window; steady requires drift < 1%",
+      "velocity_scale_definition": "zero initial velocity; Mach/Re above are initial values, not evolved flow values",
+      "raw_audit_passed": true,
+      "physical_accuracy_qualified": false
+    },
+    {
+      "file": "docs/assets/curved-boundary/driven-n64-dt0.0005.json",
+      "sound_speed_m_s": 18.042195912175806,
+      "tau": 0.62288,
+      "mach": 0.0,
+      "reynolds": 0.0,
+      "lattice_mass_kg": 0.048828125,
+      "lattice_impulse_Ns": 1.52587890625,
+      "fluid_mass_kg": 190.1855468749324,
+      "excluded_nodes": 201,
+      "final_max_speed_m_s": 0.04018720274293532,
+      "final_max_mach": 0.0022274008628747305,
+      "final_max_reynolds": 0.5023400342866915,
+      "body_impulse_Ns": [
+        2.3387186158417292,
+        -0.002841135396688775
+      ],
+      "drive_impulse_Ns": [
+        7.1319580078130675,
+        0.0
+      ],
+      "raw_momentum_error_Ns": 1.0694822805135118e-10,
+      "late_window_relative_drift": 0.08002659158829539,
+      "steady_qualified": false,
+      "sensitivity_type": "late transient window; steady requires drift < 1%",
+      "velocity_scale_definition": "zero initial velocity; Mach/Re above are initial values, not evolved flow values",
+      "raw_audit_passed": true,
+      "physical_accuracy_qualified": false
+    },
+    {
+      "file": "docs/assets/curved-boundary/driven-n64-dt0.00025.json",
+      "sound_speed_m_s": 36.08439182435161,
+      "tau": 0.56144,
+      "mach": 0.0,
+      "reynolds": 0.0,
+      "lattice_mass_kg": 0.048828125,
+      "lattice_impulse_Ns": 3.0517578125,
+      "fluid_mass_kg": 190.1855468748497,
+      "excluded_nodes": 201,
+      "final_max_speed_m_s": 0.04018605384034486,
+      "final_max_mach": 0.0011136685921148111,
+      "final_max_reynolds": 0.5023256730043107,
+      "body_impulse_Ns": [
+        2.34174003934732,
+        -0.0030772042510086527
+      ],
+      "drive_impulse_Ns": [
+        7.131958007813185,
+        0.0
+      ],
+      "raw_momentum_error_Ns": 3.3507863150816775e-10,
+      "late_window_relative_drift": 0.07995808850498842,
+      "steady_qualified": false,
+      "sensitivity_type": "late transient window; steady requires drift < 1%",
+      "velocity_scale_definition": "zero initial velocity; Mach/Re above are initial values, not evolved flow values",
+      "raw_audit_passed": true,
+      "physical_accuracy_qualified": false
+    },
+    {
+      "file": "examples/moving_boundary/evidence/comoving.json",
+      "sound_speed_m_s": 0.5773502691896257,
+      "tau": 0.8,
+      "mach": 0.05196152422706631,
+      "reynolds": 2.399999999999999,
+      "lattice_mass_kg": 0.001,
+      "lattice_impulse_Ns": 0.0010000000000000002,
+      "fluid_mass_kg": 1.23,
+      "excluded_nodes": 50,
+      "body_wall_impulse_Ns": [
+        -2.6867397195928794e-17,
+        -1.6431300764452322e-17
+      ],
+      "body_conversion_impulse_Ns": [
+        -7.312348856976446e-07,
+        -5.273559366969494e-19
+      ],
+      "global_reservoir_impulse_Ns": [
+        -7.312348860821773e-07,
+        -1.634248292248231e-16
+      ],
+      "max_step_momentum_error_Ns": 8.056749711826685e-17,
+      "max_step_mass_error_kg": 9.094947017729283e-16,
+      "reservoir_absolute_exchange_kg": 0.043987067113730294,
+      "local_mass_conservation_qualified": false,
+      "steady_qualified": false,
+      "sensitivity_type": "combined time-step and compressibility or changed motion Reynolds number",
+      "raw_audit_passed": true,
+      "physical_accuracy_qualified": false
+    },
+    {
+      "file": "examples/moving_boundary/evidence/moving.json",
+      "sound_speed_m_s": 0.5773502691896257,
+      "tau": 0.8,
+      "mach": 0.05196152422706631,
+      "reynolds": 2.399999999999999,
+      "lattice_mass_kg": 0.001,
+      "lattice_impulse_Ns": 0.0010000000000000002,
+      "fluid_mass_kg": 1.23,
+      "excluded_nodes": 50,
+      "body_wall_impulse_Ns": [
+        -0.007764104264394566,
+        6.659557945856377e-06
+      ],
+      "body_conversion_impulse_Ns": [
+        -3.5444127517896383e-05,
+        -3.2662799217406466e-07
+      ],
+      "global_reservoir_impulse_Ns": [
+        -5.030038018603024e-07,
+        -4.2845770536814606e-08
+      ],
+      "max_step_momentum_error_Ns": 9.103828801926286e-17,
+      "max_step_mass_error_kg": 6.821210263296962e-16,
+      "reservoir_absolute_exchange_kg": 0.04431096485568469,
+      "local_mass_conservation_qualified": false,
+      "steady_qualified": false,
+      "sensitivity_type": "combined time-step and compressibility or changed motion Reynolds number",
+      "raw_audit_passed": true,
+      "physical_accuracy_qualified": false
+    },
+    {
+      "file": "examples/moving_boundary/evidence/motion-half.json",
+      "sound_speed_m_s": 0.5773502691896257,
+      "tau": 0.8,
+      "mach": 0.025980762113533156,
+      "reynolds": 1.1999999999999995,
+      "lattice_mass_kg": 0.001,
+      "lattice_impulse_Ns": 0.0010000000000000002,
+      "fluid_mass_kg": 1.23,
+      "excluded_nodes": 50,
+      "body_wall_impulse_Ns": [
+        -0.005783912402251192,
+        -3.3089732486972787e-06
+      ],
+      "body_conversion_impulse_Ns": [
+        -1.4581825205111244e-05,
+        6.500824879291241e-07
+      ],
+      "global_reservoir_impulse_Ns": [
+        -3.960464742007731e-07,
+        -1.8111471682402684e-08
+      ],
+      "max_step_momentum_error_Ns": 9.270362255620059e-17,
+      "max_step_mass_error_kg": 4.547473508864641e-16,
+      "reservoir_absolute_exchange_kg": 0.04411742957535148,
+      "local_mass_conservation_qualified": false,
+      "steady_qualified": false,
+      "sensitivity_type": "combined time-step and compressibility or changed motion Reynolds number",
+      "raw_audit_passed": true,
+      "physical_accuracy_qualified": false
+    },
+    {
+      "file": "examples/moving_boundary/evidence/motion-quarter.json",
+      "sound_speed_m_s": 0.5773502691896257,
+      "tau": 0.8,
+      "mach": 0.012990381056766578,
+      "reynolds": 0.5999999999999998,
+      "lattice_mass_kg": 0.001,
+      "lattice_impulse_Ns": 0.0010000000000000002,
+      "fluid_mass_kg": 1.23,
+      "excluded_nodes": 50,
+      "body_wall_impulse_Ns": [
+        -0.004013566770418433,
+        1.10918911350999e-06
+      ],
+      "body_conversion_impulse_Ns": [
+        -5.613282118271315e-06,
+        1.1413285024751351e-06
+      ],
+      "global_reservoir_impulse_Ns": [
+        7.246226865618157e-07,
+        -1.4516654488261342e-08
+      ],
+      "max_step_momentum_error_Ns": 8.903988657493757e-17,
+      "max_step_mass_error_kg": 6.821210263296962e-16,
+      "reservoir_absolute_exchange_kg": 0.04405061739408461,
+      "local_mass_conservation_qualified": false,
+      "steady_qualified": false,
+      "sensitivity_type": "combined time-step and compressibility or changed motion Reynolds number",
+      "raw_audit_passed": true,
+      "physical_accuracy_qualified": false
+    },
+    {
+      "file": "examples/moving_boundary/evidence/time-half.json",
+      "sound_speed_m_s": 1.1547005383792515,
+      "tau": 0.65,
+      "mach": 0.025980762113533156,
+      "reynolds": 2.399999999999999,
+      "lattice_mass_kg": 0.001,
+      "lattice_impulse_Ns": 0.0020000000000000005,
+      "fluid_mass_kg": 1.23,
+      "excluded_nodes": 50,
+      "body_wall_impulse_Ns": [
+        -0.008623822855354875,
+        -7.987296639604404e-06
+      ],
+      "body_conversion_impulse_Ns": [
+        -3.522770039034386e-05,
+        8.763423516411492e-07
+      ],
+      "global_reservoir_impulse_Ns": [
+        -1.4756623107530235e-06,
+        -4.6338232976950175e-08
+      ],
+      "max_step_momentum_error_Ns": 1.4011014570769478e-16,
+      "max_step_mass_error_kg": 9.094947017729283e-16,
+      "reservoir_absolute_exchange_kg": 0.044116753120483965,
+      "local_mass_conservation_qualified": false,
+      "steady_qualified": false,
+      "sensitivity_type": "combined time-step and compressibility or changed motion Reynolds number",
+      "raw_audit_passed": true,
+      "physical_accuracy_qualified": false
+    },
+    {
+      "file": "examples/moving_boundary/evidence/time-quarter.json",
+      "sound_speed_m_s": 2.309401076758503,
+      "tau": 0.575,
+      "mach": 0.012990381056766578,
+      "reynolds": 2.4000000000000012,
+      "lattice_mass_kg": 0.001,
+      "lattice_impulse_Ns": 0.004000000000000001,
+      "fluid_mass_kg": 1.2299999999999998,
+      "excluded_nodes": 50,
+      "body_wall_impulse_Ns": [
+        -0.008153937985008344,
+        1.951788918253428e-06
+      ],
+      "body_conversion_impulse_Ns": [
+        -2.83070591106371e-05,
+        8.873909953796501e-06
+      ],
+      "global_reservoir_impulse_Ns": [
+        3.0936101319980487e-06,
+        3.9585810611697535e-08
+      ],
+      "max_step_momentum_error_Ns": 3.264055692397961e-16,
+      "max_step_mass_error_kg": 9.094947017729283e-16,
+      "reservoir_absolute_exchange_kg": 0.04405919971418825,
+      "local_mass_conservation_qualified": false,
+      "steady_qualified": false,
+      "sensitivity_type": "combined time-step and compressibility or changed motion Reynolds number",
+      "raw_audit_passed": true,
+      "physical_accuracy_qualified": false
+    },
+    {
+      "file": "examples/moving_boundary/evidence/time-eighth.json",
+      "sound_speed_m_s": 4.618802153517006,
+      "tau": 0.5375,
+      "mach": 0.006495190528383289,
+      "reynolds": 2.4000000000000012,
+      "lattice_mass_kg": 0.001,
+      "lattice_impulse_Ns": 0.008000000000000002,
+      "fluid_mass_kg": 1.23,
+      "excluded_nodes": 50,
+      "body_wall_impulse_Ns": [
+        -0.00845290248298566,
+        3.1383598344412187e-06
+      ],
+      "body_conversion_impulse_Ns": [
+        -3.321870389422991e-05,
+        1.0292495635199936e-05
+      ],
+      "global_reservoir_impulse_Ns": [
+        2.350410198232567e-06,
+        4.389993080167188e-09
+      ],
+      "max_step_momentum_error_Ns": 6.918909889463977e-16,
+      "max_step_mass_error_kg": 5.977440764581843e-16,
+      "reservoir_absolute_exchange_kg": 0.048012677011391364,
+      "local_mass_conservation_qualified": false,
+      "steady_qualified": false,
+      "sensitivity_type": "combined time-step and compressibility or changed motion Reynolds number",
+      "raw_audit_passed": true,
+      "physical_accuracy_qualified": false
+    },
+    {
+      "file": "examples/moving_boundary/evidence/time-sixteenth.json",
+      "sound_speed_m_s": 9.237604307034012,
+      "tau": 0.51875,
+      "mach": 0.0032475952641916445,
+      "reynolds": 2.399999999999994,
+      "lattice_mass_kg": 0.001,
+      "lattice_impulse_Ns": 0.016000000000000004,
+      "fluid_mass_kg": 1.23,
+      "excluded_nodes": 50,
+      "body_wall_impulse_Ns": [
+        -0.008510738886635267,
+        -1.2665759241787813e-06
+      ],
+      "body_conversion_impulse_Ns": [
+        -3.867112953627384e-05,
+        2.2109113037985965e-05
+      ],
+      "global_reservoir_impulse_Ns": [
+        -1.6743843897302216e-06,
+        1.7930198634985576e-07
+      ],
+      "max_step_momentum_error_Ns": 1.5472068071176185e-15,
+      "max_step_mass_error_kg": 4.547473508864641e-16,
+      "reservoir_absolute_exchange_kg": 0.04798852116893431,
+      "local_mass_conservation_qualified": false,
+      "steady_qualified": false,
+      "sensitivity_type": "combined time-step and compressibility or changed motion Reynolds number",
+      "raw_audit_passed": true,
+      "physical_accuracy_qualified": false
+    }
+  ],
+  "fvm_same_boundary_simulation_performed": false,
+  "physical_accuracy_qualified": false,
+  "temporal_convergence_qualified": false,
+  "eos_note": "Changing dx/dt changes SI sound speed. Fixed-grid dt refinement is combined temporal/compressibility sensitivity.",
+  "reservoir_note": "Global rescaling closes global bookkeeping; it does not establish local swept-volume conservation."
+}
