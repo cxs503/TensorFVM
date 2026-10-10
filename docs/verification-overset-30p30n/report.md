@@ -44,3 +44,13 @@ Gmsh 4.15.2, one thread, first-order ASCII 2.2. Component domain [-1,3] × [-1.5
 The initial 0.003C layer failed fine-grid edge recovery: [retained failure](../verification-overset-30p30n-failed/failure.json). The actual SIMPLE/SA flow remains unqualified: [bounded flow diagnostic](../verification-30p30n-flow-retry/report.md).
 
 Regression evidence: 16 baseline tests and 9 multi-solid/overset tests passed (19 distinct tests, six repeated).
+
+## 三段翼几何与实际流场图
+
+[几何、速度和压力图](../verification-30p30n-flow-preview/visual-report.md)。流场来自19,023单元单套Gmsh贴体网格上两个完整SIMPLE/SA迭代步，仍未收敛，不能作为已达标的物理解。此图不是overset标量制造解，也不是overset Navier–Stokes结果。
+
+![三段翼几何](../verification-30p30n-flow-preview/geometry.png)
+
+![未收敛速度场](../verification-30p30n-flow-preview/speed.png)
+
+![未收敛压力场](../verification-30p30n-flow-preview/p.png)

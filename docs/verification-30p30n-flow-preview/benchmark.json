@@ -1,0 +1,109 @@
+{
+  "benchmark": "MDA-30P30N-Re5000000-alpha0",
+  "converged": false,
+  "iterations": 2,
+  "config": {
+    "nx": 1,
+    "ny": 1,
+    "length": 10,
+    "height": 10,
+    "cylinder_x": 1.0,
+    "cylinder_y": 1.0,
+    "cylinder_radius": null,
+    "inlet_velocity": 1,
+    "reynolds": 5000000,
+    "density": 1,
+    "velocity_relaxation": 0.3,
+    "pressure_relaxation": 0.2,
+    "max_iterations": 2,
+    "tolerance": 1e-05,
+    "device": "cpu",
+    "pseudo_time_step": 0.02,
+    "mesh_type": "three-element",
+    "inlet_profile": "uniform",
+    "turbulence_model": "spalart-allmaras",
+    "turbulence_relaxation": 0.3,
+    "sa_freestream_ratio": 3,
+    "flat_plate_stretching": 4.0,
+    "body_fitted_stretching": 0.0,
+    "outer_boundary": "channel",
+    "time_step": null,
+    "inner_iterations": 1,
+    "initial_perturbation": 0.0,
+    "airfoil_code": "0012",
+    "airfoil_chord": 1,
+    "airfoil_x": 1.0,
+    "airfoil_y": 1.0,
+    "angle_of_attack": 0,
+    "mesh_file": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-30p30n-flow-retry/mesh.msh"
+  },
+  "mesh": {
+    "nodes": 16787,
+    "cells": 19023,
+    "boundary_faces": {
+      "slat": 208,
+      "main": 474,
+      "flap": 280,
+      "inlet": 34,
+      "outlet": 34,
+      "far-field": 68
+    }
+  },
+  "final_residuals": {
+    "iteration": 2,
+    "continuity": 1.1377973931694783e-12,
+    "momentum": 12.717967443950691,
+    "mass_imbalance": 1.3619612104776025e-10,
+    "velocity_change": 3.1587695814105814,
+    "u_residual": 12.717967443950691,
+    "v_residual": 11.433413394197114,
+    "turbulence": 0.014856282733148827,
+    "turbulence_change": 3.2702726512982743
+  },
+  "aerodynamic_coefficients": {
+    "slat_drag": 3.892149447094319,
+    "slat_lift": -2.2022751531363225,
+    "main_drag": 2.0135514543858166,
+    "main_lift": -1.1722581556309877,
+    "flap_drag": 4.028405073171223,
+    "flap_lift": 5.333322034886114,
+    "drag": 9.93410597465136,
+    "lift": 1.9587887261188044
+  },
+  "surface_forces": {
+    "slat": {
+      "x": 1.9460747235471596,
+      "y": -1.1011375765681612
+    },
+    "main": {
+      "x": 1.0067757271929083,
+      "y": -0.5861290778154938
+    },
+    "flap": {
+      "x": 2.0142025365856115,
+      "y": 2.666661017443057
+    },
+    "total": {
+      "x": 4.96705298732568,
+      "y": 0.9793943630594022
+    }
+  },
+  "reference_comparison": {
+    "computed_coefficients": {
+      "lift": 1.9587887261188044,
+      "drag": 9.93410597465136,
+      "drag_x100": 993.4105974651359
+    },
+    "reference": {
+      "lift": 0.033243,
+      "drag_reported": 2.167089
+    },
+    "relative_errors": {
+      "lift": 57.923344045928594,
+      "drag_if_source_is_dimensionless": 3.5840784456251495,
+      "drag_if_source_is_100x": 457.4078445625149
+    },
+    "note": "Diagnostic comparison only: source drag scaling and tunnel/domain details must be matched before treating these errors as acceptance."
+  },
+  "physics_acceptance": "diagnostic-only; not a validated match"
+}

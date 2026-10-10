@@ -13,3 +13,13 @@
 ```bash
 PYTHONPATH=src python scripts/run_three_element_flow_diagnostic.py --mesh-file docs/verification-30p30n-flow-retry/mesh.msh --output NEW_DIR --iterations 20 --seconds 120
 ```
+
+## 三段翼几何与实际流场图
+
+[几何、速度和压力图](../verification-30p30n-flow-preview/visual-report.md)。流场来自19,023单元单套Gmsh贴体网格上两个完整SIMPLE/SA迭代步，仍未收敛，不能作为已达标的物理解。此图不是overset标量制造解，也不是overset Navier–Stokes结果。
+
+![三段翼几何](../verification-30p30n-flow-preview/geometry.png)
+
+![未收敛速度场](../verification-30p30n-flow-preview/speed.png)
+
+![未收敛压力场](../verification-30p30n-flow-preview/p.png)
