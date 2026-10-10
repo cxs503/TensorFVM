@@ -1,0 +1,3368 @@
+{
+  "provenance": {
+    "matplotlib": "3.11.2",
+    "git_base": "f5626e5b021c7829d0c8dff3f82b8b27a823fb4f",
+    "python": "3.11.15",
+    "torch": "2.14.1+cu130",
+    "numpy": "2.4.6",
+    "platform": "Linux-6.8.0-137-generic-x86_64-with-glibc2.39",
+    "torch_threads": 1,
+    "device": "cpu",
+    "source_sha256": {
+      "pyproject.toml": "7222720c67aacd63d49197202dea8e1a457b8b78a53a8cba31640846a5498172",
+      "src/tensorfvm/__init__.py": "9f8d4d3a249d695e4e841e4c9d11d7158db8a2d33e2928d3565794718e2aba3c",
+      "src/tensorfvm/backend_registry.py": "e68b95fdb7c457b921b2f1c9e3920f80ebdcdb104ca8077e10e96d2a4182a13a",
+      "src/tensorfvm/body_fitted.py": "4e633fa42c1171cf57aca5bf930827f97a30dada4e405bf3ac9c1068ba1bb7a7",
+      "src/tensorfvm/mesh_api.py": "72f4f9d724084df335dca0e561877c5423c47a7f8bfffe950d631845e2dce22d",
+      "src/tensorfvm/periodic_mac.py": "b6b823c2c7972368a30fbba14f07d1222d062d00a9fe03c769c844407bfde5eb",
+      "src/tensorfvm/runtime.py": "ff383730f34f82030f28da424819eea670f28c663d5be834f30bebc6c74a2da5",
+      "src/tensorfvm/solver.py": "7c3613f23791c6a22825bd2ba0467e2bb84013ecaedc974901452b1864a2868e",
+      "src/tensorfvm/verification/__init__.py": "2e93edad1f2e0ed881602c2f72592f32070e99f9a75433e6fa0ce4c485f52652",
+      "src/tensorfvm/verification/__main__.py": "bac1da0b8ea13da1d7e8de391d0da9fe5a69f8658d55c57d55fc9c861eb28096",
+      "src/tensorfvm/verification/audit.py": "7df05206579b07718441e0ae894e60d8a7b2543fd8e557bd1f7fb7d8586ea414",
+      "src/tensorfvm/verification/cases.py": "6cf52e2cf76334ae3ce47c77c9d4bd33e7d83ab08f2d96b2123d356b0702260e",
+      "src/tensorfvm/verification/core.py": "088114b4c8ec39a0724213bfc00f83a4356bcaca1dd2398376ef35426866e12e",
+      "src/tensorfvm/verification/dfg.py": "f07412715767d7424c5a54fccd9c8b5f4aec964f8126532d45c1f7270351e1fc",
+      "src/tensorfvm/verification/engineering.py": "51a54c163066263eba16ec3b6532c37bf1fff3cb465a3ecd02cd98ea837b8079",
+      "src/tensorfvm/verification/engineering_audit.py": "987b3a75125152a634ebd116ca9df2913bfef5fa7ad78b306c980edc9d0359a1",
+      "src/tensorfvm/verification/extended.py": "9e28876cdd9681ad8dcd4075f897264703b1e8616a0694be5def3622ce030d1e",
+      "src/tensorfvm/verification/extended_audit.py": "8b2dcc2618d566b5abbdeed34312f2c8c1fb1349b12b90675080627a2a8cf4ce",
+      "src/tensorfvm/verification/extended_cases.py": "d5f58d4aca6706642d5e5d7307af3017d2c6c4840c3b485e68c98815edfc0796",
+      "src/tensorfvm/verification/external_flow.py": "1630681c6fef184e9ce21be5b1c22876277fd27a1872265df673627ef71a4f1e",
+      "src/tensorfvm/verification/external_gmsh.py": "f7151630f9673f8c752b0dd91d5c6bc8cab2e2971bd8d9fbdab098cc99e0da16",
+      "src/tensorfvm/verification/external_matched_naca.py": "aafd999643a50988a3f913838b8d707b96fcd1fc76405ebd09f8a12f38641fb8",
+      "src/tensorfvm/verification/external_mesh_report.py": "eb1beeff5743e9ed52a6929e48b7d830ef6c95e2e244f855305a171f4989d27e",
+      "src/tensorfvm/verification/gpu.py": "1372d9c7deea0617673278b8b51220d529ca79b4a0b0b022fcd9783584c154e0",
+      "src/tensorfvm/verification/lbm.py": "0ad5bf5d1022752755f5f0ff47df597baf00dca3e64bf66e576014e6930be9a4",
+      "src/tensorfvm/verification/report.py": "d38464cbba0f152d4410589e6a66c8fe05f9f84da06ecab62d3895a8f77ead62",
+      "src/tensorfvm/verification/simple_gpu.py": "292791a63231e172ee5d0f4179656f4fc3528ca733a8329fb44c65d6e08753cd",
+      "src/tensorfvm/verification/simple_gpu_audit.py": "90a778cd314b9ab36183da98b428fbc0c4918587c80217de8fc8439e0db292f6",
+      "src/tensorfvm/wall_traction.py": "776f82b3ca4253d53cf46683b938d0346852291eb7830d91300bf62115bbcef4",
+      "scripts/postprocess_incompressible_wall.py": "51c22318aa114d9653a57c3de84f993b48f3bfee22a98f1edcbfddcdd20036ac"
+    }
+  },
+  "case": "cylinder",
+  "study_type": "wall-traction-postprocessing",
+  "runs": [
+    {
+      "case": "cylinder",
+      "resolution": "scale-2",
+      "device": "cpu",
+      "config": {
+        "nx": 1,
+        "ny": 1,
+        "length": 2.2,
+        "height": 0.41,
+        "cylinder_x": 0.2,
+        "cylinder_y": 0.2,
+        "cylinder_radius": 0.05,
+        "inlet_velocity": 0.2,
+        "reynolds": 20,
+        "density": 1,
+        "velocity_relaxation": 0.7,
+        "pressure_relaxation": 0.3,
+        "max_iterations": 300,
+        "tolerance": 1e-06,
+        "device": "cpu",
+        "pseudo_time_step": null,
+        "mesh_type": "gmsh-cylinder",
+        "inlet_profile": "parabolic",
+        "turbulence_model": "laminar",
+        "turbulence_relaxation": 0.5,
+        "sa_freestream_ratio": 3.0,
+        "flat_plate_stretching": 4.0,
+        "body_fitted_stretching": 0.0,
+        "outer_boundary": "channel",
+        "time_step": null,
+        "inner_iterations": 1,
+        "initial_perturbation": 0.0,
+        "airfoil_code": "0012",
+        "airfoil_chord": 1.0,
+        "airfoil_x": 1.0,
+        "airfoil_y": 1.0,
+        "angle_of_attack": 0.0,
+        "mesh_file": "docs/verification-gmsh-cylinder/meshes/scale-2.msh"
+      },
+      "iterations": 32,
+      "elapsed_s": 4.135057196952403,
+      "converged": true,
+      "computed": {
+        "drag": 5.33545599723707,
+        "lift": 0.02458746467726144,
+        "pressure_difference_pa": 0.11064068123044879
+      },
+      "reference": {
+        "drag": 5.57953523384,
+        "lift": 0.010618948146,
+        "pressure_difference_pa": 0.11752016697
+      },
+      "digitization_absolute_uncertainty": 0.0,
+      "metrics": [
+        {
+          "name": "drag_relative_error",
+          "value": 0.04374544229465273,
+          "limit": 0.03,
+          "description": "Strict physical relative error; same immutable solved field, incompressible wall traction",
+          "unit": "1",
+          "passed": false
+        },
+        {
+          "name": "lift_relative_error",
+          "value": 1.3154331614777848,
+          "limit": 0.03,
+          "description": "Strict physical relative error; same immutable solved field, incompressible wall traction",
+          "unit": "1",
+          "passed": false
+        },
+        {
+          "name": "pressure_difference_pa_relative_error",
+          "value": 0.05853876757431241,
+          "limit": 0.03,
+          "description": "Strict physical relative error; same immutable solved field, incompressible wall traction",
+          "unit": "1",
+          "passed": false
+        },
+        {
+          "name": "solver_residual",
+          "value": 9.519571922286345e-07,
+          "limit": 1e-06,
+          "description": "Unchanged actual solved equations",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "convergence_failure",
+          "value": 0,
+          "limit": 0.5,
+          "description": "Explicit steady convergence",
+          "unit": "1",
+          "passed": true
+        }
+      ],
+      "passed": false,
+      "linear_solver_history": [
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.5427025934933216e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.007853146642446518
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 0.0,
+          "target": 1e-12,
+          "elapsed_s": 0.007259242236614227
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 4.817435350493388e-16,
+          "target": 1e-12,
+          "elapsed_s": 0.01842340547591448
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.133691581211999e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.007127804681658745
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 7.168107503217132e-18,
+          "target": 1e-12,
+          "elapsed_s": 0.006599612534046173
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.0033842978869252e-16,
+          "target": 1e-12,
+          "elapsed_s": 0.01749300118535757
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.1997580895861025e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.007265854626893997
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 6.224093674902039e-18,
+          "target": 1e-12,
+          "elapsed_s": 0.006656119599938393
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.1523086776207546e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.017579878680408
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.2310230238443294e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.007256481796503067
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 6.5542825096872195e-18,
+          "target": 1e-12,
+          "elapsed_s": 0.0066566793248057365
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 5.334048931343696e-18,
+          "target": 1e-12,
+          "elapsed_s": 0.017410751432180405
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.255810048631081e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.007129893638193607
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 6.32221988234769e-18,
+          "target": 1e-12,
+          "elapsed_s": 0.006663000211119652
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.094591079796491e-18,
+          "target": 1e-12,
+          "elapsed_s": 0.017547386698424816
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.308645666462129e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.007266216911375523
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 6.729719942503575e-18,
+          "target": 1e-12,
+          "elapsed_s": 0.006575289182364941
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.6717487351432324e-18,
+          "target": 1e-12,
+          "elapsed_s": 0.017557434737682343
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.321073526551809e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.007173658348619938
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 6.561105723667619e-18,
+          "target": 1e-12,
+          "elapsed_s": 0.006564983166754246
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 9.030048785920331e-19,
+          "target": 1e-12,
+          "elapsed_s": 0.01744238380342722
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.330326503388217e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.006711033172905445
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 6.731951176967609e-18,
+          "target": 1e-12,
+          "elapsed_s": 0.0066078417003154755
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 5.395986343916016e-19,
+          "target": 1e-12,
+          "elapsed_s": 0.0167505145072937
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.174897054809951e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.006615700200200081
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 6.057650135569329e-18,
+          "target": 1e-12,
+          "elapsed_s": 0.006742661818861961
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.5014147243797066e-19,
+          "target": 1e-12,
+          "elapsed_s": 0.016726278699934483
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.2444582351431925e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.006621343083679676
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 6.742994683935295e-18,
+          "target": 1e-12,
+          "elapsed_s": 0.006561946123838425
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.642240635471066e-19,
+          "target": 1e-12,
+          "elapsed_s": 0.016949810087680817
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.112933545648607e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.006661234423518181
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 6.7478883880766285e-18,
+          "target": 1e-12,
+          "elapsed_s": 0.006589313969016075
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.5405429549879956e-19,
+          "target": 1e-12,
+          "elapsed_s": 0.016718484461307526
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.286180649321531e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.006945347413420677
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 6.511548836174966e-18,
+          "target": 1e-12,
+          "elapsed_s": 0.006753516383469105
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 8.354335027076487e-20,
+          "target": 1e-12,
+          "elapsed_s": 0.017057185992598534
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.4120145551360314e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.006752410903573036
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 6.98348539855914e-18,
+          "target": 1e-12,
+          "elapsed_s": 0.006564587354660034
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 4.8722379884141666e-20,
+          "target": 1e-12,
+          "elapsed_s": 0.01686557475477457
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.2984148174376426e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.006694990210235119
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 6.710742193500011e-18,
+          "target": 1e-12,
+          "elapsed_s": 0.006583563983440399
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.233003212742156e-20,
+          "target": 1e-12,
+          "elapsed_s": 0.016719033010303974
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.2851361763797903e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.006644563749432564
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 6.730964352146207e-18,
+          "target": 1e-12,
+          "elapsed_s": 0.00658477284014225
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.296515853752212e-20,
+          "target": 1e-12,
+          "elapsed_s": 0.01671772450208664
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.21553226005666e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.006622341461479664
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 6.605164030825087e-18,
+          "target": 1e-12,
+          "elapsed_s": 0.006558082066476345
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.2087669421801596e-20,
+          "target": 1e-12,
+          "elapsed_s": 0.0166998403146863
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.18536366757663e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.006726741790771484
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 6.7712399201737e-18,
+          "target": 1e-12,
+          "elapsed_s": 0.006565747782588005
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 8.144655247554926e-21,
+          "target": 1e-12,
+          "elapsed_s": 0.017065738327801228
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.290096014738267e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.006687586195766926
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 6.6717951961700845e-18,
+          "target": 1e-12,
+          "elapsed_s": 0.006657136604189873
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 4.660948523741428e-21,
+          "target": 1e-12,
+          "elapsed_s": 0.016701762564480305
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.2254539207664146e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.006627737544476986
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 6.947367791329559e-18,
+          "target": 1e-12,
+          "elapsed_s": 0.006564999930560589
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.1465867463934497e-21,
+          "target": 1e-12,
+          "elapsed_s": 0.016741076484322548
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.314509444436198e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.006627996452152729
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 6.98745120859396e-18,
+          "target": 1e-12,
+          "elapsed_s": 0.006622505374252796
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.1466667476997415e-21,
+          "target": 1e-12,
+          "elapsed_s": 0.016710085794329643
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.360311646806813e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.006643421016633511
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 6.416007435357929e-18,
+          "target": 1e-12,
+          "elapsed_s": 0.006640964187681675
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.2623133080887843e-21,
+          "target": 1e-12,
+          "elapsed_s": 0.016727720387279987
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.28549289341481e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.0071394434198737144
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 7.040781190028078e-18,
+          "target": 1e-12,
+          "elapsed_s": 0.006595958024263382
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 8.228355424079888e-22,
+          "target": 1e-12,
+          "elapsed_s": 0.01735456846654415
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.3510516547544055e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.006633497774600983
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 6.825372182244517e-18,
+          "target": 1e-12,
+          "elapsed_s": 0.0066602835431694984
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 5.044429841957844e-22,
+          "target": 1e-12,
+          "elapsed_s": 0.01677961554378271
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.2839126523949074e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.0068017104640603065
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 6.6248654528996876e-18,
+          "target": 1e-12,
+          "elapsed_s": 0.006559798493981361
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.68857391474227e-22,
+          "target": 1e-12,
+          "elapsed_s": 0.016638622619211674
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.2334580698284316e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.0068321917206048965
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 6.532829890967139e-18,
+          "target": 1e-12,
+          "elapsed_s": 0.006678607314825058
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.987839875420252e-22,
+          "target": 1e-12,
+          "elapsed_s": 0.016830825246870518
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.175242586290674e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.006835874170064926
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 6.8218495145571075e-18,
+          "target": 1e-12,
+          "elapsed_s": 0.006610832177102566
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.1094225910961e-22,
+          "target": 1e-12,
+          "elapsed_s": 0.016834277659654617
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.477056576073347e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.006735962815582752
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 7.202183386066323e-18,
+          "target": 1e-12,
+          "elapsed_s": 0.006644729524850845
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 7.566648966064537e-23,
+          "target": 1e-12,
+          "elapsed_s": 0.01698573399335146
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.2475198609093605e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.006611412391066551
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 6.2962720130958375e-18,
+          "target": 1e-12,
+          "elapsed_s": 0.006579297594726086
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 4.321258917844587e-23,
+          "target": 1e-12,
+          "elapsed_s": 0.01681601908057928
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.3300134031924664e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.0065983012318611145
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 6.534341375841389e-18,
+          "target": 1e-12,
+          "elapsed_s": 0.006540626287460327
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.7442143732055414e-23,
+          "target": 1e-12,
+          "elapsed_s": 0.01675412245094776
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.238772861569557e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.006648825481534004
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 6.5310597648850525e-18,
+          "target": 1e-12,
+          "elapsed_s": 0.006548103876411915
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.7230530903111354e-23,
+          "target": 1e-12,
+          "elapsed_s": 0.016787758097052574
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.546281139038717e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.0066235000267624855
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 6.8609477909530795e-18,
+          "target": 1e-12,
+          "elapsed_s": 0.006549409590661526
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.0621042657867598e-23,
+          "target": 1e-12,
+          "elapsed_s": 0.016795934177935123
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.175544359272707e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.006988466717302799
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 6.72386001392216e-18,
+          "target": 1e-12,
+          "elapsed_s": 0.006658031605184078
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 6.0045253208625e-24,
+          "target": 1e-12,
+          "elapsed_s": 0.01761375181376934
+        }
+      ],
+      "coupled_solver_history": [
+        {
+          "linear_true_relative_residual": 2.876094961473057e-14,
+          "assembled_operator_relative_defect": 2.4465411075290023e-16,
+          "relaxation": 0.5,
+          "cells": 2178,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 4.286063063265483e-14,
+          "assembled_operator_relative_defect": 2.4465411075290023e-16,
+          "relaxation": 0.5,
+          "cells": 2178,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 5.3817414073302265e-14,
+          "assembled_operator_relative_defect": 2.4465411075290023e-16,
+          "relaxation": 0.5,
+          "cells": 2178,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 5.172130461321406e-14,
+          "assembled_operator_relative_defect": 2.4465411075290023e-16,
+          "relaxation": 0.5,
+          "cells": 2178,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 4.116935680626844e-14,
+          "assembled_operator_relative_defect": 2.4465411075290023e-16,
+          "relaxation": 0.5,
+          "cells": 2178,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 3.806972575023409e-14,
+          "assembled_operator_relative_defect": 2.686073774462086e-16,
+          "relaxation": 0.5,
+          "cells": 2178,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 3.783460715399281e-14,
+          "assembled_operator_relative_defect": 2.686073774462086e-16,
+          "relaxation": 0.5,
+          "cells": 2178,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 3.536882474485013e-14,
+          "assembled_operator_relative_defect": 2.686073774462086e-16,
+          "relaxation": 0.5,
+          "cells": 2178,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 3.694938604864467e-14,
+          "assembled_operator_relative_defect": 2.686073774462086e-16,
+          "relaxation": 0.5,
+          "cells": 2178,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 3.220238874028399e-14,
+          "assembled_operator_relative_defect": 2.686073774462086e-16,
+          "relaxation": 0.5,
+          "cells": 2178,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 3.491811160549434e-14,
+          "assembled_operator_relative_defect": 2.5553485733694856e-16,
+          "relaxation": 0.5,
+          "cells": 2178,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 3.286123139638115e-14,
+          "assembled_operator_relative_defect": 2.5553485733694856e-16,
+          "relaxation": 0.5,
+          "cells": 2178,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 3.364174395338498e-14,
+          "assembled_operator_relative_defect": 2.5553485733694856e-16,
+          "relaxation": 0.5,
+          "cells": 2178,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 3.4385189371343486e-14,
+          "assembled_operator_relative_defect": 2.5553485733694856e-16,
+          "relaxation": 0.5,
+          "cells": 2178,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 3.326869415749561e-14,
+          "assembled_operator_relative_defect": 2.5553485733694856e-16,
+          "relaxation": 0.5,
+          "cells": 2178,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 3.0472793240301954e-14,
+          "assembled_operator_relative_defect": 2.545226082525777e-16,
+          "relaxation": 0.5,
+          "cells": 2178,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 2.967500163330584e-14,
+          "assembled_operator_relative_defect": 2.545226082525777e-16,
+          "relaxation": 0.5,
+          "cells": 2178,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 3.12270608538755e-14,
+          "assembled_operator_relative_defect": 2.545226082525777e-16,
+          "relaxation": 0.5,
+          "cells": 2178,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 3.1845260724467666e-14,
+          "assembled_operator_relative_defect": 2.545226082525777e-16,
+          "relaxation": 0.5,
+          "cells": 2178,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 3.0822474308539105e-14,
+          "assembled_operator_relative_defect": 2.545226082525777e-16,
+          "relaxation": 0.5,
+          "cells": 2178,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 2.904680601676419e-14,
+          "assembled_operator_relative_defect": 2.670385519019191e-16,
+          "relaxation": 0.5,
+          "cells": 2178,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 2.9825571947038964e-14,
+          "assembled_operator_relative_defect": 2.670385519019191e-16,
+          "relaxation": 0.5,
+          "cells": 2178,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 2.9222147493937575e-14,
+          "assembled_operator_relative_defect": 2.670385519019191e-16,
+          "relaxation": 0.5,
+          "cells": 2178,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 2.9262284503151665e-14,
+          "assembled_operator_relative_defect": 2.670385519019191e-16,
+          "relaxation": 0.5,
+          "cells": 2178,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 3.111787978260779e-14,
+          "assembled_operator_relative_defect": 2.670385519019191e-16,
+          "relaxation": 0.5,
+          "cells": 2178,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 2.855396878808568e-14,
+          "assembled_operator_relative_defect": 2.4726582092052907e-16,
+          "relaxation": 0.5,
+          "cells": 2178,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 2.957333144317386e-14,
+          "assembled_operator_relative_defect": 2.4726582092052907e-16,
+          "relaxation": 0.5,
+          "cells": 2178,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 2.6808895091685332e-14,
+          "assembled_operator_relative_defect": 2.4726582092052907e-16,
+          "relaxation": 0.5,
+          "cells": 2178,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 2.813615851132805e-14,
+          "assembled_operator_relative_defect": 2.4726582092052907e-16,
+          "relaxation": 0.5,
+          "cells": 2178,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 2.874443987913253e-14,
+          "assembled_operator_relative_defect": 2.4726582092052907e-16,
+          "relaxation": 0.5,
+          "cells": 2178,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 2.88881480367337e-14,
+          "assembled_operator_relative_defect": 2.5884271933061157e-16,
+          "relaxation": 0.5,
+          "cells": 2178,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 2.983462587679098e-14,
+          "assembled_operator_relative_defect": 2.5884271933061157e-16,
+          "relaxation": 0.5,
+          "cells": 2178,
+          "backend": "full-grid-scipy-superlu-cpu"
+        }
+      ],
+      "solver": "conservative-linear-upwind",
+      "discretization": {
+        "momentum_convection": "linear-upwind",
+        "pressure_gradient": "gauss-linear",
+        "face_interpolation": "projected-linear",
+        "wall_gradient": "incompressible-normal"
+      },
+      "directory": "scale-2",
+      "mesh_scale": 2.0,
+      "mesh_quality": {
+        "cells": 2178,
+        "faces": 3348,
+        "minimum_cell_area_m2": 8.500737821225818e-06,
+        "minimum_face_projected_distance_m": 0.0010980059121687385,
+        "nonorthogonality_max_deg": 21.61838298634918,
+        "nonorthogonality_p95_deg": 9.1392804247191,
+        "internal_skewness_max": 0.4231689647864812,
+        "positive_cell_areas": true,
+        "positive_projected_distances": true,
+        "quality_gate_passed": true
+      },
+      "mesh_generation": {
+        "case": "cylinder",
+        "scale": 2.0,
+        "gmsh_version": "4.15.2",
+        "algorithm": "Frontal-Delaunay (Gmsh algorithm 6)",
+        "wall_target_size_m": 0.006,
+        "outer_target_size_m": 0.05,
+        "geometry": "Exact circle CAD arcs",
+        "mesh_sha256": "532601522d53263e32e19cf46a774de8c44aa4a264caa5c79ad5e1ec790da1d7",
+        "generator_sha256": "a4be0af11c057a76ab61c5e7c542349fa1b725a8765887372db291df7f4986de",
+        "documentation": "https://gmsh.info/doc/texinfo/gmsh.html"
+      },
+      "wall_postprocessed_without_resolving": true,
+      "upstream_fields_path": "docs/verification-gmsh-cylinder/scale-2/fields.npz",
+      "upstream_fields_sha256": "94e0c9b9a9fd9a01108edb1970c39302c56e36b28914fe699c6e31faef0ac928"
+    },
+    {
+      "case": "cylinder",
+      "resolution": "scale-1",
+      "device": "cpu",
+      "config": {
+        "nx": 1,
+        "ny": 1,
+        "length": 2.2,
+        "height": 0.41,
+        "cylinder_x": 0.2,
+        "cylinder_y": 0.2,
+        "cylinder_radius": 0.05,
+        "inlet_velocity": 0.2,
+        "reynolds": 20,
+        "density": 1,
+        "velocity_relaxation": 0.7,
+        "pressure_relaxation": 0.3,
+        "max_iterations": 300,
+        "tolerance": 1e-06,
+        "device": "cpu",
+        "pseudo_time_step": null,
+        "mesh_type": "gmsh-cylinder",
+        "inlet_profile": "parabolic",
+        "turbulence_model": "laminar",
+        "turbulence_relaxation": 0.5,
+        "sa_freestream_ratio": 3.0,
+        "flat_plate_stretching": 4.0,
+        "body_fitted_stretching": 0.0,
+        "outer_boundary": "channel",
+        "time_step": null,
+        "inner_iterations": 1,
+        "initial_perturbation": 0.0,
+        "airfoil_code": "0012",
+        "airfoil_chord": 1.0,
+        "airfoil_x": 1.0,
+        "airfoil_y": 1.0,
+        "angle_of_attack": 0.0,
+        "mesh_file": "docs/verification-gmsh-cylinder/meshes/scale-1.msh"
+      },
+      "iterations": 35,
+      "elapsed_s": 19.513054540380836,
+      "converged": true,
+      "computed": {
+        "drag": 5.5126498036744165,
+        "lift": 0.012031717391097858,
+        "pressure_difference_pa": 0.11517945530273684
+      },
+      "reference": {
+        "drag": 5.57953523384,
+        "lift": 0.010618948146,
+        "pressure_difference_pa": 0.11752016697
+      },
+      "digitization_absolute_uncertainty": 0.0,
+      "metrics": [
+        {
+          "name": "drag_relative_error",
+          "value": 0.011987634697585865,
+          "limit": 0.03,
+          "description": "Strict physical relative error; same immutable solved field, incompressible wall traction",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "lift_relative_error",
+          "value": 0.13304229624946678,
+          "limit": 0.03,
+          "description": "Strict physical relative error; same immutable solved field, incompressible wall traction",
+          "unit": "1",
+          "passed": false
+        },
+        {
+          "name": "pressure_difference_pa_relative_error",
+          "value": 0.0199175318382648,
+          "limit": 0.03,
+          "description": "Strict physical relative error; same immutable solved field, incompressible wall traction",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "solver_residual",
+          "value": 9.358922683746772e-07,
+          "limit": 1e-06,
+          "description": "Unchanged actual solved equations",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "convergence_failure",
+          "value": 0,
+          "limit": 0.5,
+          "description": "Explicit steady convergence",
+          "unit": "1",
+          "passed": true
+        }
+      ],
+      "passed": false,
+      "linear_solver_history": [
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.934149006553471e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.032274071127176285
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 0.0,
+          "target": 1e-12,
+          "elapsed_s": 0.030290267430245876
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 8.726921565072426e-16,
+          "target": 1e-12,
+          "elapsed_s": 0.09010760672390461
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 4.274035217845573e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.03180770482867956
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.3003129038221557e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.03044083621352911
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.6858990061514704e-16,
+          "target": 1e-12,
+          "elapsed_s": 0.09307744912803173
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 4.7425910143878224e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.03210420906543732
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.0543359544168363e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.030558577738702297
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.6185604529834552e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.0928462641313672
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 4.9203969364435966e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.032352760434150696
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.0746315694422018e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.03023470938205719
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 9.844106150590542e-18,
+          "target": 1e-12,
+          "elapsed_s": 0.09235361870378256
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 5.0512681333316134e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.03187047503888607
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.1769451879052326e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.030493568629026413
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 4.818907037477764e-18,
+          "target": 1e-12,
+          "elapsed_s": 0.09281873237341642
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 5.054829610440762e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.0318105136975646
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.2393528703767177e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.03037073090672493
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.2985057563696428e-18,
+          "target": 1e-12,
+          "elapsed_s": 0.09257878828793764
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 5.2277032072477135e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.031231707893311977
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.233749409779338e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.02993523981422186
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.2112086210116922e-18,
+          "target": 1e-12,
+          "elapsed_s": 0.08805580250918865
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 5.0298930009747345e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.030667143873870373
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.192008540741492e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.0304569099098444
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 7.678563854966112e-19,
+          "target": 1e-12,
+          "elapsed_s": 0.08744687587022781
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 5.134761028777198e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.03081999532878399
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.2197096853431514e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.030242424458265305
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 4.957191339025016e-19,
+          "target": 1e-12,
+          "elapsed_s": 0.08771815430372953
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 5.185052704680953e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.030840187333524227
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.2232819774480524e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.030116387642920017
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.062695331017999e-19,
+          "target": 1e-12,
+          "elapsed_s": 0.08727325685322285
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 5.078225776861815e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.030947832390666008
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.1938039961997182e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.0302689578384161
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.9809593888548327e-19,
+          "target": 1e-12,
+          "elapsed_s": 0.08740195073187351
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 5.1576520549441124e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.03818126488476992
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.2472217471702397e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.03108540177345276
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.1272636033890393e-19,
+          "target": 1e-12,
+          "elapsed_s": 0.09208065550774336
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 4.964981427509236e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.0325163034722209
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.2064793497673768e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.031270273961126804
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 7.176378311243709e-20,
+          "target": 1e-12,
+          "elapsed_s": 0.09394888859242201
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 5.0094163092375924e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.03254241310060024
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.175817968910383e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.030993127264082432
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 4.8277300326310546e-20,
+          "target": 1e-12,
+          "elapsed_s": 0.09390565566718578
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 5.0572767347457914e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.0324393305927515
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.2020885791005709e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.031039892695844173
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.8765548328840805e-20,
+          "target": 1e-12,
+          "elapsed_s": 0.0951376287266612
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 5.137660529420348e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.03254017885774374
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.2224934579062723e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.0312753776088357
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.9186481000874573e-20,
+          "target": 1e-12,
+          "elapsed_s": 0.0942945433780551
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 5.14841758874511e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.031498595140874386
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.2357339966550752e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.03143896255642176
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.2432900992365394e-20,
+          "target": 1e-12,
+          "elapsed_s": 0.0920949075371027
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 5.0233327301044686e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.03151986841112375
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.2041008225767708e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.031224419362843037
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 7.753811058579843e-21,
+          "target": 1e-12,
+          "elapsed_s": 0.08940466400235891
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 5.039518602154788e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.03163288813084364
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.2072673135053797e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.03142790403217077
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 4.953703684133026e-21,
+          "target": 1e-12,
+          "elapsed_s": 0.08943500462919474
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 5.162761770938366e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.031327967531979084
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.2531124555504143e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.03161592222750187
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.070428948367455e-21,
+          "target": 1e-12,
+          "elapsed_s": 0.08914085291326046
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 5.1368206764352064e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.03292510751634836
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.2650075039367956e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.03161702770739794
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.0153230570262297e-21,
+          "target": 1e-12,
+          "elapsed_s": 0.08977873995900154
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 5.151141018289732e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.03222955297678709
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.2290874694381395e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.031228313222527504
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.2483639787227563e-21,
+          "target": 1e-12,
+          "elapsed_s": 0.09234777744859457
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 5.055430924898791e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.03215651772916317
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.22822899960029e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.031472910195589066
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 7.9120586514983935e-22,
+          "target": 1e-12,
+          "elapsed_s": 0.09398881159722805
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 5.1760321073910265e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.03215710539370775
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.2315350412625381e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.03065985068678856
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 5.266812694472741e-22,
+          "target": 1e-12,
+          "elapsed_s": 0.09462744556367397
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 5.1833914742794114e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.03202066011726856
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.2008358831257463e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.030803914181888103
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.3297819698893027e-22,
+          "target": 1e-12,
+          "elapsed_s": 0.0949743315577507
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 5.1149246127597276e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.0320630120113492
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.1762368427329812e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.030805261805653572
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.4067590895620857e-22,
+          "target": 1e-12,
+          "elapsed_s": 0.09564334340393543
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 5.035630990092268e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.03148644044995308
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.2026381594394763e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.030839409679174423
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.386843306555159e-22,
+          "target": 1e-12,
+          "elapsed_s": 0.09021385200321674
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 5.07002063496874e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.031942625530064106
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.2369604773975276e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.031842807307839394
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 8.865052734673284e-23,
+          "target": 1e-12,
+          "elapsed_s": 0.0885867765173316
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 5.1033944395737137e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.03129448089748621
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.2358841936016873e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.030983446165919304
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 5.320398197741342e-23,
+          "target": 1e-12,
+          "elapsed_s": 0.09007576666772366
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 5.140744101912642e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.03243513684719801
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.2723065893498876e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.030965114943683147
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.534834144197745e-23,
+          "target": 1e-12,
+          "elapsed_s": 0.08904111944139004
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 5.1256984678976044e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.031910150311887264
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.2461916759235195e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.032402523793280125
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.3194418147556368e-23,
+          "target": 1e-12,
+          "elapsed_s": 0.09179481118917465
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 4.991455676626468e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.03164430055767298
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.173761856573407e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.03085792437195778
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.3905265078056297e-23,
+          "target": 1e-12,
+          "elapsed_s": 0.09087967686355114
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 5.221837691796943e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.031177503988146782
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.2125665735572889e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.030727597884833813
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 9.552019818076757e-24,
+          "target": 1e-12,
+          "elapsed_s": 0.08833227399736643
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 5.187418293849725e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.03120864648371935
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.2303372494229247e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.03113898541778326
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 5.6321075935390786e-24,
+          "target": 1e-12,
+          "elapsed_s": 0.08981069549918175
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 5.1123194312913384e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.031171763315796852
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.2374814773753491e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.030879680067300797
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.406235470818482e-24,
+          "target": 1e-12,
+          "elapsed_s": 0.08794229570776224
+        }
+      ],
+      "coupled_solver_history": [
+        {
+          "linear_true_relative_residual": 4.98248934309559e-14,
+          "assembled_operator_relative_defect": 2.5520375802921833e-16,
+          "relaxation": 0.4409314744457599,
+          "cells": 8252,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 8.775522280820766e-14,
+          "assembled_operator_relative_defect": 2.5520375802921833e-16,
+          "relaxation": 0.5,
+          "cells": 8252,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 1.2640055293629997e-13,
+          "assembled_operator_relative_defect": 2.5520375802921833e-16,
+          "relaxation": 0.5,
+          "cells": 8252,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 1.3357475021007227e-13,
+          "assembled_operator_relative_defect": 2.5520375802921833e-16,
+          "relaxation": 0.5,
+          "cells": 8252,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 1.3964689100267233e-13,
+          "assembled_operator_relative_defect": 2.5520375802921833e-16,
+          "relaxation": 0.5,
+          "cells": 8252,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 1.4680040468568615e-13,
+          "assembled_operator_relative_defect": 2.5467354825953516e-16,
+          "relaxation": 0.5,
+          "cells": 8252,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 1.2749000814191208e-13,
+          "assembled_operator_relative_defect": 2.5467354825953516e-16,
+          "relaxation": 0.5,
+          "cells": 8252,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 1.1990409146178511e-13,
+          "assembled_operator_relative_defect": 2.5467354825953516e-16,
+          "relaxation": 0.5,
+          "cells": 8252,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 1.2294152045903648e-13,
+          "assembled_operator_relative_defect": 2.5467354825953516e-16,
+          "relaxation": 0.5,
+          "cells": 8252,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 1.257334667857914e-13,
+          "assembled_operator_relative_defect": 2.5467354825953516e-16,
+          "relaxation": 0.5,
+          "cells": 8252,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 9.507476625460183e-14,
+          "assembled_operator_relative_defect": 2.521635260187942e-16,
+          "relaxation": 0.5,
+          "cells": 8252,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 9.960717703812075e-14,
+          "assembled_operator_relative_defect": 2.521635260187942e-16,
+          "relaxation": 0.5,
+          "cells": 8252,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 8.984912229468597e-14,
+          "assembled_operator_relative_defect": 2.521635260187942e-16,
+          "relaxation": 0.5,
+          "cells": 8252,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 1.0117587058006433e-13,
+          "assembled_operator_relative_defect": 2.521635260187942e-16,
+          "relaxation": 0.5,
+          "cells": 8252,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 8.482679611529574e-14,
+          "assembled_operator_relative_defect": 2.521635260187942e-16,
+          "relaxation": 0.5,
+          "cells": 8252,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 9.532483331362304e-14,
+          "assembled_operator_relative_defect": 2.5731737306832235e-16,
+          "relaxation": 0.5,
+          "cells": 8252,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 8.933098258582989e-14,
+          "assembled_operator_relative_defect": 2.5731737306832235e-16,
+          "relaxation": 0.5,
+          "cells": 8252,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 8.035629503764976e-14,
+          "assembled_operator_relative_defect": 2.5731737306832235e-16,
+          "relaxation": 0.5,
+          "cells": 8252,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 8.85352499122675e-14,
+          "assembled_operator_relative_defect": 2.5731737306832235e-16,
+          "relaxation": 0.5,
+          "cells": 8252,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 7.769878415522703e-14,
+          "assembled_operator_relative_defect": 2.5731737306832235e-16,
+          "relaxation": 0.5,
+          "cells": 8252,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 8.514468270645206e-14,
+          "assembled_operator_relative_defect": 2.575047358374052e-16,
+          "relaxation": 0.5,
+          "cells": 8252,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 8.081904775179726e-14,
+          "assembled_operator_relative_defect": 2.575047358374052e-16,
+          "relaxation": 0.5,
+          "cells": 8252,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 8.285300890121107e-14,
+          "assembled_operator_relative_defect": 2.575047358374052e-16,
+          "relaxation": 0.5,
+          "cells": 8252,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 8.174128644243171e-14,
+          "assembled_operator_relative_defect": 2.575047358374052e-16,
+          "relaxation": 0.5,
+          "cells": 8252,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 7.725830325133116e-14,
+          "assembled_operator_relative_defect": 2.575047358374052e-16,
+          "relaxation": 0.5,
+          "cells": 8252,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 8.522658173795989e-14,
+          "assembled_operator_relative_defect": 2.5380418818910194e-16,
+          "relaxation": 0.5,
+          "cells": 8252,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 9.079146050340812e-14,
+          "assembled_operator_relative_defect": 2.5380418818910194e-16,
+          "relaxation": 0.5,
+          "cells": 8252,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 8.367373034906352e-14,
+          "assembled_operator_relative_defect": 2.5380418818910194e-16,
+          "relaxation": 0.5,
+          "cells": 8252,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 9.245133732268877e-14,
+          "assembled_operator_relative_defect": 2.5380418818910194e-16,
+          "relaxation": 0.5,
+          "cells": 8252,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 7.499738790826836e-14,
+          "assembled_operator_relative_defect": 2.5380418818910194e-16,
+          "relaxation": 0.5,
+          "cells": 8252,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 8.990952898883062e-14,
+          "assembled_operator_relative_defect": 2.527666080141052e-16,
+          "relaxation": 0.5,
+          "cells": 8252,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 7.807591856563875e-14,
+          "assembled_operator_relative_defect": 2.527666080141052e-16,
+          "relaxation": 0.5,
+          "cells": 8252,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 8.257209138862541e-14,
+          "assembled_operator_relative_defect": 2.527666080141052e-16,
+          "relaxation": 0.5,
+          "cells": 8252,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 7.549942232508773e-14,
+          "assembled_operator_relative_defect": 2.527666080141052e-16,
+          "relaxation": 0.5,
+          "cells": 8252,
+          "backend": "full-grid-scipy-superlu-cpu"
+        }
+      ],
+      "solver": "conservative-linear-upwind",
+      "discretization": {
+        "momentum_convection": "linear-upwind",
+        "pressure_gradient": "gauss-linear",
+        "face_interpolation": "projected-linear",
+        "wall_gradient": "incompressible-normal"
+      },
+      "directory": "scale-1",
+      "mesh_scale": 1.0,
+      "mesh_quality": {
+        "cells": 8252,
+        "faces": 12537,
+        "minimum_cell_area_m2": 2.1225439563385406e-06,
+        "minimum_face_projected_distance_m": 0.0006787735782489175,
+        "nonorthogonality_max_deg": 21.59464979262794,
+        "nonorthogonality_p95_deg": 6.990491410159796,
+        "internal_skewness_max": 0.3759316296199791,
+        "positive_cell_areas": true,
+        "positive_projected_distances": true,
+        "quality_gate_passed": true
+      },
+      "mesh_generation": {
+        "case": "cylinder",
+        "scale": 1.0,
+        "gmsh_version": "4.15.2",
+        "algorithm": "Frontal-Delaunay (Gmsh algorithm 6)",
+        "wall_target_size_m": 0.003,
+        "outer_target_size_m": 0.025,
+        "geometry": "Exact circle CAD arcs",
+        "mesh_sha256": "ab4c554947d241db4a5f8c9aa8c3775935c7e5d50ad440ef6cff2b0fe288a778",
+        "generator_sha256": "a4be0af11c057a76ab61c5e7c542349fa1b725a8765887372db291df7f4986de",
+        "documentation": "https://gmsh.info/doc/texinfo/gmsh.html"
+      },
+      "wall_postprocessed_without_resolving": true,
+      "upstream_fields_path": "docs/verification-gmsh-cylinder/scale-1/fields.npz",
+      "upstream_fields_sha256": "b07e654f113057166b0da512ed6773e430b43b913b09213897fd1b756f797539"
+    },
+    {
+      "case": "cylinder",
+      "resolution": "scale-0.5",
+      "device": "cpu",
+      "config": {
+        "nx": 1,
+        "ny": 1,
+        "length": 2.2,
+        "height": 0.41,
+        "cylinder_x": 0.2,
+        "cylinder_y": 0.2,
+        "cylinder_radius": 0.05,
+        "inlet_velocity": 0.2,
+        "reynolds": 20,
+        "density": 1,
+        "velocity_relaxation": 0.7,
+        "pressure_relaxation": 0.3,
+        "max_iterations": 300,
+        "tolerance": 1e-06,
+        "device": "cpu",
+        "pseudo_time_step": null,
+        "mesh_type": "gmsh-cylinder",
+        "inlet_profile": "parabolic",
+        "turbulence_model": "laminar",
+        "turbulence_relaxation": 0.5,
+        "sa_freestream_ratio": 3.0,
+        "flat_plate_stretching": 4.0,
+        "body_fitted_stretching": 0.0,
+        "outer_boundary": "channel",
+        "time_step": null,
+        "inner_iterations": 1,
+        "initial_perturbation": 0.0,
+        "airfoil_code": "0012",
+        "airfoil_chord": 1.0,
+        "airfoil_x": 1.0,
+        "airfoil_y": 1.0,
+        "angle_of_attack": 0.0,
+        "mesh_file": "docs/verification-gmsh-cylinder/meshes/scale-0.5.msh"
+      },
+      "iterations": 35,
+      "elapsed_s": 124.9773789215833,
+      "converged": true,
+      "computed": {
+        "drag": 5.558997597015046,
+        "lift": 0.010385328610916589,
+        "pressure_difference_pa": 0.11648447002326939
+      },
+      "reference": {
+        "drag": 5.57953523384,
+        "lift": 0.010618948146,
+        "pressure_difference_pa": 0.11752016697
+      },
+      "digitization_absolute_uncertainty": 0.0,
+      "metrics": [
+        {
+          "name": "drag_relative_error",
+          "value": 0.0036808866624575614,
+          "limit": 0.03,
+          "description": "Strict physical relative error; same immutable solved field, incompressible wall traction",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "lift_relative_error",
+          "value": 0.022000251990251195,
+          "limit": 0.03,
+          "description": "Strict physical relative error; same immutable solved field, incompressible wall traction",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "pressure_difference_pa_relative_error",
+          "value": 0.008812929503367716,
+          "limit": 0.03,
+          "description": "Strict physical relative error; same immutable solved field, incompressible wall traction",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "solver_residual",
+          "value": 8.437786900651064e-07,
+          "limit": 1e-06,
+          "description": "Unchanged actual solved equations",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "convergence_failure",
+          "value": 0,
+          "limit": 0.5,
+          "description": "Explicit steady convergence",
+          "unit": "1",
+          "passed": true
+        }
+      ],
+      "passed": true,
+      "linear_solver_history": [
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 6.69981677584805e-17,
+          "target": 1.0008183408496227e-12,
+          "elapsed_s": 0.18036448769271374
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 0.0,
+          "target": 1e-12,
+          "elapsed_s": 0.1772958030924201
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.6033734463191843e-15,
+          "target": 1e-12,
+          "elapsed_s": 0.5973221780732274
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 7.277000826301994e-17,
+          "target": 1.0400973576413688e-12,
+          "elapsed_s": 0.17747831251472235
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.4356503585662898e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.1864147325977683
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 7.286394729157373e-16,
+          "target": 1e-12,
+          "elapsed_s": 0.5966170942410827
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 7.856188621068468e-17,
+          "target": 1.1012322141862525e-12,
+          "elapsed_s": 0.184242463670671
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.7943277436095426e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.18678344320505857
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.979788934784778e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.5956952720880508
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 8.173415619766177e-17,
+          "target": 1.1401060287221567e-12,
+          "elapsed_s": 0.18347483407706022
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.934983990736351e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.18646290618926287
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.213398963236438e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.5948180817067623
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 8.345953628784558e-17,
+          "target": 1.1582691860696143e-12,
+          "elapsed_s": 0.1828720709308982
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.0947514380505683e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.18681400641798973
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 4.580939325441649e-18,
+          "target": 1e-12,
+          "elapsed_s": 0.5948570687323809
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 8.347648976144092e-17,
+          "target": 1.1653221393713442e-12,
+          "elapsed_s": 0.1838729763403535
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.0743957193578945e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.18645240645855665
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.2718665909061537e-18,
+          "target": 1e-12,
+          "elapsed_s": 0.599595058709383
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 8.229909855721092e-17,
+          "target": 1.1662719035441e-12,
+          "elapsed_s": 0.17785823810845613
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.1210444471072332e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.1835618782788515
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.0367830275834983e-18,
+          "target": 1e-12,
+          "elapsed_s": 0.6043311785906553
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 8.37613402794529e-17,
+          "target": 1.1658682265637285e-12,
+          "elapsed_s": 0.1826143767684698
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.107012787454561e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.18572326842695475
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 5.753102983995735e-19,
+          "target": 1e-12,
+          "elapsed_s": 0.6167083336040378
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 8.405283295717776e-17,
+          "target": 1.1650499540433945e-12,
+          "elapsed_s": 0.1877100020647049
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.1648936870887928e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.18795681092888117
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.7790875636671055e-19,
+          "target": 1e-12,
+          "elapsed_s": 0.6143050976097584
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 8.316513841822075e-17,
+          "target": 1.1642165186534197e-12,
+          "elapsed_s": 0.18561482522636652
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.1479122095684874e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.18583940621465445
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.315357975640889e-19,
+          "target": 1e-12,
+          "elapsed_s": 0.6193406647071242
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 8.435957040315557e-17,
+          "target": 1.1635106471875984e-12,
+          "elapsed_s": 0.1843161741271615
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.108066808327299e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.1833862904459238
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.4798099711908458e-19,
+          "target": 1e-12,
+          "elapsed_s": 0.6114819450303912
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 8.356256511457029e-17,
+          "target": 1.1629355145264676e-12,
+          "elapsed_s": 0.18482510279864073
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.1638968531643313e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.1941144187003374
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 9.212571616727198e-20,
+          "target": 1e-12,
+          "elapsed_s": 0.6254153847694397
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 8.30058748461529e-17,
+          "target": 1.1625280426169405e-12,
+          "elapsed_s": 0.18595862295478582
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.1812198818206287e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.1908721523359418
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 5.839670445377302e-20,
+          "target": 1e-12,
+          "elapsed_s": 0.611908464692533
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 8.237950310910078e-17,
+          "target": 1.1622459166120797e-12,
+          "elapsed_s": 0.1856918055564165
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.099028485195808e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.19063812866806984
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.8554782537612205e-20,
+          "target": 1e-12,
+          "elapsed_s": 0.6224435567855835
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 8.346152868635902e-17,
+          "target": 1.1620539677479036e-12,
+          "elapsed_s": 0.18853630311787128
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.13285150369505e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.1894319336861372
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.5751593465794814e-20,
+          "target": 1e-12,
+          "elapsed_s": 0.639316531829536
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 8.338268766135119e-17,
+          "target": 1.161925164222727e-12,
+          "elapsed_s": 0.19100720342248678
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.1507382770245282e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.19360702019184828
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.5812158526933804e-20,
+          "target": 1e-12,
+          "elapsed_s": 0.6076436201110482
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 8.270021755853484e-17,
+          "target": 1.1618390954039544e-12,
+          "elapsed_s": 0.17887837067246437
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.1610913258415475e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.17335711047053337
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.0430753031664638e-20,
+          "target": 1e-12,
+          "elapsed_s": 0.6484113587066531
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 8.296803030213811e-17,
+          "target": 1.16178276376611e-12,
+          "elapsed_s": 0.1739570191130042
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.1807292876536826e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.17513087764382362
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 6.4067840694005956e-21,
+          "target": 1e-12,
+          "elapsed_s": 0.6084783598780632
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 8.328272798039839e-17,
+          "target": 1.1617461194857492e-12,
+          "elapsed_s": 0.17075915914028883
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.137269353839202e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.17164123803377151
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 4.139540795572458e-21,
+          "target": 1e-12,
+          "elapsed_s": 0.5979025540873408
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 8.242277294764915e-17,
+          "target": 1.1617224026921972e-12,
+          "elapsed_s": 0.17184572760015726
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.1575151430095162e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.1719533521682024
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.646284494741419e-21,
+          "target": 1e-12,
+          "elapsed_s": 0.5974413147196174
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 8.26816492054639e-17,
+          "target": 1.1617071165829965e-12,
+          "elapsed_s": 0.17256141919642687
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.1589125201106354e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.17279886826872826
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.7219288825069816e-21,
+          "target": 1e-12,
+          "elapsed_s": 0.596770859323442
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 8.378300678077923e-17,
+          "target": 1.1616972893710575e-12,
+          "elapsed_s": 0.18610000889748335
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.1797674111625093e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.17778562009334564
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.1291178143718277e-21,
+          "target": 1e-12,
+          "elapsed_s": 0.6078526610508561
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 8.362888855477316e-17,
+          "target": 1.161690997796564e-12,
+          "elapsed_s": 0.17549035791307688
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.1272136595397653e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.17631898634135723
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 7.274662841240078e-22,
+          "target": 1e-12,
+          "elapsed_s": 0.6397743280977011
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 8.400043482932833e-17,
+          "target": 1.1616869777162127e-12,
+          "elapsed_s": 0.17680686991661787
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.148965371188266e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.17768305353820324
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 4.461131628504216e-22,
+          "target": 1e-12,
+          "elapsed_s": 0.6053130896762013
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 8.296359415048157e-17,
+          "target": 1.161684412808566e-12,
+          "elapsed_s": 0.17266535107046366
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.1366606302254332e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.1732544433325529
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.8415137101261235e-22,
+          "target": 1e-12,
+          "elapsed_s": 0.5845684604719281
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 8.249011099148469e-17,
+          "target": 1.1616827780180872e-12,
+          "elapsed_s": 0.17294526007026434
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.1543031665719362e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.17440037615597248
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.8794544643094624e-22,
+          "target": 1e-12,
+          "elapsed_s": 0.5889729056507349
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 8.278563657252128e-17,
+          "target": 1.1616817366268684e-12,
+          "elapsed_s": 0.18218088522553444
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.1556769982317345e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.1881897673010826
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.2412736731136902e-22,
+          "target": 1e-12,
+          "elapsed_s": 0.5990750407800078
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 8.344846755670652e-17,
+          "target": 1.1616810735509936e-12,
+          "elapsed_s": 0.18914407398551702
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.109320294520851e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.1895194509997964
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 7.498971055465654e-23,
+          "target": 1e-12,
+          "elapsed_s": 0.6119400626048446
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 8.234113308901345e-17,
+          "target": 1.1616806513513844e-12,
+          "elapsed_s": 0.18790691811591387
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.1845074932173033e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.19208867847919464
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 4.702155396075979e-23,
+          "target": 1e-12,
+          "elapsed_s": 0.6570332711562514
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 8.354433552963923e-17,
+          "target": 1.1616803824527077e-12,
+          "elapsed_s": 0.22870948817580938
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.1458042515683294e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.19133096747100353
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.1027436332326285e-23,
+          "target": 1e-12,
+          "elapsed_s": 0.6161314332857728
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 8.254849449855484e-17,
+          "target": 1.161680211107892e-12,
+          "elapsed_s": 0.18988470826297998
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.1681453817488874e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.1870835768058896
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.0249958088302433e-23,
+          "target": 1e-12,
+          "elapsed_s": 0.6102065145969391
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 8.275923741679263e-17,
+          "target": 1.1616801018509653e-12,
+          "elapsed_s": 0.1800935249775648
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.1329831820654897e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.18401709664613008
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 1.2954230230706592e-23,
+          "target": 1e-12,
+          "elapsed_s": 0.6000906694680452
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 8.281564554895942e-17,
+          "target": 1.161680032127932e-12,
+          "elapsed_s": 0.1842443384230137
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.156534515988076e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.1835150383412838
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 8.417206021581403e-24,
+          "target": 1e-12,
+          "elapsed_s": 0.6060055894777179
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 8.302322518960455e-17,
+          "target": 1.1616799875917047e-12,
+          "elapsed_s": 0.18504374008625746
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.1874256886844965e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.1878759367391467
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 5.421222117540673e-24,
+          "target": 1e-12,
+          "elapsed_s": 0.6260780384764075
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 8.264611856249139e-17,
+          "target": 1.1616799591143456e-12,
+          "elapsed_s": 0.18504250794649124
+        },
+        {
+          "kind": "momentum",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 2.2040574836623817e-17,
+          "target": 1e-12,
+          "elapsed_s": 0.18616128992289305
+        },
+        {
+          "kind": "pressure",
+          "backend": "scipy-superlu-cpu",
+          "true_residual": 3.438771201947743e-24,
+          "target": 1e-12,
+          "elapsed_s": 0.6440138351172209
+        }
+      ],
+      "coupled_solver_history": [
+        {
+          "linear_true_relative_residual": 4.368494072293633e-14,
+          "assembled_operator_relative_defect": 2.670974691660111e-16,
+          "relaxation": 0.3786705466060113,
+          "cells": 32274,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 1.0983074397693126e-13,
+          "assembled_operator_relative_defect": 2.670974691660111e-16,
+          "relaxation": 0.5,
+          "cells": 32274,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 1.5996782476470186e-13,
+          "assembled_operator_relative_defect": 2.670974691660111e-16,
+          "relaxation": 0.5,
+          "cells": 32274,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 2.0635444775095745e-13,
+          "assembled_operator_relative_defect": 2.670974691660111e-16,
+          "relaxation": 0.5,
+          "cells": 32274,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 2.1053046837793794e-13,
+          "assembled_operator_relative_defect": 2.670974691660111e-16,
+          "relaxation": 0.5,
+          "cells": 32274,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 2.165159973096381e-13,
+          "assembled_operator_relative_defect": 2.494532353096107e-16,
+          "relaxation": 0.5,
+          "cells": 32274,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 2.2157993468264852e-13,
+          "assembled_operator_relative_defect": 2.494532353096107e-16,
+          "relaxation": 0.5,
+          "cells": 32274,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 1.8874240087755238e-13,
+          "assembled_operator_relative_defect": 2.494532353096107e-16,
+          "relaxation": 0.5,
+          "cells": 32274,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 1.6984033026960523e-13,
+          "assembled_operator_relative_defect": 2.494532353096107e-16,
+          "relaxation": 0.5,
+          "cells": 32274,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 1.562791214306147e-13,
+          "assembled_operator_relative_defect": 2.494532353096107e-16,
+          "relaxation": 0.5,
+          "cells": 32274,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 1.3703761889741832e-13,
+          "assembled_operator_relative_defect": 2.494058199012015e-16,
+          "relaxation": 0.5,
+          "cells": 32274,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 1.3074631646509912e-13,
+          "assembled_operator_relative_defect": 2.494058199012015e-16,
+          "relaxation": 0.5,
+          "cells": 32274,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 1.2667871979701026e-13,
+          "assembled_operator_relative_defect": 2.494058199012015e-16,
+          "relaxation": 0.5,
+          "cells": 32274,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 1.2192109406822018e-13,
+          "assembled_operator_relative_defect": 2.494058199012015e-16,
+          "relaxation": 0.5,
+          "cells": 32274,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 1.1865519282590872e-13,
+          "assembled_operator_relative_defect": 2.494058199012015e-16,
+          "relaxation": 0.5,
+          "cells": 32274,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 1.2643558255181587e-13,
+          "assembled_operator_relative_defect": 2.4967624647449086e-16,
+          "relaxation": 0.5,
+          "cells": 32274,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 1.3591237282727843e-13,
+          "assembled_operator_relative_defect": 2.4967624647449086e-16,
+          "relaxation": 0.5,
+          "cells": 32274,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 1.2262540398498094e-13,
+          "assembled_operator_relative_defect": 2.4967624647449086e-16,
+          "relaxation": 0.5,
+          "cells": 32274,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 1.2721938064450297e-13,
+          "assembled_operator_relative_defect": 2.4967624647449086e-16,
+          "relaxation": 0.5,
+          "cells": 32274,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 1.238446248681429e-13,
+          "assembled_operator_relative_defect": 2.4967624647449086e-16,
+          "relaxation": 0.5,
+          "cells": 32274,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 1.1931648400340088e-13,
+          "assembled_operator_relative_defect": 2.494061178640088e-16,
+          "relaxation": 0.5,
+          "cells": 32274,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 1.1530673378712242e-13,
+          "assembled_operator_relative_defect": 2.494061178640088e-16,
+          "relaxation": 0.5,
+          "cells": 32274,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 1.1436783604794203e-13,
+          "assembled_operator_relative_defect": 2.494061178640088e-16,
+          "relaxation": 0.5,
+          "cells": 32274,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 1.1320516233452273e-13,
+          "assembled_operator_relative_defect": 2.494061178640088e-16,
+          "relaxation": 0.5,
+          "cells": 32274,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 1.1915913207928327e-13,
+          "assembled_operator_relative_defect": 2.494061178640088e-16,
+          "relaxation": 0.5,
+          "cells": 32274,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 1.1150770983152609e-13,
+          "assembled_operator_relative_defect": 2.4983028874395423e-16,
+          "relaxation": 0.5,
+          "cells": 32274,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 1.3070034493706114e-13,
+          "assembled_operator_relative_defect": 2.4983028874395423e-16,
+          "relaxation": 0.5,
+          "cells": 32274,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 1.32576042478983e-13,
+          "assembled_operator_relative_defect": 2.4983028874395423e-16,
+          "relaxation": 0.5,
+          "cells": 32274,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 1.174786521746538e-13,
+          "assembled_operator_relative_defect": 2.4983028874395423e-16,
+          "relaxation": 0.5,
+          "cells": 32274,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 1.2093597941189615e-13,
+          "assembled_operator_relative_defect": 2.4983028874395423e-16,
+          "relaxation": 0.5,
+          "cells": 32274,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 1.1752004040877783e-13,
+          "assembled_operator_relative_defect": 2.516789720049843e-16,
+          "relaxation": 0.5,
+          "cells": 32274,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 1.128559597907144e-13,
+          "assembled_operator_relative_defect": 2.516789720049843e-16,
+          "relaxation": 0.5,
+          "cells": 32274,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 1.290204529382525e-13,
+          "assembled_operator_relative_defect": 2.516789720049843e-16,
+          "relaxation": 0.5,
+          "cells": 32274,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 1.3823027048638318e-13,
+          "assembled_operator_relative_defect": 2.516789720049843e-16,
+          "relaxation": 0.5,
+          "cells": 32274,
+          "backend": "full-grid-scipy-superlu-cpu"
+        },
+        {
+          "linear_true_relative_residual": 1.285176042351368e-13,
+          "assembled_operator_relative_defect": 2.516789720049843e-16,
+          "relaxation": 0.5,
+          "cells": 32274,
+          "backend": "full-grid-scipy-superlu-cpu"
+        }
+      ],
+      "solver": "conservative-linear-upwind",
+      "discretization": {
+        "momentum_convection": "linear-upwind",
+        "pressure_gradient": "gauss-linear",
+        "face_interpolation": "projected-linear",
+        "wall_gradient": "incompressible-normal"
+      },
+      "directory": "scale-0.5",
+      "mesh_scale": 0.5,
+      "mesh_quality": {
+        "cells": 32274,
+        "faces": 48726,
+        "minimum_cell_area_m2": 4.7441357971071685e-07,
+        "minimum_face_projected_distance_m": 0.0002583624034666389,
+        "nonorthogonality_max_deg": 22.768481341769483,
+        "nonorthogonality_p95_deg": 5.849419877560912,
+        "internal_skewness_max": 0.3870522743459118,
+        "positive_cell_areas": true,
+        "positive_projected_distances": true,
+        "quality_gate_passed": true
+      },
+      "mesh_generation": {
+        "case": "cylinder",
+        "scale": 0.5,
+        "gmsh_version": "4.15.2",
+        "algorithm": "Frontal-Delaunay (Gmsh algorithm 6)",
+        "wall_target_size_m": 0.0015,
+        "outer_target_size_m": 0.0125,
+        "geometry": "Exact circle CAD arcs",
+        "mesh_sha256": "3b65b82b03e746b3835f98b6bc6b0c287b50ff8ca08b9f3402473d27fb6ed75c",
+        "generator_sha256": "a4be0af11c057a76ab61c5e7c542349fa1b725a8765887372db291df7f4986de",
+        "documentation": "https://gmsh.info/doc/texinfo/gmsh.html"
+      },
+      "wall_postprocessed_without_resolving": true,
+      "upstream_fields_path": "docs/verification-gmsh-cylinder/scale-0.5/fields.npz",
+      "upstream_fields_sha256": "e2cc74570915b60c9283c05fb6f8a78828b3da1b835d79de458be9ad84d06fd1"
+    }
+  ],
+  "passed": false,
+  "grid_convergence_qualified": false,
+  "original_numerical_producer_provenance": {
+    "matplotlib": "3.11.2",
+    "git_base": "f5626e5b021c7829d0c8dff3f82b8b27a823fb4f",
+    "python": "3.11.15",
+    "torch": "2.14.1+cu130",
+    "numpy": "2.4.6",
+    "platform": "Linux-6.8.0-137-generic-x86_64-with-glibc2.39",
+    "torch_threads": 1,
+    "device": "cpu",
+    "source_sha256": {
+      "pyproject.toml": "7222720c67aacd63d49197202dea8e1a457b8b78a53a8cba31640846a5498172",
+      "src/tensorfvm/__init__.py": "9f8d4d3a249d695e4e841e4c9d11d7158db8a2d33e2928d3565794718e2aba3c",
+      "src/tensorfvm/backend_registry.py": "e68b95fdb7c457b921b2f1c9e3920f80ebdcdb104ca8077e10e96d2a4182a13a",
+      "src/tensorfvm/body_fitted.py": "4e633fa42c1171cf57aca5bf930827f97a30dada4e405bf3ac9c1068ba1bb7a7",
+      "src/tensorfvm/mesh_api.py": "72f4f9d724084df335dca0e561877c5423c47a7f8bfffe950d631845e2dce22d",
+      "src/tensorfvm/periodic_mac.py": "b6b823c2c7972368a30fbba14f07d1222d062d00a9fe03c769c844407bfde5eb",
+      "src/tensorfvm/runtime.py": "ff383730f34f82030f28da424819eea670f28c663d5be834f30bebc6c74a2da5",
+      "src/tensorfvm/solver.py": "7c3613f23791c6a22825bd2ba0467e2bb84013ecaedc974901452b1864a2868e",
+      "src/tensorfvm/verification/__init__.py": "2e93edad1f2e0ed881602c2f72592f32070e99f9a75433e6fa0ce4c485f52652",
+      "src/tensorfvm/verification/__main__.py": "bac1da0b8ea13da1d7e8de391d0da9fe5a69f8658d55c57d55fc9c861eb28096",
+      "src/tensorfvm/verification/audit.py": "7df05206579b07718441e0ae894e60d8a7b2543fd8e557bd1f7fb7d8586ea414",
+      "src/tensorfvm/verification/cases.py": "6cf52e2cf76334ae3ce47c77c9d4bd33e7d83ab08f2d96b2123d356b0702260e",
+      "src/tensorfvm/verification/core.py": "088114b4c8ec39a0724213bfc00f83a4356bcaca1dd2398376ef35426866e12e",
+      "src/tensorfvm/verification/dfg.py": "f07412715767d7424c5a54fccd9c8b5f4aec964f8126532d45c1f7270351e1fc",
+      "src/tensorfvm/verification/engineering.py": "51a54c163066263eba16ec3b6532c37bf1fff3cb465a3ecd02cd98ea837b8079",
+      "src/tensorfvm/verification/engineering_audit.py": "987b3a75125152a634ebd116ca9df2913bfef5fa7ad78b306c980edc9d0359a1",
+      "src/tensorfvm/verification/extended.py": "9e28876cdd9681ad8dcd4075f897264703b1e8616a0694be5def3622ce030d1e",
+      "src/tensorfvm/verification/extended_audit.py": "8b2dcc2618d566b5abbdeed34312f2c8c1fb1349b12b90675080627a2a8cf4ce",
+      "src/tensorfvm/verification/extended_cases.py": "d5f58d4aca6706642d5e5d7307af3017d2c6c4840c3b485e68c98815edfc0796",
+      "src/tensorfvm/verification/external_flow.py": "5469b8966f1e4a31aa541cb1261720c92dac44a396d01fadb5eb1a286aa7e182",
+      "src/tensorfvm/verification/external_gmsh.py": "f7151630f9673f8c752b0dd91d5c6bc8cab2e2971bd8d9fbdab098cc99e0da16",
+      "src/tensorfvm/verification/gpu.py": "1372d9c7deea0617673278b8b51220d529ca79b4a0b0b022fcd9783584c154e0",
+      "src/tensorfvm/verification/lbm.py": "0ad5bf5d1022752755f5f0ff47df597baf00dca3e64bf66e576014e6930be9a4",
+      "src/tensorfvm/verification/report.py": "d38464cbba0f152d4410589e6a66c8fe05f9f84da06ecab62d3895a8f77ead62",
+      "src/tensorfvm/verification/simple_gpu.py": "292791a63231e172ee5d0f4179656f4fc3528ca733a8329fb44c65d6e08753cd",
+      "src/tensorfvm/verification/simple_gpu_audit.py": "90a778cd314b9ab36183da98b428fbc0c4918587c80217de8fc8439e0db292f6",
+      "src/tensorfvm/sparse_simple.py": "efa18d17a8ab53c227cef8b1b0961df0a8fff09b00a90eb32e7a91b4c61b445a",
+      "src/tensorfvm/external_linear.py": "420682150edd5632b76b7a203260d006aab3cf75af90af5cbbf65a1edfa9dd70",
+      "src/tensorfvm/external_cached.py": "3b94b150f600d908430bdd047fbdfe3cbcc2e9b06314db7f4f3e2f9579b1591e",
+      "src/tensorfvm/external_anderson.py": "07c6c8611d930ca0d2210fe2c139cfeea5276a24a00625d600a18b16d1b3e61c",
+      "src/tensorfvm/external_coupled.py": "4fe0d11fa879a3034b0224518206b66532df524a37aa1aceb492bf62b89a2871",
+      "src/tensorfvm/coupled_coarse.py": "5c203b58cbacaa1d1ac25e617313804ccf489c3b209a82a6362e71097b81f554",
+      "src/tensorfvm/benchmark_airfoil.py": "c1f12bdeab08814788dfcc8a45ae346eae47bbaec295c282fb7db61276a48d4c",
+      "src/tensorfvm/multi_element.py": "9ac2f1094465f6b466c5f4fbb8c15f195a69dc0b767301deccd0d39985229850",
+      "src/tensorfvm/gmsh_external.py": "04b875eb7e2d606db4acc6d80902e367323beeeb0cfbbbbe0f29c2779bf0e1a8",
+      "src/tensorfvm/external_high_order.py": "45c433eb8eb0cfae3649db034434edc12d80cfe59a3560528f51dd1ae8dca246",
+      "src/tensorfvm/conservative_pressure.py": "46914848e8b45a85e1580f575d76597c887d38a3bfee9be84e474d314e6eaf32",
+      "src/tensorfvm/mesh_quality.py": "9943b5dbce7379277c78d635d0e6abead8a222570cfacfd45efe97b09151f77f",
+      "scripts/generate_external_gmsh.py": "a4be0af11c057a76ab61c5e7c542349fa1b725a8765887372db291df7f4986de"
+    }
+  },
+  "numerical_source_snapshot_root": "numerical-source-snapshot",
+  "input_sha256": {
+    "docs/verification-gmsh-cylinder/scale-2/fields.npz": "94e0c9b9a9fd9a01108edb1970c39302c56e36b28914fe699c6e31faef0ac928",
+    "docs/verification-gmsh-cylinder/scale-1/fields.npz": "b07e654f113057166b0da512ed6773e430b43b913b09213897fd1b756f797539",
+    "docs/verification-gmsh-cylinder/scale-0.5/fields.npz": "e2cc74570915b60c9283c05fb6f8a78828b3da1b835d79de458be9ad84d06fd1"
+  },
+  "finest_physical_passed": true
+}

@@ -1,0 +1,24 @@
+{
+  "source_sha256": {
+    "scripts/audit_external_evidence.py": "8208be6f35a50e44ad9eef9237202e2015d136f197985cacbb98ac7a78df1ba9",
+    "src/tensorfvm/verification/core.py": "088114b4c8ec39a0724213bfc00f83a4356bcaca1dd2398376ef35426866e12e",
+    "tests/test_gmsh_external.py": "89b916ec12b4486e229468c6fe23d4385a2be5e65890ffdcf872ca1c1b14dd71",
+    "tests/test_wall_traction.py": "03abed6b7f30aa77d4e982f11addb58e4725cf6bdcc6bbd45bd5eff71bc48f3a",
+    "tests/test_external_flow.py": "c49cc6c07b1ff7e388d8eee2616f392a7fa06efeb69d0e1b68a3b6cd97e2d897",
+    "tests/test_benchmark_airfoil.py": "6f17c16da77c1d5be15ac03cf110b142fc6e16b9c1363929e646bc7e43391bdd",
+    "tests/test_external_mesh_contract.py": "36988a9c9e4b0f2e2186d63321abd1c5684848718a338ef1cfd82d77c211545e"
+  },
+  "artifacts_sha256": {
+    "tests.txt": "5d53dfe9ded287d8fa184ea69d5fccf3520c54a7a51439e24f5f787d440c4ba0",
+    "audit.json": "349b1dfb8605f1a43ee1f1f88d87d4921f3a64ebe65f0ebbe467ade72bd01818",
+    "report.md": "b1ae82233bb2a53640e8b80955c9656559e7615d6142f436516a56197602a8e8",
+    "source-snapshot/scripts/audit_external_evidence.py": "8208be6f35a50e44ad9eef9237202e2015d136f197985cacbb98ac7a78df1ba9",
+    "source-snapshot/tests/test_gmsh_external.py": "89b916ec12b4486e229468c6fe23d4385a2be5e65890ffdcf872ca1c1b14dd71",
+    "source-snapshot/tests/test_benchmark_airfoil.py": "6f17c16da77c1d5be15ac03cf110b142fc6e16b9c1363929e646bc7e43391bdd",
+    "source-snapshot/tests/test_external_flow.py": "c49cc6c07b1ff7e388d8eee2616f392a7fa06efeb69d0e1b68a3b6cd97e2d897",
+    "source-snapshot/tests/test_external_mesh_contract.py": "36988a9c9e4b0f2e2186d63321abd1c5684848718a338ef1cfd82d77c211545e",
+    "source-snapshot/tests/test_wall_traction.py": "03abed6b7f30aa77d4e982f11addb58e4725cf6bdcc6bbd45bd5eff71bc48f3a",
+    "source-snapshot/src/tensorfvm/verification/core.py": "088114b4c8ec39a0724213bfc00f83a4356bcaca1dd2398376ef35426866e12e"
+  },
+  "source_snapshot_root": "source-snapshot"
+}

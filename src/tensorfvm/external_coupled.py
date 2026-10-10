@@ -17,6 +17,9 @@ class CoupledExternalFlowSolver(ExternalFlowSolver):
             raise ValueError('Full-grid external Picard correction supports verified steady laminar CPU cylinder calculations')
         super().__init__(config);self.coupled_history=[];self._coupled_lu=None
 
+    def _coupled_jacobian(self):
+        return jacobian(self)
+
     def _physical_flux(self):
         diagonal,_,_,_=self._momentum(self.velocity,self.p,self.mass_flux)
         return self._rhie_chow(self.velocity,self.p,self.volume/diagonal)[0]
@@ -30,7 +33,7 @@ class CoupledExternalFlowSolver(ExternalFlowSolver):
             d,ao,an,source=self._momentum(self.velocity,self.p,self.mass_flux)
             mom=torch.stack([self._matvec(self.velocity[:,a],d,ao,an)-source[:,a] for a in range(2)],1);rhs=-torch.cat((mom[:,0],mom[:,1],self._sum(self.mass_flux))).numpy()
             if self._coupled_lu is None or len(self.coupled_history)%5==0:
-                self._coupled_matrix,self._operator_defect=jacobian(self)
+                self._coupled_matrix,self._operator_defect=self._coupled_jacobian()
                 self._coupled_lu=splu(self._coupled_matrix.tocsc())
             q=self._coupled_lu.solve(rhs);relative=float(np.linalg.norm(self._coupled_matrix@q-rhs)/max(np.linalg.norm(rhs),1e-30))
             if not np.isfinite(q).all() or relative>1e-9:raise RuntimeError('Full coupled true linear residual failed')

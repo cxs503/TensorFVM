@@ -11,6 +11,7 @@ from .dfg import REFERENCE as DFG_REFERENCE, REFERENCE_URL
 from ..benchmark_airfoil import REFERENCE as NACA_REFERENCE
 from ..solver import SolverConfig
 from ..external_linear import ExternalFlowSolver
+from ..wall_traction import incompressible_wall_gradient
 from ..external_cached import CachedExternalFlowSolver
 from ..external_anderson import AndersonExternalFlowSolver
 from ..external_coupled import CoupledExternalFlowSolver
@@ -23,15 +24,19 @@ def configuration(case, nx, ny, device, iterations):
     return SolverConfig(**common,mesh_type='c-grid',airfoil_code='0012',reynolds=1000,angle_of_attack=4,length=20,height=16,airfoil_x=6,airfoil_y=8,airfoil_chord=1,velocity_relaxation=.5,pressure_relaxation=.3,pseudo_time_step=.2)
 
 
-def run(case,nx,ny,device,iterations,solver="simple"):
-    c=configuration(case,nx,ny,device,iterations);s=({"coupled":CoupledExternalFlowSolver,"cached":CachedExternalFlowSolver,"anderson":AndersonExternalFlowSolver}.get(solver,ExternalFlowSolver))(c);start=time.perf_counter()
+def run(case,nx,ny,device,iterations,solver="simple", *, config=None, solver_factory=None, wall_gradient="displacement-correction"):
+    c=config or configuration(case,nx,ny,device,iterations);s=(solver_factory or {"coupled":CoupledExternalFlowSolver,"cached":CachedExternalFlowSolver,"anderson":AndersonExternalFlowSolver}.get(solver,ExternalFlowSolver))(c);start=time.perf_counter()
     for i in range(iterations):
         s.step()
         if (i+1)%100==0:print(case,nx,ny,i+1,s.history[-1]['momentum'],flush=True)
         if s.converged:break
-    r=s.solve();mask=s.mesh.masks['cylinder' if case=='cylinder' else 'airfoil'];owners=s.o[mask];d=s.d[mask];grad=s._gradient(s.velocity)[owners].clone()
+    mask=s.mesh.masks['cylinder' if case=='cylinder' else 'airfoil'];owners=s.o[mask];d=s.d[mask];grad=s._gradient(s.velocity)[owners].clone()
     defect=-s.velocity[owners]-torch.einsum('fi,fij->fj',d,grad)
     grad+=d[:,:,None]*defect[:,None,:]/d.square().sum(-1)[:,None,None]
+    if wall_gradient=='incompressible-normal':
+        grad=incompressible_wall_gradient(s.velocity[owners],d,s.S[mask])
+    elif wall_gradient!='displacement-correction':
+        raise ValueError('Unknown wall traction reconstruction')
     pressure=s.p[owners,None]*s.S[mask];viscous=-torch.einsum('fij,fj->fi',c.viscosity*(grad+grad.transpose(-1,-2)),s.S[mask])
     force=array((pressure+viscous).sum(0));scale=.5*c.density*c.inlet_velocity**2*c.reference_length
     a=np.deg2rad(c.angle_of_attack);rotation=np.array([[np.cos(a),np.sin(a)],[-np.sin(a),np.cos(a)]])
@@ -49,8 +54,11 @@ def run(case,nx,ny,device,iterations,solver="simple"):
         metrics.append(Metric(name+'_relative_error',err,.03,'Worst endpoint error for figure uncertainty; DFG tabulated reference has zero digitization interval'))
     last=s.history[-1];metrics+=[Metric('solver_residual',max(last[k] for k in ('continuity','momentum','mass_imbalance')),c.tolerance,'Actual steady equations'),Metric('convergence_failure',0 if s.converged else 1,.5,'Explicit convergence required')]
     records,passed=evaluate(metrics)
-    fields=dict(vertices_m=array(s.mesh.vertices),cell_centers_m=array(s.mesh.centers),cell_velocity_m_s=array(s.velocity),cell_pressure_pa=array(s.p),cell_volumes_m2=array(s.volume),face_owner=array(s.o),face_neighbor=array(s.n),internal_face_mask=array(s.f),face_mass_flux=array(s.mass_flux),face_area_vectors_m=array(s.S),surface_mask=array(mask),surface_centers_m=centers,surface_displacement_m=array(d),surface_gradient=array(grad),surface_pressure_force=array(pressure),surface_viscous_force=array(viscous),surface_wall_pressure_pa=wallp)
-    return dict(case=case,resolution=f'{nx}x{ny}',device=device,config=asdict(c),iterations=len(s.history),elapsed_s=time.perf_counter()-start,converged=s.converged,computed=computed,reference=reference,digitization_absolute_uncertainty=uncertainty,metrics=records,passed=passed,history=s.history,linear_solver_history=s.linear_history,coupled_solver_history=getattr(s,"coupled_history",[]),solver=solver,fields=fields)
+    fields=dict(vertices_m=array(s.mesh.vertices),cell_centers_m=array(s.mesh.centers),cell_velocity_m_s=array(s.velocity),cell_pressure_pa=array(s.p),cell_volumes_m2=array(s.volume),face_owner=array(s.o),face_neighbor=array(s.n),internal_face_mask=array(s.f),face_mass_flux=array(s.mass_flux),face_area_vectors_m=array(s.S),surface_mask=array(mask),surface_centers_m=centers,surface_displacement_m=array(d),surface_gradient=array(grad),surface_pressure_force=array(pressure),surface_viscous_force=array(viscous),surface_wall_pressure_pa=wallp,surface_wall_velocity_m_s=array(s.boundary_velocity[mask]),surface_reconstruction_remainder_m_s=array(s.velocity[owners]+torch.einsum('fi,fij->fj',d,grad)))
+    if hasattr(s.mesh, 'cell_nodes'):
+        vertices=array(s.mesh.vertices)
+        fields['cell_polygons_m']=np.array([vertices[list(nodes)+[nodes[-1]]*(4-len(nodes))] for nodes in s.mesh.cell_nodes])
+    return dict(case=case,resolution=f'{nx}x{ny}',device=device,config=asdict(c),iterations=len(s.history),elapsed_s=time.perf_counter()-start,converged=s.converged,computed=computed,reference=reference,digitization_absolute_uncertainty=uncertainty,metrics=records,passed=passed,history=s.history,linear_solver_history=s.linear_history,coupled_solver_history=getattr(s,"coupled_history",[]),solver=solver,discretization=dict(momentum_convection=getattr(s,'momentum_convection_scheme','upwind'),pressure_gradient=getattr(s,'pressure_gradient_scheme','least-squares'),face_interpolation=getattr(s,'face_interpolation_scheme','arithmetic'),wall_gradient=wall_gradient),fields=fields)
 
 
 def audit(directory,row):
@@ -59,7 +67,13 @@ def audit(directory,row):
         pf=f['cell_pressure_pa'][o,None]*S;vf=-np.einsum('fij,fj->fi',mu*(g+g.transpose(0,2,1)),S)
         np.testing.assert_allclose(pf,f['surface_pressure_force'],rtol=0,atol=1e-12);np.testing.assert_allclose(vf,f['surface_viscous_force'],rtol=0,atol=1e-12)
         wall=f['cell_velocity_m_s'][o]+np.einsum('fi,fij->fj',f['surface_displacement_m'],g)
-        if np.max(abs(wall))>1e-10:raise ValueError('wall reconstruction violates no-slip')
+        if row.get('discretization',{}).get('wall_gradient')=='incompressible-normal':
+            normal=S/np.linalg.norm(S,axis=1)[:,None];velocity=f['cell_velocity_m_s'][o]
+            tangential=velocity-(velocity*normal).sum(1)[:,None]*normal
+            expected=-normal[:,:,None]*tangential[:,None,:]/(f['surface_displacement_m']*normal).sum(1)[:,None,None]
+            np.testing.assert_allclose(g,expected,rtol=0,atol=1e-12)
+            if np.max(abs(f['surface_wall_velocity_m_s']))>1e-12 or np.max(abs(np.trace(g,axis1=1,axis2=2)))>1e-10:raise ValueError('Wall data or incompressibility violated')
+        elif np.max(abs(wall))>1e-10:raise ValueError('wall reconstruction violates no-slip')
         a=np.deg2rad(c['angle_of_attack']);force=(pf+vf).sum(0);scale=.5*c['density']*c['inlet_velocity']**2*(2*c['cylinder_radius'] if row['case']=='cylinder' else c['airfoil_chord']);coeff=np.array([[np.cos(a),np.sin(a)],[-np.sin(a),np.cos(a)]])@force/scale
         np.testing.assert_allclose(coeff,[row['computed']['drag'],row['computed']['lift']],rtol=0,atol=1e-10)
         net=np.zeros(len(f['cell_volumes_m2']));np.add.at(net,f['face_owner'],f['face_mass_flux']);internal=f['internal_face_mask'];np.add.at(net,f['face_neighbor'][internal],-f['face_mass_flux'][internal])
@@ -105,7 +119,7 @@ def main(argv=None):
     if a.case=='naca' and a.solver=='coupled':p.error('Coupled external correction is currently verified for cylinders only')
     if a.output.exists() and any(a.output.iterdir()):p.error('Output must be empty')
     a.output.mkdir(parents=True,exist_ok=True);torch.set_num_threads(1);prov=provenance();root=Path(__file__).resolve().parents[3]
-    for name in ('sparse_simple.py','external_linear.py','external_cached.py','external_anderson.py','external_coupled.py','coupled_coarse.py','benchmark_airfoil.py'):prov['source_sha256']['src/tensorfvm/'+name]=sha(root/'src/tensorfvm'/name)
+    for name in ('sparse_simple.py','external_linear.py','external_cached.py','external_anderson.py','external_coupled.py','coupled_coarse.py','wall_traction.py','benchmark_airfoil.py'):prov['source_sha256']['src/tensorfvm/'+name]=sha(root/'src/tensorfvm'/name)
     summary=dict(provenance=prov,runs=[],passed=False,grid_convergence_qualified=False)
     for grid in a.grids:
         nx,ny=map(int,grid.split('x'));raw=run(a.case,nx,ny,a.device,a.max_iterations,a.solver);raw['directory']=grid;row=save_run(a.output/grid,raw);write_json(a.output/grid/'audit.json',audit(a.output/grid,row));summary['runs'].append(row);write_json(a.output/'summary.json',summary)

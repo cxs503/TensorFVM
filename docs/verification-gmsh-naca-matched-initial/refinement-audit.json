@@ -1,0 +1,38 @@
+{
+  "metrics": {
+    "drag": {
+      "values": [
+        0.12928968858768622,
+        0.1278956900099021,
+        0.12210517325454825
+      ],
+      "relative_errors": [
+        0.035091374344859406,
+        0.02393104192024596,
+        0.023990534888157694
+      ],
+      "successive_relative_changes": [
+        0.010899496125914624,
+        0.04742237041245236
+      ]
+    },
+    "lift": {
+      "values": [
+        0.21346753343055289,
+        0.21557237337687038,
+        0.19605082725584833
+      ],
+      "relative_errors": [
+        0.06274870211682376,
+        0.07322765357686063,
+        0.024931293908338405
+      ],
+      "successive_relative_changes": [
+        0.009763959608301695,
+        0.09957390333041664
+      ]
+    }
+  },
+  "grid_convergence_qualified": false,
+  "reason": "Physical acceptance and a demonstrable asymptotic regime are separate gates."
+}

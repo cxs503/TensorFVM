@@ -1,0 +1,33 @@
+{
+  "runs": [
+    {
+      "resolution": "scale-2",
+      "independent_momentum": 9.931791188122175e-07,
+      "independent_continuity": 1.3877787807814457e-17,
+      "physical_rhie_chow_relative_l2_defect": 5.395548135228717e-11,
+      "physical_fixedpoint_passed": true,
+      "discretization": {
+        "momentum_convection": "linear-upwind",
+        "pressure_gradient": "gauss-linear",
+        "face_interpolation": "projected-linear",
+        "wall_gradient": "displacement-correction"
+      },
+      "scope": "Independent NumPy configured gradients/interpolation, upwind or linear-upwind full laminar momentum, mass and physical inertia-free Rhie-Chow flux; production geometry and prescribed boundary data reconstructed from saved config"
+    },
+    {
+      "resolution": "scale-1",
+      "independent_momentum": 9.823345837343173e-07,
+      "independent_continuity": 6.938893903907228e-18,
+      "physical_rhie_chow_relative_l2_defect": 5.989683272105879e-12,
+      "physical_fixedpoint_passed": true,
+      "discretization": {
+        "momentum_convection": "linear-upwind",
+        "pressure_gradient": "gauss-linear",
+        "face_interpolation": "projected-linear",
+        "wall_gradient": "displacement-correction"
+      },
+      "scope": "Independent NumPy configured gradients/interpolation, upwind or linear-upwind full laminar momentum, mass and physical inertia-free Rhie-Chow flux; production geometry and prescribed boundary data reconstructed from saved config"
+    }
+  ],
+  "passed": true
+}
