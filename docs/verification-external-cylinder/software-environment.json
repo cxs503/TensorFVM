@@ -1,0 +1,12 @@
+{
+  "python": "3.11.15",
+  "torch": "2.14.1+cu130",
+  "numpy": "2.4.6",
+  "scipy": "1.17.1",
+  "matplotlib": "3.11.2",
+  "pypdf": "6.19.0",
+  "dtype": "float64",
+  "torch_threads": 1,
+  "publication_platform": "Linux-6.8.0-137-generic-x86_64-with-glibc2.39",
+  "timing_scope": "iterations including assembly and linear solves; excludes mesh construction, export and plotting"
+}

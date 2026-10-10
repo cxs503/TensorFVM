@@ -21,11 +21,12 @@ REFERENCE = {
     "airfoil": "NACA 0012",
     "reynolds": 1000.0,
     "angle_of_attack_degrees": 4.0,
-    "lift_coefficient": 0.205,
-    "drag_coefficient": 0.120,
+    "lift_coefficient": 27.41 / 190.95 * 1.4,
+    "drag_coefficient": 23.87 / 190.95,
     "citation": "Di Ilio et al., Fluid flow around NACA 0012 airfoil at low-Reynolds numbers with hybrid lattice Boltzmann method (2020)",
     "url": "https://arxiv.org/abs/2006.10487",
-    "source_location": "Figures 10 and 11",
+    "source_location": "Figures 10 and 11, present-study vector paths at alpha=4 degrees",
+    "digitization_absolute_uncertainty": 0.0001,
 }
 
 
@@ -42,7 +43,9 @@ def compare_airfoil(result):
                 for name in ("lift", "drag")}
     reference = {"lift": REFERENCE["lift_coefficient"],
                  "drag": REFERENCE["drag_coefficient"]}
-    errors = {name: abs(computed[name] - reference[name]) / abs(reference[name])
+    errors = {name: max(abs(computed[name] - endpoint) / abs(endpoint)
+                        for endpoint in (reference[name] - REFERENCE["digitization_absolute_uncertainty"],
+                                         reference[name] + REFERENCE["digitization_absolute_uncertainty"]))
               for name in reference}
     residuals = result.history[-1] if result.history else {}
     converged = bool(result.converged and all(
@@ -70,7 +73,9 @@ def _write_report(directory, summary):
 
 本验证采用 Di Ilio 等人的二维不可压缩层流结果（arXiv:2006.10487），
 NACA 0012，Re=1000，攻角 4°。文献指出攻角低于 8° 时解为稳态，因而与
-本项目的稳态 SIMPLE 模型相容。参考值取其图 10、11：Cl=0.205，Cd=0.120。
+本项目的稳态 SIMPLE 模型相容。参考值取图 10、11 的矢量曲线：Cl={REFERENCE["lift_coefficient"]:.8g}，Cd={REFERENCE["drag_coefficient"]:.8g}。
+图形数字化绝对不确定度各取 ±0.0001，验收使用区间端点的最坏相对误差。
+该区间仅描述图形读取，不代表作者计算结果的不确定度。旧估读参考 0.205/0.120 已撤回。
 升力和阻力相对误差分别独立要求严格小于 3%，不以平均误差替代。
 
 压力系数说明

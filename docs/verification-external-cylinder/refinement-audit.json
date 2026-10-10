@@ -1,0 +1,66 @@
+{
+  "grid_convergence_qualified": false,
+  "reason": "Three grids alone do not establish an asymptotic regime; physical and iterative failures retained.",
+  "metrics": {
+    "drag": {
+      "values": [
+        6.32479056689246,
+        5.972000786134608,
+        5.80495724797949
+      ],
+      "worst_reference_relative_errors": [
+        0.13356942860266766,
+        0.070340187102735,
+        0.04040157552412272
+      ],
+      "successive_relative_changes": [
+        0.05907396756827902,
+        0.028776015226168915
+      ],
+      "observed_reference_error_orders": [
+        0.9251687636620672,
+        0.7999376182157442
+      ]
+    },
+    "lift": {
+      "values": [
+        0.015101671237705325,
+        0.009706585419266786,
+        0.007083128087316192
+      ],
+      "worst_reference_relative_errors": [
+        0.4221437971136435,
+        0.08591837102782039,
+        0.33297272103317493
+      ],
+      "successive_relative_changes": [
+        0.5558170649515668,
+        0.3703811789946928
+      ],
+      "observed_reference_error_orders": [
+        2.2966959697565428,
+        -1.9543654427099701
+      ]
+    },
+    "pressure_difference_pa": {
+      "values": [
+        0.13099145681450713,
+        0.126544544017002,
+        0.12270256781635008
+      ],
+      "worst_reference_relative_errors": [
+        0.11462960095985922,
+        0.07679002914713086,
+        0.04409797041620113
+      ],
+      "successive_relative_changes": [
+        0.03514108673786579,
+        0.03131129420536843
+      ],
+      "observed_reference_error_orders": [
+        0.5779887408199598,
+        0.8002067373025847
+      ]
+    }
+  }
+}

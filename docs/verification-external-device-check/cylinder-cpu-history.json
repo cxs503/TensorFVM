@@ -1,0 +1,157 @@
+{
+  "history": [
+    {
+      "iteration": 1,
+      "continuity": 1.456004185781753e-14,
+      "momentum": 7.483308352929973,
+      "mass_imbalance": 8.948634516319382e-15,
+      "velocity_change": 0.81158894188303,
+      "u_residual": 7.483308352929973,
+      "v_residual": 3.427080126639378
+    },
+    {
+      "iteration": 2,
+      "continuity": 2.1266228953971772e-14,
+      "momentum": 4.975165196392642,
+      "mass_imbalance": 1.2322883228737684e-14,
+      "velocity_change": 0.31117417034165845,
+      "u_residual": 4.975165196392642,
+      "v_residual": 1.6230715970032017
+    },
+    {
+      "iteration": 3,
+      "continuity": 4.675291319400907e-15,
+      "momentum": 2.9644794368855325,
+      "mass_imbalance": 3.575222773659517e-15,
+      "velocity_change": 0.1337163984300066,
+      "u_residual": 2.9644794368855325,
+      "v_residual": 0.9666310507518691
+    },
+    {
+      "iteration": 4,
+      "continuity": 5.5743858039010815e-15,
+      "momentum": 1.5810281458423592,
+      "mass_imbalance": 1.9346397790009635e-14,
+      "velocity_change": 0.07264670709965657,
+      "u_residual": 1.5810281458423592,
+      "v_residual": 0.5598646200557033
+    },
+    {
+      "iteration": 5,
+      "continuity": 1.5284606236502963e-15,
+      "momentum": 1.0881393727478657,
+      "mass_imbalance": 2.686705871329933e-15,
+      "velocity_change": 0.04640471917575578,
+      "u_residual": 1.0881393727478657,
+      "v_residual": 0.3845399743373142
+    }
+  ],
+  "linear_history": [
+    {
+      "kind": "momentum",
+      "backend": "scipy-superlu-cpu",
+      "true_residual": 3.9028040527039756e-17,
+      "target": 1e-12,
+      "elapsed_s": 0.002385741099715233
+    },
+    {
+      "kind": "momentum",
+      "backend": "scipy-superlu-cpu",
+      "true_residual": 0.0,
+      "target": 1e-12,
+      "elapsed_s": 0.0017012786120176315
+    },
+    {
+      "kind": "pressure",
+      "backend": "scipy-superlu-cpu",
+      "true_residual": 2.0275225605669916e-15,
+      "target": 1e-12,
+      "elapsed_s": 0.0038519343361258507
+    },
+    {
+      "kind": "momentum",
+      "backend": "scipy-superlu-cpu",
+      "true_residual": 3.8685721407945995e-17,
+      "target": 1e-12,
+      "elapsed_s": 0.0017597479745745659
+    },
+    {
+      "kind": "momentum",
+      "backend": "scipy-superlu-cpu",
+      "true_residual": 5.060857662694541e-18,
+      "target": 1e-12,
+      "elapsed_s": 0.0016223527491092682
+    },
+    {
+      "kind": "pressure",
+      "backend": "scipy-superlu-cpu",
+      "true_residual": 3.4864878707582965e-15,
+      "target": 1e-12,
+      "elapsed_s": 0.0038030119612812996
+    },
+    {
+      "kind": "momentum",
+      "backend": "scipy-superlu-cpu",
+      "true_residual": 3.0945310605397924e-17,
+      "target": 1e-12,
+      "elapsed_s": 0.0017765844240784645
+    },
+    {
+      "kind": "momentum",
+      "backend": "scipy-superlu-cpu",
+      "true_residual": 3.549983484047995e-18,
+      "target": 1e-12,
+      "elapsed_s": 0.0016419291496276855
+    },
+    {
+      "kind": "pressure",
+      "backend": "scipy-superlu-cpu",
+      "true_residual": 9.362459201041375e-16,
+      "target": 1e-12,
+      "elapsed_s": 0.003730613738298416
+    },
+    {
+      "kind": "momentum",
+      "backend": "scipy-superlu-cpu",
+      "true_residual": 2.1936669046482353e-17,
+      "target": 1e-12,
+      "elapsed_s": 0.001800907775759697
+    },
+    {
+      "kind": "momentum",
+      "backend": "scipy-superlu-cpu",
+      "true_residual": 4.1610392372712795e-18,
+      "target": 1e-12,
+      "elapsed_s": 0.0016298675909638405
+    },
+    {
+      "kind": "pressure",
+      "backend": "scipy-superlu-cpu",
+      "true_residual": 7.514239409733155e-16,
+      "target": 1e-12,
+      "elapsed_s": 0.0036995867267251015
+    },
+    {
+      "kind": "momentum",
+      "backend": "scipy-superlu-cpu",
+      "true_residual": 2.7943654672798775e-17,
+      "target": 1e-12,
+      "elapsed_s": 0.0017241565510630608
+    },
+    {
+      "kind": "momentum",
+      "backend": "scipy-superlu-cpu",
+      "true_residual": 3.2640939686328925e-18,
+      "target": 1e-12,
+      "elapsed_s": 0.0016140537336468697
+    },
+    {
+      "kind": "pressure",
+      "backend": "scipy-superlu-cpu",
+      "true_residual": 3.3814414708619374e-16,
+      "target": 1e-12,
+      "elapsed_s": 0.0038167331367731094
+    }
+  ],
+  "converged": false
+}

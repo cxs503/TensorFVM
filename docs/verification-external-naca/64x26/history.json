@@ -1,0 +1,5474 @@
+[
+  {
+    "iteration": 1,
+    "continuity": 2.47198095326695e-17,
+    "momentum": 2.9657013180794376,
+    "mass_imbalance": 1.1796119636642288e-16,
+    "velocity_change": 0.3889314507929105,
+    "u_residual": 2.931594278693388,
+    "v_residual": 2.9657013180794376
+  },
+  {
+    "iteration": 2,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 1.6642278542860462,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.14339200117752138,
+    "u_residual": 1.6642278542860465,
+    "v_residual": 1.6585349268232685
+  },
+  {
+    "iteration": 3,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.9878897645706075,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 0.08752648078525982,
+    "u_residual": 0.9878897645706076,
+    "v_residual": 0.9608707500588468
+  },
+  {
+    "iteration": 4,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.6346986216160755,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 0.0553617649855046,
+    "u_residual": 0.6346986216160754,
+    "v_residual": 0.5837200724577978
+  },
+  {
+    "iteration": 5,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.45705672963791405,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 0.035918381764585616,
+    "u_residual": 0.4570567296379141,
+    "v_residual": 0.38502474223893496
+  },
+  {
+    "iteration": 6,
+    "continuity": 2.42861286636753e-17,
+    "momentum": 0.36566905467599053,
+    "mass_imbalance": 1.1796119636642288e-16,
+    "velocity_change": 0.026788639416689075,
+    "u_residual": 0.3656690546759904,
+    "v_residual": 0.2890449567815784
+  },
+  {
+    "iteration": 7,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.3187518671753441,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 0.02419599813790685,
+    "u_residual": 0.3187518671753441,
+    "v_residual": 0.24688075910855772
+  },
+  {
+    "iteration": 8,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.29393884069234444,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.022230642379335253,
+    "u_residual": 0.2939388406923445,
+    "v_residual": 0.22928986539072685
+  },
+  {
+    "iteration": 9,
+    "continuity": 2.688821387764051e-17,
+    "momentum": 0.2806434877670311,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 0.020676187122799727,
+    "u_residual": 0.2806434877670311,
+    "v_residual": 0.22258324326717102
+  },
+  {
+    "iteration": 10,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.27314241591543276,
+    "mass_imbalance": 9.020562075079397e-17,
+    "velocity_change": 0.019386968730037868,
+    "u_residual": 0.27314241591543276,
+    "v_residual": 0.2200434704067733
+  },
+  {
+    "iteration": 11,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.2686811004237598,
+    "mass_imbalance": 9.020562075079397e-17,
+    "velocity_change": 0.01826663621252811,
+    "u_residual": 0.26868110042375976,
+    "v_residual": 0.21841937642734122
+  },
+  {
+    "iteration": 12,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.26569484183795655,
+    "mass_imbalance": 2.0122792321330962e-16,
+    "velocity_change": 0.017252938452994027,
+    "u_residual": 0.26569484183795655,
+    "v_residual": 0.21661888283346836
+  },
+  {
+    "iteration": 13,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.26359025602972713,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 0.01630697575657003,
+    "u_residual": 0.26359025602972713,
+    "v_residual": 0.21451022316988205
+  },
+  {
+    "iteration": 14,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.2617414440763575,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.015405571931379258,
+    "u_residual": 0.2617414440763575,
+    "v_residual": 0.21227185041947705
+  },
+  {
+    "iteration": 15,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.26002317755681903,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 0.014535934540874429,
+    "u_residual": 0.26002317755681903,
+    "v_residual": 0.20967216140756864
+  },
+  {
+    "iteration": 16,
+    "continuity": 1.9081958235744878e-17,
+    "momentum": 0.25825259765165787,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 0.013691960180680307,
+    "u_residual": 0.2582525976516579,
+    "v_residual": 0.20695620584392374
+  },
+  {
+    "iteration": 17,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.25643324451892213,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 0.012871649218620496,
+    "u_residual": 0.25643324451892213,
+    "v_residual": 0.20395566626096248
+  },
+  {
+    "iteration": 18,
+    "continuity": 2.2551405187698492e-17,
+    "momentum": 0.25450120396235826,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.01207535460276743,
+    "u_residual": 0.2545012039623582,
+    "v_residual": 0.20087917428814459
+  },
+  {
+    "iteration": 19,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.2524753803495694,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.01105233183942711,
+    "u_residual": 0.25247538034956946,
+    "v_residual": 0.19768242680699002
+  },
+  {
+    "iteration": 20,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.2505694292805598,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 0.01019842346250499,
+    "u_residual": 0.25056942928055986,
+    "v_residual": 0.19461213391822527
+  },
+  {
+    "iteration": 21,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.24868152509134372,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 0.01015655315312658,
+    "u_residual": 0.24868152509134372,
+    "v_residual": 0.1915673468071784
+  },
+  {
+    "iteration": 22,
+    "continuity": 4.163336342344337e-17,
+    "momentum": 0.2467600207469658,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.009962207079555307,
+    "u_residual": 0.2467600207469658,
+    "v_residual": 0.18851809124235075
+  },
+  {
+    "iteration": 23,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.2448490956838802,
+    "mass_imbalance": 9.020562075079397e-17,
+    "velocity_change": 0.00966178242463922,
+    "u_residual": 0.2448490956838802,
+    "v_residual": 0.18561319560220424
+  },
+  {
+    "iteration": 24,
+    "continuity": 2.42861286636753e-17,
+    "momentum": 0.24299228248388202,
+    "mass_imbalance": 9.020562075079397e-17,
+    "velocity_change": 0.00928960073216234,
+    "u_residual": 0.242992282483882,
+    "v_residual": 0.18267365541956532
+  },
+  {
+    "iteration": 25,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.24117360313167913,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 0.00887106850291508,
+    "u_residual": 0.24117360313167913,
+    "v_residual": 0.17996959094574966
+  },
+  {
+    "iteration": 26,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.23937791257161362,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 0.00842500711977423,
+    "u_residual": 0.23937791257161362,
+    "v_residual": 0.17738569208052507
+  },
+  {
+    "iteration": 27,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.23757112551338377,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 0.00796539900501314,
+    "u_residual": 0.23757112551338377,
+    "v_residual": 0.17483072955382092
+  },
+  {
+    "iteration": 28,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.2358137541080073,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 0.007502598806280902,
+    "u_residual": 0.23581375410800728,
+    "v_residual": 0.17235612919714172
+  },
+  {
+    "iteration": 29,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.23414589824575205,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.007044241106612281,
+    "u_residual": 0.23414589824575205,
+    "v_residual": 0.1701029951895135
+  },
+  {
+    "iteration": 30,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.23250329275566578,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.006595908824362895,
+    "u_residual": 0.23250329275566578,
+    "v_residual": 0.16794117973487593
+  },
+  {
+    "iteration": 31,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.23087205442387754,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 0.006161604140171195,
+    "u_residual": 0.23087205442387754,
+    "v_residual": 0.16568421388195012
+  },
+  {
+    "iteration": 32,
+    "continuity": 3.122502256758253e-17,
+    "momentum": 0.22929758735981037,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.0057441823700735695,
+    "u_residual": 0.22929758735981037,
+    "v_residual": 0.16358386599531127
+  },
+  {
+    "iteration": 33,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.22778883434735397,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 0.005345572785003694,
+    "u_residual": 0.22778883434735392,
+    "v_residual": 0.1615766352144069
+  },
+  {
+    "iteration": 34,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.2262550189318725,
+    "mass_imbalance": 1.0408340855860843e-16,
+    "velocity_change": 0.004966972778070677,
+    "u_residual": 0.2262550189318725,
+    "v_residual": 0.1596395391229317
+  },
+  {
+    "iteration": 35,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.22469490526085584,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.004609008040303286,
+    "u_residual": 0.2246949052608558,
+    "v_residual": 0.15767498683852493
+  },
+  {
+    "iteration": 36,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.22326867547926138,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 0.004271858925589234,
+    "u_residual": 0.22326867547926144,
+    "v_residual": 0.15579054863651265
+  },
+  {
+    "iteration": 37,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.22187749990977138,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.003955358807651965,
+    "u_residual": 0.22187749990977138,
+    "v_residual": 0.15398476688285967
+  },
+  {
+    "iteration": 38,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.2204928702425292,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.003659038827077188,
+    "u_residual": 0.22049287024252925,
+    "v_residual": 0.1522885618062936
+  },
+  {
+    "iteration": 39,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.21912737225409024,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 0.0034325521457392316,
+    "u_residual": 0.2191273722540903,
+    "v_residual": 0.1505507382830435
+  },
+  {
+    "iteration": 40,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.2178627986848688,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 0.0032928369403208424,
+    "u_residual": 0.21786279868486885,
+    "v_residual": 0.14879091683700257
+  },
+  {
+    "iteration": 41,
+    "continuity": 2.168404344971009e-17,
+    "momentum": 0.21661690389837418,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 0.0031594925829324105,
+    "u_residual": 0.21661690389837412,
+    "v_residual": 0.1471573417366999
+  },
+  {
+    "iteration": 42,
+    "continuity": 2.42861286636753e-17,
+    "momentum": 0.21532932245820174,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 0.0030318432977424203,
+    "u_residual": 0.21532932245820174,
+    "v_residual": 0.1455745097250311
+  },
+  {
+    "iteration": 43,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.214175809754507,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 0.002909263160235376,
+    "u_residual": 0.214175809754507,
+    "v_residual": 0.14400943597612836
+  },
+  {
+    "iteration": 44,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.21302635480348087,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.002791185088788728,
+    "u_residual": 0.21302635480348087,
+    "v_residual": 0.14247339420067182
+  },
+  {
+    "iteration": 45,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.21185727319828618,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 0.0026850841247260115,
+    "u_residual": 0.21185727319828618,
+    "v_residual": 0.14093627488505184
+  },
+  {
+    "iteration": 46,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.21070502942695493,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.0026009139218660104,
+    "u_residual": 0.21070502942695496,
+    "v_residual": 0.13948151774267814
+  },
+  {
+    "iteration": 47,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.20960839590631353,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 0.002518010690111594,
+    "u_residual": 0.20960839590631353,
+    "v_residual": 0.1380156782672169
+  },
+  {
+    "iteration": 48,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.20847730298243938,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 0.0024362343534565234,
+    "u_residual": 0.20847730298243938,
+    "v_residual": 0.1366051377454971
+  },
+  {
+    "iteration": 49,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.207321353995286,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.0023554692664014,
+    "u_residual": 0.20732135399528603,
+    "v_residual": 0.13522185798060476
+  },
+  {
+    "iteration": 50,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.20624048819188573,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 0.002275626413520082,
+    "u_residual": 0.20624048819188573,
+    "v_residual": 0.13377175173958097
+  },
+  {
+    "iteration": 51,
+    "continuity": 2.42861286636753e-17,
+    "momentum": 0.20519511230270357,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 0.002196644458591801,
+    "u_residual": 0.20519511230270357,
+    "v_residual": 0.13241925822900047
+  },
+  {
+    "iteration": 52,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.20416668297733226,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.0021184853758169364,
+    "u_residual": 0.20416668297733226,
+    "v_residual": 0.13106259727367453
+  },
+  {
+    "iteration": 53,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.20310840914122408,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 0.002041148747409016,
+    "u_residual": 0.20310840914122408,
+    "v_residual": 0.1297450885081765
+  },
+  {
+    "iteration": 54,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.2020814388180077,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 0.0019646542699592873,
+    "u_residual": 0.2020814388180077,
+    "v_residual": 0.12848394493395293
+  },
+  {
+    "iteration": 55,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.2010349326507371,
+    "mass_imbalance": 2.0122792321330962e-16,
+    "velocity_change": 0.001889041289312554,
+    "u_residual": 0.20103493265073707,
+    "v_residual": 0.1271919344938896
+  },
+  {
+    "iteration": 56,
+    "continuity": 3.122502256758253e-17,
+    "momentum": 0.1999973004927934,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 0.0018143689198739654,
+    "u_residual": 0.1999973004927934,
+    "v_residual": 0.1258816030371348
+  },
+  {
+    "iteration": 57,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.19905316735299405,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 0.0017407136433073012,
+    "u_residual": 0.19905316735299403,
+    "v_residual": 0.12466628085928153
+  },
+  {
+    "iteration": 58,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.1981052627958119,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 0.0016681660603597992,
+    "u_residual": 0.19810526279581187,
+    "v_residual": 0.12341084104649105
+  },
+  {
+    "iteration": 59,
+    "continuity": 2.42861286636753e-17,
+    "momentum": 0.1970969492998654,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.0016010766874706706,
+    "u_residual": 0.19709694929986546,
+    "v_residual": 0.1221648821826671
+  },
+  {
+    "iteration": 60,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.19604547481694695,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.0015422992805008695,
+    "u_residual": 0.19604547481694695,
+    "v_residual": 0.12099143870253423
+  },
+  {
+    "iteration": 61,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.19503633577797963,
+    "mass_imbalance": 1.5959455978986625e-16,
+    "velocity_change": 0.0014841687476850884,
+    "u_residual": 0.19503633577797963,
+    "v_residual": 0.1198109718085136
+  },
+  {
+    "iteration": 62,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.19407206443489827,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.001426769664726879,
+    "u_residual": 0.19407206443489827,
+    "v_residual": 0.118596963718845
+  },
+  {
+    "iteration": 63,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.19304476419097624,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 0.0013701901756733026,
+    "u_residual": 0.19304476419097624,
+    "v_residual": 0.11740149164138786
+  },
+  {
+    "iteration": 64,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.1919866176388325,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 0.0013276358140414946,
+    "u_residual": 0.1919866176388325,
+    "v_residual": 0.11622462813565032
+  },
+  {
+    "iteration": 65,
+    "continuity": 4.163336342344337e-17,
+    "momentum": 0.19094719927690026,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 0.0012967381869674055,
+    "u_residual": 0.19094719927690026,
+    "v_residual": 0.11503710959838961
+  },
+  {
+    "iteration": 66,
+    "continuity": 2.2551405187698492e-17,
+    "momentum": 0.18997056689288258,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 0.0012692407827301633,
+    "u_residual": 0.18997056689288258,
+    "v_residual": 0.11399230375214114
+  },
+  {
+    "iteration": 67,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.1889802491177811,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 0.0012419529633986848,
+    "u_residual": 0.1889802491177811,
+    "v_residual": 0.1129126692972825
+  },
+  {
+    "iteration": 68,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.18797895671541126,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 0.0012149103670782146,
+    "u_residual": 0.18797895671541126,
+    "v_residual": 0.11176313487861513
+  },
+  {
+    "iteration": 69,
+    "continuity": 3.122502256758253e-17,
+    "momentum": 0.1869176600515526,
+    "mass_imbalance": 1.734723475976807e-16,
+    "velocity_change": 0.001188143584523016,
+    "u_residual": 0.1869176600515526,
+    "v_residual": 0.11062021084259785
+  },
+  {
+    "iteration": 70,
+    "continuity": 2.42861286636753e-17,
+    "momentum": 0.1858299516218024,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 0.00116167867085748,
+    "u_residual": 0.18582995162180244,
+    "v_residual": 0.10950866889152643
+  },
+  {
+    "iteration": 71,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.1847579068433766,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 0.001135968141387833,
+    "u_residual": 0.1847579068433766,
+    "v_residual": 0.10839984637187991
+  },
+  {
+    "iteration": 72,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.18370639532362357,
+    "mass_imbalance": 1.734723475976807e-16,
+    "velocity_change": 0.0011135597069724668,
+    "u_residual": 0.18370639532362357,
+    "v_residual": 0.10732769642646928
+  },
+  {
+    "iteration": 73,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.1826210344334762,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 0.0010912156845734877,
+    "u_residual": 0.1826210344334762,
+    "v_residual": 0.10635565372545126
+  },
+  {
+    "iteration": 74,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.18160366670290085,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 0.0010689715968490443,
+    "u_residual": 0.18160366670290087,
+    "v_residual": 0.10532946305289062
+  },
+  {
+    "iteration": 75,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.18051124924060985,
+    "mass_imbalance": 1.3183898417423734e-16,
+    "velocity_change": 0.0010468588850605087,
+    "u_residual": 0.18051124924060985,
+    "v_residual": 0.1042414011326576
+  },
+  {
+    "iteration": 76,
+    "continuity": 2.42861286636753e-17,
+    "momentum": 0.17944105412001016,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.0010249052305374429,
+    "u_residual": 0.17944105412001016,
+    "v_residual": 0.10316219541912267
+  },
+  {
+    "iteration": 77,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.1783396928360732,
+    "mass_imbalance": 9.020562075079397e-17,
+    "velocity_change": 0.0010031348539680796,
+    "u_residual": 0.1783396928360732,
+    "v_residual": 0.10208564686658946
+  },
+  {
+    "iteration": 78,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.17721286379969844,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 0.0009839078335348583,
+    "u_residual": 0.17721286379969847,
+    "v_residual": 0.10104517126669471
+  },
+  {
+    "iteration": 79,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.17607033777522946,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 0.0009656724418225515,
+    "u_residual": 0.17607033777522946,
+    "v_residual": 0.09996112134536086
+  },
+  {
+    "iteration": 80,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.17492672534557782,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 0.0009474303102675607,
+    "u_residual": 0.17492672534557782,
+    "v_residual": 0.09897013726806941
+  },
+  {
+    "iteration": 81,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.1737771449914849,
+    "mass_imbalance": 1.1796119636642288e-16,
+    "velocity_change": 0.0009292115970868098,
+    "u_residual": 0.1737771449914849,
+    "v_residual": 0.09798369652674715
+  },
+  {
+    "iteration": 82,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.17266569049620403,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 0.0009110434902466213,
+    "u_residual": 0.17266569049620403,
+    "v_residual": 0.09699659312865008
+  },
+  {
+    "iteration": 83,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.17154729675049724,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.0008929503956491835,
+    "u_residual": 0.1715472967504972,
+    "v_residual": 0.09595002071051889
+  },
+  {
+    "iteration": 84,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.17037411260670132,
+    "mass_imbalance": 1.1796119636642288e-16,
+    "velocity_change": 0.0008749541195465227,
+    "u_residual": 0.17037411260670132,
+    "v_residual": 0.09492567141250309
+  },
+  {
+    "iteration": 85,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.16920363832774063,
+    "mass_imbalance": 9.020562075079397e-17,
+    "velocity_change": 0.0008596048992934868,
+    "u_residual": 0.1692036383277406,
+    "v_residual": 0.09390051260676877
+  },
+  {
+    "iteration": 86,
+    "continuity": 3.122502256758253e-17,
+    "momentum": 0.16801725909164014,
+    "mass_imbalance": 1.457167719820518e-16,
+    "velocity_change": 0.000844775885403104,
+    "u_residual": 0.16801725909164014,
+    "v_residual": 0.09291134000434342
+  },
+  {
+    "iteration": 87,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.16681569193748472,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 0.0008298876238271857,
+    "u_residual": 0.16681569193748474,
+    "v_residual": 0.09190727208053415
+  },
+  {
+    "iteration": 88,
+    "continuity": 1.734723475976807e-17,
+    "momentum": 0.1656453169807688,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 0.0008149657323899273,
+    "u_residual": 0.1656453169807688,
+    "v_residual": 0.09095990096968076
+  },
+  {
+    "iteration": 89,
+    "continuity": 2.42861286636753e-17,
+    "momentum": 0.1644757020928988,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 0.0008000336862189483,
+    "u_residual": 0.1644757020928988,
+    "v_residual": 0.09002353354134485
+  },
+  {
+    "iteration": 90,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.16323786965045176,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 0.0007851129269382806,
+    "u_residual": 0.16323786965045173,
+    "v_residual": 0.08906052023993827
+  },
+  {
+    "iteration": 91,
+    "continuity": 2.42861286636753e-17,
+    "momentum": 0.16193257606607764,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.0007702229722514886,
+    "u_residual": 0.16193257606607764,
+    "v_residual": 0.088059214551934
+  },
+  {
+    "iteration": 92,
+    "continuity": 2.2551405187698492e-17,
+    "momentum": 0.1606044236744715,
+    "mass_imbalance": 1.0408340855860843e-16,
+    "velocity_change": 0.0007565151708809337,
+    "u_residual": 0.1606044236744715,
+    "v_residual": 0.08704613330255785
+  },
+  {
+    "iteration": 93,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.15933621957913544,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 0.0007445352686041851,
+    "u_residual": 0.15933621957913544,
+    "v_residual": 0.08603685409414782
+  },
+  {
+    "iteration": 94,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.15804794172582753,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 0.0007324562200382578,
+    "u_residual": 0.15804794172582753,
+    "v_residual": 0.08506169948260581
+  },
+  {
+    "iteration": 95,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.15685615380749438,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 0.0007202998184729914,
+    "u_residual": 0.1568561538074944,
+    "v_residual": 0.0840967308165064
+  },
+  {
+    "iteration": 96,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.15562791244505,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 0.0007080863383056579,
+    "u_residual": 0.15562791244505,
+    "v_residual": 0.08319429570050971
+  },
+  {
+    "iteration": 97,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.15435503095915665,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 0.0006958345936306509,
+    "u_residual": 0.15435503095915662,
+    "v_residual": 0.0822806151508296
+  },
+  {
+    "iteration": 98,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.15307269550503583,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 0.0006835619994443043,
+    "u_residual": 0.15307269550503583,
+    "v_residual": 0.08137086424216874
+  },
+  {
+    "iteration": 99,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.15172948988207563,
+    "mass_imbalance": 1.0408340855860843e-16,
+    "velocity_change": 0.0006712846348269075,
+    "u_residual": 0.15172948988207563,
+    "v_residual": 0.08044854533587689
+  },
+  {
+    "iteration": 100,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.1503268899044075,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 0.0006600312204654291,
+    "u_residual": 0.15032688990440748,
+    "v_residual": 0.07948090075475538
+  },
+  {
+    "iteration": 101,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.14887215300664447,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 0.000650357027106585,
+    "u_residual": 0.14887215300664447,
+    "v_residual": 0.07851610446791062
+  },
+  {
+    "iteration": 102,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.14746160640612815,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 0.0006405720722089114,
+    "u_residual": 0.14746160640612813,
+    "v_residual": 0.07754722915372883
+  },
+  {
+    "iteration": 103,
+    "continuity": 1.734723475976807e-17,
+    "momentum": 0.14621062858649042,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 0.0006306937685752745,
+    "u_residual": 0.14621062858649042,
+    "v_residual": 0.07664024397716532
+  },
+  {
+    "iteration": 104,
+    "continuity": 1.734723475976807e-17,
+    "momentum": 0.14492565821047443,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 0.0006207385106469232,
+    "u_residual": 0.14492565821047443,
+    "v_residual": 0.07576272586783098
+  },
+  {
+    "iteration": 105,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.14359302957006742,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 0.0006107217032998991,
+    "u_residual": 0.14359302957006742,
+    "v_residual": 0.07489998763990074
+  },
+  {
+    "iteration": 106,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.14221756137169464,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 0.0006006577933371782,
+    "u_residual": 0.14221756137169467,
+    "v_residual": 0.0740667390265361
+  },
+  {
+    "iteration": 107,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.1408454914372267,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 0.0005905603032103635,
+    "u_residual": 0.1408454914372267,
+    "v_residual": 0.07319200392308697
+  },
+  {
+    "iteration": 108,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.13944886446365518,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.0005804418665388278,
+    "u_residual": 0.13944886446365518,
+    "v_residual": 0.07233021689403417
+  },
+  {
+    "iteration": 109,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.13800217980223112,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 0.0005720825351481773,
+    "u_residual": 0.13800217980223112,
+    "v_residual": 0.07146037371669643
+  },
+  {
+    "iteration": 110,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.13652195218734367,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 0.0005642489325545785,
+    "u_residual": 0.13652195218734364,
+    "v_residual": 0.0705772871739837
+  },
+  {
+    "iteration": 111,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.13511715593375537,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 0.0005563088486066903,
+    "u_residual": 0.1351171559337554,
+    "v_residual": 0.06976274662874167
+  },
+  {
+    "iteration": 112,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.1337544893372014,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.0005482756780457176,
+    "u_residual": 0.1337544893372014,
+    "v_residual": 0.06892024044341004
+  },
+  {
+    "iteration": 113,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.13236578739921293,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 0.0005401621588911887,
+    "u_residual": 0.13236578739921293,
+    "v_residual": 0.06808814580383292
+  },
+  {
+    "iteration": 114,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.13100442676376217,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 0.0005319803852158467,
+    "u_residual": 0.1310044267637622,
+    "v_residual": 0.06731450879221497
+  },
+  {
+    "iteration": 115,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.12961308612087866,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 0.0005237418219884438,
+    "u_residual": 0.12961308612087863,
+    "v_residual": 0.06658064351217138
+  },
+  {
+    "iteration": 116,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.12819020086521893,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.000515457321660362,
+    "u_residual": 0.12819020086521893,
+    "v_residual": 0.06585398617908392
+  },
+  {
+    "iteration": 117,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.12675002144923114,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 0.0005071371422395998,
+    "u_residual": 0.12675002144923114,
+    "v_residual": 0.06511331557981861
+  },
+  {
+    "iteration": 118,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.12526992582684324,
+    "mass_imbalance": 1.0408340855860843e-16,
+    "velocity_change": 0.0004996840191614504,
+    "u_residual": 0.12526992582684324,
+    "v_residual": 0.06436341327623996
+  },
+  {
+    "iteration": 119,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.12381083000496146,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 0.000493422048470249,
+    "u_residual": 0.12381083000496146,
+    "v_residual": 0.06365003128430578
+  },
+  {
+    "iteration": 120,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.12240195451957014,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 0.0004870547871629327,
+    "u_residual": 0.12240195451957017,
+    "v_residual": 0.06293234177331586
+  },
+  {
+    "iteration": 121,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.12096629330604826,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 0.00048059273642642175,
+    "u_residual": 0.12096629330604827,
+    "v_residual": 0.06217550400871186
+  },
+  {
+    "iteration": 122,
+    "continuity": 1.734723475976807e-17,
+    "momentum": 0.11959198818755065,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 0.0004740459825055554,
+    "u_residual": 0.11959198818755065,
+    "v_residual": 0.06146246588967959
+  },
+  {
+    "iteration": 123,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.11821361285112732,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 0.000467424199792732,
+    "u_residual": 0.11821361285112732,
+    "v_residual": 0.060757160443217245
+  },
+  {
+    "iteration": 124,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.11680017074449296,
+    "mass_imbalance": 9.020562075079397e-17,
+    "velocity_change": 0.0004607366554593151,
+    "u_residual": 0.11680017074449296,
+    "v_residual": 0.06012171151305586
+  },
+  {
+    "iteration": 125,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.11535358560466843,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 0.00045399221544850654,
+    "u_residual": 0.11535358560466845,
+    "v_residual": 0.05948214756298087
+  },
+  {
+    "iteration": 126,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.11393390889125586,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 0.0004471993516677042,
+    "u_residual": 0.11393390889125588,
+    "v_residual": 0.0589337758790895
+  },
+  {
+    "iteration": 127,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.11252314147698232,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.0004403661502103695,
+    "u_residual": 0.11252314147698231,
+    "v_residual": 0.05837657577303397
+  },
+  {
+    "iteration": 128,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.11110991212458726,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 0.0004341950579651588,
+    "u_residual": 0.11110991212458726,
+    "v_residual": 0.05781542693378981
+  },
+  {
+    "iteration": 129,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.10973906672391659,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 0.0004291863555935249,
+    "u_residual": 0.1097390667239166,
+    "v_residual": 0.057260789417252975
+  },
+  {
+    "iteration": 130,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.10836923919674019,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 0.00042408113332381703,
+    "u_residual": 0.10836923919674019,
+    "v_residual": 0.05668340387958369
+  },
+  {
+    "iteration": 131,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.10697211713588121,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 0.0004188874140967913,
+    "u_residual": 0.1069721171358812,
+    "v_residual": 0.05608256443955467
+  },
+  {
+    "iteration": 132,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.10558892414766688,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 0.00041361296909092626,
+    "u_residual": 0.1055889241476669,
+    "v_residual": 0.05547823232409298
+  },
+  {
+    "iteration": 133,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.1042425399837413,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 0.00040826531641791064,
+    "u_residual": 0.1042425399837413,
+    "v_residual": 0.05485263837256689
+  },
+  {
+    "iteration": 134,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.1028872832100652,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 0.0004028517208646276,
+    "u_residual": 0.10288728321006518,
+    "v_residual": 0.05420840638428247
+  },
+  {
+    "iteration": 135,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.1015256678469248,
+    "mass_imbalance": 1.5959455978986625e-16,
+    "velocity_change": 0.0003973791945677263,
+    "u_residual": 0.10152566784692482,
+    "v_residual": 0.053566417679696735
+  },
+  {
+    "iteration": 136,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.1001552698942342,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.0003918544985461736,
+    "u_residual": 0.1001552698942342,
+    "v_residual": 0.05299718927013156
+  },
+  {
+    "iteration": 137,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.09876860914072866,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 0.00038628414497843266,
+    "u_residual": 0.09876860914072866,
+    "v_residual": 0.05243470135481822
+  },
+  {
+    "iteration": 138,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.09736607883016324,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 0.0003806744001658702,
+    "u_residual": 0.09736607883016324,
+    "v_residual": 0.051875870051108844
+  },
+  {
+    "iteration": 139,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.09601705691795434,
+    "mass_imbalance": 1.3183898417423734e-16,
+    "velocity_change": 0.00037600471191279183,
+    "u_residual": 0.09601705691795433,
+    "v_residual": 0.051337890105900674
+  },
+  {
+    "iteration": 140,
+    "continuity": 4.163336342344337e-17,
+    "momentum": 0.09474620583453432,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.00037199100938167806,
+    "u_residual": 0.09474620583453432,
+    "v_residual": 0.05077256324014054
+  },
+  {
+    "iteration": 141,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.09345707417361139,
+    "mass_imbalance": 1.1796119636642288e-16,
+    "velocity_change": 0.0003678926776133906,
+    "u_residual": 0.09345707417361139,
+    "v_residual": 0.050181198072226346
+  },
+  {
+    "iteration": 142,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.09216416989850598,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 0.00036371575491933594,
+    "u_residual": 0.09216416989850595,
+    "v_residual": 0.049595350908010705
+  },
+  {
+    "iteration": 143,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.0908559535155488,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 0.00035946613230886104,
+    "u_residual": 0.0908559535155488,
+    "v_residual": 0.04898923666024883
+  },
+  {
+    "iteration": 144,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.08955174704639891,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.0003551495505942359,
+    "u_residual": 0.08955174704639891,
+    "v_residual": 0.04837426967602584
+  },
+  {
+    "iteration": 145,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.08828393315762421,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 0.0003507715981485582,
+    "u_residual": 0.08828393315762423,
+    "v_residual": 0.04776977710518413
+  },
+  {
+    "iteration": 146,
+    "continuity": 2.5587171270657905e-17,
+    "momentum": 0.087041120421538,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 0.0003463377092802755,
+    "u_residual": 0.087041120421538,
+    "v_residual": 0.047163203058288784
+  },
+  {
+    "iteration": 147,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.08578623695712331,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 0.0003418531631614874,
+    "u_residual": 0.08578623695712331,
+    "v_residual": 0.046542737951498714
+  },
+  {
+    "iteration": 148,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.08452053513231333,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 0.0003373230832679486,
+    "u_residual": 0.08452053513231333,
+    "v_residual": 0.045914639559933926
+  },
+  {
+    "iteration": 149,
+    "continuity": 1.734723475976807e-17,
+    "momentum": 0.0832496893021631,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 0.00033275243729213866,
+    "u_residual": 0.08324968930216312,
+    "v_residual": 0.04530021757513851
+  },
+  {
+    "iteration": 150,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.08199756184771724,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.00032834549095051013,
+    "u_residual": 0.08199756184771723,
+    "v_residual": 0.04468861347239915
+  },
+  {
+    "iteration": 151,
+    "continuity": 2.42861286636753e-17,
+    "momentum": 0.08082584074431726,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 0.0003251893685393137,
+    "u_residual": 0.08082584074431724,
+    "v_residual": 0.04405690388765725
+  },
+  {
+    "iteration": 152,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.07965208538100166,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.00032195642825993964,
+    "u_residual": 0.07965208538100167,
+    "v_residual": 0.04342410567655102
+  },
+  {
+    "iteration": 153,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.0784822611107638,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.0003186512689866694,
+    "u_residual": 0.0784822611107638,
+    "v_residual": 0.04278620117553118
+  },
+  {
+    "iteration": 154,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.07735746435652133,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 0.0003152784098595651,
+    "u_residual": 0.07735746435652133,
+    "v_residual": 0.04213414428110801
+  },
+  {
+    "iteration": 155,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.07622523886397775,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 0.0003118422867006698,
+    "u_residual": 0.07622523886397775,
+    "v_residual": 0.041492189855901744
+  },
+  {
+    "iteration": 156,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.07508665270846988,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 0.0003083472488621952,
+    "u_residual": 0.07508665270846988,
+    "v_residual": 0.04086090769884428
+  },
+  {
+    "iteration": 157,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.07394285924151403,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 0.00030479755647461193,
+    "u_residual": 0.07394285924151403,
+    "v_residual": 0.04023311154114277
+  },
+  {
+    "iteration": 158,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.07279874816571688,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.0003011973780738808,
+    "u_residual": 0.0727987481657169,
+    "v_residual": 0.03959418105911713
+  },
+  {
+    "iteration": 159,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.0716611893267188,
+    "mass_imbalance": 1.1796119636642288e-16,
+    "velocity_change": 0.0002975507885859541,
+    "u_residual": 0.0716611893267188,
+    "v_residual": 0.038948545963827255
+  },
+  {
+    "iteration": 160,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.07054764808754732,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.00029386176764278904,
+    "u_residual": 0.07054764808754731,
+    "v_residual": 0.03829700087489688
+  },
+  {
+    "iteration": 161,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.06943714880259416,
+    "mass_imbalance": 9.020562075079397e-17,
+    "velocity_change": 0.0002901341982053385,
+    "u_residual": 0.06943714880259416,
+    "v_residual": 0.03768538056953251
+  },
+  {
+    "iteration": 162,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.06836575261305236,
+    "mass_imbalance": 9.020562075079397e-17,
+    "velocity_change": 0.000286784820449526,
+    "u_residual": 0.06836575261305236,
+    "v_residual": 0.03706041656236596
+  },
+  {
+    "iteration": 163,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.06734942584892195,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.00028426096850142635,
+    "u_residual": 0.06734942584892196,
+    "v_residual": 0.03644139974702166
+  },
+  {
+    "iteration": 164,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.06632988157072743,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 0.0002816699238494813,
+    "u_residual": 0.06632988157072742,
+    "v_residual": 0.03582253398643365
+  },
+  {
+    "iteration": 165,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.0653106995427473,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 0.0002790151781488781,
+    "u_residual": 0.0653106995427473,
+    "v_residual": 0.03519298889443975
+  },
+  {
+    "iteration": 166,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.06430498508936341,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 0.0002763001829461098,
+    "u_residual": 0.06430498508936341,
+    "v_residual": 0.034564291106698064
+  },
+  {
+    "iteration": 167,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.06329812886287214,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 0.00027352834630856027,
+    "u_residual": 0.06329812886287214,
+    "v_residual": 0.033948193182535974
+  },
+  {
+    "iteration": 168,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.062291501797847544,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.00027070302972920235,
+    "u_residual": 0.062291501797847544,
+    "v_residual": 0.03335662757462421
+  },
+  {
+    "iteration": 169,
+    "continuity": 4.163336342344337e-17,
+    "momentum": 0.06132035568397367,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 0.0002678275452765444,
+    "u_residual": 0.06132035568397366,
+    "v_residual": 0.032755782243388834
+  },
+  {
+    "iteration": 170,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.060374235217993684,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 0.00026490515299459894,
+    "u_residual": 0.060374235217993684,
+    "v_residual": 0.0321543059829677
+  },
+  {
+    "iteration": 171,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.05942759730763374,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 0.00026193905853477695,
+    "u_residual": 0.05942759730763374,
+    "v_residual": 0.03155479028453878
+  },
+  {
+    "iteration": 172,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.05848312366841365,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 0.0002589324110038316,
+    "u_residual": 0.058483123668413656,
+    "v_residual": 0.03094778619185462
+  },
+  {
+    "iteration": 173,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.05754232267773776,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 0.00025588830103406845,
+    "u_residual": 0.057542322677737755,
+    "v_residual": 0.030390441721118485
+  },
+  {
+    "iteration": 174,
+    "continuity": 2.2551405187698492e-17,
+    "momentum": 0.05660253811144883,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 0.00025280975904162784,
+    "u_residual": 0.05660253811144883,
+    "v_residual": 0.029831759886797544
+  },
+  {
+    "iteration": 175,
+    "continuity": 4.163336342344337e-17,
+    "momentum": 0.05566690343361763,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 0.00024969975369559805,
+    "u_residual": 0.05566690343361763,
+    "v_residual": 0.029285021106713258
+  },
+  {
+    "iteration": 176,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.05485352924036717,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.0002465611905335674,
+    "u_residual": 0.05485352924036716,
+    "v_residual": 0.028741293827169875
+  },
+  {
+    "iteration": 177,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.0540444602990822,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.0002439217125749238,
+    "u_residual": 0.0540444602990822,
+    "v_residual": 0.02819334832044649
+  },
+  {
+    "iteration": 178,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.05324157984074681,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 0.00024191058858191727,
+    "u_residual": 0.05324157984074681,
+    "v_residual": 0.027644026298696445
+  },
+  {
+    "iteration": 179,
+    "continuity": 4.163336342344337e-17,
+    "momentum": 0.05243882722541573,
+    "mass_imbalance": 9.020562075079397e-17,
+    "velocity_change": 0.0002398453423744229,
+    "u_residual": 0.052438827225415735,
+    "v_residual": 0.02709982463857852
+  },
+  {
+    "iteration": 180,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.051637091005806955,
+    "mass_imbalance": 1.1796119636642288e-16,
+    "velocity_change": 0.00023772848992975604,
+    "u_residual": 0.051637091005806955,
+    "v_residual": 0.02656719112872513
+  },
+  {
+    "iteration": 181,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.05083640730492567,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 0.00023556253030987406,
+    "u_residual": 0.05083640730492567,
+    "v_residual": 0.026060616221324183
+  },
+  {
+    "iteration": 182,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.05003714379770169,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 0.00023334994300860945,
+    "u_residual": 0.0500371437977017,
+    "v_residual": 0.025556904980352374
+  },
+  {
+    "iteration": 183,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.04924410948983132,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 0.0002310931854453413,
+    "u_residual": 0.04924410948983132,
+    "v_residual": 0.025059777807668448
+  },
+  {
+    "iteration": 184,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.0484646422209596,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 0.0002287946906017746,
+    "u_residual": 0.0484646422209596,
+    "v_residual": 0.02456013384207907
+  },
+  {
+    "iteration": 185,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.04768702136323891,
+    "mass_imbalance": 1.1796119636642288e-16,
+    "velocity_change": 0.00022645686479627614,
+    "u_residual": 0.04768702136323889,
+    "v_residual": 0.024057850723042305
+  },
+  {
+    "iteration": 186,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.04691168622875676,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.00022408208559643317,
+    "u_residual": 0.04691168622875676,
+    "v_residual": 0.02361068843749202
+  },
+  {
+    "iteration": 187,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.04613907405420065,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.00022167269986439475,
+    "u_residual": 0.04613907405420065,
+    "v_residual": 0.023164657121492144
+  },
+  {
+    "iteration": 188,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.045369470302362,
+    "mass_imbalance": 1.0408340855860843e-16,
+    "velocity_change": 0.00021923102192800137,
+    "u_residual": 0.04536947030236199,
+    "v_residual": 0.022716854381721784
+  },
+  {
+    "iteration": 189,
+    "continuity": 2.3852447794681098e-17,
+    "momentum": 0.04465549187206282,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.00021675933187881302,
+    "u_residual": 0.04465549187206282,
+    "v_residual": 0.022267525212274968
+  },
+  {
+    "iteration": 190,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.04394708121481951,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 0.00021425987399303903,
+    "u_residual": 0.04394708121481951,
+    "v_residual": 0.021839954218756962
+  },
+  {
+    "iteration": 191,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.043241258469079766,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 0.0002117348552663767,
+    "u_residual": 0.043241258469079766,
+    "v_residual": 0.021413629677971703
+  },
+  {
+    "iteration": 192,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.04253833758428768,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.00020918644406453524,
+    "u_residual": 0.04253833758428769,
+    "v_residual": 0.020993663895946823
+  },
+  {
+    "iteration": 193,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.04186467670663862,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.00020661676888511504,
+    "u_residual": 0.04186467670663862,
+    "v_residual": 0.020578084179657695
+  },
+  {
+    "iteration": 194,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.041194905401593006,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 0.000204027917224181,
+    "u_residual": 0.041194905401593,
+    "v_residual": 0.020190664201434814
+  },
+  {
+    "iteration": 195,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.04052773215050014,
+    "mass_imbalance": 1.3183898417423734e-16,
+    "velocity_change": 0.00020142193454875112,
+    "u_residual": 0.04052773215050014,
+    "v_residual": 0.01980769527655872
+  },
+  {
+    "iteration": 196,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.039865263526817074,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 0.00019880082336232174,
+    "u_residual": 0.039865263526817074,
+    "v_residual": 0.019426490006669458
+  },
+  {
+    "iteration": 197,
+    "continuity": 4.163336342344337e-17,
+    "momentum": 0.03920751986503901,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.00019616654237775144,
+    "u_residual": 0.03920751986503901,
+    "v_residual": 0.01905209484137684
+  },
+  {
+    "iteration": 198,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.03855335082755835,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 0.00019352100576985887,
+    "u_residual": 0.038553350827558355,
+    "v_residual": 0.01867701770501457
+  },
+  {
+    "iteration": 199,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.037908400110734077,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 0.00019086608252794068,
+    "u_residual": 0.037908400110734077,
+    "v_residual": 0.018301636143736803
+  },
+  {
+    "iteration": 200,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.03726697132788803,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 0.00018820359588722635,
+    "u_residual": 0.03726697132788803,
+    "v_residual": 0.01796446346871996
+  },
+  {
+    "iteration": 201,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.03662920897337608,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 0.00018553532284681928,
+    "u_residual": 0.03662920897337608,
+    "v_residual": 0.01764636314844728
+  },
+  {
+    "iteration": 202,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.0359952046114867,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 0.0001828629937656867,
+    "u_residual": 0.035995204611486704,
+    "v_residual": 0.017327777834234094
+  },
+  {
+    "iteration": 203,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.03537019474336039,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 0.00018018829203625408,
+    "u_residual": 0.03537019474336039,
+    "v_residual": 0.01700918596561172
+  },
+  {
+    "iteration": 204,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.034756457219969554,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 0.00017751285382971993,
+    "u_residual": 0.034756457219969554,
+    "v_residual": 0.016691505104008172
+  },
+  {
+    "iteration": 205,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.03414656355378789,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.0001748382679120919,
+    "u_residual": 0.03414656355378788,
+    "v_residual": 0.016374893230319532
+  },
+  {
+    "iteration": 206,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.033540789638681845,
+    "mass_imbalance": 9.020562075079397e-17,
+    "velocity_change": 0.00017216607552816843,
+    "u_residual": 0.03354078963868184,
+    "v_residual": 0.01605905390713982
+  },
+  {
+    "iteration": 207,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.03293939496198385,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 0.0001694977703503575,
+    "u_residual": 0.03293939496198385,
+    "v_residual": 0.015750883675267197
+  },
+  {
+    "iteration": 208,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.03234279878344713,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 0.00016683479848911276,
+    "u_residual": 0.03234279878344713,
+    "v_residual": 0.01545200630271885
+  },
+  {
+    "iteration": 209,
+    "continuity": 2.6020852139652106e-17,
+    "momentum": 0.03175088212482342,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 0.00016417855856154517,
+    "u_residual": 0.03175088212482341,
+    "v_residual": 0.015182873503265408
+  },
+  {
+    "iteration": 210,
+    "continuity": 1.9081958235744878e-17,
+    "momentum": 0.031163843994811955,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 0.00016153040181432488,
+    "u_residual": 0.03116384399481195,
+    "v_residual": 0.014913371219728331
+  },
+  {
+    "iteration": 211,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.030581865936812294,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 0.00015889163230686787,
+    "u_residual": 0.030581865936812294,
+    "v_residual": 0.014647587668814872
+  },
+  {
+    "iteration": 212,
+    "continuity": 2.47198095326695e-17,
+    "momentum": 0.030005125659524214,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 0.00015626350713826564,
+    "u_residual": 0.030005125659524217,
+    "v_residual": 0.014386740004076838
+  },
+  {
+    "iteration": 213,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.029433835484669345,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 0.00015364723672683933,
+    "u_residual": 0.029433835484669345,
+    "v_residual": 0.014126164762778932
+  },
+  {
+    "iteration": 214,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.02886812027833048,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.0001510439851357681,
+    "u_residual": 0.028868120278330474,
+    "v_residual": 0.013865722486137964
+  },
+  {
+    "iteration": 215,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.028308152180423613,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 0.00014845487044079508,
+    "u_residual": 0.028308152180423617,
+    "v_residual": 0.013605634185141411
+  },
+  {
+    "iteration": 216,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.02775406330169064,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 0.0001458809651401216,
+    "u_residual": 0.02775406330169064,
+    "v_residual": 0.013346150958627269
+  },
+  {
+    "iteration": 217,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.0272212638717805,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 0.00014332329660515786,
+    "u_residual": 0.027221263871780504,
+    "v_residual": 0.013087477655771916
+  },
+  {
+    "iteration": 218,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.026699378314797496,
+    "mass_imbalance": 1.0408340855860843e-16,
+    "velocity_change": 0.00014078284756524617,
+    "u_residual": 0.026699378314797493,
+    "v_residual": 0.012829865945522639
+  },
+  {
+    "iteration": 219,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.026182861389682816,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 0.00013826055663124226,
+    "u_residual": 0.026182861389682816,
+    "v_residual": 0.012573480017102373
+  },
+  {
+    "iteration": 220,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.025671802133375294,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 0.00013575731884674092,
+    "u_residual": 0.025671802133375297,
+    "v_residual": 0.01231895981416076
+  },
+  {
+    "iteration": 221,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.025166296626102418,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 0.00013327398627660525,
+    "u_residual": 0.025166296626102418,
+    "v_residual": 0.012066486006105891
+  },
+  {
+    "iteration": 222,
+    "continuity": 2.42861286636753e-17,
+    "momentum": 0.024666453833049024,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.00013081136861592402,
+    "u_residual": 0.02466645383304902,
+    "v_residual": 0.011815719529015258
+  },
+  {
+    "iteration": 223,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.024176511748675626,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 0.0001283702338350512,
+    "u_residual": 0.024176511748675626,
+    "v_residual": 0.011568483467166312
+  },
+  {
+    "iteration": 224,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.02369335285067781,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.00012595130884440753,
+    "u_residual": 0.023693352850677814,
+    "v_residual": 0.011333789204685087
+  },
+  {
+    "iteration": 225,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.02321580685174887,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 0.00012355528018115347,
+    "u_residual": 0.023215806851748864,
+    "v_residual": 0.011130161597673948
+  },
+  {
+    "iteration": 226,
+    "continuity": 2.42861286636753e-17,
+    "momentum": 0.022744016639195237,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 0.00012118279472117521,
+    "u_residual": 0.022744016639195237,
+    "v_residual": 0.01092692026352655
+  },
+  {
+    "iteration": 227,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.022278026483345686,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 0.00011883446040850121,
+    "u_residual": 0.022278026483345686,
+    "v_residual": 0.01072758329133968
+  },
+  {
+    "iteration": 228,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.021817917972645474,
+    "mass_imbalance": 1.0408340855860843e-16,
+    "velocity_change": 0.00011651084700403658,
+    "u_residual": 0.021817917972645467,
+    "v_residual": 0.010532444199714035
+  },
+  {
+    "iteration": 229,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.0213637270385899,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 0.00011421248684873042,
+    "u_residual": 0.0213637270385899,
+    "v_residual": 0.010338528988759293
+  },
+  {
+    "iteration": 230,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.02091556274164176,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 0.00011193987564328545,
+    "u_residual": 0.02091556274164176,
+    "v_residual": 0.010145175251173562
+  },
+  {
+    "iteration": 231,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.020473484010526292,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 0.00010969347324163436,
+    "u_residual": 0.02047348401052629,
+    "v_residual": 0.009952679623487799
+  },
+  {
+    "iteration": 232,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.02004337815536241,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 0.00010747370445274296,
+    "u_residual": 0.02004337815536241,
+    "v_residual": 0.009760990594311517
+  },
+  {
+    "iteration": 233,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.01962106379954215,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 0.00010528095985740116,
+    "u_residual": 0.01962106379954215,
+    "v_residual": 0.00957025010254094
+  },
+  {
+    "iteration": 234,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.019204512159913308,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 0.0001031155966323416,
+    "u_residual": 0.019204512159913305,
+    "v_residual": 0.009380645007610355
+  },
+  {
+    "iteration": 235,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.018793768711179375,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 0.00010097793937824395,
+    "u_residual": 0.018793768711179375,
+    "v_residual": 0.00919227114596849
+  },
+  {
+    "iteration": 236,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.018388938818084816,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 9.886828096006273e-05,
+    "u_residual": 0.018388938818084816,
+    "v_residual": 0.00900524281087486
+  },
+  {
+    "iteration": 237,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.0179900129219981,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 9.678688334935348e-05,
+    "u_residual": 0.0179900129219981,
+    "v_residual": 0.008819871644748224
+  },
+  {
+    "iteration": 238,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.017596993672379855,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 9.473397846948561e-05,
+    "u_residual": 0.01759699367237986,
+    "v_residual": 0.008636371909664617
+  },
+  {
+    "iteration": 239,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.017209903797262963,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 9.270976904418582e-05,
+    "u_residual": 0.017209903797262963,
+    "v_residual": 0.00845449402122628
+  },
+  {
+    "iteration": 240,
+    "continuity": 3.122502256758253e-17,
+    "momentum": 0.0168287607596057,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 9.071442944996733e-05,
+    "u_residual": 0.0168287607596057,
+    "v_residual": 0.00827433138913056
+  },
+  {
+    "iteration": 241,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.016453581423961708,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 8.87481065648954e-05,
+    "u_residual": 0.016453581423961708,
+    "v_residual": 0.008095979576923673
+  },
+  {
+    "iteration": 242,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.016084428429394067,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 8.68109206195733e-05,
+    "u_residual": 0.016084428429394067,
+    "v_residual": 0.007931856207873957
+  },
+  {
+    "iteration": 243,
+    "continuity": 2.42861286636753e-17,
+    "momentum": 0.015721241385664567,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 8.49029660456857e-05,
+    "u_residual": 0.015721241385664563,
+    "v_residual": 0.007794182490693532
+  },
+  {
+    "iteration": 244,
+    "continuity": 2.42861286636753e-17,
+    "momentum": 0.015364018465692342,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 8.302431232032337e-05,
+    "u_residual": 0.01536401846569234,
+    "v_residual": 0.00765839007488371
+  },
+  {
+    "iteration": 245,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.015012753449779466,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 8.117500480919748e-05,
+    "u_residual": 0.015012753449779466,
+    "v_residual": 0.007527319835663363
+  },
+  {
+    "iteration": 246,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.014667510278739509,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 7.935506560341477e-05,
+    "u_residual": 0.014667510278739509,
+    "v_residual": 0.007397147821893978
+  },
+  {
+    "iteration": 247,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.01432822816416036,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 7.756449435158963e-05,
+    "u_residual": 0.01432822816416036,
+    "v_residual": 0.007267484036581037
+  },
+  {
+    "iteration": 248,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.013994858635957452,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 7.580326908585011e-05,
+    "u_residual": 0.01399485863595745,
+    "v_residual": 0.007138171391247925
+  },
+  {
+    "iteration": 249,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.013667379203119806,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 7.407134703918405e-05,
+    "u_residual": 0.01366737920311981,
+    "v_residual": 0.007009249110076452
+  },
+  {
+    "iteration": 250,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.013345763790299872,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 7.236866545812237e-05,
+    "u_residual": 0.01334576379029987,
+    "v_residual": 0.006880799343696662
+  },
+  {
+    "iteration": 251,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.013029982897821944,
+    "mass_imbalance": 1.5959455978986625e-16,
+    "velocity_change": 7.069514240232166e-05,
+    "u_residual": 0.013029982897821946,
+    "v_residual": 0.006752914143847308
+  },
+  {
+    "iteration": 252,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.01272001658523094,
+    "mass_imbalance": 9.020562075079397e-17,
+    "velocity_change": 6.905067754114924e-05,
+    "u_residual": 0.012720016585230937,
+    "v_residual": 0.006625740604235178
+  },
+  {
+    "iteration": 253,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.012415895681107767,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 6.743515293239355e-05,
+    "u_residual": 0.012415895681107767,
+    "v_residual": 0.0064993386310263235
+  },
+  {
+    "iteration": 254,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.01211751988251952,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 6.584843379908722e-05,
+    "u_residual": 0.01211751988251952,
+    "v_residual": 0.006373764665679705
+  },
+  {
+    "iteration": 255,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.011824823963152736,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 6.429036928901066e-05,
+    "u_residual": 0.011824823963152736,
+    "v_residual": 0.006249151986748751
+  },
+  {
+    "iteration": 256,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.011537766787266049,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 6.27607932243146e-05,
+    "u_residual": 0.011537766787266049,
+    "v_residual": 0.006125718765094167
+  },
+  {
+    "iteration": 257,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.011256971168758493,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 6.125952484092867e-05,
+    "u_residual": 0.011256971168758493,
+    "v_residual": 0.006003340880771785
+  },
+  {
+    "iteration": 258,
+    "continuity": 2.42861286636753e-17,
+    "momentum": 0.010982652613177213,
+    "mass_imbalance": 9.020562075079397e-17,
+    "velocity_change": 5.978636951231575e-05,
+    "u_residual": 0.010982652613177213,
+    "v_residual": 0.005882003501798787
+  },
+  {
+    "iteration": 259,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.010713861932272759,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 5.8341119463345414e-05,
+    "u_residual": 0.01071386193227276,
+    "v_residual": 0.005761777807040398
+  },
+  {
+    "iteration": 260,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.010450451939599785,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 5.692355446795805e-05,
+    "u_residual": 0.010450451939599783,
+    "v_residual": 0.005642696242258061
+  },
+  {
+    "iteration": 261,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.010192324350509915,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 5.553344253517167e-05,
+    "u_residual": 0.010192324350509919,
+    "v_residual": 0.005524857917793677
+  },
+  {
+    "iteration": 262,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.009939386141300952,
+    "mass_imbalance": 9.020562075079397e-17,
+    "velocity_change": 5.41705405794346e-05,
+    "u_residual": 0.009939386141300952,
+    "v_residual": 0.005411524392373046
+  },
+  {
+    "iteration": 263,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.00969158113217233,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 5.283459507887667e-05,
+    "u_residual": 0.00969158113217233,
+    "v_residual": 0.005305228954017698
+  },
+  {
+    "iteration": 264,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.009448856370785604,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 5.152534271402054e-05,
+    "u_residual": 0.009448856370785606,
+    "v_residual": 0.005202544395866765
+  },
+  {
+    "iteration": 265,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.009211159747342703,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 5.0242510999054524e-05,
+    "u_residual": 0.009211159747342703,
+    "v_residual": 0.005100975389370868
+  },
+  {
+    "iteration": 266,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.008978430690159266,
+    "mass_imbalance": 1.1796119636642288e-16,
+    "velocity_change": 4.8985818890456834e-05,
+    "u_residual": 0.008978430690159266,
+    "v_residual": 0.00500030456768949
+  },
+  {
+    "iteration": 267,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.008750620636926096,
+    "mass_imbalance": 1.0408340855860843e-16,
+    "velocity_change": 4.7754977385960906e-05,
+    "u_residual": 0.008750620636926096,
+    "v_residual": 0.0049003752605065055
+  },
+  {
+    "iteration": 268,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.008527736307037249,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 4.654969010209342e-05,
+    "u_residual": 0.00852773630703725,
+    "v_residual": 0.004801241765963048
+  },
+  {
+    "iteration": 269,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.008309637734031193,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 4.536965384582814e-05,
+    "u_residual": 0.008309637734031192,
+    "v_residual": 0.004702978653813075
+  },
+  {
+    "iteration": 270,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.008096266160387736,
+    "mass_imbalance": 9.020562075079397e-17,
+    "velocity_change": 4.421455915781802e-05,
+    "u_residual": 0.008096266160387736,
+    "v_residual": 0.004605644688508624
+  },
+  {
+    "iteration": 271,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.007887554851729747,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 4.308409085185261e-05,
+    "u_residual": 0.007887554851729747,
+    "v_residual": 0.004509247516474567
+  },
+  {
+    "iteration": 272,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.007683440011704099,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 4.197792852878024e-05,
+    "u_residual": 0.0076834400117041,
+    "v_residual": 0.004413901432060961
+  },
+  {
+    "iteration": 273,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.007483858122532815,
+    "mass_imbalance": 9.020562075079397e-17,
+    "velocity_change": 4.089574708299182e-05,
+    "u_residual": 0.007483858122532815,
+    "v_residual": 0.004319715919147027
+  },
+  {
+    "iteration": 274,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.0072887431411356235,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 3.983721718725519e-05,
+    "u_residual": 0.0072887431411356235,
+    "v_residual": 0.004226585970445177
+  },
+  {
+    "iteration": 275,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.00709803341002349,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 3.88020057623395e-05,
+    "u_residual": 0.00709803341002349,
+    "v_residual": 0.004134536443996187
+  },
+  {
+    "iteration": 276,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.006911660542232325,
+    "mass_imbalance": 1.3183898417423734e-16,
+    "velocity_change": 3.7789776434871136e-05,
+    "u_residual": 0.006911660542232324,
+    "v_residual": 0.004043604787817999
+  },
+  {
+    "iteration": 277,
+    "continuity": 4.85722573273506e-17,
+    "momentum": 0.006729555020856035,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 3.680018997542778e-05,
+    "u_residual": 0.006729555020856034,
+    "v_residual": 0.0039538821818540576
+  },
+  {
+    "iteration": 278,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.006551652314502852,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 3.583290472297662e-05,
+    "u_residual": 0.006551652314502852,
+    "v_residual": 0.0038653216411226707
+  },
+  {
+    "iteration": 279,
+    "continuity": 3.122502256758253e-17,
+    "momentum": 0.0063778854684060585,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 3.488757699277034e-05,
+    "u_residual": 0.0063778854684060585,
+    "v_residual": 0.0037779371694866845
+  },
+  {
+    "iteration": 280,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.006208187978121243,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 3.396386146936603e-05,
+    "u_residual": 0.006208187978121243,
+    "v_residual": 0.0036936781591815665
+  },
+  {
+    "iteration": 281,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.006042488443472258,
+    "mass_imbalance": 1.734723475976807e-16,
+    "velocity_change": 3.306141158698761e-05,
+    "u_residual": 0.006042488443472258,
+    "v_residual": 0.003612987970410139
+  },
+  {
+    "iteration": 282,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.00588083067362522,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 3.2179879890681384e-05,
+    "u_residual": 0.00588083067362522,
+    "v_residual": 0.0035332709347272086
+  },
+  {
+    "iteration": 283,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.005723058809511745,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 3.131891838148437e-05,
+    "u_residual": 0.0057230588095117454,
+    "v_residual": 0.0034545524599604313
+  },
+  {
+    "iteration": 284,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.005569109679190323,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 3.047817885759585e-05,
+    "u_residual": 0.005569109679190322,
+    "v_residual": 0.00337867855785222
+  },
+  {
+    "iteration": 285,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.005418885912021007,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 2.9657313226905124e-05,
+    "u_residual": 0.005418885912021007,
+    "v_residual": 0.003303831660061347
+  },
+  {
+    "iteration": 286,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.005272321866015197,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 2.8855973814412295e-05,
+    "u_residual": 0.005272321866015197,
+    "v_residual": 0.003229913953651521
+  },
+  {
+    "iteration": 287,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.005129348041987442,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 2.807381365299566e-05,
+    "u_residual": 0.005129348041987442,
+    "v_residual": 0.0031569477134601857
+  },
+  {
+    "iteration": 288,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.004989894824067762,
+    "mass_imbalance": 9.020562075079397e-17,
+    "velocity_change": 2.7310486761633612e-05,
+    "u_residual": 0.004989894824067762,
+    "v_residual": 0.0030849529682533076
+  },
+  {
+    "iteration": 289,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.004853894120204661,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 2.6565648407417264e-05,
+    "u_residual": 0.004853894120204661,
+    "v_residual": 0.0030140629247939438
+  },
+  {
+    "iteration": 290,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.004721279612509559,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 2.583895535801517e-05,
+    "u_residual": 0.004721279612509559,
+    "v_residual": 0.0029442439699794826
+  },
+  {
+    "iteration": 291,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.004591986401750367,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 2.5130066117595717e-05,
+    "u_residual": 0.004591986401750367,
+    "v_residual": 0.002875454317268313
+  },
+  {
+    "iteration": 292,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.0044661181819930906,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 2.4438641154311824e-05,
+    "u_residual": 0.00446611818199309,
+    "v_residual": 0.002807685457853829
+  },
+  {
+    "iteration": 293,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.0043434343880190355,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 2.3764343109800024e-05,
+    "u_residual": 0.004343434388019036,
+    "v_residual": 0.002740950348575483
+  },
+  {
+    "iteration": 294,
+    "continuity": 2.949029909160572e-17,
+    "momentum": 0.004223866029996073,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 2.310683700434968e-05,
+    "u_residual": 0.004223866029996073,
+    "v_residual": 0.0026752637339164105
+  },
+  {
+    "iteration": 295,
+    "continuity": 4.163336342344337e-17,
+    "momentum": 0.004107352737099561,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 2.2465790420755916e-05,
+    "u_residual": 0.004107352737099561,
+    "v_residual": 0.002610630599173006
+  },
+  {
+    "iteration": 296,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.003993828773985475,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 2.1840873685730067e-05,
+    "u_residual": 0.003993828773985475,
+    "v_residual": 0.0025470803477445187
+  },
+  {
+    "iteration": 297,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.0038832332163553918,
+    "mass_imbalance": 9.020562075079397e-17,
+    "velocity_change": 2.1231760034767788e-05,
+    "u_residual": 0.0038832332163553926,
+    "v_residual": 0.0024846396837624692
+  },
+  {
+    "iteration": 298,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.0037755575730323574,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 2.063812576835744e-05,
+    "u_residual": 0.0037755575730323574,
+    "v_residual": 0.0024233010488365924
+  },
+  {
+    "iteration": 299,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.0036707378691520354,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 2.0059650394088635e-05,
+    "u_residual": 0.003670737869152036,
+    "v_residual": 0.0023630713792136084
+  },
+  {
+    "iteration": 300,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.0035686531978283424,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 1.949601676776158e-05,
+    "u_residual": 0.0035686531978283424,
+    "v_residual": 0.0023039157295395665
+  },
+  {
+    "iteration": 301,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.003469238845603245,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 1.894691121118175e-05,
+    "u_residual": 0.0034692388456032458,
+    "v_residual": 0.002245831009123629
+  },
+  {
+    "iteration": 302,
+    "continuity": 1.734723475976807e-17,
+    "momentum": 0.003372442089046534,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 1.8412023632508046e-05,
+    "u_residual": 0.0033724420890465347,
+    "v_residual": 0.0021888193875338716
+  },
+  {
+    "iteration": 303,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.00327820890477995,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 1.7891047629725598e-05,
+    "u_residual": 0.00327820890477995,
+    "v_residual": 0.00213287500969753
+  },
+  {
+    "iteration": 304,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.0031864753283253958,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 1.738368058956663e-05,
+    "u_residual": 0.0031864753283253958,
+    "v_residual": 0.0020780505453611587
+  },
+  {
+    "iteration": 305,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.0030971795792457202,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 1.688962377399683e-05,
+    "u_residual": 0.0030971795792457202,
+    "v_residual": 0.0020242913986115527
+  },
+  {
+    "iteration": 306,
+    "continuity": 1.9081958235744878e-17,
+    "momentum": 0.0030102672577589336,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 1.640858240314902e-05,
+    "u_residual": 0.0030102672577589336,
+    "v_residual": 0.001971590246158267
+  },
+  {
+    "iteration": 307,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.0029257007840368,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 1.594026572337981e-05,
+    "u_residual": 0.0029257007840368,
+    "v_residual": 0.0019199903740609791
+  },
+  {
+    "iteration": 308,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.002843409408293554,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 1.548438707732469e-05,
+    "u_residual": 0.002843409408293554,
+    "v_residual": 0.0018694365499798006
+  },
+  {
+    "iteration": 309,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.0027633361041532766,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 1.5040663955301348e-05,
+    "u_residual": 0.0027633361041532766,
+    "v_residual": 0.00181994028545081
+  },
+  {
+    "iteration": 310,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.0026854313812071516,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 1.4608818048933436e-05,
+    "u_residual": 0.0026854313812071516,
+    "v_residual": 0.0017714829010764478
+  },
+  {
+    "iteration": 311,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.002609643673046786,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 1.4188575292228833e-05,
+    "u_residual": 0.002609643673046786,
+    "v_residual": 0.0017240645080457136
+  },
+  {
+    "iteration": 312,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.002535925876959333,
+    "mass_imbalance": 1.5959455978986625e-16,
+    "velocity_change": 1.3779665899549265e-05,
+    "u_residual": 0.002535925876959333,
+    "v_residual": 0.0016777030617976686
+  },
+  {
+    "iteration": 313,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.002464236652727516,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 1.3381824395475306e-05,
+    "u_residual": 0.002464236652727516,
+    "v_residual": 0.00163234253794996
+  },
+  {
+    "iteration": 314,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.0023945130249083783,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 1.2994789637454929e-05,
+    "u_residual": 0.0023945130249083783,
+    "v_residual": 0.0015879741088615149
+  },
+  {
+    "iteration": 315,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.002326706286267538,
+    "mass_imbalance": 1.457167719820518e-16,
+    "velocity_change": 1.261830483678672e-05,
+    "u_residual": 0.002326706286267538,
+    "v_residual": 0.0015445902179200464
+  },
+  {
+    "iteration": 316,
+    "continuity": 2.42861286636753e-17,
+    "momentum": 0.002260770248647072,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 1.2252117571054377e-05,
+    "u_residual": 0.002260770248647072,
+    "v_residual": 0.0015021763496093621
+  },
+  {
+    "iteration": 317,
+    "continuity": 2.42861286636753e-17,
+    "momentum": 0.0021966796661682664,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 1.189597979045498e-05,
+    "u_residual": 0.0021966796661682664,
+    "v_residual": 0.001460721605793998
+  },
+  {
+    "iteration": 318,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.002134371143425704,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 1.1549647823572151e-05,
+    "u_residual": 0.0021343711434257035,
+    "v_residual": 0.0014202168615556798
+  },
+  {
+    "iteration": 319,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.0020737913277492004,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 1.121288237282414e-05,
+    "u_residual": 0.002073791327749201,
+    "v_residual": 0.0013806506913721422
+  },
+  {
+    "iteration": 320,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.0020149007679151855,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 1.0885448511910312e-05,
+    "u_residual": 0.0020149007679151855,
+    "v_residual": 0.0013420193753520195
+  },
+  {
+    "iteration": 321,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.0019576728194741,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 1.0567115671822336e-05,
+    "u_residual": 0.0019576728194741,
+    "v_residual": 0.0013043301006896374
+  },
+  {
+    "iteration": 322,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.0019020438114577451,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 1.0257657628742756e-05,
+    "u_residual": 0.0019020438114577456,
+    "v_residual": 0.0012675731095114018
+  },
+  {
+    "iteration": 323,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.0018479730014422397,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 9.956852485726309e-06,
+    "u_residual": 0.0018479730014422397,
+    "v_residual": 0.0012317296071116255
+  },
+  {
+    "iteration": 324,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.001795420122564186,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 9.664482651938755e-06,
+    "u_residual": 0.0017954201225641863,
+    "v_residual": 0.0011967752129854441
+  },
+  {
+    "iteration": 325,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.001744349640114935,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 9.380334815567437e-06,
+    "u_residual": 0.001744349640114935,
+    "v_residual": 0.001162680364430793
+  },
+  {
+    "iteration": 326,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.0016947316685324582,
+    "mass_imbalance": 1.0408340855860843e-16,
+    "velocity_change": 9.104199919174327e-06,
+    "u_residual": 0.0016947316685324582,
+    "v_residual": 0.0011294251124592072
+  },
+  {
+    "iteration": 327,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.0016465173990204006,
+    "mass_imbalance": 9.020562075079397e-17,
+    "velocity_change": 8.835873125834226e-06,
+    "u_residual": 0.0016465173990204006,
+    "v_residual": 0.0010969967538007905
+  },
+  {
+    "iteration": 328,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.001599668152236249,
+    "mass_imbalance": 1.0408340855860843e-16,
+    "velocity_change": 8.575153787049317e-06,
+    "u_residual": 0.0015996681522362488,
+    "v_residual": 0.00106538176342221
+  },
+  {
+    "iteration": 329,
+    "continuity": 2.42861286636753e-17,
+    "momentum": 0.0015541487812487187,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 8.321845407999184e-06,
+    "u_residual": 0.0015541487812487187,
+    "v_residual": 0.0010346063335966607
+  },
+  {
+    "iteration": 330,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.0015099228153347564,
+    "mass_imbalance": 9.020562075079397e-17,
+    "velocity_change": 8.07575560579643e-06,
+    "u_residual": 0.0015099228153347564,
+    "v_residual": 0.0010046176847358329
+  },
+  {
+    "iteration": 331,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.0014669595233053178,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 7.83669607262727e-06,
+    "u_residual": 0.0014669595233053178,
+    "v_residual": 0.0009754043668508878
+  },
+  {
+    "iteration": 332,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.0014252394847007125,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 7.60448252967727e-06,
+    "u_residual": 0.0014252394847007127,
+    "v_residual": 0.0009469451254960098
+  },
+  {
+    "iteration": 333,
+    "continuity": 3.122502256758253e-17,
+    "momentum": 0.0013847086023951658,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 7.3789346862751515e-06,
+    "u_residual": 0.0013847086023951658,
+    "v_residual": 0.0009192247784486336
+  },
+  {
+    "iteration": 334,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.0013453403581526135,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 7.159876189932746e-06,
+    "u_residual": 0.0013453403581526135,
+    "v_residual": 0.0008922301037720901
+  },
+  {
+    "iteration": 335,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.001307100276270376,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 6.947134581380965e-06,
+    "u_residual": 0.0013071002762703762,
+    "v_residual": 0.0008659477938194196
+  },
+  {
+    "iteration": 336,
+    "continuity": 4.163336342344337e-17,
+    "momentum": 0.00126996087333887,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 6.740541244942833e-06,
+    "u_residual": 0.00126996087333887,
+    "v_residual": 0.0008403640860713928
+  },
+  {
+    "iteration": 337,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.0012338925797320652,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 6.539931357019135e-06,
+    "u_residual": 0.0012338925797320652,
+    "v_residual": 0.0008154676915381283
+  },
+  {
+    "iteration": 338,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.0011988585895153139,
+    "mass_imbalance": 1.1796119636642288e-16,
+    "velocity_change": 6.345143836128386e-06,
+    "u_residual": 0.0011988585895153139,
+    "v_residual": 0.0007913125192291425
+  },
+  {
+    "iteration": 339,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.0011648320369535303,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 6.156021287395674e-06,
+    "u_residual": 0.0011648320369535303,
+    "v_residual": 0.0007678637221244746
+  },
+  {
+    "iteration": 340,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.0011318045077597504,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 5.972409954368985e-06,
+    "u_residual": 0.0011318045077597504,
+    "v_residual": 0.0007450525243472847
+  },
+  {
+    "iteration": 341,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.0010997883999789432,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 5.7941596591781774e-06,
+    "u_residual": 0.0010997883999789432,
+    "v_residual": 0.0007228657632225708
+  },
+  {
+    "iteration": 342,
+    "continuity": 2.1250362580715887e-17,
+    "momentum": 0.0010686910891829242,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 5.621123750243484e-06,
+    "u_residual": 0.0010686910891829242,
+    "v_residual": 0.0007012878241331624
+  },
+  {
+    "iteration": 343,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.0010384871637834508,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 5.453159045765155e-06,
+    "u_residual": 0.0010384871637834508,
+    "v_residual": 0.0006803039624672118
+  },
+  {
+    "iteration": 344,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.0010092314591710957,
+    "mass_imbalance": 9.020562075079397e-17,
+    "velocity_change": 5.290125779544574e-06,
+    "u_residual": 0.0010092314591710957,
+    "v_residual": 0.000659903461886699
+  },
+  {
+    "iteration": 345,
+    "continuity": 2.6020852139652106e-17,
+    "momentum": 0.0009808576084978805,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 5.131887542253466e-06,
+    "u_residual": 0.0009808576084978805,
+    "v_residual": 0.0006400744186546508
+  },
+  {
+    "iteration": 346,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.0009532978107373714,
+    "mass_imbalance": 1.3183898417423734e-16,
+    "velocity_change": 4.978311225478649e-06,
+    "u_residual": 0.0009532978107373714,
+    "v_residual": 0.0006208018772385543
+  },
+  {
+    "iteration": 347,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.0009265290164152067,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 4.829266965322709e-06,
+    "u_residual": 0.0009265290164152067,
+    "v_residual": 0.0006020750812543542
+  },
+  {
+    "iteration": 348,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.0009005320580108268,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 4.684628084339337e-06,
+    "u_residual": 0.0009005320580108267,
+    "v_residual": 0.0005838805827031784
+  },
+  {
+    "iteration": 349,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.0008753106157346211,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 4.544271034245817e-06,
+    "u_residual": 0.0008753106157346211,
+    "v_residual": 0.0005662085301580385
+  },
+  {
+    "iteration": 350,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.000850812848454875,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 4.408075340855966e-06,
+    "u_residual": 0.0008508128484548749,
+    "v_residual": 0.0005490428261252136
+  },
+  {
+    "iteration": 351,
+    "continuity": 2.949029909160572e-17,
+    "momentum": 0.0008270181244561328,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 4.275923542795823e-06,
+    "u_residual": 0.0008270181244561328,
+    "v_residual": 0.0005323726135736015
+  },
+  {
+    "iteration": 352,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.0008039067670000632,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 4.147701138768056e-06,
+    "u_residual": 0.0008039067670000634,
+    "v_residual": 0.0005161880791092022
+  },
+  {
+    "iteration": 353,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.0007814756892690181,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 4.023296527377873e-06,
+    "u_residual": 0.0007814756892690182,
+    "v_residual": 0.0005005193052255586
+  },
+  {
+    "iteration": 354,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.000759708294909585,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 3.902600952843116e-06,
+    "u_residual": 0.000759708294909585,
+    "v_residual": 0.0004853068362530596
+  },
+  {
+    "iteration": 355,
+    "continuity": 2.949029909160572e-17,
+    "momentum": 0.000738565419886719,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 3.7855084472626643e-06,
+    "u_residual": 0.000738565419886719,
+    "v_residual": 0.0004705390306881102
+  },
+  {
+    "iteration": 356,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.0007180279291194849,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 3.671915774550172e-06,
+    "u_residual": 0.0007180279291194848,
+    "v_residual": 0.0004562208453401767
+  },
+  {
+    "iteration": 357,
+    "continuity": 1.734723475976807e-17,
+    "momentum": 0.0006980783738456309,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 3.561722376255183e-06,
+    "u_residual": 0.0006980783738456309,
+    "v_residual": 0.000442322780630755
+  },
+  {
+    "iteration": 358,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.00067869978105443,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 3.454830313831536e-06,
+    "u_residual": 0.00067869978105443,
+    "v_residual": 0.00042883467348696813
+  },
+  {
+    "iteration": 359,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.0006598777287073728,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 3.3511442161238136e-06,
+    "u_residual": 0.0006598777287073728,
+    "v_residual": 0.00041577533649174696
+  },
+  {
+    "iteration": 360,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.0006415993209402378,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 3.2505712244113028e-06,
+    "u_residual": 0.0006415993209402377,
+    "v_residual": 0.0004031114037039224
+  },
+  {
+    "iteration": 361,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.0006238474155113824,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 3.1530209380070673e-06,
+    "u_residual": 0.0006238474155113823,
+    "v_residual": 0.00039082702843867156
+  },
+  {
+    "iteration": 362,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.0006066024890616143,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 3.0584053614113316e-06,
+    "u_residual": 0.0006066024890616143,
+    "v_residual": 0.00037891324082423114
+  },
+  {
+    "iteration": 363,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.0005898498568673832,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 2.96663885268611e-06,
+    "u_residual": 0.0005898498568673832,
+    "v_residual": 0.0003673578972170257
+  },
+  {
+    "iteration": 364,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.0005735753048819422,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 2.877638068721211e-06,
+    "u_residual": 0.0005735753048819421,
+    "v_residual": 0.0003561514402596931
+  },
+  {
+    "iteration": 365,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.0005577652105975177,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 2.7913219177166937e-06,
+    "u_residual": 0.0005577652105975177,
+    "v_residual": 0.00034528241837040443
+  },
+  {
+    "iteration": 366,
+    "continuity": 4.163336342344337e-17,
+    "momentum": 0.0005424055628879393,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 2.707611504670915e-06,
+    "u_residual": 0.0005424055628879393,
+    "v_residual": 0.00033474231539508593
+  },
+  {
+    "iteration": 367,
+    "continuity": 2.3852447794681098e-17,
+    "momentum": 0.0005274832441465413,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 2.626430083085829e-06,
+    "u_residual": 0.0005274832441465413,
+    "v_residual": 0.0003245203793691407
+  },
+  {
+    "iteration": 368,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.0005129854360464697,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 2.5477030072273976e-06,
+    "u_residual": 0.0005129854360464699,
+    "v_residual": 0.0003146087285884218
+  },
+  {
+    "iteration": 369,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.0004988997343507259,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 2.4713576796120407e-06,
+    "u_residual": 0.000498899734350726,
+    "v_residual": 0.00030500046184131106
+  },
+  {
+    "iteration": 370,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.00048521422907092855,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 2.397323505154425e-06,
+    "u_residual": 0.00048521422907092855,
+    "v_residual": 0.0002956843749300138
+  },
+  {
+    "iteration": 371,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.0004719176648099253,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 2.325531844871165e-06,
+    "u_residual": 0.0004719176648099253,
+    "v_residual": 0.00028665259759980393
+  },
+  {
+    "iteration": 372,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.00045899944474352323,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 2.255915967697142e-06,
+    "u_residual": 0.00045899944474352334,
+    "v_residual": 0.00027789696695517606
+  },
+  {
+    "iteration": 373,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.00044644733740861287,
+    "mass_imbalance": 1.1796119636642288e-16,
+    "velocity_change": 2.1884110048553396e-06,
+    "u_residual": 0.00044644733740861287,
+    "v_residual": 0.0002694260354751728
+  },
+  {
+    "iteration": 374,
+    "continuity": 2.42861286636753e-17,
+    "momentum": 0.00043426393072771565,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 2.1229539056699664e-06,
+    "u_residual": 0.0004342639307277157,
+    "v_residual": 0.000261233278204838
+  },
+  {
+    "iteration": 375,
+    "continuity": 2.42861286636753e-17,
+    "momentum": 0.0004224574300398321,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 2.059483393157535e-06,
+    "u_residual": 0.00042245743003983203,
+    "v_residual": 0.000253291601176821
+  },
+  {
+    "iteration": 376,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.00041099142813348134,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 1.997939919395897e-06,
+    "u_residual": 0.00041099142813348134,
+    "v_residual": 0.0002455959098529401
+  },
+  {
+    "iteration": 377,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.00039984745318703206,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 1.9382656237798557e-06,
+    "u_residual": 0.00039984745318703206,
+    "v_residual": 0.00023814120542214212
+  },
+  {
+    "iteration": 378,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.000389016110161845,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 1.8804042909437158e-06,
+    "u_residual": 0.000389016110161845,
+    "v_residual": 0.00023091926509225842
+  },
+  {
+    "iteration": 379,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.00037848821916440696,
+    "mass_imbalance": 9.020562075079397e-17,
+    "velocity_change": 1.824301309460985e-06,
+    "u_residual": 0.00037848821916440707,
+    "v_residual": 0.00022392054456621863
+  },
+  {
+    "iteration": 380,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.00036825492185481746,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 1.7699036302110116e-06,
+    "u_residual": 0.00036825492185481735,
+    "v_residual": 0.00021713725001102106
+  },
+  {
+    "iteration": 381,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.0003583076211114638,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 1.7171597297416241e-06,
+    "u_residual": 0.0003583076211114638,
+    "v_residual": 0.00021058488710636047
+  },
+  {
+    "iteration": 382,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.0003486380279253419,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 1.6660195669704336e-06,
+    "u_residual": 0.0003486380279253419,
+    "v_residual": 0.0002042438444402722
+  },
+  {
+    "iteration": 383,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.0003392454889982418,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 1.6164345488789422e-06,
+    "u_residual": 0.0003392454889982418,
+    "v_residual": 0.00019809900083760877
+  },
+  {
+    "iteration": 384,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.0003301155403403273,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 1.568357490877581e-06,
+    "u_residual": 0.0003301155403403273,
+    "v_residual": 0.00019214274365285427
+  },
+  {
+    "iteration": 385,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.0003212395265218674,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 1.5217425810565288e-06,
+    "u_residual": 0.0003212395265218674,
+    "v_residual": 0.00018637050562634076
+  },
+  {
+    "iteration": 386,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.0003126097732028516,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 1.4765453439924414e-06,
+    "u_residual": 0.0003126097732028516,
+    "v_residual": 0.00018077657986667213
+  },
+  {
+    "iteration": 387,
+    "continuity": 2.949029909160572e-17,
+    "momentum": 0.0003042192434683531,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 1.4327226047772257e-06,
+    "u_residual": 0.0003042192434683531,
+    "v_residual": 0.00017535458290654862
+  },
+  {
+    "iteration": 388,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.00029606086310142015,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 1.3902324565995272e-06,
+    "u_residual": 0.00029606086310142015,
+    "v_residual": 0.00017009936735399057
+  },
+  {
+    "iteration": 389,
+    "continuity": 2.2551405187698492e-17,
+    "momentum": 0.0002881278440689957,
+    "mass_imbalance": 9.020562075079397e-17,
+    "velocity_change": 1.349034224662482e-06,
+    "u_residual": 0.0002881278440689957,
+    "v_residual": 0.0001650071849737182
+  },
+  {
+    "iteration": 390,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.0002804136830419265,
+    "mass_imbalance": 1.0408340855860843e-16,
+    "velocity_change": 1.3090884342092934e-06,
+    "u_residual": 0.00028041368304192654,
+    "v_residual": 0.00016007250969865682
+  },
+  {
+    "iteration": 391,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.0002729120330086927,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 1.270356779992099e-06,
+    "u_residual": 0.0002729120330086927,
+    "v_residual": 0.0001552894968048984
+  },
+  {
+    "iteration": 392,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.00026561685567594084,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 1.2328020899676773e-06,
+    "u_residual": 0.00026561685567594084,
+    "v_residual": 0.00015065486539525026
+  },
+  {
+    "iteration": 393,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.000258522118668909,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 1.1963883008725418e-06,
+    "u_residual": 0.00025852211866890897,
+    "v_residual": 0.0001461628883112207
+  },
+  {
+    "iteration": 394,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.0002516221817195837,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 1.1610804221406923e-06,
+    "u_residual": 0.00025162218171958373,
+    "v_residual": 0.00014180906347941715
+  },
+  {
+    "iteration": 395,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.0002449113705377825,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 1.1268445092582624e-06,
+    "u_residual": 0.0002449113705377825,
+    "v_residual": 0.00013759173601115974
+  },
+  {
+    "iteration": 396,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.000238384166198649,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 1.093647635674877e-06,
+    "u_residual": 0.00023838416619864904,
+    "v_residual": 0.0001335081312835294
+  },
+  {
+    "iteration": 397,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.00023203533723964751,
+    "mass_imbalance": 9.020562075079397e-17,
+    "velocity_change": 1.0614578629386529e-06,
+    "u_residual": 0.0002320353372396475,
+    "v_residual": 0.000129552767739071
+  },
+  {
+    "iteration": 398,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.0002258598179412164,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 1.0302442131626677e-06,
+    "u_residual": 0.0002258598179412164,
+    "v_residual": 0.000125718995567608
+  },
+  {
+    "iteration": 399,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.000219852613808148,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 9.999766434898305e-07,
+    "u_residual": 0.00021985261380814806,
+    "v_residual": 0.00012201695832013152
+  },
+  {
+    "iteration": 400,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.00021401192502625891,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 9.706260195585514e-07,
+    "u_residual": 0.00021401192502625897,
+    "v_residual": 0.00011843953403873386
+  },
+  {
+    "iteration": 401,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.00020833191311973273,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 9.42164087747166e-07,
+    "u_residual": 0.00020833191311973273,
+    "v_residual": 0.00011497397330324545
+  },
+  {
+    "iteration": 402,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.00020280580762690282,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 9.145634541907199e-07,
+    "u_residual": 0.00020280580762690285,
+    "v_residual": 0.00011161379684069585
+  },
+  {
+    "iteration": 403,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.00019742984907617135,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 8.877975568033492e-07,
+    "u_residual": 0.00019742984907617135,
+    "v_residual": 0.0001083557539814976
+  },
+  {
+    "iteration": 404,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.0001921993585190399,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 8.61840643073819e-07,
+    "u_residual": 0.0001921993585190399,
+    "v_residual": 0.0001051974494872255
+  },
+  {
+    "iteration": 405,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.00018711027898483305,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 8.36667747861064e-07,
+    "u_residual": 0.00018711027898483305,
+    "v_residual": 0.00010213429691665727
+  },
+  {
+    "iteration": 406,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.00018215837694044275,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 8.122546676370135e-07,
+    "u_residual": 0.00018215837694044275,
+    "v_residual": 9.91632598554794e-05
+  },
+  {
+    "iteration": 407,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.00017733976225399334,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 7.885779419458672e-07,
+    "u_residual": 0.00017733976225399337,
+    "v_residual": 9.628138228075411e-05
+  },
+  {
+    "iteration": 408,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.00017265068333697348,
+    "mass_imbalance": 1.1796119636642288e-16,
+    "velocity_change": 7.656148299783894e-07,
+    "u_residual": 0.0001726506833369735,
+    "v_residual": 9.348592118704421e-05
+  },
+  {
+    "iteration": 409,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.00016808743187820424,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 7.433432901438053e-07,
+    "u_residual": 0.00016808743187820424,
+    "v_residual": 9.077730874791682e-05
+  },
+  {
+    "iteration": 410,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.0001636466654756889,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 7.217419589755636e-07,
+    "u_residual": 0.0001636466654756889,
+    "v_residual": 8.815082451573127e-05
+  },
+  {
+    "iteration": 411,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.00015932482556837887,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 7.007901335898126e-07,
+    "u_residual": 0.00015932482556837887,
+    "v_residual": 8.560397519981424e-05
+  },
+  {
+    "iteration": 412,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.00015511876205129684,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 6.804677480376498e-07,
+    "u_residual": 0.00015511876205129678,
+    "v_residual": 8.313284135454097e-05
+  },
+  {
+    "iteration": 413,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.00015102506064628294,
+    "mass_imbalance": 1.457167719820518e-16,
+    "velocity_change": 6.60755359760401e-07,
+    "u_residual": 0.00015102506064628294,
+    "v_residual": 8.073497361798948e-05
+  },
+  {
+    "iteration": 414,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.00014704064892458597,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 6.41634126274937e-07,
+    "u_residual": 0.00014704064892458597,
+    "v_residual": 7.840804455837812e-05
+  },
+  {
+    "iteration": 415,
+    "continuity": 2.949029909160572e-17,
+    "momentum": 0.00014316243724468846,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 6.23085790407707e-07,
+    "u_residual": 0.00014316243724468846,
+    "v_residual": 7.61500660628616e-05
+  },
+  {
+    "iteration": 416,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.00013938772563470823,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 6.064612411149639e-07,
+    "u_residual": 0.00013938772563470823,
+    "v_residual": 7.395948179504364e-05
+  },
+  {
+    "iteration": 417,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.00013571343891832178,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 5.91010491324262e-07,
+    "u_residual": 0.00013571343891832178,
+    "v_residual": 7.183348409850861e-05
+  },
+  {
+    "iteration": 418,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.0001321368165091708,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 5.759727860210617e-07,
+    "u_residual": 0.0001321368165091708,
+    "v_residual": 6.97700156115557e-05
+  },
+  {
+    "iteration": 419,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.00012865507031875492,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 5.61336180981975e-07,
+    "u_residual": 0.00012865507031875492,
+    "v_residual": 6.776722373944913e-05
+  },
+  {
+    "iteration": 420,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.000125265593970228,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 5.470890979131227e-07,
+    "u_residual": 0.000125265593970228,
+    "v_residual": 6.582309249403708e-05
+  },
+  {
+    "iteration": 421,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.00012196585839950477,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 5.332203127927926e-07,
+    "u_residual": 0.0001219658583995048,
+    "v_residual": 6.393759675376929e-05
+  },
+  {
+    "iteration": 422,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.00011875358936252294,
+    "mass_imbalance": 1.734723475976807e-16,
+    "velocity_change": 5.197189465455665e-07,
+    "u_residual": 0.00011875358936252294,
+    "v_residual": 6.210977170383978e-05
+  },
+  {
+    "iteration": 423,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 0.0001156272286688429,
+    "mass_imbalance": 9.020562075079397e-17,
+    "velocity_change": 5.065744530519112e-07,
+    "u_residual": 0.0001156272286688429,
+    "v_residual": 6.0336209771321664e-05
+  },
+  {
+    "iteration": 424,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.00011258555100479865,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 4.937766118207065e-07,
+    "u_residual": 0.00011258555100479867,
+    "v_residual": 5.861477760602227e-05
+  },
+  {
+    "iteration": 425,
+    "continuity": 2.3852447794681098e-17,
+    "momentum": 0.00010962437541838822,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 4.813155157767923e-07,
+    "u_residual": 0.00010962437541838825,
+    "v_residual": 5.694315974533569e-05
+  },
+  {
+    "iteration": 426,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.0001067415033827212,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 4.6918156226816166e-07,
+    "u_residual": 0.0001067415033827212,
+    "v_residual": 5.532024849053257e-05
+  },
+  {
+    "iteration": 427,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 0.00010393468638018243,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 4.573654450723552e-07,
+    "u_residual": 0.00010393468638018243,
+    "v_residual": 5.3745309797257205e-05
+  },
+  {
+    "iteration": 428,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 0.00010120177502519177,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 4.458581438493425e-07,
+    "u_residual": 0.00010120177502519177,
+    "v_residual": 5.221554853817235e-05
+  },
+  {
+    "iteration": 429,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 9.854077179052365e-05,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 4.346509167030277e-07,
+    "u_residual": 9.854077179052365e-05,
+    "v_residual": 5.072976435104348e-05
+  },
+  {
+    "iteration": 430,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 9.594965745234781e-05,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 4.2373528985617526e-07,
+    "u_residual": 9.594965745234781e-05,
+    "v_residual": 4.9286470354550286e-05
+  },
+  {
+    "iteration": 431,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 9.342655620982834e-05,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 4.1310305076702747e-07,
+    "u_residual": 9.342655620982833e-05,
+    "v_residual": 4.788460573580682e-05
+  },
+  {
+    "iteration": 432,
+    "continuity": 3.122502256758253e-17,
+    "momentum": 9.097064309975696e-05,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 4.027462411348992e-07,
+    "u_residual": 9.097064309975696e-05,
+    "v_residual": 4.652420837945719e-05
+  },
+  {
+    "iteration": 433,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 8.85838154420744e-05,
+    "mass_imbalance": 9.020562075079397e-17,
+    "velocity_change": 3.926571444656801e-07,
+    "u_residual": 8.858381544207442e-05,
+    "v_residual": 4.520251691646786e-05
+  },
+  {
+    "iteration": 434,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 8.625945932548864e-05,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 3.828282846285447e-07,
+    "u_residual": 8.625945932548863e-05,
+    "v_residual": 4.391822880523769e-05
+  },
+  {
+    "iteration": 435,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 8.399991104579984e-05,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 3.732524129773651e-07,
+    "u_residual": 8.399991104579984e-05,
+    "v_residual": 4.267027453084772e-05
+  },
+  {
+    "iteration": 436,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 8.180654896150335e-05,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 3.639225042428862e-07,
+    "u_residual": 8.180654896150335e-05,
+    "v_residual": 4.145771810902194e-05
+  },
+  {
+    "iteration": 437,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 7.967029474309552e-05,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 3.5483174831707487e-07,
+    "u_residual": 7.96702947430955e-05,
+    "v_residual": 4.0279436862420904e-05
+  },
+  {
+    "iteration": 438,
+    "continuity": 2.2551405187698492e-17,
+    "momentum": 7.758955076123656e-05,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 3.459735437028044e-07,
+    "u_residual": 7.758955076123658e-05,
+    "v_residual": 3.91344763829006e-05
+  },
+  {
+    "iteration": 439,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 7.556305470650977e-05,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 3.373414910745609e-07,
+    "u_residual": 7.556305470650977e-05,
+    "v_residual": 3.802379224300564e-05
+  },
+  {
+    "iteration": 440,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 7.358944364380547e-05,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 3.289293861730158e-07,
+    "u_residual": 7.358944364380547e-05,
+    "v_residual": 3.694432818347679e-05
+  },
+  {
+    "iteration": 441,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 7.16670170809903e-05,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 3.207312133657325e-07,
+    "u_residual": 7.166701708099031e-05,
+    "v_residual": 3.5895041176630716e-05
+  },
+  {
+    "iteration": 442,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 6.979444086950852e-05,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 3.127411417613857e-07,
+    "u_residual": 6.979444086950852e-05,
+    "v_residual": 3.487512521079164e-05
+  },
+  {
+    "iteration": 443,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 6.79704081472645e-05,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 3.0495351621695477e-07,
+    "u_residual": 6.79704081472645e-05,
+    "v_residual": 3.388369573513814e-05
+  },
+  {
+    "iteration": 444,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 6.619439841581992e-05,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 2.9736285300785426e-07,
+    "u_residual": 6.619439841581992e-05,
+    "v_residual": 3.291998203603093e-05
+  },
+  {
+    "iteration": 445,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 6.446548549362386e-05,
+    "mass_imbalance": 9.020562075079397e-17,
+    "velocity_change": 2.899638357201084e-07,
+    "u_residual": 6.446548549362386e-05,
+    "v_residual": 3.198313621874881e-05
+  },
+  {
+    "iteration": 446,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 6.279378625309992e-05,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 2.8275130614652255e-07,
+    "u_residual": 6.279378625309992e-05,
+    "v_residual": 3.107245065816982e-05
+  },
+  {
+    "iteration": 447,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 6.116827078931653e-05,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 2.7572026384259374e-07,
+    "u_residual": 6.116827078931653e-05,
+    "v_residual": 3.0187073283984418e-05
+  },
+  {
+    "iteration": 448,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 5.9584552609584426e-05,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 2.6886585635654825e-07,
+    "u_residual": 5.9584552609584426e-05,
+    "v_residual": 2.9327005691241632e-05
+  },
+  {
+    "iteration": 449,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 5.804141596957962e-05,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 2.621833782301408e-07,
+    "u_residual": 5.804141596957962e-05,
+    "v_residual": 2.849211278461428e-05
+  },
+  {
+    "iteration": 450,
+    "continuity": 4.163336342344337e-17,
+    "momentum": 5.653787890819052e-05,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 2.5566826344913807e-07,
+    "u_residual": 5.653787890819052e-05,
+    "v_residual": 2.76807050813487e-05
+  },
+  {
+    "iteration": 451,
+    "continuity": 2.42861286636753e-17,
+    "momentum": 5.507284916515027e-05,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 2.4931608255673865e-07,
+    "u_residual": 5.507284916515027e-05,
+    "v_residual": 2.6895788922992797e-05
+  },
+  {
+    "iteration": 452,
+    "continuity": 4.163336342344337e-17,
+    "momentum": 5.364536087253862e-05,
+    "mass_imbalance": 1.0408340855860843e-16,
+    "velocity_change": 2.431225369914358e-07,
+    "u_residual": 5.364536087253862e-05,
+    "v_residual": 2.6135716025545665e-05
+  },
+  {
+    "iteration": 453,
+    "continuity": 2.42861286636753e-17,
+    "momentum": 5.225446644669372e-05,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 2.370834566445268e-07,
+    "u_residual": 5.225446644669372e-05,
+    "v_residual": 2.539704688801405e-05
+  },
+  {
+    "iteration": 454,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 5.089923209229571e-05,
+    "mass_imbalance": 1.0408340855860843e-16,
+    "velocity_change": 2.3119479275468535e-07,
+    "u_residual": 5.089923209229571e-05,
+    "v_residual": 2.4679735334250134e-05
+  },
+  {
+    "iteration": 455,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 4.957872254429483e-05,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 2.2545261668671657e-07,
+    "u_residual": 4.9578722544294814e-05,
+    "v_residual": 2.398341014409437e-05
+  },
+  {
+    "iteration": 456,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 4.8292144798434695e-05,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 2.1985311415839703e-07,
+    "u_residual": 4.8292144798434695e-05,
+    "v_residual": 2.330929462566708e-05
+  },
+  {
+    "iteration": 457,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 4.7038554332210586e-05,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 2.1439258213185042e-07,
+    "u_residual": 4.703855433221058e-05,
+    "v_residual": 2.2653798675674443e-05
+  },
+  {
+    "iteration": 458,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 4.581722296207842e-05,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 2.09067426815146e-07,
+    "u_residual": 4.581722296207842e-05,
+    "v_residual": 2.201756420386507e-05
+  },
+  {
+    "iteration": 459,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 4.462755388705041e-05,
+    "mass_imbalance": 1.0408340855860843e-16,
+    "velocity_change": 2.0387415589073754e-07,
+    "u_residual": 4.462755388705041e-05,
+    "v_residual": 2.1398548560550504e-05
+  },
+  {
+    "iteration": 460,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 4.346842268078414e-05,
+    "mass_imbalance": 1.0408340855860843e-16,
+    "velocity_change": 1.9880937929261933e-07,
+    "u_residual": 4.346842268078414e-05,
+    "v_residual": 2.079651384883462e-05
+  },
+  {
+    "iteration": 461,
+    "continuity": 2.42861286636753e-17,
+    "momentum": 4.2339134058248906e-05,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 1.9386980398827802e-07,
+    "u_residual": 4.2339134058248906e-05,
+    "v_residual": 2.0212300593417686e-05
+  },
+  {
+    "iteration": 462,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 4.1238853041470124e-05,
+    "mass_imbalance": 1.0408340855860843e-16,
+    "velocity_change": 1.8905223153620199e-07,
+    "u_residual": 4.1238853041470124e-05,
+    "v_residual": 1.96437826799531e-05
+  },
+  {
+    "iteration": 463,
+    "continuity": 4.163336342344337e-17,
+    "momentum": 4.016688878716784e-05,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 1.8435355353396687e-07,
+    "u_residual": 4.016688878716784e-05,
+    "v_residual": 1.9090777121242775e-05
+  },
+  {
+    "iteration": 464,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 3.912263236819994e-05,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 1.797707503969903e-07,
+    "u_residual": 3.912263236819994e-05,
+    "v_residual": 1.8554112242119416e-05
+  },
+  {
+    "iteration": 465,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 3.8109260701731386e-05,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 1.7530088847195202e-07,
+    "u_residual": 3.8109260701731386e-05,
+    "v_residual": 1.8032630524721884e-05
+  },
+  {
+    "iteration": 466,
+    "continuity": 3.122502256758253e-17,
+    "momentum": 3.712257432351384e-05,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 1.709411138195449e-07,
+    "u_residual": 3.712257432351384e-05,
+    "v_residual": 1.752539461010513e-05
+  },
+  {
+    "iteration": 467,
+    "continuity": 2.168404344971009e-17,
+    "momentum": 3.616119315605821e-05,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 1.6668865643332254e-07,
+    "u_residual": 3.616119315605821e-05,
+    "v_residual": 1.703183794565788e-05
+  },
+  {
+    "iteration": 468,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 3.522448403453175e-05,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 1.6254081935951348e-07,
+    "u_residual": 3.522448403453175e-05,
+    "v_residual": 1.655162842108996e-05
+  },
+  {
+    "iteration": 469,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 3.4311867503809683e-05,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 1.5849498347098034e-07,
+    "u_residual": 3.4311867503809683e-05,
+    "v_residual": 1.608427311238487e-05
+  },
+  {
+    "iteration": 470,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 3.342271943023316e-05,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 1.5454859880748018e-07,
+    "u_residual": 3.342271943023316e-05,
+    "v_residual": 1.5632541617838133e-05
+  },
+  {
+    "iteration": 471,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 3.2556636393401347e-05,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 1.5069918857246734e-07,
+    "u_residual": 3.255663639340135e-05,
+    "v_residual": 1.5194019800122095e-05
+  },
+  {
+    "iteration": 472,
+    "continuity": 1.734723475976807e-17,
+    "momentum": 3.171289876593449e-05,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 1.4694434113948773e-07,
+    "u_residual": 3.171289876593449e-05,
+    "v_residual": 1.4767228396929854e-05
+  },
+  {
+    "iteration": 473,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 3.08910311440169e-05,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 1.4328171182853566e-07,
+    "u_residual": 3.08910311440169e-05,
+    "v_residual": 1.435222176770771e-05
+  },
+  {
+    "iteration": 474,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 3.0090304704338792e-05,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 1.397090182431171e-07,
+    "u_residual": 3.0090304704338792e-05,
+    "v_residual": 1.3950072440591869e-05
+  },
+  {
+    "iteration": 475,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 2.9310197092592717e-05,
+    "mass_imbalance": 1.0408340855860843e-16,
+    "velocity_change": 1.362240404922943e-07,
+    "u_residual": 2.931019709259272e-05,
+    "v_residual": 1.3559503344539346e-05
+  },
+  {
+    "iteration": 476,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 2.8550170135253314e-05,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 1.3282461763797215e-07,
+    "u_residual": 2.855017013525332e-05,
+    "v_residual": 1.317950334074621e-05
+  },
+  {
+    "iteration": 477,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 2.7809718406209004e-05,
+    "mass_imbalance": 1.457167719820518e-16,
+    "velocity_change": 1.2950864536342976e-07,
+    "u_residual": 2.7809718406209004e-05,
+    "v_residual": 1.28097909739268e-05
+  },
+  {
+    "iteration": 478,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 2.7088385390278896e-05,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 1.2627407663945434e-07,
+    "u_residual": 2.708838539027889e-05,
+    "v_residual": 1.2450022578792918e-05
+  },
+  {
+    "iteration": 479,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 2.6385660098944014e-05,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 1.2311891761651594e-07,
+    "u_residual": 2.6385660098944014e-05,
+    "v_residual": 1.2099855527342643e-05
+  },
+  {
+    "iteration": 480,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 2.570116583182914e-05,
+    "mass_imbalance": 1.3183898417423734e-16,
+    "velocity_change": 1.2004122684761143e-07,
+    "u_residual": 2.570116583182914e-05,
+    "v_residual": 1.1759059339356752e-05
+  },
+  {
+    "iteration": 481,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 2.503436575530292e-05,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 1.1703911406701906e-07,
+    "u_residual": 2.503436575530292e-05,
+    "v_residual": 1.1427537431968605e-05
+  },
+  {
+    "iteration": 482,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 2.438483132841645e-05,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 1.1411073619349565e-07,
+    "u_residual": 2.438483132841645e-05,
+    "v_residual": 1.1105088015247464e-05
+  },
+  {
+    "iteration": 483,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 2.3752143954123902e-05,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 1.1125430054992336e-07,
+    "u_residual": 2.3752143954123902e-05,
+    "v_residual": 1.0791417762439795e-05
+  },
+  {
+    "iteration": 484,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 2.313594015265027e-05,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 1.0846805897912759e-07,
+    "u_residual": 2.313594015265027e-05,
+    "v_residual": 1.0486247409404322e-05
+  },
+  {
+    "iteration": 485,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 2.253594465857297e-05,
+    "mass_imbalance": 1.457167719820518e-16,
+    "velocity_change": 1.0575030795489937e-07,
+    "u_residual": 2.253594465857297e-05,
+    "v_residual": 1.0189423895773692e-05
+  },
+  {
+    "iteration": 486,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 2.1951534817583036e-05,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 1.0309938891506221e-07,
+    "u_residual": 2.1951534817583036e-05,
+    "v_residual": 9.9006423647351e-06
+  },
+  {
+    "iteration": 487,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 2.1384922070790947e-05,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 1.0051368193320087e-07,
+    "u_residual": 2.138492207079094e-05,
+    "v_residual": 9.62025645917023e-06
+  },
+  {
+    "iteration": 488,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 2.083635226660304e-05,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 9.799161226897724e-08,
+    "u_residual": 2.083635226660304e-05,
+    "v_residual": 9.348570742120234e-06
+  },
+  {
+    "iteration": 489,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 2.030337630228005e-05,
+    "mass_imbalance": 1.0408340855860843e-16,
+    "velocity_change": 9.55316424855468e-08,
+    "u_residual": 2.0303376302280045e-05,
+    "v_residual": 9.084326234624137e-06
+  },
+  {
+    "iteration": 490,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 1.9783907518554707e-05,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 9.31322731156925e-08,
+    "u_residual": 1.978390751855471e-05,
+    "v_residual": 8.827391981190062e-06
+  },
+  {
+    "iteration": 491,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 1.927761190160159e-05,
+    "mass_imbalance": 1.1796119636642288e-16,
+    "velocity_change": 9.079204343898084e-08,
+    "u_residual": 1.927761190160159e-05,
+    "v_residual": 8.577419636479444e-06
+  },
+  {
+    "iteration": 492,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 1.8784214647399862e-05,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 8.85095277070036e-08,
+    "u_residual": 1.8784214647399862e-05,
+    "v_residual": 8.334281040502599e-06
+  },
+  {
+    "iteration": 493,
+    "continuity": 3.122502256758253e-17,
+    "momentum": 1.830337311983881e-05,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 8.628333647564546e-08,
+    "u_residual": 1.830337311983881e-05,
+    "v_residual": 8.09788579704158e-06
+  },
+  {
+    "iteration": 494,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 1.7834771995128437e-05,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 8.411211360748183e-08,
+    "u_residual": 1.783477199512844e-05,
+    "v_residual": 7.868176263548179e-06
+  },
+  {
+    "iteration": 495,
+    "continuity": 2.2551405187698492e-17,
+    "momentum": 1.737812281907602e-05,
+    "mass_imbalance": 9.020562075079397e-17,
+    "velocity_change": 8.199453749302421e-08,
+    "u_residual": 1.737812281907602e-05,
+    "v_residual": 7.648298036904494e-06
+  },
+  {
+    "iteration": 496,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 1.693337325339293e-05,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 7.992931638778344e-08,
+    "u_residual": 1.693337325339293e-05,
+    "v_residual": 7.4344648494812075e-06
+  },
+  {
+    "iteration": 497,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 1.649997314722161e-05,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 7.791519285316184e-08,
+    "u_residual": 1.649997314722161e-05,
+    "v_residual": 7.226737630977653e-06
+  },
+  {
+    "iteration": 498,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 1.6077902154380767e-05,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 7.595093709511502e-08,
+    "u_residual": 1.6077902154380767e-05,
+    "v_residual": 7.025571764084076e-06
+  },
+  {
+    "iteration": 499,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 1.5666789387079133e-05,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 7.403535184913324e-08,
+    "u_residual": 1.5666789387079133e-05,
+    "v_residual": 6.831075139748689e-06
+  },
+  {
+    "iteration": 500,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 1.526617747103355e-05,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 7.21672661629924e-08,
+    "u_residual": 1.526617747103355e-05,
+    "v_residual": 6.643822921429277e-06
+  },
+  {
+    "iteration": 501,
+    "continuity": 1.734723475976807e-17,
+    "momentum": 1.4875812371700834e-05,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 7.034553883844552e-08,
+    "u_residual": 1.4875812371700836e-05,
+    "v_residual": 6.461602138780508e-06
+  },
+  {
+    "iteration": 502,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 1.4495493640046678e-05,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 6.856905454544204e-08,
+    "u_residual": 1.4495493640046678e-05,
+    "v_residual": 6.284286332373698e-06
+  },
+  {
+    "iteration": 503,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 1.412488172799136e-05,
+    "mass_imbalance": 1.0408340855860843e-16,
+    "velocity_change": 6.683672615359626e-08,
+    "u_residual": 1.4124881727991363e-05,
+    "v_residual": 6.111985460517589e-06
+  },
+  {
+    "iteration": 504,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 1.3763806455238732e-05,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 6.5147490957429e-08,
+    "u_residual": 1.3763806455238732e-05,
+    "v_residual": 5.944853020084604e-06
+  },
+  {
+    "iteration": 505,
+    "continuity": 2.2551405187698492e-17,
+    "momentum": 1.3411985363774151e-05,
+    "mass_imbalance": 1.0408340855860843e-16,
+    "velocity_change": 6.350031234170217e-08,
+    "u_residual": 1.3411985363774151e-05,
+    "v_residual": 5.782163620635794e-06
+  },
+  {
+    "iteration": 506,
+    "continuity": 4.85722573273506e-17,
+    "momentum": 1.3069136184338695e-05,
+    "mass_imbalance": 1.1796119636642288e-16,
+    "velocity_change": 6.189417778301731e-08,
+    "u_residual": 1.3069136184338696e-05,
+    "v_residual": 5.623914571292972e-06
+  },
+  {
+    "iteration": 507,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 1.2735034185986814e-05,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 6.03280985167487e-08,
+    "u_residual": 1.2735034185986814e-05,
+    "v_residual": 5.470206179758891e-06
+  },
+  {
+    "iteration": 508,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 1.2409459995047567e-05,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 5.8801109426021014e-08,
+    "u_residual": 1.2409459995047567e-05,
+    "v_residual": 5.321480521528838e-06
+  },
+  {
+    "iteration": 509,
+    "continuity": 2.42861286636753e-17,
+    "momentum": 1.2092217033565684e-05,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 5.731226804250866e-08,
+    "u_residual": 1.2092217033565684e-05,
+    "v_residual": 5.1767205903719325e-06
+  },
+  {
+    "iteration": 510,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 1.1783148477206858e-05,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 5.586065376927962e-08,
+    "u_residual": 1.1783148477206858e-05,
+    "v_residual": 5.035828918386635e-06
+  },
+  {
+    "iteration": 511,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 1.1481975819741401e-05,
+    "mass_imbalance": 9.020562075079397e-17,
+    "velocity_change": 5.4445367769773156e-08,
+    "u_residual": 1.1481975819741401e-05,
+    "v_residual": 4.898846409271233e-06
+  },
+  {
+    "iteration": 512,
+    "continuity": 2.2551405187698492e-17,
+    "momentum": 1.118851883516275e-05,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 5.306553119144297e-08,
+    "u_residual": 1.118851883516275e-05,
+    "v_residual": 4.765563313301053e-06
+  },
+  {
+    "iteration": 513,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 1.0902620519244149e-05,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 5.1720287719270175e-08,
+    "u_residual": 1.0902620519244149e-05,
+    "v_residual": 4.635994651095367e-06
+  },
+  {
+    "iteration": 514,
+    "continuity": 3.122502256758253e-17,
+    "momentum": 1.062421557547972e-05,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 5.040879891282657e-08,
+    "u_residual": 1.062421557547972e-05,
+    "v_residual": 4.5100445898490445e-06
+  },
+  {
+    "iteration": 515,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 1.0353188330897934e-05,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 4.9130247425921425e-08,
+    "u_residual": 1.0353188330897934e-05,
+    "v_residual": 4.387722486569719e-06
+  },
+  {
+    "iteration": 516,
+    "continuity": 3.122502256758253e-17,
+    "momentum": 1.0089202092990352e-05,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 4.788383367593241e-08,
+    "u_residual": 1.0089202092990352e-05,
+    "v_residual": 4.269215967975973e-06
+  },
+  {
+    "iteration": 517,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 9.8319767520068e-06,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 4.666877784220702e-08,
+    "u_residual": 9.8319767520068e-06,
+    "v_residual": 4.156234965755692e-06
+  },
+  {
+    "iteration": 518,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 9.581327163231346e-06,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 4.548431697948274e-08,
+    "u_residual": 9.581327163231346e-06,
+    "v_residual": 4.046306495814365e-06
+  },
+  {
+    "iteration": 519,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 9.337086804977403e-06,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 4.432970635015465e-08,
+    "u_residual": 9.337086804977403e-06,
+    "v_residual": 3.939242953728283e-06
+  },
+  {
+    "iteration": 520,
+    "continuity": 2.42861286636753e-17,
+    "momentum": 9.099093242095967e-06,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 4.320421875814162e-08,
+    "u_residual": 9.099093242095967e-06,
+    "v_residual": 3.835039110217975e-06
+  },
+  {
+    "iteration": 521,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 8.867188056611351e-06,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 4.210714377173019e-08,
+    "u_residual": 8.867188056611351e-06,
+    "v_residual": 3.733556103697278e-06
+  },
+  {
+    "iteration": 522,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 8.641216696956115e-06,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 4.1037787501529976e-08,
+    "u_residual": 8.641216696956115e-06,
+    "v_residual": 3.634782642565328e-06
+  },
+  {
+    "iteration": 523,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 8.421028393297593e-06,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 3.999547093513911e-08,
+    "u_residual": 8.421028393297593e-06,
+    "v_residual": 3.53889918853983e-06
+  },
+  {
+    "iteration": 524,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 8.206501707924692e-06,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 3.897953237963492e-08,
+    "u_residual": 8.206501707924689e-06,
+    "v_residual": 3.445692877361597e-06
+  },
+  {
+    "iteration": 525,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 7.997506866289881e-06,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 3.798932501908325e-08,
+    "u_residual": 7.997506866289881e-06,
+    "v_residual": 3.3548864051504263e-06
+  },
+  {
+    "iteration": 526,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 7.793931109473003e-06,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 3.70242169145385e-08,
+    "u_residual": 7.793931109473003e-06,
+    "v_residual": 3.2664150849873895e-06
+  },
+  {
+    "iteration": 527,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 7.595937709223965e-06,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 3.608359044893206e-08,
+    "u_residual": 7.595937709223964e-06,
+    "v_residual": 3.1802310547000946e-06
+  },
+  {
+    "iteration": 528,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 7.403006491074775e-06,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 3.5166842327072345e-08,
+    "u_residual": 7.403006491074775e-06,
+    "v_residual": 3.0962765090427567e-06
+  },
+  {
+    "iteration": 529,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 7.215073997151488e-06,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 3.427338435280092e-08,
+    "u_residual": 7.215073997151488e-06,
+    "v_residual": 3.014643046751012e-06
+  },
+  {
+    "iteration": 530,
+    "continuity": 3.122502256758253e-17,
+    "momentum": 7.0319474342669495e-06,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 3.3402640875479506e-08,
+    "u_residual": 7.0319474342669495e-06,
+    "v_residual": 2.935290259142682e-06
+  },
+  {
+    "iteration": 531,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 6.853511244728977e-06,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 3.255404978919074e-08,
+    "u_residual": 6.853511244728976e-06,
+    "v_residual": 2.85808007454467e-06
+  },
+  {
+    "iteration": 532,
+    "continuity": 2.6020852139652106e-17,
+    "momentum": 6.679845593297864e-06,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 3.172706264376046e-08,
+    "u_residual": 6.679845593297864e-06,
+    "v_residual": 2.782912212522282e-06
+  },
+  {
+    "iteration": 533,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 6.510611905086104e-06,
+    "mass_imbalance": 1.457167719820518e-16,
+    "velocity_change": 3.0921142868400864e-08,
+    "u_residual": 6.510611905086104e-06,
+    "v_residual": 2.709719264426131e-06
+  },
+  {
+    "iteration": 534,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 6.345696780992946e-06,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 3.013576810317886e-08,
+    "u_residual": 6.345696780992946e-06,
+    "v_residual": 2.6384700949040615e-06
+  },
+  {
+    "iteration": 535,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 6.1849898091824025e-06,
+    "mass_imbalance": 9.020562075079397e-17,
+    "velocity_change": 2.937042509199017e-08,
+    "u_residual": 6.1849898091824025e-06,
+    "v_residual": 2.569166027401484e-06
+  },
+  {
+    "iteration": 536,
+    "continuity": 2.2551405187698492e-17,
+    "momentum": 6.028394890564215e-06,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 2.8624616565942063e-08,
+    "u_residual": 6.028394890564215e-06,
+    "v_residual": 2.502066673801734e-06
+  },
+  {
+    "iteration": 537,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 5.875794135004231e-06,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 2.789785347179219e-08,
+    "u_residual": 5.875794135004231e-06,
+    "v_residual": 2.4373837060805924e-06
+  },
+  {
+    "iteration": 538,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 5.727085365379687e-06,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 2.7189660412041405e-08,
+    "u_residual": 5.727085365379687e-06,
+    "v_residual": 2.3744490041713242e-06
+  },
+  {
+    "iteration": 539,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 5.582170803351777e-06,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 2.6499572203242394e-08,
+    "u_residual": 5.582170803351777e-06,
+    "v_residual": 2.3131370388604214e-06
+  },
+  {
+    "iteration": 540,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 5.440952416495971e-06,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 2.5827135208267293e-08,
+    "u_residual": 5.440952416495971e-06,
+    "v_residual": 2.2534171661281054e-06
+  },
+  {
+    "iteration": 541,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 5.303333816612128e-06,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 2.5171905337906253e-08,
+    "u_residual": 5.303333816612128e-06,
+    "v_residual": 2.1952242431488408e-06
+  },
+  {
+    "iteration": 542,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 5.169264735263093e-06,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 2.453345060438039e-08,
+    "u_residual": 5.169264735263093e-06,
+    "v_residual": 2.138517653707701e-06
+  },
+  {
+    "iteration": 543,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 5.0386480943305585e-06,
+    "mass_imbalance": 9.020562075079397e-17,
+    "velocity_change": 2.3911348345784234e-08,
+    "u_residual": 5.0386480943305585e-06,
+    "v_residual": 2.0832657083047385e-06
+  },
+  {
+    "iteration": 544,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 4.911548849044974e-06,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 2.3305185781197224e-08,
+    "u_residual": 4.911548849044974e-06,
+    "v_residual": 2.0294292683432223e-06
+  },
+  {
+    "iteration": 545,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 4.7877561636595876e-06,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 2.2714559899661424e-08,
+    "u_residual": 4.7877561636595876e-06,
+    "v_residual": 1.976970101593468e-06
+  },
+  {
+    "iteration": 546,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 4.6672826509333995e-06,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 2.213907790427072e-08,
+    "u_residual": 4.6672826509333995e-06,
+    "v_residual": 1.9258704577959958e-06
+  },
+  {
+    "iteration": 547,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 4.550255464270022e-06,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 2.157835687910392e-08,
+    "u_residual": 4.550255464270022e-06,
+    "v_residual": 1.8763700392261199e-06
+  },
+  {
+    "iteration": 548,
+    "continuity": 3.122502256758253e-17,
+    "momentum": 4.436247174300936e-06,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 2.103202101366719e-08,
+    "u_residual": 4.436247174300936e-06,
+    "v_residual": 1.8285218234206548e-06
+  },
+  {
+    "iteration": 549,
+    "continuity": 4.163336342344337e-17,
+    "momentum": 4.325153625925397e-06,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 2.0499705821741543e-08,
+    "u_residual": 4.325153625925397e-06,
+    "v_residual": 1.7820752286370378e-06
+  },
+  {
+    "iteration": 550,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 4.2168710456478855e-06,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 1.9981054366624562e-08,
+    "u_residual": 4.2168710456478855e-06,
+    "v_residual": 1.7368186174893239e-06
+  },
+  {
+    "iteration": 551,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 4.111326992697908e-06,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 1.9475718038286516e-08,
+    "u_residual": 4.111326992697908e-06,
+    "v_residual": 1.6927018938520526e-06
+  },
+  {
+    "iteration": 552,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 4.008450896972011e-06,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 1.8983356997459566e-08,
+    "u_residual": 4.008450896972011e-06,
+    "v_residual": 1.6497046004529865e-06
+  },
+  {
+    "iteration": 553,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 3.908188400739544e-06,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 1.8503641285860795e-08,
+    "u_residual": 3.908188400739544e-06,
+    "v_residual": 1.6077896517291886e-06
+  },
+  {
+    "iteration": 554,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 3.8104593393282153e-06,
+    "mass_imbalance": 9.020562075079397e-17,
+    "velocity_change": 1.8036245608143986e-08,
+    "u_residual": 3.8104593393282153e-06,
+    "v_residual": 1.5670106315151613e-06
+  },
+  {
+    "iteration": 555,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 3.7151961178954924e-06,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 1.7580855438126264e-08,
+    "u_residual": 3.7151961178954924e-06,
+    "v_residual": 1.5272504726931915e-06
+  },
+  {
+    "iteration": 556,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 3.6223381464811216e-06,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 1.7137163133007505e-08,
+    "u_residual": 3.6223381464811216e-06,
+    "v_residual": 1.4886594876369585e-06
+  },
+  {
+    "iteration": 557,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 3.5318254819441116e-06,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 1.6704867378258825e-08,
+    "u_residual": 3.5318254819441116e-06,
+    "v_residual": 1.45103601522928e-06
+  },
+  {
+    "iteration": 558,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 3.4435925814999083e-06,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 1.628367618522475e-08,
+    "u_residual": 3.4435925814999083e-06,
+    "v_residual": 1.4147150811869081e-06
+  },
+  {
+    "iteration": 559,
+    "continuity": 2.42861286636753e-17,
+    "momentum": 3.3575808795200465e-06,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 1.5873303227387225e-08,
+    "u_residual": 3.3575808795200465e-06,
+    "v_residual": 1.3793976522723116e-06
+  },
+  {
+    "iteration": 560,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 3.2737332911165774e-06,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 1.5473470726945493e-08,
+    "u_residual": 3.2737332911165774e-06,
+    "v_residual": 1.3449632190269783e-06
+  },
+  {
+    "iteration": 561,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 3.1921529937656756e-06,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 1.508390545801319e-08,
+    "u_residual": 3.1921529937656756e-06,
+    "v_residual": 1.3113905934090728e-06
+  },
+  {
+    "iteration": 562,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 3.1126764996273984e-06,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 1.4704343742621973e-08,
+    "u_residual": 3.1126764996273984e-06,
+    "v_residual": 1.2786552039155922e-06
+  },
+  {
+    "iteration": 563,
+    "continuity": 1.734723475976807e-17,
+    "momentum": 3.035192052619039e-06,
+    "mass_imbalance": 9.020562075079397e-17,
+    "velocity_change": 1.4334526232673284e-08,
+    "u_residual": 3.035192052619039e-06,
+    "v_residual": 1.246736010087134e-06
+  },
+  {
+    "iteration": 564,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 2.959648512930284e-06,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 1.3974201018562837e-08,
+    "u_residual": 2.959648512930284e-06,
+    "v_residual": 1.2156126109034772e-06
+  },
+  {
+    "iteration": 565,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 2.8860507611267604e-06,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 1.3623122741002192e-08,
+    "u_residual": 2.8860507611267604e-06,
+    "v_residual": 1.1853185357216334e-06
+  },
+  {
+    "iteration": 566,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 2.8143698971135978e-06,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 1.328105125875112e-08,
+    "u_residual": 2.8143698971135978e-06,
+    "v_residual": 1.1557909586487716e-06
+  },
+  {
+    "iteration": 567,
+    "continuity": 2.42861286636753e-17,
+    "momentum": 2.7444772340963944e-06,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 1.2947753535996753e-08,
+    "u_residual": 2.7444772340963944e-06,
+    "v_residual": 1.1271592626176257e-06
+  },
+  {
+    "iteration": 568,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 2.6763271338006818e-06,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 1.2623001532929834e-08,
+    "u_residual": 2.6763271338006818e-06,
+    "v_residual": 1.099422524030937e-06
+  },
+  {
+    "iteration": 569,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 2.610115851237866e-06,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 1.2306573204945437e-08,
+    "u_residual": 2.610115851237866e-06,
+    "v_residual": 1.0724130581943138e-06
+  },
+  {
+    "iteration": 570,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 2.5456286658651856e-06,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 1.1998252280598365e-08,
+    "u_residual": 2.5456286658651856e-06,
+    "v_residual": 1.0460943380313146e-06
+  },
+  {
+    "iteration": 571,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 2.4827373426776853e-06,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 1.169782826160315e-08,
+    "u_residual": 2.4827373426776853e-06,
+    "v_residual": 1.020437751293831e-06
+  },
+  {
+    "iteration": 572,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 2.42140135208717e-06,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 1.1405094868521815e-08,
+    "u_residual": 2.42140135208717e-06,
+    "v_residual": 9.95438380253588e-07
+  },
+  {
+    "iteration": 573,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 2.3615813670351775e-06,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 1.1119852705299138e-08,
+    "u_residual": 2.3615813670351775e-06,
+    "v_residual": 9.711098265613183e-07
+  },
+  {
+    "iteration": 574,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 2.3032389526031655e-06,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 1.0841905484504366e-08,
+    "u_residual": 2.3032389526031655e-06,
+    "v_residual": 9.474485708565905e-07
+  },
+  {
+    "iteration": 575,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 2.2463368468470846e-06,
+    "mass_imbalance": 1.1796119636642288e-16,
+    "velocity_change": 1.0571064246178707e-08,
+    "u_residual": 2.2463368468470846e-06,
+    "v_residual": 9.244494077212439e-07
+  },
+  {
+    "iteration": 576,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 2.1908386184137895e-06,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 1.0307142361831723e-08,
+    "u_residual": 2.1908386184137895e-06,
+    "v_residual": 9.02038164165887e-07
+  },
+  {
+    "iteration": 577,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 2.136708916883285e-06,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 1.004996030840033e-08,
+    "u_residual": 2.136708916883285e-06,
+    "v_residual": 8.804532718772299e-07
+  },
+  {
+    "iteration": 578,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 2.083933932600427e-06,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 9.799342226557428e-09,
+    "u_residual": 2.083933932600427e-06,
+    "v_residual": 8.594987971095842e-07
+  },
+  {
+    "iteration": 579,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 2.0324682973260138e-06,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 9.555115587644991e-09,
+    "u_residual": 2.0324682973260138e-06,
+    "v_residual": 8.391770202368243e-07
+  },
+  {
+    "iteration": 580,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 1.9822699386023095e-06,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 9.317114857410047e-09,
+    "u_residual": 1.9822699386023095e-06,
+    "v_residual": 8.193445832033874e-07
+  },
+  {
+    "iteration": 581,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 1.933306932818414e-06,
+    "mass_imbalance": 1.0408340855860843e-16,
+    "velocity_change": 9.085176611023371e-09,
+    "u_residual": 1.933306932818414e-06,
+    "v_residual": 7.999882471507488e-07
+  },
+  {
+    "iteration": 582,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 1.88554623967246e-06,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 8.859142752726257e-09,
+    "u_residual": 1.88554623967246e-06,
+    "v_residual": 7.810949928153373e-07
+  },
+  {
+    "iteration": 583,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 1.8389588155641683e-06,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 8.638858961518281e-09,
+    "u_residual": 1.8389588155641683e-06,
+    "v_residual": 7.62653079230534e-07
+  },
+  {
+    "iteration": 584,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 1.7935889952600402e-06,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 8.424174247068095e-09,
+    "u_residual": 1.7935889952600402e-06,
+    "v_residual": 7.446802916053578e-07
+  },
+  {
+    "iteration": 585,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 1.7494291950361216e-06,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 8.214943614248682e-09,
+    "u_residual": 1.7494291950361216e-06,
+    "v_residual": 7.27155224513466e-07
+  },
+  {
+    "iteration": 586,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 1.7066511536028605e-06,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 8.011022956111447e-09,
+    "u_residual": 1.7066511536028605e-06,
+    "v_residual": 7.100758727819503e-07
+  },
+  {
+    "iteration": 587,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 1.6649127752215986e-06,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 7.81227527113515e-09,
+    "u_residual": 1.6649127752215986e-06,
+    "v_residual": 6.934254407510777e-07
+  },
+  {
+    "iteration": 588,
+    "continuity": 2.42861286636753e-17,
+    "momentum": 1.6241881869366916e-06,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 7.618564223932367e-09,
+    "u_residual": 1.6241881869366916e-06,
+    "v_residual": 6.772522416763297e-07
+  },
+  {
+    "iteration": 589,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 1.584452136170893e-06,
+    "mass_imbalance": 9.020562075079397e-17,
+    "velocity_change": 7.429758919208496e-09,
+    "u_residual": 1.584452136170893e-06,
+    "v_residual": 6.61463907885875e-07
+  },
+  {
+    "iteration": 590,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 1.545680126873451e-06,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 7.245730015981167e-09,
+    "u_residual": 1.545680126873451e-06,
+    "v_residual": 6.46061461095643e-07
+  },
+  {
+    "iteration": 591,
+    "continuity": 2.2551405187698492e-17,
+    "momentum": 1.5078482831707702e-06,
+    "mass_imbalance": 3.469446951953614e-17,
+    "velocity_change": 7.066354390516949e-09,
+    "u_residual": 1.5078482831707702e-06,
+    "v_residual": 6.311509627632543e-07
+  },
+  {
+    "iteration": 592,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 1.4709338066682063e-06,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 6.891509696238529e-09,
+    "u_residual": 1.4709338066682063e-06,
+    "v_residual": 6.166017481240006e-07
+  },
+  {
+    "iteration": 593,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 1.4349139054044232e-06,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 6.721077583371482e-09,
+    "u_residual": 1.4349139054044232e-06,
+    "v_residual": 6.024164850082537e-07
+  },
+  {
+    "iteration": 594,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 1.4000594732940053e-06,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 6.554943032810456e-09,
+    "u_residual": 1.4000594732940053e-06,
+    "v_residual": 5.88558345720602e-07
+  },
+  {
+    "iteration": 595,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 1.3661298284037716e-06,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 6.392994911230687e-09,
+    "u_residual": 1.3661298284037716e-06,
+    "v_residual": 5.750155054170221e-07
+  },
+  {
+    "iteration": 596,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 1.3330397661414264e-06,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 6.235122751441224e-09,
+    "u_residual": 1.3330397661414264e-06,
+    "v_residual": 5.617783850088558e-07
+  },
+  {
+    "iteration": 597,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 1.3008014522108876e-06,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 6.081221193277031e-09,
+    "u_residual": 1.3008014522108876e-06,
+    "v_residual": 5.488396675948244e-07
+  },
+  {
+    "iteration": 598,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 1.2693316694265176e-06,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 5.9311866529299095e-09,
+    "u_residual": 1.2693316694265176e-06,
+    "v_residual": 5.363433365097224e-07
+  },
+  {
+    "iteration": 599,
+    "continuity": 2.7321894746634712e-17,
+    "momentum": 1.238611614473449e-06,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 5.784918655216131e-09,
+    "u_residual": 1.238611614473449e-06,
+    "v_residual": 5.241741197035229e-07
+  },
+  {
+    "iteration": 600,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 1.2086230917929924e-06,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 5.64231861233111e-09,
+    "u_residual": 1.2086230917929924e-06,
+    "v_residual": 5.122795982101981e-07
+  },
+  {
+    "iteration": 601,
+    "continuity": 4.163336342344337e-17,
+    "momentum": 1.179348348448511e-06,
+    "mass_imbalance": 6.245004513516506e-17,
+    "velocity_change": 5.503292710429264e-09,
+    "u_residual": 1.179348348448511e-06,
+    "v_residual": 5.006491256638845e-07
+  },
+  {
+    "iteration": 602,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 1.1507705823901797e-06,
+    "mass_imbalance": 1.734723475976807e-16,
+    "velocity_change": 5.367746358508896e-09,
+    "u_residual": 1.1507705823901797e-06,
+    "v_residual": 4.894399917111056e-07
+  },
+  {
+    "iteration": 603,
+    "continuity": 2.0816681711721685e-17,
+    "momentum": 1.1228724440784622e-06,
+    "mass_imbalance": 4.85722573273506e-17,
+    "velocity_change": 5.235591293839548e-09,
+    "u_residual": 1.1228724440784622e-06,
+    "v_residual": 4.787114235297139e-07
+  },
+  {
+    "iteration": 604,
+    "continuity": 2.2551405187698492e-17,
+    "momentum": 1.0957550811509745e-06,
+    "mass_imbalance": 1.1796119636642288e-16,
+    "velocity_change": 5.106737699378527e-09,
+    "u_residual": 1.0957550811509745e-06,
+    "v_residual": 4.682221452215599e-07
+  },
+  {
+    "iteration": 605,
+    "continuity": 3.469446951953614e-17,
+    "momentum": 1.0694195361217712e-06,
+    "mass_imbalance": 2.0816681711721685e-17,
+    "velocity_change": 4.981101309198266e-09,
+    "u_residual": 1.0694195361217712e-06,
+    "v_residual": 4.5795890661661437e-07
+  },
+  {
+    "iteration": 606,
+    "continuity": 2.42861286636753e-17,
+    "momentum": 1.043701099513901e-06,
+    "mass_imbalance": 7.632783294297951e-17,
+    "velocity_change": 4.8585981904381015e-09,
+    "u_residual": 1.043701099513901e-06,
+    "v_residual": 4.479588433164441e-07
+  },
+  {
+    "iteration": 607,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 1.0185851950327722e-06,
+    "mass_imbalance": 6.938893903907228e-18,
+    "velocity_change": 4.7391475188618415e-09,
+    "u_residual": 1.0185851950327722e-06,
+    "v_residual": 4.381915645572419e-07
+  },
+  {
+    "iteration": 608,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 9.940574969947795e-07,
+    "mass_imbalance": 1.0408340855860843e-16,
+    "velocity_change": 4.62267057965704e-09,
+    "u_residual": 9.940574969947795e-07,
+    "v_residual": 4.2867133274263127e-07
+  }
+]
