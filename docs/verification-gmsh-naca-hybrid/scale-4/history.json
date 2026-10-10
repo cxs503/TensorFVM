@@ -1,0 +1,4532 @@
+[
+  {
+    "iteration": 1,
+    "continuity": 2.7755575615628914e-17,
+    "momentum": 4.3353827353142735,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 0.617372247648953,
+    "u_residual": 4.241998598845591,
+    "v_residual": 4.335382735314274,
+    "rhie_chow_flux_defect": 0.00037866362505528813
+  },
+  {
+    "iteration": 2,
+    "continuity": 6.552917930502389e-16,
+    "momentum": 3.101688825732699,
+    "mass_imbalance": 0.0,
+    "velocity_change": 0.3013763152588379,
+    "u_residual": 3.1016888257326984,
+    "v_residual": 2.9265508630728996,
+    "rhie_chow_flux_defect": 0.0002577017347503093
+  },
+  {
+    "iteration": 3,
+    "continuity": 1.3818210898436378e-14,
+    "momentum": 1.282584097843753,
+    "mass_imbalance": 1.1102230246251565e-16,
+    "velocity_change": 0.20416346751518066,
+    "u_residual": 1.282584097843753,
+    "v_residual": 0.8533878388830078,
+    "rhie_chow_flux_defect": 0.00026226931885365917
+  },
+  {
+    "iteration": 4,
+    "continuity": 1.9680383624848252e-14,
+    "momentum": 0.6338517662434677,
+    "mass_imbalance": 2.7755575615628914e-16,
+    "velocity_change": 0.08382745797111091,
+    "u_residual": 0.6338517662434677,
+    "v_residual": 0.5235135516322954,
+    "rhie_chow_flux_defect": 0.00018634036041577636
+  },
+  {
+    "iteration": 5,
+    "continuity": 1.7789182670327475e-14,
+    "momentum": 0.5584140036204949,
+    "mass_imbalance": 5.551115123125783e-16,
+    "velocity_change": 0.053784706537958527,
+    "u_residual": 0.5584140036204948,
+    "v_residual": 0.44369489304093757,
+    "rhie_chow_flux_defect": 0.000154093984899783
+  },
+  {
+    "iteration": 6,
+    "continuity": 4.2955087186866137e-14,
+    "momentum": 0.6236559501880783,
+    "mass_imbalance": 1.3877787807814457e-15,
+    "velocity_change": 0.036923745183682244,
+    "u_residual": 0.6236559501880783,
+    "v_residual": 0.5761608727179395,
+    "rhie_chow_flux_defect": 0.00018344841819410652
+  },
+  {
+    "iteration": 7,
+    "continuity": 1.0827927096612733e-14,
+    "momentum": 0.5975234944497833,
+    "mass_imbalance": 5.551115123125783e-16,
+    "velocity_change": 0.026947004817532205,
+    "u_residual": 0.5975234944497833,
+    "v_residual": 0.5537274323460822,
+    "rhie_chow_flux_defect": 0.00017575199918876973
+  },
+  {
+    "iteration": 8,
+    "continuity": 4.404915559912126e-14,
+    "momentum": 0.5610666100264032,
+    "mass_imbalance": 9.992007221626409e-16,
+    "velocity_change": 0.02556166200404253,
+    "u_residual": 0.5610666100264032,
+    "v_residual": 0.48740576259689616,
+    "rhie_chow_flux_defect": 0.0001400788908255112
+  },
+  {
+    "iteration": 9,
+    "continuity": 3.213209321013821e-14,
+    "momentum": 0.5125387449992822,
+    "mass_imbalance": 1.6653345369377348e-15,
+    "velocity_change": 0.02258469266319929,
+    "u_residual": 0.5125387449992823,
+    "v_residual": 0.49074171203445494,
+    "rhie_chow_flux_defect": 0.0001369201108275625
+  },
+  {
+    "iteration": 10,
+    "continuity": 5.882704805053318e-15,
+    "momentum": 0.5070909566643593,
+    "mass_imbalance": 5.551115123125783e-16,
+    "velocity_change": 0.021302645924931363,
+    "u_residual": 0.5070909566643592,
+    "v_residual": 0.49984581254728383,
+    "rhie_chow_flux_defect": 0.0001637839624258253
+  },
+  {
+    "iteration": 11,
+    "continuity": 9.050540265148621e-15,
+    "momentum": 0.4927762828685488,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 0.020005820007859998,
+    "u_residual": 0.4927762828685488,
+    "v_residual": 0.48425441876159414,
+    "rhie_chow_flux_defect": 0.00019001957594831696
+  },
+  {
+    "iteration": 12,
+    "continuity": 2.2987525511580786e-15,
+    "momentum": 0.48434999307649285,
+    "mass_imbalance": 3.3306690738754696e-16,
+    "velocity_change": 0.0177833933417485,
+    "u_residual": 0.48434999307649285,
+    "v_residual": 0.4462272111138452,
+    "rhie_chow_flux_defect": 0.00017465138459769926
+  },
+  {
+    "iteration": 13,
+    "continuity": 1.1283075168622148e-14,
+    "momentum": 0.5090043773669359,
+    "mass_imbalance": 2.7755575615628914e-16,
+    "velocity_change": 0.01676582672005611,
+    "u_residual": 0.5090043773669359,
+    "v_residual": 0.4604306878947969,
+    "rhie_chow_flux_defect": 0.00015057374179140378
+  },
+  {
+    "iteration": 14,
+    "continuity": 1.1024601370701603e-14,
+    "momentum": 0.4936107642402442,
+    "mass_imbalance": 4.996003610813204e-16,
+    "velocity_change": 0.01625857908513406,
+    "u_residual": 0.4936107642402442,
+    "v_residual": 0.4497426022302235,
+    "rhie_chow_flux_defect": 0.00013604749556604779
+  },
+  {
+    "iteration": 15,
+    "continuity": 2.5034661843559292e-14,
+    "momentum": 0.4659067046802567,
+    "mass_imbalance": 9.43689570931383e-16,
+    "velocity_change": 0.016645727382169184,
+    "u_residual": 0.4659067046802567,
+    "v_residual": 0.4379388418556426,
+    "rhie_chow_flux_defect": 0.00013508899557333312
+  },
+  {
+    "iteration": 16,
+    "continuity": 4.9967408682904946e-14,
+    "momentum": 0.4446982231517139,
+    "mass_imbalance": 2.55351295663786e-15,
+    "velocity_change": 0.016939841438262104,
+    "u_residual": 0.4446982231517139,
+    "v_residual": 0.41993282314080954,
+    "rhie_chow_flux_defect": 0.00014757417138221653
+  },
+  {
+    "iteration": 17,
+    "continuity": 3.354955202539145e-15,
+    "momentum": 0.4364208582380127,
+    "mass_imbalance": 2.7755575615628914e-16,
+    "velocity_change": 0.016960873708168234,
+    "u_residual": 0.43642085823801274,
+    "v_residual": 0.4160515361797156,
+    "rhie_chow_flux_defect": 0.00015228379998672172
+  },
+  {
+    "iteration": 18,
+    "continuity": 7.26935872608081e-15,
+    "momentum": 0.43008060084013905,
+    "mass_imbalance": 0.0,
+    "velocity_change": 0.01737215611789733,
+    "u_residual": 0.43008060084013905,
+    "v_residual": 0.42724818942016324,
+    "rhie_chow_flux_defect": 0.00015427433877825876
+  },
+  {
+    "iteration": 19,
+    "continuity": 1.487091699781118e-14,
+    "momentum": 0.44293156080209994,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 0.01804821471831075,
+    "u_residual": 0.44293156080209994,
+    "v_residual": 0.4377366637214457,
+    "rhie_chow_flux_defect": 0.00016667344833646251
+  },
+  {
+    "iteration": 20,
+    "continuity": 2.568691787052657e-15,
+    "momentum": 0.4648690034203483,
+    "mass_imbalance": 4.440892098500626e-16,
+    "velocity_change": 0.01792675504080654,
+    "u_residual": 0.45541135098124985,
+    "v_residual": 0.46486900342034837,
+    "rhie_chow_flux_defect": 0.0001883993684686376
+  },
+  {
+    "iteration": 21,
+    "continuity": 1.0059661437189504e-14,
+    "momentum": 0.4952233676981649,
+    "mass_imbalance": 3.885780586188048e-16,
+    "velocity_change": 0.017411500535278734,
+    "u_residual": 0.4551612679802127,
+    "v_residual": 0.49522336769816494,
+    "rhie_chow_flux_defect": 0.00020118913356122445
+  },
+  {
+    "iteration": 22,
+    "continuity": 1.0785643211885798e-14,
+    "momentum": 0.506368537764827,
+    "mass_imbalance": 4.996003610813204e-16,
+    "velocity_change": 0.01639199437560024,
+    "u_residual": 0.45721607351474824,
+    "v_residual": 0.506368537764827,
+    "rhie_chow_flux_defect": 0.00018304953009231292
+  },
+  {
+    "iteration": 23,
+    "continuity": 1.7079219982729654e-14,
+    "momentum": 0.5362150841763562,
+    "mass_imbalance": 3.3306690738754696e-16,
+    "velocity_change": 0.0153323568238376,
+    "u_residual": 0.46478006412076117,
+    "v_residual": 0.5362150841763561,
+    "rhie_chow_flux_defect": 0.00016302722089349465
+  },
+  {
+    "iteration": 24,
+    "continuity": 1.1956581558170143e-15,
+    "momentum": 0.561751392533124,
+    "mass_imbalance": 2.220446049250313e-16,
+    "velocity_change": 0.014420453464342065,
+    "u_residual": 0.47119606438075196,
+    "v_residual": 0.561751392533124,
+    "rhie_chow_flux_defect": 0.0001609700842841891
+  },
+  {
+    "iteration": 25,
+    "continuity": 1.2119645564911963e-14,
+    "momentum": 0.5803227427524393,
+    "mass_imbalance": 3.885780586188048e-16,
+    "velocity_change": 0.013027986227720834,
+    "u_residual": 0.4737557532455744,
+    "v_residual": 0.5803227427524392,
+    "rhie_chow_flux_defect": 0.0001938635717174139
+  },
+  {
+    "iteration": 26,
+    "continuity": 1.554182130214521e-14,
+    "momentum": 0.5649424119971227,
+    "mass_imbalance": 5.551115123125783e-16,
+    "velocity_change": 0.011596869156256573,
+    "u_residual": 0.4665224585973904,
+    "v_residual": 0.5649424119971227,
+    "rhie_chow_flux_defect": 0.00021209344941007426
+  },
+  {
+    "iteration": 27,
+    "continuity": 1.8591031492043442e-14,
+    "momentum": 0.5701486822665389,
+    "mass_imbalance": 6.106226635438361e-16,
+    "velocity_change": 0.010789254187375863,
+    "u_residual": 0.4549082717614015,
+    "v_residual": 0.570148682266539,
+    "rhie_chow_flux_defect": 0.00020692737050712314
+  },
+  {
+    "iteration": 28,
+    "continuity": 7.99707522425308e-15,
+    "momentum": 0.5817129547126244,
+    "mass_imbalance": 6.661338147750939e-16,
+    "velocity_change": 0.010810896413347093,
+    "u_residual": 0.4531830371052145,
+    "v_residual": 0.5817129547126245,
+    "rhie_chow_flux_defect": 0.00019486029122639276
+  },
+  {
+    "iteration": 29,
+    "continuity": 1.1439633962329054e-14,
+    "momentum": 0.5888587596516408,
+    "mass_imbalance": 4.440892098500626e-16,
+    "velocity_change": 0.010999038546626538,
+    "u_residual": 0.4479507851840989,
+    "v_residual": 0.5888587596516408,
+    "rhie_chow_flux_defect": 0.00017870529658221008
+  },
+  {
+    "iteration": 30,
+    "continuity": 1.0776102232767926e-14,
+    "momentum": 0.6044965639445188,
+    "mass_imbalance": 1.887379141862766e-15,
+    "velocity_change": 0.010528694679621253,
+    "u_residual": 0.45323894511990725,
+    "v_residual": 0.6044965639445188,
+    "rhie_chow_flux_defect": 0.00017463720243935733
+  },
+  {
+    "iteration": 31,
+    "continuity": 6.220122073657963e-15,
+    "momentum": 0.6011303428619146,
+    "mass_imbalance": 1.1102230246251565e-16,
+    "velocity_change": 0.011657222070632578,
+    "u_residual": 0.45217364689902756,
+    "v_residual": 0.6011303428619148,
+    "rhie_chow_flux_defect": 0.0001663470900758358
+  },
+  {
+    "iteration": 32,
+    "continuity": 1.2719426206730944e-14,
+    "momentum": 0.5893200477781042,
+    "mass_imbalance": 1.2212453270876722e-15,
+    "velocity_change": 0.011451149002868366,
+    "u_residual": 0.444192525034924,
+    "v_residual": 0.5893200477781043,
+    "rhie_chow_flux_defect": 0.0001450447312942902
+  },
+  {
+    "iteration": 33,
+    "continuity": 9.212249019174834e-15,
+    "momentum": 0.5769167539868596,
+    "mass_imbalance": 7.771561172376096e-16,
+    "velocity_change": 0.010147110105595214,
+    "u_residual": 0.4366888596419757,
+    "v_residual": 0.5769167539868596,
+    "rhie_chow_flux_defect": 0.0001281548179665157
+  },
+  {
+    "iteration": 34,
+    "continuity": 1.574001345927556e-14,
+    "momentum": 0.576060245547315,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 0.008318883254445186,
+    "u_residual": 0.4306956898338792,
+    "v_residual": 0.576060245547315,
+    "rhie_chow_flux_defect": 0.0001180636464351414
+  },
+  {
+    "iteration": 35,
+    "continuity": 1.6812939929167214e-14,
+    "momentum": 0.5750151026516345,
+    "mass_imbalance": 1.1102230246251565e-15,
+    "velocity_change": 0.007786950103098489,
+    "u_residual": 0.42178255104908513,
+    "v_residual": 0.5750151026516344,
+    "rhie_chow_flux_defect": 0.00011549710759881237
+  },
+  {
+    "iteration": 36,
+    "continuity": 3.915270885279654e-15,
+    "momentum": 0.5694116857853069,
+    "mass_imbalance": 4.440892098500626e-16,
+    "velocity_change": 0.007623218923206387,
+    "u_residual": 0.4172844875345297,
+    "v_residual": 0.5694116857853069,
+    "rhie_chow_flux_defect": 0.00011710507340002499
+  },
+  {
+    "iteration": 37,
+    "continuity": 9.402960181315034e-15,
+    "momentum": 0.5603455040616043,
+    "mass_imbalance": 1.6653345369377348e-16,
+    "velocity_change": 0.007525613563187483,
+    "u_residual": 0.41407006216770714,
+    "v_residual": 0.5603455040616042,
+    "rhie_chow_flux_defect": 0.00011848730587891338
+  },
+  {
+    "iteration": 38,
+    "continuity": 2.7690686115605656e-14,
+    "momentum": 0.5474098747499865,
+    "mass_imbalance": 3.0531133177191805e-15,
+    "velocity_change": 0.007509653009568074,
+    "u_residual": 0.40407621486624645,
+    "v_residual": 0.5474098747499865,
+    "rhie_chow_flux_defect": 0.00011778220025371695
+  },
+  {
+    "iteration": 39,
+    "continuity": 1.2717691483254967e-14,
+    "momentum": 0.5193481255935924,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 0.007328913841944229,
+    "u_residual": 0.3769829448527013,
+    "v_residual": 0.5193481255935924,
+    "rhie_chow_flux_defect": 0.00010781766226683062
+  },
+  {
+    "iteration": 40,
+    "continuity": 3.0435181284926838e-15,
+    "momentum": 0.5167547147731598,
+    "mass_imbalance": 3.885780586188048e-16,
+    "velocity_change": 0.006844929181734627,
+    "u_residual": 0.3650599858272273,
+    "v_residual": 0.5167547147731598,
+    "rhie_chow_flux_defect": 0.00010463455605474708
+  },
+  {
+    "iteration": 41,
+    "continuity": 5.4913755834218314e-15,
+    "momentum": 0.5338805054525186,
+    "mass_imbalance": 2.220446049250313e-16,
+    "velocity_change": 0.006655720158361689,
+    "u_residual": 0.36948912565007586,
+    "v_residual": 0.5338805054525186,
+    "rhie_chow_flux_defect": 0.00010551619809217672
+  },
+  {
+    "iteration": 42,
+    "continuity": 3.184952301893418e-15,
+    "momentum": 0.555059424880281,
+    "mass_imbalance": 4.440892098500626e-16,
+    "velocity_change": 0.006651954626058276,
+    "u_residual": 0.37184048826482324,
+    "v_residual": 0.555059424880281,
+    "rhie_chow_flux_defect": 0.00010916739991296848
+  },
+  {
+    "iteration": 43,
+    "continuity": 4.0076449103754186e-15,
+    "momentum": 0.5531438183652498,
+    "mass_imbalance": 2.7755575615628914e-16,
+    "velocity_change": 0.006792901504951987,
+    "u_residual": 0.36912649422278176,
+    "v_residual": 0.5531438183652497,
+    "rhie_chow_flux_defect": 0.00010933540240971255
+  },
+  {
+    "iteration": 44,
+    "continuity": 1.1754106802458475e-15,
+    "momentum": 0.5505572933182722,
+    "mass_imbalance": 2.220446049250313e-16,
+    "velocity_change": 0.006829340283089513,
+    "u_residual": 0.37013684483979437,
+    "v_residual": 0.5505572933182721,
+    "rhie_chow_flux_defect": 0.00011110597519632606
+  },
+  {
+    "iteration": 45,
+    "continuity": 1.1917550279960665e-15,
+    "momentum": 0.5477515522582125,
+    "mass_imbalance": 2.7755575615628914e-16,
+    "velocity_change": 0.0069635810862397896,
+    "u_residual": 0.3692145190493876,
+    "v_residual": 0.5477515522582126,
+    "rhie_chow_flux_defect": 0.00011102913508983152
+  },
+  {
+    "iteration": 46,
+    "continuity": 4.021089017314239e-15,
+    "momentum": 0.5405238990006194,
+    "mass_imbalance": 2.3314683517128287e-15,
+    "velocity_change": 0.007021338808129274,
+    "u_residual": 0.3649238130911646,
+    "v_residual": 0.5405238990006191,
+    "rhie_chow_flux_defect": 0.0001037476511406351
+  },
+  {
+    "iteration": 47,
+    "continuity": 2.6154480057410945e-15,
+    "momentum": 0.5173223588726416,
+    "mass_imbalance": 1.0547118733938987e-15,
+    "velocity_change": 0.007287581300615131,
+    "u_residual": 0.35563967747188696,
+    "v_residual": 0.5173223588726414,
+    "rhie_chow_flux_defect": 9.263736003808736e-05
+  },
+  {
+    "iteration": 48,
+    "continuity": 6.160003063193642e-15,
+    "momentum": 0.501139934502734,
+    "mass_imbalance": 1.2212453270876722e-15,
+    "velocity_change": 0.007336234012625731,
+    "u_residual": 0.3480063487007273,
+    "v_residual": 0.501139934502734,
+    "rhie_chow_flux_defect": 7.977307852470689e-05
+  },
+  {
+    "iteration": 49,
+    "continuity": 1.9046179564052856e-15,
+    "momentum": 0.5059833404650209,
+    "mass_imbalance": 2.7755575615628914e-16,
+    "velocity_change": 0.007609699677385451,
+    "u_residual": 0.3485957953188419,
+    "v_residual": 0.5059833404650208,
+    "rhie_chow_flux_defect": 7.8890681092274e-05
+  },
+  {
+    "iteration": 50,
+    "continuity": 3.7990444123892075e-15,
+    "momentum": 0.5370567705242218,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 0.007529236472410716,
+    "u_residual": 0.35955728723845015,
+    "v_residual": 0.5370567705242218,
+    "rhie_chow_flux_defect": 8.398277870532065e-05
+  },
+  {
+    "iteration": 51,
+    "continuity": 3.119032809806299e-15,
+    "momentum": 0.541991409185375,
+    "mass_imbalance": 3.3306690738754696e-16,
+    "velocity_change": 0.007476227746665454,
+    "u_residual": 0.3600910156143391,
+    "v_residual": 0.541991409185375,
+    "rhie_chow_flux_defect": 8.426910257814233e-05
+  },
+  {
+    "iteration": 52,
+    "continuity": 9.874046025259986e-15,
+    "momentum": 0.5635467769124121,
+    "mass_imbalance": 1.7763568394002505e-15,
+    "velocity_change": 0.0075143803100405915,
+    "u_residual": 0.36802890045344516,
+    "v_residual": 0.5635467769124121,
+    "rhie_chow_flux_defect": 8.516642906115498e-05
+  },
+  {
+    "iteration": 53,
+    "continuity": 4.440892098500626e-15,
+    "momentum": 0.557906663163089,
+    "mass_imbalance": 7.771561172376096e-16,
+    "velocity_change": 0.007480307252130447,
+    "u_residual": 0.3638313592972424,
+    "v_residual": 0.557906663163089,
+    "rhie_chow_flux_defect": 8.355141688890667e-05
+  },
+  {
+    "iteration": 54,
+    "continuity": 2.5240226575462543e-15,
+    "momentum": 0.5253530156200554,
+    "mass_imbalance": 1.1102230246251565e-16,
+    "velocity_change": 0.007367100008753347,
+    "u_residual": 0.3383848399802921,
+    "v_residual": 0.5253530156200553,
+    "rhie_chow_flux_defect": 7.570662012495025e-05
+  },
+  {
+    "iteration": 55,
+    "continuity": 9.2260183867654e-15,
+    "momentum": 0.5071925604586491,
+    "mass_imbalance": 9.43689570931383e-16,
+    "velocity_change": 0.006770789078587525,
+    "u_residual": 0.3239513182590157,
+    "v_residual": 0.5071925604586491,
+    "rhie_chow_flux_defect": 7.558586424447194e-05
+  },
+  {
+    "iteration": 56,
+    "continuity": 7.187284621623657e-15,
+    "momentum": 0.48430091500746625,
+    "mass_imbalance": 2.4424906541753444e-15,
+    "velocity_change": 0.006133885264453742,
+    "u_residual": 0.3094442515787088,
+    "v_residual": 0.4843009150074662,
+    "rhie_chow_flux_defect": 7.690756167071404e-05
+  },
+  {
+    "iteration": 57,
+    "continuity": 2.0698503674920765e-14,
+    "momentum": 0.49151206886829024,
+    "mass_imbalance": 7.827072323607354e-15,
+    "velocity_change": 0.005649237827381137,
+    "u_residual": 0.3124428364424333,
+    "v_residual": 0.49151206886829024,
+    "rhie_chow_flux_defect": 7.789218703908332e-05
+  },
+  {
+    "iteration": 58,
+    "continuity": 4.326346138977533e-15,
+    "momentum": 0.5043535865074789,
+    "mass_imbalance": 2.7755575615628914e-16,
+    "velocity_change": 0.005366602720990099,
+    "u_residual": 0.31916186404314034,
+    "v_residual": 0.5043535865074787,
+    "rhie_chow_flux_defect": 7.807859866141641e-05
+  },
+  {
+    "iteration": 59,
+    "continuity": 6.926642419358142e-15,
+    "momentum": 0.4401844456882689,
+    "mass_imbalance": 1.1102230246251565e-15,
+    "velocity_change": 0.005384173371073997,
+    "u_residual": 0.29358006538747694,
+    "v_residual": 0.4401844456882689,
+    "rhie_chow_flux_defect": 6.65822700803942e-05
+  },
+  {
+    "iteration": 60,
+    "continuity": 5.461288973135359e-15,
+    "momentum": 0.43853309710100274,
+    "mass_imbalance": 9.992007221626409e-16,
+    "velocity_change": 0.004625880931843462,
+    "u_residual": 0.29162505199540667,
+    "v_residual": 0.4385330971010028,
+    "rhie_chow_flux_defect": 6.607501133484915e-05
+  },
+  {
+    "iteration": 61,
+    "continuity": 9.517994031815746e-15,
+    "momentum": 0.4297870121825079,
+    "mass_imbalance": 1.27675647831893e-15,
+    "velocity_change": 0.004378719495806482,
+    "u_residual": 0.28688905415564914,
+    "v_residual": 0.429787012182508,
+    "rhie_chow_flux_defect": 6.098150159267199e-05
+  },
+  {
+    "iteration": 62,
+    "continuity": 8.854895983123612e-15,
+    "momentum": 0.4343135501461815,
+    "mass_imbalance": 4.996003610813204e-16,
+    "velocity_change": 0.004066529989533885,
+    "u_residual": 0.28900583454999557,
+    "v_residual": 0.43431355014618145,
+    "rhie_chow_flux_defect": 5.966043838275683e-05
+  },
+  {
+    "iteration": 63,
+    "continuity": 9.929340336056747e-15,
+    "momentum": 0.4371493352098128,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 0.0036309061348741567,
+    "u_residual": 0.29380352704735946,
+    "v_residual": 0.43714933520981286,
+    "rhie_chow_flux_defect": 5.743368531995429e-05
+  },
+  {
+    "iteration": 64,
+    "continuity": 1.8316511501970112e-14,
+    "momentum": 0.4333909896022578,
+    "mass_imbalance": 6.661338147750939e-16,
+    "velocity_change": 0.003246874833387259,
+    "u_residual": 0.2955815865024831,
+    "v_residual": 0.4333909896022578,
+    "rhie_chow_flux_defect": 5.3516357737698535e-05
+  },
+  {
+    "iteration": 65,
+    "continuity": 2.8847367203321816e-15,
+    "momentum": 0.4226143687458143,
+    "mass_imbalance": 3.3306690738754696e-16,
+    "velocity_change": 0.0028601355547350216,
+    "u_residual": 0.2897721087963131,
+    "v_residual": 0.4226143687458143,
+    "rhie_chow_flux_defect": 5.119504742635684e-05
+  },
+  {
+    "iteration": 66,
+    "continuity": 4.406349417285238e-14,
+    "momentum": 0.40330937475915163,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 0.0026523165570466745,
+    "u_residual": 0.2823262485339172,
+    "v_residual": 0.40330937475915163,
+    "rhie_chow_flux_defect": 4.838115829306803e-05
+  },
+  {
+    "iteration": 67,
+    "continuity": 3.841935450332734e-14,
+    "momentum": 0.4210766995546597,
+    "mass_imbalance": 1.27675647831893e-15,
+    "velocity_change": 0.002311501386665582,
+    "u_residual": 0.2911788998259902,
+    "v_residual": 0.42107669955465965,
+    "rhie_chow_flux_defect": 4.9835210227771646e-05
+  },
+  {
+    "iteration": 68,
+    "continuity": 7.101957910649048e-15,
+    "momentum": 0.42878618607280733,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 0.0022319194725543,
+    "u_residual": 0.2940015915248135,
+    "v_residual": 0.4287861860728074,
+    "rhie_chow_flux_defect": 4.971800927878879e-05
+  },
+  {
+    "iteration": 69,
+    "continuity": 1.5990030480250716e-14,
+    "momentum": 0.42289557636237046,
+    "mass_imbalance": 3.885780586188048e-16,
+    "velocity_change": 0.0020649251764861543,
+    "u_residual": 0.28901079608572094,
+    "v_residual": 0.4228955763623705,
+    "rhie_chow_flux_defect": 4.674333369610081e-05
+  },
+  {
+    "iteration": 70,
+    "continuity": 1.402935927152793e-14,
+    "momentum": 0.41813778966685916,
+    "mass_imbalance": 6.106226635438361e-16,
+    "velocity_change": 0.0016983634465356223,
+    "u_residual": 0.28722316353384836,
+    "v_residual": 0.4181377896668591,
+    "rhie_chow_flux_defect": 4.5111032830562476e-05
+  },
+  {
+    "iteration": 71,
+    "continuity": 1.3663115777662327e-14,
+    "momentum": 0.42175217349320065,
+    "mass_imbalance": 3.885780586188048e-16,
+    "velocity_change": 0.0017383502558243613,
+    "u_residual": 0.2892570025793231,
+    "v_residual": 0.42175217349320065,
+    "rhie_chow_flux_defect": 4.559995998307999e-05
+  },
+  {
+    "iteration": 72,
+    "continuity": 6.416416876986464e-14,
+    "momentum": 0.4388522244323335,
+    "mass_imbalance": 2.609024107869118e-15,
+    "velocity_change": 0.0016553548835694931,
+    "u_residual": 0.2951200289306542,
+    "v_residual": 0.4388522244323335,
+    "rhie_chow_flux_defect": 4.552340352874795e-05
+  },
+  {
+    "iteration": 73,
+    "continuity": 1.2739809207573671e-14,
+    "momentum": 0.4372975077019843,
+    "mass_imbalance": 4.440892098500626e-16,
+    "velocity_change": 0.0013395014432923125,
+    "u_residual": 0.2931374373706004,
+    "v_residual": 0.4372975077019842,
+    "rhie_chow_flux_defect": 4.454690276373781e-05
+  },
+  {
+    "iteration": 74,
+    "continuity": 4.479923376710104e-15,
+    "momentum": 0.4502591813763142,
+    "mass_imbalance": 0.0,
+    "velocity_change": 0.0012790135398307312,
+    "u_residual": 0.2955630271883058,
+    "v_residual": 0.45025918137631427,
+    "rhie_chow_flux_defect": 4.477148585098014e-05
+  },
+  {
+    "iteration": 75,
+    "continuity": 4.602221381766469e-15,
+    "momentum": 0.5205292917542099,
+    "mass_imbalance": 1.2212453270876722e-15,
+    "velocity_change": 0.0011773886952773371,
+    "u_residual": 0.32749721157189526,
+    "v_residual": 0.5205292917542099,
+    "rhie_chow_flux_defect": 5.254469341080301e-05
+  },
+  {
+    "iteration": 76,
+    "continuity": 2.299050706755512e-15,
+    "momentum": 0.5335027980558565,
+    "mass_imbalance": 3.885780586188048e-16,
+    "velocity_change": 0.0010931098433245579,
+    "u_residual": 0.33395921430497033,
+    "v_residual": 0.5335027980558567,
+    "rhie_chow_flux_defect": 5.414359910481409e-05
+  },
+  {
+    "iteration": 77,
+    "continuity": 2.95293303698152e-15,
+    "momentum": 0.526136166904478,
+    "mass_imbalance": 2.4980018054066022e-15,
+    "velocity_change": 0.0010666065873409236,
+    "u_residual": 0.33159724118649186,
+    "v_residual": 0.5261361669044781,
+    "rhie_chow_flux_defect": 5.373018651652567e-05
+  },
+  {
+    "iteration": 78,
+    "continuity": 1.840460292848456e-15,
+    "momentum": 0.5309594971800853,
+    "mass_imbalance": 1.6653345369377348e-16,
+    "velocity_change": 0.001155869723399039,
+    "u_residual": 0.3346387793949941,
+    "v_residual": 0.5309594971800853,
+    "rhie_chow_flux_defect": 5.448859024475373e-05
+  },
+  {
+    "iteration": 79,
+    "continuity": 2.501308622032683e-15,
+    "momentum": 0.5411681908871956,
+    "mass_imbalance": 2.220446049250313e-16,
+    "velocity_change": 0.0012243530264151037,
+    "u_residual": 0.33818513921636295,
+    "v_residual": 0.5411681908871956,
+    "rhie_chow_flux_defect": 5.494568362400938e-05
+  },
+  {
+    "iteration": 80,
+    "continuity": 2.9688301513355886e-15,
+    "momentum": 0.5545660782339804,
+    "mass_imbalance": 6.661338147750939e-16,
+    "velocity_change": 0.0012192670198744038,
+    "u_residual": 0.3444879158671789,
+    "v_residual": 0.5545660782339804,
+    "rhie_chow_flux_defect": 5.558431870385312e-05
+  },
+  {
+    "iteration": 81,
+    "continuity": 5.633297647800184e-15,
+    "momentum": 0.5551406923282388,
+    "mass_imbalance": 3.885780586188048e-16,
+    "velocity_change": 0.0012108005421466728,
+    "u_residual": 0.34240108025948196,
+    "v_residual": 0.5551406923282387,
+    "rhie_chow_flux_defect": 5.366633780172103e-05
+  },
+  {
+    "iteration": 82,
+    "continuity": 2.1981114844971117e-15,
+    "momentum": 0.5463027887857983,
+    "mass_imbalance": 7.216449660063518e-16,
+    "velocity_change": 0.001171905708335086,
+    "u_residual": 0.33399718290922503,
+    "v_residual": 0.5463027887857983,
+    "rhie_chow_flux_defect": 5.04764080331189e-05
+  },
+  {
+    "iteration": 83,
+    "continuity": 9.368414789594215e-15,
+    "momentum": 0.5505179639722099,
+    "mass_imbalance": 1.1102230246251565e-16,
+    "velocity_change": 0.0011935731954397788,
+    "u_residual": 0.33493829563529787,
+    "v_residual": 0.5505179639722099,
+    "rhie_chow_flux_defect": 4.968115891361258e-05
+  },
+  {
+    "iteration": 84,
+    "continuity": 6.3330417299223285e-15,
+    "momentum": 0.5417848395844219,
+    "mass_imbalance": 1.1102230246251565e-16,
+    "velocity_change": 0.0012007938427323062,
+    "u_residual": 0.3307570493179458,
+    "v_residual": 0.5417848395844219,
+    "rhie_chow_flux_defect": 4.8232161880611605e-05
+  },
+  {
+    "iteration": 85,
+    "continuity": 2.9752676017347213e-15,
+    "momentum": 0.5348438580533357,
+    "mass_imbalance": 4.996003610813204e-16,
+    "velocity_change": 0.0012015628761590236,
+    "u_residual": 0.32705085580324117,
+    "v_residual": 0.5348438580533357,
+    "rhie_chow_flux_defect": 4.7196835019780744e-05
+  },
+  {
+    "iteration": 86,
+    "continuity": 1.4172690798730514e-15,
+    "momentum": 0.5411474158775266,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 0.0012420023885884035,
+    "u_residual": 0.3298243158489017,
+    "v_residual": 0.5411474158775265,
+    "rhie_chow_flux_defect": 4.78292873533121e-05
+  },
+  {
+    "iteration": 87,
+    "continuity": 5.3149115154544485e-15,
+    "momentum": 0.5383900834872409,
+    "mass_imbalance": 2.3314683517128287e-15,
+    "velocity_change": 0.0012188367717355097,
+    "u_residual": 0.3288389217917379,
+    "v_residual": 0.5383900834872409,
+    "rhie_chow_flux_defect": 4.675474671369974e-05
+  },
+  {
+    "iteration": 88,
+    "continuity": 7.57776681030789e-15,
+    "momentum": 0.554818363590988,
+    "mass_imbalance": 2.4980018054066022e-15,
+    "velocity_change": 0.0011570390743612657,
+    "u_residual": 0.33730188813565587,
+    "v_residual": 0.554818363590988,
+    "rhie_chow_flux_defect": 4.855312871428112e-05
+  },
+  {
+    "iteration": 89,
+    "continuity": 4.2113122884768206e-15,
+    "momentum": 0.608367113254783,
+    "mass_imbalance": 1.3322676295501878e-15,
+    "velocity_change": 0.0011683891754272757,
+    "u_residual": 0.3651429749301568,
+    "v_residual": 0.608367113254783,
+    "rhie_chow_flux_defect": 5.5060240947461356e-05
+  },
+  {
+    "iteration": 90,
+    "continuity": 4.7951873456122604e-15,
+    "momentum": 0.6138688076967028,
+    "mass_imbalance": 1.7208456881689926e-15,
+    "velocity_change": 0.001135181875823621,
+    "u_residual": 0.3699907931198052,
+    "v_residual": 0.6138688076967027,
+    "rhie_chow_flux_defect": 5.496703982475921e-05
+  },
+  {
+    "iteration": 91,
+    "continuity": 3.0751327862160033e-15,
+    "momentum": 0.6322739082026883,
+    "mass_imbalance": 9.992007221626409e-16,
+    "velocity_change": 0.0010831725226432415,
+    "u_residual": 0.3790649625639803,
+    "v_residual": 0.6322739082026883,
+    "rhie_chow_flux_defect": 5.617277329494355e-05
+  },
+  {
+    "iteration": 92,
+    "continuity": 8.159720796718957e-15,
+    "momentum": 0.644513592228459,
+    "mass_imbalance": 4.440892098500626e-16,
+    "velocity_change": 0.0011308692099231618,
+    "u_residual": 0.3859314290776233,
+    "v_residual": 0.644513592228459,
+    "rhie_chow_flux_defect": 5.7201518380559896e-05
+  },
+  {
+    "iteration": 93,
+    "continuity": 1.1177074077470955e-14,
+    "momentum": 0.6291545624742302,
+    "mass_imbalance": 3.885780586188048e-16,
+    "velocity_change": 0.0011572403277110288,
+    "u_residual": 0.3791221749621313,
+    "v_residual": 0.6291545624742303,
+    "rhie_chow_flux_defect": 5.537301582820869e-05
+  },
+  {
+    "iteration": 94,
+    "continuity": 1.2842645783633921e-14,
+    "momentum": 0.6396126229835613,
+    "mass_imbalance": 3.3306690738754696e-16,
+    "velocity_change": 0.0011291609116691973,
+    "u_residual": 0.37945757871661323,
+    "v_residual": 0.6396126229835613,
+    "rhie_chow_flux_defect": 5.526732391448461e-05
+  },
+  {
+    "iteration": 95,
+    "continuity": 9.595046924961576e-15,
+    "momentum": 0.648301728205425,
+    "mass_imbalance": 9.992007221626409e-16,
+    "velocity_change": 0.0010853206935715794,
+    "u_residual": 0.3850800681900599,
+    "v_residual": 0.648301728205425,
+    "rhie_chow_flux_defect": 5.548076912846237e-05
+  },
+  {
+    "iteration": 96,
+    "continuity": 5.503444108854311e-15,
+    "momentum": 0.6457384855465284,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 0.0010888308799664424,
+    "u_residual": 0.3810467117678997,
+    "v_residual": 0.6457384855465282,
+    "rhie_chow_flux_defect": 5.450721297868922e-05
+  },
+  {
+    "iteration": 97,
+    "continuity": 1.545831740607309e-14,
+    "momentum": 0.6347622432109624,
+    "mass_imbalance": 1.6653345369377348e-16,
+    "velocity_change": 0.001103944414124326,
+    "u_residual": 0.37452971841249655,
+    "v_residual": 0.6347622432109624,
+    "rhie_chow_flux_defect": 5.275740267632322e-05
+  },
+  {
+    "iteration": 98,
+    "continuity": 5.331191488700676e-15,
+    "momentum": 0.6022893984251411,
+    "mass_imbalance": 7.771561172376096e-16,
+    "velocity_change": 0.001088140493771943,
+    "u_residual": 0.35848806240300557,
+    "v_residual": 0.6022893984251411,
+    "rhie_chow_flux_defect": 4.835660513669643e-05
+  },
+  {
+    "iteration": 99,
+    "continuity": 3.0853886611413583e-15,
+    "momentum": 0.5985110592537983,
+    "mass_imbalance": 4.996003610813204e-16,
+    "velocity_change": 0.0010238852797198085,
+    "u_residual": 0.354524194522164,
+    "v_residual": 0.5985110592537982,
+    "rhie_chow_flux_defect": 4.7685380025208854e-05
+  },
+  {
+    "iteration": 100,
+    "continuity": 2.632442874794805e-16,
+    "momentum": 0.5971053400366859,
+    "mass_imbalance": 0.0,
+    "velocity_change": 0.001019598107814254,
+    "u_residual": 0.3548650744365999,
+    "v_residual": 0.597105340036686,
+    "rhie_chow_flux_defect": 4.757855509159904e-05
+  },
+  {
+    "iteration": 101,
+    "continuity": 3.727487069005164e-16,
+    "momentum": 0.571158598652462,
+    "mass_imbalance": 3.3306690738754696e-16,
+    "velocity_change": 0.0010253207074308705,
+    "u_residual": 0.34209332845449164,
+    "v_residual": 0.571158598652462,
+    "rhie_chow_flux_defect": 4.50747603448538e-05
+  },
+  {
+    "iteration": 102,
+    "continuity": 1.8943180357666733e-15,
+    "momentum": 0.5653530704021805,
+    "mass_imbalance": 7.771561172376096e-16,
+    "velocity_change": 0.000981856111171301,
+    "u_residual": 0.3384377120842751,
+    "v_residual": 0.5653530704021804,
+    "rhie_chow_flux_defect": 4.4704942745474254e-05
+  },
+  {
+    "iteration": 103,
+    "continuity": 1.1387104367072132e-15,
+    "momentum": 0.5376163693365867,
+    "mass_imbalance": 3.3306690738754696e-16,
+    "velocity_change": 0.0009467839636509035,
+    "u_residual": 0.3252183265089047,
+    "v_residual": 0.5376163693365867,
+    "rhie_chow_flux_defect": 4.12521801042158e-05
+  },
+  {
+    "iteration": 104,
+    "continuity": 2.3175905639050143e-15,
+    "momentum": 0.47704139091888587,
+    "mass_imbalance": 1.27675647831893e-15,
+    "velocity_change": 0.000873019884424741,
+    "u_residual": 0.2950206091406974,
+    "v_residual": 0.4770413909188858,
+    "rhie_chow_flux_defect": 3.493625812363622e-05
+  },
+  {
+    "iteration": 105,
+    "continuity": 2.67841304690819e-15,
+    "momentum": 0.4508266554073511,
+    "mass_imbalance": 1.1102230246251565e-15,
+    "velocity_change": 0.000808885097842966,
+    "u_residual": 0.28174141410617165,
+    "v_residual": 0.450826655407351,
+    "rhie_chow_flux_defect": 3.2120706575417124e-05
+  },
+  {
+    "iteration": 106,
+    "continuity": 2.8449465006019636e-15,
+    "momentum": 0.41775084636463483,
+    "mass_imbalance": 6.661338147750939e-16,
+    "velocity_change": 0.0007874594571811609,
+    "u_residual": 0.2687720891927736,
+    "v_residual": 0.41775084636463483,
+    "rhie_chow_flux_defect": 2.8050335966563527e-05
+  },
+  {
+    "iteration": 107,
+    "continuity": 1.1657341758564144e-15,
+    "momentum": 0.4042085498159975,
+    "mass_imbalance": 5.551115123125783e-16,
+    "velocity_change": 0.0007470363255476405,
+    "u_residual": 0.2629412915613101,
+    "v_residual": 0.4042085498159975,
+    "rhie_chow_flux_defect": 2.6488391864477432e-05
+  },
+  {
+    "iteration": 108,
+    "continuity": 2.4980018054066022e-15,
+    "momentum": 0.38137982087425193,
+    "mass_imbalance": 4.440892098500626e-16,
+    "velocity_change": 0.0007215118557927442,
+    "u_residual": 0.25162925756529375,
+    "v_residual": 0.38137982087425193,
+    "rhie_chow_flux_defect": 2.398815813427097e-05
+  },
+  {
+    "iteration": 109,
+    "continuity": 3.5388358909926865e-16,
+    "momentum": 0.3602333930138133,
+    "mass_imbalance": 1.1102230246251565e-16,
+    "velocity_change": 0.0006835313282345691,
+    "u_residual": 0.24275807399253013,
+    "v_residual": 0.3602333930138133,
+    "rhie_chow_flux_defect": 2.2558058394056026e-05
+  },
+  {
+    "iteration": 110,
+    "continuity": 8.378714388967978e-16,
+    "momentum": 0.3689146163093941,
+    "mass_imbalance": 1.6653345369377348e-16,
+    "velocity_change": 0.0006536554919643299,
+    "u_residual": 0.24341291717226826,
+    "v_residual": 0.36891461630939415,
+    "rhie_chow_flux_defect": 2.3281631058045188e-05
+  },
+  {
+    "iteration": 111,
+    "continuity": 3.7296554733501353e-16,
+    "momentum": 0.37223363121333564,
+    "mass_imbalance": 3.3306690738754696e-16,
+    "velocity_change": 0.0006708732105195087,
+    "u_residual": 0.24361338565780105,
+    "v_residual": 0.3722336312133357,
+    "rhie_chow_flux_defect": 2.343724153937575e-05
+  },
+  {
+    "iteration": 112,
+    "continuity": 4.3021142204224816e-16,
+    "momentum": 0.36429932000865484,
+    "mass_imbalance": 1.1102230246251565e-15,
+    "velocity_change": 0.0006676136099631382,
+    "u_residual": 0.23604149530159024,
+    "v_residual": 0.3642993200086549,
+    "rhie_chow_flux_defect": 2.2641640980432034e-05
+  },
+  {
+    "iteration": 113,
+    "continuity": 4.718447854656915e-16,
+    "momentum": 0.3653425565887318,
+    "mass_imbalance": 7.771561172376096e-16,
+    "velocity_change": 0.0006446718475983503,
+    "u_residual": 0.23051259994048354,
+    "v_residual": 0.3653425565887318,
+    "rhie_chow_flux_defect": 2.3149617783555664e-05
+  },
+  {
+    "iteration": 114,
+    "continuity": 1.6004856944959456e-16,
+    "momentum": 0.36144379621243294,
+    "mass_imbalance": 2.7755575615628914e-16,
+    "velocity_change": 0.0006567483787902981,
+    "u_residual": 0.22681513019496743,
+    "v_residual": 0.3614437962124329,
+    "rhie_chow_flux_defect": 2.266559098432846e-05
+  },
+  {
+    "iteration": 115,
+    "continuity": 4.996003610813204e-16,
+    "momentum": 0.34485966773542154,
+    "mass_imbalance": 2.4980018054066022e-15,
+    "velocity_change": 0.0006433814824035522,
+    "u_residual": 0.21774619715294685,
+    "v_residual": 0.34485966773542154,
+    "rhie_chow_flux_defect": 2.0705382849281407e-05
+  },
+  {
+    "iteration": 116,
+    "continuity": 9.71445146547012e-16,
+    "momentum": 0.32290206449333475,
+    "mass_imbalance": 3.3306690738754696e-16,
+    "velocity_change": 0.0005804924855092198,
+    "u_residual": 0.20513745619411827,
+    "v_residual": 0.3229020644933348,
+    "rhie_chow_flux_defect": 1.8633351792882872e-05
+  },
+  {
+    "iteration": 117,
+    "continuity": 3.7470027081099033e-16,
+    "momentum": 0.30552010320466544,
+    "mass_imbalance": 1.0547118733938987e-15,
+    "velocity_change": 0.00048561796183171566,
+    "u_residual": 0.1943046208296692,
+    "v_residual": 0.30552010320466544,
+    "rhie_chow_flux_defect": 1.7888652811211496e-05
+  },
+  {
+    "iteration": 118,
+    "continuity": 3.3940949009658716e-16,
+    "momentum": 0.29559373953176754,
+    "mass_imbalance": 2.7755575615628914e-16,
+    "velocity_change": 0.0004724428720091953,
+    "u_residual": 0.18842131022499198,
+    "v_residual": 0.29559373953176754,
+    "rhie_chow_flux_defect": 1.7904888012796207e-05
+  },
+  {
+    "iteration": 119,
+    "continuity": 7.216449660063518e-16,
+    "momentum": 0.273620852597113,
+    "mass_imbalance": 4.996003610813204e-16,
+    "velocity_change": 0.0004833219900145496,
+    "u_residual": 0.18065355324242707,
+    "v_residual": 0.273620852597113,
+    "rhie_chow_flux_defect": 1.730834862952092e-05
+  },
+  {
+    "iteration": 120,
+    "continuity": 5.32993787993874e-16,
+    "momentum": 0.26314451513832726,
+    "mass_imbalance": 2.7755575615628914e-16,
+    "velocity_change": 0.00047505615634205797,
+    "u_residual": 0.17764605923653043,
+    "v_residual": 0.26314451513832726,
+    "rhie_chow_flux_defect": 1.769709094753599e-05
+  },
+  {
+    "iteration": 121,
+    "continuity": 1.2697091641977742e-15,
+    "momentum": 0.2549880554196755,
+    "mass_imbalance": 6.661338147750939e-16,
+    "velocity_change": 0.00047817249415832474,
+    "u_residual": 0.17671009075523217,
+    "v_residual": 0.2549880554196755,
+    "rhie_chow_flux_defect": 1.901361794856703e-05
+  },
+  {
+    "iteration": 122,
+    "continuity": 5.205254630102907e-16,
+    "momentum": 0.25001285071455087,
+    "mass_imbalance": 7.216449660063518e-16,
+    "velocity_change": 0.0005315984260686685,
+    "u_residual": 0.17538320826503012,
+    "v_residual": 0.2500128507145509,
+    "rhie_chow_flux_defect": 1.9273407188028822e-05
+  },
+  {
+    "iteration": 123,
+    "continuity": 9.126813887982976e-16,
+    "momentum": 0.2439489309708101,
+    "mass_imbalance": 6.106226635438361e-16,
+    "velocity_change": 0.0005347122554925114,
+    "u_residual": 0.17214312309841096,
+    "v_residual": 0.24394893097081013,
+    "rhie_chow_flux_defect": 2.0041905696161074e-05
+  },
+  {
+    "iteration": 124,
+    "continuity": 2.4671562535993896e-15,
+    "momentum": 0.23957117154607258,
+    "mass_imbalance": 2.1094237467877974e-15,
+    "velocity_change": 0.0005142932050747019,
+    "u_residual": 0.17450717700233215,
+    "v_residual": 0.23957117154607258,
+    "rhie_chow_flux_defect": 2.2625714725646266e-05
+  },
+  {
+    "iteration": 125,
+    "continuity": 1.988372574229791e-15,
+    "momentum": 0.24064002580442712,
+    "mass_imbalance": 3.3306690738754696e-16,
+    "velocity_change": 0.0005422414982275397,
+    "u_residual": 0.17372743733511592,
+    "v_residual": 0.24064002580442714,
+    "rhie_chow_flux_defect": 2.2374746697334365e-05
+  },
+  {
+    "iteration": 126,
+    "continuity": 3.0899761915836876e-15,
+    "momentum": 0.2368683903307771,
+    "mass_imbalance": 2.220446049250313e-16,
+    "velocity_change": 0.0005073510178421818,
+    "u_residual": 0.17120530239735454,
+    "v_residual": 0.2368683903307771,
+    "rhie_chow_flux_defect": 2.15856152797237e-05
+  },
+  {
+    "iteration": 127,
+    "continuity": 7.743155075456976e-15,
+    "momentum": 0.2283526352537092,
+    "mass_imbalance": 1.2212453270876722e-15,
+    "velocity_change": 0.0004858859417469037,
+    "u_residual": 0.17285542112187408,
+    "v_residual": 0.2283526352537092,
+    "rhie_chow_flux_defect": 2.289528999196109e-05
+  },
+  {
+    "iteration": 128,
+    "continuity": 3.8248484240943625e-15,
+    "momentum": 0.22608232490860058,
+    "mass_imbalance": 1.0547118733938987e-15,
+    "velocity_change": 0.0005533843807130389,
+    "u_residual": 0.1721215502627625,
+    "v_residual": 0.22608232490860058,
+    "rhie_chow_flux_defect": 2.303525504826953e-05
+  },
+  {
+    "iteration": 129,
+    "continuity": 5.7462715141731735e-15,
+    "momentum": 0.22461309019025016,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 0.000552259731602698,
+    "u_residual": 0.17195155261834627,
+    "v_residual": 0.2246130901902502,
+    "rhie_chow_flux_defect": 2.270196346699607e-05
+  },
+  {
+    "iteration": 130,
+    "continuity": 9.562880001756646e-15,
+    "momentum": 0.22295179317742878,
+    "mass_imbalance": 2.6645352591003757e-15,
+    "velocity_change": 0.0005226969332499144,
+    "u_residual": 0.16962476994308673,
+    "v_residual": 0.22295179317742878,
+    "rhie_chow_flux_defect": 2.254292831445742e-05
+  },
+  {
+    "iteration": 131,
+    "continuity": 1.900389567932592e-15,
+    "momentum": 0.21945529446090437,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 0.0004566621186694684,
+    "u_residual": 0.1663101407681546,
+    "v_residual": 0.21945529446090437,
+    "rhie_chow_flux_defect": 2.2567296851855383e-05
+  },
+  {
+    "iteration": 132,
+    "continuity": 2.495399720192637e-15,
+    "momentum": 0.2074346852858873,
+    "mass_imbalance": 1.0547118733938987e-15,
+    "velocity_change": 0.00040406853158252154,
+    "u_residual": 0.16542044936613087,
+    "v_residual": 0.20743468528588727,
+    "rhie_chow_flux_defect": 2.174972004905102e-05
+  },
+  {
+    "iteration": 133,
+    "continuity": 4.581838380923742e-16,
+    "momentum": 0.20616307309274862,
+    "mass_imbalance": 1.1102230246251565e-16,
+    "velocity_change": 0.00035618095658571103,
+    "u_residual": 0.16484711660260454,
+    "v_residual": 0.20616307309274862,
+    "rhie_chow_flux_defect": 2.2070891534525208e-05
+  },
+  {
+    "iteration": 134,
+    "continuity": 1.575345756621438e-15,
+    "momentum": 0.20751577799597887,
+    "mass_imbalance": 1.1102230246251565e-16,
+    "velocity_change": 0.0003234089666445134,
+    "u_residual": 0.16065758533397814,
+    "v_residual": 0.20751577799597887,
+    "rhie_chow_flux_defect": 2.2998222994085175e-05
+  },
+  {
+    "iteration": 135,
+    "continuity": 2.983724378680108e-16,
+    "momentum": 0.20060061733765172,
+    "mass_imbalance": 1.6653345369377348e-16,
+    "velocity_change": 0.00025752860099784863,
+    "u_residual": 0.15877218205134427,
+    "v_residual": 0.20060061733765172,
+    "rhie_chow_flux_defect": 2.2351840084658e-05
+  },
+  {
+    "iteration": 136,
+    "continuity": 1.249000902703301e-16,
+    "momentum": 0.19087762277007253,
+    "mass_imbalance": 2.7755575615628914e-16,
+    "velocity_change": 0.0002384948435421412,
+    "u_residual": 0.15225477130629625,
+    "v_residual": 0.19087762277007256,
+    "rhie_chow_flux_defect": 2.1575844494636156e-05
+  },
+  {
+    "iteration": 137,
+    "continuity": 1.249000902703301e-16,
+    "momentum": 0.18901470534419926,
+    "mass_imbalance": 3.885780586188048e-16,
+    "velocity_change": 0.00022474794004323506,
+    "u_residual": 0.146520200914173,
+    "v_residual": 0.18901470534419929,
+    "rhie_chow_flux_defect": 2.2117888885152324e-05
+  },
+  {
+    "iteration": 138,
+    "continuity": 2.8189256484623115e-16,
+    "momentum": 0.1914768696964952,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 0.0002140237549888447,
+    "u_residual": 0.14590440300940294,
+    "v_residual": 0.1914768696964952,
+    "rhie_chow_flux_defect": 2.2782860743816757e-05
+  },
+  {
+    "iteration": 139,
+    "continuity": 3.8510861166685117e-16,
+    "momentum": 0.18579248314554098,
+    "mass_imbalance": 1.1102230246251565e-16,
+    "velocity_change": 0.00023421996627939062,
+    "u_residual": 0.1417402372061545,
+    "v_residual": 0.18579248314554098,
+    "rhie_chow_flux_defect": 2.2198595750344144e-05
+  },
+  {
+    "iteration": 140,
+    "continuity": 1.249000902703301e-16,
+    "momentum": 0.17871272047947317,
+    "mass_imbalance": 4.440892098500626e-16,
+    "velocity_change": 0.0002380438574106844,
+    "u_residual": 0.13743410290155675,
+    "v_residual": 0.17871272047947315,
+    "rhie_chow_flux_defect": 2.1030719531500025e-05
+  },
+  {
+    "iteration": 141,
+    "continuity": 1.249000902703301e-16,
+    "momentum": 0.18061599280051052,
+    "mass_imbalance": 4.440892098500626e-16,
+    "velocity_change": 0.00022237575918830285,
+    "u_residual": 0.13501865360407683,
+    "v_residual": 0.18061599280051055,
+    "rhie_chow_flux_defect": 2.1099703168642168e-05
+  },
+  {
+    "iteration": 142,
+    "continuity": 2.220446049250313e-16,
+    "momentum": 0.18048180132534036,
+    "mass_imbalance": 7.771561172376096e-16,
+    "velocity_change": 0.00022422528302992045,
+    "u_residual": 0.13122042575368575,
+    "v_residual": 0.1804818013253404,
+    "rhie_chow_flux_defect": 2.0994425569429478e-05
+  },
+  {
+    "iteration": 143,
+    "continuity": 8.673617379884035e-16,
+    "momentum": 0.16292125138660005,
+    "mass_imbalance": 2.831068712794149e-15,
+    "velocity_change": 0.0002263722064932451,
+    "u_residual": 0.12889110147889687,
+    "v_residual": 0.16292125138660007,
+    "rhie_chow_flux_defect": 1.743971071950775e-05
+  },
+  {
+    "iteration": 144,
+    "continuity": 4.440892098500626e-16,
+    "momentum": 0.16050106939047173,
+    "mass_imbalance": 0.0,
+    "velocity_change": 0.00020945364474328314,
+    "u_residual": 0.12368327699896181,
+    "v_residual": 0.1605010693904717,
+    "rhie_chow_flux_defect": 1.6686227452616613e-05
+  },
+  {
+    "iteration": 145,
+    "continuity": 6.938893903907228e-17,
+    "momentum": 0.1569255756493408,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 0.00022153141821204883,
+    "u_residual": 0.12043917754613939,
+    "v_residual": 0.1569255756493408,
+    "rhie_chow_flux_defect": 1.6148339847276316e-05
+  },
+  {
+    "iteration": 146,
+    "continuity": 3.400058012914542e-16,
+    "momentum": 0.14057080192848148,
+    "mass_imbalance": 1.6653345369377348e-16,
+    "velocity_change": 0.00021383060244319074,
+    "u_residual": 0.11718418695640509,
+    "v_residual": 0.14057080192848148,
+    "rhie_chow_flux_defect": 1.336725749767166e-05
+  },
+  {
+    "iteration": 147,
+    "continuity": 1.249000902703301e-16,
+    "momentum": 0.13648617270195731,
+    "mass_imbalance": 1.1102230246251565e-16,
+    "velocity_change": 0.0001976901911110423,
+    "u_residual": 0.11439854585541656,
+    "v_residual": 0.1364861727019573,
+    "rhie_chow_flux_defect": 1.276749646982117e-05
+  },
+  {
+    "iteration": 148,
+    "continuity": 3.677613769070831e-16,
+    "momentum": 0.13384782050648705,
+    "mass_imbalance": 7.771561172376096e-16,
+    "velocity_change": 0.00018629592884722435,
+    "u_residual": 0.11009336387670408,
+    "v_residual": 0.13384782050648708,
+    "rhie_chow_flux_defect": 1.24721222138351e-05
+  },
+  {
+    "iteration": 149,
+    "continuity": 3.469446951953614e-16,
+    "momentum": 0.13055014505047616,
+    "mass_imbalance": 1.6653345369377348e-16,
+    "velocity_change": 0.00018337047771277426,
+    "u_residual": 0.10838514492267376,
+    "v_residual": 0.13055014505047619,
+    "rhie_chow_flux_defect": 1.1879599119459875e-05
+  },
+  {
+    "iteration": 150,
+    "continuity": 3.5388358909926865e-16,
+    "momentum": 0.1253009494372071,
+    "mass_imbalance": 1.6653345369377348e-16,
+    "velocity_change": 0.00018117274352569268,
+    "u_residual": 0.1041868682523302,
+    "v_residual": 0.1253009494372071,
+    "rhie_chow_flux_defect": 1.0941156738309805e-05
+  },
+  {
+    "iteration": 151,
+    "continuity": 2.866088442965431e-16,
+    "momentum": 0.12140139271770858,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 0.00017588367529619564,
+    "u_residual": 0.09859358440336584,
+    "v_residual": 0.12140139271770857,
+    "rhie_chow_flux_defect": 1.0337164152796937e-05
+  },
+  {
+    "iteration": 152,
+    "continuity": 5.689893001203927e-16,
+    "momentum": 0.11953530964012218,
+    "mass_imbalance": 3.3306690738754696e-16,
+    "velocity_change": 0.0001687589062357997,
+    "u_residual": 0.09443650308931187,
+    "v_residual": 0.11953530964012218,
+    "rhie_chow_flux_defect": 9.906908582029942e-06
+  },
+  {
+    "iteration": 153,
+    "continuity": 4.2327252813834093e-16,
+    "momentum": 0.1147912614633711,
+    "mass_imbalance": 2.7755575615628914e-16,
+    "velocity_change": 0.00016187210390705697,
+    "u_residual": 0.09138384047047739,
+    "v_residual": 0.1147912614633711,
+    "rhie_chow_flux_defect": 9.374790320323257e-06
+  },
+  {
+    "iteration": 154,
+    "continuity": 5.412337245047638e-16,
+    "momentum": 0.1119535113567272,
+    "mass_imbalance": 2.220446049250313e-16,
+    "velocity_change": 0.00015366260902693885,
+    "u_residual": 0.08918456676113888,
+    "v_residual": 0.1119535113567272,
+    "rhie_chow_flux_defect": 9.333026455351534e-06
+  },
+  {
+    "iteration": 155,
+    "continuity": 8.743006318923108e-16,
+    "momentum": 0.11343212471573286,
+    "mass_imbalance": 3.3306690738754696e-16,
+    "velocity_change": 0.00014571444616973128,
+    "u_residual": 0.08762111337239185,
+    "v_residual": 0.11343212471573287,
+    "rhie_chow_flux_defect": 9.81646983526962e-06
+  },
+  {
+    "iteration": 156,
+    "continuity": 1.4155343563970746e-15,
+    "momentum": 0.11279196748420332,
+    "mass_imbalance": 2.7755575615628914e-16,
+    "velocity_change": 0.00014016317422060887,
+    "u_residual": 0.08574588592709009,
+    "v_residual": 0.11279196748420331,
+    "rhie_chow_flux_defect": 9.970092445645786e-06
+  },
+  {
+    "iteration": 157,
+    "continuity": 1.2698175844150228e-15,
+    "momentum": 0.10889840277739368,
+    "mass_imbalance": 8.881784197001252e-16,
+    "velocity_change": 0.00013947509520432534,
+    "u_residual": 0.08370474408508369,
+    "v_residual": 0.10889840277739367,
+    "rhie_chow_flux_defect": 9.532883785853573e-06
+  },
+  {
+    "iteration": 158,
+    "continuity": 9.645062526431047e-16,
+    "momentum": 0.10822908454650586,
+    "mass_imbalance": 9.992007221626409e-16,
+    "velocity_change": 0.00014103801751595008,
+    "u_residual": 0.08238728902160093,
+    "v_residual": 0.10822908454650587,
+    "rhie_chow_flux_defect": 9.252185072519456e-06
+  },
+  {
+    "iteration": 159,
+    "continuity": 1.2212453270876722e-15,
+    "momentum": 0.1051638319938317,
+    "mass_imbalance": 0.0,
+    "velocity_change": 0.00014552699062403418,
+    "u_residual": 0.08053877178615615,
+    "v_residual": 0.1051638319938317,
+    "rhie_chow_flux_defect": 8.681144681749038e-06
+  },
+  {
+    "iteration": 160,
+    "continuity": 1.6237011735142914e-15,
+    "momentum": 0.1032603415102289,
+    "mass_imbalance": 4.996003610813204e-16,
+    "velocity_change": 0.00014287648178457762,
+    "u_residual": 0.07892299942341396,
+    "v_residual": 0.10326034151022889,
+    "rhie_chow_flux_defect": 8.38255112151871e-06
+  },
+  {
+    "iteration": 161,
+    "continuity": 4.163336342344337e-15,
+    "momentum": 0.10173068833037419,
+    "mass_imbalance": 1.27675647831893e-15,
+    "velocity_change": 0.00014130538593293968,
+    "u_residual": 0.07687867692696457,
+    "v_residual": 0.10173068833037419,
+    "rhie_chow_flux_defect": 8.263495748739064e-06
+  },
+  {
+    "iteration": 162,
+    "continuity": 3.58046925441613e-15,
+    "momentum": 0.10004914316665674,
+    "mass_imbalance": 3.3306690738754696e-16,
+    "velocity_change": 0.00013847066876618817,
+    "u_residual": 0.07522674181936043,
+    "v_residual": 0.10004914316665674,
+    "rhie_chow_flux_defect": 7.93291604691497e-06
+  },
+  {
+    "iteration": 163,
+    "continuity": 5.613565168260948e-15,
+    "momentum": 0.09734863589677469,
+    "mass_imbalance": 1.1102230246251565e-16,
+    "velocity_change": 0.00013087291430681491,
+    "u_residual": 0.07260696701607113,
+    "v_residual": 0.0973486358967747,
+    "rhie_chow_flux_defect": 7.213304217792388e-06
+  },
+  {
+    "iteration": 164,
+    "continuity": 7.70911112724093e-15,
+    "momentum": 0.09518279101597724,
+    "mass_imbalance": 2.609024107869118e-15,
+    "velocity_change": 0.000120116982803899,
+    "u_residual": 0.07061929971100452,
+    "v_residual": 0.09518279101597724,
+    "rhie_chow_flux_defect": 6.924000217531323e-06
+  },
+  {
+    "iteration": 165,
+    "continuity": 3.851086116668512e-15,
+    "momentum": 0.09281072471025323,
+    "mass_imbalance": 6.661338147750939e-16,
+    "velocity_change": 0.0001190972338149087,
+    "u_residual": 0.06841205910069814,
+    "v_residual": 0.09281072471025326,
+    "rhie_chow_flux_defect": 6.420345701195586e-06
+  },
+  {
+    "iteration": 166,
+    "continuity": 2.5326962749261384e-15,
+    "momentum": 0.08828107510811875,
+    "mass_imbalance": 5.551115123125783e-16,
+    "velocity_change": 0.00011301588746811739,
+    "u_residual": 0.06519345789478838,
+    "v_residual": 0.08828107510811875,
+    "rhie_chow_flux_defect": 5.2848118756634654e-06
+  },
+  {
+    "iteration": 167,
+    "continuity": 3.5180192092809648e-15,
+    "momentum": 0.08571556196501715,
+    "mass_imbalance": 1.6653345369377348e-16,
+    "velocity_change": 0.00010454558824757321,
+    "u_residual": 0.06304508868299898,
+    "v_residual": 0.08571556196501715,
+    "rhie_chow_flux_defect": 4.957775887314937e-06
+  },
+  {
+    "iteration": 168,
+    "continuity": 9.38832345198648e-15,
+    "momentum": 0.08453287011518992,
+    "mass_imbalance": 1.4432899320127035e-15,
+    "velocity_change": 0.00010213676994254815,
+    "u_residual": 0.06058163541859682,
+    "v_residual": 0.0845328701151899,
+    "rhie_chow_flux_defect": 4.881499802992596e-06
+  },
+  {
+    "iteration": 169,
+    "continuity": 1.1102230246251565e-15,
+    "momentum": 0.08387194126518817,
+    "mass_imbalance": 3.3306690738754696e-16,
+    "velocity_change": 0.00010338122687601585,
+    "u_residual": 0.05930073551486136,
+    "v_residual": 0.08387194126518815,
+    "rhie_chow_flux_defect": 4.831005163019242e-06
+  },
+  {
+    "iteration": 170,
+    "continuity": 1.186550857568136e-15,
+    "momentum": 0.08118097138123599,
+    "mass_imbalance": 1.1102230246251565e-16,
+    "velocity_change": 0.00010125453034354193,
+    "u_residual": 0.05734283334249607,
+    "v_residual": 0.081180971381236,
+    "rhie_chow_flux_defect": 4.594687239177747e-06
+  },
+  {
+    "iteration": 171,
+    "continuity": 1.3877787807814457e-16,
+    "momentum": 0.07894760404621944,
+    "mass_imbalance": 2.7755575615628914e-16,
+    "velocity_change": 0.00010070345542268974,
+    "u_residual": 0.0555941868664096,
+    "v_residual": 0.07894760404621944,
+    "rhie_chow_flux_defect": 4.636152490615577e-06
+  },
+  {
+    "iteration": 172,
+    "continuity": 4.163336342344337e-16,
+    "momentum": 0.07765093769629203,
+    "mass_imbalance": 9.992007221626409e-16,
+    "velocity_change": 0.00010275915939502757,
+    "u_residual": 0.054239652754014,
+    "v_residual": 0.07765093769629203,
+    "rhie_chow_flux_defect": 4.587947678522102e-06
+  },
+  {
+    "iteration": 173,
+    "continuity": 6.245004513516506e-16,
+    "momentum": 0.07343021116691341,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 0.00010430230023885517,
+    "u_residual": 0.051975569876093974,
+    "v_residual": 0.07343021116691341,
+    "rhie_chow_flux_defect": 4.418301585363919e-06
+  },
+  {
+    "iteration": 174,
+    "continuity": 1.1796119636642288e-16,
+    "momentum": 0.0711750820952081,
+    "mass_imbalance": 3.3306690738754696e-16,
+    "velocity_change": 0.00010425366153986142,
+    "u_residual": 0.050835612376473514,
+    "v_residual": 0.07117508209520809,
+    "rhie_chow_flux_defect": 4.227335427606842e-06
+  },
+  {
+    "iteration": 175,
+    "continuity": 1.249000902703301e-16,
+    "momentum": 0.06970907976263556,
+    "mass_imbalance": 1.1102230246251565e-16,
+    "velocity_change": 0.0001031242387454865,
+    "u_residual": 0.049811130127076705,
+    "v_residual": 0.06970907976263557,
+    "rhie_chow_flux_defect": 3.935156230730709e-06
+  },
+  {
+    "iteration": 176,
+    "continuity": 2.0816681711721685e-16,
+    "momentum": 0.0684018355680534,
+    "mass_imbalance": 1.6653345369377348e-16,
+    "velocity_change": 0.00010296473152001176,
+    "u_residual": 0.04878589757349394,
+    "v_residual": 0.06840183556805338,
+    "rhie_chow_flux_defect": 3.892157759575339e-06
+  },
+  {
+    "iteration": 177,
+    "continuity": 1.6653345369377348e-16,
+    "momentum": 0.06822651086893639,
+    "mass_imbalance": 2.220446049250313e-16,
+    "velocity_change": 0.00010047843907269073,
+    "u_residual": 0.04765852942714415,
+    "v_residual": 0.06822651086893639,
+    "rhie_chow_flux_defect": 3.871287166591867e-06
+  },
+  {
+    "iteration": 178,
+    "continuity": 2.7755575615628914e-16,
+    "momentum": 0.06799722741452881,
+    "mass_imbalance": 0.0,
+    "velocity_change": 9.784286630714917e-05,
+    "u_residual": 0.0465939105569539,
+    "v_residual": 0.06799722741452881,
+    "rhie_chow_flux_defect": 3.918316569470052e-06
+  },
+  {
+    "iteration": 179,
+    "continuity": 1.3877787807814457e-16,
+    "momentum": 0.06793106422006485,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 0.00010002837450183433,
+    "u_residual": 0.04565442490907154,
+    "v_residual": 0.06793106422006484,
+    "rhie_chow_flux_defect": 3.919086829167434e-06
+  },
+  {
+    "iteration": 180,
+    "continuity": 2.0816681711721685e-16,
+    "momentum": 0.0676145749358244,
+    "mass_imbalance": 1.1102230246251565e-16,
+    "velocity_change": 0.00010165982223793966,
+    "u_residual": 0.044662450639371166,
+    "v_residual": 0.06761457493582439,
+    "rhie_chow_flux_defect": 3.755650119707077e-06
+  },
+  {
+    "iteration": 181,
+    "continuity": 3.400058012914542e-16,
+    "momentum": 0.06595778011307622,
+    "mass_imbalance": 7.771561172376096e-16,
+    "velocity_change": 0.00010033370453099363,
+    "u_residual": 0.043231422961005794,
+    "v_residual": 0.06595778011307622,
+    "rhie_chow_flux_defect": 3.5667695855774037e-06
+  },
+  {
+    "iteration": 182,
+    "continuity": 4.718447854656915e-16,
+    "momentum": 0.0653379252268198,
+    "mass_imbalance": 1.6653345369377348e-16,
+    "velocity_change": 9.602063470453594e-05,
+    "u_residual": 0.0424916279352474,
+    "v_residual": 0.0653379252268198,
+    "rhie_chow_flux_defect": 3.4579483398302656e-06
+  },
+  {
+    "iteration": 183,
+    "continuity": 1.2073675392798577e-15,
+    "momentum": 0.0643090752124952,
+    "mass_imbalance": 4.440892098500626e-16,
+    "velocity_change": 9.524619580021654e-05,
+    "u_residual": 0.04152067333573467,
+    "v_residual": 0.06430907521249521,
+    "rhie_chow_flux_defect": 3.2898991329888367e-06
+  },
+  {
+    "iteration": 184,
+    "continuity": 2.1094237467877974e-15,
+    "momentum": 0.06258887266618292,
+    "mass_imbalance": 5.551115123125783e-16,
+    "velocity_change": 9.105599579250188e-05,
+    "u_residual": 0.04019171419378954,
+    "v_residual": 0.0625888726661829,
+    "rhie_chow_flux_defect": 3.149234813875784e-06
+  },
+  {
+    "iteration": 185,
+    "continuity": 4.440892098500626e-15,
+    "momentum": 0.061575248650484936,
+    "mass_imbalance": 3.885780586188048e-16,
+    "velocity_change": 9.112240601950525e-05,
+    "u_residual": 0.03917522178853842,
+    "v_residual": 0.061575248650484936,
+    "rhie_chow_flux_defect": 3.1226880253175216e-06
+  },
+  {
+    "iteration": 186,
+    "continuity": 2.3592239273284576e-15,
+    "momentum": 0.060694931103069366,
+    "mass_imbalance": 4.440892098500626e-16,
+    "velocity_change": 9.243431672299046e-05,
+    "u_residual": 0.038381992158988326,
+    "v_residual": 0.06069493110306935,
+    "rhie_chow_flux_defect": 3.0933127499825973e-06
+  },
+  {
+    "iteration": 187,
+    "continuity": 8.174017018802715e-15,
+    "momentum": 0.05837370383264873,
+    "mass_imbalance": 1.1102230246251565e-15,
+    "velocity_change": 9.190699888553949e-05,
+    "u_residual": 0.036782200391414256,
+    "v_residual": 0.05837370383264871,
+    "rhie_chow_flux_defect": 2.8913977337831176e-06
+  },
+  {
+    "iteration": 188,
+    "continuity": 1.1379786002407855e-15,
+    "momentum": 0.056757696422660465,
+    "mass_imbalance": 2.7755575615628914e-16,
+    "velocity_change": 8.932694461195531e-05,
+    "u_residual": 0.035783942303711874,
+    "v_residual": 0.05675769642266047,
+    "rhie_chow_flux_defect": 2.8048467187639272e-06
+  },
+  {
+    "iteration": 189,
+    "continuity": 2.067790383364354e-15,
+    "momentum": 0.05539744300363073,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 9.064122460696392e-05,
+    "u_residual": 0.03480738174769983,
+    "v_residual": 0.05539744300363072,
+    "rhie_chow_flux_defect": 2.7802522382286214e-06
+  },
+  {
+    "iteration": 190,
+    "continuity": 4.621303340002214e-15,
+    "momentum": 0.05363403159924569,
+    "mass_imbalance": 9.43689570931383e-16,
+    "velocity_change": 8.948198751182294e-05,
+    "u_residual": 0.033656235001774816,
+    "v_residual": 0.05363403159924569,
+    "rhie_chow_flux_defect": 2.7411066433239337e-06
+  },
+  {
+    "iteration": 191,
+    "continuity": 4.107825191113079e-15,
+    "momentum": 0.05205198304567531,
+    "mass_imbalance": 6.106226635438361e-16,
+    "velocity_change": 8.820636000781042e-05,
+    "u_residual": 0.03252699964898413,
+    "v_residual": 0.05205198304567529,
+    "rhie_chow_flux_defect": 2.762569988405599e-06
+  },
+  {
+    "iteration": 192,
+    "continuity": 1.8596235662471372e-15,
+    "momentum": 0.050068958490646104,
+    "mass_imbalance": 2.220446049250313e-16,
+    "velocity_change": 9.157215400385811e-05,
+    "u_residual": 0.031257505843120176,
+    "v_residual": 0.05006895849064611,
+    "rhie_chow_flux_defect": 2.6718133139812062e-06
+  },
+  {
+    "iteration": 193,
+    "continuity": 4.544975507059235e-16,
+    "momentum": 0.04739548109622248,
+    "mass_imbalance": 4.440892098500626e-16,
+    "velocity_change": 9.008694284510024e-05,
+    "u_residual": 0.030253264781227373,
+    "v_residual": 0.04739548109622247,
+    "rhie_chow_flux_defect": 2.689199577963516e-06
+  },
+  {
+    "iteration": 194,
+    "continuity": 1.1102230246251565e-16,
+    "momentum": 0.04580043169887686,
+    "mass_imbalance": 0.0,
+    "velocity_change": 9.234456217458754e-05,
+    "u_residual": 0.02932284314004365,
+    "v_residual": 0.04580043169887687,
+    "rhie_chow_flux_defect": 2.760778558681505e-06
+  },
+  {
+    "iteration": 195,
+    "continuity": 1.6653345369377348e-16,
+    "momentum": 0.044580693540982055,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 9.406481274786861e-05,
+    "u_residual": 0.028493741255699482,
+    "v_residual": 0.044580693540982055,
+    "rhie_chow_flux_defect": 2.8032538017648063e-06
+  },
+  {
+    "iteration": 196,
+    "continuity": 2.636779683484747e-16,
+    "momentum": 0.04191886064357497,
+    "mass_imbalance": 1.6653345369377348e-16,
+    "velocity_change": 9.308448495494448e-05,
+    "u_residual": 0.02736120318527475,
+    "v_residual": 0.04191886064357497,
+    "rhie_chow_flux_defect": 2.8940773843793315e-06
+  },
+  {
+    "iteration": 197,
+    "continuity": 2.7755575615628914e-16,
+    "momentum": 0.04024211294494655,
+    "mass_imbalance": 0.0,
+    "velocity_change": 8.819489444698153e-05,
+    "u_residual": 0.02653880094735719,
+    "v_residual": 0.04024211294494655,
+    "rhie_chow_flux_defect": 2.9338163097868482e-06
+  },
+  {
+    "iteration": 198,
+    "continuity": 2.2898349882893854e-16,
+    "momentum": 0.03867015699596138,
+    "mass_imbalance": 4.996003610813204e-16,
+    "velocity_change": 9.146721594729956e-05,
+    "u_residual": 0.0257490996564358,
+    "v_residual": 0.03867015699596139,
+    "rhie_chow_flux_defect": 2.9526422076106945e-06
+  },
+  {
+    "iteration": 199,
+    "continuity": 2.3592239273284576e-16,
+    "momentum": 0.036791005939864,
+    "mass_imbalance": 4.996003610813204e-16,
+    "velocity_change": 9.033989249980501e-05,
+    "u_residual": 0.0247879578563611,
+    "v_residual": 0.036791005939864,
+    "rhie_chow_flux_defect": 2.914667452374411e-06
+  },
+  {
+    "iteration": 200,
+    "continuity": 1.5265566588595902e-16,
+    "momentum": 0.035249017934241345,
+    "mass_imbalance": 3.3306690738754696e-16,
+    "velocity_change": 8.76390616734845e-05,
+    "u_residual": 0.023911266123767105,
+    "v_residual": 0.03524901793424134,
+    "rhie_chow_flux_defect": 2.8344508494926615e-06
+  },
+  {
+    "iteration": 201,
+    "continuity": 4.996003610813204e-16,
+    "momentum": 0.032254661128328664,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 8.463442350297064e-05,
+    "u_residual": 0.022784800889748564,
+    "v_residual": 0.03225466112832866,
+    "rhie_chow_flux_defect": 2.5676251321777764e-06
+  },
+  {
+    "iteration": 202,
+    "continuity": 5.689893001203927e-16,
+    "momentum": 0.029882478195718085,
+    "mass_imbalance": 1.3322676295501878e-15,
+    "velocity_change": 7.890535962345492e-05,
+    "u_residual": 0.021880728187312255,
+    "v_residual": 0.02988247819571809,
+    "rhie_chow_flux_defect": 2.2593069749167783e-06
+  },
+  {
+    "iteration": 203,
+    "continuity": 6.591949208711867e-16,
+    "momentum": 0.028216994832562098,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 7.828950577315648e-05,
+    "u_residual": 0.021164262411266732,
+    "v_residual": 0.028216994832562098,
+    "rhie_chow_flux_defect": 2.0581042808561814e-06
+  },
+  {
+    "iteration": 204,
+    "continuity": 1.394717674685353e-15,
+    "momentum": 0.026398873699269017,
+    "mass_imbalance": 3.885780586188048e-16,
+    "velocity_change": 7.258697538124748e-05,
+    "u_residual": 0.020316450782929055,
+    "v_residual": 0.026398873699269014,
+    "rhie_chow_flux_defect": 1.955641935049086e-06
+  },
+  {
+    "iteration": 205,
+    "continuity": 3.615163723935666e-15,
+    "momentum": 0.025178481697718174,
+    "mass_imbalance": 1.3877787807814457e-15,
+    "velocity_change": 6.10568640794203e-05,
+    "u_residual": 0.019309643055629187,
+    "v_residual": 0.02517848169771817,
+    "rhie_chow_flux_defect": 2.157599338940119e-06
+  },
+  {
+    "iteration": 206,
+    "continuity": 4.253541963095131e-15,
+    "momentum": 0.024510144274936946,
+    "mass_imbalance": 4.440892098500626e-16,
+    "velocity_change": 5.2162818513747794e-05,
+    "u_residual": 0.018810737660498626,
+    "v_residual": 0.024510144274936942,
+    "rhie_chow_flux_defect": 2.2041090151660926e-06
+  },
+  {
+    "iteration": 207,
+    "continuity": 3.740063814205996e-15,
+    "momentum": 0.02397097210073315,
+    "mass_imbalance": 1.8318679906315083e-15,
+    "velocity_change": 4.831277362737918e-05,
+    "u_residual": 0.01814747553339977,
+    "v_residual": 0.02397097210073315,
+    "rhie_chow_flux_defect": 2.2935162579498625e-06
+  },
+  {
+    "iteration": 208,
+    "continuity": 5.738465258531278e-15,
+    "momentum": 0.02278103562994833,
+    "mass_imbalance": 2.3314683517128287e-15,
+    "velocity_change": 4.742593528361816e-05,
+    "u_residual": 0.017416479949376597,
+    "v_residual": 0.02278103562994833,
+    "rhie_chow_flux_defect": 2.330207828178244e-06
+  },
+  {
+    "iteration": 209,
+    "continuity": 2.8727020762175925e-15,
+    "momentum": 0.02241728464651708,
+    "mass_imbalance": 3.3306690738754696e-16,
+    "velocity_change": 4.627610983309882e-05,
+    "u_residual": 0.01702959406243669,
+    "v_residual": 0.02241728464651708,
+    "rhie_chow_flux_defect": 2.2837271034757136e-06
+  },
+  {
+    "iteration": 210,
+    "continuity": 1.5189238755652923e-14,
+    "momentum": 0.021646353442630595,
+    "mass_imbalance": 1.942890293094024e-15,
+    "velocity_change": 4.567369866181892e-05,
+    "u_residual": 0.015986453166839297,
+    "v_residual": 0.021646353442630595,
+    "rhie_chow_flux_defect": 2.3056985241044607e-06
+  },
+  {
+    "iteration": 211,
+    "continuity": 4.038436252074007e-15,
+    "momentum": 0.021042619413868147,
+    "mass_imbalance": 8.326672684688674e-16,
+    "velocity_change": 4.356836445840173e-05,
+    "u_residual": 0.015324393249379122,
+    "v_residual": 0.021042619413868147,
+    "rhie_chow_flux_defect": 2.2044352175399363e-06
+  },
+  {
+    "iteration": 212,
+    "continuity": 2.067790383364354e-15,
+    "momentum": 0.020136931625709314,
+    "mass_imbalance": 8.326672684688674e-16,
+    "velocity_change": 4.214346150932524e-05,
+    "u_residual": 0.014624847984655966,
+    "v_residual": 0.020136931625709314,
+    "rhie_chow_flux_defect": 2.066668024069229e-06
+  },
+  {
+    "iteration": 213,
+    "continuity": 6.522560269672795e-15,
+    "momentum": 0.019187416625165297,
+    "mass_imbalance": 7.771561172376096e-16,
+    "velocity_change": 4.037050349703364e-05,
+    "u_residual": 0.013738562745216691,
+    "v_residual": 0.019187416625165297,
+    "rhie_chow_flux_defect": 1.8781866157381512e-06
+  },
+  {
+    "iteration": 214,
+    "continuity": 1.3877787807814457e-15,
+    "momentum": 0.018695239921061972,
+    "mass_imbalance": 3.3306690738754696e-16,
+    "velocity_change": 3.752581067550942e-05,
+    "u_residual": 0.012864636605644627,
+    "v_residual": 0.018695239921061976,
+    "rhie_chow_flux_defect": 1.7924896712571187e-06
+  },
+  {
+    "iteration": 215,
+    "continuity": 1.6375789613221059e-15,
+    "momentum": 0.01875669100691694,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 3.5172195729349376e-05,
+    "u_residual": 0.011848851126201293,
+    "v_residual": 0.01875669100691694,
+    "rhie_chow_flux_defect": 1.8632108559233389e-06
+  },
+  {
+    "iteration": 216,
+    "continuity": 8.326672684688674e-17,
+    "momentum": 0.018644253291013362,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 3.278682846052927e-05,
+    "u_residual": 0.011329753166497133,
+    "v_residual": 0.01864425329101336,
+    "rhie_chow_flux_defect": 1.8701909576419258e-06
+  },
+  {
+    "iteration": 217,
+    "continuity": 2.220446049250313e-16,
+    "momentum": 0.017569382023202417,
+    "mass_imbalance": 1.1102230246251565e-16,
+    "velocity_change": 3.171901294019008e-05,
+    "u_residual": 0.01060135185725343,
+    "v_residual": 0.017569382023202414,
+    "rhie_chow_flux_defect": 1.7544044947184102e-06
+  },
+  {
+    "iteration": 218,
+    "continuity": 2.3592239273284576e-16,
+    "momentum": 0.01680840895429285,
+    "mass_imbalance": 1.6653345369377348e-16,
+    "velocity_change": 2.9254949705292965e-05,
+    "u_residual": 0.01012330705063027,
+    "v_residual": 0.01680840895429285,
+    "rhie_chow_flux_defect": 1.6656156072384933e-06
+  },
+  {
+    "iteration": 219,
+    "continuity": 3.0531133177191805e-16,
+    "momentum": 0.016141251910958145,
+    "mass_imbalance": 2.7755575615628914e-16,
+    "velocity_change": 2.71781534150195e-05,
+    "u_residual": 0.009466458847919268,
+    "v_residual": 0.01614125191095814,
+    "rhie_chow_flux_defect": 1.6115198394228452e-06
+  },
+  {
+    "iteration": 220,
+    "continuity": 4.996003610813204e-16,
+    "momentum": 0.01524373663999008,
+    "mass_imbalance": 2.7755575615628914e-16,
+    "velocity_change": 2.4517512065336255e-05,
+    "u_residual": 0.009169192888599277,
+    "v_residual": 0.01524373663999008,
+    "rhie_chow_flux_defect": 1.489081885412535e-06
+  },
+  {
+    "iteration": 221,
+    "continuity": 1.1102230246251565e-16,
+    "momentum": 0.014853263788031675,
+    "mass_imbalance": 1.6653345369377348e-16,
+    "velocity_change": 2.3464413479537885e-05,
+    "u_residual": 0.009033544328978547,
+    "v_residual": 0.014853263788031675,
+    "rhie_chow_flux_defect": 1.4418621195232053e-06
+  },
+  {
+    "iteration": 222,
+    "continuity": 2.0122792321330962e-16,
+    "momentum": 0.014198500308357969,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 2.4264430495979546e-05,
+    "u_residual": 0.00886876209186787,
+    "v_residual": 0.01419850030835797,
+    "rhie_chow_flux_defect": 1.3727211173776455e-06
+  },
+  {
+    "iteration": 223,
+    "continuity": 1.8041124150158794e-16,
+    "momentum": 0.01357299699247106,
+    "mass_imbalance": 5.551115123125783e-16,
+    "velocity_change": 2.326948088667794e-05,
+    "u_residual": 0.008702225767503229,
+    "v_residual": 0.01357299699247106,
+    "rhie_chow_flux_defect": 1.2782005927216311e-06
+  },
+  {
+    "iteration": 224,
+    "continuity": 1.942890293094024e-16,
+    "momentum": 0.013259270331735871,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 2.1593259479497223e-05,
+    "u_residual": 0.008521022593605623,
+    "v_residual": 0.013259270331735871,
+    "rhie_chow_flux_defect": 1.2419504508412826e-06
+  },
+  {
+    "iteration": 225,
+    "continuity": 2.983724378680108e-16,
+    "momentum": 0.01261332845429271,
+    "mass_imbalance": 2.275957200481571e-15,
+    "velocity_change": 2.045486224657063e-05,
+    "u_residual": 0.00805408904625583,
+    "v_residual": 0.012613328454292711,
+    "rhie_chow_flux_defect": 1.1792880793985092e-06
+  },
+  {
+    "iteration": 226,
+    "continuity": 1.734723475976807e-16,
+    "momentum": 0.01197076641291603,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 1.865050747335093e-05,
+    "u_residual": 0.007684149220243797,
+    "v_residual": 0.011970766412916032,
+    "rhie_chow_flux_defect": 1.0880608405050125e-06
+  },
+  {
+    "iteration": 227,
+    "continuity": 2.220446049250313e-16,
+    "momentum": 0.011476816406314264,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 1.7560049004412305e-05,
+    "u_residual": 0.007270150818205296,
+    "v_residual": 0.011476816406314266,
+    "rhie_chow_flux_defect": 1.0352275014559138e-06
+  },
+  {
+    "iteration": 228,
+    "continuity": 2.983724378680108e-16,
+    "momentum": 0.011042546900240278,
+    "mass_imbalance": 3.885780586188048e-16,
+    "velocity_change": 1.707702195402356e-05,
+    "u_residual": 0.006925814360855185,
+    "v_residual": 0.011042546900240282,
+    "rhie_chow_flux_defect": 1.0166499362891483e-06
+  },
+  {
+    "iteration": 229,
+    "continuity": 2.7755575615628914e-16,
+    "momentum": 0.010805654561249467,
+    "mass_imbalance": 2.220446049250313e-16,
+    "velocity_change": 1.7900691969379746e-05,
+    "u_residual": 0.006750192184398794,
+    "v_residual": 0.010805654561249465,
+    "rhie_chow_flux_defect": 1.061187196958441e-06
+  },
+  {
+    "iteration": 230,
+    "continuity": 5.689893001203927e-16,
+    "momentum": 0.0106507206414733,
+    "mass_imbalance": 6.106226635438361e-16,
+    "velocity_change": 1.864760654314221e-05,
+    "u_residual": 0.006656516507792039,
+    "v_residual": 0.0106507206414733,
+    "rhie_chow_flux_defect": 1.1027508035421187e-06
+  },
+  {
+    "iteration": 231,
+    "continuity": 6.800116025829084e-16,
+    "momentum": 0.010210479111621523,
+    "mass_imbalance": 1.2212453270876722e-15,
+    "velocity_change": 1.904693125125232e-05,
+    "u_residual": 0.006398981017819384,
+    "v_residual": 0.01021047911162152,
+    "rhie_chow_flux_defect": 1.1364204722994924e-06
+  },
+  {
+    "iteration": 232,
+    "continuity": 1.1449174941446927e-15,
+    "momentum": 0.00992769360945038,
+    "mass_imbalance": 1.2212453270876722e-15,
+    "velocity_change": 1.8466123732723688e-05,
+    "u_residual": 0.006210148310523751,
+    "v_residual": 0.00992769360945038,
+    "rhie_chow_flux_defect": 1.1284071928614735e-06
+  },
+  {
+    "iteration": 233,
+    "continuity": 1.0061396160665481e-15,
+    "momentum": 0.009561215624360664,
+    "mass_imbalance": 9.992007221626409e-16,
+    "velocity_change": 1.7689080092278715e-05,
+    "u_residual": 0.005998857073931953,
+    "v_residual": 0.009561215624360665,
+    "rhie_chow_flux_defect": 1.1012637046421208e-06
+  },
+  {
+    "iteration": 234,
+    "continuity": 9.575673587391975e-16,
+    "momentum": 0.009190509014486072,
+    "mass_imbalance": 8.881784197001252e-16,
+    "velocity_change": 1.8170523325086035e-05,
+    "u_residual": 0.005867804593036127,
+    "v_residual": 0.009190509014486072,
+    "rhie_chow_flux_defect": 1.058586487409301e-06
+  },
+  {
+    "iteration": 235,
+    "continuity": 1.1379786002407855e-15,
+    "momentum": 0.00875548430801834,
+    "mass_imbalance": 7.771561172376096e-16,
+    "velocity_change": 1.80066124508705e-05,
+    "u_residual": 0.0057357911549694215,
+    "v_residual": 0.00875548430801834,
+    "rhie_chow_flux_defect": 9.914344446745628e-07
+  },
+  {
+    "iteration": 236,
+    "continuity": 9.992007221626409e-16,
+    "momentum": 0.00826572672026296,
+    "mass_imbalance": 3.497202527569243e-15,
+    "velocity_change": 1.7195461565213364e-05,
+    "u_residual": 0.005549367282727362,
+    "v_residual": 0.00826572672026296,
+    "rhie_chow_flux_defect": 9.128713207958651e-07
+  },
+  {
+    "iteration": 237,
+    "continuity": 1.0477729794899915e-15,
+    "momentum": 0.0077901795660171615,
+    "mass_imbalance": 8.881784197001252e-16,
+    "velocity_change": 1.6088867235770216e-05,
+    "u_residual": 0.005356877039992647,
+    "v_residual": 0.00779017956601716,
+    "rhie_chow_flux_defect": 8.402201805542243e-07
+  },
+  {
+    "iteration": 238,
+    "continuity": 1.0200174038743626e-15,
+    "momentum": 0.0074769698465158,
+    "mass_imbalance": 1.9984014443252818e-15,
+    "velocity_change": 1.4903146824009686e-05,
+    "u_residual": 0.005168551602746149,
+    "v_residual": 0.0074769698465158,
+    "rhie_chow_flux_defect": 8.112893124659054e-07
+  },
+  {
+    "iteration": 239,
+    "continuity": 9.298117831235686e-16,
+    "momentum": 0.007291388905184191,
+    "mass_imbalance": 1.1102230246251565e-15,
+    "velocity_change": 1.4337459778116304e-05,
+    "u_residual": 0.005041738562814841,
+    "v_residual": 0.007291388905184191,
+    "rhie_chow_flux_defect": 8.037308786237634e-07
+  },
+  {
+    "iteration": 240,
+    "continuity": 8.257283745649602e-16,
+    "momentum": 0.006901722196924441,
+    "mass_imbalance": 1.6653345369377348e-15,
+    "velocity_change": 1.5031861485216916e-05,
+    "u_residual": 0.004851851960180677,
+    "v_residual": 0.00690172219692444,
+    "rhie_chow_flux_defect": 7.497921858561419e-07
+  },
+  {
+    "iteration": 241,
+    "continuity": 2.282896094385478e-15,
+    "momentum": 0.006287916786631195,
+    "mass_imbalance": 3.3861802251067274e-15,
+    "velocity_change": 1.4722737328307783e-05,
+    "u_residual": 0.004624899276232452,
+    "v_residual": 0.0062879167866311935,
+    "rhie_chow_flux_defect": 6.496685150900794e-07
+  },
+  {
+    "iteration": 242,
+    "continuity": 2.706168622523819e-16,
+    "momentum": 0.006050667078864291,
+    "mass_imbalance": 4.440892098500626e-16,
+    "velocity_change": 1.3245753539511441e-05,
+    "u_residual": 0.004490231024404158,
+    "v_residual": 0.006050667078864292,
+    "rhie_chow_flux_defect": 6.039649188732545e-07
+  },
+  {
+    "iteration": 243,
+    "continuity": 1.0408340855860843e-16,
+    "momentum": 0.0058358116071879984,
+    "mass_imbalance": 4.996003610813204e-16,
+    "velocity_change": 1.2141594513726678e-05,
+    "u_residual": 0.0043748644029133615,
+    "v_residual": 0.0058358116071879984,
+    "rhie_chow_flux_defect": 5.813816522160027e-07
+  },
+  {
+    "iteration": 244,
+    "continuity": 6.869504964868156e-16,
+    "momentum": 0.00547190433806163,
+    "mass_imbalance": 1.3322676295501878e-15,
+    "velocity_change": 1.1456399740024902e-05,
+    "u_residual": 0.004195302818940571,
+    "v_residual": 0.00547190433806163,
+    "rhie_chow_flux_defect": 5.250571650622947e-07
+  },
+  {
+    "iteration": 245,
+    "continuity": 6.800116025829084e-16,
+    "momentum": 0.005385863917146807,
+    "mass_imbalance": 8.881784197001252e-16,
+    "velocity_change": 1.014219907290951e-05,
+    "u_residual": 0.00410629580572825,
+    "v_residual": 0.005385863917146806,
+    "rhie_chow_flux_defect": 5.164572636972664e-07
+  },
+  {
+    "iteration": 246,
+    "continuity": 1.0894063429134349e-15,
+    "momentum": 0.005216550441277956,
+    "mass_imbalance": 2.55351295663786e-15,
+    "velocity_change": 9.325159157635987e-06,
+    "u_residual": 0.004005696258387568,
+    "v_residual": 0.005216550441277956,
+    "rhie_chow_flux_defect": 4.997010862289649e-07
+  },
+  {
+    "iteration": 247,
+    "continuity": 3.677613769070831e-16,
+    "momentum": 0.00496119211573883,
+    "mass_imbalance": 9.43689570931383e-16,
+    "velocity_change": 9.547664586939675e-06,
+    "u_residual": 0.003887073808864354,
+    "v_residual": 0.00496119211573883,
+    "rhie_chow_flux_defect": 4.7578063655471734e-07
+  },
+  {
+    "iteration": 248,
+    "continuity": 2.0122792321330962e-16,
+    "momentum": 0.00462494302697207,
+    "mass_imbalance": 0.0,
+    "velocity_change": 9.681682068718445e-06,
+    "u_residual": 0.0037481277768338216,
+    "v_residual": 0.00462494302697207,
+    "rhie_chow_flux_defect": 4.434928159874925e-07
+  },
+  {
+    "iteration": 249,
+    "continuity": 7.494005416219807e-16,
+    "momentum": 0.004258400583905609,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 9.58328349931481e-06,
+    "u_residual": 0.003549719156445379,
+    "v_residual": 0.004258400583905608,
+    "rhie_chow_flux_defect": 4.1874725145007773e-07
+  },
+  {
+    "iteration": 250,
+    "continuity": 9.71445146547012e-17,
+    "momentum": 0.0040605169461968346,
+    "mass_imbalance": 1.6653345369377348e-16,
+    "velocity_change": 9.300077169704934e-06,
+    "u_residual": 0.0033796783310654464,
+    "v_residual": 0.0040605169461968346,
+    "rhie_chow_flux_defect": 4.102998536178388e-07
+  },
+  {
+    "iteration": 251,
+    "continuity": 3.608224830031759e-16,
+    "momentum": 0.0039517307393861206,
+    "mass_imbalance": 1.6653345369377348e-15,
+    "velocity_change": 9.125887437511082e-06,
+    "u_residual": 0.0032311409598702492,
+    "v_residual": 0.0039517307393861206,
+    "rhie_chow_flux_defect": 4.220028861320222e-07
+  },
+  {
+    "iteration": 252,
+    "continuity": 2.636779683484747e-16,
+    "momentum": 0.0038243790448332328,
+    "mass_imbalance": 4.996003610813204e-16,
+    "velocity_change": 8.972270641338653e-06,
+    "u_residual": 0.0030934214353794684,
+    "v_residual": 0.003824379044833233,
+    "rhie_chow_flux_defect": 4.355318580174477e-07
+  },
+  {
+    "iteration": 253,
+    "continuity": 2.983724378680108e-16,
+    "momentum": 0.00355082437576106,
+    "mass_imbalance": 4.440892098500626e-16,
+    "velocity_change": 8.713861651798993e-06,
+    "u_residual": 0.0028354935611127514,
+    "v_residual": 0.003550824375761059,
+    "rhie_chow_flux_defect": 4.2654750785875903e-07
+  },
+  {
+    "iteration": 254,
+    "continuity": 3.0531133177191805e-16,
+    "momentum": 0.0034407319960655302,
+    "mass_imbalance": 1.1657341758564144e-15,
+    "velocity_change": 8.022700541676642e-06,
+    "u_residual": 0.002700416321453916,
+    "v_residual": 0.0034407319960655307,
+    "rhie_chow_flux_defect": 4.1778438940434877e-07
+  },
+  {
+    "iteration": 255,
+    "continuity": 1.8041124150158794e-16,
+    "momentum": 0.003385176599326164,
+    "mass_imbalance": 1.1102230246251565e-16,
+    "velocity_change": 7.68039624243766e-06,
+    "u_residual": 0.002566049453957395,
+    "v_residual": 0.003385176599326164,
+    "rhie_chow_flux_defect": 4.235167717404842e-07
+  },
+  {
+    "iteration": 256,
+    "continuity": 1.3183898417423734e-16,
+    "momentum": 0.0033330976142088723,
+    "mass_imbalance": 7.771561172376096e-16,
+    "velocity_change": 7.867337521598287e-06,
+    "u_residual": 0.00242582273962429,
+    "v_residual": 0.0033330976142088723,
+    "rhie_chow_flux_defect": 4.269226682279754e-07
+  },
+  {
+    "iteration": 257,
+    "continuity": 4.85722573273506e-16,
+    "momentum": 0.0031192849608469983,
+    "mass_imbalance": 1.6653345369377348e-15,
+    "velocity_change": 8.107774787204265e-06,
+    "u_residual": 0.002246622792955989,
+    "v_residual": 0.0031192849608469983,
+    "rhie_chow_flux_defect": 3.8192791612682523e-07
+  },
+  {
+    "iteration": 258,
+    "continuity": 3.0531133177191805e-16,
+    "momentum": 0.0030599623890277586,
+    "mass_imbalance": 2.7755575615628914e-16,
+    "velocity_change": 7.058652014942796e-06,
+    "u_residual": 0.002049782377563734,
+    "v_residual": 0.0030599623890277586,
+    "rhie_chow_flux_defect": 3.5677734062006373e-07
+  },
+  {
+    "iteration": 259,
+    "continuity": 4.996003610813204e-16,
+    "momentum": 0.0029633359816306636,
+    "mass_imbalance": 2.7755575615628914e-16,
+    "velocity_change": 6.377346190467037e-06,
+    "u_residual": 0.0018734373019696382,
+    "v_residual": 0.0029633359816306636,
+    "rhie_chow_flux_defect": 3.2684048441308223e-07
+  },
+  {
+    "iteration": 260,
+    "continuity": 1.6653345369377348e-16,
+    "momentum": 0.0028298410580500626,
+    "mass_imbalance": 3.885780586188048e-16,
+    "velocity_change": 6.860256997988888e-06,
+    "u_residual": 0.0017073291374957462,
+    "v_residual": 0.0028298410580500626,
+    "rhie_chow_flux_defect": 3.107307936767701e-07
+  },
+  {
+    "iteration": 261,
+    "continuity": 1.5265566588595902e-16,
+    "momentum": 0.0027367426968877206,
+    "mass_imbalance": 1.6653345369377348e-16,
+    "velocity_change": 7.193452769984655e-06,
+    "u_residual": 0.001572253448838263,
+    "v_residual": 0.0027367426968877206,
+    "rhie_chow_flux_defect": 3.02910496815116e-07
+  },
+  {
+    "iteration": 262,
+    "continuity": 4.85722573273506e-16,
+    "momentum": 0.0026236225812874244,
+    "mass_imbalance": 7.771561172376096e-16,
+    "velocity_change": 7.268526181129428e-06,
+    "u_residual": 0.001445108845053503,
+    "v_residual": 0.0026236225812874244,
+    "rhie_chow_flux_defect": 2.7052607255994084e-07
+  },
+  {
+    "iteration": 263,
+    "continuity": 2.7755575615628914e-16,
+    "momentum": 0.002510146848927176,
+    "mass_imbalance": 0.0,
+    "velocity_change": 6.3478820442521705e-06,
+    "u_residual": 0.0013529081478995618,
+    "v_residual": 0.0025101468489271764,
+    "rhie_chow_flux_defect": 2.702594462640655e-07
+  },
+  {
+    "iteration": 264,
+    "continuity": 5.967448757360216e-16,
+    "momentum": 0.0024829046959444273,
+    "mass_imbalance": 1.1102230246251565e-15,
+    "velocity_change": 5.438205110785098e-06,
+    "u_residual": 0.0012878433134492437,
+    "v_residual": 0.0024829046959444273,
+    "rhie_chow_flux_defect": 2.6607047219784087e-07
+  },
+  {
+    "iteration": 265,
+    "continuity": 2.0816681711721685e-16,
+    "momentum": 0.002436737839256968,
+    "mass_imbalance": 7.216449660063518e-16,
+    "velocity_change": 4.962337314078427e-06,
+    "u_residual": 0.0012417967473870928,
+    "v_residual": 0.002436737839256968,
+    "rhie_chow_flux_defect": 2.6702875302254405e-07
+  },
+  {
+    "iteration": 266,
+    "continuity": 9.71445146547012e-17,
+    "momentum": 0.002359172859176862,
+    "mass_imbalance": 6.106226635438361e-16,
+    "velocity_change": 4.4322333767072425e-06,
+    "u_residual": 0.0011980310103324589,
+    "v_residual": 0.002359172859176862,
+    "rhie_chow_flux_defect": 2.605123090841901e-07
+  },
+  {
+    "iteration": 267,
+    "continuity": 4.718447854656915e-16,
+    "momentum": 0.0021910364367860933,
+    "mass_imbalance": 2.7755575615628914e-16,
+    "velocity_change": 3.770614212408527e-06,
+    "u_residual": 0.0011334251439985546,
+    "v_residual": 0.0021910364367860938,
+    "rhie_chow_flux_defect": 2.3902641477548387e-07
+  },
+  {
+    "iteration": 268,
+    "continuity": 1.249000902703301e-16,
+    "momentum": 0.0021094990122010895,
+    "mass_imbalance": 5.551115123125783e-16,
+    "velocity_change": 3.6213148307514056e-06,
+    "u_residual": 0.001095662168297744,
+    "v_residual": 0.002109499012201089,
+    "rhie_chow_flux_defect": 2.264429391820463e-07
+  },
+  {
+    "iteration": 269,
+    "continuity": 4.2327252813834093e-16,
+    "momentum": 0.002024231623017373,
+    "mass_imbalance": 1.6653345369377348e-16,
+    "velocity_change": 3.6311167103579914e-06,
+    "u_residual": 0.0010565304500128401,
+    "v_residual": 0.002024231623017373,
+    "rhie_chow_flux_defect": 2.1911063339823116e-07
+  },
+  {
+    "iteration": 270,
+    "continuity": 2.636779683484747e-16,
+    "momentum": 0.0019382996834025224,
+    "mass_imbalance": 1.3877787807814457e-15,
+    "velocity_change": 3.545041053027928e-06,
+    "u_residual": 0.0010196835234458994,
+    "v_residual": 0.0019382996834025224,
+    "rhie_chow_flux_defect": 2.0752936493801106e-07
+  },
+  {
+    "iteration": 271,
+    "continuity": 9.71445146547012e-17,
+    "momentum": 0.0019091556367143187,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 3.3746383348368103e-06,
+    "u_residual": 0.0009896337244173006,
+    "v_residual": 0.001909155636714319,
+    "rhie_chow_flux_defect": 2.0061342085485224e-07
+  },
+  {
+    "iteration": 272,
+    "continuity": 4.996003610813204e-16,
+    "momentum": 0.0018545243462189291,
+    "mass_imbalance": 7.771561172376096e-16,
+    "velocity_change": 3.4041287258496783e-06,
+    "u_residual": 0.0009534189932909486,
+    "v_residual": 0.0018545243462189294,
+    "rhie_chow_flux_defect": 2.0231341947547803e-07
+  },
+  {
+    "iteration": 273,
+    "continuity": 1.249000902703301e-16,
+    "momentum": 0.0018383848731091034,
+    "mass_imbalance": 3.3306690738754696e-16,
+    "velocity_change": 3.4092316542741127e-06,
+    "u_residual": 0.0009373421985602273,
+    "v_residual": 0.0018383848731091034,
+    "rhie_chow_flux_defect": 2.0013610654111964e-07
+  },
+  {
+    "iteration": 274,
+    "continuity": 2.636779683484747e-16,
+    "momentum": 0.0018164197546100486,
+    "mass_imbalance": 7.771561172376096e-16,
+    "velocity_change": 3.3736964221457375e-06,
+    "u_residual": 0.0009094874189735879,
+    "v_residual": 0.0018164197546100486,
+    "rhie_chow_flux_defect": 1.963864899412264e-07
+  },
+  {
+    "iteration": 275,
+    "continuity": 2.636779683484747e-16,
+    "momentum": 0.0017958701673854984,
+    "mass_imbalance": 9.43689570931383e-16,
+    "velocity_change": 3.3591913795533515e-06,
+    "u_residual": 0.000886445621099783,
+    "v_residual": 0.0017958701673854984,
+    "rhie_chow_flux_defect": 1.9751511488587989e-07
+  },
+  {
+    "iteration": 276,
+    "continuity": 1.734723475976807e-16,
+    "momentum": 0.0017857013796784707,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 3.370862054616862e-06,
+    "u_residual": 0.000868406153635956,
+    "v_residual": 0.0017857013796784707,
+    "rhie_chow_flux_defect": 1.9229426169518327e-07
+  },
+  {
+    "iteration": 277,
+    "continuity": 4.3021142204224816e-16,
+    "momentum": 0.0017548257122889169,
+    "mass_imbalance": 2.7755575615628914e-16,
+    "velocity_change": 3.230616565262287e-06,
+    "u_residual": 0.000850864404627744,
+    "v_residual": 0.0017548257122889167,
+    "rhie_chow_flux_defect": 1.8540612902820252e-07
+  },
+  {
+    "iteration": 278,
+    "continuity": 9.71445146547012e-17,
+    "momentum": 0.001723919459824696,
+    "mass_imbalance": 1.1102230246251565e-16,
+    "velocity_change": 3.083064426233524e-06,
+    "u_residual": 0.0008346816048594864,
+    "v_residual": 0.001723919459824696,
+    "rhie_chow_flux_defect": 1.757046299034698e-07
+  },
+  {
+    "iteration": 279,
+    "continuity": 3.7470027081099033e-16,
+    "momentum": 0.0016604496713603606,
+    "mass_imbalance": 2.7755575615628914e-16,
+    "velocity_change": 3.0880482450547017e-06,
+    "u_residual": 0.0008031381823391387,
+    "v_residual": 0.0016604496713603606,
+    "rhie_chow_flux_defect": 1.5127254618976834e-07
+  },
+  {
+    "iteration": 280,
+    "continuity": 4.0245584642661925e-16,
+    "momentum": 0.0016128725891876026,
+    "mass_imbalance": 1.1102230246251565e-15,
+    "velocity_change": 3.111041075141638e-06,
+    "u_residual": 0.0007828545928334648,
+    "v_residual": 0.0016128725891876026,
+    "rhie_chow_flux_defect": 1.4351924192372064e-07
+  },
+  {
+    "iteration": 281,
+    "continuity": 1.1796119636642288e-16,
+    "momentum": 0.0015879010539854395,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 3.1062872015196266e-06,
+    "u_residual": 0.0007688838511197952,
+    "v_residual": 0.0015879010539854395,
+    "rhie_chow_flux_defect": 1.3691616784256133e-07
+  },
+  {
+    "iteration": 282,
+    "continuity": 2.008115895790752e-14,
+    "momentum": 0.0015323388177809834,
+    "mass_imbalance": 1.3100631690576847e-14,
+    "velocity_change": 3.1866523171036193e-06,
+    "u_residual": 0.0007424623452605843,
+    "v_residual": 0.0015323388177809832,
+    "rhie_chow_flux_defect": 1.255523756353953e-07
+  },
+  {
+    "iteration": 283,
+    "continuity": 8.326672684688674e-16,
+    "momentum": 0.001476933758165478,
+    "mass_imbalance": 2.220446049250313e-16,
+    "velocity_change": 3.143031745892963e-06,
+    "u_residual": 0.0007171253113463863,
+    "v_residual": 0.001476933758165478,
+    "rhie_chow_flux_defect": 1.1288075097631717e-07
+  },
+  {
+    "iteration": 284,
+    "continuity": 6.58501031480796e-15,
+    "momentum": 0.0013928712283281788,
+    "mass_imbalance": 3.7192471324942744e-15,
+    "velocity_change": 2.970540750884751e-06,
+    "u_residual": 0.0006884534955445912,
+    "v_residual": 0.0013928712283281788,
+    "rhie_chow_flux_defect": 9.739561342992282e-08
+  },
+  {
+    "iteration": 285,
+    "continuity": 2.09277040141842e-14,
+    "momentum": 0.0013018851288259207,
+    "mass_imbalance": 1.3988810110276972e-14,
+    "velocity_change": 2.737223611221605e-06,
+    "u_residual": 0.0006688540953744059,
+    "v_residual": 0.0013018851288259204,
+    "rhie_chow_flux_defect": 9.190778384162082e-08
+  },
+  {
+    "iteration": 286,
+    "continuity": 8.465450562766819e-16,
+    "momentum": 0.001254643555433674,
+    "mass_imbalance": 5.551115123125783e-16,
+    "velocity_change": 2.681244943375516e-06,
+    "u_residual": 0.0006644536417704805,
+    "v_residual": 0.001254643555433674,
+    "rhie_chow_flux_defect": 9.46255962010532e-08
+  },
+  {
+    "iteration": 287,
+    "continuity": 1.0602629885170245e-14,
+    "momentum": 0.0012032175626979986,
+    "mass_imbalance": 6.772360450213455e-15,
+    "velocity_change": 2.7207185331265538e-06,
+    "u_residual": 0.0006560536162664867,
+    "v_residual": 0.0012032175626979988,
+    "rhie_chow_flux_defect": 1.0044048334505591e-07
+  },
+  {
+    "iteration": 288,
+    "continuity": 3.4208746946262636e-15,
+    "momentum": 0.0011449054263249006,
+    "mass_imbalance": 2.7755575615628914e-15,
+    "velocity_change": 2.7821953193412144e-06,
+    "u_residual": 0.000641316911174467,
+    "v_residual": 0.0011449054263249006,
+    "rhie_chow_flux_defect": 1.0051462609876578e-07
+  },
+  {
+    "iteration": 289,
+    "continuity": 1.7832957333041577e-15,
+    "momentum": 0.001102385206506103,
+    "mass_imbalance": 1.1102230246251565e-15,
+    "velocity_change": 2.752790927698298e-06,
+    "u_residual": 0.0006328620901112279,
+    "v_residual": 0.0011023852065061032,
+    "rhie_chow_flux_defect": 1.0727551420489338e-07
+  },
+  {
+    "iteration": 290,
+    "continuity": 2.983724378680108e-16,
+    "momentum": 0.001067633392865208,
+    "mass_imbalance": 8.881784197001252e-16,
+    "velocity_change": 2.8723437878967056e-06,
+    "u_residual": 0.0006290774773702104,
+    "v_residual": 0.001067633392865208,
+    "rhie_chow_flux_defect": 1.0981158013469883e-07
+  },
+  {
+    "iteration": 291,
+    "continuity": 1.5959455978986625e-16,
+    "momentum": 0.0010153301695332538,
+    "mass_imbalance": 2.7755575615628914e-16,
+    "velocity_change": 2.8978536341485797e-06,
+    "u_residual": 0.0006233344851747488,
+    "v_residual": 0.001015330169533254,
+    "rhie_chow_flux_defect": 1.0790315064563366e-07
+  },
+  {
+    "iteration": 292,
+    "continuity": 2.0816681711721685e-16,
+    "momentum": 0.000966183831856653,
+    "mass_imbalance": 3.3306690738754696e-16,
+    "velocity_change": 2.8591160831986304e-06,
+    "u_residual": 0.0006145049842306451,
+    "v_residual": 0.000966183831856653,
+    "rhie_chow_flux_defect": 1.0743601224551192e-07
+  },
+  {
+    "iteration": 293,
+    "continuity": 1.8041124150158794e-16,
+    "momentum": 0.0009209260553862763,
+    "mass_imbalance": 1.1102230246251565e-16,
+    "velocity_change": 2.8100177535041876e-06,
+    "u_residual": 0.0006059417217173528,
+    "v_residual": 0.0009209260553862764,
+    "rhie_chow_flux_defect": 1.021235875245394e-07
+  },
+  {
+    "iteration": 294,
+    "continuity": 1.942890293094024e-16,
+    "momentum": 0.0008708694098264398,
+    "mass_imbalance": 0.0,
+    "velocity_change": 2.6954593788123746e-06,
+    "u_residual": 0.0005928503446877447,
+    "v_residual": 0.0008708694098264398,
+    "rhie_chow_flux_defect": 9.434388714394475e-08
+  },
+  {
+    "iteration": 295,
+    "continuity": 3.0531133177191805e-16,
+    "momentum": 0.0008359274695745824,
+    "mass_imbalance": 5.551115123125783e-16,
+    "velocity_change": 2.4793669260213605e-06,
+    "u_residual": 0.0005803205245200372,
+    "v_residual": 0.0008359274695745824,
+    "rhie_chow_flux_defect": 8.865568347989694e-08
+  },
+  {
+    "iteration": 296,
+    "continuity": 1.942890293094024e-16,
+    "momentum": 0.0007902684260200621,
+    "mass_imbalance": 2.7755575615628914e-16,
+    "velocity_change": 2.2512590264140223e-06,
+    "u_residual": 0.0005673701829828413,
+    "v_residual": 0.0007902684260200621,
+    "rhie_chow_flux_defect": 8.042071343568189e-08
+  },
+  {
+    "iteration": 297,
+    "continuity": 3.0531133177191805e-16,
+    "momentum": 0.0007192183023272094,
+    "mass_imbalance": 8.881784197001252e-16,
+    "velocity_change": 1.9551859476735906e-06,
+    "u_residual": 0.0005374489527643955,
+    "v_residual": 0.0007192183023272093,
+    "rhie_chow_flux_defect": 7.483385659147259e-08
+  },
+  {
+    "iteration": 298,
+    "continuity": 1.249000902703301e-16,
+    "momentum": 0.0006903343454386367,
+    "mass_imbalance": 4.440892098500626e-16,
+    "velocity_change": 1.471413082947473e-06,
+    "u_residual": 0.0005227441216672219,
+    "v_residual": 0.0006903343454386366,
+    "rhie_chow_flux_defect": 7.193154158529521e-08
+  },
+  {
+    "iteration": 299,
+    "continuity": 9.71445146547012e-17,
+    "momentum": 0.0006716047677705137,
+    "mass_imbalance": 2.7755575615628914e-16,
+    "velocity_change": 1.2439315108169965e-06,
+    "u_residual": 0.0005076927461157812,
+    "v_residual": 0.0006716047677705137,
+    "rhie_chow_flux_defect": 7.070410220482131e-08
+  },
+  {
+    "iteration": 300,
+    "continuity": 1.5265566588595902e-16,
+    "momentum": 0.0006507947300184724,
+    "mass_imbalance": 0.0,
+    "velocity_change": 1.182703522228934e-06,
+    "u_residual": 0.000487063423836238,
+    "v_residual": 0.0006507947300184723,
+    "rhie_chow_flux_defect": 7.083409734846129e-08
+  },
+  {
+    "iteration": 301,
+    "continuity": 4.0245584642661925e-16,
+    "momentum": 0.0006178572634831628,
+    "mass_imbalance": 1.0547118733938987e-15,
+    "velocity_change": 1.1544270294150394e-06,
+    "u_residual": 0.00046586068898048455,
+    "v_residual": 0.0006178572634831628,
+    "rhie_chow_flux_defect": 6.778858304761455e-08
+  },
+  {
+    "iteration": 302,
+    "continuity": 5.88418203051333e-15,
+    "momentum": 0.0005917622003471854,
+    "mass_imbalance": 7.327471962526033e-15,
+    "velocity_change": 1.099558502248854e-06,
+    "u_residual": 0.0004458085998211848,
+    "v_residual": 0.0005917622003471853,
+    "rhie_chow_flux_defect": 6.7666568298373e-08
+  },
+  {
+    "iteration": 303,
+    "continuity": 6.411537967210279e-15,
+    "momentum": 0.0005739778370105939,
+    "mass_imbalance": 8.548717289613705e-15,
+    "velocity_change": 1.0391148956845342e-06,
+    "u_residual": 0.0004258761982725411,
+    "v_residual": 0.0005739778370105939,
+    "rhie_chow_flux_defect": 6.841912386980193e-08
+  },
+  {
+    "iteration": 304,
+    "continuity": 6.113165529342268e-15,
+    "momentum": 0.0005523663264849577,
+    "mass_imbalance": 7.827072323607354e-15,
+    "velocity_change": 1.0092548914375499e-06,
+    "u_residual": 0.0004104494492544738,
+    "v_residual": 0.0005523663264849577,
+    "rhie_chow_flux_defect": 6.473983302985291e-08
+  },
+  {
+    "iteration": 305,
+    "continuity": 1.2823075934420558e-14,
+    "momentum": 0.0005294781422951799,
+    "mass_imbalance": 1.5654144647214707e-14,
+    "velocity_change": 1.0044205497328207e-06,
+    "u_residual": 0.00037899078461483074,
+    "v_residual": 0.0005294781422951799,
+    "rhie_chow_flux_defect": 5.944706848197942e-08
+  },
+  {
+    "iteration": 306,
+    "continuity": 1.7610912728116546e-14,
+    "momentum": 0.000517774121214658,
+    "mass_imbalance": 2.120525977034049e-14,
+    "velocity_change": 9.573056073408637e-07,
+    "u_residual": 0.00035180649907978626,
+    "v_residual": 0.000517774121214658,
+    "rhie_chow_flux_defect": 5.672462881365419e-08
+  },
+  {
+    "iteration": 307,
+    "continuity": 7.494005416219807e-16,
+    "momentum": 0.0005046082389117032,
+    "mass_imbalance": 1.1102230246251565e-15,
+    "velocity_change": 9.288630182791024e-07,
+    "u_residual": 0.00032975274587594174,
+    "v_residual": 0.0005046082389117033,
+    "rhie_chow_flux_defect": 5.533511652630962e-08
+  },
+  {
+    "iteration": 308,
+    "continuity": 3.712308238590367e-15,
+    "momentum": 0.00048458299265420976,
+    "mass_imbalance": 5.329070518200751e-15,
+    "velocity_change": 8.967001768889205e-07,
+    "u_residual": 0.00030850971297752234,
+    "v_residual": 0.0004845829926542098,
+    "rhie_chow_flux_defect": 5.086342385078706e-08
+  },
+  {
+    "iteration": 309,
+    "continuity": 1.8943180357666733e-15,
+    "momentum": 0.00046335236342128844,
+    "mass_imbalance": 3.0531133177191805e-15,
+    "velocity_change": 8.30097160453569e-07,
+    "u_residual": 0.00028847311967827567,
+    "v_residual": 0.0004633523634212884,
+    "rhie_chow_flux_defect": 4.574668033438806e-08
+  },
+  {
+    "iteration": 310,
+    "continuity": 4.85722573273506e-16,
+    "momentum": 0.00044718178746959235,
+    "mass_imbalance": 1.5543122344752192e-15,
+    "velocity_change": 7.677901597766268e-07,
+    "u_residual": 0.0002621656068313494,
+    "v_residual": 0.00044718178746959235,
+    "rhie_chow_flux_defect": 4.341291007405517e-08
+  },
+  {
+    "iteration": 311,
+    "continuity": 1.6653345369377348e-16,
+    "momentum": 0.00043593325139037445,
+    "mass_imbalance": 2.220446049250313e-16,
+    "velocity_change": 7.722637563037024e-07,
+    "u_residual": 0.00024965478517003715,
+    "v_residual": 0.00043593325139037434,
+    "rhie_chow_flux_defect": 4.4121011864468567e-08
+  },
+  {
+    "iteration": 312,
+    "continuity": 1.1102230246251565e-16,
+    "momentum": 0.00041934202811243465,
+    "mass_imbalance": 5.551115123125783e-16,
+    "velocity_change": 7.690232762631519e-07,
+    "u_residual": 0.00023933962211521775,
+    "v_residual": 0.00041934202811243465,
+    "rhie_chow_flux_defect": 4.49665674415676e-08
+  },
+  {
+    "iteration": 313,
+    "continuity": 2.636779683484747e-16,
+    "momentum": 0.0003915190242539662,
+    "mass_imbalance": 1.6653345369377348e-16,
+    "velocity_change": 7.383535153273821e-07,
+    "u_residual": 0.0002269202813953812,
+    "v_residual": 0.0003915190242539662,
+    "rhie_chow_flux_defect": 4.680343049793652e-08
+  },
+  {
+    "iteration": 314,
+    "continuity": 2.636779683484747e-16,
+    "momentum": 0.00037075874810690114,
+    "mass_imbalance": 6.106226635438361e-16,
+    "velocity_change": 6.749667239092441e-07,
+    "u_residual": 0.00022065023377073044,
+    "v_residual": 0.0003707587481069011,
+    "rhie_chow_flux_defect": 4.8536464735207374e-08
+  },
+  {
+    "iteration": 315,
+    "continuity": 3.0531133177191805e-16,
+    "momentum": 0.0003534676311569188,
+    "mass_imbalance": 1.6653345369377348e-16,
+    "velocity_change": 6.87358705777838e-07,
+    "u_residual": 0.00021216574579148632,
+    "v_residual": 0.0003534676311569188,
+    "rhie_chow_flux_defect": 4.9504689785486735e-08
+  },
+  {
+    "iteration": 316,
+    "continuity": 8.326672684688674e-17,
+    "momentum": 0.0003428845382490866,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 7.109049648878693e-07,
+    "u_residual": 0.0002063176910868516,
+    "v_residual": 0.0003428845382490866,
+    "rhie_chow_flux_defect": 5.061058630652859e-08
+  },
+  {
+    "iteration": 317,
+    "continuity": 1.8041124150158794e-16,
+    "momentum": 0.0003318851154442818,
+    "mass_imbalance": 3.3306690738754696e-16,
+    "velocity_change": 7.180299520489e-07,
+    "u_residual": 0.00020206639467691825,
+    "v_residual": 0.0003318851154442818,
+    "rhie_chow_flux_defect": 5.09428847626227e-08
+  },
+  {
+    "iteration": 318,
+    "continuity": 2.498001805406602e-16,
+    "momentum": 0.000312087393344869,
+    "mass_imbalance": 6.661338147750939e-16,
+    "velocity_change": 6.971216762350838e-07,
+    "u_residual": 0.00019366409576837006,
+    "v_residual": 0.000312087393344869,
+    "rhie_chow_flux_defect": 5.034366356986287e-08
+  },
+  {
+    "iteration": 319,
+    "continuity": 3.191891195797325e-16,
+    "momentum": 0.0002982529182394281,
+    "mass_imbalance": 1.2212453270876722e-15,
+    "velocity_change": 6.716287184972344e-07,
+    "u_residual": 0.00019145498131307957,
+    "v_residual": 0.0002982529182394281,
+    "rhie_chow_flux_defect": 4.62965951905309e-08
+  },
+  {
+    "iteration": 320,
+    "continuity": 1.942890293094024e-16,
+    "momentum": 0.0002857806439808991,
+    "mass_imbalance": 3.3306690738754696e-16,
+    "velocity_change": 6.698178173702649e-07,
+    "u_residual": 0.00018645298619108407,
+    "v_residual": 0.0002857806439808991,
+    "rhie_chow_flux_defect": 4.4217057004072455e-08
+  },
+  {
+    "iteration": 321,
+    "continuity": 2.636779683484747e-16,
+    "momentum": 0.00026186453943630313,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 6.708968641987167e-07,
+    "u_residual": 0.00017719473993027014,
+    "v_residual": 0.00026186453943630313,
+    "rhie_chow_flux_defect": 4.0171467172575204e-08
+  },
+  {
+    "iteration": 322,
+    "continuity": 1.7486012637846216e-15,
+    "momentum": 0.0002511409488099185,
+    "mass_imbalance": 3.0531133177191805e-15,
+    "velocity_change": 6.482690621005191e-07,
+    "u_residual": 0.00017495498983606007,
+    "v_residual": 0.0002511409488099185,
+    "rhie_chow_flux_defect": 3.598790721727289e-08
+  },
+  {
+    "iteration": 323,
+    "continuity": 1.0130785099704553e-15,
+    "momentum": 0.00023887944785041642,
+    "mass_imbalance": 0.0,
+    "velocity_change": 6.023309520016354e-07,
+    "u_residual": 0.00016986863880953375,
+    "v_residual": 0.00023887944785041642,
+    "rhie_chow_flux_defect": 3.354186655479107e-08
+  },
+  {
+    "iteration": 324,
+    "continuity": 3.698430450782553e-15,
+    "momentum": 0.00022479355210598554,
+    "mass_imbalance": 7.827072323607354e-15,
+    "velocity_change": 5.614698723229589e-07,
+    "u_residual": 0.00016691242440259238,
+    "v_residual": 0.00022479355210598554,
+    "rhie_chow_flux_defect": 2.8486609035964384e-08
+  },
+  {
+    "iteration": 325,
+    "continuity": 1.4155343563970746e-15,
+    "momentum": 0.00021404684117584728,
+    "mass_imbalance": 3.3861802251067274e-15,
+    "velocity_change": 4.836480914181124e-07,
+    "u_residual": 0.00016214798467911395,
+    "v_residual": 0.0002140468411758473,
+    "rhie_chow_flux_defect": 2.5083908574846098e-08
+  },
+  {
+    "iteration": 326,
+    "continuity": 1.8457457784393227e-15,
+    "momentum": 0.0001958298635618334,
+    "mass_imbalance": 1.27675647831893e-15,
+    "velocity_change": 4.6530749742666744e-07,
+    "u_residual": 0.00015220303552082164,
+    "v_residual": 0.0001958298635618334,
+    "rhie_chow_flux_defect": 2.3064827357103836e-08
+  },
+  {
+    "iteration": 327,
+    "continuity": 1.7555401576885288e-15,
+    "momentum": 0.00019193172105173707,
+    "mass_imbalance": 1.2212453270876722e-15,
+    "velocity_change": 4.2781164517283893e-07,
+    "u_residual": 0.00015067918716812017,
+    "v_residual": 0.0001919317210517371,
+    "rhie_chow_flux_defect": 2.238786617561291e-08
+  },
+  {
+    "iteration": 328,
+    "continuity": 2.7755575615628914e-15,
+    "momentum": 0.00018313111257023366,
+    "mass_imbalance": 4.9404924595819466e-15,
+    "velocity_change": 4.261295488486305e-07,
+    "u_residual": 0.00014208401649451263,
+    "v_residual": 0.00018313111257023366,
+    "rhie_chow_flux_defect": 2.3358914568577305e-08
+  },
+  {
+    "iteration": 329,
+    "continuity": 2.8449465006019636e-15,
+    "momentum": 0.0001777830346250174,
+    "mass_imbalance": 1.942890293094024e-15,
+    "velocity_change": 3.972244435167943e-07,
+    "u_residual": 0.00013708930337215147,
+    "v_residual": 0.00017778303462501736,
+    "rhie_chow_flux_defect": 2.4024505277281975e-08
+  },
+  {
+    "iteration": 330,
+    "continuity": 2.7478019859472624e-15,
+    "momentum": 0.00016866085822467674,
+    "mass_imbalance": 6.106226635438361e-16,
+    "velocity_change": 3.766146710300691e-07,
+    "u_residual": 0.00013149220696753863,
+    "v_residual": 0.00016866085822467676,
+    "rhie_chow_flux_defect": 2.3552704237188738e-08
+  },
+  {
+    "iteration": 331,
+    "continuity": 3.400058012914542e-15,
+    "momentum": 0.00016159413869229732,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 3.7394167380980226e-07,
+    "u_residual": 0.00012143470693664792,
+    "v_residual": 0.00016159413869229732,
+    "rhie_chow_flux_defect": 2.350709304269655e-08
+  },
+  {
+    "iteration": 332,
+    "continuity": 4.066191827689636e-15,
+    "momentum": 0.0001528682517168665,
+    "mass_imbalance": 5.551115123125783e-16,
+    "velocity_change": 3.596220925260532e-07,
+    "u_residual": 0.00011507495372626517,
+    "v_residual": 0.00015286825171686652,
+    "rhie_chow_flux_defect": 2.313364541908519e-08
+  },
+  {
+    "iteration": 333,
+    "continuity": 4.898859096158503e-15,
+    "momentum": 0.0001500475205238953,
+    "mass_imbalance": 8.881784197001252e-16,
+    "velocity_change": 3.378916107674157e-07,
+    "u_residual": 0.00010839536620707747,
+    "v_residual": 0.0001500475205238953,
+    "rhie_chow_flux_defect": 2.4012153700552733e-08
+  },
+  {
+    "iteration": 334,
+    "continuity": 1.817990202823694e-15,
+    "momentum": 0.0001484119008588867,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 3.1699137620876117e-07,
+    "u_residual": 0.00010422105426117143,
+    "v_residual": 0.00014841190085888666,
+    "rhie_chow_flux_defect": 2.4344402412125322e-08
+  },
+  {
+    "iteration": 335,
+    "continuity": 4.093947403305265e-15,
+    "momentum": 0.00014220146911495953,
+    "mass_imbalance": 2.220446049250313e-16,
+    "velocity_change": 2.9716279209644064e-07,
+    "u_residual": 9.938701114839985e-05,
+    "v_residual": 0.00014220146911495953,
+    "rhie_chow_flux_defect": 2.3368534679993162e-08
+  },
+  {
+    "iteration": 336,
+    "continuity": 7.632783294297951e-15,
+    "momentum": 0.0001328187468973474,
+    "mass_imbalance": 5.551115123125783e-16,
+    "velocity_change": 2.9629580779524933e-07,
+    "u_residual": 9.263551612544808e-05,
+    "v_residual": 0.00013281874689734742,
+    "rhie_chow_flux_defect": 2.1905905508956046e-08
+  },
+  {
+    "iteration": 337,
+    "continuity": 2.42861286636753e-16,
+    "momentum": 0.0001305601614741956,
+    "mass_imbalance": 1.1102230246251565e-16,
+    "velocity_change": 2.8207229374813125e-07,
+    "u_residual": 8.832157457449075e-05,
+    "v_residual": 0.0001305601614741956,
+    "rhie_chow_flux_defect": 2.139497964757174e-08
+  },
+  {
+    "iteration": 338,
+    "continuity": 3.885780586188048e-16,
+    "momentum": 0.00013013784616112715,
+    "mass_imbalance": 1.6653345369377348e-16,
+    "velocity_change": 2.7129626478574614e-07,
+    "u_residual": 8.54562720645379e-05,
+    "v_residual": 0.00013013784616112715,
+    "rhie_chow_flux_defect": 2.1064606733106447e-08
+  },
+  {
+    "iteration": 339,
+    "continuity": 1.457167719820518e-15,
+    "momentum": 0.000122352560070183,
+    "mass_imbalance": 2.7755575615628914e-16,
+    "velocity_change": 2.608156779689355e-07,
+    "u_residual": 8.09703911999465e-05,
+    "v_residual": 0.000122352560070183,
+    "rhie_chow_flux_defect": 1.9391783416537332e-08
+  },
+  {
+    "iteration": 340,
+    "continuity": 7.563394355258879e-15,
+    "momentum": 0.00011620107841868587,
+    "mass_imbalance": 3.941291737419306e-15,
+    "velocity_change": 2.395244987143941e-07,
+    "u_residual": 7.784359669712622e-05,
+    "v_residual": 0.00011620107841868587,
+    "rhie_chow_flux_defect": 1.8137300199325466e-08
+  },
+  {
+    "iteration": 341,
+    "continuity": 1.1511624986582092e-14,
+    "momentum": 0.00010595806418674632,
+    "mass_imbalance": 6.6058269965196814e-15,
+    "velocity_change": 2.148455878455205e-07,
+    "u_residual": 7.303970196846386e-05,
+    "v_residual": 0.00010595806418674634,
+    "rhie_chow_flux_defect": 1.6555969315413228e-08
+  },
+  {
+    "iteration": 342,
+    "continuity": 9.853229343548264e-16,
+    "momentum": 9.553085389978683e-05,
+    "mass_imbalance": 4.996003610813204e-16,
+    "velocity_change": 1.9050389798991318e-07,
+    "u_residual": 6.885233499865276e-05,
+    "v_residual": 9.553085389978682e-05,
+    "rhie_chow_flux_defect": 1.507817286333363e-08
+  },
+  {
+    "iteration": 343,
+    "continuity": 4.211908599671688e-15,
+    "momentum": 9.206898718030034e-05,
+    "mass_imbalance": 1.887379141862766e-15,
+    "velocity_change": 1.7616504077722084e-07,
+    "u_residual": 6.709313762563001e-05,
+    "v_residual": 9.206898718030034e-05,
+    "rhie_chow_flux_defect": 1.452490859164458e-08
+  },
+  {
+    "iteration": 344,
+    "continuity": 6.2727600891321345e-15,
+    "momentum": 8.887581583030054e-05,
+    "mass_imbalance": 3.885780586188048e-15,
+    "velocity_change": 1.6963479076981258e-07,
+    "u_residual": 6.369249646659669e-05,
+    "v_residual": 8.887581583030054e-05,
+    "rhie_chow_flux_defect": 1.3890921945301172e-08
+  },
+  {
+    "iteration": 345,
+    "continuity": 6.217248937900877e-15,
+    "momentum": 8.557731911791326e-05,
+    "mass_imbalance": 2.55351295663786e-15,
+    "velocity_change": 1.5755052551469362e-07,
+    "u_residual": 6.14532318759622e-05,
+    "v_residual": 8.557731911791326e-05,
+    "rhie_chow_flux_defect": 1.3401618287734115e-08
+  },
+  {
+    "iteration": 346,
+    "continuity": 5.662137425588298e-15,
+    "momentum": 8.149407340875148e-05,
+    "mass_imbalance": 2.6645352591003757e-15,
+    "velocity_change": 1.5008605591670943e-07,
+    "u_residual": 5.8892827532774075e-05,
+    "v_residual": 8.149407340875148e-05,
+    "rhie_chow_flux_defect": 1.297622533840139e-08
+  },
+  {
+    "iteration": 347,
+    "continuity": 3.760880495917718e-15,
+    "momentum": 6.707183866252316e-05,
+    "mass_imbalance": 2.220446049250313e-16,
+    "velocity_change": 1.427503112383377e-07,
+    "u_residual": 5.321770782465132e-05,
+    "v_residual": 6.707183866252316e-05,
+    "rhie_chow_flux_defect": 1.128865775251715e-08
+  },
+  {
+    "iteration": 348,
+    "continuity": 6.591949208711867e-16,
+    "momentum": 5.9377711300317065e-05,
+    "mass_imbalance": 7.216449660063518e-16,
+    "velocity_change": 1.294473865832632e-07,
+    "u_residual": 4.915474102309393e-05,
+    "v_residual": 5.937771130031707e-05,
+    "rhie_chow_flux_defect": 9.937497293223903e-09
+  },
+  {
+    "iteration": 349,
+    "continuity": 5.273559366969494e-16,
+    "momentum": 5.557183576248482e-05,
+    "mass_imbalance": 2.3314683517128287e-15,
+    "velocity_change": 1.2097269186384096e-07,
+    "u_residual": 4.55494853476153e-05,
+    "v_residual": 5.557183576248483e-05,
+    "rhie_chow_flux_defect": 9.306616898495705e-09
+  },
+  {
+    "iteration": 350,
+    "continuity": 6.38378239159465e-16,
+    "momentum": 5.499749000159241e-05,
+    "mass_imbalance": 9.43689570931383e-16,
+    "velocity_change": 1.1757581747789958e-07,
+    "u_residual": 4.329375184097654e-05,
+    "v_residual": 5.499749000159241e-05,
+    "rhie_chow_flux_defect": 9.034370366679286e-09
+  },
+  {
+    "iteration": 351,
+    "continuity": 6.38378239159465e-16,
+    "momentum": 5.303369528308128e-05,
+    "mass_imbalance": 8.326672684688674e-16,
+    "velocity_change": 1.1530556900691408e-07,
+    "u_residual": 4.149481009134612e-05,
+    "v_residual": 5.3033695283081284e-05,
+    "rhie_chow_flux_defect": 8.306852692589026e-09
+  },
+  {
+    "iteration": 352,
+    "continuity": 4.649058915617843e-16,
+    "momentum": 4.6876360909734366e-05,
+    "mass_imbalance": 2.3314683517128287e-15,
+    "velocity_change": 1.0571307260381219e-07,
+    "u_residual": 3.856057235189343e-05,
+    "v_residual": 4.6876360909734366e-05,
+    "rhie_chow_flux_defect": 6.94991118860407e-09
+  },
+  {
+    "iteration": 353,
+    "continuity": 5.967448757360216e-16,
+    "momentum": 4.4753287553450015e-05,
+    "mass_imbalance": 9.992007221626409e-16,
+    "velocity_change": 1.0189674600966092e-07,
+    "u_residual": 3.680527772528707e-05,
+    "v_residual": 4.475328755345001e-05,
+    "rhie_chow_flux_defect": 6.555396801527369e-09
+  },
+  {
+    "iteration": 354,
+    "continuity": 7.355227538141662e-16,
+    "momentum": 4.185208767782063e-05,
+    "mass_imbalance": 8.326672684688674e-16,
+    "velocity_change": 1.0288817449757848e-07,
+    "u_residual": 3.420050345030639e-05,
+    "v_residual": 4.185208767782063e-05,
+    "rhie_chow_flux_defect": 6.149409249089223e-09
+  },
+  {
+    "iteration": 355,
+    "continuity": 5.828670879282072e-16,
+    "momentum": 4.005689374978311e-05,
+    "mass_imbalance": 7.216449660063518e-16,
+    "velocity_change": 1.0878009904912583e-07,
+    "u_residual": 3.218208929416833e-05,
+    "v_residual": 4.005689374978311e-05,
+    "rhie_chow_flux_defect": 5.965857912270054e-09
+  },
+  {
+    "iteration": 356,
+    "continuity": 5.828670879282072e-16,
+    "momentum": 3.715987544350337e-05,
+    "mass_imbalance": 2.220446049250313e-16,
+    "velocity_change": 1.119902059048064e-07,
+    "u_residual": 3.0135339787814966e-05,
+    "v_residual": 3.715987544350337e-05,
+    "rhie_chow_flux_defect": 5.758889448898272e-09
+  },
+  {
+    "iteration": 357,
+    "continuity": 5.759281940243e-16,
+    "momentum": 3.355386922715645e-05,
+    "mass_imbalance": 9.992007221626409e-16,
+    "velocity_change": 1.0863359416017626e-07,
+    "u_residual": 2.8317883621333008e-05,
+    "v_residual": 3.355386922715645e-05,
+    "rhie_chow_flux_defect": 5.310941244187148e-09
+  },
+  {
+    "iteration": 358,
+    "continuity": 5.551115123125783e-16,
+    "momentum": 3.120428883591885e-05,
+    "mass_imbalance": 7.771561172376096e-16,
+    "velocity_change": 9.23871408238866e-08,
+    "u_residual": 2.6856730693856707e-05,
+    "v_residual": 3.1204288835918854e-05,
+    "rhie_chow_flux_defect": 4.98629911261944e-09
+  },
+  {
+    "iteration": 359,
+    "continuity": 4.718447854656915e-16,
+    "momentum": 3.040209376431059e-05,
+    "mass_imbalance": 1.1102230246251565e-16,
+    "velocity_change": 8.888768441173839e-08,
+    "u_residual": 2.5391421997635568e-05,
+    "v_residual": 3.0402093764310587e-05,
+    "rhie_chow_flux_defect": 4.852200761205983e-09
+  },
+  {
+    "iteration": 360,
+    "continuity": 4.85722573273506e-16,
+    "momentum": 2.9171268097598103e-05,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 9.121698933342581e-08,
+    "u_residual": 2.3522623208042215e-05,
+    "v_residual": 2.9171268097598106e-05,
+    "rhie_chow_flux_defect": 4.635428814214691e-09
+  },
+  {
+    "iteration": 361,
+    "continuity": 1.0477729794899915e-15,
+    "momentum": 2.8962175214338388e-05,
+    "mass_imbalance": 1.609823385706477e-15,
+    "velocity_change": 9.118336425414236e-08,
+    "u_residual": 2.0889702501968485e-05,
+    "v_residual": 2.8962175214338384e-05,
+    "rhie_chow_flux_defect": 4.114304444631972e-09
+  },
+  {
+    "iteration": 362,
+    "continuity": 5.134781488891349e-16,
+    "momentum": 2.7970627761501746e-05,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 7.920471377029226e-08,
+    "u_residual": 1.9211702833871166e-05,
+    "v_residual": 2.7970627761501742e-05,
+    "rhie_chow_flux_defect": 3.755304163022071e-09
+  },
+  {
+    "iteration": 363,
+    "continuity": 5.273559366969494e-16,
+    "momentum": 2.890670947548724e-05,
+    "mass_imbalance": 7.216449660063518e-16,
+    "velocity_change": 8.350157141949477e-08,
+    "u_residual": 1.7232227406791857e-05,
+    "v_residual": 2.890670947548724e-05,
+    "rhie_chow_flux_defect": 3.832737118001553e-09
+  },
+  {
+    "iteration": 364,
+    "continuity": 1.3183898417423734e-16,
+    "momentum": 2.9285407938034188e-05,
+    "mass_imbalance": 1.1102230246251565e-16,
+    "velocity_change": 8.690147076852867e-08,
+    "u_residual": 1.6205072879410062e-05,
+    "v_residual": 2.928540793803419e-05,
+    "rhie_chow_flux_defect": 3.948589637445243e-09
+  },
+  {
+    "iteration": 365,
+    "continuity": 1.5959455978986625e-16,
+    "momentum": 2.9552687810858474e-05,
+    "mass_imbalance": 1.6653345369377348e-16,
+    "velocity_change": 8.614976927927981e-08,
+    "u_residual": 1.5462451389468123e-05,
+    "v_residual": 2.955268781085847e-05,
+    "rhie_chow_flux_defect": 4.0972459230137495e-09
+  },
+  {
+    "iteration": 366,
+    "continuity": 5.204170427930421e-16,
+    "momentum": 2.962417744530802e-05,
+    "mass_imbalance": 4.440892098500626e-16,
+    "velocity_change": 8.247875089677226e-08,
+    "u_residual": 1.4845722756572086e-05,
+    "v_residual": 2.962417744530802e-05,
+    "rhie_chow_flux_defect": 4.378671896755634e-09
+  },
+  {
+    "iteration": 367,
+    "continuity": 5.48172618408671e-16,
+    "momentum": 2.9007012679874754e-05,
+    "mass_imbalance": 8.881784197001252e-16,
+    "velocity_change": 7.503941495175942e-08,
+    "u_residual": 1.4687729377673136e-05,
+    "v_residual": 2.9007012679874754e-05,
+    "rhie_chow_flux_defect": 4.469177064591552e-09
+  },
+  {
+    "iteration": 368,
+    "continuity": 2.5673907444456745e-16,
+    "momentum": 2.8011189138962098e-05,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 6.274955059292625e-08,
+    "u_residual": 1.4488973500653974e-05,
+    "v_residual": 2.8011189138962098e-05,
+    "rhie_chow_flux_defect": 4.4301993622441595e-09
+  },
+  {
+    "iteration": 369,
+    "continuity": 2.636779683484747e-16,
+    "momentum": 2.5584161705161652e-05,
+    "mass_imbalance": 2.220446049250313e-16,
+    "velocity_change": 5.34572345799178e-08,
+    "u_residual": 1.4009322609436335e-05,
+    "v_residual": 2.5584161705161652e-05,
+    "rhie_chow_flux_defect": 4.246544254814967e-09
+  },
+  {
+    "iteration": 370,
+    "continuity": 2.498001805406602e-16,
+    "momentum": 2.4690356510133043e-05,
+    "mass_imbalance": 1.1102230246251565e-16,
+    "velocity_change": 3.999806152867741e-08,
+    "u_residual": 1.3693241759396976e-05,
+    "v_residual": 2.4690356510133043e-05,
+    "rhie_chow_flux_defect": 4.0964931272179785e-09
+  },
+  {
+    "iteration": 371,
+    "continuity": 6.106226635438361e-16,
+    "momentum": 2.2476407879477253e-05,
+    "mass_imbalance": 1.609823385706477e-15,
+    "velocity_change": 3.788333893545853e-08,
+    "u_residual": 1.31099046044473e-05,
+    "v_residual": 2.2476407879477253e-05,
+    "rhie_chow_flux_defect": 3.793987949296518e-09
+  },
+  {
+    "iteration": 372,
+    "continuity": 2.3592239273284576e-16,
+    "momentum": 2.1136844192190635e-05,
+    "mass_imbalance": 7.771561172376096e-16,
+    "velocity_change": 3.481219644540026e-08,
+    "u_residual": 1.2801268584087847e-05,
+    "v_residual": 2.1136844192190635e-05,
+    "rhie_chow_flux_defect": 3.6067195958024563e-09
+  },
+  {
+    "iteration": 373,
+    "continuity": 2.914335439641036e-16,
+    "momentum": 2.0395004668658147e-05,
+    "mass_imbalance": 0.0,
+    "velocity_change": 3.435817438716959e-08,
+    "u_residual": 1.2602264098941747e-05,
+    "v_residual": 2.039500466865815e-05,
+    "rhie_chow_flux_defect": 3.5150244850658293e-09
+  },
+  {
+    "iteration": 374,
+    "continuity": 3.0531133177191805e-16,
+    "momentum": 1.7928880898728248e-05,
+    "mass_imbalance": 8.881784197001252e-16,
+    "velocity_change": 3.5541936720985545e-08,
+    "u_residual": 1.1971006141032174e-05,
+    "v_residual": 1.7928880898728248e-05,
+    "rhie_chow_flux_defect": 3.176622205486133e-09
+  },
+  {
+    "iteration": 375,
+    "continuity": 1.1102230246251565e-16,
+    "momentum": 1.712315625105519e-05,
+    "mass_imbalance": 2.220446049250313e-16,
+    "velocity_change": 3.4402867630199674e-08,
+    "u_residual": 1.1867774897851615e-05,
+    "v_residual": 1.712315625105519e-05,
+    "rhie_chow_flux_defect": 3.117979047336217e-09
+  },
+  {
+    "iteration": 376,
+    "continuity": 4.996003610813204e-16,
+    "momentum": 1.755505194871424e-05,
+    "mass_imbalance": 1.6653345369377348e-15,
+    "velocity_change": 3.3353646373447676e-08,
+    "u_residual": 1.2115173564014386e-05,
+    "v_residual": 1.755505194871424e-05,
+    "rhie_chow_flux_defect": 3.302220225328178e-09
+  },
+  {
+    "iteration": 377,
+    "continuity": 1.8735013540549517e-16,
+    "momentum": 1.8221556337147402e-05,
+    "mass_imbalance": 1.1102230246251565e-16,
+    "velocity_change": 3.427633691807652e-08,
+    "u_residual": 1.23783897796207e-05,
+    "v_residual": 1.8221556337147402e-05,
+    "rhie_chow_flux_defect": 3.488252291066494e-09
+  },
+  {
+    "iteration": 378,
+    "continuity": 2.7755575615628914e-16,
+    "momentum": 1.82155985584062e-05,
+    "mass_imbalance": 2.220446049250313e-16,
+    "velocity_change": 3.474065204175231e-08,
+    "u_residual": 1.2145436219769948e-05,
+    "v_residual": 1.82155985584062e-05,
+    "rhie_chow_flux_defect": 3.3531972229692674e-09
+  },
+  {
+    "iteration": 379,
+    "continuity": 6.730727086790012e-16,
+    "momentum": 1.7495187474977607e-05,
+    "mass_imbalance": 3.3306690738754696e-16,
+    "velocity_change": 3.654211368740723e-08,
+    "u_residual": 1.1454873991091829e-05,
+    "v_residual": 1.7495187474977604e-05,
+    "rhie_chow_flux_defect": 3.068417261312294e-09
+  },
+  {
+    "iteration": 380,
+    "continuity": 4.0939474033052647e-16,
+    "momentum": 1.8548461074651027e-05,
+    "mass_imbalance": 9.992007221626409e-16,
+    "velocity_change": 3.606324644120362e-08,
+    "u_residual": 1.1165167020034009e-05,
+    "v_residual": 1.8548461074651027e-05,
+    "rhie_chow_flux_defect": 3.10655081232269e-09
+  },
+  {
+    "iteration": 381,
+    "continuity": 8.326672684688674e-17,
+    "momentum": 1.845868032395511e-05,
+    "mass_imbalance": 0.0,
+    "velocity_change": 3.5917467098613154e-08,
+    "u_residual": 1.0950315079120674e-05,
+    "v_residual": 1.8458680323955115e-05,
+    "rhie_chow_flux_defect": 3.0583313328304202e-09
+  },
+  {
+    "iteration": 382,
+    "continuity": 3.191891195797325e-16,
+    "momentum": 1.764796253501238e-05,
+    "mass_imbalance": 4.440892098500626e-16,
+    "velocity_change": 3.4054348868606255e-08,
+    "u_residual": 1.023094764643691e-05,
+    "v_residual": 1.7647962535012376e-05,
+    "rhie_chow_flux_defect": 2.808213396673519e-09
+  },
+  {
+    "iteration": 383,
+    "continuity": 2.0816681711721685e-16,
+    "momentum": 1.803751300547888e-05,
+    "mass_imbalance": 1.1102230246251565e-16,
+    "velocity_change": 3.187405728244386e-08,
+    "u_residual": 1.004815892823365e-05,
+    "v_residual": 1.803751300547888e-05,
+    "rhie_chow_flux_defect": 2.7987473925887583e-09
+  },
+  {
+    "iteration": 384,
+    "continuity": 6.245004513516506e-16,
+    "momentum": 1.737613139912927e-05,
+    "mass_imbalance": 1.6653345369377348e-16,
+    "velocity_change": 3.3295198487159894e-08,
+    "u_residual": 9.45695439974583e-06,
+    "v_residual": 1.7376131399129273e-05,
+    "rhie_chow_flux_defect": 2.6830682522291014e-09
+  },
+  {
+    "iteration": 385,
+    "continuity": 1.942890293094024e-16,
+    "momentum": 1.7300870091236707e-05,
+    "mass_imbalance": 3.3306690738754696e-16,
+    "velocity_change": 3.237449319737351e-08,
+    "u_residual": 9.116772805352805e-06,
+    "v_residual": 1.7300870091236707e-05,
+    "rhie_chow_flux_defect": 2.657619353956525e-09
+  },
+  {
+    "iteration": 386,
+    "continuity": 1.6653345369377348e-16,
+    "momentum": 1.713025499444412e-05,
+    "mass_imbalance": 7.216449660063518e-16,
+    "velocity_change": 3.3058619642971354e-08,
+    "u_residual": 8.785764268834349e-06,
+    "v_residual": 1.713025499444412e-05,
+    "rhie_chow_flux_defect": 2.581901754058986e-09
+  },
+  {
+    "iteration": 387,
+    "continuity": 4.0245584642661925e-16,
+    "momentum": 1.5559760460393642e-05,
+    "mass_imbalance": 1.6653345369377348e-16,
+    "velocity_change": 3.3215031500395675e-08,
+    "u_residual": 7.957170983003713e-06,
+    "v_residual": 1.5559760460393642e-05,
+    "rhie_chow_flux_defect": 2.2462320208488436e-09
+  },
+  {
+    "iteration": 388,
+    "continuity": 2.7755575615628914e-16,
+    "momentum": 1.4634696380081156e-05,
+    "mass_imbalance": 2.7755575615628914e-16,
+    "velocity_change": 3.0896059358478944e-08,
+    "u_residual": 7.4854253327497634e-06,
+    "v_residual": 1.4634696380081156e-05,
+    "rhie_chow_flux_defect": 2.0557369502928637e-09
+  },
+  {
+    "iteration": 389,
+    "continuity": 6.175615574477433e-16,
+    "momentum": 1.2987279575618056e-05,
+    "mass_imbalance": 3.3306690738754696e-16,
+    "velocity_change": 3.2373425634668607e-08,
+    "u_residual": 6.8495580060541635e-06,
+    "v_residual": 1.2987279575618059e-05,
+    "rhie_chow_flux_defect": 1.7387858555547162e-09
+  },
+  {
+    "iteration": 390,
+    "continuity": 1.249000902703301e-16,
+    "momentum": 1.2281763357221868e-05,
+    "mass_imbalance": 1.1102230246251565e-16,
+    "velocity_change": 3.101308061140978e-08,
+    "u_residual": 6.562591794944406e-06,
+    "v_residual": 1.2281763357221868e-05,
+    "rhie_chow_flux_defect": 1.6441416757206304e-09
+  },
+  {
+    "iteration": 391,
+    "continuity": 9.71445146547012e-17,
+    "momentum": 1.1661099037783856e-05,
+    "mass_imbalance": 1.6653345369377348e-16,
+    "velocity_change": 3.14229417599024e-08,
+    "u_residual": 6.350686519293981e-06,
+    "v_residual": 1.166109903778386e-05,
+    "rhie_chow_flux_defect": 1.5785171838339917e-09
+  },
+  {
+    "iteration": 392,
+    "continuity": 2.3592239273284576e-16,
+    "momentum": 1.037469840123539e-05,
+    "mass_imbalance": 3.3306690738754696e-16,
+    "velocity_change": 3.1265079334513723e-08,
+    "u_residual": 6.037652221752943e-06,
+    "v_residual": 1.037469840123539e-05,
+    "rhie_chow_flux_defect": 1.3898044213421815e-09
+  },
+  {
+    "iteration": 393,
+    "continuity": 3.3306690738754696e-16,
+    "momentum": 9.753915807429586e-06,
+    "mass_imbalance": 5.551115123125783e-16,
+    "velocity_change": 2.782540325148991e-08,
+    "u_residual": 5.790681527015623e-06,
+    "v_residual": 9.753915807429586e-06,
+    "rhie_chow_flux_defect": 1.4081045695695123e-09
+  },
+  {
+    "iteration": 394,
+    "continuity": 8.396061623727746e-16,
+    "momentum": 9.175262475946469e-06,
+    "mass_imbalance": 4.440892098500626e-16,
+    "velocity_change": 2.590308946850972e-08,
+    "u_residual": 5.445100161681318e-06,
+    "v_residual": 9.175262475946469e-06,
+    "rhie_chow_flux_defect": 1.4246007846439063e-09
+  },
+  {
+    "iteration": 395,
+    "continuity": 2.498001805406602e-16,
+    "momentum": 9.092792060672186e-06,
+    "mass_imbalance": 2.7755575615628914e-16,
+    "velocity_change": 2.168261864238935e-08,
+    "u_residual": 5.2683011702973745e-06,
+    "v_residual": 9.092792060672186e-06,
+    "rhie_chow_flux_defect": 1.5285406959576384e-09
+  },
+  {
+    "iteration": 396,
+    "continuity": 2.914335439641036e-16,
+    "momentum": 8.98798824748806e-06,
+    "mass_imbalance": 3.3306690738754696e-16,
+    "velocity_change": 1.9154045180665158e-08,
+    "u_residual": 5.081057102827076e-06,
+    "v_residual": 8.987988247488062e-06,
+    "rhie_chow_flux_defect": 1.505453603398568e-09
+  },
+  {
+    "iteration": 397,
+    "continuity": 2.7755575615628914e-16,
+    "momentum": 8.27179456883031e-06,
+    "mass_imbalance": 9.992007221626409e-16,
+    "velocity_change": 2.00603145700598e-08,
+    "u_residual": 4.804478891725104e-06,
+    "v_residual": 8.27179456883031e-06,
+    "rhie_chow_flux_defect": 1.2776703433220877e-09
+  },
+  {
+    "iteration": 398,
+    "continuity": 6.661338147750939e-16,
+    "momentum": 8.65968404083562e-06,
+    "mass_imbalance": 2.220446049250313e-16,
+    "velocity_change": 1.8430727481526243e-08,
+    "u_residual": 4.763785725361047e-06,
+    "v_residual": 8.659684040835622e-06,
+    "rhie_chow_flux_defect": 1.3765506992456495e-09
+  },
+  {
+    "iteration": 399,
+    "continuity": 2.914335439641036e-16,
+    "momentum": 8.530258696824455e-06,
+    "mass_imbalance": 3.885780586188048e-16,
+    "velocity_change": 1.7361466484941412e-08,
+    "u_residual": 4.669992340743068e-06,
+    "v_residual": 8.530258696824455e-06,
+    "rhie_chow_flux_defect": 1.4542313949833267e-09
+  },
+  {
+    "iteration": 400,
+    "continuity": 2.0816681711721685e-16,
+    "momentum": 8.348848461762727e-06,
+    "mass_imbalance": 3.885780586188048e-16,
+    "velocity_change": 1.6660372741984786e-08,
+    "u_residual": 4.599179675872551e-06,
+    "v_residual": 8.348848461762729e-06,
+    "rhie_chow_flux_defect": 1.535609244278452e-09
+  },
+  {
+    "iteration": 401,
+    "continuity": 2.1510571102112408e-16,
+    "momentum": 8.553176494807206e-06,
+    "mass_imbalance": 4.440892098500626e-16,
+    "velocity_change": 1.8113589569240807e-08,
+    "u_residual": 4.6791559931574075e-06,
+    "v_residual": 8.553176494807207e-06,
+    "rhie_chow_flux_defect": 1.6872469301305356e-09
+  },
+  {
+    "iteration": 402,
+    "continuity": 1.3183898417423734e-16,
+    "momentum": 8.37151740895858e-06,
+    "mass_imbalance": 2.220446049250313e-16,
+    "velocity_change": 1.8903162375683014e-08,
+    "u_residual": 4.560761687918683e-06,
+    "v_residual": 8.371517408958579e-06,
+    "rhie_chow_flux_defect": 1.6976084714321695e-09
+  },
+  {
+    "iteration": 403,
+    "continuity": 2.636779683484747e-16,
+    "momentum": 7.959303468119033e-06,
+    "mass_imbalance": 6.661338147750939e-16,
+    "velocity_change": 1.8404552971917898e-08,
+    "u_residual": 4.387598794179043e-06,
+    "v_residual": 7.959303468119035e-06,
+    "rhie_chow_flux_defect": 1.6298914399442952e-09
+  },
+  {
+    "iteration": 404,
+    "continuity": 2.914335439641036e-16,
+    "momentum": 7.59308073368686e-06,
+    "mass_imbalance": 7.771561172376096e-16,
+    "velocity_change": 1.7498076467815926e-08,
+    "u_residual": 4.161650255665985e-06,
+    "v_residual": 7.593080733686861e-06,
+    "rhie_chow_flux_defect": 1.5298561648899018e-09
+  },
+  {
+    "iteration": 405,
+    "continuity": 8.326672684688674e-17,
+    "momentum": 7.216245778630203e-06,
+    "mass_imbalance": 0.0,
+    "velocity_change": 1.7961168340824285e-08,
+    "u_residual": 4.026586490883916e-06,
+    "v_residual": 7.216245778630203e-06,
+    "rhie_chow_flux_defect": 1.4618690682404008e-09
+  },
+  {
+    "iteration": 406,
+    "continuity": 3.469446951953614e-16,
+    "momentum": 6.581137201757812e-06,
+    "mass_imbalance": 8.326672684688674e-16,
+    "velocity_change": 1.8095297411521716e-08,
+    "u_residual": 3.8040132208321807e-06,
+    "v_residual": 6.581137201757812e-06,
+    "rhie_chow_flux_defect": 1.2862460689384885e-09
+  },
+  {
+    "iteration": 407,
+    "continuity": 1.1102230246251565e-16,
+    "momentum": 6.233801175586131e-06,
+    "mass_imbalance": 6.661338147750939e-16,
+    "velocity_change": 1.66408259385728e-08,
+    "u_residual": 3.6480051724614227e-06,
+    "v_residual": 6.233801175586131e-06,
+    "rhie_chow_flux_defect": 1.1483982392487497e-09
+  },
+  {
+    "iteration": 408,
+    "continuity": 5.273559366969494e-16,
+    "momentum": 5.415198001868649e-06,
+    "mass_imbalance": 6.661338147750939e-16,
+    "velocity_change": 1.5899442022508647e-08,
+    "u_residual": 3.4358955303440234e-06,
+    "v_residual": 5.41519800186865e-06,
+    "rhie_chow_flux_defect": 9.274300291932023e-10
+  },
+  {
+    "iteration": 409,
+    "continuity": 9.71445146547012e-17,
+    "momentum": 5.116989617912253e-06,
+    "mass_imbalance": 3.885780586188048e-16,
+    "velocity_change": 1.3056392687491036e-08,
+    "u_residual": 3.3428022622774714e-06,
+    "v_residual": 5.116989617912253e-06,
+    "rhie_chow_flux_defect": 8.32603569845476e-10
+  },
+  {
+    "iteration": 410,
+    "continuity": 1.3877787807814457e-16,
+    "momentum": 4.856904754502597e-06,
+    "mass_imbalance": 1.1102230246251565e-16,
+    "velocity_change": 1.1633985825924842e-08,
+    "u_residual": 3.2392323564731186e-06,
+    "v_residual": 4.856904754502597e-06,
+    "rhie_chow_flux_defect": 7.427361557264449e-10
+  },
+  {
+    "iteration": 411,
+    "continuity": 3.0531133177191805e-16,
+    "momentum": 4.5835569994126796e-06,
+    "mass_imbalance": 1.6653345369377348e-16,
+    "velocity_change": 1.139953843907332e-08,
+    "u_residual": 3.1483875595460865e-06,
+    "v_residual": 4.5835569994126796e-06,
+    "rhie_chow_flux_defect": 6.846567784886538e-10
+  },
+  {
+    "iteration": 412,
+    "continuity": 1.1102230246251565e-16,
+    "momentum": 4.4489236323702305e-06,
+    "mass_imbalance": 5.551115123125783e-16,
+    "velocity_change": 1.0346251477083568e-08,
+    "u_residual": 3.0713533569655097e-06,
+    "v_residual": 4.4489236323702305e-06,
+    "rhie_chow_flux_defect": 6.425450329427181e-10
+  },
+  {
+    "iteration": 413,
+    "continuity": 3.469446951953614e-16,
+    "momentum": 4.246858295446536e-06,
+    "mass_imbalance": 0.0,
+    "velocity_change": 1.007352467760625e-08,
+    "u_residual": 3.0130507735567226e-06,
+    "v_residual": 4.246858295446536e-06,
+    "rhie_chow_flux_defect": 6.177585365364195e-10
+  },
+  {
+    "iteration": 414,
+    "continuity": 6.938893903907228e-17,
+    "momentum": 4.083252986748092e-06,
+    "mass_imbalance": 3.3306690738754696e-16,
+    "velocity_change": 8.977965924514275e-09,
+    "u_residual": 2.9357595824379296e-06,
+    "v_residual": 4.083252986748092e-06,
+    "rhie_chow_flux_defect": 5.975770239826017e-10
+  },
+  {
+    "iteration": 415,
+    "continuity": 1.6653345369377348e-16,
+    "momentum": 3.9056808159765164e-06,
+    "mass_imbalance": 0.0,
+    "velocity_change": 7.994713657581698e-09,
+    "u_residual": 2.8038396796687865e-06,
+    "v_residual": 3.9056808159765164e-06,
+    "rhie_chow_flux_defect": 5.611440758119621e-10
+  },
+  {
+    "iteration": 416,
+    "continuity": 2.2985086056692694e-16,
+    "momentum": 3.732088827996169e-06,
+    "mass_imbalance": 1.1102230246251565e-16,
+    "velocity_change": 7.704794384097435e-09,
+    "u_residual": 2.7136618282272056e-06,
+    "v_residual": 3.732088827996169e-06,
+    "rhie_chow_flux_defect": 5.303312084028875e-10
+  },
+  {
+    "iteration": 417,
+    "continuity": 2.498001805406602e-16,
+    "momentum": 3.589545206167157e-06,
+    "mass_imbalance": 1.4432899320127035e-15,
+    "velocity_change": 7.2876340587169075e-09,
+    "u_residual": 2.577369622597524e-06,
+    "v_residual": 3.589545206167157e-06,
+    "rhie_chow_flux_defect": 4.952253031269495e-10
+  },
+  {
+    "iteration": 418,
+    "continuity": 3.191891195797325e-16,
+    "momentum": 3.432848782045082e-06,
+    "mass_imbalance": 2.220446049250313e-16,
+    "velocity_change": 7.3666680975789656e-09,
+    "u_residual": 2.470465345320755e-06,
+    "v_residual": 3.432848782045082e-06,
+    "rhie_chow_flux_defect": 4.6265446306972166e-10
+  },
+  {
+    "iteration": 419,
+    "continuity": 1.3877787807814457e-16,
+    "momentum": 3.2619171984971833e-06,
+    "mass_imbalance": 7.216449660063518e-16,
+    "velocity_change": 7.230246215107761e-09,
+    "u_residual": 2.3601752099355827e-06,
+    "v_residual": 3.2619171984971838e-06,
+    "rhie_chow_flux_defect": 4.183089049959583e-10
+  },
+  {
+    "iteration": 420,
+    "continuity": 1.8041124150158794e-16,
+    "momentum": 3.132260285739249e-06,
+    "mass_imbalance": 2.220446049250313e-16,
+    "velocity_change": 6.936032359572408e-09,
+    "u_residual": 2.2304922881695574e-06,
+    "v_residual": 3.132260285739249e-06,
+    "rhie_chow_flux_defect": 3.7267761442790294e-10
+  },
+  {
+    "iteration": 421,
+    "continuity": 3.469446951953614e-16,
+    "momentum": 2.9402839404272987e-06,
+    "mass_imbalance": 9.43689570931383e-16,
+    "velocity_change": 7.009367081547979e-09,
+    "u_residual": 2.0946610652447783e-06,
+    "v_residual": 2.9402839404272987e-06,
+    "rhie_chow_flux_defect": 3.215745958320171e-10
+  },
+  {
+    "iteration": 422,
+    "continuity": 2.0816681711721685e-16,
+    "momentum": 2.872645823561223e-06,
+    "mass_imbalance": 1.6653345369377348e-16,
+    "velocity_change": 6.719029255718156e-09,
+    "u_residual": 1.9986181836284394e-06,
+    "v_residual": 2.872645823561223e-06,
+    "rhie_chow_flux_defect": 3.1371580968092643e-10
+  },
+  {
+    "iteration": 423,
+    "continuity": 3.885780586188048e-16,
+    "momentum": 2.76881818093811e-06,
+    "mass_imbalance": 1.4432899320127035e-15,
+    "velocity_change": 6.394333841065747e-09,
+    "u_residual": 1.8977365598099236e-06,
+    "v_residual": 2.76881818093811e-06,
+    "rhie_chow_flux_defect": 2.9921517114309244e-10
+  },
+  {
+    "iteration": 424,
+    "continuity": 2.498001805406602e-16,
+    "momentum": 2.619337098339717e-06,
+    "mass_imbalance": 0.0,
+    "velocity_change": 6.319199771960549e-09,
+    "u_residual": 1.777562795298543e-06,
+    "v_residual": 2.6193370983397176e-06,
+    "rhie_chow_flux_defect": 2.647084814542495e-10
+  },
+  {
+    "iteration": 425,
+    "continuity": 1.734723475976807e-16,
+    "momentum": 2.5421976179001323e-06,
+    "mass_imbalance": 2.220446049250313e-16,
+    "velocity_change": 6.2475352972587994e-09,
+    "u_residual": 1.6752560476322074e-06,
+    "v_residual": 2.5421976179001327e-06,
+    "rhie_chow_flux_defect": 2.521160033595369e-10
+  },
+  {
+    "iteration": 426,
+    "continuity": 2.498001805406602e-16,
+    "momentum": 2.46178759664136e-06,
+    "mass_imbalance": 3.885780586188048e-16,
+    "velocity_change": 6.0926179761000565e-09,
+    "u_residual": 1.5968113182126649e-06,
+    "v_residual": 2.4617875966413613e-06,
+    "rhie_chow_flux_defect": 2.419671960346528e-10
+  },
+  {
+    "iteration": 427,
+    "continuity": 4.510281037539698e-16,
+    "momentum": 2.407517013641587e-06,
+    "mass_imbalance": 7.771561172376096e-16,
+    "velocity_change": 6.194754541798131e-09,
+    "u_residual": 1.504941649494479e-06,
+    "v_residual": 2.407517013641587e-06,
+    "rhie_chow_flux_defect": 2.355439945270139e-10
+  },
+  {
+    "iteration": 428,
+    "continuity": 9.71445146547012e-17,
+    "momentum": 2.343508719014527e-06,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 6.202986611338057e-09,
+    "u_residual": 1.4439740614561813e-06,
+    "v_residual": 2.343508719014527e-06,
+    "rhie_chow_flux_defect": 2.2690450937937064e-10
+  },
+  {
+    "iteration": 429,
+    "continuity": 1.457167719820518e-16,
+    "momentum": 2.2514444424282817e-06,
+    "mass_imbalance": 3.3306690738754696e-16,
+    "velocity_change": 5.935892238677354e-09,
+    "u_residual": 1.3865199405929899e-06,
+    "v_residual": 2.2514444424282813e-06,
+    "rhie_chow_flux_defect": 2.164150213567222e-10
+  },
+  {
+    "iteration": 430,
+    "continuity": 2.983724378680108e-16,
+    "momentum": 2.165789855668494e-06,
+    "mass_imbalance": 7.216449660063518e-16,
+    "velocity_change": 5.585772653443621e-09,
+    "u_residual": 1.2918780814657121e-06,
+    "v_residual": 2.165789855668494e-06,
+    "rhie_chow_flux_defect": 2.1014178821676548e-10
+  },
+  {
+    "iteration": 431,
+    "continuity": 1.6653345369377348e-16,
+    "momentum": 2.1122410686428757e-06,
+    "mass_imbalance": 2.220446049250313e-16,
+    "velocity_change": 5.677308993583263e-09,
+    "u_residual": 1.2522178135704254e-06,
+    "v_residual": 2.1122410686428757e-06,
+    "rhie_chow_flux_defect": 2.0508043054465656e-10
+  },
+  {
+    "iteration": 432,
+    "continuity": 6.38378239159465e-16,
+    "momentum": 2.027956943034214e-06,
+    "mass_imbalance": 6.661338147750939e-16,
+    "velocity_change": 5.657388136952324e-09,
+    "u_residual": 1.1479975852353865e-06,
+    "v_residual": 2.027956943034214e-06,
+    "rhie_chow_flux_defect": 2.0004962128788685e-10
+  },
+  {
+    "iteration": 433,
+    "continuity": 1.8041124150158794e-16,
+    "momentum": 1.9448696466512773e-06,
+    "mass_imbalance": 4.440892098500626e-16,
+    "velocity_change": 5.631421955490379e-09,
+    "u_residual": 1.107523135737592e-06,
+    "v_residual": 1.9448696466512773e-06,
+    "rhie_chow_flux_defect": 1.8907802735586087e-10
+  },
+  {
+    "iteration": 434,
+    "continuity": 1.6653345369377348e-16,
+    "momentum": 1.860720418077185e-06,
+    "mass_imbalance": 1.6653345369377348e-16,
+    "velocity_change": 5.405748490332207e-09,
+    "u_residual": 1.0711285754029132e-06,
+    "v_residual": 1.8607204180771852e-06,
+    "rhie_chow_flux_defect": 1.7471396233876426e-10
+  },
+  {
+    "iteration": 435,
+    "continuity": 4.163336342344337e-16,
+    "momentum": 1.7470810640350152e-06,
+    "mass_imbalance": 6.661338147750939e-16,
+    "velocity_change": 5.437991335878467e-09,
+    "u_residual": 9.873742044182218e-07,
+    "v_residual": 1.7470810640350152e-06,
+    "rhie_chow_flux_defect": 1.6387110550248455e-10
+  },
+  {
+    "iteration": 436,
+    "continuity": 1.249000902703301e-16,
+    "momentum": 1.6779096290022122e-06,
+    "mass_imbalance": 5.551115123125783e-16,
+    "velocity_change": 5.2422964953377504e-09,
+    "u_residual": 9.567525622705306e-07,
+    "v_residual": 1.6779096290022122e-06,
+    "rhie_chow_flux_defect": 1.611669667636789e-10
+  },
+  {
+    "iteration": 437,
+    "continuity": 4.85722573273506e-16,
+    "momentum": 1.6307366268356903e-06,
+    "mass_imbalance": 6.661338147750939e-16,
+    "velocity_change": 5.110069026779962e-09,
+    "u_residual": 9.279632336324484e-07,
+    "v_residual": 1.6307366268356903e-06,
+    "rhie_chow_flux_defect": 1.7228724469917112e-10
+  },
+  {
+    "iteration": 438,
+    "continuity": 9.71445146547012e-17,
+    "momentum": 1.604432348803722e-06,
+    "mass_imbalance": 0.0,
+    "velocity_change": 4.936468368625657e-09,
+    "u_residual": 9.12463656850718e-07,
+    "v_residual": 1.604432348803722e-06,
+    "rhie_chow_flux_defect": 1.7422364864065765e-10
+  },
+  {
+    "iteration": 439,
+    "continuity": 3.8163916471489756e-16,
+    "momentum": 1.4787644866016486e-06,
+    "mass_imbalance": 6.106226635438361e-16,
+    "velocity_change": 4.654191337882807e-09,
+    "u_residual": 8.722261872547724e-07,
+    "v_residual": 1.4787644866016486e-06,
+    "rhie_chow_flux_defect": 1.70899474165006e-10
+  },
+  {
+    "iteration": 440,
+    "continuity": 2.636779683484747e-16,
+    "momentum": 1.4053938481904876e-06,
+    "mass_imbalance": 2.7755575615628914e-16,
+    "velocity_change": 3.6350520163375144e-09,
+    "u_residual": 8.457885926916366e-07,
+    "v_residual": 1.4053938481904876e-06,
+    "rhie_chow_flux_defect": 1.6415883837493442e-10
+  },
+  {
+    "iteration": 441,
+    "continuity": 1.942890293094024e-16,
+    "momentum": 1.3614446484762197e-06,
+    "mass_imbalance": 2.220446049250313e-16,
+    "velocity_change": 2.9858309071734146e-09,
+    "u_residual": 8.211855331542248e-07,
+    "v_residual": 1.3614446484762197e-06,
+    "rhie_chow_flux_defect": 1.6555040951196998e-10
+  },
+  {
+    "iteration": 442,
+    "continuity": 4.0245584642661925e-16,
+    "momentum": 1.3179191985054113e-06,
+    "mass_imbalance": 1.6653345369377348e-16,
+    "velocity_change": 2.351248457217736e-09,
+    "u_residual": 8.050619465441279e-07,
+    "v_residual": 1.317919198505411e-06,
+    "rhie_chow_flux_defect": 1.5941438828099883e-10
+  },
+  {
+    "iteration": 443,
+    "continuity": 1.6653345369377348e-16,
+    "momentum": 1.2715564756661478e-06,
+    "mass_imbalance": 2.220446049250313e-16,
+    "velocity_change": 1.913052632106227e-09,
+    "u_residual": 7.89787093300679e-07,
+    "v_residual": 1.271556475666148e-06,
+    "rhie_chow_flux_defect": 1.51586569146925e-10
+  },
+  {
+    "iteration": 444,
+    "continuity": 1.1102230246251565e-16,
+    "momentum": 1.227491284815437e-06,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 1.5704014026673985e-09,
+    "u_residual": 7.735127593919197e-07,
+    "v_residual": 1.2274912848154372e-06,
+    "rhie_chow_flux_defect": 1.425746293785845e-10
+  },
+  {
+    "iteration": 445,
+    "continuity": 3.400058012914542e-16,
+    "momentum": 1.1719700213680972e-06,
+    "mass_imbalance": 6.106226635438361e-16,
+    "velocity_change": 1.4070526228524005e-09,
+    "u_residual": 7.492744948903546e-07,
+    "v_residual": 1.1719700213680972e-06,
+    "rhie_chow_flux_defect": 1.2538598093063733e-10
+  },
+  {
+    "iteration": 446,
+    "continuity": 2.0816681711721685e-16,
+    "momentum": 1.1438263855484668e-06,
+    "mass_imbalance": 6.661338147750939e-16,
+    "velocity_change": 1.285902482585366e-09,
+    "u_residual": 7.324455033315407e-07,
+    "v_residual": 1.1438263855484668e-06,
+    "rhie_chow_flux_defect": 1.2271090760660713e-10
+  },
+  {
+    "iteration": 447,
+    "continuity": 2.0122792321330962e-16,
+    "momentum": 1.1174005319293936e-06,
+    "mass_imbalance": 2.220446049250313e-16,
+    "velocity_change": 1.3339316361563047e-09,
+    "u_residual": 7.185642855090985e-07,
+    "v_residual": 1.1174005319293936e-06,
+    "rhie_chow_flux_defect": 1.2424571100186105e-10
+  },
+  {
+    "iteration": 448,
+    "continuity": 2.914335439641036e-16,
+    "momentum": 1.093229869269875e-06,
+    "mass_imbalance": 6.106226635438361e-16,
+    "velocity_change": 1.332936265703577e-09,
+    "u_residual": 6.975751170791646e-07,
+    "v_residual": 1.093229869269875e-06,
+    "rhie_chow_flux_defect": 1.1929989975932543e-10
+  },
+  {
+    "iteration": 449,
+    "continuity": 1.5265566588595902e-16,
+    "momentum": 1.0708426893130618e-06,
+    "mass_imbalance": 2.220446049250313e-16,
+    "velocity_change": 1.2523035698708274e-09,
+    "u_residual": 6.787352979064263e-07,
+    "v_residual": 1.0708426893130618e-06,
+    "rhie_chow_flux_defect": 1.1780773722679574e-10
+  },
+  {
+    "iteration": 450,
+    "continuity": 3.122502256758253e-16,
+    "momentum": 1.0481193234885469e-06,
+    "mass_imbalance": 6.661338147750939e-16,
+    "velocity_change": 1.2176464281310473e-09,
+    "u_residual": 6.569338870992864e-07,
+    "v_residual": 1.0481193234885467e-06,
+    "rhie_chow_flux_defect": 1.1288661923202811e-10
+  },
+  {
+    "iteration": 451,
+    "continuity": 1.1102230246251565e-16,
+    "momentum": 1.0298403009308307e-06,
+    "mass_imbalance": 5.551115123125783e-17,
+    "velocity_change": 1.2394790792694121e-09,
+    "u_residual": 6.396067234846237e-07,
+    "v_residual": 1.0298403009308307e-06,
+    "rhie_chow_flux_defect": 1.0833363663091451e-10
+  },
+  {
+    "iteration": 452,
+    "continuity": 1.249000902703301e-16,
+    "momentum": 1.0150884688387444e-06,
+    "mass_imbalance": 1.6653345369377348e-16,
+    "velocity_change": 1.2613779378639611e-09,
+    "u_residual": 6.25960124529517e-07,
+    "v_residual": 1.0150884688387442e-06,
+    "rhie_chow_flux_defect": 1.0389772282421025e-10
+  },
+  {
+    "iteration": 453,
+    "continuity": 3.191891195797325e-16,
+    "momentum": 9.898079432438156e-07,
+    "mass_imbalance": 1.1102230246251565e-16,
+    "velocity_change": 1.2783282887091074e-09,
+    "u_residual": 6.086662398863688e-07,
+    "v_residual": 9.898079432438156e-07,
+    "rhie_chow_flux_defect": 9.461507461793524e-11
+  }
+]

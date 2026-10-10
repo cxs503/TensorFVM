@@ -59,10 +59,10 @@ PYTHONPATH=src python scripts/publish_external_frontmatter.py results/cylinder
 
 ## Mandatory body-fitted mesh gate
 
-Cylinder and NACA benchmarks require physical body-fitted quadrilateral meshes;
-Cartesian obstacle masks or staircase boundaries cannot substitute for them.
-The resolution denotes circumferential and radial cell counts. Both current
-meshes have a periodic radial O topology. The historical NACA API name `c-grid`
+Cylinder and NACA benchmarks require physical body-fitted meshes with conforming
+wall faces. Supported cells are triangles and quadrilaterals, including hybrid
+wall-layer/outer-region meshes. The original structured studies below use
+circumferential and radial cell counts and have a periodic radial O topology. The historical NACA API name `c-grid`
 does not describe a true open-wake C topology.
 
 Run `python scripts/audit_external_mesh.py` before accepting external-flow
@@ -119,3 +119,37 @@ PYTHONPATH=src python -m tensorfvm.verification.external_mesh_report results/nac
 ```
 
 默认脚本路径对应已发布档案，已有输出会拒绝覆盖；重算请使用上述新的results目录。后续优先提高近壁剪切重构阶数、细化尾迹并检查网格及域独立性，再推进Re100非定常圆柱和更高Re湍流案例。
+
+
+## Gmsh混合网格：壁面有序层、外部非结构
+
+`generate_external_gmsh.py --hybrid` 使用官方 BoundaryLayer 的四边形层，外部仍由 Frontal-Delaunay 生成三角形。翼型闭合尖尾缘配置20单元扇形连接、尾缘距离加密和下游3C范围尾迹加密。物理边界标签、共性Mesh2D面通量及求解器保持一致。局部壁面层有序，整体网格没有全局结构化索引。
+
+翼型基准的首层厚度目标为0.0005C×scale、层间增长比1.18、厚度上限0.025C；细档实测壁面单元中心距约0.00025C。层数由增长序列和厚度上限决定，不能只用Quads配置声称存在壁面层。`hybrid_mesh_quality` 从实际单元逐层追踪对边，检查壁面四边形覆盖率、层数、增长比和首层中心距离。还需通过独立保存多边形网格复核和完整方程重放。
+
+```bash
+OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 PYTHONPATH=src python scripts/run_hybrid_naca.py --scales 4 2 1 --max-iterations 3500 --output results/naca-hybrid
+PYTHONPATH=src python scripts/audit_external_gmsh_mesh.py results/naca-hybrid
+PYTHONPATH=src python scripts/audit_external_equations.py results/naca-hybrid
+PYTHONPATH=src python scripts/compare_hybrid_wall_mesh.py results/naca-hybrid --baseline docs/verification-gmsh-naca-matched
+PYTHONPATH=src python scripts/preserve_external_producer.py results/naca-hybrid
+PYTHONPATH=src python -m tensorfvm.verification.external_mesh_report results/naca-hybrid
+```
+
+[实际混合网格和流场报告](verification-gmsh-naca-hybrid/report.md)附压力、速度、Cp、残差、网格图、CSV及PDF；[壁面和尾缘细节](verification-gmsh-naca-hybrid/hybrid-mesh-detail.png)。各档通过状态以报告和独立审计为准。此工况为Re1000层流，不能据此声称湍流壁面函数已认证；也未进行混合网格GPU或匹配TensorLBM性能比较。粗档失败会返回退出码2并保留所有数据，表示整组尚未全部通过。
+
+
+## 静态重叠网格入口
+
+新模块 `tensorfvm.overset` 实现独立索引贴体组件和笛卡尔背景的ACTIVE/HOLE/FRINGE分类、真实穿体单元剔除、对方ACTIVE供体搜索、仿射精确重心插值、孤儿及穿体供体拒绝，支持实际Mesh2D多边形适配。它与Gmsh共形混合网格为两个独立入口。
+
+`tensorfvm.overset_poisson` 将两个网格的扩散方程和全部供体约束同时组装求解。当前物理墙面条件是标量零Dirichlet，验证没有流动速度或压力场；不能将它当作圆柱无滑移N-S验证。全局扩散平衡按唯一实体域积分，避免重复计算重叠体源。点值插值仍需另加局部守恒通量算子。
+
+```bash
+OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 PYTHONPATH=src python scripts/run_overset_benchmark.py --levels 32 64 128 --output results/overset
+PYTHONPATH=src python scripts/audit_overset_benchmark.py results/overset
+PYTHONPATH=src python scripts/preserve_external_producer.py results/overset
+PYTHONPATH=src python -m tensorfvm.overset_report results/overset
+```
+
+[报告和当前范围](verification-overset-poisson/report.md)、[原始供体连接及逐项误差](verification-overset-poisson/summary.json)。后续接入压力速度耦合和守恒修正，先做静态层流圆柱，再推进移动物体与几何守恒律。

@@ -1,0 +1,115 @@
+{
+  "case": "static-overset-poisson",
+  "directory": "background-128",
+  "resolution": 128,
+  "config": {
+    "bounds": [
+      -2,
+      2,
+      -2,
+      2
+    ],
+    "body_radius": 0.3,
+    "component_outer_radius": 1.0,
+    "blanking_radius": 0.65,
+    "background_shape": [
+      128,
+      128
+    ],
+    "component_shape": [
+      32,
+      256
+    ]
+  },
+  "computed": {
+    "maximum_donor_constraint_residual": 1.3322676295501878e-15,
+    "relative_l2_error": 8.334819426412164e-05,
+    "maximum_absolute_error": 0.0007499660348948556,
+    "relative_algebraic_residual": 9.739949351927804e-16,
+    "raw_interface_net_flux": -6.200942882620335,
+    "physical_domain_integrated_source": -62.8691401896642,
+    "physical_global_conservation_defect": 0.007669796812798779,
+    "physical_global_conservation_defect_relative": 0.00012199620974074825,
+    "interface_absolute_flux": 17.84967197519138,
+    "physical_boundary_diffusive_flux": -62.8614703928514,
+    "active_integrated_source": -69.06241327547015,
+    "summed_fv_balance_defect": -1.5916157281026244e-12,
+    "active_cells": 22828,
+    "fringe_cells": 376,
+    "strict_local_conservation": false,
+    "navier_stokes_verified": false,
+    "error_norm_domain": "Both active component domains; overlap counted twice",
+    "wall_condition": "Scalar homogeneous Dirichlet on polygonal circular boundary",
+    "grid_0_relative_l2_error": 6.867549751698642e-05,
+    "grid_1_relative_l2_error": 0.000740720670678602
+  },
+  "connectivity": {
+    "grids": [
+      {
+        "name": "background",
+        "cells": 16384,
+        "active": 14892,
+        "hole": 1372,
+        "fringe": 120,
+        "volume": 16.0
+      },
+      {
+        "name": "body-fitted",
+        "cells": 8192,
+        "active": 7936,
+        "hole": 0,
+        "fringe": 256,
+        "volume": 2.85856229834882
+      }
+    ],
+    "orphan_receivers": 0,
+    "max_row_sum_error": 0.0,
+    "max_affine_coordinate_error": 1.1102230246251565e-16,
+    "point_value_coupling": true,
+    "conservative_flux_coupling": false
+  },
+  "metrics": [
+    {
+      "name": "grid_0_relative_l2_error",
+      "value": 6.867549751698642e-05,
+      "limit": 0.03,
+      "description": "Cartesian ACTIVE scalar error",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "grid_1_relative_l2_error",
+      "value": 0.000740720670678602,
+      "limit": 0.03,
+      "description": "Body-fitted ACTIVE scalar error",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "linear_relative_residual",
+      "value": 9.739949351927804e-16,
+      "limit": 1e-10,
+      "description": "Actual coupled sparse equations",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "donor_constraint_residual",
+      "value": 1.3322676295501878e-15,
+      "limit": 1e-10,
+      "description": "Simultaneous donor constraints",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "global_diffusion_balance_relative_error",
+      "value": 0.00012199620974074825,
+      "limit": 0.03,
+      "description": "Unique physical rectangle minus polygonal body; not a local flux certificate",
+      "unit": "1",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "elapsed_s": 6.216192027553916
+}
