@@ -1,0 +1,121 @@
+{
+  "case": "fixed circular cylinder Re=3900",
+  "kind": "primary published DNS numerical reference; not experimental points",
+  "doi": "10.1063/1.4818641",
+  "title": "Low-frequency unsteadiness in the vortex formation region of a circular cylinder",
+  "authors": [
+    "O. Lehmkuhl",
+    "I. Rodriguez",
+    "R. Borrell",
+    "A. Oliva"
+  ],
+  "year": 2013,
+  "repository_record": "https://hdl.handle.net/2117/21548",
+  "pdf_url": "https://upcommons.upc.edu/server/api/core/bitstreams/adb150ec-33dd-4066-85ce-12c32a230ddc/content",
+  "pdf_sha256": "025f1d9ed9f9e3b603acff60a0465c7b6b6ca7060db2f1cb34c3dffe6436b3ee",
+  "pdf_size": 5305253,
+  "condition": {
+    "Re": 3900,
+    "U": 1,
+    "D": 1,
+    "density_normalization": 1,
+    "domain_D": {
+      "x": [
+        -8,
+        16
+      ],
+      "y": [
+        -10,
+        10
+      ],
+      "z": [
+        0,
+        3.141592653589793
+      ]
+    },
+    "boundary": {
+      "inlet": "uniform (1,0,0)",
+      "top_bottom": "slip",
+      "cylinder": "no-slip",
+      "outlet": "pressure-based",
+      "span": "periodic"
+    }
+  },
+  "selected_exact_reported_scalars": {
+    "St": 0.215,
+    "Cd": 1.015,
+    "Cpb": -0.935,
+    "Lr_over_D": 1.36
+  },
+  "exact_means": "exact transcription of printed values; not infinitely precise physical constants",
+  "provenance": {
+    "selected": "Table I printed p.085109-5, PDF page 6 and Table IV printed p.085109-18, PDF page 19",
+    "grid": "Table III printed p.085109-17, PDF page 18; Case I 72700 x 128 planes, approx9.3M CV, piD span",
+    "conditions": "Section III printed p.085109-3/4, PDF pages4/5",
+    "integration": "Section IV printed p.085109-4:75 D/U startup and approx3900 D/U statistics; Table I states858 cycles while body states836 cycles; source discrepancy preserved"
+  },
+  "scalar_uncertainty": {
+    "statistical_CI": null,
+    "experimental_uncertainty": null,
+    "reason": "selected DNS table does not supply confidence intervals for these scalars",
+    "rounding_half_unit": {
+      "St": 0.0005,
+      "Cd": 0.0005,
+      "Cpb": 0.0005,
+      "Lr_over_D": 0.005
+    },
+    "rounding_is_not_statistical_uncertainty": true
+  },
+  "domain_grid_crosscheck": {
+    "case_II": {
+      "span_D": 6.283185307179586,
+      "approx_cells": 18600000,
+      "St": 0.214,
+      "Cd": 1.019,
+      "Cpb": -0.933,
+      "Lr_over_D": 1.363
+    },
+    "case_III": {
+      "span_D": 3.141592653589793,
+      "approx_cells": 1620000,
+      "St": 0.218,
+      "Cd": 1.05,
+      "Cpb": -0.94,
+      "Lr_over_D": 1.35
+    },
+    "not_a_confidence_interval": true
+  },
+  "conditional_mode_bounds": {
+    "Cd": [
+      0.979,
+      1.043
+    ],
+    "St": [
+      0.214,
+      0.218
+    ],
+    "Cpb": [
+      -0.98,
+      -0.877
+    ],
+    "Lr_over_D": [
+      1.26,
+      1.55
+    ],
+    "source": "Table I Mode L / Mode H; approx250 shedding cycles each",
+    "not_statistical_uncertainty": true
+  },
+  "primary_raw_profiles_ingested": false,
+  "profiles_source_available_as_figures_only": [
+    "Fig 10 mean and fluctuating streamwise velocity at x/D1.06,1.54,2.02",
+    "Fig 11 transverse velocity and fluctuation at the same stations",
+    "Fig 14 grid study near-wake profiles"
+  ],
+  "profile_digitization_used": false,
+  "source_slow_mode": {
+    "frequency_U_over_D": 0.0064,
+    "period_D_over_U": 156.25,
+    "source": "Section IV.A printed p.085109-5"
+  },
+  "numerical_accuracy_target_relative": 0.03
+}

@@ -1,0 +1,63 @@
+{
+  "case": "3d-body-fitted-cylinder-Re3900",
+  "physical_accuracy_qualified": false,
+  "numerical_accuracy_target_relative": 0.03,
+  "primary_reference": "https://upcommons.upc.edu/server/api/core/bitstreams/adb150ec-33dd-4066-85ce-12c32a230ddc/content",
+  "reference_profile_ingestion_complete": false,
+  "proposed_grid_campaign_not_run": [
+    {
+      "theta": 128,
+      "radial": 64,
+      "spanwise": 32,
+      "cells": 262144
+    },
+    {
+      "theta": 192,
+      "radial": 96,
+      "spanwise": 48,
+      "cells": 884736
+    },
+    {
+      "theta": 288,
+      "radial": 144,
+      "spanwise": 72,
+      "cells": 2985984
+    }
+  ],
+  "required_gates": [
+    "measured near-wall yplus <= 1 for wall-resolved LES",
+    "cell-face collocated velocity and pressure coupling verified under refinement",
+    "implicit viscous transport or proven diffusion stable time step for refined wall cells",
+    "scalable pressure solver before million-cell production mesh",
+    "grid/time/domain/span sensitivity documented",
+    "startup discard >= 100 D/U and record >= 500 D/U as provisional minimum; extend until stationary statistical blocks",
+    "at least 20 resolved shedding cycles; longer records for slow wake modes",
+    "Cd/St compared to verified original data, relative numerical errors <= 3 percent",
+    "Cp and velocity profile error definitions, source uncertainty and coverage reported",
+    "CPU/GPU parity assessed after CPU physical qualification"
+  ],
+  "implemented_statistics": [
+    "Cd mean",
+    "Cl rms",
+    "Welch spectral peak with insufficient-record suppression",
+    "block Cd uncertainty diagnostic",
+    "online velocity and pressure means",
+    "online Reynolds stress moments",
+    "atomic exact restart including statistics"
+  ],
+  "gpu_acceleration_tested": false,
+  "primary_reference_kind": "original DNS numerical reference, not experimental data",
+  "primary_scalar_reference": {
+    "St": 0.215,
+    "Cd": 1.015,
+    "Cpb": -0.935,
+    "Lr_over_D": 1.36
+  },
+  "primary_domain_boundary_matched_in_new_case": true,
+  "startup_operator_case_physics_qualified": false,
+  "source_low_frequency_modulation_requires_longer_record_than_fixed_minimum": {
+    "frequency_U_over_D": 0.0064,
+    "period_D_over_U": 156.25,
+    "source": "Section IV.A printed p.085109-5"
+  }
+}

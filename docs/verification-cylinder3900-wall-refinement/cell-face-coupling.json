@@ -1,0 +1,16 @@
+{
+  "coarse": {
+    "interior_max_normal_velocity_difference": 0.0024102273944621873,
+    "interior_p95_normal_velocity_difference": 0.0008090295011110302,
+    "interior_flux_relative_L2": 0.00011781805369228725,
+    "physical_coupling_qualified": false,
+    "description": "current cell-velocity interpolation versus authoritative projected face flux, actual boundary values; diagnostic only, not continuity acceptance"
+  },
+  "medium": {
+    "interior_max_normal_velocity_difference": 0.002339836007953547,
+    "interior_p95_normal_velocity_difference": 0.0015945918058573071,
+    "interior_flux_relative_L2": 9.623530178792988e-05,
+    "physical_coupling_qualified": false,
+    "description": "current cell-velocity interpolation versus authoritative projected face flux, actual boundary values; diagnostic only, not continuity acceptance"
+  }
+}

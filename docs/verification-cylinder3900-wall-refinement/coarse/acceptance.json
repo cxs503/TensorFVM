@@ -1,0 +1,93 @@
+{
+  "schema": "tensorfvm.common-3d-case-acceptance/1",
+  "common_module": "tensorfvm.verification.core",
+  "numerical_metrics": [
+    {
+      "name": "recorded_all_step_continuity",
+      "value": 9.872524849562941e-09,
+      "limit": 1e-08,
+      "description": "all completed steps, actual shared-face divergence",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "independent_final_face_continuity",
+      "value": 5.486027715492924e-09,
+      "limit": 1e-08,
+      "description": "checkpoint-native face-flux continuity replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "advective_cfl",
+      "value": 0.0002558429657563407,
+      "limit": 1.0,
+      "description": "all completed steps",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "explicit_diffusion_screen",
+      "value": 9.118843407052168e-05,
+      "limit": 0.5,
+      "description": "conservative screen, not general nonorthogonal stability proof",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "momentum_ledger",
+      "value": 4.566607508804665e-13,
+      "limit": 1e-10,
+      "description": "recorded actual step boundary/cell momentum balance",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "boundary_mass_imbalance",
+      "value": 3.450176274186081e-10,
+      "limit": 1e-08,
+      "description": "normalized physical-domain boundary flux",
+      "unit": "1",
+      "passed": true
+    }
+  ],
+  "numerical_passed": true,
+  "resolution_metrics": [
+    {
+      "name": "instantaneous_wall_yplus",
+      "value": 16.609851388053343,
+      "limit": 1.0,
+      "description": "instantaneous startup wall indicator; long-time resolution still requires stationary statistics",
+      "unit": "1",
+      "passed": false
+    }
+  ],
+  "instantaneous_resolution_passed": false,
+  "physical_accuracy_qualified": false,
+  "physical_metrics": {
+    "Cd_relative_error": null,
+    "St_relative_error": null,
+    "Cpb_relative_error": null,
+    "profile_relative_error": null,
+    "grid_independence": null,
+    "time_independence": null,
+    "stationarity": null
+  },
+  "reason": "startup stability and resolution audit only; no qualified long-time CFD statistics",
+  "source_sha256": {
+    "scripts/audit_body_fitted_cylinder3900.py": "0b0c21eac07f185f468d3d2a21ace4651a6f61c1a85c778ea26786bf2ca0f623",
+    "src/tensorfvm/__init__.py": "9f8d4d3a249d695e4e841e4c9d11d7158db8a2d33e2928d3565794718e2aba3c",
+    "src/tensorfvm/backend_registry.py": "e68b95fdb7c457b921b2f1c9e3920f80ebdcdb104ca8077e10e96d2a4182a13a",
+    "src/tensorfvm/body_fitted.py": "4e633fa42c1171cf57aca5bf930827f97a30dada4e405bf3ac9c1068ba1bb7a7",
+    "src/tensorfvm/body_fitted3d.py": "dedd408c59096f559b2345f819541450768d4ce37f062e405b4335e4d00de9e4",
+    "src/tensorfvm/mesh3d.py": "ad7fe310537e70dcb65a34b42b335ea8bd7f9abd2bf24453a907c7f43a2b7c56",
+    "src/tensorfvm/mesh_api.py": "72f4f9d724084df335dca0e561877c5423c47a7f8bfffe950d631845e2dce22d",
+    "src/tensorfvm/multi_element.py": "c89faef53a8a8d429920a9f73805b91f28df3aa48bda762e7dd6bb2520fe8afc",
+    "src/tensorfvm/runtime.py": "ff383730f34f82030f28da424819eea670f28c663d5be834f30bebc6c74a2da5",
+    "src/tensorfvm/solver.py": "7c3613f23791c6a22825bd2ba0467e2bb84013ecaedc974901452b1864a2868e",
+    "src/tensorfvm/solver3d.py": "95d4711fd52ad9f2d8dd7300a999814633de986a2d579dcc997d17aa01603a37",
+    "src/tensorfvm/verification/__init__.py": "2e93edad1f2e0ed881602c2f72592f32070e99f9a75433e6fa0ce4c485f52652",
+    "src/tensorfvm/verification/core.py": "088114b4c8ec39a0724213bfc00f83a4356bcaca1dd2398376ef35426866e12e"
+  },
+  "input_manifest_sha256": "b892ed1f79ecdff6bd40f46cac39e27fd87854612f429b5cb7f4de80d2d96452"
+}

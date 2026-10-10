@@ -1,0 +1,8 @@
+{
+  "passed": 14,
+  "failed": 0,
+  "command": "OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 PYTHONPATH=src /data/TensorFEM/.venv/bin/python -m unittest tests/test_body_fitted_transient3d.py -v",
+  "test_sha256": "235e18a9f7269f49321afa5d2fefb71fd6329b775bc98a791258e72a5bcbe6ea",
+  "latest_statistics_source_sha256": "0b41c141f6fc165bb6e38ecdd4485abd2596c872ac3d23a21aa256d36194a548",
+  "note": "new stats tested and separately bound by report snapshot; immutable CFD producer snapshots retained"
+}

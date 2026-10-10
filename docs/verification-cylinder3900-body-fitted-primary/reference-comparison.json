@@ -1,0 +1,44 @@
+{
+  "reference": {
+    "St": 0.215,
+    "Cd": 1.015,
+    "Cpb": -0.935,
+    "Lr_over_D": 1.36
+  },
+  "source": "10.1063/1.4818641",
+  "printed_pages": "Table I printed p.085109-5, PDF page 6 and Table IV printed p.085109-18, PDF page 19",
+  "actual_startup_diagnostics": {
+    "Cd": 0.2519991205185012,
+    "Cpb": 0.5087538421503526,
+    "St": null
+  },
+  "startup_relative_differences": {
+    "Cd": 0.7517250044152697,
+    "Cpb": 1.5441217563105374,
+    "St": null
+  },
+  "qualified_statistics": {
+    "Cd": null,
+    "St": null,
+    "Cpb": null
+  },
+  "qualified_relative_errors": {
+    "Cd": null,
+    "St": null,
+    "Cpb": null
+  },
+  "physical_accuracy_qualified": false,
+  "statistical_uncertainty": {
+    "statistical_CI": null,
+    "experimental_uncertainty": null,
+    "reason": "selected DNS table does not supply confidence intervals for these scalars",
+    "rounding_half_unit": {
+      "St": 0.0005,
+      "Cd": 0.0005,
+      "Cpb": 0.0005,
+      "Lr_over_D": 0.005
+    },
+    "rounding_is_not_statistical_uncertainty": true
+  },
+  "note": "Transient startup versus long-time numerical DNS: these differences do not constitute qualified benchmark errors; no raw Cp curve was fabricated"
+}
