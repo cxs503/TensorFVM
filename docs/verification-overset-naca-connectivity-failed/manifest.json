@@ -1,0 +1,22 @@
+{
+  "source_snapshot_root": "source-snapshot",
+  "source_sha256": {
+    "scripts/generate_external_gmsh.py": "1d42ea15032f81352bda2d7b7081c728f821b42fa2c70f02fb4e2ab7d8e58963",
+    "scripts/run_naca_overset.py": "4930d44ede0eb5c8f14e4e4a571376ded08aeef78c762bfc2e4d21b2a6372771",
+    "src/tensorfvm/overset.py": "9acde5f1fc9782b8161ba83cbcbade3bcf2aab351c291add0c11dbd5959aae52",
+    "src/tensorfvm/overset_scalar.py": "0f374d4586f05ae46fcdfd4769eea118ccc391ebf404eff74e1553ea4e94f9e6",
+    "src/tensorfvm/gmsh_external.py": "4eeead941c8aafa36b764a61c69487586fc99cf8c3b8ec810bc96876fc75a547",
+    "src/tensorfvm/multi_element.py": "9ac2f1094465f6b466c5f4fbb8c15f195a69dc0b767301deccd0d39985229850"
+  },
+  "artifacts_sha256": {
+    "background-32/component.json": "1cf31b0e56db0288cc61e2e424c73d089a2969ebade0f98f98ad9df01403f6c2",
+    "background-32/component.msh": "c32e6c5edaf3b18a41384cf7b83639b2d5ecdc2e78749be16e7ece26f9dfc0a2",
+    "failure.json": "a328d19439fe9fb3df9061ef21baf78d5180d61870aeb590d9a5d33d77063462",
+    "source-snapshot/scripts/generate_external_gmsh.py": "1d42ea15032f81352bda2d7b7081c728f821b42fa2c70f02fb4e2ab7d8e58963",
+    "source-snapshot/scripts/run_naca_overset.py": "4930d44ede0eb5c8f14e4e4a571376ded08aeef78c762bfc2e4d21b2a6372771",
+    "source-snapshot/src/tensorfvm/gmsh_external.py": "4eeead941c8aafa36b764a61c69487586fc99cf8c3b8ec810bc96876fc75a547",
+    "source-snapshot/src/tensorfvm/multi_element.py": "9ac2f1094465f6b466c5f4fbb8c15f195a69dc0b767301deccd0d39985229850",
+    "source-snapshot/src/tensorfvm/overset.py": "9acde5f1fc9782b8161ba83cbcbade3bcf2aab351c291add0c11dbd5959aae52",
+    "source-snapshot/src/tensorfvm/overset_scalar.py": "0f374d4586f05ae46fcdfd4769eea118ccc391ebf404eff74e1553ea4e94f9e6"
+  }
+}

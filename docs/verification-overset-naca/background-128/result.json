@@ -1,0 +1,136 @@
+{
+  "case": "naca0012-static-overset-scalar",
+  "directory": "background-128",
+  "resolution": 128,
+  "config": {
+    "bounds": [
+      -2,
+      6,
+      -2,
+      5
+    ],
+    "airfoil_code": "0012",
+    "chord": 1,
+    "incidence_deg": 4,
+    "leading_edge": [
+      1.25,
+      1.5
+    ],
+    "component_domain": [
+      0,
+      4,
+      0,
+      3
+    ],
+    "mesh_scale": 1.0
+  },
+  "mesh_generation": {
+    "case": "naca",
+    "scale": 1.0,
+    "domain_m": [
+      4,
+      3
+    ],
+    "leading_edge_unrotated_m": [
+      1.25,
+      1.5
+    ],
+    "geometric_incidence_deg": 4,
+    "open_boundaries": false,
+    "gmsh_version": "4.15.2",
+    "algorithm": "Frontal-Delaunay (Gmsh algorithm 6)",
+    "wall_target_size_m": 0.008,
+    "outer_target_size_m": 0.06,
+    "geometry": "Closed NACA0012 upper/lower interpolating CAD splines through 161 cosine-spaced points",
+    "mesh_sha256": "a6e0f00d91921bb3f8adaf33830824efae4e2e92d09c801b7ad1716c44a4c30a",
+    "generator_sha256": "d1fbf724a13f32868cdb21772c53f2b7170f94304900bf58ec3bfcc2108c1404",
+    "documentation": "https://gmsh.info/doc/texinfo/gmsh.html",
+    "mesh_layout": "quadrilateral wall layers / triangular outer region",
+    "first_layer_target_m": 0.0005,
+    "layer_growth_ratio": 1.18,
+    "layer_thickness_target_m": 0.025,
+    "trailing_edge_fan_elements": 20
+  },
+  "computed": {
+    "relative_algebraic_residual": 1.3741919468681737e-15,
+    "strict_local_conservation": false,
+    "navier_stokes_verified": false,
+    "grid_0_relative_l2_error": 6.423198699646492e-05,
+    "grid_1_relative_l2_error": 0.0002904897801783655,
+    "maximum_donor_constraint_residual": 3.552713678800501e-14,
+    "physical_global_conservation_defect_relative": 0.00021686832379078598,
+    "physical_boundary_diffusive_flux": -223.62474091263104,
+    "physical_domain_integrated_source": -223.67324855512203,
+    "active_cells": 56530,
+    "fringe_cells": 407
+  },
+  "connectivity": {
+    "grids": [
+      {
+        "name": "background",
+        "cells": 14336,
+        "active": 12640,
+        "hole": 1536,
+        "fringe": 160,
+        "volume": 56.0
+      },
+      {
+        "name": "NACA0012 component",
+        "cells": 44137,
+        "active": 43890,
+        "hole": 0,
+        "fringe": 247,
+        "volume": 11.918312138780507
+      }
+    ],
+    "orphan_receivers": 0,
+    "max_row_sum_error": 0.0,
+    "max_affine_coordinate_error": 8.881784197001252e-16,
+    "point_value_coupling": true,
+    "conservative_flux_coupling": false
+  },
+  "metrics": [
+    {
+      "name": "grid_0_relative_l2_error",
+      "value": 6.423198699646492e-05,
+      "limit": 0.03,
+      "description": "Actual ACTIVE scalar field vs analytic quadratic",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "grid_1_relative_l2_error",
+      "value": 0.0002904897801783655,
+      "limit": 0.03,
+      "description": "Actual ACTIVE scalar field vs analytic quadratic",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "linear_relative_residual",
+      "value": 1.3741919468681737e-15,
+      "limit": 1e-10,
+      "description": "Full nonorthogonal coupled diffusion",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "donor_constraint_residual",
+      "value": 3.552713678800501e-14,
+      "limit": 1e-10,
+      "description": "Actual two-way constraints",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "global_diffusion_balance_relative_error",
+      "value": 0.00021686832379078598,
+      "limit": 0.03,
+      "description": "Unique physical rectangle minus exact wall polygon",
+      "unit": "1",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "elapsed_s": 96.33013954292983
+}

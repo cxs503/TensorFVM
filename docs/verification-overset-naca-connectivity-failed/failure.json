@@ -1,0 +1,13 @@
+{
+  "stage": "connectivity-before-equation-solve",
+  "passed": false,
+  "orphan_background_receivers": 33,
+  "first_orphan_cell": 298,
+  "background_shape": [
+    32,
+    28
+  ],
+  "component_outer_target_m": 1.6,
+  "error": "Orphan overset receivers in background: 33; increase overlap or refine donor grid",
+  "solution_computed": false
+}
