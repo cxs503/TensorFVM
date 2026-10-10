@@ -1,0 +1,35 @@
+{
+  "source_url": "https://arxiv.org/html/2006.10487",
+  "source_html_sha256": "4a56c7ee1844a1a70ef0b42b9f554e588046f175765c0e4466bd12ed58356728",
+  "method": "Select black present-study long polyline; map alpha=4 marker using zero-origin axes. Coordinates rounded to 0.01 SVG units; +/-0.0001 covers extraction rounding, not author numerical uncertainty.",
+  "reference": {
+    "lift": {
+      "figure": "S6.F10",
+      "series": "present study, black line and filled circles",
+      "angle_degrees": 4,
+      "svg_point": [
+        38.19,
+        27.41
+      ],
+      "axis_svg_height": 190.95,
+      "axis_coefficient_maximum": 1.4,
+      "value": 0.20096360303744434,
+      "absolute_digitization_uncertainty": 0.0001,
+      "figure_sha256": "feb85376cef59eee2ccbbce204d20fef4948be16a26b20fb6efd16afa3aa6d43"
+    },
+    "drag": {
+      "figure": "S6.F11",
+      "series": "present study, black line and filled circles",
+      "angle_degrees": 4,
+      "svg_point": [
+        38.19,
+        23.87
+      ],
+      "axis_svg_height": 190.95,
+      "axis_coefficient_maximum": 1.0,
+      "value": 0.125006546216287,
+      "absolute_digitization_uncertainty": 0.0001,
+      "figure_sha256": "bc4dee40ba293341b25b2907980455629e2ad0127126a0a19e87df2ff7b9e300"
+    }
+  }
+}

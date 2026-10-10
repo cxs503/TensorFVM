@@ -1,0 +1,35 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/jsyc/tensor-suite-development/TensorFVM/src/tensorfvm/verification/external_flow.py", line 111, in <module>
+    if __name__=='__main__':raise SystemExit(main())
+                                             ^^^^^^
+  File "/home/jsyc/tensor-suite-development/TensorFVM/src/tensorfvm/verification/external_flow.py", line 108, in main
+    nx,ny=map(int,grid.split('x'));raw=run(a.case,nx,ny,a.device,a.max_iterations,a.solver);raw['directory']=grid;row=save_run(a.output/grid,raw);write_json(a.output/grid/'audit.json',audit(a.output/grid,row));summary['runs'].append(row);write_json(a.output/'summary.json',summary)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jsyc/tensor-suite-development/TensorFVM/src/tensorfvm/verification/external_flow.py", line 27, in run
+    s.step()
+  File "/data/TensorFEM/.venv/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jsyc/tensor-suite-development/TensorFVM/src/tensorfvm/external_coupled.py", line 26, in step
+    metrics=super().step();physical=self._physical_flux()
+            ^^^^^^^^^^^^^^
+  File "/home/jsyc/tensor-suite-development/TensorFVM/src/tensorfvm/sparse_simple.py", line 135, in step
+    if not depth:return super().step()
+                        ^^^^^^^^^^^^^^
+  File "/data/TensorFEM/.venv/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jsyc/tensor-suite-development/TensorFVM/src/tensorfvm/body_fitted.py", line 963, in step
+    return self._steady_step()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/data/TensorFEM/.venv/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jsyc/tensor-suite-development/TensorFVM/src/tensorfvm/body_fitted.py", line 862, in _steady_step
+    self.velocity[:, component] = self._linear(
+                                  ^^^^^^^^^^^^^
+  File "/home/jsyc/tensor-suite-development/TensorFVM/src/tensorfvm/external_linear.py", line 31, in _linear
+    raise RuntimeError(f'Sparse direct true residual {residual} exceeds {budget}')
+RuntimeError: Sparse direct true residual 1.5616383145919403e-08 exceeds 2.4514516892273e-09

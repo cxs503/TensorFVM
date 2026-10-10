@@ -1,0 +1,8 @@
+{
+  "resolution": "256x96",
+  "independent_momentum": 9.872956139857527e-07,
+  "independent_continuity": 4.000634957638006e-11,
+  "physical_rhie_chow_relative_l2_defect": 7.820794383501708e-12,
+  "physical_fixedpoint_passed": true,
+  "scope": "Independent NumPy least-squares velocity/pressure gradients, full laminar momentum, mass and physical inertia-free Rhie-Chow flux; production geometry and prescribed boundary data reconstructed from saved config"
+}
