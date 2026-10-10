@@ -1,0 +1,27 @@
+{
+  "name": "wall-law-batch",
+  "cpu_samples_s": [
+    0.727368381805718,
+    0.73252257052809,
+    0.7190690785646439
+  ],
+  "cuda_samples_s": [
+    0.3840099908411503,
+    0.38472796138376,
+    0.3834566781297326
+  ],
+  "cpu_median_s": 0.727368381805718,
+  "cuda_median_s": 0.3840099908411503,
+  "cpu_over_gpu_median": 1.8941392129211592,
+  "cuda_peak_allocated_bytes": 18546688,
+  "equivalent": true,
+  "relative_field_differences": {
+    "traction_pa": 1.5540179231642617e-16
+  },
+  "cpu_physical_passed": null,
+  "cuda_physical_passed": null,
+  "cpu_constitutive_passed": true,
+  "cuda_constitutive_passed": true,
+  "field_comparison_scales": {},
+  "actual_cuda_solver_device": "cuda:0"
+}

@@ -1,0 +1,27 @@
+{
+  "name": "annular-256x64",
+  "cpu_samples_s": [
+    0.24449982028454542,
+    0.24526531714946032,
+    0.2419590624049306
+  ],
+  "cuda_samples_s": [
+    0.08799214102327824,
+    0.09030164405703545,
+    0.08644405100494623
+  ],
+  "cpu_median_s": 0.24449982028454542,
+  "cuda_median_s": 0.08799214102327824,
+  "cpu_over_gpu_median": 2.7786552008078,
+  "cuda_peak_allocated_bytes": 31690240,
+  "equivalent": true,
+  "relative_field_differences": {
+    "axial_velocity_m_s": 1.2411570737115277e-13
+  },
+  "cpu_physical_passed": true,
+  "cuda_physical_passed": true,
+  "cpu_constitutive_passed": null,
+  "cuda_constitutive_passed": null,
+  "field_comparison_scales": {},
+  "actual_cuda_solver_device": "cuda:0"
+}

@@ -1,0 +1,8 @@
+......                                                                   [100%]
+=============================== warnings summary ===============================
+tests/test_engineering_benchmarks.py::test_full_csr_cuda_matches_cpu_without_fallback
+  /home/jsyc/tensor-suite-development/TensorFVM/src/tensorfvm/annular.py:116: UserWarning: Sparse CSR tensor support is in beta state. If you miss a functionality in the sparse tensor support, please submit a feature request to https://github.com/pytorch/pytorch/issues. (Triggered internally at /__w/pytorch/pytorch/aten/src/ATen/SparseCsrTensorImpl.cpp:49.)
+    A=torch.sparse_coo_tensor(ij,values,(s.count,s.count),device=s.p.device,check_invariants=True).coalesce().to_sparse_csr();matrix_nnz=A.values().numel()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+6 passed, 1 warning in 2.38s

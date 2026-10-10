@@ -1,0 +1,23 @@
+{
+  "raw_evidence_verified": true,
+  "all_cases_correctness_passed": false,
+  "failed_equivalence_cases": [
+    "SA-128x112-five-iterations"
+  ],
+  "cases": [
+    "annular-256x64",
+    "annular-512x128",
+    "annular-1024x256",
+    "poiseuille-72x24",
+    "taylor-green-64",
+    "abc-24-cubed",
+    "advected-shear-32",
+    "wall-law-batch",
+    "SA-128x112-five-iterations",
+    "TensorLBM-shear-64"
+  ],
+  "independently_reconstructed_periodic_steps": 652,
+  "summary_sha256": "cc7f7bdbcf727d35f416e6c83c740f8310d20295c24ae8e827db752d955b665e",
+  "auditor_sha256": "f19aa6a49446693ae1b522911088a48820ec8121122d060ee7e054192d08ae7d",
+  "scope": "timing medians, CPU/CUDA primary fields, full annular flux/geometry, every MAC/BGK accepted step; channel equivalence only; SA five iterations only"
+}

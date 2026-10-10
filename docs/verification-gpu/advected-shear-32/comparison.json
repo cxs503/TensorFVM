@@ -1,0 +1,30 @@
+{
+  "name": "advected-shear-32",
+  "cpu_samples_s": [
+    1.2569181742146611,
+    1.2887485837563872,
+    1.2516502933576703
+  ],
+  "cuda_samples_s": [
+    1.6614544177427888,
+    1.661174239590764,
+    1.6576835298910737
+  ],
+  "cpu_median_s": 1.2569181742146611,
+  "cuda_median_s": 1.661174239590764,
+  "cpu_over_gpu_median": 0.7566443930194265,
+  "cuda_peak_allocated_bytes": 12550144,
+  "equivalent": true,
+  "relative_field_differences": {
+    "velocity_m_s": 7.450099585923097e-17,
+    "pressure_pa": 0.0
+  },
+  "cpu_physical_passed": true,
+  "cuda_physical_passed": true,
+  "cpu_constitutive_passed": null,
+  "cuda_constitutive_passed": null,
+  "field_comparison_scales": {
+    "pressure_pa": 0.745
+  },
+  "actual_cuda_solver_device": "cuda:0"
+}

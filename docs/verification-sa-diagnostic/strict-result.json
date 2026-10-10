@@ -1,0 +1,86 @@
+{
+  "config": {
+    "nx": 64,
+    "ny": 56,
+    "length": 1.0,
+    "height": 0.2,
+    "cylinder_x": 1.0,
+    "cylinder_y": 1.0,
+    "cylinder_radius": null,
+    "inlet_velocity": 1.0,
+    "reynolds": 100000.0,
+    "density": 1.0,
+    "velocity_relaxation": 0.3,
+    "pressure_relaxation": 0.2,
+    "max_iterations": 1800,
+    "tolerance": 1e-05,
+    "device": "cpu",
+    "pseudo_time_step": 0.02,
+    "mesh_type": "flat-plate",
+    "inlet_profile": "uniform",
+    "turbulence_model": "spalart-allmaras",
+    "turbulence_relaxation": 0.3,
+    "sa_freestream_ratio": 3.0,
+    "flat_plate_stretching": 4.0,
+    "body_fitted_stretching": 0.0,
+    "outer_boundary": "channel",
+    "time_step": null,
+    "inner_iterations": 1,
+    "initial_perturbation": 0.0,
+    "airfoil_code": "0012",
+    "airfoil_chord": 1.0,
+    "airfoil_x": 1.0,
+    "airfoil_y": 1.0,
+    "angle_of_attack": 0.0,
+    "mesh_file": null
+  },
+  "metrics": [
+    {
+      "name": "skin_friction_relative_error",
+      "value": 0.07222810865840854,
+      "limit": 0.03,
+      "description": "strict project gate versus declared fully turbulent empirical correlation; model/transition uncertainty remains",
+      "unit": "1",
+      "passed": false
+    },
+    {
+      "name": "solver_residual",
+      "value": 6.915021408836851e-05,
+      "limit": 1e-05,
+      "description": "all final production residuals including SA",
+      "unit": "1",
+      "passed": false
+    },
+    {
+      "name": "convergence_failure",
+      "value": 1.0,
+      "limit": 0.5,
+      "description": "explicit steady convergence required",
+      "unit": "1",
+      "passed": false
+    },
+    {
+      "name": "maximum_local_yplus",
+      "value": 2.0901551235087696,
+      "limit": 1.0,
+      "description": "actual local first-cell y+; wall-resolved SA",
+      "unit": "1",
+      "passed": false
+    }
+  ],
+  "passed": false,
+  "original_legacy_error_limit": 0.2,
+  "independent_cf": 0.0068655119959277755,
+  "reference_cf": 0.007399999999999999,
+  "wall_force_n_m": 0.0034327559979638878,
+  "pressure_force_contribution_x_n_m": 0.0,
+  "scope": "actual 1800-iteration SA diagnostic; no current 3% or steady qualification",
+  "source_sha256": {
+    "src/tensorfvm/benchmark_flat_plate.py": "392b395c81a0089d18fe4f4303334b9c07643e82df8e6272466bbdd9f274b6c6",
+    "src/tensorfvm/solver.py": "7c3613f23791c6a22825bd2ba0467e2bb84013ecaedc974901452b1864a2868e",
+    "src/tensorfvm/body_fitted.py": "4e633fa42c1171cf57aca5bf930827f97a30dada4e405bf3ac9c1068ba1bb7a7",
+    "src/tensorfvm/backend_registry.py": "e68b95fdb7c457b921b2f1c9e3920f80ebdcdb104ca8077e10e96d2a4182a13a",
+    "src/tensorfvm/mesh_api.py": "72f4f9d724084df335dca0e561877c5423c47a7f8bfffe950d631845e2dce22d",
+    "scripts/publish_sa_diagnostic.py": "90fe5fd650ccfd1762b4d7589c761efcddd1098ecc18e38572c47b1302424c93"
+  }
+}

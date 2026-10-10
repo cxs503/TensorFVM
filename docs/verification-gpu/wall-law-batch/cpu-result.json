@@ -1,0 +1,18 @@
+{
+  "config": {
+    "samples": 65536,
+    "density_kg_m3": 1000.0,
+    "viscosity_pa_s": 0.01
+  },
+  "physical_passed": null,
+  "constitutive_passed": true,
+  "scope": "batched wall constitutive inversion; not a flow solve; includes input construction and transfer",
+  "actual_solver_device": "cpu",
+  "history": [],
+  "primary_fields": [
+    "traction_pa"
+  ],
+  "metrics": {
+    "friction_velocity_relative_linf": 2.7755575615628914e-16
+  }
+}

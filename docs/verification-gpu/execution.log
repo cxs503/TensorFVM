@@ -1,0 +1,32 @@
+annular-256x64 CPU start
+/home/jsyc/tensor-suite-development/TensorFVM/src/tensorfvm/annular.py:116: UserWarning: Sparse CSR tensor support is in beta state. If you miss a functionality in the sparse tensor support, please submit a feature request to https://github.com/pytorch/pytorch/issues. (Triggered internally at /__w/pytorch/pytorch/aten/src/ATen/SparseCsrTensorImpl.cpp:49.)
+  A=torch.sparse_coo_tensor(ij,values,(s.count,s.count),device=s.p.device,check_invariants=True).coalesce().to_sparse_csr();matrix_nnz=A.values().numel()
+annular-256x64 CUDA start
+annular-256x64 equivalent True CPU/GPU 2.7786552008078
+annular-512x128 CPU start
+annular-512x128 CUDA start
+annular-512x128 equivalent True CPU/GPU 4.733899992482001
+annular-1024x256 CPU start
+annular-1024x256 CUDA start
+annular-1024x256 equivalent True CPU/GPU 7.292132010174004
+poiseuille-72x24 CPU start
+poiseuille-72x24 CUDA start
+poiseuille-72x24 equivalent True CPU/GPU 0.4030767236561654
+taylor-green-64 CPU start
+taylor-green-64 CUDA start
+taylor-green-64 equivalent True CPU/GPU 1.4711889692376567
+abc-24-cubed CPU start
+abc-24-cubed CUDA start
+abc-24-cubed equivalent True CPU/GPU 1.2570048514973353
+advected-shear-32 CPU start
+advected-shear-32 CUDA start
+advected-shear-32 equivalent True CPU/GPU 0.7566443930194265
+wall-law-batch CPU start
+wall-law-batch CUDA start
+wall-law-batch equivalent True CPU/GPU 1.8941392129211592
+SA-128x112-five-iterations CPU start
+SA-128x112-five-iterations CUDA start
+SA-128x112-five-iterations equivalent False CPU/GPU 6.9174657230621674
+TensorLBM-shear-64 CPU start
+TensorLBM-shear-64 CUDA start
+TensorLBM-shear-64 equivalent True CPU/GPU 1.5254993885864454

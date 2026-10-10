@@ -1,0 +1,61 @@
+{
+  "config": {
+    "ntheta": 256,
+    "nr": 64,
+    "inner_radius_m": 0.05,
+    "outer_radius_m": 0.1,
+    "viscosity_pa_s": 0.001,
+    "density_kg_m3": 1.0,
+    "pressure_gradient_pa_m": 0.01,
+    "linear_tolerance": 1e-11,
+    "max_linear_iterations": 5000,
+    "device": "cuda",
+    "linear_backend": "torch-cg"
+  },
+  "elapsed_s": 0.04492363426834345,
+  "compute_elapsed_s": 0.04226958565413952,
+  "linear_solve_elapsed_s": 0.03380659222602844,
+  "linear_iterations": 77,
+  "peak_cuda_allocated_bytes": 31690240,
+  "history": [
+    {
+      "iteration": 1,
+      "linear_iterations": 75,
+      "relative_linear_residual": 4.903458128600414e-13,
+      "velocity_change_m_s": 0.0031659454607000483
+    },
+    {
+      "iteration": 2,
+      "linear_iterations": 2,
+      "relative_linear_residual": 8.07396022545261e-12,
+      "velocity_change_m_s": 6.900404726783993e-16
+    }
+  ],
+  "diagnostics": {
+    "true_production_relative_residual": 8.074416336794083e-12,
+    "maximum_nonorthogonal_area_vector_m": 8.423600358908878e-15,
+    "full_matrix_unknowns": 16384,
+    "full_matrix_nnz": 81408,
+    "initial_velocity": "zero; no analytic initialization",
+    "scope": "fully developed 3D axial annular reduction; full production diffusion matrix, not general 3D Navier-Stokes",
+    "linear_backend": "torch-cg",
+    "device": "cuda:0",
+    "timing_scope": "synchronized mesh/operator/full solve before raw host export; elapsed_s additionally includes export; no plots",
+    "silent_cpu_solver_fallback": false
+  },
+  "physical_passed": true,
+  "metrics": {
+    "velocity_volume_l2": 0.0004202995869853733,
+    "velocity_linf": 0.0007151027158632806,
+    "flow_rate_relative_error": 0.00026436971526767113,
+    "inner_wall_force_relative_error": 0.00017924887298505535,
+    "outer_wall_force_relative_error": 5.0400969215838146e-05,
+    "momentum_force_balance": 4.601958952264022e-16,
+    "true_linear_residual": 8.073380203230724e-12,
+    "area_relative_error": 0.00010039578385840623
+  },
+  "primary_fields": [
+    "axial_velocity_m_s"
+  ],
+  "actual_solver_device": "cuda:0"
+}

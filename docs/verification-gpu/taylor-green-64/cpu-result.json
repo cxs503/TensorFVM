@@ -1,0 +1,1381 @@
+{
+  "config": {
+    "nx": 64,
+    "ny": 64,
+    "nz": 4,
+    "lengths_m": [
+      6.283185307179586,
+      6.283185307179586,
+      6.283185307179586
+    ],
+    "density_kg_m3": 1.0,
+    "viscosity_pa_s": 0.1,
+    "time_step_s": 0.0125,
+    "nonlinear_tolerance": 1e-12,
+    "nonlinear_iterations": 100,
+    "device": "cpu"
+  },
+  "field_comparison_scales": {},
+  "physical_passed": true,
+  "metrics": [
+    {
+      "name": "velocity_l2",
+      "value": 8.024450747041884e-05,
+      "limit": 0.03,
+      "description": "all components at their actual staggered face positions",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "velocity_linf",
+      "value": 8.024450747056974e-05,
+      "limit": 0.03,
+      "description": "peak-normalized maximum face velocity error",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "pressure_l2",
+      "value": 0.002247972661076307,
+      "limit": 0.03,
+      "description": "cell pressure at last midpoint; mean gauge",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "pressure_linf",
+      "value": 0.0022479726610771847,
+      "limit": 0.03,
+      "description": "peak-normalized maximum pressure error",
+      "unit": "1",
+      "passed": true
+    }
+  ],
+  "actual_solver_device": "cpu",
+  "history": [
+    {
+      "step": 1,
+      "time_s": 0.0125,
+      "nonlinear_converged": true,
+      "nonlinear_iterations": 5,
+      "nonlinear_residual_m_s": 2.220446049250313e-16,
+      "kinetic_before_J": 62.01255336059963,
+      "kinetic_after_J": 61.70351201836622,
+      "convective_power_W": -8.826829139741332e-17,
+      "viscous_power_W": -24.72330737867305,
+      "pressure_power_W": -1.262555090353595e-16,
+      "energy_balance_defect_J": -6.106226635438361e-16,
+      "max_divergence_s_inv": 1.4155343563970746e-15,
+      "momentum_change_Ns": [
+        1.2914014170458047e-17,
+        -9.321836499990954e-17,
+        0.0
+      ],
+      "projection": {
+        "pressure_method": "periodic-FFT-discrete-symbol",
+        "pressure_residual": 1.677581218861062e-12,
+        "pressure_target": 1.2696475085335053e-09,
+        "pressure_converged": true,
+        "tentative_energy_J": 61.708294042544885,
+        "projected_energy_J": 61.703512018366226,
+        "momentum_change_Ns": [
+          7.235765647575239e-17,
+          -4.9520034166652894e-17,
+          0.0
+        ],
+        "max_divergence_s_inv": 1.4432899320127035e-15
+      }
+    },
+    {
+      "step": 2,
+      "time_s": 0.025,
+      "nonlinear_converged": true,
+      "nonlinear_iterations": 5,
+      "nonlinear_residual_m_s": 2.220446049250313e-16,
+      "kinetic_before_J": 61.70351201836622,
+      "kinetic_after_J": 61.396010792545255,
+      "convective_power_W": 1.0286870404706444e-16,
+      "viscous_power_W": -24.600098065675965,
+      "pressure_power_W": 1.2991658975258718e-16,
+      "energy_balance_defect_J": -1.4377388168895777e-14,
+      "max_divergence_s_inv": 1.7208456881689926e-15,
+      "momentum_change_Ns": [
+        -3.268015336465817e-16,
+        6.803889582250417e-18,
+        0.0
+      ],
+      "projection": {
+        "pressure_method": "periodic-FFT-discrete-symbol",
+        "pressure_residual": 1.6952195744447583e-12,
+        "pressure_target": 1.2633201836785062e-09,
+        "pressure_converged": true,
+        "tentative_energy_J": 61.400745272778266,
+        "projected_energy_J": 61.396010792545255,
+        "momentum_change_Ns": [
+          3.254665873997067e-16,
+          4.257446269770201e-17,
+          0.0
+        ],
+        "max_divergence_s_inv": 1.4432899320127035e-15
+      }
+    },
+    {
+      "step": 3,
+      "time_s": 0.037500000000000006,
+      "nonlinear_converged": true,
+      "nonlinear_iterations": 5,
+      "nonlinear_residual_m_s": 2.220446049250313e-16,
+      "kinetic_before_J": 61.396010792545255,
+      "kinetic_after_J": 61.09004200792238,
+      "convective_power_W": 2.296246056668237e-17,
+      "viscous_power_W": -24.477502769831872,
+      "pressure_power_W": -1.2964479158647634e-16,
+      "energy_balance_defect_J": 2.1538326677728037e-14,
+      "max_divergence_s_inv": 1.4432899320127035e-15,
+      "momentum_change_Ns": [
+        -2.983207027005786e-17,
+        7.271787804903771e-17,
+        0.0
+      ],
+      "projection": {
+        "pressure_method": "periodic-FFT-discrete-symbol",
+        "pressure_residual": 1.71257499637324e-12,
+        "pressure_target": 1.257024391228797e-09,
+        "pressure_converged": true,
+        "tentative_energy_J": 61.09472941690216,
+        "projected_energy_J": 61.09004200792238,
+        "momentum_change_Ns": [
+          1.727515948113313e-16,
+          4.16398105250074e-17,
+          0.0
+        ],
+        "max_divergence_s_inv": 1.7208456881689926e-15
+      }
+    },
+    {
+      "step": 4,
+      "time_s": 0.05,
+      "nonlinear_converged": true,
+      "nonlinear_iterations": 5,
+      "nonlinear_residual_m_s": 2.220446049250313e-16,
+      "kinetic_before_J": 61.09004200792238,
+      "kinetic_after_J": 60.78559802753275,
+      "convective_power_W": -1.3466621796011786e-16,
+      "viscous_power_W": -24.355518431168644,
+      "pressure_power_W": -5.5073431806756727e-17,
+      "energy_balance_defect_J": -2.0095036745715333e-14,
+      "max_divergence_s_inv": 1.7208456881689926e-15,
+      "momentum_change_Ns": [
+        -4.1507362673681967e-17,
+        -1.1441978953495783e-16,
+        0.0
+      ],
+      "projection": {
+        "pressure_method": "periodic-FFT-discrete-symbol",
+        "pressure_residual": 1.6922116222724998e-12,
+        "pressure_target": 1.2507599740417422e-09,
+        "pressure_converged": true,
+        "tentative_energy_J": 60.7902388332522,
+        "projected_energy_J": 60.78559802753275,
+        "momentum_change_Ns": [
+          -1.6423529044181155e-16,
+          1.5201353342789205e-16,
+          0.0
+        ],
+        "max_divergence_s_inv": 1.7208456881689926e-15
+      }
+    },
+    {
+      "step": 5,
+      "time_s": 0.0625,
+      "nonlinear_converged": true,
+      "nonlinear_iterations": 5,
+      "nonlinear_residual_m_s": 2.220446049250313e-16,
+      "kinetic_before_J": 60.78559802753275,
+      "kinetic_after_J": 60.48267125247071,
+      "convective_power_W": 7.952524282514381e-17,
+      "viscous_power_W": -24.23414200496361,
+      "pressure_power_W": -7.953866005710224e-17,
+      "energy_balance_defect_J": 4.551914400963142e-15,
+      "max_divergence_s_inv": 1.7763568394002505e-15,
+      "momentum_change_Ns": [
+        1.3176603974432386e-16,
+        4.911833759112772e-18,
+        0.0
+      ],
+      "projection": {
+        "pressure_method": "periodic-FFT-discrete-symbol",
+        "pressure_residual": 1.6625824120526816e-12,
+        "pressure_target": 1.2445267757578087e-09,
+        "pressure_converged": true,
+        "tentative_energy_J": 60.48726591826973,
+        "projected_energy_J": 60.48267125247071,
+        "momentum_change_Ns": [
+          -1.2200251213131826e-16,
+          3.486311365252415e-17,
+          0.0
+        ],
+        "max_divergence_s_inv": 1.4432899320127035e-15
+      }
+    },
+    {
+      "step": 6,
+      "time_s": 0.075,
+      "nonlinear_converged": true,
+      "nonlinear_iterations": 5,
+      "nonlinear_residual_m_s": 2.220446049250313e-16,
+      "kinetic_before_J": 60.48267125247071,
+      "kinetic_after_J": 60.18125412169987,
+      "convective_power_W": -2.892640369739928e-16,
+      "viscous_power_W": -24.113370461667543,
+      "pressure_power_W": 5.532533443776874e-17,
+      "energy_balance_defect_J": 7.66053886991358e-15,
+      "max_divergence_s_inv": 1.6653345369377348e-15,
+      "momentum_change_Ns": [
+        -3.4093548644062626e-16,
+        -6.784886227539413e-17,
+        0.0
+      ],
+      "projection": {
+        "pressure_method": "periodic-FFT-discrete-symbol",
+        "pressure_residual": 1.744442550274108e-12,
+        "pressure_target": 1.2383246407966979e-09,
+        "pressure_converged": true,
+        "tentative_energy_J": 60.185803106311816,
+        "projected_energy_J": 60.18125412169987,
+        "momentum_change_Ns": [
+          -2.1669880117706717e-16,
+          1.2964860110584494e-16,
+          0.0
+        ],
+        "max_divergence_s_inv": 1.5404344466674047e-15
+      }
+    },
+    {
+      "step": 7,
+      "time_s": 0.0875,
+      "nonlinear_converged": true,
+      "nonlinear_iterations": 5,
+      "nonlinear_residual_m_s": 2.220446049250313e-16,
+      "kinetic_before_J": 60.18125412169987,
+      "kinetic_after_J": 59.88133911186451,
+      "convective_power_W": -7.96292126174107e-17,
+      "viscous_power_W": -23.99320078682909,
+      "pressure_power_W": -1.543470138773899e-17,
+      "energy_balance_defect_J": 4.052314039881821e-15,
+      "max_divergence_s_inv": 1.4432899320127035e-15,
+      "momentum_change_Ns": [
+        1.3437029874919516e-16,
+        8.145062475613755e-17,
+        0.0
+      ],
+      "projection": {
+        "pressure_method": "periodic-FFT-discrete-symbol",
+        "pressure_residual": 1.6793990809118527e-12,
+        "pressure_target": 1.2321534143534433e-09,
+        "pressure_converged": true,
+        "tentative_energy_J": 59.885842869461875,
+        "projected_energy_J": 59.88133911186451,
+        "momentum_change_Ns": [
+          -1.6120004713945115e-16,
+          6.193781127993666e-17,
+          0.0
+        ],
+        "max_divergence_s_inv": 1.3877787807814457e-15
+      }
+    },
+    {
+      "step": 8,
+      "time_s": 0.09999999999999999,
+      "nonlinear_converged": true,
+      "nonlinear_iterations": 5,
+      "nonlinear_residual_m_s": 2.220446049250313e-16,
+      "kinetic_before_J": 59.88133911186451,
+      "kinetic_after_J": 59.58291873710177,
+      "convective_power_W": -1.638023040291404e-17,
+      "viscous_power_W": -23.873629981019494,
+      "pressure_power_W": 2.108434508774174e-16,
+      "energy_balance_defect_J": 1.8318679906315083e-15,
+      "max_divergence_s_inv": 1.4710455076283324e-15,
+      "momentum_change_Ns": [
+        -2.1763940166191647e-16,
+        -1.3735080176560393e-16,
+        0.0
+      ],
+      "projection": {
+        "pressure_method": "periodic-FFT-discrete-symbol",
+        "pressure_residual": 1.6872639237051314e-12,
+        "pressure_target": 1.226012942394565e-09,
+        "pressure_converged": true,
+        "tentative_energy_J": 59.587377717341575,
+        "projected_energy_J": 59.58291873710177,
+        "momentum_change_Ns": [
+          -2.686661344659317e-16,
+          -5.998938179235357e-17,
+          0.0
+        ],
+        "max_divergence_s_inv": 1.6653345369377348e-15
+      }
+    },
+    {
+      "step": 9,
+      "time_s": 0.11249999999999999,
+      "nonlinear_converged": true,
+      "nonlinear_iterations": 5,
+      "nonlinear_residual_m_s": 2.220446049250313e-16,
+      "kinetic_before_J": 59.58291873710177,
+      "kinetic_after_J": 59.28598554885478,
+      "convective_power_W": 1.0576863795297885e-16,
+      "viscous_power_W": -23.754655059757734,
+      "pressure_power_W": 4.497614954731861e-18,
+      "energy_balance_defect_J": -1.709743457922741e-14,
+      "max_divergence_s_inv": 1.4432899320127035e-15,
+      "momentum_change_Ns": [
+        2.775969537309535e-17,
+        1.5111792604339408e-16,
+        0.0
+      ],
+      "projection": {
+        "pressure_method": "periodic-FFT-discrete-symbol",
+        "pressure_residual": 1.740702286354449e-12,
+        "pressure_target": 1.2199030716542052e-09,
+        "pressure_converged": true,
+        "tentative_energy_J": 59.29040019692346,
+        "projected_energy_J": 59.28598554885478,
+        "momentum_change_Ns": [
+          -1.5487074680424416e-16,
+          5.390770612519855e-17,
+          0.0
+        ],
+        "max_divergence_s_inv": 1.6653345369377348e-15
+      }
+    },
+    {
+      "step": 10,
+      "time_s": 0.12499999999999999,
+      "nonlinear_converged": true,
+      "nonlinear_iterations": 5,
+      "nonlinear_residual_m_s": 2.220446049250313e-16,
+      "kinetic_before_J": 59.28598554885478,
+      "kinetic_after_J": 58.990532135686834,
+      "convective_power_W": -7.553530327720037e-17,
+      "viscous_power_W": -23.63627305343603,
+      "pressure_power_W": 1.419334220716335e-16,
+      "energy_balance_defect_J": 2.3869795029440866e-15,
+      "max_divergence_s_inv": 1.4432899320127035e-15,
+      "momentum_change_Ns": [
+        5.456099351527026e-17,
+        3.7036094148268243e-17,
+        0.0
+      ],
+      "projection": {
+        "pressure_method": "periodic-FFT-discrete-symbol",
+        "pressure_residual": 1.734618987520661e-12,
+        "pressure_target": 1.213823649630301e-09,
+        "pressure_converged": true,
+        "tentative_energy_J": 58.99490289234466,
+        "projected_energy_J": 58.990532135686834,
+        "momentum_change_Ns": [
+          -1.7152785635779473e-17,
+          -5.692595927732424e-17,
+          0.0
+        ],
+        "max_divergence_s_inv": 1.4432899320127035e-15
+      }
+    },
+    {
+      "step": 11,
+      "time_s": 0.13749999999999998,
+      "nonlinear_converged": true,
+      "nonlinear_iterations": 5,
+      "nonlinear_residual_m_s": 2.220446049250313e-16,
+      "kinetic_before_J": 58.990532135686834,
+      "kinetic_after_J": 58.69655112309626,
+      "convective_power_W": -3.0398915037193796e-17,
+      "viscous_power_W": -23.518481007245747,
+      "pressure_power_W": -9.443649542817282e-17,
+      "energy_balance_defect_J": 9.992007221626409e-16,
+      "max_divergence_s_inv": 1.6653345369377348e-15,
+      "momentum_change_Ns": [
+        3.3922119365116105e-16,
+        6.595885109391078e-17,
+        0.0
+      ],
+      "projection": {
+        "pressure_method": "periodic-FFT-discrete-symbol",
+        "pressure_residual": 1.6048928619357044e-12,
+        "pressure_target": 1.2077745245808124e-09,
+        "pressure_converged": true,
+        "tentative_energy_J": 58.700878424721395,
+        "projected_energy_J": 58.69655112309626,
+        "momentum_change_Ns": [
+          4.349741133654562e-18,
+          -6.560976798431983e-17,
+          0.0
+        ],
+        "max_divergence_s_inv": 1.4432899320127035e-15
+      }
+    },
+    {
+      "step": 12,
+      "time_s": 0.15,
+      "nonlinear_converged": true,
+      "nonlinear_iterations": 5,
+      "nonlinear_residual_m_s": 2.220446049250313e-16,
+      "kinetic_before_J": 58.69655112309626,
+      "kinetic_after_J": 58.40403517333246,
+      "convective_power_W": -1.3210375936760798e-16,
+      "viscous_power_W": -23.401275981103602,
+      "pressure_power_W": -1.2486714281130632e-16,
+      "energy_balance_defect_J": -8.43769498715119e-15,
+      "max_divergence_s_inv": 1.4432899320127035e-15,
+      "momentum_change_Ns": [
+        -5.0774440034869155e-17,
+        -1.356222012613125e-16,
+        0.0
+      ],
+      "projection": {
+        "pressure_method": "periodic-FFT-discrete-symbol",
+        "pressure_residual": 1.6894390852518962e-12,
+        "pressure_target": 1.2017555455198922e-09,
+        "pressure_converged": true,
+        "tentative_energy_J": 58.40831945196447,
+        "projected_energy_J": 58.40403517333246,
+        "momentum_change_Ns": [
+          -5.15329900117116e-17,
+          -8.912235028386594e-17,
+          0.0
+        ],
+        "max_divergence_s_inv": 1.6653345369377348e-15
+      }
+    },
+    {
+      "step": 13,
+      "time_s": 0.1625,
+      "nonlinear_converged": true,
+      "nonlinear_iterations": 5,
+      "nonlinear_residual_m_s": 2.220446049250313e-16,
+      "kinetic_before_J": 58.40403517333246,
+      "kinetic_after_J": 58.11297698521274,
+      "convective_power_W": -1.3421836550002662e-16,
+      "viscous_power_W": -23.28465504957831,
+      "pressure_power_W": 5.207114003850353e-18,
+      "energy_balance_defect_J": 8.604228440844963e-15,
+      "max_divergence_s_inv": 1.6653345369377348e-15,
+      "momentum_change_Ns": [
+        5.665819662212181e-17,
+        3.033988277815311e-17,
+        0.0
+      ],
+      "projection": {
+        "pressure_method": "periodic-FFT-discrete-symbol",
+        "pressure_residual": 1.7276553081791955e-12,
+        "pressure_target": 1.1957665622141357e-09,
+        "pressure_converged": true,
+        "tentative_energy_J": 58.11721866859578,
+        "projected_energy_J": 58.11297698521274,
+        "momentum_change_Ns": [
+          -2.387728039649154e-16,
+          9.93563026149921e-18,
+          0.0
+        ],
+        "max_divergence_s_inv": 1.4432899320127035e-15
+      }
+    },
+    {
+      "step": 14,
+      "time_s": 0.17500000000000002,
+      "nonlinear_converged": true,
+      "nonlinear_iterations": 5,
+      "nonlinear_residual_m_s": 2.220446049250313e-16,
+      "kinetic_before_J": 58.11297698521274,
+      "kinetic_after_J": 57.82336929394003,
+      "convective_power_W": -9.048643818113299e-17,
+      "viscous_power_W": -23.168615301817574,
+      "pressure_power_W": -6.961958579698636e-17,
+      "energy_balance_defect_J": 1.2878587085651816e-14,
+      "max_divergence_s_inv": 1.339206523454095e-15,
+      "momentum_change_Ns": [
+        7.869101685787333e-17,
+        2.811286519018272e-17,
+        0.0
+      ],
+      "projection": {
+        "pressure_method": "periodic-FFT-discrete-symbol",
+        "pressure_residual": 1.7227214042968246e-12,
+        "pressure_target": 1.189807425178835e-09,
+        "pressure_converged": true,
+        "tentative_energy_J": 57.82756880556549,
+        "projected_energy_J": 57.82336929394003,
+        "momentum_change_Ns": [
+          -2.856811218928e-16,
+          -9.272153817357082e-17,
+          0.0
+        ],
+        "max_divergence_s_inv": 1.5543122344752192e-15
+      }
+    },
+    {
+      "step": 15,
+      "time_s": 0.18750000000000003,
+      "nonlinear_converged": true,
+      "nonlinear_iterations": 5,
+      "nonlinear_residual_m_s": 2.220446049250313e-16,
+      "kinetic_before_J": 57.82336929394003,
+      "kinetic_after_J": 57.535204870921575,
+      "convective_power_W": 1.3135076739743286e-16,
+      "viscous_power_W": -23.05315384147537,
+      "pressure_power_W": 1.7532496149831226e-16,
+      "energy_balance_defect_J": -1.554312234475219e-14,
+      "max_divergence_s_inv": 1.4432899320127035e-15,
+      "momentum_change_Ns": [
+        2.5732330695300464e-16,
+        5.460873707093442e-17,
+        0.0
+      ],
+      "projection": {
+        "pressure_method": "periodic-FFT-discrete-symbol",
+        "pressure_residual": 1.708707571874221e-12,
+        "pressure_target": 1.183877985674251e-09,
+        "pressure_converged": true,
+        "tentative_energy_J": 57.53936263007048,
+        "projected_energy_J": 57.535204870921575,
+        "momentum_change_Ns": [
+          -3.686421840047174e-16,
+          -1.7791745205088226e-17,
+          0.0
+        ],
+        "max_divergence_s_inv": 1.6930901125533637e-15
+      }
+    },
+    {
+      "step": 16,
+      "time_s": 0.20000000000000004,
+      "nonlinear_converged": true,
+      "nonlinear_iterations": 5,
+      "nonlinear_residual_m_s": 2.220446049250313e-16,
+      "kinetic_before_J": 57.535204870921575,
+      "kinetic_after_J": 57.24847652358859,
+      "convective_power_W": 2.0165772323104206e-16,
+      "viscous_power_W": -22.938267786639745,
+      "pressure_power_W": 1.603214787602583e-16,
+      "energy_balance_defect_J": 1.482147737874584e-14,
+      "max_divergence_s_inv": 1.4432899320127035e-15,
+      "momentum_change_Ns": [
+        2.0295624952124035e-16,
+        -4.9465061469911686e-17,
+        0.0
+      ],
+      "projection": {
+        "pressure_method": "periodic-FFT-discrete-symbol",
+        "pressure_residual": 1.7168343049708188e-12,
+        "pressure_target": 1.1779780957018776e-09,
+        "pressure_converged": true,
+        "tentative_energy_J": 57.25259294537328,
+        "projected_energy_J": 57.24847652358859,
+        "momentum_change_Ns": [
+          -9.308807212029968e-17,
+          -1.7946589180134355e-16,
+          0.0
+        ],
+        "max_divergence_s_inv": 1.4432899320127035e-15
+      }
+    },
+    {
+      "step": 17,
+      "time_s": 0.21250000000000005,
+      "nonlinear_converged": true,
+      "nonlinear_iterations": 5,
+      "nonlinear_residual_m_s": 2.220446049250313e-16,
+      "kinetic_before_J": 57.24847652358859,
+      "kinetic_after_J": 56.96317709521656,
+      "convective_power_W": -1.5314881092643095e-16,
+      "viscous_power_W": -22.82395426976081,
+      "pressure_power_W": 1.6328418618746929e-16,
+      "energy_balance_defect_J": -2.475797344914099e-14,
+      "max_divergence_s_inv": 1.4432899320127035e-15,
+      "momentum_change_Ns": [
+        4.0713102045277755e-17,
+        2.8666962924860784e-17,
+        0.0
+      ],
+      "projection": {
+        "pressure_method": "periodic-FFT-discrete-symbol",
+        "pressure_residual": 1.6758680644689684e-12,
+        "pressure_target": 1.1721076080007792e-09,
+        "pressure_converged": true,
+        "tentative_energy_J": 56.96725259062231,
+        "projected_energy_J": 56.96317709521656,
+        "momentum_change_Ns": [
+          2.208680172298335e-17,
+          6.904268695596497e-17,
+          0.0
+        ],
+        "max_divergence_s_inv": 1.4432899320127035e-15
+      }
+    },
+    {
+      "step": 18,
+      "time_s": 0.22500000000000006,
+      "nonlinear_converged": true,
+      "nonlinear_iterations": 5,
+      "nonlinear_residual_m_s": 2.220446049250313e-16,
+      "kinetic_before_J": 56.96317709521656,
+      "kinetic_after_J": 56.67929946474682,
+      "convective_power_W": 5.281242330304806e-17,
+      "viscous_power_W": -22.710210437579203,
+      "pressure_power_W": 3.308908433333199e-17,
+      "energy_balance_defect_J": 1.0547118733938987e-15,
+      "max_divergence_s_inv": 1.27675647831893e-15,
+      "momentum_change_Ns": [
+        2.4886248345105945e-16,
+        -3.4759010091126724e-17,
+        0.0
+      ],
+      "projection": {
+        "pressure_method": "periodic-FFT-discrete-symbol",
+        "pressure_residual": 1.6915389790862303e-12,
+        "pressure_target": 1.1662663760438838e-09,
+        "pressure_converged": true,
+        "tentative_energy_J": 56.683334440672766,
+        "projected_energy_J": 56.67929946474682,
+        "momentum_change_Ns": [
+          -1.0619331363883998e-16,
+          -4.462580162088462e-17,
+          0.0
+        ],
+        "max_divergence_s_inv": 1.4432899320127035e-15
+      }
+    },
+    {
+      "step": 19,
+      "time_s": 0.23750000000000007,
+      "nonlinear_converged": true,
+      "nonlinear_iterations": 5,
+      "nonlinear_residual_m_s": 2.220446049250313e-16,
+      "kinetic_before_J": 56.67929946474682,
+      "kinetic_after_J": 56.39683654660863,
+      "convective_power_W": 8.594163925991336e-17,
+      "viscous_power_W": -22.597033451054862,
+      "pressure_power_W": 5.96733195671263e-17,
+      "energy_balance_defect_J": -7.771561172376096e-16,
+      "max_divergence_s_inv": 1.4155343563970746e-15,
+      "momentum_change_Ns": [
+        -1.5856722306431494e-16,
+        8.960098802267581e-18,
+        0.0
+      ],
+      "projection": {
+        "pressure_method": "periodic-FFT-discrete-symbol",
+        "pressure_residual": 1.7373519883301493e-12,
+        "pressure_target": 1.160454254034355e-09,
+        "pressure_converged": true,
+        "tentative_energy_J": 56.40083140590844,
+        "projected_energy_J": 56.39683654660863,
+        "momentum_change_Ns": [
+          1.7117030669145171e-16,
+          -1.6143239602789148e-16,
+          0.0
+        ],
+        "max_divergence_s_inv": 1.4432899320127035e-15
+      }
+    },
+    {
+      "step": 20,
+      "time_s": 0.25000000000000006,
+      "nonlinear_converged": true,
+      "nonlinear_iterations": 5,
+      "nonlinear_residual_m_s": 2.220446049250313e-16,
+      "kinetic_before_J": 56.39683654660863,
+      "kinetic_after_J": 56.115781290542444,
+      "convective_power_W": -6.57979745338055e-17,
+      "viscous_power_W": -22.484420485296155,
+      "pressure_power_W": 1.11055203005398e-16,
+      "energy_balance_defect_J": 1.2989609388114332e-14,
+      "max_divergence_s_inv": 1.4432899320127035e-15,
+      "momentum_change_Ns": [
+        -2.1958731288380975e-16,
+        5.1104812444238156e-17,
+        0.0
+      ],
+      "projection": {
+        "pressure_method": "periodic-FFT-discrete-symbol",
+        "pressure_residual": 1.6840541454200743e-12,
+        "pressure_target": 1.1546710969019332e-09,
+        "pressure_converged": true,
+        "tentative_energy_J": 56.1197364320645,
+        "projected_energy_J": 56.115781290542444,
+        "momentum_change_Ns": [
+          -3.486640886127516e-17,
+          -9.88062272935548e-17,
+          0.0
+        ],
+        "max_divergence_s_inv": 1.4432899320127035e-15
+      }
+    },
+    {
+      "step": 21,
+      "time_s": 0.26250000000000007,
+      "nonlinear_converged": true,
+      "nonlinear_iterations": 5,
+      "nonlinear_residual_m_s": 2.220446049250313e-16,
+      "kinetic_before_J": 56.115781290542444,
+      "kinetic_after_J": 55.83612668142382,
+      "convective_power_W": -1.3913247321507956e-16,
+      "viscous_power_W": -22.372368729489377,
+      "pressure_power_W": 7.998527830735425e-17,
+      "energy_balance_defect_J": -5.717648576819556e-15,
+      "max_divergence_s_inv": 1.7763568394002505e-15,
+      "momentum_change_Ns": [
+        -1.5990828296239443e-16,
+        -4.759373505582e-17,
+        0.0
+      ],
+      "projection": {
+        "pressure_method": "periodic-FFT-discrete-symbol",
+        "pressure_residual": 1.6501323571821795e-12,
+        "pressure_target": 1.1489167602993143e-09,
+        "pressure_converged": true,
+        "tentative_energy_J": 55.840042500051084,
+        "projected_energy_J": 55.83612668142382,
+        "momentum_change_Ns": [
+          -1.3049055675996907e-16,
+          1.749998779558977e-17,
+          0.0
+        ],
+        "max_divergence_s_inv": 1.4432899320127035e-15
+      }
+    },
+    {
+      "step": 22,
+      "time_s": 0.2750000000000001,
+      "nonlinear_converged": true,
+      "nonlinear_iterations": 5,
+      "nonlinear_residual_m_s": 2.220446049250313e-16,
+      "kinetic_before_J": 55.83612668142382,
+      "kinetic_after_J": 55.55786573908846,
+      "convective_power_W": 2.598256337936537e-16,
+      "viscous_power_W": -22.26087538682862,
+      "pressure_power_W": 2.4055188194393736e-16,
+      "energy_balance_defect_J": 5.551115123125783e-17,
+      "max_divergence_s_inv": 1.3877787807814457e-15,
+      "momentum_change_Ns": [
+        2.0674561412002543e-17,
+        -9.800648493179091e-17,
+        0.0
+      ],
+      "projection": {
+        "pressure_method": "periodic-FFT-discrete-symbol",
+        "pressure_residual": 1.6451060530876295e-12,
+        "pressure_target": 1.1431911005985622e-09,
+        "pressure_converged": true,
+        "tentative_energy_J": 55.56174262577789,
+        "projected_energy_J": 55.55786573908846,
+        "momentum_change_Ns": [
+          6.159781670668185e-16,
+          -7.946611947530144e-17,
+          0.0
+        ],
+        "max_divergence_s_inv": 1.4432899320127035e-15
+      }
+    },
+    {
+      "step": 23,
+      "time_s": 0.2875000000000001,
+      "nonlinear_converged": true,
+      "nonlinear_iterations": 5,
+      "nonlinear_residual_m_s": 2.220446049250313e-16,
+      "kinetic_before_J": 55.55786573908846,
+      "kinetic_after_J": 55.28099151815789,
+      "convective_power_W": -1.4777929321104437e-17,
+      "viscous_power_W": -22.149937674445894,
+      "pressure_power_W": 1.0212335632011193e-16,
+      "energy_balance_defect_J": 8.881784197001252e-16,
+      "max_divergence_s_inv": 1.4432899320127035e-15,
+      "momentum_change_Ns": [
+        -7.875733368007237e-17,
+        -3.1505932122863016e-17,
+        0.0
+      ],
+      "projection": {
+        "pressure_method": "periodic-FFT-discrete-symbol",
+        "pressure_residual": 1.6792216399410564e-12,
+        "pressure_target": 1.1374939748875158e-09,
+        "pressure_converged": true,
+        "tentative_energy_J": 55.28482985997945,
+        "projected_energy_J": 55.2809915181579,
+        "momentum_change_Ns": [
+          -2.623629333651564e-16,
+          1.1972727888936576e-16,
+          0.0
+        ],
+        "max_divergence_s_inv": 1.4432899320127035e-15
+      }
+    },
+    {
+      "step": 24,
+      "time_s": 0.3000000000000001,
+      "nonlinear_converged": true,
+      "nonlinear_iterations": 5,
+      "nonlinear_residual_m_s": 2.220446049250313e-16,
+      "kinetic_before_J": 55.28099151815789,
+      "kinetic_after_J": 55.00549710786611,
+      "convective_power_W": 2.3684680316002803e-17,
+      "viscous_power_W": -22.039552823341758,
+      "pressure_power_W": -1.1509398225404703e-16,
+      "energy_balance_defect_J": -5.6066262743570405e-15,
+      "max_divergence_s_inv": 1.4432899320127035e-15,
+      "momentum_change_Ns": [
+        -6.823928001455086e-18,
+        1.1281732156330732e-16,
+        0.0
+      ],
+      "projection": {
+        "pressure_method": "periodic-FFT-discrete-symbol",
+        "pressure_residual": 1.7930180045959896e-12,
+        "pressure_target": 1.1318252409662163e-09,
+        "pressure_converged": true,
+        "tentative_energy_J": 55.009297288041445,
+        "projected_energy_J": 55.00549710786611,
+        "momentum_change_Ns": [
+          2.784759880163259e-16,
+          1.0240878255549663e-16,
+          0.0
+        ],
+        "max_divergence_s_inv": 1.5543122344752192e-15
+      }
+    },
+    {
+      "step": 25,
+      "time_s": 0.3125000000000001,
+      "nonlinear_converged": true,
+      "nonlinear_iterations": 5,
+      "nonlinear_residual_m_s": 2.220446049250313e-16,
+      "kinetic_before_J": 55.00549710786611,
+      "kinetic_after_J": 54.73137563188715,
+      "convective_power_W": 1.279782777937775e-16,
+      "viscous_power_W": -21.929718078316128,
+      "pressure_power_W": 6.069967463313229e-17,
+      "energy_balance_defect_J": -1.404432126150823e-14,
+      "max_divergence_s_inv": 1.4432899320127035e-15,
+      "momentum_change_Ns": [
+        -3.3655464548910556e-16,
+        -1.5252538920153785e-16,
+        0.0
+      ],
+      "projection": {
+        "pressure_method": "periodic-FFT-discrete-symbol",
+        "pressure_residual": 1.7627904889503143e-12,
+        "pressure_target": 1.1261847573433623e-09,
+        "pressure_converged": true,
+        "tentative_energy_J": 54.7351380298278,
+        "projected_energy_J": 54.73137563188715,
+        "momentum_change_Ns": [
+          2.0654054135024098e-16,
+          -3.492855015543721e-17,
+          0.0
+        ],
+        "max_divergence_s_inv": 1.7208456881689926e-15
+      }
+    },
+    {
+      "step": 26,
+      "time_s": 0.3250000000000001,
+      "nonlinear_converged": true,
+      "nonlinear_iterations": 5,
+      "nonlinear_residual_m_s": 2.220446049250313e-16,
+      "kinetic_before_J": 54.73137563188715,
+      "kinetic_after_J": 54.45862024816341,
+      "convective_power_W": 6.225844380549571e-17,
+      "viscous_power_W": -21.820430697899546,
+      "pressure_power_W": -4.9846700104712437e-17,
+      "energy_balance_defect_J": 1.0602629885170245e-14,
+      "max_divergence_s_inv": 1.4432899320127035e-15,
+      "momentum_change_Ns": [
+        2.0253583069463124e-16,
+        2.504383822575209e-16,
+        0.0
+      ],
+      "projection": {
+        "pressure_method": "periodic-FFT-discrete-symbol",
+        "pressure_residual": 1.7026633454655066e-12,
+        "pressure_target": 1.1205723832327776e-09,
+        "pressure_converged": true,
+        "tentative_energy_J": 54.46234523950874,
+        "projected_energy_J": 54.45862024816341,
+        "momentum_change_Ns": [
+          1.535276610251047e-16,
+          1.8793975353144273e-16,
+          0.0
+        ],
+        "max_divergence_s_inv": 1.3322676295501878e-15
+      }
+    },
+    {
+      "step": 27,
+      "time_s": 0.33750000000000013,
+      "nonlinear_converged": true,
+      "nonlinear_iterations": 5,
+      "nonlinear_residual_m_s": 2.220446049250313e-16,
+      "kinetic_before_J": 54.45862024816341,
+      "kinetic_after_J": 54.18722414873485,
+      "convective_power_W": 1.940946728274174e-16,
+      "viscous_power_W": -21.71168795428476,
+      "pressure_power_W": 1.4017080191611119e-16,
+      "energy_balance_defect_J": -4.718447854656915e-15,
+      "max_divergence_s_inv": 1.4432899320127035e-15,
+      "momentum_change_Ns": [
+        1.209951448083645e-16,
+        -2.448154406653133e-16,
+        0.0
+      ],
+      "projection": {
+        "pressure_method": "periodic-FFT-discrete-symbol",
+        "pressure_residual": 1.6359709074611056e-12,
+        "pressure_target": 1.1149879785499056e-09,
+        "pressure_converged": true,
+        "tentative_energy_J": 54.190912105389536,
+        "projected_energy_J": 54.187224148734856,
+        "momentum_change_Ns": [
+          -4.332669511321846e-17,
+          1.4122017067304428e-18,
+          0.0
+        ],
+        "max_divergence_s_inv": 1.4432899320127035e-15
+      }
+    },
+    {
+      "step": 28,
+      "time_s": 0.35000000000000014,
+      "nonlinear_converged": true,
+      "nonlinear_iterations": 5,
+      "nonlinear_residual_m_s": 2.220446049250313e-16,
+      "kinetic_before_J": 54.18722414873485,
+      "kinetic_after_J": 53.91718055956912,
+      "convective_power_W": -2.304252897976795e-16,
+      "viscous_power_W": -21.603487133258604,
+      "pressure_power_W": -1.0042566324401122e-16,
+      "energy_balance_defect_J": 1.887379141862766e-15,
+      "max_divergence_s_inv": 1.3322676295501878e-15,
+      "momentum_change_Ns": [
+        -2.4469848219310617e-17,
+        -3.2333620729605903e-17,
+        0.0
+      ],
+      "projection": {
+        "pressure_method": "periodic-FFT-discrete-symbol",
+        "pressure_residual": 1.6745268572449976e-12,
+        "pressure_target": 1.1094314039082921e-09,
+        "pressure_converged": true,
+        "tentative_energy_J": 53.920831849740246,
+        "projected_energy_J": 53.91718055956912,
+        "momentum_change_Ns": [
+          3.98697916910289e-16,
+          -5.910424144532052e-17,
+          0.0
+        ],
+        "max_divergence_s_inv": 1.609823385706477e-15
+      }
+    },
+    {
+      "step": 29,
+      "time_s": 0.36250000000000016,
+      "nonlinear_converged": true,
+      "nonlinear_iterations": 5,
+      "nonlinear_residual_m_s": 2.220446049250313e-16,
+      "kinetic_before_J": 53.91718055956912,
+      "kinetic_after_J": 53.648482740392446,
+      "convective_power_W": 9.901827910742825e-17,
+      "viscous_power_W": -21.495825534134283,
+      "pressure_power_W": 6.322814115603111e-17,
+      "energy_balance_defect_J": 5.88418203051333e-15,
+      "max_divergence_s_inv": 1.4849232954361469e-15,
+      "momentum_change_Ns": [
+        -2.375896020314991e-16,
+        -1.4345189446910506e-16,
+        0.0
+      ],
+      "projection": {
+        "pressure_method": "periodic-FFT-discrete-symbol",
+        "pressure_residual": 1.6772416749153006e-12,
+        "pressure_target": 1.1039025206161273e-09,
+        "pressure_converged": true,
+        "tentative_energy_J": 53.65209772862636,
+        "projected_energy_J": 53.648482740392446,
+        "momentum_change_Ns": [
+          9.985105026500986e-17,
+          1.9991962298309869e-16,
+          0.0
+        ],
+        "max_divergence_s_inv": 1.4432899320127035e-15
+      }
+    },
+    {
+      "step": 30,
+      "time_s": 0.37500000000000017,
+      "nonlinear_converged": true,
+      "nonlinear_iterations": 5,
+      "nonlinear_residual_m_s": 2.220446049250313e-16,
+      "kinetic_before_J": 53.648482740392446,
+      "kinetic_after_J": 53.38112398452139,
+      "convective_power_W": 1.535452357887539e-17,
+      "viscous_power_W": -21.388700469683943,
+      "pressure_power_W": -4.5345063037400005e-17,
+      "energy_balance_defect_J": -8.659739592076221e-15,
+      "max_divergence_s_inv": 1.4432899320127035e-15,
+      "momentum_change_Ns": [
+        -5.635608530778434e-17,
+        8.13385640920045e-17,
+        0.0
+      ],
+      "projection": {
+        "pressure_method": "periodic-FFT-discrete-symbol",
+        "pressure_residual": 1.6232021994178672e-12,
+        "pressure_target": 1.0984011906727815e-09,
+        "pressure_converged": true,
+        "tentative_energy_J": 53.38470303174,
+        "projected_energy_J": 53.38112398452139,
+        "momentum_change_Ns": [
+          -6.143061286228793e-17,
+          3.91018994924561e-17,
+          0.0
+        ],
+        "max_divergence_s_inv": 1.6653345369377348e-15
+      }
+    },
+    {
+      "step": 31,
+      "time_s": 0.3875000000000002,
+      "nonlinear_converged": true,
+      "nonlinear_iterations": 5,
+      "nonlinear_residual_m_s": 1.6653345369377348e-16,
+      "kinetic_before_J": 53.38112398452139,
+      "kinetic_after_J": 53.115097618695486,
+      "convective_power_W": -5.062118290790346e-17,
+      "viscous_power_W": -21.282109266071622,
+      "pressure_power_W": -1.943649905138127e-17,
+      "energy_balance_defect_J": -5.9396931817445875e-15,
+      "max_divergence_s_inv": 1.4155343563970746e-15,
+      "momentum_change_Ns": [
+        1.1706086125788784e-16,
+        -4.2937409458629597e-17,
+        0.0
+      ],
+      "projection": {
+        "pressure_method": "periodic-FFT-discrete-symbol",
+        "pressure_residual": 1.692235111760643e-12,
+        "pressure_target": 1.092927276765346e-09,
+        "pressure_converged": true,
+        "tentative_energy_J": 53.118641082232365,
+        "projected_energy_J": 53.11509761869549,
+        "momentum_change_Ns": [
+          -1.2056434596154752e-16,
+          1.0879315891716412e-16,
+          0.0
+        ],
+        "max_divergence_s_inv": 1.4432899320127035e-15
+      }
+    },
+    {
+      "step": 32,
+      "time_s": 0.4000000000000002,
+      "nonlinear_converged": true,
+      "nonlinear_iterations": 5,
+      "nonlinear_residual_m_s": 2.220446049250313e-16,
+      "kinetic_before_J": 53.115097618695486,
+      "kinetic_after_J": 52.850397002910654,
+      "convective_power_W": 1.2463841097787754e-17,
+      "viscous_power_W": -21.17604926278649,
+      "pressure_power_W": 7.4825241080229e-17,
+      "energy_balance_defect_J": -1.27675647831893e-15,
+      "max_divergence_s_inv": 1.4988010832439613e-15,
+      "momentum_change_Ns": [
+        4.762804874274064e-16,
+        1.2147857144985189e-16,
+        0.0
+      ],
+      "projection": {
+        "pressure_method": "periodic-FFT-discrete-symbol",
+        "pressure_residual": 1.5969931309951474e-12,
+        "pressure_target": 1.0874806422652128e-09,
+        "pressure_converged": true,
+        "tentative_energy_J": 52.85390523654665,
+        "projected_energy_J": 52.85039700291066,
+        "momentum_change_Ns": [
+          2.593945107125583e-16,
+          -1.4260948605388125e-17,
+          0.0
+        ],
+        "max_divergence_s_inv": 1.27675647831893e-15
+      }
+    },
+    {
+      "step": 33,
+      "time_s": 0.4125000000000002,
+      "nonlinear_converged": true,
+      "nonlinear_iterations": 5,
+      "nonlinear_residual_m_s": 2.220446049250313e-16,
+      "kinetic_before_J": 52.850397002910654,
+      "kinetic_after_J": 52.58701553025346,
+      "convective_power_W": -6.424495280615097e-17,
+      "viscous_power_W": -21.070517812576433,
+      "pressure_power_W": 4.9005070933696606e-17,
+      "energy_balance_defect_J": 1.1268763699945339e-14,
+      "max_divergence_s_inv": 1.3877787807814457e-15,
+      "momentum_change_Ns": [
+        -4.2209643834460344e-17,
+        -1.92549859968062e-17,
+        0.0
+      ],
+      "projection": {
+        "pressure_method": "periodic-FFT-discrete-symbol",
+        "pressure_residual": 1.7172523051421423e-12,
+        "pressure_target": 1.0820611512246777e-09,
+        "pressure_converged": true,
+        "tentative_energy_J": 52.59048888425204,
+        "projected_energy_J": 52.58701553025346,
+        "momentum_change_Ns": [
+          1.2408429871046338e-16,
+          1.6441357907041236e-16,
+          0.0
+        ],
+        "max_divergence_s_inv": 1.4432899320127035e-15
+      }
+    },
+    {
+      "step": 34,
+      "time_s": 0.4250000000000002,
+      "nonlinear_converged": true,
+      "nonlinear_iterations": 5,
+      "nonlinear_residual_m_s": 2.220446049250313e-16,
+      "kinetic_before_J": 52.58701553025346,
+      "kinetic_after_J": 52.32494662673618,
+      "convective_power_W": 1.5528159270452072e-17,
+      "viscous_power_W": -20.96551228138202,
+      "pressure_power_W": 1.5776461233738006e-18,
+      "energy_balance_defect_J": -6.38378239159465e-15,
+      "max_divergence_s_inv": 1.4432899320127035e-15,
+      "momentum_change_Ns": [
+        -2.5995829782821095e-16,
+        1.381345183653758e-16,
+        0.0
+      ],
+      "projection": {
+        "pressure_method": "periodic-FFT-discrete-symbol",
+        "pressure_residual": 1.6932063549424935e-12,
+        "pressure_target": 1.0766686683735224e-09,
+        "pressure_converged": true,
+        "tentative_energy_J": 52.32838544787846,
+        "projected_energy_J": 52.32494662673618,
+        "momentum_change_Ns": [
+          -4.1659122659183765e-16,
+          1.2601998808864577e-16,
+          0.0
+        ],
+        "max_divergence_s_inv": 1.4155343563970746e-15
+      }
+    },
+    {
+      "step": 35,
+      "time_s": 0.4375000000000002,
+      "nonlinear_converged": true,
+      "nonlinear_iterations": 5,
+      "nonlinear_residual_m_s": 2.220446049250313e-16,
+      "kinetic_before_J": 52.32494662673618,
+      "kinetic_after_J": 52.064183751132795,
+      "convective_power_W": -1.1360026464951264e-16,
+      "viscous_power_W": -20.861030048270713,
+      "pressure_power_W": -1.0032707187480752e-16,
+      "energy_balance_defect_J": 6.106226635438361e-16,
+      "max_divergence_s_inv": 1.3877787807814457e-15,
+      "momentum_change_Ns": [
+        -1.0166900871336163e-16,
+        -1.8114704748848306e-16,
+        0.0
+      ],
+      "projection": {
+        "pressure_method": "periodic-FFT-discrete-symbol",
+        "pressure_residual": 1.685543489550634e-12,
+        "pressure_target": 1.0713030591156705e-09,
+        "pressure_converged": true,
+        "tentative_energy_J": 52.067588382752106,
+        "projected_energy_J": 52.064183751132795,
+        "momentum_change_Ns": [
+          5.833519453296483e-17,
+          -1.2961158287862504e-16,
+          0.0
+        ],
+        "max_divergence_s_inv": 1.4432899320127035e-15
+      }
+    },
+    {
+      "step": 36,
+      "time_s": 0.45000000000000023,
+      "nonlinear_converged": true,
+      "nonlinear_iterations": 5,
+      "nonlinear_residual_m_s": 2.220446049250313e-16,
+      "kinetic_before_J": 52.064183751132795,
+      "kinetic_after_J": 51.804720394815654,
+      "convective_power_W": 4.2270546282500214e-17,
+      "viscous_power_W": -20.75706850537148,
+      "pressure_power_W": 4.439802310472901e-17,
+      "energy_balance_defect_J": 2.1649348980190553e-15,
+      "max_divergence_s_inv": 1.3426759704060487e-15,
+      "momentum_change_Ns": [
+        -1.614126919612083e-17,
+        2.3895239252257965e-16,
+        0.0
+      ],
+      "projection": {
+        "pressure_method": "periodic-FFT-discrete-symbol",
+        "pressure_residual": 1.618867683205028e-12,
+        "pressure_target": 1.065964189525791e-09,
+        "pressure_converged": true,
+        "tentative_energy_J": 51.8080911768318,
+        "projected_energy_J": 51.804720394815654,
+        "momentum_change_Ns": [
+          4.0378719746878496e-17,
+          3.461036182104144e-17,
+          0.0
+        ],
+        "max_divergence_s_inv": 1.4155343563970746e-15
+      }
+    },
+    {
+      "step": 37,
+      "time_s": 0.46250000000000024,
+      "nonlinear_converged": true,
+      "nonlinear_iterations": 5,
+      "nonlinear_residual_m_s": 1.1102230246251565e-16,
+      "kinetic_before_J": 51.804720394815654,
+      "kinetic_after_J": 51.54655008159304,
+      "convective_power_W": 3.56632232492474e-18,
+      "viscous_power_W": -20.65362505780967,
+      "pressure_power_W": 4.7473679321410954e-17,
+      "energy_balance_defect_J": 7.049916206369744e-15,
+      "max_divergence_s_inv": 1.3322676295501878e-15,
+      "momentum_change_Ns": [
+        -1.784236710654025e-16,
+        -8.961682577925562e-17,
+        0.0
+      ],
+      "projection": {
+        "pressure_method": "periodic-FFT-discrete-symbol",
+        "pressure_residual": 1.7043957526272675e-12,
+        "pressure_target": 1.060651926345973e-09,
+        "pressure_converged": true,
+        "tentative_energy_J": 51.54988735054629,
+        "projected_energy_J": 51.54655008159304,
+        "momentum_change_Ns": [
+          -2.4373641072828787e-16,
+          3.2959419813196527e-17,
+          0.0
+        ],
+        "max_divergence_s_inv": 1.3877787807814457e-15
+      }
+    },
+    {
+      "step": 38,
+      "time_s": 0.47500000000000026,
+      "nonlinear_converged": true,
+      "nonlinear_iterations": 5,
+      "nonlinear_residual_m_s": 2.220446049250313e-16,
+      "kinetic_before_J": 51.54655008159304,
+      "kinetic_after_J": 51.2896663675475,
+      "convective_power_W": 3.7370576075638433e-19,
+      "viscous_power_W": -20.550697123642287,
+      "pressure_power_W": 1.709008944693777e-16,
+      "energy_balance_defect_J": -1.426636586643326e-14,
+      "max_divergence_s_inv": 1.2906342661267445e-15,
+      "momentum_change_Ns": [
+        1.2261363471232606e-16,
+        2.5181749893620556e-16,
+        0.0
+      ],
+      "projection": {
+        "pressure_method": "periodic-FFT-discrete-symbol",
+        "pressure_residual": 1.6640732785214756e-12,
+        "pressure_target": 1.0553661369824195e-09,
+        "pressure_converged": true,
+        "tentative_energy_J": 51.29297045663218,
+        "projected_energy_J": 51.2896663675475,
+        "momentum_change_Ns": [
+          -3.847728509143606e-17,
+          -1.7720331875907483e-16,
+          0.0
+        ],
+        "max_divergence_s_inv": 1.4432899320127035e-15
+      }
+    },
+    {
+      "step": 39,
+      "time_s": 0.48750000000000027,
+      "nonlinear_converged": true,
+      "nonlinear_iterations": 5,
+      "nonlinear_residual_m_s": 2.220446049250313e-16,
+      "kinetic_before_J": 51.2896663675475,
+      "kinetic_after_J": 51.03406284087509,
+      "convective_power_W": 1.4574236386072732e-16,
+      "viscous_power_W": -20.448282133793505,
+      "pressure_power_W": 6.486618012394466e-17,
+      "energy_balance_defect_J": 9.325873406851315e-15,
+      "max_divergence_s_inv": 1.4432899320127035e-15,
+      "momentum_change_Ns": [
+        8.314155096699795e-17,
+        -1.0159885720442651e-16,
+        0.0
+      ],
+      "projection": {
+        "pressure_method": "periodic-FFT-discrete-symbol",
+        "pressure_residual": 1.671472072964608e-12,
+        "pressure_target": 1.050106689502096e-09,
+        "pressure_converged": true,
+        "tentative_energy_J": 51.0373340799728,
+        "projected_energy_J": 51.03406284087509,
+        "momentum_change_Ns": [
+          2.238103497016973e-16,
+          3.0617666697909866e-17,
+          0.0
+        ],
+        "max_divergence_s_inv": 1.4849232954361469e-15
+      }
+    },
+    {
+      "step": 40,
+      "time_s": 0.5000000000000002,
+      "nonlinear_converged": true,
+      "nonlinear_iterations": 5,
+      "nonlinear_residual_m_s": 2.220446049250313e-16,
+      "kinetic_before_J": 51.03406284087509,
+      "kinetic_after_J": 50.77973312172521,
+      "convective_power_W": 7.86421144118294e-17,
+      "viscous_power_W": -20.346377531990573,
+      "pressure_power_W": 6.406996001906392e-18,
+      "energy_balance_defect_J": 2.7200464103316335e-15,
+      "max_divergence_s_inv": 1.4155343563970746e-15,
+      "momentum_change_Ns": [
+        3.8341093277610455e-16,
+        -3.135670391166261e-16,
+        0.0
+      ],
+      "projection": {
+        "pressure_method": "periodic-FFT-discrete-symbol",
+        "pressure_residual": 1.7006888109005296e-12,
+        "pressure_target": 1.0448734526294767e-09,
+        "pressure_converged": true,
+        "tentative_energy_J": 50.78297183743782,
+        "projected_energy_J": 50.77973312172521,
+        "momentum_change_Ns": [
+          1.360909651527305e-16,
+          5.262027913459541e-17,
+          0.0
+        ],
+        "max_divergence_s_inv": 1.4432899320127035e-15
+      }
+    }
+  ],
+  "primary_fields": [
+    "velocity_m_s",
+    "pressure_pa"
+  ]
+}

@@ -1,0 +1,112 @@
+{
+  "config": {
+    "ntheta": 256,
+    "nr": 64,
+    "inner_radius_m": 0.05,
+    "outer_radius_m": 0.1,
+    "viscosity_pa_s": 0.001,
+    "density_kg_m3": 1.0,
+    "pressure_gradient_pa_m": 0.01,
+    "linear_tolerance": 1e-11,
+    "max_linear_iterations": 5000,
+    "device": "cpu",
+    "linear_backend": "scipy"
+  },
+  "elapsed_s": 0.18045859597623348,
+  "compute_elapsed_s": 0.17970963846892118,
+  "linear_solve_elapsed_s": 0.13195350673049688,
+  "linear_iterations": 77,
+  "peak_cuda_allocated_bytes": null,
+  "diagnostics": {
+    "true_production_relative_residual": 7.885146796852508e-12,
+    "maximum_nonorthogonal_area_vector_m": 7.756165501526802e-15,
+    "full_matrix_unknowns": 16384,
+    "full_matrix_nnz": 81408,
+    "initial_velocity": "zero; no analytic initialization",
+    "scope": "fully developed 3D axial annular reduction; full production diffusion matrix, not general 3D Navier-Stokes",
+    "linear_backend": "scipy",
+    "device": "cpu",
+    "timing_scope": "synchronized mesh/operator/full solve before raw host export; elapsed_s additionally includes export; no plots",
+    "silent_cpu_solver_fallback": false
+  },
+  "case": "annular-poiseuille",
+  "role": "spatial",
+  "resolution": "256x64",
+  "spacing_m": 0.00078125,
+  "metrics": [
+    {
+      "name": "velocity_volume_l2",
+      "value": 0.0004202995869851784,
+      "limit": 0.03,
+      "description": "independent full-face reconstruction; continuous circular annulus reference",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "velocity_linf",
+      "value": 0.0007151027158651086,
+      "limit": 0.03,
+      "description": "independent full-face reconstruction; continuous circular annulus reference",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "flow_rate_relative_error",
+      "value": 0.00026436971526767113,
+      "limit": 0.03,
+      "description": "independent full-face reconstruction; continuous circular annulus reference",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "inner_wall_force_relative_error",
+      "value": 0.00017924887298535183,
+      "limit": 0.03,
+      "description": "independent full-face reconstruction; continuous circular annulus reference",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "outer_wall_force_relative_error",
+      "value": 5.040096921527422e-05,
+      "limit": 0.03,
+      "description": "independent full-face reconstruction; continuous circular annulus reference",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "momentum_force_balance",
+      "value": 6.902938428396033e-16,
+      "limit": 1e-09,
+      "description": "independent full-face reconstruction; continuous circular annulus reference",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "true_linear_residual",
+      "value": 7.884693830088221e-12,
+      "limit": 2e-10,
+      "description": "independent full-face reconstruction; continuous circular annulus reference",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "area_relative_error",
+      "value": 0.00010039578385825899,
+      "limit": 0.03,
+      "description": "independent full-face reconstruction; continuous circular annulus reference",
+      "unit": "1",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "reference": {
+    "pressure_gradient_pa_m": 0.01,
+    "axial_length_m": 1.0,
+    "pressure_policy": "imposed p(z)=G(1-z); no transverse pressure Poisson solve",
+    "analytic_flow_m3_s": 4.947381662032929e-05,
+    "velocity_formula": "G/(4 mu) [Ro^2-r^2-(Ro^2-Ri^2) ln(Ro/r)/ln(Ro/Ri)]",
+    "scope": "exact fully developed laminar axial reduction; not general curved 3D flow"
+  },
+  "directory": "annular-256x64"
+}
