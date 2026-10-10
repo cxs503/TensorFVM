@@ -1,0 +1,72 @@
+{
+  "converged": false,
+  "physics_accepted": false,
+  "iterations": 2,
+  "cp_definition": "(p-p_inf)/(0.5*rho*U_inf^2)",
+  "pressure_reference": 0.0,
+  "pressure_reference_description": "Prescribed outlet zero gauge pressure",
+  "wall_pressure_method": "Adjacent owner-cell pressure; no validated wall extrapolation",
+  "surface_definition": "Closed wall split into two LE-to-TE branches; upper has larger length-weighted chord-normal coordinate",
+  "surface_faces": 962,
+  "reference": {
+    "status": "missing",
+    "reason": "No independently verified matching-condition surface Cp dataset available",
+    "accuracy_accepted": false
+  },
+  "metrics": [
+    {
+      "element": "slat",
+      "surface": "upper",
+      "faces": 65,
+      "cp_min": 6.80530614673277,
+      "cp_max": 22.32087268779964,
+      "reference_relative_l2_error": null
+    },
+    {
+      "element": "slat",
+      "surface": "lower",
+      "faces": 143,
+      "cp_min": -30.57136256924622,
+      "cp_max": 21.04154532403422,
+      "reference_relative_l2_error": null
+    },
+    {
+      "element": "main",
+      "surface": "upper",
+      "faces": 228,
+      "cp_min": -5.265667256702017,
+      "cp_max": 18.44426708754023,
+      "reference_relative_l2_error": null
+    },
+    {
+      "element": "main",
+      "surface": "lower",
+      "faces": 246,
+      "cp_min": -26.548333873660386,
+      "cp_max": 14.306982635775004,
+      "reference_relative_l2_error": null
+    },
+    {
+      "element": "flap",
+      "surface": "upper",
+      "faces": 156,
+      "cp_min": -19.165648930625082,
+      "cp_max": 19.26602003300674,
+      "reference_relative_l2_error": null
+    },
+    {
+      "element": "flap",
+      "surface": "lower",
+      "faces": 124,
+      "cp_min": -13.697681906733443,
+      "cp_max": 19.71095371896884,
+      "reference_relative_l2_error": null
+    }
+  ],
+  "inputs_sha256": {
+    "fields.csv": "31d9633e3ce1ed4a27f8b501d70f7c958b5f3b7a830a7b2a1a627bdba31b4002",
+    "surface.csv": "f453eabb4ea081809366b30ec72e7cd387b1dfef1c075c291b47d2c71f119d1d",
+    "mesh.msh": "a44559b31ec5a2cc8018ded1c6222064c086d09a7bcfdb0ee0b6fcedf7f7294a",
+    "benchmark.json": "9e2f94c2842e4dd17771bb2f7988d74a99e22be987480f496b32ed33fa49385d"
+  }
+}

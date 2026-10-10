@@ -107,3 +107,5 @@ NACA三网格（64×26、128×52、256×104）全部达到稳态并通过独立�
 [实际流动重跑](verification-30p30n-flow-retry/report.md)：19,023控制体，Re=5,000,000、0°、SIMPLE＋SA。120秒内完成2步，动量残差仍为12.718，未通过数值收敛或物理精度验收。超时的部分迭代场不作为有效压力/速度或升阻力结果发布。下一步需要优先处理压力线性求解成本及流动稳定性。
 
 三段翼图件现直接展示于[几何与实际压力/速度云图](verification-30p30n-flow-preview/visual-report.md)，附原始逐单元场和[三页PDF](verification-30p30n-flow-preview/flow-report.pdf)。实际场为两个完整SIMPLE/SA迭代步的未收敛诊断，已标注状态，不计入物理验收。
+
+三段翼现有[分翼段上下表面Cp曲线与逐面数据](verification-30p30n-flow-preview/cp-report.md)，共962个壁面面元。采用相邻单元压力近似，当前实际流动未收敛，实验Cp参考缺失，参考误差为空，精度验收为False。
