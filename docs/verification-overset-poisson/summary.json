@@ -1,0 +1,396 @@
+{
+  "case": "static-overset-poisson",
+  "provenance": {
+    "matplotlib": "3.11.2",
+    "git_base": "e3c8732054853995d019c49a7a028438a95c6490",
+    "python": "3.11.15",
+    "torch": "2.14.1+cu130",
+    "numpy": "2.4.6",
+    "platform": "Linux-6.8.0-137-generic-x86_64-with-glibc2.39",
+    "torch_threads": 1,
+    "device": "cpu",
+    "source_sha256": {
+      "pyproject.toml": "7222720c67aacd63d49197202dea8e1a457b8b78a53a8cba31640846a5498172",
+      "src/tensorfvm/__init__.py": "9f8d4d3a249d695e4e841e4c9d11d7158db8a2d33e2928d3565794718e2aba3c",
+      "src/tensorfvm/backend_registry.py": "e68b95fdb7c457b921b2f1c9e3920f80ebdcdb104ca8077e10e96d2a4182a13a",
+      "src/tensorfvm/body_fitted.py": "4e633fa42c1171cf57aca5bf930827f97a30dada4e405bf3ac9c1068ba1bb7a7",
+      "src/tensorfvm/mesh_api.py": "72f4f9d724084df335dca0e561877c5423c47a7f8bfffe950d631845e2dce22d",
+      "src/tensorfvm/periodic_mac.py": "b6b823c2c7972368a30fbba14f07d1222d062d00a9fe03c769c844407bfde5eb",
+      "src/tensorfvm/runtime.py": "ff383730f34f82030f28da424819eea670f28c663d5be834f30bebc6c74a2da5",
+      "src/tensorfvm/solver.py": "7c3613f23791c6a22825bd2ba0467e2bb84013ecaedc974901452b1864a2868e",
+      "src/tensorfvm/verification/__init__.py": "2e93edad1f2e0ed881602c2f72592f32070e99f9a75433e6fa0ce4c485f52652",
+      "src/tensorfvm/verification/__main__.py": "bac1da0b8ea13da1d7e8de391d0da9fe5a69f8658d55c57d55fc9c861eb28096",
+      "src/tensorfvm/verification/audit.py": "7df05206579b07718441e0ae894e60d8a7b2543fd8e557bd1f7fb7d8586ea414",
+      "src/tensorfvm/verification/cases.py": "6cf52e2cf76334ae3ce47c77c9d4bd33e7d83ab08f2d96b2123d356b0702260e",
+      "src/tensorfvm/verification/core.py": "088114b4c8ec39a0724213bfc00f83a4356bcaca1dd2398376ef35426866e12e",
+      "src/tensorfvm/verification/dfg.py": "f07412715767d7424c5a54fccd9c8b5f4aec964f8126532d45c1f7270351e1fc",
+      "src/tensorfvm/verification/engineering.py": "51a54c163066263eba16ec3b6532c37bf1fff3cb465a3ecd02cd98ea837b8079",
+      "src/tensorfvm/verification/engineering_audit.py": "987b3a75125152a634ebd116ca9df2913bfef5fa7ad78b306c980edc9d0359a1",
+      "src/tensorfvm/verification/extended.py": "9e28876cdd9681ad8dcd4075f897264703b1e8616a0694be5def3622ce030d1e",
+      "src/tensorfvm/verification/extended_audit.py": "8b2dcc2618d566b5abbdeed34312f2c8c1fb1349b12b90675080627a2a8cf4ce",
+      "src/tensorfvm/verification/extended_cases.py": "d5f58d4aca6706642d5e5d7307af3017d2c6c4840c3b485e68c98815edfc0796",
+      "src/tensorfvm/verification/external_flow.py": "f5ccc382d32d76afd0a454cf128af9f2984552930c2e2d00a6c2b86b94239447",
+      "src/tensorfvm/verification/external_gmsh.py": "5d77ea5ccf05d18055e33cf1d74266207676f8853d170d35d709b526a93b86e9",
+      "src/tensorfvm/verification/external_matched_naca.py": "bbd3a8584d7399dcd3c8c9200ba454d00c884bffc3818009e4e4ad012bb0b64d",
+      "src/tensorfvm/verification/external_mesh_report.py": "eb1beeff5743e9ed52a6929e48b7d830ef6c95e2e244f855305a171f4989d27e",
+      "src/tensorfvm/verification/gpu.py": "1372d9c7deea0617673278b8b51220d529ca79b4a0b0b022fcd9783584c154e0",
+      "src/tensorfvm/verification/lbm.py": "0ad5bf5d1022752755f5f0ff47df597baf00dca3e64bf66e576014e6930be9a4",
+      "src/tensorfvm/verification/report.py": "d38464cbba0f152d4410589e6a66c8fe05f9f84da06ecab62d3895a8f77ead62",
+      "src/tensorfvm/verification/simple_gpu.py": "292791a63231e172ee5d0f4179656f4fc3528ca733a8329fb44c65d6e08753cd",
+      "src/tensorfvm/verification/simple_gpu_audit.py": "90a778cd314b9ab36183da98b428fbc0c4918587c80217de8fc8439e0db292f6",
+      "src/tensorfvm/overset.py": "9acde5f1fc9782b8161ba83cbcbade3bcf2aab351c291add0c11dbd5959aae52",
+      "src/tensorfvm/overset_poisson.py": "c71a513d1c2243bda4f468e16ced8a7883ffc23438b0807cfc682f430af12976",
+      "scripts/run_overset_benchmark.py": "c1a57375c8f132053507799bd42ab1e04d565573cac8038f76c3531c41a5773b"
+    }
+  },
+  "runs": [
+    {
+      "case": "static-overset-poisson",
+      "directory": "background-32",
+      "resolution": 32,
+      "config": {
+        "bounds": [
+          -2,
+          2,
+          -2,
+          2
+        ],
+        "body_radius": 0.3,
+        "component_outer_radius": 1.0,
+        "blanking_radius": 0.65,
+        "background_shape": [
+          32,
+          32
+        ],
+        "component_shape": [
+          8,
+          64
+        ]
+      },
+      "computed": {
+        "maximum_donor_constraint_residual": 5.551115123125783e-16,
+        "relative_l2_error": 0.0015691923230097672,
+        "maximum_absolute_error": 0.014235811637232865,
+        "relative_algebraic_residual": 4.685306558220072e-16,
+        "raw_interface_net_flux": -3.1131743905159897,
+        "physical_domain_integrated_source": -62.870842543403455,
+        "physical_global_conservation_defect": 0.16650757419132134,
+        "physical_global_conservation_defect_relative": 0.002648406915755445,
+        "interface_absolute_flux": 17.943187726604737,
+        "physical_boundary_diffusive_flux": -62.704334969212134,
+        "active_integrated_source": -65.81750935972804,
+        "summed_fv_balance_defect": -8.526512829121202e-14,
+        "active_cells": 1352,
+        "fringe_cells": 96,
+        "strict_local_conservation": false,
+        "navier_stokes_verified": false,
+        "error_norm_domain": "Both active component domains; overlap counted twice",
+        "wall_condition": "Scalar homogeneous Dirichlet on polygonal circular boundary",
+        "grid_0_relative_l2_error": 0.0012559610008400772,
+        "grid_1_relative_l2_error": 0.01868277372117117
+      },
+      "connectivity": {
+        "grids": [
+          {
+            "name": "background",
+            "cells": 1024,
+            "active": 904,
+            "hole": 88,
+            "fringe": 32,
+            "volume": 16.0
+          },
+          {
+            "name": "body-fitted",
+            "cells": 512,
+            "active": 448,
+            "hole": 0,
+            "fringe": 64,
+            "volume": 2.8542591263968045
+          }
+        ],
+        "orphan_receivers": 0,
+        "max_row_sum_error": 0.0,
+        "max_affine_coordinate_error": 1.1102230246251565e-16,
+        "point_value_coupling": true,
+        "conservative_flux_coupling": false
+      },
+      "metrics": [
+        {
+          "name": "grid_0_relative_l2_error",
+          "value": 0.0012559610008400772,
+          "limit": 0.03,
+          "description": "Cartesian ACTIVE scalar error",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "grid_1_relative_l2_error",
+          "value": 0.01868277372117117,
+          "limit": 0.03,
+          "description": "Body-fitted ACTIVE scalar error",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "linear_relative_residual",
+          "value": 4.685306558220072e-16,
+          "limit": 1e-10,
+          "description": "Actual coupled sparse equations",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "donor_constraint_residual",
+          "value": 5.551115123125783e-16,
+          "limit": 1e-10,
+          "description": "Simultaneous donor constraints",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "global_diffusion_balance_relative_error",
+          "value": 0.002648406915755445,
+          "limit": 0.03,
+          "description": "Unique physical rectangle minus polygonal body; not a local flux certificate",
+          "unit": "1",
+          "passed": true
+        }
+      ],
+      "passed": true,
+      "elapsed_s": 0.8745498266071081
+    },
+    {
+      "case": "static-overset-poisson",
+      "directory": "background-64",
+      "resolution": 64,
+      "config": {
+        "bounds": [
+          -2,
+          2,
+          -2,
+          2
+        ],
+        "body_radius": 0.3,
+        "component_outer_radius": 1.0,
+        "blanking_radius": 0.65,
+        "background_shape": [
+          64,
+          64
+        ],
+        "component_shape": [
+          16,
+          128
+        ]
+      },
+      "computed": {
+        "maximum_donor_constraint_residual": 7.771561172376096e-16,
+        "relative_l2_error": 0.0003431203361544939,
+        "maximum_absolute_error": 0.0031390186526729646,
+        "relative_algebraic_residual": 6.751921477549451e-16,
+        "raw_interface_net_flux": -5.394082375051882,
+        "physical_domain_integrated_source": -62.86948078349629,
+        "physical_global_conservation_defect": 0.032830491746288715,
+        "physical_global_conservation_defect_relative": 0.0005222007775019984,
+        "interface_absolute_flux": 17.611885848904073,
+        "physical_boundary_diffusive_flux": -62.836650291750004,
+        "active_integrated_source": -68.23073266680157,
+        "summed_fv_balance_defect": -3.126388037344441e-13,
+        "active_cells": 5624,
+        "fringe_cells": 188,
+        "strict_local_conservation": false,
+        "navier_stokes_verified": false,
+        "error_norm_domain": "Both active component domains; overlap counted twice",
+        "wall_condition": "Scalar homogeneous Dirichlet on polygonal circular boundary",
+        "grid_0_relative_l2_error": 0.00028034990153266243,
+        "grid_1_relative_l2_error": 0.003345990624314658
+      },
+      "connectivity": {
+        "grids": [
+          {
+            "name": "background",
+            "cells": 4096,
+            "active": 3704,
+            "hole": 332,
+            "fringe": 60,
+            "volume": 16.0
+          },
+          {
+            "name": "body-fitted",
+            "cells": 2048,
+            "active": 1920,
+            "hole": 0,
+            "fringe": 128,
+            "volume": 2.8577013528288244
+          }
+        ],
+        "orphan_receivers": 0,
+        "max_row_sum_error": 0.0,
+        "max_affine_coordinate_error": 1.1102230246251565e-16,
+        "point_value_coupling": true,
+        "conservative_flux_coupling": false
+      },
+      "metrics": [
+        {
+          "name": "grid_0_relative_l2_error",
+          "value": 0.00028034990153266243,
+          "limit": 0.03,
+          "description": "Cartesian ACTIVE scalar error",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "grid_1_relative_l2_error",
+          "value": 0.003345990624314658,
+          "limit": 0.03,
+          "description": "Body-fitted ACTIVE scalar error",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "linear_relative_residual",
+          "value": 6.751921477549451e-16,
+          "limit": 1e-10,
+          "description": "Actual coupled sparse equations",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "donor_constraint_residual",
+          "value": 7.771561172376096e-16,
+          "limit": 1e-10,
+          "description": "Simultaneous donor constraints",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "global_diffusion_balance_relative_error",
+          "value": 0.0005222007775019984,
+          "limit": 0.03,
+          "description": "Unique physical rectangle minus polygonal body; not a local flux certificate",
+          "unit": "1",
+          "passed": true
+        }
+      ],
+      "passed": true,
+      "elapsed_s": 1.929511626251042
+    },
+    {
+      "case": "static-overset-poisson",
+      "directory": "background-128",
+      "resolution": 128,
+      "config": {
+        "bounds": [
+          -2,
+          2,
+          -2,
+          2
+        ],
+        "body_radius": 0.3,
+        "component_outer_radius": 1.0,
+        "blanking_radius": 0.65,
+        "background_shape": [
+          128,
+          128
+        ],
+        "component_shape": [
+          32,
+          256
+        ]
+      },
+      "computed": {
+        "maximum_donor_constraint_residual": 1.3322676295501878e-15,
+        "relative_l2_error": 8.334819426412164e-05,
+        "maximum_absolute_error": 0.0007499660348948556,
+        "relative_algebraic_residual": 9.739949351927804e-16,
+        "raw_interface_net_flux": -6.200942882620335,
+        "physical_domain_integrated_source": -62.8691401896642,
+        "physical_global_conservation_defect": 0.007669796812798779,
+        "physical_global_conservation_defect_relative": 0.00012199620974074825,
+        "interface_absolute_flux": 17.84967197519138,
+        "physical_boundary_diffusive_flux": -62.8614703928514,
+        "active_integrated_source": -69.06241327547015,
+        "summed_fv_balance_defect": -1.5916157281026244e-12,
+        "active_cells": 22828,
+        "fringe_cells": 376,
+        "strict_local_conservation": false,
+        "navier_stokes_verified": false,
+        "error_norm_domain": "Both active component domains; overlap counted twice",
+        "wall_condition": "Scalar homogeneous Dirichlet on polygonal circular boundary",
+        "grid_0_relative_l2_error": 6.867549751698642e-05,
+        "grid_1_relative_l2_error": 0.000740720670678602
+      },
+      "connectivity": {
+        "grids": [
+          {
+            "name": "background",
+            "cells": 16384,
+            "active": 14892,
+            "hole": 1372,
+            "fringe": 120,
+            "volume": 16.0
+          },
+          {
+            "name": "body-fitted",
+            "cells": 8192,
+            "active": 7936,
+            "hole": 0,
+            "fringe": 256,
+            "volume": 2.85856229834882
+          }
+        ],
+        "orphan_receivers": 0,
+        "max_row_sum_error": 0.0,
+        "max_affine_coordinate_error": 1.1102230246251565e-16,
+        "point_value_coupling": true,
+        "conservative_flux_coupling": false
+      },
+      "metrics": [
+        {
+          "name": "grid_0_relative_l2_error",
+          "value": 6.867549751698642e-05,
+          "limit": 0.03,
+          "description": "Cartesian ACTIVE scalar error",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "grid_1_relative_l2_error",
+          "value": 0.000740720670678602,
+          "limit": 0.03,
+          "description": "Body-fitted ACTIVE scalar error",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "linear_relative_residual",
+          "value": 9.739949351927804e-16,
+          "limit": 1e-10,
+          "description": "Actual coupled sparse equations",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "donor_constraint_residual",
+          "value": 1.3322676295501878e-15,
+          "limit": 1e-10,
+          "description": "Simultaneous donor constraints",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "global_diffusion_balance_relative_error",
+          "value": 0.00012199620974074825,
+          "limit": 0.03,
+          "description": "Unique physical rectangle minus polygonal body; not a local flux certificate",
+          "unit": "1",
+          "passed": true
+        }
+      ],
+      "passed": true,
+      "elapsed_s": 6.216192027553916
+    }
+  ],
+  "passed": true,
+  "navier_stokes_verified": false,
+  "strict_local_conservation": false
+}

@@ -1,0 +1,26 @@
+{
+  "source_url": "https://arxiv.org/html/2006.10487",
+  "figure": "S4.F3",
+  "figure_image_url": "https://arxiv.org/html/2006.10487v1/finaldomain_NACA2.png",
+  "figure_sha256": "806019c5f187ed8b1607624b621928881a1408dd260d4aec62033297bd156e8e",
+  "domain_chords": [
+    36,
+    16
+  ],
+  "quarter_chord_x_from_inlet": 12,
+  "quarter_chord_y": 8,
+  "boundary_conditions": {
+    "inlet": "uniform velocity and zero pressure gradient",
+    "outlet": "fixed pressure and zero velocity gradient",
+    "top_bottom": "open boundaries; paper does not specify an exact finite-volume implementation"
+  },
+  "previous_configuration": {
+    "domain_chords": [
+      20,
+      16
+    ],
+    "leading_edge_x": 6,
+    "top_bottom": "prescribed freestream velocity"
+  },
+  "previous_matched_reference_claim": false
+}

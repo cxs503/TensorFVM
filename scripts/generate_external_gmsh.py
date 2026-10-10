@@ -10,7 +10,7 @@ from pathlib import Path
 import numpy as np
 
 
-def generate(case, output, scale=1., *, length=None, height=None, leading_x=6., leading_y=8., geometric_incidence_deg=0., open_boundaries=False):
+def generate(case, output, scale=1., *, length=None, height=None, leading_x=6., leading_y=8., geometric_incidence_deg=0., open_boundaries=False, hybrid=False):
     import gmsh
     if not np.isfinite(scale) or scale<=0:
         raise ValueError('Mesh scale must be finite and positive')
@@ -53,7 +53,35 @@ def generate(case, output, scale=1., *, length=None, height=None, leading_x=6., 
         threshold=gmsh.model.mesh.field.add('Threshold')
         for key,value in [('InField',distance),('SizeMin',wall_size),('SizeMax',outer_size),('DistMin',.025 if case=='cylinder' else .08),('DistMax',.15 if case=='cylinder' else 1.5)]:
             gmsh.model.mesh.field.setNumber(threshold,key,value)
-        gmsh.model.mesh.field.setAsBackgroundMesh(threshold)
+        background = threshold
+        if hybrid:
+            # Ordered wall-normal layers, with a triangular outer region.
+            layer = gmsh.model.mesh.field.add('BoundaryLayer')
+            gmsh.model.mesh.field.setNumbers(layer, 'CurvesList', body)
+            first_height = (.0002 if case=='cylinder' else .0005)*scale
+            thickness = .008 if case=='cylinder' else .025
+            for key, value in [('Size',first_height),('SizeFar',outer_size),
+                               ('Ratio',1.18),('Thickness',thickness),('Quads',1)]:
+                gmsh.model.mesh.field.setNumber(layer,key,value)
+            if case=='naca':
+                gmsh.model.mesh.field.setNumbers(layer,'FanPointsList',[upper[-1]])
+                gmsh.model.mesh.field.setNumbers(layer,'FanPointsSizesList',[20])
+                trailing = gmsh.model.mesh.field.add('Distance')
+                gmsh.model.mesh.field.setNumbers(trailing,'PointsList',[upper[-1]])
+                tip = gmsh.model.mesh.field.add('Threshold')
+                for key,value in [('InField',trailing),('SizeMin',.001*scale),
+                                  ('SizeMax',outer_size),('DistMin',.025),('DistMax',.25)]:
+                    gmsh.model.mesh.field.setNumber(tip,key,value)
+                te = gmsh.model.getValue(0,upper[-1],[])
+                wake = gmsh.model.mesh.field.add('Box')
+                for key,value in [('XMin',te[0]),('XMax',te[0]+3),
+                                  ('YMin',te[1]-.08),('YMax',te[1]+.08),
+                                  ('VIn',.025*scale),('VOut',outer_size),('Thickness',.15)]:
+                    gmsh.model.mesh.field.setNumber(wake,key,value)
+                background=gmsh.model.mesh.field.add('Min')
+                gmsh.model.mesh.field.setNumbers(background,'FieldsList',[threshold,tip,wake])
+            gmsh.model.mesh.field.setAsBoundaryLayer(layer)
+        gmsh.model.mesh.field.setAsBackgroundMesh(background)
         gmsh.option.setNumber('Mesh.Algorithm',6)
         gmsh.option.setNumber('Mesh.MshFileVersion',2.2)
         gmsh.option.setNumber('Mesh.Binary',0)
@@ -63,6 +91,8 @@ def generate(case, output, scale=1., *, length=None, height=None, leading_x=6., 
         gmsh.model.mesh.generate(2)
         gmsh.write(str(output))
         metadata=dict(case=case,scale=scale,domain_m=[L,H],leading_edge_unrotated_m=[leading_x,leading_y] if case=='naca' else None,geometric_incidence_deg=geometric_incidence_deg,open_boundaries=open_boundaries,gmsh_version=gmsh.__version__,algorithm='Frontal-Delaunay (Gmsh algorithm 6)',wall_target_size_m=wall_size,outer_target_size_m=outer_size,geometry='Exact circle CAD arcs' if case=='cylinder' else 'Closed NACA0012 upper/lower interpolating CAD splines through 161 cosine-spaced points',mesh_sha256=hashlib.sha256(output.read_bytes()).hexdigest(),generator_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),documentation='https://gmsh.info/doc/texinfo/gmsh.html')
+        if hybrid:
+            metadata.update(mesh_layout='quadrilateral wall layers / triangular outer region',first_layer_target_m=first_height,layer_growth_ratio=1.18,layer_thickness_target_m=thickness,trailing_edge_fan_elements=20 if case=='naca' else 0)
         output.with_suffix('.json').write_text(json.dumps(metadata,indent=2)+'\n')
         return metadata
     finally:
@@ -74,5 +104,6 @@ if __name__=='__main__':
     parser.add_argument('--case',choices=['cylinder','naca'],required=True)
     parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--scale',type=float,default=1.)
+    parser.add_argument('--hybrid',action='store_true')
     args=parser.parse_args()
-    print(json.dumps(generate(args.case,args.output,args.scale),indent=2))
+    print(json.dumps(generate(args.case,args.output,args.scale,hybrid=args.hybrid),indent=2))
