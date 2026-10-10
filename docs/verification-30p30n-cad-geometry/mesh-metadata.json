@@ -1,0 +1,158 @@
+{
+  "level": 0,
+  "options": {
+    "near_size": 0.003,
+    "far_size": 25.0,
+    "grading_distance": 100,
+    "alpha": 8.1,
+    "curvature_points": 48
+  },
+  "nodes": 8023,
+  "cells": 15004,
+  "wall_faces": {
+    "slat": 124,
+    "main": 583,
+    "flap": 211
+  },
+  "quality": {
+    "wall_nonorthogonality_max_deg": 28.995521694011188,
+    "wall_angle_over_75_count": 0,
+    "interior_nonorthogonality_max_deg": 29.136728181168646,
+    "nonpositive_centroid_projection_faces": 0,
+    "outlet_backflow_faces": 0,
+    "accepted": true,
+    "minimum_cell_area_chords2": 1.5949112905650641e-07,
+    "triangle_cells": 15004,
+    "quadrilateral_cells": 0
+  },
+  "geometry": {
+    "source_url": "https://hlpw4.s3.us-east-1.amazonaws.com/website/Workshop4.zip",
+    "archive_member": "Workshop4/AuxTestCase_HLPW4_30p30n_v1.tar.gz",
+    "archive_member_sha256": "9a6e4ae5625eb4a03cdaab22d375effcf3c3b821409daa5b1278d1c16d074127",
+    "geometry_scale": 0.05555555555555555,
+    "reference_chord": 1,
+    "mach": 0.2,
+    "reynolds": 9000000,
+    "angles_of_attack": [
+      8.1,
+      16.21,
+      21.34,
+      23.28
+    ],
+    "farfield_radius_in_chords": 500,
+    "geometry_exception": "BANC slat trailing edge is thicker than original LTPT model",
+    "experimental_limitations": "Known 3D effects, especially at high lift; source requests data be treated as a rough guide",
+    "original_sha256": {
+      "original/README.txt": "5ac35074ecc40f3889b31c9759002b550831c6a3ac32c69f661377a1232d0492",
+      "original/Geometry/README.txt": "8ed798c856de9a126706bd16f35e7fcddc507a0da10d2666cd27c593593afa04",
+      "original/Geometry/2010_30p30n_thik_te_18inches.crv.dat": "916391804b3d64f4904e23764f05ea87b496e2534fc58dbd7ff7a88566814a7f",
+      "original/Exp_Data_LTPT_Re9million/cf_exp.dat": "3c1819e02a457d6eadafc1ed9ac7fd9235bda81483aefdd371e31b2aebaa0019",
+      "original/Exp_Data_LTPT_Re9million/README.txt": "7ad0e10b8dd2f0ca12d50bd176027fafe01263f9f14ffe60623fec22f11db1be",
+      "original/Exp_Data_LTPT_Re9million/clalpha_exp.dat": "3ff4471835f0c84073125adec2c06c3974171e4fd8564b77c61e983383cd74d5",
+      "original/Exp_Data_LTPT_Re9million/cp_exp.dat": "e7371d66ee01d619dfccb85c454aeb079029eefe7a48e327a9cdb4002e4d0ba1",
+      "original/Geometry/2010_30p30n_thik_te_18inches.stp": "282ba530708e6aad503139b633260cd2c83bcf4064cc5838c83de2cdf4a25d67"
+    },
+    "cad_geometry": {
+      "source_relative_path": "original/Geometry/2010_30p30n_thik_te_18inches.stp",
+      "source_sha256": "282ba530708e6aad503139b633260cd2c83bcf4064cc5838c83de2cdf4a25d67",
+      "declared_step_unit": "INCH",
+      "occ_import_unit": "MM",
+      "mm_per_nominal_chord": 457.2,
+      "normalization_scale": 0.0021872265966754157,
+      "curve_groups": {
+        "main": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "flap": [
+          6,
+          7,
+          8
+        ],
+        "slat": [
+          9,
+          10,
+          11
+        ]
+      },
+      "representation": "original STEP BSplines; sampled profile retained as legacy polygon path"
+    }
+  },
+  "gmsh_version": "4.15.2",
+  "geometry_representation": "official-step-bspline",
+  "mesh_mode": "cad_triangle",
+  "boundary_layers": false,
+  "accuracy_qualified": false,
+  "actual_fan_point_tags": [],
+  "y_plus_measured": false,
+  "cad_sha256": "282ba530708e6aad503139b633260cd2c83bcf4064cc5838c83de2cdf4a25d67",
+  "cad_source_relative_path": "src/tensorfvm/data/30p30n-hlpw4/original/Geometry/2010_30p30n_thik_te_18inches.stp",
+  "cad_scale_mm_per_chord": 457.2,
+  "cad_normalization_scale": 0.0021872265966754157,
+  "cad_curve_tags": {
+    "main": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "flap": [
+      6,
+      7,
+      8
+    ],
+    "slat": [
+      9,
+      10,
+      11
+    ]
+  },
+  "cad_curve_types": {
+    "main": [
+      "TrimmedCurve",
+      "TrimmedCurve",
+      "TrimmedCurve",
+      "TrimmedCurve",
+      "TrimmedCurve"
+    ],
+    "flap": [
+      "TrimmedCurve",
+      "TrimmedCurve",
+      "TrimmedCurve"
+    ],
+    "slat": [
+      "TrimmedCurve",
+      "TrimmedCurve",
+      "TrimmedCurve"
+    ]
+  },
+  "cad_meshing_curve_tags": {
+    "main": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "flap": [
+      6,
+      7,
+      8
+    ],
+    "slat": [
+      9,
+      10,
+      11
+    ]
+  },
+  "cad_mesh_construction": {
+    "mesh_mode": "cad_triangle",
+    "boundary_layers": false,
+    "accuracy_qualified": false,
+    "purpose": "Exact CAD geometry control only; not a Re9M wall-resolved benchmark mesh"
+  }
+}

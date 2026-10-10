@@ -57,6 +57,14 @@ class ThreeElementMeshTests(unittest.TestCase):
         path.write_text(_TINY_GMSH, encoding="utf-8")
         return path
 
+    def test_tiny_translated_cell_has_centroid_inside_and_exact_area(self):
+        points=[(1.1,-.14),(1.1+2e-6,-.14),(1.1+2e-6,-.14+3e-7)]
+        center,area=ThreeElementMesh._centroid(points)
+        self.assertAlmostEqual(center[0],1.1+4e-6/3,places=14)
+        self.assertAlmostEqual(center[1],-.14+1e-7,places=14)
+        self.assertAlmostEqual(area,3e-13,delta=1e-22)
+        self.assertGreater(ThreeElementMesh._signed_area(points),0)
+
     def test_gmsh_mesh_builds_conservative_face_topology_and_named_surfaces(self):
         with tempfile.TemporaryDirectory() as temporary:
             mesh = ThreeElementMesh(SimpleNamespace(
@@ -114,7 +122,7 @@ class ThreeElementMeshTests(unittest.TestCase):
         comparison = compare_30p30n(result)
         self.assertAlmostEqual(comparison["computed_coefficients"]["drag_x100"], 2.0)
         self.assertAlmostEqual(comparison["relative_errors"]["lift"],
-                               abs(0.04 - 0.033243) / 0.033243)
+                               abs(0.04 - 2.167089) / 2.167089)
         self.assertIn("Diagnostic comparison only", comparison["note"])
 
 

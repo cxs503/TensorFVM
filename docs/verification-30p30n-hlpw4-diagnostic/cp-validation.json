@@ -1,0 +1,257 @@
+{
+  "geometry_validation": {
+    "representation": "official sampled polygon",
+    "max_wall_node_distance_over_c": {
+      "slat": 5.47390313110207e-17,
+      "main": 2.196066488055016e-17,
+      "flap": 5.638692324879687e-16
+    }
+  },
+  "converged": false,
+  "physics_accepted": false,
+  "reference": {
+    "source_url": "https://hlpw4.s3.us-east-1.amazonaws.com/website/Workshop4.zip",
+    "archive_member": "Workshop4/AuxTestCase_HLPW4_30p30n_v1.tar.gz",
+    "archive_member_sha256": "9a6e4ae5625eb4a03cdaab22d375effcf3c3b821409daa5b1278d1c16d074127",
+    "geometry_scale": 0.05555555555555555,
+    "reference_chord": 1,
+    "mach": 0.2,
+    "reynolds": 9000000,
+    "angles_of_attack": [
+      8.1,
+      16.21,
+      21.34,
+      23.28
+    ],
+    "farfield_radius_in_chords": 500,
+    "geometry_exception": "BANC slat trailing edge is thicker than original LTPT model",
+    "experimental_limitations": "Known 3D effects, especially at high lift; source requests data be treated as a rough guide",
+    "original_sha256": {
+      "original/README.txt": "5ac35074ecc40f3889b31c9759002b550831c6a3ac32c69f661377a1232d0492",
+      "original/Geometry/README.txt": "8ed798c856de9a126706bd16f35e7fcddc507a0da10d2666cd27c593593afa04",
+      "original/Geometry/2010_30p30n_thik_te_18inches.crv.dat": "916391804b3d64f4904e23764f05ea87b496e2534fc58dbd7ff7a88566814a7f",
+      "original/Exp_Data_LTPT_Re9million/cf_exp.dat": "3c1819e02a457d6eadafc1ed9ac7fd9235bda81483aefdd371e31b2aebaa0019",
+      "original/Exp_Data_LTPT_Re9million/README.txt": "7ad0e10b8dd2f0ca12d50bd176027fafe01263f9f14ffe60623fec22f11db1be",
+      "original/Exp_Data_LTPT_Re9million/clalpha_exp.dat": "3ff4471835f0c84073125adec2c06c3974171e4fd8564b77c61e983383cd74d5",
+      "original/Exp_Data_LTPT_Re9million/cp_exp.dat": "e7371d66ee01d619dfccb85c454aeb079029eefe7a48e327a9cdb4002e4d0ba1",
+      "original/Geometry/2010_30p30n_thik_te_18inches.stp": "282ba530708e6aad503139b633260cd2c83bcf4064cc5838c83de2cdf4a25d67"
+    },
+    "cad_geometry": {
+      "source_relative_path": "original/Geometry/2010_30p30n_thik_te_18inches.stp",
+      "source_sha256": "282ba530708e6aad503139b633260cd2c83bcf4064cc5838c83de2cdf4a25d67",
+      "declared_step_unit": "INCH",
+      "occ_import_unit": "MM",
+      "mm_per_nominal_chord": 457.2,
+      "normalization_scale": 0.0021872265966754157,
+      "curve_groups": {
+        "main": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "flap": [
+          6,
+          7,
+          8
+        ],
+        "slat": [
+          9,
+          10,
+          11
+        ]
+      },
+      "representation": "original STEP BSplines; sampled profile retained as legacy polygon path"
+    }
+  },
+  "reference_mach": 0.2,
+  "computed_compressibility": "incompressible",
+  "reference_cl": 3.1354,
+  "computed_cl": 2.470633522165296,
+  "lift_relative_error": 0.21201967144055112,
+  "pressure_metrics": [
+    {
+      "element": "slat",
+      "surface": "upper",
+      "total_taps": 16,
+      "supported_taps": 12,
+      "relative_l2_error": 0.7836762964722653
+    },
+    {
+      "element": "slat",
+      "surface": "lower",
+      "total_taps": 21,
+      "supported_taps": 13,
+      "relative_l2_error": 0.9811047818004622
+    },
+    {
+      "element": "main",
+      "surface": "upper",
+      "total_taps": 34,
+      "supported_taps": 33,
+      "relative_l2_error": 0.42405015414260716
+    },
+    {
+      "element": "main",
+      "surface": "lower",
+      "total_taps": 21,
+      "supported_taps": 21,
+      "relative_l2_error": 0.3126493773727518
+    },
+    {
+      "element": "flap",
+      "surface": "upper",
+      "total_taps": 30,
+      "supported_taps": 29,
+      "relative_l2_error": 0.284576962670918
+    },
+    {
+      "element": "flap",
+      "surface": "lower",
+      "total_taps": 18,
+      "supported_taps": 18,
+      "relative_l2_error": 0.2940910573940083
+    }
+  ],
+  "excluded_taps": [
+    {
+      "element": "slat",
+      "surface": "upper",
+      "tap": 3,
+      "x_over_c": -0.022209,
+      "reason": "outside_face_center_support"
+    },
+    {
+      "element": "slat",
+      "surface": "upper",
+      "tap": 13,
+      "x_over_c": -0.08488226,
+      "reason": "outside_face_center_support"
+    },
+    {
+      "element": "slat",
+      "surface": "upper",
+      "tap": 14,
+      "x_over_c": -0.08516179,
+      "reason": "outside_face_center_support"
+    },
+    {
+      "element": "slat",
+      "surface": "upper",
+      "tap": 15,
+      "x_over_c": -0.08523181,
+      "reason": "outside_face_center_support"
+    },
+    {
+      "element": "slat",
+      "surface": "lower",
+      "tap": 16,
+      "x_over_c": -0.08518132,
+      "reason": "outside_face_center_support"
+    },
+    {
+      "element": "slat",
+      "surface": "lower",
+      "tap": 17,
+      "x_over_c": -0.08472336,
+      "reason": "outside_face_center_support"
+    },
+    {
+      "element": "slat",
+      "surface": "lower",
+      "tap": 26,
+      "x_over_c": -0.03771041,
+      "reason": "ambiguous_x"
+    },
+    {
+      "element": "slat",
+      "surface": "lower",
+      "tap": 27,
+      "x_over_c": -0.03024274,
+      "reason": "ambiguous_x"
+    },
+    {
+      "element": "slat",
+      "surface": "lower",
+      "tap": 29,
+      "x_over_c": -0.03653137,
+      "reason": "ambiguous_x"
+    },
+    {
+      "element": "slat",
+      "surface": "lower",
+      "tap": 30,
+      "x_over_c": -0.04027647,
+      "reason": "ambiguous_x"
+    },
+    {
+      "element": "slat",
+      "surface": "lower",
+      "tap": 32,
+      "x_over_c": -0.04036047,
+      "reason": "ambiguous_x"
+    },
+    {
+      "element": "slat",
+      "surface": "lower",
+      "tap": 33,
+      "x_over_c": -0.03285959,
+      "reason": "ambiguous_x"
+    },
+    {
+      "element": "main",
+      "surface": "upper",
+      "tap": 33,
+      "x_over_c": 0.043812,
+      "reason": "outside_face_center_support"
+    },
+    {
+      "element": "flap",
+      "surface": "upper",
+      "tap": 0,
+      "x_over_c": 1.130939,
+      "reason": "outside_face_center_support"
+    }
+  ],
+  "full_pressure_coverage": false,
+  "wall_resolution": {
+    "slat": {
+      "first_cell_normal_distance_min": 9.999720106809104e-07,
+      "first_cell_normal_distance_max": 1.0000269772998629e-06,
+      "y_plus_estimate_max": 2.2657579453221293,
+      "y_plus_estimate_p95": 0.5713057626681174,
+      "method": "Molecular first-cell tangential velocity / normal distance; diagnostic only"
+    },
+    "main": {
+      "first_cell_normal_distance_min": 9.976314853474681e-07,
+      "first_cell_normal_distance_max": 1.0020900855778336e-06,
+      "y_plus_estimate_max": 1.8535175953215406,
+      "y_plus_estimate_p95": 0.49480073666393565,
+      "method": "Molecular first-cell tangential velocity / normal distance; diagnostic only"
+    },
+    "flap": {
+      "first_cell_normal_distance_min": 9.999988483353838e-07,
+      "first_cell_normal_distance_max": 1.000037053419713e-06,
+      "y_plus_estimate_max": 2.7858562185839246,
+      "y_plus_estimate_p95": 0.860954904188291,
+      "method": "Molecular first-cell tangential velocity / normal distance; diagnostic only"
+    }
+  },
+  "pressure_method": "Actual solver skew-corrected wall face pressure; prescribed outlet p_inf=0",
+  "acceptance_limit": 0.03,
+  "blockers": [
+    "Compressible experiment versus incompressible model",
+    "Geometry exception: thicker BANC slat trailing edge",
+    "Experimental three-dimensional effects/unknown uncertainty",
+    "Grid independence has not been demonstrated",
+    "Numerical residuals have not converged",
+    "Incomplete unambiguous pressure tap registration"
+  ],
+  "inputs_sha256": {
+    "mesh.msh": "dafa307cfcdd9514826a2b91b80727eca262ad30309d717144233bd5b7d05a0e",
+    "fields.csv": "541b1c533dd5b76a438e0b1cbbcb7a5e4fbf6aa93193d808ac94e76c0402081a",
+    "benchmark.json": "2a77102ebd833b57d25ed64b831804a9154ab6a637b923aa176e78845512e2fa",
+    "cp-experiment-original.dat": "e7371d66ee01d619dfccb85c454aeb079029eefe7a48e327a9cdb4002e4d0ba1"
+  }
+}

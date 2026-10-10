@@ -1,0 +1,114 @@
+{
+  "benchmark": "MDA-30P30N-Re9e+06-alpha8.1",
+  "converged": false,
+  "iterations": 70,
+  "config": {
+    "nx": 1,
+    "ny": 1,
+    "length": 999.9826511390124,
+    "height": 999.9826511390124,
+    "cylinder_x": 1.0,
+    "cylinder_y": 1.0,
+    "cylinder_radius": null,
+    "inlet_velocity": 1,
+    "reynolds": 9000000,
+    "density": 1,
+    "velocity_relaxation": 0.5,
+    "pressure_relaxation": 0.3,
+    "max_iterations": 70,
+    "tolerance": 0.001,
+    "device": "cpu",
+    "pseudo_time_step": null,
+    "mesh_type": "three-element",
+    "inlet_profile": "uniform",
+    "turbulence_model": "spalart-allmaras",
+    "turbulence_relaxation": 0.4,
+    "sa_freestream_ratio": 3,
+    "flat_plate_stretching": 4.0,
+    "body_fitted_stretching": 0.0,
+    "outer_boundary": "channel",
+    "time_step": null,
+    "inner_iterations": 1,
+    "initial_perturbation": 0.0,
+    "airfoil_code": "0012",
+    "airfoil_chord": 1.0,
+    "airfoil_x": 1.0,
+    "airfoil_y": 1.0,
+    "angle_of_attack": 8.1,
+    "mesh_file": "/home/jsyc/tensor-suite-development/TensorFVM/results/30p-hlpw4-deferred-checkpoint70-comparison/mesh.msh"
+  },
+  "mesh": {
+    "nodes": 45834,
+    "cells": 53490,
+    "boundary_faces": {
+      "slat": 208,
+      "main": 892,
+      "flap": 404,
+      "inlet": 32,
+      "outlet": 64,
+      "far-field": 32
+    }
+  },
+  "final_residuals": {
+    "iteration": 70,
+    "continuity": 7.105550630811136e-18,
+    "momentum": 1.8354495400676445,
+    "mass_imbalance": 5.684440504648909e-17,
+    "velocity_change": 1.980111548643661,
+    "u_residual": 1.6400700100656245,
+    "v_residual": 1.8354495400676445,
+    "turbulence": 0.21595073667090514,
+    "turbulence_change": 75.80188716956629,
+    "rhie_chow_flux_defect": 1.6572346623234954e-06,
+    "rhie_chow_max_normal_velocity_defect": 0.332616216702003,
+    "candidate_velocity_change": 1.980111548643661,
+    "convection_blend": 0.0
+  },
+  "aerodynamic_coefficients": {
+    "slat_drag": -0.006370592381194888,
+    "slat_lift": 0.08906707932145252,
+    "main_drag": 0.03902880204406031,
+    "main_lift": 1.9314567801996025,
+    "flap_drag": 0.3258134469274535,
+    "flap_lift": 0.45010966264424146,
+    "drag": 0.35847165659031893,
+    "lift": 2.470633522165296
+  },
+  "surface_forces": {
+    "slat": {
+      "x": -0.009428349186263427,
+      "y": 0.043640445668636334
+    },
+    "main": {
+      "x": -0.11675260120418238,
+      "y": 0.9588435562718559
+    },
+    "flap": {
+      "x": 0.12957100724338685,
+      "y": 0.24576336531926304
+    },
+    "total": {
+      "x": 0.0033900568529410535,
+      "y": 1.2482473672597552
+    }
+  },
+  "reference_comparison": {
+    "computed_coefficients": {
+      "lift": 2.470633522165296,
+      "drag": 0.35847165659031893,
+      "drag_x100": 35.847165659031894
+    },
+    "reference": {
+      "lift": 2.167089,
+      "drag_reported": 0.033243
+    },
+    "relative_errors": {
+      "lift": null,
+      "drag_if_source_is_dimensionless": null
+    },
+    "reynolds_alpha_match": false,
+    "source_url": "https://www.wolfdynamics.com/tutorials.html?id=119",
+    "note": "Diagnostic comparison only: graph-reading uncertainty, nominal stowed chord and matched geometry/conditions require verification. Cl/Cd labels corrected from the original Wolf Dynamics table."
+  },
+  "physics_acceptance": "diagnostic-only; not a validated match"
+}

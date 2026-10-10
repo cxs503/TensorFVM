@@ -1,0 +1,23 @@
+{
+  "slat": {
+    "first_cell_normal_distance_min": 9.999720106809104e-07,
+    "first_cell_normal_distance_max": 1.0000269772998629e-06,
+    "y_plus_estimate_max": 2.2657579453221293,
+    "y_plus_estimate_p95": 0.5713057626681174,
+    "method": "Molecular first-cell tangential velocity / normal distance; diagnostic only"
+  },
+  "main": {
+    "first_cell_normal_distance_min": 9.976314853474681e-07,
+    "first_cell_normal_distance_max": 1.0020900855778336e-06,
+    "y_plus_estimate_max": 1.8535175953215406,
+    "y_plus_estimate_p95": 0.49480073666393565,
+    "method": "Molecular first-cell tangential velocity / normal distance; diagnostic only"
+  },
+  "flap": {
+    "first_cell_normal_distance_min": 9.999988483353838e-07,
+    "first_cell_normal_distance_max": 1.000037053419713e-06,
+    "y_plus_estimate_max": 2.7858562185839246,
+    "y_plus_estimate_p95": 0.860954904188291,
+    "method": "Molecular first-cell tangential velocity / normal distance; diagnostic only"
+  }
+}
