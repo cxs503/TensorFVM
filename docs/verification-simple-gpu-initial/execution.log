@@ -1,0 +1,16 @@
+curved-32x16 cpu full solve start
+/home/jsyc/tensor-suite-development/TensorFVM/src/tensorfvm/sparse_simple.py:68: UserWarning: Sparse CSR tensor support is in beta state. If you miss a functionality in the sparse tensor support, please submit a feature request to https://github.com/pytorch/pytorch/issues. (Triggered internally at /__w/pytorch/pytorch/aten/src/ATen/SparseCsrTensorImpl.cpp:49.)
+  M=torch.sparse_csr_tensor(torch.as_tensor(A.indptr,device=device),torch.as_tensor(A.indices,device=device),torch.as_tensor(A.data,**opts),size=A.shape,check_invariants=True)
+curved-32x16 cuda full solve start
+curved-32x16 steady equivalent True window speed 0.695540087610621
+curved-64x32 cpu full solve start
+curved 64 32 cpu 50 momentum 1.0165779191613489e-05 SA None
+curved-64x32 cuda full solve start
+curved 64 32 cuda 50 momentum 7.810549068862013e-06 SA None
+curved-64x32 steady equivalent True window speed 1.2348933135306834
+curved-128x64 cpu full solve start
+curved 128 64 cpu 50 momentum 0.006924993647495877 SA None
+curved 128 64 cpu 100 momentum 0.0009990956504376132 SA None
+curved 128 64 cpu 150 momentum 0.0005007925801364874 SA None
+curved 128 64 cpu 200 momentum 0.00033551810015469653 SA None
+curved 128 64 cpu 250 momentum 0.00023640301517554706 SA None

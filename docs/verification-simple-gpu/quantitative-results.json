@@ -1,0 +1,119 @@
+{
+  "cases": [
+    {
+      "name": "curved-32x16",
+      "cells": 512,
+      "primary_flow_unknowns": 1536,
+      "cpu_full_solve_s": 2.91738772764802,
+      "cuda_full_solve_s": 4.640363872982562,
+      "metrics": {
+        "solver_residual": 8.209995456075333e-07,
+        "convergence_failure": 0.0,
+        "rhie_chow_flux_defect": 7.116095346242278e-10,
+        "velocity_volume_l2": 0.004204760771118038,
+        "velocity_linf": 0.007053982323063719,
+        "pressure_volume_l2": 0.008471598467336094,
+        "pressure_linf": 0.017714630591320227
+      },
+      "strict_physical_passed": true,
+      "steady_equivalent": true,
+      "window_speed": 0.6777551954397274
+    },
+    {
+      "name": "curved-64x32",
+      "cells": 2048,
+      "primary_flow_unknowns": 6144,
+      "cpu_full_solve_s": 5.507191836833954,
+      "cuda_full_solve_s": 4.90400374867022,
+      "metrics": {
+        "solver_residual": 9.897106445899e-07,
+        "convergence_failure": 0.0,
+        "rhie_chow_flux_defect": 4.2981475707978676e-12,
+        "velocity_volume_l2": 0.0015930614002881295,
+        "velocity_linf": 0.0021177036600040383,
+        "pressure_volume_l2": 0.0019976359847138957,
+        "pressure_linf": 0.00722673543572332
+      },
+      "strict_physical_passed": true,
+      "steady_equivalent": true,
+      "window_speed": 1.0591908921294815
+    },
+    {
+      "name": "curved-128x64",
+      "cells": 8192,
+      "primary_flow_unknowns": 24576,
+      "cpu_full_solve_s": 14.378722772933543,
+      "cuda_full_solve_s": 7.137669717893004,
+      "metrics": {
+        "solver_residual": 7.526222972199618e-07,
+        "convergence_failure": 0.0,
+        "rhie_chow_flux_defect": 8.842476202814433e-13,
+        "velocity_volume_l2": 0.0007459983982969478,
+        "velocity_linf": 0.0011357902070807877,
+        "pressure_volume_l2": 0.0006111027527547762,
+        "pressure_linf": 0.003221241877034361
+      },
+      "strict_physical_passed": true,
+      "steady_equivalent": true,
+      "window_speed": 1.985157869963985
+    },
+    {
+      "name": "curved-256x128",
+      "cells": 32768,
+      "primary_flow_unknowns": 98304,
+      "cpu_full_solve_s": 162.0520246438682,
+      "cuda_full_solve_s": 42.012633888982236,
+      "metrics": {
+        "solver_residual": 9.80559202576857e-07,
+        "convergence_failure": 0.0,
+        "rhie_chow_flux_defect": 7.817066265188814e-14,
+        "velocity_volume_l2": 0.0003739089329886574,
+        "velocity_linf": 0.0005873527669236349,
+        "pressure_volume_l2": 0.0002979322031948855,
+        "pressure_linf": 0.0015149078836772674
+      },
+      "strict_physical_passed": true,
+      "steady_equivalent": true,
+      "window_speed": 3.8768770864799524
+    },
+    {
+      "name": "sa-64x56",
+      "cells": 3584,
+      "primary_flow_unknowns": 14336,
+      "cpu_full_solve_s": 25.948401909321547,
+      "cuda_full_solve_s": 20.229450455866754,
+      "metrics": {
+        "solver_residual": 9.165471712523119e-06,
+        "convergence_failure": 0.0,
+        "rhie_chow_flux_defect": 6.374113341911798e-08,
+        "skin_friction_relative_error": 0.06614086819229936
+      },
+      "strict_physical_passed": false,
+      "steady_equivalent": true,
+      "window_speed": 1.2689874585887162
+    }
+  ],
+  "observed_orders": [
+    {
+      "coarse": "curved-32x16",
+      "fine": "curved-64x32",
+      "velocity_order": 1.4002218482639088,
+      "pressure_order": 2.084340495984423
+    },
+    {
+      "coarse": "curved-64x32",
+      "fine": "curved-128x64",
+      "velocity_order": 1.0945574347098734,
+      "pressure_order": 1.7088068299430292
+    },
+    {
+      "coarse": "curved-128x64",
+      "fine": "curved-256x128",
+      "velocity_order": 0.9964855941652889,
+      "pressure_order": 1.0364309082748524
+    }
+  ],
+  "producer_sha256": "f1b1f15d2b0635a1ded7f455331c60734e640a53503a59a6922a45e52b62ccc3",
+  "input_summary_sha256": "69be28fd02e4e8105a68d4e0163db0e5d8f43fdd67a7a05728aced9330f55d70",
+  "scope": "single complete solve times; separate three-repetition five-step window; measured orders, no imposed order"
+}

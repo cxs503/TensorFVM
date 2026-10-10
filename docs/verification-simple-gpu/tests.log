@@ -1,0 +1,12 @@
+........                                                                 [100%]
+=============================== warnings summary ===============================
+tests/test_sparse_simple.py::test_full_curved_simple_matches_continuous_pressure_velocity
+  /home/jsyc/tensor-suite-development/TensorFVM/src/tensorfvm/sparse_simple.py:68: UserWarning: Sparse CSR tensor support is in beta state. If you miss a functionality in the sparse tensor support, please submit a feature request to https://github.com/pytorch/pytorch/issues. (Triggered internally at /__w/pytorch/pytorch/aten/src/ATen/SparseCsrTensorImpl.cpp:49.)
+    M=torch.sparse_csr_tensor(torch.as_tensor(A.indptr,device=device),torch.as_tensor(A.indices,device=device),torch.as_tensor(A.data,**opts),size=A.shape,check_invariants=True)
+
+tests/test_sparse_simple.py::test_full_curved_simple_matches_continuous_pressure_velocity
+  /home/jsyc/tensor-suite-development/TensorFVM/src/tensorfvm/sparse_simple.py:88: UserWarning: Sparse invariant checks are implicitly disabled. Memory errors (e.g. SEGFAULT) will occur when operating on a sparse tensor which violates the invariants, but checks incur performance overhead. To silence this warning, explicitly opt in or out. See `torch.sparse.check_sparse_tensor_invariants.__doc__` for guidance.  (Triggered internally at /__w/pytorch/pytorch/aten/src/ATen/Context.cpp:848.)
+    B=B.tocsr();return torch.sparse_csr_tensor(torch.as_tensor(B.indptr,device=device),torch.as_tensor(B.indices,device=device),torch.as_tensor(B.data,**opts),size=B.shape)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+8 passed, 2 warnings in 6.12s

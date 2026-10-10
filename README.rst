@@ -376,3 +376,15 @@ and a public correlation comparison; coupling to SA wall boundaries remains
 pending. The 1800-iteration SA flat-plate diagnostic fails strict qualification.
 See `engineering and GPU roadmap <docs/engineering-gpu-roadmap.md>`_ and
 `measured CPU/CUDA report <docs/verification-gpu/report.md>`_.
+
+Full collocated SIMPLE and CPU-first case verification
+-----------------------------------------------------
+
+Conforming curved-channel Navier--Stokes manufactured solutions now exercise
+both momentum components, computed pressure and nonorthogonal Rhie--Chow
+fluxes. The optional sparse solver checks its assembled operators and true
+linear residuals. Steady SA and CPU mesh refinement distinguish convergence
+from empirical friction accuracy. CPU/CUDA consistency is a supporting check.
+See `workflow and acceptance scope <docs/full-simple-gpu-workflow.md>`_ and
+`full SIMPLE report <docs/verification-simple-gpu/report.md>`_.
+SIMPLEC, PISO and PIMPLE remain separate future implementations.

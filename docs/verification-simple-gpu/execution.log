@@ -1,0 +1,25 @@
+curved-32x16 cpu full solve start
+/home/jsyc/tensor-suite-development/TensorFVM/src/tensorfvm/sparse_simple.py:68: UserWarning: Sparse CSR tensor support is in beta state. If you miss a functionality in the sparse tensor support, please submit a feature request to https://github.com/pytorch/pytorch/issues. (Triggered internally at /__w/pytorch/pytorch/aten/src/ATen/SparseCsrTensorImpl.cpp:49.)
+  M=torch.sparse_csr_tensor(torch.as_tensor(A.indptr,device=device),torch.as_tensor(A.indices,device=device),torch.as_tensor(A.data,**opts),size=A.shape,check_invariants=True)
+/home/jsyc/tensor-suite-development/TensorFVM/src/tensorfvm/sparse_simple.py:88: UserWarning: Sparse invariant checks are implicitly disabled. Memory errors (e.g. SEGFAULT) will occur when operating on a sparse tensor which violates the invariants, but checks incur performance overhead. To silence this warning, explicitly opt in or out. See `torch.sparse.check_sparse_tensor_invariants.__doc__` for guidance.  (Triggered internally at /__w/pytorch/pytorch/aten/src/ATen/Context.cpp:848.)
+  B=B.tocsr();return torch.sparse_csr_tensor(torch.as_tensor(B.indptr,device=device),torch.as_tensor(B.indices,device=device),torch.as_tensor(B.data,**opts),size=B.shape)
+curved-32x16 cuda full solve start
+curved-32x16 steady equivalent True window speed 0.6777551954397274
+curved-64x32 cpu full solve start
+curved-64x32 cuda full solve start
+curved-64x32 steady equivalent True window speed 1.0591908921294815
+curved-128x64 cpu full solve start
+curved-128x64 cuda full solve start
+curved-128x64 steady equivalent True window speed 1.985157869963985
+curved-256x128 cpu full solve start
+curved 256 128 cpu 50 momentum 0.0006814028520097132 SA None
+curved 256 128 cpu 100 momentum 5.726302598314521e-06 SA None
+curved-256x128 cuda full solve start
+curved 256 128 cuda 50 momentum 0.0006814028534023398 SA None
+curved 256 128 cuda 100 momentum 5.726302614304877e-06 SA None
+curved-256x128 steady equivalent True window speed 3.8768770864799524
+sa-64x56 cpu full solve start
+sa 64 56 cpu 50 momentum 8.658589226759562e-05 SA 2.2835865192829344e-05
+sa-64x56 cuda full solve start
+sa 64 56 cuda 50 momentum 8.658589226759043e-05 SA 2.2835865192839106e-05
+sa-64x56 steady equivalent True window speed 1.2689874585887162

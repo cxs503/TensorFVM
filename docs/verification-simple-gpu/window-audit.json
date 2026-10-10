@@ -1,0 +1,55 @@
+{
+  "raw_evidence_verified": true,
+  "cases": [
+    {
+      "name": "curved-32x16",
+      "fields_equivalent": true,
+      "field_differences": {
+        "velocity": 7.342898260914163e-16,
+        "pressure": 1.64384080962076e-15
+      },
+      "cpu_over_cuda": 0.6777551954397274
+    },
+    {
+      "name": "curved-64x32",
+      "fields_equivalent": true,
+      "field_differences": {
+        "velocity": 2.369593573890987e-15,
+        "pressure": 8.070849499427871e-15
+      },
+      "cpu_over_cuda": 1.0591908921294815
+    },
+    {
+      "name": "curved-128x64",
+      "fields_equivalent": true,
+      "field_differences": {
+        "velocity": 1.2320741921128163e-14,
+        "pressure": 4.890592985790008e-14
+      },
+      "cpu_over_cuda": 1.985157869963985
+    },
+    {
+      "name": "curved-256x128",
+      "fields_equivalent": true,
+      "field_differences": {
+        "velocity": 2.699488737132614e-14,
+        "pressure": 2.1216075106461722e-13
+      },
+      "cpu_over_cuda": 3.8768770864799524
+    },
+    {
+      "name": "sa-64x56",
+      "fields_equivalent": true,
+      "field_differences": {
+        "velocity": 7.085249021854172e-16,
+        "pressure": 8.057994212484738e-14,
+        "nu_tilde": 3.2528705030032572e-15
+      },
+      "cpu_over_cuda": 1.2689874585887162
+    }
+  ],
+  "all_windows_equivalent": true,
+  "summary_sha256": "69be28fd02e4e8105a68d4e0163db0e5d8f43fdd67a7a05728aced9330f55d70",
+  "auditor_sha256": "d2eeb13a97957482fc4c6c292ffdc731544f61313549cee68b27707d9e4c5b02",
+  "scope": "saved final primary window fields and timing medians; no independent replay of every SIMPLE intermediate state"
+}

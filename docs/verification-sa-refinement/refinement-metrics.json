@@ -1,0 +1,45 @@
+{
+  "cases": [
+    {
+      "name": "sa-64x56",
+      "cells": 3584,
+      "primary_unknowns": 14336,
+      "mean_cf": 0.006910557575376986,
+      "cf_empirical_error": 0.06614086819229902,
+      "maximum_yplus": 2.09015502151632,
+      "converged": true
+    },
+    {
+      "name": "sa-128x112",
+      "cells": 14336,
+      "primary_unknowns": 57344,
+      "mean_cf": 0.006963844452604365,
+      "cf_empirical_error": 0.05893993883724781,
+      "maximum_yplus": 1.2348551402129264,
+      "converged": true
+    },
+    {
+      "name": "sa-256x224",
+      "cells": 57344,
+      "primary_unknowns": 229376,
+      "mean_cf": 0.007025613845862973,
+      "cf_empirical_error": 0.05059272353203044,
+      "maximum_yplus": 0.7363944662735167,
+      "converged": true
+    }
+  ],
+  "successive_grid_changes": [
+    {
+      "coarse": "sa-64x56",
+      "fine": "sa-128x112",
+      "relative_cf_change": 0.00765193386929406
+    },
+    {
+      "coarse": "sa-128x112",
+      "fine": "sa-256x224",
+      "relative_cf_change": 0.008792027944288655
+    }
+  ],
+  "producer_sha256": "6d4685c5513b1cba1c4aa424b472e53d4636f06c86a4f34eb5ed120208756d46",
+  "scope": "changes in computed mean Cf are grid sensitivity, not independent physical accuracy"
+}

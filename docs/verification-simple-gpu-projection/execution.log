@@ -1,0 +1,47 @@
+curved-32x16 cpu full solve start
+/home/jsyc/tensor-suite-development/TensorFVM/src/tensorfvm/sparse_simple.py:68: UserWarning: Sparse CSR tensor support is in beta state. If you miss a functionality in the sparse tensor support, please submit a feature request to https://github.com/pytorch/pytorch/issues. (Triggered internally at /__w/pytorch/pytorch/aten/src/ATen/SparseCsrTensorImpl.cpp:49.)
+  M=torch.sparse_csr_tensor(torch.as_tensor(A.indptr,device=device),torch.as_tensor(A.indices,device=device),torch.as_tensor(A.data,**opts),size=A.shape,check_invariants=True)
+curved-32x16 cuda full solve start
+curved-32x16 steady equivalent True window speed 0.664602289604644
+curved-64x32 cpu full solve start
+curved-64x32 cuda full solve start
+curved-64x32 steady equivalent True window speed 1.0486268159258048
+curved-128x64 cpu full solve start
+curved 128 64 cpu 50 momentum 0.000942727703275218 SA None
+curved 128 64 cpu 100 momentum 7.811790065745828e-06 SA None
+curved-128x64 cuda full solve start
+curved 128 64 cuda 50 momentum 0.0009427277032965958 SA None
+curved 128 64 cuda 100 momentum 7.811789989394143e-06 SA None
+curved-128x64 steady equivalent True window speed 2.056548685406373
+curved-256x128 cpu full solve start
+curved 256 128 cpu 50 momentum 130.39215375692226 SA None
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/jsyc/tensor-suite-development/TensorFVM/src/tensorfvm/verification/simple_gpu.py", line 138, in <module>
+    if __name__=='__main__':raise SystemExit(main())
+                                             ^^^^^^
+  File "/home/jsyc/tensor-suite-development/TensorFVM/src/tensorfvm/verification/simple_gpu.py", line 126, in main
+    print(name,device,'full solve start',flush=True);solver,raw,cp=run(kind,nx,ny,device,args.max_iterations,seed if kind=='curved' else None);raw['directory']=name+'/'+device;row=save_run(directory/device,raw);solvers[device]=solver;states[device]=state(solver)
+                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jsyc/tensor-suite-development/TensorFVM/src/tensorfvm/verification/simple_gpu.py", line 63, in run
+    s.step()
+  File "/home/jsyc/tensor-suite-development/TensorFVM/src/tensorfvm/sparse_simple.py", line 122, in step
+    metrics=super().step()
+            ^^^^^^^^^^^^^^
+  File "/data/TensorFEM/.venv/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jsyc/tensor-suite-development/TensorFVM/src/tensorfvm/body_fitted.py", line 963, in step
+    return self._steady_step()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/data/TensorFEM/.venv/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jsyc/tensor-suite-development/TensorFVM/src/tensorfvm/body_fitted.py", line 862, in _steady_step
+    self.velocity[:, component] = self._linear(
+                                  ^^^^^^^^^^^^^
+  File "/home/jsyc/tensor-suite-development/TensorFVM/src/tensorfvm/sparse_simple.py", line 116, in _linear
+    if not torch.isfinite(x).all() or residual>target*1.05:raise RuntimeError(f'sparse SIMPLE GMRES failed: {residual} > {target}')
+                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: sparse SIMPLE GMRES failed: 7.678241543233645e-09 > 5.524271728019902e-10

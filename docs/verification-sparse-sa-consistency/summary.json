@@ -1,0 +1,35 @@
+{
+  "previous_comparison_sha256": "b0fd7270326a9852240d00e1ab41ba0e4ed6999250dc297d4fcc9a8b561443a8",
+  "source_sha256": {
+    "src/tensorfvm/body_fitted.py": "4e633fa42c1171cf57aca5bf930827f97a30dada4e405bf3ac9c1068ba1bb7a7",
+    "src/tensorfvm/sparse_simple.py": "efa18d17a8ab53c227cef8b1b0961df0a8fff09b00a90eb32e7a91b4c61b445a",
+    "src/tensorfvm/solver.py": "7c3613f23791c6a22825bd2ba0467e2bb84013ecaedc974901452b1864a2868e"
+  },
+  "hardware": "NVIDIA GeForce RTX 3090",
+  "producer_sha256": "9ed413d38f8270dd1bc36d0ba11f26313571a7ea0c00978bc9ed9ca738344f30",
+  "devices": {
+    "cpu": {
+      "samples_s": [
+        3.4843925749883056
+      ],
+      "median_s": 3.4843925749883056,
+      "peak_cuda_allocated_bytes": null
+    },
+    "cuda": {
+      "samples_s": [
+        2.1004092413932085
+      ],
+      "median_s": 2.1004092413932085,
+      "peak_cuda_allocated_bytes": 51470848
+    }
+  },
+  "field_differences": {
+    "velocity": 3.6453457378732214e-16,
+    "pressure": 1.1678741228176134e-13,
+    "nu_tilde": 6.582681444545069e-16
+  },
+  "equivalent": true,
+  "cpu_over_cuda": 1.658911276107839,
+  "physical_passed": null,
+  "timing_scope": "one cold full five-step execution per device; correctness diagnostic, not a qualified performance benchmark"
+}

@@ -1,0 +1,31 @@
+{
+  "hardware": {
+    "cpu": "Intel Xeon Silver 4214R",
+    "gpu": "RTX 3090",
+    "cpu_threads": 1
+  },
+  "environment": {
+    "python": "3.11.15",
+    "torch": "2.14.1+cu130",
+    "numpy": "2.4.6",
+    "scipy": "1.17.1"
+  },
+  "additional_sources_sha256": {
+    "scripts/audit_simple_acceptance.py": "06b92061a942f11686a86c80c947137e0e8189ef8ad5890794c0f06923dcbfac",
+    "scripts/audit_simple_windows.py": "d2eeb13a97957482fc4c6c292ffdc731544f61313549cee68b27707d9e4c5b02",
+    "scripts/export_simple_curves.py": "4ef2a5c1a31f1192eb4c40bac80a731af69bdef2ddd4d23ffa50a211ea4883bd",
+    "scripts/publish_simple_profiles.py": "f1b1f15d2b0635a1ded7f455331c60734e640a53503a59a6922a45e52b62ccc3",
+    "scripts/audit_sa_refinement.py": "41050f89b5a5ec5122c2e60c97f4e91239fbd3cfd6962b4e56d58f4e0a2b3147",
+    "scripts/audit_sparse_sa_consistency.py": "1f332e8c8dcf88b965b2661403aa2f8cbde4ef013e46251b392ceb539a24ecc8",
+    "scripts/audit_steady_sa.py": "e533eab3687d06d1c975b00e4f035c2b43ee2983f9cab4f6a73a83124812ce13",
+    "scripts/publish_sa_diagnostic.py": "90fe5fd650ccfd1762b4d7589c761efcddd1098ecc18e38572c47b1302424c93",
+    "scripts/publish_sa_profiles.py": "6d4685c5513b1cba1c4aa424b472e53d4636f06c86a4f34eb5ed120208756d46",
+    "scripts/validate_sparse_sa_consistency.py": "9ed413d38f8270dd1bc36d0ba11f26313571a7ea0c00978bc9ed9ca738344f30",
+    "scripts/verify_sa_mesh_refinement.py": "1a343c3a59cca1f09955dab17132cc80e4705513cb15553f5dba9b9ea74f4ce9",
+    "tests/test_sparse_simple.py": "09cbac2921d16e674caa91155db5b38a9f53639bab68261985b4e4cebcd88e2b",
+    "tests/test_engineering_benchmarks.py": "a04d273058499beb7b25eac8cdec33d2d0f57f694b9ed402ca5de8be0cfefa11"
+  },
+  "test_result": "8 passed, 2 expected Torch CSR warnings",
+  "test_log_sha256": "7c3dae3005089af9d0be3df3ca323f72910aa3a06a684128e93a9f9a03eb94d9",
+  "scope": "case physical gates have priority; device consistency is separate; failed physical gates and partial runs retained"
+}

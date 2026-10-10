@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "equivalent": true,
+  "field_differences": {
+    "velocity": 3.6453457378732214e-16,
+    "pressure": 1.1678741228176134e-13,
+    "nu_tilde": 6.582681444545069e-16
+  },
+  "auditor_sha256": "1f332e8c8dcf88b965b2661403aa2f8cbde4ef013e46251b392ceb539a24ecc8",
+  "summary_sha256": "283a716d8f81257a18aa0c7feaa045341ba8dc3440152c4eed9088e03dda90e6",
+  "scope": "same original configuration, actual five-step histories, strict true linear residuals, exact pressure operator contract and raw CPU/CUDA field gates; no steady physics or repeated performance claim"
+}

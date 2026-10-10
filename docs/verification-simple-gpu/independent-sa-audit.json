@@ -1,0 +1,28 @@
+{
+  "raw_reconstruction_passed": true,
+  "results": [
+    {
+      "case": "sa-64x56",
+      "device": "cpu",
+      "independent_sa_residual": 4.10923523065028e-06,
+      "converged_transport": true,
+      "mean_cf": 0.006910557575376987,
+      "maximum_local_yplus": 2.09015502151632,
+      "mean_local_yplus": 0.7882361666299129,
+      "nonzero_eddy_viscosity": true
+    },
+    {
+      "case": "sa-64x56",
+      "device": "cuda",
+      "independent_sa_residual": 4.1092352306449864e-06,
+      "converged_transport": true,
+      "mean_cf": 0.006910557575376983,
+      "maximum_local_yplus": 2.0901550215163205,
+      "mean_local_yplus": 0.7882361666299129,
+      "nonzero_eddy_viscosity": true
+    }
+  ],
+  "auditor_sha256": "e533eab3687d06d1c975b00e4f035c2b43ee2983f9cab4f6a73a83124812ce13",
+  "summary_sha256": "69be28fd02e4e8105a68d4e0163db0e5d8f43fdd67a7a05728aced9330f55d70",
+  "scope": "complete final steady nonlinear SA residual, eddy viscosity closure and molecular wall traction; no empirical-reference substitution"
+}

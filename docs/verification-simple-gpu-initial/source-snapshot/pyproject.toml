@@ -1,0 +1,36 @@
+[project]
+name = "tensorfvm"
+version = "0.1.0"
+description = "PyTorch finite-volume incompressible-flow solvers with experimental distributed 3-D support"
+readme = "README.rst"
+requires-python = ">=3.10"
+dependencies = ["torch>=2.14.1"]
+
+[project.scripts]
+tensorfvm-benchmark = "tensorfvm.verification.__main__:main"
+tensorfvm-cylinder = "tensorfvm.cylinder:main"
+tensorfvm-benchmark-dfg = "tensorfvm.benchmark_dfg:main"
+tensorfvm-benchmark-airfoil = "tensorfvm.benchmark_airfoil:main"
+tensorfvm-benchmark-flat-plate = "tensorfvm.benchmark_flat_plate:main"
+tensorfvm-benchmark-cylinder-urans = "tensorfvm.benchmark_cylinder_urans:main"
+tensorfvm-benchmark-30p30n = "tensorfvm.benchmark_30p30n:main"
+tensorfvm-benchmark-cylinder-3d = "tensorfvm.benchmark_cylinder3d:main"
+tensorfvm-mesh-cylinder-3d = "tensorfvm.mesh_cylinder3d:main"
+
+[tool.setuptools.package-data]
+tensorfvm = ["data/30p30n/*.dat", "data/30p30n/README.rst"]
+
+[build-system]
+requires = ["setuptools>=84"]
+build-backend = "setuptools.build_meta"
+
+[project.optional-dependencies]
+benchmark = ["numpy>=1.24", "matplotlib>=3.7"]
+dev = ["pytest"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
