@@ -9,7 +9,9 @@
 | **三维 ABC/Beltrami 涡衰减** | **24³、32³、48³** | 真正三维的非线性压力平衡、速度/压力误差、空间约二阶、逐步守恒 | [新增报告](verification-extended/report.md) |
 | **带平均流的对流剪切波** | **16²/24²/32²，z=4** | 输运相位与衰减、非零平均动量、零压力动态尺度误差；32²/64² BGK对照 | [新增报告](verification-extended/report.md) |
 
-以上共15个正式 FVM 运行、5个实际 TensorLBM BGK 对照。
+新增 [贴体环形管](verification-engineering/report.md)：16,384 / 65,536 / 262,144 个完整矩阵未知量，速度二阶收敛，全部严格 <3%。该问题为三维充分发展流的二维截面约化。
+
+以上共18个正式 FVM 运行、5个实际 TensorLBM BGK 物理对照。
 各正式配置全部声明物理误差严格 <3%，另有独立逐步 NumPy 原场审计。
 ABC最细速度/压力 L2 误差为0.001427%/0.424980%。
 剪切波32²的单独输运分量误差为FVM 0.225186%、BGK 0.332209%。
@@ -31,3 +33,10 @@ NACA0012、DFG其他网格、SA平板、Re3900 URANS和30P30N仍按各自历史�
 当前尚未发布达标的SUBOFF、自由液面、移动体或上浮破冰流体benchmark。
 
 复现入口与模块约定：[共性工作流](benchmark-workflow.md)。
+
+## GPU、壁面函数与湍流推进
+
+[实际 CPU/CUDA 重复计时和场一致性](verification-gpu/report.md)：RTX 3090，10 项，完整预热后三次计时；最大环形网格约 7.29 倍，小网格存在减速。
+[壁面公开关联曲线](verification-wall-law-reference/report.md)在指定对数区通过；完整壁面函数 RANS 尚未认证。
+[SA 1800 次迭代严格诊断](verification-sa-diagnostic/report.md)摩阻误差 7.22%，未收敛。
+[完整推进路线与复现](engineering-gpu-roadmap.md)。

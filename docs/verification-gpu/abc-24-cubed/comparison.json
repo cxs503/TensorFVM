@@ -1,0 +1,28 @@
+{
+  "name": "abc-24-cubed",
+  "cpu_samples_s": [
+    0.6371376439929008,
+    0.6363503457978368,
+    0.633729767985642
+  ],
+  "cuda_samples_s": [
+    0.5080798706039786,
+    0.5055315531790257,
+    0.5062433490529656
+  ],
+  "cpu_median_s": 0.6363503457978368,
+  "cuda_median_s": 0.5062433490529656,
+  "cpu_over_gpu_median": 1.2570048514973353,
+  "cuda_peak_allocated_bytes": 22122496,
+  "equivalent": true,
+  "relative_field_differences": {
+    "velocity_m_s": 1.6006879415269357e-16,
+    "pressure_pa": 1.9845770123062626e-15
+  },
+  "cpu_physical_passed": true,
+  "cuda_physical_passed": true,
+  "cpu_constitutive_passed": null,
+  "cuda_constitutive_passed": null,
+  "field_comparison_scales": {},
+  "actual_cuda_solver_device": "cuda:0"
+}

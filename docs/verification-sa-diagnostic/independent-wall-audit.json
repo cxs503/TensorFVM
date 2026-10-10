@@ -1,0 +1,10 @@
+{
+  "raw_reconstruction_passed": true,
+  "physical_passed": false,
+  "force_n_m": 0.0034327559979638878,
+  "cf": 0.0068655119959277755,
+  "producer_cf": 0.006865511995927776,
+  "formula": "mu*(u_first/y_first + d_x v_first), exact no-slip normal gradient; NumPy LS tangential gradient on exported rectangular topology",
+  "fields_sha256": "6e96969b17bd41f6711a3f41ce59a2211dce2405d4498400f2a113d3495674ee",
+  "history_sha256": "92cb7ec938c19e135facdb9f828ab8abc169ebebaf9ed4e464c34fe38985a3f9"
+}

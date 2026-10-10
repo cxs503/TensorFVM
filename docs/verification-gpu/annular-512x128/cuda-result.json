@@ -1,0 +1,61 @@
+{
+  "config": {
+    "ntheta": 512,
+    "nr": 128,
+    "inner_radius_m": 0.05,
+    "outer_radius_m": 0.1,
+    "viscosity_pa_s": 0.001,
+    "density_kg_m3": 1.0,
+    "pressure_gradient_pa_m": 0.01,
+    "linear_tolerance": 1e-11,
+    "max_linear_iterations": 5000,
+    "device": "cuda",
+    "linear_backend": "torch-cg"
+  },
+  "elapsed_s": 0.07741132006049156,
+  "compute_elapsed_s": 0.07045767921954393,
+  "linear_solve_elapsed_s": 0.05728159286081791,
+  "linear_iterations": 156,
+  "peak_cuda_allocated_bytes": 104818688,
+  "history": [
+    {
+      "iteration": 1,
+      "linear_iterations": 148,
+      "relative_linear_residual": 3.1548858657562536e-12,
+      "velocity_change_m_s": 0.0031660066520902558
+    },
+    {
+      "iteration": 2,
+      "linear_iterations": 8,
+      "relative_linear_residual": 9.565218784619142e-12,
+      "velocity_change_m_s": 4.2922479806528635e-15
+    }
+  ],
+  "diagnostics": {
+    "true_production_relative_residual": 9.56654486428036e-12,
+    "maximum_nonorthogonal_area_vector_m": 3.381014001754834e-14,
+    "full_matrix_unknowns": 65536,
+    "full_matrix_nnz": 326656,
+    "initial_velocity": "zero; no analytic initialization",
+    "scope": "fully developed 3D axial annular reduction; full production diffusion matrix, not general 3D Navier-Stokes",
+    "linear_backend": "torch-cg",
+    "device": "cuda:0",
+    "timing_scope": "synchronized mesh/operator/full solve before raw host export; elapsed_s additionally includes export; no plots",
+    "silent_cpu_solver_fallback": false
+  },
+  "physical_passed": true,
+  "metrics": {
+    "velocity_volume_l2": 0.00010509791702514914,
+    "velocity_linf": 0.00018029547079944508,
+    "flow_rate_relative_error": 6.611592714370475e-05,
+    "inner_wall_force_relative_error": 4.481517446905157e-05,
+    "outer_wall_force_relative_error": 1.2599294452001589e-05,
+    "momentum_force_balance": 1.1504031083046462e-15,
+    "true_linear_residual": 9.563851699016084e-12,
+    "area_relative_error": 2.5099512950047107e-05
+  },
+  "primary_fields": [
+    "axial_velocity_m_s"
+  ],
+  "actual_solver_device": "cuda:0"
+}

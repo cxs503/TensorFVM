@@ -1,0 +1,29 @@
+{
+  "raw_reconstruction_passed": true,
+  "annular_qualified": false,
+  "annular_cases": [
+    {
+      "directory": "annular-256x64",
+      "raw_reconstruction_passed": true,
+      "physical_passed": true,
+      "unknowns": 16384
+    },
+    {
+      "directory": "annular-512x128",
+      "raw_reconstruction_passed": true,
+      "physical_passed": false,
+      "unknowns": 65536
+    },
+    {
+      "directory": "annular-1024x256",
+      "raw_reconstruction_passed": true,
+      "physical_passed": false,
+      "unknowns": 262144
+    }
+  ],
+  "wall_law_constitutive_verification": true,
+  "wall_law_physical_validation": false,
+  "summary_sha256": "a2b649e554a044425222c56a657d5a0b377cad1a47eb9ba6ce1514dcc4cff391",
+  "auditor_sha256": "d0b1e9a4eb59fe09e0e5e221dd01f6d60324646b94f1691bc7fc277d5dd252ab",
+  "scope": "full NumPy geometry/face coefficient, momentum balance and analytic flow; independent SciPy wall-law roots; no SA/industrial-flow certification"
+}

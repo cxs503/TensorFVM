@@ -1,0 +1,40 @@
+{
+  "source_sha256": {
+    "src/tensorfvm/benchmark_flat_plate.py": "392b395c81a0089d18fe4f4303334b9c07643e82df8e6272466bbdd9f274b6c6",
+    "src/tensorfvm/solver.py": "7c3613f23791c6a22825bd2ba0467e2bb84013ecaedc974901452b1864a2868e",
+    "src/tensorfvm/body_fitted.py": "4e633fa42c1171cf57aca5bf930827f97a30dada4e405bf3ac9c1068ba1bb7a7",
+    "src/tensorfvm/backend_registry.py": "e68b95fdb7c457b921b2f1c9e3920f80ebdcdb104ca8077e10e96d2a4182a13a",
+    "src/tensorfvm/mesh_api.py": "72f4f9d724084df335dca0e561877c5423c47a7f8bfffe950d631845e2dce22d",
+    "scripts/publish_sa_diagnostic.py": "90fe5fd650ccfd1762b4d7589c761efcddd1098ecc18e38572c47b1302424c93"
+  },
+  "artifacts_sha256": {
+    "64x56/cells.csv": "c36f71130aa6b32765e990d83073d23dba7358c4b704804fb9ad0ccfca63c922",
+    "64x56/fields.csv": "6e96969b17bd41f6711a3f41ce59a2211dce2405d4498400f2a113d3495674ee",
+    "64x56/history.json": "92cb7ec938c19e135facdb9f828ab8abc169ebebaf9ed4e464c34fe38985a3f9",
+    "64x56/nodes.csv": "954e4d8a5a2b500264b212d58edb476d49a3604278d95d9ea3eb0bdc5dab3da9",
+    "64x56/pressure.svg": "b1766c005696da61172886c4887b0998bb8f38939a676a662f7d7348e669905e",
+    "64x56/summary.json": "8a80efa71f3bb8b6471ece4fb01556dd22809135c50b9cd0dbb5532c3972e340",
+    "64x56/turbulence.csv": "e8c793f86a876c6e603c84cfcb01573dbab5f62c62830129dc2c9cd13423d855",
+    "64x56/velocity.svg": "55f1a574ace070a0d4e6744abc37efa4c4f49e08ff764f4e8705aae553fa47db",
+    "benchmark.json": "eb8a4b246970cadbc31edc23a522e4cf830d7d20b2ef4a590355841b99046648",
+    "fields.npz": "a747421b31e34c1d840b32844459118ef30e53179ab47ba6456c0f0789946e93",
+    "figures/eddy-viscosity.pdf": "db045acd52e3fcab366b592e0433bab104577d4e7ec409f1b5ee95c874c4d890",
+    "figures/eddy-viscosity.png": "2c8feb2b70dfded3def5424fe11e44f9dd620edbc3e6193db9a9df1e6bb3c813",
+    "figures/eddy-viscosity.svg": "8681847e5a9126b048eea3ef2b00b2e6fe5b0bdf9d839deaea031faa3f878f4d",
+    "figures/pressure.pdf": "485ce1270df7a8aceb25e5ae0c825aabb6d423f188306757c2db649a6cc3b997",
+    "figures/pressure.png": "0fec7efffef30cc97652ededcace467e8082c91ee93140f4a41286ae51623781",
+    "figures/pressure.svg": "f021cf2e4977adad2f69b7d8075ce6d0a1aad52a5b6e04a5f7d1cd9dd75af284",
+    "figures/skin-friction.pdf": "294283bf284c8c4ad44808431f879667f7617b5e5cad9a3df95e191cf96bfd5e",
+    "figures/skin-friction.png": "88266898296dd746104d791184dfb415fe99321624f657ddd44120e33fb3045b",
+    "figures/skin-friction.svg": "d329882728b872496a0257f4bb56541dd8141800af9c8b1f756dcb13dba5a8e6",
+    "figures/speed.pdf": "f722c5465aa0329b21bb4a5073198694b61cd396e23b3281ab52ada94c5ecd3b",
+    "figures/speed.png": "c73689730ac88eb87c6c17b27fe07f79118b61f9f6af753df48e49de94ff9131",
+    "figures/speed.svg": "952c367bbbd65c163d856adae9b7cc3220534cfbbabc9973a1d9db3f7c0502f6",
+    "independent-wall-audit.json": "a95f7fec495b3ff47ef3006c79ea752c2c6f97f795a5f6dcdc09ee7a204d2a27",
+    "report.md": "eb88638886bf7d137142a93a1d829b2db6c9cae6b11fd685d5de789cb38e98a4",
+    "report.pdf": "bca909b9c899c74cc1cc7460e2944ed659d954b75a1efccdd7e7076754fde957",
+    "report.rst": "8ba15b97b769cc25da0fba443d0357a18bef05d8eb494fef8583734a5357e6c6",
+    "strict-result.json": "122c48119f3003bc9569fd1fb4aaf0924f1b701f6b087afd09aa01a44db17e4d",
+    "wall-data.csv": "bfff8f3452d25a858888cc2993804a0389bba26595fecad30b53b116c39ee6ff"
+  }
+}

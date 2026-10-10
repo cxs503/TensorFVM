@@ -1,0 +1,106 @@
+{
+  "config": {
+    "nx": 128,
+    "ny": 112,
+    "length": 1.0,
+    "height": 0.2,
+    "cylinder_x": 1.0,
+    "cylinder_y": 1.0,
+    "cylinder_radius": null,
+    "inlet_velocity": 1.0,
+    "reynolds": 100000.0,
+    "density": 1.0,
+    "velocity_relaxation": 0.3,
+    "pressure_relaxation": 0.2,
+    "max_iterations": 5,
+    "tolerance": 1e-05,
+    "device": "cuda",
+    "pseudo_time_step": 0.02,
+    "mesh_type": "flat-plate",
+    "inlet_profile": "uniform",
+    "turbulence_model": "spalart-allmaras",
+    "turbulence_relaxation": 0.3,
+    "sa_freestream_ratio": 3.0,
+    "flat_plate_stretching": 4.0,
+    "body_fitted_stretching": 0.0,
+    "outer_boundary": "channel",
+    "time_step": null,
+    "inner_iterations": 1,
+    "initial_perturbation": 0.0,
+    "airfoil_code": "0012",
+    "airfoil_chord": 1.0,
+    "airfoil_x": 1.0,
+    "airfoil_y": 1.0,
+    "angle_of_attack": 0.0,
+    "mesh_file": null
+  },
+  "physical_passed": null,
+  "scope": "five matched production SA/SIMPLE iterations only; no steady convergence or 3% physical qualification",
+  "metrics": {
+    "iterations": 5,
+    "all_finite": true
+  },
+  "actual_solver_device": "cuda:0",
+  "history": [
+    {
+      "iteration": 1,
+      "continuity": 1.192755246241968e-09,
+      "momentum": 0.12488631215351681,
+      "mass_imbalance": 2.955039249318288e-06,
+      "velocity_change": 0.17665066919213934,
+      "u_residual": 0.12488631215351681,
+      "v_residual": 0.00044490152332440913,
+      "turbulence": 0.11370527153014696,
+      "turbulence_change": 0.24550221776290695
+    },
+    {
+      "iteration": 2,
+      "continuity": 8.760092805770898e-10,
+      "momentum": 0.10725469490063186,
+      "mass_imbalance": 1.961769564689172e-06,
+      "velocity_change": 0.13486783144910708,
+      "u_residual": 0.10725469490063187,
+      "v_residual": 0.0007187766712694627,
+      "turbulence": 0.09586446446274058,
+      "turbulence_change": 0.22422074989492222
+    },
+    {
+      "iteration": 3,
+      "continuity": 1.2733085866614181e-09,
+      "momentum": 0.0932595421602109,
+      "mass_imbalance": 3.1731782062158345e-06,
+      "velocity_change": 0.10390216316205392,
+      "u_residual": 0.0932595421602109,
+      "v_residual": 0.00088167440148116,
+      "turbulence": 0.08089766213765892,
+      "turbulence_change": 0.20479294972741174
+    },
+    {
+      "iteration": 4,
+      "continuity": 7.684792803193743e-10,
+      "momentum": 0.08208381027407982,
+      "mass_imbalance": 1.194924961412099e-06,
+      "velocity_change": 0.08080113184429938,
+      "u_residual": 0.08208381027407981,
+      "v_residual": 0.0009650071559042385,
+      "turbulence": 0.06833414911515005,
+      "turbulence_change": 0.18705735286812022
+    },
+    {
+      "iteration": 5,
+      "continuity": 9.124442800173375e-10,
+      "momentum": 0.07302194958016861,
+      "mass_imbalance": 2.292392974430609e-06,
+      "velocity_change": 0.06345834779559328,
+      "u_residual": 0.07302194958016861,
+      "v_residual": 0.0010004294314959821,
+      "turbulence": 0.05778109455123359,
+      "turbulence_change": 0.17086612810507387
+    }
+  ],
+  "primary_fields": [
+    "velocity_m_s",
+    "pressure_pa",
+    "nu_tilde_m2_s"
+  ]
+}

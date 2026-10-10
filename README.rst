@@ -365,3 +365,14 @@ figures. See `benchmark inventory <docs/benchmarks-index.md>`_,
 `quantitative tables <docs/verification-extended/results-tables.pdf>`_.
 DFG Re20 cylinder evidence has strict drag/lift/pressure gates; the published
 coarse case remains a physical failure despite residual convergence.
+
+Large conforming meshes and measured CUDA execution
+--------------------------------------------------
+
+The annular axial-flow reduction now solves full 16,384 / 65,536 / 262,144
+unknown sparse matrices with independent geometry/flux audits and strict 3%
+physical gates. Spalding dimensional traction has CPU/CUDA implementations
+and a public correlation comparison; coupling to SA wall boundaries remains
+pending. The 1800-iteration SA flat-plate diagnostic fails strict qualification.
+See `engineering and GPU roadmap <docs/engineering-gpu-roadmap.md>`_ and
+`measured CPU/CUDA report <docs/verification-gpu/report.md>`_.

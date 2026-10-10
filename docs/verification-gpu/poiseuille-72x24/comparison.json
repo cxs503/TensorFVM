@@ -1,0 +1,29 @@
+{
+  "name": "poiseuille-72x24",
+  "cpu_samples_s": [
+    5.196512669324875,
+    5.154110376723111,
+    5.188505437225103
+  ],
+  "cuda_samples_s": [
+    12.837160296738148,
+    12.872252682223916,
+    12.873699679039419
+  ],
+  "cpu_median_s": 5.188505437225103,
+  "cuda_median_s": 12.872252682223916,
+  "cpu_over_gpu_median": 0.4030767236561654,
+  "cuda_peak_allocated_bytes": 9159680,
+  "equivalent": true,
+  "relative_field_differences": {
+    "u_faces_m_s": 2.701413921142875e-16,
+    "v_faces_m_s": 2.004625279768947e-15,
+    "pressure_pa": 4.021681473766958e-15
+  },
+  "cpu_physical_passed": true,
+  "cuda_physical_passed": true,
+  "cpu_constitutive_passed": null,
+  "cuda_constitutive_passed": null,
+  "field_comparison_scales": {},
+  "actual_cuda_solver_device": "cuda:0"
+}

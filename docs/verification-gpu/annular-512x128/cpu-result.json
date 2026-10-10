@@ -1,0 +1,61 @@
+{
+  "config": {
+    "ntheta": 512,
+    "nr": 128,
+    "inner_radius_m": 0.05,
+    "outer_radius_m": 0.1,
+    "viscosity_pa_s": 0.001,
+    "density_kg_m3": 1.0,
+    "pressure_gradient_pa_m": 0.01,
+    "linear_tolerance": 1e-11,
+    "max_linear_iterations": 5000,
+    "device": "cpu",
+    "linear_backend": "torch-cg"
+  },
+  "elapsed_s": 0.8833565432578325,
+  "compute_elapsed_s": 0.8812802936881781,
+  "linear_solve_elapsed_s": 0.7283537313342094,
+  "linear_iterations": 156,
+  "peak_cuda_allocated_bytes": null,
+  "history": [
+    {
+      "iteration": 1,
+      "linear_iterations": 148,
+      "relative_linear_residual": 3.1361430312293745e-12,
+      "velocity_change_m_s": 0.003166006652090251
+    },
+    {
+      "iteration": 2,
+      "linear_iterations": 8,
+      "relative_linear_residual": 9.12985946118415e-12,
+      "velocity_change_m_s": 5.3783475069402176e-15
+    }
+  ],
+  "diagnostics": {
+    "true_production_relative_residual": 9.133116702247344e-12,
+    "maximum_nonorthogonal_area_vector_m": 3.473759366094675e-14,
+    "full_matrix_unknowns": 65536,
+    "full_matrix_nnz": 326656,
+    "initial_velocity": "zero; no analytic initialization",
+    "scope": "fully developed 3D axial annular reduction; full production diffusion matrix, not general 3D Navier-Stokes",
+    "linear_backend": "torch-cg",
+    "device": "cpu",
+    "timing_scope": "synchronized mesh/operator/full solve before raw host export; elapsed_s additionally includes export; no plots",
+    "silent_cpu_solver_fallback": false
+  },
+  "physical_passed": true,
+  "metrics": {
+    "velocity_volume_l2": 0.00010509791702492953,
+    "velocity_linf": 0.00018029547079959706,
+    "flow_rate_relative_error": 6.611592714329385e-05,
+    "inner_wall_force_relative_error": 4.4815174469199806e-05,
+    "outer_wall_force_relative_error": 1.2599294451813615e-05,
+    "momentum_force_balance": 1.2654434191351107e-15,
+    "true_linear_residual": 9.131975197441535e-12,
+    "area_relative_error": 2.5099512950047107e-05
+  },
+  "primary_fields": [
+    "axial_velocity_m_s"
+  ],
+  "actual_solver_device": "cpu"
+}

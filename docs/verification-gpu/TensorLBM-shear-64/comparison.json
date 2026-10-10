@@ -1,0 +1,30 @@
+{
+  "name": "TensorLBM-shear-64",
+  "cpu_samples_s": [
+    0.23076740186661482,
+    0.23658513464033604,
+    0.22838029731065035
+  ],
+  "cuda_samples_s": [
+    0.1505930246785283,
+    0.1512733493000269,
+    0.155567467212677
+  ],
+  "cpu_median_s": 0.23076740186661482,
+  "cuda_median_s": 0.1512733493000269,
+  "cpu_over_gpu_median": 1.5254993885864454,
+  "cuda_peak_allocated_bytes": 10431488,
+  "equivalent": true,
+  "relative_field_differences": {
+    "velocity_m_s": 2.3550166808337477e-14,
+    "pressure_pa": 8.800064429744379e-13
+  },
+  "cpu_physical_passed": true,
+  "cuda_physical_passed": true,
+  "cpu_constitutive_passed": null,
+  "cuda_constitutive_passed": null,
+  "field_comparison_scales": {
+    "pressure_pa": 0.745
+  },
+  "actual_cuda_solver_device": "cuda:0"
+}

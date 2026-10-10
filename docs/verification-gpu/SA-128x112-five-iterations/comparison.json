@@ -1,0 +1,29 @@
+{
+  "name": "SA-128x112-five-iterations",
+  "cpu_samples_s": [
+    118.77622091863304,
+    119.04970539640635,
+    118.80939201451838
+  ],
+  "cuda_samples_s": [
+    17.551012508571148,
+    17.175277301110327,
+    17.081078278832138
+  ],
+  "cpu_median_s": 118.80939201451838,
+  "cuda_median_s": 17.175277301110327,
+  "cpu_over_gpu_median": 6.9174657230621674,
+  "cuda_peak_allocated_bytes": 30834176,
+  "equivalent": false,
+  "relative_field_differences": {
+    "velocity_m_s": 1.3343970231764065e-06,
+    "pressure_pa": 0.005749264850919307,
+    "nu_tilde_m2_s": 5.773960259250898e-09
+  },
+  "cpu_physical_passed": null,
+  "cuda_physical_passed": null,
+  "cpu_constitutive_passed": null,
+  "cuda_constitutive_passed": null,
+  "field_comparison_scales": {},
+  "actual_cuda_solver_device": "cuda:0"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "taylor-green-64",
+  "cpu_samples_s": [
+    1.704223120585084,
+    1.7392748538404703,
+    1.7349108587950468
+  ],
+  "cuda_samples_s": [
+    1.173520271666348,
+    1.1792576583102345,
+    1.1831399695947766
+  ],
+  "cpu_median_s": 1.7349108587950468,
+  "cuda_median_s": 1.1792576583102345,
+  "cpu_over_gpu_median": 1.4711889692376567,
+  "cuda_peak_allocated_bytes": 26476544,
+  "equivalent": true,
+  "relative_field_differences": {
+    "velocity_m_s": 1.1996574925245894e-16,
+    "pressure_pa": 1.557686668585596e-15
+  },
+  "cpu_physical_passed": true,
+  "cuda_physical_passed": true,
+  "cpu_constitutive_passed": null,
+  "cuda_constitutive_passed": null,
+  "field_comparison_scales": {},
+  "actual_cuda_solver_device": "cuda:0"
+}
