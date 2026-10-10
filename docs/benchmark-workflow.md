@@ -54,3 +54,20 @@ OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 PYTHONPATH=src   python scripts/reproduce_pe
 ## 对照与优势
 
 报告展示FVM实际速度精度、不可压压力约束、相容面质量、逐步能量账本及主状态存储结构。LBM压力更准时如实记录。单次CPU时间、不同z维度和步数不能证明FVM更快；主数组字节不是峰值内存。保留LBM局部更新和GPU融合优势，后续以同精度、同维度的总成本对比。
+
+## 新增案例入口
+
+- 三维 ABC/Beltrami 与带平均流剪切波：
+  `python -m tensorfvm.verification.extended --output results/extended --lbm-repo ../TensorLBM`
+- DFG Re20 的完整证据与严格 Cd/Cl/压力差门：
+  `python -m tensorfvm.verification.dfg --output results/dfg --grids 64x24 128x48 256x96`
+- 从已验算原场生成新增案例的详细表格与同网格 LBM 曲线：
+  `python scripts/summarize_extended_benchmarks.py --directory results/extended`
+
+以上扩展共用 `verification/core.py` 的指标门、原场导出、来源和哈希，
+以及 `verification/report.py` 的论文绘图输出；实际方程仍调用现有生产求解器。
+`extended_audit.py` 独立重建每个 MAC/BGK 接受步；圆柱侧审计限定为保存的
+壁面压力/梯度牵引积分和权威面质量通量，没有声称独立复算全部 SIMPLE。
+零参考压力采用事先声明的动态尺度绝对误差。三维 ABC 不与二维 D2Q9 比较。
+
+当前已交付范围与失败案例见 [benchmark 总览](benchmarks-index.md)。

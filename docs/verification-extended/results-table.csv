@@ -1,0 +1,10 @@
+Case,Grid,Role,Velocity L2 (%),Pressure metric (%),Shear L2 (%),Pass
+abc,24x24x24,spatial,0.005699,1.69278,-,True
+abc,32x32x32,spatial,0.003209,0.954533,-,True
+abc,48x48x48,spatial,0.001427,0.42498,-,True
+advected-shear,16x16x4,spatial,0.620363,0,0.895360,True
+advected-shear,24x24x4,spatial,0.276903,0,0.399650,True
+advected-shear,32x32x4,spatial,0.156024,0,0.225186,True
+abc,16x16x16,negative-control,0.012786,3.78203,-,False
+advected-shear-lbm,32x32,comparison,0.230176,1.42962e-10,0.332209,True
+advected-shear-lbm,64x64,comparison,0.054381,1.78702e-10,0.078488,True

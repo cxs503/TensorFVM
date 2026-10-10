@@ -1,0 +1,75 @@
+{
+  "case": "advected-shear-lbm",
+  "role": "comparison",
+  "resolution": "32x32",
+  "spacing_m": 0.19634954084936207,
+  "time_s": 0.5,
+  "pressure_time_s": 0.5,
+  "iterations": 108,
+  "elapsed_s": 0.07958539016544819,
+  "provenance": {
+    "repository": "/home/jsyc/tensor-suite-development/TensorLBM",
+    "git_base": "cd69ffa874bcb461f833a881bdd79c2680c6d7a7",
+    "source_sha256": {
+      "src/tensorlbm/__init__.py": "4390f53698f6ee62273eb8ccf074310b55e8c65c0c9c733e4962e3f25da0cb56",
+      "src/tensorlbm/_version.py": "56b5e91c3bb77ab933c25fd65eba883419bdc5691cc94cb9dc840e8f4e3674eb",
+      "src/tensorlbm/d2q9.py": "1065c3093e07dfa186d729412c4081c7e4ba0925db223e8083ff007d457adf4d",
+      "src/tensorlbm/solver.py": "6cef9523e393f4d584ef01620074c945fc94e44521884ff308ce25b7b59c39b3",
+      "src/tensorlbm/boundaries.py": "07810d051c674b68e1777e60074358affa7362c7521ec7e8d18f0919456d5cca"
+    }
+  },
+  "config": {
+    "nx": 32,
+    "ny": 32,
+    "length_m": 6.283185307179586,
+    "time_step_s": 0.004629629629629629,
+    "tau": 0.5360253097394979,
+    "viscosity_pa_s": 0.1,
+    "density_kg_m3": 1.0,
+    "physical_speed_scale_m_s": 42.41150082346221,
+    "mach_target": 0.05,
+    "actual_initial_mach": 0.04985056907057136
+  },
+  "reference": {
+    "scope": "same continuum shear; node versus face layouts; BGK baseline only",
+    "precision": "float64 populations; unchanged upstream float32 weights",
+    "pressure_normalization": "absolute EOS pressure / initial dynamic pressure",
+    "initialization": "uniform density, equilibrium with analytic velocity; no mass correction"
+  },
+  "metrics": [
+    {
+      "name": "velocity_l2",
+      "value": 0.002301756230876621,
+      "limit": 0.03,
+      "description": "all components at their actual staggered face positions",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "velocity_linf",
+      "value": 0.0033219662128853144,
+      "limit": 0.03,
+      "description": "peak-normalized maximum face velocity error",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "shear_velocity_l2",
+      "value": 0.0033220869791008643,
+      "limit": 0.03,
+      "description": "transported shear component; excludes constant mean flow",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "pressure_dynamic_scaled_linf",
+      "value": 1.429617867467156e-12,
+      "limit": 0.03,
+      "description": "zero analytic pressure: absolute error normalized by initial dynamic pressure",
+      "unit": "1",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "directory": "lbm-shear-32"
+}

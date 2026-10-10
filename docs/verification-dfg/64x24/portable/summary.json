@@ -1,0 +1,58 @@
+{
+  "converged": true,
+  "iterations": 975,
+  "config": {
+    "nx": 64,
+    "ny": 24,
+    "length": 2.2,
+    "height": 0.41,
+    "cylinder_x": 0.2,
+    "cylinder_y": 0.2,
+    "cylinder_radius": 0.05,
+    "inlet_velocity": 0.2,
+    "reynolds": 20,
+    "density": 1,
+    "velocity_relaxation": 0.7,
+    "pressure_relaxation": 0.3,
+    "max_iterations": 1500,
+    "tolerance": 1e-06,
+    "device": "cpu",
+    "pseudo_time_step": null,
+    "mesh_type": "body-fitted",
+    "inlet_profile": "parabolic",
+    "turbulence_model": "laminar",
+    "turbulence_relaxation": 0.5,
+    "sa_freestream_ratio": 3.0,
+    "flat_plate_stretching": 4.0,
+    "body_fitted_stretching": 0.0,
+    "outer_boundary": "channel",
+    "time_step": null,
+    "inner_iterations": 1,
+    "initial_perturbation": 0.0,
+    "airfoil_code": "0012",
+    "airfoil_chord": 1.0,
+    "airfoil_x": 1.0,
+    "airfoil_y": 1.0,
+    "angle_of_attack": 0.0,
+    "mesh_file": null
+  },
+  "final_residuals": {
+    "iteration": 975,
+    "continuity": 2.3830312485132034e-10,
+    "momentum": 9.956781039403143e-07,
+    "mass_imbalance": 4.745200670193981e-09,
+    "velocity_change": 6.655416201657716e-08,
+    "u_residual": 9.956781039403143e-07,
+    "v_residual": 1.6485893734690935e-07
+  },
+  "aerodynamic_coefficients": {
+    "drag": 6.324792361899411,
+    "lift": 0.015101713971121781
+  },
+  "surface_forces": {
+    "cylinder": {
+      "x": 0.012649584723798825,
+      "y": 3.020342794224357e-05
+    }
+  }
+}

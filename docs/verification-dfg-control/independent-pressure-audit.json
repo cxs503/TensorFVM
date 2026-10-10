@@ -1,0 +1,14 @@
+{
+  "cases": [
+    {
+      "directory": "16x8",
+      "pressure_difference_pa": 0.09792787840368566,
+      "raw_reconstruction_passed": true,
+      "physical_passed": false,
+      "fields_sha256": "1718a9a46026456fd60450c73bca62282ee81b7d9d7de7f0d636974d345d21a3"
+    }
+  ],
+  "source_sha256": "2026baa224179100bf1a34f1d0a78009eb0a548b5e53d58ec1649f00a892fda5",
+  "summary_sha256": "8b24d460ba930dc0b14a5f806267762e118615c012c8a881b621336b4bfe5c58",
+  "scope": "independent NumPy least-squares pressure gradient, polygon-wall extrapolation/front-rear interpolation and actual mass/residual gates; does not certify accuracy when reference gates fail"
+}

@@ -1,0 +1,118 @@
+{
+  "case": "dfg-re20",
+  "role": "spatial",
+  "resolution": "64x24",
+  "spacing_m": 0.015625,
+  "config": {
+    "nx": 64,
+    "ny": 24,
+    "length": 2.2,
+    "height": 0.41,
+    "cylinder_x": 0.2,
+    "cylinder_y": 0.2,
+    "cylinder_radius": 0.05,
+    "inlet_velocity": 0.2,
+    "reynolds": 20,
+    "density": 1,
+    "velocity_relaxation": 0.7,
+    "pressure_relaxation": 0.3,
+    "max_iterations": 1500,
+    "tolerance": 1e-06,
+    "device": "cpu",
+    "pseudo_time_step": null,
+    "mesh_type": "body-fitted",
+    "inlet_profile": "parabolic",
+    "turbulence_model": "laminar",
+    "turbulence_relaxation": 0.5,
+    "sa_freestream_ratio": 3.0,
+    "flat_plate_stretching": 4.0,
+    "body_fitted_stretching": 0.0,
+    "outer_boundary": "channel",
+    "time_step": null,
+    "inner_iterations": 1,
+    "initial_perturbation": 0.0,
+    "airfoil_code": "0012",
+    "airfoil_chord": 1.0,
+    "airfoil_x": 1.0,
+    "airfoil_y": 1.0,
+    "angle_of_attack": 0.0,
+    "mesh_file": null
+  },
+  "elapsed_s": 307.1602853741497,
+  "iterations": 975,
+  "converged": true,
+  "computed": {
+    "drag": 6.324792361899411,
+    "lift": 0.015101713971121781,
+    "pressure_difference_pa": 0.13099148857105095
+  },
+  "reference": {
+    "values": {
+      "drag": 5.57953523384,
+      "lift": 0.010618948146,
+      "pressure_difference_pa": 0.11752016697
+    },
+    "url": "https://wwwold.mathematik.tu-dortmund.de/~featflow/en/benchmarks/cfdbenchmarking/flow/dfg_benchmark1_re20.html",
+    "pressure_sampling": "least-squares extrapolate owner pressure to polygon wall-face centers, periodic linear angle interpolation at front/rear; no exact pressure imposed"
+  },
+  "metrics": [
+    {
+      "name": "drag_relative_error",
+      "value": 0.1335697503152971,
+      "limit": 0.03,
+      "description": "DFG high-accuracy reference; pressure uses linear wall extrapolation and angle interpolation",
+      "unit": "1",
+      "passed": false
+    },
+    {
+      "name": "lift_relative_error",
+      "value": 0.4221478213744148,
+      "limit": 0.03,
+      "description": "DFG high-accuracy reference; pressure uses linear wall extrapolation and angle interpolation",
+      "unit": "1",
+      "passed": false
+    },
+    {
+      "name": "pressure_difference_pa_relative_error",
+      "value": 0.11462987118193795,
+      "limit": 0.03,
+      "description": "DFG high-accuracy reference; pressure uses linear wall extrapolation and angle interpolation",
+      "unit": "1",
+      "passed": false
+    },
+    {
+      "name": "solver_residual",
+      "value": 9.956781039403143e-07,
+      "limit": 1e-06,
+      "description": "final actual SIMPLE residual",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "convergence_failure",
+      "value": 0.0,
+      "limit": 0.5,
+      "description": "explicit convergence required",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "relative_boundary_mass_imbalance",
+      "value": 4.745200699282331e-09,
+      "limit": 1e-06,
+      "description": "authoritative boundary face mass",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "scaled_face_divergence",
+      "value": 1.6900851809368928e-08,
+      "limit": 1e-06,
+      "description": "finite-volume cell continuity from actual mass flux",
+      "unit": "1",
+      "passed": true
+    }
+  ],
+  "passed": false,
+  "directory": "64x24"
+}

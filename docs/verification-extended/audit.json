@@ -1,0 +1,63 @@
+{
+  "raw_reconstruction_passed": true,
+  "benchmark_passed": true,
+  "cases": [
+    {
+      "directory": "abc-24",
+      "steps": 20,
+      "raw_reconstruction_passed": true,
+      "benchmark_passed": true
+    },
+    {
+      "directory": "abc-32",
+      "steps": 20,
+      "raw_reconstruction_passed": true,
+      "benchmark_passed": true
+    },
+    {
+      "directory": "abc-48",
+      "steps": 20,
+      "raw_reconstruction_passed": true,
+      "benchmark_passed": true
+    },
+    {
+      "directory": "shear-16",
+      "steps": 50,
+      "raw_reconstruction_passed": true,
+      "benchmark_passed": true
+    },
+    {
+      "directory": "shear-24",
+      "steps": 50,
+      "raw_reconstruction_passed": true,
+      "benchmark_passed": true
+    },
+    {
+      "directory": "shear-32",
+      "steps": 50,
+      "raw_reconstruction_passed": true,
+      "benchmark_passed": true
+    },
+    {
+      "directory": "control-abc-16",
+      "steps": 20,
+      "raw_reconstruction_passed": true,
+      "benchmark_passed": false
+    },
+    {
+      "directory": "lbm-shear-32",
+      "steps": 108,
+      "raw_reconstruction_passed": true,
+      "benchmark_passed": true
+    },
+    {
+      "directory": "lbm-shear-64",
+      "steps": 216,
+      "raw_reconstruction_passed": true,
+      "benchmark_passed": true
+    }
+  ],
+  "summary_sha256": "584afa01acdfc684d6fc0ec7560ec333b5af8b4596ccfdcbd4aca732a4b1c517",
+  "auditor_sha256": "8b2dcc2618d566b5abbdeed34312f2c8c1fb1349b12b90675080627a2a8cf4ce",
+  "scope": "independent NumPy analytic references and every accepted MAC/BGK step"
+}
