@@ -1,0 +1,29 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "case": "sa-64x56",
+      "device": "cpu",
+      "cells": 3584,
+      "coarse_lu_independent_residual": 8.240581314439107e-15,
+      "reused_inputs_identical": true
+    },
+    {
+      "case": "sa-128x112",
+      "device": "cpu",
+      "cells": 14336,
+      "coarse_lu_independent_residual": 1.2026240569700402e-14,
+      "reused_inputs_identical": true
+    },
+    {
+      "case": "sa-256x224",
+      "device": "cuda",
+      "cells": 57344,
+      "coarse_lu_independent_residual": 1.235732390138972e-14,
+      "reused_inputs_identical": false
+    }
+  ],
+  "auditor_sha256": "41050f89b5a5ec5122c2e60c97f4e91239fbd3cfd6962b4e56d58f4e0a2b3147",
+  "summary_sha256": "871fd515be46beb7c3517b5620dd903f2effa7ee89507aceac78628528d3aa90",
+  "scope": "source hashes, exact reused CPU fields/history/results, actual devices, all linear/coarse residual gates and independent last coarse J*x-b; final physical residual gates audited separately; no finest-grid CPU/CUDA equivalence"
+}

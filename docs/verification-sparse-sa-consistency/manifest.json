@@ -1,0 +1,18 @@
+{
+  "source_sha256": {
+    "src/tensorfvm/body_fitted.py": "4e633fa42c1171cf57aca5bf930827f97a30dada4e405bf3ac9c1068ba1bb7a7",
+    "src/tensorfvm/sparse_simple.py": "efa18d17a8ab53c227cef8b1b0961df0a8fff09b00a90eb32e7a91b4c61b445a",
+    "src/tensorfvm/solver.py": "7c3613f23791c6a22825bd2ba0467e2bb84013ecaedc974901452b1864a2868e"
+  },
+  "artifacts_sha256": {
+    "audit.json": "fd8eafab6997ccec657d82b911fa09d6766eebba9246edc16a499c15236d9c94",
+    "cpu-fields.npz": "e9a6632b242727edbe4f28c4127a9edc46d4e0f51919a9debfc3f148988f1d0c",
+    "cpu-result.json": "83435dd51a9ebbfff8cae5ba5f5f29bdd09829a6007c5d51ef8a5153ecd262a0",
+    "cuda-fields.npz": "fbd765ecca001231202390c61ce22b6b20e539a42c822c2ed2321d3bfec3e86d",
+    "cuda-result.json": "190e3fd344260a020526d8e30e8c0582de66cda184c3a107f08ef9ef5d3ae5c4",
+    "execution.log": "adaf2a5e9528c4324aaa24600d45d4de331697f37dc8a0ccd38ac4f0bb16be96",
+    "report.md": "622ff842de499e8165838c22649b9061b58b67f44734efe03548c6feec09e720",
+    "summary.json": "283a716d8f81257a18aa0c7feaa045341ba8dc3440152c4eed9088e03dda90e6",
+    "verification-record.json": "d0f7a22e79d39ec9f1a962684fea678bd3738f2119c1a07e9cdc7c635ac49347"
+  }
+}

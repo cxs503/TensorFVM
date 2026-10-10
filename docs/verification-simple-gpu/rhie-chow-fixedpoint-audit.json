@@ -1,0 +1,70 @@
+{
+  "raw_evidence_verified": true,
+  "results": [
+    {
+      "case": "curved-32x16",
+      "device": "cpu",
+      "physical_steady_flux_relative_defect": 7.116095346703746e-10,
+      "passed": true
+    },
+    {
+      "case": "curved-32x16",
+      "device": "cuda",
+      "physical_steady_flux_relative_defect": 7.116095346251624e-10,
+      "passed": true
+    },
+    {
+      "case": "curved-64x32",
+      "device": "cpu",
+      "physical_steady_flux_relative_defect": 4.298144761640666e-12,
+      "passed": true
+    },
+    {
+      "case": "curved-64x32",
+      "device": "cuda",
+      "physical_steady_flux_relative_defect": 4.2981475708845325e-12,
+      "passed": true
+    },
+    {
+      "case": "curved-128x64",
+      "device": "cpu",
+      "physical_steady_flux_relative_defect": 8.84248285417281e-13,
+      "passed": true
+    },
+    {
+      "case": "curved-128x64",
+      "device": "cuda",
+      "physical_steady_flux_relative_defect": 8.842475648289042e-13,
+      "passed": true
+    },
+    {
+      "case": "curved-256x128",
+      "device": "cpu",
+      "physical_steady_flux_relative_defect": 7.817067704795884e-14,
+      "passed": true
+    },
+    {
+      "case": "curved-256x128",
+      "device": "cuda",
+      "physical_steady_flux_relative_defect": 7.817066499177784e-14,
+      "passed": true
+    },
+    {
+      "case": "sa-64x56",
+      "device": "cpu",
+      "physical_steady_flux_relative_defect": 6.374113342113817e-08,
+      "passed": true
+    },
+    {
+      "case": "sa-64x56",
+      "device": "cuda",
+      "physical_steady_flux_relative_defect": 6.374113341911801e-08,
+      "passed": true
+    }
+  ],
+  "all_passed": true,
+  "limit": 1e-06,
+  "auditor_sha256": "744d261822072689e0351ef0df114e5579a458e3ef84341c76baf4ce0c7fa4f1",
+  "summary_sha256": "69be28fd02e4e8105a68d4e0163db0e5d8f43fdd67a7a05728aced9330f55d70",
+  "scope": "actual final steady inertia-free Rhie-Chow flux; gradients independently verified by main audit"
+}

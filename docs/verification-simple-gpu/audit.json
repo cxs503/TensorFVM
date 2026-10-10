@@ -1,0 +1,48 @@
+{
+  "raw_reconstruction_passed": true,
+  "cases": [
+    {
+      "name": "curved-32x16",
+      "cells": 512,
+      "steady_equivalent": true,
+      "both_converged": true,
+      "physical_passed": true,
+      "maximum_nonorthogonal_angle_deg": 22.116245604192844
+    },
+    {
+      "name": "curved-64x32",
+      "cells": 2048,
+      "steady_equivalent": true,
+      "both_converged": true,
+      "physical_passed": true,
+      "maximum_nonorthogonal_angle_deg": 22.178984408847803
+    },
+    {
+      "name": "curved-128x64",
+      "cells": 8192,
+      "steady_equivalent": true,
+      "both_converged": true,
+      "physical_passed": true,
+      "maximum_nonorthogonal_angle_deg": 22.195265068825055
+    },
+    {
+      "name": "curved-256x128",
+      "cells": 32768,
+      "steady_equivalent": true,
+      "both_converged": true,
+      "physical_passed": true,
+      "maximum_nonorthogonal_angle_deg": 22.19926561186243
+    },
+    {
+      "name": "sa-64x56",
+      "cells": 3584,
+      "steady_equivalent": true,
+      "both_converged": true,
+      "physical_passed": false,
+      "maximum_nonorthogonal_angle_deg": 8.537736462515939e-07
+    }
+  ],
+  "summary_sha256": "69be28fd02e4e8105a68d4e0163db0e5d8f43fdd67a7a05728aced9330f55d70",
+  "auditor_sha256": "90a778cd314b9ab36183da98b428fbc0c4918587c80217de8fc8439e0db292f6",
+  "scope": "independent NumPy geometry/LS gradients/complete final momentum and mass residuals, continuous manufactured forcing, physical and CPU/CUDA field gates; SA history not independently replayed"
+}

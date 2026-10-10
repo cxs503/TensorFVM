@@ -1,0 +1,24 @@
+"""Independently reconstruct the final nonlinear SA transport and wall friction."""
+import argparse,json
+from pathlib import Path
+import numpy as np
+from tensorfvm.verification.audit import close
+from tensorfvm.verification.core import sha,write_json,artifact_manifest
+
+p=argparse.ArgumentParser();p.add_argument('directory',type=Path);args=p.parse_args();root=Path(__file__).resolve().parents[1];directory=args.directory;s=json.loads((directory/'summary.json').read_text());results=[]
+for case in s['cases']:
+    devices=case.get('devices') or {key:case[key] for key in ['cpu','cuda'] if key in case}
+    if not any(row['case']=='sa' for row in devices.values()):continue
+    for device,row in devices.items():
+        c=row['config'];f=np.load(directory/case['name']/device/'fields.npz');nu=f['nu_tilde_m2_s'];u=f['velocity_m_s'];center=f['cell_centers_m'].reshape(-1,2);vol=f['cell_volumes_m2'];o=f['face_owner'];internal=f['interior_face_mask'];ni=f['face_neighbor'][internal];oi=o[internal];out=f['outlet_face_mask'];wall=f['wall_face_mask'];fixed=(~internal)&(~out);S=f['face_area_vectors_m'];d=f['owner_neighbor_displacement_m'];T=f['nonorthogonal_area_vectors_m'];flux=f['face_mass_flux_kg_s_m'];k=np.sum(S*S,1)/np.sum(S*d,1);rho=c['density'];molecular=c['inlet_velocity']*c['length']/c['reynolds'];mu=rho*molecular;boundary=np.where(fixed&(~wall),c['sa_freestream_ratio']*molecular,0.)
+        def sum_faces(q):
+            net=np.zeros((len(vol),)+q.shape[1:]);np.add.at(net,o,q);np.add.at(net,ni,-q[internal]);return net
+        def interpolate(q):
+            qf=q[o].copy();qf[internal]=(q[oi]+q[ni])/2;return qf
+        delta=np.zeros(len(o));delta[internal]=nu[ni]-nu[oi];delta[fixed]=boundary[fixed]-nu[o[fixed]];active=internal|fixed;weight=active/np.sum(d*d,1);mf=weight[:,None,None]*d[:,:,None]*d[:,None,:];mat=np.zeros((len(vol),2,2));np.add.at(mat,o,mf);np.add.at(mat,ni,mf[internal]);inverse=np.linalg.inv(mat);wd=weight[:,None]*d;go=np.einsum('fij,fj->fi',inverse[o],wd);gn=np.einsum('fij,fj->fi',inverse[ni],wd[internal]);grad=np.zeros((len(vol),2));np.add.at(grad,o,go*delta[:,None]);np.add.at(grad,ni,gn*delta[internal,None])
+        sigma=2/3;cb1=.1355;cb2=.622;kappa=.41;cw2=.3;cw3=2.;cw1=cb1/kappa**2+(1+cb2)/sigma;gamma=interpolate(rho*(molecular+np.maximum(nu,0))/sigma);gamma[wall]=mu/sigma;diff=gamma*k;diff[out]=0;diag=np.zeros(len(vol));np.add.at(diag,o,diff+np.maximum(flux,0));np.add.at(diag,ni,diff[internal]+np.maximum(-flux[internal],0));np.add.at(diag,o[out],np.minimum(flux[out],0));ao=diff[internal]+np.maximum(-flux[internal],0);an=diff[internal]+np.maximum(flux[internal],0);source=sum_faces(np.where(fixed,(diff+np.maximum(-flux,0))*boundary,0));correction=gamma*np.sum(T*interpolate(grad),1);correction[out]=0;source+=sum_faces(correction)
+        gu=f['velocity_gradient_s_inv'];vorticity=abs(gu[:,1,0]-gu[:,0,1]);chi=np.maximum(nu,0)/molecular;fv1=chi**3/(chi**3+7.1**3);fv2=1-chi/(1+chi*fv1);distance2=center[:,1]**2;st=np.maximum(vorticity+np.maximum(nu,0)*fv2/(kappa*kappa*distance2),1e-14);ratio=np.minimum(np.maximum(nu,0)/(st*kappa*kappa*distance2),10);g=ratio+cw2*(ratio**6-ratio);fw=g*((1+cw3**6)/(g**6+cw3**6))**(1/6);source+=rho*vol*(cb1*st*np.maximum(nu,0)+cb2/sigma*np.sum(grad*grad,1));diag+=rho*vol*cw1*fw*np.maximum(nu,0)/distance2;net=diag*nu-source;np.add.at(net,oi,-ao*nu[ni]);np.add.at(net,ni,-an*nu[oi]);residual=np.max(abs(net))/(rho*c['inlet_velocity']*c['length']*molecular);hist=json.loads((directory/case['name']/device/'history.json').read_text());close(residual,hist[-1]['turbulence'],1e-9);close(molecular*chi*fv1,f['eddy_viscosity_m2_s'],1e-11)
+        owners=o[wall];wallgrad=gu[owners].copy();disp=d[wall];err=-u[owners]-np.einsum('fi,fij->fj',disp,wallgrad);wallgrad+=disp[:,:,None]*err[:,None,:]/np.sum(disp*disp,1)[:,None,None];tau=-np.einsum('fij,fj->fi',mu*(wallgrad+wallgrad.transpose(0,2,1)),S[wall]);close(tau,f['wall_viscous_force_n_m'],1e-10);cf=tau[:,0].sum()/(.5*rho*c['inlet_velocity']**2*c['length']);close(cf,f['computed_mean_cf']);shear=tau[:,0]/np.linalg.norm(S[wall],axis=1);yp=np.sqrt(abs(shear)/rho)*center[owners,1]/molecular
+        results.append(dict(case=case['name'],device=device,independent_sa_residual=float(residual),converged_transport=bool(residual<c['tolerance']),mean_cf=float(cf),maximum_local_yplus=float(yp.max()),mean_local_yplus=float(yp.mean()),nonzero_eddy_viscosity=bool(np.max(f['eddy_viscosity_m2_s'])>0)))
+write_json(directory/'independent-sa-audit.json',dict(raw_reconstruction_passed=True,results=results,auditor_sha256=sha(Path(__file__)),summary_sha256=sha(directory/'summary.json'),scope='complete final steady nonlinear SA residual, eddy viscosity closure and molecular wall traction; no empirical-reference substitution'))
+m=json.loads((directory/'manifest.json').read_text());m['artifacts_sha256']=artifact_manifest(directory);write_json(directory/'manifest.json',m);print(results)

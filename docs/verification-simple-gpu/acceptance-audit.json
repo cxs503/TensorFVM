@@ -1,0 +1,137 @@
+{
+  "raw_gates_recomputed": true,
+  "cases": [
+    {
+      "case": "curved-32x16",
+      "device": "cpu",
+      "independent_steady_converged": true,
+      "combined_passed": true,
+      "values": {
+        "rhie_chow_flux_defect": 7.116095346129467e-10,
+        "momentum": 8.209995345050862e-07,
+        "continuity": 1.5881740367262864e-13,
+        "mass_imbalance": 4.96269692007445e-14,
+        "maximum_nonorthogonal_angle_deg": 22.116245604192844
+      }
+    },
+    {
+      "case": "curved-32x16",
+      "device": "cuda",
+      "independent_steady_converged": true,
+      "combined_passed": true,
+      "values": {
+        "rhie_chow_flux_defect": 7.116095342238531e-10,
+        "momentum": 8.209995496614195e-07,
+        "continuity": 1.5881740367262864e-13,
+        "mass_imbalance": 4.959921362512887e-14,
+        "maximum_nonorthogonal_angle_deg": 22.116245604192844
+      }
+    },
+    {
+      "case": "curved-64x32",
+      "device": "cpu",
+      "independent_steady_converged": true,
+      "combined_passed": true,
+      "values": {
+        "rhie_chow_flux_defect": 4.298144760210783e-12,
+        "momentum": 9.897106679201961e-07,
+        "continuity": 7.558190184830949e-15,
+        "mass_imbalance": 3.0531133177191805e-16,
+        "maximum_nonorthogonal_angle_deg": 22.178984408847803
+      }
+    },
+    {
+      "case": "curved-64x32",
+      "device": "cuda",
+      "independent_steady_converged": true,
+      "combined_passed": true,
+      "values": {
+        "rhie_chow_flux_defect": 4.29814760749808e-12,
+        "momentum": 9.897106510864395e-07,
+        "continuity": 7.554720737878995e-15,
+        "mass_imbalance": 4.440892098500626e-16,
+        "maximum_nonorthogonal_angle_deg": 22.178984408847803
+      }
+    },
+    {
+      "case": "curved-128x64",
+      "device": "cpu",
+      "independent_steady_converged": true,
+      "combined_passed": true,
+      "values": {
+        "rhie_chow_flux_defect": 8.84248287566982e-13,
+        "momentum": 7.526222749951184e-07,
+        "continuity": 4.045808826846908e-15,
+        "mass_imbalance": 1.9220736113823023e-15,
+        "maximum_nonorthogonal_angle_deg": 22.195265068825055
+      }
+    },
+    {
+      "case": "curved-128x64",
+      "device": "cuda",
+      "independent_steady_converged": true,
+      "combined_passed": true,
+      "values": {
+        "rhie_chow_flux_defect": 8.842475639012074e-13,
+        "momentum": 7.526222968456953e-07,
+        "continuity": 4.045375145977914e-15,
+        "mass_imbalance": 1.6653345369377348e-15,
+        "maximum_nonorthogonal_angle_deg": 22.195265068825055
+      }
+    },
+    {
+      "case": "curved-256x128",
+      "device": "cpu",
+      "independent_steady_converged": true,
+      "combined_passed": true,
+      "values": {
+        "rhie_chow_flux_defect": 7.817067745460871e-14,
+        "momentum": 9.80559147267801e-07,
+        "continuity": 8.951173136040325e-16,
+        "mass_imbalance": 1.9012569296705806e-15,
+        "maximum_nonorthogonal_angle_deg": 22.19926561186243
+      }
+    },
+    {
+      "case": "curved-256x128",
+      "device": "cuda",
+      "independent_steady_converged": true,
+      "combined_passed": true,
+      "values": {
+        "rhie_chow_flux_defect": 7.817066215535229e-14,
+        "momentum": 9.805592354854287e-07,
+        "continuity": 8.951173136040325e-16,
+        "mass_imbalance": 1.6237011735142914e-15,
+        "maximum_nonorthogonal_angle_deg": 22.19926561186243
+      }
+    },
+    {
+      "case": "sa-64x56",
+      "device": "cpu",
+      "independent_steady_converged": true,
+      "combined_passed": false,
+      "values": {
+        "rhie_chow_flux_defect": 6.374113342113817e-08,
+        "momentum": 9.165471712478934e-06,
+        "continuity": 5.517288015344235e-14,
+        "mass_imbalance": 1.1249681741709594e-14,
+        "maximum_nonorthogonal_angle_deg": 8.537736462515939e-07
+      }
+    },
+    {
+      "case": "sa-64x56",
+      "device": "cuda",
+      "independent_steady_converged": true,
+      "combined_passed": false,
+      "values": {
+        "rhie_chow_flux_defect": 6.374113341911797e-08,
+        "momentum": 9.165471712522768e-06,
+        "continuity": 5.517288015344235e-14,
+        "mass_imbalance": 1.1388459619787739e-14,
+        "maximum_nonorthogonal_angle_deg": 8.537736462515939e-07
+      }
+    }
+  ],
+  "auditor_sha256": "06b92061a942f11686a86c80c947137e0e8189ef8ad5890794c0f06923dcbfac",
+  "summary_sha256": "69be28fd02e4e8105a68d4e0163db0e5d8f43fdd67a7a05728aced9330f55d70"
+}
