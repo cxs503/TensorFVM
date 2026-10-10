@@ -1,0 +1,16 @@
+{
+  "command": "env OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 PYTHONPATH=src /data/TensorFEM/.venv/bin/python -m pytest tests/test_body_fitted_transient3d.py tests/test_body_fitted3d.py tests/test_external_mesh_contract.py tests/test_multi_element_flow.py tests/test_three_element.py -q",
+  "passed": 43,
+  "failed": 0,
+  "warning": "existing torch index_reduce beta warning",
+  "source_sha256": {
+    "tests/test_body_fitted_transient3d.py": "c209b78973761a28821c759024d6186b24e89e8ee6f14fb307acfd1405fe0c4f",
+    "tests/test_body_fitted3d.py": "dd85dfa057463b77c4ab1d671a9630c8f9160f6d5ce4f630780ba4656c740e54",
+    "tests/test_external_mesh_contract.py": "36988a9c9e4b0f2e2186d63321abd1c5684848718a338ef1cfd82d77c211545e",
+    "tests/test_multi_element_flow.py": "67be8898d96e809b5e4344b5a04958c12fb5ea1edd5befcc9f40cb669d977c6a",
+    "tests/test_three_element.py": "a636bdbe5f09296a07e7692fccc5774fada8d44712fe10bc59a79a48c785b94a",
+    "src/tensorfvm/body_fitted_transient3d.py": "5e4463ffda1b05abb323af67dd8cf11ac480005aec1782bba71a961736bb284b",
+    "src/tensorfvm/collocated_diagnostics.py": "25e5419ad1df85b2ff576537bc89af7a344c6290024d9d41051e05fc919c630d"
+  },
+  "physical_accuracy_qualified": false
+}

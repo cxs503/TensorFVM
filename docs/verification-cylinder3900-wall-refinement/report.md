@@ -1,5 +1,7 @@
 # Re3900 wall refinement and startup development report
 
+**Pressure-coupling failure confirmed. The original mass/momentum audit below is insufficient for numerical qualification: pressure is dominated by mesh-locked high-frequency modes. These historical runs are preserved as failed evidence. See the [pressure-coupling correction and matched-time verification](../verification-cylinder3900-pressure-coupling/report.md).**
+
 ## Actual computational meshes
 
 The following figure is reconstructed directly from the coarse/medium checkpoints: three-dimensional cylinder wall, complete midspan mesh and a near-wall enlargement. Dimensions are normalized by D and the cylinder center is the origin. These are the two meshes actually used for the reported CFD runs; the larger preflight meshes have not been solved.
@@ -52,7 +54,7 @@ The medium pressure matrix has170496 entries, while its actual L/U factors have2
 
 Initial geometry / stretch8 for the589824-CV grid limits diffusion dt to2.38e-6; using20% of that ceiling is about4.75e-7 and implies roughly1.26billion steps over600D/U. No per-step runtime was measured on that grid. Explicit viscosity and full 3-D sparse LU are concrete production bottlenecks; escalating only mesh counts is insufficient.
 
-The common acceptance audit replays final continuity independently from native checkpoint face fluxes and checks all recorded mass/momentum/CFL/diffusion limits. Both numerical audits pass. Both instantaneous wall-resolution gates fail. Physical accuracy remains false, qualified Cd/St/Cpb/profile errors remain null, and these two startup solutions do not establish a convergence order.
+The historical common acceptance audit replays final continuity independently from native checkpoint face fluxes and checks all recorded mass/momentum/CFL/diffusion limits. Both mass/momentum audits passed, but their numerical_passed label is withdrawn as evidence of verified pressure coupling. The later pressure audit confirms a pressure/velocity coupling failure despite these small residuals. Both instantaneous wall-resolution gates fail. Physical accuracy remains false, qualified Cd/St/Cpb/profile errors remain null, and these two startup solutions do not establish a convergence order.
 
 ![Actual matched-time drag history and continuity residual](matched-startup.png)
 

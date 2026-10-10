@@ -87,8 +87,13 @@ def main():
            title='Actual wall pressure at tU/D=0.0005; NOT stationary statistics')
     ax.grid(alpha=.25);ax.legend();f.tight_layout();figs.append(('surface-cp',f))
     with PdfPages(r/'report.pdf')as pdf:
+        notice=plt.figure(figsize=(8.3,11.7))
+        notice.text(.08,.9,'Pressure-coupling qualification withdrawn',fontsize=17)
+        notice.text(.08,.8,'These historical startup fields contain mesh-locked pressure modes.\n\nNative face continuity and the momentum ledger passed, but did not\nverify pressure / cell-velocity coupling. Both numerical and physical\nqualification remain false. Original numerical evidence is preserved.\n\nSee verification-cylinder3900-pressure-coupling/report.md for the\ncorrection, unsmoothed old/new fields and matched-time dt refinement.',fontsize=12,va='top',linespacing=1.7)
+        pdf.savefig(notice);plt.close(notice)
         for name,f in figs:f.savefig(r/(name+'.png'),dpi=300);f.savefig(r/(name+'.svg'));pdf.savefig(f);plt.close(f)
     lines=['# Re3900 wall refinement and startup development report','',
+      '**Pressure-coupling failure confirmed. The original mass/momentum audit below is insufficient for numerical qualification: pressure is dominated by mesh-locked high-frequency modes. These historical runs are preserved as failed evidence. See the [pressure-coupling correction and matched-time verification](../verification-cylinder3900-pressure-coupling/report.md).**','',
       '## Actual computational meshes','',
       'The following figure is reconstructed directly from the coarse/medium checkpoints: three-dimensional cylinder wall, complete midspan mesh and a near-wall enlargement. Dimensions are normalized by D and the cylinder center is the origin. These are the two meshes actually used for the reported CFD runs; the larger preflight meshes have not been solved.','',
       '![Actual three-dimensional wall and body-fitted meshes, with near-wall enlargement](mesh.png)','',
@@ -114,7 +119,7 @@ def main():
     sec=cases['medium']['performance']['seconds_per_completed_step'];days=600/1e-5*sec/86400
     lines+=['',f'The medium pressure matrix has170496 entries, while its actual L/U factors have20452054 entries and245.62MB of stored sparse arrays. Four times the CV count produces about9.81 times the factor storage. Measured medium process peak RSS is about1.16GB. At its observed{sec:.3f}s/step, an extrapolation of600D/U at the unchanged dt1e-5 needs60million steps and about{days:.1f}days. **This is an arithmetic cost extrapolation, not a measured long run**; solver iterations, CPU load and future numerical methods will change costs.','',
       'Initial geometry / stretch8 for the589824-CV grid limits diffusion dt to2.38e-6; using20% of that ceiling is about4.75e-7 and implies roughly1.26billion steps over600D/U. No per-step runtime was measured on that grid. Explicit viscosity and full 3-D sparse LU are concrete production bottlenecks; escalating only mesh counts is insufficient.','',
-      'The common acceptance audit replays final continuity independently from native checkpoint face fluxes and checks all recorded mass/momentum/CFL/diffusion limits. Both numerical audits pass. Both instantaneous wall-resolution gates fail. Physical accuracy remains false, qualified Cd/St/Cpb/profile errors remain null, and these two startup solutions do not establish a convergence order.','',
+      'The historical common acceptance audit replays final continuity independently from native checkpoint face fluxes and checks all recorded mass/momentum/CFL/diffusion limits. Both mass/momentum audits passed, but their numerical_passed label is withdrawn as evidence of verified pressure coupling. The later pressure audit confirms a pressure/velocity coupling failure despite these small residuals. Both instantaneous wall-resolution gates fail. Physical accuracy remains false, qualified Cd/St/Cpb/profile errors remain null, and these two startup solutions do not establish a convergence order.','',
       '![Actual matched-time drag history and continuity residual](matched-startup.png)','',
       '![Measured CPU step time, pressure factor storage and setup cost](costs.png)','',
       '## Cell/face coupling diagnostic','',

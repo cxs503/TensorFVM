@@ -1,0 +1,86 @@
+{
+  "performance": {
+    "setup_walltime": 4.545493557117879,
+    "pressure_matrix_nnz": 170496,
+    "pressure_matrix_bytes": 2144260,
+    "pressure_lu_nnz": 20452054,
+    "pressure_lu_factor_bytes": 245621264,
+    "step_walltime": 16.790294982492924,
+    "requested_additional_steps": 50,
+    "completed_additional_steps": 50,
+    "seconds_per_completed_step": 0.33580589964985846,
+    "process_peak_rss_bytes": 1161904128
+  },
+  "wall_resolution": {
+    "min_wall_distance": 0.0008388835231237617,
+    "max_wall_distance": 0.002009765291042396,
+    "yplus_max": 2.9289772263592515,
+    "yplus_95": 2.8863427344999115,
+    "wall_resolved_target_yplus": 1.0,
+    "wall_resolution_passed": false,
+    "state": "instantaneous startup diagnostic, not time-averaged qualification"
+  },
+  "case": "3d-body-fitted-cylinder-Re3900",
+  "Re": 3900.0,
+  "mesh_cells": 24576,
+  "steps": 50,
+  "field_statistical_samples": 0,
+  "wall_time": 17.235171945765615,
+  "final": {
+    "step": 50,
+    "time": 0.0005000000000000007,
+    "continuity": 8.56953725471966e-09,
+    "projection_iterations": 2,
+    "cfl": 0.00042782537194587455,
+    "diffusion_cfl": 0.024669762245245027,
+    "mass_imbalance": 6.96951385492639e-11,
+    "momentum_ledger": 4.072963009069987e-15,
+    "max_speed": 1.9905813017923375,
+    "max_eddy_viscosity": 0.0038245958709861912,
+    "interior_cell_face_normal_defect_max": 0.23904662375814237,
+    "interpolated_cell_velocity_divergence_max": 122.72574679070223
+  },
+  "failure": null,
+  "mass_momentum_checks_passed": true,
+  "numerical_short_run_passed": false,
+  "pressure_coupling_qualified": false,
+  "physical_accuracy_qualified": false,
+  "pressure_coupling": {
+    "native_face_divergence_max": 8.56953725471966e-09,
+    "interpolated_cell_velocity_divergence_max": 122.72574679070223,
+    "interior_max_normal_velocity_difference": 0.23904662375814237,
+    "interior_p95_normal_velocity_difference": 0.009618025840750664,
+    "physical_coupling_qualified": false
+  },
+  "pressure_diagnostics": {
+    "wall_pressure_min": -1.5110319694493313,
+    "wall_pressure_max": 0.9842990101780181,
+    "high_angular_frequency_energy_fraction": 7.325446581436187e-05,
+    "angular_second_difference_relative_l2": 0.05225966428167069,
+    "pressure_coupling_qualified": false
+  },
+  "force": {
+    "time": 0.0005000000000000007,
+    "Cd": 3.1186166233434256,
+    "Cl": 1.6767672115729266e-07,
+    "Cz": 7.34581065394116e-15
+  },
+  "statistics": {
+    "eligible": false,
+    "duration_eligible": false,
+    "St_spectrum_eligible": false,
+    "reason": "too few samples after startup discard",
+    "sample_count": 0,
+    "Cd_mean": null,
+    "Cl_rms": null,
+    "St": null
+  },
+  "blockers": [
+    "cell/face discrepancy requires spatial and long-time verification; continuity alone is insufficient",
+    "short startup record; no statistically stationary LES established",
+    "grid/time/domain/span sensitivity not established",
+    "reference Cp and velocity raw data not yet ingested",
+    "CPU only; CUDA pressure solver and multi-rank geometry kernel pending"
+  ],
+  "discretization": "single-rank CPU shared-face FV; forward Euler with native face-flux history and boundary-consistent momentum increments; central/upwind blend; LS full deviatoric stress; WALE; nonorthogonal face projection; conservative skew-reconstructed face pressure traction"
+}
