@@ -185,3 +185,7 @@ PYTHONPATH=src python scripts/report_three_element_overset.py docs/verification-
 ```bash
 PYTHONPATH=src python scripts/run_three_element_flow_diagnostic.py --mesh-file INPUT.msh --output OUTPUT --iterations 20 --seconds 120
 ```
+
+### 三段翼表面Cp
+
+`PYTHONPATH=src python scripts/compare_three_element_cp.py docs/verification-30p30n-flow-preview`。导出逐面上下表面数据和三翼段曲线。可用`--reference FILE.csv --reference-metadata META.json`叠加独立参考；CSV列为`element,surface,x_over_c,cp`，metadata需要configuration、reynolds、alpha_deg、reference_chord、source_url、cp_definition、boundary_conditions、geometry_description。工况和归一化不一致时拒绝；多值横坐标和越界参考不做平均或外推。参考工况声明不代表几何/边界已经独立认证，当前入口不授予物理精度通过资格。

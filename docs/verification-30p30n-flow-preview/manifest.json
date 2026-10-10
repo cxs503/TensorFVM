@@ -35,11 +35,19 @@
     "scripts/plot_three_element_flow.py": "6a7997d70f6aaf57cf161aff46b26ebaa0eae901750cb7713d84787dc0ec3857",
     "src/tensorfvm/data/30p30n/slat.dat": "b4f95c83be753f4101a8e081581610e98a182b047fb92a6b352baf044f682dda",
     "src/tensorfvm/data/30p30n/main.dat": "8b4ad3189e22a776c710e89626f33be669b164e7bf8656371fb7f117ab952553",
-    "src/tensorfvm/data/30p30n/flap.dat": "b29a52519d6b702d591264e28bd3ade2201a8fa37728d2e8c07bd58d1fe0b0c2"
+    "src/tensorfvm/data/30p30n/flap.dat": "b29a52519d6b702d591264e28bd3ade2201a8fa37728d2e8c07bd58d1fe0b0c2",
+    "scripts/compare_three_element_cp.py": "700b70ff0e57798d521fe5756dc629790be9a2748e68a70f4650399a2c110ebe"
   },
   "artifacts_sha256": {
     "benchmark.json": "9e2f94c2842e4dd17771bb2f7988d74a99e22be987480f496b32ed33fa49385d",
     "cells.csv": "1b47b111a3a85409a83ba6aafcf43f76162214bc17f6179533ca83074222ab62",
+    "cp-audit.json": "17ee4d4f790b9a86ad0763f4103c3d46ac3abe842f631ccbd65adc63bcbefe91",
+    "cp-comparison.json": "28b7a16741828b1e093605b19e7cd40e60be3045a9d8bf270e0ebcd107097c1b",
+    "cp-comparison.png": "c497a4f63849c4c8772d3ce0e5563684272c6b0d9dfbe427e3765b31776ec1bf",
+    "cp-comparison.svg": "6ec33e2c806b78ee8629a29a618b51aac27630c87b320c328a2b64cba603c52b",
+    "cp-report.md": "a65905f4ae516992eb0d80b00b259dcf485c32e13b0fff46fe02845e60208812",
+    "cp-report.pdf": "4ea9655de6828378ee08a173caa2d10e48f1e6bfd9339c747d9b09838792c48b",
+    "cp-surfaces.csv": "53ce818092e438c42ad6e1c427ea246ab9198d7e8f46e432e3573afca9b15413",
     "diagnostic.json": "cbedb9fc067adaffc1bad88cc1849e4166f94b289582ad283a32351858948b07",
     "fields.csv": "31d9633e3ce1ed4a27f8b501d70f7c958b5f3b7a830a7b2a1a627bdba31b4002",
     "flow-report.pdf": "29ebfe9da2888c4bc9e2401818eb8ac5b5c43ca8c17c0b5232dcb5acc0645040",
@@ -53,6 +61,7 @@
     "p.svg": "e87d4f94d56985c859d7a06a2f98058da79b177f437bbfd215ba66eed5df99e3",
     "report.rst": "cb4e27cd53492d4d3b1c0fd4cdab9087f54acbb051e1c3485c721dc2292294aa",
     "source-snapshot/pyproject.toml": "7222720c67aacd63d49197202dea8e1a457b8b78a53a8cba31640846a5498172",
+    "source-snapshot/scripts/compare_three_element_cp.py": "700b70ff0e57798d521fe5756dc629790be9a2748e68a70f4650399a2c110ebe",
     "source-snapshot/scripts/plot_three_element_flow.py": "6a7997d70f6aaf57cf161aff46b26ebaa0eae901750cb7713d84787dc0ec3857",
     "source-snapshot/scripts/run_three_element_flow_diagnostic.py": "0b6c86f1f42045b802b0952ee142c74dafcd4c96e6bcf2c70adc8c4f74a55121",
     "source-snapshot/src/tensorfvm/__init__.py": "9f8d4d3a249d695e4e841e4c9d11d7158db8a2d33e2928d3565794718e2aba3c",
@@ -90,6 +99,6 @@
     "speed.png": "660d611f97b1377a3b38d8fe7f7d14635536d5055fd962cced8c563bde01decd",
     "speed.svg": "f2cf1b7d1f1e3956e97c89e4171b45bceeec724c34df7d81dfab6d86d7e919ec",
     "surface.csv": "f453eabb4ea081809366b30ec72e7cd387b1dfef1c075c291b47d2c71f119d1d",
-    "visual-report.md": "dddd8554d8b2a6dafb19b9f7772a1b1d0dea30b3168d9d43820df96064edff70"
+    "visual-report.md": "4851ed85cfe7a3496b3b0e8840af69a18b24a5b5cf9b5753746b180a4a098766"
   }
 }
