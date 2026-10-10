@@ -1,0 +1,17 @@
+{
+  "test_command": "OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 PYTHONPATH=src /data/TensorFEM/.venv/bin/python -m unittest tests/test_body_fitted_transient3d.py -v",
+  "passed": 9,
+  "failed": 0,
+  "test_source_sha256": "07b7aaa24f426f591a7f21b591e07aa64450d3d35e4b32f085104daf8cf838a2",
+  "coverage": [
+    "closed cell area",
+    "shared flux cancellation",
+    "nonorthogonal projection mass",
+    "independent pressure CSR response",
+    "WALE limits",
+    "mass and momentum step ledgers",
+    "bitwise exact restart and source mismatch rejection",
+    "affine velocity full deviatoric stress",
+    "short record St suppression and eligible synthetic spectral peak"
+  ]
+}

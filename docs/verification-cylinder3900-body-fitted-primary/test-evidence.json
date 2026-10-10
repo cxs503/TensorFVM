@@ -1,0 +1,12 @@
+{
+  "test_command": "OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 PYTHONPATH=src /data/TensorFEM/.venv/bin/python -m unittest tests/test_body_fitted_transient3d.py -v",
+  "passed": 11,
+  "failed": 0,
+  "test_source_sha256": "242699fced6397173c2c349a910de39b7fb6bb9776e726f6265e59d2f4eb4bfe",
+  "added_coverage": [
+    "slip impermeability within mesh roundoff",
+    "zero tangential slip stress",
+    "slip-domain mass and momentum ledger",
+    "failed diffusion screening preserves complete pre-step state"
+  ]
+}

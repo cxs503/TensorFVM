@@ -1,0 +1,52 @@
+{
+  "wall_resolution": {
+    "min_wall_distance": 0.017378541608557146,
+    "max_wall_distance": 0.06093789638588487,
+    "yplus_max": 12.442267104626085,
+    "yplus_95": 12.284028318531387,
+    "wall_resolved_target_yplus": 1.0,
+    "wall_resolution_passed": false,
+    "state": "instantaneous startup diagnostic, not time-averaged qualification"
+  },
+  "case": "3d-body-fitted-cylinder-Re3900",
+  "Re": 3900.0,
+  "mesh_cells": 6144,
+  "steps": 300,
+  "field_statistical_samples": 0,
+  "wall_time": 47.29658231046051,
+  "final": {
+    "step": 300,
+    "time": 0.6000000000000004,
+    "continuity": 7.05923042499238e-09,
+    "projection_iterations": 8,
+    "cfl": 0.04422875471262118,
+    "mass_imbalance": -1.7957857423311907e-11,
+    "momentum_ledger": 8.421574256099046e-14,
+    "max_speed": 1.8034501346583285,
+    "max_eddy_viscosity": 0.0007056175059474111
+  },
+  "failure": null,
+  "numerical_short_run_passed": true,
+  "physical_accuracy_qualified": false,
+  "force": {
+    "time": 0.6000000000000004,
+    "Cd": 0.27850982256403234,
+    "Cl": 2.3156619171606606e-07,
+    "Cz": 3.5413439460769435e-18
+  },
+  "statistics": {
+    "eligible": false,
+    "reason": "too few samples after startup discard",
+    "sample_count": 0,
+    "Cd_mean": null,
+    "Cl_rms": null,
+    "St": null
+  },
+  "blockers": [
+    "short startup record; no statistically stationary LES established",
+    "grid/time/domain/span sensitivity not established",
+    "reference Cp and velocity raw data not yet ingested",
+    "CPU only; CUDA pressure solver and multi-rank geometry kernel pending"
+  ],
+  "discretization": "single-rank CPU shared-face FV; forward Euler; central/upwind blend; LS full deviatoric stress; WALE; nonorthogonal face projection; collocated cell pressure correction"
+}

@@ -1,0 +1,43 @@
+{
+  "config": {
+    "nx": 48,
+    "ny": 16,
+    "nz": 8,
+    "length": 20.0,
+    "height": 12.0,
+    "span": 3.141592653589793,
+    "cylinder_x": 5.0,
+    "cylinder_y": 6.0,
+    "cylinder_radius": 0.5,
+    "inlet_velocity": 1.0,
+    "reynolds": 3900.0,
+    "density": 1.0,
+    "time_step": 0.002,
+    "max_steps": 300,
+    "pressure_iterations": 250,
+    "pressure_relative_tolerance": 1e-08,
+    "pressure_absolute_tolerance": 1e-11,
+    "smagorinsky_constant": 0.1,
+    "mesh_type": "body-fitted",
+    "body_fitted_stretching": 3.5,
+    "device": "cpu"
+  },
+  "settings": {
+    "upwind_fraction": 0.1,
+    "sgs": "wale",
+    "wale_constant": 0.325,
+    "pressure_tolerance": 1e-08,
+    "nonorthogonal_iterations": 80,
+    "initial_perturbation": 0.001
+  },
+  "sources": {
+    "scripts/run_body_fitted_cylinder3900.py": "260feeba658f651b2edfdbee9081c75ad70aa36b50578b9fa432920f53de1c49",
+    "src/tensorfvm/body_fitted_transient3d.py": "483d3c10ee37f3355fdebf21630cac1ca16a4a157e11d540b5c6cc036e7f8a21",
+    "src/tensorfvm/cylinder3900_statistics.py": "346826f8ae6318d61d041323224b8c60bc8ef196bb023bf7b58792ada227ddda",
+    "src/tensorfvm/cylinder3900_checkpoint.py": "9d6b475d9cec6258ed5456f5ecf5dcc9c8ebbf77639c110e49d00b525995dc2a",
+    "src/tensorfvm/body_fitted3d.py": "dedd408c59096f559b2345f819541450768d4ce37f062e405b4335e4d00de9e4",
+    "src/tensorfvm/body_fitted.py": "4e633fa42c1171cf57aca5bf930827f97a30dada4e405bf3ac9c1068ba1bb7a7",
+    "src/tensorfvm/solver3d.py": "95d4711fd52ad9f2d8dd7300a999814633de986a2d579dcc997d17aa01603a37",
+    "src/tensorfvm/backend_registry.py": "e68b95fdb7c457b921b2f1c9e3920f80ebdcdb104ca8077e10e96d2a4182a13a"
+  }
+}

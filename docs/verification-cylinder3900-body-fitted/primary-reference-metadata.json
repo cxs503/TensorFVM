@@ -1,0 +1,16 @@
+{
+  "response":{
+    "numFound":1,
+    "start":0,
+    "maxScore":5.9615,
+    "numFoundExact":true,
+    "docs":[{
+      "title_s":["Experimental and numerical studies of the flow over a circular cylinder at Reynolds number 3900"],
+      "abstract_s":["This work contributes to the study of flow over a circular cylinder at Reynolds number Re=3900. Although this classical flow is widely documented in the literature, especially for this precise Reynolds number that leads to a subcritical flow regime, there is no consensus about the turbulence statistics immediately just behind the obstacle. Here, the flow is investigated both numerically with large eddy simulation and experimentally with hot-wire anemometry and particle image velocimetry. The numerical simulation is performed using high-order schemes and a specific immersed boundary method. The present study focuses on turbulence statistics and power spectra in the near wake up to ten diameters. Statistical estimation is shown to need large integration times increasing the computational cost and leading to an uncertainty of about 10% for most flow characteristics considered in this study. The present numerical and experimental results are found to be in good agreement with previous large eddy simulation data. Contrary to this, the present results show differences compared to the experimental data found in the literature, the differences being larger than the estimated uncertainty range. Therefore, previous numerical-experimental controversy for this flow seems to be reduced with the data presented in this article."],
+      "authFullName_s":["Philippe Parnaudeau","Johan Carlier","Dominique Heitz","Eric Lamballais"],
+      "uri_s":"https://hal.science/hal-00383669v1",
+      "doiId_s":"10.1063/1.2957018",
+      "producedDateY_i":2008
+    }]
+  }
+}

@@ -1,0 +1,546 @@
+[
+  {
+    "config": {
+      "nx": 128,
+      "ny": 64,
+      "nz": 24,
+      "length": 24.0,
+      "height": 20.0,
+      "span": 3.141592653589793,
+      "cylinder_x": 8.0,
+      "cylinder_y": 10.0,
+      "cylinder_radius": 0.5,
+      "inlet_velocity": 1.0,
+      "reynolds": 3900.0,
+      "density": 1.0,
+      "time_step": 0.002,
+      "max_steps": 1,
+      "pressure_iterations": 250,
+      "pressure_relative_tolerance": 1e-08,
+      "pressure_absolute_tolerance": 1e-11,
+      "smagorinsky_constant": 0.1,
+      "mesh_type": "body-fitted",
+      "body_fitted_stretching": 6.0,
+      "device": "cpu"
+    },
+    "cells": 196608,
+    "pressure_matrix_built": false,
+    "pressure_factorization_built": false,
+    "geometry_setup_s": 1.348965484648943,
+    "transport_probe_s": 0.937752871774137,
+    "minimum_volume": 6.7284579207396155e-06,
+    "closed_cell_area_max": 5.551115123125783e-17,
+    "native_tensor_storage_bytes": 242227296,
+    "cumulative_process_peak_rss_bytes": 1123524608,
+    "wall_distance_D": {
+      "min": 0.0009168287500683471,
+      "max": 0.0022220945978032834,
+      "p95": 0.0021351366227283074
+    },
+    "spanwise_spacing_D": 0.1308996938995747,
+    "cylinder_delta_theta_radians": {
+      "min": 0.03491245720896903,
+      "max": 0.0560034615357117
+    },
+    "cylinder_arc_spacing_D": {
+      "min": 0.017456228604484515,
+      "max": 0.02800173076785585
+    },
+    "initial_yplus": {
+      "max": 2.2452259773561605,
+      "p95": 2.206645907002319,
+      "state": "unprojected homogeneous startup with imposed no-slip: not time-averaged wall qualification"
+    },
+    "initial_nu_total": {
+      "min": 0.0002564102564102564,
+      "max": 0.007221836239555356,
+      "molecular": 0.0002564102564102564
+    },
+    "explicit_diffusion_rate_per_time": 2469.3627591782847,
+    "explicit_diffusion_dt_screen_limit": 0.0002024813884236199,
+    "advective_dt_cfl_one": 0.0020093517930665264,
+    "recommended_initial_dt_with_20_percent_screen_margin": 4.049627768472398e-05,
+    "wake_region_volume_length_D": {
+      "min": 0.02002408031517083,
+      "p50": 0.042992517844854444,
+      "p95": 0.13162232653397274
+    },
+    "physical_accuracy_qualified": false
+  },
+  {
+    "config": {
+      "nx": 128,
+      "ny": 64,
+      "nz": 24,
+      "length": 24.0,
+      "height": 20.0,
+      "span": 3.141592653589793,
+      "cylinder_x": 8.0,
+      "cylinder_y": 10.0,
+      "cylinder_radius": 0.5,
+      "inlet_velocity": 1.0,
+      "reynolds": 3900.0,
+      "density": 1.0,
+      "time_step": 0.002,
+      "max_steps": 1,
+      "pressure_iterations": 250,
+      "pressure_relative_tolerance": 1e-08,
+      "pressure_absolute_tolerance": 1e-11,
+      "smagorinsky_constant": 0.1,
+      "mesh_type": "body-fitted",
+      "body_fitted_stretching": 7.0,
+      "device": "cpu"
+    },
+    "cells": 196608,
+    "pressure_matrix_built": false,
+    "pressure_factorization_built": false,
+    "geometry_setup_s": 1.131269570440054,
+    "transport_probe_s": 0.8720595547929406,
+    "minimum_volume": 2.903252939206754e-06,
+    "closed_cell_area_max": 5.551115123125783e-17,
+    "native_tensor_storage_bytes": 242227296,
+    "cumulative_process_peak_rss_bytes": 1239527424,
+    "wall_distance_D": {
+      "min": 0.00039587598101631204,
+      "max": 0.0009590060398265571,
+      "p95": 0.0009215063539317981
+    },
+    "spanwise_spacing_D": 0.1308996938995747,
+    "cylinder_delta_theta_radians": {
+      "min": 0.03491245720896903,
+      "max": 0.0560034615357117
+    },
+    "cylinder_arc_spacing_D": {
+      "min": 0.017456228604484515,
+      "max": 0.02800173076785585
+    },
+    "initial_yplus": {
+      "max": 1.5408286555460577,
+      "p95": 1.4908747046161266,
+      "state": "unprojected homogeneous startup with imposed no-slip: not time-averaged wall qualification"
+    },
+    "initial_nu_total": {
+      "min": 0.0002564102564102564,
+      "max": 0.009466458463042992,
+      "molecular": 0.0002564102564102564
+    },
+    "explicit_diffusion_rate_per_time": 16367.382508201972,
+    "explicit_diffusion_dt_screen_limit": 3.054856204096419e-05,
+    "advective_dt_cfl_one": 0.0008825814736802285,
+    "recommended_initial_dt_with_20_percent_screen_margin": 6.109712408192838e-06,
+    "wake_region_volume_length_D": {
+      "min": 0.015129882652345543,
+      "p50": 0.03689020355530624,
+      "p95": 0.12896908559364695
+    },
+    "physical_accuracy_qualified": false
+  },
+  {
+    "config": {
+      "nx": 128,
+      "ny": 64,
+      "nz": 24,
+      "length": 24.0,
+      "height": 20.0,
+      "span": 3.141592653589793,
+      "cylinder_x": 8.0,
+      "cylinder_y": 10.0,
+      "cylinder_radius": 0.5,
+      "inlet_velocity": 1.0,
+      "reynolds": 3900.0,
+      "density": 1.0,
+      "time_step": 0.002,
+      "max_steps": 1,
+      "pressure_iterations": 250,
+      "pressure_relative_tolerance": 1e-08,
+      "pressure_absolute_tolerance": 1e-11,
+      "smagorinsky_constant": 0.1,
+      "mesh_type": "body-fitted",
+      "body_fitted_stretching": 8.0,
+      "device": "cpu"
+    },
+    "cells": 196608,
+    "pressure_matrix_built": false,
+    "pressure_factorization_built": false,
+    "geometry_setup_s": 1.1130480952560902,
+    "transport_probe_s": 0.8417298663407564,
+    "minimum_volume": 1.2291160739201181e-06,
+    "closed_cell_area_max": 5.551115123125783e-17,
+    "native_tensor_storage_bytes": 242227296,
+    "cumulative_process_peak_rss_bytes": 1239527424,
+    "wall_distance_D": {
+      "min": 0.0001676465885997286,
+      "max": 0.00040604165216437713,
+      "p95": 0.00039016713179179966
+    },
+    "spanwise_spacing_D": 0.1308996938995747,
+    "cylinder_delta_theta_radians": {
+      "min": 0.03491245720896903,
+      "max": 0.0560034615357117
+    },
+    "cylinder_arc_spacing_D": {
+      "min": 0.017456228604484515,
+      "max": 0.02800173076785585
+    },
+    "initial_yplus": {
+      "max": 1.0553045616735153,
+      "p95": 0.9997141062620185,
+      "state": "unprojected homogeneous startup with imposed no-slip: not time-averaged wall qualification"
+    },
+    "initial_nu_total": {
+      "min": 0.0002564102564102564,
+      "max": 0.012512075806192464,
+      "molecular": 0.0002564102564102564
+    },
+    "explicit_diffusion_rate_per_time": 115730.45069270574,
+    "explicit_diffusion_dt_screen_limit": 4.3203841081344204e-06,
+    "advective_dt_cfl_one": 0.0003798964998925608,
+    "recommended_initial_dt_with_20_percent_screen_margin": 8.640768216268841e-07,
+    "wake_region_volume_length_D": {
+      "min": 0.01136023411476308,
+      "p50": 0.03202353839397798,
+      "p95": 0.12219960366437677
+    },
+    "physical_accuracy_qualified": false
+  },
+  {
+    "config": {
+      "nx": 192,
+      "ny": 96,
+      "nz": 32,
+      "length": 24.0,
+      "height": 20.0,
+      "span": 3.141592653589793,
+      "cylinder_x": 8.0,
+      "cylinder_y": 10.0,
+      "cylinder_radius": 0.5,
+      "inlet_velocity": 1.0,
+      "reynolds": 3900.0,
+      "density": 1.0,
+      "time_step": 0.002,
+      "max_steps": 1,
+      "pressure_iterations": 250,
+      "pressure_relative_tolerance": 1e-08,
+      "pressure_absolute_tolerance": 1e-11,
+      "smagorinsky_constant": 0.1,
+      "mesh_type": "body-fitted",
+      "body_fitted_stretching": 7.0,
+      "device": "cpu"
+    },
+    "cells": 589824,
+    "pressure_matrix_built": false,
+    "pressure_factorization_built": false,
+    "geometry_setup_s": 3.4497999185696244,
+    "transport_probe_s": 2.8590766098350286,
+    "minimum_volume": 9.495804613433218e-07,
+    "closed_cell_area_max": 2.7755575615628914e-17,
+    "native_tensor_storage_bytes": 724624928,
+    "cumulative_process_peak_rss_bytes": 2201657344,
+    "wall_distance_D": {
+      "min": 0.0002589904292460809,
+      "max": 0.000629698891966134,
+      "p95": 0.0006047639841234341
+    },
+    "spanwise_spacing_D": 0.09817477042468103,
+    "cylinder_delta_theta_radians": {
+      "min": 0.023274971472645428,
+      "max": 0.03733564102380865
+    },
+    "cylinder_arc_spacing_D": {
+      "min": 0.011637485736322714,
+      "max": 0.018667820511904326
+    },
+    "initial_yplus": {
+      "max": 1.22068580199459,
+      "p95": 1.1921007080588693,
+      "state": "unprojected homogeneous startup with imposed no-slip: not time-averaged wall qualification"
+    },
+    "initial_nu_total": {
+      "min": 0.0002564102564102564,
+      "max": 0.00694475068398911,
+      "molecular": 0.0002564102564102564
+    },
+    "explicit_diffusion_rate_per_time": 29787.35595195871,
+    "explicit_diffusion_dt_screen_limit": 1.678564558755749e-05,
+    "advective_dt_cfl_one": 0.0005568457257829894,
+    "recommended_initial_dt_with_20_percent_screen_margin": 3.357129117511498e-06,
+    "wake_region_volume_length_D": {
+      "min": 0.010422649921983333,
+      "p50": 0.025548487064053486,
+      "p95": 0.08838476918989337
+    },
+    "physical_accuracy_qualified": false
+  },
+  {
+    "config": {
+      "nx": 192,
+      "ny": 96,
+      "nz": 32,
+      "length": 24.0,
+      "height": 20.0,
+      "span": 3.141592653589793,
+      "cylinder_x": 8.0,
+      "cylinder_y": 10.0,
+      "cylinder_radius": 0.5,
+      "inlet_velocity": 1.0,
+      "reynolds": 3900.0,
+      "density": 1.0,
+      "time_step": 0.002,
+      "max_steps": 1,
+      "pressure_iterations": 250,
+      "pressure_relative_tolerance": 1e-08,
+      "pressure_absolute_tolerance": 1e-11,
+      "smagorinsky_constant": 0.1,
+      "mesh_type": "body-fitted",
+      "body_fitted_stretching": 8.0,
+      "device": "cpu"
+    },
+    "cells": 589824,
+    "pressure_matrix_built": false,
+    "pressure_factorization_built": false,
+    "geometry_setup_s": 3.595210119150579,
+    "transport_probe_s": 2.880618140101433,
+    "minimum_volume": 4.00996201566758e-07,
+    "closed_cell_area_max": 2.7755575615628914e-17,
+    "native_tensor_storage_bytes": 724624928,
+    "cumulative_process_peak_rss_bytes": 2413912064,
+    "wall_distance_D": {
+      "min": 0.0001093885914767695,
+      "max": 0.00026592979732854827,
+      "p95": 0.0002554023339543936
+    },
+    "spanwise_spacing_D": 0.09817477042468103,
+    "cylinder_delta_theta_radians": {
+      "min": 0.023274971472645428,
+      "max": 0.03733564102380865
+    },
+    "cylinder_arc_spacing_D": {
+      "min": 0.011637485736322714,
+      "max": 0.018667820511904326
+    },
+    "initial_yplus": {
+      "max": 0.8378278194897392,
+      "p95": 0.8034745721951178,
+      "state": "unprojected homogeneous startup with imposed no-slip: not time-averaged wall qualification"
+    },
+    "initial_nu_total": {
+      "min": 0.0002564102564102564,
+      "max": 0.00916852881201213,
+      "molecular": 0.0002564102564102564
+    },
+    "explicit_diffusion_rate_per_time": 210311.17561123887,
+    "explicit_diffusion_dt_screen_limit": 2.377429532913896e-06,
+    "advective_dt_cfl_one": 0.00023775838567238012,
+    "recommended_initial_dt_with_20_percent_screen_margin": 4.754859065827792e-07,
+    "wake_region_volume_length_D": {
+      "min": 0.007819328320237441,
+      "p50": 0.022036736042791466,
+      "p95": 0.08537848576467845
+    },
+    "physical_accuracy_qualified": false
+  },
+  {
+    "config": {
+      "nx": 64,
+      "ny": 32,
+      "nz": 12,
+      "length": 24.0,
+      "height": 20.0,
+      "span": 3.141592653589793,
+      "cylinder_x": 8.0,
+      "cylinder_y": 10.0,
+      "cylinder_radius": 0.5,
+      "inlet_velocity": 1.0,
+      "reynolds": 3900.0,
+      "density": 1.0,
+      "time_step": 0.002,
+      "max_steps": 1,
+      "pressure_iterations": 250,
+      "pressure_relative_tolerance": 1e-08,
+      "pressure_absolute_tolerance": 1e-11,
+      "smagorinsky_constant": 0.1,
+      "mesh_type": "body-fitted",
+      "body_fitted_stretching": 5.5,
+      "device": "cpu"
+    },
+    "cells": 24576,
+    "pressure_matrix_built": false,
+    "pressure_factorization_built": false,
+    "geometry_setup_s": 0.18793054576963186,
+    "transport_probe_s": 0.10991796758025885,
+    "minimum_volume": 8.521778976344624e-05,
+    "closed_cell_area_max": 1.1102230246251565e-16,
+    "native_tensor_storage_bytes": 30550848,
+    "cumulative_process_peak_rss_bytes": 2413912064,
+    "wall_distance_D": {
+      "min": 0.002896479322499159,
+      "max": 0.006952113145365955,
+      "p95": 0.0066893224577679435
+    },
+    "spanwise_spacing_D": 0.2617993877991494,
+    "cylinder_delta_theta_radians": {
+      "min": 0.06982491441794257,
+      "max": 0.11200692307142054
+    },
+    "cylinder_arc_spacing_D": {
+      "min": 0.034912457208971286,
+      "max": 0.05600346153571027
+    },
+    "initial_yplus": {
+      "max": 4.014662784648821,
+      "p95": 3.9586464567665245,
+      "state": "unprojected homogeneous startup with imposed no-slip: not time-averaged wall qualification"
+    },
+    "initial_nu_total": {
+      "min": 0.0002564102564102564,
+      "max": 0.012190492072894632,
+      "molecular": 0.0002564102564102564
+    },
+    "explicit_diffusion_rate_per_time": 388.75028931606914,
+    "explicit_diffusion_dt_screen_limit": 0.001286172676243285,
+    "advective_dt_cfl_one": 0.006829929483706889,
+    "recommended_initial_dt_with_20_percent_screen_margin": 0.00025723453524865704,
+    "wake_region_volume_length_D": {
+      "min": 0.04666214247957921,
+      "p50": 0.09246953764674856,
+      "p95": 0.2652862306081121
+    },
+    "physical_accuracy_qualified": false
+  },
+  {
+    "config": {
+      "nx": 64,
+      "ny": 32,
+      "nz": 12,
+      "length": 24.0,
+      "height": 20.0,
+      "span": 3.141592653589793,
+      "cylinder_x": 8.0,
+      "cylinder_y": 10.0,
+      "cylinder_radius": 0.5,
+      "inlet_velocity": 1.0,
+      "reynolds": 3900.0,
+      "density": 1.0,
+      "time_step": 0.002,
+      "max_steps": 1,
+      "pressure_iterations": 250,
+      "pressure_relative_tolerance": 1e-08,
+      "pressure_absolute_tolerance": 1e-11,
+      "smagorinsky_constant": 0.1,
+      "mesh_type": "body-fitted",
+      "body_fitted_stretching": 7.0,
+      "device": "cpu"
+    },
+    "cells": 24576,
+    "pressure_matrix_built": false,
+    "pressure_factorization_built": false,
+    "geometry_setup_s": 0.18805459700524807,
+    "transport_probe_s": 0.08407075703144073,
+    "minimum_volume": 2.4613455048305992e-05,
+    "closed_cell_area_max": 1.1102230246251565e-16,
+    "native_tensor_storage_bytes": 30550848,
+    "cumulative_process_peak_rss_bytes": 2413912064,
+    "wall_distance_D": {
+      "min": 0.0008388835231237617,
+      "max": 0.002009765291042396,
+      "p95": 0.0019340227042153263
+    },
+    "spanwise_spacing_D": 0.2617993877991494,
+    "cylinder_delta_theta_radians": {
+      "min": 0.06982491441794257,
+      "max": 0.11200692307142054
+    },
+    "cylinder_arc_spacing_D": {
+      "min": 0.034912457208971286,
+      "max": 0.05600346153571027
+    },
+    "initial_yplus": {
+      "max": 2.317525443537185,
+      "p95": 2.2426789594792305,
+      "state": "unprojected homogeneous startup with imposed no-slip: not time-averaged wall qualification"
+    },
+    "initial_nu_total": {
+      "min": 0.0002564102564102564,
+      "max": 0.01822936434465047,
+      "molecular": 0.0002564102564102564
+    },
+    "explicit_diffusion_rate_per_time": 6255.353998491719,
+    "explicit_diffusion_dt_screen_limit": 7.993152747559278e-05,
+    "advective_dt_cfl_one": 0.002085663134650202,
+    "recommended_initial_dt_with_20_percent_screen_margin": 1.5986305495118557e-05,
+    "wake_region_volume_length_D": {
+      "min": 0.0308334952623344,
+      "p50": 0.07328107966974719,
+      "p95": 0.24525716830325062
+    },
+    "physical_accuracy_qualified": false
+  },
+  {
+    "config": {
+      "nx": 64,
+      "ny": 32,
+      "nz": 12,
+      "length": 24.0,
+      "height": 20.0,
+      "span": 3.141592653589793,
+      "cylinder_x": 8.0,
+      "cylinder_y": 10.0,
+      "cylinder_radius": 0.5,
+      "inlet_velocity": 1.0,
+      "reynolds": 3900.0,
+      "density": 1.0,
+      "time_step": 0.002,
+      "max_steps": 1,
+      "pressure_iterations": 250,
+      "pressure_relative_tolerance": 1e-08,
+      "pressure_absolute_tolerance": 1e-11,
+      "smagorinsky_constant": 0.1,
+      "mesh_type": "body-fitted",
+      "body_fitted_stretching": 8.0,
+      "device": "cpu"
+    },
+    "cells": 24576,
+    "pressure_matrix_built": false,
+    "pressure_factorization_built": false,
+    "geometry_setup_s": 0.22902956791222095,
+    "transport_probe_s": 0.07847143709659576,
+    "minimum_volume": 1.0501536715010524e-05,
+    "closed_cell_area_max": 1.1102230246251565e-16,
+    "native_tensor_storage_bytes": 30550848,
+    "cumulative_process_peak_rss_bytes": 2413912064,
+    "wall_distance_D": {
+      "min": 0.00035814650785401996,
+      "max": 0.000857655075447166,
+      "p95": 0.0008253552033705631
+    },
+    "spanwise_spacing_D": 0.2617993877991494,
+    "cylinder_delta_theta_radians": {
+      "min": 0.06982491441794257,
+      "max": 0.11200692307142054
+    },
+    "cylinder_arc_spacing_D": {
+      "min": 0.034912457208971286,
+      "max": 0.05600346153571027
+    },
+    "initial_yplus": {
+      "max": 1.5034786557868165,
+      "p95": 1.4399414754720485,
+      "state": "unprojected homogeneous startup with imposed no-slip: not time-averaged wall qualification"
+    },
+    "initial_nu_total": {
+      "min": 0.0002564102564102564,
+      "max": 0.023968917255053422,
+      "molecular": 0.0002564102564102564
+    },
+    "explicit_diffusion_rate_per_time": 43420.818453554595,
+    "explicit_diffusion_dt_screen_limit": 1.15152136188964e-05,
+    "advective_dt_cfl_one": 0.0009200742687034766,
+    "recommended_initial_dt_with_20_percent_screen_margin": 2.3030427237792804e-06,
+    "wake_region_volume_length_D": {
+      "min": 0.023210230847031502,
+      "p50": 0.06341891846105499,
+      "p95": 0.24532613975350565
+    },
+    "physical_accuracy_qualified": false
+  }
+]

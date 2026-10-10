@@ -1,0 +1,194 @@
+[
+  {
+    "cells": 196608,
+    "stretch": 6.0,
+    "metrics": [
+      {
+        "name": "closed_cell_area",
+        "value": 5.551115123125783e-17,
+        "limit": 1e-12,
+        "description": "native closed 3D face-area sum",
+        "unit": "1",
+        "passed": true
+      },
+      {
+        "name": "nonpositive_cell_volume_count",
+        "value": 0.0,
+        "limit": 0.5,
+        "description": "native volume minimum strictly positive",
+        "unit": "1",
+        "passed": true
+      }
+    ],
+    "geometry_passed": true,
+    "physical_accuracy_qualified": false
+  },
+  {
+    "cells": 196608,
+    "stretch": 7.0,
+    "metrics": [
+      {
+        "name": "closed_cell_area",
+        "value": 5.551115123125783e-17,
+        "limit": 1e-12,
+        "description": "native closed 3D face-area sum",
+        "unit": "1",
+        "passed": true
+      },
+      {
+        "name": "nonpositive_cell_volume_count",
+        "value": 0.0,
+        "limit": 0.5,
+        "description": "native volume minimum strictly positive",
+        "unit": "1",
+        "passed": true
+      }
+    ],
+    "geometry_passed": true,
+    "physical_accuracy_qualified": false
+  },
+  {
+    "cells": 196608,
+    "stretch": 8.0,
+    "metrics": [
+      {
+        "name": "closed_cell_area",
+        "value": 5.551115123125783e-17,
+        "limit": 1e-12,
+        "description": "native closed 3D face-area sum",
+        "unit": "1",
+        "passed": true
+      },
+      {
+        "name": "nonpositive_cell_volume_count",
+        "value": 0.0,
+        "limit": 0.5,
+        "description": "native volume minimum strictly positive",
+        "unit": "1",
+        "passed": true
+      }
+    ],
+    "geometry_passed": true,
+    "physical_accuracy_qualified": false
+  },
+  {
+    "cells": 589824,
+    "stretch": 7.0,
+    "metrics": [
+      {
+        "name": "closed_cell_area",
+        "value": 2.7755575615628914e-17,
+        "limit": 1e-12,
+        "description": "native closed 3D face-area sum",
+        "unit": "1",
+        "passed": true
+      },
+      {
+        "name": "nonpositive_cell_volume_count",
+        "value": 0.0,
+        "limit": 0.5,
+        "description": "native volume minimum strictly positive",
+        "unit": "1",
+        "passed": true
+      }
+    ],
+    "geometry_passed": true,
+    "physical_accuracy_qualified": false
+  },
+  {
+    "cells": 589824,
+    "stretch": 8.0,
+    "metrics": [
+      {
+        "name": "closed_cell_area",
+        "value": 2.7755575615628914e-17,
+        "limit": 1e-12,
+        "description": "native closed 3D face-area sum",
+        "unit": "1",
+        "passed": true
+      },
+      {
+        "name": "nonpositive_cell_volume_count",
+        "value": 0.0,
+        "limit": 0.5,
+        "description": "native volume minimum strictly positive",
+        "unit": "1",
+        "passed": true
+      }
+    ],
+    "geometry_passed": true,
+    "physical_accuracy_qualified": false
+  },
+  {
+    "cells": 24576,
+    "stretch": 5.5,
+    "metrics": [
+      {
+        "name": "closed_cell_area",
+        "value": 1.1102230246251565e-16,
+        "limit": 1e-12,
+        "description": "native closed 3D face-area sum",
+        "unit": "1",
+        "passed": true
+      },
+      {
+        "name": "nonpositive_cell_volume_count",
+        "value": 0.0,
+        "limit": 0.5,
+        "description": "native volume minimum strictly positive",
+        "unit": "1",
+        "passed": true
+      }
+    ],
+    "geometry_passed": true,
+    "physical_accuracy_qualified": false
+  },
+  {
+    "cells": 24576,
+    "stretch": 7.0,
+    "metrics": [
+      {
+        "name": "closed_cell_area",
+        "value": 1.1102230246251565e-16,
+        "limit": 1e-12,
+        "description": "native closed 3D face-area sum",
+        "unit": "1",
+        "passed": true
+      },
+      {
+        "name": "nonpositive_cell_volume_count",
+        "value": 0.0,
+        "limit": 0.5,
+        "description": "native volume minimum strictly positive",
+        "unit": "1",
+        "passed": true
+      }
+    ],
+    "geometry_passed": true,
+    "physical_accuracy_qualified": false
+  },
+  {
+    "cells": 24576,
+    "stretch": 8.0,
+    "metrics": [
+      {
+        "name": "closed_cell_area",
+        "value": 1.1102230246251565e-16,
+        "limit": 1e-12,
+        "description": "native closed 3D face-area sum",
+        "unit": "1",
+        "passed": true
+      },
+      {
+        "name": "nonpositive_cell_volume_count",
+        "value": 0.0,
+        "limit": 0.5,
+        "description": "native volume minimum strictly positive",
+        "unit": "1",
+        "passed": true
+      }
+    ],
+    "geometry_passed": true,
+    "physical_accuracy_qualified": false
+  }
+]
