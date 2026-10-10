@@ -6,22 +6,38 @@ This is an actual 3-D body-fitted FV flow development case. It uses a polygonal 
 
 ## Configuration and software usage
 
-Re = U D / nu = 3900; U = rho = D = 1, nu = 1/3900. Domain: 20D x 12D, cylinder at (5D,6D); periodic span pi D. This domain/span is a development choice; sensitivity is still required. Grid 48 x 16 x 8 = 6144 true hexahedral control volumes. Exponential radial clustering; first-cell resolution must be measured, never inferred from grid counts alone.
+Re = U D / nu = 3900; U = rho = D = 1, nu = 1/3900. Domain: 20.0D x 12.0D, cylinder at (5.0D,6.0D); periodic span pi D. Top/bottom boundary: freestream. This domain/span is a development choice; sensitivity is still required. Grid 48 x 16 x 8 = 6144 true hexahedral control volumes. Exponential radial clustering; first-cell resolution must be measured, never inferred from grid counts alone.
 
-Shared owner/neighbor faces integrate convection, full symmetric deviatoric variable-viscosity stress and pressure. WALE SGS uses the original [Nicoud and Ducros (1999) formulation](https://doi.org/10.1023/A:1009995426001); Cw = 0.325 and Delta = V^(1/3). Zero SGS face viscosity at the wall. Forward Euler and 90% central / 10% upwind convection are exploratory settings; numerical-dissipation sensitivity remains open. LS gradients and nonorthogonal pressure face projection are implemented in a shared geometry kernel. Cell velocity and face mass flux are separate authoritative quantities; mass closure alone does not validate their collocated coupling.
+Shared owner/neighbor faces integrate convection, full symmetric deviatoric variable-viscosity stress and pressure. WALE SGS uses the original [Nicoud and Ducros (1999) formulation](https://doi.org/10.1023/A:1009995426001); Cw = 0.325 and Delta = V^(1/3). Zero SGS face viscosity at the wall. An explicit diffusion screen checks 2 dt sum(nu_f a_f)/V <=0.5 before any step commits. This conservative necessary screen is not a general skew-mesh stability proof; fine wall production may need implicit viscosity. Forward Euler and 90% central / 10% upwind convection are exploratory settings; numerical-dissipation sensitivity remains open. LS gradients and nonorthogonal pressure face projection are implemented in a shared geometry kernel. Cell velocity and face mass flux are separate authoritative quantities; mass closure alone does not validate their collocated coupling.
 
 ```bash
-OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 PYTHONPATH=src python scripts/run_body_fitted_cylinder3900.py --output results/cylinder3900-body-fitted --nx 48 --ny 16 --nz 8 --steps 300 --dt .002 --stretching 3.5
+OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 PYTHONPATH=src python scripts/run_body_fitted_cylinder3900.py --output results/cylinder3900-body-fitted --nx 48 --ny 16 --nz 8 --steps 300 --dt 0.002 --stretching 3.5 --length 20.0 --height 12.0 --cylinder-x 5.0 --cylinder-y 6.0 --outer-condition freestream
 PYTHONPATH=src python scripts/report_body_fitted_cylinder3900.py --input results/cylinder3900-body-fitted
 ```
 
-New runs support atomic checkpoints and exact continuation in a new empty output directory with `--initialize-from previous/checkpoint.npz`. Configuration and producer hashes must match; max_steps may increase. Online means and second moments resume with the state. CPU factorization only; CUDA and multi-rank curved-mesh flow not tested.
+The `--steps` argument specifies additional steps after initialization, not a total target. Statistical `--discard-time` uses physical time; the minimum record duration uses tU/D. D=U=1 in this case. New runs support atomic checkpoints and exact continuation in a new empty output directory with `--initialize-from previous/checkpoint.npz`. Configuration and producer hashes must match; max_steps may increase. Online means and second moments resume with the state. environment.json records Python/Torch/NumPy/SciPy, platform, thread settings and git base; all imported TensorFVM Python dependencies are hashed and archived at launch. CPU factorization only; CUDA and multi-rank curved-mesh flow not tested.
 
 ## Actual calculation
 
 Completed 300 steps, tU/D = 0.6; max final cell divergence = 7.059e-09; final momentum ledger = 8.422e-14; final CFL = 0.04423. These figures audit numerical advancement. Final instantaneous Cd = 0.27851 and Cl = 2.31566e-07 are startup values and are not benchmark statistics. The native geometry, actual pressure/speed maps, force history and actual wall-pressure coefficients appear in report.pdf and PNG/SVG figures.
 
 Measured instantaneous startup y+ max = 12.442267104626085, 95th percentile = 12.284028318531387. Wall-resolved y+<=1 gate: False.
+
+## Actual mesh and computed fields
+
+The geometry and fields below come directly from the native checkpoint. The
+pressure and speed are instantaneous midspan values; they are startup fields
+and do not show a statistically stationary LES wake.
+
+![Actual three-dimensional cylinder wall and midspan body-fitted mesh](geometry.png)
+
+![Computed instantaneous pressure and velocity magnitude](fields.png)
+
+![Actual force history and continuity diagnostic](histories.png)
+
+![Actual instantaneous cylinder surface pressure coefficient](surface-cp.png)
+
+
 
 ## Three distinct qualification levels
 

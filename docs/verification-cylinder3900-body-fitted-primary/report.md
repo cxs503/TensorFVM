@@ -11,7 +11,7 @@ Re = U D / nu = 3900; U = rho = D = 1, nu = 1/3900. Domain: 24.0D x 20.0D, cylin
 Shared owner/neighbor faces integrate convection, full symmetric deviatoric variable-viscosity stress and pressure. WALE SGS uses the original [Nicoud and Ducros (1999) formulation](https://doi.org/10.1023/A:1009995426001); Cw = 0.325 and Delta = V^(1/3). Zero SGS face viscosity at the wall. An explicit diffusion screen checks 2 dt sum(nu_f a_f)/V <=0.5 before any step commits. This conservative necessary screen is not a general skew-mesh stability proof; fine wall production may need implicit viscosity. Forward Euler and 90% central / 10% upwind convection are exploratory settings; numerical-dissipation sensitivity remains open. LS gradients and nonorthogonal pressure face projection are implemented in a shared geometry kernel. Cell velocity and face mass flux are separate authoritative quantities; mass closure alone does not validate their collocated coupling.
 
 ```bash
-OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 PYTHONPATH=src python scripts/run_body_fitted_cylinder3900.py --output results/cylinder3900-body-fitted --nx 48 --ny 16 --nz 8 --steps 300 --dt .002 --stretching 3.5
+OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 PYTHONPATH=src python scripts/run_body_fitted_cylinder3900.py --output results/cylinder3900-body-fitted --nx 48 --ny 16 --nz 8 --steps 300 --dt 0.002 --stretching 3.5 --length 24.0 --height 20.0 --cylinder-x 8.0 --cylinder-y 10.0 --outer-condition slip
 PYTHONPATH=src python scripts/report_body_fitted_cylinder3900.py --input results/cylinder3900-body-fitted
 ```
 
@@ -22,6 +22,20 @@ The `--steps` argument specifies additional steps after initialization, not a to
 Completed 300 steps, tU/D = 0.6; max final cell divergence = 6.110e-09; final momentum ledger = 2.372e-13; final CFL = 0.04910. These figures audit numerical advancement. Final instantaneous Cd = 0.251999 and Cl = 2.18573e-07 are startup values and are not benchmark statistics. The native geometry, actual pressure/speed maps, force history and actual wall-pressure coefficients appear in report.pdf and PNG/SVG figures.
 
 Measured instantaneous startup y+ max = 16.2384779603138, 95th percentile = 16.090648525417237. Wall-resolved y+<=1 gate: False.
+
+## Actual mesh and computed fields
+
+The geometry and fields below come directly from the native checkpoint. The
+pressure and speed are instantaneous midspan values; they are startup fields
+and do not show a statistically stationary LES wake.
+
+![Actual three-dimensional cylinder wall and midspan body-fitted mesh](geometry.png)
+
+![Computed instantaneous pressure and velocity magnitude](fields.png)
+
+![Actual force history and continuity diagnostic](histories.png)
+
+![Actual instantaneous cylinder surface pressure coefficient](surface-cp.png)
 
 ## Reproducible primary DNS scalar comparison
 
@@ -39,6 +53,8 @@ Cp at the downstream base is interpolated from the two adjacent native wall face
 The paper also reports 2piD/18.6M CV Cd=1.019, St=0.214, Cpb=-0.933; its 1.62M CV Cd=1.05 differs from fine DNS by 3.45%. That coarse DNS is not a demonstration of our 3% target. Conditional Mode L/H Cd=[0.979,1.043] is a physical-regime range, **not a statistical confidence interval**. The table supplies no scalar CI; printed rounding half-units are stored separately and are not uncertainty bars. Source slow modulation fD/U=0.0064 corresponds to about156 D/U, so a500 D/U record covers only about3 slow cycles; statistical stationarity can require much longer. Source Table I lists858 cycles whereas its body gives approximately3900 D/U and836 cycles; both original statements are preserved.
 
 
+
+![Published DNS scalar reference versus unqualified startup diagnostics](dns-scalar-comparison.png)
 
 ## Three distinct qualification levels
 
