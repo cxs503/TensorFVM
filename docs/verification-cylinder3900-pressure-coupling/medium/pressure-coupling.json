@@ -1,0 +1,18 @@
+{
+  "flux": {
+    "native_face_divergence_max": 8.56953725471966e-09,
+    "interpolated_cell_velocity_divergence_max": 122.72574679070223,
+    "interior_max_normal_velocity_difference": 0.23904662375814237,
+    "interior_p95_normal_velocity_difference": 0.009618025840750664,
+    "physical_coupling_qualified": false
+  },
+  "pressure": {
+    "wall_pressure_min": -1.5110319694493313,
+    "wall_pressure_max": 0.9842990101780181,
+    "high_angular_frequency_energy_fraction": 7.325446581436187e-05,
+    "angular_second_difference_relative_l2": 0.05225966428167069,
+    "pressure_coupling_qualified": false
+  },
+  "wall_pressure_definition": "skew-reconstructed face pressure used for conservative wall traction",
+  "pressure_coupling_qualified": false
+}

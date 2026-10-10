@@ -56,6 +56,8 @@ class BodyFittedTransient3D:
         self.tangent=self.area-self.coeff[:,None]*self.d
         self.area_mag=torch.linalg.vector_norm(self.area,dim=1)
         self.distance=torch.linalg.vector_norm(self.d,dim=1)
+        self.pressure_weight=(self.owner_offset*self.d).sum(1)/self.distance.square()
+        self.pressure_skew=self.owner_offset-self.pressure_weight[:,None]*self.d
         self.velocity=torch.zeros((self.N,3),dtype=torch.float64);self.velocity[:,0]=config.inlet_velocity
         if self.settings.initial_perturbation:
             xyz=self.centers
@@ -85,6 +87,17 @@ class BodyFittedTransient3D:
         normal.index_add_(0,self.owner,outer)
         normal.index_add_(0,self.neighbor[self.interior],outer[self.interior])
         self.ls_inverse=torch.linalg.inv(normal);self.ls_weight=w
+        # A homogeneous pressure Neumann row represents g dot n = 0.
+        # On skew boundaries the owner-to-face displacement is not normal.
+        self.pressure_ls_d=self.d.clone()
+        neumann=self.boundary&~self.outlet
+        self.pressure_ls_d[neumann]=self.area[neumann]/self.area_mag[neumann,None]*self.distance[neumann,None]
+        dp=self.pressure_ls_d
+        pressure_outer=dp[:,:,None]*dp[:,None,:]*w[:,None,None]
+        pressure_normal=torch.zeros_like(normal)
+        pressure_normal.index_add_(0,self.owner,pressure_outer)
+        pressure_normal.index_add_(0,self.neighbor[self.interior],pressure_outer[self.interior])
+        self.pressure_ls_inverse=torch.linalg.inv(pressure_normal)
 
     def gradient(self, field, pressure=False):
         scalar=field.ndim==1
@@ -101,10 +114,12 @@ class BodyFittedTransient3D:
             if f.shape[1]==3:
                 delta[self.slip]=0;delta[self.slip,1]=-f[self.owner[self.slip],1]
         rhs=torch.zeros((self.N,f.shape[1],3),dtype=f.dtype)
-        val=delta[:,:,None]*self.d[:,None,:]*self.ls_weight[:,None,None]
+        reconstruction_d=self.pressure_ls_d if pressure else self.d
+        val=delta[:,:,None]*reconstruction_d[:,None,:]*self.ls_weight[:,None,None]
         rhs.index_add_(0,self.owner,val)
         rhs.index_add_(0,self.neighbor[self.interior],val[self.interior])
-        g=torch.einsum('nij,ncj->nci',self.ls_inverse,rhs)
+        inverse=self.pressure_ls_inverse if pressure else self.ls_inverse
+        g=torch.einsum('nij,ncj->nci',inverse,rhs)
         return g[:,0] if scalar else g
 
     def _build_pressure(self):
@@ -125,6 +140,17 @@ class BodyFittedTransient3D:
     def predict_flux(self, velocity):
         return (self.face_values(velocity)*self.area).sum(1)
 
+    def momentum_predictor_flux(self, tentative_velocity):
+        """Advance the native face momentum with the cell momentum increment.
+
+        Re-interpolating the entire old cell velocity discards the previous
+        pressure projection. Its divergence then enters the next pressure RHS
+        divided by dt, leaving near-Nyquist cell pressure modes undamped.
+        Taking a difference also cancels affine inlet boundary values correctly.
+        This retains face history; it is not a proof of cell/face convergence.
+        """
+        return self.flux + self.predict_flux(tentative_velocity) - self.predict_flux(self.velocity)
+
     def pressure_flux_gradient(self, p):
         g=self.gradient(p,pressure=True);gf=.5*(g[self.owner]+g[self.safe]);gf[self.boundary]=g[self.owner[self.boundary]]
         diff=p[self.safe]-p[self.owner]
@@ -132,6 +158,24 @@ class BodyFittedTransient3D:
         q=self.coeff*diff+(gf*self.tangent).sum(1)
         q[self.boundary&~self.outlet]=0
         return q
+
+    def pressure_face_values(self, p):
+        """Conservative pressure traction at the actual geometric face center.
+
+        Arithmetic averaging is not affine exact on stretched/skew cells.
+        Interpolate at the projected face position and reconstruct its skew
+        displacement. Boundary reconstruction keeps zero normal derivative;
+        outlet pressure remains prescribed zero.
+        """
+        g=self.gradient(p,pressure=True);w=self.pressure_weight
+        gf=(1-w[:,None])*g[self.owner]+w[:,None]*g[self.safe]
+        values=(1-w)*p[self.owner]+w*p[self.safe]+(gf*self.pressure_skew).sum(1)
+        offset=self.owner_offset[self.boundary]
+        normal=self.area[self.boundary]/self.area_mag[self.boundary,None]
+        tangent=offset-(offset*normal).sum(1)[:,None]*normal
+        values[self.boundary]=p[self.owner[self.boundary]]+(g[self.owner[self.boundary]]*tangent).sum(1)
+        values[self.outlet]=0
+        return values
 
     def project(self, tentative_flux):
         dt=self.config.time_step/self.config.density
@@ -195,8 +239,8 @@ class BodyFittedTransient3D:
         # and deferred corrections still require observed stability/refinement.
         if diffusion_cfl>self.settings.diffusion_cfl_limit:raise RuntimeError(f'explicit diffusion dt screen failed: {diffusion_cfl:.6g} > {self.settings.diffusion_cfl_limit}; reduce dt or use an implicit viscous solver')
         tentative=u0+c.time_step/c.density*self.integrate(visc-conv)/self.volumes[:,None]
-        p,q,it,div=self.project(self.predict_flux(tentative))
-        facep=.5*(p[self.owner]+p[self.safe]);facep[self.boundary]=p[self.owner[self.boundary]];facep[self.outlet]=0
+        p,q,it,div=self.project(self.momentum_predictor_flux(tentative))
+        facep=self.pressure_face_values(p)
         pressure_traction=facep[:,None]*self.area
         u=tentative-c.time_step/c.density*self.integrate(pressure_traction)/self.volumes[:,None]
         momentum=c.density*(u*self.volumes[:,None]).sum(0)
@@ -210,5 +254,9 @@ class BodyFittedTransient3D:
         row=dict(step=len(self.history)+1,time=self.time,continuity=div,projection_iterations=it,cfl=cfl,diffusion_cfl=diffusion_cfl,
                  mass_imbalance=float(q[self.boundary].sum()),momentum_ledger=float(ledger.abs().max()),
                  max_speed=float(torch.linalg.vector_norm(u,dim=1).max()),max_eddy_viscosity=float((nu-c.kinematic_viscosity).max()))
+        interpolated=self.predict_flux(u)
+        normal_defect=(q-interpolated).abs()/self.area_mag/c.inlet_velocity
+        row['interior_cell_face_normal_defect_max']=float(normal_defect[self.interior].max())
+        row['interpolated_cell_velocity_divergence_max']=float((self.integrate(interpolated)/self.volumes).abs().max())
         self.history.append(row);self.forces.append(dict(time=self.time,Cd=float(wallforce[0]/force_scale),Cl=float(wallforce[1]/force_scale),Cz=float(wallforce[2]/force_scale)))
         return row

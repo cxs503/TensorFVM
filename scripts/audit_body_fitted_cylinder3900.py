@@ -24,10 +24,10 @@ def main():
     repo=Path(__file__).resolve().parents[1];bindings={}
     for src in sorted(set(scripts)):
         target=d/'acceptance-source-snapshot'/src.relative_to(repo);target.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(src,target);bindings[str(src.relative_to(repo))]=sha(target)
-    write_json(d/'acceptance.json',dict(schema='tensorfvm.common-3d-case-acceptance/1',common_module='tensorfvm.verification.core',numerical_metrics=records,numerical_passed=passed,
+    write_json(d/'acceptance.json',dict(schema='tensorfvm.common-3d-case-acceptance/2',common_module='tensorfvm.verification.core',numerical_metrics=records,mass_momentum_checks_passed=passed,numerical_passed=False,pressure_coupling_qualified=False,
         resolution_metrics=resolution,instantaneous_resolution_passed=resolved,physical_accuracy_qualified=False,
         physical_metrics=dict(Cd_relative_error=None,St_relative_error=None,Cpb_relative_error=None,profile_relative_error=None,grid_independence=None,time_independence=None,stationarity=None),
-        reason='startup stability and resolution audit only; no qualified long-time CFD statistics',source_sha256=bindings,input_manifest_sha256=sha(d/'manifest.json')))
+        reason='mass/momentum checks alone do not verify pressure/cell-face coupling; spatial and long-time coupling verification remains required',source_sha256=bindings,input_manifest_sha256=sha(d/'manifest.json')))
     manifest=json.loads((d/'manifest.json').read_text());manifest['acceptance_source_sha256']=bindings;manifest['artifact_sha256']={str(f.relative_to(d)):sha(f)for f in d.rglob('*')if f.is_file()and f.name!='manifest.json'};write_json(d/'manifest.json',manifest)
-    print(json.dumps(dict(numerical_passed=passed,instantaneous_resolution_passed=resolved,physical_accuracy_qualified=False)))
+    print(json.dumps(dict(mass_momentum_checks_passed=passed,numerical_passed=False,pressure_coupling_qualified=False,instantaneous_resolution_passed=resolved,physical_accuracy_qualified=False)))
 if __name__=='__main__':main()

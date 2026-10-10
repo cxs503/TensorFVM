@@ -10,6 +10,7 @@ from tensorfvm.solver3d import Cylinder3DConfig
 from tensorfvm.body_fitted_transient3d import BodyFittedTransient3D,TransientSettings
 from tensorfvm.cylinder3900_statistics import statistics
 from tensorfvm.cylinder3900_checkpoint import FieldMoments,save_checkpoint,restore_checkpoint
+from tensorfvm.collocated_diagnostics import flux_coupling,angular_pressure
 
 def dump(path,obj):path.write_text(json.dumps(obj,indent=2,allow_nan=False)+'\n')
 def sha(path):return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -59,11 +60,15 @@ def main():
     dump(out/'history.json',s.history);dump(out/'forces.json',s.forces)
     st=statistics(s.forces,c.diameter,c.inlet_velocity,a.discard_time,a.minimum_statistics_duration)
     dump(out/'statistics.json',st)
+    pressure_faces=s.pressure_face_values(s.pressure)
     with (out/'wall-pressure.csv').open('w',newline='')as f:
         w=csv.writer(f);w.writerow(['x','y','z','theta_degrees','pressure','Cp','area_x','area_y','area_z'])
         for j in torch.where(s.wall)[0]:
             xyz=s.fc[j];theta=np.degrees(np.arctan2(float(xyz[1])-c.cylinder_y,float(xyz[0])-c.cylinder_x))%360
-            w.writerow([*xyz.tolist(),theta,float(s.pressure[s.owner[j]]),2*float(s.pressure[s.owner[j]])/(c.density*c.inlet_velocity**2),*s.area[j].tolist()])
+            w.writerow([*xyz.tolist(),theta,float(pressure_faces[j]),2*float(pressure_faces[j])/(c.density*c.inlet_velocity**2),*s.area[j].tolist()])
+    coupling=flux_coupling(s.owner.numpy(),s.neighbor.numpy(),s.area.numpy(),s.volumes.numpy(),s.flux.numpy(),s.face_values(s.velocity).numpy(),c.inlet_velocity)
+    pressure_diagnostics=angular_pressure(s.pressure.numpy(),c.nx,c.ny,c.nz)
+    dump(out/'pressure-coupling.json',dict(flux=coupling,pressure=pressure_diagnostics,wall_pressure_definition='skew-reconstructed face pressure used for conservative wall traction',pressure_coupling_qualified=False))
     _,visc,_=s.transport(s.velocity,s.flux)
     normal=s.area[s.wall]/s.area_mag[s.wall,None]
     traction=visc[s.wall]/s.area_mag[s.wall,None]
@@ -74,10 +79,10 @@ def main():
     wall_resolution=dict(min_wall_distance=float(y.min()),max_wall_distance=float(y.max()),yplus_max=float(yp.max()),yplus_95=float(torch.quantile(yp,.95)),wall_resolved_target_yplus=1.,wall_resolution_passed=bool((yp<=1).all()),state='instantaneous startup diagnostic, not time-averaged qualification')
     performance=dict(**setup_performance,step_walltime=step_walltime,requested_additional_steps=a.steps,completed_additional_steps=len(s.history)-initial_step_count,seconds_per_completed_step=step_walltime/(len(s.history)-initial_step_count)if len(s.history)>initial_step_count else None,process_peak_rss_bytes=int(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)*1024)
     summary=dict(performance=performance,wall_resolution=wall_resolution,case='3d-body-fitted-cylinder-Re3900',Re=c.reynolds,mesh_cells=s.N,steps=len(s.history),field_statistical_samples=moments.count,wall_time=time.perf_counter()-start,
-                 final=s.history[-1]if s.history else None,failure=failure,numerical_short_run_passed=bool(s.history and failure is None and all(h['continuity']<settings.pressure_tolerance and h['cfl']<1 and h['momentum_ledger']<1e-10 for h in s.history)),physical_accuracy_qualified=False,
+                 final=s.history[-1]if s.history else None,failure=failure,mass_momentum_checks_passed=bool(s.history and failure is None and all(h['continuity']<settings.pressure_tolerance and h['cfl']<1 and h['momentum_ledger']<1e-10 for h in s.history)),numerical_short_run_passed=False,pressure_coupling_qualified=False,physical_accuracy_qualified=False,pressure_coupling=coupling,pressure_diagnostics=pressure_diagnostics,
                  force=s.forces[-1]if s.forces else None,statistics=st,
-                 blockers=['short startup record; no statistically stationary LES established','grid/time/domain/span sensitivity not established','reference Cp and velocity raw data not yet ingested','CPU only; CUDA pressure solver and multi-rank geometry kernel pending'],
-                 discretization='single-rank CPU shared-face FV; forward Euler; central/upwind blend; LS full deviatoric stress; WALE; nonorthogonal face projection; collocated cell pressure correction')
+                 blockers=['cell/face discrepancy requires spatial and long-time verification; continuity alone is insufficient','short startup record; no statistically stationary LES established','grid/time/domain/span sensitivity not established','reference Cp and velocity raw data not yet ingested','CPU only; CUDA pressure solver and multi-rank geometry kernel pending'],
+                 discretization='single-rank CPU shared-face FV; forward Euler with native face-flux history and boundary-consistent momentum increments; central/upwind blend; LS full deviatoric stress; WALE; nonorthogonal face projection; conservative skew-reconstructed face pressure traction')
     dump(out/'summary.json',summary)
     bindings_artifact={str(f.relative_to(out)):sha(f)for f in out.rglob('*')if f.is_file()}
     dump(out/'manifest.json',dict(schema='tensorfvm.body-fitted-transient3d/1',source_sha256=bindings,artifact_sha256=bindings_artifact))

@@ -52,6 +52,60 @@ class RestartTests(unittest.TestCase):
             self.assertTrue(torch.equal(ma.velocity,mb.velocity));self.assertEqual(a.history,b.history)
             with self.assertRaises(ValueError):restore_checkpoint(path,b,mb,{'kernel':'changed'})
 
+class TransientPressureCouplingTests(unittest.TestCase):
+    def test_pressure_neumann_uses_actual_normal_at_skew_slip_faces(self):
+        s=BodyFittedTransient3D(Cylinder3DConfig(nx=48,ny=16,nz=4,length=24,height=20,cylinder_x=8,cylinder_y=10,body_fitted_stretching=7,mesh_type='body-fitted',time_step=1e-5))
+        # p=x has zero normal derivative on horizontal slip boundaries, even
+        # when owner-to-face displacement includes a tangential x component.
+        invalid=torch.zeros(s.N,dtype=torch.bool)
+        invalid[s.owner[s.boundary&~s.slip]]=True
+        selected=s.owner[s.slip];selected=selected[~invalid[selected]]
+        self.assertGreater(len(selected),0)
+        gradient=s.gradient(s.centers[:,0],pressure=True)[selected]
+        exact=torch.tensor([1.,0.,0.],dtype=torch.float64)
+        self.assertLess(float((gradient-exact).abs().max()),1e-10)
+
+    def test_affine_pressure_force_on_stretched_skew_mesh(self):
+        s=BodyFittedTransient3D(Cylinder3DConfig(nx=48,ny=16,nz=4,length=24,height=20,cylinder_x=8,cylinder_y=10,body_fitted_stretching=7,mesh_type='body-fitted',time_step=1e-5))
+        # p is independent of periodic z. Exclude physical boundary stencils;
+        # their homogeneous Neumann condition is not that of this manufacture.
+        p=.7*s.centers[:,0]-.3*s.centers[:,1]+.2
+        gradient=s.integrate(s.pressure_face_values(p)[:,None]*s.area)/s.volumes[:,None]
+        radial=s.owner.new_tensor(range(s.N))//48%16
+        mask=(radial>=2)&(radial<14)
+        exact=torch.tensor([.7,-.3,0],dtype=torch.float64)
+        self.assertLess(float((gradient[mask]-exact).abs().max()),2e-9)
+
+    def test_no_momentum_increment_does_not_repeat_startup_pressure_impulse(self):
+        # An isolated projection experiment: after the first incompressibility
+        # impulse there is no acceleration. Pressure must not keep reapplying
+        # that impulse because cell interpolation differs from native flux.
+        s=BodyFittedTransient3D(Cylinder3DConfig(nx=32,ny=8,nz=4,mesh_type='body-fitted',time_step=.002),TransientSettings(initial_perturbation=0,sgs='none',pressure_tolerance=1e-11))
+        zero=torch.zeros_like(s.area)
+        s.transport=lambda u,q:(zero,zero,torch.full((s.N,),s.config.kinematic_viscosity,dtype=torch.float64))
+        s.step();impulse=float(s.pressure.abs().max());previous=s.flux.clone()
+        s.step()
+        self.assertGreater(impulse,1.)
+        self.assertLess(float(s.pressure.abs().max()),1e-5)
+        self.assertLess(float((s.flux-previous).abs().max()),1e-8)
+        self.assertLess(s.history[-1]['momentum_ledger'],1e-10)
+
+    def test_fixed_inlet_is_not_added_again_to_flux_increment(self):
+        s=BodyFittedTransient3D(Cylinder3DConfig(nx=32,ny=8,nz=4,mesh_type='body-fitted',time_step=.002))
+        trial=s.velocity.clone();trial[:,0]+=.02
+        flux=s.momentum_predictor_flux(trial)
+        self.assertTrue(torch.equal(flux[s.prescribed],s.flux[s.prescribed]))
+        self.assertTrue(torch.equal(flux[s.wall],s.flux[s.wall]))
+
+    def test_diagnostic_detects_near_nyquist_not_only_alternating_mode(self):
+        import numpy as np
+        from tensorfvm.collocated_diagnostics import angular_pressure
+        theta=np.arange(64)*2*np.pi/64
+        smooth=angular_pressure(np.sin(theta),64,1,1)
+        locked=angular_pressure(np.sin(29*theta),64,1,1)
+        self.assertLess(smooth['high_angular_frequency_energy_fraction'],1e-20)
+        self.assertGreater(locked['high_angular_frequency_energy_fraction'],.99)
+
 class StressAndStatisticsTests(unittest.TestCase):
     def test_affine_velocity_has_exact_interior_deviatoric_stress(self):
         s=BodyFittedTransient3D(Cylinder3DConfig(nx=32,ny=12,nz=4,mesh_type='body-fitted',time_step=.002),TransientSettings(sgs='none'))

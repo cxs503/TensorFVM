@@ -138,3 +138,9 @@ NACA三网格（64×26、128×52、256×104）全部达到稳态并通过独立�
 三段翼图件现直接展示于[几何与实际压力/速度云图](verification-30p30n-flow-preview/visual-report.md)，附原始逐单元场和[三页PDF](verification-30p30n-flow-preview/flow-report.pdf)。实际场为两个完整SIMPLE/SA迭代步的未收敛诊断，已标注状态，不计入物理验收。
 
 三段翼现有[分翼段上下表面Cp曲线与逐面数据](verification-30p30n-flow-preview/cp-report.md)，共962个壁面面元。采用相邻单元压力近似，当前实际流动未收敛，实验Cp参考缺失，参考误差为空，精度验收为False。
+
+### 三维贴体 Re3900：压力耦合复核
+
+[压力耦合修正报告](verification-cylinder3900-pressure-coupling/report.md)与[PDF](verification-cylinder3900-pressure-coupling/report.pdf)保留原始失败场，展示相同色标的新旧压力/速度云图、实际网格、Cp诊断和完整时间步减半复算。原每步重建面通量导致近Nyquist压力模式；拉伸网格上的算术面压力插值也不满足线性精确性。现已加入面通量历史增量推进和守恒偏斜面压力重构。
+
+24,576单元、同一启动时刻tU/D=0.0005，压力高频能量占比从93.23%降至0.00733%；时间步减半的压力L2差异为0.06268%。但两网格壁面Cp相对L2差异仍为41.89%，最大法向cell/face差异仍为0.239U，长期耦合及空间收敛未通过；数值/物理资格均为False，不增加合格案例计数。旧连续性/动量审计通过不再被用作压力耦合通过证据。
