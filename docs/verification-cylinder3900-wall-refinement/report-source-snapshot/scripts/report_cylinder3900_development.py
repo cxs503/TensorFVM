@@ -22,7 +22,6 @@ def coupling(path):
 
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--input',type=Path,required=True);a=p.parse_args();r=a.input
-    if (r/'report.md').exists():p.error('report exists; preserve evidence')
     probes=json.loads((r/'preflight/probes.json').read_text());cases={name:json.loads((r/name/'summary.json').read_text())for name in ['coarse','medium']}
     config={name:json.loads((r/name/'config.json').read_text())['config']for name in cases}
     rows=[]
@@ -34,6 +33,25 @@ def main():
     spectral=statistics(h,discard_time=0);write_json(r/'spectral-resolution-verification.json',dict(kind='synthetic operator signal, not CFD or standard field',input=dict(St=.215,dt=.002,duration=601),output=spectral,
                old_fixed_4096_bin=.1220703125,physical_accuracy_qualified=False))
     figs=[]
+    f=plt.figure(figsize=(15,9))
+    for row,name in enumerate(['coarse','medium']):
+        with np.load(r/name/'checkpoint.npz') as native:
+            c=config[name];nx,ny,nz=(c[k]for k in ['nx','ny','nz'])
+            nodes=native['vertices'];cells=native['connectivity'].reshape(nz,ny,nx,8)[nz//2].reshape(-1,8)
+            polygons=nodes.reshape(-1,3)[cells[:,:4],:2]-[c['cylinder_x'],c['cylinder_y']]
+            wall=nodes[:,0,:,:].copy();wall[...,:2]-=[c['cylinder_x'],c['cylinder_y']]
+            ax=f.add_subplot(2,3,row*3+1,projection='3d')
+            for j in range(0,nx+1,max(1,nx//24)):ax.plot(*wall[:,j].T,color='steelblue',lw=.6)
+            for j in range(nz+1):ax.plot(*wall[j].T,color='black',lw=.5)
+            ax.set(xlabel='x/D',ylabel='y/D',zlabel='z/D',title=f'{name}: actual periodic-span wall mesh')
+            ax.set_box_aspect((1,1,c['span']))
+            for column,limits,title in [(2,((-8,16),(-10,10)),'Whole midspan computational mesh'),(3,((.42,.72),(-.18,.18)),'Actual near-wall cells, downstream side')]:
+                ax=f.add_subplot(2,3,row*3+column)
+                ax.add_collection(PolyCollection(polygons,facecolors='none',edgecolors='black',linewidths=.25))
+                ax.set(xlim=limits[0],ylim=limits[1],xlabel='x/D',ylabel='y/D',title=f'{title}\n{nx} x {ny} x {nz} = {cases[name]["mesh_cells"]:,} CV')
+                ax.set_aspect('equal')
+    f.suptitle('Native checkpoint geometry: body-fitted cylinder, not a Cartesian mask')
+    f.tight_layout();figs.append(('mesh',f))
     f,axes=plt.subplots(1,3,figsize=(12,4))
     groups=sorted({(x['config']['nx'],x['config']['ny'],x['config']['nz'])for x in probes})
     for group in groups:
@@ -53,18 +71,41 @@ def main():
     axes[0].set(xlabel='t U/D',ylabel='|Cd| actual startup');axes[1].set(xlabel='t U/D',ylabel='Shared-face divergence');axes[0].legend();axes[1].legend();f.suptitle('Matched 50-step startup at dt=1e-5: NOT converged');f.tight_layout();figs.append(('matched-startup',f))
     z=np.load(r/'medium/checkpoint.npz');c=config['medium'];nodes=z['vertices'];nx,ny,nz=(c[k]for k in ['nx','ny','nz']);k=nz//2;cells=z['connectivity'].reshape(nz,ny,nx,8)[k].reshape(-1,8);polys=nodes.reshape(-1,3)[cells[:,:4],:2]-[c['cylinder_x'],c['cylinder_y']]
     f,axes=plt.subplots(1,2,figsize=(11,4))
-    for ax,values,title in zip(axes,[z['pressure'].reshape(nz,ny,nx)[k],np.linalg.norm(z['velocity'].reshape(nz,ny,nx,3)[k],axis=-1)],['Actual instantaneous pressure','Actual instantaneous speed']):
-        pc=PolyCollection(polys,array=values.ravel(),cmap='turbo',edgecolors='none');ax.add_collection(pc);ax.autoscale();ax.set(xlim=(-1,4),ylim=(-2,2),xlabel='x/D',ylabel='y/D',title=title);ax.set_aspect('equal');f.colorbar(pc,ax=ax)
+    for ax,values,title,label in zip(axes,[z['pressure'].reshape(nz,ny,nx)[k]/(c['density']*c['inlet_velocity']**2),np.linalg.norm(z['velocity'].reshape(nz,ny,nx,3)[k],axis=-1)/c['inlet_velocity']],['Actual instantaneous pressure','Actual instantaneous speed'],['p / (rho U²)','|velocity| / U']):
+        pc=PolyCollection(polys,array=values.ravel(),cmap='turbo',edgecolors='none');ax.add_collection(pc);ax.autoscale();ax.set(xlim=(-1,4),ylim=(-2,2),xlabel='x/D',ylabel='y/D',title=title);ax.set_aspect('equal');f.colorbar(pc,ax=ax,label=label)
     f.suptitle('24576 body-fitted CV, t*=0.0005: startup only');f.tight_layout();figs.append(('medium-fields',f))
+    f,ax=plt.subplots(figsize=(10,4.5))
+    for name in ['coarse','medium']:
+        surface=np.genfromtxt(r/name/'wall-pressure.csv',delimiter=',',names=True)
+        angles=np.unique(surface['theta_degrees']);cp=[]
+        areas=np.sqrt(sum(surface['area_'+axis]**2 for axis in ['x','y','z']))
+        for angle in angles:
+            selected=surface['theta_degrees']==angle
+            cp.append(np.average(surface['Cp'][selected],weights=areas[selected]))
+        ax.plot(angles,cp,label=f'{name}: {cases[name]["mesh_cells"]:,} CV')
+    ax.set(xlabel='Native wall angle (degrees); 0 = downstream base',ylabel='Instantaneous span-averaged Cp',
+           title='Actual wall pressure at tU/D=0.0005; NOT stationary statistics')
+    ax.grid(alpha=.25);ax.legend();f.tight_layout();figs.append(('surface-cp',f))
     with PdfPages(r/'report.pdf')as pdf:
-        for name,f in figs:f.savefig(r/(name+'.png'),dpi=180);f.savefig(r/(name+'.svg'));pdf.savefig(f);plt.close(f)
-    lines=['# Re3900 wall refinement and startup development report','','## Geometry and initial-viscosity preflight','',
+        for name,f in figs:f.savefig(r/(name+'.png'),dpi=300);f.savefig(r/(name+'.svg'));pdf.savefig(f);plt.close(f)
+    lines=['# Re3900 wall refinement and startup development report','',
+      '## Actual computational meshes','',
+      'The following figure is reconstructed directly from the coarse/medium checkpoints: three-dimensional cylinder wall, complete midspan mesh and a near-wall enlargement. Dimensions are normalized by D and the cylinder center is the origin. These are the two meshes actually used for the reported CFD runs; the larger preflight meshes have not been solved.','',
+      '![Actual three-dimensional wall and body-fitted meshes, with near-wall enlargement](mesh.png)','',
+      '## Actual pressure and velocity fields','',
+      'The medium-grid midspan pressure and velocity-magnitude fields below are actual saved CFD fields at tU/D=0.0005. They show the impulsive startup, not a statistically stationary vortex street. Pressure uses rho=U=D=1; the speed is normalized by U.','',
+      '![Computed midspan pressure and velocity magnitude, 24,576 control volumes](medium-fields.png)','',
+      '## Actual cylinder surface pressure','',
+      'Cp=2p/(rho U²) is calculated from the saved adjacent owner-cell wall pressure, then area-averaged across the span at each native wall angle. Angle 0 is the downstream base. This is an instantaneous startup comparison of the two grids; no experimental Cp curve or convergence claim is implied. Raw values are available in coarse/wall-pressure.csv and medium/wall-pressure.csv.','',
+      '![Actual instantaneous surface Cp from both computed grids](surface-cp.png)','',
+      '## Geometry and initial-viscosity preflight','',
       'All eight meshes were actually built with the shared 3-D native face metrics, LS gradient and WALE initial viscosity. No global pressure CSR or LU was constructed in the preflight. The startup velocity is not projected; its y+ indicator is not a long-time wall-resolution qualification. Geometry gates use the common `tensorfvm.verification.core.Metric/evaluate` module.','',
       '| Grid | Stretch | Wall distance max / D | Initial y+ max | Delta z / D | Diffusion dt ceiling | Wake h95 / D |','|---|---:|---:|---:|---:|---:|---:|']
     for x in probes:
         c0=x['config'];lines.append(f"| {c0['nx']} x {c0['ny']} x {c0['nz']} | {c0['body_fitted_stretching']} | {x['wall_distance_D']['max']:.3g} | {x['initial_yplus']['max']:.3f} | {x['spanwise_spacing_D']:.4f} | {x['explicit_diffusion_dt_screen_limit']:.3g} | {x['wake_region_volume_length_D']['p95']:.3f} |")
     lines+=['','192 x 96 x 32 / stretch8 gives initial y+max=0.838, but only an initial wall indicator. Its Delta z=0.0982D remains four times the [primary DNS](https://doi.org/10.1063/1.4818641) 128-plane spacing of pi/128=0.02454D; wake volume-length h95=0.085D is also much larger than the paper’s reported near-wake average h about0.018D. A thin first wall cell alone does not establish accurate wake LES.','',
       'The geometry run peak RSS was a cumulative process peak of about2.41 GB; the 589824-CV native stored tensors are recorded separately. These are measured geometry/transport costs, not pressure-solver costs. No large-grid LU timing or memory result is claimed.','',
+      '![Measured wall distance, startup y+ and explicit diffusion time-step limits](preflight.png)','',
       '## Matched-time two-grid short runs','',
       'Both real CFD runs use the original DNS domain [-8,16]D x [-10,10]D, span piD, inletU=1, top/bottom slip, cylinder no-slip and periodic z. Both take50 steps at dt=1e-5 to tU/D=0.0005. They ran concurrently with other CPU jobs, so timings are observed under load rather than isolated scaling.','',
       '| Case | CV | Final maxdiv | Final y+max | Seconds/step | LU stored MB | Setup seconds |','|---|---:|---:|---:|---:|---:|---:|']
@@ -74,6 +115,8 @@ def main():
     lines+=['',f'The medium pressure matrix has170496 entries, while its actual L/U factors have20452054 entries and245.62MB of stored sparse arrays. Four times the CV count produces about9.81 times the factor storage. Measured medium process peak RSS is about1.16GB. At its observed{sec:.3f}s/step, an extrapolation of600D/U at the unchanged dt1e-5 needs60million steps and about{days:.1f}days. **This is an arithmetic cost extrapolation, not a measured long run**; solver iterations, CPU load and future numerical methods will change costs.','',
       'Initial geometry / stretch8 for the589824-CV grid limits diffusion dt to2.38e-6; using20% of that ceiling is about4.75e-7 and implies roughly1.26billion steps over600D/U. No per-step runtime was measured on that grid. Explicit viscosity and full 3-D sparse LU are concrete production bottlenecks; escalating only mesh counts is insufficient.','',
       'The common acceptance audit replays final continuity independently from native checkpoint face fluxes and checks all recorded mass/momentum/CFL/diffusion limits. Both numerical audits pass. Both instantaneous wall-resolution gates fail. Physical accuracy remains false, qualified Cd/St/Cpb/profile errors remain null, and these two startup solutions do not establish a convergence order.','',
+      '![Actual matched-time drag history and continuity residual](matched-startup.png)','',
+      '![Measured CPU step time, pressure factor storage and setup cost](costs.png)','',
       '## Cell/face coupling diagnostic','',
       '| Case | Interior max normal defect / U | p95 normal defect / U | Relative face-flux L2 defect |','|---|---:|---:|---:|']
     for name,x in diag.items():lines.append(f"| {name} | {x['interior_max_normal_velocity_difference']:.6g} | {x['interior_p95_normal_velocity_difference']:.6g} | {x['interior_flux_relative_L2']:.6g} |")

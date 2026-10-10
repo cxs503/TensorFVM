@@ -1,5 +1,23 @@
 # Re3900 wall refinement and startup development report
 
+## Actual computational meshes
+
+The following figure is reconstructed directly from the coarse/medium checkpoints: three-dimensional cylinder wall, complete midspan mesh and a near-wall enlargement. Dimensions are normalized by D and the cylinder center is the origin. These are the two meshes actually used for the reported CFD runs; the larger preflight meshes have not been solved.
+
+![Actual three-dimensional wall and body-fitted meshes, with near-wall enlargement](mesh.png)
+
+## Actual pressure and velocity fields
+
+The medium-grid midspan pressure and velocity-magnitude fields below are actual saved CFD fields at tU/D=0.0005. They show the impulsive startup, not a statistically stationary vortex street. Pressure uses rho=U=D=1; the speed is normalized by U.
+
+![Computed midspan pressure and velocity magnitude, 24,576 control volumes](medium-fields.png)
+
+## Actual cylinder surface pressure
+
+Cp=2p/(rho U²) is calculated from the saved adjacent owner-cell wall pressure, then area-averaged across the span at each native wall angle. Angle 0 is the downstream base. This is an instantaneous startup comparison of the two grids; no experimental Cp curve or convergence claim is implied. Raw values are available in coarse/wall-pressure.csv and medium/wall-pressure.csv.
+
+![Actual instantaneous surface Cp from both computed grids](surface-cp.png)
+
 ## Geometry and initial-viscosity preflight
 
 All eight meshes were actually built with the shared 3-D native face metrics, LS gradient and WALE initial viscosity. No global pressure CSR or LU was constructed in the preflight. The startup velocity is not projected; its y+ indicator is not a long-time wall-resolution qualification. Geometry gates use the common `tensorfvm.verification.core.Metric/evaluate` module.
@@ -19,6 +37,8 @@ All eight meshes were actually built with the shared 3-D native face metrics, LS
 
 The geometry run peak RSS was a cumulative process peak of about2.41 GB; the 589824-CV native stored tensors are recorded separately. These are measured geometry/transport costs, not pressure-solver costs. No large-grid LU timing or memory result is claimed.
 
+![Measured wall distance, startup y+ and explicit diffusion time-step limits](preflight.png)
+
 ## Matched-time two-grid short runs
 
 Both real CFD runs use the original DNS domain [-8,16]D x [-10,10]D, span piD, inletU=1, top/bottom slip, cylinder no-slip and periodic z. Both take50 steps at dt=1e-5 to tU/D=0.0005. They ran concurrently with other CPU jobs, so timings are observed under load rather than isolated scaling.
@@ -33,6 +53,10 @@ The medium pressure matrix has170496 entries, while its actual L/U factors have2
 Initial geometry / stretch8 for the589824-CV grid limits diffusion dt to2.38e-6; using20% of that ceiling is about4.75e-7 and implies roughly1.26billion steps over600D/U. No per-step runtime was measured on that grid. Explicit viscosity and full 3-D sparse LU are concrete production bottlenecks; escalating only mesh counts is insufficient.
 
 The common acceptance audit replays final continuity independently from native checkpoint face fluxes and checks all recorded mass/momentum/CFL/diffusion limits. Both numerical audits pass. Both instantaneous wall-resolution gates fail. Physical accuracy remains false, qualified Cd/St/Cpb/profile errors remain null, and these two startup solutions do not establish a convergence order.
+
+![Actual matched-time drag history and continuity residual](matched-startup.png)
+
+![Measured CPU step time, pressure factor storage and setup cost](costs.png)
 
 ## Cell/face coupling diagnostic
 

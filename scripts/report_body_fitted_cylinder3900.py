@@ -84,7 +84,7 @@ Re = U D / nu = 3900; U = rho = D = 1, nu = 1/3900. Domain: {config['length']}D 
 Shared owner/neighbor faces integrate convection, full symmetric deviatoric variable-viscosity stress and pressure. WALE SGS uses the original [Nicoud and Ducros (1999) formulation](https://doi.org/10.1023/A:1009995426001); Cw = 0.325 and Delta = V^(1/3). Zero SGS face viscosity at the wall. An explicit diffusion screen checks 2 dt sum(nu_f a_f)/V <=0.5 before any step commits. This conservative necessary screen is not a general skew-mesh stability proof; fine wall production may need implicit viscosity. Forward Euler and 90% central / 10% upwind convection are exploratory settings; numerical-dissipation sensitivity remains open. LS gradients and nonorthogonal pressure face projection are implemented in a shared geometry kernel. Cell velocity and face mass flux are separate authoritative quantities; mass closure alone does not validate their collocated coupling.
 
 ```bash
-OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 PYTHONPATH=src python scripts/run_body_fitted_cylinder3900.py --output results/cylinder3900-body-fitted --nx 48 --ny 16 --nz 8 --steps 300 --dt .002 --stretching 3.5
+OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 PYTHONPATH=src python scripts/run_body_fitted_cylinder3900.py --output results/cylinder3900-body-fitted --nx {nx} --ny {ny} --nz {nz} --steps {summary['steps']} --dt {config['time_step']} --stretching {config['body_fitted_stretching']} --length {config['length']} --height {config['height']} --cylinder-x {config['cylinder_x']} --cylinder-y {config['cylinder_y']} --outer-condition {json.loads((d/'config.json').read_text())['settings'].get('outer_condition','freestream')}
 PYTHONPATH=src python scripts/report_body_fitted_cylinder3900.py --input results/cylinder3900-body-fitted
 ```
 
@@ -95,6 +95,20 @@ The `--steps` argument specifies additional steps after initialization, not a to
 Completed {summary['steps']} steps, tU/D = {summary['final']['time']:.6g}; max final cell divergence = {summary['final']['continuity']:.3e}; final momentum ledger = {summary['final']['momentum_ledger']:.3e}; final CFL = {summary['final']['cfl']:.5f}. These figures audit numerical advancement. Final instantaneous Cd = {summary['force']['Cd']:.6g} and Cl = {summary['force']['Cl']:.6g} are startup values and are not benchmark statistics. The native geometry, actual pressure/speed maps, force history and actual wall-pressure coefficients appear in report.pdf and PNG/SVG figures.
 
 {resolution_text}
+
+## Actual mesh and computed fields
+
+The geometry and fields below come directly from the native checkpoint. The
+pressure and speed are instantaneous midspan values; they are startup fields
+and do not show a statistically stationary LES wake.
+
+![Actual three-dimensional cylinder wall and midspan body-fitted mesh](geometry.png)
+
+![Computed instantaneous pressure and velocity magnitude](fields.png)
+
+![Actual force history and continuity diagnostic](histories.png)
+
+![Actual instantaneous cylinder surface pressure coefficient](surface-cp.png)
 
 {primary_text}
 
@@ -108,6 +122,9 @@ Completed {summary['steps']} steps, tU/D = {summary['final']['time']:.6g}; max f
 
 Production statistics default to discarding 100 D/U then collecting >=500 D/U; these are configurable development gates, not an assertion that the selected durations suffice for all wake modes. Too-short records return `St=null`. Block confidence intervals require sufficiently long independent blocks; the implementation reports that assumption. Cp/velocity reference comparison and uncertainty bands await primary raw data; current figures have no fabricated standard curve.
 '''
+    if (d/'dns-reference.json').exists():
+        text=text.replace('## Three distinct qualification levels',
+            '![Published DNS scalar reference versus unqualified startup diagnostics](dns-scalar-comparison.png)\n\n## Three distinct qualification levels')
     (d/'report.md').write_text(text)
     manifest=json.loads((d/'manifest.json').read_text());script=Path(__file__).resolve();dest=d/'source-snapshot/scripts'/script.name;dest.parent.mkdir(exist_ok=True,parents=True);shutil.copy2(script,dest)
     manifest['report_source_sha256']=hashlib.sha256(script.read_bytes()).hexdigest();manifest['artifact_sha256']={str(f.relative_to(d)):hashlib.sha256(f.read_bytes()).hexdigest()for f in d.rglob('*')if f.is_file()and f.name!='manifest.json'}
