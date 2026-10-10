@@ -1,0 +1,94 @@
+{
+  "schema": "tensorfvm.independent-benchmark-audit/1",
+  "raw_reconstruction_passed": true,
+  "benchmark_passed": true,
+  "cases": [
+    {
+      "directory": "channel-12",
+      "raw_reconstruction_passed": true,
+      "benchmark_passed": true,
+      "steps": 41
+    },
+    {
+      "directory": "channel-24",
+      "raw_reconstruction_passed": true,
+      "benchmark_passed": true,
+      "steps": 87
+    },
+    {
+      "directory": "channel-48",
+      "raw_reconstruction_passed": true,
+      "benchmark_passed": true,
+      "steps": 282
+    },
+    {
+      "directory": "tg-space-32",
+      "raw_reconstruction_passed": true,
+      "benchmark_passed": true,
+      "steps": 40
+    },
+    {
+      "directory": "tg-space-48",
+      "raw_reconstruction_passed": true,
+      "benchmark_passed": true,
+      "steps": 40
+    },
+    {
+      "directory": "tg-space-64",
+      "raw_reconstruction_passed": true,
+      "benchmark_passed": true,
+      "steps": 40
+    },
+    {
+      "directory": "tg-time-0.1",
+      "raw_reconstruction_passed": true,
+      "benchmark_passed": true,
+      "steps": 5
+    },
+    {
+      "directory": "tg-time-0.05",
+      "raw_reconstruction_passed": true,
+      "benchmark_passed": true,
+      "steps": 10
+    },
+    {
+      "directory": "tg-time-0.025",
+      "raw_reconstruction_passed": true,
+      "benchmark_passed": true,
+      "steps": 20
+    },
+    {
+      "directory": "control-unconverged-channel",
+      "raw_reconstruction_passed": true,
+      "benchmark_passed": false,
+      "steps": 1
+    },
+    {
+      "directory": "control-coarse-tg-pressure",
+      "raw_reconstruction_passed": true,
+      "benchmark_passed": false,
+      "steps": 40
+    },
+    {
+      "directory": "lbm-tg-32-ma-0.05",
+      "raw_reconstruction_passed": true,
+      "benchmark_passed": true,
+      "steps": 89
+    },
+    {
+      "directory": "lbm-tg-64-ma-0.05",
+      "raw_reconstruction_passed": true,
+      "benchmark_passed": true,
+      "steps": 177
+    },
+    {
+      "directory": "lbm-tg-32-ma-0.025",
+      "raw_reconstruction_passed": true,
+      "benchmark_passed": true,
+      "steps": 177
+    }
+  ],
+  "summary_sha256": "0bb32948e0f4874146a41a84d400367787b883e791851962d574e4fdc135f80d",
+  "auditor_sha256": "7df05206579b07718441e0ae894e60d8a7b2543fd8e557bd1f7fb7d8586ea414",
+  "scope": "NumPy analytic references, authoritative raw states and every accepted MAC/BGK step; no solver imports"
+}

@@ -342,3 +342,15 @@ MAC 面流量、压力梯度、壁面剪切及质量守恒。结果见 ``docs/su
 ``docs/current-status-2026-10-09.md``，保留旧投影失败证据。后续相容面通量
 投影与逐步连续性/质量验收见 ``docs/compatible-projection/README.md``；
 静态 SI 通道和面投影验证均不能外推 Re=3900 LES 或移动体物理资格。
+
+共性解析 benchmark 与论文报告
+-----------------------------
+
+新增 tensorfvm-benchmark（或 python -m tensorfvm.verification），通过共性模块
+执行 Poiseuille 固壁通道、Taylor–Green 瞬态涡、空间/时间加密及失败对照。
+正式案例速度、压力和适用壁面误差严格小于3%，另设质量/求解/能量门。
+--lbm-repo 指向独立 TensorLBM 仓库，开展实际匹配解析对照。
+报告提供问题、方法、使用、原场、云图、压力/速度曲线、独立审计、
+PDF/HTML/LaTeX和300dpi/矢量图。见 docs/benchmark-workflow.md 和
+docs/verification-benchmarks/。失败资料在
+docs/verification-benchmarks-failed-n128/；不认证工程破冰。

@@ -1,0 +1,141 @@
+{
+  "case": "poiseuille",
+  "role": "spatial",
+  "resolution": "72x24",
+  "spacing_m": 0.0008333333333333334,
+  "config": {
+    "nx": 72,
+    "ny": 24,
+    "length": 0.12,
+    "height": 0.02,
+    "cylinder_x": 1.0,
+    "cylinder_y": 1.0,
+    "cylinder_radius": null,
+    "inlet_velocity": 0.0005,
+    "reynolds": 1.0,
+    "density": 1000.0,
+    "velocity_relaxation": 0.7,
+    "pressure_relaxation": 0.3,
+    "max_iterations": 1000,
+    "tolerance": 1e-06,
+    "device": "cpu",
+    "pseudo_time_step": null,
+    "mesh_type": "cartesian",
+    "inlet_profile": "uniform",
+    "turbulence_model": "laminar",
+    "turbulence_relaxation": 0.5,
+    "sa_freestream_ratio": 3.0,
+    "flat_plate_stretching": 4.0,
+    "body_fitted_stretching": 0.0,
+    "outer_boundary": "channel",
+    "time_step": null,
+    "inner_iterations": 1,
+    "initial_perturbation": 0.0,
+    "airfoil_code": "0012",
+    "airfoil_chord": 1.0,
+    "airfoil_x": 1.0,
+    "airfoil_y": 1.0,
+    "angle_of_attack": 0.0,
+    "mesh_file": null
+  },
+  "elapsed_s": 5.028637966141105,
+  "iterations": 87,
+  "converged": true,
+  "time_s": null,
+  "pressure_time_s": null,
+  "metrics": [
+    {
+      "name": "velocity_l2",
+      "value": 0.001619709309362256,
+      "limit": 0.03,
+      "description": "u profile at x nearest 5H",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "velocity_linf",
+      "value": 0.0017380335467155194,
+      "limit": 0.03,
+      "description": "u profile peak-normalized maximum error",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "pressure_gradient",
+      "value": 0.0034401864720734476,
+      "limit": 0.03,
+      "description": "least-squares dp/dx in 3H<=x<=5H",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "pressure_curve_l2",
+      "value": 0.003440186472073416,
+      "limit": 0.03,
+      "description": "mean-gauge aligned downstream pressure curve",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "wall_shear_linf",
+      "value": 0.0034402042283452707,
+      "limit": 0.03,
+      "description": "half-cell wall shear, downstream only",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "force_balance",
+      "value": 1.6056632309404405e-08,
+      "limit": 0.03,
+      "description": "developed pressure/wall-force balance",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "relative_mass_imbalance",
+      "value": 1.734723475976807e-16,
+      "limit": 1e-06,
+      "description": "global inlet/outlet mass balance",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "scaled_divergence",
+      "value": 9.052326180183146e-15,
+      "limit": 1e-06,
+      "description": "authoritative face divergence H/Ub",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "solver_residual",
+      "value": 9.080719215511874e-07,
+      "limit": 1e-06,
+      "description": "final SIMPLE residual gate",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "convergence_failure",
+      "value": 0.0,
+      "limit": 0.5,
+      "description": "solver explicitly converged",
+      "unit": "1",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "reference": {
+    "velocity_formula": "u=6 Ub (y/H)(1-y/H)",
+    "pressure_gradient_pa_m": -0.15,
+    "wall_shear_pa": 0.0015,
+    "comparison_region_m": [
+      0.06,
+      0.1
+    ],
+    "pressure_gauge": "mean aligned only in comparison region",
+    "section_x_m": 0.10083333333333333
+  },
+  "directory": "channel-24"
+}

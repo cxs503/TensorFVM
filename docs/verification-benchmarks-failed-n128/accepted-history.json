@@ -1,0 +1,68 @@
+[
+  {
+    "step": 1,
+    "time_s": 0.0125,
+    "nonlinear_converged": true,
+    "nonlinear_iterations": 5,
+    "nonlinear_residual_m_s": 4.385380947269368e-15,
+    "kinetic_before_J": 62.01255336059963,
+    "kinetic_after_J": 61.703326244207105,
+    "convective_power_W": -1.5414978150920984e-17,
+    "viscous_power_W": -24.738169311402782,
+    "pressure_power_W": -7.750713368618258e-17,
+    "energy_balance_defect_J": 7.271960811294775e-15,
+    "max_divergence_s_inv": 4.2396641752873165e-15,
+    "momentum_change_Ns": [
+      3.974915870638189e-17,
+      -1.1991209884505752e-16,
+      0.0
+    ],
+    "projection": {
+      "pressure_method": "periodic-FFT-discrete-symbol",
+      "pressure_residual": 1.513896490115805e-11,
+      "pressure_target": 2.5500261466297297e-09,
+      "pressure_converged": true,
+      "tentative_energy_J": 61.70813716082292,
+      "projected_energy_J": 61.703326244207105,
+      "momentum_change_Ns": [
+        1.301410792840163e-16,
+        1.0325518650004507e-16,
+        0.0
+      ],
+      "max_divergence_s_inv": 3.885780586188048e-15
+    }
+  },
+  {
+    "step": 2,
+    "time_s": 0.025,
+    "nonlinear_converged": true,
+    "nonlinear_iterations": 5,
+    "nonlinear_residual_m_s": 1.5248913243226525e-13,
+    "kinetic_before_J": 61.703326244207105,
+    "kinetic_after_J": 61.395641096405285,
+    "convective_power_W": -1.6457740849407906e-17,
+    "viscous_power_W": -24.614811824145118,
+    "pressure_power_W": -1.0639618885149353e-16,
+    "energy_balance_defect_J": -5.88418203051333e-15,
+    "max_divergence_s_inv": 4.551914400963142e-15,
+    "momentum_change_Ns": [
+      -2.24697851622539e-16,
+      1.8570772738820143e-16,
+      0.0
+    ],
+    "projection": {
+      "pressure_method": "periodic-FFT-discrete-symbol",
+      "pressure_residual": 1.541494508458223e-11,
+      "pressure_target": 2.5373103787841134e-09,
+      "pressure_converged": true,
+      "tentative_energy_J": 61.400404153139476,
+      "projected_energy_J": 61.395641096405285,
+      "momentum_change_Ns": [
+        8.043594886608741e-17,
+        -2.158222260808833e-16,
+        0.0
+      ],
+      "max_divergence_s_inv": 4.9960036108132044e-15
+    }
+  }
+]

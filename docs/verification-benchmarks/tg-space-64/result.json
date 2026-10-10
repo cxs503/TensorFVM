@@ -1,0 +1,149 @@
+{
+  "case": "taylor-green",
+  "role": "spatial",
+  "resolution": "64x64x4",
+  "spacing_m": 0.09817477042468103,
+  "config": {
+    "nx": 64,
+    "ny": 64,
+    "nz": 4,
+    "lengths_m": [
+      6.283185307179586,
+      6.283185307179586,
+      6.283185307179586
+    ],
+    "density_kg_m3": 1.0,
+    "viscosity_pa_s": 0.1,
+    "time_step_s": 0.0125,
+    "nonlinear_tolerance": 1e-12,
+    "nonlinear_iterations": 100,
+    "device": "cpu"
+  },
+  "elapsed_s": 1.7435592357069254,
+  "iterations": 40,
+  "time_s": 0.5,
+  "pressure_time_s": 0.49375,
+  "metrics": [
+    {
+      "name": "velocity_l2",
+      "value": 8.024450747041884e-05,
+      "limit": 0.03,
+      "description": "continuous solution at actual face locations",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "velocity_linf",
+      "value": 8.024450747056974e-05,
+      "limit": 0.03,
+      "description": "continuous face velocity peak-normalized maximum error",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "pressure_l2",
+      "value": 0.002247972661076307,
+      "limit": 0.03,
+      "description": "continuous cell pressure at midpoint time, mean-zero gauge",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "pressure_linf",
+      "value": 0.0022479726610771847,
+      "limit": 0.03,
+      "description": "cell pressure peak-normalized maximum error",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "temporal_velocity_l2",
+      "value": 5.195802341735129e-08,
+      "limit": 0.03,
+      "description": "fixed-grid exact exponential; temporal error only",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "scaled_divergence",
+      "value": 1.7763568394002505e-15,
+      "limit": 1e-10,
+      "description": "all-step face divergence for U0=1 m/s and k=1 /m",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "nonlinear_residual",
+      "value": 2.220446049250313e-16,
+      "limit": 1.01e-12,
+      "description": "all-step true nonlinear residual",
+      "unit": "m/s",
+      "passed": true
+    },
+    {
+      "name": "energy_defect",
+      "value": 2.475797344914099e-14,
+      "limit": 1e-10,
+      "description": "all-step discrete work/KE defect",
+      "unit": "J",
+      "passed": true
+    },
+    {
+      "name": "energy_increase",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "no step energy increase",
+      "unit": "J",
+      "passed": true
+    },
+    {
+      "name": "momentum_change",
+      "value": 4.762804874274064e-16,
+      "limit": 1e-10,
+      "description": "all-step total momentum change",
+      "unit": "Ns",
+      "passed": true
+    },
+    {
+      "name": "convective_power",
+      "value": 2.892640369739928e-16,
+      "limit": 1e-10,
+      "description": "all-step zero convective work",
+      "unit": "W",
+      "passed": true
+    },
+    {
+      "name": "positive_viscous_power",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "viscous power nonpositive",
+      "unit": "W",
+      "passed": true
+    },
+    {
+      "name": "pressure_failure",
+      "value": 0.0,
+      "limit": 0.5,
+      "description": "all-step pressure success",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "projection_energy_increase",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "orthogonal pressure projection does not add KE",
+      "unit": "J",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "reference": {
+    "velocity_formula": "u=sin(x)cos(y)exp(-2 nu t); v=-cos(x)sin(y)exp(-2 nu t); w=0",
+    "pressure_formula": "p=rho/4*(cos(2x)+cos(2y))*exp(-4 nu t_mid)",
+    "pressure_gauge": "mean zero",
+    "semidiscrete_decay_rate_s_inv": 0.19983941350784626,
+    "scope": "2D analytic vortex embedded in a 3D periodic grid; not 3D turbulence"
+  },
+  "directory": "tg-space-64"
+}

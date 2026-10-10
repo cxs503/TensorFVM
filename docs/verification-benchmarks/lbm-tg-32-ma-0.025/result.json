@@ -1,0 +1,81 @@
+{
+  "case": "taylor-green-lbm",
+  "role": "comparison",
+  "resolution": "32x32",
+  "spacing_m": 0.19634954084936207,
+  "config": {
+    "nx": 32,
+    "ny": 32,
+    "length_m": 6.283185307179586,
+    "density_kg_m3": 1.0,
+    "viscosity_pa_s": 0.1,
+    "time_step_s": 0.002824858757062147,
+    "tau": 0.5219815449257953,
+    "mach_target": 0.025,
+    "actual_reference_mach": 0.024918820132058397,
+    "physical_speed_scale_m_s": 69.50773746067418
+  },
+  "elapsed_s": 0.1472869385033846,
+  "iterations": 177,
+  "time_s": 0.5,
+  "pressure_time_s": 0.5,
+  "provenance": {
+    "repository": "/home/jsyc/tensor-suite-development/TensorLBM",
+    "git_base": "cd69ffa874bcb461f833a881bdd79c2680c6d7a7",
+    "source_sha256": {
+      "src/tensorlbm/__init__.py": "4390f53698f6ee62273eb8ccf074310b55e8c65c0c9c733e4962e3f25da0cb56",
+      "src/tensorlbm/_version.py": "56b5e91c3bb77ab933c25fd65eba883419bdc5691cc94cb9dc840e8f4e3674eb",
+      "src/tensorlbm/d2q9.py": "1065c3093e07dfa186d729412c4081c7e4ba0925db223e8083ff007d457adf4d",
+      "src/tensorlbm/solver.py": "6cef9523e393f4d584ef01620074c945fc94e44521884ff308ce25b7b59c39b3",
+      "src/tensorlbm/boundaries.py": "07810d051c674b68e1777e60074358affa7362c7521ec7e8d18f0919456d5cca"
+    }
+  },
+  "metrics": [
+    {
+      "name": "velocity_l2",
+      "value": 0.006400304092537204,
+      "limit": 0.03,
+      "description": "continuous velocity sampled at LBM nodes",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "velocity_linf",
+      "value": 0.0064337417273491165,
+      "limit": 0.03,
+      "description": "node velocity reference-peak normalized maximum error",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "pressure_l2",
+      "value": 0.016831122032744183,
+      "limit": 0.03,
+      "description": "isothermal EOS pressure, mean zero at t=0.5 s",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "pressure_linf",
+      "value": 0.01802426102753079,
+      "limit": 0.03,
+      "description": "EOS pressure reference-peak maximum error",
+      "unit": "1",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "reference": {
+    "scope": "same periodic continuum problem; different face/node layouts and pressure clocks",
+    "initialization": "analytic density/velocity, production equilibrium populations; no artificial mass correction",
+    "precision": "float64 populations; production D2Q9 weights retain upstream float32 constants",
+    "comparison_limit": "BGK D2Q9 baseline only, not all TensorLBM collision models or optimized GPU implementations",
+    "pressure_formula": "p=(rho-mean(rho))*(dx/dt)^2/3"
+  },
+  "performance": {
+    "state_storage_bytes": 73728,
+    "state_scope": "nine population arrays only; excludes temporary fields, cached stream indices and saved history",
+    "timing_scope": "one CPU execution including diagnostics and raw sampling; no speed superiority inference"
+  },
+  "directory": "lbm-tg-32-ma-0.025"
+}
