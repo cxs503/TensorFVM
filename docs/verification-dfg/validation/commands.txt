@@ -1,0 +1,6 @@
+# Interpreter: /data/TensorFEM/.venv/bin/python; repo root; CPU one thread.
+OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 PYTHONPATH=src python -m tensorfvm.verification.dfg --output docs/verification-dfg --grids 64x24
+# Expected exit 2: physical reference gates fail even though residuals converge.
+OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 PYTHONPATH=src python scripts/audit_dfg_pressure.py --directory docs/verification-dfg
+OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 PYTHONPATH=src python -m pytest -q tests/test_dfg_evidence.py
+# Negative control: --grids 16x8 --max-iterations 1; expected exit 2.

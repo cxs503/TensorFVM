@@ -354,3 +354,14 @@ MAC 面流量、压力梯度、壁面剪切及质量守恒。结果见 ``docs/su
 PDF/HTML/LaTeX和300dpi/矢量图。见 docs/benchmark-workflow.md 和
 docs/verification-benchmarks/。失败资料在
 docs/verification-benchmarks-failed-n128/；不认证工程破冰。
+
+Additional analytic benchmarks
+------------------------------
+
+Genuine three-dimensional ABC/Beltrami decay and advected shear with nonzero
+mean flow now use the shared verification gates, raw exports and publication
+figures. See `benchmark inventory <docs/benchmarks-index.md>`_,
+`additional report <docs/verification-extended/report.md>`_ and
+`quantitative tables <docs/verification-extended/results-tables.pdf>`_.
+DFG Re20 cylinder evidence has strict drag/lift/pressure gates; the published
+coarse case remains a physical failure despite residual convergence.

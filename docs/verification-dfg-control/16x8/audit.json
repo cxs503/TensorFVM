@@ -1,0 +1,14 @@
+{
+  "raw_reconstruction_passed": true,
+  "physical_passed": false,
+  "pressure_force_n_m": [
+    0.0080026949456534,
+    0.0001485656633074251
+  ],
+  "viscous_force_n_m": [
+    0.006110449531196693,
+    3.176914506265925e-05
+  ],
+  "maximum_cell_mass_residual_kg_s_m": 4.2965059461608224e-11,
+  "scope": "NumPy integration of stored pressure/gradient traction and authoritative face mass; not an independent entire SIMPLE replay"
+}

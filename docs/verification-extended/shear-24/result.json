@@ -1,0 +1,136 @@
+{
+  "case": "advected-shear",
+  "role": "spatial",
+  "resolution": "24x24x4",
+  "spacing_m": 0.2617993877991494,
+  "config": {
+    "nx": 24,
+    "ny": 24,
+    "nz": 4,
+    "lengths_m": [
+      6.283185307179586,
+      6.283185307179586,
+      6.283185307179586
+    ],
+    "density_kg_m3": 1.0,
+    "viscosity_pa_s": 0.1,
+    "time_step_s": 0.01,
+    "nonlinear_tolerance": 1e-12,
+    "nonlinear_iterations": 100,
+    "device": "cpu"
+  },
+  "time_s": 0.5,
+  "pressure_time_s": 0.495,
+  "iterations": 50,
+  "elapsed_s": 1.0531989559531212,
+  "metrics": [
+    {
+      "name": "velocity_l2",
+      "value": 0.002769034092274307,
+      "limit": 0.03,
+      "description": "all components at their actual staggered face positions",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "velocity_linf",
+      "value": 0.003998708737015058,
+      "limit": 0.03,
+      "description": "peak-normalized maximum face velocity error",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "shear_velocity_l2",
+      "value": 0.0039965014449542535,
+      "limit": 0.03,
+      "description": "transported shear component; excludes constant mean flow",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "pressure_dynamic_scaled_linf",
+      "value": 0.0,
+      "limit": 0.03,
+      "description": "zero analytic pressure: absolute error normalized by initial dynamic pressure",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "scaled_divergence",
+      "value": 0.0,
+      "limit": 1e-10,
+      "description": "maximum over all accepted face states",
+      "unit": "1/s",
+      "passed": true
+    },
+    {
+      "name": "nonlinear_residual",
+      "value": 3.552713678800501e-15,
+      "limit": 1.01e-12,
+      "description": "all-step true fixed-point residual",
+      "unit": "m/s",
+      "passed": true
+    },
+    {
+      "name": "energy_defect",
+      "value": 2.992328607120953e-13,
+      "limit": 1e-10,
+      "description": "all-step discrete kinetic/work defect",
+      "unit": "J",
+      "passed": true
+    },
+    {
+      "name": "momentum_change",
+      "value": 1.3769552911346766e-14,
+      "limit": 1e-10,
+      "description": "all-step total momentum change",
+      "unit": "Ns",
+      "passed": true
+    },
+    {
+      "name": "convective_power",
+      "value": 4.613756444253343e-15,
+      "limit": 1e-10,
+      "description": "all-step convection work",
+      "unit": "W",
+      "passed": true
+    },
+    {
+      "name": "energy_increase",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "no accepted step gains kinetic energy",
+      "unit": "J",
+      "passed": true
+    },
+    {
+      "name": "positive_viscous_power",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "viscous work is nonpositive",
+      "unit": "W",
+      "passed": true
+    },
+    {
+      "name": "pressure_failure",
+      "value": 0.0,
+      "limit": 0.5,
+      "description": "all-step pressure solve success",
+      "unit": "1",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "reference": {
+    "scope": "2D advected shear embedded in four periodic z planes",
+    "mean_velocity_m_s": [
+      0,
+      0.7,
+      0
+    ],
+    "pressure_gauge": "mean zero",
+    "pressure_normalization": "absolute pressure / (0.5 rho (1+0.7^2))"
+  },
+  "directory": "shear-24"
+}
