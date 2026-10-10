@@ -167,3 +167,21 @@ PYTHONPATH=src python -m tensorfvm.overset_naca_report results/naca-overset
 ```
 
 [实际报告](verification-overset-naca/report.md)包含双组件状态、供体图、真实标量场及误差场、剖面、加密曲线、原始NPZ、CSV/PDF/TeX和独立复核。此入口尚未形成N-S绕流求解及力系数验证。
+
+### 30P30N 三段翼重叠网格
+
+使用三个独立实体轮廓、一个包含流体缝隙的 Gmsh 贴体组件和一个笛卡尔背景。实体面积逐个扣除；供体三角形不能穿过任一实体，重复或相交实体被拒绝。此阶段验证非正交标量扩散方程，不验收重叠网格升阻力。
+
+```bash
+PYTHONPATH=src python scripts/run_three_element_overset.py --output docs/verification-overset-30p30n
+PYTHONPATH=src python scripts/audit_three_element_overset.py docs/verification-overset-30p30n
+PYTHONPATH=src python scripts/report_three_element_overset.py docs/verification-overset-30p30n
+```
+
+输出目录必须为空。三档背景32/64/128，组件域[-1,3]×[-1.5,1.5]，背景域[-3,5]×[-3.5,3.5]。保留源文件快照、三个实体边界及偏移索引、原始场、完整供体权重、独立方程复核和报告。初始边界层厚度0.003C在细档生成失败，失败几何及前两档实际场保存在`verification-overset-30p30n-failed`。
+
+实际流动诊断入口另有实时历史及时间上限，未完成的SIMPLE步不导出为有效流动场：
+
+```bash
+PYTHONPATH=src python scripts/run_three_element_flow_diagnostic.py --mesh-file INPUT.msh --output OUTPUT --iterations 20 --seconds 120
+```

@@ -154,6 +154,7 @@ class OversetConnectivity:
     stencils: tuple
     body_polygon: np.ndarray
     blanking_polygon: np.ndarray
+    body_polygons: tuple = ()
 
     def interpolate(self, fields):
         """Simultaneous exchange; donor values are never fringe values.
@@ -186,6 +187,9 @@ class OversetConnectivity:
     def save(self, path):
         """Save geometry, classifications and donor stencils without pickles."""
         arrays = {'body_polygon':self.body_polygon,'blanking_polygon':self.blanking_polygon}
+        bodies = self.body_polygons or (self.body_polygon,)
+        arrays['body_vertices'] = np.concatenate(bodies)
+        arrays['body_offsets'] = np.r_[0,np.cumsum([len(p) for p in bodies])]
         for i,(g,state) in enumerate(zip(self.grids,self.states)):
             nodes = np.concatenate(g.polygons)
             arrays.update({f'g{i}_centers':g.centers,f'g{i}_volumes':g.volumes,f'g{i}_cell_vertices':nodes,f'g{i}_cell_offsets':np.r_[0,np.cumsum([len(p) for p in g.polygons])],f'g{i}_state':state,f'g{i}_shape':np.array(g.shape)})
@@ -240,7 +244,7 @@ def background_hole_mask(background, body_polygon, blanking_polygon):
     return hole
 
 
-def build_overset(background, component, body_polygon, blanking_polygon, *, fringe_layers=1):
+def build_overset(background, component, body_polygon, blanking_polygon, *, fringe_layers=1, body_polygons=None):
     """Classify and connect a static body-fitted/Cartesian two-grid overlap.
 
     The blanking contour must enclose the solid body and remain inside the
@@ -254,13 +258,24 @@ def build_overset(background, component, body_polygon, blanking_polygon, *, frin
     if not isinstance(fringe_layers,int) or fringe_layers < 1:
         raise ValueError('fringe_layers must be a positive integer')
     body, blanking = np.asarray(body_polygon,dtype=float),np.asarray(blanking_polygon,dtype=float)
-    if not points_in_polygon(body,blanking).all():
+    bodies = (body,) if body_polygons is None else tuple(np.asarray(p,dtype=float) for p in body_polygons)
+    if not bodies:
+        raise ValueError('At least one physical body is required')
+    for i,p in enumerate(bodies):
+        points_in_polygon(p,p)  # validates dimensions and finite coordinates
+        q=np.roll(p,-1,axis=0)
+        if abs(np.sum(p[:,0]*q[:,1]-q[:,0]*p[:,1])) < 1e-14:
+            raise ValueError('Physical body has zero area')
+        for other in bodies[:i]:
+            if _triangle_intersects_polygon(p,other):
+                raise ValueError('Physical bodies must be disjoint and non-touching')
+    if not all(points_in_polygon(p,blanking).all() for p in bodies):
         raise ValueError('Blanking contour must enclose the physical body')
     grids = (background,component)
     if 'outer' not in component.boundaries or not component.boundaries['outer'].any():
         raise ValueError('Body-fitted component requires an outer boundary cell mask')
-    bg_hole = background_hole_mask(background,body,blanking)
-    cp_hole = points_in_polygon(component.centers,body)
+    bg_hole = np.logical_or.reduce([background_hole_mask(background,p,blanking) for p in bodies])
+    cp_hole = np.logical_or.reduce([points_in_polygon(component.centers,p) for p in bodies])
     if not bg_hole.any():
         raise ValueError('Background resolution does not resolve the blanking hole')
     bg_fringe = _expand(bg_hole,background.neighbors,fringe_layers,np.zeros(len(bg_hole),bool)) & ~bg_hole
@@ -288,10 +303,10 @@ def build_overset(background, component, body_polygon, blanking_polygon, *, frin
         if len(missing):
             raise ValueError(f'Orphan overset receivers in {grids[receiver].name}: {len(missing)}, first cell {int(rcells[missing[0]])}; increase overlap or refine the donor grid')
         donor_cells = dcells[triangulation.simplices[simplex]]
-        excluded_polygon = body if donor==1 else blanking
+        excluded_polygons = bodies if donor==1 else (blanking,)
         for k in np.unique(simplex):
             triangle = grids[donor].centers[dcells[triangulation.simplices[k]]]
-            if _triangle_intersects_polygon(triangle,excluded_polygon):
+            if any(_triangle_intersects_polygon(triangle,p) for p in excluded_polygons):
                 raise ValueError(f'Donor triangle crosses a hole for receiver grid {grids[receiver].name}; increase overlap')
         transforms = triangulation.transform[simplex]
         first = np.einsum('nij,nj->ni',transforms[:,:2],points-transforms[:,2])
@@ -304,4 +319,4 @@ def build_overset(background, component, body_polygon, blanking_polygon, *, frin
         if error > 1e-10*max(1.,np.abs(points).max()):
             raise ValueError('Donor interpolation failed affine coordinate reproduction')
         stencils.append(ReceiverStencil(receiver,rcells,donor,donor_cells,weights))
-    return OversetConnectivity(grids,tuple(states),tuple(stencils),body.copy(),blanking.copy())
+    return OversetConnectivity(grids,tuple(states),tuple(stencils),body.copy(),blanking.copy(),tuple(p.copy() for p in bodies))

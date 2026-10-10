@@ -97,7 +97,9 @@ def solve_manufactured_diffusion(conn):
     for k,(g,state,v,t) in enumerate(zip(grids,states,fields,truth)):
         active=state==ACTIVE;m[f'grid_{k}_relative_l2_error']=float(np.sqrt(np.dot((v[active]-t[active])**2,g.volumes[active])/np.dot(t[active]**2,g.volumes[active])))
     exchanged=conn.interpolate(fields);m['maximum_donor_constraint_residual']=max(float(np.max(abs(exchanged[k][state==FRINGE]-fields[k][state==FRINGE]))) for k,state in enumerate(states))
-    body=conn.body_polygon;q=np.roll(body,-1,axis=0);area=abs(np.sum(body[:,0]*q[:,1]-q[:,0]*body[:,1])/2)
+    area=0.
+    for body in (conn.body_polygons or (conn.body_polygon,)):
+        q=np.roll(body,-1,axis=0);area+=abs(np.sum(body[:,0]*q[:,1]-q[:,0]*body[:,1])/2)
     source=-4*(grids[0].volumes.sum()-area);physical_flux=sum(float((q@u)[0]+b) for q,b in physical)
     m.update(physical_global_conservation_defect_relative=abs(physical_flux-source)/abs(source),physical_boundary_diffusive_flux=physical_flux,physical_domain_integrated_source=float(source),active_cells=sum(int(np.sum(s==ACTIVE)) for s in states),fringe_cells=len(received))
     return ScalarResult(fields,truth,m,conn)
