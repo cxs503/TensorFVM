@@ -1,0 +1,12 @@
+{
+  "case": "naca",
+  "scale": 2.0,
+  "gmsh_version": "4.15.2",
+  "algorithm": "Frontal-Delaunay (Gmsh algorithm 6)",
+  "wall_target_size_m": 0.016,
+  "outer_target_size_m": 0.8,
+  "geometry": "Closed NACA0012 upper/lower interpolating CAD splines through 161 cosine-spaced points",
+  "mesh_sha256": "5bfe889eab1eaf966367901f53c3debc764ad0adff5af8f2f5e771d573583537",
+  "generator_sha256": "a4be0af11c057a76ab61c5e7c542349fa1b725a8765887372db291df7f4986de",
+  "documentation": "https://gmsh.info/doc/texinfo/gmsh.html"
+}

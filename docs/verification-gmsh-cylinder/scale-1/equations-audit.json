@@ -1,0 +1,14 @@
+{
+  "resolution": "scale-1",
+  "independent_momentum": 9.358922678079325e-07,
+  "independent_continuity": 2.1155164341180575e-17,
+  "physical_rhie_chow_relative_l2_defect": 2.5158084334720397e-10,
+  "physical_fixedpoint_passed": true,
+  "discretization": {
+    "momentum_convection": "linear-upwind",
+    "pressure_gradient": "gauss-linear",
+    "face_interpolation": "projected-linear",
+    "wall_gradient": "displacement-correction"
+  },
+  "scope": "Independent NumPy configured gradients/interpolation, upwind or linear-upwind full laminar momentum, mass and physical inertia-free Rhie-Chow flux; production geometry and prescribed boundary data reconstructed from saved config"
+}

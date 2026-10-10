@@ -1,0 +1,12 @@
+{
+  "case": "cylinder",
+  "scale": 2.0,
+  "gmsh_version": "4.15.2",
+  "algorithm": "Frontal-Delaunay (Gmsh algorithm 6)",
+  "wall_target_size_m": 0.006,
+  "outer_target_size_m": 0.05,
+  "geometry": "Exact circle CAD arcs",
+  "mesh_sha256": "532601522d53263e32e19cf46a774de8c44aa4a264caa5c79ad5e1ec790da1d7",
+  "generator_sha256": "a4be0af11c057a76ab61c5e7c542349fa1b725a8765887372db291df7f4986de",
+  "documentation": "https://gmsh.info/doc/texinfo/gmsh.html"
+}

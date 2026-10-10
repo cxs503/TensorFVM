@@ -1,0 +1,31 @@
+{
+  "passed": true,
+  "runs": [
+    {
+      "resolution": "scale-2",
+      "exact_manufactured_wall_shear": 1.0,
+      "manufactured_wall_shear_relative_l2_error": 0.05004912358521709,
+      "solved_wall_gradient_trace_max": 3.552713678800501e-15,
+      "solved_wall_tangential_derivative_max": 1.7763568394002505e-15
+    },
+    {
+      "resolution": "scale-1",
+      "exact_manufactured_wall_shear": 1.0,
+      "manufactured_wall_shear_relative_l2_error": 0.025080051462129636,
+      "solved_wall_gradient_trace_max": 3.552713678800501e-15,
+      "solved_wall_tangential_derivative_max": 3.552713678800501e-15
+    },
+    {
+      "resolution": "scale-0.5",
+      "exact_manufactured_wall_shear": 1.0,
+      "manufactured_wall_shear_relative_l2_error": 0.01341733378978025,
+      "solved_wall_gradient_trace_max": 3.552713678800501e-15,
+      "solved_wall_tangential_derivative_max": 3.552713678800501e-15
+    }
+  ],
+  "observed_orders": [
+    0.9968044976872379,
+    0.9024422919157898
+  ],
+  "scope": "Analytic divergence-free circular swirl u_theta=r-R, exact curved-wall shear 1, evaluated on saved geometry; analytic values never substitute for solved external-flow fields. Actual wall gradients separately satisfy incompressibility and zero tangential derivative identities."
+}

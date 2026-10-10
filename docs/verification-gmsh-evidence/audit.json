@@ -1,0 +1,74 @@
+{
+  "checked_at_utc": "2026-10-10T09:12:01.058150+00:00",
+  "regression_tests_passed": 19,
+  "regression_test_command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 PYTHONPATH=src python -m pytest -q tests/test_gmsh_external.py tests/test_wall_traction.py tests/test_external_flow.py tests/test_benchmark_airfoil.py tests/test_external_mesh_contract.py",
+  "evidence_validator": "scripts/audit_external_evidence.py",
+  "archived_manifest_sha256": {
+    "docs/conservative-transport-audit/manifest.json": "85e284d5d698de535058d92854ef7c4f8d8ace87249af20f1c3a0cb261ed91f1",
+    "docs/periodic-mac-audit/manifest.json": "6786161310e60340f11ad005bed88ae6dddf446a120a5a602970239d932461b2",
+    "docs/verification-benchmarks/manifest.json": "1919b6cb79fdde64b56868063f033aab60278850514df28f777ee57a20d3bbc2",
+    "docs/verification-benchmarks-failed-n128/manifest.json": "3c3a51b8ec7feadaa71aef2a4031bfdf32dca3678d63f3b840501b5c46fb2cd2",
+    "docs/verification-dfg/manifest.json": "2d4942887f4374d18bba441d349c15a7fddf28cc6d8bd942f370bde9c01d1860",
+    "docs/verification-dfg-control/manifest.json": "379ed1c9d00393d1341fb89776676ae2076c73ea799c97f745dc84c26fd85e11",
+    "docs/verification-engineering/manifest.json": "18a9d08d8a53e4c404dfb081853cc4a28597c4931d23bc18ccce7cd7f3a4c4c5",
+    "docs/verification-engineering-export-failure/manifest.json": "4ee9bb7ea017022d2887cdb58baad498df96c4a5758a85aca7dbc7f5df5e99e5",
+    "docs/verification-extended/manifest.json": "df23750e5cebec3521cdc90791c8ee5349bf7dc148eff5eb3b5c3e4215afe870",
+    "docs/verification-external-coupled-rejected/manifest.json": "224cc1e277d984114653e23b463b6fc30720260af6ac1d7ae23895fc6a34c53b",
+    "docs/verification-external-cylinder/manifest.json": "1825c2a82f2324274e328b1777fd9a3daf82e77a1784004888927e27799a3cf2",
+    "docs/verification-external-cylinder-simple-control/manifest.json": "1cd80744832d991970d2680b6c7683260819c5904343932b6d5bf27c3d1fa1c9",
+    "docs/verification-external-device-check/manifest.json": "e4b0421319784b039e63e435fb95bb9a976048db33c9fbc92426547b6852e2b2",
+    "docs/verification-external-mesh/manifest.json": "82721fd56e541d13869089256768dc9cfbe899268c26a9ba1e1460ab20796fed",
+    "docs/verification-external-naca/manifest.json": "34de7ea86434a35deec6e1d3580a35eef65c4ec181e7ae706eb6841b6dd3eafe",
+    "docs/verification-external-naca-cache-partial/manifest.json": "12a3ff39049bd1f66dfb2cebb83c93257f4b58f54d2b8cd48b5772e41c830a53",
+    "docs/verification-external-naca-fine/manifest.json": "5cc8890db0766e404e339ec2d9ecce350a865a268084c4cfbd3874e2af8006fa",
+    "docs/verification-external-naca-simple-control/manifest.json": "0f3022cad2c5be3722364eef769b84f8cbb86e5a1a5dfef02d421e2e7e980428",
+    "docs/verification-gmsh-controls/manifest.json": "924b540daa1f37be6b1f1e314344d06dacb72cb381435fc942ccf564e5788ef0",
+    "docs/verification-gmsh-cylinder/manifest.json": "1c587ddab7e3f5cfb5b35ac9f91660749f5f46d49549a467818ea3f14472c6a1",
+    "docs/verification-gmsh-cylinder-wall/manifest.json": "d46a7e23a3da46e5fb958ea8595278ec3c5f69b928a17a6dac08f8de2c557d30",
+    "docs/verification-gmsh-naca/manifest.json": "a3dda0731e897688434e3215a4c4b35d9b6f58c189e4af18cc91945b83068997",
+    "docs/verification-gmsh-naca-matched/manifest.json": "45e188015bc30336fd516c987e81f6f6e75e45057a2dc8956662e0e31e57efa7",
+    "docs/verification-gmsh-naca-matched-initial/manifest.json": "5b30fe8ea4650de7e651b337f522c166c5a25883a75a232c78c8c043c7c8a3a5",
+    "docs/verification-gpu/manifest.json": "94dcca80759246e24be2f27dfa1a01df3ffc36fda7f8911de169c89a14d04112",
+    "docs/verification-sa-diagnostic/manifest.json": "4e34ea8d8bcfb1c233b18820afa0e44f84380fe8c00abef9dbd344af5799246a",
+    "docs/verification-sa-refinement/manifest.json": "cc8b34f2582da750d04bffe3b35afccf9d42b8fd7f3cc5f460577b3b886a1c2f",
+    "docs/verification-sa-refinement-cpu-partial/manifest.json": "e9bb66f84d9bfeaa00f50b523d163777bc1c9c375d24f2c9b47fa3daf70ee3a9",
+    "docs/verification-simple-gpu/manifest.json": "333e697819b1d822e3e25fb2c995d0aa691a2899caf1d74bedf0307581ddb8bc",
+    "docs/verification-simple-gpu-aggregation/manifest.json": "5f7c235b7a35b2af4df865387f6cd44d8a26dea1f75d0ab88bd95b9b39167c0a",
+    "docs/verification-simple-gpu-anderson/manifest.json": "109ecf5cc723476c45f7577181d18215d8c088e1b096d5525283dced76babce0",
+    "docs/verification-simple-gpu-initial/manifest.json": "ca992bc7c5ae65bd852cad5f9dd966886b749cc21f5fe7679047c22145422155",
+    "docs/verification-simple-gpu-linear-budget/manifest.json": "181a10d36f1abc4fc18ffe9418bb87104a0f4bf037c60b9ce02130b0d9f767c2",
+    "docs/verification-simple-gpu-preconditioner/manifest.json": "6cf10d1ab04a41f84c5358186e4de322890472293008f82b7109fbfb875d28ce",
+    "docs/verification-simple-gpu-projection/manifest.json": "0ede0869a0bfe2672373e4944b5fb0fe0f4eaea86749c0690827b033aa26f3f6",
+    "docs/verification-sparse-sa-consistency/manifest.json": "01c0c880ebf408ef4330ca338667c978aa6c1cea9be052b46d0549097e308729",
+    "docs/verification-wall-law-reference/manifest.json": "1c45971a72762b304690e877d8525929b099ea52ae10b9663cadac210fd9dff0"
+  },
+  "qualified_finest_results": {
+    "verification-gmsh-cylinder-wall": {
+      "actual_cells": 32274,
+      "converged": true,
+      "finest_physical_passed": true,
+      "iterations": 35,
+      "coefficient_relative_errors": {
+        "drag_relative_error": 0.0036808866624575614,
+        "lift_relative_error": 0.022000251990251195,
+        "pressure_difference_pa_relative_error": 0.008812929503367716
+      },
+      "refinement_sequence_passed": false,
+      "grid_convergence_qualified": false
+    },
+    "verification-gmsh-naca-matched": {
+      "actual_cells": 18712,
+      "converged": true,
+      "finest_physical_passed": true,
+      "iterations": 2635,
+      "coefficient_relative_errors": {
+        "drag_relative_error": 0.023990709476113037,
+        "lift_relative_error": 0.024933562521821676
+      },
+      "refinement_sequence_passed": false,
+      "grid_convergence_qualified": false
+    }
+  },
+  "gpu_measurements_performed": false,
+  "matched_tensorlbm_measurements_performed": false
+}

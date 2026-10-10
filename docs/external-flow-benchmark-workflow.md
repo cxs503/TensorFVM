@@ -76,3 +76,46 @@ for aerodynamic accuracy. The six current saved meshes pass these checks;
 physical errors remain above the 3% acceptance gate.
 
 Results and raw field SHA256 identifiers: [mesh audit](verification-external-mesh/audit.json).
+
+## Gmsh贴体网格与守恒高阶入口
+
+新增 `tensorfvm.verification.external_gmsh`，使用同一套配置、Metric/evaluate/save_run、壁面力和原场复核模块。Gmsh只参与预处理，求解阶段读取带物理标签的ASCII v2网格。单元数由实际三角形/四边形数决定，配置中的nx/ny不表示笛卡尔网格或真实单元数。生成器设置单线程和固定随机种子，记录网格文件和生成源SHA256。
+
+线性迎风使用实际上游质心至面中心位移，内部面修正严格相消；该方案不宣称TVD有界。几何插值及Gauss面压力积分使压力源项与边界压力力守恒一致。最大非正交角<70°、正面积和正投影距离为前置筛查，不能替代网格独立性分析。
+
+```bash
+# 可选网格预处理依赖；求解另需numpy/scipy/torch，绘图需matplotlib
+uv pip install --python /path/to/python gmsh
+PYTHONPATH=src python -m tensorfvm.verification.external_gmsh --case cylinder --scales 2 1 0.5 --max-iterations 300 --output results/cylinder-gmsh
+PYTHONPATH=src python -m tensorfvm.verification.external_matched_naca --scales 3 2 1 --max-iterations 2500 --output results/naca-matched
+PYTHONPATH=src python scripts/audit_external_gmsh_mesh.py results/cylinder-gmsh results/naca-matched
+PYTHONPATH=src python scripts/audit_external_equations.py results/cylinder-gmsh results/naca-matched
+PYTHONPATH=src python -m tensorfvm.verification.external_mesh_report results/cylinder-gmsh results/naca-matched
+```
+
+新NACA入口修正原论文36C×16C计算域、(12C,8C)四分之一弦点和开放边界，几何旋转4°、入口速度沿x。采用显式说明的压力开放边界及已知自由来流回流对流；原论文未公开该边界的完整FVM公式，因此不宣称实现逐项相同。旧20C×16C给定远场速度的结果保留为诊断，不能再标为严格匹配。新非结构网格路径当前只验证CPU，不报告GPU加速比或匹配TensorLBM优劣。
+
+
+### 细网格达标与复现续算/壁面力
+
+当前圆柱32,274控制体三个系数误差0.3681%、2.2000%、0.8813%；匹配域翼型18,712控制体Cd/Cl误差2.3991%/2.4934%，均通过独立完整方程与网格复核。粗网格没有全部达标，也没有渐近网格收敛资格。
+
+圆柱保存场经物理壁面剪切复核，不重求流场；本地比较入口支持自选输入/输出：
+
+```bash
+PYTHONPATH=src python scripts/postprocess_incompressible_wall.py --input results/cylinder-gmsh --output results/cylinder-wall
+PYTHONPATH=src python scripts/audit_external_gmsh_mesh.py results/cylinder-wall
+PYTHONPATH=src python scripts/audit_external_equations.py results/cylinder-wall
+PYTHONPATH=src python -m tensorfvm.verification.external_mesh_report results/cylinder-wall
+```
+
+NACA细网格初始2500步尚未稳态，实际保存场续算135步达标。续算器保留初始完整目录、逐步历史和原生产源快照；重启只取真实速度、压力、面通量，重建当前矩阵并重新满足稳态及通量门，不改变容差：
+
+```bash
+PYTHONPATH=src python scripts/continue_matched_naca.py --output results/naca-matched --extra-iterations 1500
+PYTHONPATH=src python scripts/audit_external_gmsh_mesh.py results/naca-matched results/naca-matched-initial
+PYTHONPATH=src python scripts/audit_external_equations.py results/naca-matched results/naca-matched-initial
+PYTHONPATH=src python -m tensorfvm.verification.external_mesh_report results/naca-matched results/naca-matched-initial
+```
+
+默认脚本路径对应已发布档案，已有输出会拒绝覆盖；重算请使用上述新的results目录。后续优先提高近壁剪切重构阶数、细化尾迹并检查网格及域独立性，再推进Re100非定常圆柱和更高Re湍流案例。

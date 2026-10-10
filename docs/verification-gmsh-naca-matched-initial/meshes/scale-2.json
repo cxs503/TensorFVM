@@ -1,0 +1,22 @@
+{
+  "case": "naca",
+  "scale": 2.0,
+  "domain_m": [
+    36,
+    16
+  ],
+  "leading_edge_unrotated_m": [
+    11.75,
+    8
+  ],
+  "geometric_incidence_deg": 4,
+  "open_boundaries": true,
+  "gmsh_version": "4.15.2",
+  "algorithm": "Frontal-Delaunay (Gmsh algorithm 6)",
+  "wall_target_size_m": 0.016,
+  "outer_target_size_m": 0.8,
+  "geometry": "Closed NACA0012 upper/lower interpolating CAD splines through 161 cosine-spaced points",
+  "mesh_sha256": "ef88879145ad9c973859914cad721dec9002b76bee632c8b3b674dadf9f5a8ee",
+  "generator_sha256": "43f2421ee245fa8b01a1a30ff76b256c0e280a01c5efc397f6fc0100da901143",
+  "documentation": "https://gmsh.info/doc/texinfo/gmsh.html"
+}
