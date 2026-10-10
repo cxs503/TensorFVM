@@ -56,3 +56,23 @@ PYTHONPATH=src python scripts/publish_external_frontmatter.py results/cylinder
 3. 通过稳态层流门后，再开发DFG Re100非稳态涡脱落，检查时间步、升阻力振幅与Strouhal数。
 4. 再推进NACA更高攻角非稳态、公开湍流翼型工况与壁面函数。需要匹配Re、攻角、Mach数/不可压缩假设及参考资料，不能用高Re实验认证当前层流模型。
 5. 匹配TensorLBM的实际几何、边界与物理参数后比较精度与耗时，再讨论贴体网格优势；当前没有匹配运行，不作跨软件优劣排名。
+
+## Mandatory body-fitted mesh gate
+
+Cylinder and NACA benchmarks require physical body-fitted quadrilateral meshes;
+Cartesian obstacle masks or staircase boundaries cannot substitute for them.
+The resolution denotes circumferential and radial cell counts. Both current
+meshes have a periodic radial O topology. The historical NACA API name `c-grid`
+does not describe a true open-wake C topology.
+
+Run `python scripts/audit_external_mesh.py` before accepting external-flow
+results. This independent NumPy audit checks the saved wall vertices against the
+circle or independently generated NACA0012 profile polygon, positive signed
+cell areas, saved cell volumes, periodic seam closure, physical wall face
+midpoints, wall face counts and the presence of oblique faces. A failed check
+raises an error requiring mesh generation repair. The checks describe polygonal
+body conformity, not exact curved-face representation or sufficient mesh quality
+for aerodynamic accuracy. The six current saved meshes pass these checks;
+physical errors remain above the 3% acceptance gate.
+
+Results and raw field SHA256 identifiers: [mesh audit](verification-external-mesh/audit.json).
