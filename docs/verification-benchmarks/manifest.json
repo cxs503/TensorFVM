@@ -18,6 +18,7 @@
     "src/tensorfvm/verification/report.py": "d38464cbba0f152d4410589e6a66c8fe05f9f84da06ecab62d3895a8f77ead62"
   },
   "artifacts_sha256": {
+    "README.md": "b1ee86a9e0dba1d576b61959949df325a337d2bcf7ce0eb0e11aec006ebff0b4",
     "audit.json": "7b8ce9daa6165a8796b337c2416d026d7326697d541fe097fd0ee95cc3dee12b",
     "channel-12/fields.npz": "0705720a9cddd25dbf3b8e998420c6f5a0d98351ead663f26852858710f62176",
     "channel-12/figures/history.pdf": "25257579ef9dcb48c1eda09a4e9b288bac9fdab003114d12be8ebebcb58d6b6d",
@@ -418,6 +419,11 @@
     "tg-time-0.1/history.json": "cbef6e92899a3d0832940da7012fdbb8254fc2d910e00ca3cd0f5ed4d4551cd3",
     "tg-time-0.1/pressure-curve.csv": "321b92aebbe344b719a6c85bc86cd17bac110f7135020563985f09b9bb224586",
     "tg-time-0.1/result.json": "3dfc44c8cc0b3c63cf79811244d97979ebbf2dad5edf59065adecf9d5ed66109",
-    "tg-time-0.1/velocity-profile.csv": "003a4c7c58b70cf2a7402a7eff010eabefc4573b6c93977e9484c33f1b18697d"
+    "tg-time-0.1/velocity-profile.csv": "003a4c7c58b70cf2a7402a7eff010eabefc4573b6c93977e9484c33f1b18697d",
+    "validation/commands.txt": "1d9f2df880795e7f71d779794d4adeeeeebf1ff991aa25d6987b3065bb8f239d",
+    "validation/final-audit.json": "7b8ce9daa6165a8796b337c2416d026d7326697d541fe097fd0ee95cc3dee12b",
+    "validation/installation.log": "51b3a76e47ba46cef654dcd488ccac1f724880aea87aa5b5df5a3230ef9e17c3",
+    "validation/run.log": "535bf7d63e2c7a822085046f715b6aca8bec9f85bd5f7e7d15f453ffbd29eb58",
+    "validation/tests.log": "8a94aba58e6f48d6025864058e2a7d97e9fa57b3c309820449146bb9e71613f8"
   }
 }
