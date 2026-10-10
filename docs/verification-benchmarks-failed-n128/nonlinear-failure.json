@@ -1,0 +1,55 @@
+{
+  "config": {
+    "nx": 128,
+    "ny": 128,
+    "nz": 4,
+    "lengths_m": [
+      6.283185307179586,
+      6.283185307179586,
+      6.283185307179586
+    ],
+    "density_kg_m3": 1.0,
+    "viscosity_pa_s": 0.1,
+    "time_step_s": 0.0125,
+    "nonlinear_tolerance": 1e-12,
+    "nonlinear_iterations": 100,
+    "device": "cpu"
+  },
+  "failure": "MAC midpoint nonlinear solve failed: residual nan",
+  "state_unchanged": true,
+  "clock_unchanged": true,
+  "accepted_history_unchanged": true,
+  "clock_s": 0.025,
+  "accepted": false,
+  "accepted_steps": 2,
+  "candidate_finite": false,
+  "reproducer_sha256": "ff61ff364761016f0aa38de0df198a16723fda4e643eee0575dcd99a9dafc992",
+  "physical_accuracy_qualified": false,
+  "provenance": {
+    "matplotlib": "3.11.2",
+    "git_base": "38c48dfe386ac822f4f70e44726fa0a610c753af",
+    "python": "3.11.15",
+    "torch": "2.14.1+cu130",
+    "numpy": "2.4.6",
+    "platform": "Linux-6.8.0-137-generic-x86_64-with-glibc2.39",
+    "torch_threads": 1,
+    "device": "cpu",
+    "source_sha256": {
+      "pyproject.toml": "7222720c67aacd63d49197202dea8e1a457b8b78a53a8cba31640846a5498172",
+      "src/tensorfvm/__init__.py": "9f8d4d3a249d695e4e841e4c9d11d7158db8a2d33e2928d3565794718e2aba3c",
+      "src/tensorfvm/backend_registry.py": "e68b95fdb7c457b921b2f1c9e3920f80ebdcdb104ca8077e10e96d2a4182a13a",
+      "src/tensorfvm/body_fitted.py": "4e633fa42c1171cf57aca5bf930827f97a30dada4e405bf3ac9c1068ba1bb7a7",
+      "src/tensorfvm/mesh_api.py": "72f4f9d724084df335dca0e561877c5423c47a7f8bfffe950d631845e2dce22d",
+      "src/tensorfvm/periodic_mac.py": "b6b823c2c7972368a30fbba14f07d1222d062d00a9fe03c769c844407bfde5eb",
+      "src/tensorfvm/runtime.py": "ff383730f34f82030f28da424819eea670f28c663d5be834f30bebc6c74a2da5",
+      "src/tensorfvm/solver.py": "7c3613f23791c6a22825bd2ba0467e2bb84013ecaedc974901452b1864a2868e",
+      "src/tensorfvm/verification/__init__.py": "2e93edad1f2e0ed881602c2f72592f32070e99f9a75433e6fa0ce4c485f52652",
+      "src/tensorfvm/verification/__main__.py": "bac1da0b8ea13da1d7e8de391d0da9fe5a69f8658d55c57d55fc9c861eb28096",
+      "src/tensorfvm/verification/audit.py": "7df05206579b07718441e0ae894e60d8a7b2543fd8e557bd1f7fb7d8586ea414",
+      "src/tensorfvm/verification/cases.py": "6cf52e2cf76334ae3ce47c77c9d4bd33e7d83ab08f2d96b2123d356b0702260e",
+      "src/tensorfvm/verification/core.py": "088114b4c8ec39a0724213bfc00f83a4356bcaca1dd2398376ef35426866e12e",
+      "src/tensorfvm/verification/lbm.py": "0ad5bf5d1022752755f5f0ff47df597baf00dca3e64bf66e576014e6930be9a4",
+      "src/tensorfvm/verification/report.py": "d38464cbba0f152d4410589e6a66c8fe05f9f84da06ecab62d3895a8f77ead62"
+    }
+  }
+}

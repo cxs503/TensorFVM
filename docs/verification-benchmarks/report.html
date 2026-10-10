@@ -1,0 +1,115 @@
+<!doctype html><html lang="zh"><meta charset="utf-8"><title>TensorFVM verification</title><style>body{max-width:1000px;margin:40px auto;font:16px/1.6 sans-serif}img{max-width:100%}figure{break-inside:avoid}p{overflow-wrap:anywhere}table{border-collapse:collapse;font-size:13px}td{border:1px solid #777;padding:5px}@media print{body{margin:0}h2{break-before:page}}</style><body><h1>TensorFVM 不可压有限体积方法的解析基准验证</h1>
+<h2>摘要</h2>
+<p>本研究通过共性 benchmark 模块，对平行板 Poiseuille 流和二维 Taylor–Green 衰减涡开展空间及时间加密。所有正式算例的预声明速度、压力与壁面相关误差均要求严格小于 3%，并分别满足质量、求解残差和适用的能量门。总体验收：**通过**。失败对照单独列出并保留原始数据。本文验证解析子问题，不能外推三维湍流、复杂曲面或上浮破冰。</p>
+<h2>1. 问题介绍与数学模型</h2>
+<p>常密度不可压方程为 ∇·u=0，ρ(∂u/∂t+∇·(u⊗u))=−∇p+∇·[μ(∇u+∇uᵀ)]。本研究无体力。全部单位为 SI，二维力/流量按单位展向深度计算。</p>
+<h3>1.1 Poiseuille 通道</h3>
+<p>L=0.12 m，H=0.02 m，ρ=1000 kg/m³，ν=10⁻⁵ m²/s，Ub=5×10⁻⁴ m/s，Re_H=1。入口规定均匀速度，壁面无滑移，出口零表压。均匀入口存在发展段；解析验证只在 3H≤x≤5H 的压力/壁面窗口，以及 x 最接近 5H 的速度剖面进行。全域云图展示实际解，入口区没有被当作充分发展解析解。</p>
+<p>解析解：u(y)=6Ub(y/H)(1−y/H)，dp/dx=−12μUb/H²，|τw|=6μUb/H。压力曲线只在比较窗内对齐均值，不把任意表压零点计入误差。</p>
+<h3>1.2 Taylor–Green 衰减涡</h3>
+<p>周期域 [0,2π]³ m，ρ=1 kg/m³，μ=0.1 Pa·s，U0=1 m/s，波数 k=1 m⁻¹。二维解析涡嵌入四层展向三维网格，w=0；不是三维湍流。</p>
+<p>u=sin(x)cos(y)e^(−2νt)，v=−cos(x)sin(y)e^(−2νt)，p=ρ[cos(2x)+cos(2y)]e^(−4νt)/4。</p>
+<p>速度比较位于实际错位面、t=0.5 s。投影压力是末步 midpoint 压力，比较时间为 t−dt/2，压力采用零均值规范。云图中的中心速度仅用于展示，验收使用权威面速度。</p>
+<h2>2. 软件与共性模块</h2>
+<p>案例适配器提供配置、求解器、参考公式和原始场；共性 core 模块统一误差、验收、导出、来源绑定与观察阶；report 模块统一云图、曲线、报告；audit 模块独立读取原场重算指标。没有复制流体求解器，也没有把解析解作为计算结果输出。</p>
+<p>安装：python -m pip install -e &#x27;.[benchmark,dev]&#x27;</p>
+<p>运行：OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 python -m tensorfvm.verification --output docs/verification-benchmarks</p>
+<p>审计：python -m tensorfvm.verification.audit --directory docs/verification-benchmarks</p>
+<p>失败返回非零退出码；--max-channel-iterations 1 可运行非收敛检查。输出目录须为空，防止覆盖既有失败证据。</p>
+<h2>3. 数值方法与实验设计</h2>
+<p>通道采用交错有限体积 SIMPLE、半单元无滑移黏性壁面离散，求解 tolerance=10⁻⁶，最多1000迭代。三网格36×12、72×24、144×48。空间误差以解析速度、压力梯度和压力曲线、壁面剪切及力平衡独立评估。</p>
+<p>周期 MAC 采用权威面速度、共享中心动量通量、完整对称黏性应力、离散相容 FFT 投影和隐式 midpoint；非线性真实残差约10⁻¹² m/s。空间32²/48²/64²×4、dt=0.0125 s；时间32²×4、dt=0.1/0.05/0.025 s，全部至t=0.5 s。时间观察阶使用固定网格离散特征值的精确指数参考，避免混合空间误差。该参考不作为连续物理误差。</p>
+<p>误差采用 ||q−q_ref||₂/||q_ref||₂ 与峰值归一化 L∞；无逐点除以参考零值。观察阶 p=ln(e₁/e₂)/ln(h₁/h₂)，来自实际解析误差，不使用假定阶或两网格 GCI 宣称验证完成。</p>
+<p>正式算例全部需通过，失败对照不计入正例资格。非收敛对照与16²粗网格压力失败仅用于证明门能拒绝错误，绝不改成通过。</p>
+<h2>4. 计算结果</h2>
+<table>
+<tr><td>Case</td><td>Study</td><td>Grid</td><td>dt (s)</td><td>Velocity L2 (%)</td><td>Pressure metric (%)</td><td>All gates</td></tr>
+<tr><td>poiseuille</td><td>spatial</td><td>36x12</td><td>—</td><td>0.634358</td><td>1.369853</td><td>PASS</td></tr>
+<tr><td>poiseuille</td><td>spatial</td><td>72x24</td><td>—</td><td>0.161971</td><td>0.344019</td><td>PASS</td></tr>
+<tr><td>poiseuille</td><td>spatial</td><td>144x48</td><td>—</td><td>0.042848</td><td>0.078365</td><td>PASS</td></tr>
+<tr><td>taylor-green</td><td>spatial</td><td>32x32x4</td><td>0.0125</td><td>0.032086</td><td>0.897811</td><td>PASS</td></tr>
+<tr><td>taylor-green</td><td>spatial</td><td>48x48x4</td><td>0.0125</td><td>0.014267</td><td>0.399544</td><td>PASS</td></tr>
+<tr><td>taylor-green</td><td>spatial</td><td>64x64x4</td><td>0.0125</td><td>0.008024</td><td>0.224797</td><td>PASS</td></tr>
+<tr><td>taylor-green</td><td>temporal</td><td>32x32x4</td><td>0.1</td><td>0.031761</td><td>0.894261</td><td>PASS</td></tr>
+<tr><td>taylor-green</td><td>temporal</td><td>32x32x4</td><td>0.05</td><td>0.032009</td><td>0.898033</td><td>PASS</td></tr>
+<tr><td>taylor-green</td><td>temporal</td><td>32x32x4</td><td>0.025</td><td>0.032071</td><td>0.898174</td><td>PASS</td></tr>
+<tr><td>poiseuille</td><td>negative-control</td><td>36x12</td><td>—</td><td>25.356201</td><td>74.139719</td><td>FAIL</td></tr>
+<tr><td>taylor-green</td><td>negative-control</td><td>16x16x4</td><td>0.0125</td><td>0.127928</td><td>3.562683</td><td>FAIL</td></tr>
+<tr><td>taylor-green-lbm</td><td>comparison</td><td>32x32</td><td>0.0056179775280898875</td><td>0.633476</td><td>0.861731</td><td>PASS</td></tr>
+<tr><td>taylor-green-lbm</td><td>comparison</td><td>64x64</td><td>0.002824858757062147</td><td>0.152073</td><td>0.814284</td><td>PASS</td></tr>
+<tr><td>taylor-green-lbm</td><td>comparison</td><td>32x32</td><td>0.002824858757062147</td><td>0.640030</td><td>1.683112</td><td>PASS</td></tr>
+</table>
+<p>空间与时间观察阶：{&quot;channel_velocity&quot;: [1.969562587297749, 1.9184359357168919], &quot;channel_pressure_gradient&quot;: [1.9934624306292263, 2.134205788719911], &quot;tg_velocity&quot;: [1.9989589105828733, 2.000226557168189], &quot;tg_pressure&quot;: [1.9968077082851627, 1.999166343016587], &quot;tg_time&quot;: [2.0000627255879495, 2.000015610195456]}。</p>
+<p>每个 result.json 包含全部门槛、指标、时间和计算配置；history.json/CSV 保存实际迭代/步历史；fields.npz 保存原始面场、中心展示场、参考与采样曲线，Taylor–Green 还保存全部接受步面场。</p>
+<h2>5. 压力场、速度场与剖面</h2>
+<p>周期涡压力曲线取中心平面 y=(floor(n/2)+1/2)Δy；速度剖面取u面 x=(floor(n/4)+1)Δx。通道剖面位置见每个reference记录。</p>
+<h3>poiseuille，144x48</h3>
+<figure><img src="channel-48/figures/pressure.png"><figcaption>实际压力场，单位 Pa</figcaption></figure>
+<p>图：实际压力场，单位 Pa。</p>
+<figure><img src="channel-48/figures/speed.png"><figcaption>实际速度幅值，单位 m/s</figcaption></figure>
+<p>图：实际速度幅值，单位 m/s。</p>
+<figure><img src="channel-48/figures/u.png"><figcaption>实际水平速度</figcaption></figure>
+<p>图：实际水平速度。</p>
+<figure><img src="channel-48/figures/v.png"><figcaption>实际垂向速度</figcaption></figure>
+<p>图：实际垂向速度。</p>
+<figure><img src="channel-48/figures/pressure-curve.png"><figcaption>压力曲线与解析参考；使用上述区域、规范和时钟</figcaption></figure>
+<p>图：压力曲线与解析参考；使用上述区域、规范和时钟。</p>
+<figure><img src="channel-48/figures/velocity-profile.png"><figcaption>速度剖面与解析参考</figcaption></figure>
+<p>图：速度剖面与解析参考。</p>
+<figure><img src="channel-48/figures/history.png"><figcaption>实际收敛或能量历史</figcaption></figure>
+<p>图：实际收敛或能量历史。</p>
+<h3>taylor-green，64x64x4</h3>
+<figure><img src="tg-space-64/figures/pressure.png"><figcaption>实际压力场，单位 Pa</figcaption></figure>
+<p>图：实际压力场，单位 Pa。</p>
+<figure><img src="tg-space-64/figures/speed.png"><figcaption>实际速度幅值，单位 m/s</figcaption></figure>
+<p>图：实际速度幅值，单位 m/s。</p>
+<figure><img src="tg-space-64/figures/u.png"><figcaption>实际水平速度</figcaption></figure>
+<p>图：实际水平速度。</p>
+<figure><img src="tg-space-64/figures/v.png"><figcaption>实际垂向速度</figcaption></figure>
+<p>图：实际垂向速度。</p>
+<figure><img src="tg-space-64/figures/pressure-curve.png"><figcaption>压力曲线与解析参考；使用上述区域、规范和时钟</figcaption></figure>
+<p>图：压力曲线与解析参考；使用上述区域、规范和时钟。</p>
+<figure><img src="tg-space-64/figures/velocity-profile.png"><figcaption>速度剖面与解析参考</figcaption></figure>
+<p>图：速度剖面与解析参考。</p>
+<figure><img src="tg-space-64/figures/history.png"><figcaption>实际收敛或能量历史</figcaption></figure>
+<p>图：实际收敛或能量历史。</p>
+<figure><img src="figures/poiseuille-spatial.png"><figcaption>poiseuille-spatial</figcaption></figure>
+<figure><img src="figures/taylor-green-spatial.png"><figcaption>taylor-green-spatial</figcaption></figure>
+<figure><img src="figures/taylor-green-temporal.png"><figcaption>taylor-green-temporal</figcaption></figure>
+<h2>6. 讨论与适用边界</h2>
+<p>3% 是本项目预声明的解析验证门，并非论文、行业或工程安全的通用标准。多项解析误差与数值门均通过后，只认证本文的边界条件和评估区域。通道入口不是充分发展解；周期涡无固壁、自由液面和移动体。二维涡嵌入3D不能验证真实3D湍流。本研究不认证翼型/圆柱升阻力、SUBOFF、双向FSI或冰破坏。网格加密使用相同物理时间；未将小残差等同于物理误差。</p>
+<p>另一次128²×4、dt=0.0125 s试验因Picard候选非有限被拒绝，完整失败场在相邻 verification-benchmarks-failed-n128 目录保留。它不计入正式32/48/64序列，不能被该序列通过覆盖。</p>
+<p>历史根目录 tensorlbm 实验代码没有作为本报告求解后端；其投影尺度、裁剪和守恒问题仍须独立处理。此工作没有放宽旧失败门或覆盖旧证据。</p>
+<h2>7. 可复现性与数据可用性</h2>
+<p>源码 SHA256、git 基线、Python/Torch/NumPy、设备与线程见 summary.json；全部报告、图和数据摘要见 manifest.json。检查源码哈希与文件哈希后，再从原始场独立重算验收。图以300 dpi PNG、矢量PDF及SVG提供；压力/速度曲线同时导出CSV。报告PDF、可打印HTML及LaTeX稿可供论文编排；投稿前仍需期刊模板、作者信息和同行审查。</p>
+<p>环境：{&quot;matplotlib&quot;: &quot;3.11.2&quot;, &quot;git_base&quot;: &quot;38c48dfe386ac822f4f70e44726fa0a610c753af&quot;, &quot;python&quot;: &quot;3.11.15&quot;, &quot;torch&quot;: &quot;2.14.1+cu130&quot;, &quot;numpy&quot;: &quot;2.4.6&quot;, &quot;platform&quot;: &quot;Linux-6.8.0-137-generic-x86_64-with-glibc2.39&quot;, &quot;torch_threads&quot;: 1, &quot;device&quot;: &quot;cpu&quot;, &quot;source_sha256&quot;: {&quot;pyproject.toml&quot;: &quot;7222720c67aacd63d49197202dea8e1a457b8b78a53a8cba31640846a5498172&quot;, &quot;src/tensorfvm/__init__.py&quot;: &quot;9f8d4d3a249d695e4e841e4c9d11d7158db8a2d33e2928d3565794718e2aba3c&quot;, &quot;src/tensorfvm/backend_registry.py&quot;: &quot;e68b95fdb7c457b921b2f1c9e3920f80ebdcdb104ca8077e10e96d2a4182a13a&quot;, &quot;src/tensorfvm/body_fitted.py&quot;: &quot;4e633fa42c1171cf57aca5bf930827f97a30dada4e405bf3ac9c1068ba1bb7a7&quot;, &quot;src/tensorfvm/mesh_api.py&quot;: &quot;72f4f9d724084df335dca0e561877c5423c47a7f8bfffe950d631845e2dce22d&quot;, &quot;src/tensorfvm/periodic_mac.py&quot;: &quot;b6b823c2c7972368a30fbba14f07d1222d062d00a9fe03c769c844407bfde5eb&quot;, &quot;src/tensorfvm/runtime.py&quot;: &quot;ff383730f34f82030f28da424819eea670f28c663d5be834f30bebc6c74a2da5&quot;, &quot;src/tensorfvm/solver.py&quot;: &quot;7c3613f23791c6a22825bd2ba0467e2bb84013ecaedc974901452b1864a2868e&quot;, &quot;src/tensorfvm/verification/__init__.py&quot;: &quot;2e93edad1f2e0ed881602c2f72592f32070e99f9a75433e6fa0ce4c485f52652&quot;, &quot;src/tensorfvm/verification/__main__.py&quot;: &quot;bac1da0b8ea13da1d7e8de391d0da9fe5a69f8658d55c57d55fc9c861eb28096&quot;, &quot;src/tensorfvm/verification/audit.py&quot;: &quot;7df05206579b07718441e0ae894e60d8a7b2543fd8e557bd1f7fb7d8586ea414&quot;, &quot;src/tensorfvm/verification/cases.py&quot;: &quot;6cf52e2cf76334ae3ce47c77c9d4bd33e7d83ab08f2d96b2123d356b0702260e&quot;, &quot;src/tensorfvm/verification/core.py&quot;: &quot;088114b4c8ec39a0724213bfc00f83a4356bcaca1dd2398376ef35426866e12e&quot;, &quot;src/tensorfvm/verification/lbm.py&quot;: &quot;0ad5bf5d1022752755f5f0ff47df597baf00dca3e64bf66e576014e6930be9a4&quot;, &quot;src/tensorfvm/verification/report.py&quot;: &quot;d38464cbba0f152d4410589e6a66c8fe05f9f84da06ecab62d3895a8f77ead62&quot;}}。</p>
+<h2>8. 参考依据</h2>
+<p>解析参考由本文控制方程直接推导：通道积分 μu&#x27;&#x27;=dp/dx 且满足无滑移与平均流量；周期涡代入不可压动量方程得到指数衰减及压力。时间参考来自离散相容拉普拉斯 Fourier 特征值。未采用无法追溯的经验升阻力值。</p>
+<p>[1] G. I. Taylor and A. E. Green, Mechanism of the production of small eddies from large ones, Proceedings of the Royal Society A 158 (1937), 499–521. DOI: https://doi.org/10.1098/rspa.1937.0036 。本文使用其经典涡验证思想的二维解析衰减变体。</p>
+<p>[2] NASA NPARC Alliance, Examining Spatial (Grid) Convergence, https://www.grc.nasa.gov/www/wind/valid/tutorial/spatconv.html 。用于网格研究方法背景，不将该网页当作本文3%阈值的来源。</p>
+<h2>9. FVM 与 LBM 对照</h2>
+<h1>FVM 与 TensorLBM 的匹配解析对照</h1>
+<h2>1. 公平性与共同条件</h2>
+<p>两者求解同一周期二维 Taylor–Green 连续问题：L=2π m、ρ=1 kg/m³、ν=0.1 m²/s、U0=1 m/s、终止时间0.5 s、CPU单线程、float64状态。同样的L2/峰值归一化L∞定义与严格3%精度门；解析值在各自实际自由度位置计算。</p>
+<p>FVM 是四层展向的MAC原型，物理解无展向变化；LBM是二维D2Q9 BGK，调用外部仓库原始 equilibrium、collide_bgk、stream、macroscopic 共性模块，没有在benchmark复制碰撞/迁移算法。LBM根据dx/dt映射SI，并使整数步恰好到0.5 s；τ=0.5+3νdt/dx²，Ma按实际dt记录。初始密度由解析压力和EOS确定，populations采用生产equilibrium初始化，可能产生有限启动误差；未做人为质量调平。</p>
+<p>FVM压力属于最后midpoint时刻；LBM压力属于步末。各自对照对应时刻的解析压力，没有把两个不同时钟的压力直接相减。LBM节点和FVM错位面不同，比较解析误差而非未经插值的数组差。</p>
+<p>LBM使用float64 populations，但当前生产D2Q9权重由float32常数形成；本报告保留该实现并测量质量漂移，不把它归因于所有LBM方法。对照仅涉及此BGK基线，不能代表TensorLBM的MRT、cumulant或GPU优化能力。</p>
+<h2>2. 实际结果</h2>
+<table>
+<tr><td>N</td><td>LBM Ma</td><td>FVM u L2 (%)</td><td>LBM u L2 (%)</td><td>FVM p L2 (%)</td><td>LBM p L2 (%)</td><td>FVM / LBM steps</td><td>FVM / LBM observed CPU seconds</td></tr>
+<tr><td>32</td><td>0.04956</td><td>0.03209</td><td>0.63348</td><td>0.89781</td><td>0.86173</td><td>40 / 89</td><td>0.8630 / 0.0747</td></tr>
+<tr><td>64</td><td>0.04984</td><td>0.00802</td><td>0.15207</td><td>0.22480</td><td>0.81428</td><td>40 / 177</td><td>1.7436 / 0.2948</td></tr>
+<tr><td>32</td><td>0.02492</td><td>0.03209</td><td>0.64003</td><td>0.89781</td><td>1.68311</td><td>40 / 177</td><td>0.8630 / 0.1473</td></tr>
+</table>
+<figure><img src="figures/fvm-lbm-errors.png"><figcaption>Accuracy comparison</figcaption></figure>
+<h2>3. FVM 的优势及证据边界</h2>
+<p>- 压力由不可压约束求解，不依靠弱可压状态方程或人为声速；本例记录相容面散度与实际压力误差。</p>
+<p>- MAC 面速度直接满足离散连续性，并保留每步动量、压力功、黏性功与能量账本。LBM的中心差分散度是可压宏观诊断，与MAC权威通量散度不是同一个离散算子；只并列展示，不据此判定LBM错误。</p>
+<p>- 物理时间步不由格子声速映射决定。本例FVM可以直接做0.1/0.05/0.025 s时间加密；隐式非线性求解仍可能失败，绝不宣称任意大步长。</p>
+<p>- 按一层物理平面统计，FVM主未知量3速度+1压力为4N²个double，D2Q9为9N²个double，比例4/9。此数只描述主状态存储，不含FVM非线性临时量、FFT、LBM流索引、报告缓存；不是峰值内存或总成本优势。</p>
+<p>- 新通道报告另验证压力梯度、壁面剪切与力平衡，给后续FEM牵引映射提供明确SI量。不能据此声称已有曲面、移动体或工程FSI优势。</p>
+<h2>4. 性能与LBM自身优势</h2>
+<p>此处运行时间来自单次CPU完整执行，包含初始化、诊断与原场采样；FVM实际推进四个z平面，LBM只有一个二维网格，而且时间步数不同。未进行重复统计、暖启动、峰值RSS或GPU公平性能测量。因此不宣称FVM速度更快或峰值内存更低。LBM的局部碰撞/迁移、无需全局压力Poisson，以及成熟融合GPU路径具有不同成本结构，应在后续相同精度、相同物理维度的基准中实测。</p>
+<p>两者的失败、质量漂移和压力误差均保留，不能通过筛选指标来制造优势。未来应增加相同固壁边界的压力驱动通道和同一几何外流，在完整3%门与守恒约束下比较达到指定精度的总成本。</p>
+<h2>5. 数据与复现</h2>
+<p>summary.json各LBM运行记录外部仓库提交号、共性源码SHA、Mach、τ、dt、密度变化与质量历史。原始populations及每一步完整状态可独立重建BGK和迁移。comparison.json绑定此次测得指标。主报告的FVM资格与LBM比较资格分别记录；某一基线失败不能被另一个基线的成功覆盖。</p></body></html>
