@@ -1,0 +1,8 @@
+Working directory: TensorFVM checkout.
+OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 PYTHONPATH=src python -m tensorfvm.verification --output docs/verification-benchmarks --lbm-repo /home/jsyc/tensor-suite-development/TensorLBM
+OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 PYTHONPATH=src python -m tensorfvm.verification.report --directory docs/verification-benchmarks
+OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 PYTHONPATH=src python -m tensorfvm.verification.audit --directory docs/verification-benchmarks
+OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 PYTHONPATH=src python -m pytest -q tests/test_verification_workflow.py
+Interpreter used: /data/TensorFEM/.venv/bin/python
+Installation check: uv pip install --python /data/TensorFEM/.venv/bin/python --no-deps -e .
+PDF/figure pages were visually inspected using pdftoppm and local image tools.
