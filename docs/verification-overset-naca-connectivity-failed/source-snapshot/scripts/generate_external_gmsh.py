@@ -10,7 +10,7 @@ from pathlib import Path
 import numpy as np
 
 
-def generate(case, output, scale=1., *, length=None, height=None, leading_x=6., leading_y=8., geometric_incidence_deg=0., open_boundaries=False, hybrid=False, outer_size_limit=None):
+def generate(case, output, scale=1., *, length=None, height=None, leading_x=6., leading_y=8., geometric_incidence_deg=0., open_boundaries=False, hybrid=False):
     import gmsh
     if not np.isfinite(scale) or scale<=0:
         raise ValueError('Mesh scale must be finite and positive')
@@ -27,9 +27,6 @@ def generate(case, output, scale=1., *, length=None, height=None, leading_x=6., 
         H=H if height is None else height
         wall_size=(.003 if case=='cylinder' else .008)*scale
         outer_size=(.025 if case=='cylinder' else .4)*scale
-        if outer_size_limit is not None:
-            if not np.isfinite(outer_size_limit) or outer_size_limit<=0:raise ValueError('Outer size limit must be positive')
-            outer_size=min(outer_size,outer_size_limit)
         corners=[geo.addPoint(x,y,0,outer_size) for x,y in [(0,0),(L,0),(L,H),(0,H)]]
         outer=[geo.addLine(corners[i],corners[(i+1)%4]) for i in range(4)]
         if case=='cylinder':

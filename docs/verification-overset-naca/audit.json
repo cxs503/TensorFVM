@@ -1,0 +1,63 @@
+{
+  "passed": true,
+  "runs": [
+    {
+      "resolution": 32,
+      "passed": true,
+      "independent_equation_max_residual": 3.502753642692369e-13,
+      "donor_constraint_max_residual": 1.0658141036401503e-14,
+      "affine_coordinate_max_error": 4.440892098500626e-16,
+      "quadratic_interpolation_relative_l2_errors": [
+        0.0005791361273955473,
+        0.0014999719038247788
+      ],
+      "body_max_deviation_m": 1.8066364398075586e-08,
+      "component_relative_l2_errors": [
+        0.0014057455350981205,
+        0.006663563642936098
+      ],
+      "physical_global_balance_relative_error": 0.004884551542663485,
+      "navier_stokes_verified": false,
+      "strict_local_conservation": false
+    },
+    {
+      "resolution": 64,
+      "passed": true,
+      "independent_equation_max_residual": 3.738120923912902e-13,
+      "donor_constraint_max_residual": 1.4210854715202004e-14,
+      "affine_coordinate_max_error": 4.440892098500626e-16,
+      "quadratic_interpolation_relative_l2_errors": [
+        0.00014423541753716667,
+        0.00038048083135160793
+      ],
+      "body_max_deviation_m": 1.931430703221386e-08,
+      "component_relative_l2_errors": [
+        0.0002868634235097089,
+        0.0013283353909667925
+      ],
+      "physical_global_balance_relative_error": 0.0009766529447358993,
+      "navier_stokes_verified": false,
+      "strict_local_conservation": false
+    },
+    {
+      "resolution": 128,
+      "passed": true,
+      "independent_equation_max_residual": 1.9438374521119073e-12,
+      "donor_constraint_max_residual": 3.552713678800501e-14,
+      "affine_coordinate_max_error": 8.881784197001252e-16,
+      "quadratic_interpolation_relative_l2_errors": [
+        3.971262923985392e-05,
+        9.451667300648316e-05
+      ],
+      "body_max_deviation_m": 3.0534267517999945e-08,
+      "component_relative_l2_errors": [
+        6.423198699646492e-05,
+        0.0002904897801783655
+      ],
+      "physical_global_balance_relative_error": 0.00021686832379320026,
+      "navier_stokes_verified": false,
+      "strict_local_conservation": false
+    }
+  ],
+  "scope": "Independent raw polygon geometry, dense analytic NACA0012 conformity, NumPy LS gradients/full nonorthogonal scalar diffusion, two-way ACTIVE donors and unique-domain global scalar flux; no overset production module imported."
+}

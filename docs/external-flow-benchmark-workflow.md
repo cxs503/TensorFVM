@@ -153,3 +153,17 @@ PYTHONPATH=src python -m tensorfvm.overset_report results/overset
 ```
 
 [报告和当前范围](verification-overset-poisson/report.md)、[原始供体连接及逐项误差](verification-overset-poisson/summary.json)。后续接入压力速度耦合和守恒修正，先做静态层流圆柱，再推进移动物体与几何守恒律。
+
+
+### NACA overset 测试入口
+
+NACA0012组件使用Gmsh四边形壁面层及外部三角形，笛卡尔背景单独索引。组件外缘限制为0.06C×scale，确保足够的ACTIVE供体。首轮33个孤儿被严格拒绝，失败几何和原生成源快照保留。新增通用标量算子包含LS梯度、完整非正交扩散修正和同时求解的双向供体约束。物理翼面施加制造解标量Dirichlet数据，人工重叠边界没有解析场输入。
+
+```bash
+OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 PYTHONPATH=src python scripts/run_naca_overset.py --levels 32 64 128 --output results/naca-overset
+PYTHONPATH=src python scripts/audit_naca_overset.py results/naca-overset
+PYTHONPATH=src python scripts/preserve_external_producer.py results/naca-overset
+PYTHONPATH=src python -m tensorfvm.overset_naca_report results/naca-overset
+```
+
+[实际报告](verification-overset-naca/report.md)包含双组件状态、供体图、真实标量场及误差场、剖面、加密曲线、原始NPZ、CSV/PDF/TeX和独立复核。此入口尚未形成N-S绕流求解及力系数验证。
