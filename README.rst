@@ -228,12 +228,45 @@ NACA 0012、Re=1000、攻角 4° 数据。该攻角低于文献给出的 8° 非
 物理边界组，并分别积分三段翼的压力与壁面剪切力。结果目录包含非结构网格、
 单元场、逐段表面 ``Cp``、残差和机器可读报告。
 
-报告将计算结果与公开验证仓库记载的 ``Cl=0.033243``、``Cd=2.167089`` 作诊断比较；
-来源对 Cd 使用的缩放记法与常规无量纲 Cd 可能相差 100 倍，代码会同时输出常规
-``Cd`` 与 ``100*Cd``，但**不据此自动宣称验证通过**。当前算例使用矩形远场域和
+原 Wolf Dynamics 表的正确数值是 ``Cl=2.167089``、``Cd=0.033243``；早期派生资料
+把两者标签抄反，现已纠正。该参考仅适用于其 Re=5,000,000、攻角 0° 工况，
+且读图不确定度与几何匹配仍需检查，**不据此自动宣称验证通过**。当前旧算例使用矩形远场域和
 二维不可压缩 SA 模型，未严格复刻风洞边界，也未包含可压缩效应；返回码 0 仅代表
 数值残差收敛。该案例用于三段几何与求解器联调，不能替代网格无关性、y+ 检查及
 严格的实验复现。
+
+新增官方 HLPW4 三段翼实验对比
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``src/tensorfvm/data/30p30n-hlpw4`` 保存官方 BANC 几何、NASA LTPT 原始
+Cp/Cl/Cf 数据、来源及 SHA256。采用名义收起弦长 C=1，Re=9,000,000，
+攻角 8.10°，500C 圆形远场；实验 M=0.2，当前求解器为不可压近似。
+Gmsh 壁面四边形层和外部三角形网格复用共享 Mesh2D/SIMPLE/SA 模块。
+网格检查包含重心投影、壁面非正交角和自由流出口回流。
+这是一个尚未达到物理精度要求的开发案例，单个流场计算不构成 overset 流动验证。
+
+安装 ``.[benchmark,mesh]`` 后运行::
+
+    OMP_NUM_THREADS=1 PYTHONPATH=src python scripts/mesh_hlpw30p30n.py \
+        --output results/30p-mesh --level 0 --layer-thickness .001
+    OMP_NUM_THREADS=1 PYTHONPATH=src python scripts/run_three_element_steady.py \
+        --mesh-file results/30p-mesh/mesh.msh --output results/30p-flow \
+        --chord 1 --alpha 8.10 --pressure-gradient gauss-skew-corrected
+    PYTHONPATH=src python scripts/report_hlpw30p30n.py results/30p-flow
+
+报告输出三翼段 Cp 对比、实际几何、压力/速度云图、残差、逐测点误差和 PDF。
+未收敛或多值 x 注册不完整的结果保留失败状态，不外推、平均或用实验数据修正方程。
+实验存在已知三维效应，官方 BANC 缝翼尾缘也比原实验更厚，均在报告中说明。
+``--sa-newton`` 仅供研究：虽有独立自动微分和真实线性残差检查，仍可能趋向非物理
+低湍流分支；正式开发计算默认使用正生产项的 Picard SA 更新。
+
+原始 STEP 曲线的几何对照可以运行 ``--geometry cad --cad-mesh-mode triangles``。
+15,004 单元的实际 CAD 网格及独立壁节点验证见
+``docs/verification-30p30n-cad-geometry/``；它没有壁面层，不能用于 Re9M 精度验收。
+``--cad-mesh-mode hybrid`` 仍为研究路径：真实缝翼凹槽处的层碰撞和
+Gmsh 曲线终止限制尚未解决，失败日志单独保留。默认仍使用 polygon。
+70 步实际 SIMPLE/SA 与官方实验的 Cp 对比见
+``docs/verification-30p30n-hlpw4-diagnostic/hlpw-report.md``，升力差21.20%，未达标。
 
 高 Re 平板 SA RANS 基准（实验性）
 ---------------------------------
@@ -389,3 +422,24 @@ from empirical friction accuracy. CPU/CUDA consistency is a supporting check.
 See `workflow and acceptance scope <docs/full-simple-gpu-workflow.md>`_ and
 `full SIMPLE report <docs/verification-simple-gpu/report.md>`_.
 SIMPLEC, PISO and PIMPLE remain separate future implementations.
+
+Three-dimensional body-fitted cylinder, Re3900
+--------------------------------------------
+
+新增真正三维贴体有限体积瞬态入口
+``scripts/run_body_fitted_cylinder3900.py``：周期展向、无滑移圆柱、
+WALE、共享面通量和变黏度应力、非正交压力投影及原子检查点。
+``scripts/report_body_fitted_cylinder3900.py`` 输出实际网格、压力/速度场、
+表面 Cp、力历史和 PDF，并对照原作者 DNS 标量。
+
+参考匹配域的 6,144 控制体、300 步仅为启动稳定性验证。
+连续性缺陷 6.11e-9，但最大 y+=16.24，记录仅 0.6D/U；
+尚未达到壁面分辨率、长期统计或严格 3% 物理误差门。
+``docs/verification-cylinder3900-body-fitted-primary/report.md`` 保留
+DNS 来源、原场检查点、全部生产源码及真实差距；GPU 尚未验证。
+
+后续八网格预检及两网格实际启动计算见
+``docs/verification-cylinder3900-wall-refinement/report.md``。
+24,576 控制体案例测得最大 y+=2.81，仍未达标；
+589,824 控制体仅进行了几何/初始黏度预检，未完成 LES 求解。
+共性验收模块独立复核原场守恒，统计模块修复谱分段过短的问题。

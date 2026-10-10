@@ -239,21 +239,28 @@ class ThreeElementMesh:
 
     @staticmethod
     def _signed_area(points: list[tuple[float, float]]) -> float:
-        return 0.5 * sum(
+        origin=points[0]
+        local=[(x-origin[0],y-origin[1]) for x,y in points]
+        return 0.5 * math.fsum(
             x0 * y1 - x1 * y0
-            for (x0, y0), (x1, y1) in zip(points, points[1:] + points[:1])
+            for (x0, y0), (x1, y1) in zip(local, local[1:] + local[:1])
         )
 
     @classmethod
     def _centroid(cls, points: list[tuple[float, float]]):
+        # Thin first-layer fans can have area ~1e-13 at x~1. Global shoelace
+        # sums lose digits and can put their centroid outside the triangle.
+        # Translate before products; restore the origin only after division.
+        origin=points[0]
+        points=[(x-origin[0],y-origin[1]) for x,y in points]
         cross = [x0 * y1 - x1 * y0
                  for (x0, y0), (x1, y1) in zip(points, points[1:] + points[:1])]
-        area = 0.5 * sum(cross)
+        area = 0.5 * math.fsum(cross)
         center = (
-            sum((p[0] + q[0]) * cross_value
+            origin[0]+math.fsum((p[0] + q[0]) * cross_value
                 for p, q, cross_value in zip(points, points[1:] + points[:1], cross))
             / (6 * area),
-            sum((p[1] + q[1]) * cross_value
+            origin[1]+math.fsum((p[1] + q[1]) * cross_value
                 for p, q, cross_value in zip(points, points[1:] + points[:1], cross))
             / (6 * area),
         )

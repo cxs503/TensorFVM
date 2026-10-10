@@ -13,8 +13,15 @@ benchmark can run without downloading geometry at runtime.  Their order and
 normalization are preserved; the solver treats the profiles as separate solid
 boundaries.
 
-The diagnostic case's Re=5,000,000 and 0-degree conditions follow the original
-case description in https://github.com/coutinhola/30P30N.  Reference lift and
-drag values are transcribed from the validation repository README; the drag
-normalization is ambiguous there, so the code reports both Cd and 100*Cd and
-does not use the comparison as an acceptance criterion.
+The deployed x extent was normalized to one. The nominal stowed reference
+chord in these coordinates is 1/1.216241; Reynolds numbers and force coefficients
+must use that nominal chord. The legacy entry point remains a diagnostic case.
+
+The original Wolf Dynamics table identifies Cl=2.167089 and Cd=0.033243 at
+Re=5,000,000 and alpha=0. The derivative repository README swapped their labels.
+The values were read from plots with unquantified uncertainty; neither residual
+convergence nor matching a force coefficient grants pressure accuracy acceptance.
+
+The separate 30p30n-hlpw4 directory contains the official HLPW4 geometry and
+NASA LTPT Cp data at Re=9,000,000, M=0.2 and alpha=8.10/16.21/21.34/23.28 degrees.
+Do not mix its conditions with this legacy Wolf Dynamics case.

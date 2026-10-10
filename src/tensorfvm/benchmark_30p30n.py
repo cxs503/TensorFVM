@@ -19,9 +19,10 @@ import torch
 from .solver import SimpleSolver, SolverConfig
 
 
-REFERENCE_LIFT = 0.033243
-REFERENCE_DRAG_REPORTED = 2.167089
+REFERENCE_LIFT = 2.167089
+REFERENCE_DRAG_REPORTED = 0.033243
 PROFILE_DIRECTORY = Path(__file__).with_name("data") / "30p30n"
+NORMALIZED_NOMINAL_CHORD = 1 / 1.216241
 
 
 def _read_profile(path: Path) -> list[tuple[float, float]]:
@@ -77,7 +78,7 @@ def _minimum_profile_gap(first, second) -> float:
 
 def write_gmsh_geo(destination: str | Path, *, domain=(-5.0, 5.0, -5.0, 5.0),
                    near_size=0.0015, far_size=0.08, first_layer=1e-5,
-                   layer_thickness=0.004, layer_ratio=1.2) -> Path:
+                   layer_thickness=0.004, layer_ratio=1.2, profile_directory=None) -> Path:
     """Write a 30P30N Gmsh .geo model with three separate wall boundaries."""
     destination = Path(destination)
     xmin, xmax, ymin, ymax = map(float, domain)
@@ -89,8 +90,9 @@ def write_gmsh_geo(destination: str | Path, *, domain=(-5.0, 5.0, -5.0, 5.0),
         raise ValueError("mesh domain bounds must be ordered")
     if min(near_size, far_size, first_layer, layer_thickness, layer_ratio) <= 0:
         raise ValueError("mesh sizes, boundary-layer thickness, and ratio must be positive")
+    profile_directory = PROFILE_DIRECTORY if profile_directory is None else Path(profile_directory)
     profiles = {
-        name: _read_profile(PROFILE_DIRECTORY / f"{name}.dat")
+        name: _read_profile(profile_directory / f"{name}.dat")
         for name in ("slat", "main", "flap")
     }
     minimum_gap = min(
@@ -210,17 +212,21 @@ def _generate_mesh(output: Path, *, near_size: float, far_size: float,
 
 
 def compare_30p30n(result) -> dict:
-    """Report the archived reference comparison without overclaiming validation.
+    """Diagnostic comparison with correctly identified Wolf Dynamics values.
 
-    The source validation README reports ``Cd=2.167089`` and ``Cl=0.033243``
-    without an unambiguous drag-coefficient normalization.  Both ``Cd`` and
-    ``100*Cd`` comparisons are reported as diagnostics, never as an automatic
-    physics pass/fail gate.
+    Wolf Dynamics identifies Cl=2.167089 and Cd=0.033243. The derivative
+    validation-repository README swapped the labels; it is not authoritative.
+    These are graph readings, not an independently qualified reference dataset.
+    Nominal stowed chord, geometry, Re and boundary conditions must also match.
     """
     computed = result.aerodynamic_coefficients or {}
     lift = float(computed.get("lift", math.nan))
     drag = float(computed.get("drag", math.nan))
     valid = math.isfinite(lift) and math.isfinite(drag)
+    config = getattr(result, 'config', None)
+    conditions_match = config is None or (
+        math.isclose(config.reynolds, 5_000_000) and
+        math.isclose(config.angle_of_attack, 0, abs_tol=1e-10))
     return {
         "computed_coefficients": {
             "lift": lift if valid else None,
@@ -231,18 +237,19 @@ def compare_30p30n(result) -> dict:
                       "drag_reported": REFERENCE_DRAG_REPORTED},
         "relative_errors": {
             "lift": abs(lift - REFERENCE_LIFT) / abs(REFERENCE_LIFT)
-            if valid else None,
+            if valid and conditions_match else None,
             "drag_if_source_is_dimensionless": abs(drag - REFERENCE_DRAG_REPORTED)
-            / abs(REFERENCE_DRAG_REPORTED) if valid else None,
-            "drag_if_source_is_100x": abs(100 * drag - REFERENCE_DRAG_REPORTED)
-            / abs(REFERENCE_DRAG_REPORTED) if valid else None,
+            / abs(REFERENCE_DRAG_REPORTED) if valid and conditions_match else None,
         },
-        "note": "Diagnostic comparison only: source drag scaling and tunnel/domain "
-                "details must be matched before treating these errors as acceptance.",
+        "reynolds_alpha_match": conditions_match,
+        "source_url": "https://www.wolfdynamics.com/tutorials.html?id=119",
+        "note": "Diagnostic comparison only: graph-reading uncertainty, nominal "
+                "stowed chord and matched geometry/conditions require verification. "
+                "Cl/Cd labels corrected from the original Wolf Dynamics table.",
     }
 
 
-def export_result(result, directory: str | Path) -> None:
+def export_result(result, directory: str | Path, *, wall_pressure=None) -> None:
     """Write the unstructured solution, element Cp, force and residual files."""
     directory = Path(directory)
     directory.mkdir(parents=True, exist_ok=True)
@@ -283,6 +290,14 @@ def export_result(result, directory: str | Path) -> None:
     face_centers = mesh.face_centers.detach().cpu()
     owners = mesh.owner.detach().cpu()
     masks = mesh.masks
+    if wall_pressure is not None:
+        wall_pressure=wall_pressure.detach().cpu().reshape(-1)
+        if len(wall_pressure)!=len(owners) or not bool(torch.isfinite(wall_pressure).all()):
+            raise ValueError('Invalid solver face-pressure field')
+        with (directory/'wall-face-pressure.csv').open('w',newline='',encoding='utf-8') as stream:
+            writer=csv.writer(stream);writer.writerow(('face','p'))
+            for face_id in torch.nonzero(masks['wall']).flatten().tolist():
+                writer.writerow((face_id,float(wall_pressure[face_id])))
     with (directory / "surface.csv").open("w", newline="", encoding="utf-8") as stream:
         writer = csv.writer(stream)
         writer.writerow(("element", "x", "y", "p", "cp"))
@@ -292,7 +307,7 @@ def export_result(result, directory: str | Path) -> None:
             for face_id in torch.nonzero(mask, as_tuple=False).flatten().tolist():
                 owner = int(owners[face_id])
                 point = face_centers[face_id]
-                value = float(pressure[owner])
+                value = float(pressure[owner]) if wall_pressure is None else float(wall_pressure[face_id])
                 writer.writerow((name, float(point[0]), float(point[1]), value,
                                  value / dynamic_pressure))
 
@@ -301,7 +316,7 @@ def export_result(result, directory: str | Path) -> None:
     )
     comparison = compare_30p30n(result)
     summary = {
-        "benchmark": "MDA-30P30N-Re5000000-alpha0",
+        "benchmark": f"MDA-30P30N-Re{result.config.reynolds:g}-alpha{result.config.angle_of_attack:g}",
         "converged": result.converged,
         "iterations": len(result.history),
         "config": asdict(result.config),
@@ -318,44 +333,18 @@ def export_result(result, directory: str | Path) -> None:
     (directory / "benchmark.json").write_text(
         json.dumps(summary, indent=2, allow_nan=False) + "\n", encoding="utf-8"
     )
-    report = f"""MDA 30P30N 三段翼二维诊断算例
-==================================
+    report = f"""MDA 30P30N 三段翼流动诊断
+============================
 
-工况
-----
+Re={result.config.reynolds:g}，攻角={result.config.angle_of_attack:g}°，
+参考弦长={result.config.reference_length:g}。数值收敛={result.converged}，
+完成迭代={len(result.history)}。实际计算数据在 fields.csv 和 surface.csv。
 
-几何采用独立的 slat、main 和 flap 坐标边界；Re=5,000,000，攻角 0°，
-基于 PyTorch 的二维同位网格 SIMPLE + Spalart--Allmaras 求解器。三段翼轮廓
-在包内 ``tensorfvm/data/30p30n`` 中，Gmsh 只用于生成二维三角形/四边形网格；
-求解阶段通过物理边界组分别积分各翼段压力和黏性力。
-
-参考对比
---------
-
-参考验证仓库报告 ``Cl=0.033243``、``Cd=2.167089``。当前结果：
-``Cl={comparison['computed_coefficients']['lift']:.8g}``，
-``Cd={comparison['computed_coefficients']['drag']:.8g}``，
-``100*Cd={comparison['computed_coefficients']['drag_x100']:.8g}``；升力相对误差
-``{comparison['relative_errors']['lift'] if comparison['relative_errors']['lift'] is not None else float('nan'):.4%}``，
-若来源 Cd 为常规无量纲数，则阻力相对误差为
-``{comparison['relative_errors']['drag_if_source_is_dimensionless'] if comparison['relative_errors']['drag_if_source_is_dimensionless'] is not None else float('nan'):.4%}``；若来源 Cd 采用百分数记法，则为
-``{comparison['relative_errors']['drag_if_source_is_100x'] if comparison['relative_errors']['drag_if_source_is_100x'] is not None else float('nan'):.4%}``。
-
-该对比仅为诊断，**不作为自动精度验收**：公开 README 未充分说明阻力系数缩放约定；
-试验风洞边界、几何归一化和当前远场矩形域也并未完全等同。当前方程是二维
-不可压缩模型，不能仅凭收敛或系数相近声称复现了实验。
-
-复现
-----
-
-安装 PyTorch 及 Gmsh 后运行::
-
-    python -m tensorfvm.benchmark_30p30n --output results/30p30n
-
-也可预先用 Gmsh 生成 ASCII v2 网格，并通过 ``--mesh-file`` 传给算例。
-结果目录包含 ``fields.csv``、``surface.csv``、``nodes.csv``、``cells.csv``、
-``history.json`` 和 ``benchmark.json``。返回码 0 表示数值残差收敛，不代表
-公开实验误差通过。
+当前 Cl={comparison['computed_coefficients']['lift']:.8g}，
+Cd={comparison['computed_coefficients']['drag']:.8g}。
+Wolf Dynamics 原表为 Cl=2.167089，Cd=0.033243；旧派生资料误将标签抄反。
+该参考来自图上读取，几何、收起状态参考弦长及工况仍需独立匹配，不能只凭
+系数接近或迭代收敛授予物理精度资格。正式压力对比另行记录来源与工况。
 """
     (directory / "report.rst").write_text(report, encoding="utf-8")
 
@@ -380,7 +369,7 @@ def run_benchmark(directory: str | Path, *, max_iterations: int = 1000,
     config = SolverConfig(
         nx=1, ny=1, length=10.0, height=10.0,
         cylinder_radius=None, mesh_type="three-element", mesh_file=str(mesh_path),
-        airfoil_chord=1.0, inlet_velocity=1.0, density=1.0,
+        airfoil_chord=NORMALIZED_NOMINAL_CHORD, inlet_velocity=1.0, density=1.0,
         reynolds=5_000_000.0, angle_of_attack=0.0,
         turbulence_model="spalart-allmaras", sa_freestream_ratio=3.0,
         velocity_relaxation=0.3, pressure_relaxation=0.2,
