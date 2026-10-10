@@ -1,0 +1,19 @@
+{
+  "resolution": 64,
+  "passed": true,
+  "independent_equation_max_residual": 2.43421819159928e-13,
+  "donor_constraint_max_residual": 3.197442310920451e-14,
+  "affine_coordinate_max_error": 4.440892098500626e-16,
+  "quadratic_interpolation_relative_l2_errors": [
+    0.00014763120390114928,
+    0.0008958618234529561
+  ],
+  "body_max_deviation_m": 6.827306393595232e-17,
+  "component_relative_l2_errors": [
+    0.00036834821592982014,
+    0.002717688720336897
+  ],
+  "physical_global_balance_relative_error": 0.0008148169903202325,
+  "navier_stokes_verified": false,
+  "strict_local_conservation": false
+}

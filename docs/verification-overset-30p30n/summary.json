@@ -1,0 +1,324 @@
+{
+  "case": "30p30n-static-overset-diffusion",
+  "runs": [
+    {
+      "case": "30p30n-static-overset-diffusion",
+      "directory": "background-32",
+      "resolution": 32,
+      "computed": {
+        "relative_algebraic_residual": 5.473854452463646e-16,
+        "strict_local_conservation": false,
+        "navier_stokes_verified": false,
+        "grid_0_relative_l2_error": 0.001757311806124487,
+        "grid_1_relative_l2_error": 0.013373023323663687,
+        "maximum_donor_constraint_residual": 7.105427357601002e-15,
+        "physical_global_conservation_defect_relative": 0.003980598476246738,
+        "physical_boundary_diffusive_flux": -222.90230403042844,
+        "physical_domain_integrated_source": -223.79313464117558,
+        "active_cells": 13134,
+        "fringe_cells": 158
+      },
+      "connectivity": {
+        "grids": [
+          {
+            "name": "background",
+            "cells": 896,
+            "active": 760,
+            "hole": 96,
+            "fringe": 40,
+            "volume": 56.0
+          },
+          {
+            "name": "30P30N fitted component",
+            "cells": 12492,
+            "active": 12374,
+            "hole": 0,
+            "fringe": 118,
+            "volume": 11.948283660293896
+          }
+        ],
+        "orphan_receivers": 0,
+        "max_row_sum_error": 0.0,
+        "max_affine_coordinate_error": 4.440892098500626e-16,
+        "point_value_coupling": true,
+        "conservative_flux_coupling": false
+      },
+      "metrics": [
+        {
+          "name": "grid_0_relative_l2_error",
+          "value": 0.001757311806124487,
+          "limit": 0.03,
+          "description": "Actual active scalar field",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "grid_1_relative_l2_error",
+          "value": 0.013373023323663687,
+          "limit": 0.03,
+          "description": "Actual active scalar field",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "algebraic_residual",
+          "value": 5.473854452463646e-16,
+          "limit": 1e-10,
+          "description": "Full coupled nonorthogonal equation",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "donor_residual",
+          "value": 7.105427357601002e-15,
+          "limit": 1e-10,
+          "description": "Two-way interpolation constraints",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "global_balance",
+          "value": 0.003980598476246738,
+          "limit": 0.03,
+          "description": "Unique domain minus three separate solids",
+          "unit": "1",
+          "passed": true
+        }
+      ],
+      "passed": true,
+      "elapsed_s": 25.17753405496478
+    },
+    {
+      "case": "30p30n-static-overset-diffusion",
+      "directory": "background-64",
+      "resolution": 64,
+      "computed": {
+        "relative_algebraic_residual": 5.46762459468487e-16,
+        "strict_local_conservation": false,
+        "navier_stokes_verified": false,
+        "grid_0_relative_l2_error": 0.0003686721134317284,
+        "grid_1_relative_l2_error": 0.0027202613364316294,
+        "maximum_donor_constraint_residual": 1.0658141036401503e-14,
+        "physical_global_conservation_defect_relative": 0.0008146563242529423,
+        "physical_boundary_diffusive_flux": -223.61082014871576,
+        "physical_domain_integrated_source": -223.79313464117558,
+        "active_cells": 33624,
+        "fringe_cells": 314
+      },
+      "connectivity": {
+        "grids": [
+          {
+            "name": "background",
+            "cells": 3584,
+            "active": 3120,
+            "hole": 384,
+            "fringe": 80,
+            "volume": 56.0
+          },
+          {
+            "name": "30P30N fitted component",
+            "cells": 30738,
+            "active": 30504,
+            "hole": 0,
+            "fringe": 234,
+            "volume": 11.9482836602939
+          }
+        ],
+        "orphan_receivers": 0,
+        "max_row_sum_error": 0.0,
+        "max_affine_coordinate_error": 4.440892098500626e-16,
+        "point_value_coupling": true,
+        "conservative_flux_coupling": false
+      },
+      "metrics": [
+        {
+          "name": "grid_0_relative_l2_error",
+          "value": 0.0003686721134317284,
+          "limit": 0.03,
+          "description": "Actual active scalar field",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "grid_1_relative_l2_error",
+          "value": 0.0027202613364316294,
+          "limit": 0.03,
+          "description": "Actual active scalar field",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "algebraic_residual",
+          "value": 5.46762459468487e-16,
+          "limit": 1e-10,
+          "description": "Full coupled nonorthogonal equation",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "donor_residual",
+          "value": 1.0658141036401503e-14,
+          "limit": 1e-10,
+          "description": "Two-way interpolation constraints",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "global_balance",
+          "value": 0.0008146563242529423,
+          "limit": 0.03,
+          "description": "Unique domain minus three separate solids",
+          "unit": "1",
+          "passed": true
+        }
+      ],
+      "passed": true,
+      "elapsed_s": 62.022551068104804
+    },
+    {
+      "case": "30p30n-static-overset-diffusion",
+      "directory": "background-128",
+      "resolution": 128,
+      "computed": {
+        "relative_algebraic_residual": 6.305805693810078e-16,
+        "strict_local_conservation": false,
+        "navier_stokes_verified": false,
+        "grid_0_relative_l2_error": 8.6502177613767e-05,
+        "grid_1_relative_l2_error": 0.0006271944144338529,
+        "maximum_donor_constraint_residual": 2.4868995751603507e-14,
+        "physical_global_conservation_defect_relative": 0.00018780649769704723,
+        "physical_boundary_diffusive_flux": -223.75110483634998,
+        "physical_domain_integrated_source": -223.79313464117558,
+        "active_cells": 108028,
+        "fringe_cells": 628
+      },
+      "connectivity": {
+        "grids": [
+          {
+            "name": "background",
+            "cells": 14336,
+            "active": 12640,
+            "hole": 1536,
+            "fringe": 160,
+            "volume": 56.0
+          },
+          {
+            "name": "30P30N fitted component",
+            "cells": 95856,
+            "active": 95388,
+            "hole": 0,
+            "fringe": 468,
+            "volume": 11.948283660293898
+          }
+        ],
+        "orphan_receivers": 0,
+        "max_row_sum_error": 0.0,
+        "max_affine_coordinate_error": 4.440892098500626e-16,
+        "point_value_coupling": true,
+        "conservative_flux_coupling": false
+      },
+      "metrics": [
+        {
+          "name": "grid_0_relative_l2_error",
+          "value": 8.6502177613767e-05,
+          "limit": 0.03,
+          "description": "Actual active scalar field",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "grid_1_relative_l2_error",
+          "value": 0.0006271944144338529,
+          "limit": 0.03,
+          "description": "Actual active scalar field",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "algebraic_residual",
+          "value": 6.305805693810078e-16,
+          "limit": 1e-10,
+          "description": "Full coupled nonorthogonal equation",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "donor_residual",
+          "value": 2.4868995751603507e-14,
+          "limit": 1e-10,
+          "description": "Two-way interpolation constraints",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "global_balance",
+          "value": 0.00018780649769704723,
+          "limit": 0.03,
+          "description": "Unique domain minus three separate solids",
+          "unit": "1",
+          "passed": true
+        }
+      ],
+      "passed": true,
+      "elapsed_s": 198.12076307740062
+    }
+  ],
+  "provenance": {
+    "matplotlib": "3.11.2",
+    "git_base": "4b56bc3b50dcf7b8485053a617c2f64ed80d0ff3",
+    "python": "3.11.15",
+    "torch": "2.14.1+cu130",
+    "numpy": "2.4.6",
+    "platform": "Linux-6.8.0-137-generic-x86_64-with-glibc2.39",
+    "torch_threads": 1,
+    "device": "cpu",
+    "source_sha256": {
+      "pyproject.toml": "7222720c67aacd63d49197202dea8e1a457b8b78a53a8cba31640846a5498172",
+      "src/tensorfvm/__init__.py": "9f8d4d3a249d695e4e841e4c9d11d7158db8a2d33e2928d3565794718e2aba3c",
+      "src/tensorfvm/backend_registry.py": "e68b95fdb7c457b921b2f1c9e3920f80ebdcdb104ca8077e10e96d2a4182a13a",
+      "src/tensorfvm/body_fitted.py": "4e633fa42c1171cf57aca5bf930827f97a30dada4e405bf3ac9c1068ba1bb7a7",
+      "src/tensorfvm/mesh_api.py": "72f4f9d724084df335dca0e561877c5423c47a7f8bfffe950d631845e2dce22d",
+      "src/tensorfvm/periodic_mac.py": "b6b823c2c7972368a30fbba14f07d1222d062d00a9fe03c769c844407bfde5eb",
+      "src/tensorfvm/runtime.py": "ff383730f34f82030f28da424819eea670f28c663d5be834f30bebc6c74a2da5",
+      "src/tensorfvm/solver.py": "7c3613f23791c6a22825bd2ba0467e2bb84013ecaedc974901452b1864a2868e",
+      "src/tensorfvm/verification/__init__.py": "2e93edad1f2e0ed881602c2f72592f32070e99f9a75433e6fa0ce4c485f52652",
+      "src/tensorfvm/verification/__main__.py": "bac1da0b8ea13da1d7e8de391d0da9fe5a69f8658d55c57d55fc9c861eb28096",
+      "src/tensorfvm/verification/audit.py": "7df05206579b07718441e0ae894e60d8a7b2543fd8e557bd1f7fb7d8586ea414",
+      "src/tensorfvm/verification/cases.py": "6cf52e2cf76334ae3ce47c77c9d4bd33e7d83ab08f2d96b2123d356b0702260e",
+      "src/tensorfvm/verification/core.py": "088114b4c8ec39a0724213bfc00f83a4356bcaca1dd2398376ef35426866e12e",
+      "src/tensorfvm/verification/dfg.py": "f07412715767d7424c5a54fccd9c8b5f4aec964f8126532d45c1f7270351e1fc",
+      "src/tensorfvm/verification/engineering.py": "51a54c163066263eba16ec3b6532c37bf1fff3cb465a3ecd02cd98ea837b8079",
+      "src/tensorfvm/verification/engineering_audit.py": "987b3a75125152a634ebd116ca9df2913bfef5fa7ad78b306c980edc9d0359a1",
+      "src/tensorfvm/verification/extended.py": "9e28876cdd9681ad8dcd4075f897264703b1e8616a0694be5def3622ce030d1e",
+      "src/tensorfvm/verification/extended_audit.py": "8b2dcc2618d566b5abbdeed34312f2c8c1fb1349b12b90675080627a2a8cf4ce",
+      "src/tensorfvm/verification/extended_cases.py": "d5f58d4aca6706642d5e5d7307af3017d2c6c4840c3b485e68c98815edfc0796",
+      "src/tensorfvm/verification/external_flow.py": "f5ccc382d32d76afd0a454cf128af9f2984552930c2e2d00a6c2b86b94239447",
+      "src/tensorfvm/verification/external_gmsh.py": "5d77ea5ccf05d18055e33cf1d74266207676f8853d170d35d709b526a93b86e9",
+      "src/tensorfvm/verification/external_matched_naca.py": "bbd3a8584d7399dcd3c8c9200ba454d00c884bffc3818009e4e4ad012bb0b64d",
+      "src/tensorfvm/verification/external_mesh_report.py": "eb1beeff5743e9ed52a6929e48b7d830ef6c95e2e244f855305a171f4989d27e",
+      "src/tensorfvm/verification/gpu.py": "1372d9c7deea0617673278b8b51220d529ca79b4a0b0b022fcd9783584c154e0",
+      "src/tensorfvm/verification/lbm.py": "0ad5bf5d1022752755f5f0ff47df597baf00dca3e64bf66e576014e6930be9a4",
+      "src/tensorfvm/verification/report.py": "d38464cbba0f152d4410589e6a66c8fe05f9f84da06ecab62d3895a8f77ead62",
+      "src/tensorfvm/verification/simple_gpu.py": "292791a63231e172ee5d0f4179656f4fc3528ca733a8329fb44c65d6e08753cd",
+      "src/tensorfvm/verification/simple_gpu_audit.py": "90a778cd314b9ab36183da98b428fbc0c4918587c80217de8fc8439e0db292f6",
+      "scripts/run_three_element_overset.py": "845f623d3cfe14765f6d7dcc46dbfa8de3bd0d4c92e6438f4d35bdb8049b6d03",
+      "src/tensorfvm/overset.py": "01e456ef885dd433f34dd5eaea479a5237e80a2277d5119a1b253c5f727a2475",
+      "src/tensorfvm/overset_scalar.py": "0a31f1be3940c8a9859b503402950e3e44b9d58f8cc52fb6a59f3f97684f413d",
+      "src/tensorfvm/benchmark_30p30n.py": "b99fe4f0993d228818f389a06c9284cb80d616b17b17a2ad807ae8b0f87cb4e4",
+      "src/tensorfvm/multi_element.py": "9ac2f1094465f6b466c5f4fbb8c15f195a69dc0b767301deccd0d39985229850",
+      "src/tensorfvm/data/30p30n/slat.dat": "b4f95c83be753f4101a8e081581610e98a182b047fb92a6b352baf044f682dda",
+      "src/tensorfvm/data/30p30n/main.dat": "8b4ad3189e22a776c710e89626f33be669b164e7bf8656371fb7f117ab952553",
+      "src/tensorfvm/data/30p30n/flap.dat": "b29a52519d6b702d591264e28bd3ade2201a8fa37728d2e8c07bd58d1fe0b0c2"
+    }
+  },
+  "minimum_gaps": {
+    "slat-main": 0.024235557327439587,
+    "main-flap": 0.010442748910456958,
+    "slat-flap": 0.7011260662535361
+  },
+  "passed": true,
+  "navier_stokes_verified": false,
+  "strict_local_conservation": false,
+  "component_grids": 1,
+  "physical_solids": 3
+}
