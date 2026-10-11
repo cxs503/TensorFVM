@@ -49,7 +49,40 @@ class CartesianGrid3D:
                     cells.append((ids[i,j,k],ids[i+1,j,k],ids[i+1,j+1,k],ids[i,j+1,k],ids[i,j,k+1],ids[i+1,j,k+1],ids[i+1,j+1,k+1],ids[i,j+1,k+1]))
         return NativeMesh3D.from_cells(xyz.reshape(-1,3), cells, ('hexahedron',)*len(cells))
 
-def sphere_shell_mesh(inner_radius, outer_radius, radial_layers, angular_resolution, center=(0,0,0)):
+def shell_radial_coordinates(inner_radius, outer_radius, layers, first_height=None):
+    """Uniform or geometric normal layers with exact requested shell thickness.
+
+    A specified first height determines the geometric growth, rather than
+    silently changing that height to fit the outer radius. No y+ is inferred.
+    """
+    if not np.isfinite([inner_radius,outer_radius]).all() or not 0 < inner_radius < outer_radius or int(layers)!=layers or layers<1:
+        raise ValueError('finite ordered radii and positive integer layers required')
+    layers=int(layers); thickness=outer_radius-inner_radius
+    if first_height is None:
+        return np.linspace(inner_radius,outer_radius,layers+1)
+    if not np.isfinite(first_height) or first_height<=0 or first_height>thickness/layers*(1+1e-12):
+        raise ValueError('first height must be positive and no greater than uniform spacing')
+    if layers==1:
+        if not np.isclose(first_height,thickness,rtol=1e-12,atol=0):
+            raise ValueError('one layer must span the entire shell')
+        return np.array([inner_radius,outer_radius])
+    from scipy.optimize import brentq
+    # Solve in log growth; summing normalized positive heights avoids overflow.
+    exponents=np.arange(layers,dtype=float)
+    target=np.log(thickness/first_height)
+    from scipy.special import logsumexp
+    if np.isclose(first_height,thickness/layers,rtol=1e-12,atol=0):
+        growth_log=0.
+    else:
+        growth_log=brentq(lambda x:logsumexp(exponents*x)-target,0,target/(layers-1))
+    radii=inner_radius+np.r_[0,np.cumsum(first_height*np.exp(exponents*growth_log))]
+    radii[-1]=outer_radius
+    if not np.all(np.diff(radii)>0):
+        raise ValueError('layer spacing is below coordinate floating-point resolution')
+    return radii
+
+
+def sphere_shell_mesh(inner_radius, outer_radius, radial_layers, angular_resolution, center=(0,0,0), *, first_height=None, wall_geometry='inscribed'):
     """Radially structured wedge layers on an icosphere angular surface.
 
     Angular triangles are refined by midpoint subdivision. Surface facets are
@@ -57,6 +90,8 @@ def sphere_shell_mesh(inner_radius, outer_radius, radial_layers, angular_resolut
     """
     if not (0 < inner_radius < outer_radius) or int(radial_layers) != radial_layers or radial_layers < 1 or int(angular_resolution) != angular_resolution or angular_resolution < 0:
         raise ValueError('positive ordered radii, layers and nonnegative subdivision required')
+    if wall_geometry not in ('inscribed','circumscribed'):
+        raise ValueError('wall geometry must be inscribed or circumscribed')
     c = np.asarray(center,float)
     if c.shape != (3,) or not np.isfinite(c).all():
         raise ValueError('finite centre required')
@@ -76,7 +111,15 @@ def sphere_shell_mesh(inner_radius, outer_radius, radial_layers, angular_resolut
             ab,bd,da=midpoint(a,b),midpoint(b,d),midpoint(d,a)
             refined.extend(((a,ab,da),(ab,b,bd),(da,bd,d),(ab,bd,da)))
         vertices=np.asarray(points);triangles=np.asarray(refined)
-    radii=np.linspace(inner_radius,outer_radius,int(radial_layers)+1)
+    if wall_geometry=='circumscribed':
+        # Thin layers outside an inscribed planar wall can still lie inside
+        # the analytic solid. Move the wall out until every facet plane
+        # separates the entire sphere, then fit normal layers to that wall.
+        a,b,d=vertices[triangles[:,0]],vertices[triangles[:,1]],vertices[triangles[:,2]]
+        normals=np.cross(b-a,d-a)
+        distances=np.abs(np.einsum('ij,ij->i',normals,a))/np.linalg.norm(normals,axis=1)
+        inner_radius=inner_radius/distances.min()*(1+8*np.finfo(float).eps)
+    radii=shell_radial_coordinates(inner_radius,outer_radius,radial_layers,first_height)
     count=len(vertices);xyz=np.concatenate([c+r*vertices for r in radii]);cells=[]
     for layer in range(int(radial_layers)):
         for tri in triangles:
