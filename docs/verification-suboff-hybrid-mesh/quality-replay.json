@@ -1,0 +1,69 @@
+{
+  "mother_integral_volume_L3": 0.008458913136585507,
+  "quadrature_resolution_difference_L3": 1.851864148139093e-12,
+  "scope": "geometry diagnostic against the same mother polynomial; not independent experimental validation",
+  "cases": {
+    "coarse": {
+      "nonorthogonality_degrees": {
+        "all_internal": {
+          "count": 34014,
+          "maximum": 80.71282520498292,
+          "p95": 46.476800397773324
+        },
+        "structured_structured": {
+          "count": 16560,
+          "maximum": 4.988633983818418,
+          "p95": 3.1097999143125787
+        },
+        "structured_tetra_interface": {
+          "count": 1488,
+          "maximum": 80.71282520498292,
+          "p95": 51.75544797161523
+        },
+        "exterior_exterior": {
+          "count": 15966,
+          "maximum": 77.49128404031961,
+          "p95": 54.998979841154096
+        },
+        "wall": {
+          "count": 1488,
+          "maximum": 88.77447489554115,
+          "p95": 88.69394738378458
+        }
+      },
+      "body_volume_relative_error_vs_mother_integral": 0.014163434635055152,
+      "wall_facet_centroid_radial_deviation_L": 0.0020447856457743354
+    },
+    "medium": {
+      "nonorthogonality_degrees": {
+        "all_internal": {
+          "count": 82580,
+          "maximum": 77.89925307947328,
+          "p95": 41.75640841770865
+        },
+        "structured_structured": {
+          "count": 51520,
+          "maximum": 5.645352964133537,
+          "p95": 1.4673300453814637
+        },
+        "structured_tetra_interface": {
+          "count": 3008,
+          "maximum": 71.51941593326451,
+          "p95": 50.89178030580457
+        },
+        "exterior_exterior": {
+          "count": 28052,
+          "maximum": 77.89925307947328,
+          "p95": 53.31755392584054
+        },
+        "wall": {
+          "count": 3008,
+          "maximum": 88.69832874687609,
+          "p95": 88.51767473578792
+        }
+      },
+      "body_volume_relative_error_vs_mother_integral": 0.0078103735181877815,
+      "wall_facet_centroid_radial_deviation_L": 0.0013626555580345074
+    }
+  }
+}
