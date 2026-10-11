@@ -1,0 +1,51 @@
+{
+  "level": 1,
+  "background_n": 14,
+  "radial_layers": 10,
+  "angular_subdivision": 1,
+  "background_cells": 2744,
+  "body_cells": 800,
+  "background_from_body": {
+    "receivers": 144,
+    "constant_max_error": 2.220446049250313e-16,
+    "affine_max_error": 2.4424906541753444e-15,
+    "nonlinear_relative_l2": 0.004160689858606013,
+    "nonlinear_component_relative_l2": [
+      0.005490538851492085,
+      0.004477184485246311,
+      0.0023104831016538224
+    ],
+    "donors_only_active": true,
+    "containing_cells_only_active": true,
+    "minimum_weight": 0.01346231218028467,
+    "weight_sum_max_error": 0.0
+  },
+  "body_from_background": {
+    "receivers": 160,
+    "constant_max_error": 2.220446049250313e-16,
+    "affine_max_error": 1.7763568394002505e-15,
+    "nonlinear_relative_l2": 0.0023083661806593695,
+    "nonlinear_component_relative_l2": [
+      0.003108277443532544,
+      0.0023603950203452675,
+      0.001357210080593109
+    ],
+    "donors_only_active": true,
+    "containing_cells_only_active": true,
+    "minimum_weight": -5.410189470067312e-16,
+    "weight_sum_max_error": 0.0
+  },
+  "background_status_counts": [
+    2440,
+    160,
+    144
+  ],
+  "body_status_counts": [
+    640,
+    0,
+    160
+  ],
+  "minimum_volume": 0.024573373155264443,
+  "elapsed_seconds": 7.863169341348112,
+  "completed": true
+}
