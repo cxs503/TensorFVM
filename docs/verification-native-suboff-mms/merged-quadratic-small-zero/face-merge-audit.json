@@ -1,0 +1,30 @@
+{
+  "merged_pairs": 3312,
+  "original_faces": 17275,
+  "resulting_faces": 13963,
+  "before_wall": {
+    "faces": 736,
+    "maximum_degrees": 88.71404231540603,
+    "p95_degrees": 88.53430896800678
+  },
+  "after_wall": {
+    "faces": 384,
+    "maximum_degrees": 18.1423433218964,
+    "p95_degrees": 6.692621430775325
+  },
+  "mesh_audit": {
+    "cells": 6085,
+    "faces": 13963,
+    "minimum_cell_volume": 2.6567503170977526e-09,
+    "maximum_relative_closure": 2.255243788383941e-16,
+    "minimum_face_projection": 1.2286560435424542e-09,
+    "maximum_nonorthogonality_degrees": 76.86540816878991,
+    "patch_face_counts": {
+      "farfield": 510,
+      "inlet": 66,
+      "internal": 12937,
+      "outlet": 66,
+      "wall": 384
+    }
+  }
+}

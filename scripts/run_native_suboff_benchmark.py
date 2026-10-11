@@ -21,6 +21,7 @@ from tensorfvm.native_mesh3d import NativeMesh3D
 from tensorfvm.native_collocated3d import NativeSteadySettings, NativeSteadySolver3D
 from tensorfvm.native_manufactured3d import abc_fields, exact_boundary_flux, exact_boundary_velocity_means, volume_weighted_error
 from tensorfvm.native_quadratic_flow3d import NativeQuadraticSteadySolver3D
+from tensorfvm.native_face_geometry3d import merge_coplanar_faces
 
 
 def write(path, value):
@@ -42,10 +43,12 @@ def main():
     p.add_argument('--relaxation', type=float, default=.7)
     p.add_argument('--linear-method', choices=['direct', 'iterative', 'block', 'schur'], default='direct')
     p.add_argument('--reconstruction', choices=['linear', 'quadratic'], default='linear')
+    p.add_argument('--quadratic-linear-solver', choices=['matrix-free','assembled'], default='matrix-free')
+    p.add_argument('--merge-coplanar-faces', action='store_true', help='Recover compatible planar quad faces; preserve mixed-cell interfaces')
     p.add_argument('--initial-run', type=Path, help='Optional previous numerical run on identical mesh; never analytic truth')
     args = p.parse_args()
     if args.reconstruction == 'quadratic' and args.linear_method != 'direct':
-        p.error('Quadratic mode uses direct baseline LU to precondition current-equation GMRES')
+        p.error('Quadratic mode currently requires direct sparse LU/preconditioned GMRES')
     if args.reconstruction == 'quadratic' and args.mode != 'manufactured':
         p.error('Quadratic mixed-outlet physical flow is not validated')
     out = args.output
@@ -80,8 +83,13 @@ def main():
         shutil.copy2(args.initial_run/'fields.npz',out/'initial-numerical-state.npz')
         initial_binding=dict(kind='previous numerical field; not analytic reference',
             sha256=digest(out/'initial-numerical-state.npz'),origin=str(args.initial_run))
+        initial_result=args.initial_run/'result.json'
+        if initial_result.exists():
+            shutil.copy2(initial_result,out/'initial-producer-result.json')
+            initial_binding['producer_converged']=json.loads(initial_result.read_text())['converged']
+            initial_binding['producer_result_sha256']=digest(out/'initial-producer-result.json')
     write(out / 'config.json', dict(mode=args.mode, reconstruction=args.reconstruction,
-        initial_state=initial_binding, settings=asdict(settings),
+        initial_state=initial_binding, quadratic_linear_solver=args.quadratic_linear_solver, merge_coplanar_faces=args.merge_coplanar_faces, settings=asdict(settings),
         mesh_sha256=digest(out / 'input.msh'), source_sha256=bindings,
         experimental_accuracy_qualified=False,
         manufactured_definition='independent continuum ABC velocity, trigonometric pressure and analytic NS forcing; all velocity boundaries manufactured including hull',
@@ -93,12 +101,25 @@ def main():
         git_base=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=repo, text=True).strip(),
         device='CPU scipy sparse reference; GPU not tested'))
     mesh = NativeMesh3D.from_gmsh(out / 'input.msh', triangulate_faces=True)
+    if args.merge_coplanar_faces:
+        original=mesh
+        mesh,merge=merge_coplanar_faces(mesh)
+        lengths=np.array([len(group) for group in merge['original_face_groups']])
+        np.savez_compressed(out/'face-merge-map.npz',original_to_merged=merge['original_to_merged'],
+            original_group_indices=np.concatenate(merge['original_face_groups']),original_group_offsets=np.r_[0,np.cumsum(lengths)])
+        def wall_angles(m):
+            wall=m.patch_labels=='wall';d=m.face_centers[wall]-m.cell_centers[m.owner[wall]];s=m.area_vectors[wall]
+            angle=np.degrees(np.arccos(np.clip(np.einsum('fi,fi->f',d,s)/np.linalg.norm(d,axis=1)/np.linalg.norm(s,axis=1),-1,1)))
+            return dict(faces=int(wall.sum()),maximum_degrees=float(angle.max()),p95_degrees=float(np.percentile(angle,95)))
+        write(out/'face-merge-audit.json',dict(merged_pairs=merge['merged_pairs'],original_faces=merge['original_faces'],resulting_faces=merge['resulting_faces'],before_wall=wall_angles(original),after_wall=wall_angles(mesh),mesh_audit=merge['audit']))
     boundary = mesh.neighbor < 0
     if args.mode == 'manufactured':
         field = lambda points: abc_fields(points, nu=args.nu)
         exact = field(mesh.cell_centers)
         solver_type=NativeQuadraticSteadySolver3D if args.reconstruction=='quadratic' else NativeSteadySolver3D
         extra={} if args.reconstruction=='linear' else dict(
+            quadratic_linear_solver=args.quadratic_linear_solver,
+            linear_callback=lambda event: print(json.dumps(event),flush=True),
             boundary_velocity_means=exact_boundary_velocity_means(mesh,field),
             boundary_velocity_gradients=field(mesh.face_centers)['velocity_gradient'])
         solver = solver_type(mesh, boundary, field(mesh.face_centers)['velocity'], **extra,

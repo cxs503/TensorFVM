@@ -1,0 +1,374 @@
+{
+  "passed": false,
+  "current_equation_and_recorded_change_gates_passed": false,
+  "manufactured_pointwise_accuracy_passed": false,
+  "mesh_convergence_qualified": false,
+  "experimental_accuracy_qualified": false,
+  "suboff_physical_benchmark_passed": false,
+  "metrics": [
+    {
+      "name": "recorded-nonlinear-failure",
+      "value": 1,
+      "limit": 0.5,
+      "description": "Actual producer converged flag required",
+      "unit": "1",
+      "passed": false
+    },
+    {
+      "name": "missing-recorded-history",
+      "value": 0,
+      "limit": 0.5,
+      "description": "Producer nonlinear change ledger required",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "momentum_residual",
+      "value": 1.1627970690362627e-06,
+      "limit": 1e-07,
+      "description": "Independent current-equation replay",
+      "unit": "1",
+      "passed": false
+    },
+    {
+      "name": "native_divergence_max",
+      "value": 1.0693786756529824e-08,
+      "limit": 1e-07,
+      "description": "Independent current-equation replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "current_reconstructed_divergence_max",
+      "value": 0.003783921604698718,
+      "limit": 1e-07,
+      "description": "Independent current-equation replay",
+      "unit": "1",
+      "passed": false
+    },
+    {
+      "name": "face_flux_consistency_max",
+      "value": 7.885327306926033e-06,
+      "limit": 1e-07,
+      "description": "Independent current-equation replay",
+      "unit": "1",
+      "passed": false
+    },
+    {
+      "name": "recorded-velocity_change",
+      "value": 1.0,
+      "limit": 1e-07,
+      "description": "Recorded last numerical update, not independently recomputed",
+      "unit": "1",
+      "passed": false
+    },
+    {
+      "name": "recorded-pressure_change",
+      "value": 1.0,
+      "limit": 1e-07,
+      "description": "Recorded last numerical update, not independently recomputed",
+      "unit": "1",
+      "passed": false
+    },
+    {
+      "name": "recorded-flux_change",
+      "value": 1.0,
+      "limit": 1e-07,
+      "description": "Recorded last numerical update, not independently recomputed",
+      "unit": "1",
+      "passed": false
+    },
+    {
+      "name": "relative-L2-velocity",
+      "value": 0.00038821287867281515,
+      "limit": 0.03,
+      "description": "Independent continuum field at actual volume centroid",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "relative-L2-pressure",
+      "value": 0.09222863701432515,
+      "limit": 0.03,
+      "description": "Independent continuum field at actual volume centroid",
+      "unit": "1",
+      "passed": false
+    },
+    {
+      "name": "relative-L2-velocity_x",
+      "value": 0.0004439737592344921,
+      "limit": 0.03,
+      "description": "Independent continuum field at actual volume centroid",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "relative-L2-velocity_y",
+      "value": 0.0003236621285571798,
+      "limit": 0.03,
+      "description": "Independent continuum field at actual volume centroid",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "relative-L2-velocity_z",
+      "value": 0.00048240365937546656,
+      "limit": 0.03,
+      "description": "Independent continuum field at actual volume centroid",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "reference_velocity-missing",
+      "value": 0,
+      "limit": 0.5,
+      "description": "Archived reference required for independent replay consistency",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "reference_velocity-independent-reference-defect",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "Frozen analytic expression versus archived reference; not used to initialize solution",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "reference_pressure-missing",
+      "value": 0,
+      "limit": 0.5,
+      "description": "Archived reference required for independent replay consistency",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "reference_pressure-independent-reference-defect",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "Frozen analytic expression versus archived reference; not used to initialize solution",
+      "unit": "1",
+      "passed": true
+    }
+  ],
+  "relative_L2_errors": {
+    "velocity": 0.00038821287867281515,
+    "pressure": 0.09222863701432515,
+    "velocity_x": 0.0004439737592344921,
+    "velocity_y": 0.0003236621285571798,
+    "velocity_z": 0.00048240365937546656
+  },
+  "current_equation_residuals": {
+    "momentum_residual": 1.1627970690362627e-06,
+    "native_divergence_max": 1.0693786756529824e-08,
+    "current_reconstructed_divergence_max": 0.003783921604698718,
+    "face_flux_consistency_max": 7.885327306926033e-06
+  },
+  "recorded_final_history": {
+    "iteration": 17,
+    "accepted": false,
+    "old_merit": 1.1690733269247446e-06,
+    "trials": [
+      {
+        "relaxation": 0.7,
+        "merit": 1.3790901377692304e-06
+      },
+      {
+        "relaxation": 0.35,
+        "merit": 1.2943346760571737e-06
+      },
+      {
+        "relaxation": 0.175,
+        "merit": 1.2362496450339835e-06
+      },
+      {
+        "relaxation": 0.0875,
+        "merit": 1.2037033015115023e-06
+      },
+      {
+        "relaxation": 0.04375,
+        "merit": 1.1866344619067856e-06
+      },
+      {
+        "relaxation": 0.021875,
+        "merit": 1.17791346192006e-06
+      },
+      {
+        "relaxation": 0.0109375,
+        "merit": 1.1735080278482184e-06
+      },
+      {
+        "relaxation": 0.00546875,
+        "merit": 1.171294302638251e-06
+      },
+      {
+        "relaxation": 0.002734375,
+        "merit": 1.1701847169037442e-06
+      },
+      {
+        "relaxation": 0.0013671875,
+        "merit": 1.16962924691744e-06
+      },
+      {
+        "relaxation": 0.00068359375,
+        "merit": 1.169351343105896e-06
+      },
+      {
+        "relaxation": 0.000341796875,
+        "merit": 1.1692123490513429e-06
+      },
+      {
+        "relaxation": 0.0001708984375,
+        "merit": 1.1691428414956445e-06
+      },
+      {
+        "relaxation": 8.544921875e-05,
+        "merit": 1.169108085087589e-06
+      },
+      {
+        "relaxation": 4.2724609375e-05,
+        "merit": 1.1690907062234794e-06
+      },
+      {
+        "relaxation": 2.13623046875e-05,
+        "merit": 1.1690820166286824e-06
+      }
+    ],
+    "momentum_residual": 1.1627970690362627e-06,
+    "native_divergence_max": 1.0693786756529824e-08,
+    "current_reconstructed_divergence_max": 0.003783921604698718,
+    "face_flux_consistency_max": 7.885327306926033e-06
+  },
+  "replay_api": "frozen quadratic _assess_state(actual u,p,q)",
+  "mode": "manufactured",
+  "reconstruction": "quadratic",
+  "quadratic_linear_solver": "assembled",
+  "face_policy": "merged_coplanar_polygon_faces",
+  "cells": 6085,
+  "faces": 13963,
+  "frozen_imports": {
+    "tensorfvm.backend_registry": {
+      "path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/merged-quadratic-small-zero/source-snapshot/src/tensorfvm/backend_registry.py",
+      "sha256": "e68b95fdb7c457b921b2f1c9e3920f80ebdcdb104ca8077e10e96d2a4182a13a",
+      "bound_by_producer": true
+    },
+    "tensorfvm.solver": {
+      "path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/merged-quadratic-small-zero/source-snapshot/src/tensorfvm/solver.py",
+      "sha256": "7c3613f23791c6a22825bd2ba0467e2bb84013ecaedc974901452b1864a2868e",
+      "bound_by_producer": true
+    },
+    "tensorfvm.body_fitted": {
+      "path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/merged-quadratic-small-zero/source-snapshot/src/tensorfvm/body_fitted.py",
+      "sha256": "4e633fa42c1171cf57aca5bf930827f97a30dada4e405bf3ac9c1068ba1bb7a7",
+      "bound_by_producer": true
+    },
+    "tensorfvm.mesh3d": {
+      "path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/merged-quadratic-small-zero/source-snapshot/src/tensorfvm/mesh3d.py",
+      "sha256": "ad7fe310537e70dcb65a34b42b335ea8bd7f9abd2bf24453a907c7f43a2b7c56",
+      "bound_by_producer": true
+    },
+    "tensorfvm.runtime": {
+      "path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/merged-quadratic-small-zero/source-snapshot/src/tensorfvm/runtime.py",
+      "sha256": "ff383730f34f82030f28da424819eea670f28c663d5be834f30bebc6c74a2da5",
+      "bound_by_producer": true
+    },
+    "tensorfvm.solver3d": {
+      "path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/merged-quadratic-small-zero/source-snapshot/src/tensorfvm/solver3d.py",
+      "sha256": "95d4711fd52ad9f2d8dd7300a999814633de986a2d579dcc997d17aa01603a37",
+      "bound_by_producer": true
+    },
+    "tensorfvm.body_fitted3d": {
+      "path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/merged-quadratic-small-zero/source-snapshot/src/tensorfvm/body_fitted3d.py",
+      "sha256": "dedd408c59096f559b2345f819541450768d4ce37f062e405b4335e4d00de9e4",
+      "bound_by_producer": true
+    },
+    "tensorfvm.multi_element": {
+      "path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/merged-quadratic-small-zero/source-snapshot/src/tensorfvm/multi_element.py",
+      "sha256": "c89faef53a8a8d429920a9f73805b91f28df3aa48bda762e7dd6bb2520fe8afc",
+      "bound_by_producer": true
+    },
+    "tensorfvm.mesh_api": {
+      "path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/merged-quadratic-small-zero/source-snapshot/src/tensorfvm/mesh_api.py",
+      "sha256": "72f4f9d724084df335dca0e561877c5423c47a7f8bfffe950d631845e2dce22d",
+      "bound_by_producer": true
+    },
+    "tensorfvm": {
+      "path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/merged-quadratic-small-zero/source-snapshot/src/tensorfvm/__init__.py",
+      "sha256": "9f8d4d3a249d695e4e841e4c9d11d7158db8a2d33e2928d3565794718e2aba3c",
+      "bound_by_producer": true
+    },
+    "tensorfvm.native_mesh3d": {
+      "path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/merged-quadratic-small-zero/source-snapshot/src/tensorfvm/native_mesh3d.py",
+      "sha256": "59833e84499f7c5b4572b9d2f96020024d46b26fc91ee4dc2111300872b31470",
+      "bound_by_producer": true
+    },
+    "tensorfvm.native_operators3d": {
+      "path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/merged-quadratic-small-zero/source-snapshot/src/tensorfvm/native_operators3d.py",
+      "sha256": "190ad3e4478d11bdd9332c38f8a7441530e9993c4459855722d15abe2fd519e0",
+      "bound_by_producer": true
+    },
+    "tensorfvm.native_viscous3d": {
+      "path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/merged-quadratic-small-zero/source-snapshot/src/tensorfvm/native_viscous3d.py",
+      "sha256": "910f6e806a7f588024f421f984bccd24214798ee7fb4bda415ca7de0c6aa8662",
+      "bound_by_producer": true
+    },
+    "tensorfvm.native_collocated3d": {
+      "path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/merged-quadratic-small-zero/source-snapshot/src/tensorfvm/native_collocated3d.py",
+      "sha256": "c769a160eef819873f43a4169328a783a12b022c626c07570577395f34d2d366",
+      "bound_by_producer": true
+    },
+    "tensorfvm.native_face_geometry3d": {
+      "path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/merged-quadratic-small-zero/source-snapshot/src/tensorfvm/native_face_geometry3d.py",
+      "sha256": "5173d0072c42f6a997cd3049be747aa9550fec753fbbe68a087cc7eac0f289ad",
+      "bound_by_producer": true
+    },
+    "tensorfvm.native_manufactured3d": {
+      "path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/merged-quadratic-small-zero/source-snapshot/src/tensorfvm/native_manufactured3d.py",
+      "sha256": "1a1e04e003d1a01fd2b924d199d1c51166bae8d48c5505a3e0c8e90db0ad3f46",
+      "bound_by_producer": true
+    },
+    "tensorfvm.native_quadratic3d": {
+      "path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/merged-quadratic-small-zero/source-snapshot/src/tensorfvm/native_quadratic3d.py",
+      "sha256": "3730d69c6c878b3e0fa121701cd04b1747c276e6b9cea85d781608e18f9b5c26",
+      "bound_by_producer": true
+    },
+    "tensorfvm.native_quadratic_maps3d": {
+      "path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/merged-quadratic-small-zero/source-snapshot/src/tensorfvm/native_quadratic_maps3d.py",
+      "sha256": "c7e9405930105d2a08eeae11b05aa48d07b459e9b3ac9ceac7a5ef36f6b33edd",
+      "bound_by_producer": true
+    },
+    "tensorfvm.native_quadratic_system3d": {
+      "path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/merged-quadratic-small-zero/source-snapshot/src/tensorfvm/native_quadratic_system3d.py",
+      "sha256": "ddebc6be079d89ac7282143546a4f0aac3a3423c4eb96cd12b59bec0d40bf00b",
+      "bound_by_producer": true
+    },
+    "tensorfvm.native_quadratic_flow3d": {
+      "path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/merged-quadratic-small-zero/source-snapshot/src/tensorfvm/native_quadratic_flow3d.py",
+      "sha256": "ac74e591ae74b9ebdf31378ed916b54a74d66ac328e1a31976f14d1a917bbc6a",
+      "bound_by_producer": true
+    }
+  },
+  "limitations": [
+    "Single-grid pointwise MMS verification is not physical SUBOFF drag/Cp validation.",
+    "Recorded field-change gates cannot be independently reconstructed from one final state.",
+    "No linear solve or time advancement is performed by this audit."
+  ],
+  "producer_input_sha256": {
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/merged-quadratic-small-zero/config.json": "9e9b1da348a1c4c148203e0b8c824c5ca7040dbb89051374ff4bf25fd0e8410a",
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/merged-quadratic-small-zero/input.msh": "9fde17de9bdaec2b0aac49eab46fecf1b526b71232a9d71b0d0e177dae1c346a",
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/merged-quadratic-small-zero/fields.npz": "a9e7d81adc9b0643b39c8a5405e44bedf4264dbcf0b61617dfafd3670c31ffa5",
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/merged-quadratic-small-zero/result.json": "0b41e0d3aa288304194e67c57267320baa612616500c8efcf322a36f0136f7cf"
+  },
+  "producer_inputs_unchanged_during_replay": true,
+  "audit_source_sha256": "a7c551b0af1d81b261f3d5057f045e3f24731401813eb274cf5b261d14822c35",
+  "acceptance_source_sha256": "088114b4c8ec39a0724213bfc00f83a4356bcaca1dd2398376ef35426866e12e",
+  "subprocess_command": [
+    "/data/TensorFEM/.venv/bin/python",
+    "/home/jsyc/tensor-suite-development/TensorFVM/scripts/audit_native_suboff_run.py",
+    "--worker",
+    "--run",
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/merged-quadratic-small-zero",
+    "--output",
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/merged-quadratic-small-zero/audit"
+  ]
+}

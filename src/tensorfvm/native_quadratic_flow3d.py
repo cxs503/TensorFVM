@@ -1,21 +1,30 @@
 """Quadratic shared-face corrections for the native steady FVM equations.
 
-The reference sparse system preconditions the corrected current equations.
+The reference sparse system preconditions the legacy corrected iteration.
+An optional full sparse operator solves the complete frozen-flux equations.
 Convergence replays the current corrected momentum and mass equations. No
 analytic interior field or reverse-discrete manufactured force is used.
 """
 import numpy as np
+import time
 from scipy import sparse
 from scipy.sparse.linalg import splu, gmres, LinearOperator
 from .native_collocated3d import NativeSteadySolver3D
 from .native_quadratic3d import NativeQuadratic3D
+from .native_quadratic_system3d import current_matrix
 
 
 class NativeQuadraticSteadySolver3D(NativeSteadySolver3D):
-    def __init__(self, *args, boundary_velocity_means=None, boundary_velocity_gradients=None, **kwargs):
+    def __init__(self, *args, boundary_velocity_means=None, boundary_velocity_gradients=None, quadratic_linear_solver='matrix-free', linear_callback=None, **kwargs):
         super().__init__(*args, **kwargs)
+        if quadratic_linear_solver not in ('matrix-free','assembled'):
+            raise ValueError('Quadratic linear solver must be matrix-free or assembled')
+        self.quadratic_linear_solver=quadratic_linear_solver
+        self.linear_callback=linear_callback
         if not np.all(self.fixed[self.mesh.neighbor<0]):
             raise ValueError('Quadratic flow currently requires prescribed velocity on every boundary; mixed outlet not validated')
+        if np.any(self.pressure.dirichlet):
+            raise ValueError('All-velocity-Dirichlet quadratic flow requires a pressure gauge, not pressure Dirichlet faces')
         self.boundary_velocity_gradients = (None if boundary_velocity_gradients is None
             else np.broadcast_to(np.asarray(boundary_velocity_gradients,float),(self.F,3,3)).copy())
         if self.boundary_velocity_gradients is not None and not np.isfinite(self.boundary_velocity_gradients).all():
@@ -23,7 +32,7 @@ class NativeQuadraticSteadySolver3D(NativeSteadySolver3D):
         if self.settings.bounded_convection or self.settings.convection_order != 2:
             raise ValueError('Quadratic implicit action requires unbounded order-2 reconstruction; bounded Newton linearization not implemented')
         if self.settings.linear_method != 'direct':
-            raise ValueError('Quadratic current operator uses baseline direct LU as a GMRES preconditioner')
+            raise ValueError('Quadratic flow currently requires direct sparse LU/preconditioned GMRES')
         self.quadratic_velocity = NativeQuadratic3D(self.mesh, self.fixed)
         self.quadratic_pressure = NativeQuadratic3D(self.mesh, self.pressure.dirichlet)
         self.boundary_velocity_means = (None if boundary_velocity_means is None
@@ -143,13 +152,13 @@ class NativeQuadraticSteadySolver3D(NativeSteadySolver3D):
         return block,rhs+extra,a,correction,qsource
 
     def _linear(self,block,rhs,a):
-        """Solve the actual quadratic linearized equations with a baseline LU.
+        """Dispatch the complete assembled or legacy matrix-free iteration.
 
-        Deferring the full quadratic correction through a Picard update can be
-        unstable even under relaxation. Here linear corrections participate in
-        GMRES's operator; only the nonlinear covariance is frozen per update.
-        The baseline matrix is a preconditioner, never the converged equation.
+        The legacy correction action freezes the baseline high-order advection
+        source and the nonlinear covariance. Its baseline LU preconditions the
+        correction iteration. Final acceptance replays the complete equations.
         """
+        if self.quadratic_linear_solver=='assembled':return self._linear_assembled(a)
         old_u,old_p=self.u,self.p
         flux=self._pending_flux.copy()
         pending_source=self._pending_qsource
@@ -186,6 +195,33 @@ class NativeQuadraticSteadySolver3D(NativeSteadySolver3D):
             _,new_delta=self._corrections(flux,a)
             pending_source[:]=base_source+new_delta
             return answer,true,len(counter)
+        finally:
+            self.u,self.p=old_u,old_p
+            del self._frozen_covariance_divergence
+
+    def _linear_assembled(self,a):
+        """Solve the complete frozen-flux operator, including all advection.
+
+        The legacy action lags a baseline high-order convection source. Here
+        the full current quadratic operator supplies both the LU and residual.
+        """
+        old_u,old_p=self.u,self.p
+        flux=self._pending_flux.copy();pending_source=self._pending_qsource
+        base_source=self._pending_base_qsource.copy();self._linear_flux=flux
+        self._frozen_covariance_divergence=self._covariance_divergence() if self.settings.convection else np.zeros(3*self.N)
+        try:
+            started=time.perf_counter()
+            matrix=current_matrix(self,flux,a)
+            if self.linear_callback:self.linear_callback(dict(stage='assembled_matrix_ready',unknowns=4*self.N,nnz=matrix.nnz,assembly_seconds=time.perf_counter()-started))
+            self.u=np.zeros_like(old_u);self.p=np.zeros_like(old_p)
+            _,base_rhs,_,_,_=NativeSteadySolver3D._system(self,flux)
+            zero,_=self._corrections(flux,a);target=base_rhs+zero
+            answer,true,iterations=NativeSteadySolver3D._linear(self,matrix,target,a)
+            self.u=answer[:3*self.N].reshape(self.N,3);self.p=answer[3*self.N:]
+            _,delta=self._corrections(flux,a);pending_source[:]=base_source+delta
+            self._last_quadratic_linear=dict(method='assembled full quadratic sparse operator',matrix_nnz=matrix.nnz,true_residual=true,iterations=iterations,elapsed_seconds=time.perf_counter()-started)
+            if self.linear_callback:self.linear_callback(dict(stage='linear_solve_completed',**self._last_quadratic_linear))
+            return answer,true,iterations
         finally:
             self.u,self.p=old_u,old_p
             del self._frozen_covariance_divergence
@@ -248,6 +284,7 @@ class NativeQuadraticSteadySolver3D(NativeSteadySolver3D):
             row=dict(iteration=iteration+1,accepted=True,accepted_relaxation=omega,
                 old_merit=merit,merit=trial_merit,trials=trials,
                 true_linear_relative_residual=float(linear),linear_iterations=li,**changes,**metrics)
+            if self.quadratic_linear_solver=='assembled':row['linear_operator']=self._last_quadratic_linear.copy()
             self.history.append(row)
             if callback is not None:callback(row)
             if max(*changes.values(),*metrics.values())<c.nonlinear_tolerance:

@@ -1,0 +1,40 @@
+{
+  "mesh_path": "docs/verification-native-suboff-mms/quadratic-assembled-coarse/input.msh",
+  "mesh_sha256": "123628d05073ba7053ffbbf597ca64eb783820ae53393cc0b28feb6dbe4e2b11",
+  "fields_path": "docs/verification-native-suboff-mms/quadratic-assembled-coarse/fields.npz",
+  "fields_sha256": "fdbc5f3bd36b92ccf3c37f11058528c690a842b0fdde05e12ae90a7003370612",
+  "case_kind": "manufactured",
+  "status_text": "Manufactured: independent audit passed; physical SUBOFF unqualified",
+  "plane_z_L": 0.03,
+  "section_polygons": 1788,
+  "section_cells_by_type": {
+    "hexahedron": 270,
+    "tetra": 1518
+  },
+  "pressure_range": [
+    -0.14838814221351806,
+    0.15049163408030308
+  ],
+  "speed_range": [
+    0.1988502523618439,
+    1.219868065790986
+  ],
+  "section_pressure_range": [
+    -0.0348183510234867,
+    0.042941961969962215
+  ],
+  "section_speed_range": [
+    0.4637456492638674,
+    1.1731876893827091
+  ],
+  "wall_pressure_definition": "Reconstructed native wall-face pressure supplied by the solver; not experimental Cp",
+  "representation": "Native facet plane intersection polygons, piecewise constant cell fields",
+  "qualification_inferred_from_figures": false,
+  "face_policy": "triangulated_native_faces",
+  "merge_coplanar_faces": false,
+  "original_faces": 36386,
+  "reconstructed_faces": 36386,
+  "merged_pairs": 0,
+  "config_path": "docs/verification-native-suboff-mms/quadratic-assembled-coarse/config.json",
+  "config_sha256": "5ee5e825ab841450abd30503ef834382ccdb5464a01cf0fb9688d1fc8f318fb8"
+}
