@@ -108,7 +108,7 @@ def load_plot_mesh(mesh_path, fields_path):
     return mesh,policy,merge_metadata
 
 
-def plot_fields(mesh_path,fields_path,out,*,status_text='Diagnostic / unqualified',case_kind='diagnostic',plane=0.):
+def plot_fields(mesh_path,fields_path,out,*,status_text='Diagnostic / unqualified',case_kind='diagnostic',plane=0.,view_limits=None):
     import matplotlib
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
@@ -126,12 +126,14 @@ def plot_fields(mesh_path,fields_path,out,*,status_text='Diagnostic / unqualifie
     polygons,ids=cell_section_polygons(mesh,value=plane)
     if not len(ids):raise ValueError('no finite area cells intersect the requested plane')
     speed=np.linalg.norm(velocity,axis=1)
-    limits=(-.05,1.08,-.13,.13)
-    fig,axes=plt.subplots(3,1,figsize=(13,9))
+    limits=(-.05,1.08,-.13,.13) if view_limits is None else tuple(view_limits)
+    if len(limits)!=4 or not np.isfinite(limits).all() or limits[0]>=limits[1] or limits[2]>=limits[3]:
+        raise ValueError('view limits must be finite xmin < xmax, ymin < ymax')
+    fig,axes=plt.subplots(3,1,figsize=(13,9)) if view_limits is None else plt.subplots(1,3,figsize=(14,4.8))
     col=PolyCollection(polygons,facecolors='none',edgecolors='#555555',linewidths=.25);axes[0].add_collection(col);axes[0].set_title(f'Actual native cell polygons: z/L={plane:g}')
     for ax,data,title,label in zip(axes[1:],[pressure,speed],['Cell pressure','Velocity magnitude'],['Pressure (solver units)','Speed (solver units)']):
         col=PolyCollection(polygons,array=data[ids],cmap='coolwarm' if title=='Cell pressure' else 'viridis',edgecolors='none')
-        ax.add_collection(col);fig.colorbar(col,ax=ax,label=label,pad=.02);ax.set_title(title+'; piecewise constant actual cell values')
+        ax.add_collection(col);fig.colorbar(col,ax=ax,label=label,pad=.02);ax.set_title(title+('; piecewise constant actual cell values' if view_limits is None else '\nNative cell values'))
     for ax in axes:
         ax.set_xlim(limits[:2]);ax.set_ylim(limits[2:]);ax.set_aspect('equal');ax.set_xlabel('x/L');ax.set_ylabel('y/L');ax.text(.01,.96,status_text,transform=ax.transAxes,va='top',color='#8b0000',fontsize=10,bbox={'facecolor':'white','alpha':.85,'edgecolor':'none'})
     fig.suptitle('SUBOFF native mixed-cell section — '+case_kind)
@@ -160,6 +162,7 @@ def plot_fields(mesh_path,fields_path,out,*,status_text='Diagnostic / unqualifie
     types=np.asarray(mesh.cell_types)
     summary={'mesh_path':str(mesh_path),'mesh_sha256':hashlib.sha256(Path(mesh_path).read_bytes()).hexdigest(),'fields_path':str(fields_path),'fields_sha256':hashlib.sha256(Path(fields_path).read_bytes()).hexdigest(),'case_kind':case_kind,'status_text':status_text,'plane_z_L':plane,'section_polygons':len(polygons),'section_cells_by_type':{str(k):int(v) for k,v in zip(*np.unique(types[ids],return_counts=True))},'pressure_range':[float(pressure.min()),float(pressure.max())],'speed_range':[float(speed.min()),float(speed.max())],'section_pressure_range':[float(pressure[ids].min()),float(pressure[ids].max())],'section_speed_range':[float(speed[ids].min()),float(speed[ids].max())],'wall_pressure_definition':wall_definition+'; not experimental Cp','representation':'Native facet plane intersection polygons, piecewise constant cell fields','qualification_inferred_from_figures':False}
     summary.update(face_policy)
+    summary['view_limits']=list(limits)
     if face_policy['config_path'] is not None:(out/'run-config.json').write_bytes(Path(face_policy['config_path']).read_bytes())
     if merge_metadata is not None:
         lengths=np.array([len(g) for g in merge_metadata['original_face_groups']],dtype=int)
@@ -175,6 +178,7 @@ def plot_fields(mesh_path,fields_path,out,*,status_text='Diagnostic / unqualifie
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('--mesh',type=Path,required=True);p.add_argument('--fields',type=Path,required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--case-kind',choices=('diagnostic','manufactured','physical'),default='diagnostic');p.add_argument('--status-text',default='Diagnostic / unqualified');p.add_argument('--plane-z',type=float,default=0.)
-    a=p.parse_args();print(json.dumps(plot_fields(a.mesh,a.fields,a.output,status_text=a.status_text,case_kind=a.case_kind,plane=a.plane_z),indent=2))
+    p.add_argument('--view-limits',type=float,nargs=4,metavar=('XMIN','XMAX','YMIN','YMAX'))
+    a=p.parse_args();print(json.dumps(plot_fields(a.mesh,a.fields,a.output,status_text=a.status_text,case_kind=a.case_kind,plane=a.plane_z,view_limits=a.view_limits),indent=2))
 
 if __name__=='__main__':main()

@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 import numpy as np
 import pytest
-from tensorfvm.suboff_validation import drag_comparison, cp_comparison, require_reynolds
+from tensorfvm.suboff_validation import drag_comparison, cp_comparison, require_reynolds, require_physical_iterate
 
 
 def cases():
@@ -33,3 +33,11 @@ def test_separate_drag_and_cp_conditions_cannot_be_mixed():
     drag, cp = cases()[:2]
     require_reynolds(drag['operating_conditions']['Re_L'], drag['operating_conditions']['Re_L'])
     with pytest.raises(ValueError):require_reynolds(drag['operating_conditions']['Re_L'], cp['operating_conditions']['Re_L'])
+
+
+def test_failed_initialization_is_not_a_physical_benchmark_result():
+    for result in ({}, {'solution_state':'initialization_only', 'completed_momentum_iterations':0},
+                   {'solution_state':'coupled_iterate', 'completed_momentum_iterations':0}):
+        with pytest.raises(ValueError,match='initialization cannot be compared'):
+            require_physical_iterate(result)
+    require_physical_iterate({'solution_state':'momentum_only', 'completed_momentum_iterations':1})

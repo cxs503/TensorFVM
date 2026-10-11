@@ -137,7 +137,7 @@ class NativeSSTRansSolver3D(NativeSteadySolver3D):
             result[name]=dict(relative_residual=float(np.linalg.norm(integrated)/max(scale,np.finfo(float).tiny)),maximum_specific_residual=float(np.max(np.abs(integrated/m.cell_volumes))),global_integrated_residual=float(integrated.sum()),boundary_advective_flux=float(af[b.boundary].sum()),boundary_diffusive_flux=float(df[b.boundary].sum()),integrated_current_source=float(np.sum(m.cell_volumes*source)))
         return result
 
-    def solve_rans(self,initial_k,initial_omega,*,inlet_k,inlet_omega,callback=None):
+    def solve_rans(self,initial_k,initial_omega,*,inlet_k,inlet_omega,callback=None,momentum_callback=None):
         self.k=np.broadcast_to(np.asarray(initial_k,dtype=float),(self.N,)).copy();self.omega=np.broadcast_to(np.asarray(initial_omega,dtype=float),(self.N,)).copy()
         self.k_boundary=np.broadcast_to(np.asarray(inlet_k,dtype=float),(self.F,)).copy();self.omega_boundary=np.broadcast_to(np.asarray(inlet_omega,dtype=float),(self.F,)).copy()
         self.k_boundary[self.wall]=0.
@@ -147,7 +147,9 @@ class NativeSSTRansSolver3D(NativeSteadySolver3D):
         for iteration in range(r.max_outer_iterations):
             old_u=self.u.copy();old_p=self.p.copy();old_flux=self.flux.copy();old_k=self.k.copy();old_w=self.omega.copy()
             closure=self.current_closure();self._update_momentum_coefficients(closure)
-            momentum=super().solve()
+            def inner_callback(row):
+                if momentum_callback:momentum_callback(dict(outer_iteration=iteration+1,**row))
+            momentum=super().solve(callback=inner_callback)
             # If an implicit turbulence solve proposes a negative state, reduce
             # pseudo dt and retry from the same old k/omega; never clip values.
             dt=r.pseudo_time_step;update=None

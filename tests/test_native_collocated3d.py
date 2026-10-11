@@ -64,3 +64,66 @@ def test_nonaffine_rhie_chow_uses_actual_conservative_momentum_gradient():
     compact_source=np.einsum('ij,ij->i',op.I@ls_source,tangent)
     compact_source[op.dirichlet]+=op.coefficient[op.dirichlet]*boundary[op.dirichlet]
     np.testing.assert_allclose(op.pressure_flux_defect@p+defect,expected-compact-compact_source,atol=2e-14)
+
+
+def test_pressure_outlet_backflow_prescribes_incoming_momentum_conservatively():
+    m=skew_mesh(2);boundary=m.neighbor<0
+    outlet=boundary&(m.face_centers[:,0]>1)
+    prescribed=np.tile([1.2, -.3, .2],(len(m.owner),1))
+    solver=NativeSteadySolver3D(m,boundary&~outlet,prescribed,outlet,
+        settings=NativeSteadySettings(convection_order=1))
+    flux=np.zeros(len(m.owner));flux[outlet]=-.07
+    matrix,source=solver._convection(flux)
+    # Incoming momentum is boundary data, independent of owner velocity.
+    assert matrix.nnz==0 or np.max(np.abs(matrix.data))==0
+    expected=np.zeros((solver.N,3))
+    np.add.at(expected,m.owner[outlet],flux[outlet,None]*prescribed[outlet])
+    np.testing.assert_allclose(source.reshape(-1,3),expected,atol=1e-15)
+    np.testing.assert_allclose(expected.sum(0),(flux[outlet,None]*prescribed[outlet]).sum(0))
+    flux[outlet]=.07;matrix,source=solver._convection(flux)
+    assert np.min(matrix.diagonal())>=0
+    np.testing.assert_allclose(source,0,atol=0)
+    u=np.arange(solver.N*3).reshape(-1,3)/10
+    np.testing.assert_allclose((matrix@u.ravel()).reshape(-1,3).sum(0),
+        (flux[outlet,None]*u[m.owner[outlet]]).sum(0))
+
+
+def test_pseudo_time_converges_original_affine_ns_without_changing_steady_operator():
+    m=skew_mesh(2);G=np.array([[.2,.4,.1],[-.3,-.1,.2],[.1,.1,-.1]])
+    u=np.array([.3,-.1,.2])+m.cell_centers@G.T
+    bu=np.array([.3,-.1,.2])+m.face_centers@G.T
+    g=np.array([.7,-.3,.2]);p=m.cell_centers@g
+    settings=NativeSteadySettings(viscosity=.5,momentum_pseudo_cfl=1.,max_iterations=500,
+        nonlinear_tolerance=1e-10,relaxation=.8)
+    solver=NativeSteadySolver3D(m,m.neighbor<0,bu,body_force=g+u@G.T,gauge_value=p[0],settings=settings)
+    result=solver.solve()
+    assert result['converged']
+    np.testing.assert_allclose(solver.u,u,atol=1e-8)
+    np.testing.assert_allclose(solver.p,p,atol=1e-8)
+    block,rhs,_,correction,source=solver._system(solver.flux)
+    assert np.linalg.norm(block@np.r_[solver.u.ravel(),solver.p]-rhs)<1e-9
+    np.testing.assert_allclose(solver.flux,solver.velocity_flux_matrix@solver.u.ravel()+correction@solver.p+source,atol=1e-9)
+    # Re-entering the inner solve retains the converged pressure-corrected flux.
+    again=solver.solve()
+    assert again['converged'] and again['history'][-1]['iteration']==1
+    restored=NativeSteadySolver3D(m,m.neighbor<0,bu,body_force=g+u@G.T,gauge_value=p[0],settings=settings)
+    restored.initialize_state(solver.u,solver.p,solver.flux)
+    restart=restored.solve()
+    assert restart['converged'] and len(restart['history'])==1
+    with pytest.raises(ValueError,match='finite native'):
+        restored.initialize_state(solver.u,solver.p,np.zeros(1))
+
+
+def test_pseudo_time_preserves_nonaffine_steady_pressure_flux_fixed_point():
+    m=skew_mesh(3);force=np.column_stack((np.sin(2*m.cell_centers[:,0]),
+        .2*np.cos(3*m.cell_centers[:,1]),m.cell_centers[:,2]**2))
+    def make(cfl):
+        return NativeSteadySolver3D(m,m.neighbor<0,np.zeros((len(m.owner),3)),body_force=force,
+            settings=NativeSteadySettings(viscosity=.5,convection=False,momentum_pseudo_cfl=cfl,
+                max_iterations=500,nonlinear_tolerance=1e-10,relaxation=.8))
+    reference=make(None);assert reference.solve()['converged']
+    assert np.linalg.norm(reference.pressure.pressure_flux_defect@reference.p)>1e-6
+    transient=make(3.);result=transient.solve();assert result['converged']
+    np.testing.assert_allclose(transient.u,reference.u,atol=1e-9)
+    np.testing.assert_allclose(transient.p,reference.p,atol=1e-9)
+    np.testing.assert_allclose(transient.flux,reference.flux,atol=1e-9)

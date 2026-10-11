@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/home/jsyc/tensor-suite-development/TensorFVM/scripts/compare_native_suboff_experiment.py", line 103, in <module>
+    if __name__ == '__main__':raise SystemExit(main())
+                                               ^^^^^^
+  File "/home/jsyc/tensor-suite-development/TensorFVM/scripts/compare_native_suboff_experiment.py", line 25, in main
+    require_physical_iterate(result)
+  File "/home/jsyc/tensor-suite-development/TensorFVM/src/tensorfvm/suboff_validation.py", line 10, in require_physical_iterate
+    raise ValueError('No completed physical momentum iteration; initialization cannot be compared')
+ValueError: No completed physical momentum iteration; initialization cannot be compared

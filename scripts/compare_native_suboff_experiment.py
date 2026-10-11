@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """Compare a frozen physical SST run with the appropriate SUBOFF reference."""
 import argparse
+import csv
 import json
 from pathlib import Path
 import shutil
 import numpy as np
 from tensorfvm.native_mesh3d import NativeMesh3D
-from tensorfvm.suboff_validation import require_reynolds, drag_comparison, sample_upper_meridian_pressure, cp_comparison
+from tensorfvm.suboff_validation import require_reynolds, require_physical_iterate, drag_comparison, sample_upper_meridian_pressure, cp_comparison
 from run_native_suboff_benchmark import write, digest
 
 
@@ -21,6 +22,7 @@ def main():
     config = json.loads((run / 'config.json').read_text())
     if 'numerically_converged' not in result or 'Re_L' not in result or config.get('kind') != 'native SST SUBOFF diagnostic':
         parser.error('Physical native SST run required; manufactured solutions cannot be compared as SUBOFF flow')
+    require_physical_iterate(result)
     repo = Path(__file__).resolve().parents[1]
     spec_path = repo / 'benchmarks/suboff_aff1_validation.json'; spec = json.loads(spec_path.read_text())
     case = spec['cases'][0 if args.case == 'drag' else 1]
@@ -41,11 +43,24 @@ def main():
         raise ValueError('Reported force does not agree with native face traction replay')
     if args.case == 'drag':
         comparison = drag_comparison(force_replayed, case)
+        properties=case['operating_conditions']; length=case['geometry']['L_m']
+        force_scale=properties['rho_kg_m3']*properties['U_m_s']**2*length**2
+        denominator=.5*properties['rho_kg_m3']*properties['U_m_s']**2*case['reference']['frontal_area_m2']
+        comparison['axial_components']={name:dict(force_N=float(np.asarray(value)[0]*force_scale),
+            Cd=float(np.asarray(value)[0]*force_scale/denominator))
+            for name,value in result['forces_dimensionless'].items()
+            if name in ('physical_pressure_force','anisotropic_viscous_force','isotropic_turbulent_force')}
         metric_passed = comparison['nominal_error_below_3_percent']
     else:
         points = case['reference']['corrected_candidate_points']
         sample = sample_upper_meridian_pressure(mesh, fields['pressure_faces'], [row['x_L'] for row in points])
         comparison = {**sample, **cp_comparison(sample['Cp_calculated'], points)}
+        with (out / 'cp-taps.csv').open('w',newline='') as stream:
+            writer=csv.writer(stream)
+            writer.writerow(['x_L','Cp_calculated','Cp_reference_candidate','difference','face_index','geometry_offset_L'])
+            for index,x in enumerate(sample['x_L']):
+                calc=sample['Cp_calculated'][index]; reference=comparison['candidate_Cp_listed'][index]
+                writer.writerow([x,calc,reference,calc-reference,sample['face_indices'][index],sample['geometry_offset_L'][index]])
         metric_passed = comparison['provisional_nominal_error_below_3_percent'] and comparison['correction_sensitivity_error_below_3_percent']
         import matplotlib
         matplotlib.use('Agg')
@@ -59,10 +74,13 @@ def main():
     summary = dict(case_id=case['case_id'], metrics=comparison, source_sha256=bindings,
         native_force_replay_max_error=float(np.max(np.abs(force_replayed - reported))),
         numerically_converged=result['numerically_converged'], nominal_metric_passed=bool(metric_passed),
-        wall_resolution_passed=result['low_Re_wall_resolution']['maximum_yplus_below_one'],
+        solution_state=result['solution_state'], failure=result['failure'],
+        wall_resolution_passed=result['low_Re_wall_resolution']['qualified'],
         spatial_convergence_qualified=result['spatial_convergence_qualified'],
         physical_validation_passed=False,
         note='Single-case nominal metrics cannot establish all-case spatial/physical qualification; Cp reference is provisional.')
+    shutil.copy2(Path(__file__),out / 'comparison-source.py')
+    shutil.copy2(repo / 'src/tensorfvm/suboff_validation.py',out / 'comparison-core.py')
     write(out / 'comparison.json', summary)
     table = '\n'.join(f'| {key} | {value:.8g} |' for key, value in comparison.items()
         if isinstance(value, (float, int)) and not isinstance(value, bool))

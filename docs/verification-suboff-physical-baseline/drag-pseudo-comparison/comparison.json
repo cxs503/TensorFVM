@@ -1,0 +1,46 @@
+{
+  "case_id": "aff1_drag_oxford_replication",
+  "metrics": {
+    "total_drag_N": 3061.0730602822946,
+    "reference_drag_N": 87.4,
+    "Cd_calculated": 3.261437207506168,
+    "Cd_reference": 0.09312081297064881,
+    "relative_error": 34.02371922519787,
+    "nominal_error_below_3_percent": false,
+    "experimental_uncertainty": null,
+    "normalization": "total pressure plus viscous force; frontal area",
+    "property_provenance": "Independent published CFD reproduction setup; original DTMB fluid properties not verified.",
+    "axial_components": {
+      "physical_pressure_force": {
+        "force_N": 3047.0551865353327,
+        "Cd": 3.2465017864599783
+      },
+      "anisotropic_viscous_force": {
+        "force_N": 14.01787374697278,
+        "Cd": 0.014935421046201604
+      },
+      "isotropic_turbulent_force": {
+        "force_N": 0.0,
+        "Cd": 0.0
+      }
+    }
+  },
+  "source_sha256": {
+    "docs/verification-suboff-physical-baseline/drag-pseudo/input.msh": "afebe7d4b6f96eae92810debfa485f591d58323c477b28cda83a60df59ac70e1",
+    "docs/verification-suboff-physical-baseline/drag-pseudo/fields.npz": "530d1681d06ed7352e06fa9deb9513e7d32cdc3c168b73d45d81a676ae53b8e2",
+    "docs/verification-suboff-physical-baseline/drag-pseudo/config.json": "040aedc37fac0836fd2868eeacf2dd261c7116401fd04769388aac823f836b83",
+    "docs/verification-suboff-physical-baseline/drag-pseudo/result.json": "fcee22fcdcbe6e8cba106eba88c7a361103dda2a4bfc7d0614f45259c29875b6"
+  },
+  "native_force_replay_max_error": 6.661338147750939e-16,
+  "numerically_converged": false,
+  "nominal_metric_passed": false,
+  "solution_state": "momentum_only",
+  "failure": {
+    "type": "RuntimeError",
+    "message": "Explicit divergence guard exceeded: max speed 702.174 > 5; state retained without clipping"
+  },
+  "wall_resolution_passed": false,
+  "spatial_convergence_qualified": false,
+  "physical_validation_passed": false,
+  "note": "Single-case nominal metrics cannot establish all-case spatial/physical qualification; Cp reference is provisional."
+}
