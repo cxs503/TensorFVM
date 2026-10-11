@@ -12,7 +12,7 @@ import time
 import numpy as np
 from tensorfvm.native_mesh3d import NativeMesh3D
 from tensorfvm.native_collocated3d import NativeSteadySettings
-from tensorfvm.native_rans3d import NativeRansSettings, NativeSSTRansSolver3D
+from tensorfvm.native_rans3d import NativeRansSettings, NativeSSTRansSolver3D, NativeSimpleSSTRansSolver3D
 from tensorfvm.native_sst3d import inflow_from_intensity, VARIANT
 from tensorfvm.native_projection3d import NativeProjection3D
 from run_native_suboff_benchmark import write, digest
@@ -26,11 +26,15 @@ def main():
     parser.add_argument('--intensity', type=float, default=.005)
     parser.add_argument('--length-scale', type=float, default=.05)
     parser.add_argument('--outer-iterations', type=int, default=100)
-    parser.add_argument('--inner-iterations', type=int, default=80)
+    parser.add_argument('--inner-iterations', type=int, help='Default: one SIMPLE sweep per SST update; 80 for coupled momentum')
     parser.add_argument('--pseudo-dt', type=float, default=1.)
+    parser.add_argument('--algorithm', choices=['coupled','simple'], default='simple')
+    parser.add_argument('--wall-treatment', choices=['resolved','spalding'], default='spalding')
+    parser.add_argument('--disable-skew-correction', action='store_true', help='Use linear face interpolation for pressure and velocity; accuracy requires a separate mesh study')
+    parser.add_argument('--pressure-relaxation', type=float, default=.2)
     parser.add_argument('--linear-method', choices=['direct', 'iterative', 'block', 'schur'], default='direct')
     parser.add_argument('--convection-order', type=int, choices=[1, 2], default=2)
-    parser.add_argument('--relaxation', type=float, default=.6)
+    parser.add_argument('--relaxation', type=float, default=.3)
     parser.add_argument('--lu-ordering', choices=['COLAMD', 'MMD_ATA', 'MMD_AT_PLUS_A', 'NATURAL'], default='COLAMD')
     parser.add_argument('--initial-velocity', choices=['freestream', 'rest'], default='freestream')
     parser.add_argument('--momentum-cfl', type=float, help='Optional local implicit pseudo time; original steady equations remain the convergence gate')
@@ -38,11 +42,14 @@ def main():
     parser.add_argument('--initial-run', type=Path, help='Frozen numerical state on identical mesh and Reynolds number')
     parser.add_argument('--project-initial-flux', action='store_true', help='Numerical divergence-free flux seed; velocity potential is never used as physical pressure')
     args = parser.parse_args()
+    if args.inner_iterations is None:args.inner_iterations=1 if args.algorithm=="simple" else 80
     if not np.isfinite(args.reynolds) or args.reynolds <= 0:
         parser.error('positive finite Reynolds number required')
     if args.maximum_speed is not None and (not np.isfinite(args.maximum_speed) or args.maximum_speed<=1):
         parser.error('maximum speed guard must be finite and greater than one')
     if args.project_initial_flux and args.initial_run is not None:parser.error('Select a restart or initial projection, not both')
+    if args.algorithm=='simple' and (args.momentum_cfl is not None or args.linear_method!='direct'):
+        parser.error('SIMPLE requires direct segregated linear solves and uses equation relaxation, not momentum-cfl')
     out = args.output
     if out.exists() and any(out.iterdir()):
         parser.error('output must be empty to preserve evidence')
@@ -63,9 +70,9 @@ def main():
         max_iterations=args.inner_iterations, nonlinear_tolerance=1e-8,
         relaxation=args.relaxation, linear_method=args.linear_method, bounded_convection=True,
         convection_order=args.convection_order, lu_ordering=args.lu_ordering,
-        momentum_pseudo_cfl=args.momentum_cfl)
+        momentum_pseudo_cfl=args.momentum_cfl, pressure_relaxation=args.pressure_relaxation, face_skew_correction=not args.disable_skew_correction)
     rans_settings = NativeRansSettings(max_outer_iterations=args.outer_iterations,
-        pseudo_time_step=args.pseudo_dt, nonlinear_tolerance=1e-7)
+        pseudo_time_step=args.pseudo_dt, nonlinear_tolerance=1e-7, wall_treatment=args.wall_treatment)
     k0, omega0 = inflow_from_intensity(1., args.intensity, args.length_scale)
     initial_binding=None
     if args.initial_run is not None:
@@ -78,7 +85,8 @@ def main():
         initial_binding=dict(origin=str(args.initial_run),kind='previous numerical state, not reference data',
             sha256={name:digest(out/('initial-'+name)) for name in ['fields.npz','config.json','result.json']})
     write(out / 'config.json', dict(kind='native SST SUBOFF diagnostic',
-        variant=VARIANT, dimensionless_units=dict(L=1., U=1., rho=1., Re_L=args.reynolds),
+        algorithm=args.algorithm, wall_treatment=args.wall_treatment,
+        wall_model_variant="Spalding equilibrium shear; binomial omega cell constraint; blended equilibrium wall production" if args.wall_treatment=="spalding" else "low-Re resolved SST", variant=VARIANT, dimensionless_units=dict(L=1., U=1., rho=1., Re_L=args.reynolds),
         momentum_settings=asdict(settings), rans_settings=asdict(rans_settings),
         initial_velocity=args.initial_velocity, outlet_backflow_velocity=[1., 0., 0.],
         maximum_speed_guard=args.maximum_speed,
@@ -86,13 +94,14 @@ def main():
         initial_flux_projection=args.project_initial_flux,
         inlet=dict(intensity=args.intensity, length_scale_L=args.length_scale,
             k=float(k0), omega=float(omega0), provenance='explicit modeling assumptions, not measured experimental inflow'),
-        trip='fully turbulent low-Re SST; no explicit experimental trip geometry or transition model',
+        trip='fully turbulent SST; no explicit experimental trip geometry or transition model',
         physical_validation_passed=False, source_sha256=bindings, mesh_sha256=digest(out / 'input.msh'),
         environment=dict(python=sys.version, executable=sys.executable, platform=platform.platform(), device='CPU scipy; GPU untested')))
     mesh = NativeMesh3D.from_gmsh(out / 'input.msh', triangulate_faces=True)
     fixed = (mesh.neighbor < 0) & (mesh.patch_labels != 'outlet')
     velocity = np.tile([1., 0., 0.], (len(mesh.owner), 1)); velocity[mesh.patch_labels == 'wall'] = 0.
-    solver = NativeSSTRansSolver3D(mesh, fixed, velocity,
+    solver_class=NativeSimpleSSTRansSolver3D if args.algorithm=="simple" else NativeSSTRansSolver3D
+    solver = solver_class(mesh, fixed, velocity,
         pressure_dirichlet=mesh.patch_labels == 'outlet', settings=settings, rans_settings=rans_settings)
     initial_k=k0;initial_omega=omega0
     if initial_binding is not None:
@@ -167,15 +176,20 @@ def main():
         physical_validation_passed=False, spatial_convergence_qualified=False,
         solution_state='coupled_iterate' if history else 'momentum_only' if momentum_history else 'initialization_only',
         completed_momentum_iterations=len(momentum_history),
+        wall_treatment=args.wall_treatment, algorithm=args.algorithm,
+        wall_function_diagnostics=dict(enabled=args.wall_treatment=='spalding',
+            minimum_yplus=float(yplus.min()),maximum_yplus=float(yplus.max()),
+            area_fraction_yplus_30_to_300=float(np.sum(area[(yplus>=30)&(yplus<=300)])/area.sum()),
+            qualified=False, note='Equilibrium Spalding shear, blended omega cell constraint; mesh and pressure-gradient sensitivity remain unqualified'),
         low_Re_wall_resolution=dict(maximum_yplus=float(yplus.max()),
             area_weighted_mean_yplus=float(np.sum(yplus * area) / area.sum()),
             maximum_yplus_below_one=bool(yplus.max() < 1),
-            qualified=bool(converged and failure is None and yplus.max() < 1)),
+            qualified=bool(args.wall_treatment=="resolved" and converged and failure is None and yplus.max() < 1)),
         forces_dimensionless={key: value.tolist() for key, value in forces.items() if key.endswith('force')},
         history=history, momentum_history=momentum_history, failure=failure, wall_seconds=time.perf_counter()-start,
         limitations=['Experimental total drag and Cp are not yet compared by this runner.',
             'True nonlinear momentum, k and omega convergence is required independently.',
-            'Actual computed y+ is necessary for wall-resolved SST acceptance.',
+            'Actual computed y+ and wall-treatment sensitivity are required for acceptance.',
             'Inflow turbulence and tripping remain modeling assumptions.',
             'Single grid does not establish spatial convergence.'])
     write(out / 'result.json', summary)
@@ -184,8 +198,8 @@ def main():
 Cells: {len(mesh.cells):,}; Re_L: {args.reynolds:g}; model: {VARIANT}.
 Numerically converged: **{converged}**. Experimental validation passed: **false**.
 Computed maximum wall y+: **{yplus.max():.6g}**.
-This wall-resolved model requires a suitable first-cell distance; a set mesh
-height alone is not a wall-resolution qualification. No wall function is used.
+Algorithm: **{args.algorithm}**. Wall treatment: **{args.wall_treatment}**.
+Computed y+ and mesh/wall-treatment sensitivity are required for qualification.
 
 Physical pressure is converted from pi=p+2rho k/3, and the reported force
 includes both anisotropic and isotropic Reynolds stress consistently.

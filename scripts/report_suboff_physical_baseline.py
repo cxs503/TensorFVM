@@ -63,7 +63,10 @@ def main():
         from tensorfvm.native_mesh3d import NativeMesh3D
         mesh=NativeMesh3D.from_gmsh(runs[name]/'input.msh',triangulate_faces=True)
         axes[0].scatter(mesh.face_centers[wall,0],fields['wall_yplus'],s=3,alpha=.35,label=name)
-    axes[0].axhline(1,color='black',ls='--');axes[0].set(xlabel='x/L',ylabel='Actual wall y+',title='All native wall faces');axes[0].legend()
+    if any(r['config'].get('wall_treatment')=='spalding' for r in records.values()):
+        axes[0].axhspan(30,300,color='green',alpha=.12,label='Conventional log-layer target (not qualification)')
+    else:axes[0].axhline(1,color='black',ls='--')
+    axes[0].set(xlabel='x/L',ylabel='Actual wall y+',title='All native wall faces');axes[0].legend()
     components=drag['axial_components'];names=list(components)
     axes[1].bar(np.arange(len(names)),[components[name]['Cd'] for name in names],label='Calculated components')
     axes[1].axhline(drag['Cd_reference'],color='black',ls='--',label='Reference TOTAL Cd')
@@ -73,6 +76,7 @@ def main():
     table='\n'.join(f"| {name} | {r['result']['cells']:,} | {r['result']['Re_L']:.9g} | {r['result']['completed_momentum_iterations']} | {len(r['result']['history'])} | {r['result']['numerically_converged']} | {r['result']['low_Re_wall_resolution']['maximum_yplus']:.6g} |" for name,r in records.items())
     failures='\n'.join(f"- {name}: `{r['result']['failure']}`; state `{r['result']['solution_state']}`." for name,r in records.items())
     sources='\n'.join(f"- {name}: [raw calculation]({link(runs[name]/'report.md')}), [experimental comparison]({link(comparisons[name]/'report.md')})." for name in records)
+    model_settings='；'.join(f"{name}: {r['config'].get('algorithm','coupled')}, wall treatment={r['config'].get('wall_treatment','resolved')}" for name,r in records.items())
     summary=dict(physical_validation_passed=False,
         Cp_relative_L2_error=cp['nominal_relative_L2_error'],Cp_absolute_RMSE=cp['absolute_RMSE'],
         Cd_relative_error=drag['relative_error'],Cd_calculated=drag['Cd_calculated'],Cd_reference=drag['Cd_reference'],
@@ -89,7 +93,7 @@ def main():
 ## 工况、模型与软件设置
 
 Cp 对照风洞 Re_L=1.2e7；阻力采用文献复现工况 U=3.046 m/s、rho=998.2 kg/m³、mu=0.001002 Pa s、L=4.356 m、D=0.508 m。
-两项独立运行，未混用雷诺数。SST-2003，低 Re 近壁积分，无壁面函数；入流湍流强度 0.5%、长度尺度 0.05L 为建模假设。
+两项独立运行，未混用雷诺数。SST-2003；{model_settings}。入流湍流强度 0.5%、长度尺度 0.05L 为建模假设。
 未显式建立实验绊线，也未使用转捩模型。边界为来流速度、远场速度、物理压力出口 p=0；压力出口回流使用显式给定的来流速度和湍流量。
 物理压力由 pi=p+2rho k/3 转换；Cd 包含压力和全部黏性/雷诺应力。运行配置与源代码快照保存于各计算目录。
 
@@ -130,7 +134,7 @@ Cp 参考为已保存的二级转录候选表，图中 ±0.015 为文献报告�
 
 {failures}
 
-残差为当前原方程残差；线性求解成功或小迭代增量不能替代耦合收敛。低 Re SST 的 y+ 检查必须同时具备已收敛状态。
+残差为当前原方程残差；线性求解成功或小迭代增量不能替代耦合收敛。近壁 y+ 分布检查必须结合收敛状态与所选壁面模型；落在目标范围内不等于物理合格。
 尚未完成三档网格或计算域独立性验证；CPU SciPy 运行，未开展本例 GPU 验证。
 
 ## 复现与原始证据

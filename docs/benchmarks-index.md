@@ -1,5 +1,13 @@
 # TensorFVM benchmark 总览
 
+## 最新：SIMPLE + SST + 壁面函数
+
+[实现、验证与 SUBOFF 实际诊断](verification-suboff-simple-sst-wall/README.md)：
+独立 SIMPLE 分离式求解已接入 SST-2003 和 Spalding 壁面函数，42 项测试通过；
+小通道原方程收敛通过。9,068 单元 SUBOFF 已走完一次 SST 更新，随后仍触发速度保护。
+主诊断 Cp 偏差 1,485.52%、Cd 偏差 6,154.57%，均为未收敛场偏差，**未达标**。
+报告含网格、原始流场、实验曲线、y+ 与力分解。以下全耦合结果为上一轮历史对照。
+
 ## SUBOFF 主验收目标：表面 Cp 与总阻力 Cd
 
 以匹配实验工况的 **Cp 测点曲线相对 L2 <3%**、**总 Cd 相对误差 <3%** 为主目标。

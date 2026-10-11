@@ -110,14 +110,14 @@ class NativeSSTTransport3D:
         source=np.zeros(op.F);incoming=op.boundary&(q<0);source[incoming]=q[incoming]*bd[incoming]
         return matrix,source
 
-    def step(self,k,omega,face_flux,wall_distance,nu,velocity_gradient,dt,*,k_boundary,omega_boundary,k_neumann=0.,omega_neumann=0.,rho=1.):
+    def step(self,k,omega,face_flux,wall_distance,nu,velocity_gradient,dt,*,k_boundary,omega_boundary,k_neumann=0.,omega_neumann=0.,rho=1.,closure_override=None,omega_constraints=None):
         if np.ndim(rho)!=0 or not np.isfinite(rho) or rho<=0:raise ValueError('transport requires positive constant density')
         if not np.isfinite(dt) or dt<=0:raise ValueError('positive pseudo time step required')
         m=self.mesh;b=self.base;N=b.N;k=_finite('k',k);omega=_finite('omega',omega)
         if k.shape!=(N,) or omega.shape!=(N,):raise ValueError('one k and omega per cell required')
         gk=np.column_stack([g@k for g in b.gradient_matrices])+b.gradient_source(k_neumann,k_boundary)
         gw=np.column_stack([g@omega for g in b.gradient_matrices])+b.gradient_source(omega_neumann,omega_boundary)
-        closure=sst2003_closure(k,omega,wall_distance,nu,velocity_gradient,gk,gw,rho=rho)
+        closure=sst2003_closure(k,omega,wall_distance,nu,velocity_gradient,gk,gw,rho=rho) if closure_override is None else closure_override
         result={};ledgers={};matrices={};volume=m.cell_volumes
         for name,old,sigma,production,destruction,bd,gn in [
             ('k',k,closure['sigma_k'],closure['production_limited'],BETA_STAR*omega,k_boundary,k_neumann),
@@ -134,12 +134,21 @@ class NativeSSTTransport3D:
             positive=np.maximum(production,0)
             A=diags(volume/dt+volume*(destruction+extra_sink))+b.divergence_matrix@adv-diffusion.scalar_diffusion_matrix
             rhs=volume*old/dt+volume*positive+b.divergence_matrix@(diff_source-adv_source)
+            if name=='omega' and omega_constraints is not None:
+                ids,values=omega_constraints
+                A=A.tolil()
+                for cell,value in zip(ids,values):A[cell,:]=0;A[cell,cell]=1;rhs[cell]=value
+                A=A.tocsr()
             new=spsolve(A.tocsc(),rhs)
             if not np.isfinite(new).all() or np.any(new<0) or (name=='omega' and np.any(new<=0)):raise RuntimeError('invalid SST update; no clipping applied')
             adv_flux=adv@new+adv_source;diff_flux=diffusion.scalar_flux(new,gn,bd)
             local_source=positive-(destruction+extra_sink)*new
             transient=volume*(new-old)/dt
             residual=transient+b.divergence_matrix@(adv_flux-diff_flux)-volume*local_source
-            ledgers[name]=dict(max_local_integrated_residual=float(np.max(np.abs(residual))),global_residual=float(transient.sum()+(adv_flux-diff_flux)[b.boundary].sum()-(volume*local_source).sum()),boundary_advective_flux=float(adv_flux[b.boundary].sum()),boundary_diffusive_flux=float(diff_flux[b.boundary].sum()),integrated_source=float((volume*local_source).sum()),relative_update=float(np.linalg.norm(new-old)/max(np.linalg.norm(old),np.finfo(float).tiny)))
+            wall_reaction=0.
+            if name=='omega' and omega_constraints is not None:
+                ids,_=omega_constraints
+                wall_reaction=float(residual[ids].sum());residual[ids]=0.
+            ledgers[name]=dict(wall_constraint_reaction=wall_reaction,max_local_integrated_residual=float(np.max(np.abs(residual))),global_residual=float(transient.sum()+(adv_flux-diff_flux)[b.boundary].sum()-(volume*local_source).sum()-wall_reaction),boundary_advective_flux=float(adv_flux[b.boundary].sum()),boundary_diffusive_flux=float(diff_flux[b.boundary].sum()),integrated_source=float((volume*local_source).sum()),relative_update=float(np.linalg.norm(new-old)/max(np.linalg.norm(old),np.finfo(float).tiny)))
             result[name]=new;matrices[name]=A.tocsr()
         return dict(**result,closure=closure,ledger=ledgers,matrices=matrices,variant=VARIANT,integrated_rans_validated=False,physical_benchmark_passed=False)

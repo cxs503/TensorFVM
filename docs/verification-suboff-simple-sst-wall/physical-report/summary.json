@@ -1,0 +1,22 @@
+{
+  "physical_validation_passed": false,
+  "Cp_relative_L2_error": 14.855221771581862,
+  "Cp_absolute_RMSE": 1.8624429189021396,
+  "Cd_relative_error": 61.54570153321041,
+  "Cd_calculated": 5.824306574592108,
+  "Cd_reference": 0.09312081297064881,
+  "both_numerically_converged": false,
+  "spatial_convergence_qualified": false,
+  "input_sha256": {
+    "../cp-interleaved/result.json": "8a5969bab5305642c875a7bb805864f31392ee323f6c79174eef0a3dbbb33fa4",
+    "../cp-interleaved/config.json": "0a99d4e8233ef7b97fa1c8646111c463409165cd4d98843a1173da878655a758",
+    "../cp-interleaved/fields.npz": "4efd811f0a52fb6b1fa39f3a34f5110dbc841d12a9e2d96926d27e80a37217f4",
+    "../cp-interleaved/input.msh": "afebe7d4b6f96eae92810debfa485f591d58323c477b28cda83a60df59ac70e1",
+    "../cp-comparison/comparison.json": "5474cfd163b06d8349f6ec30b7aa6726e76a4d8025c10808bcd1c9e9294bfa58",
+    "../drag-interleaved/result.json": "cdae8c2bd89c570109369cba248426dec96097a8b588d357cbf1a0e484854a0e",
+    "../drag-interleaved/config.json": "a2afa5bbc4fa095ed286cd2a160bba689442f5378998788e5d32e36934b3611f",
+    "../drag-interleaved/fields.npz": "24a9c760c25ced765838643af19b031107658bfb5ce248ea5454204ca1e0e8d2",
+    "../drag-interleaved/input.msh": "afebe7d4b6f96eae92810debfa485f591d58323c477b28cda83a60df59ac70e1",
+    "../drag-comparison/comparison.json": "eb71ee1c9899d28d19e8a769de0b64f22597052c226667b3b1528ff390fc218a"
+  }
+}

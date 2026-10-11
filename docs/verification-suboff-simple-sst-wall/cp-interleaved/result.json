@@ -1,0 +1,180 @@
+{
+  "cells": 9068,
+  "Re_L": 12000000.0,
+  "numerically_converged": false,
+  "physical_validation_passed": false,
+  "spatial_convergence_qualified": false,
+  "solution_state": "coupled_iterate",
+  "completed_momentum_iterations": 2,
+  "wall_treatment": "spalding",
+  "algorithm": "simple",
+  "wall_function_diagnostics": {
+    "enabled": true,
+    "minimum_yplus": 113.12456055782798,
+    "maximum_yplus": 245.60693513027033,
+    "area_fraction_yplus_30_to_300": 1.0,
+    "qualified": false,
+    "note": "Equilibrium Spalding shear, blended omega cell constraint; mesh and pressure-gradient sensitivity remain unqualified"
+  },
+  "low_Re_wall_resolution": {
+    "maximum_yplus": 245.60693513027033,
+    "area_weighted_mean_yplus": 196.23799519504675,
+    "maximum_yplus_below_one": false,
+    "qualified": false
+  },
+  "forces_dimensionless": {
+    "total_force": [
+      0.031129437241643625,
+      0.0024249096175909678,
+      -0.00021307923921476445
+    ],
+    "physical_pressure_force": [
+      0.030176294616408493,
+      0.0024231808106460044,
+      -0.0002125544402014272
+    ],
+    "anisotropic_viscous_force": [
+      0.0009531426252606569,
+      1.7288069707027501e-06,
+      -5.247990234049924e-07
+    ],
+    "isotropic_turbulent_force": [
+      -2.549518261698956e-14,
+      -2.5743858704417598e-14,
+      1.0069371283626767e-14
+    ],
+    "modified_pressure_force": [
+      0.03017629461638297,
+      0.002423180810620265,
+      -0.00021255444019135946
+    ]
+  },
+  "history": [
+    {
+      "iteration": 1,
+      "momentum_inner_converged": false,
+      "momentum_current_residual": 0.008803175014861485,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 1179.9075204284559,
+      "stored_native_divergence_max": 4.801030717064585e-11,
+      "face_flux_consistency_max": 1.603373870829357,
+      "velocity_change": 0.19561419705718758,
+      "modified_pressure_change": 1.0,
+      "flux_change": 0.000809603855230798,
+      "k_change": 0.0003577219701486813,
+      "omega_change": 0.9961581380565697,
+      "k_current_nonlinear_residual": 0.9989229620197295,
+      "omega_current_nonlinear_residual": 0.7577983833436305,
+      "pseudo_time_step_used": 0.0001,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "wall_constraint_reaction": 0.0,
+          "wall_constraint_relative_residual": 0.0,
+          "relative_residual": 0.9989229620197295,
+          "maximum_specific_residual": 0.005733315620892255,
+          "global_integrated_residual": 1.0366924782668189e-05,
+          "boundary_advective_flux": -1.5095136549224853e-10,
+          "boundary_diffusive_flux": 2.3255470917840906e-12,
+          "integrated_current_source": -1.0367078059580766e-05
+        },
+        "omega": {
+          "wall_constraint_reaction": 0.30318378365283444,
+          "wall_constraint_relative_residual": 0.4992051815023856,
+          "relative_residual": 0.7577983833436305,
+          "maximum_specific_residual": 196802.02884619,
+          "global_integrated_residual": 0.7441015404701143,
+          "boundary_advective_flux": -8.280055774911865e-07,
+          "boundary_diffusive_flux": 1.1022252121094489e-08,
+          "integrated_current_source": -1.0472861631507786
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "wall_constraint_reaction": 0.0,
+          "max_local_integrated_residual": 4.3966882944847314e-18,
+          "global_residual": -6.613125032393224e-17,
+          "boundary_advective_flux": -3.019027309726386e-10,
+          "boundary_diffusive_flux": 4.651094545471648e-12,
+          "integrated_source": -1.070421389658719e-05,
+          "relative_update": 0.0007154164013955113
+        },
+        "omega": {
+          "wall_constraint_reaction": 637.7242438830056,
+          "max_local_integrated_residual": 3.586059671868008e-14,
+          "global_residual": -2.2737367544323206e-13,
+          "boundary_advective_flux": -1.656011154982373e-06,
+          "boundary_diffusive_flux": 2.2044505883685606e-08,
+          "integrated_source": -415.8892351502523,
+          "relative_update": 111.38704345405216
+        }
+      },
+      "elapsed_seconds": 22.310433158650994,
+      "total_force_dimensionless": [
+        0.029494106291415845,
+        0.0021216010192312783,
+        4.382851126934515e-05
+      ],
+      "physical_pressure_force_dimensionless": [
+        0.028547198148200368,
+        0.0021205484514190275,
+        4.3582584503461694e-05
+      ],
+      "viscous_force_dimensionless": [
+        0.0009469081432409879,
+        1.0525678379989824e-06,
+        2.4592675581533365e-07
+      ]
+    }
+  ],
+  "momentum_history": [
+    {
+      "outer_iteration": 1,
+      "iteration": 1,
+      "algorithm": "SIMPLE",
+      "velocity_change": 0.19561419705718758,
+      "pressure_change": 1.0,
+      "flux_change": 0.000809603855230798,
+      "momentum_residual": 0.008886601539303879,
+      "native_divergence_max": 4.801030717064585e-11,
+      "current_reconstructed_divergence_max": 1712.9066111834723,
+      "face_flux_consistency_max": 1.6045229878924465,
+      "true_linear_relative_residual": 5.5196580302867056e-14,
+      "linear_iterations": 2,
+      "elapsed_seconds": 17.97155453916639,
+      "maximum_speed": 2.30766197925289,
+      "modified_pressure_min": -1.436697656651082,
+      "modified_pressure_max": 4.250716424605465
+    },
+    {
+      "outer_iteration": 2,
+      "iteration": 1,
+      "algorithm": "SIMPLE",
+      "velocity_change": 0.20507914236311617,
+      "pressure_change": 0.14746463812802665,
+      "flux_change": 0.0011268805776028046,
+      "momentum_residual": 0.009765288328616364,
+      "native_divergence_max": 5.815345340322491e-11,
+      "current_reconstructed_divergence_max": 27457.377817159442,
+      "face_flux_consistency_max": 6.984354947106379,
+      "true_linear_relative_residual": 5.67538046639441e-15,
+      "linear_iterations": 2,
+      "elapsed_seconds": 26.13386468309909,
+      "maximum_speed": 18.336396548106695,
+      "modified_pressure_min": -1.8238286417446608,
+      "modified_pressure_max": 4.633770382496008
+    }
+  ],
+  "failure": {
+    "type": "RuntimeError",
+    "message": "Explicit divergence guard exceeded: max speed 18.3364 > 5; state retained without clipping"
+  },
+  "wall_seconds": 26.28493808582425,
+  "limitations": [
+    "Experimental total drag and Cp are not yet compared by this runner.",
+    "True nonlinear momentum, k and omega convergence is required independently.",
+    "Actual computed y+ and wall-treatment sensitivity are required for acceptance.",
+    "Inflow turbulence and tripping remain modeling assumptions.",
+    "Single grid does not establish spatial convergence."
+  ]
+}
