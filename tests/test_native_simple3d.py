@@ -64,3 +64,24 @@ def test_simple_sst_wall_function_converges_current_equations(face_skew_correcti
     reconstructed=s.velocity_flux_matrix@s.u.ravel()+corr@s.p+source
     assert np.max(np.abs(s.viscous.op.integrate(reconstructed)/m.cell_volumes))<1e-7
     assert not r['physical_benchmark_passed']
+
+
+@pytest.mark.parametrize('pressure_outlet',[False,True])
+def test_one_full_pressure_correction_matches_reconstructed_flux(pressure_outlet):
+    """Frozen Stokes coefficients isolate correction consistency from iteration lag."""
+    m=skew_mesh(3);boundary=m.neighbor<0
+    outlet=boundary&(m.face_centers[:,0]>1.) if pressure_outlet else np.zeros(len(m.owner),bool)
+    x,y,z=m.cell_centers.T
+    force=np.column_stack((np.sin(3*y),np.cos(2*x),x*z))
+    s=NativeSimpleSolver3D(m,boundary&~outlet,np.zeros((len(m.owner),3)),outlet,
+        body_force=force,settings=NativeSteadySettings(viscosity=.1,convection=False,
+            max_iterations=1,relaxation=.5,pressure_relaxation=1.))
+    r=s.solve()
+    assert np.linalg.norm(s.u)>1e-3 and np.linalg.norm(s.p)>1e-3
+    # Pressure correction must conserve both the stored face flux and the flux
+    # independently reconstructed from the corrected pressure and velocity.
+    row=r['history'][-1]
+    assert row['native_divergence_max']<1e-11
+    assert row['current_reconstructed_divergence_max']<1e-11
+    assert row['face_flux_consistency_max']<1e-11
+    assert not r['converged']  # A projection is not a converged Stokes solution.

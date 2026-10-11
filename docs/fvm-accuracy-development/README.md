@@ -1,5 +1,13 @@
 # Standalone FVM accuracy first
 
+## Latest pressure-response correction
+
+[A reproducible inconsistency and its correction](../verification-simple-pressure-response/README.md)
+match the pressure-correction face response to the actual cell-velocity response.
+Two frozen-coefficient regressions now conserve reconstructed flux to roundoff;
+32 related tests pass. The matched SUBOFF run still fails its speed guard, with
+larger peak velocity. This is not a stability improvement or physical acceptance.
+
 ## Latest SIMPLE/SST wall-function implementation
 
 [Current implementation and measured failures](../verification-suboff-simple-sst-wall/README.md):

@@ -1,6 +1,13 @@
 # TensorFVM benchmark 总览
 
-## 最新：SIMPLE + SST + 壁面函数
+## 最新：确认并修正 SIMPLE 压力响应不一致
+
+[修复前后回归及 SUBOFF 复测](verification-simple-pressure-response/README.md)：
+冻结系数并关闭压力松弛后，旧压力修正与单元速度重构不匹配；修正后两个回归
+重构散度降至约 1e−15，32 项测试通过。SUBOFF 同设置仍在第 2 步触发保护，
+最大速度反而升至 29.35U；**不能宣称已解决失稳或达到 3% 精度**。
+
+## 前一轮：SIMPLE + SST + 壁面函数
 
 [实现、验证与 SUBOFF 实际诊断](verification-suboff-simple-sst-wall/README.md)：
 独立 SIMPLE 分离式求解已接入 SST-2003 和 Spalding 壁面函数，42 项测试通过；
