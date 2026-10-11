@@ -1,0 +1,18 @@
+{
+  "input_sha256": {
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/quadratic-assembled-coarse/fields.npz": "fdbc5f3bd36b92ccf3c37f11058528c690a842b0fdde05e12ae90a7003370612",
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/quadratic-assembled-coarse/config.json": "5ee5e825ab841450abd30503ef834382ccdb5464a01cf0fb9688d1fc8f318fb8",
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/quadratic-assembled-coarse/input.msh": "123628d05073ba7053ffbbf597ca64eb783820ae53393cc0b28feb6dbe4e2b11",
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/quadratic-assembled-coarse/audit/audit.json": "42311d0c0eabd5c4838d5be48287c29201fb0300598f795dc4912d8fd69e47ca"
+  },
+  "artifact_sha256": {
+    "README.md": "8ffde67c0dabacc98a828919d30761ce1946f62ee58f09eff0b1e3432ac97901",
+    "comparison.pdf": "765c3af667590d24759ef51f443155aaa521435d73398f6415ec91a546b57a6a",
+    "comparison.png": "15d02743d6bdc95732b1791734cd3d8ac60e0950deb553bfc028bcce58f4c2e4",
+    "plot_native_manufactured_comparison.py": "e15a1fec9e51182152af662cef569989d0126947bf4447e60cb5aa304eb5e752",
+    "plot_native_suboff_fields.py": "1184d2ba9f90049574e882eecdb9edb1b7a754aa526e9f41c2c3da8187554b1d",
+    "section-comparison.npz": "61253d5272e91e129aa5f385c6877342bef72c8a4e810d40e3e593c9dd10c92d",
+    "summary.json": "4c1e7c95be9cb1b98f9fb17f4debd4dec65b7fa5558d97e277099a14a6cb7c68"
+  },
+  "documentation_correction": "README reproduction command corrected to the recorded z=0 tail window after plotting; frozen executed source, numerical arrays and figures unchanged."
+}

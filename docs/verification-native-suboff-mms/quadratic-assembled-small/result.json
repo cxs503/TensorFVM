@@ -1,0 +1,466 @@
+{
+  "mode": "manufactured",
+  "reconstruction": "quadratic",
+  "cells": 6085,
+  "geometry": {
+    "cells": 6085,
+    "faces": 17275,
+    "minimum_cell_volume": 2.6567503170977526e-09,
+    "maximum_relative_closure": 2.0097682112441686e-16,
+    "minimum_face_projection": 1.2286560435424542e-09,
+    "maximum_nonorthogonality_degrees": 88.71404231540603,
+    "patch_face_counts": {
+      "farfield": 510,
+      "inlet": 66,
+      "internal": 15897,
+      "outlet": 66,
+      "wall": 736
+    }
+  },
+  "converged": true,
+  "relative_L2_errors": {
+    "velocity": 0.00015873175792073955,
+    "velocity_x": 0.00020296541290737595,
+    "velocity_y": 9.226876894267741e-05,
+    "velocity_z": 0.00023718565745768844,
+    "pressure": 0.007593947853783147
+  },
+  "manufactured_pointwise_accuracy_passed": true,
+  "mesh_convergence_qualified": false,
+  "experimental_accuracy_qualified": false,
+  "wall_forces": {
+    "pressure_force": [
+      -1.950695017149703e-06,
+      -7.787455135659188e-07,
+      -0.0004886010064494643
+    ],
+    "viscous_force": [
+      -0.00022905069444073981,
+      -0.0002625319430192938,
+      -0.00021905721044991508
+    ],
+    "total_force": [
+      -0.00023100138945788951,
+      -0.00026331068853285974,
+      -0.0007076582168993794
+    ]
+  },
+  "history": [
+    {
+      "iteration": 1,
+      "accepted": true,
+      "accepted_relaxation": 0.7,
+      "old_merit": 0.007836416944791872,
+      "merit": 0.0023547653921359175,
+      "trials": [
+        {
+          "relaxation": 0.7,
+          "merit": 0.0023547653921359175
+        }
+      ],
+      "true_linear_relative_residual": 5.361260197894161e-15,
+      "linear_iterations": 1,
+      "velocity_change": 0.0012239319895179844,
+      "pressure_change": 0.09799801004594533,
+      "flux_change": 0.00153182615681498,
+      "momentum_residual": 0.0006604321974508795,
+      "native_divergence_max": 0.04839343831870308,
+      "current_reconstructed_divergence_max": 0.12097999476916668,
+      "face_flux_consistency_max": 0.005578827088835096,
+      "linear_operator": {
+        "method": "assembled full quadratic sparse operator",
+        "matrix_nnz": 6827758,
+        "true_residual": 5.361260197894161e-15,
+        "iterations": 1,
+        "elapsed_seconds": 214.5386899774894
+      }
+    },
+    {
+      "iteration": 2,
+      "accepted": true,
+      "accepted_relaxation": 0.7,
+      "old_merit": 0.0023547653921359175,
+      "merit": 0.0007148695368874769,
+      "trials": [
+        {
+          "relaxation": 0.7,
+          "merit": 0.0007148695368874769
+        }
+      ],
+      "true_linear_relative_residual": 1.1248920875832859e-13,
+      "linear_iterations": 4,
+      "velocity_change": 0.00036632662563694204,
+      "pressure_change": 0.028165837051927028,
+      "flux_change": 0.0004668412331611315,
+      "momentum_residual": 0.0002263869112767848,
+      "native_divergence_max": 0.014518031495483716,
+      "current_reconstructed_divergence_max": 0.03628924760500602,
+      "face_flux_consistency_max": 0.001673495995042994,
+      "linear_operator": {
+        "method": "assembled full quadratic sparse operator",
+        "matrix_nnz": 6827758,
+        "true_residual": 1.1248920875832859e-13,
+        "iterations": 4,
+        "elapsed_seconds": 3.0344189759343863
+      }
+    },
+    {
+      "iteration": 3,
+      "accepted": true,
+      "accepted_relaxation": 0.7,
+      "old_merit": 0.0007148695368874769,
+      "merit": 0.00021909692813747001,
+      "trials": [
+        {
+          "relaxation": 0.7,
+          "merit": 0.00021909692813747001
+        }
+      ],
+      "true_linear_relative_residual": 3.339504859117329e-13,
+      "linear_iterations": 4,
+      "velocity_change": 0.00011343470943876145,
+      "pressure_change": 0.008581585060611609,
+      "flux_change": 0.00014501742091932367,
+      "momentum_residual": 8.137933795177118e-05,
+      "native_divergence_max": 0.004355409448918302,
+      "current_reconstructed_divergence_max": 0.010886320279101766,
+      "face_flux_consistency_max": 0.0005020343477392497,
+      "linear_operator": {
+        "method": "assembled full quadratic sparse operator",
+        "matrix_nnz": 6827758,
+        "true_residual": 3.339504859117329e-13,
+        "iterations": 4,
+        "elapsed_seconds": 3.0856334306299686
+      }
+    },
+    {
+      "iteration": 4,
+      "accepted": true,
+      "accepted_relaxation": 0.7,
+      "old_merit": 0.00021909692813747001,
+      "merit": 6.771064989507085e-05,
+      "trials": [
+        {
+          "relaxation": 0.7,
+          "merit": 6.771064989507085e-05
+        }
+      ],
+      "true_linear_relative_residual": 4.447726407436482e-13,
+      "linear_iterations": 4,
+      "velocity_change": 3.6155685386304706e-05,
+      "pressure_change": 0.0027391833894722245,
+      "flux_change": 4.5806475994843376e-05,
+      "momentum_residual": 2.9333497389785814e-05,
+      "native_divergence_max": 0.001306622834552452,
+      "current_reconstructed_divergence_max": 0.003265850331789816,
+      "face_flux_consistency_max": 0.00015060886659511218,
+      "linear_operator": {
+        "method": "assembled full quadratic sparse operator",
+        "matrix_nnz": 6827758,
+        "true_residual": 4.447726407436482e-13,
+        "iterations": 4,
+        "elapsed_seconds": 3.0430784672498703
+      }
+    },
+    {
+      "iteration": 5,
+      "accepted": true,
+      "accepted_relaxation": 0.7,
+      "old_merit": 6.771064989507085e-05,
+      "merit": 2.1069603260223088e-05,
+      "trials": [
+        {
+          "relaxation": 0.7,
+          "merit": 2.1069603260223088e-05
+        }
+      ],
+      "true_linear_relative_residual": 4.848285416942745e-13,
+      "linear_iterations": 4,
+      "velocity_change": 1.1771427990445132e-05,
+      "pressure_change": 0.0009009253120144217,
+      "flux_change": 1.4667391263701728e-05,
+      "momentum_residual": 1.0427998748671248e-05,
+      "native_divergence_max": 0.0003919868503511378,
+      "current_reconstructed_divergence_max": 0.0009797497571538618,
+      "face_flux_consistency_max": 4.518249725694836e-05,
+      "linear_operator": {
+        "method": "assembled full quadratic sparse operator",
+        "matrix_nnz": 6827758,
+        "true_residual": 4.848285416942745e-13,
+        "iterations": 4,
+        "elapsed_seconds": 3.0289820255711675
+      }
+    },
+    {
+      "iteration": 6,
+      "accepted": true,
+      "accepted_relaxation": 0.7,
+      "old_merit": 2.1069603260223088e-05,
+      "merit": 6.591347193941037e-06,
+      "trials": [
+        {
+          "relaxation": 0.7,
+          "merit": 6.591347193941037e-06
+        }
+      ],
+      "true_linear_relative_residual": 4.978402882410886e-13,
+      "linear_iterations": 4,
+      "velocity_change": 3.885695948706149e-06,
+      "pressure_change": 0.00030191226499552026,
+      "flux_change": 4.746192031589528e-06,
+      "momentum_residual": 3.644064442757258e-06,
+      "native_divergence_max": 0.00011759605512828073,
+      "current_reconstructed_divergence_max": 0.0002939240970469165,
+      "face_flux_consistency_max": 1.3554725152289056e-05,
+      "linear_operator": {
+        "method": "assembled full quadratic sparse operator",
+        "matrix_nnz": 6827758,
+        "true_residual": 4.978402882410886e-13,
+        "iterations": 4,
+        "elapsed_seconds": 3.0189799647778273
+      }
+    },
+    {
+      "iteration": 7,
+      "accepted": true,
+      "accepted_relaxation": 0.7,
+      "old_merit": 6.591347193941037e-06,
+      "merit": 2.0700863414149112e-06,
+      "trials": [
+        {
+          "relaxation": 0.7,
+          "merit": 2.0700863414149112e-06
+        }
+      ],
+      "true_linear_relative_residual": 5.020296376846546e-13,
+      "linear_iterations": 4,
+      "velocity_change": 1.2930746618016856e-06,
+      "pressure_change": 0.00010261353550194331,
+      "flux_change": 1.5478285444049817e-06,
+      "momentum_residual": 1.2530996614221014e-06,
+      "native_divergence_max": 3.5278816590619203e-05,
+      "current_reconstructed_divergence_max": 8.8177051586616e-05,
+      "face_flux_consistency_max": 4.066412605366407e-06,
+      "linear_operator": {
+        "method": "assembled full quadratic sparse operator",
+        "matrix_nnz": 6827758,
+        "true_residual": 5.020296376846546e-13,
+        "iterations": 4,
+        "elapsed_seconds": 3.0288515174761415
+      }
+    },
+    {
+      "iteration": 8,
+      "accepted": true,
+      "accepted_relaxation": 0.7,
+      "old_merit": 2.0700863414149112e-06,
+      "merit": 6.518614509678385e-07,
+      "trials": [
+        {
+          "relaxation": 0.7,
+          "merit": 6.518614509678385e-07
+        }
+      ],
+      "true_linear_relative_residual": 5.032957119953762e-13,
+      "linear_iterations": 4,
+      "velocity_change": 4.322050896636379e-07,
+      "pressure_change": 3.536509034730226e-05,
+      "flux_change": 5.076391746573714e-07,
+      "momentum_residual": 4.249393698600617e-07,
+      "native_divergence_max": 1.0583645043918543e-05,
+      "current_reconstructed_divergence_max": 2.6453069910645604e-05,
+      "face_flux_consistency_max": 1.21992250218151e-06,
+      "linear_operator": {
+        "method": "assembled full quadratic sparse operator",
+        "matrix_nnz": 6827758,
+        "true_residual": 5.032957119953762e-13,
+        "iterations": 4,
+        "elapsed_seconds": 3.049984467215836
+      }
+    },
+    {
+      "iteration": 9,
+      "accepted": true,
+      "accepted_relaxation": 0.7,
+      "old_merit": 6.518614509678385e-07,
+      "merit": 2.0560120041101382e-07,
+      "trials": [
+        {
+          "relaxation": 0.7,
+          "merit": 2.0560120041101382e-07
+        }
+      ],
+      "true_linear_relative_residual": 5.037202391772533e-13,
+      "linear_iterations": 4,
+      "velocity_change": 1.4479928317069873e-07,
+      "pressure_change": 1.2380901372621347e-05,
+      "flux_change": 1.6717256623132343e-07,
+      "momentum_residual": 1.4240914369310772e-07,
+      "native_divergence_max": 3.175093565310548e-06,
+      "current_reconstructed_divergence_max": 7.935909351476724e-06,
+      "face_flux_consistency_max": 3.6597638396725324e-07,
+      "linear_operator": {
+        "method": "assembled full quadratic sparse operator",
+        "matrix_nnz": 6827758,
+        "true_residual": 5.037202391772533e-13,
+        "iterations": 4,
+        "elapsed_seconds": 3.0781449088826776
+      }
+    },
+    {
+      "iteration": 10,
+      "accepted": true,
+      "accepted_relaxation": 0.7,
+      "old_merit": 2.0560120041101382e-07,
+      "merit": 6.490014180079985e-08,
+      "trials": [
+        {
+          "relaxation": 0.7,
+          "merit": 6.490014180079985e-08
+        }
+      ],
+      "true_linear_relative_residual": 5.038888224972955e-13,
+      "linear_iterations": 4,
+      "velocity_change": 4.857773903983063e-08,
+      "pressure_change": 4.4113593656521126e-06,
+      "flux_change": 5.521945734401203e-08,
+      "momentum_residual": 4.725245395902336e-08,
+      "native_divergence_max": 9.525280549953685e-07,
+      "current_reconstructed_divergence_max": 2.3807708806022476e-06,
+      "face_flux_consistency_max": 1.0979280642024921e-07,
+      "linear_operator": {
+        "method": "assembled full quadratic sparse operator",
+        "matrix_nnz": 6827758,
+        "true_residual": 5.038888224972955e-13,
+        "iterations": 4,
+        "elapsed_seconds": 3.0649452777579427
+      }
+    },
+    {
+      "iteration": 11,
+      "accepted": true,
+      "accepted_relaxation": 0.7,
+      "old_merit": 6.490014180079985e-08,
+      "merit": 2.049029411026695e-08,
+      "trials": [
+        {
+          "relaxation": 0.7,
+          "merit": 2.049029411026695e-08
+        }
+      ],
+      "true_linear_relative_residual": 5.039110289527854e-13,
+      "linear_iterations": 4,
+      "velocity_change": 1.631522043372732e-08,
+      "pressure_change": 1.6011214271914063e-06,
+      "flux_change": 1.8282895034692172e-08,
+      "momentum_residual": 1.554738256594005e-08,
+      "native_divergence_max": 2.8575831848483846e-07,
+      "current_reconstructed_divergence_max": 7.142322165137048e-07,
+      "face_flux_consistency_max": 3.2937809364270995e-08,
+      "linear_operator": {
+        "method": "assembled full quadratic sparse operator",
+        "matrix_nnz": 6827758,
+        "true_residual": 5.039110289527854e-13,
+        "iterations": 4,
+        "elapsed_seconds": 3.0149559807032347
+      }
+    },
+    {
+      "iteration": 12,
+      "accepted": true,
+      "accepted_relaxation": 0.7,
+      "old_merit": 2.049029411026695e-08,
+      "merit": 6.467585335027146e-09,
+      "trials": [
+        {
+          "relaxation": 0.7,
+          "merit": 6.467585335027146e-09
+        }
+      ],
+      "true_linear_relative_residual": 5.038854380978581e-13,
+      "linear_iterations": 4,
+      "velocity_change": 5.48661325427671e-09,
+      "pressure_change": 5.915501996337233e-07,
+      "flux_change": 6.065346822401196e-09,
+      "momentum_residual": 5.079160467838504e-09,
+      "native_divergence_max": 8.572755810743374e-08,
+      "current_reconstructed_divergence_max": 2.142714652757105e-07,
+      "face_flux_consistency_max": 9.881333114121639e-09,
+      "linear_operator": {
+        "method": "assembled full quadratic sparse operator",
+        "matrix_nnz": 6827758,
+        "true_residual": 5.038854380978581e-13,
+        "iterations": 4,
+        "elapsed_seconds": 3.0656970739364624
+      }
+    },
+    {
+      "iteration": 13,
+      "accepted": true,
+      "accepted_relaxation": 0.7,
+      "old_merit": 6.467585335027146e-09,
+      "merit": 2.0403587308839977e-09,
+      "trials": [
+        {
+          "relaxation": 0.7,
+          "merit": 2.0403587308839977e-09
+        }
+      ],
+      "true_linear_relative_residual": 5.039309499320833e-13,
+      "linear_iterations": 4,
+      "velocity_change": 1.8481618465532074e-09,
+      "pressure_change": 2.2193673924439152e-07,
+      "flux_change": 2.0157800229731766e-09,
+      "momentum_residual": 1.6493039321412764e-09,
+      "native_divergence_max": 2.5718334165011147e-08,
+      "current_reconstructed_divergence_max": 6.428350781576837e-08,
+      "face_flux_consistency_max": 2.9643970273519066e-09,
+      "linear_operator": {
+        "method": "assembled full quadratic sparse operator",
+        "matrix_nnz": 6827758,
+        "true_residual": 5.039309499320833e-13,
+        "iterations": 4,
+        "elapsed_seconds": 3.0188742261379957
+      }
+    },
+    {
+      "iteration": 14,
+      "accepted": true,
+      "accepted_relaxation": 0.7,
+      "old_merit": 2.0403587308839977e-09,
+      "merit": 6.43284142233952e-10,
+      "trials": [
+        {
+          "relaxation": 0.7,
+          "merit": 6.43284142233952e-10
+        }
+      ],
+      "true_linear_relative_residual": 5.039355817201456e-13,
+      "linear_iterations": 4,
+      "velocity_change": 6.238917830312239e-10,
+      "pressure_change": 8.424539679605298e-08,
+      "flux_change": 6.710961152309132e-10,
+      "momentum_residual": 5.328766412575752e-10,
+      "native_divergence_max": 7.715664996056498e-09,
+      "current_reconstructed_divergence_max": 1.9287208218456427e-08,
+      "face_flux_consistency_max": 8.893183274267438e-10,
+      "linear_operator": {
+        "method": "assembled full quadratic sparse operator",
+        "matrix_nnz": 6827758,
+        "true_residual": 5.039355817201456e-13,
+        "iterations": 4,
+        "elapsed_seconds": 3.073559284210205
+      }
+    }
+  ],
+  "failure": null,
+  "wall_seconds": 287.7316098352894,
+  "extended_pressure_stencils": 86,
+  "limitations": [
+    "Single grid cannot establish spatial convergence.",
+    "Manufactured hull boundary is not physical no-slip SUBOFF flow.",
+    "No turbulence model or experimental drag/Cp comparison in this runner.",
+    "Full nonorthogonal stress matrix is not guaranteed positive definite.",
+    "Cell-center error metric does not equal error in exact cell averages."
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "mesh_path": "docs/verification-native-suboff-mms/quadratic-assembled-medium/input.msh",
+  "mesh_sha256": "b85e232b14aa318d190792aa1c174bcb4dcfc6da057d2bd6b34600637268a4fd",
+  "fields_path": "docs/verification-native-suboff-mms/quadratic-assembled-medium/fields.npz",
+  "fields_sha256": "7eb61d2545443168225e466da56a162766ad57eb43ba406cc7fe522ced8159fa",
+  "case_kind": "manufactured",
+  "status_text": "Global MMS audited; local accuracy reported separately",
+  "plane_z_L": 0.03,
+  "section_polygons": 2766,
+  "section_cells_by_type": {
+    "hexahedron": 546,
+    "tetra": 2220
+  },
+  "pressure_range": [
+    -0.15286685110476192,
+    0.15093080324198951
+  ],
+  "speed_range": [
+    0.18568942855936796,
+    1.2205890629221838
+  ],
+  "section_pressure_range": [
+    -0.0269052419516783,
+    0.039047061635814256
+  ],
+  "section_speed_range": [
+    0.45168680455081156,
+    1.1751518073850542
+  ],
+  "wall_pressure_definition": "Reconstructed native wall-face pressure supplied by the solver; not experimental Cp",
+  "representation": "Native facet plane intersection polygons, piecewise constant cell fields",
+  "qualification_inferred_from_figures": false,
+  "face_policy": "triangulated_native_faces",
+  "merge_coplanar_faces": false,
+  "original_faces": 86748,
+  "reconstructed_faces": 86748,
+  "merged_pairs": 0,
+  "config_path": "docs/verification-native-suboff-mms/quadratic-assembled-medium/config.json",
+  "config_sha256": "3590164b4aef6b85e200030cf1268c24ebdf6cc7a5b97681e437097a64da47a8"
+}

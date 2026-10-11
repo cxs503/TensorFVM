@@ -1,0 +1,72 @@
+{
+  "passed": true,
+  "checks": {
+    "pressure_face_means": {
+      "shape": [
+        36386
+      ],
+      "maximum_absolute_difference": 0.0,
+      "exactly_equal": true
+    },
+    "velocity_face_means": {
+      "shape": [
+        36386,
+        3
+      ],
+      "maximum_absolute_difference": 0.0,
+      "exactly_equal": true
+    },
+    "traction": {
+      "shape": [
+        36386,
+        3
+      ],
+      "maximum_absolute_difference": 0.0,
+      "exactly_equal": true
+    },
+    "current_equation_residual": {
+      "shape": [
+        46592
+      ],
+      "maximum_absolute_difference": 0.0,
+      "exactly_equal": true
+    },
+    "current_consistent_flux": {
+      "shape": [
+        36386
+      ],
+      "maximum_absolute_difference": 0.0,
+      "exactly_equal": true
+    },
+    "full_matrix_random_action": {
+      "shape": [
+        46592
+      ],
+      "maximum_absolute_difference": 0.0,
+      "exactly_equal": true
+    }
+  },
+  "input_sha256": {
+    "input.msh": "123628d05073ba7053ffbbf597ca64eb783820ae53393cc0b28feb6dbe4e2b11",
+    "fields.npz": "fdbc5f3bd36b92ccf3c37f11058528c690a842b0fdde05e12ae90a7003370612"
+  },
+  "source_changes": {
+    "src/tensorfvm/native_face_geometry3d.py": {
+      "historical": null,
+      "current": "5173d0072c42f6a997cd3049be747aa9550fec753fbbe68a087cc7eac0f289ad"
+    },
+    "src/tensorfvm/native_manufactured3d.py": {
+      "historical": "ab105132c07a16d9cf879d22dcec8ecfe8a72247114474b0cb770ae5fcc6e6da",
+      "current": "1a1e04e003d1a01fd2b924d199d1c51166bae8d48c5505a3e0c8e90db0ad3f46"
+    },
+    "src/tensorfvm/native_quadratic3d.py": {
+      "historical": "d5cc37263cf470edbd1f89e21fabdb4488baff2f392b483b0db4820c7be3c070",
+      "current": "3730d69c6c878b3e0fa121701cd04b1747c276e6b9cea85d781608e18f9b5c26"
+    },
+    "src/tensorfvm/native_quadratic_flow3d.py": {
+      "historical": "2b37f92055bac4d0b86016189ae8648022ed1de2872265da53cfe094bdd62e9c",
+      "current": "3e4660be9252d992848e11a5f4a47801fbc7ecff65fae425d78d577f7ead7c5a"
+    }
+  },
+  "scope": "Same 11,648-cell mesh, actual archived numerical fields and one seeded random full-matrix action. Not a general equivalence proof or new flow solve."
+}

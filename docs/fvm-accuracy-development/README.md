@@ -8,7 +8,7 @@ conservation gates. Existing state conversion contracts are preparatory only.
 
 1. Verify independent three-dimensional nonlinear momentum and pressure fields,
    including every velocity component, true current residuals and face fluxes.
-2. Verify mesh convergence on actual body-fitted/mixed meshes. SUBOFF's baseline
+2. Verify mesh convergence on actual body-fitted/mixed meshes. SUBOFF's original linear-reconstruction baseline
    manufactured pressure errors remain 5.4999% and 4.2777%; both fail 3%.
 3. Validate single-domain no-slip laminar cases, wall-resolved/wall-function
    turbulence and physical drag/Cp against independent references, with mesh
@@ -131,3 +131,34 @@ the 6,085-cell result. Small cell volumes can hide large local errors in the
 global volume-weighted L2 norm. Local pressure and wall Cp are not qualified;
 regional error checks and a fixed physical pressure-scale maximum-error check
 must precede any claim that SUBOFF is accurate or ready for overset flow.
+
+## Larger standalone SUBOFF grids and current limits
+
+[The refinement report](../verification-native-suboff-mms/mesh-refinement-report.md)
+now compares converged 6,085 / 11,648 / 24,284-cell triangulated-face quadratic
+runs with unchanged continuum forcing and convergence tolerances. Pressure L2
+decreases **0.759395% → 0.524758% → 0.400184%**. The latest independent audit
+passes **19/19** gates; velocity-vector error is **0.0076091%**.
+
+Maximum pressure error divided by the fixed MMS scale `rho U²` decreases to
+**2.54578%**, with zero cells above that scale's 3% threshold. Wall-owner relative
+pressure L2 remains **8.36176%**, the fixed near-body window **4.06459%**, and
+the fixed tail window **23.4110%**. These denominators differ; the case is not
+declared locally or physically qualified. Refinement helps, but does not yet
+resolve all pressure accuracy gates.
+
+New **61,282 / 172,768-cell** conforming meshes pass geometry and prescribed-P2
+gradient/Hessian reconstruction checks. Neither has a full NS solution yet.
+The 24,284-cell solve took **3995.77 s**, with **17.465 GiB** observed peak RSS;
+3594.30 s was spent in its first full linear solve including assembly. Evaluate
+sparse ordering and reusable preconditioning before advancing full flow on
+61,282 cells, and improve the tail tetrahedron transition. A separate Schur
+linear probe passes its true residual gate in 583 iterations; that does not
+enable or qualify the nonlinear production path.
+
+The historical/current frozen-source probe gives identical face fields, stress,
+current equation residuals, consistent fluxes and one random full-matrix action
+on the archived 11,648-cell case. Numerical hashes differ only in reviewed
+branches/guards; the comparison tool requires an explicit bound compatibility
+probe for mixed source versions. [Targeted checks](pytest-suboff-refinement.txt):
+**19 passed**. Numerical discretization source was not changed in this update.

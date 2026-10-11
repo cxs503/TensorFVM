@@ -1,0 +1,52 @@
+{
+  "cells": 61282,
+  "faces": 223570,
+  "polynomial_reproduction_passed": true,
+  "results": {
+    "free_pressure": {
+      "stencil_diagnostics": {
+        "depth_counts": {
+          "2": 24289,
+          "3": 36596,
+          "4": 397
+        },
+        "samples_min": 18,
+        "samples_max": 49,
+        "normalized_condition_max": 17.104325764214764,
+        "directional_scale_ratio_max": 42.572688861853315,
+        "min_samples": 18,
+        "max_depth": 5,
+        "condition_limit": 100000000.0,
+        "coordinate_scaling": "SVD rotation and directional whitening",
+        "cell_coefficient_nnz": 17728299,
+        "boundary_response_nnz": 0
+      },
+      "maximum_absolute_gradient_error": 2.041533608831969e-12,
+      "maximum_absolute_hessian_error": 8.009374163897576e-09
+    },
+    "prescribed_velocity": {
+      "stencil_diagnostics": {
+        "depth_counts": {
+          "2": 26165,
+          "3": 35117
+        },
+        "samples_min": 18,
+        "samples_max": 54,
+        "normalized_condition_max": 17.104325764214764,
+        "directional_scale_ratio_max": 41.56248787484659,
+        "min_samples": 18,
+        "max_depth": 5,
+        "condition_limit": 100000000.0,
+        "coordinate_scaling": "SVD rotation and directional whitening",
+        "cell_coefficient_nnz": 17399853,
+        "boundary_response_nnz": 1446939
+      },
+      "maximum_absolute_gradient_error": 2.3477886301748185e-12,
+      "maximum_absolute_hessian_error": 1.160660756394094e-08
+    }
+  },
+  "elapsed_seconds": 193.41086112242192,
+  "flow_solved": false,
+  "mesh_convergence_qualified": false,
+  "experimental_accuracy_qualified": false
+}

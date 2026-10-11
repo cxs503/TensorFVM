@@ -1,0 +1,79 @@
+{
+  "axial_stations": 97,
+  "azimuthal": 64,
+  "layers": 12,
+  "first_height_L": 7.525e-05,
+  "growth": 1.2,
+  "layer_heights_L": [
+    7.525e-05,
+    9.03e-05,
+    0.00010836,
+    0.00013003199999999998,
+    0.00015603839999999995,
+    0.00018724607999999997,
+    0.00022469529599999994,
+    0.00026963435519999993,
+    0.00032356122623999987,
+    0.00038827347148799986,
+    0.0004659281657855998,
+    0.0005591137989427198
+  ],
+  "total_thickness_L": 0.0029784327936563187,
+  "adaptive_sampling": {},
+  "gmsh_version": "4.15.2",
+  "interface_triangles": 12160,
+  "structured_hexes": 72192,
+  "cap_wedges": 1536,
+  "conforming_interface": true,
+  "physics_qualified": false,
+  "domain_L": [
+    [
+      -1,
+      3
+    ],
+    [
+      -1,
+      1
+    ],
+    [
+      -1,
+      1
+    ]
+  ],
+  "mesh_audit": {
+    "cells": 172768,
+    "faces": 646050,
+    "minimum_cell_volume": 4.363653352736699e-12,
+    "maximum_relative_closure": 7.863463641269223e-16,
+    "minimum_face_projection": 2.1361946304204777e-12,
+    "maximum_nonorthogonality_degrees": 89.35420564355744,
+    "patch_face_counts": {
+      "farfield": 4096,
+      "inlet": 546,
+      "internal": 628702,
+      "outlet": 546,
+      "wall": 12160
+    }
+  },
+  "exterior_tetrahedra": 99040,
+  "verified_shared_interface_faces": 12160,
+  "generation_and_import_seconds": 526.1404602136463,
+  "affine_audit": {
+    "least_squares_gradient_max_error": 6.1033400555743356e-12,
+    "face_affine_max_error": 1.7763568394002505e-15,
+    "gauss_gradient_max_error": 4.2028158731000076e-11,
+    "constant_vector_divergence_max_error": 7.215273163722667e-12,
+    "affine_vector_divergence_max_error": 6.555644915806624e-12,
+    "global_flux_balance_error": 2.857835138802252e-18
+  },
+  "interface_arbitrary_flux_cancellation": 7.105427357601002e-15,
+  "wall_node_radial_error_L": 3.8163916471489756e-17,
+  "physical_length_m": 4.3561001016,
+  "source_geometry_sha256": "435bd062a90d6881784734fa614f033e880b310111200436e8b13950fbccae02",
+  "faceted_body_volume_L3": 0.008442553722554964,
+  "domain_volume_balance_error_L3": 0.0,
+  "geometry_passed": true,
+  "numerical_flow_qualified": false,
+  "physical_qualified": false,
+  "first_height_m": 0.0003277965326454
+}

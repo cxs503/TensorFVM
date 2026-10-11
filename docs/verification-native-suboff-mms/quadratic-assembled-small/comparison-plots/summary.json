@@ -1,0 +1,55 @@
+{
+  "plane_z_L": 0.03,
+  "face_policy": {
+    "face_policy": "triangulated_native_faces",
+    "merge_coplanar_faces": false,
+    "original_faces": 17275,
+    "reconstructed_faces": 17275,
+    "merged_pairs": 0,
+    "config_path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/quadratic-assembled-small/config.json",
+    "config_sha256": "4271dda40b2b304108fa46671a11d9ac76fe39d159efd33729671c91f47b7184"
+  },
+  "section_polygons": 624,
+  "pressure_common_limits": [
+    -0.0345595773542232,
+    0.01881702872962805
+  ],
+  "speed_common_limits": [
+    0.8370093624904758,
+    1.0689969830164627
+  ],
+  "pressure_alignment": {
+    "kind": "subtract each field own full-domain cell-volume-weighted mean",
+    "numerical_mean": 1.461981676744038e-05,
+    "reference_mean": 9.375929859169637e-06,
+    "numerical_to_reference_gauge_offset": -5.243886908270743e-06
+  },
+  "audit_passed": true,
+  "audit_sha256": "2fda9ea641bc4f6e45c2997540d57b756f4e6bf5faf3ae26ec705d7983989916",
+  "audit_current_equation_residuals": {
+    "momentum_residual": 5.328766412575752e-10,
+    "native_divergence_max": 7.715664996056498e-09,
+    "current_reconstructed_divergence_max": 1.9287208218456427e-08,
+    "face_flux_consistency_max": 8.893183274267438e-10
+  },
+  "audit_relative_L2_errors": {
+    "velocity": 0.00015873175792073955,
+    "pressure": 0.007593947853783147,
+    "velocity_x": 0.00020296541290737595,
+    "velocity_y": 9.226876894267741e-05,
+    "velocity_z": 0.00023718565745768844
+  },
+  "experimental_accuracy_qualified": false,
+  "representation": "identical true native section polygons; actual numerical/reference values evaluated at same corresponding native cell centroid; no smoothing, plane interpolation or geometric projection",
+  "display_window_L": {
+    "x": [
+      -0.05,
+      1.08
+    ],
+    "y": [
+      -0.13,
+      0.13
+    ]
+  },
+  "colour_scale_population": "actual native section polygons intersecting the displayed rectangular window; cells are not volume-clipped"
+}
