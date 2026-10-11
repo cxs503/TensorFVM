@@ -1,0 +1,37 @@
+{
+  "scope": "same-grid operator change, not a mesh-convergence series or physical validation",
+  "cells": 9068,
+  "plane_z": 0.01894220174036791,
+  "display_window": {
+    "x": [
+      0.9,
+      1.025
+    ],
+    "y": [
+      -0.04,
+      0.04
+    ]
+  },
+  "pressure_limits": [
+    -0.011560251255371672,
+    0.011530342282557195
+  ],
+  "error_limits": [
+    0,
+    0.0136198118390898
+  ],
+  "global_gauge_only": true,
+  "representation": "exact cell section polygons coloured by actual cell centroid values; no smoothing or plane interpolation",
+  "input_sha256": {
+    "docs/verification-native-suboff-mms/tail-transition-quadratic/config.json": "bc8f0c05dd7731c11097f740b0eb0a341fdf0e7c6891a8e2000e2d583a19090b",
+    "docs/verification-native-suboff-mms/tail-transition-quadratic/input.msh": "afebe7d4b6f96eae92810debfa485f591d58323c477b28cda83a60df59ac70e1",
+    "docs/verification-native-suboff-mms/tail-transition-quadratic/fields.npz": "a5524548e4ce43359630ab6699e4bc3f7cbcc845c5f2d9f2b3d71dcbc2444563",
+    "docs/verification-native-suboff-mms/tail-transition-quadratic/result.json": "723b0d2e9746f8127cc06de493e48b399cd119af76b4280999667316f179ae3b",
+    "docs/verification-native-suboff-mms/tail-transition-quadratic/audit/audit.json": "fab094889b403ca19a6c350fe1b590a51f31718197103da95f97d2ce37c2e5f6",
+    "docs/verification-native-suboff-mms/tail-transition-cubic-viscosity/config.json": "28f96d456b6802928262f85922d40b0f4bedad72d14a169a2149cbe76644ef05",
+    "docs/verification-native-suboff-mms/tail-transition-cubic-viscosity/input.msh": "afebe7d4b6f96eae92810debfa485f591d58323c477b28cda83a60df59ac70e1",
+    "docs/verification-native-suboff-mms/tail-transition-cubic-viscosity/fields.npz": "3ab88cbba6a94c5b179dff9a63b25f9d6718dcf23d6d49185a2730c9b66e94a1",
+    "docs/verification-native-suboff-mms/tail-transition-cubic-viscosity/result.json": "790ba4d7b23ef36cefe7ed850855804481240e9d9735efa3adcc798719a91a2b",
+    "docs/verification-native-suboff-mms/tail-transition-cubic-viscosity/audit/audit.json": "e5ab6306ad686d041082fcd35ccbd6ca364428f869797ded839ebc6aaa0883e9"
+  }
+}

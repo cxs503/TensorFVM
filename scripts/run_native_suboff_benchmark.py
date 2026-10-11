@@ -45,9 +45,13 @@ def main():
     p.add_argument('--lu-ordering', choices=['COLAMD','MMD_ATA','MMD_AT_PLUS_A','NATURAL'], default='COLAMD')
     p.add_argument('--reconstruction', choices=['linear', 'quadratic'], default='linear')
     p.add_argument('--quadratic-linear-solver', choices=['matrix-free','assembled'], default='matrix-free')
+    p.add_argument('--viscous-reconstruction', choices=['quadratic','cubic'], default='quadratic',
+                   help='Viscous face gradient only; requires quadratic flow reconstruction')
     p.add_argument('--merge-coplanar-faces', action='store_true', help='Recover compatible planar quad faces; preserve mixed-cell interfaces')
     p.add_argument('--initial-run', type=Path, help='Optional previous numerical run on identical mesh; never analytic truth')
     args = p.parse_args()
+    if args.viscous_reconstruction != 'quadratic' and args.reconstruction != 'quadratic':
+        p.error('Cubic viscous reconstruction requires quadratic flow reconstruction')
     if args.reconstruction == 'quadratic' and args.linear_method != 'direct':
         p.error('Quadratic mode currently requires direct sparse LU/preconditioned GMRES')
     if args.reconstruction == 'quadratic' and args.mode != 'manufactured':
@@ -90,7 +94,8 @@ def main():
             initial_binding['producer_converged']=json.loads(initial_result.read_text())['converged']
             initial_binding['producer_result_sha256']=digest(out/'initial-producer-result.json')
     write(out / 'config.json', dict(mode=args.mode, reconstruction=args.reconstruction,
-        initial_state=initial_binding, quadratic_linear_solver=args.quadratic_linear_solver, merge_coplanar_faces=args.merge_coplanar_faces, settings=asdict(settings),
+        initial_state=initial_binding, quadratic_linear_solver=args.quadratic_linear_solver,
+        viscous_reconstruction=args.viscous_reconstruction, merge_coplanar_faces=args.merge_coplanar_faces, settings=asdict(settings),
         mesh_sha256=digest(out / 'input.msh'), source_sha256=bindings,
         experimental_accuracy_qualified=False,
         manufactured_definition='independent continuum ABC velocity, trigonometric pressure and analytic NS forcing; all velocity boundaries manufactured including hull',
@@ -120,6 +125,7 @@ def main():
         solver_type=NativeQuadraticSteadySolver3D if args.reconstruction=='quadratic' else NativeSteadySolver3D
         extra={} if args.reconstruction=='linear' else dict(
             quadratic_linear_solver=args.quadratic_linear_solver,
+            viscous_reconstruction=args.viscous_reconstruction,
             linear_callback=lambda event: print(json.dumps(event),flush=True),
             boundary_velocity_means=exact_boundary_velocity_means(mesh,field),
             boundary_velocity_gradients=field(mesh.face_centers)['velocity_gradient'])
@@ -167,7 +173,10 @@ def main():
             errors[f'velocity_{"xyz"[axis]}'] = volume_weighted_error(result['velocity'][:, axis], exact['velocity'][:, axis], mesh.cell_volumes)
         errors['pressure'] = volume_weighted_error(result['pressure'], exact['pressure'], mesh.cell_volumes, remove_mean=True)
     np.savez_compressed(out / 'fields.npz', **fields)
-    summary = dict(mode=args.mode, reconstruction=args.reconstruction, cells=len(mesh.cells), geometry=mesh.audit(),
+    summary = dict(mode=args.mode, reconstruction=args.reconstruction,
+        viscous_reconstruction=args.viscous_reconstruction,
+        viscous_stencil_diagnostics=getattr(getattr(solver,'viscous_gradient',None),'stencil_diagnostics',None),
+        cells=len(mesh.cells), geometry=mesh.audit(),
         converged=result['converged'], relative_L2_errors=errors,
         manufactured_pointwise_accuracy_passed=bool(exact is not None and result['converged'] and all(x < .03 for x in errors.values())),
         mesh_convergence_qualified=False, experimental_accuracy_qualified=False,
@@ -184,6 +193,7 @@ def main():
     (out / 'report.md').write_text(f'''# Native 3D SUBOFF {args.mode} calculation
 
 Reconstruction: **{args.reconstruction}**. Initial state: `{initial_binding}`.
+Viscous reconstruction: **{args.viscous_reconstruction}** (when quadratic flow is selected).
 
 Actual mixed-cell body-fitted mesh: {len(mesh.cells):,} control volumes.
 Converged: **{result['converged']}**. Independent manufactured field gate: **{summary['manufactured_pointwise_accuracy_passed']}**.

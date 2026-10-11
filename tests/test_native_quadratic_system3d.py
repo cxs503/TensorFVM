@@ -21,10 +21,12 @@ def test_reject_pressure_dirichlet_with_all_fixed_boundary_fluxes():
 @pytest.mark.parametrize('mixed',[False,True])
 @pytest.mark.parametrize('prescribed_mean',[False,True])
 @pytest.mark.parametrize('merged',[False,True])
-def test_assembled_full_equations_match_original_residual_with_frozen_flux(mixed,prescribed_mean,merged):
+@pytest.mark.parametrize('viscous_reconstruction',['quadratic','cubic'])
+def test_assembled_full_equations_match_original_residual_with_frozen_flux(mixed,prescribed_mean,merged,viscous_reconstruction):
     m=merge_coplanar_faces(planar_mesh(mixed))[0] if merged else actual_mesh(mixed)
     exact=abc_fields(m.cell_centers);boundary=abc_fields(m.face_centers)
     solver=NativeQuadraticSteadySolver3D(m,m.neighbor<0,boundary['velocity'],quadratic_linear_solver='assembled',
+        viscous_reconstruction=viscous_reconstruction,
         boundary_velocity_means=exact_boundary_velocity_means(m,abc_fields) if prescribed_mean else None,
         boundary_velocity_gradients=boundary['velocity_gradient'],boundary_flux=exact_boundary_flux(m,abc_fields),
         body_force=exact['acceleration'],gauge_value=exact['pressure'][0],settings=NativeSteadySettings(viscosity=.1))
@@ -44,13 +46,14 @@ def test_assembled_full_equations_match_original_residual_with_frozen_flux(mixed
 
 @pytest.mark.parametrize('merged',[False,True])
 @pytest.mark.parametrize('ordering',['COLAMD','MMD_AT_PLUS_A'])
-def test_assembled_nonlinear_mixed_mesh_converges_from_numerical_seed(merged,ordering):
+@pytest.mark.parametrize('viscous_reconstruction',['quadratic','cubic'])
+def test_assembled_nonlinear_mixed_mesh_converges_from_numerical_seed(merged,ordering,viscous_reconstruction):
     m=merge_coplanar_faces(planar_mesh(True))[0] if merged else actual_mesh(True)
     exact=abc_fields(m.cell_centers);boundary=abc_fields(m.face_centers)
     settings=NativeSteadySettings(viscosity=.1,nonlinear_tolerance=1e-9,linear_tolerance=1e-11,max_iterations=100,relaxation=.8,lu_ordering=ordering)
     kwargs=dict(settings=settings,body_force=exact['acceleration'],boundary_flux=exact_boundary_flux(m,abc_fields),gauge_value=exact['pressure'][0])
     seed=NativeSteadySolver3D(m,m.neighbor<0,boundary['velocity'],**kwargs).solve();assert seed['converged']
-    solver=NativeQuadraticSteadySolver3D(m,m.neighbor<0,boundary['velocity'],**kwargs,quadratic_linear_solver='assembled',boundary_velocity_means=exact_boundary_velocity_means(m,abc_fields),boundary_velocity_gradients=boundary['velocity_gradient'])
+    solver=NativeQuadraticSteadySolver3D(m,m.neighbor<0,boundary['velocity'],**kwargs,quadratic_linear_solver='assembled',viscous_reconstruction=viscous_reconstruction,boundary_velocity_means=exact_boundary_velocity_means(m,abc_fields),boundary_velocity_gradients=boundary['velocity_gradient'])
     solver.u=seed['velocity'].copy();solver.p=seed['pressure'].copy()
     result=solver.solve();assert result['converged'],result['history'][-1]
     assert volume_weighted_error(result['velocity'],exact['velocity'],m.cell_volumes)<.03

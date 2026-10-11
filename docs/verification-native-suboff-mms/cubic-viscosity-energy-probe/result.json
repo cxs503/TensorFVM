@@ -1,0 +1,68 @@
+{
+  "quadratic": {
+    "eigenvalues": [
+      -0.4402088069843454,
+      -0.3872392505700256,
+      -0.3430594841254435
+    ],
+    "eigenpair_residuals": [
+      1.7145130231622327e-15,
+      1.395973561647787e-15,
+      2.1354211155950083e-11
+    ],
+    "negative_diagonal_count": 0,
+    "largest_mode_cell": 8732,
+    "largest_mode_center": [
+      0.2709472033287144,
+      0.05784047843439377,
+      0.01150518649575734
+    ],
+    "seconds": 3.779749020934105,
+    "nnz": 5665475
+  },
+  "cubic": {
+    "eigenvalues": [
+      -0.5590069107149302,
+      -0.4030784882965774,
+      -0.2670107554293736
+    ],
+    "eigenpair_residuals": [
+      1.6289168578248908e-15,
+      1.6511700736484836e-15,
+      1.836365197714832e-11
+    ],
+    "negative_diagonal_count": 0,
+    "largest_mode_cell": 832,
+    "largest_mode_center": [
+      -0.003580795889403097,
+      -0.032702290892696904,
+      -0.0017046763938938388
+    ],
+    "seconds": 29.151354840025306,
+    "nnz": 8770030
+  },
+  "scope": "Symmetric part of integrated homogeneous velocity diffusion, scaled by sqrt(abs(diagonal)); negative energy does not by itself prove a pressure-coupling instability.",
+  "mesh_sha256": "afebe7d4b6f96eae92810debfa485f591d58323c477b28cda83a60df59ac70e1",
+  "sources": {
+    "src/tensorfvm/backend_registry.py": "e68b95fdb7c457b921b2f1c9e3920f80ebdcdb104ca8077e10e96d2a4182a13a",
+    "src/tensorfvm/solver.py": "7c3613f23791c6a22825bd2ba0467e2bb84013ecaedc974901452b1864a2868e",
+    "src/tensorfvm/body_fitted.py": "4e633fa42c1171cf57aca5bf930827f97a30dada4e405bf3ac9c1068ba1bb7a7",
+    "src/tensorfvm/mesh3d.py": "ad7fe310537e70dcb65a34b42b335ea8bd7f9abd2bf24453a907c7f43a2b7c56",
+    "src/tensorfvm/runtime.py": "ff383730f34f82030f28da424819eea670f28c663d5be834f30bebc6c74a2da5",
+    "src/tensorfvm/solver3d.py": "95d4711fd52ad9f2d8dd7300a999814633de986a2d579dcc997d17aa01603a37",
+    "src/tensorfvm/body_fitted3d.py": "dedd408c59096f559b2345f819541450768d4ce37f062e405b4335e4d00de9e4",
+    "src/tensorfvm/multi_element.py": "c89faef53a8a8d429920a9f73805b91f28df3aa48bda762e7dd6bb2520fe8afc",
+    "src/tensorfvm/mesh_api.py": "72f4f9d724084df335dca0e561877c5423c47a7f8bfffe950d631845e2dce22d",
+    "src/tensorfvm/__init__.py": "9f8d4d3a249d695e4e841e4c9d11d7158db8a2d33e2928d3565794718e2aba3c",
+    "src/tensorfvm/native_mesh3d.py": "59833e84499f7c5b4572b9d2f96020024d46b26fc91ee4dc2111300872b31470",
+    "src/tensorfvm/native_operators3d.py": "190ad3e4478d11bdd9332c38f8a7441530e9993c4459855722d15abe2fd519e0",
+    "src/tensorfvm/native_viscous3d.py": "910f6e806a7f588024f421f984bccd24214798ee7fb4bda415ca7de0c6aa8662",
+    "src/tensorfvm/native_collocated3d.py": "7f4b6de699042d0c8841569ac6ddb3dd901dd8384dd2236590594bbcee28f402",
+    "src/tensorfvm/native_face_geometry3d.py": "5173d0072c42f6a997cd3049be747aa9550fec753fbbe68a087cc7eac0f289ad",
+    "src/tensorfvm/native_quadratic3d.py": "3730d69c6c878b3e0fa121701cd04b1747c276e6b9cea85d781608e18f9b5c26",
+    "src/tensorfvm/native_cubic_gradient3d.py": "3dbf7449ab1b576e13e4f85441470bb2f55c2d5fde32f23e23e06f4e3c6c5b03",
+    "src/tensorfvm/native_quadratic_maps3d.py": "c7e9405930105d2a08eeae11b05aa48d07b459e9b3ac9ceac7a5ef36f6b33edd",
+    "src/tensorfvm/native_quadratic_system3d.py": "635ba4ff1870ea211f77d3dfd7b8d869751f6910e0b1e09c338fb9e03a44be49",
+    "src/tensorfvm/native_quadratic_flow3d.py": "1a8aa755a6dbc5ecb9a09d5eb12da8aeab19e0916216d67e7a75bedc9d178139"
+  }
+}
