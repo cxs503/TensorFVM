@@ -1,0 +1,11 @@
+{
+  "output": "docs/verification-suboff-wall-resolved-mesh/attempt-01",
+  "chord_tolerance": 0.0001,
+  "minimum_spacing": 1e-05,
+  "maximum_spacing": 0.035,
+  "azimuthal": 48,
+  "layers": 24,
+  "first_height": 4e-06,
+  "growth": 1.3,
+  "far_size": 0.3
+}

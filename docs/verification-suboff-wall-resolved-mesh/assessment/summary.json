@@ -1,0 +1,51 @@
+{
+  "native_geometry_sha256": "8b21f28c2443701702ff7e7e9508da5645a73245122dfb9938045972dac5b0f0",
+  "case_summary_sha256": "341df5c5bbce565b959259fdf4aab17c7e5c12205b8071b83f28202581d50efd",
+  "grouped_quality_sha256": "a40a48c45636ddb9c1b3e69878f377bd98f5f07d0dd6c476738bf9c3cca12a23",
+  "cell_positivity_by_type": {
+    "hexahedron": {
+      "cells": 78336,
+      "minimum_volume_L3": 3.8284348694441666e-13,
+      "positive_volumes": true
+    },
+    "tetra": {
+      "cells": 22638,
+      "minimum_volume_L3": 1.0316314116779282e-09,
+      "positive_volumes": true
+    },
+    "wedge": {
+      "cells": 2304,
+      "minimum_volume_L3": 1.1786351867291302e-13,
+      "positive_volumes": true
+    }
+  },
+  "wall_centroid_projection_diagnostic": {
+    "minimum_face_normal_center_distance_L": 1.967102877583465e-06,
+    "p50_face_normal_center_distance_L": 1.9957026316614117e-06,
+    "p95_face_normal_center_distance_L": 1.9962387392782512e-06,
+    "maximum_face_normal_center_distance_L": 1.997311274645267e-06,
+    "definition": "Projection from native adjacent cell centroid onto each planar wall facet normal; not an exact nearest-surface SST distance"
+  },
+  "yplus_planning": [
+    {
+      "observable": "Cp",
+      "Re_L": 12000000.0,
+      "assumed_Cf": 0.003,
+      "assumed_first_cell_center_distance_L": 2e-06,
+      "estimated_yplus": 0.9295160030897801,
+      "actual_wall_tau_available": false
+    },
+    {
+      "observable": "drag",
+      "Re_L": 13218056.8,
+      "assumed_Cf": 0.003,
+      "assumed_first_cell_center_distance_L": 2e-06,
+      "estimated_yplus": 1.023866277112474,
+      "actual_wall_tau_available": false
+    }
+  ],
+  "geometry_positive_closed_conforming": true,
+  "actual_yplus_qualified": false,
+  "SST_flow_qualified": false,
+  "experimental_accuracy_qualified": false
+}
