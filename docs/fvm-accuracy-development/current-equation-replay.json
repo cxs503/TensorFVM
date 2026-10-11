@@ -1,0 +1,40 @@
+{
+  "producer_sources_verified": true,
+  "replay_source_sha256": "03ef9f93d5ccfafa295af897f2fc5153243533c79028e37a7295917a83fc3bbc",
+  "cases": [
+    {
+      "n": 3,
+      "raw_fields_sha256": "a60799d74ec77ee02d90c201d639d8c28d9d645d622f063361d49daa7aafaf5d",
+      "metrics": {
+        "momentum_residual": 4.343827657512448e-11,
+        "native_divergence_max": 4.329755304288697e-12,
+        "current_reconstructed_divergence_max": 1.6392855822777722e-11,
+        "face_flux_consistency_max": 2.1156900062026868e-12
+      },
+      "all_current_equation_gates_pass": true
+    },
+    {
+      "n": 6,
+      "raw_fields_sha256": "b8be723d2ebba31557b5344eda7d357d82588eb81f60d9c1bad8df48e056bbbc",
+      "metrics": {
+        "momentum_residual": 2.8911845997019665e-11,
+        "native_divergence_max": 2.8982316546688503e-11,
+        "current_reconstructed_divergence_max": 2.8815949626448423e-11,
+        "face_flux_consistency_max": 1.3941257828944164e-13
+      },
+      "all_current_equation_gates_pass": true
+    },
+    {
+      "n": 12,
+      "raw_fields_sha256": "550a5b55d8d6718016840f1f13471665bce64760a733cfb0929c1310aed908a3",
+      "metrics": {
+        "momentum_residual": 3.1380001084462146e-12,
+        "native_divergence_max": 3.9899583637037495e-11,
+        "current_reconstructed_divergence_max": 3.961293792986709e-11,
+        "face_flux_consistency_max": 3.920213097769889e-14
+      },
+      "all_current_equation_gates_pass": true
+    }
+  ],
+  "passed": true
+}

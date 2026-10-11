@@ -1,0 +1,60 @@
+{
+  "reconstruction": "quadratic",
+  "kind": "Independent fixed-parameter 3D nonlinear ABC manufactured NS",
+  "amplitude": 0.5,
+  "wavenumber": 0.7,
+  "kinematic_viscosity": 0.1,
+  "density": 1.0,
+  "logical_domain": [
+    [
+      0,
+      1
+    ],
+    [
+      0,
+      1
+    ],
+    [
+      0,
+      1
+    ]
+  ],
+  "coordinate_transform": [
+    [
+      1.0,
+      0.18,
+      0.12
+    ],
+    [
+      0.0,
+      1.0,
+      0.2
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "grids": [
+    6,
+    12,
+    24
+  ],
+  "velocity_boundary": "analytic Dirichlet on all physical facets",
+  "native_boundary_flux": "order-8 Duffy triangle Gauss quadrature of the analytic velocity",
+  "body_force": "independent differential analytic acceleration at actual cell centroids",
+  "initial_velocity": "zero",
+  "initial_pressure": "constant gauge p_exact(first cell)",
+  "solver": {
+    "convection_order": 2,
+    "bounded_convection": false,
+    "nonlinear_tolerance": 1e-09,
+    "linear_tolerance": 1e-11,
+    "max_iterations": 100,
+    "relaxation": 0.8
+  },
+  "error_norm": "volume-weighted relative L2 at actual cell centroids; pressure means removed independently",
+  "mms_error_limit": 0.03,
+  "suboff_physics_passed": false
+}

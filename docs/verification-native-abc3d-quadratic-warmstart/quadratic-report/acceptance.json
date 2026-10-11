@@ -1,0 +1,901 @@
+{
+  "current_residual_and_change_gates_passed": true,
+  "all_metric_gates_passed": true,
+  "all_grids_nonlinearly_converged": true,
+  "all_error_metrics_strictly_decrease": true,
+  "finest_grid_all_errors_below_three_percent": true,
+  "manufactured_spatial_verification_passed": true,
+  "suboff_physical_benchmark_passed": false,
+  "metrics": [
+    {
+      "name": "producer-source-bindings-missing",
+      "value": 0,
+      "limit": 0.5,
+      "description": "At least one imported source binding required",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "producer-source-hash-mismatches",
+      "value": 0,
+      "limit": 0.5,
+      "description": "Imported numerical source snapshot checks",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-3-raw-field-missing",
+      "value": 0,
+      "limit": 0.5,
+      "description": "Raw numerical field availability",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-3-recorded-nonlinear-failure",
+      "value": 0,
+      "limit": 0.5,
+      "description": "Recorded nonlinear completion",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-3-baseline-initialization-missing",
+      "value": 0,
+      "limit": 0.5,
+      "description": "Numerical warm-start raw fields and history required",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-3-baseline-initialization-failure",
+      "value": 0,
+      "limit": 0.5,
+      "description": "Independently converged finite baseline from zero",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-3-baseline-last-velocity_change",
+      "value": 2.341744068420666e-10,
+      "limit": 1e-09,
+      "description": "Baseline current residual/change before numerical initialization",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-3-baseline-last-pressure_change",
+      "value": 3.3540826339775654e-10,
+      "limit": 1e-09,
+      "description": "Baseline current residual/change before numerical initialization",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-3-baseline-last-flux_change",
+      "value": 7.594255573014715e-11,
+      "limit": 1e-09,
+      "description": "Baseline current residual/change before numerical initialization",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-3-baseline-last-momentum_residual",
+      "value": 2.5734304459002146e-10,
+      "limit": 1e-09,
+      "description": "Baseline current residual/change before numerical initialization",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-3-baseline-last-native_divergence_max",
+      "value": 1.1094500318442613e-11,
+      "limit": 1e-09,
+      "description": "Baseline current residual/change before numerical initialization",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-3-baseline-last-current_reconstructed_divergence_max",
+      "value": 1.2076683403305921e-11,
+      "limit": 1e-09,
+      "description": "Baseline current residual/change before numerical initialization",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-3-baseline-last-face_flux_consistency_max",
+      "value": 1.751099265590028e-13,
+      "limit": 1e-09,
+      "description": "Baseline current residual/change before numerical initialization",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-3-velocity_vector",
+      "value": 0.000258737356831386,
+      "limit": 0.03,
+      "description": "Replayed pointwise volume-weighted relative L2",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-3-pressure_mean_removed",
+      "value": 0.01501255406544264,
+      "limit": 0.03,
+      "description": "Replayed pointwise volume-weighted relative L2",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-3-velocity_x",
+      "value": 0.00026917464119643667,
+      "limit": 0.03,
+      "description": "Replayed pointwise volume-weighted relative L2",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-3-velocity_y",
+      "value": 0.00026665288326807005,
+      "limit": 0.03,
+      "description": "Replayed pointwise volume-weighted relative L2",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-3-velocity_z",
+      "value": 0.00023918448067806132,
+      "limit": 0.03,
+      "description": "Replayed pointwise volume-weighted relative L2",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-3-reported-error-replay",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "Raw error versus producer ledger",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-3-last-velocity_change",
+      "value": 1.1104863164556966e-10,
+      "limit": 1e-09,
+      "description": "Saved current-operator residual/change; not reconstructed by reporter",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-3-last-pressure_change",
+      "value": 8.548497072117589e-10,
+      "limit": 1e-09,
+      "description": "Saved current-operator residual/change; not reconstructed by reporter",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-3-last-flux_change",
+      "value": 2.7939029007585457e-11,
+      "limit": 1e-09,
+      "description": "Saved current-operator residual/change; not reconstructed by reporter",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-3-last-momentum_residual",
+      "value": 4.343827657512448e-11,
+      "limit": 1e-09,
+      "description": "Saved current-operator residual/change; not reconstructed by reporter",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-3-last-native_divergence_max",
+      "value": 4.329755304288697e-12,
+      "limit": 1e-09,
+      "description": "Saved current-operator residual/change; not reconstructed by reporter",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-3-last-current_reconstructed_divergence_max",
+      "value": 1.6392855822777722e-11,
+      "limit": 1e-09,
+      "description": "Saved current-operator residual/change; not reconstructed by reporter",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-3-last-face_flux_consistency_max",
+      "value": 2.1156900062026868e-12,
+      "limit": 1e-09,
+      "description": "Saved current-operator residual/change; not reconstructed by reporter",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-raw-field-missing",
+      "value": 0,
+      "limit": 0.5,
+      "description": "Raw numerical field availability",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-recorded-nonlinear-failure",
+      "value": 0,
+      "limit": 0.5,
+      "description": "Recorded nonlinear completion",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-baseline-initialization-missing",
+      "value": 0,
+      "limit": 0.5,
+      "description": "Numerical warm-start raw fields and history required",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-baseline-initialization-failure",
+      "value": 0,
+      "limit": 0.5,
+      "description": "Independently converged finite baseline from zero",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-baseline-last-velocity_change",
+      "value": 5.215113815526754e-11,
+      "limit": 1e-09,
+      "description": "Baseline current residual/change before numerical initialization",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-baseline-last-pressure_change",
+      "value": 4.327012581257227e-10,
+      "limit": 1e-09,
+      "description": "Baseline current residual/change before numerical initialization",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-baseline-last-flux_change",
+      "value": 4.717473008025242e-11,
+      "limit": 1e-09,
+      "description": "Baseline current residual/change before numerical initialization",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-baseline-last-momentum_residual",
+      "value": 3.816282225010794e-11,
+      "limit": 1e-09,
+      "description": "Baseline current residual/change before numerical initialization",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-baseline-last-native_divergence_max",
+      "value": 1.0749532514120484e-10,
+      "limit": 1e-09,
+      "description": "Baseline current residual/change before numerical initialization",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-baseline-last-current_reconstructed_divergence_max",
+      "value": 1.0760492497041705e-10,
+      "limit": 1e-09,
+      "description": "Baseline current residual/change before numerical initialization",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-baseline-last-face_flux_consistency_max",
+      "value": 4.53156075171208e-15,
+      "limit": 1e-09,
+      "description": "Baseline current residual/change before numerical initialization",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-velocity_vector",
+      "value": 1.8038623599416533e-05,
+      "limit": 0.03,
+      "description": "Replayed pointwise volume-weighted relative L2",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-pressure_mean_removed",
+      "value": 0.005597523377487791,
+      "limit": 0.03,
+      "description": "Replayed pointwise volume-weighted relative L2",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-velocity_x",
+      "value": 2.0010812216471803e-05,
+      "limit": 0.03,
+      "description": "Replayed pointwise volume-weighted relative L2",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-velocity_y",
+      "value": 1.650993108275689e-05,
+      "limit": 0.03,
+      "description": "Replayed pointwise volume-weighted relative L2",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-velocity_z",
+      "value": 1.773745330469668e-05,
+      "limit": 0.03,
+      "description": "Replayed pointwise volume-weighted relative L2",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-reported-error-replay",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "Raw error versus producer ledger",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-last-velocity_change",
+      "value": 4.456518579067514e-11,
+      "limit": 1e-09,
+      "description": "Saved current-operator residual/change; not reconstructed by reporter",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-last-pressure_change",
+      "value": 6.881599385733204e-10,
+      "limit": 1e-09,
+      "description": "Saved current-operator residual/change; not reconstructed by reporter",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-last-flux_change",
+      "value": 3.9267776013607256e-11,
+      "limit": 1e-09,
+      "description": "Saved current-operator residual/change; not reconstructed by reporter",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-last-momentum_residual",
+      "value": 2.8911845997019665e-11,
+      "limit": 1e-09,
+      "description": "Saved current-operator residual/change; not reconstructed by reporter",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-last-native_divergence_max",
+      "value": 2.8982316546688503e-11,
+      "limit": 1e-09,
+      "description": "Saved current-operator residual/change; not reconstructed by reporter",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-last-current_reconstructed_divergence_max",
+      "value": 2.8815949626448423e-11,
+      "limit": 1e-09,
+      "description": "Saved current-operator residual/change; not reconstructed by reporter",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-last-face_flux_consistency_max",
+      "value": 1.3941257828944164e-13,
+      "limit": 1e-09,
+      "description": "Saved current-operator residual/change; not reconstructed by reporter",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-12-raw-field-missing",
+      "value": 0,
+      "limit": 0.5,
+      "description": "Raw numerical field availability",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-12-recorded-nonlinear-failure",
+      "value": 0,
+      "limit": 0.5,
+      "description": "Recorded nonlinear completion",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-12-baseline-initialization-missing",
+      "value": 0,
+      "limit": 0.5,
+      "description": "Numerical warm-start raw fields and history required",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-12-baseline-initialization-failure",
+      "value": 0,
+      "limit": 0.5,
+      "description": "Independently converged finite baseline from zero",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-12-baseline-last-velocity_change",
+      "value": 2.4059136145900525e-11,
+      "limit": 1e-09,
+      "description": "Baseline current residual/change before numerical initialization",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-12-baseline-last-pressure_change",
+      "value": 6.270706448453057e-10,
+      "limit": 1e-09,
+      "description": "Baseline current residual/change before numerical initialization",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-12-baseline-last-flux_change",
+      "value": 2.572767733352112e-11,
+      "limit": 1e-09,
+      "description": "Baseline current residual/change before numerical initialization",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-12-baseline-last-momentum_residual",
+      "value": 6.596805606464795e-12,
+      "limit": 1e-09,
+      "description": "Baseline current residual/change before numerical initialization",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-12-baseline-last-native_divergence_max",
+      "value": 4.5738163256814314e-11,
+      "limit": 1e-09,
+      "description": "Baseline current residual/change before numerical initialization",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-12-baseline-last-current_reconstructed_divergence_max",
+      "value": 4.573628975546026e-11,
+      "limit": 1e-09,
+      "description": "Baseline current residual/change before numerical initialization",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-12-baseline-last-face_flux_consistency_max",
+      "value": 8.575466151371642e-16,
+      "limit": 1e-09,
+      "description": "Baseline current residual/change before numerical initialization",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-12-velocity_vector",
+      "value": 3.865506161454697e-06,
+      "limit": 0.03,
+      "description": "Replayed pointwise volume-weighted relative L2",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-12-pressure_mean_removed",
+      "value": 0.0014319901537093503,
+      "limit": 0.03,
+      "description": "Replayed pointwise volume-weighted relative L2",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-12-velocity_x",
+      "value": 4.075177530656235e-06,
+      "limit": 0.03,
+      "description": "Replayed pointwise volume-weighted relative L2",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-12-velocity_y",
+      "value": 3.6322761611717696e-06,
+      "limit": 0.03,
+      "description": "Replayed pointwise volume-weighted relative L2",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-12-velocity_z",
+      "value": 3.917278717293236e-06,
+      "limit": 0.03,
+      "description": "Replayed pointwise volume-weighted relative L2",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-12-reported-error-replay",
+      "value": 4.235164736271502e-22,
+      "limit": 1e-12,
+      "description": "Raw error versus producer ledger",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-12-last-velocity_change",
+      "value": 0.0,
+      "limit": 1e-09,
+      "description": "Saved current-operator residual/change; not reconstructed by reporter",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-12-last-pressure_change",
+      "value": 0.0,
+      "limit": 1e-09,
+      "description": "Saved current-operator residual/change; not reconstructed by reporter",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-12-last-flux_change",
+      "value": 1.1351964513418996e-13,
+      "limit": 1e-09,
+      "description": "Saved current-operator residual/change; not reconstructed by reporter",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-12-last-momentum_residual",
+      "value": 3.1380001084462146e-12,
+      "limit": 1e-09,
+      "description": "Saved current-operator residual/change; not reconstructed by reporter",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-12-last-native_divergence_max",
+      "value": 3.9899583637037495e-11,
+      "limit": 1e-09,
+      "description": "Saved current-operator residual/change; not reconstructed by reporter",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-12-last-current_reconstructed_divergence_max",
+      "value": 3.961293792986709e-11,
+      "limit": 1e-09,
+      "description": "Saved current-operator residual/change; not reconstructed by reporter",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-12-last-face_flux_consistency_max",
+      "value": 3.920213097769889e-14,
+      "limit": 1e-09,
+      "description": "Saved current-operator residual/change; not reconstructed by reporter",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-3-to-6-velocity_vector-ratio",
+      "value": 0.06971789393045376,
+      "limit": 1.0,
+      "description": "Strict actual-grid refinement decrease",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-3-to-6-velocity_x-ratio",
+      "value": 0.0743413723058274,
+      "limit": 1.0,
+      "description": "Strict actual-grid refinement decrease",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-3-to-6-velocity_y-ratio",
+      "value": 0.06191544182989094,
+      "limit": 1.0,
+      "description": "Strict actual-grid refinement decrease",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-3-to-6-velocity_z-ratio",
+      "value": 0.07415804426112002,
+      "limit": 1.0,
+      "description": "Strict actual-grid refinement decrease",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-3-to-6-pressure_mean_removed-ratio",
+      "value": 0.3728561677837828,
+      "limit": 1.0,
+      "description": "Strict actual-grid refinement decrease",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-to-12-velocity_vector-ratio",
+      "value": 0.21429052722069816,
+      "limit": 1.0,
+      "description": "Strict actual-grid refinement decrease",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-to-12-velocity_x-ratio",
+      "value": 0.20364878179716128,
+      "limit": 1.0,
+      "description": "Strict actual-grid refinement decrease",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-to-12-velocity_y-ratio",
+      "value": 0.22000553139590925,
+      "limit": 1.0,
+      "description": "Strict actual-grid refinement decrease",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-to-12-velocity_z-ratio",
+      "value": 0.22084786637639717,
+      "limit": 1.0,
+      "description": "Strict actual-grid refinement decrease",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-to-12-pressure_mean_removed-ratio",
+      "value": 0.2558256673779249,
+      "limit": 1.0,
+      "description": "Strict actual-grid refinement decrease",
+      "unit": "1",
+      "passed": true
+    }
+  ],
+  "source_bindings": [
+    {
+      "source": "scripts/verify_native_abc_convergence3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/__init__.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/backend_registry.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/body_fitted.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/body_fitted3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/mesh3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/mesh_api.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/multi_element.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_collocated3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_manufactured3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_mesh3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_operators3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_quadratic3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_quadratic_flow3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_viscous3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/runtime.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/solver.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/solver3d.py",
+      "matched": true
+    },
+    {
+      "source": "scripts/verify_native_abc_convergence3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/__init__.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/backend_registry.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/body_fitted.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/body_fitted3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/mesh3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/mesh_api.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/multi_element.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_collocated3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_manufactured3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_mesh3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_operators3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_quadratic3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_quadratic_flow3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_viscous3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/runtime.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/solver.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/solver3d.py",
+      "matched": true
+    },
+    {
+      "source": "scripts/verify_native_abc_convergence3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/__init__.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/backend_registry.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/body_fitted.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/body_fitted3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/mesh3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/mesh_api.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/multi_element.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_collocated3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_manufactured3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_mesh3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_operators3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_quadratic3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_quadratic_flow3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_viscous3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/runtime.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/solver.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/solver3d.py",
+      "matched": true
+    }
+  ]
+}

@@ -35,6 +35,22 @@ def exact_boundary_flux(mesh,field,order=8):
     return result
 
 
+
+def exact_boundary_velocity_means(mesh, field, order=8):
+    """Independent prescribed boundary area means; no interior reference use."""
+    a,w=leggauss(order);a=(a+1)/2;w=w/2
+    bary=np.array([[1-r,r*(1-s),r*s] for r in a for s in a])
+    weights=np.array([2*r*wr*ws for r,wr in zip(a,w) for s,ws in zip(a,w)])
+    b=np.flatnonzero(mesh.neighbor<0);result=np.zeros((len(mesh.owner),3))
+    for start in range(0,len(b),256):
+        ids=b[start:start+256]
+        if any(len(mesh.face_vertices[i])!=3 for i in ids):raise ValueError('boundary quadrature requires native triangle facets')
+        triangles=mesh.vertices[np.asarray([mesh.face_vertices[i] for i in ids])]
+        nodes=np.einsum('qj,fjk->fqk',bary,triangles)
+        values=field(nodes.reshape(-1,3))['velocity'].reshape(len(ids),len(weights),3)
+        result[ids]=np.einsum('q,fqk->fk',weights,values)
+    return result
+
 def volume_weighted_error(actual,reference,volumes,*,remove_mean=False):
     a=np.asarray(actual);r=np.asarray(reference);v=np.asarray(volumes)
     if a.shape!=r.shape or a.shape[0]!=len(v) or not np.isfinite(a).all() or not np.isfinite(r).all() or np.any(v<=0):raise ValueError('finite matching fields and positive volumes required')

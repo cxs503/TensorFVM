@@ -19,7 +19,8 @@ import numpy as np
 import scipy
 from tensorfvm.native_mesh3d import NativeMesh3D
 from tensorfvm.native_collocated3d import NativeSteadySettings, NativeSteadySolver3D
-from tensorfvm.native_manufactured3d import abc_fields, exact_boundary_flux, volume_weighted_error
+from tensorfvm.native_manufactured3d import abc_fields, exact_boundary_flux, exact_boundary_velocity_means, volume_weighted_error
+from tensorfvm.native_quadratic_flow3d import NativeQuadraticSteadySolver3D
 
 
 def write(path, value):
@@ -40,7 +41,13 @@ def main():
     p.add_argument('--tolerance', type=float, default=1e-7)
     p.add_argument('--relaxation', type=float, default=.7)
     p.add_argument('--linear-method', choices=['direct', 'iterative', 'block', 'schur'], default='direct')
+    p.add_argument('--reconstruction', choices=['linear', 'quadratic'], default='linear')
+    p.add_argument('--initial-run', type=Path, help='Optional previous numerical run on identical mesh; never analytic truth')
     args = p.parse_args()
+    if args.reconstruction == 'quadratic' and args.linear_method != 'direct':
+        p.error('Quadratic mode uses direct baseline LU to precondition current-equation GMRES')
+    if args.reconstruction == 'quadratic' and args.mode != 'manufactured':
+        p.error('Quadratic mixed-outlet physical flow is not validated')
     out = args.output
     if out.exists() and any(out.iterdir()):
         p.error('output must be empty to preserve evidence')
@@ -65,7 +72,16 @@ def main():
     settings = NativeSteadySettings(viscosity=args.nu, max_iterations=args.max_iterations,
         nonlinear_tolerance=args.tolerance, relaxation=args.relaxation,
         linear_method=args.linear_method, bounded_convection=args.mode == 'laminar')
-    write(out / 'config.json', dict(mode=args.mode, settings=asdict(settings),
+    initial_binding=None
+    if args.initial_run is not None:
+        initial_config=json.loads((args.initial_run/'config.json').read_text())
+        if initial_config['mesh_sha256'] != digest(out/'input.msh'):
+            p.error('Initial numerical run must use the identical mesh bytes')
+        shutil.copy2(args.initial_run/'fields.npz',out/'initial-numerical-state.npz')
+        initial_binding=dict(kind='previous numerical field; not analytic reference',
+            sha256=digest(out/'initial-numerical-state.npz'),origin=str(args.initial_run))
+    write(out / 'config.json', dict(mode=args.mode, reconstruction=args.reconstruction,
+        initial_state=initial_binding, settings=asdict(settings),
         mesh_sha256=digest(out / 'input.msh'), source_sha256=bindings,
         experimental_accuracy_qualified=False,
         manufactured_definition='independent continuum ABC velocity, trigonometric pressure and analytic NS forcing; all velocity boundaries manufactured including hull',
@@ -81,7 +97,11 @@ def main():
     if args.mode == 'manufactured':
         field = lambda points: abc_fields(points, nu=args.nu)
         exact = field(mesh.cell_centers)
-        solver = NativeSteadySolver3D(mesh, boundary, field(mesh.face_centers)['velocity'],
+        solver_type=NativeQuadraticSteadySolver3D if args.reconstruction=='quadratic' else NativeSteadySolver3D
+        extra={} if args.reconstruction=='linear' else dict(
+            boundary_velocity_means=exact_boundary_velocity_means(mesh,field),
+            boundary_velocity_gradients=field(mesh.face_centers)['velocity_gradient'])
+        solver = solver_type(mesh, boundary, field(mesh.face_centers)['velocity'], **extra,
             settings=settings, body_force=exact['acceleration'],
             boundary_flux=exact_boundary_flux(mesh, field), gauge_value=exact['pressure'][0])
     else:
@@ -91,6 +111,13 @@ def main():
         solver = NativeSteadySolver3D(mesh, fixed, velocity,
             pressure_dirichlet=mesh.patch_labels == 'outlet', settings=settings)
         exact = None
+    if args.initial_run is not None:
+        with np.load(out/'initial-numerical-state.npz') as seed:
+            if seed['velocity'].shape!=solver.u.shape or seed['pressure'].shape!=solver.p.shape:
+                raise ValueError('Initial numerical field shape mismatch')
+            if not np.isfinite(seed['velocity']).all() or not np.isfinite(seed['pressure']).all():
+                raise ValueError('Initial numerical fields must be finite')
+            solver.u=seed['velocity'].copy();solver.p=seed['pressure'].copy()
     print(f'OPERATOR_READY cells={len(mesh.cells)} elapsed={time.perf_counter()-start:.3f}', flush=True)
     history = []
     def checkpoint(row):
@@ -118,7 +145,7 @@ def main():
             errors[f'velocity_{"xyz"[axis]}'] = volume_weighted_error(result['velocity'][:, axis], exact['velocity'][:, axis], mesh.cell_volumes)
         errors['pressure'] = volume_weighted_error(result['pressure'], exact['pressure'], mesh.cell_volumes, remove_mean=True)
     np.savez_compressed(out / 'fields.npz', **fields)
-    summary = dict(mode=args.mode, cells=len(mesh.cells), geometry=mesh.audit(),
+    summary = dict(mode=args.mode, reconstruction=args.reconstruction, cells=len(mesh.cells), geometry=mesh.audit(),
         converged=result['converged'], relative_L2_errors=errors,
         manufactured_pointwise_accuracy_passed=bool(exact is not None and result['converged'] and all(x < .03 for x in errors.values())),
         mesh_convergence_qualified=False, experimental_accuracy_qualified=False,
@@ -133,6 +160,8 @@ def main():
     write(out / 'result.json', summary)
     rows = '\n'.join(f'| {key} | {100*value:.6g}% | {value < .03} |' for key, value in errors.items())
     (out / 'report.md').write_text(f'''# Native 3D SUBOFF {args.mode} calculation
+
+Reconstruction: **{args.reconstruction}**. Initial state: `{initial_binding}`.
 
 Actual mixed-cell body-fitted mesh: {len(mesh.cells):,} control volumes.
 Converged: **{result['converged']}**. Independent manufactured field gate: **{summary['manufactured_pointwise_accuracy_passed']}**.

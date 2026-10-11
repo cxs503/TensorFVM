@@ -1,0 +1,589 @@
+{
+  "current_residual_and_change_gates_passed": false,
+  "all_metric_gates_passed": false,
+  "all_grids_nonlinearly_converged": false,
+  "all_error_metrics_strictly_decrease": false,
+  "finest_grid_all_errors_below_three_percent": true,
+  "manufactured_spatial_verification_passed": false,
+  "suboff_physical_benchmark_passed": false,
+  "metrics": [
+    {
+      "name": "producer-source-bindings-missing",
+      "value": 0,
+      "limit": 0.5,
+      "description": "At least one imported source binding required",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "producer-source-hash-mismatches",
+      "value": 0,
+      "limit": 0.5,
+      "description": "Imported numerical source snapshot checks",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-3-raw-field-missing",
+      "value": 1,
+      "limit": 0.5,
+      "description": "Raw numerical field availability",
+      "unit": "1",
+      "passed": false
+    },
+    {
+      "name": "n-3-recorded-nonlinear-failure",
+      "value": 1,
+      "limit": 0.5,
+      "description": "Recorded nonlinear completion",
+      "unit": "1",
+      "passed": false
+    },
+    {
+      "name": "n-3-missing-history",
+      "value": 1.0,
+      "limit": 0.5,
+      "description": "Current residual history availability",
+      "unit": "1",
+      "passed": false
+    },
+    {
+      "name": "n-6-raw-field-missing",
+      "value": 0,
+      "limit": 0.5,
+      "description": "Raw numerical field availability",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-recorded-nonlinear-failure",
+      "value": 0,
+      "limit": 0.5,
+      "description": "Recorded nonlinear completion",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-velocity_vector",
+      "value": 1.803862227594196e-05,
+      "limit": 0.03,
+      "description": "Replayed pointwise volume-weighted relative L2",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-pressure_mean_removed",
+      "value": 0.0055975236128406654,
+      "limit": 0.03,
+      "description": "Replayed pointwise volume-weighted relative L2",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-velocity_x",
+      "value": 2.001081012294845e-05,
+      "limit": 0.03,
+      "description": "Replayed pointwise volume-weighted relative L2",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-velocity_y",
+      "value": 1.6509931156311932e-05,
+      "limit": 0.03,
+      "description": "Replayed pointwise volume-weighted relative L2",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-velocity_z",
+      "value": 1.7737451326146764e-05,
+      "limit": 0.03,
+      "description": "Replayed pointwise volume-weighted relative L2",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-reported-error-replay",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "Raw error versus producer ledger",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-last-velocity_change",
+      "value": 6.043012880150083e-11,
+      "limit": 1e-09,
+      "description": "Saved current-operator residual/change; not reconstructed by reporter",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-last-pressure_change",
+      "value": 5.558005024320457e-10,
+      "limit": 1e-09,
+      "description": "Saved current-operator residual/change; not reconstructed by reporter",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-last-flux_change",
+      "value": 5.8029026353847276e-11,
+      "limit": 1e-09,
+      "description": "Saved current-operator residual/change; not reconstructed by reporter",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-last-momentum_residual",
+      "value": 3.820728398122927e-11,
+      "limit": 1e-09,
+      "description": "Saved current-operator residual/change; not reconstructed by reporter",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-last-native_divergence_max",
+      "value": 5.83833606460083e-11,
+      "limit": 1e-09,
+      "description": "Saved current-operator residual/change; not reconstructed by reporter",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-last-current_reconstructed_divergence_max",
+      "value": 5.838916850020586e-11,
+      "limit": 1e-09,
+      "description": "Saved current-operator residual/change; not reconstructed by reporter",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-last-face_flux_consistency_max",
+      "value": 1.1241008124329722e-15,
+      "limit": 1e-09,
+      "description": "Saved current-operator residual/change; not reconstructed by reporter",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-12-raw-field-missing",
+      "value": 0,
+      "limit": 0.5,
+      "description": "Raw numerical field availability",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-12-recorded-nonlinear-failure",
+      "value": 0,
+      "limit": 0.5,
+      "description": "Recorded nonlinear completion",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-12-velocity_vector",
+      "value": 3.865504504103431e-06,
+      "limit": 0.03,
+      "description": "Replayed pointwise volume-weighted relative L2",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-12-pressure_mean_removed",
+      "value": 0.001431989887467399,
+      "limit": 0.03,
+      "description": "Replayed pointwise volume-weighted relative L2",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-12-velocity_x",
+      "value": 4.07517525082873e-06,
+      "limit": 0.03,
+      "description": "Replayed pointwise volume-weighted relative L2",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-12-velocity_y",
+      "value": 3.632274363514972e-06,
+      "limit": 0.03,
+      "description": "Replayed pointwise volume-weighted relative L2",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-12-velocity_z",
+      "value": 3.917277799337049e-06,
+      "limit": 0.03,
+      "description": "Replayed pointwise volume-weighted relative L2",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-12-reported-error-replay",
+      "value": 8.470329472543003e-22,
+      "limit": 1e-12,
+      "description": "Raw error versus producer ledger",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-12-last-velocity_change",
+      "value": 2.4979474751560466e-11,
+      "limit": 1e-09,
+      "description": "Saved current-operator residual/change; not reconstructed by reporter",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-12-last-pressure_change",
+      "value": 7.893352244875057e-10,
+      "limit": 1e-09,
+      "description": "Saved current-operator residual/change; not reconstructed by reporter",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-12-last-flux_change",
+      "value": 2.6060729416766288e-11,
+      "limit": 1e-09,
+      "description": "Saved current-operator residual/change; not reconstructed by reporter",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-12-last-momentum_residual",
+      "value": 7.684960801174413e-12,
+      "limit": 1e-09,
+      "description": "Saved current-operator residual/change; not reconstructed by reporter",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-12-last-native_divergence_max",
+      "value": 5.741906949907612e-11,
+      "limit": 1e-09,
+      "description": "Saved current-operator residual/change; not reconstructed by reporter",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-12-last-current_reconstructed_divergence_max",
+      "value": 5.742356590232585e-11,
+      "limit": 1e-09,
+      "description": "Saved current-operator residual/change; not reconstructed by reporter",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-12-last-face_flux_consistency_max",
+      "value": 6.123730745556848e-16,
+      "limit": 1e-09,
+      "description": "Saved current-operator residual/change; not reconstructed by reporter",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-3-to-6-velocity_vector-ratio",
+      "value": 2.0,
+      "limit": 1.0,
+      "description": "Strict actual-grid refinement decrease",
+      "unit": "1",
+      "passed": false
+    },
+    {
+      "name": "n-3-to-6-velocity_x-ratio",
+      "value": 2.0,
+      "limit": 1.0,
+      "description": "Strict actual-grid refinement decrease",
+      "unit": "1",
+      "passed": false
+    },
+    {
+      "name": "n-3-to-6-velocity_y-ratio",
+      "value": 2.0,
+      "limit": 1.0,
+      "description": "Strict actual-grid refinement decrease",
+      "unit": "1",
+      "passed": false
+    },
+    {
+      "name": "n-3-to-6-velocity_z-ratio",
+      "value": 2.0,
+      "limit": 1.0,
+      "description": "Strict actual-grid refinement decrease",
+      "unit": "1",
+      "passed": false
+    },
+    {
+      "name": "n-3-to-6-pressure_mean_removed-ratio",
+      "value": 2.0,
+      "limit": 1.0,
+      "description": "Strict actual-grid refinement decrease",
+      "unit": "1",
+      "passed": false
+    },
+    {
+      "name": "n-6-to-12-velocity_vector-ratio",
+      "value": 0.21429045106503725,
+      "limit": 1.0,
+      "description": "Strict actual-grid refinement decrease",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-to-12-velocity_x-ratio",
+      "value": 0.20364868917302392,
+      "limit": 1.0,
+      "description": "Strict actual-grid refinement decrease",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-to-12-velocity_y-ratio",
+      "value": 0.22000542153237948,
+      "limit": 1.0,
+      "description": "Strict actual-grid refinement decrease",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-to-12-velocity_z-ratio",
+      "value": 0.22084783925876617,
+      "limit": 1.0,
+      "description": "Strict actual-grid refinement decrease",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "n-6-to-12-pressure_mean_removed-ratio",
+      "value": 0.2558256090572674,
+      "limit": 1.0,
+      "description": "Strict actual-grid refinement decrease",
+      "unit": "1",
+      "passed": true
+    }
+  ],
+  "source_bindings": [
+    {
+      "source": "scripts/verify_native_abc_convergence3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/__init__.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/backend_registry.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/body_fitted.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/body_fitted3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/mesh3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/mesh_api.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/multi_element.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_collocated3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_manufactured3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_mesh3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_operators3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_quadratic3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_quadratic_flow3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_viscous3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/runtime.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/solver.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/solver3d.py",
+      "matched": true
+    },
+    {
+      "source": "scripts/verify_native_abc_convergence3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/__init__.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/backend_registry.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/body_fitted.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/body_fitted3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/mesh3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/mesh_api.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/multi_element.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_collocated3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_manufactured3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_mesh3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_operators3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_quadratic3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_quadratic_flow3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_viscous3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/runtime.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/solver.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/solver3d.py",
+      "matched": true
+    },
+    {
+      "source": "scripts/verify_native_abc_convergence3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/__init__.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/backend_registry.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/body_fitted.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/body_fitted3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/mesh3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/mesh_api.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/multi_element.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_collocated3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_manufactured3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_mesh3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_operators3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_quadratic3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_quadratic_flow3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/native_viscous3d.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/runtime.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/solver.py",
+      "matched": true
+    },
+    {
+      "source": "src/tensorfvm/solver3d.py",
+      "matched": true
+    }
+  ]
+}

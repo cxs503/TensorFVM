@@ -1,0 +1,2363 @@
+{
+  "config": {
+    "reconstruction": "quadratic",
+    "initialization": "baseline",
+    "kind": "Independent fixed-parameter 3D nonlinear ABC manufactured NS",
+    "amplitude": 0.5,
+    "wavenumber": 0.7,
+    "kinematic_viscosity": 0.1,
+    "density": 1.0,
+    "logical_domain": [
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "coordinate_transform": [
+      [
+        1.0,
+        0.18,
+        0.12
+      ],
+      [
+        0.0,
+        1.0,
+        0.2
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "grids": [
+      3,
+      6,
+      12
+    ],
+    "velocity_boundary": "analytic Dirichlet on all physical facets",
+    "native_boundary_flux": "order-8 Duffy triangle Gauss quadrature of the analytic velocity",
+    "body_force": "independent differential analytic acceleration at actual cell centroids",
+    "initial_velocity": "previous independently converged baseline FVM solve from zero; not analytic interior truth",
+    "initial_pressure": "constant gauge p_exact(first cell)",
+    "solver": {
+      "convection_order": 2,
+      "bounded_convection": false,
+      "nonlinear_tolerance": 1e-09,
+      "linear_tolerance": 1e-11,
+      "max_iterations": 100,
+      "relaxation": 0.8
+    },
+    "error_norm": "volume-weighted relative L2 at actual cell centroids; pressure means removed independently",
+    "mms_error_limit": 0.03,
+    "suboff_physics_passed": false
+  },
+  "cases": [
+    {
+      "n": 3,
+      "cells": 27,
+      "faces": 216,
+      "geometry": {
+        "cells": 27,
+        "faces": 216,
+        "minimum_cell_volume": 0.03703703703703703,
+        "maximum_relative_closure": 5.556307337494351e-17,
+        "minimum_face_projection": 0.009259259259259233,
+        "maximum_nonorthogonality_degrees": 29.194318711799408,
+        "patch_face_counts": {
+          "boundary": 108,
+          "internal": 108
+        }
+      },
+      "numerically_converged": true,
+      "relative_errors": {
+        "velocity_vector": 0.000258737356831386,
+        "pressure_mean_removed": 0.01501255406544264,
+        "velocity_x": 0.00026917464119643667,
+        "velocity_y": 0.00026665288326807005,
+        "velocity_z": 0.00023918448067806132
+      },
+      "all_error_metrics_below_3_percent": true,
+      "final": {
+        "iteration": 52,
+        "accepted": true,
+        "accepted_relaxation": 0.2,
+        "old_merit": 5.909968703854583e-11,
+        "merit": 4.3484239428954933e-11,
+        "trials": [
+          {
+            "relaxation": 0.8,
+            "merit": 1.4552701653344818e-10
+          },
+          {
+            "relaxation": 0.4,
+            "merit": 6.560849326928846e-11
+          },
+          {
+            "relaxation": 0.2,
+            "merit": 4.3484239428954933e-11
+          }
+        ],
+        "true_linear_relative_residual": 6.922948968726194e-12,
+        "linear_iterations": 7,
+        "velocity_change": 1.1104863164556966e-10,
+        "pressure_change": 8.548497072117589e-10,
+        "flux_change": 2.7939029007585457e-11,
+        "momentum_residual": 4.343827657512448e-11,
+        "native_divergence_max": 4.329755304288697e-12,
+        "current_reconstructed_divergence_max": 1.6392855822777722e-11,
+        "face_flux_consistency_max": 2.1156900062026868e-12
+      },
+      "history": [
+        {
+          "iteration": 1,
+          "accepted": true,
+          "accepted_relaxation": 0.8,
+          "old_merit": 0.003443579456341518,
+          "merit": 0.000992465962726937,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 0.000992465962726937
+            }
+          ],
+          "true_linear_relative_residual": 3.9372373737167694e-12,
+          "linear_iterations": 18,
+          "velocity_change": 0.0025372981850125286,
+          "pressure_change": 0.05132553455595355,
+          "flux_change": 0.001069601265270752,
+          "momentum_residual": 0.0009048305571603539,
+          "native_divergence_max": 0.0008484594398660182,
+          "current_reconstructed_divergence_max": 0.0032094056855073968,
+          "face_flux_consistency_max": 0.0005541101298260088
+        },
+        {
+          "iteration": 2,
+          "accepted": true,
+          "accepted_relaxation": 0.4,
+          "old_merit": 0.000992465962726937,
+          "merit": 0.0007673400790136043,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 0.0020282976056545613
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 0.0007673400790136043
+            }
+          ],
+          "true_linear_relative_residual": 6.9730830904116145e-12,
+          "linear_iterations": 17,
+          "velocity_change": 0.002540141344844891,
+          "pressure_change": 0.025697869177848352,
+          "flux_change": 0.0006763326385381765,
+          "momentum_residual": 0.0007272922140339677,
+          "native_divergence_max": 0.0005090756894062174,
+          "current_reconstructed_divergence_max": 0.0019256422150829848,
+          "face_flux_consistency_max": 0.0003324644873524699
+        },
+        {
+          "iteration": 3,
+          "accepted": true,
+          "accepted_relaxation": 0.2,
+          "old_merit": 0.0007673400790136043,
+          "merit": 0.0005156597889864447,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 0.0016620802741567939
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 0.0008351419124541886
+            },
+            {
+              "relaxation": 0.2,
+              "merit": 0.0005156597889864447
+            }
+          ],
+          "true_linear_relative_residual": 4.078651640854211e-12,
+          "linear_iterations": 17,
+          "velocity_change": 0.0018318431192357084,
+          "pressure_change": 0.01135793872395112,
+          "flux_change": 0.0004492021331258763,
+          "momentum_residual": 0.00047707086733074494,
+          "native_divergence_max": 0.00040726055143266657,
+          "current_reconstructed_divergence_max": 0.0015405140241094993,
+          "face_flux_consistency_max": 0.0002659723494915243
+        },
+        {
+          "iteration": 4,
+          "accepted": true,
+          "accepted_relaxation": 0.4,
+          "old_merit": 0.0005156597889864447,
+          "merit": 0.0004770214178641332,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 0.0011537341741481436
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 0.0004770214178641332
+            }
+          ],
+          "true_linear_relative_residual": 3.7476217115726416e-12,
+          "linear_iterations": 17,
+          "velocity_change": 0.0015332014777156627,
+          "pressure_change": 0.014725077658450936,
+          "flux_change": 0.00040618191405120726,
+          "momentum_residual": 0.0004623402806023701,
+          "native_divergence_max": 0.0002443563445325252,
+          "current_reconstructed_divergence_max": 0.0009243076809015464,
+          "face_flux_consistency_max": 0.00015958241959325193
+        },
+        {
+          "iteration": 5,
+          "accepted": true,
+          "accepted_relaxation": 0.2,
+          "old_merit": 0.0004770214178641332,
+          "merit": 0.00027867036758171584,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 0.0011415294649786574
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 0.0005601741088784087
+            },
+            {
+              "relaxation": 0.2,
+              "merit": 0.00027867036758171584
+            }
+          ],
+          "true_linear_relative_residual": 2.940032207084631e-12,
+          "linear_iterations": 17,
+          "velocity_change": 0.0012123881379173824,
+          "pressure_change": 0.007875355261318398,
+          "flux_change": 0.00029831655833519695,
+          "momentum_residual": 0.00026235658117315235,
+          "native_divergence_max": 0.00019548507540908747,
+          "current_reconstructed_divergence_max": 0.0007394463170269131,
+          "face_flux_consistency_max": 0.00012766647471336
+        },
+        {
+          "iteration": 6,
+          "accepted": true,
+          "accepted_relaxation": 0.2,
+          "old_merit": 0.00027867036758171584,
+          "merit": 0.00021167536437286815,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 0.0007164584055852046
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 0.00030122378444639444
+            },
+            {
+              "relaxation": 0.2,
+              "merit": 0.00021167536437286815
+            }
+          ],
+          "true_linear_relative_residual": 2.490103449412974e-12,
+          "linear_iterations": 23,
+          "velocity_change": 0.0004968582399299283,
+          "pressure_change": 0.004510212567944322,
+          "flux_change": 0.00013025756904173506,
+          "momentum_residual": 0.00019788307151011954,
+          "native_divergence_max": 0.00015638805971737033,
+          "current_reconstructed_divergence_max": 0.0005915568411240421,
+          "face_flux_consistency_max": 0.00010213286112194867
+        },
+        {
+          "iteration": 7,
+          "accepted": true,
+          "accepted_relaxation": 0.8,
+          "old_merit": 0.00021167536437286815,
+          "merit": 0.00014802093685276437,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 0.00014802093685276437
+            }
+          ],
+          "true_linear_relative_residual": 7.770151645472506e-12,
+          "linear_iterations": 16,
+          "velocity_change": 0.0004341755113695689,
+          "pressure_change": 0.0008594839481548752,
+          "flux_change": 0.00010151690487412379,
+          "momentum_residual": 0.00014725572097838008,
+          "native_divergence_max": 3.127759680142395e-05,
+          "current_reconstructed_divergence_max": 0.00011831113578993083,
+          "face_flux_consistency_max": 2.0426561373974918e-05
+        },
+        {
+          "iteration": 8,
+          "accepted": true,
+          "accepted_relaxation": 0.2,
+          "old_merit": 0.00014802093685276437,
+          "merit": 6.970606443464844e-05,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 0.0007059458409235916
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 0.0002528374052957949
+            },
+            {
+              "relaxation": 0.2,
+              "merit": 6.970606443464844e-05
+            }
+          ],
+          "true_linear_relative_residual": 5.286103930730761e-12,
+          "linear_iterations": 16,
+          "velocity_change": 0.000481700101142886,
+          "pressure_change": 0.0037187886176316357,
+          "flux_change": 0.00012176901725073478,
+          "momentum_residual": 6.86609762838177e-05,
+          "native_divergence_max": 2.502208489220393e-05,
+          "current_reconstructed_divergence_max": 9.464876120685378e-05,
+          "face_flux_consistency_max": 1.634099195414936e-05
+        },
+        {
+          "iteration": 9,
+          "accepted": true,
+          "accepted_relaxation": 0.4,
+          "old_merit": 6.970606443464844e-05,
+          "merit": 6.429915027053449e-05,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 0.00015693899420964147
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 6.429915027053449e-05
+            }
+          ],
+          "true_linear_relative_residual": 1.872704158820992e-12,
+          "linear_iterations": 22,
+          "velocity_change": 0.00025097911292997453,
+          "pressure_change": 0.0015927459041274203,
+          "flux_change": 6.122118384161144e-05,
+          "momentum_residual": 6.389305217199397e-05,
+          "native_divergence_max": 1.5013251523133406e-05,
+          "current_reconstructed_divergence_max": 5.678925619953189e-05,
+          "face_flux_consistency_max": 9.804700868123594e-06
+        },
+        {
+          "iteration": 10,
+          "accepted": true,
+          "accepted_relaxation": 0.2,
+          "old_merit": 6.429915027053449e-05,
+          "merit": 3.621731813300449e-05,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 0.000287385691267542
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 0.00011103922923311984
+            },
+            {
+              "relaxation": 0.2,
+              "merit": 3.621731813300449e-05
+            }
+          ],
+          "true_linear_relative_residual": 1.918413091383007e-12,
+          "linear_iterations": 22,
+          "velocity_change": 0.0002097266990415426,
+          "pressure_change": 0.0016271608457270202,
+          "flux_change": 5.313436943111701e-05,
+          "momentum_residual": 3.575440017307227e-05,
+          "native_divergence_max": 1.2010600607070824e-05,
+          "current_reconstructed_divergence_max": 4.543133535269904e-05,
+          "face_flux_consistency_max": 7.843648216724728e-06
+        },
+        {
+          "iteration": 11,
+          "accepted": true,
+          "accepted_relaxation": 0.4,
+          "old_merit": 3.621731813300449e-05,
+          "merit": 3.205866227403986e-05,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 7.901175916694597e-05
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 3.205866227403986e-05
+            }
+          ],
+          "true_linear_relative_residual": 5.895381031583749e-12,
+          "linear_iterations": 15,
+          "velocity_change": 0.0001240635689563062,
+          "pressure_change": 0.0007871620140900724,
+          "flux_change": 3.024789350160669e-05,
+          "momentum_residual": 3.187104593916498e-05,
+          "native_divergence_max": 7.206348335408315e-06,
+          "current_reconstructed_divergence_max": 2.7258800405695345e-05,
+          "face_flux_consistency_max": 4.706240647397127e-06
+        },
+        {
+          "iteration": 12,
+          "accepted": true,
+          "accepted_relaxation": 0.2,
+          "old_merit": 3.205866227403986e-05,
+          "merit": 1.907416235801789e-05,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 0.00013986222916096588
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 5.564668040622488e-05
+            },
+            {
+              "relaxation": 0.2,
+              "merit": 1.907416235801789e-05
+            }
+          ],
+          "true_linear_relative_residual": 6.447256220349057e-12,
+          "linear_iterations": 15,
+          "velocity_change": 0.0001048238431715625,
+          "pressure_change": 0.0008127274298215308,
+          "flux_change": 2.65631251153683e-05,
+          "momentum_residual": 1.88718697248823e-05,
+          "native_divergence_max": 5.765085430823465e-06,
+          "current_reconstructed_divergence_max": 2.180699903537795e-05,
+          "face_flux_consistency_max": 3.7649364583803763e-06
+        },
+        {
+          "iteration": 13,
+          "accepted": true,
+          "accepted_relaxation": 0.4,
+          "old_merit": 1.907416235801789e-05,
+          "merit": 1.6689524818969352e-05,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 4.151055905197532e-05
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 1.6689524818969352e-05
+            }
+          ],
+          "true_linear_relative_residual": 3.3845820187763594e-12,
+          "linear_iterations": 17,
+          "velocity_change": 6.46467661616651e-05,
+          "pressure_change": 0.0004133479460525625,
+          "flux_change": 1.5780622875196104e-05,
+          "momentum_residual": 1.6606527865533477e-05,
+          "native_divergence_max": 3.459050110000279e-06,
+          "current_reconstructed_divergence_max": 1.3084195854117662e-05,
+          "face_flux_consistency_max": 2.2589889759513974e-06
+        },
+        {
+          "iteration": 14,
+          "accepted": true,
+          "accepted_relaxation": 0.2,
+          "old_merit": 1.6689524818969352e-05,
+          "merit": 1.0092050104593347e-05,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 7.222139692252118e-05
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 2.910082776751722e-05
+            },
+            {
+              "relaxation": 0.2,
+              "merit": 1.0092050104593347e-05
+            }
+          ],
+          "true_linear_relative_residual": 2.7765742213701002e-12,
+          "linear_iterations": 18,
+          "velocity_change": 5.482546497274729e-05,
+          "pressure_change": 0.00042397101632092577,
+          "flux_change": 1.3886324367713879e-05,
+          "momentum_residual": 1.0004043383598688e-05,
+          "native_divergence_max": 2.7672397299553794e-06,
+          "current_reconstructed_divergence_max": 1.046733724421878e-05,
+          "face_flux_consistency_max": 1.8071620011449512e-06
+        },
+        {
+          "iteration": 15,
+          "accepted": true,
+          "accepted_relaxation": 0.4,
+          "old_merit": 1.0092050104593347e-05,
+          "merit": 8.862342151436609e-06,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 2.22322688165788e-05
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 8.862342151436609e-06
+            }
+          ],
+          "true_linear_relative_residual": 9.23628079763472e-12,
+          "linear_iterations": 14,
+          "velocity_change": 3.448792573661858e-05,
+          "pressure_change": 0.00022284626534794388,
+          "flux_change": 8.435074674760185e-06,
+          "momentum_residual": 8.82634722127057e-06,
+          "native_divergence_max": 1.6603400794859562e-06,
+          "current_reconstructed_divergence_max": 6.2804037819705355e-06,
+          "face_flux_consistency_max": 1.0843118360920328e-06
+        },
+        {
+          "iteration": 16,
+          "accepted": true,
+          "accepted_relaxation": 0.2,
+          "old_merit": 8.862342151436609e-06,
+          "merit": 5.3481486083868025e-06,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 3.8297228301861136e-05
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 1.5506359820729022e-05
+            },
+            {
+              "relaxation": 0.2,
+              "merit": 5.3481486083868025e-06
+            }
+          ],
+          "true_linear_relative_residual": 9.165979853940955e-12,
+          "linear_iterations": 14,
+          "velocity_change": 2.926482998171895e-05,
+          "pressure_change": 0.00022556413043231071,
+          "flux_change": 7.4064135140248075e-06,
+          "momentum_residual": 5.309916227013319e-06,
+          "native_divergence_max": 1.3282784552259845e-06,
+          "current_reconstructed_divergence_max": 5.024302526118047e-06,
+          "face_flux_consistency_max": 8.674339757014371e-07
+        },
+        {
+          "iteration": 17,
+          "accepted": true,
+          "accepted_relaxation": 0.4,
+          "old_merit": 5.3481486083868025e-06,
+          "merit": 4.756491880949078e-06,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 1.2021752020405431e-05
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 4.756491880949078e-06
+            }
+          ],
+          "true_linear_relative_residual": 5.072868508234727e-12,
+          "linear_iterations": 14,
+          "velocity_change": 1.8612655118731894e-05,
+          "pressure_change": 0.00012161503465530641,
+          "flux_change": 4.562460458853699e-06,
+          "momentum_residual": 4.741046120576449e-06,
+          "native_divergence_max": 7.969649672076586e-07,
+          "current_reconstructed_divergence_max": 3.01458232695312e-06,
+          "face_flux_consistency_max": 5.204683999290207e-07
+        },
+        {
+          "iteration": 18,
+          "accepted": true,
+          "accepted_relaxation": 0.2,
+          "old_merit": 4.756491880949078e-06,
+          "merit": 2.8352964275217385e-06,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 2.057672998929518e-05
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 8.338222481518406e-06
+            },
+            {
+              "relaxation": 0.2,
+              "merit": 2.8352964275217385e-06
+            }
+          ],
+          "true_linear_relative_residual": 4.860186872726e-12,
+          "linear_iterations": 14,
+          "velocity_change": 1.5779348689018732e-05,
+          "pressure_change": 0.00012120367997470209,
+          "flux_change": 3.989881714371909e-06,
+          "momentum_residual": 2.8186914888810225e-06,
+          "native_divergence_max": 6.375755262806594e-07,
+          "current_reconstructed_divergence_max": 2.411654870367042e-06,
+          "face_flux_consistency_max": 4.1636640975298525e-07
+        },
+        {
+          "iteration": 19,
+          "accepted": true,
+          "accepted_relaxation": 0.4,
+          "old_merit": 2.8352964275217385e-06,
+          "merit": 2.5691125577924275e-06,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 6.53299706410949e-06
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 2.5691125577924275e-06
+            }
+          ],
+          "true_linear_relative_residual": 2.586780122556661e-12,
+          "linear_iterations": 17,
+          "velocity_change": 1.010460252407665e-05,
+          "pressure_change": 6.6742245888832e-05,
+          "flux_change": 2.482603276943755e-06,
+          "momentum_residual": 2.562526176673241e-06,
+          "native_divergence_max": 3.8254680604504776e-07,
+          "current_reconstructed_divergence_max": 1.4469920125229079e-06,
+          "face_flux_consistency_max": 2.4982426231486443e-07
+        },
+        {
+          "iteration": 20,
+          "accepted": true,
+          "accepted_relaxation": 0.2,
+          "old_merit": 2.5691125577924275e-06,
+          "merit": 1.5030126721220611e-06,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 1.1131141349117748e-05
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 4.504569559683056e-06
+            },
+            {
+              "relaxation": 0.2,
+              "merit": 1.5030126721220611e-06
+            }
+          ],
+          "true_linear_relative_residual": 1.5735496158811487e-12,
+          "linear_iterations": 16,
+          "velocity_change": 8.552697306730175e-06,
+          "pressure_change": 6.547388139624001e-05,
+          "flux_change": 2.1605979860016524e-06,
+          "momentum_residual": 1.495799561116456e-06,
+          "native_divergence_max": 3.0603728860476026e-07,
+          "current_reconstructed_divergence_max": 1.1575890916763756e-06,
+          "face_flux_consistency_max": 1.9985492794576087e-07
+        },
+        {
+          "iteration": 21,
+          "accepted": true,
+          "accepted_relaxation": 0.4,
+          "old_merit": 1.5030126721220611e-06,
+          "merit": 1.3933036319909485e-06,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 3.559592069221566e-06
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 1.3933036319909485e-06
+            }
+          ],
+          "true_linear_relative_residual": 7.954920508423021e-12,
+          "linear_iterations": 13,
+          "velocity_change": 5.502556417461168e-06,
+          "pressure_change": 3.671507379483444e-05,
+          "flux_change": 1.3549686479513663e-06,
+          "momentum_residual": 1.390506375970862e-06,
+          "native_divergence_max": 1.836299234857231e-07,
+          "current_reconstructed_divergence_max": 6.945588932744109e-07,
+          "face_flux_consistency_max": 1.1991539661008324e-07
+        },
+        {
+          "iteration": 22,
+          "accepted": true,
+          "accepted_relaxation": 0.2,
+          "old_merit": 1.3933036319909485e-06,
+          "merit": 7.96596222595369e-07,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 6.0431944621587065e-06
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 2.4394106440051707e-06
+            },
+            {
+              "relaxation": 0.2,
+              "merit": 7.96596222595369e-07
+            }
+          ],
+          "true_linear_relative_residual": 5.3444184567444695e-12,
+          "linear_iterations": 13,
+          "velocity_change": 4.648596423208794e-06,
+          "pressure_change": 3.5473595926406424e-05,
+          "flux_change": 1.1732830410552978e-06,
+          "momentum_residual": 7.934619476172148e-07,
+          "native_divergence_max": 1.4690210729112477e-07,
+          "current_reconstructed_divergence_max": 5.55639792957502e-07,
+          "face_flux_consistency_max": 9.592989263626562e-08
+        },
+        {
+          "iteration": 23,
+          "accepted": true,
+          "accepted_relaxation": 0.4,
+          "old_merit": 7.96596222595369e-07,
+          "merit": 7.577236512832031e-07,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 1.942218672642187e-06
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 7.577236512832031e-07
+            }
+          ],
+          "true_linear_relative_residual": 4.35645937577503e-12,
+          "linear_iterations": 13,
+          "velocity_change": 3.0012565758668477e-06,
+          "pressure_change": 2.02126408692866e-05,
+          "flux_change": 7.406250499685063e-07,
+          "momentum_residual": 7.56538842038815e-07,
+          "native_divergence_max": 8.814493872300047e-08,
+          "current_reconstructed_divergence_max": 3.333871735865247e-07,
+          "face_flux_consistency_max": 5.755928467409431e-08
+        },
+        {
+          "iteration": 24,
+          "accepted": true,
+          "accepted_relaxation": 0.2,
+          "old_merit": 7.577236512832031e-07,
+          "merit": 4.2211938251648454e-07,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 3.2872638005248765e-06
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 1.3227558074357253e-06
+            },
+            {
+              "relaxation": 0.2,
+              "merit": 4.2211938251648454e-07
+            }
+          ],
+          "true_linear_relative_residual": 1.5484056393685489e-12,
+          "linear_iterations": 15,
+          "velocity_change": 2.5304162772785595e-06,
+          "pressure_change": 1.9252658148900665e-05,
+          "flux_change": 6.381206426367079e-07,
+          "momentum_residual": 4.207571373437344e-07,
+          "native_divergence_max": 7.05155208599595e-08,
+          "current_reconstructed_divergence_max": 2.6670684245486137e-07,
+          "face_flux_consistency_max": 4.604611348783442e-08
+        },
+        {
+          "iteration": 25,
+          "accepted": true,
+          "accepted_relaxation": 0.4,
+          "old_merit": 4.2211938251648454e-07,
+          "merit": 4.128917203108991e-07,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 1.0605290982803894e-06
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 4.128917203108991e-07
+            }
+          ],
+          "true_linear_relative_residual": 1.550821425864907e-12,
+          "linear_iterations": 15,
+          "velocity_change": 1.6383224094701223e-06,
+          "pressure_change": 1.1127478812136099e-05,
+          "flux_change": 4.0510381700320096e-07,
+          "momentum_residual": 4.123908272256141e-07,
+          "native_divergence_max": 4.2309169792642556e-08,
+          "current_reconstructed_divergence_max": 1.6002438205792171e-07,
+          "face_flux_consistency_max": 2.7628413570223854e-08
+        },
+        {
+          "iteration": 26,
+          "accepted": true,
+          "accepted_relaxation": 0.2,
+          "old_merit": 4.128917203108991e-07,
+          "merit": 2.2366395367656333e-07,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 1.7900431142923993e-06
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 7.177781588252724e-07
+            },
+            {
+              "relaxation": 0.2,
+              "merit": 2.2366395367656333e-07
+            }
+          ],
+          "true_linear_relative_residual": 8.249934841217043e-12,
+          "linear_iterations": 12,
+          "velocity_change": 1.378548112493405e-06,
+          "pressure_change": 1.046012078967155e-05,
+          "flux_change": 3.473657027468299e-07,
+          "momentum_residual": 2.230717722369312e-07,
+          "native_divergence_max": 3.3838368357352884e-08,
+          "current_reconstructed_divergence_max": 1.2801479101764992e-07,
+          "face_flux_consistency_max": 2.2102017622408608e-08
+        },
+        {
+          "iteration": 27,
+          "accepted": true,
+          "accepted_relaxation": 0.2,
+          "old_merit": 2.2366395367656333e-07,
+          "merit": 1.2196994960415363e-07,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 5.79311093501186e-07
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 2.2531464737641238e-07
+            },
+            {
+              "relaxation": 0.2,
+              "merit": 1.2196994960415363e-07
+            }
+          ],
+          "true_linear_relative_residual": 6.4548913799697946e-12,
+          "linear_iterations": 12,
+          "velocity_change": 4.4734199627775933e-07,
+          "pressure_change": 3.0617396582479307e-06,
+          "flux_change": 1.1081886999758275e-07,
+          "momentum_residual": 1.2127393484678922e-07,
+          "native_divergence_max": 2.7075796042719265e-08,
+          "current_reconstructed_divergence_max": 1.0241366817098643e-07,
+          "face_flux_consistency_max": 1.7681820056122512e-08
+        },
+        {
+          "iteration": 28,
+          "accepted": true,
+          "accepted_relaxation": 0.4,
+          "old_merit": 1.2196994960415363e-07,
+          "merit": 1.1853756284892097e-07,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 2.0133422331654882e-07
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 1.1853756284892097e-07
+            }
+          ],
+          "true_linear_relative_residual": 1.248574161885542e-12,
+          "linear_iterations": 18,
+          "velocity_change": 3.04871872677185e-07,
+          "pressure_change": 2.632795392054247e-06,
+          "flux_change": 7.91631401288951e-08,
+          "momentum_residual": 1.1828020130611601e-07,
+          "native_divergence_max": 1.624357336138527e-08,
+          "current_reconstructed_divergence_max": 6.144781402456224e-08,
+          "face_flux_consistency_max": 1.0608910576809744e-08
+        },
+        {
+          "iteration": 29,
+          "accepted": true,
+          "accepted_relaxation": 0.2,
+          "old_merit": 1.1853756284892097e-07,
+          "merit": 6.408580949767734e-08,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 3.16622815448405e-07
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 1.2312770669191057e-07
+            },
+            {
+              "relaxation": 0.2,
+              "merit": 6.408580949767734e-08
+            }
+          ],
+          "true_linear_relative_residual": 2.9680858410881134e-12,
+          "linear_iterations": 14,
+          "velocity_change": 2.444281481098498e-07,
+          "pressure_change": 1.6846232591803353e-06,
+          "flux_change": 6.065508670948001e-08,
+          "momentum_residual": 6.37807542370616e-08,
+          "native_divergence_max": 1.299587187864049e-08,
+          "current_reconstructed_divergence_max": 4.915883191139449e-08,
+          "face_flux_consistency_max": 8.487242123126299e-09
+        },
+        {
+          "iteration": 30,
+          "accepted": true,
+          "accepted_relaxation": 0.4,
+          "old_merit": 6.408580949767734e-08,
+          "merit": 6.282379657751877e-08,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 1.0925819221774453e-07
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 6.282379657751877e-08
+            }
+          ],
+          "true_linear_relative_residual": 5.8430905803122135e-12,
+          "linear_iterations": 11,
+          "velocity_change": 1.657357683076324e-07,
+          "pressure_change": 1.4131422507739901e-06,
+          "flux_change": 4.283495925375205e-08,
+          "momentum_residual": 6.271187907560004e-08,
+          "native_divergence_max": 7.796584315655776e-09,
+          "current_reconstructed_divergence_max": 2.949185439610203e-08,
+          "face_flux_consistency_max": 5.09224851811626e-09
+        },
+        {
+          "iteration": 31,
+          "accepted": true,
+          "accepted_relaxation": 0.2,
+          "old_merit": 6.282379657751877e-08,
+          "merit": 3.3728179252166245e-08,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 1.7299921930248182e-07
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 6.731840830146406e-08
+            },
+            {
+              "relaxation": 0.2,
+              "merit": 3.3728179252166245e-08
+            }
+          ],
+          "true_linear_relative_residual": 8.07183082670084e-12,
+          "linear_iterations": 11,
+          "velocity_change": 1.3351305818531295e-07,
+          "pressure_change": 9.259665056080985e-07,
+          "flux_change": 3.3182752775481064e-08,
+          "momentum_residual": 3.359454565534437e-08,
+          "native_divergence_max": 6.243676888006979e-09,
+          "current_reconstructed_divergence_max": 2.3593861551984847e-08,
+          "face_flux_consistency_max": 4.073861562403904e-09
+        },
+        {
+          "iteration": 32,
+          "accepted": true,
+          "accepted_relaxation": 0.4,
+          "old_merit": 3.3728179252166245e-08,
+          "merit": 3.330607503205871e-08,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 5.930300024727267e-08
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 3.330607503205871e-08
+            }
+          ],
+          "true_linear_relative_residual": 3.090745531243169e-12,
+          "linear_iterations": 11,
+          "velocity_change": 9.01138750490153e-08,
+          "pressure_change": 7.593500165392807e-07,
+          "flux_change": 2.3190788104852952e-08,
+          "momentum_residual": 3.325739289044524e-08,
+          "native_divergence_max": 3.745360584173075e-09,
+          "current_reconstructed_divergence_max": 1.4154292519302784e-08,
+          "face_flux_consistency_max": 2.444265117125456e-09
+        },
+        {
+          "iteration": 33,
+          "accepted": true,
+          "accepted_relaxation": 0.2,
+          "old_merit": 3.330607503205871e-08,
+          "merit": 1.7783644220435184e-08,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 9.451582367441691e-08
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 3.682320112102967e-08
+            },
+            {
+              "relaxation": 0.2,
+              "merit": 1.7783644220435184e-08
+            }
+          ],
+          "true_linear_relative_residual": 4.28224208377689e-12,
+          "linear_iterations": 11,
+          "velocity_change": 7.292135056201951e-08,
+          "pressure_change": 5.086046133596859e-07,
+          "flux_change": 1.8148919857822026e-08,
+          "momentum_residual": 1.7725208019139856e-08,
+          "native_divergence_max": 2.9996562733725093e-09,
+          "current_reconstructed_divergence_max": 1.1323795245238303e-08,
+          "face_flux_consistency_max": 1.9554466405782892e-09
+        },
+        {
+          "iteration": 34,
+          "accepted": true,
+          "accepted_relaxation": 0.4,
+          "old_merit": 1.7783644220435184e-08,
+          "merit": 1.7663144332202937e-08,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 3.219074606530966e-08
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 1.7663144332202937e-08
+            }
+          ],
+          "true_linear_relative_residual": 9.066373376950376e-12,
+          "linear_iterations": 10,
+          "velocity_change": 4.899988372093957e-08,
+          "pressure_change": 4.084376608895528e-07,
+          "flux_change": 1.2560918797156088e-08,
+          "momentum_residual": 1.7641939139853534e-08,
+          "native_divergence_max": 1.800241268556935e-09,
+          "current_reconstructed_divergence_max": 6.7902813996600936e-09,
+          "face_flux_consistency_max": 1.1732402733406385e-09
+        },
+        {
+          "iteration": 35,
+          "accepted": true,
+          "accepted_relaxation": 0.2,
+          "old_merit": 1.7663144332202937e-08,
+          "merit": 9.394906983568022e-09,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 5.161976080859937e-08
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 2.0144467511069083e-08
+            },
+            {
+              "relaxation": 0.2,
+              "merit": 9.394906983568022e-09
+            }
+          ],
+          "true_linear_relative_residual": 1.8098450903251681e-12,
+          "linear_iterations": 17,
+          "velocity_change": 3.981469492068048e-08,
+          "pressure_change": 2.791119193370896e-07,
+          "flux_change": 9.921662676150907e-09,
+          "momentum_residual": 9.369374134917067e-09,
+          "native_divergence_max": 1.4401840969791028e-09,
+          "current_reconstructed_divergence_max": 5.432334925642436e-09,
+          "face_flux_consistency_max": 9.386111091993757e-10
+        },
+        {
+          "iteration": 36,
+          "accepted": true,
+          "accepted_relaxation": 0.4,
+          "old_merit": 9.394906983568022e-09,
+          "merit": 9.371604466949126e-09,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 1.747482568419588e-08
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 9.371604466949126e-09
+            }
+          ],
+          "true_linear_relative_residual": 4.840841183019235e-12,
+          "linear_iterations": 10,
+          "velocity_change": 2.6643206975470785e-08,
+          "pressure_change": 2.1987106397433894e-07,
+          "flux_change": 6.805777606610985e-09,
+          "momentum_residual": 9.362376146503203e-09,
+          "native_divergence_max": 8.640860839348454e-10,
+          "current_reconstructed_divergence_max": 3.257032456238652e-09,
+          "face_flux_consistency_max": 5.631517197071902e-10
+        },
+        {
+          "iteration": 37,
+          "accepted": true,
+          "accepted_relaxation": 0.2,
+          "old_merit": 9.371604466949126e-09,
+          "merit": 4.9735252450932684e-09,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 2.8183007170445595e-08
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 1.1020402856851809e-08
+            },
+            {
+              "relaxation": 0.2,
+              "merit": 4.9735252450932684e-09
+            }
+          ],
+          "true_linear_relative_residual": 5.7818298906212216e-12,
+          "linear_iterations": 10,
+          "velocity_change": 2.1730876658928534e-08,
+          "pressure_change": 1.5304135187915027e-07,
+          "flux_change": 5.421297233293416e-09,
+          "momentum_residual": 4.962348486522132e-09,
+          "native_divergence_max": 6.911232211526121e-10,
+          "current_reconstructed_divergence_max": 2.6080213301471486e-09,
+          "face_flux_consistency_max": 4.5053183783445684e-10
+        },
+        {
+          "iteration": 38,
+          "accepted": true,
+          "accepted_relaxation": 0.4,
+          "old_merit": 4.9735252450932684e-09,
+          "merit": 4.972697467817202e-09,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 9.480079799810377e-09
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 4.972697467817202e-09
+            }
+          ],
+          "true_linear_relative_residual": 3.968597735818967e-12,
+          "linear_iterations": 10,
+          "velocity_change": 1.4478537841950743e-08,
+          "pressure_change": 1.1839245293687754e-07,
+          "flux_change": 3.686813644061766e-09,
+          "momentum_residual": 4.9686719875029216e-09,
+          "native_divergence_max": 4.14090262079725e-10,
+          "current_reconstructed_divergence_max": 1.5628585300908608e-09,
+          "face_flux_consistency_max": 2.703110662638237e-10
+        },
+        {
+          "iteration": 39,
+          "accepted": true,
+          "accepted_relaxation": 0.2,
+          "old_merit": 4.972697467817202e-09,
+          "merit": 2.636655139163158e-09,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 1.5355581370358665e-08
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 6.017023962196025e-09
+            },
+            {
+              "relaxation": 0.2,
+              "merit": 2.636655139163158e-09
+            }
+          ],
+          "true_linear_relative_residual": 3.1534302001392038e-12,
+          "linear_iterations": 12,
+          "velocity_change": 1.1839604709486203e-08,
+          "pressure_change": 8.372084578971744e-08,
+          "flux_change": 2.956613452907346e-09,
+          "momentum_residual": 2.6317826394535103e-09,
+          "native_divergence_max": 3.313941933369425e-10,
+          "current_reconstructed_divergence_max": 1.2500713901519857e-09,
+          "face_flux_consistency_max": 2.1625488033869676e-10
+        },
+        {
+          "iteration": 40,
+          "accepted": true,
+          "accepted_relaxation": 0.4,
+          "old_merit": 2.636655139163158e-09,
+          "merit": 2.634882986212779e-09,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 5.126454886919552e-09
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 2.634882986212779e-09
+            }
+          ],
+          "true_linear_relative_residual": 8.259593948591808e-12,
+          "linear_iterations": 9,
+          "velocity_change": 7.842590300022597e-09,
+          "pressure_change": 6.360749842798817e-08,
+          "flux_change": 1.9914498254222556e-09,
+          "momentum_residual": 2.6331335465518148e-09,
+          "native_divergence_max": 2.013826605473668e-10,
+          "current_reconstructed_divergence_max": 7.479212249528191e-10,
+          "face_flux_consistency_max": 1.2974876297680168e-10
+        },
+        {
+          "iteration": 41,
+          "accepted": true,
+          "accepted_relaxation": 0.2,
+          "old_merit": 2.634882986212779e-09,
+          "merit": 1.4003448524544544e-09,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 8.348575971901096e-09
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 3.2802135678382906e-09
+            },
+            {
+              "relaxation": 0.2,
+              "merit": 1.4003448524544544e-09
+            }
+          ],
+          "true_linear_relative_residual": 8.87309023197601e-12,
+          "linear_iterations": 9,
+          "velocity_change": 6.434728938980925e-09,
+          "pressure_change": 4.566532938739943e-08,
+          "flux_change": 1.6082123759869382e-09,
+          "momentum_residual": 1.398245363632126e-09,
+          "native_divergence_max": 1.584215883476681e-10,
+          "current_reconstructed_divergence_max": 6.026942382664214e-10,
+          "face_flux_consistency_max": 1.0380185253593722e-10
+        },
+        {
+          "iteration": 42,
+          "accepted": true,
+          "accepted_relaxation": 0.4,
+          "old_merit": 1.4003448524544544e-09,
+          "merit": 1.3973683635058783e-09,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 2.7742243594979543e-09
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 1.3973683635058783e-09
+            }
+          ],
+          "true_linear_relative_residual": 4.3363388091404106e-12,
+          "linear_iterations": 9,
+          "velocity_change": 4.249905044231017e-09,
+          "pressure_change": 3.42124695417694e-08,
+          "flux_change": 1.0764671941733863e-09,
+          "momentum_residual": 1.3966101001899521e-09,
+          "native_divergence_max": 9.639173834119499e-11,
+          "current_reconstructed_divergence_max": 3.6022456892381715e-10,
+          "face_flux_consistency_max": 6.227871039103995e-11
+        },
+        {
+          "iteration": 43,
+          "accepted": true,
+          "accepted_relaxation": 0.2,
+          "old_merit": 1.3973683635058783e-09,
+          "merit": 7.451436610578012e-10,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 4.540238366737005e-09
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 1.7887514548827641e-09
+            },
+            {
+              "relaxation": 0.2,
+              "merit": 7.451436610578012e-10
+            }
+          ],
+          "true_linear_relative_residual": 4.7337452572458136e-12,
+          "linear_iterations": 9,
+          "velocity_change": 3.4982585329195155e-09,
+          "pressure_change": 2.4907242668362974e-08,
+          "flux_change": 8.749642148090394e-10,
+          "momentum_residual": 7.442363989370728e-10,
+          "native_divergence_max": 7.572392712873467e-11,
+          "current_reconstructed_divergence_max": 2.9062090234344145e-10,
+          "face_flux_consistency_max": 4.9824560899402926e-11
+        },
+        {
+          "iteration": 44,
+          "accepted": true,
+          "accepted_relaxation": 0.4,
+          "old_merit": 7.451436610578012e-10,
+          "merit": 7.420446918553795e-10,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 1.502821978411148e-09
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 7.420446918553795e-10
+            }
+          ],
+          "true_linear_relative_residual": 2.2779832453026806e-12,
+          "linear_iterations": 9,
+          "velocity_change": 2.3052119331588384e-09,
+          "pressure_change": 1.8428983459519815e-08,
+          "flux_change": 5.825944732496842e-10,
+          "momentum_residual": 7.41714510449315e-10,
+          "native_divergence_max": 4.6133565717587656e-11,
+          "current_reconstructed_divergence_max": 1.7349474981664953e-10,
+          "face_flux_consistency_max": 2.98938299903629e-11
+        },
+        {
+          "iteration": 45,
+          "accepted": true,
+          "accepted_relaxation": 0.2,
+          "old_merit": 7.420446918553795e-10,
+          "merit": 3.963569095630261e-10,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 2.46418167189943e-09
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 9.727194276579627e-10
+            },
+            {
+              "relaxation": 0.2,
+              "merit": 3.963569095630261e-10
+            }
+          ],
+          "true_linear_relative_residual": 2.590784678855409e-12,
+          "linear_iterations": 15,
+          "velocity_change": 1.899543014344481e-09,
+          "pressure_change": 1.3560809871731242e-08,
+          "flux_change": 4.754586236228455e-10,
+          "momentum_residual": 3.9595679872704236e-10,
+          "native_divergence_max": 3.782290106113529e-11,
+          "current_reconstructed_divergence_max": 1.3725786132678944e-10,
+          "face_flux_consistency_max": 2.3915750029582427e-11
+        },
+        {
+          "iteration": 46,
+          "accepted": true,
+          "accepted_relaxation": 0.4,
+          "old_merit": 3.963569095630261e-10,
+          "merit": 3.9586852819628916e-10,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 8.169169691141501e-10
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 3.9586852819628916e-10
+            }
+          ],
+          "true_linear_relative_residual": 1.6277356761342314e-12,
+          "linear_iterations": 11,
+          "velocity_change": 1.25153276965936e-09,
+          "pressure_change": 9.940477693894623e-09,
+          "flux_change": 3.1566163850864535e-10,
+          "momentum_residual": 3.957278728120149e-10,
+          "native_divergence_max": 2.2278835026812167e-11,
+          "current_reconstructed_divergence_max": 8.201720552714067e-11,
+          "face_flux_consistency_max": 1.434883748445293e-11
+        },
+        {
+          "iteration": 47,
+          "accepted": true,
+          "accepted_relaxation": 0.2,
+          "old_merit": 3.9586852819628916e-10,
+          "merit": 2.0998608335845084e-10,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 1.3368557773162593e-09
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 5.275416383653461e-10
+            },
+            {
+              "relaxation": 0.2,
+              "merit": 2.0998608335845084e-10
+            }
+          ],
+          "true_linear_relative_residual": 7.175162509426329e-12,
+          "linear_iterations": 8,
+          "velocity_change": 1.0322809166484385e-09,
+          "pressure_change": 7.388814591938467e-09,
+          "flux_change": 2.584244990705988e-10,
+          "momentum_residual": 2.098370374556912e-10,
+          "native_divergence_max": 1.6192765878164653e-11,
+          "current_reconstructed_divergence_max": 6.650742456759674e-11,
+          "face_flux_consistency_max": 1.1479486510203982e-11
+        },
+        {
+          "iteration": 48,
+          "accepted": true,
+          "accepted_relaxation": 0.4,
+          "old_merit": 2.0998608335845084e-10,
+          "merit": 2.059193518867157e-10,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 4.3056940385624995e-10
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 2.059193518867157e-10
+            }
+          ],
+          "true_linear_relative_residual": 5.671665593768495e-12,
+          "linear_iterations": 8,
+          "velocity_change": 6.639173113254583e-10,
+          "pressure_change": 5.241990602495375e-09,
+          "flux_change": 1.6736283170410804e-10,
+          "momentum_residual": 2.0584310722515076e-10,
+          "native_divergence_max": 1.2725851622485965e-11,
+          "current_reconstructed_divergence_max": 4.028093483765539e-11,
+          "face_flux_consistency_max": 6.887569399463084e-12
+        },
+        {
+          "iteration": 49,
+          "accepted": true,
+          "accepted_relaxation": 0.2,
+          "old_merit": 2.059193518867157e-10,
+          "merit": 1.1074125830746349e-10,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 7.095934671368236e-10
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 2.8119507509725985e-10
+            },
+            {
+              "relaxation": 0.2,
+              "merit": 1.1074125830746349e-10
+            }
+          ],
+          "true_linear_relative_residual": 3.7450736257694545e-12,
+          "linear_iterations": 8,
+          "velocity_change": 5.477069187381897e-10,
+          "pressure_change": 3.927391933380499e-09,
+          "flux_change": 1.3721116907294899e-10,
+          "momentum_residual": 1.1066435097329863e-10,
+          "native_divergence_max": 9.280857332649718e-12,
+          "current_reconstructed_divergence_max": 3.278936497319585e-11,
+          "face_flux_consistency_max": 5.510227028893495e-12
+        },
+        {
+          "iteration": 50,
+          "accepted": true,
+          "accepted_relaxation": 0.4,
+          "old_merit": 1.1074125830746349e-10,
+          "merit": 1.0742631912338009e-10,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 2.2795648234532483e-10
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 1.0742631912338009e-10
+            }
+          ],
+          "true_linear_relative_residual": 1.202008495992687e-12,
+          "linear_iterations": 14,
+          "velocity_change": 3.5082281297568893e-10,
+          "pressure_change": 2.7628686413248445e-09,
+          "flux_change": 8.817118559484045e-11,
+          "momentum_residual": 1.0739613305121999e-10,
+          "native_divergence_max": 5.423692744921384e-12,
+          "current_reconstructed_divergence_max": 2.020093467502982e-11,
+          "face_flux_consistency_max": 3.3059647080130695e-12
+        },
+        {
+          "iteration": 51,
+          "accepted": true,
+          "accepted_relaxation": 0.2,
+          "old_merit": 1.0742631912338009e-10,
+          "merit": 5.909968703854583e-11,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 3.819825539256083e-10
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 1.52332679996382e-10
+            },
+            {
+              "relaxation": 0.2,
+              "merit": 5.909968703854583e-11
+            }
+          ],
+          "true_linear_relative_residual": 1.634070911986789e-12,
+          "linear_iterations": 14,
+          "velocity_change": 2.938276948784141e-10,
+          "pressure_change": 2.1102769262447266e-09,
+          "flux_change": 7.367829710438553e-11,
+          "momentum_residual": 5.906734592074613e-11,
+          "native_divergence_max": 4.462211850020382e-12,
+          "current_reconstructed_divergence_max": 1.640372213063124e-11,
+          "face_flux_consistency_max": 2.6447962677423166e-12
+        },
+        {
+          "iteration": 52,
+          "accepted": true,
+          "accepted_relaxation": 0.2,
+          "old_merit": 5.909968703854583e-11,
+          "merit": 4.3484239428954933e-11,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 1.4552701653344818e-10
+            },
+            {
+              "relaxation": 0.4,
+              "merit": 6.560849326928846e-11
+            },
+            {
+              "relaxation": 0.2,
+              "merit": 4.3484239428954933e-11
+            }
+          ],
+          "true_linear_relative_residual": 6.922948968726194e-12,
+          "linear_iterations": 7,
+          "velocity_change": 1.1104863164556966e-10,
+          "pressure_change": 8.548497072117589e-10,
+          "flux_change": 2.7939029007585457e-11,
+          "momentum_residual": 4.343827657512448e-11,
+          "native_divergence_max": 4.329755304288697e-12,
+          "current_reconstructed_divergence_max": 1.6392855822777722e-11,
+          "face_flux_consistency_max": 2.1156900062026868e-12
+        }
+      ],
+      "elapsed_seconds": 9.33744003251195,
+      "original_analytic_boundary_flux_sum": 1.1102230246251565e-16,
+      "mms_spatial_accuracy_passed": true,
+      "suboff_physical_benchmark_passed": false,
+      "source_sha256": {
+        "scripts/verify_native_abc_convergence3d.py": "95fc38586a4e31a4d9c6762b58603fed7c4e27093739d924a7c11267bce93acd",
+        "src/tensorfvm/__init__.py": "9f8d4d3a249d695e4e841e4c9d11d7158db8a2d33e2928d3565794718e2aba3c",
+        "src/tensorfvm/backend_registry.py": "e68b95fdb7c457b921b2f1c9e3920f80ebdcdb104ca8077e10e96d2a4182a13a",
+        "src/tensorfvm/body_fitted.py": "4e633fa42c1171cf57aca5bf930827f97a30dada4e405bf3ac9c1068ba1bb7a7",
+        "src/tensorfvm/body_fitted3d.py": "dedd408c59096f559b2345f819541450768d4ce37f062e405b4335e4d00de9e4",
+        "src/tensorfvm/mesh3d.py": "ad7fe310537e70dcb65a34b42b335ea8bd7f9abd2bf24453a907c7f43a2b7c56",
+        "src/tensorfvm/mesh_api.py": "72f4f9d724084df335dca0e561877c5423c47a7f8bfffe950d631845e2dce22d",
+        "src/tensorfvm/multi_element.py": "c89faef53a8a8d429920a9f73805b91f28df3aa48bda762e7dd6bb2520fe8afc",
+        "src/tensorfvm/native_collocated3d.py": "c769a160eef819873f43a4169328a783a12b022c626c07570577395f34d2d366",
+        "src/tensorfvm/native_manufactured3d.py": "ab105132c07a16d9cf879d22dcec8ecfe8a72247114474b0cb770ae5fcc6e6da",
+        "src/tensorfvm/native_mesh3d.py": "59833e84499f7c5b4572b9d2f96020024d46b26fc91ee4dc2111300872b31470",
+        "src/tensorfvm/native_operators3d.py": "190ad3e4478d11bdd9332c38f8a7441530e9993c4459855722d15abe2fd519e0",
+        "src/tensorfvm/native_quadratic3d.py": "d5cc37263cf470edbd1f89e21fabdb4488baff2f392b483b0db4820c7be3c070",
+        "src/tensorfvm/native_quadratic_flow3d.py": "f1bbd7c2939819d2373884c70a177868dfa40965d94b5286e5e0c5f65c26866d",
+        "src/tensorfvm/native_viscous3d.py": "910f6e806a7f588024f421f984bccd24214798ee7fb4bda415ca7de0c6aa8662",
+        "src/tensorfvm/runtime.py": "ff383730f34f82030f28da424819eea670f28c663d5be834f30bebc6c74a2da5",
+        "src/tensorfvm/solver.py": "7c3613f23791c6a22825bd2ba0467e2bb84013ecaedc974901452b1864a2868e",
+        "src/tensorfvm/solver3d.py": "95d4711fd52ad9f2d8dd7300a999814633de986a2d579dcc997d17aa01603a37"
+      }
+    },
+    {
+      "n": 6,
+      "cells": 216,
+      "faces": 1512,
+      "geometry": {
+        "cells": 216,
+        "faces": 1512,
+        "minimum_cell_volume": 0.004629629629629625,
+        "maximum_relative_closure": 5.632949679888614e-17,
+        "minimum_face_projection": 0.001157407407407401,
+        "maximum_nonorthogonality_degrees": 29.194318711799482,
+        "patch_face_counts": {
+          "boundary": 432,
+          "internal": 1080
+        }
+      },
+      "numerically_converged": true,
+      "relative_errors": {
+        "velocity_vector": 1.8038623599416533e-05,
+        "pressure_mean_removed": 0.005597523377487791,
+        "velocity_x": 2.0010812216471803e-05,
+        "velocity_y": 1.650993108275689e-05,
+        "velocity_z": 1.773745330469668e-05
+      },
+      "all_error_metrics_below_3_percent": true,
+      "final": {
+        "iteration": 14,
+        "accepted": true,
+        "accepted_relaxation": 0.8,
+        "old_merit": 9.543274412754379e-11,
+        "merit": 2.961496376351208e-11,
+        "trials": [
+          {
+            "relaxation": 0.8,
+            "merit": 2.961496376351208e-11
+          }
+        ],
+        "true_linear_relative_residual": 3.56861145872481e-12,
+        "linear_iterations": 2,
+        "velocity_change": 4.456518579067514e-11,
+        "pressure_change": 6.881599385733204e-10,
+        "flux_change": 3.9267776013607256e-11,
+        "momentum_residual": 2.8911845997019665e-11,
+        "native_divergence_max": 2.8982316546688503e-11,
+        "current_reconstructed_divergence_max": 2.8815949626448423e-11,
+        "face_flux_consistency_max": 1.3941257828944164e-13
+      },
+      "history": [
+        {
+          "iteration": 1,
+          "accepted": true,
+          "accepted_relaxation": 0.8,
+          "old_merit": 0.0007432461450166764,
+          "merit": 0.00017436303689247808,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 0.00017436303689247808
+            }
+          ],
+          "true_linear_relative_residual": 7.430123764097253e-13,
+          "linear_iterations": 13,
+          "velocity_change": 0.0006881005442353115,
+          "pressure_change": 0.099955037755432,
+          "flux_change": 0.0004030991901621296,
+          "momentum_residual": 0.00014323780789951492,
+          "native_divergence_max": 0.0002280387131924217,
+          "current_reconstructed_divergence_max": 0.0016800842901506224,
+          "face_flux_consistency_max": 0.00017019344075889053
+        },
+        {
+          "iteration": 2,
+          "accepted": true,
+          "accepted_relaxation": 0.8,
+          "old_merit": 0.00017436303689247808,
+          "merit": 4.5199436541015256e-05,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 4.5199436541015256e-05
+            }
+          ],
+          "true_linear_relative_residual": 6.529327229039729e-13,
+          "linear_iterations": 12,
+          "velocity_change": 0.0001552243109719919,
+          "pressure_change": 0.019846865026004197,
+          "flux_change": 0.0001044694748099442,
+          "momentum_residual": 4.059030558694165e-05,
+          "native_divergence_max": 4.560774235648492e-05,
+          "current_reconstructed_divergence_max": 0.0003360168817248956,
+          "face_flux_consistency_max": 3.403870051549318e-05
+        },
+        {
+          "iteration": 3,
+          "accepted": true,
+          "accepted_relaxation": 0.8,
+          "old_merit": 4.5199436541015256e-05,
+          "merit": 1.2572426563618752e-05,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 1.2572426563618752e-05
+            }
+          ],
+          "true_linear_relative_residual": 4.236359221988828e-12,
+          "linear_iterations": 10,
+          "velocity_change": 3.752366808977771e-05,
+          "pressure_change": 0.003944334812074509,
+          "flux_change": 2.840551239366602e-05,
+          "momentum_residual": 1.192682912444753e-05,
+          "native_divergence_max": 9.121551589927336e-06,
+          "current_reconstructed_divergence_max": 6.720337504503148e-05,
+          "face_flux_consistency_max": 6.807741971031175e-06
+        },
+        {
+          "iteration": 4,
+          "accepted": true,
+          "accepted_relaxation": 0.8,
+          "old_merit": 1.2572426563618752e-05,
+          "merit": 3.68713642961278e-06,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 3.68713642961278e-06
+            }
+          ],
+          "true_linear_relative_residual": 6.018343791494183e-12,
+          "linear_iterations": 9,
+          "velocity_change": 9.766175117876791e-06,
+          "pressure_change": 0.0007889939643048173,
+          "flux_change": 8.025659974748382e-06,
+          "momentum_residual": 3.6003205162226006e-06,
+          "native_divergence_max": 1.82430914562326e-06,
+          "current_reconstructed_divergence_max": 1.3440708079827377e-05,
+          "face_flux_consistency_max": 1.3615488517441062e-06
+        },
+        {
+          "iteration": 5,
+          "accepted": true,
+          "accepted_relaxation": 0.8,
+          "old_merit": 3.68713642961278e-06,
+          "merit": 1.123296565705201e-06,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 1.123296565705201e-06
+            }
+          ],
+          "true_linear_relative_residual": 6.656543736741767e-13,
+          "linear_iterations": 10,
+          "velocity_change": 2.708240553904043e-06,
+          "pressure_change": 0.00016046793497861663,
+          "flux_change": 2.3328178938432064e-06,
+          "momentum_residual": 1.1119749811545525e-06,
+          "native_divergence_max": 3.648621633572936e-07,
+          "current_reconstructed_divergence_max": 2.6881416481522284e-06,
+          "face_flux_consistency_max": 2.7230988124184927e-07
+        },
+        {
+          "iteration": 6,
+          "accepted": true,
+          "accepted_relaxation": 0.8,
+          "old_merit": 1.123296565705201e-06,
+          "merit": 3.5013264609470547e-07,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 3.5013264609470547e-07
+            }
+          ],
+          "true_linear_relative_residual": 7.213327999714552e-13,
+          "linear_iterations": 9,
+          "velocity_change": 7.838415251407522e-07,
+          "pressure_change": 3.375428735420958e-05,
+          "flux_change": 6.900403140517111e-07,
+          "momentum_residual": 3.486840759698238e-07,
+          "native_divergence_max": 7.29728942272523e-08,
+          "current_reconstructed_divergence_max": 5.376285526145769e-07,
+          "face_flux_consistency_max": 5.446200160724833e-08
+        },
+        {
+          "iteration": 7,
+          "accepted": true,
+          "accepted_relaxation": 0.8,
+          "old_merit": 3.5013264609470547e-07,
+          "merit": 1.1021471105378164e-07,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 1.1021471105378164e-07
+            }
+          ],
+          "true_linear_relative_residual": 1.0000365273075345e-12,
+          "linear_iterations": 8,
+          "velocity_change": 2.3198584237216114e-07,
+          "pressure_change": 7.514901269339911e-06,
+          "flux_change": 2.0566493825709252e-07,
+          "momentum_residual": 1.1003085779207316e-07,
+          "native_divergence_max": 1.4593179789579306e-08,
+          "current_reconstructed_divergence_max": 1.0752917275341766e-07,
+          "face_flux_consistency_max": 1.0892405564734683e-08
+        },
+        {
+          "iteration": 8,
+          "accepted": true,
+          "accepted_relaxation": 0.8,
+          "old_merit": 1.1021471105378164e-07,
+          "merit": 3.4712108367117746e-08,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 3.4712108367117746e-08
+            }
+          ],
+          "true_linear_relative_residual": 7.022319809337415e-12,
+          "linear_iterations": 6,
+          "velocity_change": 6.91878330468636e-08,
+          "pressure_change": 1.8028904761453433e-06,
+          "flux_change": 6.13140440130605e-08,
+          "momentum_residual": 3.468874526488449e-08,
+          "native_divergence_max": 2.947185495649763e-09,
+          "current_reconstructed_divergence_max": 2.15528371400042e-08,
+          "face_flux_consistency_max": 2.1784820194962156e-09
+        },
+        {
+          "iteration": 9,
+          "accepted": true,
+          "accepted_relaxation": 0.8,
+          "old_merit": 3.4712108367117746e-08,
+          "merit": 1.0874971752152636e-08,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 1.0874971752152636e-08
+            }
+          ],
+          "true_linear_relative_residual": 2.4419113784360554e-12,
+          "linear_iterations": 6,
+          "velocity_change": 2.0614566202077124e-08,
+          "pressure_change": 4.6446932063438585e-07,
+          "flux_change": 1.8204125745662812e-08,
+          "momentum_residual": 1.0871972477999074e-08,
+          "native_divergence_max": 6.016970671707257e-10,
+          "current_reconstructed_divergence_max": 4.312716933574374e-09,
+          "face_flux_consistency_max": 4.35696771419221e-10
+        },
+        {
+          "iteration": 10,
+          "accepted": true,
+          "accepted_relaxation": 0.8,
+          "old_merit": 1.0874971752152636e-08,
+          "merit": 3.377596251076541e-09,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 3.377596251076541e-09
+            }
+          ],
+          "true_linear_relative_residual": 7.406212197136502e-13,
+          "linear_iterations": 6,
+          "velocity_change": 6.110043678698245e-09,
+          "pressure_change": 1.254558614039984e-07,
+          "flux_change": 5.3731371391848445e-09,
+          "momentum_residual": 3.3772053192742892e-09,
+          "native_divergence_max": 1.2382082859030421e-10,
+          "current_reconstructed_divergence_max": 8.658161687602463e-10,
+          "face_flux_consistency_max": 8.71392317771849e-11
+        },
+        {
+          "iteration": 11,
+          "accepted": true,
+          "accepted_relaxation": 0.8,
+          "old_merit": 3.377596251076541e-09,
+          "merit": 1.0379667904792582e-09,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 1.0379667904792582e-09
+            }
+          ],
+          "true_linear_relative_residual": 1.0930587433961009e-12,
+          "linear_iterations": 5,
+          "velocity_change": 1.7990094124316538e-09,
+          "pressure_change": 3.4551352774770266e-08,
+          "flux_change": 1.5769349585647879e-09,
+          "momentum_residual": 1.0379123960024813e-09,
+          "native_divergence_max": 2.779114438578035e-11,
+          "current_reconstructed_divergence_max": 1.6707023264839176e-10,
+          "face_flux_consistency_max": 1.742791985943256e-11
+        },
+        {
+          "iteration": 12,
+          "accepted": true,
+          "accepted_relaxation": 0.8,
+          "old_merit": 1.0379667904792582e-09,
+          "merit": 3.15920965611037e-10,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 3.15920965611037e-10
+            }
+          ],
+          "true_linear_relative_residual": 4.9525284375673425e-12,
+          "linear_iterations": 3,
+          "velocity_change": 5.266577546632869e-10,
+          "pressure_change": 9.506377472229258e-09,
+          "flux_change": 4.609483908070765e-10,
+          "momentum_residual": 3.156478460439761e-10,
+          "native_divergence_max": 6.47766840167208e-11,
+          "current_reconstructed_divergence_max": 6.911365230122261e-11,
+          "face_flux_consistency_max": 3.485314457236041e-12
+        },
+        {
+          "iteration": 13,
+          "accepted": true,
+          "accepted_relaxation": 0.8,
+          "old_merit": 3.15920965611037e-10,
+          "merit": 9.543274412754379e-11,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 9.543274412754379e-11
+            }
+          ],
+          "true_linear_relative_residual": 1.6519061053472797e-12,
+          "linear_iterations": 3,
+          "velocity_change": 1.529722661861202e-10,
+          "pressure_change": 2.6056091751376406e-09,
+          "flux_change": 1.3400839542397623e-10,
+          "momentum_residual": 9.522174261270592e-11,
+          "native_divergence_max": 3.039212631561485e-11,
+          "current_reconstructed_divergence_max": 3.1256559840375805e-11,
+          "face_flux_consistency_max": 6.970628914472082e-13
+        },
+        {
+          "iteration": 14,
+          "accepted": true,
+          "accepted_relaxation": 0.8,
+          "old_merit": 9.543274412754379e-11,
+          "merit": 2.961496376351208e-11,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 2.961496376351208e-11
+            }
+          ],
+          "true_linear_relative_residual": 3.56861145872481e-12,
+          "linear_iterations": 2,
+          "velocity_change": 4.456518579067514e-11,
+          "pressure_change": 6.881599385733204e-10,
+          "flux_change": 3.9267776013607256e-11,
+          "momentum_residual": 2.8911845997019665e-11,
+          "native_divergence_max": 2.8982316546688503e-11,
+          "current_reconstructed_divergence_max": 2.8815949626448423e-11,
+          "face_flux_consistency_max": 1.3941257828944164e-13
+        }
+      ],
+      "elapsed_seconds": 6.30107937566936,
+      "original_analytic_boundary_flux_sum": -1.1102230246251565e-16,
+      "mms_spatial_accuracy_passed": true,
+      "suboff_physical_benchmark_passed": false,
+      "source_sha256": {
+        "scripts/verify_native_abc_convergence3d.py": "95fc38586a4e31a4d9c6762b58603fed7c4e27093739d924a7c11267bce93acd",
+        "src/tensorfvm/__init__.py": "9f8d4d3a249d695e4e841e4c9d11d7158db8a2d33e2928d3565794718e2aba3c",
+        "src/tensorfvm/backend_registry.py": "e68b95fdb7c457b921b2f1c9e3920f80ebdcdb104ca8077e10e96d2a4182a13a",
+        "src/tensorfvm/body_fitted.py": "4e633fa42c1171cf57aca5bf930827f97a30dada4e405bf3ac9c1068ba1bb7a7",
+        "src/tensorfvm/body_fitted3d.py": "dedd408c59096f559b2345f819541450768d4ce37f062e405b4335e4d00de9e4",
+        "src/tensorfvm/mesh3d.py": "ad7fe310537e70dcb65a34b42b335ea8bd7f9abd2bf24453a907c7f43a2b7c56",
+        "src/tensorfvm/mesh_api.py": "72f4f9d724084df335dca0e561877c5423c47a7f8bfffe950d631845e2dce22d",
+        "src/tensorfvm/multi_element.py": "c89faef53a8a8d429920a9f73805b91f28df3aa48bda762e7dd6bb2520fe8afc",
+        "src/tensorfvm/native_collocated3d.py": "c769a160eef819873f43a4169328a783a12b022c626c07570577395f34d2d366",
+        "src/tensorfvm/native_manufactured3d.py": "ab105132c07a16d9cf879d22dcec8ecfe8a72247114474b0cb770ae5fcc6e6da",
+        "src/tensorfvm/native_mesh3d.py": "59833e84499f7c5b4572b9d2f96020024d46b26fc91ee4dc2111300872b31470",
+        "src/tensorfvm/native_operators3d.py": "190ad3e4478d11bdd9332c38f8a7441530e9993c4459855722d15abe2fd519e0",
+        "src/tensorfvm/native_quadratic3d.py": "d5cc37263cf470edbd1f89e21fabdb4488baff2f392b483b0db4820c7be3c070",
+        "src/tensorfvm/native_quadratic_flow3d.py": "f1bbd7c2939819d2373884c70a177868dfa40965d94b5286e5e0c5f65c26866d",
+        "src/tensorfvm/native_viscous3d.py": "910f6e806a7f588024f421f984bccd24214798ee7fb4bda415ca7de0c6aa8662",
+        "src/tensorfvm/runtime.py": "ff383730f34f82030f28da424819eea670f28c663d5be834f30bebc6c74a2da5",
+        "src/tensorfvm/solver.py": "7c3613f23791c6a22825bd2ba0467e2bb84013ecaedc974901452b1864a2868e",
+        "src/tensorfvm/solver3d.py": "95d4711fd52ad9f2d8dd7300a999814633de986a2d579dcc997d17aa01603a37"
+      }
+    },
+    {
+      "n": 12,
+      "cells": 1728,
+      "faces": 11232,
+      "geometry": {
+        "cells": 1728,
+        "faces": 11232,
+        "minimum_cell_volume": 0.0005787037037037022,
+        "maximum_relative_closure": 5.901743015159813e-17,
+        "minimum_face_projection": 0.00014467592592592394,
+        "maximum_nonorthogonality_degrees": 29.194318711799706,
+        "patch_face_counts": {
+          "boundary": 1728,
+          "internal": 9504
+        }
+      },
+      "numerically_converged": true,
+      "relative_errors": {
+        "velocity_vector": 3.865506161454697e-06,
+        "pressure_mean_removed": 0.0014319901537093503,
+        "velocity_x": 4.075177530656235e-06,
+        "velocity_y": 3.632276161171769e-06,
+        "velocity_z": 3.917278717293236e-06
+      },
+      "all_error_metrics_below_3_percent": true,
+      "final": {
+        "iteration": 14,
+        "accepted": true,
+        "accepted_relaxation": 0.8,
+        "old_merit": 9.290456472761081e-12,
+        "merit": 9.274694141784582e-12,
+        "trials": [
+          {
+            "relaxation": 0.8,
+            "merit": 9.274694141784582e-12
+          }
+        ],
+        "true_linear_relative_residual": 2.9765149434933794e-12,
+        "linear_iterations": 0,
+        "velocity_change": 0.0,
+        "pressure_change": 0.0,
+        "flux_change": 1.1351964513418996e-13,
+        "momentum_residual": 3.1380001084462146e-12,
+        "native_divergence_max": 3.9899583637037495e-11,
+        "current_reconstructed_divergence_max": 3.961293792986709e-11,
+        "face_flux_consistency_max": 3.920213097769889e-14
+      },
+      "history": [
+        {
+          "iteration": 1,
+          "accepted": true,
+          "accepted_relaxation": 0.8,
+          "old_merit": 0.00019086863384082153,
+          "merit": 4.0756664608675115e-05,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 4.0756664608675115e-05
+            }
+          ],
+          "true_linear_relative_residual": 1.0704078012376848e-12,
+          "linear_iterations": 12,
+          "velocity_change": 0.00018860821000303763,
+          "pressure_change": 0.0862596111790399,
+          "flux_change": 0.0001314237788613666,
+          "momentum_residual": 3.072953523170653e-05,
+          "native_divergence_max": 8.504824305535781e-05,
+          "current_reconstructed_divergence_max": 0.000800938159623107,
+          "face_flux_consistency_max": 4.7900017730755346e-05
+        },
+        {
+          "iteration": 2,
+          "accepted": true,
+          "accepted_relaxation": 0.8,
+          "old_merit": 4.0756664608675115e-05,
+          "merit": 9.066807295695267e-06,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 9.066807295695267e-06
+            }
+          ],
+          "true_linear_relative_residual": 9.251474574192312e-13,
+          "linear_iterations": 11,
+          "velocity_change": 4.066829139140796e-05,
+          "pressure_change": 0.01668751136250299,
+          "flux_change": 3.050425584390114e-05,
+          "momentum_residual": 7.316757016975514e-06,
+          "native_divergence_max": 1.7009650110172404e-05,
+          "current_reconstructed_divergence_max": 0.000160187632112646,
+          "face_flux_consistency_max": 9.580003191567795e-06
+        },
+        {
+          "iteration": 3,
+          "accepted": true,
+          "accepted_relaxation": 0.8,
+          "old_merit": 9.066807295695267e-06,
+          "merit": 2.100614678731834e-06,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 2.100614678731834e-06
+            }
+          ],
+          "true_linear_relative_residual": 1.2122454376280268e-12,
+          "linear_iterations": 10,
+          "velocity_change": 9.027155476253459e-06,
+          "pressure_change": 0.003200747835871015,
+          "flux_change": 7.291693390643819e-06,
+          "momentum_residual": 1.8071244528146759e-06,
+          "native_divergence_max": 3.401926897933503e-06,
+          "current_reconstructed_divergence_max": 3.203752967267935e-05,
+          "face_flux_consistency_max": 1.9160005459190364e-06
+        },
+        {
+          "iteration": 4,
+          "accepted": true,
+          "accepted_relaxation": 0.8,
+          "old_merit": 2.100614678731834e-06,
+          "merit": 5.048340456087475e-07,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 5.048340456087475e-07
+            }
+          ],
+          "true_linear_relative_residual": 1.7432000494416883e-12,
+          "linear_iterations": 9,
+          "velocity_change": 2.0812614109522085e-06,
+          "pressure_change": 0.0006176882029210598,
+          "flux_change": 1.802881873682838e-06,
+          "momentum_residual": 4.571458691145951e-07,
+          "native_divergence_max": 6.803866068050276e-07,
+          "current_reconstructed_divergence_max": 6.4075047234296544e-06,
+          "face_flux_consistency_max": 3.8320008938673115e-07
+        },
+        {
+          "iteration": 5,
+          "accepted": true,
+          "accepted_relaxation": 0.8,
+          "old_merit": 5.048340456087475e-07,
+          "merit": 1.2509324482742348e-07,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 1.2509324482742348e-07
+            }
+          ],
+          "true_linear_relative_residual": 1.9948325391440616e-12,
+          "linear_iterations": 8,
+          "velocity_change": 5.017939369993237e-07,
+          "pressure_change": 0.00012108963654473139,
+          "flux_change": 4.6161598295875253e-07,
+          "momentum_residual": 1.175297850395785e-07,
+          "native_divergence_max": 1.360712563874821e-07,
+          "current_reconstructed_divergence_max": 1.2815070136312772e-06,
+          "face_flux_consistency_max": 7.664001354061049e-08
+        },
+        {
+          "iteration": 6,
+          "accepted": true,
+          "accepted_relaxation": 0.8,
+          "old_merit": 1.2509324482742348e-07,
+          "merit": 3.176290783404261e-08,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 3.176290783404261e-08
+            }
+          ],
+          "true_linear_relative_residual": 2.2164075760713302e-12,
+          "linear_iterations": 7,
+          "velocity_change": 1.2662336286628465e-07,
+          "pressure_change": 2.435548651832778e-05,
+          "flux_change": 1.2200208487244404e-07,
+          "momentum_residual": 3.0586174265352714e-08,
+          "native_divergence_max": 2.720665692734768e-08,
+          "current_reconstructed_divergence_max": 2.563089979007448e-07,
+          "face_flux_consistency_max": 1.5328001728068825e-08
+        },
+        {
+          "iteration": 7,
+          "accepted": true,
+          "accepted_relaxation": 0.8,
+          "old_merit": 3.176290783404261e-08,
+          "merit": 8.22547396328041e-09,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 8.22547396328041e-09
+            }
+          ],
+          "true_linear_relative_residual": 7.226926321750142e-12,
+          "linear_iterations": 5,
+          "velocity_change": 3.3242135830076725e-08,
+          "pressure_change": 5.0735109396479e-06,
+          "flux_change": 3.306767598748786e-08,
+          "momentum_residual": 8.043617151486047e-09,
+          "native_divergence_max": 5.484866311133982e-09,
+          "current_reconstructed_divergence_max": 5.12182645046044e-08,
+          "face_flux_consistency_max": 3.06560014960311e-09
+        },
+        {
+          "iteration": 8,
+          "accepted": true,
+          "accepted_relaxation": 0.8,
+          "old_merit": 8.22547396328041e-09,
+          "merit": 2.166804729726889e-09,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 2.166804729726889e-09
+            }
+          ],
+          "true_linear_relative_residual": 2.251666387548632e-12,
+          "linear_iterations": 5,
+          "velocity_change": 8.987667149997058e-09,
+          "pressure_change": 1.100732958021778e-06,
+          "flux_change": 9.122106235460869e-09,
+          "momentum_residual": 2.1388030274169674e-09,
+          "native_divergence_max": 1.104156266418243e-09,
+          "current_reconstructed_divergence_max": 1.0236473044211709e-08,
+          "face_flux_consistency_max": 6.131201034246176e-10
+        },
+        {
+          "iteration": 9,
+          "accepted": true,
+          "accepted_relaxation": 0.8,
+          "old_merit": 2.166804729726889e-09,
+          "merit": 5.802986632143646e-10,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 5.802986632143646e-10
+            }
+          ],
+          "true_linear_relative_residual": 7.0858750615845555e-12,
+          "linear_iterations": 3,
+          "velocity_change": 2.480186530176216e-09,
+          "pressure_change": 2.48460420796398e-07,
+          "flux_change": 2.547108911280473e-09,
+          "momentum_residual": 5.753258912373673e-10,
+          "native_divergence_max": 3.414283855640575e-10,
+          "current_reconstructed_divergence_max": 1.926697551501987e-09,
+          "face_flux_consistency_max": 1.2262402068492352e-10
+        },
+        {
+          "iteration": 10,
+          "accepted": true,
+          "accepted_relaxation": 0.8,
+          "old_merit": 5.802986632143646e-10,
+          "merit": 1.577647976345804e-10,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 1.577647976345804e-10
+            }
+          ],
+          "true_linear_relative_residual": 6.633740057801662e-13,
+          "linear_iterations": 4,
+          "velocity_change": 6.922092866102763e-10,
+          "pressure_change": 5.8241913843100294e-08,
+          "flux_change": 7.156297904682141e-10,
+          "momentum_residual": 1.569619365502009e-10,
+          "native_divergence_max": 7.408873514691546e-11,
+          "current_reconstructed_divergence_max": 3.7953840070770163e-10,
+          "face_flux_consistency_max": 2.4524853139648424e-11
+        },
+        {
+          "iteration": 11,
+          "accepted": true,
+          "accepted_relaxation": 0.8,
+          "old_merit": 1.577647976345804e-10,
+          "merit": 4.881682424837223e-11,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 4.881682424837223e-11
+            }
+          ],
+          "true_linear_relative_residual": 5.111387237052705e-12,
+          "linear_iterations": 2,
+          "velocity_change": 1.906877950444317e-10,
+          "pressure_change": 1.3896133560386892e-08,
+          "flux_change": 1.9787825413173578e-10,
+          "momentum_residual": 4.65049915530304e-11,
+          "native_divergence_max": 8.022857378442441e-11,
+          "current_reconstructed_divergence_max": 1.0977144193624591e-10,
+          "face_flux_consistency_max": 4.9049216252659626e-12
+        },
+        {
+          "iteration": 12,
+          "accepted": true,
+          "accepted_relaxation": 0.8,
+          "old_merit": 4.881682424837223e-11,
+          "merit": 2.5626406863880548e-11,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 2.5626406863880548e-11
+            }
+          ],
+          "true_linear_relative_residual": 7.803866311848505e-12,
+          "linear_iterations": 1,
+          "velocity_change": 5.985557755320511e-11,
+          "pressure_change": 3.311363475333848e-09,
+          "flux_change": 6.199249427648512e-11,
+          "momentum_residual": 1.1525310265953146e-11,
+          "native_divergence_max": 1.187174109018583e-10,
+          "current_reconstructed_divergence_max": 1.0676297346190447e-10,
+          "face_flux_consistency_max": 9.8115583437622e-13
+        },
+        {
+          "iteration": 13,
+          "accepted": true,
+          "accepted_relaxation": 0.8,
+          "old_merit": 2.5626406863880548e-11,
+          "merit": 9.290456472761081e-12,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 9.290456472761081e-12
+            }
+          ],
+          "true_linear_relative_residual": 1.2987975724355338e-12,
+          "linear_iterations": 1,
+          "velocity_change": 1.5831206008712138e-11,
+          "pressure_change": 1.0110104755972845e-09,
+          "flux_change": 1.6528350195180317e-11,
+          "momentum_residual": 3.139215363535606e-12,
+          "native_divergence_max": 4.1038297760032094e-11,
+          "current_reconstructed_divergence_max": 3.961293792986709e-11,
+          "face_flux_consistency_max": 1.9588814822918913e-13
+        },
+        {
+          "iteration": 14,
+          "accepted": true,
+          "accepted_relaxation": 0.8,
+          "old_merit": 9.290456472761081e-12,
+          "merit": 9.274694141784582e-12,
+          "trials": [
+            {
+              "relaxation": 0.8,
+              "merit": 9.274694141784582e-12
+            }
+          ],
+          "true_linear_relative_residual": 2.9765149434933794e-12,
+          "linear_iterations": 0,
+          "velocity_change": 0.0,
+          "pressure_change": 0.0,
+          "flux_change": 1.1351964513418996e-13,
+          "momentum_residual": 3.1380001084462146e-12,
+          "native_divergence_max": 3.9899583637037495e-11,
+          "current_reconstructed_divergence_max": 3.961293792986709e-11,
+          "face_flux_consistency_max": 3.920213097769889e-14
+        }
+      ],
+      "elapsed_seconds": 52.60153972264379,
+      "original_analytic_boundary_flux_sum": -1.1102230246251565e-16,
+      "mms_spatial_accuracy_passed": true,
+      "suboff_physical_benchmark_passed": false,
+      "source_sha256": {
+        "scripts/verify_native_abc_convergence3d.py": "95fc38586a4e31a4d9c6762b58603fed7c4e27093739d924a7c11267bce93acd",
+        "src/tensorfvm/__init__.py": "9f8d4d3a249d695e4e841e4c9d11d7158db8a2d33e2928d3565794718e2aba3c",
+        "src/tensorfvm/backend_registry.py": "e68b95fdb7c457b921b2f1c9e3920f80ebdcdb104ca8077e10e96d2a4182a13a",
+        "src/tensorfvm/body_fitted.py": "4e633fa42c1171cf57aca5bf930827f97a30dada4e405bf3ac9c1068ba1bb7a7",
+        "src/tensorfvm/body_fitted3d.py": "dedd408c59096f559b2345f819541450768d4ce37f062e405b4335e4d00de9e4",
+        "src/tensorfvm/mesh3d.py": "ad7fe310537e70dcb65a34b42b335ea8bd7f9abd2bf24453a907c7f43a2b7c56",
+        "src/tensorfvm/mesh_api.py": "72f4f9d724084df335dca0e561877c5423c47a7f8bfffe950d631845e2dce22d",
+        "src/tensorfvm/multi_element.py": "c89faef53a8a8d429920a9f73805b91f28df3aa48bda762e7dd6bb2520fe8afc",
+        "src/tensorfvm/native_collocated3d.py": "c769a160eef819873f43a4169328a783a12b022c626c07570577395f34d2d366",
+        "src/tensorfvm/native_manufactured3d.py": "ab105132c07a16d9cf879d22dcec8ecfe8a72247114474b0cb770ae5fcc6e6da",
+        "src/tensorfvm/native_mesh3d.py": "59833e84499f7c5b4572b9d2f96020024d46b26fc91ee4dc2111300872b31470",
+        "src/tensorfvm/native_operators3d.py": "190ad3e4478d11bdd9332c38f8a7441530e9993c4459855722d15abe2fd519e0",
+        "src/tensorfvm/native_quadratic3d.py": "d5cc37263cf470edbd1f89e21fabdb4488baff2f392b483b0db4820c7be3c070",
+        "src/tensorfvm/native_quadratic_flow3d.py": "f1bbd7c2939819d2373884c70a177868dfa40965d94b5286e5e0c5f65c26866d",
+        "src/tensorfvm/native_viscous3d.py": "910f6e806a7f588024f421f984bccd24214798ee7fb4bda415ca7de0c6aa8662",
+        "src/tensorfvm/runtime.py": "ff383730f34f82030f28da424819eea670f28c663d5be834f30bebc6c74a2da5",
+        "src/tensorfvm/solver.py": "7c3613f23791c6a22825bd2ba0467e2bb84013ecaedc974901452b1864a2868e",
+        "src/tensorfvm/solver3d.py": "95d4711fd52ad9f2d8dd7300a999814633de986a2d579dcc997d17aa01603a37"
+      }
+    }
+  ]
+}
