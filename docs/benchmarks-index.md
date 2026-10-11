@@ -154,3 +154,11 @@ NACA三网格（64×26、128×52、256×104）全部达到稳态并通过独立�
 ### SUBOFF 近壁结构化与外部非结构化混合网格
 
 [混合网格报告](verification-suboff-hybrid-mesh/report.md)：近壁保持六面体、艏艉棱柱封口，外部真实 Gmsh 四面体。两档总单元数 11,648 / 24,284，共形交界三角面 1,488 / 3,008；支持显式分片三角面积分的翘曲面。65 项集成检查通过，包含实际混合网格上的解析标量投影。附原生网格、真实截面、原始几何、分区质量与源码校验清单。艏艉弦差及薄层壁面非正交性仍待优化，没有黏性流动、Cp/阻力或 y+ 验证；仍不增加合格流动 benchmark 计数。
+
+### 三维完整动量、SST 耦合及 SUBOFF 全指标验证
+
+[全指标开发报告](verification-suboff-validation/report.md)：总阻力、19点表面 Cp、独立三维制造解同时开发。固定解析参数的非线性 ABC 三档 27/216/1,728 单元均数值收敛，误差严格随细化下降；最细速度向量 0.0240%、三分量 0.0287%/0.0235%/0.0195%、去均值压力 **2.9124%**，通过最细网格制造解空间验证。粗/中压力 24.7230%/9.0798%失败记录完整保留。
+
+[三维 NS/SST 非零通道](verification-native-rans3d/report.md)在伪时间步0.1/1/10下均通过原始非线性门限，计算场最大相对差约9.62e-8；仅耦合数值验证。[SUBOFF 11,648单元完整 NS 制造解](verification-native-suboff-mms/coarse/report.md)55步收敛，速度0.1979%、压力 **5.4999%**，未通过3%。[重构审计](verification-native-suboff-mms/reconstruction-audit/report.md)及[线性求解失败/修复证据](verification-native-suboff-linear/report.md)均保留。
+
+[自适应贴体几何](verification-suboff-adaptive-mesh/report.md)与[实验参考审查](verification-suboff-reference/README.md)提供实际面内弦差及数据溯源。当前 **没有新增合格 SUBOFF 物理流动案例**；制造解通过不替代阻力/Cp验证。新原生三维路径尚未验证GPU。完整回归282项通过、45子测试。

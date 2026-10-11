@@ -1,0 +1,197 @@
+{
+  "checked_utc": "2026-10-11",
+  "configuration": "AFF-1 bare hull, zero angle of attack",
+  "total_drag": {
+    "original": "Liu & Huang 1998, ADA359226, Table 14, model 5470 DTMB tow tank",
+    "resistance_N_verified": [
+      87.4,
+      242.2,
+      332.9,
+      451.5,
+      576.9,
+      697.0
+    ],
+    "speed_knots_verified": [
+      5.92,
+      10.0,
+      11.84,
+      13.92,
+      16.0,
+      17.99
+    ],
+    "experimental_density_kg_m3": null,
+    "experimental_kinematic_viscosity_m2_s": null,
+    "experimental_Re": null,
+    "experimental_total_coefficient_qualified": null,
+    "uncertainty": null,
+    "note": "CR residual coefficient is not total Ct. Dimensional forces verified against primary report OCR and independent publication."
+  },
+  "cp_candidate": {
+    "url": "https://zenodo.org/records/22692726",
+    "doi": "10.5281/zenodo.22692726",
+    "rows": 19,
+    "Re_L": 12000000,
+    "normalization": "(p-p_inf)/(0.5*rho*U_inf**2)",
+    "uncertainty_95_absolute": 0.015,
+    "full_primary_table_verified": false,
+    "measured_sample_primary_verified_rows": 4,
+    "corrected_column_use_authorized": true,
+    "correction_arithmetic_discrepancies": [
+      {
+        "x_L": 0.181,
+        "measured_minus_correction_minus_corrected": 2.0000000000006124e-05
+      },
+      {
+        "x_L": 0.857,
+        "measured_minus_correction_minus_corrected": -2.999999999999531e-06
+      },
+      {
+        "x_L": 0.956,
+        "measured_minus_correction_minus_corrected": -0.0003599999999999992
+      }
+    ],
+    "corrected_column_use_scope": "Provisional nominal comparison only; retain known discrepancies, primary-table qualification flag and uncertainty."
+  },
+  "files": {
+    "derived-hull-coefficients.pdf": {
+      "sha256": "c8c9d3ea415f3ee532e1bd134ebe648a61897239688817f030a88f830c083951",
+      "bytes": 578794,
+      "url": "https://dergipark.org.tr/en/download/article-file/3184219",
+      "doi": "10.54926/gdt.1308809",
+      "authors": [
+        "Gokhan Budak"
+      ],
+      "year": 2023,
+      "license": null,
+      "license_status": "No explicit redistribution license found in paper or original article page.",
+      "storage": "external_download",
+      "redistributed_in_repository": false,
+      "local_cache_path": "results/suboff-reference-source-pdfs/derived-hull-coefficients.pdf",
+      "unmodified": true
+    },
+    "jfm-tripping.pdf": {
+      "sha256": "255223702e27c49c0333256df298199a5cdca25a4fa70ea8392ce19693428223",
+      "bytes": 6524358,
+      "url": "https://websites.umich.edu/~krmahesh/globalassets/publpdf/journal/nicksuboff_jfm.pdf",
+      "doi": "10.1017/jfm.2023.777",
+      "authors": [
+        "Nicholas Morse",
+        "Krishnan Mahesh"
+      ],
+      "year": 2023,
+      "license": "CC-BY-4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "license_evidence": "Publisher article page and original PDF first page.",
+      "storage": "external_download",
+      "redistributed_in_repository": false,
+      "local_cache_path": "results/suboff-reference-source-pdfs/jfm-tripping.pdf",
+      "unmodified": true
+    },
+    "solitary-wave-resistance-mirror.pdf": {
+      "sha256": "04289964e8e9f2072ef31caca9b78ea47370632249f9c69047c811f754642e65",
+      "bytes": 10236069,
+      "url": "https://pdfs.semanticscholar.org/f47b/c3f261aad243de23e79324c957bd17cea3e7.pdf",
+      "original_url": "https://www.mdpi.com/2077-1312/9/12/1374",
+      "doi": "10.3390/jmse9121374",
+      "authors": [
+        "Jingyuan Li",
+        "Qinghe Zhang",
+        "Tongqing Chen"
+      ],
+      "year": 2021,
+      "license": "CC-BY-4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "license_evidence": "Original publisher PDF first page retained in mirror.",
+      "storage": "external_download",
+      "redistributed_in_repository": false,
+      "local_cache_path": "results/suboff-reference-source-pdfs/solitary-wave-resistance-mirror.pdf",
+      "unmodified": true
+    },
+    "zenodo-CHECKSUMS.sha256": {
+      "sha256": "b11003e2a0d17988bc0faf81df0d2e25a3abeb42d1a940f5d955636e5c418873",
+      "bytes": 9974,
+      "storage": "repository_file",
+      "relative_path": "docs/verification-suboff-reference/zenodo-CHECKSUMS.sha256",
+      "authors": [
+        "Simvia"
+      ],
+      "year": 2026,
+      "doi": "10.5281/zenodo.22692726",
+      "license": "CC-BY-4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "license_evidence": "https://zenodo.org/api/records/22692726 metadata.license.id=cc-by-4.0, access_right=open",
+      "unmodified": true,
+      "url": "https://zenodo.org/records/22692726/files/CHECKSUMS.sha256?download=1"
+    },
+    "zenodo-README.md": {
+      "sha256": "7f736ea855f961955aff36112188e6aaacf0116543328846fd0726130b4ecb27",
+      "bytes": 9354,
+      "storage": "repository_file",
+      "relative_path": "docs/verification-suboff-reference/zenodo-README.md",
+      "authors": [
+        "Simvia"
+      ],
+      "year": 2026,
+      "doi": "10.5281/zenodo.22692726",
+      "license": "CC-BY-4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "license_evidence": "https://zenodo.org/api/records/22692726 metadata.license.id=cc-by-4.0, access_right=open",
+      "unmodified": true,
+      "url": "https://zenodo.org/records/22692726/files/README.md?download=1"
+    },
+    "zenodo-experimental_data__dtmb_tow_tank_table14.csv": {
+      "sha256": "7fdf3c4d1eddd5d908fe4b780bb0ab8ad15a29023b73204c415d2bc745ed8b6a",
+      "bytes": 1395,
+      "storage": "repository_file",
+      "relative_path": "docs/verification-suboff-reference/zenodo-experimental_data__dtmb_tow_tank_table14.csv",
+      "authors": [
+        "Simvia"
+      ],
+      "year": 2026,
+      "doi": "10.5281/zenodo.22692726",
+      "license": "CC-BY-4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "license_evidence": "https://zenodo.org/api/records/22692726 metadata.license.id=cc-by-4.0, access_right=open",
+      "unmodified": true,
+      "url": "https://zenodo.org/records/22692726/files/experimental_data__dtmb_tow_tank_table14.csv?download=1"
+    },
+    "zenodo-experimental_data__exp_cp_hull_bare_table1_huang1992.csv": {
+      "sha256": "bf1b0f43331a5483f334da27e6c43148e22e2145c62f0b3bd2fc87ce730a63a5",
+      "bytes": 1245,
+      "storage": "repository_file",
+      "relative_path": "docs/verification-suboff-reference/zenodo-experimental_data__exp_cp_hull_bare_table1_huang1992.csv",
+      "authors": [
+        "Simvia"
+      ],
+      "year": 2026,
+      "doi": "10.5281/zenodo.22692726",
+      "license": "CC-BY-4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "license_evidence": "https://zenodo.org/api/records/22692726 metadata.license.id=cc-by-4.0, access_right=open",
+      "unmodified": true,
+      "url": "https://zenodo.org/records/22692726/files/experimental_data__exp_cp_hull_bare_table1_huang1992.csv?download=1"
+    },
+    "zenodo-metadata.json": {
+      "sha256": "53c0a1822c3d59dff7a306edb216890277b2ef2a99b70edf50186c417dc69094",
+      "bytes": 32010,
+      "storage": "repository_file",
+      "relative_path": "docs/verification-suboff-reference/zenodo-metadata.json",
+      "url": "https://zenodo.org/api/records/22692726"
+    },
+    "supplemental-audit.json": {
+      "storage": "repository_file",
+      "relative_path": "docs/verification-suboff-reference/supplemental-audit.json",
+      "sha256": "97e87dae0d71cc2b0f7187db9a71fa4a3a14b04c4c5360ff9509fa0be0cd6b96",
+      "bytes": 3807
+    },
+    "supplemental-notes.md": {
+      "storage": "repository_file",
+      "relative_path": "docs/verification-suboff-reference/supplemental-notes.md",
+      "sha256": "777e87e08a69ab30722317935392ee923c05db948ad9f63f9f13c52f79f1c974",
+      "bytes": 3511
+    }
+  },
+  "acceptance_scope": "Two independent operating conditions: drag literature reproduction and Cp wind-tunnel Re; same Reynolds number is not required.",
+  "physical_benchmark_passed": false,
+  "same_reynolds_number_between_cases_required": false
+}

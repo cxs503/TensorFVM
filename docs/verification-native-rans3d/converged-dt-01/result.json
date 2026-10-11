@@ -1,0 +1,3162 @@
+{
+  "kind": "Nonzero 3D channel NS/SST integration pilot; not physical validation",
+  "cells": 27,
+  "faces": 216,
+  "Re": 20.0,
+  "density": 1.0,
+  "dynamic_molecular_viscosity": 0.05,
+  "inlet_speed": 1.0,
+  "initial_k": 0.001,
+  "initial_omega": 1.0,
+  "wall_turbulent_viscosity_zero": true,
+  "geometry": {
+    "cells": 27,
+    "faces": 216,
+    "minimum_cell_volume": 0.03703703703703703,
+    "maximum_relative_closure": 0.0,
+    "minimum_face_projection": 0.009259259259259257,
+    "maximum_nonorthogonality_degrees": 25.239401820678957,
+    "patch_face_counts": {
+      "farfield": 36,
+      "inlet": 18,
+      "internal": 108,
+      "outlet": 18,
+      "wall": 36
+    }
+  },
+  "wall_distance_error": 0.0,
+  "velocity_x_range": [
+    0.9030382629621455,
+    1.194138077143862
+  ],
+  "wall_normal_flux_max": 0.0,
+  "total_wall_force": [
+    0.5648014014986433,
+    -0.0009681807169169129,
+    9.643320758148086e-05
+  ],
+  "pressure_wall_force": [
+    0.0,
+    0.004152049151494234,
+    0.0
+  ],
+  "anisotropic_wall_force": [
+    0.5648014014986433,
+    -0.005120229868411147,
+    9.643320758148086e-05
+  ],
+  "isotropic_wall_force": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "force_decomposition_error": 0.0,
+  "physical_pressure_conversion_error": 0.0,
+  "pseudo_time_step": 0.1,
+  "turbulence_relaxation": 0.7,
+  "outer_tolerance": 1e-07,
+  "inner_tolerance": 1e-08,
+  "maximum_outer_iterations": 100,
+  "numerically_converged": true,
+  "physical_benchmark_passed": false,
+  "elapsed_seconds": 14.671983258798718,
+  "history": [
+    {
+      "iteration": 1,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 0.0003956044860669051,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 0.00017520824351901365,
+      "stored_native_divergence_max": 1.931830945212099e-10,
+      "face_flux_consistency_max": 3.677151592027233e-05,
+      "velocity_change": 1.0,
+      "modified_pressure_change": 1.0,
+      "flux_change": 1.0,
+      "k_change": 0.006309816531997071,
+      "omega_change": 0.9852020214296451,
+      "k_current_nonlinear_residual": 0.9962639890580309,
+      "omega_current_nonlinear_residual": 0.44060097812984167,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 0.9962639890580309,
+          "maximum_specific_residual": 0.007912456487555517,
+          "global_integrated_residual": 0.004829338807468508,
+          "boundary_advective_flux": -4.435351928833732e-06,
+          "boundary_diffusive_flux": -0.000591515029740303,
+          "integrated_current_source": -0.004242259129657038
+        },
+        "omega": {
+          "relative_residual": 0.44060097812984167,
+          "maximum_specific_residual": 719.5158266495067,
+          "global_integrated_residual": -493.1163208814797,
+          "boundary_advective_flux": 48.15546207008589,
+          "boundary_diffusive_flux": 782.6761583569286,
+          "integrated_current_source": -241.4043754053631
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 2.234049398383217e-19,
+          "global_residual": -1.1926223897340549e-18,
+          "boundary_advective_flux": -6.336217041523366e-06,
+          "boundary_diffusive_flux": -0.0005887977707999105,
+          "integrated_source": 0.0005129564915929044,
+          "relative_update": 0.00897023855869279
+        },
+        "omega": {
+          "max_local_integrated_residual": 2.3814283878209608e-14,
+          "global_residual": -1.616484723854228e-13,
+          "boundary_advective_flux": 68.79351724297952,
+          "boundary_diffusive_flux": 748.7545205770891,
+          "integrated_source": -2.3185204730122653,
+          "relative_update": 80.40164748481331
+        }
+      }
+    },
+    {
+      "iteration": 2,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 5.7174454784609025e-05,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 0.0004631767569066719,
+      "stored_native_divergence_max": 1.7672850682881607e-10,
+      "face_flux_consistency_max": 0.0001202336535857662,
+      "velocity_change": 0.0002971861078343625,
+      "modified_pressure_change": 0.0005581114458046273,
+      "flux_change": 0.0002663209311670847,
+      "k_change": 0.2531821151683201,
+      "omega_change": 0.28152758087959023,
+      "k_current_nonlinear_residual": 0.9085952678059348,
+      "omega_current_nonlinear_residual": 0.14955590829593007,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 0.9085952678059348,
+          "maximum_specific_residual": 0.007190053121077737,
+          "global_integrated_residual": 0.0046607170603393715,
+          "boundary_advective_flux": -0.00019801653595470474,
+          "boundary_diffusive_flux": -0.0002922781264411049,
+          "integrated_current_source": -0.004566455469852971
+        },
+        "omega": {
+          "relative_residual": 0.14955590829593007,
+          "maximum_specific_residual": 310.64076481385666,
+          "global_integrated_residual": -212.09734898673406,
+          "boundary_advective_flux": 67.54982839363028,
+          "boundary_diffusive_flux": 749.3411617668451,
+          "integrated_current_source": -469.6939843864807
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 2.981555974335137e-19,
+          "global_residual": -4.336808689942018e-19,
+          "boundary_advective_flux": -0.00028098006924148967,
+          "boundary_diffusive_flux": -0.0001640588347485005,
+          "integrated_source": -0.002724328058542457,
+          "relative_update": 0.2976390691881932
+        },
+        "omega": {
+          "max_local_integrated_residual": 4.973799150320701e-14,
+          "global_residual": 2.2737367544323206e-13,
+          "boundary_advective_flux": 75.86522062958404,
+          "boundary_diffusive_flux": 735.1234358167444,
+          "integrated_source": -377.84415370794517,
+          "relative_update": 0.5592499686012108
+        }
+      }
+    },
+    {
+      "iteration": 3,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 4.3643319943180173e-05,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 0.0003720546880182779,
+      "stored_native_divergence_max": 1.7566304660876502e-10,
+      "face_flux_consistency_max": 9.919519341315684e-05,
+      "velocity_change": 2.4630672983795766e-05,
+      "modified_pressure_change": 0.0005068646383623052,
+      "flux_change": 2.4974694910947882e-05,
+      "k_change": 0.25858684492306316,
+      "omega_change": 0.09589199401606685,
+      "k_current_nonlinear_residual": 0.7638201082284561,
+      "omega_current_nonlinear_residual": 0.05401827588914935,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 0.7638201082284561,
+          "maximum_specific_residual": 0.00496401422340695,
+          "global_integrated_residual": 0.0034404243168233055,
+          "boundary_advective_flux": -0.0003697669452891101,
+          "boundary_diffusive_flux": -3.627634812728346e-05,
+          "integrated_current_source": -0.0037739149139851325
+        },
+        "omega": {
+          "relative_residual": 0.05401827588914935,
+          "maximum_specific_residual": 124.26283005426711,
+          "global_integrated_residual": -88.1308210278703,
+          "boundary_advective_flux": 75.29676578979468,
+          "boundary_diffusive_flux": 736.4360139974881,
+          "integrated_current_source": -573.0084271798232
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 2.439454888092385e-19,
+          "global_residual": 0.0,
+          "boundary_advective_flux": -0.0004433744458817826,
+          "boundary_diffusive_flux": 7.345498533162423e-05,
+          "integrated_source": -0.002809154167394301,
+          "relative_update": 0.30390633932066613
+        },
+        "omega": {
+          "max_local_integrated_residual": 4.263256414560601e-14,
+          "global_residual": 2.2737367544323206e-13,
+          "boundary_advective_flux": 78.6169527939093,
+          "boundary_diffusive_flux": 730.9320117766692,
+          "integrated_source": -539.7745660250164,
+          "relative_update": 0.15121315534833146
+        }
+      }
+    },
+    {
+      "iteration": 4,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 3.094084577805033e-05,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 0.0002476832139286511,
+      "stored_native_divergence_max": 1.7537190449834488e-10,
+      "face_flux_consistency_max": 6.827087948131638e-05,
+      "velocity_change": 8.656281712181074e-06,
+      "modified_pressure_change": 0.0004007756126015314,
+      "flux_change": 1.3625734458900772e-05,
+      "k_change": 0.21343063940966786,
+      "omega_change": 0.03701273680288762,
+      "k_current_nonlinear_residual": 0.5751213007928347,
+      "omega_current_nonlinear_residual": 0.022322102586605032,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 0.5751213007928347,
+          "maximum_specific_residual": 0.0031792403214566203,
+          "global_integrated_residual": 0.0023659277414883853,
+          "boundary_advective_flux": -0.0004985897759460389,
+          "boundary_diffusive_flux": 0.00014323035505501498,
+          "integrated_current_source": -0.0030077478724894386
+        },
+        "omega": {
+          "relative_residual": 0.022322102586605032,
+          "maximum_specific_residual": 50.41625776555779,
+          "global_integrated_residual": -38.67720892884533,
+          "boundary_advective_flux": 78.6856240867653,
+          "boundary_diffusive_flux": 731.3548804869922,
+          "integrated_current_source": -613.9920474713815
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 2.168404344971009e-19,
+          "global_residual": -1.3010426069826053e-18,
+          "boundary_advective_flux": -0.000553798655207872,
+          "boundary_diffusive_flux": 0.00022018184717264802,
+          "integrated_source": -0.002446515371406975,
+          "relative_update": 0.25898411845427194
+        },
+        "omega": {
+          "max_local_integrated_residual": 4.263256414560601e-14,
+          "global_residual": 1.1368683772161603e-13,
+          "boundary_advective_flux": 80.13775903254687,
+          "boundary_diffusive_flux": 729.1913956507631,
+          "integrated_source": -601.7090724428634,
+          "relative_update": 0.05472302364540785
+        }
+      }
+    },
+    {
+      "iteration": 5,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 2.1837236180820646e-05,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 0.00015712778945839445,
+      "stored_native_divergence_max": 1.7525050161060212e-10,
+      "face_flux_consistency_max": 4.4815845251344744e-05,
+      "velocity_change": 4.282406914024644e-06,
+      "modified_pressure_change": 0.00028538505773993233,
+      "flux_change": 7.79030492894923e-06,
+      "k_change": 0.16617758020741055,
+      "omega_change": 0.017287427879058324,
+      "k_current_nonlinear_residual": 0.41659498194072625,
+      "omega_current_nonlinear_residual": 0.011466012150918706,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 0.41659498194072625,
+          "maximum_specific_residual": 0.0019921418432731768,
+          "global_integrated_residual": 0.0016011922207810475,
+          "boundary_advective_flux": -0.0005921334048273907,
+          "boundary_diffusive_flux": 0.0002626224963326719,
+          "integrated_current_source": -0.00245594812194111
+        },
+        "omega": {
+          "relative_residual": 0.011466012150918706,
+          "maximum_specific_residual": 37.19262041401152,
+          "global_integrated_residual": -18.669234788185467,
+          "boundary_advective_flux": 80.3691514744294,
+          "boundary_diffusive_flux": 729.2441274555882,
+          "integrated_current_source": -630.2057411929733
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 1.7618285302889447e-19,
+          "global_residual": 0.0,
+          "boundary_advective_flux": -0.000632223248621863,
+          "boundary_diffusive_flux": 0.00031380802686043277,
+          "integrated_source": -0.0021141538722747374,
+          "relative_update": 0.20819234380914012
+        },
+        "omega": {
+          "max_local_integrated_residual": 3.552713678800501e-14,
+          "global_residual": 0.0,
+          "boundary_advective_flux": 81.0906020788428,
+          "boundary_diffusive_flux": 728.3476740131728,
+          "integrated_source": -625.4519025385505,
+          "relative_update": 0.02501845131754619
+        }
+      }
+    },
+    {
+      "iteration": 6,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 1.5840196181506933e-05,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 0.00013461077853170464,
+      "stored_native_divergence_max": 1.7518436701280398e-10,
+      "face_flux_consistency_max": 2.975222512083264e-05,
+      "velocity_change": 4.018013995725974e-06,
+      "modified_pressure_change": 0.00019904313165693157,
+      "flux_change": 5.770746892993906e-06,
+      "k_change": 0.12833522507469822,
+      "omega_change": 0.009932876956378544,
+      "k_current_nonlinear_residual": 0.2990624039175798,
+      "omega_current_nonlinear_residual": 0.0070671661933971825,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 0.2990624039175798,
+          "maximum_specific_residual": 0.0014807384554949893,
+          "global_integrated_residual": 0.001086046020851044,
+          "boundary_advective_flux": -0.0006599411746743383,
+          "boundary_diffusive_flux": 0.0003410305385086584,
+          "integrated_current_source": -0.0020870177340340406
+        },
+        "omega": {
+          "relative_residual": 0.0070671661933971825,
+          "maximum_specific_residual": 26.58096367578035,
+          "global_integrated_residual": -9.99320529952567,
+          "boundary_advective_flux": 81.313279921725,
+          "boundary_diffusive_flux": 728.2935251124309,
+          "integrated_current_source": -636.9870398911801
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 1.8973538018496328e-19,
+          "global_residual": -2.168404344971009e-19,
+          "boundary_advective_flux": -0.0006890020102914101,
+          "boundary_diffusive_flux": 0.0003746478998097833,
+          "integrated_source": -0.0018738334429875753,
+          "relative_update": 0.16508083018939204
+        },
+        "omega": {
+          "max_local_integrated_residual": 2.842170943040401e-14,
+          "global_residual": -3.410605131648481e-13,
+          "boundary_advective_flux": 81.71798689643329,
+          "boundary_diffusive_flux": 727.8909641550079,
+          "integrated_source": -635.0111040372004,
+          "relative_update": 0.014265513038380018
+        }
+      }
+    },
+    {
+      "iteration": 7,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 1.1825925766238091e-05,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 0.00011473614104232087,
+      "stored_native_divergence_max": 1.7514165118193153e-10,
+      "face_flux_consistency_max": 2.5343078326411913e-05,
+      "velocity_change": 4.779120461016379e-06,
+      "modified_pressure_change": 0.00013937711000855572,
+      "flux_change": 5.865567840622869e-06,
+      "k_change": 0.09991621296510228,
+      "omega_change": 0.006410543132549387,
+      "k_current_nonlinear_residual": 0.2165017639135583,
+      "omega_current_nonlinear_residual": 0.004702929823818061,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 0.2165017639135583,
+          "maximum_specific_residual": 0.0012547276845346852,
+          "global_integrated_residual": 0.0007429899364669673,
+          "boundary_advective_flux": -0.0007093756110713483,
+          "boundary_diffusive_flux": 0.0003926152371143252,
+          "integrated_current_source": -0.0018449807846526404
+        },
+        "omega": {
+          "relative_residual": 0.004702929823818061,
+          "maximum_specific_residual": 18.625650496100103,
+          "global_integrated_residual": -5.835197110277506,
+          "boundary_advective_flux": 81.89148999889998,
+          "boundary_diffusive_flux": 727.8221656924467,
+          "integrated_current_source": -640.0954785832694
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 1.6263032587282567e-19,
+          "global_residual": -6.505213034913027e-19,
+          "boundary_advective_flux": -0.0007305624637482534,
+          "boundary_diffusive_flux": 0.00041473366908041886,
+          "integrated_source": -0.0017098530449857834,
+          "relative_update": 0.13131870480586227
+        },
+        "omega": {
+          "max_local_integrated_residual": 3.552713678800501e-14,
+          "global_residual": 1.1368683772161603e-13,
+          "boundary_advective_flux": 82.13944443478059,
+          "boundary_diffusive_flux": 727.6230572469321,
+          "integrated_source": -639.1919822569937,
+          "relative_update": 0.009180093740480162
+        }
+      }
+    },
+    {
+      "iteration": 8,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 9.006169275198742e-06,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 9.494567135291675e-05,
+      "stored_native_divergence_max": 1.7511130045999584e-10,
+      "face_flux_consistency_max": 2.095140827804154e-05,
+      "velocity_change": 4.9420954063929345e-06,
+      "modified_pressure_change": 9.862810221075537e-05,
+      "flux_change": 5.858500763057857e-06,
+      "k_change": 0.07846767306573081,
+      "omega_change": 0.004300799671805373,
+      "k_current_nonlinear_residual": 0.15914953328629672,
+      "omega_current_nonlinear_residual": 0.003190298618512061,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 0.15914953328629672,
+          "maximum_specific_residual": 0.0010348201520700736,
+          "global_integrated_residual": 0.0005137466745478778,
+          "boundary_advective_flux": -0.0007456655976144329,
+          "boundary_diffusive_flux": 0.0004268183076885896,
+          "integrated_current_source": -0.0016862305798509005
+        },
+        "omega": {
+          "relative_residual": 0.003190298618512061,
+          "maximum_specific_residual": 12.884965623248172,
+          "global_integrated_residual": -3.6200693172809912,
+          "boundary_advective_flux": 82.26459562860086,
+          "boundary_diffusive_flux": 727.5654187987507,
+          "integrated_current_source": -641.6807538528687
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 1.0842021724855044e-19,
+          "global_residual": 0.0,
+          "boundary_advective_flux": -0.0007612191627729476,
+          "boundary_diffusive_flux": 0.00044148487564082137,
+          "integrated_source": -0.0015994086761523382,
+          "relative_update": 0.1049742255664194
+        },
+        "omega": {
+          "max_local_integrated_residual": 3.552713678800501e-14,
+          "global_residual": -2.2737367544323206e-13,
+          "boundary_advective_flux": 82.42466878747923,
+          "boundary_diffusive_flux": 727.4571332961057,
+          "integrated_source": -641.2212892147137,
+          "relative_update": 0.0061515505731042095
+        }
+      }
+    },
+    {
+      "iteration": 9,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 6.9320036607742525e-06,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 7.6970503037857e-05,
+      "stored_native_divergence_max": 1.7508863109361178e-10,
+      "face_flux_consistency_max": 1.696120563449144e-05,
+      "velocity_change": 4.6158442699785495e-06,
+      "modified_pressure_change": 7.059167382869768e-05,
+      "flux_change": 5.431961144843921e-06,
+      "k_change": 0.06185242692749895,
+      "omega_change": 0.0029104969777371103,
+      "k_current_nonlinear_residual": 0.11868928767003811,
+      "omega_current_nonlinear_residual": 0.0021677532138873684,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 0.11868928767003811,
+          "maximum_specific_residual": 0.0008373958522197343,
+          "global_integrated_residual": 0.0003591575816193104,
+          "boundary_advective_flux": -0.0007724772177068039,
+          "boundary_diffusive_flux": 0.0004497346831269234,
+          "integrated_current_source": -0.0015813694824530374
+        },
+        "omega": {
+          "relative_residual": 0.0021677532138873684,
+          "maximum_specific_residual": 8.837575969864217,
+          "global_integrated_residual": -2.3303219691796335,
+          "boundary_advective_flux": 82.51191338414299,
+          "boundary_diffusive_flux": 727.414472460243,
+          "integrated_current_source": -642.5722371069205
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 1.3552527156068805e-19,
+          "global_residual": -2.168404344971009e-19,
+          "boundary_advective_flux": -0.0007839685505777173,
+          "boundary_diffusive_flux": 0.0004595620855833079,
+          "integrated_source": -0.0015248609319705008,
+          "relative_update": 0.08396225876214733
+        },
+        "omega": {
+          "max_local_integrated_residual": 2.842170943040401e-14,
+          "global_residual": 1.1368683772161603e-13,
+          "boundary_advective_flux": 82.61807156662405,
+          "boundary_diffusive_flux": 727.3508381000935,
+          "integrated_source": -642.3148186390595,
+          "relative_update": 0.004160718969747857
+        }
+      }
+    },
+    {
+      "iteration": 10,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 5.35791362265534e-06,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 6.148509523230815e-05,
+      "stored_native_divergence_max": 1.7507120753101906e-10,
+      "face_flux_consistency_max": 1.3523632549305996e-05,
+      "velocity_change": 4.050111889387333e-06,
+      "modified_pressure_change": 5.105726730086131e-05,
+      "flux_change": 4.761255909793458e-06,
+      "k_change": 0.04869577517555092,
+      "omega_change": 0.0019700621388928636,
+      "k_current_nonlinear_residual": 0.08942622834557473,
+      "omega_current_nonlinear_residual": 0.0014696972066440873,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 0.08942622834557473,
+          "maximum_specific_residual": 0.0006683792336083015,
+          "global_integrated_residual": 0.0002537300880239527,
+          "boundary_advective_flux": -0.0007923940640383755,
+          "boundary_diffusive_flux": 0.0004652666093410758,
+          "integrated_current_source": -0.0015113907614034043
+        },
+        "omega": {
+          "relative_residual": 0.0014696972066440873,
+          "maximum_specific_residual": 6.026141294151012,
+          "global_integrated_residual": -1.5312981569651583,
+          "boundary_advective_flux": 82.67789220749476,
+          "boundary_diffusive_flux": 727.3208615322403,
+          "integrated_current_source": -643.1116711677803
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 9.486769009248164e-20,
+          "global_residual": -6.505213034913027e-19,
+          "boundary_advective_flux": -0.0008009303793201377,
+          "boundary_diffusive_flux": 0.0004719277181034652,
+          "integrated_source": -0.00147413860763399,
+          "relative_update": 0.0668883779420665
+        },
+        "omega": {
+          "max_local_integrated_residual": 3.552713678800501e-14,
+          "global_residual": 0.0,
+          "boundary_advective_flux": 82.74917281407905,
+          "boundary_diffusive_flux": 727.2813832942245,
+          "integrated_source": -642.9565059438291,
+          "relative_update": 0.0028155466156505283
+        }
+      }
+    },
+    {
+      "iteration": 11,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 4.143100605225278e-06,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 4.858255559347934e-05,
+      "stored_native_divergence_max": 1.7505940447248852e-10,
+      "face_flux_consistency_max": 1.066089594128905e-05,
+      "velocity_change": 3.4139374310202475e-06,
+      "modified_pressure_change": 3.726437780151402e-05,
+      "flux_change": 4.0154782658492574e-06,
+      "k_change": 0.0381727895873793,
+      "omega_change": 0.001331339199608595,
+      "k_current_nonlinear_residual": 0.06777718905323835,
+      "omega_current_nonlinear_residual": 0.0009939327005188052,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 0.06777718905323835,
+          "maximum_specific_residual": 0.0005280273175962461,
+          "global_integrated_residual": 0.0001809701530321134,
+          "boundary_advective_flux": -0.0008072546237418686,
+          "boundary_diffusive_flux": 0.00047591717327953993,
+          "integrated_current_source": -0.001464141950053522
+        },
+        "omega": {
+          "relative_residual": 0.0009939327005188052,
+          "maximum_specific_residual": 4.0923328413817925,
+          "global_integrated_residual": -1.01717524113073,
+          "boundary_advective_flux": 82.78983972447834,
+          "boundary_diffusive_flux": 727.2608322307109,
+          "integrated_current_source": -643.4538172651019
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 1.3552527156068805e-19,
+          "global_residual": -2.168404344971009e-19,
+          "boundary_advective_flux": -0.0008136238458712881,
+          "boundary_diffusive_flux": 0.00048048511535988555,
+          "integrated_source": -0.0014392696920196217,
+          "relative_update": 0.05292831818988451
+        },
+        "omega": {
+          "max_local_integrated_residual": 4.618527782440651e-14,
+          "global_residual": -1.1368683772161603e-13,
+          "boundary_advective_flux": 82.83794197491248,
+          "boundary_diffusive_flux": 727.2354952706797,
+          "integrated_source": -643.3557240950878,
+          "relative_update": 0.001902415099006866
+        }
+      }
+    },
+    {
+      "iteration": 12,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 3.198938500707692e-06,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 3.80700760456154e-05,
+      "stored_native_divergence_max": 1.7504760141395797e-10,
+      "face_flux_consistency_max": 8.331076520901037e-06,
+      "velocity_change": 2.800430989212086e-06,
+      "modified_pressure_change": 2.7403261552014596e-05,
+      "flux_change": 3.296740425420184e-06,
+      "k_change": 0.0297550292561048,
+      "omega_change": 0.0008981473046008737,
+      "k_current_nonlinear_residual": 0.05150530144398908,
+      "omega_current_nonlinear_residual": 0.0006707897294188151,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 0.05150530144398908,
+          "maximum_specific_residual": 0.00041386714855467166,
+          "global_integrated_residual": 0.00013016552216258914,
+          "boundary_advective_flux": -0.0008183808247032725,
+          "boundary_diffusive_flux": 0.00048330310083663877,
+          "integrated_current_source": -0.0014318494477025007
+        },
+        "omega": {
+          "relative_residual": 0.0006707897294188151,
+          "maximum_specific_residual": 2.771012627039965,
+          "global_integrated_residual": -0.6793082057066584,
+          "boundary_advective_flux": 82.86545725481373,
+          "boundary_diffusive_flux": 727.2215791218922,
+          "integrated_current_source": -643.6768136613719
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 1.5585406229479126e-19,
+          "global_residual": 2.168404344971009e-19,
+          "boundary_advective_flux": -0.0008231495108163939,
+          "boundary_diffusive_flux": 0.00048647104586072785,
+          "integrated_source": -0.0014150339636105364,
+          "relative_update": 0.04155947432441109
+        },
+        "omega": {
+          "max_local_integrated_residual": 2.1316282072803006e-14,
+          "global_residual": -1.1368683772161603e-13,
+          "boundary_advective_flux": 82.89796757770719,
+          "boundary_diffusive_flux": 727.2049947241329,
+          "integrated_source": -643.6130409202274,
+          "relative_update": 0.0012832881638039201
+        }
+      }
+    },
+    {
+      "iteration": 13,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 2.4640437949305816e-06,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 2.9638563187467378e-05,
+      "stored_native_divergence_max": 1.75041606209625e-10,
+      "face_flux_consistency_max": 6.465701821695146e-06,
+      "velocity_change": 2.2532375035402517e-06,
+      "modified_pressure_change": 2.0274595640631123e-05,
+      "flux_change": 2.6549027747214056e-06,
+      "k_change": 0.023057547169732885,
+      "omega_change": 0.000605024233592767,
+      "k_current_nonlinear_residual": 0.039161748775647945,
+      "omega_current_nonlinear_residual": 0.00045198178330554527,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 0.039161748775647945,
+          "maximum_specific_residual": 0.00032236664819655,
+          "global_integrated_residual": 9.430030185126912e-05,
+          "boundary_advective_flux": -0.000826732584037794,
+          "boundary_diffusive_flux": 0.0004884788541527675,
+          "integrated_current_source": -0.0014095117400418308
+        },
+        "omega": {
+          "relative_residual": 0.00045198178330554527,
+          "maximum_specific_residual": 1.8723415640933065,
+          "global_integrated_residual": -0.4548049054292087,
+          "boundary_advective_flux": 82.91653175442886,
+          "boundary_diffusive_flux": 727.1956312449234,
+          "integrated_current_source": -643.8242945850654
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 1.1519648082658485e-19,
+          "global_residual": -2.168404344971009e-19,
+          "boundary_advective_flux": -0.0008303121468024925,
+          "boundary_diffusive_flux": 0.0004906989319244042,
+          "integrated_source": -0.00139800546668951,
+          "relative_update": 0.03238624503415521
+        },
+        "omega": {
+          "max_local_integrated_residual": 3.552713678800501e-14,
+          "global_residual": 1.1368683772161603e-13,
+          "boundary_advective_flux": 82.93850380214784,
+          "boundary_diffusive_flux": 727.1846573118032,
+          "integrated_source": -643.7821932524175,
+          "relative_update": 0.0008644185770471245
+        }
+      }
+    },
+    {
+      "iteration": 14,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 1.8928150734292384e-06,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 2.295335956178923e-05,
+      "stored_native_divergence_max": 1.750380465570523e-10,
+      "face_flux_consistency_max": 4.99009752794044e-06,
+      "velocity_change": 1.7873615050151581e-06,
+      "modified_pressure_change": 1.5072074596653592e-05,
+      "flux_change": 2.107660637012235e-06,
+      "k_change": 0.01776909620638134,
+      "omega_change": 0.00040708997829428853,
+      "k_current_nonlinear_residual": 0.029756967180005027,
+      "omega_current_nonlinear_residual": 0.00030417393132675213,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 0.029756967180005027,
+          "maximum_specific_residual": 0.0002498203155294532,
+          "global_integrated_residual": 6.872912648932208e-05,
+          "boundary_advective_flux": -0.0008330131589814496,
+          "boundary_diffusive_flux": 0.0004921400838284653,
+          "integrated_current_source": -0.001393882369299237
+        },
+        "omega": {
+          "relative_residual": 0.00030417393132675213,
+          "maximum_specific_residual": 1.2631185066930912,
+          "global_integrated_residual": -0.3048109530674469,
+          "boundary_advective_flux": 82.95100544616642,
+          "boundary_diffusive_flux": 727.1783779704919,
+          "integrated_current_source": -643.922561571258
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 2.168404344971009e-19,
+          "global_residual": -2.168404344971009e-19,
+          "boundary_advective_flux": -0.0008357050120875244,
+          "boundary_diffusive_flux": 0.0004937105942328521,
+          "integrated_source": -0.0013859191556897077,
+          "relative_update": 0.02506478649263644
+        },
+        "omega": {
+          "max_local_integrated_residual": 3.552713678800501e-14,
+          "global_residual": -1.1368683772161603e-13,
+          "boundary_advective_flux": 82.96584584661747,
+          "boundary_diffusive_flux": 727.1710745039325,
+          "integrated_source": -643.8945436556738,
+          "relative_update": 0.0005816011485415284
+        }
+      }
+    },
+    {
+      "iteration": 15,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 1.4499877374220053e-06,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 1.76987263677264e-05,
+      "stored_native_divergence_max": 1.7503017785136526e-10,
+      "face_flux_consistency_max": 3.834243189199116e-06,
+      "velocity_change": 1.4025760904140314e-06,
+      "modified_pressure_change": 1.1245180563209927e-05,
+      "flux_change": 1.655085460744627e-06,
+      "k_change": 0.013626097245738671,
+      "omega_change": 0.00027365514420175414,
+      "k_current_nonlinear_residual": 0.02258158604446878,
+      "omega_current_nonlinear_residual": 0.00020450657019925277,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 0.02258158604446878,
+          "maximum_specific_residual": 0.0001927778740913648,
+          "global_integrated_residual": 5.0338065247160056e-05,
+          "boundary_advective_flux": -0.0008377417569173423,
+          "boundary_diffusive_flux": 0.0004947514247119402,
+          "integrated_current_source": -0.0013828312468764424
+        },
+        "omega": {
+          "relative_residual": 0.00020450657019925277,
+          "maximum_specific_residual": 0.851091904198359,
+          "global_integrated_residual": -0.20434525616921617,
+          "boundary_advective_flux": 82.974253362596,
+          "boundary_diffusive_flux": 727.1668707035338,
+          "integrated_current_source": -643.9882720847686
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 1.4907779871675686e-19,
+          "global_residual": -6.505213034913027e-19,
+          "boundary_advective_flux": -0.0008397684322587572,
+          "boundary_diffusive_flux": 0.0004958716201490446,
+          "integrated_source": -0.0013772621940946997,
+          "relative_update": 0.01928258960996925
+        },
+        "omega": {
+          "max_local_integrated_residual": 3.552713678800501e-14,
+          "global_residual": -2.2737367544323206e-13,
+          "boundary_advective_flux": 82.98426859585729,
+          "boundary_diffusive_flux": 727.1619957385778,
+          "integrated_source": -643.9695519105405,
+          "relative_update": 0.0003909557134532083
+        }
+      }
+    },
+    {
+      "iteration": 16,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 1.1077852184457563e-06,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 1.3596608388552476e-05,
+      "stored_native_divergence_max": 1.7502961580095904e-10,
+      "face_flux_consistency_max": 2.9459092008299326e-06,
+      "velocity_change": 1.0913959949454054e-06,
+      "modified_pressure_change": 8.412193123229599e-06,
+      "flux_change": 1.2886797019571015e-06,
+      "k_change": 0.01040414459074986,
+      "omega_change": 0.00018381916678162055,
+      "k_current_nonlinear_residual": 0.017109230807966933,
+      "omega_current_nonlinear_residual": 0.00013739189498268424,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 0.017109230807966933,
+          "maximum_specific_residual": 0.00014821978705696292,
+          "global_integrated_residual": 3.7012427042065064e-05,
+          "boundary_advective_flux": -0.0008413041872103226,
+          "boundary_diffusive_flux": 0.0004966271609562677,
+          "integrated_current_source": -0.0013749437752086553
+        },
+        "omega": {
+          "relative_residual": 0.00013739189498268424,
+          "maximum_specific_residual": 0.5729210576236369,
+          "global_integrated_residual": -0.13698559811422484,
+          "boundary_advective_flux": 82.98991660081239,
+          "boundary_diffusive_flux": 727.159183906753,
+          "integrated_current_source": -644.0322817078264
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 1.2197274440461925e-19,
+          "global_residual": 2.168404344971009e-19,
+          "boundary_advective_flux": -0.0008428310428572636,
+          "boundary_diffusive_flux": 0.0004974318269877549,
+          "integrated_source": -0.001371012216557018,
+          "relative_update": 0.014758650253978337
+        },
+        "omega": {
+          "max_local_integrated_residual": 3.552713678800501e-14,
+          "global_residual": -1.1368683772161603e-13,
+          "boundary_advective_flux": 82.99666980149087,
+          "boundary_diffusive_flux": 727.1559253560175,
+          "integrated_source": -644.0197504437812,
+          "relative_update": 0.0002626077139945338
+        }
+      }
+    },
+    {
+      "iteration": 17,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 8.442023138668109e-07,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 1.0411814321834021e-05,
+      "stored_native_divergence_max": 1.7502661819879256e-10,
+      "face_flux_consistency_max": 2.2560963187645555e-06,
+      "velocity_change": 8.435683973632783e-07,
+      "modified_pressure_change": 6.304495974699824e-06,
+      "flux_change": 9.965990293287054e-07,
+      "k_change": 0.007914572877584021,
+      "omega_change": 0.0001233987054176022,
+      "k_current_nonlinear_residual": 0.012941125753386067,
+      "omega_current_nonlinear_residual": 9.224534869152641e-05,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 0.012941125753386067,
+          "maximum_specific_residual": 0.00011359962264241402,
+          "global_integrated_residual": 2.729720164569698e-05,
+          "boundary_advective_flux": -0.0008439886356600161,
+          "boundary_diffusive_flux": 0.000497982536812873,
+          "integrated_current_source": -0.0013692683741185865
+        },
+        "omega": {
+          "relative_residual": 9.224534869152641e-05,
+          "maximum_specific_residual": 0.3853713563793035,
+          "global_integrated_residual": -0.09181086795061333,
+          "boundary_advective_flux": 83.00046045651045,
+          "boundary_diffusive_flux": 727.1540453705225,
+          "integrated_current_source": -644.0617740460615
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 1.3552527156068805e-19,
+          "global_residual": -2.168404344971009e-19,
+          "boundary_advective_flux": -0.0008451391882876289,
+          "boundary_diffusive_flux": 0.0004985639900780084,
+          "integrated_source": -0.0013664696560787234,
+          "relative_update": 0.011247346502456203
+        },
+        "omega": {
+          "max_local_integrated_residual": 3.552713678800501e-14,
+          "global_residual": -1.1368683772161603e-13,
+          "boundary_advective_flux": 83.00501049146594,
+          "boundary_diffusive_flux": 727.1518659827693,
+          "integrated_source": -644.0533791530086,
+          "relative_update": 0.0001762878706245552
+        }
+      }
+    },
+    {
+      "iteration": 18,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 6.41816357460711e-07,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 7.950494769412562e-06,
+      "stored_native_divergence_max": 1.7502324589635526e-10,
+      "face_flux_consistency_max": 1.7229046119782154e-06,
+      "velocity_change": 6.484609257634185e-07,
+      "modified_pressure_change": 4.730471327749446e-06,
+      "flux_change": 7.664715487690046e-07,
+      "k_change": 0.006001509473231722,
+      "omega_change": 8.279560313109606e-05,
+      "k_current_nonlinear_residual": 0.00977192423130445,
+      "omega_current_nonlinear_residual": 6.190166020194996e-05,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 0.00977192423130445,
+          "maximum_specific_residual": 8.68211935813893e-05,
+          "global_integrated_residual": 2.0178542415766107e-05,
+          "boundary_advective_flux": -0.0008460112417623825,
+          "boundary_diffusive_flux": 0.0004989667174122214,
+          "integrated_current_source": -0.0013651565015903703
+        },
+        "omega": {
+          "relative_residual": 6.190166020194996e-05,
+          "maximum_specific_residual": 0.2590532940092118,
+          "global_integrated_residual": -0.06151725064992175,
+          "boundary_advective_flux": 83.00755241403746,
+          "boundary_diffusive_flux": 727.1506092387958,
+          "integrated_current_source": -644.0815395741085
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 1.3552527156068805e-19,
+          "global_residual": -2.168404344971009e-19,
+          "boundary_advective_flux": -0.0008468781289255611,
+          "boundary_diffusive_flux": 0.0004993889374372364,
+          "integrated_source": -0.0013631498073250173,
+          "relative_update": 0.008540176517320867
+        },
+        "omega": {
+          "max_local_integrated_residual": 3.197442310920451e-14,
+          "global_residual": 0.0,
+          "boundary_advective_flux": 83.01061585279847,
+          "boundary_diffusive_flux": 727.149151373429,
+          "integrated_source": -644.0759144447219,
+          "relative_update": 0.00011828123436926944
+        }
+      }
+    },
+    {
+      "iteration": 19,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 4.868805577352399e-07,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 6.055687608738646e-06,
+      "stored_native_divergence_max": 1.7502324589635526e-10,
+      "face_flux_consistency_max": 1.3123853713770117e-06,
+      "velocity_change": 4.962275453403687e-07,
+      "modified_pressure_change": 3.5517589754706458e-06,
+      "flux_change": 5.867923269000505e-07,
+      "k_change": 0.004538335887687299,
+      "omega_change": 5.552835956231027e-05,
+      "k_current_nonlinear_residual": 0.00736680143683952,
+      "omega_current_nonlinear_residual": 4.15210850311158e-05,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 0.00736680143683952,
+          "maximum_specific_residual": 6.618765237911433e-05,
+          "global_integrated_residual": 1.494164130948333e-05,
+          "boundary_advective_flux": -0.000847534598319232,
+          "boundary_diffusive_flux": 0.0004996842044610583,
+          "integrated_current_source": -0.0013621604440897737
+        },
+        "omega": {
+          "relative_residual": 4.15210850311158e-05,
+          "maximum_specific_residual": 0.17404759506049758,
+          "global_integrated_residual": -0.04120774652563419,
+          "boundary_advective_flux": 83.01231903352226,
+          "boundary_diffusive_flux": 727.148311278759,
+          "integrated_current_source": -644.094784498711
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 1.0164395367051604e-19,
+          "global_residual": 0.0,
+          "boundary_advective_flux": -0.0008481875073742424,
+          "boundary_diffusive_flux": 0.0004999920161794981,
+          "integrated_source": -0.0013607127873497497,
+          "relative_update": 0.006464545948258552
+        },
+        "omega": {
+          "max_local_integrated_residual": 3.552713678800501e-14,
+          "global_residual": 0.0,
+          "boundary_advective_flux": 83.01438026533879,
+          "boundary_diffusive_flux": 727.1473361092551,
+          "integrated_source": -644.0910154424108,
+          "relative_update": 7.932703753097348e-05
+        }
+      }
+    },
+    {
+      "iteration": 20,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 3.6859758775377964e-07,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 4.601918739577381e-06,
+      "stored_native_divergence_max": 1.7502193444540742e-10,
+      "face_flux_consistency_max": 9.97387498341551e-07,
+      "velocity_change": 3.7828898905530285e-07,
+      "modified_pressure_change": 2.6674038432791144e-06,
+      "flux_change": 4.4750882035636595e-07,
+      "k_change": 0.00342369516524652,
+      "omega_change": 3.7227191765053463e-05,
+      "k_current_nonlinear_residual": 0.0055450315110173705,
+      "omega_current_nonlinear_residual": 2.7840080702891457e-05,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 0.0055450315110173705,
+          "maximum_specific_residual": 5.034213559167907e-05,
+          "global_integrated_residual": 1.107715373500934e-05,
+          "boundary_advective_flux": -0.000848681273650962,
+          "boundary_diffusive_flux": 0.0005002089254919775,
+          "integrated_current_source": -0.0013599673528779488
+        },
+        "omega": {
+          "relative_residual": 2.7840080702891457e-05,
+          "maximum_specific_residual": 0.11688278558578034,
+          "global_integrated_residual": -0.02759593790175696,
+          "boundary_advective_flux": 83.01552057237592,
+          "boundary_diffusive_flux": 727.1467744980533,
+          "integrated_current_source": -644.1036579877757
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 1.2197274440461925e-19,
+          "global_residual": 2.168404344971009e-19,
+          "boundary_advective_flux": -0.0008491727373998297,
+          "boundary_diffusive_flux": 0.0005004340407911499,
+          "integrated_source": -0.0013589176162364135,
+          "relative_update": 0.004880456115705614
+        },
+        "omega": {
+          "max_local_integrated_residual": 2.842170943040401e-14,
+          "global_residual": 0.0,
+          "boundary_advective_flux": 83.01690668703988,
+          "boundary_diffusive_flux": 727.1461223023099,
+          "integrated_source": -644.1011329663721,
+          "relative_update": 5.3182066169369266e-05
+        }
+      }
+    },
+    {
+      "iteration": 21,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 2.7852706527338257e-07,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 3.489851630178453e-06,
+      "stored_native_divergence_max": 1.7502174709527201e-10,
+      "face_flux_consistency_max": 7.564081403732548e-07,
+      "velocity_change": 2.8744548236164555e-07,
+      "modified_pressure_change": 2.003098800441058e-06,
+      "flux_change": 3.4016814897173484e-07,
+      "k_change": 0.0025774328849908303,
+      "omega_change": 2.494971967995168e-05,
+      "k_current_nonlinear_residual": 0.004167683378323045,
+      "omega_current_nonlinear_residual": 1.866077127287044e-05,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 0.004167683378323045,
+          "maximum_specific_residual": 3.8209724525713465e-05,
+          "global_integrated_residual": 8.218761422887806e-06,
+          "boundary_advective_flux": -0.000849543787023443,
+          "boundary_diffusive_flux": 0.0005005936253368518,
+          "integrated_current_source": -0.0013583561737831823
+        },
+        "omega": {
+          "relative_residual": 1.866077127287044e-05,
+          "maximum_specific_residual": 0.07846292993573244,
+          "global_integrated_residual": -0.01847588908339315,
+          "boundary_advective_flux": 83.01766955936577,
+          "boundary_diffusive_flux": 727.1457468165552,
+          "integrated_current_source": -644.1096013681062
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 1.6263032587282567e-19,
+          "global_residual": -4.336808689942018e-19,
+          "boundary_advective_flux": -0.0008499134592079108,
+          "boundary_diffusive_flux": 0.000500758670458104,
+          "integrated_source": -0.0013575917463218834,
+          "relative_update": 0.0036761543027867293
+        },
+        "omega": {
+          "max_local_integrated_residual": 4.263256414560601e-14,
+          "global_residual": 1.1368683772161603e-13,
+          "boundary_advective_flux": 83.01860121345962,
+          "boundary_diffusive_flux": 727.1453107106803,
+          "integrated_source": -644.1079101022074,
+          "relative_update": 3.5642619937998785e-05
+        }
+      }
+    },
+    {
+      "iteration": 22,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 2.101013631109777e-07,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 2.6414371872285343e-06,
+      "stored_native_divergence_max": 1.7502212179554282e-10,
+      "face_flux_consistency_max": 5.72547839888804e-07,
+      "velocity_change": 2.1780542072229048e-07,
+      "modified_pressure_change": 1.5037647794760975e-06,
+      "flux_change": 2.5784295263891944e-07,
+      "k_change": 0.001936787347912881,
+      "omega_change": 1.6716671192156345e-05,
+      "k_current_nonlinear_residual": 0.0031281748239610145,
+      "omega_current_nonlinear_residual": 1.2504449956156626e-05,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 0.0031281748239610145,
+          "maximum_specific_residual": 2.8945122801797466e-05,
+          "global_integrated_residual": 6.100927282711519e-06,
+          "boundary_advective_flux": -0.0008501920246145138,
+          "boundary_diffusive_flux": 0.0005008762096791785,
+          "integrated_current_source": -0.0013571691615764038
+        },
+        "omega": {
+          "relative_residual": 1.2504449956156626e-05,
+          "maximum_specific_residual": 0.052654239860839606,
+          "global_integrated_residual": -0.012367180437360736,
+          "boundary_advective_flux": 83.01911119317576,
+          "boundary_diffusive_flux": 727.1450596267503,
+          "integrated_current_source": -644.1135812531372
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 9.486769009248164e-20,
+          "global_residual": -2.168404344971009e-19,
+          "boundary_advective_flux": -0.000850469858418349,
+          "boundary_diffusive_flux": 0.0005009974457485642,
+          "integrated_source": -0.0013566105742458788,
+          "relative_update": 0.0027635515831203237
+        },
+        "omega": {
+          "max_local_integrated_residual": 4.973799150320701e-14,
+          "global_residual": 0.0,
+          "boundary_advective_flux": 83.01973711369632,
+          "boundary_diffusive_flux": 727.1447680745288,
+          "integrated_source": -644.1124486665257,
+          "relative_update": 2.388103209794479e-05
+        }
+      }
+    },
+    {
+      "iteration": 23,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 1.582319643928562e-07,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 1.995727830744753e-06,
+      "stored_native_divergence_max": 1.750209976947304e-10,
+      "face_flux_consistency_max": 4.326072267912817e-07,
+      "velocity_change": 1.646333707391339e-07,
+      "modified_pressure_change": 1.1283507095267216e-06,
+      "flux_change": 1.9495876576052602e-07,
+      "k_change": 0.0014530097678767265,
+      "omega_change": 1.1197709383412075e-05,
+      "k_current_nonlinear_residual": 0.002344938857324971,
+      "omega_current_nonlinear_residual": 8.37706506410618e-06,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 0.002344938857324971,
+          "maximum_specific_residual": 2.1887599906920448e-05,
+          "global_integrated_residual": 4.5299098701017135e-06,
+          "boundary_advective_flux": -0.0008506787870474939,
+          "boundary_diffusive_flux": 0.0005010840856633849,
+          "integrated_current_source": -0.00135629278258098
+        },
+        "omega": {
+          "relative_residual": 8.37706506410618e-06,
+          "maximum_specific_residual": 0.035324621748179734,
+          "global_integrated_residual": -0.008276619911344762,
+          "boundary_advective_flux": 83.02007777547063,
+          "boundary_diffusive_flux": 727.1446001451291,
+          "integrated_current_source": -644.1162457497471
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 7.453889935837843e-20,
+          "global_residual": -2.168404344971009e-19,
+          "boundary_advective_flux": -0.0008508874127810717,
+          "boundary_diffusive_flux": 0.0005011732703507377,
+          "integrated_source": -0.0013558834751022132,
+          "relative_update": 0.0020738981681453165
+        },
+        "omega": {
+          "max_local_integrated_residual": 4.973799150320701e-14,
+          "global_residual": 0.0,
+          "boundary_advective_flux": 83.02049813032893,
+          "boundary_diffusive_flux": 727.1444052718272,
+          "integrated_source": -644.11548743426,
+          "relative_update": 1.5996760544512253e-05
+        }
+      }
+    },
+    {
+      "iteration": 24,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 1.189918358835317e-07,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 1.5053735598069549e-06,
+      "stored_native_divergence_max": 1.750213723950012e-10,
+      "face_flux_consistency_max": 3.2633003349546996e-07,
+      "velocity_change": 1.241734974413549e-07,
+      "modified_pressure_change": 8.461343168122215e-07,
+      "flux_change": 1.4709007247801598e-07,
+      "k_change": 0.001088483314096873,
+      "omega_change": 7.499268043910065e-06,
+      "k_current_nonlinear_residual": 0.0017557095041192262,
+      "omega_current_nonlinear_residual": 5.6108209463030626e-06,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 0.0017557095041192262,
+          "maximum_specific_residual": 1.6523298044914972e-05,
+          "global_integrated_residual": 3.363605442223562e-06,
+          "boundary_advective_flux": -0.0008510439591008794,
+          "boundary_diffusive_flux": 0.0005012371685536416,
+          "integrated_current_source": -0.0013556447330967444
+        },
+        "omega": {
+          "relative_residual": 5.6108209463030626e-06,
+          "maximum_specific_residual": 0.02369275786472391,
+          "global_integrated_residual": -0.005538142517964917,
+          "boundary_advective_flux": 83.02072551367601,
+          "boundary_diffusive_flux": 727.1442929328385,
+          "integrated_current_source": -644.1180292766446
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 9.486769009248164e-20,
+          "global_residual": -4.336808689942018e-19,
+          "boundary_advective_flux": -0.0008512004713450261,
+          "boundary_diffusive_flux": 0.0005013028456860152,
+          "integrated_source": -0.0013553441518724424,
+          "relative_update": 0.0015539594327345309
+        },
+        "omega": {
+          "max_local_integrated_residual": 3.552713678800501e-14,
+          "global_residual": 0.0,
+          "boundary_advective_flux": 83.02100772016729,
+          "boundary_diffusive_flux": 727.1441627048271,
+          "integrated_source": -644.1175216347605,
+          "relative_update": 1.0713254792300279e-05
+        }
+      }
+    },
+    {
+      "iteration": 25,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 8.93611604773712e-08,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 1.1337487797330457e-06,
+      "stored_native_divergence_max": 1.750209976947304e-10,
+      "face_flux_consistency_max": 2.4578188584367666e-07,
+      "velocity_change": 9.347718548448115e-08,
+      "modified_pressure_change": 6.340550286849849e-07,
+      "flux_change": 1.107597373182193e-07,
+      "k_change": 0.0008143370836887151,
+      "omega_change": 5.02149369267491e-06,
+      "k_current_nonlinear_residual": 0.0013130714384244151,
+      "omega_current_nonlinear_residual": 3.7573543675743955e-06,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 0.0013130714384244151,
+          "maximum_specific_residual": 1.2454315292740031e-05,
+          "global_integrated_residual": 2.49735192718025e-06,
+          "boundary_advective_flux": -0.0008513176547550965,
+          "boundary_diffusive_flux": 0.0005013499879205897,
+          "integrated_current_source": -0.0013551649946028663
+        },
+        "omega": {
+          "relative_residual": 3.7573543675743955e-06,
+          "maximum_specific_residual": 0.015887845473978587,
+          "global_integrated_residual": -0.003705235081717495,
+          "boundary_advective_flux": 83.02115937311332,
+          "boundary_diffusive_flux": 727.1440875349426,
+          "integrated_current_source": -644.1192229267476
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 1.2197274440461925e-19,
+          "global_residual": -2.168404344971009e-19,
+          "boundary_advective_flux": -0.0008514349603309275,
+          "boundary_diffusive_flux": 0.0005013983909139719,
+          "integrated_source": -0.0013549438795615887,
+          "relative_update": 0.001162774865818175
+        },
+        "omega": {
+          "max_local_integrated_residual": 4.973799150320701e-14,
+          "global_residual": 0.0,
+          "boundary_advective_flux": 83.02134877850142,
+          "boundary_diffusive_flux": 727.1440005230465,
+          "integrated_source": -644.1188831405206,
+          "relative_update": 7.173569019802935e-06
+        }
+      }
+    },
+    {
+      "iteration": 26,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 6.702532408022498e-08,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 8.526308394318781e-07,
+      "stored_native_divergence_max": 1.7501931154351174e-10,
+      "face_flux_consistency_max": 1.8484810407337626e-07,
+      "velocity_change": 7.024811154419254e-08,
+      "modified_pressure_change": 4.7476842371398864e-07,
+      "flux_change": 8.325798761038516e-08,
+      "k_change": 0.0006085114240875811,
+      "omega_change": 3.361900158419825e-06,
+      "k_current_nonlinear_residual": 0.0009810022772132635,
+      "omega_current_nonlinear_residual": 2.515779490726361e-06,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 0.0009810022772132635,
+          "maximum_specific_residual": 9.373706646636447e-06,
+          "global_integrated_residual": 1.8538178701388683e-06,
+          "boundary_advective_flux": -0.0008515225950407287,
+          "boundary_diffusive_flux": 0.0005014331779162032,
+          "integrated_current_source": -0.0013548095908270704
+        },
+        "omega": {
+          "relative_residual": 2.515779490726361e-06,
+          "maximum_specific_residual": 0.010652274823327533,
+          "global_integrated_residual": -0.002478674711653417,
+          "boundary_advective_flux": 83.02144984076487,
+          "boundary_diffusive_flux": 727.1439502099358,
+          "integrated_current_source": -644.1200216944592
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 1.3552527156068805e-19,
+          "global_residual": 4.336808689942018e-19,
+          "boundary_advective_flux": -0.0008516104321562244,
+          "boundary_diffusive_flux": 0.0005014688690461753,
+          "integrated_source": -0.001354646719010999,
+          "relative_update": 0.0008689898992533929
+        },
+        "omega": {
+          "max_local_integrated_residual": 2.842170943040401e-14,
+          "global_residual": 1.1368683772161603e-13,
+          "boundary_advective_flux": 83.02157693080233,
+          "boundary_diffusive_flux": 727.143892082421,
+          "integrated_source": -644.1197942855572,
+          "relative_update": 4.802717470099126e-06
+        }
+      }
+    },
+    {
+      "iteration": 27,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 5.021550256679531e-08,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 6.40345119679031e-07,
+      "stored_native_divergence_max": 1.7501874949310553e-10,
+      "face_flux_consistency_max": 1.388322669326758e-07,
+      "velocity_change": 5.270952809332568e-08,
+      "modified_pressure_change": 3.5521319078693156e-07,
+      "flux_change": 6.248692414450459e-08,
+      "k_change": 0.0004542139960121225,
+      "omega_change": 2.250545160864085e-06,
+      "k_current_nonlinear_residual": 0.0007321948048379807,
+      "omega_current_nonlinear_residual": 1.6842665178857609e-06,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 0.0007321948048379807,
+          "maximum_specific_residual": 7.045488359209026e-06,
+          "global_integrated_residual": 1.3757295794343484e-06,
+          "boundary_advective_flux": -0.0008516759084809942,
+          "boundary_diffusive_flux": 0.0005014945409974395,
+          "integrated_current_source": -0.0013545461790578678
+        },
+        "omega": {
+          "relative_residual": 1.6842665178857609e-06,
+          "maximum_specific_residual": 0.007141081862966025,
+          "global_integrated_residual": -0.001658009407970673,
+          "boundary_advective_flux": 83.02164422208946,
+          "boundary_diffusive_flux": 727.14385839578,
+          "integrated_current_source": -644.1205561642824
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 1.3552527156068805e-19,
+          "global_residual": -2.168404344971009e-19,
+          "boundary_advective_flux": -0.0008517416184004669,
+          "boundary_diffusive_flux": 0.0005015208677134163,
+          "integrated_source": -0.0013544260900812187,
+          "relative_update": 0.0006487046121605468
+        },
+        "omega": {
+          "max_local_integrated_residual": 4.263256414560601e-14,
+          "global_residual": -1.1368683772161603e-13,
+          "boundary_advective_flux": 83.02172948170872,
+          "boundary_diffusive_flux": 727.1438195699525,
+          "integrated_source": -644.1204039780175,
+          "relative_update": 3.215065840718603e-06
+        }
+      }
+    },
+    {
+      "iteration": 28,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 3.7583642228874026e-08,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 4.802958033789383e-07,
+      "stored_native_divergence_max": 1.7501987359391796e-10,
+      "face_flux_consistency_max": 1.041381373634298e-07,
+      "velocity_change": 3.949402697205399e-08,
+      "modified_pressure_change": 2.6554725880432e-07,
+      "flux_change": 4.683112033640434e-08,
+      "k_change": 0.00033870257368369237,
+      "omega_change": 1.5064502120825742e-06,
+      "k_current_nonlinear_residual": 0.0005459903959778862,
+      "omega_current_nonlinear_residual": 1.12748291071239e-06,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 0.0005459903959778862,
+          "maximum_specific_residual": 5.288780735218964e-06,
+          "global_integrated_residual": 1.020595972398741e-06,
+          "boundary_advective_flux": -0.0008517904953377139,
+          "boundary_diffusive_flux": 0.0005015398128498441,
+          "integrated_current_source": -0.0013543509041599568
+        },
+        "omega": {
+          "relative_residual": 1.12748291071239e-06,
+          "maximum_specific_residual": 0.004786810319875378,
+          "global_integrated_residual": -0.0011089953711245215,
+          "boundary_advective_flux": 83.02177424709464,
+          "boundary_diffusive_flux": 727.143797007302,
+          "integrated_current_source": -644.1209137648364
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 8.131516293641283e-20,
+          "global_residual": 0.0,
+          "boundary_advective_flux": -0.0008518396070970153,
+          "boundary_diffusive_flux": 0.0005015592359210729,
+          "integrated_source": -0.0013542622957482741,
+          "relative_update": 0.00048376560160751715
+        },
+        "omega": {
+          "max_local_integrated_residual": 5.684341886080802e-14,
+          "global_residual": 0.0,
+          "boundary_advective_flux": 83.02183143530392,
+          "boundary_diffusive_flux": 727.1437710773046,
+          "integrated_source": -644.1208119237684,
+          "relative_update": 2.1520723251474777e-06
+        }
+      }
+    },
+    {
+      "iteration": 29,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 2.8104936587216174e-08,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 3.5981027594889076e-07,
+      "stored_native_divergence_max": 1.7501987359391796e-10,
+      "face_flux_consistency_max": 7.80194396587941e-08,
+      "velocity_change": 2.955392959890269e-08,
+      "modified_pressure_change": 1.983531679872638e-07,
+      "flux_change": 3.505228043195255e-08,
+      "k_change": 0.00025233449523980007,
+      "omega_change": 1.008321781006067e-06,
+      "k_current_nonlinear_residual": 0.00040678957932008855,
+      "omega_current_nonlinear_residual": 7.547153838492452e-07,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 0.00040678957932008855,
+          "maximum_specific_residual": 3.965320563083364e-06,
+          "global_integrated_residual": 7.568560269913223e-07,
+          "boundary_advective_flux": -0.0008518760615007956,
+          "boundary_diffusive_flux": 0.000501573215859254,
+          "integrated_current_source": -0.001354206133387041
+        },
+        "omega": {
+          "relative_residual": 7.547153838492452e-07,
+          "maximum_specific_residual": 0.0032085247529565204,
+          "global_integrated_residual": -0.0007417533442299895,
+          "boundary_advective_flux": 83.02186118739857,
+          "boundary_diffusive_flux": 727.1437559592331,
+          "integrated_current_source": -644.1211530184902
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 1.1519648082658485e-19,
+          "global_residual": -4.336808689942018e-19,
+          "boundary_advective_flux": -0.0008519127350316103,
+          "boundary_diffusive_flux": 0.0005015875468157709,
+          "integrated_source": -0.0013541407196684158,
+          "relative_update": 0.00036042537140958467
+        },
+        "omega": {
+          "max_local_integrated_residual": 3.552713678800501e-14,
+          "global_residual": -1.1368683772161603e-13,
+          "boundary_advective_flux": 83.02189954215645,
+          "boundary_diffusive_flux": 727.1437386437796,
+          "integrated_source": -644.1210848688836,
+          "relative_update": 1.4404599530263219e-06
+        }
+      }
+    },
+    {
+      "iteration": 30,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 2.1002124649733144e-08,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 2.6923562516933947e-07,
+      "stored_native_divergence_max": 1.7502024829418877e-10,
+      "face_flux_consistency_max": 5.838417174719446e-08,
+      "velocity_change": 2.208956992223313e-08,
+      "modified_pressure_change": 1.480419034076338e-07,
+      "flux_change": 2.6204833447361108e-08,
+      "k_change": 0.00018782990661902376,
+      "omega_change": 6.748919397033088e-07,
+      "k_current_nonlinear_residual": 0.0003028335290470721,
+      "omega_current_nonlinear_residual": 5.051774060350704e-07,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 0.0003028335290470721,
+          "maximum_specific_residual": 2.9696846969724333e-06,
+          "global_integrated_residual": 5.610496462127511e-07,
+          "boundary_advective_flux": -0.0008519399017964509,
+          "boundary_diffusive_flux": 0.0005015978616149072,
+          "integrated_current_source": -0.0013540988130575707
+        },
+        "omega": {
+          "relative_residual": 5.051774060350704e-07,
+          "maximum_specific_residual": 0.002150593205950457,
+          "global_integrated_residual": -0.0004961218156435132,
+          "boundary_advective_flux": 83.02191929629274,
+          "boundary_diffusive_flux": 727.1437285094246,
+          "integrated_current_source": -644.1213130913162
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 8.131516293641283e-20,
+          "global_residual": -4.336808689942018e-19,
+          "boundary_advective_flux": -0.000851967263651487,
+          "boundary_diffusive_flux": 0.0005016084354260344,
+          "integrated_source": -0.0013540505059645924,
+          "relative_update": 0.0002682995519046413
+        },
+        "omega": {
+          "max_local_integrated_residual": 2.842170943040401e-14,
+          "global_residual": -1.1368683772161603e-13,
+          "boundary_advective_flux": 83.021945018019,
+          "boundary_diffusive_flux": 727.1437169477251,
+          "integrated_source": -644.1212674865302,
+          "relative_update": 9.641314615127163e-07
+        }
+      }
+    },
+    {
+      "iteration": 31,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 1.568698335528516e-08,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 2.0123575555919257e-07,
+      "stored_native_divergence_max": 1.7502006094405336e-10,
+      "face_flux_consistency_max": 4.3642356728490483e-08,
+      "velocity_change": 1.6492572495855675e-08,
+      "modified_pressure_change": 1.1040412646149938e-07,
+      "flux_change": 1.9569114064756037e-08,
+      "k_change": 0.00013970416013130572,
+      "omega_change": 4.5172468566682735e-07,
+      "k_current_nonlinear_residual": 0.00022527272262361694,
+      "omega_current_nonlinear_residual": 3.3814725321055723e-07,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 0.00022527272262361694,
+          "maximum_specific_residual": 2.2216746017266233e-06,
+          "global_integrated_residual": 4.1573110444820183e-07,
+          "boundary_advective_flux": -0.0008519874930854799,
+          "boundary_diffusive_flux": 0.0005016160448133686,
+          "integrated_current_source": -0.0013540192690032968
+        },
+        "omega": {
+          "relative_residual": 3.3814725321055723e-07,
+          "maximum_specific_residual": 0.001441524555495288,
+          "global_integrated_residual": -0.0003318398259168909,
+          "boundary_advective_flux": 83.02195811986111,
+          "boundary_diffusive_flux": 727.1437101508324,
+          "integrated_current_source": -644.1214201911454
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 1.3552527156068805e-19,
+          "global_residual": 0.0,
+          "boundary_advective_flux": -0.000852007890639771,
+          "boundary_diffusive_flux": 0.0005016238459778827,
+          "integrated_source": -0.0013539835875464798,
+          "relative_update": 0.00019956149100689672
+        },
+        "omega": {
+          "max_local_integrated_residual": 5.684341886080802e-14,
+          "global_residual": 1.1368683772161603e-13,
+          "boundary_advective_flux": 83.02197536901546,
+          "boundary_diffusive_flux": 727.1437024316276,
+          "integrated_source": -644.1213896715838,
+          "relative_update": 6.453210328593481e-07
+        }
+      }
+    },
+    {
+      "iteration": 32,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 1.1715283906820353e-08,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 1.502469511305282e-07,
+      "stored_native_divergence_max": 1.7502024829418877e-10,
+      "face_flux_consistency_max": 3.258809447292954e-08,
+      "velocity_change": 1.2301406778493136e-08,
+      "modified_pressure_change": 8.227168308272943e-08,
+      "flux_change": 1.4598961618093165e-08,
+      "k_change": 0.00010383269234611156,
+      "omega_change": 3.023654222503803e-07,
+      "k_current_nonlinear_residual": 0.00016745705155918295,
+      "omega_current_nonlinear_residual": 2.2635143182966744e-07,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 0.00016745705155918295,
+          "maximum_specific_residual": 1.6604102020575232e-06,
+          "global_integrated_residual": 3.079251181094518e-07,
+          "boundary_advective_flux": -0.0008520229429612369,
+          "boundary_diffusive_flux": 0.0005016294585518788,
+          "integrated_current_source": -0.0013539603266312255
+        },
+        "omega": {
+          "relative_residual": 2.2635143182966744e-07,
+          "maximum_specific_residual": 0.0009663056525783807,
+          "global_integrated_residual": -0.00022196926316997434,
+          "boundary_advective_flux": 83.02198404868712,
+          "boundary_diffusive_flux": 727.1436978706055,
+          "integrated_current_source": -644.1214918526551
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 1.2874900798265365e-19,
+          "global_residual": 0.0,
+          "boundary_advective_flux": -0.0008520381367235767,
+          "boundary_diffusive_flux": 0.0005016352134638971,
+          "integrated_source": -0.0013539339683051954,
+          "relative_update": 0.00014832369692879664
+        },
+        "omega": {
+          "max_local_integrated_residual": 2.842170943040401e-14,
+          "global_residual": 1.1368683772161603e-13,
+          "boundary_advective_flux": 83.02199561623804,
+          "boundary_diffusive_flux": 727.1436927172134,
+          "integrated_source": -644.1214714267364,
+          "relative_update": 4.3195062711363333e-07
+        }
+      }
+    },
+    {
+      "iteration": 33,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 8.752238859964713e-09,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 1.1205781839940253e-07,
+      "stored_native_divergence_max": 1.7501949889364715e-10,
+      "face_flux_consistency_max": 2.430855616797345e-08,
+      "velocity_change": 9.166816363348752e-09,
+      "modified_pressure_change": 6.126195308633061e-08,
+      "flux_change": 1.0880934539931539e-08,
+      "k_change": 7.711883138668271e-05,
+      "omega_change": 2.0240626029434282e-07,
+      "k_current_nonlinear_residual": 0.00012439609534011819,
+      "omega_current_nonlinear_residual": 1.515272831358256e-07,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 0.00012439609534011819,
+          "maximum_specific_residual": 1.23976715008461e-06,
+          "global_integrated_residual": 2.2798166704816808e-07,
+          "boundary_advective_flux": -0.0008520493288626764,
+          "boundary_diffusive_flux": 0.0005016393524280036,
+          "integrated_current_source": -0.0013539166629577281
+        },
+        "omega": {
+          "relative_residual": 1.515272831358256e-07,
+          "maximum_specific_residual": 0.0006478197984929323,
+          "global_integrated_residual": -0.0001484891218332951,
+          "boundary_advective_flux": 83.02200135908268,
+          "boundary_diffusive_flux": 727.1436896547141,
+          "integrated_current_source": -644.1215398065096
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 7.453889935837843e-20,
+          "global_residual": 6.505213034913027e-19,
+          "boundary_advective_flux": -0.0008520606378190572,
+          "boundary_diffusive_flux": 0.0005016435972060301,
+          "integrated_source": -0.0013538971913955788,
+          "relative_update": 0.0001101649753149908
+        },
+        "omega": {
+          "max_local_integrated_residual": 2.842170943040401e-14,
+          "global_residual": -1.1368683772161603e-13,
+          "boundary_advective_flux": 83.02200911691781,
+          "boundary_diffusive_flux": 727.1436862144631,
+          "integrated_source": -644.1215261343982,
+          "relative_update": 2.891518111247544e-07
+        }
+      }
+    },
+    {
+      "iteration": 34,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 6.546081687957179e-09,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 8.348629662591199e-08,
+      "stored_native_divergence_max": 1.7502043564432418e-10,
+      "face_flux_consistency_max": 1.811399455431406e-08,
+      "velocity_change": 6.825090733529845e-09,
+      "modified_pressure_change": 4.558466326962713e-08,
+      "flux_change": 8.102757821391708e-09,
+      "k_change": 5.724106483138273e-05,
+      "omega_change": 1.3550794044139161e-07,
+      "k_current_nonlinear_residual": 9.234971866033593e-05,
+      "omega_current_nonlinear_residual": 1.0144813649615099e-07,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 9.234971866033593e-05,
+          "maximum_specific_residual": 9.248641787871981e-07,
+          "global_integrated_residual": 1.6872512833988665e-07,
+          "boundary_advective_flux": -0.0008520689540813785,
+          "boundary_diffusive_flux": 0.0005016466488575971,
+          "integrated_current_source": -0.0013538843280673158
+        },
+        "omega": {
+          "relative_residual": 1.0144813649615099e-07,
+          "maximum_specific_residual": 0.00043437066857787693,
+          "global_integrated_residual": -9.934541842326894e-05,
+          "boundary_advective_flux": 83.02201291139771,
+          "boundary_diffusive_flux": 727.1436841567809,
+          "integrated_current_source": -644.1215718999649
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 1.2197274440461925e-19,
+          "global_residual": 0.0,
+          "boundary_advective_flux": -0.000852077365419279,
+          "boundary_diffusive_flux": 0.0005016497792484056,
+          "integrated_source": -0.0013538699445908287,
+          "relative_update": 8.17703281859681e-05
+        },
+        "omega": {
+          "max_local_integrated_residual": 2.842170943040401e-14,
+          "global_residual": 0.0,
+          "boundary_advective_flux": 83.02201811477622,
+          "boundary_diffusive_flux": 727.1436818602612,
+          "integrated_source": -644.1215627471178,
+          "relative_update": 1.935827768495493e-07
+        }
+      }
+    },
+    {
+      "iteration": 35,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 4.9079215940109334e-09,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 6.21320839777617e-08,
+      "stored_native_divergence_max": 1.7502043564432418e-10,
+      "face_flux_consistency_max": 1.348409908730197e-08,
+      "velocity_change": 5.077504951565858e-09,
+      "modified_pressure_change": 3.389587061810107e-08,
+      "flux_change": 6.029038245962227e-09,
+      "k_change": 4.2461331473501315e-05,
+      "omega_change": 9.073415199929467e-08,
+      "k_current_nonlinear_residual": 6.851818184252794e-05,
+      "omega_current_nonlinear_residual": 6.792961694238397e-08,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 6.851818184252794e-05,
+          "maximum_specific_residual": 6.893673537880507e-07,
+          "global_integrated_residual": 1.24821359669517e-07,
+          "boundary_advective_flux": -0.0008520835408023591,
+          "boundary_diffusive_flux": 0.0005016520287720956,
+          "integrated_current_source": -0.001353860390934124
+        },
+        "omega": {
+          "relative_residual": 6.792961694238397e-08,
+          "maximum_specific_residual": 0.0002913088273883701,
+          "global_integrated_residual": -6.647634234968613e-05,
+          "boundary_advective_flux": 83.0220206181087,
+          "boundary_diffusive_flux": 727.1436804767037,
+          "integrated_current_source": -644.1215933822527
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 1.2197274440461925e-19,
+          "global_residual": 0.0,
+          "boundary_advective_flux": -0.0008520897926477851,
+          "boundary_diffusive_flux": 0.0005016543369175869,
+          "integrated_source": -0.001353849766983336,
+          "relative_update": 6.0657609661005e-05
+        },
+        "omega": {
+          "max_local_integrated_residual": 4.263256414560601e-14,
+          "global_residual": 0.0,
+          "boundary_advective_flux": 83.02202410868416,
+          "boundary_diffusive_flux": 727.143678943711,
+          "integrated_source": -644.1215872536677,
+          "relative_update": 1.2962021929017032e-07
+        }
+      }
+    },
+    {
+      "iteration": 36,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 3.696405086922814e-09,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 4.618736967887393e-08,
+      "stored_native_divergence_max": 1.7501949889364715e-10,
+      "face_flux_consistency_max": 1.0026979746502462e-08,
+      "velocity_change": 3.774572723195346e-09,
+      "modified_pressure_change": 2.5187675912199307e-08,
+      "flux_change": 4.482655852519417e-09,
+      "k_change": 3.14799758720078e-05,
+      "omega_change": 6.076579567054408e-08,
+      "k_current_nonlinear_residual": 5.080803214469421e-05,
+      "omega_current_nonlinear_residual": 4.549390223725652e-08,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 5.080803214469421e-05,
+          "maximum_specific_residual": 5.134271500531788e-07,
+          "global_integrated_residual": 9.230657499423401e-08,
+          "boundary_advective_flux": -0.0008520943754903268,
+          "boundary_diffusive_flux": 0.0005016559948192649,
+          "integrated_current_source": -0.0013538426768845862
+        },
+        "omega": {
+          "relative_residual": 4.549390223725652e-08,
+          "maximum_specific_residual": 0.00019541370998155114,
+          "global_integrated_residual": -4.4490566154076205e-05,
+          "boundary_advective_flux": 83.02202575743506,
+          "boundary_diffusive_flux": 727.1436780126828,
+          "integrated_current_source": -644.1216077646817
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 1.6263032587282567e-19,
+          "global_residual": -2.168404344971009e-19,
+          "boundary_advective_flux": -0.0008520990192201684,
+          "boundary_diffusive_flux": 0.0005016576963716722,
+          "integrated_source": -0.0013538348308239569,
+          "relative_update": 4.4970608972095696e-05
+        },
+        "omega": {
+          "max_local_integrated_residual": 7.815970093361102e-14,
+          "global_residual": -1.1368683772161603e-13,
+          "boundary_advective_flux": 83.02202809949092,
+          "boundary_diffusive_flux": 727.143676989374,
+          "integrated_source": -644.1216036601342,
+          "relative_update": 8.680828049933418e-08
+        }
+      }
+    },
+    {
+      "iteration": 37,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 2.806029525741134e-09,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 3.4292571782223995e-08,
+      "stored_native_divergence_max": 1.7501968624378255e-10,
+      "face_flux_consistency_max": 7.447903793700306e-09,
+      "velocity_change": 2.8040262790178072e-09,
+      "modified_pressure_change": 1.8704915376308238e-08,
+      "flux_change": 3.3305537092288473e-09,
+      "k_change": 2.3326254708670124e-05,
+      "omega_change": 4.0705028760105756e-08,
+      "k_current_nonlinear_residual": 3.7655560943641456e-05,
+      "omega_current_nonlinear_residual": 3.047503399340587e-08,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 3.7655560943641456e-05,
+          "maximum_specific_residual": 3.821039197728663e-07,
+          "global_integrated_residual": 6.823652946448184e-08,
+          "boundary_advective_flux": -0.0008521024182531583,
+          "boundary_diffusive_flux": 0.0005016589180052396,
+          "integrated_current_source": -0.0013538295727878625
+        },
+        "omega": {
+          "relative_residual": 3.047503399340587e-08,
+          "maximum_specific_residual": 0.00013112549748006683,
+          "global_integrated_residual": -2.978287873489638e-05,
+          "boundary_advective_flux": 83.02202918336394,
+          "boundary_diffusive_flux": 727.1436763623168,
+          "integrated_current_source": -644.121617396074
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 1.3552527156068805e-19,
+          "global_residual": 0.0,
+          "boundary_advective_flux": -0.0008521058653682276,
+          "boundary_diffusive_flux": 0.0005016601721381336,
+          "integrated_source": -0.0013538237791779514,
+          "relative_update": 3.332279188889452e-05
+        },
+        "omega": {
+          "max_local_integrated_residual": 4.263256414560601e-14,
+          "global_residual": -2.2737367544323206e-13,
+          "boundary_advective_flux": 83.02203075520612,
+          "boundary_diffusive_flux": 727.1436756792277,
+          "integrated_source": -644.1216146463436,
+          "relative_update": 5.815004151998626e-08
+        }
+      }
+    },
+    {
+      "iteration": 38,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 2.1581631325486903e-09,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 2.542657359660971e-08,
+      "stored_native_divergence_max": 1.7502212179554282e-10,
+      "face_flux_consistency_max": 5.52555501354135e-09,
+      "velocity_change": 2.081673844082675e-09,
+      "modified_pressure_change": 1.3882344632230956e-08,
+      "flux_change": 2.472924223387969e-09,
+      "k_change": 1.727584559875658e-05,
+      "omega_change": 2.7274488105334718e-08,
+      "k_current_nonlinear_residual": 2.7893891512882494e-05,
+      "omega_current_nonlinear_residual": 2.041979234684242e-08,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 2.7893891512882494e-05,
+          "maximum_specific_residual": 2.841690098332003e-07,
+          "global_integrated_residual": 5.042526732443378e-08,
+          "boundary_advective_flux": -0.0008521083850096712,
+          "boundary_diffusive_flux": 0.0005016610721316851,
+          "integrated_current_source": -0.0013538198824086807
+        },
+        "omega": {
+          "relative_residual": 2.041979234684242e-08,
+          "maximum_specific_residual": 8.801845796613249e-05,
+          "global_integrated_residual": -1.994255171200443e-05,
+          "boundary_advective_flux": 83.02203146623978,
+          "boundary_diffusive_flux": 727.1436752564971,
+          "integrated_current_source": -644.1216238477057
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 1.1519648082658485e-19,
+          "global_residual": 0.0,
+          "boundary_advective_flux": -0.0008521109423516994,
+          "boundary_diffusive_flux": 0.0005016619963146886,
+          "integrated_source": -0.0013538156050985123,
+          "relative_update": 2.4679545065496697e-05
+        },
+        "omega": {
+          "max_local_integrated_residual": 2.842170943040401e-14,
+          "global_residual": 1.1368683772161603e-13,
+          "boundary_advective_flux": 83.02203252149145,
+          "boundary_diffusive_flux": 727.1436748005027,
+          "integrated_source": -644.1216220050061,
+          "relative_update": 3.8963554632270716e-08
+        }
+      }
+    },
+    {
+      "iteration": 39,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 1.694011904784626e-09,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 1.8823457043071198e-08,
+      "stored_native_divergence_max": 1.7501893684324093e-10,
+      "face_flux_consistency_max": 4.093860000997651e-09,
+      "velocity_change": 1.5444632005757413e-09,
+      "modified_pressure_change": 1.029727149784115e-08,
+      "flux_change": 1.835002141876024e-09,
+      "k_change": 1.278880984586841e-05,
+      "omega_change": 1.8281220898976803e-08,
+      "k_current_nonlinear_residual": 2.065306733389063e-05,
+      "omega_current_nonlinear_residual": 1.3686577740308061e-08,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 2.065306733389063e-05,
+          "maximum_specific_residual": 2.1119392772310806e-07,
+          "global_integrated_residual": 3.725058869060921e-08,
+          "boundary_advective_flux": -0.0008521128091522674,
+          "boundary_diffusive_flux": 0.0005016626592283364,
+          "integrated_current_source": -0.0013538127189692943
+        },
+        "omega": {
+          "relative_residual": 1.3686577740308061e-08,
+          "maximum_specific_residual": 5.910713991452709e-05,
+          "global_integrated_residual": -1.3357604298436243e-05,
+          "boundary_advective_flux": 83.02203298683483,
+          "boundary_diffusive_flux": 727.143674515225,
+          "integrated_current_source": -644.121628170786
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 9.486769009248164e-20,
+          "global_residual": 0.0,
+          "boundary_advective_flux": -0.0008521147053324275,
+          "boundary_diffusive_flux": 0.0005016633401385504,
+          "integrated_source": -0.0013538095617065373,
+          "relative_update": 1.8269600450449813e-05
+        },
+        "omega": {
+          "max_local_integrated_residual": 3.552713678800501e-14,
+          "global_residual": -1.1368683772161603e-13,
+          "boundary_advective_flux": 83.02203369553696,
+          "boundary_diffusive_flux": 727.1436742108141,
+          "integrated_source": -644.1216269354659,
+          "relative_update": 2.611602994138428e-08
+        }
+      }
+    },
+    {
+      "iteration": 40,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 1.3689763234640299e-09,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 1.3909384768973075e-08,
+      "stored_native_divergence_max": 1.750209976947304e-10,
+      "face_flux_consistency_max": 3.0283615615189774e-09,
+      "velocity_change": 1.145231085941205e-09,
+      "modified_pressure_change": 7.633896201950451e-09,
+      "flux_change": 1.360850262108152e-09,
+      "k_change": 9.463012304930116e-06,
+      "omega_change": 1.225788376324674e-08,
+      "k_current_nonlinear_residual": 1.5285053545453523e-05,
+      "omega_current_nonlinear_residual": 9.176909211213892e-09,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 1.5285053545453523e-05,
+          "maximum_specific_residual": 1.5685976579960732e-07,
+          "global_integrated_residual": 2.7509233573005173e-08,
+          "boundary_advective_flux": -0.0008521160877689826,
+          "boundary_diffusive_flux": 0.0005016638283375861,
+          "integrated_current_source": -0.0013538074253401414
+        },
+        "omega": {
+          "relative_residual": 9.176909211213892e-09,
+          "maximum_specific_residual": 3.97111292449459e-05,
+          "global_integrated_residual": -8.950141071828455e-06,
+          "boundary_advective_flux": 83.02203399926805,
+          "boundary_diffusive_flux": 727.1436740180806,
+          "integrated_current_source": -644.1216310686716
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 1.4907779871675686e-19,
+          "global_residual": 2.168404344971009e-19,
+          "boundary_advective_flux": -0.0008521174929785963,
+          "boundary_diffusive_flux": 0.0005016643299188177,
+          "integrated_source": -0.0013538050952867126,
+          "relative_update": 1.3518519253953022e-05
+        },
+        "omega": {
+          "max_local_integrated_residual": 3.552713678800501e-14,
+          "global_residual": 1.1368683772161603e-13,
+          "boundary_advective_flux": 83.02203447543411,
+          "boundary_diffusive_flux": 727.1436738148501,
+          "integrated_source": -644.1216302401813,
+          "relative_update": 1.751126256332371e-08
+        }
+      }
+    },
+    {
+      "iteration": 41,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 1.1481879142764571e-09,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 1.025491654094157e-08,
+      "stored_native_divergence_max": 1.7501912419337634e-10,
+      "face_flux_consistency_max": 2.2359621654199913e-09,
+      "velocity_change": 8.487399330223894e-10,
+      "modified_pressure_change": 5.6564927667808545e-09,
+      "flux_change": 1.0086660944145529e-09,
+      "k_change": 6.999197921292717e-06,
+      "omega_change": 8.222626646617402e-09,
+      "k_current_nonlinear_residual": 1.1307513356132489e-05,
+      "omega_current_nonlinear_residual": 6.1557220605104345e-09,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 1.1307513356132489e-05,
+          "maximum_specific_residual": 1.1643461619044905e-07,
+          "global_integrated_residual": 2.030911580237035e-08,
+          "boundary_advective_flux": -0.0008521185162533893,
+          "boundary_diffusive_flux": 0.0005016646893889358,
+          "integrated_current_source": -0.0013538035147581276
+        },
+        "omega": {
+          "relative_residual": 6.1557220605104345e-09,
+          "maximum_specific_residual": 2.669430725665833e-05,
+          "global_integrated_residual": -5.99936940859358e-06,
+          "boundary_advective_flux": 83.02203467307194,
+          "boundary_diffusive_flux": 727.1436736844828,
+          "integrated_current_source": -644.1216330120415
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 6.776263578034403e-20,
+          "global_residual": -2.168404344971009e-19,
+          "boundary_advective_flux": -0.0008521195570976815,
+          "boundary_diffusive_flux": 0.0005016650588043045,
+          "integrated_source": -0.001353801795525976,
+          "relative_update": 9.998816156557734e-06
+        },
+        "omega": {
+          "max_local_integrated_residual": 3.552713678800501e-14,
+          "global_residual": 1.1368683772161603e-13,
+          "boundary_advective_flux": 83.0220349931589,
+          "boundary_diffusive_flux": 727.1436735487912,
+          "integrated_source": -644.1216324561346,
+          "relative_update": 1.174660951890576e-08
+        }
+      }
+    },
+    {
+      "iteration": 42,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 1.003458101576518e-09,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 7.539017410351788e-09,
+      "stored_native_divergence_max": 1.7502024829418877e-10,
+      "face_flux_consistency_max": 1.6470614871977318e-09,
+      "velocity_change": 6.286894825464727e-10,
+      "modified_pressure_change": 4.189253809032594e-09,
+      "flux_change": 7.47243426084215e-10,
+      "k_change": 5.174842581833717e-06,
+      "omega_change": 5.5184225671605046e-09,
+      "k_current_nonlinear_residual": 8.36171085261167e-06,
+      "omega_current_nonlinear_residual": 4.131112634659667e-09,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 8.36171085261167e-06,
+          "maximum_specific_residual": 8.637880965462964e-08,
+          "global_integrated_residual": 1.4989162881346392e-08,
+          "boundary_advective_flux": -0.0008521203141923879,
+          "boundary_diffusive_flux": 0.0005016653234459896,
+          "integrated_current_source": -0.0013538006268012587
+        },
+        "omega": {
+          "relative_residual": 4.131112634659667e-09,
+          "maximum_specific_residual": 1.7955139387293425e-05,
+          "global_integrated_residual": -4.0232597435796436e-06,
+          "boundary_advective_flux": 83.02203512130731,
+          "boundary_diffusive_flux": 727.1436734604946,
+          "integrated_current_source": -644.1216343159275
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 1.2874900798265365e-19,
+          "global_residual": 0.0,
+          "boundary_advective_flux": -0.0008521210847859577,
+          "boundary_diffusive_flux": 0.0005016655954742293,
+          "integrated_source": -0.0013537993585180147,
+          "relative_update": 7.392611552474744e-06
+        },
+        "omega": {
+          "max_local_integrated_residual": 2.842170943040401e-14,
+          "global_residual": 2.2737367544323206e-13,
+          "boundary_advective_flux": 83.02203533659623,
+          "boundary_diffusive_flux": 727.1436733698876,
+          "integrated_source": -644.1216339427219,
+          "relative_update": 7.883460824771588e-09
+        }
+      }
+    },
+    {
+      "iteration": 43,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 9.118755307758059e-10,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 5.52192379321692e-09,
+      "stored_native_divergence_max": 1.7501837479283472e-10,
+      "face_flux_consistency_max": 1.2096778578829515e-09,
+      "velocity_change": 4.6546899826280035e-10,
+      "modified_pressure_change": 3.101172585390526e-09,
+      "flux_change": 5.533085619974321e-10,
+      "k_change": 3.824597587445303e-06,
+      "omega_change": 3.7055677393687623e-09,
+      "k_current_nonlinear_residual": 6.18102679298739e-06,
+      "omega_current_nonlinear_residual": 2.7738730351269177e-09,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 6.18102679298739e-06,
+          "maximum_specific_residual": 6.404720383455864e-08,
+          "global_integrated_residual": 1.1059718932482032e-08,
+          "boundary_advective_flux": -0.0008521216447105168,
+          "boundary_diffusive_flux": 0.0005016657902733554,
+          "integrated_current_source": -0.001353798494702805
+        },
+        "omega": {
+          "relative_residual": 2.7738730351269177e-09,
+          "maximum_specific_residual": 1.2085199333267125e-05,
+          "global_integrated_residual": -2.699423575558413e-06,
+          "boundary_advective_flux": 83.02203541934678,
+          "boundary_diffusive_flux": 727.1436733100018,
+          "integrated_current_source": -644.1216351912315
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 1.6263032587282567e-19,
+          "global_residual": 0.0,
+          "boundary_advective_flux": -0.0008521222149682812,
+          "boundary_diffusive_flux": 0.0005016659905552654,
+          "integrated_source": -0.0013537975592720494,
+          "relative_update": 5.463699566528846e-06
+        },
+        "omega": {
+          "max_local_integrated_residual": 2.842170943040401e-14,
+          "global_residual": 2.2737367544323206e-13,
+          "boundary_advective_flux": 83.02203556424074,
+          "boundary_diffusive_flux": 727.143673249492,
+          "integrated_source": -644.1216349405321,
+          "relative_update": 5.293668193224559e-09
+        }
+      }
+    },
+    {
+      "iteration": 44,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 8.555741402382795e-10,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 4.024728300633384e-09,
+      "stored_native_divergence_max": 1.7501856214297012e-10,
+      "face_flux_consistency_max": 8.850218058409354e-10,
+      "velocity_change": 3.444694554228117e-10,
+      "modified_pressure_change": 2.2946987170543673e-09,
+      "flux_change": 4.0952070815724793e-10,
+      "k_change": 2.8256815076746213e-06,
+      "omega_change": 2.4897614964310523e-09,
+      "k_current_nonlinear_residual": 4.5674368139128424e-06,
+      "omega_current_nonlinear_residual": 1.8636541920389495e-09,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 4.5674368139128424e-06,
+          "maximum_specific_residual": 4.746500700985838e-08,
+          "global_integrated_residual": 8.158258549432337e-09,
+          "boundary_advective_flux": -0.000852122628910903,
+          "boundary_diffusive_flux": 0.0005016661339234354,
+          "integrated_current_source": -0.001353796921092888
+        },
+        "omega": {
+          "relative_residual": 1.8636541920389495e-09,
+          "maximum_specific_residual": 8.14041562557932e-06,
+          "global_integrated_residual": -1.8122153107036354e-06,
+          "boundary_advective_flux": 83.02203561741919,
+          "boundary_diffusive_flux": 727.1436732088151,
+          "integrated_current_source": -644.1216357791807
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 1.0842021724855044e-19,
+          "global_residual": -2.168404344971009e-19,
+          "boundary_advective_flux": -0.0008521230507374668,
+          "boundary_diffusive_flux": 0.0005016662813587938,
+          "integrated_source": -0.0013537962312947605,
+          "relative_update": 4.036681734779673e-06
+        },
+        "omega": {
+          "max_local_integrated_residual": 3.552713678800501e-14,
+          "global_residual": 0.0,
+          "boundary_advective_flux": 83.02203571500488,
+          "boundary_diffusive_flux": 727.1436731683991,
+          "integrated_source": -644.1216356106631,
+          "relative_update": 3.556802137485012e-09
+        }
+      }
+    },
+    {
+      "iteration": 45,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 8.216010818931252e-10,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 2.9140619917100703e-09,
+      "stored_native_divergence_max": 1.7502062299445958e-10,
+      "face_flux_consistency_max": 6.441782107735605e-10,
+      "velocity_change": 2.54816232458349e-10,
+      "modified_pressure_change": 1.6972487791941969e-09,
+      "flux_change": 3.029692474362689e-10,
+      "k_change": 2.086979062483286e-06,
+      "omega_change": 1.6739920759838093e-09,
+      "k_current_nonlinear_residual": 3.3739558027653626e-06,
+      "omega_current_nonlinear_residual": 1.2529470585443956e-09,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 3.3739558027653626e-06,
+          "maximum_specific_residual": 3.5159216313844726e-08,
+          "global_integrated_residual": 6.0164954696524935e-09,
+          "boundary_advective_flux": -0.0008521233566459438,
+          "boundary_diffusive_flux": 0.0005016663868604054,
+          "integrated_current_source": -0.0013537957600018187
+        },
+        "omega": {
+          "relative_residual": 1.2529470585443956e-09,
+          "maximum_specific_residual": 5.48784141329861e-06,
+          "global_integrated_residual": -1.2173662395920104e-06,
+          "boundary_advective_flux": 83.02203574898483,
+          "boundary_diffusive_flux": 727.1436731407257,
+          "integrated_current_source": -644.1216361743745
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 1.4907779871675686e-19,
+          "global_residual": -4.336808689942018e-19,
+          "boundary_advective_flux": -0.0008521236685518972,
+          "boundary_diffusive_flux": 0.0005016664953772887,
+          "integrated_source": -0.0013537952514335854,
+          "relative_update": 2.981395325263046e-06
+        },
+        "omega": {
+          "max_local_integrated_residual": 4.973799150320701e-14,
+          "global_residual": 1.1368683772161603e-13,
+          "boundary_advective_flux": 83.02203581476017,
+          "boundary_diffusive_flux": 727.1436731137261,
+          "integrated_source": -644.1216360610164,
+          "relative_update": 2.391417255555475e-09
+        }
+      }
+    },
+    {
+      "iteration": 46,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 8.012595252809086e-10,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 2.090574963142799e-09,
+      "stored_native_divergence_max": 1.7502062299445958e-10,
+      "face_flux_consistency_max": 4.6560480471136145e-10,
+      "velocity_change": 1.884217427862034e-10,
+      "modified_pressure_change": 1.254863953259024e-09,
+      "flux_change": 2.2405094941296241e-10,
+      "k_change": 1.5409141217328703e-06,
+      "omega_change": 1.1263489906203828e-09,
+      "k_current_nonlinear_residual": 2.491547336408252e-06,
+      "omega_current_nonlinear_residual": 8.429852604403879e-10,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 2.491547336408252e-06,
+          "maximum_specific_residual": 2.6032043720507108e-08,
+          "global_integrated_residual": 4.435967200759554e-09,
+          "boundary_advective_flux": -0.0008521238945436107,
+          "boundary_diffusive_flux": 0.0005016665730037141,
+          "integrated_current_source": -0.0013537949035145257
+        },
+        "omega": {
+          "relative_residual": 8.429852604403879e-10,
+          "maximum_specific_residual": 3.703009407107771e-06,
+          "global_integrated_residual": -8.183402394612571e-07,
+          "boundary_advective_flux": 83.02203583632463,
+          "boundary_diffusive_flux": 727.1436730948677,
+          "integrated_current_source": -644.1216364402028
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 1.1519648082658485e-19,
+          "global_residual": 2.168404344971009e-19,
+          "boundary_advective_flux": -0.0008521241250855926,
+          "boundary_diffusive_flux": 0.000501666652864255,
+          "integrated_source": -0.001353794528631668,
+          "relative_update": 2.2013040751889253e-06
+        },
+        "omega": {
+          "max_local_integrated_residual": 3.907985046680551e-14,
+          "global_residual": 1.1368683772161603e-13,
+          "boundary_advective_flux": 83.02203588069743,
+          "boundary_diffusive_flux": 727.1436730768271,
+          "integrated_source": -644.1216363638878,
+          "relative_update": 1.6090699855927245e-09
+        }
+      }
+    },
+    {
+      "iteration": 47,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 7.890586758365306e-10,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 1.4803276104924377e-09,
+      "stored_native_divergence_max": 1.7502024829418877e-10,
+      "face_flux_consistency_max": 3.3327041126796075e-10,
+      "velocity_change": 1.3927452603381816e-10,
+      "modified_pressure_change": 9.274429950553195e-10,
+      "flux_change": 1.6562646343355954e-10,
+      "k_change": 1.1373962655319788e-06,
+      "omega_change": 7.584894320694537e-10,
+      "k_current_nonlinear_residual": 1.839371051267741e-06,
+      "omega_current_nonlinear_residual": 5.676231963894535e-10,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 1.839371051267741e-06,
+          "maximum_specific_residual": 1.926599049277544e-08,
+          "global_integrated_residual": 3.2699209716736103e-09,
+          "boundary_advective_flux": -0.0008521242919837605,
+          "boundary_diffusive_flux": 0.0005016667099736595,
+          "integrated_current_source": -0.0013537942718783915
+        },
+        "omega": {
+          "relative_residual": 5.676231963894535e-10,
+          "maximum_specific_residual": 2.501174379609949e-06,
+          "global_integrated_residual": -5.505262512528475e-07,
+          "boundary_advective_flux": 83.02203589426937,
+          "boundary_diffusive_flux": 727.1436730639532,
+          "integrated_current_source": -644.1216366191575
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 2.0328790734103208e-19,
+          "global_residual": -6.505213034913027e-19,
+          "boundary_advective_flux": -0.0008521244623258946,
+          "boundary_diffusive_flux": 0.0005016667687374676,
+          "integrated_source": -0.0013537939955893604,
+          "relative_update": 1.6248508228335639e-06
+        },
+        "omega": {
+          "max_local_integrated_residual": 2.1316282072803006e-14,
+          "global_residual": 0.0,
+          "boundary_advective_flux": 83.02203592423227,
+          "boundary_diffusive_flux": 727.143673051896,
+          "integrated_source": -644.1216365677353,
+          "relative_update": 1.0835563296929687e-09
+        }
+      }
+    },
+    {
+      "iteration": 48,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 7.81672627961587e-10,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 1.3071416371177036e-09,
+      "stored_native_divergence_max": 1.7501987359391796e-10,
+      "face_flux_consistency_max": 2.352488204238057e-10,
+      "velocity_change": 1.0291040969476609e-10,
+      "modified_pressure_change": 6.852133578476271e-10,
+      "flux_change": 1.22393306731867e-10,
+      "k_change": 8.393155926936152e-07,
+      "omega_change": 5.112318880142614e-10,
+      "k_current_nonlinear_residual": 1.3575227483600382e-06,
+      "omega_current_nonlinear_residual": 3.8254989266780845e-10,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 1.3575227483600382e-06,
+          "maximum_specific_residual": 1.425274077721043e-08,
+          "global_integrated_residual": 2.4098816878838456e-09,
+          "boundary_advective_flux": -0.0008521245855445943,
+          "boundary_diffusive_flux": 0.0005016668107478351,
+          "integrated_current_source": -0.0013537938061741175
+        },
+        "omega": {
+          "relative_residual": 3.8254989266780845e-10,
+          "maximum_specific_residual": 1.6912513989275622e-06,
+          "global_integrated_residual": -3.7066834235321977e-07,
+          "boundary_advective_flux": 83.02203593268648,
+          "boundary_diffusive_flux": 727.1436730430906,
+          "integrated_current_source": -644.1216367397358
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 1.2874900798265365e-19,
+          "global_residual": -2.168404344971009e-19,
+          "boundary_advective_flux": -0.000852124711364236,
+          "boundary_diffusive_flux": 0.0005016668539826646,
+          "integrated_source": -0.0013537936025842393,
+          "relative_update": 1.1990217402889964e-06
+        },
+        "omega": {
+          "max_local_integrated_residual": 3.552713678800501e-14,
+          "global_residual": 1.1368683772161603e-13,
+          "boundary_advective_flux": 83.02203595294016,
+          "boundary_diffusive_flux": 727.1436730350302,
+          "integrated_source": -644.1216367050538,
+          "relative_update": 7.303312733504261e-10
+        }
+      }
+    },
+    {
+      "iteration": 49,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 7.771355021408658e-10,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 1.3088598486282743e-09,
+      "stored_native_divergence_max": 1.7501893684324093e-10,
+      "face_flux_consistency_max": 1.897024568681127e-10,
+      "velocity_change": 7.601530669325571e-11,
+      "modified_pressure_change": 5.060817765361755e-10,
+      "flux_change": 9.041458346931307e-11,
+      "k_change": 6.191923904439356e-07,
+      "omega_change": 3.449171405665679e-10,
+      "k_current_nonlinear_residual": 1.0016342425382763e-06,
+      "omega_current_nonlinear_residual": 2.5807178280575475e-10,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 1.0016342425382763e-06,
+          "maximum_specific_residual": 1.0539956518219665e-08,
+          "global_integrated_residual": 1.77569674875559e-09,
+          "boundary_advective_flux": -0.000852124802308472,
+          "boundary_diffusive_flux": 0.0005016668848827198,
+          "integrated_current_source": -0.0013537934628879407
+        },
+        "omega": {
+          "relative_residual": 2.5807178280575475e-10,
+          "maximum_specific_residual": 1.1449535000096487e-06,
+          "global_integrated_residual": -2.4979848123329873e-07,
+          "boundary_advective_flux": 83.02203595813842,
+          "boundary_diffusive_flux": 727.1436730289961,
+          "integrated_current_source": -644.1216368210592
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 8.131516293641283e-20,
+          "global_residual": 0.0,
+          "boundary_advective_flux": -0.000852124895213074,
+          "boundary_diffusive_flux": 0.0005016669166885676,
+          "integrated_source": -0.0013537933128931789,
+          "relative_update": 8.845602673571462e-07
+        },
+        "omega": {
+          "max_local_integrated_residual": 3.197442310920451e-14,
+          "global_residual": -2.2737367544323206e-13,
+          "boundary_advective_flux": 83.02203597184456,
+          "boundary_diffusive_flux": 727.1436730236062,
+          "integrated_source": -644.121636797643,
+          "relative_update": 4.927387784651941e-10
+        }
+      }
+    },
+    {
+      "iteration": 50,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 7.742964611659086e-10,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 1.3101180453001238e-09,
+      "stored_native_divergence_max": 1.7501893684324093e-10,
+      "face_flux_consistency_max": 1.8987576354961844e-10,
+      "velocity_change": 5.613159282256525e-11,
+      "modified_pressure_change": 3.736643025095955e-10,
+      "flux_change": 6.676997735218773e-11,
+      "k_change": 4.5668743307997013e-07,
+      "omega_change": 2.3295848675068415e-10,
+      "k_current_nonlinear_residual": 7.388594432630357e-07,
+      "omega_current_nonlinear_residual": 1.742833551646559e-10,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 7.388594432630357e-07,
+          "maximum_specific_residual": 7.79150838492169e-09,
+          "global_integrated_residual": 1.308161349074721e-09,
+          "boundary_advective_flux": -0.0008521249623179891,
+          "boundary_diffusive_flux": 0.0005016669394143533,
+          "integrated_current_source": -0.0013537932098936912
+        },
+        "omega": {
+          "relative_residual": 1.742833551646559e-10,
+          "maximum_specific_residual": 7.761121985083718e-07,
+          "global_integrated_residual": -1.6851020545605166e-07,
+          "boundary_advective_flux": 83.0220359749873,
+          "boundary_diffusive_flux": 727.1436730194624,
+          "integrated_current_source": -644.1216368759647
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 1.7618285302889447e-19,
+          "global_residual": -2.168404344971009e-19,
+          "boundary_advective_flux": -0.0008521250308977737,
+          "boundary_diffusive_flux": 0.0005016669628098751,
+          "integrated_source": -0.0013537930994028365,
+          "relative_update": 6.524104610827766e-07
+        },
+        "omega": {
+          "max_local_integrated_residual": 3.552713678800501e-14,
+          "global_residual": 1.1368683772161603e-13,
+          "boundary_advective_flux": 83.02203598427394,
+          "boundary_diffusive_flux": 727.1436730158568,
+          "integrated_source": -644.1216368601373,
+          "relative_update": 3.327978416923993e-10
+        }
+      }
+    },
+    {
+      "iteration": 51,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 7.724831781268724e-10,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 1.311039105403311e-09,
+      "stored_native_divergence_max": 1.750209976947304e-10,
+      "face_flux_consistency_max": 1.9000263862256617e-10,
+      "velocity_change": 4.1436578194104125e-11,
+      "modified_pressure_change": 2.7581265035140976e-10,
+      "flux_change": 4.929394602469851e-11,
+      "k_change": 3.367530874488762e-07,
+      "omega_change": 1.5752484512538325e-10,
+      "k_current_nonlinear_residual": 5.448928364606275e-07,
+      "omega_current_nonlinear_residual": 1.1783501932006955e-10,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 5.448928364606275e-07,
+          "maximum_specific_residual": 5.757778733775277e-09,
+          "global_integrated_residual": 9.635579440507401e-10,
+          "boundary_advective_flux": -0.0008521250803995479,
+          "boundary_diffusive_flux": 0.0005016669795222523,
+          "integrated_current_source": -0.0013537930234797445
+        },
+        "omega": {
+          "relative_residual": 1.1783501932006955e-10,
+          "maximum_specific_residual": 5.268180292006263e-07,
+          "global_integrated_residual": -1.1379714670578522e-07,
+          "boundary_advective_flux": 83.0220359861313,
+          "boundary_diffusive_flux": 727.1436730130052,
+          "integrated_current_source": -644.1216369130766
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 1.8295911660692887e-19,
+          "global_residual": -2.168404344971009e-19,
+          "boundary_advective_flux": -0.0008521251310090854,
+          "boundary_diffusive_flux": 0.0005016669967296038,
+          "integrated_source": -0.0013537929421012064,
+          "relative_update": 4.810757537252133e-07
+        },
+        "omega": {
+          "max_local_integrated_residual": 4.263256414560601e-14,
+          "global_residual": -2.2737367544323206e-13,
+          "boundary_advective_flux": 83.02203599243184,
+          "boundary_diffusive_flux": 727.1436730105926,
+          "integrated_source": -644.1216369023653,
+          "relative_update": 2.2503549761655167e-10
+        }
+      }
+    },
+    {
+      "iteration": 52,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 7.713006653764384e-10,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 1.3117149007604856e-09,
+      "stored_native_divergence_max": 1.7502006094405336e-10,
+      "face_flux_consistency_max": 1.9009557209598293e-10,
+      "velocity_change": 3.058017936388955e-11,
+      "modified_pressure_change": 2.0352855325576332e-10,
+      "flux_change": 3.6381641300971875e-11,
+      "k_change": 2.482611649703697e-07,
+      "omega_change": 1.0665174663180026e-10,
+      "k_current_nonlinear_residual": 4.0175623833278286e-07,
+      "omega_current_nonlinear_residual": 7.976964853599096e-11,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 4.0175623833278286e-07,
+          "maximum_specific_residual": 4.253506131449998e-09,
+          "global_integrated_residual": 7.096148567824954e-10,
+          "boundary_advective_flux": -0.000852125167516477,
+          "boundary_diffusive_flux": 0.0005016670090186982,
+          "integrated_current_source": -0.0013537928861500324
+        },
+        "omega": {
+          "relative_residual": 7.976964853599096e-11,
+          "maximum_specific_residual": 3.5812896248543774e-07,
+          "global_integrated_residual": -7.693854009449552e-08,
+          "boundary_advective_flux": 83.02203599349495,
+          "boundary_diffusive_flux": 727.1436730086257,
+          "integrated_current_source": -644.1216369381922
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 1.7618285302889447e-19,
+          "global_residual": 2.168404344971009e-19,
+          "boundary_advective_flux": -0.0008521252048546302,
+          "boundary_diffusive_flux": 0.0005016670216734521,
+          "integrated_source": -0.0013537928262220425,
+          "relative_update": 3.546587607193484e-07
+        },
+        "omega": {
+          "max_local_integrated_residual": 3.552713678800501e-14,
+          "global_residual": 1.1368683772161603e-13,
+          "boundary_advective_flux": 83.02203599777567,
+          "boundary_diffusive_flux": 727.1436730070104,
+          "integrated_source": -644.1216369309337,
+          "relative_update": 1.523596452205093e-10
+        }
+      }
+    },
+    {
+      "iteration": 53,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 7.705135397167026e-10,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 1.3122088142643318e-09,
+      "stored_native_divergence_max": 1.7502006094405336e-10,
+      "face_flux_consistency_max": 1.9016368167645847e-10,
+      "velocity_change": 2.2562053980521312e-11,
+      "modified_pressure_change": 1.5014990102388322e-10,
+      "flux_change": 2.6844457241771463e-11,
+      "k_change": 1.8298519549309056e-07,
+      "omega_change": 7.230660515430396e-11,
+      "k_current_nonlinear_residual": 2.961568377536834e-07,
+      "omega_current_nonlinear_residual": 5.40740254645852e-11,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 2.961568377536834e-07,
+          "maximum_specific_residual": 3.141270554739679e-09,
+          "global_integrated_residual": 5.225164893048629e-10,
+          "boundary_advective_flux": -0.000852125231772483,
+          "boundary_diffusive_flux": 0.0005016670307092465,
+          "integrated_current_source": -0.0013537927849982185
+        },
+        "omega": {
+          "relative_residual": 5.40740254645852e-11,
+          "maximum_specific_residual": 2.4383955254947404e-07,
+          "global_integrated_residual": -5.208379194598933e-08,
+          "boundary_advective_flux": 83.02203599835549,
+          "boundary_diffusive_flux": 727.143673005651,
+          "integrated_current_source": -644.1216369552117
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 7.792703114739563e-20,
+          "global_residual": -2.168404344971009e-19,
+          "boundary_advective_flux": -0.0008521252593124863,
+          "boundary_diffusive_flux": 0.0005016670400150619,
+          "integrated_source": -0.0013537927408728096,
+          "relative_update": 2.614073969757e-07
+        },
+        "omega": {
+          "max_local_integrated_residual": 2.842170943040401e-14,
+          "global_residual": 0.0,
+          "boundary_advective_flux": 83.02203600126832,
+          "boundary_diffusive_flux": 727.1436730045691,
+          "integrated_source": -644.121636950286,
+          "relative_update": 1.0329514773020954e-10
+        }
+      }
+    },
+    {
+      "iteration": 54,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 7.699795455886943e-10,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 1.3125737606187182e-09,
+      "stored_native_divergence_max": 1.7502062299445958e-10,
+      "face_flux_consistency_max": 1.9021357145626583e-10,
+      "velocity_change": 1.6642097331713726e-11,
+      "modified_pressure_change": 1.107417877884898e-10,
+      "flux_change": 1.980225060720816e-11,
+      "k_change": 1.348460000863092e-07,
+      "omega_change": 4.90933379247345e-11,
+      "k_current_nonlinear_residual": 2.1826975139231073e-07,
+      "omega_current_nonlinear_residual": 3.6708909113748144e-11,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 2.1826975139231073e-07,
+          "maximum_specific_residual": 2.3191932062233206e-09,
+          "global_integrated_residual": 3.846924039576169e-10,
+          "boundary_advective_flux": -0.0008521252791553894,
+          "boundary_diffusive_flux": 0.000501667046658302,
+          "integrated_current_source": -0.0013537927105060953
+        },
+        "omega": {
+          "relative_residual": 3.6708909113748144e-11,
+          "maximum_specific_residual": 1.6630226795655287e-07,
+          "global_integrated_residual": -3.530598990941769e-08,
+          "boundary_advective_flux": 83.02203600156001,
+          "boundary_diffusive_flux": 727.1436730036271,
+          "integrated_current_source": -644.1216369667611
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 8.131516293641283e-20,
+          "global_residual": -6.505213034913027e-19,
+          "boundary_advective_flux": -0.0008521252994636134,
+          "boundary_diffusive_flux": 0.000501667053500865,
+          "integrated_source": -0.0013537926780205743,
+          "relative_update": 1.926371293324445e-07
+        },
+        "omega": {
+          "max_local_integrated_residual": 3.552713678800501e-14,
+          "global_residual": 1.1368683772161603e-13,
+          "boundary_advective_flux": 83.02203600354527,
+          "boundary_diffusive_flux": 727.1436730029021,
+          "integrated_source": -644.1216369634135,
+          "relative_update": 7.013334244422914e-11
+        }
+      }
+    },
+    {
+      "iteration": 55,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 7.696111222427099e-10,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 1.3128389313166178e-09,
+      "stored_native_divergence_max": 1.7501949889364715e-10,
+      "face_flux_consistency_max": 1.9025011253892554e-10,
+      "velocity_change": 1.2272794481226321e-11,
+      "modified_pressure_change": 8.165850703376165e-11,
+      "flux_change": 1.460417321167207e-11,
+      "k_change": 9.935273718202984e-08,
+      "omega_change": 3.338464334446345e-11,
+      "k_current_nonlinear_residual": 1.608358175275153e-07,
+      "omega_current_nonlinear_residual": 2.495921338826668e-11,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 1.608358175275153e-07,
+          "maximum_specific_residual": 1.7117824054281765e-09,
+          "global_integrated_residual": 2.831830076287017e-10,
+          "boundary_advective_flux": -0.0008521253140880964,
+          "boundary_diffusive_flux": 0.0005016670583847214,
+          "integrated_current_source": -0.0013537926556558254
+        },
+        "omega": {
+          "relative_residual": 2.495921338826668e-11,
+          "maximum_specific_residual": 1.1362232354983347e-07,
+          "global_integrated_residual": -2.3967434370497642e-08,
+          "boundary_advective_flux": 83.02203600366991,
+          "boundary_diffusive_flux": 727.1436730022481,
+          "integrated_current_source": -644.1216369746105
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 1.3552527156068805e-19,
+          "global_residual": -6.505213034913027e-19,
+          "boundary_advective_flux": -0.0008521253290601881,
+          "boundary_diffusive_flux": 0.0005016670634156618,
+          "integrated_source": -0.0013537926317427297,
+          "relative_update": 1.4193247430773305e-07
+        },
+        "omega": {
+          "max_local_integrated_residual": 3.552713678800501e-14,
+          "global_residual": 2.2737367544323206e-13,
+          "boundary_advective_flux": 83.02203600502531,
+          "boundary_diffusive_flux": 727.1436730017617,
+          "integrated_source": -644.1216369723318,
+          "relative_update": 4.7692342541512716e-11
+        }
+      }
+    },
+    {
+      "iteration": 56,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 7.693535297432182e-10,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 1.313034091610793e-09,
+      "stored_native_divergence_max": 1.7502062299445958e-10,
+      "face_flux_consistency_max": 1.9027695044582238e-10,
+      "velocity_change": 9.04831430837267e-12,
+      "modified_pressure_change": 6.019973800835288e-11,
+      "flux_change": 1.076794377017468e-11,
+      "k_change": 7.318898104180573e-08,
+      "omega_change": 2.2740208407534075e-11,
+      "k_current_nonlinear_residual": 1.1849333634671654e-07,
+      "omega_current_nonlinear_residual": 1.6998578009492524e-11,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 1.1849333634671654e-07,
+          "maximum_specific_residual": 1.2631257814601624e-09,
+          "global_integrated_residual": 2.0843190164306655e-10,
+          "boundary_advective_flux": -0.0008521253398365297,
+          "boundary_diffusive_flux": 0.0005016670670058503,
+          "integrated_current_source": -0.001353792615274282
+        },
+        "omega": {
+          "relative_residual": 1.6998578009492524e-11,
+          "maximum_specific_residual": 7.777574984046963e-08,
+          "global_integrated_residual": -1.629543389114474e-08,
+          "boundary_advective_flux": 83.02203600505709,
+          "boundary_diffusive_flux": 727.1436730013063,
+          "integrated_current_source": -644.1216369799538
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 1.2197274440461925e-19,
+          "global_residual": 2.168404344971009e-19,
+          "boundary_advective_flux": -0.000852125350872259,
+          "boundary_diffusive_flux": 0.0005016670707045392,
+          "integrated_source": -0.0013537925976736065,
+          "relative_update": 1.0455568319615986e-07
+        },
+        "omega": {
+          "max_local_integrated_residual": 4.263256414560601e-14,
+          "global_residual": 1.1368683772161603e-13,
+          "boundary_advective_flux": 83.02203600598412,
+          "boundary_diffusive_flux": 727.1436730009804,
+          "integrated_source": -644.1216369784,
+          "relative_update": 3.248602677752206e-11
+        }
+      }
+    },
+    {
+      "iteration": 57,
+      "momentum_inner_converged": true,
+      "momentum_current_residual": 7.691713657602539e-10,
+      "modified_pressure_gauge_residual": 0.0,
+      "current_reconstructed_divergence_max": 1.313177180276709e-09,
+      "stored_native_divergence_max": 1.7501987359391796e-10,
+      "face_flux_consistency_max": 1.902965363412279e-10,
+      "velocity_change": 6.669771171615689e-12,
+      "modified_pressure_change": 4.437021664091381e-11,
+      "flux_change": 7.937789057084336e-12,
+      "k_change": 5.390634115955066e-08,
+      "omega_change": 1.5517124930273388e-11,
+      "k_current_nonlinear_residual": 8.728332667636288e-08,
+      "omega_current_nonlinear_residual": 1.1597409109201738e-11,
+      "pseudo_time_step_used": 0.1,
+      "step_retries": 0,
+      "turbulence_current_ledger": {
+        "k": {
+          "relative_residual": 8.728332667636288e-08,
+          "maximum_specific_residual": 9.318308523174963e-10,
+          "global_integrated_residual": 1.53393823242582e-10,
+          "boundary_advective_flux": -0.000852125358811563,
+          "boundary_diffusive_flux": 0.0005016670733435731,
+          "integrated_current_source": -0.0013537925855489595
+        },
+        "omega": {
+          "relative_residual": 1.1597409109201738e-11,
+          "maximum_specific_residual": 5.3343133910033196e-08,
+          "global_integrated_residual": -1.1097418317618235e-08,
+          "boundary_advective_flux": 83.02203600596755,
+          "boundary_diffusive_flux": 727.1436730006624,
+          "integrated_current_source": -644.1216369835973
+        }
+      },
+      "frozen_transport_ledger": {
+        "k": {
+          "max_local_integrated_residual": 2.303929616531697e-19,
+          "global_residual": 2.168404344971009e-19,
+          "boundary_advective_flux": -0.0008521253669442256,
+          "boundary_diffusive_flux": 0.0005016670760626211,
+          "integrated_source": -0.0013537925725958797,
+          "relative_update": 7.700905661606063e-08
+        },
+        "omega": {
+          "max_local_integrated_residual": 4.263256414560601e-14,
+          "global_residual": 1.1368683772161603e-13,
+          "boundary_advective_flux": 83.02203600660283,
+          "boundary_diffusive_flux": 727.1436730004434,
+          "integrated_source": -644.121636982536,
+          "relative_update": 2.2167318378428496e-11
+        }
+      }
+    }
+  ],
+  "source_sha256": {
+    "scripts/verify_native_rans_integration3d.py": "74110623b772730a6065448029bff7e4ce6ef02b72c337e8e29158919e57dfc3",
+    "src/tensorfvm/__init__.py": "9f8d4d3a249d695e4e841e4c9d11d7158db8a2d33e2928d3565794718e2aba3c",
+    "src/tensorfvm/backend_registry.py": "e68b95fdb7c457b921b2f1c9e3920f80ebdcdb104ca8077e10e96d2a4182a13a",
+    "src/tensorfvm/body_fitted.py": "4e633fa42c1171cf57aca5bf930827f97a30dada4e405bf3ac9c1068ba1bb7a7",
+    "src/tensorfvm/body_fitted3d.py": "dedd408c59096f559b2345f819541450768d4ce37f062e405b4335e4d00de9e4",
+    "src/tensorfvm/mesh3d.py": "ad7fe310537e70dcb65a34b42b335ea8bd7f9abd2bf24453a907c7f43a2b7c56",
+    "src/tensorfvm/mesh_api.py": "72f4f9d724084df335dca0e561877c5423c47a7f8bfffe950d631845e2dce22d",
+    "src/tensorfvm/multi_element.py": "c89faef53a8a8d429920a9f73805b91f28df3aa48bda762e7dd6bb2520fe8afc",
+    "src/tensorfvm/native_collocated3d.py": "60711249787b46525dd47ac0128973bbadc72dba15dd922d49d0f2353bd92545",
+    "src/tensorfvm/native_mesh3d.py": "59833e84499f7c5b4572b9d2f96020024d46b26fc91ee4dc2111300872b31470",
+    "src/tensorfvm/native_operators3d.py": "190ad3e4478d11bdd9332c38f8a7441530e9993c4459855722d15abe2fd519e0",
+    "src/tensorfvm/native_rans3d.py": "3c27d1153eea80d19f2bd7868e6400f1c95f9c679749b02fb0c4d767ce12dd6d",
+    "src/tensorfvm/native_sst3d.py": "266b2e21814db3d8915b1f9e3c5be04ad82909e12b7310e1cf061bbbe5980828",
+    "src/tensorfvm/native_viscous3d.py": "910f6e806a7f588024f421f984bccd24214798ee7fb4bda415ca7de0c6aa8662",
+    "src/tensorfvm/runtime.py": "ff383730f34f82030f28da424819eea670f28c663d5be834f30bebc6c74a2da5",
+    "src/tensorfvm/solver.py": "7c3613f23791c6a22825bd2ba0467e2bb84013ecaedc974901452b1864a2868e",
+    "src/tensorfvm/solver3d.py": "95d4711fd52ad9f2d8dd7300a999814633de986a2d579dcc997d17aa01603a37"
+  }
+}

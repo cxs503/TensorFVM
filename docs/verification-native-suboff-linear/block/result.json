@@ -1,0 +1,62 @@
+{
+  "mode": "manufactured",
+  "cells": 11648,
+  "geometry": {
+    "cells": 11648,
+    "faces": 36386,
+    "minimum_cell_volume": 6.264192355773182e-10,
+    "maximum_relative_closure": 1.8001583037665584e-16,
+    "minimum_face_projection": 2.9260360240227417e-10,
+    "maximum_nonorthogonality_degrees": 88.77447489554115,
+    "patch_face_counts": {
+      "farfield": 704,
+      "inlet": 90,
+      "internal": 34014,
+      "outlet": 90,
+      "wall": 1488
+    }
+  },
+  "converged": false,
+  "relative_L2_errors": {
+    "velocity": 1.0,
+    "velocity_x": 0.9999999999999999,
+    "velocity_y": 1.0,
+    "velocity_z": 0.9999999999999999,
+    "pressure": 1.0
+  },
+  "manufactured_pointwise_accuracy_passed": false,
+  "mesh_convergence_qualified": false,
+  "experimental_accuracy_qualified": false,
+  "wall_forces": {
+    "pressure_force": [
+      1.2775837648106015e-18,
+      -5.462700765300195e-20,
+      -1.6182465195619902e-19
+    ],
+    "viscous_force": [
+      -79.63087293746207,
+      -121.03437320899785,
+      -85.82915069658421
+    ],
+    "total_force": [
+      -79.63087293746207,
+      -121.03437320899785,
+      -85.82915069658421
+    ]
+  },
+  "history": [],
+  "failure": {
+    "type": "RuntimeError",
+    "message": "current coupled block GMRES failed: 60, 6000 iterations"
+  },
+  "wall_seconds": 472.1155313355848,
+  "extended_pressure_stencils": 113,
+  "limitations": [
+    "Single grid cannot establish spatial convergence.",
+    "Manufactured hull boundary is not physical no-slip SUBOFF flow.",
+    "No turbulence model or experimental drag/Cp comparison in this runner.",
+    "Full nonorthogonal stress matrix is not guaranteed positive definite.",
+    "Cell-center error metric does not equal error in exact cell averages."
+  ],
+  "scope": "Single first-linearization diagnostic, not a converged flow benchmark"
+}

@@ -1,0 +1,72 @@
+{
+  "mode": "manufactured",
+  "cells": 11648,
+  "geometry": {
+    "cells": 11648,
+    "faces": 36386,
+    "minimum_cell_volume": 6.264192355773182e-10,
+    "maximum_relative_closure": 1.8001583037665584e-16,
+    "minimum_face_projection": 2.9260360240227417e-10,
+    "maximum_nonorthogonality_degrees": 88.77447489554115,
+    "patch_face_counts": {
+      "farfield": 704,
+      "inlet": 90,
+      "internal": 34014,
+      "outlet": 90,
+      "wall": 1488
+    }
+  },
+  "converged": false,
+  "relative_L2_errors": {
+    "velocity": 0.18138495642393723,
+    "velocity_x": 0.2597174344170829,
+    "velocity_y": 0.12034053417720725,
+    "velocity_z": 0.203500765691794,
+    "pressure": 4.255192308205397
+  },
+  "manufactured_pointwise_accuracy_passed": false,
+  "mesh_convergence_qualified": false,
+  "experimental_accuracy_qualified": false,
+  "wall_forces": {
+    "pressure_force": [
+      0.0008247305671634107,
+      -0.023474236595518602,
+      0.014071673032675933
+    ],
+    "viscous_force": [
+      0.017773900925247058,
+      -0.015441967866277002,
+      0.008453134072134112
+    ],
+    "total_force": [
+      0.018598631492410467,
+      -0.038916204461795605,
+      0.022524807104810043
+    ]
+  },
+  "history": [
+    {
+      "iteration": 1,
+      "velocity_change": 1.0,
+      "pressure_change": 0.986004988206733,
+      "flux_change": 0.9692529887378646,
+      "momentum_residual": 0.1076641210731397,
+      "native_divergence_max": 5.12674810572744e-08,
+      "current_reconstructed_divergence_max": 0.449366366821468,
+      "face_flux_consistency_max": 0.037434521121159206,
+      "true_linear_relative_residual": 5.2950024024301645e-11,
+      "linear_iterations": 238
+    }
+  ],
+  "failure": null,
+  "wall_seconds": 154.30928710196167,
+  "extended_pressure_stencils": 113,
+  "limitations": [
+    "Single grid cannot establish spatial convergence.",
+    "Manufactured hull boundary is not physical no-slip SUBOFF flow.",
+    "No turbulence model or experimental drag/Cp comparison in this runner.",
+    "Full nonorthogonal stress matrix is not guaranteed positive definite.",
+    "Cell-center error metric does not equal error in exact cell averages."
+  ],
+  "scope": "Single first-linearization diagnostic, not a converged flow benchmark"
+}
