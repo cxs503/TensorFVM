@@ -14,11 +14,23 @@ experimental operating point. Use the definitions in
 - Cd: relative error in total pressure-plus-viscous axial force coefficient,
   strictly below 3%, using the same frontal reference area as the reference.
 
-Current physical Cp error: **not computed**. Current physical Cd error:
-**not computed**. The repository contains reference data and comparison code,
-but no completed matched physical SUBOFF run or experimental comparison
-artifact. Previous global, wall-adjacent and tail pressure percentages refer
-to manufactured fields, and are not experimental Cp or Cd errors.
+[Matched physical diagnostics and raw experimental comparisons](../verification-suboff-physical-baseline/README.md)
+have now been executed on 9,068 native cells. Both current second-order cases
+stop at momentum iteration 2 under the explicit speed guard; neither completes
+an SST outer iteration. The retained failed fields have Cp curve deviation
+**3,422.59%** and total Cd deviation **13,947.08%**. These are diagnostic
+deviations of unconverged fields, **not errors of a converged physical solution**.
+Physical acceptance remains failed. Previous global, wall-adjacent and tail
+pressure percentages refer to manufactured fields, not experimental Cp/Cd.
+
+The startup pressure-outlet backflow convection bug is corrected. Optional
+local pseudo time preserves the original steady Rhie--Chow fixed point by
+deferring its mobility difference to the old pressure. Affine and nonaffine
+tests verify that property; the SUBOFF runs still fail the startup guard.
+50 targeted tests pass. A separate 15,419-cell, 20-layer geometry retains the
+same hull facets and reduces the first full layer to 2e-6 L; it has no flow
+qualification. Finish the mixed-mesh physical momentum/pressure solve before
+attributing the failure to SST constants or wall functions.
 
 Manufactured verification and regional pressure checks remain numerical
 diagnostics. Their thresholds do not replace these primary physical targets;

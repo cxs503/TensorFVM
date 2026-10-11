@@ -1,0 +1,19 @@
+{
+  "scripts/compare_native_suboff_experiment.py": "196c25226e82c187f5b843c03eba5f7199f420060211e0ee1f3adcfdb6b47939",
+  "scripts/plot_native_suboff_fields.py": "695ce02f45c6934e829179c3e6672a63c5263f6150524ba2c9e61de572117298",
+  "scripts/compare_suboff_wall_meshes.py": "362d7d327f6d598e32041f77e97b7ff46e6cec5676c2ee42a15cfa343ea2923a",
+  "scripts/audit_suboff_physical_startup.py": "5a5e96cb4a529fe9c93754b01c9dd26c2814226acb7a04e50aed168a74eefe89",
+  "scripts/run_native_suboff_rans.py": "243ac7a789119475ef5d61883f187617803905fa72f7913c0034fab56a393d80",
+  "scripts/report_suboff_physical_baseline.py": "331948ca3e156960d69c856227c991d5e14f060b519fd73e14d99fba01507ca6",
+  "tests/test_native_suboff_sections.py": "19c33bdfc2310699f77b5c881ab52184ec04d2a126531ff48e2492697a33393d",
+  "tests/test_native_sst3d.py": "35498587c99ec3acdb2eae5b63afb60c213f1293de434fdd30bc2ea4b0d4417b",
+  "tests/test_native_rans3d.py": "e31f3a18be43bb67a4869c6dcce2d4ab5318e226fd51d9cdf72b355c53b58e82",
+  "tests/test_native_suboff_plot_face_policy.py": "0bdc6ebdaac7497c307d16d7a8b796f8c16c692ef092de101e891672644a863b",
+  "tests/test_suboff_validation.py": "8e93109de498f73147d28ace5abe8e1e33d4fd68a93c29af0e7176dcc92b3afd",
+  "tests/test_native_projection3d.py": "be79fc90a7acef3b9fe85537fc534636f77dc88ca852c12245a40e81d2736b17",
+  "tests/test_native_viscous3d.py": "8c19804b0f6789eb42d7a910cc372e6e55628789b767883dee31a7d92bbfb54e",
+  "tests/test_native_collocated3d.py": "281a7512c9771d91ac467aea3047cd534677bdeab60f65daa26ec5e1454b853b",
+  "src/tensorfvm/suboff_validation.py": "089244c37a60437d5ec6640fdad03791604f29856dd02f267911bfb766066e9b",
+  "src/tensorfvm/native_collocated3d.py": "2e0da54e3f37183596edb3a1a49254e0e2a83e09318d1e4a037989a90ed70ddd",
+  "src/tensorfvm/native_rans3d.py": "9799c603dc116d8a0bdb6bc36102d83c19f040a1aab6a5a4b3fa625169f968f5"
+}

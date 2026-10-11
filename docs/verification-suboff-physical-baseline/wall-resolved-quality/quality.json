@@ -1,0 +1,62 @@
+{
+  "geometry_sha256": "debceb4ad7829de75375e339e1ca2f3f3177ae26ff4b8605bbbfb03c8e6dc6e3",
+  "geometry_path": "docs/verification-suboff-physical-baseline/wall-resolved-pilot-mesh/native-geometry.npz",
+  "nonorthogonality": {
+    "all_internal": {
+      "faces": 59589,
+      "maximum_degrees": 72.89277419441783,
+      "p95_degrees": 32.54441247518488,
+      "maximum_face_index": 14411,
+      "maximum_face_center_L": [
+        0.9497474258778856,
+        -0.01957528814217162,
+        0.010395331448934756
+      ]
+    },
+    "tet_to_tet": {
+      "faces": 14789,
+      "maximum_degrees": 72.89277419441783,
+      "p95_degrees": 45.847063207810166,
+      "maximum_face_index": 14411,
+      "maximum_face_center_L": [
+        0.9497474258778856,
+        -0.01957528814217162,
+        0.010395331448934756
+      ]
+    },
+    "layer_to_layer": {
+      "faces": 44064,
+      "maximum_degrees": 9.2574284601823,
+      "p95_degrees": 6.671990083295975,
+      "maximum_face_index": 18904,
+      "maximum_face_center_L": [
+        0.9957226910401471,
+        0.00317285583004452,
+        0.002438538474499904
+      ]
+    },
+    "interface": {
+      "faces": 736,
+      "maximum_degrees": 70.72267639403205,
+      "p95_degrees": 52.97757866261182,
+      "maximum_face_index": 16110,
+      "maximum_face_center_L": [
+        0.9909475220922396,
+        -0.0042829681198432,
+        0.007700956139066736
+      ]
+    },
+    "wall": {
+      "faces": 736,
+      "maximum_degrees": 89.99572003254471,
+      "p95_degrees": 89.99512159295662,
+      "maximum_face_index": 17121,
+      "maximum_face_center_L": [
+        0.283517563491628,
+        0.01487593423254391,
+        0.05535002691335624
+      ]
+    }
+  },
+  "flow_qualified": false
+}

@@ -1,0 +1,841 @@
+{
+  "cases": [
+    {
+      "run": "docs/verification-suboff-physical-baseline/cp-consistent",
+      "numerically_converged": false,
+      "completed_outer_iterations": 0,
+      "extrema": {
+        "speed": [
+          {
+            "cell": 3380,
+            "value": 6.493368762831848,
+            "center_L": [
+              0.9845937100027,
+              -0.012862175156585665,
+              -0.013579947115734745
+            ],
+            "cell_type": "tetra",
+            "wall_distance_L": 0.012719643110488477,
+            "boundary_patches": []
+          },
+          {
+            "cell": 259,
+            "value": 6.304882830184069,
+            "center_L": [
+              0.9876407910520641,
+              -0.009372328492537649,
+              -0.006513032611317301
+            ],
+            "cell_type": "tetra",
+            "wall_distance_L": 0.006092934308772367,
+            "boundary_patches": []
+          },
+          {
+            "cell": 4195,
+            "value": 4.3082623684124535,
+            "center_L": [
+              0.9891158977260159,
+              -0.007300960665423488,
+              -0.005701891384972138
+            ],
+            "cell_type": "tetra",
+            "wall_distance_L": 0.0041717094915188265,
+            "boundary_patches": []
+          },
+          {
+            "cell": 3934,
+            "value": 3.802972063647836,
+            "center_L": [
+              0.9862557996469096,
+              -0.00851152796981429,
+              -0.0012810463302026175
+            ],
+            "cell_type": "tetra",
+            "wall_distance_L": 0.003100579277033792,
+            "boundary_patches": []
+          },
+          {
+            "cell": 5416,
+            "value": 2.9623210423839303,
+            "center_L": [
+              0.9817336119235935,
+              -0.013068851037010453,
+              -0.011275571015048932
+            ],
+            "cell_type": "tetra",
+            "wall_distance_L": 0.010871969435314766,
+            "boundary_patches": []
+          }
+        ],
+        "absolute_pressure": [
+          {
+            "cell": 1169,
+            "value": 18.732343510599875,
+            "center_L": [
+              0.9872673411790436,
+              -0.01108592753226388,
+              -0.010030657480846894
+            ],
+            "cell_type": "tetra",
+            "wall_distance_L": 0.009437063812881513,
+            "boundary_patches": []
+          },
+          {
+            "cell": 4473,
+            "value": 18.248577376191953,
+            "center_L": [
+              0.9908762132568778,
+              -0.007318664228374441,
+              -0.002372885468638283
+            ],
+            "cell_type": "tetra",
+            "wall_distance_L": 0.0028629535141533147,
+            "boundary_patches": []
+          },
+          {
+            "cell": 5378,
+            "value": 13.635916195795588,
+            "center_L": [
+              0.9847806929729577,
+              -0.009579004372962436,
+              -0.004208656510631489
+            ],
+            "cell_type": "tetra",
+            "wall_distance_L": 0.004608175083559861,
+            "boundary_patches": []
+          },
+          {
+            "cell": 8981,
+            "value": 12.740347672676803,
+            "center_L": [
+              0.0025772258882222486,
+              -0.008746376725369882,
+              -0.005844142087086704
+            ],
+            "cell_type": "wedge",
+            "wall_distance_L": 0.000290663339944716,
+            "boundary_patches": [
+              "wall"
+            ]
+          },
+          {
+            "cell": 8982,
+            "value": 12.68264047630285,
+            "center_L": [
+              0.0025772258882222504,
+              -0.005844142087086711,
+              -0.00874637672536988
+            ],
+            "cell_type": "wedge",
+            "wall_distance_L": 0.000290663339944716,
+            "boundary_patches": [
+              "wall"
+            ]
+          }
+        ],
+        "absolute_stored_divergence": [
+          {
+            "cell": 8986,
+            "value": 241.66864807025124,
+            "center_L": [
+              0.002577225888222251,
+              0.00874637672536988,
+              -0.005844142087086712
+            ],
+            "cell_type": "wedge",
+            "wall_distance_L": 0.00029066333994471526,
+            "boundary_patches": [
+              "wall"
+            ]
+          },
+          {
+            "cell": 8983,
+            "value": 241.66864805676548,
+            "center_L": [
+              0.00257722588822225,
+              -0.002052189793324525,
+              -0.010317054793317947
+            ],
+            "cell_type": "wedge",
+            "wall_distance_L": 0.00029066333994471607,
+            "boundary_patches": [
+              "wall"
+            ]
+          },
+          {
+            "cell": 8981,
+            "value": 241.66864805293483,
+            "center_L": [
+              0.0025772258882222486,
+              -0.008746376725369882,
+              -0.005844142087086704
+            ],
+            "cell_type": "wedge",
+            "wall_distance_L": 0.000290663339944716,
+            "boundary_patches": [
+              "wall"
+            ]
+          },
+          {
+            "cell": 8973,
+            "value": 241.66864805182286,
+            "center_L": [
+              0.002577225888222248,
+              0.008746376725369879,
+              0.0058441420870867025
+            ],
+            "cell_type": "wedge",
+            "wall_distance_L": 0.00029066333994471553,
+            "boundary_patches": [
+              "wall"
+            ]
+          },
+          {
+            "cell": 8980,
+            "value": 241.6686480502978,
+            "center_L": [
+              0.002577225888222249,
+              -0.010317054793317945,
+              -0.0020521897933245183
+            ],
+            "cell_type": "wedge",
+            "wall_distance_L": 0.00029066333994471564,
+            "boundary_patches": [
+              "wall"
+            ]
+          }
+        ]
+      },
+      "stored_divergence_max_replayed": 241.66864807025124,
+      "last_logged_stored_divergence": 241.66864807025124,
+      "global_boundary_volume_flux": -4.016009746976579e-12,
+      "mesh_sha256": "afebe7d4b6f96eae92810debfa485f591d58323c477b28cda83a60df59ac70e1",
+      "fields_sha256": "8dc41c0a4ec83330e75f04222d83e6c6afc42258a04918a9e79d5a9f1a09af48",
+      "result_sha256": "0f110f7b68f44e53f04cab0ef0ca7dae83a235855487b2fc50fdd884d60a5d7d"
+    },
+    {
+      "run": "docs/verification-suboff-physical-baseline/drag-consistent",
+      "numerically_converged": false,
+      "completed_outer_iterations": 0,
+      "extrema": {
+        "speed": [
+          {
+            "cell": 3380,
+            "value": 6.493152808659303,
+            "center_L": [
+              0.9845937100027,
+              -0.012862175156585665,
+              -0.013579947115734745
+            ],
+            "cell_type": "tetra",
+            "wall_distance_L": 0.012719643110488477,
+            "boundary_patches": []
+          },
+          {
+            "cell": 259,
+            "value": 6.304678768939119,
+            "center_L": [
+              0.9876407910520641,
+              -0.009372328492537649,
+              -0.006513032611317301
+            ],
+            "cell_type": "tetra",
+            "wall_distance_L": 0.006092934308772367,
+            "boundary_patches": []
+          },
+          {
+            "cell": 4195,
+            "value": 4.3081473708766564,
+            "center_L": [
+              0.9891158977260159,
+              -0.007300960665423488,
+              -0.005701891384972138
+            ],
+            "cell_type": "tetra",
+            "wall_distance_L": 0.0041717094915188265,
+            "boundary_patches": []
+          },
+          {
+            "cell": 3934,
+            "value": 3.802942715310278,
+            "center_L": [
+              0.9862557996469096,
+              -0.00851152796981429,
+              -0.0012810463302026175
+            ],
+            "cell_type": "tetra",
+            "wall_distance_L": 0.003100579277033792,
+            "boundary_patches": []
+          },
+          {
+            "cell": 5416,
+            "value": 2.9622084214943163,
+            "center_L": [
+              0.9817336119235935,
+              -0.013068851037010453,
+              -0.011275571015048932
+            ],
+            "cell_type": "tetra",
+            "wall_distance_L": 0.010871969435314766,
+            "boundary_patches": []
+          }
+        ],
+        "absolute_pressure": [
+          {
+            "cell": 1169,
+            "value": 18.73149178080385,
+            "center_L": [
+              0.9872673411790436,
+              -0.01108592753226388,
+              -0.010030657480846894
+            ],
+            "cell_type": "tetra",
+            "wall_distance_L": 0.009437063812881513,
+            "boundary_patches": []
+          },
+          {
+            "cell": 4473,
+            "value": 18.24776746730354,
+            "center_L": [
+              0.9908762132568778,
+              -0.007318664228374441,
+              -0.002372885468638283
+            ],
+            "cell_type": "tetra",
+            "wall_distance_L": 0.0028629535141533147,
+            "boundary_patches": []
+          },
+          {
+            "cell": 5378,
+            "value": 13.635195246320418,
+            "center_L": [
+              0.9847806929729577,
+              -0.009579004372962436,
+              -0.004208656510631489
+            ],
+            "cell_type": "tetra",
+            "wall_distance_L": 0.004608175083559861,
+            "boundary_patches": []
+          },
+          {
+            "cell": 8981,
+            "value": 12.740285475238535,
+            "center_L": [
+              0.0025772258882222486,
+              -0.008746376725369882,
+              -0.005844142087086704
+            ],
+            "cell_type": "wedge",
+            "wall_distance_L": 0.000290663339944716,
+            "boundary_patches": [
+              "wall"
+            ]
+          },
+          {
+            "cell": 8982,
+            "value": 12.682594167668384,
+            "center_L": [
+              0.0025772258882222504,
+              -0.005844142087086711,
+              -0.00874637672536988
+            ],
+            "cell_type": "wedge",
+            "wall_distance_L": 0.000290663339944716,
+            "boundary_patches": [
+              "wall"
+            ]
+          }
+        ],
+        "absolute_stored_divergence": [
+          {
+            "cell": 8986,
+            "value": 241.66864807027395,
+            "center_L": [
+              0.002577225888222251,
+              0.00874637672536988,
+              -0.005844142087086712
+            ],
+            "cell_type": "wedge",
+            "wall_distance_L": 0.00029066333994471526,
+            "boundary_patches": [
+              "wall"
+            ]
+          },
+          {
+            "cell": 8983,
+            "value": 241.6686480567784,
+            "center_L": [
+              0.00257722588822225,
+              -0.002052189793324525,
+              -0.010317054793317947
+            ],
+            "cell_type": "wedge",
+            "wall_distance_L": 0.00029066333994471607,
+            "boundary_patches": [
+              "wall"
+            ]
+          },
+          {
+            "cell": 8981,
+            "value": 241.66864805293426,
+            "center_L": [
+              0.0025772258882222486,
+              -0.008746376725369882,
+              -0.005844142087086704
+            ],
+            "cell_type": "wedge",
+            "wall_distance_L": 0.000290663339944716,
+            "boundary_patches": [
+              "wall"
+            ]
+          },
+          {
+            "cell": 8973,
+            "value": 241.66864805185688,
+            "center_L": [
+              0.002577225888222248,
+              0.008746376725369879,
+              0.0058441420870867025
+            ],
+            "cell_type": "wedge",
+            "wall_distance_L": 0.00029066333994471553,
+            "boundary_patches": [
+              "wall"
+            ]
+          },
+          {
+            "cell": 8980,
+            "value": 241.6686480503059,
+            "center_L": [
+              0.002577225888222249,
+              -0.010317054793317945,
+              -0.0020521897933245183
+            ],
+            "cell_type": "wedge",
+            "wall_distance_L": 0.00029066333994471564,
+            "boundary_patches": [
+              "wall"
+            ]
+          }
+        ]
+      },
+      "stored_divergence_max_replayed": 241.66864807027395,
+      "last_logged_stored_divergence": 241.66864807027395,
+      "global_boundary_volume_flux": -4.013955834381022e-12,
+      "mesh_sha256": "afebe7d4b6f96eae92810debfa485f591d58323c477b28cda83a60df59ac70e1",
+      "fields_sha256": "4d07dec9d263b09de88177ed6be7949504b63d2b5bc2fc30fa63a0ee1fed510a",
+      "result_sha256": "e097364f6cf3343d3a5ef600a5cca90b44cb97eb60b932f732415f8631650c14"
+    },
+    {
+      "run": "docs/verification-suboff-physical-baseline/cp-first-order",
+      "numerically_converged": false,
+      "completed_outer_iterations": 0,
+      "extrema": {
+        "speed": [
+          {
+            "cell": 3380,
+            "value": 6.445752989002393,
+            "center_L": [
+              0.9845937100027,
+              -0.012862175156585665,
+              -0.013579947115734745
+            ],
+            "cell_type": "tetra",
+            "wall_distance_L": 0.012719643110488477,
+            "boundary_patches": []
+          },
+          {
+            "cell": 259,
+            "value": 6.341233173088504,
+            "center_L": [
+              0.9876407910520641,
+              -0.009372328492537649,
+              -0.006513032611317301
+            ],
+            "cell_type": "tetra",
+            "wall_distance_L": 0.006092934308772367,
+            "boundary_patches": []
+          },
+          {
+            "cell": 4195,
+            "value": 4.481936186363002,
+            "center_L": [
+              0.9891158977260159,
+              -0.007300960665423488,
+              -0.005701891384972138
+            ],
+            "cell_type": "tetra",
+            "wall_distance_L": 0.0041717094915188265,
+            "boundary_patches": []
+          },
+          {
+            "cell": 3934,
+            "value": 3.913459959426726,
+            "center_L": [
+              0.9862557996469096,
+              -0.00851152796981429,
+              -0.0012810463302026175
+            ],
+            "cell_type": "tetra",
+            "wall_distance_L": 0.003100579277033792,
+            "boundary_patches": []
+          },
+          {
+            "cell": 2488,
+            "value": 2.993540631199625,
+            "center_L": [
+              1.0317946371162028,
+              -0.2671023906988809,
+              -0.08296674555552802
+            ],
+            "cell_type": "tetra",
+            "wall_distance_L": 0.2778942686519879,
+            "boundary_patches": []
+          }
+        ],
+        "absolute_pressure": [
+          {
+            "cell": 4473,
+            "value": 18.843072591301627,
+            "center_L": [
+              0.9908762132568778,
+              -0.007318664228374441,
+              -0.002372885468638283
+            ],
+            "cell_type": "tetra",
+            "wall_distance_L": 0.0028629535141533147,
+            "boundary_patches": []
+          },
+          {
+            "cell": 1169,
+            "value": 18.703027835196057,
+            "center_L": [
+              0.9872673411790436,
+              -0.01108592753226388,
+              -0.010030657480846894
+            ],
+            "cell_type": "tetra",
+            "wall_distance_L": 0.009437063812881513,
+            "boundary_patches": []
+          },
+          {
+            "cell": 5378,
+            "value": 14.231506183589644,
+            "center_L": [
+              0.9847806929729577,
+              -0.009579004372962436,
+              -0.004208656510631489
+            ],
+            "cell_type": "tetra",
+            "wall_distance_L": 0.004608175083559861,
+            "boundary_patches": []
+          },
+          {
+            "cell": 468,
+            "value": 12.072638889171188,
+            "center_L": [
+              0.9922612046620325,
+              -0.008848638731616903,
+              -0.005989342850396557
+            ],
+            "cell_type": "tetra",
+            "wall_distance_L": 0.006083143000626286,
+            "boundary_patches": []
+          },
+          {
+            "cell": 8982,
+            "value": 11.95498834687778,
+            "center_L": [
+              0.0025772258882222504,
+              -0.005844142087086711,
+              -0.00874637672536988
+            ],
+            "cell_type": "wedge",
+            "wall_distance_L": 0.000290663339944716,
+            "boundary_patches": [
+              "wall"
+            ]
+          }
+        ],
+        "absolute_stored_divergence": [
+          {
+            "cell": 8986,
+            "value": 241.66864806801692,
+            "center_L": [
+              0.002577225888222251,
+              0.00874637672536988,
+              -0.005844142087086712
+            ],
+            "cell_type": "wedge",
+            "wall_distance_L": 0.00029066333994471526,
+            "boundary_patches": [
+              "wall"
+            ]
+          },
+          {
+            "cell": 8983,
+            "value": 241.66864805707627,
+            "center_L": [
+              0.00257722588822225,
+              -0.002052189793324525,
+              -0.010317054793317947
+            ],
+            "cell_type": "wedge",
+            "wall_distance_L": 0.00029066333994471607,
+            "boundary_patches": [
+              "wall"
+            ]
+          },
+          {
+            "cell": 8981,
+            "value": 241.66864805399135,
+            "center_L": [
+              0.0025772258882222486,
+              -0.008746376725369882,
+              -0.005844142087086704
+            ],
+            "cell_type": "wedge",
+            "wall_distance_L": 0.000290663339944716,
+            "boundary_patches": [
+              "wall"
+            ]
+          },
+          {
+            "cell": 8973,
+            "value": 241.66864805139988,
+            "center_L": [
+              0.002577225888222248,
+              0.008746376725369879,
+              0.0058441420870867025
+            ],
+            "cell_type": "wedge",
+            "wall_distance_L": 0.00029066333994471553,
+            "boundary_patches": [
+              "wall"
+            ]
+          },
+          {
+            "cell": 8980,
+            "value": 241.66864804838823,
+            "center_L": [
+              0.002577225888222249,
+              -0.010317054793317945,
+              -0.0020521897933245183
+            ],
+            "cell_type": "wedge",
+            "wall_distance_L": 0.00029066333994471564,
+            "boundary_patches": [
+              "wall"
+            ]
+          }
+        ]
+      },
+      "stored_divergence_max_replayed": 241.66864806801692,
+      "last_logged_stored_divergence": 241.66864806801692,
+      "global_boundary_volume_flux": -4.041045276181876e-12,
+      "mesh_sha256": "afebe7d4b6f96eae92810debfa485f591d58323c477b28cda83a60df59ac70e1",
+      "fields_sha256": "e680fa0d28361e12ca32ad1f8e2047bd12f5e8262980567866b78ac58bce2899",
+      "result_sha256": "1408bc4e5d8717e096b6bedf0814472b91a3ba752ba31018721df21d39924ee2"
+    },
+    {
+      "run": "docs/verification-suboff-physical-baseline/cp-projected",
+      "numerically_converged": false,
+      "completed_outer_iterations": 0,
+      "extrema": {
+        "speed": [
+          {
+            "cell": 3380,
+            "value": 6.512957047724161,
+            "center_L": [
+              0.9845937100027,
+              -0.012862175156585665,
+              -0.013579947115734745
+            ],
+            "cell_type": "tetra",
+            "wall_distance_L": 0.012719643110488477,
+            "boundary_patches": []
+          },
+          {
+            "cell": 259,
+            "value": 6.161058952540103,
+            "center_L": [
+              0.9876407910520641,
+              -0.009372328492537649,
+              -0.006513032611317301
+            ],
+            "cell_type": "tetra",
+            "wall_distance_L": 0.006092934308772367,
+            "boundary_patches": []
+          },
+          {
+            "cell": 4195,
+            "value": 4.461762263802519,
+            "center_L": [
+              0.9891158977260159,
+              -0.007300960665423488,
+              -0.005701891384972138
+            ],
+            "cell_type": "tetra",
+            "wall_distance_L": 0.0041717094915188265,
+            "boundary_patches": []
+          },
+          {
+            "cell": 3934,
+            "value": 4.43543487845191,
+            "center_L": [
+              0.9862557996469096,
+              -0.00851152796981429,
+              -0.0012810463302026175
+            ],
+            "cell_type": "tetra",
+            "wall_distance_L": 0.003100579277033792,
+            "boundary_patches": []
+          },
+          {
+            "cell": 6780,
+            "value": 3.415359512375651,
+            "center_L": [
+              0.9834818878287812,
+              -0.010975140876353073,
+              -0.0008211541070315834
+            ],
+            "cell_type": "tetra",
+            "wall_distance_L": 0.004976581019795335,
+            "boundary_patches": []
+          }
+        ],
+        "absolute_pressure": [
+          {
+            "cell": 4473,
+            "value": 20.037495208971254,
+            "center_L": [
+              0.9908762132568778,
+              -0.007318664228374441,
+              -0.002372885468638283
+            ],
+            "cell_type": "tetra",
+            "wall_distance_L": 0.0028629535141533147,
+            "boundary_patches": []
+          },
+          {
+            "cell": 1169,
+            "value": 18.78824690084118,
+            "center_L": [
+              0.9872673411790436,
+              -0.01108592753226388,
+              -0.010030657480846894
+            ],
+            "cell_type": "tetra",
+            "wall_distance_L": 0.009437063812881513,
+            "boundary_patches": []
+          },
+          {
+            "cell": 5378,
+            "value": 14.264336582258592,
+            "center_L": [
+              0.9847806929729577,
+              -0.009579004372962436,
+              -0.004208656510631489
+            ],
+            "cell_type": "tetra",
+            "wall_distance_L": 0.004608175083559861,
+            "boundary_patches": []
+          },
+          {
+            "cell": 468,
+            "value": 11.857951502516952,
+            "center_L": [
+              0.9922612046620325,
+              -0.008848638731616903,
+              -0.005989342850396557
+            ],
+            "cell_type": "tetra",
+            "wall_distance_L": 0.006083143000626286,
+            "boundary_patches": []
+          },
+          {
+            "cell": 7697,
+            "value": 8.758823239436706,
+            "center_L": [
+              0.9955934402661973,
+              -0.007502232272685777,
+              -0.003140257008479738
+            ],
+            "cell_type": "tetra",
+            "wall_distance_L": 0.003992488554666916,
+            "boundary_patches": []
+          }
+        ],
+        "absolute_stored_divergence": [
+          {
+            "cell": 4472,
+            "value": 1.5653114605078623e-07,
+            "center_L": [
+              0.9862557996469095,
+              -0.00750763654584828,
+              -0.0033975152842863274
+            ],
+            "cell_type": "tetra",
+            "wall_distance_L": 0.002649709120070449,
+            "boundary_patches": []
+          },
+          {
+            "cell": 7817,
+            "value": 9.896628058822466e-08,
+            "center_L": [
+              0.9686355210532414,
+              0.0035759261635716104,
+              0.010340745553607542
+            ],
+            "cell_type": "tetra",
+            "wall_distance_L": 0.0033462836194407086,
+            "boundary_patches": []
+          },
+          {
+            "cell": 7815,
+            "value": 7.40169934345222e-08,
+            "center_L": [
+              0.9725966891444446,
+              0.004450244103576777,
+              0.009841989326035548
+            ],
+            "cell_type": "tetra",
+            "wall_distance_L": 0.0034964666765089796,
+            "boundary_patches": []
+          },
+          {
+            "cell": 7093,
+            "value": 7.373843408569422e-08,
+            "center_L": [
+              0.9686355210532416,
+              0.006295472098547829,
+              0.009402514441131085
+            ],
+            "cell_type": "tetra",
+            "wall_distance_L": 0.0038205584518277032,
+            "boundary_patches": []
+          },
+          {
+            "cell": 4473,
+            "value": 7.068873542227786e-08,
+            "center_L": [
+              0.9908762132568778,
+              -0.007318664228374441,
+              -0.002372885468638283
+            ],
+            "cell_type": "tetra",
+            "wall_distance_L": 0.0028629535141533147,
+            "boundary_patches": []
+          }
+        ]
+      },
+      "stored_divergence_max_replayed": 1.5653114605078623e-07,
+      "last_logged_stored_divergence": 1.5653114605078623e-07,
+      "global_boundary_volume_flux": -8.06699151922885e-12,
+      "mesh_sha256": "afebe7d4b6f96eae92810debfa485f591d58323c477b28cda83a60df59ac70e1",
+      "fields_sha256": "b6c4d0bf4616e0c1e20d70fe42c2a66966dfeab576774244a619d01cb4b024e0",
+      "result_sha256": "6f72218c6a282469c514ddfa45ec7bd7adebc964c1cebe5744358ef964f62a3d"
+    }
+  ],
+  "physical_validation_passed": false
+}

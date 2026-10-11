@@ -102,6 +102,7 @@ class NativeSteadySettings:
     convection_order: int=2
     bounded_convection: bool=False
     lu_ordering: str='COLAMD'
+    momentum_pseudo_cfl: float | None=None
 
 
 class NativeSteadySolver3D:
@@ -111,6 +112,8 @@ class NativeSteadySolver3D:
         if c.linear_method not in ('direct','iterative','block','schur'):raise ValueError('linear_method must be direct, iterative, block or schur')
         if c.lu_ordering not in ('COLAMD','MMD_ATA','MMD_AT_PLUS_A','NATURAL'):
             raise ValueError('lu_ordering must be a supported SuperLU column ordering')
+        if c.momentum_pseudo_cfl is not None and (not np.isfinite(c.momentum_pseudo_cfl) or c.momentum_pseudo_cfl<=0):
+            raise ValueError('momentum pseudo CFL must be positive and finite')
         self.N=len(mesh.cells);self.F=len(mesh.owner);b=mesh.neighbor<0
         self.fixed=np.asarray(velocity_dirichlet,dtype=bool)
         self.viscous=NativeViscous3D(mesh,self.fixed,c.viscosity)
@@ -154,6 +157,16 @@ class NativeSteadySolver3D:
         coefficient=self.viscous.face_viscosity*np.sum(mesh.area_vectors**2,axis=1)/np.sum(mesh.area_vectors*self.viscous.op.d,axis=1)
         self._mobility_reference=(-self.viscous.divergence_matrix@sparse.diags(coefficient)@self.viscous.delta_matrix).diagonal()*10/9
         self._last_matrix=None
+        self._flux_initialized=False
+
+    def initialize_state(self,velocity,pressure,flux):
+        """Restore a numerical state, including its pressure-corrected face flux."""
+        values=[np.asarray(value,dtype=float) for value in (velocity,pressure,flux)]
+        if any(value.shape!=shape or not np.isfinite(value).all()
+               for value,shape in zip(values,[(self.N,3),(self.N,),(self.F,)])):
+            raise ValueError('finite native velocity, pressure and face flux shapes required')
+        self.u,self.p,self.flux=[value.copy() for value in values]
+        self._flux_initialized=True
 
     def _convection(self,flux):
         m=self.mesh;i=m.neighbor>=0;o=m.owner;n=m.neighbor;f=np.arange(self.F)
@@ -161,8 +174,14 @@ class NativeSteadySolver3D:
         # Conservative first-order upwind linearization; deferred high order is
         # added separately from an actual reconstructed velocity, never reference.
         upstream=np.where(q[i]>=0,o[i],n[i]);open_faces=(~i)&~self.fixed
-        matrix=sparse.coo_matrix((np.r_[np.ones(i.sum()),np.ones(open_faces.sum())],(np.r_[f[i],f[open_faces]],np.r_[upstream,o[open_faces]])),shape=(self.F,self.N)).tocsr()
-        source=np.zeros((self.F,3));source[self.fixed]=self.velocity_boundary[self.fixed]
+        outflow=open_faces&(q>=0);backflow=open_faces&(q<0)
+        # A pressure outlet can temporarily become an inlet. Its incoming
+        # momentum uses the explicitly supplied ambient boundary velocity,
+        # exactly as scalar transport uses incoming turbulence data. Using
+        # the owner value here creates a negative convection diagonal.
+        matrix=sparse.coo_matrix((np.r_[np.ones(i.sum()),np.ones(outflow.sum())],(np.r_[f[i],f[outflow]],np.r_[upstream,o[outflow]])),shape=(self.F,self.N)).tocsr()
+        source=np.zeros((self.F,3));prescribed=self.fixed|backflow
+        source[prescribed]=self.velocity_boundary[prescribed]
         a=self.viscous.divergence_matrix@sparse.diags(q)@matrix
         if self.settings.convection_order==2:
             gradient=np.stack([np.column_stack([g@self.u[:,axis] for g in self.viscous.gradient_matrices])+self.viscous.gradient_source(dirichlet_values=self.velocity_boundary[:,axis]) for axis in range(3)],axis=1)
@@ -265,14 +284,39 @@ class NativeSteadySolver3D:
     def solve(self,callback=None):
         c=self.settings
         # Boundary sources are included before the first nonlinear linearization.
-        self.flux=self.velocity_flux_matrix@self.u.ravel()+self.velocity_flux_source
+        if not self._flux_initialized:
+            self.flux=self.velocity_flux_matrix@self.u.ravel()+self.velocity_flux_source
+            self._flux_initialized=True
         converged=False
         for iteration in range(c.max_iterations):
             block,rhs,a,correction,qsource=self._system(self.flux)
+            if c.momentum_pseudo_cfl is not None:
+                # Consistent local pseudo time: include mass in the implicit
+                # RC mobility, then defer the difference to OLD pressure.
+                # At a fixed point this exactly recovers the original steady
+                # face flux, unlike simply replacing its mobility with dt's.
+                rate=self._mobility_reference+.5*c.density*self.viscous.op.integrate(np.abs(self.flux),signed=False)
+                mass_cell=rate/c.momentum_pseudo_cfl;mass=np.repeat(mass_cell,3)
+                diagonal=self._mobility_reference+(a-self._diffusion).diagonal().reshape(self.N,3).mean(1)
+                alpha=np.asarray(self.viscous.interpolation@(self.mesh.cell_volumes/(diagonal+mass_cell)))
+                alpha[self.fixed]=0
+                transient_correction=sparse.diags(alpha)@self.pressure.pressure_flux_defect
+                transient_source=qsource+(correction-transient_correction)@self.p
+                # Boundary pressure source is already included in qsource;
+                # it is unchanged at the fixed point and needs no lagged value.
+                correction=transient_correction;qsource=np.asarray(transient_source)
+                rhs[:3*self.N]+=mass*self.u.ravel()
+                a=a+sparse.diags(mass)
+                block=sparse.bmat([[a,self.pressure.pressure_force_matrix],
+                    [self.mass_velocity_matrix,self.viscous.divergence_matrix@correction]],format='csr')
+                rhs[3*self.N:]=-self.viscous.divergence_matrix@qsource
+                if self.gauge:
+                    row=3*self.N;block=block.tolil();block[row,:]=0;block[row,row]=1
+                    block=block.tocsr();rhs[row]=self.gauge_value
             answer,linear,li=self._linear(block,rhs,a)
             newu=answer[:3*self.N].reshape(self.N,3);newp=answer[3*self.N:]
             newq=self.velocity_flux_matrix@newu.ravel()+correction@newp+qsource
-            omega=c.relaxation if iteration else 1.
+            omega=c.relaxation if iteration or c.momentum_pseudo_cfl is not None else 1.
             u=(1-omega)*self.u+omega*newu;p=(1-omega)*self.p+omega*newp
             q=(1-omega)*self.flux+omega*newq
             change=float(np.linalg.norm(u-self.u)/max(np.linalg.norm(u),1e-30))

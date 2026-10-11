@@ -1,0 +1,12 @@
+{
+  "output": "results/suboff-aff1-physical-baseline/wall-resolved-pilot-mesh",
+  "axial": 24,
+  "azimuthal": 16,
+  "layers": 20,
+  "first_height": 2e-06,
+  "growth": 1.4,
+  "far_size": 0.4,
+  "tail_size": 0.003,
+  "tail_radius": 0.01,
+  "tail_size_gradient": 0.5
+}

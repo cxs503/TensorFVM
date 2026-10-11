@@ -4,6 +4,12 @@ from .suboff_geometry import radius
 from .native_rans3d import _triangle_distance
 
 
+def require_physical_iterate(result):
+    """Do not turn an untouched initialization into an experimental error."""
+    if result.get('solution_state') not in ('momentum_only', 'coupled_iterate') or result.get('completed_momentum_iterations', 0) < 1:
+        raise ValueError('No completed physical momentum iteration; initialization cannot be compared')
+
+
 def require_reynolds(actual, expected):
     if not np.isfinite(actual) or actual <= 0 or abs(actual / expected - 1) > 1e-6:
         raise ValueError('Computed Reynolds number does not match this experimental case')

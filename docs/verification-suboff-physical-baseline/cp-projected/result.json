@@ -1,0 +1,91 @@
+{
+  "cells": 9068,
+  "Re_L": 12000000.0,
+  "numerically_converged": false,
+  "physical_validation_passed": false,
+  "spatial_convergence_qualified": false,
+  "solution_state": "momentum_only",
+  "completed_momentum_iterations": 2,
+  "low_Re_wall_resolution": {
+    "maximum_yplus": 68.55870902893516,
+    "area_weighted_mean_yplus": 59.602156402388566,
+    "maximum_yplus_below_one": false,
+    "qualified": false
+  },
+  "forces_dimensionless": {
+    "total_force": [
+      0.04853105952027414,
+      0.005047240174362656,
+      -0.0013394696615737609
+    ],
+    "physical_pressure_force": [
+      0.04844275635147916,
+      0.005047125576550441,
+      -0.0013394638622594812
+    ],
+    "anisotropic_viscous_force": [
+      8.83031687949785e-05,
+      1.1459781221537892e-07,
+      -5.79931427976236e-09
+    ],
+    "isotropic_turbulent_force": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "modified_pressure_force": [
+      0.04844275635147916,
+      0.005047125576550441,
+      -0.0013394638622594812
+    ]
+  },
+  "history": [],
+  "momentum_history": [
+    {
+      "outer_iteration": 1,
+      "iteration": 1,
+      "velocity_change": 0.10710302402423594,
+      "pressure_change": 1.0,
+      "flux_change": 0.0006091745212110421,
+      "momentum_residual": 0.013813101847307375,
+      "native_divergence_max": 5.299149379283582e-11,
+      "current_reconstructed_divergence_max": 1842.873752962234,
+      "face_flux_consistency_max": 0.7602527669118838,
+      "true_linear_relative_residual": 3.784685027512359e-15,
+      "linear_iterations": 1,
+      "elapsed_seconds": 94.97707660961896,
+      "maximum_speed": 1.3022493828408694,
+      "modified_pressure_min": -3.2822568687452858,
+      "modified_pressure_max": 8.585803992890574
+    },
+    {
+      "outer_iteration": 1,
+      "iteration": 2,
+      "velocity_change": 0.1483120739683575,
+      "pressure_change": 0.5264549422247026,
+      "flux_change": 0.0053772179339212816,
+      "momentum_residual": 0.04239939770982258,
+      "native_divergence_max": 1.5653114605078623e-07,
+      "current_reconstructed_divergence_max": 4252.25858134737,
+      "face_flux_consistency_max": 2.3110700479116417,
+      "true_linear_relative_residual": 3.229021879415679e-11,
+      "linear_iterations": 15,
+      "elapsed_seconds": 98.23290759511292,
+      "maximum_speed": 6.512957047724161,
+      "modified_pressure_min": -20.037470208971254,
+      "modified_pressure_max": 14.264361582258593
+    }
+  ],
+  "failure": {
+    "type": "RuntimeError",
+    "message": "Explicit divergence guard exceeded: max speed 6.51296 > 5; state retained without clipping"
+  },
+  "wall_seconds": 98.36063238419592,
+  "limitations": [
+    "Experimental total drag and Cp are not yet compared by this runner.",
+    "True nonlinear momentum, k and omega convergence is required independently.",
+    "Actual computed y+ is necessary for wall-resolved SST acceptance.",
+    "Inflow turbulence and tripping remain modeling assumptions.",
+    "Single grid does not establish spatial convergence."
+  ]
+}
