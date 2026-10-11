@@ -52,3 +52,13 @@ This repository uses reStructuredText and Sphinx-style documentation. Keep
 README.rst and existing .rst cross-references intact unless a deliberate,
 tested documentation migration is approved. Ecosystem documentation should
 follow the same convention; do not mechanically convert files to Markdown.
+
+Repository map
+--------------
+
+* `TensorPlatform <https://github.com/cxs503/TensorPlatform>`_ — shared data and AI services.
+* `TensorPhysics <https://github.com/cxs503/TensorPhysics>`_ — scientific workflow orchestration and multiphysics coordination.
+* `TensorLBM <https://github.com/cxs503/TensorLBM>`_ — lattice Boltzmann solver.
+* `TensorFVM <https://github.com/cxs503/TensorFVM>`_ — finite-volume solver.
+* `TensorFEM <https://github.com/cxs503/TensorFEM>`_ — finite-element solver.
+* `TensorDEM <https://github.com/cxs503/TensorDEM>`_ — discrete-element solver.
