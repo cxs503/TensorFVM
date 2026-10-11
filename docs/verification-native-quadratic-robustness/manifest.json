@@ -1,0 +1,179 @@
+{
+  "archive_time_utc": "2026-10-11T05:18:41.850350+00:00",
+  "snapshot_timing": "after-completion archival of exact executed probe scripts and previously frozen producer source; no new probe launch snapshot claimed",
+  "producer_snapshot": "docs/verification-native-abc3d-quadratic/source-snapshot",
+  "runtime": {
+    "python": "3.11.15",
+    "numpy": "2.4.6",
+    "scipy": "1.17.1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "original_n3_production_qualified": false,
+  "standalone_linesearch_converged": true,
+  "standalone_linesearch_all_point_error_metrics_below_3_percent": true,
+  "mesh_convergence_qualified": false,
+  "suboff_physical_qualified": false,
+  "files": {
+    "original-config.json": {
+      "sha256": "b5f1b49db5b3688a692dcebd50eb9fa3fab65245839b2ef8e18c0d14f94238c2",
+      "bytes": 1230
+    },
+    "original-zero-start-failure.json": {
+      "sha256": "2421372d54ac97024a3e0c154c6d25e828f8258d10838317fb44d5686d3da47e",
+      "bytes": 3000
+    },
+    "probe-quadratic-n3-failed-linear.json": {
+      "sha256": "bdad7c9216d5653ba447cc895af3cf5ea5b2231a47024a067dfef6a2a2fc3088",
+      "bytes": 2248
+    },
+    "probe-quadratic-n3-failed-linear.npz": {
+      "sha256": "e3f27fd0b0d072268607ee7ca05f198811b9e109b1389750c3443155c1ccf63f",
+      "bytes": 189372
+    },
+    "probe-quadratic-n3-failed-linear.py": {
+      "sha256": "47f73d68fbba5f5a2114ae3808323bbe26321c4067a075cbba86cdd1145864f5",
+      "bytes": 4860
+    },
+    "probe-quadratic-n3-linear.json": {
+      "sha256": "6eafaf146aade6eaa6bc394fb1668a298a802b37847b01ab7c3b050cba3375a6",
+      "bytes": 1472
+    },
+    "probe-quadratic-n3-linear.npz": {
+      "sha256": "b97c42093f3c81f773e2fdaf88bc9f72b752a041b591fe291af1216f40890801",
+      "bytes": 189372
+    },
+    "probe-quadratic-n3-linear.py": {
+      "sha256": "177b1f5e65ae98185ce4f3f279b34957d0ca10b059206aeb7e8144b422098852",
+      "bytes": 4116
+    },
+    "probe-quadratic-n3-linesearch.json": {
+      "sha256": "bb181e6cd0860cdccb3bdaf4d8309d57070bac0426ffc8562dca4dfe31ecff98",
+      "bytes": 45576
+    },
+    "probe-quadratic-n3-linesearch.log": {
+      "sha256": "ce6d34f12a118801b04fd0d1fbcb232631a9263625d2eb42db3f813886970e68",
+      "bytes": 34988
+    },
+    "probe-quadratic-n3-linesearch.npz": {
+      "sha256": "641c85f3cc509a192f3562291931dba5f2d3f5658f7f6bc25222d4c69cba4fcf",
+      "bytes": 3350
+    },
+    "probe-quadratic-n3-linesearch.py": {
+      "sha256": "e02ffd9b8d096fee69c057763fcac4729c9e738e9783a6e26ac3f4ee3fb7c8dc",
+      "bytes": 5033
+    },
+    "probe-quadratic-n3-warmstart.json": {
+      "sha256": "a709039dbfa17faff16ac807e283cc0568edf27b597eff981bc90fae269f563c",
+      "bytes": 11838
+    },
+    "probe-quadratic-n3-warmstart.log": {
+      "sha256": "3e258f5710a152d482fe37c804f0f6ab2a83c03290f0e724e1f7fc25aeb02d81",
+      "bytes": 2899
+    },
+    "probe-quadratic-n3-warmstart.npz": {
+      "sha256": "8bc10005482e67684359fbbc420938cbe2bc7ac20f73d397f62ec79671c13aa2",
+      "bytes": 2818
+    },
+    "probe-quadratic-n3-warmstart.py": {
+      "sha256": "57bf505467428cbc61033e9918eabdeb4d44f0d861b1d974b8b88d037669a508",
+      "bytes": 3257
+    },
+    "probe-quadratic-n3-zero-linesearch.json": {
+      "sha256": "f8e9f28e462ec242fe109379cf62de61bc3f0241cb6ee96d33a01e8635fb73b3",
+      "bytes": 5670
+    },
+    "probe-quadratic-n3-zero-linesearch.log": {
+      "sha256": "fd562fb662ba02a9b202c5092769a265f9d5f946533ff5dfed27c466af7e92bf",
+      "bytes": 2904
+    },
+    "probe-quadratic-n3-zero-linesearch.npz": {
+      "sha256": "68f31d0aea6f28baea161d753de1c1c663fc91bc2ff7875b320b518465f08509",
+      "bytes": 3350
+    },
+    "probe-quadratic-n3-zero-linesearch.py": {
+      "sha256": "2eb04e55f1d7ae8987f73c7a0ae5a811594feb80a8a958aabd01574cc586ab53",
+      "bytes": 4942
+    },
+    "report.md": {
+      "sha256": "4022a8764c6a61244647684a380cea045c95e4c425d7e4f990a53447f828404a",
+      "bytes": 6241
+    },
+    "source-snapshot/scripts/verify_native_abc_convergence3d.py": {
+      "sha256": "e980d9e5ad5f629bce1173d2c18d3c4f3f5b6694d406036db57d7aeed9b341c4",
+      "bytes": 6190
+    },
+    "source-snapshot/src/tensorfvm/__init__.py": {
+      "sha256": "9f8d4d3a249d695e4e841e4c9d11d7158db8a2d33e2928d3565794718e2aba3c",
+      "bytes": 1121
+    },
+    "source-snapshot/src/tensorfvm/backend_registry.py": {
+      "sha256": "e68b95fdb7c457b921b2f1c9e3920f80ebdcdb104ca8077e10e96d2a4182a13a",
+      "bytes": 8925
+    },
+    "source-snapshot/src/tensorfvm/body_fitted.py": {
+      "sha256": "4e633fa42c1171cf57aca5bf930827f97a30dada4e405bf3ac9c1068ba1bb7a7",
+      "bytes": 51996
+    },
+    "source-snapshot/src/tensorfvm/body_fitted3d.py": {
+      "sha256": "dedd408c59096f559b2345f819541450768d4ce37f062e405b4335e4d00de9e4",
+      "bytes": 9130
+    },
+    "source-snapshot/src/tensorfvm/mesh3d.py": {
+      "sha256": "ad7fe310537e70dcb65a34b42b335ea8bd7f9abd2bf24453a907c7f43a2b7c56",
+      "bytes": 3115
+    },
+    "source-snapshot/src/tensorfvm/mesh_api.py": {
+      "sha256": "72f4f9d724084df335dca0e561877c5423c47a7f8bfffe950d631845e2dce22d",
+      "bytes": 8624
+    },
+    "source-snapshot/src/tensorfvm/multi_element.py": {
+      "sha256": "c89faef53a8a8d429920a9f73805b91f28df3aa48bda762e7dd6bb2520fe8afc",
+      "bytes": 12109
+    },
+    "source-snapshot/src/tensorfvm/native_collocated3d.py": {
+      "sha256": "c769a160eef819873f43a4169328a783a12b022c626c07570577395f34d2d366",
+      "bytes": 22594
+    },
+    "source-snapshot/src/tensorfvm/native_manufactured3d.py": {
+      "sha256": "ab105132c07a16d9cf879d22dcec8ecfe8a72247114474b0cb770ae5fcc6e6da",
+      "bytes": 3574
+    },
+    "source-snapshot/src/tensorfvm/native_mesh3d.py": {
+      "sha256": "59833e84499f7c5b4572b9d2f96020024d46b26fc91ee4dc2111300872b31470",
+      "bytes": 9656
+    },
+    "source-snapshot/src/tensorfvm/native_operators3d.py": {
+      "sha256": "190ad3e4478d11bdd9332c38f8a7441530e9993c4459855722d15abe2fd519e0",
+      "bytes": 4073
+    },
+    "source-snapshot/src/tensorfvm/native_quadratic3d.py": {
+      "sha256": "d5cc37263cf470edbd1f89e21fabdb4488baff2f392b483b0db4820c7be3c070",
+      "bytes": 14304
+    },
+    "source-snapshot/src/tensorfvm/native_quadratic_flow3d.py": {
+      "sha256": "f77e67a6b52d37c458b4ab67b725a7bbdeba19f7f9527546ef6f0cf0cbbb33ee",
+      "bytes": 11514
+    },
+    "source-snapshot/src/tensorfvm/native_viscous3d.py": {
+      "sha256": "910f6e806a7f588024f421f984bccd24214798ee7fb4bda415ca7de0c6aa8662",
+      "bytes": 8240
+    },
+    "source-snapshot/src/tensorfvm/runtime.py": {
+      "sha256": "ff383730f34f82030f28da424819eea670f28c663d5be834f30bebc6c74a2da5",
+      "bytes": 7754
+    },
+    "source-snapshot/src/tensorfvm/solver.py": {
+      "sha256": "7c3613f23791c6a22825bd2ba0467e2bb84013ecaedc974901452b1864a2868e",
+      "bytes": 23762
+    },
+    "source-snapshot/src/tensorfvm/solver3d.py": {
+      "sha256": "95d4711fd52ad9f2d8dd7300a999814633de986a2d579dcc997d17aa01603a37",
+      "bytes": 23635
+    }
+  },
+  "standalone_zero_start_linesearch_converged": false,
+  "producer_source_bindings_match": true,
+  "producer_source_checked_files": 18
+}

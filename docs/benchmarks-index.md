@@ -176,3 +176,13 @@ NACA三网格（64×26、128×52、256×104）全部达到稳态并通过独立�
 [三维 NS/SST 非零通道](verification-native-rans3d/report.md)在伪时间步0.1/1/10下均通过原始非线性门限，计算场最大相对差约9.62e-8；仅耦合数值验证。[SUBOFF 11,648单元完整 NS 制造解](verification-native-suboff-mms/coarse/report.md)55步收敛，速度0.1979%、压力 **5.4999%**，未通过3%。[重构审计](verification-native-suboff-mms/reconstruction-audit/report.md)及[线性求解失败/修复证据](verification-native-suboff-linear/report.md)均保留。
 
 [自适应贴体几何](verification-suboff-adaptive-mesh/report.md)与[实验参考审查](verification-suboff-reference/README.md)提供实际面内弦差及数据溯源。当前 **没有新增合格 SUBOFF 物理流动案例**；制造解通过不替代阻力/Cp验证。新原生三维路径尚未验证GPU。完整回归282项通过、45子测试。
+
+### 独立 FVM 优先：三维二次重构完整方程验证
+
+[三网格正式报告](verification-native-abc3d-quadratic-warmstart/quadratic-report/report.md)使用独立连续解析体力、实际共享三角面及真实非线性动量/连续方程。显式采用从零求解收敛的原 FVM 数值场初始化，并记录残差下降回退；27/216/1,728 单元均收敛，压力误差 **1.5013% / 0.5598% / 0.1432%**，速度向量及三分量均小于 3%，全部误差随细化下降，报告 84/84 门限通过。
+
+[原零初值失败报告](verification-native-abc3d-quadratic/quadratic-report/report.md)保留粗网格失败，不宣称零初值普遍收敛。[开发顺序与独立方程复放](fvm-accuracy-development/README.md)：先完成单独 FVM，再做 FVM–LBM。321 项回归及 45 子测试通过。当前结果为制造解验证；SUBOFF 实际阻力/Cp、混合出口二次重构、湍流物理验证及纯 FVM overset 流动仍未达标。
+
+补充细化：[6/12/24 零初值报告](verification-native-abc3d-quadratic-refinement/quadratic-report/report.md)57/57 门限通过，最细 13,824 单元压力 **0.0375142%**、速度向量 **0.0000610359%**。保留运行时实际固定松弛源码，不把后续回退修复归功于该结果。
+
+[SUBOFF 二次方程失败证据](verification-native-suboff-mms/quadratic-coarse-attempt-01/failure-explanation.md)：首次 GMRES 1,800 内迭代失败，未完成任何非线性更新，保存场等于原数值初值，压力仍 5.49992%。下一步修复真实混合网格上的二次算子预条件，未增加合格 SUBOFF 案例。

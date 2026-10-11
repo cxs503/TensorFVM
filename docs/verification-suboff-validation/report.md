@@ -135,3 +135,18 @@ Every completed report binds its actual input, raw fields, configuration,
 source snapshots and hashes. The coarse probe's after-completion archival
 timing is explicitly disclosed. [Full regression output](pytest-output.txt)
 records **282 passed**, three library warnings and 45 subtests.
+
+## Update: standalone FVM accuracy before FVM–LBM
+
+The quadratic reconstruction is now integrated into actual native three-dimensional
+momentum and continuity equations, with a matrix-free current-operator solve and
+residual-decreasing nonlinear backtracking. The
+[accepted three-grid ABC verification](../verification-native-abc3d-quadratic-warmstart/quadratic-report/report.md)
+uses explicitly archived numerical baseline initialization and yields pressure
+errors 1.5013%, 0.5598% and 0.1432%; all velocity components pass 3% on all
+three grids. The original zero-start coarse failure remains archived separately.
+This update supersedes earlier statements that quadratic reconstruction exists
+only as a standalone interpolation operator. It does not certify SUBOFF:
+the body-fitted baseline pressure errors and physical drag/Cp gaps remain.
+Quadratic mixed-outlet and SST operation are not yet supported. New FVM–LBM
+joint solver work follows standalone FVM acceptance.

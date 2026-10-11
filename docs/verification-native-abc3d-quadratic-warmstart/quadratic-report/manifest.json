@@ -1,0 +1,38 @@
+{
+  "input_sha256": {
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-abc3d-quadratic-warmstart/summary.json": "d72dd946d8c005e47ddbdc8fe871ed139969ae2df56854b590a521e60c5942e4",
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-abc3d-quadratic-warmstart/config.json": "6784ade5a8ba3a1322ca4544117d33614b23b34b3c1fe6eff873a4615636d57d",
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-abc3d-quadratic-warmstart/n-3/result.json": "4980a89a543c60239fabe6e864759dbf94e57d06f27b3779b51e7ba6fdf7b42a",
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-abc3d-quadratic-warmstart/n-3/baseline-initialization-result.json": "0609613cb761fb409c066ee4fb4bfc2b85f4763b6c6ee79701e7c7cb56c116db",
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-abc3d-quadratic-warmstart/n-3/baseline-initialization-fields.npz": "831f703cadb8564a95c2e6ada2f149b63c5023a4190a42817ef907ecce00cec9",
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-abc3d-quadratic-warmstart/n-3/fields.npz": "a60799d74ec77ee02d90c201d639d8c28d9d645d622f063361d49daa7aafaf5d",
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-abc3d-quadratic-warmstart/n-6/result.json": "f1b4423302ac2ff4ce818cec28d4d5144cffa2b5ebe160d54dec4e22005e0d1f",
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-abc3d-quadratic-warmstart/n-6/baseline-initialization-result.json": "8d69da756ae4e6c1aeef76b528d8c9184cc6d5c89d09393873dd02ebb0a83f0a",
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-abc3d-quadratic-warmstart/n-6/baseline-initialization-fields.npz": "29d3971073bce5e37c5c2785895a2b9a98bcb2a79b51b9f079fbfe00ea44e9b7",
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-abc3d-quadratic-warmstart/n-6/fields.npz": "b8be723d2ebba31557b5344eda7d357d82588eb81f60d9c1bad8df48e056bbbc",
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-abc3d-quadratic-warmstart/n-12/result.json": "01a4089dc3b2f34dee17bc7326c3cf6af10066ff5fdc15b84ad425f825f0f97f",
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-abc3d-quadratic-warmstart/n-12/baseline-initialization-result.json": "f9ffa47a6fb7563cca741dff01ea7a6bfd19faecd4b23de18e8df3b5b9551b5c",
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-abc3d-quadratic-warmstart/n-12/baseline-initialization-fields.npz": "8985218129e4447a1b52506f75b57c8d3be4e2f53fb4b3a1d2a91e96cfa3637a",
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-abc3d-quadratic-warmstart/n-12/fields.npz": "550a5b55d8d6718016840f1f13471665bce64760a733cfb0929c1310aed908a3",
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-abc3d-spatial/summary.json": "ab219d2641f92da36ffc6d93c3c549b4784d7267d73d7640d2f5b7a755cc1ed9",
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-abc3d-spatial/config.json": "7adaf8dc5750ce164dc96a49f2ecb56ece8646120ffe25859d927cd7401b8bbd",
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-abc3d-spatial/n-3/result.json": "5e8e48d6c793c974099ac5b6ee7fd8c6bfb8000fa48771086850098a1a41bbc2",
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-abc3d-spatial/n-3/fields.npz": "3aca973bb8971fe5d2ac2406198b7877698df23d96f16b809eb78fef846cd8c8",
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-abc3d-spatial/n-6/result.json": "f922bfd745afd32066a95298f5da755012f6475b83331cfceddd48e9bae44e90",
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-abc3d-spatial/n-6/fields.npz": "accd0e7cb32a59469c524e3cd1bfc5f3dfc64d07ce20312fbb1a93a621f72ed1",
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-abc3d-spatial/n-12/result.json": "e42c1fd78404fb71cc38aceeb9c2921a865281479c0caf63d11b6eb130d5c71d",
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-abc3d-spatial/n-12/fields.npz": "87ad6c0da3fdb5653e244a6be577eea882cff479d3925b83c9ee8481ace3148b"
+  },
+  "artifact_sha256": {
+    "acceptance.json": "a10adf7b401c90a5cf3baab379fa4a7ff57fd362234e005055a07873869595d8",
+    "n-12-mesh-fields.png": "a67f3b18a3f4516a4b04e1eb9ff555a34b3f7a4a48be8c246386b58f1c0347be",
+    "n-3-mesh-fields.png": "35f5d50d86ca56ce67145df5b5ac12841d9f82577438494c50e5582feed6a2fd",
+    "n-6-mesh-fields.png": "9a28146c173b48d01fbfbb7092fb04a1dab93003db0da6bf0c9856658f731348",
+    "report.md": "0a4a16c838392a482e77b9425a631f939b4d202a7776edbdf29758a4da1b06ce",
+    "saved-current-residuals.png": "1214b68b34377b9884e8344f5f9a5872c73fbb53b689dcf32dad6696da62f7fc",
+    "source-snapshot/scripts/report_native_abc_convergence3d.py": "8618312b9008a7b86c0e90dfdb799366562fdb1451df62c70823fda8c79e54e0",
+    "source-snapshot/scripts/report_native_quadratic_fvm.py": "7672ad5129daa4f06ef0fb53c6ea3e4c602a8dedd84758ba9df5d190c686cbe5",
+    "source-snapshot/src/tensorfvm/verification/core.py": "088114b4c8ec39a0724213bfc00f83a4356bcaca1dd2398376ef35426866e12e",
+    "spatial-errors.png": "28d868c93bbae99af3fe3a32fecdcecf20df82bcf02dc9dcc2e691f0babfceb3"
+  }
+}

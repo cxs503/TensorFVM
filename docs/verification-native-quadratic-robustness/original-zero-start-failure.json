@@ -1,0 +1,28 @@
+{
+  "n": 3,
+  "error": "Quadratic current-equation GMRES failed: info=30, true=0.00017373232174374009, iterations=1800",
+  "traceback": "Traceback (most recent call last):\n  File \"/home/jsyc/tensor-suite-development/TensorFVM/scripts/verify_native_abc_convergence3d.py\", line 44, in main\n    state=solver.solve(callback=cb)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/jsyc/tensor-suite-development/TensorFVM/src/tensorfvm/native_collocated3d.py\", line 269, in solve\n    answer,linear,li=self._linear(block,rhs,a)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/jsyc/tensor-suite-development/TensorFVM/src/tensorfvm/native_quadratic_flow3d.py\", line 180, in _linear\n    raise RuntimeError(f'Quadratic current-equation GMRES failed: info={info}, true={true}, iterations={len(counter)}')\nRuntimeError: Quadratic current-equation GMRES failed: info=30, true=0.00017373232174374009, iterations=1800\n",
+  "numerically_converged": false,
+  "mms_spatial_accuracy_passed": false,
+  "suboff_physical_benchmark_passed": false,
+  "source_sha256": {
+    "scripts/verify_native_abc_convergence3d.py": "e980d9e5ad5f629bce1173d2c18d3c4f3f5b6694d406036db57d7aeed9b341c4",
+    "src/tensorfvm/__init__.py": "9f8d4d3a249d695e4e841e4c9d11d7158db8a2d33e2928d3565794718e2aba3c",
+    "src/tensorfvm/backend_registry.py": "e68b95fdb7c457b921b2f1c9e3920f80ebdcdb104ca8077e10e96d2a4182a13a",
+    "src/tensorfvm/body_fitted.py": "4e633fa42c1171cf57aca5bf930827f97a30dada4e405bf3ac9c1068ba1bb7a7",
+    "src/tensorfvm/body_fitted3d.py": "dedd408c59096f559b2345f819541450768d4ce37f062e405b4335e4d00de9e4",
+    "src/tensorfvm/mesh3d.py": "ad7fe310537e70dcb65a34b42b335ea8bd7f9abd2bf24453a907c7f43a2b7c56",
+    "src/tensorfvm/mesh_api.py": "72f4f9d724084df335dca0e561877c5423c47a7f8bfffe950d631845e2dce22d",
+    "src/tensorfvm/multi_element.py": "c89faef53a8a8d429920a9f73805b91f28df3aa48bda762e7dd6bb2520fe8afc",
+    "src/tensorfvm/native_collocated3d.py": "c769a160eef819873f43a4169328a783a12b022c626c07570577395f34d2d366",
+    "src/tensorfvm/native_manufactured3d.py": "ab105132c07a16d9cf879d22dcec8ecfe8a72247114474b0cb770ae5fcc6e6da",
+    "src/tensorfvm/native_mesh3d.py": "59833e84499f7c5b4572b9d2f96020024d46b26fc91ee4dc2111300872b31470",
+    "src/tensorfvm/native_operators3d.py": "190ad3e4478d11bdd9332c38f8a7441530e9993c4459855722d15abe2fd519e0",
+    "src/tensorfvm/native_quadratic3d.py": "d5cc37263cf470edbd1f89e21fabdb4488baff2f392b483b0db4820c7be3c070",
+    "src/tensorfvm/native_quadratic_flow3d.py": "f77e67a6b52d37c458b4ab67b725a7bbdeba19f7f9527546ef6f0cf0cbbb33ee",
+    "src/tensorfvm/native_viscous3d.py": "910f6e806a7f588024f421f984bccd24214798ee7fb4bda415ca7de0c6aa8662",
+    "src/tensorfvm/runtime.py": "ff383730f34f82030f28da424819eea670f28c663d5be834f30bebc6c74a2da5",
+    "src/tensorfvm/solver.py": "7c3613f23791c6a22825bd2ba0467e2bb84013ecaedc974901452b1864a2868e",
+    "src/tensorfvm/solver3d.py": "95d4711fd52ad9f2d8dd7300a999814633de986a2d579dcc997d17aa01603a37"
+  }
+}
