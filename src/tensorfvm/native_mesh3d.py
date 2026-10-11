@@ -1,6 +1,8 @@
 """Static, non-periodic polyhedral finite-volume geometry from linear cells.
 
 Supports convex tetrahedra, hexahedra, wedges and pyramids with planar faces.
+Opt-in triangulate_faces uses deterministic vertex-ID diagonals for all faces;
+warped quads then represent two planar facets, not a bilinear curved surface.
 This is a geometry contract, not evidence of a validated flow discretization.
 """
 from dataclasses import dataclass
@@ -29,13 +31,24 @@ class NativeMesh3D:
     patch_labels: np.ndarray
 
     @classmethod
-    def from_cells(cls, vertices, cells, cell_types, boundary_patches=None):
+    def from_cells(cls, vertices, cells, cell_types, boundary_patches=None, *, triangulate_faces=False):
         vertices=np.asarray(vertices,dtype=float)
         if vertices.ndim!=2 or vertices.shape[1]!=3 or not np.isfinite(vertices).all():
             raise ValueError('vertices must be finite (n,3) coordinates')
         cells=tuple(tuple(map(int,c)) for c in cells); types=tuple(cell_types)
         if not cells or len(cells)!=len(types):raise ValueError('nonempty cells and matching types required')
-        patches={} if boundary_patches is None else {tuple(sorted(k)):str(v) for k,v in boundary_patches.items()}
+        patches={}
+        if boundary_patches is not None:
+            for face,label in boundary_patches.items():
+                face=tuple(face)
+                if triangulate_faces:
+                    pivot=face.index(min(face));face=face[pivot:]+face[:pivot]
+                    pieces=[(face[0],face[j],face[j+1]) for j in range(1,len(face)-1)]
+                else: pieces=[face]
+                for piece in pieces:
+                    key=tuple(sorted(piece))
+                    if key in patches and patches[key]!=str(label): raise ValueError('ambiguous physical patch')
+                    patches[key]=str(label)
         faces=[]; centers=[]; areas=[]; own=[]; nei=[]; lookup={}; volumes=[]; centroids=[]
         scale=max(float(np.ptp(vertices,axis=0).max()),np.finfo(float).tiny)
         for ci,(cell,kind) in enumerate(zip(cells,types)):
@@ -43,7 +56,14 @@ class NativeMesh3D:
             if len(cell)!=_COUNTS[kind] or len(set(cell))!=len(cell) or min(cell)<0 or max(cell)>=len(vertices):
                 raise ValueError(f'invalid {kind} connectivity at cell {ci}')
             ref=vertices[list(cell)].mean(axis=0); volume=0.; moment=np.zeros(3)
-            for local in _FACES[kind]:
+            local_faces = _FACES[kind]
+            if triangulate_faces:
+                local_faces = []
+                for face in _FACES[kind]:
+                    pivot = min(range(len(face)), key=lambda j: cell[face[j]])
+                    ordered = face[pivot:] + face[:pivot]
+                    local_faces.extend((ordered[0], ordered[j], ordered[j+1]) for j in range(1,len(ordered)-1))
+            for local in local_faces:
                 ids=tuple(cell[j] for j in local); pts=vertices[list(ids)]
                 tris=np.stack([np.stack((pts[0],pts[j],pts[j+1])) for j in range(1,len(pts)-1)])
                 sv=.5*np.cross(tris[:,1]-tris[:,0],tris[:,2]-tris[:,0]); area=sv.sum(axis=0)
@@ -89,13 +109,15 @@ class NativeMesh3D:
         return mesh
 
     @classmethod
-    def from_gmsh(cls,path):
+    def from_gmsh(cls,path, *, triangulate_faces=False):
         """Read Gmsh via its official API; reject high-order/unsupported elements."""
         import gmsh
         if gmsh.isInitialized():raise RuntimeError('from_gmsh requires an uninitialized Gmsh session')
         gmsh.initialize();gmsh.option.setNumber('General.Terminal',0)
         try:
             gmsh.open(str(path)); tags,xyz,_=gmsh.model.mesh.getNodes()
+            if triangulate_faces:
+                order=np.argsort(tags);tags=tags[order];xyz=np.asarray(xyz).reshape(-1,3)[order].ravel()
             index={int(t):i for i,t in enumerate(tags)};vertices=np.asarray(xyz).reshape(-1,3)
             cells=[];types=[]; supported={4:'tetra',5:'hexahedron',6:'wedge',7:'pyramid'}
             ets,_,nodes=gmsh.model.mesh.getElements(3)
@@ -103,7 +125,7 @@ class NativeMesh3D:
                 if et not in supported:raise ValueError(f'unsupported Gmsh volume element type {et}')
                 kind=supported[et];arr=np.asarray(conn).reshape(-1,_COUNTS[kind])
                 cells.extend(tuple(index[int(v)] for v in c) for c in arr);types.extend([kind]*len(arr))
-            patches={}
+            patches={};patch_names={}
             for dim,tag in gmsh.model.getPhysicalGroups(2):
                 name=gmsh.model.getPhysicalName(dim,tag) or f'physical_{tag}'
                 for entity in gmsh.model.getEntitiesForPhysicalGroup(dim,tag):
@@ -111,10 +133,10 @@ class NativeMesh3D:
                     for et,conn in zip(ets,nodes):
                         if et not in (2,3):raise ValueError(f'unsupported Gmsh surface element type {et}')
                         for face in np.asarray(conn).reshape(-1,3 if et==2 else 4):
-                            key=tuple(sorted(index[int(v)] for v in face))
-                            if key in patches and patches[key]!=name:raise ValueError('ambiguous physical patch')
-                            patches[key]=name
-            return cls.from_cells(vertices,cells,types,patches)
+                            cyclic=tuple(index[int(v)] for v in face);key=tuple(sorted(cyclic))
+                            if key in patch_names and patch_names[key]!=name:raise ValueError('ambiguous physical patch')
+                            patch_names[key]=name;patches[cyclic]=name
+            return cls.from_cells(vertices,cells,types,patches,triangulate_faces=triangulate_faces)
         finally:gmsh.finalize()
 
     def audit(self):
