@@ -1,6 +1,12 @@
 TensorFVM
 =========
 
+系统总览
+--------
+
+跨仓库系统架构、模块边界、统一接口与破冰船应用路线见 `TensorPhysics 系统总览 <https://github.com/cxs503/TensorPhysics/blob/main/docs/SYSTEM_OVERVIEW.md>`_。
+
+
 基于 PyTorch 的二维不可压缩有限体积求解器，采用 SIMPLE
 压力－速度耦合。支持层流，以及实验性的 Spalart--Allmaras（SA）一方程
 RANS 闭合；网格包括笛卡尔交错网格、圆柱 O 型贴体网格、NACA 翼型 C
