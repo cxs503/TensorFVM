@@ -19,8 +19,9 @@ been accepted.
 | [3D nonlinear ABC, 27 / 216 / 1,728 cells](../verification-native-abc3d-spatial/report.md) | Fine velocity vector 0.0240%, components 0.0287% / 0.0235% / 0.0195%, pressure 2.9124%; all errors decrease | Fine-grid manufactured spatial verification passes; coarse/medium pressure fails |
 | [Native SST nonzero 3D channel](../verification-native-rans3d/report.md) | Original nonlinear gates pass for pseudo dt 0.1 / 1 / 10, with 57 / 19 / 16 outer iterations | Numerical coupling verification; no experimental accuracy target |
 | [SUBOFF mixed-grid ABC, 11,648 cells](../verification-native-suboff-mms/coarse/report.md) | Converged in 55 updates; velocity vector 0.1979%, pressure 5.4999% | Pressure fails the 3% gate |
-| SUBOFF mixed-grid ABC, 24,284 cells | Running; final gate and error unavailable | No acceptance claimed |
+| [SUBOFF mixed-grid ABC, 24,284 cells](../verification-native-suboff-mms/medium/report.md) | Converged in 42 updates; velocity vector 0.1461%, pressure 4.2777% | Pressure fails the 3% gate; two meshes do not establish a three-grid convergence study |
 | [Adaptive wall geometry](../verification-suboff-adaptive-mesh/report.md) | 22,436 cells; actual sampled wall-facet error 2.54955e-4 L | Geometry only |
+| [Wall-resolved planning mesh](../verification-suboff-wall-resolved-mesh/report.md) | 103,278 positive-volume cells; 24 structured wall layers | Geometry only; actual flow y+ and physical accuracy unverified |
 | [Experimental reference and specification](../verification-suboff-reference/README.md) | Frozen total force and 19 candidate Cp taps with provenance/uncertainty | Reference and comparison infrastructure, not calculated flow |
 
 ## Numerical method
@@ -42,7 +43,8 @@ are recomputed; frozen linearized source ledgers are not convergence evidence.
 
 The ABC forcing is derived independently from the continuum Navier–Stokes
 equations, with fixed amplitude 0.5, wavenumber 0.7 and nu=0.1. All three velocity
-components vary in all three spatial directions. No reference velocity or
+components are nonzero; the vector field and pressure vary in all three spatial
+directions. No reference velocity or
 pressure is used as an initial solution, and no production operator residual
 defines the manufactured forcing. Relative L2 uses actual control-volume
 weights and values at volume centroids; pressure means are removed explicitly.
@@ -92,6 +94,14 @@ calculate a new NS pressure solution, so it cannot be counted as passing the
 SUBOFF pressure gate. A production change must preserve shared-face conservation
 and update the pressure/velocity coupling consistently before actual re-solving.
 
+![Actual medium mixed mesh and computed fields](../verification-native-suboff-mms/medium/figures/fields.png)
+
+Refining from 11,648 to 24,284 cells reduces pressure error from 5.4999%
+to 4.2777%, but both fail. These two levels alone do not establish an
+asymptotic convergence rate. A reusable quadratic reconstruction module now
+passes seven tests for polynomial reproduction and actual triangular face
+integration. It has not yet been coupled into a new converged SUBOFF solve.
+
 ## Cost, failed attempts, and remaining work
 
 [Linear solver diagnostics](../verification-native-suboff-linear/report.md)
@@ -100,6 +110,7 @@ approximation with exact velocity factors solves the first linearization in
 238 iterations, true relative residual 5.30e-11, and 154.31 seconds. One update
 does not establish nonlinear convergence or 100,000-cell scalability. The
 converged 11,648-cell manufactured SUBOFF run took 822.20 seconds on the CPU.
+The 24,284-cell run took 1,837.11 seconds and 42 nonlinear updates.
 GPU acceleration of these new native 3D paths has not been tested.
 
 Next required gates are exterior-mesh/discretization convergence, suitable
