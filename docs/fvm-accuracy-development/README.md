@@ -1,5 +1,33 @@
 # Standalone FVM accuracy first
 
+## Primary SUBOFF acceptance: surface Cp and total Cd
+
+The user's primary acceptance targets are the actual surface pressure
+coefficient curve and total drag coefficient, each compared with its matched
+experimental operating point. Use the definitions in
+[`suboff_aff1_validation.json`](../../benchmarks/suboff_aff1_validation.json):
+
+- Cp: relative L2 over the 19 specified meridian taps, strictly below 3%; also
+  report absolute RMSE, individual differences, reference qualification and
+  experimental uncertainty. Use physical wall-face pressure and the prescribed
+  freestream pressure reference; do not fit a pressure offset to the data.
+- Cd: relative error in total pressure-plus-viscous axial force coefficient,
+  strictly below 3%, using the same frontal reference area as the reference.
+
+Current physical Cp error: **not computed**. Current physical Cd error:
+**not computed**. The repository contains reference data and comparison code,
+but no completed matched physical SUBOFF run or experimental comparison
+artifact. Previous global, wall-adjacent and tail pressure percentages refer
+to manufactured fields, and are not experimental Cp or Cd errors.
+
+Manufactured verification and regional pressure checks remain numerical
+diagnostics. Their thresholds do not replace these primary physical targets;
+an additional local MMS campaign is not itself the requested end result.
+Prioritize a documented physical baseline with no-slip hull, suitable outlet,
+matched Reynolds number and near-wall treatment, followed by raw Cp sampling,
+integrated Cd, convergence checks and mesh sensitivity. Neither physical
+metric can be qualified from an unconverged field or a reference-mismatched run.
+
 ## Latest same-mesh viscosity experiment: local accuracy failed
 
 [The controlled cubic-viscosity report](../verification-native-suboff-mms/cubic-viscosity-report.md)

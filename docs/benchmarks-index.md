@@ -1,5 +1,13 @@
 # TensorFVM benchmark 总览
 
+## SUBOFF 主验收目标：表面 Cp 与总阻力 Cd
+
+以匹配实验工况的 **Cp 测点曲线相对 L2 <3%**、**总 Cd 相对误差 <3%** 为主目标。
+当前两项实验对照误差均为 **尚未计算**：已有参考数据和比较模块，尚无完成的匹配物理
+SUBOFF 流场与对照产物。下述制造解的全域/壁邻/尾区压力误差不能作为 Cp 或 Cd 误差。
+制造解继续用于数值诊断；[当前开发口径](fvm-accuracy-development/README.md#primary-suboff-acceptance-surface-cp-and-total-cd)
+与[实验验收定义](../benchmarks/suboff_aff1_validation.json)明确区分各项资格。
+
 ## 最新 SUBOFF 同网格黏性重构试验：局部精度失败
 
 [完整对照报告](verification-native-suboff-mms/cubic-viscosity-report.md)：9,068 单元上
