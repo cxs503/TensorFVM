@@ -48,7 +48,7 @@ Recommended integration path
 Documentation convention
 ------------------------
 
-This repository uses reStructuredText and Sphinx-style documentation. Keep
+This repository uses reStructuredText documentation. Keep
 README.rst and existing .rst cross-references intact unless a deliberate,
 tested documentation migration is approved. Ecosystem documentation should
 follow the same convention; do not mechanically convert files to Markdown.
