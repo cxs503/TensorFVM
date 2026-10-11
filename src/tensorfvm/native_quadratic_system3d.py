@@ -13,7 +13,8 @@ def prepare_geometry(solver):
     op=solver.quadratic_velocity;p=solver.quadratic_pressure;s=m.area_vectors
     mean=face_mean_matrix(op,prescribed_boundary_means=solver.boundary_velocity_means is not None)
     pressure_mean=face_mean_matrix(p,prescribed_boundary_means=True)
-    gradient=face_gradient_matrices(op)
+    gradient=(solver.viscous_gradient.face_gradient_matrices
+              if solver.viscous_reconstruction == 'cubic' else face_gradient_matrices(op))
     normal=sum(sparse.diags(s[:,k])@gradient[k] for k in range(3))
     mu=sparse.diags(solver.viscous.face_viscosity)
     stress=[]

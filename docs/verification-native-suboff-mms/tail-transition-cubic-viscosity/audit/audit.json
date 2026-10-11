@@ -1,0 +1,343 @@
+{
+  "passed": true,
+  "current_equation_and_recorded_change_gates_passed": true,
+  "manufactured_pointwise_accuracy_passed": true,
+  "mesh_convergence_qualified": false,
+  "experimental_accuracy_qualified": false,
+  "suboff_physical_benchmark_passed": false,
+  "metrics": [
+    {
+      "name": "recorded-nonlinear-failure",
+      "value": 0,
+      "limit": 0.5,
+      "description": "Actual producer converged flag required",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "missing-recorded-history",
+      "value": 0,
+      "limit": 0.5,
+      "description": "Producer nonlinear change ledger required",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "momentum_residual",
+      "value": 2.674027902541423e-10,
+      "limit": 1e-07,
+      "description": "Independent current-equation replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "native_divergence_max",
+      "value": 1.4036453396065647e-09,
+      "limit": 1e-07,
+      "description": "Independent current-equation replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "current_reconstructed_divergence_max",
+      "value": 2.0448405145700127e-11,
+      "limit": 1e-07,
+      "description": "Independent current-equation replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "face_flux_consistency_max",
+      "value": 5.987597308055589e-11,
+      "limit": 1e-07,
+      "description": "Independent current-equation replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "recorded-velocity_change",
+      "value": 3.6775839802461307e-10,
+      "limit": 1e-07,
+      "description": "Recorded last numerical update, not independently recomputed",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "recorded-pressure_change",
+      "value": 5.348766189531932e-08,
+      "limit": 1e-07,
+      "description": "Recorded last numerical update, not independently recomputed",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "recorded-flux_change",
+      "value": 4.762801496657655e-10,
+      "limit": 1e-07,
+      "description": "Recorded last numerical update, not independently recomputed",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "relative-L2-velocity",
+      "value": 0.00013556672661277667,
+      "limit": 0.03,
+      "description": "Independent continuum field at actual volume centroid",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "relative-L2-pressure",
+      "value": 0.008617079249214999,
+      "limit": 0.03,
+      "description": "Independent continuum field at actual volume centroid",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "relative-L2-velocity_x",
+      "value": 0.0001653959200717684,
+      "limit": 0.03,
+      "description": "Independent continuum field at actual volume centroid",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "relative-L2-velocity_y",
+      "value": 7.550773254166498e-05,
+      "limit": 0.03,
+      "description": "Independent continuum field at actual volume centroid",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "relative-L2-velocity_z",
+      "value": 0.00021639968261887656,
+      "limit": 0.03,
+      "description": "Independent continuum field at actual volume centroid",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "reference_velocity-missing",
+      "value": 0,
+      "limit": 0.5,
+      "description": "Archived reference required for independent replay consistency",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "reference_velocity-independent-reference-defect",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "Frozen analytic expression versus archived reference; not used to initialize solution",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "reference_pressure-missing",
+      "value": 0,
+      "limit": 0.5,
+      "description": "Archived reference required for independent replay consistency",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "reference_pressure-independent-reference-defect",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "Frozen analytic expression versus archived reference; not used to initialize solution",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "invalid-initial-numerical-fields",
+      "value": 0,
+      "limit": 0.5,
+      "description": "Bound numerical initialization cell fields",
+      "unit": "1",
+      "passed": true
+    }
+  ],
+  "relative_L2_errors": {
+    "velocity": 0.00013556672661277667,
+    "pressure": 0.008617079249214999,
+    "velocity_x": 0.0001653959200717684,
+    "velocity_y": 7.550773254166498e-05,
+    "velocity_z": 0.00021639968261887656
+  },
+  "current_equation_residuals": {
+    "momentum_residual": 2.674027902541423e-10,
+    "native_divergence_max": 1.4036453396065647e-09,
+    "current_reconstructed_divergence_max": 2.0448405145700127e-11,
+    "face_flux_consistency_max": 5.987597308055589e-11
+  },
+  "recorded_final_history": {
+    "iteration": 15,
+    "accepted": true,
+    "accepted_relaxation": 0.7,
+    "old_merit": 9.754659752058136e-10,
+    "merit": 3.087120027985548e-10,
+    "trials": [
+      {
+        "relaxation": 0.7,
+        "merit": 3.087120027985548e-10
+      }
+    ],
+    "true_linear_relative_residual": 1.3074687042312797e-13,
+    "linear_iterations": 4,
+    "velocity_change": 3.6775839802461307e-10,
+    "pressure_change": 5.348766189531932e-08,
+    "flux_change": 4.762801496657655e-10,
+    "momentum_residual": 2.674027902541423e-10,
+    "native_divergence_max": 1.4036453396065647e-09,
+    "current_reconstructed_divergence_max": 2.0448405145700127e-11,
+    "face_flux_consistency_max": 5.987597308055589e-11,
+    "linear_operator": {
+      "method": "assembled full quadratic sparse operator",
+      "matrix_nnz": 13724411,
+      "true_residual": 1.3074687042312797e-13,
+      "iterations": 4,
+      "elapsed_seconds": 5.813755119219422
+    }
+  },
+  "replay_api": "frozen quadratic _assess_state(actual u,p,q)",
+  "mode": "manufactured",
+  "reconstruction": "quadratic",
+  "quadratic_linear_solver": "assembled",
+  "face_policy": "triangulated_native_faces",
+  "cells": 9068,
+  "faces": 23241,
+  "frozen_imports": {
+    "tensorfvm.backend_registry": {
+      "path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/tail-transition-cubic-viscosity/source-snapshot/src/tensorfvm/backend_registry.py",
+      "sha256": "e68b95fdb7c457b921b2f1c9e3920f80ebdcdb104ca8077e10e96d2a4182a13a",
+      "bound_by_producer": true
+    },
+    "tensorfvm.solver": {
+      "path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/tail-transition-cubic-viscosity/source-snapshot/src/tensorfvm/solver.py",
+      "sha256": "7c3613f23791c6a22825bd2ba0467e2bb84013ecaedc974901452b1864a2868e",
+      "bound_by_producer": true
+    },
+    "tensorfvm.body_fitted": {
+      "path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/tail-transition-cubic-viscosity/source-snapshot/src/tensorfvm/body_fitted.py",
+      "sha256": "4e633fa42c1171cf57aca5bf930827f97a30dada4e405bf3ac9c1068ba1bb7a7",
+      "bound_by_producer": true
+    },
+    "tensorfvm.mesh3d": {
+      "path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/tail-transition-cubic-viscosity/source-snapshot/src/tensorfvm/mesh3d.py",
+      "sha256": "ad7fe310537e70dcb65a34b42b335ea8bd7f9abd2bf24453a907c7f43a2b7c56",
+      "bound_by_producer": true
+    },
+    "tensorfvm.runtime": {
+      "path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/tail-transition-cubic-viscosity/source-snapshot/src/tensorfvm/runtime.py",
+      "sha256": "ff383730f34f82030f28da424819eea670f28c663d5be834f30bebc6c74a2da5",
+      "bound_by_producer": true
+    },
+    "tensorfvm.solver3d": {
+      "path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/tail-transition-cubic-viscosity/source-snapshot/src/tensorfvm/solver3d.py",
+      "sha256": "95d4711fd52ad9f2d8dd7300a999814633de986a2d579dcc997d17aa01603a37",
+      "bound_by_producer": true
+    },
+    "tensorfvm.body_fitted3d": {
+      "path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/tail-transition-cubic-viscosity/source-snapshot/src/tensorfvm/body_fitted3d.py",
+      "sha256": "dedd408c59096f559b2345f819541450768d4ce37f062e405b4335e4d00de9e4",
+      "bound_by_producer": true
+    },
+    "tensorfvm.multi_element": {
+      "path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/tail-transition-cubic-viscosity/source-snapshot/src/tensorfvm/multi_element.py",
+      "sha256": "c89faef53a8a8d429920a9f73805b91f28df3aa48bda762e7dd6bb2520fe8afc",
+      "bound_by_producer": true
+    },
+    "tensorfvm.mesh_api": {
+      "path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/tail-transition-cubic-viscosity/source-snapshot/src/tensorfvm/mesh_api.py",
+      "sha256": "72f4f9d724084df335dca0e561877c5423c47a7f8bfffe950d631845e2dce22d",
+      "bound_by_producer": true
+    },
+    "tensorfvm": {
+      "path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/tail-transition-cubic-viscosity/source-snapshot/src/tensorfvm/__init__.py",
+      "sha256": "9f8d4d3a249d695e4e841e4c9d11d7158db8a2d33e2928d3565794718e2aba3c",
+      "bound_by_producer": true
+    },
+    "tensorfvm.native_mesh3d": {
+      "path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/tail-transition-cubic-viscosity/source-snapshot/src/tensorfvm/native_mesh3d.py",
+      "sha256": "59833e84499f7c5b4572b9d2f96020024d46b26fc91ee4dc2111300872b31470",
+      "bound_by_producer": true
+    },
+    "tensorfvm.native_operators3d": {
+      "path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/tail-transition-cubic-viscosity/source-snapshot/src/tensorfvm/native_operators3d.py",
+      "sha256": "190ad3e4478d11bdd9332c38f8a7441530e9993c4459855722d15abe2fd519e0",
+      "bound_by_producer": true
+    },
+    "tensorfvm.native_viscous3d": {
+      "path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/tail-transition-cubic-viscosity/source-snapshot/src/tensorfvm/native_viscous3d.py",
+      "sha256": "910f6e806a7f588024f421f984bccd24214798ee7fb4bda415ca7de0c6aa8662",
+      "bound_by_producer": true
+    },
+    "tensorfvm.native_collocated3d": {
+      "path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/tail-transition-cubic-viscosity/source-snapshot/src/tensorfvm/native_collocated3d.py",
+      "sha256": "7f4b6de699042d0c8841569ac6ddb3dd901dd8384dd2236590594bbcee28f402",
+      "bound_by_producer": true
+    },
+    "tensorfvm.native_face_geometry3d": {
+      "path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/tail-transition-cubic-viscosity/source-snapshot/src/tensorfvm/native_face_geometry3d.py",
+      "sha256": "5173d0072c42f6a997cd3049be747aa9550fec753fbbe68a087cc7eac0f289ad",
+      "bound_by_producer": true
+    },
+    "tensorfvm.native_manufactured3d": {
+      "path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/tail-transition-cubic-viscosity/source-snapshot/src/tensorfvm/native_manufactured3d.py",
+      "sha256": "1a1e04e003d1a01fd2b924d199d1c51166bae8d48c5505a3e0c8e90db0ad3f46",
+      "bound_by_producer": true
+    },
+    "tensorfvm.native_quadratic3d": {
+      "path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/tail-transition-cubic-viscosity/source-snapshot/src/tensorfvm/native_quadratic3d.py",
+      "sha256": "3730d69c6c878b3e0fa121701cd04b1747c276e6b9cea85d781608e18f9b5c26",
+      "bound_by_producer": true
+    },
+    "tensorfvm.native_cubic_gradient3d": {
+      "path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/tail-transition-cubic-viscosity/source-snapshot/src/tensorfvm/native_cubic_gradient3d.py",
+      "sha256": "3dbf7449ab1b576e13e4f85441470bb2f55c2d5fde32f23e23e06f4e3c6c5b03",
+      "bound_by_producer": true
+    },
+    "tensorfvm.native_quadratic_maps3d": {
+      "path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/tail-transition-cubic-viscosity/source-snapshot/src/tensorfvm/native_quadratic_maps3d.py",
+      "sha256": "c7e9405930105d2a08eeae11b05aa48d07b459e9b3ac9ceac7a5ef36f6b33edd",
+      "bound_by_producer": true
+    },
+    "tensorfvm.native_quadratic_system3d": {
+      "path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/tail-transition-cubic-viscosity/source-snapshot/src/tensorfvm/native_quadratic_system3d.py",
+      "sha256": "635ba4ff1870ea211f77d3dfd7b8d869751f6910e0b1e09c338fb9e03a44be49",
+      "bound_by_producer": true
+    },
+    "tensorfvm.native_quadratic_flow3d": {
+      "path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/tail-transition-cubic-viscosity/source-snapshot/src/tensorfvm/native_quadratic_flow3d.py",
+      "sha256": "1a8aa755a6dbc5ecb9a09d5eb12da8aeab19e0916216d67e7a75bedc9d178139",
+      "bound_by_producer": true
+    }
+  },
+  "limitations": [
+    "Single-grid pointwise MMS verification is not physical SUBOFF drag/Cp validation.",
+    "Recorded field-change gates cannot be independently reconstructed from one final state.",
+    "No linear solve or time advancement is performed by this audit."
+  ],
+  "producer_input_sha256": {
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/tail-transition-cubic-viscosity/config.json": "28f96d456b6802928262f85922d40b0f4bedad72d14a169a2149cbe76644ef05",
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/tail-transition-cubic-viscosity/input.msh": "afebe7d4b6f96eae92810debfa485f591d58323c477b28cda83a60df59ac70e1",
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/tail-transition-cubic-viscosity/fields.npz": "3ab88cbba6a94c5b179dff9a63b25f9d6718dcf23d6d49185a2730c9b66e94a1",
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/tail-transition-cubic-viscosity/result.json": "790ba4d7b23ef36cefe7ed850855804481240e9d9735efa3adcc798719a91a2b",
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/tail-transition-cubic-viscosity/initial-numerical-state.npz": "a5524548e4ce43359630ab6699e4bc3f7cbcc845c5f2d9f2b3d71dcbc2444563",
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/tail-transition-cubic-viscosity/initial-producer-result.json": "723b0d2e9746f8127cc06de493e48b399cd119af76b4280999667316f179ae3b"
+  },
+  "producer_inputs_unchanged_during_replay": true,
+  "audit_source_sha256": "94ef3ac061241a080a1dc6b8515d2eda326be59942fd2e1b38bbdba6b626c929",
+  "acceptance_source_sha256": "088114b4c8ec39a0724213bfc00f83a4356bcaca1dd2398376ef35426866e12e",
+  "subprocess_command": [
+    "/data/TensorFEM/.venv/bin/python",
+    "/home/jsyc/tensor-suite-development/TensorFVM/scripts/audit_native_suboff_run.py",
+    "--worker",
+    "--run",
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/tail-transition-cubic-viscosity",
+    "--output",
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/tail-transition-cubic-viscosity/audit"
+  ]
+}

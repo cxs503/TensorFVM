@@ -5,6 +5,7 @@ import numpy as np
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'src'))
 from tensorfvm.native_mesh3d import NativeMesh3D
 from tensorfvm.native_face_geometry3d import merge_coplanar_faces
+from tensorfvm.native_pressure_acceptance import regional_pressure_acceptance
 parser=argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--runs',type=Path,nargs='+',required=True);parser.add_argument('--output',type=Path,required=True)
 args=parser.parse_args()
@@ -52,13 +53,16 @@ for case in args.runs:
  out[name]['fixed_spatial_windows_L']=fixed_windows
  out[name]['window_selection']='cell centroids inside fixed cylinders; no partial-cell clipping, hull-distance estimate, or regional gauge fit'
  out[name]['fixed_scale_diagnostic']='RMS and maximum error divided by rho*U^2=0.25; not reference-relative L2, physical Cp, or a replacement acceptance gate'
+ out[name]['local_pressure_acceptance']=regional_pressure_acceptance(stats,
+     ['all','wall_adjacent','near_body_fixed_window','near_tail_fixed_window'],
+     equation_audit_passed=audit.get('passed') is True)
  (args.output/'result.json').write_text(json.dumps(out,indent=2));print(json.dumps({'case':name,'regions':{key:stats[key] for key in ['all','wall_adjacent','hexahedron','wedge','tetra','tail_x_greater_09'] if key in stats},'worst':hotspots[0]},indent=2),flush=True)
 print(json.dumps({'seconds':time.perf_counter()-start}))
 
 shutil.copy2(Path(__file__).resolve(),args.output/'executed-audit.py')
 repo=Path(__file__).resolve().parents[1]
 sources={}
-for relative in ('src/tensorfvm/native_mesh3d.py','src/tensorfvm/native_face_geometry3d.py'):
+for relative in ('src/tensorfvm/native_mesh3d.py','src/tensorfvm/native_face_geometry3d.py','src/tensorfvm/native_pressure_acceptance.py'):
  source=repo/relative;target=args.output/'source-snapshot'/relative;target.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(source,target);sources[relative]=hashlib.sha256(target.read_bytes()).hexdigest()
 (args.output/'source-bindings.json').write_text(json.dumps(sources,indent=2)+'\n')
 manifest={str(p.relative_to(args.output)):hashlib.sha256(p.read_bytes()).hexdigest() for p in args.output.rglob('*') if p.is_file()}

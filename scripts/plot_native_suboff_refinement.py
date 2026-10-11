@@ -49,6 +49,7 @@ def collect(runs, local_audit, source_review=None):
         # rejection of genuinely different ordering choices in comparisons.
         settings.setdefault('lu_ordering', 'COLAMD')
         policies.append(dict(settings=settings, reconstruction=config.get('reconstruction', 'linear'),
+                             viscous_reconstruction=config.get('viscous_reconstruction', 'quadratic'),
                              quadratic_linear_solver=config.get('quadratic_linear_solver', 'matrix-free'),
                              merge_coplanar_faces=config.get('merge_coplanar_faces', False),
                              manufactured_definition=config['manufactured_definition']))

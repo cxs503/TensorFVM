@@ -11,11 +11,12 @@ from scipy import sparse
 from scipy.sparse.linalg import splu, gmres, LinearOperator
 from .native_collocated3d import NativeSteadySolver3D
 from .native_quadratic3d import NativeQuadratic3D
+from .native_cubic_gradient3d import NativeCubicFaceGradient3D
 from .native_quadratic_system3d import current_matrix
 
 
 class NativeQuadraticSteadySolver3D(NativeSteadySolver3D):
-    def __init__(self, *args, boundary_velocity_means=None, boundary_velocity_gradients=None, quadratic_linear_solver='matrix-free', linear_callback=None, **kwargs):
+    def __init__(self, *args, boundary_velocity_means=None, boundary_velocity_gradients=None, quadratic_linear_solver='matrix-free', viscous_reconstruction='quadratic', linear_callback=None, **kwargs):
         super().__init__(*args, **kwargs)
         if quadratic_linear_solver not in ('matrix-free','assembled'):
             raise ValueError('Quadratic linear solver must be matrix-free or assembled')
@@ -35,6 +36,12 @@ class NativeQuadraticSteadySolver3D(NativeSteadySolver3D):
             raise ValueError('Quadratic flow currently requires direct sparse LU/preconditioned GMRES')
         self.quadratic_velocity = NativeQuadratic3D(self.mesh, self.fixed)
         self.quadratic_pressure = NativeQuadratic3D(self.mesh, self.pressure.dirichlet)
+        if viscous_reconstruction not in ('quadratic', 'cubic'):
+            raise ValueError('Viscous reconstruction must be quadratic or cubic')
+        self.viscous_reconstruction = viscous_reconstruction
+        self.viscous_gradient = self.quadratic_velocity
+        if viscous_reconstruction == 'cubic':
+            self.viscous_gradient = NativeCubicFaceGradient3D(self.mesh, self.fixed)
         self.boundary_velocity_means = (None if boundary_velocity_means is None
             else np.broadcast_to(np.asarray(boundary_velocity_means,float),(self.F,3)).copy())
         if self.boundary_velocity_means is not None and not np.isfinite(self.boundary_velocity_means).all():
@@ -49,7 +56,7 @@ class NativeQuadraticSteadySolver3D(NativeSteadySolver3D):
             boundary_face_means=self.boundary_velocity_means)
 
     def quadratic_traction(self):
-        g = self.quadratic_velocity.face_gradient(self.u,self.velocity_boundary)
+        g = self.viscous_gradient.face_gradient(self.u,self.velocity_boundary)
         nb = self.viscous.neumann
         normals = self.viscous.normal[nb]
         g[nb] -= np.einsum('fki,fi->fk',g[nb],normals)[:,:,None]*normals[:,None,:]

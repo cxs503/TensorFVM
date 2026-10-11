@@ -1,0 +1,293 @@
+{
+  "scope": "read-only exact-state truncation decomposition; not a coupled solution error budget or new solve",
+  "cells": 9068,
+  "source_sha256": {
+    "src/tensorfvm/backend_registry.py": "e68b95fdb7c457b921b2f1c9e3920f80ebdcdb104ca8077e10e96d2a4182a13a",
+    "src/tensorfvm/solver.py": "7c3613f23791c6a22825bd2ba0467e2bb84013ecaedc974901452b1864a2868e",
+    "src/tensorfvm/body_fitted.py": "4e633fa42c1171cf57aca5bf930827f97a30dada4e405bf3ac9c1068ba1bb7a7",
+    "src/tensorfvm/mesh3d.py": "ad7fe310537e70dcb65a34b42b335ea8bd7f9abd2bf24453a907c7f43a2b7c56",
+    "src/tensorfvm/runtime.py": "ff383730f34f82030f28da424819eea670f28c663d5be834f30bebc6c74a2da5",
+    "src/tensorfvm/solver3d.py": "95d4711fd52ad9f2d8dd7300a999814633de986a2d579dcc997d17aa01603a37",
+    "src/tensorfvm/body_fitted3d.py": "dedd408c59096f559b2345f819541450768d4ce37f062e405b4335e4d00de9e4",
+    "src/tensorfvm/multi_element.py": "c89faef53a8a8d429920a9f73805b91f28df3aa48bda762e7dd6bb2520fe8afc",
+    "src/tensorfvm/mesh_api.py": "72f4f9d724084df335dca0e561877c5423c47a7f8bfffe950d631845e2dce22d",
+    "src/tensorfvm/__init__.py": "9f8d4d3a249d695e4e841e4c9d11d7158db8a2d33e2928d3565794718e2aba3c",
+    "src/tensorfvm/native_mesh3d.py": "59833e84499f7c5b4572b9d2f96020024d46b26fc91ee4dc2111300872b31470",
+    "src/tensorfvm/native_operators3d.py": "190ad3e4478d11bdd9332c38f8a7441530e9993c4459855722d15abe2fd519e0",
+    "src/tensorfvm/native_viscous3d.py": "910f6e806a7f588024f421f984bccd24214798ee7fb4bda415ca7de0c6aa8662",
+    "src/tensorfvm/native_collocated3d.py": "7f4b6de699042d0c8841569ac6ddb3dd901dd8384dd2236590594bbcee28f402",
+    "src/tensorfvm/native_face_geometry3d.py": "5173d0072c42f6a997cd3049be747aa9550fec753fbbe68a087cc7eac0f289ad",
+    "src/tensorfvm/native_quadratic3d.py": "3730d69c6c878b3e0fa121701cd04b1747c276e6b9cea85d781608e18f9b5c26",
+    "src/tensorfvm/native_quadratic_maps3d.py": "c7e9405930105d2a08eeae11b05aa48d07b459e9b3ac9ceac7a5ef36f6b33edd",
+    "src/tensorfvm/native_quadratic_system3d.py": "ddebc6be079d89ac7282143546a4f0aac3a3423c4eb96cd12b59bec0d40bf00b",
+    "src/tensorfvm/native_quadratic_flow3d.py": "7d8ca89500d1beaa6fef5ec0d53732a6fab153df86af8494fe636e58b425b9e6",
+    "src/tensorfvm/native_manufactured3d.py": "1a1e04e003d1a01fd2b924d199d1c51166bae8d48c5505a3e0c8e90db0ad3f46"
+  },
+  "input_sha256": {
+    "config.json": "bc8f0c05dd7731c11097f740b0eb0a341fdf0e7c6891a8e2000e2d583a19090b",
+    "input.msh": "afebe7d4b6f96eae92810debfa485f591d58323c477b28cda83a60df59ac70e1",
+    "fields.npz": "a5524548e4ce43359630ab6699e4bc3f7cbcc845c5f2d9f2b3d71dcbc2444563"
+  },
+  "algebraic_term_identity_max": 5.999536085937883e-16,
+  "face_quadrature_6_vs_8_force_acceleration_max": 1.6044455201022058e-12,
+  "regions": {
+    "all": {
+      "cells": 9068,
+      "terms": {
+        "pressure_reconstruction": {
+          "acceleration_RMS": 0.0008211695284925802,
+          "acceleration_max": 0.0032050349425904586
+        },
+        "viscous_reconstruction": {
+          "acceleration_RMS": 0.0020381672396614908,
+          "acceleration_max": 0.0813492024494049
+        },
+        "convection_reconstruction": {
+          "acceleration_RMS": 0.001158694354514139,
+          "acceleration_max": 0.008891072242140691
+        },
+        "centroid_force_quadrature": {
+          "acceleration_RMS": 0.000990773933107747,
+          "acceleration_max": 0.002174068439589717
+        },
+        "total_exact_state": {
+          "acceleration_RMS": 0.002725011189725229,
+          "acceleration_max": 0.08158862302137548
+        }
+      },
+      "continuity": {
+        "exact_surface": {
+          "maximum": 7.904219524170455e-13,
+          "RMS": 1.8313955184239275e-15
+        },
+        "velocity_reconstruction": {
+          "maximum": 0.0032300553800873586,
+          "RMS": 0.0005731172797460031
+        },
+        "rhie_chow_correction": {
+          "maximum": 0.0006510163258750334,
+          "RMS": 0.00015865840937954271
+        },
+        "current_coupled": {
+          "maximum": 0.003302154941503048,
+          "RMS": 0.0005935613429153521
+        }
+      }
+    },
+    "wall": {
+      "cells": 384,
+      "terms": {
+        "pressure_reconstruction": {
+          "acceleration_RMS": 3.992979795291642e-06,
+          "acceleration_max": 1.614802258954136e-05
+        },
+        "viscous_reconstruction": {
+          "acceleration_RMS": 0.03344913723635324,
+          "acceleration_max": 0.0813492024494049
+        },
+        "convection_reconstruction": {
+          "acceleration_RMS": 0.00014419675696567685,
+          "acceleration_max": 0.0005658922216099371
+        },
+        "centroid_force_quadrature": {
+          "acceleration_RMS": 2.0418050614205867e-05,
+          "acceleration_max": 3.328903609265235e-05
+        },
+        "total_exact_state": {
+          "acceleration_RMS": 0.03348881797154094,
+          "acceleration_max": 0.08158862302137548
+        }
+      },
+      "continuity": {
+        "exact_surface": {
+          "maximum": 7.572044827782514e-13,
+          "RMS": 1.1460752231711778e-13
+        },
+        "velocity_reconstruction": {
+          "maximum": 0.0005229474517998649,
+          "RMS": 0.0001572182326003591
+        },
+        "rhie_chow_correction": {
+          "maximum": 5.491199986406506e-08,
+          "RMS": 1.4698384020749345e-08
+        },
+        "current_coupled": {
+          "maximum": 0.0005229415836442874,
+          "RMS": 0.0001572163910873428
+        }
+      }
+    },
+    "tail": {
+      "cells": 2092,
+      "terms": {
+        "pressure_reconstruction": {
+          "acceleration_RMS": 2.6835780460100515e-06,
+          "acceleration_max": 1.4284220080332587e-05
+        },
+        "viscous_reconstruction": {
+          "acceleration_RMS": 0.004316182747650538,
+          "acceleration_max": 0.032228898990069164
+        },
+        "convection_reconstruction": {
+          "acceleration_RMS": 2.2829028153546468e-05,
+          "acceleration_max": 0.00022065685388019705
+        },
+        "centroid_force_quadrature": {
+          "acceleration_RMS": 3.186293090078626e-06,
+          "acceleration_max": 1.0464747752329385e-05
+        },
+        "total_exact_state": {
+          "acceleration_RMS": 0.004327633578887797,
+          "acceleration_max": 0.03240961440995988
+        }
+      },
+      "continuity": {
+        "exact_surface": {
+          "maximum": 7.904219524170455e-13,
+          "RMS": 7.676094853153841e-14
+        },
+        "velocity_reconstruction": {
+          "maximum": 0.00017383896058479205,
+          "RMS": 1.8751949165237e-05
+        },
+        "rhie_chow_correction": {
+          "maximum": 2.418470718948412e-07,
+          "RMS": 4.0543874490504645e-08
+        },
+        "current_coupled": {
+          "maximum": 0.00017382811245402765,
+          "RMS": 1.8753027603340114e-05
+        }
+      }
+    },
+    "wall_tail": {
+      "cells": 80,
+      "terms": {
+        "pressure_reconstruction": {
+          "acceleration_RMS": 4.5534048249050005e-06,
+          "acceleration_max": 8.07124541931973e-06
+        },
+        "viscous_reconstruction": {
+          "acceleration_RMS": 0.021537765106630503,
+          "acceleration_max": 0.032228898990069164
+        },
+        "convection_reconstruction": {
+          "acceleration_RMS": 9.578739308870645e-05,
+          "acceleration_max": 0.00022065685388019705
+        },
+        "centroid_force_quadrature": {
+          "acceleration_RMS": 6.448876038462736e-06,
+          "acceleration_max": 1.0443680943273783e-05
+        },
+        "total_exact_state": {
+          "acceleration_RMS": 0.021580802448847285,
+          "acceleration_max": 0.03240961440995988
+        }
+      },
+      "continuity": {
+        "exact_surface": {
+          "maximum": 7.572044827782514e-13,
+          "RMS": 1.412921122025264e-13
+        },
+        "velocity_reconstruction": {
+          "maximum": 0.00017383896058479205,
+          "RMS": 9.707152844921183e-05
+        },
+        "rhie_chow_correction": {
+          "maximum": 1.851268452827113e-08,
+          "RMS": 1.0512565524245906e-08
+        },
+        "current_coupled": {
+          "maximum": 0.00017382811245402765,
+          "RMS": 9.706589169509308e-05
+        }
+      }
+    },
+    "wall_tail_wedge": {
+      "cells": 16,
+      "terms": {
+        "pressure_reconstruction": {
+          "acceleration_RMS": 2.327635913792978e-06,
+          "acceleration_max": 2.798863639522541e-06
+        },
+        "viscous_reconstruction": {
+          "acceleration_RMS": 0.0007604845136258448,
+          "acceleration_max": 0.000846560089010398
+        },
+        "convection_reconstruction": {
+          "acceleration_RMS": 4.727795609226914e-06,
+          "acceleration_max": 6.65264678359245e-06
+        },
+        "centroid_force_quadrature": {
+          "acceleration_RMS": 1.6601422950692296e-07,
+          "acceleration_max": 2.4823403987962003e-07
+        },
+        "total_exact_state": {
+          "acceleration_RMS": 0.0007560861284657648,
+          "acceleration_max": 0.0008415227795751741
+        }
+      },
+      "continuity": {
+        "exact_surface": {
+          "maximum": 7.572044827782514e-13,
+          "RMS": 3.907031068839278e-13
+        },
+        "velocity_reconstruction": {
+          "maximum": 3.369008225265341e-06,
+          "RMS": 2.1064787662077775e-06
+        },
+        "rhie_chow_correction": {
+          "maximum": 8.981740383944289e-10,
+          "RMS": 5.418536321218879e-10
+        },
+        "current_coupled": {
+          "maximum": 3.3691512970597185e-06,
+          "RMS": 2.1068190767674504e-06
+        }
+      }
+    }
+  },
+  "hotspot": {
+    "cell": 8991,
+    "center": [
+      0.9972653648000261,
+      0.0005684871903638458,
+      0.002857978102883826
+    ],
+    "type": "wedge",
+    "pressure_error": 0.006564337904437484,
+    "terms_acceleration": {
+      "pressure_reconstruction": [
+        -2.283913904999441e-06,
+        5.431310315884567e-07,
+        1.3608299435884717e-06
+      ],
+      "viscous_reconstruction": [
+        -5.4030976456741076e-05,
+        0.00048795439816794477,
+        -0.0005081846036241923
+      ],
+      "convection_reconstruction": [
+        -8.167936858721735e-08,
+        -2.7989882773879537e-06,
+        2.4360913536611682e-06
+      ],
+      "centroid_force_quadrature": [
+        -3.871063334802621e-10,
+        -7.351302081099331e-08,
+        -4.765874086961815e-08
+      ],
+      "total_exact_state": [
+        -5.6396956836661214e-05,
+        0.00048562502790133424,
+        -0.0005044353410678122
+      ]
+    },
+    "divergence": {
+      "exact_surface": -6.376458802343168e-13,
+      "velocity_reconstruction": 1.29316082979338e-06,
+      "rhie_chow_correction": 8.923057036528971e-10,
+      "current_coupled": 1.2940532152027679e-06
+    }
+  }
+}

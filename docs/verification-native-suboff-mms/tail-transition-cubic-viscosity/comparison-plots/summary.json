@@ -1,0 +1,55 @@
+{
+  "plane_z_L": 0.03,
+  "face_policy": {
+    "face_policy": "triangulated_native_faces",
+    "merge_coplanar_faces": false,
+    "original_faces": 23241,
+    "reconstructed_faces": 23241,
+    "merged_pairs": 0,
+    "config_path": "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/tail-transition-cubic-viscosity/config.json",
+    "config_sha256": "28f96d456b6802928262f85922d40b0f4bedad72d14a169a2149cbe76644ef05"
+  },
+  "section_polygons": 776,
+  "pressure_common_limits": [
+    -0.011560251255371674,
+    0.011530342282557194
+  ],
+  "speed_common_limits": [
+    0.7964831532784842,
+    1.0704120800092172
+  ],
+  "pressure_alignment": {
+    "kind": "subtract each field own full-domain cell-volume-weighted mean",
+    "numerical_mean": -0.00041419939317079694,
+    "reference_mean": 6.853805669460782e-06,
+    "numerical_to_reference_gauge_offset": 0.00042105319884025774
+  },
+  "audit_passed": true,
+  "audit_sha256": "e5ab6306ad686d041082fcd35ccbd6ca364428f869797ded839ebc6aaa0883e9",
+  "audit_current_equation_residuals": {
+    "momentum_residual": 2.674027902541423e-10,
+    "native_divergence_max": 1.4036453396065647e-09,
+    "current_reconstructed_divergence_max": 2.0448405145700127e-11,
+    "face_flux_consistency_max": 5.987597308055589e-11
+  },
+  "audit_relative_L2_errors": {
+    "velocity": 0.00013556672661277667,
+    "pressure": 0.008617079249214999,
+    "velocity_x": 0.0001653959200717684,
+    "velocity_y": 7.550773254166498e-05,
+    "velocity_z": 0.00021639968261887656
+  },
+  "experimental_accuracy_qualified": false,
+  "representation": "identical true native section polygons; actual numerical/reference values evaluated at same corresponding native cell centroid; no smoothing, plane interpolation or geometric projection",
+  "display_window_L": {
+    "x": [
+      -0.05,
+      1.08
+    ],
+    "y": [
+      -0.13,
+      0.13
+    ]
+  },
+  "colour_scale_population": "actual native section polygons intersecting the displayed rectangular window; cells are not volume-clipped"
+}

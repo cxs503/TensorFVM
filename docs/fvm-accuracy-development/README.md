@@ -1,5 +1,25 @@
 # Standalone FVM accuracy first
 
+## Latest same-mesh viscosity experiment: local accuracy failed
+
+[The controlled cubic-viscosity report](../verification-native-suboff-mms/cubic-viscosity-report.md)
+archives a complete 9,068-cell solve and a negative result. Cubic viscous gradients
+reduce wall-tail truncation RMS by about 200 times, yet coupled pressure errors
+increase: global 0.7465% → 0.8617%, wall 11.51% → 20.66%, fixed tail
+27.87% → 102.04%. Fifteen updates converge and 19/19 original audit gates pass;
+this does not qualify local pressure accuracy. Cubic viscosity remains an
+explicit experimental option, not the recommended SUBOFF configuration.
+
+The new common regional-pressure gate requires global, wall-adjacent, fixed
+near-body and fixed tail relative L2 errors to each be strictly below 3%.
+Both runs fail this gate. Missing/nonfinite regions fail closed; fixed-scale
+errors cannot substitute for reference-relative errors. There are 61 targeted
+checks, shared-colour field plots, raw pressure curves and a diffusion-energy
+probe. Neither velocity diffusion symmetric part is positive definite; this
+alone does not establish the cause of pressure oscillations. Prioritize a small
+mixed-mesh reproduction and pressure–velocity coupling diagnosis before further
+order increases, physical turbulence, or coupled FVM–LBM flow.
+
 ## Latest controlled exterior-mesh experiment
 
 [The tail-transition report](../verification-native-suboff-mms/tail-transition-report.md)

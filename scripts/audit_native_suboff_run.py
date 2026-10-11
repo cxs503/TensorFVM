@@ -85,6 +85,9 @@ def worker(run,out):
             algorithm=config.get('quadratic_linear_solver','matrix-free')
             if 'quadratic_linear_solver' in inspect.signature(cls.__init__).parameters:extra['quadratic_linear_solver']=algorithm
             elif algorithm!='matrix-free':raise ValueError('frozen solver cannot reproduce requested assembled algorithm')
+            viscous=config.get('viscous_reconstruction','quadratic')
+            if 'viscous_reconstruction' in inspect.signature(cls.__init__).parameters:extra['viscous_reconstruction']=viscous
+            elif viscous!='quadratic':raise ValueError('frozen solver cannot reproduce requested viscous reconstruction')
         elif reconstruction!='linear':raise ValueError('unsupported reconstruction')
         solver=cls(mesh,mesh.neighbor<0,field(mesh.face_centers)['velocity'],**extra,settings=settings,body_force=exact['acceleration'],boundary_flux=exact_boundary_flux(mesh,field),gauge_value=exact['pressure'][0])
     elif mode=='laminar' and reconstruction=='linear':
