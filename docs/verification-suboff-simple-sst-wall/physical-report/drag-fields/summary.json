@@ -1,0 +1,47 @@
+{
+  "mesh_path": "docs/verification-suboff-simple-sst-wall/drag-interleaved/input.msh",
+  "mesh_sha256": "afebe7d4b6f96eae92810debfa485f591d58323c477b28cda83a60df59ac70e1",
+  "fields_path": "docs/verification-suboff-simple-sst-wall/drag-interleaved/fields.npz",
+  "fields_sha256": "24a9c760c25ced765838643af19b031107658bfb5ce248ea5454204ca1e0e8d2",
+  "case_kind": "physical",
+  "status_text": "UNCONVERGED diagnostic; not an accuracy qualification",
+  "plane_z_L": 0.0,
+  "section_polygons": 1763,
+  "section_cells_by_type": {
+    "hexahedron": 264,
+    "tetra": 1475,
+    "wedge": 24
+  },
+  "pressure_range": [
+    -1.8250733774718066,
+    4.6336423153067585
+  ],
+  "speed_range": [
+    0.1664134297458522,
+    18.387939030285533
+  ],
+  "section_pressure_range": [
+    -1.8250733774718066,
+    4.5923697679276625
+  ],
+  "section_speed_range": [
+    0.1664134297458522,
+    18.387939030285533
+  ],
+  "wall_pressure_definition": "Reconstructed native wall-face pressure supplied by the solver; not experimental Cp",
+  "representation": "Native facet plane intersection polygons, piecewise constant cell fields",
+  "qualification_inferred_from_figures": false,
+  "face_policy": "triangulated_native_faces",
+  "merge_coplanar_faces": false,
+  "original_faces": 23241,
+  "reconstructed_faces": 23241,
+  "merged_pairs": 0,
+  "config_path": "docs/verification-suboff-simple-sst-wall/drag-interleaved/config.json",
+  "config_sha256": "a2afa5bbc4fa095ed286cd2a160bba689442f5378998788e5d32e36934b3611f",
+  "view_limits": [
+    -0.05,
+    1.08,
+    -0.13,
+    0.13
+  ]
+}

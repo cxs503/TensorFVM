@@ -14,7 +14,7 @@ from .native_viscous3d import NativeViscous3D
 
 class FreePressureReconstruction3D:
     """Extrapolate pressure on velocity walls; do not impose zero dp/dn there."""
-    def __init__(self,mesh,dirichlet_mask):
+    def __init__(self,mesh,dirichlet_mask,*,skew_correction=True):
         self.mesh=mesh;self.N=len(mesh.cells);self.F=len(mesh.owner)
         self.dirichlet=np.asarray(dirichlet_mask,dtype=bool)
         i=mesh.neighbor>=0;b=~i
@@ -56,6 +56,7 @@ class FreePressureReconstruction3D:
                 self.G[k]+=sparse.coo_matrix((np.r_[-response[:,k],response[:,k]],(np.r_[ec,ec],np.r_[ec,en])),shape=(self.N,self.N)).tocsr()
         self.I=self.base.interpolation;self.D=self.base.divergence_matrix;self.weight=self.base.weight
         self.skew=mesh.face_centers-mesh.cell_centers[o]-self.weight[:,None]*d
+        if not skew_correction:self.skew[:]=0.
         self.face_matrix=self.I.copy()
         for k in range(3):self.face_matrix+=sparse.diags(self.skew[:,k])@self.I@self.G[k]
         self.face_matrix=(sparse.diags((~bd).astype(float))@self.face_matrix).tocsr()
@@ -103,6 +104,8 @@ class NativeSteadySettings:
     bounded_convection: bool=False
     lu_ordering: str='COLAMD'
     momentum_pseudo_cfl: float | None=None
+    pressure_relaxation: float=.2
+    face_skew_correction: bool=True
 
 
 class NativeSteadySolver3D:
@@ -120,7 +123,7 @@ class NativeSteadySolver3D:
         self.velocity_boundary=np.broadcast_to(np.asarray(velocity_boundary,dtype=float),(self.F,3)).copy()
         if not np.isfinite(self.velocity_boundary).all():raise ValueError('finite boundary velocity required')
         pd=np.zeros(self.F,bool) if pressure_dirichlet is None else np.asarray(pressure_dirichlet,dtype=bool)
-        self.pressure=FreePressureReconstruction3D(mesh,pd)
+        self.pressure=FreePressureReconstruction3D(mesh,pd,skew_correction=c.face_skew_correction)
         self.pressure_boundary=pressure_boundary
         if not pd.any() and not np.all(self.fixed[b]):raise ValueError('unanchored mixed velocity pressure problem')
         self.gauge=not pd.any();self.gauge_value=float(gauge_value)
@@ -134,6 +137,7 @@ class NativeSteadySolver3D:
         self.face_velocity_matrices=[];self.face_velocity_source=np.zeros((self.F,3))
         off=mesh.face_centers-mesh.cell_centers[mesh.owner]-self.viscous.weight[:,None]*self.viscous.op.d
         nb=self.viscous.neumann;off[nb]-=self.viscous.normal[nb]*(off[nb]*self.viscous.normal[nb]).sum(1)[:,None]
+        if not c.face_skew_correction:off[:]=0.
         for component in range(3):
             source=self.viscous.gradient_source(dirichlet_values=self.velocity_boundary[:,component])
             vf=self.viscous.interpolation.copy()

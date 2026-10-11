@@ -1,5 +1,13 @@
 # Standalone FVM accuracy first
 
+## Latest SIMPLE/SST wall-function implementation
+
+[Current implementation and measured failures](../verification-suboff-simple-sst-wall/README.md):
+SIMPLE, SST-2003 and Spalding shear with omega cell constraints are connected.
+42 targeted tests pass, including full current-equation convergence of a small channel.
+SUBOFF completes one SST update but still stops under the speed guard; physical
+validation remains failed. The coupled-solver diagnostics below are historical.
+
 ## Primary SUBOFF acceptance: surface Cp and total Cd
 
 The user's primary acceptance targets are the actual surface pressure

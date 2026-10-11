@@ -75,7 +75,7 @@ def main():
         native_force_replay_max_error=float(np.max(np.abs(force_replayed - reported))),
         numerically_converged=result['numerically_converged'], nominal_metric_passed=bool(metric_passed),
         solution_state=result['solution_state'], failure=result['failure'],
-        wall_resolution_passed=result['low_Re_wall_resolution']['qualified'],
+        wall_resolution_passed=(result.get('wall_function_diagnostics',{}).get('qualified',False) if result.get('wall_treatment')=='spalding' else result['low_Re_wall_resolution']['qualified']),
         spatial_convergence_qualified=result['spatial_convergence_qualified'],
         physical_validation_passed=False,
         note='Single-case nominal metrics cannot establish all-case spatial/physical qualification; Cp reference is provisional.')

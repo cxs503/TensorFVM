@@ -10,7 +10,9 @@ from scipy import sparse
 from scipy.spatial import cKDTree
 from .native_collocated3d import NativeSteadySolver3D
 from .native_viscous3d import NativeViscous3D
-from .native_sst3d import NativeSSTTransport3D,sst2003_closure,wall_omega,VARIANT
+from .native_sst3d import NativeSSTTransport3D,sst2003_closure,wall_omega,VARIANT,BETA1,BETA_STAR
+from .wall_functions import wall_traction,KAPPA
+from .native_simple3d import NativeSimpleMixin
 
 
 def _triangle_distance(points,triangles):
@@ -65,6 +67,7 @@ class NativeRansSettings:
     turbulence_relaxation: float=.5
     nonlinear_tolerance: float=1e-7
     maximum_step_retries: int=8
+    wall_treatment: str="resolved"
 
 
 class NativeSSTRansSolver3D(NativeSteadySolver3D):
@@ -72,13 +75,15 @@ class NativeSSTRansSolver3D(NativeSteadySolver3D):
         super().__init__(*args,**kwargs)
         self.rans_settings=rans_settings or NativeRansSettings();r=self.rans_settings
         if r.max_outer_iterations<1 or r.maximum_step_retries<0 or not np.isfinite([r.pseudo_time_step,r.turbulence_relaxation,r.nonlinear_tolerance]).all() or r.pseudo_time_step<=0 or not 0<r.turbulence_relaxation<=1 or r.nonlinear_tolerance<=0:raise ValueError('positive finite RANS iteration settings required')
+        if r.wall_treatment not in ("resolved","spalding"):raise ValueError("wall_treatment must be resolved or spalding")
         self.wall=self.mesh.patch_labels==wall_patch
         if not np.all(self.fixed[self.wall]):raise ValueError('SST wall requires prescribed no-slip velocity')
         if not np.allclose(self.velocity_boundary[self.wall],0,rtol=0,atol=1e-14):raise ValueError('stationary SST wall velocity must be zero')
         self.wall_distance=true_triangle_wall_distance(self.mesh,patch=wall_patch)
         if np.any(self.wall_distance<=0):raise ValueError('positive cell-to-wall distances required')
         self.nu=self.settings.viscosity/self.settings.density
-        self.transport=NativeSSTTransport3D(self.mesh,self.fixed)
+        self.scalar_fixed=self.fixed & ~self.wall if r.wall_treatment=="spalding" else self.fixed
+        self.transport=NativeSSTTransport3D(self.mesh,self.scalar_fixed)
         self.physical_pressure_boundary=np.broadcast_to(np.asarray(self.pressure_boundary,dtype=float),(self.F,)).copy()
         self.physical_gauge_value=self.gauge_value
         self.k=None;self.omega=None;self.rans_history=[]
@@ -100,13 +105,62 @@ class NativeSSTRansSolver3D(NativeSteadySolver3D):
         offset=m.face_centers-m.cell_centers[m.owner]-b.weight[:,None]*b.op.d
         nb=b.neumann;offset[nb]-=b.normal[nb]*np.sum(offset[nb]*b.normal[nb],axis=1)[:,None]
         result=np.asarray(b.interpolation@field)+np.sum(offset*(b.interpolation@gradient),axis=1)
-        result[self.fixed]=boundary[self.fixed];return result
+        result[self.scalar_fixed]=boundary[self.scalar_fixed];return result
 
     def velocity_gradient(self):
         return np.stack([np.column_stack([g@self.u[:,k] for g in self.viscous.gradient_matrices])+self.viscous.gradient_source(dirichlet_values=self.velocity_boundary[:,k]) for k in range(3)],axis=1)
 
     def current_closure(self):
-        return sst2003_closure(self.k,self.omega,self.wall_distance,self.nu,self.velocity_gradient(),self._scalar_gradient(self.k,self.k_boundary),self._scalar_gradient(self.omega,self.omega_boundary),rho=self.settings.density)
+        closure=sst2003_closure(self.k,self.omega,self.wall_distance,self.nu,self.velocity_gradient(),self._scalar_gradient(self.k,self.k_boundary),self._scalar_gradient(self.omega,self.omega_boundary),rho=self.settings.density)
+        if self.rans_settings.wall_treatment=='spalding':
+            ids,omega,production=self.wall_model()
+            closure['production_limited'][ids]=np.minimum(production,closure['production_limit'][ids])
+            closure['k_source']=closure['production_limited']-closure['k_destruction']
+            # omega equation is constrained in these cells, with its reaction
+            # reported separately from conservative unconstrained transport.
+        return closure
+
+    def wall_model(self):
+        m=self.mesh;faces=np.flatnonzero(self.wall);owner=m.owner[faces]
+        area=np.linalg.norm(m.area_vectors[faces],axis=1);n=m.area_vectors[faces]/area[:,None]
+        tangent=self.u[owner]-n*np.sum(self.u[owner]*n,axis=1)[:,None]
+        y=self.wall_distance[owner]
+        law=wall_traction(tangent,y,self.settings.density,self.settings.viscosity)
+        ut=law['friction_velocity_m_s'];yp=law['y_plus']
+        omega_vis=6*self.nu/(BETA1*y*y)
+        omega_log=np.sqrt(self.k[owner])/(BETA_STAR**.25*KAPPA*y)
+        omega=np.hypot(omega_vis,omega_log)
+        # Equilibrium log-layer production; smoothly vanish at the viscous wall.
+        blend=1-np.exp(-(yp/11.)**2)
+        production=blend*ut**3/(KAPPA*y)
+        weights=np.bincount(owner,weights=area,minlength=self.N);ids=np.flatnonzero(weights)
+        average=lambda value:np.bincount(owner,weights=area*value,minlength=self.N)[ids]/weights[ids]
+        return ids,average(omega),average(production)
+
+    def _apply_wall_traction(self):
+        m=self.mesh;v=self.viscous;faces=np.flatnonzero(self.wall);owner=m.owner[faces]
+        area=np.linalg.norm(m.area_vectors[faces],axis=1);n=m.area_vectors[faces]/area[:,None]
+        tangent=self.u[owner]-n*np.sum(self.u[owner]*n,axis=1)[:,None]
+        y=self.wall_distance[owner];speed=np.linalg.norm(tangent,axis=1)
+        law=wall_traction(tangent,y,self.settings.density,self.settings.viscosity)
+        drag=np.divide(self.settings.density*law['friction_velocity_m_s']**2,speed,
+            out=self.settings.viscosity/y,where=speed>0)
+        normal=n[:,:,None]*n[:,None,:];project=np.eye(3)-normal
+        # Retain normal viscous traction; replace only tangential stress by
+        # the same implicit Robin law used in the reported force.
+        rows=(3*faces[:,None,None]+np.arange(3)[None,:,None]+np.zeros((1,1,3),int)).ravel()
+        cols=(3*faces[:,None,None]+np.arange(3)[None,None,:]+np.zeros((1,3,1),int)).ravel()
+        selector=sparse.eye(3*self.F,format='csr')-sparse.coo_matrix((project.ravel(),(rows,cols)),shape=(3*self.F,3*self.F)).tocsr()
+        cellcols=(3*owner[:,None,None]+np.arange(3)[None,None,:]+np.zeros((1,3,1),int)).ravel()
+        robin=sparse.coo_matrix(((-area[:,None,None]*drag[:,None,None]*project).ravel(),(rows,cellcols)),shape=(3*self.F,3*self.N)).tocsr()
+        orth_coefficient=v.face_viscosity[faces]*area**2/np.sum(m.area_vectors[faces]*v.op.d[faces],axis=1)
+        implicit_difference=(area*drag-orth_coefficient)[:,None,None]*project
+        cellrows=(3*owner[:,None,None]+np.arange(3)[None,:,None]+np.zeros((1,1,3),int)).ravel()
+        self.wall_implicit_correction=sparse.coo_matrix((implicit_difference.ravel(),(cellrows,cellcols)),shape=(3*self.N,3*self.N)).tocsr()
+        self.wall_flux_matrix=selector@v.momentum_flux_matrix+robin
+        self.wall_flux_source=selector@v.momentum_flux_source(dirichlet_values=self.velocity_boundary).ravel()
+        self._diffusion=-v.vector_divergence_matrix@self.wall_flux_matrix
+        self.diffusion_source=v.vector_divergence_matrix@self.wall_flux_source
 
     def _update_momentum_coefficients(self,closure):
         rho=self.settings.density
@@ -116,6 +170,7 @@ class NativeSSTRansSolver3D(NativeSteadySolver3D):
         # Low-Re SST resolves the wall: eddy viscosity is exactly zero on wall faces.
         mu[self.wall]=self.settings.viscosity
         self.update_dynamic_viscosity(mu)
+        if self.rans_settings.wall_treatment=="spalding":self._apply_wall_traction()
         kface=self._scalar_faces(self.k,self.k_boundary)
         self.pressure_boundary=self.physical_pressure_boundary+2/3*rho*kface
         self.p_face_source,self.p_defect_source,self.p_force_source,_=self.pressure.sources(self.pressure_boundary)
@@ -129,19 +184,29 @@ class NativeSSTRansSolver3D(NativeSteadySolver3D):
             ('k',self.k,self.k_boundary,closure['sigma_k'],closure['k_source']),
             ('omega',self.omega,self.omega_boundary,closure['sigma_omega'],closure['omega_source'])]:
             coefficient=self.nu+sigma*closure['nu_t']
-            diffusion=NativeViscous3D(m,self.fixed,coefficient)
+            diffusion=NativeViscous3D(m,self.scalar_fixed,coefficient)
             adv,adv_source=self.transport._upwind(self.flux,boundary)
             af=adv@value+adv_source;df=diffusion.scalar_flux(value,dirichlet_values=boundary)
             integrated=b.divergence_matrix@(af-df)-m.cell_volumes*source
             scale=np.linalg.norm(b.divergence_matrix@af)+np.linalg.norm(b.divergence_matrix@df)+np.linalg.norm(m.cell_volumes*source)
-            result[name]=dict(relative_residual=float(np.linalg.norm(integrated)/max(scale,np.finfo(float).tiny)),maximum_specific_residual=float(np.max(np.abs(integrated/m.cell_volumes))),global_integrated_residual=float(integrated.sum()),boundary_advective_flux=float(af[b.boundary].sum()),boundary_diffusive_flux=float(df[b.boundary].sum()),integrated_current_source=float(np.sum(m.cell_volumes*source)))
+            reaction=0.;constraint_residual=0.
+            if name=='omega' and self.rans_settings.wall_treatment=='spalding':
+                ids,values,_=self.wall_model();reaction=float(integrated[ids].sum())
+                integrated[ids]=0.
+                free=np.ones(self.N,dtype=bool);free[ids]=False
+                scale=(np.linalg.norm((b.divergence_matrix@af)[free])
+                    +np.linalg.norm((b.divergence_matrix@df)[free])
+                    +np.linalg.norm((m.cell_volumes*source)[free]))
+                constraint_residual=float(np.max(np.abs(value[ids]-values)/values))
+            result[name]=dict(wall_constraint_reaction=reaction,wall_constraint_relative_residual=constraint_residual,relative_residual=max(constraint_residual,float(np.linalg.norm(integrated)/max(scale,np.finfo(float).tiny))),maximum_specific_residual=float(np.max(np.abs(integrated/m.cell_volumes))),global_integrated_residual=float(integrated.sum()),boundary_advective_flux=float(af[b.boundary].sum()),boundary_diffusive_flux=float(df[b.boundary].sum()),integrated_current_source=float(np.sum(m.cell_volumes*source)))
         return result
 
     def solve_rans(self,initial_k,initial_omega,*,inlet_k,inlet_omega,callback=None,momentum_callback=None):
         self.k=np.broadcast_to(np.asarray(initial_k,dtype=float),(self.N,)).copy();self.omega=np.broadcast_to(np.asarray(initial_omega,dtype=float),(self.N,)).copy()
         self.k_boundary=np.broadcast_to(np.asarray(inlet_k,dtype=float),(self.F,)).copy();self.omega_boundary=np.broadcast_to(np.asarray(inlet_omega,dtype=float),(self.F,)).copy()
-        self.k_boundary[self.wall]=0.
-        self.omega_boundary[self.wall]=wall_omega(self.nu,self.wall_distance[self.mesh.owner[self.wall]])
+        if self.rans_settings.wall_treatment=='resolved':
+            self.k_boundary[self.wall]=0.
+            self.omega_boundary[self.wall]=wall_omega(self.nu,self.wall_distance[self.mesh.owner[self.wall]])
         if not np.isfinite(self.k_boundary).all() or not np.isfinite(self.omega_boundary).all() or np.any(self.k_boundary<0) or np.any(self.omega_boundary<=0):raise ValueError('nonnegative k and positive omega boundary values required')
         r=self.rans_settings;converged=False
         for iteration in range(r.max_outer_iterations):
@@ -149,13 +214,17 @@ class NativeSSTRansSolver3D(NativeSteadySolver3D):
             closure=self.current_closure();self._update_momentum_coefficients(closure)
             def inner_callback(row):
                 if momentum_callback:momentum_callback(dict(outer_iteration=iteration+1,**row))
-            momentum=super().solve(callback=inner_callback)
+            momentum=self.solve(callback=inner_callback)
             # If an implicit turbulence solve proposes a negative state, reduce
             # pseudo dt and retry from the same old k/omega; never clip values.
             dt=r.pseudo_time_step;update=None
+            extra={}
+            if r.wall_treatment=='spalding':
+                ids,values,_=self.wall_model()
+                extra=dict(closure_override=self.current_closure(),omega_constraints=(ids,values))
             for retry in range(r.maximum_step_retries+1):
                 try:
-                    update=self.transport.step(self.k,self.omega,self.flux,self.wall_distance,self.nu,self.velocity_gradient(),dt,k_boundary=self.k_boundary,omega_boundary=self.omega_boundary,rho=self.settings.density)
+                    update=self.transport.step(self.k,self.omega,self.flux,self.wall_distance,self.nu,self.velocity_gradient(),dt,k_boundary=self.k_boundary,omega_boundary=self.omega_boundary,rho=self.settings.density,**extra)
                     break
                 except RuntimeError:
                     if retry==r.maximum_step_retries:raise
@@ -183,8 +252,17 @@ class NativeSSTRansSolver3D(NativeSteadySolver3D):
     def forces(self,patch='wall'):
         if self.k is None:raise RuntimeError('initialize RANS state before evaluating RANS forces')
         base=super().forces(patch);mask=self.mesh.patch_labels==patch
+        if self.rans_settings.wall_treatment=='spalding':
+            traction=(self.wall_flux_matrix@self.u.ravel()+self.wall_flux_source).reshape(self.F,3)
+            base['viscous_traction_integrated']=traction
+            base['viscous_force']=-traction[mask].sum(0)
+            base['total_force']=base['pressure_force']+base['viscous_force']
         kfaces=self._scalar_faces(self.k,self.k_boundary);isotropic=2/3*self.settings.density*kfaces[:,None]*self.mesh.area_vectors
         physical=base['pressure_faces']-2/3*self.settings.density*kfaces
         pressure_force=(physical[mask,None]*self.mesh.area_vectors[mask]).sum(0)
         isotropic_force=isotropic[mask].sum(0)
         return dict(total_force=base['total_force'],physical_pressure_force=pressure_force,anisotropic_viscous_force=base['viscous_force'],isotropic_turbulent_force=isotropic_force,modified_pressure_force=base['pressure_force'],physical_pressure_faces=physical,modified_pressure_faces=base['pressure_faces'],isotropic_reynolds_stress_traction=-isotropic,anisotropic_stress_traction=base['viscous_traction_integrated'])
+
+
+class NativeSimpleSSTRansSolver3D(NativeSimpleMixin,NativeSSTRansSolver3D):
+    """SIMPLE pressure/velocity coupling with shared SST transport and wall laws."""
