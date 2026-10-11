@@ -1,5 +1,13 @@
 # TensorFVM benchmark 总览
 
+## 最新 SUBOFF 单域网格对照
+
+[尾部过渡与完整流场报告](verification-native-suboff-mms/tail-transition-report.md)：
+固定艇体表面和结构化层，6,085 → 9,068 单元。新流场 15 步收敛、独立审核
+19/19 通过；近艇压力 L2 33.49% → 4.94%，壁邻 21.88% → 11.51%。
+全域压力 L2 0.7465%，局部相对误差仍未全面低于 3%；不构成真实湍流 SUBOFF 合格案例。
+另有 26,570 单元几何对照、失败初值/排序记录、网格和实际场图，未提高正式物理合格计数。
+
 ## Overset 与后续 FVM–LBM 耦合
 
 新增 [开发接口约定](overset-development/README.md)：贴体局部网格与笛卡尔背景，

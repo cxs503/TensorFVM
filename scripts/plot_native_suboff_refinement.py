@@ -45,6 +45,9 @@ def collect(runs, local_audit, source_review=None):
         windows = current_windows
         settings = config['settings'].copy()
         settings.pop('max_iterations', None)
+        # Historical runs used SuperLU's implicit COLAMD default. Preserve
+        # rejection of genuinely different ordering choices in comparisons.
+        settings.setdefault('lu_ordering', 'COLAMD')
         policies.append(dict(settings=settings, reconstruction=config.get('reconstruction', 'linear'),
                              quadratic_linear_solver=config.get('quadratic_linear_solver', 'matrix-free'),
                              merge_coplanar_faces=config.get('merge_coplanar_faces', False),

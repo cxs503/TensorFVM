@@ -1,0 +1,1348 @@
+{
+  "quadratic-assembled-small": {
+    "mesh_sha256": "9fde17de9bdaec2b0aac49eab46fecf1b526b71232a9d71b0d0e177dae1c346a",
+    "fields_sha256": "ddae6231f75755a6c55347ef79b367901336df1fffac57fad19f8f8a04523274",
+    "cells": 6085,
+    "faces": 17275,
+    "gauge_definition": "remove one actual and one reference volume-weighted mean over ALL cells, no regional gauge removal",
+    "actual_removed_global_mean": 1.4619816767440257e-05,
+    "reference_removed_global_mean": 9.375929859169012e-06,
+    "pressure_fixed_scale_rho_U2": 0.25,
+    "regions": {
+      "all": {
+        "cells": 6085,
+        "volume": 15.991800511213771,
+        "volume_fraction": 1.0,
+        "pressure_relative_L2_global_gauge_aligned": 0.0075939478537831485,
+        "error_energy_fraction": 1.0,
+        "maximum_absolute_error": 0.036730935955381024,
+        "maximum_error_over_rho_U2": 0.1469237438215241,
+        "maximum_cell": 4904,
+        "maximum_center": [
+          0.9497885350463279,
+          -0.018549798441975664,
+          0.020200915392216818
+        ],
+        "maximum_cell_type": "tetra",
+        "maximum_cell_volume": 2.7357083403205313e-06,
+        "maximum_reference_pressure_global_aligned": 0.0021713586011578236,
+        "maximum_computed_pressure_global_aligned": -0.0345595773542232,
+        "rms_error_over_rho_U2": 0.001877072496037555,
+        "cells_above_3percent_rho_U2": 22,
+        "region_volume_fraction_above_3percent_rho_U2": 1.7026702438735542e-06
+      },
+      "wall_adjacent": {
+        "cells": 384,
+        "volume": 0.0001849047257658794,
+        "volume_fraction": 1.1562470757199634e-05,
+        "pressure_relative_L2_global_gauge_aligned": 0.2188225088743512,
+        "error_energy_fraction": 1.3359303212069104e-05,
+        "maximum_absolute_error": 0.01002407392212871,
+        "maximum_error_over_rho_U2": 0.04009629568851484,
+        "maximum_cell": 5242,
+        "maximum_center": [
+          0.9461658399167445,
+          -0.006634421848643255,
+          0.009929113970633324
+        ],
+        "maximum_cell_type": "hexahedron",
+        "maximum_cell_volume": 8.056591373510123e-08,
+        "maximum_reference_pressure_global_aligned": 0.0010591290895096588,
+        "maximum_computed_pressure_global_aligned": -0.00896494483261905,
+        "rms_error_over_rho_U2": 0.0020176583359190117,
+        "cells_above_3percent_rho_U2": 1,
+        "region_volume_fraction_above_3percent_rho_U2": 0.00043571581743730706
+      },
+      "nonwall": {
+        "cells": 5701,
+        "volume": 15.991615606488008,
+        "volume_fraction": 0.9999884375292429,
+        "pressure_relative_L2_global_gauge_aligned": 0.007593897189777705,
+        "error_energy_fraction": 0.999986640696788,
+        "maximum_absolute_error": 0.036730935955381024,
+        "maximum_error_over_rho_U2": 0.1469237438215241,
+        "maximum_cell": 4904,
+        "maximum_center": [
+          0.9497885350463279,
+          -0.018549798441975664,
+          0.020200915392216818
+        ],
+        "maximum_cell_type": "tetra",
+        "maximum_cell_volume": 2.7357083403205313e-06,
+        "maximum_reference_pressure_global_aligned": 0.0021713586011578236,
+        "maximum_computed_pressure_global_aligned": -0.0345595773542232,
+        "rms_error_over_rho_U2": 0.001877070809624908,
+        "cells_above_3percent_rho_U2": 21,
+        "region_volume_fraction_above_3percent_rho_U2": 1.697651921526684e-06
+      },
+      "fore_x_less_0233": {
+        "cells": 1966,
+        "volume": 4.913800721861838,
+        "volume_fraction": 0.30727001117955305,
+        "pressure_relative_L2_global_gauge_aligned": 0.010593840382139563,
+        "error_energy_fraction": 0.14797511449856923,
+        "maximum_absolute_error": 0.005500889936822229,
+        "maximum_error_over_rho_U2": 0.022003559747288917,
+        "maximum_cell": 6058,
+        "maximum_center": [
+          0.0011973733890297945,
+          -0.006125627308626595,
+          0.009167649130031652
+        ],
+        "maximum_cell_type": "wedge",
+        "maximum_cell_volume": 5.0931841274747506e-08,
+        "maximum_reference_pressure_global_aligned": -8.031256967421437e-06,
+        "maximum_computed_pressure_global_aligned": 0.005492858679854808,
+        "rms_error_over_rho_U2": 0.0013026126771146585,
+        "cells_above_3percent_rho_U2": 0,
+        "region_volume_fraction_above_3percent_rho_U2": 0.0
+      },
+      "midbody": {
+        "cells": 1591,
+        "volume": 2.0910484474503734,
+        "volume_fraction": 0.1307575370255581,
+        "pressure_relative_L2_global_gauge_aligned": 0.008503796325896857,
+        "error_energy_fraction": 0.040829225641713277,
+        "maximum_absolute_error": 0.0007000042700317059,
+        "maximum_error_over_rho_U2": 0.0028000170801268237,
+        "maximum_cell": 5161,
+        "maximum_center": [
+          0.7181198173344453,
+          -0.011214451130673328,
+          0.056378853051749306
+        ],
+        "maximum_cell_type": "hexahedron",
+        "maximum_cell_volume": 7.207178017325228e-07,
+        "maximum_reference_pressure_global_aligned": 0.004742620914594751,
+        "maximum_computed_pressure_global_aligned": 0.005442625184626457,
+        "rms_error_over_rho_U2": 0.0010488979873436903,
+        "cells_above_3percent_rho_U2": 0,
+        "region_volume_fraction_above_3percent_rho_U2": 0.0
+      },
+      "aftbody": {
+        "cells": 2528,
+        "volume": 8.986951341901563,
+        "volume_fraction": 0.561972451794889,
+        "pressure_relative_L2_global_gauge_aligned": 0.007244242306934394,
+        "error_energy_fraction": 0.8111956598597175,
+        "maximum_absolute_error": 0.036730935955381024,
+        "maximum_error_over_rho_U2": 0.1469237438215241,
+        "maximum_cell": 4904,
+        "maximum_center": [
+          0.9497885350463279,
+          -0.018549798441975664,
+          0.020200915392216818
+        ],
+        "maximum_cell_type": "tetra",
+        "maximum_cell_volume": 2.7357083403205313e-06,
+        "maximum_reference_pressure_global_aligned": 0.0021713586011578236,
+        "maximum_computed_pressure_global_aligned": -0.0345595773542232,
+        "rms_error_over_rho_U2": 0.0022552066424860948,
+        "cells_above_3percent_rho_U2": 22,
+        "region_volume_fraction_above_3percent_rho_U2": 3.0298108713965956e-06
+      },
+      "tail_x_greater_09": {
+        "cells": 1948,
+        "volume": 8.441630525596675,
+        "volume_fraction": 0.5278724256019348,
+        "pressure_relative_L2_global_gauge_aligned": 0.007274603244991972,
+        "error_energy_fraction": 0.7983237261565267,
+        "maximum_absolute_error": 0.036730935955381024,
+        "maximum_error_over_rho_U2": 0.1469237438215241,
+        "maximum_cell": 4904,
+        "maximum_center": [
+          0.9497885350463279,
+          -0.018549798441975664,
+          0.020200915392216818
+        ],
+        "maximum_cell_type": "tetra",
+        "maximum_cell_volume": 2.7357083403205313e-06,
+        "maximum_reference_pressure_global_aligned": 0.0021713586011578236,
+        "maximum_computed_pressure_global_aligned": -0.0345595773542232,
+        "rms_error_over_rho_U2": 0.0023083734806145567,
+        "cells_above_3percent_rho_U2": 22,
+        "region_volume_fraction_above_3percent_rho_U2": 3.225533597311875e-06
+      },
+      "near_body_fixed_window": {
+        "cells": 2065,
+        "volume": 0.008961585407959858,
+        "volume_fraction": 0.0005603862680550458,
+        "pressure_relative_L2_global_gauge_aligned": 0.33490930430377025,
+        "error_energy_fraction": 0.0032349382385385298,
+        "maximum_absolute_error": 0.036730935955381024,
+        "maximum_error_over_rho_U2": 0.1469237438215241,
+        "maximum_cell": 4904,
+        "maximum_center": [
+          0.9497885350463279,
+          -0.018549798441975664,
+          0.020200915392216818
+        ],
+        "maximum_cell_type": "tetra",
+        "maximum_cell_volume": 2.7357083403205313e-06,
+        "maximum_reference_pressure_global_aligned": 0.0021713586011578236,
+        "maximum_computed_pressure_global_aligned": -0.0345595773542232,
+        "rms_error_over_rho_U2": 0.004509935187647782,
+        "cells_above_3percent_rho_U2": 22,
+        "region_volume_fraction_above_3percent_rho_U2": 0.0030383868073410817
+      },
+      "near_tail_fixed_window": {
+        "cells": 417,
+        "volume": 0.00014196410001603892,
+        "volume_fraction": 8.877305586477948e-06,
+        "pressure_relative_L2_global_gauge_aligned": 2.02918656564415,
+        "error_energy_fraction": 0.00033672349436016254,
+        "maximum_absolute_error": 0.0175180077777482,
+        "maximum_error_over_rho_U2": 0.0700720311109928,
+        "maximum_cell": 3796,
+        "maximum_center": [
+          1.0047078423991442,
+          -0.008741312229373912,
+          -0.021710750831820374
+        ],
+        "maximum_cell_type": "tetra",
+        "maximum_cell_volume": 5.932222822089631e-07,
+        "maximum_reference_pressure_global_aligned": -0.0024664271856937054,
+        "maximum_computed_pressure_global_aligned": -0.01998443496344191,
+        "rms_error_over_rho_U2": 0.011560514720318115,
+        "cells_above_3percent_rho_U2": 11,
+        "region_volume_fraction_above_3percent_rho_U2": 0.02570651362732324
+      },
+      "hexahedron": {
+        "cells": 1056,
+        "volume": 0.000715263471567441,
+        "volume_fraction": 4.472688807404044e-05,
+        "pressure_relative_L2_global_gauge_aligned": 0.20282301310831838,
+        "error_energy_fraction": 4.5840591964557344e-05,
+        "maximum_absolute_error": 0.01002407392212871,
+        "maximum_error_over_rho_U2": 0.04009629568851484,
+        "maximum_cell": 5242,
+        "maximum_center": [
+          0.9461658399167445,
+          -0.006634421848643255,
+          0.009929113970633324
+        ],
+        "maximum_cell_type": "hexahedron",
+        "maximum_cell_volume": 8.056591373510123e-08,
+        "maximum_reference_pressure_global_aligned": 0.0010591290895096588,
+        "maximum_computed_pressure_global_aligned": -0.00896494483261905,
+        "rms_error_over_rho_U2": 0.0019002984473469064,
+        "cells_above_3percent_rho_U2": 3,
+        "region_volume_fraction_above_3percent_rho_U2": 0.00045746419712192434
+      },
+      "wall_adjacent_hexahedron": {
+        "cells": 352,
+        "volume": 0.0001843874834830404,
+        "volume_fraction": 1.153012653914387e-05,
+        "pressure_relative_L2_global_gauge_aligned": 0.21590413030775651,
+        "error_energy_fraction": 1.3005309486262576e-05,
+        "maximum_absolute_error": 0.01002407392212871,
+        "maximum_error_over_rho_U2": 0.04009629568851484,
+        "maximum_cell": 5242,
+        "maximum_center": [
+          0.9461658399167445,
+          -0.006634421848643255,
+          0.009929113970633324
+        ],
+        "maximum_cell_type": "hexahedron",
+        "maximum_cell_volume": 8.056591373510123e-08,
+        "maximum_reference_pressure_global_aligned": 0.0010591290895096588,
+        "maximum_computed_pressure_global_aligned": -0.00896494483261905,
+        "rms_error_over_rho_U2": 0.001993537250743662,
+        "cells_above_3percent_rho_U2": 1,
+        "region_volume_fraction_above_3percent_rho_U2": 0.00043693808393730545
+      },
+      "tetra": {
+        "cells": 4933,
+        "volume": 15.991083117747149,
+        "volume_fraction": 0.9999551399189779,
+        "pressure_relative_L2_global_gauge_aligned": 0.0075937667492482945,
+        "error_energy_fraction": 0.9999522392390445,
+        "maximum_absolute_error": 0.036730935955381024,
+        "maximum_error_over_rho_U2": 0.1469237438215241,
+        "maximum_cell": 4904,
+        "maximum_center": [
+          0.9497885350463279,
+          -0.018549798441975664,
+          0.020200915392216818
+        ],
+        "maximum_cell_type": "tetra",
+        "maximum_cell_volume": 2.7357083403205313e-06,
+        "maximum_reference_pressure_global_aligned": 0.0021713586011578236,
+        "maximum_computed_pressure_global_aligned": -0.0345595773542232,
+        "rms_error_over_rho_U2": 0.001877069773520187,
+        "cells_above_3percent_rho_U2": 19,
+        "region_volume_fraction_above_3percent_rho_U2": 1.682284761361698e-06
+      },
+      "wedge": {
+        "cells": 96,
+        "volume": 2.129995057200764e-06,
+        "volume_fraction": 1.3319294820537366e-07,
+        "pressure_relative_L2_global_gauge_aligned": 19.61756628921773,
+        "error_energy_fraction": 1.9201689910864483e-06,
+        "maximum_absolute_error": 0.005500889936822229,
+        "maximum_error_over_rho_U2": 0.022003559747288917,
+        "maximum_cell": 6058,
+        "maximum_center": [
+          0.0011973733890297945,
+          -0.006125627308626595,
+          0.009167649130031652
+        ],
+        "maximum_cell_type": "wedge",
+        "maximum_cell_volume": 5.0931841274747506e-08,
+        "maximum_reference_pressure_global_aligned": -8.031256967421437e-06,
+        "maximum_computed_pressure_global_aligned": 0.005492858679854808,
+        "rms_error_over_rho_U2": 0.007127055752684813,
+        "cells_above_3percent_rho_U2": 0,
+        "region_volume_fraction_above_3percent_rho_U2": 0.0
+      },
+      "wall_adjacent_wedge": {
+        "cells": 32,
+        "volume": 5.172422828389848e-07,
+        "volume_fraction": 3.2344218055764525e-08,
+        "pressure_relative_L2_global_gauge_aligned": 23.123588605282556,
+        "error_energy_fraction": 3.5399372580652764e-07,
+        "maximum_absolute_error": 0.0039545917955801655,
+        "maximum_error_over_rho_U2": 0.015818367182320662,
+        "maximum_cell": 5996,
+        "maximum_center": [
+          0.0025772258882222495,
+          -0.010317054793317945,
+          0.0020521897933245214
+        ],
+        "maximum_cell_type": "wedge",
+        "maximum_cell_volume": 2.967089236033881e-08,
+        "maximum_reference_pressure_global_aligned": -8.728050138145563e-06,
+        "maximum_computed_pressure_global_aligned": -0.003963319845718311,
+        "rms_error_over_rho_U2": 0.0062098412859739795,
+        "cells_above_3percent_rho_U2": 0,
+        "region_volume_fraction_above_3percent_rho_U2": 0.0
+      }
+    },
+    "top10_hotspots": [
+      {
+        "cell": 4904,
+        "type": "tetra",
+        "center": [
+          0.9497885350463279,
+          -0.018549798441975664,
+          0.020200915392216818
+        ],
+        "volume": 2.7357083403205313e-06,
+        "signed_error_global_gauge": -0.036730935955381024,
+        "error_over_rho_U2": -0.1469237438215241,
+        "wall_adjacent": false,
+        "face_nonorthogonality_max": 55.36852795510817,
+        "neighbor_cells": [
+          4279,
+          4839,
+          4845,
+          4903
+        ],
+        "neighbor_errors_global_gauge": [
+          -0.006477715654930957,
+          -0.007988847762086054,
+          -0.007753263738545825,
+          -0.03211416150728427
+        ],
+        "neighbor_volumes": [
+          1.2662376463423323e-07,
+          3.092148770213828e-06,
+          2.206627935665586e-06,
+          1.5789496642006206e-06
+        ],
+        "cell_neighbor_volume_ratio_max": 21.60501504771184
+      },
+      {
+        "cell": 4903,
+        "type": "tetra",
+        "center": [
+          0.9448845784192751,
+          -0.02058574375728824,
+          0.0182352753814097
+        ],
+        "volume": 1.5789496642006206e-06,
+        "signed_error_global_gauge": -0.03211416150728427,
+        "error_over_rho_U2": -0.1284566460291371,
+        "wall_adjacent": false,
+        "face_nonorthogonality_max": 71.07310543575004,
+        "neighbor_cells": [
+          2979,
+          4843,
+          4904,
+          5946
+        ],
+        "neighbor_errors_global_gauge": [
+          -0.023305327060133916,
+          -0.00122045369711437,
+          -0.036730935955381024,
+          -0.008781356143871096
+        ],
+        "neighbor_volumes": [
+          1.061870962986636e-06,
+          8.204461894365064e-07,
+          2.7357083403205313e-06,
+          1.4065991106399838e-07
+        ],
+        "cell_neighbor_volume_ratio_max": 11.225299747859356
+      },
+      {
+        "cell": 2979,
+        "type": "tetra",
+        "center": [
+          0.9520441259819423,
+          -0.021357069411385512,
+          0.015275607116573097
+        ],
+        "volume": 1.061870962986636e-06,
+        "signed_error_global_gauge": -0.023305327060133916,
+        "error_over_rho_U2": -0.09322130824053566,
+        "wall_adjacent": false,
+        "face_nonorthogonality_max": 71.07310543575004,
+        "neighbor_cells": [
+          3067,
+          3367,
+          4903,
+          5947
+        ],
+        "neighbor_errors_global_gauge": [
+          -0.007898656836710162,
+          0.0024831846145306775,
+          -0.03211416150728427,
+          9.300532757203325e-05
+        ],
+        "neighbor_volumes": [
+          1.4598812119847683e-06,
+          1.7434114896224474e-06,
+          1.5789496642006206e-06,
+          1.4065991106399838e-07
+        ],
+        "cell_neighbor_volume_ratio_max": 7.549208263778148
+      },
+      {
+        "cell": 3796,
+        "type": "tetra",
+        "center": [
+          1.0047078423991442,
+          -0.008741312229373912,
+          -0.021710750831820374
+        ],
+        "volume": 5.932222822089631e-07,
+        "signed_error_global_gauge": -0.0175180077777482,
+        "error_over_rho_U2": -0.0700720311109928,
+        "wall_adjacent": false,
+        "face_nonorthogonality_max": 36.47170984468365,
+        "neighbor_cells": [
+          1081,
+          3881,
+          3985,
+          4340
+        ],
+        "neighbor_errors_global_gauge": [
+          -0.0007637585906930084,
+          -0.012461978512051265,
+          0.004425703315273905,
+          0.004193397840426928
+        ],
+        "neighbor_volumes": [
+          1.4694816418410797e-07,
+          6.441458365912862e-07,
+          9.200320586445835e-06,
+          2.956433170248657e-07
+        ],
+        "cell_neighbor_volume_ratio_max": 15.509061042324458
+      },
+      {
+        "cell": 1424,
+        "type": "tetra",
+        "center": [
+          0.9267304583240477,
+          -0.027844834267253964,
+          0.025888154793251968
+        ],
+        "volume": 4.10685903875056e-06,
+        "signed_error_global_gauge": 0.016089971491894867,
+        "error_over_rho_U2": 0.06435988596757947,
+        "wall_adjacent": false,
+        "face_nonorthogonality_max": 52.32059314711323,
+        "neighbor_cells": [
+          3252,
+          4251,
+          4419,
+          4843
+        ],
+        "neighbor_errors_global_gauge": [
+          0.008551286615598949,
+          0.007040977749108926,
+          -0.0014161728713929357,
+          -0.00122045369711437
+        ],
+        "neighbor_volumes": [
+          2.264891051673638e-06,
+          1.4277099682966668e-06,
+          4.983727616126243e-06,
+          8.204461894365064e-07
+        ],
+        "cell_neighbor_volume_ratio_max": 5.00564094468061
+      },
+      {
+        "cell": 1782,
+        "type": "tetra",
+        "center": [
+          0.9520441259819424,
+          -0.02305013585048164,
+          0.012040409545800115
+        ],
+        "volume": 9.617011304630269e-07,
+        "signed_error_global_gauge": 0.014860805018855816,
+        "error_over_rho_U2": 0.05944322007542326,
+        "wall_adjacent": false,
+        "face_nonorthogonality_max": 71.3824154061667,
+        "neighbor_cells": [
+          2342,
+          2415,
+          3367,
+          5948
+        ],
+        "neighbor_errors_global_gauge": [
+          0.012275095429268218,
+          0.0023112781234620114,
+          0.0024831846145306775,
+          0.002810963860384645
+        ],
+        "neighbor_volumes": [
+          1.5789496642006212e-06,
+          1.3803283935223766e-06,
+          1.7434114896224474e-06,
+          1.4065991106399864e-07
+        ],
+        "cell_neighbor_volume_ratio_max": 6.837066248573581
+      },
+      {
+        "cell": 3881,
+        "type": "tetra",
+        "center": [
+          1.0047078423991442,
+          -0.007649473090938247,
+          -0.022163005410890183
+        ],
+        "volume": 6.441458365912862e-07,
+        "signed_error_global_gauge": -0.012461978512051265,
+        "error_over_rho_U2": -0.04984791404820506,
+        "wall_adjacent": false,
+        "face_nonorthogonality_max": 25.81129027147001,
+        "neighbor_cells": [
+          671,
+          2762,
+          3042,
+          3796
+        ],
+        "neighbor_errors_global_gauge": [
+          -0.002061515431641521,
+          -0.011965219103534057,
+          0.010101122565997638,
+          -0.0175180077777482
+        ],
+        "neighbor_volumes": [
+          1.4118666461455452e-07,
+          5.83094861506478e-07,
+          3.2395610433601744e-07,
+          5.932222822089631e-07
+        ],
+        "cell_neighbor_volume_ratio_max": 4.562370237655456
+      },
+      {
+        "cell": 2342,
+        "type": "tetra",
+        "center": [
+          0.9448845784192751,
+          -0.024923660669594963,
+          0.011041779351041196
+        ],
+        "volume": 1.5789496642006212e-06,
+        "signed_error_global_gauge": 0.012275095429268218,
+        "error_over_rho_U2": 0.04910038171707287,
+        "wall_adjacent": false,
+        "face_nonorthogonality_max": 71.3824154061667,
+        "neighbor_cells": [
+          1782,
+          2122,
+          4901,
+          5948
+        ],
+        "neighbor_errors_global_gauge": [
+          0.014860805018855816,
+          -0.005890680589116563,
+          -0.004540913658757583,
+          0.002810963860384645
+        ],
+        "neighbor_volumes": [
+          9.617011304630269e-07,
+          2.0568822426615936e-06,
+          3.2655554501972944e-06,
+          1.4065991106399864e-07
+        ],
+        "cell_neighbor_volume_ratio_max": 11.22529974785934
+      },
+      {
+        "cell": 2762,
+        "type": "tetra",
+        "center": [
+          1.0047078423991442,
+          -0.006467674923521514,
+          -0.022163005410890183
+        ],
+        "volume": 5.83094861506478e-07,
+        "signed_error_global_gauge": -0.011965219103534057,
+        "error_over_rho_U2": -0.04786087641413623,
+        "wall_adjacent": false,
+        "face_nonorthogonality_max": 28.504862128131617,
+        "neighbor_cells": [
+          7,
+          2012,
+          3881,
+          4120
+        ],
+        "neighbor_errors_global_gauge": [
+          -0.003671688877994582,
+          -0.0014836783512379177,
+          -0.012461978512051265,
+          -0.0021491205703322337
+        ],
+        "neighbor_volumes": [
+          1.2477930198723415e-07,
+          2.956433170248661e-07,
+          6.441458365912862e-07,
+          1.2849482535461456e-05
+        ],
+        "cell_neighbor_volume_ratio_max": 22.036693141599056
+      },
+      {
+        "cell": 3042,
+        "type": "tetra",
+        "center": [
+          0.9913475985370033,
+          -0.003909029907161952,
+          -0.017367317548300752
+        ],
+        "volume": 3.2395610433601744e-07,
+        "signed_error_global_gauge": 0.010101122565997638,
+        "error_over_rho_U2": 0.04040449026399055,
+        "wall_adjacent": false,
+        "face_nonorthogonality_max": 73.20475594510096,
+        "neighbor_cells": [
+          3041,
+          3881,
+          4339,
+          5984
+        ],
+        "neighbor_errors_global_gauge": [
+          0.00536133112909604,
+          -0.012461978512051265,
+          0.006521738576525392,
+          0.0015412374811704537
+        ],
+        "neighbor_volumes": [
+          4.793384210677792e-07,
+          6.441458365912862e-07,
+          4.3744568750262105e-07,
+          4.695160361711087e-08
+        ],
+        "cell_neighbor_volume_ratio_max": 6.8997878534218176
+      }
+    ],
+    "scope": "raw field/local spatial accuracy audit, no new solve or changed acceptance threshold",
+    "fixed_spatial_windows_L": {
+      "near_body_fixed_window": {
+        "x_min": -0.025,
+        "x_max": 1.025,
+        "radius_max": 0.08
+      },
+      "near_tail_fixed_window": {
+        "x_min": 0.9,
+        "x_max": 1.025,
+        "radius_max": 0.025
+      }
+    },
+    "window_selection": "cell centroids inside fixed cylinders; no partial-cell clipping, hull-distance estimate, or regional gauge fit",
+    "fixed_scale_diagnostic": "RMS and maximum error divided by rho*U^2=0.25; not reference-relative L2, physical Cp, or a replacement acceptance gate"
+  },
+  "tail-transition-quadratic": {
+    "mesh_sha256": "afebe7d4b6f96eae92810debfa485f591d58323c477b28cda83a60df59ac70e1",
+    "fields_sha256": "a5524548e4ce43359630ab6699e4bc3f7cbcc845c5f2d9f2b3d71dcbc2444563",
+    "cells": 9068,
+    "faces": 23241,
+    "gauge_definition": "remove one actual and one reference volume-weighted mean over ALL cells, no regional gauge removal",
+    "actual_removed_global_mean": -0.00032517598503525283,
+    "reference_removed_global_mean": 6.853805669460352e-06,
+    "pressure_fixed_scale_rho_U2": 0.25,
+    "regions": {
+      "all": {
+        "cells": 9068,
+        "volume": 15.991800511213771,
+        "volume_fraction": 1.0,
+        "pressure_relative_L2_global_gauge_aligned": 0.007465060557566647,
+        "error_energy_fraction": 1.0,
+        "maximum_absolute_error": 0.006564337904437483,
+        "maximum_error_over_rho_U2": 0.026257351617749933,
+        "maximum_cell": 8991,
+        "maximum_center": [
+          0.9972653648000261,
+          0.0005684871903638458,
+          0.002857978102883826
+        ],
+        "maximum_cell_type": "wedge",
+        "maximum_cell_volume": 2.6567503170977588e-09,
+        "maximum_reference_pressure_global_aligned": 0.00031461611065639923,
+        "maximum_computed_pressure_global_aligned": 0.006878954015093882,
+        "rms_error_over_rho_U2": 0.0018453011132429592,
+        "cells_above_3percent_rho_U2": 0,
+        "region_volume_fraction_above_3percent_rho_U2": 0.0
+      },
+      "wall_adjacent": {
+        "cells": 384,
+        "volume": 0.0001849047257658794,
+        "volume_fraction": 1.1562470757199634e-05,
+        "pressure_relative_L2_global_gauge_aligned": 0.11508458772747204,
+        "error_energy_fraction": 3.823476389893053e-06,
+        "maximum_absolute_error": 0.006564337904437483,
+        "maximum_error_over_rho_U2": 0.026257351617749933,
+        "maximum_cell": 8991,
+        "maximum_center": [
+          0.9972653648000261,
+          0.0005684871903638458,
+          0.002857978102883826
+        ],
+        "maximum_cell_type": "wedge",
+        "maximum_cell_volume": 2.6567503170977588e-09,
+        "maximum_reference_pressure_global_aligned": 0.00031461611065639923,
+        "maximum_computed_pressure_global_aligned": 0.006878954015093882,
+        "rms_error_over_rho_U2": 0.0010611361901398106,
+        "cells_above_3percent_rho_U2": 0,
+        "region_volume_fraction_above_3percent_rho_U2": 0.0
+      },
+      "nonwall": {
+        "cells": 8684,
+        "volume": 15.991615606488006,
+        "volume_fraction": 0.9999884375292428,
+        "pressure_relative_L2_global_gauge_aligned": 0.00746504634635888,
+        "error_energy_fraction": 0.9999961765236102,
+        "maximum_absolute_error": 0.006116307674061739,
+        "maximum_error_over_rho_U2": 0.024465230696246957,
+        "maximum_cell": 9024,
+        "maximum_center": [
+          0.9976702107312542,
+          -0.0006485659489294888,
+          0.003260561208301296
+        ],
+        "maximum_cell_type": "wedge",
+        "maximum_cell_volume": 4.240253535747839e-09,
+        "maximum_reference_pressure_global_aligned": 0.00036002307689328417,
+        "maximum_computed_pressure_global_aligned": 0.006476330750955024,
+        "rms_error_over_rho_U2": 0.0018453082536991662,
+        "cells_above_3percent_rho_U2": 0,
+        "region_volume_fraction_above_3percent_rho_U2": 0.0
+      },
+      "fore_x_less_0233": {
+        "cells": 1958,
+        "volume": 4.960078179326267,
+        "volume_fraction": 0.3101638352634627,
+        "pressure_relative_L2_global_gauge_aligned": 0.009837164755511408,
+        "error_energy_fraction": 0.1326454815997739,
+        "maximum_absolute_error": 0.0009139982384835169,
+        "maximum_error_over_rho_U2": 0.0036559929539340674,
+        "maximum_cell": 3175,
+        "maximum_center": [
+          -0.9186224219100395,
+          -0.828720255115973,
+          0.15441021581934153
+        ],
+        "maximum_cell_type": "tetra",
+        "maximum_cell_volume": 0.00740192269450926,
+        "maximum_reference_pressure_global_aligned": -0.013532768457094734,
+        "maximum_computed_pressure_global_aligned": -0.014446766695578251,
+        "rms_error_over_rho_U2": 0.0012067516327121837,
+        "cells_above_3percent_rho_U2": 0,
+        "region_volume_fraction_above_3percent_rho_U2": 0.0
+      },
+      "midbody": {
+        "cells": 1598,
+        "volume": 2.0215711734597885,
+        "volume_fraction": 0.12641298095497266,
+        "pressure_relative_L2_global_gauge_aligned": 0.009199235240101484,
+        "error_energy_fraction": 0.04646667912425416,
+        "maximum_absolute_error": 0.0007701355069790888,
+        "maximum_error_over_rho_U2": 0.0030805420279163553,
+        "maximum_cell": 2369,
+        "maximum_center": [
+          0.5975036727529655,
+          0.7010581779999427,
+          0.9071854364562211
+        ],
+        "maximum_cell_type": "tetra",
+        "maximum_cell_volume": 0.008573842119474935,
+        "maximum_reference_pressure_global_aligned": 0.05311884902613358,
+        "maximum_computed_pressure_global_aligned": 0.053888984533112666,
+        "rms_error_over_rho_U2": 0.0011187736400217344,
+        "cells_above_3percent_rho_U2": 0,
+        "region_volume_fraction_above_3percent_rho_U2": 0.0
+      },
+      "aftbody": {
+        "cells": 5512,
+        "volume": 9.010151158427718,
+        "volume_fraction": 0.5634231837815648,
+        "pressure_relative_L2_global_gauge_aligned": 0.0071572479455911915,
+        "error_energy_fraction": 0.8208878392759718,
+        "maximum_absolute_error": 0.006564337904437483,
+        "maximum_error_over_rho_U2": 0.026257351617749933,
+        "maximum_cell": 8991,
+        "maximum_center": [
+          0.9972653648000261,
+          0.0005684871903638458,
+          0.002857978102883826
+        ],
+        "maximum_cell_type": "wedge",
+        "maximum_cell_volume": 2.6567503170977588e-09,
+        "maximum_reference_pressure_global_aligned": 0.00031461611065639923,
+        "maximum_computed_pressure_global_aligned": 0.006878954015093882,
+        "rms_error_over_rho_U2": 0.002227367087515279,
+        "cells_above_3percent_rho_U2": 0,
+        "region_volume_fraction_above_3percent_rho_U2": 0.0
+      },
+      "tail_x_greater_09": {
+        "cells": 4902,
+        "volume": 8.425486813624143,
+        "volume_fraction": 0.5268629262674971,
+        "pressure_relative_L2_global_gauge_aligned": 0.0071755122912370625,
+        "error_energy_fraction": 0.8036416435634722,
+        "maximum_absolute_error": 0.006564337904437483,
+        "maximum_error_over_rho_U2": 0.026257351617749933,
+        "maximum_cell": 8991,
+        "maximum_center": [
+          0.9972653648000261,
+          0.0005684871903638458,
+          0.002857978102883826
+        ],
+        "maximum_cell_type": "wedge",
+        "maximum_cell_volume": 2.6567503170977588e-09,
+        "maximum_reference_pressure_global_aligned": 0.00031461611065639923,
+        "maximum_computed_pressure_global_aligned": 0.006878954015093882,
+        "rms_error_over_rho_U2": 0.0022790278927962925,
+        "cells_above_3percent_rho_U2": 0,
+        "region_volume_fraction_above_3percent_rho_U2": 0.0
+      },
+      "near_body_fixed_window": {
+        "cells": 4313,
+        "volume": 0.009482228018769464,
+        "volume_fraction": 0.0005929431155747807,
+        "pressure_relative_L2_global_gauge_aligned": 0.04940340077922968,
+        "error_energy_fraction": 7.752302123828885e-05,
+        "maximum_absolute_error": 0.006564337904437483,
+        "maximum_error_over_rho_U2": 0.026257351617749933,
+        "maximum_cell": 8991,
+        "maximum_center": [
+          0.9972653648000261,
+          0.0005684871903638458,
+          0.002857978102883826
+        ],
+        "maximum_cell_type": "wedge",
+        "maximum_cell_volume": 2.6567503170977588e-09,
+        "maximum_reference_pressure_global_aligned": 0.00031461611065639923,
+        "maximum_computed_pressure_global_aligned": 0.006878954015093882,
+        "rms_error_over_rho_U2": 0.0006672307809323236,
+        "cells_above_3percent_rho_U2": 0,
+        "region_volume_fraction_above_3percent_rho_U2": 0.0
+      },
+      "near_tail_fixed_window": {
+        "cells": 2092,
+        "volume": 0.00017376923650499934,
+        "volume_fraction": 1.0866145834119732e-05,
+        "pressure_relative_L2_global_gauge_aligned": 0.2787082988605204,
+        "error_energy_fraction": 9.197095888529146e-06,
+        "maximum_absolute_error": 0.006564337904437483,
+        "maximum_error_over_rho_U2": 0.026257351617749933,
+        "maximum_cell": 8991,
+        "maximum_center": [
+          0.9972653648000261,
+          0.0005684871903638458,
+          0.002857978102883826
+        ],
+        "maximum_cell_type": "wedge",
+        "maximum_cell_volume": 2.6567503170977588e-09,
+        "maximum_reference_pressure_global_aligned": 0.00031461611065639923,
+        "maximum_computed_pressure_global_aligned": 0.006878954015093882,
+        "rms_error_over_rho_U2": 0.0016976761062751913,
+        "cells_above_3percent_rho_U2": 0,
+        "region_volume_fraction_above_3percent_rho_U2": 0.0
+      },
+      "hexahedron": {
+        "cells": 1056,
+        "volume": 0.000715263471567441,
+        "volume_fraction": 4.472688807404044e-05,
+        "pressure_relative_L2_global_gauge_aligned": 0.10820029914943999,
+        "error_energy_fraction": 1.3498858486294589e-05,
+        "maximum_absolute_error": 0.0017699214942940192,
+        "maximum_error_over_rho_U2": 0.007079685977176077,
+        "maximum_cell": 8263,
+        "maximum_center": [
+          0.9862426258611525,
+          -0.001123658134589467,
+          -0.0056490109156700765
+        ],
+        "maximum_cell_type": "hexahedron",
+        "maximum_cell_volume": 2.3185947488565824e-08,
+        "maximum_reference_pressure_global_aligned": -0.0006363998659662239,
+        "maximum_computed_pressure_global_aligned": -0.002406321360260243,
+        "rms_error_over_rho_U2": 0.0010137513011939136,
+        "cells_above_3percent_rho_U2": 0,
+        "region_volume_fraction_above_3percent_rho_U2": 0.0
+      },
+      "wall_adjacent_hexahedron": {
+        "cells": 352,
+        "volume": 0.0001843874834830404,
+        "volume_fraction": 1.153012653914387e-05,
+        "pressure_relative_L2_global_gauge_aligned": 0.11099000041685396,
+        "error_energy_fraction": 3.556237564351631e-06,
+        "maximum_absolute_error": 0.0017699214942940192,
+        "maximum_error_over_rho_U2": 0.007079685977176077,
+        "maximum_cell": 8263,
+        "maximum_center": [
+          0.9862426258611525,
+          -0.001123658134589467,
+          -0.0056490109156700765
+        ],
+        "maximum_cell_type": "hexahedron",
+        "maximum_cell_volume": 2.3185947488565824e-08,
+        "maximum_reference_pressure_global_aligned": -0.0006363998659662239,
+        "maximum_computed_pressure_global_aligned": -0.002406321360260243,
+        "rms_error_over_rho_U2": 0.0010248152738453625,
+        "cells_above_3percent_rho_U2": 0,
+        "region_volume_fraction_above_3percent_rho_U2": 0.0
+      },
+      "tetra": {
+        "cells": 7916,
+        "volume": 15.991083117747149,
+        "volume_fraction": 0.9999551399189779,
+        "pressure_relative_L2_global_gauge_aligned": 0.007465007325806763,
+        "error_energy_fraction": 0.9999856742216664,
+        "maximum_absolute_error": 0.0019620338612157677,
+        "maximum_error_over_rho_U2": 0.00784813544486307,
+        "maximum_cell": 7710,
+        "maximum_center": [
+          0.9988116121002695,
+          0.0016418311599462993,
+          0.005260220774897907
+        ],
+        "maximum_cell_type": "tetra",
+        "maximum_cell_volume": 4.7618567223149065e-09,
+        "maximum_reference_pressure_global_aligned": 0.0005855858369323186,
+        "maximum_computed_pressure_global_aligned": 0.0025476196981480863,
+        "rms_error_over_rho_U2": 0.001845329286783135,
+        "cells_above_3percent_rho_U2": 0,
+        "region_volume_fraction_above_3percent_rho_U2": 0.0
+      },
+      "wedge": {
+        "cells": 96,
+        "volume": 2.129995057200764e-06,
+        "volume_fraction": 1.3319294820537366e-07,
+        "pressure_relative_L2_global_gauge_aligned": 12.687425423378048,
+        "error_energy_fraction": 8.26919846922335e-07,
+        "maximum_absolute_error": 0.006564337904437483,
+        "maximum_error_over_rho_U2": 0.026257351617749933,
+        "maximum_cell": 8991,
+        "maximum_center": [
+          0.9972653648000261,
+          0.0005684871903638458,
+          0.002857978102883826
+        ],
+        "maximum_cell_type": "wedge",
+        "maximum_cell_volume": 2.6567503170977588e-09,
+        "maximum_reference_pressure_global_aligned": 0.00031461611065639923,
+        "maximum_computed_pressure_global_aligned": 0.006878954015093882,
+        "rms_error_over_rho_U2": 0.004597887443314721,
+        "cells_above_3percent_rho_U2": 0,
+        "region_volume_fraction_above_3percent_rho_U2": 0.0
+      },
+      "wall_adjacent_wedge": {
+        "cells": 32,
+        "volume": 5.172422828389848e-07,
+        "volume_fraction": 3.2344218055764525e-08,
+        "pressure_relative_L2_global_gauge_aligned": 19.841495894478022,
+        "error_energy_fraction": 2.672388255414211e-07,
+        "maximum_absolute_error": 0.006564337904437483,
+        "maximum_error_over_rho_U2": 0.026257351617749933,
+        "maximum_cell": 8991,
+        "maximum_center": [
+          0.9972653648000261,
+          0.0005684871903638458,
+          0.002857978102883826
+        ],
+        "maximum_cell_type": "wedge",
+        "maximum_cell_volume": 2.6567503170977588e-09,
+        "maximum_reference_pressure_global_aligned": 0.00031461611065639923,
+        "maximum_computed_pressure_global_aligned": 0.006878954015093882,
+        "rms_error_over_rho_U2": 0.005304185364239781,
+        "cells_above_3percent_rho_U2": 0,
+        "region_volume_fraction_above_3percent_rho_U2": 0.0
+      }
+    },
+    "top10_hotspots": [
+      {
+        "cell": 8991,
+        "type": "wedge",
+        "center": [
+          0.9972653648000261,
+          0.0005684871903638458,
+          0.002857978102883826
+        ],
+        "volume": 2.6567503170977588e-09,
+        "signed_error_global_gauge": 0.006564337904437483,
+        "error_over_rho_U2": 0.026257351617749933,
+        "wall_adjacent": true,
+        "face_nonorthogonality_max": 18.142343321896362,
+        "neighbor_cells": [
+          8255,
+          8990,
+          8992,
+          9023
+        ],
+        "neighbor_errors_global_gauge": [
+          0.0016684270851910397,
+          0.005481399246669783,
+          0.006239077520745788,
+          0.005927777386957225
+        ],
+        "neighbor_volumes": [
+          2.3185947488565808e-08,
+          2.656750317097758e-09,
+          2.6567503170977575e-09,
+          4.2402535357478385e-09
+        ],
+        "cell_neighbor_volume_ratio_max": 8.727183484029542
+      },
+      {
+        "cell": 8992,
+        "type": "wedge",
+        "center": [
+          0.9972653648000265,
+          -0.0005684871903638457,
+          0.0028579781028838266
+        ],
+        "volume": 2.6567503170977575e-09,
+        "signed_error_global_gauge": 0.006239077520745788,
+        "error_over_rho_U2": 0.02495631008298315,
+        "wall_adjacent": true,
+        "face_nonorthogonality_max": 18.142343321834197,
+        "neighbor_cells": [
+          8256,
+          8991,
+          8993,
+          9024
+        ],
+        "neighbor_errors_global_gauge": [
+          0.0017133262597351065,
+          0.006564337904437483,
+          0.004935995433689834,
+          0.006116307674061739
+        ],
+        "neighbor_volumes": [
+          2.3185947488565794e-08,
+          2.6567503170977588e-09,
+          2.6567503170977575e-09,
+          4.240253535747839e-09
+        ],
+        "cell_neighbor_volume_ratio_max": 8.72718348402954
+      },
+      {
+        "cell": 9024,
+        "type": "wedge",
+        "center": [
+          0.9976702107312542,
+          -0.0006485659489294888,
+          0.003260561208301296
+        ],
+        "volume": 4.240253535747839e-09,
+        "signed_error_global_gauge": 0.006116307674061739,
+        "error_over_rho_U2": 0.024465230696246957,
+        "wall_adjacent": false,
+        "face_nonorthogonality_max": 8.139021157465166,
+        "neighbor_cells": [
+          8608,
+          8992,
+          9023,
+          9025,
+          9056
+        ],
+        "neighbor_errors_global_gauge": [
+          0.0014926261514553027,
+          0.006239077520745788,
+          0.005927777386957225,
+          0.005074606549293027,
+          0.004203319368681436
+        ],
+        "neighbor_volumes": [
+          3.2733701388030446e-08,
+          2.6567503170977575e-09,
+          4.2402535357478385e-09,
+          4.240253535747838e-09,
+          6.932360429767405e-09
+        ],
+        "cell_neighbor_volume_ratio_max": 7.719750979998254
+      },
+      {
+        "cell": 9023,
+        "type": "wedge",
+        "center": [
+          0.9976702107312544,
+          0.0006485659489294893,
+          0.0032605612083012963
+        ],
+        "volume": 4.2402535357478385e-09,
+        "signed_error_global_gauge": 0.005927777386957225,
+        "error_over_rho_U2": 0.0237111095478289,
+        "wall_adjacent": false,
+        "face_nonorthogonality_max": 8.139021157465391,
+        "neighbor_cells": [
+          8607,
+          8991,
+          9022,
+          9024,
+          9055
+        ],
+        "neighbor_errors_global_gauge": [
+          0.001479438484792552,
+          0.006564337904437483,
+          0.004762118105747022,
+          0.006116307674061739,
+          0.004063394272860509
+        ],
+        "neighbor_volumes": [
+          3.273370138803044e-08,
+          2.6567503170977588e-09,
+          4.240253535747836e-09,
+          4.240253535747839e-09,
+          6.932360429767404e-09
+        ],
+        "cell_neighbor_volume_ratio_max": 7.719750979998254
+      },
+      {
+        "cell": 8990,
+        "type": "wedge",
+        "center": [
+          0.9972653648000261,
+          0.0016189145497078554,
+          0.002422876844355781
+        ],
+        "volume": 2.656750317097758e-09,
+        "signed_error_global_gauge": 0.005481399246669783,
+        "error_over_rho_U2": 0.021925596986679133,
+        "wall_adjacent": true,
+        "face_nonorthogonality_max": 18.1423433218964,
+        "neighbor_cells": [
+          8254,
+          8989,
+          8991,
+          9022
+        ],
+        "neighbor_errors_global_gauge": [
+          0.001364380829508959,
+          0.004021881552119086,
+          0.006564337904437483,
+          0.004762118105747022
+        ],
+        "neighbor_volumes": [
+          2.3185947488565804e-08,
+          2.656750317097758e-09,
+          2.6567503170977588e-09,
+          4.240253535747836e-09
+        ],
+        "cell_neighbor_volume_ratio_max": 8.727183484029544
+      },
+      {
+        "cell": 8998,
+        "type": "wedge",
+        "center": [
+          0.9972653648000264,
+          -0.0016189145497078562,
+          -0.0024228768443557806
+        ],
+        "volume": 2.6567503170977547e-09,
+        "signed_error_global_gauge": -0.0054680557178666545,
+        "error_over_rho_U2": -0.021872222871466618,
+        "wall_adjacent": true,
+        "face_nonorthogonality_max": 18.142343321834154,
+        "neighbor_cells": [
+          8262,
+          8997,
+          8999,
+          9030
+        ],
+        "neighbor_errors_global_gauge": [
+          -0.0015191210065431118,
+          -0.004235083093528151,
+          -0.005303068934175409,
+          -0.004592538901187608
+        ],
+        "neighbor_volumes": [
+          2.3185947488565778e-08,
+          2.656750317097759e-09,
+          2.6567503170977604e-09,
+          4.240253535747833e-09
+        ],
+        "cell_neighbor_volume_ratio_max": 8.727183484029544
+      },
+      {
+        "cell": 8999,
+        "type": "wedge",
+        "center": [
+          0.9972653648000265,
+          -0.0005684871903638469,
+          -0.0028579781028838266
+        ],
+        "volume": 2.6567503170977604e-09,
+        "signed_error_global_gauge": -0.005303068934175409,
+        "error_over_rho_U2": -0.021212275736701636,
+        "wall_adjacent": true,
+        "face_nonorthogonality_max": 18.142343321834176,
+        "neighbor_cells": [
+          8263,
+          8998,
+          9000,
+          9031
+        ],
+        "neighbor_errors_global_gauge": [
+          -0.0017699214942940192,
+          -0.0054680557178666545,
+          -0.004683173961061402,
+          -0.004549318942806452
+        ],
+        "neighbor_volumes": [
+          2.3185947488565824e-08,
+          2.6567503170977547e-09,
+          2.656750317097761e-09,
+          4.2402535357478435e-09
+        ],
+        "cell_neighbor_volume_ratio_max": 8.727183484029542
+      },
+      {
+        "cell": 9025,
+        "type": "wedge",
+        "center": [
+          0.9976702107312542,
+          -0.0018469595603289198,
+          0.0027641703213983795
+        ],
+        "volume": 4.240253535747838e-09,
+        "signed_error_global_gauge": 0.005074606549293027,
+        "error_over_rho_U2": 0.020298426197172106,
+        "wall_adjacent": false,
+        "face_nonorthogonality_max": 8.139021157465482,
+        "neighbor_cells": [
+          8609,
+          8993,
+          9024,
+          9026,
+          9057
+        ],
+        "neighbor_errors_global_gauge": [
+          0.0012091659555743353,
+          0.004935995433689834,
+          0.006116307674061739,
+          0.0037862128479032534,
+          0.0036512307528860284
+        ],
+        "neighbor_volumes": [
+          3.273370138803043e-08,
+          2.6567503170977575e-09,
+          4.240253535747839e-09,
+          4.240253535747835e-09,
+          6.9323604297674e-09
+        ],
+        "cell_neighbor_volume_ratio_max": 7.719750979998254
+      },
+      {
+        "cell": 8993,
+        "type": "wedge",
+        "center": [
+          0.9972653648000264,
+          -0.0016189145497078556,
+          0.0024228768443557815
+        ],
+        "volume": 2.6567503170977575e-09,
+        "signed_error_global_gauge": 0.004935995433689834,
+        "error_over_rho_U2": 0.019743981734759337,
+        "wall_adjacent": true,
+        "face_nonorthogonality_max": 18.142343321854995,
+        "neighbor_cells": [
+          8257,
+          8992,
+          8994,
+          9025
+        ],
+        "neighbor_errors_global_gauge": [
+          0.0014028197500968636,
+          0.006239077520745788,
+          0.003765405173546529,
+          0.005074606549293027
+        ],
+        "neighbor_volumes": [
+          2.3185947488565794e-08,
+          2.6567503170977575e-09,
+          2.656750317097758e-09,
+          4.240253535747838e-09
+        ],
+        "cell_neighbor_volume_ratio_max": 8.72718348402954
+      },
+      {
+        "cell": 9022,
+        "type": "wedge",
+        "center": [
+          0.9976702107312542,
+          0.0018469595603289204,
+          0.00276417032139838
+        ],
+        "volume": 4.240253535747836e-09,
+        "signed_error_global_gauge": 0.004762118105747022,
+        "error_over_rho_U2": 0.01904847242298809,
+        "wall_adjacent": false,
+        "face_nonorthogonality_max": 8.139021157465482,
+        "neighbor_cells": [
+          8606,
+          8990,
+          9021,
+          9023,
+          9054
+        ],
+        "neighbor_errors_global_gauge": [
+          0.0012229036893477573,
+          0.005481399246669783,
+          0.003157950340645104,
+          0.005927777386957225,
+          0.003435320242801149
+        ],
+        "neighbor_volumes": [
+          3.273370138803043e-08,
+          2.656750317097758e-09,
+          4.240253535747838e-09,
+          4.2402535357478385e-09,
+          6.932360429767406e-09
+        ],
+        "cell_neighbor_volume_ratio_max": 7.719750979998257
+      }
+    ],
+    "scope": "raw field/local spatial accuracy audit, no new solve or changed acceptance threshold",
+    "fixed_spatial_windows_L": {
+      "near_body_fixed_window": {
+        "x_min": -0.025,
+        "x_max": 1.025,
+        "radius_max": 0.08
+      },
+      "near_tail_fixed_window": {
+        "x_min": 0.9,
+        "x_max": 1.025,
+        "radius_max": 0.025
+      }
+    },
+    "window_selection": "cell centroids inside fixed cylinders; no partial-cell clipping, hull-distance estimate, or regional gauge fit",
+    "fixed_scale_diagnostic": "RMS and maximum error divided by rho*U^2=0.25; not reference-relative L2, physical Cp, or a replacement acceptance gate"
+  }
+}

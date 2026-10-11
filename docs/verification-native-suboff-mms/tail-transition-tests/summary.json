@@ -1,0 +1,39 @@
+{
+  "total_passed": 41,
+  "runs": [
+    {
+      "tests": [
+        "tests/test_suboff_hybrid_mesh.py"
+      ],
+      "passed": 4,
+      "seconds": 21.4,
+      "log": "mesh.txt"
+    },
+    {
+      "tests": [
+        "tests/test_native_quadratic_flow3d.py",
+        "tests/test_native_quadratic_system3d.py",
+        "tests/test_native_collocated3d.py"
+      ],
+      "passed": 25,
+      "seconds": 26.31,
+      "log": "flow.txt"
+    },
+    {
+      "tests": [
+        "tests/test_native_field_transfer3d.py"
+      ],
+      "passed": 3,
+      "seconds": 1.81,
+      "evidence": "observed pytest terminal result, session 56194"
+    },
+    {
+      "tests": [
+        "tests/test_native_suboff_refinement_comparison.py"
+      ],
+      "passed": 9,
+      "seconds": 0.06,
+      "log": "comparison.txt"
+    }
+  ]
+}

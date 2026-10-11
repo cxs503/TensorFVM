@@ -1,5 +1,24 @@
 # Standalone FVM accuracy first
 
+## Latest controlled exterior-mesh experiment
+
+[The tail-transition report](../verification-native-suboff-mms/tail-transition-report.md)
+holds the structured layer and hull facets fixed. The new 9,068-cell full
+quadratic solve converges in 15 updates and passes 19/19 independent gates.
+Near-body pressure L2 falls from 33.49% to 4.94%, wall-owner L2 from 21.88%
+to 11.51%; local relative accuracy is still unqualified. The largest error is
+now in a wall-adjacent tail-cap wedge. Prioritize this geometry/reconstruction
+diagnostic alongside lower-memory solution methods before physical turbulence.
+
+The divergent low-order initialization is archived and unused. A new common
+local affine transfer supplies only a numerical initial guess from an audited
+run, followed by a complete target-mesh solve; it is not conservative overset
+coupling. COLAMD remains the default: an MMD_AT_PLUS_A frozen linear probe
+did not complete within 600 seconds. This round's [41 targeted checks](../verification-native-suboff-mms/tail-transition-tests/summary.json)
+pass; no larger-grid flow or GPU qualification is inferred.
+
+## Development priority
+
 Development priority is standalone FVM, followed by FVM–LBM. New LBM coupling
 work is deferred until the corresponding FVM case passes its own accuracy and
 conservation gates. Existing state conversion contracts are preparatory only.

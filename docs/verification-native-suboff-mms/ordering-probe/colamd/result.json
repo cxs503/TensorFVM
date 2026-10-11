@@ -1,0 +1,15 @@
+{
+  "linear_solve_passed": true,
+  "true_relative_residual": 5.548196856710343e-15,
+  "factor_seconds": 209.97098363563418,
+  "factor_nnz": 140074113,
+  "matrix_nnz": 6827758,
+  "change_from_converged_state_max": 4.912211758884011e-08,
+  "ordering": "COLAMD",
+  "scaled_matrix_and_rhs_sha256": "13b070f18a16dfe392601e6ca0eaa9dcf637676a0862142dcf7f802f3e434f6d",
+  "linear_seconds": 211.0059970105067,
+  "total_seconds": 232.11952299717814,
+  "peak_process_rss_GiB": 4.2011566162109375,
+  "flow_solved": false,
+  "production_enabled": false
+}

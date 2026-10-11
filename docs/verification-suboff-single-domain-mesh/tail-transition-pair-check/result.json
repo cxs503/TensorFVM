@@ -1,0 +1,26 @@
+{
+  "passed": true,
+  "pairs": [
+    {
+      "baseline": "docs/verification-suboff-single-domain-mesh/coarse",
+      "candidate": "docs/verification-suboff-single-domain-mesh/coarse-tail-transition",
+      "structured_cells": 1152,
+      "wall_triangles": 736,
+      "checks": {
+        "structured_cell_centers_and_volumes_bitwise_equal": true,
+        "wall_face_centers_and_area_vectors_bitwise_equal": true
+      }
+    },
+    {
+      "baseline": "docs/verification-suboff-hybrid-mesh/medium",
+      "candidate": "docs/verification-suboff-single-domain-mesh/medium-tail-transition",
+      "structured_cells": 9216,
+      "wall_triangles": 3008,
+      "checks": {
+        "structured_cell_centers_and_volumes_bitwise_equal": true,
+        "wall_face_centers_and_area_vectors_bitwise_equal": true
+      }
+    }
+  ],
+  "scope": "fixed structured volume and wall facet geometry; does not imply identical exterior stencils or improved flow accuracy"
+}

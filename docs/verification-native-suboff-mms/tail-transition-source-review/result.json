@@ -1,0 +1,64 @@
+{
+  "passed": true,
+  "checks": {
+    "pressure_face_means": {
+      "shape": [
+        17275
+      ],
+      "maximum_absolute_difference": 0.0,
+      "exactly_equal": true
+    },
+    "velocity_face_means": {
+      "shape": [
+        17275,
+        3
+      ],
+      "maximum_absolute_difference": 0.0,
+      "exactly_equal": true
+    },
+    "traction": {
+      "shape": [
+        17275,
+        3
+      ],
+      "maximum_absolute_difference": 0.0,
+      "exactly_equal": true
+    },
+    "current_equation_residual": {
+      "shape": [
+        24340
+      ],
+      "maximum_absolute_difference": 0.0,
+      "exactly_equal": true
+    },
+    "current_consistent_flux": {
+      "shape": [
+        17275
+      ],
+      "maximum_absolute_difference": 0.0,
+      "exactly_equal": true
+    },
+    "full_matrix_random_action": {
+      "shape": [
+        24340
+      ],
+      "maximum_absolute_difference": 0.0,
+      "exactly_equal": true
+    }
+  },
+  "input_sha256": {
+    "input.msh": "9fde17de9bdaec2b0aac49eab46fecf1b526b71232a9d71b0d0e177dae1c346a",
+    "fields.npz": "ddae6231f75755a6c55347ef79b367901336df1fffac57fad19f8f8a04523274"
+  },
+  "source_changes": {
+    "src/tensorfvm/native_collocated3d.py": {
+      "historical": "c769a160eef819873f43a4169328a783a12b022c626c07570577395f34d2d366",
+      "current": "7f4b6de699042d0c8841569ac6ddb3dd901dd8384dd2236590594bbcee28f402"
+    },
+    "src/tensorfvm/native_quadratic_flow3d.py": {
+      "historical": "3e4660be9252d992848e11a5f4a47801fbc7ecff65fae425d78d577f7ead7c5a",
+      "current": "7d8ca89500d1beaa6fef5ec0d53732a6fab153df86af8494fe636e58b425b9e6"
+    }
+  },
+  "scope": "Same 6,085-cell mesh, actual archived numerical fields and one seeded random full-matrix action. Not a general equivalence proof or new flow solve."
+}

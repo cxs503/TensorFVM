@@ -43,10 +43,11 @@ def test_assembled_full_equations_match_original_residual_with_frozen_flux(mixed
 
 
 @pytest.mark.parametrize('merged',[False,True])
-def test_assembled_nonlinear_mixed_mesh_converges_from_numerical_seed(merged):
+@pytest.mark.parametrize('ordering',['COLAMD','MMD_AT_PLUS_A'])
+def test_assembled_nonlinear_mixed_mesh_converges_from_numerical_seed(merged,ordering):
     m=merge_coplanar_faces(planar_mesh(True))[0] if merged else actual_mesh(True)
     exact=abc_fields(m.cell_centers);boundary=abc_fields(m.face_centers)
-    settings=NativeSteadySettings(viscosity=.1,nonlinear_tolerance=1e-9,linear_tolerance=1e-11,max_iterations=100,relaxation=.8)
+    settings=NativeSteadySettings(viscosity=.1,nonlinear_tolerance=1e-9,linear_tolerance=1e-11,max_iterations=100,relaxation=.8,lu_ordering=ordering)
     kwargs=dict(settings=settings,body_force=exact['acceleration'],boundary_flux=exact_boundary_flux(m,abc_fields),gauge_value=exact['pressure'][0])
     seed=NativeSteadySolver3D(m,m.neighbor<0,boundary['velocity'],**kwargs).solve();assert seed['converged']
     solver=NativeQuadraticSteadySolver3D(m,m.neighbor<0,boundary['velocity'],**kwargs,quadratic_linear_solver='assembled',boundary_velocity_means=exact_boundary_velocity_means(m,abc_fields),boundary_velocity_gradients=boundary['velocity_gradient'])

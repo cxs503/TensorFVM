@@ -1,0 +1,21 @@
+{
+  "kind": "transferred numerical initial guess",
+  "mesh_sha256": "afebe7d4b6f96eae92810debfa485f591d58323c477b28cda83a60df59ac70e1",
+  "source_inputs_sha256": {
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/quadratic-assembled-small/config.json": "4271dda40b2b304108fa46671a11d9ac76fe39d159efd33729671c91f47b7184",
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/quadratic-assembled-small/result.json": "99bd8e78745719a4d2ea604a951f307a426f827acaee1e422e72be1e42b88b30",
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/quadratic-assembled-small/input.msh": "9fde17de9bdaec2b0aac49eab46fecf1b526b71232a9d71b0d0e177dae1c346a",
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/quadratic-assembled-small/fields.npz": "ddae6231f75755a6c55347ef79b367901336df1fffac57fad19f8f8a04523274",
+    "/home/jsyc/tensor-suite-development/TensorFVM/docs/verification-native-suboff-mms/quadratic-assembled-small/audit/audit.json": "2fda9ea641bc4f6e45c2997540d57b756f4e6bf5faf3ae26ec705d7983989916"
+  },
+  "transfer": {
+    "exact_center_copies": 1397,
+    "affine_fits": 7671,
+    "source_cells": 6085,
+    "target_cells": 9068,
+    "neighbors": 16,
+    "conservative_transfer": false,
+    "flow_solved": false
+  },
+  "analytic_reference_used": false
+}

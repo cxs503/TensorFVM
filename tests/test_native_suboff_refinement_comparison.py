@@ -69,6 +69,22 @@ def test_changed_numerical_source_requires_an_explicit_compatibility_probe(tmp_p
         plot.collect(runs, audit)
 
 
+@pytest.mark.parametrize('ordering', ['COLAMD', 'MMD_AT_PLUS_A'])
+def test_implicit_historical_ordering_only_matches_explicit_colamd(tmp_path, ordering):
+    runs, audit = evidence(tmp_path)
+    path = runs[0] / 'config.json'
+    config = json.loads(path.read_text());config['settings']['lu_ordering'] = ordering
+    path.write_text(json.dumps(config))
+    ledger = runs[0] / 'audit/audit.json'
+    data = json.loads(ledger.read_text());data['producer_input_sha256'][str(path)] = plot.digest(path)
+    ledger.write_text(json.dumps(data))
+    if ordering == 'COLAMD':
+        assert len(plot.collect(runs, audit)[0]) == 2
+    else:
+        with pytest.raises(ValueError, match='settings and face policies'):
+            plot.collect(runs, audit)
+
+
 @pytest.mark.parametrize('target', ['fields.npz', 'result.json', 'audit/audit.json', 'local-result'])
 def test_mutated_or_failed_evidence_cannot_enter_comparison(tmp_path, target):
     runs, audit = evidence(tmp_path)
