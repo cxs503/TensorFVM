@@ -1,0 +1,6 @@
+{
+  "mesh": "docs/verification-suboff-single-domain-mesh/fine/suboff-hybrid.msh",
+  "mesh_sha256": "ee3a8a8d85c01b2279a6c784e899ebdfeb76657ab065d06adce75b8d421aac06",
+  "maximum_absolute_polynomial_derivative_tolerance": 1e-07,
+  "scope": "P2 gradient/Hessian reproduction and stencil construction only; no NS flow or accuracy qualification"
+}
