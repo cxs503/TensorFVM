@@ -57,7 +57,13 @@ class NativeSimpleMixin:
             predicted=splu(A,permc_spec=c.lu_ordering).solve(target)
             correction=sparse.diags(alpha)@self.pressure.pressure_flux_defect
             qstar=self.velocity_flux_matrix@predicted+correction@self.p+self.velocity_flux_source+alpha*self.p_defect_source
-            response=-sparse.diags(alpha)@self.pressure.compact_flux
+            # Differentiate the actual face-flux reconstruction with respect
+            # to the full SIMPLE pressure increment. The compact-only shortcut
+            # assumes B diag(1/aP) G == diag(alpha) I(grad p). That identity
+            # fails with variable mobility, skew reconstruction or component
+            # dependent wall resistance. Keep all these contributions here.
+            response=(correction-self.velocity_flux_matrix@sparse.diags(inverse)
+                @self.pressure.pressure_force_matrix).tocsr()
             P=(self.viscous.divergence_matrix@response).tolil()
             prhs=-self.viscous.divergence_matrix@qstar
             if self.gauge:P[0,:]=0;P[0,0]=1;prhs[0]=self.gauge_value-self.p[0]

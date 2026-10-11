@@ -1,0 +1,37 @@
+{
+  "cells": 27,
+  "frozen_coefficients": true,
+  "pressure_relaxation": 1.0,
+  "checks_passed": true,
+  "physical_validation_passed": false,
+  "rows": [
+    {
+      "pressure_outlet": false,
+      "iteration": 1,
+      "algorithm": "SIMPLE",
+      "velocity_change": 1.0,
+      "pressure_change": 1.0,
+      "flux_change": 1.0,
+      "momentum_residual": 0.06912282369454276,
+      "native_divergence_max": 9.36750677027476e-16,
+      "current_reconstructed_divergence_max": 9.074772183703674e-16,
+      "face_flux_consistency_max": 8.22876318934203e-17,
+      "true_linear_relative_residual": 1.262060483759617e-15,
+      "linear_iterations": 2
+    },
+    {
+      "pressure_outlet": true,
+      "iteration": 1,
+      "algorithm": "SIMPLE",
+      "velocity_change": 1.0,
+      "pressure_change": 1.0,
+      "flux_change": 1.0,
+      "momentum_residual": 0.08566349356582269,
+      "native_divergence_max": 7.376911581591372e-16,
+      "current_reconstructed_divergence_max": 7.962380754733545e-16,
+      "face_flux_consistency_max": 7.082416241088182e-17,
+      "true_linear_relative_residual": 1.4192449988971555e-15,
+      "linear_iterations": 2
+    }
+  ]
+}

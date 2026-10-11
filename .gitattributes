@@ -1,3 +1,5 @@
 # Preserve frozen producer bytes (Gmsh trailing spaces and CSV CRLF) for hashes.
 docs/verification-suboff-simple-sst-wall/**/input.msh whitespace=-blank-at-eol
 docs/verification-suboff-simple-sst-wall/**/*.csv whitespace=cr-at-eol
+docs/verification-simple-pressure-response/**/input.msh whitespace=-blank-at-eol
+docs/verification-simple-pressure-response/**/*.csv whitespace=cr-at-eol
