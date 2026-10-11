@@ -80,20 +80,49 @@ def cell_section_polygons(mesh, *, axis=2, value=0., tolerance=1e-11):
     return polygons,np.asarray(cell_ids,dtype=int)
 
 
+
+def load_plot_mesh(mesh_path, fields_path):
+    """Reproduce the producer face policy from the adjacent run config.
+
+    Legacy runs without this option retain the original triangulated topology.
+    No flux or face field is interpolated to accommodate a topology mismatch.
+    """
+    from tensorfvm.native_mesh3d import NativeMesh3D
+    config_path=Path(fields_path).parent/'config.json'
+    config=json.loads(config_path.read_text()) if config_path.exists() else {}
+    if not isinstance(config,dict):raise ValueError('run config must be a JSON object')
+    if 'mesh_sha256' in config and hashlib.sha256(Path(mesh_path).read_bytes()).hexdigest()!=config['mesh_sha256']:
+        raise ValueError('input mesh SHA256 does not match the field producer config')
+    merged=config.get('merge_coplanar_faces',False)
+    if not isinstance(merged,bool):raise ValueError('merge_coplanar_faces must be a JSON boolean')
+    mesh=NativeMesh3D.from_gmsh(mesh_path,triangulate_faces=True)
+    original_faces=len(mesh.owner);merge_metadata=None
+    if merged:
+        from tensorfvm.native_face_geometry3d import merge_coplanar_faces
+        mesh,merge_metadata=merge_coplanar_faces(mesh)
+    policy=dict(face_policy='merged_coplanar_polygon_faces' if merged else 'triangulated_native_faces',
+        merge_coplanar_faces=merged,original_faces=original_faces,reconstructed_faces=len(mesh.owner),
+        merged_pairs=merge_metadata['merged_pairs'] if merge_metadata else 0,
+        config_path=str(config_path) if config_path.exists() else None,
+        config_sha256=hashlib.sha256(config_path.read_bytes()).hexdigest() if config_path.exists() else None)
+    return mesh,policy,merge_metadata
+
+
 def plot_fields(mesh_path,fields_path,out,*,status_text='Diagnostic / unqualified',case_kind='diagnostic',plane=0.):
     import matplotlib
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
     from matplotlib.collections import PolyCollection
-    from tensorfvm.native_mesh3d import NativeMesh3D
     out=Path(out)
     if out.exists() and any(out.iterdir()):raise ValueError('output must be empty to preserve evidence')
     out.mkdir(parents=True,exist_ok=True)
-    mesh=NativeMesh3D.from_gmsh(mesh_path,triangulate_faces=True)
+    mesh,face_policy,merge_metadata=load_plot_mesh(mesh_path,fields_path)
     fields=np.load(fields_path,allow_pickle=False);velocity=fields['velocity'];pressure=fields['pressure'];flux=fields['flux']
     if velocity.shape!=(len(mesh.cells),3) or pressure.shape!=(len(mesh.cells),) or flux.shape!=(len(mesh.owner),):
-        raise ValueError('field shapes do not match native mesh cells/faces')
+        raise ValueError(f'field shapes do not match reconstructed native mesh cells/faces ({face_policy["face_policy"]}, {len(mesh.cells)} cells, {len(mesh.owner)} faces; flux shape {flux.shape})')
     if not all(np.isfinite(v).all() for v in (velocity,pressure,flux)):raise ValueError('nonfinite solution cannot be plotted')
+    if 'pressure_faces' in fields and (fields['pressure_faces'].shape!=(len(mesh.owner),) or not np.isfinite(fields['pressure_faces']).all()):
+        raise ValueError('invalid reconstructed face pressure array for configured face policy')
     polygons,ids=cell_section_polygons(mesh,value=plane)
     if not len(ids):raise ValueError('no finite area cells intersect the requested plane')
     speed=np.linalg.norm(velocity,axis=1)
@@ -130,6 +159,15 @@ def plot_fields(mesh_path,fields_path,out,*,status_text='Diagnostic / unqualifie
     ax.text(.01,.98,status_text,transform=ax.transAxes,va='top',color='#8b0000');ax.legend(loc='lower right');fig.tight_layout();fig.savefig(out/'wall-pressure.png',dpi=180);fig.savefig(out/'wall-pressure.pdf');plt.close(fig)
     types=np.asarray(mesh.cell_types)
     summary={'mesh_path':str(mesh_path),'mesh_sha256':hashlib.sha256(Path(mesh_path).read_bytes()).hexdigest(),'fields_path':str(fields_path),'fields_sha256':hashlib.sha256(Path(fields_path).read_bytes()).hexdigest(),'case_kind':case_kind,'status_text':status_text,'plane_z_L':plane,'section_polygons':len(polygons),'section_cells_by_type':{str(k):int(v) for k,v in zip(*np.unique(types[ids],return_counts=True))},'pressure_range':[float(pressure.min()),float(pressure.max())],'speed_range':[float(speed.min()),float(speed.max())],'section_pressure_range':[float(pressure[ids].min()),float(pressure[ids].max())],'section_speed_range':[float(speed[ids].min()),float(speed[ids].max())],'wall_pressure_definition':wall_definition+'; not experimental Cp','representation':'Native facet plane intersection polygons, piecewise constant cell fields','qualification_inferred_from_figures':False}
+    summary.update(face_policy)
+    if face_policy['config_path'] is not None:(out/'run-config.json').write_bytes(Path(face_policy['config_path']).read_bytes())
+    if merge_metadata is not None:
+        lengths=np.array([len(g) for g in merge_metadata['original_face_groups']],dtype=int)
+        np.savez_compressed(out/'face-topology-map.npz',original_to_merged=merge_metadata['original_to_merged'],group_indices=np.concatenate(merge_metadata['original_face_groups']),group_offsets=np.r_[0,np.cumsum(lengths)])
+        from tensorfvm import native_face_geometry3d
+        geometry_source=Path(native_face_geometry3d.__file__)
+        (out/'face-geometry-source.py').write_bytes(geometry_source.read_bytes())
+        summary['face_geometry_source_sha256']=hashlib.sha256(geometry_source.read_bytes()).hexdigest()
     (out/'summary.json').write_text(json.dumps(summary,indent=2)+'\n');(out/'plot-source.py').write_bytes(Path(__file__).read_bytes())
     (out/'manifest.json').write_text(json.dumps({f.name:hashlib.sha256(f.read_bytes()).hexdigest() for f in out.iterdir() if f.is_file() and f.name!='manifest.json'},indent=2)+'\n')
     return summary

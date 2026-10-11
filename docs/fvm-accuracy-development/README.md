@@ -10,19 +10,24 @@ conservation gates. Existing state conversion contracts are preparatory only.
    including every velocity component, true current residuals and face fluxes.
 2. Verify mesh convergence on actual body-fitted/mixed meshes. SUBOFF's baseline
    manufactured pressure errors remain 5.4999% and 4.2777%; both fail 3%.
-3. Verify pure FVM overset Stokes and nonlinear velocity/pressure equations,
+3. Validate single-domain no-slip laminar cases, wall-resolved/wall-function
+   turbulence and physical drag/Cp against independent references, with mesh
+   sensitivity. Complete the SUBOFF body-fitted baseline before adding overset.
+4. Verify pure FVM overset Stokes and nonlinear velocity/pressure equations,
    excluding HOLE values from gradients and setting only one global gauge.
    Current 3D overset results verify interpolation, not a fluid solver.
-4. Validate no-slip laminar cases, wall-resolved/wall-function turbulence and
-   physical drag/Cp against independent references, with mesh sensitivity.
 5. Start FVM–LBM joint time advancement after these FVM gates pass.
 
 ## Current quadratic FVM development
 
 `native_quadratic_flow3d.py` integrates quadratic pressure area means, shared
 symmetric stress and consistent Rhie–Chow correction into the actual equations.
-Matrix-free GMRES solves the corrected operator; the baseline LU is only a
-preconditioner. Independent prescribed boundary velocity means are distinct
+The legacy matrix-free iteration uses a baseline LU preconditioner and lags
+part of the baseline high-order advection source. Final acceptance replays the
+complete current equations. The new opt-in `assembled` path builds the full
+frozen-flux quadratic operator, including the complete linear advection term;
+only the nonlinear velocity covariance is frozen for each nonlinear update.
+Independent prescribed boundary velocity means are distinct
 from face-centroid values. The internal advection covariance is a second-order
 approximation, not exact integration of arbitrary nonlinear velocity fields.
 Interior forcing remains the independently derived analytic pointwise force.
@@ -70,13 +75,59 @@ the original 27-cell zero-start failure or qualify the SUBOFF mesh.
 and [independent residual replay](refinement-current-equation-replay.json)
 retain this distinct configuration.
 
-## Actual SUBOFF quadratic blocker
+## Actual SUBOFF quadratic solve
 
 [The first mixed-mesh quadratic attempt](../verification-native-suboff-mms/quadratic-coarse-attempt-01/failure-explanation.md)
 failed its first current-equation GMRES solve after 1,800 inner iterations,
 true residual 1.78421e-5. Zero nonlinear updates completed. Saved velocity and
 pressure are exactly the copied baseline numerical initial fields; the pressure
 error remains 5.49992%. The already-fresh baseline LU is not adequate here.
-A quadratic-operator block/Schur preconditioner and mixed-mesh robustness checks
-precede another costly production run. Backtracking alone cannot solve an inner
-linear failure. This failed attempt is preserved and does not count as accepted.
+The new full sparse quadratic operator is checked against the original actual
+equation residual on both warped triangular faces and planar polygon faces,
+with mixed hex/tet control volumes and nonzero boundary sources. On the original
+11,648-cell SUBOFF mesh, its numerical warm-start run converges in 15 updates:
+velocity vector **0.0112074%**, all velocity components below **0.015405%**,
+pressure **0.524758%**. Independent frozen-producer replay passes 19/19 gates.
+The wall geometry and original triangulated faces remain unchanged in this run.
+Backtracking alone cannot solve an inner linear failure. This failed attempt
+is preserved and does not count as accepted.
+
+[Single-domain report, real mesh and field/reference comparison](../verification-native-suboff-mms/single-domain-report.md)
+separates this success from the smaller merged-face zero-start failure.
+No actual SUBOFF drag/Cp, turbulence or mesh convergence qualification follows
+from one manufactured run. [Full regression](pytest-single-domain.txt): 375 tests
+and 45 subtests pass; [additional provenance checks](pytest-single-domain-audit.txt):
+8 targeted tests pass after binding the initial producer convergence ledger.
+
+## Single-domain SUBOFF face geometry
+
+The immediate mesh is a complete conforming fluid domain: structured wall
+layers, wedge nose/tail caps and external Gmsh tetrahedra. It contains no
+overset interpolation. A new 6,085-cell mesh provides a smaller development
+level alongside the existing 11,648/24,284-cell meshes.
+
+Optional `--merge-coplanar-faces` restores two compatible triangles to a planar
+quad only when owner, neighbor and boundary patch agree. Different exterior
+tetrahedron neighbors keep their separate interface triangles. Cell geometry,
+volumes and conservative area sums are preserved. Nonplanar or perpendicular
+pairs are rejected. Quadratic face moments and manufactured boundary fluxes
+are integrated over the actual polygon.
+
+On the original 11,648-cell mesh, the wall maximum cell-to-face normal angle
+changes from 88.774 degrees to 12.498 degrees (including tip triangles);
+the 95th percentile becomes 3.932 degrees. Much of the original wall metric
+came from offset triangle centroids on planar parent quads. This geometric
+improvement alone does not establish pressure accuracy or physical validity.
+
+On the separate 6,085-cell merged-face mesh, zero initialization fails at update
+17 and remains archived. Initialization from its 100-step linear numerical field
+(explicitly recorded as not yet converged) then converges in 16 quadratic updates:
+velocity **0.0158491%**, pressure **0.772845%**, 19/19 independent audit gates pass.
+The two successful SUBOFF cases have different face policies; they do not form
+a certified same-configuration mesh refinement series.
+
+The actual centroid comparison also exposes a local tail pressure hotspot in
+the 6,085-cell result. Small cell volumes can hide large local errors in the
+global volume-weighted L2 norm. Local pressure and wall Cp are not qualified;
+regional error checks and a fixed physical pressure-scale maximum-error check
+must precede any claim that SUBOFF is accurate or ready for overset flow.

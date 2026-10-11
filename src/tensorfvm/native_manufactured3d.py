@@ -5,6 +5,7 @@ no-slip submarine flow. No discrete production residual defines the force.
 """
 import numpy as np
 from numpy.polynomial.legendre import leggauss
+from .native_face_geometry3d import polygon_triangles
 
 
 def abc_fields(points,*,amplitude=.5,wavenumber=.7,nu=.1,rho=1.):
@@ -19,7 +20,10 @@ def abc_fields(points,*,amplitude=.5,wavenumber=.7,nu=.1,rho=1.):
 
 
 def exact_boundary_flux(mesh,field,order=8):
-    """Duffy tensor Gauss integration of vector flux on native triangle facets."""
+    """Duffy tensor Gauss vector flux on convex planar native polygons."""
+    if any(len(mesh.face_vertices[i]) != 3 for i in np.flatnonzero(mesh.neighbor < 0)):
+        means = exact_boundary_velocity_means(mesh, field, order)
+        return np.einsum('fk,fk->f', means, mesh.area_vectors)
     a,w=leggauss(order);a=(a+1)/2;w=w/2
     bary=np.array([[1-r,r*(1-s),r*s] for r in a for s in a])
     weights=np.array([2*r*wr*ws for r,wr in zip(a,w) for s,ws in zip(a,w)])
@@ -42,6 +46,24 @@ def exact_boundary_velocity_means(mesh, field, order=8):
     bary=np.array([[1-r,r*(1-s),r*s] for r in a for s in a])
     weights=np.array([2*r*wr*ws for r,wr in zip(a,w) for s,ws in zip(a,w)])
     b=np.flatnonzero(mesh.neighbor<0);result=np.zeros((len(mesh.owner),3))
+    if any(len(mesh.face_vertices[i]) != 3 for i in b):
+        # Fan triangles have the true geometry and area weights; do not apply
+        # the triangle covariance/quadrature to a four-vertex face directly.
+        pieces=[];face_ids=[];areas=[]
+        for face in b:
+            triangles=polygon_triangles(mesh.vertices[list(mesh.face_vertices[face])])
+            pieces.extend(triangles);face_ids.extend([face]*len(triangles))
+            areas.extend(np.linalg.norm(.5*np.cross(triangles[:,1]-triangles[:,0],
+                                                    triangles[:,2]-triangles[:,0]),axis=1))
+        pieces=np.asarray(pieces);face_ids=np.asarray(face_ids);areas=np.asarray(areas)
+        for start in range(0,len(pieces),256):
+            stop=min(start+256,len(pieces));triangles=pieces[start:stop]
+            nodes=np.einsum('qj,fjk->fqk',bary,triangles)
+            values=field(nodes.reshape(-1,3))['velocity'].reshape(len(triangles),len(weights),3)
+            means=np.einsum('q,fqk->fk',weights,values)
+            np.add.at(result,face_ids[start:stop],areas[start:stop,None]*means)
+        result[b]/=np.linalg.norm(mesh.area_vectors[b],axis=1)[:,None]
+        return result
     for start in range(0,len(b),256):
         ids=b[start:start+256]
         if any(len(mesh.face_vertices[i])!=3 for i in ids):raise ValueError('boundary quadrature requires native triangle facets')

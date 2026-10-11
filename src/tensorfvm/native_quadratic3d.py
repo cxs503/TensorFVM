@@ -8,6 +8,7 @@ This module assembles no flow system and does not replace first-order LS.
 """
 import numpy as np
 from scipy import sparse
+from .native_face_geometry3d import polygon_face_covariance
 
 
 _PAIRS = ((0, 1), (0, 2), (1, 2))
@@ -51,8 +52,6 @@ class NativeQuadratic3D:
             raise ValueError('Dirichlet mask must select boundary faces')
         if min_samples < 9 or max_depth < 1 or not np.isfinite(condition_limit) or condition_limit <= 1:
             raise ValueError('At least nine samples, positive depth and condition limit >1 required')
-        if any(len(face) != 3 for face in mesh.face_vertices):
-            raise ValueError('Quadratic face means require native triangular facets; triangulate_faces=True')
         adjacency = [set() for _ in range(self.N)]
         boundary_faces = [[] for _ in range(self.N)]
         for owner, neighbor in zip(mesh.owner[self.internal], mesh.neighbor[self.internal]):
@@ -131,9 +130,15 @@ class NativeQuadratic3D:
         self.weight = np.zeros(self.F)
         self.weight[self.internal] = np.einsum('fi,fi->f',
             (mesh.face_centers-mesh.cell_centers[mesh.owner])[self.internal], mesh.area_vectors[self.internal])/self.projection[self.internal]
-        vertices = mesh.vertices[np.array(mesh.face_vertices)]
-        offset = vertices-mesh.face_centers[:, None]
-        self.face_covariance = np.einsum('fai,faj->fij', offset, offset)/12
+        if all(len(face) == 3 for face in mesh.face_vertices):
+            # Preserve the previous triangle arithmetic exactly.
+            vertices = mesh.vertices[np.array(mesh.face_vertices)]
+            offset = vertices-mesh.face_centers[:, None]
+            self.face_covariance = np.einsum('fai,faj->fij', offset, offset)/12
+        else:
+            self.face_covariance = np.array([polygon_face_covariance(
+                mesh.vertices[list(face)], center)
+                for face, center in zip(mesh.face_vertices, mesh.face_centers)])
 
     def _values(self, values):
         a = np.asarray(values, float)
@@ -181,7 +186,7 @@ class NativeQuadratic3D:
         return (1-w)*value[self.mesh.owner]+w*value[self.neighbor_safe]
 
     def face_mean(self, values, boundary_values=0., *, boundary_face_means=None):
-        """Triangle area means; Dir centroid point data gains Hessian covariance.
+        """Polygon area means; Dir centroid point data gains Hessian covariance.
 
         Explicit boundary_face_means overrides means on Dirichlet faces only,
         e.g. physical constant no-slip velocity. It does not become LS samples.
@@ -202,7 +207,7 @@ class NativeQuadratic3D:
         return mean[:, 0] if scalar else mean
 
     def face_gradient(self, values, boundary_values=0., *, compact=True, cell_gradients=None):
-        """Gradient at triangle centroid (=area mean for quadratic fields).
+        """Gradient at polygon centroid (=area mean for quadratic fields).
 
         cell_gradients may supply the current conservative Gauss gradient.
         The Hessian geometry correction remains from the real-cell fit.
