@@ -1,0 +1,106 @@
+{
+  "case": "coarse-legacy",
+  "config": {
+    "nx": 48,
+    "ny": 16,
+    "nz": 8,
+    "length": 24,
+    "height": 20,
+    "span": 3.141592653589793,
+    "cylinder_x": 8,
+    "cylinder_y": 10,
+    "cylinder_radius": 0.5,
+    "inlet_velocity": 1.0,
+    "reynolds": 3900.0,
+    "density": 1.0,
+    "time_step": 1e-05,
+    "max_steps": 50,
+    "pressure_iterations": 250,
+    "pressure_relative_tolerance": 1e-08,
+    "pressure_absolute_tolerance": 1e-11,
+    "smagorinsky_constant": 0.1,
+    "mesh_type": "body-fitted",
+    "body_fitted_stretching": 3.5,
+    "device": "cpu"
+  },
+  "settings": {
+    "upwind_fraction": 0.1,
+    "sgs": "wale",
+    "wale_constant": 0.325,
+    "pressure_tolerance": 1e-08,
+    "nonorthogonal_iterations": 80,
+    "initial_perturbation": 0.001,
+    "outer_condition": "slip",
+    "diffusion_cfl_limit": 0.5,
+    "initial_projection": false
+  },
+  "initialization": {
+    "method": "uniform-cell-with-prescribed-wall-flux",
+    "compatible_projection": false
+  },
+  "elapsed_seconds": 3.4707247698679566,
+  "completed_steps": 50,
+  "requested_steps": 50,
+  "time": 0.0005000000000000007,
+  "failure": null,
+  "metrics": [
+    {
+      "name": "native_face_divergence",
+      "value": 7.496663045181836e-10,
+      "limit": 1e-08,
+      "description": "Shared-face incompressibility",
+      "unit": "1/s",
+      "passed": true
+    },
+    {
+      "name": "independent_momentum_update_error",
+      "value": 2.220446049250313e-16,
+      "limit": 1e-11,
+      "description": "NumPy face-scatter replay of entire cell momentum update",
+      "unit": "m/s",
+      "passed": true
+    },
+    {
+      "name": "independent_global_momentum_ledger",
+      "value": 7.92749612631735e-15,
+      "limit": 1e-10,
+      "description": "Domain momentum equals physical boundary traction impulse",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "interior_cell_face_normal_defect",
+      "value": 0.24466933344715786,
+      "limit": 0.03,
+      "description": "Maximum native versus interpolated normal velocity divided by U",
+      "unit": "1",
+      "passed": false
+    },
+    {
+      "name": "cell_interpolated_divergence_scaled_by_D_over_U",
+      "value": 4.569225050483282,
+      "limit": 0.03,
+      "description": "Separate strict screening of interpolated cell divergence; not replaced by native continuity",
+      "unit": "1",
+      "passed": false
+    }
+  ],
+  "passed": false,
+  "numerical_qualified": false,
+  "physical_accuracy_qualified": false,
+  "independent_replay": {
+    "native_divergence_max": 7.496663045181836e-10,
+    "cell_interpolated_divergence_max": 4.569225050483282,
+    "interior_normal_defect_max": 0.24466933344715786,
+    "interior_normal_defect_p95": 0.00964147076524584,
+    "momentum_update_max_error": 2.220446049250313e-16,
+    "momentum_ledger_max": 7.92749612631735e-15,
+    "mass_imbalance": 4.182910684491503e-10
+  },
+  "last_force": {
+    "time": 0.0005000000000000007,
+    "Cd": 0.16919981386236027,
+    "Cl": 1.3864181914533278e-07,
+    "Cz": -4.001212786491305e-18
+  }
+}

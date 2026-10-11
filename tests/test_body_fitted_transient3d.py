@@ -166,3 +166,88 @@ class SpectralResolutionTests(unittest.TestCase):
         h=[dict(time=i*.1,Cd=1.,Cl=.1)for i in range(6001)]
         st=statistics(h,discard_time=0)
         self.assertTrue(st['duration_eligible']);self.assertFalse(st['signal_present']);self.assertFalse(st['eligible']);self.assertIsNone(st['St']);self.assertIsNone(st['diagnostic_spectral_peak'])
+
+class PressureBoundaryCompatibilityTests(unittest.TestCase):
+    def solver(self,dt=1e-5,initialize=False):
+        return BodyFittedTransient3D(Cylinder3DConfig(nx=48,ny=16,nz=4,length=24,height=20,cylinder_x=8,cylinder_y=10,body_fitted_stretching=7,mesh_type='body-fitted',time_step=dt),TransientSettings(initial_perturbation=0,sgs='none',pressure_tolerance=1e-10,nonorthogonal_iterations=150,initial_projection=initialize))
+
+    def test_nonzero_neumann_affine_pressure_is_exact_at_all_physical_faces(self):
+        s=self.solver();g=torch.tensor([.7,-.3,0.],dtype=torch.float64)
+        pressure=s.centers@g+.2;face_pressure=s.fc@g+.2
+        normal=s.area/s.area_mag[:,None]
+        s.set_pressure_boundary_conditions(neumann=normal@g,outlet_values=face_pressure)
+        self.assertLess(float((s.gradient(pressure,pressure=True)-g).abs().max()),1e-10)
+        self.assertLess(float((s.pressure_face_values(pressure)-face_pressure).abs().max()),1e-10)
+        self.assertLess(float((s.pressure_flux_gradient(pressure)-s.area@g).abs().max()),1e-10)
+        gauss=s.integrate(s.pressure_face_values(pressure)[:,None]*s.area)/s.volumes[:,None]
+        self.assertLess(float((gauss-g).abs().max()),1e-9)
+        # Every shared-face pressure traction remains conservative.
+        self.assertLess(float((s.integrate(face_pressure[:,None]*s.area).sum(0)-(face_pressure[:,None]*s.area)[s.boundary].sum(0)).abs().max()),1e-10)
+
+    def test_manufactured_nonzero_neumann_projection_has_zero_velocity_impulse_defect(self):
+        s=self.solver();g=torch.tensor([.7,-.3,0.],dtype=torch.float64)
+        pressure=s.centers@g+.2;face_pressure=s.fc@g+.2
+        s.set_pressure_boundary_conditions(neumann=(s.area/s.area_mag[:,None])@g,outlet_values=face_pressure)
+        solved,flux,_,residual=s.project(s.area@g,correction_scale=1.)
+        self.assertLess(residual,1e-10)
+        self.assertLess(float((solved-pressure).abs().max()),1e-8)
+        self.assertLess(float(flux.abs().max()),1e-8)
+        corrected=g-s.integrate(s.pressure_face_values(solved)[:,None]*s.area)/s.volumes[:,None]
+        self.assertLess(float(corrected.abs().max()),1e-8)
+
+    def test_initial_hodge_projection_is_dt_independent_and_conservative(self):
+        a=self.solver(initialize=True);b=self.solver(dt=5e-6,initialize=True)
+        self.assertTrue(torch.equal(a.velocity,b.velocity));self.assertTrue(torch.equal(a.flux,b.flux))
+        self.assertTrue(torch.equal(a.initial_velocity_potential,b.initial_velocity_potential))
+        self.assertEqual(a.time,0);self.assertFalse(a.history);self.assertFalse(a.forces)
+        self.assertEqual(float(a.pressure.abs().max()),0)
+        self.assertEqual(float(a.pressure_neumann.abs().max()),0)
+        self.assertLess(a.initialization['momentum_impulse_ledger'],1e-10)
+        self.assertLess(a.initialization['native_continuity'],1e-10)
+        self.assertLess(float(a.flux[a.wall].abs().max()),1e-12)
+        # No nonconservative cell velocity reconstruction or filtering is used:
+        # the sole impulse is the divergence of shared-face pressure traction.
+        a.set_pressure_boundary_conditions(neumann=(a.area/a.area_mag[:,None])[:,0]*a.config.inlet_velocity*a.wall)
+        phi_face=a.pressure_face_values(a.initial_velocity_potential)
+        reconstructed=torch.zeros_like(a.velocity);reconstructed[:,0]=a.config.inlet_velocity
+        reconstructed-=a.integrate(phi_face[:,None]*a.area)/a.volumes[:,None]
+        self.assertLess(float((a.velocity-reconstructed).abs().max()),1e-12)
+        a.set_pressure_boundary_conditions()
+
+    def test_invalid_boundary_data_and_pressure_scale_are_rejected(self):
+        s=self.solver()
+        with self.assertRaisesRegex(ValueError,'one value per face'):
+            s.set_pressure_boundary_conditions(neumann=torch.ones(2))
+        with self.assertRaisesRegex(ValueError,'nonfinite'):
+            s.set_pressure_boundary_conditions(neumann=float('nan'))
+        s.set_pressure_boundary_conditions()
+        with self.assertRaisesRegex(ValueError,'positive'):
+            s.project(s.flux,correction_scale=0.)
+
+class CompatibleInitializationRestartTests(unittest.TestCase):
+    def test_hodge_checkpoint_roundtrip_recomputes_evidence_and_preserves_next_step(self):
+        import tempfile
+        from pathlib import Path
+        from tensorfvm.cylinder3900_checkpoint import FieldMoments,save_checkpoint,restore_checkpoint
+        c=Cylinder3DConfig(nx=32,ny=8,nz=4,mesh_type='body-fitted',time_step=.002)
+        settings=TransientSettings(initial_projection=True)
+        a=BodyFittedTransient3D(c,settings);ma=FieldMoments(a)
+        for _ in range(2):a.step();ma.add(a)
+        with tempfile.TemporaryDirectory()as t:
+            path=Path(t)/'checkpoint.npz';producer={'kernel':'conservative-hodge-restart-test'}
+            save_checkpoint(path,a,ma,producer)
+            b=BodyFittedTransient3D(c,settings);mb=FieldMoments(b)
+            # Init evidence is deterministically recomputed by the factory, not
+            # stored by the current checkpoint schema. It is not evolving state.
+            self.assertTrue(torch.equal(a.initial_velocity_potential,b.initial_velocity_potential))
+            self.assertEqual(a.initialization,b.initialization)
+            restore_checkpoint(path,b,mb,producer)
+            self.assertEqual(float(b.pressure_neumann.abs().max()),0)
+            self.assertEqual(float(b.pressure_outlet_values.abs().max()),0)
+            a.step();ma.add(a);b.step();mb.add(b)
+            for name in ('velocity','pressure','flux'):
+                self.assertTrue(torch.equal(getattr(a,name),getattr(b,name)))
+            self.assertEqual(a.time,b.time);self.assertEqual(a.history,b.history);self.assertEqual(a.forces,b.forces)
+            self.assertEqual(ma.count,mb.count)
+            for name in ('velocity','pressure','velocity_product'):
+                self.assertTrue(torch.equal(getattr(ma,name),getattr(mb,name)))

@@ -1,0 +1,15 @@
+{
+  "kind": "native-face Hodge initialization diagnostic",
+  "mesh_input": "docs/verification-suboff-mesh/source-bound-coarse/suboff.msh",
+  "mesh_sha256": "254dc5060def74185896d97a93bb7d0e9e417796ec2c43749bb46264d4b9c025",
+  "coordinates": "x/L,y/L,z/L; inlet U=1",
+  "velocity_potential_bc": {
+    "wall": "dphi/dn=U dot n; corrected native normal flux zero",
+    "inlet": "dphi/dn=0; prescribed inflow unchanged",
+    "farfield": "dphi/dn=0; prescribed outer normal flux unchanged",
+    "outlet": "phi=0"
+  },
+  "physical_pressure_computed": false,
+  "time_advanced": false,
+  "physical_accuracy_qualified": false
+}

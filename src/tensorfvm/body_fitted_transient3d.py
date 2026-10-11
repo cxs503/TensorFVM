@@ -21,6 +21,7 @@ class TransientSettings:
     initial_perturbation: float = .001
     outer_condition: str = 'slip'
     diffusion_cfl_limit: float = .5
+    initial_projection: bool = False
 
 class BodyFittedTransient3D:
     def __init__(self, config, settings=None):
@@ -68,9 +69,13 @@ class BodyFittedTransient3D:
             self.velocity[:,1]+=self.settings.initial_perturbation*config.inlet_velocity*envelope*torch.sin(phase)
             self.velocity[:,2]+=self.settings.initial_perturbation*config.inlet_velocity*envelope*torch.cos(phase)
         self.pressure=torch.zeros(self.N,dtype=torch.float64)
+        self.pressure_neumann=torch.zeros(len(self.owner),dtype=torch.float64)
+        self.pressure_outlet_values=torch.zeros(len(self.owner),dtype=torch.float64)
         self.time=0.;self.history=[];self.forces=[]
         self._build_ls();self._build_pressure()
         self.flux=self.predict_flux(self.velocity)
+        self.initialization=dict(method='uniform-cell-with-prescribed-wall-flux',compatible_projection=False)
+        if self.settings.initial_projection:self.initialize_compatible_velocity()
 
     def integrate(self, face_values):
         shape=(self.N,)+face_values.shape[1:]
@@ -104,7 +109,8 @@ class BodyFittedTransient3D:
         f=field[:,None] if scalar else field
         delta=f[self.safe]-f[self.owner]
         if pressure:
-            delta[self.boundary]=0.;delta[self.outlet]=-f[self.owner[self.outlet]]
+            delta[self.boundary]=self.pressure_neumann[self.boundary,None]*self.distance[self.boundary,None]
+            delta[self.outlet]=self.pressure_outlet_values[self.outlet,None]-f[self.owner[self.outlet]]
         else:
             target=torch.zeros((int(self.boundary.sum()),f.shape[1]),dtype=f.dtype)
             if f.shape[1]==3:target[:,0]=self.config.inlet_velocity
@@ -154,9 +160,10 @@ class BodyFittedTransient3D:
     def pressure_flux_gradient(self, p):
         g=self.gradient(p,pressure=True);gf=.5*(g[self.owner]+g[self.safe]);gf[self.boundary]=g[self.owner[self.boundary]]
         diff=p[self.safe]-p[self.owner]
-        diff[self.boundary]=0;diff[self.outlet]=-p[self.owner[self.outlet]]
+        diff[self.boundary]=0;diff[self.outlet]=self.pressure_outlet_values[self.outlet]-p[self.owner[self.outlet]]
         q=self.coeff*diff+(gf*self.tangent).sum(1)
-        q[self.boundary&~self.outlet]=0
+        neumann=self.boundary&~self.outlet
+        q[neumann]=self.pressure_neumann[neumann]*self.area_mag[neumann]
         return q
 
     def pressure_face_values(self, p):
@@ -164,8 +171,8 @@ class BodyFittedTransient3D:
 
         Arithmetic averaging is not affine exact on stretched/skew cells.
         Interpolate at the projected face position and reconstruct its skew
-        displacement. Boundary reconstruction keeps zero normal derivative;
-        outlet pressure remains prescribed zero.
+        displacement. Boundary reconstruction uses the prescribed normal
+        derivative and outlet value (both zero by default).
         """
         g=self.gradient(p,pressure=True);w=self.pressure_weight
         gf=(1-w[:,None])*g[self.owner]+w[:,None]*g[self.safe]
@@ -173,19 +180,72 @@ class BodyFittedTransient3D:
         offset=self.owner_offset[self.boundary]
         normal=self.area[self.boundary]/self.area_mag[self.boundary,None]
         tangent=offset-(offset*normal).sum(1)[:,None]*normal
-        values[self.boundary]=p[self.owner[self.boundary]]+(g[self.owner[self.boundary]]*tangent).sum(1)
-        values[self.outlet]=0
+        normal_distance=(offset*normal).sum(1)
+        values[self.boundary]=p[self.owner[self.boundary]]+(g[self.owner[self.boundary]]*tangent).sum(1)+self.pressure_neumann[self.boundary]*normal_distance
+        values[self.outlet]=self.pressure_outlet_values[self.outlet]
         return values
 
-    def project(self, tentative_flux):
-        dt=self.config.time_step/self.config.density
-        rhs=-self.integrate(tentative_flux)/dt;p=self.pressure.clone()
+    def set_pressure_boundary_conditions(self, *, neumann=None, outlet_values=None):
+        """Normal derivative on non-outlet faces and pressure at the outlet.
+
+        These data enter LS gradients, diffusive pressure flux and conservative
+        traction consistently. Default step data are zero; initialization uses
+        a nonzero impermeability impulse, with units of velocity potential.
+        """
+        pending=[]
+        for current, value in ((self.pressure_neumann,neumann),(self.pressure_outlet_values,outlet_values)):
+            target=torch.zeros_like(current)
+            if value is not None:
+                data=torch.as_tensor(value,dtype=torch.float64)
+                if data.ndim==0:target.fill_(float(data))
+                elif data.shape==target.shape:target.copy_(data)
+                else:raise ValueError('pressure boundary data must be scalar or one value per face')
+                if not bool(torch.isfinite(target).all()):raise ValueError('nonfinite pressure boundary data')
+            pending.append(target)
+        self.pressure_neumann.copy_(pending[0]);self.pressure_outlet_values.copy_(pending[1])
+
+    def initialize_compatible_velocity(self):
+        """Conservative dt-independent Hodge projection of initial velocity.
+
+        The wall-normal impulse is prescribed at actual wall faces, rather than
+        replacing the raw uniform wall flux by zero before imposing homogeneous
+        pressure Neumann data. Phi is a velocity potential, NOT physical pressure
+        or an elapsed-time step. Wall tangential no-slip develops viscously.
+        """
+        original=self.velocity.clone()
+        raw=self.predict_flux(original)
+        impermeable=self.wall|self.slip
+        raw[impermeable]=(original[self.owner[impermeable]]*self.area[impermeable]).sum(1)
+        derivative=torch.zeros_like(raw)
+        derivative[impermeable]=raw[impermeable]/self.area_mag[impermeable]
+        self.set_pressure_boundary_conditions(neumann=derivative)
+        phi,flux,iterations,residual=self.project(raw,correction_scale=1.)
+        traction=self.pressure_face_values(phi)[:,None]*self.area
+        self.velocity=original-self.integrate(traction)/self.volumes[:,None]
+        self.flux=flux
+        impulse=((self.velocity-original)*self.volumes[:,None]).sum(0)
+        ledger=impulse+traction[self.boundary].sum(0)
+        defect=(flux-self.predict_flux(self.velocity)).abs()/self.area_mag/self.config.inlet_velocity
+        self.initialization=dict(method='conservative-normal-Neumann-Hodge-potential',compatible_projection=True,
+            projection_iterations=iterations,native_continuity=residual,momentum_impulse_ledger=float(ledger.abs().max()),
+            interior_cell_face_normal_defect_max=float(defect[self.interior].max()),
+            interpolated_cell_velocity_divergence_max=float((self.integrate(self.predict_flux(self.velocity))/self.volumes).abs().max()),
+            potential_min=float(phi.min()),potential_max=float(phi.max()))
+        self.initial_velocity_potential=phi.clone()
+        self.pressure.zero_()
+        self.set_pressure_boundary_conditions()
+
+    def project(self, tentative_flux, *, correction_scale=None):
+        dt=self.config.time_step/self.config.density if correction_scale is None else float(correction_scale)
+        if not np.isfinite(dt) or dt<=0:raise ValueError('positive finite pressure correction scale required')
+        outlet_source=torch.zeros_like(tentative_flux)
+        outlet_source[self.outlet]=self.coeff[self.outlet]*self.pressure_outlet_values[self.outlet]
+        rhs=-self.integrate(tentative_flux)/dt+self.integrate(outlet_source);p=self.pressure.clone()
         before=None
         for k in range(self.settings.nonorthogonal_iterations):
             nonorth=self.pressure_flux_gradient(p)
-            diff=p[self.safe]-p[self.owner];diff[self.boundary]=0;diff[self.outlet]=-p[self.owner[self.outlet]]
+            diff=p[self.safe]-p[self.owner];diff[self.boundary]=0;diff[self.outlet]=self.pressure_outlet_values[self.outlet]-p[self.owner[self.outlet]]
             nonorth-=self.coeff*diff
-            nonorth[self.boundary&~self.outlet]=0
             p=torch.from_numpy(self.pressure_lu.solve((rhs+self.integrate(nonorth)).numpy()))
             q=tentative_flux-dt*self.pressure_flux_gradient(p)
             residual=float((self.integrate(q)/self.volumes).abs().max())
