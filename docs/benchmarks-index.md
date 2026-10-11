@@ -1,5 +1,19 @@
 # TensorFVM benchmark 总览
 
+## Overset 与后续 FVM–LBM 耦合
+
+新增 [开发接口约定](overset-development/README.md)：贴体局部网格与笛卡尔背景，
+分别保留 ACTIVE / HOLE / FRINGE。三维球壳连接使用真实控制体定位及
+实体外安全 donor；SUBOFF 的实体切孔尚需单独适配。
+
+[非匹配共同平面通量验证](verification-overset-flux/report.md) 的三级
+通量密度误差为 1.1891% / 0.3189% / 0.0806%，积分平衡在舍入量级。
+该算子尚未接入 overset 压力求解，不能据此认定完整 NS 耦合守恒。
+[三维球壳 overset 验证](verification-overset3d/publication-report.md) 最细双向插值误差
+为 0.1012% / 0.0807%，三级误差下降，包含真实网格图和独立原场审核。
+SI 宏观量、LBM 单位/压力参考及时间插值已有接口，真实联合流动尚未执行。
+
+
 ## 新增三维贴体 Re3900 开发案例
 
 [匹配参考域报告](verification-cylinder3900-body-fitted-primary/report.md)
