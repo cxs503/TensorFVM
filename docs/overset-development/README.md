@@ -1,5 +1,9 @@
 # Overset development and FVM–LBM coupling contract
 
+**Current task: body-fitted mesh generation and Cartesian-background overset.**
+See [geometry priorities and preserved failed layouts](body-fitted-cartesian.md).
+Turbulence-model comparisons and physical sphere/cube flow are deferred for this task.
+
 **Current priority: standalone FVM accuracy first.** New FVM–LBM flow coupling
 is deferred until standalone FVM momentum, pressure, interface conservation and
 physical benchmark gates pass. See the [FVM accuracy plan](../fvm-accuracy-development/README.md).

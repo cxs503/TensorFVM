@@ -21,9 +21,23 @@ def audit(directory):
         actual=hashlib.sha256((directory/name).read_bytes()).hexdigest()
         if actual!=expected:raise ValueError('producer artifact hash mismatch: '+name)
     summary=json.loads((directory/'summary.json').read_text());rows=[];metrics=[]
+    config=json.loads((directory/'config.json').read_text())
     for record in summary['rows']:
         if not record['completed']:raise ValueError('incomplete producer level')
         folder=directory/f"level-{record['level']}";background=np.load(folder/'background-native.npz');body=np.load(folder/'body-native.npz')
+        if config.get('wall_geometry')=='circumscribed':
+            boundary=np.flatnonzero(body['neighbor']<0)
+            wall=boundary[np.linalg.norm(body['face_centers'][boundary],axis=1)<(config['inner_radius']+config['outer_radius'])/2]
+            planes=np.abs(np.einsum('ij,ij->i',body['face_centers'][wall],body['area_vectors'][wall]))/np.linalg.norm(body['area_vectors'][wall],axis=1)
+            offsets=body['face_offsets'];ids=np.unique(np.concatenate([body['face_vertices'][offsets[f]:offsets[f+1]] for f in wall]))
+            radial_error=float(np.max(np.linalg.norm(body['vertices'][ids],axis=1))/config['solid_radius']-1)
+            prefix=f"level-{record['level']}-wall"
+            checks=[('missing-facets',int(len(wall)==0),.5),('sphere-plane-clearance-defect',float(max(0,config['solid_radius']-planes.min())),1e-12),('body-hole-cells',int(np.count_nonzero(body['status']==1)),.5),('radial-geometry-error',radial_error,.03),('nonpositive-volumes',int(np.count_nonzero(body['cell_volumes']<=0)),.5)]
+            if config.get('level_1_first_height') is not None:
+                radii=np.unique(np.round(np.linalg.norm(body['vertices'],axis=1),13))
+                expected=config['level_1_first_height']*14/record['background_n']
+                checks.append(('first-height-defect',float(abs((radii[1]-radii[0])-expected)),1e-12))
+            metrics.extend(Metric(prefix+'-'+name,float(value),float(limit),'Independent raw circumscribed wall and layer replay') for name,value,limit in checks)
         cells=background['cells'].reshape(-1,8);vertices=background['vertices'][cells]
         closest=np.minimum(np.maximum(np.zeros(3),vertices.min(axis=1)),vertices.max(axis=1))
         intersecting=np.linalg.norm(closest,axis=1)<=1*(1+1e-12)

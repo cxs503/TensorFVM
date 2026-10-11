@@ -111,3 +111,55 @@ def test_shared_macroscopic_exchange_contract(problem):
         np.testing.assert_allclose(actual.velocity,expected.velocity,atol=1e-13)
         np.testing.assert_allclose(actual.pressure,expected.pressure,atol=3e-10)
         assert actual.time==.5
+
+
+def test_graded_layers_preserve_first_height_and_total_thickness():
+    from tensorfvm.overset3d import shell_radial_coordinates
+    radii=shell_radial_coordinates(1,2.6,10,.02)
+    h=np.diff(radii)
+    assert radii[0]==1 and radii[-1]==2.6
+    np.testing.assert_allclose(h[0],.02,rtol=1e-12)
+    assert np.all(h>0) and np.all(np.diff(h)>0)
+    np.testing.assert_allclose(h[1:]/h[:-1],np.full(9,h[1]/h[0]),rtol=2e-12)
+    mesh=sphere_shell_mesh(1,2.6,10,1,first_height=.02)
+    assert mesh.audit()['minimum_cell_volume']>0
+    np.testing.assert_allclose(np.unique(np.round(np.linalg.norm(mesh.vertices,axis=1),12)),radii,atol=1e-12)
+    for bad in (0,-1,.17,float('nan')):
+        with pytest.raises(ValueError):shell_radial_coordinates(1,2.6,10,bad)
+    with pytest.raises(ValueError):shell_radial_coordinates(1,2,1,.1)
+    np.testing.assert_allclose(shell_radial_coordinates(1,2,1,1),[1,2])
+
+
+def test_graded_shell_cartesian_overlap_and_unsafe_layout_rejection():
+    background=CartesianGrid3D.from_bounds((-3,)*3,(3,)*3,(14,)*3)
+    body=sphere_shell_mesh(1,2.6,10,1,first_height=.02)
+    solid=SphereSolid((0,0,0),1)
+    with pytest.raises(ValueError,match='orphan'):
+        build_spherical_overset(background,body,solid,1.5,.3)
+    connection=build_spherical_overset(background,body,solid,1.4,.3)
+    fields=[1+m.cell_centers@np.array([.2,-.4,.7]) for m in connection.grids]
+    for actual,expected in zip(connection.interpolate(fields),fields):
+        np.testing.assert_allclose(actual,expected,atol=2e-13)
+    for mapping,status in ((connection.background_from_body,connection.body_status),(connection.body_from_background,connection.background_status)):
+        assert len(mapping.receiver_indices)>0
+        assert np.all(status[mapping.donor_indices]==ACTIVE)
+        assert np.all(status[mapping.containing_cells]==ACTIVE)
+
+
+def test_circumscribed_wall_preserves_thin_fluid_layers():
+    body=sphere_shell_mesh(1,2.6,10,1,first_height=.02,wall_geometry='circumscribed')
+    # Every inner facet plane must exclude the analytic sphere. Centres alone
+    # are insufficient to prove wall clearance.
+    boundary=np.flatnonzero(body.neighbor<0)
+    inner=boundary[np.linalg.norm(body.face_centers[boundary],axis=1)<1.5]
+    distances=np.abs(np.einsum('ij,ij->i',body.face_centers[inner],body.area_vectors[inner]))/np.linalg.norm(body.area_vectors[inner],axis=1)
+    assert np.all(distances>=1-2e-14)
+    assert np.all(np.linalg.norm(body.cell_centers,axis=1)>1)
+    radii=np.unique(np.round(np.linalg.norm(body.vertices,axis=1),12))
+    np.testing.assert_allclose(radii[1]-radii[0],.02,atol=2e-12)
+    background=CartesianGrid3D.from_bounds((-3,)*3,(3,)*3,(14,)*3)
+    connection=build_spherical_overset(background,body,SphereSolid((0,0,0),1),1.4,.3)
+    assert not np.any(connection.body_status==HOLE)
+    assert len(connection.body_from_background.receiver_indices)>0
+    with pytest.raises(ValueError,match='wall geometry'):
+        sphere_shell_mesh(1,2.6,10,1,wall_geometry='invalid')

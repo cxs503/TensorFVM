@@ -1,0 +1,1184 @@
+{
+  "passed": true,
+  "metrics": [
+    {
+      "name": "level-1-wall-missing-facets",
+      "value": 0.0,
+      "limit": 0.5,
+      "description": "Independent raw circumscribed wall and layer replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-wall-sphere-plane-clearance-defect",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "Independent raw circumscribed wall and layer replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-wall-body-hole-cells",
+      "value": 0.0,
+      "limit": 0.5,
+      "description": "Independent raw circumscribed wall and layer replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-wall-radial-geometry-error",
+      "value": 0.018073920910256502,
+      "limit": 0.03,
+      "description": "Independent raw circumscribed wall and layer replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-wall-nonpositive-volumes",
+      "value": 0.0,
+      "limit": 0.5,
+      "description": "Independent raw circumscribed wall and layer replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-wall-first-height-defect",
+      "value": 1.734723475976807e-17,
+      "limit": 1e-12,
+      "description": "Independent raw circumscribed wall and layer replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-solid-intersecting-background-not-hole",
+      "value": 0,
+      "limit": 0.5,
+      "description": "Cartesian cell-box sphere intersection requires HOLE",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-background-from-body-constant",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-background-from-body-affine",
+      "value": 1.7763568394002505e-15,
+      "limit": 1e-10,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-background-from-body-coordinate-reproduction",
+      "value": 3.3306690738754696e-16,
+      "limit": 1e-10,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-background-from-body-negative-weight",
+      "value": 0.0,
+      "limit": 1e-11,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-background-from-body-inactive-donors",
+      "value": 0.0,
+      "limit": 0.5,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-background-from-body-inactive-containing-cells",
+      "value": 0.0,
+      "limit": 0.5,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-background-from-body-sphere-clearance-defect",
+      "value": 0.0,
+      "limit": 1e-11,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-background-from-body-native-containment-defect",
+      "value": 0.0,
+      "limit": 1e-10,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-background-from-body-nonlinear-L2",
+      "value": 0.0010053609955209223,
+      "limit": 0.03,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-background-from-body-saved-field-replay",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-background-from-body-saved-source-replay",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-background-from-body-saved-reference-replay",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-background-from-body-saved-points-replay",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-background-from-body-nonlinear-component-0-L2",
+      "value": 0.0013172420332948783,
+      "limit": 0.03,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-background-from-body-nonlinear-component-1-L2",
+      "value": 0.0011106971994247071,
+      "limit": 0.03,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-background-from-body-nonlinear-component-2-L2",
+      "value": 0.0005419389698702366,
+      "limit": 0.03,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-background-from-body-receiver-duplicate-count",
+      "value": 0.0,
+      "limit": 0.5,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-background-from-body-receiver-fringe-set-mismatch",
+      "value": 0.0,
+      "limit": 0.5,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-background-from-body-receiver-weight-replay",
+      "value": 0.0,
+      "limit": 1e-14,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-body-from-background-constant",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-body-from-background-affine",
+      "value": 1.7763568394002505e-15,
+      "limit": 1e-10,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-body-from-background-coordinate-reproduction",
+      "value": 4.996003610813204e-16,
+      "limit": 1e-10,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-body-from-background-negative-weight",
+      "value": 7.020267309411716e-16,
+      "limit": 1e-11,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-body-from-background-inactive-donors",
+      "value": 0.0,
+      "limit": 0.5,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-body-from-background-inactive-containing-cells",
+      "value": 0.0,
+      "limit": 0.5,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-body-from-background-sphere-clearance-defect",
+      "value": 0.0,
+      "limit": 1e-11,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-body-from-background-native-containment-defect",
+      "value": 2.1424971861775406e-17,
+      "limit": 1e-10,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-body-from-background-nonlinear-L2",
+      "value": 0.002031542889074163,
+      "limit": 0.03,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-body-from-background-saved-field-replay",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-body-from-background-saved-source-replay",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-body-from-background-saved-reference-replay",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-body-from-background-saved-points-replay",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-body-from-background-nonlinear-component-0-L2",
+      "value": 0.00271068020336795,
+      "limit": 0.03,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-body-from-background-nonlinear-component-1-L2",
+      "value": 0.0020698899091859,
+      "limit": 0.03,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-body-from-background-nonlinear-component-2-L2",
+      "value": 0.001247077292246284,
+      "limit": 0.03,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-body-from-background-receiver-duplicate-count",
+      "value": 0.0,
+      "limit": 0.5,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-body-from-background-receiver-fringe-set-mismatch",
+      "value": 0.0,
+      "limit": 0.5,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-1-body-from-background-receiver-weight-replay",
+      "value": 0.0,
+      "limit": 1e-14,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-wall-missing-facets",
+      "value": 0.0,
+      "limit": 0.5,
+      "description": "Independent raw circumscribed wall and layer replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-wall-sphere-plane-clearance-defect",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "Independent raw circumscribed wall and layer replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-wall-body-hole-cells",
+      "value": 0.0,
+      "limit": 0.5,
+      "description": "Independent raw circumscribed wall and layer replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-wall-radial-geometry-error",
+      "value": 0.018073920910256502,
+      "limit": 0.03,
+      "description": "Independent raw circumscribed wall and layer replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-wall-nonpositive-volumes",
+      "value": 0.0,
+      "limit": 0.5,
+      "description": "Independent raw circumscribed wall and layer replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-wall-first-height-defect",
+      "value": 5.5523294295589665e-14,
+      "limit": 1e-12,
+      "description": "Independent raw circumscribed wall and layer replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-solid-intersecting-background-not-hole",
+      "value": 0,
+      "limit": 0.5,
+      "description": "Cartesian cell-box sphere intersection requires HOLE",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-background-from-body-constant",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-background-from-body-affine",
+      "value": 1.7763568394002505e-15,
+      "limit": 1e-10,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-background-from-body-coordinate-reproduction",
+      "value": 4.611102534756203e-16,
+      "limit": 1e-10,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-background-from-body-negative-weight",
+      "value": 7.912641644520115e-16,
+      "limit": 1e-11,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-background-from-body-inactive-donors",
+      "value": 0.0,
+      "limit": 0.5,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-background-from-body-inactive-containing-cells",
+      "value": 0.0,
+      "limit": 0.5,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-background-from-body-sphere-clearance-defect",
+      "value": 0.0,
+      "limit": 1e-11,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-background-from-body-native-containment-defect",
+      "value": 0.0,
+      "limit": 1e-10,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-background-from-body-nonlinear-L2",
+      "value": 0.0009182654746821298,
+      "limit": 0.03,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-background-from-body-saved-field-replay",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-background-from-body-saved-source-replay",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-background-from-body-saved-reference-replay",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-background-from-body-saved-points-replay",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-background-from-body-nonlinear-component-0-L2",
+      "value": 0.001209139041709846,
+      "limit": 0.03,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-background-from-body-nonlinear-component-1-L2",
+      "value": 0.001010852431326217,
+      "limit": 0.03,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-background-from-body-nonlinear-component-2-L2",
+      "value": 0.0004869011858378946,
+      "limit": 0.03,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-background-from-body-receiver-duplicate-count",
+      "value": 0.0,
+      "limit": 0.5,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-background-from-body-receiver-fringe-set-mismatch",
+      "value": 0.0,
+      "limit": 0.5,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-background-from-body-receiver-weight-replay",
+      "value": 0.0,
+      "limit": 1e-14,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-body-from-background-constant",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-body-from-background-affine",
+      "value": 1.7763568394002505e-15,
+      "limit": 1e-10,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-body-from-background-coordinate-reproduction",
+      "value": 4.965068306494546e-16,
+      "limit": 1e-10,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-body-from-background-negative-weight",
+      "value": 9.644707873917152e-16,
+      "limit": 1e-11,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-body-from-background-inactive-donors",
+      "value": 0.0,
+      "limit": 0.5,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-body-from-background-inactive-containing-cells",
+      "value": 0.0,
+      "limit": 0.5,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-body-from-background-sphere-clearance-defect",
+      "value": 0.0,
+      "limit": 1e-11,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-body-from-background-native-containment-defect",
+      "value": 1.0211333138733243e-17,
+      "limit": 1e-10,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-body-from-background-nonlinear-L2",
+      "value": 0.0012751618783758856,
+      "limit": 0.03,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-body-from-background-saved-field-replay",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-body-from-background-saved-source-replay",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-body-from-background-saved-reference-replay",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-body-from-background-saved-points-replay",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-body-from-background-nonlinear-component-0-L2",
+      "value": 0.0017405326556184742,
+      "limit": 0.03,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-body-from-background-nonlinear-component-1-L2",
+      "value": 0.001254844234371419,
+      "limit": 0.03,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-body-from-background-nonlinear-component-2-L2",
+      "value": 0.0007516820460431057,
+      "limit": 0.03,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-body-from-background-receiver-duplicate-count",
+      "value": 0.0,
+      "limit": 0.5,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-body-from-background-receiver-fringe-set-mismatch",
+      "value": 0.0,
+      "limit": 0.5,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-2-body-from-background-receiver-weight-replay",
+      "value": 0.0,
+      "limit": 1e-14,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-wall-missing-facets",
+      "value": 0.0,
+      "limit": 0.5,
+      "description": "Independent raw circumscribed wall and layer replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-wall-sphere-plane-clearance-defect",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "Independent raw circumscribed wall and layer replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-wall-body-hole-cells",
+      "value": 0.0,
+      "limit": 0.5,
+      "description": "Independent raw circumscribed wall and layer replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-wall-radial-geometry-error",
+      "value": 0.004548967004296411,
+      "limit": 0.03,
+      "description": "Independent raw circumscribed wall and layer replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-wall-nonpositive-volumes",
+      "value": 0.0,
+      "limit": 0.5,
+      "description": "Independent raw circumscribed wall and layer replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-wall-first-height-defect",
+      "value": 2.7281996106687245e-14,
+      "limit": 1e-12,
+      "description": "Independent raw circumscribed wall and layer replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-solid-intersecting-background-not-hole",
+      "value": 0,
+      "limit": 0.5,
+      "description": "Cartesian cell-box sphere intersection requires HOLE",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-background-from-body-constant",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-background-from-body-affine",
+      "value": 1.7763568394002505e-15,
+      "limit": 1e-10,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-background-from-body-coordinate-reproduction",
+      "value": 3.3306690738754696e-16,
+      "limit": 1e-10,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-background-from-body-negative-weight",
+      "value": 2.110168744348968e-15,
+      "limit": 1e-11,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-background-from-body-inactive-donors",
+      "value": 0.0,
+      "limit": 0.5,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-background-from-body-inactive-containing-cells",
+      "value": 0.0,
+      "limit": 0.5,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-background-from-body-sphere-clearance-defect",
+      "value": 0.0,
+      "limit": 1e-11,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-background-from-body-native-containment-defect",
+      "value": 0.0,
+      "limit": 1e-10,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-background-from-body-nonlinear-L2",
+      "value": 0.00037490635456720507,
+      "limit": 0.03,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-background-from-body-saved-field-replay",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-background-from-body-saved-source-replay",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-background-from-body-saved-reference-replay",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-background-from-body-saved-points-replay",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-background-from-body-nonlinear-component-0-L2",
+      "value": 0.0005154159738039576,
+      "limit": 0.03,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-background-from-body-nonlinear-component-1-L2",
+      "value": 0.00037028570362863646,
+      "limit": 0.03,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-background-from-body-nonlinear-component-2-L2",
+      "value": 0.00020175296896660056,
+      "limit": 0.03,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-background-from-body-receiver-duplicate-count",
+      "value": 0.0,
+      "limit": 0.5,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-background-from-body-receiver-fringe-set-mismatch",
+      "value": 0.0,
+      "limit": 0.5,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-background-from-body-receiver-weight-replay",
+      "value": 0.0,
+      "limit": 1e-14,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-body-from-background-constant",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-body-from-background-affine",
+      "value": 3.552713678800501e-15,
+      "limit": 1e-10,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-body-from-background-coordinate-reproduction",
+      "value": 5.438959822042073e-16,
+      "limit": 1e-10,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-body-from-background-negative-weight",
+      "value": 2.9526876481307163e-15,
+      "limit": 1e-11,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-body-from-background-inactive-donors",
+      "value": 0.0,
+      "limit": 0.5,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-body-from-background-inactive-containing-cells",
+      "value": 0.0,
+      "limit": 0.5,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-body-from-background-sphere-clearance-defect",
+      "value": 0.0,
+      "limit": 1e-11,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-body-from-background-native-containment-defect",
+      "value": 9.430006297051537e-18,
+      "limit": 1e-10,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-body-from-background-nonlinear-L2",
+      "value": 0.000795065345170797,
+      "limit": 0.03,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-body-from-background-saved-field-replay",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-body-from-background-saved-source-replay",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-body-from-background-saved-reference-replay",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-body-from-background-saved-points-replay",
+      "value": 0.0,
+      "limit": 1e-12,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-body-from-background-nonlinear-component-0-L2",
+      "value": 0.0010663107870102575,
+      "limit": 0.03,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-body-from-background-nonlinear-component-1-L2",
+      "value": 0.0008126337290375808,
+      "limit": 0.03,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-body-from-background-nonlinear-component-2-L2",
+      "value": 0.00047491536034322706,
+      "limit": 0.03,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-body-from-background-receiver-duplicate-count",
+      "value": 0.0,
+      "limit": 0.5,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-body-from-background-receiver-fringe-set-mismatch",
+      "value": 0.0,
+      "limit": 0.5,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "level-3-body-from-background-receiver-weight-replay",
+      "value": 0.0,
+      "limit": 1e-14,
+      "description": "Independent raw geometry and point-map replay",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "background-from-body-refinement-1-error-ratio",
+      "value": 0.913368908057086,
+      "limit": 1,
+      "description": "Strict decrease across actual archived refinement levels",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "background-from-body-refinement-2-error-ratio",
+      "value": 0.40827665299839794,
+      "limit": 1,
+      "description": "Strict decrease across actual archived refinement levels",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "body-from-background-refinement-1-error-ratio",
+      "value": 0.6276814952978995,
+      "limit": 1,
+      "description": "Strict decrease across actual archived refinement levels",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "body-from-background-refinement-2-error-ratio",
+      "value": 0.6235015009885919,
+      "limit": 1,
+      "description": "Strict decrease across actual archived refinement levels",
+      "unit": "1",
+      "passed": true
+    }
+  ],
+  "replayed_rows": [
+    {
+      "level": 1,
+      "direction": "background-from-body",
+      "relative_l2": 0.0010053609955209223,
+      "constant_max": 0.0,
+      "affine_max": 1.7763568394002505e-15,
+      "coordinate_max": 3.3306690738754696e-16,
+      "minimum_sphere_tangent_clearance": 0.2867738515061238,
+      "native_containment_max_defect": 0.0
+    },
+    {
+      "level": 1,
+      "direction": "body-from-background",
+      "relative_l2": 0.002031542889074163,
+      "constant_max": 0.0,
+      "affine_max": 1.7763568394002505e-15,
+      "coordinate_max": 4.996003610813204e-16,
+      "minimum_sphere_tangent_clearance": 0.853837378126729,
+      "native_containment_max_defect": 2.1424971861775406e-17
+    },
+    {
+      "level": 2,
+      "direction": "background-from-body",
+      "relative_l2": 0.0009182654746821298,
+      "constant_max": 0.0,
+      "affine_max": 1.7763568394002505e-15,
+      "coordinate_max": 4.611102534756203e-16,
+      "minimum_sphere_tangent_clearance": 0.31557803797647566,
+      "native_containment_max_defect": 0.0
+    },
+    {
+      "level": 2,
+      "direction": "body-from-background",
+      "relative_l2": 0.0012751618783758856,
+      "constant_max": 0.0,
+      "affine_max": 1.7763568394002505e-15,
+      "coordinate_max": 4.965068306494546e-16,
+      "minimum_sphere_tangent_clearance": 0.7148335525602463,
+      "native_containment_max_defect": 1.0211333138733243e-17
+    },
+    {
+      "level": 3,
+      "direction": "background-from-body",
+      "relative_l2": 0.00037490635456720507,
+      "constant_max": 0.0,
+      "affine_max": 1.7763568394002505e-15,
+      "coordinate_max": 3.3306690738754696e-16,
+      "minimum_sphere_tangent_clearance": 0.33950508161315307,
+      "native_containment_max_defect": 0.0
+    },
+    {
+      "level": 3,
+      "direction": "body-from-background",
+      "relative_l2": 0.000795065345170797,
+      "constant_max": 0.0,
+      "affine_max": 3.552713678800501e-15,
+      "coordinate_max": 5.438959822042073e-16,
+      "minimum_sphere_tangent_clearance": 0.7681872171084463,
+      "native_containment_max_defect": 9.430006297051537e-18
+    }
+  ],
+  "producer_artifacts_checked": 38,
+  "producer_manifest_sha256": "a6461033841b71dc3b8915a56ef9bcac29ed0ddaa8c13d101f6948e42c065d75",
+  "method": "Independent raw arrays; no connectivity builder or locator imported",
+  "flow_solved": false,
+  "fvm_lbm_coupling_executed": false
+}

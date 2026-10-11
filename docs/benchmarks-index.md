@@ -186,3 +186,9 @@ NACA三网格（64×26、128×52、256×104）全部达到稳态并通过独立�
 补充细化：[6/12/24 零初值报告](verification-native-abc3d-quadratic-refinement/quadratic-report/report.md)57/57 门限通过，最细 13,824 单元压力 **0.0375142%**、速度向量 **0.0000610359%**。保留运行时实际固定松弛源码，不把后续回退修复归功于该结果。
 
 [SUBOFF 二次方程失败证据](verification-native-suboff-mms/quadratic-coarse-attempt-01/failure-explanation.md)：首次 GMRES 1,800 内迭代失败，未完成任何非线性更新，保存场等于原数值初值，压力仍 5.49992%。下一步修复真实混合网格上的二次算子预条件，未增加合格 SUBOFF 案例。
+
+### 当前重点：渐变贴体网格与笛卡尔背景 overset
+
+[三档正式网格与连接报告](verification-overset3d-graded-circumscribed/report.md)、[真实重叠网格及近壁放大图](verification-overset3d-graded-circumscribed/wall-layer-plots/report.md)：首层高度可控，外包球面保证薄层在解析实体之外；近壁层完整、无贴体 HOLE。最细 **17,920 贴体 + 10,648 笛卡尔单元**，14 径向层，球面最大径向近似误差 **0.4549%**；双向规定非线性场插值误差 **0.03749% / 0.07951%**，三级均递减。
+
+[失败布局与开发顺序](overset-development/body-fitted-cartesian.md)保留原重叠区孤立接收点，以及内接球薄层被挖掉、插值不单调的两次试验。13 项针对性回归通过。此次验收仅针对静态几何与点值连接，未求解 overset 流动、未验证通量守恒，也未运行 FVM–LBM 耦合。

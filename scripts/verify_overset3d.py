@@ -9,7 +9,7 @@ import shutil
 import time
 import numpy as np
 from tensorfvm.overset3d import (ACTIVE, HOLE, FRINGE, CartesianGrid3D,
-    SphereSolid, sphere_shell_mesh, build_spherical_overset)
+    SphereSolid, sphere_shell_mesh, shell_radial_coordinates, build_spherical_overset)
 from plot_native_suboff_fields import cell_section_polygons
 
 
@@ -80,30 +80,56 @@ def plot_case(folder,background,body,connection):
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--output',type=Path,required=True)
+    parser.add_argument('--first-height',type=float,help='Level-1 first radial height, scales as 14/background_n; default uniform')
+    parser.add_argument('--wall-geometry',choices=['inscribed','circumscribed'],default='inscribed')
+    parser.add_argument('--angular-levels',type=int,nargs=3,default=[1,2,2])
+    parser.add_argument('--split-radius',type=float,default=1.5)
+    parser.add_argument('--fringe-width',type=float,default=.3)
     args=parser.parse_args();out=args.output
+    if not np.isfinite([args.split_radius,args.fringe_width]).all() or args.split_radius<=1 or args.fringe_width<=0 or args.split_radius+2*args.fringe_width>=2.6:
+        parser.error('require a fluid split radius, positive fringe width, and room for outer shell receivers')
+    if any(a<0 for a in args.angular_levels):parser.error('nonnegative angular subdivisions required')
+    if args.first_height is not None:
+        for n,r in ((14,10),(18,12),(22,14)):
+            try: shell_radial_coordinates(1,2.6,r,args.first_height*14/n)
+            except ValueError as exc: parser.error(str(exc))
     if out.exists() and any(out.iterdir()):parser.error('output must be empty')
     out.mkdir(parents=True,exist_ok=True);root=Path(__file__).resolve().parents[1]
     sources=('scripts/verify_overset3d.py','scripts/plot_native_suboff_fields.py','src/tensorfvm/overset3d.py','src/tensorfvm/native_mesh3d.py')
     for name in sources:
         dest=out/'source-snapshot'/name;dest.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(root/name,dest)
-    config=dict(background_bounds=[[-3,-3,-3],[3,3,3]],inner_radius=1,outer_radius=2.6,solid_radius=1,split_radius=1.5,fringe_width=.3,
-        levels=[dict(background_n=n,radial_layers=r,angular_subdivision=a) for n,r,a in ((14,10,1),(18,12,2),(22,14,2))],
+    config=dict(background_bounds=[[-3,-3,-3],[3,3,3]],inner_radius=1,outer_radius=2.6,solid_radius=1,split_radius=args.split_radius,fringe_width=args.fringe_width,
+        levels=[dict(background_n=n,radial_layers=r,angular_subdivision=a) for n,r,a in zip((14,18,22),(10,12,14),args.angular_levels)],
         field='[1+.3*sin(.7x)*cos(.6y)+.2*cos(.8z), .8+.2*cos(.5x+.4y)+.15*sin(.9z), 1.2+.25*sin(.6y+.3z)+.1*cos(.7x)]',
         value_semantics='cell-centroid point values; not cell volume averages',norm='receiver-volume-weighted relative L2 on fringe centres')
     (out/'config.json').write_text(json.dumps(config,indent=2)+'\n');(out/'environment.json').write_text(json.dumps(dict(python=platform.python_version(),numpy=np.__version__,platform=platform.platform()),indent=2)+'\n')
+    config['wall_geometry']=args.wall_geometry
+    config['radial_distribution']='uniform' if args.first_height is None else 'geometric growth fitted to exact shell thickness'
+    config['level_1_first_height']=args.first_height
+    (out/'config.json').write_text(json.dumps(config,indent=2)+'\n')
     rows=[]
     for level,settings in enumerate(config['levels']):
         folder=out/f'level-{level+1}';folder.mkdir();start=time.monotonic()
         try:
             n=settings['background_n'];background=CartesianGrid3D.from_bounds((-3,)*3,(3,)*3,(n,)*3)
-            body=sphere_shell_mesh(1,2.6,settings['radial_layers'],settings['angular_subdivision'])
-            connection=build_spherical_overset(background,body,SphereSolid(np.zeros(3),1),1.5,.3)
+            first_height=None if args.first_height is None else args.first_height*14/n
+            body=sphere_shell_mesh(1,2.6,settings['radial_layers'],settings['angular_subdivision'],first_height=first_height,wall_geometry=args.wall_geometry)
+            radii=np.unique(np.round(np.linalg.norm(body.vertices,axis=1),13))
+            heights=np.diff(radii)
+            layer_geometry=dict(radii=radii.tolist(),heights=heights.tolist(),growth_ratios=(heights[1:]/heights[:-1]).tolist(),first_height=float(heights[0]),outer_height=float(heights[-1]),outer_height_over_background_spacing=float(heights[-1]/(6/n)),geometry_audit=body.audit())
+            (folder/'wall-layer-geometry.json').write_text(json.dumps(layer_geometry,indent=2)+'\n')
+            layer_geometry['wall_vertex_radius']=float(radii[0])
+            layer_geometry['wall_maximum_radial_error']=float(radii[0]-1) if args.wall_geometry=='circumscribed' else None
+            layer_geometry['wall_geometry']=args.wall_geometry
+            connection=build_spherical_overset(background,body,SphereSolid(np.zeros(3),1),args.split_radius,args.fringe_width)
+            layer_geometry['body_hole_cells']=int(np.count_nonzero(connection.body_status==HOLE))
+            (folder/'wall-layer-geometry.json').write_text(json.dumps(layer_geometry,indent=2)+'\n')
             save_mesh(folder/'background-native.npz',background,connection.background_status);save_mesh(folder/'body-native.npz',body,connection.body_status)
             bm,br=transfer_metrics(body,background,connection.body_status,connection.background_from_body)
             rm,rr=transfer_metrics(background,body,connection.background_status,connection.body_from_background)
             np.savez_compressed(folder/'background-from-body.npz',**br);np.savez_compressed(folder/'body-from-background.npz',**rr)
             plot_case(folder,background,body,connection)
-            row=dict(level=level+1,**settings,background_cells=len(background.cells),body_cells=len(body.cells),background_from_body=bm,body_from_background=rm,
+            row=dict(level=level+1,**settings,wall_layer_geometry=layer_geometry,background_cells=len(background.cells),body_cells=len(body.cells),background_from_body=bm,body_from_background=rm,
                 background_status_counts=np.bincount(connection.background_status,minlength=3).tolist(),body_status_counts=np.bincount(connection.body_status,minlength=3).tolist(),
                 minimum_volume=min(float(background.cell_volumes.min()),float(body.cell_volumes.min())),elapsed_seconds=time.monotonic()-start,completed=True)
         except Exception as exc:
@@ -113,7 +139,10 @@ def main():
     decreasing=complete and all(all(rows[i+1][direction]['nonlinear_relative_l2']<rows[i][direction]['nonlinear_relative_l2'] for i in range(2)) for direction in ('background_from_body','body_from_background'))
     invariants=complete and all(all(r[d]['constant_max_error']<1e-12 and r[d]['affine_max_error']<1e-10 and r[d]['donors_only_active'] and r[d]['containing_cells_only_active'] and r[d]['minimum_weight']>=-1e-11 for d in ('background_from_body','body_from_background')) for r in rows)
     fine3=complete and all(rows[-1][d]['nonlinear_relative_l2']<.03 for d in ('background_from_body','body_from_background'))
-    summary=dict(rows=rows,three_level_error_decrease=decreasing,invariants_passed=invariants,fine_interpolation_below_three_percent=fine3,connectivity_interpolation_qualified=bool(decreasing and invariants and fine3),flow_solved=False,navier_stokes_qualified=False,conservative_flux_transfer=False,fvm_lbm_coupling_executed=False)
+    wall_layers_preserved=complete and all(r['wall_layer_geometry']['body_hole_cells']==0 for r in rows)
+    surface_geometry_below_three_percent=complete and args.wall_geometry=='circumscribed' and all(r['wall_layer_geometry']['wall_maximum_radial_error']<.03 for r in rows)
+    body_fitted_mesh_connectivity_qualified=bool(decreasing and invariants and fine3 and wall_layers_preserved and surface_geometry_below_three_percent)
+    summary=dict(body_fitted_mesh_connectivity_qualified=body_fitted_mesh_connectivity_qualified,surface_geometry_below_three_percent=surface_geometry_below_three_percent,wall_layers_preserved=wall_layers_preserved,rows=rows,three_level_error_decrease=decreasing,invariants_passed=invariants,fine_interpolation_below_three_percent=fine3,connectivity_interpolation_qualified=bool(decreasing and invariants and fine3),flow_solved=False,navier_stokes_qualified=False,conservative_flux_transfer=False,fvm_lbm_coupling_executed=False)
     (out/'summary.json').write_text(json.dumps(summary,indent=2)+'\n')
     report='# Three-dimensional Cartesian / body-fitted overset verification\n\n## Scope and method\n\nThe background is a native Cartesian hexahedral grid on [-3,3]^3. The component grid has radially structured wedge layers between radii 1 and 2.6, using an icosphere angular triangulation. Planar facets approximate the spherical wall. A radius-1 solid is excluded. Background centroid classification is hole below radius 1.5, fringe below 1.8, otherwise active; shell centres beyond radius 2.1 are fringe. Background cells whose Cartesian boxes intersect the radius-1 solid additionally become HOLE by an exact closest-point sphere test. The remaining split/fringe masks use centroid radii. This is not a cut-cell method or a moving-grid calculation.\n\nBoth transfer directions require a containing active native polyhedron and a convex tetrahedron of active donor centres. A tangent separating half-space protects the entire interpolation tetrahedron from the sphere. No nearest-neighbour fallback or orphan suppression is used. Weights reproduce constants and affine fields. The independently prescribed nonlinear vector field is fixed across all levels; formulas and coordinates are in config.json. Angular subdivision levels are 1, 2 and 2: the final refinement changes Cartesian and radial resolution without further angular refinement. This is a joint-grid interpolation diagnostic, not a uniform-h order study or Navier–Stokes spatial convergence. Errors use receiver-cell-volume-weighted relative L2 on fringe point values. These weights define a diagnostic norm, not conservative remapping of volume averages.\n\n## Results\n\n|Level|Background cells|Shell cells|Shell → background L2|Background → shell L2|Time s|\n|---|---:|---:|---:|---:|---:|\n'
     for r in rows:
@@ -123,9 +152,18 @@ def main():
     for r in rows:
         if r['completed']:report+=f"\n### Level {r['level']} real geometry and interpolation diagnostic\n\n![Actual mesh classification](level-{r['level']}/mesh-classification.png)\n\n![Fringe interpolation errors](level-{r['level']}/fringe-interpolation-error.png)\n"
     report+='\n## Limits and reproduction\n\nNo Navier–Stokes equations, pressure correction, turbulence, LBM populations, time stepping, moving-solid hole cutting or conservative shared interface flux are solved in this verification. The error plots show point interpolation of a prescribed analytic vector field; they are not velocity or pressure flow contours. The generic native mesh adapter uses a sphere-specific solid-clearance contract; a SUBOFF solid-clearance adapter remains necessary. FVM/LBM coupling requires common units and physical coordinates, shared time advancement, consistent pressure/density conversion, population reconstruction and conservative interface flux. Those are separate acceptance gates.\n\nRun `OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 PYTHONPATH=src python scripts/verify_overset3d.py --output EMPTY_DIRECTORY`. Producer sources were copied before execution. Every archived output except the manifest itself has a SHA-256 binding in manifest.json.\n'
+    report=report.replace('Angular subdivision levels are 1, 2 and 2: the final refinement changes Cartesian and radial resolution without further angular refinement.', 'Angular subdivisions are '+str(args.angular_levels)+'.')
+    report=report.replace('hole below radius 1.5, fringe below 1.8, otherwise active; shell centres beyond radius 2.1 are fringe',f'hole below radius {args.split_radius:g}, fringe below {args.split_radius+args.fringe_width:g}, otherwise active; shell centres beyond radius {args.split_radius+2*args.fringe_width:g} are fringe')
+    report+='\n## Actual radial layer distribution\n\nRadial mode: '+config['radial_distribution']+'. First-layer height is a geometry input; no wall stress, y+ or turbulence resolution is inferred. Per-level wall-layer-geometry.json records every radius/height, growth ratio, outer spacing relative to Cartesian spacing and actual mesh quality.\n\n|Level|First height|Outer height|Outer/background spacing|Maximum nonorthogonality (degrees)|\n|---|---:|---:|---:|---:|\n'
+    for row in rows:
+        if row['completed']:
+            g=row['wall_layer_geometry'];report+=f"|{row['level']}|{g['first_height']:.6g}|{g['outer_height']:.6g}|{g['outer_height_over_background_spacing']:.6g}|{g['geometry_audit']['maximum_nonorthogonality_degrees']:.6g}|\n"
+    report+='\nWall geometry: '+args.wall_geometry+'. All body wall layers preserved (no body HOLE cells): **'+str(wall_layers_preserved)+'**. Surface maximum radial error below 3% at every level: **'+str(surface_geometry_below_three_percent)+'**. Combined body-fitted mesh/connectivity qualification: **'+str(body_fitted_mesh_connectivity_qualified)+'**. Circumscribed mode moves planar facets outside the analytic sphere; its measured radial geometry error remains a separate diagnostic. This is not exact curved geometry.\n'
+    report+='\nUse `--wall-geometry '+args.wall_geometry+' --angular-levels '+' '.join(map(str,args.angular_levels))+'` to reproduce surface geometry.\n'
+    report+='\nReproduce the recorded radial mode with `--first-height '+str(args.first_height)+'` when set; omit it for uniform spacing. Overlap parameters: `--split-radius '+str(args.split_radius)+' --fringe-width '+str(args.fringe_width)+'`.\n'
     (out/'report.md').write_text(report)
     manifest={str(p.relative_to(out)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(out.rglob('*')) if p.is_file()}
     (out/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n');print(json.dumps(summary,indent=2))
-    return 0 if summary['connectivity_interpolation_qualified'] else 2
+    return 0 if (summary['body_fitted_mesh_connectivity_qualified'] if args.wall_geometry=='circumscribed' else summary['connectivity_interpolation_qualified']) else 2
 
 if __name__=='__main__':raise SystemExit(main())
