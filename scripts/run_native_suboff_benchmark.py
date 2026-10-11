@@ -42,6 +42,7 @@ def main():
     p.add_argument('--tolerance', type=float, default=1e-7)
     p.add_argument('--relaxation', type=float, default=.7)
     p.add_argument('--linear-method', choices=['direct', 'iterative', 'block', 'schur'], default='direct')
+    p.add_argument('--lu-ordering', choices=['COLAMD','MMD_ATA','MMD_AT_PLUS_A','NATURAL'], default='COLAMD')
     p.add_argument('--reconstruction', choices=['linear', 'quadratic'], default='linear')
     p.add_argument('--quadratic-linear-solver', choices=['matrix-free','assembled'], default='matrix-free')
     p.add_argument('--merge-coplanar-faces', action='store_true', help='Recover compatible planar quad faces; preserve mixed-cell interfaces')
@@ -74,7 +75,7 @@ def main():
         bindings[str(relative)] = digest(target)
     settings = NativeSteadySettings(viscosity=args.nu, max_iterations=args.max_iterations,
         nonlinear_tolerance=args.tolerance, relaxation=args.relaxation,
-        linear_method=args.linear_method, bounded_convection=args.mode == 'laminar')
+        linear_method=args.linear_method, lu_ordering=args.lu_ordering, bounded_convection=args.mode == 'laminar')
     initial_binding=None
     if args.initial_run is not None:
         initial_config=json.loads((args.initial_run/'config.json').read_text())

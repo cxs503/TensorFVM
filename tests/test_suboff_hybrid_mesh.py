@@ -32,9 +32,17 @@ def test_structured_normal_layers_close_caps_and_preserve_requested_spacing():
     with pytest.raises(ValueError):structured_layers(growth=float('nan'))
 
 
-def test_actual_gmsh_exterior_shares_all_structured_facets(tmp_path):
+@pytest.mark.parametrize('tail_size', [None, .01])
+def test_actual_gmsh_exterior_shares_all_structured_facets(tmp_path, tail_size):
     pytest.importorskip('gmsh')
-    m,s=generate_suboff_hybrid_mesh(tmp_path/'hybrid.msh',axial=12,azimuthal=8,layers=2,far_size=.6)
+    m,s=generate_suboff_hybrid_mesh(tmp_path/'hybrid.msh',axial=12,azimuthal=8,layers=2,far_size=.6,tail_size=tail_size)
+    if tail_size is not None:
+        assert s['tail_refinement']['size_L']==tail_size
+        # The background field must not move even one imposed structured node.
+        from scipy.spatial import cKDTree
+        points,*_=structured_layers(axial=12,azimuthal=8,layers=2)
+        distance,_=cKDTree(m.vertices).query(points)
+        assert distance.max()<1e-13
     assert s['exterior_tetrahedra']>0 and s['structured_hexes']>0
     assert s['verified_shared_interface_faces']==s['interface_triangles']
     assert set(m.patch_labels)=={'internal','wall','inlet','outlet','farfield'}

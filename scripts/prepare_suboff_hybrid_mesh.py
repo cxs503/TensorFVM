@@ -40,6 +40,9 @@ def main():
     parser.add_argument('--axial',type=int,default=32);parser.add_argument('--azimuthal',type=int,default=24)
     parser.add_argument('--layers',type=int,default=4);parser.add_argument('--first-height',type=float,default=.0004)
     parser.add_argument('--growth',type=float,default=1.25);parser.add_argument('--far-size',type=float,default=.35)
+    parser.add_argument('--tail-size',type=float,help='Optional exterior tetra size around the outer tail tip, in L')
+    parser.add_argument('--tail-radius',type=float,default=.01)
+    parser.add_argument('--tail-size-gradient',type=float,default=.5)
     a=parser.parse_args();out=a.output
     if out.exists() and any(out.iterdir()):raise SystemExit('Output must be empty; evidence is never overwritten')
     out.mkdir(parents=True,exist_ok=True);root=Path(__file__).resolve().parents[1]
@@ -47,7 +50,8 @@ def main():
         dst=out/'source-snapshot'/rel;dst.parent.mkdir(parents=True,exist_ok=True);dst.write_bytes((root/rel).read_bytes())
     config=vars(a).copy();config['output']=str(out);(out/'config.json').write_text(json.dumps(config,indent=2)+'\n')
     start=time.perf_counter()
-    m,s=generate_suboff_hybrid_mesh(out/'suboff-hybrid.msh',axial=a.axial,azimuthal=a.azimuthal,layers=a.layers,first_height=a.first_height,growth=a.growth,far_size=a.far_size)
+    m,s=generate_suboff_hybrid_mesh(out/'suboff-hybrid.msh',axial=a.axial,azimuthal=a.azimuthal,layers=a.layers,first_height=a.first_height,growth=a.growth,far_size=a.far_size,
+        tail_size=a.tail_size,tail_radius=a.tail_radius,tail_size_gradient=a.tail_size_gradient)
     s['generation_and_import_seconds']=time.perf_counter()-start
     op=NativeOperators3D(m);s['affine_audit']=op.audit_affine()
     internal=m.neighbor>=0;left=np.asarray(m.cell_types)[m.owner];right=np.asarray(m.cell_types)[m.neighbor]
@@ -81,6 +85,7 @@ def main():
         ax.set_xlim(limits[:2]);ax.set_ylim(limits[2:]);ax.set_aspect('equal');ax.set_title(title);ax.set_xlabel('x/L');ax.set_ylabel('y/L');ax.legend(loc='upper right')
     fig.tight_layout();fig.savefig(out/'mesh.png',dpi=180);fig.savefig(out/'mesh.pdf');plt.close(fig)
     s['first_height_m']=a.first_height*LENGTH_M
+    tail_options='' if a.tail_size is None else f' --tail-size {a.tail_size} --tail-radius {a.tail_radius} --tail-size-gradient {a.tail_size_gradient}'
     (out/'summary.json').write_text(json.dumps(s,indent=2)+'\n')
     (out/'report.md').write_text(f'''# SUBOFF structured near-wall / unstructured exterior mesh
 
@@ -89,6 +94,8 @@ def main():
 Bare AFF-1 mother profile from TensorLBM (source SHA256 `{SOURCE_SHA256}`). The original experiment offset table remains independently unverified. Length {LENGTH_M:.8f} m. Surface coordinates use cosine-spaced axial stations with the nearest interior samples replaced by the three exact polynomial junctions (avoiding nearly coincident points), uniform periodic azimuth, and finite-difference meridian normals. Both tips close on the axis using wedges, rather than repeated degenerate hexahedra. Normal layer distances are measured from the same original surface, without accumulating marching-normal drift.
 
 Actual mesh: **{s['structured_hexes']} near-wall hexes**, **{s['cap_wedges']} cap wedges**, **{s['exterior_tetrahedra']} exterior tetrahedra**. {a.layers} layers, first height {a.first_height:.6g} L = {s['first_height_m']:.6g} m, growth {a.growth}, total thickness {s['total_thickness_L']:.6g} L. These are geometry-development parameters, not a Reynolds/y+ design.
+
+Optional exterior tail sizing: `{json.dumps(s.get('tail_refinement', None))}`. This prescribes a continuous Gmsh Ball size field around the outer tail tip; actual neighbor volume ratios and flow errors require separate checks. The structured layers and imposed interface are retained.
 
 Gmsh {s['gmsh_version']} meshes the exterior of the imposed layer skin inside a [-1,3] × [-1,1] × [-1,1] L box. This is genuine unstructured tetrahedral generation. Every outer structured quad is divided on its smallest-vertex-ID diagonal. The exact triangles are imposed on Gmsh and shared in the finite-volume importer: **{s['verified_shared_interface_faces']} verified internal triangles**. No overset interpolation or pyramid transition is used. The native volume mesh retains hex/wedge cell types; only FV integration faces are triangulated.
 
@@ -128,7 +135,7 @@ TensorLBM `dg_curv.py` motivated layer height/growth and local-normal geometry, 
 ## Reproduction
 
 ```bash
-OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 PYTHONPATH=src /data/TensorFEM/.venv/bin/python scripts/prepare_suboff_hybrid_mesh.py --output NEW_EMPTY_DIRECTORY --axial {a.axial} --azimuthal {a.azimuthal} --layers {a.layers} --first-height {a.first_height} --growth {a.growth} --far-size {a.far_size}
+OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 PYTHONPATH=src /data/TensorFEM/.venv/bin/python scripts/prepare_suboff_hybrid_mesh.py --output NEW_EMPTY_DIRECTORY --axial {a.axial} --azimuthal {a.azimuthal} --layers {a.layers} --first-height {a.first_height} --growth {a.growth} --far-size {a.far_size}{tail_options}
 ```
 ''')
     (out/'manifest.json').write_text(json.dumps({str(f.relative_to(out)):hashlib.sha256(f.read_bytes()).hexdigest() for f in out.rglob('*') if f.is_file() and f.name!='manifest.json'},indent=2)+'\n')

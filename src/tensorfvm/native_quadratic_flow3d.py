@@ -175,7 +175,7 @@ class NativeQuadraticSteadySolver3D(NativeSteadySolver3D):
             target=(base_rhs+zero)/scale
             scaled=(sparse.diags(1/scale)@block).tocsc()
             if getattr(self,'_quadratic_preconditioner',None) is None:
-                self._quadratic_preconditioner=splu(scaled)
+                self._quadratic_preconditioner=splu(scaled,permc_spec=self.settings.lu_ordering)
                 self._quadratic_preconditioner_scale=scale.copy()
             pre=LinearOperator(block.shape,matvec=lambda x:self._quadratic_preconditioner.solve(x*scale/self._quadratic_preconditioner_scale))
             def action(x):

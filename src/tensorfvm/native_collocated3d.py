@@ -101,6 +101,7 @@ class NativeSteadySettings:
     linear_method: str='direct'
     convection_order: int=2
     bounded_convection: bool=False
+    lu_ordering: str='COLAMD'
 
 
 class NativeSteadySolver3D:
@@ -108,6 +109,8 @@ class NativeSteadySolver3D:
         self.mesh=mesh;self.settings=settings or NativeSteadySettings();c=self.settings
         if not np.isfinite([c.viscosity,c.density,c.relaxation,c.nonlinear_tolerance,c.linear_tolerance]).all() or c.viscosity<=0 or c.density<=0 or not 0<c.relaxation<=1 or c.max_iterations<1 or c.nonlinear_tolerance<=0 or c.linear_tolerance<=0:raise ValueError('positive finite material/solver settings required')
         if c.linear_method not in ('direct','iterative','block','schur'):raise ValueError('linear_method must be direct, iterative, block or schur')
+        if c.lu_ordering not in ('COLAMD','MMD_ATA','MMD_AT_PLUS_A','NATURAL'):
+            raise ValueError('lu_ordering must be a supported SuperLU column ordering')
         self.N=len(mesh.cells);self.F=len(mesh.owner);b=mesh.neighbor<0
         self.fixed=np.asarray(velocity_dirichlet,dtype=bool)
         self.viscous=NativeViscous3D(mesh,self.fixed,c.viscosity)
@@ -209,7 +212,7 @@ class NativeSteadySolver3D:
                 true=np.linalg.norm(scaled@candidate-target)/max(np.linalg.norm(target),1e-30)
                 if info==0 and true<max(5*linear_tolerance,1e-9):answer=candidate
             if answer is None:
-                lu=splu(scaled);self._cached_lu=lu;self._cached_lu_scale=scale.copy();answer=lu.solve(target)
+                lu=splu(scaled,permc_spec=self.settings.lu_ordering);self._cached_lu=lu;self._cached_lu_scale=scale.copy();answer=lu.solve(target)
             else:lu=self._cached_lu
             for _ in range(3):
                 residual=target-scaled@answer
@@ -237,7 +240,7 @@ class NativeSteadySolver3D:
                 # pressure preconditioner even while the coupled system solves.
                 response=np.repeat(1/(self._mobility_reference+convection_diagonal),3)*scale[:nv]
                 pressure_approx=(scaled[nv:,nv:]-bv@sparse.diags(response)@gp).tocsc()
-                ilu_v=splu(av);ilu_p=splu(pressure_approx)
+                ilu_v=splu(av,permc_spec=self.settings.lu_ordering);ilu_p=splu(pressure_approx,permc_spec=self.settings.lu_ordering)
             else:
                 ilu_v=spilu(av,drop_tol=1e-4,fill_factor=20)
                 ilu_p=spilu(pressure_approx,drop_tol=1e-4,fill_factor=20)

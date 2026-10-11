@@ -1,0 +1,18 @@
+{
+  "converged": false,
+  "flow_completed": false,
+  "used_as_initial_state": false,
+  "reason": "Stopped divergent linear-reconstruction seed; using transfer of an independently converged numerical field instead",
+  "last_iteration": {
+    "iteration": 10,
+    "velocity_change": 0.5848446162144673,
+    "pressure_change": 0.6426382109728257,
+    "flux_change": 0.06217833225231783,
+    "momentum_residual": 1.222371599022605,
+    "native_divergence_max": 7.523248048277446e-08,
+    "current_reconstructed_divergence_max": 9692.343214032418,
+    "face_flux_consistency_max": 24.66905512982836,
+    "true_linear_relative_residual": 3.6052871862971746e-12,
+    "linear_iterations": 53
+  }
+}

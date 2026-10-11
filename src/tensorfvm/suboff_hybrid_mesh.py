@@ -146,9 +146,13 @@ def structured_layers(*, axial=48, azimuthal=24, layers=4, first_height=.0004, g
     return np.asarray(points),cells,types,wall,interface,dict(axial_stations=len(x),azimuthal=azimuthal,layers=layers,first_height_L=first_height,growth=growth,layer_heights_L=heights.tolist(),total_thickness_L=float(offsets[-1]),adaptive_sampling=adaptive)
 
 
-def generate_suboff_hybrid_mesh(path, *, far_size=.35, **settings):
+def generate_suboff_hybrid_mesh(path, *, far_size=.35, tail_size=None,
+                               tail_radius=.01, tail_size_gradient=.5, **settings):
     import gmsh
     if not np.isfinite(far_size) or far_size<=0:raise ValueError('far_size must be positive')
+    if tail_size is not None and (not np.isfinite([tail_size,tail_radius,tail_size_gradient]).all()
+            or not 0<tail_size<far_size or tail_radius<=0 or tail_size_gradient<=0):
+        raise ValueError('tail refinement requires 0 < tail_size < far_size and positive radius/size gradient')
     points,cells,types,wall,interface,summary=structured_layers(**settings)
     path=Path(path);path.parent.mkdir(parents=True,exist_ok=True)
     if gmsh.isInitialized():raise RuntimeError('requires an uninitialized Gmsh session')
@@ -172,6 +176,22 @@ def generate_suboff_hybrid_mesh(path, *, far_size=.35, **settings):
         gmsh.model.mesh.addElementsByType(skin,2,[],(triangles+base).ravel())
         loop1=gmsh.model.geo.addSurfaceLoop(outer);loop2=gmsh.model.geo.addSurfaceLoop([skin])
         volume=gmsh.model.geo.addVolume([loop1,loop2]);gmsh.model.geo.synchronize()
+        if tail_size is not None:
+            # The structured skin and outer boundary are already fixed. A ball
+            # field controls exterior tetra sizes with a continuous transition.
+            # Its slope is a requested size gradient, not a guarantee on adjacent
+            # cell volumes; the generated mesh must still be measured.
+            thickness=(far_size-tail_size)/tail_size_gradient
+            center=1+summary['total_thickness_L']
+            field=gmsh.model.mesh.field.add('Ball')
+            for key,value in dict(XCenter=center,YCenter=0,ZCenter=0,Radius=tail_radius,
+                                  Thickness=thickness,VIn=tail_size,VOut=far_size).items():
+                gmsh.model.mesh.field.setNumber(field,key,value)
+            gmsh.model.mesh.field.setAsBackgroundMesh(field)
+            gmsh.option.setNumber('Mesh.MeshSizeMin',tail_size)
+            summary['tail_refinement']=dict(field='Ball',center_L=[center,0,0],
+                radius_L=tail_radius,size_L=tail_size,transition_thickness_L=thickness,
+                requested_size_gradient=tail_size_gradient,adjacent_volume_ratio_guaranteed=False)
         gmsh.model.mesh.generate(3)
         # Exterior mesher must preserve the imposed interface exactly.
         et,_,conn=gmsh.model.mesh.getElements(2,skin)

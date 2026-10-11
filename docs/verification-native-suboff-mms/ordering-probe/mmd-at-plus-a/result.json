@@ -1,0 +1,15 @@
+{
+  "linear_solve_passed": false,
+  "completed": false,
+  "flow_solved": false,
+  "ordering": "MMD_AT_PLUS_A",
+  "failure": {
+    "type": "ExternalTimeLimit",
+    "limit_seconds": 600,
+    "termination_signal": "SIGTERM"
+  },
+  "recorded_by_supervisor": true,
+  "true_relative_residual": null,
+  "factor_nnz": null,
+  "peak_process_rss_GiB": null
+}
