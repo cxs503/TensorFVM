@@ -1,0 +1,80 @@
+{
+  "checked_utc": "2026-10-11",
+  "scope": "Two independent experimental comparison operating conditions are allowed; same Reynolds number is not required.",
+  "drag_literature_reproduction": {
+    "source_doi": "10.1093/ooenergy/oiaf014",
+    "source_url": "https://academic.oup.com/ooenergy/article/doi/10.1093/ooenergy/oiaf014/8405192",
+    "published": "2025-12-26",
+    "journal_volume_year": 2026,
+    "section": "Solver settings; Grid independence verification; lift/drag coefficient definitions",
+    "configuration": "SUBOFF AFF-1, zero incidence",
+    "reference_experimental_force_N": 87.4,
+    "reported_CFD_force_N": 88.71,
+    "stated_CFD_density_kg_m3": 998.2,
+    "stated_CFD_dynamic_viscosity_Pa_s": 0.001002,
+    "stated_CFD_inlet_m_s": 3.046,
+    "computed_kinematic_viscosity_m2_s": 1.0038068523342016e-06,
+    "computed_Re_L": 13218056.809580836,
+    "Re_derived_not_direct_experimental_metadata": true,
+    "coefficient_definition": "D/(0.5*rho*S*U**2), S maximum cross-sectional area",
+    "reference_frontal_area_m2_derived_for_D_0508": 0.2026829916389991,
+    "reference_Cd_frontal_derived_with_stated_CFD_properties": 0.09312081297064881,
+    "coefficient_status": "Transparent normalization of original measured force using independent-paper CFD operating properties, not an original tabulated experimental coefficient.",
+    "source_reports_turbulence": "SST k-omega",
+    "source_velocity_boundary": "no-slip body; velocity inlet; pressure outlet; side symmetry",
+    "experimental_density_verified": false,
+    "experimental_viscosity_verified": false,
+    "experimental_drag_uncertainty": null,
+    "replication_conditions_available": true
+  },
+  "budak_2023": {
+    "doi": "10.54926/gdt.1308809",
+    "stated_wetted_area_m2": 5.98,
+    "first_speed_knots": 5.92,
+    "published_total_Ct": 0.003161,
+    "coefficient_definition": "Rt/(0.5*rho*S*V**2)",
+    "stated_density": null,
+    "stated_viscosity": null,
+    "stated_Re": null,
+    "warning": "Do not infer density by inverting tabulated Ct."
+  },
+  "budak_beji_2016": {
+    "source_url": "https://www.researchgate.net/publication/305308713_Computational_Resistance_Analyses_of_A_Generic_Submarine_Hull_Form_and_Its_Geometric_Variants",
+    "author_original_paper_text_read": true,
+    "page": 83,
+    "stated_freshwater_density_kg_m3": 998.2,
+    "viscosity_verified": false,
+    "Re_first_case_verified": false,
+    "warning": "Density is paper CFD normalization; cannot silently transfer it to Budak 2023 or original DTMB experiment."
+  },
+  "cp_original_scan": {
+    "source": "Huang et al. 19th symposium, Table 1 p333, ADA329405",
+    "full_primary_table_verified": false,
+    "retrieval_attempts": [
+      {
+        "url": "https://apps.dtic.mil/sti/citations/ADA329405",
+        "status": "unavailable"
+      },
+      {
+        "url": "https://apps.dtic.mil/sti/pdfs/ADA329405.pdf",
+        "status": "official origin inaccessible in environment"
+      },
+      {
+        "url": "https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/ADA329405.xhtml",
+        "status": "unavailable"
+      },
+      {
+        "source": "NASA NTRS targeted web search",
+        "status": "no original Table 1 scan identified"
+      },
+      {
+        "source": "NAP targeted symposium search / ONR proceedings index",
+        "status": "no original Table 1 scan identified"
+      }
+    ],
+    "candidate_Cp_correction_sensitivity_relative_L2": 0.00065979052876088,
+    "candidate_Cp_difference_L2_absolute": 0.000360567608084808,
+    "uncorrected_to_corrected_recomputed_data_is_not_replacement_reference": true,
+    "qualification_status": "Original scan still required to certify exact corrected primary entries; provisional secondary table may be compared with explicit sensitivity and uncertainty disclosure."
+  }
+}

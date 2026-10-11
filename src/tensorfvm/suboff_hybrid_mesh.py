@@ -15,17 +15,100 @@ def facet(face):
     return [(f[0],f[j],f[j+1]) for j in range(1,len(f)-1)]
 
 
-def structured_layers(*, axial=48, azimuthal=24, layers=4, first_height=.0004, growth=1.25):
+def adaptive_meridian_stations(chord_tolerance, *, minimum_spacing=1e-5, maximum_spacing=.05, max_stations=512):
+    """Sample each mother segment by its distance from a meridian chord.
+
+    Dense cosine reference samples resolve tip curvature. Recursive farthest
+    point splitting retains exact polynomial junctions. Tolerance is in L and
+    measures Euclidean meridian distance, not radial discrepancy at fixed x.
+    A spacing conflict fails explicitly rather than introducing needle cells.
+    The tolerance is checked on dense samples; it is not a continuous proof.
+    """
+    if not np.isfinite([chord_tolerance,minimum_spacing,maximum_spacing]).all() or chord_tolerance<=0 or minimum_spacing<=0 or maximum_spacing<minimum_spacing or max_stations<5:
+        raise ValueError('positive chord tolerance / minimum spacing and >=5 stations required')
+    breaks=np.array([0,3.333333,10.645833,13.979167,LENGTH_FT])/LENGTH_FT
+    result=[];errors=[]
+    for a,b in zip(breaks[:-1],breaks[1:]):
+        xx=a+(b-a)*.5*(1-np.cos(np.linspace(0,np.pi,8193)))
+        xx[[0,-1]]=[a,b]
+        rr=radius(xx);rr[xx==0]=0;rr[xx==1]=0
+        points=np.column_stack((xx,rr));chosen={0,len(xx)-1};stack=[(0,len(xx)-1)]
+        while stack:
+            lo,hi=stack.pop()
+            v=points[hi]-points[lo];t=np.clip((points[lo:hi+1]-points[lo])@v/(v@v),0,1)
+            distances=np.linalg.norm(points[lo:hi+1]-points[lo]-t[:,None]*v,axis=1)
+            index=lo+int(np.argmax(distances));maximum=float(distances.max())
+            if maximum<=chord_tolerance and xx[hi]-xx[lo]<=maximum_spacing:
+                errors.append(maximum);continue
+            if maximum<=chord_tolerance:
+                index=lo+int(np.argmin(abs(xx[lo:hi+1]-.5*(xx[lo]+xx[hi]))))
+            if xx[index]-xx[lo]<minimum_spacing or xx[hi]-xx[index]<minimum_spacing:
+                raise ValueError('chord tolerance conflicts with minimum axial spacing; refine spacing policy explicitly')
+            chosen.add(index)
+            if len(result)+len(chosen)>max_stations:raise ValueError('adaptive station limit exceeded')
+            stack.extend([(lo,index),(index,hi)])
+        stations=xx[sorted(chosen)]
+        result.extend(stations if not result else stations[1:])
+    x=np.asarray(result)
+    if np.any(np.diff(x)<minimum_spacing*(1-1e-12)):
+        raise ValueError('adaptive stations violate minimum spacing')
+    return x,dict(chord_tolerance_L=float(chord_tolerance),minimum_axial_spacing_L=float(minimum_spacing),
+                  actual_minimum_axial_spacing_L=float(np.diff(x).min()),maximum_axial_spacing_L=float(maximum_spacing),
+                  actual_maximum_axial_spacing_L=float(np.diff(x).max()),reference_points_per_segment=8193,
+                  maximum_dense_meridian_chord_error_L=max(errors),continuous_geometry_certified=False)
+
+
+def wall_facet_geometry_audit(mesh):
+    """Distances of actual triangular wall interiors to continuous mother hull.
+
+    Axisymmetry reduces the 3D closest surface distance to a 2D meridian
+    minimization. Includes vertices, edge midpoints, centroid and interior
+    quarter points. Reported maxima are sampled, not a global Hausdorff bound.
+    """
+    from scipy.spatial import cKDTree
+    from scipy.optimize import minimize_scalar
+    xx=.5*(1-np.cos(np.linspace(0,np.pi,32769)))
+    reference=np.column_stack((xx,radius(xx)));reference[[0,-1],1]=0
+    tree=cKDTree(reference)
+    bary=np.array([[1,0,0],[0,1,0],[0,0,1],[.5,.5,0],[0,.5,.5],[.5,0,.5],
+                   [1/3,1/3,1/3],[.5,.25,.25],[.25,.5,.25],[.25,.25,.5]])
+    faces=np.flatnonzero(mesh.patch_labels=='wall'); samples=[]
+    for fi in faces:
+        vertices=mesh.vertices[list(mesh.face_vertices[fi])]
+        if len(vertices)!=3:raise ValueError('audit requires actual triangular wall facets')
+        q=bary@vertices;samples.extend(np.column_stack((q[:,0],np.linalg.norm(q[:,1:],axis=1))))
+    samples=np.asarray(samples);_,nearest=tree.query(samples);distances=[]
+    for q,k in zip(samples,nearest):
+        lo=xx[max(int(k)-3,0)];hi=xx[min(int(k)+3,len(xx)-1)]
+        def distance2(x):
+            r=0. if x in (0.,1.) else float(radius(x))
+            return (x-q[0])**2+(r-q[1])**2
+        solve=minimize_scalar(distance2,bounds=(lo,hi),method='bounded',options={'xatol':1e-14})
+        distances.append(np.sqrt(min(solve.fun,distance2(lo),distance2(hi))))
+    distances=np.asarray(distances).reshape(len(faces),len(bary))
+    return dict(wall_triangles=len(faces),samples_per_triangle=len(bary),
+                maximum_sampled_surface_distance_L=float(distances.max()),
+                maximum_sampled_interior_distance_L=float(distances[:,3:].max()),
+                maximum_sampled_vertex_distance_L=float(distances[:,:3].max()),
+                p95_sampled_surface_distance_L=float(np.percentile(distances,95)),
+                continuous_geometry_certified=False)
+
+
+def structured_layers(*, axial=48, azimuthal=24, layers=4, first_height=.0004, growth=1.25, chord_tolerance=None, minimum_spacing=1e-5, maximum_spacing=.05, max_stations=512):
     if axial<12 or azimuthal<8 or layers<1 or not np.isfinite([first_height,growth]).all() or first_height<=0 or growth<1:
         raise ValueError('require axial>=12, azimuthal>=8, layers>=1, positive height and growth>=1')
-    breaks=np.array([3.333333,10.645833,13.979167])/LENGTH_FT
-    x=.5*(1-np.cos(np.linspace(0,np.pi,axial+1)))
-    # Replace nearby cosine samples with exact junctions; appending them creates
-    # nearly coincident stations and needle-like exterior boundary triangles.
-    for junction in breaks:
-        nearest=1+np.argmin(np.abs(x[1:-1]-junction));x[nearest]=junction
-    x=np.sort(x)
-    if np.any(np.diff(x)<=0):raise ValueError('colliding axial stations')
+    adaptive={}
+    if chord_tolerance is not None:
+        x,adaptive=adaptive_meridian_stations(chord_tolerance,minimum_spacing=minimum_spacing,maximum_spacing=maximum_spacing,max_stations=max_stations)
+    else:
+        breaks=np.array([3.333333,10.645833,13.979167])/LENGTH_FT
+        x=.5*(1-np.cos(np.linspace(0,np.pi,axial+1)))
+        # Replace nearby cosine samples with exact junctions; appending them creates
+        # nearly coincident stations and needle-like exterior boundary triangles.
+        for junction in breaks:
+            nearest=1+np.argmin(np.abs(x[1:-1]-junction));x[nearest]=junction
+        x=np.sort(x)
+        if np.any(np.diff(x)<=0):raise ValueError('colliding axial stations')
     r=radius(x);r[[0,-1]]=0
     eps=1e-7
     slope=(radius(np.minimum(x+eps,1))-radius(np.maximum(x-eps,0)))/(np.minimum(x+eps,1)-np.maximum(x-eps,0))
@@ -60,7 +143,7 @@ def structured_layers(*, axial=48, azimuthal=24, layers=4, first_height=.0004, g
     interface=[surface(layers,i,j) for i in range(len(x)-1) for j in range(azimuthal)]
     # Fail before Gmsh if offsets fold or facet projections become nonpositive.
     NativeMesh3D.from_cells(points,cells,types,triangulate_faces=True)
-    return np.asarray(points),cells,types,wall,interface,dict(axial_stations=len(x),azimuthal=azimuthal,layers=layers,first_height_L=first_height,growth=growth,layer_heights_L=heights.tolist(),total_thickness_L=float(offsets[-1]))
+    return np.asarray(points),cells,types,wall,interface,dict(axial_stations=len(x),azimuthal=azimuthal,layers=layers,first_height_L=first_height,growth=growth,layer_heights_L=heights.tolist(),total_thickness_L=float(offsets[-1]),adaptive_sampling=adaptive)
 
 
 def generate_suboff_hybrid_mesh(path, *, far_size=.35, **settings):
