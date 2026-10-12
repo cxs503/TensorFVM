@@ -2,6 +2,8 @@
 
 日期：2026-10-12。**状态：配置与网格流程验证；尚无 Cp 或阻力误差小于 3% 的计算结论。**
 
+后续：[首层变薄与尾部加密对照](refinement-01/README.md)；[原生 TensorFVM SIMPLEC 实现与验证](../verification-native-simplec/README.md)。
+
 ## 1. 选定的公开案例
 
 Permadi、Chen、Sugianto（2023），[Influence of Full and Symmetrical Domains on the Numerical Flow around a SUBOFF Submarine Model using OpenFOAM](https://doi.org/10.47176/jafm.16.05.1513)，[出版社全文](https://www.jafmonline.net/article_2198_f0ba50cd6021da497f86f3e36ea63eec.pdf)。

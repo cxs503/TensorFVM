@@ -464,6 +464,8 @@ OpenFOAM SUBOFF 对照基线
 
 文献设置核查、Foundation 12 复现脚本和实际网格检查见
 `OpenFOAM SUBOFF 调研与试算报告 <docs/verification-openfoam-suboff/README.md>`_。
+新增 `原生 SIMPLEC 小案例验证 <docs/verification-native-simplec/README.md>`_
+及 `第一层变薄、尾部加密对照 <docs/verification-openfoam-suboff/refinement-01/README.md>`_。
 该独立基线仍处于诊断阶段；不能据此宣称 TensorFVM 或 SUBOFF 的 Cp/阻力已达到 3% 精度。
 
 Tensor 生态项目协同

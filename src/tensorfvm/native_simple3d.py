@@ -1,4 +1,4 @@
-"""Segregated SIMPLE on shared native 3D faces (CPU reference).
+"""Segregated SIMPLE/SIMPLEC on shared native 3D faces (CPU reference).
 
 Momentum uses positive orthogonal diffusion implicitly and defers the remaining
 symmetric stress. A compact pressure correction enforces conservative face flux.
@@ -23,9 +23,24 @@ class NativeSimpleMixin:
         if np.any(diagonal<=0):raise RuntimeError('nonpositive SIMPLE momentum diagonal')
         relaxed=diagonal/c.relaxation
         inverse=1/relaxed
+        self.simplec_limited_dofs=0
+        if c.pressure_velocity_algorithm=='simplec':
+            # aP*u' + sum(aN*uN') = -G*p'. SIMPLEC approximates same-
+            # component neighbour corrections by u', giving aP+sum(aN).
+            # Other velocity components are not equated to this component;
+            # their implicit wall couplings remain in the momentum solve.
+            entries=implicit.tocoo()
+            mask=(entries.row!=entries.col)&(entries.row%3==entries.col%3)
+            neighbor_sum=np.bincount(entries.row[mask],weights=entries.data[mask],minlength=3*self.N)
+            denominator=relaxed+neighbor_sum
+            floor=.1*relaxed
+            self.simplec_limited_dofs=int(np.count_nonzero(denominator<floor))
+            inverse=1/np.maximum(denominator,floor)
         # Relaxation changes the iterative velocity response, not the target
         # steady Rhie--Chow flux. Use the unrelaxed momentum diagonal for
-        # steady face mobility; inverse remains relaxed in the SIMPLE update.
+        # steady face mobility. SIMPLEC changes the increment response, not
+        # this project's steady RC equation. This is not a port of the whole
+        # OpenFOAM rAtU/HbyA/face-interpolation discretization.
         alpha=np.asarray(v.interpolation@(m.cell_volumes*(1/diagonal).reshape(self.N,3).mean(1)))
         alpha[self.fixed]=0.
         full=self._diffusion+conv
@@ -95,7 +110,8 @@ class NativeSimpleMixin:
             consistent=self.velocity_flux_matrix@self.u.ravel()+corr@self.p+src
             residual=(block@np.r_[self.u.ravel(),self.p]-rhs)[:3*self.N]
             norm=lambda x:float(np.linalg.norm(x))
-            row=dict(iteration=iteration+1,algorithm='SIMPLE',
+            row=dict(iteration=iteration+1,algorithm=c.pressure_velocity_algorithm.upper(),
+                simplec_limited_dofs=self.simplec_limited_dofs,
                 velocity_change=norm(self.u-old_u)/max(norm(self.u),1e-30),
                 pressure_change=norm(self.p-old_p)/max(norm(self.p),1.),
                 flux_change=norm(self.flux-old_q)/max(norm(self.flux),1e-30),

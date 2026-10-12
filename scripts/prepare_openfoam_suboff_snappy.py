@@ -12,10 +12,13 @@ from tensorfvm.suboff_geometry import radius,SOURCE_SHA256
 p=argparse.ArgumentParser(description=__doc__)
 p.add_argument('--output',type=Path,required=True)
 p.add_argument('--surface-level',type=int,default=6)
+p.add_argument('--tail-level',type=int,choices=[6,7,8],help='Optional local volume refinement around x/L=0.87..1.02')
 p.add_argument('--first-layer-thickness',type=float,default=.0002)
 p.add_argument('--iterations',type=int,default=500)
 p.add_argument('--reynolds',type=float,default=13218056.809580836)
 a=p.parse_args();out=a.output
+tail_geometry=' tailBox { type searchableBox; min (0.87 -0.04 -0.04); max (1.02 0.04 0.04); }' if a.tail_level else ''
+tail_refinement=f' tailBox {{ mode inside; levels ((1e15 {a.tail_level})); }}' if a.tail_level else ''
 if not 4 <= a.surface_level <= 7:p.error('surface level must be 4..7')
 if not np.isfinite(a.first_layer_thickness) or a.first_layer_thickness <= 0:p.error('positive layer thickness required')
 write_rans_case(None,out,reynolds=a.reynolds,iterations=a.iterations)
@@ -64,6 +67,7 @@ geometry
  wall {{ type triSurfaceMesh; file "suboff.stl"; }}
  nearHull {{ type searchableBox; min (-0.1 -0.12 -0.12); max (1.1 0.12 0.12); }}
  wake {{ type searchableBox; min (0.7 -0.2 -0.2); max (2.5 0.2 0.2); }}
+ {tail_geometry}
 }}
 castellatedMeshControls
 {{
@@ -76,6 +80,7 @@ castellatedMeshControls
  {{
   nearHull {{ mode inside; levels ((1e15 4)); }}
   wake {{ mode inside; levels ((1e15 3)); }}
+  {tail_refinement}
  }}
  locationInMesh (-2 0 0);
  allowFreeStandingZoneFaces true;
@@ -114,6 +119,7 @@ background=re.sub(r' refinementSurfaces .*', ' refinementSurfaces {}', backgroun
 (out/'provenance.json').write_text(json.dumps(dict(kind='OpenFOAM Foundation 12 AFF-1 independent snappy pilot',
  mother_profile_sha256=SOURCE_SHA256,stl_sha256=hashlib.sha256((out/'constant/triSurface/suboff.stl').read_bytes()).hexdigest(),
  surface_triangles=len(triangles),surface_level=a.surface_level,reynolds=a.reynolds,
+ tail_level=a.tail_level,
  first_layer_thickness_L=a.first_layer_thickness,layers_requested=6,growth_requested=1.15,
  domain_L=[[-3,-2.625,-2.125],[4,2.375,.875]],turbulence_inlet=dict(intensity=.005,length_scale_L=.05),
  geometry='AFF-1 bare hull, zero incidence; fully turbulent; no explicit trip',

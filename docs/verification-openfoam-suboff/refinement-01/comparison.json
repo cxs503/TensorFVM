@@ -1,0 +1,125 @@
+{
+  "scope": "100-iteration OpenFOAM grid comparison; both SIMPLEC/SST; unconverged",
+  "baseline": {
+    "cells": 254775,
+    "area_fraction_with_layers": 0.9747590089389868,
+    "area_fraction_six_layers": 0.9613948022188901,
+    "last_cd": 0.09928360716309,
+    "provisional_drag_relative_error_percent": 6.618063133086771,
+    "last_yplus": {
+      "minimum": 14.63227462123,
+      "maximum": 1224.289291328,
+      "mean": 65.68899700547
+    },
+    "yplus_regions": {
+      "body_x_lt_0.85": {
+        "face_quantiles_0_10_50_90_100": [
+          14.6322746212,
+          46.92970851574,
+          49.3982505653,
+          56.75686847029,
+          70.2340255154
+        ],
+        "area_weighted_mean": 50.84312584186249,
+        "area_fraction_40_to_50": 0.5738878699476805,
+        "area_fraction_30_to_100": 0.9992594499935563,
+        "area_fraction_with_layers": 1.0
+      },
+      "tail_x_ge_0.85": {
+        "face_quantiles_0_10_50_90_100": [
+          29.8773581332,
+          36.56378597922,
+          63.9407409118,
+          853.2567818684,
+          1224.28929133
+        ],
+        "area_weighted_mean": 259.2583796419595,
+        "area_fraction_40_to_50": 0.12352129605330146,
+        "area_fraction_30_to_100": 0.5651295463511264,
+        "area_fraction_with_layers": 0.581162145688832
+      },
+      "all": {
+        "face_quantiles_0_10_50_90_100": [
+          14.6322746212,
+          46.6400289634,
+          49.4360579283,
+          57.23045787315,
+          1224.28929133
+        ],
+        "area_weighted_mean": 63.40313564995124,
+        "area_fraction_40_to_50": 0.5467468210934816,
+        "area_fraction_30_to_100": 0.9730968935188585,
+        "area_fraction_with_layers": 0.9747590089389868
+      }
+    },
+    "last_initial_residuals": {
+      "Ux": 1.34547624687e-05,
+      "Uy": 0.000543306091986,
+      "Uz": 0.000538103724808,
+      "p": 0.000306481702185,
+      "omega": 2.01994795438e-06,
+      "k": 5.69979596306e-06
+    }
+  },
+  "thinner_tail_refined": {
+    "cells": 382279,
+    "area_fraction_with_layers": 0.9989839189656421,
+    "area_fraction_six_layers": 0.995680475015177,
+    "last_cd": 0.09960656736169,
+    "provisional_drag_relative_error_percent": 6.964881624353381,
+    "last_yplus": {
+      "minimum": 13.4348592227,
+      "maximum": 589.9190285463,
+      "mean": 45.0293355726
+    },
+    "yplus_regions": {
+      "body_x_lt_0.85": {
+        "face_quantiles_0_10_50_90_100": [
+          13.4348592227,
+          42.20503267499,
+          44.42900398165,
+          51.49681379867,
+          63.2710576329
+        ],
+        "area_weighted_mean": 45.80726295780371,
+        "area_fraction_40_to_50": 0.7919821265785829,
+        "area_fraction_30_to_100": 0.9992594502734419,
+        "area_fraction_with_layers": 1.0
+      },
+      "tail_x_ge_0.85": {
+        "face_quantiles_0_10_50_90_100": [
+          26.4670997534,
+          27.36095040595,
+          29.960505023049997,
+          37.243587529050004,
+          589.919028546
+        ],
+        "area_weighted_mean": 39.47275982173003,
+        "area_fraction_40_to_50": 0.004389187360565112,
+        "area_fraction_30_to_100": 0.5037247206547716,
+        "area_fraction_with_layers": 0.9831460195233007
+      },
+      "all": {
+        "face_quantiles_0_10_50_90_100": [
+          13.4348592227,
+          30.50321437654,
+          43.999001790799994,
+          51.45553725766,
+          589.919028546
+        ],
+        "area_weighted_mean": 45.42537284540307,
+        "area_fraction_40_to_50": 0.7445002721027241,
+        "area_fraction_30_to_100": 0.9693849976877585,
+        "area_fraction_with_layers": 0.9989839189656421
+      }
+    },
+    "last_initial_residuals": {
+      "Ux": 1.56478213883e-05,
+      "Uy": 0.000896419383577,
+      "Uz": 0.000887937951116,
+      "p": 0.000908171472402,
+      "omega": 3.02023493247e-06,
+      "k": 1.02902631385e-05
+    }
+  }
+}

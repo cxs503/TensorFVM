@@ -105,7 +105,7 @@ if force_path.exists():
             denominator=.5*np.pi*(.508/4.356)**2/4
             metrics['cd_pressure']=float(force_values[1]/denominator)
             metrics['cd_viscous']=float(force_values[4]/denominator)
-        np.savetxt(evidence/'wall-cp-pilot.csv',np.c_[centers,cp],delimiter=',',header='x_L,y_L,z_L,Cp',comments='')
+        np.savetxt(evidence/'wall-cp-pilot.csv.gz',np.c_[centers,cp],delimiter=',',header='x_L,y_L,z_L,Cp',comments='')
         fig,ax=plt.subplots(figsize=(8,3.5),layout='constrained');ax.scatter(centers[:,0],cp,s=.5,alpha=.2)
         ax.set(xlabel='x/L',ylabel='Cp = 2p (U=1)',title='Unconverged pilot: all wall faces; not the Re=12M tap comparison')
         fig.savefig(out/'cp-pilot.png',dpi=160);plt.close(fig)
@@ -114,6 +114,26 @@ if force_path.exists():
         with gzip.open(evidence/'yPlus.dat.gz','wb') as stream:stream.write(yp.read_bytes())
         rows=np.array([line.split() for line in yp.read_text().splitlines() if line.strip() and not line.startswith('#')])
         metrics['last_yplus']={key:float(val) for key,val in zip(['minimum','maximum','mean'],rows[-1,2:5])}
+    if (time_dir/'yPlus').exists():
+        yp_wall=scalar_patch(time_dir/'yPlus')
+        regions={'body_x_lt_0.85':centers[:,0]<.85,'tail_x_ge_0.85':centers[:,0]>=.85,
+                 'all':np.ones(count,dtype=bool)}
+        metrics['yplus_regions']={}
+        for name,mask in regions.items():
+            vals=yp_wall[mask];weights=areas[mask]
+            metrics['yplus_regions'][name]=dict(
+                face_quantiles_0_10_50_90_100=np.quantile(vals,[0,.1,.5,.9,1]).tolist(),
+                area_weighted_mean=float(np.average(vals,weights=weights)),
+                area_fraction_40_to_50=float(weights[(vals>=40)&(vals<=50)].sum()/weights.sum()),
+                area_fraction_30_to_100=float(weights[(vals>=30)&(vals<=100)].sum()/weights.sum()),
+                area_fraction_with_layers=float(weights[layers[mask]>0].sum()/weights.sum()))
+        np.savetxt(evidence/'wall-yplus.csv.gz',np.c_[centers,yp_wall,layers,areas],delimiter=',',
+                   header='x_L,y_L,z_L,yplus,layers,area_L2',comments='')
+        fig,ax=plt.subplots(figsize=(8,3.5),layout='constrained')
+        ax.scatter(centers[:,0],yp_wall,s=.5,alpha=.25)
+        ax.axhspan(40,50,color='green',alpha=.2,label='Nominal target 40-50')
+        ax.set(xlabel='x/L',ylabel='y+',yscale='log',title='Computed wall y+: local distribution, pilot state')
+        ax.legend();fig.savefig(out/'yplus-pilot.png',dpi=160);plt.close(fig)
 for name in ['log.blockMesh','log.backgroundRefinement','log.snappyHexMesh','log.checkMesh','log.checkMesh.extended','log.foamRun']:
     path=case/name
     if path.exists():
