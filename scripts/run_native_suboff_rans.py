@@ -26,12 +26,12 @@ def main():
     parser.add_argument('--intensity', type=float, default=.005)
     parser.add_argument('--length-scale', type=float, default=.05)
     parser.add_argument('--outer-iterations', type=int, default=100)
-    parser.add_argument('--inner-iterations', type=int, help='Default: one SIMPLE sweep per SST update; 80 for coupled momentum')
+    parser.add_argument('--inner-iterations', type=int, help='Default: one SIMPLE/SIMPLEC sweep per SST update; 80 for coupled momentum')
     parser.add_argument('--pseudo-dt', type=float, default=1.)
-    parser.add_argument('--algorithm', choices=['coupled','simple'], default='simple')
+    parser.add_argument('--algorithm', choices=['coupled','simple','simplec'], default='simple')
     parser.add_argument('--wall-treatment', choices=['resolved','spalding'], default='spalding')
     parser.add_argument('--disable-skew-correction', action='store_true', help='Use linear face interpolation for pressure and velocity; accuracy requires a separate mesh study')
-    parser.add_argument('--pressure-relaxation', type=float, default=.2)
+    parser.add_argument('--pressure-relaxation', type=float, help='Default 1 for SIMPLEC, 0.2 otherwise')
     parser.add_argument('--linear-method', choices=['direct', 'iterative', 'block', 'schur'], default='direct')
     parser.add_argument('--convection-order', type=int, choices=[1, 2], default=2)
     parser.add_argument('--relaxation', type=float, default=.3)
@@ -42,14 +42,15 @@ def main():
     parser.add_argument('--initial-run', type=Path, help='Frozen numerical state on identical mesh and Reynolds number')
     parser.add_argument('--project-initial-flux', action='store_true', help='Numerical divergence-free flux seed; velocity potential is never used as physical pressure')
     args = parser.parse_args()
-    if args.inner_iterations is None:args.inner_iterations=1 if args.algorithm=="simple" else 80
+    if args.pressure_relaxation is None:args.pressure_relaxation=1. if args.algorithm=='simplec' else .2
+    if args.inner_iterations is None:args.inner_iterations=1 if args.algorithm in ('simple','simplec') else 80
     if not np.isfinite(args.reynolds) or args.reynolds <= 0:
         parser.error('positive finite Reynolds number required')
     if args.maximum_speed is not None and (not np.isfinite(args.maximum_speed) or args.maximum_speed<=1):
         parser.error('maximum speed guard must be finite and greater than one')
     if args.project_initial_flux and args.initial_run is not None:parser.error('Select a restart or initial projection, not both')
-    if args.algorithm=='simple' and (args.momentum_cfl is not None or args.linear_method!='direct'):
-        parser.error('SIMPLE requires direct segregated linear solves and uses equation relaxation, not momentum-cfl')
+    if args.algorithm in ('simple','simplec') and (args.momentum_cfl is not None or args.linear_method!='direct'):
+        parser.error('SIMPLE/SIMPLEC requires direct segregated linear solves and uses equation relaxation, not momentum-cfl')
     out = args.output
     if out.exists() and any(out.iterdir()):
         parser.error('output must be empty to preserve evidence')
@@ -70,7 +71,8 @@ def main():
         max_iterations=args.inner_iterations, nonlinear_tolerance=1e-8,
         relaxation=args.relaxation, linear_method=args.linear_method, bounded_convection=True,
         convection_order=args.convection_order, lu_ordering=args.lu_ordering,
-        momentum_pseudo_cfl=args.momentum_cfl, pressure_relaxation=args.pressure_relaxation, face_skew_correction=not args.disable_skew_correction)
+        momentum_pseudo_cfl=args.momentum_cfl, pressure_relaxation=args.pressure_relaxation,
+        pressure_velocity_algorithm='simplec' if args.algorithm=='simplec' else 'simple', face_skew_correction=not args.disable_skew_correction)
     rans_settings = NativeRansSettings(max_outer_iterations=args.outer_iterations,
         pseudo_time_step=args.pseudo_dt, nonlinear_tolerance=1e-7, wall_treatment=args.wall_treatment)
     k0, omega0 = inflow_from_intensity(1., args.intensity, args.length_scale)
@@ -100,7 +102,7 @@ def main():
     mesh = NativeMesh3D.from_gmsh(out / 'input.msh', triangulate_faces=True)
     fixed = (mesh.neighbor < 0) & (mesh.patch_labels != 'outlet')
     velocity = np.tile([1., 0., 0.], (len(mesh.owner), 1)); velocity[mesh.patch_labels == 'wall'] = 0.
-    solver_class=NativeSimpleSSTRansSolver3D if args.algorithm=="simple" else NativeSSTRansSolver3D
+    solver_class=NativeSimpleSSTRansSolver3D if args.algorithm in ('simple','simplec') else NativeSSTRansSolver3D
     solver = solver_class(mesh, fixed, velocity,
         pressure_dirichlet=mesh.patch_labels == 'outlet', settings=settings, rans_settings=rans_settings)
     initial_k=k0;initial_omega=omega0

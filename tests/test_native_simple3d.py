@@ -8,14 +8,15 @@ from tests.test_native_collocated3d import skew_mesh
 from tests.test_native_rans3d import channel
 
 
+@pytest.mark.parametrize('algorithm',['simple','simplec'])
 @pytest.mark.parametrize('convection',[False,True])
-def test_simple_affine_skew_mesh_exact_solution(convection):
+def test_simple_affine_skew_mesh_exact_solution(convection,algorithm):
     m=skew_mesh(2);G=np.array([[.2,.4,.1],[-.3,-.1,.2],[.1,.1,-.1]])
     u=np.array([.3,-.1,.2])+m.cell_centers@G.T
     bd=np.array([.3,-.1,.2])+m.face_centers@G.T
     g=np.array([.7,-.3,.2]);p=m.cell_centers@g
     s=NativeSimpleSolver3D(m,m.neighbor<0,bd,body_force=np.tile(g,(len(u),1))+(u@G.T if convection else 0),gauge_value=p[0],
-        settings=NativeSteadySettings(viscosity=.5,convection=convection,max_iterations=1200,relaxation=.5,nonlinear_tolerance=1e-9))
+        settings=NativeSteadySettings(pressure_velocity_algorithm=algorithm,viscosity=.5,convection=convection,max_iterations=1200,relaxation=.5,nonlinear_tolerance=1e-9))
     r=s.solve();assert r['converged'],r['history'][-1]
     np.testing.assert_allclose(s.u,u,atol=1e-8);np.testing.assert_allclose(s.p,p,atol=1e-8)
 
@@ -45,12 +46,14 @@ def test_simple_wall_function_coupling_and_force_ledger():
     assert not r['numerically_converged']
 
 
+@pytest.mark.parametrize('algorithm',['simple','simplec'])
 @pytest.mark.parametrize('face_skew_correction',[True,False])
-def test_simple_sst_wall_function_converges_current_equations(face_skew_correction):
+def test_simple_sst_wall_function_converges_current_equations(face_skew_correction,algorithm):
     m=channel();fixed=(m.neighbor<0)&(m.patch_labels!='outlet')
     bd=np.tile([1.,0.,0.],(len(m.owner),1));bd[m.patch_labels=='wall']=0.
     s=NativeSimpleSSTRansSolver3D(m,fixed,bd,m.patch_labels=='outlet',
-        settings=NativeSteadySettings(viscosity=.01,relaxation=.4,pressure_relaxation=.2,
+        settings=NativeSteadySettings(pressure_velocity_algorithm=algorithm,viscosity=.01,relaxation=.4,
+            pressure_relaxation=1. if algorithm=='simplec' else .2,
             convection_order=1,max_iterations=10,face_skew_correction=face_skew_correction),
         rans_settings=NativeRansSettings(max_outer_iterations=80,pseudo_time_step=1.,
             turbulence_relaxation=.7,wall_treatment='spalding'))
@@ -66,15 +69,16 @@ def test_simple_sst_wall_function_converges_current_equations(face_skew_correcti
     assert not r['physical_benchmark_passed']
 
 
+@pytest.mark.parametrize('algorithm',['simple','simplec'])
 @pytest.mark.parametrize('pressure_outlet',[False,True])
-def test_one_full_pressure_correction_matches_reconstructed_flux(pressure_outlet):
+def test_one_full_pressure_correction_matches_reconstructed_flux(pressure_outlet,algorithm):
     """Frozen Stokes coefficients isolate correction consistency from iteration lag."""
     m=skew_mesh(3);boundary=m.neighbor<0
     outlet=boundary&(m.face_centers[:,0]>1.) if pressure_outlet else np.zeros(len(m.owner),bool)
     x,y,z=m.cell_centers.T
     force=np.column_stack((np.sin(3*y),np.cos(2*x),x*z))
     s=NativeSimpleSolver3D(m,boundary&~outlet,np.zeros((len(m.owner),3)),outlet,
-        body_force=force,settings=NativeSteadySettings(viscosity=.1,convection=False,
+        body_force=force,settings=NativeSteadySettings(pressure_velocity_algorithm=algorithm,viscosity=.1,convection=False,
             max_iterations=1,relaxation=.5,pressure_relaxation=1.))
     r=s.solve()
     assert np.linalg.norm(s.u)>1e-3 and np.linalg.norm(s.p)>1e-3
@@ -141,3 +145,17 @@ def test_rejected_linear_solve_preserves_last_accepted_state(monkeypatch,bad_pre
     np.testing.assert_array_equal(s.p,p)
     np.testing.assert_array_equal(s.flux,q)
     assert not s.history
+
+
+def test_simplec_matches_simple_nonaffine_steady_solution():
+    m=skew_mesh(3);x,y,z=m.cell_centers.T
+    force=np.column_stack((np.sin(3*y),np.cos(2*x),x*z));answers=[]
+    for algorithm in ('simple','simplec'):
+        s=NativeSimpleSolver3D(m,m.neighbor<0,np.zeros((len(m.owner),3)),body_force=force,
+            settings=NativeSteadySettings(viscosity=.1,convection=False,relaxation=.5,
+                pressure_velocity_algorithm=algorithm,pressure_relaxation=1.,
+                max_iterations=1500,nonlinear_tolerance=1e-9))
+        result=s.solve();assert result['converged'],result['history'][-1]
+        assert result['history'][-1]['algorithm']==algorithm.upper()
+        answers.append((s.u.copy(),s.p.copy(),s.flux.copy()))
+    for left,right in zip(*answers):np.testing.assert_allclose(left,right,atol=2e-8)

@@ -106,6 +106,7 @@ class NativeSteadySettings:
     momentum_pseudo_cfl: float | None=None
     pressure_relaxation: float=.2
     face_skew_correction: bool=True
+    pressure_velocity_algorithm: str='simple'
 
 
 class NativeSteadySolver3D:
@@ -113,6 +114,8 @@ class NativeSteadySolver3D:
         self.mesh=mesh;self.settings=settings or NativeSteadySettings();c=self.settings
         if not np.isfinite([c.viscosity,c.density,c.relaxation,c.nonlinear_tolerance,c.linear_tolerance]).all() or c.viscosity<=0 or c.density<=0 or not 0<c.relaxation<=1 or c.max_iterations<1 or c.nonlinear_tolerance<=0 or c.linear_tolerance<=0:raise ValueError('positive finite material/solver settings required')
         if c.linear_method not in ('direct','iterative','block','schur'):raise ValueError('linear_method must be direct, iterative, block or schur')
+        if c.pressure_velocity_algorithm not in ('simple','simplec'):
+            raise ValueError('pressure_velocity_algorithm must be simple or simplec')
         if c.lu_ordering not in ('COLAMD','MMD_ATA','MMD_AT_PLUS_A','NATURAL'):
             raise ValueError('lu_ordering must be a supported SuperLU column ordering')
         if c.momentum_pseudo_cfl is not None and (not np.isfinite(c.momentum_pseudo_cfl) or c.momentum_pseudo_cfl<=0):
