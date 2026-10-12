@@ -1,0 +1,150 @@
+{
+  "cells": 835814,
+  "wall_faces": 40308,
+  "mean_layers_face_weighted": 5.964275081869604,
+  "area_fraction_with_layers": 0.9999190669056214,
+  "area_fraction_six_layers": 0.9968165352426958,
+  "face_layer_histogram": {
+    "0": 19,
+    "1": 57,
+    "2": 85,
+    "3": 107,
+    "4": 121,
+    "5": 138,
+    "6": 39781
+  },
+  "standard_mesh_ok": true,
+  "extended_mesh_ok": false,
+  "max_nonorthogonality_deg": 64.1786061639,
+  "max_skewness": 1.3992377648,
+  "solver_completed": true,
+  "numerically_converged": true,
+  "physical_benchmark_passed": false,
+  "wall_surface_area_L2": 0.31538692958016645,
+  "missing_layers": {
+    "faces": 19,
+    "area_fraction": 8.093309437856908e-05,
+    "face_centres_min_L": [
+      0.8691004130579999,
+      -0.03591100919575,
+      -0.0074090951877866665
+    ],
+    "face_centres_max_L": [
+      0.973747240208,
+      5.9602384294800005e-05,
+      0.0071699047198020005
+    ]
+  },
+  "incomplete_layers": {
+    "faces": 527,
+    "area_fraction": 0.0031834647573042193,
+    "face_centres_min_L": [
+      0.8576585489837499,
+      -0.040179775974425,
+      -0.014165671430825
+    ],
+    "face_centres_max_L": [
+      0.97745136176225,
+      0.006882855225002001,
+      0.008032062972862498
+    ]
+  },
+  "last_iteration": 1000.0,
+  "last_cd": 0.09132077726811,
+  "reference_cd": 0.09312081297064881,
+  "provisional_drag_relative_error_percent": 1.933011155203479,
+  "last_initial_residuals": {
+    "Ux": 1.02930101538e-09,
+    "Uy": 5.99429531226e-08,
+    "Uz": 5.88571951741e-08,
+    "p": 1.23567694949e-07,
+    "omega": 9.87814905164e-10,
+    "k": 1.00433921701e-09
+  },
+  "pressure_force_reintegration_max_abs_error": 3.754050022231059e-17,
+  "cd_pressure": 0.011392360508569831,
+  "cd_viscous": 0.07992841675953592,
+  "pressure_drag_regions": {
+    "forebody_x_lt_0.25": {
+      "cd_pressure": 0.004314979868339107,
+      "area_fraction": 0.24972094260905175
+    },
+    "midbody_0.25_to_0.75": {
+      "cd_pressure": 3.620848895917808e-05,
+      "area_fraction": 0.581481615737056
+    },
+    "afterbody_x_ge_0.75": {
+      "cd_pressure": 0.007041172151278513,
+      "area_fraction": 0.16879744165389213
+    },
+    "zero_layer_faces": {
+      "cd_pressure": -4.454495711533417e-05,
+      "area_fraction": 8.093309437856908e-05
+    }
+  },
+  "last_yplus": {
+    "minimum": 1.731440568114,
+    "maximum": 224.8247724316,
+    "mean": 40.82221087181
+  },
+  "yplus_outliers": {
+    "maximum_face_center_L": [
+      0.9711602191682001,
+      5.9602384294800005e-05,
+      0.0071699047198020005
+    ],
+    "area_fraction_gt_100": 0.00011835050539839194,
+    "area_fraction_gt_200": 7.263384550671798e-06,
+    "max_on_six_layer_faces": 63.0126016045,
+    "max_on_zero_layer_faces": 224.824772432,
+    "area_fraction_gt_100_on_incomplete_layers": 0.00011835050539839194
+  },
+  "yplus_regions": {
+    "body_x_lt_0.85": {
+      "face_quantiles_0_10_50_90_100": [
+        6.70504433711,
+        41.0906875287,
+        43.0743684363,
+        50.55950723914,
+        63.0126016045
+      ],
+      "area_weighted_mean": 44.79553435829208,
+      "area_fraction_40_to_50": 0.8071086133356913,
+      "area_fraction_30_to_100": 0.9991300530886923,
+      "area_fraction_with_layers": 1.0
+    },
+    "tail_x_ge_0.85": {
+      "face_quantiles_0_10_50_90_100": [
+        1.73144056811,
+        19.018771117260002,
+        23.2872071867,
+        31.81433954956,
+        224.824772432
+      ],
+      "area_weighted_mean": 25.239930144001857,
+      "area_fraction_40_to_50": 0.013739519166432962,
+      "area_fraction_30_to_100": 0.19056566311352338,
+      "area_fraction_with_layers": 0.998665468045747
+    },
+    "all": {
+      "face_quantiles_0_10_50_90_100": [
+        1.73144056811,
+        23.210745679749998,
+        42.395640103299996,
+        50.39639054524,
+        224.824772432
+      ],
+      "area_weighted_mean": 43.60957882050133,
+      "area_fraction_40_to_50": 0.7589945044372051,
+      "area_fraction_30_to_100": 0.9500944208758705,
+      "area_fraction_with_layers": 0.9999190669056214
+    }
+  },
+  "mesh_sha256": {
+    "points": "ffac66d1e9b8957525dd81b7c7355a98e51ac8978b11873873cc35e8bd053624",
+    "faces": "31183fe85bfffdfb8f68aacd589457a198f1cd642166c0f183243c48f394cc2c",
+    "owner": "359c9dc3d31d1a500360e5c88f7dd18a019d3c2584a175f3c471c1f3f2eac1c6",
+    "neighbour": "8b01ea3f085576a3c3722bf60111935631a46f45a09916b15e3b6c1d5c805c2c",
+    "boundary": "864b57cba7df369f5ae5a32e8807e5fc021b1facdffc21caa19c5604cd5856d5"
+  }
+}

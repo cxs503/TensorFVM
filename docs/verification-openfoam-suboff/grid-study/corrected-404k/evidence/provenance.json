@@ -1,0 +1,41 @@
+{
+  "kind": "OpenFOAM Foundation 12 AFF-1 independent snappy pilot",
+  "mother_profile_sha256": "435bd062a90d6881784734fa614f033e880b310111200436e8b13950fbccae02",
+  "stl_sha256": "455e2ac1a67d023af813cc21034d7455f44d69e5d234d9bff4298ecb02b0b47b",
+  "surface_triangles": 48960,
+  "surface_level": 6,
+  "reynolds": 13218056.809580836,
+  "tail_level": 7,
+  "tip_level": 8,
+  "base_scale": 1.0,
+  "base_counts": [
+    28,
+    20,
+    12
+  ],
+  "first_layer_thickness_L": 0.00018,
+  "layers_requested": 6,
+  "growth_requested": 1.15,
+  "domain_L": [
+    [
+      -3,
+      -2.625,
+      -2.125
+    ],
+    [
+      4,
+      2.375,
+      0.875
+    ]
+  ],
+  "turbulence_inlet": {
+    "intensity": 0.005,
+    "length_scale_L": 0.05
+  },
+  "geometry": "AFF-1 bare hull, zero incidence; fully turbulent; no explicit trip",
+  "literature_doi": "10.47176/jafm.16.05.1513",
+  "literature_geometry": "AFF-8",
+  "literature_version": "OpenCFD v2112",
+  "literature_exact_reproduction": false,
+  "physical_benchmark_passed": false
+}
