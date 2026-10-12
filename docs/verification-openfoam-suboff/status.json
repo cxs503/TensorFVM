@@ -1,0 +1,50 @@
+{
+  "cells": 254775,
+  "wall_faces": 19196,
+  "mean_layers_face_weighted": 5.806418003750782,
+  "area_fraction_with_layers": 0.9747590089389868,
+  "area_fraction_six_layers": 0.9613948022188901,
+  "face_layer_histogram": {
+    "0": 496,
+    "1": 48,
+    "2": 48,
+    "3": 52,
+    "4": 52,
+    "5": 48,
+    "6": 18452
+  },
+  "standard_mesh_ok": true,
+  "extended_mesh_ok": false,
+  "max_nonorthogonality_deg": 44.9567959136,
+  "max_skewness": 0.572335544998,
+  "solver_completed": true,
+  "numerically_converged": false,
+  "physical_benchmark_passed": false,
+  "last_iteration": 100.0,
+  "last_cd": 0.09928360716309,
+  "reference_cd": 0.09312081297064881,
+  "provisional_drag_relative_error_percent": 6.618063133086771,
+  "last_initial_residuals": {
+    "Ux": 1.34547624687e-05,
+    "Uy": 0.000543306091986,
+    "Uz": 0.000538103724808,
+    "p": 0.000306481702185,
+    "omega": 2.01994795438e-06,
+    "k": 5.69979596306e-06
+  },
+  "pressure_force_reintegration_max_abs_error": 1.918133637628149e-16,
+  "cd_pressure": 0.014658946835293563,
+  "cd_viscous": 0.0846246603278092,
+  "last_yplus": {
+    "minimum": 14.63227462123,
+    "maximum": 1224.289291328,
+    "mean": 65.68899700547
+  },
+  "mesh_sha256": {
+    "points": "3d3abf6a1b1c88906645d510304b6423b95779076df7e288b956cb8468654c40",
+    "faces": "1779acdad1093dd787c7bf927754b7ec1f22dfe925fb7ac0bc57a43d6c2a51e9",
+    "owner": "dc685e284b7fee2df81012aef8efb7363c56382e3df5178d601634950baafdcf",
+    "neighbour": "4a52f700055824808e369bdbc5fd8ec8966593ed34971652fdb8a07a3ed9d415",
+    "boundary": "6095c1ecc2db3a3bf2d4efc651483cf64e1144850ba31210634795c6227d4f7e"
+  }
+}

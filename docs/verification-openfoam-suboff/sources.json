@@ -1,0 +1,19 @@
+{
+  "retrieved_utc_date": "2026-10-12",
+  "sources": [
+    {
+      "title": "Permadi et al. (2023), OpenFOAM SUBOFF domain comparison",
+      "doi": "10.47176/jafm.16.05.1513",
+      "url": "https://www.jafmonline.net/article_2198_f0ba50cd6021da497f86f3e36ea63eec.pdf",
+      "sha256": "ce2acb49230078b9a85b8d7d6b8a0e44cf4f3d6c9bc8bf165072795e86f2f3a0",
+      "redistribution": "external download only; paper not bundled"
+    },
+    {
+      "title": "OpenFOAM Foundation 12 Ubuntu noble official binary",
+      "url": "https://dl.openfoam.org/ubuntu/dists/noble/main/binary-amd64/openfoam12_20250206_amd64.deb",
+      "sha256": "b3dcd9a636a5a827bf43ffcf0156922ba6db492123f035eae1046ee759602dd1",
+      "build": "12-86e126a7bc4d",
+      "installation": "dpkg-deb local extraction; installation prefix adjusted; WM_MPLIB=none; solver unmodified"
+    }
+  ]
+}
