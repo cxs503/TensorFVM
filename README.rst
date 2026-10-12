@@ -14,6 +14,15 @@ RANS 闭合；网格包括笛卡尔交错网格、圆柱 O 型贴体网格、NAC
 投影/SGS 基线。
 它不是已经验证的工程 CFD 软件。
 
+面向 Agent 科研工厂的职责
+------------------------
+
+在以 Agent 为科研主体的黑灯科研工厂中，TensorFVM 是一个**可编程、可观测、可验证的有限体积数值实验设备**。它负责有限体积数值内核及自身基准验证，不负责全局科研规划、跨仓库工作流编排，也不能自行判定结果已获得科学验证。
+
+目标接口应支持参数化实验、结构化诊断、可复现输出和基准证据关联。科研工作流可按物理问题和验证要求选择 TensorFVM、TensorLBM 或外部求解器；自主开发的价值应由准确性、可维护性、耦合能力和同等条件下的性能基准证明，而不是预先假定自研总是更优。
+
+**科研工厂架构：** `TensorPhysics 科研工厂架构 <https://github.com/cxs503/TensorPhysics/blob/main/docs/SCIENCE_FACTORY_ARCHITECTURE.md>`_；**系统总览：** `SYSTEM_OVERVIEW.md <https://github.com/cxs503/TensorPhysics/blob/main/docs/SYSTEM_OVERVIEW.md>`_。
+
 系统职责与集成边界
 --------------------
 
