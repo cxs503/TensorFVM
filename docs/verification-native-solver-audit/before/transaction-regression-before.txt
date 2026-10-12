@@ -1,0 +1,45 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+___________ test_rejected_linear_solve_preserves_last_accepted_state ___________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7e4ef7837c10>
+
+    def test_rejected_linear_solve_preserves_last_accepted_state(monkeypatch):
+        import tensorfvm.native_simple3d as module
+        original=module.splu;m=skew_mesh(2)
+        s=NativeSimpleSolver3D(m,m.neighbor<0,np.zeros((len(m.owner),3)),
+            body_force=np.tile([.3,.2,.1],(len(m.cells),1)),
+            settings=NativeSteadySettings(viscosity=.1,convection=False,max_iterations=1))
+        u=np.zeros((s.N,3));p=np.zeros(s.N);q=np.zeros(s.F)
+        s.initialize_state(u,p,q)
+        class PerturbedFactor:
+            def __init__(self,matrix,**kwargs):self.factor=original(matrix,**kwargs);self.size=matrix.shape[0]
+            def solve(self,rhs):
+                answer=self.factor.solve(rhs)
+                return answer+np.linspace(0.,1.,s.N) if self.size==s.N else answer
+        monkeypatch.setattr(module,'splu',PerturbedFactor)
+        with pytest.raises(RuntimeError,match='linear solve'):s.solve()
+>       np.testing.assert_array_equal(s.u,u)
+E       AssertionError: 
+E       Arrays are not equal
+E       
+E       Mismatched elements: 24 / 24 (100%)
+E       First 5 mismatches are at indices:
+E        [0, 0]: -0.06185384382052886 (ACTUAL), 0.0 (DESIRED)
+E        [0, 1]: -0.11257399575336272 (ACTUAL), 0.0 (DESIRED)
+E        [0, 2]: -0.21747811487297952 (ACTUAL), 0.0 (DESIRED)
+E        [1, 0]: -0.06185384382052887 (ACTUAL), 0.0 (DESIRED)
+E        [1, 1]: -0.11257399575336256 (ACTUAL), 0.0 (DESIRED)
+E       Max absolute difference among violations: 0.21747811
+E       Max relative difference among violations: inf
+E        ACTUAL: array([[-0.061854, -0.112574, -0.217478],
+E              [-0.061854, -0.112574, -0.217478],
+E              [-0.061854, -0.112574, -0.217478],...
+E        DESIRED: array([[0., 0., 0.],
+E              [0., 0., 0.],
+E              [0., 0., 0.],...
+
+tests/test_native_simple3d.py:138: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_native_simple3d.py::test_rejected_linear_solve_preserves_last_accepted_state
+1 failed, 9 deselected in 1.90s

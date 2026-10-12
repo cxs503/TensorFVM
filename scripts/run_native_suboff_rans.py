@@ -156,7 +156,8 @@ def main():
             callback=checkpoint, momentum_callback=momentum_checkpoint)
         converged = result['numerically_converged']
     except Exception as error:
-        failure = dict(type=type(error).__name__, message=str(error)); converged = False
+        failure = dict(type=type(error).__name__, message=str(error),
+            rejected_linear_solve=getattr(solver,"last_rejected_linear_solve",None)); converged = False
     forces = solver.forces()
     wall = mesh.patch_labels == 'wall'
     area = np.linalg.norm(mesh.area_vectors[wall], axis=1)
@@ -170,12 +171,14 @@ def main():
         k=solver.k, omega=solver.omega, flux=solver.flux,
         pressure_faces=forces['physical_pressure_faces'],
         anisotropic_stress_traction=forces['anisotropic_stress_traction'],
+        linearized_anisotropic_stress_traction=forces['linearized_anisotropic_stress_traction'],
         isotropic_reynolds_stress_traction=forces['isotropic_reynolds_stress_traction'],
         wall_distance=solver.wall_distance, wall_yplus=yplus, wall_face_indices=np.flatnonzero(wall))
     summary = dict(cells=len(mesh.cells), Re_L=args.reynolds, numerically_converged=converged,
         physical_validation_passed=False, spatial_convergence_qualified=False,
         solution_state='coupled_iterate' if history else 'momentum_only' if momentum_history else 'initialization_only',
         completed_momentum_iterations=len(momentum_history),
+        wall_force_evaluation="current nonlinear wall law; frozen linearized traction archived separately",
         wall_treatment=args.wall_treatment, algorithm=args.algorithm,
         wall_function_diagnostics=dict(enabled=args.wall_treatment=='spalding',
             minimum_yplus=float(yplus.min()),maximum_yplus=float(yplus.max()),

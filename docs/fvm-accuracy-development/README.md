@@ -1,5 +1,16 @@
 # Standalone FVM accuracy first
 
+## Latest solver audit: energy passivity remains unresolved
+
+[Four further defects and their evidence](../verification-native-solver-audit/README.md):
+the mixed-mesh viscous operator has a negative energy quadratic form under
+homogeneous velocity boundaries. This is a passivity failure, not a proof of
+instability of the complete incompressible solver. Three additional defects
+are corrected: relaxation-dependent steady flux, stale interrupted wall force,
+and rejected linear candidates overwriting accepted state. 48 related tests
+pass. SUBOFF still fails the pressure linear-residual gate before accepting
+its first step; no physical qualification is claimed.
+
 ## Latest pressure-response correction
 
 [A reproducible inconsistency and its correction](../verification-simple-pressure-response/README.md)

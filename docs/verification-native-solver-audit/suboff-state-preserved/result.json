@@ -1,0 +1,72 @@
+{
+  "cells": 9068,
+  "Re_L": 12000000.0,
+  "numerically_converged": false,
+  "physical_validation_passed": false,
+  "spatial_convergence_qualified": false,
+  "solution_state": "initialization_only",
+  "completed_momentum_iterations": 0,
+  "wall_force_evaluation": "current nonlinear wall law; frozen linearized traction archived separately",
+  "wall_treatment": "spalding",
+  "algorithm": "simple",
+  "wall_function_diagnostics": {
+    "enabled": true,
+    "minimum_yplus": 60.52241877313282,
+    "maximum_yplus": 193.84068849248274,
+    "area_fraction_yplus_30_to_300": 1.0,
+    "qualified": false,
+    "note": "Equilibrium Spalding shear, blended omega cell constraint; mesh and pressure-gradient sensitivity remain unqualified"
+  },
+  "low_Re_wall_resolution": {
+    "maximum_yplus": 193.84068849248274,
+    "area_weighted_mean_yplus": 191.22450718186033,
+    "maximum_yplus_below_one": false,
+    "qualified": false
+  },
+  "forces_dimensionless": {
+    "total_force": [
+      0.0009105476623867151,
+      -4.4178889335844655e-20,
+      -6.863324337505609e-21
+    ],
+    "physical_pressure_force": [
+      -4.743363825108768e-24,
+      8.358401595906922e-23,
+      -1.3464303173861197e-23
+    ],
+    "anisotropic_viscous_force": [
+      0.0009105476623867151,
+      -4.4178889335844655e-20,
+      -6.863324337505609e-21
+    ],
+    "isotropic_turbulent_force": [
+      4.743363825108768e-24,
+      -8.358401595906922e-23,
+      1.3464303173861197e-23
+    ],
+    "modified_pressure_force": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "history": [],
+  "momentum_history": [],
+  "failure": {
+    "type": "RuntimeError",
+    "message": "SIMPLE linear solve failed true residual gate: momentum=2.25112e-16, pressure=5.46047e-08; accepted state preserved",
+    "rejected_linear_solve": {
+      "momentum_relative_residual": 2.2511225324511483e-16,
+      "pressure_relative_residual": 5.460469464808807e-08,
+      "accepted_state_changed": false
+    }
+  },
+  "wall_seconds": 23.422745794057846,
+  "limitations": [
+    "Experimental total drag and Cp are not yet compared by this runner.",
+    "True nonlinear momentum, k and omega convergence is required independently.",
+    "Actual computed y+ and wall-treatment sensitivity are required for acceptance.",
+    "Inflow turbulence and tripping remain modeling assumptions.",
+    "Single grid does not establish spatial convergence."
+  ]
+}

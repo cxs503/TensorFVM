@@ -1,0 +1,42 @@
+{
+  "cases": [
+    {
+      "relaxation": 0.3,
+      "converged": true,
+      "iterations": 76,
+      "last": {
+        "iteration": 76,
+        "algorithm": "SIMPLE",
+        "velocity_change": 2.3657591388895253e-10,
+        "pressure_change": 6.575630609714096e-10,
+        "flux_change": 1.6156080020417245e-10,
+        "momentum_residual": 8.815278839836559e-10,
+        "native_divergence_max": 3.512815038853035e-17,
+        "current_reconstructed_divergence_max": 9.658777566819152e-10,
+        "face_flux_consistency_max": 1.1049773888851384e-10,
+        "true_linear_relative_residual": 4.455075717151071e-16,
+        "linear_iterations": 2
+      }
+    },
+    {
+      "relaxation": 0.8,
+      "converged": true,
+      "iterations": 78,
+      "last": {
+        "iteration": 78,
+        "algorithm": "SIMPLE",
+        "velocity_change": 3.452336323301778e-11,
+        "pressure_change": 9.466243327000229e-11,
+        "flux_change": 2.162274164436753e-11,
+        "momentum_residual": 2.795925976281775e-10,
+        "native_divergence_max": 9.367506770274761e-17,
+        "current_reconstructed_divergence_max": 8.183866436091425e-10,
+        "face_flux_consistency_max": 1.089218324909491e-10,
+        "true_linear_relative_residual": 1.7471376498143028e-16,
+        "linear_iterations": 2
+      }
+    }
+  ],
+  "relative_velocity_difference": 0.18224276185911234,
+  "relative_pressure_difference": 0.02047864394014204
+}

@@ -252,8 +252,21 @@ class NativeSSTRansSolver3D(NativeSteadySolver3D):
     def forces(self,patch='wall'):
         if self.k is None:raise RuntimeError('initialize RANS state before evaluating RANS forces')
         base=super().forces(patch);mask=self.mesh.patch_labels==patch
+        linearized=base['viscous_traction_integrated'].copy()
         if self.rans_settings.wall_treatment=='spalding':
-            traction=(self.wall_flux_matrix@self.u.ravel()+self.wall_flux_source).reshape(self.F,3)
+            linearized=(self.wall_flux_matrix@self.u.ravel()+self.wall_flux_source).reshape(self.F,3)
+            traction=linearized.copy()
+            # A diagnostic can interrupt the momentum solve before wall
+            # coefficients are refreshed. Report the nonlinear constitutive
+            # traction at the current state; retain the frozen linearized
+            # traction separately, without changing any solver coefficient.
+            wall=self.wall;m=self.mesh;area=np.linalg.norm(m.area_vectors[wall],axis=1)
+            normal=m.area_vectors[wall]/area[:,None]
+            velocity=self.u[m.owner[wall]]
+            tangent=velocity-normal*np.sum(velocity*normal,axis=1)[:,None]
+            law=wall_traction(tangent,self.wall_distance[m.owner[wall]],self.settings.density,self.settings.viscosity)
+            traction[wall]=(normal*np.sum(linearized[wall]*normal,axis=1)[:,None]
+                +area[:,None]*law['traction_pa'])
             base['viscous_traction_integrated']=traction
             base['viscous_force']=-traction[mask].sum(0)
             base['total_force']=base['pressure_force']+base['viscous_force']
@@ -261,7 +274,7 @@ class NativeSSTRansSolver3D(NativeSteadySolver3D):
         physical=base['pressure_faces']-2/3*self.settings.density*kfaces
         pressure_force=(physical[mask,None]*self.mesh.area_vectors[mask]).sum(0)
         isotropic_force=isotropic[mask].sum(0)
-        return dict(total_force=base['total_force'],physical_pressure_force=pressure_force,anisotropic_viscous_force=base['viscous_force'],isotropic_turbulent_force=isotropic_force,modified_pressure_force=base['pressure_force'],physical_pressure_faces=physical,modified_pressure_faces=base['pressure_faces'],isotropic_reynolds_stress_traction=-isotropic,anisotropic_stress_traction=base['viscous_traction_integrated'])
+        return dict(total_force=base['total_force'],physical_pressure_force=pressure_force,anisotropic_viscous_force=base['viscous_force'],isotropic_turbulent_force=isotropic_force,modified_pressure_force=base['pressure_force'],physical_pressure_faces=physical,modified_pressure_faces=base['pressure_faces'],isotropic_reynolds_stress_traction=-isotropic,anisotropic_stress_traction=base['viscous_traction_integrated'],linearized_anisotropic_stress_traction=linearized)
 
 
 class NativeSimpleSSTRansSolver3D(NativeSimpleMixin,NativeSSTRansSolver3D):

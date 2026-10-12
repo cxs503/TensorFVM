@@ -22,7 +22,10 @@ class NativeSimpleMixin:
         if np.any(diagonal<=0):raise RuntimeError('nonpositive SIMPLE momentum diagonal')
         relaxed=diagonal/c.relaxation
         inverse=1/relaxed
-        alpha=np.asarray(v.interpolation@(m.cell_volumes*inverse.reshape(self.N,3).mean(1)))
+        # Relaxation changes the iterative velocity response, not the target
+        # steady Rhie--Chow flux. Use the unrelaxed momentum diagonal for
+        # steady face mobility; inverse remains relaxed in the SIMPLE update.
+        alpha=np.asarray(v.interpolation@(m.cell_volumes*(1/diagonal).reshape(self.N,3).mean(1)))
         alpha[self.fixed]=0.
         full=self._diffusion+conv
         rhs=self.force_integrated+self.diffusion_source-self.p_force_source-source
@@ -48,7 +51,7 @@ class NativeSimpleMixin:
         if not self._flux_initialized:
             self.flux=self.velocity_flux_matrix@self.u.ravel()+self.velocity_flux_source
             self._flux_initialized=True
-        converged=False
+        converged=False;self.last_rejected_linear_solve=None
         for iteration in range(c.max_iterations):
             old_u=self.u.copy();old_p=self.p.copy();old_q=self.flux.copy()
             implicit,full,rhs,inverse,alpha,extra=self._simple_momentum(self.flux)
@@ -68,11 +71,23 @@ class NativeSimpleMixin:
             prhs=-self.viscous.divergence_matrix@qstar
             if self.gauge:P[0,:]=0;P[0,0]=1;prhs[0]=self.gauge_value-self.p[0]
             P=P.tocsc();dp=splu(P,permc_spec=c.lu_ordering).solve(prhs)
-            self.u=(predicted-inverse*(self.pressure.pressure_force_matrix@dp)).reshape(self.N,3)
-            self.p+=c.pressure_relaxation*dp
-            if self.gauge:self.p+=self.gauge_value-self.p[0]
-            self.flux=qstar+response@dp
-            if not all(np.isfinite(x).all() for x in (self.u,self.p,self.flux)):raise RuntimeError('nonfinite SIMPLE state')
+            norm=lambda x:float(np.linalg.norm(x))
+            linear_u=norm(A@predicted-target)/max(norm(target),1e-30)
+            linear_p=norm(P@dp-prhs)/max(norm(prhs),1e-30)
+            finite=np.isfinite(predicted).all() and np.isfinite(dp).all() and np.isfinite([linear_u,linear_p]).all()
+            if not finite or max(linear_u,linear_p)>max(5*c.linear_tolerance,1e-9):
+                self.last_rejected_linear_solve=dict(
+                    momentum_relative_residual=linear_u if np.isfinite(linear_u) else None,
+                    pressure_relative_residual=linear_p if np.isfinite(linear_p) else None,
+                    accepted_state_changed=False)
+                raise RuntimeError(f'SIMPLE linear solve failed true residual gate: momentum={linear_u:g}, pressure={linear_p:g}; accepted state preserved')
+            candidate_u=(predicted-inverse*(self.pressure.pressure_force_matrix@dp)).reshape(self.N,3)
+            candidate_p=self.p+c.pressure_relaxation*dp
+            if self.gauge:candidate_p+=self.gauge_value-candidate_p[0]
+            candidate_flux=qstar+response@dp
+            if not all(np.isfinite(x).all() for x in (candidate_u,candidate_p,candidate_flux)):
+                raise RuntimeError('nonfinite SIMPLE candidate; accepted state preserved')
+            self.u,self.p,self.flux=candidate_u,candidate_p,candidate_flux
             block,rhs,_,corr,src=self._system(self.flux)
             consistent=self.velocity_flux_matrix@self.u.ravel()+corr@self.p+src
             residual=(block@np.r_[self.u.ravel(),self.p]-rhs)[:3*self.N]
@@ -85,8 +100,7 @@ class NativeSimpleMixin:
                 native_divergence_max=float(np.abs(self.viscous.op.integrate(self.flux)/self.mesh.cell_volumes).max()),
                 current_reconstructed_divergence_max=float(np.abs(self.viscous.op.integrate(consistent)/self.mesh.cell_volumes).max()),
                 face_flux_consistency_max=float(np.max(np.abs(consistent-self.flux)/np.linalg.norm(self.mesh.area_vectors,axis=1))),
-                true_linear_relative_residual=max(norm(A@predicted-target)/max(norm(target),1e-30),norm(P@dp-prhs)/max(norm(prhs),1e-30)),linear_iterations=2)
-            if row["true_linear_relative_residual"]>max(5*c.linear_tolerance,1e-9):raise RuntimeError("SIMPLE linear solve failed true residual gate")
+                true_linear_relative_residual=max(linear_u,linear_p),linear_iterations=2)
             self.history.append(row)
             if callback:callback(row)
             if max(row[key] for key in ('velocity_change','pressure_change','flux_change','momentum_residual','native_divergence_max','current_reconstructed_divergence_max','face_flux_consistency_max'))<c.nonlinear_tolerance:
