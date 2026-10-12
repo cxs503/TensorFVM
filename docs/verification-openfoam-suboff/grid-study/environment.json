@@ -1,0 +1,131 @@
+{
+  "openfoam": "Foundation 12 build 12-86e126a7bc4d",
+  "mpi": "Open MPI 4.1.6 Ubuntu 24.04 packages, extracted to user directory",
+  "packages": [
+    {
+      "filename": "libevent-pthreads-2.1-7t64_2.1.12-stable-9ubuntu2_amd64.deb",
+      "metadata": "Package: libevent-pthreads-2.1-7t64\nVersion: 2.1.12-stable-9ubuntu2\nArchitecture: amd64",
+      "sha256": "f9bf6e3681179df772eea7d04b98b597560c428c39b7fca05bfaf64691c327b1"
+    },
+    {
+      "filename": "libfabric1_1.17.0-3build2_amd64.deb",
+      "metadata": "Package: libfabric1\nVersion: 1.17.0-3build2\nArchitecture: amd64",
+      "sha256": "804fe1206ed62d370bc5f5b1714ddb75264012c4181fb46e493e262d3102f5ca"
+    },
+    {
+      "filename": "libhwloc-plugins_2.10.0-1build1_amd64.deb",
+      "metadata": "Package: libhwloc-plugins\nVersion: 2.10.0-1build1\nArchitecture: amd64",
+      "sha256": "64ef2b2cdf1d657ee491583931648bd805e8dfb4097de8072946cb94efc6f352"
+    },
+    {
+      "filename": "libhwloc15_2.10.0-1build1_amd64.deb",
+      "metadata": "Package: libhwloc15\nVersion: 2.10.0-1build1\nArchitecture: amd64",
+      "sha256": "45acb4e6676f968d0f32ff1c5115cad0b61165931afa1a59282bda6f00d13c3b"
+    },
+    {
+      "filename": "libibverbs1_50.0-2ubuntu0.2_amd64.deb",
+      "metadata": "Package: libibverbs1\nVersion: 50.0-2ubuntu0.2\nArchitecture: amd64",
+      "sha256": "8489558105ee1d1c65ae6e0f1bac0e9b15f314a68f106ee9a63c89821242bd8e"
+    },
+    {
+      "filename": "libmunge2_0.5.15-4ubuntu0.1_amd64.deb",
+      "metadata": "Package: libmunge2\nVersion: 0.5.15-4ubuntu0.1\nArchitecture: amd64",
+      "sha256": "1cd371adfbe0cb19bb2479a0fe2340a12b09d42bffbcb85d2beb9bb2d4ef09ca"
+    },
+    {
+      "filename": "libnl-3-200_3.7.0-0.3build1.1_amd64.deb",
+      "metadata": "Package: libnl-3-200\nVersion: 3.7.0-0.3build1.1\nArchitecture: amd64",
+      "sha256": "15b3f61db753dc3db6f62f4259f8b822299343e500886776486612a13a2ed247"
+    },
+    {
+      "filename": "libnl-route-3-200_3.7.0-0.3build1.1_amd64.deb",
+      "metadata": "Package: libnl-route-3-200\nVersion: 3.7.0-0.3build1.1\nArchitecture: amd64",
+      "sha256": "c9dbd29cb7fdcf1a0587726cbc5432a7d3e81242108dfcfa2dd6716c44c74d4d"
+    },
+    {
+      "filename": "libopenmpi3t64_4.1.6-7ubuntu2_amd64.deb",
+      "metadata": "Package: libopenmpi3t64\nVersion: 4.1.6-7ubuntu2\nArchitecture: amd64",
+      "sha256": "4709aa89fd1064c6df3b8e7e460f530d8f2df24937a1d8df8fbf4948b391e99b"
+    },
+    {
+      "filename": "libpmix2t64_5.0.1-4.1build1_amd64.deb",
+      "metadata": "Package: libpmix2t64\nVersion: 5.0.1-4.1build1\nArchitecture: amd64",
+      "sha256": "54874f3e936e9862c2fdc2785a61e6e7220739228f911c150d41dffd788bedd0"
+    },
+    {
+      "filename": "libpsm-infinipath1_3.3+20.604758e7-6.3build1_amd64.deb",
+      "metadata": "Package: libpsm-infinipath1\nVersion: 3.3+20.604758e7-6.3build1\nArchitecture: amd64",
+      "sha256": "56e190ab22563014ed60bf9c15e20a46949dda21284ff32a5e5354addde6c6bc"
+    },
+    {
+      "filename": "libpsm2-2_11.2.185-2build1_amd64.deb",
+      "metadata": "Package: libpsm2-2\nVersion: 11.2.185-2build1\nArchitecture: amd64",
+      "sha256": "ff1c78b8feda2bb3537a8a2e93d5266be76c0c172b9e52dddc98509b7e18c420"
+    },
+    {
+      "filename": "libscotch-7.0_7.0.4-1ubuntu2_amd64.deb",
+      "metadata": "Package: libscotch-7.0\nVersion: 7.0.4-1ubuntu2\nArchitecture: amd64",
+      "sha256": "aea6cb51c92c259751c065ec061908ed3beba62d54185e4dfae5d8eb3230160a"
+    },
+    {
+      "filename": "libscotch-dev_7.0.4-1ubuntu2_amd64.deb",
+      "metadata": "Package: libscotch-dev\nVersion: 7.0.4-1ubuntu2\nArchitecture: amd64",
+      "sha256": "ebe88b3d0fc9ccf730898d2bab18e94e1c568750b81c79927f887eeba806451e"
+    },
+    {
+      "filename": "libucx0_1.16.0+ds-5ubuntu1_amd64.deb",
+      "metadata": "Package: libucx0\nVersion: 1.16.0+ds-5ubuntu1\nArchitecture: amd64",
+      "sha256": "1138ee6dd436a0111a7d5dbbad38ec4d82f3245bf3b32782973426ebf9b05e15"
+    },
+    {
+      "filename": "openmpi-bin_4.1.6-7ubuntu2_amd64.deb",
+      "metadata": "Package: openmpi-bin\nVersion: 4.1.6-7ubuntu2\nArchitecture: amd64",
+      "sha256": "b99dc4516afc262ad59b52128784565bda9ef16bbe8de4500699d87ec67b1f34"
+    },
+    {
+      "filename": "openmpi-common_4.1.6-7ubuntu2_all.deb",
+      "metadata": "Package: openmpi-common\nVersion: 4.1.6-7ubuntu2\nArchitecture: all",
+      "sha256": "1246554675cd86baa4e7e2e4195bed0f7a16d6538d484c347e2379f82791f821"
+    }
+  ],
+  "parallel_wrapper": "#!/bin/bash\nexport OPAL_PREFIX=/home/jsyc/.local/opt/fvm-openmpi/usr\nexport PMIX_INSTALL_PREFIX=/home/jsyc/.local/opt/fvm-openmpi/usr\nexport PATH=\"$OPAL_PREFIX/bin:$PATH\"\nexport LD_LIBRARY_PATH=\"$OPAL_PREFIX/lib/x86_64-linux-gnu:$OPAL_PREFIX/lib/x86_64-linux-gnu/pmix2/lib:$LD_LIBRARY_PATH\"\nexport OMPI_MCA_mca_base_component_path=\"$OPAL_PREFIX/lib/x86_64-linux-gnu/openmpi/lib/openmpi3\"\nexport PMIX_MCA_mca_base_component_path=\"$OPAL_PREFIX/lib/x86_64-linux-gnu/pmix2/lib/pmix\"\nsource /home/jsyc/.local/opt/openfoam12-20250206/opt/openfoam12/etc/bashrc WM_MPLIB=SYSTEMOPENMPI\nexec \"$@\"\n",
+  "serial_parallel_check": {
+    "checkpoint": 100,
+    "comparison_iteration": 101,
+    "serial_cd": 0.0994409993803,
+    "mpi8_cd": 0.09944078564874,
+    "relative_difference": 2.1493303701477795e-06,
+    "criterion": 0.001,
+    "passed": true
+  },
+  "hardware": {
+    "cpu": "Intel Xeon Silver 4214R @ 2.40GHz",
+    "physical_cores": 12,
+    "logical_cpus": 24,
+    "ram_GiB_approx": 30,
+    "medium_ranks": 4,
+    "fine_ranks": 8,
+    "medium_cpu_set": "0-3",
+    "fine_cpu_set": "4-11",
+    "performance_claim": "No scaling or GPU benchmark in this grid study"
+  },
+  "postprocessing": {
+    "python": "3.11.15",
+    "numpy": "2.4.6",
+    "matplotlib": "3.11.2"
+  },
+  "report_completed_at_utc": "2026-10-12T16:26:31.649582+00:00",
+  "implementation_base_commit": "1455704",
+  "published_script_sha256": {
+    "src/tensorfvm/openfoam_history.py": "c578a338d7d1cb26d2737b541b1163d4ad0853495edd1d96c3da22f29d427ea1",
+    "scripts/prepare_openfoam_restart.py": "89ef156f3a761810f10b40ef82d4bda9449210b2c2c82f61dd995635dd2a110e",
+    "scripts/compare_openfoam_suboff_grids.py": "00d13fc9e8d26758488106d2ddc750d6a094206dc5d7376465c54d6b7f79f02c",
+    "scripts/report_openfoam_suboff_pilot.py": "3f4af3da40a2ad2dc2a69a6fc1e55c25b1bff5ebf3cbbabf94d241f097354c3b",
+    "scripts/run_openfoam_suboff.py": "eda9eb0ec8fc875f343b735056e7bb29c2f2555c883c33b177421345de47bdba",
+    "scripts/plot_openfoam_slice.py": "6b7397933da8d3d0ece252e0492f4b404063d1972b7ef9ba7a8f6c3da12cfb8f",
+    "scripts/audit_openfoam_convergence.py": "0527e026eac47d4cd43524b861f3837bd266a43fb94844e0cfe39c96909aecb0",
+    "scripts/prepare_openfoam_suboff_snappy.py": "c497d3a22c9be09dc813cad6eafd9391b8ac1a013cd8e3b6c4c64002c1be74a0",
+    "scripts/prepare_openfoam_suboff.py": "2f3b982517215a107da43ab6ae5dea2adcd9804cc3c86801934c7d3ed0826ed2",
+    "scripts/run_openfoam_parallel.py": "b8394afc055e85b5fb8e1372c33b2099a80ad41e8bff7efcd42b70ccd75cd57d"
+  }
+}

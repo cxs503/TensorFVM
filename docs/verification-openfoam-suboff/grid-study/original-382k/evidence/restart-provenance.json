@@ -1,0 +1,16 @@
+{
+  "source": "/home/jsyc/tensor-suite-development/TensorFVM/results/openfoam-suboff/simplec-thinner-tail",
+  "start": 100,
+  "end": 600,
+  "processes": 8,
+  "checkpoint_sha256": {
+    "U": "f6272b268a4080e641ceade80d855a3bf0d5e318496482e06fd5aff5447812f5",
+    "p": "df0013d65894514d06dea2eded2901adf3219091ce18534eb0fa0c39fc22a968",
+    "k": "0d78bff88c65fff4ef14a81aac0664e856cc6790b6f7c31365d9a5b13eb7d15f",
+    "omega": "826dc964dde659a1b4329560c2ea0a28d132c7aca3ff32246d1d95ba8b21e3d6",
+    "nut": "4d44ab716f5ba3a1862dcf728def5b2e7e7a866f9ad36955e5bfa3d2f5030830",
+    "phi": "aebcc7a34644408225c13100d99cc873caf74cbdbd91a6db5a692191f1784dba"
+  },
+  "changed_physical_parameters": false,
+  "physical_benchmark_passed": false
+}

@@ -13,12 +13,18 @@ p=argparse.ArgumentParser(description=__doc__)
 p.add_argument('--output',type=Path,required=True)
 p.add_argument('--surface-level',type=int,default=6)
 p.add_argument('--tail-level',type=int,choices=[6,7,8],help='Optional local volume refinement around x/L=0.87..1.02')
+p.add_argument('--tip-level',type=int,choices=[7,8,9],help='Optional refinement of the remaining tip layer gap at x/L>0.975')
+p.add_argument('--base-scale',type=float,default=1.,help='Scale background cell counts; same layer thickness is retained')
 p.add_argument('--first-layer-thickness',type=float,default=.0002)
 p.add_argument('--iterations',type=int,default=500)
 p.add_argument('--reynolds',type=float,default=13218056.809580836)
 a=p.parse_args();out=a.output
 tail_geometry=' tailBox { type searchableBox; min (0.87 -0.04 -0.04); max (1.02 0.04 0.04); }' if a.tail_level else ''
 tail_refinement=f' tailBox {{ mode inside; levels ((1e15 {a.tail_level})); }}' if a.tail_level else ''
+tip_geometry=' tipBox { type searchableBox; min (0.975 -0.012 -0.012); max (1.01 0.012 0.012); }' if a.tip_level else ''
+tip_refinement=f' tipBox {{ mode inside; levels ((1e15 {a.tip_level})); }}' if a.tip_level else ''
+if not np.isfinite(a.base_scale) or not 1 <= a.base_scale <= 2:p.error('base-scale must be 1..2')
+counts=tuple(round(n*a.base_scale) for n in (28,20,12))
 if not 4 <= a.surface_level <= 7:p.error('surface level must be 4..7')
 if not np.isfinite(a.first_layer_thickness) or a.first_layer_thickness <= 0:p.error('positive layer thickness required')
 write_rans_case(None,out,reynolds=a.reynolds,iterations=a.iterations)
@@ -58,6 +64,8 @@ boundary
 );
 mergePatchPairs ();
 ''')
+block=out/'system/blockMeshDict'
+block.write_text(block.read_text().replace('(28 20 12)', '('+' '.join(map(str,counts))+')'))
 (out/'system/snappyHexMeshDict').write_text(header('snappyHexMeshDict')+f'''
 castellatedMesh true;
 snap true;
@@ -68,10 +76,11 @@ geometry
  nearHull {{ type searchableBox; min (-0.1 -0.12 -0.12); max (1.1 0.12 0.12); }}
  wake {{ type searchableBox; min (0.7 -0.2 -0.2); max (2.5 0.2 0.2); }}
  {tail_geometry}
+ {tip_geometry}
 }}
 castellatedMeshControls
 {{
- maxLocalCells 2000000; maxGlobalCells 2000000; minRefinementCells 0;
+ maxLocalCells 4000000; maxGlobalCells 4000000; minRefinementCells 0;
  nCellsBetweenLevels 3;
  features ();
  refinementSurfaces {{ wall {{ level ({a.surface_level} {a.surface_level}); patchInfo {{ type wall; }} }} }}
@@ -81,6 +90,7 @@ castellatedMeshControls
   nearHull {{ mode inside; levels ((1e15 4)); }}
   wake {{ mode inside; levels ((1e15 3)); }}
   {tail_refinement}
+  {tip_refinement}
  }}
  locationInMesh (-2 0 0);
  allowFreeStandingZoneFaces true;
@@ -120,6 +130,7 @@ background=re.sub(r' refinementSurfaces .*', ' refinementSurfaces {}', backgroun
  mother_profile_sha256=SOURCE_SHA256,stl_sha256=hashlib.sha256((out/'constant/triSurface/suboff.stl').read_bytes()).hexdigest(),
  surface_triangles=len(triangles),surface_level=a.surface_level,reynolds=a.reynolds,
  tail_level=a.tail_level,
+ tip_level=a.tip_level,base_scale=a.base_scale,base_counts=counts,
  first_layer_thickness_L=a.first_layer_thickness,layers_requested=6,growth_requested=1.15,
  domain_L=[[-3,-2.625,-2.125],[4,2.375,.875]],turbulence_inlet=dict(intensity=.005,length_scale_L=.05),
  geometry='AFF-1 bare hull, zero incidence; fully turbulent; no explicit trip',

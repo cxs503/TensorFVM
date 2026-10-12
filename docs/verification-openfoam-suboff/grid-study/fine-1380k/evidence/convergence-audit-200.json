@@ -1,0 +1,44 @@
+{
+  "last_iteration": 200.0,
+  "window": 200,
+  "residual_window": 20,
+  "criteria": {
+    "force_relative_range_max": 0.002,
+    "force_half_window_drift_max": 0.001,
+    "initial_residual_max": 1e-05,
+    "continuity_local_max": 1e-07,
+    "continuity_global_max": 1e-09
+  },
+  "physical_benchmark_passed": false,
+  "numerically_converged": false,
+  "sufficient_history": true,
+  "force_windows": {
+    "cd": {
+      "mean": 0.09004531948885891,
+      "relative_range": 0.07940600888061335,
+      "half_window_relative_drift": 0.010168236492923616
+    },
+    "pressure_drag": {
+      "mean": 5.89604803643987e-05,
+      "relative_range": 0.838169205089786,
+      "half_window_relative_drift": 0.006596693258656802
+    },
+    "viscous_drag": {
+      "mean": 0.000421959378997319,
+      "relative_range": 0.08628549498204491,
+      "half_window_relative_drift": 0.012510803954694307
+    }
+  },
+  "last_window_residual_max": {
+    "Ux": 6.60581067738e-07,
+    "Uy": 7.64678699068e-05,
+    "Uz": 4.5271151032e-05,
+    "p": 3.12629544671e-05,
+    "k": 1.33726621331e-06,
+    "omega": 1.49612600947e-07,
+    "continuity_local": 4.80188994479e-11,
+    "continuity_global": 6.63223964582e-13
+  },
+  "force_stable": false,
+  "residuals_passed": false
+}

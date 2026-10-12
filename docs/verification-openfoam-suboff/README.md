@@ -1,6 +1,8 @@
 # OpenFOAM SUBOFF 调研与复现基线
 
-日期：2026-10-12。**状态：配置与网格流程验证；尚无 Cp 或阻力误差小于 3% 的计算结论。**
+日期：2026-10-12。**本页为初次 100 步试算快照，不能作为已收敛的精度结论。**
+
+本页保留初次 100 步试算状态。最新进展见[迭代收敛与三档网格研究](grid-study/README.md)。
 
 后续：[首层变薄与尾部加密对照](refinement-01/README.md)；[原生 TensorFVM SIMPLEC 实现与验证](../verification-native-simplec/README.md)。
 
