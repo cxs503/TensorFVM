@@ -1,5 +1,7 @@
 # 原生 TensorFVM 修复：混合黏性算子接入 Stokes / SIMPLE / SIMPLEC
 
+后续进展：[有限 Re 对流接入与压力—体力平衡修复](../verification-native-hybrid-ns/README.md)。以下保留本轮 Stokes 历史记录。
+
 日期：2026-10-12；开发起点：`0c1d8c9`。
 
 **本报告全部由原生 TensorFVM 计算，没有调用 OpenFOAM。新混合后端的 Stokes 验证通过；旧配点 SIMPLE/SST 与 SUBOFF 尚未修复。**

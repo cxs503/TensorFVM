@@ -16,7 +16,7 @@ from .native_hybrid_viscous3d import NativeHybridViscous3D
 class NativeHybridStokes3D:
     def __init__(self, mesh, velocity_dirichlet, velocity_boundary=0., *,
                  viscosity=1., body_force=0., boundary_traction=0.,
-                 gauge_value=0.):
+                 gauge_value=0., body_force_discretization='face'):
         self.mesh = mesh
         self.viscous = NativeHybridViscous3D(
             mesh, viscosity, dirichlet_mask=velocity_dirichlet)
@@ -27,7 +27,27 @@ class NativeHybridStokes3D:
         if not np.isfinite(force).all() or not np.isfinite(gauge_value):
             raise ValueError('finite body force and pressure gauge required')
         self.load = v._traction_load(boundary_traction)
-        self.load[:3*self.N] += (mesh.cell_volumes[:, None]*force).ravel()
+        self.body_force = force.copy()
+        self.body_force_discretization = body_force_discretization
+        self.owner_force_flux = np.zeros((self.F,3))
+        self.neighbor_force_flux = np.zeros((self.F,3))
+        if body_force_discretization == 'cell':
+            self.load[:3*self.N] += (mesh.cell_volumes[:, None]*force).ravel()
+        elif body_force_discretization == 'face':
+            # Dual load of the divergence-conforming mean velocity
+            # R_K(U)=sum_f r_Kf (U_f dot S_Kf)/V_K. Constant forces have
+            # exactly the same face response as a linear pressure gradient.
+            # The geometric moment identity sum S r^T=V I preserves the
+            # integrated cell load. Force fluxes must also enter traction.
+            offset = mesh.face_centers-mesh.cell_centers[mesh.owner]
+            self.owner_force_flux = np.sum(force[mesh.owner]*offset,axis=1)[:,None]*mesh.area_vectors
+            internal = mesh.neighbor >= 0
+            neighbor = mesh.neighbor[internal]
+            offset = mesh.face_centers[internal]-mesh.cell_centers[neighbor]
+            self.neighbor_force_flux[internal] = -np.sum(force[neighbor]*offset,axis=1)[:,None]*mesh.area_vectors[internal]
+            self.load[3*self.N:] += (self.owner_force_flux+self.neighbor_force_flux).ravel()
+        else:
+            raise ValueError('body_force_discretization must be cell or face')
         faces = np.arange(self.F)
         internal = ~v.boundary
         rows = np.r_[mesh.owner, mesh.neighbor[internal]]
@@ -158,10 +178,12 @@ class NativeHybridStokes3D:
         # Free boundary traction is in load; Dirichlet reaction is external work.
         external_work = float(self.state @ self.load+self.prescribed @ reaction)
         balance = diagnostic['energy_form']-pressure_work-external_work
-        total_traction = diagnostic['face_flux']-self.p[self.mesh.owner, None]*self.mesh.area_vectors
+        total_traction = (diagnostic['face_flux']-self.p[self.mesh.owner, None]*self.mesh.area_vectors
+                          -self.owner_force_flux)
         internal = ~v.boundary
         neighbor_traction = (diagnostic['neighbor_face_flux'][internal]
-            +self.p[self.mesh.neighbor[internal], None]*self.mesh.area_vectors[internal])
+            +self.p[self.mesh.neighbor[internal], None]*self.mesh.area_vectors[internal]
+            -self.neighbor_force_flux[internal])
         return dict(numerically_converged=self.converged, physical_benchmark_passed=False,
             velocity=self.state[:3*self.N].reshape(self.N, 3).copy(),
             face_velocity=self.state[3*self.N:].reshape(self.F, 3).copy(),
