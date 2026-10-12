@@ -1,0 +1,4 @@
+...............................x........................................ [100%]
+=========================== short test summary info ============================
+XFAIL tests/test_native_energy_small.py::test_two_cell_skew_viscosity_must_dissipate - Open defect: skew two-cell viscous operator creates kinetic energy
+71 passed, 1 xfailed in 56.66s

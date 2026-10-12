@@ -1,5 +1,7 @@
 # 原生 FVM 基础攻关：能量型混合黏性离散与压力病态诊断
 
+后续进展：[原生混合 Stokes / SIMPLE / SIMPLEC 接入](../verification-native-hybrid-flow/README.md)。旧配点求解器的失败状态仍保留；以下为历史记录。
+
 日期：2026-10-12。开发起点：`e4ba7910a90b4066ed835a06628e49711efa4eb1`。
 
 ## 状态与本轮变更
