@@ -3,6 +3,7 @@
   "benchmark_id": "suboff_aff1_physical_validation",
   "status": "physical_diagnostics_executed_not_converged_or_validated",
   "latest_evidence": "docs/verification-simple-pressure-response/README.md",
+  "latest_solver_audit": "docs/verification-native-solver-audit/README.md",
   "configuration": "AFF-1 bare hull, zero incidence",
   "all_metrics_required": true,
   "same_reynolds_number_between_cases_required": false,

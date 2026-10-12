@@ -1,6 +1,14 @@
 # TensorFVM benchmark 总览
 
-## 最新：确认并修正 SIMPLE 压力响应不一致
+## 最新：四项后续求解器问题
+
+[四项问题、修复与原始证据](verification-native-solver-audit/README.md)：
+确认混合网格黏性算子存在离散增能方向（未修复）；修正速度松弛系数改变稳态解、
+中断后的壁面牵引滞后、失败线性候选覆盖状态三项问题。48 项相关测试通过。
+SUBOFF 新启动试验仍未通过压力线性残差门槛，0 个接受步，**没有物理精度资格**。
+下面的 Cp/Cd 数字属于先前版本的历史失败场。
+
+## 前一轮：确认并修正 SIMPLE 压力响应不一致
 
 [修复前后回归及 SUBOFF 复测](verification-simple-pressure-response/README.md)：
 冻结系数并关闭压力松弛后，旧压力修正与单元速度重构不匹配；修正后两个回归

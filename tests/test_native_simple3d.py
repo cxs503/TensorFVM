@@ -85,3 +85,59 @@ def test_one_full_pressure_correction_matches_reconstructed_flux(pressure_outlet
     assert row['current_reconstructed_divergence_max']<1e-11
     assert row['face_flux_consistency_max']<1e-11
     assert not r['converged']  # A projection is not a converged Stokes solution.
+
+
+def test_interrupted_momentum_reports_current_wall_law_without_mutating_solver():
+    m=channel();wall=m.patch_labels=='wall';bd=np.tile([1.,0.,0.],(len(m.owner),1));bd[wall]=0.
+    s=NativeSimpleSSTRansSolver3D(m,(m.neighbor<0)&(m.patch_labels!='outlet'),bd,m.patch_labels=='outlet',
+        settings=NativeSteadySettings(viscosity=.001,max_iterations=1,convection_order=1,relaxation=.3),
+        rans_settings=NativeRansSettings(wall_treatment='spalding'))
+    s.u[:,0]=1.
+    def stop(row):raise StopIteration('diagnostic guard')
+    with pytest.raises(StopIteration):s.solve_rans(.001,1.,inlet_k=.001,inlet_omega=1.,momentum_callback=stop)
+    matrix=s._diffusion.copy();velocity=s.u.copy();f=s.forces()
+    area=np.linalg.norm(m.area_vectors[wall],axis=1);n=m.area_vectors[wall]/area[:,None]
+    u=s.u[m.owner[wall]];tangent=u-n*np.sum(u*n,axis=1)[:,None]
+    expected=wall_traction(tangent,s.wall_distance[m.owner[wall]],1.,.001)['traction_pa']*area[:,None]
+    actual=f['anisotropic_stress_traction'][wall];actual=actual-n*np.sum(actual*n,axis=1)[:,None]
+    np.testing.assert_allclose(actual,expected,atol=1e-12)
+    np.testing.assert_array_equal(s.u,velocity)
+    assert (s._diffusion!=matrix).nnz==0
+    assert np.linalg.norm(f['linearized_anisotropic_stress_traction']-f['anisotropic_stress_traction'])>1e-8
+    np.testing.assert_allclose(f['total_force'],f['physical_pressure_force']+f['anisotropic_viscous_force']+f['isotropic_turbulent_force'],atol=1e-12)
+
+
+def test_momentum_relaxation_does_not_change_converged_stokes_solution():
+    m=skew_mesh(3);x,y,z=m.cell_centers.T
+    force=np.column_stack((np.sin(3*y),np.cos(2*x),x*z));answers=[]
+    for relaxation in (.3,.8):
+        s=NativeSimpleSolver3D(m,m.neighbor<0,np.zeros((len(m.owner),3)),body_force=force,
+            settings=NativeSteadySettings(viscosity=.1,convection=False,relaxation=relaxation,
+                max_iterations=1500,nonlinear_tolerance=1e-9))
+        result=s.solve();assert result['converged']
+        answers.append((s.u.copy(),s.p.copy()))
+    np.testing.assert_allclose(answers[0][0],answers[1][0],atol=2e-8)
+    np.testing.assert_allclose(answers[0][1],answers[1][1],atol=2e-8)
+
+
+@pytest.mark.parametrize("bad_pressure",["inaccurate","nonfinite"])
+def test_rejected_linear_solve_preserves_last_accepted_state(monkeypatch,bad_pressure):
+    import tensorfvm.native_simple3d as module
+    original=module.splu;m=skew_mesh(2)
+    s=NativeSimpleSolver3D(m,m.neighbor<0,np.zeros((len(m.owner),3)),
+        body_force=np.tile([.3,.2,.1],(len(m.cells),1)),
+        settings=NativeSteadySettings(viscosity=.1,convection=False,max_iterations=1))
+    u=np.zeros((s.N,3));p=np.zeros(s.N);q=np.zeros(s.F)
+    s.initialize_state(u,p,q)
+    class PerturbedFactor:
+        def __init__(self,matrix,**kwargs):self.factor=original(matrix,**kwargs);self.size=matrix.shape[0]
+        def solve(self,rhs):
+            answer=self.factor.solve(rhs)
+            if self.size!=s.N:return answer
+            return np.full(s.N,np.nan) if bad_pressure=="nonfinite" else answer+np.linspace(0.,1.,s.N)
+    monkeypatch.setattr(module,'splu',PerturbedFactor)
+    with pytest.raises(RuntimeError,match='linear solve'):s.solve()
+    np.testing.assert_array_equal(s.u,u)
+    np.testing.assert_array_equal(s.p,p)
+    np.testing.assert_array_equal(s.flux,q)
+    assert not s.history

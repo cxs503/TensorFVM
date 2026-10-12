@@ -1,0 +1,37 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______ test_momentum_relaxation_does_not_change_converged_stokes_solution ______
+
+    def test_momentum_relaxation_does_not_change_converged_stokes_solution():
+        m=skew_mesh(3);x,y,z=m.cell_centers.T
+        force=np.column_stack((np.sin(3*y),np.cos(2*x),x*z));answers=[]
+        for relaxation in (.3,.8):
+            s=NativeSimpleSolver3D(m,m.neighbor<0,np.zeros((len(m.owner),3)),body_force=force,
+                settings=NativeSteadySettings(viscosity=.1,convection=False,relaxation=relaxation,
+                    max_iterations=1500,nonlinear_tolerance=1e-9))
+            result=s.solve();assert result['converged']
+            answers.append((s.u.copy(),s.p.copy()))
+>       np.testing.assert_allclose(answers[0][0],answers[1][0],atol=2e-8)
+E       AssertionError: 
+E       Not equal to tolerance rtol=1e-07, atol=2e-08
+E       
+E       Mismatched elements: 81 / 81 (100%)
+E       First 5 mismatches are at indices:
+E        [0, 0]: -0.03835393598127431 (ACTUAL), -0.042567212363750634 (DESIRED)
+E        [0, 1]: 0.05668512212713441 (ACTUAL), 0.05670192513977968 (DESIRED)
+E        [0, 2]: -0.0044932900775409524 (ACTUAL), -0.010918316656707401 (DESIRED)
+E        [1, 0]: -0.05910272989862549 (ACTUAL), -0.0615491247748424 (DESIRED)
+E        [1, 1]: 0.009065679563768145 (ACTUAL), 0.01640609387931198 (DESIRED)
+E       Max absolute difference among violations: 0.01279493
+E       Max relative difference among violations: 3.91668556
+E        ACTUAL: array([[-0.038354,  0.056685, -0.004493],
+E              [-0.059103,  0.009066, -0.010325],
+E              [-0.058301, -0.052992, -0.011262],...
+E        DESIRED: array([[-0.042567,  0.056702, -0.010918],
+E              [-0.061549,  0.016406, -0.019714],
+E              [-0.057508, -0.044226, -0.020523],...
+
+tests/test_native_simple3d.py:119: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_native_simple3d.py::test_momentum_relaxation_does_not_change_converged_stokes_solution
+1 failed, 8 deselected in 2.91s

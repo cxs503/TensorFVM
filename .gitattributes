@@ -3,3 +3,6 @@ docs/verification-suboff-simple-sst-wall/**/input.msh whitespace=-blank-at-eol
 docs/verification-suboff-simple-sst-wall/**/*.csv whitespace=cr-at-eol
 docs/verification-simple-pressure-response/**/input.msh whitespace=-blank-at-eol
 docs/verification-simple-pressure-response/**/*.csv whitespace=cr-at-eol
+docs/verification-native-solver-audit/**/input.msh whitespace=-blank-at-eol
+# Preserve verbatim pytest failure logs used as before-fix evidence.
+docs/verification-native-solver-audit/before/*-regression-before.txt whitespace=-blank-at-eol
