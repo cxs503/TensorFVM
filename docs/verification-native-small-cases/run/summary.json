@@ -1,0 +1,12 @@
+{
+  "requirements": {
+    "energy_control": true,
+    "energy_skew": false,
+    "relaxation": true,
+    "interrupted_wall": true,
+    "rejected_inaccurate": true,
+    "rejected_nonfinite": true
+  },
+  "all_requirements_passed": false,
+  "physical_benchmark_passed": false
+}
