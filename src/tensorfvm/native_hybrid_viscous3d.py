@@ -1,8 +1,8 @@
 """Experimental energy-based hybrid FV diffusion on native polyhedral cells.
 
 Cell and shared-face unknowns are independent. Face equilibrium enforces a
-single conservative flux. Only prescribed Dirichlet boundary values are
-supported. This reference operator is not yet a SIMPLE/RANS backend.
+single conservative flux. Boundary faces may prescribe values or outward
+traction (scalar diffusive flux for components=1).
 
 The scalar construction follows the hybrid FV gradient/residual framework
 of Droniou et al., https://arxiv.org/abs/0812.2097. The symmetric-deviatoric
@@ -15,7 +15,7 @@ from scipy.sparse.linalg import splu, cg
 
 class NativeHybridViscous3D:
     def __init__(self, mesh, dynamic_viscosity=1., *, components=3,
-                 deviatoric=True, stabilization=1.):
+                 deviatoric=True, stabilization=1., dirichlet_mask=None):
         if components not in (1, 3):
             raise ValueError('components must be 1 or 3')
         if not np.isfinite(stabilization) or stabilization <= 0:
@@ -28,6 +28,12 @@ class NativeHybridViscous3D:
         self.mu = mu
         self.boundary = mesh.neighbor < 0
         self.internal_faces = np.flatnonzero(~self.boundary)
+        self.dirichlet = (self.boundary.copy() if dirichlet_mask is None
+                          else np.asarray(dirichlet_mask, bool).copy())
+        if self.dirichlet.shape != (self.F,) or np.any(self.dirichlet & ~self.boundary):
+            raise ValueError('Dirichlet mask must select boundary faces')
+        self.traction_boundary = self.boundary & ~self.dirichlet
+        self.free_faces = np.flatnonzero(~self.dirichlet)
         self.local = []
         face_ids = [[] for _ in range(self.N)]
         signs = [[] for _ in range(self.N)]
@@ -78,7 +84,7 @@ class NativeHybridViscous3D:
         self.full_matrix = sparse.coo_matrix((np.concatenate(values),
             (np.concatenate(rows), np.concatenate(columns))), shape=(size, size)).tocsr()
         self.full_matrix.eliminate_zeros()
-        nodes = np.r_[np.arange(self.N), self.N+self.internal_faces]
+        nodes = np.r_[np.arange(self.N), self.N+self.free_faces]
         self.free = (components*nodes[:, None]+np.arange(components)).ravel()
         self.matrix = self.full_matrix[self.free][:, self.free].tocsc()
         self.cell_dofs = components*self.N
@@ -86,14 +92,25 @@ class NativeHybridViscous3D:
 
     def _prescribed(self, boundary_values):
         boundary = np.broadcast_to(np.asarray(boundary_values, float), (self.F, self.components))
-        if not np.isfinite(boundary[self.boundary]).all():
+        if not np.isfinite(boundary[self.dirichlet]).all():
             raise ValueError('finite Dirichlet boundary values required')
         state = np.zeros((self.N+self.F, self.components))
-        state[self.N+np.flatnonzero(self.boundary)] = boundary[self.boundary]
+        state[self.N+np.flatnonzero(self.dirichlet)] = boundary[self.dirichlet]
         return state.ravel()
 
-    def equilibrate_faces(self, cell_values, boundary_values=0., *, linear_method='direct'):
-        """Minimize energy over internal faces for a prescribed cell field."""
+    def _traction_load(self, boundary_traction):
+        """Prescribed outward stress times normal, per unit face area."""
+        traction = np.broadcast_to(np.asarray(boundary_traction, float), (self.F, self.components))
+        if not np.isfinite(traction[self.traction_boundary]).all():
+            raise ValueError('finite boundary traction required')
+        load = np.zeros((self.N+self.F, self.components))
+        mask = self.traction_boundary
+        load[self.N+np.flatnonzero(mask)] = (
+            np.linalg.norm(self.mesh.area_vectors[mask], axis=1)[:, None]*traction[mask])
+        return load.ravel()
+
+    def equilibrate_faces(self, cell_values, boundary_values=0., *, boundary_traction=0., linear_method='direct'):
+        """Equilibrate free faces, including prescribed traction boundaries."""
         cells = np.asarray(cell_values, float)
         if cells.shape != (self.N, self.components) or not np.isfinite(cells).all():
             raise ValueError('finite cell values with explicit component dimension required')
@@ -103,7 +120,7 @@ class NativeHybridViscous3D:
         iterations = 0
         if len(faces):
             block = self.full_matrix[faces][:, faces].tocsc()
-            rhs = -(self.full_matrix @ state)[faces]
+            rhs = (self._traction_load(boundary_traction)-self.full_matrix @ state)[faces]
             if linear_method == 'direct':
                 if self._face_factor is None:
                     self._face_factor = splu(block)
@@ -128,13 +145,13 @@ class NativeHybridViscous3D:
         result.update(face_linear_relative_residual=float(relative), face_iterations=iterations)
         return result
 
-    def solve(self, body_force=0., boundary_values=0., *, linear_method='direct'):
+    def solve(self, body_force=0., boundary_values=0., *, boundary_traction=0., linear_method='direct'):
         """Solve -div(tau)=force (or -div(mu grad u)=force for a scalar)."""
         force = np.broadcast_to(np.asarray(body_force, float), (self.N, self.components))
         if not np.isfinite(force).all():
             raise ValueError('finite cell body force required')
         state = self._prescribed(boundary_values)
-        rhs = -(self.full_matrix @ state)[self.free]
+        rhs = (self._traction_load(boundary_traction)-self.full_matrix @ state)[self.free]
         rhs[:self.cell_dofs] += (self.mesh.cell_volumes[:, None]*force).ravel()
         if linear_method == 'direct':
             answer = splu(self.matrix).solve(rhs)
@@ -171,7 +188,8 @@ class NativeHybridViscous3D:
         boundary_work = float(np.sum(state.reshape(-1, self.components)[self.N:][self.boundary]*owner_flux[self.boundary]))
         rate = -float(cells.ravel() @ reaction[:self.cell_dofs])
         return dict(cell_values=cells.copy(), face_values=state[self.cell_dofs:].reshape(self.F, self.components).copy(),
-                    face_flux=owner_flux, energy_form=energy, kinetic_energy_rate=rate,
+                    face_flux=owner_flux, neighbor_face_flux=neighbor_flux,
+                    energy_form=energy, kinetic_energy_rate=rate,
                     boundary_work=boundary_work,
                     energy_balance_error=abs(rate+energy-boundary_work),
                     interface_flux_defect_max=float(np.max(np.abs(interface_defect), initial=0.)),

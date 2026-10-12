@@ -1,5 +1,7 @@
 # Native SIMPLEC：实现与验证
 
+后续进展：[原生混合 Stokes / SIMPLE / SIMPLEC 接入](../verification-native-hybrid-flow/README.md)。旧配点求解器的失败状态仍保留；以下为历史记录。
+
 日期：2026-10-12。**算法选项通过小案例验证；SUBOFF 物理精度未通过。**
 
 ## 1. 修改范围
