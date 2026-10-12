@@ -1,0 +1,49 @@
+FoamFile { version 2.0; format ascii; class dictionary; object snappyHexMeshDict; }
+
+castellatedMesh true;
+snap false;
+addLayers false;
+geometry
+{
+
+ nearHull { type searchableBox; min (-0.1 -0.12 -0.12); max (1.1 0.12 0.12); }
+ wake { type searchableBox; min (0.7 -0.2 -0.2); max (2.5 0.2 0.2); }
+}
+castellatedMeshControls
+{
+ maxLocalCells 2000000; maxGlobalCells 2000000; minRefinementCells 0;
+ nCellsBetweenLevels 3;
+ features ();
+ refinementSurfaces {}
+ resolveFeatureAngle 30;
+ refinementRegions
+ {
+  nearHull { mode inside; levels ((1e15 4)); }
+  wake { mode inside; levels ((1e15 3)); }
+ }
+ locationInMesh (-2 0 0);
+ allowFreeStandingZoneFaces true;
+}
+snapControls
+{
+ nSmoothPatch 3; tolerance 2; nSolveIter 30; nRelaxIter 5;
+ nFeatureSnapIter 10; implicitFeatureSnap true; explicitFeatureSnap false; multiRegionFeatureSnap false;
+}
+addLayersControls
+{
+ relativeSizes false;
+ layers { wall { nSurfaceLayers 6; } }
+ expansionRatio 1.15;
+ firstLayerThickness 0.00020000000000000001;
+ minThickness 8.0000000000000007e-05;
+ nGrow 0; featureAngle 60; slipFeatureAngle 30;
+ nRelaxIter 5; nSmoothSurfaceNormals 1; nSmoothNormals 3; nSmoothThickness 10;
+ maxFaceThicknessRatio 0.5; maxThicknessToMedialRatio 0.3; minMedialAxisAngle 90;
+ nBufferCellsNoExtrude 0; nLayerIter 50;
+}
+meshQualityControls
+{
+ #includeEtc "caseDicts/mesh/generation/meshQualityDict"
+}
+writeFlags (scalarLevels layerSets layerFields);
+mergeTolerance 1e-6;

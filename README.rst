@@ -459,6 +459,13 @@ DNS 来源、原场检查点、全部生产源码及真实差距；GPU 尚未验
 589,824 控制体仅进行了几何/初始黏度预检，未完成 LES 求解。
 共性验收模块独立复核原场守恒，统计模块修复谱分段过短的问题。
 
+OpenFOAM SUBOFF 对照基线
+=======================
+
+文献设置核查、Foundation 12 复现脚本和实际网格检查见
+`OpenFOAM SUBOFF 调研与试算报告 <docs/verification-openfoam-suboff/README.md>`_。
+该独立基线仍处于诊断阶段；不能据此宣称 TensorFVM 或 SUBOFF 的 Cp/阻力已达到 3% 精度。
+
 Tensor 生态项目协同
 ==================
 
