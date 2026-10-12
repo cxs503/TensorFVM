@@ -8,6 +8,7 @@ import numpy as np
 from scipy import sparse
 from scipy.sparse.linalg import splu
 from .native_collocated3d import NativeSteadySolver3D
+from .native_linear_diagnostics import linear_system_diagnostics
 
 
 class NativeSimpleMixin:
@@ -79,6 +80,8 @@ class NativeSimpleMixin:
                 self.last_rejected_linear_solve=dict(
                     momentum_relative_residual=linear_u if np.isfinite(linear_u) else None,
                     pressure_relative_residual=linear_p if np.isfinite(linear_p) else None,
+                    momentum_system=linear_system_diagnostics(A,target,predicted),
+                    pressure_system=linear_system_diagnostics(P,prhs,dp),
                     accepted_state_changed=False)
                 raise RuntimeError(f'SIMPLE linear solve failed true residual gate: momentum={linear_u:g}, pressure={linear_p:g}; accepted state preserved')
             candidate_u=(predicted-inverse*(self.pressure.pressure_force_matrix@dp)).reshape(self.N,3)
