@@ -61,7 +61,7 @@ def main():
         mesh=SimpleNamespace(vertices=f['vertices'],face_vertices=f['face_vertices'],owner=owner,neighbor=neighbor,cells=list(range(len(volume))))
         polys,ids=cell_section_polygons(mesh,value=.001)
         keys=[('velocity','Streamwise velocity'),('modified_pressure','Modified pressure p*')]
-        if summary['initialized']:keys += [('k','Accepted initial k; SST step failed' if not summary['startup_steps_completed'] else 'Current k'),('omega','Current omega')]
+        if summary['initialized']:keys += [('k','Accepted initial k; SST step failed' if summary['completed_steps']==0 and not summary['startup_steps_completed'] else 'Current accepted k'),('omega','Current accepted omega')]
         fig,axes=plt.subplots(len(keys)+1,1,figsize=(12,3*(len(keys)+1)),constrained_layout=True)
         fig.suptitle('SST STARTUP DIAGNOSTIC — no physical benchmark qualification')
         for ax in axes:ax.set(xlim=(-.15,1.25),ylim=(-.2,.2),aspect='equal',xlabel='x/L',ylabel='y/L')

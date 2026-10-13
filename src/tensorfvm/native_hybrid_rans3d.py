@@ -87,7 +87,16 @@ class NativeHybridRans3D:
             transport=t)
 
     def solve(self,*,max_iterations=100,dt=.01,relaxation=.7,tolerance=1e-7,
-              momentum_method='newton',momentum_max_iterations=50,callback=None):
+              momentum_method='newton',momentum_max_iterations=50,
+              momentum_coupling='converged',momentum_sweeps=1,
+              momentum_relaxation=.5,callback=None):
+        """Advance segregated RANS with converged momentum or explicit sweeps.
+
+        Sweeps rebuild convection each time and retain the momentum and pressure
+        linear-solve gates. Their incomplete nonlinear momentum solve is allowed
+        only as an outer iterate; CURRENT coupled equations and changes must
+        still converge before the RANS result can pass.
+        """
         if not self.initialized:raise RuntimeError('initialize turbulence first')
         if not np.isfinite(dt) or dt<=0 or not np.isfinite(relaxation) or not 0<relaxation<=1:
             raise ValueError('positive dt and relaxation in (0,1] required')
@@ -95,18 +104,32 @@ class NativeHybridRans3D:
             raise ValueError('positive iteration limit and tolerance required')
         if momentum_method not in ('newton','simple','simplec','coupled'):
             raise ValueError('unsupported momentum method')
+        if momentum_coupling not in ('converged','sweeps'):
+            raise ValueError('unknown momentum coupling')
+        if momentum_coupling=='sweeps' and momentum_method not in ('simple','simplec'):
+            raise ValueError('momentum sweeps require SIMPLE or SIMPLEC')
+        if (not isinstance(momentum_sweeps,(int,np.integer)) or momentum_sweeps<1
+                or not np.isfinite(momentum_relaxation) or not 0<momentum_relaxation<=1):
+            raise ValueError('positive integer momentum sweeps and relaxation in (0,1] required')
         self.converged=False
         self.tolerance=tolerance
         for _ in range(max_iterations):
             old={key:getattr(self,key).copy() for key in ('k','omega','k_faces','omega_faces')}
             old_u=self.flow.state.copy();old_p=self.flow.p.copy()
             self._refresh_viscosity()
+            momentum_start=len(self.flow.history)
             if momentum_method=='newton':
                 mr=self.flow.solve_newton(max_iterations=momentum_max_iterations,tolerance=tolerance*.1)
+            elif momentum_coupling=='sweeps':
+                mr=self.flow.solve(algorithm=momentum_method,max_outer_iterations=momentum_sweeps,
+                    max_iterations=1,relaxation=momentum_relaxation,tolerance=tolerance*.1)
             else:
-                mr=self.flow.solve(algorithm=momentum_method,max_outer_iterations=momentum_max_iterations,tolerance=tolerance*.1)
-            if not mr['numerically_converged']:
+                mr=self.flow.solve(algorithm=momentum_method,max_outer_iterations=momentum_max_iterations,
+                    relaxation=momentum_relaxation,tolerance=tolerance*.1)
+            if momentum_coupling=='converged' and not mr['numerically_converged']:
                 raise RuntimeError('hybrid RANS momentum subsolve did not converge')
+            momentum_records=(self.flow.newton_history if momentum_method=='newton'
+                              else self.flow.history[momentum_start:])
             step=self.transport.step(self.k,self.omega,self.k_faces,self.omega_faces,
                 self.flow.volume_flux(),self.wall_distance,self.nu,self.flow.velocity_gradient(),dt,
                 rho=self.rho,**self.boundary)
@@ -116,6 +139,11 @@ class NativeHybridRans3D:
             changes['velocity']=float(np.linalg.norm(self.flow.state-old_u)/max(np.linalg.norm(self.flow.state),1.))
             changes['modified_pressure']=float(np.linalg.norm(self.flow.p-old_p)/max(np.linalg.norm(self.flow.p),1.))
             row=dict(iteration=len(self.history)+1,**{k:v for k,v in current.items() if k!='transport'},
+                momentum_method=momentum_method,momentum_coupling=momentum_coupling,
+                momentum_subsolve_converged=bool(mr['numerically_converged']),
+                momentum_iterations=sum(entry['iteration']>0 for entry in momentum_records),
+                momentum_linear_residual_max=max((entry['true_linear_relative_residual'] for entry in
+                    momentum_records if 'true_linear_relative_residual' in entry),default=None),
                 changes=changes,minimum_k=float(min(self.k.min(),self.k_faces.min())),
                 minimum_omega=float(min(self.omega.min(),self.omega_faces.min())),
                 frozen_linear_residuals={name:step['transport'][name]['linear_relative_residual'] for name in ('k','omega')},
