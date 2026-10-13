@@ -110,7 +110,11 @@ def solve_mmp_newton(scalar,volume_flux,**kwargs):
             if stable>=2:return finish()
         return finish('original fixed-point polish change failed')
 
-    for smoothing in (1e-3,1e-4,1e-5,1e-6,1e-7,1e-8,1e-9,1e-10,0.):
+    # Start with a broadly smoothed graph law. Jumping directly to 1e-3 can
+    # strand the initial uncorrected diffusion guess near a singular tangent.
+    # These are only continuation equations; acceptance still requires zero
+    # smoothing and the unchanged original residual/update/flux gates.
+    for smoothing in (1.,1e-1,1e-2,1e-3,1e-4,1e-5,1e-6,1e-7,1e-8,1e-9,1e-10,0.):
         for iteration in range(80):
             matrix,tangent=scalar.mmp.nonlinear_system(state,smoothing=smoothing,state_scale=state_scale,jacobian=True)
             residual=scalar.mmp.nonlinear_reaction(state,smoothing=smoothing,state_scale=state_scale)+extra@state-forcing
