@@ -15,7 +15,7 @@ from .native_hybrid_viscous3d import NativeHybridViscous3D
 
 
 class NativeHybridScalar3D:
-    def __init__(self, mesh, diffusivity=1., *, dirichlet_mask=None, stabilization=1., correction='none', mmp_solver='continuation_newton', work_balance_policy='absolute'):
+    def __init__(self, mesh, diffusivity=1., *, dirichlet_mask=None, stabilization=1., correction='none', mmp_solver='continuation_newton', work_balance_policy='absolute', cell_constraints=None):
         self.mesh = mesh
         self.diffusion = NativeHybridViscous3D(mesh, diffusivity, components=1,
             dirichlet_mask=dirichlet_mask, stabilization=stabilization)
@@ -24,8 +24,18 @@ class NativeHybridScalar3D:
         if work_balance_policy not in ('absolute','relative'):raise ValueError('unknown scalar work balance policy')
         self.work_balance_policy=work_balance_policy
         self.mmp_solver=mmp_solver
-        self.mmp=NativeScalarMMP3D(self.diffusion) if correction=='nonlinear_mmp' else None
         self.N, self.F = self.diffusion.N, self.diffusion.F
+        self.constraint_cells=np.empty(0,dtype=int);self.constraint_values=np.empty(0)
+        if cell_constraints is not None:
+            cells,values=cell_constraints;cells=np.asarray(cells)
+            if (cells.ndim!=1 or cells.dtype.kind not in 'iu' or np.any(cells<0)
+                    or np.any(cells>=self.N) or len(np.unique(cells))!=len(cells)):
+                raise ValueError('distinct valid integer constrained cell indices required')
+            self.constraint_cells=cells.astype(int,copy=True)
+            self.constraint_values=self._array(values,len(cells),'cell constraint values')
+        self.free=np.setdiff1d(self.diffusion.free,self.constraint_cells)
+        self.free_cells=self.free[self.free<self.N]
+        self.mmp=NativeScalarMMP3D(self.diffusion,free_dofs=self.free) if correction=='nonlinear_mmp' else None
         self.boundary = mesh.neighbor < 0
         ids = np.arange(self.F); interior = ~self.boundary
         self.D = sparse.coo_matrix((np.r_[np.ones(self.F), -np.ones(interior.sum())],
@@ -46,6 +56,19 @@ class NativeHybridScalar3D:
         return np.column_stack([self.D @ (values*self.mesh.area_vectors[:, j])
                                 for j in range(3)])/self.mesh.cell_volumes[:, None]
 
+    def _prescribed(self,boundary_values):
+        state=self.diffusion._prescribed(boundary_values)
+        state[self.constraint_cells]=self.constraint_values
+        return state
+
+    def _constraint_reaction(self,cell_equation):
+        reaction=np.zeros_like(cell_equation)
+        reaction[self.constraint_cells]=cell_equation[self.constraint_cells]
+        return reaction
+
+    def _constraint_error(self,cells):
+        return float(np.max(abs(cells[self.constraint_cells]-self.constraint_values),initial=0.))
+
     def solve(self, volume_flux=0., *, source=0., sink=0., boundary_values=0.,
               boundary_diffusive_flux=0., inflow_values=None, old_values=None, dt=None):
         """One linear steady solve or backward Euler step, with an explicit ledger.
@@ -54,6 +77,9 @@ class NativeHybridScalar3D:
         on Neumann boundaries. Inflow values are mandatory wherever q<0,
         including Neumann diffusion boundaries. sink must be nonnegative.
         Both dt and old_values must be supplied for a transient step.
+        Constructor cell_constraints=(indices,values) eliminate specified cell
+        unknowns. Their original-equation reactions are explicit source terms
+        in the returned local/global flux and work ledgers.
         """
         if self.mmp is not None:
             return self._solve_mmp(volume_flux,source=source,sink=sink,boundary_values=boundary_values,
@@ -90,13 +116,13 @@ class NativeHybridScalar3D:
         cell_matrix = adv_matrix+sparse.diags(volume*(sink+inverse_dt))
         extra = sparse.block_diag((cell_matrix, sparse.csr_matrix((self.F,self.F))), format='csr')
         operator = self.diffusion.full_matrix+extra
-        state = self.diffusion._prescribed(bd[:,None])
+        state = self._prescribed(bd[:,None])
         forcing = self.diffusion._traction_load(gn[:,None])
         forcing[:self.N] += volume*(source+old*inverse_dt)-self.D @ face_source
-        free = self.diffusion.free
+        free = self.free
         rhs = (forcing-operator @ state)[free]
         matrix = operator[free][:,free].tocsc()
-        answer = splu(matrix).solve(rhs)
+        answer = splu(matrix).solve(rhs) if len(free) else np.empty(0)
         relative = float(np.linalg.norm(matrix @ answer-rhs)/max(np.linalg.norm(rhs),1e-30))
         if not np.isfinite(answer).all() or relative > 1e-9:
             raise RuntimeError(f'hybrid scalar true linear residual failed: {relative:g}')
@@ -117,22 +143,30 @@ class NativeHybridScalar3D:
         storage = volume*inverse_dt*(cells-old)
         destruction = volume*sink*cells
         production = volume*source
-        cell_balance = storage+self.D @ total_flux+destruction-production
-        global_balance = float(storage.sum()+total_flux[self.boundary].sum()+destruction.sum()-production.sum(dtype=np.longdouble))
+        raw_cell_balance = storage+self.D @ total_flux+destruction-production
+        constraint=self._constraint_reaction(self._cell_equation(storage,advective_flux,destruction,production,cell_reaction))
+        cell_balance=raw_cell_balance-constraint
+        raw_global=storage.sum()+total_flux[self.boundary].sum()+destruction.sum()-production.sum(dtype=np.longdouble)
+        global_balance = float(raw_global-constraint.sum(dtype=np.longdouble))
         # Independently reconstructed neighbor-side diffusion, no sign reuse.
         neighbor_total = -advective_flux-neighbor_reaction
         interface = total_flux[~self.boundary]+neighbor_total[~self.boundary]
         scalar_work = float(cells @ (storage+self.D @ advective_flux+destruction-production))
-        direct_work_balance = scalar_work+diffusion['energy_form']-diffusion['boundary_work']
+        constraint_work=float(np.sum(cells*constraint,dtype=np.longdouble))
+        direct_work_balance = scalar_work+diffusion['energy_form']-diffusion['boundary_work']-constraint_work
         work_balance,cell_work,interface_work,cell_extended,face_extended,work_scale=self._stable_work_balance(state,storage,advective_flux,destruction,production,
-            reactions=(cell_reaction,owner_reaction,neighbor_reaction))
+            reactions=(cell_reaction,owner_reaction,neighbor_reaction),constraint=constraint)
         scale = max(float(np.abs(storage).sum()+np.abs(total_flux[self.boundary]).sum()
-                          +np.abs(destruction).sum()+np.abs(production).sum()),1e-30)
+                          +np.abs(destruction).sum()+np.abs(production).sum()+np.abs(constraint).sum()),1e-30)
         return dict(cell_values=cells.copy(), face_values=faces.copy(),
             gradient=self.gradient(faces), advective_flux=advective_flux,
             diffusive_flux=diffusive_flux, total_flux=total_flux,
             neighbor_total_flux=neighbor_total, storage=storage,
             destruction=destruction, production=production, cell_balance=cell_balance,
+            cell_balance_without_constraint=raw_cell_balance,cell_constraint_reaction=constraint,
+            constrained_cells=self.constraint_cells.copy(),prescribed_cell_values=self.constraint_values.copy(),
+            cell_constraint_work=constraint_work,cell_constraint_error=self._constraint_error(cells),
+            global_balance_without_constraint=float(raw_global),
             cell_balance_max=float(np.max(np.abs(cell_balance))),
             interface_flux_defect_max=float(np.max(np.abs(interface),initial=0.)),
             global_balance=global_balance, global_relative_balance=abs(global_balance)/scale,
@@ -163,15 +197,21 @@ class NativeHybridScalar3D:
             owner[faces[sign>0]]=reaction[1:][sign>0];neighbor[faces[sign<0]]=reaction[1:][sign<0]
         return cell,owner,neighbor
 
-    def _stable_work_balance(self,state,storage,advective_flux,destruction,production,*,reactions=None):
-        """Local work identity with the same precise fluxes as the mass ledger."""
-        dtype=np.longdouble;u=np.asarray(state,dtype=dtype)
-        cell,owner,neighbor=self._local_diffusion_reactions(state) if reactions is None else reactions
+    def _cell_equation(self,storage,advective_flux,destruction,production,cell):
+        dtype=np.longdouble
         remainder=np.asarray(storage,dtype=dtype)+np.asarray(destruction,dtype=dtype)-np.asarray(production,dtype=dtype)
         internal=~self.boundary
         np.add.at(remainder,self.mesh.owner,np.asarray(advective_flux,dtype=dtype))
         np.add.at(remainder,self.mesh.neighbor[internal],-np.asarray(advective_flux[internal],dtype=dtype))
-        cell_work=u[:self.N]*(remainder+cell)
+        return remainder+cell
+
+    def _stable_work_balance(self,state,storage,advective_flux,destruction,production,*,reactions=None,constraint=None):
+        """Local work identity with the same precise fluxes as the mass ledger."""
+        dtype=np.longdouble;u=np.asarray(state,dtype=dtype);internal=~self.boundary
+        cell,owner,neighbor=self._local_diffusion_reactions(state) if reactions is None else reactions
+        equation=self._cell_equation(storage,advective_flux,destruction,production,cell)
+        if constraint is None:constraint=self._constraint_reaction(equation)
+        cell_work=u[:self.N]*(equation-constraint)
         interface_work=u[self.N:][internal]*(owner[internal]+neighbor[internal])
         balance=np.sum(cell_work,dtype=dtype)+np.sum(interface_work,dtype=dtype)
         # This scale consists only of gross terms in the same work identity.
@@ -185,15 +225,18 @@ class NativeHybridScalar3D:
         scale=diffusion_scale+np.sum(abs(u[self.N:][self.boundary]*owner[self.boundary]),dtype=dtype)
         for term in (storage,advection,destruction,production):
             scale+=np.sum(abs(u[:self.N]*np.asarray(term,dtype=dtype)),dtype=dtype)
+        scale+=np.sum(abs(u[:self.N]*constraint),dtype=dtype)
         return (float(balance),np.asarray(cell_work,float),np.asarray(interface_work,float),
-                remainder+cell,owner+neighbor,float(scale))
+                equation,owner+neighbor,float(scale))
 
     def steady_residual(self, cell_values, face_values, volume_flux=0., *, source=0.,
                         sink=0., boundary_values=0., boundary_diffusive_flux=0., inflow_values=None):
         """Evaluate CURRENT equations, including unequilibrated face unknowns.
 
-        No time term, frozen solve or state repair is used. All cell equations
+        No time term, frozen solve or state repair is used. Unconstrained cell
         and free face equations enter the normalized original-system residual.
+        Prescribed cell errors and original constraint reactions are separate;
+        a convergence check must include cell_constraint_error as well.
         """
         if self.mmp is not None:
             gn=np.broadcast_to(np.asarray(boundary_diffusive_flux,float),(self.F,))
@@ -226,8 +269,8 @@ class NativeHybridScalar3D:
         adv_div=self.D @ adv
         residual=reaction-load
         residual[:self.N]+=adv_div+destruction-production
-        free=self.diffusion.free
-        prescribed=self.diffusion._prescribed(bd[:,None])
+        free=self.free
+        prescribed=self._prescribed(bd[:,None])
         prescribed_load=self.diffusion.full_matrix @ prescribed
         scale=max(np.linalg.norm(prescribed_load[free])+np.linalg.norm(load[free])+
                   np.linalg.norm(production)+np.linalg.norm(destruction)+np.linalg.norm(adv_div),1e-30)
@@ -236,14 +279,19 @@ class NativeHybridScalar3D:
         total=adv-owner_reaction
         # Shared owner flux ledger is separate: it alone misses free-face residuals.
         local=self.D @ total+destruction-production
+        constraint=self._constraint_reaction(residual[:self.N])
+        constraint_error=self._constraint_error(cells)
         return dict(relative_residual=float(np.linalg.norm(residual[free])/scale),
             residual_scale=float(scale),free_residual=residual[free],
             cell_equation=residual[:self.N],face_equation=residual[self.N:],
+            cell_constraint_reaction=constraint,cell_constraint_error=constraint_error,
+            constrained_cells=self.constraint_cells.copy(),prescribed_cell_values=self.constraint_values.copy(),
+            unconstrained_cell_equation_max=float(np.max(abs(residual[self.free_cells]),initial=0.)),
             dirichlet_error=bc_error,cell_equation_max=float(np.max(np.abs(residual[:self.N]))),
             free_face_equation_max=float(np.max(np.abs(residual[self.N:][~mask]),initial=0.)),
             interface_flux_defect_max=float(np.max(abs((owner_reaction+neighbor_reaction)[~self.boundary]),initial=0.)),
-            total_flux=total,local_shared_flux_balance=local,
-            global_balance=float(total[self.boundary].sum()+destruction.sum()-production.sum(dtype=np.longdouble)))
+            total_flux=total,local_shared_flux_balance=local-constraint,local_shared_flux_balance_without_constraint=local,
+            global_balance=float(total[self.boundary].sum()+destruction.sum()-production.sum(dtype=np.longdouble)-constraint.sum(dtype=np.longdouble)))
 
     def ledger_acceptable(self,result):
         # All local/interface/global flux gates stay absolute and unchanged.
@@ -252,8 +300,10 @@ class NativeHybridScalar3D:
         flux=max(result['cell_balance_max'],result['interface_flux_defect_max'],abs(result['global_balance']))
         work=(abs(result['work_balance'])<1e-8 if self.work_balance_policy=='absolute'
               else result['relative_work_balance']<1e-12)
-        finite=np.isfinite([flux,result['work_balance'],result['work_balance_scale'],result['relative_work_balance']]).all()
-        return bool(finite and flux<1e-8 and work)
+        constraint_error=result.get('cell_constraint_error',0.)
+        finite=np.isfinite([result['cell_balance_max'],result['interface_flux_defect_max'],result['global_balance'],
+            result['work_balance'],result['work_balance_scale'],result['relative_work_balance'],constraint_error]).all()
+        return bool(finite and flux<1e-8 and work and constraint_error<1e-12)
 
     def _solve_mmp(self,volume_flux,**kwargs):
         gn=np.broadcast_to(np.asarray(kwargs['boundary_diffusive_flux'],float),(self.F,))
@@ -278,7 +328,8 @@ class NativeHybridScalar3D:
             current,info=self.mmp.operator(state);linear.diffusion=current
             audit=linear.steady_residual(state[:self.N],state[self.N:],q,**residual_kwargs)
             residual=audit['free_residual'].copy()
-            residual[:self.N]+=self.mesh.cell_volumes*invdt*(state[:self.N]-old)
+            cells=self.free_cells
+            residual[:len(cells)]+=self.mesh.cell_volumes[cells]*invdt*(state[cells]-old[cells])
             scale=audit['residual_scale']+np.linalg.norm(self.mesh.cell_volumes*invdt*old)
             error=float(np.linalg.norm(residual)/max(scale,1e-30))
             history.append(dict(iteration=iteration+1,current_nonlinear_residual=error,change=change))
