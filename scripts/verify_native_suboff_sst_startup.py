@@ -28,6 +28,7 @@ def main():
     p.add_argument('--output',type=Path,required=True)
     p.add_argument('--steps',type=int,default=1)
     p.add_argument('--dt',type=float,default=.01)
+    p.add_argument('--tolerance',type=float,default=1e-8,help='current coupled residual and change tolerance; steady force/work/transport ledgers still require separate audit')
     p.add_argument('--momentum-method',choices=['newton','simple','simplec','coupled'],default='newton')
     p.add_argument('--momentum-coupling',choices=['converged','sweeps'],default='converged')
     p.add_argument('--momentum-sweeps',type=int,default=1)
@@ -39,6 +40,7 @@ def main():
     p.add_argument('--scalar-work-balance-policy',choices=['absolute','relative'],default='absolute')
     a=p.parse_args()
     if a.steps<1 or not np.isfinite(a.dt) or a.dt<=0:p.error('positive step count and dt required')
+    if not np.isfinite(a.tolerance) or a.tolerance<=0:p.error('positive finite coupled tolerance required')
     if a.momentum_coupling=='sweeps' and a.momentum_method not in ('simple','simplec'):
         p.error('sweeps require SIMPLE or SIMPLEC')
     if a.momentum_coupling!='sweeps' and a.momentum_inner_iterations!=1:
@@ -78,7 +80,7 @@ def main():
         shutil.copytree(a.restart_run/'source-snapshot',out/'restart-source-snapshot')
     nu=old['nu'];k0,w0=inflow_from_intensity(1.,.005,.05)
     write_json(out/'settings.json',dict(backend='native_hybrid_cell_and_shared_face_velocity',kind='actual SUBOFF SST startup diagnostic',
-        Re_L=old['Re_L'],nu=nu,rho=1.,U=1.,L=1.,variant=VARIANT,steps=a.steps,dt=a.dt,relaxation=.7,tolerance=1e-8,
+        Re_L=old['Re_L'],nu=nu,rho=1.,U=1.,L=1.,variant=VARIANT,steps=a.steps,dt=a.dt,relaxation=.7,tolerance=a.tolerance,
         k_inflow=float(k0),omega_inflow=float(w0),intensity=.005,length_scale_L=.05,
         inlet_provenance='explicit modeling assumptions, not measured experimental inflow',
         wall_treatment='resolved; k=0 and omega=60*nu/(beta1*d1^2); no wall function',
@@ -119,7 +121,7 @@ def main():
         np.savez_compressed(out/'initial-turbulence.npz',k=s.k,omega=s.omega,k_faces=s.k_faces,omega_faces=s.omega_faces)
         print(dict(stage='SST_STARTUP',cells=flow.N,faces=flow.F,face_initialization=s.initialization['face_initialization']),flush=True)
         def progress(row):write_json(out/'progress.json',row);print(row,flush=True)
-        result=s.solve(max_iterations=a.steps,dt=a.dt,relaxation=.7,tolerance=1e-8,
+        result=s.solve(max_iterations=a.steps,dt=a.dt,relaxation=.7,tolerance=a.tolerance,
             momentum_method=a.momentum_method,momentum_coupling=a.momentum_coupling,
             momentum_sweeps=a.momentum_sweeps,momentum_inner_iterations=a.momentum_inner_iterations,
             momentum_relaxation=a.momentum_relaxation,callback=progress)

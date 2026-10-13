@@ -18,7 +18,9 @@ def digest(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 
 
 def main():
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('run',type=Path);p.add_argument('--output',type=Path,required=True);a=p.parse_args()
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('run',type=Path);p.add_argument('--output',type=Path,required=True)
+    p.add_argument('--precision-sensitivity',action='store_true',help='compare saved extended scalar states with their production float64 cast, at identical frozen closure coefficients')
+    a=p.parse_args()
     root=a.run;cfg=json.loads((root/'settings.json').read_text());summary=json.loads((root/'summary.json').read_text())
     if not summary['initialized'] or not summary['source_integrity_verified']:raise ValueError('verified initialized run required')
     if digest(root/'fields.npz')!=summary['fields_sha256']:raise ValueError('saved field changed')
@@ -28,7 +30,8 @@ def main():
         if digest(root/('initial-'+relative))!=sha:raise ValueError('initial input changed')
     evidence=NativeRunEvidence(a.output,__file__);out=a.output
     write_json(out/'settings.json',dict(run=str(root),scope=__doc__,bindings={name:digest(root/name) for name in
-        ('settings.json','summary.json','fields.npz','initial-input.msh','sources.json')},physical_suboff_benchmark_passed=False))
+        ('settings.json','summary.json','fields.npz','initial-input.msh','sources.json')},
+        precision_sensitivity=a.precision_sensitivity,physical_suboff_benchmark_passed=False))
     m=NativeMesh3D.from_gmsh(root/'initial-input.msh',triangulate_faces=True)
     f=np.load(root/'fields.npz',allow_pickle=False);boundary=m.neighbor<0;inside=~boundary;wall=m.patch_labels=='wall'
     fixed=boundary&(m.patch_labels!='outlet');velocity=np.tile([1.,0.,0.],(len(m.owner),1));velocity[wall]=0.
@@ -67,6 +70,21 @@ def main():
         scalar[name].update(relative_current_residual=saved['relative_residual'],current_steady_ledger_passed=op.ledger_acceptable(ledger))
         for key in ('total_flux','neighbor_total_flux','cell_balance','work_balance_cell_terms','work_balance_interface_terms'):
             raw[name+'_'+key]=ledger[key]
+        if a.precision_sensitivity:
+            preserved=np.r_[f[name],f[name+'_faces']]
+            extended=copy.copy(op);extended.mmp=None
+            if op.mmp is not None:extended.diffusion,_=op.mmp.operator(preserved)
+            sensitivity=extended._solution_result(preserved,q,c[name+'_source'],np.zeros(flow.N),np.zeros(flow.N),0.,cfg[name+'_inflow'],0.)
+            scalar[name]['state_precision_sensitivity']=dict(
+                scope='diagnostic only: identical current float64 SST closure; changing state precision also rebuilds its nonlinear MMP coefficients; not a full extended-precision SST solve',
+                saved_dtype=str(preserved.dtype),saved_precision_bits=int(np.finfo(preserved.dtype).nmant+1),
+                maximum_state_cast_difference=float(np.max(abs(preserved-state))),
+                preserved_state_ledger={key:sensitivity[key] for key in ('cell_balance_max','interface_flux_defect_max',
+                    'global_balance','work_balance','relative_work_balance')},
+                maximum_local_ledger_change=float(np.max(abs(sensitivity['cell_balance']-ledger['cell_balance']))),
+                maximum_cell_equation_change=float(np.max(abs(sensitivity['cell_equation_extended']-ledger['cell_equation_extended']))))
+            raw[name+'_preserved_precision_cell_balance']=sensitivity['cell_balance']
+            raw[name+'_preserved_precision_cell_equation']=sensitivity['cell_equation_extended']
     np.savez_compressed(out/'reconstructed-ledgers.npz',**raw);evidence.verify_sources()
     write_json(out/'audit.json',dict(source_integrity_verified=True,producer_sources_verified=True,
         reconstructed_sha256=digest(out/'reconstructed-ledgers.npz'),producer_solver_converged=summary.get('solver_converged',False),
