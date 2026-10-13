@@ -36,7 +36,8 @@ def solve_newton(solver, *, max_iterations=50, tolerance=1e-8, max_backtracks=20
         if iteration==0 and not require_initial_correction and max(metrics.values())<tolerance:
             s.nonlinear_converged=True
             s.newton_history.append(dict(iteration=0,accepted=True,step_length=0.,backtracks=0,merit_before=merit,
-                merit_after=merit,velocity_change=0.,pressure_change=0.,**metrics))
+                merit_after=merit,velocity_change=0.,pressure_change=0.,
+                full_velocity_change=0.,full_pressure_change=0.,**metrics))
             break
         jac=s.viscous.full_matrix+s.convection.hybrid_jacobian(s.state,s.face_mean.matrix)
         matrix=sparse.bmat([[space.matrix(jac),-s.B.T],[s.B,None]],format='lil')
@@ -45,10 +46,11 @@ def solve_newton(solver, *, max_iterations=50, tolerance=1e-8, max_backtracks=20
             matrix[size,:]=0.;matrix[size,size]=1.;rhs[size]=-gauge
         options={"allow_inexact": True} if allow_inexact_linear_steps else {}
         direction,linear_residual=s._coupled_linear(matrix.tocsc(),rhs,**options)
-        old=s.state.copy();old_p=s.p.copy();accepted=False;trials=[];du=dp=float('inf')
+        old=s.state.copy();old_p=s.p.copy();accepted=False;trials=[];du=dp=full_du=full_dp=float('inf')
+        full_velocity_direction=space.expand(direction[:size])
         for backtracks in range(max_backtracks+1):
             step=2.**(-backtracks)
-            trial=old+space.expand(step*direction[:size])
+            trial=old+step*full_velocity_direction
             trial_p=old_p+step*direction[size:]
             if not np.isfinite(trial).all() or not np.isfinite(trial_p).all():
                 trials.append(dict(step_length=step,merit=None,accepted=False,reason='nonfinite_trial'))
@@ -56,7 +58,11 @@ def solve_newton(solver, *, max_iterations=50, tolerance=1e-8, max_backtracks=20
             candidate=evaluate(trial,trial_p)
             du=float(np.linalg.norm(trial-old)/max(np.linalg.norm(trial),1.))
             dp=float(np.linalg.norm(trial_p-old_p)/max(np.linalg.norm(trial_p),1.))
-            already_solved=max(candidate[4].values())<tolerance and max(du,dp)<tolerance
+            full_du=float(np.linalg.norm(full_velocity_direction)/max(np.linalg.norm(trial),1.))
+            full_dp=float(np.linalg.norm(direction[size:])/max(np.linalg.norm(trial_p),1.))
+            # Damping can make an arbitrarily large correction look small.
+            # Qualification requires the complete correction at this state.
+            already_solved=max(candidate[4].values())<tolerance and max(full_du,full_dp)<tolerance
             decreased=np.isfinite(candidate[3]) and candidate[3]<=(1-1e-4*step)*merit
             trials.append(dict(step_length=step,merit=candidate[3],accepted=bool(decreased or already_solved)))
             if decreased or already_solved:
@@ -66,12 +72,14 @@ def solve_newton(solver, *, max_iterations=50, tolerance=1e-8, max_backtracks=20
             backtracks=backtracks,merit_before=merit,merit_after=current[3],
             true_linear_relative_residual=linear_residual,
             velocity_change=du if accepted else 0.,pressure_change=dp if accepted else 0.,
+            full_velocity_change=full_du if np.isfinite(full_du) else None,
+            full_pressure_change=full_dp if np.isfinite(full_dp) else None,
             trials=trials,**current[4])
         s.newton_history.append(row)
         if callback:callback(row)
         if not accepted:
             s.newton_failure='line_search_failed';break
-        s.nonlinear_converged=bool(max(current[4].values())<tolerance and max(du,dp)<tolerance)
+        s.nonlinear_converged=bool(max(current[4].values())<tolerance and max(full_du,full_dp)<tolerance)
         if s.nonlinear_converged:break
     if not s.nonlinear_converged and s.newton_failure is None:s.newton_failure='iteration_limit'
     result=s.result()

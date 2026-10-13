@@ -126,3 +126,18 @@ def test_restart_can_require_complete_correction_even_at_small_residual(monkeypa
         s.solve_newton(require_initial_correction=True)
     assert not s.nonlinear_converged
     np.testing.assert_array_equal(s.state,old);np.testing.assert_array_equal(s.p,old_p)
+
+
+def test_damping_cannot_turn_large_full_correction_into_convergence(monkeypatch):
+    _,s,_=potential_solver(2,.1)
+    s.initialize_stokes();assert s.solve_newton(tolerance=1e-10)['numerically_converged']
+    old=s.state.copy();old_p=s.p.copy()
+    def large_direction(matrix,rhs):
+        direction=np.zeros_like(rhs);direction[0]=1e-5
+        return direction,0.
+    monkeypatch.setattr(s,'_coupled_linear',large_direction)
+    result=s.solve_newton(max_iterations=1,max_backtracks=25,tolerance=1e-9,require_initial_correction=True)
+    assert not result['numerically_converged']
+    assert result['newton_history'][0]['full_velocity_change']>1e-9
+    assert result['newton_failure']=='line_search_failed'
+    np.testing.assert_array_equal(s.state,old);np.testing.assert_array_equal(s.p,old_p)

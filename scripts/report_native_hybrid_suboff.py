@@ -82,6 +82,22 @@ def main():
         history=json.loads((root/'history.json').read_text())
         if summary['numerically_converged']:
             assert max(mass,momentum,balance)<1e-8
+            if settings.get('verify_initial_correction'):
+                assert history and history[0]['iteration']>=1 and history[0]['step_length']>0
+                assert all(row['accepted'] for row in history)
+                last=history[-1]
+                # Historical producers did not record full changes; a full
+                # accepted step makes their saved changes equivalent.
+                if 'full_velocity_change' in last:
+                    assert max(last['full_velocity_change'],last['full_pressure_change'])<settings['numerical_tolerance']
+                else:assert last['step_length']==1.
+            if settings.get('linear_method')=='block_amg':
+                for row in json.loads((root/'coupled-linear-history.json').read_text()):
+                    assert row['accepted'] and row['candidate_finite']
+                    assert row['true_relative_residual']<=1e-9
+                    assert row['algebraic_continuity_defect_per_volume_max']<=1e-8
+                    assert row['gauge_equation_defect']<=1e-9
+                    assert row['gmres_info']==0 or (settings.get('inexact_newton') and row['gmres_info']>0)
             assert max(history[-1][k] for k in ('current_momentum_residual','divergence_max','velocity_change','pressure_change'))<settings['numerical_tolerance']
         if rejected_audit is not None and rejected_audit['record']['candidate_finite']:
             locations=f['cell_centers'][constraint_cells];magnitudes=np.abs(constraint)
