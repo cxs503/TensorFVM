@@ -1,0 +1,19 @@
+{
+  "initialized": true,
+  "startup_steps_completed": true,
+  "completed_steps": 6,
+  "failure": null,
+  "completed_steps_before_restart": 25,
+  "total_completed_steps": 31,
+  "numerically_converged": false,
+  "solver_converged": true,
+  "qualification": "startup diagnostic only; complete independent RANS force/work/transport audit not performed",
+  "physical_suboff_benchmark_passed": false,
+  "cells": 1331,
+  "faces": 3556,
+  "Re_L": 10.0,
+  "wall_function_verified": false,
+  "source_integrity_verified": true,
+  "fields_sha256": "54b09eb80929b521c2bcafeb3fe14a45656ffa4801afe6d439fa6af412689e8f",
+  "runtime_seconds": 585.8094200436026
+}
