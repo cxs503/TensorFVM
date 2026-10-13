@@ -37,9 +37,10 @@ def main():
     fixed=boundary&(m.patch_labels!='outlet');velocity=np.tile([1.,0.,0.],(len(m.owner),1));velocity[wall]=0.
     flow=NativeHybridNavierStokes3D(m,fixed,velocity,viscosity=cfg['nu'],convection_order=2,backflow_velocity=[1,0,0])
     policy=cfg.get('scalar_work_balance_policy','absolute')
+    precision=cfg.get('scalar_precision','float64')
     s=NativeHybridRans3D(flow,f['wall_distance'],cfg['nu'],k_dirichlet_mask=fixed,omega_dirichlet_mask=fixed,
         k_boundary=f['k_boundary'],omega_boundary=f['omega_boundary'],k_inflow=cfg['k_inflow'],omega_inflow=cfg['omega_inflow'],
-        scalar_correction=cfg['scalar_correction'],scalar_work_balance_policy=policy)
+        scalar_correction=cfg['scalar_correction'],scalar_work_balance_policy=policy,scalar_precision=precision)
     for name,value in [('owner',m.owner),('neighbor',m.neighbor),('vertices',m.vertices),('area_vectors',m.area_vectors)]:
         np.testing.assert_array_equal(f[name],value)
     s.restore_accepted_fields(f);current=s.current_residual();r=s.result();q=flow.volume_flux()
@@ -58,8 +59,9 @@ def main():
     scalar={};c=current['transport']['closure']
     for name in ('k','omega'):
         op=NativeHybridScalar3D(m,cfg['nu']+c['sigma_'+name]*c['nu_t'],dirichlet_mask=fixed,
-            correction=cfg['scalar_correction'],work_balance_policy=policy)
-        state=np.r_[np.asarray(f[name],float),np.asarray(f[name+'_faces'],float)]
+            correction=cfg['scalar_correction'],work_balance_policy=policy,data_precision=precision)
+        dtype=np.longdouble if precision=='longdouble' else float
+        state=np.r_[np.asarray(f[name],dtype),np.asarray(f[name+'_faces'],dtype)]
         linear=copy.copy(op);linear.mmp=None
         if op.mmp is not None:linear.diffusion,_=op.mmp.operator(state)
         ledger=linear._solution_result(state,q,c[name+'_source'],np.zeros(flow.N),np.zeros(flow.N),0.,cfg[name+'_inflow'],0.)
@@ -76,7 +78,7 @@ def main():
             if op.mmp is not None:extended.diffusion,_=op.mmp.operator(preserved)
             sensitivity=extended._solution_result(preserved,q,c[name+'_source'],np.zeros(flow.N),np.zeros(flow.N),0.,cfg[name+'_inflow'],0.)
             scalar[name]['state_precision_sensitivity']=dict(
-                scope='diagnostic only: identical current float64 SST closure; changing state precision also rebuilds its nonlinear MMP coefficients; not a full extended-precision SST solve',
+                scope=f'diagnostic only: identical current {precision} SST closure; saved raw state versus declared production state; nonlinear MMP coefficients rebuilt at each state',
                 saved_dtype=str(preserved.dtype),saved_precision_bits=int(np.finfo(preserved.dtype).nmant+1),
                 maximum_state_cast_difference=float(np.max(abs(preserved-state))),
                 preserved_state_ledger={key:sensitivity[key] for key in ('cell_balance_max','interface_flux_defect_max',
@@ -86,9 +88,14 @@ def main():
             raw[name+'_preserved_precision_cell_balance']=sensitivity['cell_balance']
             raw[name+'_preserved_precision_cell_equation']=sensitivity['cell_equation_extended']
     np.savez_compressed(out/'reconstructed-ledgers.npz',**raw);evidence.verify_sources()
+    flow_checks=[balances[key] for key in ('mass_divergence_max','local_momentum_balance_max',
+        'global_momentum_balance_max','interface_traction_defect_max','energy_balance_error')]
+    ledgers_passed=bool(np.isfinite(flow_checks).all() and max(abs(v) for v in flow_checks)<1e-8
+        and all(scalar[name]['current_steady_ledger_passed'] for name in ('k','omega')))
     write_json(out/'audit.json',dict(source_integrity_verified=True,producer_sources_verified=True,
         reconstructed_sha256=digest(out/'reconstructed-ledgers.npz'),producer_solver_converged=summary.get('solver_converged',False),
         current_equations={k:v for k,v in current.items() if k!='transport'},flow=balances,scalar=scalar,
+        current_steady_ledgers_passed=ledgers_passed,scalar_precision=precision,
         numerical_qualification=False,physical_suboff_benchmark_passed=False,
         qualification='diagnostic audit only; all convergence, mesh and physical-reference gates remain required'))
     print(json.loads((out/'audit.json').read_text()),flush=True)

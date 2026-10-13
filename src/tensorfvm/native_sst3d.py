@@ -24,13 +24,13 @@ CD_FLOOR=1e-10
 VARIANT='NASA TMR SST-2003 (exact production, isotropic Reynolds stress retained)'
 
 
-def _finite(name,value):
-    value=np.asarray(value,dtype=float)
+def _finite(name,value,*,dtype=float):
+    value=np.asarray(value,dtype=dtype)
     if not np.isfinite(value).all():raise ValueError(f'{name} must be finite')
     return value
 
 
-def sst2003_closure(k,omega,wall_distance,nu,velocity_gradient,grad_k,grad_omega,*,rho=1.):
+def sst2003_closure(k,omega,wall_distance,nu,velocity_gradient,grad_k,grad_omega,*,rho=1.,precision='float64'):
     """Pointwise 3D SST-2003 coefficients and specific (per mass) sources.
 
     grad_u[...,i,j]=du_i/dx_j. Wall distance is positive nearest-wall distance;
@@ -38,9 +38,11 @@ def sst2003_closure(k,omega,wall_distance,nu,velocity_gradient,grad_k,grad_omega
     CD has the density convention and dimensional numerical floor of TMR.
     Outputs production/source are per unit mass; tau_t is dynamic stress.
     """
-    k,omega,d,nu,rho=np.broadcast_arrays(*[_finite(name,x) for name,x in [('k',k),('omega',omega),('wall distance',wall_distance),('nu',nu),('rho',rho)]])
+    if precision not in ('float64','longdouble'):raise ValueError('unknown SST arithmetic precision')
+    finite=lambda name,value:_finite(name,value,dtype=np.longdouble if precision=='longdouble' else float)
+    k,omega,d,nu,rho=np.broadcast_arrays(*[finite(name,x) for name,x in [('k',k),('omega',omega),('wall distance',wall_distance),('nu',nu),('rho',rho)]])
     if np.any(k<0) or np.any(omega<=0) or np.any(d<=0) or np.any(nu<=0) or np.any(rho<=0):raise ValueError('k>=0 and positive omega, wall distance, nu, rho required')
-    shape=k.shape;G=np.broadcast_to(_finite('velocity gradient',velocity_gradient),shape+(3,3));gk=np.broadcast_to(_finite('k gradient',grad_k),shape+(3,));gw=np.broadcast_to(_finite('omega gradient',grad_omega),shape+(3,))
+    shape=k.shape;G=np.broadcast_to(finite('velocity gradient',velocity_gradient),shape+(3,3));gk=np.broadcast_to(finite('k gradient',grad_k),shape+(3,));gw=np.broadcast_to(finite('omega gradient',grad_omega),shape+(3,))
     S=.5*(G+G.swapaxes(-1,-2));W=.5*(G-G.swapaxes(-1,-2))
     S2=2*np.sum(S*S,axis=(-2,-1));W2=2*np.sum(W*W,axis=(-2,-1));div=np.trace(G,axis1=-2,axis2=-1)
     cross=np.sum(gk*gw,axis=-1)
