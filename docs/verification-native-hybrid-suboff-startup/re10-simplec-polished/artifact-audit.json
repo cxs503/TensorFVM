@@ -1,0 +1,16 @@
+{
+  "source_and_fields_verified": true,
+  "mass_divergence_max": 1.5857792070520698e-14,
+  "local_integrated_momentum_max": 1.1113954201391607e-10,
+  "wall_force": [
+    0.39643329894754004,
+    0.000567884016359565,
+    -0.0014659639860268336
+  ],
+  "force_balance_max": 3.398260405712561e-11,
+  "numerically_converged": true,
+  "wall_Cp_certified": false,
+  "grid_convergence_certified": false,
+  "physical_suboff_benchmark_passed": false,
+  "audit_source_sha256": "1753dcb9abaff337125ec8d8ddfc9c31217211ad49e70611c43af5292f5e0686"
+}

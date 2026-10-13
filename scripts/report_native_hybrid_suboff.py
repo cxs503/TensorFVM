@@ -17,6 +17,11 @@ def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('directory',type=Path);root=p.parse_args().directory
     summary=json.loads((root/'summary.json').read_text());settings=json.loads((root/'settings.json').read_text())
     assert summary['source_integrity_verified']
+    if settings.get('initial_run'):
+        for name,digest in settings['initial_run']['files'].items():
+            assert hashlib.sha256((root/('initial-'+name)).read_bytes()).hexdigest()==digest
+        previous=json.loads((root/'initial-settings.json').read_text())
+        assert previous['mesh_sha256']==settings['mesh_sha256']
     for path,digest in json.loads((root/'sources.json').read_text()).items():
         assert hashlib.sha256((root/'source-snapshot'/path).read_bytes()).hexdigest()==digest
     assert hashlib.sha256((root/'input.msh').read_bytes()).hexdigest()==settings['mesh_sha256']
@@ -40,7 +45,7 @@ def main():
         history=json.loads((root/'history.json').read_text())
         if summary['numerically_converged']:
             assert max(mass,momentum,balance)<1e-8
-            assert max(history[-1][k] for k in ('current_momentum_residual','divergence_max','velocity_change','pressure_change'))<1e-8
+            assert max(history[-1][k] for k in ('current_momentum_residual','divergence_max','velocity_change','pressure_change'))<settings['numerical_tolerance']
         mesh=SimpleNamespace(vertices=f['vertices'],cells=list(range(len(v))),face_vertices=f['face_vertices'],owner=owner,neighbor=neighbor)
         polygons,ids=cell_section_polygons(mesh,value=.001)
         fig,axes=plt.subplots(4,1,figsize=(12,12),constrained_layout=True)
