@@ -74,3 +74,28 @@ def test_stable_power_ledger_preserves_identity_and_detects_perturbation():
     assert abs(perturbed['work_balance'])>1e-3
     np.testing.assert_allclose(perturbed['work_balance'],
         perturbed['work_balance_cell_terms'].sum()+perturbed['work_balance_interface_terms'].sum(),rtol=1e-12)
+
+
+def test_numerical_restart_rechecks_original_equations_and_unrelaxed_updates():
+    m=pressure_mesh(2);bd=np.zeros(len(m.owner));bd[[38,52,60,90]]=1.
+    op=NativeHybridScalar3D(m,correction='nonlinear_mmp')
+    original=op.solve(boundary_values=bd)
+    state=np.r_[original['cell_values'],original['face_values']]
+    saved=state.copy()
+    restarted=op.solve(boundary_values=bd,nonlinear_initial_state=state)
+    assert restarted['numerical_state_restart'] and restarted['final_smoothing']==0
+    assert restarted['current_nonlinear_residual']<1e-12
+    history=restarted['nonlinear_history']
+    assert len(history)>=2
+    assert all(row['fixed_point_polish'] and row['unrelaxed'] and row['change']<1e-12 for row in history[-2:])
+    np.testing.assert_array_equal(state,saved)
+    np.testing.assert_allclose(restarted['cell_values'],original['cell_values'],atol=1e-10)
+
+
+def test_numerical_restart_rejects_invalid_states_and_boundary_changes():
+    m=pressure_mesh(1);op=NativeHybridScalar3D(m,correction='nonlinear_mmp')
+    for state in (np.ones(op.N),np.full(op.N+op.F,np.nan),np.zeros(op.N+op.F)):
+        with pytest.raises(ValueError):op.solve(boundary_values=1.,nonlinear_initial_state=state)
+    for correction,method in [('none','continuation_newton'),('nonlinear_mmp','picard')]:
+        s=NativeHybridScalar3D(m,correction=correction,mmp_solver=method)
+        with pytest.raises(ValueError):s.solve(boundary_values=1.,nonlinear_initial_state=np.ones(s.N+s.F))

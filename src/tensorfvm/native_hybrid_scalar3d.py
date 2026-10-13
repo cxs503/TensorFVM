@@ -43,17 +43,23 @@ class NativeHybridScalar3D:
                                 for j in range(3)])/self.mesh.cell_volumes[:, None]
 
     def solve(self, volume_flux=0., *, source=0., sink=0., boundary_values=0.,
-              boundary_diffusive_flux=0., inflow_values=None, old_values=None, dt=None):
+              boundary_diffusive_flux=0., inflow_values=None, old_values=None, dt=None, nonlinear_initial_state=None):
         """One linear steady solve or backward Euler step, with an explicit ledger.
 
         boundary_diffusive_flux is outward kappa*grad(phi).n per unit area
         on Neumann boundaries. Inflow values are mandatory wherever q<0,
         including Neumann diffusion boundaries. sink must be nonnegative.
         Both dt and old_values must be supplied for a transient step.
+        nonlinear_initial_state is an optional complete numerical cell/face state
+        for continuation Newton. Restart solves the unsmoothed original equations;
+        it never inherits convergence and must preserve prescribed boundary values.
         """
+        if nonlinear_initial_state is not None and (self.mmp is None or self.mmp_solver!='continuation_newton'):
+            raise ValueError('numerical nonlinear restart requires continuation_newton correction')
         if self.mmp is not None:
             return self._solve_mmp(volume_flux,source=source,sink=sink,boundary_values=boundary_values,
-                boundary_diffusive_flux=boundary_diffusive_flux,inflow_values=inflow_values,old_values=old_values,dt=dt)
+                boundary_diffusive_flux=boundary_diffusive_flux,inflow_values=inflow_values,old_values=old_values,dt=dt,
+                nonlinear_initial_state=nonlinear_initial_state)
         q = self._array(volume_flux, self.F, 'shared volume flux')
         source = self._array(source, self.N, 'source')
         sink = self._array(sink, self.N, 'sink')
@@ -223,7 +229,8 @@ class NativeHybridScalar3D:
         gn=np.broadcast_to(np.asarray(kwargs['boundary_diffusive_flux'],float),(self.F,))
         if np.any(gn[self.diffusion.traction_boundary]!=0):
             raise ValueError('nonlinear scalar correction currently requires homogeneous Neumann data')
-        if self.mmp_solver=='continuation_newton':return solve_mmp_newton(self,volume_flux,**kwargs)
+        initial_state=kwargs.pop('nonlinear_initial_state',None)
+        if self.mmp_solver=='continuation_newton':return solve_mmp_newton(self,volume_flux,initial_state=initial_state,**kwargs)
         linear=copy.copy(self);linear.mmp=None
         initial=linear.solve(volume_flux,**kwargs)
         state=np.r_[initial['cell_values'],initial['face_values']]

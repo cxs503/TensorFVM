@@ -6,7 +6,7 @@ from scipy.sparse.linalg import splu
 from .native_scalar_mmp3d import ScalarMMPConvergenceError
 
 
-def solve_mmp_newton(scalar,volume_flux,**kwargs):
+def solve_mmp_newton(scalar,volume_flux,*,initial_state=None,**kwargs):
     linear=copy.copy(scalar);linear.mmp=None
     initial=linear.solve(volume_flux,**kwargs)  # validates data, independent initial guess
     state=np.r_[initial['cell_values'],initial['face_values']].astype(np.longdouble)
@@ -26,6 +26,14 @@ def solve_mmp_newton(scalar,volume_flux,**kwargs):
     forcing=scalar.diffusion._traction_load(gn[:,None])
     forcing[:N]+=v*(source+old*invdt)-scalar.D@adv_source
     prescribed=scalar.diffusion._prescribed(np.broadcast_to(np.asarray(kwargs['boundary_values'],float),(F,))[:,None])
+    if initial_state is not None:
+        restart=np.asarray(initial_state,dtype=np.longdouble)
+        fixed=np.setdiff1d(np.arange(N+F),free)
+        if restart.shape!=(N+F,) or not np.isfinite(restart).all():
+            raise ValueError('finite complete cell/face restart state required')
+        if not np.array_equal(restart[fixed],prescribed[fixed]):
+            raise ValueError('restart changes prescribed scalar boundary values')
+        state=restart.copy()
     fixed_scale=max(np.linalg.norm((forcing-(scalar.diffusion.full_matrix+extra)@prescribed)[free]),1e-30)
     state_scale=max(float(np.max(np.abs(state))),float(np.max(np.abs(old))),1e-30)
     history=[];linear_residual=initial['linear_relative_residual']
@@ -46,7 +54,7 @@ def solve_mmp_newton(scalar,volume_flux,**kwargs):
             error=float(np.linalg.norm(residual)/max(scale,1e-30))
             r.update(info,nonlinear_history=history,current_nonlinear_residual=error,
                      scalar_diffusion_correction='nonlinear_mmp',nonlinear_solver='continuation_newton',
-                     continuation_state_scale=state_scale,final_smoothing=float(smoothing),ledger_refinements=refinement,
+                     numerical_state_restart=initial_state is not None,continuation_state_scale=state_scale,final_smoothing=float(smoothing),ledger_refinements=refinement,
                      solution_precision_bits=int(np.finfo(state.dtype).nmant+1))
             ledger=max(r['cell_balance_max'],r['interface_flux_defect_max'],abs(r['global_balance']),abs(r['work_balance']))
             if failure is None and error<1e-12 and ledger<1e-8 and history[-1]['change']<1e-12:
@@ -88,7 +96,7 @@ def solve_mmp_newton(scalar,volume_flux,**kwargs):
         """
         nonlocal state,linear_residual
         stable=0
-        for iteration in range(8):
+        for iteration in range(32):
             frozen=copy.copy(linear);frozen.diffusion,_=scalar.mmp.operator(state)
             jac=(frozen.diffusion.full_matrix+extra)[free][:,free].tocsc();factor=splu(jac)
             candidate=state.astype(np.longdouble);worst_linear=0.
@@ -111,11 +119,28 @@ def solve_mmp_newton(scalar,volume_flux,**kwargs):
             if stable>=2:return finish()
         return finish('original fixed-point polish change failed')
 
-    for smoothing in (1e-3,1e-4,1e-5,1e-6,1e-7,1e-8,1e-9,1e-10,0.):
+    stages=(0.,) if initial_state is not None else (1e-3,1e-4,1e-5,1e-6,1e-7,1e-8,1e-9,1e-10,0.)
+    for smoothing in stages:
         for iteration in range(80):
-            matrix,tangent=scalar.mmp.nonlinear_system(state,smoothing=smoothing,state_scale=state_scale,jacobian=True)
             residual=scalar.mmp.nonlinear_reaction(state,smoothing=smoothing,state_scale=state_scale)+extra@state-forcing
             rhs=-np.asarray(residual[free],float)
+            merit=float(np.linalg.norm(rhs)/fixed_scale)
+            # Positive smoothing stages only provide a continuation seed. Once
+            # that stage's equation is equilibrated, do not solve an ill-
+            # conditioned tangent solely to certify a small seed update.
+            # Zero smoothing still requires ORIGINAL residual/change/ledgers.
+            if smoothing>0 and merit<1e-12:
+                history.append(dict(iteration=len(history)+1,smoothing=smoothing,
+                    stage_iteration=iteration+1,smoothed_relative_residual=merit,
+                    current_nonlinear_residual=float(np.linalg.norm((scalar.mmp.nonlinear_reaction(state)+extra@state-forcing)[free])/fixed_scale),
+                    change=None,true_linear_relative_residual=None,accepted=False,
+                    stage_converged=True,continuation_seed_only=True))
+                break
+            if smoothing==0 and merit<1e-12:
+                # No Newton direction is needed here. Its true residual must
+                # not veto the separately certified original fixed-point path.
+                return polish_fixed_point()
+            matrix,tangent=scalar.mmp.nonlinear_system(state,smoothing=smoothing,state_scale=state_scale,jacobian=True)
             jac=(tangent+extra)[free][:,free].tocsc();step=splu(jac).solve(rhs)
             linear_residual=float(np.linalg.norm(jac@step-rhs)/max(np.linalg.norm(rhs),1e-30))
             if not np.isfinite(step).all():raise RuntimeError('nonfinite Newton increment rejected')
@@ -129,7 +154,7 @@ def solve_mmp_newton(scalar,volume_flux,**kwargs):
             if merit<(1e-14 if smoothing==0 else 1e-12) and change<1e-12:
                 row['stage_converged']=True
                 break
-            if smoothing==0 and merit<1e-14:
+            if smoothing==0 and merit<1e-12:
                 return polish_fixed_point()
             for back in range(30):
                 trial=state.copy();trial[free]+=2.**-back*step
