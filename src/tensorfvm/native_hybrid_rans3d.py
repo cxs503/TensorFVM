@@ -13,12 +13,12 @@ from .native_sst3d import sst2003_closure
 class NativeHybridRans3D:
     def __init__(self,flow,wall_distance,nu,*,k_dirichlet_mask=None,omega_dirichlet_mask=None,
                  k_boundary,omega_boundary,k_inflow=None,omega_inflow=None,k_neumann=0.,omega_neumann=0.,
-                 scalar_correction='none', mmp_solver='continuation_newton', scalar_work_balance_policy='absolute'):
+                 scalar_correction='none', mmp_solver='continuation_newton', scalar_work_balance_policy='absolute',scalar_warm_start=False):
         if not isinstance(flow,NativeHybridNavierStokes3D):
             raise TypeError('native hybrid Navier-Stokes flow required')
         self.flow=flow;self.mesh=flow.mesh
         self.transport=NativeHybridSSTTransport3D(self.mesh,k_dirichlet_mask=k_dirichlet_mask,
-                                                 omega_dirichlet_mask=omega_dirichlet_mask,scalar_correction=scalar_correction,mmp_solver=mmp_solver,scalar_work_balance_policy=scalar_work_balance_policy)
+                                                 omega_dirichlet_mask=omega_dirichlet_mask,scalar_correction=scalar_correction,mmp_solver=mmp_solver,scalar_work_balance_policy=scalar_work_balance_policy,scalar_warm_start=scalar_warm_start)
         self.nu=self.transport._state(nu,flow.N,'molecular viscosity',True)
         self.wall_distance=self.transport._state(wall_distance,flow.N,'wall distance',True)
         self.rho=flow.convection.density
@@ -195,6 +195,9 @@ class NativeHybridRans3D:
                 changes=changes,minimum_k=float(min(self.k.min(),self.k_faces.min())),
                 minimum_omega=float(min(self.omega.min(),self.omega_faces.min())),
                 frozen_linear_residuals={name:step['transport'][name]['linear_relative_residual'] for name in ('k','omega')},
+                scalar_nonlinear_iterations={name:len(step['transport'][name].get('nonlinear_history',[])) for name in ('k','omega')},
+                scalar_initialization={name:{key:value for key,value in step['transport'][name].get('warm_start',dict(attempted=False)).items()
+                    if key!='history'} for name in ('k','omega')},
                 scalar_subsolve_ledgers={name:{key:step['transport'][name][key] for key in
                     ('cell_balance_max','interface_flux_defect_max','global_balance','work_balance','work_balance_scale',
                      'relative_work_balance','absolute_work_gate_passed','work_balance_policy')} for name in ('k','omega')})

@@ -20,10 +20,13 @@ class HybridSSTAdmissibilityError(RuntimeError):
 
 
 class NativeHybridSSTTransport3D:
-    def __init__(self, mesh, *, k_dirichlet_mask=None, omega_dirichlet_mask=None, scalar_correction='none', mmp_solver='continuation_newton', scalar_work_balance_policy='absolute'):
+    def __init__(self, mesh, *, k_dirichlet_mask=None, omega_dirichlet_mask=None, scalar_correction='none', mmp_solver='continuation_newton', scalar_work_balance_policy='absolute',scalar_warm_start=False):
         self.mesh = mesh
         if scalar_correction not in ('none','nonlinear_mmp'):raise ValueError('unknown scalar correction')
         self.scalar_correction=scalar_correction
+        if scalar_warm_start and (scalar_correction!='nonlinear_mmp' or mmp_solver!='continuation_newton'):
+            raise ValueError('scalar warm start requires nonlinear_mmp continuation_newton')
+        self.scalar_warm_start=bool(scalar_warm_start)
         self.mmp_solver=mmp_solver
         self.scalar_work_balance_policy=scalar_work_balance_policy
         self.geometry = NativeHybridScalar3D(mesh,dirichlet_mask=k_dirichlet_mask,work_balance_policy=scalar_work_balance_policy)
@@ -51,6 +54,11 @@ class NativeHybridSSTTransport3D:
         if np.ndim(rho) != 0 or not np.isfinite(rho) or rho <= 0:
             raise ValueError('positive constant density required')
         N,F = self.geometry.N,self.geometry.F
+        initial_states={}
+        if self.scalar_warm_start:
+            for name,cell,face in [('k',k,k_faces),('omega',omega,omega_faces)]:
+                initial_states[name]=np.r_[self.geometry._array(cell,N,name,preserve_precision=True),
+                    self.geometry._array(face,F,'face '+name,preserve_precision=True)]
         k = self._state(k,N,'k',False); omega = self._state(omega,N,'omega',True)
         kf = self._state(k_faces,F,'face k',False); wf = self._state(omega_faces,F,'face omega',True)
         closure = sst2003_closure(k,omega,wall_distance,nu,velocity_gradient,
@@ -77,9 +85,16 @@ class NativeHybridSSTTransport3D:
             if constraints is not None:
                 self._state(constraints[1],len(constraints[0]),'constrained omega',True)
             op = NativeHybridScalar3D(self.mesh,coefficient,dirichlet_mask=mask,correction=self.scalar_correction,mmp_solver=self.mmp_solver,work_balance_policy=self.scalar_work_balance_policy,cell_constraints=constraints)
+            initial=initial_states.get(name)
+            if initial is not None:
+                # The initial guess uses CURRENT prescribed data, including
+                # changing wall-cell targets. This does not accept or clip an
+                # interior solution; the full original equations still solve.
+                initial[N:][mask]=bd[mask]
+                initial[op.constraint_cells]=op.constraint_values
             try:
                 result = op.solve(flux,source=np.maximum(production,0),sink=destruction+extra_sink,
-                    boundary_values=bd,inflow_values=inflow,boundary_diffusive_flux=gn,old_values=old,dt=dt)
+                    boundary_values=bd,inflow_values=inflow,boundary_diffusive_flux=gn,old_values=old,dt=dt,initial_state=initial)
             except ScalarMMPConvergenceError as error:
                 error.scalar_name=name
                 error.scalar_result['diffusivity']=coefficient

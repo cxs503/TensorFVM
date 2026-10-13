@@ -6,7 +6,33 @@ from scipy.sparse.linalg import splu
 from .native_scalar_mmp3d import ScalarMMPConvergenceError
 
 
-def solve_mmp_newton(scalar,volume_flux,**kwargs):
+def solve_mmp_newton(scalar,volume_flux,*,initial_state=None,**kwargs):
+    """Try an explicit state on the original equations, then fall back safely.
+
+    A warm attempt must pass exactly the same residual, full increment and
+    ledger gates as continuation. Its failure cannot change the supplied state.
+    Invalid input or a malformed initial state is rejected, never hidden by a
+    fallback. The existing cold continuation remains the default.
+    """
+    if initial_state is None:
+        return _solve_mmp_newton(scalar,volume_flux,**kwargs)
+    try:
+        result=_solve_mmp_newton(scalar,volume_flux,initial_state=initial_state,**kwargs)
+        result['warm_start']=dict(attempted=True,accepted=True,fallback_to_continuation=False)
+        return result
+    except ScalarMMPConvergenceError as exc:
+        attempt=dict(attempted=True,accepted=False,fallback_to_continuation=True,
+            failure=exc.scalar_result.get('failure'),history=exc.scalar_result.get('nonlinear_history',[]))
+        try:
+            result=_solve_mmp_newton(scalar,volume_flux,**kwargs)
+        except ScalarMMPConvergenceError as fallback:
+            fallback.scalar_result['warm_start']=attempt
+            raise
+        result['warm_start']=attempt
+        return result
+
+
+def _solve_mmp_newton(scalar,volume_flux,*,initial_state=None,**kwargs):
     linear=copy.copy(scalar);linear.mmp=None
     initial=linear.solve(volume_flux,**kwargs)  # validates data, independent initial guess
     state=np.r_[initial['cell_values'],initial['face_values']].astype(np.longdouble)
@@ -26,6 +52,14 @@ def solve_mmp_newton(scalar,volume_flux,**kwargs):
     forcing=scalar.diffusion._traction_load(gn[:,None])
     forcing[:N]+=v*(source+old*invdt)-scalar.D@adv_source
     prescribed=scalar._prescribed(np.broadcast_to(np.asarray(kwargs['boundary_values'],float),(F,))[:,None])
+    if initial_state is not None:
+        candidate=np.asarray(initial_state)
+        if candidate.shape!=(N+F,) or candidate.dtype.kind!='f' or not np.isfinite(candidate).all():
+            raise ValueError('finite floating scalar initial state with shape (cells + faces,) required')
+        fixed=np.setdiff1d(np.arange(N+F),free)
+        if not np.array_equal(candidate[fixed],prescribed[fixed]):
+            raise ValueError('scalar initial state must match prescribed face and cell values')
+        state=candidate.astype(np.longdouble,copy=True)
     fixed_scale=max(np.linalg.norm((forcing-(scalar.diffusion.full_matrix+extra)@prescribed)[free]),1e-30)
     state_scale=max(float(np.max(np.abs(state))),float(np.max(np.abs(old))),1e-30)
     history=[];linear_residual=initial['linear_relative_residual']
@@ -46,7 +80,7 @@ def solve_mmp_newton(scalar,volume_flux,**kwargs):
             scale=audit['residual_scale']+np.linalg.norm(v*invdt*old)
             error=float(np.linalg.norm(residual)/max(scale,1e-30))
             r.update(info,nonlinear_history=history,current_nonlinear_residual=error,
-                     scalar_diffusion_correction='nonlinear_mmp',nonlinear_solver='continuation_newton',
+                     scalar_diffusion_correction='nonlinear_mmp',nonlinear_solver='warm_start_newton' if initial_state is not None else 'continuation_newton',
                      continuation_state_scale=state_scale,final_smoothing=float(smoothing),ledger_refinements=refinement,
                      solution_precision_bits=int(np.finfo(state.dtype).nmant+1))
             ledger_passed=scalar.ledger_acceptable(r)
@@ -115,7 +149,8 @@ def solve_mmp_newton(scalar,volume_flux,**kwargs):
     # strand the initial uncorrected diffusion guess near a singular tangent.
     # These are only continuation equations; acceptance still requires zero
     # smoothing and the unchanged original residual/update/flux gates.
-    for smoothing in (1.,1e-1,1e-2,1e-3,1e-4,1e-5,1e-6,1e-7,1e-8,1e-9,1e-10,0.):
+    schedule=(0.,) if initial_state is not None else (1.,1e-1,1e-2,1e-3,1e-4,1e-5,1e-6,1e-7,1e-8,1e-9,1e-10,0.)
+    for smoothing in schedule:
         for iteration in range(80):
             matrix,tangent=scalar.mmp.nonlinear_system(state,smoothing=smoothing,state_scale=state_scale,jacobian=True)
             residual=scalar.mmp.nonlinear_reaction(state,smoothing=smoothing,state_scale=state_scale)+extra@state-forcing

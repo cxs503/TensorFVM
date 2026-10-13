@@ -37,10 +37,12 @@ def main():
     p.add_argument('--momentum-relaxation',type=float,default=.5)
     p.add_argument('--face-initialization',choices=['diffusion_equilibrium','cell_average'],default='cell_average')
     p.add_argument('--scalar-correction',choices=['none','nonlinear_mmp'],default='nonlinear_mmp')
+    p.add_argument('--scalar-warm-start',action='store_true',help='try saved scalar cells/faces on original equations, with checked cold-continuation fallback')
     p.add_argument('--scalar-work-balance-policy',choices=['absolute','relative'],default='absolute')
     a=p.parse_args()
     if a.steps<1 or not np.isfinite(a.dt) or a.dt<=0:p.error('positive step count and dt required')
     if not np.isfinite(a.tolerance) or a.tolerance<=0:p.error('positive finite coupled tolerance required')
+    if a.scalar_warm_start and a.scalar_correction!='nonlinear_mmp':p.error('scalar warm start requires nonlinear_mmp')
     if a.momentum_coupling=='sweeps' and a.momentum_method not in ('simple','simplec'):
         p.error('sweeps require SIMPLE or SIMPLEC')
     if a.momentum_coupling!='sweeps' and a.momentum_inner_iterations!=1:
@@ -87,6 +89,7 @@ def main():
         trip='no geometric trip or transition model',initial_laminar_run=str(source),initial_bindings=binding,
         face_initialization='restored_accepted_fields' if a.restart_run is not None else a.face_initialization,
         requested_face_initialization=a.face_initialization,scalar_correction=a.scalar_correction,scalar_work_balance_policy=a.scalar_work_balance_policy,
+        scalar_warm_start=a.scalar_warm_start,
         momentum_method=a.momentum_method,momentum_coupling=a.momentum_coupling,
         momentum_sweeps=a.momentum_sweeps,momentum_relaxation=a.momentum_relaxation,
         momentum_inner_iterations=a.momentum_inner_iterations,momentum_relaxation_basis=a.momentum_relaxation_basis,
@@ -107,7 +110,7 @@ def main():
     y=true_triangle_wall_distance(m);kb=np.full(len(b),k0);wb=np.full(len(b),w0)
     kb[wall]=0.;wb[wall]=wall_omega(nu,y[m.owner[wall]])
     s=NativeHybridRans3D(flow,y,nu,k_dirichlet_mask=fixed,omega_dirichlet_mask=fixed,
-        k_boundary=kb,omega_boundary=wb,k_inflow=k0,omega_inflow=w0,scalar_correction=a.scalar_correction,scalar_work_balance_policy=a.scalar_work_balance_policy)
+        k_boundary=kb,omega_boundary=wb,k_inflow=k0,omega_inflow=w0,scalar_correction=a.scalar_correction,scalar_work_balance_policy=a.scalar_work_balance_policy,scalar_warm_start=a.scalar_warm_start)
     failure=None;completed=False;result=None
     try:
         if a.restart_run is None:s.initialize(k0,w0,face_initialization=a.face_initialization)
