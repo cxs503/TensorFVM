@@ -33,3 +33,7 @@ OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 PYTHONPATH=src python scripts/verify_na
 代码检查发现，MMP 零平滑非线性反应保留扩展精度，但构造冻结扩散算子及局部通量时存在 float64 强制转换。需要验证这一精度不一致是否导致当前绝对收支失败，并在相同方程与门槛下重放候选；尚未将其判定为唯一原因。
 
 ![真实网格与当前未收敛场](omega-transport-rejected/startup-fields.png)
+
+## 动量迭代对照与批次修正
+
+[固定同一 SST 涡黏性的 SUBOFF 动量对照](frozen-momentum-comparison/README.md)：SIMPLEC 与原生 Newton 收敛至一致的离散解；不代表完整 RANS 已收敛。[RANS 内层修正批次接口与测试](simplec-batching/README.md)已完成，完整 SST 验证仍在运行。
