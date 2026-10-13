@@ -8,7 +8,7 @@ import numpy as np
 from scipy import sparse
 
 
-def solve_newton(solver, *, max_iterations=50, tolerance=1e-8, max_backtracks=20, callback=None):
+def solve_newton(solver, *, max_iterations=50, tolerance=1e-8, max_backtracks=20, callback=None, allow_inexact_linear_steps=False):
     s=solver
     if not np.isfinite(tolerance) or tolerance<=0 or max_iterations<1 or max_backtracks<0:
         raise ValueError('positive tolerance/iteration limit and nonnegative backtrack limit required')
@@ -41,7 +41,8 @@ def solve_newton(solver, *, max_iterations=50, tolerance=1e-8, max_backtracks=20
         rhs=-np.r_[momentum,mass]
         if s.gauge:
             matrix[size,:]=0.;matrix[size,size]=1.;rhs[size]=-gauge
-        direction,linear_residual=s._coupled_linear(matrix.tocsc(),rhs)
+        options={"allow_inexact": True} if allow_inexact_linear_steps else {}
+        direction,linear_residual=s._coupled_linear(matrix.tocsc(),rhs,**options)
         old=s.state.copy();old_p=s.p.copy();accepted=False;trials=[];du=dp=float('inf')
         for backtracks in range(max_backtracks+1):
             step=2.**(-backtracks)
@@ -73,5 +74,6 @@ def solve_newton(solver, *, max_iterations=50, tolerance=1e-8, max_backtracks=20
     if not s.nonlinear_converged and s.newton_failure is None:s.newton_failure='iteration_limit'
     result=s.result()
     result.update(newton_history=list(s.newton_history),newton_failure=s.newton_failure,
-                  nonlinear_method='coupled_newton')
+                  nonlinear_method='coupled_newton',
+                  allow_inexact_linear_steps=bool(allow_inexact_linear_steps))
     return result

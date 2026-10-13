@@ -61,14 +61,15 @@ class NativeHybridNavierStokes3D(NativeHybridStokes3D):
         return dict(self.initialization_history)
 
     def solve_newton(self, *, max_iterations=50, tolerance=1e-8,
-                     max_backtracks=20, callback=None):
+                     max_backtracks=20, callback=None, allow_inexact_linear_steps=False):
         """Optional coupled Newton reference solve of the same native equations.
 
         SIMPLE/SIMPLEC retain their Picard interface. This method uses a full
         sparse Jacobian and residual line search, not a segregated method.
         """
         return solve_newton(self,max_iterations=max_iterations,tolerance=tolerance,
-                            max_backtracks=max_backtracks,callback=callback)
+                            max_backtracks=max_backtracks,callback=callback,
+                            allow_inexact_linear_steps=allow_inexact_linear_steps)
 
     def solve(self, *, algorithm='simplec', max_outer_iterations=40,
               max_iterations=3000, tolerance=1e-8, relaxation=.5,
