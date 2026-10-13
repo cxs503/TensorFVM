@@ -1,0 +1,27 @@
+{
+  "sources_and_fields_verified": true,
+  "initialized": true,
+  "completed_steps": 0,
+  "mass_divergence_max": 1.7675495799318967e-14,
+  "numerically_converged": false,
+  "physical_suboff_benchmark_passed": false,
+  "coupled_force_and_work_not_independently_audited": true,
+  "scalar_minima": {
+    "k": 3.7500000000000003e-05,
+    "omega": 0.22360679774997896,
+    "k_faces": 0.0,
+    "omega_faces": 0.22360679774997896
+  },
+  "accepted_turbulence_unchanged_from_initial_guess": true,
+  "rejected_scalar": {
+    "name": "omega",
+    "fields_verified": true,
+    "cell_balance_max": 4.732169803340708e-08,
+    "interface_defect_max": 2.584420144557953e-08,
+    "global_balance": 1.0296431707246256e-08,
+    "sum_saved_work_terms": 0.24840914115270316,
+    "cell_min": 0.22357545919139746,
+    "face_min": 0.2235758883746477,
+    "candidate_is_accepted_flow": false
+  }
+}

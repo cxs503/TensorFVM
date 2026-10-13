@@ -1,0 +1,15 @@
+{
+  "initialized": true,
+  "startup_steps_completed": false,
+  "completed_steps": 0,
+  "failure": "ScalarMMPConvergenceError: nonlinear scalar correction failed current residual/change: {'iteration': 60, 'smoothing': 0.0, 'change': 1.0751253494043266e-16, 'current_nonlinear_residual': 6.741298751149555e-16, 'accepted': False, 'refinement_accepted': True, 'extended_residual_before': 2.3941937623165025e-08, 'extended_residual_after': 2.3430705028319946e-08, 'step_length': 0.125, 'true_linear_relative_residual': 5.014083985522635e-15}",
+  "numerically_converged": false,
+  "physical_suboff_benchmark_passed": false,
+  "cells": 1331,
+  "faces": 3556,
+  "Re_L": 10.0,
+  "wall_function_verified": false,
+  "source_integrity_verified": true,
+  "fields_sha256": "cfc6f41469f90bc73208171ecbe0dcf0f732a91839aa0b26124dbeb0417ae944",
+  "runtime_seconds": 146.56817197147757
+}

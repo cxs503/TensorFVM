@@ -1,0 +1,124 @@
+{
+  "Re_L": 10.0,
+  "runs": [
+    {
+      "run": "docs/verification-native-hybrid-suboff-startup/re10-newton",
+      "cells": 1331,
+      "faces": 3556,
+      "Cd_L2": 0.7928665979032378,
+      "body_polyhedral_volume": 0.00745717069545318,
+      "domain_bounds": [
+        [
+          -1.0,
+          -1.0,
+          -1.0
+        ],
+        [
+          3.0,
+          1.0,
+          1.0
+        ]
+      ],
+      "Cd_owner_pressure_proxy": 0.022366305777432906,
+      "Cd_remaining_numerical_force": 0.7705002921258048,
+      "Cd_reconstructed_pressure_proxy": 0.023062945852268774,
+      "pressure_force_split_certified": false,
+      "minimum_cell_volume": 9.939508174416833e-08,
+      "mass_divergence_max": 1.4729579832765805e-14,
+      "source_bindings": {
+        "settings.json": "a2101a5de3ad1243faa0a3bc9eeebb62ab63767e060ad91cc45cc62370282c59",
+        "summary.json": "31569de5accf6ab74dfc3b0b9f2fb452a6af6d3fd014393c15d6489c80d2904a",
+        "artifact-audit.json": "b717592018d76e2a06901764dbbdd9f70cdfa0b5227eb4f2b3ac066d861ad79f",
+        "sources.json": "baae30d306c0f68e67f62e89c5d3868b98b80236b4ac0f78ee3fec5cbd1a6076",
+        "postprocessing-sources.json": "ec072583598e7050c072fdc8195194c68ce72c5cad322dd4319ce4457a6f8bd1",
+        "input.msh": "15d81c1f97495b6b9f1060e05126a5f8ed1b8ca4814e1533087d92944add4408",
+        "fields.npz": "9cd572933d7662183feee4db97822d706b5c45164730357ab3f45aef6b029bcf",
+        "wall-pressure-traces.npz": "2f8c221431bf8f399b3fb31c60587a7150f1302e8d22403ae69601205c6887f4"
+      }
+    },
+    {
+      "run": "docs/verification-native-hybrid-suboff-startup/medium-re10-refined",
+      "cells": 3427,
+      "faces": 9720,
+      "Cd_L2": 0.769525999715665,
+      "body_polyhedral_volume": 0.00800382574496483,
+      "domain_bounds": [
+        [
+          -1.0,
+          -1.0,
+          -1.0
+        ],
+        [
+          3.0,
+          1.0,
+          1.0
+        ]
+      ],
+      "Cd_owner_pressure_proxy": 0.02770749767603215,
+      "Cd_remaining_numerical_force": 0.7418185020396328,
+      "Cd_reconstructed_pressure_proxy": 0.028452876533023516,
+      "pressure_force_split_certified": false,
+      "minimum_cell_volume": 1.5347565300402723e-08,
+      "mass_divergence_max": 4.4835478089295326e-14,
+      "source_bindings": {
+        "settings.json": "41ea143b676858580574a6d4521f5d1fdb5610e279539963cbb2e63f8ae52577",
+        "summary.json": "f9dce49afd8a67ac45e6bf5dfe0a479503b81657f47d45f890c23f5a7ded240d",
+        "artifact-audit.json": "0f661eebe880fc888813b0e5e913a961c1bc98cef167c42d05c99b41f2a80bb5",
+        "sources.json": "950ef014cbce6d346211f972f702d9aeeccf25e065f8516989b4f04e746711ff",
+        "postprocessing-sources.json": "ec072583598e7050c072fdc8195194c68ce72c5cad322dd4319ce4457a6f8bd1",
+        "input.msh": "6cd8fe1eacd261ccae5fb28a85795858693f1089407be2eb8d85e32ed541bd89",
+        "fields.npz": "a2dfb623a1156ec642873a20b7cba1978dd83b2043fc2068860c382274eaaa98",
+        "wall-pressure-traces.npz": "5d98336f01d1f2e79b1a51f29b92caebf26abbf5a68d5bdfe85ed5197d0cfa2c"
+      },
+      "Cd_relative_change_from_previous_using_finer_denominator": 0.03033113656484242
+    },
+    {
+      "run": "docs/verification-native-hybrid-suboff-startup/fine-re10-refined-terminal",
+      "cells": 11648,
+      "faces": 36386,
+      "Cd_L2": 0.7716879511387497,
+      "body_polyhedral_volume": 0.008339105873291857,
+      "domain_bounds": [
+        [
+          -1.0,
+          -1.0,
+          -1.0
+        ],
+        [
+          3.0,
+          1.0,
+          1.0
+        ]
+      ],
+      "Cd_owner_pressure_proxy": 0.03190471963118763,
+      "Cd_remaining_numerical_force": 0.7397832315075621,
+      "Cd_reconstructed_pressure_proxy": 0.032360645779966016,
+      "pressure_force_split_certified": false,
+      "minimum_cell_volume": 6.264192355773182e-10,
+      "mass_divergence_max": 1.1844194488637108e-13,
+      "source_bindings": {
+        "settings.json": "f98c0864a094e771db151e57cb5da308bd0692b323fda955926c0ab184a7f811",
+        "summary.json": "5f5c435dd9fb06429097d491e71ec816929e49f9ab052bfd6218e76296fd3d0c",
+        "artifact-audit.json": "81e897369a66cb020c0b313699ea3b179e5e6bc87daf640ba691641adf7806f7",
+        "sources.json": "06dc71c48264a24a6ceedfe5906983cdd3162fefcd5aaadf74f809da73f3683c",
+        "postprocessing-sources.json": "e58437b35ad2967a399aece9d07fb3abe677024f4f08272cae3fb4cb289fafc8",
+        "input.msh": "123628d05073ba7053ffbbf597ca64eb783820ae53393cc0b28feb6dbe4e2b11",
+        "fields.npz": "af9cc30f259fba5106f275b335cea84c4f0bd8e27a4debf93796fa987c077c1e",
+        "wall-pressure-traces.npz": "d8cc8e7c46e6ec36d5b4c2868397bbd8cce8df6a50bc9da430a78662f0565744"
+      },
+      "Cd_relative_change_from_previous_using_finer_denominator": 0.0028015876364200208
+    }
+  ],
+  "wall_Cp_certified": false,
+  "grid_convergence_certified": false,
+  "Cd_signed_refinement_increments": [
+    -0.023340598187572725,
+    0.002161951423084618
+  ],
+  "Cd_refinement_trend": "nonmonotonic",
+  "observed_order": null,
+  "GCI": null,
+  "force_split_interpretation": "Owner/connected-cell pressure are postprocessing proxies. Remaining total minus owner-pressure includes viscous and numerical terms; it is not certified skin friction.",
+  "physical_suboff_benchmark_passed": false,
+  "interpretation": "Changes include geometry and spatial discretization. Small drag changes do not establish asymptotic grid convergence, especially with nonmonotonic increments or changing geometry. No independent physical reference is used."
+}
