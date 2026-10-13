@@ -1,0 +1,83 @@
+[
+  {
+    "iteration": 1,
+    "accepted": true,
+    "step_length": 1.0,
+    "backtracks": 0,
+    "merit_before": 0.005274013852101646,
+    "merit_after": 0.00010391096641677625,
+    "true_linear_relative_residual": 7.077738041721332e-10,
+    "velocity_change": 0.0490121838446118,
+    "pressure_change": 0.18812533172899662,
+    "trials": [
+      {
+        "step_length": 1.0,
+        "merit": 0.00010391096641677625,
+        "accepted": true
+      }
+    ],
+    "current_momentum_residual": 0.0001038536443454598,
+    "divergence_max": 3.5765217863400003e-10,
+    "gauge_error": 0.0,
+    "wall_force": [
+      0.38593833958260526,
+      -0.00032225674298232636,
+      5.917328740200778e-05
+    ],
+    "Cd_L2": 0.7718766791652105
+  },
+  {
+    "iteration": 2,
+    "accepted": true,
+    "step_length": 1.0,
+    "backtracks": 0,
+    "merit_before": 0.00010391096641677625,
+    "merit_after": 2.443248903835506e-08,
+    "true_linear_relative_residual": 2.407006538838494e-10,
+    "velocity_change": 0.0004895896189657236,
+    "pressure_change": 0.0019086404686069363,
+    "trials": [
+      {
+        "step_length": 1.0,
+        "merit": 2.443248903835506e-08,
+        "accepted": true
+      }
+    ],
+    "current_momentum_residual": 2.44189940624896e-08,
+    "divergence_max": 5.6734897911404956e-12,
+    "gauge_error": 0.0,
+    "wall_force": [
+      0.38584397346393723,
+      -0.00032309477340141963,
+      6.528318367259964e-05
+    ],
+    "Cd_L2": 0.7716879469278745
+  },
+  {
+    "iteration": 3,
+    "accepted": true,
+    "step_length": 1.0,
+    "backtracks": 0,
+    "merit_before": 2.443248903835506e-08,
+    "merit_after": 5.319649041526928e-13,
+    "true_linear_relative_residual": 1.797106956468422e-10,
+    "velocity_change": 6.195707660870877e-08,
+    "pressure_change": 2.9669986764849504e-07,
+    "trials": [
+      {
+        "step_length": 1.0,
+        "merit": 5.319649041526928e-13,
+        "accepted": true
+      }
+    ],
+    "current_momentum_residual": 2.5711194173800178e-15,
+    "divergence_max": 7.810192702180106e-14,
+    "gauge_error": 0.0,
+    "wall_force": [
+      0.3858439755693735,
+      -0.00032309587749824884,
+      6.528542649745703e-05
+    ],
+    "Cd_L2": 0.771687951138747
+  }
+]
