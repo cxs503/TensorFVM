@@ -1,0 +1,61 @@
+[
+  {
+    "n": 8192,
+    "converged": true,
+    "Cf": 0.005177940748040514,
+    "bulk_velocity": 19.653344170898105,
+    "first_cell_y_plus": 0.009600608479681003,
+    "wall_omega": 8683899136.742811,
+    "runtime_seconds": 23.409569075331092,
+    "iterations": 5237,
+    "last": {
+      "iteration": 5237,
+      "current_relative_local_residual": 9.196339710069445e-11,
+      "unrelaxed_change": 9.449267454887393e-13
+    },
+    "Cf_relative_error_DNS": 0.034528521206942164,
+    "scalar_ledgers": {
+      "k": {
+        "relative_local_max": 9.196339710069445e-11,
+        "absolute_local_max": 1.0784811290006323e-12,
+        "global_balance": -3.780207024108048e-11
+      },
+      "omega": {
+        "relative_local_max": 2.6778160777766256e-11,
+        "absolute_local_max": 0.000244140625,
+        "global_balance": 0.00022612646739990296
+      }
+    },
+    "fields_sha256": "8b81a442643ea4a55a941e15a392ea9a062dc44fad972069ba6b3922ac921353"
+  },
+  {
+    "n": 32768,
+    "converged": false,
+    "Cf": 0.005182646556140792,
+    "bulk_velocity": 19.64441959263099,
+    "first_cell_y_plus": 0.0023998225192456207,
+    "wall_omega": 138980554551.35233,
+    "runtime_seconds": 123.3303056852892,
+    "iterations": 8000,
+    "last": {
+      "iteration": 8000,
+      "current_relative_local_residual": 2.176318135272118e-09,
+      "unrelaxed_change": 6.347432415110923e-12
+    },
+    "Cf_relative_error_DNS": 0.03546871981715349,
+    "scalar_ledgers": {
+      "k": {
+        "relative_local_max": 2.176318135272118e-09,
+        "absolute_local_max": 4.869557534642271e-12,
+        "global_balance": -2.2504347000047545e-11
+      },
+      "omega": {
+        "relative_local_max": 2.998943141338509e-10,
+        "absolute_local_max": 0.015625,
+        "global_balance": 0.01579188380118415
+      }
+    },
+    "fields_sha256": "291f4f2006be20915cbd12c0c8494f743d4ae59d72dec98913bae4d03483f659",
+    "Cf_change_from_previous": 0.000907993251961693
+  }
+]

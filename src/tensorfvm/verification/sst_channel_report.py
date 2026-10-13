@@ -24,10 +24,12 @@ def plot_reference(directory):
         path=root/f"reference-n{row['n']}-fields.npz"
         if hashlib.sha256(path.read_bytes()).hexdigest()!=row['fields_sha256']:raise ValueError('changed reference fields')
         if row['n'] in selected:
-            with np.load(path,allow_pickle=False) as f:axes[0].plot(f['y']*re_tau,f['velocity'],label=f"Independent SST n={row['n']}")
+            with np.load(path,allow_pickle=False) as f:axes[0].plot(f['y']*re_tau,f['velocity'],label=f"Independent SST n={row['n']}"+(" (not converged)" if not row["converged"] else ""),linestyle="-" if row["converged"] else ":")
     axes[0].set(xscale='log',xlim=(.1,re_tau*1.05),xlabel='y+',ylabel='U+',title='Independent model; displayed y+ >= 0.1')
     axes[0].legend(fontsize=8);axes[0].grid(True)
-    axes[1].plot([r['n'] for r in rows],[r['Cf'] for r in rows],'o-',label='Independent 1D SST')
+    accepted=[r for r in rows if r['converged']];rejected=[r for r in rows if not r['converged']]
+    axes[1].plot([r['n'] for r in accepted],[r['Cf'] for r in accepted],'o-',label='Independent 1D SST, relative criterion')
+    if rejected:axes[1].plot([r['n'] for r in rejected],[r['Cf'] for r in rejected],'rx',label='Unconverged reference iterate')
     native.sort(key=lambda r:r['n']);axes[1].plot([r['n'] for r in native],[r['Cf'] for r in native],'x--',label='Native hybrid 3D')
     axes[1].axhline(reference['Cf'],color='k',label='DNS');axes[1].axhspan(reference['Cf']*.97,reference['Cf']*1.03,color='g',alpha=.1,label='±3% nominal band')
     axes[1].set(xscale='log',xlabel='Wall-normal cells',ylabel='Cf',title='Independent model limit vs native grids');axes[1].legend(fontsize=8);axes[1].grid(True)

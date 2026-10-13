@@ -34,3 +34,39 @@ python scripts/report_native_developed_channel.py results/channel-re1000-new
 
 运行器复制参考文件到各次运行目录；后处理优先使用该冻结副本，并核对哈希。
 旧归档保留原参考位置的兼容读取。网格、速度、两种压力、原场与收敛曲线沿用共性报告模块。
+
+
+## 独立模型参考的实际结果
+
+采用[已独立实现并验证的同条件一维 SST 方程](../verification-native-sst-model-limit/README.md)，
+更换为本 DNS 的 Reτ，不修改模型常数或壁面公式。四档初查后继续检查两档更细网格。
+
+| 法向单元 | Cf | 对 DNS 的名义偏差 | 一维相对方程与两次完整更新门槛 | 原始最大绝对 ω 行缺陷 |
+|---:|---:|---:|---|---:|
+| 64 | 0.0046300306 | 7.4941% | 通过 | 5.821e-11 |
+| 128 | 0.0048461096 | 3.1770% | 通过 | 4.657e-10 |
+| 512 | 0.0050869864 | 1.6356% | 通过 | 2.98e-08 |
+| 2048 | 0.0051592289 | 3.0790% | 通过 | 2.98e-07 |
+| 8192 | 0.0051779407 | 3.4529% | 通过 | 0.0002441 |
+| 32768 | 0.0051826466 | 3.5469% | **失败** | 0.01562 |
+
+n=512 的小于 3% 不能单独作为达标结论。n=2048→8192 的 Cf 继续增加约 0.3614%，
+n=8192 的名义偏差为 3.4529%，模型/壁面组合尚未证明满足此通道的 3% 目标。
+n=32768 在 8000 次迭代后局部相对缺陷 2.176e-9，超过预设 1e-10；虽然其 Cf 再变化约 0.0908%，
+**该档未收敛，不将其用作认证模型极限或网格通过证据**。
+
+这些一维结果只按所声明的相对方程与连续两次未松弛更新门槛评价，
+其极细网格绝对 ω 缺陷显著大于原生三维的 1e-8 门槛，未放宽或替代三维验收。
+独立交叉重算存在巨大项相消导致的绝对舍入差异；逐单元归一化重算差异处于浮点量级，原始绝对值也全部保留。
+[四档完整证据](independent-reference/summary.json)、[更细诊断含失败状态](independent-fine-diagnostic/summary.json)
+及各目录下 `artifact-audit.json`、原场、历史和冻结源码可复查。
+
+![细网格参考明确标出未收敛状态](independent-fine-diagnostic/model-discretization-comparison.png)
+
+```bash
+python scripts/verify_sst_channel_reference.py --reference docs/verification-native-channel-sst-re1000/reference --native-runs --levels 64 128 512 2048 --model-source docs/verification-native-sst-model-limit/run/model-source.html --output results/sst-reference-re1000-new
+python scripts/verify_sst_channel_reference.py --reference docs/verification-native-channel-sst-re1000/reference --native-runs --levels 8192 32768 --model-source docs/verification-native-sst-model-limit/run/model-source.html --output results/sst-reference-re1000-fine-new
+```
+
+第二条预期返回未通过状态；每组可用 `audit_sst_channel_reference.py` 重算，
+`plot_sst_channel_reference.py` 对未收敛点单独标记。
