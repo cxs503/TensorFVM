@@ -1,0 +1,117 @@
+"""Conservative cell/face scalar transport for the native hybrid backend.
+
+Solves d(phi)/dt + div(U phi) - div(kappa grad(phi)) + sink*phi = source.
+Coefficients and shared volume flux are frozen during each solve. First-order
+cell upwind is used for advection; diffusion uses the hybrid energy operator.
+No scalar clipping or general discrete maximum principle is claimed.
+"""
+import numpy as np
+from scipy import sparse
+from scipy.sparse.linalg import splu
+from .native_hybrid_viscous3d import NativeHybridViscous3D
+
+
+class NativeHybridScalar3D:
+    def __init__(self, mesh, diffusivity=1., *, dirichlet_mask=None, stabilization=1.):
+        self.mesh = mesh
+        self.diffusion = NativeHybridViscous3D(mesh, diffusivity, components=1,
+            dirichlet_mask=dirichlet_mask, stabilization=stabilization)
+        self.N, self.F = self.diffusion.N, self.diffusion.F
+        self.boundary = mesh.neighbor < 0
+        ids = np.arange(self.F); interior = ~self.boundary
+        self.D = sparse.coo_matrix((np.r_[np.ones(self.F), -np.ones(interior.sum())],
+            (np.r_[mesh.owner, mesh.neighbor[interior]], np.r_[ids, ids[interior]])),
+            shape=(self.N, self.F)).tocsr()
+
+    @staticmethod
+    def _array(value, size, name):
+        answer = np.broadcast_to(np.asarray(value, float), (size,)).copy()
+        if not np.isfinite(answer).all():
+            raise ValueError(f'finite {name} required')
+        return answer
+
+    def gradient(self, face_values):
+        values = self._array(face_values, self.F, 'face scalar')
+        return np.column_stack([self.D @ (values*self.mesh.area_vectors[:, j])
+                                for j in range(3)])/self.mesh.cell_volumes[:, None]
+
+    def solve(self, volume_flux=0., *, source=0., sink=0., boundary_values=0.,
+              boundary_diffusive_flux=0., inflow_values=None, old_values=None, dt=None):
+        """One linear steady solve or backward Euler step, with an explicit ledger.
+
+        boundary_diffusive_flux is outward kappa*grad(phi).n per unit area
+        on Neumann boundaries. Inflow values are mandatory wherever q<0,
+        including Neumann diffusion boundaries. sink must be nonnegative.
+        Both dt and old_values must be supplied for a transient step.
+        """
+        q = self._array(volume_flux, self.F, 'shared volume flux')
+        source = self._array(source, self.N, 'source')
+        sink = self._array(sink, self.N, 'sink')
+        if np.any(sink < 0):
+            raise ValueError('nonnegative sink required')
+        transient = dt is not None
+        if transient != (old_values is not None):
+            raise ValueError('dt and old_values must be supplied together')
+        if transient and (not np.isscalar(dt) or not np.isfinite(dt) or dt <= 0):
+            raise ValueError('positive finite scalar dt required')
+        old = self._array(old_values, self.N, 'old scalar') if transient else np.zeros(self.N)
+        inverse_dt = 1./dt if transient else 0.
+        bd = np.broadcast_to(np.asarray(boundary_values, float), (self.F,))
+        gn = np.broadcast_to(np.asarray(boundary_diffusive_flux, float), (self.F,))
+        incoming = self.boundary & (q < 0)
+        if incoming.any() and inflow_values is None:
+            raise ValueError('explicit scalar inflow/backflow values required')
+        inflow = np.zeros(self.F) if inflow_values is None else np.broadcast_to(np.asarray(inflow_values, float), (self.F,))
+        if not np.isfinite(inflow[incoming]).all():
+            raise ValueError('finite incoming scalar required')
+        active = ~incoming
+        ids = np.flatnonzero(active)
+        upstream = np.where(q >= 0, self.mesh.owner, self.mesh.neighbor)
+        transport = sparse.coo_matrix((q[ids], (ids, upstream[ids])),
+                                      shape=(self.F, self.N)).tocsr()
+        face_source = np.zeros(self.F)
+        face_source[incoming] = q[incoming]*inflow[incoming]
+        adv_matrix = self.D @ transport
+        volume = self.mesh.cell_volumes
+        cell_matrix = adv_matrix+sparse.diags(volume*(sink+inverse_dt))
+        extra = sparse.block_diag((cell_matrix, sparse.csr_matrix((self.F,self.F))), format='csr')
+        operator = self.diffusion.full_matrix+extra
+        state = self.diffusion._prescribed(bd[:,None])
+        forcing = self.diffusion._traction_load(gn[:,None])
+        forcing[:self.N] += volume*(source+old*inverse_dt)-self.D @ face_source
+        free = self.diffusion.free
+        rhs = (forcing-operator @ state)[free]
+        matrix = operator[free][:,free].tocsc()
+        answer = splu(matrix).solve(rhs)
+        relative = float(np.linalg.norm(matrix @ answer-rhs)/max(np.linalg.norm(rhs),1e-30))
+        if not np.isfinite(answer).all() or relative > 1e-9:
+            raise RuntimeError(f'hybrid scalar true linear residual failed: {relative:g}')
+        state[free] = answer
+        diffusion = self.diffusion.diagnostics(state)
+        cells, faces = state[:self.N], state[self.N:]
+        advective_flux = transport @ cells+face_source
+        diffusive_flux = diffusion['face_flux'][:,0]
+        total_flux = advective_flux-diffusive_flux
+        storage = volume*inverse_dt*(cells-old)
+        destruction = volume*sink*cells
+        production = volume*source
+        cell_balance = storage+self.D @ total_flux+destruction-production
+        global_balance = float(storage.sum()+total_flux[self.boundary].sum()+destruction.sum()-production.sum())
+        # Independently reconstructed neighbor-side diffusion, no sign reuse.
+        neighbor_total = -advective_flux-diffusion['neighbor_face_flux'][:,0]
+        interface = total_flux[~self.boundary]+neighbor_total[~self.boundary]
+        scalar_work = float(cells @ (storage+self.D @ advective_flux+destruction-production))
+        work_balance = scalar_work+diffusion['energy_form']-diffusion['boundary_work']
+        scale = max(float(np.abs(storage).sum()+np.abs(total_flux[self.boundary]).sum()
+                          +np.abs(destruction).sum()+np.abs(production).sum()),1e-30)
+        return dict(cell_values=cells.copy(), face_values=faces.copy(),
+            gradient=self.gradient(faces), advective_flux=advective_flux,
+            diffusive_flux=diffusive_flux, total_flux=total_flux,
+            neighbor_total_flux=neighbor_total, storage=storage,
+            destruction=destruction, production=production, cell_balance=cell_balance,
+            cell_balance_max=float(np.max(np.abs(cell_balance))),
+            interface_flux_defect_max=float(np.max(np.abs(interface),initial=0.)),
+            global_balance=global_balance, global_relative_balance=abs(global_balance)/scale,
+            diffusion_energy=diffusion['energy_form'], boundary_diffusive_work=diffusion['boundary_work'],
+            work_balance=float(work_balance), linear_relative_residual=relative,
+            cell_min=float(cells.min()), face_min=float(faces.min()))

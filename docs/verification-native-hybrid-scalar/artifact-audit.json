@@ -1,0 +1,30 @@
+{
+  "raw_fields_verified": true,
+  "source_hashes_verified": true,
+  "cases": [
+    {
+      "n": 2,
+      "relative_l2": 0.015229297902699914,
+      "global_balance": 7.105427357601002e-15,
+      "local_max": 1.4932499681208355e-14,
+      "interface_max": 7.771561172376096e-15
+    },
+    {
+      "n": 4,
+      "relative_l2": 0.004185862608784143,
+      "global_balance": -3.552713678800501e-15,
+      "local_max": 1.5633327965502986e-14,
+      "interface_max": 5.648259637780484e-15
+    },
+    {
+      "n": 8,
+      "relative_l2": 0.0012667857689159128,
+      "global_balance": 2.877698079828406e-13,
+      "local_max": 9.164544123585472e-15,
+      "interface_max": 5.960509863456309e-15
+    }
+  ],
+  "coupled_rans_verified": false,
+  "physical_suboff_benchmark_passed": false,
+  "audit_source_sha256": "00d33a353d9292a77bb596251d6c2c4d0147b7499722d89795717c932e162d2f"
+}
