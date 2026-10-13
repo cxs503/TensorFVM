@@ -62,3 +62,20 @@ def test_missing_wall_mode_or_conflicting_scalar_conditions_are_rejected():
     with pytest.raises(ValueError,match='zero k/omega'):
         NativeHybridRans3D(flow,s.wall_distance,.01,k_dirichlet_mask=mask,omega_dirichlet_mask=mask,
             k_neumann=1.,wall_treatment='spalding_blended',**kwargs)
+
+
+def test_failed_momentum_trial_rolls_back_complete_coupled_state(monkeypatch):
+    s=setup();before=s.result();old_history=list(s.history)
+    def failed(**kwargs):
+        s.flow.state[:3*s.flow.N]=1e100
+        s.flow.p[:]=1e100
+        raise RuntimeError('injected subsolve failure after velocity mutation')
+    monkeypatch.setattr(s.flow,'solve_newton',failed)
+    with pytest.raises(RuntimeError,match='injected'):s.solve(max_iterations=1)
+    after=s.result()
+    for key in ('velocity','face_velocity','modified_pressure','k','omega','k_faces','omega_faces'):
+        np.testing.assert_array_equal(after[key],before[key])
+    assert s.history==old_history and not after['numerically_converged']
+    assert s.last_failure['rolled_back']
+    assert np.max(s.last_failed_state['velocity'])==1e100
+    assert np.isfinite(s.current_residual()['omega_constraint'])

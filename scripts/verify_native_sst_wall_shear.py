@@ -12,6 +12,8 @@ def main():
     p.add_argument('--layers',type=int,default=4);p.add_argument('--nu',type=float,default=.001)
     p.add_argument('--steps',type=int,default=120);p.add_argument('--dt',type=float,default=1.)
     p.add_argument('--momentum-method',choices=['newton','simplec'],default='newton')
+    p.add_argument('--momentum-outer-relaxation',type=float,default=1.)
+    p.add_argument('--momentum-max-iterations',type=int,default=50)
     a=p.parse_args();evidence=NativeRunEvidence(a.output,__file__);start=time.perf_counter()
     s=sst_wall_shear_solver(a.layers,a.nu);m=s.mesh;flow=s.flow
     write_json(a.output/'settings.json',dict(kind=__doc__,layers=a.layers,nu=a.nu,rho=1.,Re_H_deltaU=1/a.nu,
@@ -22,14 +24,20 @@ def main():
         wall_treatment=s.wall_treatment,upper_wall='moving no-slip U=1; k=0; omega=60nu/(beta1*d1^2)',
         scalar_correction='nonlinear_mmp',scalar_precision='longdouble',scalar_work_balance_policy='relative',
         scalar_warm_start=True,require_steady_ledgers=True,momentum_method=a.momentum_method,
+        momentum_outer_relaxation=a.momentum_outer_relaxation,momentum_max_iterations=a.momentum_max_iterations,
         physical_suboff_benchmark_passed=False))
     failure=None
     try:
         def progress(row):write_json(a.output/'progress.json',row);print(row,flush=True)
         s.solve(max_iterations=a.steps,dt=a.dt,tolerance=1e-10,relaxation=.7,
-            momentum_method=a.momentum_method,require_steady_ledgers=True,callback=progress)
+            momentum_method=a.momentum_method,momentum_outer_relaxation=a.momentum_outer_relaxation,
+            momentum_max_iterations=a.momentum_max_iterations,require_steady_ledgers=True,callback=progress)
     except (ValueError,RuntimeError) as exc:
         failure=dict(type=type(exc).__name__,message=str(exc));print(failure,flush=True)
+        if s.last_failed_state is not None:
+            np.savez_compressed(a.output/'rejected-coupled-fields.npz',**s.last_failed_state)
+            write_json(a.output/'rejected-coupled-fields.json',dict(**s.last_failure,
+                fields_sha256=hashlib.sha256((a.output/'rejected-coupled-fields.npz').read_bytes()).hexdigest()))
     r=s.result();current=s.current_residual(with_ledgers=True)
     acceptance=s._steady_ledger_acceptance(current,flow.result())
     fields=dict(vertices=m.vertices,face_vertices=np.asarray(m.face_vertices),owner=m.owner,neighbor=m.neighbor,

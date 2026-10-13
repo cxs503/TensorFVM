@@ -34,6 +34,7 @@ class NativeHybridRans3D:
             k_inflow=k_inflow,omega_inflow=omega_inflow,k_neumann=k_neumann,omega_neumann=omega_neumann)
         if wall is not None:wall.validate_transport(self.transport.k_mask,self.transport.omega_mask,self.nu,self.rho,k_neumann,omega_neumann)
         self.history=[];self.converged=False;self.initialized=False
+        self.last_failed_state=None;self.last_failure=None
 
     def initialize(self,k,omega,*,face_initialization='diffusion_equilibrium'):
         """Build an explicit numerical initial guess, never reference interiors.
@@ -154,7 +155,7 @@ class NativeHybridRans3D:
     def solve(self,*,max_iterations=100,dt=.01,relaxation=.7,tolerance=1e-7,
               momentum_method='newton',momentum_max_iterations=50,
               momentum_coupling='converged',momentum_sweeps=1,momentum_inner_iterations=1,
-              momentum_relaxation=.5,require_steady_ledgers=False,callback=None):
+              momentum_relaxation=.5,momentum_outer_relaxation=1.,require_steady_ledgers=False,callback=None):
         """Advance segregated RANS with converged momentum or explicit sweeps.
 
         Sweeps rebuild convection each time. Optional inner iterations reuse
@@ -181,40 +182,59 @@ class NativeHybridRans3D:
         if (not isinstance(momentum_sweeps,(int,np.integer)) or momentum_sweeps<1
                 or not np.isfinite(momentum_relaxation) or not 0<momentum_relaxation<=1):
             raise ValueError('positive integer momentum sweeps and relaxation in (0,1] required')
+        if not np.isfinite(momentum_outer_relaxation) or not 0<momentum_outer_relaxation<=1:
+            raise ValueError('momentum outer relaxation must be in (0,1]')
+        if momentum_method=='newton' and momentum_outer_relaxation!=1.:
+            raise ValueError('Newton uses its own line search, not Picard outer relaxation')
+        self.last_failed_state=None;self.last_failure=None
         self.converged=False
         self.tolerance=tolerance
         self.require_steady_ledgers=bool(require_steady_ledgers)
         for _ in range(max_iterations):
             old={key:getattr(self,key).copy() for key in ('k','omega','k_faces','omega_faces')}
             old_u=self.flow.state.copy();old_p=self.flow.p.copy()
-            self._refresh_viscosity()
-            momentum_start=len(self.flow.history)
-            outer_start=len(self.flow.outer_history)
-            if momentum_method=='newton':
-                mr=self.flow.solve_newton(max_iterations=momentum_max_iterations,tolerance=tolerance*.1)
-            elif momentum_coupling=='sweeps':
-                mr=self.flow.solve(algorithm=momentum_method,max_outer_iterations=momentum_sweeps,
-                    max_iterations=momentum_inner_iterations,relaxation=momentum_relaxation,tolerance=tolerance*.1)
-            else:
-                mr=self.flow.solve(algorithm=momentum_method,max_outer_iterations=momentum_max_iterations,
-                    relaxation=momentum_relaxation,tolerance=tolerance*.1)
-            if momentum_coupling=='converged' and not mr['numerically_converged']:
-                raise RuntimeError('hybrid RANS momentum subsolve did not converge')
-            momentum_records=(self.flow.newton_history if momentum_method=='newton'
-                              else self.flow.history[momentum_start:])
-            step=self.transport.step(self.k,self.omega,self.k_faces,self.omega_faces,
-                self.flow.volume_flux(),self.wall_distance,self.nu,self.flow.velocity_gradient(),dt,
-                rho=self.rho,cell_velocity=self.flow.state[:3*self.flow.N].reshape(self.flow.N,3),**self.boundary)
-            for key in old:setattr(self,key,old[key]+relaxation*(step[key]-old[key]))
-            # Relax free unknowns, not the prescribed rows of this subsolve.
-            constrained=step['transport']['omega']['constrained_cells']
-            self.omega[constrained]=step['transport']['omega']['prescribed_cell_values']
-            current=self.current_residual()
+            try:
+                self._refresh_viscosity()
+                momentum_start=len(self.flow.history)
+                outer_start=len(self.flow.outer_history)
+                if momentum_method=='newton':
+                    mr=self.flow.solve_newton(max_iterations=momentum_max_iterations,tolerance=tolerance*.1)
+                elif momentum_coupling=='sweeps':
+                    mr=self.flow.solve(algorithm=momentum_method,max_outer_iterations=momentum_sweeps,
+                        max_iterations=momentum_inner_iterations,relaxation=momentum_relaxation,outer_relaxation=momentum_outer_relaxation,tolerance=tolerance*.1)
+                else:
+                    mr=self.flow.solve(algorithm=momentum_method,max_outer_iterations=momentum_max_iterations,
+                        relaxation=momentum_relaxation,outer_relaxation=momentum_outer_relaxation,tolerance=tolerance*.1)
+                if momentum_coupling=='converged' and not mr['numerically_converged']:
+                    raise RuntimeError('hybrid RANS momentum subsolve did not converge')
+                momentum_records=(self.flow.newton_history if momentum_method=='newton'
+                                  else self.flow.history[momentum_start:])
+                step=self.transport.step(self.k,self.omega,self.k_faces,self.omega_faces,
+                    self.flow.volume_flux(),self.wall_distance,self.nu,self.flow.velocity_gradient(),dt,
+                    rho=self.rho,cell_velocity=self.flow.state[:3*self.flow.N].reshape(self.flow.N,3),**self.boundary)
+                for key in old:setattr(self,key,old[key]+relaxation*(step[key]-old[key]))
+                # Relax free unknowns, not the prescribed rows of this subsolve.
+                constrained=step['transport']['omega']['constrained_cells']
+                self.omega[constrained]=step['transport']['omega']['prescribed_cell_values']
+                current=self.current_residual()
+            except (ValueError,RuntimeError) as exc:
+                # A failed subsolve is not an accepted coupled iterate. Keep
+                # the rejected fields for diagnosis and restore all old fields.
+                self.last_failed_state=dict(velocity=self.flow.state[:3*self.flow.N].reshape(self.flow.N,3).copy(),
+                    face_velocity=self.flow.state[3*self.flow.N:].reshape(self.flow.F,3).copy(),
+                    modified_pressure=self.flow.p.copy(),**{key:getattr(self,key).copy() for key in old})
+                self.last_failure=dict(type=type(exc).__name__,message=str(exc),rolled_back=True)
+                self.flow.state=old_u;self.flow.p=old_p
+                for key,value in old.items():setattr(self,key,value)
+                self.converged=False;self.flow.converged=False;self.flow.nonlinear_converged=False
+                self.flow._coupled_factor=None;self.flow._block_preconditioner=None
+                self._refresh_viscosity()
+                raise
             changes={key:float(np.linalg.norm(getattr(self,key)-old[key])/max(np.linalg.norm(getattr(self,key)),1e-30)) for key in old}
             changes['velocity']=float(np.linalg.norm(self.flow.state-old_u)/max(np.linalg.norm(self.flow.state),1.))
             changes['modified_pressure']=float(np.linalg.norm(self.flow.p-old_p)/max(np.linalg.norm(self.flow.p),1.))
             row=dict(iteration=len(self.history)+1,**{k:v for k,v in current.items() if k!='transport'},
-                momentum_method=momentum_method,momentum_coupling=momentum_coupling,
+                momentum_method=momentum_method,momentum_coupling=momentum_coupling,momentum_outer_relaxation=momentum_outer_relaxation,
                 momentum_subsolve_converged=bool(mr['numerically_converged']),
                 momentum_inner_iterations_limit=momentum_inner_iterations if momentum_coupling=='sweeps' else None,
                 momentum_outer_iterations=len(self.flow.outer_history)-outer_start if momentum_method!='newton' else None,
