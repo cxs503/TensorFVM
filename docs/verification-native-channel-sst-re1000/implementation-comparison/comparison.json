@@ -1,0 +1,60 @@
+{
+  "Re_tau": 1000.512,
+  "native_bindings": {
+    "settings.json": "cff6166e0c6adce94df4b19cdad95a75bf2ee9898d0a54a289c5ffa38cb2163a",
+    "summary.json": "cac799bb196772674433d6713178ef78dfc710c6c1dfd0560e1ff8448f75a4b2",
+    "cases.json": "9d2d6e7701dc195f5179d4836b1397bc263f65b8497c417071c847cdfe82699f",
+    "sources.json": "9d888604e221a5043278ec0779999e59c1aaae41b3d77cc7a0cdbb7da8f40cac",
+    "artifact-audit.json": "3c7cc21743121f34e13359cc2056daeadc06b17b9c7db62b9c257124a83f7b1a"
+  },
+  "reference_bindings": {
+    "docs/verification-native-channel-sst-re1000/independent-reference": {
+      "settings.json": "0d400322b2c6d82a1538ca701c6caacdf0d68b4d440aa2bfe1e93d8fc497d5bd",
+      "summary.json": "6dd428d390fdcc15a04bbced8daf4952aa5d51166472c583333974daa4ca99c3",
+      "cases.json": "17536ad00406dba84136280484d611045aa8688a0a232b1cb536c7e887a50b5e",
+      "artifact-audit.json": "90e653aa88fcfb8c93f98bb327cc3761ce080b806b08581f901768b659c46418",
+      "sources.json": "de85f1946c335535bb4ecfce4d59baa5de788a7aa59b250467e6dbffe589b2ad"
+    },
+    "docs/verification-native-channel-sst-re1000/independent-fine-diagnostic": {
+      "settings.json": "c4df9ef8115885c64acf106f93e444aedc52ab781821e7db6908a76326491262",
+      "summary.json": "eecfb17457e90feb2d9d862951f735550416e1a36d84737cb64b01004b1624f7",
+      "cases.json": "357de98974d1fe004a8aa1e2a12239b4d99866096548e29dd4845b95d080c182",
+      "artifact-audit.json": "febf2732ffa2afa7ad7c3d50f6b60cb25d43d238953e6d9c3c4c962bff39d7db",
+      "sources.json": "de85f1946c335535bb4ecfce4d59baa5de788a7aa59b250467e6dbffe589b2ad"
+    }
+  },
+  "finest_accepted_reference_n": 8192,
+  "finest_accepted_reference_Cf": 0.005177940748040514,
+  "excluded_reference_cases": [
+    {
+      "n": 32768,
+      "run": "docs/verification-native-channel-sst-re1000/independent-fine-diagnostic",
+      "reason": "failed declared relative reference criterion"
+    }
+  ],
+  "cases": [
+    {
+      "n": 64,
+      "Cf": 0.004628756748341817,
+      "fields_sha256": "a5b2aa3e8313edd3b6ed92aa6f0b56f5a67e523e14718d5e73b5a36e95da667d",
+      "Cf_relative_error_DNS": 0.07519589216990279,
+      "native_accuracy_passed": false,
+      "Cf_relative_difference_same_n": 0.00027513133433798576,
+      "Cf_relative_difference_finest_accepted_reference": 0.10606224103791151,
+      "velocity_relative_l2_finest_accepted_reference": 0.05728786096552723
+    },
+    {
+      "n": 128,
+      "Cf": 0.004845771221725444,
+      "fields_sha256": "14ba972e6fe7027e4d9b9cf3973e909fcc2facfd64be7baf63ccb0143709b6aa",
+      "Cf_relative_error_DNS": 0.0318374079471879,
+      "native_accuracy_passed": false,
+      "Cf_relative_difference_same_n": 6.981559214735977e-05,
+      "Cf_relative_difference_finest_accepted_reference": 0.06415089366188143,
+      "velocity_relative_l2_finest_accepted_reference": 0.03350622929619378
+    }
+  ],
+  "native_absolute_gates_replaced": false,
+  "physical_suboff_benchmark_passed": false,
+  "scope": "Independent model/discretization comparison, not physical benchmark qualification; reference absolute residual limits remain applicable"
+}

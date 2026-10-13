@@ -1,0 +1,48 @@
+{
+  "no_slip_Cd_L2": 0.7928665979032378,
+  "no_slip_source": "docs/verification-native-hybrid-suboff-startup/re10-newton",
+  "no_slip_bindings": {
+    "settings.json": "a2101a5de3ad1243faa0a3bc9eeebb62ab63767e060ad91cc45cc62370282c59",
+    "summary.json": "31569de5accf6ab74dfc3b0b9f2fb452a6af6d3fd014393c15d6489c80d2904a",
+    "fields.npz": "9cd572933d7662183feee4db97822d706b5c45164730357ab3f45aef6b029bcf",
+    "sources.json": "baae30d306c0f68e67f62e89c5d3868b98b80236b4ac0f78ee3fec5cbd1a6076",
+    "artifact-audit.json": "b717592018d76e2a06901764dbbdd9f70cdfa0b5227eb4f2b3ac066d861ad79f"
+  },
+  "runs": [
+    {
+      "run": "/tmp/fvm-native-normal-constraints/results/native-suboff-normal-robin-beta100",
+      "friction": 100.0,
+      "Cd_L2": 0.7826226583402717,
+      "Cd_relative_difference_from_no_slip": 0.012920130057258734,
+      "velocity_relative_difference_from_no_slip": 0.000801844279848545,
+      "normal_velocity_error": 5.204170427930421e-18,
+      "robin_tangential_defect": 4.163336342344337e-17,
+      "source_bindings": {
+        "settings.json": "de351bf948a603bcc63984a009b2020ea07bd84cb72d467a9126d7b499460aea",
+        "summary.json": "772fdd776d93b5dbe3263cdfeee316ae8ec043ac7bed9fb453df9024a3182f3e",
+        "fields.npz": "0d1711e082537a863a5e74ba476feef53c00d3c1b893ee55a3e25e979803297b",
+        "sources.json": "84d39ce8c8cf7dac52314132702cbb5d281162e100f50b20ce9098add634cf9e",
+        "artifact-audit.json": "6ebc7ab87de0522b073cc8ee62090e89eba6ca4e4ae0162baa8927f084c6c0af"
+      }
+    },
+    {
+      "run": "/tmp/fvm-native-normal-constraints/results/native-suboff-normal-robin-beta1000",
+      "friction": 1000.0,
+      "Cd_L2": 0.7918177676848487,
+      "Cd_relative_difference_from_no_slip": 0.0013228331489341988,
+      "velocity_relative_difference_from_no_slip": 8.2017073090883e-05,
+      "normal_velocity_error": 4.336808689942018e-19,
+      "robin_tangential_defect": 3.382710778154774e-17,
+      "source_bindings": {
+        "settings.json": "ca7afa7adcb008facfdf95c1e711d8131fc0974ae87f8f607230ad1d94091d7e",
+        "summary.json": "c132a8deac2372fa34a65321fc90997f08c0b3955a5e42bd1e97832189fe4da0",
+        "fields.npz": "03d3ce9db285540787963951a76898cc2b3b2aaba0fe245065d48a4f9b3896f7",
+        "sources.json": "84d39ce8c8cf7dac52314132702cbb5d281162e100f50b20ce9098add634cf9e",
+        "artifact-audit.json": "f241f4d3f9511a73fb7ec377853d598277248f0660d2f9a7a93bb5cdb5e458b7"
+      }
+    }
+  ],
+  "physical_suboff_benchmark_passed": false,
+  "grid_convergence_certified": false,
+  "scope": "Same-grid boundary limit consistency; differences from no-slip are not experimental errors"
+}

@@ -1,0 +1,38 @@
+{
+  "numerically_converged": true,
+  "solver_converged": true,
+  "failure": null,
+  "cells": 1331,
+  "faces": 3556,
+  "Re_L": 10.0,
+  "mass_divergence_max": 3.8296907565191096e-14,
+  "local_integrated_momentum_max": 1.5612511283791264e-15,
+  "force_balance_max": 7.382983113757291e-15,
+  "interface_traction_defect_max": 1.5838025335668249e-15,
+  "energy_balance_error": 6.2727600891321345e-15,
+  "wall_force": [
+    0.39131132917013584,
+    0.0005902231734521081,
+    -0.0014448614882262842
+  ],
+  "wall_owner_pressure_force": [
+    0.011338791579727397,
+    0.0009744791771499135,
+    -0.0009875940918723262
+  ],
+  "wall_remaining_numerical_force": [
+    0.37997253759040844,
+    -0.00038425600369780544,
+    -0.00045726739635395803
+  ],
+  "Cd_L2": 0.7826226583402717,
+  "wall_normal_velocity_error": 5.204170427930421e-18,
+  "wall_robin_tangential_defect": 4.163336342344337e-17,
+  "wall_Cp_certified": false,
+  "grid_convergence_certified": false,
+  "physical_suboff_benchmark_passed": false,
+  "max_cell_speed": 1.0467587876250364,
+  "source_integrity_verified": true,
+  "fields_sha256": "0d1711e082537a863a5e74ba476feef53c00d3c1b893ee55a3e25e979803297b",
+  "runtime_seconds": 126.42161648347974
+}

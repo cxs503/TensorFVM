@@ -1,0 +1,60 @@
+{
+  "postprocessing_sources": {
+    "scripts/report_native_developed_channel.py": "b0cd92466d8bbb2e7906c3bac3dc84c640f9d62579ae843e917afd0b44f18cc6",
+    "src/tensorfvm/native_sections3d.py": "83e2f51410ef1b9f64f6643b456180e22e70a94e74c14ec569ac833b0b4c0ef7"
+  },
+  "source_and_field_integrity_verified": true,
+  "source_snapshot_complete": true,
+  "missing_source_modules": [],
+  "cases": [
+    {
+      "case": "laminar-n64-newton",
+      "divergence": 1.5991963268983153e-13,
+      "global_momentum": 4.987375004764137e-13,
+      "cell_momentum_integrated": 1.8447699964840858e-15,
+      "cell_momentum_per_volume": 9.320079154925788e-11,
+      "current_scalar": {},
+      "velocity_relative_l2": 0.0003818121498426071,
+      "Cf": 0.179804411760559
+    },
+    {
+      "case": "laminar-n128-newton",
+      "divergence": 3.016578677393937e-13,
+      "global_momentum": 5.364868658945066e-13,
+      "cell_momentum_integrated": 6.760271595990242e-16,
+      "cell_momentum_per_volume": 1.131504555818296e-10,
+      "current_scalar": {},
+      "velocity_relative_l2": 9.55249357898807e-05,
+      "Cf": 0.1799510572227286
+    },
+    {
+      "case": "sst-n64-coupled",
+      "divergence": 6.770997301221339e-13,
+      "global_momentum": 6.373922571995959e-11,
+      "cell_momentum_integrated": 1.4699352846037073e-13,
+      "cell_momentum_per_volume": 1.0066875296092465e-08,
+      "current_scalar": {
+        "k": 9.55052486372155e-09,
+        "omega": 1.4296337192769203e-13
+      },
+      "velocity_relative_l2": 0.04337163822830115,
+      "Cf": 0.004628756748341817
+    },
+    {
+      "case": "sst-n128-coupled",
+      "divergence": 1.4554753801723542e-12,
+      "global_momentum": 1.423414692649035e-10,
+      "cell_momentum_integrated": 2.8516078387497146e-13,
+      "cell_momentum_per_volume": 5.167159801770065e-07,
+      "current_scalar": {
+        "k": 9.14230974241638e-09,
+        "omega": 4.1255524768876146e-14
+      },
+      "velocity_relative_l2": 0.024007702604063378,
+      "Cf": 0.004845771221725444
+    }
+  ],
+  "physical_suboff_benchmark_passed": false,
+  "grid_convergence_certified": false,
+  "audit_source_sha256": "b0cd92466d8bbb2e7906c3bac3dc84c640f9d62579ae843e917afd0b44f18cc6"
+}
