@@ -1,0 +1,44 @@
+{
+  "authors": [
+    "Myoungkyu Lee",
+    "Robert D. Moser"
+  ],
+  "title": "Direct numerical simulation of turbulent channel flow up to Re_tau = 5200",
+  "journal": "Journal of Fluid Mechanics 774 (2015), 395-415",
+  "doi": "10.1017/jfm.2015.268",
+  "source_type": "original authors DNS statistical data; not experiment",
+  "retrieved_utc": "2026-10-13T09:09:52.229240+00:00",
+  "files": {
+    "mean": {
+      "upstream_url": "https://turbulence.oden.utexas.edu/channel2015/data/LM_Channel_0180_mean_prof.dat",
+      "raw_sha256": "a020248f04de754fa85ec6e22a94e0e57cfcb920fede39147dcb8aee420f2a65",
+      "csv": "mean.csv",
+      "csv_sha256": "d1e6640cd91a2874ec2a63ce7000eb9a5e67b6f766f460c14048a19172dc624f",
+      "rows": 96
+    },
+    "mean_standard_deviation": {
+      "upstream_url": "https://turbulence.oden.utexas.edu/channel2015/data/LM_Channel_0180_mean_stdev.dat",
+      "raw_sha256": "fe8ab7fde9ae200f477af2e30cab3a17fe70f0c5699bdcfcb7d7ec80320cd448",
+      "csv": "mean_standard_deviation.csv",
+      "csv_sha256": "0d8a64182d3a276541896e0c6bd8f7105fd04dc2bf44509a3f29cd4b205d9b0a",
+      "rows": 96
+    }
+  },
+  "Re_tau_reported": 182.088,
+  "nu": 0.00035,
+  "half_width": 1.0,
+  "U_bulk": 1.0,
+  "u_tau": 0.0637309,
+  "U_bulk_plus": 15.690975649174892,
+  "Cf": 0.008123255229619998,
+  "Cf_definition": "2*tau_wall/(rho*U_bulk^2)",
+  "normalization": "all profile fields in wall units except y_over_delta",
+  "uncertainty": "separate file reports estimated standard deviation from finite statistical sample; no bulk/friction uncertainty specified",
+  "centerline_missing": true,
+  "interpolation": "PCHIP in y/delta, no extrapolation; all case cell centers must lie within data range",
+  "license": "no explicit license in downloaded header; numerical values transcribed with author attribution, raw source files cached locally",
+  "metric_profile": "sqrt(sum(V*(U_calc-U_DNS)^2)/sum(V*U_DNS^2)) at all cell centers",
+  "metric_Cf": "abs(Cf_calc-Cf_DNS)/abs(Cf_DNS), U_bulk from actual outlet face flux",
+  "threshold_strict": 0.03,
+  "source_values_changed": false
+}
