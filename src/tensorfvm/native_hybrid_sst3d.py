@@ -21,8 +21,13 @@ class HybridSSTAdmissibilityError(RuntimeError):
 
 
 class NativeHybridSSTTransport3D:
-    def __init__(self, mesh, *, k_dirichlet_mask=None, omega_dirichlet_mask=None, scalar_correction='none', mmp_solver='continuation_newton', scalar_work_balance_policy='absolute',scalar_warm_start=False,scalar_precision='float64'):
+    def __init__(self, mesh, *, k_dirichlet_mask=None, omega_dirichlet_mask=None, scalar_correction='none', mmp_solver='continuation_newton', scalar_work_balance_policy='absolute',scalar_warm_start=False,scalar_precision='float64',wall_model=None):
         self.mesh = mesh
+        self.wall_model=wall_model
+        if wall_model is not None:
+            from .native_sst_wall3d import NativeSSTWall3D
+            if not isinstance(wall_model,NativeSSTWall3D) or wall_model.mesh is not mesh:
+                raise ValueError('SST wall model must use the same mesh')
         if scalar_correction not in ('none','nonlinear_mmp'):raise ValueError('unknown scalar correction')
         self.scalar_correction=scalar_correction
         if scalar_warm_start and (scalar_correction!='nonlinear_mmp' or mmp_solver!='continuation_newton'):
@@ -49,18 +54,26 @@ class NativeHybridSSTTransport3D:
             raise ValueError(f'invalid {name}: no positivity clipping applied')
         return value
 
-    def closure(self,k,omega,k_faces,omega_faces,wall_distance,nu,velocity_gradient,*,rho=1.):
+    def closure(self,k,omega,k_faces,omega_faces,wall_distance,nu,velocity_gradient,*,rho=1.,cell_velocity=None):
         """Use the same declared arithmetic in transport, restart and audit."""
         extended=self.scalar_precision=='longdouble'
         if extended:
             k_faces=np.asarray(k_faces,np.longdouble);omega_faces=np.asarray(omega_faces,np.longdouble)
-        return sst2003_closure(k,omega,wall_distance,nu,velocity_gradient,
+        closure=sst2003_closure(k,omega,wall_distance,nu,velocity_gradient,
             self.geometry.gradient(k_faces,preserve_precision=extended),
             self.geometry.gradient(omega_faces,preserve_precision=extended),rho=rho,precision=self.scalar_precision)
+        return closure if self.wall_model is None else self.wall_model.apply(closure,k,cell_velocity)
+
+    def _wall_constraints(self,closure,nu,rho,k_neumann,omega_neumann,explicit):
+        if self.wall_model is None:return explicit
+        if explicit is not None:raise ValueError('wall model and explicit omega constraints cannot be combined')
+        self.wall_model.validate_transport(self.k_mask,self.omega_mask,np.broadcast_to(nu,(self.geometry.N,)),rho,k_neumann,omega_neumann)
+        wall=closure['wall_model']
+        return wall['cells'],wall['omega']
 
     def step(self, k, omega, k_faces, omega_faces, volume_flux, wall_distance, nu,
              velocity_gradient, dt, *, k_boundary, omega_boundary,
-             k_inflow=None, omega_inflow=None, k_neumann=0., omega_neumann=0., rho=1.,omega_constraints=None):
+             k_inflow=None, omega_inflow=None, k_neumann=0., omega_neumann=0., rho=1.,omega_constraints=None,cell_velocity=None):
         """One conservative, frozen-coefficient backward Euler update.
 
         Negative production/cross diffusion is retained as a Patankar sink.
@@ -77,7 +90,8 @@ class NativeHybridSSTTransport3D:
                     self.geometry._array(face,F,'face '+name,preserve_precision=True)]
         k = self._state(k,N,'k',False); omega = self._state(omega,N,'omega',True)
         kf = self._state(k_faces,F,'face k',False); wf = self._state(omega_faces,F,'face omega',True)
-        closure = self.closure(k,omega,kf,wf,wall_distance,nu,velocity_gradient,rho=rho)
+        closure = self.closure(k,omega,kf,wf,wall_distance,nu,velocity_gradient,rho=rho,cell_velocity=cell_velocity)
+        omega_constraints=self._wall_constraints(closure,nu,rho,k_neumann,omega_neumann,omega_constraints)
         flux = self.geometry._array(volume_flux,F,'volume flux')
         incoming = (self.mesh.neighbor < 0) & (flux < 0)
         results = {}
@@ -122,19 +136,20 @@ class NativeHybridSSTTransport3D:
             results[name] = result
         return dict(k=results['k']['cell_values'],omega=results['omega']['cell_values'],
             k_faces=results['k']['face_values'],omega_faces=results['omega']['face_values'],
-            closure=closure,transport=results,variant=VARIANT,
+            closure=closure,transport=results,variant=closure.get('wall_model',{}).get('variant',VARIANT),
             nonlinear_rans_converged=False,physical_benchmark_passed=False)
 
     def steady_residual(self,k,omega,k_faces,omega_faces,volume_flux,wall_distance,nu,
                         velocity_gradient,*,k_boundary,omega_boundary,k_inflow=None,
-                        omega_inflow=None,k_neumann=0.,omega_neumann=0.,rho=1.,omega_constraints=None,with_ledgers=False):
+                        omega_inflow=None,k_neumann=0.,omega_neumann=0.,rho=1.,omega_constraints=None,with_ledgers=False,cell_velocity=None):
         """Original nonlinear SST residual at the supplied current state."""
         if np.ndim(rho)!=0 or not np.isfinite(rho) or rho<=0:
             raise ValueError('positive constant density required')
         N,F=self.geometry.N,self.geometry.F
         k=self._state(k,N,'k',False);omega=self._state(omega,N,'omega',True)
         kf=self._state(k_faces,F,'face k',False);wf=self._state(omega_faces,F,'face omega',True)
-        c=self.closure(k,omega,kf,wf,wall_distance,nu,velocity_gradient,rho=rho)
+        c=self.closure(k,omega,kf,wf,wall_distance,nu,velocity_gradient,rho=rho,cell_velocity=cell_velocity)
+        omega_constraints=self._wall_constraints(c,nu,rho,k_neumann,omega_neumann,omega_constraints)
         results={}
         for name,cell,face,mask,sigma,source,bd,inflow,gn in [
             ('k',k,kf,self.k_mask,c['sigma_k'],c['k_source'],k_boundary,k_inflow,k_neumann),
