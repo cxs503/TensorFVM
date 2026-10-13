@@ -29,6 +29,7 @@ def main():
     p.add_argument('--dt',type=float,default=.01)
     p.add_argument('--face-initialization',choices=['diffusion_equilibrium','cell_average'],default='cell_average')
     p.add_argument('--scalar-correction',choices=['none','nonlinear_mmp'],default='nonlinear_mmp')
+    p.add_argument('--scalar-work-balance-policy',choices=['absolute','relative'],default='absolute')
     a=p.parse_args()
     if a.steps<1 or not np.isfinite(a.dt) or a.dt<=0:p.error('positive step count and dt required')
     source=a.laminar_run;old=json.loads((source/'settings.json').read_text());old_summary=json.loads((source/'summary.json').read_text())
@@ -50,7 +51,7 @@ def main():
         inlet_provenance='explicit modeling assumptions, not measured experimental inflow',
         wall_treatment='resolved; k=0 and omega=60*nu/(beta1*d1^2); no wall function',
         trip='no geometric trip or transition model',initial_laminar_run=str(source),initial_bindings=binding,
-        face_initialization=a.face_initialization,scalar_correction=a.scalar_correction,
+        face_initialization=a.face_initialization,scalar_correction=a.scalar_correction,scalar_work_balance_policy=a.scalar_work_balance_policy,
         momentum_method='native coupled Newton',physical_suboff_benchmark_passed=False))
     m=NativeMesh3D.from_gmsh(out/'initial-input.msh',triangulate_faces=True)
     b=m.neighbor<0;wall=m.patch_labels=='wall';fixed=b&(m.patch_labels!='outlet')
@@ -65,7 +66,7 @@ def main():
     y=true_triangle_wall_distance(m);kb=np.full(len(b),k0);wb=np.full(len(b),w0)
     kb[wall]=0.;wb[wall]=wall_omega(nu,y[m.owner[wall]])
     s=NativeHybridRans3D(flow,y,nu,k_dirichlet_mask=fixed,omega_dirichlet_mask=fixed,
-        k_boundary=kb,omega_boundary=wb,k_inflow=k0,omega_inflow=w0,scalar_correction=a.scalar_correction)
+        k_boundary=kb,omega_boundary=wb,k_inflow=k0,omega_inflow=w0,scalar_correction=a.scalar_correction,scalar_work_balance_policy=a.scalar_work_balance_policy)
     failure=None;completed=False;result=None
     try:
         s.initialize(k0,w0,face_initialization=a.face_initialization)

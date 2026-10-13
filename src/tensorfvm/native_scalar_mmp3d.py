@@ -31,13 +31,20 @@ class NativeScalarMMP3D:
             i,j=np.triu_indices(len(ids),1);self.edges.append((i,j))
             pairs.append(np.sort(np.column_stack((ids[i],ids[j])),axis=1))
         self.pairs,self.inverse,self.counts=np.unique(np.vstack(pairs),axis=0,return_inverse=True,return_counts=True)
-        a=diffusion.full_matrix.tocoo();off=a.row!=a.col
+        # Assemble scalar reactions from local coefficients before rounding the
+        # global matrix. Extended-state residuals must match local flux ledgers.
+        rows=[];cols=[];data=[]
+        for _,_,ids,matrix,*_ in diffusion.local:
+            rows.append(np.repeat(ids,len(ids)));cols.append(np.tile(ids,len(ids)))
+            data.append(matrix.ravel().astype(np.longdouble))
+        a=sparse.coo_matrix((np.concatenate(data),(np.concatenate(rows),np.concatenate(cols))),
+            shape=diffusion.full_matrix.shape).tocsr().tocoo();off=a.row!=a.col
         self.ai,self.aj,self.av=a.row[off],a.col[off],a.data[off]
         i,j=self.pairs.T;e=np.arange(len(i))
         self.E=sparse.coo_matrix((np.r_[np.ones(len(i)),-np.ones(len(i))],
             (np.r_[e,e],np.r_[i,j])),shape=(len(i),self.size)).tocsr()
         self.H=abs(self.E)
-        self.reaction_matrix=sparse.coo_matrix((self.av,(self.ai,self.aj)),shape=(self.size,self.size)).tocsr()
+        self.reaction_matrix=sparse.coo_matrix((self.av.astype(float),(self.ai,self.aj)),shape=(self.size,self.size)).tocsr()
         self.reaction_matrix-=sparse.diags(np.asarray(self.reaction_matrix.sum(axis=1)).ravel())
         # Strict positive edge correction is essential even when A*u=0:
         # an uncorrected discrete harmonic solution may already be negative.
@@ -53,21 +60,15 @@ class NativeScalarMMP3D:
         self.strict[np.setdiff1d(np.arange(self.size),diffusion.free)]=0.
 
     def operator(self,state):
-        u=np.asarray(state,float)
-        if u.shape!=(self.size,) or not np.isfinite(u).all():raise ValueError('finite hybrid scalar state required')
-        i,j=self.pairs.T;difference=np.abs(u[i]-u[j])
-        denominator=np.bincount(np.r_[i,j],weights=np.r_[difference,difference],minlength=self.size)
-        # Difference form preserves the constant nullspace in floating point.
-        reaction=np.bincount(self.ai,weights=self.av*(u[self.aj]-u[self.ai]),minlength=self.size)
-        numerator=np.zeros(self.size);numerator[self.base.free]=np.abs(reaction[self.base.free])
-        beta=np.divide(self.margin*numerator,denominator,out=np.zeros(self.size),where=denominator>0)
-        weight=np.maximum(beta[i]+self.strict[i],beta[j]+self.strict[j])
+        u=np.asarray(state)
+        if u.dtype.kind!='f':u=u.astype(float)
+        i,j,_,_,_,_,_,_,_,_,weight=self._coefficients(u,0.,1.)
         local_weights=weight[self.inverse]/self.counts[self.inverse]
         rows=[];cols=[];data=[];local=[];offset=0;extra_energy=0.
         for record,(ii,jj) in zip(self.base.local,self.edges):
             faces,sign,ids,original,g,residual,penalty=record
             w=local_weights[offset:offset+len(ii)];offset+=len(ii)
-            correction=np.zeros_like(original)
+            correction=np.zeros_like(original,dtype=u.dtype)
             np.add.at(correction,(ii,ii),w);np.add.at(correction,(jj,jj),w)
             np.add.at(correction,(ii,jj),-w);np.add.at(correction,(jj,ii),-w)
             extra_energy+=float(np.sum(w*(u[ids[ii]]-u[ids[jj]])**2))
@@ -75,7 +76,7 @@ class NativeScalarMMP3D:
             local.append((faces,sign,ids,matrix,g,residual,penalty))
             rows.append(np.repeat(ids,len(ids)));cols.append(np.tile(ids,len(ids)));data.append(matrix.ravel())
         op=copy.copy(self.base);op.local=local
-        op.full_matrix=sparse.coo_matrix((np.concatenate(data),(np.concatenate(rows),np.concatenate(cols))),shape=self.base.full_matrix.shape).tocsr()
+        op.full_matrix=sparse.coo_matrix((np.concatenate(data),(np.concatenate(rows),np.concatenate(cols))),shape=self.base.full_matrix.shape).tocsr().astype(float)
         op.matrix=op.full_matrix[op.free][:,op.free].tocsc();op._face_factor=None
         return op,dict(correction_energy=extra_energy,maximum_edge_weight=float(weight.max(initial=0)),
                        active_edges=int(np.count_nonzero(weight)),regularization=self.regularization)
