@@ -165,14 +165,45 @@ def test_momentum_sweeps_converge_same_coupled_equations_as_newton(method):
 def test_invalid_sweep_configuration_and_linear_failure_leave_turbulence_unchanged(monkeypatch):
     s=setup(shear=.3);old={key:getattr(s,key).copy() for key in ('k','omega','k_faces','omega_faces')}
     for options in (dict(momentum_method='newton'),dict(momentum_method='coupled'),
-                    dict(momentum_method='simplec',momentum_sweeps=0)):
+                    dict(momentum_method='simplec',momentum_sweeps=0),
+                    dict(momentum_method='simplec',momentum_inner_iterations=0),
+                    dict(momentum_method='simplec',momentum_inner_iterations=1.5)):
         with pytest.raises(ValueError):s.solve(momentum_coupling='sweeps',**options)
+    with pytest.raises(ValueError,match='only to sweeps'):
+        s.solve(momentum_inner_iterations=2)
     def failed(**kwargs):raise RuntimeError('injected true linear residual failure')
     monkeypatch.setattr(s.flow,'solve',failed)
     with pytest.raises(RuntimeError,match='true linear residual failure'):
         s.solve(momentum_method='simplec',momentum_coupling='sweeps')
     for key,value in old.items():np.testing.assert_array_equal(getattr(s,key),value)
     assert not s.converged and not s.history
+
+
+def test_batched_simplec_reuses_factors_but_checks_current_rans_equations(monkeypatch):
+    import tensorfvm.native_hybrid_stokes3d as stokes
+    s=setup(shear=.3);s.flow.momentum_relaxation_basis='diagonal'
+    s.flow.state=s.flow.prescribed.copy();s.flow.p[:]=0.
+    factors=[];factor=stokes.splu
+    def counted(matrix,*args,**kwargs):
+        factors.append(matrix.shape)
+        return factor(matrix,*args,**kwargs)
+    monkeypatch.setattr(stokes,'splu',counted)
+    r=s.solve(max_iterations=1,dt=1.,momentum_method='simplec',momentum_coupling='sweeps',
+              momentum_inner_iterations=8,momentum_relaxation=.9,tolerance=1e-8)
+    row=r['rans_history'][-1]
+    assert len(factors)==2  # One momentum factor and one pressure factor.
+    assert row['momentum_iterations']==8 and row['momentum_outer_iterations']==1
+    assert row['momentum_inner_iterations_limit']==8
+    assert row['momentum_relaxation_basis']=='diagonal'
+    assert row['momentum_linear_residual_max']<1e-9
+    assert not r['numerically_converged'] and max(row['k'],row['omega'])>1e-8
+    r=s.solve(max_iterations=200,dt=1.,momentum_method='simplec',momentum_coupling='sweeps',
+              momentum_inner_iterations=8,momentum_relaxation=.9,tolerance=1e-8)
+    ref=setup(shear=.3).solve(max_iterations=100,dt=1.,tolerance=1e-8)
+    assert r['numerically_converged'] and ref['numerically_converged']
+    for key in ('velocity','face_velocity','modified_pressure','k','omega','total_traction_integrated'):
+        np.testing.assert_allclose(r[key],ref[key],rtol=2e-5,atol=2e-7)
+    assert r['energy_balance_error']<1e-7
 
 
 def test_restart_preserves_shared_faces_and_matches_uninterrupted_sweeps():
