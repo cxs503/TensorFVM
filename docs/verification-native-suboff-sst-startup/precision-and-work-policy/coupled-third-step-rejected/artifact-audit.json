@@ -1,0 +1,27 @@
+{
+  "sources_and_fields_verified": true,
+  "initialized": true,
+  "completed_steps": 2,
+  "mass_divergence_max": 3.7983737869603617e-14,
+  "numerically_converged": false,
+  "physical_suboff_benchmark_passed": false,
+  "coupled_force_and_work_not_independently_audited": true,
+  "scalar_minima": {
+    "k": 3.726001475762915e-06,
+    "omega": 0.22356939705360718,
+    "k_faces": 0.0,
+    "omega_faces": 0.22357262632116373
+  },
+  "accepted_turbulence_unchanged_from_initial_guess": false,
+  "rejected_scalar": {
+    "name": "k",
+    "fields_verified": true,
+    "cell_balance_max": 3.8763989722805086e-08,
+    "interface_defect_max": 4.6813811112364453e-08,
+    "global_balance": 2.849951520721164e-07,
+    "sum_saved_work_terms": 6.624133553373044e-12,
+    "cell_min": 1.647805919224523e-10,
+    "face_min": 0.0,
+    "candidate_is_accepted_flow": false
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "source_integrity_verified": true,
+  "rows": [
+    {
+      "exponent": -20,
+      "scale": 9.5367431640625e-07,
+      "work": -9.091124238435229e-16,
+      "work_scale": 73178.74210220335,
+      "relative_work": 1.2423176427026206e-20,
+      "absolute_work_gate_passed": true,
+      "cell_balance": 4.0586355595222375e-18
+    },
+    {
+      "exponent": 0,
+      "scale": 1.0,
+      "work": -0.0009995796809715767,
+      "work_scale": 8.046087784739371e+16,
+      "relative_work": 1.2423176427026206e-20,
+      "absolute_work_gate_passed": false,
+      "cell_balance": 4.25578784046159e-12
+    },
+    {
+      "exponent": 20,
+      "scale": 1048576.0,
+      "work": -1099049482.116873,
+      "work_scale": 8.846767077427376e+28,
+      "relative_work": 1.2423176427026206e-20,
+      "absolute_work_gate_passed": false,
+      "cell_balance": 4.462516990599852e-06
+    }
+  ],
+  "relative_work_invariant": true,
+  "legacy_absolute_work_classification_changes": true,
+  "scalar_flux_absolute_gate_not_claimed_unit_invariant": true,
+  "physical_suboff_benchmark_passed": false
+}
