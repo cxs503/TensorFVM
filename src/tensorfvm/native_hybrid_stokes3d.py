@@ -12,6 +12,7 @@ from scipy.sparse.linalg import splu, gmres, LinearOperator
 
 from .native_hybrid_viscous3d import NativeHybridViscous3D
 from .native_face_mean3d import NativeFaceMean3D
+from .native_boundary_constraints3d import require_rigid_motion_constraints
 from .native_block_solver3d import NativeHybridBlockSolver3D
 
 
@@ -35,6 +36,7 @@ class NativeHybridStokes3D:
             mesh, viscosity, dirichlet_mask=velocity_dirichlet,
             gradient_jump_stabilization=gradient_jump_stabilization)
         v = self.viscous
+        self.rigid_motion_constraints = require_rigid_motion_constraints(mesh, v.dirichlet_components)
         self.N, self.F = v.N, v.F
         self.prescribed = v._prescribed(velocity_boundary)
         self.face_mean = NativeFaceMean3D(mesh)
