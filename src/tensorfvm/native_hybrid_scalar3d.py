@@ -70,7 +70,7 @@ class NativeHybridScalar3D:
         return float(np.max(abs(cells[self.constraint_cells]-self.constraint_values),initial=0.))
 
     def solve(self, volume_flux=0., *, source=0., sink=0., boundary_values=0.,
-              boundary_diffusive_flux=0., inflow_values=None, old_values=None, dt=None):
+              boundary_diffusive_flux=0., inflow_values=None, old_values=None, dt=None, initial_state=None):
         """One linear steady solve or backward Euler step, with an explicit ledger.
 
         boundary_diffusive_flux is outward kappa*grad(phi).n per unit area
@@ -80,10 +80,15 @@ class NativeHybridScalar3D:
         Constructor cell_constraints=(indices,values) eliminate specified cell
         unknowns. Their original-equation reactions are explicit source terms
         in the returned local/global flux and work ledgers.
+        An optional complete initial_state is used only by continuation Newton:
+        try zero smoothing first, with full original-equation acceptance, and
+        fall back to cold continuation if the nonlinear attempt fails.
         """
+        if initial_state is not None and (self.mmp is None or self.mmp_solver!='continuation_newton'):
+            raise ValueError('scalar initial state requires nonlinear_mmp continuation_newton')
         if self.mmp is not None:
             return self._solve_mmp(volume_flux,source=source,sink=sink,boundary_values=boundary_values,
-                boundary_diffusive_flux=boundary_diffusive_flux,inflow_values=inflow_values,old_values=old_values,dt=dt)
+                boundary_diffusive_flux=boundary_diffusive_flux,inflow_values=inflow_values,old_values=old_values,dt=dt,initial_state=initial_state)
         q = self._array(volume_flux, self.F, 'shared volume flux')
         source = self._array(source, self.N, 'source')
         sink = self._array(sink, self.N, 'sink')
@@ -306,10 +311,11 @@ class NativeHybridScalar3D:
         return bool(finite and flux<1e-8 and work and constraint_error<1e-12)
 
     def _solve_mmp(self,volume_flux,**kwargs):
+        initial_state=kwargs.pop('initial_state',None)
         gn=np.broadcast_to(np.asarray(kwargs['boundary_diffusive_flux'],float),(self.F,))
         if np.any(gn[self.diffusion.traction_boundary]!=0):
             raise ValueError('nonlinear scalar correction currently requires homogeneous Neumann data')
-        if self.mmp_solver=='continuation_newton':return solve_mmp_newton(self,volume_flux,**kwargs)
+        if self.mmp_solver=='continuation_newton':return solve_mmp_newton(self,volume_flux,initial_state=initial_state,**kwargs)
         linear=copy.copy(self);linear.mmp=None
         initial=linear.solve(volume_flux,**kwargs)
         state=np.r_[initial['cell_values'],initial['face_values']]
