@@ -28,11 +28,15 @@ class NativeHybridViscous3D:
         self.mu = mu
         self.boundary = mesh.neighbor < 0
         self.internal_faces = np.flatnonzero(~self.boundary)
-        self.dirichlet = (self.boundary.copy() if dirichlet_mask is None
-                          else np.asarray(dirichlet_mask, bool).copy())
-        if self.dirichlet.shape != (self.F,) or np.any(self.dirichlet & ~self.boundary):
-            raise ValueError('Dirichlet mask must select boundary faces')
-        self.traction_boundary = self.boundary & ~self.dirichlet
+        mask = self.boundary if dirichlet_mask is None else np.asarray(dirichlet_mask, bool)
+        if mask.shape == (self.F,):
+            mask = np.broadcast_to(mask[:,None], (self.F,components))
+        if mask.shape != (self.F,components) or np.any(mask & ~self.boundary[:,None]):
+            raise ValueError('Dirichlet mask must select boundary faces or their components')
+        self.dirichlet_components = mask.copy()
+        self.dirichlet = mask.all(axis=1)
+        self.traction_components = self.boundary[:,None] & ~mask
+        self.traction_boundary = self.traction_components.any(axis=1)
         self.free_faces = np.flatnonzero(~self.dirichlet)
         self.local = []
         face_ids = [[] for _ in range(self.N)]
@@ -84,29 +88,28 @@ class NativeHybridViscous3D:
         self.full_matrix = sparse.coo_matrix((np.concatenate(values),
             (np.concatenate(rows), np.concatenate(columns))), shape=(size, size)).tocsr()
         self.full_matrix.eliminate_zeros()
-        nodes = np.r_[np.arange(self.N), self.N+self.free_faces]
-        self.free = (components*nodes[:, None]+np.arange(components)).ravel()
+        free_mask = np.vstack((np.ones((self.N,components),bool),~self.dirichlet_components))
+        self.free = np.flatnonzero(free_mask.ravel())
         self.matrix = self.full_matrix[self.free][:, self.free].tocsc()
         self.cell_dofs = components*self.N
         self._face_factor = None
 
     def _prescribed(self, boundary_values):
         boundary = np.broadcast_to(np.asarray(boundary_values, float), (self.F, self.components))
-        if not np.isfinite(boundary[self.dirichlet]).all():
+        if not np.isfinite(boundary[self.dirichlet_components]).all():
             raise ValueError('finite Dirichlet boundary values required')
         state = np.zeros((self.N+self.F, self.components))
-        state[self.N+np.flatnonzero(self.dirichlet)] = boundary[self.dirichlet]
+        state[self.N:][self.dirichlet_components] = boundary[self.dirichlet_components]
         return state.ravel()
 
     def _traction_load(self, boundary_traction):
         """Prescribed outward stress times normal, per unit face area."""
         traction = np.broadcast_to(np.asarray(boundary_traction, float), (self.F, self.components))
-        if not np.isfinite(traction[self.traction_boundary]).all():
+        if not np.isfinite(traction[self.traction_components]).all():
             raise ValueError('finite boundary traction required')
         load = np.zeros((self.N+self.F, self.components))
-        mask = self.traction_boundary
-        load[self.N+np.flatnonzero(mask)] = (
-            np.linalg.norm(self.mesh.area_vectors[mask], axis=1)[:, None]*traction[mask])
+        integrated = np.linalg.norm(self.mesh.area_vectors,axis=1)[:,None]*traction
+        load[self.N:][self.traction_components] = integrated[self.traction_components]
         return load.ravel()
 
     def equilibrate_faces(self, cell_values, boundary_values=0., *, boundary_traction=0., linear_method='direct'):

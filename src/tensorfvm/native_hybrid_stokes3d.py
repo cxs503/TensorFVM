@@ -8,7 +8,7 @@ Convection, SST and wall functions are deliberately outside this interface.
 """
 import numpy as np
 from scipy import sparse
-from scipy.sparse.linalg import splu
+from scipy.sparse.linalg import splu, gmres, LinearOperator
 
 from .native_hybrid_viscous3d import NativeHybridViscous3D
 
@@ -16,7 +16,12 @@ from .native_hybrid_viscous3d import NativeHybridViscous3D
 class NativeHybridStokes3D:
     def __init__(self, mesh, velocity_dirichlet, velocity_boundary=0., *,
                  viscosity=1., body_force=0., boundary_traction=0.,
-                 gauge_value=0., body_force_discretization='face'):
+                 gauge_value=0., body_force_discretization='face', coupled_linear_method='direct'):
+        if coupled_linear_method not in ('direct', 'reused_lu'):
+            raise ValueError('coupled_linear_method must be direct or reused_lu')
+        self.coupled_linear_method = coupled_linear_method
+        self._coupled_factor = None
+        self.coupled_linear_history = []
         self.mesh = mesh
         self.viscous = NativeHybridViscous3D(
             mesh, viscosity, dirichlet_mask=velocity_dirichlet)
@@ -60,7 +65,13 @@ class NativeHybridStokes3D:
         self.A = v.matrix
         self.rhs = (self.load-v.full_matrix @ self.prescribed)[v.free]
         self.mass_rhs = -self.divergence @ self.prescribed
-        self.gauge = not v.traction_boundary.any()
+        # Pressure has a constant nullspace if every boundary NORMAL flux
+        # is fixed; free tangential components on a symmetry plane do not
+        # determine pressure. Component masks support axis-aligned symmetry.
+        area = np.linalg.norm(mesh.area_vectors,axis=1)
+        free_normal = np.abs(mesh.area_vectors)*v.traction_components
+        self.open_normal_boundary = np.any(free_normal > 1e-12*area[:,None],axis=1)
+        self.gauge = not self.open_normal_boundary.any()
         self.gauge_value = float(gauge_value)
         if self.gauge and abs(self.mass_rhs.sum()) > 1e-11*max(
                 np.abs(self.mass_rhs).sum(), 1.):
@@ -76,6 +87,41 @@ class NativeHybridStokes3D:
         residual = np.linalg.norm(matrix @ answer-rhs)/max(np.linalg.norm(rhs), np.finfo(float).tiny)
         if not np.isfinite(answer).all() or not np.isfinite(residual) or residual > 1e-9:
             raise RuntimeError(f'hybrid Stokes linear solve failed true residual: {residual:g}')
+        return answer, float(residual)
+
+    def _coupled_linear(self, matrix, rhs):
+        """Reuse an earlier LU only as a preconditioner for the CURRENT matrix.
+
+        Every candidate is checked against the current true residual. A stale
+        preconditioner may slow convergence, but cannot qualify a wrong solve.
+        Refresh by direct factorization if GMRES fails its residual check.
+        """
+        matrix = matrix.tocsc()
+        iterations = 0
+        reused = self.coupled_linear_method == 'reused_lu' and self._coupled_factor is not None
+        fallback = False
+        scale = max(np.linalg.norm(rhs), np.finfo(float).tiny)
+        if reused:
+            def count(_):
+                nonlocal iterations
+                iterations += 1
+            preconditioner = LinearOperator(matrix.shape, matvec=self._coupled_factor.solve)
+            answer, info = gmres(matrix, rhs, M=preconditioner, rtol=1e-11,
+                atol=0., restart=40, maxiter=4, callback=count, callback_type='pr_norm')
+            residual = np.linalg.norm(matrix @ answer-rhs)/scale
+            fallback = bool(info != 0 or not np.isfinite(answer).all()
+                            or not np.isfinite(residual) or residual > 1e-9)
+        if not reused or fallback:
+            factor = splu(matrix)
+            answer = factor.solve(rhs)
+            residual = np.linalg.norm(matrix @ answer-rhs)/scale
+            if self.coupled_linear_method == 'reused_lu':
+                self._coupled_factor = factor
+        if not np.isfinite(answer).all() or not np.isfinite(residual) or residual > 1e-9:
+            raise RuntimeError(f'hybrid coupled solve failed true residual: {residual:g}')
+        self.coupled_linear_history.append(dict(reused_preconditioner=reused,
+            fallback_factorization=fallback, gmres_iterations=iterations,
+            true_relative_residual=float(residual)))
         return answer, float(residual)
 
     def _row(self, state, pressure, iteration, linear_residual, limited=0):
@@ -112,7 +158,7 @@ class NativeHybridStokes3D:
             if self.gauge:
                 matrix[size, :] = 0.; matrix[size, size] = 1.
                 rhs[size] = self.gauge_value
-            answer, residual = self._linear(matrix.tocsc(), rhs)
+            answer, residual = self._coupled_linear(matrix.tocsc(), rhs)
             state = self.prescribed.copy(); state[v.free] = answer[:size]
             pressure = answer[size:]
             row = self._row(state, pressure, 1, residual)
@@ -131,7 +177,7 @@ class NativeHybridStokes3D:
         limited = 0
         if algorithm == 'simplec':
             entries = self.A.tocoo()
-            same = (entries.row != entries.col) & (entries.row % 3 == entries.col % 3)
+            same = (entries.row != entries.col) & (v.free[entries.row] % 3 == v.free[entries.col] % 3)
             neighbor_sum = np.bincount(entries.row[same], weights=entries.data[same], minlength=size)
             denominator = relaxed+neighbor_sum
             limited = int(np.count_nonzero(denominator < .1*relaxed))

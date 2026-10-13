@@ -4,19 +4,21 @@ from tensorfvm.native_mesh3d import NativeMesh3D
 from tensorfvm.native_hybrid_stokes3d import NativeHybridStokes3D
 
 
-def channel_mesh(n):
-    if not isinstance(n, int) or n < 1:
-        raise ValueError('positive integer mesh subdivision required')
-    grid = np.linspace(0., 1., n+1)
-    points = np.array([[x, y, z] for z in grid for y in grid for x in grid])
-    index = lambda x, y, z: z*(n+1)**2+y*(n+1)+x
+def channel_mesh(n, *, triangulate_faces=True):
+    divisions = (n,n,n) if isinstance(n,int) else tuple(n)
+    if len(divisions)!=3 or any(not isinstance(v,int) or v<1 for v in divisions):
+        raise ValueError('positive integer mesh subdivisions required')
+    nx,ny,nz = divisions
+    gx,gy,gz = [np.linspace(0.,1.,v+1) for v in divisions]
+    points = np.array([[x,y,z] for z in gz for y in gy for x in gx])
+    index = lambda x,y,z: z*(nx+1)*(ny+1)+y*(nx+1)+x
     cells = []
-    for z in range(n):
-        for y in range(n):
-            for x in range(n):
+    for z in range(nz):
+        for y in range(ny):
+            for x in range(nx):
                 cells.append([index(x,y,z), index(x+1,y,z), index(x+1,y+1,z), index(x,y+1,z),
                               index(x,y,z+1), index(x+1,y,z+1), index(x+1,y+1,z+1), index(x,y+1,z+1)])
-    return NativeMesh3D.from_cells(points, cells, ['hexahedron']*len(cells), triangulate_faces=True)
+    return NativeMesh3D.from_cells(points, cells, ['hexahedron']*len(cells), triangulate_faces=triangulate_faces)
 
 
 def channel_exact(points):

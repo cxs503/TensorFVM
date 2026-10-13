@@ -17,7 +17,7 @@ class NativeHybridNavierStokes3D(NativeHybridStokes3D):
                  density=1., backflow_velocity=None, convection_order=1, **kwargs):
         super().__init__(mesh, velocity_dirichlet, velocity_boundary, **kwargs)
         inflow = np.broadcast_to(np.asarray(velocity_boundary, float), (self.F,3)).copy()
-        open_faces = self.viscous.traction_boundary
+        open_faces = self.open_normal_boundary
         if open_faces.any():
             if backflow_velocity is None:
                 raise ValueError('explicit backflow_velocity required on total traction boundaries')
@@ -44,7 +44,9 @@ class NativeHybridNavierStokes3D(NativeHybridStokes3D):
 
     def solve(self, *, algorithm='simplec', max_outer_iterations=40,
               max_iterations=3000, tolerance=1e-8, relaxation=.5,
-              pressure_relaxation=None, callback=None, momentum_callback=None):
+              pressure_relaxation=None, outer_relaxation=1., callback=None, momentum_callback=None):
+        if not np.isfinite(outer_relaxation) or not 0 < outer_relaxation <= 1:
+            raise ValueError('outer_relaxation must be in (0, 1]')
         if max_outer_iterations < 1:
             raise ValueError('positive outer iteration limit required')
         self.nonlinear_converged = False
@@ -59,6 +61,10 @@ class NativeHybridNavierStokes3D(NativeHybridStokes3D):
             super().solve(algorithm=algorithm, relaxation=relaxation,
                 pressure_relaxation=pressure_relaxation, max_iterations=max_iterations,
                 tolerance=tolerance*.1, callback=momentum_callback)
+            # Relax the nonlinear candidate, then audit the accepted CURRENT
+            # equations. Prescribed values and pressure gauge are unchanged.
+            self.state = old+outer_relaxation*(self.state-old)
+            self.p = old_p+outer_relaxation*(self.p-old_p)
             full, source = self._current_system()
             residual = full @ self.state+source-self.divergence.T @ self.p-self.load
             scale = max(np.linalg.norm((self.load-source-full @ self.prescribed)[free]),1.)
