@@ -16,20 +16,22 @@ from tensorfvm.native_hybrid_sst3d import HybridSSTAdmissibilityError
 
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',type=Path,required=True)
-    p.add_argument('--levels',type=int,nargs='+',default=[2,4,8]);args=p.parse_args();out=args.output
+    p.add_argument('--levels',type=int,nargs='+',default=[2,4,8])
+    p.add_argument('--scalar-correction',choices=['none','nonlinear_mmp'],default='none');args=p.parse_args();out=args.output
     evidence=NativeRunEvidence(out,__file__);rows=[];comparison={}
-    write_json(out/'settings.json',dict(levels=args.levels,dt=1.,relaxation=.7,tolerance=1e-8,
+    write_json(out/'settings.json',dict(levels=args.levels,scalar_correction=args.scalar_correction,dt=1.,relaxation=.7,tolerance=1e-8,
         density=1.,nu=.1,shear=.3,velocity_boundary='U=(0.3*y,0,0) on all boundary faces',
         reservoir='k=.01,omega=2 on all boundaries; this is not a no-slip turbulence wall condition',
         low_re='reservoir data except y=0/1: k=0,omega=60*nu/(beta1*d1^2)',
         pressure='solve p*=p+2*rho*k/3, output physical p; gauge p*[0]=0',
-        low_re_mesh='orthogonal hexahedra with unsplit quadrilateral faces; other controls triangulate faces',
+        low_re_mesh=('triangulated hexahedra' if args.scalar_correction!='none' else 'orthogonal hexahedra with unsplit quadrilateral faces; other controls triangulate faces'),
         physical_benchmark_passed=False,wall_function_verified=False))
     for kind in ('reservoir','low_re','laminar_limit'):
         for n in (args.levels if kind!='laminar_limit' else [args.levels[-1]]):
             methods=('newton','simplec') if kind=='reservoir' and n==args.levels[0] else ('newton',)
             for method in methods:
-                name=f'{kind}-n{n}-{method}';m,s=coupled_shear_solver(n,kind)
+                name=f'{kind}-n{n}-{method}';m,s=coupled_shear_solver(n,kind,scalar_correction=args.scalar_correction,
+                    triangulate_faces=True if args.scalar_correction!='none' else None)
                 r=s.solve(max_iterations=120,dt=1.,relaxation=.7,tolerance=1e-8,momentum_method=method)
                 current=r['current_rans_residual'];last=r['rans_history'][-1]
                 row=dict(case=name,kind=kind,n=n,cells=len(m.cells),faces=len(m.owner),iterations=len(r['rans_history']),
@@ -51,6 +53,7 @@ def main():
                     fields[scalar+'_residual_scale']=current['transport'][scalar]['residual_scale']
                     fields[scalar+'_total_flux']=current['transport'][scalar]['total_flux']
                     fields[scalar+'_source']=current['transport']['closure'][scalar+'_source']
+                    fields[scalar+'_correction_energy']=current['transport'][scalar].get('correction_energy',0.)
                 np.savez_compressed(path,vertices=m.vertices,cell_offsets=np.r_[0,np.cumsum([len(c) for c in m.cells])],
                     cell_vertices=np.concatenate(m.cells),face_vertices=np.asarray(m.face_vertices),
                     cell_centers=m.cell_centers,cell_volumes=m.cell_volumes,face_centers=m.face_centers,

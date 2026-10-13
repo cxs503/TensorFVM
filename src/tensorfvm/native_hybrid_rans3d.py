@@ -12,12 +12,13 @@ from .native_sst3d import sst2003_closure
 
 class NativeHybridRans3D:
     def __init__(self,flow,wall_distance,nu,*,k_dirichlet_mask=None,omega_dirichlet_mask=None,
-                 k_boundary,omega_boundary,k_inflow=None,omega_inflow=None,k_neumann=0.,omega_neumann=0.):
+                 k_boundary,omega_boundary,k_inflow=None,omega_inflow=None,k_neumann=0.,omega_neumann=0.,
+                 scalar_correction='none'):
         if not isinstance(flow,NativeHybridNavierStokes3D):
             raise TypeError('native hybrid Navier-Stokes flow required')
         self.flow=flow;self.mesh=flow.mesh
         self.transport=NativeHybridSSTTransport3D(self.mesh,k_dirichlet_mask=k_dirichlet_mask,
-                                                 omega_dirichlet_mask=omega_dirichlet_mask)
+                                                 omega_dirichlet_mask=omega_dirichlet_mask,scalar_correction=scalar_correction)
         self.nu=self.transport._state(nu,flow.N,'molecular viscosity',True)
         self.wall_distance=self.transport._state(wall_distance,flow.N,'wall distance',True)
         self.rho=flow.convection.density

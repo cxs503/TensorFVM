@@ -1,0 +1,362 @@
+[
+  {
+    "iteration": 1,
+    "momentum": 2.702562656057411e-07,
+    "divergence": 2.220446049250313e-16,
+    "gauge": 0.0,
+    "k": 0.0036959885497659523,
+    "omega": 0.0035033170574709145,
+    "k_boundary": 0.0,
+    "omega_boundary": 0.0,
+    "changes": {
+      "k": 0.009092547782906545,
+      "omega": 0.008565470992571824,
+      "k_faces": 0.004513440347972552,
+      "omega_faces": 0.0042533964448554255,
+      "velocity": 0.0,
+      "modified_pressure": 0.0
+    },
+    "minimum_k": 0.009889297889758506,
+    "minimum_omega": 1.97912478619509,
+    "frozen_linear_residuals": {
+      "k": 4.536651350295081e-16,
+      "omega": 4.4243334534944163e-16
+    }
+  },
+  {
+    "iteration": 2,
+    "momentum": 9.04898772349287e-08,
+    "divergence": 1.700029006457271e-16,
+    "gauge": 0.0,
+    "k": 0.0013197480252338722,
+    "omega": 0.0012590952411324942,
+    "k_boundary": 0.0,
+    "omega_boundary": 0.0,
+    "changes": {
+      "k": 0.0032986936837114365,
+      "omega": 0.0031271259889416375,
+      "k_faces": 0.0016367848746148344,
+      "omega_faces": 0.0015525101041486105,
+      "velocity": 6.8232726417162e-07,
+      "modified_pressure": 2.477133854633027e-07
+    },
+    "minimum_k": 0.009848722124271125,
+    "minimum_omega": 1.9714200112128955,
+    "frozen_linear_residuals": {
+      "k": 4.478793901951546e-16,
+      "omega": 4.3826680031128516e-16
+    }
+  },
+  {
+    "iteration": 3,
+    "momentum": 2.9181890499415672e-08,
+    "divergence": 8.326672684688674e-17,
+    "gauge": 0.0,
+    "k": 0.00047188469745566966,
+    "omega": 0.0004533204237924106,
+    "k_boundary": 0.0,
+    "omega_boundary": 0.0,
+    "changes": {
+      "k": 0.001194974989858732,
+      "omega": 0.0011404788719516661,
+      "k_faces": 0.0005934095787549814,
+      "omega_faces": 0.0005667057129249904,
+      "velocity": 2.3018517038418723e-07,
+      "modified_pressure": 8.316705293181206e-08
+    },
+    "minimum_k": 0.009833859738540701,
+    "minimum_omega": 1.9685773873082124,
+    "frozen_linear_residuals": {
+      "k": 5.305575604543294e-16,
+      "omega": 3.9984043225364123e-16
+    }
+  },
+  {
+    "iteration": 4,
+    "momentum": 9.044564484141e-09,
+    "divergence": 8.326672684688674e-17,
+    "gauge": 0.0,
+    "k": 0.00016898299960586082,
+    "omega": 0.00016352956597859823,
+    "k_boundary": 0.0,
+    "omega_boundary": 0.0,
+    "changes": {
+      "k": 0.00043273063107310093,
+      "omega": 0.0004159415887077929,
+      "k_faces": 0.00021512289359490957,
+      "omega_faces": 0.00020691624547035929,
+      "velocity": 7.450636755921397e-08,
+      "modified_pressure": 2.6567819918415486e-08
+    },
+    "minimum_k": 0.00982841948542412,
+    "minimum_omega": 1.9675290040142766,
+    "frozen_linear_residuals": {
+      "k": 5.910571758863653e-16,
+      "omega": 4.749345602340656e-16
+    }
+  },
+  {
+    "iteration": 5,
+    "momentum": 2.657308499388165e-09,
+    "divergence": 5.551115123125783e-17,
+    "gauge": 0.0,
+    "k": 6.060792566982752e-05,
+    "omega": 5.910839890226866e-05,
+    "k_boundary": 0.0,
+    "omega_boundary": 0.0,
+    "changes": {
+      "k": 0.0001566981884612864,
+      "omega": 0.00015174737636947352,
+      "k_faces": 7.798323216181446e-05,
+      "omega_faces": 7.557229989227592e-05,
+      "velocity": 2.3089495222293574e-08,
+      "modified_pressure": 8.013013374004039e-09
+    },
+    "minimum_k": 0.009826429431994237,
+    "minimum_omega": 1.9671424779066917,
+    "frozen_linear_residuals": {
+      "k": 6.373657376817085e-16,
+      "omega": 4.879886200034803e-16
+    }
+  },
+  {
+    "iteration": 6,
+    "momentum": 7.17041535134328e-10,
+    "divergence": 1.6653345369377348e-16,
+    "gauge": 0.0,
+    "k": 2.1769196242972814e-05,
+    "omega": 2.1404879921990015e-05,
+    "k_boundary": 0.0,
+    "omega_boundary": 0.0,
+    "changes": {
+      "k": 5.6744718021329816e-05,
+      "omega": 5.5383950419244114e-05,
+      "k_faces": 2.82674122668618e-05,
+      "omega_faces": 2.7609291085500148e-05,
+      "velocity": 6.7509271885098305e-09,
+      "modified_pressure": 2.224198099192613e-09
+    },
+    "minimum_k": 0.009825701931775448,
+    "minimum_omega": 1.9670000112366388,
+    "frozen_linear_residuals": {
+      "k": 5.273365692887434e-16,
+      "omega": 4.184140658047656e-16
+    }
+  },
+  {
+    "iteration": 7,
+    "momentum": 8.80703123217003e-10,
+    "divergence": 1.6653345369377348e-16,
+    "gauge": 0.0,
+    "k": 7.828688999156462e-06,
+    "omega": 7.76419611994222e-06,
+    "k_boundary": 0.0,
+    "omega_boundary": 0.0,
+    "changes": {
+      "k": 2.0549010178457343e-05,
+      "omega": 2.0221560371296042e-05,
+      "k_faces": 1.0245237884855876e-05,
+      "omega_faces": 1.0089275426786863e-05,
+      "velocity": 0.0,
+      "modified_pressure": 0.0
+    },
+    "minimum_k": 0.009825436145943027,
+    "minimum_omega": 1.9669475134911778,
+    "frozen_linear_residuals": {
+      "k": 5.578745300003866e-16,
+      "omega": 4.1167926952630554e-16
+    }
+  },
+  {
+    "iteration": 8,
+    "momentum": 9.02691696893569e-10,
+    "divergence": 1.6653345369377348e-16,
+    "gauge": 0.0,
+    "k": 2.8181406650962613e-06,
+    "omega": 2.8203158371367896e-06,
+    "k_boundary": 0.0,
+    "omega_boundary": 0.0,
+    "changes": {
+      "k": 7.4410664409274545e-06,
+      "omega": 7.385771533828033e-06,
+      "k_faces": 3.7126703722840056e-06,
+      "omega_faces": 3.687757640481385e-06,
+      "velocity": 0.0,
+      "modified_pressure": 0.0
+    },
+    "minimum_k": 0.00982533910300609,
+    "minimum_omega": 1.9669281726538925,
+    "frozen_linear_residuals": {
+      "k": 4.539140951975773e-16,
+      "omega": 5.624312946070273e-16
+    }
+  },
+  {
+    "iteration": 9,
+    "momentum": 8.962309422121439e-10,
+    "divergence": 1.6653345369377348e-16,
+    "gauge": 0.0,
+    "k": 1.0152207379346754e-06,
+    "omega": 1.025697655438522e-06,
+    "k_boundary": 0.0,
+    "omega_boundary": 0.0,
+    "changes": {
+      "k": 2.69421169154426e-06,
+      "omega": 2.6984183839610526e-06,
+      "k_faces": 1.3451101698510326e-06,
+      "omega_faces": 1.348186266097884e-06,
+      "velocity": 0.0,
+      "modified_pressure": 0.0
+    },
+    "minimum_k": 0.009825303692520385,
+    "minimum_omega": 1.9669210485412032,
+    "frozen_linear_residuals": {
+      "k": 5.147558764033058e-16,
+      "omega": 5.132716689845448e-16
+    }
+  },
+  {
+    "iteration": 10,
+    "momentum": 8.883166860975391e-10,
+    "divergence": 1.6653345369377348e-16,
+    "gauge": 0.0,
+    "k": 3.659231840788427e-07,
+    "omega": 3.7340155635731013e-07,
+    "k_boundary": 0.0,
+    "omega_boundary": 0.0,
+    "changes": {
+      "k": 9.753364078774103e-07,
+      "omega": 9.861389088305368e-07,
+      "k_faces": 4.872097649910561e-07,
+      "omega_faces": 4.929599252566479e-07,
+      "velocity": 0.0,
+      "modified_pressure": 0.0
+    },
+    "minimum_k": 0.009825290779258313,
+    "minimum_omega": 1.9669184248096485,
+    "frozen_linear_residuals": {
+      "k": 6.132357981860798e-16,
+      "omega": 5.070489914507108e-16
+    }
+  },
+  {
+    "iteration": 11,
+    "momentum": 8.832981275026791e-10,
+    "divergence": 1.6653345369377348e-16,
+    "gauge": 0.0,
+    "k": 1.3193812296173462e-07,
+    "omega": 1.3604930898554373e-07,
+    "k_boundary": 0.0,
+    "omega_boundary": 0.0,
+    "changes": {
+      "k": 3.5300305580014286e-07,
+      "omega": 3.604687353707398e-07,
+      "k_faces": 1.7641724253067693e-07,
+      "omega_faces": 1.8027608976521798e-07,
+      "velocity": 0.0,
+      "modified_pressure": 0.0
+    },
+    "minimum_k": 0.009825286073015476,
+    "minimum_omega": 1.9669174586430098,
+    "frozen_linear_residuals": {
+      "k": 5.300590675864025e-16,
+      "omega": 4.937415702530705e-16
+    }
+  },
+  {
+    "iteration": 12,
+    "momentum": 8.806508287219994e-10,
+    "divergence": 1.6653345369377348e-16,
+    "gauge": 0.0,
+    "k": 4.758086136798152e-08,
+    "omega": 4.960452666758858e-08,
+    "k_boundary": 0.0,
+    "omega_boundary": 0.0,
+    "changes": {
+      "k": 1.2772622182100502e-07,
+      "omega": 1.3179084671965602e-07,
+      "k_faces": 6.385776544552902e-08,
+      "omega_faces": 6.593582500730431e-08,
+      "velocity": 0.0,
+      "modified_pressure": 0.0
+    },
+    "minimum_k": 0.009825284358888315,
+    "minimum_omega": 1.966917102898301,
+    "frozen_linear_residuals": {
+      "k": 4.1716998297540923e-16,
+      "omega": 6.325251648646558e-16
+    }
+  },
+  {
+    "iteration": 13,
+    "momentum": 8.793731163027202e-10,
+    "divergence": 1.6653345369377348e-16,
+    "gauge": 0.0,
+    "k": 1.716000726899849e-08,
+    "omega": 1.8096918584021442e-08,
+    "k_boundary": 0.0,
+    "omega_boundary": 0.0,
+    "changes": {
+      "k": 4.619940768410917e-08,
+      "omega": 4.819259717804086e-08,
+      "k_faces": 2.3105482685597655e-08,
+      "omega_faces": 2.411874604126465e-08,
+      "velocity": 0.0,
+      "modified_pressure": 0.0
+    },
+    "minimum_k": 0.009825283734957967,
+    "minimum_omega": 1.9669169719236301,
+    "frozen_linear_residuals": {
+      "k": 5.378923046147221e-16,
+      "omega": 4.486349475078014e-16
+    }
+  },
+  {
+    "iteration": 14,
+    "momentum": 8.787876432569006e-10,
+    "divergence": 1.6653345369377348e-16,
+    "gauge": 0.0,
+    "k": 6.18841517626101e-09,
+    "omega": 6.605615300683646e-09,
+    "k_boundary": 0.0,
+    "omega_boundary": 0.0,
+    "changes": {
+      "k": 1.6704177808202087e-08,
+      "omega": 1.7625598694987727e-08,
+      "k_faces": 8.35652805558322e-09,
+      "omega_faces": 8.823324837655837e-09,
+      "velocity": 0.0,
+      "modified_pressure": 0.0
+    },
+    "minimum_k": 0.009825283508000028,
+    "minimum_omega": 1.9669169237059179,
+    "frozen_linear_residuals": {
+      "k": 5.723054258220341e-16,
+      "omega": 4.882272419009593e-16
+    }
+  },
+  {
+    "iteration": 15,
+    "momentum": 8.785285993699515e-10,
+    "divergence": 1.6653345369377348e-16,
+    "gauge": 0.0,
+    "k": 2.2314694227086507e-09,
+    "omega": 2.4123128070274547e-09,
+    "k_boundary": 0.0,
+    "omega_boundary": 0.0,
+    "changes": {
+      "k": 6.037038705875543e-09,
+      "omega": 6.4471550408313245e-09,
+      "k_faces": 3.0208335518113466e-09,
+      "omega_faces": 3.2281151508530655e-09,
+      "velocity": 0.0,
+      "modified_pressure": 0.0
+    },
+    "minimum_k": 0.009825283425498776,
+    "minimum_omega": 1.9669169059557297,
+    "frozen_linear_residuals": {
+      "k": 5.48598660916624e-16,
+      "omega": 4.944601512697972e-16
+    }
+  }
+]

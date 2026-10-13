@@ -1,0 +1,8 @@
+{
+  "source_integrity_verified": true,
+  "failed_case": "suboff_layer_affine-nonlinear_mmp",
+  "reason": "RuntimeError: nonlinear scalar correction failed current residual/change: {'iteration': 600, 'current_nonlinear_residual': 3.3575959075517885e-10, 'change': 1.6844516588800005e-07}",
+  "completed_field_cases": 3,
+  "failed_candidate_saved": false,
+  "physical_benchmark_passed": false
+}

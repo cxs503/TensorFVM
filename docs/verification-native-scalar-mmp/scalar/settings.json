@@ -1,0 +1,23 @@
+{
+  "levels": [
+    2,
+    4,
+    8
+  ],
+  "velocity": [
+    0.6,
+    -0.3,
+    0.2
+  ],
+  "sink": 0.7,
+  "scalar_correction": "nonlinear_mmp",
+  "scalar": "1+x^2+y^2+z^2",
+  "diffusivity": "1+x",
+  "source": "2*U.dot(x,y,z) - (6+8*x) + sink*phi",
+  "advection": "first-order cell upwind",
+  "diffusion": "native hybrid scalar energy",
+  "boundary": "independent polygon area means, order-4 Gauss integration",
+  "accuracy_gate": 0.03,
+  "ledger_absolute_gate": 1e-08,
+  "physical_suboff_benchmark_passed": false
+}

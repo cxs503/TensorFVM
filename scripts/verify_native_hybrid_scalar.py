@@ -20,12 +20,13 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--levels',type=int,nargs='+',default=[2,4,8])
+    parser.add_argument('--scalar-correction',choices=['none','nonlinear_mmp'],default='none')
     args=parser.parse_args();out=args.output
     if len(args.levels)<3 or sorted(set(args.levels))!=args.levels or min(args.levels)<1:
         parser.error('at least three increasing positive grid levels required')
     evidence=NativeRunEvidence(out,__file__);rows=[]
     U=np.array([.6,-.3,.2]);sink=.7
-    write_json(out/'settings.json',dict(levels=args.levels,velocity=U.tolist(),sink=sink,
+    write_json(out/'settings.json',dict(levels=args.levels,velocity=U.tolist(),sink=sink,scalar_correction=args.scalar_correction,
         scalar='1+x^2+y^2+z^2',diffusivity='1+x',source='2*U.dot(x,y,z) - (6+8*x) + sink*phi',
         advection='first-order cell upwind',diffusion='native hybrid scalar energy',
         boundary='independent polygon area means, order-4 Gauss integration',
@@ -35,7 +36,7 @@ def main():
         boundary=exact_boundary_velocity_means(mesh,lambda p:dict(velocity=
             np.column_stack((1+np.sum(p*p,axis=1),np.zeros((len(p),2))))),order=4)[:,0]
         source=2*x @ U-(6+8*x[:,0])+sink*exact
-        op=NativeHybridScalar3D(mesh,1+x[:,0])
+        op=NativeHybridScalar3D(mesh,1+x[:,0],correction=args.scalar_correction)
         result=op.solve(mesh.area_vectors @ U,source=source,sink=sink,
                         boundary_values=boundary,inflow_values=boundary)
         error=volume_weighted_error(result['cell_values'],exact,mesh.cell_volumes)
@@ -43,12 +44,14 @@ def main():
             'interface_flux_defect_max','global_balance','work_balance','diffusion_energy')}
         passed=bool(error<.03 and max(abs(ledger[k]) for k in ledger if k!='diffusion_energy')<1e-8)
         path=out/f'scalar-n{n}-fields.npz'
+        if 'nonlinear_history' in result:write_json(out/f'scalar-n{n}-nonlinear.json',result['nonlinear_history'])
+        saved={key:value for key,value in result.items() if key!='nonlinear_history'}
         np.savez_compressed(path,vertices=mesh.vertices,cell_offsets=np.r_[0,np.cumsum([len(c) for c in mesh.cells])],
             cell_vertices=np.concatenate(mesh.cells),face_vertices=np.asarray(mesh.face_vertices),
             cell_centers=x,cell_volumes=mesh.cell_volumes,face_centers=mesh.face_centers,
             area_vectors=mesh.area_vectors,owner=mesh.owner,neighbor=mesh.neighbor,
             exact=exact,source=source,sink=sink,boundary_values=boundary,volume_flux=mesh.area_vectors @ U,
-            diffusivity=1+x[:,0],**result)
+            diffusivity=1+x[:,0],**saved)
         row=dict(n=n,cells=len(mesh.cells),faces=len(mesh.owner),relative_l2=error,
                  accuracy_and_ledger_passed=passed,fields_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),**ledger)
         rows.append(row);print(row,flush=True)

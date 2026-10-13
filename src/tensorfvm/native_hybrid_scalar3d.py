@@ -8,14 +8,18 @@ No scalar clipping or general discrete maximum principle is claimed.
 import numpy as np
 from scipy import sparse
 from scipy.sparse.linalg import splu
+import copy
+from .native_scalar_mmp3d import NativeScalarMMP3D, ScalarMMPConvergenceError
 from .native_hybrid_viscous3d import NativeHybridViscous3D
 
 
 class NativeHybridScalar3D:
-    def __init__(self, mesh, diffusivity=1., *, dirichlet_mask=None, stabilization=1.):
+    def __init__(self, mesh, diffusivity=1., *, dirichlet_mask=None, stabilization=1., correction='none'):
         self.mesh = mesh
         self.diffusion = NativeHybridViscous3D(mesh, diffusivity, components=1,
             dirichlet_mask=dirichlet_mask, stabilization=stabilization)
+        if correction not in ('none','nonlinear_mmp'):raise ValueError('unknown scalar diffusion correction')
+        self.mmp=NativeScalarMMP3D(self.diffusion) if correction=='nonlinear_mmp' else None
         self.N, self.F = self.diffusion.N, self.diffusion.F
         self.boundary = mesh.neighbor < 0
         ids = np.arange(self.F); interior = ~self.boundary
@@ -44,6 +48,9 @@ class NativeHybridScalar3D:
         including Neumann diffusion boundaries. sink must be nonnegative.
         Both dt and old_values must be supplied for a transient step.
         """
+        if self.mmp is not None:
+            return self._solve_mmp(volume_flux,source=source,sink=sink,boundary_values=boundary_values,
+                boundary_diffusive_flux=boundary_diffusive_flux,inflow_values=inflow_values,old_values=old_values,dt=dt)
         q = self._array(volume_flux, self.F, 'shared volume flux')
         source = self._array(source, self.N, 'source')
         sink = self._array(sink, self.N, 'sink')
@@ -87,9 +94,16 @@ class NativeHybridScalar3D:
         if not np.isfinite(answer).all() or relative > 1e-9:
             raise RuntimeError(f'hybrid scalar true linear residual failed: {relative:g}')
         state[free] = answer
+        return self._solution_result(state,q,source,sink,old,inverse_dt,inflow,relative)
+
+    def _solution_result(self,state,q,source,sink,old,inverse_dt,inflow_values,linear_residual):
+        volume=self.mesh.cell_volumes
         diffusion = self.diffusion.diagnostics(state)
         cells, faces = state[:self.N], state[self.N:]
-        advective_flux = transport @ cells+face_source
+        upstream=np.where(q>=0,self.mesh.owner,self.mesh.neighbor)
+        advective_flux=q*cells[upstream.clip(min=0)]
+        incoming=self.boundary & (q<0)
+        if incoming.any():advective_flux[incoming]=q[incoming]*np.broadcast_to(np.asarray(inflow_values,float),(self.F,))[incoming]
         diffusive_flux = diffusion['face_flux'][:,0]
         total_flux = advective_flux-diffusive_flux
         storage = volume*inverse_dt*(cells-old)
@@ -113,7 +127,7 @@ class NativeHybridScalar3D:
             interface_flux_defect_max=float(np.max(np.abs(interface),initial=0.)),
             global_balance=global_balance, global_relative_balance=abs(global_balance)/scale,
             diffusion_energy=diffusion['energy_form'], boundary_diffusive_work=diffusion['boundary_work'],
-            work_balance=float(work_balance), linear_relative_residual=relative,
+            work_balance=float(work_balance), linear_relative_residual=linear_residual,
             cell_min=float(cells.min()), face_min=float(faces.min()))
 
     def steady_residual(self, cell_values, face_values, volume_flux=0., *, source=0.,
@@ -123,6 +137,15 @@ class NativeHybridScalar3D:
         No time term, frozen solve or state repair is used. All cell equations
         and free face equations enter the normalized original-system residual.
         """
+        if self.mmp is not None:
+            gn=np.broadcast_to(np.asarray(boundary_diffusive_flux,float),(self.F,))
+            if np.any(gn[self.diffusion.traction_boundary]!=0):
+                raise ValueError('nonlinear scalar correction currently requires homogeneous Neumann data')
+            op=copy.copy(self);op.mmp=None
+            op.diffusion,info=self.mmp.operator(np.r_[cell_values,face_values])
+            result=op.steady_residual(cell_values,face_values,volume_flux,source=source,sink=sink,
+                boundary_values=boundary_values,boundary_diffusive_flux=boundary_diffusive_flux,inflow_values=inflow_values)
+            result.update(info);return result
         cells=self._array(cell_values,self.N,'cell scalar')
         faces=self._array(face_values,self.F,'face scalar')
         q=self._array(volume_flux,self.F,'volume flux')
@@ -161,3 +184,40 @@ class NativeHybridScalar3D:
             interface_flux_defect_max=diff['interface_flux_defect_max'],
             total_flux=total,local_shared_flux_balance=local,
             global_balance=float(total[self.boundary].sum()+destruction.sum()-production.sum()))
+
+    def _solve_mmp(self,volume_flux,**kwargs):
+        gn=np.broadcast_to(np.asarray(kwargs['boundary_diffusive_flux'],float),(self.F,))
+        if np.any(gn[self.diffusion.traction_boundary]!=0):
+            raise ValueError('nonlinear scalar correction currently requires homogeneous Neumann data')
+        linear=copy.copy(self);linear.mmp=None
+        initial=linear.solve(volume_flux,**kwargs)
+        state=np.r_[initial['cell_values'],initial['face_values']]
+        q=self._array(volume_flux,self.F,'volume flux')
+        source=self._array(kwargs['source'],self.N,'source');sink=self._array(kwargs['sink'],self.N,'sink')
+        dt=kwargs['dt'];invdt=0. if dt is None else 1./dt
+        old=np.zeros(self.N) if dt is None else self._array(kwargs['old_values'],self.N,'old scalar')
+        residual_kwargs={key:value for key,value in kwargs.items() if key not in ('old_values','dt')}
+        history=[]
+        for iteration in range(600):
+            linear.diffusion,_=self.mmp.operator(state)
+            solved=linear.solve(q,**kwargs)
+            candidate=np.r_[solved['cell_values'],solved['face_values']]
+            change=float(np.linalg.norm(candidate-state)/max(np.linalg.norm(candidate),1e-30))
+            state=.5*(state+candidate)
+            current,info=self.mmp.operator(state);linear.diffusion=current
+            audit=linear.steady_residual(state[:self.N],state[self.N:],q,**residual_kwargs)
+            residual=audit['free_residual'].copy()
+            residual[:self.N]+=self.mesh.cell_volumes*invdt*(state[:self.N]-old)
+            scale=audit['residual_scale']+np.linalg.norm(self.mesh.cell_volumes*invdt*old)
+            error=float(np.linalg.norm(residual)/max(scale,1e-30))
+            history.append(dict(iteration=iteration+1,current_nonlinear_residual=error,change=change))
+            if max(error,change)<1e-12:
+                result=linear._solution_result(state,q,source,sink,old,invdt,kwargs['inflow_values'],solved['linear_relative_residual'])
+                ledger=max(result['cell_balance_max'],result['interface_flux_defect_max'],abs(result['global_balance']),abs(result['work_balance']))
+                if ledger>1e-8:continue
+                result.update(info,nonlinear_history=history,current_nonlinear_residual=error,
+                              scalar_diffusion_correction='nonlinear_mmp')
+                return result
+        result=linear._solution_result(state,q,source,sink,old,invdt,kwargs['inflow_values'],solved['linear_relative_residual'])
+        result.update(info,nonlinear_history=history,current_nonlinear_residual=error,converged=False)
+        raise ScalarMMPConvergenceError(result)
