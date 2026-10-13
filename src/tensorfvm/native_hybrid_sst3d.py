@@ -20,10 +20,11 @@ class HybridSSTAdmissibilityError(RuntimeError):
 
 
 class NativeHybridSSTTransport3D:
-    def __init__(self, mesh, *, k_dirichlet_mask=None, omega_dirichlet_mask=None, scalar_correction='none'):
+    def __init__(self, mesh, *, k_dirichlet_mask=None, omega_dirichlet_mask=None, scalar_correction='none', mmp_solver='continuation_newton'):
         self.mesh = mesh
         if scalar_correction not in ('none','nonlinear_mmp'):raise ValueError('unknown scalar correction')
         self.scalar_correction=scalar_correction
+        self.mmp_solver=mmp_solver
         self.geometry = NativeHybridScalar3D(mesh,dirichlet_mask=k_dirichlet_mask)
         self.k_mask = self.geometry.diffusion.dirichlet.copy()
         self.omega_mask = (mesh.neighbor < 0) if omega_dirichlet_mask is None else np.asarray(omega_dirichlet_mask,bool).copy()
@@ -71,7 +72,7 @@ class NativeHybridSSTTransport3D:
                 raise ValueError('negative SST source cannot be linearized at zero')
             extra_sink = np.divide(-negative,old,out=np.zeros_like(old),where=old>0)
             coefficient = np.broadcast_to(np.asarray(nu,float),(N,))+sigma*closure['nu_t']
-            op = NativeHybridScalar3D(self.mesh,coefficient,dirichlet_mask=mask,correction=self.scalar_correction)
+            op = NativeHybridScalar3D(self.mesh,coefficient,dirichlet_mask=mask,correction=self.scalar_correction,mmp_solver=self.mmp_solver)
             try:
                 result = op.solve(flux,source=np.maximum(production,0),sink=destruction+extra_sink,
                     boundary_values=bd,inflow_values=inflow,boundary_diffusive_flux=gn,old_values=old,dt=dt)
@@ -105,7 +106,7 @@ class NativeHybridSSTTransport3D:
         for name,cell,face,mask,sigma,source,bd,inflow,gn in [
             ('k',k,kf,self.k_mask,c['sigma_k'],c['k_source'],k_boundary,k_inflow,k_neumann),
             ('omega',omega,wf,self.omega_mask,c['sigma_omega'],c['omega_source'],omega_boundary,omega_inflow,omega_neumann)]:
-            op=NativeHybridScalar3D(self.mesh,np.asarray(nu)+sigma*c['nu_t'],dirichlet_mask=mask,correction=self.scalar_correction)
+            op=NativeHybridScalar3D(self.mesh,np.asarray(nu)+sigma*c['nu_t'],dirichlet_mask=mask,correction=self.scalar_correction,mmp_solver=self.mmp_solver)
             results[name]=op.steady_residual(cell,face,volume_flux,source=source,boundary_values=bd,
                                inflow_values=inflow,boundary_diffusive_flux=gn)
         return dict(closure=c,**results)

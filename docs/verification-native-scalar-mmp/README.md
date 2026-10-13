@@ -1,5 +1,8 @@
 # 混合标量正值修正：通过范围、精度代价与未收敛反例
 
+后续求解器修复见[延续 Newton 验证](../verification-native-mmp-continuation/README.md)。本页保留原 Picard 运行及当时的失败证据。
+
+
 ## 1. 问题定位
 
 [上一阶段](../verification-native-hybrid-rans/README.md)发现三角面低 Re 壁面案例出现负面 k。
