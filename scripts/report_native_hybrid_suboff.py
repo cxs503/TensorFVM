@@ -42,7 +42,8 @@ def main():
             nv=len(rejected['free_velocity_dofs']);defect=rejected['equation_defect']
             assert rejected['candidate'].shape==defect.shape==(nv+len(rejected['cell_volumes']),)
             constraint=defect[nv:]/rejected['cell_volumes']
-            if bool(rejected['gauge']):constraint=constraint[1:]
+            constraint_cells=np.arange(len(rejected['cell_volumes']))
+            if bool(rejected['gauge']):constraint=constraint[1:];constraint_cells=constraint_cells[1:]
             if record['candidate_finite']:
                 assert np.isfinite(rejected['candidate']).all() and np.isfinite(defect).all()
                 np.testing.assert_allclose(float(np.max(np.abs(constraint),initial=0.)),record['algebraic_continuity_defect_per_volume_max'],rtol=1e-12)
@@ -69,6 +70,23 @@ def main():
         if summary['numerically_converged']:
             assert max(mass,momentum,balance)<1e-8
             assert max(history[-1][k] for k in ('current_momentum_residual','divergence_max','velocity_change','pressure_change'))<settings['numerical_tolerance']
+        if rejected_audit is not None and rejected_audit['record']['candidate_finite']:
+            locations=f['cell_centers'][constraint_cells];magnitudes=np.abs(constraint)
+            top=np.argsort(magnitudes)[-20:][::-1]
+            rejected_audit['largest_local_constraints']=[dict(cell=int(constraint_cells[i]),
+                center=locations[i].tolist(),volume=float(v[constraint_cells[i]]),
+                vertex_count=int(f['cell_offsets'][constraint_cells[i]+1]-f['cell_offsets'][constraint_cells[i]]),
+                absolute_defect_per_volume=float(magnitudes[i])) for i in top]
+            fig,axes=plt.subplots(1,2,figsize=(12,4.5),constrained_layout=True)
+            colors=np.log10(np.maximum(magnitudes,1e-20))
+            for ax in axes:
+                points=ax.scatter(locations[:,0],np.linalg.norm(locations[:,1:],axis=1),c=colors,s=6,cmap='magma')
+                ax.set(xlabel='x/L',ylabel='Cell-center radius / L');ax.grid(True)
+            axes[0].set_title('Rejected algebraic candidate: local continuity defect')
+            axes[1].set(xlim=(-.05,1.05),ylim=(0,.1),title='Near-body cells; NOT a converged flow field')
+            fig.colorbar(points,ax=axes,label='log10(abs(equation defect / cell volume))')
+            fig.savefig(root/'rejected-linear-local-defects.png',dpi=180)
+            fig.savefig(root/'rejected-linear-local-defects.pdf');plt.close(fig)
         mesh=SimpleNamespace(vertices=f['vertices'],cells=list(range(len(v))),cell_centers=f['cell_centers'],face_centers=f['face_centers'],face_vertices=f['face_vertices'],owner=owner,neighbor=neighbor)
         trace=NativeBoundaryPressureTrace3D(mesh,wall).reconstruct(f['pressure'])
         np.testing.assert_array_equal(trace['face_indices'],np.flatnonzero(wall))
