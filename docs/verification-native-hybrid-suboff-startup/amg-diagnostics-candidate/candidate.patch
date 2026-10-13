@@ -1,0 +1,164 @@
+diff --git a/scripts/run_native_hybrid_suboff.py b/scripts/run_native_hybrid_suboff.py
+index c4dd42f..7693b09 100644
+--- a/scripts/run_native_hybrid_suboff.py
++++ b/scripts/run_native_hybrid_suboff.py
+@@ -8,6 +8,7 @@ import shutil
+ import time
+ import numpy as np
+ from tensorfvm.native_mesh3d import NativeMesh3D
++from tensorfvm.native_block_solver3d import NativeBlockSolveError
+ from tensorfvm.native_hybrid_ns3d import NativeHybridNavierStokes3D
+ from tensorfvm.native_boundary_constraints3d import require_rigid_motion_constraints
+ from tensorfvm.verification.native_run import NativeRunEvidence,write_json
+@@ -94,6 +95,13 @@ def main():
+             max_iterations=a.momentum_iterations,relaxation=a.momentum_relaxation,tolerance=a.tolerance,callback=progress)
+     except (RuntimeError,ValueError) as exc:
+         failure=f'{type(exc).__name__}: {exc}';s.nonlinear_converged=False;r=s.result()
++        if isinstance(exc,NativeBlockSolveError):
++            np.savez_compressed(out/'rejected-linear-candidate.npz',candidate=exc.candidate,
++                equation_defect=exc.defect,free_velocity_dofs=s.viscous.free,
++                cell_volumes=m.cell_volumes,gauge=np.asarray(s.gauge))
++            write_json(out/'rejected-linear-candidate.json',dict(**exc.record,
++                fields_sha256=hashlib.sha256((out/'rejected-linear-candidate.npz').read_bytes()).hexdigest(),
++                changes_accepted_state=False))
+         print(dict(failure=failure),flush=True)
+     area=np.linalg.norm(m.area_vectors,axis=1);normal=m.area_vectors/area[:,None]
+     t=r['total_traction_integrated'];wall_force=-t[wall].sum(0)
+diff --git a/src/tensorfvm/native_block_solver3d.py b/src/tensorfvm/native_block_solver3d.py
+index de46316..8b1564c 100644
+--- a/src/tensorfvm/native_block_solver3d.py
++++ b/src/tensorfvm/native_block_solver3d.py
+@@ -11,6 +11,15 @@ from scipy import sparse
+ from scipy.sparse.linalg import LinearOperator,gmres
+ 
+ 
++class NativeBlockSolveError(RuntimeError):
++    """Rejected algebraic candidate, retained separately from accepted flow state."""
++    def __init__(self, message, candidate, defect, record):
++        super().__init__(message)
++        self.candidate = candidate.copy()
++        self.defect = defect.copy()
++        self.record = record
++
++
+ class NativeHybridBlockSolver3D:
+     def __init__(self,solver):
+         try:
+@@ -77,11 +86,30 @@ class NativeHybridBlockSolver3D:
+             rtol=1e-13,atol=0.,restart=80,maxiter=30,
+             callback=lambda residual:history.append(float(residual)),callback_type='pr_norm')
+         if s.gauge:answer=np.r_[answer[:nv],gauge,answer[nv:]]
+-        error=float(np.linalg.norm(matrix@answer-rhs)/max(np.linalg.norm(rhs),np.finfo(float).tiny))
++        defect=matrix@answer-rhs
++        error=float(np.linalg.norm(defect)/max(np.linalg.norm(rhs),np.finfo(float).tiny))
++        # Integrated continuity residuals can hide large local divergence on
++        # thin cells. The replaced gauge row is a pressure constraint.
++        constraint=defect[nv:]/s.mesh.cell_volumes
++        if s.gauge:constraint=constraint[1:]
++        constraint_max=float(np.max(np.abs(constraint),initial=0.))
++        gauge_error=float(abs(defect[nv])) if s.gauge else 0.
++        finite=bool(np.isfinite(answer).all() and np.isfinite(defect).all()
++                    and np.isfinite([error,constraint_max,gauge_error]).all())
++        accepted=bool(info==0 and finite and error<=1e-9
++                      and constraint_max<=1e-8 and gauge_error<=1e-9)
+         record=dict(method='block_amg',gmres_info=int(info),gmres_iterations=len(history),
+-            true_relative_residual=error,preconditioned_residual_history=history,
++            true_relative_residual=error if np.isfinite(error) else None,
++            algebraic_continuity_defect_per_volume_max=constraint_max if np.isfinite(constraint_max) else None,
++            gauge_equation_defect=gauge_error if np.isfinite(gauge_error) else None,
++            momentum_equation_defect_max=float(np.max(np.abs(defect[:nv]))) if finite else None,
++            candidate_finite=finite,accepted=accepted,
++            candidate_kind='algebraic solution or Newton increment; not accepted physical flow',
++            preconditioned_residual_history=[v if np.isfinite(v) else None for v in history],
+             operator_complexities=self.complexities,setup_seconds=self.setup_seconds,
+             solve_seconds=time.perf_counter()-start,pyamg_version=self.pyamg_version)
+-        if info!=0 or not np.isfinite(answer).all() or not np.isfinite(error) or error>1e-9:
+-            raise RuntimeError(f'block AMG failed CURRENT true residual: info={info}, residual={error:g}')
++        if not accepted:
++            raise NativeBlockSolveError(
++                f'block AMG failed CURRENT true residual: info={info}, residual={error:g}, '
++                f'constraint_per_volume={constraint_max:g}', answer, defect, record)
+         return answer,error,record
+diff --git a/src/tensorfvm/native_hybrid_stokes3d.py b/src/tensorfvm/native_hybrid_stokes3d.py
+index 2a91e5a..5acb081 100644
+--- a/src/tensorfvm/native_hybrid_stokes3d.py
++++ b/src/tensorfvm/native_hybrid_stokes3d.py
+@@ -12,7 +12,7 @@ from scipy.sparse.linalg import splu, gmres, LinearOperator
+ 
+ from .native_hybrid_viscous3d import NativeHybridViscous3D
+ from .native_face_mean3d import NativeFaceMean3D
+-from .native_block_solver3d import NativeHybridBlockSolver3D
++from .native_block_solver3d import NativeHybridBlockSolver3D, NativeBlockSolveError
+ 
+ 
+ class NativeHybridStokes3D:
+@@ -124,7 +124,11 @@ class NativeHybridStokes3D:
+         if self.coupled_linear_method == 'block_amg':
+             if self._block_preconditioner is None:
+                 self._block_preconditioner = NativeHybridBlockSolver3D(self)
+-            answer,residual,record = self._block_preconditioner.solve(matrix,rhs)
++            try:
++                answer,residual,record = self._block_preconditioner.solve(matrix,rhs)
++            except NativeBlockSolveError as exc:
++                self.coupled_linear_history.append(exc.record)
++                raise
+             self.coupled_linear_history.append(record)
+             return answer,residual
+         matrix = matrix.tocsc()
+diff --git a/tests/test_native_block_solver3d.py b/tests/test_native_block_solver3d.py
+index 50b7dce..3a6b2e5 100644
+--- a/tests/test_native_block_solver3d.py
++++ b/tests/test_native_block_solver3d.py
+@@ -57,3 +57,52 @@ def test_variable_viscosity_and_component_symmetry_match_direct(kind):
+         answers.append(r)
+     for key in ('velocity','pressure','total_traction_integrated'):
+         np.testing.assert_allclose(answers[0][key],answers[1][key],atol=1e-8)
++
++
++def test_failed_gmres_retains_candidate_and_keeps_accepted_state(monkeypatch):
++    import tensorfvm.native_block_solver3d as module
++    _,s,_=potential_solver(2,.1);s.coupled_linear_method='block_amg'
++    old=s.state.copy();old_p=s.p.copy()
++    monkeypatch.setattr(module,'gmres',lambda a,b,**kw:(np.zeros_like(b),30))
++    with pytest.raises(module.NativeBlockSolveError) as error:s.initialize_stokes()
++    failure=error.value
++    assert failure.record['gmres_info']==30
++    assert not failure.record['accepted']
++    assert failure.candidate.shape==failure.defect.shape==(len(s.viscous.free)+s.N,)
++    assert s.coupled_linear_history[-1]==failure.record
++    assert np.linalg.norm(failure.defect)>0
++    np.testing.assert_array_equal(s.state,old);np.testing.assert_array_equal(s.p,old_p)
++
++
++def test_small_global_residual_cannot_hide_local_mass_defect(monkeypatch):
++    import tensorfvm.native_block_solver3d as module
++    from tensorfvm.native_mesh3d import NativeMesh3D
++    from tensorfvm.verification.native_hybrid_flow import channel_mesh
++    from scipy.sparse.linalg import spsolve
++    base=channel_mesh(2,triangulate_faces=False)
++    m=NativeMesh3D.from_cells(base.vertices*.01,base.cells,base.cell_types,triangulate_faces=False)
++    s=NativeHybridStokes3D(m,m.neighbor<0,viscosity=1e-4,
++        body_force=[.7,-.3,.2],gauge_value=.4,coupled_linear_method='block_amg')
++    face=np.flatnonzero(m.neighbor>=0)[0];axis=np.argmax(abs(m.area_vectors[face]))
++    position=np.flatnonzero(s.viscous.free==3*s.N+3*face+axis)[0]
++    def inaccurate(matrix,rhs,**kwargs):
++        candidate=spsolve(matrix,rhs);candidate[position]+=1e-9
++        return candidate,0
++    monkeypatch.setattr(module,'gmres',inaccurate)
++    old=s.state.copy();old_p=s.p.copy()
++    with pytest.raises(module.NativeBlockSolveError) as error:s.solve(algorithm='coupled')
++    record=error.value.record
++    assert record['gmres_info']==0 and record['true_relative_residual']<1e-9
++    assert record['algebraic_continuity_defect_per_volume_max']>1e-8
++    np.testing.assert_array_equal(s.state,old);np.testing.assert_array_equal(s.p,old_p)
++
++
++def test_nonfinite_rejected_candidate_record_is_json_serializable(monkeypatch):
++    import json
++    import tensorfvm.native_block_solver3d as module
++    _,s,_=potential_solver(2,.1);s.coupled_linear_method='block_amg'
++    monkeypatch.setattr(module,'gmres',lambda a,b,**kw:(np.full_like(b,np.nan),0))
++    with pytest.raises(module.NativeBlockSolveError) as error:s.initialize_stokes()
++    assert not error.value.record['candidate_finite']
++    assert error.value.record['true_relative_residual'] is None
++    json.dumps(error.value.record,allow_nan=False)
