@@ -54,7 +54,7 @@ class NativeHybridBlockSolver3D:
         for positions,cycle in self.groups:result[positions]=cycle@rhs[positions]
         return result
 
-    def solve(self,matrix,rhs):
+    def solve(self,matrix,rhs,*,allow_inexact=False):
         s=self.solver;nv=len(s.viscous.free);matrix=matrix.tocsr();rhs=np.asarray(rhs,float)
         if matrix.shape!=(nv+s.N,nv+s.N) or rhs.shape!=(nv+s.N,):
             raise ValueError('block solver requires the native coupled velocity/pressure system')
@@ -83,7 +83,7 @@ class NativeHybridBlockSolver3D:
         history=[]
         answer,info=gmres(reduced,reduced_rhs,
             M=LinearOperator(reduced.shape,matvec=precondition,dtype=float),
-            rtol=1e-13,atol=0.,restart=80,maxiter=30,
+            rtol=1e-13,atol=0.,restart=80,maxiter=60,
             callback=lambda residual:history.append(float(residual)),callback_type='pr_norm')
         if s.gauge:answer=np.r_[answer[:nv],gauge,answer[nv:]]
         defect=matrix@answer-rhs
@@ -96,14 +96,19 @@ class NativeHybridBlockSolver3D:
         gauge_error=float(abs(defect[nv])) if s.gauge else 0.
         finite=bool(np.isfinite(answer).all() and np.isfinite(defect).all()
                     and np.isfinite([error,constraint_max,gauge_error]).all())
-        accepted=bool(info==0 and finite and error<=1e-9
+        original_criteria=bool(finite and error<=1e-9
                       and constraint_max<=1e-8 and gauge_error<=1e-9)
-        record=dict(method='block_amg',gmres_info=int(info),gmres_iterations=len(history),
+        # An iteration-limit direction may be useful to damped Newton only.
+        # Its original matrix checks remain mandatory; breakdown is rejected.
+        accepted=bool(original_criteria and (info==0 or (allow_inexact and info>0)))
+        record=dict(method='block_amg',gmres_restart=80,gmres_max_restart_cycles=60,gmres_info=int(info),gmres_iterations=len(history),
             true_relative_residual=error if np.isfinite(error) else None,
             algebraic_continuity_defect_per_volume_max=constraint_max if np.isfinite(constraint_max) else None,
             gauge_equation_defect=gauge_error if np.isfinite(gauge_error) else None,
             momentum_equation_defect_max=float(np.max(np.abs(defect[:nv]))) if finite else None,
             candidate_finite=finite,accepted=accepted,
+            gmres_target_reached=bool(info==0),original_criteria_satisfied=original_criteria,
+            inexact_direction_allowed=bool(allow_inexact),
             candidate_kind='algebraic solution or Newton increment; not accepted physical flow',
             preconditioned_residual_history=[v if np.isfinite(v) else None for v in history],
             operator_complexities=self.complexities,setup_seconds=self.setup_seconds,
