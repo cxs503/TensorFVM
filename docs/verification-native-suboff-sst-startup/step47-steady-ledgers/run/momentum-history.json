@@ -1,0 +1,542 @@
+[
+  {
+    "iteration": 1,
+    "momentum_relative_residual": 2.3390313571032995e-14,
+    "divergence_max": 1.4432300030566363e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.6753186548882525e-15,
+    "simplec_limited_dofs": 6722,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 2,
+    "momentum_relative_residual": 2.078153519131124e-14,
+    "divergence_max": 3.141072838281879e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.6774712690446555e-15,
+    "simplec_limited_dofs": 6722,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 3,
+    "momentum_relative_residual": 1.7244476321348516e-14,
+    "divergence_max": 1.5457290023856473e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.649154217035477e-15,
+    "simplec_limited_dofs": 6722,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 4,
+    "momentum_relative_residual": 1.4084591594053283e-14,
+    "divergence_max": 3.2532540110776605e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.6111083893306364e-15,
+    "simplec_limited_dofs": 6722,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 5,
+    "momentum_relative_residual": 1.182739749971591e-14,
+    "divergence_max": 3.117964248498402e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.625551790984057e-15,
+    "simplec_limited_dofs": 6722,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 6,
+    "momentum_relative_residual": 1.0299805720080836e-14,
+    "divergence_max": 2.2991049509129628e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.622977709410833e-15,
+    "simplec_limited_dofs": 6722,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 7,
+    "momentum_relative_residual": 9.234959566453244e-15,
+    "divergence_max": 2.1071933064928195e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.6507889837454695e-15,
+    "simplec_limited_dofs": 6722,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 8,
+    "momentum_relative_residual": 8.316716324443698e-15,
+    "divergence_max": 1.7497357739539653e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.674703328773586e-15,
+    "simplec_limited_dofs": 6722,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 9,
+    "momentum_relative_residual": 7.746918680216357e-15,
+    "divergence_max": 1.6905877069164075e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.635660709695569e-15,
+    "simplec_limited_dofs": 6722,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 10,
+    "momentum_relative_residual": 7.224323485719689e-15,
+    "divergence_max": 2.2315445998392127e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.592188911109483e-15,
+    "simplec_limited_dofs": 6722,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 11,
+    "momentum_relative_residual": 6.799117381577002e-15,
+    "divergence_max": 3.1407532342939127e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.641507078962374e-15,
+    "simplec_limited_dofs": 6722,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 12,
+    "momentum_relative_residual": 6.5637341391633246e-15,
+    "divergence_max": 1.6171483514944888e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.656073464327983e-15,
+    "simplec_limited_dofs": 6722,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 13,
+    "momentum_relative_residual": 6.34077666013673e-15,
+    "divergence_max": 2.7591307270893062e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.675409539867167e-15,
+    "simplec_limited_dofs": 6722,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 14,
+    "momentum_relative_residual": 6.170080740652189e-15,
+    "divergence_max": 1.826686125382902e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.662835638390286e-15,
+    "simplec_limited_dofs": 6722,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 15,
+    "momentum_relative_residual": 6.0519272040967434e-15,
+    "divergence_max": 2.019261110324065e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.645079750449875e-15,
+    "simplec_limited_dofs": 6722,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 16,
+    "momentum_relative_residual": 5.887628063897505e-15,
+    "divergence_max": 3.037715157348669e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.629645092920997e-15,
+    "simplec_limited_dofs": 6722,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 17,
+    "momentum_relative_residual": 5.796252255920711e-15,
+    "divergence_max": 2.060761538904876e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.5912535308596725e-15,
+    "simplec_limited_dofs": 6722,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 18,
+    "momentum_relative_residual": 5.733132377237001e-15,
+    "divergence_max": 1.8546853850143886e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.599444017631689e-15,
+    "simplec_limited_dofs": 6722,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 19,
+    "momentum_relative_residual": 5.6632183520155554e-15,
+    "divergence_max": 2.318410904446149e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.5857568105191595e-15,
+    "simplec_limited_dofs": 6722,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 20,
+    "momentum_relative_residual": 5.653618511490284e-15,
+    "divergence_max": 1.3542672998528411e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.595907426122067e-15,
+    "simplec_limited_dofs": 6722,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 1,
+    "momentum_relative_residual": 1.2762931347264874e-14,
+    "divergence_max": 1.8411974790957257e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.644251416226238e-15,
+    "simplec_limited_dofs": 6724,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 2,
+    "momentum_relative_residual": 1.1585025097693098e-14,
+    "divergence_max": 1.6180794305475322e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.61977968409299e-15,
+    "simplec_limited_dofs": 6724,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 3,
+    "momentum_relative_residual": 9.870788073145624e-15,
+    "divergence_max": 1.5394236435787772e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.62167779165113e-15,
+    "simplec_limited_dofs": 6724,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 4,
+    "momentum_relative_residual": 8.490020557623381e-15,
+    "divergence_max": 1.7060334069800393e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.554966092395464e-15,
+    "simplec_limited_dofs": 6724,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 5,
+    "momentum_relative_residual": 7.59624551395501e-15,
+    "divergence_max": 1.2829830657499443e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.61599307157097e-15,
+    "simplec_limited_dofs": 6724,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 6,
+    "momentum_relative_residual": 7.019413247918465e-15,
+    "divergence_max": 2.0225992881844153e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.608945442886518e-15,
+    "simplec_limited_dofs": 6724,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 7,
+    "momentum_relative_residual": 6.573130269515254e-15,
+    "divergence_max": 1.9617112104776905e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.600793848507417e-15,
+    "simplec_limited_dofs": 6724,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 8,
+    "momentum_relative_residual": 6.299693272993317e-15,
+    "divergence_max": 1.804227548806172e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.580983743365303e-15,
+    "simplec_limited_dofs": 6724,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 9,
+    "momentum_relative_residual": 6.108282903168407e-15,
+    "divergence_max": 1.6617885317951582e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.577320918923805e-15,
+    "simplec_limited_dofs": 6724,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 10,
+    "momentum_relative_residual": 5.954893604992548e-15,
+    "divergence_max": 1.5705364191409395e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.581607935567011e-15,
+    "simplec_limited_dofs": 6724,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 11,
+    "momentum_relative_residual": 5.8187675533167556e-15,
+    "divergence_max": 1.5706157379396904e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.5524316191706123e-15,
+    "simplec_limited_dofs": 6724,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 12,
+    "momentum_relative_residual": 5.710397708950604e-15,
+    "divergence_max": 2.7917158788333936e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.567829358659664e-15,
+    "simplec_limited_dofs": 6724,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 13,
+    "momentum_relative_residual": 5.621824758876906e-15,
+    "divergence_max": 2.0437292017962556e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.556067105372038e-15,
+    "simplec_limited_dofs": 6724,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 14,
+    "momentum_relative_residual": 5.588615878317037e-15,
+    "divergence_max": 1.4439392061582065e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.5706152186147016e-15,
+    "simplec_limited_dofs": 6724,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 15,
+    "momentum_relative_residual": 5.5599373911329934e-15,
+    "divergence_max": 1.8880433127837038e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.545789801444152e-15,
+    "simplec_limited_dofs": 6724,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 16,
+    "momentum_relative_residual": 5.5568864020184475e-15,
+    "divergence_max": 2.502178880025518e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.5992592427030194e-15,
+    "simplec_limited_dofs": 6724,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 17,
+    "momentum_relative_residual": 5.5413697890269215e-15,
+    "divergence_max": 1.3656432633727286e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.605229731060421e-15,
+    "simplec_limited_dofs": 6724,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 18,
+    "momentum_relative_residual": 5.5584631083749e-15,
+    "divergence_max": 1.203843514823949e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.6441505869382176e-15,
+    "simplec_limited_dofs": 6724,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 19,
+    "momentum_relative_residual": 5.562720624801438e-15,
+    "divergence_max": 1.3547599005763537e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.609051480606099e-15,
+    "simplec_limited_dofs": 6724,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 20,
+    "momentum_relative_residual": 5.511625066348908e-15,
+    "divergence_max": 2.28973504322764e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.598339100650418e-15,
+    "simplec_limited_dofs": 6724,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 1,
+    "momentum_relative_residual": 8.10754302810759e-15,
+    "divergence_max": 1.4583552463451582e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.6275159502177116e-15,
+    "simplec_limited_dofs": 6713,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 2,
+    "momentum_relative_residual": 7.578831914278384e-15,
+    "divergence_max": 2.1027400146973828e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.5800578488996436e-15,
+    "simplec_limited_dofs": 6713,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 3,
+    "momentum_relative_residual": 6.954470403317939e-15,
+    "divergence_max": 1.4535329630039563e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.559787376475049e-15,
+    "simplec_limited_dofs": 6713,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 4,
+    "momentum_relative_residual": 6.418665101485932e-15,
+    "divergence_max": 1.8067112866102058e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.595008702432375e-15,
+    "simplec_limited_dofs": 6713,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 5,
+    "momentum_relative_residual": 6.099578439500448e-15,
+    "divergence_max": 1.9070799375282838e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.555105025018615e-15,
+    "simplec_limited_dofs": 6713,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 6,
+    "momentum_relative_residual": 5.915062132412247e-15,
+    "divergence_max": 1.2713333480525441e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.57972395938124e-15,
+    "simplec_limited_dofs": 6713,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 7,
+    "momentum_relative_residual": 5.763613867327478e-15,
+    "divergence_max": 1.2159488051858581e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.598048403577161e-15,
+    "simplec_limited_dofs": 6713,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 8,
+    "momentum_relative_residual": 5.722273773974102e-15,
+    "divergence_max": 1.703855532293664e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.597483165256217e-15,
+    "simplec_limited_dofs": 6713,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 9,
+    "momentum_relative_residual": 5.6013415300392704e-15,
+    "divergence_max": 1.6715065815561773e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.587431419978125e-15,
+    "simplec_limited_dofs": 6713,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 10,
+    "momentum_relative_residual": 5.58153658805506e-15,
+    "divergence_max": 1.4179013653477936e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.592083117703015e-15,
+    "simplec_limited_dofs": 6713,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 11,
+    "momentum_relative_residual": 5.545845026763769e-15,
+    "divergence_max": 2.858352578962504e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.5940515911117525e-15,
+    "simplec_limited_dofs": 6713,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 12,
+    "momentum_relative_residual": 5.539893249261632e-15,
+    "divergence_max": 1.3542672998528411e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.581652826545916e-15,
+    "simplec_limited_dofs": 6713,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 13,
+    "momentum_relative_residual": 5.545124954393376e-15,
+    "divergence_max": 1.3916804964931496e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.57232955134755e-15,
+    "simplec_limited_dofs": 6713,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 14,
+    "momentum_relative_residual": 5.53910099553533e-15,
+    "divergence_max": 3.892549573486988e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.61273843554476e-15,
+    "simplec_limited_dofs": 6713,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 15,
+    "momentum_relative_residual": 5.527352375326024e-15,
+    "divergence_max": 1.6866288900304305e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.612853594378488e-15,
+    "simplec_limited_dofs": 6713,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 16,
+    "momentum_relative_residual": 5.585333873340211e-15,
+    "divergence_max": 2.3027641083447195e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.627731362295528e-15,
+    "simplec_limited_dofs": 6713,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 17,
+    "momentum_relative_residual": 5.526225129583558e-15,
+    "divergence_max": 2.1676158409221657e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.6253862949883306e-15,
+    "simplec_limited_dofs": 6713,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 18,
+    "momentum_relative_residual": 5.519566100084154e-15,
+    "divergence_max": 2.4303806724063578e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.583498072675124e-15,
+    "simplec_limited_dofs": 6713,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 19,
+    "momentum_relative_residual": 5.558202391532072e-15,
+    "divergence_max": 1.7973034672433843e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 5.825827178346684e-15,
+    "simplec_limited_dofs": 6713,
+    "momentum_relaxation_basis": "diagonal"
+  },
+  {
+    "iteration": 20,
+    "momentum_relative_residual": 5.4900633632288346e-15,
+    "divergence_max": 2.5639023061982443e-14,
+    "boundary_velocity_error": 0.0,
+    "true_linear_relative_residual": 3.575232507097511e-15,
+    "simplec_limited_dofs": 6713,
+    "momentum_relaxation_basis": "diagonal"
+  }
+]

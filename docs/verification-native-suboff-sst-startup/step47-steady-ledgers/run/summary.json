@@ -1,0 +1,53 @@
+{
+  "initialized": true,
+  "startup_steps_completed": true,
+  "completed_steps": 3,
+  "failure": null,
+  "completed_steps_before_restart": 44,
+  "total_completed_steps": 47,
+  "numerically_converged": false,
+  "solver_converged": true,
+  "steady_ledger_acceptance": {
+    "passed": true,
+    "flow_passed": true,
+    "flow": {
+      "local_momentum_balance_max": 1.0519363158323358e-14,
+      "global_momentum_balance_max": 5.742740943206164e-14,
+      "interface_traction_defect_max": 1.2823075934420558e-14,
+      "energy_balance_error": 5.0459636469213365e-14
+    },
+    "scalar": {
+      "k": {
+        "cell_balance_max": 1.6600408022882093e-18,
+        "interface_flux_defect_max": 3.360421238496675e-22,
+        "global_balance": 3.346870696574076e-17,
+        "work_balance": 6.8529024162588925e-22,
+        "relative_work_balance": 1.8532595924846592e-14,
+        "absolute_work_gate_passed": true,
+        "work_balance_policy": "relative",
+        "cell_constraint_error": 0.0,
+        "passed": true
+      },
+      "omega": {
+        "cell_balance_max": 3.055902197957039e-10,
+        "interface_flux_defect_max": 1.3642420526593924e-12,
+        "global_balance": 5.122274160385132e-09,
+        "work_balance": 0.03949406296202632,
+        "relative_work_balance": 3.5294416349048385e-20,
+        "absolute_work_gate_passed": false,
+        "work_balance_policy": "relative",
+        "cell_constraint_error": 0.0,
+        "passed": true
+      }
+    }
+  },
+  "qualification": "startup diagnostic only; complete independent RANS force/work/transport audit not performed",
+  "physical_suboff_benchmark_passed": false,
+  "cells": 1331,
+  "faces": 3556,
+  "Re_L": 10.0,
+  "wall_function_verified": false,
+  "source_integrity_verified": true,
+  "fields_sha256": "322ca2a6ce120c16210d96135c63ee895c3e62e028139b9810478db6261be16b",
+  "runtime_seconds": 71.95085124950856
+}

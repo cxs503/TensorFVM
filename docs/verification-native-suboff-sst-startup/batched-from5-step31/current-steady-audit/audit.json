@@ -1,0 +1,64 @@
+{
+  "source_integrity_verified": true,
+  "producer_sources_verified": true,
+  "reconstructed_sha256": "b2e7e65f4bba5fb100212c00a6a02d4cc7e3fe9dadd50646cee1b3f3ab37a15f",
+  "producer_solver_converged": true,
+  "current_equations": {
+    "momentum": 2.4721830095947286e-11,
+    "divergence": 2.0178591561142025e-14,
+    "velocity_boundary": 0.0,
+    "gauge": 0.0,
+    "k": 2.968762851460366e-09,
+    "omega": 6.476257760890433e-16,
+    "k_boundary": 0.0,
+    "omega_boundary": 0.0
+  },
+  "flow": {
+    "mass_divergence_max": 1.8435372317206784e-14,
+    "local_momentum_balance_max": 1.2754325373620645e-11,
+    "global_momentum_balance_max": 7.503836926283335e-10,
+    "interface_traction_defect_max": 8.882498903073355e-12,
+    "energy_balance_error": 4.2169234770739195e-10,
+    "wall_force": [
+      0.39643397838270994,
+      0.0005678442005498871,
+      -0.0014660048760296747
+    ],
+    "Cd_L2": 0.7928679567654199,
+    "pressure_work": 8.542260370810887e-19,
+    "viscous_energy": 0.3961763852748406,
+    "convection_power": 0.0002677645060374795,
+    "external_work": 0.39644414935918576
+  },
+  "scalar": {
+    "k": {
+      "cell_balance_max": 1.7248048480682954e-13,
+      "interface_flux_defect_max": 6.839584253925337e-19,
+      "global_balance": 3.690390562463269e-12,
+      "work_balance": 7.681509449226876e-17,
+      "work_balance_scale": 3.6977563368754475e-08,
+      "relative_work_balance": 2.0773433264447177e-09,
+      "absolute_work_gate_passed": true,
+      "work_balance_policy": "relative",
+      "relative_current_residual": 2.968762851460366e-09,
+      "current_steady_ledger_passed": false
+    },
+    "omega": {
+      "cell_balance_max": 1.2363307178020477e-07,
+      "interface_flux_defect_max": 2.5049757823580876e-09,
+      "global_balance": -6.416812539100647e-06,
+      "work_balance": 37.64281424392078,
+      "work_balance_scale": 1.1189889803374287e+18,
+      "relative_work_balance": 3.36400222927751e-17,
+      "absolute_work_gate_passed": false,
+      "work_balance_policy": "relative",
+      "relative_current_residual": 6.476257760890433e-16,
+      "current_steady_ledger_passed": false
+    }
+  },
+  "current_steady_ledgers_passed": false,
+  "scalar_precision": "float64",
+  "numerical_qualification": false,
+  "physical_suboff_benchmark_passed": false,
+  "qualification": "diagnostic audit only; all convergence, mesh and physical-reference gates remain required"
+}

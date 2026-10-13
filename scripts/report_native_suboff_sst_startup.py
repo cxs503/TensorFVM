@@ -11,6 +11,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.collections import PolyCollection
+from matplotlib.ticker import MaxNLocator
 from tensorfvm.native_sections3d import cell_section_polygons
 
 
@@ -91,7 +92,27 @@ def main():
             ax.grid(True,alpha=.25);ax.legend()
         axes[0].set(ylabel='Current steady equation residual',title='Accepted coupled iterations; not physical qualification')
         axes[1].set(ylabel='Relative change',xlabel='Completed coupled iteration')
+        axes[1].xaxis.set_major_locator(MaxNLocator(integer=True))
         fig.savefig(root/'residual-history.png',dpi=160);fig.savefig(root/'residual-history.pdf');plt.close(fig)
+        checked=[(row['iteration']+offset,row['steady_ledger_acceptance']) for row in history
+                 if row.get('steady_ledger_acceptance') is not None]
+        if checked:
+            iterations=[item[0] for item in checked]
+            fig,axes=plt.subplots(2,1,figsize=(9,7),sharex=True,constrained_layout=True)
+            for name in ('k','omega'):
+                scalar=[item[1]['scalar'][name] for item in checked]
+                flux=[max(abs(r[key]) for key in ('cell_balance_max','interface_flux_defect_max','global_balance')) for r in scalar]
+                axes[0].semilogy(iterations,np.maximum(flux,1e-30),marker='o',label=name+' max local/interface/global flux defect')
+                axes[1].semilogy(iterations,[max(r['relative_work_balance'],1e-30) for r in scalar],marker='o',label=name+' relative work defect')
+            axes[0].semilogy(iterations,[max(max(abs(v) for v in item[1]['flow'].values()),1e-30) for item in checked],marker='o',label='max momentum / energy defect')
+            axes[0].axhline(1e-8,ls='--',color='.4',label='absolute flux / momentum gate')
+            if settings.get('scalar_work_balance_policy','absolute')=='relative':
+                axes[1].axhline(1e-12,ls='--',color='.4',label='selected relative work gate')
+            for ax in axes:ax.grid(True,alpha=.25);ax.legend()
+            axes[0].set(ylabel='Absolute steady defect',title='Current steady ledgers; transient storage excluded')
+            axes[1].set(ylabel='Relative work defect',xlabel='Completed coupled iteration')
+            axes[1].xaxis.set_major_locator(MaxNLocator(integer=True))
+            fig.savefig(root/'steady-ledger-history.png',dpi=160);fig.savefig(root/'steady-ledger-history.pdf');plt.close(fig)
 
 
 if __name__=='__main__':main()
