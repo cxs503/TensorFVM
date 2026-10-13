@@ -35,3 +35,5 @@ OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 PYTHONPATH=src python scripts/verify_na
 ```
 
 当前改进尚不提供高 Re 壁面函数、Cp/Cd <3% 或网格收敛结论。
+
+补充：原行和松弛两组各 100 步已结束，详见[完整四组对照](../frozen-momentum-four-way/README.md)。α=0.5/0.9 的动量残差分别为 4.6027e-7、1.4929e-7，均未收敛。批次接口及复现脚本选项已合入 main；所有运行仍保留各自原始源码快照。

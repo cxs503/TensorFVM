@@ -1,0 +1,17 @@
+{
+  "scope": "Compare native momentum iterations at a frozen saved SUBOFF SST viscosity.\n\nThis is one momentum subproblem, not a full steady RANS qualification.\n",
+  "input_bindings": {
+    "fields.npz": "40d69fa1ef59db2db4c09142d6dbd86ec69d5ef1b2c427fd51234cab50fffa8b",
+    "settings.json": "94ff99f5d717b80bca6494bd635e294ac2afdfee60307ba9dfe97b7e84e5e07e",
+    "summary.json": "616ab47b8dcc40bd72d7e645d1a65e715e4a142b1ed275a2cbea89a8a5304a65",
+    "initial-input.msh": "15d81c1f97495b6b9f1060e05126a5f8ed1b8ca4814e1533087d92944add4408"
+  },
+  "run": "docs/verification-native-suboff-sst-startup/precision-and-work-policy/simplec-five-completed",
+  "algorithm": "simplec",
+  "iterations": 100,
+  "relaxation": 0.9,
+  "tolerance": 1e-09,
+  "viscosity": "frozen saved rho*(nu+nu_t)",
+  "scalar_equations_advanced": false,
+  "physical_suboff_benchmark_passed": false
+}

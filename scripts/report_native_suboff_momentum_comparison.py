@@ -103,12 +103,12 @@ def main():
         '本页验证原生动量求解器。固定同一保存状态的黏性系数，不推进 k、ω，不能作为完整 RANS 或实验精度达标证据。',
         '',f"输入 NPZ SHA256：`{reference['inputs_sha256']}`。各运行完全一致；源码、原始场和输入绑定均已核对。",'',
         'Re=10，1,331 单元，3,556 面，无滑移壁面。使用实际 SUBOFF 数值状态，无制造体力。压力数组为修正压力 p*；Cd 参考面积为 L²。', '',
-        '| 求解设置 | 外迭代 / 修正数 | 当前动量残差 | 全局动量收支 | 能量收支 | 耗时/s |',
-        '|---|---:|---:|---:|---:|---:|']
+        '| 求解设置 | 数值收敛标志 | 外迭代 / 修正数 | 当前动量残差 | 全局动量收支 | 能量收支 | 耗时/s |',
+        '|---|---|---:|---:|---:|---:|---:|']
     for r in records:
         s=r['summary'];c=r['settings']
         name=c['algorithm'] if c['algorithm']=='newton' else f"SIMPLEC，{c.get('relaxation_basis','absolute_row_sum')}，α={c['relaxation']}，内层上限 {c.get('inner_iterations',1)}"
-        lines.append(f"| {name} | {r['outer_iterations']} / {r['linear_corrections']} | {s['current_momentum_residual']:.4e} | {s['global_momentum_balance_max']:.4e} | {s['energy_balance_error']:.4e} | {s['runtime_seconds']:.2f} |")
+        lines.append(f"| {name} | {'是' if s['numerically_converged'] else '否'} | {r['outer_iterations']} / {r['linear_corrections']} | {s['current_momentum_residual']:.4e} | {s['global_momentum_balance_max']:.4e} | {s['energy_balance_error']:.4e} | {s['runtime_seconds']:.2f} |")
     lines+=['','计数说明：SIMPLEC 每次修正包含动量预测与压力校正；Newton 为联合线性修正。两者不能按外迭代数直接比较计算成本。耗时为各进程记录值，同机并发负载可能影响结果。',
         '', '![当前动量残差](momentum-residual.png)', '',
         '原始面速度重新计算通量，独立散射质量和动量通量，重新积分壁面力。详细字段差异见 comparison.json；此审计不等于另一套离散方法的验证。', '',
