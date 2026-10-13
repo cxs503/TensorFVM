@@ -1,0 +1,10 @@
+{
+  "local": {
+    "tests/test_spalding_linearization.py": "f3f8f9d54c7e8a4ad8457494a6dbba3fd5d9577a0ccca40e3b284a6048f67435",
+    "src/tensorfvm/wall_functions.py": "30e42b7667c30f7be45cb4324a7e06b85839eb5a8a57373729fb0c719278b339"
+  },
+  "openfoam_foundation12": {
+    "/home/jsyc/.local/opt/openfoam12-20250206/opt/openfoam12/src/MomentumTransportModels/momentumTransportModels/derivedFvPatchFields/wallFunctions/omegaWallFunctions/omegaWallFunction/omegaWallFunctionFvPatchScalarField.C": "f7de1965d5b7475cf609dd0d0f8db7f3d14e767526989024be374480ccd40f1f",
+    "/home/jsyc/.local/opt/openfoam12-20250206/opt/openfoam12/src/MomentumTransportModels/momentumTransportModels/derivedFvPatchFields/wallFunctions/nutWallFunctions/nutUSpaldingWallFunction/nutUSpaldingWallFunctionFvPatchScalarField.C": "28ddc8e485869e61c5182ecff158dca232ab31829a8d9568a162ee7dd81ab222"
+  }
+}
