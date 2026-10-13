@@ -12,6 +12,7 @@ wallCellWallFunctionFvPatchScalarField::patchFieldsToWallCellField.
 Only blended=True and ordinary conformal full-wall cells are covered.
 """
 import numpy as np
+from .native_spalding3d import NativeSpaldingWall3D
 
 
 def foundation12_blended_omega_wall(k, distance, nu, normal_gradient_magnitude,
@@ -85,7 +86,6 @@ class NativeSSTWall3D:
     gradient of the auxiliary hybrid face trace. Bulk closure remains SST-2003.
     """
     def __init__(self,momentum_wall):
-        from .native_spalding3d import NativeSpaldingWall3D
         if not isinstance(momentum_wall,NativeSpaldingWall3D):
             raise TypeError('native Spalding momentum wall required')
         self.momentum=momentum_wall;self.mesh=momentum_wall.mesh

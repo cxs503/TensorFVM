@@ -7,7 +7,7 @@ Numerical convergence does not qualify a physical benchmark.
 import numpy as np
 from .native_hybrid_ns3d import NativeHybridNavierStokes3D
 from .native_hybrid_sst3d import NativeHybridSSTTransport3D
-from .native_sst3d import sst2003_closure
+from .native_sst_wall3d import NativeSSTWall3D
 
 
 class NativeHybridRans3D:
@@ -21,7 +21,6 @@ class NativeHybridRans3D:
             raise ValueError('unknown native SST wall treatment')
         wall=None
         if wall_treatment=='spalding_blended':
-            from .native_sst_wall3d import NativeSSTWall3D
             wall=NativeSSTWall3D(flow.wall_model)
         elif flow.wall_model is not None:
             raise ValueError('Spalding momentum requires explicit spalding_blended SST wall treatment')

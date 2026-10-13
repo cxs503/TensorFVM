@@ -9,6 +9,7 @@ import numpy as np
 from .native_hybrid_scalar3d import NativeHybridScalar3D
 from .native_scalar_mmp3d import ScalarMMPConvergenceError
 from .native_sst3d import sst2003_closure, BETA_STAR, VARIANT
+from .native_sst_wall3d import NativeSSTWall3D
 
 
 class HybridSSTAdmissibilityError(RuntimeError):
@@ -25,7 +26,6 @@ class NativeHybridSSTTransport3D:
         self.mesh = mesh
         self.wall_model=wall_model
         if wall_model is not None:
-            from .native_sst_wall3d import NativeSSTWall3D
             if not isinstance(wall_model,NativeSSTWall3D) or wall_model.mesh is not mesh:
                 raise ValueError('SST wall model must use the same mesh')
         if scalar_correction not in ('none','nonlinear_mmp'):raise ValueError('unknown scalar correction')
