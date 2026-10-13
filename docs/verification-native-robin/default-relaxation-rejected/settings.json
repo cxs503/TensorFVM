@@ -1,0 +1,28 @@
+{
+  "case": "unforced finite-slip Couette",
+  "mu": 0.7,
+  "density": 1.0,
+  "height": 1.0,
+  "wall_speeds": [
+    0,
+    1
+  ],
+  "friction": [
+    2,
+    5
+  ],
+  "robin_sign": "outward total traction + C u = g",
+  "normal_velocity": "zero separately imposed at planar walls",
+  "body_force": [
+    0,
+    0,
+    0
+  ],
+  "reference_pressure": 0.0,
+  "analytic_interior_seed": false,
+  "wall_function": false,
+  "full_curved_impermeable_wall_supported": false,
+  "numerical_and_absolute_ledger_gate": 1e-08,
+  "accuracy_gate": 0.03,
+  "physical_suboff_benchmark_passed": false
+}

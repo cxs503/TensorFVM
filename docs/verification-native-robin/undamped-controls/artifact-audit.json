@@ -1,0 +1,155 @@
+{
+  "source_and_fields_verified": true,
+  "postprocessing_sources": {
+    "scripts/report_native_robin.py": "5f28cd930b842e5b8c25c72d97a0e89075764886fa6b61df6f3a3f0a04894818",
+    "src/tensorfvm/native_sections3d.py": "83e2f51410ef1b9f64f6643b456180e22e70a94e74c14ec569ac833b0b4c0ef7"
+  },
+  "cases": [
+    {
+      "case": "n4-coupled",
+      "control_passed": true,
+      "ledger": {
+        "divergence": 8.109993354284861e-15,
+        "robin_boundary": 8.881784197001252e-16,
+        "local_force": 1.6237011735142914e-15,
+        "mechanical_power": 5.384581669432009e-15,
+        "bulk_dissipation_replay": 4.9404924595819466e-15,
+        "slip_dissipation_replay": 0.0
+      },
+      "velocity_relative_l2": 5.276558772455731e-15,
+      "bulk_dissipation": 0.31530111256249693,
+      "slip_dissipation": 0.15449754515562356,
+      "wall_power": 0.4697986577181151
+    },
+    {
+      "case": "n4-simplec",
+      "control_passed": true,
+      "ledger": {
+        "divergence": 2.220446049250313e-16,
+        "robin_boundary": 8.881784197001252e-16,
+        "local_force": 2.270880256440674e-15,
+        "mechanical_power": 6.661338147750939e-15,
+        "bulk_dissipation_replay": 5.2735593669694936e-15,
+        "slip_dissipation_replay": 0.0
+      },
+      "velocity_relative_l2": 4.422381305730332e-15,
+      "bulk_dissipation": 0.3153011125624972,
+      "slip_dissipation": 0.15449754515562353,
+      "wall_power": 0.4697986577181141
+    },
+    {
+      "case": "n4-newton",
+      "control_passed": true,
+      "ledger": {
+        "divergence": 8.109993354284861e-15,
+        "robin_boundary": 8.881784197001252e-16,
+        "local_force": 1.3183898417423734e-15,
+        "mechanical_power": 5.384581669432009e-15,
+        "bulk_dissipation_replay": 4.9404924595819466e-15,
+        "slip_dissipation_replay": 0.0
+      },
+      "velocity_relative_l2": 5.276558772455731e-15,
+      "bulk_dissipation": 0.31530111256249693,
+      "slip_dissipation": 0.15449754515562356,
+      "wall_power": 0.4697986577181151
+    },
+    {
+      "case": "n8-coupled",
+      "control_passed": true,
+      "ledger": {
+        "divergence": 3.5638159090467525e-14,
+        "robin_boundary": 1.4634801858025447e-15,
+        "local_force": 3.427813588530171e-15,
+        "mechanical_power": 2.7200464103316335e-15,
+        "bulk_dissipation_replay": 5.88418203051333e-15,
+        "slip_dissipation_replay": 0.0
+      },
+      "velocity_relative_l2": 3.186974087049333e-15,
+      "bulk_dissipation": 0.3153011125624975,
+      "slip_dissipation": 0.15449754515562258,
+      "wall_power": 0.4697986577181228
+    },
+    {
+      "case": "n8-simplec",
+      "control_passed": true,
+      "ledger": {
+        "divergence": 5.650810426766802e-16,
+        "robin_boundary": 1.3322676295501878e-15,
+        "local_force": 3.395537133141773e-15,
+        "mechanical_power": 3.941291737419306e-15,
+        "bulk_dissipation_replay": 7.382983113757291e-15,
+        "slip_dissipation_replay": 0.0
+      },
+      "velocity_relative_l2": 6.771198572163992e-15,
+      "bulk_dissipation": 0.31530111256249793,
+      "slip_dissipation": 0.15449754515562117,
+      "wall_power": 0.46979865771812307
+    },
+    {
+      "case": "n8-newton",
+      "control_passed": true,
+      "ledger": {
+        "divergence": 3.5638159090467525e-14,
+        "robin_boundary": 1.4634801858025447e-15,
+        "local_force": 3.4139358007223564e-15,
+        "mechanical_power": 2.7200464103316335e-15,
+        "bulk_dissipation_replay": 5.88418203051333e-15,
+        "slip_dissipation_replay": 0.0
+      },
+      "velocity_relative_l2": 3.186974087049333e-15,
+      "bulk_dissipation": 0.3153011125624975,
+      "slip_dissipation": 0.15449754515562258,
+      "wall_power": 0.4697986577181228
+    },
+    {
+      "case": "n16-coupled",
+      "control_passed": true,
+      "ledger": {
+        "divergence": 1.2856382625159313e-13,
+        "robin_boundary": 5.900598001746405e-15,
+        "local_force": 8.77846985197031e-15,
+        "mechanical_power": 5.012656956182582e-14,
+        "bulk_dissipation_replay": 2.853273173286652e-14,
+        "slip_dissipation_replay": 0.0
+      },
+      "velocity_relative_l2": 4.535700610840693e-14,
+      "bulk_dissipation": 0.31530111256249765,
+      "slip_dissipation": 0.15449754515562064,
+      "wall_power": 0.4697986577181684
+    },
+    {
+      "case": "n16-simplec",
+      "control_passed": true,
+      "ledger": {
+        "divergence": 4.170495900087761e-16,
+        "robin_boundary": 6.0298988024953815e-15,
+        "local_force": 8.835348484350768e-15,
+        "mechanical_power": 4.5852210917018965e-14,
+        "bulk_dissipation_replay": 2.7200464103316335e-14,
+        "slip_dissipation_replay": 0.0
+      },
+      "velocity_relative_l2": 3.8101330314804957e-14,
+      "bulk_dissipation": 0.3153011125624989,
+      "slip_dissipation": 0.15449754515562283,
+      "wall_power": 0.46979865771816753
+    },
+    {
+      "case": "n16-newton",
+      "control_passed": true,
+      "ledger": {
+        "divergence": 1.2856382625159313e-13,
+        "robin_boundary": 5.947686785704003e-15,
+        "local_force": 9.003983903847297e-15,
+        "mechanical_power": 5.012656956182582e-14,
+        "bulk_dissipation_replay": 2.853273173286652e-14,
+        "slip_dissipation_replay": 0.0
+      },
+      "velocity_relative_l2": 4.535700610840693e-14,
+      "bulk_dissipation": 0.31530111256249765,
+      "slip_dissipation": 0.15449754515562064,
+      "wall_power": 0.4697986577181684
+    }
+  ],
+  "physical_suboff_benchmark_passed": false,
+  "scope": "Affine linear-slip boundary control only; bulk power reconstructed directly from saved face velocity gradients"
+}
