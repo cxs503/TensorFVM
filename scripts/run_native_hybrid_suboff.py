@@ -2,6 +2,7 @@
 """Native hybrid SUBOFF laminar startup; no experimental accuracy qualification."""
 import argparse
 import hashlib
+import json
 from pathlib import Path
 import shutil
 import time
@@ -18,22 +19,39 @@ def main():
     p.add_argument('--reynolds',type=float,required=True)
     p.add_argument('--algorithm',choices=['newton','simplec'],default='newton')
     p.add_argument('--max-iterations',type=int,default=40)
+    p.add_argument('--tolerance',type=float,default=1e-8,help='May tighten but cannot relax the 1e-8 benchmark gate')
+    p.add_argument('--initial-run',type=Path,help='Previous native laminar numerical state on the identical mesh; Re may differ for continuation')
+    p.add_argument('--linear-method',choices=['direct','reused_lu','block_amg'],default='direct')
     p.add_argument('--momentum-iterations',type=int,default=3000)
     p.add_argument('--momentum-relaxation',type=float,default=.5)
     p.add_argument('--momentum-relaxation-basis',choices=['absolute_row_sum','diagonal'],default='absolute_row_sum')
     a=p.parse_args()
     if not np.isfinite(a.reynolds) or a.reynolds<=0:p.error('positive finite Reynolds number required')
+    if not np.isfinite(a.tolerance) or not 0<a.tolerance<=1e-8:p.error('tolerance must be positive and <=1e-8')
     if a.max_iterations<1:p.error('positive iteration limit required')
     evidence=NativeRunEvidence(a.output,__file__);out=a.output
     shutil.copy2(a.mesh,out/'input.msh');mesh_hash=hashlib.sha256((out/'input.msh').read_bytes()).hexdigest()
+    initial_binding=None
+    if a.initial_run is not None:
+        old_config=json.loads((a.initial_run/'settings.json').read_text());old_summary=json.loads((a.initial_run/'summary.json').read_text())
+        if old_config.get('backend')!='native_hybrid_cell_and_shared_face_velocity' or old_config.get('flow')!='steady laminar; no SST or wall function':
+            raise ValueError('restart requires a native hybrid laminar numerical run')
+        if old_config['mesh_sha256']!=mesh_hash:raise ValueError('restart mesh mismatch')
+        if not old_summary['source_integrity_verified']:raise ValueError('unverified restart source')
+        if hashlib.sha256((a.initial_run/'fields.npz').read_bytes()).hexdigest()!=old_summary['fields_sha256']:raise ValueError('restart fields hash mismatch')
+        initial_binding=dict(previous_Re_L=old_config['Re_L'],previous_numerically_converged=old_summary['numerically_converged'],origin=str(a.initial_run),files={})
+        for name in ('fields.npz','settings.json','summary.json'):
+            shutil.copy2(a.initial_run/name,out/('initial-'+name))
+            initial_binding['files'][name]=hashlib.sha256((out/('initial-'+name)).read_bytes()).hexdigest()
     write_json(out/'settings.json',dict(backend='native_hybrid_cell_and_shared_face_velocity',
         flow='steady laminar; no SST or wall function',Re_L=a.reynolds,L=1.,U=1.,rho=1.,nu=1/a.reynolds,
         algorithm=a.algorithm,max_iterations=a.max_iterations,convection_order=2,body_force=[0,0,0],
         momentum_iterations=a.momentum_iterations,momentum_relaxation=a.momentum_relaxation,
-        momentum_relaxation_basis=a.momentum_relaxation_basis,
+        momentum_relaxation_basis=a.momentum_relaxation_basis,linear_method=a.linear_method,
+        initial_run=initial_binding,
         inlet_and_farfield_velocity=[1,0,0],wall_velocity=[0,0,0],outlet='zero total outward traction',
-        outlet_backflow_velocity=[1,0,0],initialization='native Stokes numerical solve, no reference interior state',
-        numerical_tolerance=1e-8,initialization_tolerance=1e-8,absolute_integrated_ledger_tolerance=1e-8,
+        outlet_backflow_velocity=[1,0,0],initialization='previous numerical iterate; current equations rebuilt' if initial_binding else 'native Stokes numerical solve, no reference interior state',
+        numerical_tolerance=a.tolerance,initialization_tolerance=1e-8,absolute_integrated_ledger_tolerance=1e-8,
         reference_area='L^2=1; no experimental Cd normalization assumed',mesh_sha256=mesh_hash,
         wall_pressure_status='owner cell pressure and normal traction proxy saved separately; wall Cp not certified',
         physical_suboff_benchmark_passed=False))
@@ -49,19 +67,31 @@ def main():
     print(dict(stage='BUILD_NATIVE_HYBRID',cells=len(m.cells),faces=len(b)),flush=True)
     s=NativeHybridNavierStokes3D(m,fixed,velocity,viscosity=1/a.reynolds,
         boundary_traction=0.,backflow_velocity=[1,0,0],convection_order=2,
-        momentum_relaxation_basis=a.momentum_relaxation_basis)
+        momentum_relaxation_basis=a.momentum_relaxation_basis,coupled_linear_method=a.linear_method)
     failure=None
     try:
-        print('INITIALIZE_STOKES',flush=True);initial=s.initialize_stokes(tolerance=1e-8)
+        if initial_binding is None:
+            print('INITIALIZE_STOKES',flush=True);initial=s.initialize_stokes(tolerance=1e-8)
+        else:
+            with np.load(out/'initial-fields.npz',allow_pickle=False) as previous:
+                state=np.r_[previous['velocity'].ravel(),previous['face_velocity'].ravel()];pressure=previous['pressure'].copy()
+                if state.shape!=s.state.shape or pressure.shape!=s.p.shape or not np.isfinite(state).all() or not np.isfinite(pressure).all():
+                    raise ValueError('invalid restart state shape/values')
+                np.testing.assert_array_equal(previous['owner'],m.owner);np.testing.assert_array_equal(previous['neighbor'],m.neighbor)
+                np.testing.assert_allclose(previous['face_velocity'][fixed],velocity[fixed],rtol=0,atol=1e-14)
+                np.testing.assert_allclose(previous['flux'],np.sum(previous['face_velocity']*m.area_vectors,axis=1),rtol=0,atol=1e-14)
+                s.state=state;s.p=pressure;s.converged=False;s.nonlinear_converged=False
+            initial=dict(method='previous_native_numerical_state',**initial_binding)
+
         write_json(out/'initialization.json',initial)
         print(dict(stage='SOLVE_NS',initial=initial),flush=True)
         def progress(row):
             force=-s.result()['total_traction_integrated'][wall].sum(0)
             row.update(wall_force=force.tolist(),Cd_L2=float(2*force[0]))
             write_json(out/'progress.json',row);print(row,flush=True)
-        if a.algorithm=='newton':r=s.solve_newton(max_iterations=a.max_iterations,tolerance=1e-8,callback=progress)
+        if a.algorithm=='newton':r=s.solve_newton(max_iterations=a.max_iterations,tolerance=a.tolerance,callback=progress)
         else:r=s.solve(algorithm='simplec',max_outer_iterations=a.max_iterations,
-            max_iterations=a.momentum_iterations,relaxation=a.momentum_relaxation,tolerance=1e-8,callback=progress)
+            max_iterations=a.momentum_iterations,relaxation=a.momentum_relaxation,tolerance=a.tolerance,callback=progress)
     except (RuntimeError,ValueError) as exc:
         failure=f'{type(exc).__name__}: {exc}';s.nonlinear_converged=False;r=s.result()
         print(dict(failure=failure),flush=True)

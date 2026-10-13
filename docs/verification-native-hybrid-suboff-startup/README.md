@@ -86,5 +86,25 @@ python scripts/report_native_hybrid_suboff.py results/suboff-startup-re10-new
 SIMPLEC 的同网格 Re=10 独立求解采用对角基准、动量/压力松弛 1。
 其求解器相对残差门槛已通过，Cd 与 Newton 相对差为 1.296e-9，但单元积分动量缺陷 1.0524e-8、界面牵引缺陷 1.2907e-8，略高于既定 1e-8 门槛。
 因此[整体验收明确失败](re10-simplec-ledger-rejected/summary.json)，没有将小误差四舍五入为通过；[独立对照](algorithm-comparison.json)与全部原场保存。
-下一步需继续收紧迭代收敛，保留原积分收支门槛。
-Re=100 Newton 启动仍在进行，目前出现明显回溯和停滞，未计为成功。
+从上述数值状态继续做 7 次 SIMPLEC 外迭代，将相对迭代门槛收紧到 1e-10，原积分收支门槛保持 1e-8。
+现在单元/界面缺陷分别降至 1.111e-10 / 1.348e-10，整体通过。
+[补充原场](re10-simplec-polished/summary.json)和[最终算法对照](algorithm-comparison-polished.json)保留了原失败状态的完整重启绑定；
+Cd 与 Newton 相对差约 1.029e-11。这项通过确认离散方程的算法一致性，仍不是实验物理精度。
+Re=100 从 Stokes 直接启动在 432.39 秒后因回溯失败而停止，当前动量残差仍约 1.805e-2。
+[失败原场与审计](re100-newton-rejected/summary.json)完整保留，不报告为真实阻力。
+新增 `--initial-run` 从同网格的历史原生层流数值状态重启，校验网格、原场 SHA、数据形状、规定边界与面通量一致性；可显式记录不同 Re 的黏度延续。
+初始原场、配置、汇总及哈希随新运行一同归档，全部当前方程重新建立。
+`--tolerance` 只允许收紧 1e-8 门槛，不能放宽；`--linear-method` 可选择 direct、reused_lu 或 block_amg。
+Re=10→30 延续已在 4 次 Newton 迭代后通过全部数值门槛，耗时 101.21 秒。
+Re=30 的 Cd,L²=0.306173642，单元积分动量缺陷 4.718e-16，总力闭合 9.714e-16；见[原场与汇总](re30-continuation/summary.json)。
+Re=30→60 的后续延续正在进行。单网格、低 Re 数值通过不能替代高 Re Cp/Cd 的实验对照与网格收敛。
+
+
+SIMPLEC 的失败保留与继续迭代可复现为（第一条预期返回未通过）：
+
+```bash
+python scripts/run_native_hybrid_suboff.py --mesh results/suboff-startup-mesh-new/suboff-hybrid.msh --reynolds 10 --algorithm simplec --momentum-relaxation 1 --momentum-relaxation-basis diagonal --output results/suboff-simplec-initial-new
+python scripts/run_native_hybrid_suboff.py --mesh results/suboff-startup-mesh-new/suboff-hybrid.msh --reynolds 10 --algorithm simplec --momentum-relaxation 1 --momentum-relaxation-basis diagonal --tolerance 1e-10 --initial-run results/suboff-simplec-initial-new --output results/suboff-simplec-polished-new
+python scripts/report_native_hybrid_suboff.py results/suboff-simplec-polished-new
+python scripts/run_native_hybrid_suboff.py --mesh results/suboff-startup-mesh-new/suboff-hybrid.msh --reynolds 30 --initial-run results/suboff-startup-re10-new --output results/suboff-re30-new
+```
