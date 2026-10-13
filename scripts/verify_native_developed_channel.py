@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import json
 import time
+import shutil
 from pathlib import Path
 import numpy as np
 from scipy.interpolate import PchipInterpolator
@@ -14,17 +15,19 @@ from tensorfvm.verification.native_run import NativeRunEvidence,write_json
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output',type=Path,required=True)
+    parser.add_argument('--reference',type=Path,help='Verified channel reference directory; copied into each run')
     parser.add_argument('--levels',type=int,nargs='+',default=[16,32,64])
     parser.add_argument('--zero-initial-pressure',action='store_true',help='Discard the Stokes initial pressure before SST iteration')
     parser.add_argument('--momentum',choices=['coupled','simplec'],default='coupled')
     args=parser.parse_args()
     if any(n<16 or n%8 for n in args.levels):parser.error('levels must be multiples of 8 and >=16')
     repo=Path(__file__).resolve().parents[1];out=args.output;evidence=NativeRunEvidence(out,__file__)
-    reference=repo/'docs/verification-native-channel-sst/reference'
+    reference=args.reference or repo/'docs/verification-native-channel-sst/reference'
     meta=json.loads((reference/'provenance.json').read_text())
     data=np.loadtxt(reference/'mean.csv',delimiter=',',skiprows=1)
     for entry in meta['files'].values():
         p=reference/entry['csv'];assert hashlib.sha256(p.read_bytes()).hexdigest()==entry['csv_sha256']
+    shutil.copytree(reference,out/'reference')
     interpolate=PchipInterpolator(data[:,0],data[:,2],extrapolate=False)
     write_json(out/'settings.json',dict(levels=args.levels,Re_tau=meta['Re_tau_reported'],density=1.,half_width=1.,
         length=.1,span=.1,axial='n/8',spanwise=2,wall_normal_stretch=3.,body_force=[0,0,0],

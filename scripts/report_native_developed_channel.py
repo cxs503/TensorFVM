@@ -16,7 +16,8 @@ from tensorfvm.native_sections3d import cell_section_polygons
 
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('directory',type=Path);root=p.parse_args().directory
-    repo=Path(__file__).resolve().parents[1];ref=repo/'docs/verification-native-channel-sst/reference'
+    repo=Path(__file__).resolve().parents[1]
+    ref=root/'reference' if (root/'reference').is_dir() else repo/'docs/verification-native-channel-sst/reference'
     settings=json.loads((root/'settings.json').read_text());meta=settings['reference_provenance']
     for r in meta['files'].values():assert hashlib.sha256((ref/r['csv']).read_bytes()).hexdigest()==r['csv_sha256']
     dns=np.loadtxt(ref/'mean.csv',delimiter=',',skiprows=1);unc=np.loadtxt(ref/'mean_standard_deviation.csv',delimiter=',',skiprows=1)
@@ -69,7 +70,7 @@ def main():
     axes[0].plot(dns[:,1],dns[:,2],'k-',label='Lee–Moser DNS')
     axes[0].fill_between(dns[:,1],dns[:,2]-2*unc[:,2],dns[:,2]+2*unc[:,2],color='k',alpha=.15,label='DNS ±2 sample SD')
     for row,y,u in profiles:axes[0].plot(y*meta['Re_tau_reported'],u,'o-',ms=3,label=f"SST n={row['n']}")
-    axes[0].set(xscale='log',xlabel='y+',ylabel='U+');axes[0].legend(fontsize=8);axes[0].grid(True)
+    axes[0].set(xscale='log',xlim=(.1,1.05*meta['Re_tau_reported']),xlabel='y+',ylabel='U+');axes[0].legend(fontsize=8);axes[0].grid(True)
     axes[1].plot([r['n'] for r,y,u in profiles],[r['Cf'] for r,y,u in profiles],'o-',label='Native SST, face-flux bulk velocity')
     axes[1].axhline(meta['Cf'],color='k',label='DNS');axes[1].axhspan(meta['Cf']*.97,meta['Cf']*1.03,color='g',alpha=.1,label='±3% nominal band')
     axes[1].set(xlabel='Wall-normal cells',ylabel='Cf');axes[1].legend(fontsize=8);axes[1].grid(True)
