@@ -59,6 +59,20 @@ OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 PYTHONPATH=src python scripts/verify_na
   --scalar-work-balance-policy relative --momentum-method simplec --momentum-coupling sweeps
 ```
 
+### 真实 SUBOFF 的 SIMPLEC 对照结果
+
+[三步试算](simplec-third-step-rejected/summary.json)实际完成两步，第三步 k 子问题被拒绝，耗时 201.110 s。每个已完成外迭代执行一次 SIMPLEC 修正，真实线性残差分别为 3.076e-15、5.293e-15；第二步动量相对残差 4.817e-6、连续性 2.356e-14、k/omega 稳态相对残差 0.9899/0.8928，**尚未收敛**。
+
+第三步 k 在平滑阶段第 17 次 Newton 迭代出现完整更新约 463、真实线性残差 1.637e-9，超过 1e-9 门槛，候选被拒绝。联合 Newton 动量和 SIMPLEC 动量两种路径均能复现第三步 k 的非线性困难，说明仅更换压力—速度算法没有解决该标量问题。两次运行停止位置不同，不能把总耗时比解释为收敛求解的加速比。
+
+![SIMPLEC 对照实际网格与失败时保存场](simplec-third-step-rejected/startup-fields.png)
+
+### k 子问题的独立复现
+
+[重放结果](third-k-replay/summary.json)在 57.714 s 内逐项复现联合 Newton 路径第三步 k 的失败指标。扩散系数与体积积分产生项逐位一致，储存和耗散重构相对差 <1e-15；这使后续非线性修复可直接使用原始子问题，避免每次重复动量求解。
+
+[单方向雅可比诊断](k-tangent-audit.json)在该拒绝候选、平滑量 1e-3 上，中心差分步长逐级缩小时呈二阶下降，最小相对方向导数误差约 6.58e-11。它没有发现该方向上的平滑切线错误；零平滑的非光滑切换、其他方向与全局收敛性质不由这一项检查证明。诊断脚本保留，使用 `coupled-third-step-rejected` 原场及其冻结标量实现可重放。
+
 ## 5. 剩余工作
 
 解决真实网格 k 非线性停滞，完成连续外迭代及全部稳态收支核验；再验证高 Re、SIMPLEC+SST 壁面处理和实际 y+。目前没有与 OpenFOAM 对齐的壁面函数、同工况/同网格对照或 Cp/Cd 双指标 <3% 证据。低 Re 层流三网格阻力非单调、尾部 Cp 极值随细化增强的问题也仍需处理。

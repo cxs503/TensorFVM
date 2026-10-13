@@ -1,0 +1,56 @@
+{
+  "scope": "directional Jacobian diagnostic at rejected third-step k candidate; not solver convergence",
+  "state_scale": 3.961947063074633e-05,
+  "checks": [
+    {
+      "smoothing": 0.001,
+      "relative_step": 0.0001,
+      "relative_direction_error": 0.004312533922500888
+    },
+    {
+      "smoothing": 0.001,
+      "relative_step": 1e-05,
+      "relative_direction_error": 6.462744977657876e-05
+    },
+    {
+      "smoothing": 0.001,
+      "relative_step": 1e-06,
+      "relative_direction_error": 6.579472545501572e-07
+    },
+    {
+      "smoothing": 0.001,
+      "relative_step": 1e-07,
+      "relative_direction_error": 6.5815682770618626e-09
+    },
+    {
+      "smoothing": 0.001,
+      "relative_step": 1e-08,
+      "relative_direction_error": 6.583041905171011e-11
+    },
+    {
+      "smoothing": 0.0,
+      "relative_step": 0.0001,
+      "relative_direction_error": 0.21851770057306552
+    },
+    {
+      "smoothing": 0.0,
+      "relative_step": 1e-05,
+      "relative_direction_error": 0.16854655185294456
+    },
+    {
+      "smoothing": 0.0,
+      "relative_step": 1e-06,
+      "relative_direction_error": 0.07547532328448961
+    },
+    {
+      "smoothing": 0.0,
+      "relative_step": 1e-07,
+      "relative_direction_error": 0.00970910639423148
+    },
+    {
+      "smoothing": 0.0,
+      "relative_step": 1e-08,
+      "relative_direction_error": 0.004812731087257299
+    }
+  ]
+}
