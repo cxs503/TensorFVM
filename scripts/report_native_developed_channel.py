@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import json
+import shutil
 from pathlib import Path
 from types import SimpleNamespace
 import numpy as np
@@ -99,7 +100,12 @@ def main():
         ax.axhline(1e-8,color='k',ls='--',label='gate');ax.set(xlabel='Outer iteration');ax.grid(True);ax.legend(fontsize=8)
     axes[0].set_ylabel('Maximum current residual');axes[1].set_ylabel('Maximum relative state change')
     fig.savefig(root/'convergence.png',dpi=180);fig.savefig(root/'convergence.pdf');plt.close(fig)
-    write=dict(source_and_field_integrity_verified=True,source_snapshot_complete=not missing,missing_source_modules=missing,cases=audit,physical_suboff_benchmark_passed=False,
+    post_sources={}
+    for name in ('scripts/report_native_developed_channel.py','src/tensorfvm/native_sections3d.py'):
+        target=root/'postprocessing-source'/name;target.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(repo/name,target)
+        post_sources[name]=hashlib.sha256(target.read_bytes()).hexdigest()
+    (root/'postprocessing-sources.json').write_text(json.dumps(post_sources,indent=2)+'\n')
+    write=dict(postprocessing_sources=post_sources,source_and_field_integrity_verified=True,source_snapshot_complete=not missing,missing_source_modules=missing,cases=audit,physical_suboff_benchmark_passed=False,
         grid_convergence_certified=False,audit_source_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest())
     (root/'artifact-audit.json').write_text(json.dumps(write,indent=2)+'\n');print(write)
 

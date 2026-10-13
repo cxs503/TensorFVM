@@ -1,0 +1,49 @@
+[
+  {
+    "reused_preconditioner": false,
+    "fallback_factorization": false,
+    "gmres_iterations": 0,
+    "residual_refinement": [
+      {
+        "before": 1.2669127289568087e-09,
+        "after": 1.8411974790957257e-14,
+        "accepted": true
+      }
+    ],
+    "true_relative_residual": 1.088811574357153e-15
+  },
+  {
+    "reused_preconditioner": false,
+    "fallback_factorization": false,
+    "gmres_iterations": 0,
+    "residual_refinement": [
+      {
+        "before": 1.7755407630802024e-10,
+        "after": 2.9950322957881202e-15,
+        "accepted": true
+      }
+    ],
+    "true_relative_residual": 2.6067098585630857e-15
+  },
+  {
+    "reused_preconditioner": false,
+    "fallback_factorization": false,
+    "gmres_iterations": 0,
+    "residual_refinement": [],
+    "true_relative_residual": 1.341919483314168e-14
+  },
+  {
+    "reused_preconditioner": false,
+    "fallback_factorization": false,
+    "gmres_iterations": 0,
+    "residual_refinement": [],
+    "true_relative_residual": 1.0567141889522398e-14
+  },
+  {
+    "reused_preconditioner": false,
+    "fallback_factorization": false,
+    "gmres_iterations": 0,
+    "residual_refinement": [],
+    "true_relative_residual": 9.046278169393122e-15
+  }
+]

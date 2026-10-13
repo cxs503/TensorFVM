@@ -1,0 +1,28 @@
+{
+  "iteration": 4,
+  "accepted": true,
+  "step_length": 1.0,
+  "backtracks": 0,
+  "merit_before": 9.345120717746731e-14,
+  "merit_after": 9.395755506106959e-14,
+  "true_linear_relative_residual": 8.57867117598175e-15,
+  "velocity_change": 2.5205862636295546e-15,
+  "pressure_change": 1.3248638406494292e-14,
+  "trials": [
+    {
+      "step_length": 1.0,
+      "merit": 9.395755506106959e-14,
+      "accepted": true
+    }
+  ],
+  "current_momentum_residual": 1.4110697879183384e-15,
+  "divergence_max": 4.400461975038784e-14,
+  "gauge_error": 0.0,
+  "boundary_velocity_error": 5.204170427930421e-18,
+  "wall_force": [
+    0.39131132917013584,
+    0.0005902231734521081,
+    -0.0014448614882262842
+  ],
+  "Cd_L2": 0.7826226583402717
+}
