@@ -33,7 +33,8 @@ def main():
             raise ValueError(f'nonconverged run cannot enter grid comparison: {root}')
         if settings['backend']!='native_hybrid_cell_and_shared_face_velocity':raise ValueError('native hybrid run required')
         if settings0 is None:settings0=settings
-        if any(settings[key]!=settings0[key] for key in same):raise ValueError('different physical problems')
+        if any(settings[key]!=settings0[key] for key in same) or settings.get('wall_friction')!=settings0.get('wall_friction'):
+            raise ValueError('different physical problems or wall boundary conditions')
         if digest(root/'fields.npz')!=summary['fields_sha256']:raise ValueError('fields changed')
         if digest(root/'input.msh')!=settings['mesh_sha256']:raise ValueError('mesh changed')
         if digest(root/'wall-pressure-traces.npz')!=audit['pressure_trace']['fields_sha256']:
