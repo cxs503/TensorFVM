@@ -38,13 +38,17 @@ class NativeHybridBlockSolver3D:
             rows.append(np.repeat(nodes,len(nodes)));cols.append(np.tile(nodes,len(nodes)));data.append(block.ravel())
         scalar=sparse.coo_matrix((np.concatenate(data),(np.concatenate(rows),np.concatenate(cols))),
                                  shape=(N+F,N+F)).tocsr()
+        proxy=None
+        if v.velocity_space.rotated:
+            proxy=v.velocity_space.matrix(sparse.kron(scalar,sparse.eye(3),format="csr")+v.robin_matrix)
         self.groups=[];self.complexities=[]
         for component in range(3):
             positions=np.flatnonzero(v.free%3==component);nodes=v.free[positions]//3
             if len(nodes)==0:continue
             # Constants suffice for the scalar diffusion preconditioner.
-            block=scalar[nodes][:,nodes]+v.robin_matrix[v.free[positions]][:,v.free[positions]]
-            hierarchy=pyamg.smoothed_aggregation_solver(block,max_coarse=30)
+            block=(proxy[positions][:,positions] if proxy is not None else
+                scalar[nodes][:,nodes]+v.robin_matrix[v.free[positions]][:,v.free[positions]])
+            hierarchy=pyamg.smoothed_aggregation_solver(block.tocsr(),max_coarse=30)
             self.groups.append((positions,hierarchy.aspreconditioner()))
             self.complexities.append(float(hierarchy.operator_complexity()))
         self.setup_seconds=time.perf_counter()-start
@@ -105,6 +109,7 @@ class NativeHybridBlockSolver3D:
             gauge_equation_defect=gauge_error if np.isfinite(gauge_error) else None,
             momentum_equation_defect_max=float(np.max(np.abs(defect[:nv]))) if finite else None,
             candidate_finite=finite,accepted=accepted,
+            velocity_coordinates='reduced tangent basis' if s.viscous.velocity_space.rotated else 'free Cartesian components',
             candidate_kind='algebraic solution or Newton increment; not accepted physical flow',
             preconditioned_residual_history=[v if np.isfinite(v) else None for v in history],
             operator_complexities=self.complexities,setup_seconds=self.setup_seconds,
