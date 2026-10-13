@@ -50,7 +50,7 @@ class NativeHybridNavierStokes3D(NativeHybridStokes3D):
         Rebuild the viscous system so repeated use after NS is well defined.
         """
         self.A = self.viscous.matrix
-        self.rhs = (self.load-self.viscous.full_matrix @ self.prescribed)[self.viscous.free]
+        self.rhs = self.viscous.velocity_space.restrict(self.load-self.viscous.full_matrix @ self.prescribed)
         self._coupled_factor = None
         NativeHybridStokes3D.solve(self,algorithm='coupled',tolerance=tolerance)
         self._coupled_factor = None
@@ -78,12 +78,13 @@ class NativeHybridNavierStokes3D(NativeHybridStokes3D):
         if max_outer_iterations < 1:
             raise ValueError('positive outer iteration limit required')
         self.nonlinear_converged = False
+        self.velocity_constraint_tolerance=tolerance
         for outer in range(max_outer_iterations):
             old = self.state.copy(); old_p = self.p.copy()
             full, source = self._current_system()
-            free = self.viscous.free
-            self.A = full[free][:,free].tocsc()
-            self.rhs = (self.load-source-full @ self.prescribed)[free]
+            space = self.viscous.velocity_space
+            self.A = space.matrix(full)
+            self.rhs = space.restrict(self.load-source-full @ self.prescribed)
             # Reuse the tested linear algorithms; retain all inner records.
             start = len(self.history)
             super().solve(algorithm=algorithm, relaxation=relaxation,
@@ -95,16 +96,17 @@ class NativeHybridNavierStokes3D(NativeHybridStokes3D):
             self.p = old_p+outer_relaxation*(self.p-old_p)
             full, source = self._current_system()
             residual = full @ self.state+source-self.divergence.T @ self.p-self.load
-            scale = max(np.linalg.norm((self.load-source-full @ self.prescribed)[free]),1.)
+            scale = max(np.linalg.norm(space.restrict(self.load-source-full @ self.prescribed)),1.)
             row = dict(iteration=outer+1, inner_iterations=len(self.history)-start,
                 frozen_inner_converged=self.converged,
-                current_momentum_residual=float(np.linalg.norm(residual[free])/scale),
+                current_momentum_residual=float(np.linalg.norm(space.restrict(residual))/scale),
                 divergence_max=float(np.max(np.abs(self.divergence @ self.state/self.mesh.cell_volumes))),
+                boundary_velocity_error=space.constraint_error(self.state-self.prescribed),
                 velocity_change=float(np.linalg.norm(self.state-old)/max(np.linalg.norm(self.state),1.)),
                 pressure_change=float(np.linalg.norm(self.p-old_p)/max(np.linalg.norm(self.p),1.)))
             self.outer_history.append(row)
             self.nonlinear_converged = bool(self.converged and max(row[key] for key in (
-                'current_momentum_residual','divergence_max','velocity_change','pressure_change')) < tolerance)
+                'current_momentum_residual','divergence_max','velocity_change','pressure_change','boundary_velocity_error')) < tolerance)
             if callback: callback(row)
             if self.nonlinear_converged: break
         return self.result()
@@ -127,7 +129,7 @@ class NativeHybridNavierStokes3D(NativeHybridStokes3D):
         local_balance = self.convection.D @ momentum_flux-self.mesh.cell_volumes[:,None]*self.body_force
         reaction = full @ self.state+source-self.divergence.T @ self.p-self.load
         external = float(self.state @ self.load+self.prescribed @ reaction)
-        result.update(numerically_converged=self.nonlinear_converged,
+        result.update(numerically_converged=bool(self.nonlinear_converged and result["boundary_velocity_error"]<getattr(self,"velocity_constraint_tolerance",1e-8)),
             reconstructed_velocity=mean_velocity,
             total_traction_integrated=total_traction,
             neighbor_total_traction_integrated=neighbor_traction,

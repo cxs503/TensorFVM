@@ -6,6 +6,9 @@ face divergence. No collocated Rhie--Chow reconstruction is involved.
 Dirichlet velocity, total outward traction (tau-pI)n and dissipative Robin
 conditions (tau-pI)n + C u = g are supported. For Robin faces, the
 boundary_traction argument supplies g, including C u_wall for a moving wall.
+Normal velocity on arbitrary planar facets can be eliminated with
+normal_velocity_faces; velocity_boundary supplies its normal projection.
+State and physical tractions remain Cartesian; no normal penalty is added.
 Convection, SST and wall functions are deliberately outside this interface.
 """
 import numpy as np
@@ -22,7 +25,7 @@ class NativeHybridStokes3D:
     def __init__(self, mesh, velocity_dirichlet, velocity_boundary=0., *,
                  viscosity=1., body_force=0., boundary_traction=0.,
                  gauge_value=0., body_force_discretization='face', coupled_linear_method='direct',
-                 gradient_jump_stabilization=1., momentum_relaxation_basis='diagonal',robin_coefficient=None):
+                 gradient_jump_stabilization=1., momentum_relaxation_basis='diagonal',robin_coefficient=None,normal_velocity_faces=None):
         if coupled_linear_method not in ('direct', 'reused_lu', 'block_amg'):
             raise ValueError('coupled_linear_method must be direct, reused_lu or block_amg')
         if momentum_relaxation_basis not in ('diagonal','absolute_row_sum'):
@@ -36,9 +39,9 @@ class NativeHybridStokes3D:
         self.gradient_jump_stabilization = gradient_jump_stabilization
         self.viscous = NativeHybridViscous3D(
             mesh, viscosity, dirichlet_mask=velocity_dirichlet,
-            gradient_jump_stabilization=gradient_jump_stabilization,robin_coefficient=robin_coefficient)
+            gradient_jump_stabilization=gradient_jump_stabilization,robin_coefficient=robin_coefficient,normal_velocity_faces=normal_velocity_faces)
         v = self.viscous
-        self.rigid_motion_constraints = require_rigid_motion_constraints(mesh, v.dirichlet_components,v.robin_coefficient)
+        self.rigid_motion_constraints = require_rigid_motion_constraints(mesh, v.dirichlet_components,v.robin_coefficient,v.normal_velocity_faces)
         self.N, self.F = v.N, v.F
         self.prescribed = v._prescribed(velocity_boundary)
         self.face_mean = NativeFaceMean3D(mesh)
@@ -71,9 +74,9 @@ class NativeHybridStokes3D:
         self.divergence = sparse.coo_matrix((vectors.ravel(),
             (np.repeat(rows, 3), (3*(self.N+face_ids[:, None])+np.arange(3)).ravel())),
             shape=(self.N, 3*(self.N+self.F))).tocsr()
-        self.B = self.divergence[:, v.free].tocsr()
+        self.B = (self.divergence @ v.velocity_space.prolongation).tocsr()
         self.A = v.matrix
-        self.rhs = (self.load-v.full_matrix @ self.prescribed)[v.free]
+        self.rhs = v.velocity_space.restrict(self.load-v.full_matrix @ self.prescribed)
         self.mass_rhs = -self.divergence @ self.prescribed
         # Pressure has a constant nullspace if every boundary NORMAL flux
         # is fixed; free tangential components on a symmetry plane do not
@@ -81,6 +84,7 @@ class NativeHybridStokes3D:
         area = np.linalg.norm(mesh.area_vectors,axis=1)
         free_normal = np.abs(mesh.area_vectors)*v.traction_components
         self.open_normal_boundary = np.any(free_normal > 1e-12*area[:,None],axis=1)
+        self.open_normal_boundary[v.normal_velocity_faces]=False
         self.gauge = not self.open_normal_boundary.any()
         self.gauge_value = float(gauge_value)
         if self.gauge and abs(self.mass_rhs.sum()) > 1e-11*max(
@@ -100,10 +104,10 @@ class NativeHybridStokes3D:
         """
         new = NativeHybridViscous3D(self.mesh,viscosity,
             dirichlet_mask=self.viscous.dirichlet_components,
-            gradient_jump_stabilization=self.gradient_jump_stabilization,robin_coefficient=self.viscous.robin_coefficient)
+            gradient_jump_stabilization=self.gradient_jump_stabilization,robin_coefficient=self.viscous.robin_coefficient,normal_velocity_faces=self.viscous.normal_velocity_faces)
         self.viscous = new
         self.A = new.matrix
-        self.rhs = (self.load-new.full_matrix @ self.prescribed)[new.free]
+        self.rhs = new.velocity_space.restrict(self.load-new.full_matrix @ self.prescribed)
         self._coupled_factor = None
         self._block_preconditioner = None
         self.converged = False
@@ -189,12 +193,13 @@ class NativeHybridStokes3D:
         return answer, float(residual)
 
     def _row(self, state, pressure, iteration, linear_residual, limited=0):
-        unknown = state[self.viscous.free]
+        unknown = self.viscous.velocity_space.restrict(state-self.prescribed)
         momentum = self.A @ unknown-self.B.T @ pressure-self.rhs
         continuity = self.divergence @ state
         return dict(iteration=iteration, momentum_relative_residual=float(
             np.linalg.norm(momentum)/max(np.linalg.norm(self.rhs), 1.)),
             divergence_max=float(np.max(np.abs(continuity/self.mesh.cell_volumes))),
+            boundary_velocity_error=self.viscous.velocity_space.constraint_error(state-self.prescribed),
             true_linear_relative_residual=linear_residual,
             simplec_limited_dofs=limited, momentum_relaxation_basis=self.momentum_relaxation_basis)
 
@@ -214,6 +219,7 @@ class NativeHybridStokes3D:
                 or tolerance <= 0 or max_iterations < 1):
             raise ValueError('positive finite tolerances and valid relaxation required')
         v = self.viscous
+        self.velocity_constraint_tolerance=tolerance
         size = len(v.free)
         self.converged = False
         if algorithm == 'coupled':
@@ -223,12 +229,12 @@ class NativeHybridStokes3D:
                 matrix[size, :] = 0.; matrix[size, size] = 1.
                 rhs[size] = self.gauge_value
             answer, residual = self._coupled_linear(matrix.tocsc(), rhs)
-            state = self.prescribed.copy(); state[v.free] = answer[:size]
+            state = self.prescribed+v.velocity_space.expand(answer[:size])
             pressure = answer[size:]
             row = self._row(state, pressure, 1, residual)
             self.state, self.p = state, pressure
             self.history.append(row)
-            self.converged = max(row['momentum_relative_residual'], row['divergence_max']) < tolerance
+            self.converged = max(row['momentum_relative_residual'], row['divergence_max'],row['boundary_velocity_error']) < tolerance
             if callback: callback(row)
             return self.result()
 
@@ -260,7 +266,7 @@ class NativeHybridStokes3D:
         pressure_matrix = pressure_matrix.tocsc()
         pfactor = splu(pressure_matrix)
         for iteration in range(max_iterations):
-            rhs = self.rhs+self.B.T @ self.p+extra*self.state[v.free]
+            rhs = self.rhs+self.B.T @ self.p+extra*v.velocity_space.restrict(self.state-self.prescribed)
             predicted = mfactor.solve(rhs)
             prhs = self.mass_rhs-self.B @ predicted
             if self.gauge: prhs[0] = self.gauge_value-self.p[0]
@@ -269,7 +275,7 @@ class NativeHybridStokes3D:
                            np.linalg.norm(pressure_matrix @ dp-prhs)/max(np.linalg.norm(prhs), np.finfo(float).tiny))
             if not np.isfinite(predicted).all() or not np.isfinite(dp).all() or not np.isfinite(residual) or residual > 1e-9:
                 raise RuntimeError('hybrid SIMPLE linear solve failed true residual; accepted state preserved')
-            state = self.prescribed.copy(); state[v.free] = predicted+response @ dp
+            state = self.prescribed+v.velocity_space.expand(predicted+response @ dp)
             pressure = self.p+pressure_relaxation*dp
             if self.gauge: pressure += self.gauge_value-pressure[0]
             if not np.isfinite(state).all() or not np.isfinite(pressure).all():
@@ -278,7 +284,7 @@ class NativeHybridStokes3D:
             self.state, self.p = state, pressure
             self.history.append(row)
             if callback: callback(row)
-            if max(row['momentum_relative_residual'], row['divergence_max']) < tolerance:
+            if max(row['momentum_relative_residual'], row['divergence_max'],row['boundary_velocity_error']) < tolerance:
                 self.converged = True
                 break
         return self.result()
@@ -300,7 +306,9 @@ class NativeHybridStokes3D:
         neighbor_traction = (diagnostic['neighbor_face_flux'][internal]
             +self.p[self.mesh.neighbor[internal], None]*self.mesh.area_vectors[internal]
             -self.neighbor_force_flux[internal])
-        return dict(numerically_converged=self.converged, physical_benchmark_passed=False,
+        constraint_error=v.velocity_space.constraint_error(self.state-self.prescribed)
+        return dict(numerically_converged=bool(self.converged and constraint_error<getattr(self,"velocity_constraint_tolerance",1e-8)),
+            boundary_velocity_error=constraint_error,physical_benchmark_passed=False,
             velocity=self.state[:3*self.N].reshape(self.N, 3).copy(),
             face_velocity=self.state[3*self.N:].reshape(self.F, 3).copy(),
             pressure=self.p.copy(), flux=np.sum(self.state[3*self.N:].reshape(self.F, 3)*self.mesh.area_vectors, axis=1),

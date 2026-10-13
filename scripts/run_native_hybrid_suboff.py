@@ -9,6 +9,7 @@ import time
 import numpy as np
 from tensorfvm.native_mesh3d import NativeMesh3D
 from tensorfvm.native_block_solver3d import NativeBlockSolveError
+from tensorfvm.native_robin3d import tangential_friction
 from tensorfvm.native_hybrid_ns3d import NativeHybridNavierStokes3D
 from tensorfvm.native_boundary_constraints3d import require_rigid_motion_constraints
 from tensorfvm.verification.native_run import NativeRunEvidence,write_json
@@ -18,6 +19,7 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--mesh',type=Path,required=True);p.add_argument('--output',type=Path,required=True)
     p.add_argument('--reynolds',type=float,required=True)
+    p.add_argument('--wall-friction',type=float,help='Finite Navier slip coefficient for boundary verification only; omitted means no-slip')
     p.add_argument('--algorithm',choices=['newton','simplec'],default='newton')
     p.add_argument('--max-iterations',type=int,default=40)
     p.add_argument('--tolerance',type=float,default=1e-8,help='May tighten but cannot relax the 1e-8 benchmark gate')
@@ -27,6 +29,7 @@ def main():
     p.add_argument('--momentum-relaxation',type=float,default=.5)
     p.add_argument('--momentum-relaxation-basis',choices=['absolute_row_sum','diagonal'],default='absolute_row_sum')
     a=p.parse_args()
+    if a.wall_friction is not None and (not np.isfinite(a.wall_friction) or a.wall_friction<=0):p.error('positive finite wall friction required')
     if not np.isfinite(a.reynolds) or a.reynolds<=0:p.error('positive finite Reynolds number required')
     if not np.isfinite(a.tolerance) or not 0<a.tolerance<=1e-8:p.error('tolerance must be positive and <=1e-8')
     if a.max_iterations<1:p.error('positive iteration limit required')
@@ -37,6 +40,7 @@ def main():
         old_config=json.loads((a.initial_run/'settings.json').read_text());old_summary=json.loads((a.initial_run/'summary.json').read_text())
         if old_config.get('backend')!='native_hybrid_cell_and_shared_face_velocity' or old_config.get('flow')!='steady laminar; no SST or wall function':
             raise ValueError('restart requires a native hybrid laminar numerical run')
+        if old_config.get('wall_friction')!=a.wall_friction:raise ValueError('restart wall boundary mismatch')
         if old_config['mesh_sha256']!=mesh_hash:raise ValueError('restart mesh mismatch')
         if not old_summary['source_integrity_verified']:raise ValueError('unverified restart source')
         if hashlib.sha256((a.initial_run/'fields.npz').read_bytes()).hexdigest()!=old_summary['fields_sha256']:raise ValueError('restart fields hash mismatch')
@@ -50,6 +54,7 @@ def main():
         momentum_iterations=a.momentum_iterations,momentum_relaxation=a.momentum_relaxation,
         momentum_relaxation_basis=a.momentum_relaxation_basis,linear_method=a.linear_method,
         initial_run=initial_binding,
+        wall_friction=a.wall_friction,wall_boundary='no-slip' if a.wall_friction is None else 'finite Navier slip with exact normal constraint; no turbulence wall law',
         inlet_and_farfield_velocity=[1,0,0],wall_velocity=[0,0,0],outlet='zero total outward traction',
         outlet_backflow_velocity=[1,0,0],initialization='previous numerical iterate; current equations rebuilt' if initial_binding else 'native Stokes numerical solve, no reference interior state',
         numerical_tolerance=a.tolerance,initialization_tolerance=1e-8,absolute_integrated_ledger_tolerance=1e-8,
@@ -61,14 +66,18 @@ def main():
     b=m.neighbor<0;wall=m.patch_labels=='wall';outlet=m.patch_labels=='outlet'
     if not wall.any() or not outlet.any() or set(m.patch_labels[b])!={'wall','inlet','outlet','farfield'}:
         raise ValueError('expected complete SUBOFF physical boundary patches')
-    fixed=b & ~outlet;velocity=np.tile([1.,0.,0.],(len(b),1));velocity[wall]=0.
+    fixed=b & ~outlet
+    if a.wall_friction is not None:fixed &= ~wall
+    velocity=np.tile([1.,0.,0.],(len(b),1));velocity[wall]=0.
     constraint=require_rigid_motion_constraints(m,np.repeat(fixed[:,None],3,axis=1))
     write_json(out/'mesh-audit.json',dict(**m.audit(),
         cell_type_counts={k:m.cell_types.count(k) for k in set(m.cell_types)},rigid_constraint_rank=constraint['rank']))
     print(dict(stage='BUILD_NATIVE_HYBRID',cells=len(m.cells),faces=len(b)),flush=True)
     s=NativeHybridNavierStokes3D(m,fixed,velocity,viscosity=1/a.reynolds,
         boundary_traction=0.,backflow_velocity=[1,0,0],convection_order=2,
-        momentum_relaxation_basis=a.momentum_relaxation_basis,coupled_linear_method=a.linear_method)
+        momentum_relaxation_basis=a.momentum_relaxation_basis,coupled_linear_method=a.linear_method,
+        normal_velocity_faces=wall if a.wall_friction is not None else None,
+        robin_coefficient=tangential_friction(m,wall,a.wall_friction) if a.wall_friction is not None else None)
     failure=None
     try:
         if initial_binding is None:
@@ -81,6 +90,8 @@ def main():
                 np.testing.assert_array_equal(previous['owner'],m.owner);np.testing.assert_array_equal(previous['neighbor'],m.neighbor)
                 np.testing.assert_allclose(previous['face_velocity'][fixed],velocity[fixed],rtol=0,atol=1e-14)
                 np.testing.assert_allclose(previous['flux'],np.sum(previous['face_velocity']*m.area_vectors,axis=1),rtol=0,atol=1e-14)
+                if a.wall_friction is not None:
+                    np.testing.assert_allclose(np.sum(previous['face_velocity'][wall]*m.area_vectors[wall],axis=1),0.,rtol=0,atol=1e-14)
                 s.state=state;s.p=pressure;s.converged=False;s.nonlinear_converged=False
             initial=dict(method='previous_native_numerical_state',**initial_binding)
 
@@ -98,7 +109,11 @@ def main():
         if isinstance(exc,NativeBlockSolveError):
             np.savez_compressed(out/'rejected-linear-candidate.npz',candidate=exc.candidate,
                 equation_defect=exc.defect,free_velocity_dofs=s.viscous.free,
-                cell_volumes=m.cell_volumes,gauge=np.asarray(s.gauge))
+                cell_volumes=m.cell_volumes,gauge=np.asarray(s.gauge),
+                velocity_prolongation_data=s.viscous.velocity_space.prolongation.data,
+                velocity_prolongation_indices=s.viscous.velocity_space.prolongation.indices,
+                velocity_prolongation_indptr=s.viscous.velocity_space.prolongation.indptr,
+                velocity_prolongation_shape=np.asarray(s.viscous.velocity_space.prolongation.shape))
             write_json(out/'rejected-linear-candidate.json',dict(**exc.record,
                 fields_sha256=hashlib.sha256((out/'rejected-linear-candidate.npz').read_bytes()).hexdigest(),
                 changes_accepted_state=False))
@@ -117,6 +132,13 @@ def main():
     force_balance=float(np.max(np.abs(wall_force+other_momentum)))
     accepted=bool(r['numerically_converged'] and failure is None and max(mass,momentum,force_balance,
         r['interface_traction_defect_max'],r['energy_balance_error'])<1e-8)
+    wall_normal_error=float(np.max(abs(np.sum(r['face_velocity'][wall]*normal[wall],axis=1))))
+    wall_robin_defect=None
+    if a.wall_friction is not None:
+        tangent=t[wall]-np.sum(t[wall]*normal[wall],axis=1)[:,None]*normal[wall]
+        face_tangent=r['face_velocity'][wall]-np.sum(r['face_velocity'][wall]*normal[wall],axis=1)[:,None]*normal[wall]
+        wall_robin_defect=float(np.max(abs(tangent+a.wall_friction*area[wall,None]*face_tangent)))
+        accepted=bool(accepted and max(wall_normal_error,wall_robin_defect)<1e-8)
     fields={k:r[k] for k in ('velocity','face_velocity','pressure','flux','total_traction_integrated','momentum_flux_integrated')}
     np.savez_compressed(out/'fields.npz',vertices=m.vertices,face_vertices=np.asarray(m.face_vertices),
         cell_vertices=np.concatenate(m.cells),cell_offsets=np.r_[0,np.cumsum([len(c) for c in m.cells])],
@@ -134,6 +156,7 @@ def main():
         interface_traction_defect_max=r['interface_traction_defect_max'],energy_balance_error=r['energy_balance_error'],
         wall_force=wall_force.tolist(),wall_owner_pressure_force=pressure_force.tolist(),
         wall_remaining_numerical_force=(wall_force-pressure_force).tolist(),Cd_L2=float(2*wall_force[0]),
+        wall_normal_velocity_error=wall_normal_error,wall_robin_tangential_defect=wall_robin_defect,
         wall_Cp_certified=False,grid_convergence_certified=False,physical_suboff_benchmark_passed=False,
         max_cell_speed=float(np.linalg.norm(r['velocity'],axis=1).max()),
         source_integrity_verified=True,fields_sha256=hashlib.sha256((out/'fields.npz').read_bytes()).hexdigest(),
