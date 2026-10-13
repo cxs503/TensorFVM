@@ -12,7 +12,8 @@ from scipy.sparse.linalg import splu, gmres, LinearOperator
 
 from .native_hybrid_viscous3d import NativeHybridViscous3D
 from .native_face_mean3d import NativeFaceMean3D
-from .native_block_solver3d import NativeHybridBlockSolver3D
+from .native_boundary_constraints3d import require_rigid_motion_constraints
+from .native_block_solver3d import NativeHybridBlockSolver3D, NativeBlockSolveError
 
 
 class NativeHybridStokes3D:
@@ -35,6 +36,7 @@ class NativeHybridStokes3D:
             mesh, viscosity, dirichlet_mask=velocity_dirichlet,
             gradient_jump_stabilization=gradient_jump_stabilization)
         v = self.viscous
+        self.rigid_motion_constraints = require_rigid_motion_constraints(mesh, v.dirichlet_components)
         self.N, self.F = v.N, v.F
         self.prescribed = v._prescribed(velocity_boundary)
         self.face_mean = NativeFaceMean3D(mesh)
@@ -124,13 +126,18 @@ class NativeHybridStokes3D:
         if self.coupled_linear_method == 'block_amg':
             if self._block_preconditioner is None:
                 self._block_preconditioner = NativeHybridBlockSolver3D(self)
-            answer,residual,record = self._block_preconditioner.solve(matrix,rhs)
+            try:
+                answer,residual,record = self._block_preconditioner.solve(matrix,rhs)
+            except NativeBlockSolveError as exc:
+                self.coupled_linear_history.append(exc.record)
+                raise
             self.coupled_linear_history.append(record)
             return answer,residual
         matrix = matrix.tocsc()
         iterations = 0
         reused = self.coupled_linear_method == 'reused_lu' and self._coupled_factor is not None
         fallback = False
+        refinements=[]
         scale = max(np.linalg.norm(rhs), np.finfo(float).tiny)
         if reused:
             def count(_):
@@ -145,6 +152,29 @@ class NativeHybridStokes3D:
         if not reused or fallback:
             factor = splu(matrix)
             answer = factor.solve(rhs)
+            # A small global residual can conceal divergence in tiny cells.
+            # Refine the SAME saddle equations using extended residuals and
+            # the existing LU. Keep float64 states and all outer gates.
+            nv=len(self.viscous.free)
+            def quality(candidate):
+                defect=matrix@candidate-rhs
+                relative=float(np.linalg.norm(defect)/scale)
+                if len(defect)!=nv+self.N:return relative
+                constraint=defect[nv:]/self.mesh.cell_volumes
+                if self.gauge:constraint=constraint.copy();constraint[0]=defect[nv]
+                return max(relative,float(np.max(np.abs(constraint),initial=0.)))
+            merit=quality(answer)
+            if merit>1e-11:
+                precise=matrix.astype(np.longdouble);precise_rhs=rhs.astype(np.longdouble)
+                for iteration in range(3):
+                    defect=precise_rhs-precise@answer.astype(np.longdouble)
+                    candidate=answer+factor.solve(np.asarray(defect,float))
+                    after=quality(candidate)
+                    accepted=bool(np.isfinite(candidate).all() and after<merit)
+                    refinements.append(dict(before=merit,after=after,accepted=accepted))
+                    if not accepted:break
+                    answer=candidate;merit=after
+                    if merit<=1e-11:break
             residual = np.linalg.norm(matrix @ answer-rhs)/scale
             if self.coupled_linear_method == 'reused_lu':
                 self._coupled_factor = factor
@@ -152,6 +182,7 @@ class NativeHybridStokes3D:
             raise RuntimeError(f'hybrid coupled solve failed true residual: {residual:g}')
         self.coupled_linear_history.append(dict(reused_preconditioner=reused,
             fallback_factorization=fallback, gmres_iterations=iterations,
+            residual_refinement=refinements,
             true_relative_residual=float(residual)))
         return answer, float(residual)
 
