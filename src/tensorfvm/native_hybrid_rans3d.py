@@ -127,12 +127,13 @@ class NativeHybridRans3D:
 
     def solve(self,*,max_iterations=100,dt=.01,relaxation=.7,tolerance=1e-7,
               momentum_method='newton',momentum_max_iterations=50,
-              momentum_coupling='converged',momentum_sweeps=1,
+              momentum_coupling='converged',momentum_sweeps=1,momentum_inner_iterations=1,
               momentum_relaxation=.5,callback=None):
         """Advance segregated RANS with converged momentum or explicit sweeps.
 
-        Sweeps rebuild convection each time and retain the momentum and pressure
-        linear-solve gates. Their incomplete nonlinear momentum solve is allowed
+        Sweeps rebuild convection each time. Optional inner iterations reuse
+        that frozen system's factors and retain every momentum/pressure linear
+        solve gate. Their incomplete nonlinear momentum solve is allowed
         only as an outer iterate; CURRENT coupled equations and changes must
         still converge before the RANS result can pass.
         """
@@ -147,6 +148,10 @@ class NativeHybridRans3D:
             raise ValueError('unknown momentum coupling')
         if momentum_coupling=='sweeps' and momentum_method not in ('simple','simplec'):
             raise ValueError('momentum sweeps require SIMPLE or SIMPLEC')
+        if not isinstance(momentum_inner_iterations,(int,np.integer)) or momentum_inner_iterations<1:
+            raise ValueError('positive integer momentum inner iterations required')
+        if momentum_coupling!='sweeps' and momentum_inner_iterations!=1:
+            raise ValueError('momentum inner iterations apply only to sweeps coupling')
         if (not isinstance(momentum_sweeps,(int,np.integer)) or momentum_sweeps<1
                 or not np.isfinite(momentum_relaxation) or not 0<momentum_relaxation<=1):
             raise ValueError('positive integer momentum sweeps and relaxation in (0,1] required')
@@ -157,11 +162,12 @@ class NativeHybridRans3D:
             old_u=self.flow.state.copy();old_p=self.flow.p.copy()
             self._refresh_viscosity()
             momentum_start=len(self.flow.history)
+            outer_start=len(self.flow.outer_history)
             if momentum_method=='newton':
                 mr=self.flow.solve_newton(max_iterations=momentum_max_iterations,tolerance=tolerance*.1)
             elif momentum_coupling=='sweeps':
                 mr=self.flow.solve(algorithm=momentum_method,max_outer_iterations=momentum_sweeps,
-                    max_iterations=1,relaxation=momentum_relaxation,tolerance=tolerance*.1)
+                    max_iterations=momentum_inner_iterations,relaxation=momentum_relaxation,tolerance=tolerance*.1)
             else:
                 mr=self.flow.solve(algorithm=momentum_method,max_outer_iterations=momentum_max_iterations,
                     relaxation=momentum_relaxation,tolerance=tolerance*.1)
@@ -180,6 +186,9 @@ class NativeHybridRans3D:
             row=dict(iteration=len(self.history)+1,**{k:v for k,v in current.items() if k!='transport'},
                 momentum_method=momentum_method,momentum_coupling=momentum_coupling,
                 momentum_subsolve_converged=bool(mr['numerically_converged']),
+                momentum_inner_iterations_limit=momentum_inner_iterations if momentum_coupling=='sweeps' else None,
+                momentum_outer_iterations=len(self.flow.outer_history)-outer_start if momentum_method!='newton' else None,
+                momentum_relaxation_basis=self.flow.momentum_relaxation_basis,
                 momentum_iterations=sum(entry['iteration']>0 for entry in momentum_records),
                 momentum_linear_residual_max=max((entry['true_linear_relative_residual'] for entry in
                     momentum_records if 'true_linear_relative_residual' in entry),default=None),
