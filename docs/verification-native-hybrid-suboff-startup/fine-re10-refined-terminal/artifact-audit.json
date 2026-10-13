@@ -1,0 +1,29 @@
+{
+  "source_and_fields_verified": true,
+  "mass_divergence_max": 1.1844194488637108e-13,
+  "local_integrated_momentum_max": 6.904199434387692e-16,
+  "wall_boundary": {
+    "normal_velocity_error": 0.0,
+    "friction": null
+  },
+  "pressure_trace": {
+    "maximum_pressure_noise_amplification": 2.746267661794722,
+    "maximum_rings": 1,
+    "minimum_singular_ratio": 0.5702309191305643,
+    "owner_to_linear_trace_Cp_absolute_rms": 0.07323602662546147,
+    "wall_Cp_certified": false,
+    "fields_sha256": "d8cc8e7c46e6ec36d5b4c2868397bbd8cce8df6a50bc9da430a78662f0565744"
+  },
+  "rejected_linear_candidate": null,
+  "wall_force": [
+    0.38584397556937483,
+    -0.00032309587749907473,
+    6.528542649789582e-05
+  ],
+  "force_balance_max": 4.9404924595819466e-15,
+  "numerically_converged": true,
+  "wall_Cp_certified": false,
+  "grid_convergence_certified": false,
+  "physical_suboff_benchmark_passed": false,
+  "audit_source_sha256": "3327ce2f01608037fb84164bccaf8e819856aa7edcc1a236dd38330eaea3e110"
+}

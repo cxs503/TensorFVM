@@ -110,3 +110,33 @@ def test_low_re_wall_positive_on_quad_faces_and_triangle_counterexample_retained
     with pytest.raises(HybridSSTAdmissibilityError) as failure:bad.solve(max_iterations=1,dt=1.)
     assert failure.value.scalar_result['face_min']<0
     np.testing.assert_array_equal(bad.k,old)
+
+
+def test_convex_initial_faces_preserve_positive_guess_and_still_solve_current_sst():
+    reference=setup(shear=.3);expected=reference.solve(max_iterations=100,dt=1.,tolerance=1e-8)
+    assert expected['numerically_converged']
+    s=setup(shear=.3);x=s.mesh.cell_centers[:,0]
+    k=.01*(1+.2*x);omega=2*(1+.1*x)
+    s.initialize(k,omega,face_initialization='cell_average')
+    np.testing.assert_array_equal(s.k,k);np.testing.assert_array_equal(s.omega,omega)
+    inside=s.mesh.neighbor>=0
+    np.testing.assert_allclose(s.k_faces[inside],.5*(k[s.mesh.owner[inside]]+k[s.mesh.neighbor[inside]]))
+    np.testing.assert_array_equal(s.k_faces[s.transport.k_mask],.01)
+    np.testing.assert_array_equal(s.omega_faces[s.transport.omega_mask],2.)
+    assert s.k_faces.min()>0 and s.omega_faces.min()>0
+    assert not s.converged and not s.initialization['face_diffusion_equilibrium']
+    assert max(s.current_residual()[key] for key in ('k','omega'))>1e-5
+    result=s.solve(max_iterations=100,dt=1.,tolerance=1e-8)
+    assert result['numerically_converged']
+    for key in ('velocity','pressure','k','omega','nu_t'):
+        np.testing.assert_allclose(result[key],expected[key],rtol=1e-6,atol=1e-8)
+    assert result['initialization']['face_initialization']=='cell_average'
+
+
+def test_convex_initialization_rejects_invalid_data_without_overwriting_state():
+    s=setup();old={key:getattr(s,key).copy() for key in ('k','omega','k_faces','omega_faces')}
+    for kw in (dict(face_initialization='unknown'),dict(face_initialization='cell_average')):
+        with pytest.raises(ValueError):s.initialize(-.01,2.,**kw)
+    s.boundary['omega_boundary']=-1.
+    with pytest.raises(ValueError):s.initialize(.01,2.,face_initialization='cell_average')
+    for key,value in old.items():np.testing.assert_array_equal(getattr(s,key),value)

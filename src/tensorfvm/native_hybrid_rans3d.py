@@ -26,8 +26,15 @@ class NativeHybridRans3D:
             k_inflow=k_inflow,omega_inflow=omega_inflow,k_neumann=k_neumann,omega_neumann=omega_neumann)
         self.history=[];self.converged=False;self.initialized=False
 
-    def initialize(self,k,omega):
-        """Equilibrate initial scalar faces; never seed from reference interiors."""
+    def initialize(self,k,omega,*,face_initialization='diffusion_equilibrium'):
+        """Build an explicit numerical initial guess, never reference interiors.
+
+        cell_average preserves positive cell guesses using convex shared-face
+        averages and exact Dirichlet values. It does not claim face equilibrium;
+        subsequent transport solves retain their original equations and gates.
+        """
+        if face_initialization not in ('diffusion_equilibrium','cell_average'):
+            raise ValueError('unknown scalar face initialization')
         from .native_hybrid_scalar3d import NativeHybridScalar3D
         values={}
         for name,old,mask in [('k',k,self.transport.k_mask),('omega',omega,self.transport.omega_mask)]:
@@ -35,11 +42,20 @@ class NativeHybridRans3D:
             op=NativeHybridScalar3D(self.mesh,self.nu,dirichlet_mask=mask)
             bd=np.broadcast_to(np.asarray(self.boundary[name+'_boundary'],float),(self.flow.F,))
             gn=np.broadcast_to(np.asarray(self.boundary[name+'_neumann'],float),(self.flow.F,))
-            r=op.diffusion.equilibrate_faces(old[:,None],bd[:,None],boundary_traction=gn[:,None])
-            faces=self.transport._state(r['face_values'][:,0],self.flow.F,'face '+name,name=='omega')
+            if face_initialization=='diffusion_equilibrium':
+                r=op.diffusion.equilibrate_faces(old[:,None],bd[:,None],boundary_traction=gn[:,None])
+                faces=r['face_values'][:,0]
+            else:
+                faces=old[self.mesh.owner].copy();internal=self.mesh.neighbor>=0
+                faces[internal]=.5*(faces[internal]+old[self.mesh.neighbor[internal]])
+                faces[mask]=bd[mask]
+            faces=self.transport._state(faces,self.flow.F,'face '+name,name=='omega')
             values[name]=old;values[name+'_faces']=faces
         for name,value in values.items():setattr(self,name,value)
         self.initialized=True;self.converged=False
+        self.initialization=dict(face_initialization=face_initialization,
+            face_diffusion_equilibrium=face_initialization=='diffusion_equilibrium',
+            numerical_initial_guess=True,physical_benchmark_passed=False)
         self._refresh_viscosity()
 
     def _closure(self):
@@ -123,7 +139,7 @@ class NativeHybridRans3D:
         r.update(numerically_converged=self.converged,physical_benchmark_passed=False,
             pressure=physical.copy(),physical_pressure=physical.copy(),modified_pressure=s.p.copy(),
             k=self.k.copy(),omega=self.omega.copy(),k_faces=self.k_faces.copy(),omega_faces=self.omega_faces.copy(),
-            nu_t=self.closure['nu_t'].copy(),pressure_traction_integrated=pressure_traction,
+            nu_t=self.closure['nu_t'].copy(),initialization=dict(self.initialization),pressure_traction_integrated=pressure_traction,
             isotropic_turbulent_traction_integrated=isotropic,deviatoric_traction_integrated=viscous,
             numerical_traction_correction=correction,current_rans_residual=current,rans_history=list(self.history))
         return r
