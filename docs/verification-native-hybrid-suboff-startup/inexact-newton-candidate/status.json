@@ -1,0 +1,9 @@
+{
+  "branch": "fix/native-amg-diagnostics",
+  "commit": "f00d816",
+  "production_integrated": false,
+  "tests_passed": 24,
+  "physical_suboff_benchmark_passed": false,
+  "actual_fine_run": "in progress; no result claimed",
+  "policy": "Only explicitly enabled Newton increments may accept positive GMRES iteration-limit status, after all original matrix checks. Strict initialization and complete physical gates unchanged."
+}
