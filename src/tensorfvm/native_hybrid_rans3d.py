@@ -57,13 +57,14 @@ class NativeHybridRans3D:
         """Rebuild momentum and both original steady SST equations at one state."""
         if not self.initialized:raise RuntimeError('initialize turbulence first')
         self._refresh_viscosity()
-        s=self.flow;full,source=s._current_system();free=s.viscous.free
+        s=self.flow;full,source=s._current_system();space=s.viscous.velocity_space
         residual=full @ s.state+source-s.divergence.T @ s.p-s.load
-        scale=max(np.linalg.norm((s.load-source-full @ s.prescribed)[free]),1.)
+        scale=max(np.linalg.norm(space.restrict(s.load-source-full @ s.prescribed)),1.)
         t=self.transport.steady_residual(self.k,self.omega,self.k_faces,self.omega_faces,
             s.volume_flux(),self.wall_distance,self.nu,s.velocity_gradient(),rho=self.rho,**self.boundary)
-        return dict(momentum=float(np.linalg.norm(residual[free])/scale),
+        return dict(momentum=float(np.linalg.norm(space.restrict(residual))/scale),
             divergence=float(np.max(np.abs(s.divergence @ s.state/self.mesh.cell_volumes))),
+            velocity_boundary=space.constraint_error(s.state-s.prescribed),
             gauge=abs(float(s.p[0]-s.gauge_value)) if s.gauge else 0.,
             k=t['k']['relative_residual'],omega=t['omega']['relative_residual'],
             k_boundary=t['k']['dirichlet_error'],omega_boundary=t['omega']['dirichlet_error'],
@@ -103,7 +104,7 @@ class NativeHybridRans3D:
                 minimum_omega=float(min(self.omega.min(),self.omega_faces.min())),
                 frozen_linear_residuals={name:step['transport'][name]['linear_relative_residual'] for name in ('k','omega')})
             self.history.append(row)
-            self.converged=bool(max(row[key] for key in ('momentum','divergence','gauge','k','omega','k_boundary','omega_boundary'))<tolerance
+            self.converged=bool(max(row[key] for key in ('momentum','divergence','gauge','k','omega','k_boundary','omega_boundary','velocity_boundary'))<tolerance
                                 and max(changes.values())<tolerance)
             if callback:callback(row)
             if self.converged:break
@@ -113,7 +114,7 @@ class NativeHybridRans3D:
         if not self.initialized:raise RuntimeError('initialize turbulence first')
         current=self.current_residual();s=self.flow;r=s.result()
         self.converged=bool(self.converged and max(current[key] for key in
-            ('momentum','divergence','gauge','k','omega','k_boundary','omega_boundary'))<self.tolerance)
+            ('momentum','divergence','gauge','k','omega','k_boundary','omega_boundary','velocity_boundary'))<self.tolerance)
         physical=s.p-2/3*self.rho*self.k
         pressure_traction=-physical[self.mesh.owner,None]*self.mesh.area_vectors
         isotropic=-2/3*self.rho*self.k[self.mesh.owner,None]*self.mesh.area_vectors

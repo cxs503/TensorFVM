@@ -7,7 +7,7 @@ This six-mode audit is necessary, not a proof of full discrete coercivity.
 import numpy as np
 
 
-def rigid_motion_constraint_audit(mesh,dirichlet_components,robin_coefficient=None):
+def rigid_motion_constraint_audit(mesh,dirichlet_components,robin_coefficient=None,normal_velocity_faces=None):
     mask=np.asarray(dirichlet_components,bool)
     if mask.shape!=(len(mesh.owner),3) or np.any(mask & (mesh.neighbor>=0)[:,None]):
         raise ValueError('boundary component mask required')
@@ -20,6 +20,12 @@ def rigid_motion_constraint_audit(mesh,dirichlet_components,robin_coefficient=No
     modes[:,1,3]=-z;modes[:,1,5]=x
     modes[:,2,3]=y;modes[:,2,4]=-x
     constrained=modes[mask]
+    if normal_velocity_faces is not None:
+        selected=np.asarray(normal_velocity_faces,bool)
+        if selected.shape!=(len(mask),) or np.any(selected & (mesh.neighbor>=0)):
+            raise ValueError("normal constraints require boundary faces")
+        normal=mesh.area_vectors[selected]/np.linalg.norm(mesh.area_vectors[selected],axis=1)[:,None]
+        constrained=np.vstack((constrained,np.einsum("fi,fij->fj",normal,modes[selected])))
     if robin_coefficient is not None:
         from .native_robin3d import validate_robin
         c=validate_robin(mesh,robin_coefficient,3,mask)
@@ -36,8 +42,8 @@ def rigid_motion_constraint_audit(mesh,dirichlet_components,robin_coefficient=No
                 singular_values=values,necessary_uniqueness_condition_passed=rank==6)
 
 
-def require_rigid_motion_constraints(mesh,dirichlet_components,robin_coefficient=None):
-    result=rigid_motion_constraint_audit(mesh,dirichlet_components,robin_coefficient)
+def require_rigid_motion_constraints(mesh,dirichlet_components,robin_coefficient=None,normal_velocity_faces=None):
+    result=rigid_motion_constraint_audit(mesh,dirichlet_components,robin_coefficient,normal_velocity_faces)
     if result['rank']<6:
         raise ValueError(f"velocity face constraints leave {6-result['rank']} global rigid motion(s) undetermined; add resolved boundary constraints")
     return result
