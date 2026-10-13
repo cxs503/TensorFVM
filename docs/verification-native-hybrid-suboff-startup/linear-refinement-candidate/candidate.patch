@@ -1,0 +1,48 @@
+--- a/src/tensorfvm/native_hybrid_stokes3d.py
++++ b/src/tensorfvm/native_hybrid_stokes3d.py
+@@ -131,6 +131,7 @@
+         iterations = 0
+         reused = self.coupled_linear_method == 'reused_lu' and self._coupled_factor is not None
+         fallback = False
++        refinements=[]
+         scale = max(np.linalg.norm(rhs), np.finfo(float).tiny)
+         if reused:
+             def count(_):
+@@ -145,6 +146,29 @@
+         if not reused or fallback:
+             factor = splu(matrix)
+             answer = factor.solve(rhs)
++            # A small global residual can conceal divergence in tiny cells.
++            # Refine the SAME saddle equations using extended residuals and
++            # the existing LU. Keep float64 states and all outer gates.
++            nv=len(self.viscous.free)
++            def quality(candidate):
++                defect=matrix@candidate-rhs
++                relative=float(np.linalg.norm(defect)/scale)
++                if len(defect)!=nv+self.N:return relative
++                constraint=defect[nv:]/self.mesh.cell_volumes
++                if self.gauge:constraint=constraint.copy();constraint[0]=defect[nv]
++                return max(relative,float(np.max(np.abs(constraint),initial=0.)))
++            merit=quality(answer)
++            if merit>1e-11:
++                precise=matrix.astype(np.longdouble);precise_rhs=rhs.astype(np.longdouble)
++                for iteration in range(3):
++                    defect=precise_rhs-precise@answer.astype(np.longdouble)
++                    candidate=answer+factor.solve(np.asarray(defect,float))
++                    after=quality(candidate)
++                    accepted=bool(np.isfinite(candidate).all() and after<merit)
++                    refinements.append(dict(before=merit,after=after,accepted=accepted))
++                    if not accepted:break
++                    answer=candidate;merit=after
++                    if merit<=1e-11:break
+             residual = np.linalg.norm(matrix @ answer-rhs)/scale
+             if self.coupled_linear_method == 'reused_lu':
+                 self._coupled_factor = factor
+@@ -152,6 +176,7 @@
+             raise RuntimeError(f'hybrid coupled solve failed true residual: {residual:g}')
+         self.coupled_linear_history.append(dict(reused_preconditioner=reused,
+             fallback_factorization=fallback, gmres_iterations=iterations,
++            residual_refinement=refinements,
+             true_relative_residual=float(residual)))
+         return answer, float(residual)
+ 

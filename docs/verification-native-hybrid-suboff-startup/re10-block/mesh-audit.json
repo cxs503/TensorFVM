@@ -1,0 +1,21 @@
+{
+  "cells": 1331,
+  "faces": 3556,
+  "minimum_cell_volume": 9.939508174416833e-08,
+  "maximum_relative_closure": 1.4956306989265952e-16,
+  "minimum_face_projection": 2.7336364385075436e-08,
+  "maximum_nonorthogonality_degrees": 87.78958993604341,
+  "patch_face_counts": {
+    "farfield": 152,
+    "inlet": 26,
+    "internal": 3176,
+    "outlet": 26,
+    "wall": 176
+  },
+  "cell_type_counts": {
+    "tetra": 1139,
+    "wedge": 32,
+    "hexahedron": 160
+  },
+  "rigid_constraint_rank": 6
+}
