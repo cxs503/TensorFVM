@@ -41,3 +41,5 @@ OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 PYTHONPATH=src python scripts/verify_na
 ## 累计 25 步的当前稳态审计
 
 [完整记录、网格与场图](resumed-25-step-audit/README.md)：续算完成，但动量和两条标量的完整验收仍未通过；ω 小归一化残差仍对应约 3.7e-4 的全局收支缺陷。精度敏感性对照表明当前缺陷主要部分不能归因于保存场向 float64 的转换。已从该状态采用批次 SIMPLEC 继续计算。
+
+[四组完全相同输入的动量对照](frozen-momentum-four-way/README.md)已包含原行和松弛 0.5/0.9 各 100 步未收敛的完整记录，以及已收敛的批次 SIMPLEC 和原生 Newton。它们都是固定 SST 黏性的子问题，不能替代完整耦合验证。
