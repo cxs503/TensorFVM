@@ -41,3 +41,5 @@ J_traction = -beta*I - (beta_radial-beta)*e*e^T
 本页不改变在运行的 SUBOFF 方程、常数或验收门槛。
 
 进展：[混合标量单元约束与反力账本](../../verification-native-scalar-cell-constraints/README.md)已实现并验证；完整壁面模型仍待接入。
+
+新增：[Foundation 12 blended ω/G 与面积加权壁邻单元组件](omega-blend/README.md)，8 项测试通过，包括计算所得 ω 实际进入原生输运约束及反力账本。完整 Spalding 动量、G 与 SST 耦合仍未完成。
