@@ -113,13 +113,22 @@ ABC/势流使用去均值压力，Kovasznay 同时报固定参考压力和去均
 | 256 | 1.25748% | 15.64750% | 是 | 未通过 |
 | 1,024 | 0.38397% | 7.81218% | 是 | 未通过 |
 | 4,096 | 0.12172% | 3.94954% | 是 | 未通过 |
+| 9,216 | 0.06727% | 2.66609% | 是 | 通过 |
 
 [完整指标](kovasznay/cases.json) · [配置](kovasznay/settings.json)
 
-该网格为 `n×n×1`，不能替代真正三维 ABC。4,096 单元的去均值压力误差为 0.799%，但预定固定参考压力误差为 3.950%，仍不通过。更细的 9,216 单元独立计算正在进行，本报告不预判其结果。
+该网格为 `n×n×1`，不能替代真正三维 ABC。4,096 单元的去均值压力误差为 0.799%，但预定固定参考压力误差为 3.950%，仍不通过。9,216 单元独立计算现已完成，固定参考压力误差 2.66609%、去均值压力误差 0.37069%，通过预定门槛。四档误差单调下降。
+
+[细网格完整指标](kovasznay-fine/cases.json) · [细网格配置](kovasznay-fine/settings.json)。
+细网格有 74,112 个面、210,816 个自由速度未知量和 9,216 个压力未知量。
+原生 Stokes 初值后 4 步 Newton 收敛；当前动量残差 `5.15e-15`、最大散度 `1.21e-13`，
+整体动量闭合 `1.27e-13`、能量闭合 `1.78e-15`，计算约 1,134 秒。
+该次仍使用联合参考求解，不声称大网格 SIMPLEC 或物理 SUBOFF 已通过。
 
 ![Kovasznay 误差](kovasznay/errors.png)
-![Kovasznay 实际网格和场切面](kovasznay/section/mesh-pressure-speed.png)
+![Kovasznay 最细实际网格和场切面](kovasznay-fine/section/mesh-pressure-speed.png)
+
+切面图中压力分别去体积均值，仅供场形态对照；验收采用上表固定参考压力误差。
 
 ### 线性算法与效率限制
 
@@ -151,7 +160,7 @@ python -m pip install pyamg==5.3.0  # 在已有 benchmark Python 环境中补充
 export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 PYTHONPATH=src
 python scripts/verify_native_newton.py --case potential --levels 2 4 6 --viscosities .001 --output results/reproduce-newton-potential
 python scripts/verify_native_newton.py --case abc --levels 8 12 16 --viscosities .1 --linear-method block_amg --output results/reproduce-newton-abc
-python scripts/verify_native_newton.py --case kovasznay --levels 16 32 64 --viscosities .025 --output results/reproduce-newton-kovasznay
+python scripts/verify_native_newton.py --case kovasznay --levels 16 32 64 96 --viscosities .025 --output results/reproduce-newton-kovasznay
 python scripts/verify_native_newton.py --case kovasznay --levels 64 96 --viscosities .025 --linear-method block_amg --output results/reproduce-newton-kovasznay-amg
 ```
 

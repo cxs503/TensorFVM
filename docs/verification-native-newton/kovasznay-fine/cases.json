@@ -1,0 +1,47 @@
+[
+  {
+    "case": "kovasznay-n96-mu0.025",
+    "cells": 9216,
+    "faces": 74112,
+    "velocity_unknowns": 210816,
+    "n": 96,
+    "viscosity": 0.025,
+    "numerically_converged": true,
+    "failure": null,
+    "velocity_relative_l2": 0.0006727128870167667,
+    "pressure_mean_free_relative_l2": 0.003706887018328718,
+    "pressure_fixed_gauge_relative_l2": 0.026660890608472182,
+    "analytic_accuracy_and_ledger_passed": true,
+    "iterations": 4,
+    "final_residuals": {
+      "iteration": 4,
+      "accepted": true,
+      "step_length": 1.0,
+      "backtracks": 0,
+      "merit_before": 1.4826444144714763e-12,
+      "merit_after": 1.2263365923192902e-12,
+      "true_linear_relative_residual": 7.979829383790531e-12,
+      "velocity_change": 4.570327147372546e-13,
+      "pressure_change": 8.407672283817541e-12,
+      "current_momentum_residual": 5.1525636061434e-15,
+      "divergence_max": 1.211843125847878e-13,
+      "gauge_error": 0.0
+    },
+    "initialization": {
+      "method": "native_stokes",
+      "converged": true,
+      "iteration": 1,
+      "momentum_relative_residual": 2.891846232287211e-14,
+      "divergence_max": 5.2454540711010606e-11,
+      "true_linear_relative_residual": 3.455361463709207e-14,
+      "simplec_limited_dofs": 0,
+      "momentum_relaxation_basis": "absolute_row_sum"
+    },
+    "runtime_seconds": 1134.2491673203185,
+    "energy_balance_error": 1.7763568394002505e-15,
+    "convection_energy_identity_error": 1.1535911115245767e-16,
+    "interface_traction_defect_max": 1.0321604682062002e-16,
+    "local_momentum_balance_max": 2.9436088982981445e-16,
+    "global_momentum_balance_max": 1.273476038136751e-13
+  }
+]
