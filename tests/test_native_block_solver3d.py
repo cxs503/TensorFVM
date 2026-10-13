@@ -149,3 +149,45 @@ def test_inexact_newton_rejects_wrong_equations_before_state_change(monkeypatch)
     with pytest.raises(module.NativeBlockSolveError):s.solve_newton(allow_inexact_linear_steps=True)
     assert not s.coupled_linear_history[-1]['original_criteria_satisfied']
     np.testing.assert_array_equal(s.state,old);np.testing.assert_array_equal(s.p,old_p)
+
+
+@pytest.mark.parametrize('open_boundary',[False,True])
+def test_residual_refinement_corrects_same_matrix_without_waiving_checks(monkeypatch,open_boundary):
+    import tensorfvm.native_block_solver3d as module
+    from scipy.sparse.linalg import spsolve
+    m=pressure_mesh(2);fixed=m.neighbor<0
+    if open_boundary:fixed[np.flatnonzero(fixed)[::3]]=False
+    s=NativeHybridStokes3D(m,fixed,body_force=[.7,-.3,.2],gauge_value=.4,
+                          coupled_linear_method='block_amg')
+    calls=[]
+    def limited(a,b,**kwargs):
+        calls.append(b.copy());answer=spsolve(a,b)
+        if len(calls)==1:answer[0]+=1e-5
+        return answer,60 if len(calls)==1 else 0
+    monkeypatch.setattr(module,'gmres',limited)
+    original=s._coupled_linear
+    monkeypatch.setattr(s,'_coupled_linear',lambda a,b:original(a,b,allow_inexact=True))
+    result=s.solve(algorithm='coupled',tolerance=1e-9)
+    assert result['numerically_converged']
+    row=s.coupled_linear_history[-1]
+    assert row['original_criteria_satisfied'] and not row['gmres_target_reached']
+    assert row['true_relative_residual']<=1e-9
+    assert row['algebraic_continuity_defect_per_volume_max']<=1e-8
+    assert row['gauge_equation_defect']<=1e-9
+    assert len(calls)==2 and len(row['residual_refinement'])==1
+    correction=row['residual_refinement'][0]
+    assert correction['accepted'] and correction['quality_before']>1 and correction['quality_after']<=1
+
+
+def test_nonimproving_refinement_cannot_accept_bad_direction(monkeypatch):
+    import tensorfvm.native_block_solver3d as module
+    _,s,_=potential_solver(2,.1);s.initialize_stokes();s.coupled_linear_method='block_amg'
+    old=s.state.copy();old_p=s.p.copy();calls=[]
+    def no_progress(a,b,**kwargs):
+        calls.append(b.copy());return np.zeros_like(b),60
+    monkeypatch.setattr(module,'gmres',no_progress)
+    with pytest.raises(module.NativeBlockSolveError) as error:s.solve_newton(allow_inexact_linear_steps=True)
+    assert len(calls)==2
+    assert not error.value.record['residual_refinement'][0]['accepted']
+    assert not error.value.record['original_criteria_satisfied']
+    np.testing.assert_array_equal(s.state,old);np.testing.assert_array_equal(s.p,old_p)

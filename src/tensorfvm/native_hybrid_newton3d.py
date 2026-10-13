@@ -8,7 +8,7 @@ import numpy as np
 from scipy import sparse
 
 
-def solve_newton(solver, *, max_iterations=50, tolerance=1e-8, max_backtracks=20, callback=None, allow_inexact_linear_steps=False):
+def solve_newton(solver, *, max_iterations=50, tolerance=1e-8, max_backtracks=20, callback=None, allow_inexact_linear_steps=False, require_initial_correction=False):
     s=solver
     s.velocity_constraint_tolerance=tolerance
     if not np.isfinite(tolerance) or tolerance<=0 or max_iterations<1 or max_backtracks<0:
@@ -33,7 +33,7 @@ def solve_newton(solver, *, max_iterations=50, tolerance=1e-8, max_backtracks=20
     current=evaluate(s.state,s.p)
     for iteration in range(max_iterations):
         momentum,mass,gauge,merit,metrics=current
-        if iteration==0 and max(metrics.values())<tolerance:
+        if iteration==0 and not require_initial_correction and max(metrics.values())<tolerance:
             s.nonlinear_converged=True
             s.newton_history.append(dict(iteration=0,accepted=True,step_length=0.,backtracks=0,merit_before=merit,
                 merit_after=merit,velocity_change=0.,pressure_change=0.,**metrics))
@@ -77,5 +77,6 @@ def solve_newton(solver, *, max_iterations=50, tolerance=1e-8, max_backtracks=20
     result=s.result()
     result.update(newton_history=list(s.newton_history),newton_failure=s.newton_failure,
                   nonlinear_method='coupled_newton',
-                  allow_inexact_linear_steps=bool(allow_inexact_linear_steps))
+                  allow_inexact_linear_steps=bool(allow_inexact_linear_steps),
+                  require_initial_correction=bool(require_initial_correction))
     return result
