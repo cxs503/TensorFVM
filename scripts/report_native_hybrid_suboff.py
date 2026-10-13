@@ -33,6 +33,22 @@ def main():
         assert hashlib.sha256((root/'source-snapshot'/path).read_bytes()).hexdigest()==digest
     assert hashlib.sha256((root/'input.msh').read_bytes()).hexdigest()==settings['mesh_sha256']
     assert hashlib.sha256((root/'fields.npz').read_bytes()).hexdigest()==summary['fields_sha256']
+    rejected_audit=None
+    if (root/'rejected-linear-candidate.json').exists():
+        record=json.loads((root/'rejected-linear-candidate.json').read_text())
+        assert not record['accepted'] and not record['changes_accepted_state']
+        assert hashlib.sha256((root/'rejected-linear-candidate.npz').read_bytes()).hexdigest()==record['fields_sha256']
+        with np.load(root/'rejected-linear-candidate.npz',allow_pickle=False) as rejected:
+            nv=len(rejected['free_velocity_dofs']);defect=rejected['equation_defect']
+            assert rejected['candidate'].shape==defect.shape==(nv+len(rejected['cell_volumes']),)
+            constraint=defect[nv:]/rejected['cell_volumes']
+            if bool(rejected['gauge']):constraint=constraint[1:]
+            if record['candidate_finite']:
+                assert np.isfinite(rejected['candidate']).all() and np.isfinite(defect).all()
+                np.testing.assert_allclose(float(np.max(np.abs(constraint),initial=0.)),record['algebraic_continuity_defect_per_volume_max'],rtol=1e-12)
+                np.testing.assert_allclose(float(np.max(np.abs(defect[:nv]))),record['momentum_equation_defect_max'],rtol=1e-12)
+            rejected_audit=dict(candidate_hash_verified=True,saved_equation_defect_metrics_replayed=True,
+                coupled_matrix_reassembled=False,candidate_is_physical_flow=False,record={k:v for k,v in record.items() if k!='preconditioned_residual_history'})
     with np.load(root/'fields.npz',allow_pickle=False) as f:
         v=f['cell_volumes'];owner=f['owner'];neighbor=f['neighbor'];inside=neighbor>=0;wall=f['patch_labels']=='wall'
         area=np.linalg.norm(f['area_vectors'],axis=1);normal=f['area_vectors']/area[:,None]
@@ -62,6 +78,7 @@ def main():
             wall_Cp_certified=False,fields_sha256=hashlib.sha256((root/'wall-pressure-traces.npz').read_bytes()).hexdigest())
         polygons,ids=cell_section_polygons(mesh,value=.001)
         fig,axes=plt.subplots(4,1,figsize=(12,12),constrained_layout=True)
+        if not summary['numerically_converged']:fig.suptitle('REJECTED RUN — saved solver state is not converged flow')
         for ax,key,title in zip(axes,[None,None,'velocity','pressure'],['Actual domain mesh, z/L=0.001','Body-fitted mesh detail','Native streamwise velocity U/U_inf','Native cell pressure p/(rho U_inf^2)']):
             if key is None:pc=PolyCollection(polygons,facecolors='none',edgecolors='.35',linewidths=.3)
             else:
@@ -83,7 +100,7 @@ def main():
         axes[1].set(xlabel='NS iteration',ylabel='Residual');axes[1].grid(True)
         fig.savefig(root/'wall-proxies-convergence.png',dpi=180);fig.savefig(root/'wall-proxies-convergence.pdf');plt.close(fig)
     audit=dict(source_and_fields_verified=True,mass_divergence_max=mass,local_integrated_momentum_max=momentum,
-        pressure_trace=trace_audit,wall_force=force.tolist(),force_balance_max=balance,numerically_converged=summary['numerically_converged'],
+        pressure_trace=trace_audit,rejected_linear_candidate=rejected_audit,wall_force=force.tolist(),force_balance_max=balance,numerically_converged=summary['numerically_converged'],
         wall_Cp_certified=False,grid_convergence_certified=False,physical_suboff_benchmark_passed=False,
         audit_source_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest())
     (root/'artifact-audit.json').write_text(json.dumps(audit,indent=2)+'\n');print(audit)

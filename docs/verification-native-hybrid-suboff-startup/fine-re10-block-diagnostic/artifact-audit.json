@@ -1,0 +1,52 @@
+{
+  "source_and_fields_verified": true,
+  "mass_divergence_max": 13.690415205058065,
+  "local_integrated_momentum_max": 0.35432557818544025,
+  "pressure_trace": {
+    "maximum_pressure_noise_amplification": 2.746267661794722,
+    "maximum_rings": 1,
+    "minimum_singular_ratio": 0.5702309191305643,
+    "owner_to_linear_trace_Cp_absolute_rms": 0.0,
+    "wall_Cp_certified": false,
+    "fields_sha256": "815cbdf8880642825a1cf6bf265d93fbf29f3e76bbdaf65c8865a2b05a6d3985"
+  },
+  "rejected_linear_candidate": {
+    "candidate_hash_verified": true,
+    "saved_equation_defect_metrics_replayed": true,
+    "coupled_matrix_reassembled": false,
+    "candidate_is_physical_flow": false,
+    "record": {
+      "method": "block_amg",
+      "gmres_info": 30,
+      "gmres_iterations": 2400,
+      "true_relative_residual": 9.157241644086107e-11,
+      "algebraic_continuity_defect_per_volume_max": 1.62169600821396e-08,
+      "gauge_equation_defect": 0.0,
+      "momentum_equation_defect_max": 3.767321413100764e-11,
+      "candidate_finite": true,
+      "accepted": false,
+      "candidate_kind": "algebraic solution or Newton increment; not accepted physical flow",
+      "operator_complexities": [
+        1.3197539848428503,
+        1.3197539848428503,
+        1.3197539848428503
+      ],
+      "setup_seconds": 0.8625460341572762,
+      "solve_seconds": 361.5595689089969,
+      "pyamg_version": "5.3.0",
+      "fields_sha256": "295b3fb7a156e218b688f93c3b6c80a5ffbf64b2ff89e42f31c761d0f5e5995a",
+      "changes_accepted_state": false
+    }
+  },
+  "wall_force": [
+    -0.0,
+    -0.0,
+    -0.0
+  ],
+  "force_balance_max": 88.81390286438786,
+  "numerically_converged": false,
+  "wall_Cp_certified": false,
+  "grid_convergence_certified": false,
+  "physical_suboff_benchmark_passed": false,
+  "audit_source_sha256": "f13fc99ab2d9556a15b8dfc62eded4ede5ef2dc3f04c496209a182a1d48fbf72"
+}
