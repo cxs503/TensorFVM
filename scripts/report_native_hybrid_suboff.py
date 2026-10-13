@@ -61,7 +61,20 @@ def main():
         remote=f['momentum_flux_integrated'][~inside & ~wall].sum(0)
         balance=float(np.max(np.abs(force+remote)))
         np.testing.assert_allclose(f['flux'],np.sum(f['face_velocity']*f['area_vectors'],axis=1),rtol=0,atol=1e-14)
-        np.testing.assert_allclose(f['face_velocity'][wall],0.,atol=1e-14)
+        beta=settings.get('wall_friction')
+        wall_u=f['face_velocity'][wall];wall_n=normal[wall]
+        normal_velocity=np.sum(wall_u*wall_n,axis=1)
+        wall_boundary_audit=dict(normal_velocity_error=float(np.max(abs(normal_velocity))),friction=beta)
+        if beta is None:np.testing.assert_allclose(wall_u,0.,atol=1e-14)
+        else:
+            traction=f['total_traction_integrated'][wall]
+            tangent_traction=traction-np.sum(traction*wall_n,axis=1)[:,None]*wall_n
+            tangent_velocity=wall_u-normal_velocity[:,None]*wall_n
+            robin_error=float(np.max(abs(tangent_traction+beta*area[wall,None]*tangent_velocity)))
+            wall_boundary_audit['robin_tangential_defect']=robin_error
+            np.testing.assert_allclose([wall_boundary_audit['normal_velocity_error'],robin_error],
+                [summary['wall_normal_velocity_error'],summary['wall_robin_tangential_defect']],rtol=1e-10,atol=1e-15)
+            if summary['numerically_converged']:assert max(wall_boundary_audit['normal_velocity_error'],robin_error)<1e-8
         np.testing.assert_allclose(force,summary['wall_force'],rtol=1e-12)
         np.testing.assert_allclose([mass,momentum,balance],[summary['mass_divergence_max'],summary['local_integrated_momentum_max'],summary['force_balance_max']],rtol=1e-12)
         np.testing.assert_allclose(f['wall_cp_owner'],2*f['pressure'][owner[wall]],atol=1e-14)
@@ -118,7 +131,7 @@ def main():
         axes[1].set(xlabel='NS iteration',ylabel='Residual');axes[1].grid(True)
         fig.savefig(root/'wall-proxies-convergence.png',dpi=180);fig.savefig(root/'wall-proxies-convergence.pdf');plt.close(fig)
     audit=dict(source_and_fields_verified=True,mass_divergence_max=mass,local_integrated_momentum_max=momentum,
-        pressure_trace=trace_audit,rejected_linear_candidate=rejected_audit,wall_force=force.tolist(),force_balance_max=balance,numerically_converged=summary['numerically_converged'],
+        wall_boundary=wall_boundary_audit,pressure_trace=trace_audit,rejected_linear_candidate=rejected_audit,wall_force=force.tolist(),force_balance_max=balance,numerically_converged=summary['numerically_converged'],
         wall_Cp_certified=False,grid_convergence_certified=False,physical_suboff_benchmark_passed=False,
         audit_source_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest())
     (root/'artifact-audit.json').write_text(json.dumps(audit,indent=2)+'\n');print(audit)
