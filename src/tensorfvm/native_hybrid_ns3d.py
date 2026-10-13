@@ -5,7 +5,8 @@ SIMPLE/SIMPLEC or coupled solve uses the shared hybrid Stokes infrastructure.
 Only a residual rebuilt from CURRENT face velocity can qualify convergence.
 Linear upwind reconstruction uses the current hybrid Gauss gradient; its
 signed correction work is explicitly audited.
-SST and wall functions are not implemented by this backend.
+An optional cell-sampled Spalding traction supplies a nonlinear boundary law.
+It does not by itself implement SST wall production/omega coupling.
 """
 import numpy as np
 from .native_hybrid_stokes3d import NativeHybridStokes3D
@@ -15,7 +16,7 @@ from .native_hybrid_newton3d import solve_newton
 
 class NativeHybridNavierStokes3D(NativeHybridStokes3D):
     def __init__(self, mesh, velocity_dirichlet, velocity_boundary=0., *,
-                 density=1., backflow_velocity=None, convection_order=1, **kwargs):
+                 density=1., backflow_velocity=None, convection_order=1, wall_model=None, **kwargs):
         kwargs.setdefault('momentum_relaxation_basis','absolute_row_sum')
         super().__init__(mesh, velocity_dirichlet, velocity_boundary, **kwargs)
         inflow = np.broadcast_to(np.asarray(velocity_boundary, float), (self.F,3)).copy()
@@ -25,6 +26,11 @@ class NativeHybridNavierStokes3D(NativeHybridStokes3D):
                 raise ValueError('explicit backflow_velocity required on total traction boundaries')
             inflow[open_faces] = np.broadcast_to(np.asarray(backflow_velocity,float), (self.F,3))[open_faces]
         self.convection = NativeHybridConvection3D(mesh, inflow, density, convection_order)
+        self.wall_model=wall_model
+        if wall_model is not None:
+            from .native_spalding3d import NativeSpaldingWall3D
+            if not isinstance(wall_model,NativeSpaldingWall3D):raise TypeError('native Spalding wall model required')
+            wall_model.validate_flow(self,kwargs.get('boundary_traction',0.))
         self.outer_history = []
         self.nonlinear_converged = False
 
@@ -35,7 +41,16 @@ class NativeHybridNavierStokes3D(NativeHybridStokes3D):
     def _current_system(self, state=None):
         convection, source = self.convection.hybrid_system(
             self.volume_flux(state),self.face_mean.matrix,self.velocity_gradient(state))
-        return self.viscous.full_matrix+convection, source
+        full=self.viscous.full_matrix+convection
+        if self.wall_model is not None:
+            wall,wall_source=self.wall_model.system(self.state if state is None else state)
+            full=full+wall;source=source+wall_source
+        return full, source
+
+    def momentum_jacobian(self):
+        jac=self.viscous.full_matrix+self.convection.hybrid_jacobian(self.state,self.face_mean.matrix)
+        if self.wall_model is not None:jac=jac+self.wall_model.jacobian(self.state)
+        return jac
 
     def velocity_gradient(self, state=None):
         state = self.state if state is None else state
@@ -131,6 +146,10 @@ class NativeHybridNavierStokes3D(NativeHybridStokes3D):
         local_balance = self.convection.D @ momentum_flux-self.mesh.cell_volumes[:,None]*self.body_force
         reaction = full @ self.state+source-self.divergence.T @ self.p-self.load
         external = float(self.state @ self.load+self.prescribed @ reaction)
+        wall=None
+        if self.wall_model is not None:
+            wall=self.wall_model.diagnostics(self.state,total_traction)
+            external+=wall['boundary_power']
         result.update(numerically_converged=bool(self.nonlinear_converged and result["boundary_velocity_error"]<getattr(self,"velocity_constraint_tolerance",1e-8)),
             reconstructed_velocity=mean_velocity,
             total_traction_integrated=total_traction,
@@ -150,4 +169,5 @@ class NativeHybridNavierStokes3D(NativeHybridStokes3D):
             momentum_flux_integrated=momentum_flux,
             total_momentum_reaction=reaction.reshape(-1,3),
             outer_history=list(self.outer_history))
+        if wall is not None:result['wall_model']=wall
         return result
