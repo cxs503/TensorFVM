@@ -1,0 +1,13 @@
+{
+  "original_run": "/home/jsyc/tensor-suite-development/TensorFVM/results/native-suboff-sst-startup-convex",
+  "original_bindings": {
+    "settings.json": "85b714e4b1cbf342eb17164f145c96b5634bbba393eb5132dcb81af0052710ea",
+    "summary.json": "5aa55600888c3698f26a32e0d4d6967ebe44a7cd0d16475741b72837791d66d2",
+    "fields.npz": "cfc6f41469f90bc73208171ecbe0dcf0f732a91839aa0b26124dbeb0417ae944",
+    "initial-input.msh": "15d81c1f97495b6b9f1060e05126a5f8ed1b8ca4814e1533087d92944add4408",
+    "rejected-scalar-candidate.npz": "b4d74dd1677d94b614ce4a7b5765306945571e7f07fe85b1bfb0942f28b16f08"
+  },
+  "work_balance_policy": "relative",
+  "physical_suboff_benchmark_passed": false,
+  "scope": "one original omega subsolve; momentum and k not advanced"
+}
