@@ -79,7 +79,8 @@ def main():
         inlet_provenance='explicit modeling assumptions, not measured experimental inflow',
         wall_treatment='resolved; k=0 and omega=60*nu/(beta1*d1^2); no wall function',
         trip='no geometric trip or transition model',initial_laminar_run=str(source),initial_bindings=binding,
-        face_initialization=a.face_initialization,scalar_correction=a.scalar_correction,scalar_work_balance_policy=a.scalar_work_balance_policy,
+        face_initialization='restored_accepted_fields' if a.restart_run is not None else a.face_initialization,
+        requested_face_initialization=a.face_initialization,scalar_correction=a.scalar_correction,scalar_work_balance_policy=a.scalar_work_balance_policy,
         momentum_method=a.momentum_method,momentum_coupling=a.momentum_coupling,
         momentum_sweeps=a.momentum_sweeps,momentum_relaxation=a.momentum_relaxation,
         restart_run=str(a.restart_run) if a.restart_run is not None else None,
@@ -110,7 +111,7 @@ def main():
                 s.restore_accepted_fields(f)
         write_json(out/'initialization.json',dict(**s.initialization,k_face_min=float(s.k_faces.min()),omega_face_min=float(s.omega_faces.min())))
         np.savez_compressed(out/'initial-turbulence.npz',k=s.k,omega=s.omega,k_faces=s.k_faces,omega_faces=s.omega_faces)
-        print(dict(stage='SST_STARTUP',cells=flow.N,faces=flow.F,face_initialization=a.face_initialization),flush=True)
+        print(dict(stage='SST_STARTUP',cells=flow.N,faces=flow.F,face_initialization=s.initialization['face_initialization']),flush=True)
         def progress(row):write_json(out/'progress.json',row);print(row,flush=True)
         result=s.solve(max_iterations=a.steps,dt=a.dt,relaxation=.7,tolerance=1e-8,
             momentum_method=a.momentum_method,momentum_coupling=a.momentum_coupling,
