@@ -79,8 +79,56 @@ OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 PYTHONPATH=src python scripts/verify_na
 
 [相同原始 k 输入的修复重放](third-k-strong-continuation/summary.json)在 37.266 s 内通过：两个重放的输入文件 SHA256 完全相同，局部/接口/全局缺陷为 1.076e-19、5.550e-24、-2.937e-19；最终平滑量为 0，原方程相对残差 1.034e-16，完整 Newton 更新 6.890e-20。相对工作缺陷 1.088e-16，旧绝对工作门槛也通过，候选 k 非负。
 
-11 项 MMP Newton/标量精度回归通过（[日志](strong-continuation-tests.log)，与前述 43 项有重叠，不能相加）。这证明该原始子问题已解出；不能用它替代完整 SST 耦合。随后已启动 5 步 SIMPLEC+SST 实际网格试验，结果待核验。
+11 项 MMP Newton/标量精度回归通过（[日志](strong-continuation-tests.log)，与前述 43 项有重叠，不能相加）。这证明该原始子问题已解出；不能用它替代完整 SST 耦合。随后 5 步 SIMPLEC+SST 实际网格试验全部完成，见下节；尚未达到稳态。
 
-## 5. 剩余工作
+## 5. 五步完整耦合及当前原方程审计
 
-将已通过原始 k 重放的延续修复用于完整 SST 耦合，完成连续外迭代及全部稳态收支核验；再验证高 Re、SIMPLEC+SST 壁面处理和实际 y+。目前没有与 OpenFOAM 对齐的壁面函数、同工况/同网格对照或 Cp/Cd 双指标 <3% 证据。低 Re 层流三网格阻力非单调、尾部 Cp 极值随细化增强的问题也仍需处理。
+[真实 SUBOFF 五步计算](simplec-five-completed/summary.json)全部完成，耗时 467.607 s，跨过原第三步 k 的失败点。五次迭代均采用原生 SIMPLEC、每轮一次压力修正、SST-2003、显式相对标量工作判据。原场 SHA256 为 `40d69fa1ef59db2db4c09142d6dbd86ec69d5ef1b2c427fd51234cab50fffa8b`。源码/输入/原场绑定通过，独立散度复算约 2.279e-14。
+
+| 迭代 | 当前动量残差 | 当前 k 残差 | 当前 omega 残差 |
+|---|---:|---:|---:|
+| 1 | 9.447e-6 | 0.9991 | 0.9916 |
+| 2 | 4.817e-6 | 0.9899 | 0.8928 |
+| 3 | 3.746e-6 | 0.9012 | 0.4015 |
+| 4 | 3.081e-6 | 0.5237 | 0.04174 |
+| 5 | 2.604e-6 | 0.3692 | 0.003502 |
+
+![当前稳态原方程残差与场变化](simplec-five-completed/residual-history.png)
+
+![五步后的真实网格与原始场](simplec-five-completed/startup-fields.png)
+
+**完成五步不代表收敛。** 第五步仍有 k/omega 相对变化 0.0465/0.0506。omega 子求解的旧绝对工作门槛仍未通过，显式相对判据的使用继续记录。
+
+新脚本 `audit_native_suboff_rans_state.py` 从保存场重新构造当前稳态算子，单独求和通量、力与工作，完全去掉瞬态储存项。这是对生产算子的原场复算，不是另一种独立离散方法。[第五步审计](five-current-steady-audit/audit.json)显示：
+
+| 当前完整状态的收支 | 值 |
+|---|---:|
+| 动量局部积分缺陷 | 4.035e-6 |
+| 总动量/力收支缺陷 | 4.671e-5 |
+| 动量工作平衡缺陷 | 4.442e-5 |
+| k 稳态全局收支 | 1.646e-3 |
+| k 稳态相对工作缺陷 | 0.7351 |
+| omega 稳态全局收支 | 3.510e7 |
+| omega 稳态相对工作缺陷 | 9.097e-5 |
+| 当前 Cd（参考面积 L²） | 0.79286676 |
+
+Cd 与此前层流解相近并不证明完整 RANS 收敛。冻结系数的瞬态子问题可以具有很小残差，而接受的松弛场在当前非线性稳态方程上仍有大缺陷；因此当前所有数值/物理资格保持 false。[旧第三步失败状态的同类审计](third-current-steady-audit/audit.json)也保留作为对照。
+
+## 6. 可核验续算
+
+新增 `--restart-run`：验证原始网格、Re、模型、入口参数、边界、源码与场文件哈希，精确保留单元及共享面状态，清除历史收敛标志。本次只续算原生数值场，不从参考数据生成内部场。单元/面恢复后的五步剪切流与不中断计算一致；无效值、边界或压力基准不匹配在提交前拒绝，见 [两项测试](restart-tests.log)。
+
+已从第五步的完整状态启动 20 步续算，显式将稳态伪时间步从 0.01 改为 1，每个外迭代执行 5 次 SIMPLEC 修正。原稳态目标方程与验收门槛不变；这不是物理瞬态时间精度试验。源码冻结、结果待核验，不能提前标为收敛。
+
+```bash
+OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 PYTHONPATH=src python scripts/verify_native_suboff_sst_startup.py \
+  --laminar-run docs/verification-native-hybrid-suboff-startup/re10-newton \
+  --restart-run docs/verification-native-suboff-sst-startup/precision-and-work-policy/simplec-five-completed \
+  --output results/native-suboff-sst-simplec-resumed-dt1 --steps 20 --dt 1 \
+  --scalar-work-balance-policy relative --momentum-method simplec \
+  --momentum-coupling sweeps --momentum-sweeps 5
+```
+
+## 7. 剩余工作
+
+继续已经越过原 k 失败点的完整 SST 外迭代，完成全部稳态收支核验；再验证高 Re、SIMPLEC+SST 壁面处理和实际 y+。目前没有与 OpenFOAM 对齐的壁面函数、同工况/同网格对照或 Cp/Cd 双指标 <3% 证据。低 Re 层流三网格阻力非单调、尾部 Cp 极值随细化增强的问题也仍需处理。
