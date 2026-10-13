@@ -33,6 +33,12 @@ class NativeScalarMMP3D:
         self.pairs,self.inverse,self.counts=np.unique(np.vstack(pairs),axis=0,return_inverse=True,return_counts=True)
         a=diffusion.full_matrix.tocoo();off=a.row!=a.col
         self.ai,self.aj,self.av=a.row[off],a.col[off],a.data[off]
+        i,j=self.pairs.T;e=np.arange(len(i))
+        self.E=sparse.coo_matrix((np.r_[np.ones(len(i)),-np.ones(len(i))],
+            (np.r_[e,e],np.r_[i,j])),shape=(len(i),self.size)).tocsr()
+        self.H=abs(self.E)
+        self.reaction_matrix=sparse.coo_matrix((self.av,(self.ai,self.aj)),shape=(self.size,self.size)).tocsr()
+        self.reaction_matrix-=sparse.diags(np.asarray(self.reaction_matrix.sum(axis=1)).ravel())
         # Strict positive edge correction is essential even when A*u=0:
         # an uncorrected discrete harmonic solution may already be negative.
         # O((h/L)^2) scaling makes this regularization vanish under refinement.
@@ -73,3 +79,52 @@ class NativeScalarMMP3D:
         op.matrix=op.full_matrix[op.free][:,op.free].tocsc();op._face_factor=None
         return op,dict(correction_energy=extra_energy,maximum_edge_weight=float(weight.max(initial=0)),
                        active_edges=int(np.count_nonzero(weight)),regularization=self.regularization)
+
+    def nonlinear_system(self,state,*,smoothing=0.,state_scale=1.,jacobian=False):
+        """Smooth continuation system; smoothing=0 is the original graph law.
+
+        state_scale supplies scalar units. Smoothing is dimensionless; it is
+        removed before accepting any result. The Jacobian differentiates both
+        graph coefficients and their multiplication by scalar jumps.
+        """
+        i,j,du,reaction,ad,ar,den,active,gap,ag,weight=self._coefficients(state,smoothing,state_scale)
+        du,reaction,ad,ar,den,gap,ag,weight=[np.asarray(a,float) for a in (du,reaction,ad,ar,den,gap,ag,weight)]
+        matrix=self.base.full_matrix+self.E.T@sparse.diags(weight)@self.E
+        if not jacobian:return matrix
+        dre=np.divide(reaction,ar,out=np.zeros_like(reaction),where=ar>0)
+        ddu=np.divide(du,ad,out=np.zeros_like(du),where=ad>0)
+        f1=np.zeros(self.size);f2=f1.copy()
+        f1[active]=self.margin*dre[active]/den[active]
+        f2[active]=self.margin*ar[active]/den[active]**2
+        db=sparse.diags(f1)@self.reaction_matrix-sparse.diags(f2)@(self.H.T@sparse.diags(ddu)@self.E)
+        sg=np.divide(gap,ag,out=np.zeros_like(gap),where=ag>0);e=np.arange(len(i))
+        pick=sparse.coo_matrix((np.r_[.5*(1+sg),.5*(1-sg)],
+            (np.r_[e,e],np.r_[i,j])),shape=self.E.shape).tocsr()
+        tangent=matrix+self.E.T@sparse.diags(du)@pick@db
+        return matrix,tangent
+
+    def _coefficients(self,state,smoothing,state_scale):
+        u=np.asarray(state)
+        if u.dtype.kind!='f':u=u.astype(float)
+        if u.shape!=(self.size,) or not np.isfinite(u).all():raise ValueError('finite hybrid scalar state required')
+        if not np.isfinite(smoothing) or smoothing<0 or not np.isfinite(state_scale) or state_scale<=0:
+            raise ValueError('nonnegative smoothing and positive state scale required')
+        i,j=self.pairs.T;du=u[i]-u[j];diagonal=self.base.full_matrix.diagonal()
+        reaction=np.zeros(self.size,dtype=u.dtype)
+        np.add.at(reaction,self.ai,self.av*(u[self.aj]-u[self.ai]))
+        ad=np.hypot(du,smoothing*state_scale)
+        ar=np.hypot(reaction,diagonal*smoothing*state_scale)
+        den=np.zeros(self.size,dtype=u.dtype)
+        np.add.at(den,i,ad);np.add.at(den,j,ad)
+        active=self.base.free[den[self.base.free]>0]
+        beta=np.zeros(self.size,dtype=u.dtype);beta[active]=self.margin*ar[active]/den[active];beta+=self.strict
+        gap=beta[i]-beta[j];ag=np.hypot(gap,smoothing*np.maximum(diagonal[i],diagonal[j]))
+        weight=.5*(beta[i]+beta[j]+ag)
+        return i,j,du,reaction,ad,ar,den,active,gap,ag,weight
+
+    def nonlinear_reaction(self,state,*,smoothing=0.,state_scale=1.):
+        """Constant-preserving equation evaluation with the state's precision."""
+        i,j,du,reaction,*_,weight=self._coefficients(state,smoothing,state_scale)
+        answer=reaction.copy()
+        np.add.at(answer,i,weight*du);np.add.at(answer,j,-weight*du)
+        return answer

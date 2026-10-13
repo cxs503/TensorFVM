@@ -10,15 +10,18 @@ from scipy import sparse
 from scipy.sparse.linalg import splu
 import copy
 from .native_scalar_mmp3d import NativeScalarMMP3D, ScalarMMPConvergenceError
+from .native_scalar_mmp_newton3d import solve_mmp_newton
 from .native_hybrid_viscous3d import NativeHybridViscous3D
 
 
 class NativeHybridScalar3D:
-    def __init__(self, mesh, diffusivity=1., *, dirichlet_mask=None, stabilization=1., correction='none'):
+    def __init__(self, mesh, diffusivity=1., *, dirichlet_mask=None, stabilization=1., correction='none', mmp_solver='continuation_newton'):
         self.mesh = mesh
         self.diffusion = NativeHybridViscous3D(mesh, diffusivity, components=1,
             dirichlet_mask=dirichlet_mask, stabilization=stabilization)
         if correction not in ('none','nonlinear_mmp'):raise ValueError('unknown scalar diffusion correction')
+        if mmp_solver not in ('picard','continuation_newton'):raise ValueError('unknown scalar nonlinear solver')
+        self.mmp_solver=mmp_solver
         self.mmp=NativeScalarMMP3D(self.diffusion) if correction=='nonlinear_mmp' else None
         self.N, self.F = self.diffusion.N, self.diffusion.F
         self.boundary = mesh.neighbor < 0
@@ -115,7 +118,8 @@ class NativeHybridScalar3D:
         neighbor_total = -advective_flux-diffusion['neighbor_face_flux'][:,0]
         interface = total_flux[~self.boundary]+neighbor_total[~self.boundary]
         scalar_work = float(cells @ (storage+self.D @ advective_flux+destruction-production))
-        work_balance = scalar_work+diffusion['energy_form']-diffusion['boundary_work']
+        direct_work_balance = scalar_work+diffusion['energy_form']-diffusion['boundary_work']
+        work_balance,cell_work,interface_work,cell_extended,face_extended=self._stable_work_balance(state,storage,advective_flux,destruction,production)
         scale = max(float(np.abs(storage).sum()+np.abs(total_flux[self.boundary]).sum()
                           +np.abs(destruction).sum()+np.abs(production).sum()),1e-30)
         return dict(cell_values=cells.copy(), face_values=faces.copy(),
@@ -127,8 +131,37 @@ class NativeHybridScalar3D:
             interface_flux_defect_max=float(np.max(np.abs(interface),initial=0.)),
             global_balance=global_balance, global_relative_balance=abs(global_balance)/scale,
             diffusion_energy=diffusion['energy_form'], boundary_diffusive_work=diffusion['boundary_work'],
-            work_balance=float(work_balance), linear_relative_residual=linear_residual,
+            work_balance=float(work_balance),work_balance_direct_float64=float(direct_work_balance),
+            work_balance_cell_terms=cell_work,work_balance_interface_terms=interface_work,
+            cell_equation_extended=cell_extended,face_diffusion_reaction_extended=face_extended,
+            work_balance_precision_bits=int(np.finfo(np.longdouble).nmant+1),
+            linear_relative_residual=linear_residual,
             cell_min=float(cells.min()), face_min=float(faces.min()))
+
+    def _stable_work_balance(self,state,storage,advective_flux,destruction,production):
+        """Same work identity without subtracting large total energies.
+
+        Constant-preserving local differences evaluate the intended zero-row-sum
+        diffusion stencil. Extended accumulation retains small equilibrium
+        defects when omega boundary work is many orders larger than the defect.
+        The direct float64 total-energy subtraction is separately retained.
+        """
+        dtype=np.longdouble;u=np.asarray(state,dtype=dtype)
+        cell=np.zeros(self.N,dtype=dtype);owner=np.zeros(self.F,dtype=dtype);neighbor=owner.copy()
+        for c,(faces,sign,ids,matrix,*_) in enumerate(self.diffusion.local):
+            local=matrix.astype(dtype);np.fill_diagonal(local,0.)
+            phi=u[ids];reaction=np.sum(local*(phi[None,:]-phi[:,None]),axis=1)
+            cell[c]=reaction[0]
+            owner[faces[sign>0]]=reaction[1:][sign>0];neighbor[faces[sign<0]]=reaction[1:][sign<0]
+        remainder=np.asarray(storage,dtype=dtype)+np.asarray(destruction,dtype=dtype)-np.asarray(production,dtype=dtype)
+        internal=~self.boundary
+        np.add.at(remainder,self.mesh.owner,np.asarray(advective_flux,dtype=dtype))
+        np.add.at(remainder,self.mesh.neighbor[internal],-np.asarray(advective_flux[internal],dtype=dtype))
+        cell_work=u[:self.N]*(remainder+cell)
+        interface_work=u[self.N:][internal]*(owner[internal]+neighbor[internal])
+        balance=np.sum(cell_work,dtype=dtype)+np.sum(interface_work,dtype=dtype)
+        return (float(balance),np.asarray(cell_work,float),np.asarray(interface_work,float),
+                remainder+cell,owner+neighbor)
 
     def steady_residual(self, cell_values, face_values, volume_flux=0., *, source=0.,
                         sink=0., boundary_values=0., boundary_diffusive_flux=0., inflow_values=None):
@@ -142,7 +175,8 @@ class NativeHybridScalar3D:
             if np.any(gn[self.diffusion.traction_boundary]!=0):
                 raise ValueError('nonlinear scalar correction currently requires homogeneous Neumann data')
             op=copy.copy(self);op.mmp=None
-            op.diffusion,info=self.mmp.operator(np.r_[cell_values,face_values])
+            cells=self._array(cell_values,self.N,'cell scalar');faces=self._array(face_values,self.F,'face scalar')
+            op.diffusion,info=self.mmp.operator(np.r_[cells,faces])
             result=op.steady_residual(cell_values,face_values,volume_flux,source=source,sink=sink,
                 boundary_values=boundary_values,boundary_diffusive_flux=boundary_diffusive_flux,inflow_values=inflow_values)
             result.update(info);return result
@@ -189,6 +223,7 @@ class NativeHybridScalar3D:
         gn=np.broadcast_to(np.asarray(kwargs['boundary_diffusive_flux'],float),(self.F,))
         if np.any(gn[self.diffusion.traction_boundary]!=0):
             raise ValueError('nonlinear scalar correction currently requires homogeneous Neumann data')
+        if self.mmp_solver=='continuation_newton':return solve_mmp_newton(self,volume_flux,**kwargs)
         linear=copy.copy(self);linear.mmp=None
         initial=linear.solve(volume_flux,**kwargs)
         state=np.r_[initial['cell_values'],initial['face_values']]

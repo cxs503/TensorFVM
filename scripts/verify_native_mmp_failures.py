@@ -20,10 +20,10 @@ def main():
             points,cells,types,_,_,_=structured_layers(axial=12,azimuthal=8,layers=2,first_height=.001,growth=1.2)
             m=NativeMesh3D.from_cells(points,cells,types,triangulate_faces=True)
             bd=1+m.face_centers@np.array([.1,-.2,.3])
-            op=NativeHybridScalar3D(m,correction='nonlinear_mmp')
+            op=NativeHybridScalar3D(m,correction='nonlinear_mmp',mmp_solver='picard')
             run=lambda:op.solve(boundary_values=bd)
         else:
-            m,s=coupled_shear_solver(8,'low_re',triangulate_faces=True,scalar_correction='nonlinear_mmp')
+            m,s=coupled_shear_solver(8,'low_re',triangulate_faces=True,scalar_correction='nonlinear_mmp',mmp_solver='picard')
             run=lambda:s.solve(max_iterations=120,dt=1.,tolerance=1e-8)
         tick=time.perf_counter()
         try:run()

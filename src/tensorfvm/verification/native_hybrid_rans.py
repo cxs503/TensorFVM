@@ -6,7 +6,7 @@ from tensorfvm.native_hybrid_rans3d import NativeHybridRans3D
 from tensorfvm.native_sst3d import wall_omega
 
 
-def coupled_shear_solver(n=4,kind='reservoir',*,density=1.,triangulate_faces=None,scalar_correction='none'):
+def coupled_shear_solver(n=4,kind='reservoir',*,density=1.,triangulate_faces=None,scalar_correction='none',mmp_solver='continuation_newton'):
     if kind not in ('reservoir','low_re','laminar_limit'):raise ValueError('unknown coupling control')
     if triangulate_faces is None:triangulate_faces=kind!='low_re'
     mesh=channel_mesh((2,n,1),triangulate_faces=triangulate_faces);b=mesh.neighbor<0;nu=.1;shear=.3
@@ -25,6 +25,6 @@ def coupled_shear_solver(n=4,kind='reservoir',*,density=1.,triangulate_faces=Non
         from tensorfvm.native_hybrid_scalar3d import NativeHybridScalar3D
         w0=NativeHybridScalar3D(mesh,nu).solve(boundary_values=wb)['cell_values']
     rans=NativeHybridRans3D(flow,distance,nu,k_boundary=kb,omega_boundary=wb,
-                          k_inflow=kb,omega_inflow=wb,scalar_correction=scalar_correction)
+                          k_inflow=kb,omega_inflow=wb,scalar_correction=scalar_correction,mmp_solver=mmp_solver)
     rans.initialize(k0,w0)
     return mesh,rans
