@@ -16,7 +16,8 @@ from .native_hybrid_viscous3d import NativeHybridViscous3D
 class NativeHybridStokes3D:
     def __init__(self, mesh, velocity_dirichlet, velocity_boundary=0., *,
                  viscosity=1., body_force=0., boundary_traction=0.,
-                 gauge_value=0., body_force_discretization='face', coupled_linear_method='direct'):
+                 gauge_value=0., body_force_discretization='face', coupled_linear_method='direct',
+                 gradient_jump_stabilization=1.):
         if coupled_linear_method not in ('direct', 'reused_lu'):
             raise ValueError('coupled_linear_method must be direct or reused_lu')
         self.coupled_linear_method = coupled_linear_method
@@ -24,7 +25,8 @@ class NativeHybridStokes3D:
         self.coupled_linear_history = []
         self.mesh = mesh
         self.viscous = NativeHybridViscous3D(
-            mesh, viscosity, dirichlet_mask=velocity_dirichlet)
+            mesh, viscosity, dirichlet_mask=velocity_dirichlet,
+            gradient_jump_stabilization=gradient_jump_stabilization)
         v = self.viscous
         self.N, self.F = v.N, v.F
         self.prescribed = v._prescribed(velocity_boundary)
@@ -234,7 +236,8 @@ class NativeHybridStokes3D:
             velocity=self.state[:3*self.N].reshape(self.N, 3).copy(),
             face_velocity=self.state[3*self.N:].reshape(self.F, 3).copy(),
             pressure=self.p.copy(), flux=np.sum(self.state[3*self.N:].reshape(self.F, 3)*self.mesh.area_vectors, axis=1),
-            energy_form=diagnostic['energy_form'], pressure_work=pressure_work,
+            energy_form=diagnostic['energy_form'], gradient_jump_energy=diagnostic['gradient_jump_energy'],
+            pressure_work=pressure_work,
             external_work=external_work, energy_balance_error=abs(balance),
             total_traction_integrated=total_traction,
             interface_traction_defect_max=float(np.max(np.abs(

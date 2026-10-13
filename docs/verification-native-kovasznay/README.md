@@ -122,3 +122,5 @@ result = solver.solve(
 **新发现的阻断项**：[真实三维偏斜混合网格 ABC 探针](abc-diagnostics/README.md)虽数值收敛，756 单元上的去均值压力误差仍达 NS 139.46%、Stokes 37.52%。因此二维无体力验证通过也不能视为三维压力已算准；根因尚未确认。
 
 整体任务仍进行中。下一步优先定位并修复上述三维压力问题，再按[原生 SUBOFF 开发验收计划](../native-suboff-development-plan.md)推进边界牵引、变黏度与壁面剪切验证，再接入 SST 与壁面律。新混合后端尚未计算 SUBOFF；现有 OpenFOAM 结果只作外部基线。
+
+后续：[三维压力诊断与梯度跳变稳定化](../verification-native-gradient-jump/README.md)。本页场数据对应本页冻结源码；新默认算子的完整精度需按后续报告继续验收。
