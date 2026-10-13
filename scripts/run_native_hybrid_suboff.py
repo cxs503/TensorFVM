@@ -21,6 +21,7 @@ def main():
     p.add_argument('--reynolds',type=float,required=True)
     p.add_argument('--wall-friction',type=float,help='Finite Navier slip coefficient for boundary verification only; omitted means no-slip')
     p.add_argument('--algorithm',choices=['newton','simplec'],default='newton')
+    p.add_argument('--inexact-newton',action='store_true',help='Permit iteration-limited AMG directions only after original matrix checks; nonlinear gates unchanged')
     p.add_argument('--max-iterations',type=int,default=40)
     p.add_argument('--tolerance',type=float,default=1e-8,help='May tighten but cannot relax the 1e-8 benchmark gate')
     p.add_argument('--initial-run',type=Path,help='Previous native laminar numerical state on the identical mesh; Re may differ for continuation')
@@ -32,6 +33,7 @@ def main():
     if a.wall_friction is not None and (not np.isfinite(a.wall_friction) or a.wall_friction<=0):p.error('positive finite wall friction required')
     if not np.isfinite(a.reynolds) or a.reynolds<=0:p.error('positive finite Reynolds number required')
     if not np.isfinite(a.tolerance) or not 0<a.tolerance<=1e-8:p.error('tolerance must be positive and <=1e-8')
+    if a.inexact_newton and (a.algorithm!='newton' or a.linear_method!='block_amg'):p.error('--inexact-newton requires newton and block_amg')
     if a.max_iterations<1:p.error('positive iteration limit required')
     evidence=NativeRunEvidence(a.output,__file__);out=a.output
     shutil.copy2(a.mesh,out/'input.msh');mesh_hash=hashlib.sha256((out/'input.msh').read_bytes()).hexdigest()
@@ -53,7 +55,7 @@ def main():
         algorithm=a.algorithm,max_iterations=a.max_iterations,convection_order=2,body_force=[0,0,0],
         momentum_iterations=a.momentum_iterations,momentum_relaxation=a.momentum_relaxation,
         momentum_relaxation_basis=a.momentum_relaxation_basis,linear_method=a.linear_method,
-        initial_run=initial_binding,
+        initial_run=initial_binding,inexact_newton=a.inexact_newton,
         wall_friction=a.wall_friction,wall_boundary='no-slip' if a.wall_friction is None else 'finite Navier slip with exact normal constraint; no turbulence wall law',
         inlet_and_farfield_velocity=[1,0,0],wall_velocity=[0,0,0],outlet='zero total outward traction',
         outlet_backflow_velocity=[1,0,0],initialization='previous numerical iterate; current equations rebuilt' if initial_binding else 'native Stokes numerical solve, no reference interior state',
@@ -101,7 +103,7 @@ def main():
             force=-s.result()['total_traction_integrated'][wall].sum(0)
             row.update(wall_force=force.tolist(),Cd_L2=float(2*force[0]))
             write_json(out/'progress.json',row);print(row,flush=True)
-        if a.algorithm=='newton':r=s.solve_newton(max_iterations=a.max_iterations,tolerance=a.tolerance,callback=progress)
+        if a.algorithm=='newton':r=s.solve_newton(max_iterations=a.max_iterations,tolerance=a.tolerance,callback=progress,allow_inexact_linear_steps=a.inexact_newton)
         else:r=s.solve(algorithm='simplec',max_outer_iterations=a.max_iterations,
             max_iterations=a.momentum_iterations,relaxation=a.momentum_relaxation,tolerance=a.tolerance,callback=progress)
     except (RuntimeError,ValueError) as exc:

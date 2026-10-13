@@ -122,7 +122,7 @@ class NativeHybridStokes3D:
             raise RuntimeError(f'hybrid Stokes linear solve failed true residual: {residual:g}')
         return answer, float(residual)
 
-    def _coupled_linear(self, matrix, rhs):
+    def _coupled_linear(self, matrix, rhs, *, allow_inexact=False):
         """Reuse an earlier LU only as a preconditioner for the CURRENT matrix.
 
         Every candidate is checked against the current true residual. A stale
@@ -133,7 +133,7 @@ class NativeHybridStokes3D:
             if self._block_preconditioner is None:
                 self._block_preconditioner = NativeHybridBlockSolver3D(self)
             try:
-                answer,residual,record = self._block_preconditioner.solve(matrix,rhs)
+                answer,residual,record = self._block_preconditioner.solve(matrix,rhs,allow_inexact=allow_inexact)
             except NativeBlockSolveError as exc:
                 self.coupled_linear_history.append(exc.record)
                 raise

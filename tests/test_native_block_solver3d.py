@@ -74,7 +74,8 @@ def test_failed_gmres_retains_candidate_and_keeps_accepted_state(monkeypatch):
     np.testing.assert_array_equal(s.state,old);np.testing.assert_array_equal(s.p,old_p)
 
 
-def test_small_global_residual_cannot_hide_local_mass_defect(monkeypatch):
+@pytest.mark.parametrize("allow_inexact",[False,True])
+def test_small_global_residual_cannot_hide_local_mass_defect(monkeypatch,allow_inexact):
     import tensorfvm.native_block_solver3d as module
     from tensorfvm.native_mesh3d import NativeMesh3D
     from tensorfvm.verification.native_hybrid_flow import channel_mesh
@@ -89,6 +90,8 @@ def test_small_global_residual_cannot_hide_local_mass_defect(monkeypatch):
         candidate=spsolve(matrix,rhs);candidate[position]+=1e-9
         return candidate,0
     monkeypatch.setattr(module,'gmres',inaccurate)
+    original=s._coupled_linear
+    monkeypatch.setattr(s,'_coupled_linear',lambda a,b:original(a,b,allow_inexact=allow_inexact))
     old=s.state.copy();old_p=s.p.copy()
     with pytest.raises(module.NativeBlockSolveError) as error:s.solve(algorithm='coupled')
     record=error.value.record
@@ -106,3 +109,43 @@ def test_nonfinite_rejected_candidate_record_is_json_serializable(monkeypatch):
     assert not error.value.record['candidate_finite']
     assert error.value.record['true_relative_residual'] is None
     json.dumps(error.value.record,allow_nan=False)
+
+
+@pytest.mark.parametrize('status',[30,-1])
+def test_iteration_limit_is_only_usable_as_explicit_newton_direction(monkeypatch,status):
+    import tensorfvm.native_block_solver3d as module
+    from scipy.sparse.linalg import spsolve
+    _,reference,_=potential_solver(2,.1)
+    reference.initialize_stokes();expected=reference.solve_newton(tolerance=1e-9)
+    _,s,_=potential_solver(2,.1);s.coupled_linear_method='block_amg'
+    monkeypatch.setattr(module,'gmres',lambda a,b,**kw:(spsolve(a,b),status))
+    old=s.state.copy()
+    # Even an accurate candidate cannot bypass strict Stokes status checks.
+    with pytest.raises(module.NativeBlockSolveError):s.initialize_stokes()
+    np.testing.assert_array_equal(s.state,old)
+    assert s.coupled_linear_history[-1]['original_criteria_satisfied']
+    s.coupled_linear_method='direct';s.initialize_stokes();s.coupled_linear_method='block_amg'
+    old=s.state.copy();old_p=s.p.copy()
+    if status<0:
+        with pytest.raises(module.NativeBlockSolveError):s.solve_newton(allow_inexact_linear_steps=True)
+        np.testing.assert_array_equal(s.state,old);np.testing.assert_array_equal(s.p,old_p)
+    else:
+        result=s.solve_newton(tolerance=1e-9,allow_inexact_linear_steps=True)
+        assert result['numerically_converged'] and result['energy_balance_error']<1e-8
+        assert s.newton_history[-1]['velocity_change']<1e-9
+        assert s.newton_history[-1]['pressure_change']<1e-9
+        record=s.coupled_linear_history[-1]
+        assert record['accepted'] and record['original_criteria_satisfied']
+        assert record['inexact_direction_allowed'] and not record['gmres_target_reached']
+        for key in ('velocity','pressure','face_velocity','flux'):
+            np.testing.assert_allclose(result[key],expected[key],atol=1e-8)
+
+
+def test_inexact_newton_rejects_wrong_equations_before_state_change(monkeypatch):
+    import tensorfvm.native_block_solver3d as module
+    _,s,_=potential_solver(2,.1);s.initialize_stokes();s.coupled_linear_method='block_amg'
+    old=s.state.copy();old_p=s.p.copy()
+    monkeypatch.setattr(module,'gmres',lambda a,b,**kw:(np.zeros_like(b),60))
+    with pytest.raises(module.NativeBlockSolveError):s.solve_newton(allow_inexact_linear_steps=True)
+    assert not s.coupled_linear_history[-1]['original_criteria_satisfied']
+    np.testing.assert_array_equal(s.state,old);np.testing.assert_array_equal(s.p,old_p)
