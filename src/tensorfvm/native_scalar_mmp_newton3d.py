@@ -48,8 +48,8 @@ def solve_mmp_newton(scalar,volume_flux,**kwargs):
                      scalar_diffusion_correction='nonlinear_mmp',nonlinear_solver='continuation_newton',
                      continuation_state_scale=state_scale,final_smoothing=float(smoothing),ledger_refinements=refinement,
                      solution_precision_bits=int(np.finfo(state.dtype).nmant+1))
-            ledger=max(r['cell_balance_max'],r['interface_flux_defect_max'],abs(r['global_balance']),abs(r['work_balance']))
-            if failure is None and error<1e-12 and ledger<1e-8 and history[-1]['change']<1e-12:
+            ledger_passed=scalar.ledger_acceptable(r)
+            if failure is None and error<1e-12 and ledger_passed and history[-1]['change']<1e-12:
                 return r
             if failure is not None or refinement==8:break
             # Mixed-precision residual refinement of the SAME zero-smoothing
@@ -64,9 +64,8 @@ def solve_mmp_newton(scalar,volume_flux,**kwargs):
                 candidate=state.astype(np.longdouble);candidate[free]+=np.longdouble(alpha)*step.astype(np.longdouble)
                 candidate_result,_,candidate_residual=evaluate(candidate)
                 candidate_norm=float(np.linalg.norm(candidate_residual[free]))
-                candidate_ledger=max(candidate_result['cell_balance_max'],candidate_result['interface_flux_defect_max'],
-                    abs(candidate_result['global_balance']),abs(candidate_result['work_balance']))
-                if candidate_norm<norm:candidates.append((candidate_norm,alpha,candidate,candidate_ledger<1e-8))
+                candidate_ledger=scalar.ledger_acceptable(candidate_result)
+                if candidate_norm<norm:candidates.append((candidate_norm,alpha,candidate,candidate_ledger))
             if not candidates:break
             after,alpha,candidate,_=min(candidates,key=lambda entry:(not entry[3],entry[0]))
             change=float(np.linalg.norm(candidate-state)/max(np.linalg.norm(candidate),state_scale))
