@@ -90,28 +90,31 @@ def solve_developed_rans(solver,*,max_iterations=400,dt=1.,relaxation=.5,toleran
         raise ValueError('positive iteration controls and relaxation in (0,1] required')
     if momentum_method not in ('coupled','simplec','simple'):raise ValueError('unknown momentum predictor')
     from tensorfvm.native_hybrid_stokes3d import NativeHybridStokes3D
-    s=solver;s.converged=False;s.tolerance=tolerance
+    s=solver;s.converged=False;s.tolerance=tolerance;failure=None
     for iteration in range(max_iterations):
         old={k:getattr(s,k).copy() for k in ('k','omega','k_faces','omega_faces')}
         old_u=s.flow.state.copy();old_p=s.flow.p.copy()
-        s._refresh_viscosity()
-        if momentum_method=='coupled':s.flow.initialize_stokes()
-        else:
-            f=s.flow;f.A=f.viscous.matrix
-            f.rhs=(f.load-f.viscous.full_matrix@f.prescribed)[f.viscous.free]
-            # The predictor is linear viscous flow; no nonlinear inertia damping.
-            # Keep the general NS solver's relaxation basis unchanged.
-            basis=f.momentum_relaxation_basis
-            try:
-                f.momentum_relaxation_basis='diagonal'
-                NativeHybridStokes3D.solve(f,algorithm=momentum_method,relaxation=1.,
-                    pressure_relaxation=1.,tolerance=tolerance*.1)
-            finally:f.momentum_relaxation_basis=basis
-            if not f.converged:raise RuntimeError('developed momentum predictor did not converge')
-        update_developed_rans_inflow(s)
-        step=s.transport.step(s.k,s.omega,s.k_faces,s.omega_faces,0.,s.wall_distance,s.nu,
-            s.flow.velocity_gradient(),dt,rho=s.rho,**s.boundary)
-        for k in old:setattr(s,k,old[k]+relaxation*(step[k]-old[k]))
+        try:
+            s._refresh_viscosity()
+            if momentum_method=='coupled':s.flow.initialize_stokes(tolerance=tolerance)
+            else:
+                f=s.flow;f.A=f.viscous.matrix
+                f.rhs=(f.load-f.viscous.full_matrix@f.prescribed)[f.viscous.free]
+                # The predictor is linear viscous flow; no nonlinear inertia damping.
+                # Keep the general NS solver's relaxation basis unchanged.
+                basis=f.momentum_relaxation_basis
+                try:
+                    f.momentum_relaxation_basis='diagonal'
+                    NativeHybridStokes3D.solve(f,algorithm=momentum_method,relaxation=1.,
+                        pressure_relaxation=1.,tolerance=tolerance*.1)
+                finally:f.momentum_relaxation_basis=basis
+                if not f.converged:raise RuntimeError('developed momentum predictor did not converge')
+            update_developed_rans_inflow(s)
+            step=s.transport.step(s.k,s.omega,s.k_faces,s.omega_faces,0.,s.wall_distance,s.nu,
+                s.flow.velocity_gradient(),dt,rho=s.rho,**s.boundary)
+            for k in old:setattr(s,k,old[k]+relaxation*(step[k]-old[k]))
+        except RuntimeError as exc:
+            failure=f'{type(exc).__name__}: {exc}'
         boundary=update_developed_rans_inflow(s);current=s.current_residual()
         changes={k:float(np.linalg.norm(getattr(s,k)-old[k])/max(np.linalg.norm(getattr(s,k)),1e-30)) for k in old}
         changes['velocity']=float(np.linalg.norm(s.flow.state-old_u)/max(np.linalg.norm(s.flow.state),1.))
@@ -120,17 +123,17 @@ def solve_developed_rans(solver,*,max_iterations=400,dt=1.,relaxation=.5,toleran
             current['transport'][name]['free_face_equation_max'],current['transport'][name]['interface_flux_defect_max'],
             abs(current['transport'][name]['global_balance'])) for name in ('k','omega')}
         row=dict(iteration=len(s.history)+1,**{k:v for k,v in current.items() if k!='transport'},
-            changes=changes,inflow_changes=boundary,scalar_absolute_ledger=ledgers,
+            changes=changes,inflow_changes=boundary,scalar_absolute_ledger=ledgers,failure=failure,
             minimum_k=float(min(s.k.min(),s.k_faces.min())),minimum_omega=float(min(s.omega.min(),s.omega_faces.min())))
         s.history.append(row)
-        s.converged=bool(max(row[k] for k in ('momentum','divergence','gauge','k','omega','k_boundary','omega_boundary'))<tolerance
+        s.converged=bool(failure is None and max(row[k] for k in ('momentum','divergence','gauge','k','omega','k_boundary','omega_boundary'))<tolerance
             and max(changes.values())<tolerance and max(boundary.values())<tolerance and max(ledgers.values())<1e-8)
         if callback:callback(row)
-        if s.converged:break
+        if s.converged or failure is not None:break
     s.flow.nonlinear_converged=s.converged
     result=s.result()
     result.update(nonlinear_method='fully_developed_predictor_with_full_native_rans_acceptance',
-        momentum_predictor=momentum_method,
+        momentum_predictor=momentum_method,failure=failure,
         momentum_predictor_settings={'relaxation':1.,'pressure_relaxation':1.,'basis':'diagonal'} if momentum_method!='coupled' else {},
         predictor_convection='zero by developed-flow ansatz; actual flux used for final residuals',
         scalar_absolute_ledger=ledgers,inflow_changes=boundary)
