@@ -91,7 +91,7 @@ def main():
     for row in records:
         h=row['history'];label=row['settings']['algorithm']
         if label!='newton':
-            label+=f" / {row['settings'].get('relaxation_basis','absolute_row_sum')} / inner {row['settings'].get('inner_iterations',1)}"
+            label+=f" / {row['settings'].get('relaxation_basis','absolute_row_sum')} / alpha {row['settings']['relaxation']} / inner {row['settings'].get('inner_iterations',1)}"
         ax.semilogy([x['iteration'] for x in h],[x['current_momentum_residual'] for x in h],'.-',label=label)
     ax.axhline(1e-9,color='k',linestyle=':',label='current residual target')
     ax.set(xlabel='Nonlinear outer iteration (different work per iteration)',ylabel='Current momentum residual',
