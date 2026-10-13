@@ -103,3 +103,26 @@ def test_already_solved_state_and_failed_linear_step_do_not_change_state(monkeyp
     monkeypatch.setattr(s,'_coupled_linear',failed)
     with pytest.raises(RuntimeError,match='forced linear failure'):s.solve_newton()
     np.testing.assert_array_equal(old,s.state);np.testing.assert_array_equal(p,s.p)
+
+
+def test_restart_can_require_complete_correction_even_at_small_residual(monkeypatch):
+    _,s,_=potential_solver(2,.1)
+    s.initialize_stokes();assert s.solve_newton(tolerance=1e-10)['numerically_converged']
+    original=s._coupled_linear;calls=[]
+    def count(a,b):
+        calls.append(b.copy());return original(a,b)
+    monkeypatch.setattr(s,'_coupled_linear',count)
+    result=s.solve_newton(tolerance=1e-9,require_initial_correction=True)
+    assert result['numerically_converged'] and result['require_initial_correction']
+    assert len(calls)==1
+    row=result['newton_history'][0]
+    assert row['iteration']==1 and row['step_length']==1.
+    assert row['velocity_change']<1e-9 and row['pressure_change']<1e-9
+    assert row['true_linear_relative_residual']<1e-9
+    old=s.state.copy();old_p=s.p.copy()
+    def failed(*args):raise RuntimeError('terminal correction failed')
+    monkeypatch.setattr(s,'_coupled_linear',failed)
+    with pytest.raises(RuntimeError,match='terminal correction failed'):
+        s.solve_newton(require_initial_correction=True)
+    assert not s.nonlinear_converged
+    np.testing.assert_array_equal(s.state,old);np.testing.assert_array_equal(s.p,old_p)

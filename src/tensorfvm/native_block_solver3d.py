@@ -80,24 +80,59 @@ class NativeHybridBlockSolver3D:
                 pressure+=pressure_rhs.sum()/d[0]
             u+=self.velocity_inverse(b.T@pressure)
             return np.r_[u,pressure]
+        preconditioner=LinearOperator(reduced.shape,matvec=precondition,dtype=float)
         history=[]
         answer,info=gmres(reduced,reduced_rhs,
-            M=LinearOperator(reduced.shape,matvec=precondition,dtype=float),
-            rtol=1e-13,atol=0.,restart=80,maxiter=60,
+            M=preconditioner,rtol=1e-13,atol=0.,restart=80,maxiter=60,
             callback=lambda residual:history.append(float(residual)),callback_type='pr_norm')
         if s.gauge:answer=np.r_[answer[:nv],gauge,answer[nv:]]
-        defect=matrix@answer-rhs
-        error=float(np.linalg.norm(defect)/max(np.linalg.norm(rhs),np.finfo(float).tiny))
-        # Integrated continuity residuals can hide large local divergence on
-        # thin cells. The replaced gauge row is a pressure constraint.
-        constraint=defect[nv:]/s.mesh.cell_volumes
-        if s.gauge:constraint=constraint[1:]
-        constraint_max=float(np.max(np.abs(constraint),initial=0.))
-        gauge_error=float(abs(defect[nv])) if s.gauge else 0.
-        finite=bool(np.isfinite(answer).all() and np.isfinite(defect).all()
-                    and np.isfinite([error,constraint_max,gauge_error]).all())
-        original_criteria=bool(finite and error<=1e-9
-                      and constraint_max<=1e-8 and gauge_error<=1e-9)
+
+        def measure(candidate):
+            defect=matrix@candidate-rhs
+            error=float(np.linalg.norm(defect)/max(np.linalg.norm(rhs),np.finfo(float).tiny))
+            # Integrated continuity alone can hide divergence on thin cells.
+            constraint=defect[nv:]/s.mesh.cell_volumes
+            if s.gauge:constraint=constraint[1:]
+            local=float(np.max(np.abs(constraint),initial=0.))
+            gauge_error=float(abs(defect[nv])) if s.gauge else 0.
+            finite=bool(np.isfinite(candidate).all() and np.isfinite(defect).all()
+                        and np.isfinite([error,local,gauge_error]).all())
+            quality=max(error/1e-9,local/1e-8,gauge_error/1e-9) if finite else float('inf')
+            return defect,error,local,gauge_error,finite,quality
+
+        measured=measure(answer);refinements=[]
+        # Correct the SAME original matrix. Extended precision is only used
+        # for forming the correction RHS; acceptance retains float64 original
+        # equation checks and does not waive the initial GMRES status policy.
+        if measured[4] and measured[5]>1 and (info==0 or (allow_inexact and info>0)):
+            wide_matrix=matrix.astype(np.longdouble);wide_rhs=rhs.astype(np.longdouble)
+            for attempt in range(3):
+                correction_rhs=np.asarray(wide_rhs-wide_matrix@answer.astype(np.longdouble),float)
+                if s.gauge:
+                    correction_gauge=correction_rhs[nv]
+                    reduced_correction=np.r_[correction_rhs[:nv]+s.B[0].toarray().ravel()*correction_gauge,
+                                              correction_rhs[nv+1:]]
+                else:reduced_correction=correction_rhs
+                correction_history=[]
+                correction,correction_info=gmres(reduced,reduced_correction,M=preconditioner,
+                    rtol=1e-8,atol=0.,restart=80,maxiter=10,
+                    callback=lambda residual:correction_history.append(float(residual)),callback_type='pr_norm')
+                if s.gauge:correction=np.r_[correction[:nv],correction_gauge,correction[nv:]]
+                trial=answer+correction;trial_measured=measure(trial)
+                improved=bool(correction_info>=0 and trial_measured[4] and trial_measured[5]<measured[5])
+                refinements.append(dict(attempt=attempt+1,gmres_info=int(correction_info),
+                    gmres_iterations=len(correction_history),gmres_rtol=1e-8,gmres_max_restart_cycles=10,
+                    quality_before=measured[5],quality_after=trial_measured[5] if trial_measured[4] else None,
+                    true_relative_residual_before=measured[1],
+                    true_relative_residual_after=trial_measured[1] if trial_measured[4] else None,
+                    algebraic_continuity_defect_per_volume_after=trial_measured[2] if trial_measured[4] else None,
+                    accepted=improved,
+                    preconditioned_residual_history=[v if np.isfinite(v) else None for v in correction_history]))
+                if not improved:break
+                answer=trial;measured=trial_measured
+                if measured[5]<=1:break
+        defect,error,constraint_max,gauge_error,finite,quality=measured
+        original_criteria=bool(finite and quality<=1)
         # An iteration-limit direction may be useful to damped Newton only.
         # Its original matrix checks remain mandatory; breakdown is rejected.
         accepted=bool(original_criteria and (info==0 or (allow_inexact and info>0)))
@@ -107,6 +142,7 @@ class NativeHybridBlockSolver3D:
             gauge_equation_defect=gauge_error if np.isfinite(gauge_error) else None,
             momentum_equation_defect_max=float(np.max(np.abs(defect[:nv]))) if finite else None,
             candidate_finite=finite,accepted=accepted,
+            residual_refinement=refinements,residual_formation_dtype=np.dtype(np.longdouble).name,
             gmres_target_reached=bool(info==0),original_criteria_satisfied=original_criteria,
             inexact_direction_allowed=bool(allow_inexact),
             candidate_kind='algebraic solution or Newton increment; not accepted physical flow',
