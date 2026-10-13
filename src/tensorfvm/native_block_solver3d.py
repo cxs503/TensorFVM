@@ -11,6 +11,15 @@ from scipy import sparse
 from scipy.sparse.linalg import LinearOperator,gmres
 
 
+class NativeBlockSolveError(RuntimeError):
+    """Rejected algebraic candidate, retained separately from accepted flow state."""
+    def __init__(self, message, candidate, defect, record):
+        super().__init__(message)
+        self.candidate = candidate.copy()
+        self.defect = defect.copy()
+        self.record = record
+
+
 class NativeHybridBlockSolver3D:
     def __init__(self,solver):
         try:
@@ -77,11 +86,30 @@ class NativeHybridBlockSolver3D:
             rtol=1e-13,atol=0.,restart=80,maxiter=30,
             callback=lambda residual:history.append(float(residual)),callback_type='pr_norm')
         if s.gauge:answer=np.r_[answer[:nv],gauge,answer[nv:]]
-        error=float(np.linalg.norm(matrix@answer-rhs)/max(np.linalg.norm(rhs),np.finfo(float).tiny))
+        defect=matrix@answer-rhs
+        error=float(np.linalg.norm(defect)/max(np.linalg.norm(rhs),np.finfo(float).tiny))
+        # Integrated continuity residuals can hide large local divergence on
+        # thin cells. The replaced gauge row is a pressure constraint.
+        constraint=defect[nv:]/s.mesh.cell_volumes
+        if s.gauge:constraint=constraint[1:]
+        constraint_max=float(np.max(np.abs(constraint),initial=0.))
+        gauge_error=float(abs(defect[nv])) if s.gauge else 0.
+        finite=bool(np.isfinite(answer).all() and np.isfinite(defect).all()
+                    and np.isfinite([error,constraint_max,gauge_error]).all())
+        accepted=bool(info==0 and finite and error<=1e-9
+                      and constraint_max<=1e-8 and gauge_error<=1e-9)
         record=dict(method='block_amg',gmres_info=int(info),gmres_iterations=len(history),
-            true_relative_residual=error,preconditioned_residual_history=history,
+            true_relative_residual=error if np.isfinite(error) else None,
+            algebraic_continuity_defect_per_volume_max=constraint_max if np.isfinite(constraint_max) else None,
+            gauge_equation_defect=gauge_error if np.isfinite(gauge_error) else None,
+            momentum_equation_defect_max=float(np.max(np.abs(defect[:nv]))) if finite else None,
+            candidate_finite=finite,accepted=accepted,
+            candidate_kind='algebraic solution or Newton increment; not accepted physical flow',
+            preconditioned_residual_history=[v if np.isfinite(v) else None for v in history],
             operator_complexities=self.complexities,setup_seconds=self.setup_seconds,
             solve_seconds=time.perf_counter()-start,pyamg_version=self.pyamg_version)
-        if info!=0 or not np.isfinite(answer).all() or not np.isfinite(error) or error>1e-9:
-            raise RuntimeError(f'block AMG failed CURRENT true residual: info={info}, residual={error:g}')
+        if not accepted:
+            raise NativeBlockSolveError(
+                f'block AMG failed CURRENT true residual: info={info}, residual={error:g}, '
+                f'constraint_per_volume={constraint_max:g}', answer, defect, record)
         return answer,error,record
