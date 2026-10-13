@@ -1,5 +1,5 @@
 {
-  "production_integrated": false,
+  "production_integrated": true,
   "tests_passed": 62,
   "full_medium_NS_completed": true,
   "initialization_divergence_before": 5.5239242586385114e-08,
@@ -13,5 +13,6 @@
   "combined_candidate_commit": "27777e0",
   "combined_candidate_branch": "fix/native-linear-refinement",
   "combined_related_tests_passed": 74,
-  "combined_tests": "../amg-diagnostics-candidate/combined-core-tests.txt"
+  "combined_tests": "../amg-diagnostics-candidate/combined-core-tests.txt",
+  "integrated_main_commit": "c3ae8de6517cece78048b8b23a797540d9fa1502"
 }
