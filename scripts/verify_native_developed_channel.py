@@ -70,7 +70,7 @@ def main():
                 bulk_velocity_from_face_flux=bulk,bulk_velocity_from_cells=bulk_cell,wall_shear=tau,
                 wall_shear_balance_error=abs(tau-1),first_cell_y_plus=float(y.min()*np.sqrt(abs(tau))/bc['nu']),
                 current=current,iterations=len(r['rans_history']) if kind=='sst' else len(r['newton_history']),
-                scalar_absolute_ledger=r.get('scalar_absolute_ledger'),energy_balance_error=r['energy_balance_error'],
+                failure=r.get('failure'),scalar_absolute_ledger=r.get('scalar_absolute_ledger'),energy_balance_error=r['energy_balance_error'],
                 global_momentum_balance_max=r['global_momentum_balance_max'],runtime_seconds=time.perf_counter()-tick,
                 accuracy_passed=bool(converged and max(error,cf_error)<.03),physical_suboff_benchmark_passed=False)
             fields={k:r[k] for k in ('velocity','face_velocity','flux','total_traction_integrated','momentum_flux_integrated')}

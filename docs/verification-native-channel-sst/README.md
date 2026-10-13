@@ -35,7 +35,7 @@ SST 采用 NASA TMR SST-2003 精确生产项版本；各向同性湍流应力吸
 
 固定区域 0≤x≤0.1、0≤y≤1、0≤z≤0.1。
 壁法向节点为 y(t)=(exp(3t)−1)/(exp(3)−1)，n=16/32/64；轴向 n/8，展向 2。
-使用四边形共享面、六面体单元，既加密法向也加密轴向。当前正在追加 n=128（4096 单元）的独立计算。
+使用四边形共享面、六面体单元，既加密法向也加密轴向。n=128（4096 单元）在动量预测步遇到初始化容差问题，修正后的独立重算正在进行。
 充分发展平均流对轴向/展向长度不敏感，但离散面通量对轴向分辨率敏感，因此必须保持明确的固定几何与加密规则。
 
 动量/连续性由原生单元与共享面速度后端求解，湍流输运使用原生混合标量算子；未调用 OpenFOAM。
@@ -66,17 +66,21 @@ DNS 用保形 PCHIP 插值至实际单元中心，禁止超出参考表范围外
 
 上述三档来自 [初步加密数据](pilot-refinement/cases.json)。该批保存了源文件快照，但当时运行器延迟导入的 SST/边界模块未全部纳入初始快照。
 [审计](pilot-refinement/artifact-audit.json)明确列出缺失模块，`source_snapshot_complete=false`；因此这些数值属于初步结果。
-运行器已将数值依赖提前导入，修正后的完整快照加密重跑正在进行，后续应以其终态报告替代初步认证。
+运行器已将数值依赖提前导入。[完整快照重跑](refinement-v2-interrupted/cases.json)已再次完成 n=16/32/64，数值与初步结果一致，但在 n=128 的 SST 动量预测步因 Stokes 初始化检查抛出异常。
+该次没有保存失败 n=128 的候选场，不能补造其收敛结果；[原异常日志](refinement-v2-interrupted/run.log)保留。
+结束后、改源码前，逐个比对当前源文件与原始快照 SHA，均一致；[汇总](refinement-v2-interrupted/summary.json)明确标记外部事后验源与异常终止。
+因此三档已完成场的源码覆盖与审计已补齐，四档整体仍失败。
+后续将通道动量预测的 Stokes 门槛统一到既定外层 1e-8，并增加预测失败时的原场/当前残差归档；最终全 RANS、更新和收支门槛均未改变。
 现有 [联立控制](coupled-control/summary.json)和 [SIMPLEC 控制](simplec-control/summary.json)已完整重跑、验源与原场复算。
 
-![DNS 速度剖面与摩阻比较（初步加密）](pilot-refinement/dns-profiles-friction.png)
+![DNS 速度剖面与摩阻比较（三档完整源码重跑）](refinement-v2-interrupted/dns-profiles-friction.png)
 
-![实际剖切网格、速度、修正压力与物理模型压力](pilot-refinement/mesh-velocity-pressure.png)
+![实际剖切网格、速度、修正压力与物理模型压力](refinement-v2-interrupted/mesh-velocity-pressure.png)
 
 图中横轴为壁面法向 y，纵轴为流向 x；按真实网格单元着色，未平滑成解析流场。
 p* 随 x 变化；物理模型压力还包含 −2k/3，不能混淆两种变量。
 
-![完整当前方程与状态变化](pilot-refinement/convergence.png)
+![完整当前方程与状态变化](refinement-v2-interrupted/convergence.png)
 
 ## 4. SIMPLEC 修复与边界缺陷
 
@@ -90,7 +94,7 @@ p* 随 x 变化；物理模型压力还包含 −2k/3，不能混淆两种变量
 稀疏 LU 可以返回小残差但非唯一的流场。新增六个刚体模态的边界约束秩检查，当前通道在求解前拒绝此类输入。
 2×n×2 网格消除了该缺陷。此检查是唯一性必要条件，不能作为任意网格离散稳定性的充分证明。
 通用 Stokes 构造器接入已在隔离分支 `ce6e298` 通过 [71 项回归](isolated-stokes-integration-tests.txt)，
-待已启动的冻结源码计算结束后合入主线。通道功能的 [5 项测试](tests.txt)已通过。
+待已启动的冻结源码计算结束后合入主线。通道功能原有 [5 项测试](tests.txt)已通过，增加失败归档检查后 [6 项测试](tests-v3.txt)通过。
 
 此前仅在长通道上加密法向、保持两个轴向单元，实际面流量给出的 SST 摩阻误差约 22.1%、17.2%、14.3%。
 若改用单元速度均值计算，会掩盖该误差。该失败探索日志保留，不计为当前精度通过。

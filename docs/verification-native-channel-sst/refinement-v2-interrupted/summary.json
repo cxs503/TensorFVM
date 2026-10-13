@@ -1,0 +1,22 @@
+{
+  "source_integrity_verified": true,
+  "source_verification": "external post-exception comparison against unchanged working-tree files and original snapshot",
+  "termination": "RuntimeError: Stokes initialization failed convergence check during SST n128",
+  "all_numerically_converged": false,
+  "all_accuracy_gates_passed": false,
+  "requested_levels": [
+    16,
+    32,
+    64,
+    128
+  ],
+  "completed_sst_levels": [
+    16,
+    32,
+    64
+  ],
+  "failed_case_fields_available": false,
+  "all_cases_wall_resolved": true,
+  "wall_functions_verified": false,
+  "physical_suboff_benchmark_passed": false
+}

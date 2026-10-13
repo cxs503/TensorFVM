@@ -37,3 +37,17 @@ def test_simplec_zero_pressure_recovers_independent_coupled_momentum():
     assert f.converged and len(f.history)>1
     assert np.linalg.norm(f.state-expected_u)/np.linalg.norm(expected_u)<1e-8
     np.testing.assert_allclose(f.p,expected_p,atol=2e-7,rtol=0.)
+
+
+def test_failed_momentum_predictor_returns_unqualified_fields(monkeypatch):
+    from tensorfvm.verification.native_developed_channel import developed_channel_rans,solve_developed_rans
+    _,s,_=developed_channel_rans(4,axial=2,length=.1,span=.1)
+    k=s.k.copy();omega=s.omega.copy()
+    def reject(**kwargs):raise RuntimeError('deliberate momentum rejection')
+    monkeypatch.setattr(s.flow,'initialize_stokes',reject)
+    r=solve_developed_rans(s,max_iterations=2)
+    assert not r['numerically_converged']
+    assert r['failure']=='RuntimeError: deliberate momentum rejection'
+    assert len(r['rans_history'])==1
+    assert r['rans_history'][0]['failure']==r['failure']
+    np.testing.assert_array_equal(s.k,k);np.testing.assert_array_equal(s.omega,omega)
