@@ -1,0 +1,18 @@
+{
+  "coupled_case": "sst-n16-coupled",
+  "simplec_case": "sst-n16-simplec",
+  "simplec_initial_pressure": "zero",
+  "relative_field_differences": {
+    "velocity": 5.314357716738165e-13,
+    "face_velocity": 5.302296004125508e-13,
+    "flux": 4.365069166256106e-13,
+    "modified_pressure": 2.3026104203452655e-11,
+    "k": 1.2837911281431813e-13,
+    "omega": 4.199042309071784e-15,
+    "k_faces": 1.2905488766618301e-13,
+    "omega_faces": 7.036260200148712e-16
+  },
+  "Cf_relative_difference": 1.0155038433373801e-12,
+  "both_numerically_converged": true,
+  "physical_accuracy_passed": false
+}

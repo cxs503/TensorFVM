@@ -1,0 +1,85 @@
+{
+  "source_and_field_integrity_verified": true,
+  "source_snapshot_complete": false,
+  "missing_source_modules": [
+    "native_hybrid_rans3d",
+    "native_hybrid_sst3d",
+    "native_hybrid_scalar3d",
+    "native_sst3d",
+    "native_boundary_constraints3d"
+  ],
+  "cases": [
+    {
+      "case": "laminar-n16-coupled",
+      "divergence": 8.121961455555286e-14,
+      "global_momentum": 1.2184728866073552e-13,
+      "cell_momentum_integrated": 9.277084309089467e-15,
+      "cell_momentum_per_volume": 2.501857588779909e-11,
+      "current_scalar": {},
+      "velocity_relative_l2": 0.006018522751400518,
+      "Cf": 0.1769280054590705
+    },
+    {
+      "case": "laminar-n32-coupled",
+      "divergence": 1.2156755967087467e-12,
+      "global_momentum": 7.427831746485876e-13,
+      "cell_momentum_integrated": 1.190670825823581e-14,
+      "cell_momentum_per_volume": 1.4295365186034288e-10,
+      "current_scalar": {},
+      "velocity_relative_l2": 0.001522666047573762,
+      "Cf": 0.17922055961624822
+    },
+    {
+      "case": "laminar-n64-coupled",
+      "divergence": 1.0411307601465895e-11,
+      "global_momentum": 1.0747465886882753e-12,
+      "cell_momentum_integrated": 4.042447800112203e-15,
+      "cell_momentum_per_volume": 1.9853619233392459e-10,
+      "current_scalar": {},
+      "velocity_relative_l2": 0.00038181215858779,
+      "Cf": 0.17980441175767453
+    },
+    {
+      "case": "sst-n16-coupled",
+      "divergence": 7.114331717439401e-13,
+      "global_momentum": 1.824971308783934e-11,
+      "cell_momentum_integrated": 3.1281143040434722e-12,
+      "cell_momentum_per_volume": 1.7757935210722837e-08,
+      "current_scalar": {
+        "k": 9.498960058843678e-09,
+        "omega": 3.7534841953294716e-13
+      },
+      "velocity_relative_l2": 0.03846755521143337,
+      "Cf": 0.007566645549648039
+    },
+    {
+      "case": "sst-n32-coupled",
+      "divergence": 2.8699683925970696e-12,
+      "global_momentum": 1.492874321883629e-11,
+      "cell_momentum_integrated": 5.429955313510093e-12,
+      "cell_momentum_per_volume": 1.1778378369556876e-07,
+      "current_scalar": {
+        "k": 9.889682855236985e-09,
+        "omega": 1.870558681693182e-14
+      },
+      "velocity_relative_l2": 0.014500663923452358,
+      "Cf": 0.008056836393169623
+    },
+    {
+      "case": "sst-n64-coupled",
+      "divergence": 3.240718293569694e-11,
+      "global_momentum": 5.742526974552171e-11,
+      "cell_momentum_integrated": 2.1495795594905776e-12,
+      "cell_momentum_per_volume": 1.8223981074910778e-07,
+      "current_scalar": {
+        "k": 9.262133001472069e-09,
+        "omega": 5.144470793931046e-15
+      },
+      "velocity_relative_l2": 0.018899100336210783,
+      "Cf": 0.008350138084261055
+    }
+  ],
+  "physical_suboff_benchmark_passed": false,
+  "grid_convergence_certified": false,
+  "audit_source_sha256": "f17c88c5a6c1cce9b3e0ddafbd6d5c159358dd702cb292e2fead5212b5f20e7b"
+}
