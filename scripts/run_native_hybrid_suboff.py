@@ -116,6 +116,7 @@ def main():
         area_vectors=m.area_vectors,owner=m.owner,neighbor=m.neighbor,patch_labels=m.patch_labels,
         wall_cp_owner=wall_cp_owner,wall_cp_normal_traction_proxy=wall_cp_normal_traction,**fields)
     write_json(out/'linear-history.json',list(s.history))
+    write_json(out/'coupled-linear-history.json',list(s.coupled_linear_history))
     history=r.get('newton_history',getattr(s,'newton_history',r['outer_history']))
     write_json(out/'history.json',history)
     evidence.verify_sources()

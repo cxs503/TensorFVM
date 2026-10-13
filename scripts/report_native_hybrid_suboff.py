@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import json
+import shutil
 from pathlib import Path
 from types import SimpleNamespace
 import numpy as np
@@ -11,11 +12,17 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.collections import PolyCollection
 from tensorfvm.native_sections3d import cell_section_polygons
+from tensorfvm.native_boundary_pressure3d import NativeBoundaryPressureTrace3D
 
 
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('directory',type=Path);root=p.parse_args().directory
     summary=json.loads((root/'summary.json').read_text());settings=json.loads((root/'settings.json').read_text())
+    repo=Path(__file__).resolve().parents[1];post_sources={}
+    for name in ('scripts/report_native_hybrid_suboff.py','src/tensorfvm/native_boundary_pressure3d.py','src/tensorfvm/native_sections3d.py'):
+        target=root/'postprocessing-source'/name;target.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(repo/name,target)
+        post_sources[name]=hashlib.sha256(target.read_bytes()).hexdigest()
+    (root/'postprocessing-sources.json').write_text(json.dumps(post_sources,indent=2)+'\n')
     assert summary['source_integrity_verified']
     if settings.get('initial_run'):
         for name,digest in settings['initial_run']['files'].items():
@@ -46,7 +53,13 @@ def main():
         if summary['numerically_converged']:
             assert max(mass,momentum,balance)<1e-8
             assert max(history[-1][k] for k in ('current_momentum_residual','divergence_max','velocity_change','pressure_change'))<settings['numerical_tolerance']
-        mesh=SimpleNamespace(vertices=f['vertices'],cells=list(range(len(v))),face_vertices=f['face_vertices'],owner=owner,neighbor=neighbor)
+        mesh=SimpleNamespace(vertices=f['vertices'],cells=list(range(len(v))),cell_centers=f['cell_centers'],face_centers=f['face_centers'],face_vertices=f['face_vertices'],owner=owner,neighbor=neighbor)
+        trace=NativeBoundaryPressureTrace3D(mesh,wall).reconstruct(f['pressure'])
+        np.testing.assert_array_equal(trace['face_indices'],np.flatnonzero(wall))
+        np.savez_compressed(root/'wall-pressure-traces.npz',**trace,input_fields_sha256=summary['fields_sha256'])
+        trace_audit=dict(maximum_pressure_noise_amplification=float(trace['pressure_noise_amplification'].max()),maximum_rings=int(trace['stencil_rings'].max()),minimum_singular_ratio=float(trace['singular_ratio'].min()),
+            owner_to_linear_trace_Cp_absolute_rms=float(np.sqrt(np.average((f['wall_cp_owner']-2*trace['pressure'])**2,weights=area[wall]))),
+            wall_Cp_certified=False,fields_sha256=hashlib.sha256((root/'wall-pressure-traces.npz').read_bytes()).hexdigest())
         polygons,ids=cell_section_polygons(mesh,value=.001)
         fig,axes=plt.subplots(4,1,figsize=(12,12),constrained_layout=True)
         for ax,key,title in zip(axes,[None,None,'velocity','pressure'],['Actual domain mesh, z/L=0.001','Body-fitted mesh detail','Native streamwise velocity U/U_inf','Native cell pressure p/(rho U_inf^2)']):
@@ -61,6 +74,7 @@ def main():
         x=f['face_centers'][wall,0]
         axes[0].scatter(x,f['wall_cp_owner'],s=9,label='Adjacent-cell pressure proxy')
         axes[0].scatter(x,f['wall_cp_normal_traction_proxy'],s=9,marker='x',label='Negative normal traction proxy')
+        axes[0].scatter(x,2*trace['pressure'],s=9,marker='+',label='Connected-cell linear pressure trace')
         axes[0].set(xlabel='x/L',ylabel='Pressure coefficient proxy',title='Wall Cp NOT certified; all actual wall facets');axes[0].legend(fontsize=8);axes[0].grid(True)
         if history:
             axes[1].semilogy([h['iteration'] for h in history],[h['current_momentum_residual'] for h in history],'o-',label='Current momentum')
@@ -69,7 +83,7 @@ def main():
         axes[1].set(xlabel='NS iteration',ylabel='Residual');axes[1].grid(True)
         fig.savefig(root/'wall-proxies-convergence.png',dpi=180);fig.savefig(root/'wall-proxies-convergence.pdf');plt.close(fig)
     audit=dict(source_and_fields_verified=True,mass_divergence_max=mass,local_integrated_momentum_max=momentum,
-        wall_force=force.tolist(),force_balance_max=balance,numerically_converged=summary['numerically_converged'],
+        pressure_trace=trace_audit,wall_force=force.tolist(),force_balance_max=balance,numerically_converged=summary['numerically_converged'],
         wall_Cp_certified=False,grid_convergence_certified=False,physical_suboff_benchmark_passed=False,
         audit_source_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest())
     (root/'artifact-audit.json').write_text(json.dumps(audit,indent=2)+'\n');print(audit)

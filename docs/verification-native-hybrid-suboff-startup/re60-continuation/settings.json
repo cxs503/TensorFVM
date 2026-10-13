@@ -1,0 +1,55 @@
+{
+  "backend": "native_hybrid_cell_and_shared_face_velocity",
+  "flow": "steady laminar; no SST or wall function",
+  "Re_L": 60.0,
+  "L": 1.0,
+  "U": 1.0,
+  "rho": 1.0,
+  "nu": 0.016666666666666666,
+  "algorithm": "newton",
+  "max_iterations": 40,
+  "convection_order": 2,
+  "body_force": [
+    0,
+    0,
+    0
+  ],
+  "momentum_iterations": 3000,
+  "momentum_relaxation": 0.5,
+  "momentum_relaxation_basis": "absolute_row_sum",
+  "linear_method": "direct",
+  "initial_run": {
+    "previous_Re_L": 30.0,
+    "previous_numerically_converged": true,
+    "origin": "results/native-hybrid-suboff-re30-continuation",
+    "files": {
+      "fields.npz": "6189f16d0f01e00ca9576d8fd35e4b68d42c69f74ab5d39fee186f5e0f077ca0",
+      "settings.json": "7d41c41210605f8f9d4737789b903fac5de0f796317ec7b198b0e214487f135f",
+      "summary.json": "cfcca681ae837eb7847b58200069e22dbb65bf661eac54d83a1ff6c765601392"
+    }
+  },
+  "inlet_and_farfield_velocity": [
+    1,
+    0,
+    0
+  ],
+  "wall_velocity": [
+    0,
+    0,
+    0
+  ],
+  "outlet": "zero total outward traction",
+  "outlet_backflow_velocity": [
+    1,
+    0,
+    0
+  ],
+  "initialization": "previous numerical iterate; current equations rebuilt",
+  "numerical_tolerance": 1e-08,
+  "initialization_tolerance": 1e-08,
+  "absolute_integrated_ledger_tolerance": 1e-08,
+  "reference_area": "L^2=1; no experimental Cd normalization assumed",
+  "mesh_sha256": "15d81c1f97495b6b9f1060e05126a5f8ed1b8ca4814e1533087d92944add4408",
+  "wall_pressure_status": "owner cell pressure and normal traction proxy saved separately; wall Cp not certified",
+  "physical_suboff_benchmark_passed": false
+}

@@ -1,0 +1,755 @@
+[
+  {
+    "iteration": 1,
+    "accepted": true,
+    "step_length": 0.25,
+    "backtracks": 2,
+    "merit_before": 0.009608789378851177,
+    "merit_after": 0.0088063723806567,
+    "true_linear_relative_residual": 2.9979184077819717e-13,
+    "velocity_change": 0.024001822042176334,
+    "pressure_change": 0.12922491570694375,
+    "trials": [
+      {
+        "step_length": 1.0,
+        "merit": 0.07802212918788327,
+        "accepted": false
+      },
+      {
+        "step_length": 0.5,
+        "merit": 0.020210137022067733,
+        "accepted": false
+      },
+      {
+        "step_length": 0.25,
+        "merit": 0.0088063723806567,
+        "accepted": true
+      }
+    ],
+    "current_momentum_residual": 0.008806372380656702,
+    "divergence_max": 3.1213421148182978e-12,
+    "gauge_error": 0.0,
+    "wall_force": [
+      0.05504501558889658,
+      -0.0006664329400459232,
+      -1.1797951945407192e-05
+    ],
+    "Cd_L2": 0.11009003117779316
+  },
+  {
+    "iteration": 2,
+    "accepted": true,
+    "step_length": 0.03125,
+    "backtracks": 5,
+    "merit_before": 0.0088063723806567,
+    "merit_after": 0.00870045929363049,
+    "true_linear_relative_residual": 3.6227821203439993e-13,
+    "velocity_change": 0.0054036420380069545,
+    "pressure_change": 0.01408792398730252,
+    "trials": [
+      {
+        "step_length": 1.0,
+        "merit": 0.3546962989323846,
+        "accepted": false
+      },
+      {
+        "step_length": 0.5,
+        "merit": 0.090840832674252,
+        "accepted": false
+      },
+      {
+        "step_length": 0.25,
+        "merit": 0.025954918963799728,
+        "accepted": false
+      },
+      {
+        "step_length": 0.125,
+        "merit": 0.01142425564809255,
+        "accepted": false
+      },
+      {
+        "step_length": 0.0625,
+        "merit": 0.008994902356856144,
+        "accepted": false
+      },
+      {
+        "step_length": 0.03125,
+        "merit": 0.00870045929363049,
+        "accepted": true
+      }
+    ],
+    "current_momentum_residual": 0.008700459293630492,
+    "divergence_max": 3.0164035794065466e-12,
+    "gauge_error": 0.0,
+    "wall_force": [
+      0.05535728533382611,
+      -0.0005409320309832737,
+      -9.33011643036142e-05
+    ],
+    "Cd_L2": 0.11071457066765222
+  },
+  {
+    "iteration": 3,
+    "accepted": true,
+    "step_length": 0.125,
+    "backtracks": 3,
+    "merit_before": 0.00870045929363049,
+    "merit_after": 0.00811144389615518,
+    "true_linear_relative_residual": 2.904972312346647e-13,
+    "velocity_change": 0.013816116325432353,
+    "pressure_change": 0.05592463716260411,
+    "trials": [
+      {
+        "step_length": 1.0,
+        "merit": 0.09976345766721736,
+        "accepted": false
+      },
+      {
+        "step_length": 0.5,
+        "merit": 0.026276003747010643,
+        "accepted": false
+      },
+      {
+        "step_length": 0.25,
+        "merit": 0.01000022371393107,
+        "accepted": false
+      },
+      {
+        "step_length": 0.125,
+        "merit": 0.00811144389615518,
+        "accepted": true
+      }
+    ],
+    "current_momentum_residual": 0.008111443896155182,
+    "divergence_max": 2.644980750599024e-12,
+    "gauge_error": 0.0,
+    "wall_force": [
+      0.05482964267318653,
+      -0.0011069311383956793,
+      -0.00024817065391153834
+    ],
+    "Cd_L2": 0.10965928534637306
+  },
+  {
+    "iteration": 4,
+    "accepted": true,
+    "step_length": 0.0625,
+    "backtracks": 4,
+    "merit_before": 0.00811144389615518,
+    "merit_after": 0.00803467313172452,
+    "true_linear_relative_residual": 3.2650838094837893e-13,
+    "velocity_change": 0.007523028368847223,
+    "pressure_change": 0.02604141293389831,
+    "trials": [
+      {
+        "step_length": 1.0,
+        "merit": 0.21376963950413644,
+        "accepted": false
+      },
+      {
+        "step_length": 0.5,
+        "merit": 0.055483187955654045,
+        "accepted": false
+      },
+      {
+        "step_length": 0.25,
+        "merit": 0.017108688273543737,
+        "accepted": false
+      },
+      {
+        "step_length": 0.125,
+        "merit": 0.009167633317631691,
+        "accepted": false
+      },
+      {
+        "step_length": 0.0625,
+        "merit": 0.00803467313172452,
+        "accepted": true
+      }
+    ],
+    "current_momentum_residual": 0.00803467313172452,
+    "divergence_max": 2.514221376820975e-12,
+    "gauge_error": 0.0,
+    "wall_force": [
+      0.055096430085179796,
+      -0.0010078023384413439,
+      -0.0004340557951455041
+    ],
+    "Cd_L2": 0.11019286017035959
+  },
+  {
+    "iteration": 5,
+    "accepted": true,
+    "step_length": 6.103515625e-05,
+    "backtracks": 14,
+    "merit_before": 0.00803467313172452,
+    "merit_after": 0.008034494738298209,
+    "true_linear_relative_residual": 1.1057924766169031e-11,
+    "velocity_change": 0.00020347972888294682,
+    "pressure_change": 0.000834397793517793,
+    "trials": [
+      {
+        "step_length": 1.0,
+        "merit": 144.7047473044847,
+        "accepted": false
+      },
+      {
+        "step_length": 0.5,
+        "merit": 36.178508425584354,
+        "accepted": false
+      },
+      {
+        "step_length": 0.25,
+        "merit": 9.047534760722273,
+        "accepted": false
+      },
+      {
+        "step_length": 0.125,
+        "merit": 2.2650876048423956,
+        "accepted": false
+      },
+      {
+        "step_length": 0.0625,
+        "merit": 0.5696455184634581,
+        "accepted": false
+      },
+      {
+        "step_length": 0.03125,
+        "merit": 0.14595615692870775,
+        "accepted": false
+      },
+      {
+        "step_length": 0.015625,
+        "merit": 0.04042369216522849,
+        "accepted": false
+      },
+      {
+        "step_length": 0.0078125,
+        "merit": 0.014935072348872981,
+        "accepted": false
+      },
+      {
+        "step_length": 0.00390625,
+        "merit": 0.00945426228845431,
+        "accepted": false
+      },
+      {
+        "step_length": 0.001953125,
+        "merit": 0.008350602479247125,
+        "accepted": false
+      },
+      {
+        "step_length": 0.0009765625,
+        "merit": 0.008107477856085276,
+        "accepted": false
+      },
+      {
+        "step_length": 0.00048828125,
+        "merit": 0.008050766605450729,
+        "accepted": false
+      },
+      {
+        "step_length": 0.000244140625,
+        "merit": 0.008037706492335376,
+        "accepted": false
+      },
+      {
+        "step_length": 0.0001220703125,
+        "merit": 0.008034940497387183,
+        "accepted": false
+      },
+      {
+        "step_length": 6.103515625e-05,
+        "merit": 0.008034494738298209,
+        "accepted": true
+      }
+    ],
+    "current_momentum_residual": 0.00803449473829821,
+    "divergence_max": 2.5145524132102862e-12,
+    "gauge_error": 0.0,
+    "wall_force": [
+      0.05510184061775252,
+      -0.0010089544650198684,
+      -0.000428084458302535
+    ],
+    "Cd_L2": 0.11020368123550504
+  },
+  {
+    "iteration": 6,
+    "accepted": true,
+    "step_length": 1.52587890625e-05,
+    "backtracks": 16,
+    "merit_before": 0.008034494738298209,
+    "merit_after": 0.008034447497191878,
+    "true_linear_relative_residual": 2.45843214870687e-11,
+    "velocity_change": 9.974125255401341e-05,
+    "pressure_change": 0.000408391751337998,
+    "trials": [
+      {
+        "step_length": 1.0,
+        "merit": 559.5320812626339,
+        "accepted": false
+      },
+      {
+        "step_length": 0.5,
+        "merit": 139.88526380484907,
+        "accepted": false
+      },
+      {
+        "step_length": 0.25,
+        "merit": 34.97421784183816,
+        "accepted": false
+      },
+      {
+        "step_length": 0.125,
+        "merit": 8.746751303966745,
+        "accepted": false
+      },
+      {
+        "step_length": 0.0625,
+        "merit": 2.1900362548844248,
+        "accepted": false
+      },
+      {
+        "step_length": 0.03125,
+        "merit": 0.5509563884547435,
+        "accepted": false
+      },
+      {
+        "step_length": 0.015625,
+        "merit": 0.141326489009361,
+        "accepted": false
+      },
+      {
+        "step_length": 0.0078125,
+        "merit": 0.03930382285250737,
+        "accepted": false
+      },
+      {
+        "step_length": 0.00390625,
+        "merit": 0.014696577741222263,
+        "accepted": false
+      },
+      {
+        "step_length": 0.001953125,
+        "merit": 0.0094158000477612,
+        "accepted": false
+      },
+      {
+        "step_length": 0.0009765625,
+        "merit": 0.008346660011017673,
+        "accepted": false
+      },
+      {
+        "step_length": 0.00048828125,
+        "merit": 0.0081084652762215,
+        "accepted": false
+      },
+      {
+        "step_length": 0.000244140625,
+        "merit": 0.008051869993714997,
+        "accepted": false
+      },
+      {
+        "step_length": 0.0001220703125,
+        "merit": 0.008038339552726774,
+        "accepted": false
+      },
+      {
+        "step_length": 6.103515625e-05,
+        "merit": 0.008035210209160513,
+        "accepted": false
+      },
+      {
+        "step_length": 3.0517578125e-05,
+        "merit": 0.008034550975627323,
+        "accepted": false
+      },
+      {
+        "step_length": 1.52587890625e-05,
+        "merit": 0.008034447497191878,
+        "accepted": true
+      }
+    ],
+    "current_momentum_residual": 0.008034447497191878,
+    "divergence_max": 2.512235158485106e-12,
+    "gauge_error": 0.0,
+    "wall_force": [
+      0.05510440582437212,
+      -0.0010095337951209209,
+      -0.00042516012584108273
+    ],
+    "Cd_L2": 0.11020881164874424
+  },
+  {
+    "iteration": 7,
+    "accepted": true,
+    "step_length": 3.814697265625e-06,
+    "backtracks": 18,
+    "merit_before": 0.008034447497191878,
+    "merit_after": 0.008034434665934015,
+    "true_linear_relative_residual": 4.635300614605039e-11,
+    "velocity_change": 4.8438479354614256e-05,
+    "pressure_change": 0.00019817563391547876,
+    "trials": [
+      {
+        "step_length": 1.0,
+        "merit": 2117.5229330382285,
+        "accepted": false
+      },
+      {
+        "step_length": 0.5,
+        "merit": 529.3827816476396,
+        "accepted": false
+      },
+      {
+        "step_length": 0.25,
+        "merit": 132.34852407328083,
+        "accepted": false
+      },
+      {
+        "step_length": 0.125,
+        "merit": 33.090323239069804,
+        "accepted": false
+      },
+      {
+        "step_length": 0.0625,
+        "merit": 8.275922128744682,
+        "accepted": false
+      },
+      {
+        "step_length": 0.03125,
+        "merit": 2.072401443037436,
+        "accepted": false
+      },
+      {
+        "step_length": 0.015625,
+        "merit": 0.5215858908936708,
+        "accepted": false
+      },
+      {
+        "step_length": 0.0078125,
+        "merit": 0.13401060609306584,
+        "accepted": false
+      },
+      {
+        "step_length": 0.00390625,
+        "merit": 0.03751109650688417,
+        "accepted": false
+      },
+      {
+        "step_length": 0.001953125,
+        "merit": 0.014298869396574444,
+        "accepted": false
+      },
+      {
+        "step_length": 0.0009765625,
+        "merit": 0.00934075634068194,
+        "accepted": false
+      },
+      {
+        "step_length": 0.00048828125,
+        "merit": 0.008332636065004992,
+        "accepted": false
+      },
+      {
+        "step_length": 0.000244140625,
+        "merit": 0.008106121293275004,
+        "accepted": false
+      },
+      {
+        "step_length": 0.0001220703125,
+        "merit": 0.008051753196228681,
+        "accepted": false
+      },
+      {
+        "step_length": 6.103515625e-05,
+        "merit": 0.008038521017741272,
+        "accepted": false
+      },
+      {
+        "step_length": 3.0517578125e-05,
+        "merit": 0.008035342798370702,
+        "accepted": false
+      },
+      {
+        "step_length": 1.52587890625e-05,
+        "merit": 0.008034609994324548,
+        "accepted": false
+      },
+      {
+        "step_length": 7.62939453125e-06,
+        "merit": 0.008034457470602207,
+        "accepted": false
+      },
+      {
+        "step_length": 3.814697265625e-06,
+        "merit": 0.008034434665934015,
+        "accepted": true
+      }
+    ],
+    "current_momentum_residual": 0.008034434665934016,
+    "divergence_max": 2.5165386315461556e-12,
+    "gauge_error": 0.0,
+    "wall_force": [
+      0.055105630156154176,
+      -0.001009818692811761,
+      -0.00042374060435001153
+    ],
+    "Cd_L2": 0.11021126031230835
+  },
+  {
+    "iteration": 8,
+    "accepted": true,
+    "step_length": 9.5367431640625e-07,
+    "backtracks": 20,
+    "merit_before": 0.008034434665934015,
+    "merit_after": 0.008034430889197744,
+    "true_linear_relative_residual": 7.85169869583886e-11,
+    "velocity_change": 2.2605749765317172e-05,
+    "pressure_change": 9.244994278939176e-05,
+    "trials": [
+      {
+        "step_length": 1.0,
+        "merit": 7389.534313916991,
+        "accepted": false
+      },
+      {
+        "step_length": 0.5,
+        "merit": 1847.3850668219218,
+        "accepted": false
+      },
+      {
+        "step_length": 0.25,
+        "merit": 461.8489296623212,
+        "accepted": false
+      },
+      {
+        "step_length": 0.125,
+        "merit": 115.46536266994474,
+        "accepted": false
+      },
+      {
+        "step_length": 0.0625,
+        "merit": 28.86967907228188,
+        "accepted": false
+      },
+      {
+        "step_length": 0.03125,
+        "merit": 7.2208335651367435,
+        "accepted": false
+      },
+      {
+        "step_length": 0.015625,
+        "merit": 1.8086666622863112,
+        "accepted": false
+      },
+      {
+        "step_length": 0.0078125,
+        "merit": 0.4556758138621038,
+        "accepted": false
+      },
+      {
+        "step_length": 0.00390625,
+        "merit": 0.11756351434006229,
+        "accepted": false
+      },
+      {
+        "step_length": 0.001953125,
+        "merit": 0.03347044019821237,
+        "accepted": false
+      },
+      {
+        "step_length": 0.0009765625,
+        "merit": 0.013397521530871292,
+        "accepted": false
+      },
+      {
+        "step_length": 0.00048828125,
+        "merit": 0.009162541101747428,
+        "accepted": false
+      },
+      {
+        "step_length": 0.000244140625,
+        "merit": 0.008294901826302955,
+        "accepted": false
+      },
+      {
+        "step_length": 0.0001220703125,
+        "merit": 0.008097612308341242,
+        "accepted": false
+      },
+      {
+        "step_length": 6.103515625e-05,
+        "merit": 0.00804989061042573,
+        "accepted": false
+      },
+      {
+        "step_length": 3.0517578125e-05,
+        "merit": 0.008038170183504981,
+        "accepted": false
+      },
+      {
+        "step_length": 1.52587890625e-05,
+        "merit": 0.008035306879724037,
+        "accepted": false
+      },
+      {
+        "step_length": 7.62939453125e-06,
+        "merit": 0.008034622047461231,
+        "accepted": false
+      },
+      {
+        "step_length": 3.814697265625e-06,
+        "merit": 0.008034466185411752,
+        "accepted": false
+      },
+      {
+        "step_length": 1.9073486328125e-06,
+        "merit": 0.008034434883479586,
+        "accepted": false
+      },
+      {
+        "step_length": 9.5367431640625e-07,
+        "merit": 0.008034430889197744,
+        "accepted": true
+      }
+    ],
+    "current_momentum_residual": 0.008034430889197744,
+    "divergence_max": 2.5125661948744172e-12,
+    "gauge_error": 0.0,
+    "wall_force": [
+      0.05510619659710015,
+      -0.0010099524653846839,
+      -0.00042307827874793306
+    ],
+    "Cd_L2": 0.1102123931942003
+  },
+  {
+    "iteration": 9,
+    "accepted": false,
+    "step_length": 0.0,
+    "backtracks": 20,
+    "merit_before": 0.008034430889197744,
+    "merit_after": 0.008034430889197744,
+    "true_linear_relative_residual": 1.797793111312044e-10,
+    "velocity_change": 0.0,
+    "pressure_change": 0.0,
+    "trials": [
+      {
+        "step_length": 1.0,
+        "merit": 21046.013373407128,
+        "accepted": false
+      },
+      {
+        "step_length": 0.5,
+        "merit": 5261.50406902878,
+        "accepted": false
+      },
+      {
+        "step_length": 0.25,
+        "merit": 1315.3782746036754,
+        "accepted": false
+      },
+      {
+        "step_length": 0.125,
+        "merit": 328.84758791260896,
+        "accepted": false
+      },
+      {
+        "step_length": 0.0625,
+        "merit": 82.21519827116283,
+        "accepted": false
+      },
+      {
+        "step_length": 0.03125,
+        "merit": 20.55721174362582,
+        "accepted": false
+      },
+      {
+        "step_length": 0.015625,
+        "merit": 5.142753914178589,
+        "accepted": false
+      },
+      {
+        "step_length": 0.0078125,
+        "merit": 1.2891691939242544,
+        "accepted": false
+      },
+      {
+        "step_length": 0.00390625,
+        "merit": 0.3258280317384813,
+        "accepted": false
+      },
+      {
+        "step_length": 0.001953125,
+        "merit": 0.08517127127891266,
+        "accepted": false
+      },
+      {
+        "step_length": 0.0009765625,
+        "merit": 0.025564300751024692,
+        "accepted": false
+      },
+      {
+        "step_length": 0.00048828125,
+        "merit": 0.011672838869205584,
+        "accepted": false
+      },
+      {
+        "step_length": 0.000244140625,
+        "merit": 0.008817261057626296,
+        "accepted": false
+      },
+      {
+        "step_length": 0.0001220703125,
+        "merit": 0.008218728984979993,
+        "accepted": false
+      },
+      {
+        "step_length": 6.103515625e-05,
+        "merit": 0.008079517314471662,
+        "accepted": false
+      },
+      {
+        "step_length": 3.0517578125e-05,
+        "merit": 0.00804553247617715,
+        "accepted": false
+      },
+      {
+        "step_length": 1.52587890625e-05,
+        "merit": 0.008037142008456481,
+        "accepted": false
+      },
+      {
+        "step_length": 7.62939453125e-06,
+        "merit": 0.008035077833611362,
+        "accepted": false
+      },
+      {
+        "step_length": 3.814697265625e-06,
+        "merit": 0.008034577289189876,
+        "accepted": false
+      },
+      {
+        "step_length": 1.9073486328125e-06,
+        "merit": 0.008034459826237452,
+        "accepted": false
+      },
+      {
+        "step_length": 9.5367431640625e-07,
+        "merit": 0.008034434292296935,
+        "accepted": false
+      }
+    ],
+    "current_momentum_residual": 0.008034430889197744,
+    "divergence_max": 2.5125661948744172e-12,
+    "gauge_error": 0.0,
+    "wall_force": [
+      0.05510619659710015,
+      -0.0010099524653846839,
+      -0.00042307827874793306
+    ],
+    "Cd_L2": 0.1102123931942003
+  }
+]

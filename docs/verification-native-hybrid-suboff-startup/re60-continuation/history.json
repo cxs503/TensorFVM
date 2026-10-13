@@ -1,0 +1,110 @@
+[
+  {
+    "iteration": 1,
+    "accepted": true,
+    "step_length": 1.0,
+    "backtracks": 0,
+    "merit_before": 0.014740998567765179,
+    "merit_after": 0.0010304098780410443,
+    "true_linear_relative_residual": 4.887449695341256e-14,
+    "velocity_change": 0.05106054941485932,
+    "pressure_change": 0.6747066628317585,
+    "trials": [
+      {
+        "step_length": 1.0,
+        "merit": 0.0010304098780410443,
+        "accepted": true
+      }
+    ],
+    "current_momentum_residual": 0.001030409878041044,
+    "divergence_max": 1.1738223762386996e-11,
+    "gauge_error": 0.0,
+    "wall_force": [
+      0.0896912921048996,
+      0.0003958745524602322,
+      -0.00019695187627225818
+    ],
+    "Cd_L2": 0.1793825842097992
+  },
+  {
+    "iteration": 2,
+    "accepted": true,
+    "step_length": 1.0,
+    "backtracks": 0,
+    "merit_before": 0.0010304098780410443,
+    "merit_after": 8.028975131577663e-06,
+    "true_linear_relative_residual": 3.418705728886747e-14,
+    "velocity_change": 0.0022973274511368523,
+    "pressure_change": 0.010209870488845724,
+    "trials": [
+      {
+        "step_length": 1.0,
+        "merit": 8.028975131577663e-06,
+        "accepted": true
+      }
+    ],
+    "current_momentum_residual": 8.028975131577619e-06,
+    "divergence_max": 6.528535984237571e-13,
+    "gauge_error": 0.0,
+    "wall_force": [
+      0.08929708313617918,
+      0.00034642200304219755,
+      -0.00014179754400999673
+    ],
+    "Cd_L2": 0.17859416627235836
+  },
+  {
+    "iteration": 3,
+    "accepted": true,
+    "step_length": 1.0,
+    "backtracks": 0,
+    "merit_before": 8.028975131577663e-06,
+    "merit_after": 2.6431187450310177e-10,
+    "true_linear_relative_residual": 1.8230954067299838e-14,
+    "velocity_change": 6.1270191542196015e-06,
+    "pressure_change": 2.6761516061428176e-05,
+    "trials": [
+      {
+        "step_length": 1.0,
+        "merit": 2.6431187450310177e-10,
+        "accepted": true
+      }
+    ],
+    "current_momentum_residual": 2.643118560906836e-10,
+    "divergence_max": 1.943281848861208e-14,
+    "gauge_error": 0.0,
+    "wall_force": [
+      0.0892964665412712,
+      0.0003463640455670351,
+      -0.0001413943121848199
+    ],
+    "Cd_L2": 0.1785929330825424
+  },
+  {
+    "iteration": 4,
+    "accepted": true,
+    "step_length": 1.0,
+    "backtracks": 0,
+    "merit_before": 2.6431187450310177e-10,
+    "merit_after": 9.992722733122425e-14,
+    "true_linear_relative_residual": 2.2911353969725998e-14,
+    "velocity_change": 1.7717820341538674e-10,
+    "pressure_change": 7.816865184585585e-10,
+    "trials": [
+      {
+        "step_length": 1.0,
+        "merit": 9.992722733122425e-14,
+        "accepted": true
+      }
+    ],
+    "current_momentum_residual": 1.5508942936043959e-15,
+    "divergence_max": 2.9199998487257784e-14,
+    "gauge_error": 0.0,
+    "wall_force": [
+      0.089296466544329,
+      0.00034636404365481055,
+      -0.0001413943145249248
+    ],
+    "Cd_L2": 0.178592933088658
+  }
+]

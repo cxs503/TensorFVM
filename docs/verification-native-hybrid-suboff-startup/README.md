@@ -67,10 +67,12 @@
 
 ![两种壁面压力代理量与当前方程收敛](re10-newton/wall-proxies-convergence.png)
 
-目前保存两种诊断量：相邻单元压力 `2p_owner/(ρU∞²)` 与负法向总牵引 `−2(t·n)/(ρU∞² A)`。
+最初保存两种诊断量：相邻单元压力 `2p_owner/(ρU∞²)` 与负法向总牵引 `−2(t·n)/(ρU∞² A)`。
 前者不是经验证的壁面压力重构，后者含黏性法向应力及数值稳定项；均不能直接当作已经验证的表面 Cp。
 此网格两种代理量的面积加权绝对 RMS 差约为 0.4904，不能选择其中更好看的曲线报告达标。
-下一阶段需通过独立曲面牵引/压力检验和网格加密确定壁面压力的提取方法。
+新增第三条曲线采用内部连通单元的线性最小二乘重构，不输入已知壁面压力。
+[独立算子验证](../verification-native-boundary-pressure/README.md)已通过仿射一致性、规范压力平移、不可解邻域拒绝和三档曲面采样函数加密。
+实际 CFD 中，该重构与原壁邻值的 Cp 绝对 RMS 差为 0.09917；仍需曲面真实流动及网格加密确定物理压力精度。
 
 ## 5. 复现
 
@@ -97,7 +99,9 @@ Re=100 从 Stokes 直接启动在 432.39 秒后因回溯失败而停止，当前
 `--tolerance` 只允许收紧 1e-8 门槛，不能放宽；`--linear-method` 可选择 direct、reused_lu 或 block_amg。
 Re=10→30 延续已在 4 次 Newton 迭代后通过全部数值门槛，耗时 101.21 秒。
 Re=30 的 Cd,L²=0.306173642，单元积分动量缺陷 4.718e-16，总力闭合 9.714e-16；见[原场与汇总](re30-continuation/summary.json)。
-Re=30→60 的后续延续正在进行。单网格、低 Re 数值通过不能替代高 Re Cp/Cd 的实验对照与网格收敛。
+Re=30→60 延续已通过：Cd,L²=0.178592933，局部动量缺陷 3.053e-16，总力闭合 5.551e-16，见 [Re=60 归档](re60-continuation/summary.json)。
+继续到 Re=100 仍因 Newton 回溯失败而拒绝，最终动量残差约 8.034e-3，见[延续失败场](re100-continuation-rejected/summary.json)。
+改善初值尚未解决该粗网格上更强惯性时的非线性问题。单网格、低 Re 数值通过不能替代高 Re Cp/Cd 的实验对照与网格收敛。
 
 
 SIMPLEC 的失败保留与继续迭代可复现为（第一条预期返回未通过）：
@@ -108,3 +112,26 @@ python scripts/run_native_hybrid_suboff.py --mesh results/suboff-startup-mesh-ne
 python scripts/report_native_hybrid_suboff.py results/suboff-simplec-polished-new
 python scripts/run_native_hybrid_suboff.py --mesh results/suboff-startup-mesh-new/suboff-hybrid.msh --reynolds 30 --initial-run results/suboff-startup-re10-new --output results/suboff-re30-new
 ```
+
+
+## 6. 分块求解与网格加密的实测状态
+
+同一 1,331 单元、Re=10 案例使用分块 AMG 后，原方程和全部收支通过；
+与直接 LU 的最大相对原场差为 1.225e-14（总牵引），见[逐场对照](block-direct-comparison.json)。
+AMG 耗时 127.56 秒，原 LU 130.03 秒，本规模下没有明显速度优势的证据。
+[分块原场及线性方法配置](re10-block/summary.json)均保留。
+
+新增 3,427 单元网格：18 轴向分段、12 周向、3 层、首层 0.00129254L、增长率 1.129243、外部尺寸 0.533333L。
+576 六面体、72 棱柱和 2779 四面体，艇体体积 0.008003826L³，几何体积误差降至约 5.38%。
+[网格及完整参数](medium-mesh/summary.json)已保存，但[直接求解启动失败](medium-re10-initialization-rejected/summary.json)：
+Stokes 质量散度 5.524e-8 超出 1e-8 门槛，整体小线性残差不能代表小单元中的连续性已满足。
+未进入合格 NS 解，所存力不可用于网格阻力收敛比较。
+对原联立方程增加扩展精度残差迭代修正后，隔离验证中的同网格 Stokes 散度降至 4.383e-14，已进入 NS 迭代。
+该修复仍在隔离分支验证，完整 NS 尚未结束；保留原控制方程与门槛，不能提前将它计为中网格流动通过。
+[候选补丁与 62 项相关回归](linear-refinement-candidate/)已保存；运行版本与最终兼容性修正版本的源码差别和哈希见该目录的 status.json。
+
+归档的 11,648 单元修复网格使用分块 AMG，Stokes 初始化达到 30×80 次 GMRES 上限后被拒绝，实际整体线性相对残差为 3.657e-11。
+虽然整体残差小于通用 1e-9 上限，GMRES 自身未达到所要求的 1e-13 相对容差，且此运行未保存拒绝的 GMRES 候选向量用于逐单元散度复核，不能认定它可接受。
+[失败归档](fine-re10-block-rejected/summary.json)中的零艇体力来自未更新的初始状态，**不是细网格阻力结果**。
+此前名字含 near-coincident-diagnostic 的约 1.2 万单元历史网格仍有 4.326e-13L³ 极小单元，不作为本次加密输入。
+当前仍没有三档收敛流场，不能声称 Cp/Cd 网格无关。

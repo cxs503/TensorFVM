@@ -1,0 +1,10 @@
+{
+  "production_integrated": false,
+  "tests_passed": 62,
+  "full_medium_NS_completed": false,
+  "initialization_divergence_before": 5.5239242586385114e-08,
+  "initialization_divergence_after": 4.382990630912896e-14,
+  "runtime_source_sha256": "0fe5f2813238c4e2be59b5f05254d1b29462cae485171a3f20b6f56a3136a682",
+  "final_candidate_source_sha256": "8cef7a54ca13bbbec0717cc103edcd74377a5a2f70cdd72cc26250e48fc5b904",
+  "difference": "final candidate additionally handles small non-saddle matrices used by the reused-LU unit test; numerical native saddle path unchanged"
+}
