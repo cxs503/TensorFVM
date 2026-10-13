@@ -1,0 +1,120 @@
+{
+  "source_and_field_integrity_verified": true,
+  "cases": [
+    {
+      "case": "reservoir-n2-newton",
+      "divergence": 5.551115123125783e-17,
+      "global_momentum": 9.9594506806526e-10,
+      "current_scalar_residual": {
+        "k": 3.6580354940994954e-09,
+        "omega": 9.557564334472243e-09
+      },
+      "scalar_shared_balance": {
+        "k": 3.6581063451522182e-09,
+        "omega": 9.557605677123502e-09
+      }
+    },
+    {
+      "case": "reservoir-n2-simplec",
+      "divergence": 6.271136803428281e-17,
+      "global_momentum": 1.503796202939101e-10,
+      "current_scalar_residual": {
+        "k": 3.6589089289494307e-09,
+        "omega": 9.558125774678121e-09
+      },
+      "scalar_shared_balance": {
+        "k": 3.6589795598813345e-09,
+        "omega": 9.55816712881596e-09
+      }
+    },
+    {
+      "case": "reservoir-n4-newton",
+      "divergence": 3.6079725730321546e-17,
+      "global_momentum": 2.0748739763697957e-10,
+      "current_scalar_residual": {
+        "k": 1.7152540269878566e-09,
+        "omega": 4.1190705551778236e-09
+      },
+      "scalar_shared_balance": {
+        "k": 1.7164819427412745e-09,
+        "omega": 4.119778837951976e-09
+      }
+    },
+    {
+      "case": "reservoir-n8-newton",
+      "divergence": 2.255140518769849e-16,
+      "global_momentum": 1.0201907169145843e-10,
+      "current_scalar_residual": {
+        "k": 7.087783006164296e-10,
+        "omega": 1.675895452173227e-09
+      },
+      "scalar_shared_balance": {
+        "k": 7.0951326866248e-10,
+        "omega": 1.6763192313083434e-09
+      }
+    },
+    {
+      "case": "low_re-n2-newton",
+      "divergence": 1.4932396766705267e-17,
+      "global_momentum": 6.88151763344773e-10,
+      "current_scalar_residual": {
+        "k": 1.6320963309464536e-09,
+        "omega": 9.918404514154794e-14
+      },
+      "scalar_shared_balance": {
+        "k": 1.6320938530451282e-09,
+        "omega": 9.936908047869277e-14
+      }
+    },
+    {
+      "case": "low_re-n4-newton",
+      "divergence": 3.635359530497051e-17,
+      "global_momentum": 1.1150425553588597e-10,
+      "current_scalar_residual": {
+        "k": 9.164199562723006e-10,
+        "omega": 1.2581332274586916e-13
+      },
+      "scalar_shared_balance": {
+        "k": 9.164974585747938e-10,
+        "omega": 1.3870000895361412e-13
+      }
+    },
+    {
+      "case": "low_re-n8-newton",
+      "divergence": 5.551115123125784e-17,
+      "global_momentum": 6.047372536882437e-11,
+      "current_scalar_residual": {
+        "k": 1.676608123784081e-09,
+        "omega": 2.637454949663811e-12
+      },
+      "scalar_shared_balance": {
+        "k": 1.676996758712506e-09,
+        "omega": 2.6358932769181424e-12
+      }
+    },
+    {
+      "case": "laminar_limit-n8-newton",
+      "divergence": 1.8176179229594021e-16,
+      "global_momentum": 4.4694899517848656e-17,
+      "current_scalar_residual": {
+        "k": 0.0,
+        "omega": 6.028294238084009e-16
+      },
+      "scalar_shared_balance": {
+        "k": 0.0,
+        "omega": 6.533674837573962e-16
+      }
+    }
+  ],
+  "simplec_newton_difference": {
+    "velocity": 3.1816170300162357e-10,
+    "modified_pressure": 2.459094220635095e-10,
+    "k": 4.0475938573036885e-12,
+    "omega": 4.526368169166517e-10,
+    "nu_t": 9.369059347785758e-13
+  },
+  "triangulated_wall_counterexample_confirmed": true,
+  "physical_suboff_benchmark_passed": false,
+  "turbulent_accuracy_verified": false,
+  "audit_source_sha256": "790020309a7af4fea6a1503f74185cffec6f8071fa9df12b64024b465ef3767f"
+}

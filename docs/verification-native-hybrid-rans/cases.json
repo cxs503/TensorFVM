@@ -1,0 +1,260 @@
+[
+  {
+    "case": "reservoir-n2-newton",
+    "kind": "reservoir",
+    "n": 2,
+    "cells": 4,
+    "faces": 40,
+    "iterations": 21,
+    "converged": true,
+    "current": {
+      "momentum": 6.393240362991283e-10,
+      "divergence": 2.7755575615628914e-17,
+      "gauge": 2.5670083686607882e-33,
+      "k": 3.6580354940994954e-09,
+      "omega": 9.557564334472243e-09,
+      "k_boundary": 0.0,
+      "omega_boundary": 0.0
+    },
+    "final_changes": {
+      "k": 4.200019821819384e-09,
+      "omega": 9.448533412913748e-09,
+      "k_faces": 1.7433749779506547e-09,
+      "omega_faces": 3.925752170608129e-09,
+      "velocity": 0.0,
+      "modified_pressure": 0.0
+    },
+    "minimum_k": 0.009410753938017477,
+    "minimum_omega": 1.8871864843332131,
+    "energy_balance_error": 1.1292710343224766e-10,
+    "global_momentum_balance_max": 9.95945070316322e-10,
+    "physical_benchmark_passed": false,
+    "fields_sha256": "7e2f3216d210a28795eb0fc45df51cccb287aaba443f79300bd417fe5eca4c3d"
+  },
+  {
+    "case": "reservoir-n2-simplec",
+    "kind": "reservoir",
+    "n": 2,
+    "cells": 4,
+    "faces": 40,
+    "iterations": 21,
+    "converged": true,
+    "current": {
+      "momentum": 7.164044204448131e-11,
+      "divergence": 4.163336342344337e-17,
+      "gauge": 0.0,
+      "k": 3.6589089289494307e-09,
+      "omega": 9.558125774678121e-09,
+      "k_boundary": 0.0,
+      "omega_boundary": 0.0
+    },
+    "final_changes": {
+      "k": 4.200692598495446e-09,
+      "omega": 9.448953918257136e-09,
+      "k_faces": 1.7434515423220327e-09,
+      "omega_faces": 3.925804244102731e-09,
+      "velocity": 5.87350434526018e-11,
+      "modified_pressure": 7.896007128654905e-12
+    },
+    "minimum_k": 0.009410753936257815,
+    "minimum_omega": 1.8871864841364903,
+    "energy_balance_error": 1.8196284756744063e-11,
+    "global_momentum_balance_max": 1.5037962879777762e-10,
+    "physical_benchmark_passed": false,
+    "fields_sha256": "29ecf1ea407f89d27dee383d3a4f473b733c537ebcbefc3e7ee9f5dc1fb8296f"
+  },
+  {
+    "case": "reservoir-n4-newton",
+    "kind": "reservoir",
+    "n": 4,
+    "cells": 8,
+    "faces": 76,
+    "iterations": 21,
+    "converged": true,
+    "current": {
+      "momentum": 5.088080636807291e-10,
+      "divergence": 5.551115123125783e-17,
+      "gauge": 0.0,
+      "k": 1.7152540269878566e-09,
+      "omega": 4.1190705551778236e-09,
+      "k_boundary": 0.0,
+      "omega_boundary": 0.0
+    },
+    "final_changes": {
+      "k": 3.0037716197997367e-09,
+      "omega": 6.332293357087781e-09,
+      "k_faces": 1.5363574942685159e-09,
+      "omega_faces": 3.2418897135988126e-09,
+      "velocity": 0.0,
+      "modified_pressure": 0.0
+    },
+    "minimum_k": 0.00934152881620166,
+    "minimum_omega": 1.8739512756556271,
+    "energy_balance_error": 1.1339629582551858e-10,
+    "global_momentum_balance_max": 2.0748739935029892e-10,
+    "physical_benchmark_passed": false,
+    "fields_sha256": "5c102d47ccc9f2d3de89ac98f671364f7e135d6441b92661cdb5467447ceebfc"
+  },
+  {
+    "case": "reservoir-n8-newton",
+    "kind": "reservoir",
+    "n": 8,
+    "cells": 16,
+    "faces": 148,
+    "iterations": 21,
+    "converged": true,
+    "current": {
+      "momentum": 2.2064749314967293e-10,
+      "divergence": 2.255140518769849e-16,
+      "gauge": 0.0,
+      "k": 7.087783006164296e-10,
+      "omega": 1.675895452173227e-09,
+      "k_boundary": 0.0,
+      "omega_boundary": 0.0
+    },
+    "final_changes": {
+      "k": 2.7911828532319005e-09,
+      "omega": 5.8168229758246944e-09,
+      "k_faces": 1.5109676475702116e-09,
+      "omega_faces": 3.1517502392780937e-09,
+      "velocity": 0.0,
+      "modified_pressure": 0.0
+    },
+    "minimum_k": 0.00932325253166939,
+    "minimum_omega": 1.8704574576086221,
+    "energy_balance_error": 8.737536562331005e-11,
+    "global_momentum_balance_max": 1.0201906600910482e-10,
+    "physical_benchmark_passed": false,
+    "fields_sha256": "090aba88234024e89a313ba4a345a530eed121e435eee1c1612d37b5e489f27e"
+  },
+  {
+    "case": "low_re-n2-newton",
+    "kind": "low_re",
+    "n": 2,
+    "cells": 4,
+    "faces": 20,
+    "iterations": 20,
+    "converged": true,
+    "current": {
+      "momentum": 6.346533201431931e-10,
+      "divergence": 1.2823178848923651e-17,
+      "gauge": 0.0,
+      "k": 1.6320963309464536e-09,
+      "omega": 9.918404514154794e-14,
+      "k_boundary": 0.0,
+      "omega_boundary": 0.0
+    },
+    "final_changes": {
+      "k": 5.416372759577001e-09,
+      "omega": 3.1976267017186876e-13,
+      "k_faces": 3.6767184502342336e-10,
+      "omega_faces": 2.5850936178379008e-14,
+      "velocity": 0.0,
+      "modified_pressure": 0.0
+    },
+    "minimum_k": 0.0,
+    "minimum_omega": 2.0,
+    "energy_balance_error": 6.076810929456222e-11,
+    "global_momentum_balance_max": 6.881517611859507e-10,
+    "physical_benchmark_passed": false,
+    "fields_sha256": "f9cec35366fd15242572f8beefab41ce29b601b9508cb91cfafe1e3345d12394"
+  },
+  {
+    "case": "low_re-n4-newton",
+    "kind": "low_re",
+    "n": 4,
+    "cells": 8,
+    "faces": 38,
+    "iterations": 22,
+    "converged": true,
+    "current": {
+      "momentum": 8.905801582680434e-10,
+      "divergence": 1.9157344168050514e-17,
+      "gauge": 0.0,
+      "k": 9.164199562723006e-10,
+      "omega": 1.2581332274586916e-13,
+      "k_boundary": 0.0,
+      "omega_boundary": 0.0
+    },
+    "final_changes": {
+      "k": 4.081148203347111e-09,
+      "omega": 7.03448406002401e-13,
+      "k_faces": 2.721903759325106e-10,
+      "omega_faces": 5.584540676462179e-14,
+      "velocity": 0.0,
+      "modified_pressure": 0.0
+    },
+    "minimum_k": 0.0,
+    "minimum_omega": 2.0,
+    "energy_balance_error": 1.3168234384852706e-10,
+    "global_momentum_balance_max": 1.1150425473731919e-10,
+    "physical_benchmark_passed": false,
+    "fields_sha256": "8cef143420eefd71b8d1702d491f173931ecd18b9c5f51c84bab18ca57966f15"
+  },
+  {
+    "case": "low_re-n8-newton",
+    "kind": "low_re",
+    "n": 8,
+    "cells": 16,
+    "faces": 74,
+    "iterations": 23,
+    "converged": true,
+    "current": {
+      "momentum": 7.711883262292215e-10,
+      "divergence": 5.551115123125784e-17,
+      "gauge": 0.0,
+      "k": 1.676608123784081e-09,
+      "omega": 2.637454949663811e-12,
+      "k_boundary": 0.0,
+      "omega_boundary": 0.0
+    },
+    "final_changes": {
+      "k": 7.720202822943213e-09,
+      "omega": 1.4330943860670274e-11,
+      "k_faces": 5.420950822155665e-10,
+      "omega_faces": 1.3548837375327963e-12,
+      "velocity": 0.0,
+      "modified_pressure": 0.0
+    },
+    "minimum_k": 0.0,
+    "minimum_omega": 2.0,
+    "energy_balance_error": 9.605407962076651e-11,
+    "global_momentum_balance_max": 6.047372444743782e-11,
+    "physical_benchmark_passed": false,
+    "fields_sha256": "bb2e60c142d5c62c9765c2e9dd55c1cf73484065489695f765cffb83a4515f96"
+  },
+  {
+    "case": "laminar_limit-n8-newton",
+    "kind": "laminar_limit",
+    "n": 8,
+    "cells": 16,
+    "faces": 148,
+    "iterations": 1,
+    "converged": true,
+    "current": {
+      "momentum": 1.8720281997795427e-16,
+      "divergence": 2.220446049250313e-16,
+      "gauge": 0.0,
+      "k": 0.0,
+      "omega": 6.028294238084009e-16,
+      "k_boundary": 0.0,
+      "omega_boundary": 0.0
+    },
+    "final_changes": {
+      "k": 0.0,
+      "omega": 5.661667391874902e-16,
+      "k_faces": 0.0,
+      "omega_faces": 3.361780052636837e-16,
+      "velocity": 0.0,
+      "modified_pressure": 0.0
+    },
+    "minimum_k": 0.0,
+    "minimum_omega": 0.6915640748081237,
+    "energy_balance_error": 6.418476861114186e-17,
+    "global_momentum_balance_max": 4.3315132424559995e-17,
+    "physical_benchmark_passed": false,
+    "velocity_max_absolute_error": 2.220446049250313e-16,
+    "upper_wall_shear_relative_error": 1.61907524424502e-15,
+    "fields_sha256": "198dfd850b6fc46760a840ce033a2742317923f01eab591d0e8032f92b29c232"
+  }
+]
