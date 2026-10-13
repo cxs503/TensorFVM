@@ -3,7 +3,9 @@
 This explicitly selected backend connects the hybrid viscous operator to
 incompressibility. Pressure work uses the negative transpose of the actual
 face divergence. No collocated Rhie--Chow reconstruction is involved.
-Dirichlet velocity and total outward traction (tau-pI)n are supported.
+Dirichlet velocity, total outward traction (tau-pI)n and dissipative Robin
+conditions (tau-pI)n + C u = g are supported. For Robin faces, the
+boundary_traction argument supplies g, including C u_wall for a moving wall.
 Convection, SST and wall functions are deliberately outside this interface.
 """
 import numpy as np
@@ -20,7 +22,7 @@ class NativeHybridStokes3D:
     def __init__(self, mesh, velocity_dirichlet, velocity_boundary=0., *,
                  viscosity=1., body_force=0., boundary_traction=0.,
                  gauge_value=0., body_force_discretization='face', coupled_linear_method='direct',
-                 gradient_jump_stabilization=1., momentum_relaxation_basis='diagonal'):
+                 gradient_jump_stabilization=1., momentum_relaxation_basis='diagonal',robin_coefficient=None):
         if coupled_linear_method not in ('direct', 'reused_lu', 'block_amg'):
             raise ValueError('coupled_linear_method must be direct, reused_lu or block_amg')
         if momentum_relaxation_basis not in ('diagonal','absolute_row_sum'):
@@ -34,9 +36,9 @@ class NativeHybridStokes3D:
         self.gradient_jump_stabilization = gradient_jump_stabilization
         self.viscous = NativeHybridViscous3D(
             mesh, viscosity, dirichlet_mask=velocity_dirichlet,
-            gradient_jump_stabilization=gradient_jump_stabilization)
+            gradient_jump_stabilization=gradient_jump_stabilization,robin_coefficient=robin_coefficient)
         v = self.viscous
-        self.rigid_motion_constraints = require_rigid_motion_constraints(mesh, v.dirichlet_components)
+        self.rigid_motion_constraints = require_rigid_motion_constraints(mesh, v.dirichlet_components,v.robin_coefficient)
         self.N, self.F = v.N, v.F
         self.prescribed = v._prescribed(velocity_boundary)
         self.face_mean = NativeFaceMean3D(mesh)
@@ -98,7 +100,7 @@ class NativeHybridStokes3D:
         """
         new = NativeHybridViscous3D(self.mesh,viscosity,
             dirichlet_mask=self.viscous.dirichlet_components,
-            gradient_jump_stabilization=self.gradient_jump_stabilization)
+            gradient_jump_stabilization=self.gradient_jump_stabilization,robin_coefficient=self.viscous.robin_coefficient)
         self.viscous = new
         self.A = new.matrix
         self.rhs = (self.load-new.full_matrix @ self.prescribed)[new.free]
@@ -290,7 +292,8 @@ class NativeHybridStokes3D:
         reaction = v.full_matrix @ self.state-self.divergence.T @ self.p-self.load
         # Free boundary traction is in load; Dirichlet reaction is external work.
         external_work = float(self.state @ self.load+self.prescribed @ reaction)
-        balance = diagnostic['energy_form']-pressure_work-external_work
+        total_energy=diagnostic['energy_form']+diagnostic['robin_power']
+        balance = total_energy-pressure_work-external_work
         total_traction = (diagnostic['face_flux']-self.p[self.mesh.owner, None]*self.mesh.area_vectors
                           -self.owner_force_flux)
         internal = ~v.boundary
@@ -301,7 +304,9 @@ class NativeHybridStokes3D:
             velocity=self.state[:3*self.N].reshape(self.N, 3).copy(),
             face_velocity=self.state[3*self.N:].reshape(self.F, 3).copy(),
             pressure=self.p.copy(), flux=np.sum(self.state[3*self.N:].reshape(self.F, 3)*self.mesh.area_vectors, axis=1),
-            energy_form=diagnostic['energy_form'], gradient_jump_energy=diagnostic['gradient_jump_energy'],
+            energy_form=total_energy,bulk_viscous_energy=diagnostic['energy_form'],
+            robin_power=diagnostic['robin_power'],robin_reaction_integrated=diagnostic['robin_reaction_integrated'],
+            gradient_jump_energy=diagnostic['gradient_jump_energy'],
             pressure_work=pressure_work,
             external_work=external_work, energy_balance_error=abs(balance),
             total_traction_integrated=total_traction,

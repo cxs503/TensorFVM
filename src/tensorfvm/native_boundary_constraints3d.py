@@ -7,7 +7,7 @@ This six-mode audit is necessary, not a proof of full discrete coercivity.
 import numpy as np
 
 
-def rigid_motion_constraint_audit(mesh,dirichlet_components):
+def rigid_motion_constraint_audit(mesh,dirichlet_components,robin_coefficient=None):
     mask=np.asarray(dirichlet_components,bool)
     if mask.shape!=(len(mesh.owner),3) or np.any(mask & (mesh.neighbor>=0)[:,None]):
         raise ValueError('boundary component mask required')
@@ -20,6 +20,14 @@ def rigid_motion_constraint_audit(mesh,dirichlet_components):
     modes[:,1,3]=-z;modes[:,1,5]=x
     modes[:,2,3]=y;modes[:,2,4]=-x
     constrained=modes[mask]
+    if robin_coefficient is not None:
+        from .native_robin3d import validate_robin
+        c=validate_robin(mesh,robin_coefficient,3,mask)
+        values,vectors=np.linalg.eigh(c)
+        active=values>1e-12*np.max(abs(values),axis=1)[:,None]
+        # Normalize constrained directions: this checks rank, not conditioning.
+        robin_modes=np.einsum("fij,fik->fjk",vectors,modes)[active]
+        constrained=np.vstack((constrained,robin_modes))
     if len(constrained):
         values=np.linalg.svd(constrained,compute_uv=False)
         rank=int(np.count_nonzero(values>1e-12*max(float(values.max(initial=0)),1.)))
@@ -28,8 +36,8 @@ def rigid_motion_constraint_audit(mesh,dirichlet_components):
                 singular_values=values,necessary_uniqueness_condition_passed=rank==6)
 
 
-def require_rigid_motion_constraints(mesh,dirichlet_components):
-    result=rigid_motion_constraint_audit(mesh,dirichlet_components)
+def require_rigid_motion_constraints(mesh,dirichlet_components,robin_coefficient=None):
+    result=rigid_motion_constraint_audit(mesh,dirichlet_components,robin_coefficient)
     if result['rank']<6:
         raise ValueError(f"velocity face constraints leave {6-result['rank']} global rigid motion(s) undetermined; add resolved boundary constraints")
     return result
