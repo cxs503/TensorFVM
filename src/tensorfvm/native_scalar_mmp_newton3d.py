@@ -20,9 +20,15 @@ def solve_mmp_newton(scalar,volume_flux,*,initial_state=None,**kwargs):
         result=_solve_mmp_newton(scalar,volume_flux,initial_state=initial_state,**kwargs)
         result['warm_start']=dict(attempted=True,accepted=True,fallback_to_continuation=False)
         return result
-    except ScalarMMPConvergenceError as exc:
+    except RuntimeError as exc:
+        # An unsmoothed tangent can be singular at the proposed state even
+        # though the smoothed continuation path is well posed. Treat numerical
+        # factorization/increment failures like a rejected nonlinear attempt.
+        # Input ValueErrors continue to propagate without a fallback.
+        diagnostic=getattr(exc,'scalar_result',{})
         attempt=dict(attempted=True,accepted=False,fallback_to_continuation=True,
-            failure=exc.scalar_result.get('failure'),history=exc.scalar_result.get('nonlinear_history',[]))
+            failure=diagnostic.get('failure') or f'{type(exc).__name__}: {exc}',
+            history=diagnostic.get('nonlinear_history',[]))
         try:
             result=_solve_mmp_newton(scalar,volume_flux,**kwargs)
         except ScalarMMPConvergenceError as fallback:
