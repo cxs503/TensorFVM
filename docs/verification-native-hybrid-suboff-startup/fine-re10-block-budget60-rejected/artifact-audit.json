@@ -1,0 +1,276 @@
+{
+  "source_and_fields_verified": true,
+  "mass_divergence_max": 1.4031531424618234e-11,
+  "local_integrated_momentum_max": 0.0013779248813066691,
+  "pressure_trace": {
+    "maximum_pressure_noise_amplification": 2.746267661794722,
+    "maximum_rings": 1,
+    "minimum_singular_ratio": 0.5702309191305643,
+    "owner_to_linear_trace_Cp_absolute_rms": 0.07295712682879457,
+    "wall_Cp_certified": false,
+    "fields_sha256": "56ce8fc03f85ab41b3a1ae05de2b531cb3e66e5770ffed85b1139feb03b1b141"
+  },
+  "rejected_linear_candidate": {
+    "candidate_hash_verified": true,
+    "saved_equation_defect_metrics_replayed": true,
+    "coupled_matrix_reassembled": false,
+    "candidate_is_physical_flow": false,
+    "record": {
+      "method": "block_amg",
+      "gmres_restart": 80,
+      "gmres_max_restart_cycles": 60,
+      "gmres_info": 60,
+      "gmres_iterations": 4800,
+      "true_relative_residual": 6.048017709268362e-10,
+      "algebraic_continuity_defect_per_volume_max": 2.2029781522184417e-10,
+      "gauge_equation_defect": 0.0,
+      "momentum_equation_defect_max": 1.3754333592726573e-12,
+      "candidate_finite": true,
+      "accepted": false,
+      "candidate_kind": "algebraic solution or Newton increment; not accepted physical flow",
+      "operator_complexities": [
+        1.3197539848428503,
+        1.3197539848428503,
+        1.3197539848428503
+      ],
+      "setup_seconds": 0.8310330957174301,
+      "solve_seconds": 743.1176481451839,
+      "pyamg_version": "5.3.0",
+      "fields_sha256": "13c21bd4f652fb4707d1543faa94c05aa08783d24f7ae161c553d6303ee67670",
+      "changes_accepted_state": false
+    },
+    "largest_local_constraints": [
+      {
+        "cell": 11513,
+        "center": [
+          0.0009879456800185472,
+          -0.006552178112827887,
+          0.005027663096017892
+        ],
+        "volume": 1.0088530725003247e-08,
+        "vertex_count": 6,
+        "absolute_defect_per_volume": 2.2029781522184417e-10
+      },
+      {
+        "cell": 11512,
+        "center": [
+          0.000987945680018547,
+          -0.005027663096017891,
+          0.006552178112827888
+        ],
+        "volume": 1.0088530725003247e-08,
+        "vertex_count": 6,
+        "absolute_defect_per_volume": 2.1816665401882128e-10
+      },
+      {
+        "cell": 11511,
+        "center": [
+          0.0009879456800185467,
+          -0.0031605211478203847,
+          0.007630173019234959
+        ],
+        "volume": 1.0088530725003234e-08,
+        "vertex_count": 6,
+        "absolute_defect_per_volume": 2.143578303523585e-10
+      },
+      {
+        "cell": 11514,
+        "center": [
+          0.0009879456800185467,
+          -0.007630173019234959,
+          0.0031605211478203873
+        ],
+        "volume": 1.0088530725003226e-08,
+        "vertex_count": 6,
+        "absolute_defect_per_volume": 2.085877332768368e-10
+      },
+      {
+        "cell": 11515,
+        "center": [
+          0.0009879456800185467,
+          -0.008188184243838277,
+          0.0010779949064070732
+        ],
+        "volume": 1.0088530725003244e-08,
+        "vertex_count": 6,
+        "absolute_defect_per_volume": 2.0049465429656434e-10
+      },
+      {
+        "cell": 11510,
+        "center": [
+          0.0009879456800185467,
+          -0.0010779949064070708,
+          0.008188184243838279
+        ],
+        "volume": 1.0088530725003238e-08,
+        "vertex_count": 6,
+        "absolute_defect_per_volume": 1.9425650486976651e-10
+      },
+      {
+        "cell": 11509,
+        "center": [
+          0.0009879456800185465,
+          0.0010779949064070717,
+          0.008188184243838275
+        ],
+        "volume": 1.0088530725003239e-08,
+        "vertex_count": 6,
+        "absolute_defect_per_volume": 1.7948858298639402e-10
+      },
+      {
+        "cell": 11516,
+        "center": [
+          0.0009879456800185465,
+          -0.008188184243838277,
+          -0.0010779949064070712
+        ],
+        "volume": 1.0088530725003246e-08,
+        "vertex_count": 6,
+        "absolute_defect_per_volume": 1.7896557851076516e-10
+      },
+      {
+        "cell": 11517,
+        "center": [
+          0.0009879456800185467,
+          -0.007630173019234959,
+          -0.003160521147820386
+        ],
+        "volume": 1.0088530725003226e-08,
+        "vertex_count": 6,
+        "absolute_defect_per_volume": 1.788608142857458e-10
+      },
+      {
+        "cell": 11521,
+        "center": [
+          0.0009879456800185467,
+          -0.0010779949064070717,
+          -0.008188184243838279
+        ],
+        "volume": 1.0088530725003228e-08,
+        "vertex_count": 6,
+        "absolute_defect_per_volume": 1.768614446299577e-10
+      },
+      {
+        "cell": 11523,
+        "center": [
+          0.0009879456800185472,
+          0.0031605211478203856,
+          -0.007630173019234959
+        ],
+        "volume": 1.0088530725003272e-08,
+        "vertex_count": 6,
+        "absolute_defect_per_volume": 1.7278804180196288e-10
+      },
+      {
+        "cell": 11465,
+        "center": [
+          0.0014145322789849508,
+          -0.006459886909934388,
+          0.004956845565284668
+        ],
+        "volume": 7.845079496293257e-09,
+        "vertex_count": 6,
+        "absolute_defect_per_volume": 1.7067204372833913e-10
+      },
+      {
+        "cell": 11519,
+        "center": [
+          0.0009879456800185467,
+          -0.005027663096017895,
+          -0.006552178112827886
+        ],
+        "volume": 1.0088530725003259e-08,
+        "vertex_count": 6,
+        "absolute_defect_per_volume": 1.7027308546015077e-10
+      },
+      {
+        "cell": 11463,
+        "center": [
+          0.0014145322789849515,
+          -0.003116003386935403,
+          0.007522697637139955
+        ],
+        "volume": 7.845079496293244e-09,
+        "vertex_count": 6,
+        "absolute_defect_per_volume": 1.6662870566466973e-10
+      },
+      {
+        "cell": 11518,
+        "center": [
+          0.0009879456800185472,
+          -0.00655217811282789,
+          -0.00502766309601789
+        ],
+        "volume": 1.0088530725003233e-08,
+        "vertex_count": 6,
+        "absolute_defect_per_volume": 1.6293809591376802e-10
+      },
+      {
+        "cell": 11522,
+        "center": [
+          0.0009879456800185467,
+          0.001077994906407069,
+          -0.008188184243838279
+        ],
+        "volume": 1.0088530725003228e-08,
+        "vertex_count": 6,
+        "absolute_defect_per_volume": 1.6212426204748471e-10
+      },
+      {
+        "cell": 11520,
+        "center": [
+          0.0009879456800185472,
+          -0.003160521147820389,
+          -0.0076301730192349605
+        ],
+        "volume": 1.0088530725003266e-08,
+        "vertex_count": 6,
+        "absolute_defect_per_volume": 1.6065174401478633e-10
+      },
+      {
+        "cell": 11477,
+        "center": [
+          0.0014145322789849513,
+          0.006459886909934387,
+          -0.004956845565284671
+        ],
+        "volume": 7.845079496293236e-09,
+        "vertex_count": 6,
+        "absolute_defect_per_volume": 1.5749143118107766e-10
+      },
+      {
+        "cell": 11467,
+        "center": [
+          0.0014145322789849513,
+          -0.008072848952220072,
+          0.0010628107272055661
+        ],
+        "volume": 7.84507949629325e-09,
+        "vertex_count": 6,
+        "absolute_defect_per_volume": 1.5027028087237409e-10
+      },
+      {
+        "cell": 11501,
+        "center": [
+          0.9985143884177565,
+          0.0017532293327050688,
+          -0.0013453001831009441
+        ],
+        "volume": 6.26419235577319e-10,
+        "vertex_count": 6,
+        "absolute_defect_per_volume": 1.4673223754355955e-10
+      }
+    ]
+  },
+  "wall_force": [
+    0.37068669966961126,
+    -0.0002020483722385316,
+    7.967719621615882e-05
+  ],
+  "force_balance_max": 7.987797433856025e-05,
+  "numerically_converged": false,
+  "wall_Cp_certified": false,
+  "grid_convergence_certified": false,
+  "physical_suboff_benchmark_passed": false,
+  "audit_source_sha256": "01625b40cd7f350de3f218817d50fc6298aaeee7692645cc8a00efb5064f1090"
+}

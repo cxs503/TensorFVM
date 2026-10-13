@@ -1,0 +1,36 @@
+{
+  "numerically_converged": false,
+  "solver_converged": false,
+  "failure": "NativeBlockSolveError: block AMG failed CURRENT true residual: info=60, residual=6.04802e-10, constraint_per_volume=2.20298e-10",
+  "cells": 11648,
+  "faces": 36386,
+  "Re_L": 10.0,
+  "mass_divergence_max": 1.4031531424618234e-11,
+  "local_integrated_momentum_max": 0.0013779248813066691,
+  "force_balance_max": 7.987797433856025e-05,
+  "interface_traction_defect_max": 0.0011376761311078128,
+  "energy_balance_error": 0.00033254420634121207,
+  "wall_force": [
+    0.37068669966961126,
+    -0.0002020483722385316,
+    7.967719621615882e-05
+  ],
+  "wall_owner_pressure_force": [
+    0.014512929914797,
+    -8.438697893001697e-05,
+    4.9102679944211515e-05
+  ],
+  "wall_remaining_numerical_force": [
+    0.35617376975481424,
+    -0.00011766139330851465,
+    3.05745162719473e-05
+  ],
+  "Cd_L2": 0.7413733993392225,
+  "wall_Cp_certified": false,
+  "grid_convergence_certified": false,
+  "physical_suboff_benchmark_passed": false,
+  "max_cell_speed": 1.069968165410813,
+  "source_integrity_verified": true,
+  "fields_sha256": "671db613fdda0e1c97db4c244fac0a05e508ff623a127db6772b8ba6dda68c30",
+  "runtime_seconds": 1257.415133042261
+}
