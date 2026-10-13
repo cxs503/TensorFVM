@@ -1,0 +1,68 @@
+[
+  {
+    "n": 2,
+    "cells": 28,
+    "stabilization": 0.0,
+    "unconstrained_deviatoric_ratio": 0.09439246834919693,
+    "full_strain_ratio": 0.11521183087311627,
+    "minimum_strain_to_gradient_energy_ratio": 0.11950805324162715,
+    "eigen_relative_residual": 4.266424046895207e-09,
+    "eigen_divergence_max": 7.077671781985371e-16,
+    "ratio_definition": "divergence-free strain energy / full gradient plus original residual energy"
+  },
+  {
+    "n": 2,
+    "cells": 28,
+    "stabilization": 1.0,
+    "unconstrained_deviatoric_ratio": 0.6309155146395627,
+    "full_strain_ratio": 0.677873013164932,
+    "minimum_strain_to_gradient_energy_ratio": 0.7026787818607826,
+    "eigen_relative_residual": 1.8664934716722654e-10,
+    "eigen_divergence_max": 2.0174291924524024e-15,
+    "ratio_definition": "divergence-free strain energy / full gradient plus original residual energy"
+  },
+  {
+    "n": 4,
+    "cells": 224,
+    "stabilization": 0.0,
+    "unconstrained_deviatoric_ratio": 0.01731761048763939,
+    "full_strain_ratio": 0.058617533348562,
+    "minimum_strain_to_gradient_energy_ratio": 0.06782098394131389,
+    "eigen_relative_residual": 2.0157511712850164e-08,
+    "eigen_divergence_max": 2.7061686225238187e-15,
+    "ratio_definition": "divergence-free strain energy / full gradient plus original residual energy"
+  },
+  {
+    "n": 4,
+    "cells": 224,
+    "stabilization": 1.0,
+    "unconstrained_deviatoric_ratio": 0.45852227673780527,
+    "full_strain_ratio": 0.4646635495665269,
+    "minimum_strain_to_gradient_energy_ratio": 0.4680698664012541,
+    "eigen_relative_residual": 8.932057485058337e-09,
+    "eigen_divergence_max": 6.942363350859182e-15,
+    "ratio_definition": "divergence-free strain energy / full gradient plus original residual energy"
+  },
+  {
+    "n": 6,
+    "cells": 756,
+    "stabilization": 0.0,
+    "unconstrained_deviatoric_ratio": 0.006333127565215427,
+    "full_strain_ratio": 0.04793927719099072,
+    "minimum_strain_to_gradient_energy_ratio": 0.053932031200432294,
+    "eigen_relative_residual": 1.7928199187030924e-08,
+    "eigen_divergence_max": 3.148986541799172e-15,
+    "ratio_definition": "divergence-free strain energy / full gradient plus original residual energy"
+  },
+  {
+    "n": 6,
+    "cells": 756,
+    "stabilization": 1.0,
+    "unconstrained_deviatoric_ratio": 0.4265011358605099,
+    "full_strain_ratio": 0.42798905976571705,
+    "minimum_strain_to_gradient_energy_ratio": 0.42879176476268965,
+    "eigen_relative_residual": 1.204914726332285e-08,
+    "eigen_divergence_max": 1.4625969045508868e-14,
+    "ratio_definition": "divergence-free strain energy / full gradient plus original residual energy"
+  }
+]

@@ -11,15 +11,19 @@ vector extension below is a project implementation, separately verified.
 import numpy as np
 from scipy import sparse
 from scipy.sparse.linalg import splu, cg
+from .native_gradient_jump3d import NativeGradientJump3D
 
 
 class NativeHybridViscous3D:
     def __init__(self, mesh, dynamic_viscosity=1., *, components=3,
-                 deviatoric=True, stabilization=1., dirichlet_mask=None):
+                 deviatoric=True, stabilization=1., dirichlet_mask=None,
+                 gradient_jump_stabilization=1.):
         if components not in (1, 3):
             raise ValueError('components must be 1 or 3')
         if not np.isfinite(stabilization) or stabilization <= 0:
             raise ValueError('positive finite stabilization required')
+        if not np.isfinite(gradient_jump_stabilization) or gradient_jump_stabilization < 0:
+            raise ValueError('finite nonnegative gradient jump stabilization required')
         self.mesh = mesh
         self.N, self.F, self.components = len(mesh.cells), len(mesh.owner), components
         mu = np.broadcast_to(np.asarray(dynamic_viscosity, float), (self.N,)).copy()
@@ -88,6 +92,10 @@ class NativeHybridViscous3D:
         self.full_matrix = sparse.coo_matrix((np.concatenate(values),
             (np.concatenate(rows), np.concatenate(columns))), shape=(size, size)).tocsr()
         self.full_matrix.eliminate_zeros()
+        self.gradient_jump = None
+        if components==3 and gradient_jump_stabilization>0:
+            self.gradient_jump=NativeGradientJump3D(mesh,self.local,mu,gradient_jump_stabilization)
+            self.full_matrix+=self.gradient_jump.matrix
         free_mask = np.vstack((np.ones((self.N,components),bool),~self.dirichlet_components))
         self.free = np.flatnonzero(free_mask.ravel())
         self.matrix = self.full_matrix[self.free][:, self.free].tocsc()
@@ -180,19 +188,25 @@ class NativeHybridViscous3D:
         owner_flux = np.zeros((self.F, self.components))
         neighbor_flux = np.zeros_like(owner_flux)
         energy = 0.
+        gradient_reaction=np.zeros((self.N,self.components,3))
+        jump_energy=0.
+        if self.gradient_jump is not None:
+            gradient_reaction,jump_energy=self.gradient_jump.gradient_reactions(state)
         for cell, (faces, sign, ids, local, gradient, residual, penalty) in enumerate(self.local):
             local_state = state[ids]
             local_reaction = (local @ local_state).reshape(-1, self.components)
+            local_reaction += (gradient_reaction[cell] @ gradient).T
             owner_flux[faces[sign > 0]] = local_reaction[1:][sign > 0]
             neighbor_flux[faces[sign < 0]] = local_reaction[1:][sign < 0]
             energy += float(local_state @ local @ local_state)
+        energy += jump_energy
         cells = state[:self.cell_dofs].reshape(self.N, self.components)
         interface_defect = owner_flux[~self.boundary]+neighbor_flux[~self.boundary]
         boundary_work = float(np.sum(state.reshape(-1, self.components)[self.N:][self.boundary]*owner_flux[self.boundary]))
         rate = -float(cells.ravel() @ reaction[:self.cell_dofs])
         return dict(cell_values=cells.copy(), face_values=state[self.cell_dofs:].reshape(self.F, self.components).copy(),
                     face_flux=owner_flux, neighbor_face_flux=neighbor_flux,
-                    energy_form=energy, kinetic_energy_rate=rate,
+                    energy_form=energy, gradient_jump_energy=jump_energy, kinetic_energy_rate=rate,
                     boundary_work=boundary_work,
                     energy_balance_error=abs(rate+energy-boundary_work),
                     interface_flux_defect_max=float(np.max(np.abs(interface_defect), initial=0.)),

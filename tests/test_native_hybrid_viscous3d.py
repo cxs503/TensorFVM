@@ -86,8 +86,9 @@ def test_hybrid_cg_matches_direct_face_equilibrium():
 
 def test_hybrid_symmetric_deviatoric_vector_diffusion_refinement():
     errors = []
-    # n=8 is still pre-asymptotic for the symmetric stress coupling (~1.59).
-    for n in (4,8,16):
+    # With the Korn jump term, 8->16 is still pre-asymptotic (1.79961).
+    # Keep the 1.8 gate and verify the next refinement pair.
+    for n in (4,8,16,32):
         mesh = box(n)
         sin = np.sin(np.pi*mesh.cell_centers); cos = np.cos(np.pi*mesh.cell_centers)
         phi = np.prod(sin, axis=1)

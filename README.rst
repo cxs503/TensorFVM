@@ -471,7 +471,12 @@ DNS 来源、原场检查点、全部生产源码及真实差距；GPU 尚未验
 原生 TensorFVM 修复进展
 ======================
 
-最新进展见 `无体力 Kovasznay 流与对称面验证 <docs/verification-native-kovasznay/README.md>`_。
+最新进展见 `三维压力诊断与梯度跳变稳定化 <docs/verification-native-gradient-jump/README.md>`_。
+新增非负梯度跳变项并同步数值牵引；756 单元三维 ABC 的 Stokes 压力误差从 37.52%
+降至 12.76%，NS 从 139.46% 降至 55.82%，仍未通过 3% 门槛。不可压缩速度空间的
+能量控制、真实切面图和未通过数据均保留；110 项核心测试通过，旧配点缺陷仍为已知失败。
+
+上一阶段见 `无体力 Kovasznay 流与对称面验证 <docs/verification-native-kovasznay/README.md>`_。
 新增分量边界、正确的对称面压力参考、SIMPLEC 分量索引、外层松弛，以及带当前真实残差
 审计的 LU 预条件复用。Re=40 的完整立方体粗网格与平面对称挤出加密结果分别报告；9,216 单元挤出案例的
 速度、固定参考压力误差为 0.058%、2.292%。三维偏斜混合网格 ABC 探针的压力仍未达标。
