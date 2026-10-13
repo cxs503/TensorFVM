@@ -15,12 +15,13 @@ from scipy import sparse
 from scipy.sparse.linalg import splu, cg
 from .native_gradient_jump3d import NativeGradientJump3D
 from .native_robin3d import validate_robin,robin_matrix
+from .native_velocity_space3d import NativeVelocitySpace3D
 
 
 class NativeHybridViscous3D:
     def __init__(self, mesh, dynamic_viscosity=1., *, components=3,
                  deviatoric=True, stabilization=1., dirichlet_mask=None,
-                 gradient_jump_stabilization=1., robin_coefficient=None):
+                 gradient_jump_stabilization=1., robin_coefficient=None,normal_velocity_faces=None):
         if components not in (1, 3):
             raise ValueError('components must be 1 or 3')
         if not np.isfinite(stabilization) or stabilization <= 0:
@@ -41,6 +42,8 @@ class NativeHybridViscous3D:
         if mask.shape != (self.F,components) or np.any(mask & ~self.boundary[:,None]):
             raise ValueError('Dirichlet mask must select boundary faces or their components')
         self.dirichlet_components = mask.copy()
+        self.velocity_space=NativeVelocitySpace3D(mesh,components,mask,normal_velocity_faces)
+        self.normal_velocity_faces=self.velocity_space.normal_faces
         self.robin_coefficient = validate_robin(mesh,robin_coefficient,components,mask)
         self.dirichlet = mask.all(axis=1)
         self.traction_components = self.boundary[:,None] & ~mask
@@ -102,9 +105,8 @@ class NativeHybridViscous3D:
             self.full_matrix+=self.gradient_jump.matrix
         self.robin_matrix = robin_matrix(mesh,self.robin_coefficient)
         if self.robin_matrix.nnz:self.full_matrix += self.robin_matrix
-        free_mask = np.vstack((np.ones((self.N,components),bool),~self.dirichlet_components))
-        self.free = np.flatnonzero(free_mask.ravel())
-        self.matrix = self.full_matrix[self.free][:, self.free].tocsc()
+        self.free = self.velocity_space.free
+        self.matrix = self.velocity_space.matrix(self.full_matrix)
         self.cell_dofs = components*self.N
         self._face_factor = None
 
@@ -114,6 +116,11 @@ class NativeHybridViscous3D:
             raise ValueError('finite Dirichlet boundary values required')
         state = np.zeros((self.N+self.F, self.components))
         state[self.N:][self.dirichlet_components] = boundary[self.dirichlet_components]
+        selected=self.normal_velocity_faces
+        if selected.any():
+            if not np.isfinite(boundary[selected]).all():raise ValueError("finite prescribed normal velocity required")
+            normal=self.velocity_space.normal[selected]
+            state[self.N:][selected]=normal*np.sum(normal*boundary[selected],axis=1)[:,None]
         return state.ravel()
 
     def _traction_load(self, boundary_traction):
@@ -136,8 +143,8 @@ class NativeHybridViscous3D:
         faces = self.free[self.cell_dofs:]
         iterations = 0
         if len(faces):
-            block = self.full_matrix[faces][:, faces].tocsc()
-            rhs = (self._traction_load(boundary_traction)-self.full_matrix @ state)[faces]
+            block = self.matrix[self.cell_dofs:,self.cell_dofs:].tocsc()
+            rhs = self.velocity_space.restrict(self._traction_load(boundary_traction)-self.full_matrix @ state)[self.cell_dofs:]
             if linear_method == 'direct':
                 if self._face_factor is None:
                     self._face_factor = splu(block)
@@ -155,7 +162,7 @@ class NativeHybridViscous3D:
             relative = np.linalg.norm(block @ answer-rhs)/max(np.linalg.norm(rhs), 1e-30)
             if not np.isfinite(answer).all() or relative > 1e-9:
                 raise RuntimeError(f'hybrid face equilibrium failed true residual: {relative:g}')
-            state[faces] = answer
+            state += self.velocity_space.expand(np.r_[np.zeros(self.cell_dofs),answer])
         else:
             relative = 0.
         result = self.diagnostics(state)
@@ -168,7 +175,7 @@ class NativeHybridViscous3D:
         if not np.isfinite(force).all():
             raise ValueError('finite cell body force required')
         state = self._prescribed(boundary_values)
-        rhs = (self._traction_load(boundary_traction)-self.full_matrix @ state)[self.free]
+        rhs = self.velocity_space.restrict(self._traction_load(boundary_traction)-self.full_matrix @ state)
         rhs[:self.cell_dofs] += (self.mesh.cell_volumes[:, None]*force).ravel()
         if linear_method == 'direct':
             answer = splu(self.matrix).solve(rhs)
@@ -182,9 +189,9 @@ class NativeHybridViscous3D:
         relative = np.linalg.norm(self.matrix @ answer-rhs)/max(np.linalg.norm(rhs), 1e-30)
         if not np.isfinite(answer).all() or relative > 1e-9:
             raise RuntimeError(f'hybrid diffusion failed true residual: {relative:g}')
-        state[self.free] = answer
+        state += self.velocity_space.expand(answer)
         result = self.diagnostics(state)
-        result['linear_relative_residual'] = float(np.linalg.norm(self.matrix @ state[self.free]-rhs)/max(np.linalg.norm(rhs), 1e-30))
+        result['linear_relative_residual'] = float(np.linalg.norm(self.matrix @ self.velocity_space.restrict(state)-rhs)/max(np.linalg.norm(rhs), 1e-30))
         return result
 
     def diagnostics(self, state):

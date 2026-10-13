@@ -10,22 +10,24 @@ from scipy import sparse
 
 def solve_newton(solver, *, max_iterations=50, tolerance=1e-8, max_backtracks=20, callback=None):
     s=solver
+    s.velocity_constraint_tolerance=tolerance
     if not np.isfinite(tolerance) or tolerance<=0 or max_iterations<1 or max_backtracks<0:
         raise ValueError('positive tolerance/iteration limit and nonnegative backtrack limit required')
-    free=s.viscous.free;size=len(free);volumes=s.mesh.cell_volumes
-    momentum_scale=max(np.linalg.norm((s.load-s.viscous.full_matrix@s.prescribed)[free]),1.)
+    space=s.viscous.velocity_space;size=len(space.free);volumes=s.mesh.cell_volumes
+    momentum_scale=max(np.linalg.norm(space.restrict(s.load-s.viscous.full_matrix@s.prescribed)),1.)
     continuity_scale=max(np.linalg.norm(s.divergence@s.state/volumes),1.)
     s.nonlinear_converged=False;s.newton_history=[];s.newton_failure=None
 
     def evaluate(state,pressure):
         full,source=s._current_system(state)
-        momentum=(full@state+source-s.divergence.T@pressure-s.load)[free]
+        momentum=space.restrict(full@state+source-s.divergence.T@pressure-s.load)
         mass=s.divergence@state
         gauge=(pressure[0]-s.gauge_value) if s.gauge else 0.
         merit=float(np.linalg.norm(np.r_[momentum/momentum_scale,mass/volumes/continuity_scale,gauge]))
-        scale=max(np.linalg.norm((s.load-source-full@s.prescribed)[free]),1.)
+        scale=max(np.linalg.norm(space.restrict(s.load-source-full@s.prescribed)),1.)
         row=dict(current_momentum_residual=float(np.linalg.norm(momentum)/scale),
-                 divergence_max=float(np.max(np.abs(mass/volumes))),gauge_error=abs(gauge))
+                 divergence_max=float(np.max(np.abs(mass/volumes))),gauge_error=abs(gauge),
+                 boundary_velocity_error=space.constraint_error(state-s.prescribed))
         return momentum,mass,gauge,merit,row
 
     current=evaluate(s.state,s.p)
@@ -37,7 +39,7 @@ def solve_newton(solver, *, max_iterations=50, tolerance=1e-8, max_backtracks=20
                 merit_after=merit,velocity_change=0.,pressure_change=0.,**metrics))
             break
         jac=s.viscous.full_matrix+s.convection.hybrid_jacobian(s.state,s.face_mean.matrix)
-        matrix=sparse.bmat([[jac[free][:,free],-s.B.T],[s.B,None]],format='lil')
+        matrix=sparse.bmat([[space.matrix(jac),-s.B.T],[s.B,None]],format='lil')
         rhs=-np.r_[momentum,mass]
         if s.gauge:
             matrix[size,:]=0.;matrix[size,size]=1.;rhs[size]=-gauge
@@ -45,7 +47,7 @@ def solve_newton(solver, *, max_iterations=50, tolerance=1e-8, max_backtracks=20
         old=s.state.copy();old_p=s.p.copy();accepted=False;trials=[];du=dp=float('inf')
         for backtracks in range(max_backtracks+1):
             step=2.**(-backtracks)
-            trial=old.copy();trial[free]+=step*direction[:size]
+            trial=old+space.expand(step*direction[:size])
             trial_p=old_p+step*direction[size:]
             if not np.isfinite(trial).all() or not np.isfinite(trial_p).all():
                 trials.append(dict(step_length=step,merit=None,accepted=False,reason='nonfinite_trial'))
