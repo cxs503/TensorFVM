@@ -1,0 +1,32 @@
+{
+  "source_integrity_verified": true,
+  "solver_converged": true,
+  "boundary_verification_passed": true,
+  "independent": {
+    "velocity_max_error": 5.294532590127687e-10,
+    "wall_shear_max_error": 3.231041215828734e-11,
+    "mass_divergence_max": 3.69132563499432e-16,
+    "local_momentum_balance_max": 1.6247799988660339e-10,
+    "global_momentum_balance_max": 1.357677264841389e-10,
+    "wall_normal_flux_max": 0.0
+  },
+  "wall": {
+    "traction_defect_max": 3.529845469738002e-12,
+    "boundary_power": -0.003836388547616576,
+    "wall_motion_power": 0.0,
+    "sample_dissipation": 0.004171258942292032,
+    "sampling_transfer_power": 0.00033487039467545624,
+    "work_decomposition_error": 2.710505431213761e-19,
+    "sampling": "wall-adjacent cell; face trace used for discrete boundary work"
+  },
+  "reference_shear": 0.0051758701254599965,
+  "energy_balance_error": 5.254760819181636e-12,
+  "interface_traction_defect_max": 9.09073477234207e-11,
+  "wall_y_plus_min": 17.985880090798883,
+  "wall_y_plus_max": 17.98588010345137,
+  "bulk_viscous_energy": 0.0013394815780894307,
+  "fields_sha256": "52b0b597316736ced4690f9abd2071c7fc7313d3df59dbc447a2b0dc85347792",
+  "runtime_seconds": 6.924677804112434,
+  "physical_suboff_benchmark_passed": false,
+  "sst_coupled": false
+}

@@ -1,0 +1,21 @@
+{
+  "kind": "Unforced native NS with cell-sampled Spalding stress; not SST qualification.",
+  "algorithm": "newton",
+  "cells": 16,
+  "faces": 136,
+  "layers": 4,
+  "bulk_viscosity": 0.02,
+  "molecular_viscosity": 0.001,
+  "rho": 1.0,
+  "wall_speed": 0.0,
+  "upper_wall_speed": 1.0,
+  "cell_sampling_distance": 0.125,
+  "body_force": 0.0,
+  "incoming_velocity": "analytical one-dimensional Couette profile used as physical incoming boundary data only",
+  "initialization": "native Stokes, without nonlinear wall stress; no analytical interior field assigned",
+  "momentum_relaxation_basis": "absolute_row_sum",
+  "relaxation": 0.5,
+  "tolerance": 1e-09,
+  "sst_coupled": false,
+  "physical_suboff_benchmark_passed": false
+}
