@@ -5,5 +5,9 @@
   "actual_fine_run": "../fine-re10-block-diagnostic",
   "diagnostic_complete": true,
   "solver_scaled_candidate_under_test": true,
-  "physical_suboff_benchmark_passed": false
+  "physical_suboff_benchmark_passed": false,
+  "combined_candidate_commit": "27777e0",
+  "combined_candidate_branch": "fix/native-linear-refinement",
+  "combined_related_tests_passed": 74,
+  "combined_tests": "../amg-diagnostics-candidate/combined-core-tests.txt"
 }

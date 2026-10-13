@@ -9,5 +9,9 @@
   "difference": "final candidate additionally handles small non-saddle matrices used by the reused-LU unit test; numerical native saddle path unchanged",
   "full_medium_NS_numerically_converged": true,
   "full_medium_NS_evidence": "../medium-re10-refined",
-  "candidate_commit": "e0b03a2"
+  "candidate_commit": "e0b03a2",
+  "combined_candidate_commit": "27777e0",
+  "combined_candidate_branch": "fix/native-linear-refinement",
+  "combined_related_tests_passed": 74,
+  "combined_tests": "../amg-diagnostics-candidate/combined-core-tests.txt"
 }

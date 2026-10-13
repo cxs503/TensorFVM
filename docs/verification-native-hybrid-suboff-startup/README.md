@@ -175,3 +175,5 @@ Stokes 质量散度 5.524e-8 超出 1e-8 门槛，整体小线性残差不能代
 [输入原场、完整源码、全部差分步长及结果](re100-jacobian-check/summary.json)保留。
 这项检查未发现该状态下的 Jacobian 不一致，但只覆盖三个方向；
 它不证明非线性求解的全局收敛，也不改变原 Re=100 失败结论。
+
+直接精度修复、刚体约束检查和未平衡 AMG 诊断合并到隔离分支 `fix/native-linear-refinement`（`27777e0`）后，通过 [74 项相关回归](amg-diagnostics-candidate/combined-core-tests.txt)。它不包含仍在测试中的尺度平衡候选，也尚未改动主线正在运行的冻结源码。
