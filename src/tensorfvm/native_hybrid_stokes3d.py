@@ -12,7 +12,7 @@ from scipy.sparse.linalg import splu, gmres, LinearOperator
 
 from .native_hybrid_viscous3d import NativeHybridViscous3D
 from .native_face_mean3d import NativeFaceMean3D
-from .native_block_solver3d import NativeHybridBlockSolver3D
+from .native_block_solver3d import NativeHybridBlockSolver3D, NativeBlockSolveError
 
 
 class NativeHybridStokes3D:
@@ -124,7 +124,11 @@ class NativeHybridStokes3D:
         if self.coupled_linear_method == 'block_amg':
             if self._block_preconditioner is None:
                 self._block_preconditioner = NativeHybridBlockSolver3D(self)
-            answer,residual,record = self._block_preconditioner.solve(matrix,rhs)
+            try:
+                answer,residual,record = self._block_preconditioner.solve(matrix,rhs)
+            except NativeBlockSolveError as exc:
+                self.coupled_linear_history.append(exc.record)
+                raise
             self.coupled_linear_history.append(record)
             return answer,residual
         matrix = matrix.tocsc()
