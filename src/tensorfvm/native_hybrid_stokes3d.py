@@ -12,6 +12,7 @@ from scipy.sparse.linalg import splu, gmres, LinearOperator
 
 from .native_hybrid_viscous3d import NativeHybridViscous3D
 from .native_face_mean3d import NativeFaceMean3D
+from .native_block_solver3d import NativeHybridBlockSolver3D
 
 
 class NativeHybridStokes3D:
@@ -19,13 +20,14 @@ class NativeHybridStokes3D:
                  viscosity=1., body_force=0., boundary_traction=0.,
                  gauge_value=0., body_force_discretization='face', coupled_linear_method='direct',
                  gradient_jump_stabilization=1., momentum_relaxation_basis='diagonal'):
-        if coupled_linear_method not in ('direct', 'reused_lu'):
-            raise ValueError('coupled_linear_method must be direct or reused_lu')
+        if coupled_linear_method not in ('direct', 'reused_lu', 'block_amg'):
+            raise ValueError('coupled_linear_method must be direct, reused_lu or block_amg')
         if momentum_relaxation_basis not in ('diagonal','absolute_row_sum'):
             raise ValueError('momentum_relaxation_basis must be diagonal or absolute_row_sum')
         self.momentum_relaxation_basis = momentum_relaxation_basis
         self.coupled_linear_method = coupled_linear_method
         self._coupled_factor = None
+        self._block_preconditioner = None
         self.coupled_linear_history = []
         self.mesh = mesh
         self.viscous = NativeHybridViscous3D(
@@ -99,6 +101,12 @@ class NativeHybridStokes3D:
         preconditioner may slow convergence, but cannot qualify a wrong solve.
         Refresh by direct factorization if GMRES fails its residual check.
         """
+        if self.coupled_linear_method == 'block_amg':
+            if self._block_preconditioner is None:
+                self._block_preconditioner = NativeHybridBlockSolver3D(self)
+            answer,residual,record = self._block_preconditioner.solve(matrix,rhs)
+            self.coupled_linear_history.append(record)
+            return answer,residual
         matrix = matrix.tocsc()
         iterations = 0
         reused = self.coupled_linear_method == 'reused_lu' and self._coupled_factor is not None

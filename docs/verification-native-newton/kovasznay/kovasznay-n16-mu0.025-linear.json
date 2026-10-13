@@ -1,0 +1,32 @@
+[
+  {
+    "reused_preconditioner": false,
+    "fallback_factorization": false,
+    "gmres_iterations": 0,
+    "true_relative_residual": 4.731178722581276e-15
+  },
+  {
+    "reused_preconditioner": false,
+    "fallback_factorization": false,
+    "gmres_iterations": 0,
+    "true_relative_residual": 3.6348491743436267e-14
+  },
+  {
+    "reused_preconditioner": true,
+    "fallback_factorization": false,
+    "gmres_iterations": 10,
+    "true_relative_residual": 2.12523335771744e-12
+  },
+  {
+    "reused_preconditioner": true,
+    "fallback_factorization": false,
+    "gmres_iterations": 10,
+    "true_relative_residual": 4.5452144818075994e-12
+  },
+  {
+    "reused_preconditioner": true,
+    "fallback_factorization": false,
+    "gmres_iterations": 10,
+    "true_relative_residual": 3.43879305947227e-12
+  }
+]

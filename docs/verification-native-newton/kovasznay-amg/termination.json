@@ -1,0 +1,7 @@
+{
+  "status": "stopped_after_completed_n64",
+  "incomplete_case": "kovasznay-n96-mu0.025",
+  "source_integrity_verified_before_stop": true,
+  "reason": "Block AMG is slower for this anisotropic extrusion (585 s versus 240 s at n64). Native direct/reused-LU n96 job is running separately.",
+  "physical_suboff_benchmark_passed": false
+}

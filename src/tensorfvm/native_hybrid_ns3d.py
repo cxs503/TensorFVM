@@ -10,6 +10,7 @@ SST and wall functions are not implemented by this backend.
 import numpy as np
 from .native_hybrid_stokes3d import NativeHybridStokes3D
 from .native_hybrid_convection3d import NativeHybridConvection3D
+from .native_hybrid_newton3d import solve_newton
 
 
 class NativeHybridNavierStokes3D(NativeHybridStokes3D):
@@ -31,15 +32,43 @@ class NativeHybridNavierStokes3D(NativeHybridStokes3D):
         state = self.state if state is None else state
         return np.sum(state[3*self.N:].reshape(self.F,3)*self.mesh.area_vectors, axis=1)
 
-    def _current_system(self):
+    def _current_system(self, state=None):
         convection, source = self.convection.hybrid_system(
-            self.volume_flux(),self.face_mean.matrix,self.velocity_gradient())
+            self.volume_flux(state),self.face_mean.matrix,self.velocity_gradient(state))
         return self.viscous.full_matrix+convection, source
 
-    def velocity_gradient(self):
-        face = self.state[3*self.N:].reshape(self.F,3)
+    def velocity_gradient(self, state=None):
+        state = self.state if state is None else state
+        face = state[3*self.N:].reshape(self.F,3)
         return np.stack([self.convection.D @ (face*self.mesh.area_vectors[:,j,None])
                          /self.mesh.cell_volumes[:,None] for j in range(3)], axis=2)
+
+    def initialize_stokes(self, *, tolerance=1e-9):
+        """Compute an incompressible native Stokes initial guess, without exact fields.
+
+        This changes the initial iterate, not the Navier--Stokes equations.
+        Rebuild the viscous system so repeated use after NS is well defined.
+        """
+        self.A = self.viscous.matrix
+        self.rhs = (self.load-self.viscous.full_matrix @ self.prescribed)[self.viscous.free]
+        self._coupled_factor = None
+        NativeHybridStokes3D.solve(self,algorithm='coupled',tolerance=tolerance)
+        self._coupled_factor = None
+        self.nonlinear_converged = False
+        self.initialization_history = dict(method='native_stokes',converged=self.converged,
+                                           **self.history[-1])
+        if not self.converged:raise RuntimeError('Stokes initialization failed convergence check')
+        return dict(self.initialization_history)
+
+    def solve_newton(self, *, max_iterations=50, tolerance=1e-8,
+                     max_backtracks=20, callback=None):
+        """Optional coupled Newton reference solve of the same native equations.
+
+        SIMPLE/SIMPLEC retain their Picard interface. This method uses a full
+        sparse Jacobian and residual line search, not a segregated method.
+        """
+        return solve_newton(self,max_iterations=max_iterations,tolerance=tolerance,
+                            max_backtracks=max_backtracks,callback=callback)
 
     def solve(self, *, algorithm='simplec', max_outer_iterations=40,
               max_iterations=3000, tolerance=1e-8, relaxation=.5,
