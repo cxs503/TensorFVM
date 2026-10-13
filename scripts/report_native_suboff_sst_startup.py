@@ -23,6 +23,10 @@ def main():
     assert summary['source_integrity_verified'] and digest(root/'fields.npz')==summary['fields_sha256']
     for name,sha in json.loads((root/'sources.json').read_text()).items():assert digest(root/'source-snapshot'/name)==sha
     for name,sha in settings['initial_bindings'].items():assert digest(root/('initial-'+name))==sha
+    for name,sha in settings.get('restart_bindings',{}).items():assert digest(root/('restart-'+name))==sha
+    if settings.get('restart_bindings'):
+        for name,sha in json.loads((root/'restart-sources.json').read_text()).items():
+            assert digest(root/'restart-source-snapshot'/name)==sha
     repo=Path(__file__).resolve().parents[1];sources={}
     for name in ('scripts/report_native_suboff_sst_startup.py','src/tensorfvm/native_sections3d.py'):
         dst=root/'postprocessing-source'/name;dst.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(repo/name,dst);sources[name]=digest(dst)
@@ -34,6 +38,7 @@ def main():
         flux=np.sum(f['face_velocity']*f['area_vectors'],axis=1)
         audit=dict(sources_and_fields_verified=True,initialized=summary['initialized'],
             completed_steps=summary['completed_steps'],mass_divergence_max=float(np.max(abs(div(flux)/volume))),
+            total_completed_steps=summary.get('total_completed_steps',summary['completed_steps']),
             numerically_converged=summary['numerically_converged'],physical_suboff_benchmark_passed=False,
             coupled_force_and_work_not_independently_audited=True)
         if summary['initialized']:

@@ -24,6 +24,7 @@ def digest(path):return hashlib.sha256(path.read_bytes()).hexdigest()
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--laminar-run',type=Path,required=True)
+    p.add_argument('--restart-run',type=Path,help='source-verified accepted SST iterate on the same mesh and conditions')
     p.add_argument('--output',type=Path,required=True)
     p.add_argument('--steps',type=int,default=1)
     p.add_argument('--dt',type=float,default=.01)
@@ -49,9 +50,28 @@ def main():
         raise ValueError('initial fields/mesh changed')
     for name,sha in json.loads((source/'sources.json').read_text()).items():
         if digest(source/'source-snapshot'/name)!=sha:raise ValueError('initial numerical source changed')
+    restart_bindings={};previous_steps=0
+    if a.restart_run is not None:
+        root=a.restart_run;rs=json.loads((root/'settings.json').read_text());summary=json.loads((root/'summary.json').read_text())
+        if not summary['initialized'] or not summary['source_integrity_verified']:
+            raise ValueError('source-verified initialized SST restart required')
+        if (rs['backend']!=old['backend'] or rs['Re_L']!=old['Re_L'] or rs['nu']!=old['nu']
+                or rs['variant']!=VARIANT or rs['rho']!=1. or rs['U']!=1. or rs['L']!=1.
+                or rs['intensity']!=.005 or rs['length_scale_L']!=.05
+                or rs['scalar_correction']!=a.scalar_correction
+                or digest(root/'initial-input.msh')!=old['mesh_sha256']):
+            raise ValueError('restart mesh, model or physical settings mismatch')
+        if digest(root/'fields.npz')!=summary['fields_sha256']:raise ValueError('restart fields changed')
+        for name,sha in json.loads((root/'sources.json').read_text()).items():
+            if digest(root/'source-snapshot'/name)!=sha:raise ValueError('restart numerical source changed')
+        previous_steps=summary.get('total_completed_steps',summary['completed_steps'])
+        restart_bindings={name:digest(root/name) for name in ('fields.npz','settings.json','summary.json','sources.json')}
     evidence=NativeRunEvidence(a.output,__file__);out=a.output;start=time.perf_counter();binding={}
     for name in ('fields.npz','settings.json','summary.json','input.msh'):
         shutil.copy2(source/name,out/('initial-'+name));binding[name]=digest(out/('initial-'+name))
+    if a.restart_run is not None:
+        for name in restart_bindings:shutil.copy2(a.restart_run/name,out/('restart-'+name))
+        shutil.copytree(a.restart_run/'source-snapshot',out/'restart-source-snapshot')
     nu=old['nu'];k0,w0=inflow_from_intensity(1.,.005,.05)
     write_json(out/'settings.json',dict(backend='native_hybrid_cell_and_shared_face_velocity',kind='actual SUBOFF SST startup diagnostic',
         Re_L=old['Re_L'],nu=nu,rho=1.,U=1.,L=1.,variant=VARIANT,steps=a.steps,dt=a.dt,relaxation=.7,tolerance=1e-8,
@@ -62,6 +82,8 @@ def main():
         face_initialization=a.face_initialization,scalar_correction=a.scalar_correction,scalar_work_balance_policy=a.scalar_work_balance_policy,
         momentum_method=a.momentum_method,momentum_coupling=a.momentum_coupling,
         momentum_sweeps=a.momentum_sweeps,momentum_relaxation=a.momentum_relaxation,
+        restart_run=str(a.restart_run) if a.restart_run is not None else None,
+        restart_bindings=restart_bindings,completed_steps_before_restart=previous_steps,
         physical_suboff_benchmark_passed=False))
     m=NativeMesh3D.from_gmsh(out/'initial-input.msh',triangulate_faces=True)
     b=m.neighbor<0;wall=m.patch_labels=='wall';fixed=b&(m.patch_labels!='outlet')
@@ -79,7 +101,13 @@ def main():
         k_boundary=kb,omega_boundary=wb,k_inflow=k0,omega_inflow=w0,scalar_correction=a.scalar_correction,scalar_work_balance_policy=a.scalar_work_balance_policy)
     failure=None;completed=False;result=None
     try:
-        s.initialize(k0,w0,face_initialization=a.face_initialization)
+        if a.restart_run is None:s.initialize(k0,w0,face_initialization=a.face_initialization)
+        else:
+            with np.load(out/'restart-fields.npz',allow_pickle=False) as f:
+                for key,value in (('owner',m.owner),('neighbor',m.neighbor),('vertices',m.vertices),
+                    ('area_vectors',m.area_vectors),('k_boundary',kb),('omega_boundary',wb),('wall_distance',y)):
+                    np.testing.assert_array_equal(f[key],value)
+                s.restore_accepted_fields(f)
         write_json(out/'initialization.json',dict(**s.initialization,k_face_min=float(s.k_faces.min()),omega_face_min=float(s.omega_faces.min())))
         np.savez_compressed(out/'initial-turbulence.npz',k=s.k,omega=s.omega,k_faces=s.k_faces,omega_faces=s.omega_faces)
         print(dict(stage='SST_STARTUP',cells=flow.N,faces=flow.F,face_initialization=a.face_initialization),flush=True)
@@ -121,9 +149,12 @@ def main():
             for key in ('free_residual','total_flux','local_shared_flux_balance'):
                 fields[name+'_'+key]=transport[key]
     np.savez_compressed(out/'fields.npz',**fields)
-    write_json(out/'history.json',s.history);write_json(out/'momentum-history.json',getattr(flow,'newton_history',[]))
+    write_json(out/'history.json',s.history)
+    write_json(out/'momentum-history.json',getattr(flow,'newton_history',[]) if a.momentum_method=='newton' else flow.history)
+    write_json(out/'momentum-outer-history.json',flow.outer_history)
     evidence.verify_sources()
     summary=dict(initialized=s.initialized,startup_steps_completed=completed,completed_steps=len(s.history),failure=failure,
+        completed_steps_before_restart=previous_steps,total_completed_steps=previous_steps+len(s.history),
         numerically_converged=False,solver_converged=bool(completed and s.converged),
         qualification='startup diagnostic only; complete independent RANS force/work/transport audit not performed',physical_suboff_benchmark_passed=False,
         cells=flow.N,faces=flow.F,Re_L=old['Re_L'],wall_function_verified=False,

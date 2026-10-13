@@ -173,3 +173,31 @@ def test_invalid_sweep_configuration_and_linear_failure_leave_turbulence_unchang
         s.solve(momentum_method='simplec',momentum_coupling='sweeps')
     for key,value in old.items():np.testing.assert_array_equal(getattr(s,key),value)
     assert not s.converged and not s.history
+
+
+def test_restart_preserves_shared_faces_and_matches_uninterrupted_sweeps():
+    settings=dict(dt=1.,momentum_method='simplec',momentum_coupling='sweeps',tolerance=1e-8)
+    original=setup(shear=.3);first=original.solve(max_iterations=2,**settings)
+    resumed=setup(shear=.3)
+    resumed.restore_accepted_fields(first)
+    assert not resumed.converged and not resumed.history
+    for key in ('k','omega','k_faces','omega_faces'):
+        np.testing.assert_array_equal(getattr(resumed,key),first[key])
+    expected=original.solve(max_iterations=3,**settings);actual=resumed.solve(max_iterations=3,**settings)
+    for key in ('velocity','face_velocity','modified_pressure','k','omega','k_faces','omega_faces','nu_t'):
+        np.testing.assert_allclose(actual[key],expected[key],rtol=1e-13,atol=1e-14)
+    assert len(actual['rans_history'])==3
+
+
+def test_invalid_restart_is_atomic_and_valid_restart_clears_convergence():
+    s=setup(shear=.3);fields=s.solve(max_iterations=100,dt=1.,tolerance=1e-8)
+    assert fields['numerically_converged']
+    saved=s.flow.state.copy();k=s.k.copy()
+    for key,index,value in [('omega',0,-1.),('k_faces',0,-.1),('modified_pressure',0,1.),
+                            ('face_velocity',(0,0),np.nan)]:
+        bad=dict(fields);bad[key]=fields[key].copy();bad[key][index]=value
+        with pytest.raises(ValueError):s.restore_accepted_fields(bad)
+        np.testing.assert_array_equal(s.flow.state,saved);np.testing.assert_array_equal(s.k,k)
+        assert s.converged
+    s.restore_accepted_fields(fields)
+    assert not s.converged and not s.result()['numerically_converged']

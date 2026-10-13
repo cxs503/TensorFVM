@@ -63,6 +63,45 @@ class NativeHybridRans3D:
             self.flow.velocity_gradient(),self.transport.geometry.gradient(self.k_faces),
             self.transport.geometry.gradient(self.omega_faces),rho=self.rho)
 
+    def restore_accepted_fields(self,fields):
+        """Restore a numerical iterate without re-equilibrating shared faces.
+
+        File provenance and mesh identity are checked by the runner. Here all
+        values, shapes and prescribed conditions are checked before committing
+        the state. Restoring an iterate never restores its convergence claim.
+        """
+        s=self.flow;values={}
+        for key,shape in (('velocity',(s.N,3)),('face_velocity',(s.F,3)),
+                          ('modified_pressure',(s.N,)),('k',(s.N,)),('omega',(s.N,)),
+                          ('k_faces',(s.F,)),('omega_faces',(s.F,))):
+            value=np.asarray(fields[key])
+            if value.shape!=shape or value.dtype.kind!='f' or not np.isfinite(value).all():
+                raise ValueError('invalid restart '+key)
+            if key.startswith('k') and np.any(value<0):raise ValueError('negative restart '+key)
+            if key.startswith('omega') and np.any(value<=0):raise ValueError('nonpositive restart '+key)
+            values[key]=value.copy()
+        state=np.r_[values['velocity'].ravel(),values['face_velocity'].ravel()]
+        if s.viscous.velocity_space.constraint_error(state-s.prescribed)>1e-12:
+            raise ValueError('restart velocity boundary mismatch')
+        if s.gauge and abs(values['modified_pressure'][0]-s.gauge_value)>1e-12:
+            raise ValueError('restart pressure gauge mismatch')
+        for name,mask in (('k',self.transport.k_mask),('omega',self.transport.omega_mask)):
+            boundary=np.broadcast_to(np.asarray(self.boundary[name+'_boundary'],float),(s.F,))
+            if not np.array_equal(values[name+'_faces'][mask],boundary[mask]):
+                raise ValueError('restart '+name+' boundary mismatch')
+        closure=sst2003_closure(values['k'],values['omega'],self.wall_distance,self.nu,
+            s.velocity_gradient(state),self.transport.geometry.gradient(values['k_faces']),
+            self.transport.geometry.gradient(values['omega_faces']),rho=self.rho)
+        viscosity=self.rho*(self.nu+closure['nu_t'])
+        if not np.isfinite(viscosity).all() or np.any(viscosity<=0):
+            raise ValueError('invalid restart viscosity')
+        s.update_dynamic_viscosity(viscosity)
+        s.state=state;s.p=values['modified_pressure'];s.converged=False;s.nonlinear_converged=False
+        for key in ('k','omega','k_faces','omega_faces'):setattr(self,key,values[key])
+        self.closure=closure;self.history=[];self.initialized=True;self.converged=False
+        self.initialization=dict(face_initialization='restored_accepted_fields',
+            face_diffusion_equilibrium=False,numerical_initial_guess=True,physical_benchmark_passed=False)
+
     def _refresh_viscosity(self):
         self.closure=self._closure()
         viscosity=self.rho*(self.nu+self.closure['nu_t'])
