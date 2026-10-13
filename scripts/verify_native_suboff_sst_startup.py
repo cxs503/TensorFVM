@@ -31,6 +31,8 @@ def main():
     p.add_argument('--momentum-method',choices=['newton','simple','simplec','coupled'],default='newton')
     p.add_argument('--momentum-coupling',choices=['converged','sweeps'],default='converged')
     p.add_argument('--momentum-sweeps',type=int,default=1)
+    p.add_argument('--momentum-inner-iterations',type=int,default=1)
+    p.add_argument('--momentum-relaxation-basis',choices=['absolute_row_sum','diagonal'],default='absolute_row_sum')
     p.add_argument('--momentum-relaxation',type=float,default=.5)
     p.add_argument('--face-initialization',choices=['diffusion_equilibrium','cell_average'],default='cell_average')
     p.add_argument('--scalar-correction',choices=['none','nonlinear_mmp'],default='nonlinear_mmp')
@@ -39,7 +41,9 @@ def main():
     if a.steps<1 or not np.isfinite(a.dt) or a.dt<=0:p.error('positive step count and dt required')
     if a.momentum_coupling=='sweeps' and a.momentum_method not in ('simple','simplec'):
         p.error('sweeps require SIMPLE or SIMPLEC')
-    if a.momentum_sweeps<1 or not np.isfinite(a.momentum_relaxation) or not 0<a.momentum_relaxation<=1:
+    if a.momentum_coupling!='sweeps' and a.momentum_inner_iterations!=1:
+        p.error('momentum inner iterations apply only to sweeps coupling')
+    if a.momentum_sweeps<1 or a.momentum_inner_iterations<1 or not np.isfinite(a.momentum_relaxation) or not 0<a.momentum_relaxation<=1:
         p.error('positive momentum sweep count and relaxation in (0,1] required')
     source=a.laminar_run;old=json.loads((source/'settings.json').read_text());old_summary=json.loads((source/'summary.json').read_text())
     if old.get('backend')!='native_hybrid_cell_and_shared_face_velocity' or old.get('wall_friction') is not None:
@@ -83,6 +87,7 @@ def main():
         requested_face_initialization=a.face_initialization,scalar_correction=a.scalar_correction,scalar_work_balance_policy=a.scalar_work_balance_policy,
         momentum_method=a.momentum_method,momentum_coupling=a.momentum_coupling,
         momentum_sweeps=a.momentum_sweeps,momentum_relaxation=a.momentum_relaxation,
+        momentum_inner_iterations=a.momentum_inner_iterations,momentum_relaxation_basis=a.momentum_relaxation_basis,
         restart_run=str(a.restart_run) if a.restart_run is not None else None,
         restart_bindings=restart_bindings,completed_steps_before_restart=previous_steps,
         physical_suboff_benchmark_passed=False))
@@ -90,7 +95,8 @@ def main():
     b=m.neighbor<0;wall=m.patch_labels=='wall';fixed=b&(m.patch_labels!='outlet')
     if set(m.patch_labels[b])!={'wall','inlet','outlet','farfield'}:raise ValueError('invalid boundary patches')
     velocity=np.tile([1.,0.,0.],(len(b),1));velocity[wall]=0.
-    flow=NativeHybridNavierStokes3D(m,fixed,velocity,viscosity=nu,convection_order=2,backflow_velocity=[1,0,0])
+    flow=NativeHybridNavierStokes3D(m,fixed,velocity,viscosity=nu,convection_order=2,backflow_velocity=[1,0,0],
+        momentum_relaxation_basis=a.momentum_relaxation_basis)
     with np.load(out/'initial-fields.npz',allow_pickle=False) as f:
         np.testing.assert_array_equal(f['owner'],m.owner);np.testing.assert_array_equal(f['neighbor'],m.neighbor)
         np.testing.assert_allclose(f['face_velocity'][fixed],velocity[fixed],atol=1e-14,rtol=0)
@@ -115,7 +121,8 @@ def main():
         def progress(row):write_json(out/'progress.json',row);print(row,flush=True)
         result=s.solve(max_iterations=a.steps,dt=a.dt,relaxation=.7,tolerance=1e-8,
             momentum_method=a.momentum_method,momentum_coupling=a.momentum_coupling,
-            momentum_sweeps=a.momentum_sweeps,momentum_relaxation=a.momentum_relaxation,callback=progress)
+            momentum_sweeps=a.momentum_sweeps,momentum_inner_iterations=a.momentum_inner_iterations,
+            momentum_relaxation=a.momentum_relaxation,callback=progress)
         completed=True
     except (ValueError,RuntimeError) as exc:
         failure=f'{type(exc).__name__}: {exc}';s.converged=False
