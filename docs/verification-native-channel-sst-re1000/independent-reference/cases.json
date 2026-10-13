@@ -1,0 +1,121 @@
+[
+  {
+    "n": 64,
+    "converged": true,
+    "Cf": 0.004630030614842904,
+    "bulk_velocity": 20.783709642608713,
+    "first_cell_y_plus": 1.257904705613219,
+    "wall_omega": 505844.23565990874,
+    "runtime_seconds": 6.03340260963887,
+    "iterations": 5160,
+    "last": {
+      "iteration": 5160,
+      "current_relative_local_residual": 9.915501454096635e-11,
+      "unrelaxed_change": 1.275998622536936e-12
+    },
+    "Cf_relative_error_DNS": 0.0749413795573195,
+    "scalar_ledgers": {
+      "k": {
+        "relative_local_max": 9.915501454096635e-11,
+        "absolute_local_max": 6.39172048622072e-12,
+        "global_balance": -4.575997529033052e-11
+      },
+      "omega": {
+        "relative_local_max": 3.207016470384407e-11,
+        "absolute_local_max": 5.820766091346741e-11,
+        "global_balance": 4.547949239430693e-10
+      }
+    },
+    "fields_sha256": "f5eea4c21a5501fd88b9f090e5930246e94d916a3b4659b72096870245136e01"
+  },
+  {
+    "n": 128,
+    "converged": true,
+    "Cf": 0.004846109555733689,
+    "bulk_velocity": 20.315072840248902,
+    "first_cell_y_plus": 0.6215821547999585,
+    "wall_omega": 2071644.4150851257,
+    "runtime_seconds": 6.788401022553444,
+    "iterations": 5162,
+    "last": {
+      "iteration": 5162,
+      "current_relative_local_residual": 9.950645311635323e-11,
+      "unrelaxed_change": 1.277802334965736e-12
+    },
+    "Cf_relative_error_DNS": 0.03176981038316484,
+    "scalar_ledgers": {
+      "k": {
+        "relative_local_max": 9.950645311635323e-11,
+        "absolute_local_max": 3.240501617041147e-12,
+        "global_balance": -4.581284921295083e-11
+      },
+      "omega": {
+        "relative_local_max": 3.2062360126201313e-11,
+        "absolute_local_max": 4.656612873077393e-10,
+        "global_balance": 3.2721242382294236e-11
+      }
+    },
+    "fields_sha256": "08a4b3d08c6d947943689c25defd998e07277f6728ec0402ffc9ad0959c68ccf",
+    "Cf_change_from_previous": 0.04458812546553552
+  },
+  {
+    "n": 512,
+    "converged": true,
+    "Cf": 0.0050869863972914115,
+    "bulk_velocity": 19.828264778953802,
+    "first_cell_y_plus": 0.15403243682363554,
+    "wall_omega": 33735559.45321335,
+    "runtime_seconds": 8.791238001547754,
+    "iterations": 5164,
+    "last": {
+      "iteration": 5164,
+      "current_relative_local_residual": 9.95481081187285e-11,
+      "unrelaxed_change": 1.2748294607786095e-12
+    },
+    "Cf_relative_error_DNS": 0.016356264212032512,
+    "scalar_ledgers": {
+      "k": {
+        "relative_local_max": 9.95481081187285e-11,
+        "absolute_local_max": 8.174199164767693e-13,
+        "global_balance": -4.564501602955114e-11
+      },
+      "omega": {
+        "relative_local_max": 3.199665591819142e-11,
+        "absolute_local_max": 2.9802322387695312e-08,
+        "global_balance": 3.187747402155772e-08
+      }
+    },
+    "fields_sha256": "505e54f2913b3393101b9ab487f25cad6e483d0e2c6f41d25bcac829fb98f17c",
+    "Cf_change_from_previous": 0.047351579647623765
+  },
+  {
+    "n": 2048,
+    "converged": true,
+    "Cf": 0.005159228898358719,
+    "bulk_velocity": 19.688951970700263,
+    "first_cell_y_plus": 0.038423538021338785,
+    "wall_omega": 542147656.5528729,
+    "runtime_seconds": 11.690052039921284,
+    "iterations": 5144,
+    "last": {
+      "iteration": 5144,
+      "current_relative_local_residual": 9.947097985367651e-11,
+      "unrelaxed_change": 1.4127635386443268e-12
+    },
+    "Cf_relative_error_DNS": 0.03078998051628634,
+    "scalar_ledgers": {
+      "k": {
+        "relative_local_max": 9.947097985367651e-11,
+        "absolute_local_max": 2.7075715801350153e-13,
+        "global_balance": -4.9183234115940864e-11
+      },
+      "omega": {
+        "relative_local_max": 3.1627370435561185e-11,
+        "absolute_local_max": 2.980232238769531e-07,
+        "global_balance": 2.476641998462592e-07
+      }
+    },
+    "fields_sha256": "93ba4f6d99f9524fc7c855fba51baa5f1acc2a5d0aa6b08328c034c4f87080d6",
+    "Cf_change_from_previous": 0.014002577224338649
+  }
+]

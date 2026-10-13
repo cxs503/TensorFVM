@@ -1,0 +1,31 @@
+{
+  "levels": [
+    64,
+    128,
+    512,
+    2048
+  ],
+  "Re_tau": 1000.512,
+  "nu": 0.000999488262009851,
+  "half_width": 1.0,
+  "density": 1.0,
+  "wall_shear": 1.0,
+  "pressure_gradient": -1.0,
+  "body_force": 0.0,
+  "wall_k": 0.0,
+  "wall_omega": "60*nu/(.075*first_cell_distance^2)",
+  "centerline": "zero k/omega derivative; zero total shear",
+  "scalar_diffusion": "harmonic face conductance; independent tridiagonal solver",
+  "momentum": "exact total-shear identity; eddy-viscosity limiter solved algebraically",
+  "residual_gate": "max per-cell equation defect / local flux+source magnitudes <1e-10",
+  "update_gate": "two consecutive full unrelaxed scalar updates <1e-10",
+  "dt": 0.01,
+  "relaxation": 0.5,
+  "stretch": 3.0,
+  "production_modules_used": false,
+  "DNS_enters_solve": false,
+  "native_benchmark_gates_replaced": false,
+  "physical_suboff_benchmark_passed": false,
+  "model_source_url": "https://tmbwg.github.io/turbmodels/sst.html#sst-2003",
+  "model_source_sha256": "ccc4bc8d999444104e4e41f2c610dc9de7e7cb213d3e8b7bdb1997c4b8d6ee9f"
+}

@@ -19,12 +19,13 @@ def sha(path):return hashlib.sha256(path.read_bytes()).hexdigest()
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',type=Path,required=True)
     p.add_argument('--levels',type=int,nargs='+',default=[16,32,64,128,512,2048,8192])
+    p.add_argument('--reference',type=Path,help='DNS reference directory; frozen with the diagnostic')
     p.add_argument('--model-source',type=Path,required=True)
-    p.add_argument('--native-runs',type=Path,nargs='+',default=[Path('docs/verification-native-channel-sst/refinement-v2-interrupted'),Path('docs/verification-native-channel-sst/refinement-n128')])
+    p.add_argument('--native-runs',type=Path,nargs='*',default=[Path('docs/verification-native-channel-sst/refinement-v2-interrupted'),Path('docs/verification-native-channel-sst/refinement-n128')])
     a=p.parse_args()
     if any(n<4 for n in a.levels) or a.levels!=sorted(set(a.levels)):p.error('strictly increasing unique levels >=4 required')
     out=a.output;evidence=NativeRunEvidence(out,__file__)
-    refroot=Path(__file__).resolve().parents[1]/'docs/verification-native-channel-sst/reference'
+    refroot=a.reference or Path(__file__).resolve().parents[1]/'docs/verification-native-channel-sst/reference'
     meta=json.loads((refroot/'provenance.json').read_text());re_tau=meta['Re_tau_reported']
     for record in meta['files'].values():
         if sha(refroot/record['csv'])!=record['csv_sha256']:raise ValueError('modified DNS reference')

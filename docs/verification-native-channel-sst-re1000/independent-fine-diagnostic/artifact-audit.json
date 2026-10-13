@@ -1,0 +1,49 @@
+{
+  "source_and_field_hashes_verified": true,
+  "reference_equations_replayed_with_production_closure": true,
+  "audit_sources": {
+    "scripts/audit_sst_channel_reference.py": "07d6e5a0e0ff92d63b3b2148654a922f5ad852dfd321dbf312fcb25cca0ff5d9",
+    "src/tensorfvm/native_sst3d.py": "cb319b8e919d2dc501a104f2a0536aa3156817a9f4aa5caeb756362d0cf14a73"
+  },
+  "cases": [
+    {
+      "n": 8192,
+      "Cf": 0.005177940748040514,
+      "scalar": {
+        "k": {
+          "production_closure_relative_local_residual": 9.196339710069445e-11,
+          "stored_residual_replay_relative_difference": 2.1822778573528056e-16,
+          "absolute_local_residual": 1.078508884576248e-12,
+          "global_balance": -3.780207024108048e-11
+        },
+        "omega": {
+          "production_closure_relative_local_residual": 2.6778160777766256e-11,
+          "stored_residual_replay_relative_difference": 2.1786006371365845e-16,
+          "absolute_local_residual": 0.000244140625,
+          "global_balance": 0.0002271397463610846
+        }
+      }
+    },
+    {
+      "n": 32768,
+      "Cf": 0.005182646556140792,
+      "scalar": {
+        "k": {
+          "production_closure_relative_local_residual": 2.176318135272118e-09,
+          "stored_residual_replay_relative_difference": 2.2105224514132266e-16,
+          "absolute_local_residual": 4.869529779066655e-12,
+          "global_balance": -2.2504346996659414e-11
+        },
+        "omega": {
+          "production_closure_relative_local_residual": 2.998943141338509e-10,
+          "stored_residual_replay_relative_difference": 2.2142566286812334e-16,
+          "absolute_local_residual": 0.015625,
+          "global_balance": 0.01577662501212165
+        }
+      }
+    }
+  ],
+  "native_absolute_ledger_gates_replaced": false,
+  "physical_suboff_benchmark_passed": false,
+  "scope": "Cross-check of a separately solved 1D model; fine-grid omega absolute cancellation is reported, not certified under 3D ledger gates"
+}
