@@ -140,3 +140,36 @@ def test_convex_initialization_rejects_invalid_data_without_overwriting_state():
     s.boundary['omega_boundary']=-1.
     with pytest.raises(ValueError):s.initialize(.01,2.,face_initialization='cell_average')
     for key,value in old.items():np.testing.assert_array_equal(getattr(s,key),value)
+
+
+@pytest.mark.parametrize('method',['simple','simplec'])
+def test_momentum_sweeps_converge_same_coupled_equations_as_newton(method):
+    ref=setup(shear=.3);expected=ref.solve(max_iterations=100,dt=1.,tolerance=1e-8)
+    assert expected['numerically_converged']
+    s=setup(shear=.3)
+    # Non-equilibrium momentum as well as positive non-equilibrium turbulence.
+    s.flow.state=s.flow.prescribed.copy();s.flow.p[:]=0.
+    r=s.solve(max_iterations=1,dt=1.,tolerance=1e-8,momentum_method=method,momentum_coupling='sweeps')
+    row=r['rans_history'][-1]
+    assert row['momentum_iterations']==1 and not row['momentum_subsolve_converged']
+    assert row['momentum_linear_residual_max']<1e-9
+    assert not r['numerically_converged'] and row['momentum']>1e-8
+    r=s.solve(max_iterations=400,dt=1.,tolerance=1e-8,momentum_method=method,momentum_coupling='sweeps')
+    assert r['numerically_converged'],r['rans_history'][-1]
+    assert all(row['momentum_iterations']==1 for row in r['rans_history'])
+    for key in ('velocity','pressure','k','omega','nu_t','total_traction_integrated'):
+        np.testing.assert_allclose(r[key],expected[key],rtol=2e-5,atol=2e-7)
+    assert r['energy_balance_error']<1e-7
+
+
+def test_invalid_sweep_configuration_and_linear_failure_leave_turbulence_unchanged(monkeypatch):
+    s=setup(shear=.3);old={key:getattr(s,key).copy() for key in ('k','omega','k_faces','omega_faces')}
+    for options in (dict(momentum_method='newton'),dict(momentum_method='coupled'),
+                    dict(momentum_method='simplec',momentum_sweeps=0)):
+        with pytest.raises(ValueError):s.solve(momentum_coupling='sweeps',**options)
+    def failed(**kwargs):raise RuntimeError('injected true linear residual failure')
+    monkeypatch.setattr(s.flow,'solve',failed)
+    with pytest.raises(RuntimeError,match='true linear residual failure'):
+        s.solve(momentum_method='simplec',momentum_coupling='sweeps')
+    for key,value in old.items():np.testing.assert_array_equal(getattr(s,key),value)
+    assert not s.converged and not s.history

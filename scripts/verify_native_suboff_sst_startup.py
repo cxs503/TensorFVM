@@ -27,11 +27,19 @@ def main():
     p.add_argument('--output',type=Path,required=True)
     p.add_argument('--steps',type=int,default=1)
     p.add_argument('--dt',type=float,default=.01)
+    p.add_argument('--momentum-method',choices=['newton','simple','simplec','coupled'],default='newton')
+    p.add_argument('--momentum-coupling',choices=['converged','sweeps'],default='converged')
+    p.add_argument('--momentum-sweeps',type=int,default=1)
+    p.add_argument('--momentum-relaxation',type=float,default=.5)
     p.add_argument('--face-initialization',choices=['diffusion_equilibrium','cell_average'],default='cell_average')
     p.add_argument('--scalar-correction',choices=['none','nonlinear_mmp'],default='nonlinear_mmp')
     p.add_argument('--scalar-work-balance-policy',choices=['absolute','relative'],default='absolute')
     a=p.parse_args()
     if a.steps<1 or not np.isfinite(a.dt) or a.dt<=0:p.error('positive step count and dt required')
+    if a.momentum_coupling=='sweeps' and a.momentum_method not in ('simple','simplec'):
+        p.error('sweeps require SIMPLE or SIMPLEC')
+    if a.momentum_sweeps<1 or not np.isfinite(a.momentum_relaxation) or not 0<a.momentum_relaxation<=1:
+        p.error('positive momentum sweep count and relaxation in (0,1] required')
     source=a.laminar_run;old=json.loads((source/'settings.json').read_text());old_summary=json.loads((source/'summary.json').read_text())
     if old.get('backend')!='native_hybrid_cell_and_shared_face_velocity' or old.get('wall_friction') is not None:
         raise ValueError('native no-slip laminar numerical source required')
@@ -52,7 +60,9 @@ def main():
         wall_treatment='resolved; k=0 and omega=60*nu/(beta1*d1^2); no wall function',
         trip='no geometric trip or transition model',initial_laminar_run=str(source),initial_bindings=binding,
         face_initialization=a.face_initialization,scalar_correction=a.scalar_correction,scalar_work_balance_policy=a.scalar_work_balance_policy,
-        momentum_method='native coupled Newton',physical_suboff_benchmark_passed=False))
+        momentum_method=a.momentum_method,momentum_coupling=a.momentum_coupling,
+        momentum_sweeps=a.momentum_sweeps,momentum_relaxation=a.momentum_relaxation,
+        physical_suboff_benchmark_passed=False))
     m=NativeMesh3D.from_gmsh(out/'initial-input.msh',triangulate_faces=True)
     b=m.neighbor<0;wall=m.patch_labels=='wall';fixed=b&(m.patch_labels!='outlet')
     if set(m.patch_labels[b])!={'wall','inlet','outlet','farfield'}:raise ValueError('invalid boundary patches')
@@ -74,7 +84,9 @@ def main():
         np.savez_compressed(out/'initial-turbulence.npz',k=s.k,omega=s.omega,k_faces=s.k_faces,omega_faces=s.omega_faces)
         print(dict(stage='SST_STARTUP',cells=flow.N,faces=flow.F,face_initialization=a.face_initialization),flush=True)
         def progress(row):write_json(out/'progress.json',row);print(row,flush=True)
-        result=s.solve(max_iterations=a.steps,dt=a.dt,relaxation=.7,tolerance=1e-8,momentum_method='newton',callback=progress)
+        result=s.solve(max_iterations=a.steps,dt=a.dt,relaxation=.7,tolerance=1e-8,
+            momentum_method=a.momentum_method,momentum_coupling=a.momentum_coupling,
+            momentum_sweeps=a.momentum_sweeps,momentum_relaxation=a.momentum_relaxation,callback=progress)
         completed=True
     except (ValueError,RuntimeError) as exc:
         failure=f'{type(exc).__name__}: {exc}';s.converged=False
