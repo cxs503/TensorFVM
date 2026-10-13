@@ -47,3 +47,7 @@ OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 PYTHONPATH=src python scripts/verify_na
 ## 第 31 步与严格续算
 
 [第 31 步当前稳态审计](step31-current-audit/README.md)：原耦合 1e-8 门槛通过，质量/动量/能量收支通过，但完整 k/ω 标量验收仍失败。已启动 1e-12 严格续算及[标量初值复用对照](scalar-warm-start/README.md)。[对角松弛单次修正对照](frozen-momentum-single-sweep/README.md)亦已完成并保留未收敛标志。
+
+## 第 44 步：剩余 ω 精度问题
+
+[严格续算与精度敏感性审计](step44-current-audit/README.md)：13 步/275.036 s 达到 1e-12 耦合残差及变化门槛，质量/动量/能量及 k 收支通过；ω 全局通量误差 2.4913e-7，仍未通过 1e-8 门槛。状态与闭合源项的精度转换影响已与残余局部缺陷同量级，需要继续修复和实际重算。

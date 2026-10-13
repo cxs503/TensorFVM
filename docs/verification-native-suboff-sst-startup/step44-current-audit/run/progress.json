@@ -1,0 +1,71 @@
+{
+  "iteration": 13,
+  "momentum": 6.106344905156053e-14,
+  "divergence": 1.3352471903285026e-14,
+  "velocity_boundary": 0.0,
+  "gauge": 0.0,
+  "k": 2.576154400055839e-13,
+  "omega": 8.639970124366492e-17,
+  "k_boundary": 0.0,
+  "omega_boundary": 0.0,
+  "momentum_method": "simplec",
+  "momentum_coupling": "sweeps",
+  "momentum_subsolve_converged": false,
+  "momentum_inner_iterations_limit": 20,
+  "momentum_outer_iterations": 1,
+  "momentum_relaxation_basis": "diagonal",
+  "momentum_iterations": 20,
+  "momentum_linear_residual_max": 3.6982915509187596e-15,
+  "changes": {
+    "k": 5.753305363092106e-13,
+    "omega": 5.23507013053369e-17,
+    "k_faces": 5.239155561205832e-13,
+    "omega_faces": 8.171794958863989e-18,
+    "velocity": 3.5138558056387553e-14,
+    "modified_pressure": 7.095557609417854e-14
+  },
+  "minimum_k": 0.0,
+  "minimum_omega": 0.22360679774997896,
+  "frozen_linear_residuals": {
+    "k": 5.379541479165967e-16,
+    "omega": 9.38456969864717e-16
+  },
+  "scalar_nonlinear_iterations": {
+    "k": 2,
+    "omega": 2
+  },
+  "scalar_initialization": {
+    "k": {
+      "attempted": true,
+      "accepted": true,
+      "fallback_to_continuation": false
+    },
+    "omega": {
+      "attempted": true,
+      "accepted": true,
+      "fallback_to_continuation": false
+    }
+  },
+  "scalar_subsolve_ledgers": {
+    "k": {
+      "cell_balance_max": 1.5521268712733296e-21,
+      "interface_flux_defect_max": 1.6543612251060553e-24,
+      "global_balance": -2.1335572937156812e-21,
+      "work_balance": -1.7013029982838106e-25,
+      "work_balance_scale": 3.69942536600882e-08,
+      "relative_work_balance": 4.5988304397644505e-18,
+      "absolute_work_gate_passed": true,
+      "work_balance_policy": "relative"
+    },
+    "omega": {
+      "cell_balance_max": 3.23255813393028e-11,
+      "interface_flux_defect_max": 1.3642420526593924e-12,
+      "global_balance": -2.3660466945060743e-10,
+      "work_balance": -0.00016237935824129726,
+      "work_balance_scale": 1.1189889803389153e+18,
+      "relative_work_balance": 1.4511256240621457e-22,
+      "absolute_work_gate_passed": false,
+      "work_balance_policy": "relative"
+    }
+  }
+}

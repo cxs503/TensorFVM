@@ -1,0 +1,13 @@
+{
+  "scope": "Diagnostic precision sensitivity of the SAME SST closure at saved SUBOFF fields.\n\nNo solve is performed. The production closure is unchanged: a separate function\nobject executes its exact code with an extended-precision input validator.\nThe current production discretization is not qualified by these diagnostics.\n",
+  "run": "results/native-suboff-sst-warm-strict-from31",
+  "bindings": {
+    "settings.json": "9f37583fa8e112309b6ca2b16ce7abb30e17267076a0b94f102fb21b3e2263ab",
+    "summary.json": "f7d45514c9322762897ae5665749bac33e02a69c2ebc6851f5fc473f6ecbd4b8",
+    "fields.npz": "b726d8e239383bb80b2f34c80d6ae0efc7d0163afb44f1c3bf3d2f9a72a9bfa8",
+    "sources.json": "f221ff552b8b0f2e9836d9723495ef8802bacf76dcfb60fba3465a516f759cc7",
+    "initial-input.msh": "15d81c1f97495b6b9f1060e05126a5f8ed1b8ca4814e1533087d92944add4408"
+  },
+  "precision_bits": 64,
+  "physical_suboff_benchmark_passed": false
+}
