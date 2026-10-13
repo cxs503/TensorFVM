@@ -471,7 +471,15 @@ DNS 来源、原场检查点、全部生产源码及真实差距；GPU 尚未验
 原生 TensorFVM 修复进展
 ======================
 
-最新进展见 `有限 Re 对流与压力—体力平衡修复 <docs/verification-native-hybrid-ns/README.md>`_。
+最新进展见 `无体力 Kovasznay 流与对称面验证 <docs/verification-native-kovasznay/README.md>`_。
+新增分量边界、正确的对称面压力参考、SIMPLEC 分量索引、外层松弛，以及带当前真实残差
+审计的 LU 预条件复用。Re=40 的完整立方体粗网格与平面对称挤出加密结果分别报告；9,216 单元挤出案例的
+速度、固定参考压力误差为 0.058%、2.292%。三维偏斜混合网格 ABC 探针的压力仍未达标。
+另完成 `变黏度与壁面剪切力验证 <docs/verification-native-hybrid-shear/README.md>`_。
+最终物理验收按 `原生 SUBOFF 开发计划 <docs/native-suboff-development-plan.md>`_ 持续推进，
+SST、壁面函数和原生 SUBOFF 尚未完成。
+
+前一阶段见 `有限 Re 对流与压力—体力平衡修复 <docs/verification-native-hybrid-ns/README.md>`_。
 混合后端已接入守恒对流、线性迎风重构和当前非线性残差验收，修复了常体力与线性压力
 无法严格平衡的问题。Re=10 制造解在 1,000 单元上的速度、压力相对 L2 误差分别为
 0.77%、2.75%（原生联合求解）；SIMPLE/SIMPLEC 同方程对照在 27 单元完成。
@@ -480,7 +488,7 @@ SST、壁面函数和原生 SUBOFF 尚待后续接入与验收。
 `混合黏性算子与 Stokes / SIMPLE / SIMPLEC 验证 <docs/verification-native-hybrid-flow/README.md>`_
 已接入原生压力速度方程与混合牵引边界。512 单元解析通道的速度、压力、壁面力误差
 分别为 1.10%、0.14%、1.48%。这些是原生 Stokes 结果；旧配点黏性缺陷仍保留失败测试，
-新后端尚未接入对流、SST 和 Spalding，SUBOFF 的原生 Cp/Cd 尚未达标。
+该阶段尚未接入对流；后续对流进展见上文。SST、Spalding 和 SUBOFF 的原生 Cp/Cd 尚未达标。
 
 OpenFOAM SUBOFF 对照基线
 =======================

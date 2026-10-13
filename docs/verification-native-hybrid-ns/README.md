@@ -140,6 +140,8 @@ result = solver.solve(algorithm="simplec", tolerance=1e-8)
 
 完整回归 **90 passed, 1 xfailed**，见 [测试原始输出](tests.txt)。随后增加真实开放边界回流控制并复测 NS 模块，**20 passed**，见 [补充测试](backflow-tests.txt)；这些测试与完整回归有重叠。已知失败项仍为旧配点黏性算子的增能缺陷，未删除或放宽。
 
+后续进展：[无体力 Kovasznay 流与对称面验证](../verification-native-kovasznay/README.md)。
+
 ## 6. 当前边界与下一步
 
 - 有限 Re 层流的守恒对流与压力速度耦合已接通；本轮仅验证 Re=10 的光滑制造解。

@@ -31,3 +31,46 @@ def polynomial_solver(n, reynolds=10., *, convection_order=1, body_force_discret
         viscosity=1/reynolds, body_force=exact['force'], gauge_value=exact['pressure'][0],
         convection_order=convection_order,body_force_discretization=body_force_discretization)
     return mesh, solver, exact
+
+
+def kovasznay_fields(points, reynolds=40.):
+    """Unforced steady Navier--Stokes solution; rho=1 and nu=1/Re.
+
+    exp(lambda*x) decays downstream. The identity lambda**2-Re*lambda
+    = 4*pi**2 makes convection + grad(p) - nu*laplacian(u) exactly zero.
+    No source calculated from the discrete operator is used.
+    """
+    if not np.isfinite(reynolds) or reynolds <= 0:
+        raise ValueError('positive finite Reynolds number required')
+    x, y, _ = np.asarray(points).T
+    k = 2*np.pi
+    lam = -2*k*k/(reynolds+np.sqrt(reynolds**2+4*k*k))
+    e = np.exp(lam*x); c = np.cos(k*y); s = np.sin(k*y)
+    velocity = np.column_stack((1-e*c, lam/k*e*s, np.zeros_like(x)))
+    pressure = .5*(1-e*e)
+    gradient = np.zeros((len(x),3,3))
+    gradient[:,0,0] = -lam*e*c
+    gradient[:,0,1] = k*e*s
+    gradient[:,1,0] = lam*lam/k*e*s
+    gradient[:,1,1] = lam*e*c
+    return dict(velocity=velocity, pressure=pressure, gradient=gradient,
+                force=np.zeros_like(velocity))
+
+
+def kovasznay_solver(n, reynolds=40., *, convection_order=2, triangulate_faces=True,
+                     coupled_linear_method='direct', symmetry_extrusion=False):
+
+    """Unit cube segment of an analytic 2D flow, fixed exact boundary means."""
+    mesh = channel_mesh((n,n,1) if symmetry_extrusion else n,triangulate_faces=triangulate_faces)
+    fields = lambda points: kovasznay_fields(points,reynolds)
+    exact = fields(mesh.cell_centers)
+    boundary = exact_boundary_velocity_means(mesh,fields)
+    fixed = np.repeat((mesh.neighbor<0)[:,None],3,axis=1)
+    if symmetry_extrusion:
+        z = mesh.face_centers[:,2]
+        planes = (mesh.neighbor<0) & ((z<1e-10)|(z>1-1e-10))
+        fixed[planes,:2] = False
+    solver = NativeHybridNavierStokes3D(mesh,fixed,boundary,
+        viscosity=1/reynolds,body_force=0.,gauge_value=exact['pressure'][0],
+        convection_order=convection_order,coupled_linear_method=coupled_linear_method)
+    return mesh,solver,exact
