@@ -77,6 +77,21 @@ def main():
             ax.add_collection(collection);ax.set_title(title);fig.colorbar(collection,ax=ax)
         fig.savefig(root/'startup-fields.png',dpi=160);fig.savefig(root/'startup-fields.pdf');plt.close(fig)
     (root/'artifact-audit.json').write_text(json.dumps(audit,indent=2,allow_nan=False)+'\n');print(audit)
+    history=json.loads((root/'history.json').read_text())
+    if history:
+        offset=settings.get('completed_steps_before_restart',0)
+        steps=np.arange(1,len(history)+1)+offset
+        fig,axes=plt.subplots(2,1,figsize=(9,7),sharex=True,constrained_layout=True)
+        for key in ('momentum','divergence','k','omega'):
+            axes[0].semilogy(steps,[max(row[key],1e-30) for row in history],marker='o',label=key)
+        for key in ('velocity','modified_pressure','k','omega'):
+            axes[1].semilogy(steps,[max(row['changes'][key],1e-30) for row in history],marker='o',label=key)
+        for ax in axes:
+            ax.axhline(settings['tolerance'],ls='--',color='.4',label='requested tolerance')
+            ax.grid(True,alpha=.25);ax.legend()
+        axes[0].set(ylabel='Current steady equation residual',title='Accepted coupled iterations; not physical qualification')
+        axes[1].set(ylabel='Relative change',xlabel='Completed coupled iteration')
+        fig.savefig(root/'residual-history.png',dpi=160);fig.savefig(root/'residual-history.pdf');plt.close(fig)
 
 
 if __name__=='__main__':main()
