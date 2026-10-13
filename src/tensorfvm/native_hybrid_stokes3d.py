@@ -11,15 +11,19 @@ from scipy import sparse
 from scipy.sparse.linalg import splu, gmres, LinearOperator
 
 from .native_hybrid_viscous3d import NativeHybridViscous3D
+from .native_face_mean3d import NativeFaceMean3D
 
 
 class NativeHybridStokes3D:
     def __init__(self, mesh, velocity_dirichlet, velocity_boundary=0., *,
                  viscosity=1., body_force=0., boundary_traction=0.,
                  gauge_value=0., body_force_discretization='face', coupled_linear_method='direct',
-                 gradient_jump_stabilization=1.):
+                 gradient_jump_stabilization=1., momentum_relaxation_basis='diagonal'):
         if coupled_linear_method not in ('direct', 'reused_lu'):
             raise ValueError('coupled_linear_method must be direct or reused_lu')
+        if momentum_relaxation_basis not in ('diagonal','absolute_row_sum'):
+            raise ValueError('momentum_relaxation_basis must be diagonal or absolute_row_sum')
+        self.momentum_relaxation_basis = momentum_relaxation_basis
         self.coupled_linear_method = coupled_linear_method
         self._coupled_factor = None
         self.coupled_linear_history = []
@@ -30,6 +34,7 @@ class NativeHybridStokes3D:
         v = self.viscous
         self.N, self.F = v.N, v.F
         self.prescribed = v._prescribed(velocity_boundary)
+        self.face_mean = NativeFaceMean3D(mesh)
         force = np.broadcast_to(np.asarray(body_force, float), (self.N, 3))
         if not np.isfinite(force).all() or not np.isfinite(gauge_value):
             raise ValueError('finite body force and pressure gauge required')
@@ -46,13 +51,9 @@ class NativeHybridStokes3D:
             # exactly the same face response as a linear pressure gradient.
             # The geometric moment identity sum S r^T=V I preserves the
             # integrated cell load. Force fluxes must also enter traction.
-            offset = mesh.face_centers-mesh.cell_centers[mesh.owner]
-            self.owner_force_flux = np.sum(force[mesh.owner]*offset,axis=1)[:,None]*mesh.area_vectors
-            internal = mesh.neighbor >= 0
-            neighbor = mesh.neighbor[internal]
-            offset = mesh.face_centers[internal]-mesh.cell_centers[neighbor]
-            self.neighbor_force_flux[internal] = -np.sum(force[neighbor]*offset,axis=1)[:,None]*mesh.area_vectors[internal]
-            self.load[3*self.N:] += (self.owner_force_flux+self.neighbor_force_flux).ravel()
+            self.owner_force_flux, self.neighbor_force_flux = self.face_mean.moments(
+                mesh.cell_volumes[:,None]*force)
+            self.load += self.face_mean.matrix.T @ (mesh.cell_volumes[:,None]*force).ravel()
         else:
             raise ValueError('body_force_discretization must be cell or face')
         faces = np.arange(self.F)
@@ -134,7 +135,7 @@ class NativeHybridStokes3D:
             np.linalg.norm(momentum)/max(np.linalg.norm(self.rhs), 1.)),
             divergence_max=float(np.max(np.abs(continuity/self.mesh.cell_volumes))),
             true_linear_relative_residual=linear_residual,
-            simplec_limited_dofs=limited)
+            simplec_limited_dofs=limited, momentum_relaxation_basis=self.momentum_relaxation_basis)
 
     def solve(self, *, algorithm='simple', relaxation=.5, pressure_relaxation=None,
               max_iterations=3000, tolerance=1e-8, callback=None):
@@ -173,7 +174,12 @@ class NativeHybridStokes3D:
         diagonal = self.A.diagonal()
         if np.any(diagonal <= 0):
             raise RuntimeError('nonpositive hybrid momentum diagonal')
-        relaxed = diagonal/relaxation
+        # Projected inertia need not be diagonally dominant. A row-norm
+        # pseudo-time diagonal stabilizes the segregated iteration without
+        # altering its fixed point: the same extra term goes on both sides.
+        basis = (np.asarray(abs(self.A).sum(axis=1)).ravel()
+                 if self.momentum_relaxation_basis == 'absolute_row_sum' else diagonal)
+        relaxed = basis/relaxation
         extra = relaxed-diagonal
         inverse = 1/relaxed
         limited = 0
@@ -240,6 +246,7 @@ class NativeHybridStokes3D:
             pressure_work=pressure_work,
             external_work=external_work, energy_balance_error=abs(balance),
             total_traction_integrated=total_traction,
+            neighbor_total_traction_integrated=neighbor_traction,
             interface_traction_defect_max=float(np.max(np.abs(
                 total_traction[internal]+neighbor_traction), initial=0.)),
             total_momentum_reaction=reaction.reshape(-1, 3), history=list(self.history))

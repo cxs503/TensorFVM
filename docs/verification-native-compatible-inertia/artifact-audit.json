@@ -1,0 +1,115 @@
+{
+  "artifact_consistency_verified": true,
+  "physical_suboff_benchmark_passed": false,
+  "audit_source_sha256": "367ed28ce234f0c76e133843c29e2699b47fc7505dfe47339e004f5d975f296e",
+  "cases": [
+    {
+      "run": "abc",
+      "case": "abc-n2-mu0.1",
+      "fields_sha256": "9ba88102dc8eeb61ecda8275823ddec3e8032fee9b78da6a463b2b76d655f388",
+      "velocity_relative_l2": 0.011829127604833584,
+      "pressure_mean_free_relative_l2": 0.46796469956643133,
+      "global_momentum_balance_max": 3.409152404820759e-10,
+      "numerically_converged": true
+    },
+    {
+      "run": "abc",
+      "case": "abc-n4-mu0.1",
+      "fields_sha256": "fd7990fab176e32851b7f39abe6bceebaecc708e0f3638bee14227fa20c1c85b",
+      "velocity_relative_l2": 0.0044072042243013835,
+      "pressure_mean_free_relative_l2": 0.2412300210773503,
+      "global_momentum_balance_max": 2.092978013124025e-10,
+      "numerically_converged": true
+    },
+    {
+      "run": "abc",
+      "case": "abc-n6-mu0.1",
+      "fields_sha256": "a5faf7d5d777bf33967db83dceebe1b7595f2068765606064ad9aecd0ad7321e",
+      "velocity_relative_l2": 0.0022464938909214065,
+      "pressure_mean_free_relative_l2": 0.13780608542365616,
+      "global_momentum_balance_max": 1.4115258961666655e-10,
+      "numerically_converged": true
+    },
+    {
+      "run": "abc",
+      "case": "abc-n8-mu0.1",
+      "fields_sha256": "6c02d21da961c9064bf0d130dcdfea3f360aff707bec1eb27a4c84b670f999c3",
+      "velocity_relative_l2": 0.0013470296208289243,
+      "pressure_mean_free_relative_l2": 0.0883000778525858,
+      "global_momentum_balance_max": 1.322924825242211e-10,
+      "numerically_converged": true
+    },
+    {
+      "run": "potential",
+      "case": "potential-n2-mu0.1",
+      "fields_sha256": "f776c8962c85c8100ef046da0a07fc75c67d081086d0a99e2fbc0e5241a3f125",
+      "velocity_relative_l2": 0.006140382236930629,
+      "pressure_mean_free_relative_l2": 0.025604257955523804,
+      "global_momentum_balance_max": 1.1098936325559805e-08,
+      "numerically_converged": true
+    },
+    {
+      "run": "potential",
+      "case": "potential-n4-mu0.1",
+      "fields_sha256": "e191246b83e5b3ddab80f4f2f9837d60cc0c63f814b76bbd0ba57a8ad923ea67",
+      "velocity_relative_l2": 0.0016660823215340888,
+      "pressure_mean_free_relative_l2": 0.006855274863471771,
+      "global_momentum_balance_max": 9.031933603798059e-09,
+      "numerically_converged": true
+    },
+    {
+      "run": "potential",
+      "case": "potential-n6-mu0.1",
+      "fields_sha256": "1ee0b9f7d88befb8490e9b817133f61088aac2adef895c5074a7fb83b43ce19b",
+      "velocity_relative_l2": 0.0007594470295367897,
+      "pressure_mean_free_relative_l2": 0.003179389477739173,
+      "global_momentum_balance_max": 4.902070749324139e-09,
+      "numerically_converged": true
+    },
+    {
+      "run": "viscosity",
+      "case": "potential-n4-mu1",
+      "fields_sha256": "bf95498c81aa2a8aa0bc1cff5e27d254e0902ec7363c1b154ceb52bfd67805a8",
+      "velocity_relative_l2": 0.0016904609859990447,
+      "pressure_mean_free_relative_l2": 0.020650464713155715,
+      "global_momentum_balance_max": 9.830006211797304e-09,
+      "numerically_converged": true
+    },
+    {
+      "run": "viscosity",
+      "case": "potential-n4-mu0.01",
+      "fields_sha256": "f3652053f9ea919ffb9d17f005dccfd4fcc8e3d91c24beea4b6861f341825978",
+      "velocity_relative_l2": 0.0028110862878861563,
+      "pressure_mean_free_relative_l2": 0.0060116538092402395,
+      "global_momentum_balance_max": 5.8520685103369274e-09,
+      "numerically_converged": true
+    },
+    {
+      "run": "viscosity",
+      "case": "potential-n4-mu0.001",
+      "fields_sha256": "c3c1933dd91d98a1104f9b562d74afc7c9670b5d72e4caf261b4fa92fbe82824",
+      "velocity_relative_l2": 0.16324922408829648,
+      "pressure_mean_free_relative_l2": 0.33620257629728517,
+      "global_momentum_balance_max": 0.09699529220657899,
+      "numerically_converged": false
+    },
+    {
+      "run": "simplec",
+      "case": "potential-n2-mu0.1",
+      "fields_sha256": "ca0f21b30a75672ab0f0653fa83b4d9c6e3206ad5f04f68b7483c8c91aba216c",
+      "velocity_relative_l2": 0.006140382353182336,
+      "pressure_mean_free_relative_l2": 0.02560425839693244,
+      "global_momentum_balance_max": 1.1012793843523383e-08,
+      "numerically_converged": true
+    },
+    {
+      "run": "simplec",
+      "case": "potential-n4-mu0.1",
+      "fields_sha256": "fa6290e9e810deac105bb839c45d4b02a1ce550713cf8362336cf5a6d1129f3f",
+      "velocity_relative_l2": 0.0016660823566916221,
+      "pressure_mean_free_relative_l2": 0.006855273895726128,
+      "global_momentum_balance_max": 9.307279461023832e-09,
+      "numerically_converged": true
+    }
+  ]
+}

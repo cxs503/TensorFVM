@@ -17,7 +17,7 @@
 
 ## 开发次序与退出条件
 
-1. **无体力层流与三维算子**：Kovasznay 等独立解析解，核对非零对流、压力、黏性自行平衡；有体力制造解通过不能代替此门槛。见[当前验证](verification-native-kovasznay/README.md)。随后按既有 benchmark 规范补齐真正三维、三个速度分量非零的独立制造解与三档网格；二维挤出不能替代该项。[ABC 初步诊断](verification-native-kovasznay/abc-diagnostics/README.md)已暴露显著压力误差。[梯度跳变修正](verification-native-gradient-jump/README.md)改善了应变控制和压力误差，但 756 单元 NS 压力仍为 55.82%；下一步优先处理小黏度下惯性/压力兼容性，再做加密，暂不进入 SST 耦合。
+1. **无体力层流与三维算子**：Kovasznay 等独立解析解，核对非零对流、压力、黏性自行平衡；有体力制造解通过不能代替此门槛。见[当前验证](verification-native-kovasznay/README.md)。随后按既有 benchmark 规范补齐真正三维、三个速度分量非零的独立制造解与三档网格；二维挤出不能替代该项。[ABC 初步诊断](verification-native-kovasznay/abc-diagnostics/README.md)已暴露显著压力误差。[梯度跳变修正](verification-native-gradient-jump/README.md)改善了应变控制和压力误差，该阶段 756 单元 NS 压力仍为 55.82%。随后[共享面惯性修复](verification-native-compatible-inertia/README.md)使其降至 13.78%，1,792 单元为 8.83%；无体力三维势流三档网格已通过，756 单元速度/压力为 0.076%/0.318%。黏度 0.001 仍不收敛，ABC 精度仍未达标；下一步处理低黏度迭代和三维加密/可扩展求解，暂不进入 SST 耦合。
 2. **边界与力**：对称面、混合牵引、变黏度、切向 Robin/壁面律，在简单通道和独立解析算子上分别验证；检查法向约束、剪切符号、积分力与功。
 3. **SST 输运**：在新混合后端实现 k/ω 输运、源项、变黏度耦合；验证常量保持、守恒、正值处理、壁距与量纲。旧配点路径的 SST 不能自动视为新后端已有能力。
 4. **湍流简单物理案例**：通道/平板的速度律、摩阻、壁面分辨率和网格敏感性；之后再进入轴对称外流。不得通过裁剪解或调整参考值过门槛。
