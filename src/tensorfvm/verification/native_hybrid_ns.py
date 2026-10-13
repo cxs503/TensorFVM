@@ -74,3 +74,30 @@ def kovasznay_solver(n, reynolds=40., *, convection_order=2, triangulate_faces=T
         viscosity=1/reynolds,body_force=0.,gauge_value=exact['pressure'][0],
         convection_order=convection_order,coupled_linear_method=coupled_linear_method)
     return mesh,solver,exact
+
+
+def potential_fields(points):
+    """Unforced genuinely 3D irrotational flow at any constant viscosity.
+
+    U = grad(x+y+z+xyz), div U = lap U = curl U = 0,
+    p = -|U|^2/2, so (U dot grad) U + grad p - nu lap U = 0.
+    All three velocity components and all three coordinates are active.
+    """
+    x,y,z = np.asarray(points).T
+    velocity = np.column_stack((1+y*z,1+x*z,1+x*y))
+    gradient = np.zeros((len(x),3,3))
+    gradient[:,0,1]=gradient[:,1,0]=z
+    gradient[:,0,2]=gradient[:,2,0]=y
+    gradient[:,1,2]=gradient[:,2,1]=x
+    return dict(velocity=velocity,pressure=-.5*np.sum(velocity**2,axis=1),
+                gradient=gradient,force=np.zeros_like(velocity))
+
+
+def potential_solver(n, viscosity=.1):
+    from .native_hybrid_pressure import pressure_mesh
+    mesh=pressure_mesh(n);exact=potential_fields(mesh.cell_centers)
+    boundary=exact_boundary_velocity_means(mesh,potential_fields)
+    solver=NativeHybridNavierStokes3D(mesh,mesh.neighbor<0,boundary,
+        viscosity=viscosity,body_force=0.,gauge_value=exact['pressure'][0],
+        convection_order=2,coupled_linear_method='reused_lu')
+    return mesh,solver,exact

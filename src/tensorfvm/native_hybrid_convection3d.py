@@ -41,6 +41,19 @@ class NativeHybridConvection3D:
         matrix = sparse.kron(self.D @ transport, sparse.eye(3), format='csr')
         return matrix, (self.D @ source).ravel(), transport, source
 
+    def hybrid_system(self, volume_flux, mean, gradients=None):
+        """Apply cell momentum to the dual of the face mean reconstruction.
+
+        Order one transports R U and has the usual upwind energy identity.
+        Order two transports U_K + G_K (x_f-x_K): the cell value is implicit,
+        the gradient is deferred. The difference U_K-R_K U and the gradient
+        correction have signed work, audited separately in diagnostics.
+        """
+        matrix, source, _, _ = self.assemble(volume_flux, gradients)
+        trial = (mean if self.order == 1 else sparse.hstack(
+            (sparse.eye(3*self.N),sparse.csr_matrix((3*self.N,3*self.F))),format='csr'))
+        return mean.T @ matrix @ trial, mean.T @ source
+
     def deferred_flux(self, mass_flux, gradients):
         gradient = np.asarray(gradients, float)
         if gradient.shape != (self.N,3,3) or not np.isfinite(gradient).all():
@@ -52,29 +65,34 @@ class NativeHybridConvection3D:
         flux[active] = mass_flux[active,None]*np.einsum('fij,fj->fi',gradient[upstream],offset)
         return flux
 
-    def diagnostics(self, velocity, volume_flux, gradients=None):
+    def diagnostics(self, velocity, volume_flux, gradients=None, *, base_velocity=None):
         u = np.asarray(velocity, float)
         if u.shape != (self.N, 3) or not np.isfinite(u).all():
             raise ValueError('finite cell velocity required')
+        base = u if base_velocity is None else np.asarray(base_velocity, float)
+        if base.shape != u.shape or not np.isfinite(base).all():
+            raise ValueError('finite base cell velocity required')
         matrix, source, transport, face_source = self.assemble(volume_flux, gradients)
         flux = transport @ u+face_source
         integrated = self.D @ flux
         q = self.density*np.asarray(volume_flux)
         m = self.mesh; i = ~self.boundary; incoming = self.boundary & (q < 0)
         outgoing = self.boundary & (q >= 0)
-        jump = u[m.owner[i]]-u[m.neighbor[i]]
+        jump = base[m.owner[i]]-base[m.neighbor[i]]
         dissipation = .5*np.sum(np.abs(q[i])*np.sum(jump**2, axis=1))
-        dissipation += .5*np.sum(-q[incoming]*np.sum((u[m.owner[incoming]]-self.inflow[incoming])**2, axis=1))
-        boundary_power = .5*(np.sum(q[outgoing]*np.sum(u[m.owner[outgoing]]**2, axis=1))
+        dissipation += .5*np.sum(-q[incoming]*np.sum((base[m.owner[incoming]]-self.inflow[incoming])**2, axis=1))
+        boundary_power = .5*(np.sum(q[outgoing]*np.sum(base[m.owner[outgoing]]**2, axis=1))
                             +np.sum(q[incoming]*np.sum(self.inflow[incoming]**2, axis=1)))
-        divergence_power = .5*np.sum((self.D @ q)*np.sum(u*u, axis=1))
-        correction_power = (float(np.sum(u*(self.D @ self.deferred_flux(q,gradients))))
+        divergence_power = .5*np.sum((self.D @ q)*np.sum(base*base, axis=1))
+        correction_power = (float(np.sum(base*(self.D @ self.deferred_flux(q,gradients))))
                             if self.order == 2 else 0.)
-        power = float(np.sum(u*integrated))
+        projection_power = float(np.sum(base*(self.D @ (transport @ (u-base)))))
+        correction_power += projection_power
+        power = float(np.sum(base*integrated))
         return dict(momentum_flux=flux, integrated=integrated, power=power,
             upwind_dissipation=float(dissipation), boundary_kinetic_energy_flux=float(boundary_power),
             divergence_power=float(divergence_power),
-            deferred_correction_power=correction_power,
+            deferred_correction_power=correction_power, projection_correction_power=projection_power,
             energy_identity_error=abs(power-dissipation-boundary_power-divergence_power-correction_power),
             global_momentum_balance_error=float(np.max(np.abs(integrated.sum(0)-flux[self.boundary].sum(0)))),
             assembly_error=float(np.max(np.abs((matrix @ u.ravel()+source).reshape(self.N,3)-integrated))))

@@ -3,11 +3,11 @@
 Picard outer iterations freeze the conservative face volume flux. Each inner
 SIMPLE/SIMPLEC or coupled solve uses the shared hybrid Stokes infrastructure.
 Only a residual rebuilt from CURRENT face velocity can qualify convergence.
-Optional linear upwind reconstruction uses the current hybrid Gauss gradient.
+Linear upwind reconstruction uses the current hybrid Gauss gradient; its
+signed correction work is explicitly audited.
 SST and wall functions are not implemented by this backend.
 """
 import numpy as np
-from scipy import sparse
 from .native_hybrid_stokes3d import NativeHybridStokes3D
 from .native_hybrid_convection3d import NativeHybridConvection3D
 
@@ -15,6 +15,7 @@ from .native_hybrid_convection3d import NativeHybridConvection3D
 class NativeHybridNavierStokes3D(NativeHybridStokes3D):
     def __init__(self, mesh, velocity_dirichlet, velocity_boundary=0., *,
                  density=1., backflow_velocity=None, convection_order=1, **kwargs):
+        kwargs.setdefault('momentum_relaxation_basis','absolute_row_sum')
         super().__init__(mesh, velocity_dirichlet, velocity_boundary, **kwargs)
         inflow = np.broadcast_to(np.asarray(velocity_boundary, float), (self.F,3)).copy()
         open_faces = self.open_normal_boundary
@@ -31,11 +32,9 @@ class NativeHybridNavierStokes3D(NativeHybridStokes3D):
         return np.sum(state[3*self.N:].reshape(self.F,3)*self.mesh.area_vectors, axis=1)
 
     def _current_system(self):
-        cell_matrix, cell_source, _, _ = self.convection.assemble(self.volume_flux(), self.velocity_gradient())
-        convection = sparse.block_diag((cell_matrix, sparse.csr_matrix((3*self.F,3*self.F))), format='csr')
-        source = np.r_[cell_source, np.zeros(3*self.F)]
-        full = self.viscous.full_matrix+convection
-        return full, source
+        convection, source = self.convection.hybrid_system(
+            self.volume_flux(),self.face_mean.matrix,self.velocity_gradient())
+        return self.viscous.full_matrix+convection, source
 
     def velocity_gradient(self):
         face = self.state[3*self.N:].reshape(self.F,3)
@@ -84,10 +83,30 @@ class NativeHybridNavierStokes3D(NativeHybridStokes3D):
     def result(self):
         result = super().result()
         full, source = self._current_system()
-        adv = self.convection.diagnostics(result['velocity'], result['flux'], self.velocity_gradient())
+        mean_velocity = (self.face_mean.matrix @ self.state).reshape(self.N,3)
+        transported = result['velocity'] if self.convection.order == 2 else mean_velocity
+        adv = self.convection.diagnostics(transported, result['flux'], self.velocity_gradient(),
+                                         base_velocity=mean_velocity)
+        # Inertia now contributes face test-function reactions. Include its
+        # dual moments in numerical traction, just as body-force moments are
+        # subtracted. Omitting these produces a false interface force ledger.
+        owner_inertia, neighbor_inertia = self.face_mean.moments(adv['integrated'])
+        total_traction = result['total_traction_integrated']+owner_inertia
+        internal = ~self.viscous.boundary
+        neighbor_traction = result['neighbor_total_traction_integrated']+neighbor_inertia[internal]
+        momentum_flux = adv['momentum_flux']-total_traction
+        local_balance = self.convection.D @ momentum_flux-self.mesh.cell_volumes[:,None]*self.body_force
         reaction = full @ self.state+source-self.divergence.T @ self.p-self.load
         external = float(self.state @ self.load+self.prescribed @ reaction)
         result.update(numerically_converged=self.nonlinear_converged,
+            reconstructed_velocity=mean_velocity,
+            total_traction_integrated=total_traction,
+            neighbor_total_traction_integrated=neighbor_traction,
+            interface_traction_defect_max=float(np.max(np.abs(
+                total_traction[internal]+neighbor_traction),initial=0.)),
+            local_momentum_balance_max=float(np.max(np.abs(local_balance),initial=0.)),
+            global_momentum_balance_max=float(np.max(np.abs(local_balance.sum(0)),initial=0.)),
+            projection_correction_power=adv['projection_correction_power'],
             convection_power=adv['power'], upwind_dissipation=adv['upwind_dissipation'],
             deferred_correction_power=adv['deferred_correction_power'],
             boundary_kinetic_energy_flux=adv['boundary_kinetic_energy_flux'],
@@ -95,7 +114,7 @@ class NativeHybridNavierStokes3D(NativeHybridStokes3D):
             convection_global_balance_error=adv['global_momentum_balance_error'],
             external_work=external,
             energy_balance_error=abs(result['energy_form']+adv['power']-result['pressure_work']-external),
-            momentum_flux_integrated=adv['momentum_flux']-result['total_traction_integrated'],
+            momentum_flux_integrated=momentum_flux,
             total_momentum_reaction=reaction.reshape(-1,3),
             outer_history=list(self.outer_history))
         return result
