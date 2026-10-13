@@ -27,6 +27,7 @@ build-backend = "setuptools.build_meta"
 [project.optional-dependencies]
 benchmark = ["numpy>=1.24", "matplotlib>=3.7", "scipy>=1.11"]
 mesh = ["gmsh>=4.12"]
+amg = ["numpy>=1.24", "scipy>=1.11", "pyamg>=5.3"]
 dev = ["pytest"]
 
 [tool.setuptools.packages.find]

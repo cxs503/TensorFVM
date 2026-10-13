@@ -1,0 +1,86 @@
+[
+  {
+    "iteration": 1,
+    "accepted": true,
+    "step_length": 1.0,
+    "backtracks": 0,
+    "merit_before": 0.011884876688502738,
+    "merit_after": 0.0008206922871609191,
+    "true_linear_relative_residual": 2.1733492136224183e-13,
+    "velocity_change": 0.11063786946676726,
+    "pressure_change": 0.7812889327727999,
+    "trials": [
+      {
+        "step_length": 1.0,
+        "merit": 0.0008206922871609191,
+        "accepted": true
+      }
+    ],
+    "current_momentum_residual": 0.0008206922871609191,
+    "divergence_max": 1.1212974992957925e-12,
+    "gauge_error": 0.0
+  },
+  {
+    "iteration": 2,
+    "accepted": true,
+    "step_length": 1.0,
+    "backtracks": 0,
+    "merit_before": 0.0008206922871609191,
+    "merit_after": 4.261672670443698e-07,
+    "true_linear_relative_residual": 2.06236212650123e-12,
+    "velocity_change": 0.0017729027040386653,
+    "pressure_change": 0.05593151911948759,
+    "trials": [
+      {
+        "step_length": 1.0,
+        "merit": 4.261672670443698e-07,
+        "accepted": true
+      }
+    ],
+    "current_momentum_residual": 4.2616726704408594e-07,
+    "divergence_max": 1.9853563237859362e-13,
+    "gauge_error": 0.0
+  },
+  {
+    "iteration": 3,
+    "accepted": true,
+    "step_length": 1.0,
+    "backtracks": 0,
+    "merit_before": 4.261672670443698e-07,
+    "merit_after": 5.127833619727757e-13,
+    "true_linear_relative_residual": 6.424150880254294e-12,
+    "velocity_change": 1.0378281457439977e-06,
+    "pressure_change": 1.3715104366424855e-05,
+    "trials": [
+      {
+        "step_length": 1.0,
+        "merit": 5.127833619727757e-13,
+        "accepted": true
+      }
+    ],
+    "current_momentum_residual": 2.1783104989217773e-13,
+    "divergence_max": 1.7622014958362797e-13,
+    "gauge_error": 0.0
+  },
+  {
+    "iteration": 4,
+    "accepted": true,
+    "step_length": 1.0,
+    "backtracks": 0,
+    "merit_before": 5.127833619727757e-13,
+    "merit_after": 4.4260932656560666e-13,
+    "true_linear_relative_residual": 8.220974450996286e-12,
+    "velocity_change": 4.4183429379401077e-13,
+    "pressure_change": 8.603377382102045e-12,
+    "trials": [
+      {
+        "step_length": 1.0,
+        "merit": 4.4260932656560666e-13,
+        "accepted": true
+      }
+    ],
+    "current_momentum_residual": 3.5023703081458567e-15,
+    "divergence_max": 6.991629497576923e-14,
+    "gauge_error": 0.0
+  }
+]

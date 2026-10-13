@@ -1,0 +1,35 @@
+ITER 0.01 1 1.0 5.797877732912832e-06
+ITER 0.01 2 1.0 2.507616393557163e-10
+ITER 0.01 3 1.0 8.410962409568928e-16
+RESULT 0.01 True None 0.0010858135664950437 0.0026029764682002055
+ITER 0.005 1 1.0 1.9748720629514735e-05
+ITER 0.005 2 1.0 1.7995337415841488e-06
+ITER 0.005 3 1.0 1.370252049659587e-09
+ITER 0.005 4 1.0 8.016864124536108e-16
+RESULT 0.005 True None 0.0022074140615048676 0.00337770155338322
+ITER 0.002 1 1.0 0.00015185947661330962
+ITER 0.002 2 1.0 1.9949419178191186e-05
+ITER 0.002 3 1.0 2.144615087019309e-06
+ITER 0.002 4 1.0 1.255721695049534e-07
+ITER 0.002 5 1.0 3.635417144093706e-10
+ITER 0.002 6 1.0 3.581576962483037e-15
+ITER 0.002 7 1.0 7.308629329221042e-16
+RESULT 0.002 True None 0.003674666454098524 0.00555379948626431
+ITER 0.001 1 0.03125 0.00041157353008082584
+ITER 0.001 2 0.0625 0.0004019477932402404
+ITER 0.001 3 0.0625 0.0003925476229468426
+ITER 0.001 4 0.001953125 0.00039236414035776895
+ITER 0.001 5 0.000244140625 0.0003923251458140252
+Traceback (most recent call last):
+  File "/tmp/native-newton-continuation-probe.py", line 8, in <module>
+    r=s.solve_newton(max_iterations=40,tolerance=1e-8,callback=lambda row:print('ITER',mu,row['iteration'],row['step_length'],row['current_momentum_residual'],flush=True))
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jsyc/tensor-suite-development/TensorFVM/src/tensorfvm/native_hybrid_ns3d.py", line 70, in solve_newton
+    return solve_newton(self,max_iterations=max_iterations,tolerance=tolerance,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jsyc/tensor-suite-development/TensorFVM/src/tensorfvm/native_hybrid_newton3d.py", line 44, in solve_newton
+    direction,linear_residual=s._coupled_linear(matrix.tocsc(),rhs)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jsyc/tensor-suite-development/TensorFVM/src/tensorfvm/native_hybrid_stokes3d.py", line 124, in _coupled_linear
+    raise RuntimeError(f'hybrid coupled solve failed true residual: {residual:g}')
+RuntimeError: hybrid coupled solve failed true residual: 1.41482e-09

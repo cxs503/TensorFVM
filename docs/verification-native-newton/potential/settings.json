@@ -1,0 +1,21 @@
+{
+  "case": "potential",
+  "output": "results/native-newton-potential",
+  "levels": [
+    2,
+    4,
+    6
+  ],
+  "viscosities": [
+    0.001
+  ],
+  "initialization": "stokes",
+  "method": "newton",
+  "max_iterations": 50,
+  "tolerance": 1e-08,
+  "accuracy_threshold": 0.03,
+  "gpu_tested": false,
+  "pressure_metric": "volume weighted mean-free relative L2; also fixed gauge for Kovasznay",
+  "kovasznay_mesh": "n x n x 1 with spanwise symmetry; not genuine 3D refinement",
+  "newton_linear_solver": "native coupled sparse LU/reused LU; not SIMPLE/SIMPLEC"
+}

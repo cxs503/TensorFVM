@@ -54,6 +54,44 @@ class NativeHybridConvection3D:
             (sparse.eye(3*self.N),sparse.csr_matrix((3*self.N,3*self.F))),format='csr'))
         return mean.T @ matrix @ trial, mean.T @ source
 
+    def hybrid_jacobian(self, state, mean):
+        """Derivative of the actual flux, including q and Gauss gradients.
+
+        The upwind active set is chosen at the supplied state. At zero mass
+        flux this selects a one-sided derivative; line searches must rebuild
+        the original nonlinear residual after any active-set change.
+        """
+        m = self.mesh
+        state = np.asarray(state,float)
+        if state.shape != (3*(self.N+self.F),) or not np.isfinite(state).all():
+            raise ValueError('one finite hybrid vector state required')
+        ids = np.arange(self.F)
+        q_map = sparse.coo_matrix((self.density*m.area_vectors.ravel(),
+            (np.repeat(ids,3),(3*(self.N+ids[:,None])+np.arange(3)).ravel())),
+            shape=(self.F,len(state))).tocsr()
+        q = q_map @ state
+        active = ~self.boundary | (q >= 0)
+        upstream = np.where(q >= 0,m.owner,m.neighbor)[active]
+        pick = sparse.coo_matrix((np.ones(active.sum()),(ids[active],upstream)),
+                                 shape=(self.F,self.N)).tocsr()
+        if self.order == 1:
+            reconstruction = sparse.kron(pick,sparse.eye(3),format='csr') @ mean
+        else:
+            offset = np.zeros((self.F,3))
+            offset[active] = m.face_centers[active]-m.cell_centers[upstream]
+            gradient_part = sparse.csr_matrix((self.F,self.F))
+            for j in range(3):
+                gradient = sparse.diags(1/m.cell_volumes) @ self.D @ sparse.diags(m.area_vectors[:,j])
+                gradient_part += sparse.diags(offset[:,j]) @ pick @ gradient
+            reconstruction = sparse.kron(sparse.hstack((pick,gradient_part)),sparse.eye(3),format='csr')
+        transported = (reconstruction @ state).reshape(self.F,3)
+        transported[~active] = self.inflow[~active]
+        # d(q*u_adv) = q*d(u_adv) + u_adv*dq, also for incoming open boundaries.
+        flux_response = sparse.coo_matrix((transported.ravel(),
+            (np.arange(3*self.F),np.repeat(ids,3))),shape=(3*self.F,self.F)).tocsr()
+        face_derivative = sparse.diags(np.repeat(q,3)) @ reconstruction + flux_response @ q_map
+        return mean.T @ sparse.kron(self.D,sparse.eye(3),format='csr') @ face_derivative
+
     def deferred_flux(self, mass_flux, gradients):
         gradient = np.asarray(gradients, float)
         if gradient.shape != (self.N,3,3) or not np.isfinite(gradient).all():
