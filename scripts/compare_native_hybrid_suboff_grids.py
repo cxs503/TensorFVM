@@ -53,9 +53,16 @@ def main():
             volume=float(-np.einsum('ij,ij->',fields['face_centers'][wall],fields['area_vectors'][wall])/3)
             domain=np.stack((fields['vertices'].min(0),fields['vertices'].max(0)))
             if rows:np.testing.assert_allclose(domain,rows[0]['domain_bounds'],rtol=0,atol=1e-12)
+            normalization=.5*settings['rho']*settings['U']**2*settings['L']**2
+            owner_pressure_force=np.sum(fields['pressure'][fields['owner'][wall],None]*fields['area_vectors'][wall],axis=0)
+            trace_pressure_force=np.sum(trace['pressure'][:,None]*fields['area_vectors'][wall],axis=0)
             curves.append((fields['face_centers'][wall,0].copy(),2*trace['pressure'].copy()/(settings['rho']*settings['U']**2)))
             rows.append(dict(run=str(root),cells=len(fields['cell_volumes']),faces=len(wall),Cd_L2=cd,
                 body_polyhedral_volume=volume,domain_bounds=domain.tolist(),
+                Cd_owner_pressure_proxy=float(owner_pressure_force[0]/normalization),
+                Cd_remaining_numerical_force=float((force[0]-owner_pressure_force[0])/normalization),
+                Cd_reconstructed_pressure_proxy=float(trace_pressure_force[0]/normalization),
+                pressure_force_split_certified=False,
                 minimum_cell_volume=float(fields['cell_volumes'].min()),
                 mass_divergence_max=summary['mass_divergence_max'],
                 source_bindings={name:digest(root/name) for name in ('settings.json','summary.json','artifact-audit.json',
@@ -64,19 +71,30 @@ def main():
         raise ValueError('runs must be ordered by increasing cell count')
     for previous,row in zip(rows,rows[1:]):
         row['Cd_relative_change_from_previous_using_finer_denominator']=abs(row['Cd_L2']-previous['Cd_L2'])/abs(row['Cd_L2'])
+    increments=np.diff([row['Cd_L2'] for row in rows])
+    trend=('insufficient_grids' if len(rows)<3 else
+           'nonmonotonic' if np.any(increments[:-1]*increments[1:]<0) else 'monotonic_or_flat')
     args.output.mkdir(parents=True,exist_ok=True)
     result=dict(Re_L=settings0['Re_L'],runs=rows,wall_Cp_certified=False,grid_convergence_certified=False,
+        Cd_signed_refinement_increments=increments.tolist(),Cd_refinement_trend=trend,
+        observed_order=None,GCI=None,
+        force_split_interpretation='Owner/connected-cell pressure are postprocessing proxies. Remaining total minus owner-pressure includes viscous and numerical terms; it is not certified skin friction.',
         physical_suboff_benchmark_passed=False,
-        interpretation='Changes include geometry and spatial discretization. Two grids or small drag changes do not establish grid convergence. No independent physical reference is used.')
+        interpretation='Changes include geometry and spatial discretization. Small drag changes do not establish asymptotic grid convergence, especially with nonmonotonic increments or changing geometry. No independent physical reference is used.')
     (args.output/'comparison.json').write_text(json.dumps(result,indent=2,allow_nan=False)+'\n')
     shutil.copy2(__file__,args.output/Path(__file__).name)
-    fig,axes=plt.subplots(1,2,figsize=(12,4.5),constrained_layout=True)
+    fig,axes=plt.subplots(1,3,figsize=(16,4.5),constrained_layout=True)
     for row,(x,cp) in zip(rows,curves):axes[0].scatter(x,cp,s=9,label=f"{row['cells']} cells")
     axes[0].set(xlabel='x/L',ylabel='Connected-cell pressure trace Cp',title='All actual wall facets; wall Cp NOT certified')
     axes[0].legend();axes[0].grid(True)
     axes[1].plot([row['cells'] for row in rows],[row['Cd_L2'] for row in rows],'o-')
     axes[1].set(xlabel='Cells',ylabel='Cd with reference area L^2',title=f"Native laminar Re_L={settings0['Re_L']:g}; no reference data")
     axes[1].grid(True)
+    axes[2].plot([row['cells'] for row in rows],[row['Cd_owner_pressure_proxy'] for row in rows],'o-',label='Owner pressure proxy')
+    axes[2].plot([row['cells'] for row in rows],[row['Cd_remaining_numerical_force'] for row in rows],'s-',label='Total minus owner pressure')
+    axes[2].plot([row['cells'] for row in rows],[row['Cd_reconstructed_pressure_proxy'] for row in rows],'^--',label='Reconstructed pressure proxy')
+    axes[2].set(xlabel='Cells',ylabel='Force coefficient with area L^2',title='Force split is diagnostic; not certified friction')
+    axes[2].legend(fontsize=8);axes[2].grid(True)
     fig.savefig(args.output/'grid-comparison.png',dpi=180);fig.savefig(args.output/'grid-comparison.pdf');plt.close(fig)
     print(json.dumps(result,indent=2))
 

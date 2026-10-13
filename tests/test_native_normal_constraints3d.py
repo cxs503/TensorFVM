@@ -124,3 +124,28 @@ def test_result_cannot_certify_a_mutated_velocity_violating_normal_boundary():
     s.state[3*(s.N+face):3*(s.N+face)+3]+=.01*normal
     r=s.result()
     assert r['boundary_velocity_error']>.009 and not r['numerically_converged']
+
+
+def test_refined_newton_increment_respects_rotated_robin_constraints(monkeypatch):
+    pytest.importorskip('pyamg')
+    import tensorfvm.native_block_solver3d as module
+    from scipy.sparse.linalg import spsolve
+    m,s,reference,_,normal=rotated_couette('newton')
+    s.coupled_linear_method='block_amg';calls=[]
+    def limited(a,b,**kwargs):
+        answer=spsolve(a,b);calls.append(b.copy())
+        # Relative perturbation also exercises corrections at a tiny RHS.
+        if len(calls)==1:answer[0]+=1e-4*max(np.linalg.norm(answer),1e-20)
+        return answer,60 if len(calls)==1 else 0
+    monkeypatch.setattr(module,'gmres',limited)
+    result=s.solve_newton(tolerance=1e-9,allow_inexact_linear_steps=True,require_initial_correction=True)
+    assert result['numerically_converged'] and len(calls)==2
+    row=s.coupled_linear_history[-1]
+    assert row['velocity_coordinates']=='reduced tangent basis'
+    assert row['residual_refinement'][0]['accepted'] and row['original_criteria_satisfied']
+    assert not row['gmres_target_reached']
+    assert result['newton_history'][0]['step_length']==1.
+    assert result['energy_balance_error']<1e-8
+    assert np.max(abs(result['flux'][normal]))<1e-14
+    np.testing.assert_allclose(result['velocity'],reference['velocity'],atol=1e-9)
+    np.testing.assert_allclose(result['total_traction_integrated'],reference['total_traction_integrated'],atol=1e-9)
