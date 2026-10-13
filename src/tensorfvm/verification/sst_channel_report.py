@@ -30,7 +30,8 @@ def plot_reference(directory):
     accepted=[r for r in rows if r['converged']];rejected=[r for r in rows if not r['converged']]
     axes[1].plot([r['n'] for r in accepted],[r['Cf'] for r in accepted],'o-',label='Independent 1D SST, relative criterion')
     if rejected:axes[1].plot([r['n'] for r in rejected],[r['Cf'] for r in rejected],'rx',label='Unconverged reference iterate')
-    native.sort(key=lambda r:r['n']);axes[1].plot([r['n'] for r in native],[r['Cf'] for r in native],'x--',label='Native hybrid 3D')
+    native.sort(key=lambda r:r['n'])
+    if native:axes[1].plot([r['n'] for r in native],[r['Cf'] for r in native],'x--',label='Native hybrid 3D')
     axes[1].axhline(reference['Cf'],color='k',label='DNS');axes[1].axhspan(reference['Cf']*.97,reference['Cf']*1.03,color='g',alpha=.1,label='±3% nominal band')
     axes[1].set(xscale='log',xlabel='Wall-normal cells',ylabel='Cf',title='Independent model limit vs native grids');axes[1].legend(fontsize=8);axes[1].grid(True)
     fig.savefig(root/'model-discretization-comparison.png',dpi=180);fig.savefig(root/'model-discretization-comparison.pdf');plt.close(fig)
