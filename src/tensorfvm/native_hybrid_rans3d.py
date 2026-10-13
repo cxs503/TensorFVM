@@ -13,12 +13,12 @@ from .native_sst3d import sst2003_closure
 class NativeHybridRans3D:
     def __init__(self,flow,wall_distance,nu,*,k_dirichlet_mask=None,omega_dirichlet_mask=None,
                  k_boundary,omega_boundary,k_inflow=None,omega_inflow=None,k_neumann=0.,omega_neumann=0.,
-                 scalar_correction='none', mmp_solver='continuation_newton', scalar_work_balance_policy='absolute',scalar_warm_start=False):
+                 scalar_correction='none', mmp_solver='continuation_newton', scalar_work_balance_policy='absolute',scalar_warm_start=False,scalar_precision='float64'):
         if not isinstance(flow,NativeHybridNavierStokes3D):
             raise TypeError('native hybrid Navier-Stokes flow required')
         self.flow=flow;self.mesh=flow.mesh
         self.transport=NativeHybridSSTTransport3D(self.mesh,k_dirichlet_mask=k_dirichlet_mask,
-                                                 omega_dirichlet_mask=omega_dirichlet_mask,scalar_correction=scalar_correction,mmp_solver=mmp_solver,scalar_work_balance_policy=scalar_work_balance_policy,scalar_warm_start=scalar_warm_start)
+                                                 omega_dirichlet_mask=omega_dirichlet_mask,scalar_correction=scalar_correction,mmp_solver=mmp_solver,scalar_work_balance_policy=scalar_work_balance_policy,scalar_warm_start=scalar_warm_start,scalar_precision=scalar_precision)
         self.nu=self.transport._state(nu,flow.N,'molecular viscosity',True)
         self.wall_distance=self.transport._state(wall_distance,flow.N,'wall distance',True)
         self.rho=flow.convection.density
@@ -59,9 +59,8 @@ class NativeHybridRans3D:
         self._refresh_viscosity()
 
     def _closure(self):
-        return sst2003_closure(self.k,self.omega,self.wall_distance,self.nu,
-            self.flow.velocity_gradient(),self.transport.geometry.gradient(self.k_faces),
-            self.transport.geometry.gradient(self.omega_faces),rho=self.rho)
+        return self.transport.closure(self.k,self.omega,self.k_faces,self.omega_faces,self.wall_distance,self.nu,
+            self.flow.velocity_gradient(),rho=self.rho)
 
     def restore_accepted_fields(self,fields):
         """Restore a numerical iterate without re-equilibrating shared faces.
@@ -89,10 +88,9 @@ class NativeHybridRans3D:
             boundary=np.broadcast_to(np.asarray(self.boundary[name+'_boundary'],float),(s.F,))
             if not np.array_equal(values[name+'_faces'][mask],boundary[mask]):
                 raise ValueError('restart '+name+' boundary mismatch')
-        closure=sst2003_closure(values['k'],values['omega'],self.wall_distance,self.nu,
-            s.velocity_gradient(state),self.transport.geometry.gradient(values['k_faces']),
-            self.transport.geometry.gradient(values['omega_faces']),rho=self.rho)
-        viscosity=self.rho*(self.nu+closure['nu_t'])
+        closure=self.transport.closure(values['k'],values['omega'],values['k_faces'],values['omega_faces'],
+            self.wall_distance,self.nu,s.velocity_gradient(state),rho=self.rho)
+        viscosity=np.asarray(self.rho*(self.nu+closure['nu_t']),float)
         if not np.isfinite(viscosity).all() or np.any(viscosity<=0):
             raise ValueError('invalid restart viscosity')
         s.update_dynamic_viscosity(viscosity)
@@ -104,11 +102,11 @@ class NativeHybridRans3D:
 
     def _refresh_viscosity(self):
         self.closure=self._closure()
-        viscosity=self.rho*(self.nu+self.closure['nu_t'])
+        viscosity=np.asarray(self.rho*(self.nu+self.closure['nu_t']),float)
         if not np.array_equal(viscosity,self.flow.viscous.mu):
             self.flow.update_dynamic_viscosity(viscosity)
 
-    def current_residual(self):
+    def current_residual(self,*,with_ledgers=False):
         """Rebuild momentum and both original steady SST equations at one state."""
         if not self.initialized:raise RuntimeError('initialize turbulence first')
         self._refresh_viscosity()
@@ -116,7 +114,7 @@ class NativeHybridRans3D:
         residual=full @ s.state+source-s.divergence.T @ s.p-s.load
         scale=max(np.linalg.norm(space.restrict(s.load-source-full @ s.prescribed)),1.)
         t=self.transport.steady_residual(self.k,self.omega,self.k_faces,self.omega_faces,
-            s.volume_flux(),self.wall_distance,self.nu,s.velocity_gradient(),rho=self.rho,**self.boundary)
+            s.volume_flux(),self.wall_distance,self.nu,s.velocity_gradient(),rho=self.rho,with_ledgers=with_ledgers,**self.boundary)
         return dict(momentum=float(np.linalg.norm(space.restrict(residual))/scale),
             divergence=float(np.max(np.abs(s.divergence @ s.state/self.mesh.cell_volumes))),
             velocity_boundary=space.constraint_error(s.state-s.prescribed),
@@ -125,10 +123,24 @@ class NativeHybridRans3D:
             k_boundary=t['k']['dirichlet_error'],omega_boundary=t['omega']['dirichlet_error'],
             transport=t)
 
+    @staticmethod
+    def _steady_ledger_acceptance(current,flow):
+        flow_values={key:flow[key] for key in ('local_momentum_balance_max','global_momentum_balance_max',
+                    'interface_traction_defect_max','energy_balance_error')}
+        flow_passed=bool(np.isfinite(list(flow_values.values())).all() and max(abs(v) for v in flow_values.values())<1e-8)
+        scalars={}
+        for name in ('k','omega'):
+            r=current['transport'][name]
+            scalars[name]={key:r['steady_ledger'][key] for key in ('cell_balance_max','interface_flux_defect_max',
+                'global_balance','work_balance','relative_work_balance','absolute_work_gate_passed','work_balance_policy','cell_constraint_error')}
+            scalars[name]['passed']=r['steady_ledger_passed']
+        return dict(passed=bool(flow_passed and all(r['passed'] for r in scalars.values())),
+                    flow_passed=flow_passed,flow=flow_values,scalar=scalars)
+
     def solve(self,*,max_iterations=100,dt=.01,relaxation=.7,tolerance=1e-7,
               momentum_method='newton',momentum_max_iterations=50,
               momentum_coupling='converged',momentum_sweeps=1,momentum_inner_iterations=1,
-              momentum_relaxation=.5,callback=None):
+              momentum_relaxation=.5,require_steady_ledgers=False,callback=None):
         """Advance segregated RANS with converged momentum or explicit sweeps.
 
         Sweeps rebuild convection each time. Optional inner iterations reuse
@@ -157,6 +169,7 @@ class NativeHybridRans3D:
             raise ValueError('positive integer momentum sweeps and relaxation in (0,1] required')
         self.converged=False
         self.tolerance=tolerance
+        self.require_steady_ledgers=bool(require_steady_ledgers)
         for _ in range(max_iterations):
             old={key:getattr(self,key).copy() for key in ('k','omega','k_faces','omega_faces')}
             old_u=self.flow.state.copy();old_p=self.flow.p.copy()
@@ -201,18 +214,27 @@ class NativeHybridRans3D:
                 scalar_subsolve_ledgers={name:{key:step['transport'][name][key] for key in
                     ('cell_balance_max','interface_flux_defect_max','global_balance','work_balance','work_balance_scale',
                      'relative_work_balance','absolute_work_gate_passed','work_balance_policy')} for name in ('k','omega')})
-            self.history.append(row)
-            self.converged=bool(max(row[key] for key in ('momentum','divergence','gauge','k','omega','k_boundary','omega_boundary','velocity_boundary'))<tolerance
+            candidate=bool(max(row[key] for key in ('momentum','divergence','gauge','k','omega','k_boundary','omega_boundary','velocity_boundary'))<tolerance
                                 and max(changes.values())<tolerance)
+            row['steady_ledger_acceptance']=None
+            if candidate and self.require_steady_ledgers:
+                checked=self.current_residual(with_ledgers=True)
+                row['steady_ledger_acceptance']=self._steady_ledger_acceptance(checked,self.flow.result())
+                candidate=bool(candidate and row['steady_ledger_acceptance']['passed'])
+            self.history.append(row)
+            self.converged=candidate
             if callback:callback(row)
             if self.converged:break
         return self.result()
 
     def result(self):
         if not self.initialized:raise RuntimeError('initialize turbulence first')
-        current=self.current_residual();s=self.flow;r=s.result()
+        check_ledgers=bool(self.converged and getattr(self,'require_steady_ledgers',False))
+        current=self.current_residual(with_ledgers=check_ledgers);s=self.flow;r=s.result()
         self.converged=bool(self.converged and max(current[key] for key in
             ('momentum','divergence','gauge','k','omega','k_boundary','omega_boundary','velocity_boundary'))<self.tolerance)
+        ledger_acceptance=self._steady_ledger_acceptance(current,r) if check_ledgers else None
+        if ledger_acceptance is not None:self.converged=bool(self.converged and ledger_acceptance['passed'])
         physical=s.p-2/3*self.rho*self.k
         pressure_traction=-physical[self.mesh.owner,None]*self.mesh.area_vectors
         isotropic=-2/3*self.rho*self.k[self.mesh.owner,None]*self.mesh.area_vectors
@@ -222,6 +244,7 @@ class NativeHybridRans3D:
             pressure=physical.copy(),physical_pressure=physical.copy(),modified_pressure=s.p.copy(),
             k=self.k.copy(),omega=self.omega.copy(),k_faces=self.k_faces.copy(),omega_faces=self.omega_faces.copy(),
             nu_t=self.closure['nu_t'].copy(),initialization=dict(self.initialization),pressure_traction_integrated=pressure_traction,
+            steady_ledger_acceptance=ledger_acceptance,
             isotropic_turbulent_traction_integrated=isotropic,deviatoric_traction_integrated=viscous,
             numerical_traction_correction=correction,current_rans_residual=current,rans_history=list(self.history))
         return r

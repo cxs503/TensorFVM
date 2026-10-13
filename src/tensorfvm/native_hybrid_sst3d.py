@@ -4,6 +4,7 @@ A step does not establish nonlinear RANS convergence or a physical benchmark.
 Old cell AND shared-face states define the current gradients. No collocated
 transport, face interpolation, positivity floor, or hidden clipping is used.
 """
+import copy
 import numpy as np
 from .native_hybrid_scalar3d import NativeHybridScalar3D
 from .native_scalar_mmp3d import ScalarMMPConvergenceError
@@ -20,13 +21,17 @@ class HybridSSTAdmissibilityError(RuntimeError):
 
 
 class NativeHybridSSTTransport3D:
-    def __init__(self, mesh, *, k_dirichlet_mask=None, omega_dirichlet_mask=None, scalar_correction='none', mmp_solver='continuation_newton', scalar_work_balance_policy='absolute',scalar_warm_start=False):
+    def __init__(self, mesh, *, k_dirichlet_mask=None, omega_dirichlet_mask=None, scalar_correction='none', mmp_solver='continuation_newton', scalar_work_balance_policy='absolute',scalar_warm_start=False,scalar_precision='float64'):
         self.mesh = mesh
         if scalar_correction not in ('none','nonlinear_mmp'):raise ValueError('unknown scalar correction')
         self.scalar_correction=scalar_correction
         if scalar_warm_start and (scalar_correction!='nonlinear_mmp' or mmp_solver!='continuation_newton'):
             raise ValueError('scalar warm start requires nonlinear_mmp continuation_newton')
         self.scalar_warm_start=bool(scalar_warm_start)
+        if scalar_precision not in ('float64','longdouble'):raise ValueError('unknown SST scalar precision')
+        if scalar_precision=='longdouble' and (scalar_correction!='nonlinear_mmp' or mmp_solver!='continuation_newton'):
+            raise ValueError('extended SST precision requires nonlinear_mmp continuation_newton')
+        self.scalar_precision=scalar_precision
         self.mmp_solver=mmp_solver
         self.scalar_work_balance_policy=scalar_work_balance_policy
         self.geometry = NativeHybridScalar3D(mesh,dirichlet_mask=k_dirichlet_mask,work_balance_policy=scalar_work_balance_policy)
@@ -36,11 +41,22 @@ class NativeHybridSSTTransport3D:
             raise ValueError('omega Dirichlet mask must select boundary faces')
 
     def _state(self, value, size, name, strict):
-        value = self.geometry._array(value,size,name)
+        extended=self.scalar_precision=='longdouble'
+        if extended:value=np.asarray(value,np.longdouble)
+        value = self.geometry._array(value,size,name,preserve_precision=extended)
         invalid = np.any(value <= 0) if strict else np.any(value < 0)
         if invalid:
             raise ValueError(f'invalid {name}: no positivity clipping applied')
         return value
+
+    def closure(self,k,omega,k_faces,omega_faces,wall_distance,nu,velocity_gradient,*,rho=1.):
+        """Use the same declared arithmetic in transport, restart and audit."""
+        extended=self.scalar_precision=='longdouble'
+        if extended:
+            k_faces=np.asarray(k_faces,np.longdouble);omega_faces=np.asarray(omega_faces,np.longdouble)
+        return sst2003_closure(k,omega,wall_distance,nu,velocity_gradient,
+            self.geometry.gradient(k_faces,preserve_precision=extended),
+            self.geometry.gradient(omega_faces,preserve_precision=extended),rho=rho,precision=self.scalar_precision)
 
     def step(self, k, omega, k_faces, omega_faces, volume_flux, wall_distance, nu,
              velocity_gradient, dt, *, k_boundary, omega_boundary,
@@ -61,8 +77,7 @@ class NativeHybridSSTTransport3D:
                     self.geometry._array(face,F,'face '+name,preserve_precision=True)]
         k = self._state(k,N,'k',False); omega = self._state(omega,N,'omega',True)
         kf = self._state(k_faces,F,'face k',False); wf = self._state(omega_faces,F,'face omega',True)
-        closure = sst2003_closure(k,omega,wall_distance,nu,velocity_gradient,
-            self.geometry.gradient(kf),self.geometry.gradient(wf),rho=rho)
+        closure = self.closure(k,omega,kf,wf,wall_distance,nu,velocity_gradient,rho=rho)
         flux = self.geometry._array(volume_flux,F,'volume flux')
         incoming = (self.mesh.neighbor < 0) & (flux < 0)
         results = {}
@@ -84,7 +99,7 @@ class NativeHybridSSTTransport3D:
             constraints=omega_constraints if name=='omega' else None
             if constraints is not None:
                 self._state(constraints[1],len(constraints[0]),'constrained omega',True)
-            op = NativeHybridScalar3D(self.mesh,coefficient,dirichlet_mask=mask,correction=self.scalar_correction,mmp_solver=self.mmp_solver,work_balance_policy=self.scalar_work_balance_policy,cell_constraints=constraints)
+            op = NativeHybridScalar3D(self.mesh,coefficient,dirichlet_mask=mask,correction=self.scalar_correction,mmp_solver=self.mmp_solver,work_balance_policy=self.scalar_work_balance_policy,cell_constraints=constraints,data_precision=self.scalar_precision)
             initial=initial_states.get(name)
             if initial is not None:
                 # The initial guess uses CURRENT prescribed data, including
@@ -112,15 +127,14 @@ class NativeHybridSSTTransport3D:
 
     def steady_residual(self,k,omega,k_faces,omega_faces,volume_flux,wall_distance,nu,
                         velocity_gradient,*,k_boundary,omega_boundary,k_inflow=None,
-                        omega_inflow=None,k_neumann=0.,omega_neumann=0.,rho=1.,omega_constraints=None):
+                        omega_inflow=None,k_neumann=0.,omega_neumann=0.,rho=1.,omega_constraints=None,with_ledgers=False):
         """Original nonlinear SST residual at the supplied current state."""
         if np.ndim(rho)!=0 or not np.isfinite(rho) or rho<=0:
             raise ValueError('positive constant density required')
         N,F=self.geometry.N,self.geometry.F
         k=self._state(k,N,'k',False);omega=self._state(omega,N,'omega',True)
         kf=self._state(k_faces,F,'face k',False);wf=self._state(omega_faces,F,'face omega',True)
-        c=sst2003_closure(k,omega,wall_distance,nu,velocity_gradient,
-                        self.geometry.gradient(kf),self.geometry.gradient(wf),rho=rho)
+        c=self.closure(k,omega,kf,wf,wall_distance,nu,velocity_gradient,rho=rho)
         results={}
         for name,cell,face,mask,sigma,source,bd,inflow,gn in [
             ('k',k,kf,self.k_mask,c['sigma_k'],c['k_source'],k_boundary,k_inflow,k_neumann),
@@ -128,7 +142,14 @@ class NativeHybridSSTTransport3D:
             constraints=omega_constraints if name=='omega' else None
             if constraints is not None:
                 self._state(constraints[1],len(constraints[0]),'constrained omega',True)
-            op=NativeHybridScalar3D(self.mesh,np.asarray(nu)+sigma*c['nu_t'],dirichlet_mask=mask,correction=self.scalar_correction,mmp_solver=self.mmp_solver,work_balance_policy=self.scalar_work_balance_policy,cell_constraints=constraints)
+            op=NativeHybridScalar3D(self.mesh,np.asarray(nu)+sigma*c['nu_t'],dirichlet_mask=mask,correction=self.scalar_correction,mmp_solver=self.mmp_solver,work_balance_policy=self.scalar_work_balance_policy,cell_constraints=constraints,data_precision=self.scalar_precision)
             results[name]=op.steady_residual(cell,face,volume_flux,source=source,boundary_values=bd,
                                inflow_values=inflow,boundary_diffusive_flux=gn)
+            if with_ledgers:
+                linear=copy.copy(op);linear.mmp=None;state=np.r_[cell,face]
+                if op.mmp is not None:linear.diffusion,_=op.mmp.operator(state)
+                q=op._array(volume_flux,F,'volume flux')
+                ledger=linear._solution_result(state,q,source,np.zeros(N),np.zeros(N),0.,inflow,0.)
+                results[name]['steady_ledger']=ledger
+                results[name]['steady_ledger_passed']=op.ledger_acceptable(ledger)
         return dict(closure=c,**results)

@@ -40,13 +40,17 @@ def solve_mmp_newton(scalar,volume_flux,*,initial_state=None,**kwargs):
 
 def _solve_mmp_newton(scalar,volume_flux,*,initial_state=None,**kwargs):
     linear=copy.copy(scalar);linear.mmp=None
-    initial=linear.solve(volume_flux,**kwargs)  # validates data, independent initial guess
+    # Float64 is only the initial predictor and sparse factorization format.
+    # Original residuals, storage/source/sink and ledgers retain selected data
+    # precision, including when their scales require extended refinement.
+    predictor=copy.copy(linear);predictor.data_precision='float64'
+    initial=predictor.solve(volume_flux,**kwargs)
     state=np.r_[initial['cell_values'],initial['face_values']].astype(np.longdouble)
     N,F=scalar.N,scalar.F;v=scalar.mesh.cell_volumes;free=scalar.free
     q=scalar._array(volume_flux,F,'volume flux')
-    source=scalar._array(kwargs['source'],N,'source');sink=scalar._array(kwargs['sink'],N,'sink')
+    source=scalar._transport_array(kwargs['source'],N,'source');sink=scalar._transport_array(kwargs['sink'],N,'sink')
     invdt=0. if kwargs['dt'] is None else 1./kwargs['dt']
-    old=np.zeros(N) if not invdt else scalar._array(kwargs['old_values'],N,'old scalar')
+    old=np.zeros(N) if not invdt else scalar._transport_array(kwargs['old_values'],N,'old scalar')
     incoming=scalar.boundary & (q<0);ids=np.flatnonzero(~incoming)
     upstream=np.where(q>=0,scalar.mesh.owner,scalar.mesh.neighbor)
     transport=sparse.coo_matrix((q[ids],(ids,upstream[ids])),shape=(F,N)).tocsr()
@@ -55,7 +59,7 @@ def _solve_mmp_newton(scalar,volume_flux,*,initial_state=None,**kwargs):
     cells=scalar.D@transport+sparse.diags(v*(sink+invdt))
     extra=sparse.block_diag((cells,sparse.csr_matrix((F,F))),format='csr')
     gn=np.broadcast_to(np.asarray(kwargs['boundary_diffusive_flux'],float),(F,))
-    forcing=scalar.diffusion._traction_load(gn[:,None])
+    forcing=scalar.diffusion._traction_load(gn[:,None]).astype(np.result_type(source,sink,old,float))
     forcing[:N]+=v*(source+old*invdt)-scalar.D@adv_source
     prescribed=scalar._prescribed(np.broadcast_to(np.asarray(kwargs['boundary_values'],float),(F,))[:,None])
     if initial_state is not None:
@@ -96,7 +100,7 @@ def _solve_mmp_newton(scalar,volume_flux,*,initial_state=None,**kwargs):
             # Mixed-precision residual refinement of the SAME zero-smoothing
             # equations. No value clipping or acceptance-threshold adjustment.
             _,tangent=scalar.mmp.nonlinear_system(state,jacobian=True)
-            jac=(tangent+extra)[free][:,free].tocsc();rhs=-np.asarray(precise[free],float)
+            jac=(tangent+extra)[free][:,free].astype(float).tocsc();rhs=-np.asarray(precise[free],float)
             step=splu(jac).solve(rhs)
             true_linear=float(np.linalg.norm(jac@step-rhs)/max(np.linalg.norm(rhs),1e-30))
             if not np.isfinite(step).all() or true_linear>1e-9:break
@@ -130,7 +134,7 @@ def _solve_mmp_newton(scalar,volume_flux,*,initial_state=None,**kwargs):
         stable=0
         for iteration in range(8):
             frozen=copy.copy(linear);frozen.diffusion,_=scalar.mmp.operator(state)
-            jac=(frozen.diffusion.full_matrix+extra)[free][:,free].tocsc();factor=splu(jac)
+            jac=(frozen.diffusion.full_matrix+extra)[free][:,free].astype(float).tocsc();factor=splu(jac)
             candidate=state.astype(np.longdouble);worst_linear=0.
             for inner in range(3):
                 r=frozen._solution_result(candidate,q,source,sink,old,invdt,kwargs['inflow_values'],linear_residual)
@@ -161,7 +165,7 @@ def _solve_mmp_newton(scalar,volume_flux,*,initial_state=None,**kwargs):
             matrix,tangent=scalar.mmp.nonlinear_system(state,smoothing=smoothing,state_scale=state_scale,jacobian=True)
             residual=scalar.mmp.nonlinear_reaction(state,smoothing=smoothing,state_scale=state_scale)+extra@state-forcing
             rhs=-np.asarray(residual[free],float)
-            jac=(tangent+extra)[free][:,free].tocsc();step=splu(jac).solve(rhs) if len(free) else np.empty(0)
+            jac=(tangent+extra)[free][:,free].astype(float).tocsc();step=splu(jac).solve(rhs) if len(free) else np.empty(0)
             linear_residual=float(np.linalg.norm(jac@step-rhs)/max(np.linalg.norm(rhs),1e-30))
             if not np.isfinite(step).all():raise RuntimeError('nonfinite Newton increment rejected')
             merit=float(np.linalg.norm(rhs)/fixed_scale)

@@ -29,6 +29,7 @@ def main():
     p.add_argument('--steps',type=int,default=1)
     p.add_argument('--dt',type=float,default=.01)
     p.add_argument('--tolerance',type=float,default=1e-8,help='current coupled residual and change tolerance; steady force/work/transport ledgers still require separate audit')
+    p.add_argument('--require-steady-ledgers',action='store_true',help='continue past residual convergence until current force/work/scalar ledgers also pass')
     p.add_argument('--momentum-method',choices=['newton','simple','simplec','coupled'],default='newton')
     p.add_argument('--momentum-coupling',choices=['converged','sweeps'],default='converged')
     p.add_argument('--momentum-sweeps',type=int,default=1)
@@ -38,11 +39,13 @@ def main():
     p.add_argument('--face-initialization',choices=['diffusion_equilibrium','cell_average'],default='cell_average')
     p.add_argument('--scalar-correction',choices=['none','nonlinear_mmp'],default='nonlinear_mmp')
     p.add_argument('--scalar-warm-start',action='store_true',help='try saved scalar cells/faces on original equations, with checked cold-continuation fallback')
+    p.add_argument('--scalar-precision',choices=['float64','longdouble'],default='float64',help='SST states, gradients, sources and scalar residual arithmetic; sparse LU remains float64')
     p.add_argument('--scalar-work-balance-policy',choices=['absolute','relative'],default='absolute')
     a=p.parse_args()
     if a.steps<1 or not np.isfinite(a.dt) or a.dt<=0:p.error('positive step count and dt required')
     if not np.isfinite(a.tolerance) or a.tolerance<=0:p.error('positive finite coupled tolerance required')
     if a.scalar_warm_start and a.scalar_correction!='nonlinear_mmp':p.error('scalar warm start requires nonlinear_mmp')
+    if a.scalar_precision=='longdouble' and a.scalar_correction!='nonlinear_mmp':p.error('extended scalar precision requires nonlinear_mmp')
     if a.momentum_coupling=='sweeps' and a.momentum_method not in ('simple','simplec'):
         p.error('sweeps require SIMPLE or SIMPLEC')
     if a.momentum_coupling!='sweeps' and a.momentum_inner_iterations!=1:
@@ -90,6 +93,8 @@ def main():
         face_initialization='restored_accepted_fields' if a.restart_run is not None else a.face_initialization,
         requested_face_initialization=a.face_initialization,scalar_correction=a.scalar_correction,scalar_work_balance_policy=a.scalar_work_balance_policy,
         scalar_warm_start=a.scalar_warm_start,
+        scalar_precision=a.scalar_precision,scalar_precision_bits=int(np.finfo(np.longdouble if a.scalar_precision=='longdouble' else float).nmant+1),
+        require_steady_ledgers=a.require_steady_ledgers,
         momentum_method=a.momentum_method,momentum_coupling=a.momentum_coupling,
         momentum_sweeps=a.momentum_sweeps,momentum_relaxation=a.momentum_relaxation,
         momentum_inner_iterations=a.momentum_inner_iterations,momentum_relaxation_basis=a.momentum_relaxation_basis,
@@ -110,7 +115,7 @@ def main():
     y=true_triangle_wall_distance(m);kb=np.full(len(b),k0);wb=np.full(len(b),w0)
     kb[wall]=0.;wb[wall]=wall_omega(nu,y[m.owner[wall]])
     s=NativeHybridRans3D(flow,y,nu,k_dirichlet_mask=fixed,omega_dirichlet_mask=fixed,
-        k_boundary=kb,omega_boundary=wb,k_inflow=k0,omega_inflow=w0,scalar_correction=a.scalar_correction,scalar_work_balance_policy=a.scalar_work_balance_policy,scalar_warm_start=a.scalar_warm_start)
+        k_boundary=kb,omega_boundary=wb,k_inflow=k0,omega_inflow=w0,scalar_correction=a.scalar_correction,scalar_work_balance_policy=a.scalar_work_balance_policy,scalar_warm_start=a.scalar_warm_start,scalar_precision=a.scalar_precision)
     failure=None;completed=False;result=None
     try:
         if a.restart_run is None:s.initialize(k0,w0,face_initialization=a.face_initialization)
@@ -124,7 +129,7 @@ def main():
         np.savez_compressed(out/'initial-turbulence.npz',k=s.k,omega=s.omega,k_faces=s.k_faces,omega_faces=s.omega_faces)
         print(dict(stage='SST_STARTUP',cells=flow.N,faces=flow.F,face_initialization=s.initialization['face_initialization']),flush=True)
         def progress(row):write_json(out/'progress.json',row);print(row,flush=True)
-        result=s.solve(max_iterations=a.steps,dt=a.dt,relaxation=.7,tolerance=a.tolerance,
+        result=s.solve(max_iterations=a.steps,dt=a.dt,relaxation=.7,tolerance=a.tolerance,require_steady_ledgers=a.require_steady_ledgers,
             momentum_method=a.momentum_method,momentum_coupling=a.momentum_coupling,
             momentum_sweeps=a.momentum_sweeps,momentum_inner_iterations=a.momentum_inner_iterations,
             momentum_relaxation=a.momentum_relaxation,callback=progress)
@@ -169,6 +174,7 @@ def main():
     summary=dict(initialized=s.initialized,startup_steps_completed=completed,completed_steps=len(s.history),failure=failure,
         completed_steps_before_restart=previous_steps,total_completed_steps=previous_steps+len(s.history),
         numerically_converged=False,solver_converged=bool(completed and s.converged),
+        steady_ledger_acceptance=result.get('steady_ledger_acceptance') if result is not None else None,
         qualification='startup diagnostic only; complete independent RANS force/work/transport audit not performed',physical_suboff_benchmark_passed=False,
         cells=flow.N,faces=flow.F,Re_L=old['Re_L'],wall_function_verified=False,
         source_integrity_verified=True,fields_sha256=digest(out/'fields.npz'),runtime_seconds=time.perf_counter()-start)

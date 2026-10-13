@@ -15,7 +15,7 @@ from .native_hybrid_viscous3d import NativeHybridViscous3D
 
 
 class NativeHybridScalar3D:
-    def __init__(self, mesh, diffusivity=1., *, dirichlet_mask=None, stabilization=1., correction='none', mmp_solver='continuation_newton', work_balance_policy='absolute', cell_constraints=None):
+    def __init__(self, mesh, diffusivity=1., *, dirichlet_mask=None, stabilization=1., correction='none', mmp_solver='continuation_newton', work_balance_policy='absolute', cell_constraints=None,data_precision='float64'):
         self.mesh = mesh
         self.diffusion = NativeHybridViscous3D(mesh, diffusivity, components=1,
             dirichlet_mask=dirichlet_mask, stabilization=stabilization)
@@ -23,6 +23,10 @@ class NativeHybridScalar3D:
         if mmp_solver not in ('picard','continuation_newton'):raise ValueError('unknown scalar nonlinear solver')
         if work_balance_policy not in ('absolute','relative'):raise ValueError('unknown scalar work balance policy')
         self.work_balance_policy=work_balance_policy
+        if data_precision not in ('float64','longdouble'):raise ValueError('unknown scalar data precision')
+        if data_precision=='longdouble' and (correction!='nonlinear_mmp' or mmp_solver!='continuation_newton'):
+            raise ValueError('extended scalar data requires nonlinear_mmp continuation_newton')
+        self.data_precision=data_precision
         self.mmp_solver=mmp_solver
         self.N, self.F = self.diffusion.N, self.diffusion.F
         self.constraint_cells=np.empty(0,dtype=int);self.constraint_values=np.empty(0)
@@ -51,8 +55,13 @@ class NativeHybridScalar3D:
             raise ValueError(f'finite {name} required')
         return answer
 
-    def gradient(self, face_values):
-        values = self._array(face_values, self.F, 'face scalar')
+    def _transport_array(self,value,size,name):
+        """Authoritative source/sink/old data; sparse LU remains float64."""
+        if self.data_precision=='longdouble':value=np.asarray(value,np.longdouble)
+        return self._array(value,size,name,preserve_precision=self.data_precision=='longdouble')
+
+    def gradient(self, face_values, *, preserve_precision=False):
+        values = self._array(face_values, self.F, 'face scalar',preserve_precision=preserve_precision)
         return np.column_stack([self.D @ (values*self.mesh.area_vectors[:, j])
                                 for j in range(3)])/self.mesh.cell_volumes[:, None]
 
@@ -256,7 +265,7 @@ class NativeHybridScalar3D:
         cells=self._array(cell_values,self.N,'cell scalar',preserve_precision=True)
         faces=self._array(face_values,self.F,'face scalar',preserve_precision=True)
         q=self._array(volume_flux,self.F,'volume flux')
-        src=self._array(source,self.N,'source');snk=self._array(sink,self.N,'sink')
+        src=self._transport_array(source,self.N,'source');snk=self._transport_array(sink,self.N,'sink')
         bd=np.broadcast_to(np.asarray(boundary_values,float),(self.F,))
         gn=np.broadcast_to(np.asarray(boundary_diffusive_flux,float),(self.F,))
         incoming=self.boundary & (q<0)
