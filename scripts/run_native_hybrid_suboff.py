@@ -8,6 +8,7 @@ import shutil
 import time
 import numpy as np
 from tensorfvm.native_mesh3d import NativeMesh3D
+from tensorfvm.native_block_solver3d import NativeBlockSolveError
 from tensorfvm.native_hybrid_ns3d import NativeHybridNavierStokes3D
 from tensorfvm.native_boundary_constraints3d import require_rigid_motion_constraints
 from tensorfvm.verification.native_run import NativeRunEvidence,write_json
@@ -94,6 +95,13 @@ def main():
             max_iterations=a.momentum_iterations,relaxation=a.momentum_relaxation,tolerance=a.tolerance,callback=progress)
     except (RuntimeError,ValueError) as exc:
         failure=f'{type(exc).__name__}: {exc}';s.nonlinear_converged=False;r=s.result()
+        if isinstance(exc,NativeBlockSolveError):
+            np.savez_compressed(out/'rejected-linear-candidate.npz',candidate=exc.candidate,
+                equation_defect=exc.defect,free_velocity_dofs=s.viscous.free,
+                cell_volumes=m.cell_volumes,gauge=np.asarray(s.gauge))
+            write_json(out/'rejected-linear-candidate.json',dict(**exc.record,
+                fields_sha256=hashlib.sha256((out/'rejected-linear-candidate.npz').read_bytes()).hexdigest(),
+                changes_accepted_state=False))
         print(dict(failure=failure),flush=True)
     area=np.linalg.norm(m.area_vectors,axis=1);normal=m.area_vectors/area[:,None]
     t=r['total_traction_integrated'];wall_force=-t[wall].sum(0)
