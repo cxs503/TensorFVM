@@ -1,0 +1,13 @@
+{
+  "run": "/tmp/fvm-native-normal-constraints/results/native-suboff-sst-strict-from31",
+  "scope": "Rebuild current steady RANS operators and audit saved SUBOFF field ledgers.\n\nThis independently sums flux/work from reconstructed production operators; it\nis not an independent discretization, experiment, or physical qualification.\n",
+  "bindings": {
+    "settings.json": "9ab124794e65343a9c1dcf1c18d17da0264ecf5fb1243b8ffc4f8bb36cb3bc26",
+    "summary.json": "431519cce3e551429f8a2cf7ecafafa9b563160971dcd4f49ba109dc7370583e",
+    "fields.npz": "976f7a996523481000e5ac9b5dd3ffa37b4bcd0aee322df0db89e69f66a78c2b",
+    "initial-input.msh": "15d81c1f97495b6b9f1060e05126a5f8ed1b8ca4814e1533087d92944add4408",
+    "sources.json": "a685fb934ed4ad19f31aafd9a4fbd7940ea86ebba0e08f47014c58b47a30b2d5"
+  },
+  "precision_sensitivity": false,
+  "physical_suboff_benchmark_passed": false
+}
