@@ -19,11 +19,12 @@ class ScalarMMPConvergenceError(RuntimeError):
 
 
 class NativeScalarMMP3D:
-    def __init__(self, diffusion, margin=1.01, regularization=.01):
+    def __init__(self, diffusion, margin=1.01, regularization=.01,*,free_dofs=None):
         if diffusion.components!=1:raise ValueError('scalar diffusion required')
         if not np.isfinite(margin) or margin<=1:raise ValueError('margin must exceed one')
         if not np.isfinite(regularization) or regularization<=0:raise ValueError('positive graph regularization required')
         self.base=diffusion;self.margin=margin
+        self.free=diffusion.free if free_dofs is None else np.asarray(free_dofs,int)
         self.regularization=regularization
         self.size=diffusion.N+diffusion.F
         self.edges=[];pairs=[]
@@ -57,7 +58,7 @@ class NativeScalarMMP3D:
         length=float(np.max(np.ptp(diffusion.mesh.vertices,axis=0)))
         degree=np.bincount(self.pairs.ravel(),minlength=self.size)
         self.strict=regularization*(node_h/length)**2*diffusion.full_matrix.diagonal()/degree
-        self.strict[np.setdiff1d(np.arange(self.size),diffusion.free)]=0.
+        self.strict[np.setdiff1d(np.arange(self.size),self.free)]=0.
 
     def operator(self,state):
         u=np.asarray(state)
@@ -117,7 +118,7 @@ class NativeScalarMMP3D:
         ar=np.hypot(reaction,diagonal*smoothing*state_scale)
         den=np.zeros(self.size,dtype=u.dtype)
         np.add.at(den,i,ad);np.add.at(den,j,ad)
-        active=self.base.free[den[self.base.free]>0]
+        active=self.free[den[self.free]>0]
         beta=np.zeros(self.size,dtype=u.dtype);beta[active]=self.margin*ar[active]/den[active];beta+=self.strict
         gap=beta[i]-beta[j];ag=np.hypot(gap,smoothing*np.maximum(diagonal[i],diagonal[j]))
         weight=.5*(beta[i]+beta[j]+ag)

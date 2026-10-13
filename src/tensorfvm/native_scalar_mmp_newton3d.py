@@ -10,7 +10,7 @@ def solve_mmp_newton(scalar,volume_flux,**kwargs):
     linear=copy.copy(scalar);linear.mmp=None
     initial=linear.solve(volume_flux,**kwargs)  # validates data, independent initial guess
     state=np.r_[initial['cell_values'],initial['face_values']].astype(np.longdouble)
-    N,F=scalar.N,scalar.F;v=scalar.mesh.cell_volumes;free=scalar.diffusion.free
+    N,F=scalar.N,scalar.F;v=scalar.mesh.cell_volumes;free=scalar.free
     q=scalar._array(volume_flux,F,'volume flux')
     source=scalar._array(kwargs['source'],N,'source');sink=scalar._array(kwargs['sink'],N,'sink')
     invdt=0. if kwargs['dt'] is None else 1./kwargs['dt']
@@ -25,7 +25,7 @@ def solve_mmp_newton(scalar,volume_flux,**kwargs):
     gn=np.broadcast_to(np.asarray(kwargs['boundary_diffusive_flux'],float),(F,))
     forcing=scalar.diffusion._traction_load(gn[:,None])
     forcing[:N]+=v*(source+old*invdt)-scalar.D@adv_source
-    prescribed=scalar.diffusion._prescribed(np.broadcast_to(np.asarray(kwargs['boundary_values'],float),(F,))[:,None])
+    prescribed=scalar._prescribed(np.broadcast_to(np.asarray(kwargs['boundary_values'],float),(F,))[:,None])
     fixed_scale=max(np.linalg.norm((forcing-(scalar.diffusion.full_matrix+extra)@prescribed)[free]),1e-30)
     state_scale=max(float(np.max(np.abs(state))),float(np.max(np.abs(old))),1e-30)
     history=[];linear_residual=initial['linear_relative_residual']
@@ -41,7 +41,8 @@ def solve_mmp_newton(scalar,volume_flux,**kwargs):
         for refinement in range(9):
             r,info,precise=evaluate(state)
             audit=linear.steady_residual(state[:N],state[N:],q,**residual_kwargs)
-            residual=audit['free_residual'].copy();residual[:N]+=v*invdt*(state[:N]-old)
+            residual=audit['free_residual'].copy();cells=scalar.free_cells
+            residual[:len(cells)]+=v[cells]*invdt*(state[cells]-old[cells])
             scale=audit['residual_scale']+np.linalg.norm(v*invdt*old)
             error=float(np.linalg.norm(residual)/max(scale,1e-30))
             r.update(info,nonlinear_history=history,current_nonlinear_residual=error,
@@ -119,7 +120,7 @@ def solve_mmp_newton(scalar,volume_flux,**kwargs):
             matrix,tangent=scalar.mmp.nonlinear_system(state,smoothing=smoothing,state_scale=state_scale,jacobian=True)
             residual=scalar.mmp.nonlinear_reaction(state,smoothing=smoothing,state_scale=state_scale)+extra@state-forcing
             rhs=-np.asarray(residual[free],float)
-            jac=(tangent+extra)[free][:,free].tocsc();step=splu(jac).solve(rhs)
+            jac=(tangent+extra)[free][:,free].tocsc();step=splu(jac).solve(rhs) if len(free) else np.empty(0)
             linear_residual=float(np.linalg.norm(jac@step-rhs)/max(np.linalg.norm(rhs),1e-30))
             if not np.isfinite(step).all():raise RuntimeError('nonfinite Newton increment rejected')
             merit=float(np.linalg.norm(rhs)/fixed_scale)

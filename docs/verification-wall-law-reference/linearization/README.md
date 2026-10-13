@@ -39,3 +39,5 @@ J_traction = -beta*I - (beta_radial-beta)*e*e^T
 4. 先用无体力剪切流与有参考数据的湍流通道检查壁面应力和 y+，然后在实际 SUBOFF 上做匹配网格/工况的 Cp/Cd 对照。仍须完成当前无壁面函数的原生 SST 收敛验证。
 
 本页不改变在运行的 SUBOFF 方程、常数或验收门槛。
+
+进展：[混合标量单元约束与反力账本](../../verification-native-scalar-cell-constraints/README.md)已实现并验证；完整壁面模型仍待接入。
