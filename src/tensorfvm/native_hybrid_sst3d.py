@@ -6,6 +6,7 @@ transport, face interpolation, positivity floor, or hidden clipping is used.
 """
 import numpy as np
 from .native_hybrid_scalar3d import NativeHybridScalar3D
+from .native_scalar_mmp3d import ScalarMMPConvergenceError
 from .native_sst3d import sst2003_closure, BETA_STAR, VARIANT
 
 
@@ -19,8 +20,10 @@ class HybridSSTAdmissibilityError(RuntimeError):
 
 
 class NativeHybridSSTTransport3D:
-    def __init__(self, mesh, *, k_dirichlet_mask=None, omega_dirichlet_mask=None):
+    def __init__(self, mesh, *, k_dirichlet_mask=None, omega_dirichlet_mask=None, scalar_correction='none'):
         self.mesh = mesh
+        if scalar_correction not in ('none','nonlinear_mmp'):raise ValueError('unknown scalar correction')
+        self.scalar_correction=scalar_correction
         self.geometry = NativeHybridScalar3D(mesh,dirichlet_mask=k_dirichlet_mask)
         self.k_mask = self.geometry.diffusion.dirichlet.copy()
         self.omega_mask = (mesh.neighbor < 0) if omega_dirichlet_mask is None else np.asarray(omega_dirichlet_mask,bool).copy()
@@ -68,9 +71,14 @@ class NativeHybridSSTTransport3D:
                 raise ValueError('negative SST source cannot be linearized at zero')
             extra_sink = np.divide(-negative,old,out=np.zeros_like(old),where=old>0)
             coefficient = np.broadcast_to(np.asarray(nu,float),(N,))+sigma*closure['nu_t']
-            op = NativeHybridScalar3D(self.mesh,coefficient,dirichlet_mask=mask)
-            result = op.solve(flux,source=np.maximum(production,0),sink=destruction+extra_sink,
-                boundary_values=bd,inflow_values=inflow,boundary_diffusive_flux=gn,old_values=old,dt=dt)
+            op = NativeHybridScalar3D(self.mesh,coefficient,dirichlet_mask=mask,correction=self.scalar_correction)
+            try:
+                result = op.solve(flux,source=np.maximum(production,0),sink=destruction+extra_sink,
+                    boundary_values=bd,inflow_values=inflow,boundary_diffusive_flux=gn,old_values=old,dt=dt)
+            except ScalarMMPConvergenceError as error:
+                error.scalar_name=name
+                error.scalar_result['diffusivity']=coefficient
+                raise
             if (np.any(result['cell_values']<0) or np.any(result['face_values']<0)
                 or (name=='omega' and (np.any(result['cell_values']<=0) or np.any(result['face_values']<=0)))):
                 raise HybridSSTAdmissibilityError(name,result)
@@ -97,7 +105,7 @@ class NativeHybridSSTTransport3D:
         for name,cell,face,mask,sigma,source,bd,inflow,gn in [
             ('k',k,kf,self.k_mask,c['sigma_k'],c['k_source'],k_boundary,k_inflow,k_neumann),
             ('omega',omega,wf,self.omega_mask,c['sigma_omega'],c['omega_source'],omega_boundary,omega_inflow,omega_neumann)]:
-            op=NativeHybridScalar3D(self.mesh,np.asarray(nu)+sigma*c['nu_t'],dirichlet_mask=mask)
+            op=NativeHybridScalar3D(self.mesh,np.asarray(nu)+sigma*c['nu_t'],dirichlet_mask=mask,correction=self.scalar_correction)
             results[name]=op.steady_residual(cell,face,volume_flux,source=source,boundary_values=bd,
                                inflow_values=inflow,boundary_diffusive_flux=gn)
         return dict(closure=c,**results)

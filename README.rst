@@ -480,7 +480,10 @@ DNS 来源、原场检查点、全部生产源码及真实差距；GPU 尚未验
 新增 `混合标量与 SST 输运验证 <docs/verification-native-hybrid-scalar/README.md>`_；
 SST 一步输运已接入新后端。新增 `动量—SST 耦合控制 <docs/verification-native-hybrid-rans/README.md>`_，
 8 个控制计算和 78 项回归通过，包含 SIMPLEC/Newton 对照、物理压力恢复和低 Re 四边形壁面控制。
-三角面强壁面源项的负面 k 反例保留；一般多面体正值性、湍流物理精度、壁面函数和 SUBOFF 仍未验收。
+新增 `非线性标量正值修正 <docs/verification-native-scalar-mmp/README.md>`_，修复了已测零源项负值与部分三角面壁面反例；
+三档标量误差为 2.629%／1.163%／0.594%，84 项回归通过。修正引入额外扩散，
+较细壁面耦合及实际 SUBOFF 薄层网格内迭代仍停滞，候选原场与失败记录保留。
+一般多面体正值性、湍流物理精度、壁面函数和 SUBOFF 仍未验收。
 
 上一阶段见 `共享面惯性与压力相容性验证 <docs/verification-native-compatible-inertia/README.md>`_。
 统一惯性与体力的对偶加载，补齐惯性牵引和能量账本。无体力三维势流通过三档网格验证，

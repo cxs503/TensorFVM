@@ -1,0 +1,30 @@
+{
+  "raw_fields_verified": true,
+  "source_hashes_verified": true,
+  "cases": [
+    {
+      "n": 2,
+      "relative_l2": 0.02629378146461867,
+      "global_balance": -6.191669399413513e-11,
+      "local_max": 2.932787346310306e-11,
+      "interface_max": 1.885658296174597e-11
+    },
+    {
+      "n": 4,
+      "relative_l2": 0.011630292750402811,
+      "global_balance": 3.384670321793237e-11,
+      "local_max": 3.430358774814124e-11,
+      "interface_max": 1.817995753938817e-11
+    },
+    {
+      "n": 8,
+      "relative_l2": 0.0059387851570015075,
+      "global_balance": 3.1535662969872646e-11,
+      "local_max": 3.146863498948438e-11,
+      "interface_max": 2.096828266573425e-11
+    }
+  ],
+  "coupled_rans_verified": false,
+  "physical_suboff_benchmark_passed": false,
+  "audit_source_sha256": "00d33a353d9292a77bb596251d6c2c4d0147b7499722d89795717c932e162d2f"
+}

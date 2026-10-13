@@ -1,0 +1,21 @@
+{
+  "levels": [
+    2,
+    4,
+    8
+  ],
+  "scalar_correction": "nonlinear_mmp",
+  "dt": 1.0,
+  "relaxation": 0.7,
+  "tolerance": 1e-08,
+  "density": 1.0,
+  "nu": 0.1,
+  "shear": 0.3,
+  "velocity_boundary": "U=(0.3*y,0,0) on all boundary faces",
+  "reservoir": "k=.01,omega=2 on all boundaries; this is not a no-slip turbulence wall condition",
+  "low_re": "reservoir data except y=0/1: k=0,omega=60*nu/(beta1*d1^2)",
+  "pressure": "solve p*=p+2*rho*k/3, output physical p; gauge p*[0]=0",
+  "low_re_mesh": "triangulated hexahedra",
+  "physical_benchmark_passed": false,
+  "wall_function_verified": false
+}
