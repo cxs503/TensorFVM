@@ -39,7 +39,7 @@ def solve_newton(solver, *, max_iterations=50, tolerance=1e-8, max_backtracks=20
                 merit_after=merit,velocity_change=0.,pressure_change=0.,
                 full_velocity_change=0.,full_pressure_change=0.,**metrics))
             break
-        jac=s.viscous.full_matrix+s.convection.hybrid_jacobian(s.state,s.face_mean.matrix)
+        jac=s.momentum_jacobian()
         matrix=sparse.bmat([[space.matrix(jac),-s.B.T],[s.B,None]],format='lil')
         rhs=-np.r_[momentum,mass]
         if s.gauge:
