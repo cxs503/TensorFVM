@@ -1,0 +1,18 @@
+{
+  "scalar_numerically_converged": true,
+  "failure": null,
+  "source_integrity_verified": true,
+  "candidate_sha256": "9c383c7985edddfd67d916346c2feaee0ebfddd2901ed9f2cb8560b7614b9dbb",
+  "inputs_sha256": "62d6f1512af0a66adf840102763af99fbf3a70f6fa11f5898950ab3bbd7c7e6e",
+  "runtime_seconds": 37.26615065895021,
+  "cell_balance_max": 1.0759991257483926e-19,
+  "interface_flux_defect_max": 5.5501322673087495e-24,
+  "global_balance": -2.936656610685759e-19,
+  "work_balance": -1.2124549186769609e-23,
+  "work_balance_scale": 1.1145476601054449e-07,
+  "relative_work_balance": 1.0878448379338513e-16,
+  "absolute_work_gate_passed": true,
+  "work_balance_policy": "relative",
+  "physical_suboff_benchmark_passed": false,
+  "full_rans_step_completed": false
+}
