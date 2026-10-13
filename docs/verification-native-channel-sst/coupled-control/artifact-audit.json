@@ -1,0 +1,33 @@
+{
+  "source_and_field_integrity_verified": true,
+  "source_snapshot_complete": true,
+  "missing_source_modules": [],
+  "cases": [
+    {
+      "case": "laminar-n16-newton",
+      "divergence": 8.121961455555286e-14,
+      "global_momentum": 1.2184728866073552e-13,
+      "cell_momentum_integrated": 9.277084309089467e-15,
+      "cell_momentum_per_volume": 2.501857588779909e-11,
+      "current_scalar": {},
+      "velocity_relative_l2": 0.006018522751400518,
+      "Cf": 0.1769280054590705
+    },
+    {
+      "case": "sst-n16-coupled",
+      "divergence": 7.114331717439401e-13,
+      "global_momentum": 1.824971308783934e-11,
+      "cell_momentum_integrated": 3.1281143040434722e-12,
+      "cell_momentum_per_volume": 1.7757935210722837e-08,
+      "current_scalar": {
+        "k": 9.498960058843678e-09,
+        "omega": 3.7534841953294716e-13
+      },
+      "velocity_relative_l2": 0.03846755521143337,
+      "Cf": 0.007566645549648039
+    }
+  ],
+  "physical_suboff_benchmark_passed": false,
+  "grid_convergence_certified": false,
+  "audit_source_sha256": "f17c88c5a6c1cce9b3e0ddafbd6d5c159358dd702cb292e2fead5212b5f20e7b"
+}
