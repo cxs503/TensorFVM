@@ -1,0 +1,52 @@
+{
+  "iteration": 20,
+  "momentum": 7.689372824318663e-08,
+  "divergence": 1.7864089536022098e-14,
+  "velocity_boundary": 0.0,
+  "gauge": 0.0,
+  "k": 2.4338090113375236e-07,
+  "omega": 2.2729603170691306e-13,
+  "k_boundary": 0.0,
+  "omega_boundary": 0.0,
+  "momentum_method": "simplec",
+  "momentum_coupling": "sweeps",
+  "momentum_subsolve_converged": false,
+  "momentum_iterations": 5,
+  "momentum_linear_residual_max": 2.0981356482103513e-15,
+  "changes": {
+    "k": 5.500838529311224e-07,
+    "omega": 5.1076937666337674e-12,
+    "k_faces": 5.001588405303089e-07,
+    "omega_faces": 6.639896983469801e-13,
+    "velocity": 8.051150484055702e-09,
+    "modified_pressure": 6.829911970300647e-08
+  },
+  "minimum_k": 0.0,
+  "minimum_omega": 0.22360679774997896,
+  "frozen_linear_residuals": {
+    "k": 9.329076630207638e-16,
+    "omega": 1.2673707047606249e-15
+  },
+  "scalar_subsolve_ledgers": {
+    "k": {
+      "cell_balance_max": 1.905143837337364e-21,
+      "interface_flux_defect_max": 1.3719737305270674e-21,
+      "global_balance": -1.3431784636030206e-20,
+      "work_balance": -3.482698249489913e-25,
+      "work_balance_scale": 3.699425350319901e-08,
+      "relative_work_balance": 9.414160091617345e-18,
+      "absolute_work_gate_passed": true,
+      "work_balance_policy": "relative"
+    },
+    "omega": {
+      "cell_balance_max": 2.747060174820848e-11,
+      "interface_flux_defect_max": 5.451248610496839e-12,
+      "global_balance": -1.8801272279496406e-10,
+      "work_balance": 6.599433913628682e-05,
+      "work_balance_scale": 1.1189889803387293e+18,
+      "relative_work_balance": 5.897675517439829e-23,
+      "absolute_work_gate_passed": false,
+      "work_balance_policy": "relative"
+    }
+  }
+}

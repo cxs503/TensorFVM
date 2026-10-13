@@ -37,3 +37,7 @@ OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 PYTHONPATH=src python scripts/verify_na
 ## 动量迭代对照与批次修正
 
 [固定同一 SST 涡黏性的 SUBOFF 动量对照](frozen-momentum-comparison/README.md)：SIMPLEC 与原生 Newton 收敛至一致的离散解；不代表完整 RANS 已收敛。[RANS 内层修正批次接口与测试](simplec-batching/README.md)已完成，完整 SST 验证仍在运行。
+
+## 累计 25 步的当前稳态审计
+
+[完整记录、网格与场图](resumed-25-step-audit/README.md)：续算完成，但动量和两条标量的完整验收仍未通过；ω 小归一化残差仍对应约 3.7e-4 的全局收支缺陷。精度敏感性对照表明当前缺陷主要部分不能归因于保存场向 float64 的转换。已从该状态采用批次 SIMPLEC 继续计算。
