@@ -9,6 +9,15 @@ from .native_hybrid_scalar3d import NativeHybridScalar3D
 from .native_sst3d import sst2003_closure, BETA_STAR, VARIANT
 
 
+class HybridSSTAdmissibilityError(RuntimeError):
+    """Rejected candidate and its untouched conservative scalar solve ledger."""
+    def __init__(self,name,result):
+        self.scalar_name=name
+        self.scalar_result=result
+        super().__init__(f'invalid hybrid SST {name} update; cell_min={result["cell_min"]:g}, '
+                         f'face_min={result["face_min"]:g}; no clipping applied')
+
+
 class NativeHybridSSTTransport3D:
     def __init__(self, mesh, *, k_dirichlet_mask=None, omega_dirichlet_mask=None):
         self.mesh = mesh
@@ -64,7 +73,7 @@ class NativeHybridSSTTransport3D:
                 boundary_values=bd,inflow_values=inflow,boundary_diffusive_flux=gn,old_values=old,dt=dt)
             if (np.any(result['cell_values']<0) or np.any(result['face_values']<0)
                 or (name=='omega' and (np.any(result['cell_values']<=0) or np.any(result['face_values']<=0)))):
-                raise RuntimeError(f'invalid hybrid SST {name} update; no clipping applied')
+                raise HybridSSTAdmissibilityError(name,result)
             result['negative_production_sink'] = extra_sink
             result['diffusivity'] = coefficient
             results[name] = result
@@ -72,3 +81,23 @@ class NativeHybridSSTTransport3D:
             k_faces=results['k']['face_values'],omega_faces=results['omega']['face_values'],
             closure=closure,transport=results,variant=VARIANT,
             nonlinear_rans_converged=False,physical_benchmark_passed=False)
+
+    def steady_residual(self,k,omega,k_faces,omega_faces,volume_flux,wall_distance,nu,
+                        velocity_gradient,*,k_boundary,omega_boundary,k_inflow=None,
+                        omega_inflow=None,k_neumann=0.,omega_neumann=0.,rho=1.):
+        """Original nonlinear SST residual at the supplied current state."""
+        if np.ndim(rho)!=0 or not np.isfinite(rho) or rho<=0:
+            raise ValueError('positive constant density required')
+        N,F=self.geometry.N,self.geometry.F
+        k=self._state(k,N,'k',False);omega=self._state(omega,N,'omega',True)
+        kf=self._state(k_faces,F,'face k',False);wf=self._state(omega_faces,F,'face omega',True)
+        c=sst2003_closure(k,omega,wall_distance,nu,velocity_gradient,
+                        self.geometry.gradient(kf),self.geometry.gradient(wf),rho=rho)
+        results={}
+        for name,cell,face,mask,sigma,source,bd,inflow,gn in [
+            ('k',k,kf,self.k_mask,c['sigma_k'],c['k_source'],k_boundary,k_inflow,k_neumann),
+            ('omega',omega,wf,self.omega_mask,c['sigma_omega'],c['omega_source'],omega_boundary,omega_inflow,omega_neumann)]:
+            op=NativeHybridScalar3D(self.mesh,np.asarray(nu)+sigma*c['nu_t'],dirichlet_mask=mask)
+            results[name]=op.steady_residual(cell,face,volume_flux,source=source,boundary_values=bd,
+                               inflow_values=inflow,boundary_diffusive_flux=gn)
+        return dict(closure=c,**results)

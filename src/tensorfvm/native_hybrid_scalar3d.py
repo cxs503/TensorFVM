@@ -115,3 +115,49 @@ class NativeHybridScalar3D:
             diffusion_energy=diffusion['energy_form'], boundary_diffusive_work=diffusion['boundary_work'],
             work_balance=float(work_balance), linear_relative_residual=relative,
             cell_min=float(cells.min()), face_min=float(faces.min()))
+
+    def steady_residual(self, cell_values, face_values, volume_flux=0., *, source=0.,
+                        sink=0., boundary_values=0., boundary_diffusive_flux=0., inflow_values=None):
+        """Evaluate CURRENT equations, including unequilibrated face unknowns.
+
+        No time term, frozen solve or state repair is used. All cell equations
+        and free face equations enter the normalized original-system residual.
+        """
+        cells=self._array(cell_values,self.N,'cell scalar')
+        faces=self._array(face_values,self.F,'face scalar')
+        q=self._array(volume_flux,self.F,'volume flux')
+        src=self._array(source,self.N,'source');snk=self._array(sink,self.N,'sink')
+        bd=np.broadcast_to(np.asarray(boundary_values,float),(self.F,))
+        gn=np.broadcast_to(np.asarray(boundary_diffusive_flux,float),(self.F,))
+        incoming=self.boundary & (q<0)
+        if incoming.any() and inflow_values is None:
+            raise ValueError('explicit scalar inflow/backflow values required')
+        inflow=np.zeros(self.F) if inflow_values is None else np.broadcast_to(np.asarray(inflow_values,float),(self.F,))
+        if not np.isfinite(inflow[incoming]).all():raise ValueError('finite incoming scalar required')
+        upstream=np.where(q>=0,self.mesh.owner,self.mesh.neighbor)
+        adv=q*cells[upstream.clip(min=0)];adv[incoming]=q[incoming]*inflow[incoming]
+        state=np.r_[cells,faces];diff=self.diffusion.diagnostics(state)
+        reaction=self.diffusion.full_matrix @ state
+        load=self.diffusion._traction_load(gn[:,None])
+        production=self.mesh.cell_volumes*src;destruction=self.mesh.cell_volumes*snk*cells
+        adv_div=self.D @ adv
+        residual=reaction-load
+        residual[:self.N]+=adv_div+destruction-production
+        free=self.diffusion.free
+        prescribed=self.diffusion._prescribed(bd[:,None])
+        prescribed_load=self.diffusion.full_matrix @ prescribed
+        scale=max(np.linalg.norm(prescribed_load[free])+np.linalg.norm(load[free])+
+                  np.linalg.norm(production)+np.linalg.norm(destruction)+np.linalg.norm(adv_div),1e-30)
+        mask=self.diffusion.dirichlet
+        bc_error=float(np.max(np.abs(faces[mask]-bd[mask]),initial=0.))
+        total=adv-diff['face_flux'][:,0]
+        # Shared owner flux ledger is separate: it alone misses free-face residuals.
+        local=self.D @ total+destruction-production
+        return dict(relative_residual=float(np.linalg.norm(residual[free])/scale),
+            residual_scale=float(scale),free_residual=residual[free],
+            cell_equation=residual[:self.N],face_equation=residual[self.N:],
+            dirichlet_error=bc_error,cell_equation_max=float(np.max(np.abs(residual[:self.N]))),
+            free_face_equation_max=float(np.max(np.abs(residual[self.N:][~mask]),initial=0.)),
+            interface_flux_defect_max=diff['interface_flux_defect_max'],
+            total_flux=total,local_shared_flux_balance=local,
+            global_balance=float(total[self.boundary].sum()+destruction.sum()-production.sum()))

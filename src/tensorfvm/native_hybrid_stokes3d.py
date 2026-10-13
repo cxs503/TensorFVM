@@ -30,6 +30,7 @@ class NativeHybridStokes3D:
         self._block_preconditioner = None
         self.coupled_linear_history = []
         self.mesh = mesh
+        self.gradient_jump_stabilization = gradient_jump_stabilization
         self.viscous = NativeHybridViscous3D(
             mesh, viscosity, dirichlet_mask=velocity_dirichlet,
             gradient_jump_stabilization=gradient_jump_stabilization)
@@ -85,6 +86,25 @@ class NativeHybridStokes3D:
         self.p = np.full(self.N, self.gauge_value if self.gauge else 0.)
         self.history = []
         self.converged = False
+
+    def update_dynamic_viscosity(self, viscosity):
+        """Rebuild physical stress and invalidate all viscosity-dependent solves.
+
+        Accepted velocity/pressure and prescribed loads remain the initial
+        iterate. A previous convergence flag never survives a coefficient change.
+        Construction is validated before changing the accepted operator.
+        """
+        new = NativeHybridViscous3D(self.mesh,viscosity,
+            dirichlet_mask=self.viscous.dirichlet_components,
+            gradient_jump_stabilization=self.gradient_jump_stabilization)
+        self.viscous = new
+        self.A = new.matrix
+        self.rhs = (self.load-new.full_matrix @ self.prescribed)[new.free]
+        self._coupled_factor = None
+        self._block_preconditioner = None
+        self.converged = False
+        if hasattr(self,'nonlinear_converged'):
+            self.nonlinear_converged = False
 
     @staticmethod
     def _linear(matrix, rhs):

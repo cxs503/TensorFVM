@@ -478,7 +478,9 @@ DNS 来源、原场检查点、全部生产源码及真实差距；GPU 尚未验
 当前 Re=40 Kovasznay 的 9,216 单元固定参考压力误差为 2.666%，速度误差为 0.0673%；
 四档误差单调下降，数值收敛与守恒检查通过。
 新增 `混合标量与 SST 输运验证 <docs/verification-native-hybrid-scalar/README.md>`_；
-SST 一步输运已接入新后端，动量耦合、壁面函数以及低黏度细网格稳定性仍需后续验证。
+SST 一步输运已接入新后端。新增 `动量—SST 耦合控制 <docs/verification-native-hybrid-rans/README.md>`_，
+8 个控制计算和 78 项回归通过，包含 SIMPLEC/Newton 对照、物理压力恢复和低 Re 四边形壁面控制。
+三角面强壁面源项的负面 k 反例保留；一般多面体正值性、湍流物理精度、壁面函数和 SUBOFF 仍未验收。
 
 上一阶段见 `共享面惯性与压力相容性验证 <docs/verification-native-compatible-inertia/README.md>`_。
 统一惯性与体力的对偶加载，补齐惯性牵引和能量账本。无体力三维势流通过三档网格验证，
