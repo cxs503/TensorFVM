@@ -2,7 +2,9 @@
 
 Cell and shared-face unknowns are independent. Face equilibrium enforces a
 single conservative flux. Boundary faces may prescribe values or outward
-traction (scalar diffusive flux for components=1).
+traction (scalar diffusive flux for components=1). Optional symmetric Robin
+tensors impose outward traction + C u = g on free boundary components.
+Diagnostics keep physical viscous flux and Robin reaction separate.
 
 The scalar construction follows the hybrid FV gradient/residual framework
 of Droniou et al., https://arxiv.org/abs/0812.2097. The symmetric-deviatoric
@@ -12,12 +14,13 @@ import numpy as np
 from scipy import sparse
 from scipy.sparse.linalg import splu, cg
 from .native_gradient_jump3d import NativeGradientJump3D
+from .native_robin3d import validate_robin,robin_matrix
 
 
 class NativeHybridViscous3D:
     def __init__(self, mesh, dynamic_viscosity=1., *, components=3,
                  deviatoric=True, stabilization=1., dirichlet_mask=None,
-                 gradient_jump_stabilization=1.):
+                 gradient_jump_stabilization=1., robin_coefficient=None):
         if components not in (1, 3):
             raise ValueError('components must be 1 or 3')
         if not np.isfinite(stabilization) or stabilization <= 0:
@@ -38,6 +41,7 @@ class NativeHybridViscous3D:
         if mask.shape != (self.F,components) or np.any(mask & ~self.boundary[:,None]):
             raise ValueError('Dirichlet mask must select boundary faces or their components')
         self.dirichlet_components = mask.copy()
+        self.robin_coefficient = validate_robin(mesh,robin_coefficient,components,mask)
         self.dirichlet = mask.all(axis=1)
         self.traction_components = self.boundary[:,None] & ~mask
         self.traction_boundary = self.traction_components.any(axis=1)
@@ -96,6 +100,8 @@ class NativeHybridViscous3D:
         if components==3 and gradient_jump_stabilization>0:
             self.gradient_jump=NativeGradientJump3D(mesh,self.local,mu,gradient_jump_stabilization)
             self.full_matrix+=self.gradient_jump.matrix
+        self.robin_matrix = robin_matrix(mesh,self.robin_coefficient)
+        if self.robin_matrix.nnz:self.full_matrix += self.robin_matrix
         free_mask = np.vstack((np.ones((self.N,components),bool),~self.dirichlet_components))
         self.free = np.flatnonzero(free_mask.ravel())
         self.matrix = self.full_matrix[self.free][:, self.free].tocsc()
@@ -200,6 +206,8 @@ class NativeHybridViscous3D:
             neighbor_flux[faces[sign < 0]] = local_reaction[1:][sign < 0]
             energy += float(local_state @ local @ local_state)
         energy += jump_energy
+        robin_reaction=self.robin_matrix @ state
+        robin_power=float(state @ robin_reaction)
         cells = state[:self.cell_dofs].reshape(self.N, self.components)
         interface_defect = owner_flux[~self.boundary]+neighbor_flux[~self.boundary]
         boundary_work = float(np.sum(state.reshape(-1, self.components)[self.N:][self.boundary]*owner_flux[self.boundary]))
@@ -207,6 +215,7 @@ class NativeHybridViscous3D:
         return dict(cell_values=cells.copy(), face_values=state[self.cell_dofs:].reshape(self.F, self.components).copy(),
                     face_flux=owner_flux, neighbor_face_flux=neighbor_flux,
                     energy_form=energy, gradient_jump_energy=jump_energy, kinetic_energy_rate=rate,
+                    robin_power=robin_power,robin_reaction_integrated=robin_reaction[self.cell_dofs:].reshape(self.F,self.components),
                     boundary_work=boundary_work,
                     energy_balance_error=abs(rate+energy-boundary_work),
                     interface_flux_defect_max=float(np.max(np.abs(interface_defect), initial=0.)),

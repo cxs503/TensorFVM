@@ -43,7 +43,8 @@ class NativeHybridBlockSolver3D:
             positions=np.flatnonzero(v.free%3==component);nodes=v.free[positions]//3
             if len(nodes)==0:continue
             # Constants suffice for the scalar diffusion preconditioner.
-            hierarchy=pyamg.smoothed_aggregation_solver(scalar[nodes][:,nodes],max_coarse=30)
+            block=scalar[nodes][:,nodes]+v.robin_matrix[v.free[positions]][:,v.free[positions]]
+            hierarchy=pyamg.smoothed_aggregation_solver(block,max_coarse=30)
             self.groups.append((positions,hierarchy.aspreconditioner()))
             self.complexities.append(float(hierarchy.operator_complexity()))
         self.setup_seconds=time.perf_counter()-start
