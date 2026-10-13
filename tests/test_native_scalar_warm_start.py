@@ -32,7 +32,8 @@ def test_warm_original_equations_match_cold_after_changed_source():
     assert len(warm['nonlinear_history'])<len(cold['nonlinear_history'])
 
 
-def test_rejected_warm_attempt_falls_back_without_changing_input(monkeypatch):
+@pytest.mark.parametrize('failure_kind',['ledger','factorization'])
+def test_rejected_warm_attempt_falls_back_without_changing_input(monkeypatch,failure_kind):
     import tensorfvm.native_scalar_mmp_newton3d as newton
     op,q,kwargs=setup();expected=op.solve(q,**kwargs)
     state=np.r_[expected['cell_values'],expected['face_values']];saved=state.copy()
@@ -40,6 +41,7 @@ def test_rejected_warm_attempt_falls_back_without_changing_input(monkeypatch):
     def reject_warm(scalar,flux,*,initial_state=None,**options):
         calls.append(initial_state is not None)
         if initial_state is not None:
+            if failure_kind=='factorization':raise RuntimeError('injected singular warm tangent')
             failed=dict(expected,converged=False,failure='injected original ledger rejection')
             raise ScalarMMPConvergenceError(failed)
         return original(scalar,flux,**options)
