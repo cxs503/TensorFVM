@@ -74,3 +74,56 @@ def area_average_wall_cells(owner, area, omega, production):
     total=np.bincount(inverse,weights=area,minlength=len(cells))
     averaged=[np.bincount(inverse,weights=area*v,minlength=len(cells))/total for v in (omega,production)]
     return dict(cells=cells,omega=averaged[0],production=averaged[1],wall_area=total)
+
+
+class NativeSSTWall3D:
+    """Selected hybrid Spalding + Foundation-12 blended wall coupling.
+
+    This combines the native cell-sampled momentum boundary with the pinned
+    omega/G wall formula; it is not identical to OpenFOAM's full discretization.
+    The physical-wall gradient estimate is |U_cell-U_wall|/distance, not the
+    gradient of the auxiliary hybrid face trace. Bulk closure remains SST-2003.
+    """
+    def __init__(self,momentum_wall):
+        from .native_spalding3d import NativeSpaldingWall3D
+        if not isinstance(momentum_wall,NativeSpaldingWall3D):
+            raise TypeError('native Spalding momentum wall required')
+        self.momentum=momentum_wall;self.mesh=momentum_wall.mesh
+
+    def validate_transport(self,k_mask,omega_mask,nu,rho,k_neumann,omega_neumann):
+        w=self.momentum
+        if np.any(k_mask[w.mask]) or np.any(omega_mask[w.mask]):
+            raise ValueError('wall model requires free scalar faces with zero diffusive flux')
+        for data in (k_neumann,omega_neumann):
+            if np.any(np.broadcast_to(np.asarray(data,float),(w.F,))[w.mask]!=0):
+                raise ValueError('wall model requires zero k/omega wall diffusive flux')
+        if rho!=w.density or not np.allclose(np.asarray(nu)[w.owner],w.molecular_viscosity/rho,rtol=1e-14,atol=0.):
+            raise ValueError('SST and momentum wall molecular properties differ')
+
+    def apply(self,closure,k,cell_velocity):
+        w=self.momentum;velocity=np.asarray(cell_velocity,float)
+        if velocity.shape!=(w.N,3) or not np.isfinite(velocity).all():
+            raise ValueError('finite current cell velocity required by SST wall model')
+        k=np.asarray(k);div=closure['velocity_divergence']
+        # Foundation G is deviatoric shear production. Its k*div(U) term
+        # sits OUTSIDE Pk's limiter; keep this distinction at wall cells.
+        deviatoric=closure['nu_t']*(closure['strain_squared']-2/3*div*div)
+        gradient=np.linalg.norm(velocity[w.owner]-w.wall_velocity,axis=1)/w.distance
+        face=foundation12_blended_omega_wall(k[w.owner],w.distance,w.molecular_viscosity/w.density,
+                                            gradient,deviatoric[w.owner])
+        cell=area_average_wall_cells(w.owner,w.area,face['omega'],face['production'])
+        ids=cell['cells'];out=dict(closure)
+        for key in ('production_raw','production_limited','k_source'):out[key]=closure[key].copy()
+        dilatation=2/3*k[ids]*div[ids]
+        out['production_raw'][ids]=cell['production']-dilatation
+        out['production_limited'][ids]=np.minimum(cell['production'],closure['production_limit'][ids])-dilatation
+        out['k_source'][ids]=out['production_limited'][ids]-closure['k_destruction'][ids]
+        # omega has its independent G/nu_t production expression. Its wall
+        # rows are constrained and their original-equation reactions retained.
+        out['wall_model']=dict(**cell,faces=w.faces.copy(),face_omega=face['omega'],
+            face_production=face['production'],y_plus_k=face['y_plus_k'],
+            physical_wall_gradient_magnitude=gradient,
+            gradient_sampling='|U_cell-U_wall|/distance; physical wall, not auxiliary face trace',
+            variant='native SST-2003 bulk; Foundation-12 blended omega/G wall formulas',
+            wall_formula_precision='float64',physical_benchmark_passed=False)
+        return out
