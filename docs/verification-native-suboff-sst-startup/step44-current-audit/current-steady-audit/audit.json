@@ -1,0 +1,92 @@
+{
+  "source_integrity_verified": true,
+  "producer_sources_verified": true,
+  "reconstructed_sha256": "32229de2f777c5da6e47f6ef8d143470e8558b944f5d9f41d1042e802f0b61a2",
+  "producer_solver_converged": true,
+  "current_equations": {
+    "momentum": 6.106344905156053e-14,
+    "divergence": 1.3352471903285026e-14,
+    "velocity_boundary": 0.0,
+    "gauge": 0.0,
+    "k": 2.576154400055839e-13,
+    "omega": 8.639970124366492e-17,
+    "k_boundary": 0.0,
+    "omega_boundary": 0.0
+  },
+  "flow": {
+    "mass_divergence_max": 1.7071094766089882e-14,
+    "local_momentum_balance_max": 9.203748874142548e-14,
+    "global_momentum_balance_max": 6.203582569516697e-14,
+    "interface_traction_defect_max": 8.814129981438157e-14,
+    "energy_balance_error": 4.9182879990894435e-14,
+    "wall_force": [
+      0.3964339780882549,
+      0.0005678442064556311,
+      -0.001466004857512355
+    ],
+    "Cd_L2": 0.7928679561765098,
+    "pressure_work": -4.6256948935667196e-17,
+    "viscous_energy": 0.39617638528517735,
+    "convection_power": 0.0002677645016107427,
+    "external_work": 0.39644414978683734
+  },
+  "scalar": {
+    "k": {
+      "cell_balance_max": 1.488620886245668e-17,
+      "interface_flux_defect_max": 6.002436114991045e-21,
+      "global_balance": 3.0319179064009177e-16,
+      "work_balance": 6.18773283635029e-21,
+      "work_balance_scale": 3.6977563445767247e-08,
+      "relative_work_balance": 1.6733749494948372e-13,
+      "absolute_work_gate_passed": true,
+      "work_balance_policy": "relative",
+      "relative_current_residual": 2.576154400055839e-13,
+      "current_steady_ledger_passed": true,
+      "state_precision_sensitivity": {
+        "scope": "diagnostic only: identical current float64 SST closure; changing state precision also rebuilds its nonlinear MMP coefficients; not a full extended-precision SST solve",
+        "saved_dtype": "float128",
+        "saved_precision_bits": 64,
+        "maximum_state_cast_difference": 3.3848230665669892e-21,
+        "preserved_state_ledger": {
+          "cell_balance_max": 1.48854555077138e-17,
+          "interface_flux_defect_max": 8.896327488007813e-22,
+          "global_balance": 3.0319290237083504e-16,
+          "work_balance": 6.187715405841535e-21,
+          "relative_work_balance": 1.6733702356881037e-13
+        },
+        "maximum_local_ledger_change": 5.1574711192681276e-21,
+        "maximum_cell_equation_change": 5.3047092683025665e-21
+      }
+    },
+    "omega": {
+      "cell_balance_max": 3.26617737300694e-08,
+      "interface_flux_defect_max": 1.4775303758263192e-09,
+      "global_balance": -2.491287887096405e-07,
+      "work_balance": -2.6020218830895985,
+      "work_balance_scale": 1.1189889803374286e+18,
+      "relative_work_balance": 2.325332893184493e-18,
+      "absolute_work_gate_passed": false,
+      "work_balance_policy": "relative",
+      "relative_current_residual": 8.639970124366492e-17,
+      "current_steady_ledger_passed": false,
+      "state_precision_sensitivity": {
+        "scope": "diagnostic only: identical current float64 SST closure; changing state precision also rebuilds its nonlinear MMP coefficients; not a full extended-precision SST solve",
+        "saved_dtype": "float128",
+        "saved_precision_bits": 64,
+        "maximum_state_cast_difference": 9.285940905101597e-10,
+        "preserved_state_ledger": {
+          "cell_balance_max": 2.9402144718915224e-08,
+          "interface_flux_defect_max": 1.3642420526593924e-12,
+          "global_balance": -1.6158446669578552e-07,
+          "work_balance": -1.6474474834941988,
+          "relative_work_balance": 1.4722642603660088e-18
+        },
+        "maximum_local_ledger_change": 2.278829924762249e-08,
+        "maximum_cell_equation_change": 2.548767952248454e-08
+      }
+    }
+  },
+  "numerical_qualification": false,
+  "physical_suboff_benchmark_passed": false,
+  "qualification": "diagnostic audit only; all convergence, mesh and physical-reference gates remain required"
+}
