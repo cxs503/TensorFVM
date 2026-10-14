@@ -1,0 +1,9 @@
+# large/regenerable artifacts stay out of git (meshes, checkpoints, logs, run directories)
+*.msh
+*.npz
+*.log
+*.dat
+**/run-*/
+**/m*-run*/
+**/mesh-*/
+!**/reference.json
