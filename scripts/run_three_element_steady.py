@@ -11,7 +11,7 @@ from tensorfvm.verification.core import provenance,sha,write_json,artifact_manif
 
 
 def main():
- p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',type=Path,required=True);p.add_argument('--mesh-file',type=Path,required=True);p.add_argument('--reynolds',type=float,default=9000000);p.add_argument('--chord',type=float,default=1);p.add_argument('--alpha',type=float,default=0);p.add_argument('--max-iterations',type=int,default=2000);p.add_argument('--resume',action='store_true');p.add_argument('--anderson-depth',type=int,default=0);p.add_argument('--tolerance',type=float,default=1e-5);p.add_argument('--pressure-gradient',choices=['least-squares','gauss-linear','gauss-skew-corrected'],default='least-squares');p.add_argument('--allow-poor-mesh',action='store_true');p.add_argument('--sa-newton',action='store_true');p.add_argument('--convection-blend',type=float);p.add_argument('--implicit-convection',action='store_true');p.add_argument('--coupled',action='store_true');p.add_argument('--initialize-from',type=Path);p.add_argument('--sa-relaxation',type=float,default=.3);p.add_argument('--u-relaxation',type=float,default=.5);p.add_argument('--p-relaxation',type=float,default=.3);p.add_argument('--sa-inner-iterations',type=int,default=3);args=p.parse_args();out=args.output.resolve();out.mkdir(parents=True,exist_ok=True);root=Path(__file__).resolve().parents[1];torch.set_num_threads(1)
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',type=Path,required=True);p.add_argument('--mesh-file',type=Path,required=True);p.add_argument('--reynolds',type=float,default=9000000);p.add_argument('--chord',type=float,default=1);p.add_argument('--alpha',type=float,default=0);p.add_argument('--max-iterations',type=int,default=2000);p.add_argument('--resume',action='store_true');p.add_argument('--anderson-depth',type=int,default=0);p.add_argument('--tolerance',type=float,default=1e-5);p.add_argument('--pressure-gradient',choices=['least-squares','gauss-linear','gauss-skew-corrected'],default='least-squares');p.add_argument('--allow-poor-mesh',action='store_true');p.add_argument('--sa-newton',action='store_true');p.add_argument('--convection-blend',type=float);p.add_argument('--implicit-convection',action='store_true');p.add_argument('--coupled',action='store_true');p.add_argument('--initialize-from',type=Path);p.add_argument('--sa-relaxation',type=float,default=.3);p.add_argument('--u-relaxation',type=float,default=.5);p.add_argument('--p-relaxation',type=float,default=.3);p.add_argument('--sa-inner-iterations',type=int,default=3);p.add_argument('--blend-ramp',type=int,default=0,help='Initialized runs: ramp the bounded linear-upwind blend 0->1 over this many iterations instead of switching at once');p.add_argument('--save-interval',type=int,default=10);p.add_argument('--linear-backend',choices=['lu','krylov'],default='lu',help='lu: cached complete SuperLU factors; krylov: ILU/AMG-preconditioned GMRES on the current matrices (same true-residual budgets and operator gates, O(N) memory)');p.add_argument('--lu-refresh-interval',type=int,default=0,help='Reuse each sparse LU factor as GMRES preconditioner of the current matrix for up to this many solves (0 = factorize every solve); identical results within the linear budget, about 2x faster');p.add_argument('--interpolate-initialization',action='store_true',help='Allow --initialize-from a run on a different mesh: nearest-cell-centre mapping of u, p and nu_tilde, mass fluxes rebuilt from the mapped velocity');args=p.parse_args();out=args.output.resolve();out.mkdir(parents=True,exist_ok=True);root=Path(__file__).resolve().parents[1];torch.set_num_threads(1)
  if args.convection_blend is not None and not 0<=args.convection_blend<=1:p.error('Convection blend must be in [0,1]')
  if any(out.iterdir()) and not args.resume:p.error('Output must be empty unless --resume')
  config=SolverConfig(nx=1,ny=1,length=60,height=60,cylinder_radius=None,mesh_type='three-element',mesh_file=str(args.mesh_file.resolve()),airfoil_chord=args.chord,inlet_velocity=1,density=1,reynolds=args.reynolds,angle_of_attack=args.alpha,turbulence_model='spalart-allmaras',sa_freestream_ratio=3,velocity_relaxation=args.u_relaxation,pressure_relaxation=args.p_relaxation,turbulence_relaxation=args.sa_relaxation,pseudo_time_step=.02,tolerance=args.tolerance,max_iterations=args.max_iterations,device='cpu')
@@ -28,9 +28,11 @@ def main():
   from tensorfvm.sa_newton import NewtonSaMixin
   class NewtonSolver(NewtonSaMixin,base):pass
   base=NewtonSolver
- solver=base(config);solver.implicit_convection=args.implicit_convection;quality=mesh_quality(solver.mesh,args.alpha)
+ solver=base(config);solver.implicit_convection=args.implicit_convection;solver.lu_refresh_interval=max(0,args.lu_refresh_interval);solver.linear_backend=args.linear_backend
+ if args.linear_backend=='krylov' and solver.lu_refresh_interval==0:solver.lu_refresh_interval=10
+ quality=mesh_quality(solver.mesh,args.alpha)
  if not quality['accepted'] and not args.allow_poor_mesh:p.error('Mesh quality rejected: '+json.dumps(quality))
- bounds=solver.mesh.vertices.max(0).values-solver.mesh.vertices.min(0).values;config=replace(config,length=float(bounds[0]),height=float(bounds[1]));solver.config=config;solver.anderson_depth=args.anderson_depth;solver.sa_inner_iterations=1 if args.sa_newton else args.sa_inner_iterations;prov=provenance();prov['numerical_settings']=dict(anderson_depth=args.anderson_depth,sa_inner_iterations=solver.sa_inner_iterations,coupled=args.coupled,sa_newton=args.sa_newton,sa_vorticity_floor=solver.sa_vorticity_floor,pressure_gradient=args.pressure_gradient,momentum_diffusion='fully implicit nonorthogonal',momentum_linearization='implicit frozen bounded convection' if args.implicit_convection else 'deferred bounded convection',fixed_convection_blend=args.convection_blend,sa_relaxation='single implicit',viscous_stress='full symmetric deviatoric variable viscosity')
+ bounds=solver.mesh.vertices.max(0).values-solver.mesh.vertices.min(0).values;config=replace(config,length=float(bounds[0]),height=float(bounds[1]));solver.config=config;solver.anderson_depth=args.anderson_depth;solver.sa_inner_iterations=1 if args.sa_newton else args.sa_inner_iterations;prov=provenance();prov['numerical_settings']=dict(anderson_depth=args.anderson_depth,linear_backend=solver.linear_backend,lu_refresh_interval=solver.lu_refresh_interval,sa_inner_iterations=solver.sa_inner_iterations,coupled=args.coupled,sa_newton=args.sa_newton,sa_vorticity_floor=solver.sa_vorticity_floor,pressure_gradient=args.pressure_gradient,momentum_diffusion='fully implicit nonorthogonal',momentum_linearization='implicit frozen bounded convection' if args.implicit_convection else 'deferred bounded convection',fixed_convection_blend=args.convection_blend,initialized_blend_ramp=args.blend_ramp,sa_relaxation='single implicit',viscous_stress='full symmetric deviatoric variable viscosity')
  sources=['scripts/run_three_element_steady.py','src/tensorfvm/multi_element_flow.py','src/tensorfvm/hlpw30p30n.py','src/tensorfvm/multi_element_coupled.py','src/tensorfvm/multi_element_least_squares.py','src/tensorfvm/sa_newton.py','src/tensorfvm/multi_element_skew_pressure.py','src/tensorfvm/external_anderson.py','src/tensorfvm/external_coupled.py','src/tensorfvm/coupled_coarse.py','src/tensorfvm/multi_element.py','src/tensorfvm/benchmark_30p30n.py','src/tensorfvm/external_cached.py','src/tensorfvm/external_linear.py','src/tensorfvm/external_high_order.py','src/tensorfvm/sparse_simple.py','src/tensorfvm/conservative_pressure.py']
  for name in sources:prov['source_sha256'][name]=sha(root/name)
  if args.initialize_from and args.resume:p.error('Use either initialize-from or resume')
@@ -38,14 +40,31 @@ def main():
   previous=args.initialize_from.resolve();oldconfig=json.loads((previous/'config.json').read_text())
   for key in ['reynolds','airfoil_chord','angle_of_attack']:
    if oldconfig[key]!=asdict(config)[key]:raise ValueError('Initialization condition mismatch: '+key)
-  if sha(previous/'mesh.msh')!=sha(args.mesh_file):raise ValueError('Initialization mesh mismatch')
+  same_mesh=sha(previous/'mesh.msh')==sha(args.mesh_file)
+  if not same_mesh and not args.interpolate_initialization:raise ValueError('Initialization mesh mismatch (pass --interpolate-initialization to map between meshes)')
   with np.load(previous/'checkpoint.npz') as checkpoint:
-   for name,target in [('velocity',solver.velocity),('pressure',solver.p),('mass_flux',solver.mass_flux),('nu_tilde',solver.nu_tilde)]:
-    value=checkpoint[name]
-    if value.shape!=tuple(target.shape) or not np.isfinite(value).all():raise ValueError('Invalid initial checkpoint')
-    target.copy_(torch.from_numpy(value))
+   if same_mesh:
+    for name,target in [('velocity',solver.velocity),('pressure',solver.p),('mass_flux',solver.mass_flux),('nu_tilde',solver.nu_tilde)]:
+     value=checkpoint[name]
+     if value.shape!=tuple(target.shape) or not np.isfinite(value).all():raise ValueError('Invalid initial checkpoint')
+     target.copy_(torch.from_numpy(value))
+    method='identical mesh'
+   else:
+    from types import SimpleNamespace
+    from scipy.spatial import cKDTree
+    from tensorfvm.multi_element import ThreeElementMesh
+    source=ThreeElementMesh(SimpleNamespace(mesh_file=str(previous/'mesh.msh'),device='cpu'))
+    if checkpoint['velocity'].shape!=(source.volumes.numel(),2):raise ValueError('Initial checkpoint does not match its own mesh')
+    _,nearest=cKDTree(source.centers.reshape(-1,2).numpy()).query(solver.mesh.centers.reshape(-1,2).numpy())
+    for name,target in [('velocity',solver.velocity),('pressure',solver.p),('nu_tilde',solver.nu_tilde)]:
+     value=checkpoint[name][nearest]
+     if not np.isfinite(value).all():raise ValueError('Invalid initial checkpoint')
+     target.copy_(torch.from_numpy(value).reshape(target.shape))
+    mesh=solver.mesh;face_velocity=solver.velocity[mesh.owner].clone();face_velocity[mesh.interior]=.5*(solver.velocity[mesh.owner[mesh.interior]]+solver.velocity[mesh.neighbor[mesh.interior]]);face_velocity[mesh.masks['wall']]=0
+    solver.mass_flux.copy_((config.density*(face_velocity*mesh.face_area_vectors).sum(-1)).reshape(solver.mass_flux.shape))
+    method='nearest cell-centre mapping from a different mesh; face mass fluxes rebuilt by linear interpolation of the mapped velocity'
   solver.turbulent_kinematic_viscosity=solver._sa_eddy_viscosity(solver.nu_tilde);solver.config=replace(config,pseudo_time_step=None);config=solver.config
-  prov['initialization']=dict(directory=str(previous),checkpoint_sha256=sha(previous/'checkpoint.npz'),producer_sha256=sha(previous/'producer.json'))
+  prov['initialization']=dict(directory=str(previous),checkpoint_sha256=sha(previous/'checkpoint.npz'),producer_sha256=sha(previous/'producer.json'),source_mesh_sha256=sha(previous/'mesh.msh'),method=method)
  if args.resume:
   old=json.loads((out/'producer.json').read_text())
   if old.get('numerical_settings')!=prov['numerical_settings']:raise ValueError('Restart numerical settings mismatch')
@@ -70,13 +89,13 @@ def main():
   write_json(out/'sa-newton-history.json',getattr(solver,'sa_newton_history',[]));write_json(out/'coupled-history.json',getattr(solver,'coupled_history',[]));write_json(out/'history-live.json',solver.history);write_json(out/'linear-history.json',solver.linear_history)
  try:
   while len(solver.history)<args.max_iterations and not solver.converged:
-   i=len(solver.history);solver.convection_blend=1. if initialized_stage else min(1.,max(0.,(i-40)/60))
+   i=len(solver.history);solver.convection_blend=(min(1.,i/args.blend_ramp) if args.blend_ramp>0 else 1.) if initialized_stage else min(1.,max(0.,(i-40)/60))
    if args.convection_blend is not None:solver.convection_blend=args.convection_blend
    if i>=100:solver.config=replace(solver.config,pseudo_time_step=None)
    metrics=solver.step()
    if not all(np.isfinite(v) for v in metrics.values()):raise RuntimeError('Nonfinite outer metrics')
-   if i%10==0 or solver.converged:print(json.dumps(dict(metrics,elapsed_s=time.perf_counter()-start,coefficients=solver._aerodynamic_coefficients())),flush=True)
-   if (i+1)%10==0 or solver.converged:save()
+   if i%args.save_interval==0 or solver.converged:print(json.dumps(dict(metrics,elapsed_s=time.perf_counter()-start,coefficients=solver._aerodynamic_coefficients())),flush=True)
+   if (i+1)%args.save_interval==0 or solver.converged:save()
    if args.convection_blend is not None and args.convection_blend<1:
     stage_converged=max(metrics[k] for k in ('momentum','turbulence','continuity','mass_imbalance','rhie_chow_max_normal_velocity_defect'))<args.tolerance and metrics['rhie_chow_flux_defect']<1e-7
     if stage_converged:break

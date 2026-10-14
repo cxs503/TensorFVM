@@ -57,7 +57,11 @@ class MultiElementFlowTests(unittest.TestCase):
         self.assertTrue(pressure)
         self.assertLess(pressure[-1]['assembled_operator_relative_defect'],2e-12)
         self.assertTrue(any(r['kind']=='spalart-allmaras' for r in s.linear_history))
-        self.assertIsNot(s._lu_cache['momentum'],s._sa_lu_cache['momentum'])
+        # Momentum factors are keyed per velocity component ('momentum0',
+        # 'momentum1'); the SA solve reuses the 'momentum' kind in its own cache.
+        momentum=[v for k,v in s._lu_cache.items() if k.startswith('momentum')]
+        self.assertTrue(momentum);self.assertIn('momentum',s._sa_lu_cache)
+        self.assertFalse(any(v is s._sa_lu_cache['momentum'] for v in momentum))
         self.assertTrue(all(r['true_residual']<=1.05*r['target'] for r in s.linear_history))
 
     def test_sa_uses_exactly_one_implicit_relaxation(self):
