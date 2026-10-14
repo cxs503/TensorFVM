@@ -19,22 +19,31 @@ def main():
     p.add_argument('--cad-mesh-mode',choices=['hybrid','triangles'],default='triangles',
         help='CAD triangles validate geometry only; hybrid is a research path with unresolved cove termination')
     p.add_argument('--curvature-points',type=int,default=48)
+    p.add_argument('--fan-angle',type=float,default=45,help='Polygon corners turning more than this (degrees) get a boundary-layer fan')
+    p.add_argument('--wake-size',type=float,help='Optional triangle size cap (chords) reached --wake-distance from the walls')
+    p.add_argument('--wake-distance',type=float,default=.5)
+    p.add_argument('--near-size',type=float,help='Override the wall/near-body triangle size (default .003/2**(level/2))')
+    p.add_argument('--layer-ratio',type=float,default=1.18)
     a=p.parse_args();out=a.output
     if not 0<a.layer_thickness<.006:p.error('Layer thickness must be positive and below half the narrowest element gap')
+    if a.near_size is not None and not 0<a.near_size<1:p.error('Near size must be in (0,1) chords')
+    if not 1<a.layer_ratio<2:p.error('Layer ratio must be in (1,2)')
     if out.exists() and any(out.iterdir()):p.error('Mesh output must be empty')
     out.mkdir(parents=True,exist_ok=True);ratio=2**(.5*a.level)
-    options=dict(near_size=.003/ratio,far_size=25/ratio,first_layer=2e-6/ratio,
-        layer_thickness=a.layer_thickness,layer_ratio=1.18,grading_distance=100,
-        alpha=a.alpha,fan_elements=12)
+    options=dict(near_size=a.near_size if a.near_size is not None else .003/ratio,far_size=25/ratio,first_layer=2e-6/ratio,
+        layer_thickness=a.layer_thickness,layer_ratio=a.layer_ratio,grading_distance=100,
+        alpha=a.alpha,fan_elements=12,fan_angle=a.fan_angle)
+    if a.wake_size is not None:options.update(wake_size=a.wake_size,wake_distance=a.wake_distance)
     import gmsh
     failure=None;mesh=None;fan_points=[];body_curve_types={};meshing_curve_tags={}
     try:
         if a.geometry=='cad':
             options['curvature_points']=a.curvature_points
+            for key in ['fan_angle','wake_size','wake_distance']:options.pop(key,None)  # CAD writers keep their own fans/grading
             options['terminate_cove']=True
             options['intersect_metrics']=True
             if a.cad_mesh_mode=='triangles':
-                for key in ['first_layer','layer_thickness','layer_ratio','fan_elements','terminate_cove','intersect_metrics']:
+                for key in ['first_layer','layer_thickness','layer_ratio','fan_elements','fan_angle','terminate_cove','intersect_metrics']:
                     options.pop(key,None)
             writer=write_cad_triangle_mesh_geo if a.cad_mesh_mode=='triangles' else write_cad_mesh_geo
             geo=writer(out/'mesh.geo',**options)
