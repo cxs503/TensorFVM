@@ -154,12 +154,23 @@ class MultiElementFlowSolver(ConservativePressureGradient,LinearUpwindMomentum,C
         if defect>2e-11:raise RuntimeError(f'Current full momentum operator mismatch: {defect}')
         return matrices,defect
 
+    # 0 (default): every current system is factorized afresh.  The pressure
+    # coefficient changes rapidly during startup on a 500C domain and a stale
+    # factor then wastes Krylov vectors.  N>0: keep each factor as the GMRES
+    # preconditioner of the *current* matrix for N solves of its kind (the
+    # true-residual budget and the operator gates are unchanged); failed
+    # solves fall back to a fresh direct factorization.  Factorization is
+    # ~60% of a SIMPLE iteration at 6e4 cells, so this roughly halves the
+    # cost once the fields vary slowly.
+    lu_refresh_interval=0
+
     def _linear(self,diagonal,ao,an,rhs,initial,symmetric=False,operator=None,**kwargs):
-        # The pressure coefficient changes rapidly during startup on a 500C
-        # domain. A fresh factor avoids hundreds of ineffective Krylov vectors
-        # with the previous coefficient field as a preconditioner.
-        self._linear_calls['pressure' if operator is not None else 'momentum']=0
+        kind='pressure' if operator is not None else 'momentum'
+        if self.linear_backend=='krylov':pass  # O(N) preconditioners are always cached and refreshed adaptively
+        elif self.lu_refresh_interval<=0:self._linear_calls.clear();self.gmres_max_restarts=10
+        else:self.gmres_max_restarts=1
         full_momentum=operator is None and not self._in_sa_step and self._momentum_reference is not None
+        self._cache_key_suffix=str(self._momentum_component) if full_momentum else ''
         if full_momentum:
             if self._momentum_corrections is None:
                 self._momentum_corrections,self._momentum_operator_defect=self.momentum_correction_matrices(self._momentum_reference,self._momentum_reference_flux)
@@ -170,7 +181,7 @@ class MultiElementFlowSolver(ConservativePressureGradient,LinearUpwindMomentum,C
                 raise RuntimeError('Current relaxed momentum matrix has nonpositive diagonal')
             rhs=rhs+torch.from_numpy(Q@array(initial));self._momentum_component+=1
         try:answer=super()._linear(diagonal,ao,an,rhs,initial,symmetric,operator,**kwargs)
-        finally:self._momentum_matrix_override=None
+        finally:self._momentum_matrix_override=None;self._cache_key_suffix=''
         if full_momentum:self.linear_history[-1]['momentum_assembled_operator_relative_defect']=self._momentum_operator_defect
         return answer
 
