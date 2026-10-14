@@ -41,6 +41,78 @@ def metadata():
     return json.loads((DATA/'metadata.json').read_text())
 
 
+def resample_profile(points, max_turn=1.5, max_length=None, corner_turn=30.):
+    """Curvature-adaptive resampling of a closed polygon along cubic splines.
+
+    The official 30P30N polylines turn by 11-16 degrees per facet around the
+    leading edges (3.3e-3 c facets on a 0.015 c nose radius).  Each convex
+    polygon corner is a local expansion/recompression for the wall-resolved
+    boundary layer (first cells 2e-6 c): the computed Cp and Cf alternate by
+    +-0.3 and a factor 2-3 between neighbouring facets, which thickens the
+    main-element layer before its suction peak and triggers a separation
+    bubble there.  Smooth segments between genuine corners (turn above
+    ``corner_turn`` degrees: blunt trailing edges, slat cusp, cove lips) are
+    therefore interpolated by chord-length parametrised cubic splines through
+    the original vertices; every original facet whose spline arc turns by more
+    than ``max_turn`` degrees (or is longer than ``max_length``) is subdivided
+    on the spline into equal-turning pieces.  All original vertices, the
+    corners and the orientation are preserved exactly.
+    """
+    from scipy.interpolate import splprep, splev
+    P=np.asarray(points,dtype=float)
+    if np.allclose(P[0],P[-1]):P=P[:-1]
+    n=len(P)
+    if n<4 or not 0<max_turn<corner_turn:
+        raise ValueError('resample_profile needs a closed polygon and 0<max_turn<corner_turn')
+    previous=P-np.roll(P,1,axis=0);following=np.roll(P,-1,axis=0)-P
+    turn=np.degrees(np.arctan2(previous[:,0]*following[:,1]-previous[:,1]*following[:,0],(previous*following).sum(1)))
+    corners=np.flatnonzero(np.abs(turn)>corner_turn)
+    if len(corners)==0:
+        segments=[np.vstack([P,P[:1]])];periodic=True
+    else:
+        periodic=False;order=np.roll(np.arange(n),-corners[0]);Q=P[order];cs=sorted(set((c-corners[0])%n for c in corners))
+        bounds=cs+[n];segments=[Q[a:b+1] if b<n else np.vstack([Q[a:],Q[:1]]) for a,b in zip(bounds[:-1],bounds[1:])]
+    out=[]
+    for seg in segments:
+        m=len(seg)
+        if m<5:
+            out.extend(seg[:-1].tolist());continue
+        tck,u=splprep([seg[:,0],seg[:,1]],s=0,k=3,per=periodic)
+        limit=np.radians(max_turn)
+        for k in range(m-1):
+            out.append(seg[k].tolist())
+            # turning of the spline across this original facet
+            t=np.linspace(u[k],u[k+1],64);dx,dy=splev(t,tck,der=1)
+            theta=np.unwrap(np.arctan2(dy,dx));turning=np.abs(np.diff(theta)).sum()
+            pieces=int(np.ceil(turning/limit))
+            if max_length is not None:
+                pieces=max(pieces,int(np.ceil(np.linalg.norm(seg[k+1]-seg[k])/max_length)))
+            if pieces>1:
+                # equal-turning subdivision keeps the new facets uniform in angle
+                cum=np.concatenate([[0],np.cumsum(np.abs(np.diff(theta)))])
+                targets=np.linspace(0,cum[-1],pieces+1)[1:-1]
+                tt=np.interp(targets,cum,t) if cum[-1]>0 else np.linspace(u[k],u[k+1],pieces+1)[1:-1]
+                x,y=splev(tt,tck);out.extend(np.column_stack([x,y]).tolist())
+    out=np.asarray(out)
+    return np.vstack([out,out[:1]])
+
+
+def profile_directory(max_turn=None,destination=None):
+    """Official polylines (``max_turn`` None) or a resampled copy next to the mesh.
+
+    ``max_turn`` is one angle for all elements or a mapping element -> angle
+    (Gmsh's boundary-layer edge recovery is not robust to every node
+    distribution in the 0.0127 c main-flap gap, so the flap may need a
+    slightly different angle than slat and main).
+    """
+    if max_turn is None:return DATA
+    turns=dict(max_turn) if isinstance(max_turn,dict) else {name:float(max_turn) for name in ['slat','main','flap']}
+    destination=Path(destination);destination.mkdir(parents=True,exist_ok=True)
+    for name in ['slat','main','flap']:
+        np.savetxt(destination/(name+'.dat'),resample_profile(np.loadtxt(DATA/(name+'.dat')),max_turn=turns[name]),fmt='%.17g')
+    return destination
+
+
 def mesh_quality(mesh,alpha):
     """Independent centroid/face-angle and freestream boundary checks."""
     import torch
@@ -60,7 +132,7 @@ def mesh_quality(mesh,alpha):
 
 def write_mesh_geo(path, *, near_size=.003, far_size=25, first_layer=2e-6,
                    layer_thickness=.0005, layer_ratio=1.18, grading_distance=100,
-                   alpha=8.1,fan_elements=12,fan_angle=45,wake_size=None,wake_distance=.5):
+                   alpha=8.1,fan_elements=12,fan_angle=45,wake_size=None,wake_distance=.5,max_turn=None):
     """Shared Gmsh wall layers; official circular 500C farfield and nominal C=1.
 
     Left semicircle uses prescribed freestream velocity; right uses zero gauge
@@ -74,6 +146,9 @@ def write_mesh_geo(path, *, near_size=.003, far_size=25, first_layer=2e-6,
     near-wall jets at every suction peak.  Smooth kinks are extruded with the
     averaged normal instead.
 
+    ``max_turn`` (optional, degrees) resamples the polylines with
+    :func:`resample_profile` so that no smooth facet turns by more than this.
+
     ``wake_size`` (optional) caps the triangle size at ``wake_distance`` chords
     from the walls, so that the slat/main wakes, the gap flows and the outer
     boundary layers are not left to the 500C far-field grading, which otherwise
@@ -86,10 +161,11 @@ def write_mesh_geo(path, *, near_size=.003, far_size=25, first_layer=2e-6,
         raise ValueError('Fan angle must be in (0,180) degrees')
     if wake_size is not None and not (near_size<wake_size<far_size and layer_thickness<wake_distance<grading_distance):
         raise ValueError('Wake refinement must satisfy near_size<wake_size<far_size and layer_thickness<wake_distance<grading_distance')
+    profiles = profile_directory(max_turn, Path(path).parent/'profiles')
     path = write_gmsh_geo(path,domain=(-500,500,-500,500),near_size=near_size,
                          far_size=far_size,first_layer=first_layer,
                          layer_thickness=layer_thickness,layer_ratio=layer_ratio,
-                         profile_directory=DATA)
+                         profile_directory=profiles)
     text = path.read_text()
     points = list(map(int,re.findall(r'Point\((\d+)\)',text)))
     corners = points[-4:]; center = max(points)+1
@@ -123,7 +199,7 @@ def write_mesh_geo(path, *, near_size=.003, far_size=25, first_layer=2e-6,
             'Background Field = 6;']))
     fans=[];offset=1
     for name in ['slat','main','flap']:
-        profile=np.loadtxt(DATA/(name+'.dat'))[:-1]
+        profile=np.loadtxt(profiles/(name+'.dat'))[:-1]
         previous=profile-np.roll(profile,1,axis=0);following=np.roll(profile,-1,axis=0)-profile
         turn=np.degrees(np.arctan2(previous[:,0]*following[:,1]-previous[:,1]*following[:,0],(previous*following).sum(1)))
         # Canonical contours are clockwise. Convex body corners need a fan

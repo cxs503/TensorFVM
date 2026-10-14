@@ -55,9 +55,12 @@ class ThreeElementMesh:
                 polygons, line_groups, nodes)
             self.collapsed_fan_apex_cells = removed
             self.fillet_wall_nodes = tuple(sorted(fillet_nodes))
-        missing = {"slat", "main", "flap", "inlet", "outlet", "far-field"} - set(
-            line_groups.values()
-        )
+        required = {"slat", "main", "flap", "inlet", "outlet", "far-field"}
+        if getattr(config, "single_element", False):
+            # Verification meshes (flat plate, single airfoil) run through the
+            # same solver with only the ``main`` wall; slat/flap masks stay empty.
+            required -= {"slat", "flap"}
+        missing = required - set(line_groups.values())
         if missing:
             raise ValueError("Gmsh mesh is missing physical boundary groups: "
                              + ", ".join(sorted(missing)))
