@@ -24,22 +24,28 @@ def main():
     p.add_argument('--wake-distance',type=float,default=.5)
     p.add_argument('--near-size',type=float,help='Override the wall/near-body triangle size (default .003/2**(level/2))')
     p.add_argument('--layer-ratio',type=float,default=1.18)
+    p.add_argument('--max-turn',type=str,help='Resample the official polylines on cubic splines so no smooth facet turns by more than this (degrees); the 11-16 degree leading-edge facets otherwise imprint Cp/Cf sawtooth on the wall-resolved layers')
     a=p.parse_args();out=a.output
     if not 0<a.layer_thickness<.006:p.error('Layer thickness must be positive and below half the narrowest element gap')
     if a.near_size is not None and not 0<a.near_size<1:p.error('Near size must be in (0,1) chords')
     if not 1<a.layer_ratio<2:p.error('Layer ratio must be in (1,2)')
+    if a.max_turn is not None:
+        turns=[float(v) for v in a.max_turn.split(',')]
+        if len(turns) not in (1,3) or not all(0<v<30 for v in turns):p.error('Max turn must be one angle or slat,main,flap angles in (0,30) degrees')
+        a.max_turn=turns[0] if len(turns)==1 else dict(zip(['slat','main','flap'],turns))
     if out.exists() and any(out.iterdir()):p.error('Mesh output must be empty')
     out.mkdir(parents=True,exist_ok=True);ratio=2**(.5*a.level)
     options=dict(near_size=a.near_size if a.near_size is not None else .003/ratio,far_size=25/ratio,first_layer=2e-6/ratio,
         layer_thickness=a.layer_thickness,layer_ratio=a.layer_ratio,grading_distance=100,
         alpha=a.alpha,fan_elements=12,fan_angle=a.fan_angle)
     if a.wake_size is not None:options.update(wake_size=a.wake_size,wake_distance=a.wake_distance)
+    if a.max_turn is not None:options.update(max_turn=a.max_turn)
     import gmsh
     failure=None;mesh=None;fan_points=[];body_curve_types={};meshing_curve_tags={}
     try:
         if a.geometry=='cad':
             options['curvature_points']=a.curvature_points
-            for key in ['fan_angle','wake_size','wake_distance']:options.pop(key,None)  # CAD writers keep their own fans/grading
+            for key in ['fan_angle','wake_size','wake_distance','max_turn']:options.pop(key,None)  # CAD writers keep their own fans/grading
             options['terminate_cove']=True
             options['intersect_metrics']=True
             if a.cad_mesh_mode=='triangles':
@@ -100,7 +106,7 @@ def main():
             nodes=len(mesh.vertices),cells=len(mesh.cell_nodes),
             wall_faces={n:int(mesh.masks[n].sum()) for n in ['slat','main','flap']},
             quality=quality,geometry=metadata(),gmsh_version=gmsh.__version__,
-            geometry_representation='official-step-bspline' if a.geometry=='cad' else 'official-profile-polyline',
+            geometry_representation='official-step-bspline' if a.geometry=='cad' else ('official-profile-polyline-spline-resampled-max-turn-%s-deg'%(a.max_turn if not isinstance(a.max_turn,dict) else ','.join('%s=%g'%kv for kv in a.max_turn.items())) if a.max_turn is not None else 'official-profile-polyline'),
             mesh_mode=('cad_triangle' if a.cad_mesh_mode=='triangles' else 'cad_hybrid_research') if a.geometry=='cad' else 'polygon_hybrid',
             boundary_layers=not(a.geometry=='cad' and a.cad_mesh_mode=='triangles'),accuracy_qualified=False,
             actual_fan_point_tags=fan_points,y_plus_measured=False,**cad_info))
@@ -109,7 +115,7 @@ def main():
     if failure is not None:
         write_json(out/'mesh-failure.json',dict(level=a.level,options=options,
             failure=failure,accepted=False,geometry=metadata(),
-            geometry_representation='official-step-bspline' if a.geometry=='cad' else 'official-profile-polyline',
+            geometry_representation='official-step-bspline' if a.geometry=='cad' else ('official-profile-polyline-spline-resampled-max-turn-%s-deg'%(a.max_turn if not isinstance(a.max_turn,dict) else ','.join('%s=%g'%kv for kv in a.max_turn.items())) if a.max_turn is not None else 'official-profile-polyline'),
             gmsh_version=gmsh.__version__))
     root=Path(__file__).resolve().parents[1]
     sources=[Path(__file__),root/'src/tensorfvm/hlpw30p30n.py',
@@ -124,6 +130,6 @@ def main():
         source_sha256=hashes,artifacts_sha256=artifact_manifest(out)))
     if failure is not None:raise SystemExit('Mesh failed; native geometry and failure record retained: '+failure)
     print(json.dumps(dict(cells=len(mesh.cell_nodes),nodes=len(mesh.vertices),level=a.level,
-        geometry_representation='official-step-bspline' if a.geometry=='cad' else 'official-profile-polyline')))
+        geometry_representation='official-step-bspline' if a.geometry=='cad' else ('official-profile-polyline-spline-resampled-max-turn-%s-deg'%(a.max_turn if not isinstance(a.max_turn,dict) else ','.join('%s=%g'%kv for kv in a.max_turn.items())) if a.max_turn is not None else 'official-profile-polyline'))))
 
 if __name__=='__main__':main()

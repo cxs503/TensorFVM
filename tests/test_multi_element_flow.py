@@ -1,12 +1,13 @@
 """Independent conservative reconstruction and current equation checks."""
 import tempfile
 import unittest
+import numpy as np
 from pathlib import Path
 import torch
 from tests.test_three_element import _TINY_GMSH
 from tensorfvm.solver import SolverConfig
 from tensorfvm.multi_element_flow import MultiElementFlowSolver
-from tensorfvm.hlpw30p30n import reference_zones,write_mesh_geo
+from tensorfvm.hlpw30p30n import DATA,reference_zones,resample_profile,write_mesh_geo
 
 
 def _two_row_mesh():
@@ -151,6 +152,27 @@ class MultiElementFlowTests(unittest.TestCase):
         self.assertEqual(geo.count('Circle('),4)
         self.assertIn('500',geo)
         self.assertIn('Physical Curve("far-field")',geo)
+
+    def test_spline_resampling_smooths_facets_but_keeps_corners_and_vertices(self):
+        def turns(points):
+            closed=points[:-1];edges=np.diff(np.vstack([closed,closed[:1]]),axis=0)
+            t=edges/np.linalg.norm(edges,axis=1)[:,None]
+            cross=t[:-1,0]*t[1:,1]-t[:-1,1]*t[1:,0];dot=(t[:-1]*t[1:]).sum(1)
+            return np.degrees(np.arctan2(cross,dot))
+        for name,corners in [('slat',2),('main',3),('flap',1)]:
+            original=np.loadtxt(DATA/(name+'.dat'));resampled=resample_profile(original,max_turn=1.5)
+            self.assertTrue(np.allclose(resampled[0],resampled[-1]))
+            smooth=np.abs(turns(resampled));self.assertEqual(int((smooth>30).sum()),corners)
+            self.assertLess(smooth[smooth<=30].max(),1.5+0.3)  # discrete spline turn, small tolerance
+            self.assertGreater(np.abs(turns(original))[np.abs(turns(original))<=30].max(),10.)
+            # every official vertex is kept exactly and the signed area (orientation) is unchanged
+            from scipy.spatial import cKDTree
+            self.assertLess(cKDTree(resampled).query(original)[0].max(),1e-12)
+            area=lambda q:0.5*np.sum(q[:-1,0]*q[1:,1]-q[1:,0]*q[:-1,1])
+            self.assertLess(abs(area(resampled)-area(original)),1e-5)  # LE sagitta of the 12-degree facets
+        geo=write_mesh_geo(Path(self.temp.name)/'resampled.geo',max_turn={'slat':1.5,'main':1.5,'flap':2.}).read_text()
+        self.assertGreater(geo.count('Point('),645+209+205+16)
+        self.assertTrue((Path(self.temp.name)/'profiles'/'main.dat').exists())
 
 
 if __name__=='__main__':unittest.main()
