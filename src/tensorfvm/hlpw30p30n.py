@@ -60,14 +60,32 @@ def mesh_quality(mesh,alpha):
 
 def write_mesh_geo(path, *, near_size=.003, far_size=25, first_layer=2e-6,
                    layer_thickness=.0005, layer_ratio=1.18, grading_distance=100,
-                   alpha=8.1,fan_elements=12):
+                   alpha=8.1,fan_elements=12,fan_angle=45,wake_size=None,wake_distance=.5):
     """Shared Gmsh wall layers; official circular 500C farfield and nominal C=1.
 
     Left semicircle uses prescribed freestream velocity; right uses zero gauge
     pressure. This is an incompressible approximation to a compressible farfield.
+
+    ``fan_angle`` is the convex polygon turn (degrees) above which a corner gets
+    a boundary-layer fan.  Only genuinely sharp corners (trailing edges, slat
+    cusp, main cove lip; turns of 60-162 degrees) should get one: the 11-16
+    degree facets of the sampled leading edges used to receive two-sector fans
+    whose first ring is a sliver with no wall face, which produced spurious
+    near-wall jets at every suction peak.  Smooth kinks are extruded with the
+    averaged normal instead.
+
+    ``wake_size`` (optional) caps the triangle size at ``wake_distance`` chords
+    from the walls, so that the slat/main wakes, the gap flows and the outer
+    boundary layers are not left to the 500C far-field grading, which otherwise
+    reaches 0.13C already half a chord behind the flap.  The size is piecewise
+    linear in wall distance: near_size -> wake_size -> far_size.
     """
     if not 0<grading_distance<=500:
         raise ValueError('Grading distance must be in (0,500]')
+    if not 0<fan_angle<180:
+        raise ValueError('Fan angle must be in (0,180) degrees')
+    if wake_size is not None and not (near_size<wake_size<far_size and layer_thickness<wake_distance<grading_distance):
+        raise ValueError('Wake refinement must satisfy near_size<wake_size<far_size and layer_thickness<wake_distance<grading_distance')
     path = write_gmsh_geo(path,domain=(-500,500,-500,500),near_size=near_size,
                          far_size=far_size,first_layer=first_layer,
                          layer_thickness=layer_thickness,layer_ratio=layer_ratio,
@@ -93,6 +111,16 @@ def write_mesh_geo(path, *, near_size=.003, far_size=25, first_layer=2e-6,
         text = re.sub(rf'Physical Curve\("{name}"\).*?;',
                       f'Physical Curve("{name}") = {{{", ".join(map(str,ids))}}};',text)
     text = text.replace('Field[2].DistMax = 0.25;',f'Field[2].DistMax = {grading_distance};')
+    if wake_size is not None:
+        text = text.replace('Background Field = 2;','\n'.join([
+            'Field[4] = Threshold;','Field[4].InField = 1;',
+            f'Field[4].SizeMin = {near_size:.12g};',f'Field[4].SizeMax = {wake_size:.12g};',
+            f'Field[4].DistMin = {layer_thickness:.12g};',f'Field[4].DistMax = {wake_distance:.12g};',
+            'Field[5] = Threshold;','Field[5].InField = 1;',
+            f'Field[5].SizeMin = {wake_size:.12g};',f'Field[5].SizeMax = {far_size:.12g};',
+            f'Field[5].DistMin = {wake_distance:.12g};',f'Field[5].DistMax = {grading_distance:.12g};',
+            'Field[6] = MathEval;',f'Field[6].F = "F4+F5-{wake_size:.12g}";',
+            'Background Field = 6;']))
     fans=[];offset=1
     for name in ['slat','main','flap']:
         profile=np.loadtxt(DATA/(name+'.dat'))[:-1]
@@ -100,7 +128,7 @@ def write_mesh_geo(path, *, near_size=.003, far_size=25, first_layer=2e-6,
         turn=np.degrees(np.arctan2(previous[:,0]*following[:,1]-previous[:,1]*following[:,0],(previous*following).sum(1)))
         # Canonical contours are clockwise. Convex body corners need a fan
         # in the external fluid; smooth curvature remains normally extruded.
-        fans.extend((offset+np.flatnonzero(turn < -10)).tolist());offset+=len(profile)
+        fans.extend((offset+np.flatnonzero(turn < -fan_angle)).tolist());offset+=len(profile)
     text=text.replace('BoundaryLayer Field = 3;',
                       'Field[3].FanPointsList = {'+', '.join(map(str,fans))+'};\n'+
                       'Field[3].FanPointsSizesList = {'+', '.join([str(fan_elements)]*len(fans))+'};\nBoundaryLayer Field = 3;')
