@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import io
 import json
+import math
 from pathlib import Path
 import re
 import shutil
@@ -87,10 +88,24 @@ def main():
     wall=m.masks['wall'];own=s.o[wall];fc=m.face_centers[wall].numpy();normal=-m.face_normals[wall]
     tangent=torch.stack([normal[:,1],-normal[:,0]],1)
     distance=abs(((m.centers.reshape(-1,2)[own]-m.face_centers[wall])*normal).sum(1))
-    tau=s.kinematic_viscosity*(s.velocity[own]*tangent).sum(1)/distance
+    # Same complete molecular wall stress used for force integration, including
+    # the face no-slip gradient correction; U_t/d is only a diagnostic estimate.
+    gradient=s._gradient(s.velocity)[own].clone();d=s.d[wall]
+    error=-s.velocity[own]-torch.einsum('fi,fij->fj',d,gradient)
+    gradient+=d[:,:,None]*error[:,None,:]/d.square().sum(-1)[:,None,None]
+    stress=s.kinematic_viscosity*(gradient+gradient.transpose(-1,-2))
+    tau=(torch.einsum('fij,fj->fi',stress,normal)*tangent).sum(1)
     cp=(2*s.reconstructed_pressure_faces(s.p)[wall]).numpy();cf=(2*tau).numpy()
     yp=(distance*torch.sqrt(abs(tau))/s.kinematic_viscosity).numpy()
     alpha=config['angle_of_attack'];reference=reference_surfaces(a.reference/'n0012cp_cfl3d_sa.dat',alpha)
+    pressure_force=(s.reconstructed_pressure_faces(s.p)[wall,None]*s.S[wall]).sum(0)
+    viscous_force=-torch.einsum('fij,fj->fi',stress,s.S[wall]).sum(0)
+    angle=math.radians(alpha)
+    def coefficients(force):
+        return dict(drag=float(2*(force[0]*math.cos(angle)+force[1]*math.sin(angle))),
+            lift=float(2*(-force[0]*math.sin(angle)+force[1]*math.cos(angle))))
+    reconstructed=coefficients(pressure_force+viscous_force)
+    for name in ['drag','lift']:np.testing.assert_allclose(reconstructed[name],coeff[name],atol=1e-12,rtol=1e-12)
     cf_ref=zones(a.reference/'n0012cf_cfl3d_sa.dat')[alpha]
     cf_ref=cf_ref[np.argsort(cf_ref[:,0])]
     coefficient_table=np.loadtxt(a.reference/'n0012clcd_cfl3d_sa.dat',skiprows=4)
@@ -114,6 +129,7 @@ def main():
         sources_sha256=sha(run/'sources.json'),settings_sha256=sha(run/'settings.json'),
         reference_manifest=manifest,reference_scope='TMR essentially incompressible case; CFL3D SA M=0.15 with vortex farfield; native incompressible SA at radius 500c, no vortex correction. No coefficient correction applied.',
         coefficients=coeff,reference_coefficients=dict(lift=float(ref_row[1]),drag=float(ref_row[2])),
+        force_reconstruction=dict(total=reconstructed,pressure=coefficients(pressure_force),viscous=coefficients(viscous_force)),
         lift_error=float(cl_error),lift_error_kind='relative' if alpha else 'absolute',drag_relative_error=float(cd_error),
         cp_errors=errors,cf_upper_diagnostic=cf_error,wall_y_plus=dict(max=float(yp.max()),p99=float(np.quantile(yp,.99))),
         current_equations=current,velocity_change=history[-1]['velocity_change'],force_ranges_last_100=force_ranges,
