@@ -11,6 +11,7 @@ environment switches (experiments):
   NO_STRESS=1          drop the transpose/deviatoric stress correction source
   BLEND=x              fixed convection blend (0 = first-order upwind) after the ramp
   U_RELAX / P_RELAX / SA_RELAX   relaxation factors
+  ANDERSON=n           Anderson mixing depth (MultiElementFlowSolver.step), 0 = off
 Reference (TMR, CFL3D SA, Re 6e6, M 0.15): alpha 10: Cl 1.0909 Cd 0.01231 (7 codes 1.089-1.100
 / 0.01225-0.01245); alpha 0: Cd 0.00819; alpha 15: Cl 1.5461 Cd 0.02124.
 Writes JSON lines (it, residuals, Cl, Cd, Cf stations), OUTDIR/wall.dat and a resumable
@@ -39,6 +40,7 @@ config.single_element = True
 s = SkewPressureMultiElementSolver(config, bounded=not int(env('UNBOUNDED', '0')))
 s.linear_backend = 'krylov'; s.lu_refresh_interval = 10
 s.sa_linear_upwind = bool(int(env('SA_LINEAR_UPWIND', '0')))
+s.anderson_depth = int(env('ANDERSON', '0'))
 if int(env('NO_STRESS', '0')):
     s.stress_correction = lambda velocity: torch.zeros_like(s.S)
 bounds = s.mesh.vertices.max(0).values - s.mesh.vertices.min(0).values
@@ -46,7 +48,7 @@ s.config = replace(s.config, length=float(bounds[0]), height=float(bounds[1])); 
 if not (out / 'mesh.msh').exists():
     os.symlink(os.path.relpath(mesh, out), out / 'mesh.msh')
 json.dump(dict(reynolds=Re, alpha=alpha, mesh=str(mesh), env={k: v for k, v in os.environ.items()
-          if k in ('SA_LINEAR_UPWIND', 'UNBOUNDED', 'NO_STRESS', 'BLEND', 'U_RELAX', 'P_RELAX', 'SA_RELAX')}),
+          if k in ('SA_LINEAR_UPWIND', 'UNBOUNDED', 'NO_STRESS', 'BLEND', 'U_RELAX', 'P_RELAX', 'SA_RELAX', 'ANDERSON')}),
           open(out / 'config.json', 'w'))
 print('cells', s.count, 'nu', s.kinematic_viscosity, 'alpha', alpha, 'bounded', s.bounded,
       'sa_linear_upwind', s.sa_linear_upwind, 'env', dict(os.environ) and {k: env(k) for k in
