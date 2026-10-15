@@ -130,9 +130,44 @@ def mesh_quality(mesh,alpha):
     return record
 
 
+
+def layer_zones(profiles, thin, thick):
+    """Map every wall facet (Gmsh curve id) of the polygon layout to a quad-layer thickness.
+
+    The shared writer limits one uniform layer to half the main/flap gap (0.0064 C), which
+    leaves the aft main boundary layer, the slat/main wakes and the flap confluent layer
+    (0.01-0.05 C thick) to isotropic triangles.  Gmsh 2D accepts several BoundaryLayer
+    fields, so facets that have free fluid above them get ``thick`` while facets that face
+    another element, and both facets of every fan corner, keep ``thin``:
+
+    * main upper surface, 0.06 < x < 0.855 (clear of the slat trailing edge at x 0.019 and of
+      the blunt main trailing edge whose fan must stay inside the 0.013 C main/flap gap);
+    * flap upper surface, x > 0.905 (downstream of the main trailing edge at x 0.874);
+    * both flap surfaces for 0.96 < x < 1.115; the blunt flap trailing edge (x 1.128-1.131)
+      keeps the thin layer because a 0.04 C fan on its 0.003 C base produced 88-degree
+      wall non-orthogonality.
+
+    Facet ids equal the ids of their first point; contours are clockwise (outward normal of
+    the edge d is (-d_y, d_x)).  Returns ``{curve_id: thickness}``.
+    """
+    zones = {}; offset = 1
+    for name in ['slat', 'main', 'flap']:
+        q = np.loadtxt(profiles / (name + '.dat'))
+        if np.allclose(q[0], q[-1]): q = q[:-1]
+        d = np.roll(q, -1, axis=0) - q; mid = q + d / 2
+        n = np.c_[-d[:, 1], d[:, 0]] / np.linalg.norm(d, axis=1)[:, None]
+        for i, ((x, y), (nx, ny)) in enumerate(zip(mid, n)):
+            t = thin
+            if name == 'main' and ny > 0.2 and 0.06 < x < 0.855: t = thick
+            if name == 'flap' and ((ny > -0.2 and x > 0.905) or x > 0.96) and x < 1.115: t = thick
+            zones[offset + i] = t
+        offset += len(q)
+    return zones
+
 def write_mesh_geo(path, *, near_size=.003, far_size=25, first_layer=2e-6,
                    layer_thickness=.0005, layer_ratio=1.18, grading_distance=100,
-                   alpha=8.1,fan_elements=12,fan_angle=45,wake_size=None,wake_distance=.5,max_turn=None):
+                   alpha=8.1,fan_elements=12,fan_angle=45,wake_size=None,wake_distance=.5,max_turn=None,
+                   thick_layer=None):
     """Shared Gmsh wall layers; official circular 500C farfield and nominal C=1.
 
     Left semicircle uses prescribed freestream velocity; right uses zero gauge
@@ -154,7 +189,13 @@ def write_mesh_geo(path, *, near_size=.003, far_size=25, first_layer=2e-6,
     boundary layers are not left to the 500C far-field grading, which otherwise
     reaches 0.13C already half a chord behind the flap.  The size is piecewise
     linear in wall distance: near_size -> wake_size -> far_size.
+
+    ``thick_layer`` (optional, chords) gives the facets selected by :func:`layer_zones` a
+    second, thicker quad layer (same first layer and ratio); ``layer_thickness`` remains
+    the thin layer of the gap regions and of every fan corner.
     """
+    if thick_layer is not None and not layer_thickness<thick_layer<.2:
+        raise ValueError('thick_layer must exceed layer_thickness and stay below 0.2 C')
     if not 0<grading_distance<=500:
         raise ValueError('Grading distance must be in (0,500]')
     if not 0<fan_angle<180:
@@ -205,9 +246,22 @@ def write_mesh_geo(path, *, near_size=.003, far_size=25, first_layer=2e-6,
         # Canonical contours are clockwise. Convex body corners need a fan
         # in the external fluid; smooth curvature remains normally extruded.
         fans.extend((offset+np.flatnonzero(turn < -fan_angle)).tolist());offset+=len(profile)
+    extra=''
+    if thick_layer is not None:
+        zones=layer_zones(profiles,layer_thickness,thick_layer)
+        match=re.search(r'Field\[3\]\.CurvesList = \{(.*?)\};',text)
+        if not match:raise ValueError('Shared mesh writer boundary-layer field changed')
+        curves=[int(v) for v in match.group(1).split(',')]
+        thin=[c for c in curves if zones.get(c,layer_thickness)==layer_thickness]
+        thick=[c for c in curves if zones.get(c,layer_thickness)!=layer_thickness]
+        if not thick:raise ValueError('thick_layer selected no facets')
+        text=text.replace(match.group(0),'Field[3].CurvesList = {'+', '.join(map(str,thin))+'};')
+        extra='\n'.join(['Field[7] = BoundaryLayer;','Field[7].CurvesList = {'+', '.join(map(str,thick))+'};',
+                         f'Field[7].hwall_n = {first_layer:.12g};',f'Field[7].thickness = {thick_layer:.12g};',
+                         f'Field[7].ratio = {layer_ratio:.12g};','Field[7].Quads = 1;','BoundaryLayer Field = 7;'])+'\n'
     text=text.replace('BoundaryLayer Field = 3;',
                       'Field[3].FanPointsList = {'+', '.join(map(str,fans))+'};\n'+
-                      'Field[3].FanPointsSizesList = {'+', '.join([str(fan_elements)]*len(fans))+'};\nBoundaryLayer Field = 3;')
+                      'Field[3].FanPointsSizesList = {'+', '.join([str(fan_elements)]*len(fans))+'};\nBoundaryLayer Field = 3;\n'+extra)
     path.write_text(text)
     return path
 

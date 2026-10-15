@@ -4,6 +4,11 @@
 usage: make_naca_mesh.py OUTDIR [layer_thickness=0.005] [near=0.004] [ratio=1.18]
                          [wake_size=0.03] [wake_distance=0.5] [max_turn_deg=1.5]
                          [first_layer=2e-6] [alpha_split_deg=10] [far_size=25] [radius=500]
+                         [split_x] [thick_layer=0.04] [grading_distance=25]
+grading_distance: distance at which the background size reaches far_size (linear growth from
+wake_size at wake_distance).  The default 25 gives cells of ~1x the distance to the airfoil, which
+leaves total-pressure errors of +-2-3 % in the outer flow at 1-5 c; grading_distance=400 gives
+h ~ 0.03 + 0.06 d (an O-mesh-like ~6 % radial grading) for only a few thousand extra cells.
 Writes OUTDIR/mesh.geo, OUTDIR/mesh.msh (v2.2 ASCII) and OUTDIR/metadata.json.
 Physical groups: main (airfoil), inlet, outlet, far-field, fluid  -- same far-field
 arc assignment as src/tensorfvm/hlpw30p30n.write_mesh_geo (circle centred at (0.5,0),
@@ -55,7 +60,8 @@ def resample(P, max_turn_deg, near, te_size=1e-3, te_zone=0.97):
     return Q
 
 def write_geo(path, Q, *, first_layer, layer_thickness, ratio, near, wake_size, wake_distance,
-              far_size, radius, alpha_split, fan_elements=12, grading_distance=25.0):
+              far_size, radius, alpha_split, fan_elements=12, grading_distance=25.0,
+              split_x=None, thick_layer=None):
     L = []
     L += [f"Mesh.CharacteristicLengthMin = {first_layer:.12g};",
           f"Mesh.CharacteristicLengthMax = {far_size:.12g};",
@@ -97,11 +103,21 @@ def write_geo(path, Q, *, first_layer, layer_thickness, ratio, near, wake_size, 
           f"Field[5].DistMin = {wake_distance:.12g};", f"Field[5].DistMax = {grading_distance:.12g};",
           "Field[6] = MathEval;", f"Field[6].F = \"F4+F5-{wake_size:.12g}\";",
           "Background Field = 6;",
-          "Field[3] = BoundaryLayer;", f"Field[3].CurvesList = {{{cl}}};",
+          ]
+    # Optional second boundary-layer field: facets whose both end points lie at x > split_x get a
+    # thicker quad layer (Gmsh 2D accepts several BoundaryLayer fields; tests whether the junction
+    # between different layer thicknesses is meshed robustly).
+    thin = [k for k in curves if not (split_x is not None and Q[k - 1][0] > split_x and Q[k % n][0] > split_x)]
+    thick = [k for k in curves if k not in thin]
+    L += ["Field[3] = BoundaryLayer;", f"Field[3].CurvesList = {{{', '.join(map(str, thin))}}};",
           f"Field[3].hwall_n = {first_layer:.12g};", f"Field[3].thickness = {layer_thickness:.12g};",
           f"Field[3].ratio = {ratio:.12g};", "Field[3].Quads = 1;",
           "Field[3].FanPointsList = {1};", f"Field[3].FanPointsSizesList = {{{fan_elements}}};",
           "BoundaryLayer Field = 3;"]
+    if thick:
+        L += ["Field[7] = BoundaryLayer;", f"Field[7].CurvesList = {{{', '.join(map(str, thick))}}};",
+              f"Field[7].hwall_n = {first_layer:.12g};", f"Field[7].thickness = {thick_layer:.12g};",
+              f"Field[7].ratio = {ratio:.12g};", "Field[7].Quads = 1;", "BoundaryLayer Field = 7;"]
     Path(path).write_text("\n".join(L) + "\n")
 
 def main():
@@ -111,12 +127,15 @@ def main():
     layer_thickness, near, ratio = g(1, 0.005), g(2, 0.004), g(3, 1.18)
     wake_size, wake_distance, max_turn = g(4, 0.03), g(5, 0.5), g(6, 1.5)
     first_layer, alpha_split, far_size, radius = g(7, 2e-6), g(8, 10.0), g(9, 25.0), g(10, 500.0)
+    split_x = float(a[11]) if len(a) > 11 and a[11] not in ("-", "none") else None; thick_layer = g(12, 0.04)
+    grading_distance = g(13, 25.0)
     Q = resample(dense_profile(), max_turn, near)
     seg = np.linalg.norm(np.diff(np.vstack([Q, Q[:1]]), axis=0), axis=1)
     geo = out / "mesh.geo"
     write_geo(geo, Q, first_layer=first_layer, layer_thickness=layer_thickness, ratio=ratio, near=near,
               wake_size=wake_size, wake_distance=wake_distance, far_size=far_size, radius=radius,
-              alpha_split=alpha_split)
+              alpha_split=alpha_split, split_x=split_x, thick_layer=thick_layer,
+              grading_distance=grading_distance)
     import gmsh
     gmsh.initialize(); gmsh.option.setNumber("General.Terminal", 0)
     gmsh.open(str(geo)); gmsh.model.mesh.generate(2)
@@ -128,7 +147,8 @@ def main():
                 cells=int(sum(counts.values())), element_counts=counts,
                 layer_thickness=layer_thickness, near=near, ratio=ratio, wake_size=wake_size,
                 wake_distance=wake_distance, max_turn=max_turn, first_layer=first_layer,
-                alpha_split=alpha_split, far_size=far_size, radius=radius)
+                alpha_split=alpha_split, far_size=far_size, radius=radius,
+                split_x=split_x, thick_layer=thick_layer, grading_distance=grading_distance)
     (out / "metadata.json").write_text(json.dumps(meta, indent=1))
     print(json.dumps(meta))
 
