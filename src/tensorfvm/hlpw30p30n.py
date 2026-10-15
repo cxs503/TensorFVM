@@ -41,6 +41,104 @@ def metadata():
     return json.loads((DATA/'metadata.json').read_text())
 
 
+def resample_profile(points, max_turn=1.5, max_length=None, corner_turn=30.):
+    """Curvature-adaptive resampling of a closed polygon along cubic splines.
+
+    The official 30P30N polylines turn by 11-16 degrees per facet around the
+    leading edges (3.3e-3 c facets on a 0.015 c nose radius).  Each convex
+    polygon corner is a local expansion/recompression for the wall-resolved
+    boundary layer (first cells 2e-6 c): the computed Cp and Cf alternate by
+    +-0.3 and a factor 2-3 between neighbouring facets, which thickens the
+    main-element layer before its suction peak and triggers a separation
+    bubble there.  Smooth segments between genuine corners (turn above
+    ``corner_turn`` degrees: blunt trailing edges, slat cusp, cove lips) are
+    therefore interpolated by chord-length parametrised cubic splines through
+    the original vertices; every original facet whose spline arc turns by more
+    than ``max_turn`` degrees (or is longer than ``max_length``) is subdivided
+    on the spline into equal-turning pieces.  All original vertices, the
+    corners and the orientation are preserved exactly.
+    """
+    from scipy.interpolate import splprep, splev
+    P=np.asarray(points,dtype=float)
+    if np.allclose(P[0],P[-1]):P=P[:-1]
+    n=len(P)
+    if n<4 or not 0<max_turn<corner_turn:
+        raise ValueError('resample_profile needs a closed polygon and 0<max_turn<corner_turn')
+    previous=P-np.roll(P,1,axis=0);following=np.roll(P,-1,axis=0)-P
+    turn=np.degrees(np.arctan2(previous[:,0]*following[:,1]-previous[:,1]*following[:,0],(previous*following).sum(1)))
+    corners=np.flatnonzero(np.abs(turn)>corner_turn)
+    if len(corners)==0:
+        segments=[np.vstack([P,P[:1]])];periodic=True
+    else:
+        periodic=False;order=np.roll(np.arange(n),-corners[0]);Q=P[order];cs=sorted(set((c-corners[0])%n for c in corners))
+        bounds=cs+[n];segments=[Q[a:b+1] if b<n else np.vstack([Q[a:],Q[:1]]) for a,b in zip(bounds[:-1],bounds[1:])]
+    if max_length is not None and not max_length>0:
+        raise ValueError('max_length must be positive')
+    out=[]
+    for seg in segments:
+        m=len(seg)
+        if m<5:
+            # too short for a cubic spline (blunt trailing edges): straight facets, length cap only
+            for k in range(m-1):
+                pieces=1 if max_length is None else int(np.ceil(np.linalg.norm(seg[k+1]-seg[k])/max_length))
+                out.extend(np.linspace(seg[k],seg[k+1],pieces+1)[:-1].tolist())
+            continue
+        tck,u=splprep([seg[:,0],seg[:,1]],s=0,k=3,per=periodic)
+        limit=np.radians(max_turn)
+        for k in range(m-1):
+            out.append(seg[k].tolist())
+            # turning and arc length of the spline across this original facet
+            t=np.linspace(u[k],u[k+1],64);dx,dy=splev(t,tck,der=1)
+            theta=np.unwrap(np.arctan2(dy,dx));dtheta=np.abs(np.diff(theta))
+            x,y=splev(t,tck);ds=np.hypot(np.diff(x),np.diff(y))
+            def subdivide(cost):
+                # equal-cost split of the facet; cost = turning/limit (+ length/max_length)
+                cum=np.concatenate([[0],np.cumsum(cost)]);pieces=int(np.ceil(cum[-1]-1e-9))
+                if pieces<=1:return np.zeros((0,2))
+                targets=np.linspace(0,cum[-1],pieces+1)[1:-1]
+                tt=np.interp(targets,cum,t) if cum[-1]>0 else np.linspace(u[k],u[k+1],pieces+1)[1:-1]
+                return np.column_stack(splev(tt,tck))
+            new=subdivide(dtheta/limit)  # equal-turning subdivision (unchanged when no length cap binds)
+            if max_length is not None:
+                chain=np.vstack([seg[k],new,seg[k+1]])
+                if np.linalg.norm(np.diff(chain,axis=0),axis=1).max()>max_length:
+                    # equal-cost subdivision bounds both the turning and the length of every piece
+                    new=subdivide(dtheta/limit+ds/max_length)
+            out.extend(new.tolist())
+    out=np.asarray(out)
+    return np.vstack([out,out[:1]])
+
+
+def per_element(value,name):
+    """One value for all elements or a mapping element -> value (None stays None)."""
+    if value is None:return None
+    if isinstance(value,dict):
+        if set(value)!={'slat','main','flap'}:raise ValueError('Per-element values need slat, main and flap entries')
+        return value[name]
+    return value
+
+
+def profile_directory(max_turn=None,destination=None,max_length=None):
+    """Official polylines (``max_turn`` None) or a resampled copy next to the mesh.
+
+    ``max_turn`` is one angle for all elements or a mapping element -> angle
+    (Gmsh's boundary-layer edge recovery is not robust to every node
+    distribution in the 0.0127 c main-flap gap, so the flap may need a
+    slightly different angle than slat and main).  ``max_length`` (chords, one
+    value or per element) additionally subdivides long facets: 3.2e-3 c flap
+    facets turning 1-2 degrees still imprint a Cp sawtooth of +-0.05 on the
+    flap suction side (the polygon sagitta l*theta/8 is 2-3 wall units).
+    """
+    if max_turn is None:
+        if max_length is not None:raise ValueError('max_length resampling needs max_turn')
+        return DATA
+    destination=Path(destination);destination.mkdir(parents=True,exist_ok=True)
+    for name in ['slat','main','flap']:
+        np.savetxt(destination/(name+'.dat'),resample_profile(np.loadtxt(DATA/(name+'.dat')),max_turn=float(per_element(max_turn,name)),
+                                                              max_length=per_element(max_length,name)),fmt='%.17g')
+    return destination
+
+
 def mesh_quality(mesh,alpha):
     """Independent centroid/face-angle and freestream boundary checks."""
     import torch
@@ -58,20 +156,85 @@ def mesh_quality(mesh,alpha):
     return record
 
 
+
+def layer_zones(profiles, thin, thick):
+    """Map every wall facet (Gmsh curve id) of the polygon layout to a quad-layer thickness.
+
+    The shared writer limits one uniform layer to half the main/flap gap (0.0064 C), which
+    leaves the aft main boundary layer, the slat/main wakes and the flap confluent layer
+    (0.01-0.05 C thick) to isotropic triangles.  Gmsh 2D accepts several BoundaryLayer
+    fields, so facets that have free fluid above them get ``thick`` while facets that face
+    another element, and both facets of every fan corner, keep ``thin``:
+
+    * main upper surface, 0.06 < x < 0.855 (clear of the slat trailing edge at x 0.019 and of
+      the blunt main trailing edge whose fan must stay inside the 0.013 C main/flap gap);
+    * flap upper surface, x > 0.905 (downstream of the main trailing edge at x 0.874);
+    * both flap surfaces for 0.96 < x < 1.115; the blunt flap trailing edge (x 1.128-1.131)
+      keeps the thin layer because a 0.04 C fan on its 0.003 C base produced 88-degree
+      wall non-orthogonality.
+
+    Facet ids equal the ids of their first point; contours are clockwise (outward normal of
+    the edge d is (-d_y, d_x)).  Returns ``{curve_id: thickness}``.
+    """
+    zones = {}; offset = 1
+    for name in ['slat', 'main', 'flap']:
+        q = np.loadtxt(profiles / (name + '.dat'))
+        if np.allclose(q[0], q[-1]): q = q[:-1]
+        d = np.roll(q, -1, axis=0) - q; mid = q + d / 2
+        n = np.c_[-d[:, 1], d[:, 0]] / np.linalg.norm(d, axis=1)[:, None]
+        for i, ((x, y), (nx, ny)) in enumerate(zip(mid, n)):
+            t = thin
+            if name == 'main' and ny > 0.2 and 0.06 < x < 0.855: t = thick
+            if name == 'flap' and ((ny > -0.2 and x > 0.905) or x > 0.96) and x < 1.115: t = thick
+            zones[offset + i] = t
+        offset += len(q)
+    return zones
+
 def write_mesh_geo(path, *, near_size=.003, far_size=25, first_layer=2e-6,
                    layer_thickness=.0005, layer_ratio=1.18, grading_distance=100,
-                   alpha=8.1,fan_elements=12):
+                   alpha=8.1,fan_elements=12,fan_angle=45,wake_size=None,wake_distance=.5,max_turn=None,max_length=None,
+                   thick_layer=None):
     """Shared Gmsh wall layers; official circular 500C farfield and nominal C=1.
 
     Left semicircle uses prescribed freestream velocity; right uses zero gauge
     pressure. This is an incompressible approximation to a compressible farfield.
+
+    ``fan_angle`` is the convex polygon turn (degrees) above which a corner gets
+    a boundary-layer fan.  Only genuinely sharp corners (trailing edges, slat
+    cusp, main cove lip; turns of 60-162 degrees) should get one: the 11-16
+    degree facets of the sampled leading edges used to receive two-sector fans
+    whose first ring is a sliver with no wall face, which produced spurious
+    near-wall jets at every suction peak.  Smooth kinks are extruded with the
+    averaged normal instead.
+
+    ``max_turn`` (optional, degrees) resamples the polylines with
+    :func:`resample_profile` so that no smooth facet turns by more than this;
+    ``max_length`` (optional, chords; one value or per element) also caps the
+    facet length (see :func:`profile_directory`).
+
+    ``wake_size`` (optional) caps the triangle size at ``wake_distance`` chords
+    from the walls, so that the slat/main wakes, the gap flows and the outer
+    boundary layers are not left to the 500C far-field grading, which otherwise
+    reaches 0.13C already half a chord behind the flap.  The size is piecewise
+    linear in wall distance: near_size -> wake_size -> far_size.
+
+    ``thick_layer`` (optional, chords) gives the facets selected by :func:`layer_zones` a
+    second, thicker quad layer (same first layer and ratio); ``layer_thickness`` remains
+    the thin layer of the gap regions and of every fan corner.
     """
+    if thick_layer is not None and not layer_thickness<thick_layer<.2:
+        raise ValueError('thick_layer must exceed layer_thickness and stay below 0.2 C')
     if not 0<grading_distance<=500:
         raise ValueError('Grading distance must be in (0,500]')
+    if not 0<fan_angle<180:
+        raise ValueError('Fan angle must be in (0,180) degrees')
+    if wake_size is not None and not (near_size<wake_size<far_size and layer_thickness<wake_distance<grading_distance):
+        raise ValueError('Wake refinement must satisfy near_size<wake_size<far_size and layer_thickness<wake_distance<grading_distance')
+    profiles = profile_directory(max_turn, Path(path).parent/'profiles', max_length)
     path = write_gmsh_geo(path,domain=(-500,500,-500,500),near_size=near_size,
                          far_size=far_size,first_layer=first_layer,
                          layer_thickness=layer_thickness,layer_ratio=layer_ratio,
-                         profile_directory=DATA)
+                         profile_directory=profiles)
     text = path.read_text()
     points = list(map(int,re.findall(r'Point\((\d+)\)',text)))
     corners = points[-4:]; center = max(points)+1
@@ -93,17 +256,40 @@ def write_mesh_geo(path, *, near_size=.003, far_size=25, first_layer=2e-6,
         text = re.sub(rf'Physical Curve\("{name}"\).*?;',
                       f'Physical Curve("{name}") = {{{", ".join(map(str,ids))}}};',text)
     text = text.replace('Field[2].DistMax = 0.25;',f'Field[2].DistMax = {grading_distance};')
+    if wake_size is not None:
+        text = text.replace('Background Field = 2;','\n'.join([
+            'Field[4] = Threshold;','Field[4].InField = 1;',
+            f'Field[4].SizeMin = {near_size:.12g};',f'Field[4].SizeMax = {wake_size:.12g};',
+            f'Field[4].DistMin = {layer_thickness:.12g};',f'Field[4].DistMax = {wake_distance:.12g};',
+            'Field[5] = Threshold;','Field[5].InField = 1;',
+            f'Field[5].SizeMin = {wake_size:.12g};',f'Field[5].SizeMax = {far_size:.12g};',
+            f'Field[5].DistMin = {wake_distance:.12g};',f'Field[5].DistMax = {grading_distance:.12g};',
+            'Field[6] = MathEval;',f'Field[6].F = "F4+F5-{wake_size:.12g}";',
+            'Background Field = 6;']))
     fans=[];offset=1
     for name in ['slat','main','flap']:
-        profile=np.loadtxt(DATA/(name+'.dat'))[:-1]
+        profile=np.loadtxt(profiles/(name+'.dat'))[:-1]
         previous=profile-np.roll(profile,1,axis=0);following=np.roll(profile,-1,axis=0)-profile
         turn=np.degrees(np.arctan2(previous[:,0]*following[:,1]-previous[:,1]*following[:,0],(previous*following).sum(1)))
         # Canonical contours are clockwise. Convex body corners need a fan
         # in the external fluid; smooth curvature remains normally extruded.
-        fans.extend((offset+np.flatnonzero(turn < -10)).tolist());offset+=len(profile)
+        fans.extend((offset+np.flatnonzero(turn < -fan_angle)).tolist());offset+=len(profile)
+    extra=''
+    if thick_layer is not None:
+        zones=layer_zones(profiles,layer_thickness,thick_layer)
+        match=re.search(r'Field\[3\]\.CurvesList = \{(.*?)\};',text)
+        if not match:raise ValueError('Shared mesh writer boundary-layer field changed')
+        curves=[int(v) for v in match.group(1).split(',')]
+        thin=[c for c in curves if zones.get(c,layer_thickness)==layer_thickness]
+        thick=[c for c in curves if zones.get(c,layer_thickness)!=layer_thickness]
+        if not thick:raise ValueError('thick_layer selected no facets')
+        text=text.replace(match.group(0),'Field[3].CurvesList = {'+', '.join(map(str,thin))+'};')
+        extra='\n'.join(['Field[7] = BoundaryLayer;','Field[7].CurvesList = {'+', '.join(map(str,thick))+'};',
+                         f'Field[7].hwall_n = {first_layer:.12g};',f'Field[7].thickness = {thick_layer:.12g};',
+                         f'Field[7].ratio = {layer_ratio:.12g};','Field[7].Quads = 1;','BoundaryLayer Field = 7;'])+'\n'
     text=text.replace('BoundaryLayer Field = 3;',
                       'Field[3].FanPointsList = {'+', '.join(map(str,fans))+'};\n'+
-                      'Field[3].FanPointsSizesList = {'+', '.join([str(fan_elements)]*len(fans))+'};\nBoundaryLayer Field = 3;')
+                      'Field[3].FanPointsSizesList = {'+', '.join([str(fan_elements)]*len(fans))+'};\nBoundaryLayer Field = 3;\n'+extra)
     path.write_text(text)
     return path
 
