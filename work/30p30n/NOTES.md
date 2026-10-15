@@ -207,3 +207,13 @@ slat and on the flap; or a wake/BL anisotropic triangle size field); (2) report 
   m5-stage1 at it 171) and every .msh.  `work/env/setup.sh` rebuilds the env in 90 s; meshes
   regenerate in 10-20 s each (m5 identical: 128,043 cells).  run_naca.py now registers SIGUSR1
   (faulthandler) because the first run-a10-ff attempt stalled inside step() without output.
+* run_naca.py argument order is `MESH OUTDIR alpha Re max_it save_every` (NO separate total
+  argument): `... 10 6e6 1500 1500 10` sets save_every=1500, so the run prints only at it 0 and
+  never checkpoints — the two "stalled" run-a10-ff attempts were silent, healthy runs (8 s/it)
+  killed by mistake.  Correct: `run_naca.py MESH OUT 10 6e6 1500 10`.
+* Exact 30P30N stage-1 command (m5, 300 it, 0.5/0.3/0.3, 7-10 s/it):
+  `scripts/run_three_element_steady.py --mesh-file work/30p30n/m5/mesh.msh --output
+  work/30p30n/m5-stage1 --chord 1 --alpha 8.1 --pressure-gradient gauss-skew-corrected
+  --linear-backend krylov --lu-refresh-interval 1 --linear-budget-scale 1000 --max-iterations 300
+  --save-interval 10`; stage 2 adds `--initialize-from work/30p30n/m5-stage1 --u-relaxation 0.7
+  --sa-relaxation 0.7 --max-iterations 2500` with a new --output.
