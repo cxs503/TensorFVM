@@ -72,44 +72,70 @@ def resample_profile(points, max_turn=1.5, max_length=None, corner_turn=30.):
     else:
         periodic=False;order=np.roll(np.arange(n),-corners[0]);Q=P[order];cs=sorted(set((c-corners[0])%n for c in corners))
         bounds=cs+[n];segments=[Q[a:b+1] if b<n else np.vstack([Q[a:],Q[:1]]) for a,b in zip(bounds[:-1],bounds[1:])]
+    if max_length is not None and not max_length>0:
+        raise ValueError('max_length must be positive')
     out=[]
     for seg in segments:
         m=len(seg)
         if m<5:
-            out.extend(seg[:-1].tolist());continue
+            # too short for a cubic spline (blunt trailing edges): straight facets, length cap only
+            for k in range(m-1):
+                pieces=1 if max_length is None else int(np.ceil(np.linalg.norm(seg[k+1]-seg[k])/max_length))
+                out.extend(np.linspace(seg[k],seg[k+1],pieces+1)[:-1].tolist())
+            continue
         tck,u=splprep([seg[:,0],seg[:,1]],s=0,k=3,per=periodic)
         limit=np.radians(max_turn)
         for k in range(m-1):
             out.append(seg[k].tolist())
-            # turning of the spline across this original facet
+            # turning and arc length of the spline across this original facet
             t=np.linspace(u[k],u[k+1],64);dx,dy=splev(t,tck,der=1)
-            theta=np.unwrap(np.arctan2(dy,dx));turning=np.abs(np.diff(theta)).sum()
-            pieces=int(np.ceil(turning/limit))
-            if max_length is not None:
-                pieces=max(pieces,int(np.ceil(np.linalg.norm(seg[k+1]-seg[k])/max_length)))
-            if pieces>1:
-                # equal-turning subdivision keeps the new facets uniform in angle
-                cum=np.concatenate([[0],np.cumsum(np.abs(np.diff(theta)))])
+            theta=np.unwrap(np.arctan2(dy,dx));dtheta=np.abs(np.diff(theta))
+            x,y=splev(t,tck);ds=np.hypot(np.diff(x),np.diff(y))
+            def subdivide(cost):
+                # equal-cost split of the facet; cost = turning/limit (+ length/max_length)
+                cum=np.concatenate([[0],np.cumsum(cost)]);pieces=int(np.ceil(cum[-1]-1e-9))
+                if pieces<=1:return np.zeros((0,2))
                 targets=np.linspace(0,cum[-1],pieces+1)[1:-1]
                 tt=np.interp(targets,cum,t) if cum[-1]>0 else np.linspace(u[k],u[k+1],pieces+1)[1:-1]
-                x,y=splev(tt,tck);out.extend(np.column_stack([x,y]).tolist())
+                return np.column_stack(splev(tt,tck))
+            new=subdivide(dtheta/limit)  # equal-turning subdivision (unchanged when no length cap binds)
+            if max_length is not None:
+                chain=np.vstack([seg[k],new,seg[k+1]])
+                if np.linalg.norm(np.diff(chain,axis=0),axis=1).max()>max_length:
+                    # equal-cost subdivision bounds both the turning and the length of every piece
+                    new=subdivide(dtheta/limit+ds/max_length)
+            out.extend(new.tolist())
     out=np.asarray(out)
     return np.vstack([out,out[:1]])
 
 
-def profile_directory(max_turn=None,destination=None):
+def per_element(value,name):
+    """One value for all elements or a mapping element -> value (None stays None)."""
+    if value is None:return None
+    if isinstance(value,dict):
+        if set(value)!={'slat','main','flap'}:raise ValueError('Per-element values need slat, main and flap entries')
+        return value[name]
+    return value
+
+
+def profile_directory(max_turn=None,destination=None,max_length=None):
     """Official polylines (``max_turn`` None) or a resampled copy next to the mesh.
 
     ``max_turn`` is one angle for all elements or a mapping element -> angle
     (Gmsh's boundary-layer edge recovery is not robust to every node
     distribution in the 0.0127 c main-flap gap, so the flap may need a
-    slightly different angle than slat and main).
+    slightly different angle than slat and main).  ``max_length`` (chords, one
+    value or per element) additionally subdivides long facets: 3.2e-3 c flap
+    facets turning 1-2 degrees still imprint a Cp sawtooth of +-0.05 on the
+    flap suction side (the polygon sagitta l*theta/8 is 2-3 wall units).
     """
-    if max_turn is None:return DATA
-    turns=dict(max_turn) if isinstance(max_turn,dict) else {name:float(max_turn) for name in ['slat','main','flap']}
+    if max_turn is None:
+        if max_length is not None:raise ValueError('max_length resampling needs max_turn')
+        return DATA
     destination=Path(destination);destination.mkdir(parents=True,exist_ok=True)
     for name in ['slat','main','flap']:
-        np.savetxt(destination/(name+'.dat'),resample_profile(np.loadtxt(DATA/(name+'.dat')),max_turn=turns[name]),fmt='%.17g')
+        np.savetxt(destination/(name+'.dat'),resample_profile(np.loadtxt(DATA/(name+'.dat')),max_turn=float(per_element(max_turn,name)),
+                                                              max_length=per_element(max_length,name)),fmt='%.17g')
     return destination
 
 
@@ -166,7 +192,7 @@ def layer_zones(profiles, thin, thick):
 
 def write_mesh_geo(path, *, near_size=.003, far_size=25, first_layer=2e-6,
                    layer_thickness=.0005, layer_ratio=1.18, grading_distance=100,
-                   alpha=8.1,fan_elements=12,fan_angle=45,wake_size=None,wake_distance=.5,max_turn=None,
+                   alpha=8.1,fan_elements=12,fan_angle=45,wake_size=None,wake_distance=.5,max_turn=None,max_length=None,
                    thick_layer=None):
     """Shared Gmsh wall layers; official circular 500C farfield and nominal C=1.
 
@@ -182,7 +208,9 @@ def write_mesh_geo(path, *, near_size=.003, far_size=25, first_layer=2e-6,
     averaged normal instead.
 
     ``max_turn`` (optional, degrees) resamples the polylines with
-    :func:`resample_profile` so that no smooth facet turns by more than this.
+    :func:`resample_profile` so that no smooth facet turns by more than this;
+    ``max_length`` (optional, chords; one value or per element) also caps the
+    facet length (see :func:`profile_directory`).
 
     ``wake_size`` (optional) caps the triangle size at ``wake_distance`` chords
     from the walls, so that the slat/main wakes, the gap flows and the outer
@@ -202,7 +230,7 @@ def write_mesh_geo(path, *, near_size=.003, far_size=25, first_layer=2e-6,
         raise ValueError('Fan angle must be in (0,180) degrees')
     if wake_size is not None and not (near_size<wake_size<far_size and layer_thickness<wake_distance<grading_distance):
         raise ValueError('Wake refinement must satisfy near_size<wake_size<far_size and layer_thickness<wake_distance<grading_distance')
-    profiles = profile_directory(max_turn, Path(path).parent/'profiles')
+    profiles = profile_directory(max_turn, Path(path).parent/'profiles', max_length)
     path = write_gmsh_geo(path,domain=(-500,500,-500,500),near_size=near_size,
                          far_size=far_size,first_layer=first_layer,
                          layer_thickness=layer_thickness,layer_ratio=layer_ratio,

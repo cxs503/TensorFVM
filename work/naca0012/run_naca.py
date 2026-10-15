@@ -18,7 +18,8 @@ Reference (TMR, CFL3D SA, Re 6e6, M 0.15): alpha 10: Cl 1.0909 Cd 0.01231 (7 cod
 Writes JSON lines (it, residuals, Cl, Cd, Cf stations), OUTDIR/wall.dat and a resumable
 OUTDIR/checkpoint.npz every 5*save_every iterations.
 """
-import os, sys, json, time, numpy as np, torch
+import os, sys, json, time, numpy as np, torch, faulthandler, signal
+faulthandler.register(signal.SIGUSR1, all_threads=True)  # kill -USR1 PID dumps the Python stack to stderr (stall diagnosis)
 from pathlib import Path
 from dataclasses import replace, asdict
 from tensorfvm.solver import SolverConfig
