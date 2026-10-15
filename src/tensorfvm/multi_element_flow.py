@@ -18,7 +18,7 @@ class MultiElementFlowSolver(ConservativePressureGradient,LinearUpwindMomentum,C
     def __init__(self,config,*,bounded=True):
         if config.mesh_type!='three-element' or config.device!='cpu' or config.time_step is not None:
             raise ValueError('Multi-element sparse verification requires steady three-element CPU mesh')
-        super().__init__(config);self.bounded=bounded;self.convection_blend=1.;self.sa_inner_iterations=3
+        super().__init__(config);self.bounded=bounded;self.convection_blend=1.;self.sa_inner_iterations=3;self.sa_linear_upwind=False
         self._sa_lu_cache={};self._sa_linear_calls={};self.anderson_depth=0
         self._in_sa_step=False;self._momentum_reference=None;self._momentum_matrix_override=None;self._momentum_face_factors=None;self._momentum_stress_source=None
         self.implicit_convection=False;self._lagged_upwind=None
@@ -52,11 +52,36 @@ class MultiElementFlowSolver(ConservativePressureGradient,LinearUpwindMomentum,C
         fv2=1-chi/(1+chi*fv1)
         return torch.maximum(vorticity+nu.clamp_min(0)*fv2/(.41**2*self.wall_distance.square()),self.sa_vorticity_floor*vorticity).clamp_min(1e-14)
 
+    def sa_upwind_correction(self,nu_tilde,flux):
+        """Bounded linear-upwind face correction of nu_tilde (deferred, scalar twin of
+        ``linear_upwind_correction``).  First-order upwind keeps the implicit matrix;
+        the limited gradient part enters the source.  The Barth-Jespersen bound uses the
+        face neighbours and the Dirichlet boundary values of nu_tilde."""
+        gradient=self._gradient(nu_tilde,boundary_values=self.sa_boundary_nu_tilde)
+        upstream,displacement=self._upwind_geometry(flux)
+        delta=(displacement*gradient[upstream]).sum(-1)
+        if self.bounded:
+            minimum=nu_tilde.clone();maximum=nu_tilde.clone()
+            minimum.index_reduce_(0,self.oi,nu_tilde[self.ni],reduce='amin',include_self=True);minimum.index_reduce_(0,self.ni,nu_tilde[self.oi],reduce='amin',include_self=True)
+            maximum.index_reduce_(0,self.oi,nu_tilde[self.ni],reduce='amax',include_self=True);maximum.index_reduce_(0,self.ni,nu_tilde[self.oi],reduce='amax',include_self=True)
+            fixed=self.mesh.boundary&~self.mesh.masks['outlet'];owners=self.o[fixed];boundary=self.sa_boundary_nu_tilde[fixed]
+            minimum.index_reduce_(0,owners,boundary,reduce='amin',include_self=True);maximum.index_reduce_(0,owners,boundary,reduce='amax',include_self=True)
+            base=nu_tilde[upstream]
+            ratio=torch.where(delta>0,(maximum[upstream]-base)/delta.clamp_min(1e-30),(minimum[upstream]-base)/delta.clamp_max(-1e-30))
+            ratio=torch.where(delta.abs()<1e-30,torch.ones_like(ratio),ratio).clamp(0,1)
+            cell_ratio=torch.ones_like(nu_tilde);cell_ratio.index_reduce_(0,upstream,ratio,reduce='amin',include_self=True)
+            delta=delta*cell_ratio[upstream]
+        correction=torch.zeros_like(flux);correction[self.f]=delta
+        return self.convection_blend*correction
+
     def _sa_system(self,nu_tilde):
         # OpenFOAM's documented SA guard: Stilde >= 0.3*Omega. This avoids a
         # near-zero rotation scale inside vortical coves without changing the
         # transport, diffusion, wall distance or force equations.
         diagonal,ao,an,source=super()._sa_system(nu_tilde)
+        if self.sa_linear_upwind:
+            # Same bounded linear-upwind convection as momentum (deferred correction).
+            source=source-self._sum(self.mass_flux*self.sa_upwind_correction(nu_tilde,self.mass_flux))
         c=self.config;nu=nu_tilde.clamp_min(0);chi=nu/self.kinematic_viscosity;fv1=chi**3/(chi**3+7.1**3);fv2=1-chi/(1+chi*fv1);gradient=self._gradient(self.velocity);omega=(gradient[:,1,0]-gradient[:,0,1]).abs();d2=self.wall_distance.square();old=(omega+nu*fv2/(.41**2*d2)).clamp_min(1e-14);new=self.sa_stilde(omega,nu)
         def destruction(st):
             r=(nu/(st*.41**2*d2)).clamp(max=10);g=r+.3*(r**6-r);fw=g*((1+2.**6)/(g**6+2.**6))**(1/6)
@@ -154,12 +179,23 @@ class MultiElementFlowSolver(ConservativePressureGradient,LinearUpwindMomentum,C
         if defect>2e-11:raise RuntimeError(f'Current full momentum operator mismatch: {defect}')
         return matrices,defect
 
+    # 0 (default): every current system is factorized afresh.  The pressure
+    # coefficient changes rapidly during startup on a 500C domain and a stale
+    # factor then wastes Krylov vectors.  N>0: keep each factor as the GMRES
+    # preconditioner of the *current* matrix for N solves of its kind (the
+    # true-residual budget and the operator gates are unchanged); failed
+    # solves fall back to a fresh direct factorization.  Factorization is
+    # ~60% of a SIMPLE iteration at 6e4 cells, so this roughly halves the
+    # cost once the fields vary slowly.
+    lu_refresh_interval=0
+
     def _linear(self,diagonal,ao,an,rhs,initial,symmetric=False,operator=None,**kwargs):
-        # The pressure coefficient changes rapidly during startup on a 500C
-        # domain. A fresh factor avoids hundreds of ineffective Krylov vectors
-        # with the previous coefficient field as a preconditioner.
-        self._linear_calls['pressure' if operator is not None else 'momentum']=0
+        kind='pressure' if operator is not None else 'momentum'
+        if self.linear_backend=='krylov':pass  # O(N) preconditioners are always cached and refreshed adaptively
+        elif self.lu_refresh_interval<=0:self._linear_calls.clear();self.gmres_max_restarts=10
+        else:self.gmres_max_restarts=1
         full_momentum=operator is None and not self._in_sa_step and self._momentum_reference is not None
+        self._cache_key_suffix=str(self._momentum_component) if full_momentum else ''
         if full_momentum:
             if self._momentum_corrections is None:
                 self._momentum_corrections,self._momentum_operator_defect=self.momentum_correction_matrices(self._momentum_reference,self._momentum_reference_flux)
@@ -170,7 +206,7 @@ class MultiElementFlowSolver(ConservativePressureGradient,LinearUpwindMomentum,C
                 raise RuntimeError('Current relaxed momentum matrix has nonpositive diagonal')
             rhs=rhs+torch.from_numpy(Q@array(initial));self._momentum_component+=1
         try:answer=super()._linear(diagonal,ao,an,rhs,initial,symmetric,operator,**kwargs)
-        finally:self._momentum_matrix_override=None
+        finally:self._momentum_matrix_override=None;self._cache_key_suffix=''
         if full_momentum:self.linear_history[-1]['momentum_assembled_operator_relative_defect']=self._momentum_operator_defect
         return answer
 

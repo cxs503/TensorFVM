@@ -48,9 +48,19 @@ class ThreeElementMesh:
                                                physical_names, node_index)
         if not polygons:
             raise ValueError("Gmsh mesh contains no linear triangle or quadrilateral cells")
-        missing = {"slat", "main", "flap", "inlet", "outlet", "far-field"} - set(
-            line_groups.values()
-        )
+        self.collapsed_fan_apex_cells = 0
+        self.fillet_wall_nodes: tuple[int, ...] = ()
+        if getattr(config, "collapse_fan_apex_cells", True):
+            polygons, line_groups, removed, fillet_nodes = self._collapse_fan_apex_cells(
+                polygons, line_groups, nodes)
+            self.collapsed_fan_apex_cells = removed
+            self.fillet_wall_nodes = tuple(sorted(fillet_nodes))
+        required = {"slat", "main", "flap", "inlet", "outlet", "far-field"}
+        if getattr(config, "single_element", False):
+            # Verification meshes (flat plate, single airfoil) run through the
+            # same solver with only the ``main`` wall; slat/flap masks stay empty.
+            required -= {"slat", "flap"}
+        missing = required - set(line_groups.values())
         if missing:
             raise ValueError("Gmsh mesh is missing physical boundary groups: "
                              + ", ".join(sorted(missing)))
@@ -132,6 +142,67 @@ class ThreeElementMesh:
         self.masks["wall"] = self.masks["slat"] | self.masks["main"] | self.masks["flap"]
         self.masks["airfoil"] = self.masks["wall"]
         self.masks["cylinder"] = torch.zeros_like(self.boundary)
+
+    # Gmsh 2-D boundary-layer "fans" at convex wall corners start with a ring of
+    # triangles whose apex is the corner node itself.  Those triangles touch the
+    # wall at a single vertex and own no wall face, so the no-slip condition is
+    # never applied to them: in the HLPW4 30P30N runs they carried |u| up to
+    # 2.6 U and Cp down to -59 within 1e-6 c of the wall.  The reader therefore
+    # removes them and turns the exposed edges of the first fan ring into wall
+    # faces.  The solid grows by a fillet of radius ``hwall_n`` (the first-layer
+    # height, 2e-6 c for the level-0 mesh), which is far below any geometric
+    # tolerance that matters for the benchmark.
+    _FAN_APEX_MAX_EDGE = 1e-4
+
+    @classmethod
+    def _collapse_fan_apex_cells(cls, polygons, line_groups, nodes):
+        wall_names = {"slat", "main", "flap"}
+        wall_edges = {key: name for key, name in line_groups.items() if name in wall_names}
+        wall_node_name: dict[int, str] = {}
+        for (start, stop), name in wall_edges.items():
+            wall_node_name[start] = name
+            wall_node_name[stop] = name
+        if not wall_node_name:
+            return polygons, line_groups, 0, set()
+        edge_cells: dict[tuple[int, int], list[int]] = {}
+        for cell_id, cell in enumerate(polygons):
+            for start, stop in zip(cell, cell[1:] + cell[:1]):
+                edge_cells.setdefault((min(start, stop), max(start, stop)), []).append(cell_id)
+        removed: dict[int, str] = {}
+        for cell_id, cell in enumerate(polygons):
+            if len(cell) != 3:
+                continue
+            on_wall = [node for node in cell if node in wall_node_name]
+            if len(on_wall) != 1:
+                continue
+            edges = [(min(a, b), max(a, b)) for a, b in zip(cell, cell[1:] + cell[:1])]
+            if any(edge in wall_edges for edge in edges):
+                continue
+            longest = max(math.dist(nodes[a], nodes[b]) for a, b in edges)
+            if longest > cls._FAN_APEX_MAX_EDGE:
+                continue
+            removed[cell_id] = wall_node_name[on_wall[0]]
+        if not removed:
+            return polygons, line_groups, 0, set()
+        line_groups = dict(line_groups)
+        fillet_nodes: set[int] = set()
+        for cell_id, name in removed.items():
+            cell = polygons[cell_id]
+            for start, stop in zip(cell, cell[1:] + cell[:1]):
+                key = (min(start, stop), max(start, stop))
+                others = [other for other in edge_cells[key] if other != cell_id]
+                if not others:
+                    raise ValueError("Gmsh fan apex triangle has an unexpected boundary edge")
+                if others[0] in removed:
+                    continue
+                if key in line_groups and line_groups[key] != name:
+                    raise ValueError("Gmsh fan apex triangle borders a foreign boundary group")
+                line_groups[key] = name
+                for node in key:
+                    if node not in wall_node_name:
+                        fillet_nodes.add(node)
+        kept = [cell for cell_id, cell in enumerate(polygons) if cell_id not in removed]
+        return kept, line_groups, len(removed), fillet_nodes
 
     @staticmethod
     def _read_sections(path: Path) -> dict[str, list[str]]:
