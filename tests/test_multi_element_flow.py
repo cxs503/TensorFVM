@@ -7,7 +7,7 @@ import torch
 from tests.test_three_element import _TINY_GMSH
 from tensorfvm.solver import SolverConfig
 from tensorfvm.multi_element_flow import MultiElementFlowSolver
-from tensorfvm.hlpw30p30n import DATA,reference_zones,resample_profile,write_mesh_geo
+from tensorfvm.hlpw30p30n import DATA,layer_zones,reference_zones,resample_profile,write_mesh_geo
 
 
 def _two_row_mesh():
@@ -174,5 +174,32 @@ class MultiElementFlowTests(unittest.TestCase):
         self.assertGreater(geo.count('Point('),645+209+205+16)
         self.assertTrue((Path(self.temp.name)/'profiles'/'main.dat').exists())
 
+    def test_zoned_quad_layers_keep_gaps_and_fans_thin(self):
+        out=Path(self.temp.name)/'zoned'
+        geo=write_mesh_geo(out/'mesh.geo',thick_layer=.04,max_turn={'slat':1.5,'main':1.5,'flap':2.}).read_text()
+        self.assertEqual(geo.count('BoundaryLayer;'),2);self.assertIn('Field[7].thickness = 0.04;',geo)
+        self.assertIn('Field[3].thickness = 0.0005;',geo)
+        import re
+        thin=set(map(int,re.search(r'Field\[3\]\.CurvesList = \{([^}]*)\}',geo).group(1).split(',')))
+        thick=set(map(int,re.search(r'Field\[7\]\.CurvesList = \{([^}]*)\}',geo).group(1).split(',')))
+        fans=set(map(int,re.search(r'Field\[3\]\.FanPointsList = \{([^}]*)\}',geo).group(1).split(',')))
+        zones=layer_zones(out/'profiles',.0005,.04)
+        self.assertEqual(thin|thick,set(zones));self.assertFalse(thin&thick)
+        self.assertEqual(thick,{k for k,v in zones.items() if v==.04})
+        # the facets on both sides of every fan corner stay in the thin field
+        n_slat=len(np.loadtxt(out/'profiles'/'slat.dat'))-1
+        for f in fans:self.assertIn(f,thin)
+        # geometry of the zones: slat entirely thin, main thick facets only on the upper surface
+        # clear of the slat/main and main/flap gaps, flap thick facets downstream of the main TE
+        main=np.loadtxt(out/'profiles'/'main.dat')[:-1];flap=np.loadtxt(out/'profiles'/'flap.dat')[:-1]
+        self.assertTrue(all(k>n_slat for k in thick))
+        mids={i+n_slat+1:(main[i]+main[(i+1)%len(main)])/2 for i in range(len(main))}
+        mids.update({i+n_slat+len(main)+1:(flap[i]+flap[(i+1)%len(flap)])/2 for i in range(len(flap))})
+        for k in thick:
+            x,y=mids[k]
+            if k<=n_slat+len(main):self.assertTrue(.06<x<.855 and y>-.01,(k,x,y))
+            else:self.assertTrue(.905<x<1.115,(k,x,y))
+        self.assertGreater(len(thick),300);self.assertGreater(len(thin),300)
+        with self.assertRaises(ValueError):write_mesh_geo(out/'bad.geo',thick_layer=.0004)
 
 if __name__=='__main__':unittest.main()
