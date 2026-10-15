@@ -1,0 +1,30 @@
+{
+  "level": 0,
+  "refinement_scale": 1.0,
+  "options": {
+    "first_layer": 2e-06,
+    "layer_thickness": 0.04,
+    "ratio": 1.12,
+    "near": 0.004,
+    "wake_size": 0.03,
+    "wake_distance": 0.5,
+    "far_size": 25.0,
+    "radius": 500.0,
+    "alpha_split": 0.0,
+    "grading_distance": 400.0
+  },
+  "trailing_edge_facet_cap": 0.001,
+  "max_turn_deg": 1.5,
+  "wall_points": 626,
+  "cells": 101486,
+  "element_counts": {
+    "2": 58114,
+    "3": 43372
+  },
+  "gmsh_version": "4.15.2",
+  "source_sha256": {
+    "scripts/mesh_highre_naca.py": "1ade905faded35df2a7e8ddd0aca058b0e1536690c38f965bb4b1830ffd8e0aa",
+    "work/naca0012/make_naca_mesh.py": "78b9089cf11b232e7fa53060822a6cdc418c941ef230adcc62fd5491167dd0fc"
+  },
+  "mesh_sha256": "0efe6423845954abd4aa8ae468c25690aba4bb7d5f3fb8af61d8b7c14ca01c92"
+}
