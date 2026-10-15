@@ -12,6 +12,7 @@ environment switches (experiments):
   BLEND=x              fixed convection blend (0 = first-order upwind) after the ramp
   U_RELAX / P_RELAX / SA_RELAX   relaxation factors
   ANDERSON=n           Anderson mixing depth (MultiElementFlowSolver.step), 0 = off
+  LU_REFRESH=n         preconditioner refresh interval (default 10); LINEAR_BUDGET_SCALE=x inner-solve budget factor
 Reference (TMR, CFL3D SA, Re 6e6, M 0.15): alpha 10: Cl 1.0909 Cd 0.01231 (7 codes 1.089-1.100
 / 0.01225-0.01245); alpha 0: Cd 0.00819; alpha 15: Cl 1.5461 Cd 0.02124.
 Writes JSON lines (it, residuals, Cl, Cd, Cf stations), OUTDIR/wall.dat and a resumable
@@ -38,7 +39,7 @@ config = SolverConfig(nx=1, ny=1, length=1000, height=1000, cylinder_radius=None
                       max_iterations=maxit, device='cpu')
 config.single_element = True
 s = SkewPressureMultiElementSolver(config, bounded=not int(env('UNBOUNDED', '0')))
-s.linear_backend = 'krylov'; s.lu_refresh_interval = 10
+s.linear_backend = 'krylov'; s.lu_refresh_interval = int(env('LU_REFRESH', '10')); s.linear_budget_scale = float(env('LINEAR_BUDGET_SCALE', '1'))
 s.sa_linear_upwind = bool(int(env('SA_LINEAR_UPWIND', '0')))
 s.anderson_depth = int(env('ANDERSON', '0'))
 if int(env('NO_STRESS', '0')):

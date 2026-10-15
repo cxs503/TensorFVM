@@ -134,9 +134,26 @@ UPDATE (same day, later): the NACA deficit is a SLOW TRANSIENT, not a discretisa
   faster, stable (dU 3e-3 flat).  => use U_RELAX 0.85 SA_RELAX 0.9 (P 0.3) from now on; the
   30P30N m3 runs (500 it at 0.5/0.3/0.3) were far from converged — their Cl 2.44-2.5 and the
   "two branches" are transient states, not solutions.
-* Running: run-a10-r7 (-> 2000), run-a10-r9 (from scratch, 0.85/0.9, -> 1500) to get the
-  converged alpha 10 answer and the iteration count needed at high relaxation.
-Plan: (1) converged alpha 10 Cl/Cd/Cp on mesh-a; if within ~3-5 % of CFL3D the solver is fine and
-the remaining error is mesh (TE/wake/triangles) — optional checks mesh-n / mesh-thick; (2) go back
-to 30P30N with 0.85/0.9 relaxation and >=2000 iterations (m3 at 9 s/it alone => ~5 h; consider
-M0-like 60k mesh with the fixes, or run across turns with checkpoints).
+* CONVERGED alpha 10 on mesh-a (run-a10-r9, 0.85/0.9 from scratch, Cl flat after ~1000 it;
+  r7 from the baseline follows the same trajectory => path independent): Cl 1.028 (-5.8 %),
+  Cd 0.0181 (ref 0.0123), Cp_min -5.20 @x .003 (ref -5.66), upper Cf = CFL3D within 1-2 % for
+  x .002-.2 (local cf ratio 1.04-1.09 because U_e is 3-4 % low), momentum integral closes
+  (0.99-1.13); but Cf falls below CFL3D from x .3 on: 0.87 @.4, 0.80 @.5, 0.73 @.6, 0.57 @.8,
+  0.36 @.9, separation at x .977 (21 reversed faces).  => the front BL is right, the remaining
+  deficit is the rear upper BL (delta 1-4 cm, far outside the 0.005 quad layer, resolved by
+  isotropic 0.004 triangles) and the resulting TE separation / circulation loss.
+* Linear-solver cost: budgets were |b|*1e-11 absolute (pressure 5e-12, momentum 3e-9) -> 90-145
+  GMRES iterations per solve on 30P30N m4 (17 s/it).  Added solver.linear_budget_scale
+  (external_cached.py; driver --linear-budget-scale; run_naca env LINEAR_BUDGET_SCALE) and
+  LU_REFRESH env.  m4 with --lu-refresh-interval 1 --linear-budget-scale 1000: 9.9 s/it
+  (momentum 6 its 0.9 s x2, pressure 23 its 1.8 s, SA 15 its 0.6 s x3; ~4.7 s/it is Python
+  assembly/metrics overhead).  NACA 54k: solves are cheap anyway (3.1 -> 2.8 s/it); refresh 1
+  is slower there (setup cost).  Trajectories identical to printed precision.
+* The driver refuses --resume when numerical settings change (provenance gate) -> new output dir.
+* Running now: work/30p30n/m4-run2 (m4 = m3 recipe with --wake-size 0.03, 118,895 cells;
+  alpha 8.1, 0.85/0.9/0.3, refresh 1, budget 1e3, 3000 it, ~8 h) and run-a10-thick (mesh-thick10:
+  quad layer 0.04 c, 69 layers ratio 1.12, 75k cells, 0.85/0.9) to test the rear-BL hypothesis.
+Plan: (1) if the thick layer fixes the NACA rear BL/Cl, the 30P30N needs thick quad layers too
+(limited by the slat/main and main/flap gaps -> at least on the main upper surface aft of the
+slat and on the flap; or a wake/BL anisotropic triangle size field); (2) report m4-run2 only after
+>= 1500 iterations with a flat Cl.
