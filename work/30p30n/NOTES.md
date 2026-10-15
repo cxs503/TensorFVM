@@ -193,3 +193,17 @@ slat and on the flap; or a wake/BL anisotropic triangle size field); (2) report 
   m6 = m5 + `--grading-distance 400` -> 152,665 cells (ready, unused until run-a10-ff reports).
 * Runs: m4-stage1 done (300 it, Cl 2.5210, Cd 0.2134 — transient); m5-stage1 running (same
   settings, ~11 s/it); next m5-stage2 (or m6) at 0.7/0.7/0.3, 2500 it (~7 h).
+* Flap Cp sawtooth (m4-stage1 report: x 0.90-0.96, +-0.05): the 0.00315 c flap facets still turn
+  0.5-1.8 deg each (sagitta l*theta/8 ~ 1e-5 c = 2-3 wall units).  Added `--max-length`
+  (per element; resample_profile subdivides by equal turning+length cost only where the cap
+  binds, so existing recipes are unchanged) and the HLPW report now validates the wall nodes
+  against the deterministic resampled polygon (mesh options max_turn/max_length) instead of
+  failing.  m7 = m6 + `--max-length 0.04,0.04,0.0017` -> 156,128 cells (flap 534 faces; caps
+  0.0014-0.0016/0.0018 lost the Gmsh edge-recovery lottery on the MAIN element).
+* m4-stage1 HLPW report (300 it, transient): Cl -19.5 %; Cp rel-L2 slat 50/76 %, main 27/19 %,
+  flap 32/30 % (upper/lower); slat upper Cp -1.1 vs exp -2.0, main peak -4.4 vs -5.7, flap peak
+  -2.45 vs -3.2.  Not a solution — stage 2 needed.
+* SANDBOX RESET (again): lost venv, all logs, checkpoints (m4-stage1, m4-stage2 at it 70,
+  m5-stage1 at it 171) and every .msh.  `work/env/setup.sh` rebuilds the env in 90 s; meshes
+  regenerate in 10-20 s each (m5 identical: 128,043 cells).  run_naca.py now registers SIGUSR1
+  (faulthandler) because the first run-a10-ff attempt stalled inside step() without output.

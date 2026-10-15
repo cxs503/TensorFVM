@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 from matplotlib.collections import PolyCollection
 from matplotlib.backends.backend_pdf import PdfPages
 from tensorfvm.multi_element import ThreeElementMesh
-from tensorfvm.hlpw30p30n import DATA,metadata,reference_zones
+from tensorfvm.hlpw30p30n import DATA,metadata,per_element,reference_zones,resample_profile
 from tensorfvm.verification.core import sha,write_json,artifact_manifest
 
 
@@ -58,17 +58,31 @@ def runs(mask):
     return np.split(i,np.flatnonzero(np.diff(i)>1)+1)
 
 
-def validate_polygon_walls(wall,fillet_vertices=None,fillet_tolerance=1e-5):
+def polygon_distance(vertices,polygon):
+    """Distance of every vertex to the closed polyline ``polygon`` (first point repeated last)."""
+    edges=polygon[1:]-polygon[:-1];start=polygon[:-1];d=vertices[:,None]-start
+    t=np.clip(np.einsum('nki,ki->nk',d,edges)/np.einsum('ki,ki->k',edges,edges),0,1)
+    return np.linalg.norm(d-t[:,:,None]*edges,axis=-1).min(1)
+
+
+def validate_polygon_walls(wall,fillet_vertices=None,fillet_tolerance=1e-5,max_turn=None,max_length=None):
     """Every wall node must lie on the official polygon, except the declared
     fan-apex fillet nodes (see ``ThreeElementMesh._collapse_fan_apex_cells``),
-    which sit one first-layer height off the sharp corners they round off."""
-    errors={};fillets={}
+    which sit one first-layer height off the sharp corners they round off.
+
+    Meshes built from the spline-resampled polylines (``hlpw30p30n.resample_profile``,
+    mesh option ``max_turn``) are validated against that deterministic resampled polygon
+    (every official vertex is still a vertex of it); the distance of the added nodes
+    from the official facets (the spline sagitta of the coarse official sampling) is
+    reported, not treated as a geometry error."""
+    errors={};fillets={};sagitta={}
+    turns=None if max_turn is None else {name:float(per_element(max_turn,name)) for name in ['slat','main','flap']}
+    lengths={name:per_element(max_length,name) for name in ['slat','main','flap']}
     fillet_vertices=np.zeros((0,2)) if fillet_vertices is None else np.asarray(fillet_vertices,float).reshape(-1,2)
     for name,(_,vertices,_,_) in wall.items():
-        canonical=np.loadtxt(DATA/(name+'.dat'))
-        edges=canonical[1:]-canonical[:-1];start=canonical[:-1];d=vertices[:,None]-start
-        t=np.clip(np.einsum('nki,ki->nk',d,edges)/np.einsum('ki,ki->k',edges,edges),0,1)
-        distance=np.linalg.norm(d-t[:,:,None]*edges,axis=-1).min(1)
+        official=np.loadtxt(DATA/(name+'.dat'))
+        canonical=official if turns is None else resample_profile(official,max_turn=turns[name],max_length=lengths[name])
+        distance=polygon_distance(vertices,canonical)
         off=distance>1e-8
         declared=np.zeros(len(vertices),bool)
         if off.any() and len(fillet_vertices):
@@ -77,8 +91,11 @@ def validate_polygon_walls(wall,fillet_vertices=None,fillet_tolerance=1e-5):
         if off.any() and distance[off].max()>fillet_tolerance:raise ValueError('Fan-apex fillet nodes of '+name+' exceed the declared tolerance')
         errors[name]=float(distance[~off].max()) if (~off).any() else 0.
         fillets[name]=dict(count=int(off.sum()),max_distance_over_c=float(distance[off].max()) if off.any() else 0.)
-    return dict(representation='official sampled polygon',max_wall_node_distance_over_c=errors,
-                fan_apex_fillet_nodes=fillets,fan_apex_fillet_tolerance_over_c=fillet_tolerance)
+        if turns is not None:sagitta[name]=float(polygon_distance(vertices[~off],official).max()) if (~off).any() else 0.
+    result=dict(representation='official sampled polygon' if turns is None else 'official polygon, spline-resampled (max_turn %s deg, max_length %s c)'%(turns,lengths),
+                max_wall_node_distance_over_c=errors,fan_apex_fillet_nodes=fillets,fan_apex_fillet_tolerance_over_c=fillet_tolerance)
+    if turns is not None:result['max_distance_from_official_facets_over_c']=sagitta
+    return result
 
 
 def validate_cad_walls(wall,cad_path,expected_sha):
@@ -127,7 +144,8 @@ def main():
     if mesh_metadata.get('geometry_representation')=='official-step-bspline':
         cad_path=DATA/'original/Geometry/2010_30p30n_thik_te_18inches.stp'
         geometry_validation=validate_cad_walls(wall,cad_path,mesh_metadata['cad_sha256'])
-    else:geometry_validation=validate_polygon_walls(wall,mesh.vertices[list(mesh.fillet_wall_nodes)].numpy() if mesh.fillet_wall_nodes else None)
+    else:geometry_validation=validate_polygon_walls(wall,mesh.vertices[list(mesh.fillet_wall_nodes)].numpy() if mesh.fillet_wall_nodes else None,
+                                                    max_turn=mesh_metadata.get('options',{}).get('max_turn'),max_length=mesh_metadata.get('options',{}).get('max_length'))
     write_json(out/'geometry-validation.json',geometry_validation)
     dynamic=.5*config['density']*config['inlet_velocity']**2;cp=data['p']/dynamic;metrics=[];rows=[];excluded=[];curves={}
     pressure_method='Adjacent owner-cell pressure; prescribed outlet p_inf=0'

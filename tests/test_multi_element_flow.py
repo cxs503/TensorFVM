@@ -7,7 +7,7 @@ import torch
 from tests.test_three_element import _TINY_GMSH
 from tensorfvm.solver import SolverConfig
 from tensorfvm.multi_element_flow import MultiElementFlowSolver
-from tensorfvm.hlpw30p30n import DATA,layer_zones,reference_zones,resample_profile,write_mesh_geo
+from tensorfvm.hlpw30p30n import DATA,layer_zones,per_element,profile_directory,reference_zones,resample_profile,write_mesh_geo
 
 
 def _two_row_mesh():
@@ -201,5 +201,24 @@ class MultiElementFlowTests(unittest.TestCase):
             else:self.assertTrue(.905<x<1.115,(k,x,y))
         self.assertGreater(len(thick),300);self.assertGreater(len(thin),300)
         with self.assertRaises(ValueError):write_mesh_geo(out/'bad.geo',thick_layer=.0004)
+
+    def test_facet_length_cap_subdivides_long_flap_facets_only_where_asked(self):
+        official=np.loadtxt(DATA/'flap.dat')
+        base=resample_profile(official,max_turn=2.);capped=resample_profile(official,max_turn=2.,max_length=.0015)
+        seg=lambda q:np.linalg.norm(np.diff(q,axis=0),axis=1)
+        self.assertGreater(seg(base).max(),.003);self.assertLessEqual(seg(capped).max(),.0015+1e-12)
+        self.assertGreater(len(capped),len(base))
+        from scipy.spatial import cKDTree
+        self.assertLess(cKDTree(capped).query(official)[0].max(),1e-12)  # official vertices kept
+        edges=base[1:]-base[:-1];d=capped[:,None]-base[:-1]
+        t=np.clip(np.einsum('nki,ki->nk',d,edges)/np.einsum('ki,ki->k',edges,edges),0,1)
+        self.assertLess(np.linalg.norm(d-t[:,:,None]*edges,axis=-1).min(1).max(),2e-5)  # same spline (sagitta), finer sampling
+        out=Path(self.temp.name)/'capped'
+        profiles=profile_directory({'slat':1.5,'main':1.5,'flap':2.},out,max_length={'slat':None,'main':None,'flap':.0015})
+        self.assertEqual(len(np.loadtxt(profiles/'flap.dat')),len(capped))
+        self.assertEqual(len(np.loadtxt(profiles/'main.dat')),len(resample_profile(np.loadtxt(DATA/'main.dat'),max_turn=1.5)))
+        self.assertEqual(per_element({'slat':1,'main':2,'flap':3},'flap'),3);self.assertEqual(per_element(.5,'slat'),.5)
+        with self.assertRaises(ValueError):per_element({'slat':1},'slat')
+        with self.assertRaises(ValueError):profile_directory(None,out,max_length=.001)
 
 if __name__=='__main__':unittest.main()
