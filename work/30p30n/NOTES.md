@@ -115,8 +115,28 @@ Meshes generated for the next experiments: mesh-n (first layer 1e-6, ratio 1.12,
 mesh-t (near .002, max_turn .75 deg, 1192 wall points, 98,318 cells), mesh-thick0 (alpha 0 split,
 quad layer 0.04 c, ratio 1.12, 69 layers, 75,050 cells; run-a0-thick stopped at it 350 to free
 a core; resume with the same command, 500 -> more).
-Plan: (1) let the baselines converge and judge accuracy only then; (2) if alpha 10 stays low at
-convergence, test suspects one at a time (UNBOUNDED, NO_STRESS, BLEND, SA_LINEAR_UPWIND, mesh-n,
-mesh-t, mesh-thick); (3) convergence acceleration (anderson_depth exists in
-MultiElementFlowSolver.step; higher relaxation) because 30P30N m3 runs of 500 it were certainly
-unconverged too; (4) return to 30P30N.
+UPDATE (same day, later): the NACA deficit is a SLOW TRANSIENT, not a discretisation defect.
+* alpha 0 baseline (0.5/0.3/0.3) at it 800: Cd 0.0084 (ref 0.00819), Cf .05/.1/.3/.6 within 2 %
+  of CFL3D, Cf .9 +7 % and still falling; momentum integral closes (0.83-1.09).  With relaxation
+  0.85/0.9 it reaches Cd 0.00814 at it 760 and keeps falling (Cf .9 0.0018 < ref 0.0020; 4
+  reversed TE faces) -> the converged alpha 0 Cd may undershoot by a few %.
+* alpha 10 baseline: Cl 0.914 @600, dip to 0.898 @880 (TE separation sets in, 60 reversed faces
+  x > .85), 0.914 @1050; front Cf keeps healing: Cf(.05) 0.0069 @560 -> 0.0093 @1040 -> 0.0095
+  @1200 (ref 0.0096), Cf(.1) 0.0046 -> 0.0068 (ref 0.0070), Cf(.3) 0.0021 -> 0.0035 (ref 0.0040),
+  Cf(.6) 0.0007 -> 0.0010 (ref 0.00235).  Resumed with 0.7/0.7 from it 1050 (run-a10-r7):
+  Cl 0.938 @1220 rising 0.0015/10 it, Cp_min -4.77.  The forward BL "momentum loss" at it 400-600
+  was the BL still developing from the impulsive start (the BL state propagates downstream over
+  hundreds of iterations); the rear TE separation is (at least partly) the consequence of the
+  transient excess theta arriving there.
+* Convergence acceleration test (alpha 0, forks from it 650, 110-150 it): P_RELAX 0.5 = identical
+  to 0.3 (pressure is not the bottleneck); ANDERSON=5 (MultiElementFlowSolver.step mixing) =
+  identical (always rejected/ineffective); U/SA relaxation 0.7/0.7 = 1.8x faster; 0.85/0.9 = 2.75x
+  faster, stable (dU 3e-3 flat).  => use U_RELAX 0.85 SA_RELAX 0.9 (P 0.3) from now on; the
+  30P30N m3 runs (500 it at 0.5/0.3/0.3) were far from converged — their Cl 2.44-2.5 and the
+  "two branches" are transient states, not solutions.
+* Running: run-a10-r7 (-> 2000), run-a10-r9 (from scratch, 0.85/0.9, -> 1500) to get the
+  converged alpha 10 answer and the iteration count needed at high relaxation.
+Plan: (1) converged alpha 10 Cl/Cd/Cp on mesh-a; if within ~3-5 % of CFL3D the solver is fine and
+the remaining error is mesh (TE/wake/triangles) — optional checks mesh-n / mesh-thick; (2) go back
+to 30P30N with 0.85/0.9 relaxation and >=2000 iterations (m3 at 9 s/it alone => ~5 h; consider
+M0-like 60k mesh with the fixes, or run across turns with checkpoints).
