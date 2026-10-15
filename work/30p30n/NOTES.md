@@ -96,6 +96,27 @@ Cp_min -4.3 vs -5.66, upper Cf 0.55-0.6x CFL3D for x .002-.2 (local cf 0.65-0.85
   the momentum deficit grows ~2x faster between x .01 and .2 than Cf + pressure gradient allow
   (plate closes to 4 %) => numerical momentum loss in curved / pressure-gradient BL cells —
   a discretisation issue, not the turbulence model, not the multi-element setup.
-Plan: switch suspects one at a time on the NACA (run_naca.py env switches UNBOUNDED, NO_STRESS,
-BLEND, SA_LINEAR_UPWIND; normal/tangential refinement via make_naca_mesh.py), check with
-compare.py and profiles.py (momentum-integral ratio), then return to 30P30N.
+IMPORTANT CORRECTION (second incarnation, 2026-10-15): "Cl flat at 0.905 for it 300-360" was NOT
+convergence.  Rerun on mesh-a (54k): Cl 0.509 @90, 0.870 @270, 0.900 @480, 0.914 @600 and still
+rising ~0.0012/10 it; Cp_min deepening (-3.75 @250 -> -4.51 @600); Cf(.05) rising 0.0053 -> 0.0072
+(ref 0.0096) while the rear upper BL weakens (Cf(.6) 0.0032 -> 0.0008, ref 0.00235).  The SIMPLE
+transient of the BL/circulation system takes >1000 iterations on these meshes (U/p/SA relaxation
+0.5/0.3/0.3).  Momentum-integral checks are only meaningful near convergence:
+* alpha 0 (mesh-a0, 54k): at it 200 the ratios LHS/RHS were 0.24-0.72 (BL "too young");
+  at it 500 they are 0.83-1.09 (closed), theta(.3) 3.7e-4 -> 5.3e-4, Cf .05/.1 = CFL3D within 1 %,
+  Cf .3 +6.5 %, .6 +17 %, .9 +32 % and still falling, Cd 0.0117 @150 -> 0.0089 @500 (ref 0.00819),
+  Cp_min -0.407 (ref -0.413).  => alpha 0 is converging toward the reference.
+* alpha 10 at it 600: ratios 1.5-2.0 for x .01-.1 (inside the quad layer), local cf ratio 1.05 at
+  the nose, 0.84 @.05, 0.75 @.1, 0.67 @.2, 0.56 @.3; H 1.56; theta too large.  Unknown yet
+  whether this persists at convergence (runs resumed: a10 -> 1500 it, a0 -> 1000 it).
+Also noted: profiles.py theta/delta99 are contaminated once delta99 exceeds the quad layer (0.005)
+and by the slow potential-flow variation (alpha 0, x > .4: delta99 0.04-0.16 nonsense).
+Meshes generated for the next experiments: mesh-n (first layer 1e-6, ratio 1.12, 66,564 cells),
+mesh-t (near .002, max_turn .75 deg, 1192 wall points, 98,318 cells), mesh-thick0 (alpha 0 split,
+quad layer 0.04 c, ratio 1.12, 69 layers, 75,050 cells; run-a0-thick stopped at it 350 to free
+a core; resume with the same command, 500 -> more).
+Plan: (1) let the baselines converge and judge accuracy only then; (2) if alpha 10 stays low at
+convergence, test suspects one at a time (UNBOUNDED, NO_STRESS, BLEND, SA_LINEAR_UPWIND, mesh-n,
+mesh-t, mesh-thick); (3) convergence acceleration (anderson_depth exists in
+MultiElementFlowSolver.step; higher relaxation) because 30P30N m3 runs of 500 it were certainly
+unconverged too; (4) return to 30P30N.
