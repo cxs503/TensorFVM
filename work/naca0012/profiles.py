@@ -7,7 +7,7 @@ import sys, numpy as np, json
 from types import SimpleNamespace
 from tensorfvm.multi_element import ThreeElementMesh
 from scipy.spatial import cKDTree
-run = sys.argv[1]; xs = [float(a) for a in sys.argv[2:]]; verbose = '-v' in sys.argv
+run = sys.argv[1]; verbose = '-v' in sys.argv; xs = [float(a) for a in sys.argv[2:] if a != '-v']
 xs = [x for x in xs]
 mesh = ThreeElementMesh(SimpleNamespace(mesh_file=run + '/mesh.msh', device='cpu', single_element=True))
 ck = np.load(run + '/checkpoint.npz'); vel = ck['velocity']; nt = ck['nu_tilde']; p = ck['pressure']
