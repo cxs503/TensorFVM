@@ -57,7 +57,7 @@ class CachedExternalFlowSolver(ExternalFlowSolver):
         if pressure:
             probe=torch.sin(torch.arange(self.count,dtype=rhs.dtype)*.371);target=host(operator(probe));defect=float(np.linalg.norm(A@host(probe)-target)/np.linalg.norm(target))
             if defect>2e-12:raise RuntimeError('Current pressure operator mismatch')
-        b=host(rhs);force=self.config.density*self.config.inlet_velocity**2*self.config.reference_length;budget=max(1e-12,min(np.linalg.norm(b)*1e-11,self.config.tolerance*force/(10*math.sqrt(self.count))))
+        b=host(rhs);force=self.config.density*self.config.inlet_velocity**2*self.config.reference_length;budget=max(1e-12,min(np.linalg.norm(b)*1e-11,self.config.tolerance*force/(10*math.sqrt(self.count))))*float(getattr(self,'linear_budget_scale',1.))
         key=kind+self._cache_key_suffix;count=self._linear_calls.get(key,0);interval=max(1,int(self.lu_refresh_interval));refresh=key not in self._lu_cache or count%interval==0 or bool(self._refresh_next.get(key))
         krylov=self.linear_backend=='krylov';iterations=[0];x0=host(initial)
         def counter(_):iterations[0]+=1
