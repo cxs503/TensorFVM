@@ -157,3 +157,39 @@ Plan: (1) if the thick layer fixes the NACA rear BL/Cl, the 30P30N needs thick q
 (limited by the slat/main and main/flap gaps -> at least on the main upper surface aft of the
 slat and on the flap; or a wake/BL anisotropic triangle size field); (2) report m4-run2 only after
 >= 1500 iterations with a flat Cl.
+
+## 2026-10-15 (cont.) — thick-layer verdict, 30P30N relaxation limits, zoned layers, far-field grading
+* m4-run2 (0.85/0.9 from scratch) DIVERGED (log work/30p30n/m4-run2-diverged.log).  The 30P30N
+  also diverges at 0.85/0.9 when started from a developed 300-it state (m4-stage2 attempt: dU x4
+  per 10 it, Cl -266 by it 61; log m4-stage2-diverged-0.85.log).  0.7/0.7/0.3 from the 300-it
+  state is stable (m4-stage2.log: 70 it, dU 3e-2..7e-2 falling, Cl 2.52-2.53, Cd 0.205 -> 0.17;
+  stopped at it 70 to free a core).  => 30P30N recipe: stage 1 = 300 it at 0.5/0.3/0.3 from
+  scratch, stage 2 = --initialize-from stage1 at 0.7/0.7/0.3 (new dir; --resume refuses setting
+  changes).  High relaxation that works on NACA is NOT usable here.
+* NACA run-a10-thick CONVERGED (mesh-thick10: 0.04 c quad layer, 75k cells, 0.85/0.9, Cl flat
+  from it 1300): Cl 1.0780 (-1.2 % vs CFL3D 1.0909; mesh-a 0.005 layer gave -5.8 %), Cd 0.0186
+  (Cd_p 0.01217, Cd_f 0.00644), Cp_min -5.43 (ref -5.66), upper Cf/CFL3D 1.03-1.07 for x .002-.9
+  (1.11-1.15 at .9-.95), attached to the TE (1 reversed face).  => ROOT CAUSE #4 CONFIRMED: the
+  rear BL must live inside the quad layer; isotropic triangles outside a thin layer cost -27 %
+  Cf(.6), -64 % Cf(.9), TE separation and -5 % Cl.  Tool: work/naca0012/cd_decomp.py.
+* Remaining NACA alpha-10 discrepancy is a NOSE/OUTER-FLOW effect: pressure drag 0.0122 vs ~0.006
+  expected, Cl_p/Cd_p bins (integrating CFL3D's Cp on the same geometry) put the whole excess at
+  x < 0.02 (upper +0.0033, lower x < .005 +0.0064); the stagnation Cp is 1.021 (physical max 1.0,
+  CFL3D 1.005 incl. M=0.15) and the total-pressure coefficient p+|u|^2 in the OUTER flow is
+  1.015-1.03 at 0.3-2 c from the airfoil (0.966 at 3-5 c, 1.000 at 50 c).  Cause: the NACA mesh
+  script's background grading reached far_size 25 at 25 c => cell size ~ distance (0.19 c at 1 c,
+  1.8 c at 5 c), i.e. (h/r)^2 ~ 4-16 % outer-flow discretisation error.  The 30P30N writer grades
+  to 100 c (h ~ 0.25 d); its m4 300-it field has Cp_total errors < 0.1 % upstream (transient junk
+  above the main element aside).  Fix: `grading_distance` 400 (h ~ 0.03 + 0.06 d, +25k cells):
+  make_naca_mesh.py arg 13, mesh_hlpw30p30n.py --grading-distance.  Test running:
+  work/naca0012/run-a10-ff (mesh-thick10-ff, 101,446 cells, 0.85/0.9, 1500 it).
+* Zoned quad layers for the 30P30N (hlpw30p30n.layer_zones + write_mesh_geo thick_layer;
+  --thick-layer): 0.04 c on the main upper surface 0.06 < x < 0.855 and the flap upper surface
+  0.905 < x < 1.115 (both flap sides for x > 0.96); 0.005 c elsewhere (gaps, slat, cove, TE fans
+  — a 0.04 layer on the blunt flap TE gave 88 deg wall non-orthogonality, rejected by
+  mesh_quality).  Gmsh is a lottery: thick 0.04/ratio 1.15 -> "Edge not recovered"; 1.16 works.
+  m5: `--layer-thickness 0.005 --thick-layer 0.04 --near-size 0.003 --wake-size 0.03
+  --wake-distance 0.5 --layer-ratio 1.16 --max-turn 1.5,1.5,2` -> 128,043 cells (m5/zones.png).
+  m6 = m5 + `--grading-distance 400` -> 152,665 cells (ready, unused until run-a10-ff reports).
+* Runs: m4-stage1 done (300 it, Cl 2.5210, Cd 0.2134 — transient); m5-stage1 running (same
+  settings, ~11 s/it); next m5-stage2 (or m6) at 0.7/0.7/0.3, 2500 it (~7 h).

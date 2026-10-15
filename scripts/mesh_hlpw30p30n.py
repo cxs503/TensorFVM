@@ -22,13 +22,15 @@ def main():
     p.add_argument('--fan-angle',type=float,default=45,help='Polygon corners turning more than this (degrees) get a boundary-layer fan')
     p.add_argument('--wake-size',type=float,help='Optional triangle size cap (chords) reached --wake-distance from the walls')
     p.add_argument('--wake-distance',type=float,default=.5)
+    p.add_argument('--grading-distance',type=float,default=100,help='Wall distance (chords) at which the background triangle size reaches far_size; the size grows linearly from --wake-size at --wake-distance, so 100 gives h ~ 0.25 d and 400 gives h ~ 0.06 d (O-mesh-like radial grading, +~25k cells)')
     p.add_argument('--near-size',type=float,help='Override the wall/near-body triangle size (default .003/2**(level/2))')
-    p.add_argument('--layer-ratio',type=float,default=1.18)
+    p.add_argument('--layer-ratio',type=float,default=1.18);p.add_argument('--thick-layer',type=float,help='Second quad-layer thickness (chords) for facets with free fluid above them (hlpw30p30n.layer_zones); the gap regions keep --layer-thickness')
     p.add_argument('--max-turn',type=str,help='Resample the official polylines on cubic splines so no smooth facet turns by more than this (degrees); the 11-16 degree leading-edge facets otherwise imprint Cp/Cf sawtooth on the wall-resolved layers')
     a=p.parse_args();out=a.output
     if not 0<a.layer_thickness<.006:p.error('Layer thickness must be positive and below half the narrowest element gap')
     if a.near_size is not None and not 0<a.near_size<1:p.error('Near size must be in (0,1) chords')
     if not 1<a.layer_ratio<2:p.error('Layer ratio must be in (1,2)')
+    if not a.wake_distance<a.grading_distance<=500:p.error('Grading distance must lie between the wake distance and the 500C far field')
     if a.max_turn is not None:
         turns=[float(v) for v in a.max_turn.split(',')]
         if len(turns) not in (1,3) or not all(0<v<30 for v in turns):p.error('Max turn must be one angle or slat,main,flap angles in (0,30) degrees')
@@ -36,10 +38,11 @@ def main():
     if out.exists() and any(out.iterdir()):p.error('Mesh output must be empty')
     out.mkdir(parents=True,exist_ok=True);ratio=2**(.5*a.level)
     options=dict(near_size=a.near_size if a.near_size is not None else .003/ratio,far_size=25/ratio,first_layer=2e-6/ratio,
-        layer_thickness=a.layer_thickness,layer_ratio=a.layer_ratio,grading_distance=100,
+        layer_thickness=a.layer_thickness,layer_ratio=a.layer_ratio,grading_distance=a.grading_distance,
         alpha=a.alpha,fan_elements=12,fan_angle=a.fan_angle)
     if a.wake_size is not None:options.update(wake_size=a.wake_size,wake_distance=a.wake_distance)
     if a.max_turn is not None:options.update(max_turn=a.max_turn)
+    if a.thick_layer is not None:options.update(thick_layer=a.thick_layer)
     import gmsh
     failure=None;mesh=None;fan_points=[];body_curve_types={};meshing_curve_tags={}
     try:
