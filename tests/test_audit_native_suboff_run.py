@@ -18,7 +18,24 @@ spec=importlib.util.spec_from_file_location('audit_native_suboff_test',SCRIPT)
 audit=importlib.util.module_from_spec(spec);spec.loader.exec_module(audit)
 
 
+def require_gmsh():
+    """Skip the test when the gmsh runtime cannot be loaded.
+
+    ``pytest.importorskip`` only catches ImportError, but a pip-installed
+    gmsh that lacks libGLU raises OSError while loading its shared object.
+    Treat both as "the optional mesh runtime is unavailable".
+    """
+    try:
+        import gmsh  # noqa: F401
+    except (ImportError, OSError) as exc:
+        pytest.skip(f'gmsh runtime unavailable: {exc}')
+
+
 def fixture_run(tmp_path,quadratic=False,merged=False):
+    # The fixture builds its mesh through NativeMesh3D.from_gmsh, which needs
+    # the gmsh runtime.  Skip rather than fail when it is absent, so the suite
+    # stays runnable without the optional 'mesh' extra.
+    require_gmsh()
     run=tmp_path/'run';run.mkdir();n=3
     points=np.array([[x,y,z] for z in np.linspace(0,1,n+1) for y in np.linspace(0,1,n+1) for x in np.linspace(0,1,n+1)])
     ix=lambda x,y,z:z*(n+1)**2+y*(n+1)+x
