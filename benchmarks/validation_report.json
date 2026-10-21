@@ -1,0 +1,168 @@
+{
+  "mission": "m140",
+  "module": "TensorFVM two-phase VOF (SI-0B Phase 1)",
+  "timestamp": 1792559487.74174,
+  "anchor1_static_interface": {
+    "anchor": "static_interface",
+    "description": "1000-step VOF transport with zero velocity; interface must remain flat",
+    "criteria": {
+      "max_perturbation_cells": {
+        "value": 0.0,
+        "threshold": 1.0,
+        "unit": "grid_cells",
+        "file": "benchmarks/two_phase_anchors.py",
+        "key": "anchor1_static_interface.max_perturbation_cells",
+        "pass": true
+      },
+      "volume_drift_liquid": {
+        "value": 0.0,
+        "threshold": 1e-12,
+        "file": "benchmarks/two_phase_anchors.py",
+        "key": "anchor1_static_interface.volume_drift_liquid",
+        "pass": true
+      },
+      "volume_drift_gas": {
+        "value": 0.0,
+        "threshold": 1e-12,
+        "file": "benchmarks/two_phase_anchors.py",
+        "key": "anchor1_static_interface.volume_drift_gas",
+        "pass": true
+      },
+      "volume_drift_transported": {
+        "value": 0.0,
+        "threshold": 1e-10,
+        "file": "benchmarks/two_phase_anchors.py",
+        "key": "anchor1_static_interface.volume_drift_transported",
+        "pass": true
+      }
+    },
+    "init_vol_liquid": 800.0,
+    "final_vol_liquid": 800.0,
+    "init_vol_gas": 800.0,
+    "final_vol_gas": 800.0
+  },
+  "anchor2_hydrostatic_pressure": {
+    "anchor": "hydrostatic_pressure",
+    "description": "Analytical hydrostatic p=ρg(H−y); net force must vanish at interior faces",
+    "criteria": {
+      "max_relative_error": {
+        "value": 0.0,
+        "threshold": 0.02,
+        "unit": "fraction",
+        "file": "benchmarks/two_phase_anchors.py",
+        "key": "anchor2_hydrostatic_pressure.max_relative_error",
+        "pass": true
+      },
+      "net_force_machine_precision": {
+        "value": 2.2551405187698492e-17,
+        "threshold": 1e-10,
+        "file": "benchmarks/two_phase_anchors.py",
+        "key": "anchor2_hydrostatic_pressure.net_force_machine_precision",
+        "pass": true
+      },
+      "top_pressure_zero": {
+        "value": 0.0,
+        "threshold": 1e-15,
+        "file": "benchmarks/two_phase_anchors.py",
+        "key": "anchor2_hydrostatic_pressure.top_pressure_zero",
+        "pass": true
+      }
+    },
+    "rho_liquid": 10.0,
+    "gravity": 1.0,
+    "height": 1.0,
+    "p_analytic_col": [
+      9.875,
+      9.625,
+      9.375,
+      9.125,
+      8.875
+    ],
+    "p_numerical_col": [
+      9.875,
+      9.625,
+      9.375,
+      9.125,
+      8.875
+    ]
+  },
+  "anchor3_bubble_rise_stokes": {
+    "anchor": "bubble_rise_stokes",
+    "description": "VOF-transported bubble centroid velocity vs Stokes analytical solution",
+    "v_stokes_analytical": 0.03125,
+    "criteria": {
+      "relative_error_coarse": {
+        "value": 0.0645878625178572,
+        "threshold": 0.1,
+        "unit": "fraction",
+        "file": "benchmarks/two_phase_anchors.py",
+        "key": "anchor3_bubble_rise_stokes.relative_error_coarse",
+        "pass": true
+      },
+      "relative_error_fine": {
+        "value": 0.05725755171818525,
+        "threshold": 0.1,
+        "unit": "fraction",
+        "file": "benchmarks/two_phase_anchors.py",
+        "key": "anchor3_bubble_rise_stokes.relative_error_fine",
+        "pass": true
+      },
+      "grid_convergence_monotone": {
+        "value": 1,
+        "threshold": 1,
+        "file": "benchmarks/two_phase_anchors.py",
+        "key": "anchor3_bubble_rise_stokes.grid_convergence_monotone",
+        "pass": true,
+        "description": "coarse_err=0.064588 → fine_err=0.057258"
+      }
+    },
+    "mesh_results": {
+      "mesh_20": {
+        "n_steps": 16,
+        "init_centroid_y": 0.25,
+        "final_centroid_y": 0.6241648549928571,
+        "v_simulated": 0.029231629296316963,
+        "v_stokes": 0.03125,
+        "relative_error": 0.0645878625178572,
+        "rho_bubble": 10.0,
+        "rho_liquid": 1.0,
+        "mu_bubble": 1.0,
+        "mu_liquid": 0.10000000000000002,
+        "csf_max_force": 14.399999999999999
+      },
+      "mesh_40": {
+        "n_steps": 32,
+        "init_centroid_y": 0.25,
+        "final_centroid_y": 0.6270969793127259,
+        "v_simulated": 0.02946070150880671,
+        "v_stokes": 0.03125,
+        "relative_error": 0.05725755171818525,
+        "rho_bubble": 10.0,
+        "rho_liquid": 1.0,
+        "mu_bubble": 1.0,
+        "mu_liquid": 0.10000000000000002,
+        "csf_max_force": 57.599999999999994
+      },
+      "mesh_80": {
+        "n_steps": 64,
+        "init_centroid_y": 0.25,
+        "final_centroid_y": 0.6372515213557337,
+        "v_simulated": 0.030254025105916696,
+        "v_stokes": 0.03125,
+        "relative_error": 0.03187119661066573,
+        "rho_bubble": 10.0,
+        "rho_liquid": 1.0,
+        "mu_bubble": 1.0,
+        "mu_liquid": 0.10000000000000002,
+        "csf_max_force": 196.65870119269027
+      }
+    },
+    "note": "VOF transport validated with prescribed Stokes velocity field. Full SIMPLE/projection coupling for variable-density two-phase is under development — see [待办] in two_phase_solver.py docstring."
+  },
+  "summary": {
+    "total_criteria": 10,
+    "passed": 10,
+    "failed": 0,
+    "all_pass": true
+  }
+}
