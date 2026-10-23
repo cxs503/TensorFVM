@@ -159,3 +159,51 @@ def test_simplec_matches_simple_nonaffine_steady_solution():
         assert result['history'][-1]['algorithm']==algorithm.upper()
         answers.append((s.u.copy(),s.p.copy(),s.flux.copy()))
     for left,right in zip(*answers):np.testing.assert_allclose(left,right,atol=2e-8)
+
+
+@pytest.mark.parametrize('damping',[1.,.3])
+def test_simple_step_preserves_face_flux_ledger(damping):
+    """Every accepted sweep must keep flux == B u + correction p + qsource.
+
+    The legacy update under-relaxed the pressure alone (p += alpha_p dp) while
+    the flux took the full response, injecting (1 - alpha_p) correction dp of
+    ledger inconsistency per sweep.  On thin-layer external meshes that defect
+    grew without bound.  Damping must now be a convex mix of the whole
+    consistent step, which leaves the ledger exact for every damping factor.
+    """
+    m=channel();fixed=(m.neighbor<0)&(m.patch_labels!='outlet')
+    bd=np.tile([1.,0.,0.],(len(m.owner),1));bd[m.patch_labels=='wall']=0.
+    s=NativeSimpleSSTRansSolver3D(m,fixed,bd,m.patch_labels=='outlet',
+        settings=NativeSteadySettings(viscosity=.01,max_iterations=6,relaxation=.4,
+            pressure_relaxation=damping,convection_order=1),
+        rans_settings=NativeRansSettings(max_outer_iterations=1,pseudo_time_step=1.,wall_treatment='spalding'))
+    s.u[:,0]=1.
+    k0,omega0=.001,1.
+    s.k=np.full(s.N,k0);s.omega=np.full(s.N,omega0)
+    s.k_boundary=np.full(s.F,k0);s.omega_boundary=np.full(s.F,omega0)
+    s._update_momentum_coefficients(s.current_closure())
+    result=s.solve()
+    assert len(result['history'])==6
+    defects=[row['ledger_identity_defect_max'] for row in result['history']]
+    if damping==1.:
+        # A full consistent step puts the state on the ledger manifold at once.
+        assert max(defects)<1e-12,defects
+    else:
+        # Uniform damping contracts the inherited off-manifold part by (1-w);
+        # it never injects new inconsistency through the pressure update.
+        assert np.all(np.diff(defects)<=1e-15) and defects[-1]<=defects[0]*(1-damping)**2,defects
+    assert all(row['native_divergence_max']<1e-9 for row in result['history'])
+    assert result['history'][-1]['pressure_increment_flux_response_max']>0.
+
+
+def test_pressure_damping_does_not_change_converged_steady_solution():
+    """Uniform damping is an iteration parameter, never a term in the equations."""
+    m=skew_mesh(3);x,y,z=m.cell_centers.T
+    force=np.column_stack((np.sin(3*y),np.cos(2*x),x*z));answers=[]
+    for damping in (1.,.4):
+        s=NativeSimpleSolver3D(m,m.neighbor<0,np.zeros((len(m.owner),3)),body_force=force,
+            settings=NativeSteadySettings(viscosity=.1,convection=False,relaxation=.5,
+                pressure_relaxation=damping,max_iterations=1500,nonlinear_tolerance=1e-9))
+        result=s.solve();assert result['converged'],result['history'][-1]
+        answers.append((s.u.copy(),s.p.copy(),s.flux.copy()))
+    for left,right in zip(*answers):np.testing.assert_allclose(left,right,atol=2e-8)
