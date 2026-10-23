@@ -76,9 +76,11 @@ class NativeSimpleMixin:
 
     def solve(self,callback=None):
         c=self.settings
-        if c.linear_method!='direct':raise ValueError('Native SIMPLE currently supports direct segregated linear solves only')
+        if c.linear_method not in ('direct','amg'):raise ValueError('Native SIMPLE supports direct or amg segregated linear solves')
         if c.momentum_pseudo_cfl is not None:raise ValueError('SIMPLE uses equation relaxation; momentum_pseudo_cfl is unsupported')
         if not 0<c.pressure_relaxation<=1:raise ValueError('pressure relaxation must lie in (0,1]')
+        if not np.isfinite(c.pressure_increment_damping) or c.pressure_increment_damping<0:
+            raise ValueError('pressure increment damping must be finite and nonnegative')
         if not self._flux_initialized:
             self.flux=self.velocity_flux_matrix@self.u.ravel()+self.velocity_flux_source
             self._flux_initialized=True
@@ -88,6 +90,38 @@ class NativeSimpleMixin:
             implicit,full,rhs,inverse,alpha,extra=self._simple_momentum(self.flux)
             A=(implicit+sparse.diags(extra)).tocsc()
             target=rhs-self.pressure.pressure_force_matrix@self.p+(implicit-full)@self.u.ravel()+extra*self.u.ravel()
+
+            def solve_with_amg(matrix,vector):
+                # Smoothed-aggregation AMG on the pressure-correction operator.
+                # The operator is a divergence-of-response Laplacian, so AMG is
+                # the natural scalable preconditioner; but thin-layer meshes
+                # make its symmetrized form indefinite (a few eigenvalues below
+                # zero, non-dominant rows), and V-cycles *diverge* on such an
+                # operator.  Estimate the most negative eigenvalue and shift
+                # the preconditioner operator into the SPD cone; the shift is
+                # reported in the history and the true residual of the
+                # unshifted system is still the acceptance gate.
+                import pyamg
+                from scipy.sparse.linalg import eigsh, gmres
+                symmetrized=((matrix+matrix.T)*.5).tocsr()
+                shift=0.
+                try:
+                    smallest=float(eigsh(symmetrized.tocsc(),k=1,which='SA',
+                        return_eigenvectors=False,maxiter=60,tol=1e-3)[0])
+                    if smallest<0:shift=-1.05*smallest
+                except Exception:
+                    shift=.5*float(np.median(np.abs(matrix.diagonal())))
+                if shift>0:symmetrized=(symmetrized+sparse.eye(self.N,format='csr')*shift).tocsr()
+                hierarchy=pyamg.smoothed_aggregation_solver(symmetrized,max_coarse=100)
+                preconditioner=hierarchy.aspreconditioner()
+                counter=[];tolerance=max(c.linear_tolerance,1e-10)
+                answer,info=gmres(matrix,vector,M=preconditioner,rtol=tolerance,atol=0.,
+                    restart=80,maxiter=60,callback=lambda r:counter.append(r),callback_type='pr_norm')
+                residual=float(np.linalg.norm(matrix@answer-vector)/max(np.linalg.norm(vector),1e-30))
+                return answer,residual,dict(pressure_amg_shift=shift,
+                    pressure_amg_levels=int(len(hierarchy.levels)),
+                    pressure_amg_operator_complexity=float(hierarchy.operator_complexity()),
+                    pressure_amg_iterations=int(len(counter)),pressure_amg_info=int(info))
 
             def solve_equilibrated(matrix,vector):
                 # Thin-layer meshes make the segregated systems span many row
@@ -120,7 +154,42 @@ class NativeSimpleMixin:
             P=(self.viscous.divergence_matrix@response).tolil()
             prhs=-self.viscous.divergence_matrix@qstar
             if self.gauge:P[0,:]=0;P[0,0]=1;prhs[0]=self.gauge_value-self.p[0]
-            P=P.tocsc();dp,linear_p=solve_equilibrated(P,prhs)
+            P=P.tocsc()
+            damping_scale=0.
+            if c.pressure_increment_damping>0:
+                # Anchor the pressure increment where the correction is only
+                # weakly constrained (thin-layer/tail regions whose level is far
+                # from the pressure-Dirichlet boundary).  The term is O(dp), so
+                # it vanishes at the fixed point and changes neither the
+                # converged state nor the continuity operator; it only bounds
+                # the increment that a near-null mode would otherwise amplify.
+                reference=float(np.median(np.abs(P.diagonal())))
+                if not np.isfinite(reference) or reference<=0:
+                    raise RuntimeError('nonpositive pressure correction reference scale')
+                damping_scale=c.pressure_increment_damping*reference
+                P=(P+sparse.eye(self.N,format='csc')*damping_scale).tocsc()
+                if self.gauge:P[0,:]=0;P[0,0]=1
+            # Pressure-correction solve.  The AMG preconditioner is optional
+            # (tensorfvm[amg]); the direct sparse factorization remains the
+            # default and the fallback, and both are gated on the true residual
+            # of the unshifted system.
+            pressure_extra=dict(pressure_amg_shift=0.,pressure_amg_levels=0,
+                pressure_amg_operator_complexity=1.,pressure_amg_iterations=0,
+                pressure_amg_info=0,pressure_linear_solver='direct')
+            used_amg=False
+            if c.linear_method=='amg':
+                pressure_scale=np.maximum(np.asarray(abs(P).sum(axis=1)).ravel(),1e-30)
+                scaled_p=(sparse.diags(1/pressure_scale)@P).tocsc()
+                dp,_,amg_report=solve_with_amg(scaled_p,prhs/pressure_scale)
+                # Row scaling is one-sided: diag(1/s) P dp = diag(1/s) rhs, so
+                # dp itself solves the original system.  Gate on the true
+                # residual of the unscaled correction operator.
+                linear_p=float(np.linalg.norm(P@dp-prhs)/max(np.linalg.norm(prhs),1e-30))
+                pressure_extra.update(amg_report);pressure_extra['pressure_linear_solver']='amg'
+                used_amg=linear_p<=max(5*c.linear_tolerance,1e-9)
+                if not used_amg:pressure_extra['pressure_linear_solver']='amg-fallback'
+            if not used_amg:
+                dp,linear_p=solve_equilibrated(P,prhs)
             norm=lambda x:float(np.linalg.norm(x))
             finite=np.isfinite(predicted).all() and np.isfinite(dp).all() and np.isfinite([linear_u,linear_p]).all()
             if not finite or max(linear_u,linear_p)>max(5*c.linear_tolerance,1e-9):
@@ -180,6 +249,8 @@ class NativeSimpleMixin:
                     np.abs(P.diagonal())/np.maximum(np.asarray(abs(P).sum(axis=1)).ravel(),1e-300))),
                 pressure_operator_diagonal_span=(float(P.diagonal().min()),float(P.diagonal().max())),
                 maximum_increment=float(np.max(np.abs(dp))),
+                pressure_increment_damping_scale=float(damping_scale),
+                **pressure_extra,
                 true_linear_relative_residual=max(linear_u,linear_p),linear_iterations=2)
             self.history.append(row)
             if callback:callback(row)

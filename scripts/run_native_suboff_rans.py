@@ -32,7 +32,8 @@ def main():
     parser.add_argument('--wall-treatment', choices=['resolved','spalding'], default='spalding')
     parser.add_argument('--disable-skew-correction', action='store_true', help='Use linear face interpolation for pressure and velocity; accuracy requires a separate mesh study')
     parser.add_argument('--pressure-relaxation', type=float, help='Uniform damping of the consistent SIMPLE step; default 1 (full correction, exact face-flux ledger)')
-    parser.add_argument('--linear-method', choices=['direct', 'iterative', 'block', 'schur'], default='direct')
+    parser.add_argument('--pressure-increment-damping', type=float, help='Tikhonov anchor on the SIMPLE pressure increment as a fraction of the median pressure-operator diagonal; 0 disables it')
+    parser.add_argument('--linear-method', choices=['direct', 'iterative', 'block', 'schur', 'amg'], default='direct')
     parser.add_argument('--convection-order', type=int, choices=[1, 2], default=2)
     parser.add_argument('--relaxation', type=float, default=.3)
     parser.add_argument('--lu-ordering', choices=['COLAMD', 'MMD_ATA', 'MMD_AT_PLUS_A', 'NATURAL'], default='COLAMD')
@@ -49,8 +50,8 @@ def main():
     if args.maximum_speed is not None and (not np.isfinite(args.maximum_speed) or args.maximum_speed<=1):
         parser.error('maximum speed guard must be finite and greater than one')
     if args.project_initial_flux and args.initial_run is not None:parser.error('Select a restart or initial projection, not both')
-    if args.algorithm in ('simple','simplec') and (args.momentum_cfl is not None or args.linear_method!='direct'):
-        parser.error('SIMPLE/SIMPLEC requires direct segregated linear solves and uses equation relaxation, not momentum-cfl')
+    if args.algorithm in ('simple','simplec') and (args.momentum_cfl is not None or args.linear_method not in ('direct','amg')):
+        parser.error('SIMPLE/SIMPLEC requires direct or AMG segregated linear solves and uses equation relaxation, not momentum-cfl')
     out = args.output
     if out.exists() and any(out.iterdir()):
         parser.error('output must be empty to preserve evidence')
@@ -72,6 +73,7 @@ def main():
         relaxation=args.relaxation, linear_method=args.linear_method, bounded_convection=True,
         convection_order=args.convection_order, lu_ordering=args.lu_ordering,
         momentum_pseudo_cfl=args.momentum_cfl, pressure_relaxation=args.pressure_relaxation,
+        pressure_increment_damping=(0. if args.pressure_increment_damping is None else args.pressure_increment_damping),
         pressure_velocity_algorithm='simplec' if args.algorithm=='simplec' else 'simple', face_skew_correction=not args.disable_skew_correction)
     rans_settings = NativeRansSettings(max_outer_iterations=args.outer_iterations,
         pseudo_time_step=args.pseudo_dt, nonlinear_tolerance=1e-7, wall_treatment=args.wall_treatment)
