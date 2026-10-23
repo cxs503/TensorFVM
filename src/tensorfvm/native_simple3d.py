@@ -169,6 +169,17 @@ class NativeSimpleMixin:
                 face_flux_consistency_max=float(np.max(np.abs(consistent-self.flux)/norms)),
                 ledger_identity_defect_max=float(np.max(np.abs(self.flux-step_identity)/norms)),
                 pressure_increment_flux_response_max=float(np.max(np.abs(correction@dp)/norms)),
+                # Admissibility of the pressure-correction operator.  A
+                # well-posed correction behaves like a scaled Laplacian; the
+                # count of non-negative-diagonal rows and the weakest
+                # diagonal-to-row-sum ratio expose thin-layer/sliver cells
+                # where dp is only weakly constrained.  Neither quantity is
+                # used to clip anything: the state update is untouched.
+                pressure_operator_negative_diagonal_count=int(np.sum(P.diagonal()<0)),
+                pressure_operator_minimum_diagonal_ratio=float(np.min(
+                    np.abs(P.diagonal())/np.maximum(np.asarray(abs(P).sum(axis=1)).ravel(),1e-300))),
+                pressure_operator_diagonal_span=(float(P.diagonal().min()),float(P.diagonal().max())),
+                maximum_increment=float(np.max(np.abs(dp))),
                 true_linear_relative_residual=max(linear_u,linear_p),linear_iterations=2)
             self.history.append(row)
             if callback:callback(row)
