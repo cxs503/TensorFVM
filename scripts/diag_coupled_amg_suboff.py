@@ -121,20 +121,20 @@ def main(argv: list[str] | None = None) -> int:
     except Exception as error:  # keep the failure as evidence
         converged = False
         status = f"failed: {type(error).__name__}: {error}"
+    np.savez(args.output / "fields.npz", velocity=solver.u, pressure=solver.p,
+             flux=solver.flux)
     forces = {}
     try:
         wall = solver.forces("wall")
         # The runner reports forces on the wall patch; no experimental value is
         # fitted or compared here.
         forces = {
-            "pressure_force": wall["pressure_force"].tolist(),
-            "viscous_force": wall["viscous_force"].tolist(),
-            "total_force": wall["total_force"].tolist(),
-            "drag_force_x": float(wall["total_force"][0]),
+            "pressure_force": wall.get("pressure_force"),
+            "viscous_force": wall.get("viscous_force"),
+            "total_force": wall.get("total_force"),
+            "drag_force_x": float(wall["total_force"][0]) if "total_force" in wall else None,
+            "available_keys": sorted(wall),
         }
-        np.savez(args.output / "fields.npz", velocity=solver.u, pressure=solver.p,
-                 flux=solver.flux, k=solver.k if solver.k is not None else np.array([]),
-                 omega=solver.omega if solver.omega is not None else np.array([]))
     except Exception as error:  # forces are optional evidence
         forces = {"error": f"{type(error).__name__}: {error}"}
     summary = {
