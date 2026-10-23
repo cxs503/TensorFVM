@@ -207,3 +207,29 @@ def test_pressure_damping_does_not_change_converged_steady_solution():
         result=s.solve();assert result['converged'],result['history'][-1]
         answers.append((s.u.copy(),s.p.copy(),s.flux.copy()))
     for left,right in zip(*answers):np.testing.assert_allclose(left,right,atol=2e-8)
+
+
+def test_channel_pressure_operator_is_admissible():
+    """The pressure correction must stay a scaled Laplacian on clean meshes.
+
+    Thin-layer and sliver cells can flip the sign of a correction row, which
+    leaves dp only weakly constrained.  The channel is admissible and must
+    report a fully signed, diagonally meaningful operator, so the diagnostic
+    cannot silently rot.
+    """
+    m=channel();fixed=(m.neighbor<0)&(m.patch_labels!='outlet')
+    bd=np.tile([1.,0.,0.],(len(m.owner),1));bd[m.patch_labels=='wall']=0.
+    s=NativeSimpleSSTRansSolver3D(m,fixed,bd,m.patch_labels=='outlet',
+        settings=NativeSteadySettings(viscosity=.01,max_iterations=3,relaxation=.4,
+            pressure_relaxation=1.,convection_order=1),
+        rans_settings=NativeRansSettings(max_outer_iterations=1,pseudo_time_step=1.,wall_treatment='spalding'))
+    s.u[:,0]=1.
+    k0,omega0=.001,1.
+    s.k=np.full(s.N,k0);s.omega=np.full(s.N,omega0)
+    s.k_boundary=np.full(s.F,k0);s.omega_boundary=np.full(s.F,omega0)
+    s._update_momentum_coefficients(s.current_closure())
+    result=s.solve()
+    for row in result['history']:
+        assert row['pressure_operator_negative_diagonal_count']==0,row
+        assert row['pressure_operator_minimum_diagonal_ratio']>1e-6,row
+        assert row['maximum_increment']>0.
