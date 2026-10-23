@@ -233,3 +233,46 @@ def test_channel_pressure_operator_is_admissible():
         assert row['pressure_operator_negative_diagonal_count']==0,row
         assert row['pressure_operator_minimum_diagonal_ratio']>1e-6,row
         assert row['maximum_increment']>0.
+
+
+def test_increment_damping_is_a_pseudo_time_not_a_term():
+    """The increment anchor must vanish at the fixed point.
+
+    It is a Tikhonov term on dp only, so a converged answer cannot depend on
+    it.  This pins that a damped run reaches the same discrete steady state.
+    """
+    m=skew_mesh(3);x,y,z=m.cell_centers.T
+    force=np.column_stack((np.sin(2*y),np.cos(3*x),x*y));answers=[]
+    for damping in (0.,.5):
+        s=NativeSimpleSolver3D(m,m.neighbor<0,np.zeros((len(m.owner),3)),body_force=force,
+            settings=NativeSteadySettings(viscosity=.1,convection=False,relaxation=.5,
+                pressure_relaxation=1.,pressure_increment_damping=damping,
+                max_iterations=3000,nonlinear_tolerance=1e-9))
+        result=s.solve();assert result['converged'],result['history'][-1]
+        assert result['history'][-1]['pressure_increment_damping_scale']>=0.
+        answers.append((s.u.copy(),s.p.copy(),s.flux.copy()))
+    for left,right in zip(*answers):np.testing.assert_allclose(left,right,atol=2e-8)
+
+
+def test_rejects_negative_increment_damping():
+    m=channel()
+    with pytest.raises(ValueError,match='pressure increment damping'):
+        NativeSimpleSolver3D(m,m.neighbor<0,np.zeros((len(m.owner),3)),
+            settings=NativeSteadySettings(pressure_increment_damping=-1.)).solve()
+
+
+@pytest.mark.parametrize('algorithm',['simple','simplec'])
+def test_amg_pressure_solve_matches_direct(algorithm):
+    """The AMG pressure solve is a preconditioner, not a different equation."""
+    pytest.importorskip('pyamg')
+    m=skew_mesh(3);x,y,z=m.cell_centers.T
+    force=np.column_stack((np.sin(3*y),np.cos(2*x),x*z));answers=[]
+    for method in ('direct','amg'):
+        s=NativeSimpleSolver3D(m,m.neighbor<0,np.zeros((len(m.owner),3)),body_force=force,
+            settings=NativeSteadySettings(viscosity=.1,convection=False,relaxation=.5,
+                pressure_relaxation=1.,linear_method=method,pressure_velocity_algorithm=algorithm,
+                max_iterations=1500,nonlinear_tolerance=1e-9))
+        result=s.solve();assert result['converged'],result['history'][-1]
+        assert result['history'][-1]['pressure_linear_solver']==method
+        answers.append((s.u.copy(),s.p.copy(),s.flux.copy()))
+    for left,right in zip(*answers):np.testing.assert_allclose(left,right,atol=2e-8)

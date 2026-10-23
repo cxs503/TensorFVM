@@ -111,6 +111,15 @@ class NativeSteadySettings:
     # geometrically).  Do not under-relax the pressure alone: that tears the
     # flux ledger apart (see native_simple3d.NativeSimpleMixin.solve).
     pressure_relaxation: float=1.
+    # Tikhonov anchor on the SIMPLE pressure *increment*: the correction matrix
+    # receives +beta*median(|diag|) on its diagonal.  Regions whose pressure
+    # level is only weakly tied to the pressure-Dirichlet boundary otherwise
+    # admit near-null increments and dp can reach O(10^3) even when the local
+    # continuity residual is 1e-10.  The term vanishes as dp -> 0, so the
+    # converged state, the discrete continuity operator and the face-flux
+    # ledger are unchanged; it only bounds the increment (a pressure
+    # pseudo-time).  0 disables it.
+    pressure_increment_damping: float=0.
     face_skew_correction: bool=True
     pressure_velocity_algorithm: str='simple'
 
@@ -119,7 +128,7 @@ class NativeSteadySolver3D:
     def __init__(self,mesh,velocity_dirichlet,velocity_boundary,pressure_dirichlet=None,pressure_boundary=0.,*,settings=None,body_force=None,boundary_flux=None,gauge_value=0.):
         self.mesh=mesh;self.settings=settings or NativeSteadySettings();c=self.settings
         if not np.isfinite([c.viscosity,c.density,c.relaxation,c.nonlinear_tolerance,c.linear_tolerance]).all() or c.viscosity<=0 or c.density<=0 or not 0<c.relaxation<=1 or c.max_iterations<1 or c.nonlinear_tolerance<=0 or c.linear_tolerance<=0:raise ValueError('positive finite material/solver settings required')
-        if c.linear_method not in ('direct','iterative','block','schur'):raise ValueError('linear_method must be direct, iterative, block or schur')
+        if c.linear_method not in ('direct','iterative','block','schur','amg'):raise ValueError('linear_method must be direct, iterative, block, schur or amg')
         if c.pressure_velocity_algorithm not in ('simple','simplec'):
             raise ValueError('pressure_velocity_algorithm must be simple or simplec')
         if c.lu_ordering not in ('COLAMD','MMD_ATA','MMD_AT_PLUS_A','NATURAL'):
@@ -252,6 +261,55 @@ class NativeSteadySolver3D:
                 # Reused LU is only a preconditioner for the current matrix.
                 answer+=lu.solve(residual*(scale/self._cached_lu_scale))
             iterations=max(1,len(counter))
+        elif self.settings.linear_method=='amg':
+            # Scalable block preconditioner: ILU on the velocity block and
+            # smoothed-aggregation AMG on the sparse SIMPLE Schur
+            # approximation of the pressure block.  The pressure correction is
+            # the hard part on thin-layer meshes (near-null levels), and AMG
+            # handles its Laplacian-like structure far better than ILU.  Only
+            # the preconditioner is approximate: the solved matrix and its
+            # true residual remain the acceptance gate, and nothing about the
+            # pressure equation itself changes.
+            try:
+                import pyamg
+            except ImportError as exc:  # pragma: no cover - dependency guard
+                raise ImportError('linear_method=amg requires the optional tensorfvm[amg] dependency') from exc
+            nv=3*self.N
+            av=scaled[:nv,:nv].tocsc();gp=scaled[:nv,nv:].tocsr();bv=scaled[nv:,:nv].tocsr()
+            convection_diagonal=(a-self._diffusion).diagonal().reshape(self.N,3).mean(1)
+            response=np.repeat(1/(self._mobility_reference+convection_diagonal),3)*scale[:nv]
+            pressure_approx=(scaled[nv:,nv:]-bv@sparse.diags(response)@gp).tocsc()
+            # SA-AMG is built for symmetric positive definite problems.  The
+            # thin-layer Schur approximation is symmetric but *indefinite*
+            # (a few eigenvalues below zero, thousands of non-dominant rows),
+            # and V-cycles diverge on it.  Estimate the most negative
+            # eigenvalue and shift the approximation into the SPD cone.
+            # Only the preconditioner is shifted; the solved matrix and its
+            # true residual stay untouched.
+            symmetric=((pressure_approx+pressure_approx.T)*.5).tocsr()
+            amg_shift=0.
+            try:
+                from scipy.sparse.linalg import eigsh
+                smallest=float(eigsh(symmetric.tocsc(),k=1,which='SA',
+                    return_eigenvectors=False,maxiter=60,tol=1e-3)[0])
+                if smallest<0:amg_shift=-1.05*smallest
+            except Exception:
+                amg_shift=.5*float(np.median(np.abs(symmetric.diagonal())))
+            if amg_shift>0:symmetric=(symmetric+sparse.eye(self.N,format='csr')*amg_shift).tocsr()
+            self.amg_pressure_shift=float(amg_shift)
+            hierarchy=pyamg.smoothed_aggregation_solver(symmetric,max_coarse=50)
+            self.amg_operator_complexity=float(hierarchy.operator_complexity())
+            self.amg_levels=int(len(hierarchy.levels))
+            ilu_v=spilu(av,drop_tol=1e-4,fill_factor=20)
+            amg_p=hierarchy.aspreconditioner()
+            def apply_preconditioner(value):
+                velocity=ilu_v.solve(value[:nv]);pressure=amg_p.matvec(value[nv:]-bv@velocity)
+                velocity-=ilu_v.solve(gp@pressure)
+                return np.r_[velocity,pressure]
+            pre=LinearOperator(scaled.shape,matvec=apply_preconditioner);counter=[]
+            answer,info=gmres(scaled,target,M=pre,rtol=linear_tolerance,atol=1e-13,restart=100,maxiter=100,callback=lambda r:counter.append(r),callback_type='pr_norm')
+            if info!=0:raise RuntimeError(f'current coupled AMG-block GMRES failed: {info}, {len(counter)} iterations')
+            iterations=len(counter)
         elif self.settings.linear_method in ('block','schur'):
             # Factor the velocity and orthogonal pressure response separately.
             # This is only a preconditioner: the original coupled matrix and its
