@@ -159,3 +159,120 @@ def test_simplec_matches_simple_nonaffine_steady_solution():
         assert result['history'][-1]['algorithm']==algorithm.upper()
         answers.append((s.u.copy(),s.p.copy(),s.flux.copy()))
     for left,right in zip(*answers):np.testing.assert_allclose(left,right,atol=2e-8)
+
+
+@pytest.mark.parametrize('damping',[1.,.3])
+def test_simple_step_preserves_face_flux_ledger(damping):
+    """Every accepted sweep must keep flux == B u + correction p + qsource.
+
+    The legacy update under-relaxed the pressure alone (p += alpha_p dp) while
+    the flux took the full response, injecting (1 - alpha_p) correction dp of
+    ledger inconsistency per sweep.  On thin-layer external meshes that defect
+    grew without bound.  Damping must now be a convex mix of the whole
+    consistent step, which leaves the ledger exact for every damping factor.
+    """
+    m=channel();fixed=(m.neighbor<0)&(m.patch_labels!='outlet')
+    bd=np.tile([1.,0.,0.],(len(m.owner),1));bd[m.patch_labels=='wall']=0.
+    s=NativeSimpleSSTRansSolver3D(m,fixed,bd,m.patch_labels=='outlet',
+        settings=NativeSteadySettings(viscosity=.01,max_iterations=6,relaxation=.4,
+            pressure_relaxation=damping,convection_order=1),
+        rans_settings=NativeRansSettings(max_outer_iterations=1,pseudo_time_step=1.,wall_treatment='spalding'))
+    s.u[:,0]=1.
+    k0,omega0=.001,1.
+    s.k=np.full(s.N,k0);s.omega=np.full(s.N,omega0)
+    s.k_boundary=np.full(s.F,k0);s.omega_boundary=np.full(s.F,omega0)
+    s._update_momentum_coefficients(s.current_closure())
+    result=s.solve()
+    assert len(result['history'])==6
+    defects=[row['ledger_identity_defect_max'] for row in result['history']]
+    if damping==1.:
+        # A full consistent step puts the state on the ledger manifold at once.
+        assert max(defects)<1e-12,defects
+    else:
+        # Uniform damping contracts the inherited off-manifold part by (1-w);
+        # it never injects new inconsistency through the pressure update.
+        assert np.all(np.diff(defects)<=1e-15) and defects[-1]<=defects[0]*(1-damping)**2,defects
+    assert all(row['native_divergence_max']<1e-9 for row in result['history'])
+    assert result['history'][-1]['pressure_increment_flux_response_max']>0.
+
+
+def test_pressure_damping_does_not_change_converged_steady_solution():
+    """Uniform damping is an iteration parameter, never a term in the equations."""
+    m=skew_mesh(3);x,y,z=m.cell_centers.T
+    force=np.column_stack((np.sin(3*y),np.cos(2*x),x*z));answers=[]
+    for damping in (1.,.4):
+        s=NativeSimpleSolver3D(m,m.neighbor<0,np.zeros((len(m.owner),3)),body_force=force,
+            settings=NativeSteadySettings(viscosity=.1,convection=False,relaxation=.5,
+                pressure_relaxation=damping,max_iterations=1500,nonlinear_tolerance=1e-9))
+        result=s.solve();assert result['converged'],result['history'][-1]
+        answers.append((s.u.copy(),s.p.copy(),s.flux.copy()))
+    for left,right in zip(*answers):np.testing.assert_allclose(left,right,atol=2e-8)
+
+
+def test_channel_pressure_operator_is_admissible():
+    """The pressure correction must stay a scaled Laplacian on clean meshes.
+
+    Thin-layer and sliver cells can flip the sign of a correction row, which
+    leaves dp only weakly constrained.  The channel is admissible and must
+    report a fully signed, diagonally meaningful operator, so the diagnostic
+    cannot silently rot.
+    """
+    m=channel();fixed=(m.neighbor<0)&(m.patch_labels!='outlet')
+    bd=np.tile([1.,0.,0.],(len(m.owner),1));bd[m.patch_labels=='wall']=0.
+    s=NativeSimpleSSTRansSolver3D(m,fixed,bd,m.patch_labels=='outlet',
+        settings=NativeSteadySettings(viscosity=.01,max_iterations=3,relaxation=.4,
+            pressure_relaxation=1.,convection_order=1),
+        rans_settings=NativeRansSettings(max_outer_iterations=1,pseudo_time_step=1.,wall_treatment='spalding'))
+    s.u[:,0]=1.
+    k0,omega0=.001,1.
+    s.k=np.full(s.N,k0);s.omega=np.full(s.N,omega0)
+    s.k_boundary=np.full(s.F,k0);s.omega_boundary=np.full(s.F,omega0)
+    s._update_momentum_coefficients(s.current_closure())
+    result=s.solve()
+    for row in result['history']:
+        assert row['pressure_operator_negative_diagonal_count']==0,row
+        assert row['pressure_operator_minimum_diagonal_ratio']>1e-6,row
+        assert row['maximum_increment']>0.
+
+
+def test_increment_damping_is_a_pseudo_time_not_a_term():
+    """The increment anchor must vanish at the fixed point.
+
+    It is a Tikhonov term on dp only, so a converged answer cannot depend on
+    it.  This pins that a damped run reaches the same discrete steady state.
+    """
+    m=skew_mesh(3);x,y,z=m.cell_centers.T
+    force=np.column_stack((np.sin(2*y),np.cos(3*x),x*y));answers=[]
+    for damping in (0.,.5):
+        s=NativeSimpleSolver3D(m,m.neighbor<0,np.zeros((len(m.owner),3)),body_force=force,
+            settings=NativeSteadySettings(viscosity=.1,convection=False,relaxation=.5,
+                pressure_relaxation=1.,pressure_increment_damping=damping,
+                max_iterations=3000,nonlinear_tolerance=1e-9))
+        result=s.solve();assert result['converged'],result['history'][-1]
+        assert result['history'][-1]['pressure_increment_damping_scale']>=0.
+        answers.append((s.u.copy(),s.p.copy(),s.flux.copy()))
+    for left,right in zip(*answers):np.testing.assert_allclose(left,right,atol=2e-8)
+
+
+def test_rejects_negative_increment_damping():
+    m=channel()
+    with pytest.raises(ValueError,match='pressure increment damping'):
+        NativeSimpleSolver3D(m,m.neighbor<0,np.zeros((len(m.owner),3)),
+            settings=NativeSteadySettings(pressure_increment_damping=-1.)).solve()
+
+
+@pytest.mark.parametrize('algorithm',['simple','simplec'])
+def test_amg_pressure_solve_matches_direct(algorithm):
+    """The AMG pressure solve is a preconditioner, not a different equation."""
+    pytest.importorskip('pyamg')
+    m=skew_mesh(3);x,y,z=m.cell_centers.T
+    force=np.column_stack((np.sin(3*y),np.cos(2*x),x*z));answers=[]
+    for method in ('direct','amg'):
+        s=NativeSimpleSolver3D(m,m.neighbor<0,np.zeros((len(m.owner),3)),body_force=force,
+            settings=NativeSteadySettings(viscosity=.1,convection=False,relaxation=.5,
+                pressure_relaxation=1.,linear_method=method,pressure_velocity_algorithm=algorithm,
+                max_iterations=1500,nonlinear_tolerance=1e-9))
+        result=s.solve();assert result['converged'],result['history'][-1]
+        assert result['history'][-1]['pressure_linear_solver']==method
+        answers.append((s.u.copy(),s.p.copy(),s.flux.copy()))
+    for left,right in zip(*answers):np.testing.assert_allclose(left,right,atol=2e-8)

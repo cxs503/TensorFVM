@@ -25,8 +25,9 @@ def test_pressure_wall_extrapolation_does_not_impose_zero_normal_gradient():
     np.testing.assert_allclose((op.pressure_force_matrix@p+force).reshape(-1,3),m.cell_volumes[:,None]*g,atol=2e-14)
 
 
-@pytest.mark.parametrize('linear_method',['direct','block','schur'])
+@pytest.mark.parametrize('linear_method',['direct','block','schur','amg'])
 def test_complete_stokes_and_nonlinear_ns_solve_affine_field_with_physical_force(linear_method):
+    if linear_method=='amg':pytest.importorskip('pyamg')
     m=skew_mesh();G=np.array([[.2,.4,.1],[-.3,-.1,.2],[.1,.1,-.1]])
     u=np.array([.3,-.1,.2])+m.cell_centers@G.T;bu=np.array([.3,-.1,.2])+m.face_centers@G.T;g=np.array([.7,-.3,.2]);p=m.cell_centers@g
     for convection in [False,True]:
@@ -37,6 +38,7 @@ def test_complete_stokes_and_nonlinear_ns_solve_affine_field_with_physical_force
         np.testing.assert_allclose(r['pressure'],p,atol=2e-9)
         assert r['history'][-1]['native_divergence_max']<1e-10
         f=solver.forces('boundary');np.testing.assert_allclose(f['pressure_force'],g*m.cell_volumes.sum(),atol=1e-9);np.testing.assert_allclose(f['viscous_force'],0,atol=1e-9)
+        if linear_method=='amg':assert solver.amg_pressure_shift>=0.
 
 
 def test_abc_force_independent_differential_identity_and_closed_boundary_quadrature():
