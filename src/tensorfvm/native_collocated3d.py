@@ -104,7 +104,13 @@ class NativeSteadySettings:
     bounded_convection: bool=False
     lu_ordering: str='COLAMD'
     momentum_pseudo_cfl: float | None=None
-    pressure_relaxation: float=.2
+    # Uniform damping of the accepted SIMPLE (velocity, pressure, face-flux)
+    # correction.  1 applies the full pressure correction and keeps the
+    # face-flux ledger identity exact at every sweep; values below 1 mix the
+    # whole consistent step toward the previous state (continuity then decays
+    # geometrically).  Do not under-relax the pressure alone: that tears the
+    # flux ledger apart (see native_simple3d.NativeSimpleMixin.solve).
+    pressure_relaxation: float=1.
     face_skew_correction: bool=True
     pressure_velocity_algorithm: str='simple'
 

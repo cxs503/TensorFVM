@@ -31,7 +31,7 @@ def main():
     parser.add_argument('--algorithm', choices=['coupled','simple','simplec'], default='simple')
     parser.add_argument('--wall-treatment', choices=['resolved','spalding'], default='spalding')
     parser.add_argument('--disable-skew-correction', action='store_true', help='Use linear face interpolation for pressure and velocity; accuracy requires a separate mesh study')
-    parser.add_argument('--pressure-relaxation', type=float, help='Default 1 for SIMPLEC, 0.2 otherwise')
+    parser.add_argument('--pressure-relaxation', type=float, help='Uniform damping of the consistent SIMPLE step; default 1 (full correction, exact face-flux ledger)')
     parser.add_argument('--linear-method', choices=['direct', 'iterative', 'block', 'schur'], default='direct')
     parser.add_argument('--convection-order', type=int, choices=[1, 2], default=2)
     parser.add_argument('--relaxation', type=float, default=.3)
@@ -42,7 +42,7 @@ def main():
     parser.add_argument('--initial-run', type=Path, help='Frozen numerical state on identical mesh and Reynolds number')
     parser.add_argument('--project-initial-flux', action='store_true', help='Numerical divergence-free flux seed; velocity potential is never used as physical pressure')
     args = parser.parse_args()
-    if args.pressure_relaxation is None:args.pressure_relaxation=1. if args.algorithm=='simplec' else .2
+    if args.pressure_relaxation is None:args.pressure_relaxation=1.
     if args.inner_iterations is None:args.inner_iterations=1 if args.algorithm in ('simple','simplec') else 80
     if not np.isfinite(args.reynolds) or args.reynolds <= 0:
         parser.error('positive finite Reynolds number required')
