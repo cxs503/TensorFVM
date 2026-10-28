@@ -1,7 +1,0 @@
-{
-  "command": "OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 PYTHONPATH=src python -m pytest -q tests/test_openfoam_history.py tests/test_openfoam_parallel_runner.py tests/test_openfoam_case.py",
-  "passed": 9,
-  "failed": 0,
-  "coverage": "Restart history merging, first pressure residual, independent force components, checkpoint persistence and iteration-limit rejection; case I/O; partial checkpoints missing pressure/turbulence fields are rejected",
-  "not_a_physical_validation": true
-}
