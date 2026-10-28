@@ -5,4 +5,13 @@ __pycache__/
 build/
 dist/
 results/
+**/results/
 uv.lock
+
+# Local test/tool caches and transient run logs
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.log
