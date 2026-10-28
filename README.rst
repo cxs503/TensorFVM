@@ -419,8 +419,7 @@ Additional analytic benchmarks
 Genuine three-dimensional ABC/Beltrami decay and advected shear with nonzero
 mean flow now use the shared verification gates, raw exports and publication
 figures. See `benchmark inventory <docs/benchmarks-index.md>`_,
-`additional report <docs/verification-extended/report.md>`_ and
-`quantitative tables <docs/verification-extended/results-tables.pdf>`_.
+`additional report <docs/verification-extended/report.md>`_.
 DFG Re20 cylinder evidence has strict drag/lift/pressure gates; the published
 coarse case remains a physical failure despite residual convergence.
 
