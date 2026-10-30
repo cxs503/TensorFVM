@@ -1,0 +1,72 @@
+{
+  "case": "NASA TMR 2DBFS backward facing step validation",
+  "grid": "5levdn",
+  "grid_file": "validation_tmr/reference/tmr/grids/backstep5_5levdn_derived.p2dfmt",
+  "grid_sha256": "36b5f310b94ff689f0ff199c4a183394ba238962ac77284682d8a0a6a22a40d8",
+  "cells": 1248,
+  "zones": [
+    [
+      17,
+      17
+    ],
+    [
+      7,
+      17
+    ],
+    [
+      25,
+      29
+    ],
+    [
+      9,
+      29
+    ]
+  ],
+  "extent": [
+    -130.0,
+    50.0,
+    0.0,
+    9.0
+  ],
+  "step_height": 1.0,
+  "reynolds_step": 36000.0,
+  "inlet_velocity": 1.0,
+  "density": 1.0,
+  "viscosity": 2.777777777777778e-05,
+  "turbulence_model": "spalart-allmaras",
+  "sa_freestream_ratio": 3.0,
+  "wall_bc": "no-slip bottom wall, step face and upper channel wall",
+  "top_bc": "grid_top_patch=wall",
+  "inlet_bc": "uniform U=1 at x/H=-130 (TMR adjusted inflow length)",
+  "outlet_bc": "pressure reference",
+  "max_iterations": 1500,
+  "tolerance": 1e-05,
+  "relaxation": {
+    "velocity": 0.7,
+    "pressure": 0.3,
+    "turbulence": 0.5
+  },
+  "linear_solver": "LU-preconditioned (validation_tmr/linear.py)",
+  "references": {
+    "Backstep_validation_cf.exp.dat": {
+      "file": "Backstep_validation_cf.exp.dat",
+      "sha256": "cd9b6434b7956bc58e859de6af654cd7f891e25303babf1dd8633d6c58f74276"
+    },
+    "Backstep_validation_cp.expnew.dat": {
+      "file": "Backstep_validation_cp.expnew.dat",
+      "sha256": "2b3ec9f8d8025b958d6ddcf6767daaf3c93083d45ef350a8cf9c4b46f93a882a"
+    },
+    "Backstep_validation_profiles.exp.dat": {
+      "file": "Backstep_validation_profiles.exp.dat",
+      "sha256": "23e8b44db52bfc36c66af6b743a4080c34f0165eb213a3db29c0914e12cf598d"
+    }
+  },
+  "environment": {
+    "python": "3.11.6 (main, May  9 2024, 00:00:00) [GCC 12.3.0 20230508 (Anolis OS 12.3.0-2)]",
+    "torch": "2.7.1",
+    "numpy": "2.4.6",
+    "threads": 4,
+    "device": "cpu",
+    "timestamp_utc": "2026-10-30T23:02:45Z"
+  }
+}

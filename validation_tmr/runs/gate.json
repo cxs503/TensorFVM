@@ -1,0 +1,160 @@
+{
+  "gate": {
+    "criteria": {
+      "min_grid_levels": 3,
+      "flatplate_cf_rms_max": 0.05,
+      "flatplate_cf_max_max": 0.1,
+      "flatplate_u_plus_rms_log_layer_max": 1.0,
+      "backstep_reattachment_error_max": 0.15,
+      "backstep_profile_rms_max": 0.15
+    },
+    "info_criteria": {
+      "backstep_cf_rms_max": 0.4,
+      "backstep_cp_rms_max": 0.45
+    },
+    "flat_plate": [
+      {
+        "label": "flatplate-35x25",
+        "cells": 816,
+        "converged": true,
+        "stationary": true,
+        "note": "momentum 3.8e-08, du 3.2e-07, SA 8.5e-06",
+        "iterations": 244,
+        "cf_rms": 0.030009447311251245,
+        "cf_max": 0.04327033734221924,
+        "u_plus_rms_log": 0.4369051192114188,
+        "u_plus_rms": 0.3429349383933608,
+        "re_theta": [
+          4133.161690589735,
+          12861.974963353017
+        ]
+      },
+      {
+        "label": "flatplate-69x49",
+        "cells": 3264,
+        "converged": true,
+        "stationary": true,
+        "note": "momentum 8.1e-08, du 2.7e-07, SA 9.8e-06",
+        "iterations": 675,
+        "cf_rms": 0.008736141778347712,
+        "cf_max": 0.017524630177296233,
+        "u_plus_rms_log": 0.10293012073100932,
+        "u_plus_rms": 0.2721727379587905,
+        "re_theta": [
+          4029.5468938171407,
+          12777.982146829178
+        ]
+      },
+      {
+        "label": "flatplate-137x97",
+        "cells": 13056,
+        "converged": true,
+        "stationary": true,
+        "note": "momentum 6.0e-07, du 3.9e-07, SA 1.0e-05",
+        "iterations": 2173,
+        "cf_rms": 0.0081995023577764,
+        "cf_max": 0.014487293920052201,
+        "u_plus_rms_log": 0.14745823051577378,
+        "u_plus_rms": 0.3174792248970915,
+        "re_theta": [
+          4002.9486559864004,
+          12828.344521995426
+        ]
+      }
+    ],
+    "backstep": [
+      {
+        "label": "backstep-5levdn",
+        "cells": 1248,
+        "converged": false,
+        "stationary": true,
+        "note": "momentum 5.2e-07, du 6.0e-05, SA 2.2e-03",
+        "iterations": 1500,
+        "reattachment": 4.897396476960876,
+        "reattachment_error": 0.21999295420073062,
+        "cf_rms": 0.3649830253137674,
+        "cp_rms": 0.42730072534839986,
+        "profile_rms": 0.044045919455734536
+      },
+      {
+        "label": "backstep-4levdn",
+        "cells": 4992,
+        "converged": true,
+        "stationary": true,
+        "note": "momentum 2.0e-07, du 1.3e-06, SA 1.0e-05",
+        "iterations": 1411,
+        "reattachment": 5.386810975051955,
+        "reattachment_error": 0.14204403611267502,
+        "cf_rms": 0.3198616601109131,
+        "cp_rms": 0.3878816314839188,
+        "profile_rms": 0.038992456513015486
+      },
+      {
+        "label": "backstep-3levdn",
+        "cells": 19968,
+        "converged": false,
+        "stationary": true,
+        "note": "momentum 2.1e-05, du 5.3e-05, SA 1.6e-04",
+        "iterations": 1600,
+        "reattachment": 5.97586878898412,
+        "reattachment_error": 0.04822495337928534,
+        "cf_rms": 0.2685874303609067,
+        "cp_rms": 0.29828134583594473,
+        "profile_rms": 0.03254824252230086
+      }
+    ],
+    "failures": [],
+    "warnings": [],
+    "passed": true
+  },
+  "red_team": {
+    "passed": false,
+    "failures": [
+      "flatplate-69x49: stored wall hash mismatch",
+      "flatplate-69x49: cf_relative_error_rms not reproducible from artefacts",
+      "flatplate-69x49: cf_relative_error_max not reproducible from artefacts",
+      "flatplate-69x49: u_plus_error_rms not reproducible from artefacts",
+      "flatplate-69x49: u_plus_error_rms_log_layer not reproducible from artefacts",
+      "flatplate-69x49: Cf table row not reproducible at Re_theta 4030",
+      "flatplate-69x49: Cf table row not reproducible at Re_theta 4109",
+      "flatplate-69x49: Cf table row not reproducible at Re_theta 4190",
+      "flatplate-69x49: Cf table row not reproducible at Re_theta 4272",
+      "flatplate-69x49: Cf table row not reproducible at Re_theta 4356",
+      "flatplate-69x49: Cf table row not reproducible at Re_theta 4441",
+      "flatplate-69x49: Cf table row not reproducible at Re_theta 4527",
+      "flatplate-69x49: Cf table row not reproducible at Re_theta 4652",
+      "flatplate-69x49: Cf table row not reproducible at Re_theta 4753",
+      "flatplate-69x49: Cf table row not reproducible at Re_theta 4858",
+      "flatplate-69x49: Cf table row not reproducible at Re_theta 4966",
+      "flatplate-69x49: Cf table row not reproducible at Re_theta 5077",
+      "flatplate-69x49: Cf table row not reproducible at Re_theta 5193",
+      "flatplate-69x49: Cf table row not reproducible at Re_theta 5313",
+      "flatplate-69x49: Cf table row not reproducible at Re_theta 5436",
+      "flatplate-69x49: Cf table row not reproducible at Re_theta 5564",
+      "flatplate-69x49: Cf table row not reproducible at Re_theta 5695",
+      "flatplate-69x49: Cf table row not reproducible at Re_theta 5874",
+      "flatplate-69x49: Cf table row not reproducible at Re_theta 6033",
+      "flatplate-69x49: Cf table row not reproducible at Re_theta 6200",
+      "flatplate-69x49: Cf table row not reproducible at Re_theta 6377",
+      "flatplate-69x49: Cf table row not reproducible at Re_theta 6563",
+      "flatplate-69x49: Cf table row not reproducible at Re_theta 6759",
+      "flatplate-69x49: Cf table row not reproducible at Re_theta 6965",
+      "flatplate-69x49: Cf table row not reproducible at Re_theta 7181",
+      "flatplate-69x49: Cf table row not reproducible at Re_theta 7469",
+      "flatplate-69x49: Cf table row not reproducible at Re_theta 7743",
+      "flatplate-69x49: Cf table row not reproducible at Re_theta 8039",
+      "flatplate-69x49: Cf table row not reproducible at Re_theta 8359",
+      "flatplate-69x49: Cf table row not reproducible at Re_theta 8702",
+      "flatplate-69x49: Cf table row not reproducible at Re_theta 9067",
+      "flatplate-69x49: Cf table row not reproducible at Re_theta 9561",
+      "flatplate-69x49: Cf table row not reproducible at Re_theta 10057",
+      "flatplate-69x49: Cf table row not reproducible at Re_theta 10594",
+      "flatplate-69x49: Cf table row not reproducible at Re_theta 11116",
+      "flatplate-69x49: Cf table row not reproducible at Re_theta 11704",
+      "flatplate-69x49: Cf table row not reproducible at Re_theta 12242",
+      "flatplate-69x49: Cf table row not reproducible at Re_theta 12778"
+    ],
+    "injected": "flatplate-69x49 skin friction scaled by 0.60"
+  },
+  "exit_status": 0
+}

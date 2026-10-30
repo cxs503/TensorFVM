@@ -1,0 +1,55 @@
+{
+  "case": "NASA TMR 2DZP flat plate validation",
+  "grid": "35x25",
+  "grid_file": "validation_tmr/reference/tmr/grids/flatplate_clust2_4levelsdown_35x25.p2dfmt",
+  "grid_sha256": "41c409f49afca8affaafd4a0a49c6ba934eca9007da502fe0c20afbd091500b0",
+  "cells": 816,
+  "zones": [
+    [
+      35,
+      25
+    ]
+  ],
+  "extent": [
+    -0.33333,
+    2.0,
+    0.0,
+    1.0
+  ],
+  "reynolds_per_unit_length": 5000000.0,
+  "inlet_velocity": 1.0,
+  "density": 1.0,
+  "viscosity": 2e-07,
+  "turbulence_model": "spalart-allmaras",
+  "sa_freestream_ratio": 3.0,
+  "wall_bc": "no-slip bottom plate",
+  "top_bc": "grid_top_patch=far-field",
+  "inlet_bc": "uniform U=1",
+  "outlet_bc": "pressure reference",
+  "max_iterations": 8000,
+  "tolerance": 1e-05,
+  "relaxation": {
+    "velocity": 0.7,
+    "pressure": 0.3,
+    "turbulence": 0.5
+  },
+  "linear_solver": "LU-preconditioned (validation_tmr/linear.py)",
+  "references": {
+    "FlatPlate_validation_cf_K-S.dat": {
+      "file": "FlatPlate_validation_cf_K-S.dat",
+      "sha256": "bafbaf7fa7969a945a5ad0935ca90c320ab72f14ba5a08474abffa61356bba2d"
+    },
+    "FlatPlate_validation_u+y+.dat": {
+      "file": "FlatPlate_validation_u+y+.dat",
+      "sha256": "314dc0b5e4aa666ee88ac507eeda8cbeaacc1279057d10430748231264277bcb"
+    }
+  },
+  "environment": {
+    "python": "3.11.6 (main, May  9 2024, 00:00:00) [GCC 12.3.0 20230508 (Anolis OS 12.3.0-2)]",
+    "torch": "2.7.1",
+    "numpy": "2.4.6",
+    "threads": 4,
+    "device": "cpu",
+    "timestamp_utc": "2026-10-30T23:11:59Z"
+  }
+}

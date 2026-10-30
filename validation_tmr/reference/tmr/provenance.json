@@ -1,0 +1,151 @@
+{
+  "name": "NASA Turbulence Modeling Resource reference artefacts",
+  "mirror_root": "https://tmbwg.github.io/turbmodels/",
+  "retrieval": {
+    "timestamp_utc": "2026-10-30T22:49:57Z",
+    "tool": "curl -sSL",
+    "network": "https://tmbwg.github.io, https://www.nasa.gov"
+  },
+  "files": {
+    "page_flatplate_val.html": {
+      "url": "https://tmbwg.github.io/turbmodels/flatplate_val.html",
+      "description": "2DZP flat plate validation case definition",
+      "bytes": 20365,
+      "sha256": "b8844cd5c975f18910a130d49f819889dc08bb15b9495fc2a8184e6149c2d9ae"
+    },
+    "page_flatplate_grids.html": {
+      "url": "https://tmbwg.github.io/turbmodels/flatplate_grids.html",
+      "description": "2DZP official nested grid family description",
+      "bytes": 22149,
+      "sha256": "8643b1a4ebfc7334af3762b53311896c7a03e0aa1c10389653d9653854ee10ba"
+    },
+    "page_backstep_val.html": {
+      "url": "https://tmbwg.github.io/turbmodels/backstep_val.html",
+      "description": "2DBFS backward-facing-step case definition",
+      "bytes": 16396,
+      "sha256": "dad891f157d433759d463e75098fc043f9459acb3638ea105815448621b7565c"
+    },
+    "page_backstep_grids.html": {
+      "url": "https://tmbwg.github.io/turbmodels/backstep_grids.html",
+      "description": "2DBFS official nested grid family description",
+      "bytes": 14861,
+      "sha256": "ad3f7b58ea4d922d7871c53168b27844c140c9a24a3410a092d7e75dbcfebabc"
+    },
+    "page_spalart.html": {
+      "url": "https://tmbwg.github.io/turbmodels/spalart.html",
+      "description": "Spalart-Allmaras model definition used by the solver",
+      "bytes": 86269,
+      "sha256": "a1f2dd4bdbe0014ec9059ccec95f5b0d333b70c210246f57ca741fa42122eb63"
+    },
+    "FlatPlate_validation_cf_K-S.dat": {
+      "url": "https://tmbwg.github.io/turbmodels/FlatPlate_validation/cf_K-S.dat",
+      "description": "Cf(Re_theta) from the Karman-Schoenherr relation",
+      "bytes": 4224,
+      "sha256": "bafbaf7fa7969a945a5ad0935ca90c320ab72f14ba5a08474abffa61356bba2d"
+    },
+    "FlatPlate_validation_u+y+.dat": {
+      "url": "https://tmbwg.github.io/turbmodels/FlatPlate_validation/u+y+.dat",
+      "description": "u+ vs y+ from Coles law of the wall with van Driest damping",
+      "bytes": 137104,
+      "sha256": "314dc0b5e4aa666ee88ac507eeda8cbeaacc1279057d10430748231264277bcb"
+    },
+    "FlatPlate_validation_cf_as_function_of_x.dat": {
+      "url": "https://tmbwg.github.io/turbmodels/FlatPlate_validation/cf_as_function_of_x.dat",
+      "description": "typical model Cf(x) variation, kept for context only",
+      "bytes": 183312,
+      "sha256": "97d01033550468819a0f081fee37fc1836ff12a4ad8318f0a80cdc847625a8e2"
+    },
+    "FlatPlate_validation_retheta_variation_typical.dat": {
+      "url": "https://tmbwg.github.io/turbmodels/FlatPlate_validation/retheta_variation_typical.dat",
+      "description": "typical Re_theta(x), used to confirm the sampling window",
+      "bytes": 14936,
+      "sha256": "ea563b33fd85a3ab93b1063a74c2f65f10af22189eca2807aa3ce508f83797a7"
+    },
+    "Backstep_validation_cf.exp.dat": {
+      "url": "https://tmbwg.github.io/turbmodels/Backstep_validation/cf.exp.dat",
+      "description": "Driver & Seegmiller bottom-wall skin friction (TMR distributed)",
+      "bytes": 592,
+      "sha256": "cd9b6434b7956bc58e859de6af654cd7f891e25303babf1dd8633d6c58f74276"
+    },
+    "Backstep_validation_cp.expnew.dat": {
+      "url": "https://tmbwg.github.io/turbmodels/Backstep_validation/cp.expnew.dat",
+      "description": "Driver & Seegmiller wall pressure coefficient, shifted to Cp=0 at x/H=40",
+      "bytes": 2087,
+      "sha256": "2b3ec9f8d8025b958d6ddcf6767daaf3c93083d45ef350a8cf9c4b46f93a882a"
+    },
+    "Backstep_validation_profiles.exp.dat": {
+      "url": "https://tmbwg.github.io/turbmodels/Backstep_validation/profiles.exp.dat",
+      "description": "Driver & Seegmiller velocity/turbulence profiles at x/H = -4, 1, 4, 6, 10",
+      "bytes": 10341,
+      "sha256": "23e8b44db52bfc36c66af6b743a4080c34f0165eb213a3db29c0914e12cf598d"
+    },
+    "grids/flatplate_clust2_4levelsdown_35x25.p2dfmt": {
+      "url": "https://www.nasa.gov/wp-content/uploads/2026/02/flatplategrids-grids.zip",
+      "description": "official TMR flat plate grid 35x25 (4 levels down)",
+      "bytes": 42622,
+      "sha256": "41c409f49afca8affaafd4a0a49c6ba934eca9007da502fe0c20afbd091500b0"
+    },
+    "grids/flatplate_clust2_3levelsdown_69x49.p2dfmt": {
+      "url": "https://www.nasa.gov/wp-content/uploads/2026/02/flatplategrids-grids.zip",
+      "description": "official TMR flat plate grid 69x49 (3 levels down)",
+      "bytes": 164580,
+      "sha256": "18c1d1c82cf91bdad89b2c2963129fc992fcd8b98fda4b3e79b7397ee52ba223"
+    },
+    "grids/flatplate_clust2_2levelsdown_137x97.p2dfmt": {
+      "url": "https://www.nasa.gov/wp-content/uploads/2026/02/flatplategrids-grids.zip",
+      "description": "official TMR flat plate grid 137x97 (2 levels down)",
+      "bytes": 646770,
+      "sha256": "55ae965f2151e5644e3c7c1b6fecea7ce0a16cf4c34eae6997f27683a4e2ac44"
+    },
+    "grids/backstep5_4levdn.p2dfmt": {
+      "url": "https://www.nasa.gov/wp-content/uploads/2026/02/backstep-grids.zip",
+      "description": "official TMR 2DBFS grid 33x33/13x33/49x57/17x57 (4 levels down)",
+      "bytes": 257071,
+      "sha256": "14c05f8d7e242abe196c5c3e00513739c76f6ada09e528cdb0004acbee024b6b"
+    },
+    "grids/backstep5_3levdn.p2dfmt": {
+      "url": "https://www.nasa.gov/wp-content/uploads/2026/02/backstep-grids.zip",
+      "description": "official TMR 2DBFS grid 65x65/25x65/97x113/33x113 (3 levels down)",
+      "bytes": 999726,
+      "sha256": "dbfcbea3f8150073a3cb3a6d62e857e7463827a0750d696438cf9f23b4a3ec3c"
+    },
+    "grids/backstep5_2levdn.p2dfmt": {
+      "url": "https://www.nasa.gov/wp-content/uploads/2026/02/backstep-grids.zip",
+      "description": "official TMR 2DBFS grid 129x129/49x129/193x225/65x225 (2 levels down)",
+      "bytes": 3942695,
+      "sha256": "b456a6c584a35beb26a289193a8e8fb7f60d5f06c2f35fdab1b50b3363d3969d"
+    }
+  },
+  "citations": [
+    {
+      "kind": "case-definition",
+      "title": "NASA Turbulence Modeling Resource: 2D Zero Pressure Gradient Flat Plate Validation Case",
+      "url": "https://tmbwg.github.io/turbmodels/flatplate_val.html"
+    },
+    {
+      "kind": "case-definition",
+      "title": "NASA Turbulence Modeling Resource: 2D Backward Facing Step Validation Case",
+      "url": "https://tmbwg.github.io/turbmodels/backstep_val.html"
+    },
+    {
+      "kind": "experiment",
+      "title": "Driver, D. M. and Seegmiller, H. L., \"Features of Reattaching Turbulent Shear Layer in Divergent Channel Flow\", AIAA Journal 23(2):163-171, 1985",
+      "doi": "10.2514/3.8890"
+    },
+    {
+      "kind": "theory",
+      "title": "Schoenherr, K. E., Trans. SNAME 40:279-313, 1932 (Karman-Schoenherr skin-friction relation, as tabulated by TMR)",
+      "url": "https://tmbwg.github.io/turbmodels/flatplate_val.html"
+    },
+    {
+      "kind": "theory",
+      "title": "Coles, D., \"The law of the wake in the turbulent boundary layer\", J. Fluid Mech. 1(2):191-226, 1956",
+      "doi": "10.1017/S0022112056000135"
+    },
+    {
+      "kind": "model",
+      "title": "Spalart, P. R. and Allmaras, S. R., \"A one-equation turbulence model for aerodynamic flows\", 1992 (as specified by TMR)",
+      "url": "https://tmbwg.github.io/turbmodels/spalart.html"
+    }
+  ]
+}

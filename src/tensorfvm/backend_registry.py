@@ -218,3 +218,18 @@ register_backend(SolverBackend(
     residual_length="airfoil_chord",
     required_mesh_masks=("inlet", "outlet", "far-field", "slat", "main", "flap"),
 ))
+register_backend(SolverBackend(
+    name="tmr-grid",
+    solver_factory=_lazy_factory("tensorfvm.body_fitted", "BodyFittedSolver"),
+    mesh_factory=_lazy_factory("tensorfvm.tmr_grid", "TmrGridMesh"),
+    structured=False,
+    min_nx=1,
+    min_ny=1,
+    supports_spalart_allmaras=True,
+    supports_transient=True,
+    requires_mesh_file=True,
+    forbids_cylinder=True,
+    reference_length="domain_length",
+    residual_length="domain_length",
+    required_mesh_masks=("inlet", "outlet", "wall", "far-field"),
+))

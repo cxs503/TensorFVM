@@ -48,11 +48,14 @@ class SolverConfig:
     airfoil_y: float = 1.0
     angle_of_attack: float = 0.0
     mesh_file: str | None = None
+    grid_top_patch: str = "far-field"
     single_element: bool = False
 
     def __post_init__(self):
         if not isinstance(self.single_element, bool):
             raise ValueError('single_element must be boolean')
+        if self.grid_top_patch not in ("wall", "far-field"):
+            raise ValueError("grid_top_patch must be 'wall' or 'far-field'")
         for name in ("nx", "ny", "max_iterations", "inner_iterations"):
             value = getattr(self, name)
             if isinstance(value, bool) or not isinstance(value, int):
