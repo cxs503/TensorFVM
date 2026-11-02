@@ -1,6 +1,14 @@
 TensorFVM
 =========
 
+Tensor 生态愿景与项目边界
+--------------------------
+
+AI 时代 Tensor 生态总纲：`Tensor Ecosystem: Vision for the AI Era <https://github.com/cxs503/TensorPlatform/blob/main/docs/architecture/TENSOR_ECOSYSTEM_AI_ERA_VISION.md>`_.
+
+本项目职责与 Agent 开发规则：`docs/PROJECT_CHARTER.md <docs/PROJECT_CHARTER.md>`_。有限体积算法、求解器诊断与本仓库的验证基准属于 TensorFVM；跨领域 Agent 运行基础设施属于 TensorPlatform；科研工作流与科学验收由 TensorPhysics 负责。
+
+
 系统总览
 --------
 
