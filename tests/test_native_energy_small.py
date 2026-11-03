@@ -17,8 +17,14 @@ def test_two_cell_skew_geometry_and_independent_stress_balance():
     assert result['energy_balance_error'] < 1e-12
 
 
-@pytest.mark.xfail(strict=True, reason='Open defect: skew two-cell viscous operator creates kinetic energy')
+@pytest.mark.xfail(strict=True, reason=(
+    'Structural: the deferred nonorthogonal correction family is never passive on this '
+    'pair (no gamma: scan in tests/test_native_energy_passivity.py); passivity is only '
+    'attained by a two-point operator that loses affine exactness (112% flux error)'))
 def test_two_cell_skew_viscosity_must_dissipate():
     # Keep the physical requirement red until the operator is corrected.
     # XPASS must fail CI so this marker is removed when the defect is fixed.
+    # Measured verdict (scripts/native_viscous_passivity_audit.md): the defect exists
+    # only beyond 85.9 deg nonorthogonality, i.e. 16 deg outside the 70 deg mesh
+    # quality gate, and no correction weight removes it.
     assert energy_diagnostic(two_tetrahedra())['kinetic_energy_rate'] <= 1e-12

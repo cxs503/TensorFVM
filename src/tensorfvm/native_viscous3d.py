@@ -4,6 +4,16 @@ Uses linear mixed Dirichlet/normal-derivative data, fully assembled
 nonorthogonal gradients and known viscosity. No flow solver or pressure BC
 is supplied. Warped mixed cells must already expose planar native facets.
 All vector matrices use cell/face major, component minor (interleaved) order.
+
+The face gradient is the interpolated cell gradient plus a deferred
+nonorthogonal correction ``gamma*s*(du - d.grad)``.  ``correction`` selects
+``gamma``: ``'over-relaxed'`` (default, ``1/(s.d)``), ``'minimum'``
+(``(s.d)/(|d|^2|s|^2)``, orthogonal/minimum correction), ``'none'``, or a raw
+nonnegative scalar.  ``correction_damping`` (default ``1.``) additionally
+scales the correction by a face-wise factor in ``[0, 1]``.  Every choice reproduces the exact affine traction
+``mu*s.grad`` because the correction vanishes for affine fields; none of them
+is guaranteed to satisfy the discrete passivity inequality, see
+:mod:`tensorfvm.verification.native_energy`.
 """
 import numpy as np
 from scipy.sparse import coo_matrix, diags, kron, eye, bmat
@@ -11,7 +21,7 @@ from .native_operators3d import NativeOperators3D
 
 
 class NativeViscous3D:
-    def __init__(self,mesh,dirichlet_mask,dynamic_viscosity=1.,*,deviatoric=True,correction_damping=1.):
+    def __init__(self,mesh,dirichlet_mask,dynamic_viscosity=1.,*,deviatoric=True,correction='over-relaxed',correction_damping=1.):
         self.mesh=mesh;self.op=NativeOperators3D(mesh)
         self.internal=self.op.internal;self.boundary=self.op.boundary
         self.N=len(mesh.cells);self.F=len(mesh.owner)
@@ -42,11 +52,21 @@ class NativeViscous3D:
         contraction=sum(diags(d[:,k])@self.raw_face_gradient[k] for k in range(3))
         normal_contraction=sum(diags(self.normal[:,k])@self.raw_face_gradient[k] for k in range(3))
         active=i|bd
+        dd=np.einsum('ij,ij->i',d,d);ss=np.einsum('ij,ij->i',s,s)
+        self.correction=correction
+        if isinstance(correction,str):
+            if correction=='over-relaxed':gamma=1/projection
+            elif correction=='minimum':gamma=projection/(dd*ss)
+            elif correction=='none':gamma=np.zeros(self.F)
+            else:raise ValueError('unknown nonorthogonal correction')
+        elif np.isfinite(correction) and correction>=0:gamma=np.full(self.F,float(correction))
+        else:raise ValueError('correction must be a known name or a finite nonnegative scale')
+        self.correction_gamma=gamma
+        self.correction_direction=gamma[:,None]*s
         damping=np.asarray(correction_damping,dtype=float)
         if damping.ndim==0:damping=np.full(self.F,float(damping))
         if damping.shape!=(self.F,) or not np.isfinite(damping).all() or np.any(damping<0) or np.any(damping>1):raise ValueError('correction damping must be a scalar or face array within [0,1]')
         self.correction_damping=damping
-        self.correction_direction=s/projection[:,None]
         damped_active=active*damping
         self.face_gradient_matrices=[(a+diags(self.correction_direction[:,k]*damped_active)@(self.delta_matrix-contraction)-diags(self.normal[:,k]*self.neumann)@normal_contraction).tocsr() for k,a in enumerate(self.raw_face_gradient)]
         mu=np.asarray(dynamic_viscosity,dtype=float)
