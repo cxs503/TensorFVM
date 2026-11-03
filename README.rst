@@ -52,7 +52,7 @@ TensorFVM 是 Tensor 工程仿真体系中的**有限体积流体求解器**，�
 
 仅使用 CPU 时可先从 PyTorch 官方 CPU 索引安装，避免下载 CUDA 运行库::
 
-    python -m pip install "torch>=2.14.1" --index-url https://download.pytorch.org/whl/cpu
+    python -m pip install "torch>=2.7" --index-url https://download.pytorch.org/whl/cpu
     python -m pip install -e .
 
 CUDA 需安装与硬件兼容的 PyTorch，并通过 ``--device cuda`` 选择。
