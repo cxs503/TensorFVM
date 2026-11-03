@@ -39,6 +39,7 @@ __all__ = [
     "compatible_momentum_operators",
     "compatible_boundary_source",
     "compatible_energy_rate",
+    "compatible_momentum_matrix_in_legacy_sign",
     "reconstruction_weight",
 ]
 
@@ -71,8 +72,12 @@ def compatible_momentum_operators(mesh, dirichlet_mask, dynamic_viscosity=1., *,
                                   deviatoric=True):
     """Assemble the energy (Galerkin) viscous momentum operator.
 
-    Returns a dict with ``matrix`` (``3N x 3N``, symmetric PSD, same sign
-    convention as ``NativeViscous3D.momentum_diffusion_matrix``), the
+    Returns a dict with ``matrix`` (``3N x 3N``, symmetric PSD).  Note the sign
+    convention: ``u^T K u >= 0`` here, whereas the production slot
+    ``NativeViscous3D.momentum_diffusion_matrix`` satisfies ``u^T M u <= 0``, so
+    ``K`` is *not* a drop-in replacement; use
+    :func:`compatible_momentum_matrix_in_legacy_sign` for that slot (verified in
+    ``tests/test_native_compatible_sign_convention.py``).  Also returned are the
     per-(i,j) gradient blocks, cell viscosity, and the legacy operator used for
     its gradient stencils.
     """
@@ -135,6 +140,18 @@ def compatible_boundary_source(operators, neumann_gradients=0., dirichlet_values
             offset = 0.5 * (data[:, i, j] + data[:, j, i])
         source += operators["multiplicities"][(i, j)] * (block.T @ (weight @ offset))
     return source
+
+
+def compatible_momentum_matrix_in_legacy_sign(operators):
+    """Negated compatible operator, i.e. the drop-in for a ``momentum_diffusion_matrix`` slot.
+
+    ``NativeViscous3D.momentum_diffusion_matrix`` approximates ``+div(tau)`` and is
+    negative semidefinite on well-shaped meshes (``u^T M u <= 0`` is the dissipative
+    sign).  ``compatible_momentum_operators['matrix']`` is positive semidefinite
+    (``-u^T K u <= 0``).  Returning ``-K`` keeps a solver's viscous update dissipative
+    when the assembly is swapped, since ``u^T (-K) u <= 0`` for every ``u``.
+    """
+    return (-operators["matrix"]).tocsr()
 
 
 def compatible_energy_rate(operators, velocity):
