@@ -1,0 +1,102 @@
+{
+  "linear": {
+    "interior_error": 2.3092638912203256e-14,
+    "all_cell_error": 43.974464053469816,
+    "interior_cells": 132,
+    "cells": 192,
+    "median_aspect": 4.489081890547246,
+    "max_aspect": 45.03455545071393
+  },
+  "consistency": {
+    "gradient_difference": 1.3379054808471125e-14,
+    "h_row_defect": 0.0,
+    "i_row_defect": 0.0,
+    "quadratic_difference": 4.440892098500626e-16,
+    "gauge_cells": 8,
+    "operator_scaling": 3.002635085348767
+  },
+  "orders": {
+    "0.0": [
+      {
+        "cells": 192,
+        "error": 0.06156505914181567,
+        "spacing": 0.125,
+        "median_aspect": 1.0,
+        "max_aspect": 1.0
+      },
+      {
+        "cells": 768,
+        "error": 0.01762418640564125,
+        "spacing": 0.0625,
+        "median_aspect": 1.0,
+        "max_aspect": 1.0,
+        "observed_order": 1.804555131600396
+      },
+      {
+        "cells": 3072,
+        "error": 0.005510870564375429,
+        "spacing": 0.03125,
+        "median_aspect": 1.0,
+        "max_aspect": 1.0,
+        "observed_order": 1.6772045115479703
+      }
+    ],
+    "3.0": [
+      {
+        "cells": 192,
+        "error": 0.07278244940123114,
+        "spacing": 0.125,
+        "median_aspect": 2.1431332767893947,
+        "max_aspect": 5.243378311655338
+      },
+      {
+        "cells": 768,
+        "error": 0.01790996937951606,
+        "spacing": 0.06249999999999999,
+        "median_aspect": 2.121839539360186,
+        "max_aspect": 5.784049920165959,
+        "observed_order": 2.022827733306868
+      },
+      {
+        "cells": 3072,
+        "error": 0.004091158842707251,
+        "spacing": 0.03125,
+        "median_aspect": 2.117504341017559,
+        "max_aspect": 6.068292999141449,
+        "observed_order": 2.1301814134827004
+      }
+    ],
+    "6.0": [
+      {
+        "cells": 192,
+        "error": 0.1522555104909891,
+        "spacing": 0.125,
+        "median_aspect": 4.489081890547246,
+        "max_aspect": 45.03455545071393
+      },
+      {
+        "cells": 768,
+        "error": 0.050068463866791896,
+        "spacing": 0.0625,
+        "median_aspect": 4.510127107300237,
+        "max_aspect": 55.27972349632502,
+        "observed_order": 1.6045203452735788
+      },
+      {
+        "cells": 3072,
+        "error": 0.01270868663788106,
+        "spacing": 0.031249999999999997,
+        "median_aspect": 4.482157342510901,
+        "max_aspect": 60.97989907861,
+        "observed_order": 1.9780872486048622
+      }
+    ]
+  },
+  "step": {
+    "operator_defect": 1.1128100846849962e-16,
+    "pressure_solves": 1,
+    "continuity": 0.00209686341608141,
+    "mass_imbalance": 2.433853419803178e-05,
+    "scheme": "least-squares"
+  }
+}
