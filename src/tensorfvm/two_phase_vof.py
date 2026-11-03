@@ -195,21 +195,57 @@ class VOFTransport:
     Face fluxes are computed from the staggered face velocities ``u`` (east
     faces, shape (ny, nx+1)) and ``v`` (north faces, shape (ny+1, nx)).
 
-    The donor-cell scheme uses a bounded blending of upwind and downwind:
+    Two face-value options are available via ``scheme``:
+
+    ``scheme="blend"`` (default, historical behaviour, kept bit-for-bit):
 
         f_face = f_donor + C·(f_acceptor − f_donor)
 
-    where C is the local Courant number.  This yields a stable, conservative,
-    and bounded transport that preserves total phase volume to machine
-    precision when the velocity field is divergence-free.
+    where C is the local Courant number.  For a smooth field the discrete symbol
+    of this stencil is  G = (1−C+2C²) + (C−2C²)cosθ − iC sinθ, with
+    |G|² = 1 + (3C²−C)θ² + O(θ⁴).  It is therefore **von Neumann stable only for
+    C ≤ 1/3**, and its effective numerical diffusion is (uΔx/2)(1−3C) — i.e.
+    anti-diffusive for C > 1/3.  The α∈[0,1] clip and the pure-donor pinning act as
+    a hard limiter that keeps sharp interfaces bounded, but they cannot preserve
+    accuracy (nor exact conservation) for smooth fields above that limit.
+    See ``tensorfvm.verification.vof_transport_audit`` for the measurements.
+
+    ``scheme="upwind"`` (classical donor-cell / first-order upwind):
+
+        f_face = f_donor
+
+    G = 1 − C(1−cosθ) − iC sinθ, stable for all 0 ≤ C ≤ 1, exact at C = 1, with
+    numerical diffusion (uΔx/2)(1−C).  Recommended whenever the VOF Courant
+    number can exceed 1/3 (the two-phase solver default is 0.5).
+
+    Both options are conservative in flux form and preserve total phase volume to
+    machine precision when the velocity field is divergence-free and the clip is
+    inactive (sharp interfaces can activate the clip; see the audit for measured
+    drift).
     """
 
-    def __init__(self, ny: int, nx: int, dx: float, dy: float, device: str = "cpu"):
+    def __init__(
+        self,
+        ny: int,
+        nx: int,
+        dx: float,
+        dy: float,
+        device: str = "cpu",
+        scheme: str = "blend",
+    ):
+        if scheme not in ("blend", "upwind"):
+            raise ValueError(
+                f"unknown VOF scheme {scheme!r}; expected 'blend' or 'upwind'"
+            )
         self.ny = ny
         self.nx = nx
         self.dx = float(dx)
         self.dy = float(dy)
         self.device = device
+        self.scheme = scheme
+        # Face-value blend weight: 1 = Courant-weighted donor/acceptor blend (legacy
+        # default, bit-for-bit unchanged), 0 = classic donor-cell (first-order upwind).
+        self._blend = 1.0 if scheme == "blend" else 0.0
         self._dt = None
 
     def face_flux_x(self, u: torch.Tensor) -> torch.Tensor:
@@ -272,7 +308,8 @@ class VOFTransport:
         Conservation:  α_new = α_old − (dt/V)·[ΣF_face·α_face]
 
         where V = dx·dy is the cell volume and F_face is the volumetric
-        face flux.  The scheme is bounded for CFL ≤ 1.
+        face flux.  Stability: ``scheme="blend"`` (default) is von Neumann stable only for
+        CFL ≤ 1/3; ``scheme="upwind"`` is stable for CFL ≤ 1 (exact at CFL = 1).
         """
         cell_vol = self.dx * self.dy
         Fe = u * self.dy  # east-face volumetric flux (ny, nx+1)
@@ -281,7 +318,7 @@ class VOFTransport:
         # --- x-direction face values (east faces, nx+1) ---
         donor_x, acceptor_x, pos_x = self._donor_face_alpha_x(alpha, Fe)
         cour_x = (Fe * dt / cell_vol).abs()
-        af_x = donor_x + cour_x * (acceptor_x - donor_x)
+        af_x = donor_x + self._blend * cour_x * (acceptor_x - donor_x)
         # Pin face value to donor when donor is pure (α=0 or 1) to prevent
         # spurious mixing at sharp interfaces that breaks global conservation.
         pure_x = (donor_x <= 0.0) | (donor_x >= 1.0)
@@ -291,7 +328,7 @@ class VOFTransport:
         # --- y-direction face values (north faces, ny+1) ---
         donor_y, acceptor_y, pos_y = self._donor_face_alpha_y(alpha, Fn)
         cour_y = (Fn * dt / cell_vol).abs()
-        af_y = donor_y + cour_y * (acceptor_y - donor_y)
+        af_y = donor_y + self._blend * cour_y * (acceptor_y - donor_y)
         pure_y = (donor_y <= 0.0) | (donor_y >= 1.0)
         af_y = torch.where(pure_y, donor_y, af_y)
         af_y = af_y.clamp(0.0, 1.0)
