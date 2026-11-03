@@ -14,12 +14,14 @@ references that need no external data:
 4. a fully sealed domain (``top_atmosphere=False``), whose pressure Poisson
    problem is all-Neumann with a one-dimensional null space.
 
-Tests 2-4 are ``xfail(strict=True)``: the current transient projection path
+Tests 2-3 are ``xfail(strict=True)``: the current transient projection path
 does not reproduce the analytic reference, so they are executable
 reproductions of the defects documented in
 ``scripts/verification-two-phase-solver/report.md``.  ``strict=True`` turns
 each of them red the moment the solver is fixed, which is the signal to
-promote it to a plain assertion.
+promote it to a plain assertion.  Test 4 (sealed-domain well-posedness
+guard) is a hard assertion since m2751: the solver now rejects the
+all-Neumann configuration at ``step()`` time.
 
 Cases are small (n <= 64, <= 10 steps) and run in a few seconds.
 """
@@ -110,14 +112,20 @@ def test_laplace_pressure_of_static_drop_matches_sigma_over_R():
     assert abs((inside - outside) - exact) / exact < 0.15
 
 
-@pytest.mark.xfail(strict=True, reason=(
-    "a sealed domain gives an all-Neumann pressure Poisson problem; the "
-    "solver neither pins the level nor rejects the configuration"))
 def test_fully_sealed_domain_is_rejected():
-    """A sealed domain has no pressure datum; the solver must not run silently."""
+    """A sealed domain has no pressure datum; the solver must not run silently.
+
+    All-Neumann pressure Poisson: the operator is singular (constant null
+    space), so the configuration is ill-posed and must be rejected with a
+    ``ValueError`` instead of iterating on garbage.
+    """
     solver, _ = _solver(n=16, gravity=9.81, mu=1e-3, top_atmosphere=False)
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match='sealed domain'):
         solver.step(1e-5)
+    # A datum on any boundary restores well-posedness: the same grid with
+    # the top row open must step without raising.
+    open_solver, _ = _solver(n=16, gravity=9.81, mu=1e-3, top_atmosphere=True)
+    open_solver.step(1e-5)
 
 
 def test_single_phase_mode_is_dormant():

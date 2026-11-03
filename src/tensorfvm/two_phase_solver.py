@@ -783,6 +783,14 @@ class TwoPhaseSolver:
         self._current_dt = dt_eff if dt_eff > 0 else None
 
         if self.tp.enabled and dt_eff > 0:
+            if not self.tp.top_atmosphere and not self.tp.side_outlet:
+                raise ValueError(
+                    "sealed domain: with top_atmosphere=False and "
+                    "side_outlet=False the pressure Poisson problem is "
+                    "all-Neumann, has a one-dimensional null space and no "
+                    "pressure datum; the projection would run silently on a "
+                    "singular operator. Set top_atmosphere=True or "
+                    "side_outlet=True to provide a datum.")
             return self._projection_step(dt_eff)
 
         # --- Single-phase SIMPLE path (unchanged from baseline) ---
