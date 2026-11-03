@@ -197,6 +197,75 @@ def solution_study(n, warp=0.0, viscosity=1.3):
                     / max(np.linalg.norm(rhs), 1e-30)))
 
 
+def manufactured_solution_study(n, warp=0.0, viscosity=1.3):
+    """Dirichlet diffusion solve of the *consistent* manufactured problem.
+
+    ``solution_study`` solves ``div(tau(u)) = 0`` and compares the result with
+    :func:`manufactured`, which does not satisfy that homogeneous equation
+    (``divergence_of_stress`` is O(1) everywhere).  That comparison therefore
+    measures the distance between two different fields, not a discretisation
+    error.  Here the analytic divergence of the stress of the manufactured
+    field is imposed as the cell source, so the exact discrete solution really
+    is ``manufactured`` and the error below is a discretisation error.
+    """
+    from scipy.sparse.linalg import spsolve
+
+    mesh = hex_box(n, warp)
+    op = _operator(mesh, viscosity)
+    data = _boundary_data(op)
+    rhs = -(op.vector_divergence_matrix @
+            op.momentum_flux_source(dirichlet_values=data).ravel())
+    source = divergence_of_stress(mesh.cell_centers, viscosity)*mesh.cell_volumes[:, None]
+    rhs = rhs + source.ravel()
+    solved = spsolve(op.momentum_diffusion_matrix.tocsc(), rhs)
+    values = solved.reshape(len(mesh.cells), 3)
+    exact = manufactured(mesh.cell_centers)
+    err = np.linalg.norm(values - exact, axis=1)
+    wall = _wall_mask(mesh, n)
+    return dict(n=n, h=1.0/n, warp=warp,
+                l2_global=float(np.sqrt(np.mean(err**2))),
+                linf_global=float(err.max()),
+                l2_interior=float(np.sqrt(np.mean(err[~wall]**2))),
+                l2_wall=float(np.sqrt(np.mean(err[wall]**2))),
+                field_scale=float(np.linalg.norm(exact, axis=1).max()),
+                residual=float(np.linalg.norm(op.momentum_diffusion_matrix @ solved - rhs)
+                               / max(np.linalg.norm(rhs), 1e-30)))
+
+
+def wall_second_derivative(face_centers, normals, step=1e-4):
+    """Analytic d2u_a/dn2 at the given points along the supplied unit normals."""
+    normals = np.asarray(normals, dtype=float)
+    points = np.asarray(face_centers, dtype=float)
+    second = np.zeros((len(points), 3))
+    for a in range(3):
+        plus = np.einsum('fab,fb->fa', manufactured_gradient(points + step*normals), normals)
+        centre = np.einsum('fab,fb->fa', manufactured_gradient(points), normals)
+        minus = np.einsum('fab,fb->fa', manufactured_gradient(points - step*normals), normals)
+        second[:, a] = (plus[:, a] - 2*centre[:, a] + minus[:, a])/step**2
+    return second
+
+
+def wall_error_model(n, warp=0.0, viscosity=1.3):
+    """Leading-order model of the wall-cell divergence error.
+
+    The Dirichlet face reconstruction supplies ``2*(u_D - u_P)/|d|`` as the
+    normal derivative, i.e. the central difference over the half-cell interval
+    *evaluated at the wall*; its leading error is ``(|d|/2) d2u/dn2``.  Per face
+    that error contributes ``mu*err*area`` to the outflux, and the cell-volume
+    normalisation of a uniform box cancels it exactly, so the wall-cell
+    divergence error should approach ``mu*|d|/2*|d2u/dn2|`` with no ``h`` decay.
+    """
+    mesh = hex_box(n, warp)
+    op = _operator(mesh, viscosity)
+    wall = op.dirichlet
+    distance = np.linalg.norm(mesh.face_centers[wall] - mesh.cell_centers[mesh.owner[wall]], axis=1)
+    second = wall_second_derivative(mesh.face_centers[wall], op.normal[wall])
+    predicted = viscosity*distance[:, None]/2*second
+    return dict(n=n, h=1.0/n, warp=warp, mean_distance=float(distance.mean()),
+                predicted_l2=float(np.sqrt(np.mean(np.sum(predicted**2, axis=1)))),
+                predicted_linf=float(np.linalg.norm(predicted, axis=1).max()))
+
+
 def orders(rows, key):
     """Successive convergence orders of ``key`` over a refined family."""
     values = [row[key] for row in rows]
