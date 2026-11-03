@@ -1,0 +1,316 @@
+{
+  "generated_by": "scripts/audit_analytic_reference_residuals.py",
+  "numeric_threshold": 1e-10,
+  "cases": [
+    {
+      "case": "native_order3d.manufactured/stress/divergence_of_stress",
+      "module": "src/tensorfvm/verification/native_order3d.py",
+      "claim": "grad u, deviatoric stress mu(grad u + grad u^T - 2/3 tr(grad u) I) and its divergence",
+      "symbolic": {
+        "identity_div_tau[0]": "0",
+        "identity_div_tau[1]": "0",
+        "identity_div_tau[2]": "0"
+      },
+      "symbolic_max_abs": 4.729688040998671e-15,
+      "symbolic_zero": true,
+      "numeric_max_rel": 2.069821592946893e-15,
+      "numeric_per_component": {
+        "gradient[0][0]": 2.3071808243717815e-16,
+        "stress[0][0]": 2.069821592946893e-15,
+        "gradient[0][1]": 2.2843948311253103e-16,
+        "stress[0][1]": 3.369944826923359e-16,
+        "gradient[0][2]": 1.815580813973954e-16,
+        "stress[0][2]": 1.954548485639201e-16,
+        "div_tau[0]": 1.963109665799885e-15,
+        "gradient[1][0]": 3.1013004240962875e-16,
+        "stress[1][0]": 3.369944826923359e-16,
+        "gradient[1][1]": 1.6063008839452376e-16,
+        "stress[1][1]": 1.806675001192669e-15,
+        "gradient[1][2]": 1.1948736286548283e-16,
+        "stress[1][2]": 2.3939965041539687e-16,
+        "div_tau[1]": 1.847800111866682e-15,
+        "gradient[2][0]": 3.087076253806829e-16,
+        "stress[2][0]": 1.954548485639201e-16,
+        "gradient[2][1]": 2.3760174210385307e-16,
+        "stress[2][1]": 2.3939965041539687e-16,
+        "gradient[2][2]": 0.0,
+        "stress[2][2]": 8.109965176686323e-16,
+        "div_tau[2]": 4.393911224953751e-16
+      },
+      "nonvacuous": "lap(u) is non-zero (max symbolic component magnitude 12.234), so the identity constrains the divergence formula",
+      "points": 4000
+    },
+    {
+      "case": "annular.analytic_velocity / analytic_flow",
+      "module": "src/tensorfvm/annular.py",
+      "claim": "annular Hagen-Poiseuille profile solves mu (1/r)(r u')' = dp/dz with dp/dz = -G and u(ri)=u(ro)=0",
+      "symbolic": {
+        "momentum_residual": "0",
+        "u(ri)": "0",
+        "u(ro)": "0",
+        "flow_rate_minus_closed_form": "0"
+      },
+      "symbolic_max_abs": 0.0,
+      "symbolic_zero": true,
+      "numeric_max_rel": 8.355974928072425e-15,
+      "numeric_per_component": {
+        "profile_vs_symbolic": 8.355974928072425e-15,
+        "closed_form_flux_vs_quadrature": 4.339935568049535e-07
+      },
+      "nonvacuous": "closed-form flow rate 4.947382e-05 m^2/s is reproduced by quadrature, so the flux formula is not a free parameter",
+      "points": 3999
+    },
+    {
+      "case": "extended_cases.exact_velocity/exact_pressure ('abc')",
+      "module": "src/tensorfvm/verification/extended_cases.py",
+      "claim": "u = (sin z + cos y, sin x + cos z, sin y + cos x) e^{-nu t} with p = -|u|^2/2 is an exact 3-D Navier-Stokes solution",
+      "symbolic": {
+        "div_u": "0",
+        "curl_x_minus_u_x": "0",
+        "curl_y_minus_u_y": "0",
+        "curl_z_minus_u_z": "0",
+        "navier_stokes_x": "0",
+        "navier_stokes_y": "0",
+        "navier_stokes_z": "0"
+      },
+      "symbolic_max_abs": 0.0,
+      "symbolic_zero": true,
+      "numeric_max_rel": 0.0,
+      "numeric_per_component": {},
+      "nonvacuous": "Beltrami property curl u = u verified symbolically (3/3 components), so the advective term is a pure gradient",
+      "points": 2000
+    },
+    {
+      "case": "extended_cases.exact_velocity ('advected-shear')",
+      "module": "src/tensorfvm/verification/extended_cases.py",
+      "claim": "u = (sin(y-0.7t) e^{-nu t}, 0.7, 0), p = 0 solves the incompressible Navier-Stokes equations",
+      "symbolic": {
+        "navier_stokes_x": "0",
+        "divergence": "0"
+      },
+      "symbolic_max_abs": 0.0,
+      "symbolic_zero": true,
+      "numeric_max_rel": 0.0,
+      "numeric_per_component": {},
+      "nonvacuous": "phase speed and mean flow are the same 0.7, so advection and unsteady terms cancel only if the coded phase is exact",
+      "points": 0
+    },
+    {
+      "case": "overset_poisson.manufactured_value/manufactured_source, overset_scalar.exact_value",
+      "module": "src/tensorfvm/overset_poisson.py, src/tensorfvm/overset_scalar.py",
+      "claim": "-Laplace(phi) equals the coded right-hand side; the overset scalar quadratic is the coded value",
+      "symbolic": {
+        "source_plus_laplacian": "0"
+      },
+      "symbolic_max_abs": 0.0,
+      "symbolic_zero": true,
+      "numeric_max_rel": 2.760767615897729e-16,
+      "numeric_per_component": {
+        "value": 2.7319857470806584e-16,
+        "source": 1.7301443380813172e-16,
+        "overset_scalar_value": 2.760767615897729e-16
+      },
+      "nonvacuous": "the source is a linear function of (x, y) but the Laplacian of the quadratic is constant, so a sign slip would show up immediately",
+      "points": 2000
+    },
+    {
+      "case": "curved_channel.reference (mapped-coordinate manufactured NS solution)",
+      "module": "src/tensorfvm/curved_channel.py",
+      "claim": "u=(w, g' w), p=G(L-x) with w=6V eta(1-eta) and the coded body force is an exact solution of the incompressible 2-D Navier-Stokes equations in the sin^4-mapped channel",
+      "symbolic": {
+        "continuity": "0",
+        "convective_x": "0",
+        "convective_y_minus_g2_w2": "0",
+        "navier_stokes_x_residual": "0",
+        "navier_stokes_y_residual": "0",
+        "laplace_x_minus_coded": "0",
+        "laplace_y_minus_coded": "0"
+      },
+      "symbolic_max_abs": 0.0,
+      "symbolic_zero": true,
+      "numeric_max_rel": 3.317974162711565e-15,
+      "numeric_per_component": {
+        "velocity_x": 8.789266397821466e-16,
+        "velocity_y": 8.742921843384542e-16,
+        "pressure": 2.9605987591203345e-16,
+        "force_x_vs_exact_body_force": 3.317974162711565e-15,
+        "force_y_vs_exact_body_force": 8.283648918216479e-16,
+        "laplace_x_vs_coded": 3.2777398036521654e-16,
+        "laplace_y_vs_coded": 1.2185079596683048e-15
+      },
+      "nonvacuous": "continuity and both momentum residuals are non-trivial: the mapped Laplacians differ from w'' by geometry terms that are all audited separately",
+      "points": 1500
+    },
+    {
+      "case": "extended_cases torch implementations vs symbolic solution",
+      "module": "src/tensorfvm/verification/extended_cases.py",
+      "claim": "the torch reference fields evaluate the audited closed forms (not a different formula)",
+      "symbolic": {},
+      "symbolic_max_abs": 0.0,
+      "symbolic_zero": true,
+      "numeric_max_rel": 1.0315663918808081e-18,
+      "numeric_per_component": {
+        "abc_velocity": 0.0,
+        "abc_pressure_mean_gauged": 1.0315663918808081e-18,
+        "advected_shear_velocity": 0.0
+      },
+      "nonvacuous": "pressure is mean-gauged exactly as the code does, so the comparison is not offset by an arbitrary constant",
+      "points": 1500
+    }
+  ],
+  "derivative_limit": {
+    "rows": [
+      {
+        "h": 0.1,
+        "max_abs_error": 0.07121128177612679,
+        "per_component": {
+          "du0/dx0": 0.07121128177612679,
+          "du0/dx1": 0.011957131029202372,
+          "du0/dx2": 0.003129882991694588,
+          "du1/dx0": 0.004080335258052181,
+          "du1/dx1": 0.029808002262650346,
+          "du1/dx2": 0.001094326599458073,
+          "du2/dx0": 0.02618439381345805,
+          "du2/dx1": 0.02772176059947351,
+          "du2/dx2": 4.440892098500626e-16
+        }
+      },
+      {
+        "h": 0.04869675251658631,
+        "max_abs_error": 0.016950557036417457,
+        "per_component": {
+          "du0/dx0": 0.016950557036417457,
+          "du0/dx1": 0.002838152562526286,
+          "du0/dx2": 0.0007419291779975357,
+          "du1/dx0": 0.000968511086843149,
+          "du1/dx1": 0.007095255553510649,
+          "du1/dx2": 0.0002594067690573354,
+          "du2/dx0": 0.006232721132507724,
+          "du2/dx1": 0.006598663476786504,
+          "du2/dx2": 1.2212453270876722e-15
+        }
+      },
+      {
+        "h": 0.023713737056616554,
+        "max_abs_error": 0.004023200644725833,
+        "per_component": {
+          "du0/dx0": 0.004023200644725833,
+          "du0/dx1": 0.0006731822615790861,
+          "du0/dx2": 0.00017592322121906534,
+          "du1/dx0": 0.000229721436550534,
+          "du1/dx1": 0.001684053017013687,
+          "du1/dx2": 6.150947525929151e-05,
+          "du2/dx0": 0.0014793311880358928,
+          "du2/dx1": 0.001566187299744115,
+          "du2/dx2": 3.6637359812630166e-15
+        }
+      },
+      {
+        "h": 0.011547819846894581,
+        "max_abs_error": 0.0009542532155979444,
+        "per_component": {
+          "du0/dx0": 0.0009542532155979444,
+          "du0/dx1": 0.0001596451203575988,
+          "du0/dx2": 4.1717075271785475e-05,
+          "du1/dx0": 5.447842059058683e-05,
+          "du1/dx1": 0.0003994364558568275,
+          "du1/dx2": 1.4585882365802938e-05,
+          "du2/dx0": 0.000350878981140168,
+          "du2/dx1": 0.0003714801718859295,
+          "du2/dx2": 3.6637359812630166e-15
+        }
+      },
+      {
+        "h": 0.005623413251903491,
+        "max_abs_error": 0.00022630045872151783,
+        "per_component": {
+          "du0/dx0": 0.00022630045872151783,
+          "du0/dx1": 3.785829920222028e-05,
+          "du0/dx2": 9.892627219842964e-06,
+          "du1/dx0": 1.2919031547431459e-05,
+          "du1/dx1": 9.47260661046112e-05,
+          "du1/dx2": 3.4588401931490154e-06,
+          "du2/dx0": 8.32106961672352e-05,
+          "du2/dx1": 8.809625362848905e-05,
+          "du2/dx2": 1.3433698597964394e-14
+        }
+      },
+      {
+        "h": 0.0027384196342643613,
+        "max_abs_error": 5.366493461878008e-05,
+        "per_component": {
+          "du0/dx0": 5.366493461878008e-05,
+          "du0/dx1": 8.977644267993412e-06,
+          "du0/dx2": 2.3459087963306757e-06,
+          "du1/dx0": 3.063594280816595e-06,
+          "du1/dx1": 2.2463357665758465e-05,
+          "du1/dx2": 8.202192911532791e-07,
+          "du2/dx0": 1.9732600610833373e-05,
+          "du2/dx1": 2.0891162642255878e-05,
+          "du2/dx2": 1.765254609153999e-14
+        }
+      },
+      {
+        "h": 0.001333521432163324,
+        "max_abs_error": 1.272599732704549e-05,
+        "per_component": {
+          "du0/dx0": 1.272599732704549e-05,
+          "du0/dx1": 2.1289362144294444e-06,
+          "du0/dx2": 5.563025546884148e-07,
+          "du1/dx0": 7.264931891626247e-07,
+          "du1/dx1": 5.326916571624096e-06,
+          "du1/dx2": 1.9450454324942967e-07,
+          "du2/dx0": 4.679350207759114e-06,
+          "du2/dx1": 4.954089362074754e-06,
+          "du2/dx2": 5.473399511402022e-14
+        }
+      },
+      {
+        "h": 0.0006493816315762113,
+        "max_abs_error": 3.017811567751494e-06,
+        "per_component": {
+          "du0/dx0": 3.017811567751494e-06,
+          "du0/dx1": 5.048502305093905e-07,
+          "du0/dx2": 1.3192013770257915e-07,
+          "du1/dx0": 1.7227865767299733e-07,
+          "du1/dx1": 1.2632118382427393e-06,
+          "du1/dx2": 4.6124319141860326e-08,
+          "du2/dx0": 1.1096494971774007e-06,
+          "du2/dx1": 1.1748004618006291e-06,
+          "du2/dx2": 9.325873406851315e-14
+        }
+      },
+      {
+        "h": 0.00031622776601683794,
+        "max_abs_error": 7.156359096427423e-07,
+        "per_component": {
+          "du0/dx0": 7.156359096427423e-07,
+          "du0/dx1": 1.1971945612643253e-07,
+          "du0/dx2": 3.1282995749393194e-08,
+          "du1/dx0": 4.085366756001463e-08,
+          "du1/dx1": 2.995552270679269e-07,
+          "du1/dx2": 1.0937919903142301e-08,
+          "du2/dx0": 2.6313931855703743e-07,
+          "du2/dx1": 2.785891104473137e-07,
+          "du2/dx2": 1.637578961322106e-13
+        }
+      }
+    ],
+    "slopes": [
+      1.9947674503450776,
+      1.9987593041095584,
+      1.9997057923857504,
+      1.99993023295428,
+      1.999983455055302,
+      1.999996086094088,
+      1.9999990680203115,
+      1.9999999813532274
+    ]
+  },
+  "figures": [
+    "derivative-limit.png",
+    "reference-containment.png"
+  ],
+  "all_symbolic_zero": true,
+  "all_numeric_contained": true
+}
