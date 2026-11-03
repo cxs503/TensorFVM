@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "PyTorch finite-volume incompressible-flow solvers with experimental distributed 3-D support"
 readme = "README.rst"
 requires-python = ">=3.10"
-dependencies = ["torch>=2.14.1"]
+dependencies = ["torch>=2.7"]
 
 [project.scripts]
 tensorfvm-benchmark = "tensorfvm.verification.__main__:main"
