@@ -1,0 +1,473 @@
+{
+  "levels": [
+    2,
+    4,
+    8
+  ],
+  "quadrature_order": 6,
+  "field": "ABC amplitude .5 wavenumber .7",
+  "family_volume_audit": {
+    "hex/n=2": {
+      "volume_sum": 1.0,
+      "cells": 8,
+      "min_volume": 0.125
+    },
+    "hex/n=4": {
+      "volume_sum": 1.0,
+      "cells": 64,
+      "min_volume": 0.015625
+    },
+    "hex/n=8": {
+      "volume_sum": 1.0,
+      "cells": 512,
+      "min_volume": 0.001953125
+    },
+    "wedge/n=2": {
+      "volume_sum": 1.0,
+      "cells": 16,
+      "min_volume": 0.062499999999999986
+    },
+    "wedge/n=4": {
+      "volume_sum": 1.0,
+      "cells": 128,
+      "min_volume": 0.007812499999999998
+    },
+    "wedge/n=8": {
+      "volume_sum": 1.0,
+      "cells": 1024,
+      "min_volume": 0.0009765624999999998
+    },
+    "tetra/n=2": {
+      "volume_sum": 0.9999999999999999,
+      "cells": 48,
+      "min_volume": 0.020833333333333332
+    },
+    "tetra/n=4": {
+      "volume_sum": 1.0,
+      "cells": 384,
+      "min_volume": 0.0026041666666666665
+    },
+    "tetra/n=8": {
+      "volume_sum": 1.0,
+      "cells": 3072,
+      "min_volume": 0.0003255208333333333
+    }
+  },
+  "affine_anchor": {
+    "hex": {
+      "first_order_affine_error": 0.0125,
+      "second_order_affine_error": 1.3877787807814457e-17
+    },
+    "wedge": {
+      "first_order_affine_error": 0.011458333333333307,
+      "second_order_affine_error": 2.7755575615628914e-17
+    },
+    "tetra": {
+      "first_order_affine_error": 0.0078125,
+      "second_order_affine_error": 1.3877787807814457e-17
+    }
+  },
+  "cell_value_divergence_defect": {
+    "hex": 0.002864786785144992,
+    "wedge": 0.0020719286306472517,
+    "tetra": 0.0007550995809851113
+  },
+  "results": {
+    "hex/first_order_upwind": {
+      "rows": [
+        {
+          "relative_error": 0.08606030765200463,
+          "boundary_relative_error": 0.06266087751957537,
+          "energy_identity_error": 6.113350175661993e-17,
+          "momentum_balance_error": 1.5265566588595902e-16,
+          "assembly_error": 1.2836953722228372e-16,
+          "cells": 8,
+          "faces": 72,
+          "interior_faces": 24,
+          "n": 2,
+          "h": 0.5
+        },
+        {
+          "relative_error": 0.04392151920891432,
+          "boundary_relative_error": 0.031567883392821044,
+          "energy_identity_error": 1.6327032989409498e-16,
+          "momentum_balance_error": 1.5265566588595902e-16,
+          "assembly_error": 3.0140820395097023e-17,
+          "cells": 64,
+          "faces": 480,
+          "interior_faces": 288,
+          "n": 4,
+          "h": 0.25
+        },
+        {
+          "relative_error": 0.022174314566625827,
+          "boundary_relative_error": 0.015844722777077967,
+          "energy_identity_error": 3.169816424512405e-18,
+          "momentum_balance_error": 3.885780586188048e-16,
+          "assembly_error": 1.0191500421363742e-17,
+          "cells": 512,
+          "faces": 3456,
+          "interior_faces": 2688,
+          "n": 8,
+          "h": 0.125
+        }
+      ],
+      "observed_order": [
+        0.9704200408714698,
+        0.9860384469657452
+      ]
+    },
+    "hex/second_order_exact_gradient": {
+      "rows": [
+        {
+          "relative_error": 0.011637585476306517,
+          "boundary_relative_error": 0.00953664048573835,
+          "energy_identity_error": 1.0755285551056204e-16,
+          "momentum_balance_error": 2.498001805406602e-16,
+          "assembly_error": 8.326672684688674e-17,
+          "cells": 8,
+          "faces": 72,
+          "interior_faces": 24,
+          "n": 2,
+          "h": 0.5
+        },
+        {
+          "relative_error": 0.002935041324130826,
+          "boundary_relative_error": 0.0023947988359362196,
+          "energy_identity_error": 1.3205582460873444e-16,
+          "momentum_balance_error": 2.220446049250313e-16,
+          "assembly_error": 3.426078865054194e-17,
+          "cells": 64,
+          "faces": 480,
+          "interior_faces": 288,
+          "n": 4,
+          "h": 0.25
+        },
+        {
+          "relative_error": 0.0007371568662986953,
+          "boundary_relative_error": 0.0006001940987121273,
+          "energy_identity_error": 7.958043946043603e-17,
+          "momentum_balance_error": 6.106226635438361e-16,
+          "assembly_error": 9.459663954936026e-18,
+          "cells": 512,
+          "faces": 3456,
+          "interior_faces": 2688,
+          "n": 8,
+          "h": 0.125
+        }
+      ],
+      "observed_order": [
+        1.9873390430778113,
+        1.993337254737787
+      ]
+    },
+    "hex/second_order_gauss_gradient": {
+      "rows": [
+        {
+          "relative_error": 0.011489123211638964,
+          "boundary_relative_error": 0.009461854622374132,
+          "energy_identity_error": 1.9081958235744878e-16,
+          "momentum_balance_error": 2.7755575615628914e-17,
+          "assembly_error": 1.3183898417423734e-16,
+          "cells": 8,
+          "faces": 72,
+          "interior_faces": 24,
+          "n": 2,
+          "h": 0.5
+        },
+        {
+          "relative_error": 0.0029184631811549028,
+          "boundary_relative_error": 0.0023867785037654885,
+          "energy_identity_error": 1.1123914289701275e-16,
+          "momentum_balance_error": 3.3306690738754696e-16,
+          "assembly_error": 2.927345865710862e-17,
+          "cells": 64,
+          "faces": 480,
+          "interior_faces": 288,
+          "n": 4,
+          "h": 0.25
+        },
+        {
+          "relative_error": 0.0007352055648663468,
+          "boundary_relative_error": 0.0005992740036482459,
+          "energy_identity_error": 5.919743861770854e-17,
+          "momentum_balance_error": 5.828670879282072e-16,
+          "assembly_error": 1.0570971181733668e-17,
+          "cells": 512,
+          "faces": 3456,
+          "interior_faces": 2688,
+          "n": 8,
+          "h": 0.125
+        }
+      ],
+      "observed_order": [
+        1.9769879307773701,
+        1.9889892758078342
+      ]
+    },
+    "wedge/first_order_upwind": {
+      "rows": [
+        {
+          "relative_error": 0.06769979052859632,
+          "boundary_relative_error": 0.04805185682511665,
+          "energy_identity_error": 9.458316807499068e-17,
+          "momentum_balance_error": 1.1102230246251565e-16,
+          "assembly_error": 5.204170427930421e-17,
+          "cells": 16,
+          "faces": 88,
+          "interior_faces": 40,
+          "n": 2,
+          "h": 0.5
+        },
+        {
+          "relative_error": 0.03445149325664483,
+          "boundary_relative_error": 0.024225988465131902,
+          "energy_identity_error": 1.218541350320921e-16,
+          "momentum_balance_error": 1.942890293094024e-16,
+          "assembly_error": 1.713039432527097e-17,
+          "cells": 128,
+          "faces": 608,
+          "interior_faces": 416,
+          "n": 4,
+          "h": 0.25
+        },
+        {
+          "relative_error": 0.017396651624733174,
+          "boundary_relative_error": 0.012173298421792331,
+          "energy_identity_error": 3.430331538431343e-16,
+          "momentum_balance_error": 8.604228440844963e-16,
+          "assembly_error": 4.9060148304969076e-18,
+          "cells": 1024,
+          "faces": 4480,
+          "interior_faces": 3712,
+          "n": 8,
+          "h": 0.125
+        }
+      ],
+      "observed_order": [
+        0.9745848538460484,
+        0.985756862268533
+      ]
+    },
+    "wedge/second_order_exact_gradient": {
+      "rows": [
+        {
+          "relative_error": 0.009999980588748089,
+          "boundary_relative_error": 0.008180296978474126,
+          "energy_identity_error": 1.249000902703301e-16,
+          "momentum_balance_error": 1.942890293094024e-16,
+          "assembly_error": 7.28583859910259e-17,
+          "cells": 16,
+          "faces": 88,
+          "interior_faces": 40,
+          "n": 2,
+          "h": 0.5
+        },
+        {
+          "relative_error": 0.0024941459055303054,
+          "boundary_relative_error": 0.0020507550519338258,
+          "energy_identity_error": 1.4051260155412137e-16,
+          "momentum_balance_error": 1.1102230246251565e-16,
+          "assembly_error": 2.0274580625478933e-17,
+          "cells": 128,
+          "faces": 608,
+          "interior_faces": 416,
+          "n": 4,
+          "h": 0.25
+        },
+        {
+          "relative_error": 0.0006239627212072324,
+          "boundary_relative_error": 0.0005134944576068218,
+          "energy_identity_error": 3.3003114130458755e-16,
+          "momentum_balance_error": 5.551115123125783e-16,
+          "assembly_error": 5.3939058081153846e-18,
+          "cells": 1024,
+          "faces": 4480,
+          "interior_faces": 3712,
+          "n": 8,
+          "h": 0.125
+        }
+      ],
+      "observed_order": [
+        2.0033794302966768,
+        1.9990141215002715
+      ]
+    },
+    "wedge/second_order_gauss_gradient": {
+      "rows": [
+        {
+          "relative_error": 0.009817017366881274,
+          "boundary_relative_error": 0.00800173969500183,
+          "energy_identity_error": 4.163336342344337e-17,
+          "momentum_balance_error": 1.3877787807814457e-16,
+          "assembly_error": 5.551115123125783e-17,
+          "cells": 16,
+          "faces": 88,
+          "interior_faces": 40,
+          "n": 2,
+          "h": 0.5
+        },
+        {
+          "relative_error": 0.0024541135390599347,
+          "boundary_relative_error": 0.0020118078929094374,
+          "energy_identity_error": 1.0061396160665481e-16,
+          "momentum_balance_error": 4.996003610813204e-16,
+          "assembly_error": 1.734723475976807e-17,
+          "cells": 128,
+          "faces": 608,
+          "interior_faces": 416,
+          "n": 4,
+          "h": 0.25
+        },
+        {
+          "relative_error": 0.0006146701511366351,
+          "boundary_relative_error": 0.0005042732659873985,
+          "energy_identity_error": 3.3610267347050637e-16,
+          "momentum_balance_error": 7.771561172376096e-16,
+          "assembly_error": 6.044427111606687e-18,
+          "cells": 1024,
+          "faces": 4480,
+          "interior_faces": 3712,
+          "n": 8,
+          "h": 0.125
+        }
+      ],
+      "observed_order": [
+        2.0000827710167086,
+        1.997317663051049
+      ]
+    },
+    "tetra/first_order_upwind": {
+      "rows": [
+        {
+          "relative_error": 0.031241030988698154,
+          "boundary_relative_error": 0.018944045855735378,
+          "energy_identity_error": 1.4865977383291273e-16,
+          "momentum_balance_error": 1.5265566588595902e-16,
+          "assembly_error": 1.0842021724855044e-17,
+          "cells": 48,
+          "faces": 120,
+          "interior_faces": 72,
+          "n": 2,
+          "h": 0.5
+        },
+        {
+          "relative_error": 0.016327555424985103,
+          "boundary_relative_error": 0.00980574291099127,
+          "energy_identity_error": 1.3861177559176563e-16,
+          "momentum_balance_error": 6.938893903907228e-17,
+          "assembly_error": 4.174178364069192e-18,
+          "cells": 384,
+          "faces": 864,
+          "interior_faces": 672,
+          "n": 4,
+          "h": 0.25
+        },
+        {
+          "relative_error": 0.008369157191541151,
+          "boundary_relative_error": 0.005005009422938771,
+          "energy_identity_error": 2.1876849916172855e-16,
+          "momentum_balance_error": 4.579669976578771e-16,
+          "assembly_error": 1.734723475976807e-18,
+          "cells": 3072,
+          "faces": 6528,
+          "interior_faces": 5760,
+          "n": 8,
+          "h": 0.125
+        }
+      ],
+      "observed_order": [
+        0.9361332592222156,
+        0.9641545556862082
+      ]
+    },
+    "tetra/second_order_exact_gradient": {
+      "rows": [
+        {
+          "relative_error": 0.008142114457895809,
+          "boundary_relative_error": 0.006428012613956204,
+          "energy_identity_error": 1.3183898417423734e-16,
+          "momentum_balance_error": 1.3877787807814457e-16,
+          "assembly_error": 2.45029690981724e-17,
+          "cells": 48,
+          "faces": 120,
+          "interior_faces": 72,
+          "n": 2,
+          "h": 0.5
+        },
+        {
+          "relative_error": 0.0019684841574728286,
+          "boundary_relative_error": 0.001609004552612408,
+          "energy_identity_error": 1.7694179454963432e-16,
+          "momentum_balance_error": 2.220446049250313e-16,
+          "assembly_error": 5.204170427930421e-18,
+          "cells": 384,
+          "faces": 864,
+          "interior_faces": 672,
+          "n": 4,
+          "h": 0.25
+        },
+        {
+          "relative_error": 0.00048699571144345845,
+          "boundary_relative_error": 0.00040249654932449753,
+          "energy_identity_error": 2.1510571102112408e-16,
+          "momentum_balance_error": 5.828670879282072e-16,
+          "assembly_error": 1.734723475976807e-18,
+          "cells": 3072,
+          "faces": 6528,
+          "interior_faces": 5760,
+          "n": 8,
+          "h": 0.125
+        }
+      ],
+      "observed_order": [
+        2.0483184007157607,
+        2.015104128722374
+      ]
+    },
+    "tetra/second_order_gauss_gradient": {
+      "rows": [
+        {
+          "relative_error": 0.007794678648989526,
+          "boundary_relative_error": 0.006042211439121093,
+          "energy_identity_error": 8.326672684688674e-17,
+          "momentum_balance_error": 1.1102230246251565e-16,
+          "assembly_error": 1.734723475976807e-17,
+          "cells": 48,
+          "faces": 120,
+          "interior_faces": 72,
+          "n": 2,
+          "h": 0.5
+        },
+        {
+          "relative_error": 0.0018712364007405584,
+          "boundary_relative_error": 0.001513359881767177,
+          "energy_identity_error": 1.97758476261356e-16,
+          "momentum_balance_error": 4.163336342344337e-16,
+          "assembly_error": 5.204170427930421e-18,
+          "cells": 384,
+          "faces": 864,
+          "interior_faces": 672,
+          "n": 4,
+          "h": 0.25
+        },
+        {
+          "relative_error": 0.00046171955244816255,
+          "boundary_relative_error": 0.0003786095707066133,
+          "energy_identity_error": 1.7520707107365752e-16,
+          "momentum_balance_error": 8.881784197001252e-16,
+          "assembly_error": 2.168404344971009e-18,
+          "cells": 3072,
+          "faces": 6528,
+          "interior_faces": 5760,
+          "n": 8,
+          "h": 0.125
+        }
+      ],
+      "observed_order": [
+        2.058497714700905,
+        2.0189030988653545
+      ]
+    }
+  }
+}
