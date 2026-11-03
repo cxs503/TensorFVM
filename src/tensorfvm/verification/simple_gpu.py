@@ -101,7 +101,7 @@ def publish(output,summary):
         for label,values in [('pressure',f['pressure_pa']),('speed',np.linalg.norm(f['velocity_m_s'],axis=1)),('eddy-viscosity',f['eddy_viscosity_m2_s'])]:
             if label=='eddy-viscosity' and cpu['case']!='sa':continue
             fig,ax=plt.subplots(figsize=(9,3));collection=PolyCollection(pol,array=values,edgecolors='none',rasterized=True);ax.add_collection(collection);ax.autoscale_view();ax.set_aspect('equal');ax.set(xlabel='x (m)',ylabel='y (m)',title=case['name']+' '+label);fig.colorbar(collection,ax=ax,label='Pa' if label=='pressure' else 'm²/s' if label=='eddy-viscosity' else 'm/s');figure(fig,figs,case['name']+'-'+label)
-    text+='\n## GPU计时范围与限制\n\n每个配置都在CPU、CUDA完成真实稳态求解，计时含设置/网格/组装/实际线性求解/主机传输，不含绘图；完整求解时间是一次测量，不能称三次中位数。另以CPU实际中间场（残差第一次低于1e−3）作为双方相同重启，完整预热后各做三次五步SIMPLE窗口，包含CPU组装及传输，排除重启复制和绘图。窗口不是完整稳态求解时间；其速度比只代表该窗口。float64，单线程CPU，RTX3090；小网格可能减速。主场一致性统一≤1e−6。\n\n完整 history、linear_history、原场、粗网格来源与窗口输出均保留。SIMPLEC/PISO/PIMPLE仍无独立生产实现，不能冒用这些名称。\n'
+    text+='\n## GPU计时范围与限制\n\n每个配置都在CPU、CUDA完成真实稳态求解，计时含设置/网格/组装/实际线性求解/主机传输，不含绘图；完整求解时间是一次测量，不能称三次中位数。另以CPU实际中间场（残差第一次低于1e−3）作为双方相同重启，完整预热后各做三次五步SIMPLE窗口，包含CPU组装及传输，排除重启复制和绘图。窗口不是完整稳态求解时间；其速度比只代表该窗口。float64，单线程CPU，RTX3090；小网格可能减速。主场一致性统一≤1e−6。\n\n完整 history、linear_history、原场、粗网格来源与窗口输出均保留。SIMPLEC已在2D同位生产迭代实现并按解析槽道门禁验证（见docs/simplec_pressure_velocity_coupling.md）；PISO/PIMPLE仍无独立生产实现，不能冒用这些名称。\n'
     for case in summary['cases']:
         for label in ['pressure','speed']:text+=f"\n![{label}](figures/{case['name']}-{label}.png)\n"
     (output/'report.md').write_text(text)
