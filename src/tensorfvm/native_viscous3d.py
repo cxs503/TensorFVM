@@ -11,7 +11,7 @@ from .native_operators3d import NativeOperators3D
 
 
 class NativeViscous3D:
-    def __init__(self,mesh,dirichlet_mask,dynamic_viscosity=1.,*,deviatoric=True):
+    def __init__(self,mesh,dirichlet_mask,dynamic_viscosity=1.,*,deviatoric=True,correction_damping=1.):
         self.mesh=mesh;self.op=NativeOperators3D(mesh)
         self.internal=self.op.internal;self.boundary=self.op.boundary
         self.N=len(mesh.cells);self.F=len(mesh.owner)
@@ -42,8 +42,13 @@ class NativeViscous3D:
         contraction=sum(diags(d[:,k])@self.raw_face_gradient[k] for k in range(3))
         normal_contraction=sum(diags(self.normal[:,k])@self.raw_face_gradient[k] for k in range(3))
         active=i|bd
+        damping=np.asarray(correction_damping,dtype=float)
+        if damping.ndim==0:damping=np.full(self.F,float(damping))
+        if damping.shape!=(self.F,) or not np.isfinite(damping).all() or np.any(damping<0) or np.any(damping>1):raise ValueError('correction damping must be a scalar or face array within [0,1]')
+        self.correction_damping=damping
         self.correction_direction=s/projection[:,None]
-        self.face_gradient_matrices=[(a+diags(self.correction_direction[:,k]*active)@(self.delta_matrix-contraction)-diags(self.normal[:,k]*self.neumann)@normal_contraction).tocsr() for k,a in enumerate(self.raw_face_gradient)]
+        damped_active=active*damping
+        self.face_gradient_matrices=[(a+diags(self.correction_direction[:,k]*damped_active)@(self.delta_matrix-contraction)-diags(self.normal[:,k]*self.neumann)@normal_contraction).tocsr() for k,a in enumerate(self.raw_face_gradient)]
         mu=np.asarray(dynamic_viscosity,dtype=float)
         if mu.ndim==0:mu=np.full(self.F,float(mu))
         elif mu.shape==(self.N,):mu=np.asarray(self.interpolation@mu)
@@ -86,7 +91,7 @@ class NativeViscous3D:
         raw=np.asarray(self.interpolation@self.gradient_source(g,v))
         delta=np.zeros(self.F);delta[self.dirichlet]=v[self.dirichlet]
         active=self.internal|self.dirichlet
-        result=raw+self.correction_direction*(active*(delta-np.einsum('ij,ij->i',raw,self.op.d)))[:,None]
+        result=raw+self.correction_direction*(self.correction_damping*active*(delta-np.einsum('ij,ij->i',raw,self.op.d)))[:,None]
         nb=self.neumann;result[nb]+=self.normal[nb]*(g[nb]-np.einsum('ij,ij->i',raw[nb],self.normal[nb]))[:,None]
         return result
 
