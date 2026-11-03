@@ -27,6 +27,7 @@ class SolverConfig:
     density: float = 1.0
     velocity_relaxation: float = 0.7
     pressure_relaxation: float = 0.3
+    pressure_velocity_algorithm: str = "simple"
     max_iterations: int = 500
     tolerance: float = 1e-5
     device: str = "cpu"
@@ -86,6 +87,9 @@ class SolverConfig:
             raise ValueError("inlet_profile must be uniform or parabolic")
         if self.inlet_profile == "parabolic" and not backend.supports_parabolic_inlet:
             raise ValueError("parabolic inlet profile is only supported on the cylinder O-grid")
+        if self.pressure_velocity_algorithm not in ("simple", "simplec"):
+            raise ValueError(
+                "pressure_velocity_algorithm must be simple or simplec")
         if self.turbulence_model not in ("laminar", "spalart-allmaras"):
             raise ValueError("turbulence_model must be laminar or spalart-allmaras")
         if self.turbulence_model == "spalart-allmaras" and not backend.supports_spalart_allmaras:
@@ -247,6 +251,8 @@ class SimpleSolver:
     reported steady momentum residual and convergence criterion.
     """
 
+    simplec_floor_fraction = 0.1
+
     def __new__(cls, config: SolverConfig):
         if cls is SimpleSolver:
             factory = get_backend(config.mesh_type).solver_factory
@@ -280,6 +286,7 @@ class SimpleSolver:
         self.u[self._u_open] = c.inlet_velocity
         self.history = []
         self.converged = False
+        self.simplec_limited_dofs = 0
 
     def _boundaries(self):
         self.u.masked_fill_(~self._u_open, 0)
@@ -381,7 +388,22 @@ class SimpleSolver:
             if error.item() / self.config.inlet_velocity < inner_tolerance:
                 break
         distance_area = self.dy if component == "u" else self.dx
-        return torch.where(active, distance_area / relaxed, 0)
+        mobility = relaxed
+        if self.config.pressure_velocity_algorithm == "simplec":
+            # SIMPLEC (Van Doormaal & Raithby, 1984): the neighbour velocity
+            # corrections are approximated by the local one, so the pressure
+            # correction mobility uses a relaxed diagonal minus the neighbour
+            # coefficients instead of the diagonal alone.  The floor keeps the
+            # mobility finite where aP/alpha - sum(aN) degenerates.
+            neighbor_total = sum(coeffs)
+            denominator = relaxed - neighbor_total
+            floor = self.simplec_floor_fraction * diagonal
+            self.simplec_limited_dofs = int(
+                torch.count_nonzero(active & (denominator < floor)).item())
+            mobility = torch.where(denominator > floor, denominator,
+                                   torch.where(floor > 0, floor,
+                                               torch.ones_like(floor)))
+        return torch.where(active, distance_area / mobility, 0)
 
     def _divergence(self):
         return ((self.u[:, 1:] - self.u[:, :-1]) / self.dx
