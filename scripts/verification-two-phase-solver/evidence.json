@@ -1,0 +1,118 @@
+{
+  "cases": {
+    "hydrostatic_initialisation": {
+      "cells": "32x32",
+      "max_abs_error_pa": 0.0,
+      "relative_error": 0.0,
+      "top_row_gauge_pa": 0.0,
+      "analytic_top_row_pa": 0.15328125,
+      "note": "top row is pinned to the atmospheric gauge, excluded from the error"
+    },
+    "rest_state": {
+      "cells": "16x16",
+      "dt_s": 1e-05,
+      "steps_requested": 10,
+      "initial_balance_residual": {
+        "max_residual": 78.48000000000047,
+        "rms_residual": 19.810675034246174
+      },
+      "max_velocity_after": {
+        "step": 10,
+        "max_u": 1.130302745911544e+38,
+        "max_v": 1.1895644001441502e+38,
+        "max_div": 6.595904782570761e+39
+      },
+      "divergence_trace": [
+        {
+          "step": 1,
+          "max_u": 0.03517287036960865,
+          "max_v": 0.031477957772094986,
+          "max_div": 1.5460349712080352
+        },
+        {
+          "step": 2,
+          "max_u": 495.89096896930494,
+          "max_v": 465.86019293976784,
+          "max_div": 26926.203015134306
+        },
+        {
+          "step": 3,
+          "max_u": 16488990.364756074,
+          "max_v": 18440098.981404737,
+          "max_div": 967738229.4160962
+        },
+        {
+          "step": 4,
+          "max_u": 483174111669.6772,
+          "max_v": 521977475266.526,
+          "max_div": 28262313970834.32
+        },
+        {
+          "step": 5,
+          "max_u": 1.3134966106358058e+16,
+          "max_v": 1.4060989040360964e+16,
+          "max_div": 7.679685421643658e+17
+        },
+        {
+          "step": 6,
+          "max_u": 3.376959902332791e+20,
+          "max_v": 3.593563984980745e+20,
+          "max_div": 1.973070651115452e+22
+        },
+        {
+          "step": 7,
+          "max_u": 8.379017797925058e+24,
+          "max_v": 8.879999560905379e+24,
+          "max_div": 4.893347512163353e+26
+        },
+        {
+          "step": 8,
+          "max_u": 2.0283311700712735e+29,
+          "max_v": 2.1432271121173474e+29,
+          "max_div": 1.1841546151352886e+31
+        },
+        {
+          "step": 9,
+          "max_u": 4.821580201991695e+33,
+          "max_v": 5.083271775973899e+33,
+          "max_div": 2.814180712209261e+35
+        },
+        {
+          "step": 10,
+          "max_u": 1.130302745911544e+38,
+          "max_v": 1.1895644001441502e+38,
+          "max_div": 6.595904782570761e+39
+        }
+      ],
+      "diverged": null,
+      "exact": {
+        "max_u": 0.0,
+        "max_v": 0.0
+      }
+    },
+    "young_laplace": {
+      "radius_m": 0.2,
+      "sigma_n_m": 0.07,
+      "exact_dp_pa": 0.35,
+      "runs": [
+        {
+          "cells": "32x32",
+          "dp_measured_pa": 0.0,
+          "dp_exact_pa": 0.35000000000000003,
+          "max_u": 0.0,
+          "csf_force_max_n_m3": 20.181047025274566,
+          "drop_area_error": 0.0020084153326787907
+        },
+        {
+          "cells": "64x64",
+          "dp_measured_pa": 0.0,
+          "dp_exact_pa": 0.35000000000000003,
+          "max_u": 0.0,
+          "csf_force_max_n_m3": 63.155979649056164,
+          "drop_area_error": 0.0006258295855177884
+        }
+      ],
+      "note": "csf_force_max_n_m3 is non-zero: the CSF operator itself is active, but it is never added to the transient momentum predictor, so dp remains 0"
+    }
+  }
+}
