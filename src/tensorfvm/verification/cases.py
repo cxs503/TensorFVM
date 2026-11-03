@@ -13,11 +13,18 @@ def array(t):
     return t.detach().cpu().numpy()
 
 
-def channel(ny=12, max_iterations=1000):
+def channel(ny=12, max_iterations=1000, algorithm="simple",
+            velocity_relaxation=None, pressure_relaxation=None):
     started=time.perf_counter()
+    options={}
+    if velocity_relaxation is not None:
+        options["velocity_relaxation"]=velocity_relaxation
+    if pressure_relaxation is not None:
+        options["pressure_relaxation"]=pressure_relaxation
     c=SolverConfig(nx=3*ny,ny=ny,length=.12,height=.02,
                    inlet_velocity=.0005,density=1000.,reynolds=1.,
-                   cylinder_radius=None,tolerance=1e-6,max_iterations=max_iterations)
+                   cylinder_radius=None,tolerance=1e-6,max_iterations=max_iterations,
+                   pressure_velocity_algorithm=algorithm,**options)
     s=SimpleSolver(c);r=s.solve()
     u,v=r.cell_center_velocity();u,v,p=array(u),array(v),array(r.p)
     x,y=array(r.x),array(r.y);dx,dy=c.length/c.nx,c.height/c.ny
@@ -52,7 +59,9 @@ def channel(ny=12, max_iterations=1000):
     return dict(case="poiseuille",role="spatial",resolution=f"{c.nx}x{c.ny}",
       spacing_m=dy,config=asdict(c),elapsed_s=time.perf_counter()-started,
       iterations=len(r.history),converged=bool(r.converged),time_s=None,pressure_time_s=None,metrics=rows,passed=passed,
+      simplec_limited_dofs=int(getattr(s,"simplec_limited_dofs",0)),
       reference=dict(velocity_formula="u=6 Ub (y/H)(1-y/H)",pressure_gradient_pa_m=reference_slope,
+                     pressure_velocity_algorithm=algorithm,
                      wall_shear_pa=shear,comparison_region_m=[3*c.height,5*c.height],
                      pressure_gauge="mean aligned only in comparison region",section_x_m=float(x[section])),
       history=r.history,fields=dict(x_m=x,y_m=y,u_m_s=u,v_m_s=v,p_pa=p,
