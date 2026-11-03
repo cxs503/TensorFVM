@@ -1,0 +1,217 @@
+{
+  "schema": "tensorfvm.periodic-mac-temporal-order/1",
+  "config": {
+    "n": 16,
+    "planes": 4,
+    "viscosity_pa_s": 0.1,
+    "amplitude": 1.0,
+    "final_time_s": 1.0,
+    "time_steps_s": [
+      0.2,
+      0.1,
+      0.05,
+      0.025
+    ]
+  },
+  "grids": [
+    {
+      "n": 16,
+      "time_steps_s": [
+        0.2,
+        0.1,
+        0.05,
+        0.025
+      ],
+      "velocity_at_final_time_l2": 18.573186330305354,
+      "cells": 1024,
+      "velocity": {
+        "differences": [
+          1.924809820164446e-05,
+          4.811004010890071e-06,
+          1.2026872134600363e-06
+        ],
+        "two_level_orders": [
+          2.000306000819219,
+          2.00007651699557
+        ],
+        "richardson_order": 2.000191258907394
+      },
+      "pressure": {
+        "differences": [
+          0.020204135747433564,
+          0.009985714298027203,
+          0.0049642943137928825
+        ],
+        "two_level_orders": [
+          1.0167131047636113,
+          1.0082769804013514
+        ],
+        "richardson_order": 1.0124950425824817
+      },
+      "first_order_control_velocity": {
+        "differences": [
+          0.002026852738149697,
+          0.0009936799151548398,
+          0.0004920280492300146
+        ],
+        "two_level_orders": [
+          1.0283881631570875,
+          1.0140406425457296
+        ],
+        "richardson_order": 1.021214402851408
+      },
+      "error_vs_exact": [
+        {
+          "dt_s": 0.2,
+          "velocity_error_vs_exact": 0.0025345775941967587,
+          "pressure_error_vs_exact": 0.006161844219505991,
+          "kinetic_energy_error_vs_exact": 0.005075579271974409,
+          "nonlinear_iterations": 8,
+          "all_steps_converged": true
+        },
+        {
+          "dt_s": 0.1,
+          "velocity_error_vs_exact": 0.0025538748496323036,
+          "pressure_error_vs_exact": 0.0137641978069808,
+          "kinetic_energy_error_vs_exact": 0.005114271976012164,
+          "nonlinear_iterations": 7,
+          "all_steps_converged": true
+        },
+        {
+          "dt_s": 0.05,
+          "velocity_error_vs_exact": 0.002558698163550321,
+          "pressure_error_vs_exact": 0.02351509706403616,
+          "kinetic_energy_error_vs_exact": 0.0051239432633926225,
+          "nonlinear_iterations": 6,
+          "all_steps_converged": true
+        },
+        {
+          "dt_s": 0.025,
+          "velocity_error_vs_exact": 0.0025599039295275045,
+          "pressure_error_vs_exact": 0.028338709682492018,
+          "kinetic_energy_error_vs_exact": 0.005126360967183387,
+          "nonlinear_iterations": 5,
+          "all_steps_converged": true
+        }
+      ]
+    },
+    {
+      "n": 32,
+      "time_steps_s": [
+        0.1,
+        0.05,
+        0.025,
+        0.0125
+      ],
+      "velocity_at_final_time_l2": 37.07530509437529,
+      "cells": 4096,
+      "velocity": {
+        "differences": [
+          4.952381517416668e-06,
+          1.2380284571190158e-06,
+          3.095029575298208e-07
+        ],
+        "two_level_orders": [
+          2.000077983479969,
+          2.0000193758479483
+        ],
+        "richardson_order": 2.000048679663958
+      },
+      "pressure": {
+        "differences": [
+          0.010083611138180862,
+          0.005012704915820105,
+          0.00249914358271553
+        ],
+        "two_level_orders": [
+          1.0083511744213822,
+          1.0041555184939375
+        ],
+        "richardson_order": 1.0062533464576602
+      },
+      "first_order_control_velocity": {
+        "differences": [
+          0.0010132389856958377,
+          0.0005016662232457858,
+          0.0002496105262091726
+        ],
+        "two_level_orders": [
+          1.0141747817388178,
+          1.0070490312558207
+        ],
+        "richardson_order": 1.0106119064973196
+      },
+      "error_vs_exact": [
+        {
+          "dt_s": 0.1,
+          "velocity_error_vs_exact": 0.000635325831736153,
+          "pressure_error_vs_exact": 0.011720444213273448,
+          "kinetic_energy_error_vs_exact": 0.0012710553023846775,
+          "nonlinear_iterations": 7,
+          "all_steps_converged": true
+        },
+        {
+          "dt_s": 0.05,
+          "velocity_error_vs_exact": 0.0006402813841712635,
+          "pressure_error_vs_exact": 0.0016204926572842679,
+          "kinetic_energy_error_vs_exact": 0.0012809727285933291,
+          "nonlinear_iterations": 6,
+          "all_steps_converged": true
+        },
+        {
+          "dt_s": 0.025,
+          "velocity_error_vs_exact": 0.0006415202068486536,
+          "pressure_error_vs_exact": 0.003375292911167682,
+          "kinetic_energy_error_vs_exact": 0.0012834519618729972,
+          "nonlinear_iterations": 5,
+          "all_steps_converged": true
+        },
+        {
+          "dt_s": 0.0125,
+          "velocity_error_vs_exact": 0.0006418299084544385,
+          "pressure_error_vs_exact": 0.005859792032229816,
+          "kinetic_energy_error_vs_exact": 0.0012840717625399866,
+          "nonlinear_iterations": 5,
+          "all_steps_converged": true
+        }
+      ]
+    }
+  ],
+  "estimator": {
+    "synthetic_order": 2.0,
+    "floor": 0.001,
+    "errors": [
+      1.001,
+      0.251,
+      0.0635,
+      0.016625
+    ],
+    "error_orders": [
+      1.9956827048852213,
+      1.9828588671786063,
+      1.9334022512709763
+    ],
+    "difference_orders": [
+      2.0,
+      2.0
+    ],
+    "difference_richardson_order": 2.0000000000000004
+  },
+  "notes": [
+    "orders come from self-convergence on a fixed grid, so every dt-independent (spatial) error cancels in the difference",
+    "pressure is compared after removing its spatial mean: the projection potential is defined up to an additive constant",
+    "the first-order control keeps the production projection and replaces only the trapezoidal momentum averaging, so it isolates the time scheme",
+    "error_vs_exact is reported next to the orders on purpose: it saturates at the spatial floor and must not be read as a temporal order",
+    "each grid refines dt only: the time-step series is halved per grid doubling so that dt/h, and hence the convective CFL number, is fixed"
+  ],
+  "cfl_note": "grids refine dt in step with h, so dt/h and the convective CFL number are held fixed; n=32 with dt=0.2 s is rejected by the Picard iteration (residual NaN) and is never reported as a result",
+  "velocity_order_passed": true,
+  "pressure_first_order_confirmed": true,
+  "control_first_order_confirmed": true,
+  "physical_accuracy_3_percent_passed": true,
+  "figures": {
+    "temporal-order.png": "6f515878bb643db8954617f5bff8e3ccb677722a1b96b94683eb6271cb04be18",
+    "error-floor.png": "b6b94f7718228160990314d83c118b8e358299b168d363b1bfa366b0ccf963d0",
+    "fields.png": "984e498187d060f8648ac58f5abccc3b9e127e31df3f010b78270baa05ffe5d6"
+  }
+}
