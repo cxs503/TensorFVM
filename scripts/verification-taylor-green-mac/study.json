@@ -1,0 +1,261 @@
+{
+  "schema": "tensorfvm.taylor-green-mac-study/1",
+  "exact_solution": {
+    "u": "A cos(x) sin(y) exp(-2 nu t)",
+    "v": "-A sin(x) cos(y) exp(-2 nu t)",
+    "w": "0",
+    "p": "-(A^2/4)(cos 2x + cos 2y) exp(-4 nu t)   (rho = 1)",
+    "kinetic_energy": "rho Lz A^2 pi^2 exp(-4 nu t)",
+    "source": "Taylor & Green (1937) single-mode vortex; exact unforced NS solution"
+  },
+  "case": {
+    "amplitude": 1.0,
+    "viscosity_pa_s": 0.05,
+    "density_kg_m3": 1.0,
+    "amplitude_decay_exponent_1_s": 0.1,
+    "energy_decay_exponent_1_s": 0.2,
+    "box_m": [
+      6.283185307179586,
+      6.283185307179586,
+      6.283185307179586
+    ],
+    "nz": 4,
+    "reynolds_amplitude_based": 125.66370614359172,
+    "theoretical_initial_energy_J": 62.01255336059963
+  },
+  "spatial_ladder": [
+    {
+      "n": 8,
+      "dx_m": 0.7853981633974483,
+      "steps": 100,
+      "velocity_relative_l2": 0.005048573825874054,
+      "pressure_relative_l2": 0.13698704124647418,
+      "velocity_x_relative_l2": 0.005048573825874061,
+      "velocity_y_relative_l2": 0.005048573825874055,
+      "velocity_z_max_abs_m_s": 0.0,
+      "energy_relative_error": 0.01012263574942372,
+      "measured_energy_decay_rate_1_s": 0.18992825498374688,
+      "decay_rate_relative_error": 0.050358725081265654,
+      "max_divergence_s_inv": 3.3306690738754696e-16,
+      "sampled_max_divergence_s_inv": 4.996003610813204e-16,
+      "sampled_energy_relative_error": 1.145804675431332e-16,
+      "max_energy_balance_defect_over_initial_J": 3.086063764491811e-16,
+      "nonlinear_all_converged": true,
+      "max_nonlinear_iterations": 4
+    },
+    {
+      "n": 16,
+      "dx_m": 0.39269908169872414,
+      "steps": 100,
+      "velocity_relative_l2": 0.0012793265464932898,
+      "pressure_relative_l2": 0.03464461125248305,
+      "velocity_x_relative_l2": 0.0012793265464932986,
+      "velocity_y_relative_l2": 0.0012793265464932785,
+      "velocity_z_max_abs_m_s": 0.0,
+      "energy_relative_error": 0.002560289769399234,
+      "measured_energy_decay_rate_1_s": 0.1974429821888682,
+      "decay_rate_relative_error": 0.012785089055659116,
+      "max_divergence_s_inv": 3.3306690738754696e-16,
+      "sampled_max_divergence_s_inv": 2.1094237467877974e-15,
+      "sampled_energy_relative_error": 0.0,
+      "max_energy_balance_defect_over_initial_J": 5.033036552822394e-16,
+      "nonlinear_all_converged": true,
+      "max_nonlinear_iterations": 4,
+      "velocity_observed_order": 1.9804913404586664,
+      "pressure_observed_order": 1.983336550066107,
+      "energy_observed_order": 1.9832059839414278
+    },
+    {
+      "n": 24,
+      "dx_m": 0.2617993877991494,
+      "steps": 100,
+      "velocity_relative_l2": 0.0005700085751498472,
+      "pressure_relative_l2": 0.014936966760693218,
+      "velocity_x_relative_l2": 0.0005700085751498438,
+      "velocity_y_relative_l2": 0.0005700085751498517,
+      "velocity_z_max_abs_m_s": 0.0,
+      "energy_relative_error": 0.0011403420600754296,
+      "measured_energy_decay_rate_1_s": 0.1988603076360613,
+      "decay_rate_relative_error": 0.005698461819693551,
+      "max_divergence_s_inv": 4.440892098500626e-16,
+      "sampled_max_divergence_s_inv": 3.3306690738754696e-15,
+      "sampled_energy_relative_error": 1.145804675431332e-16,
+      "max_energy_balance_defect_over_initial_J": 4.439993117296412e-16,
+      "nonlinear_all_converged": true,
+      "max_nonlinear_iterations": 4,
+      "velocity_observed_order": 1.9938526445289877,
+      "pressure_observed_order": 2.0749086574487476,
+      "energy_observed_order": 1.9947269370076348
+    },
+    {
+      "n": 32,
+      "dx_m": 0.19634954084936207,
+      "steps": 100,
+      "velocity_relative_l2": 0.0003209068217152581,
+      "pressure_relative_l2": 0.007983022757124078,
+      "velocity_x_relative_l2": 0.00032090682171525566,
+      "velocity_y_relative_l2": 0.00032090682171526114,
+      "velocity_z_max_abs_m_s": 0.0,
+      "energy_relative_error": 0.0006419166246188617,
+      "measured_energy_decay_rate_1_s": 0.19935828931573135,
+      "decay_rate_relative_error": 0.0032085534213432965,
+      "max_divergence_s_inv": 6.106226635438361e-16,
+      "sampled_max_divergence_s_inv": 3.9968028886505635e-15,
+      "sampled_energy_relative_error": 0.0,
+      "max_energy_balance_defect_over_initial_J": 4.307957031651004e-16,
+      "nonlinear_all_converged": true,
+      "max_nonlinear_iterations": 4,
+      "velocity_observed_order": 1.9969982626308795,
+      "pressure_observed_order": 2.177827746888206,
+      "energy_observed_order": 1.9974311124804462
+    }
+  ],
+  "temporal_ladder": {
+    "grid_n": 32,
+    "rows": [
+      {
+        "time_step_s": 0.2,
+        "steps": 5,
+        "velocity_relative_l2": 0.00031761247702532543,
+        "pressure_relative_l2": 0.011078080191025899,
+        "energy_relative_error": 0.0006353258317362064,
+        "max_nonlinear_iterations": 7,
+        "nonlinear_all_converged": true
+      },
+      {
+        "time_step_s": 0.1,
+        "steps": 10,
+        "velocity_relative_l2": 0.00032008946345322736,
+        "pressure_relative_l2": 0.0009795840636730906,
+        "energy_relative_error": 0.0006402813841711539,
+        "max_nonlinear_iterations": 6,
+        "nonlinear_all_converged": true
+      },
+      {
+        "time_step_s": 0.05,
+        "steps": 20,
+        "velocity_relative_l2": 0.0003207086763967785,
+        "pressure_relative_l2": 0.004014237903286102,
+        "energy_relative_error": 0.000641520206848757,
+        "max_nonlinear_iterations": 5,
+        "nonlinear_all_converged": true
+      },
+      {
+        "time_step_s": 0.01,
+        "steps": 100,
+        "velocity_relative_l2": 0.0003209068217152581,
+        "pressure_relative_l2": 0.007983022757124078,
+        "energy_relative_error": 0.0006419166246188617,
+        "max_nonlinear_iterations": 4,
+        "nonlinear_all_converged": true
+      }
+    ],
+    "velocity_error_spread_over_floor": 0.010372214343676394,
+    "interpretation": "Refining dt from 0.2 s to 0.01 s moves the velocity error by 1.04% around its floor, i.e. the error is dominated by the spatial truncation and no temporal observed order can be extracted from this case at these resolutions. This is a negative result, reported instead of a fitted order.",
+    "temporal_order_resolved": false
+  },
+  "long_horizon": [
+    {
+      "n": 16,
+      "final_time_s": 2.99999999999998,
+      "steps": 300,
+      "velocity_relative_l2": 0.003842891762558593,
+      "pressure_relative_l2": 0.029695104215821604,
+      "energy_relative_error": 0.007700551342215895,
+      "measured_energy_decay_rate_1_s": 0.19744298218886994,
+      "decay_rate_relative_error": 0.012785089055650373,
+      "max_divergence_s_inv": 2.220446049250313e-16,
+      "nonlinear_all_converged": true
+    },
+    {
+      "n": 24,
+      "final_time_s": 2.99999999999998,
+      "steps": 300,
+      "velocity_relative_l2": 0.001711000639976243,
+      "pressure_relative_l2": 0.012689068187161142,
+      "energy_relative_error": 0.0034249288031422444,
+      "measured_energy_decay_rate_1_s": 0.19886030763606258,
+      "decay_rate_relative_error": 0.005698461819687167,
+      "max_divergence_s_inv": 3.3306690738754696e-16,
+      "nonlinear_all_converged": true
+    },
+    {
+      "n": 32,
+      "final_time_s": 2.99999999999998,
+      "steps": 300,
+      "velocity_relative_l2": 0.0009630294417558254,
+      "pressure_relative_l2": 0.006709029610442532,
+      "energy_relative_error": 0.001926986309217504,
+      "measured_energy_decay_rate_1_s": 0.1993582893157327,
+      "decay_rate_relative_error": 0.0032085534213364963,
+      "max_divergence_s_inv": 5.551115123125783e-16,
+      "nonlinear_all_converged": true
+    }
+  ],
+  "discrimination": {
+    "grid_n": 32,
+    "note": "Each control breaks one physical ingredient on purpose. A gate that does not move is a gate that cannot see that ingredient.",
+    "baseline": {
+      "velocity_relative_l2": 0.0003209068217152581,
+      "pressure_relative_l2": 0.007983022757124078,
+      "decay_rate_relative_error": 0.0032085534213432965
+    },
+    "no_convection": {
+      "velocity_relative_l2": 0.0003209068217153306,
+      "pressure_relative_l2": 1.0,
+      "pressure_max_abs_pa": 1.255298220160146e-15,
+      "exact_pressure_max_abs_pa": 0.4014995356161683,
+      "decay_rate_relative_error": 0.0032085534213446842
+    },
+    "reference_viscosity_20_percent_high": {
+      "velocity_relative_l2": 0.020528729596293475,
+      "pressure_relative_l2": 0.03250195809615042,
+      "decay_rate_relative_error": 0.16934046118445267,
+      "energy_relative_error": 0.04147888793142478
+    }
+  },
+  "gates": {
+    "criterion": "relative L2 error against the exact solution below 3% on the finest grid",
+    "velocity": {
+      "value": 0.0003209068217152581,
+      "passed": true
+    },
+    "pressure": {
+      "value": 0.007983022757124078,
+      "passed": true
+    },
+    "energy_decay_rate": {
+      "value": 0.0032085534213432965,
+      "passed": true
+    },
+    "energy_at_final_time": {
+      "value": 0.0006419166246188617,
+      "passed": true
+    },
+    "discrete_divergence_free_initial_condition": {
+      "value": 3.9968028886505635e-15,
+      "passed": true
+    },
+    "observed_order_velocity_in_1p8_2p2": {
+      "value": 1.9969982626308795,
+      "passed": true
+    },
+    "observed_order_pressure_in_1p8_2p2": {
+      "value": 2.177827746888206,
+      "passed": true
+    }
+  },
+  "gate_summary": {
+    "physical_accuracy_qualified": true,
+    "informative_gates": {
+      "velocity_gate_blind_to_convection": true,
+      "velocity_gate_blind_to_20_percent_viscosity_error": true,
+      "decay_rate_gate_sees_20_percent_viscosity_error": true
+    },
+    "honest_limitations": [
+      "The velocity field is also the exact solution of the linear diffusion problem, so the velocity gate alone cannot certify the nonlinear momentum flux; the pressure comparison is the discriminating witness (control no_convection).",
+      "The whole movement is a single Fourier mode on a periodic box: no wall, no shear layer, no inhomogeneous direction. This qualifies the periodic kernel against a nonlinear NS solution; it does not qualify wall-bounded backends.",
+      "No temporal observed order is reported: at n=32 the velocity error is spatial-error dominated for dt in [0.01, 0.2] s."
+    ]
+  }
+}
