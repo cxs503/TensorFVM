@@ -1,0 +1,231 @@
+{
+ "truncation": [
+  {
+   "n": 4,
+   "h": 0.25,
+   "warp": 0.0,
+   "cells": 64,
+   "faces": 480,
+   "wall_cells": 56,
+   "field_scale": 43.262816035862365,
+   "l2_global": 3.160868182435565,
+   "linf_global": 6.825587786061819,
+   "l2_interior": 1.204190068151251,
+   "linf_interior": 1.5333443489726146,
+   "l2_wall": 3.3483178636792275,
+   "linf_wall": 6.825587786061819
+  },
+  {
+   "n": 8,
+   "h": 0.125,
+   "warp": 0.0,
+   "cells": 512,
+   "faces": 3456,
+   "wall_cells": 296,
+   "field_scale": 48.40938553954803,
+   "l2_global": 2.547558663443486,
+   "linf_global": 7.952931821162151,
+   "l2_interior": 0.2803220109504611,
+   "linf_interior": 0.4941789414385277,
+   "l2_wall": 3.341960330973716,
+   "linf_wall": 7.952931821162151
+  },
+  {
+   "n": 16,
+   "h": 0.0625,
+   "warp": 0.0,
+   "cells": 4096,
+   "faces": 26112,
+   "wall_cells": 1548,
+   "field_scale": 50.54612994389438,
+   "l2_global": 1.960215619757955,
+   "linf_global": 8.397422660945308,
+   "l2_interior": 0.08791474108678082,
+   "linf_interior": 0.2353580654827592,
+   "l2_wall": 3.18659197979462,
+   "linf_wall": 8.397422660945308
+  },
+  {
+   "n": 4,
+   "h": 0.25,
+   "warp": 2.0,
+   "cells": 64,
+   "faces": 480,
+   "wall_cells": 61,
+   "field_scale": 44.175148061459126,
+   "l2_global": 3.262327383330719,
+   "linf_global": 6.707054243457655,
+   "l2_interior": 1.194723372840377,
+   "linf_interior": 1.4241504059853638,
+   "l2_wall": 3.3310654657726477,
+   "linf_wall": 6.707054243457655
+  },
+  {
+   "n": 8,
+   "h": 0.125,
+   "warp": 2.0,
+   "cells": 512,
+   "faces": 3456,
+   "wall_cells": 361,
+   "field_scale": 48.922516519691506,
+   "l2_global": 2.6335695222228135,
+   "linf_global": 8.905692453972183,
+   "l2_interior": 0.3358298757185444,
+   "linf_interior": 0.6210517226572806,
+   "l2_wall": 3.128832248695345,
+   "linf_wall": 8.905692453972183
+  }
+ ],
+ "face": [
+  {
+   "n": 4,
+   "h": 0.25,
+   "warp": 0.0,
+   "linf_internal_per_area": 1.182316620809257,
+   "rel_internal_per_area": 0.11529025267781633,
+   "linf_boundary_per_area": 1.8599258603745819,
+   "rel_boundary_per_area": 0.13737999947028995,
+   "wall_normal_derivative_error": 0.4846184458364009,
+   "rel_wall_normal_derivative": 0.061916377553895924,
+   "interior_normal_derivative_error": 0.5744699141323389
+  },
+  {
+   "n": 8,
+   "h": 0.125,
+   "warp": 0.0,
+   "linf_internal_per_area": 0.6098731830906935,
+   "rel_internal_per_area": 0.04564265774893405,
+   "linf_boundary_per_area": 0.9808241468016371,
+   "rel_boundary_per_area": 0.06918273371659064,
+   "wall_normal_derivative_error": 0.22564837136918983,
+   "rel_wall_normal_derivative": 0.02757356379931301,
+   "interior_normal_derivative_error": 0.3523409040404913
+  },
+  {
+   "n": 16,
+   "h": 0.0625,
+   "warp": 0.0,
+   "linf_internal_per_area": 0.31204682998018285,
+   "rel_internal_per_area": 0.02177836781040428,
+   "linf_boundary_per_area": 0.5150840196117553,
+   "rel_boundary_per_area": 0.03554337612394008,
+   "wall_normal_derivative_error": 0.11306844531721656,
+   "rel_wall_normal_derivative": 0.013522191465746732,
+   "interior_normal_derivative_error": 0.18747572418848746
+  },
+  {
+   "n": 4,
+   "h": 0.25,
+   "warp": 2.0,
+   "linf_internal_per_area": 1.2639097910141388,
+   "rel_internal_per_area": 0.1161588480058899,
+   "linf_boundary_per_area": 2.122395236843882,
+   "rel_boundary_per_area": 0.1631336992134765,
+   "wall_normal_derivative_error": 0.7589700165943246,
+   "rel_wall_normal_derivative": 0.10130909643066177,
+   "interior_normal_derivative_error": 0.7104725021996521
+  },
+  {
+   "n": 8,
+   "h": 0.125,
+   "warp": 2.0,
+   "linf_internal_per_area": 0.6423948438273858,
+   "rel_internal_per_area": 0.04868099055607963,
+   "linf_boundary_per_area": 1.3939338962552925,
+   "rel_boundary_per_area": 0.10229578114010134,
+   "wall_normal_derivative_error": 0.48082239646838726,
+   "rel_wall_normal_derivative": 0.06166103392296092,
+   "interior_normal_derivative_error": 0.37485136704198946
+  }
+ ],
+ "solution": [
+  {
+   "n": 4,
+   "h": 0.25,
+   "warp": 0.0,
+   "l2_global": 0.3803739945082596,
+   "linf_global": 0.8409844245525491,
+   "l2_interior": 0.7082226451145469,
+   "field_scale": 2.199593341784506,
+   "residual": 1.1184605422469032e-15
+  },
+  {
+   "n": 8,
+   "h": 0.125,
+   "warp": 0.0,
+   "l2_global": 0.3581940127545778,
+   "linf_global": 0.8699252372668312,
+   "l2_interior": 0.5183338916508913,
+   "field_scale": 2.4996075040577956,
+   "residual": 2.1449365174401092e-15
+  },
+  {
+   "n": 16,
+   "h": 0.0625,
+   "warp": 0.0,
+   "l2_global": 0.35223106900944295,
+   "linf_global": 0.8915986542492753,
+   "l2_interior": 0.43569841700013606,
+   "field_scale": 2.620653602222782,
+   "residual": 3.926777357893254e-15
+  },
+  {
+   "n": 4,
+   "h": 0.25,
+   "warp": 2.0,
+   "l2_global": 0.37483780701621316,
+   "linf_global": 0.8791543664383823,
+   "l2_interior": 0.6848615808307872,
+   "field_scale": 2.2925857137523447,
+   "residual": 7.754420584412456e-16
+  },
+  {
+   "n": 8,
+   "h": 0.125,
+   "warp": 2.0,
+   "l2_global": 0.3484255570413629,
+   "linf_global": 0.8687253797764612,
+   "l2_interior": 0.548794851460128,
+   "field_scale": 2.526404646157204,
+   "residual": 2.563645875973756e-15
+  }
+ ],
+ "orders": {
+  "l2_global": [
+   0.31,
+   0.38
+  ],
+  "l2_interior": [
+   2.1,
+   1.67
+  ],
+  "l2_wall": [
+   0.0,
+   0.07
+  ]
+ },
+ "face_orders": {
+  "rel_internal_per_area": [
+   1.34,
+   1.07
+  ],
+  "rel_boundary_per_area": [
+   0.99,
+   0.96
+  ],
+  "rel_wall_normal_derivative": [
+   1.17,
+   1.03
+  ]
+ },
+ "solution_orders": {
+  "l2_global": [
+   0.09,
+   0.02
+  ],
+  "l2_interior": [
+   0.45,
+   0.25
+  ]
+ }
+}
