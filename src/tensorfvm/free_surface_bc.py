@@ -11,14 +11,34 @@ free surface (air-water interface) can cross domain boundaries:
 * :func:`apply_open_pressure` — sets the gauge pressure to zero on all
   open/free-surface faces, mimicking a pressure outlet.
 
-* :func:`outflow_vof_flux` — computes the volume-fraction flux leaving the
-  domain through open boundaries, so that the global volume ledger can be
-  closed in the anchor validation.
+* :func:`outflow_vof_flux` — gross liquid volume leaving the domain through
+  the open boundaries (the *outflow* side of the ledger).
+
+* :func:`net_vof_flux` — signed net liquid volume leaving the domain
+  (outflow − inflow), which is the quantity that must balance the change of
+  the total liquid volume ``d(sum(alpha) * dx * dy)/dt``.
 
 The design is intentionally mesh-agnostic within the Cartesian staggered
 framework of :mod:`tensorfvm.solver`: the BC flags are boolean masks aligned
 with the MAC face arrays ``u`` (east, shape (ny, nx+1)) and ``v`` (north,
 shape (ny+1, nx)).
+
+Boundary-flux convention
+------------------------
+:class:`~tensorfvm.two_phase_vof.VOFTransport` reconstructs face values from
+the adjacent cell values and, at the domain boundary, uses a zero-gradient
+ghost cell.  The boundary face value is therefore *exactly* the adjacent
+interior cell value, so the boundary liquid flux is ``dt * F_face * alpha_face``
+with ``F_face`` the volumetric face flux.  Summing the flux-form update over
+all cells telescopes, which gives the discrete ledger identity
+
+    (sum(alpha_new) - sum(alpha_old)) * dx * dy  =  -dt * net_vof_flux(...)
+
+to round-off, for **any** velocity field and for **any** VOF face-reconstruction
+scheme (:func:`net_vof_flux` reproduces the donor-cell face value, which is the
+value used at the boundary by ``scheme="upwind"``).  Both helpers clamp the
+in/out split *per face*; clamping the column sum instead silently cancels
+co-located inflow against outflow and breaks the ledger.
 """
 
 from __future__ import annotations
@@ -29,6 +49,7 @@ __all__ = [
     "FreeSurfaceBC",
     "apply_open_pressure",
     "outflow_vof_flux",
+    "net_vof_flux",
 ]
 
 
@@ -39,6 +60,74 @@ def apply_open_pressure(
     return torch.where(open_mask, torch.zeros_like(p), p)
 
 
+def _check_mac_shapes(alpha: torch.Tensor, u: torch.Tensor, v: torch.Tensor):
+    """Validate the staggered MAC shape contract and return ``(ny, nx)``."""
+    if alpha.dim() != 2:
+        raise ValueError(f"alpha must be a 2-D cell field, got shape {tuple(alpha.shape)}")
+    ny, nx = alpha.shape
+    if tuple(u.shape) != (ny, nx + 1):
+        raise ValueError(
+            f"u must be the east-face field of shape {(ny, nx + 1)}, got {tuple(u.shape)}"
+        )
+    if tuple(v.shape) != (ny + 1, nx):
+        raise ValueError(
+            f"v must be the north-face field of shape {(ny + 1, nx)}, got {tuple(v.shape)}"
+        )
+    return ny, nx
+
+
+def _boundary_liquid_flux(
+    alpha: torch.Tensor,
+    u: torch.Tensor,
+    v: torch.Tensor,
+    dx: float,
+    dy: float,
+    dt: float,
+):
+    """Per-face boundary liquid volume fluxes.
+
+    Returns ``(gross_out, net_out, terms)`` where ``gross_out`` is the liquid
+    volume leaving, ``net_out`` is ``outflow - inflow``, and ``terms`` maps each
+    boundary to ``(outflow, inflow)`` in m^3 for one step.  All four boundary
+    faces use the donor-cell (upwind) face value, which equals the adjacent
+    interior cell value because the transport operator closes the boundary with
+    a zero-gradient ghost cell.
+    """
+    ny, nx = _check_mac_shapes(alpha, u, v)
+    if not torch.isfinite(alpha).all():
+        raise ValueError("alpha must be finite")
+    if not torch.isfinite(u).all() or not torch.isfinite(v).all():
+        raise ValueError("face velocities must be finite")
+    for name, value in (("dx", dx), ("dy", dy), ("dt", dt)):
+        if not float(value) >= 0.0 or not (float(value) < float("inf")):
+            raise ValueError(f"{name} must be finite and non-negative")
+
+    # Liquid volume flux through each boundary face (m^3/s, upwind alpha),
+    # signed positive *out of the domain*: east/north faces leave with positive
+    # velocity, west/south faces leave with negative velocity.
+    leave_east = u[:, -1] * dy * alpha[:, -1]
+    leave_west = -u[:, 0] * dy * alpha[:, 0]
+    leave_north = v[-1, :] * dx * alpha[-1, :]
+    leave_south = -v[0, :] * dx * alpha[0, :]
+
+    zero = torch.zeros((), dtype=alpha.dtype, device=alpha.device)
+
+    def split(flux):  # per-face in/out split; never across a column
+        return torch.clamp(flux, min=0.0), torch.clamp(-flux, min=0.0)
+
+    terms = {
+        "east": split(leave_east),
+        "west": split(leave_west),
+        "north": split(leave_north),
+        "south": split(leave_south),
+    }
+    gross = sum((out.sum() for out, _ in terms.values()), zero)
+    net = sum((out.sum() - inc.sum() for out, inc in terms.values()), zero)
+    return dt * gross, dt * net, {
+        key: (float(o.sum()), float(i.sum())) for key, (o, i) in terms.items()
+    }
+
+
 def outflow_vof_flux(
     alpha: torch.Tensor,
     u: torch.Tensor,
@@ -47,23 +136,34 @@ def outflow_vof_flux(
     dy: float,
     dt: float,
 ) -> float:
-    """Compute the net liquid volume leaving the domain through boundaries.
+    """Gross liquid volume leaving the domain through all four boundaries.
 
-    Returns the *outflow* (positive = leaving) of the liquid phase through
-    all four domain boundaries, using upwind face values of alpha.
+    Positive means liquid leaves the domain.  The in/out split is applied
+    *per boundary face* and every face uses its own upwind volume fraction, so
+    an inflow segment next to an outflow segment cannot cancel outflow.
+
+    Returns the outflow only; use :func:`net_vof_flux` for the signed balance
+    that closes the global liquid-volume ledger.
     """
-    # East boundary (last east face column): flux out = u[-1]*dy*alpha[-1]
-    east_out = max(0.0, float(u[:, -1].sum().item())) * dy
-    west_out = max(0.0, float(-u[:, 0].sum().item())) * dy
-    north_out = max(0.0, float(v[-1, :].sum().item())) * dx
-    south_out = max(0.0, float(-v[0, :].sum().item())) * dx
-    # Liquid fraction at boundary cells
-    a_e = float(alpha[:, -1].mean().item())
-    a_w = float(alpha[:, 0].mean().item())
-    a_n = float(alpha[-1, :].mean().item())
-    a_s = float(alpha[0, :].mean().item())
-    return dt * (east_out * a_e + west_out * a_w
-                 + north_out * a_n + south_out * a_s)
+    gross, _net, _terms = _boundary_liquid_flux(alpha, u, v, dx, dy, dt)
+    return float(gross.item())
+
+
+def net_vof_flux(
+    alpha: torch.Tensor,
+    u: torch.Tensor,
+    v: torch.Tensor,
+    dx: float,
+    dy: float,
+    dt: float,
+) -> float:
+    """Signed net liquid volume leaving the domain through all four boundaries.
+
+    ``net > 0`` means the domain loses liquid, so a consistent transport step
+    must satisfy ``(sum(alpha_new) - sum(alpha_ref)) * dx * dy == -net``.
+    """
+    _gross, net, _terms = _boundary_liquid_flux(alpha, u, v, dx, dy, dt)
+    return float(net.item())
 
 
 class FreeSurfaceBC:
@@ -169,5 +269,41 @@ class FreeSurfaceBC:
         v: torch.Tensor,
         dt: float,
     ) -> float:
-        """Net liquid volume lost through open boundaries in one step."""
+        """Gross liquid volume lost through open boundaries in one step."""
         return outflow_vof_flux(alpha, u, v, self.dx, self.dy, dt)
+
+    def vof_net_flux(
+        self,
+        alpha: torch.Tensor,
+        u: torch.Tensor,
+        v: torch.Tensor,
+        dt: float,
+    ) -> float:
+        """Signed net liquid volume lost through open boundaries in one step."""
+        return net_vof_flux(alpha, u, v, self.dx, self.dy, dt)
+
+    def ledger_residual(
+        self,
+        alpha_ref: torch.Tensor,
+        alpha_new: torch.Tensor,
+        u: torch.Tensor,
+        v: torch.Tensor,
+        dt: float,
+    ) -> float:
+        """Global liquid-volume ledger residual for one transport step.
+
+        Returns ``(sum(alpha_new) - sum(alpha_ref)) * dx * dy + net_vof_flux``,
+        which is zero (to round-off) whenever the advection step and the
+        boundary-flux witness are consistent, and equals the unaccounted liquid
+        volume otherwise.
+        """
+        if tuple(alpha_ref.shape) != (self.ny, self.nx):
+            raise ValueError(
+                f"alpha_ref must have shape {(self.ny, self.nx)}, got {tuple(alpha_ref.shape)}"
+            )
+        if tuple(alpha_new.shape) != (self.ny, self.nx):
+            raise ValueError(
+                f"alpha_new must have shape {(self.ny, self.nx)}, got {tuple(alpha_new.shape)}"
+            )
+        delta_volume = float((alpha_new.sum() - alpha_ref.sum()).item()) * self.dx * self.dy
+        return delta_volume + self.vof_net_flux(alpha_ref, u, v, dt)
