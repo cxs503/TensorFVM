@@ -1,0 +1,523 @@
+{
+ "mission": 2891,
+ "module": "tensorfvm.native_velocity_space3d",
+ "cases": {
+  "channel_cartesian_traction_free": {
+   "full_dofs": 240,
+   "reduced_dofs": 240,
+   "rotated": false,
+   "orthonormality_error": 0.0,
+   "constraint_range_error": 0.0,
+   "rank_constraints": 0,
+   "nullity_gap": 0,
+   "roundtrip_error": 0.0,
+   "constraint_error_projected": 0.0,
+   "constraint_error_raw": 0.0,
+   "idempotence_error": 0.0,
+   "kkt_solution_error": 0.0,
+   "kkt_constraint_error": 0.0,
+   "penalty": [],
+   "checks": {
+    "orthonormal_columns": true,
+    "range_inside_constraints": true,
+    "exact_elimination_dimension": true,
+    "roundtrip_exact": true,
+    "projection_satisfies_constraints": true,
+    "raw_vector_flagged": true,
+    "projection_idempotent": true,
+    "matches_kkt_solve": true,
+    "penalty_is_first_order": true,
+    "tangent_plane_exact": true
+   },
+   "passed": true
+  },
+  "channel_cartesian_one_component": {
+   "full_dofs": 240,
+   "reduced_dofs": 239,
+   "rotated": false,
+   "orthonormality_error": 0.0,
+   "constraint_range_error": 0.0,
+   "rank_constraints": 1,
+   "nullity_gap": 0,
+   "roundtrip_error": 0.0,
+   "constraint_error_projected": 0.0,
+   "constraint_error_raw": 1.4650939859740129,
+   "idempotence_error": 0.0,
+   "kkt_solution_error": 1.5544414364489977e-15,
+   "kkt_constraint_error": 4.591356587599653e-19,
+   "penalty": [
+    {
+     "epsilon": 0.1,
+     "solution_error": 0.15570541581512096,
+     "constraint_residual": 0.0012163474523542025
+    },
+    {
+     "epsilon": 0.01,
+     "solution_error": 0.12722408362433874,
+     "constraint_residual": 0.0009938555392209703
+    },
+    {
+     "epsilon": 0.001,
+     "solution_error": 0.044968527206859,
+     "constraint_residual": 0.0003512874180891002
+    },
+    {
+     "epsilon": 0.0001,
+     "solution_error": 0.006023586290868394,
+     "constraint_residual": 4.705535642789086e-05
+    },
+    {
+     "epsilon": 1e-05,
+     "solution_error": 0.0006235281311568051,
+     "constraint_residual": 4.870908631105586e-06
+    },
+    {
+     "epsilon": 1e-06,
+     "solution_error": 6.257272087160629e-05,
+     "constraint_residual": 4.888087496546647e-07
+    }
+   ],
+   "penalty_slopes": [
+    0.08773438725521701,
+    0.45166066745659744,
+    0.8730535277363435,
+    0.9849990842774249,
+    0.9984710119616886
+   ],
+   "penalty_slope": 0.9984710119616886,
+   "checks": {
+    "orthonormal_columns": true,
+    "range_inside_constraints": true,
+    "exact_elimination_dimension": true,
+    "roundtrip_exact": true,
+    "projection_satisfies_constraints": true,
+    "raw_vector_flagged": true,
+    "projection_idempotent": true,
+    "matches_kkt_solve": true,
+    "penalty_is_first_order": true,
+    "tangent_plane_exact": true
+   },
+   "passed": true
+  },
+  "channel_normal_axis_aligned": {
+   "full_dofs": 240,
+   "reduced_dofs": 239,
+   "rotated": true,
+   "orthonormality_error": 0.0,
+   "constraint_range_error": 0.0,
+   "rank_constraints": 1,
+   "nullity_gap": 0,
+   "roundtrip_error": 0.0,
+   "constraint_error_projected": 0.0,
+   "constraint_error_raw": 0.37016818043339356,
+   "idempotence_error": 0.0,
+   "kkt_solution_error": 1.466887560954609e-15,
+   "kkt_constraint_error": 1.6929062053413817e-18,
+   "penalty": [
+    {
+     "epsilon": 0.1,
+     "solution_error": 0.20885705263986992,
+     "constraint_residual": 0.0016054468473797104
+    },
+    {
+     "epsilon": 0.01,
+     "solution_error": 0.16866060311785372,
+     "constraint_residual": 0.001296463921759992
+    },
+    {
+     "epsilon": 0.001,
+     "solution_error": 0.05766979993922824,
+     "constraint_residual": 0.0004432974483322684
+    },
+    {
+     "epsilon": 0.0001,
+     "solution_error": 0.007607431446310976,
+     "constraint_residual": 5.847696631627059e-05
+    },
+    {
+     "epsilon": 1e-05,
+     "solution_error": 0.0007858215462849108,
+     "constraint_residual": 6.04046982440911e-06
+    },
+    {
+     "epsilon": 1e-06,
+     "solution_error": 7.88420627107611e-05,
+     "constraint_residual": 6.060448494318256e-07
+    }
+   ],
+   "penalty_slopes": [
+    0.09283549601223266,
+    0.4660652041847821,
+    0.8797103973721513,
+    0.985914114968717,
+    0.998565954458593
+   ],
+   "penalty_slope": 0.998565954458593,
+   "tangential_normal_component": 0.0,
+   "checks": {
+    "orthonormal_columns": true,
+    "range_inside_constraints": true,
+    "exact_elimination_dimension": true,
+    "roundtrip_exact": true,
+    "projection_satisfies_constraints": true,
+    "raw_vector_flagged": true,
+    "projection_idempotent": true,
+    "matches_kkt_solve": true,
+    "penalty_is_first_order": true,
+    "tangent_plane_exact": true
+   },
+   "passed": true
+  },
+  "tetra_cartesian_traction_free": {
+   "full_dofs": 27,
+   "reduced_dofs": 27,
+   "rotated": false,
+   "orthonormality_error": 0.0,
+   "constraint_range_error": 0.0,
+   "rank_constraints": 0,
+   "nullity_gap": 0,
+   "roundtrip_error": 0.0,
+   "constraint_error_projected": 0.0,
+   "constraint_error_raw": 0.0,
+   "idempotence_error": 0.0,
+   "kkt_solution_error": 0.0,
+   "kkt_constraint_error": 0.0,
+   "penalty": [],
+   "checks": {
+    "orthonormal_columns": true,
+    "range_inside_constraints": true,
+    "exact_elimination_dimension": true,
+    "roundtrip_exact": true,
+    "projection_satisfies_constraints": true,
+    "raw_vector_flagged": true,
+    "projection_idempotent": true,
+    "matches_kkt_solve": true,
+    "penalty_is_first_order": true,
+    "tangent_plane_exact": true
+   },
+   "passed": true
+  },
+  "tetra_cartesian_one_component": {
+   "full_dofs": 27,
+   "reduced_dofs": 26,
+   "rotated": false,
+   "orthonormality_error": 0.0,
+   "constraint_range_error": 0.0,
+   "rank_constraints": 1,
+   "nullity_gap": 0,
+   "roundtrip_error": 0.0,
+   "constraint_error_projected": 0.0,
+   "constraint_error_raw": 0.20106039678829332,
+   "idempotence_error": 0.0,
+   "kkt_solution_error": 3.5895466162787147e-16,
+   "kkt_constraint_error": 7.45118139053546e-18,
+   "penalty": [
+    {
+     "epsilon": 0.1,
+     "solution_error": 0.30931367963312734,
+     "constraint_residual": 0.014948230483119381
+    },
+    {
+     "epsilon": 0.01,
+     "solution_error": 0.11309804803987597,
+     "constraint_residual": 0.005465699710714994
+    },
+    {
+     "epsilon": 0.001,
+     "solution_error": 0.015400940125483431,
+     "constraint_residual": 0.0007442826418977164
+    },
+    {
+     "epsilon": 0.0001,
+     "solution_error": 0.0015978952368565123,
+     "constraint_residual": 7.722162924297524e-05
+    },
+    {
+     "epsilon": 1e-05,
+     "solution_error": 0.00016039148852228717,
+     "constraint_residual": 7.75125413400878e-06
+    },
+    {
+     "epsilon": 1e-06,
+     "solution_error": 1.6045193455328972e-05,
+     "constraint_residual": 7.754175314876976e-07
+    }
+   ],
+   "penalty_slopes": [
+    0.4369440179340678,
+    0.8659078770482147,
+    0.9839989302796096,
+    0.9983669842688476,
+    0.9998363601922937
+   ],
+   "penalty_slope": 0.9998363601922937,
+   "checks": {
+    "orthonormal_columns": true,
+    "range_inside_constraints": true,
+    "exact_elimination_dimension": true,
+    "roundtrip_exact": true,
+    "projection_satisfies_constraints": true,
+    "raw_vector_flagged": true,
+    "projection_idempotent": true,
+    "matches_kkt_solve": true,
+    "penalty_is_first_order": true,
+    "tangent_plane_exact": true
+   },
+   "passed": true
+  },
+  "tetra_normal_slanted": {
+   "full_dofs": 27,
+   "reduced_dofs": 26,
+   "rotated": true,
+   "orthonormality_error": 2.220446049250313e-16,
+   "constraint_range_error": 1.5213428532527852e-18,
+   "rank_constraints": 1,
+   "nullity_gap": 0,
+   "roundtrip_error": 2.7755575615628914e-17,
+   "constraint_error_projected": 0.0,
+   "constraint_error_raw": 0.20730180311514645,
+   "idempotence_error": 0.0,
+   "kkt_solution_error": 3.981397702989321e-16,
+   "kkt_constraint_error": 9.540979117872439e-18,
+   "penalty": [
+    {
+     "epsilon": 0.1,
+     "solution_error": 0.48621219814166927,
+     "constraint_residual": 0.02543484903975863
+    },
+    {
+     "epsilon": 0.01,
+     "solution_error": 0.19936474268676696,
+     "constraint_residual": 0.010429216201216618
+    },
+    {
+     "epsilon": 0.001,
+     "solution_error": 0.028894969014896656,
+     "constraint_residual": 0.0015115605443700901
+    },
+    {
+     "epsilon": 0.0001,
+     "solution_error": 0.0030254459214994894,
+     "constraint_residual": 0.0001582678521546907
+    },
+    {
+     "epsilon": 1e-05,
+     "solution_error": 0.00030397477443104353,
+     "constraint_residual": 1.5901601253727818e-05
+    },
+    {
+     "epsilon": 1e-06,
+     "solution_error": 3.041185366921123e-05,
+     "constraint_residual": 1.5909121779573987e-06
+    }
+   ],
+   "penalty_slopes": [
+    0.38717749373764987,
+    0.8388261234377788,
+    0.9800328385761471,
+    0.9979518496581811,
+    0.9997946527063881
+   ],
+   "penalty_slope": 0.9997946527063881,
+   "tangential_normal_component": 0.0,
+   "checks": {
+    "orthonormal_columns": true,
+    "range_inside_constraints": true,
+    "exact_elimination_dimension": true,
+    "roundtrip_exact": true,
+    "projection_satisfies_constraints": true,
+    "raw_vector_flagged": true,
+    "projection_idempotent": true,
+    "matches_kkt_solve": true,
+    "penalty_is_first_order": true,
+    "tangent_plane_exact": true
+   },
+   "passed": true
+  },
+  "tetra_normal_plus_cartesian": {
+   "full_dofs": 27,
+   "reduced_dofs": 24,
+   "rotated": true,
+   "orthonormality_error": 2.220446049250313e-16,
+   "constraint_range_error": 1.5213428532527852e-18,
+   "rank_constraints": 3,
+   "nullity_gap": 0,
+   "roundtrip_error": 2.7755575615628914e-17,
+   "constraint_error_projected": 0.0,
+   "constraint_error_raw": 1.7365513957825303,
+   "idempotence_error": 2.7755575615628914e-17,
+   "kkt_solution_error": 2.6135504278441604e-16,
+   "kkt_constraint_error": 8.613501880583535e-18,
+   "penalty": [
+    {
+     "epsilon": 0.1,
+     "solution_error": 0.5118746819659842,
+     "constraint_residual": 0.027180222523489086
+    },
+    {
+     "epsilon": 0.01,
+     "solution_error": 0.17505496679723292,
+     "constraint_residual": 0.009295308244424896
+    },
+    {
+     "epsilon": 0.001,
+     "solution_error": 0.02307240024171214,
+     "constraint_residual": 0.0012251298898241134
+    },
+    {
+     "epsilon": 0.0001,
+     "solution_error": 0.0023828628220195864,
+     "constraint_residual": 0.00012652851181599463
+    },
+    {
+     "epsilon": 1e-05,
+     "solution_error": 0.00023906960857183947,
+     "constraint_residual": 1.2694445317414318e-05
+    },
+    {
+     "epsilon": 1e-06,
+     "solution_error": 2.3914822183921533e-05,
+     "constraint_residual": 1.2698619632292263e-06
+    }
+   ],
+   "penalty_slopes": [
+    0.4659892118515315,
+    0.8800816605194298,
+    0.9859937355428153,
+    0.9985746708822478,
+    0.9998572144058119
+   ],
+   "penalty_slope": 0.9998572144058119,
+   "tangential_normal_component": 0.0,
+   "checks": {
+    "orthonormal_columns": true,
+    "range_inside_constraints": true,
+    "exact_elimination_dimension": true,
+    "roundtrip_exact": true,
+    "projection_satisfies_constraints": true,
+    "raw_vector_flagged": true,
+    "projection_idempotent": true,
+    "matches_kkt_solve": true,
+    "penalty_is_first_order": true,
+    "tangent_plane_exact": true
+   },
+   "passed": true
+  },
+  "tetra_normal_two_faces": {
+   "full_dofs": 27,
+   "reduced_dofs": 25,
+   "rotated": true,
+   "orthonormality_error": 2.220446049250313e-16,
+   "constraint_range_error": 9.416486360171003e-18,
+   "rank_constraints": 2,
+   "nullity_gap": 0,
+   "roundtrip_error": 2.7755575615628914e-17,
+   "constraint_error_projected": 0.0,
+   "constraint_error_raw": 1.2938552688334275,
+   "idempotence_error": 4.440892098500626e-16,
+   "kkt_solution_error": 5.150619556468507e-16,
+   "kkt_constraint_error": 6.5052130349130266e-18,
+   "penalty": [
+    {
+     "epsilon": 0.1,
+     "solution_error": 0.6874483002079419,
+     "constraint_residual": 0.02789504960116079
+    },
+    {
+     "epsilon": 0.01,
+     "solution_error": 0.2759381548153678,
+     "constraint_residual": 0.011182607799598236
+    },
+    {
+     "epsilon": 0.001,
+     "solution_error": 0.03972941556480674,
+     "constraint_residual": 0.0016089478257647677
+    },
+    {
+     "epsilon": 0.0001,
+     "solution_error": 0.004157143230664105,
+     "constraint_residual": 0.0001683374372679204
+    },
+    {
+     "epsilon": 1e-05,
+     "solution_error": 0.000417652847831442,
+     "constraint_residual": 1.691206192437969e-05
+    },
+    {
+     "epsilon": 1e-06,
+     "solution_error": 4.178477174053742e-05,
+     "constraint_residual": 1.6919934754775108e-06
+    }
+   ],
+   "penalty_slopes": [
+    0.39642828659866586,
+    0.8416995794007304,
+    0.9803171884679811,
+    0.9979795409362063,
+    0.9997974129864047
+   ],
+   "penalty_slope": 0.9997974129864047,
+   "tangential_normal_component": 2.7755575615628914e-17,
+   "checks": {
+    "orthonormal_columns": true,
+    "range_inside_constraints": true,
+    "exact_elimination_dimension": true,
+    "roundtrip_exact": true,
+    "projection_satisfies_constraints": true,
+    "raw_vector_flagged": true,
+    "projection_idempotent": true,
+    "matches_kkt_solve": true,
+    "penalty_is_first_order": true,
+    "tangent_plane_exact": true
+   },
+   "passed": true
+  }
+ },
+ "mesh": {
+  "channel": {
+   "cells": 8,
+   "faces": 72,
+   "internal_faces": 24,
+   "boundary_faces": 48
+  },
+  "tetra": {
+   "cells": 2,
+   "faces": 7
+  }
+ },
+ "operator": {
+  "free_slip_box": {
+   "reduced_dofs": 27,
+   "symmetry_error": 0.0,
+   "min_eigenvalue": 0.027861433782208175,
+   "max_eigenvalue": 12.68465843842649,
+   "zero_modes": 0,
+   "max_tangential_normal_component": 0.0
+  },
+  "no_slip_box": {
+   "reduced_dofs": 3,
+   "symmetry_error": 0.0,
+   "min_eigenvalue": 12.0,
+   "max_eigenvalue": 12.0,
+   "zero_modes": 0,
+   "max_tangential_normal_component": 0.0
+  }
+ },
+ "rejections": {
+  "normal_on_interior_face": {
+   "rejected": true,
+   "message": "normal velocity constraints require boundary faces"
+  },
+  "normal_with_one_component": {
+   "rejected": true,
+   "message": "normal velocity constraints require three components"
+  },
+  "normal_over_cartesian": {
+   "rejected": true,
+   "message": "normal and Cartesian component constraints cannot overlap on a face"
+  }
+ },
+ "rejections_passed": true,
+ "operator_passed": true,
+ "passed": true
+}
