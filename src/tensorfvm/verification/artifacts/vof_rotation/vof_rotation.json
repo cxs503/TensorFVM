@@ -1,0 +1,217 @@
+{
+ "parameters": {
+  "resolutions": [
+   32,
+   64,
+   128
+  ],
+  "domain": 1.0,
+  "rate": 6.283185307179586,
+  "cfl": 0.4
+ },
+ "divergence": 0.0,
+ "unbounded_donor_cell": {
+  "raw_minimum": -0.005054276545267822,
+  "raw_maximum": 0.9546302585617364,
+  "cells_out_of_range": 4,
+  "clipped_mass_gain_per_step": 8.816520334818667e-06
+ },
+ "cosine_hill": {
+  "donor_cell": [
+   {
+    "cells": 32,
+    "steps": 243,
+    "dt": 0.00411522633744856,
+    "l1": 0.02694850393620666,
+    "relative_l1": 1.2828026960463725,
+    "linf": 0.776322155042522,
+    "minimum": 0.0,
+    "maximum": 0.1795931966296825,
+    "mass": 0.021082842586309616,
+    "volume_drift": 7.532208509569704e-05,
+    "volume_drift_relative": 0.0035854819273576127,
+    "mass_conservation_error": 0.07712981513799377,
+    "peak_retention": 0.1895636978486516,
+    "observed_order": null
+   },
+   {
+    "cells": 64,
+    "steps": 495,
+    "dt": 0.00202020202020202,
+    "l1": 0.02044309495991646,
+    "relative_l1": 0.9725973156985265,
+    "linf": 0.6845770239448545,
+    "minimum": 0.0,
+    "maximum": 0.30839413571756363,
+    "mass": 0.020891621869344953,
+    "volume_drift": 0.0001274521399577365,
+    "volume_drift_relative": 0.006063641999705997,
+    "mass_conservation_error": 0.5220439652668887,
+    "peak_retention": 0.31255958015902274,
+    "observed_order": null
+   },
+   {
+    "cells": 128,
+    "steps": 997,
+    "dt": 0.0010030090270812437,
+    "l1": 0.014011047393502694,
+    "relative_l1": 0.6665896511406265,
+    "linf": 0.5175582205343321,
+    "minimum": 0.0,
+    "maximum": 0.4827079621356351,
+    "mass": 0.020992028048512388,
+    "volume_drift": 2.6971225670562732e-05,
+    "volume_drift_relative": 0.0012831831486711518,
+    "mass_conservation_error": 0.4418965613864998,
+    "peak_retention": 0.4843270166373571,
+    "observed_order": 0.545048819815987
+   }
+  ],
+  "flux_corrected": [
+   {
+    "cells": 32,
+    "steps": 243,
+    "dt": 0.00411522633744856,
+    "l1": 0.03169164007700987,
+    "relative_l1": 1.5085854646757846,
+    "linf": 0.8372390201504445,
+    "minimum": 1.1990456333229054e-06,
+    "maximum": 0.11788241186542467,
+    "mass": 0.021439222302346878,
+    "volume_drift": 0.0004317018011329582,
+    "volume_drift_relative": 0.020549869324559857,
+    "mass_conservation_error": 0.4420626443601492,
+    "peak_retention": 0.12442690660830057,
+    "observed_order": null
+   },
+   {
+    "cells": 64,
+    "steps": 495,
+    "dt": 0.00202020202020202,
+    "l1": 0.025605079627226038,
+    "relative_l1": 1.2181830472595347,
+    "linf": 0.7809299697173104,
+    "minimum": 4.978032764274355e-11,
+    "maximum": 0.21486367541125367,
+    "mass": 0.02117021272269929,
+    "volume_drift": 0.0001511387133966008,
+    "volume_drift_relative": 0.007190550512820371,
+    "mass_conservation_error": 0.6190641700724768,
+    "peak_retention": 0.21776581458562808,
+    "observed_order": null
+   },
+   {
+    "cells": 128,
+    "steps": 997,
+    "dt": 0.0010030090270812437,
+    "l1": 0.018681024208441283,
+    "relative_l1": 0.8887684882023219,
+    "linf": 0.6428476840262073,
+    "minimum": 2.368174982075825e-19,
+    "maximum": 0.3619886885944479,
+    "mass": 0.021009661510896026,
+    "volume_drift": 9.337763286924872e-06,
+    "volume_drift_relative": 0.0004442534663576579,
+    "mass_conservation_error": 0.1529899136929771,
+    "peak_retention": 0.3632028376489783,
+    "observed_order": 0.4548564910020967
+   }
+  ]
+ },
+ "zalesak": {
+  "donor_cell": [
+   {
+    "cells": 32,
+    "steps": 243,
+    "dt": 0.00411522633744856,
+    "l1": 0.06209565554110247,
+    "relative_l1": 1.766276424280248,
+    "linf": 0.853416967760533,
+    "minimum": 0.0,
+    "maximum": 0.2253250450628135,
+    "mass": 0.039464344910674236,
+    "volume_drift": 0.004308094910674236,
+    "volume_drift_relative": 0.12254136634806716,
+    "mass_conservation_error": 4.4114891885304175,
+    "distorted_fraction": 0.181640625
+   },
+   {
+    "cells": 64,
+    "steps": 495,
+    "dt": 0.00202020202020202,
+    "l1": 0.059785344892451436,
+    "relative_l1": 1.4237254225551226,
+    "linf": 0.828219394424764,
+    "minimum": 0.0,
+    "maximum": 0.3970628059403129,
+    "mass": 0.04316548775684813,
+    "volume_drift": 0.0011733002568481282,
+    "volume_drift_relative": 0.027940917744476355,
+    "mass_conservation_error": 4.805837852049933,
+    "distorted_fraction": 0.163818359375
+   },
+   {
+    "cells": 128,
+    "steps": 997,
+    "dt": 0.0010030090270812437,
+    "l1": 0.05142342379514833,
+    "relative_l1": 1.1900019427397037,
+    "linf": 0.8352471210619802,
+    "minimum": 0.0,
+    "maximum": 0.5223548319773476,
+    "mass": 0.043448443641169565,
+    "volume_drift": 0.00023555301616956514,
+    "volume_drift_relative": 0.005450989571923948,
+    "mass_conservation_error": 3.8593006169221553,
+    "distorted_fraction": 0.13336181640625
+   }
+  ],
+  "flux_corrected": [
+   {
+    "cells": 32,
+    "steps": 243,
+    "dt": 0.00411522633744856,
+    "l1": 0.0620530493446285,
+    "relative_l1": 1.765064514691655,
+    "linf": 0.8843313317021674,
+    "minimum": 5.921837272386563e-06,
+    "maximum": 0.16322265034440164,
+    "mass": 0.03629104407707597,
+    "volume_drift": 0.001134794077075972,
+    "volume_drift_relative": 0.0322785870812721,
+    "mass_conservation_error": 1.1620291349257954,
+    "distorted_fraction": 0.1123046875
+   },
+   {
+    "cells": 64,
+    "steps": 495,
+    "dt": 0.00202020202020202,
+    "l1": 0.0647038487107981,
+    "relative_l1": 1.5408544437176104,
+    "linf": 0.8306295260868195,
+    "minimum": 8.116753604307966e-10,
+    "maximum": 0.3230072126697103,
+    "mass": 0.04297539789316095,
+    "volume_drift": 0.0009832103931609534,
+    "volume_drift_relative": 0.023414126572018985,
+    "mass_conservation_error": 4.027229770387265,
+    "distorted_fraction": 0.159912109375
+   },
+   {
+    "cells": 128,
+    "steps": 997,
+    "dt": 0.0010030090270812437,
+    "l1": 0.05843967964356154,
+    "relative_l1": 1.3523668238419664,
+    "linf": 0.8126106856747568,
+    "minimum": 1.6289023134227746e-17,
+    "maximum": 0.4335862023396836,
+    "mass": 0.043556415017925273,
+    "volume_drift": 0.0003435243929252735,
+    "volume_drift_relative": 0.00794958143176226,
+    "mass_conservation_error": 5.628303653687681,
+    "distorted_fraction": 0.14520263671875
+   }
+  ]
+ }
+}
