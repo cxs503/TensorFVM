@@ -3,6 +3,7 @@ from pathlib import Path
 import numpy as np
 import pytest
 from tensorfvm.suboff_geometry import radius,suboff_radius_profile,RADIUS_OVER_LENGTH,SOURCE_SHA256
+from tests.evidence_support import published
 
 
 def test_mother_dimensions_and_segment_stations():
@@ -19,7 +20,7 @@ def test_mother_dimensions_and_segment_stations():
 
 
 def test_archived_source_sha_and_exact_numpy_port():
-    source=Path(__file__).parents[1]/'docs/verification-suboff-mesh/tensorlbm-suboff-cad-source.py'
+    source=published('docs/verification-suboff-mesh/tensorlbm-suboff-cad-source.py')
     assert hashlib.sha256(source.read_bytes()).hexdigest()==SOURCE_SHA256
     text=source.read_text();a=text.index('def suboff_radius_profile(');b=text.index('\n\n# ---------------------------------------------------------------------------',a)
     original=text[a:b].replace('    config: SuboffConfig | None = None,\n','').replace('    if config is None:\n        config = SuboffConfig()\n\n','')

@@ -4,6 +4,7 @@ from pathlib import Path
 import pytest
 import torch
 from tensorfvm.periodic_mac import PeriodicMACConfig,PeriodicMACSolver
+from tests.evidence_support import published
 from tensorfvm.runtime import DistributedRuntime
 from scripts.run_periodic_mac import random_curl,numerical_qualified
 
@@ -89,7 +90,7 @@ def test_actual_gpu_midpoint_matches_cpu_face_momentum():
 
 
 def test_published_refinement_gates_preserve_coarse_mms_failure():
-    study=json.loads((Path(__file__).resolve().parents[1]/'docs/periodic-mac/study.json').read_text())
+    study=json.loads(published('docs/periodic-mac/study.json').read_text())
     assert study['refinement_order_passed']
     assert study['variable_mu_mms'][0]['error_3_percent_passed'] is False
     assert study['mms_all_grids_3_percent_passed'] is False

@@ -4,6 +4,7 @@ import json
 import numpy as np
 import torch
 from tensorfvm.wall_traction import incompressible_wall_gradient
+from tests.evidence_support import published
 
 
 def test_flat_incompressible_wall_exact_shear():
@@ -19,7 +20,7 @@ def test_flat_incompressible_wall_exact_shear():
 
 def test_circular_manufactured_wall_shear_converges():
     # Incompressible swirl u_theta=r-R has exact circular-wall shear 1.
-    root=Path(__file__).resolve().parents[1]/'docs/verification-gmsh-cylinder'
+    root=published('docs/verification-gmsh-cylinder')
     summary=json.loads((root/'summary.json').read_text());errors=[]
     for row in summary['runs']:
         with np.load(root/row['directory']/'fields.npz') as f:
