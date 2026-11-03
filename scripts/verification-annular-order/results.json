@@ -1,0 +1,364 @@
+{
+  "case": {
+    "inner_radius_m": 0.05,
+    "outer_radius_m": 0.1,
+    "pressure_gradient_pa_m": 0.01,
+    "viscosity_pa_s": 0.001,
+    "analytic_flow_rate_m3_s": 4.947381662032929e-05,
+    "quadrature_flow_rate_m3_s": 4.947381662032939e-05,
+    "analytic_max_velocity_m_s": 0.003165942182285223,
+    "analytic_max_velocity_radius_m": 0.07355342550373582,
+    "analytic_inner_wall_shear_pa": 0.00029101064033336144,
+    "analytic_outer_wall_shear_pa": -0.00022949467983331931
+  },
+  "reference_self_check": {
+    "checks": {
+      "momentum_equation_relative_residual": 3.3520634185046916e-10,
+      "no_slip_relative_residual": 6.849159650179787e-16,
+      "closed_form_vs_quadrature_flow_rate_relative": 1.917533284737518e-15,
+      "global_equilibrium_identity_relative_residual": 1.1503742337469315e-16,
+      "flow_rate_m3_s": 4.947381662032929e-05,
+      "flow_rate_quadrature_m3_s": 4.947381662032939e-05,
+      "max_velocity_m_s": 0.003165942182285223,
+      "max_velocity_radius_m": 0.07355342550373582,
+      "inner_wall_shear_pa": 0.00029101064033336144,
+      "outer_wall_shear_pa": -0.00022949467983331931
+    },
+    "worst_relative": 3.3520634185046916e-10,
+    "passed": true
+  },
+  "study": {
+    "rows": [
+      {
+        "nr": 8,
+        "ntheta": 32,
+        "cells": 256,
+        "spacing_m": 0.00625,
+        "angular_spacing_rad": 0.19634954084936207,
+        "elapsed_s": 2.087465239688754,
+        "linear_iterations": 8,
+        "solver_relative_residual": 3.131680151763066e-14,
+        "matrix_nnz": 1216,
+        "metrics": [
+          {
+            "name": "velocity_linf",
+            "value": 0.04017157959115063,
+            "limit": 0.03,
+            "description": "max |u_num-u_exact| / max|u_exact|",
+            "unit": "1",
+            "passed": false
+          },
+          {
+            "name": "velocity_l2",
+            "value": 0.019307594025103136,
+            "limit": 0.03,
+            "description": "volume-weighted L2 of velocity error / max|u_exact|",
+            "unit": "1",
+            "passed": true
+          },
+          {
+            "name": "flow_rate",
+            "value": 0.016419274286534998,
+            "limit": 0.03,
+            "description": "|Q_num-Q_exact|/Q_exact",
+            "unit": "1",
+            "passed": true
+          },
+          {
+            "name": "inner_wall_shear",
+            "value": 0.009818840313305691,
+            "limit": 0.03,
+            "description": "|tau_inner_num|-|tau_exact| over |tau_exact|",
+            "unit": "1",
+            "passed": true
+          },
+          {
+            "name": "outer_wall_shear",
+            "value": 0.001642887733811438,
+            "limit": 0.03,
+            "description": "|tau_outer_num|-|tau_exact| over |tau_exact|",
+            "unit": "1",
+            "passed": true
+          },
+          {
+            "name": "max_velocity",
+            "value": 0.003800948801205113,
+            "limit": 0.03,
+            "description": "|u_max_num-u_max_exact|/u_max_exact",
+            "unit": "1",
+            "passed": true
+          }
+        ],
+        "wall_traction_balance_relative": 0.0,
+        "radial_shear_correction_max_n_m": 1.3907405106564772e-20,
+        "values": {
+          "l2": 0.019307594025103136,
+          "linf": 0.04017157959115063,
+          "flow_rate_m3_s": 5.0286140785420213e-05,
+          "flow_rate_error": 0.016419274286534998,
+          "inner_wall_shear_pa": 0.00028815325332645533,
+          "outer_wall_shear_pa": 0.00022911764583884617,
+          "max_velocity_m_s": 0.003177975766427665,
+          "max_velocity_radius_m": 0.07157397400160542,
+          "exact_flow_rate_m3_s": 4.947381662032929e-05,
+          "exact_inner_wall_shear_pa": 0.00029101064033336144,
+          "exact_outer_wall_shear_pa": -0.00022949467983331931,
+          "exact_max_velocity_m_s": 0.003165942182285223,
+          "exact_max_velocity_radius_m": 0.07355342550373582,
+          "area_m2": 0.023410838641935394
+        }
+      },
+      {
+        "nr": 16,
+        "ntheta": 64,
+        "cells": 1024,
+        "spacing_m": 0.003125,
+        "angular_spacing_rad": 0.09817477042468103,
+        "elapsed_s": 8.30929595977068,
+        "linear_iterations": 17,
+        "solver_relative_residual": 7.308395280997313e-13,
+        "matrix_nnz": 4992,
+        "metrics": [
+          {
+            "name": "velocity_linf",
+            "value": 0.010844766402651246,
+            "limit": 0.03,
+            "description": "max |u_num-u_exact| / max|u_exact|",
+            "unit": "1",
+            "passed": true
+          },
+          {
+            "name": "velocity_l2",
+            "value": 0.004877444619361689,
+            "limit": 0.03,
+            "description": "volume-weighted L2 of velocity error / max|u_exact|",
+            "unit": "1",
+            "passed": true
+          },
+          {
+            "name": "flow_rate",
+            "value": 0.004199910326425267,
+            "limit": 0.03,
+            "description": "|Q_num-Q_exact|/Q_exact",
+            "unit": "1",
+            "passed": true
+          },
+          {
+            "name": "inner_wall_shear",
+            "value": 0.0024636452272148576,
+            "limit": 0.03,
+            "description": "|tau_inner_num|-|tau_exact| over |tau_exact|",
+            "unit": "1",
+            "passed": true
+          },
+          {
+            "name": "outer_wall_shear",
+            "value": 0.0004062422517385582,
+            "limit": 0.03,
+            "description": "|tau_outer_num|-|tau_exact| over |tau_exact|",
+            "unit": "1",
+            "passed": true
+          },
+          {
+            "name": "max_velocity",
+            "value": 0.0019252448633245566,
+            "limit": 0.03,
+            "description": "|u_max_num-u_max_exact|/u_max_exact",
+            "unit": "1",
+            "passed": true
+          }
+        ],
+        "wall_traction_balance_relative": 2.304448506064259e-16,
+        "radial_shear_correction_max_n_m": 9.005623918939112e-20,
+        "values": {
+          "l2": 0.004877444619361689,
+          "linf": 0.010844766402651246,
+          "flow_rate_m3_s": 4.9681602213640684e-05,
+          "flow_rate_error": 0.004199910326425267,
+          "inner_wall_shear_pa": 0.0002902936933582354,
+          "outer_wall_shear_pa": 0.0002294014493978218,
+          "max_velocity_m_s": 0.0031720373962092503,
+          "max_velocity_radius_m": 0.07336010952712636,
+          "exact_flow_rate_m3_s": 4.947381662032929e-05,
+          "exact_inner_wall_shear_pa": 0.00029101064033336144,
+          "exact_outer_wall_shear_pa": -0.00022949467983331931,
+          "exact_max_velocity_m_s": 0.003165942182285223,
+          "exact_max_velocity_radius_m": 0.07355342550373582,
+          "area_m2": 0.023524113679094544
+        }
+      },
+      {
+        "nr": 32,
+        "ntheta": 128,
+        "cells": 4096,
+        "spacing_m": 0.0015625,
+        "angular_spacing_rad": 0.04908738521234052,
+        "elapsed_s": 46.156503818929195,
+        "linear_iterations": 36,
+        "solver_relative_residual": 3.1431840082377114e-12,
+        "matrix_nnz": 20224,
+        "metrics": [
+          {
+            "name": "velocity_linf",
+            "value": 0.002810660760657071,
+            "limit": 0.03,
+            "description": "max |u_num-u_exact| / max|u_exact|",
+            "unit": "1",
+            "passed": true
+          },
+          {
+            "name": "velocity_l2",
+            "value": 0.0012225373030529602,
+            "limit": 0.03,
+            "description": "volume-weighted L2 of velocity error / max|u_exact|",
+            "unit": "1",
+            "passed": true
+          },
+          {
+            "name": "flow_rate",
+            "value": 0.001055975835317191,
+            "limit": 0.03,
+            "description": "|Q_num-Q_exact|/Q_exact",
+            "unit": "1",
+            "passed": true
+          },
+          {
+            "name": "inner_wall_shear",
+            "value": 0.0006164724583211878,
+            "limit": 0.03,
+            "description": "|tau_inner_num|-|tau_exact| over |tau_exact|",
+            "unit": "1",
+            "passed": true
+          },
+          {
+            "name": "outer_wall_shear",
+            "value": 0.00010127889029299169,
+            "limit": 0.03,
+            "description": "|tau_outer_num|-|tau_exact| over |tau_exact|",
+            "unit": "1",
+            "passed": true
+          },
+          {
+            "name": "max_velocity",
+            "value": 0.00022628252595534534,
+            "limit": 0.03,
+            "description": "|u_max_num-u_max_exact|/u_max_exact",
+            "unit": "1",
+            "passed": true
+          }
+        ],
+        "wall_traction_balance_relative": 4.603345393831558e-16,
+        "radial_shear_correction_max_n_m": 3.4584805953218597e-19,
+        "values": {
+          "l2": 0.0012225373030529602,
+          "linf": 0.002810660760657071,
+          "flow_rate_m3_s": 4.9526059775161275e-05,
+          "flow_rate_error": 0.001055975835317191,
+          "inner_wall_shear_pa": 0.0002908312402885175,
+          "outer_wall_shear_pa": 0.00022947143686681765,
+          "max_velocity_m_s": 0.003165225784891187,
+          "max_velocity_radius_m": 0.07419913710257228,
+          "exact_flow_rate_m3_s": 4.947381662032929e-05,
+          "exact_inner_wall_shear_pa": 0.00029101064033336144,
+          "exact_outer_wall_shear_pa": -0.00022949467983331931,
+          "exact_max_velocity_m_s": 0.003165942182285223,
+          "exact_max_velocity_radius_m": 0.07355342550373582,
+          "area_m2": 0.02355248367716065
+        }
+      }
+    ],
+    "orders": {
+      "velocity_linf": [
+        1.8891762133209822,
+        1.9480177376988979
+      ],
+      "velocity_l2": [
+        1.9849710000552225,
+        1.9962470054030348
+      ],
+      "flow_rate": [
+        1.9669599331177618,
+        1.9917817039883023
+      ],
+      "inner_wall_shear": [
+        1.9947581220259358,
+        1.9986861713204822
+      ],
+      "outer_wall_shear": [
+        2.0158216956985666,
+        2.004006794319341
+      ],
+      "max_velocity": [
+        0.9813176447853209,
+        3.0888448615687882
+      ]
+    },
+    "geometry": [
+      {
+        "nr": 8,
+        "ntheta": 32,
+        "cells": 256,
+        "area_m2": 0.023410838641935394,
+        "exact_area_m2": 0.023561944901923454,
+        "relative_area_error": -0.006413148855794371,
+        "inner_perimeter_m": 0.31365484905459395,
+        "outer_perimeter_m": 0.6273096981091879,
+        "inner_perimeter_deficit": -0.0016056069643815155,
+        "outer_perimeter_deficit": -0.0016056069643815155,
+        "min_cell_area_m2": 6.477608348191718e-05,
+        "cell_area_ratio": 1.823529411764725,
+        "positive_volumes": true
+      },
+      {
+        "nr": 16,
+        "ntheta": 64,
+        "cells": 1024,
+        "area_m2": 0.023524113679094544,
+        "exact_area_m2": 0.023561944901923454,
+        "relative_area_error": -0.0016056069643818685,
+        "inner_perimeter_m": 0.3140331156954753,
+        "outer_perimeter_m": 0.6280662313909506,
+        "inner_perimeter_deficit": -0.00040154685032079763,
+        "outer_perimeter_deficit": -0.00040154685032079763,
+        "min_cell_area_m2": 1.5793777494509153e-05,
+        "cell_area_ratio": 1.9090909090909627,
+        "positive_volumes": true
+      },
+      {
+        "nr": 32,
+        "ntheta": 128,
+        "cells": 4096,
+        "area_m2": 0.02355248367716065,
+        "exact_area_m2": 0.023561944901923454,
+        "relative_area_error": -0.0004015468503210037,
+        "inner_perimeter_m": 0.3141277250932773,
+        "outer_perimeter_m": 0.6282554501865546,
+        "inner_perimeter_deficit": -0.00010039578385814121,
+        "outer_perimeter_deficit": -0.00010039578385814121,
+        "min_cell_area_m2": 3.893309120217309e-06,
+        "cell_area_ratio": 1.9538461538464502,
+        "positive_volumes": true
+      }
+    ],
+    "geometry_orders": [
+      1.9979141144312054,
+      1.9994785510191166
+    ]
+  },
+  "acceptance": {
+    "per_metric": {
+      "velocity_linf": true,
+      "velocity_l2": true,
+      "flow_rate": true,
+      "inner_wall_shear": true,
+      "outer_wall_shear": true,
+      "max_velocity": true,
+      "asymptotic_second_order": true
+    },
+    "l2_order": 1.9962470054030348,
+    "passed": true
+  },
+  "runtime_s": 57.09394622966647,
+  "error_limit": 0.03,
+  "order_limit": 1.8
+}
