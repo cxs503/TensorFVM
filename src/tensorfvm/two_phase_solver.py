@@ -226,13 +226,20 @@ class TwoPhaseSolver:
         y = (torch.arange(self.ny, dtype=self.p.dtype, device=c.device)
              + 0.5).reshape(-1, 1) * self.dy
         y_grid = y.expand(self.ny, self.nx)
+        # Pressure is *continuous* across the interface: the liquid branch must
+        # carry the weight of the gas column above it, p_i = rho_g g (H - h_i).
+        # Dropping that offset leaves a jump of rho_g g (H - h_i) at the
+        # interface, i.e. a spurious discrete pressure gradient across the
+        # interface cell that drives the resting column.
+        p_iface = rho_g * g * (c.height - interface_y)
         self.p = torch.where(
             y_grid < interface_y,
-            rho_l * g * (interface_y - y_grid),
+            p_iface + rho_l * g * (interface_y - y_grid),
             rho_g * g * (c.height - y_grid),
         ).to(dtype=self.p.dtype, device=c.device)
-        if self.tp.top_atmosphere:
-            self.p[-1, :] = 0.0
+        # No cell-centre pinning here: the atmospheric datum p = 0 is imposed on
+        # the top *face* by the projection pressure operator, so the top cell
+        # centre carries the discrete-consistent value rho_g g dy/2.
 
     def hydrostatic_balance_residual(self) -> dict:
         """Compute the force balance residual at each v-face.
@@ -441,6 +448,21 @@ class TwoPhaseSolver:
     def _neighbor_sum(field, coeffs):
         return sum(a * value for a, value in zip(coeffs, _neighbors(field)))
 
+    def _csf_face_forces(self):
+        """Brackbill CSF force (N/m³) interpolated to the interior MAC faces.
+
+        Returns ``(f_u, f_v)`` with shapes ``(ny, nx-1)`` and ``(ny-1, nx)``,
+        or ``(None, None)`` when surface tension is switched off so that the
+        single-phase / sigma=0 behaviour is bit-for-bit unchanged.
+        """
+        if (self.props is None or not self.props.surface_tension
+                or self.props.sigma == 0.0):
+            return None, None
+        f = self.props.csf(self.alpha, self.dx, self.dy)      # (ny, nx, 2)
+        f_u = 0.5 * (f[:, :-1, 0] + f[:, 1:, 0])
+        f_v = 0.5 * (f[:-1, :, 1] + f[1:, :, 1])
+        return f_u, f_v
+
     def _divergence(self) -> torch.Tensor:
         return ((self.u[:, 1:] - self.u[:, :-1]) / self.dx
                 + (self.v[1:] - self.v[:-1]) / self.dy)
@@ -519,8 +541,13 @@ class TwoPhaseSolver:
             rz = new_rz
         return q
 
-    def _boundaries(self):
-        """Apply boundary conditions."""
+    def _boundaries(self, projection: bool = False):
+        """Apply boundary conditions.
+
+        ``projection=True`` is used by the transient Chorin path: the
+        atmospheric pressure datum is then imposed on the top *face* inside the
+        Poisson operator, so the top cell-centre level must not be overwritten.
+        """
         # Inlet
         self.u[:, 0] = self.config.inlet_velocity if self.config.inlet_velocity != 0 else 0.0
         # Bottom wall
@@ -528,8 +555,13 @@ class TwoPhaseSolver:
             self.v[0, :] = 0.0
         # Top atmosphere
         if self.tp.top_atmosphere:
-            self.v[-1, :] = self.v[-2, :]  # zero gradient
-            self.p[-1, :] = 0.0  # atmospheric
+            if not projection:
+                self.v[-1, :] = self.v[-2, :]  # zero gradient (SIMPLE path)
+                self.p[-1, :] = 0.0  # atmospheric (SIMPLE path gauge)
+            # In the projection path the top face velocity is *corrected* by the
+            # pressure datum p=0 imposed on that face; overwriting it with a
+            # zero-gradient copy would leave the top cell's divergence
+            # uncorrectable and poison the whole elliptic solve.
         # Side outlet
         if self.tp.side_outlet:
             self.u[:, -1] = self.u[:, -2]
@@ -547,11 +579,12 @@ class TwoPhaseSolver:
     def _projection_pressure(self, u_star, v_star, dt):
         """Chorin projection pressure solve for variable-density flow.
 
-        Solves:  ∇·(1/ρ ∇p) = (1/dt) ∇·u*
+        Solves:  ∇·(1/ρ ∇φ) = (1/dt) ∇·u*
 
-        Returns the pressure field p (not correction).  The 1/ρ weighting
-        is the key: it naturally handles density jumps.  A Jacobi-preconditioned
-        CG iteration is used.
+        Returns the pressure *correction* φ (not the pressure): the caller
+        updates p ← p + φ, so the scheme is the standard incremental-pressure
+        projection.  The 1/ρ weighting is the key: it naturally handles density
+        jumps.  A Jacobi-preconditioned CG iteration is used.
         """
         ny, nx = self.ny, self.nx
         # Face inverse density (harmonic mean for sharp interfaces)
@@ -582,24 +615,37 @@ class TwoPhaseSolver:
         cn_s[1:, :] = cn         # south face of cell (j,i) for j > 0
 
         diag = ce_e + ce_w + cn_n + cn_s
-        off_e = -ce_e   # coefficient of east neighbor
-        off_w = -ce_w   # coefficient of west neighbor
-        off_n = -cn_n   # coefficient of north neighbor
-        off_s = -cn_s   # coefficient of south neighbor
+        # matvec below is  diag*q - sum(off*neighbour); for the standard
+        # five-point -Laplacian (diag*q - ce_e*q_E - ...) the off-diagonals
+        # must be *positive* here.  Negating them (the previous code) turned
+        # the operator into sum(ce*(q + q_neighbour)), a positive-definite
+        # Helmholtz-like matrix whose inverse is not the projection: the
+        # correction then *amplified* divergence by (1 + 1/(dx dy)).
+        off_e = ce_e    # coefficient of east neighbor
+        off_w = ce_w    # coefficient of west neighbor
+        off_n = cn_n    # coefficient of north neighbor
+        off_s = cn_s    # coefficient of south neighbor
 
-        # Boundary conditions:
-        # Top atmosphere: Dirichlet p=0 at j=ny-1
+        # Boundary conditions.
+        # A sealed box has no Dirichlet datum: the pressure operator is a pure
+        # Neumann Laplacian, singular up to an additive constant.  Refuse the
+        # configuration instead of silently returning an arbitrary pressure
+        # level (downstream this produced a non-finite iterate).
+        if not self.tp.top_atmosphere and not self.tp.side_outlet:
+            raise ValueError(
+                "two-phase transient projection needs a pressure datum: set "
+                "top_atmosphere=True (p=0 on the top face) or "
+                "side_outlet=True (p=0 on the side columns). A fully sealed "
+                "domain gives an all-Neumann Poisson problem whose pressure "
+                "level is not unique."
+            )
+        # Top atmosphere: p = 0 on the top *face*, i.e. half a cell above the
+        # top cell centre.  The half-cell distance is what makes the discrete
+        # hydrostatic gradient exact on the topmost interior face:
+        #   (p_top - p_below)/dy = -rho_g g   with  p_top = rho_g g dy/2.
         if self.tp.top_atmosphere:
-            # Top row: diag=1, all off-diagonals=0
-            diag[-1, :] = 1.0
-            off_e[-1, :] = 0.0
-            off_w[-1, :] = 0.0
-            off_n[-1, :] = 0.0
-            off_s[-1, :] = 0.0
-            # Row below top: remove north face (it connects to Dirichlet cell)
-            # Actually for Dirichlet, the north coefficient of row ny-2 is still
-            # valid (it's an interior face). The Dirichlet condition is handled
-            # by setting top row's equation to p=0.
+            inv_rho_top = 1.0 / self.rho_field[-1, :].clamp_min(1e-10)
+            diag[-1, :] = diag[-1, :] + 2.0 * inv_rho_top * self.dx / self.dy
 
         # Bottom wall: no flux (Neumann) → south face already 0 at j=0 (cn_s[0]=0)
         # Side walls: no flux → ce_e[:,-1]=0 and ce_w[:,0]=0 already
@@ -613,12 +659,18 @@ class TwoPhaseSolver:
         def matvec_proj(q):
             return diag * q - self._neighbor_sum(q, coeffs_proj)
 
-        # RHS: (1/dt) * div(u*)
+        # RHS: (1/dt) * div(u*) * cell volume.  The volume factor is not
+        # cosmetic: the operator columns carry face areas (dy/dx, dx/dy), so
+        # omitting V from the right-hand side scales phi by 1/V and the
+        # velocity correction over-shoots by a factor 1/(dx dy) = 64 (n=8) --
+        # the projection then *amplifies* divergence instead of removing it.
         div = ((u_star[:, 1:] - u_star[:, :-1]) / self.dx
                + (v_star[1:] - v_star[:-1]) / self.dy)
-        b = (div / dt).masked_fill(~self.fluid, 0)
-        if self.tp.top_atmosphere:
-            b[-1, :] = 0.0  # Dirichlet p=0
+        # Sign: u_new = u* - dt (1/rho) grad(phi) must *remove* the
+        # divergence, i.e. matvec(phi) = -V div(u*)/dt with the operator
+        # matvec = sum_faces ce (phi - phi_neighbour).  Using +V div/dt
+        # doubles the divergence instead (measured amplification 2.000).
+        b = (-div * (self.dx * self.dy) / dt).masked_fill(~self.fluid, 0)
 
         # CG solve (Jacobi preconditioned)
         q = torch.zeros_like(b)
@@ -648,16 +700,16 @@ class TwoPhaseSolver:
     def _projection_step(self, dt: float) -> dict:
         """Chorin projection step for two-phase flow on staggered MAC grid.
 
-        1. Predict velocity (diffusion + gravity, no pressure gradient)
-        2. Solve pressure Poisson: ∇·(1/ρ ∇p) = (1/dt) ∇·u*
-        3. Correct: u = u* - dt/ρ ∇p
+        1. Predict velocity (diffusion + gravity + CSF - ∇p^n/ρ)
+        2. Solve the pressure-correction Poisson: ∇·(1/ρ ∇φ) = (1/dt) ∇·u*
+        3. Correct: u = u* - dt/ρ ∇φ, then p ← p + φ
         4. Advect VOF
 
         Velocity arrays are MAC staggered:
           u: shape (ny, nx+1)  — east face, column i sits between cell (i-1) and i
           v: shape (ny+1, nx)  — north face, row j sits between cell (j-1) and j
         """
-        self._boundaries()
+        self._boundaries(projection=True)
 
         rho = self.rho_field      # (ny, nx)
         mu = self.mu_field        # (ny, nx)
@@ -682,8 +734,18 @@ class TwoPhaseSolver:
         # d2udy2_full[:, 1:-1] is (ny-2, nx-1). ✓
         mu_u_face = 0.5 * (mu[:, :-1] + mu[:, 1:])       # (ny, nx-1) at all u-faces
         rho_u_face = 0.5 * (rho[:, :-1] + rho[:, 1:])   # (ny, nx-1)
+        # Pressure gradient at the *current* level plus the surface-tension
+        # source.  The scheme is incremental (p <- p + phi), so the predictor
+        # must carry -grad(p^n)/rho: without it the hydrostatic head is not
+        # balanced and the projection manufactures a pressure impulse every
+        # step.  The CSF term is likewise absent from the SIMPLE-only path.
+        dpdx_old = (self.p[:, 1:] - self.p[:, :-1]) / self.dx   # (ny, nx-1)
+        dpdy_old = (self.p[1:, :] - self.p[:-1, :]) / self.dy   # (ny-1, nx)
+        f_u, f_v = self._csf_face_forces()
         du_dt = (mu_u_face[1:-1, :] * (d2udx2[1:-1, :] + d2udy2_full[:, 1:-1])
-                 / rho_u_face[1:-1, :])
+                 - dpdx_old[1:-1, :]) / rho_u_face[1:-1, :]
+        if f_u is not None:
+            du_dt = du_dt + f_u[1:-1, :] / rho_u_face[1:-1, :]
         self.u[1:-1, 1:-1] = u_old[1:-1, 1:-1] + dt * du_dt
 
         # v: shape (ny+1, nx). Interior v-faces: rows 1..ny-1, cols 1..nx-2
@@ -708,26 +770,28 @@ class TwoPhaseSolver:
         rho_v_face = 0.5 * (rho[:-1, :] + rho[1:, :])   # (ny-1, nx)
         dv_dt = (mu_v_face[:, 1:-1]
                  * (d2vdx2_full[1:-1, :] + d2vdy2_full[:, 1:-1])
-                 / rho_v_face[:, 1:-1])
+                 - dpdy_old[:, 1:-1]) / rho_v_face[:, 1:-1]
         # Gravity body force (same for all fluid)
         grav_v = -self.tp.gravity
         dv_dt = dv_dt + grav_v
+        if f_v is not None:
+            dv_dt = dv_dt + f_v[:, 1:-1] / rho_v_face[:, 1:-1]
         self.v[1:-1, 1:-1] = v_old[1:-1, 1:-1] + dt * dv_dt
 
-        self._boundaries()
+        self._boundaries(projection=True)
 
-        # --- Step 2: Solve pressure Poisson ---
+        # --- Step 2: Solve pressure-correction Poisson ---
         u_star = self.u.clone()
         v_star = self.v.clone()
-        p_new = self._projection_pressure(u_star, v_star, dt)
+        dp = self._projection_pressure(u_star, v_star, dt)
 
         # --- Step 3: Velocity correction ---
-        # u = u* - dt * (1/rho_face) * dp/dx
+        # u = u* - dt * (1/rho_face) * d(dp)/dx
         inv_rho_u = 2.0 / (self.rho_field[:, :-1] + self.rho_field[:, 1:]).clamp_min(1e-10)
         inv_rho_v = 2.0 / (self.rho_field[:-1, :] + self.rho_field[1:, :]).clamp_min(1e-10)
 
-        dpdx = (p_new[:, 1:] - p_new[:, :-1]) / self.dx
-        dpdy = (p_new[1:, :] - p_new[:-1, :]) / self.dy
+        dpdx = (dp[:, 1:] - dp[:, :-1]) / self.dx
+        dpdy = (dp[1:, :] - dp[:-1, :]) / self.dy
 
         # u[j, i] face (i=1..nx-2 interior) sits between cells (i-1) and (i).
         # dpdx[i-1] = (p[i]-p[i-1])/dx, inv_rho_u[i-1] at that face.
@@ -737,9 +801,16 @@ class TwoPhaseSolver:
         # dpdy[j-1] = (p[j]-p[j-1])/dy, inv_rho_v[j-1] at that face.
         # dpdy and inv_rho_v are (ny-1, nx); v[1:-1] is (ny-1, nx) → match directly
         self.v[1:-1, :] = v_star[1:-1, :] - dt * inv_rho_v * dpdy
+        # Open top boundary: the atmospheric datum lives on the face, half a
+        # cell above the top cell centre, so the top face velocity is corrected
+        # with the half-cell gradient.  This is what closes the divergence of
+        # the top cell and makes the projection an exact projection.
+        if self.tp.top_atmosphere:
+            inv_rho_top = 1.0 / self.rho_field[-1, :].clamp_min(1e-10)
+            self.v[-1, :] = v_star[-1, :] + dt * inv_rho_top * dp[-1, :] / (0.5 * self.dy)
 
-        self.p = p_new
-        self._boundaries()
+        self.p = self.p + dp
+        self._boundaries(projection=True)
 
         # --- Step 4: VOF transport ---
         if dt > 0:
