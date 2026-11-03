@@ -84,8 +84,8 @@ def test_wall_normal_derivative_is_first_order():
     assert 0.6 < order < 1.6, order
 
 
-def test_dirichlet_diffusion_solution_shows_no_measurable_convergence():
-    """Recorded defect: the Dirichlet diffusion solve on this operator does not converge."""
+def test_homogeneous_comparison_shows_no_measurable_convergence():
+    """Recorded plateau: comparing a homogeneous solve with a non-solution field."""
     rows = [_solution(n, 0.0) for n in (4, 8)]
     ratio = rows[1]['l2_global']/rows[0]['l2_global']
     assert ratio > 0.85, (ratio, study.orders(rows, 'l2_global')[0])
@@ -100,7 +100,16 @@ def test_wall_cell_divergence_must_be_second_order():
     assert study.orders(rows, 'l2_wall')[0] > 1.5
 
 
-@pytest.mark.xfail(strict=True, reason='Open defect: Dirichlet diffusion solve does not converge')
-def test_dirichlet_diffusion_solution_must_converge():
-    rows = [_solution(n, 0.0) for n in (4, 8)]
-    assert study.orders(rows, 'l2_global')[0] > 0.9
+def test_dirichlet_diffusion_solution_converges_once_the_source_is_restored():
+    """The former strict xfail here measured a missing source term, not the operator.
+
+    ``_solution`` solves ``div(tau(u)) = 0`` and compares the result with the
+    manufactured field, which has O(1) ``div(tau)``; the plateau above is that
+    mismatch.  Restoring the analytic stress divergence as a cell source makes
+    the manufactured field the exact solution of the discrete problem, and the
+    same assembly converges at second order (see
+    ``tests/test_native_viscous_manufactured_solve.py``).
+    """
+    rows = [study.manufactured_solution_study(n, 0.0, VISCOSITY) for n in (4, 8)]
+    assert study.orders(rows, 'l2_interior')[0] > 1.9
+    assert study.orders(rows, 'l2_global')[0] > 1.7
