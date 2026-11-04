@@ -257,8 +257,12 @@ class TwoPhaseSolver:
         dpdy[1:-1, :] = (self.p[1:, :] - self.p[:-1, :]) / self.dy
         # Residual: dp/dy + rho*g should be 0 for hydrostatic balance
         residual = dpdy + rho_v * g
-        # Only evaluate at active v-faces
-        active = self._v_active
+        # Only evaluate at active interior v-faces (dpdy is not defined on the
+        # two boundary rows, where it is left at zero and would report a
+        # spurious rho g residual)
+        interior = torch.zeros_like(self.v, dtype=torch.bool)
+        interior[1:-1, :] = True
+        active = self._v_active & interior
         res_active = residual[active]
         return {
             "max_residual": float(res_active.abs().max()) if active.any() else 0.0,
