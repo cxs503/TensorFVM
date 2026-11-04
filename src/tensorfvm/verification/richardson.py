@@ -15,7 +15,8 @@ Engineering*; Celik et al. 2008, *J. Fluids Eng.* 130:078001):
   refinement ratios,
 * :func:`richardson_gci` returns the extrapolated value, the relative GCI,
   an asymptotic-range verdict against a theory order, and a fall-back with the
-  two-grid safety factor when the three-grid sequence is inconsistent,
+  two-grid safety factor when the three-grid sequence is inconsistent or its
+  observed order is implausible (no order information),
 * :func:`reference_agreement` compares the extrapolated value with an
   independent reference and reports whether the GCI band covers it.
 
@@ -39,6 +40,17 @@ MIN_RATIO = 1.01
 #: Bracket used when solving for the observed order; h^p is monotone in p.
 ORDER_BOUNDS = (1e-8, 40.0)
 
+#: Plausibility window for an *observed* order.  A three-grid triplet can hand
+#: back an arbitrarily large ``p`` when the two finest metrics happen to nearly
+#: cancel: the estimate is then not evidence of faster convergence but of one
+#: vanishing difference, and the GCI divides by ``r^p-1`` so the band collapses
+#: to nothing.  Such a triplet carries no order information and is demoted to the
+#: two-grid fall-back like an inconsistent one.  The window is the formal order
+#: times ``ORDER_CAP_FACTOR`` when a formal order is declared, otherwise
+#: ``ORDER_CAP_ABS`` in absolute terms.
+ORDER_CAP_FACTOR = 3.0
+ORDER_CAP_ABS = 6.0
+
 
 @dataclass(frozen=True)
 class RefinementStudy:
@@ -50,6 +62,7 @@ class RefinementStudy:
     order_used: float
     order_ratio: float
     convergence: str
+    fallback_reason: str
     asymptotic: bool
     extrapolated: float
     gci: float
@@ -57,6 +70,7 @@ class RefinementStudy:
     band: tuple
     theory_order: float
     refinement_ratio: float
+    order_limit: float
 
     def as_dict(self):
         return asdict(self)
@@ -115,22 +129,48 @@ def richardson_gci(fine, medium, coarse, spacings, *, theory_order=None,
 
     ``theory_order`` is the formal order of the scheme; when given, the study is
     only declared inside the asymptotic range if ``|p_observed-p_theory| <=
-    order_tolerance``.  An inconsistent series (no monotone error decay) falls
-    back to ``theory_order`` (or first order if unknown) with the conservative
-    two-grid safety factor 3.0, so that a broken refinement study can never
-    report a confident band.
+    order_tolerance``.
+
+    Two situations carry no order information and demote the study to the
+    two-grid fall-back: an inconsistent series (``q=(f3-f2)/(f2-f1) <= 0``, i.e.
+    no monotone one-sided ``C h^p`` decay) and an implausibly large observed
+    order (``p > ORDER_CAP_FACTOR*theory_order``, or ``ORDER_CAP_ABS`` without a
+    formal order), which is what a near-cancellation between the two finest
+    metrics produces.  The fall-back uses ``theory_order`` (first order when
+    unknown), the safety factor ``SAFETY_FALLBACK = 3`` and an ``eps`` taken from
+    the larger of the two adjacent metric changes, so ``convergence`` is
+    ``'inconsistent'`` or ``'order-implausible'`` and ``fallback_reason`` records
+    which rule fired.  A broken refinement study therefore cannot report a narrow
+    band.
     """
     h, v = _check(spacings, (fine, medium, coarse))
     if safety_factor is not None and not (math.isfinite(safety_factor) and safety_factor >= 1.):
         raise ValueError("safety factor must be finite and >= 1")
+    if theory_order is not None and not (math.isfinite(theory_order) and theory_order > 0.):
+        raise ValueError("theory order must be finite and positive")
     r21, r32 = h[1]/h[0], h[2]/h[1]
     p = observed_order(h, v)
-    fallback = p != p  # nan: no monotone C h^p error decay in this series
+    limit = ORDER_CAP_ABS if theory_order is None else ORDER_CAP_FACTOR*theory_order
+    if p != p:
+        fallback_reason = "non-monotone"
+    elif p > limit:
+        fallback_reason = "implausible-order"
+    else:
+        fallback_reason = "none"
+    fallback = fallback_reason != "none"
     p_used = float(1. if theory_order is None else theory_order) if fallback else p
-    convergence = "inconsistent" if fallback else "monotone"
+    convergence = "inconsistent" if fallback_reason == "non-monotone" else (
+        "order-implausible" if fallback_reason == "implausible-order" else "monotone")
     if v[0] == 0.:
         raise ValueError("relative GCI needs a non-zero fine-grid metric")
-    eps = abs((v[1]-v[0])/v[0])
+    # The fall-back band is driven by the worst *adjacent* change of the triplet,
+    # not by the fine/medium difference alone: in a non-monotone series the two
+    # finest metrics can cancel by accident, and a band built on that (near-zero)
+    # difference would look confident exactly where the study carries no
+    # information (efficiency index >> 1).  Using the larger of the two adjacent
+    # changes keeps the two-grid safety factor 3.0 conservative.
+    d1, d2 = abs(v[1]-v[0]), abs(v[2]-v[1])
+    eps = (max(d1, d2) if fallback else d1)/abs(v[0])
     gci = (safety_factor or (SAFETY_FALLBACK if fallback else SAFETY_OBSERVED))*eps/(r21**p_used-1.)
     correction = (v[1]-v[0])/(r21**p_used-1.)
     extrapolated = float(v[0]-correction)
@@ -138,8 +178,6 @@ def richardson_gci(fine, medium, coarse, spacings, *, theory_order=None,
         asymptotic = not fallback
         order_ratio = float("nan")
     else:
-        if not (math.isfinite(theory_order) and theory_order > 0.):
-            raise ValueError("theory order must be finite and positive")
         order_ratio = float(p_used/theory_order)
         asymptotic = bool(not fallback and abs(p_used-theory_order) <= order_tolerance)
     half = gci*abs(extrapolated)
@@ -147,12 +185,14 @@ def richardson_gci(fine, medium, coarse, spacings, *, theory_order=None,
         spacings=tuple(float(x) for x in h), values=tuple(float(x) for x in v),
         order=float(p), order_used=float(p_used), order_ratio=order_ratio,
         convergence=convergence,
+        fallback_reason=fallback_reason,
         asymptotic=asymptotic, extrapolated=extrapolated,
         gci=float(gci),
         safety_factor=float(safety_factor or (SAFETY_FALLBACK if fallback else SAFETY_OBSERVED)),
         band=(float(extrapolated-half), float(extrapolated+half)),
         theory_order=float("nan") if theory_order is None else float(theory_order),
-        refinement_ratio=float(r21))
+        refinement_ratio=float(r21),
+        order_limit=float(limit))
 
 
 def power_law_series(exact, primary, order, spacings, *, secondary=None,
@@ -181,6 +221,11 @@ def reference_agreement(study, reference):
     property a GCI can honestly claim) and the efficiency index
     ``actual_error/GCI`` (Roache: values far below one mean the band is
     conservative, values above one mean the band was not a bound).
+
+    ``asymptotic`` and ``fallback_reason`` are echoed into the result: a coverage
+    verdict computed on a study that is outside the asymptotic range, or on a
+    fall-back band, must travel with that qualifier instead of being quoted as an
+    ordinary GCI agreement.  The verdict itself is not changed here.
     """
     if not math.isfinite(reference):
         raise ValueError("finite reference required")
@@ -193,4 +238,6 @@ def reference_agreement(study, reference):
     return dict(reference=float(reference), extrapolated=study.extrapolated,
                 relative_error=float(error), gci=study.gci,
                 efficiency_index=efficiency, band_covered=covered,
-                band=study.band)
+                band=study.band, asymptotic=bool(study.asymptotic),
+                fallback_reason=study.fallback_reason,
+                safety_factor=study.safety_factor)
