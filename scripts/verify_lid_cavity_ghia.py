@@ -278,6 +278,13 @@ def main() -> None:
             print(f"finished Re={rey:g} n={n}: max|du|={result['u']['max_abs_error']:.4f} "
                   f"steps={result['solver']['steps']} "
                   f"wall={result['solver']['wall_seconds']:.0f}s", flush=True)
+            # Crash resilience: a multi-hour ladder must not lose finished cases.
+            # Every completed case is flushed to ``summary.partial.json``; the
+            # final ``summary.json`` is written once, at the end, as before.
+            with open(os.path.join(args.out, "summary.partial.json"), "w") as handle:
+                json.dump({"meta": meta, "cases": sorted(cases, key=lambda c: (c["reynolds"], c["n"])),
+                           "partial": True, "wall_seconds_total": time.time() - started},
+                          handle, indent=1)
 
     cases.sort(key=lambda c: (c["reynolds"], c["n"]))
     summary = {"meta": meta, "cases": cases}
