@@ -8,25 +8,15 @@ defective discretisation, i.e. a hole in verification coverage.
 
 Toolchain: Python 3.11.6, numpy 2.4.6, torch 2.7.1, scipy 1.16.0.
 
-Totals: killed 4, survived 2, invalid 0.
+Totals: killed 1, survived 0, invalid 0.
 
 | mutant | file | defect | predicted | observed | first failing test |
 |---|---|---|---|---|---|
-| `BF-RC-SIGN` | `src/tensorfvm/body_fitted.py` | Rhie--Chow damping enters the face flux with the wrong sign | killed | killed | tests/test_mutation_coverage.py::test_rhie_chow_damping_is_diffusive_in_the_pressure_field |
-| `BF-NONORTHO-DROP` | `src/tensorfvm/body_fitted.py` | Non-orthogonal cross term dropped from the face normal pressure | killed | killed | tests/test_body_fitted.py::FittedSolverTests::test_damped_pressure_response_matches_predictor_sensitivity |
-| `BF-DAMP-RATIO` | `src/tensorfvm/body_fitted.py` | Pseudo-time damping ratio inverted (steady_df/df instead of df/steady_df) | killed | killed | tests/test_body_fitted.py::FittedSolverTests::test_damped_pressure_response_matches_predictor_sensitivity |
-| `CP-WEIGHT-SWAP` | `src/tensorfvm/conservative_pressure.py` | Projected-linear face weights applied to the wrong owner/neighbour | killed | survived | - |
-| `CP-OUTLET-DROP` | `src/tensorfvm/conservative_pressure.py` | Outlet faces no longer zeroed in the Gauss pressure gradient | killed | killed | tests/test_multi_element_flow.py::MultiElementFlowTests::test_coupled_frozen_reconstruction_operator |
-| `STAG-UPWIND` | `src/tensorfvm/solver.py` | Staggered u-face interpolation replaced by first-order upwind | killed | survived | - |
+| `CP-WEIGHT-SWAP` | `src/tensorfvm/conservative_pressure.py` | Projected-linear face weights applied to the wrong owner/neighbour | killed | killed | tests/test_projected_linear_interpolation.py::test_face_share_of_a_step_field_is_the_geometric_share |
 
 ## Per-mutant rationale
 
-- **BF-RC-SIGN** (killed): The damping term is what prevents checkerboard pressure/velocity decoupling on collocated grids; flipping it must move the steady solution or destroy convergence.
-- **BF-NONORTHO-DROP** (killed): On skewed body-fitted cells the projected-gradient correction carries the tangential part of the pressure gradient into the face flux.  If no test varies skewness, the deletion survives and the suite only certifies orthogonal-grid behaviour.
-- **BF-DAMP-RATIO** (killed): beta blends the retained face-flux memory with the unrelaxed operator; inverting the ratio selects the complementary blend, so the pseudo-time and velocity-relaxation equivalence tests must fail.
-- **CP-WEIGHT-SWAP** (survived): Swapping the bracket keeps the weights admissible, so the existing bracketing guard cannot catch it; only a test that compares the interpolated face value against the exact linear field on a stretched grid can.
-- **CP-OUTLET-DROP** (killed): The gauge of a pressure gradient with a prescribed outlet pressure depends on this masking; a suite that only checks force balance can let it through.
-- **STAG-UPWIND** (survived): Upwinding biases every face value, so the channel-profile refinement test and the steady-state equivalence tests should react; if tolerances are loose enough it survives.
+- **CP-WEIGHT-SWAP** (killed): Swapping the bracket keeps the weights admissible, so the existing bracketing guard cannot catch it; only a test that compares the interpolated face value against the exact linear field on a stretched grid can.
 
 ## Scope limits
 

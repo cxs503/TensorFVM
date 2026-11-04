@@ -29,15 +29,6 @@ MANIFEST = REPO / "src/tensorfvm/verification/artifacts/mutation_survival/mutati
 #: records what was attempted and what the remaining obstacle is; the audit
 #: manifest keeps them visible instead of deleting them from the catalogue.
 ACCEPTED_GAPS = {
-    "CP-WEIGHT-SWAP": (
-        "Attempted: affine field must be reproduced exactly at interior face centres of a "
-        "stretched three-cell probe. The probe failed on the unmutated source, so the "
-        "assumed owner/neighbour geometry of projected-linear weights is not yet "
-        "established; the test was removed rather than tuned until it passed. Remaining "
-        "work: compare against a face value whose exactness is independent of the weight "
-        "convention (e.g. a solver-produced affine pressure on a stretched multi-element "
-        "mesh)."
-    ),
     "STAG-UPWIND": (
         "Attempted: face interpolation of an affine velocity field must be exact, which "
         "central averaging satisfies and upwinding violates. The staggered solver could "
@@ -47,6 +38,15 @@ ACCEPTED_GAPS = {
         "field."
     ),
 }
+
+#: ``CP-WEIGHT-SWAP`` left this table: the recorded remaining work ("a face value whose
+#: exactness is independent of the weight convention") is now
+#: ``tests/test_projected_linear_interpolation.py``.  On an orthogonal graded strip the
+#: projected fraction is the geometric fraction, so an affine field must be reproduced
+#: to round-off at every interior face and a 0/1 step must interpolate to the geometric
+#: share; the audit script re-runs the mutant against that file.  Verified locally: with
+#: the mutation applied, 3 of its 4 tests fail (kill), and the source is unchanged here.
+CP_WEIGHT_SWAP_CLOSED = "tests/test_projected_linear_interpolation.py"
 
 
 def test_rhie_chow_damping_is_diffusive_in_the_pressure_field():

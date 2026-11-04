@@ -64,7 +64,8 @@ CATALOGUE = [
         description="Projected-linear face weights applied to the wrong owner/neighbour",
         find="        values[self.f]=weights.reshape(shape)*field[self.oi]+(1-weights).reshape(shape)*field[self.ni]",
         replace="        values[self.f]=(1-weights).reshape(shape)*field[self.oi]+weights.reshape(shape)*field[self.ni]",
-        tests=["tests/test_multi_element_flow.py"],
+        tests=["tests/test_multi_element_flow.py",
+               "tests/test_projected_linear_interpolation.py"],
         rationale=(
             "Swapping the bracket keeps the weights admissible, so the existing "
             "bracketing guard cannot catch it; only a test that compares the "

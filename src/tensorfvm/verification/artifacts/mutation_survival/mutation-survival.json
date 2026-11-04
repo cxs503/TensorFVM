@@ -1,115 +1,117 @@
 {
- "tool": "scripts/audit_mutation_survival.py",
- "python": "3.11.6",
- "numpy": "2.4.6",
- "torch": "2.7.1",
- "scipy": "1.16.0",
- "killed": 4,
- "survived": 2,
- "invalid": 0,
- "mutants": [
-  {
-   "id": "BF-RC-SIGN",
-   "file": "src/tensorfvm/body_fitted.py",
-   "description": "Rhie--Chow damping enters the face flux with the wrong sign",
-   "rationale": "The damping term is what prevents checkerboard pressure/velocity decoupling on collocated grids; flipping it must move the steady solution or destroy convergence.",
-   "expected": "killed",
-   "tests": [
-    "tests/test_body_fitted.py",
-    "tests/test_mutation_coverage.py"
-   ],
-   "status": "killed",
-   "returncode": 1,
-   "first_failure": "tests/test_mutation_coverage.py::test_rhie_chow_damping_is_diffusive_in_the_pressure_field",
-   "duration_seconds": 35.141,
-   "summary_line": "1 failed, 27 passed, 1 skipped, 2 warnings in 32.39s",
-   "source_restored": true,
-   "source_sha256": "4e633fa42c1171cf57aca5bf930827f97a30dada4e405bf3ac9c1068ba1bb7a7"
-  },
-  {
-   "id": "BF-NONORTHO-DROP",
-   "file": "src/tensorfvm/body_fitted.py",
-   "description": "Non-orthogonal cross term dropped from the face normal pressure",
-   "rationale": "On skewed body-fitted cells the projected-gradient correction carries the tangential part of the pressure gradient into the face flux.  If no test varies skewness, the deletion survives and the suite only certifies orthogonal-grid behaviour.",
-   "expected": "killed",
-   "tests": [
-    "tests/test_body_fitted.py"
-   ],
-   "status": "killed",
-   "returncode": 1,
-   "first_failure": "tests/test_body_fitted.py::FittedSolverTests::test_damped_pressure_response_matches_predictor_sensitivity",
-   "duration_seconds": 6.975,
-   "summary_line": "1 failed, 9 passed, 1 skipped, 2 warnings in 5.00s",
-   "source_restored": true,
-   "source_sha256": "4e633fa42c1171cf57aca5bf930827f97a30dada4e405bf3ac9c1068ba1bb7a7"
-  },
-  {
-   "id": "BF-DAMP-RATIO",
-   "file": "src/tensorfvm/body_fitted.py",
-   "description": "Pseudo-time damping ratio inverted (steady_df/df instead of df/steady_df)",
-   "rationale": "beta blends the retained face-flux memory with the unrelaxed operator; inverting the ratio selects the complementary blend, so the pseudo-time and velocity-relaxation equivalence tests must fail.",
-   "expected": "killed",
-   "tests": [
-    "tests/test_body_fitted.py"
-   ],
-   "status": "killed",
-   "returncode": 1,
-   "first_failure": "tests/test_body_fitted.py::FittedSolverTests::test_damped_pressure_response_matches_predictor_sensitivity",
-   "duration_seconds": 7.189,
-   "summary_line": "1 failed, 9 passed, 1 skipped, 2 warnings in 5.13s",
-   "source_restored": true,
-   "source_sha256": "4e633fa42c1171cf57aca5bf930827f97a30dada4e405bf3ac9c1068ba1bb7a7"
-  },
-  {
-   "id": "CP-WEIGHT-SWAP",
-   "file": "src/tensorfvm/conservative_pressure.py",
-   "description": "Projected-linear face weights applied to the wrong owner/neighbour",
-   "rationale": "Swapping the bracket keeps the weights admissible, so the existing bracketing guard cannot catch it; only a test that compares the interpolated face value against the exact linear field on a stretched grid can.",
-   "expected": "killed",
-   "tests": [
-    "tests/test_multi_element_flow.py"
-   ],
-   "status": "survived",
-   "returncode": 0,
-   "first_failure": null,
-   "duration_seconds": 13.786,
-   "summary_line": "14 passed, 3 warnings in 11.58s",
-   "source_restored": true,
-   "source_sha256": "46914848e8b45a85e1580f575d76597c887d38a3bfee9be84e474d314e6eaf32"
-  },
-  {
-   "id": "CP-OUTLET-DROP",
-   "file": "src/tensorfvm/conservative_pressure.py",
-   "description": "Outlet faces no longer zeroed in the Gauss pressure gradient",
-   "rationale": "The gauge of a pressure gradient with a prescribed outlet pressure depends on this masking; a suite that only checks force balance can let it through.",
-   "expected": "killed",
-   "tests": [
-    "tests/test_multi_element_flow.py"
-   ],
-   "status": "killed",
-   "returncode": 1,
-   "first_failure": "tests/test_multi_element_flow.py::MultiElementFlowTests::test_coupled_frozen_reconstruction_operator",
-   "duration_seconds": 7.079,
-   "summary_line": "1 failed, 2 warnings in 4.87s",
-   "source_restored": true,
-   "source_sha256": "46914848e8b45a85e1580f575d76597c887d38a3bfee9be84e474d314e6eaf32"
-  },
-  {
-   "id": "STAG-UPWIND",
-   "file": "src/tensorfvm/solver.py",
-   "description": "Staggered u-face interpolation replaced by first-order upwind",
-   "rationale": "Upwinding biases every face value, so the channel-profile refinement test and the steady-state equivalence tests should react; if tolerances are loose enough it survives.",
-   "expected": "killed",
-   "tests": [
-    "tests/test_solver.py"
-   ],
-   "status": "survived",
-   "returncode": 0,
-   "first_failure": null,
-   "duration_seconds": 26.859,
-   "summary_line": "12 passed, 2 warnings, 39 subtests passed in 23.82s",
-   "source_restored": true,
-   "source_sha256": "2a51125a867b760430ecc48cb8f7f2bcaffdb06e2856f017d9a06626044b5e02"
-  }
- ]
+  "invalid": 0,
+  "killed": 4,
+  "mutants": [
+    {
+      "description": "Rhie--Chow damping enters the face flux with the wrong sign",
+      "duration_seconds": 35.141,
+      "expected": "killed",
+      "file": "src/tensorfvm/body_fitted.py",
+      "first_failure": "tests/test_mutation_coverage.py::test_rhie_chow_damping_is_diffusive_in_the_pressure_field",
+      "id": "BF-RC-SIGN",
+      "rationale": "The damping term is what prevents checkerboard pressure/velocity decoupling on collocated grids; flipping it must move the steady solution or destroy convergence.",
+      "returncode": 1,
+      "source_restored": true,
+      "source_sha256": "4e633fa42c1171cf57aca5bf930827f97a30dada4e405bf3ac9c1068ba1bb7a7",
+      "status": "killed",
+      "summary_line": "1 failed, 27 passed, 1 skipped, 2 warnings in 32.39s",
+      "tests": [
+        "tests/test_body_fitted.py",
+        "tests/test_mutation_coverage.py"
+      ]
+    },
+    {
+      "description": "Non-orthogonal cross term dropped from the face normal pressure",
+      "duration_seconds": 6.975,
+      "expected": "killed",
+      "file": "src/tensorfvm/body_fitted.py",
+      "first_failure": "tests/test_body_fitted.py::FittedSolverTests::test_damped_pressure_response_matches_predictor_sensitivity",
+      "id": "BF-NONORTHO-DROP",
+      "rationale": "On skewed body-fitted cells the projected-gradient correction carries the tangential part of the pressure gradient into the face flux.  If no test varies skewness, the deletion survives and the suite only certifies orthogonal-grid behaviour.",
+      "returncode": 1,
+      "source_restored": true,
+      "source_sha256": "4e633fa42c1171cf57aca5bf930827f97a30dada4e405bf3ac9c1068ba1bb7a7",
+      "status": "killed",
+      "summary_line": "1 failed, 9 passed, 1 skipped, 2 warnings in 5.00s",
+      "tests": [
+        "tests/test_body_fitted.py"
+      ]
+    },
+    {
+      "description": "Pseudo-time damping ratio inverted (steady_df/df instead of df/steady_df)",
+      "duration_seconds": 7.189,
+      "expected": "killed",
+      "file": "src/tensorfvm/body_fitted.py",
+      "first_failure": "tests/test_body_fitted.py::FittedSolverTests::test_damped_pressure_response_matches_predictor_sensitivity",
+      "id": "BF-DAMP-RATIO",
+      "rationale": "beta blends the retained face-flux memory with the unrelaxed operator; inverting the ratio selects the complementary blend, so the pseudo-time and velocity-relaxation equivalence tests must fail.",
+      "returncode": 1,
+      "source_restored": true,
+      "source_sha256": "4e633fa42c1171cf57aca5bf930827f97a30dada4e405bf3ac9c1068ba1bb7a7",
+      "status": "killed",
+      "summary_line": "1 failed, 9 passed, 1 skipped, 2 warnings in 5.13s",
+      "tests": [
+        "tests/test_body_fitted.py"
+      ]
+    },
+    {
+      "description": "Projected-linear face weights applied to the wrong owner/neighbour",
+      "duration_seconds": 22.21,
+      "expected": "killed",
+      "file": "src/tensorfvm/conservative_pressure.py",
+      "first_failure": "tests/test_projected_linear_interpolation.py::test_face_share_of_a_step_field_is_the_geometric_share",
+      "id": "CP-WEIGHT-SWAP",
+      "rationale": "Swapping the bracket keeps the weights admissible, so the existing bracketing guard cannot catch it; only a test that compares the interpolated face value against the exact linear field on a stretched grid can.",
+      "returncode": 1,
+      "source_restored": true,
+      "source_sha256": "46914848e8b45a85e1580f575d76597c887d38a3bfee9be84e474d314e6eaf32",
+      "status": "killed",
+      "summary_line": "1 failed, 14 passed, 3 warnings in 17.85s",
+      "tests": [
+        "tests/test_multi_element_flow.py",
+        "tests/test_projected_linear_interpolation.py"
+      ]
+    },
+    {
+      "description": "Outlet faces no longer zeroed in the Gauss pressure gradient",
+      "duration_seconds": 7.079,
+      "expected": "killed",
+      "file": "src/tensorfvm/conservative_pressure.py",
+      "first_failure": "tests/test_multi_element_flow.py::MultiElementFlowTests::test_coupled_frozen_reconstruction_operator",
+      "id": "CP-OUTLET-DROP",
+      "rationale": "The gauge of a pressure gradient with a prescribed outlet pressure depends on this masking; a suite that only checks force balance can let it through.",
+      "returncode": 1,
+      "source_restored": true,
+      "source_sha256": "46914848e8b45a85e1580f575d76597c887d38a3bfee9be84e474d314e6eaf32",
+      "status": "killed",
+      "summary_line": "1 failed, 2 warnings in 4.87s",
+      "tests": [
+        "tests/test_multi_element_flow.py"
+      ]
+    },
+    {
+      "description": "Staggered u-face interpolation replaced by first-order upwind",
+      "duration_seconds": 26.859,
+      "expected": "killed",
+      "file": "src/tensorfvm/solver.py",
+      "first_failure": null,
+      "id": "STAG-UPWIND",
+      "rationale": "Upwinding biases every face value, so the channel-profile refinement test and the steady-state equivalence tests should react; if tolerances are loose enough it survives.",
+      "returncode": 0,
+      "source_restored": true,
+      "source_sha256": "2a51125a867b760430ecc48cb8f7f2bcaffdb06e2856f017d9a06626044b5e02",
+      "status": "survived",
+      "summary_line": "12 passed, 2 warnings, 39 subtests passed in 23.82s",
+      "tests": [
+        "tests/test_solver.py"
+      ]
+    }
+  ],
+  "note": "CP-WEIGHT-SWAP re-audited (scripts/audit_mutation_survival.py --only CP-WEIGHT-SWAP, 2026-11-04): killed by tests/test_projected_linear_interpolation.py. Other records are carried over unchanged from the previous full run; re-run the script without --only to refresh them.",
+  "numpy": "2.4.6",
+  "python": "3.11.6",
+  "scipy": "1.16.0",
+  "survived": 2,
+  "tool": "scripts/audit_mutation_survival.py",
+  "torch": "2.7.1"
 }
