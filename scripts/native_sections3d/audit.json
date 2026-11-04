@@ -1,0 +1,714 @@
+{
+ "cases": [
+  {
+   "analytic_area": 1.0,
+   "axis": 2,
+   "cells": [
+    0
+   ],
+   "collinear_vertices": [
+    0
+   ],
+   "computed_area": 1.0,
+   "expected_polygons": 1,
+   "expected_vertices": 4,
+   "label": "cube_z_half",
+   "orientation_positive": true,
+   "physical_area": 1.0,
+   "plane": "z=0.5",
+   "polygons": 1,
+   "relative_error": 0.0,
+   "signed_areas": [
+    1.0
+   ],
+   "value": 0.5,
+   "vertices": [
+    4
+   ]
+  },
+  {
+   "analytic_area": 1.0,
+   "axis": 2,
+   "cells": [
+    0
+   ],
+   "collinear_vertices": [
+    0
+   ],
+   "computed_area": 1.0,
+   "expected_polygons": 1,
+   "expected_vertices": 4,
+   "label": "cube_z_bottom_coplanar",
+   "orientation_positive": true,
+   "physical_area": 1.0,
+   "plane": "z=0 (coplanar face)",
+   "polygons": 1,
+   "relative_error": 0.0,
+   "signed_areas": [
+    1.0
+   ],
+   "value": 0.0,
+   "vertices": [
+    4
+   ]
+  },
+  {
+   "analytic_area": 1.0,
+   "axis": 2,
+   "cells": [
+    0
+   ],
+   "collinear_vertices": [
+    0
+   ],
+   "computed_area": 1.0,
+   "expected_polygons": 1,
+   "expected_vertices": 4,
+   "label": "cube_z_top_coplanar",
+   "orientation_positive": true,
+   "physical_area": 1.0,
+   "plane": "z=1 (coplanar face)",
+   "polygons": 1,
+   "relative_error": 0.0,
+   "signed_areas": [
+    1.0
+   ],
+   "value": 1.0,
+   "vertices": [
+    4
+   ]
+  },
+  {
+   "analytic_area": 1.0,
+   "axis": 2,
+   "cells": [
+    0
+   ],
+   "collinear_vertices": [
+    0
+   ],
+   "computed_area": 1.0,
+   "expected_polygons": 1,
+   "expected_vertices": 4,
+   "label": "cube_z_near_tangent_snap",
+   "orientation_positive": true,
+   "physical_area": 1.0,
+   "plane": "z=5e-12 (snapped to coplanar)",
+   "polygons": 1,
+   "relative_error": 0.0,
+   "signed_areas": [
+    1.0
+   ],
+   "value": 5e-12,
+   "vertices": [
+    4
+   ]
+  },
+  {
+   "analytic_area": 1.0,
+   "axis": 2,
+   "cells": [
+    0
+   ],
+   "collinear_vertices": [
+    4
+   ],
+   "computed_area": 1.0,
+   "expected_polygons": 1,
+   "expected_vertices": 8,
+   "label": "cube_tri_z_half",
+   "orientation_positive": true,
+   "physical_area": 1.0,
+   "plane": "z=0.5 (triangulated)",
+   "polygons": 1,
+   "relative_error": 0.0,
+   "signed_areas": [
+    1.0
+   ],
+   "value": 0.5,
+   "vertices": [
+    8
+   ]
+  },
+  {
+   "analytic_area": 1.0,
+   "axis": 2,
+   "cells": [
+    0
+   ],
+   "collinear_vertices": [
+    0
+   ],
+   "computed_area": 1.0,
+   "expected_polygons": 1,
+   "expected_vertices": 4,
+   "label": "cube_tri_z_bottom_coplanar",
+   "orientation_positive": true,
+   "physical_area": 1.0,
+   "plane": "z=0 triangulated (diagonal cancellation)",
+   "polygons": 1,
+   "relative_error": 0.0,
+   "signed_areas": [
+    1.0
+   ],
+   "value": 0.0,
+   "vertices": [
+    4
+   ]
+  },
+  {
+   "analytic_area": 0.21650635094610965,
+   "axis": 2,
+   "cells": [
+    0
+   ],
+   "collinear_vertices": [
+    0
+   ],
+   "computed_area": 0.21650635094610965,
+   "expected_polygons": 1,
+   "expected_vertices": 3,
+   "label": "cube_plane_111_c0.5",
+   "orientation_positive": true,
+   "physical_area": 0.21650635094610965,
+   "plane": "x+y+z=0.5 (triangle)",
+   "polygons": 1,
+   "relative_error": 0.0,
+   "signed_areas": [
+    0.21650635094610965
+   ],
+   "value": 0.2886751345948129,
+   "vertices": [
+    3
+   ]
+  },
+  {
+   "analytic_area": 1.299038105676658,
+   "axis": 2,
+   "cells": [
+    0
+   ],
+   "collinear_vertices": [
+    0
+   ],
+   "computed_area": 1.2990381056766578,
+   "expected_polygons": 1,
+   "expected_vertices": 6,
+   "label": "cube_plane_111_c1.5",
+   "orientation_positive": true,
+   "physical_area": 1.299038105676658,
+   "plane": "x+y+z=1.5 (hexagon)",
+   "polygons": 1,
+   "relative_error": 1.709300165674279e-16,
+   "signed_areas": [
+    1.2990381056766578
+   ],
+   "value": 0.8660254037844387,
+   "vertices": [
+    6
+   ]
+  },
+  {
+   "analytic_area": 0.21650635094610965,
+   "axis": 2,
+   "cells": [
+    0
+   ],
+   "collinear_vertices": [
+    0
+   ],
+   "computed_area": 0.21650635094610965,
+   "expected_polygons": 1,
+   "expected_vertices": 3,
+   "label": "tetra_plane_111_c0.5",
+   "orientation_positive": true,
+   "physical_area": 0.21650635094610965,
+   "plane": "x+y+z=0.5 (triangle)",
+   "polygons": 1,
+   "relative_error": 0.0,
+   "signed_areas": [
+    0.21650635094610965
+   ],
+   "value": 0.2886751345948129,
+   "vertices": [
+    3
+   ]
+  },
+  {
+   "analytic_area": 0.28125,
+   "axis": 2,
+   "cells": [
+    0
+   ],
+   "collinear_vertices": [
+    0
+   ],
+   "computed_area": 0.28125,
+   "expected_polygons": 1,
+   "expected_vertices": 3,
+   "label": "tetra_z_quarter",
+   "orientation_positive": true,
+   "physical_area": 0.28125,
+   "plane": "z=0.25",
+   "polygons": 1,
+   "relative_error": 0.0,
+   "signed_areas": [
+    0.28125
+   ],
+   "value": 0.25,
+   "vertices": [
+    3
+   ]
+  },
+  {
+   "analytic_area": 0.5,
+   "axis": 2,
+   "cells": [
+    0
+   ],
+   "collinear_vertices": [
+    0
+   ],
+   "computed_area": 0.5,
+   "expected_polygons": 1,
+   "expected_vertices": 3,
+   "label": "tetra_z_bottom_coplanar",
+   "orientation_positive": true,
+   "physical_area": 0.5,
+   "plane": "z=0 (coplanar base)",
+   "polygons": 1,
+   "relative_error": 0.0,
+   "signed_areas": [
+    0.5
+   ],
+   "value": 0.0,
+   "vertices": [
+    3
+   ]
+  },
+  {
+   "analytic_area": 0.28125,
+   "axis": 1,
+   "cells": [
+    0
+   ],
+   "collinear_vertices": [
+    0
+   ],
+   "computed_area": 0.28125,
+   "expected_polygons": 1,
+   "expected_vertices": 3,
+   "label": "tetra_y_quarter",
+   "orientation_positive": true,
+   "physical_area": 0.28125,
+   "plane": "y=0.25",
+   "polygons": 1,
+   "relative_error": 0.0,
+   "signed_areas": [
+    0.28125
+   ],
+   "value": 0.25,
+   "vertices": [
+    3
+   ]
+  },
+  {
+   "analytic_area": 4.0,
+   "axis": 2,
+   "cells": [
+    0,
+    2,
+    4,
+    6
+   ],
+   "collinear_vertices": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "computed_area": 4.0,
+   "expected_polygons": 4,
+   "expected_vertices": 4,
+   "label": "block_z_half",
+   "orientation_positive": true,
+   "physical_area": 4.0,
+   "plane": "z=0.5 through 4 cells",
+   "polygons": 4,
+   "relative_error": 0.0,
+   "signed_areas": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "value": 0.5,
+   "vertices": [
+    4,
+    4,
+    4,
+    4
+   ]
+  },
+  {
+   "analytic_area": 4.0,
+   "axis": 2,
+   "cells": [
+    0,
+    2,
+    4,
+    6
+   ],
+   "collinear_vertices": [
+    4,
+    4,
+    4,
+    4
+   ],
+   "computed_area": 4.0,
+   "expected_polygons": 4,
+   "expected_vertices": 8,
+   "label": "block_tri_z_half",
+   "orientation_positive": true,
+   "physical_area": 4.0,
+   "plane": "z=0.5 triangulated",
+   "polygons": 4,
+   "relative_error": 0.0,
+   "signed_areas": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "value": 0.5,
+   "vertices": [
+    8,
+    8,
+    8,
+    8
+   ]
+  },
+  {
+   "analytic_area": 8.0,
+   "axis": 0,
+   "cells": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "collinear_vertices": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "computed_area": 8.0,
+   "expected_polygons": 8,
+   "expected_vertices": 4,
+   "label": "block_x_internal_coplanar",
+   "orientation_positive": true,
+   "physical_area": 4.0,
+   "plane": "x=1 (internal facet, both owners)",
+   "polygons": 8,
+   "relative_error": 0.0,
+   "signed_areas": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "value": 1.0,
+   "vertices": [
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4
+   ]
+  },
+  {
+   "analytic_area": 0.944,
+   "axis": 2,
+   "cells": [
+    0
+   ],
+   "collinear_vertices": [
+    0
+   ],
+   "computed_area": 0.9440000000000001,
+   "expected_polygons": 1,
+   "expected_vertices": 4,
+   "label": "parallelepiped_z_half",
+   "orientation_positive": true,
+   "physical_area": 0.944,
+   "plane": "z=0.5 (skew prism)",
+   "polygons": 1,
+   "relative_error": 1.176083712526649e-16,
+   "signed_areas": [
+    0.9440000000000001
+   ],
+   "value": 0.5,
+   "vertices": [
+    4
+   ]
+  }
+ ],
+ "claims": {
+  "description": "docstring claims audited against closed-form geometry",
+  "diagonal_cancellation": true,
+  "exact_facet_area": true,
+  "open_section_rejected": true,
+  "tangency_omitted": true
+ },
+ "geometry": {
+  "block_2x2x2": {
+   "analytic_volume": 8.0,
+   "cells": 8,
+   "faces": 36,
+   "maximum_relative_closure": 0.0,
+   "minimum_face_projection": 0.4999999999999998,
+   "relative_volume_error": 1.1102230246251565e-16,
+   "volume": 7.999999999999999
+  },
+  "cube": {
+   "analytic_volume": 1.0,
+   "cells": 1,
+   "faces": 6,
+   "maximum_relative_closure": 0.0,
+   "minimum_face_projection": 0.5,
+   "relative_volume_error": 1.1102230246251565e-16,
+   "volume": 0.9999999999999999
+  },
+  "cube_rotated": {
+   "analytic_volume": 1.0,
+   "cells": 1,
+   "faces": 6,
+   "maximum_relative_closure": 2.0687784610393942e-17,
+   "minimum_face_projection": 0.4999999999999999,
+   "relative_volume_error": 2.220446049250313e-16,
+   "volume": 1.0000000000000002
+  },
+  "cube_triangulated": {
+   "analytic_volume": 1.0,
+   "cells": 1,
+   "faces": 12,
+   "maximum_relative_closure": 0.0,
+   "minimum_face_projection": 0.24999999999999994,
+   "relative_volume_error": 0.0,
+   "volume": 1.0
+  },
+  "parallelepiped": {
+   "analytic_volume": 0.944,
+   "cells": 1,
+   "faces": 6,
+   "maximum_relative_closure": 4.927277183758538e-17,
+   "minimum_face_projection": 0.47199999999999986,
+   "relative_volume_error": 0.0,
+   "volume": 0.944
+  },
+  "tetra": {
+   "analytic_volume": 0.16666666666666666,
+   "cells": 1,
+   "faces": 4,
+   "maximum_relative_closure": 0.0,
+   "minimum_face_projection": 0.12499999999999997,
+   "relative_volume_error": 0.0,
+   "volume": 0.16666666666666666
+  }
+ },
+ "integration": {
+  "block_2x2x2_slab_z": {
+   "analytic_volume": 3.8,
+   "integral": 3.7999999999999994,
+   "panels": [
+    [
+     0.0,
+     0.95
+    ]
+   ],
+   "relative_error": 1.1686558153949016e-16,
+   "slices_per_panel": 40
+  },
+  "cube_section_axis_rotated": {
+   "analytic_volume": 1.0,
+   "integral": 1.0,
+   "panels": [
+    [
+     0.0,
+     0.5773502691896258
+    ],
+    [
+     0.5773502691896258,
+     1.1547005383792517
+    ],
+    [
+     1.1547005383792517,
+     1.7320508075688772
+    ]
+   ],
+   "relative_error": 0.0,
+   "slices_per_panel": 40
+  },
+  "cube_triangulated_z": {
+   "analytic_volume": 1.0,
+   "integral": 1.0,
+   "panels": [
+    [
+     0.0,
+     1.0
+    ]
+   ],
+   "relative_error": 0.0,
+   "slices_per_panel": 40
+  },
+  "cube_y": {
+   "analytic_volume": 1.0,
+   "integral": 1.0,
+   "panels": [
+    [
+     0.0,
+     1.0
+    ]
+   ],
+   "relative_error": 0.0,
+   "slices_per_panel": 40
+  },
+  "cube_z": {
+   "analytic_volume": 1.0,
+   "integral": 1.0,
+   "panels": [
+    [
+     0.0,
+     1.0
+    ]
+   ],
+   "relative_error": 0.0,
+   "slices_per_panel": 40
+  },
+  "parallelepiped_flat_band_z": {
+   "analytic_volume": 0.4248,
+   "integral": 0.42479999999999996,
+   "panels": [
+    [
+     0.5,
+     0.95
+    ]
+   ],
+   "relative_error": 1.3067596805851655e-16,
+   "slices_per_panel": 40
+  },
+  "tetra_x": {
+   "analytic_volume": 0.16666666666666666,
+   "integral": 0.16666666666666666,
+   "panels": [
+    [
+     0.0,
+     1.0
+    ]
+   ],
+   "relative_error": 0.0,
+   "slices_per_panel": 40
+  },
+  "tetra_z": {
+   "analytic_volume": 0.16666666666666666,
+   "integral": 0.16666666666666666,
+   "panels": [
+    [
+     0.0,
+     1.0
+    ]
+   ],
+   "relative_error": 0.0,
+   "slices_per_panel": 40
+  }
+ },
+ "machine": {
+  "summary": {
+   "all_verified": true,
+   "cases": 16,
+   "maximum_relative_area_error": 1.709300165674279e-16,
+   "maximum_relative_integral_error": 1.3067596805851655e-16,
+   "module": "tensorfvm.native_sections3d.cell_section_polygons",
+   "orientation_failures": [],
+   "owner_duplication_factor": 2.0,
+   "polygons_expected_mismatch": [],
+   "rejections_accepted": [],
+   "tangency_polygons": 0,
+   "triangulated_collinear_nodes": {
+    "block_tri_z_half": [
+     4,
+     4,
+     4,
+     4
+    ],
+    "cube_tri_z_bottom_coplanar": [
+     0
+    ],
+    "cube_tri_z_half": [
+     4
+    ]
+   },
+   "worst_case": "cube_plane_111_c1.5"
+  }
+ },
+ "rejection": {
+  "invalid_axis": {
+   "message": "finite plane and positive tolerance required",
+   "rejected": true
+  },
+  "nonfinite_plane": {
+   "message": "finite plane and positive tolerance required",
+   "rejected": true
+  },
+  "nonplanar_facet": {
+   "message": "nonplanar facet plane intersection",
+   "rejected": true
+  },
+  "nonpositive_tolerance": {
+   "message": "finite plane and positive tolerance required",
+   "rejected": true
+  },
+  "open_section_ring": {
+   "message": "nonclosed section boundary in native cell 0",
+   "rejected": true
+  }
+ },
+ "tangency": {
+  "rotated_cube_vertex_far": {
+   "cells": [],
+   "polygons": 0,
+   "total_abs_area": 0.0
+  },
+  "rotated_cube_vertex_origin": {
+   "cells": [],
+   "polygons": 0,
+   "total_abs_area": 0.0
+  },
+  "rotated_tetra_vertex_far": {
+   "cells": [],
+   "polygons": 0,
+   "total_abs_area": 0.0
+  },
+  "rotated_tetra_vertex_origin": {
+   "cells": [],
+   "polygons": 0,
+   "total_abs_area": 0.0
+  }
+ }
+}
