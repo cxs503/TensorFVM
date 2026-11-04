@@ -1,0 +1,239 @@
+{
+  "schema": "tensorfvm.two-phase-surface-tension-audit/1",
+  "generated_s": 1.18,
+  "parameters": {
+    "radius_m": 0.2,
+    "sigma_n_m": 0.07,
+    "mu_pa_s": 0.01,
+    "dt_s": 1e-05,
+    "steps": 10,
+    "grids": [
+      24,
+      32
+    ],
+    "rho_liquid": 1000.0,
+    "rho_gas": 1.0
+  },
+  "analytic_references": {
+    "curvature": "kappa = 1/R for a circle",
+    "net_force": "closed interface: |closed kappa*n ds = 0",
+    "pressure_jump": "2D Young-Laplace: dp = sigma/R"
+  },
+  "curvature": [
+    {
+      "n": 24,
+      "dx": 0.041666666666666664,
+      "exact": 5.0,
+      "kappa_band_mean": 5.016219155977685,
+      "kappa_band_max": 8.854654852936404,
+      "relative_error": 0.0032438311955370835,
+      "band_cells": 28
+    },
+    {
+      "n": 32,
+      "dx": 0.03125,
+      "exact": 5.0,
+      "kappa_band_mean": 5.502267882229966,
+      "kappa_band_max": 8.092560376851283,
+      "relative_error": 0.10045357644599325,
+      "band_cells": 36
+    }
+  ],
+  "force_balance": [
+    {
+      "n": 24,
+      "net_force_n": 3.734966828381784e-15,
+      "gross_force_n": 0.8708447650192739,
+      "imbalance": 4.2889008218349e-15
+    },
+    {
+      "n": 32,
+      "net_force_n": 1.3548623466035522e-17,
+      "gross_force_n": 1.3645986347194965,
+      "imbalance": 9.928650902410248e-18
+    }
+  ],
+  "laplace": [
+    {
+      "n": 24,
+      "radius_m": 0.2,
+      "sigma_n_m": 0.07,
+      "mu_pa_s": 0.01,
+      "dt_s": 1e-05,
+      "steps": 10,
+      "pressure_jump_pa": -1.1871377682047892e+22,
+      "exact_jump_pa": 0.35000000000000003,
+      "relative_error": -3.391822194870826e+22,
+      "umax_m_s": 4.4734149986671585e+20,
+      "capillary_number": 6.390592855238797e+19,
+      "capillary_velocity_scale": 7.000000000000001,
+      "max_divergence": 4.264871430116528e+22,
+      "final_divergence": 4.264871430116528e+22,
+      "finite": true,
+      "history": [
+        {
+          "iteration": 1,
+          "divergence": 0.013277008173517284,
+          "velocity_change": 0.0001461534826916361,
+          "volume_drift": 0.0
+        },
+        {
+          "iteration": 2,
+          "divergence": 1.9919344055381403,
+          "velocity_change": 0.021122407346580052,
+          "volume_drift": 0.0
+        },
+        {
+          "iteration": 3,
+          "divergence": 586.1447676075023,
+          "velocity_change": 6.225428396391828,
+          "volume_drift": 0.0
+        },
+        {
+          "iteration": 4,
+          "divergence": 209598.80871493806,
+          "velocity_change": 2221.43988835049,
+          "volume_drift": 0.0
+        },
+        {
+          "iteration": 5,
+          "divergence": 101877572.47041316,
+          "velocity_change": 1077038.9274524762,
+          "volume_drift": 0.0
+        },
+        {
+          "iteration": 6,
+          "divergence": 69256020142.60007,
+          "velocity_change": 726094845.2427361,
+          "volume_drift": 0.0
+        },
+        {
+          "iteration": 7,
+          "divergence": 49432977010303.97,
+          "velocity_change": 517379506440.04315,
+          "volume_drift": 0.0
+        },
+        {
+          "iteration": 8,
+          "divergence": 4.092802572148006e+16,
+          "velocity_change": 428628671079810.56,
+          "volume_drift": 0.0
+        },
+        {
+          "iteration": 9,
+          "divergence": 3.908829433265609e+19,
+          "velocity_change": 4.107906035361479e+17,
+          "volume_drift": 0.0
+        },
+        {
+          "iteration": 10,
+          "divergence": 4.264871430116528e+22,
+          "velocity_change": 4.4774823311108964e+20,
+          "volume_drift": 0.0
+        }
+      ]
+    },
+    {
+      "n": 32,
+      "radius_m": 0.2,
+      "sigma_n_m": 0.07,
+      "mu_pa_s": 0.01,
+      "dt_s": 1e-05,
+      "steps": 10,
+      "pressure_jump_pa": 8.495445815503953e+23,
+      "exact_jump_pa": 0.35000000000000003,
+      "relative_error": 2.427270233001129e+24,
+      "umax_m_s": 1.4510519988913968e+23,
+      "capillary_number": 2.0729314269877097e+22,
+      "capillary_velocity_scale": 7.000000000000001,
+      "max_divergence": 1.8532698525160515e+25,
+      "final_divergence": 1.8532698525160515e+25,
+      "finite": true,
+      "history": [
+        {
+          "iteration": 1,
+          "divergence": 0.050511856947754424,
+          "velocity_change": 0.00041658999649928915,
+          "volume_drift": 0.0
+        },
+        {
+          "iteration": 2,
+          "divergence": 8.38948801347178,
+          "velocity_change": 0.06618192963318803,
+          "volume_drift": 0.0
+        },
+        {
+          "iteration": 3,
+          "divergence": 4355.892175235078,
+          "velocity_change": 34.4151854137601,
+          "volume_drift": 0.0
+        },
+        {
+          "iteration": 4,
+          "divergence": 2556814.7546111303,
+          "velocity_change": 20179.157451897936,
+          "volume_drift": 0.0
+        },
+        {
+          "iteration": 5,
+          "divergence": 2017175769.1978002,
+          "velocity_change": 15894233.584118724,
+          "volume_drift": 0.0
+        },
+        {
+          "iteration": 6,
+          "divergence": 2038973707516.5679,
+          "velocity_change": 16024744142.041891,
+          "volume_drift": 0.0
+        },
+        {
+          "iteration": 7,
+          "divergence": 2913248649962691.0,
+          "velocity_change": 22810532330649.977,
+          "volume_drift": 0.0
+        },
+        {
+          "iteration": 8,
+          "divergence": 4.786662842322498e+18,
+          "velocity_change": 3.746091443604261e+16,
+          "volume_drift": 0.0
+        },
+        {
+          "iteration": 9,
+          "divergence": 8.85705910275525e+21,
+          "velocity_change": 6.927235988186009e+19,
+          "volume_drift": 0.0
+        },
+        {
+          "iteration": 10,
+          "divergence": 1.8532698525160515e+25,
+          "velocity_change": 1.4517403761623308e+23,
+          "volume_drift": 0.0
+        }
+      ]
+    }
+  ],
+  "criteria": {
+    "C1_curvature_within_3pct": {
+      "24": true,
+      "32": false
+    },
+    "C2_net_csf_force_within_3pct": {
+      "24": true,
+      "32": true
+    },
+    "C3_young_laplace_within_3pct": {
+      "24": false,
+      "32": false
+    },
+    "C4_capillary_number_below_0p01": {
+      "24": false,
+      "32": false
+    },
+    "C5_finite_iterates": {
+      "24": true,
+      "32": true
+    }
+  },
+  "all_criteria_passed": false
+}
