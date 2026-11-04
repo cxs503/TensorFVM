@@ -19,8 +19,14 @@ post-clamp volume gain of +2.19e−6 m² per step (+0.25 % after one revolution)
 :class:`LimitedVOFTransport` keeps the same donor/acceptor face construction
 but applies a Zalesak (1979) flux limiter to the *anti-diffusive* part of the
 face flux.  Each face flux stays single-valued, so the update telescopes to
-machine-precision conservation, while the limiter bounds every cell update to
-``[0, 1]`` without any clipping.
+conservation *up to the limiter's per-face discretisation of the per-cell
+budget*: measured mass drift on a compactly-supported profile is 1.7e-6
+(n=64) to 6.5e-9 (n=256), converging with the grid, and the limiter bounds
+every cell update to ``[0, 1]`` to ~1e-9 (see
+``verification/fct_conservation_audit.py``).  Note: on a *non-compact* profile
+(e.g. a Gaussian) the zero-gradient ghost boundary injects the field tail under
+a uniform flow; that boundary artifact is shared by the pure donor-cell
+baseline and is a property of the boundary treatment, not of this limiter.
 """
 
 import torch
