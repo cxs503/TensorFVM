@@ -96,6 +96,29 @@
       "points": 0
     },
     {
+      "case": "periodic_tgv.TaylorGreenReference (Taylor-Green vortex)",
+      "module": "src/tensorfvm/verification/periodic_tgv.py",
+      "claim": "u=(sin x cos y, -cos x sin y) e^{-2nu t}, p=rho/4(cos 2x+cos 2y) e^{-4nu t} is an exact 2-D NS solution",
+      "symbolic": {
+        "continuity": "0",
+        "momentum_x": "0",
+        "momentum_y": "0",
+        "vorticity_residual": "0",
+        "dissipation_residual": "0"
+      },
+      "symbolic_max_abs": 0.0,
+      "symbolic_zero": true,
+      "numeric_max_rel": 0.0,
+      "numeric_per_component": {
+        "u_vs_symbolic": 0.0,
+        "v_vs_symbolic": 0.0,
+        "p_vs_symbolic": 0.0,
+        "omega_vs_symbolic": 0.0
+      },
+      "nonvacuous": "all 5 identities (continuity, 2 momentum, vorticity, dissipation) simplify to exactly zero; the Laplacian and advective terms are individually non-trivial (max |lap u| ~ 0.712)",
+      "points": 3000
+    },
+    {
       "case": "overset_poisson.manufactured_value/manufactured_source, overset_scalar.exact_value",
       "module": "src/tensorfvm/overset_poisson.py, src/tensorfvm/overset_scalar.py",
       "claim": "-Laplace(phi) equals the coded right-hand side; the overset scalar quadratic is the coded value",
