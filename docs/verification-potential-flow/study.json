@@ -1,0 +1,38 @@
+{
+  "viscosity": 0.1,
+  "cases": [
+    {
+      "n": 2,
+      "cells": 28,
+      "h": 0.5,
+      "velocity_l2_relative": 0.006140381869263151,
+      "pressure_l2_relative": 0.0073529317758268,
+      "divergence_max": 1.1704260523733484e-12,
+      "converged": true,
+      "energy_balance_error": 4.453326596376428e-12,
+      "iterations": 20
+    },
+    {
+      "n": 3,
+      "cells": 97,
+      "h": 0.3333333333333333,
+      "velocity_l2_relative": 0.0029333066428444948,
+      "pressure_l2_relative": 0.0052665074017199266,
+      "divergence_max": 1.0686356524521875e-12,
+      "converged": true,
+      "energy_balance_error": 9.264589095892006e-12,
+      "iterations": 21
+    },
+    {
+      "n": 4,
+      "cells": 224,
+      "h": 0.25,
+      "velocity_l2_relative": 0.0016660824441393106,
+      "pressure_l2_relative": 0.003561882271122647,
+      "divergence_max": 6.752436223183312e-13,
+      "converged": true,
+      "energy_balance_error": 9.524825372864143e-12,
+      "iterations": 22
+    }
+  ]
+}
