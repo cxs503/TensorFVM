@@ -1,0 +1,264 @@
+{
+  "mission": 3646,
+  "parameters": {
+    "radius_m": 0.2,
+    "sigma_n_m": 0.07,
+    "mu_pa_s": 0.01,
+    "dt_s": 1e-05,
+    "steps": 10,
+    "exact_jump_pa": 0.35000000000000003
+  },
+  "published_record": {
+    "path": "docs/two-phase-surface-tension-audit/summary.json",
+    "grids": [
+      24,
+      32
+    ],
+    "values": {
+      "grids": [
+        24,
+        32
+      ],
+      "n24": {
+        "pressure_jump_pa": -1.18714e+22,
+        "relative_error": -3.391822194870826e+22,
+        "umax_m_s": 4.47e+20,
+        "capillary_number": 6.39e+19,
+        "final_divergence": 4.26e+22,
+        "kappa_relative_error": 0.0032
+      },
+      "n32": {
+        "pressure_jump_pa": 8.49545e+23,
+        "relative_error": 2.427270233001129e+24,
+        "umax_m_s": 1.45e+23,
+        "capillary_number": 2.07e+22,
+        "final_divergence": 1.85e+25,
+        "kappa_relative_error": 0.1005
+      }
+    }
+  },
+  "regenerated": [
+    {
+      "n": 24,
+      "curvature": {
+        "n": 24,
+        "dx": 0.041666666666666664,
+        "exact": 5.0,
+        "kappa_band_mean": 5.016219155977685,
+        "kappa_band_max": 8.854654852936404,
+        "relative_error": 0.0032438311955370835,
+        "band_cells": 28
+      },
+      "force": {
+        "n": 24,
+        "net_force_n": 3.734966828381784e-15,
+        "gross_force_n": 0.8708447650192739,
+        "imbalance": 4.2889008218349e-15
+      },
+      "laplace": {
+        "n": 24,
+        "radius_m": 0.2,
+        "sigma_n_m": 0.07,
+        "mu_pa_s": 0.01,
+        "dt_s": 1e-05,
+        "steps": 10,
+        "pressure_jump_pa": 0.3558703126808913,
+        "exact_jump_pa": 0.35000000000000003,
+        "relative_error": 0.01677232194540368,
+        "umax_m_s": 1.3420213154723815e-05,
+        "capillary_number": 1.917173307817688e-06,
+        "capillary_velocity_scale": 7.000000000000001,
+        "max_divergence": 8.064225201102676e-14,
+        "final_divergence": 5.063000740567467e-16,
+        "finite": true
+      }
+    },
+    {
+      "n": 32,
+      "curvature": {
+        "n": 32,
+        "dx": 0.03125,
+        "exact": 5.0,
+        "kappa_band_mean": 5.502267882229966,
+        "kappa_band_max": 8.092560376851283,
+        "relative_error": 0.10045357644599325,
+        "band_cells": 36
+      },
+      "force": {
+        "n": 32,
+        "net_force_n": 1.3548623466035522e-17,
+        "gross_force_n": 1.3645986347194965,
+        "imbalance": 9.928650902410248e-18
+      },
+      "laplace": {
+        "n": 32,
+        "radius_m": 0.2,
+        "sigma_n_m": 0.07,
+        "mu_pa_s": 0.01,
+        "dt_s": 1e-05,
+        "steps": 10,
+        "pressure_jump_pa": 0.34378710959438763,
+        "exact_jump_pa": 0.35000000000000003,
+        "relative_error": -0.017751115444606835,
+        "umax_m_s": 7.496158421724103e-05,
+        "capillary_number": 1.0708797745320147e-05,
+        "capillary_velocity_scale": 7.000000000000001,
+        "max_divergence": 2.4262570983346263e-13,
+        "final_divergence": 9.171416948919493e-15,
+        "finite": true
+      }
+    },
+    {
+      "n": 48,
+      "curvature": {
+        "n": 48,
+        "dx": 0.020833333333333332,
+        "exact": 5.0,
+        "kappa_band_mean": 6.530624121356184,
+        "kappa_band_max": 15.93447026543306,
+        "relative_error": 0.30612482427123683,
+        "band_cells": 60
+      },
+      "force": {
+        "n": 48,
+        "net_force_n": 2.185593841001038e-15,
+        "gross_force_n": 1.7890552531260226,
+        "imbalance": 1.2216469207321248e-15
+      },
+      "laplace": {
+        "n": 48,
+        "radius_m": 0.2,
+        "sigma_n_m": 0.07,
+        "mu_pa_s": 0.01,
+        "dt_s": 1e-05,
+        "steps": 10,
+        "pressure_jump_pa": 0.2840036469489714,
+        "exact_jump_pa": 0.35000000000000003,
+        "relative_error": -0.1885610087172247,
+        "umax_m_s": 0.00028845205812511087,
+        "capillary_number": 4.120743687501584e-05,
+        "capillary_velocity_scale": 7.000000000000001,
+        "max_divergence": 5.814002843615787e-13,
+        "final_divergence": 1.3616467979191138e-14,
+        "finite": true
+      }
+    },
+    {
+      "n": 64,
+      "curvature": {
+        "n": 64,
+        "dx": 0.015625,
+        "exact": 5.0,
+        "kappa_band_mean": 5.119849174511269,
+        "kappa_band_max": 9.937650725356054,
+        "relative_error": 0.023969834902253774,
+        "band_cells": 64
+      },
+      "force": {
+        "n": 64,
+        "net_force_n": 2.359479019930958e-17,
+        "gross_force_n": 2.0793657445575646,
+        "imbalance": 1.1347109213982912e-17
+      },
+      "laplace": {
+        "n": 64,
+        "radius_m": 0.2,
+        "sigma_n_m": 0.07,
+        "mu_pa_s": 0.01,
+        "dt_s": 1e-05,
+        "steps": 10,
+        "pressure_jump_pa": 0.32804593937255344,
+        "exact_jump_pa": 0.35000000000000003,
+        "relative_error": -0.06272588750699026,
+        "umax_m_s": 0.00033501819178374413,
+        "capillary_number": 4.7859741683392014e-05,
+        "capillary_velocity_scale": 7.000000000000001,
+        "max_divergence": 1.2470542177026034e-12,
+        "final_divergence": 4.168449033213964e-14,
+        "finite": true
+      }
+    }
+  ],
+  "comparisons": {
+    "24": {
+      "pressure_jump_pa": {
+        "published": -1.18714e+22,
+        "regenerated": 0.3558703126808913,
+        "magnitude_ratio": 3.3358781491405486e+22,
+        "agrees_within_tolerance": false
+      },
+      "relative_error": {
+        "published": -3.391822194870826e+22,
+        "regenerated": 0.01677232194540368,
+        "magnitude_ratio": 2.022273484799359e+24,
+        "agrees_within_tolerance": false
+      },
+      "umax_m_s": {
+        "published": 4.47e+20,
+        "regenerated": 1.3420213154723815e-05,
+        "magnitude_ratio": 3.3307965741412932e+25,
+        "agrees_within_tolerance": false
+      },
+      "capillary_number": {
+        "published": 6.39e+19,
+        "regenerated": 1.917173307817688e-06,
+        "magnitude_ratio": 3.33303200808367e+25,
+        "agrees_within_tolerance": false
+      },
+      "final_divergence": {
+        "published": 4.26e+22,
+        "regenerated": 5.063000740567467e-16,
+        "magnitude_ratio": 8.413982573351419e+37,
+        "agrees_within_tolerance": false
+      },
+      "kappa_relative_error": {
+        "published": 0.0032,
+        "regenerated": 0.0032438311955370835,
+        "magnitude_ratio": 0.9864878309335618,
+        "agrees_within_tolerance": true
+      }
+    },
+    "32": {
+      "pressure_jump_pa": {
+        "published": 8.49545e+23,
+        "regenerated": 0.34378710959438763,
+        "magnitude_ratio": 2.4711368643295667e+24,
+        "agrees_within_tolerance": false
+      },
+      "relative_error": {
+        "published": 2.427270233001129e+24,
+        "regenerated": -0.017751115444606835,
+        "magnitude_ratio": 1.367390258136474e+26,
+        "agrees_within_tolerance": false
+      },
+      "umax_m_s": {
+        "published": 1.45e+23,
+        "regenerated": 7.496158421724103e-05,
+        "magnitude_ratio": 1.934324114332822e+27,
+        "agrees_within_tolerance": false
+      },
+      "capillary_number": {
+        "published": 2.07e+22,
+        "regenerated": 1.0708797745320147e-05,
+        "magnitude_ratio": 1.9329900977022478e+27,
+        "agrees_within_tolerance": false
+      },
+      "final_divergence": {
+        "published": 1.85e+25,
+        "regenerated": 9.171416948919493e-15,
+        "magnitude_ratio": 2.017136512606106e+39,
+        "agrees_within_tolerance": false
+      },
+      "kappa_relative_error": {
+        "published": 0.1005,
+        "regenerated": 0.10045357644599325,
+        "magnitude_ratio": 1.000462139384671,
+        "agrees_within_tolerance": true
+      }
+    }
+  },
+  "toolchain": {
+    "torch": "2.7.1",
+    "seconds": 7.12
+  }
+}
