@@ -64,7 +64,7 @@ CATALOGUE = [
         description="Projected-linear face weights applied to the wrong owner/neighbour",
         find="        values[self.f]=weights.reshape(shape)*field[self.oi]+(1-weights).reshape(shape)*field[self.ni]",
         replace="        values[self.f]=(1-weights).reshape(shape)*field[self.oi]+weights.reshape(shape)*field[self.ni]",
-        tests=["tests/test_multi_element_flow.py"],
+        tests=["tests/test_mutation_coverage.py", "tests/test_multi_element_flow.py"],
         rationale=(
             "Swapping the bracket keeps the weights admissible, so the existing "
             "bracketing guard cannot catch it; only a test that compares the "
@@ -93,7 +93,7 @@ CATALOGUE = [
         description="Staggered u-face interpolation replaced by first-order upwind",
         find="        return ((0.5 * (self.u[:, :-1] + self.u[:, 1:])).masked_fill(~self.fluid, 0),",
         replace="        return ((self.u[:, :-1]).masked_fill(~self.fluid, 0),",
-        tests=["tests/test_solver.py"],
+        tests=["tests/test_mutation_coverage.py", "tests/test_solver.py"],
         rationale=(
             "Upwinding biases every face value, so the channel-profile "
             "refinement test and the steady-state equivalence tests should react; "
