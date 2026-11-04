@@ -156,6 +156,59 @@ def csf_surface_tension(
     return force
 
 
+def smooth_alpha(alpha: torch.Tensor, iterations: int = 3) -> torch.Tensor:
+    """Brackbill--Kothe--Zemach (1992) interface smoothing of the colour field.
+
+    One pass is the separable kernel ``[1/4, 1/2, 1/4]`` in each direction, i.e.
+    the discrete approximation of a Gaussian of width ``~sqrt(iterations/2)``
+    cells.  Brackbill et al. recommend convolving the colour function before
+    differentiating it because the grid-scale ``alpha`` profile makes the
+    normals -- and therefore the curvature ``kappa = div n`` -- a grid-noise
+    amplifier.  ``iterations=0`` returns the input unchanged (legacy path).
+    Edges use a zero-gradient copy so the total volume fraction is unchanged in
+    the interior and pure-phase cells stay exactly 0/1.
+    """
+    if iterations < 0:
+        raise ValueError("iterations must be >= 0")
+    out = alpha
+    for _ in range(iterations):
+        b = out.clone()
+        b[:, 1:-1] = 0.25 * out[:, :-2] + 0.5 * out[:, 1:-1] + 0.25 * out[:, 2:]
+        b[1:-1, :] = 0.25 * b[:-2, :] + 0.5 * b[1:-1, :] + 0.25 * b[2:, :]
+        out = b
+    return out
+
+
+def balanced_csf_face_forces(
+    alpha: torch.Tensor,
+    sigma: float,
+    dx: float,
+    dy: float,
+    *,
+    smoothing: int = 3,
+) -> tuple:
+    """Balanced-force (Francois et al. 2006) CSF force sampled on MAC faces.
+
+    Returns ``(f_u, f_v)`` of shapes ``(ny, nx-1)`` and ``(ny-1, nx)`` -- the
+    same face layout the projection's ``(1/rho) dp/dx`` correction uses.
+
+    The legacy path averaged the *cell-centred* force
+    ``sigma*kappa*grad(alpha)`` onto the faces.  That average is not
+    proportional to the two-point face difference ``alpha_R - alpha_L`` the
+    pressure gradient is built from, so the discrete surface force has a
+    non-zero curl and the projection cannot cancel it: the residual drives
+    spurious currents that grow with the resolution.  Here the force on a face
+    is ``sigma * kappa_face * (alpha_R - alpha_L)/dx`` with the *same* two-point
+    stencil as the pressure gradient, so for a uniform ``kappa`` the pressure
+    field ``p = sigma*kappa*alpha`` cancels it exactly and the interface stays
+    at rest to round-off (``docs/two-phase-csf-balance/``).
+    """
+    kappa = interface_curvature(smooth_alpha(alpha, smoothing), dx, dy)
+    f_u = sigma * 0.5 * (kappa[:, :-1] + kappa[:, 1:]) * (alpha[:, 1:] - alpha[:, :-1]) / dx
+    f_v = sigma * 0.5 * (kappa[:-1, :] + kappa[1:, :]) * (alpha[1:, :] - alpha[:-1, :]) / dy
+    return f_u, f_v
+
+
 class TwoPhaseProperties:
     """Container for two-phase physical-property pairs and CSF switch."""
 
