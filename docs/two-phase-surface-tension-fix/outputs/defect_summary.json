@@ -1,0 +1,185 @@
+{
+  "schema": "tensorfvm.two-phase-surface-tension-defect/1",
+  "results": [
+    {
+      "n": 24,
+      "radius": 0.2,
+      "sigma": 0.07,
+      "mu": 0.01,
+      "dt": 1e-05,
+      "steps_run": 10,
+      "diverged": false,
+      "exact_jump_pa": 0.35000000000000003,
+      "computed_jump_pa": 0.3558703126808913,
+      "inside_pressure_pa": 0.35589232228154544,
+      "outside_pressure_pa": 2.2009600654120065e-05,
+      "relative_error": 0.016772321945403644,
+      "umax": 1.3420213154723815e-05,
+      "capillary_number": 1.917173307817688e-06,
+      "final_divergence": 5.063000740567467e-16,
+      "history": [
+        {
+          "iteration": 1,
+          "time": 1e-05,
+          "continuity": 4.8073052848293e-14,
+          "velocity_change": 8.372689150907998e-06,
+          "volume_drift": 0.0
+        },
+        {
+          "iteration": 2,
+          "time": 2e-05,
+          "continuity": 8.064225201102676e-14,
+          "velocity_change": 3.672531450661867e-06,
+          "volume_drift": 0.0
+        },
+        {
+          "iteration": 3,
+          "time": 3.0000000000000004e-05,
+          "continuity": 9.664673033225879e-15,
+          "velocity_change": 1.4869069665284278e-06,
+          "volume_drift": 0.0
+        },
+        {
+          "iteration": 4,
+          "time": 4e-05,
+          "continuity": 6.3418493902661155e-15,
+          "velocity_change": 2.1929497392523285e-06,
+          "volume_drift": 0.0
+        },
+        {
+          "iteration": 5,
+          "time": 5e-05,
+          "continuity": 1.8620869630508793e-15,
+          "velocity_change": 2.418987296765257e-06,
+          "volume_drift": 0.0
+        },
+        {
+          "iteration": 6,
+          "time": 6e-05,
+          "continuity": 4.511422765160703e-15,
+          "velocity_change": 1.9009575860783965e-06,
+          "volume_drift": 0.0
+        },
+        {
+          "iteration": 7,
+          "time": 7.000000000000001e-05,
+          "continuity": 2.4764924558848184e-15,
+          "velocity_change": 1.609617776888954e-06,
+          "volume_drift": 0.0
+        },
+        {
+          "iteration": 8,
+          "time": 8e-05,
+          "continuity": 7.045382886036039e-16,
+          "velocity_change": 1.5263118918042842e-06,
+          "volume_drift": 0.0
+        },
+        {
+          "iteration": 9,
+          "time": 9e-05,
+          "continuity": 5.860366852168328e-17,
+          "velocity_change": 1.527604174686884e-06,
+          "volume_drift": 0.0
+        },
+        {
+          "iteration": 10,
+          "time": 0.0001,
+          "continuity": 5.063000740567467e-16,
+          "velocity_change": 1.568686783672389e-06,
+          "volume_drift": 0.0
+        }
+      ]
+    },
+    {
+      "n": 32,
+      "radius": 0.2,
+      "sigma": 0.07,
+      "mu": 0.01,
+      "dt": 1e-05,
+      "steps_run": 10,
+      "diverged": false,
+      "exact_jump_pa": 0.35000000000000003,
+      "computed_jump_pa": 0.34378710959438763,
+      "inside_pressure_pa": 0.3437599552945789,
+      "outside_pressure_pa": -2.7154299808711705e-05,
+      "relative_error": 0.017751115444606867,
+      "umax": 7.496158421724103e-05,
+      "capillary_number": 1.0708797745320147e-05,
+      "final_divergence": 9.171416948919493e-15,
+      "history": [
+        {
+          "iteration": 1,
+          "time": 1e-05,
+          "continuity": 2.1312119583493608e-13,
+          "velocity_change": 1.7485350768742807e-05,
+          "volume_drift": 0.0
+        },
+        {
+          "iteration": 2,
+          "time": 2e-05,
+          "continuity": 2.4262570983346263e-13,
+          "velocity_change": 1.2641457517834346e-05,
+          "volume_drift": 0.0
+        },
+        {
+          "iteration": 3,
+          "time": 3.0000000000000004e-05,
+          "continuity": 1.8531725633208485e-16,
+          "velocity_change": 1.2633081277036182e-05,
+          "volume_drift": 0.0
+        },
+        {
+          "iteration": 4,
+          "time": 4e-05,
+          "continuity": 8.094070661109065e-14,
+          "velocity_change": 1.408319430851636e-05,
+          "volume_drift": 0.0
+        },
+        {
+          "iteration": 5,
+          "time": 5e-05,
+          "continuity": 2.4209614483483924e-14,
+          "velocity_change": 1.491136239948008e-05,
+          "volume_drift": 0.0
+        },
+        {
+          "iteration": 6,
+          "time": 6e-05,
+          "continuity": 3.9013226243306276e-14,
+          "velocity_change": 1.4742355948506656e-05,
+          "volume_drift": 0.0
+        },
+        {
+          "iteration": 7,
+          "time": 7.000000000000001e-05,
+          "continuity": 3.794853970992551e-14,
+          "velocity_change": 1.4896042418188703e-05,
+          "volume_drift": 0.0
+        },
+        {
+          "iteration": 8,
+          "time": 8e-05,
+          "continuity": 5.385699752922385e-14,
+          "velocity_change": 1.3457145897381927e-05,
+          "volume_drift": 0.0
+        },
+        {
+          "iteration": 9,
+          "time": 9e-05,
+          "continuity": 2.7981170982668835e-14,
+          "velocity_change": 1.1102124999924802e-05,
+          "volume_drift": 0.0
+        },
+        {
+          "iteration": 10,
+          "time": 0.0001,
+          "continuity": 9.171416948919493e-15,
+          "velocity_change": 9.222619659195592e-06,
+          "volume_drift": 0.0
+        }
+      ]
+    }
+  ],
+  "defect_confirmed": false,
+  "note": "The explicit CSF force in the predictor is not balanced by the projection step, causing exponential divergence for static drops."
+}
