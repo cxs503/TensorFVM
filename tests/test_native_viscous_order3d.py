@@ -1,8 +1,21 @@
 """Order-of-accuracy facts for the native 3-D viscous operator.
 
 These tests do not state what the order *should* be; they pin what the merged
-operator actually delivers, measured against an analytic manufactured field, so
-that the recorded limitation cannot silently change in either direction.
+operator actually delivers, measured against analytic fields, so that the
+recorded limitation cannot silently change in either direction.
+
+Two protocols are used:
+
+``manufactured``
+    :func:`tensorfvm.verification.native_order3d.manufactured`.  This field has
+    ``div(tau(u)) = mu*lap u != 0``, so it solves no homogeneous problem and its
+    Dirichlet solve error *saturates*; that saturation is the measured fact, and
+    the field is used for truncation / face-traction diagnostics only.
+``harmonic``
+    :func:`tensorfvm.verification.native_order3d.harmonic_velocity`, built as
+    ``curl`` of a component-wise harmonic potential, hence ``lap u = 0`` and
+    ``div u = 0``, hence ``div(tau(u)) = 0`` identically.  This one *is* an exact
+    solution of the Dirichlet problem, so its error slope is the solution order.
 """
 from functools import lru_cache
 
@@ -196,3 +209,73 @@ def test_unknown_field_mode_and_bad_divisions_are_rejected():
     with pytest.raises(ValueError, match="subdivisions"):
         nv.cube_mesh((4, 4))
 
+
+@lru_cache(maxsize=None)
+def _harmonic(n, warp):
+    return study.harmonic_solution_study(n, warp, VISCOSITY)
+
+
+def test_harmonic_field_really_solves_the_homogeneous_problem():
+    """The exact-solution protocol is only as good as this identity."""
+    points = np.array([[.13, .27, .41], [.71, .12, .88], [.5, .5, .5], [.93, .07, .65]])
+    step = 1e-6
+    gradient = study.harmonic_gradient(points)
+    np.testing.assert_allclose(
+        gradient, np.stack([(study.harmonic_velocity(points + step*np.eye(3)[b])
+                            - study.harmonic_velocity(points - step*np.eye(3)[b]))/(2*step)
+                           for b in range(3)], axis=2), atol=1e-7)
+    # div u = 0 and lap u = 0, hence div tau = mu*(lap u + grad(div u)/3) = 0.
+    assert np.abs(np.trace(gradient, axis1=1, axis2=2)).max() < 1e-12
+    laplacian = sum((study.harmonic_gradient(points + step*np.eye(3)[b])
+                     - study.harmonic_gradient(points - step*np.eye(3)[b]))[:, :, b]/(2*step)
+                    for b in range(3))
+    scale = max(np.abs(study.harmonic_velocity(points)).max(), 1.0)
+    assert np.abs(laplacian).max() < 1e-6*scale
+
+
+def test_manufactured_field_is_not_a_solution_of_the_homogeneous_problem():
+    """Why the manufactured Dirichlet solve cannot converge (documented for years).
+
+    ``div(tau(u_manufactured)) = mu*lap u`` is O(10) on the unit box while the
+    solution error is O(1): the residual never vanishes with ``h``, so the
+    discrete solution converges to the *solution* of the homogeneous problem and
+    its distance to the manufactured field saturates at a mesh-independent value.
+    """
+    points = np.array([[.2, .3, .4], [.6, .1, .8], [.5, .5, .5]])
+    residual = study.divergence_of_stress(points, VISCOSITY)
+    assert np.linalg.norm(residual, axis=1).max() > 5.0
+    for row in (_solution(4, 0.0), _solution(8, 0.0)):
+        assert row['residual'] < 1e-12          # the linear solve itself is exact
+    ratio = _solution(8, 0.0)['l2_global']/_solution(4, 0.0)['l2_global']
+    assert ratio > 0.85, ratio                   # and the error saturates
+
+
+def test_exact_solution_dirichlet_solve_converges():
+    """The operator converges once the target really is a solution.
+
+    Measured L2 orders on the harmonic protocol for n = 4, 8, 12, 16 are
+    1.43 / 1.03 / 0.78 (interior 0.88 / 0.87 / 1.07): first order, with the
+    spread of a pre-asymptotic family.  The gate below is a floor, not a claim.
+    """
+    rows = [_harmonic(n, 0.0) for n in (4, 8)]
+    order = study.orders(rows, 'l2_global')[0]
+    assert order > 0.6, order
+    assert rows[0]['l2_global'] < 0.05*rows[0]['field_scale']
+    for row in rows:
+        assert row['residual'] < 1e-10
+
+
+def test_wall_cell_divergence_is_carried_by_the_dirichlet_face_flux():
+    """Mechanism behind the O(1) wall truncation: it is a wall-flux deficit.
+
+    Summing only the Dirichlet-face contributions of the traction error
+    reproduces >= 85 % of the total wall-cell divergence error (92 % at n=4,
+    98 % at n=8), and Dirichlet faces are never owned by an interior cell, so the
+    interior share is exactly zero.  An interior-operator defect would not look
+    like this.
+    """
+    for n in (4, 8):
+        row = _truncation(n, 0.0)
+        share = row['l2_wall_wall_faces_only']/row['l2_wall']
+        assert share > 0.85, (n, share)
+        assert row['l2_interior_wall_faces_only'] == 0.0
