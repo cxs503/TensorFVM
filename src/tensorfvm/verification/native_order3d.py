@@ -52,6 +52,27 @@ def hex_box(n, warp=0.0, triangulate_faces=True):
                                    triangulate_faces=triangulate_faces)
 
 
+# m2774 graft: shared mesh/operator cache (built once per refined family).
+_MESHES = {}
+_OPERATORS = {}
+
+
+def cached_operator(n, warp=0.0, viscosity=1.0):
+    """Mesh and operator shared by every study on the same refined family.
+
+    Mesh assembly dominates the runtime, so the stencil is built once per
+    ``(n, warp, viscosity)``; the studies only read it.
+    """
+    key = (int(n), float(warp), float(viscosity))
+    if key not in _OPERATORS:
+        mesh = _MESHES.get((int(n), float(warp)))
+        if mesh is None:
+            mesh = _MESHES[(int(n), float(warp))] = hex_box(n, warp)
+        _OPERATORS[key] = NativeViscous3D(mesh, mesh.neighbor < 0, viscosity)
+    return _MESHES[(int(n), float(warp))], _OPERATORS[key]
+
+
+
 def manufactured(points):
     """Smooth, non-polynomial velocity used as the manufactured field."""
     p = np.atleast_2d(np.asarray(points, dtype=float))
@@ -317,6 +338,37 @@ def harmonic_solution_study(n, warp=0.0, viscosity=1.3, k=PI):
                 residual=float(np.linalg.norm(
                     op.momentum_diffusion_matrix @ solved - rhs)
                     / max(np.linalg.norm(rhs), 1e-30)))
+
+
+# m2774 graft: source-free solve kept as the ill-posed-record study; name per m2774.
+def harmonic_extension_study(n, warp=0.0, viscosity=1.3):
+    """Source-free Dirichlet solve, kept as the record of an ill-posed test.
+
+    ``div(tau(u)) = 0`` with ``u = u_man`` on the faces does *not* have
+    ``u_man`` as its exact solution, so the distance measured here is
+    ``|u_h - u_man|`` where ``u_h`` converges to the harmonic extension of the
+    boundary data.  That distance has a nonzero ``O(1)`` limit by construction,
+    which is why it cannot certify either convergence or a defect.
+    """
+    from scipy.sparse.linalg import spsolve
+
+    mesh, op = cached_operator(n, warp, viscosity)
+    data = _boundary_data(op)
+    rhs = -(op.divergence_matrix@op.momentum_flux_source(dirichlet_values=data))
+    solved = spsolve(op.momentum_diffusion_matrix.tocsc(), rhs.ravel())
+    values = solved.reshape(len(mesh.cells), 3)
+    exact = manufactured(mesh.cell_centers)
+    err = np.linalg.norm(values - exact, axis=1)
+    wall = _wall_mask(mesh, n)
+    return dict(n=n, h=1.0/n, warp=warp, cells=int(len(mesh.cells)),
+                l2_global=float(np.sqrt(np.mean(err**2))),
+                linf_global=float(err.max()),
+                l2_interior=float(np.sqrt(np.mean(err[~wall]**2))),
+                field_scale=float(np.linalg.norm(exact, axis=1).max()),
+                residual=float(np.linalg.norm(
+                    op.momentum_diffusion_matrix @ solved - rhs.ravel())
+                    / max(np.linalg.norm(rhs), 1e-30)))
+
 
 
 def wall_second_derivative(face_centers, normals, step=1e-4):

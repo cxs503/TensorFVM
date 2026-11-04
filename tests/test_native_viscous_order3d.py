@@ -279,3 +279,55 @@ def test_wall_cell_divergence_is_carried_by_the_dirichlet_face_flux():
         share = row['l2_wall_wall_faces_only']/row['l2_wall']
         assert share > 0.85, (n, share)
         assert row['l2_interior_wall_faces_only'] == 0.0
+
+
+@lru_cache(maxsize=None)
+def _msolution(n, warp):
+    return study.manufactured_solution_study(n, warp, VISCOSITY)
+
+
+@lru_cache(maxsize=None)
+def _hextension(n, warp):
+    return study.harmonic_extension_study(n, warp, VISCOSITY)
+
+
+def test_manufactured_source_is_the_operator_source():
+    """The integrated source must be the one this operator actually sees.
+
+    A mis-signed or mis-scaled source would make the convergence ratio blow up
+    (or add a fixed offset); the measured ratio for this family is ~0.29.
+    """
+    rows = [_msolution(n, 0.0) for n in (4, 8)]
+    ratio = rows[1]['l2_global']/rows[0]['l2_global']
+    assert 0.15 < ratio < 0.6, (ratio, [r['l2_global'] for r in rows])
+
+
+def test_manufactured_dirichlet_solution_converges():
+    """Well-posed Dirichlet solve: the discrete field must refine toward ``u_man``.
+
+    The analytic source ``div(tau(u_man))`` is integrated, so the manufactured
+    field solves the boundary-value problem exactly.  Measured L2 order is 1.80
+    on this family; the gate is a first-order floor because the wall flux is
+    one-sided (see ``test_wall_cell_divergence_does_not_refine``).
+    """
+    rows = [_msolution(n, 0.0) for n in (4, 8)]
+    order = study.orders(rows, 'l2_global')[0]
+    assert order > 1.5, (order, [r['l2_global'] for r in rows])
+    for row in rows:
+        assert row['residual'] < 1e-12
+        assert row['l2_global'] < 0.05*row['field_scale']
+
+
+def test_harmonic_extension_distance_has_no_convergence_rate():
+    """A source-free solve measures the harmonic extension, so it cannot refine.
+
+    ``div(tau(u)) = 0`` with the manufactured field on the boundary has the
+    harmonic extension as its exact solution; the distance to ``manufactured``
+    therefore converges to a nonzero constant (measured ratio ~0.94 per
+    refinement).  Pinned so nobody re-reads this as a solver defect.
+    """
+    rows = [_hextension(n, 0.0) for n in (4, 8)]
+    ratio = rows[1]['l2_global']/rows[0]['l2_global']
+    assert ratio > 0.85, (ratio, study.orders(rows, 'l2_global')[0])
+    for row in rows:  # the linear solve itself is exact
+        assert row['residual'] < 1e-12
