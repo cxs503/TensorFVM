@@ -214,3 +214,77 @@ def self_check() -> dict[str, object]:
                 report["ok"] = False
                 report.setdefault("nonfinite", []).append((re, which))
     return report
+
+#: Bibliographic target, quoted verbatim in every artefact that scores against it.
+REFERENCE = ("U. Ghia, K.N. Ghia, C.T. Shin, J. Comput. Phys. 48 (1982) 387-411, "
+             "Tables I (u at x = 0.5) and II (v at y = 0.5)")
+
+#: Reference entries the solver cannot reproduce at *any* resolution.
+#:
+#: A dispute is *not* a licence to edit the transcription: the published number
+#: stays exactly as printed and any gate that ignores it must say so out loud.
+#: Each record carries the evidence that produced it, so the claim can be
+#: re-checked (and overturned) without reading the prose report.
+DISPUTES: dict[tuple[float, str, float], dict[str, object]] = {
+    (400.0, "v", 0.9063): {
+        "published": -0.23827,
+        "computed_n": {32: -0.35284, 64: -0.38064, 128: -0.38758},
+        "observed_order": 2.00,
+        "richardson_limit": -0.38989,
+        "limit_relative_error": 0.637,
+        "metric_interpolation_error_bound_n128": 1.0e-3,
+        "neighbour_deltas_n128": {0.9453: 0.0016, 0.8594: 0.0021, 0.8047: 0.0028},
+        "evidence": ("scripts/audit_ghia_re400_v_attribution.py over the committed "
+                     "ladder bundle docs/verification-lid-cavity-ladder/summary.json; "
+                     "clean second-order convergence to a limit 64% away from the "
+                     "tabulated value while the three neighbouring entries are inside "
+                     "0.3%, and the interpolation error of the metric path is two "
+                     "orders of magnitude smaller than the gap"),
+        "adjudication": ("needs the printed Table II or an independent DNS; offline "
+                         "copies of the paper are not available in this checkout"),
+    },
+}
+
+
+def smoothness_audit(threshold: float = 10.0) -> dict:
+    """Flag tabulated entries whose adjacent secant slopes jump by ``threshold``.
+
+    A published centreline profile is a smooth curve sampled on a non-uniform
+    grid: between two neighbouring intervals the secant slope may change by tens
+    of percent, but a change of an order of magnitude across one interval means
+    the sampled curve has a corner there, i.e. at least one of the three entries
+    is inconsistent with the other two.  The statistic is deliberately local
+    (both neighbours must lie within ``0.06 L``) so it cannot be triggered by the
+    genuine large-scale curvature of a high-Reynolds-number profile.
+    """
+    flagged = []
+    entries = 0
+    for reynolds in SUPPORTED_REYNOLDS:
+        for which in ("u", "v"):
+            pts = sorted(table(reynolds, which))
+            for index in range(1, len(pts) - 1):
+                left, here, right = pts[index - 1], pts[index], pts[index + 1]
+                if (here[0] - left[0]) > 0.06 or (right[0] - here[0]) > 0.06:
+                    continue
+                entries += 1
+                s_left = (here[1] - left[1]) / (here[0] - left[0])
+                s_right = (right[1] - here[1]) / (right[0] - here[0])
+                scale = max(abs(s_left), abs(s_right), 1e-12)
+                ratio = scale / max(min(abs(s_left), abs(s_right)), 1e-12)
+                if ratio >= threshold:
+                    flagged.append({
+                        "key": f"{reynolds:g}/{which}/{here[0]:.4f}",
+                        "reynolds": reynolds, "which": which, "x": here[0],
+                        "value": here[1], "slope_ratio": ratio,
+                        "slope_left": s_left, "slope_right": s_right,
+                    })
+    registered = {f"{k[0]:g}/{k[1]}/{k[2]:.4f}" for k in DISPUTES}
+    unexplained = [item for item in flagged
+                   if not any(item["reynolds"] == k[0] and item["which"] == k[1]
+                              and abs(item["x"] - k[2]) <= 0.06 for k in DISPUTES)]
+    return {"entries": entries, "threshold": threshold, "flagged": flagged,
+            "registered": sorted(registered),
+            "registered_flagged": sorted(registered & {item["key"] for item in flagged}),
+            "unexplained": [item["key"] for item in unexplained],
+            "ok": bool(flagged) and not unexplained
+                  and registered <= {item["key"] for item in flagged}}
