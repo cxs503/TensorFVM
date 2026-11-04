@@ -1,0 +1,180 @@
+{
+ "ns": [
+  4,
+  6,
+  8
+ ],
+ "viscosity": 1.3,
+ "diagnostics": [
+  {
+   "consistency": 2.1163626406917047e-16,
+   "n": 4,
+   "h": 0.25,
+   "faces": 480,
+   "cells": 64,
+   "wall_faces": 192,
+   "lsq_degree1_wall_gradient_error": 1.908970980915121,
+   "lsq_degree1_condition_max": 3.980064163901802,
+   "lsq_degree2_wall_gradient_error": 0.7582591292746494,
+   "lsq_degree2_condition_max": 43.958248389452294,
+   "as_built_wall_gradient_error": 0.9794795805921227,
+   "as_built_internal_gradient_error": 0.5810653192117765,
+   "predicted_wall_error_from_wall_gradient": 5.093293819079038,
+   "predicted_wall_error_from_lsq2": 3.942947472228177
+  },
+  {
+   "consistency": 1.717376241217039e-16,
+   "n": 6,
+   "h": 0.16666666666666666,
+   "faces": 1512,
+   "cells": 216,
+   "wall_faces": 432,
+   "lsq_degree1_wall_gradient_error": 1.080643965951516,
+   "lsq_degree1_condition_max": 3.980064163901799,
+   "lsq_degree2_wall_gradient_error": 0.3957083300650262,
+   "lsq_degree2_condition_max": 43.958248389452294,
+   "as_built_wall_gradient_error": 0.649377756247216,
+   "as_built_internal_gradient_error": 0.3543686358319703,
+   "predicted_wall_error_from_wall_gradient": 5.065146498728286,
+   "predicted_wall_error_from_lsq2": 3.086524974507205
+  },
+  {
+   "consistency": 2.0816681711721685e-16,
+   "n": 8,
+   "h": 0.125,
+   "faces": 3456,
+   "cells": 512,
+   "wall_faces": 768,
+   "lsq_degree1_wall_gradient_error": 0.7373482151591674,
+   "lsq_degree1_condition_max": 3.980064163901801,
+   "lsq_degree2_wall_gradient_error": 0.23921003548053812,
+   "lsq_degree2_condition_max": 43.958248389452315,
+   "as_built_wall_gradient_error": 0.48512560011919426,
+   "as_built_internal_gradient_error": 0.2567150174272609,
+   "predicted_wall_error_from_wall_gradient": 5.04530624123962,
+   "predicted_wall_error_from_lsq2": 2.4877843689975965
+  }
+ ],
+ "rows": {
+  "as_built": {
+   "wall_l2": [
+    3.3483178636792275,
+    3.0555233963381485,
+    3.341960330973715
+   ],
+   "wall_orders": [
+    0.22568449221977532,
+    -0.31147807385653775
+   ],
+   "interior_orders": [
+    2.0866719939505893,
+    2.1257870016282725
+   ]
+  },
+  "wall_normal_exact": {
+   "wall_l2": [
+    3.261331703517934,
+    2.9905034401638035,
+    3.268683614261517
+   ],
+   "wall_orders": [
+    0.21381337229300465,
+    -0.3091801681918546
+   ],
+   "interior_orders": [
+    2.0866719939505893,
+    2.1257870016282725
+   ]
+  },
+  "wall_full_exact": {
+   "wall_l2": [
+    1.8037487690186698,
+    0.9809778399576312,
+    0.7314539444408611
+   ],
+   "wall_orders": [
+    1.5021577575456928,
+    1.020277730652553
+   ],
+   "interior_orders": [
+    2.0866719939505893,
+    2.1257870016282725
+   ]
+  },
+  "mirror_average": {
+   "wall_l2": [
+    1.4414791064608192,
+    0.7329686316978455,
+    0.5755726856251824
+   ],
+   "wall_orders": [
+    1.6680155766388682,
+    0.8402935377849431
+   ],
+   "interior_orders": [
+    2.0866719939505893,
+    2.1257870016282725
+   ]
+  },
+  "all_faces_exact": {
+   "wall_l2": [
+    0.5620966788765305,
+    0.24988024117325922,
+    0.1367664102987706
+   ],
+   "wall_orders": [
+    1.9994127178313172,
+    2.095046543420039
+   ],
+   "interior_orders": [
+    2.0286638231719727,
+    2.241110026969719
+   ]
+  },
+  "interp_exact_cell_gradients": {
+   "wall_l2": [
+    4.706587888299922,
+    3.759039959938535,
+    3.902673184628723
+   ],
+   "wall_orders": [
+    0.5544240580809557,
+    -0.13034581882315519
+   ],
+   "interior_orders": [
+    2.0130817671972894,
+    2.2050926245318934
+   ]
+  },
+  "lsq_degree1": {
+   "wall_l2": [
+    11.626918766830732,
+    7.2929904699863615,
+    6.2010277465166475
+   ],
+   "wall_orders": [
+    1.1503069104364017,
+    0.5638120999473191
+   ],
+   "interior_orders": [
+    2.3012702429225294,
+    2.0339513066496684
+   ]
+  },
+  "lsq_degree2": {
+   "wall_l2": [
+    6.235752010270485,
+    4.351603585568883,
+    3.5342106565288
+   ],
+   "wall_orders": [
+    0.8872644236084147,
+    0.7232096011772409
+   ],
+   "interior_orders": [
+    0.8793802640525278,
+    1.2061509167014532
+   ]
+  }
+ }
+}
