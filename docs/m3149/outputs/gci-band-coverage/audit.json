@@ -1,0 +1,396 @@
+{
+ "summary": {
+  "cases": 1920,
+  "pure_cases": 384,
+  "pure_implementation_coverage": 1.0,
+  "pure_published_coverage": 1.0,
+  "pure_worst_efficiency": 1.4654943925051886e-14,
+  "truncation_cases": 1536,
+  "truncation_implementation_coverage": 1.0,
+  "truncation_published_coverage": 0.9713541666666666,
+  "convention_disagreements": 44,
+  "worst_row": {
+   "p": 1.0,
+   "r21": 3.0,
+   "r32": 3.0,
+   "alpha": 0.3,
+   "secondary_order": 2.0,
+   "sign": 1.0,
+   "efficiency": 0.7363636363636366,
+   "gci": 0.3160919540229885,
+   "error": 0.23275862068965525,
+   "implementation": true,
+   "published": false
+  },
+  "asymptotic_rate_in_truncation": 0.9518229166666666,
+  "noise": [
+   {
+    "amplitude": 0.0,
+    "cases": 200,
+    "implementation_rate": 1.0,
+    "published_rate": 1.0,
+    "fallback_rate": 0.0,
+    "worst_efficiency": 0.0
+   },
+   {
+    "amplitude": 0.01,
+    "cases": 200,
+    "implementation_rate": 1.0,
+    "published_rate": 1.0,
+    "fallback_rate": 0.0,
+    "worst_efficiency": 0.1644293195379681
+   },
+   {
+    "amplitude": 0.03,
+    "cases": 200,
+    "implementation_rate": 1.0,
+    "published_rate": 0.855,
+    "fallback_rate": 0.0,
+    "worst_efficiency": 0.587045548472509
+   },
+   {
+    "amplitude": 0.05,
+    "cases": 200,
+    "implementation_rate": 0.995,
+    "published_rate": 0.76,
+    "fallback_rate": 0.0,
+    "worst_efficiency": 1.1791313923721782
+   },
+   {
+    "amplitude": 0.1,
+    "cases": 200,
+    "implementation_rate": 0.815,
+    "published_rate": 0.615,
+    "fallback_rate": 0.0,
+    "worst_efficiency": 4.042380518236888
+   }
+  ],
+  "noise_cases": 1000
+ },
+ "by_alpha": [
+  {
+   "alpha": 0.0,
+   "cases": 384,
+   "implementation_covered": 384,
+   "published_covered": 384,
+   "implementation_rate": 1.0,
+   "published_rate": 1.0,
+   "worst_efficiency": 1.4654943925051886e-14,
+   "worst_case": {
+    "p": 1.0,
+    "r21": 1.2,
+    "r32": 1.2,
+    "alpha": 0.0,
+    "secondary_order": 1.0,
+    "sign": 1.0
+   }
+  },
+  {
+   "alpha": 0.01,
+   "cases": 384,
+   "implementation_covered": 384,
+   "published_covered": 384,
+   "implementation_rate": 1.0,
+   "published_rate": 1.0,
+   "worst_efficiency": 0.10018491124260279,
+   "worst_case": {
+    "p": 1.0,
+    "r21": 3.0,
+    "r32": 3.0,
+    "alpha": 0.01,
+    "secondary_order": 2.0,
+    "sign": 1.0
+   }
+  },
+  {
+   "alpha": 0.05,
+   "cases": 384,
+   "implementation_covered": 384,
+   "published_covered": 382,
+   "implementation_rate": 1.0,
+   "published_rate": 0.9947916666666666,
+   "worst_efficiency": 0.3812499999999984,
+   "worst_case": {
+    "p": 1.0,
+    "r21": 3.0,
+    "r32": 3.0,
+    "alpha": 0.05,
+    "secondary_order": 2.0,
+    "sign": 1.0
+   }
+  },
+  {
+   "alpha": 0.1,
+   "cases": 384,
+   "implementation_covered": 384,
+   "published_covered": 374,
+   "implementation_rate": 1.0,
+   "published_rate": 0.9739583333333334,
+   "worst_efficiency": 0.5693877551020401,
+   "worst_case": {
+    "p": 1.0,
+    "r21": 3.0,
+    "r32": 3.0,
+    "alpha": 0.1,
+    "secondary_order": 2.0,
+    "sign": 1.0
+   }
+  },
+  {
+   "alpha": 0.3,
+   "cases": 384,
+   "implementation_covered": 384,
+   "published_covered": 352,
+   "implementation_rate": 1.0,
+   "published_rate": 0.9166666666666666,
+   "worst_efficiency": 0.7363636363636366,
+   "worst_case": {
+    "p": 1.0,
+    "r21": 3.0,
+    "r32": 3.0,
+    "alpha": 0.3,
+    "secondary_order": 2.0,
+    "sign": 1.0
+   }
+  }
+ ],
+ "by_order": [
+  {
+   "p": 1.0,
+   "cases": 256,
+   "implementation_covered": 256,
+   "published_covered": 224,
+   "implementation_rate": 1.0,
+   "published_rate": 0.875,
+   "worst_efficiency": 0.7363636363636366,
+   "worst_case": {
+    "p": 1.0,
+    "r21": 3.0,
+    "r32": 3.0,
+    "alpha": 0.3,
+    "secondary_order": 2.0,
+    "sign": 1.0
+   }
+  },
+  {
+   "p": 1.5,
+   "cases": 256,
+   "implementation_covered": 256,
+   "published_covered": 256,
+   "implementation_rate": 1.0,
+   "published_rate": 1.0,
+   "worst_efficiency": 0.11649726187845325,
+   "worst_case": {
+    "p": 1.5,
+    "r21": 3.0,
+    "r32": 3.0,
+    "alpha": 0.3,
+    "secondary_order": 2.0,
+    "sign": 1.0
+   }
+  },
+  {
+   "p": 2.0,
+   "cases": 256,
+   "implementation_covered": 256,
+   "published_covered": 256,
+   "implementation_rate": 1.0,
+   "published_rate": 1.0,
+   "worst_efficiency": 0.15478637101135695,
+   "worst_case": {
+    "p": 2.0,
+    "r21": 3.0,
+    "r32": 3.0,
+    "alpha": 0.3,
+    "secondary_order": 1.0,
+    "sign": 1.0
+   }
+  },
+  {
+   "p": 2.5,
+   "cases": 256,
+   "implementation_covered": 256,
+   "published_covered": 256,
+   "implementation_rate": 1.0,
+   "published_rate": 1.0,
+   "worst_efficiency": 0.2027527950827445,
+   "worst_case": {
+    "p": 2.5,
+    "r21": 3.0,
+    "r32": 3.0,
+    "alpha": 0.3,
+    "secondary_order": 1.0,
+    "sign": 1.0
+   }
+  },
+  {
+   "p": 3.0,
+   "cases": 256,
+   "implementation_covered": 256,
+   "published_covered": 256,
+   "implementation_rate": 1.0,
+   "published_rate": 1.0,
+   "worst_efficiency": 0.2271242014811471,
+   "worst_case": {
+    "p": 3.0,
+    "r21": 3.0,
+    "r32": 3.0,
+    "alpha": 0.3,
+    "secondary_order": 1.0,
+    "sign": 1.0
+   }
+  },
+  {
+   "p": 4.0,
+   "cases": 256,
+   "implementation_covered": 256,
+   "published_covered": 244,
+   "implementation_rate": 1.0,
+   "published_rate": 0.953125,
+   "worst_efficiency": 0.24302809573360953,
+   "worst_case": {
+    "p": 4.0,
+    "r21": 3.0,
+    "r32": 3.0,
+    "alpha": 0.3,
+    "secondary_order": 1.0,
+    "sign": 1.0
+   }
+  }
+ ],
+ "noise": [
+  {
+   "amplitude": 0.0,
+   "cases": 200,
+   "implementation_rate": 1.0,
+   "published_rate": 1.0,
+   "fallback_rate": 0.0,
+   "worst_efficiency": 0.0
+  },
+  {
+   "amplitude": 0.01,
+   "cases": 200,
+   "implementation_rate": 1.0,
+   "published_rate": 1.0,
+   "fallback_rate": 0.0,
+   "worst_efficiency": 0.1644293195379681
+  },
+  {
+   "amplitude": 0.03,
+   "cases": 200,
+   "implementation_rate": 1.0,
+   "published_rate": 0.855,
+   "fallback_rate": 0.0,
+   "worst_efficiency": 0.587045548472509
+  },
+  {
+   "amplitude": 0.05,
+   "cases": 200,
+   "implementation_rate": 0.995,
+   "published_rate": 0.76,
+   "fallback_rate": 0.0,
+   "worst_efficiency": 1.1791313923721782
+  },
+  {
+   "amplitude": 0.1,
+   "cases": 200,
+   "implementation_rate": 0.815,
+   "published_rate": 0.615,
+   "fallback_rate": 0.0,
+   "worst_efficiency": 4.042380518236888
+  }
+ ],
+ "rows": [
+  {
+   "p": 1.0,
+   "r21": 1.2,
+   "r32": 1.2,
+   "alpha": 0.0,
+   "secondary_order": 1.0,
+   "sign": 1.0,
+   "values": [
+    1.5,
+    1.6,
+    1.72
+   ],
+   "order_observed": 0.9999999999999896,
+   "order_ratio": 0.9999999999999896,
+   "asymptotic": true,
+   "convergence": "monotone",
+   "extrapolated": 0.9999999999999939,
+   "gci": 0.41666666666667174,
+   "band": [
+    0.5833333333333247,
+    1.416666666666663
+   ],
+   "error": 6.106226635438361e-15,
+   "efficiency": 1.4654943925051886e-14,
+   "implementation": true,
+   "published": true
+  },
+  {
+   "p": 1.0,
+   "r21": 1.2,
+   "r32": 1.2,
+   "alpha": 0.0,
+   "secondary_order": 1.0,
+   "sign": -1.0,
+   "values": [
+    0.5,
+    0.4,
+    0.28
+   ],
+   "order_observed": 1.0000000000000009,
+   "order_ratio": 1.0000000000000009,
+   "asymptotic": true,
+   "convergence": "monotone",
+   "extrapolated": 0.9999999999999994,
+   "gci": 1.2499999999999987,
+   "band": [
+    -0.24999999999999856,
+    2.2499999999999973
+   ],
+   "error": 5.551115123125783e-16,
+   "efficiency": 4.440892098500631e-16,
+   "implementation": true,
+   "published": true
+  }
+ ],
+ "noise_rows": [
+  {
+   "amplitude": 0.0,
+   "seed": 0,
+   "values": [
+    1.2625,
+    2.05,
+    5.2
+   ],
+   "extrapolated": 1.0,
+   "gci": 0.25990099009900985,
+   "convergence": "monotone",
+   "asymptotic": true,
+   "error": 0.0,
+   "efficiency": 0.0,
+   "implementation": true,
+   "published": true
+  },
+  {
+   "amplitude": 0.0,
+   "seed": 1,
+   "values": [
+    1.2625,
+    2.05,
+    5.2
+   ],
+   "extrapolated": 1.0,
+   "gci": 0.25990099009900985,
+   "convergence": "monotone",
+   "asymptotic": true,
+   "error": 0.0,
+   "efficiency": 0.0,
+   "implementation": true,
+   "published": true
+  }
+ ],
+ "_excerpt_notice": "Per-case arrays excerpted to 2 sample records each (rows=1920, noise_rows=1000 in full dump). Full deterministic dump: 1440096 bytes, md5 f6dbebadc6ba05cc085b1dccfb71d4a6, archived platform-side (/root/tp-agent/work/m3149_archive/audit.full.json). Regenerate: PYTHONPATH=src python scripts/audit_gci_band_coverage.py"
+}
