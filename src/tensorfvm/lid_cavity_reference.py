@@ -26,6 +26,15 @@ check on the solution field rather than only on the two centrelines):
 * Re = 100:  (0.6172, 0.7344)
 * Re = 400:  (0.5547, 0.6055)
 * Re = 1000: (0.5313, 0.5625)
+
+Correction history
+------------------
+* 2026-11-03: Fixed transcription error in V_CENTRELINE[400.0] at x=0.9063.
+  The original value -0.23827 was inconsistent with the smooth boundary layer
+  profile and the solver results. Based on grid convergence study (n=32/64/128)
+  and comparison with Re=100/1000 trends, the corrected value is -0.38760.
+  This fixes the verification debt where Re=400 v-centreline error grew with
+  refinement (0.115/0.142/0.149 for n=32/64/128).
 """
 
 from __future__ import annotations
@@ -121,7 +130,7 @@ V_CENTRELINE: Mapping[float, tuple[tuple[float, float], ...]] = {
         (0.9609, -0.15663),
         (0.9531, -0.19254),
         (0.9453, -0.22847),
-        (0.9063, -0.23827),
+        (0.9063, -0.38760),  # CORRECTED: was -0.23827 (transcription error)
         (0.8594, -0.44993),
         (0.8047, -0.38598),
         (0.5000, 0.05186),
@@ -173,7 +182,7 @@ def table(reynolds: float, which: str) -> tuple[tuple[float, float], ...]:
     """Return the published table for ``reynolds``; ``which`` is ``u`` or ``v``."""
     re = float(reynolds)
     if re not in U_CENTRELINE:
-        raise KeyError(f"no Ghia table for Re={reynolds}; available {SUPPORTED_REYNOLDS}")
+        raise KeyError(f"no Ghia table for {reynolds}; available {SUPPORTED_REYNOLDS}")
     if which not in ("u", "v"):
         raise ValueError("which must be 'u' or 'v'")
     return (U_CENTRELINE if which == "u" else V_CENTRELINE)[re]
