@@ -28,16 +28,25 @@ Wall closure
     ``docs/native_viscous_dirichlet_order.md``).
 
 ``'three_point'``
-    The normal component of the face gradient on every Dirichlet face is
-    replaced by a one-sided three-point stencil through the face, the owner
-    cell centre and a second cell centre taken along the mesh line in the
-    face-normal direction (the neighbour across the internal face whose
-    normal is best aligned with the face normal).  The stencil is exact for
-    affine fields, second order for smooth fields, and leaves the tangential
-    part of the face gradient untouched.  Faces without an aligned second
-    cell (alignment < cos 60 deg, or degenerate spacing) keep the two-point
-    closure; the count of upgraded faces is exposed as
-    ``wall_second_order_faces``.
+    The normal part of the face gradient on every Dirichlet face is replaced
+    by a one-sided three-point stencil through the face, the owner cell centre
+    and a second cell centre taken along the mesh line in the face-normal
+    direction (the neighbour across the internal face whose normal is best
+    aligned with the inward face normal).  The tangential part of the face
+    gradient is left untouched, except for the offset term described below.
+    Faces without an aligned second cell (alignment < cos 60 deg, or
+    degenerate spacing) keep the two-point closure; the number of upgraded
+    faces is exposed as ``wall_second_order_faces``.
+
+    Measured properties (``scripts/verify_three_point_wall_closure.py``,
+    ``docs/wall-closure-three-point/report.md``): affine-exact at round-off on
+    Cartesian and warped box meshes, a 2.4x smaller wall normal-derivative
+    error on the quadratic benchmark, but an *observed* order of 1.2-1.5 rather
+    than 2 -- the offset term is evaluated with the two-point tangential
+    gradient, whose wall error is O(h) with an O(1) weight.  It also does not
+    repay the O(1) wall-adjacent cell divergence, whose driver is documented in
+    ``docs/native_viscous_dirichlet_order.md`` as the evaluation point of the
+    whole wall-face gradient tensor, not the normal derivative.
 
 """
 import numpy as np
@@ -97,6 +106,8 @@ class NativeViscous3D:
         self.wall_closure=wall_closure
         self.wall_second_cell=-np.ones(self.F,dtype=int)
         self.wall_coeff=np.zeros((self.F,3))
+        self.wall_offset=np.zeros((self.F,3,2))
+        self.wall_weight=np.zeros((self.F,3))
         self.wall_second_order_faces=0
         if wall_closure=='three_point':
             self._assemble_three_point_wall(mesh,o,n,i,bd,f)
@@ -130,13 +141,15 @@ class NativeViscous3D:
         """Replace the Dirichlet-face normal gradient component by a one-sided
         three-point stencil (face, owner centre, second cell centre).
 
-        The stencil is exact for affine fields and second order for smooth
-        fields; the tangential part of the face gradient is left unchanged.
-        Faces without an aligned second cell keep the two-point closure.
+        The stencil is exact for affine fields; for smooth fields the observed
+        order is 1.2-1.5 because the tangential offset term below inherits the
+        O(h) wall error of the two-point tangential gradient.  Faces without an
+        aligned second cell keep the two-point closure.
         """
         F=self.F;N=self.N
         second=-np.ones(F,dtype=int)
         coeff=np.zeros((F,3))
+        offset=np.zeros((F,3,2))
         candidates={}
         for gf in np.where(i)[0]:
             candidates.setdefault(o[gf],[]).append((gf,self.normal[gf],1))
@@ -146,37 +159,54 @@ class NativeViscous3D:
             c0=o[face];nf=self.normal[face]
             best_align=-2.0;best_gf=-1
             for gf,gn,sig in candidates.get(c0,()):
-                align=sig*(gn@nf)
+                # Walk *inward*, away from the wall: the second centre lies behind
+                # the owner centre seen from the face, so the candidate face
+                # normal (owner -> neighbour, sign corrected by ``sig``) must be
+                # anti-parallel to the outward face normal ``nf``.
+                align=-sig*(gn@nf)
                 if align>best_align:best_align,best_gf=align,gf
             if best_gf<0 or best_align<0.5:continue
             c1=n[best_gf] if o[best_gf]==c0 else o[best_gf]
             if c1<0:continue
-            delta0=float((cc[c0]-fc[face])@nf)
-            delta1=float((cc[c1]-fc[face])@nf)
+            # ``nf`` is outward, so the interior side is reached along ``-nf``.
+            inward=-nf
+            r0=cc[c0]-fc[face];r1=cc[c1]-fc[face]
+            delta0=float(r0@inward);delta1=float(r1@inward)
             if delta0<=0 or delta1<=delta0*(1+1e-9):continue
             gap=delta1-delta0
             coeff[face,0]=(delta0+delta1)/(delta0*delta1)
             coeff[face,1]=-delta1/(delta0*gap)
             coeff[face,2]=delta0/(delta1*gap)
+            # Tangential part of each radius vector: a triangulated boundary
+            # facet puts its centroid off the normal line through the owner
+            # centre, so the stencil needs ``u - e.grad_t`` to stay exact.
+            offset[face,:,0]=r0-delta0*inward
+            offset[face,:,1]=r1-delta1*inward
             second[face]=c1
         self.wall_second_cell=second
         self.wall_coeff=coeff
+        self.wall_offset=offset
         self.wall_second_order_faces=int((second[bd]>=0).sum())
         nrm=self.normal
-        nc=(sum(diags(nrm[:,a])@self.face_gradient_matrices[a] for a in range(3))).toarray()
+        fbb=f[bd][second[bd]>=0]
+        if len(fbb)==0:return
+        # Normal-derivative rows of the *un-upgraded* face gradients: their normal
+        # component is what the one-sided stencil replaces, and what is left of a
+        # row afterwards is the tangential operator used by the offset term.
+        nc=sum(diags(nrm[:,a])@self.face_gradient_matrices[a] for a in range(3)).tocsr()
+        tangential=[(self.face_gradient_matrices[a]-diags(nrm[:,a])@nc).tocsr() for a in range(3)]
+        P=coo_matrix((np.ones(len(fbb)),(np.arange(len(fbb)),fbb)),shape=(len(fbb),F)).tocsr()
+        tangential=[(P@t).tocsr() for t in tangential]
+        weight=-(coeff[fbb,1][:,None]*offset[fbb,:,0]+coeff[fbb,2][:,None]*offset[fbb,:,1])
+        self.wall_weight[fbb]=weight
+        correction=sum(diags(weight[:,a])@tangential[a] for a in range(3)).tocsr()
         for k in range(3):
             M=self.face_gradient_matrices[k]
-            mask=second[bd]>=0
-            fb=f[bd][mask]
-            drop_vals=(nrm[bd,k][mask][:,None]*nc[bd][mask]).ravel()
-            drop_rows=np.repeat(fb,3)
-            drop_cols=np.tile(np.arange(3),len(fb))
-            drop=coo_matrix((drop_vals,(drop_rows,drop_cols)),shape=(F,N))
-            add_vals=np.r_[nrm[bd,k][mask]*coeff[bd,1][mask],nrm[bd,k][mask]*coeff[bd,2][mask]]
-            add_rows=np.r_[fb,fb]
-            add_cols=np.r_[o[bd][mask],second[bd][mask]]
-            add=coo_matrix((add_vals,(add_rows,add_cols)),shape=(F,N))
-            self.face_gradient_matrices[k]=(M-drop+add).tocsr()
+            selected=tangential[k]+diags(nrm[fbb,k])@correction
+            selected=selected+coo_matrix((np.r_[nrm[fbb,k]*coeff[fbb,1],nrm[fbb,k]*coeff[fbb,2]],
+                                          (np.r_[np.arange(len(fbb)),np.arange(len(fbb))],
+                                           np.r_[o[fbb],second[fbb]])),shape=(len(fbb),N)).tocsr()
+            self.face_gradient_matrices[k]=(M-P.T@(P@M)+P.T@selected).tocsr()
 
     def _boundary_data(self,neumann_gradients,dirichlet_values):
         g=np.broadcast_to(np.asarray(neumann_gradients,dtype=float),(self.F,))
@@ -200,8 +230,10 @@ class NativeViscous3D:
         if self.wall_closure=='three_point':
             sel=self.dirichlet&(self.wall_second_cell>=0)
             n=self.normal[sel]
-            old=result[sel]
-            result[sel]=old-np.einsum('fi,fi->f',old,n)[:,None]*n+n*(self.wall_coeff[sel,0]*v[sel])[:,None]
+            base=result[sel]
+            tangential=base-np.einsum('fi,fi->f',base,n)[:,None]*n
+            offset_term=np.einsum('fi,fi->f',self.wall_weight[sel],tangential)
+            result[sel]=tangential+n*(self.wall_coeff[sel,0]*v[sel]+offset_term)[:,None]
         return result
 
     def scalar_flux_source(self,neumann_gradients=0.,dirichlet_values=0.):

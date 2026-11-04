@@ -1,0 +1,213 @@
+{
+ "closures": [
+  "two_point",
+  "three_point"
+ ],
+ "generated": "2026-11-04T12:33:04Z",
+ "levels": [
+  4,
+  8
+ ],
+ "orders": {
+  "l2_interior": {
+   "three_point|warp=0": [
+    2.102906188921404
+   ],
+   "three_point|warp=2": [
+    1.8308741296584436
+   ],
+   "two_point|warp=0": [
+    2.1029061889214065
+   ],
+   "two_point|warp=2": [
+    1.8308741296584436
+   ]
+  },
+  "l2_wall": {
+   "three_point|warp=0": [
+    0.12842308929476168
+   ],
+   "three_point|warp=2": [
+    0.23349935010945327
+   ],
+   "two_point|warp=0": [
+    0.0027418840892553093
+   ],
+   "two_point|warp=2": [
+    0.09035939668955593
+   ]
+  },
+  "rel_boundary_per_area": {
+   "three_point|warp=0": [
+    1.0512800717503765
+   ],
+   "three_point|warp=2": [
+    0.7412757762720364
+   ],
+   "two_point|warp=0": [
+    0.9896880568015279
+   ],
+   "two_point|warp=2": [
+    0.6733081894090464
+   ]
+  },
+  "rel_wall_normal_derivative": {
+   "three_point|warp=0": [
+    1.4783118637113908
+   ],
+   "three_point|warp=2": [
+    1.1776881855840196
+   ],
+   "two_point|warp=0": [
+    1.1670353250672414
+   ],
+   "two_point|warp=2": [
+    0.71633273227753
+   ]
+  }
+ },
+ "records": [
+  {
+   "affine_flux": 3.7470027081099033e-16,
+   "cells": 64,
+   "closure": "two_point",
+   "faces": 480,
+   "l2_interior": 1.204190068151251,
+   "l2_wall": 3.3483178636792275,
+   "linf_wall": 6.825587786061819,
+   "n": 4,
+   "quadratic_normal_derivative": 0.12862318840579712,
+   "rel_boundary_per_area": 0.13737999947028995,
+   "rel_wall_normal_derivative": 0.061916377553895924,
+   "upgraded_faces": 0,
+   "wall_cells": 56,
+   "wall_seconds": 1.871622085571289,
+   "warp": 0.0
+  },
+  {
+   "affine_flux": 2.598832607447754e-16,
+   "cells": 512,
+   "closure": "two_point",
+   "faces": 3456,
+   "l2_interior": 0.2803220109504611,
+   "l2_wall": 3.341960330973716,
+   "linf_wall": 7.952931821162151,
+   "n": 8,
+   "quadratic_normal_derivative": 0.06431159420289853,
+   "rel_boundary_per_area": 0.06918273371659064,
+   "rel_wall_normal_derivative": 0.02757356379931301,
+   "upgraded_faces": 0,
+   "wall_cells": 296,
+   "wall_seconds": 14.015336751937866,
+   "warp": 0.0
+  },
+  {
+   "affine_flux": 5.065392549852277e-16,
+   "cells": 64,
+   "closure": "two_point",
+   "faces": 480,
+   "l2_interior": 1.194723372840377,
+   "l2_wall": 3.3310654657726477,
+   "linf_wall": 6.707054243457655,
+   "n": 4,
+   "quadratic_normal_derivative": 0.13600675427186412,
+   "rel_boundary_per_area": 0.1631336992134765,
+   "rel_wall_normal_derivative": 0.10130909643066177,
+   "upgraded_faces": 0,
+   "wall_cells": 61,
+   "wall_seconds": 1.9632289409637451,
+   "warp": 2.0
+  },
+  {
+   "affine_flux": 4.198030811863873e-16,
+   "cells": 512,
+   "closure": "two_point",
+   "faces": 3456,
+   "l2_interior": 0.335829875718544,
+   "l2_wall": 3.1288322486953453,
+   "linf_wall": 8.905692453972183,
+   "n": 8,
+   "quadratic_normal_derivative": 0.06642436843461547,
+   "rel_boundary_per_area": 0.10229578114010134,
+   "rel_wall_normal_derivative": 0.06166103392296092,
+   "upgraded_faces": 0,
+   "wall_cells": 361,
+   "wall_seconds": 13.667585372924805,
+   "warp": 2.0
+  },
+  {
+   "affine_flux": 7.077671781985373e-16,
+   "cells": 64,
+   "closure": "three_point",
+   "faces": 480,
+   "l2_interior": 1.2041900681512507,
+   "l2_wall": 3.6932982907406724,
+   "linf_wall": 7.074613622360957,
+   "n": 4,
+   "quadratic_normal_derivative": 0.05233494363929303,
+   "rel_boundary_per_area": 0.14506378115155363,
+   "rel_wall_normal_derivative": 0.07712457573949058,
+   "upgraded_faces": 192,
+   "wall_cells": 56,
+   "wall_seconds": 1.9000301361083984,
+   "warp": 0.0
+  },
+  {
+   "affine_flux": 3.434752482434078e-16,
+   "cells": 512,
+   "closure": "three_point",
+   "faces": 3456,
+   "l2_interior": 0.2803220109504616,
+   "l2_wall": 3.378743187323193,
+   "linf_wall": 7.739674883971941,
+   "n": 8,
+   "quadratic_normal_derivative": 0.026167471819647403,
+   "rel_boundary_per_area": 0.06999905192325967,
+   "rel_wall_normal_derivative": 0.027680668485454276,
+   "upgraded_faces": 768,
+   "wall_cells": 296,
+   "wall_seconds": 14.078489542007446,
+   "warp": 0.0
+  },
+  {
+   "affine_flux": 6.036837696399289e-16,
+   "cells": 64,
+   "closure": "three_point",
+   "faces": 480,
+   "l2_interior": 1.194723372840377,
+   "l2_wall": 3.918349091817203,
+   "linf_wall": 9.181589867962536,
+   "n": 4,
+   "quadratic_normal_derivative": 0.12907457519824786,
+   "rel_boundary_per_area": 0.1811587460733704,
+   "rel_wall_normal_derivative": 0.17027788796417204,
+   "upgraded_faces": 192,
+   "wall_cells": 61,
+   "wall_seconds": 1.8869452476501465,
+   "warp": 2.0
+  },
+  {
+   "affine_flux": 4.744468706796567e-16,
+   "cells": 512,
+   "closure": "three_point",
+   "faces": 3456,
+   "l2_interior": 0.335829875718544,
+   "l2_wall": 3.3328273535071173,
+   "linf_wall": 10.317000615834655,
+   "n": 8,
+   "quadratic_normal_derivative": 0.07153918436711704,
+   "rel_boundary_per_area": 0.10837099535440718,
+   "rel_wall_normal_derivative": 0.07527292377760493,
+   "upgraded_faces": 768,
+   "wall_cells": 361,
+   "wall_seconds": 13.670238971710205,
+   "warp": 2.0
+  }
+ ],
+ "script": "scripts/verify_three_point_wall_closure.py",
+ "viscosity": 1.3,
+ "warps": [
+  0.0,
+  2.0
+ ]
+}
