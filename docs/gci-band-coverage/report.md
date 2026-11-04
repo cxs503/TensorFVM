@@ -72,6 +72,6 @@
 
 ## 5. 产物
 
-* `outputs/gci-band-coverage/audit.json`：审计摘要+逐例记录节选（全量 1920 例 dump md5 f6dbebadc6ba05cc085b1dccfb71d4a6 平台侧存档；`PYTHONPATH=src python scripts/audit_gci_band_coverage.py` 确定性重生成全量）；
+* `outputs/gci-band-coverage/audit.json`：全部 1920+1000 例逐例记录（含参数、GCI、误差、两种惯例判定）；
 * `outputs/gci-band-coverage/RESULTS.md`：聚合表；
 * 本节数字与表格全部由该脚本生成（零手抄）。
