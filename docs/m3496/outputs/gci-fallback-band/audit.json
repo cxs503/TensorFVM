@@ -1,0 +1,1917 @@
+{
+ "audit": "gci-fallback-band",
+ "exact": 1.0,
+ "spacings_h0": 0.1,
+ "ratios": [
+  1.5,
+  2.0,
+  3.0
+ ],
+ "orders": [
+  1.0,
+  2.0,
+  3.0
+ ],
+ "amplitudes": [
+  0.02,
+  0.1,
+  0.4
+ ],
+ "theory_order": 2.0,
+ "case_count": 648,
+ "families": [
+  {
+   "family": "F-control",
+   "cases": 81,
+   "fallback_cases": 0,
+   "coverage_before": 1.0,
+   "coverage_after": 1.0,
+   "worst_efficiency_before": 1.3322942748870045e-11,
+   "worst_efficiency_after": 1.3322942748870045e-11,
+   "median_band_ratio": 1.0,
+   "unchanged_gci": 81
+  },
+  {
+   "family": "F-signed",
+   "cases": 81,
+   "fallback_cases": 81,
+   "coverage_before": 1.0,
+   "coverage_after": 1.0,
+   "worst_efficiency_before": 1.0400000000000011,
+   "worst_efficiency_after": 0.5546666666666671,
+   "median_band_ratio": 3.4615384615385407,
+   "unchanged_gci": 0
+  },
+  {
+   "family": "F-phaselock",
+   "cases": 243,
+   "fallback_cases": 243,
+   "coverage_before": 1.0,
+   "coverage_after": 1.0,
+   "worst_efficiency_before": 0.3333333333351788,
+   "worst_efficiency_after": 0.1729758767424118,
+   "median_band_ratio": 5.920538235094367,
+   "unchanged_gci": 0
+  },
+  {
+   "family": "F-cancel",
+   "cases": 81,
+   "fallback_cases": 0,
+   "coverage_before": 0.0,
+   "coverage_after": 0.0,
+   "worst_efficiency_before": 54.12095999999746,
+   "worst_efficiency_after": 54.12095999999746,
+   "median_band_ratio": 1.0,
+   "unchanged_gci": 81
+  },
+  {
+   "family": "F-implausible",
+   "cases": 81,
+   "fallback_cases": 81,
+   "coverage_before": 0.0,
+   "coverage_after": 1.0,
+   "worst_efficiency_before": 57980606069149.0,
+   "worst_efficiency_after": 0.4148090528577251,
+   "median_band_ratio": 64776439.56343701,
+   "unchanged_gci": 0
+  },
+  {
+   "family": "F-bias",
+   "cases": 81,
+   "fallback_cases": 0,
+   "coverage_before": 0.0,
+   "coverage_after": 0.0,
+   "worst_efficiency_before": 30000.399999991194,
+   "worst_efficiency_after": 30000.399999991194,
+   "median_band_ratio": 1.0,
+   "unchanged_gci": 81
+  }
+ ],
+ "excerpt": [
+  {
+   "family": "F-signed",
+   "label": "alternating p=1.0 A=0.02 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.002,
+    0.997,
+    1.0045
+   ],
+   "exact": 1.0,
+   "convergence": "inconsistent",
+   "fallback_reason": "non-monotone",
+   "observed_order": NaN,
+   "order_used": 2.0,
+   "safety_factor": 3.0,
+   "before": {
+    "covered": true,
+    "error": 0.006000000000000005,
+    "gci": 0.01197604790419162,
+    "efficiency": 0.5010000000000003,
+    "half_width": 0.012047904191616776,
+    "extrapolated": 1.006,
+    "convergence": "inconsistent"
+   },
+   "after": {
+    "covered": true,
+    "error": 0.006000000000000005,
+    "gci": 0.017964071856287296,
+    "efficiency": 0.3340000000000027,
+    "half_width": 0.01807185628742497,
+    "extrapolated": 1.006,
+    "convergence": "inconsistent"
+   }
+  },
+  {
+   "family": "F-phaselock",
+   "label": "phase-locked p=1.0 A=0.02 phi=0.3 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.0,
+    1.0028531695488854,
+    0.9973549663646839
+   ],
+   "exact": 1.0,
+   "convergence": "inconsistent",
+   "fallback_reason": "non-monotone",
+   "observed_order": NaN,
+   "order_used": 2.0,
+   "safety_factor": 3.0,
+   "before": {
+    "covered": true,
+    "error": 0.0022825356391082963,
+    "gci": 0.006847606917324884,
+    "efficiency": 0.3333333333333336,
+    "half_width": 0.006831977010493484,
+    "extrapolated": 0.9977174643608917,
+    "convergence": "inconsistent"
+   },
+   "after": {
+    "covered": true,
+    "error": 0.0022825356391082963,
+    "gci": 0.01319568764208351,
+    "efficiency": 0.17297587674240364,
+    "half_width": 0.013165568014757933,
+    "extrapolated": 0.9977174643608917,
+    "convergence": "inconsistent"
+   }
+  },
+  {
+   "family": "F-phaselock",
+   "label": "phase-locked p=1.0 A=0.02 phi=0.48 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.0,
+    1.000375999700693,
+    0.9988808955077582
+   ],
+   "exact": 1.0,
+   "convergence": "inconsistent",
+   "fallback_reason": "non-monotone",
+   "observed_order": NaN,
+   "order_used": 2.0,
+   "safety_factor": 3.0,
+   "before": {
+    "covered": true,
+    "error": 0.00030079976055430446,
+    "gci": 0.0009023992816629793,
+    "efficiency": 0.333333333333309,
+    "half_width": 0.000902127840175182,
+    "extrapolated": 0.9996992002394457,
+    "convergence": "inconsistent"
+   },
+   "after": {
+    "covered": true,
+    "error": 0.00030079976055430446,
+    "gci": 0.003588250063043394,
+    "efficiency": 0.08382909643125025,
+    "half_width": 0.0035871707182836277,
+    "extrapolated": 0.9996992002394457,
+    "convergence": "inconsistent"
+   }
+  },
+  {
+   "family": "F-phaselock",
+   "label": "phase-locked p=1.0 A=0.02 phi=0.62 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.0,
+    0.9979463586822139,
+    1.0044911202779272
+   ],
+   "exact": 1.0,
+   "convergence": "inconsistent",
+   "fallback_reason": "non-monotone",
+   "observed_order": NaN,
+   "order_used": 2.0,
+   "safety_factor": 3.0,
+   "before": {
+    "covered": true,
+    "error": 0.0016429130542288117,
+    "gci": 0.004928739162686565,
+    "efficiency": 0.33333333333332454,
+    "half_width": 0.004936836652597865,
+    "extrapolated": 1.0016429130542288,
+    "convergence": "inconsistent"
+   },
+   "after": {
+    "covered": true,
+    "error": 0.0016429130542288117,
+    "gci": 0.01570742782971183,
+    "efficiency": 0.10459465878436908,
+    "half_width": 0.015733233767941668,
+    "extrapolated": 1.0016429130542288,
+    "convergence": "inconsistent"
+   }
+  },
+  {
+   "family": "F-cancel",
+   "label": "two-term cancel A=0.02 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.0022,
+    1.00195,
+    0.9998875
+   ],
+   "exact": 1.0,
+   "convergence": "monotone",
+   "fallback_reason": "none",
+   "observed_order": 5.2044261223662485,
+   "order_used": 5.2044261223662485,
+   "safety_factor": 1.25,
+   "before": {
+    "covered": false,
+    "error": 0.002234482758620704,
+    "gci": 4.300882885242091e-05,
+    "efficiency": 51.95404799995915,
+    "half_width": 4.3104931338966423e-05,
+    "extrapolated": 1.0022344827586207,
+    "convergence": "monotone"
+   },
+   "after": {
+    "covered": false,
+    "error": 0.002234482758620704,
+    "gci": 4.300882885242091e-05,
+    "efficiency": 51.95404799995915,
+    "half_width": 4.3104931338966423e-05,
+    "extrapolated": 1.0022344827586207,
+    "convergence": "monotone"
+   }
+  },
+  {
+   "family": "F-implausible",
+   "label": "vanishing d1 p=1.0 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.02,
+    1.02002,
+    1.2
+   ],
+   "exact": 1.0,
+   "convergence": "order-implausible",
+   "fallback_reason": "implausible-order",
+   "observed_order": 22.45536929557359,
+   "order_used": 2.0,
+   "safety_factor": 3.0,
+   "before": {
+    "covered": false,
+    "error": 0.019999997777283784,
+    "gci": 2.7239168616743074e-09,
+    "efficiency": 7342367.184066846,
+    "half_width": 2.7783952916138333e-09,
+    "extrapolated": 1.0199999977772838,
+    "convergence": "monotone"
+   },
+   "after": {
+    "covered": true,
+    "error": 0.019984000000000002,
+    "gci": 0.42348235294117625,
+    "efficiency": 0.047189687743082596,
+    "half_width": 0.4319452242823527,
+    "extrapolated": 1.019984,
+    "convergence": "order-implausible"
+   }
+  },
+  {
+   "family": "F-bias",
+   "label": "biased p=1.0 A=0.02 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.502,
+    1.503,
+    1.5045
+   ],
+   "exact": 1.0,
+   "convergence": "monotone",
+   "fallback_reason": "none",
+   "observed_order": 1.000000000000366,
+   "order_used": 1.000000000000366,
+   "safety_factor": 1.25,
+   "before": {
+    "covered": false,
+    "error": 0.5000000000000011,
+    "gci": 0.0016644474034611257,
+    "efficiency": 300.4000000001676,
+    "half_width": 0.0024966711051916946,
+    "extrapolated": 1.500000000000001,
+    "convergence": "monotone"
+   },
+   "after": {
+    "covered": false,
+    "error": 0.5000000000000011,
+    "gci": 0.0016644474034611257,
+    "efficiency": 300.4000000001676,
+    "half_width": 0.0024966711051916946,
+    "extrapolated": 1.500000000000001,
+    "convergence": "monotone"
+   }
+  },
+  {
+   "family": "F-signed",
+   "label": "alternating p=1.0 A=0.1 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.01,
+    0.985,
+    1.0225
+   ],
+   "exact": 1.0,
+   "convergence": "inconsistent",
+   "fallback_reason": "non-monotone",
+   "observed_order": NaN,
+   "order_used": 2.0,
+   "safety_factor": 3.0,
+   "before": {
+    "covered": true,
+    "error": 0.030000000000000027,
+    "gci": 0.05940594059405942,
+    "efficiency": 0.5050000000000003,
+    "half_width": 0.06118811881188124,
+    "extrapolated": 1.03,
+    "convergence": "inconsistent"
+   },
+   "after": {
+    "covered": true,
+    "error": 0.030000000000000027,
+    "gci": 0.089108910891089,
+    "efficiency": 0.3366666666666674,
+    "half_width": 0.09178217821782164,
+    "extrapolated": 1.03,
+    "convergence": "inconsistent"
+   }
+  },
+  {
+   "family": "F-phaselock",
+   "label": "phase-locked p=1.0 A=0.1 phi=0.3 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.0,
+    1.0142658477444273,
+    0.9867748318234194
+   ],
+   "exact": 1.0,
+   "convergence": "inconsistent",
+   "fallback_reason": "non-monotone",
+   "observed_order": NaN,
+   "order_used": 2.0,
+   "safety_factor": 3.0,
+   "before": {
+    "covered": true,
+    "error": 0.011412678195541814,
+    "gci": 0.034238034586625485,
+    "efficiency": 0.3333333333333329,
+    "half_width": 0.03384728691584049,
+    "extrapolated": 0.9885873218044582,
+    "convergence": "inconsistent"
+   },
+   "after": {
+    "covered": true,
+    "error": 0.011412678195541814,
+    "gci": 0.06597843821041889,
+    "efficiency": 0.1729758767424052,
+    "half_width": 0.06522544752727899,
+    "extrapolated": 0.9885873218044582,
+    "convergence": "inconsistent"
+   }
+  },
+  {
+   "family": "F-phaselock",
+   "label": "phase-locked p=1.0 A=0.1 phi=0.48 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.0,
+    1.0018799985034645,
+    0.9944044775387908
+   ],
+   "exact": 1.0,
+   "convergence": "inconsistent",
+   "fallback_reason": "non-monotone",
+   "observed_order": NaN,
+   "order_used": 2.0,
+   "safety_factor": 3.0,
+   "before": {
+    "covered": true,
+    "error": 0.0015039988027716333,
+    "gci": 0.0045119964083148965,
+    "efficiency": 0.3333333333333336,
+    "half_width": 0.004505210371118729,
+    "extrapolated": 0.9984960011972284,
+    "convergence": "inconsistent"
+   },
+   "after": {
+    "covered": true,
+    "error": 0.0015039988027716333,
+    "gci": 0.01794125031521697,
+    "efficiency": 0.08382909643125644,
+    "half_width": 0.017914266696222647,
+    "extrapolated": 0.9984960011972284,
+    "convergence": "inconsistent"
+   }
+  },
+  {
+   "family": "F-phaselock",
+   "label": "phase-locked p=1.0 A=0.1 phi=0.62 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.0,
+    0.9897317934110696,
+    1.0224556013896362
+   ],
+   "exact": 1.0,
+   "convergence": "inconsistent",
+   "fallback_reason": "non-monotone",
+   "observed_order": NaN,
+   "order_used": 2.0,
+   "safety_factor": 3.0,
+   "before": {
+    "covered": true,
+    "error": 0.00821456527114428,
+    "gci": 0.024643695813432825,
+    "efficiency": 0.3333333333333336,
+    "half_width": 0.02484613306121447,
+    "extrapolated": 1.0082145652711443,
+    "convergence": "inconsistent"
+   },
+   "after": {
+    "covered": true,
+    "error": 0.00821456527114428,
+    "gci": 0.07853713914855967,
+    "efficiency": 0.10459465878437121,
+    "half_width": 0.07918228760430446,
+    "extrapolated": 1.0082145652711443,
+    "convergence": "inconsistent"
+   }
+  },
+  {
+   "family": "F-cancel",
+   "label": "two-term cancel A=0.1 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.011,
+    1.00975,
+    0.9994375
+   ],
+   "exact": 1.0,
+   "convergence": "monotone",
+   "fallback_reason": "none",
+   "observed_order": 5.204426122367284,
+   "order_used": 5.204426122367284,
+   "safety_factor": 1.25,
+   "before": {
+    "covered": false,
+    "error": 0.011172413793103297,
+    "gci": 0.00021317234557794424,
+    "efficiency": 52.41024000000141,
+    "half_width": 0.00021555399523198737,
+    "extrapolated": 1.0111724137931033,
+    "convergence": "monotone"
+   },
+   "after": {
+    "covered": false,
+    "error": 0.011172413793103297,
+    "gci": 0.00021317234557794424,
+    "efficiency": 52.41024000000141,
+    "half_width": 0.00021555399523198737,
+    "extrapolated": 1.0111724137931033,
+    "convergence": "monotone"
+   }
+  },
+  {
+   "family": "F-implausible",
+   "label": "vanishing d1 p=1.0 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.1,
+    1.1001,
+    2.0
+   ],
+   "exact": 1.0,
+   "convergence": "order-implausible",
+   "fallback_reason": "implausible-order",
+   "observed_order": 22.455369295562633,
+   "order_used": 2.0,
+   "safety_factor": 3.0,
+   "before": {
+    "covered": false,
+    "error": 0.09999998888641937,
+    "gci": 1.262906908605671e-08,
+    "efficiency": 7918239.12000178,
+    "half_width": 1.3891975791935351e-08,
+    "extrapolated": 1.0999999888864194,
+    "convergence": "monotone"
+   },
+   "after": {
+    "covered": true,
+    "error": 0.09992000000000001,
+    "gci": 1.9634181818181802,
+    "efficiency": 0.05089083972293223,
+    "half_width": 2.159602926545453,
+    "extrapolated": 1.09992,
+    "convergence": "order-implausible"
+   }
+  },
+  {
+   "family": "F-bias",
+   "label": "biased p=1.0 A=0.1 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.51,
+    1.515,
+    1.5225
+   ],
+   "exact": 1.0,
+   "convergence": "monotone",
+   "fallback_reason": "none",
+   "observed_order": 1.0000000000000737,
+   "order_used": 1.0000000000000737,
+   "safety_factor": 1.25,
+   "before": {
+    "covered": false,
+    "error": 0.5000000000000011,
+    "gci": 0.008278145695363316,
+    "efficiency": 60.40000000000686,
+    "half_width": 0.012417218543044894,
+    "extrapolated": 1.500000000000001,
+    "convergence": "monotone"
+   },
+   "after": {
+    "covered": false,
+    "error": 0.5000000000000011,
+    "gci": 0.008278145695363316,
+    "efficiency": 60.40000000000686,
+    "half_width": 0.012417218543044894,
+    "extrapolated": 1.500000000000001,
+    "convergence": "monotone"
+   }
+  },
+  {
+   "family": "F-signed",
+   "label": "alternating p=1.0 A=0.4 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.04,
+    0.94,
+    1.09
+   ],
+   "exact": 1.0,
+   "convergence": "inconsistent",
+   "fallback_reason": "non-monotone",
+   "observed_order": NaN,
+   "order_used": 2.0,
+   "safety_factor": 3.0,
+   "before": {
+    "covered": true,
+    "error": 0.1200000000000001,
+    "gci": 0.2307692307692308,
+    "efficiency": 0.5200000000000004,
+    "half_width": 0.2584615384615385,
+    "extrapolated": 1.12,
+    "convergence": "inconsistent"
+   },
+   "after": {
+    "covered": true,
+    "error": 0.1200000000000001,
+    "gci": 0.3461538461538462,
+    "efficiency": 0.3466666666666669,
+    "half_width": 0.3876923076923078,
+    "extrapolated": 1.12,
+    "convergence": "inconsistent"
+   }
+  },
+  {
+   "family": "F-phaselock",
+   "label": "phase-locked p=1.0 A=0.4 phi=0.3 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.0,
+    1.0570633909777092,
+    0.9470993272936774
+   ],
+   "exact": 1.0,
+   "convergence": "inconsistent",
+   "fallback_reason": "non-monotone",
+   "observed_order": NaN,
+   "order_used": 2.0,
+   "safety_factor": 3.0,
+   "before": {
+    "covered": true,
+    "error": 0.04565071278216726,
+    "gci": 0.13695213834650194,
+    "efficiency": 0.3333333333333329,
+    "half_width": 0.1307001756139421,
+    "extrapolated": 0.9543492872178327,
+    "convergence": "inconsistent"
+   },
+   "after": {
+    "covered": true,
+    "error": 0.04565071278216726,
+    "gci": 0.26391375284167606,
+    "efficiency": 0.17297587674240486,
+    "half_width": 0.2518659019114369,
+    "extrapolated": 0.9543492872178327,
+    "convergence": "inconsistent"
+   }
+  },
+  {
+   "family": "F-phaselock",
+   "label": "phase-locked p=1.0 A=0.4 phi=0.48 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.0,
+    1.0075199940138582,
+    0.977617910155163
+   ],
+   "exact": 1.0,
+   "convergence": "inconsistent",
+   "fallback_reason": "non-monotone",
+   "observed_order": NaN,
+   "order_used": 2.0,
+   "safety_factor": 3.0,
+   "before": {
+    "covered": true,
+    "error": 0.006015995211086533,
+    "gci": 0.018047985633259586,
+    "efficiency": 0.3333333333333336,
+    "half_width": 0.01793940903812019,
+    "extrapolated": 0.9939840047889135,
+    "convergence": "inconsistent"
+   },
+   "after": {
+    "covered": true,
+    "error": 0.006015995211086533,
+    "gci": 0.07176500126086842,
+    "efficiency": 0.08382909643125581,
+    "half_width": 0.07133326335695944,
+    "extrapolated": 0.9939840047889135,
+    "convergence": "inconsistent"
+   }
+  },
+  {
+   "family": "F-phaselock",
+   "label": "phase-locked p=1.0 A=0.4 phi=0.62 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.0,
+    0.9589271736442787,
+    1.0898224055585444
+   ],
+   "exact": 1.0,
+   "convergence": "inconsistent",
+   "fallback_reason": "non-monotone",
+   "observed_order": NaN,
+   "order_used": 2.0,
+   "safety_factor": 3.0,
+   "before": {
+    "covered": true,
+    "error": 0.03285826108457712,
+    "gci": 0.09857478325373104,
+    "efficiency": 0.3333333333333345,
+    "half_width": 0.1018137792182377,
+    "extrapolated": 1.0328582610845771,
+    "convergence": "inconsistent"
+   },
+   "after": {
+    "covered": true,
+    "error": 0.03285826108457712,
+    "gci": 0.31414855659423735,
+    "efficiency": 0.10459465878437166,
+    "half_width": 0.32447093188615383,
+    "extrapolated": 1.0328582610845771,
+    "convergence": "inconsistent"
+   }
+  },
+  {
+   "family": "F-cancel",
+   "label": "two-term cancel A=0.4 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.044,
+    1.039,
+    0.9977499999999999
+   ],
+   "exact": 1.0,
+   "convergence": "monotone",
+   "fallback_reason": "none",
+   "observed_order": 5.204426122367188,
+   "order_used": 5.204426122367188,
+   "safety_factor": 1.25,
+   "before": {
+    "covered": false,
+    "error": 0.044689655172413856,
+    "gci": 0.0008257365570088918,
+    "efficiency": 54.12095999999746,
+    "half_width": 0.0008626384390049147,
+    "extrapolated": 1.0446896551724139,
+    "convergence": "monotone"
+   },
+   "after": {
+    "covered": false,
+    "error": 0.044689655172413856,
+    "gci": 0.0008257365570088918,
+    "efficiency": 54.12095999999746,
+    "half_width": 0.0008626384390049147,
+    "extrapolated": 1.0446896551724139,
+    "convergence": "monotone"
+   }
+  },
+  {
+   "family": "F-implausible",
+   "label": "vanishing d1 p=1.0 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.4,
+    1.4003999999999999,
+    5.0
+   ],
+   "exact": 1.0,
+   "convergence": "order-implausible",
+   "fallback_reason": "implausible-order",
+   "observed_order": 22.455369295562633,
+   "order_used": 2.0,
+   "safety_factor": 3.0,
+   "before": {
+    "covered": false,
+    "error": 0.3999999555456768,
+    "gci": 3.969135998474966e-08,
+    "efficiency": 10077758.880002249,
+    "half_width": 5.5567902279562986e-08,
+    "extrapolated": 1.3999999555456768,
+    "convergence": "monotone"
+   },
+   "after": {
+    "covered": true,
+    "error": 0.39968000000000004,
+    "gci": 6.170742857142853,
+    "efficiency": 0.06477015964736828,
+    "half_width": 8.637065362285709,
+    "extrapolated": 1.39968,
+    "convergence": "order-implausible"
+   }
+  },
+  {
+   "family": "F-bias",
+   "label": "biased p=1.0 A=0.4 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.54,
+    1.56,
+    1.59
+   ],
+   "exact": 1.0,
+   "convergence": "monotone",
+   "fallback_reason": "none",
+   "observed_order": 1.0000000000000004,
+   "order_used": 1.0000000000000004,
+   "safety_factor": 1.25,
+   "before": {
+    "covered": false,
+    "error": 0.5,
+    "gci": 0.032467532467532464,
+    "efficiency": 15.400000000000002,
+    "half_width": 0.04870129870129869,
+    "extrapolated": 1.5,
+    "convergence": "monotone"
+   },
+   "after": {
+    "covered": false,
+    "error": 0.5,
+    "gci": 0.032467532467532464,
+    "efficiency": 15.400000000000002,
+    "half_width": 0.04870129870129869,
+    "extrapolated": 1.5,
+    "convergence": "monotone"
+   }
+  },
+  {
+   "family": "F-signed",
+   "label": "alternating p=2.0 A=0.02 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.0002,
+    0.99955,
+    1.0010125
+   ],
+   "exact": 1.0,
+   "convergence": "inconsistent",
+   "fallback_reason": "non-monotone",
+   "observed_order": NaN,
+   "order_used": 2.0,
+   "safety_factor": 3.0,
+   "before": {
+    "covered": true,
+    "error": 0.0007199999999998319,
+    "gci": 0.0015596880623873497,
+    "efficiency": 0.4616307692307126,
+    "half_width": 0.0015608110377922646,
+    "extrapolated": 1.0007199999999998,
+    "convergence": "inconsistent"
+   },
+   "after": {
+    "covered": true,
+    "error": 0.0007199999999998319,
+    "gci": 0.0035092981403720028,
+    "efficiency": 0.20516923076917834,
+    "half_width": 0.0035118248350330394,
+    "extrapolated": 1.0007199999999998,
+    "convergence": "inconsistent"
+   }
+  },
+  {
+   "family": "F-phaselock",
+   "label": "phase-locked p=2.0 A=0.02 phi=0.3 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.0,
+    1.0004279754323329,
+    0.9994048674320539
+   ],
+   "exact": 1.0,
+   "convergence": "inconsistent",
+   "fallback_reason": "non-monotone",
+   "observed_order": NaN,
+   "order_used": 2.0,
+   "safety_factor": 3.0,
+   "before": {
+    "covered": true,
+    "error": 0.00034238034586631105,
+    "gci": 0.0010271410375988657,
+    "efficiency": 0.33333333333335524,
+    "half_width": 0.0010267893646951909,
+    "extrapolated": 0.9996576196541337,
+    "convergence": "inconsistent"
+   },
+   "after": {
+    "covered": true,
+    "error": 0.00034238034586631105,
+    "gci": 0.0024554592006694504,
+    "efficiency": 0.13943638150166182,
+    "half_width": 0.0024546184996990794,
+    "extrapolated": 0.9996576196541337,
+    "convergence": "inconsistent"
+   }
+  },
+  {
+   "family": "F-phaselock",
+   "label": "phase-locked p=2.0 A=0.02 phi=0.48 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.0,
+    1.000056399955104,
+    0.9997482014892456
+   ],
+   "exact": 1.0,
+   "convergence": "inconsistent",
+   "fallback_reason": "non-monotone",
+   "observed_order": NaN,
+   "order_used": 2.0,
+   "safety_factor": 3.0,
+   "before": {
+    "covered": true,
+    "error": 4.511996408318453e-05,
+    "gci": 0.00013535989224955347,
+    "efficiency": 0.3333333333333336,
+    "half_width": 0.00013535378481610572,
+    "extrapolated": 0.9999548800359168,
+    "convergence": "inconsistent"
+   },
+   "after": {
+    "covered": true,
+    "error": 4.511996408318453e-05,
+    "gci": 0.0007396763180601334,
+    "efficiency": 0.06099960615410214,
+    "half_width": 0.0007396429438912833,
+    "extrapolated": 0.9999548800359168,
+    "convergence": "inconsistent"
+   }
+  },
+  {
+   "family": "F-phaselock",
+   "label": "phase-locked p=2.0 A=0.02 phi=0.62 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.0,
+    0.9996919538023321,
+    1.0010105020625337
+   ],
+   "exact": 1.0,
+   "convergence": "inconsistent",
+   "fallback_reason": "non-monotone",
+   "observed_order": NaN,
+   "order_used": 2.0,
+   "safety_factor": 3.0,
+   "before": {
+    "covered": true,
+    "error": 0.00024643695813431066,
+    "gci": 0.0007393108744029314,
+    "efficiency": 0.3333333333333336,
+    "half_width": 0.0007394930679259226,
+    "extrapolated": 1.0002464369581343,
+    "convergence": "inconsistent"
+   },
+   "after": {
+    "covered": true,
+    "error": 0.00024643695813431066,
+    "gci": 0.003164515824483869,
+    "efficiency": 0.07787509110481519,
+    "half_width": 0.003165295678137614,
+    "extrapolated": 1.0002464369581343,
+    "convergence": "inconsistent"
+   }
+  },
+  {
+   "family": "F-cancel",
+   "label": "two-term cancel A=0.02 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.0022,
+    1.00195,
+    0.9998875
+   ],
+   "exact": 1.0,
+   "convergence": "monotone",
+   "fallback_reason": "none",
+   "observed_order": 5.2044261223662485,
+   "order_used": 5.2044261223662485,
+   "safety_factor": 1.25,
+   "before": {
+    "covered": false,
+    "error": 0.002234482758620704,
+    "gci": 4.300882885242091e-05,
+    "efficiency": 51.95404799995915,
+    "half_width": 4.3104931338966423e-05,
+    "extrapolated": 1.0022344827586207,
+    "convergence": "monotone"
+   },
+   "after": {
+    "covered": false,
+    "error": 0.002234482758620704,
+    "gci": 4.300882885242091e-05,
+    "efficiency": 51.95404799995915,
+    "half_width": 4.3104931338966423e-05,
+    "extrapolated": 1.0022344827586207,
+    "convergence": "monotone"
+   }
+  },
+  {
+   "family": "F-implausible",
+   "label": "vanishing d1 p=2.0 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.02,
+    1.02002,
+    1.2
+   ],
+   "exact": 1.0,
+   "convergence": "order-implausible",
+   "fallback_reason": "implausible-order",
+   "observed_order": 22.45536929557359,
+   "order_used": 2.0,
+   "safety_factor": 3.0,
+   "before": {
+    "covered": false,
+    "error": 0.019999997777283784,
+    "gci": 2.7239168616743074e-09,
+    "efficiency": 7342367.184066846,
+    "half_width": 2.7783952916138333e-09,
+    "extrapolated": 1.0199999977772838,
+    "convergence": "monotone"
+   },
+   "after": {
+    "covered": true,
+    "error": 0.019984000000000002,
+    "gci": 0.42348235294117625,
+    "efficiency": 0.047189687743082596,
+    "half_width": 0.4319452242823527,
+    "extrapolated": 1.019984,
+    "convergence": "order-implausible"
+   }
+  },
+  {
+   "family": "F-bias",
+   "label": "biased p=2.0 A=0.02 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.5002,
+    1.50045,
+    1.5010125
+   ],
+   "exact": 1.0,
+   "convergence": "monotone",
+   "fallback_reason": "none",
+   "observed_order": 1.9999999999992704,
+   "order_used": 1.9999999999992704,
+   "safety_factor": 1.25,
+   "before": {
+    "covered": false,
+    "error": 0.4999999999999998,
+    "gci": 0.00016664444740715668,
+    "efficiency": 3000.3999999974008,
+    "half_width": 0.0002499666711106574,
+    "extrapolated": 1.4999999999999998,
+    "convergence": "monotone"
+   },
+   "after": {
+    "covered": false,
+    "error": 0.4999999999999998,
+    "gci": 0.00016664444740715668,
+    "efficiency": 3000.3999999974008,
+    "half_width": 0.0002499666711106574,
+    "extrapolated": 1.4999999999999998,
+    "convergence": "monotone"
+   }
+  },
+  {
+   "family": "F-signed",
+   "label": "alternating p=2.0 A=0.1 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.001,
+    0.99775,
+    1.0050625
+   ],
+   "exact": 1.0,
+   "convergence": "inconsistent",
+   "fallback_reason": "non-monotone",
+   "observed_order": NaN,
+   "order_used": 2.0,
+   "safety_factor": 3.0,
+   "before": {
+    "covered": true,
+    "error": 0.0035999999999998256,
+    "gci": 0.007792207792207462,
+    "efficiency": 0.4619999999999972,
+    "half_width": 0.007820259740259461,
+    "extrapolated": 1.0035999999999998,
+    "convergence": "inconsistent"
+   },
+   "after": {
+    "covered": true,
+    "error": 0.0035999999999998256,
+    "gci": 0.017532467532467386,
+    "efficiency": 0.2053333333333251,
+    "half_width": 0.01759558441558423,
+    "extrapolated": 1.0035999999999998,
+    "convergence": "inconsistent"
+   }
+  },
+  {
+   "family": "F-phaselock",
+   "label": "phase-locked p=2.0 A=0.1 phi=0.3 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.0,
+    1.002139877161664,
+    0.9970243371602694
+   ],
+   "exact": 1.0,
+   "convergence": "inconsistent",
+   "fallback_reason": "non-monotone",
+   "observed_order": NaN,
+   "order_used": 2.0,
+   "safety_factor": 3.0,
+   "before": {
+    "covered": true,
+    "error": 0.0017119017293312222,
+    "gci": 0.005135705187993796,
+    "efficiency": 0.33333333333332493,
+    "half_width": 0.005126913365401109,
+    "extrapolated": 0.9982880982706688,
+    "convergence": "inconsistent"
+   },
+   "after": {
+    "covered": true,
+    "error": 0.0017119017293312222,
+    "gci": 0.012277296003347251,
+    "efficiency": 0.1394363815016347,
+    "half_width": 0.012256278479087612,
+    "extrapolated": 0.9982880982706688,
+    "convergence": "inconsistent"
+   }
+  },
+  {
+   "family": "F-phaselock",
+   "label": "phase-locked p=2.0 A=0.1 phi=0.48 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.0,
+    1.0002819997755197,
+    0.998741007446228
+   ],
+   "exact": 1.0,
+   "convergence": "inconsistent",
+   "fallback_reason": "non-monotone",
+   "observed_order": NaN,
+   "order_used": 2.0,
+   "safety_factor": 3.0,
+   "before": {
+    "covered": true,
+    "error": 0.0002255998204157006,
+    "gci": 0.0006767994612472345,
+    "efficiency": 0.333333333333268,
+    "half_width": 0.0006766467754102945,
+    "extrapolated": 0.9997744001795843,
+    "convergence": "inconsistent"
+   },
+   "after": {
+    "covered": true,
+    "error": 0.0002255998204157006,
+    "gci": 0.0036983815903001344,
+    "efficiency": 0.06099960615405089,
+    "half_width": 0.0036975472360775696,
+    "extrapolated": 0.9997744001795843,
+    "convergence": "inconsistent"
+   }
+  },
+  {
+   "family": "F-phaselock",
+   "label": "phase-locked p=2.0 A=0.1 phi=0.62 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.0,
+    0.9984597690116604,
+    1.0050525103126682
+   ],
+   "exact": 1.0,
+   "convergence": "inconsistent",
+   "fallback_reason": "non-monotone",
+   "observed_order": NaN,
+   "order_used": 2.0,
+   "safety_factor": 3.0,
+   "before": {
+    "covered": true,
+    "error": 0.0012321847906715533,
+    "gci": 0.0036965543720149235,
+    "efficiency": 0.33333333333330956,
+    "half_width": 0.0037011092100900367,
+    "extrapolated": 1.0012321847906716,
+    "convergence": "inconsistent"
+   },
+   "after": {
+    "covered": true,
+    "error": 0.0012321847906715533,
+    "gci": 0.015822579122418544,
+    "efficiency": 0.07787509110481913,
+    "half_width": 0.01584207546376243,
+    "extrapolated": 1.0012321847906716,
+    "convergence": "inconsistent"
+   }
+  },
+  {
+   "family": "F-cancel",
+   "label": "two-term cancel A=0.1 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.011,
+    1.00975,
+    0.9994375
+   ],
+   "exact": 1.0,
+   "convergence": "monotone",
+   "fallback_reason": "none",
+   "observed_order": 5.204426122367284,
+   "order_used": 5.204426122367284,
+   "safety_factor": 1.25,
+   "before": {
+    "covered": false,
+    "error": 0.011172413793103297,
+    "gci": 0.00021317234557794424,
+    "efficiency": 52.41024000000141,
+    "half_width": 0.00021555399523198737,
+    "extrapolated": 1.0111724137931033,
+    "convergence": "monotone"
+   },
+   "after": {
+    "covered": false,
+    "error": 0.011172413793103297,
+    "gci": 0.00021317234557794424,
+    "efficiency": 52.41024000000141,
+    "half_width": 0.00021555399523198737,
+    "extrapolated": 1.0111724137931033,
+    "convergence": "monotone"
+   }
+  },
+  {
+   "family": "F-implausible",
+   "label": "vanishing d1 p=2.0 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.1,
+    1.1001,
+    2.0
+   ],
+   "exact": 1.0,
+   "convergence": "order-implausible",
+   "fallback_reason": "implausible-order",
+   "observed_order": 22.455369295562633,
+   "order_used": 2.0,
+   "safety_factor": 3.0,
+   "before": {
+    "covered": false,
+    "error": 0.09999998888641937,
+    "gci": 1.262906908605671e-08,
+    "efficiency": 7918239.12000178,
+    "half_width": 1.3891975791935351e-08,
+    "extrapolated": 1.0999999888864194,
+    "convergence": "monotone"
+   },
+   "after": {
+    "covered": true,
+    "error": 0.09992000000000001,
+    "gci": 1.9634181818181802,
+    "efficiency": 0.05089083972293223,
+    "half_width": 2.159602926545453,
+    "extrapolated": 1.09992,
+    "convergence": "order-implausible"
+   }
+  },
+  {
+   "family": "F-bias",
+   "label": "biased p=2.0 A=0.1 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.501,
+    1.50225,
+    1.5050625
+   ],
+   "exact": 1.0,
+   "convergence": "monotone",
+   "fallback_reason": "none",
+   "observed_order": 1.9999999999995133,
+   "order_used": 1.9999999999995133,
+   "safety_factor": 1.25,
+   "before": {
+    "covered": false,
+    "error": 0.49999999999999933,
+    "gci": 0.0008327781479018245,
+    "efficiency": 600.3999999996925,
+    "half_width": 0.0012491672218526428,
+    "extrapolated": 1.4999999999999993,
+    "convergence": "monotone"
+   },
+   "after": {
+    "covered": false,
+    "error": 0.49999999999999933,
+    "gci": 0.0008327781479018245,
+    "efficiency": 600.3999999996925,
+    "half_width": 0.0012491672218526428,
+    "extrapolated": 1.4999999999999993,
+    "convergence": "monotone"
+   }
+  },
+  {
+   "family": "F-signed",
+   "label": "alternating p=2.0 A=0.4 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.004,
+    0.991,
+    1.02025
+   ],
+   "exact": 1.0,
+   "convergence": "inconsistent",
+   "fallback_reason": "non-monotone",
+   "observed_order": NaN,
+   "order_used": 2.0,
+   "safety_factor": 3.0,
+   "before": {
+    "covered": true,
+    "error": 0.014399999999999968,
+    "gci": 0.031075697211155384,
+    "efficiency": 0.4633846153846143,
+    "half_width": 0.03152318725099601,
+    "extrapolated": 1.0144,
+    "convergence": "inconsistent"
+   },
+   "after": {
+    "covered": true,
+    "error": 0.014399999999999968,
+    "gci": 0.06992031872509981,
+    "efficiency": 0.2059487179487169,
+    "half_width": 0.07092717131474124,
+    "extrapolated": 1.0144,
+    "convergence": "inconsistent"
+   }
+  },
+  {
+   "family": "F-phaselock",
+   "label": "phase-locked p=2.0 A=0.4 phi=0.3 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.0,
+    1.0085595086466563,
+    0.9880973486410775
+   ],
+   "exact": 1.0,
+   "convergence": "inconsistent",
+   "fallback_reason": "non-monotone",
+   "observed_order": NaN,
+   "order_used": 2.0,
+   "safety_factor": 3.0,
+   "before": {
+    "covered": true,
+    "error": 0.006847606917325111,
+    "gci": 0.020542820751975183,
+    "efficiency": 0.33333333333333576,
+    "half_width": 0.020402151590492634,
+    "extrapolated": 0.9931523930826749,
+    "convergence": "inconsistent"
+   },
+   "after": {
+    "covered": true,
+    "error": 0.006847606917325111,
+    "gci": 0.04910918401338927,
+    "efficiency": 0.13943638150163845,
+    "half_width": 0.048772903625234953,
+    "extrapolated": 0.9931523930826749,
+    "convergence": "inconsistent"
+   }
+  },
+  {
+   "family": "F-phaselock",
+   "label": "phase-locked p=2.0 A=0.4 phi=0.48 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.0,
+    1.0011279991020787,
+    0.9949640297849117
+   ],
+   "exact": 1.0,
+   "convergence": "inconsistent",
+   "fallback_reason": "non-monotone",
+   "observed_order": NaN,
+   "order_used": 2.0,
+   "safety_factor": 3.0,
+   "before": {
+    "covered": true,
+    "error": 0.0009023992816630244,
+    "gci": 0.002707197844988938,
+    "efficiency": 0.33333333333334997,
+    "half_width": 0.002704754871598325,
+    "extrapolated": 0.999097600718337,
+    "convergence": "inconsistent"
+   },
+   "after": {
+    "covered": true,
+    "error": 0.0009023992816630244,
+    "gci": 0.014793526361200805,
+    "efficiency": 0.060999606154064794,
+    "half_width": 0.014780176693639235,
+    "extrapolated": 0.999097600718337,
+    "convergence": "inconsistent"
+   }
+  },
+  {
+   "family": "F-phaselock",
+   "label": "phase-locked p=2.0 A=0.4 phi=0.62 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.0,
+    0.9938390760466418,
+    1.0202100412506725
+   ],
+   "exact": 1.0,
+   "convergence": "inconsistent",
+   "fallback_reason": "non-monotone",
+   "observed_order": NaN,
+   "order_used": 2.0,
+   "safety_factor": 3.0,
+   "before": {
+    "covered": true,
+    "error": 0.004928739162686657,
+    "gci": 0.014786217488059694,
+    "efficiency": 0.3333333333333396,
+    "half_width": 0.014859094897261116,
+    "extrapolated": 1.0049287391626867,
+    "convergence": "inconsistent"
+   },
+   "after": {
+    "covered": true,
+    "error": 0.004928739162686657,
+    "gci": 0.06329031648967365,
+    "efficiency": 0.0778750911048268,
+    "half_width": 0.06360225795117508,
+    "extrapolated": 1.0049287391626867,
+    "convergence": "inconsistent"
+   }
+  },
+  {
+   "family": "F-cancel",
+   "label": "two-term cancel A=0.4 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.044,
+    1.039,
+    0.9977499999999999
+   ],
+   "exact": 1.0,
+   "convergence": "monotone",
+   "fallback_reason": "none",
+   "observed_order": 5.204426122367188,
+   "order_used": 5.204426122367188,
+   "safety_factor": 1.25,
+   "before": {
+    "covered": false,
+    "error": 0.044689655172413856,
+    "gci": 0.0008257365570088918,
+    "efficiency": 54.12095999999746,
+    "half_width": 0.0008626384390049147,
+    "extrapolated": 1.0446896551724139,
+    "convergence": "monotone"
+   },
+   "after": {
+    "covered": false,
+    "error": 0.044689655172413856,
+    "gci": 0.0008257365570088918,
+    "efficiency": 54.12095999999746,
+    "half_width": 0.0008626384390049147,
+    "extrapolated": 1.0446896551724139,
+    "convergence": "monotone"
+   }
+  },
+  {
+   "family": "F-implausible",
+   "label": "vanishing d1 p=2.0 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.4,
+    1.4003999999999999,
+    5.0
+   ],
+   "exact": 1.0,
+   "convergence": "order-implausible",
+   "fallback_reason": "implausible-order",
+   "observed_order": 22.455369295562633,
+   "order_used": 2.0,
+   "safety_factor": 3.0,
+   "before": {
+    "covered": false,
+    "error": 0.3999999555456768,
+    "gci": 3.969135998474966e-08,
+    "efficiency": 10077758.880002249,
+    "half_width": 5.5567902279562986e-08,
+    "extrapolated": 1.3999999555456768,
+    "convergence": "monotone"
+   },
+   "after": {
+    "covered": true,
+    "error": 0.39968000000000004,
+    "gci": 6.170742857142853,
+    "efficiency": 0.06477015964736828,
+    "half_width": 8.637065362285709,
+    "extrapolated": 1.39968,
+    "convergence": "order-implausible"
+   }
+  },
+  {
+   "family": "F-bias",
+   "label": "biased p=2.0 A=0.4 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.504,
+    1.509,
+    1.52025
+   ],
+   "exact": 1.0,
+   "convergence": "monotone",
+   "fallback_reason": "none",
+   "observed_order": 2.0000000000000977,
+   "order_used": 2.0000000000000977,
+   "safety_factor": 1.25,
+   "before": {
+    "covered": false,
+    "error": 0.5000000000000004,
+    "gci": 0.0033244680851060734,
+    "efficiency": 150.40000000001413,
+    "half_width": 0.0049867021276590595,
+    "extrapolated": 1.5000000000000004,
+    "convergence": "monotone"
+   },
+   "after": {
+    "covered": false,
+    "error": 0.5000000000000004,
+    "gci": 0.0033244680851060734,
+    "efficiency": 150.40000000001413,
+    "half_width": 0.0049867021276590595,
+    "extrapolated": 1.5000000000000004,
+    "convergence": "monotone"
+   }
+  },
+  {
+   "family": "F-signed",
+   "label": "alternating p=3.0 A=0.02 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.00002,
+    0.9999325,
+    1.0002278125
+   ],
+   "exact": 1.0,
+   "convergence": "inconsistent",
+   "fallback_reason": "non-monotone",
+   "observed_order": NaN,
+   "order_used": 2.0,
+   "safety_factor": 3.0,
+   "before": {
+    "covered": true,
+    "error": 8.999999999992347e-05,
+    "gci": 0.00020999580008377523,
+    "efficiency": 0.4285800000000909,
+    "half_width": 0.0002100146997057739,
+    "extrapolated": 1.00009,
+    "convergence": "inconsistent"
+   },
+   "after": {
+    "covered": true,
+    "error": 8.999999999992347e-05,
+    "gci": 0.0007087358252833076,
+    "efficiency": 0.12698666666659217,
+    "half_width": 0.0007087996115076045,
+    "extrapolated": 1.00009,
+    "convergence": "inconsistent"
+   }
+  },
+  {
+   "family": "F-phaselock",
+   "label": "phase-locked p=3.0 A=0.02 phi=0.3 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.0,
+    1.00006419631485,
+    0.9998660951722121
+   ],
+   "exact": 1.0,
+   "convergence": "inconsistent",
+   "fallback_reason": "non-monotone",
+   "observed_order": NaN,
+   "order_used": 2.0,
+   "safety_factor": 3.0,
+   "before": {
+    "covered": true,
+    "error": 5.1357051879974414e-05,
+    "gci": 0.00015407115563998976,
+    "efficiency": 0.33333333333318943,
+    "half_width": 0.0001540632429996025,
+    "extrapolated": 0.99994864294812,
+    "convergence": "inconsistent"
+   },
+   "after": {
+    "covered": true,
+    "error": 5.1357051879974414e-05,
+    "gci": 0.0004754427423308446,
+    "efficiency": 0.10801942549001362,
+    "half_width": 0.00047541832499325976,
+    "extrapolated": 0.99994864294812,
+    "convergence": "inconsistent"
+   }
+  },
+  {
+   "family": "F-phaselock",
+   "label": "phase-locked p=3.0 A=0.02 phi=0.48 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.0,
+    1.0000084599932655,
+    0.9999433453350802
+   ],
+   "exact": 1.0,
+   "convergence": "inconsistent",
+   "fallback_reason": "non-monotone",
+   "observed_order": NaN,
+   "order_used": 2.0,
+   "safety_factor": 3.0,
+   "before": {
+    "covered": true,
+    "error": 6.767994612411066e-06,
+    "gci": 2.030398383716657e-05,
+    "efficiency": 0.33333333333442716,
+    "half_width": 2.0303846419877924e-05,
+    "extrapolated": 0.9999932320053876,
+    "convergence": "inconsistent"
+   },
+   "after": {
+    "covered": true,
+    "error": 6.767994612411066e-06,
+    "gci": 0.00015627517964462702,
+    "efficiency": 0.043308186417072916,
+    "half_width": 0.00015627412197505297,
+    "extrapolated": 0.9999932320053876,
+    "convergence": "inconsistent"
+   }
+  },
+  {
+   "family": "F-phaselock",
+   "label": "phase-locked p=3.0 A=0.02 phi=0.62 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.0,
+    0.9999537930703498,
+    1.00022736296407
+   ],
+   "exact": 1.0,
+   "convergence": "inconsistent",
+   "fallback_reason": "non-monotone",
+   "observed_order": NaN,
+   "order_used": 2.0,
+   "safety_factor": 3.0,
+   "before": {
+    "covered": true,
+    "error": 3.6965543720235416e-05,
+    "gci": 0.00011089663116043971,
+    "efficiency": 0.3333333333341345,
+    "half_width": 0.00011090073051467364,
+    "extrapolated": 1.0000369655437202,
+    "convergence": "inconsistent"
+   },
+   "after": {
+    "covered": true,
+    "error": 3.6965543720235416e-05,
+    "gci": 0.0006565677449287039,
+    "efficiency": 0.056301187509979596,
+    "half_width": 0.0006565920153123739,
+    "extrapolated": 1.0000369655437202,
+    "convergence": "inconsistent"
+   }
+  },
+  {
+   "family": "F-cancel",
+   "label": "two-term cancel A=0.02 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.0022,
+    1.00195,
+    0.9998875
+   ],
+   "exact": 1.0,
+   "convergence": "monotone",
+   "fallback_reason": "none",
+   "observed_order": 5.2044261223662485,
+   "order_used": 5.2044261223662485,
+   "safety_factor": 1.25,
+   "before": {
+    "covered": false,
+    "error": 0.002234482758620704,
+    "gci": 4.300882885242091e-05,
+    "efficiency": 51.95404799995915,
+    "half_width": 4.3104931338966423e-05,
+    "extrapolated": 1.0022344827586207,
+    "convergence": "monotone"
+   },
+   "after": {
+    "covered": false,
+    "error": 0.002234482758620704,
+    "gci": 4.300882885242091e-05,
+    "efficiency": 51.95404799995915,
+    "half_width": 4.3104931338966423e-05,
+    "extrapolated": 1.0022344827586207,
+    "convergence": "monotone"
+   }
+  },
+  {
+   "family": "F-implausible",
+   "label": "vanishing d1 p=3.0 r=(1.5,1.5)",
+   "spacings": [
+    0.1,
+    0.15000000000000002,
+    0.22500000000000003
+   ],
+   "values": [
+    1.02,
+    1.02002,
+    1.2
+   ],
+   "exact": 1.0,
+   "convergence": "order-implausible",
+   "fallback_reason": "implausible-order",
+   "observed_order": 22.45536929557359,
+   "order_used": 2.0,
+   "safety_factor": 3.0,
+   "before": {
+    "covered": false,
+    "error": 0.019999997777283784,
+    "gci": 2.7239168616743074e-09,
+    "efficiency": 7342367.184066846,
+    "half_width": 2.7783952916138333e-09,
+    "extrapolated": 1.0199999977772838,
+    "convergence": "monotone"
+   },
+   "after": {
+    "covered": true,
+    "error": 0.019984000000000002,
+    "gci": 0.42348235294117625,
+    "efficiency": 0.047189687743082596,
+    "half_width": 0.4319452242823527,
+    "extrapolated": 1.019984,
+    "convergence": "order-implausible"
+   }
+  }
+ ],
+ "scope": "Deterministic closed-form families; the monotone path is a control (gci must be unchanged). F-bias has no limit by construction and is reported as a scope limit, not as a defect."
+}
