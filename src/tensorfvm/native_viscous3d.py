@@ -45,6 +45,9 @@ from scipy.sparse import coo_matrix, diags, kron, eye, bmat
 from .native_operators3d import NativeOperators3D
 
 
+_COLLINEAR_TOL=1e-6
+
+
 class NativeViscous3D:
     def __init__(self,mesh,dirichlet_mask,dynamic_viscosity=1.,*,deviatoric=True,correction='over-relaxed',correction_damping=1.,wall_closure='two_point'):
         self.mesh=mesh;self.op=NativeOperators3D(mesh)
@@ -144,39 +147,51 @@ class NativeViscous3D:
         fc=mesh.face_centers;cc=mesh.cell_centers
         for face in np.where(bd)[0]:
             c0=o[face];nf=self.normal[face]
+            inward=cc[c0]-fc[face]
+            span=float(np.linalg.norm(inward))
+            if span<=0:continue
+            inward=inward/span
             best_align=-2.0;best_gf=-1
             for gf,gn,sig in candidates.get(c0,()):
-                align=sig*(gn@nf)
+                align=sig*(gn@inward)
                 if align>best_align:best_align,best_gf=align,gf
             if best_gf<0 or best_align<0.5:continue
             c1=n[best_gf] if o[best_gf]==c0 else o[best_gf]
             if c1<0:continue
-            delta0=float((cc[c0]-fc[face])@nf)
-            delta1=float((cc[c1]-fc[face])@nf)
-            if delta0<=0 or delta1<=delta0*(1+1e-9):continue
+            first=cc[c0]-fc[face];second_offset=cc[c1]-fc[face]
+            delta0=float(first@nf);delta1=float(second_offset@nf)
+            if delta0==0. or delta1*delta0<=0:continue
+            if abs(delta1)<=abs(delta0)*(1+1e-9):continue
+            # The one-dimensional weights below reproduce the affine face normal
+            # derivative only when both abscissae sit on the face normal line.
+            # Triangulated faces put their centroid off that line, so such faces
+            # keep the two-point closure instead of silently losing exactness.
+            if (np.linalg.norm(first-delta0*nf)>_COLLINEAR_TOL*abs(delta0)
+                    or np.linalg.norm(second_offset-delta1*nf)>_COLLINEAR_TOL*abs(delta1)):continue
+            side=1.0 if delta0>0 else -1.0
             gap=delta1-delta0
-            coeff[face,0]=(delta0+delta1)/(delta0*delta1)
-            coeff[face,1]=-delta1/(delta0*gap)
-            coeff[face,2]=delta0/(delta1*gap)
+            coeff[face,0]=side*(delta0+delta1)/(delta0*delta1)
+            coeff[face,1]=-side*delta1/(delta0*gap)
+            coeff[face,2]=side*delta0/(delta1*gap)
             second[face]=c1
         self.wall_second_cell=second
         self.wall_coeff=coeff
         self.wall_second_order_faces=int((second[bd]>=0).sum())
         nrm=self.normal
-        nc=(sum(diags(nrm[:,a])@self.face_gradient_matrices[a] for a in range(3))).toarray()
-        for k in range(3):
-            M=self.face_gradient_matrices[k]
-            mask=second[bd]>=0
+        mask=second[bd]>=0
+        if mask.any():
+            # Normal-contraction operator d/dn = sum_a n_a d/dx_a over every face,
+            # restricted to the upgraded Dirichlet faces by a diagonal factor.
+            nc=sum(diags(nrm[:,a])@self.face_gradient_matrices[a] for a in range(3)).tocsr()
             fb=f[bd][mask]
-            drop_vals=(nrm[bd,k][mask][:,None]*nc[bd][mask]).ravel()
-            drop_rows=np.repeat(fb,3)
-            drop_cols=np.tile(np.arange(3),len(fb))
-            drop=coo_matrix((drop_vals,(drop_rows,drop_cols)),shape=(F,N))
-            add_vals=np.r_[nrm[bd,k][mask]*coeff[bd,1][mask],nrm[bd,k][mask]*coeff[bd,2][mask]]
-            add_rows=np.r_[fb,fb]
-            add_cols=np.r_[o[bd][mask],second[bd][mask]]
-            add=coo_matrix((add_vals,(add_rows,add_cols)),shape=(F,N))
-            self.face_gradient_matrices[k]=(M-drop+add).tocsr()
+            upgraded=np.zeros(F);upgraded[fb]=1.
+            for k in range(3):
+                drop=diags(nrm[:,k]*upgraded)@nc
+                add_vals=np.r_[nrm[bd,k][mask]*coeff[bd,1][mask],nrm[bd,k][mask]*coeff[bd,2][mask]]
+                add_rows=np.r_[fb,fb]
+                add_cols=np.r_[o[bd][mask],second[bd][mask]]
+                add=coo_matrix((add_vals,(add_rows,add_cols)),shape=(F,N))
+                self.face_gradient_matrices[k]=(self.face_gradient_matrices[k]-drop+add).tocsr()
 
     def _boundary_data(self,neumann_gradients,dirichlet_values):
         g=np.broadcast_to(np.asarray(neumann_gradients,dtype=float),(self.F,))
