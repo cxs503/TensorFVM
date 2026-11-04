@@ -1,0 +1,57 @@
+{
+ "baseline_all_verified": true,
+ "baseline_max_area_error": 1.709300165674279e-16,
+ "kill_rate": 0.75,
+ "mutants": {
+  "coplanar_diagonal_not_cancelled": {
+   "caught": true,
+   "exception": "ValueError: nonclosed section boundary in native cell 0"
+  },
+  "nonplanar_facet_accepted": {
+   "all_verified": false,
+   "caught": true,
+   "max_area_error": 1.709300165674279e-16,
+   "orientation_failures": [],
+   "polygons_expected_mismatch": [],
+   "rejections_accepted": [
+    "nonplanar_facet"
+   ],
+   "worst_case": "cube_plane_111_c1.5"
+  },
+  "plane_snap_removed": {
+   "all_verified": true,
+   "caught": false,
+   "max_area_error": 1.709300165674279e-16,
+   "orientation_failures": [],
+   "polygons_expected_mismatch": [],
+   "rejections_accepted": [],
+   "worst_case": "cube_plane_111_c1.5"
+  },
+  "sign_flip_removed": {
+   "all_verified": false,
+   "caught": true,
+   "max_area_error": 2.0,
+   "orientation_failures": [
+    "cube_z_half",
+    "cube_z_bottom_coplanar",
+    "cube_z_top_coplanar",
+    "cube_z_near_tangent_snap",
+    "cube_tri_z_half",
+    "cube_tri_z_bottom_coplanar",
+    "tetra_z_quarter",
+    "tetra_z_bottom_coplanar",
+    "tetra_y_quarter",
+    "block_z_half",
+    "block_tri_z_half",
+    "block_x_internal_coplanar",
+    "parallelepiped_z_half"
+   ],
+   "polygons_expected_mismatch": [],
+   "rejections_accepted": [],
+   "worst_case": "cube_z_half"
+  }
+ },
+ "survivors": [
+  "plane_snap_removed"
+ ]
+}
