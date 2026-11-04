@@ -117,8 +117,9 @@ def richardson_gci(fine, medium, coarse, spacings, *, theory_order=None,
     only declared inside the asymptotic range if ``|p_observed-p_theory| <=
     order_tolerance``.  An inconsistent series (no monotone error decay) falls
     back to ``theory_order`` (or first order if unknown) with the conservative
-    two-grid safety factor 3.0, so that a broken refinement study can never
-    report a confident band.
+    two-grid safety factor 3.0 and the **worst of the two consecutive grid
+    pairs**, so that a broken refinement study cannot report a confident band
+    (see ``docs/verification-gci-fallback/``).
     """
     h, v = _check(spacings, (fine, medium, coarse))
     if safety_factor is not None and not (math.isfinite(safety_factor) and safety_factor >= 1.):
@@ -131,6 +132,16 @@ def richardson_gci(fine, medium, coarse, spacings, *, theory_order=None,
     if v[0] == 0.:
         raise ValueError("relative GCI needs a non-zero fine-grid metric")
     eps = abs((v[1]-v[0])/v[0])
+    if fallback and v[1] != 0.:
+        # A non-monotone series can hide its whole disagreement in the coarse
+        # pair: two error terms of opposite sign that cancel between the fine
+        # and the medium grid ("false convergence") collapse ``eps`` while the
+        # coarse metric is still far from the limit, so the two-grid band would
+        # be confidently wrong.  Bound the fall-back with the worst consecutive
+        # pair, expressed in the fine-pair scaling (the ratio of the two
+        # ``r**p_used - 1`` denominators is positive for any assumed order).
+        eps = max(eps, abs((v[2]-v[1])/v[1])
+                  * (r21**p_used-1.)/(r32**p_used-1.))
     gci = (safety_factor or (SAFETY_FALLBACK if fallback else SAFETY_OBSERVED))*eps/(r21**p_used-1.)
     correction = (v[1]-v[0])/(r21**p_used-1.)
     extrapolated = float(v[0]-correction)
@@ -142,7 +153,15 @@ def richardson_gci(fine, medium, coarse, spacings, *, theory_order=None,
             raise ValueError("theory order must be finite and positive")
         order_ratio = float(p_used/theory_order)
         asymptotic = bool(not fallback and abs(p_used-theory_order) <= order_tolerance)
-    half = gci*abs(extrapolated)
+    if fallback:
+        # An inconsistent series carries no valid match order, so the extrapolated
+        # value is not a legitimate reference: scale the relative band by the
+        # largest metric in the study, and never claim a precision narrower than
+        # the spread of the three computed values (the data cannot support it).
+        half = max(gci*float(np.max(np.abs(v))),
+                   float(np.max(np.abs(v-extrapolated))))
+    else:
+        half = gci*abs(extrapolated)
     return RefinementStudy(
         spacings=tuple(float(x) for x in h), values=tuple(float(x) for x in v),
         order=float(p), order_used=float(p_used), order_ratio=order_ratio,
