@@ -13,19 +13,32 @@ def spalding_y_plus(u_plus,kappa=KAPPA,E=E):
     u=np.asarray(u_plus,dtype=float)
     if not np.isfinite(u).all() or np.any(u<0) or not np.isfinite([kappa,E]).all() or kappa<=0 or E<=0:raise ValueError('finite nonnegative u+ and positive wall constants required')
     z=kappa*u
-    with np.errstate(over='ignore',invalid='ignore'):
-        remainder=np.expm1(np.minimum(z,700))-z-.5*z*z-z**3/6
+    # Saturate the exponent argument and its polynomial partners together: for
+    # kappa*u+ > 700 the exponential alone leaves float64 range and the
+    # polynomial terms are then negligible beside it.
+    saturated=np.minimum(z,700.)
+    remainder=np.expm1(saturated)-saturated-.5*saturated*saturated-saturated**3/6
     small=z<1e-3
-    remainder=np.where(small,z**4/24*(1+z/5+z*z/30+z**3/210),remainder)
+    # Evaluate the series only where it applies. Multiplying the unused branch
+    # overflows to inf for kappa*u+ > ~1e103 and used to raise RuntimeWarnings.
+    scaled=np.where(small,z,0.)
+    remainder=np.where(small,scaled**4/24*(1+scaled/5+scaled*scaled/30+scaled**3/210),remainder)
     return u+np.maximum(remainder,0)/E
 
 
-def u_plus_at_y_plus(y_plus,kappa=KAPPA,E=E):
+def u_plus_at_y_plus(y_plus,kappa=KAPPA,E=E,max_iterations=400):
     yp=np.asarray(y_plus,dtype=float)
     if not np.isfinite(yp).all() or np.any(yp<0):raise ValueError('nonnegative finite y+ required')
-    low=np.zeros_like(yp);high=np.maximum(yp,1.)
-    for _ in range(90):
+    # y+ = u+ + remainder(u+)/E grows like exp(kappa*u+)/E, so
+    # u+ = (log(E*y+) + 10*kappa)/kappa is a rigorous upper bound (the
+    # exponential term alone exceeds y+ by exp(10*kappa)). Bracketing this
+    # tightly keeps bisection resolvable far past y+ = 1e20, where the former
+    # 90 halvings of [0, y+] silently returned the bracket width instead of u+.
+    high=np.maximum(1.,(np.log(np.maximum(E*yp,E))+10*kappa)/kappa)
+    low=np.zeros_like(yp)
+    for _ in range(max_iterations):
         mid=.5*(low+high);small=spalding_y_plus(mid,kappa,E)<yp;low=np.where(small,mid,low);high=np.where(small,high,mid)
+        if np.all(high-low<=np.maximum(1e-15*high,4*np.finfo(float).eps)):break
     return .5*(low+high)
 
 
