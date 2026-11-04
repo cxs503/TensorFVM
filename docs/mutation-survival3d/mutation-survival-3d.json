@@ -1,0 +1,106 @@
+{
+ "tool": "scripts/audit_mutation_survival3d.py",
+ "environment": {
+  "python": "3.11.6",
+  "numpy": "2.4.6",
+  "torch": "2.7.1",
+  "scipy": "1.16.0",
+  "omp_threads": 1
+ },
+ "scope": "3-D native finite-volume core",
+ "mutants": [
+  {
+   "id": "CV3-PFD-SIGN",
+   "file": "src/tensorfvm/native_collocated3d.py",
+   "description": "Compatible face-flux defect gets the wrong sign (interpolated gradient flux plus compact flux)",
+   "note": null,
+   "rationale": "The defect operator is what keeps the collocated pressure and the face flux compatible; reversing it turns the damping into an anti-damping, so a steady solve must lose convergence or move the pressure field.",
+   "expected": "killed",
+   "tests": [
+    "tests/test_native_collocated3d.py"
+   ],
+   "status": "killed",
+   "returncode": 1,
+   "first_failure": "tests/test_native_collocated3d.py::test_pressure_wall_extrapolation_does_not_impose_zero_normal_gradient",
+   "summary_line": "1 failed, 2 warnings in 5.86s",
+   "source_restored": true,
+   "source_sha256": "38ecd16d2a3939e97220f1c64962bd4d5bd5a4245488c09e3d793eea24cb79e3",
+   "duration_seconds": 8.3
+  },
+  {
+   "id": "CV3-PFD-DROP",
+   "file": "src/tensorfvm/native_collocated3d.py",
+   "description": "Compatible face-flux defect deleted: the compact two-point gradient is used as if it were a face flux",
+   "note": null,
+   "rationale": "Deleting the interpolated-gradient part leaves an inconsistent face flux, i.e. exactly the checkerboard-prone operator this module exists to replace; the affine/consistency tests should notice.",
+   "expected": "killed",
+   "tests": [
+    "tests/test_native_collocated3d.py"
+   ],
+   "status": "killed",
+   "returncode": 1,
+   "first_failure": "tests/test_native_collocated3d.py::test_pressure_wall_extrapolation_does_not_impose_zero_normal_gradient",
+   "summary_line": "1 failed, 2 warnings in 6.15s",
+   "source_restored": true,
+   "source_sha256": "38ecd16d2a3939e97220f1c64962bd4d5bd5a4245488c09e3d793eea24cb79e3",
+   "duration_seconds": 8.78
+  },
+  {
+   "id": "CV3-SKEW-DROP",
+   "file": "src/tensorfvm/native_collocated3d.py",
+   "description": "Face skewness correction silently disabled regardless of the caller's flag",
+   "note": null,
+   "rationale": "On skewed native meshes the skew term is the second-order part of the face reconstruction.  If no test uses a skewed mesh with the flag on, the defect survives and the suite only certifies orthogonal behaviour.",
+   "expected": "killed",
+   "tests": [
+    "tests/test_native_collocated3d.py"
+   ],
+   "status": "killed",
+   "returncode": 1,
+   "first_failure": "tests/test_native_collocated3d.py::test_pressure_wall_extrapolation_does_not_impose_zero_normal_gradient",
+   "summary_line": "1 failed, 2 warnings in 5.86s",
+   "source_restored": true,
+   "source_sha256": "38ecd16d2a3939e97220f1c64962bd4d5bd5a4245488c09e3d793eea24cb79e3",
+   "duration_seconds": 11.25
+  },
+  {
+   "id": "OP3-RECON-SWAP",
+   "file": "src/tensorfvm/native_operators3d.py",
+   "description": "Owner/neighbour interpolation weights swapped in the affine-exact face reconstruction",
+   "note": "\u9996\u6b21\u5ba1\u8ba1\u65f6\u8be5\u53d8\u5f02\u4f53 survived\uff1a\u88ab\u6307\u5411\u7684 tests/test_native_mesh3d.py \u53ea\u7528\u5355\u80de\u7f51\u683c\uff0c\u6ca1\u6709\u5185\u90e8\u9762\uff0c\u6743\u91cd\u8def\u5f84\u4ece\u672a\u88ab\u8d70\u5230\u3002\u5df2\u8865 test_face_reconstruction_reduces_to_geometric_projection_on_nonuniform_pair \u628a\u5b58\u6d3b\u9879\u5173\u95ed\u3002",
+   "rationale": "With the weights swapped the geometric weight (which is not 1/2 on a graded mesh) inverts; any test that checks interpolation on a non-uniform mesh or affine reproduction must fail.",
+   "expected": "killed",
+   "tests": [
+    "tests/test_native_mesh3d.py"
+   ],
+   "status": "killed",
+   "returncode": 1,
+   "first_failure": "tests/test_native_mesh3d.py::test_face_reconstruction_reduces_to_geometric_projection_on_nonuniform_pair",
+   "summary_line": "1 failed, 7 passed, 1 skipped, 2 warnings in 5.35s",
+   "source_restored": true,
+   "source_sha256": "190ad3e4478d11bdd9332c38f8a7441530e9993c4459855722d15abe2fd519e0",
+   "duration_seconds": 8.94
+  },
+  {
+   "id": "OP3-GAUSS-VOLUME",
+   "file": "src/tensorfvm/native_operators3d.py",
+   "description": "Gauss gradient returned as an integrated flux (cell volume division dropped)",
+   "note": null,
+   "rationale": "The gradient is a per-volume quantity; dropping the division scales it by the cell volume.  Only a test that compares against an analytic affine gradient on cells of different volume can see it.",
+   "expected": "killed",
+   "tests": [
+    "tests/test_native_mesh3d.py"
+   ],
+   "status": "killed",
+   "returncode": 1,
+   "first_failure": "tests/test_native_mesh3d.py::test_linear_cells_have_real_volume_and_affine_response[tetra-points0-0.16666666666666666]",
+   "summary_line": "1 failed, 2 warnings in 5.12s",
+   "source_restored": true,
+   "source_sha256": "190ad3e4478d11bdd9332c38f8a7441530e9993c4459855722d15abe2fd519e0",
+   "duration_seconds": 7.52
+  }
+ ],
+ "killed": 5,
+ "survived": 0,
+ "invalid": 0
+}
