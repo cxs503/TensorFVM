@@ -33,6 +33,7 @@ import pytest
 import torch
 
 from tensorfvm.two_phase_solver import GridConfig, TwoPhaseConfig, TwoPhaseSolver
+import numpy as np
 
 
 def _solver(n=32, gravity=9.81, sigma=0.0, surface_tension=False,
@@ -360,3 +361,14 @@ def test_single_phase_path_is_unchanged():
 # --------------------------------------------------------------------------- #
 
 
+
+
+def test_hydrostatic_anchor_is_continuous_at_the_interface():
+    """Pressure must be continuous across a flat interface without surface tension."""
+    n = 32
+    solver, _ = _solver(n=n)
+    jlo, jhi = n // 2 - 1, n // 2
+    jump = float(solver.p[jhi, 0] - solver.p[jlo, 0])
+    rho_face = 0.5 * (1000.0 + 1.0)
+    np.testing.assert_allclose(jump, -rho_face * 9.81 * solver.dy, rtol=0,
+                               atol=1e-9)
