@@ -94,6 +94,12 @@ OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 PYTHONPATH=src \
 `release-source-sha256.json` 绑定最终代码，`campaign-manifest.json` 绑定全部归档文件。
 旧报告和字段保留为历史证据，不能把其中冻结壁面力误认为已经按新方法重算。
 
+> **接手记录（薄层/四面体接口）**：该优先项已由
+> [薄层耗散性包络](../verification-thin-layer-viscous-passivity/README.md) 偿还一部分：
+> 4 族确定性网格 × AR 1–50 × 剪切 0–0.8 共 140 个网格上，默认 `over-relaxed` 全部无源，
+> 而 `none`/`minimum` 在高长宽比界面制造能量且 `minimum` 无任何阻尼值可救；
+> 本页的 `−0.2458` 见证**未**在那边复现（checkout 不含 `.msh`、环境无 `gmsh`），仍为未结清项。
+
 ## 接下来的重点
 
 优先检查三角化薄层/四面体接口上的黏性耗散性与压力系统响应，增加这类网格上的能量及算子检查。
