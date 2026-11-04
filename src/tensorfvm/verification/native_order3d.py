@@ -248,6 +248,19 @@ def wall_second_derivative(face_centers, normals, step=1e-4):
 def wall_error_model(n, warp=0.0, viscosity=1.3):
     """Leading-order model of the wall-cell divergence error.
 
+    .. warning::
+       The normal-derivative term below is **not** the driver of the recorded
+       ``O(1)`` wall-cell error: replacing it by the analytic ``du/dn`` on every
+       wall face changes the wall-cell divergence by 2.6% at ``n=4`` and 2.2% at
+       ``n=8`` and does not restore refinement
+       (``tests/test_wall_cell_gradient_attribution.py``,
+       ``scripts/audit_wall_cell_gradient_attribution.py``).  The measured driver
+       is the *evaluation point* of the whole wall-face gradient tensor: an exact
+       wall-face gradient still only refines at order ~1.3-1.5, because the
+       divergence amplifies a face-gradient error ``dg`` by ``1/h`` and the
+       internal faces of a wall-adjacent cell keep the as-built ``dg``.  Keep this
+       model as the normal-part bookkeeping only.
+
     The Dirichlet face reconstruction supplies ``2*(u_D - u_P)/|d|`` as the
     normal derivative, i.e. the central difference over the half-cell interval
     *evaluated at the wall*; its leading error is ``(|d|/2) d2u/dn2``.  Per face
