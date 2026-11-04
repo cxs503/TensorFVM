@@ -1,0 +1,641 @@
+{
+  "operator": "tensorfvm.native_gradient_jump3d.NativeGradientJump3D",
+  "purpose": "Crouzeix-Raviart type tangential gradient-jump (Korn) stabilisation",
+  "literature": "Hansbo & Larson 2003, doi:10.1051/m2an:2003020, eq. (26)",
+  "environment": {
+    "python": "3.11.6",
+    "numpy": "2.4.6"
+  },
+  "families": [
+    "hex_cube_n2",
+    "hex_sheared_n2",
+    "hex_sheared_n3",
+    "tetra_pair"
+  ],
+  "checks": [
+    {
+      "id": "hex_cube_n2/symmetry",
+      "name": "hex_cube_n2: matrix symmetry",
+      "measured": 0.0,
+      "reference": "0 (exact)",
+      "error": 0.0,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": "assembled as (A+A.T)/2 by construction"
+    },
+    {
+      "id": "hex_cube_n2/psd",
+      "name": "hex_cube_n2: lambda_min(M)",
+      "measured": -8.021150916410913e-17,
+      "reference": ">= 0 (exact PSD)",
+      "error": 8.021150916410913e-17,
+      "tolerance": 1e-14,
+      "pass": true,
+      "note": "lambda_max=2.500000e-01"
+    },
+    {
+      "id": "hex_cube_n2/affine_energy",
+      "name": "hex_cube_n2: energy of affine velocity",
+      "measured": 2.165601226355425e-32,
+      "reference": "0 (exact)",
+      "error": 2.165601226355425e-32,
+      "tolerance": 1e-24,
+      "pass": true,
+      "note": "Crouzeix-Raviart requirement: the term vanishes on the FE space"
+    },
+    {
+      "id": "hex_cube_n2/kernel",
+      "name": "hex_cube_n2: dim ker(M)",
+      "measured": 186.0,
+      "reference": ">= 12 (affine space)",
+      "error": 0.0,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": "size=240, rank=54"
+    },
+    {
+      "id": "hex_cube_n2/energy_identity",
+      "name": "hex_cube_n2: ledger energy vs u^T M u",
+      "measured": 2.999382527891558,
+      "reference": "u^T M u",
+      "error": 0.0,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": "u^T M u=2.999382527892e+00"
+    },
+    {
+      "id": "hex_cube_n2/ledger_closure",
+      "name": "hex_cube_n2: stress replay vs M@u",
+      "measured": 3.246500256259135e-16,
+      "reference": "0 (exact)",
+      "error": 3.246500256259135e-16,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "hex_cube_n2/energy_gradient_fd",
+      "name": "hex_cube_n2: dE/du = 2*M@u (FD)",
+      "measured": 2.0218275096908604e-09,
+      "reference": "2*M@u",
+      "error": 2.0218275096908604e-09,
+      "tolerance": 1e-06,
+      "pass": true,
+      "note": "central differences of the reported energy, step=1e-6"
+    },
+    {
+      "id": "hex_cube_n2/strength_0.5",
+      "name": "hex_cube_n2: energy ratio at strength=0.5",
+      "measured": 0.5,
+      "reference": 0.5,
+      "error": 0.0,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "hex_cube_n2/strength_2.5",
+      "name": "hex_cube_n2: energy ratio at strength=2.5",
+      "measured": 2.499999999999999,
+      "reference": 2.5,
+      "error": 8.881784197001252e-16,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "hex_cube_n2/mu_2",
+      "name": "hex_cube_n2: energy ratio at mu=2",
+      "measured": 2.0,
+      "reference": "2.0",
+      "error": 0.0,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": "harmonic mean of a uniform viscosity is that viscosity"
+    },
+    {
+      "id": "hex_cube_n2/strength_zero",
+      "name": "hex_cube_n2: term absent at strength=0",
+      "measured": 1.0,
+      "reference": "1.0",
+      "error": 0.0,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "hex_sheared_n2/symmetry",
+      "name": "hex_sheared_n2: matrix symmetry",
+      "measured": 0.0,
+      "reference": "0 (exact)",
+      "error": 0.0,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": "assembled as (A+A.T)/2 by construction"
+    },
+    {
+      "id": "hex_sheared_n2/psd",
+      "name": "hex_sheared_n2: lambda_min(M)",
+      "measured": -2.0655555798425209e-16,
+      "reference": ">= 0 (exact PSD)",
+      "error": 2.0655555798425209e-16,
+      "tolerance": 1e-14,
+      "pass": true,
+      "note": "lambda_max=2.560865e-01"
+    },
+    {
+      "id": "hex_sheared_n2/affine_energy",
+      "name": "hex_sheared_n2: energy of affine velocity",
+      "measured": 5.105206816608585e-31,
+      "reference": "0 (exact)",
+      "error": 5.105206816608585e-31,
+      "tolerance": 1e-24,
+      "pass": true,
+      "note": "Crouzeix-Raviart requirement: the term vanishes on the FE space"
+    },
+    {
+      "id": "hex_sheared_n2/kernel",
+      "name": "hex_sheared_n2: dim ker(M)",
+      "measured": 186.0,
+      "reference": ">= 12 (affine space)",
+      "error": 0.0,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": "size=240, rank=54"
+    },
+    {
+      "id": "hex_sheared_n2/energy_identity",
+      "name": "hex_sheared_n2: ledger energy vs u^T M u",
+      "measured": 4.776024219693762,
+      "reference": "u^T M u",
+      "error": 0.0,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": "u^T M u=4.776024219694e+00"
+    },
+    {
+      "id": "hex_sheared_n2/ledger_closure",
+      "name": "hex_sheared_n2: stress replay vs M@u",
+      "measured": 2.356967749372201e-16,
+      "reference": "0 (exact)",
+      "error": 2.356967749372201e-16,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "hex_sheared_n2/energy_gradient_fd",
+      "name": "hex_sheared_n2: dE/du = 2*M@u (FD)",
+      "measured": 2.372660252090101e-09,
+      "reference": "2*M@u",
+      "error": 2.372660252090101e-09,
+      "tolerance": 1e-06,
+      "pass": true,
+      "note": "central differences of the reported energy, step=1e-6"
+    },
+    {
+      "id": "hex_sheared_n2/strength_0.5",
+      "name": "hex_sheared_n2: energy ratio at strength=0.5",
+      "measured": 0.5,
+      "reference": 0.5,
+      "error": 0.0,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "hex_sheared_n2/strength_2.5",
+      "name": "hex_sheared_n2: energy ratio at strength=2.5",
+      "measured": 2.4999999999999996,
+      "reference": 2.5,
+      "error": 4.440892098500626e-16,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "hex_sheared_n2/mu_2",
+      "name": "hex_sheared_n2: energy ratio at mu=2",
+      "measured": 2.0,
+      "reference": "2.0",
+      "error": 0.0,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": "harmonic mean of a uniform viscosity is that viscosity"
+    },
+    {
+      "id": "hex_sheared_n2/strength_zero",
+      "name": "hex_sheared_n2: term absent at strength=0",
+      "measured": 1.0,
+      "reference": "1.0",
+      "error": 0.0,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "hex_sheared_n3/symmetry",
+      "name": "hex_sheared_n3: matrix symmetry",
+      "measured": 0.0,
+      "reference": "0 (exact)",
+      "error": 0.0,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": "assembled as (A+A.T)/2 by construction"
+    },
+    {
+      "id": "hex_sheared_n3/psd",
+      "name": "hex_sheared_n3: lambda_min(M)",
+      "measured": -1.406555764757649e-16,
+      "reference": ">= 0 (exact PSD)",
+      "error": 1.406555764757649e-16,
+      "tolerance": 1e-14,
+      "pass": true,
+      "note": "lambda_max=2.874116e-01"
+    },
+    {
+      "id": "hex_sheared_n3/affine_energy",
+      "name": "hex_sheared_n3: energy of affine velocity",
+      "measured": 1.3355927704469765e-30,
+      "reference": "0 (exact)",
+      "error": 1.3355927704469765e-30,
+      "tolerance": 1e-24,
+      "pass": true,
+      "note": "Crouzeix-Raviart requirement: the term vanishes on the FE space"
+    },
+    {
+      "id": "hex_sheared_n3/kernel",
+      "name": "hex_sheared_n3: dim ker(M)",
+      "measured": 513.0,
+      "reference": ">= 12 (affine space)",
+      "error": 0.0,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": "size=729, rank=216"
+    },
+    {
+      "id": "hex_sheared_n3/energy_identity",
+      "name": "hex_sheared_n3: ledger energy vs u^T M u",
+      "measured": 11.426695205428732,
+      "reference": "u^T M u",
+      "error": 0.0,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": "u^T M u=1.142669520543e+01"
+    },
+    {
+      "id": "hex_sheared_n3/ledger_closure",
+      "name": "hex_sheared_n3: stress replay vs M@u",
+      "measured": 4.841903025164784e-16,
+      "reference": "0 (exact)",
+      "error": 4.841903025164784e-16,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "hex_sheared_n3/energy_gradient_fd",
+      "name": "hex_sheared_n3: dE/du = 2*M@u (FD)",
+      "measured": 4.936369255261688e-09,
+      "reference": "2*M@u",
+      "error": 4.936369255261688e-09,
+      "tolerance": 1e-06,
+      "pass": true,
+      "note": "central differences of the reported energy, step=1e-6"
+    },
+    {
+      "id": "hex_sheared_n3/strength_0.5",
+      "name": "hex_sheared_n3: energy ratio at strength=0.5",
+      "measured": 0.5,
+      "reference": 0.5,
+      "error": 0.0,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "hex_sheared_n3/strength_2.5",
+      "name": "hex_sheared_n3: energy ratio at strength=2.5",
+      "measured": 2.5000000000000018,
+      "reference": 2.5,
+      "error": 1.7763568394002505e-15,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "hex_sheared_n3/mu_2",
+      "name": "hex_sheared_n3: energy ratio at mu=2",
+      "measured": 2.0,
+      "reference": "2.0",
+      "error": 0.0,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": "harmonic mean of a uniform viscosity is that viscosity"
+    },
+    {
+      "id": "hex_sheared_n3/strength_zero",
+      "name": "hex_sheared_n3: term absent at strength=0",
+      "measured": 1.0,
+      "reference": "1.0",
+      "error": 0.0,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "tetra_pair/symmetry",
+      "name": "tetra_pair: matrix symmetry",
+      "measured": 0.0,
+      "reference": "0 (exact)",
+      "error": 0.0,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": "assembled as (A+A.T)/2 by construction"
+    },
+    {
+      "id": "tetra_pair/psd",
+      "name": "tetra_pair: lambda_min(M)",
+      "measured": -3.5147290331801083e-16,
+      "reference": ">= 0 (exact PSD)",
+      "error": 3.5147290331801083e-16,
+      "tolerance": 1e-14,
+      "pass": true,
+      "note": "lambda_max=1.500000e+00"
+    },
+    {
+      "id": "tetra_pair/affine_energy",
+      "name": "tetra_pair: energy of affine velocity",
+      "measured": 1.9216501000663758e-32,
+      "reference": "0 (exact)",
+      "error": 1.9216501000663758e-32,
+      "tolerance": 1e-24,
+      "pass": true,
+      "note": "Crouzeix-Raviart requirement: the term vanishes on the FE space"
+    },
+    {
+      "id": "tetra_pair/kernel",
+      "name": "tetra_pair: dim ker(M)",
+      "measured": 21.0,
+      "reference": ">= 12 (affine space)",
+      "error": 0.0,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": "size=27, rank=6"
+    },
+    {
+      "id": "tetra_pair/energy_identity",
+      "name": "tetra_pair: ledger energy vs u^T M u",
+      "measured": 9.10399059374047,
+      "reference": "u^T M u",
+      "error": 0.0,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": "u^T M u=9.103990593740e+00"
+    },
+    {
+      "id": "tetra_pair/ledger_closure",
+      "name": "tetra_pair: stress replay vs M@u",
+      "measured": 1.4129381699661082e-16,
+      "reference": "0 (exact)",
+      "error": 1.4129381699661082e-16,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "tetra_pair/energy_gradient_fd",
+      "name": "tetra_pair: dE/du = 2*M@u (FD)",
+      "measured": 1.5783063339716866e-10,
+      "reference": "2*M@u",
+      "error": 1.5783063339716866e-10,
+      "tolerance": 1e-06,
+      "pass": true,
+      "note": "central differences of the reported energy, step=1e-6"
+    },
+    {
+      "id": "tetra_pair/strength_0.5",
+      "name": "tetra_pair: energy ratio at strength=0.5",
+      "measured": 0.5,
+      "reference": 0.5,
+      "error": 0.0,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "tetra_pair/strength_2.5",
+      "name": "tetra_pair: energy ratio at strength=2.5",
+      "measured": 2.5000000000000004,
+      "reference": 2.5,
+      "error": 4.440892098500626e-16,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "tetra_pair/mu_2",
+      "name": "tetra_pair: energy ratio at mu=2",
+      "measured": 2.0,
+      "reference": "2.0",
+      "error": 0.0,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": "harmonic mean of a uniform viscosity is that viscosity"
+    },
+    {
+      "id": "tetra_pair/strength_zero",
+      "name": "tetra_pair: term absent at strength=0",
+      "measured": 1.0,
+      "reference": "1.0",
+      "error": 0.0,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "hex_cube_n2/weight",
+      "name": "weight = mu*area/height",
+      "measured": 0.25,
+      "reference": 0.25,
+      "error": 0.0,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": "internal_faces=24, mu=1"
+    },
+    {
+      "id": "hex_cube_n2/cov_major",
+      "name": "covariance major in-plane eigenvalue",
+      "measured": 0.020833333333333332,
+      "reference": 0.020833333333333332,
+      "error": 1.6653345369377348e-16,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "hex_cube_n2/cov_minor",
+      "name": "covariance minor in-plane eigenvalue",
+      "measured": 0.006944444444444445,
+      "reference": 0.006944444444444444,
+      "error": 1.249000902703301e-16,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "hex_cube_n2/cov_normal",
+      "name": "covariance normal eigenvalue",
+      "measured": 0.0,
+      "reference": 0.0,
+      "error": 0.0,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": "face inertia is planar"
+    },
+    {
+      "id": "hex_cube_n2/cov_trace",
+      "name": "covariance trace",
+      "measured": 0.027777777777777776,
+      "reference": 0.027777777777777776,
+      "error": 1.249000902703301e-16,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "refinement/order_finest",
+      "name": "observed order (n=5->6)",
+      "measured": 1.7107757730058966,
+      "reference": "2.0 (asymptotic)",
+      "error": 0.28922422699410344,
+      "tolerance": 0.3,
+      "pass": true,
+      "note": "monotone approach to second order; energy->0 under refinement"
+    },
+    {
+      "id": "refinement/order_mean",
+      "name": "observed order (two finest pairs)",
+      "measured": 1.6506774666763442,
+      "reference": "2.0 (asymptotic)",
+      "error": 0.3493225333236558,
+      "tolerance": 0.35,
+      "pass": true,
+      "note": "the defect energy vanishes under refinement, no h-independent floor"
+    },
+    {
+      "id": "refinement/monotone",
+      "name": "energy decreases at every refinement",
+      "measured": 1.0,
+      "reference": "1.0",
+      "error": 0.0,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": "energies: 4.166667e-02, 2.469136e-02, 1.562500e-02, 1.066667e-02"
+    },
+    {
+      "id": "hex_cube_n2/lambda_min_gain",
+      "name": "hex_cube_n2: lambda_min increase",
+      "measured": 0.17268702124686244,
+      "reference": "> 0 (monotone stiffening)",
+      "error": 0.0,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": "bare=2.897903e-01, stabilised=3.398334e-01, both positive (no coercivity failure is reproduced on this family)"
+    },
+    {
+      "id": "hex_sheared_n2/lambda_min_gain",
+      "name": "hex_sheared_n2: lambda_min increase",
+      "measured": 0.1746640784531512,
+      "reference": "> 0 (monotone stiffening)",
+      "error": 0.0,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": "bare=2.937608e-01, stabilised=3.450703e-01, both positive (no coercivity failure is reproduced on this family)"
+    },
+    {
+      "id": "hex_sheared_n3/lambda_min_gain",
+      "name": "hex_sheared_n3: lambda_min increase",
+      "measured": 0.25242901864607153,
+      "reference": "> 0 (monotone stiffening)",
+      "error": 0.0,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": "bare=1.149630e-01, stabilised=1.439830e-01, both positive (no coercivity failure is reproduced on this family)"
+    },
+    {
+      "id": "guard/negative",
+      "name": "strength=negative rejected",
+      "measured": 1.0,
+      "reference": "ValueError",
+      "error": 0.0,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": "finite nonnegative gradient jump stabilization required"
+    },
+    {
+      "id": "guard/nan",
+      "name": "strength=nan rejected",
+      "measured": 1.0,
+      "reference": "ValueError",
+      "error": 0.0,
+      "tolerance": 1e-12,
+      "pass": true,
+      "note": "finite nonnegative gradient jump stabilization required"
+    }
+  ],
+  "summary": {
+    "total": 57,
+    "passed": 57,
+    "failed": 0
+  },
+  "refinement": {
+    "samples": [
+      {
+        "n": 2,
+        "h": 0.5,
+        "energy": 0.04166666666666666
+      },
+      {
+        "n": 3,
+        "h": 0.3333333333333333,
+        "energy": 0.024691358024691357
+      },
+      {
+        "n": 4,
+        "h": 0.25,
+        "energy": 0.015624999999999998
+      },
+      {
+        "n": 5,
+        "h": 0.2,
+        "energy": 0.010666666666666666
+      }
+    ],
+    "observed_orders": [
+      1.290488708648545,
+      1.5905791603467918,
+      1.7107757730058966
+    ]
+  },
+  "coercivity": [
+    {
+      "family": "hex_cube_n2",
+      "lambda_min_bare": 0.2897903412232644,
+      "lambda_min_stabilised": 0.3398333720352218,
+      "relative_increase": 0.17268702124686244
+    },
+    {
+      "family": "hex_sheared_n2",
+      "lambda_min_bare": 0.2937608309570974,
+      "lambda_min_stabilised": 0.3450702957818507,
+      "relative_increase": 0.1746640784531512
+    },
+    {
+      "family": "hex_sheared_n3",
+      "lambda_min_bare": 0.11496299506932223,
+      "lambda_min_stabilised": 0.1439829910952844,
+      "relative_increase": 0.25242901864607153
+    }
+  ]
+}
