@@ -14,6 +14,31 @@ scales the correction by a face-wise factor in ``[0, 1]``.  Every choice reprodu
 ``mu*s.grad`` because the correction vanishes for affine fields; none of them
 is guaranteed to satisfy the discrete passivity inequality, see
 :mod:`tensorfvm.verification.native_energy`.
+Wall closure
+------------
+``wall_closure`` selects the Dirichlet-face normal-derivative estimate:
+
+``'two_point'`` (default, historical behaviour)
+    The correction drives the face value to the prescribed data, which makes
+    the effective wall normal derivative the two-point estimate
+    ``(u_D - u_cell - grad u_cell . d)/|d|``.  Its Taylor expansion misses the
+    curvature term ``(delta/2) d2u/dn2``, so the wall traction is first order
+    and the wall-adjacent cell divergence stays O(1) (see
+    :mod:`tensorfvm.verification.native_order3d` and
+    ``docs/native_viscous_dirichlet_order.md``).
+
+``'three_point'``
+    The normal component of the face gradient on every Dirichlet face is
+    replaced by a one-sided three-point stencil through the face, the owner
+    cell centre and a second cell centre taken along the mesh line in the
+    face-normal direction (the neighbour across the internal face whose
+    normal is best aligned with the face normal).  The stencil is exact for
+    affine fields, second order for smooth fields, and leaves the tangential
+    part of the face gradient untouched.  Faces without an aligned second
+    cell (alignment < cos 60 deg, or degenerate spacing) keep the two-point
+    closure; the count of upgraded faces is exposed as
+    ``wall_second_order_faces``.
+
 """
 import numpy as np
 from scipy.sparse import coo_matrix, diags, kron, eye, bmat
@@ -21,7 +46,7 @@ from .native_operators3d import NativeOperators3D
 
 
 class NativeViscous3D:
-    def __init__(self,mesh,dirichlet_mask,dynamic_viscosity=1.,*,deviatoric=True,correction='over-relaxed',correction_damping=1.):
+    def __init__(self,mesh,dirichlet_mask,dynamic_viscosity=1.,*,deviatoric=True,correction='over-relaxed',correction_damping=1.,wall_closure='two_point'):
         self.mesh=mesh;self.op=NativeOperators3D(mesh)
         self.internal=self.op.internal;self.boundary=self.op.boundary
         self.N=len(mesh.cells);self.F=len(mesh.owner)
@@ -69,6 +94,13 @@ class NativeViscous3D:
         self.correction_damping=damping
         damped_active=active*damping
         self.face_gradient_matrices=[(a+diags(self.correction_direction[:,k]*damped_active)@(self.delta_matrix-contraction)-diags(self.normal[:,k]*self.neumann)@normal_contraction).tocsr() for k,a in enumerate(self.raw_face_gradient)]
+        self.wall_closure=wall_closure
+        self.wall_second_cell=-np.ones(self.F,dtype=int)
+        self.wall_coeff=np.zeros((self.F,3))
+        self.wall_second_order_faces=0
+        if wall_closure=='three_point':
+            self._assemble_three_point_wall(mesh,o,n,i,bd,f)
+        elif wall_closure!='two_point':raise ValueError("wall_closure must be 'two_point' or 'three_point'")
         mu=np.asarray(dynamic_viscosity,dtype=float)
         if mu.ndim==0:mu=np.full(self.F,float(mu))
         elif mu.shape==(self.N,):mu=np.asarray(self.interpolation@mu)
@@ -94,6 +126,58 @@ class NativeViscous3D:
         self.vector_divergence_matrix=kron(self.divergence_matrix,eye(3),format='csr')
         self.momentum_diffusion_matrix=(self.vector_divergence_matrix@self.momentum_flux_matrix).tocsr()
 
+    def _assemble_three_point_wall(self,mesh,o,n,i,bd,f):
+        """Replace the Dirichlet-face normal gradient component by a one-sided
+        three-point stencil (face, owner centre, second cell centre).
+
+        The stencil is exact for affine fields and second order for smooth
+        fields; the tangential part of the face gradient is left unchanged.
+        Faces without an aligned second cell keep the two-point closure.
+        """
+        F=self.F;N=self.N
+        second=-np.ones(F,dtype=int)
+        coeff=np.zeros((F,3))
+        candidates={}
+        for gf in np.where(i)[0]:
+            candidates.setdefault(o[gf],[]).append((gf,self.normal[gf],1))
+            candidates.setdefault(n[gf],[]).append((gf,self.normal[gf],-1))
+        fc=mesh.face_centers;cc=mesh.cell_centers
+        for face in np.where(bd)[0]:
+            c0=o[face];nf=self.normal[face]
+            best_align=-2.0;best_gf=-1
+            for gf,gn,sig in candidates.get(c0,()):
+                align=sig*(gn@nf)
+                if align>best_align:best_align,best_gf=align,gf
+            if best_gf<0 or best_align<0.5:continue
+            c1=n[best_gf] if o[best_gf]==c0 else o[best_gf]
+            if c1<0:continue
+            delta0=float((cc[c0]-fc[face])@nf)
+            delta1=float((cc[c1]-fc[face])@nf)
+            if delta0<=0 or delta1<=delta0*(1+1e-9):continue
+            gap=delta1-delta0
+            coeff[face,0]=(delta0+delta1)/(delta0*delta1)
+            coeff[face,1]=-delta1/(delta0*gap)
+            coeff[face,2]=delta0/(delta1*gap)
+            second[face]=c1
+        self.wall_second_cell=second
+        self.wall_coeff=coeff
+        self.wall_second_order_faces=int((second[bd]>=0).sum())
+        nrm=self.normal
+        nc=(sum(diags(nrm[:,a])@self.face_gradient_matrices[a] for a in range(3))).toarray()
+        for k in range(3):
+            M=self.face_gradient_matrices[k]
+            mask=second[bd]>=0
+            fb=f[bd][mask]
+            drop_vals=(nrm[bd,k][mask][:,None]*nc[bd][mask]).ravel()
+            drop_rows=np.repeat(fb,3)
+            drop_cols=np.tile(np.arange(3),len(fb))
+            drop=coo_matrix((drop_vals,(drop_rows,drop_cols)),shape=(F,N))
+            add_vals=np.r_[nrm[bd,k][mask]*coeff[bd,1][mask],nrm[bd,k][mask]*coeff[bd,2][mask]]
+            add_rows=np.r_[fb,fb]
+            add_cols=np.r_[o[bd][mask],second[bd][mask]]
+            add=coo_matrix((add_vals,(add_rows,add_cols)),shape=(F,N))
+            self.face_gradient_matrices[k]=(M-drop+add).tocsr()
+
     def _boundary_data(self,neumann_gradients,dirichlet_values):
         g=np.broadcast_to(np.asarray(neumann_gradients,dtype=float),(self.F,))
         v=np.broadcast_to(np.asarray(dirichlet_values,dtype=float),(self.F,))
@@ -113,6 +197,11 @@ class NativeViscous3D:
         active=self.internal|self.dirichlet
         result=raw+self.correction_direction*(self.correction_damping*active*(delta-np.einsum('ij,ij->i',raw,self.op.d)))[:,None]
         nb=self.neumann;result[nb]+=self.normal[nb]*(g[nb]-np.einsum('ij,ij->i',raw[nb],self.normal[nb]))[:,None]
+        if self.wall_closure=='three_point':
+            sel=self.dirichlet&(self.wall_second_cell>=0)
+            n=self.normal[sel]
+            old=result[sel]
+            result[sel]=old-np.einsum('fi,fi->f',old,n)[:,None]*n+n*(self.wall_coeff[sel,0]*v[sel])[:,None]
         return result
 
     def scalar_flux_source(self,neumann_gradients=0.,dirichlet_values=0.):
