@@ -1,6 +1,7 @@
 """Guard against silent continuation from stale OpenFOAM checkpoints."""
 from pathlib import Path
 import json
+import os
 import subprocess
 import sys
 import pytest
@@ -75,3 +76,18 @@ if 'foamRun' in sys.argv:
     audit = json.loads((case / 'convergence-audit.json').read_text())
     assert not audit['numerically_converged']
     assert not audit['physical_benchmark_passed']
+
+
+def test_runner_imports_the_package_from_a_source_checkout():
+    """The script must not require an installed ``tensorfvm`` distribution.
+
+    Four checkpoint-audit tests above invoke the script as a child process; a
+    child does not inherit pytest's ``pythonpath=src``, so an uninstalled
+    checkout failed with ``ModuleNotFoundError`` before the audit ran.
+    """
+    script = Path(__file__).resolve().parents[1] / 'scripts/run_openfoam_parallel.py'
+    env = {k: v for k, v in os.environ.items() if k not in ('PYTHONPATH', 'PYTHONHOME')}
+    result = subprocess.run([sys.executable, str(script), '--help'],
+                            capture_output=True, text=True, env=env)
+    assert result.returncode == 0, result.stderr
+    assert 'usage' in result.stdout.lower()

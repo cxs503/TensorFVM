@@ -3,8 +3,13 @@
 
 Requires prior mesh gating and decomposition. A stopped run is never a pass.
 """
-import argparse,json,re,subprocess
+import argparse,json,re,subprocess,sys
 from pathlib import Path
+# Executed as ``python scripts/run_openfoam_parallel.py`` from a source
+# checkout, the package is not installed; resolve it from the sibling src/
+# tree exactly like the other audit scripts so the runner never dies with
+# ModuleNotFoundError before the checkpoint audit runs.
+sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'src'))
 from tensorfvm.openfoam_history import convergence_audit
 p=argparse.ArgumentParser(description=__doc__)
 p.add_argument('--case',type=Path,required=True)
