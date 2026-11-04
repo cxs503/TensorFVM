@@ -4,8 +4,8 @@
  "numpy": "2.4.6",
  "torch": "2.7.1",
  "scipy": "1.16.0",
- "killed": 4,
- "survived": 2,
+ "killed": 6,
+ "survived": 0,
  "invalid": 0,
  "mutants": [
   {
@@ -21,8 +21,8 @@
    "status": "killed",
    "returncode": 1,
    "first_failure": "tests/test_mutation_coverage.py::test_rhie_chow_damping_is_diffusive_in_the_pressure_field",
-   "duration_seconds": 35.141,
-   "summary_line": "1 failed, 27 passed, 1 skipped, 2 warnings in 32.39s",
+   "duration_seconds": 38.794,
+   "summary_line": "1 failed, 27 passed, 1 skipped, 2 warnings in 35.92s",
    "source_restored": true,
    "source_sha256": "4e633fa42c1171cf57aca5bf930827f97a30dada4e405bf3ac9c1068ba1bb7a7"
   },
@@ -38,8 +38,8 @@
    "status": "killed",
    "returncode": 1,
    "first_failure": "tests/test_body_fitted.py::FittedSolverTests::test_damped_pressure_response_matches_predictor_sensitivity",
-   "duration_seconds": 6.975,
-   "summary_line": "1 failed, 9 passed, 1 skipped, 2 warnings in 5.00s",
+   "duration_seconds": 9.695,
+   "summary_line": "1 failed, 9 passed, 1 skipped, 2 warnings in 6.71s",
    "source_restored": true,
    "source_sha256": "4e633fa42c1171cf57aca5bf930827f97a30dada4e405bf3ac9c1068ba1bb7a7"
   },
@@ -55,8 +55,8 @@
    "status": "killed",
    "returncode": 1,
    "first_failure": "tests/test_body_fitted.py::FittedSolverTests::test_damped_pressure_response_matches_predictor_sensitivity",
-   "duration_seconds": 7.189,
-   "summary_line": "1 failed, 9 passed, 1 skipped, 2 warnings in 5.13s",
+   "duration_seconds": 9.123,
+   "summary_line": "1 failed, 9 passed, 1 skipped, 2 warnings in 6.43s",
    "source_restored": true,
    "source_sha256": "4e633fa42c1171cf57aca5bf930827f97a30dada4e405bf3ac9c1068ba1bb7a7"
   },
@@ -67,13 +67,14 @@
    "rationale": "Swapping the bracket keeps the weights admissible, so the existing bracketing guard cannot catch it; only a test that compares the interpolated face value against the exact linear field on a stretched grid can.",
    "expected": "killed",
    "tests": [
+    "tests/test_mutation_coverage.py",
     "tests/test_multi_element_flow.py"
    ],
-   "status": "survived",
-   "returncode": 0,
-   "first_failure": null,
-   "duration_seconds": 13.786,
-   "summary_line": "14 passed, 3 warnings in 11.58s",
+   "status": "killed",
+   "returncode": 1,
+   "first_failure": "tests/test_mutation_coverage.py::test_projected_linear_weights_reproduce_affine_face_values_on_a_stretched_grid",
+   "duration_seconds": 9.153,
+   "summary_line": "1 failed, 1 passed, 2 warnings in 5.97s",
    "source_restored": true,
    "source_sha256": "46914848e8b45a85e1580f575d76597c887d38a3bfee9be84e474d314e6eaf32"
   },
@@ -89,8 +90,8 @@
    "status": "killed",
    "returncode": 1,
    "first_failure": "tests/test_multi_element_flow.py::MultiElementFlowTests::test_coupled_frozen_reconstruction_operator",
-   "duration_seconds": 7.079,
-   "summary_line": "1 failed, 2 warnings in 4.87s",
+   "duration_seconds": 8.627,
+   "summary_line": "1 failed, 2 warnings in 5.98s",
    "source_restored": true,
    "source_sha256": "46914848e8b45a85e1580f575d76597c887d38a3bfee9be84e474d314e6eaf32"
   },
@@ -101,15 +102,16 @@
    "rationale": "Upwinding biases every face value, so the channel-profile refinement test and the steady-state equivalence tests should react; if tolerances are loose enough it survives.",
    "expected": "killed",
    "tests": [
+    "tests/test_mutation_coverage.py",
     "tests/test_solver.py"
    ],
-   "status": "survived",
-   "returncode": 0,
-   "first_failure": null,
-   "duration_seconds": 26.859,
-   "summary_line": "12 passed, 2 warnings, 39 subtests passed in 23.82s",
+   "status": "killed",
+   "returncode": 1,
+   "first_failure": "tests/test_mutation_coverage.py::test_face_to_cell_reconstruction_is_second_order",
+   "duration_seconds": 8.847,
+   "summary_line": "1 failed, 2 passed, 2 warnings in 5.97s",
    "source_restored": true,
-   "source_sha256": "2a51125a867b760430ecc48cb8f7f2bcaffdb06e2856f017d9a06626044b5e02"
+   "source_sha256": "f758b76e196844d7e5e150af12b4885bbdbe5d27537c03616e4393ec24823d93"
   }
  ]
 }
