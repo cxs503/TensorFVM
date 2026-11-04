@@ -60,6 +60,15 @@ def drop(n=48, radius=0.2, sigma=0.07, mu=1e-2, steps=20):
 
 
 def divergence_removal(n=32):
+    """Divergence-removal audit through the *production* correction routine.
+
+    Earlier revisions of this script re-implemented the velocity correction
+    inline and left the atmospheric top face untouched, which is not the code
+    path ``step()`` runs; it also read ``solver.cg_info`` (removed long ago), so
+    the script crashed.  Both are fixed here: the correction now comes from
+    :meth:`TwoPhaseSolver._velocity_correction`, and the "top face frozen"
+    variant is reported separately as the boundary-condition sensitivity.
+    """
     tp = TwoPhaseConfig(enabled=True, rho_liquid=1000.0, rho_gas=1000.0,
                         mu_liquid=1e-2, mu_gas=1e-2, gravity=0.0)
     s = TwoPhaseSolver(GridConfig(nx=n, ny=n, length=1.0, height=1.0), tp)
@@ -69,19 +78,26 @@ def divergence_removal(n=32):
     u[:, 0] = 0.0
     u[:, -1] = 0.0
     v[0, :] = 0.0
-    div0 = (u[:, 1:] - u[:, :-1]) / s.dx + (v[1:] - v[:-1]) / s.dy
-    phi = s._projection_pressure(u, v, 1e-5)
-    iu = 2.0 / (s.rho_field[:, :-1] + s.rho_field[:, 1:])
-    iv = 2.0 / (s.rho_field[:-1, :] + s.rho_field[1:, :])
-    un, vn = u.clone(), v.clone()
-    un[:, 1:-1] = u[:, 1:-1] - 1e-5 * iu * (phi[:, 1:] - phi[:, :-1]) / s.dx
-    vn[1:-1, :] = v[1:-1, :] - 1e-5 * iv * (phi[1:] - phi[:-1]) / s.dy
-    div1 = (un[:, 1:] - un[:, :-1]) / s.dx + (vn[1:] - vn[:-1]) / s.dy
+
+    def div_of(a, b):
+        return (a[:, 1:] - a[:, :-1]) / s.dx + (b[1:] - b[:-1]) / s.dy
+
+    div0 = div_of(u, v)
+    dt = 1e-5
+    phi = s._projection_pressure(u, v, dt)
+    un, vn = s._velocity_correction(u, v, phi, dt)
+    div1 = div_of(un, vn)
+    # sensitivity: the same correction with the atmospheric top face frozen
+    vn_top = vn.clone()
+    vn_top[-1, :] = v[-1, :]
+    div1_top = div_of(un, vn_top)
     return dict(div_before_max=float(div0.abs().max()),
                 div_after_max=float(div1.abs().max()),
                 div_before_median=float(div0.abs().median()),
                 div_after_median=float(div1.abs().median()),
-                cg=s.cg_info)
+                div_after_max_top_frozen=float(div1_top.abs().max()),
+                removal_ratio=float(div1.abs().max() / div0.abs().max()),
+                top_frozen_ratio=float(div1_top.abs().max() / div0.abs().max()))
 
 
 def main():
@@ -106,7 +122,7 @@ def main():
     axes[1].legend(fontsize=8)
     fig.tight_layout()
     fig.savefig(OUT / 'projection-audit.png', dpi=130)
-    print(json.dumps({k: v for k, v in metrics.items() if k != 'column'}, indent=1)[:1200])
+    print(json.dumps({k: v for k, v in metrics.items() if k != 'column'}, indent=1)[:1600])
     print('column: vmax=%.3e umax=%.3e force_resid=%.3e'
           % (col['final_vmax'], col['final_umax'], col['max_force_residual']))
 
