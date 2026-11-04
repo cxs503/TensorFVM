@@ -1,0 +1,379 @@
+{
+  "provenance": {
+    "bundle": "docs/verification-lid-cavity-ladder/summary.json",
+    "bundle_timestamp": "2026-11-03T23:30:28",
+    "bundle_note": "assembled from summary.partial.json: the runner was still working on the Re=1000 n=128 row when the ladder was stopped, so that row is NOT included and is NOT claimed; every row present here is converged to the stated gate.",
+    "code": "tensorfvm.lid_cavity.LidCavitySolver",
+    "reference": "U. Ghia, K.N. Ghia, C.T. Shin, J. Comput. Phys. 48 (1982) 387-411, Tables I (u at x = 0.5) and II (v at y = 0.5)",
+    "dispute_register": {
+      "400/v/0.9063": {
+        "published": -0.23827,
+        "computed_n": {
+          "32": -0.35284,
+          "64": -0.38064,
+          "128": -0.38758
+        },
+        "observed_order": 2.0,
+        "richardson_limit": -0.38989,
+        "limit_relative_error": 0.637,
+        "metric_interpolation_error_bound_n128": 0.001,
+        "neighbour_deltas_n128": {
+          "0.9453": 0.0016,
+          "0.8594": 0.0021,
+          "0.8047": 0.0028
+        },
+        "evidence": "scripts/audit_ghia_re400_v_attribution.py over the committed ladder bundle docs/verification-lid-cavity-ladder/summary.json; clean second-order convergence to a limit 64% away from the tabulated value while the three neighbouring entries are inside 0.3%, and the interpolation error of the metric path is two orders of magnitude smaller than the gap",
+        "adjudication": "needs the printed Table II or an independent DNS; offline copies of the paper are not available in this checkout"
+      }
+    }
+  },
+  "T1_order": {
+    "point": 0.9063,
+    "reference": -0.23827,
+    "computed": {
+      "32": -0.3528387627669481,
+      "64": -0.3806365470248758,
+      "128": -0.3875820683606132
+    },
+    "delta": {
+      "32": -0.11456876276694808,
+      "64": -0.1423665470248758,
+      "128": -0.1493120683606132
+    },
+    "observed_order": 2.000814998219725,
+    "richardson_limit": -0.38989549912854427,
+    "limit_vs_reference": -0.15162549912854426,
+    "limit_relative_error": 0.6363600080939449,
+    "verdict": "solver value is grid-converged at clean second order; the gap survives extrapolation",
+    "worst_other_point": {
+      "x": 0.9609,
+      "reference": -0.15663,
+      "richardson_limit": -0.1620073624543109,
+      "limit_relative_error": 0.03433162519511536
+    }
+  },
+  "T2_extraction": {
+    "grid": 128,
+    "h": 0.0078125,
+    "curvature_estimate": -99.22524668932344,
+    "interpolation_error_bound": 0.0007570285544534564,
+    "target_inside_sampled_range": true,
+    "rule": "cubic Hermite (Catmull-Rom) on cell-centre samples",
+    "observed_gap": 0.1493120683606132,
+    "gap_over_bound": 197.23439424079635,
+    "verdict": "interpolation error is orders of magnitude below the gap; the metric path is not the cause"
+  },
+  "T3_reference_self_consistency": {
+    "entries": 42,
+    "threshold": 10.0,
+    "flagged": [
+      {
+        "key": "400/v/0.9063",
+        "reynolds": 400.0,
+        "which": "v",
+        "x": 0.9063,
+        "value": -0.23827,
+        "slope_ratio": 17.959923414995025,
+        "slope_left": 4.513006396588492,
+        "slope_right": 0.25128205128205117
+      },
+      {
+        "key": "400/v/0.9453",
+        "reynolds": 400.0,
+        "which": "v",
+        "x": 0.9453,
+        "value": -0.22847,
+        "slope_ratio": 18.331632653061433,
+        "slope_left": 0.25128205128205117,
+        "slope_right": 4.606410256410307
+      }
+    ],
+    "registered": [
+      "400/v/0.9063"
+    ],
+    "registered_flagged": [
+      "400/v/0.9063"
+    ],
+    "unexplained": [],
+    "ok": true
+  },
+  "per_point": {
+    "0.0000": {
+      "reference": 0.0,
+      "computed": {
+        "32": 0.024289948376211273,
+        "64": 0.007375703842637783,
+        "128": 0.0019490276103892382
+      },
+      "delta": {
+        "32": 0.024289948376211273,
+        "64": 0.007375703842637783,
+        "128": 0.0019490276103892382
+      },
+      "finest_delta": 0.0019490276103892382,
+      "order": 1.6400979993869158,
+      "richardson_limit": -0.0006145101338220168
+    },
+    "0.0625": {
+      "reference": 0.1836,
+      "computed": {
+        "32": 0.16761651624592458,
+        "64": 0.18154936694396998,
+        "128": 0.1844128071470456
+      },
+      "delta": {
+        "32": -0.015983483754075434,
+        "64": -0.002050633056030038,
+        "128": 0.0008128071470455966
+      },
+      "finest_delta": 0.0008128071470455966,
+      "order": 2.2826690861160945,
+      "richardson_limit": 0.18515352317707412
+    },
+    "0.0703": {
+      "reference": 0.19713,
+      "computed": {
+        "32": 0.1795085393818073,
+        "64": 0.1948472886824935,
+        "128": 0.19798962777427587
+      },
+      "delta": {
+        "32": -0.017621460618192697,
+        "64": -0.002282711317506486,
+        "128": 0.0008596277742758673
+      },
+      "finest_delta": 0.0008596277742758673,
+      "order": 2.2872700761087006,
+      "richardson_limit": 0.19879923443710645
+    },
+    "0.0781": {
+      "reference": 0.2092,
+      "computed": {
+        "32": 0.19045183232434199,
+        "64": 0.20672376048778596,
+        "128": 0.21009837741794446
+      },
+      "delta": {
+        "32": -0.018748167675658012,
+        "64": -0.00247623951221404,
+        "128": 0.0008983774179444626
+      },
+      "finest_delta": 0.0008983774179444626,
+      "order": 2.2695895662216623,
+      "richardson_limit": 0.21098135521225572
+    },
+    "0.0938": {
+      "reference": 0.22965,
+      "computed": {
+        "32": 0.20912694829641557,
+        "64": 0.22700367133487556,
+        "128": 0.23074896272385495
+      },
+      "delta": {
+        "32": -0.020523051703584427,
+        "64": -0.002646328665124431,
+        "128": 0.001098962723854957
+      },
+      "finest_delta": 0.001098962723854957,
+      "order": 2.2549324301057996,
+      "richardson_limit": 0.2317415873875336
+    },
+    "0.1563": {
+      "reference": 0.28124,
+      "computed": {
+        "32": 0.2567338991929784,
+        "64": 0.27803046758001704,
+        "128": 0.28240949355734724
+      },
+      "delta": {
+        "32": -0.02450610080702159,
+        "64": -0.0032095324199829522,
+        "128": 0.0011694935573472454
+      },
+      "finest_delta": 0.0011694935573472454,
+      "order": 2.2819390678544402,
+      "richardson_limit": 0.28354298375620307
+    },
+    "0.2266": {
+      "reference": 0.30203,
+      "computed": {
+        "32": 0.2778574854787055,
+        "64": 0.29849783516425044,
+        "128": 0.30272319949399745
+      },
+      "delta": {
+        "32": -0.02417251452129454,
+        "64": -0.003532164835749585,
+        "128": 0.0006931994939974317
+      },
+      "finest_delta": 0.0006931994939974317,
+      "order": 2.2883197654118157,
+      "richardson_limit": 0.3038108461371175
+    },
+    "0.2344": {
+      "reference": 0.30174,
+      "computed": {
+        "32": 0.2781805106430114,
+        "64": 0.2983285022614685,
+        "128": 0.30238544000643347
+      },
+      "delta": {
+        "32": -0.023559489356988594,
+        "64": -0.0034114977385314993,
+        "128": 0.000645440006433462
+      },
+      "finest_delta": 0.000645440006433462,
+      "order": 2.312172966749298,
+      "richardson_limit": 0.303408290591356
+    },
+    "0.5000": {
+      "reference": 0.05186,
+      "computed": {
+        "32": 0.054583520958752754,
+        "64": 0.052061414121682754,
+        "128": 0.051970202497109846
+      },
+      "delta": {
+        "32": 0.002723520958752751,
+        "64": 0.00020141412168275113,
+        "128": 0.00011020249710984309
+      },
+      "finest_delta": 0.00011020249710984309,
+      "order": 4.789267877578385,
+      "richardson_limit": 0.05196678007050155
+    },
+    "0.8047": {
+      "reference": -0.38598,
+      "computed": {
+        "32": -0.3700656036741023,
+        "64": -0.38318572320542676,
+        "128": -0.38512408090726624
+      },
+      "delta": {
+        "32": 0.015914396325897695,
+        "64": 0.002794276794573225,
+        "128": 0.0008559190927337479
+      },
+      "finest_delta": 0.0008559190927337479,
+      "order": 2.7588741303674396,
+      "richardson_limit": -0.385460095091576
+    },
+    "0.8594": {
+      "reference": -0.44993,
+      "computed": {
+        "32": -0.4138916923928149,
+        "64": -0.44502900655254674,
+        "128": -0.45199281640456773
+      },
+      "delta": {
+        "32": 0.03603830760718507,
+        "64": 0.004900993447453261,
+        "128": -0.0020628164045677355
+      },
+      "finest_delta": -0.0020628164045677355,
+      "order": 2.1606957902828747,
+      "richardson_limit": -0.4539989238781803
+    },
+    "0.9063": {
+      "reference": -0.23827,
+      "computed": {
+        "32": -0.3528387627669481,
+        "64": -0.3806365470248758,
+        "128": -0.3875820683606132
+      },
+      "delta": {
+        "32": -0.11456876276694808,
+        "64": -0.1423665470248758,
+        "128": -0.1493120683606132
+      },
+      "finest_delta": -0.1493120683606132,
+      "order": 2.000814998219725,
+      "richardson_limit": -0.38989549912854427
+    },
+    "0.9453": {
+      "reference": -0.22847,
+      "computed": {
+        "32": -0.20358799169666655,
+        "64": -0.22671909643218388,
+        "128": -0.23277799176694322
+      },
+      "delta": {
+        "32": 0.024882008303333453,
+        "64": 0.0017509035678161256,
+        "128": -0.004307991766943214
+      },
+      "finest_delta": -0.004307991766943214,
+      "order": 1.9327074815035694,
+      "richardson_limit": -0.2349282824420294
+    },
+    "0.9531": {
+      "reference": -0.19254,
+      "computed": {
+        "32": -0.1698639752346242,
+        "64": -0.1908271138133053,
+        "128": -0.1964053089458988
+      },
+      "delta": {
+        "32": 0.02267602476537578,
+        "64": 0.0017128861866946843,
+        "128": -0.0038653089458988155
+      },
+      "finest_delta": -0.0038653089458988155,
+      "order": 1.90998442407531,
+      "richardson_limit": -0.19842782277874638
+    },
+    "0.9609": {
+      "reference": -0.15663,
+      "computed": {
+        "32": -0.13758520255439413,
+        "64": -0.15493592289589583,
+        "128": -0.15995982621536883
+      },
+      "delta": {
+        "32": 0.01904479744560586,
+        "64": 0.001694077104104158,
+        "128": -0.003329826215368842
+      },
+      "finest_delta": -0.003329826215368842,
+      "order": 1.7881149534889136,
+      "richardson_limit": -0.1620073624543109
+    },
+    "0.9688": {
+      "reference": -0.12146,
+      "computed": {
+        "32": -0.10520119922711275,
+        "64": -0.11941864969052642,
+        "128": -0.123729939958633
+      },
+      "delta": {
+        "32": 0.016258800772887244,
+        "64": 0.002041350309473583,
+        "128": -0.002269939958633005
+      },
+      "finest_delta": -0.002269939958633005,
+      "order": 1.7214711737933588,
+      "richardson_limit": -0.12560626977860462
+    },
+    "1.0000": {
+      "reference": 0.0,
+      "computed": {
+        "32": 0.023302924799085842,
+        "64": 0.007125204387469206,
+        "128": 0.001970746248872446
+      },
+      "delta": {
+        "32": 0.023302924799085842,
+        "64": 0.007125204387469206,
+        "128": 0.001970746248872446
+      },
+      "finest_delta": 0.001970746248872446,
+      "order": 1.6501156555539183,
+      "richardson_limit": -0.0004394693519641853
+    }
+  },
+  "verdict": {
+    "attribution": "reference table entry at (Re=400, x=0.9063); not the extraction, not discretisation",
+    "adjudication": "requires the printed Table II (or an independent DNS) to settle; offline copy not available",
+    "gate_effect": "ghia_acceptance keeps failing unless the dispute is passed explicitly as registered"
+  }
+}

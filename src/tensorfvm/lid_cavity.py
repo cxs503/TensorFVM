@@ -437,8 +437,19 @@ def score_against_ghia(solver: LidCavitySolver, reynolds: float | None = None) -
     return out
 
 
+def _registered_disputes() -> dict:
+    """Group the reference dispute register by ``(Re, component)`` -> ``{x: record}``."""
+    from .lid_cavity_reference import DISPUTES
+
+    grouped: dict = {}
+    for (reynolds, which, x), record in DISPUTES.items():
+        grouped.setdefault((reynolds, which), {})[round(x, 4)] = record
+    return grouped
+
+
 def ghia_acceptance(result: dict, *, max_error: float = 0.03,
-                    min_relative: float = 0.15) -> dict:
+                    min_relative: float = 0.15,
+                    allow_registered_disputes: bool = False) -> dict:
     """Turn :func:`score_against_ghia` output into explicit pass/fail facts.
 
     Two independent criteria, both reported so a partial pass cannot hide:
@@ -448,19 +459,44 @@ def ghia_acceptance(result: dict, *, max_error: float = 0.03,
     ``min_relative`` relative error of the *primary extremum* (the deepest
                      reverse-flow u or the strongest v) must stay below
                      ``min_relative`` (the platform's 15 % acceptance band).
+
+    ``allow_registered_disputes`` drops the *registered* reference entries
+    (:data:`tensorfvm.lid_cavity_reference.DISPUTES`) from the pointwise gate.
+    It is off by default so the published gate keeps failing; when it is on the
+    ignored points are reported back with their published value, the solver's
+    delta and the evidence that registered them, so a pass can never hide one.
     """
     from .lid_cavity_reference import VORTEX_CENTRE
 
     re = float(result["reynolds"])
     checks: dict = {"reynolds": re, "criteria": {}}
     worst = 0.0
+    dispute_register = _registered_disputes() if allow_registered_disputes else {}
+    checks["registered_disputes"] = []
     for which in ("u", "v"):
         block = result[which]
-        worst = max(worst, block["max_abs_error"])
+        disputed = dispute_register.get((re, which), {})
+        profile = block["profiles"]
+        pointwise, ignored = [], []
+        for coord, delta in zip(profile["coord"], profile["delta"]):
+            x = round(float(coord), 4)
+            if x in disputed:
+                ignored.append({"x": x, "delta": float(delta),
+                                "published": disputed[x]["published"],
+                                "evidence": disputed[x]["evidence"]})
+            else:
+                pointwise.append(abs(float(delta)))
+        value = max(pointwise) if pointwise else float("nan")
+        worst = max(worst, value)
         checks["criteria"][f"{which}_max_abs_error"] = {
-            "value": block["max_abs_error"], "limit": max_error,
-            "pass": block["max_abs_error"] <= max_error,
+            "value": value, "limit": max_error,
+            "points": len(pointwise), "ignored": len(ignored),
+            "pass": bool(value <= max_error),
         }
+        if ignored:
+            checks["registered_disputes"].extend(
+                [dict(item, component=which) for item in ignored])
+    checks["disputes_declared"] = bool(checks["registered_disputes"]) if allow_registered_disputes else True
     ext = result["u"]["extremum"]
     u_ref, u_got = ext["min_reference"][1], ext["min_computed"][1]
     u_rel = abs(u_got - u_ref) / abs(u_ref)
