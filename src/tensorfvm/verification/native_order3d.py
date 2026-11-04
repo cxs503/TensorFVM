@@ -101,6 +101,41 @@ def divergence_of_stress(points, viscosity=1.0):
     return viscosity*(lap + grad_div/3.0)
 
 
+def harmonic_velocity(points, k=PI):
+    """Exact solution of the homogeneous Dirichlet problem ``div(tau(u)) = 0``.
+
+    Built as ``u = curl A`` with a component-wise harmonic potential
+    ``A = (e^{k(z-1/2)}cos(ky), e^{k(z-1/2)}sin(kx), e^{k(z-1/2)}cos(kx))``.
+    Because every potential component is harmonic, ``lap u = 0`` and
+    ``div u = 0`` hold identically, so ``div tau = mu*(lap u + grad(div u)/3)``
+    vanishes pointwise: this field *is* the solution the Dirichlet solve is
+    supposed to reproduce.  ``field_scale`` here is O(1)-O(20) on the unit box.
+    """
+    p = np.atleast_2d(np.asarray(points, dtype=float))
+    x, y, z = p[:, 0], p[:, 1], p[:, 2]
+    e = np.exp(k*(z - 0.5))
+    return np.stack([-k*e*np.sin(k*x),
+                     k*e*(np.cos(k*y) + np.sin(k*x)),
+                     k*e*(np.cos(k*x) + np.sin(k*y))], axis=1)
+
+
+def harmonic_gradient(points, k=PI):
+    """Analytic ``grad u`` of :func:`harmonic_velocity`, ``[i, a, b] = du_a/dx_b``."""
+    p = np.atleast_2d(np.asarray(points, dtype=float))
+    x, y, z = p[:, 0], p[:, 1], p[:, 2]
+    e = k*np.exp(k*(z - 0.5))
+    g = np.zeros((len(x), 3, 3))
+    g[:, 0, 0] = -k*e*np.cos(k*x)
+    g[:, 0, 2] = -k*e*np.sin(k*x)
+    g[:, 1, 0] = k*e*np.cos(k*x)
+    g[:, 1, 1] = -k*e*np.sin(k*y)
+    g[:, 1, 2] = k*e*(np.cos(k*y) + np.sin(k*x))
+    g[:, 2, 0] = -k*e*np.sin(k*x)
+    g[:, 2, 1] = k*e*np.cos(k*y)
+    g[:, 2, 2] = k*e*(np.cos(k*x) + np.sin(k*y))
+    return g
+
+
 def _wall_mask(mesh, n, layers=1.5):
     """Cells whose centre lies within ``layers`` cells of any box face."""
     half = layers/n
@@ -128,6 +163,20 @@ def truncation_study(n, warp=0.0, viscosity=1.3):
     exact = divergence_of_stress(mesh.cell_centers, viscosity)
     err = np.linalg.norm(discrete - exact, axis=1)
     wall = _wall_mask(mesh, n)
+    # Which faces carry the cell-divergence deficit?  The wall-cell error is
+    # attributed to the Dirichlet faces alone if ``l2_wall_wall_faces_only``
+    # matches ``l2_wall``: that is the signature of a wall-flux closure error,
+    # not of an interior operator error.
+    deficit = flux - np.einsum('fij,fj->fi', stress(mesh.face_centers, viscosity),
+                               mesh.area_vectors)
+    owner_share = np.zeros((op.N, 3))
+    np.add.at(owner_share, mesh.owner, deficit)
+    inner = np.where(op.internal)[0]
+    np.add.at(owner_share, mesh.neighbor[inner], -deficit[inner])
+    wall_only = np.zeros((op.N, 3))
+    np.add.at(wall_only, mesh.owner[op.dirichlet], deficit[op.dirichlet])
+    per_volume = mesh.cell_volumes[:, None]
+    wall_flux_err = np.linalg.norm(wall_only/per_volume, axis=1)
     return dict(n=n, h=1.0/n, warp=warp, cells=int(len(mesh.cells)),
                 faces=int(len(mesh.owner)), wall_cells=int(wall.sum()),
                 field_scale=float(np.linalg.norm(exact, axis=1).max()),
@@ -136,7 +185,10 @@ def truncation_study(n, warp=0.0, viscosity=1.3):
                 l2_interior=float(np.sqrt(np.mean(err[~wall]**2))),
                 linf_interior=float(err[~wall].max()),
                 l2_wall=float(np.sqrt(np.mean(err[wall]**2))),
-                linf_wall=float(err[wall].max()))
+                linf_wall=float(err[wall].max()),
+                l2_wall_wall_faces_only=float(np.sqrt(np.mean(wall_flux_err[wall]**2))),
+                l2_interior_wall_faces_only=float(
+                    np.sqrt(np.mean(wall_flux_err[~wall]**2))))
 
 
 def face_traction_study(n, warp=0.0, viscosity=1.3):
@@ -230,6 +282,41 @@ def manufactured_solution_study(n, warp=0.0, viscosity=1.3):
                 field_scale=float(np.linalg.norm(exact, axis=1).max()),
                 residual=float(np.linalg.norm(op.momentum_diffusion_matrix @ solved - rhs)
                                / max(np.linalg.norm(rhs), 1e-30)))
+
+
+def harmonic_solution_study(n, warp=0.0, viscosity=1.3, k=PI):
+    """Dirichlet solve against a field that *is* an exact solution.
+
+    :func:`solution_study` feeds the manufactured field, which satisfies
+    ``div(tau(u)) = mu*lap u != 0``; no refinement can make the discrete
+    solution approach it.  Here the Dirichlet data come from
+    :func:`harmonic_velocity`, for which ``div(tau) = 0`` identically, so the
+    measured error is a genuine discretisation error and its slope is the
+    solution order of the operator.
+    """
+    from scipy.sparse.linalg import spsolve
+
+    mesh = hex_box(n, warp)
+    op = _operator(mesh, viscosity)
+    data = np.zeros((op.F, 3))
+    data[op.dirichlet] = harmonic_velocity(mesh.face_centers[op.dirichlet], k)
+    rhs = -(op.vector_divergence_matrix @
+            op.momentum_flux_source(dirichlet_values=data).ravel())
+    solved = spsolve(op.momentum_diffusion_matrix.tocsc(), rhs)
+    values = solved.reshape(len(mesh.cells), 3)
+    exact = harmonic_velocity(mesh.cell_centers, k)
+    err = np.linalg.norm(values - exact, axis=1)
+    wall = _wall_mask(mesh, n)
+    return dict(n=n, h=1.0/n, warp=warp,
+                l2_global=float(np.sqrt(np.mean(err**2))),
+                linf_global=float(err.max()),
+                l2_interior=float(np.sqrt(np.mean(err[~wall]**2))),
+                linf_interior=float(err[~wall].max()),
+                l2_wall=float(np.sqrt(np.mean(err[wall]**2))),
+                field_scale=float(np.linalg.norm(exact, axis=1).max()),
+                residual=float(np.linalg.norm(
+                    op.momentum_diffusion_matrix @ solved - rhs)
+                    / max(np.linalg.norm(rhs), 1e-30)))
 
 
 def wall_second_derivative(face_centers, normals, step=1e-4):
