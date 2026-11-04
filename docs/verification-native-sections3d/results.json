@@ -1,0 +1,820 @@
+{
+ "summary": {
+  "case_count": 79,
+  "passed": true,
+  "tolerance_relative": 1e-12,
+  "max_rel_error": 1.4145895842364322e-15,
+  "worst_case": "prism_n96",
+  "median_rel_error": 0.0,
+  "kinds": [
+   "decomposition",
+   "functional",
+   "polygon",
+   "rectangle",
+   "similarity"
+  ],
+  "source_sha256": {
+   "src/tensorfvm/native_sections3d.py": "83e2f51410ef1b9f64f6643b456180e22e70a94e74c14ec569ac833b0b4c0ef7",
+   "src/tensorfvm/native_mesh3d.py": "59833e84499f7c5b4572b9d2f96020024d46b26fc91ee4dc2111300872b31470",
+   "tests/test_native_sections3d.py": "e0addc58cb5c6272a39f095a9a20210fe73d37624bc997b87202636ca3f7fa98",
+   "scripts/audit_native_sections3d.py": "458e81f5ac57efdca18664654dbd64da059c76aa0431c6a4880c37132af65baa"
+  },
+  "figures": [
+   "sections3d-analytic.png",
+   "sections3d-errors.png"
+  ],
+  "note": "Cells are graded against closed-form areas only; no case compares the engine with another implementation. A plane touching a cell at a single vertex encloses no finite area and is reported as absent, which is a documented convention, not a tolerance."
+ },
+ "cases": [
+  {
+   "case": "brick_axis0_interior",
+   "kind": "rectangle",
+   "plane": 0.5,
+   "cells": 12,
+   "analytic_area": 12.0,
+   "computed_area": 12.0,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "brick_axis1_interior",
+   "kind": "rectangle",
+   "plane": 1.5,
+   "cells": 8,
+   "analytic_area": 8.0,
+   "computed_area": 8.0,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "brick_axis2_interior",
+   "kind": "rectangle",
+   "plane": 2.5,
+   "cells": 6,
+   "analytic_area": 6.0,
+   "computed_area": 6.0,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "brick_coplanar_facet_plane",
+   "kind": "rectangle",
+   "plane": 2.0,
+   "cells": 12,
+   "analytic_area": 12.0,
+   "computed_area": 12.0,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "brick_graded_spacing",
+   "kind": "rectangle",
+   "plane": 0.001,
+   "cells": 6,
+   "analytic_area": 6.0,
+   "computed_area": 6.0,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "brick_triangulated_facets",
+   "kind": "rectangle",
+   "plane": 0.5,
+   "cells": 1,
+   "analytic_area": 6.0,
+   "computed_area": 6.0,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "brick_triangulated_coplanar",
+   "kind": "rectangle",
+   "plane": 0.0,
+   "cells": 1,
+   "analytic_area": 6.0,
+   "computed_area": 6.0,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "pyramid_h0.0000",
+   "kind": "similarity",
+   "plane": 0.0,
+   "cells": 1,
+   "analytic_area": 4.0,
+   "computed_area": 4.0,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "pyramid_h0.0500",
+   "kind": "similarity",
+   "plane": 0.049999999999999996,
+   "cells": 1,
+   "analytic_area": 3.61,
+   "computed_area": 3.61,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "pyramid_h0.1000",
+   "kind": "similarity",
+   "plane": 0.09999999999999999,
+   "cells": 1,
+   "analytic_area": 3.24,
+   "computed_area": 3.24,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "pyramid_h0.1500",
+   "kind": "similarity",
+   "plane": 0.15,
+   "cells": 1,
+   "analytic_area": 2.8899999999999997,
+   "computed_area": 2.8899999999999997,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "pyramid_h0.2000",
+   "kind": "similarity",
+   "plane": 0.19999999999999998,
+   "cells": 1,
+   "analytic_area": 2.5600000000000005,
+   "computed_area": 2.5600000000000005,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "pyramid_h0.2500",
+   "kind": "similarity",
+   "plane": 0.24999999999999997,
+   "cells": 1,
+   "analytic_area": 2.25,
+   "computed_area": 2.25,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "pyramid_h0.3000",
+   "kind": "similarity",
+   "plane": 0.3,
+   "cells": 1,
+   "analytic_area": 1.9599999999999997,
+   "computed_area": 1.9599999999999997,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "pyramid_h0.3500",
+   "kind": "similarity",
+   "plane": 0.35,
+   "cells": 1,
+   "analytic_area": 1.6900000000000002,
+   "computed_area": 1.6900000000000002,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "pyramid_h0.4000",
+   "kind": "similarity",
+   "plane": 0.39999999999999997,
+   "cells": 1,
+   "analytic_area": 1.4400000000000004,
+   "computed_area": 1.4400000000000004,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "pyramid_h0.4500",
+   "kind": "similarity",
+   "plane": 0.44999999999999996,
+   "cells": 1,
+   "analytic_area": 1.2100000000000002,
+   "computed_area": 1.2100000000000002,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "pyramid_h0.5000",
+   "kind": "similarity",
+   "plane": 0.49999999999999994,
+   "cells": 1,
+   "analytic_area": 1.0,
+   "computed_area": 1.0,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "pyramid_h0.5500",
+   "kind": "similarity",
+   "plane": 0.5499999999999999,
+   "cells": 1,
+   "analytic_area": 0.8100000000000003,
+   "computed_area": 0.8100000000000003,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "pyramid_h0.6000",
+   "kind": "similarity",
+   "plane": 0.6,
+   "cells": 1,
+   "analytic_area": 0.6400000000000001,
+   "computed_area": 0.6400000000000001,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "pyramid_h0.6500",
+   "kind": "similarity",
+   "plane": 0.6499999999999999,
+   "cells": 1,
+   "analytic_area": 0.49000000000000027,
+   "computed_area": 0.49000000000000027,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "pyramid_h0.7000",
+   "kind": "similarity",
+   "plane": 0.7,
+   "cells": 1,
+   "analytic_area": 0.3600000000000001,
+   "computed_area": 0.3600000000000001,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "pyramid_h0.7500",
+   "kind": "similarity",
+   "plane": 0.7499999999999999,
+   "cells": 1,
+   "analytic_area": 0.2500000000000002,
+   "computed_area": 0.2500000000000002,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "pyramid_h0.8000",
+   "kind": "similarity",
+   "plane": 0.7999999999999999,
+   "cells": 1,
+   "analytic_area": 0.16000000000000011,
+   "computed_area": 0.16000000000000011,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "pyramid_h0.8500",
+   "kind": "similarity",
+   "plane": 0.85,
+   "cells": 1,
+   "analytic_area": 0.09000000000000002,
+   "computed_area": 0.09000000000000002,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "pyramid_h0.9000",
+   "kind": "similarity",
+   "plane": 0.8999999999999999,
+   "cells": 1,
+   "analytic_area": 0.04000000000000007,
+   "computed_area": 0.04000000000000007,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "pyramid_h0.9500",
+   "kind": "similarity",
+   "plane": 0.95,
+   "cells": 1,
+   "analytic_area": 0.010000000000000018,
+   "computed_area": 0.010000000000000018,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "tetra_h0.0000",
+   "kind": "similarity",
+   "plane": 0.0,
+   "cells": 1,
+   "analytic_area": 0.5,
+   "computed_area": 0.5,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "tetra_h0.0500",
+   "kind": "similarity",
+   "plane": 0.049999999999999996,
+   "cells": 1,
+   "analytic_area": 0.45125,
+   "computed_area": 0.45125,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "tetra_h0.1000",
+   "kind": "similarity",
+   "plane": 0.09999999999999999,
+   "cells": 1,
+   "analytic_area": 0.405,
+   "computed_area": 0.405,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "tetra_h0.1500",
+   "kind": "similarity",
+   "plane": 0.15,
+   "cells": 1,
+   "analytic_area": 0.36124999999999996,
+   "computed_area": 0.36124999999999996,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "tetra_h0.2000",
+   "kind": "similarity",
+   "plane": 0.19999999999999998,
+   "cells": 1,
+   "analytic_area": 0.32000000000000006,
+   "computed_area": 0.32000000000000006,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "tetra_h0.2500",
+   "kind": "similarity",
+   "plane": 0.24999999999999997,
+   "cells": 1,
+   "analytic_area": 0.28125,
+   "computed_area": 0.28125,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "tetra_h0.3000",
+   "kind": "similarity",
+   "plane": 0.3,
+   "cells": 1,
+   "analytic_area": 0.24499999999999997,
+   "computed_area": 0.24499999999999997,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "tetra_h0.3500",
+   "kind": "similarity",
+   "plane": 0.35,
+   "cells": 1,
+   "analytic_area": 0.21125000000000002,
+   "computed_area": 0.21125000000000002,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "tetra_h0.4000",
+   "kind": "similarity",
+   "plane": 0.39999999999999997,
+   "cells": 1,
+   "analytic_area": 0.18000000000000005,
+   "computed_area": 0.18000000000000005,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "tetra_h0.4500",
+   "kind": "similarity",
+   "plane": 0.44999999999999996,
+   "cells": 1,
+   "analytic_area": 0.15125000000000002,
+   "computed_area": 0.15125000000000002,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "tetra_h0.5000",
+   "kind": "similarity",
+   "plane": 0.49999999999999994,
+   "cells": 1,
+   "analytic_area": 0.125,
+   "computed_area": 0.125,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "tetra_h0.5500",
+   "kind": "similarity",
+   "plane": 0.5499999999999999,
+   "cells": 1,
+   "analytic_area": 0.10125000000000003,
+   "computed_area": 0.10125000000000003,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "tetra_h0.6000",
+   "kind": "similarity",
+   "plane": 0.6,
+   "cells": 1,
+   "analytic_area": 0.08000000000000002,
+   "computed_area": 0.08000000000000002,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "tetra_h0.6500",
+   "kind": "similarity",
+   "plane": 0.6499999999999999,
+   "cells": 1,
+   "analytic_area": 0.061250000000000034,
+   "computed_area": 0.061250000000000034,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "tetra_h0.7000",
+   "kind": "similarity",
+   "plane": 0.7,
+   "cells": 1,
+   "analytic_area": 0.04500000000000001,
+   "computed_area": 0.04500000000000001,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "tetra_h0.7500",
+   "kind": "similarity",
+   "plane": 0.7499999999999999,
+   "cells": 1,
+   "analytic_area": 0.03125000000000003,
+   "computed_area": 0.03125000000000003,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "tetra_h0.8000",
+   "kind": "similarity",
+   "plane": 0.7999999999999999,
+   "cells": 1,
+   "analytic_area": 0.020000000000000014,
+   "computed_area": 0.020000000000000014,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "tetra_h0.8500",
+   "kind": "similarity",
+   "plane": 0.85,
+   "cells": 1,
+   "analytic_area": 0.011250000000000003,
+   "computed_area": 0.011250000000000003,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "tetra_h0.9000",
+   "kind": "similarity",
+   "plane": 0.8999999999999999,
+   "cells": 1,
+   "analytic_area": 0.005000000000000009,
+   "computed_area": 0.005000000000000009,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "tetra_h0.9500",
+   "kind": "similarity",
+   "plane": 0.95,
+   "cells": 1,
+   "analytic_area": 0.0012500000000000022,
+   "computed_area": 0.0012500000000000022,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "wedge_parallel_cut",
+   "kind": "similarity",
+   "plane": 0.5,
+   "cells": 1,
+   "analytic_area": 0.5,
+   "computed_area": 0.5,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "prism_n3",
+   "kind": "polygon",
+   "plane": 0.5,
+   "cells": 3,
+   "analytic_area": 1.299038105676658,
+   "computed_area": 1.299038105676658,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "prism_n6",
+   "kind": "polygon",
+   "plane": 0.5,
+   "cells": 6,
+   "analytic_area": 2.598076211353316,
+   "computed_area": 2.598076211353316,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "prism_n12",
+   "kind": "polygon",
+   "plane": 0.5,
+   "cells": 12,
+   "analytic_area": 2.9999999999999996,
+   "computed_area": 3.0,
+   "rel_error": 1.4802973661668756e-16,
+   "passed": true
+  },
+  {
+   "case": "prism_n24",
+   "kind": "polygon",
+   "plane": 0.5,
+   "cells": 24,
+   "analytic_area": 3.105828541230249,
+   "computed_area": 3.1058285412302498,
+   "rel_error": 2.8597149131365414e-16,
+   "passed": true
+  },
+  {
+   "case": "prism_n96",
+   "kind": "polygon",
+   "plane": 0.5,
+   "cells": 96,
+   "analytic_area": 3.1393502030468667,
+   "computed_area": 3.139350203046871,
+   "rel_error": 1.4145895842364322e-15,
+   "passed": true
+  },
+  {
+   "case": "kuhn_z0.0200",
+   "kind": "decomposition",
+   "plane": 0.02,
+   "cells": 6,
+   "analytic_area": 1.0,
+   "computed_area": 1.0,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "kuhn_z0.0600",
+   "kind": "decomposition",
+   "plane": 0.06,
+   "cells": 6,
+   "analytic_area": 1.0,
+   "computed_area": 1.0,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "kuhn_z0.1000",
+   "kind": "decomposition",
+   "plane": 0.1,
+   "cells": 6,
+   "analytic_area": 1.0,
+   "computed_area": 1.0,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "kuhn_z0.1400",
+   "kind": "decomposition",
+   "plane": 0.13999999999999999,
+   "cells": 6,
+   "analytic_area": 1.0,
+   "computed_area": 1.0,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "kuhn_z0.1800",
+   "kind": "decomposition",
+   "plane": 0.18,
+   "cells": 6,
+   "analytic_area": 1.0,
+   "computed_area": 1.0,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "kuhn_z0.2200",
+   "kind": "decomposition",
+   "plane": 0.22,
+   "cells": 6,
+   "analytic_area": 1.0,
+   "computed_area": 1.0,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "kuhn_z0.2600",
+   "kind": "decomposition",
+   "plane": 0.26,
+   "cells": 6,
+   "analytic_area": 1.0,
+   "computed_area": 1.0,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "kuhn_z0.3000",
+   "kind": "decomposition",
+   "plane": 0.30000000000000004,
+   "cells": 6,
+   "analytic_area": 1.0,
+   "computed_area": 1.0,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "kuhn_z0.3400",
+   "kind": "decomposition",
+   "plane": 0.34,
+   "cells": 6,
+   "analytic_area": 1.0,
+   "computed_area": 1.0,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "kuhn_z0.3800",
+   "kind": "decomposition",
+   "plane": 0.38,
+   "cells": 6,
+   "analytic_area": 1.0,
+   "computed_area": 1.0,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "kuhn_z0.4200",
+   "kind": "decomposition",
+   "plane": 0.42000000000000004,
+   "cells": 6,
+   "analytic_area": 1.0,
+   "computed_area": 1.0,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "kuhn_z0.4600",
+   "kind": "decomposition",
+   "plane": 0.46,
+   "cells": 6,
+   "analytic_area": 1.0,
+   "computed_area": 1.0,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "kuhn_z0.5000",
+   "kind": "decomposition",
+   "plane": 0.5,
+   "cells": 6,
+   "analytic_area": 1.0,
+   "computed_area": 1.0,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "kuhn_z0.5400",
+   "kind": "decomposition",
+   "plane": 0.54,
+   "cells": 6,
+   "analytic_area": 1.0,
+   "computed_area": 1.0,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "kuhn_z0.5800",
+   "kind": "decomposition",
+   "plane": 0.5800000000000001,
+   "cells": 6,
+   "analytic_area": 1.0,
+   "computed_area": 1.0,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "kuhn_z0.6200",
+   "kind": "decomposition",
+   "plane": 0.62,
+   "cells": 6,
+   "analytic_area": 1.0,
+   "computed_area": 1.0,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "kuhn_z0.6600",
+   "kind": "decomposition",
+   "plane": 0.66,
+   "cells": 6,
+   "analytic_area": 1.0,
+   "computed_area": 1.0,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "kuhn_z0.7000",
+   "kind": "decomposition",
+   "plane": 0.7000000000000001,
+   "cells": 6,
+   "analytic_area": 1.0,
+   "computed_area": 1.0,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "kuhn_z0.7400",
+   "kind": "decomposition",
+   "plane": 0.74,
+   "cells": 6,
+   "analytic_area": 1.0,
+   "computed_area": 1.0,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "kuhn_z0.7800",
+   "kind": "decomposition",
+   "plane": 0.78,
+   "cells": 6,
+   "analytic_area": 1.0,
+   "computed_area": 1.0,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "kuhn_z0.8200",
+   "kind": "decomposition",
+   "plane": 0.8200000000000001,
+   "cells": 6,
+   "analytic_area": 1.0,
+   "computed_area": 1.0,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "kuhn_z0.8600",
+   "kind": "decomposition",
+   "plane": 0.86,
+   "cells": 6,
+   "analytic_area": 1.0,
+   "computed_area": 1.0,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "kuhn_z0.9000",
+   "kind": "decomposition",
+   "plane": 0.9,
+   "cells": 6,
+   "analytic_area": 1.0,
+   "computed_area": 1.0,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "kuhn_z0.9400",
+   "kind": "decomposition",
+   "plane": 0.9400000000000001,
+   "cells": 6,
+   "analytic_area": 1.0,
+   "computed_area": 1.0,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "kuhn_z0.9800",
+   "kind": "decomposition",
+   "plane": 0.98,
+   "cells": 6,
+   "analytic_area": 1.0,
+   "computed_area": 1.0,
+   "rel_error": 0.0,
+   "passed": true
+  },
+  {
+   "case": "linear_field_integral",
+   "kind": "functional",
+   "plane": 2.5,
+   "cells": 6,
+   "analytic_area": 24.0,
+   "computed_area": 24.0,
+   "rel_error": 0.0,
+   "passed": true
+  }
+ ]
+}
