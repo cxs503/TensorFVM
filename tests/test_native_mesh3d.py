@@ -54,3 +54,37 @@ def test_gmsh_volume_and_physical_patches(tmp_path):
     assert set(m.patch_labels)=={'internal','outer'}
     assert m.cell_volumes.sum()==pytest.approx(1)
     assert max(NativeOperators3D(m).audit_affine().values())<1e-10
+
+
+def test_face_reconstruction_reduces_to_geometric_projection_on_nonuniform_pair():
+    """Zero-gradient reconstruction must reproduce the linear field at the
+    geometric projection point of the face centroid.
+
+    The pre-existing affine checks use single cells, i.e. no internal face, so
+    the owner/neighbour interpolation weight of ``reconstruct_faces`` was never
+    exercised (measured: mutant OP3-RECON-SWAP survived).  Here the second
+    tetrahedron is four times longer than the first, so the owner->neighbour
+    line meets the shared face well away from its midpoint: a swapped weight
+    changes the result by 0.6 of the jump, while the criterion below is
+    satisfied identically (to round-off) for any correct weight because an
+    affine field is reproduced exactly at the plane intersection.
+    """
+    vertices=[[0,0,0],[1,0,0],[0,1,0],[0,0,1],[0,0,-4]]
+    m=NativeMesh3D.from_cells(vertices,[[0,1,2,3],[0,2,1,4]],['tetra']*2)
+    op=NativeOperators3D(m)
+    (face,)=np.nonzero(op.internal)
+    face=int(face[0]);o=int(m.owner[face]);n=int(m.neighbor[face])
+    d=m.cell_centers[n]-m.cell_centers[o];s=m.area_vectors[face]
+    # Plane-intersection parameter of the centre line with the face plane,
+    # derived from geometry alone (independent of the operator's blend form).
+    t=float(((m.face_centers[face]-m.cell_centers[o])@s)/(d@s))
+    assert abs(t-.5)>.1, "mesh must make the criterion sensitive to a weight swap"
+    gradient=np.array([.7,-1.3,2.1])
+    values=1.7+m.cell_centers@gradient
+    faces=op.reconstruct_faces(values,np.zeros_like(m.cell_centers),np.zeros(op.boundary.sum()))
+    exact=1.7+(m.cell_centers[o]+t*d)@gradient
+    assert faces[face]==pytest.approx(exact,abs=1e-12)
+    # Sensitivity: the arithmetic midpoint value is measurably different, so the
+    # assertion above cannot be satisfied by an incorrect blend weight.
+    midpoint=1.7+.5*(m.cell_centers[o]+m.cell_centers[n])@gradient
+    assert abs(midpoint-exact)>1e-2
