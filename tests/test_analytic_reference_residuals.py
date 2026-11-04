@@ -26,6 +26,7 @@ SYMBOLIC_CASES = {
     "advected_shear": audit.case_advected_shear,
     "overset_poisson": audit.case_overset_poisson,
     "curved_channel": audit.case_curved_channel,
+    "taylor_green": audit.case_taylor_green,
 }
 
 

@@ -4,6 +4,7 @@
 | annular.analytic_velocity / analytic_flow | annular Hagen-Poiseuille profile solves mu (1/r)(r u')' = dp/dz with dp/dz = -G and u(ri)=u(ro)=0 | 0 (exact) | 8.356e-15 | 3999 |
 | extended_cases.exact_velocity/exact_pressure ('abc') | u = (sin z + cos y, sin x + cos z, sin y + cos x) e^{-nu t} with p = -|u|^2/2 is an exact 3-D Navier-Stokes solution | 0 (exact) | 0.000e+00 | 2000 |
 | extended_cases.exact_velocity ('advected-shear') | u = (sin(y-0.7t) e^{-nu t}, 0.7, 0), p = 0 solves the incompressible Navier-Stokes equations | 0 (exact) | 0.000e+00 | 0 |
+| periodic_tgv.TaylorGreenReference (Taylor-Green vortex) | u=(sin x cos y, -cos x sin y) e^{-2nu t}, p=rho/4(cos 2x+cos 2y) e^{-4nu t} is an exact 2-D NS solution | 0 (exact) | 0.000e+00 | 3000 |
 | overset_poisson.manufactured_value/manufactured_source, overset_scalar.exact_value | -Laplace(phi) equals the coded right-hand side; the overset scalar quadratic is the coded value | 0 (exact) | 2.761e-16 | 2000 |
 | curved_channel.reference (mapped-coordinate manufactured NS solution) | u=(w, g' w), p=G(L-x) with w=6V eta(1-eta) and the coded body force is an exact solution of the incompressible 2-D Navier-Stokes equations in the sin^4-mapped channel | 0 (exact) | 3.318e-15 | 1500 |
 | extended_cases torch implementations vs symbolic solution | the torch reference fields evaluate the audited closed forms (not a different formula) | 0 (exact) | 1.032e-18 | 1500 |
