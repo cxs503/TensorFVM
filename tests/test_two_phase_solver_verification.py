@@ -158,3 +158,205 @@ def test_single_phase_mode_is_dormant():
     solver = TwoPhaseSolver(GridConfig(nx=8, ny=8))
     assert solver.alpha is None and solver.vof is None and solver.fs_bc is None
     assert solver.rho_field is not None and float(solver.rho_field.max()) == 1.0
+
+
+
+# --------------------------------------------------------------------------- #
+# m2564 additions rebased on the merged solver (m2654 absorbed the operator
+# repair; these anchors are the unique verification increment)
+# --------------------------------------------------------------------------- #
+
+def _stratified_alpha(solver: TwoPhaseSolver, interface_y: float) -> torch.Tensor:
+    y = (torch.arange(solver.ny, dtype=torch.float64) + 0.5) * solver.dy
+    col = (y < interface_y).to(torch.float64).reshape(-1, 1)
+    return col.expand(solver.ny, solver.nx).clone()
+
+
+
+
+
+
+def _circular_alpha(nx: int, ny: int, radius: float, dx: float,
+                    cy: float = 0.5, cx: float = 0.5,
+                    eps_factor: float = 0.75) -> torch.Tensor:
+    x = (torch.arange(nx, dtype=torch.float64) + 0.5) * dx
+    y = (torch.arange(ny, dtype=torch.float64) + 0.5) * dx
+    r = torch.sqrt((x[None, :] - cx) ** 2 + (y[:, None] - cy) ** 2)
+    return 0.5 * (1.0 - torch.tanh((r - radius) / (eps_factor * dx)))
+
+
+
+
+
+
+def _column_solver(n: int = 40, dt: float = 1e-3) -> TwoPhaseSolver:
+    cfg = GridConfig(nx=n, ny=n, length=1.0, height=1.0, time_step=dt)
+    tp = TwoPhaseConfig(enabled=True, rho_liquid=1000.0, rho_gas=1.0,
+                        mu_liquid=1.0e-3, mu_gas=1.0e-5,
+                        gravity=9.81, top_atmosphere=True)
+    solver = TwoPhaseSolver(cfg, tp)
+    solver.set_alpha(_stratified_alpha(solver, 0.5))
+    solver.initialize_hydrostatic_pressure(0.5)
+    return solver
+
+
+# --------------------------------------------------------------------------- #
+# anchor 1: static water column stays at rest (was xfail(strict=True))
+# --------------------------------------------------------------------------- #
+
+
+
+
+def test_static_column_stays_at_rest():
+    """A hydrostatic two-phase column at rest must not generate motion.
+
+    Well-balanced variable-density projection: gravity in the momentum
+    predictor is exactly cancelled by the pressure gradient of the
+    variable-density Poisson solve, so ``u`` and ``v`` stay at round-off and
+    the discrete divergence is nulled.
+    """
+    solver = _column_solver(n=40, dt=1e-3)
+    dt = 1e-3
+    with torch.no_grad():
+        for _ in range(10):
+            solver.step(dt)
+            assert torch.isfinite(solver.u).all() and torch.isfinite(solver.v).all()
+
+    max_u = float(torch.abs(solver.u).max())
+    max_v = float(torch.abs(solver.v).max())
+    max_div = float(torch.abs(solver._divergence()).max())
+    assert max_u < 1e-9, f"static column: max|u| = {max_u:.3e} (must be < 1e-9)"
+    assert max_v < 1e-9, f"static column: max|v| = {max_v:.3e} (must be < 1e-9)"
+    assert max_div < 1e-10, f"static column: max|div u| = {max_div:.3e}"
+
+    # The pressure must be the hydrostatic field, i.e. O(rho*g*dy) in
+    # magnitude -- not the O(rho*g*dy/dt) blow-up of the inconsistent operator.
+    p_bottom = float(solver.p[0, 0])
+    p_expected = (1000.0 * 9.81 * (0.5 - 0.5 * solver.dy)
+                  + 1.0 * 9.81 * 0.5)
+    assert abs(p_bottom - p_expected) / p_expected < 0.01, (
+        f"static column: p_bottom = {p_bottom:.1f} Pa vs hydrostatic "
+        f"{p_expected:.1f} Pa")
+
+
+
+
+
+
+def test_static_column_divergence_does_not_grow():
+    """The residual divergence must stay bounded (no exponential growth)."""
+    solver = _column_solver(n=32, dt=1e-3)
+    divs = []
+    with torch.no_grad():
+        for _ in range(10):
+            solver.step(1e-3)
+            divs.append(float(torch.abs(solver._divergence()).max()))
+    assert max(divs) < 1e-10, f"divergence grew to {max(divs):.3e}"
+    # monotone-ish, never amplified by orders of magnitude
+    assert divs[-1] < 1e-6
+
+
+# --------------------------------------------------------------------------- #
+# anchor 2: Young-Laplace pressure jump of a static droplet (was xfail)
+# --------------------------------------------------------------------------- #
+
+
+
+
+@pytest.mark.parametrize("radius", [0.2, 0.25, 0.3])
+def test_static_droplet_laplace_pressure(radius):
+    """dp = sigma/R for a static droplet held by surface tension.
+
+    Acceptance: relative error < 15%.  This test only passes if the CSF force
+    actually reaches the momentum prediction (``surface_tension=True`` is
+    otherwise inert and dp would be 0).
+    """
+    n, sigma, dt = 64, 0.0728, 1e-4
+    cfg = GridConfig(nx=n, ny=n, length=1.0, height=1.0, time_step=dt)
+    tp = TwoPhaseConfig(enabled=True, rho_liquid=1000.0, rho_gas=1000.0,
+                        mu_liquid=1.0e-3, mu_gas=1.0e-3, sigma=sigma,
+                        surface_tension=True, gravity=0.0, top_atmosphere=True)
+    solver = TwoPhaseSolver(cfg, tp)
+    solver.set_alpha(_circular_alpha(n, n, radius, solver.dx))
+
+    with torch.no_grad():
+        for _ in range(5):
+            solver.step(dt)
+
+    c = n // 2
+    p_center = float(solver.p[c - 1:c + 1, c - 1:c + 1].mean())
+    p_far = float(solver.p[2:5, 2:5].mean())
+    dp = p_center - p_far
+    dp_ref = sigma / radius
+    rel = abs(dp - dp_ref) / dp_ref
+    assert rel < 0.15, (
+        f"Laplace jump: dp = {dp:.5f} Pa vs sigma/R = {dp_ref:.5f} Pa "
+        f"(rel.err {rel * 100:.2f}% > 15%)")
+
+
+
+
+
+
+def test_surface_tension_switch_is_respected():
+    """Negative control: with surface_tension=False the CSF force is off."""
+    n, sigma, dt = 48, 0.0728, 1e-4
+    cfg = GridConfig(nx=n, ny=n, length=1.0, height=1.0, time_step=dt)
+    tp = TwoPhaseConfig(enabled=True, rho_liquid=1000.0, rho_gas=1000.0,
+                        mu_liquid=1.0e-3, mu_gas=1.0e-3, sigma=sigma,
+                        surface_tension=False, gravity=0.0, top_atmosphere=True)
+    solver = TwoPhaseSolver(cfg, tp)
+    solver.set_alpha(_circular_alpha(n, n, 0.25, solver.dx))
+    with torch.no_grad():
+        for _ in range(3):
+            solver.step(dt)
+    c = n // 2
+    dp = float(solver.p[c, c] - solver.p[2, 2])
+    assert abs(dp) < 1e-6, f"CSF must be gated off, got dp = {dp:.3e} Pa"
+    assert float(torch.abs(solver.u).max()) < 1e-9
+
+
+# --------------------------------------------------------------------------- #
+# anchor 3: fully closed domain rejected at configuration time (was xfail)
+# --------------------------------------------------------------------------- #
+
+
+
+
+def test_pressure_scale_is_hydrostatic():
+    """Reject the old operator: p must be O(rho*g*dy), not O(rho*g*dy/dt)."""
+    solver = _column_solver(n=32, dt=1e-3)
+    with torch.no_grad():
+        solver.step(1e-3)
+    rho_g_dy = 1000.0 * 9.81 * solver.dy
+    p_max = float(solver.p.abs().max())
+    # the column is 0.5 m high -> ~20 cells
+    assert 5.0 * rho_g_dy < p_max < 100.0 * rho_g_dy, (
+        f"p_max = {p_max:.1f} Pa is not of hydrostatic magnitude "
+        f"(rho*g*dy = {rho_g_dy:.1f} Pa)")
+
+
+# --------------------------------------------------------------------------- #
+# single-phase path must remain untouched
+# --------------------------------------------------------------------------- #
+
+
+
+
+def test_single_phase_path_is_unchanged():
+    """two_phase disabled -> no gravity/CSF coupling, still a quiet field."""
+    cfg = GridConfig(nx=16, ny=16, length=1.0, height=1.0, time_step=0.0,
+                     density=1.0)
+    solver = TwoPhaseSolver(cfg, TwoPhaseConfig(enabled=False))
+    with torch.no_grad():
+        solver.step(0.0)
+    assert float(torch.abs(solver.u).max()) == 0.0
+    assert float(torch.abs(solver.v).max()) == 0.0
+    assert solver.alpha is None
+
+
+# --------------------------------------------------------------------------- #
+# carried from the m2538 generation (see module docstring)
+# --------------------------------------------------------------------------- #
+
+
