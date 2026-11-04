@@ -1,0 +1,344 @@
+{
+  "closures": [
+    "two_point",
+    "three_point"
+  ],
+  "affine": [
+    {
+      "divisions": [
+        6,
+        6,
+        6
+      ],
+      "closure": "two_point",
+      "affine_error": 1.2506835007564504e-15,
+      "upgraded_faces": 0,
+      "dirichlet_faces": 432,
+      "h": 0.16666666666666666
+    },
+    {
+      "divisions": [
+        6,
+        6,
+        6
+      ],
+      "closure": "three_point",
+      "affine_error": 2.033631708547074e-15,
+      "upgraded_faces": 432,
+      "dirichlet_faces": 432,
+      "h": 0.16666666666666666
+    }
+  ],
+  "trig1d": {
+    "two_point": [
+      {
+        "divisions": [
+          8,
+          4,
+          4
+        ],
+        "closure": "two_point",
+        "mode": "trig1d",
+        "wall_flux": 0.012171972018370709,
+        "upgraded_faces": 0,
+        "dirichlet_faces": 320,
+        "h": 0.125
+      },
+      {
+        "divisions": [
+          16,
+          4,
+          4
+        ],
+        "closure": "two_point",
+        "mode": "trig1d",
+        "wall_flux": 0.0034334510505103456,
+        "upgraded_faces": 0,
+        "dirichlet_faces": 576,
+        "h": 0.0625
+      },
+      {
+        "divisions": [
+          32,
+          4,
+          4
+        ],
+        "closure": "two_point",
+        "mode": "trig1d",
+        "wall_flux": 0.001072467432316466,
+        "upgraded_faces": 0,
+        "dirichlet_faces": 1088,
+        "h": 0.03125
+      }
+    ],
+    "three_point": [
+      {
+        "divisions": [
+          8,
+          4,
+          4
+        ],
+        "closure": "three_point",
+        "mode": "trig1d",
+        "wall_flux": 0.023315727203130018,
+        "upgraded_faces": 320,
+        "dirichlet_faces": 320,
+        "h": 0.125
+      },
+      {
+        "divisions": [
+          16,
+          4,
+          4
+        ],
+        "closure": "three_point",
+        "mode": "trig1d",
+        "wall_flux": 0.006269696516926968,
+        "upgraded_faces": 576,
+        "dirichlet_faces": 576,
+        "h": 0.0625
+      },
+      {
+        "divisions": [
+          32,
+          4,
+          4
+        ],
+        "closure": "three_point",
+        "mode": "trig1d",
+        "wall_flux": 0.0017902778921220414,
+        "upgraded_faces": 1088,
+        "dirichlet_faces": 1088,
+        "h": 0.03125
+      }
+    ]
+  },
+  "trig3d": {
+    "two_point": [
+      {
+        "divisions": [
+          4,
+          4,
+          4
+        ],
+        "closure": "two_point",
+        "mode": "trig3d",
+        "wall_flux": 0.05924993339140416,
+        "upgraded_faces": 0,
+        "dirichlet_faces": 192,
+        "h": 0.25
+      },
+      {
+        "divisions": [
+          6,
+          6,
+          6
+        ],
+        "closure": "two_point",
+        "mode": "trig3d",
+        "wall_flux": 0.034193670842989646,
+        "upgraded_faces": 0,
+        "dirichlet_faces": 432,
+        "h": 0.16666666666666666
+      },
+      {
+        "divisions": [
+          8,
+          8,
+          8
+        ],
+        "closure": "two_point",
+        "mode": "trig3d",
+        "wall_flux": 0.024128436745960616,
+        "upgraded_faces": 0,
+        "dirichlet_faces": 768,
+        "h": 0.125
+      }
+    ],
+    "three_point": [
+      {
+        "divisions": [
+          4,
+          4,
+          4
+        ],
+        "closure": "three_point",
+        "mode": "trig3d",
+        "wall_flux": 0.08959553360077219,
+        "upgraded_faces": 192,
+        "dirichlet_faces": 192,
+        "h": 0.25
+      },
+      {
+        "divisions": [
+          6,
+          6,
+          6
+        ],
+        "closure": "three_point",
+        "mode": "trig3d",
+        "wall_flux": 0.047455419151427376,
+        "upgraded_faces": 432,
+        "dirichlet_faces": 432,
+        "h": 0.16666666666666666
+      },
+      {
+        "divisions": [
+          8,
+          8,
+          8
+        ],
+        "closure": "three_point",
+        "mode": "trig3d",
+        "wall_flux": 0.031142462695633314,
+        "upgraded_faces": 768,
+        "dirichlet_faces": 768,
+        "h": 0.125
+      }
+    ]
+  },
+  "harmonic": {
+    "two_point": [
+      {
+        "n": 4,
+        "h": 0.25,
+        "closure": "two_point",
+        "warp": 0.0,
+        "l2_global": 0.6287192485662468,
+        "l2_interior": 0.26371285390193105,
+        "l2_wall": 0.6646974262053963,
+        "linf_global": 1.9105967745943175,
+        "residual": 7.338980227311354e-16,
+        "upgraded_faces": 0,
+        "dirichlet_faces": 192,
+        "nonzeros": 5244
+      },
+      {
+        "n": 6,
+        "h": 0.16666666666666666,
+        "closure": "two_point",
+        "warp": 0.0,
+        "l2_global": 0.36867797319935364,
+        "l2_interior": 0.2196197976585177,
+        "l2_wall": 0.3924913200254532,
+        "linf_global": 1.296035195239015,
+        "residual": 1.2527227490918942e-15,
+        "upgraded_faces": 0,
+        "dirichlet_faces": 432,
+        "nonzeros": 31904
+      },
+      {
+        "n": 8,
+        "h": 0.125,
+        "closure": "two_point",
+        "warp": 0.0,
+        "l2_global": 0.233386461649637,
+        "l2_interior": 0.14335017323883883,
+        "l2_wall": 0.28146340755302174,
+        "linf_global": 0.8828239468803798,
+        "residual": 1.587862659418866e-15,
+        "upgraded_faces": 0,
+        "dirichlet_faces": 768,
+        "nonzeros": 43286
+      }
+    ],
+    "three_point": [
+      {
+        "n": 4,
+        "h": 0.25,
+        "closure": "three_point",
+        "warp": 0.0,
+        "l2_global": 0.3704019333975127,
+        "l2_interior": 0.15270747947750085,
+        "l2_wall": 0.39174721511063226,
+        "linf_global": 1.0130410839170556,
+        "residual": 7.716960528641739e-16,
+        "upgraded_faces": 192,
+        "dirichlet_faces": 192,
+        "nonzeros": 5244
+      },
+      {
+        "n": 6,
+        "h": 0.16666666666666666,
+        "closure": "three_point",
+        "warp": 0.0,
+        "l2_global": 0.19628930276391873,
+        "l2_interior": 0.10815036223441407,
+        "l2_wall": 0.20994278803637045,
+        "linf_global": 0.6310653952101243,
+        "residual": 1.2120672273473403e-15,
+        "upgraded_faces": 432,
+        "dirichlet_faces": 432,
+        "nonzeros": 31904
+      },
+      {
+        "n": 8,
+        "h": 0.125,
+        "closure": "three_point",
+        "warp": 0.0,
+        "l2_global": 0.11871866672687827,
+        "l2_interior": 0.06797082165381474,
+        "l2_wall": 0.14494014766420799,
+        "linf_global": 0.4172821462253951,
+        "residual": 1.3218116769203075e-15,
+        "upgraded_faces": 768,
+        "dirichlet_faces": 768,
+        "nonzeros": 43286
+      }
+    ]
+  },
+  "orders": {
+    "trig1d": {
+      "two_point": [
+        1.8258316215343608,
+        1.678725557789394
+      ],
+      "three_point": [
+        1.8948359106050245,
+        1.8082120672528064
+      ]
+    },
+    "trig3d": {
+      "two_point": [
+        1.3557864313208725,
+        1.2119263047228492
+      ],
+      "three_point": [
+        1.5673722144581217,
+        1.4641804914880148
+      ]
+    },
+    "harmonic_l2_global": {
+      "two_point": [
+        1.3164172182635454,
+        1.5893512046826872
+      ],
+      "three_point": [
+        1.566100520966628,
+        1.7478776213998364
+      ]
+    },
+    "harmonic_l2_wall": {
+      "two_point": [
+        1.2992918650641552,
+        1.1558314056893202
+      ],
+      "three_point": [
+        1.5384350076398559,
+        1.2879293104492584
+      ]
+    },
+    "harmonic_l2_interior": {
+      "two_point": [
+        0.45124222549022835,
+        1.482912905822695
+      ],
+      "three_point": [
+        0.8508788644894668,
+        1.6144349143577115
+      ]
+    }
+  },
+  "seconds": 36.7,
+  "markdown": "| closure | affine error | upgraded faces / Dirichlet faces |\n|---|---|---|\n| two_point | 1.25e-15 | 0 / 432 |\n| three_point | 2.03e-15 | 432 / 432 |\n\n3-D trig field, wall $\\partial u/\\partial n$:\n\n| closure | h=1/4 | h=1/6 | h=1/8 | orders |\n|---|---|---|---|---|\n| two_point | 5.9250e-02 | 3.4194e-02 | 2.4128e-02 | 1.36 / 1.21 |\n| three_point | 8.9596e-02 | 4.7455e-02 | 3.1142e-02 | 1.57 / 1.46 |\n\nHarmonic field, Dirichlet solution error:\n\n| closure | n=4 | n=6 | n=8 | orders |\n|---|---|---|---|---|\n| two_point | 0.62872 | 0.36868 | 0.23339 | 1.32 / 1.59 |\n| three_point | 0.37040 | 0.19629 | 0.11872 | 1.57 / 1.75 |"
+}
