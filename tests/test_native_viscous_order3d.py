@@ -12,6 +12,7 @@ import pytest
 from tensorfvm.native_mesh3d import NativeMesh3D
 from tensorfvm.native_viscous3d import NativeViscous3D
 from tensorfvm.verification import native_order3d as study
+from tensorfvm.verification import native_viscous_order3d as nv    # m2572 wall-closure module (name kept per m2530 ruling)
 
 VISCOSITY = 1.3
 
@@ -113,3 +114,85 @@ def test_dirichlet_diffusion_solution_converges_once_the_source_is_restored():
     rows = [study.manufactured_solution_study(n, 0.0, VISCOSITY) for n in (4, 8)]
     assert study.orders(rows, 'l2_interior')[0] > 1.9
     assert study.orders(rows, 'l2_global')[0] > 1.7
+
+
+# --------------------------------------------------------------------------- #
+# m2572 additions rebased on the merged test file (the two m2530-era
+# test_dirichlet_diffusion_* anchors are superseded by the merged
+# test_homogeneous_comparison_* / ..._converges_once_the_source_is_restored)
+# --------------------------------------------------------------------------- #
+
+def test_affine_exactness_is_preserved_on_every_family_mesh():
+    for divisions in [(8, 8, 8), (16, 4, 4), (6, 6, 6)]:
+        mesh = nv.cube_mesh(divisions)
+        assert nv.affine_exactness(mesh) < 1e-12
+    warped = nv.cube_mesh((6, 6, 6), warp=0.35)
+    assert nv.affine_exactness(warped) < 1e-12
+
+
+
+
+def test_one_dimensional_control_is_second_order():
+    rows = nv.family([(16, 4, 4), (32, 4, 4)], mode="trig1d")
+    orders = nv.orders(rows, "wall_flux")
+    assert orders[0] > 1.8, orders
+    assert rows[-1]["wall_flux"] < 6e-4
+
+
+
+
+def test_three_dimensional_wall_flux_is_only_first_order():
+    """Regression pin for the known limitation: m2530's FAIL is reproduced."""
+    rows = nv.family([(4, 4, 4), (8, 8, 8)], mode="trig3d")
+    orders = nv.orders(rows, "wall_flux")
+    assert 0.8 < orders[0] < 1.6, orders
+    assert rows[-1]["wall_flux"] > 1e-2
+
+
+
+
+def test_metrics_disagree_in_magnitude_but_share_the_rate_direction():
+    rows = nv.family([(4, 4, 4), (8, 8, 8)], mode="trig3d")
+    assert rows[-1]["face"] > rows[-1]["wall_flux"]
+    assert rows[-1]["face"] < rows[0]["face"]
+    assert rows[-1]["face_floored"] < rows[-1]["face"]
+
+
+
+
+def test_fixed_value_matrix_constant_mode_vanishes_with_refinement():
+    coarse = nv.wall_closure_metrics(nv.cube_mesh((4, 4, 4)))
+    fine = nv.wall_closure_metrics(nv.cube_mesh((8, 8, 8)))
+    assert fine["constant_mode"] < coarse["constant_mode"]
+    assert fine["constant_mode"] < 0.3
+    ratio = coarse["constant_mode"] / fine["constant_mode"]
+    assert 1.2 < ratio < 2.5, ratio
+
+
+
+
+def test_manufactured_fields_match_finite_differences():
+    points = np.array([[0.31, 0.42, 0.27], [0.68, 0.13, 0.77]])
+    for mode in ("trig1d", "trig3d"):
+        values, gradient = nv.scalar_field(points, mode)
+        assert values.shape == (2,)
+        assert gradient.shape == (2, 3)
+        step = 1e-6
+        numeric = np.zeros((2, 3))
+        for axis in range(3):
+            shift = np.zeros(3)
+            shift[axis] = step
+            numeric[:, axis] = (
+                nv.scalar_field(points + shift, mode)[0] - nv.scalar_field(points - shift, mode)[0]
+            ) / (2 * step)
+        np.testing.assert_allclose(gradient, numeric, rtol=0, atol=2e-6)
+
+
+
+
+def test_unknown_field_mode_and_bad_divisions_are_rejected():
+    with pytest.raises(ValueError, match="unknown"):
+        nv.scalar_field(np.zeros((1, 3)), "cubic")
+    with pytest.raises(ValueError, match="subdivisions"):
+        nv.cube_mesh((4, 4))
+
