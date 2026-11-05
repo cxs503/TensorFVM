@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Generate source-bound hybrid mesh evidence, including real facet sections."""
-import argparse,hashlib,json,time
+import argparse
+import hashlib
+import json
+import time
 from pathlib import Path
 import numpy as np
 import matplotlib

@@ -1,7 +1,17 @@
 #!/usr/bin/env python3
 """Run the real body-fitted 3-D Re3900 case and archive replayable evidence."""
-import argparse,csv,hashlib,json,shutil,time,sys,platform,os,subprocess
-import scipy,resource
+import argparse
+import csv
+import hashlib
+import json
+import shutil
+import time
+import sys
+import platform
+import os
+import subprocess
+import scipy
+import resource
 from dataclasses import asdict
 from pathlib import Path
 import numpy as np

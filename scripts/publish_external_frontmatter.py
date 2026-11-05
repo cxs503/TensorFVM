@@ -1,5 +1,8 @@
 """Replace the machine summary page by manuscript problem/method/results pages."""
-import argparse,json,re,subprocess,tempfile,textwrap
+import argparse
+import json
+import tempfile
+import textwrap
 from pathlib import Path
 from matplotlib.backends.backend_pdf import PdfPages
 from tensorfvm.verification.report import plt

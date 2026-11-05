@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Supplemental grouped nonorthogonality audit of an actual native mesh NPZ."""
-import argparse,hashlib,json
+import argparse
+import hashlib
+import json
 from pathlib import Path
 import numpy as np
 import matplotlib

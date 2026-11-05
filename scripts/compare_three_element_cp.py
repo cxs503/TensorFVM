@@ -2,7 +2,9 @@
 Reference CSV: element,surface,x_over_c,cp. Metadata JSON must accompany it.
 Owner-cell pressure is an explicit wall-pressure approximation, not extrapolation.
 """
-import argparse,csv,json
+import argparse
+import csv
+import json
 from pathlib import Path
 from types import SimpleNamespace
 import numpy as np
@@ -46,7 +48,7 @@ def main():
         face_ids=torch.nonzero(mesh.masks[name]).flatten().numpy();edges=mesh.face_vertices[face_ids].numpy();links={tuple(a):i for i,(a,b) in enumerate(edges)};order=[0]
         while len(order)<len(edges):order.append(links[tuple(edges[order[-1],1])])
         if len(set(order))!=len(edges) or not np.array_equal(edges[order[-1],1],edges[order[0],0]):raise ValueError('Wall loop is not closed')
-        face_ids=face_ids[order];centers=mesh.face_centers[face_ids].numpy();owners=mesh.owner[face_ids].numpy();S=mesh.face_area_vectors[face_ids].numpy();length=mesh.face_lengths[face_ids].numpy();cp=(pressure[owners]-pinf)/dynamic
+        face_ids=face_ids[order];centers=mesh.face_centers[face_ids].numpy();owners=mesh.owner[face_ids].numpy();mesh.face_area_vectors[face_ids].numpy();length=mesh.face_lengths[face_ids].numpy();cp=(pressure[owners]-pinf)/dynamic
         profile=np.array(_read_profile(PROFILE_DIRECTORY/f'{name}.dat'));leading=profile[np.argmin(profile[:,0])];trailing=profile[np.argmax(profile[:,0])];tangent=trailing-leading;tangent/=np.linalg.norm(tangent);normal=np.array([-tangent[1],tangent[0]])
         # Split the closed wall contour into two continuous LE-to-TE branches.
         # Local normal signs alone would fragment the slat and cove surfaces.

@@ -1,5 +1,8 @@
 """Publish actual SA wall profiles, refinement differences and convergence curves."""
-import argparse,json,subprocess,tempfile
+import argparse
+import json
+import subprocess
+import tempfile
 from pathlib import Path
 import numpy as np
 from matplotlib.backends.backend_pdf import PdfPages

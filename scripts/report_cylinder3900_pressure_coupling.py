@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Replay unsmoothed saved pressure and native mesh; compare startup coupling."""
-import argparse,json,shutil
+import argparse
+import json
+import shutil
 from pathlib import Path
 import numpy as np
 import matplotlib

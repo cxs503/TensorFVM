@@ -1,5 +1,7 @@
 """Reconstruct saved CPU/CUDA fields, timing ratios and every periodic step."""
-import json, math, statistics
+import json
+import math
+import statistics
 from pathlib import Path
 import numpy as np
 from tensorfvm.verification.audit import close, d, mac_acceleration, projected

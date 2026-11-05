@@ -1,5 +1,7 @@
 """Losslessly share duplicated PDF resources; preserve page count and images."""
-import argparse,json,tempfile
+import argparse
+import json
+import tempfile
 from pathlib import Path
 from pypdf import PdfReader,PdfWriter,__version__
 from pypdf.generic import EncodedStreamObject,DictionaryObject
