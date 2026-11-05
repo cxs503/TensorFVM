@@ -8,14 +8,17 @@ pointwise comparison so geometry can be ruled out as a confound for the Cd bug.
 
 Run:  python3 _fuse_geom.py
 """
+
 import numpy as np
 import os
 
 OUR = "airfoil_data"
 TFVM = "/workspace/TensorFVM/src/tensorfvm/data/30p30n"
-PAIRS = [("slat", "gh_Slat.dat", "slat.dat"),
-         ("main", "gh_Main.dat", "main.dat"),
-         ("flap", "gh_Flap.dat", "flap.dat")]
+PAIRS = [
+    ("slat", "gh_Slat.dat", "slat.dat"),
+    ("main", "gh_Main.dat", "main.dat"),
+    ("flap", "gh_Flap.dat", "flap.dat"),
+]
 
 
 def main():
@@ -32,17 +35,23 @@ def main():
         identical = same_shape and dx < 1e-12 and dy < 1e-12
         all_identical = all_identical and identical
         print(f"\n[{name}]")
-        print(f"  our  : n={len(a)}  x[{a[:,0].min():.4f},{a[:,0].max():.4f}] "
-              f"y[{a[:,1].min():.4f},{a[:,1].max():.4f}]")
-        print(f"  tfvm : n={len(b)}  x[{b[:,0].min():.4f},{b[:,0].max():.4f}] "
-              f"y[{b[:,1].min():.4f},{b[:,1].max():.4f}]")
+        print(
+            f"  our  : n={len(a)}  x[{a[:, 0].min():.4f},{a[:, 0].max():.4f}] "
+            f"y[{a[:, 1].min():.4f},{a[:, 1].max():.4f}]"
+        )
+        print(
+            f"  tfvm : n={len(b)}  x[{b[:, 0].min():.4f},{b[:, 0].max():.4f}] "
+            f"y[{b[:, 1].min():.4f},{b[:, 1].max():.4f}]"
+        )
         print(f"  shape_match = {same_shape}")
         print(f"  max|dx| = {dx:.2e}   max|dy| = {dy:.2e}")
         print(f"  IDENTICAL = {identical}")
     print("\n" + "=" * 70)
-    verdict = ("PASS -- geometry is byte-for-byte identical; NOT a confound."
-               if all_identical else
-               "DIFFERS -- geometry mismatch may contribute to the Cd bug.")
+    verdict = (
+        "PASS -- geometry is byte-for-byte identical; NOT a confound."
+        if all_identical
+        else "DIFFERS -- geometry mismatch may contribute to the Cd bug."
+    )
     print("VERDICT:", verdict)
     print("=" * 70)
     return 0 if all_identical else 1

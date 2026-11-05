@@ -1,4 +1,5 @@
 """One-off publisher for the mission 2699 progress report."""
+
 import base64
 import json
 import os
@@ -6,16 +7,29 @@ import pathlib
 import urllib.request
 
 root = pathlib.Path(__file__).resolve().parents[1]
-summ = json.loads((root / "docs/two-phase-surface-tension-audit/summary.json").read_text())
+summ = json.loads(
+    (root / "docs/two-phase-surface-tension-audit/summary.json").read_text()
+)
 png = base64.b64encode(
-    (root / "docs/two-phase-surface-tension-audit/fig_surface_tension_audit.png").read_bytes()).decode()
+    (
+        root / "docs/two-phase-surface-tension-audit/fig_surface_tension_audit.png"
+    ).read_bytes()
+).decode()
 
 rows = "\n".join(
     "| {n} | {d:+.4f} | {b:.4f} | {p:.4g} | {e:.4g} | {r:+.3e} | {u:.3g} | {c:.3g} | {f:.3g} |".format(
-        n=c["n"], d=c["relative_error"], b=b["imbalance"], p=l["pressure_jump_pa"],
-        e=l["exact_jump_pa"], r=l["relative_error"], u=l["umax_m_s"],
-        c=l["capillary_number"], f=l["final_divergence"])
-    for c, b, l in zip(summ["curvature"], summ["force_balance"], summ["laplace"]))
+        n=c["n"],
+        d=c["relative_error"],
+        b=b["imbalance"],
+        p=laplace["pressure_jump_pa"],
+        e=laplace["exact_jump_pa"],
+        r=laplace["relative_error"],
+        u=laplace["umax_m_s"],
+        c=laplace["capillary_number"],
+        f=laplace["final_divergence"],
+    )
+    for c, b, laplace in zip(summ["curvature"], summ["force_balance"], summ["laplace"])
+)
 
 md = f"""# TensorFVM 两相 CSF 表面张力链：验证欠账闭合（含诚实 FAIL）
 
@@ -47,7 +61,7 @@ md = f"""# TensorFVM 两相 CSF 表面张力链：验证欠账闭合（含诚实
 {rows}
 
 判据：C1 曲率<3%、C2 净毛细力<3%、C3 Young–Laplace<3%、C4 Ca<1e-2、C5 迭代有限。
-`all_criteria_passed = {summ['all_criteria_passed']}`。
+`all_criteria_passed = {summ["all_criteria_passed"]}`。
 
 ## 4. 结果图
 `fig_surface_tension_audit.png`：左=离散曲率相对误差与 CSF 净力失衡随网格变化（含 3% 证据线）；
@@ -85,23 +99,43 @@ payload = dict(
     summary="补齐 CSF 力与动量方程的耦合，定位并修复投影 Poisson 的体积/符号与 Dirichlet 不对称缺陷；曲率与净力过 3% 判据，静止液滴 Δp 仍发散故保持 xfail。",
     scenario_key="tensorfvm.two-phase-surface-tension",
     mission_id=2699,
-    tags=["TensorFVM", "two-phase", "VOF", "CSF", "Young-Laplace",
-          "verification-debt", "honest-FAIL"],
+    tags=[
+        "TensorFVM",
+        "two-phase",
+        "VOF",
+        "CSF",
+        "Young-Laplace",
+        "verification-debt",
+        "honest-FAIL",
+    ],
     markdown=md,
-    figures=[dict(name="fig_surface_tension_audit.png",
-                  caption="离散曲率/CSF 净力与静止液滴 Young–Laplace、Ca、散度随网格变化（含 3% 证据线）",
-                  png_base64=png)],
+    figures=[
+        dict(
+            name="fig_surface_tension_audit.png",
+            caption="离散曲率/CSF 净力与静止液滴 Young–Laplace、Ca、散度随网格变化（含 3% 证据线）",
+            png_base64=png,
+        )
+    ],
 )
-import urllib.request as _u
-_login = _u.Request(os.environ["TENSOR_API_BASE"] + "/auth/login",
-    data=json.dumps({"username": os.environ["TENSOR_AGENT_USER"],
-                      "password": os.environ["TENSOR_AGENT_PASS"]}).encode(),
-    headers={"Content-Type": "application/json"}, method="POST")
+import urllib.request as _u  # noqa: E402
+
+_login = _u.Request(
+    os.environ["TENSOR_API_BASE"] + "/auth/login",
+    data=json.dumps(
+        {
+            "username": os.environ["TENSOR_AGENT_USER"],
+            "password": os.environ["TENSOR_AGENT_PASS"],
+        }
+    ).encode(),
+    headers={"Content-Type": "application/json"},
+    method="POST",
+)
 token = json.loads(_u.urlopen(_login, timeout=60).read())["access_token"]
 
 req = urllib.request.Request(
     os.environ["TENSOR_API_BASE"] + "/tensor/reports",
     data=json.dumps(payload).encode(),
     headers={"Authorization": "Bearer " + token, "Content-Type": "application/json"},
-    method="POST")
+    method="POST",
+)
 print(urllib.request.urlopen(req, timeout=60).read().decode()[:300])

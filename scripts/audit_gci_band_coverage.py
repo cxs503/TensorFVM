@@ -53,7 +53,7 @@ ALPHA = (0.0, 0.01, 0.05, 0.1, 0.3)
 S_ORDER = (1.0, 2.0)
 SIGNS = (1.0, -1.0)
 EXACT = 1.0
-H0 = 0.5   # finest spacing; keeps the fine-grid metric away from zero for sign=-1
+H0 = 0.5  # finest spacing; keeps the fine-grid metric away from zero for sign=-1
 
 
 def series(p, r21, r32, alpha, s, sign, exact=EXACT):
@@ -87,16 +87,26 @@ def study_row(p, r21, r32, alpha, s, sign):
     fine, medium, coarse = values
     study = richardson_gci(fine, medium, coarse, tuple(h), theory_order=p)
     error = abs(study.extrapolated - EXACT) / EXACT
-    row = dict(p=p, r21=r21, r32=r32, alpha=alpha, secondary_order=s, sign=sign,
-               values=values,
-               order_observed=study.order, order_ratio=study.order_ratio,
-               asymptotic=study.asymptotic, convergence=study.convergence,
-               extrapolated=study.extrapolated, gci=study.gci,
-               band=[study.band[0], study.band[1]],
-               error=error,
-               efficiency=float("nan") if study.gci == 0. else error / study.gci,
-               implementation=_covers(study, EXACT),
-               published=_published_covers(study, fine, EXACT))
+    row = dict(
+        p=p,
+        r21=r21,
+        r32=r32,
+        alpha=alpha,
+        secondary_order=s,
+        sign=sign,
+        values=values,
+        order_observed=study.order,
+        order_ratio=study.order_ratio,
+        asymptotic=study.asymptotic,
+        convergence=study.convergence,
+        extrapolated=study.extrapolated,
+        gci=study.gci,
+        band=[study.band[0], study.band[1]],
+        error=error,
+        efficiency=float("nan") if study.gci == 0.0 else error / study.gci,
+        implementation=_covers(study, EXACT),
+        published=_published_covers(study, fine, EXACT),
+    )
     return row
 
 
@@ -106,39 +116,56 @@ def aggregate(rows, key, values):
         subset = [r for r in rows if r[key] == value]
         impl = sum(1 for r in subset if r["implementation"])
         pub = sum(1 for r in subset if r["published"])
-        worst = max(subset, key=lambda r: (r["efficiency"]
-                                          if math.isfinite(r["efficiency"]) else -1.))
-        out.append(dict(**{key: value}, cases=len(subset),
-                        implementation_covered=impl,
-                        published_covered=pub,
-                        implementation_rate=impl / len(subset),
-                        published_rate=pub / len(subset),
-                        worst_efficiency=worst["efficiency"],
-                        worst_case={k: worst[k] for k in
-                                    ("p", "r21", "r32", "alpha", "secondary_order", "sign")}))
+        worst = max(
+            subset,
+            key=lambda r: r["efficiency"] if math.isfinite(r["efficiency"]) else -1.0,
+        )
+        out.append(
+            dict(
+                **{key: value},
+                cases=len(subset),
+                implementation_covered=impl,
+                published_covered=pub,
+                implementation_rate=impl / len(subset),
+                published_rate=pub / len(subset),
+                worst_efficiency=worst["efficiency"],
+                worst_case={
+                    k: worst[k]
+                    for k in ("p", "r21", "r32", "alpha", "secondary_order", "sign")
+                },
+            )
+        )
     return out
 
 
 def figures(rows, path):
     import matplotlib
+
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
     fig, axes = plt.subplots(1, 2, figsize=(11, 4.2), dpi=140)
     for axis, alpha in zip(axes, (0.0, 0.1)):
-        subset = [r for r in rows if r["alpha"] == alpha and r["secondary_order"] == 2.0]
-        axis.scatter([r["order_observed"] for r in subset],
-                     [min(r["efficiency"], 10.) for r in subset],
-                     s=16, c=["#2b7bba" if r["implementation"] else "#d62728"
-                              for r in subset],
-                     label="band covers exact" if alpha == 0. else "covers / misses")
+        subset = [
+            r for r in rows if r["alpha"] == alpha and r["secondary_order"] == 2.0
+        ]
+        axis.scatter(
+            [r["order_observed"] for r in subset],
+            [min(r["efficiency"], 10.0) for r in subset],
+            s=16,
+            c=["#2b7bba" if r["implementation"] else "#d62728" for r in subset],
+            label="band covers exact" if alpha == 0.0 else "covers / misses",
+        )
         axis.axhline(1.0, color="k", lw=1, ls="--")
         axis.set_xlabel("observed order p")
         axis.set_ylabel("efficiency E = |error|/GCI (capped at 10)")
         axis.set_title(f"second-term size alpha = {alpha:g}")
-        axis.grid(alpha=.3)
+        axis.grid(alpha=0.3)
     axes[0].legend(fontsize=7)
-    fig.suptitle("GCI band coverage: pure Ch^p (left) vs truncation C2 h^(p+2) (right)", fontsize=9)
+    fig.suptitle(
+        "GCI band coverage: pure Ch^p (left) vs truncation C2 h^(p+2) (right)",
+        fontsize=9,
+    )
     fig.tight_layout()
     fig.savefig(path)
     plt.close(fig)
@@ -161,28 +188,46 @@ def noise_study(p=2.0, r21=2.0, r32=2.0, alpha=0.05, s=2.0, amplitude=0.05, seed
     noisy = [v * (1.0 + amplitude * rng.uniform(-1.0, 1.0)) for v in values]
     study = richardson_gci(noisy[0], noisy[1], noisy[2], tuple(h), theory_order=p)
     error = abs(study.extrapolated - EXACT) / EXACT
-    return dict(amplitude=amplitude, seed=seed, values=noisy,
-                extrapolated=study.extrapolated, gci=study.gci,
-                convergence=study.convergence, asymptotic=study.asymptotic,
-                error=error,
-                efficiency=float("nan") if study.gci == 0. else error / study.gci,
-                implementation=_covers(study, EXACT),
-                published=_published_covers(study, noisy[0], EXACT))
+    return dict(
+        amplitude=amplitude,
+        seed=seed,
+        values=noisy,
+        extrapolated=study.extrapolated,
+        gci=study.gci,
+        convergence=study.convergence,
+        asymptotic=study.asymptotic,
+        error=error,
+        efficiency=float("nan") if study.gci == 0.0 else error / study.gci,
+        implementation=_covers(study, EXACT),
+        published=_published_covers(study, noisy[0], EXACT),
+    )
 
 
 def noise_aggregate():
-    rows = [noise_study(amplitude=a, seed=seed)
-            for a in NOISE for seed in range(NOISE_SEEDS)]
+    rows = [
+        noise_study(amplitude=a, seed=seed)
+        for a in NOISE
+        for seed in range(NOISE_SEEDS)
+    ]
     table = []
     for a in NOISE:
         subset = [r for r in rows if r["amplitude"] == a]
-        table.append(dict(
-            amplitude=a, cases=len(subset),
-            implementation_rate=sum(1 for r in subset if r["implementation"]) / len(subset),
-            published_rate=sum(1 for r in subset if r["published"]) / len(subset),
-            fallback_rate=sum(1 for r in subset if r["convergence"] == "inconsistent") / len(subset),
-            worst_efficiency=max(r["efficiency"] for r in subset
-                                 if math.isfinite(r["efficiency"]))))
+        table.append(
+            dict(
+                amplitude=a,
+                cases=len(subset),
+                implementation_rate=sum(1 for r in subset if r["implementation"])
+                / len(subset),
+                published_rate=sum(1 for r in subset if r["published"]) / len(subset),
+                fallback_rate=sum(
+                    1 for r in subset if r["convergence"] == "inconsistent"
+                )
+                / len(subset),
+                worst_efficiency=max(
+                    r["efficiency"] for r in subset if math.isfinite(r["efficiency"])
+                ),
+            )
+        )
     return rows, table
 
 
@@ -218,21 +263,36 @@ def write_docs(summary, by_alpha, by_p, noise_table, docs_dir):
         "|---|---|---|---|---|",
     ]
     for e in by_alpha:
-        lines.append(f"| {e['alpha']:g} | {e['cases']} | {e['implementation_rate']:.4f} | "
-                     f"{e['published_rate']:.4f} | {e['worst_efficiency']:.3f} |")
-    lines += ["", "按观测阶分解（仅含第二项的 1536 例）：", "",
-              "| p_true | 例数 | 本仓惯例 | Celik/ASME 惯例 | 最差 E |", "|---|---|---|---|---|"]
+        lines.append(
+            f"| {e['alpha']:g} | {e['cases']} | {e['implementation_rate']:.4f} | "
+            f"{e['published_rate']:.4f} | {e['worst_efficiency']:.3f} |"
+        )
+    lines += [
+        "",
+        "按观测阶分解（仅含第二项的 1536 例）：",
+        "",
+        "| p_true | 例数 | 本仓惯例 | Celik/ASME 惯例 | 最差 E |",
+        "|---|---|---|---|---|",
+    ]
     for e in by_p:
-        lines.append(f"| {e['p']:g} | {e['cases']} | {e['implementation_rate']:.4f} | "
-                     f"{e['published_rate']:.4f} | {e['worst_efficiency']:.3f} |")
-    lines += ["", "加性噪声族（每网格独立 ±1/3/5/10 % 相对扰动，每档 "
-              f"{int(noise_table[0]['cases'])} 个种子）：", "",
-              "| 噪声幅度 | 例数 | 本仓惯例 | Celik/ASME 惯例 | 判为不一致(Fs=3)比例 | 最差 E |",
-              "|---|---|---|---|---|---|"]
+        lines.append(
+            f"| {e['p']:g} | {e['cases']} | {e['implementation_rate']:.4f} | "
+            f"{e['published_rate']:.4f} | {e['worst_efficiency']:.3f} |"
+        )
+    lines += [
+        "",
+        "加性噪声族（每网格独立 ±1/3/5/10 % 相对扰动，每档 "
+        f"{int(noise_table[0]['cases'])} 个种子）：",
+        "",
+        "| 噪声幅度 | 例数 | 本仓惯例 | Celik/ASME 惯例 | 判为不一致(Fs=3)比例 | 最差 E |",
+        "|---|---|---|---|---|---|",
+    ]
     for e in noise_table:
-        lines.append(f"| {e['amplitude']:g} | {e['cases']} | {e['implementation_rate']:.4f} | "
-                     f"{e['published_rate']:.4f} | {e['fallback_rate']:.4f} | "
-                     f"{e['worst_efficiency']:.3f} |")
+        lines.append(
+            f"| {e['amplitude']:g} | {e['cases']} | {e['implementation_rate']:.4f} | "
+            f"{e['published_rate']:.4f} | {e['fallback_rate']:.4f} | "
+            f"{e['worst_efficiency']:.3f} |"
+        )
     lines += [
         "",
         f"最差确定性用例：p={w['p']:g}、r21={w['r21']:g}、r32={w['r32']:g}、"
@@ -240,7 +300,7 @@ def write_docs(summary, by_alpha, by_p, noise_table, docs_dir):
         f"E={w['efficiency']:.3f}、GCI={w['gci']:.4f}、相对误差={w['error']:.4f}"
         f"（本仓惯例覆盖={w['implementation']}，Celik/ASME 惯例覆盖={w['published']}）。",
         "",
-        f"含第二项的案例中 {summary['asymptotic_rate_in_truncation']*100:.1f}% 被 "
+        f"含第二项的案例中 {summary['asymptotic_rate_in_truncation'] * 100:.1f}% 被 "
         "`theory_order` + 20 % 阶容差判为「在渐近区」，说明渐近区标记本身对截断误差不敏感；",
         "误差带的可信度只能由覆盖率回答，不能由该标记回答。",
         "",
@@ -279,57 +339,102 @@ def main():
     out = sys.argv[1] if len(sys.argv) > 1 else "gci-band-coverage"
     target = os.path.join("outputs", out)
     os.makedirs(target, exist_ok=True)
-    rows = [study_row(p, r21, r32, alpha, s, sign)
-            for p in P_TRUE for r21 in R21 for r32 in R32
-            for alpha in ALPHA for s in S_ORDER for sign in SIGNS]
-    pure = [r for r in rows if r["alpha"] == 0.]
+    rows = [
+        study_row(p, r21, r32, alpha, s, sign)
+        for p in P_TRUE
+        for r21 in R21
+        for r32 in R32
+        for alpha in ALPHA
+        for s in S_ORDER
+        for sign in SIGNS
+    ]
+    pure = [r for r in rows if r["alpha"] == 0.0]
     by_alpha = aggregate(rows, "alpha", ALPHA)
-    by_p = aggregate([r for r in rows if r["alpha"] > 0.], "p", P_TRUE)
-    worst = max(rows, key=lambda r: (r["efficiency"]
-                                    if math.isfinite(r["efficiency"]) else -1.))
+    by_p = aggregate([r for r in rows if r["alpha"] > 0.0], "p", P_TRUE)
+    worst = max(
+        rows, key=lambda r: r["efficiency"] if math.isfinite(r["efficiency"]) else -1.0
+    )
     summary = dict(
         cases=len(rows),
         pure_cases=len(pure),
-        pure_implementation_coverage=sum(1 for r in pure if r["implementation"]) / len(pure),
+        pure_implementation_coverage=sum(1 for r in pure if r["implementation"])
+        / len(pure),
         pure_published_coverage=sum(1 for r in pure if r["published"]) / len(pure),
         pure_worst_efficiency=max(r["efficiency"] for r in pure),
-        truncation_cases=sum(1 for r in rows if r["alpha"] > 0.),
-        truncation_implementation_coverage=sum(1 for r in rows if r["alpha"] > 0. and r["implementation"])
-        / max(1, sum(1 for r in rows if r["alpha"] > 0.)),
-        truncation_published_coverage=sum(1 for r in rows if r["alpha"] > 0. and r["published"])
-        / max(1, sum(1 for r in rows if r["alpha"] > 0.)),
-        convention_disagreements=sum(1 for r in rows
-                                     if r["implementation"] != r["published"]),
-        worst_row={k: worst[k] for k in
-                   ("p", "r21", "r32", "alpha", "secondary_order", "sign",
-                    "efficiency", "gci", "error", "implementation", "published")},
-        asymptotic_rate_in_truncation=sum(1 for r in rows if r["alpha"] > 0. and r["asymptotic"])
-        / max(1, sum(1 for r in rows if r["alpha"] > 0.)),
+        truncation_cases=sum(1 for r in rows if r["alpha"] > 0.0),
+        truncation_implementation_coverage=sum(
+            1 for r in rows if r["alpha"] > 0.0 and r["implementation"]
+        )
+        / max(1, sum(1 for r in rows if r["alpha"] > 0.0)),
+        truncation_published_coverage=sum(
+            1 for r in rows if r["alpha"] > 0.0 and r["published"]
+        )
+        / max(1, sum(1 for r in rows if r["alpha"] > 0.0)),
+        convention_disagreements=sum(
+            1 for r in rows if r["implementation"] != r["published"]
+        ),
+        worst_row={
+            k: worst[k]
+            for k in (
+                "p",
+                "r21",
+                "r32",
+                "alpha",
+                "secondary_order",
+                "sign",
+                "efficiency",
+                "gci",
+                "error",
+                "implementation",
+                "published",
+            )
+        },
+        asymptotic_rate_in_truncation=sum(
+            1 for r in rows if r["alpha"] > 0.0 and r["asymptotic"]
+        )
+        / max(1, sum(1 for r in rows if r["alpha"] > 0.0)),
     )
     noise_rows, noise_table = noise_aggregate()
     summary["noise"] = noise_table
     summary["noise_cases"] = len(noise_rows)
-    payload = dict(summary=summary, by_alpha=by_alpha, by_order=by_p,
-                   noise=noise_table, rows=rows, noise_rows=noise_rows)
+    payload = dict(
+        summary=summary,
+        by_alpha=by_alpha,
+        by_order=by_p,
+        noise=noise_table,
+        rows=rows,
+        noise_rows=noise_rows,
+    )
     with open(os.path.join(target, "audit.json"), "w") as handle:
         json.dump(payload, handle, indent=1)
     figures(rows, os.path.join(target, "gci_band_coverage.png"))
 
-    lines = ["# GCI band coverage audit", "",
-             f"cases={summary['cases']} (pure={summary['pure_cases']}, "
-             f"truncation={summary['truncation_cases']})", "",
-             "| alpha | cases | implementation rate | published rate | worst E |",
-             "|---|---|---|---|---|"]
+    lines = [
+        "# GCI band coverage audit",
+        "",
+        f"cases={summary['cases']} (pure={summary['pure_cases']}, "
+        f"truncation={summary['truncation_cases']})",
+        "",
+        "| alpha | cases | implementation rate | published rate | worst E |",
+        "|---|---|---|---|---|",
+    ]
     for entry in by_alpha:
-        lines.append(f"| {entry['alpha']:g} | {entry['cases']} | "
-                     f"{entry['implementation_rate']:.3f} | {entry['published_rate']:.3f} | "
-                     f"{entry['worst_efficiency']:.3f} |")
-    lines += ["", "| p | cases | implementation rate | published rate | worst E |",
-              "|---|---|---|---|---|"]
+        lines.append(
+            f"| {entry['alpha']:g} | {entry['cases']} | "
+            f"{entry['implementation_rate']:.3f} | {entry['published_rate']:.3f} | "
+            f"{entry['worst_efficiency']:.3f} |"
+        )
+    lines += [
+        "",
+        "| p | cases | implementation rate | published rate | worst E |",
+        "|---|---|---|---|---|",
+    ]
     for entry in by_p:
-        lines.append(f"| {entry['p']:g} | {entry['cases']} | "
-                     f"{entry['implementation_rate']:.3f} | {entry['published_rate']:.3f} | "
-                     f"{entry['worst_efficiency']:.3f} |")
+        lines.append(
+            f"| {entry['p']:g} | {entry['cases']} | "
+            f"{entry['implementation_rate']:.3f} | {entry['published_rate']:.3f} | "
+            f"{entry['worst_efficiency']:.3f} |"
+        )
     with open(os.path.join(target, "RESULTS.md"), "w") as handle:
         handle.write("\n".join(lines) + "\n")
     write_docs(summary, by_alpha, by_p, noise_table, os.path.join("docs", out))

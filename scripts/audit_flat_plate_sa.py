@@ -63,7 +63,7 @@ def measure(config, output, threads=8):
     result = SimpleSolver(config).solve()
     elapsed = time.time() - started
     drag = float(result.surface_forces["plate"]["x"])
-    scale = 0.5 * config.density * config.inlet_velocity ** 2 * config.length
+    scale = 0.5 * config.density * config.inlet_velocity**2 * config.length
     skin = drag / scale
     reference = reference_skin_friction(config.reynolds)
     residuals = dict(result.history[-1]) if result.history else {}
@@ -77,7 +77,8 @@ def measure(config, output, threads=8):
         "residuals": residuals,
         "all_residuals_below_tolerance": all(
             isinstance(v, (int, float)) and abs(v) < config.tolerance
-            for k, v in residuals.items() if k != "iteration"
+            for k, v in residuals.items()
+            if k != "iteration"
         ),
         "plate_drag": drag,
         "skin_friction": skin,
@@ -99,21 +100,27 @@ def main(argv=None):
     parser.add_argument("--ny", type=int, default=40)
     parser.add_argument("--iterations", type=int, default=250)
     parser.add_argument("--threads", type=int, default=8)
-    parser.add_argument("--output", type=Path,
-                        default=Path("artifacts/flat-plate-sa/run.json"))
+    parser.add_argument(
+        "--output", type=Path, default=Path("artifacts/flat-plate-sa/run.json")
+    )
     arguments = parser.parse_args(argv)
     config = build_config(arguments.nx, arguments.ny, arguments.iterations)
     record = measure(config, arguments.output, threads=arguments.threads)
     band = reference_band(config.reynolds)
-    print(json.dumps({
-        "grid": record["grid"],
-        "iterations": record["iterations"],
-        "converged": record["converged"],
-        "skin_friction": record["skin_friction"],
-        "band": band,
-        "gate_error_limit": ERROR_LIMIT,
-        "elapsed_seconds": record["elapsed_seconds"],
-    }, indent=2))
+    print(
+        json.dumps(
+            {
+                "grid": record["grid"],
+                "iterations": record["iterations"],
+                "converged": record["converged"],
+                "skin_friction": record["skin_friction"],
+                "band": band,
+                "gate_error_limit": ERROR_LIMIT,
+                "elapsed_seconds": record["elapsed_seconds"],
+            },
+            indent=2,
+        )
+    )
     return 0
 
 

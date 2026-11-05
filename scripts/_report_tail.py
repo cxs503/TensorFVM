@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Read-only: print the limitations/todo sections of given platform report ids."""
+
 import json
 import os
 import re
@@ -13,7 +14,9 @@ if not TOK:
 
 
 def get(path):
-    req = urllib.request.Request(BASE + path, headers={"Authorization": "Bearer " + TOK})
+    req = urllib.request.Request(
+        BASE + path, headers={"Authorization": "Bearer " + TOK}
+    )
     with urllib.request.urlopen(req, timeout=30) as r:
         return json.load(r)
 

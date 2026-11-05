@@ -11,6 +11,7 @@ production code.
 Outputs (``--output``): ``mutation-survival.json`` (machine record, includes
 source and toolchain hashes), ``MUTATION-SURVIVAL.md`` and ``mutation-survival.png``.
 """
+
 import argparse
 import hashlib
 import json
@@ -22,6 +23,7 @@ import time
 from pathlib import Path
 
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
@@ -42,7 +44,9 @@ def apply_mutation(entry):
     text = path.read_text()
     count = text.count(entry["find"])
     if count != 1:
-        raise RuntimeError(f"{entry['id']}: anchor occurs {count} times in {entry['file']}")
+        raise RuntimeError(
+            f"{entry['id']}: anchor occurs {count} times in {entry['file']}"
+        )
     mutated = text.replace(entry["find"], entry["replace"])
     if mutated == text:
         raise RuntimeError(f"{entry['id']}: mutation is a no-op")
@@ -52,13 +56,27 @@ def apply_mutation(entry):
 
 def run_tests(entry, timeout):
     env = dict(os.environ)
-    env["PYTHONPATH"] = os.pathsep.join([str(REPO / "src"), str(REPO), env.get("PYTHONPATH", "")])
+    env["PYTHONPATH"] = os.pathsep.join(
+        [str(REPO / "src"), str(REPO), env.get("PYTHONPATH", "")]
+    )
     env["OMP_NUM_THREADS"] = env.get("OMP_NUM_THREADS", "1")
     env["MKL_NUM_THREADS"] = env.get("MKL_NUM_THREADS", "1")
-    cmd = [sys.executable, "-m", "pytest", *entry["tests"], "-x", "-q",
-           "-p", "no:cacheprovider", "--timeout", str(timeout)]
+    cmd = [
+        sys.executable,
+        "-m",
+        "pytest",
+        *entry["tests"],
+        "-x",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--timeout",
+        str(timeout),
+    ]
     started = time.perf_counter()
-    proc = subprocess.run(cmd, cwd=REPO, env=env, capture_output=True, text=True, timeout=timeout + 120)
+    proc = subprocess.run(
+        cmd, cwd=REPO, env=env, capture_output=True, text=True, timeout=timeout + 120
+    )
     return proc, time.perf_counter() - started
 
 
@@ -82,10 +100,17 @@ def status_of(proc):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output", type=Path,
-                        default=REPO / "src/tensorfvm/verification/artifacts/mutation_survival")
-    parser.add_argument("--timeout", type=int, default=1800, help="per-mutant pytest timeout (s)")
-    parser.add_argument("--only", nargs="*", default=None, help="restrict to these mutant ids")
+    parser.add_argument(
+        "--output",
+        type=Path,
+        default=REPO / "src/tensorfvm/verification/artifacts/mutation_survival",
+    )
+    parser.add_argument(
+        "--timeout", type=int, default=1800, help="per-mutant pytest timeout (s)"
+    )
+    parser.add_argument(
+        "--only", nargs="*", default=None, help="restrict to these mutant ids"
+    )
     args = parser.parse_args()
     out = args.output
     out.mkdir(parents=True, exist_ok=True)
@@ -95,8 +120,14 @@ def main():
     for entry in entries:
         original_path = REPO / entry["file"]
         before = sha256(original_path)
-        row = dict(id=entry["id"], file=entry["file"], description=entry["description"],
-                   rationale=entry["rationale"], expected=entry["expected"], tests=entry["tests"])
+        row = dict(
+            id=entry["id"],
+            file=entry["file"],
+            description=entry["description"],
+            rationale=entry["rationale"],
+            expected=entry["expected"],
+            tests=entry["tests"],
+        )
         try:
             path, mutated = apply_mutation(entry)
             path.write_text(mutated)
@@ -107,28 +138,42 @@ def main():
             row["returncode"] = proc.returncode
             row["first_failure"] = first_failure(proc)
             row["duration_seconds"] = round(elapsed, 3)
-            tail = [line for line in proc.stdout.strip().splitlines() if line.strip()][-1:] or [""]
+            tail = [line for line in proc.stdout.strip().splitlines() if line.strip()][
+                -1:
+            ] or [""]
             row["summary_line"] = tail[-1][:200]
-            print(f"{entry['id']}: {row['status']} ({elapsed:.1f}s) {row['first_failure'] or ''}", flush=True)
+            print(
+                f"{entry['id']}: {row['status']} ({elapsed:.1f}s) {row['first_failure'] or ''}",
+                flush=True,
+            )
         except Exception as exc:  # audit must record failures, not abort silently
             row["status"] = "invalid(exception)"
             row["error"] = f"{type(exc).__name__}: {exc}"
             print(f"{entry['id']}: {row['status']} {row['error']}", flush=True)
         finally:
             # Restore unconditionally from the recorded bytes.
-            restored = subprocess.run(["git", "checkout", "--", entry["file"]], cwd=REPO,
-                                      capture_output=True, text=True)
+            restored = subprocess.run(
+                ["git", "checkout", "--", entry["file"]],
+                cwd=REPO,
+                capture_output=True,
+                text=True,
+            )
             after = sha256(original_path)
             row["source_restored"] = bool(after == before)
             row["source_sha256"] = before
             if not row["source_restored"]:
-                row["error"] = (row.get("error", "") + f" | restore mismatch {restored.stderr.strip()}").strip(" |")
+                row["error"] = (
+                    row.get("error", "")
+                    + f" | restore mismatch {restored.stderr.strip()}"
+                ).strip(" |")
         rows.append(row)
 
     summary = dict(
         tool="scripts/audit_mutation_survival.py",
         python=sys.version.split()[0],
-        numpy=_version("numpy"), torch=_version("torch"), scipy=_version("scipy"),
+        numpy=_version("numpy"),
+        torch=_version("torch"),
+        scipy=_version("scipy"),
         killed=sum(r["status"] == "killed" for r in rows),
         survived=sum(r["status"] == "survived" for r in rows),
         invalid=sum(r["status"].startswith("invalid") for r in rows),
@@ -137,7 +182,9 @@ def main():
     (out / "mutation-survival.json").write_text(json.dumps(summary, indent=1) + "\n")
     write_markdown(out / "MUTATION-SURVIVAL.md", summary)
     write_figure(out / "mutation-survival.png", summary)
-    print(f"killed={summary['killed']} survived={summary['survived']} invalid={summary['invalid']}")
+    print(
+        f"killed={summary['killed']} survived={summary['survived']} invalid={summary['invalid']}"
+    )
     return 0
 
 
@@ -166,18 +213,30 @@ def write_markdown(path, summary):
         "|---|---|---|---|---|---|",
     ]
     for row in summary["mutants"]:
-        lines.append("| `{}` | `{}` | {} | {} | {} | {} |".format(
-            row["id"], row["file"], row["description"], row["expected"], row["status"],
-            row.get("first_failure") or "-"))
+        lines.append(
+            "| `{}` | `{}` | {} | {} | {} | {} |".format(
+                row["id"],
+                row["file"],
+                row["description"],
+                row["expected"],
+                row["status"],
+                row.get("first_failure") or "-",
+            )
+        )
     lines += ["", "## Per-mutant rationale", ""]
     for row in summary["mutants"]:
         lines.append(f"- **{row['id']}** ({row['status']}): {row['rationale']}")
         if row.get("error"):
             lines.append(f"  - note: {row['error']}")
-    lines += ["", "## Scope limits", "",
-              "This audit says nothing about physical accuracy; it measures whether the existing",
-              "tests constrain the discrete operators. Mutants are curated by hand, so the",
-              "killed fraction is not an estimate of a random defect-detection probability.", ""]
+    lines += [
+        "",
+        "## Scope limits",
+        "",
+        "This audit says nothing about physical accuracy; it measures whether the existing",
+        "tests constrain the discrete operators. Mutants are curated by hand, so the",
+        "killed fraction is not an estimate of a random defect-detection probability.",
+        "",
+    ]
     path.write_text("\n".join(lines))
 
 
@@ -191,9 +250,11 @@ def write_figure(path, summary):
         ax.text(v + 0.02, i, row["status"], va="center", fontsize=9)
     ax.set_xlim(0, 1.45)
     ax.set_xticks([0, 1], ["survived", "killed"])
-    ax.set_title("TensorFVM mutation survival: 2-D FV kernels\n"
-                 f"killed {summary['killed']} / {len(ids)}")
-    ax.grid(axis="x", alpha=.3)
+    ax.set_title(
+        "TensorFVM mutation survival: 2-D FV kernels\n"
+        f"killed {summary['killed']} / {len(ids)}"
+    )
+    ax.grid(axis="x", alpha=0.3)
     fig.savefig(path, dpi=160)
     plt.close(fig)
 

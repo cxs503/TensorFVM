@@ -11,6 +11,7 @@ model.mesh.getNodes, model.mesh.getElements(dim[, entity]),
 model.getPhysicalGroups, model.getPhysicalName,
 model.getEntitiesForPhysicalGroup.  Only MSH 4.1 ASCII.
 """
+
 from pathlib import Path
 
 import numpy as np
@@ -38,8 +39,8 @@ class _Mesh:
             if d != dim or (entity is not None and e != entity):
                 continue
             types.append(et)
-            tags.append(block['tags'])
-            nodes.append(block['nodes'])
+            tags.append(block["tags"])
+            nodes.append(block["nodes"])
         return types, tags, nodes
 
 
@@ -53,7 +54,7 @@ class _Model:
         return [(dim, tag) for (d, tag) in self._names if d == dim]
 
     def getPhysicalName(self, dim, tag):
-        return self._names.get((dim, tag), '')
+        return self._names.get((dim, tag), "")
 
     def getEntitiesForPhysicalGroup(self, dim, tag):
         return list(self._entities.get((dim, tag), []))
@@ -61,10 +62,17 @@ class _Model:
 
 class _NullModel:
     def __init__(self):
-        self.mesh = _Mesh(type('Empty', (), dict(
-            node_tags=np.zeros(0, dtype=np.int64),
-            node_xyz=np.zeros((0, 3)),
-            element_blocks={}))())
+        self.mesh = _Mesh(
+            type(
+                "Empty",
+                (),
+                dict(
+                    node_tags=np.zeros(0, dtype=np.int64),
+                    node_xyz=np.zeros((0, 3)),
+                    element_blocks={},
+                ),
+            )()
+        )
         self._names = {}
         self._entities = {}
 
@@ -72,7 +80,7 @@ class _NullModel:
         return []
 
     def getPhysicalName(self, dim, tag):
-        return ''
+        return ""
 
     def getEntitiesForPhysicalGroup(self, dim, tag):
         return []
@@ -88,7 +96,7 @@ def isInitialized():
 def initialize():
     global _INITIALIZED, model
     if _INITIALIZED:
-        raise RuntimeError('gmsh stub already initialized')
+        raise RuntimeError("gmsh stub already initialized")
     _INITIALIZED = True
     model = _NullModel()
 
@@ -102,33 +110,33 @@ def finalize():
 def open(path):  # noqa: A001 - mirrors the Gmsh API name
     global model
     if not _INITIALIZED:
-        raise RuntimeError('initialize() the gmsh stub before open()')
+        raise RuntimeError("initialize() the gmsh stub before open()")
     lines = Path(path).read_text().splitlines()
 
     def section(name):
-        start = lines.index(f'${name}') + 1
-        return start, lines.index(f'$End{name}')
+        start = lines.index(f"${name}") + 1
+        return start, lines.index(f"$End{name}")
 
     def numbers(start, end):
         for line in lines[start:end]:
             for token in line.split():
                 yield token
 
-    fmt = lines[lines.index('$MeshFormat') + 1].split()
-    if fmt[:2] != ['4.1', '0']:
-        raise ValueError(f'unsupported MSH format: {fmt}')
+    fmt = lines[lines.index("$MeshFormat") + 1].split()
+    if fmt[:2] != ["4.1", "0"]:
+        raise ValueError(f"unsupported MSH format: {fmt}")
 
     names = {}
-    if '$PhysicalNames' in lines:
-        start, end = section('PhysicalNames')
-        for line in lines[start + 1:start + 1 + int(lines[start])]:
+    if "$PhysicalNames" in lines:
+        start, end = section("PhysicalNames")
+        for line in lines[start + 1 : start + 1 + int(lines[start])]:
             dim, tag, name = line.split(None, 2)
             names[(int(dim), int(tag))] = name.strip().strip('"')
 
     # Entities: bbox width 3 for points, 6 for curves/surfaces/volumes.
     entity_physical = {}
     physical_entities = {}
-    start, end = section('Entities')
+    start, end = section("Entities")
     counts = [int(v) for v in lines[start].split()]
     cursor = start + 1
     for dim, count in enumerate(counts):
@@ -142,7 +150,7 @@ def open(path):  # noqa: A001 - mirrors the Gmsh API name
             for p in phys:
                 physical_entities.setdefault((dim, p), []).append(tag)
 
-    start, end = section('Nodes')
+    start, end = section("Nodes")
     header = [int(v) for v in numbers(start, start + 1)]
     cursor = start + 1
     num_blocks, num_nodes = header[0], header[1]
@@ -157,13 +165,13 @@ def open(path):  # noqa: A001 - mirrors the Gmsh API name
         cursor += num_in_block
         coords = [float(v) for v in numbers(cursor, cursor + num_in_block)]
         cursor += num_in_block
-        node_tags[offset:offset + num_in_block] = tags
-        node_xyz[offset:offset + num_in_block] = np.asarray(coords).reshape(-1, 3)
+        node_tags[offset : offset + num_in_block] = tags
+        node_xyz[offset : offset + num_in_block] = np.asarray(coords).reshape(-1, 3)
         offset += num_in_block
 
     widths = {2: 3, 3: 4, 4: 4, 5: 8, 6: 6, 7: 5}
     element_blocks = {}
-    start, end = section('Elements')
+    start, end = section("Elements")
     header = [int(v) for v in numbers(start, start + 1)]
     cursor = start + 1
     for _ in range(header[0]):
@@ -171,14 +179,14 @@ def open(path):  # noqa: A001 - mirrors the Gmsh API name
         cursor += 1
         dim, entity, et, count = parts[:4]
         if et not in widths:
-            raise ValueError(f'unsupported Gmsh element type {et}')
+            raise ValueError(f"unsupported Gmsh element type {et}")
         width = widths[et]
         values = [int(v) for v in numbers(cursor, cursor + count)]
         cursor += count
         rows = np.asarray(values, dtype=np.int64).reshape(-1, 1 + width)
         element_blocks[(dim, entity, et)] = dict(tags=rows[:, 0], nodes=rows[:, 1:])
 
-    state = type('GmshState', (), {})()
+    state = type("GmshState", (), {})()
     state.node_tags = node_tags
     state.node_xyz = node_xyz
     state.element_blocks = element_blocks
