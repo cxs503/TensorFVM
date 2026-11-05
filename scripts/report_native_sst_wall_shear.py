@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Plot saved coupled wall-SST diagnostic fields and actual acceptance history."""
-import argparse,hashlib,json,shutil
+import argparse
+import hashlib
+import json
+import shutil
 from pathlib import Path
 from types import SimpleNamespace
 import numpy as np

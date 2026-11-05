@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Report actual nonzero 3D NS/SST convergence and pseudo-step consistency."""
-import argparse,json,hashlib
+import argparse
+import json
+import hashlib
 from pathlib import Path
 import numpy as np
 import matplotlib

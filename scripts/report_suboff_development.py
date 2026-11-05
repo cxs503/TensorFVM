@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Integrate source-bound SUBOFF preparation and pressure-compatibility evidence."""
-import argparse,json,shutil
+import argparse
+import json
+import shutil
 from pathlib import Path
 from tensorfvm.verification.core import write_json,sha
 
@@ -8,7 +10,7 @@ from tensorfvm.verification.core import write_json,sha
 def main():
     repo=Path(__file__).resolve().parents[1];docs=repo/'docs';out=docs/'verification-suboff-development';out.mkdir(exist_ok=True)
     projection={name:json.loads((docs/'verification-suboff-projection'/name/'result.json').read_text())for name in ['coarse','medium']}
-    compatibility=json.loads((docs/'verification-transient-pressure-compatibility/summary.json').read_text())
+    json.loads((docs/'verification-transient-pressure-compatibility/summary.json').read_text())
     tests=['tests/test_body_fitted_transient3d.py','tests/test_body_fitted3d.py','tests/test_external_mesh_contract.py','tests/test_multi_element_flow.py','tests/test_three_element.py','tests/test_native_mesh3d.py','tests/test_native_projection3d.py','tests/test_suboff_geometry.py']
     # Supplied by the completed integration test run; bind the exact checked
     # sources and retain the real pytest output, not a manufactured CFD gate.

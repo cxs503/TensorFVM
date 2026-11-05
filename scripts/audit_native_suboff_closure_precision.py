@@ -5,7 +5,11 @@ No solve is performed. The production closure is unchanged: a separate function
 object executes its exact code with an extended-precision input validator.
 The current production discretization is not qualified by these diagnostics.
 """
-import argparse,copy,hashlib,json,types
+import argparse
+import copy
+import hashlib
+import json
+import types
 from pathlib import Path
 import numpy as np
 from tensorfvm.native_mesh3d import NativeMesh3D

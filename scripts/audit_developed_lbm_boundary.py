@@ -1,5 +1,6 @@
 """Independent long-window fluid acceleration qualification."""
-import argparse,json
+import argparse
+import json
 from pathlib import Path
 from tensorfvm.developed_boundary_audit import audit
 parser=argparse.ArgumentParser();parser.add_argument('--lbm-root',type=Path,required=True);parser.add_argument('--output',type=Path,default=Path('docs/external-boundary/developed-report.json'));args=parser.parse_args()

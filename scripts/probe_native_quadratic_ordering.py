@@ -1,8 +1,13 @@
 """Compare SuperLU orderings on a frozen full quadratic system, without a flow solve."""
-import json,time,sys,hashlib
+import json
+import time
+import sys
+import hashlib
 from pathlib import Path
 import numpy as np
-import argparse,resource,signal
+import argparse
+import resource
+import signal
 from scipy import sparse
 from scipy.sparse.linalg import splu
 p=argparse.ArgumentParser();p.add_argument('--ordering',required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--run',type=Path,required=True);args=p.parse_args()

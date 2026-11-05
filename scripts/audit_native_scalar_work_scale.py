@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Check work-diagnostic scaling on a bound saved scalar equation/state."""
-import argparse,hashlib,json,shutil
+import argparse
+import hashlib
+import json
 from pathlib import Path
 import numpy as np
 import matplotlib

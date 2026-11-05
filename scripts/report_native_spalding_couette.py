@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Check saved Couette force/work arrays and plot native wall-boundary evidence."""
-import argparse,hashlib,json
+import argparse
+import hashlib
+import json
 from pathlib import Path
 from types import SimpleNamespace
 import numpy as np

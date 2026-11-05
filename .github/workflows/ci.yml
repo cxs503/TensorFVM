@@ -58,10 +58,14 @@ jobs:
   lint:
     name: lint (advisory)
     runs-on: ubuntu-latest
-    # Advisory on purpose: the tree carries a large pre-existing ruff backlog
-    # (unused imports, import ordering, semicolon-packed statements).  Making
-    # it blocking would hide every other signal.  Fix the backlog, then drop
-    # this continue-on-error and promote it to a gate.
+    # The enforced rule set is declared in pyproject.toml ([tool.ruff.lint]):
+    # E4 (import syntax) + E9 (syntax errors) + F (pyflakes correctness).  The
+    # whole tree satisfies it since PR #109, so this job is expected to be green;
+    # keep continue-on-error for one release cycle, then drop it to promote the
+    # job to a gate.
+    #
+    # ruff is pinned in the `dev` extra (ruff>=0.15,<0.16) so the gate cannot
+    # drift underneath a stale branch.
     continue-on-error: true
     steps:
       - uses: actions/checkout@v4
@@ -76,5 +80,9 @@ jobs:
           pip install -e ".[dev]"
       - name: Lint (ruff)
         run: ruff check src tests scripts
-      - name: Format check (ruff format)
-        run: ruff format --check src tests scripts
+      # No `ruff format --check` step: this repository never adopted ruff-format's
+      # canonical layout.  Numeric fixtures and short solver helpers are written
+      # as dense one-statement-per-line chains on purpose, so `ruff format` would
+      # rewrite 554 of 556 tracked Python files (measured on PR #109, ruff 0.15.0)
+      # and bury every real diff.  Re-introduce the step per module after a
+      # dedicated mechanical reformat lands; see docs/pr109-lint-gate/report.md.

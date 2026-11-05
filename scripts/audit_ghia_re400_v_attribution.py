@@ -54,7 +54,7 @@ REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(REPO, "src"))
 
 from tensorfvm.lid_cavity_reference import (  # noqa: E402
-    DISPUTES, REFERENCE, smoothness_audit, table,
+    DISPUTES, REFERENCE, smoothness_audit,
 )
 
 DISPUTED = (400.0, "v", 0.9063)

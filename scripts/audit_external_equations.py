@@ -4,10 +4,10 @@ import json
 from pathlib import Path
 import numpy as np
 import torch
+from tensorfvm import external_open_boundary  # noqa: F401  (registers the open-boundary backend)
+from tensorfvm import gmsh_external  # noqa: F401  (registers the optional external-mesh readers)
 from tensorfvm.solver import SolverConfig
 from tensorfvm.body_fitted import BodyFittedSolver
-from tensorfvm import external_open_boundary
-from tensorfvm import gmsh_external  # Register optional external mesh readers.
 from tensorfvm.verification.core import write_json,sha,artifact_manifest
 
 

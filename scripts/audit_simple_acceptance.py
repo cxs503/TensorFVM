@@ -1,5 +1,6 @@
 """Recompute acceptance from independently reconstructed final physical fields."""
-import argparse,json
+import argparse
+import json
 from pathlib import Path
 import numpy as np
 from tensorfvm.verification.simple_gpu_audit import reconstruction
