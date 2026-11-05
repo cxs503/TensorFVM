@@ -7,8 +7,9 @@ it does not re-run the solver (that costs minutes to an hour per row).  Pinned h
 * the projection stays divergence free at every resolution,
 * both primary extrema and the u-centreline are inside 3 % on every grid that
   resolves the lid shear layer (n >= 64),
-* the defect the ladder exposed -- the Re = 400 v-centreline extraction, whose error
-  grows under refinement -- stays visible as a strict xfail instead of a green suite.
+* the Re=400 v-centreline discrepancy at x=0.9063 stays visible as a strict
+  xfail, and the PR #82 proposal to read the printed entry as a transcription
+  error (rewrite -0.23827 -> -0.38760) is pinned as recorded-but-not-applied.
 
 A live smoke run of the same code path lives in ``tests/test_lid_cavity.py``.
 """
@@ -110,3 +111,33 @@ def test_extrema_are_grid_converged_between_n64_and_n128():
 def test_re400_v_centreline_discrepancy_is_still_present_and_unexplained():
     row = _cases()[(400.0, 64)]
     assert row["acceptance"]["pass"], row["acceptance"]["criteria"]
+
+def test_re400_v_centreline_correction_claim_is_recorded_not_applied():
+    """PR #82 (agent/m3240) proposed rewriting the printed Ghia value at
+
+    Re = 400, v-centreline, ``x = 0.9063`` from ``-0.23827`` to ``-0.38760``.
+    The merge keeps the number as printed and keeps the claim, verbatim and
+    machine-readable, on the dispute record; this test pins both facts together
+    with the untouched evidence bundle so neither side can be lost silently.
+    """
+    from tensorfvm.lid_cavity_reference import DISPUTES, V_CENTRELINE
+
+    published = dict(V_CENTRELINE[400.0])[0.9063]
+    assert published == pytest.approx(-0.23827, abs=1e-9), (
+        "the printed value must stay as printed - a dispute is not a licence to "
+        "edit the transcription")
+    claim = DISPUTES[(400.0, "v", 0.9063)]["competing_transcription"]
+    assert claim["value"] == pytest.approx(-0.38760, abs=1e-9)
+    assert claim["printed_value"] == pytest.approx(published, abs=1e-9)
+    assert claim["source"].startswith("PR #82")
+    assert claim["rationale"] and claim["rejected_because"]
+
+    # the claim is recorded, not in force: the committed bundle is still scored
+    # against the printed table and the Re = 400 v gate still fails there.
+    row = _cases()[(400.0, 64)]
+    profile = row["v"]["profiles"]
+    at_point = profile["reference"][profile["coord"].index(0.9063)]
+    assert at_point == pytest.approx(-0.23827), at_point
+    assert row["v"]["max_abs_error"] == pytest.approx(
+        abs(at_point - profile["computed"][profile["coord"].index(0.9063)]), abs=5e-4)
+    assert row["v"]["max_abs_error"] > 0.03, row["v"]["max_abs_error"]

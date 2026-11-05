@@ -26,6 +26,22 @@ check on the solution field rather than only on the two centrelines):
 * Re = 100:  (0.6172, 0.7344)
 * Re = 400:  (0.5547, 0.6055)
 * Re = 1000: (0.5313, 0.5625)
+
+Correction history
+------------------
+* 2026-11-04 (PR #82, branch ``agent/m3240``): proposed reading
+  ``V_CENTRELINE[400.0]`` at ``x = 0.9063`` as a transcription error and
+  rewriting the printed ``-0.23827`` to ``-0.38760``, on the grounds that the
+  point is a corner in the sampled profile (flagged by :func:`smoothness_audit`)
+  and that the solver's n = 128 value is ``-0.38758``.
+* 2026-11-04 (merge onto main): **not applied.**  The replacement reproduces the
+  solver's own number to five digits, so scoring against it would make the
+  Re = 400 v-centreline gate circular; the printed Table II is not available in
+  this checkout to settle the transcription.  The claim is preserved verbatim in
+  ``DISPUTES[(400.0, "v", 0.9063)]["competing_transcription"]`` together with the
+  reason it was rejected, and the gate keeps failing until the printed table or
+  an independent DNS adjudicates it.  The PR's own write-up is kept at
+  ``docs/verification-lid-cavity-correction/report.md``.
 """
 
 from __future__ import annotations
@@ -121,7 +137,7 @@ V_CENTRELINE: Mapping[float, tuple[tuple[float, float], ...]] = {
         (0.9609, -0.15663),
         (0.9531, -0.19254),
         (0.9453, -0.22847),
-        (0.9063, -0.23827),
+        (0.9063, -0.23827),  # as printed; disputed -- see DISPUTES below
         (0.8594, -0.44993),
         (0.8047, -0.38598),
         (0.5000, 0.05186),
@@ -173,7 +189,7 @@ def table(reynolds: float, which: str) -> tuple[tuple[float, float], ...]:
     """Return the published table for ``reynolds``; ``which`` is ``u`` or ``v``."""
     re = float(reynolds)
     if re not in U_CENTRELINE:
-        raise KeyError(f"no Ghia table for Re={reynolds}; available {SUPPORTED_REYNOLDS}")
+        raise KeyError(f"no Ghia table for {reynolds}; available {SUPPORTED_REYNOLDS}")
     if which not in ("u", "v"):
         raise ValueError("which must be 'u' or 'v'")
     return (U_CENTRELINE if which == "u" else V_CENTRELINE)[re]
@@ -242,6 +258,26 @@ DISPUTES: dict[tuple[float, str, float], dict[str, object]] = {
                      "orders of magnitude smaller than the gap"),
         "adjudication": ("needs the printed Table II or an independent DNS; offline "
                          "copies of the paper are not available in this checkout"),
+        # Preserved rather than merged-and-forgotten: PR #82 (agent/m3240) read
+        # this entry as a transcription error and rewrote it.  The table above
+        # keeps the number as printed, so the claim lives here, verbatim, with
+        # the reason it was not adopted.
+        "competing_transcription": {
+            "value": -0.38760,
+            "printed_value": -0.23827,
+            "source": ("PR #82 (branch agent/m3240): src/tensorfvm/"
+                       "lid_cavity_reference.py V_CENTRELINE[400.0]"),
+            "rationale": ("the entry is a corner in the sampled profile "
+                          "(smoothness_audit slope ratio >> 10) and the solver's "
+                          "n=128 value is -0.38758, i.e. the printed number looks "
+                          "like a transcription error"),
+            "rejected_because": ("the proposed replacement reproduces the computed "
+                                 "value to five digits, so a gate scored against it "
+                                 "would be circular, and the printed Table II is not "
+                                 "available in this checkout to settle the "
+                                 "transcription"),
+            "kept_at": "docs/verification-lid-cavity-correction/report.md",
+        },
     },
 }
 
