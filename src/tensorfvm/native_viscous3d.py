@@ -130,53 +130,71 @@ class NativeViscous3D:
         """Replace the Dirichlet-face normal gradient component by a one-sided
         three-point stencil (face, owner centre, second cell centre).
 
-        The stencil is exact for affine fields and second order for smooth
-        fields; the tangential part of the face gradient is left unchanged.
-        Faces without an aligned second cell keep the two-point closure.
+        The three points are (foot of the normal from the owner centre on the
+        face plane, owner centre, second cell centre); they are collinear on an
+        orthogonal mesh but the face *centroid* of a triangulated or skewed
+        face is laterally offset from that line.  The Dirichlet datum therefore
+        enters through ``v - grad_t.t`` (``grad_t`` = tangential part of the
+        two-point face gradient), which is exact for affine fields and keeps the
+        stencil second order for smooth fields.  The tangential part of the
+        face gradient is left unchanged.  Faces without an aligned second cell
+        keep the two-point closure.
         """
         F=self.F;N=self.N
         second=-np.ones(F,dtype=int)
-        coeff=np.zeros((F,3))
+        coeff=np.zeros((F,3));offset=np.zeros((F,3))
         candidates={}
         for gf in np.where(i)[0]:
             candidates.setdefault(o[gf],[]).append((gf,self.normal[gf],1))
             candidates.setdefault(n[gf],[]).append((gf,self.normal[gf],-1))
         fc=mesh.face_centers;cc=mesh.cell_centers
         for face in np.where(bd)[0]:
-            c0=o[face];nf=self.normal[face]
+            c0=o[face];nf=self.normal[face];inward=-nf
             best_align=-2.0;best_gf=-1
             for gf,gn,sig in candidates.get(c0,()):
-                align=sig*(gn@nf)
+                align=sig*(gn@inward)
                 if align>best_align:best_align,best_gf=align,gf
             if best_gf<0 or best_align<0.5:continue
             c1=n[best_gf] if o[best_gf]==c0 else o[best_gf]
             if c1<0:continue
-            delta0=float((cc[c0]-fc[face])@nf)
-            delta1=float((cc[c1]-fc[face])@nf)
+            # Distances are measured inward (the boundary normal points out of the
+            # owner cell), so the interior second cell lies at increasing delta.
+            delta0=float((fc[face]-cc[c0])@nf)
+            delta1=float((fc[face]-cc[c1])@nf)
             if delta0<=0 or delta1<=delta0*(1+1e-9):continue
             gap=delta1-delta0
+            # With delta measured inward (behind the outward face normal) these are
+            # the negated Lagrange weights of the (0, delta0, delta1) stencil, i.e.
+            # the outward du/dn itself.
             coeff[face,0]=(delta0+delta1)/(delta0*delta1)
             coeff[face,1]=-delta1/(delta0*gap)
             coeff[face,2]=delta0/(delta1*gap)
+            offset[face]=fc[face]-cc[c0]-delta0*nf
             second[face]=c1
         self.wall_second_cell=second
         self.wall_coeff=coeff
+        self.wall_offset=offset
         self.wall_second_order_faces=int((second[bd]>=0).sum())
         nrm=self.normal
-        nc=(sum(diags(nrm[:,a])@self.face_gradient_matrices[a] for a in range(3))).toarray()
-        for k in range(3):
-            M=self.face_gradient_matrices[k]
-            mask=second[bd]>=0
-            fb=f[bd][mask]
-            drop_vals=(nrm[bd,k][mask][:,None]*nc[bd][mask]).ravel()
-            drop_rows=np.repeat(fb,3)
-            drop_cols=np.tile(np.arange(3),len(fb))
-            drop=coo_matrix((drop_vals,(drop_rows,drop_cols)),shape=(F,N))
-            add_vals=np.r_[nrm[bd,k][mask]*coeff[bd,1][mask],nrm[bd,k][mask]*coeff[bd,2][mask]]
-            add_rows=np.r_[fb,fb]
-            add_cols=np.r_[o[bd][mask],second[bd][mask]]
-            add=coo_matrix((add_vals,(add_rows,add_cols)),shape=(F,N))
-            self.face_gradient_matrices[k]=(M-drop+add).tocsr()
+        mask=second[bd]>=0
+        fb=f[bd][mask]
+        if len(fb):
+            # ncs[f,:] holds the coefficients of the current normal component
+            # n.(grad u) of row f; it is removed from every component k below.
+            ncs=sum(diags(nrm[:,a])@self.face_gradient_matrices[a] for a in range(3))
+            # lateral part of the face-centroid offset from the normal line
+            w=offset-np.einsum('ij,ij->i',offset,nrm)[:,None]*nrm
+            comb=sum(diags(w[:,a])@self.face_gradient_matrices[a] for a in range(3))
+            select=coo_matrix((np.ones(len(fb)),(np.arange(len(fb)),fb)),shape=(len(fb),F))
+            local=np.arange(len(fb))
+            comb=select@comb
+            for k in range(3):
+                drop=select@(diags(nrm[:,k])@ncs)
+                add=coo_matrix((np.r_[nrm[fb,k]*coeff[fb,1],nrm[fb,k]*coeff[fb,2]],
+                                (np.r_[local,local],np.r_[o[fb],second[fb]])),shape=(len(fb),N))
+                # -n_k*coeff0 * w.grad_t: the face-centroid to normal-foot shift
+                corr=diags(nrm[fb,k]*(-coeff[fb,0]))@comb
+                self.face_gradient_matrices[k]=(self.face_gradient_matrices[k]+select.T@(add-drop+corr)).tocsr()
 
     def _boundary_data(self,neumann_gradients,dirichlet_values):
         g=np.broadcast_to(np.asarray(neumann_gradients,dtype=float),(self.F,))
@@ -201,7 +219,10 @@ class NativeViscous3D:
             sel=self.dirichlet&(self.wall_second_cell>=0)
             n=self.normal[sel]
             old=result[sel]
-            result[sel]=old-np.einsum('fi,fi->f',old,n)[:,None]*n+n*(self.wall_coeff[sel,0]*v[sel])[:,None]
+            tangent=old-np.einsum('fi,fi->f',old,n)[:,None]*n
+            # Dirichlet datum moved from the face centroid to the normal foot
+            foot=v[sel]-np.einsum('fi,fi->f',tangent,self.wall_offset[sel])
+            result[sel]=tangent+n*(self.wall_coeff[sel,0]*foot)[:,None]
         return result
 
     def scalar_flux_source(self,neumann_gradients=0.,dirichlet_values=0.):

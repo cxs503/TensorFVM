@@ -104,6 +104,14 @@ The solution is first order because the boundary impedance is first order: a
 Dirichlet wall flux error of O(h) perturbs the whole elliptic solution at O(h)
 (the interior inherits it — measured interior orders 0.88..1.07).
 
+> **Follow-up (2026-11-04)**: the three-point one-sided stencil proposed below was
+> merged as `wall_closure='three_point'` but never ran (0 Dirichlet faces engaged,
+> then a COO shape crash, then not affine exact).  It is now fixed and measured:
+> `docs/native-viscous-three-point-closure/report.md` — the solution error drops by
+> 37-49 % and the wall `du/dn` *order* rises to 1.57/1.46, but the absolute wall
+> `du/dn` error is still larger than the two-point closure, so the option stays
+> non-default and the "second order" claim is not made.
+
 A second-order closure would need the missing `(delta/2) d2u/dn2` term, i.e. a
 curvature-aware wall reconstruction (quadratic face reconstruction, or a
 three-point one-sided normal stencil on obstacle-normal mesh lines). That changes
