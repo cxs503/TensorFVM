@@ -1,0 +1,62 @@
+{
+ "schema": "tensorfvm.two-phase-projection-operator/1",
+ "gate_operator_residual": 1e-08,
+ "gate_removal_ratio": 1e-08,
+ "gate_mutation_min": 0.001,
+ "cases": [
+  {
+   "case": "isotropic_uniform",
+   "nx": 32,
+   "ny": 32,
+   "dx": 0.03125,
+   "dy": 0.03125,
+   "density_ratio": 1.0,
+   "operator_residual": 1.043338560197429e-10,
+   "div_before": 0.20734477154728875,
+   "div_after": 2.1633082478156318e-11,
+   "removal_ratio": 1.0433387018501452e-10,
+   "div_after_top_frozen": 0.0642963670875672,
+   "top_frozen_ratio": 0.31009398793980797,
+   "mutation_residual_swap_geometry": 1.043338560197429e-10,
+   "mutation_residual_drop_datum": 0.3100939879398081,
+   "notes": "isotropic"
+  },
+  {
+   "case": "anisotropic_uniform",
+   "nx": 32,
+   "ny": 24,
+   "dx": 0.03125,
+   "dy": 0.024999999999999998,
+   "density_ratio": 1.0,
+   "operator_residual": 8.117510558737142e-11,
+   "div_before": 0.24408654854674447,
+   "div_after": 1.9813782559108262e-11,
+   "removal_ratio": 8.117523344517189e-11,
+   "div_after_top_frozen": 0.08145938881273915,
+   "top_frozen_ratio": 0.33373157717103386,
+   "mutation_residual_swap_geometry": 0.19745311080126648,
+   "mutation_residual_drop_datum": 0.33373157717103374,
+   "notes": "anisotropic"
+  },
+  {
+   "case": "anisotropic_stratified",
+   "nx": 32,
+   "ny": 24,
+   "dx": 0.03125,
+   "dy": 0.024999999999999998,
+   "density_ratio": 1000.0,
+   "operator_residual": 9.045844320206457e-11,
+   "div_before": 0.24408654854674447,
+   "div_after": 2.207969918011088e-11,
+   "removal_ratio": 9.045848413839341e-11,
+   "div_after_top_frozen": 0.08217509189466371,
+   "top_frozen_ratio": 0.33666374646174546,
+   "mutation_residual_swap_geometry": 0.25413978750620153,
+   "mutation_residual_drop_datum": 0.3366637464617455,
+   "notes": "anisotropic"
+  }
+ ],
+ "all_operator_residuals_pass": true,
+ "all_removal_ratios_pass": true,
+ "all_mutations_detected": true
+}

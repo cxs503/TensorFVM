@@ -715,6 +715,40 @@ class TwoPhaseSolver:
             rz = new_rz
         return q
 
+    def _velocity_correction(self, u_star, v_star, dp, dt: float) -> tuple:
+        """Return ``(u, v)`` after the projection correction with ``dp``.
+
+        ``u = u* - dt (1/rho)_f grad(dp)``, with the *same* face density that the
+        operator in :meth:`_projection_pressure` assembles.  Keeping the
+        correction as a pure function of ``(u*, v*, dp)`` lets the operator and
+        the correction be checked against each other independently (see
+        ``tests/test_two_phase_projection_operator.py``); when they disagree the
+        solve returns ``dp`` for a different operator and divergence is only
+        partly removed.
+
+        Index conventions (staggered MAC grid):
+        ``u`` is ``(ny, nx+1)`` with interior faces ``u[:, 1:-1]`` sitting
+        between cells ``i-1`` and ``i``; ``v`` is ``(ny+1, nx)`` with interior
+        faces ``v[1:-1, :]`` between cells ``j-1`` and ``j``.  The top face
+        ``v[-1, :]`` is corrected across the half-cell distance to the
+        atmospheric pressure datum.
+        """
+        inv_rho_u = 2.0 / (self.rho_field[:, :-1] + self.rho_field[:, 1:]).clamp_min(1e-10)
+        inv_rho_v = 2.0 / (self.rho_field[:-1, :] + self.rho_field[1:, :]).clamp_min(1e-10)
+
+        u = u_star.clone()
+        v = v_star.clone()
+        u[:, 1:-1] = u_star[:, 1:-1] - dt * inv_rho_u * (dp[:, 1:] - dp[:, :-1]) / self.dx
+        v[1:-1, :] = v_star[1:-1, :] - dt * inv_rho_v * (dp[1:, :] - dp[:-1, :]) / self.dy
+        # Open top boundary: the atmospheric datum lives on the face, half a
+        # cell above the top cell centre, so the top face velocity is corrected
+        # with the half-cell gradient.  This is what closes the divergence of
+        # the top cell and makes the projection an exact projection.
+        if self.tp.top_atmosphere:
+            inv_rho_top = 1.0 / self.rho_field[-1, :].clamp_min(1e-10)
+            v[-1, :] = v_star[-1, :] + dt * inv_rho_top * dp[-1, :] / (0.5 * self.dy)
+        return u, v
+
     def _projection_step(self, dt: float) -> dict:
         """Chorin projection step for two-phase flow on staggered MAC grid.
 
@@ -804,29 +838,7 @@ class TwoPhaseSolver:
         dp = self._projection_pressure(u_star, v_star, dt)
 
         # --- Step 3: Velocity correction ---
-        # u = u* - dt * (1/rho_face) * d(dp)/dx
-        inv_rho_u = 2.0 / (self.rho_field[:, :-1] + self.rho_field[:, 1:]).clamp_min(1e-10)
-        inv_rho_v = 2.0 / (self.rho_field[:-1, :] + self.rho_field[1:, :]).clamp_min(1e-10)
-
-        dpdx = (dp[:, 1:] - dp[:, :-1]) / self.dx
-        dpdy = (dp[1:, :] - dp[:-1, :]) / self.dy
-
-        # u[j, i] face (i=1..nx-2 interior) sits between cells (i-1) and (i).
-        # dpdx[i-1] = (p[i]-p[i-1])/dx, inv_rho_u[i-1] at that face.
-        # dpdx and inv_rho_u are (ny, nx-1); u[:, 1:-1] is (ny, nx-1) → match directly
-        self.u[:, 1:-1] = u_star[:, 1:-1] - dt * inv_rho_u * dpdx
-        # v[j] face (j=1..ny-1 interior, since v has ny+1 rows: 0..ny)
-        # dpdy[j-1] = (p[j]-p[j-1])/dy, inv_rho_v[j-1] at that face.
-        # dpdy and inv_rho_v are (ny-1, nx); v[1:-1] is (ny-1, nx) → match directly
-        self.v[1:-1, :] = v_star[1:-1, :] - dt * inv_rho_v * dpdy
-        # Open top boundary: the atmospheric datum lives on the face, half a
-        # cell above the top cell centre, so the top face velocity is corrected
-        # with the half-cell gradient.  This is what closes the divergence of
-        # the top cell and makes the projection an exact projection.
-        if self.tp.top_atmosphere:
-            inv_rho_top = 1.0 / self.rho_field[-1, :].clamp_min(1e-10)
-            self.v[-1, :] = v_star[-1, :] + dt * inv_rho_top * dp[-1, :] / (0.5 * self.dy)
-
+        self.u, self.v = self._velocity_correction(u_star, v_star, dp, dt)
         self.p = self.p + dp
         self._boundaries(projection=True)
 
