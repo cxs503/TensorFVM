@@ -102,6 +102,18 @@ amount of mesh refinement removes it. This is recorded as a strict `xfail` in
 `tests/test_lid_cavity_re1000_evidence.py` so it cannot quietly disappear, and is handed
 on as the next unit of work: decide between the reference table and the extraction.
 
+**Update -- the question is decided, and the hypothesis above was wrong about the cause.**
+`scripts/audit_ghia_re400_v_attribution.py` (doc `docs/GHIA_RE400_V_ATTRIBUTION.md`) shows the
+extraction is innocent: the metric path's interpolation error at n = 128 is bounded by
+7.6e-4, 197x smaller than the 0.149 gap, and the solver value at x = 0.9063 converges at clean
+second order (p = 2.00) to a Richardson limit of -0.38989 that survives extrapolation. The
+suspect is the printed entry itself (-0.23827, inconsistent with its neighbours -0.22847 and
+-0.44993), registered in `tensorfvm.lid_cavity_reference.DISPUTES` rather than overwritten.
+The counterfactual -- what the ladder would read if the entry were corrected -- is scored
+opt-in in `docs/verification-ghia-re400-v-centreline/`: Re = 400 v becomes
+0.0371 / 0.0093 / 0.0043 at n = 32/64/128 and no other row moves. The gate stays red by
+default until a human adjudicates the entry against the printed Table II.
+
 ### 5.2 Scope
 
 * Steady state only; the Re = 1000 case is a steady solution in Ghia's own reading, but
