@@ -1,0 +1,144 @@
+{
+ "description": "Exact vertex-level geometric identities, inscribed-polygon area law, refinement order and negative controls for the extruded body-fitted cylinder O-grid (TensorFVM).",
+ "stretching": 2.5,
+ "cases": {
+  "nx16": {
+   "nx": 16,
+   "ny": 8,
+   "nz": 6,
+   "cells": 768,
+   "span_m": 3.0,
+   "radius_m": 0.5,
+   "cylinder_centre_recovered": [
+    5.000000000000016,
+    6.0
+   ],
+   "arc_faces": 12,
+   "wake_faces": 4,
+   "wake_to_arc_area_ratio": 0.13882855892296062,
+   "cylinder_area_analytic": 9.42477796076938,
+   "cylinder_area_inscribed_arc_exact": 9.317485623690747,
+   "cylinder_area_from_vertices": 9.349912300850825,
+   "cylinder_area_arc_from_vertices": 8.210114004950352,
+   "cylinder_area_stored": 9.349912300850825,
+   "identity_stored_vs_vertices_rel": 0.0,
+   "identity_arc_vs_inscribed_rel": 0.11749577797480501,
+   "deficit_vs_analytic_rel": 0.007943493229249813,
+   "arc_vertex_radius_rel_error": 3.197442310920451e-14,
+   "cross_section_from_vertices": 239.23936186235215,
+   "cross_section_stored": 239.23936186235218,
+   "cross_section_stored_rel": 1.1880030614174858e-16,
+   "cross_section_volume_rel": 1.1880030614174858e-16
+  },
+  "nx32": {
+   "nx": 32,
+   "ny": 8,
+   "nz": 6,
+   "cells": 1536,
+   "span_m": 3.0,
+   "radius_m": 0.5,
+   "cylinder_centre_recovered": [
+    5.000000000000007,
+    6.0
+   ],
+   "arc_faces": 24,
+   "wake_faces": 8,
+   "wake_to_arc_area_ratio": 0.1380638370444752,
+   "cylinder_area_analytic": 9.42477796076938,
+   "cylinder_area_inscribed_arc_exact": 9.397885839843713,
+   "cylinder_area_from_vertices": 9.406024771952206,
+   "cylinder_area_arc_from_vertices": 8.264935995488116,
+   "cylinder_area_stored": 9.406024771952206,
+   "identity_stored_vs_vertices_rel": 0.0,
+   "identity_arc_vs_inscribed_rel": 0.12020971200292448,
+   "deficit_vs_analytic_rel": 0.0019897751326592317,
+   "arc_vertex_radius_rel_error": 1.4432899320127035e-14,
+   "cross_section_from_vertices": 239.22084064159574,
+   "cross_section_stored": 239.22084064159574,
+   "cross_section_stored_rel": 0.0,
+   "cross_section_volume_rel": 2.3761900806113997e-16
+  },
+  "nx64": {
+   "nx": 64,
+   "ny": 8,
+   "nz": 6,
+   "cells": 3072,
+   "span_m": 3.0,
+   "radius_m": 0.5,
+   "cylinder_centre_recovered": [
+    4.999999999999994,
+    5.999999999999997
+   ],
+   "arc_faces": 48,
+   "wake_faces": 16,
+   "wake_to_arc_area_ratio": 0.13787368379580922,
+   "cylinder_area_analytic": 9.42477796076938,
+   "cylinder_area_inscribed_arc_exact": 9.4180506091406,
+   "cylinder_area_from_vertices": 9.42008736245906,
+   "cylinder_area_arc_from_vertices": 8.278675828967927,
+   "cylinder_area_stored": 9.42008736245906,
+   "identity_stored_vs_vertices_rel": 0.0,
+   "identity_arc_vs_inscribed_rel": 0.12089141886581505,
+   "deficit_vs_analytic_rel": 0.0004976879380971426,
+   "arc_vertex_radius_rel_error": 1.3988810110276972e-14,
+   "cross_section_from_vertices": 239.2161646023373,
+   "cross_section_stored": 239.21616460233733,
+   "cross_section_stored_rel": 1.188118264401197e-16,
+   "cross_section_volume_rel": 2.376236528802394e-16
+  }
+ },
+ "refinement": {
+  "rows": [
+   {
+    "nx": 8,
+    "cells": 256,
+    "arc_faces": 6,
+    "deficit_vs_analytic_rel": 0.031525443913075796,
+    "identity_arc_vs_inscribed_rel": 0.10684468953511002,
+    "cross_section_stored_rel": 1.1876495258520262e-16
+   },
+   {
+    "nx": 16,
+    "cells": 512,
+    "arc_faces": 12,
+    "deficit_vs_analytic_rel": 0.007943493229249813,
+    "identity_arc_vs_inscribed_rel": 0.11749577797480501,
+    "cross_section_stored_rel": 1.1880030614174858e-16
+   },
+   {
+    "nx": 32,
+    "cells": 1024,
+    "arc_faces": 24,
+    "deficit_vs_analytic_rel": 0.0019897751326592317,
+    "identity_arc_vs_inscribed_rel": 0.12020971200292448,
+    "cross_section_stored_rel": 0.0
+   },
+   {
+    "nx": 64,
+    "cells": 2048,
+    "arc_faces": 48,
+    "deficit_vs_analytic_rel": 0.0004976879380971426,
+    "identity_arc_vs_inscribed_rel": 0.12089141886581505,
+    "cross_section_stored_rel": 1.188118264401197e-16
+   },
+   {
+    "nx": 128,
+    "cells": 4096,
+    "arc_faces": 96,
+    "deficit_vs_analytic_rel": 0.00012443724875539934,
+    "identity_arc_vs_inscribed_rel": 0.12106204744516513,
+    "cross_section_stored_rel": 0.0
+   }
+  ],
+  "deficit_observed_order": 1.996636920292654,
+  "identity_observed_order": -0.040156582934327806
+ },
+ "negative_controls": {
+  "nx": 32,
+  "baseline_arc_area": 8.264935995488116,
+  "radius_inflation_1pct_area_rel_change": 0.009999999999999657,
+  "predicted_radius_inflation_change": 0.01,
+  "single_vertex_shift_1pct_area_rel_change": 0.0004782853069119196,
+  "single_vertex_shift_detected": true
+ }
+}
