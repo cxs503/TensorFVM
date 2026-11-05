@@ -438,13 +438,15 @@ def score_against_ghia(solver: LidCavitySolver, reynolds: float | None = None) -
 
 
 def _registered_disputes() -> dict:
-    """Group the reference dispute register by ``(Re, component)`` -> ``{x: record}``."""
-    from .lid_cavity_reference import DISPUTES
+    """Group the reference dispute register by ``(Re, component)`` -> ``{x: record}``.
 
-    grouped: dict = {}
-    for (reynolds, which, x), record in DISPUTES.items():
-        grouped.setdefault((reynolds, which), {})[round(x, 4)] = record
-    return grouped
+    The grouping lives in :func:`tensorfvm.lid_cavity_reference.disputes_by_case`
+    so the gate and the consistency audit cannot disagree about which points the
+    register excludes.
+    """
+    from .lid_cavity_reference import disputes_by_case
+
+    return disputes_by_case()
 
 
 def ghia_acceptance(result: dict, *, max_error: float = 0.03,

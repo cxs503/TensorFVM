@@ -1,0 +1,3076 @@
+{
+ "acceptance": [
+  {
+   "committed_pass": true,
+   "excluded_points": [],
+   "failing_criteria": [],
+   "lenient_pass": true,
+   "max_abs_error": 0.007785453957715589,
+   "n": 32,
+   "reproduces_committed": true,
+   "reynolds": 100.0,
+   "strict_pass": true
+  },
+  {
+   "committed_pass": true,
+   "excluded_points": [],
+   "failing_criteria": [],
+   "lenient_pass": true,
+   "max_abs_error": 0.00872776060095204,
+   "n": 64,
+   "reproduces_committed": true,
+   "reynolds": 100.0,
+   "strict_pass": true
+  },
+  {
+   "committed_pass": true,
+   "excluded_points": [],
+   "failing_criteria": [],
+   "lenient_pass": true,
+   "max_abs_error": 0.009146022186147074,
+   "n": 128,
+   "reproduces_committed": true,
+   "reynolds": 100.0,
+   "strict_pass": true
+  },
+  {
+   "committed_pass": false,
+   "excluded_points": [
+    {
+     "component": "v",
+     "delta": -0.11456876276694808,
+     "evidence": "scripts/audit_ghia_re400_v_attribution.py over the committed ladder bundle docs/verification-lid-cavity-ladder/summary.json; clean second-order convergence to a limit 64% away from the tabulated value while the three neighbouring entries are inside 0.3%, and the interpolation error of the metric path is two orders of magnitude smaller than the gap",
+     "published": -0.23827,
+     "x": 0.9063
+    }
+   ],
+   "failing_criteria": [
+    "u_max_abs_error",
+    "v_max_abs_error"
+   ],
+   "lenient_pass": false,
+   "max_abs_error": 0.11456876276694808,
+   "n": 32,
+   "reproduces_committed": true,
+   "reynolds": 400.0,
+   "strict_pass": false
+  },
+  {
+   "committed_pass": false,
+   "excluded_points": [
+    {
+     "component": "v",
+     "delta": -0.1423665470248758,
+     "evidence": "scripts/audit_ghia_re400_v_attribution.py over the committed ladder bundle docs/verification-lid-cavity-ladder/summary.json; clean second-order convergence to a limit 64% away from the tabulated value while the three neighbouring entries are inside 0.3%, and the interpolation error of the metric path is two orders of magnitude smaller than the gap",
+     "published": -0.23827,
+     "x": 0.9063
+    }
+   ],
+   "failing_criteria": [
+    "v_max_abs_error"
+   ],
+   "lenient_pass": true,
+   "max_abs_error": 0.1423665470248758,
+   "n": 64,
+   "reproduces_committed": true,
+   "reynolds": 400.0,
+   "strict_pass": false
+  },
+  {
+   "committed_pass": false,
+   "excluded_points": [
+    {
+     "component": "v",
+     "delta": -0.1493120683606132,
+     "evidence": "scripts/audit_ghia_re400_v_attribution.py over the committed ladder bundle docs/verification-lid-cavity-ladder/summary.json; clean second-order convergence to a limit 64% away from the tabulated value while the three neighbouring entries are inside 0.3%, and the interpolation error of the metric path is two orders of magnitude smaller than the gap",
+     "published": -0.23827,
+     "x": 0.9063
+    }
+   ],
+   "failing_criteria": [
+    "v_max_abs_error"
+   ],
+   "lenient_pass": true,
+   "max_abs_error": 0.1493120683606132,
+   "n": 128,
+   "reproduces_committed": true,
+   "reynolds": 400.0,
+   "strict_pass": false
+  },
+  {
+   "committed_pass": true,
+   "excluded_points": [],
+   "failing_criteria": [],
+   "lenient_pass": true,
+   "max_abs_error": 0.029310305036261974,
+   "n": 64,
+   "reproduces_committed": true,
+   "reynolds": 1000.0,
+   "strict_pass": true
+  }
+ ],
+ "gate_verdicts_reproduced": true,
+ "key_quantities": [
+  {
+   "converged_residual": 7.23900110225865e-08,
+   "max_abs_error_u": 0.0069160981373702635,
+   "max_abs_error_v": 0.007785453957715589,
+   "max_divergence": 1.4210854715202004e-14,
+   "n": 32,
+   "reynolds": 100.0,
+   "steps": 5750,
+   "u_min": {
+    "computed": -0.21086536334011652,
+    "pass_15pct": true,
+    "reference": -0.2109,
+    "relative_error": 0.0001642326215433179
+   },
+   "v_max": {
+    "computed": 0.17606873531516815,
+    "pass_15pct": true,
+    "reference": 0.17527,
+    "relative_error": 0.00455717073753715
+   },
+   "vortex_centre": {
+    "computed": [
+     0.609375,
+     0.765625
+    ],
+    "distance": 0.032190545972381336,
+    "reference": [
+     0.6172,
+     0.7344
+    ]
+   },
+   "wall_seconds": 29.62599468231201
+  },
+  {
+   "converged_residual": 9.780068902879672e-08,
+   "max_abs_error_u": 0.004452212009521672,
+   "max_abs_error_v": 0.00872776060095204,
+   "max_divergence": 9.237055564881302e-14,
+   "n": 64,
+   "reynolds": 100.0,
+   "steps": 11250,
+   "u_min": {
+    "computed": -0.21336741634292558,
+    "pass_15pct": true,
+    "reference": -0.2109,
+    "relative_error": 0.011699461085469782
+   },
+   "v_max": {
+    "computed": 0.17887482321645376,
+    "pass_15pct": true,
+    "reference": 0.17527,
+    "relative_error": 0.02056725746821333
+   },
+   "vortex_centre": {
+    "computed": [
+     0.6171875,
+     0.7421875
+    ],
+    "distance": 0.007787510032096214,
+    "reference": [
+     0.6172,
+     0.7344
+    ]
+   },
+   "wall_seconds": 85.91319537162781
+  },
+  {
+   "converged_residual": 9.755562283923307e-08,
+   "max_abs_error_u": 0.004922402895836425,
+   "max_abs_error_v": 0.009146022186147074,
+   "max_divergence": 6.750155989720952e-13,
+   "n": 128,
+   "reynolds": 100.0,
+   "steps": 22500,
+   "u_min": {
+    "computed": -0.21384907268007644,
+    "pass_15pct": true,
+    "reference": -0.2109,
+    "relative_error": 0.013983274917384715
+   },
+   "v_max": {
+    "computed": 0.17941629259451372,
+    "pass_15pct": true,
+    "reference": 0.17527,
+    "relative_error": 0.02365660178304166
+   },
+   "vortex_centre": {
+    "computed": [
+     0.61328125,
+     0.73828125
+    ],
+    "distance": 0.00551549663448355,
+    "reference": [
+     0.6172,
+     0.7344
+    ]
+   },
+   "wall_seconds": 426.3573558330536
+  },
+  {
+   "converged_residual": 9.488037022720164e-08,
+   "max_abs_error_u": 0.06836401423978111,
+   "max_abs_error_v": 0.11456876276694808,
+   "max_divergence": 7.16093850883226e-15,
+   "n": 32,
+   "reynolds": 400.0,
+   "steps": 13250,
+   "u_min": {
+    "computed": -0.3037156568526348,
+    "pass_15pct": true,
+    "reference": -0.32726,
+    "relative_error": 0.07194384632208396
+   },
+   "v_max": {
+    "computed": 0.2778574854787055,
+    "pass_15pct": true,
+    "reference": 0.30203,
+    "relative_error": 0.08003348846569724
+   },
+   "vortex_centre": {
+    "computed": [
+     0.546875,
+     0.640625
+    ],
+    "distance": 0.035986056327416555,
+    "reference": [
+     0.5547,
+     0.6055
+    ]
+   },
+   "wall_seconds": 75.28784728050232
+  },
+  {
+   "converged_residual": 9.159485614418372e-08,
+   "max_abs_error_u": 0.006596111540415894,
+   "max_abs_error_v": 0.1423665470248758,
+   "max_divergence": 3.197442310920451e-14,
+   "n": 64,
+   "reynolds": 400.0,
+   "steps": 25500,
+   "u_min": {
+    "computed": -0.32410768143031227,
+    "pass_15pct": true,
+    "reference": -0.32726,
+    "relative_error": 0.009632459114122497
+   },
+   "v_max": {
+    "computed": 0.29849783516425044,
+    "pass_15pct": true,
+    "reference": 0.30203,
+    "relative_error": 0.011694748322185164
+   },
+   "vortex_centre": {
+    "computed": [
+     0.5546875,
+     0.6171875
+    ],
+    "distance": 0.01168750668449003,
+    "reference": [
+     0.5547,
+     0.6055
+    ]
+   },
+   "wall_seconds": 193.33267903327942
+  },
+  {
+   "converged_residual": 9.990181126795505e-08,
+   "max_abs_error_u": 0.00134981727198058,
+   "max_abs_error_v": 0.1493120683606132,
+   "max_divergence": 2.4868995751603507e-13,
+   "n": 128,
+   "reynolds": 400.0,
+   "steps": 50500,
+   "u_min": {
+    "computed": -0.3278305780903923,
+    "pass_15pct": true,
+    "reference": -0.32726,
+    "relative_error": 0.0017435008567875483
+   },
+   "v_max": {
+    "computed": 0.30272319949399745,
+    "pass_15pct": true,
+    "reference": 0.30203,
+    "relative_error": 0.002295134569405131
+   },
+   "vortex_centre": {
+    "computed": [
+     0.55078125,
+     0.60546875
+    ],
+    "distance": 0.003918874599295029,
+    "reference": [
+     0.5547,
+     0.6055
+    ]
+   },
+   "wall_seconds": 969.7717182636261
+  },
+  {
+   "converged_residual": 9.974947090540809e-08,
+   "max_abs_error_u": 0.029310305036261974,
+   "max_abs_error_v": 0.019733918942391973,
+   "max_divergence": 2.1316282072803006e-14,
+   "n": 64,
+   "reynolds": 1000.0,
+   "steps": 58750,
+   "u_min": {
+    "computed": -0.3721841952508898,
+    "pass_15pct": true,
+    "reference": -0.38289,
+    "relative_error": 0.027960523255008498
+   },
+   "v_max": {
+    "computed": 0.36228283753525553,
+    "pass_15pct": true,
+    "reference": 0.37095,
+    "relative_error": 0.02336477278540092
+   },
+   "vortex_centre": {
+    "computed": [
+     0.5234375,
+     0.5703125
+    ],
+    "distance": 0.011083955183056268,
+    "reference": [
+     0.5313,
+     0.5625
+    ]
+   },
+   "wall_seconds": 560.4596853256226
+  }
+ ],
+ "meta": {
+  "acceptance_band": 0.03,
+  "bundle": "docs/verification-lid-cavity-ladder/summary.json",
+  "bundle_is_partial": true,
+  "bundle_md5": "833e107867f0cbe21b06221115ffdcf7",
+  "bundle_provenance": "assembled from summary.partial.json: the runner was still working on the Re=1000 n=128 row when the ladder was stopped, so that row is NOT included and is NOT claimed; every row present here is converged to the stated gate.",
+  "bundle_timestamp": "2026-11-03T23:30:28",
+  "code": "tensorfvm.verification.ghia_reference_audit.audit",
+  "generated_utc": "2026-11-05T08:09:03+00:00",
+  "grids_missing": [
+   {
+    "n": 32,
+    "reynolds": 1000.0
+   },
+   {
+    "n": 128,
+    "reynolds": 1000.0
+   }
+  ],
+  "grids_present": {
+   "100": [
+    32,
+    64,
+    128
+   ],
+   "1000": [
+    64
+   ],
+   "400": [
+    32,
+    64,
+    128
+   ]
+  },
+  "reference": "U. Ghia, K.N. Ghia, C.T. Shin, J. Comput. Phys. 48 (1982) 387-411, Tables I (u at x = 0.5) and II (v at y = 0.5)",
+  "reynolds": [
+   100.0,
+   400.0,
+   1000.0
+  ],
+  "saturated_ratio": 1.5,
+  "shrinking_ratio": 2.0
+ },
+ "negative_control": {
+  "control_passes": true,
+  "detected": true,
+  "injected": {
+   "magnitude": 0.05,
+   "reynolds": 100.0,
+   "which": "u",
+   "x": 0.5
+  },
+  "new_defects": [
+   {
+    "reynolds": 100.0,
+    "which": "u",
+    "x": 0.5
+   }
+  ],
+  "no_other_new_defects": true
+ },
+ "ok": true,
+ "pointwise": {
+  "band": 0.03,
+  "reynolds": {
+   "100.0": {
+    "grids": [
+     32,
+     64,
+     128
+    ],
+    "which": {
+     "u": {
+      "max_residual": {
+       "128": 0.004922402895836425,
+       "32": 0.0069160981373702635,
+       "64": 0.004452212009521672
+      },
+      "max_residual_consistent": 0.004922402895836425,
+      "reference_points": 17,
+      "rows": [
+       {
+        "computed": {
+         "128": -0.0001399646115557776,
+         "32": -0.0017889603049131616,
+         "64": -0.0005221202716085855
+        },
+        "convergence": "shrinking",
+        "delta_signed_finest": -0.0001399646115557776,
+        "inside_band": true,
+        "limit_residual": 2.511454314161818e-05,
+        "observed_order": 1.7290020605081822,
+        "published": 0.0,
+        "ratio_previous_over_finest": 3.7303734551537993,
+        "residual": {
+         "128": 0.0001399646115557776,
+         "32": 0.0017889603049131616,
+         "64": 0.0005221202716085855
+        },
+        "residual_over_uncertainty": 0.8478636313127766,
+        "resolution_uncertainty": 0.00016507915469739579,
+        "richardson_limit": 2.511454314161818e-05,
+        "verdict": "consistent",
+        "x": 0.0
+       },
+       {
+        "computed": {
+         "128": -0.037220413285280286,
+         "32": -0.03679059023334651,
+         "64": -0.03716662404674475
+        },
+        "convergence": "saturated",
+        "delta_signed_finest": -5.041328528028466e-05,
+        "inside_band": true,
+        "limit_residual": 5.939181403741278e-05,
+        "observed_order": 2.805472925803593,
+        "published": -0.03717,
+        "ratio_previous_over_finest": 0.06696554760283925,
+        "residual": {
+         "128": 5.041328528028466e-05,
+         "32": 0.00037940976665349485,
+         "64": 3.3759532552524174e-06
+        },
+        "residual_over_uncertainty": 5.614871505564705,
+        "resolution_uncertainty": 8.97852875712682e-06,
+        "richardson_limit": -0.037229391814037414,
+        "verdict": "consistent",
+        "x": 0.0547
+       },
+       {
+        "computed": {
+         "128": -0.04196383598513219,
+         "32": -0.041425418648237615,
+         "64": -0.041894568552683614
+        },
+        "convergence": "saturated",
+        "delta_signed_finest": -4.3835985132190114e-05,
+        "inside_band": true,
+        "limit_residual": 5.583445351729083e-05,
+        "observed_order": 2.7597998682160814,
+        "published": -0.04192,
+        "ratio_previous_over_finest": 0.5801500123630071,
+        "residual": {
+         "128": 4.3835985132190114e-05,
+         "32": 0.000494581351762384,
+         "64": 2.5431447316384692e-05
+        },
+        "residual_over_uncertainty": 3.653465069476396,
+        "resolution_uncertainty": 1.1998468385102848e-05,
+        "richardson_limit": -0.04197583445351729,
+        "verdict": "consistent",
+        "x": 0.0625
+       },
+       {
+        "computed": {
+         "128": -0.04660491684603016,
+         "32": -0.04595944980198743,
+         "64": -0.04652028229453547
+        },
+        "convergence": "saturated",
+        "delta_signed_finest": 0.001145083153969842,
+        "inside_band": true,
+        "limit_residual": 0.0011300410744285866,
+        "observed_order": 2.7282512767524874,
+        "published": -0.04775,
+        "ratio_previous_over_finest": 1.0739112711607661,
+        "residual": {
+         "128": 0.001145083153969842,
+         "32": 0.0017905501980125735,
+         "64": 0.0012297177054645322
+        },
+        "residual_over_uncertainty": 76.12532235513906,
+        "resolution_uncertainty": 1.5042079541257139e-05,
+        "richardson_limit": -0.046619958925571414,
+        "verdict": "consistent",
+        "x": 0.0703
+       },
+       {
+        "computed": {
+         "128": -0.06440264336308366,
+         "32": -0.06340826418989082,
+         "64": -0.06426270910797993
+        },
+        "convergence": "saturated",
+        "delta_signed_finest": -6.264336308366147e-05,
+        "inside_band": true,
+        "limit_residual": 9.00489663389209e-05,
+        "observed_order": 2.610238322147649,
+        "published": -0.06434,
+        "ratio_previous_over_finest": 1.233824115043746,
+        "residual": {
+         "128": 6.264336308366147e-05,
+         "32": 0.0009317358101091772,
+         "64": 7.729089202006267e-05
+        },
+        "residual_over_uncertainty": 2.2857866874952375,
+        "resolution_uncertainty": 2.740560325526526e-05,
+        "richardson_limit": -0.06443004896633892,
+        "verdict": "consistent",
+        "x": 0.1016
+       },
+       {
+        "computed": {
+         "128": -0.10168660249747102,
+         "32": -0.10001927177767787,
+         "64": -0.10144043397398889
+        },
+        "convergence": "saturated",
+        "delta_signed_finest": -0.00018660249747101676,
+        "inside_band": true,
+        "limit_residual": 0.00023817634280712263,
+        "observed_order": 2.529353010344024,
+        "published": -0.1015,
+        "ratio_previous_over_finest": 0.3192134447202276,
+        "residual": {
+         "128": 0.00018660249747101676,
+         "32": 0.0014807282223221335,
+         "64": 5.956602601112082e-05
+        },
+        "residual_over_uncertainty": 3.618161419900779,
+        "resolution_uncertainty": 5.157384533610276e-05,
+        "richardson_limit": -0.10173817634280713,
+        "verdict": "consistent",
+        "x": 0.1719
+       },
+       {
+        "computed": {
+         "128": -0.15758135953988237,
+         "32": -0.15501936569196537,
+         "64": -0.15719389764931332
+        },
+        "convergence": "saturated",
+        "delta_signed_finest": -0.000961359539882356,
+        "inside_band": true,
+        "limit_residual": 0.0010453667198100647,
+        "observed_order": 2.4885785871765957,
+        "published": -0.15662,
+        "ratio_previous_over_finest": 0.5969646375835044,
+        "residual": {
+         "128": 0.000961359539882356,
+         "32": 0.001600634308034643,
+         "64": 0.0005738976493133152
+        },
+        "residual_over_uncertainty": 11.44377826644742,
+        "resolution_uncertainty": 8.400717992771789e-05,
+        "richardson_limit": -0.15766536671981007,
+        "verdict": "consistent",
+        "x": 0.2813
+       },
+       {
+        "computed": {
+         "128": -0.21384907268007644,
+         "32": -0.21086536334011652,
+         "64": -0.21336741634292558
+        },
+        "convergence": "saturated",
+        "delta_signed_finest": -0.0029490726800764366,
+        "inside_band": true,
+        "limit_residual": 0.0030638980661310267,
+        "observed_order": 2.3770362989297853,
+        "published": -0.2109,
+        "ratio_previous_over_finest": 0.8366753249572758,
+        "residual": {
+         "128": 0.0029490726800764366,
+         "32": 3.463665988348574e-05,
+         "64": 0.002467416342925577
+        },
+        "residual_over_uncertainty": 25.683107032400805,
+        "resolution_uncertainty": 0.00011482538605457672,
+        "richardson_limit": -0.21396389806613103,
+        "verdict": "consistent",
+        "x": 0.4531
+       },
+       {
+        "computed": {
+         "128": -0.2090247080588222,
+         "32": -0.20643488812846356,
+         "64": -0.20859373153375452
+        },
+        "convergence": "saturated",
+        "delta_signed_finest": -0.0032147080588222077,
+        "inside_band": true,
+        "limit_residual": 0.0033222052087967524,
+        "observed_order": 2.3245774050942742,
+        "published": -0.20581,
+        "ratio_previous_over_finest": 0.8659360299032619,
+        "residual": {
+         "128": 0.0032147080588222077,
+         "32": 0.0006248881284635632,
+         "64": 0.0027837315337545243
+        },
+        "residual_over_uncertainty": 29.905053851040325,
+        "resolution_uncertainty": 0.00010749714997454772,
+        "richardson_limit": -0.20913220520879675,
+        "verdict": "consistent",
+        "x": 0.5
+       },
+       {
+        "computed": {
+         "128": -0.13871346459845116,
+         "32": -0.13810695121406963,
+         "64": -0.13852577622637757
+        },
+        "convergence": "saturated",
+        "delta_signed_finest": -0.002303464598451155,
+        "inside_band": true,
+        "limit_residual": 0.0024558719579070853,
+        "observed_order": 1.1580083297353259,
+        "published": -0.13641,
+        "ratio_previous_over_finest": 0.9185190984919903,
+        "residual": {
+         "128": 0.002303464598451155,
+         "32": 0.0016969512140696252,
+         "64": 0.0021157762263775692
+        },
+        "residual_over_uncertainty": 15.113867248105546,
+        "resolution_uncertainty": 0.00015240735945592506,
+        "richardson_limit": -0.1388658719579071,
+        "verdict": "consistent",
+        "x": 0.6172
+       },
+       {
+        "computed": {
+         "128": 0.0042066625671525635,
+         "32": 0.003134963182173667,
+         "64": 0.004128113079868918
+        },
+        "convergence": "saturated",
+        "delta_signed_finest": 0.0008866625671525635,
+        "inside_band": true,
+        "limit_residual": 0.0008934087066494248,
+        "observed_order": 3.6603377186930346,
+        "published": 0.00332,
+        "ratio_previous_over_finest": 0.9114099430904137,
+        "residual": {
+         "128": 0.0008866625671525635,
+         "32": 0.0001850368178263331,
+         "64": 0.000808113079868918
+        },
+        "residual_over_uncertainty": 131.43258712113013,
+        "resolution_uncertainty": 6.746139496861633e-06,
+        "richardson_limit": 0.004213408706649425,
+        "verdict": "consistent",
+        "x": 0.7344
+       },
+       {
+        "computed": {
+         "128": 0.23643240289583642,
+         "32": 0.23330546730257803,
+         "64": 0.23596221200952167
+        },
+        "convergence": "saturated",
+        "delta_signed_finest": 0.004922402895836425,
+        "inside_band": true,
+        "limit_residual": 0.005023511529654495,
+        "observed_order": 2.498341121723253,
+        "published": 0.23151,
+        "ratio_previous_over_finest": 0.9044793983214051,
+        "residual": {
+         "128": 0.004922402895836425,
+         "32": 0.001795467302578041,
+         "64": 0.004452212009521672
+        },
+        "residual_over_uncertainty": 48.68429836262919,
+        "resolution_uncertainty": 0.00010110863381806354,
+        "richardson_limit": 0.2365335115296545,
+        "verdict": "consistent",
+        "x": 0.8516
+       },
+       {
+        "computed": {
+         "128": 0.6907060673145174,
+         "32": 0.6846677993643602,
+         "64": 0.689674755947891
+        },
+        "convergence": "saturated",
+        "delta_signed_finest": 0.0035360673145174992,
+        "inside_band": true,
+        "limit_residual": 0.00380359700514743,
+        "observed_order": 2.2794539782324326,
+        "published": 0.68717,
+        "ratio_previous_over_finest": 0.7083450978457377,
+        "residual": {
+         "128": 0.0035360673145174992,
+         "32": 0.002502200635639773,
+         "64": 0.002504755947891013
+        },
+        "residual_over_uncertainty": 13.217476184384154,
+        "resolution_uncertainty": 0.0002675296906299859,
+        "richardson_limit": 0.6909735970051474,
+        "verdict": "consistent",
+        "x": 0.9531
+       },
+       {
+        "computed": {
+         "128": 0.7401886690104665,
+         "32": 0.7347845183677205,
+         "64": 0.7392592354891773
+        },
+        "convergence": "saturated",
+        "delta_signed_finest": 0.0029686690104665514,
+        "inside_band": true,
+        "limit_residual": 0.003212329819563875,
+        "observed_order": 2.267372898627458,
+        "published": 0.73722,
+        "ratio_previous_over_finest": 0.6869191149257826,
+        "residual": {
+         "128": 0.0029686690104665514,
+         "32": 0.002435481632279468,
+         "64": 0.0020392354891772824
+        },
+        "residual_over_uncertainty": 12.183613037586111,
+        "resolution_uncertainty": 0.00024366080909729232,
+        "richardson_limit": 0.7404323298195639,
+        "verdict": "consistent",
+        "x": 0.9609
+       },
+       {
+        "computed": {
+         "128": 0.7917159526693951,
+         "32": 0.7879175755003333,
+         "64": 0.7909954697460909
+        },
+        "convergence": "saturated",
+        "delta_signed_finest": 0.0030059526693950733,
+        "inside_band": true,
+        "limit_residual": 0.0032261499840633423,
+        "observed_order": 2.0949075210078076,
+        "published": 0.78871,
+        "ratio_previous_over_finest": 0.7603146148508154,
+        "residual": {
+         "128": 0.0030059526693950733,
+         "32": 0.0007924244996667662,
+         "64": 0.0022854697460908957
+        },
+        "residual_over_uncertainty": 13.65117768998679,
+        "resolution_uncertainty": 0.00022019731466831286,
+        "richardson_limit": 0.7919361499840634,
+        "verdict": "consistent",
+        "x": 0.9688
+       },
+       {
+        "computed": {
+         "128": 0.8435830820446749,
+         "32": 0.8413122752633485,
+         "64": 0.8430649580317804
+        },
+        "convergence": "saturated",
+        "delta_signed_finest": 0.0023530820446748812,
+        "inside_band": true,
+        "limit_residual": 0.0025705301746515863,
+        "observed_order": 1.7581955420578967,
+        "published": 0.84123,
+        "ratio_previous_over_finest": 0.7798104770434746,
+        "residual": {
+         "128": 0.0023530820446748812,
+         "32": 8.227526334847468e-05,
+         "64": 0.0018349580317803538
+        },
+        "residual_over_uncertainty": 10.821348727750784,
+        "resolution_uncertainty": 0.0002174481299766752,
+        "richardson_limit": 0.8438005301746516,
+        "verdict": "consistent",
+        "x": 0.9766
+       },
+       {
+        "computed": {
+         "128": 1.00049390154061,
+         "32": 0.9930839018626297,
+         "64": 1.0007030607294314
+        },
+        "convergence": "saturated",
+        "delta_signed_finest": 0.00049390154061002,
+        "inside_band": true,
+        "limit_residual": 0.000487997685256536,
+        "observed_order": 5.186958451890883,
+        "published": 1.0,
+        "ratio_previous_over_finest": 1.423483572379686,
+        "residual": {
+         "128": 0.00049390154061002,
+         "32": 0.0069160981373702635,
+         "64": 0.0007030607294313818
+        },
+        "residual_over_uncertainty": 83.65745958117326,
+        "resolution_uncertainty": 5.903855353517935e-06,
+        "richardson_limit": 1.0004879976852565,
+        "verdict": "consistent",
+        "x": 1.0
+       }
+      ]
+     },
+     "v": {
+      "max_residual": {
+       "128": 0.009146022186147074,
+       "32": 0.007785453957715589,
+       "64": 0.00872776060095204
+      },
+      "max_residual_consistent": 0.009146022186147074,
+      "reference_points": 17,
+      "rows": [
+       {
+        "computed": {
+         "128": 0.0005188981230937438,
+         "32": 0.007785453957715589,
+         "64": 0.0020449076558478486
+        },
+        "convergence": "shrinking",
+        "delta_signed_finest": 0.0005188981230937438,
+        "inside_band": true,
+        "limit_residual": 3.3643050855049206e-05,
+        "observed_order": 1.9114240637047106,
+        "published": 0.0,
+        "ratio_previous_over_finest": 3.9408653931061086,
+        "residual": {
+         "128": 0.0005188981230937438,
+         "32": 0.007785453957715589,
+         "64": 0.0020449076558478486
+        },
+        "residual_over_uncertainty": 0.939112137807549,
+        "resolution_uncertainty": 0.000552541173948793,
+        "richardson_limit": -3.3643050855049206e-05,
+        "verdict": "consistent",
+        "x": 0.0
+       },
+       {
+        "computed": {
+         "128": 0.0947933538454256,
+         "32": 0.09386638972705633,
+         "64": 0.09468576035953333
+        },
+        "convergence": "saturated",
+        "delta_signed_finest": 0.002463353845425606,
+        "inside_band": true,
+        "limit_residual": 0.0024796178660702606,
+        "observed_order": 2.9289254508587783,
+        "published": 0.09233,
+        "ratio_previous_over_finest": 0.9563223586038715,
+        "residual": {
+         "128": 0.002463353845425606,
+         "32": 0.001536389727056331,
+         "64": 0.002355760359533332
+        },
+        "residual_over_uncertainty": 151.46032455599817,
+        "resolution_uncertainty": 1.6264020644659656e-05,
+        "richardson_limit": 0.09480961786607026,
+        "verdict": "consistent",
+        "x": 0.0625
+       },
+       {
+        "computed": {
+         "128": 0.1035596132064214,
+         "32": 0.10238429771105834,
+         "64": 0.10341266114741118
+        },
+        "convergence": "saturated",
+        "delta_signed_finest": 0.002649613206421403,
+        "inside_band": true,
+        "limit_residual": 0.0026741135795757126,
+        "observed_order": 2.8069327424330623,
+        "published": 0.10091,
+        "ratio_previous_over_finest": 0.9445382976450762,
+        "residual": {
+         "128": 0.002649613206421403,
+         "32": 0.0014742977110583366,
+         "64": 0.0025026611474111837
+        },
+        "residual_over_uncertainty": 108.14583066690992,
+        "resolution_uncertainty": 2.4500373154303416e-05,
+        "richardson_limit": 0.10358411357957571,
+        "verdict": "consistent",
+        "x": 0.0703
+       },
+       {
+        "computed": {
+         "128": 0.11171535907077286,
+         "32": 0.11034873690386243,
+         "64": 0.11153089212168346
+        },
+        "convergence": "saturated",
+        "delta_signed_finest": 0.002815359070772863,
+        "inside_band": true,
+        "limit_residual": 0.0028494659720694065,
+        "observed_order": 2.679985217700487,
+        "published": 0.1089,
+        "ratio_previous_over_finest": 0.9344783580167771,
+        "residual": {
+         "128": 0.002815359070772863,
+         "32": 0.0014487369038624354,
+         "64": 0.0026308921216834646
+        },
+        "residual_over_uncertainty": 82.5451437612142,
+        "resolution_uncertainty": 3.410690129654516e-05,
+        "richardson_limit": 0.1117494659720694,
+        "verdict": "consistent",
+        "x": 0.0781
+       },
+       {
+        "computed": {
+         "128": 0.12637118911836495,
+         "32": 0.12461253646193154,
+         "64": 0.12611800870150588
+        },
+        "convergence": "saturated",
+        "delta_signed_finest": 0.00320118911836495,
+        "inside_band": true,
+        "limit_residual": 0.0032523755290067846,
+        "observed_order": 2.5719783816647452,
+        "published": 0.12317,
+        "ratio_previous_over_finest": 0.9209105093458577,
+        "residual": {
+         "128": 0.00320118911836495,
+         "32": 0.0014425364619315428,
+         "64": 0.002948008701505883
+        },
+        "residual_over_uncertainty": 62.5398241100316,
+        "resolution_uncertainty": 5.118641064184682e-05,
+        "richardson_limit": 0.1264223755290068,
+        "verdict": "consistent",
+        "x": 0.0938
+       },
+       {
+        "computed": {
+         "128": 0.16471026302324177,
+         "32": 0.16187884891352153,
+         "64": 0.16426595633214106
+        },
+        "convergence": "saturated",
+        "delta_signed_finest": 0.003940263023241769,
+        "inside_band": true,
+        "limit_residual": 0.004041873256839412,
+        "observed_order": 2.425635715325134,
+        "published": 0.16077,
+        "ratio_previous_over_finest": 0.8872393318720216,
+        "residual": {
+         "128": 0.003940263023241769,
+         "32": 0.0011088489135215318,
+         "64": 0.003495956332141059
+        },
+        "residual_over_uncertainty": 38.77821045904074,
+        "resolution_uncertainty": 0.00010161023359764497,
+        "richardson_limit": 0.1648118732568394,
+        "verdict": "consistent",
+        "x": 0.1563
+       },
+       {
+        "computed": {
+         "128": 0.17921431195983586,
+         "32": 0.17586126195974022,
+         "64": 0.1786649508347644
+        },
+        "convergence": "saturated",
+        "delta_signed_finest": 0.004144311959835861,
+        "inside_band": true,
+        "limit_residual": 0.0042781867461202105,
+        "observed_order": 2.3514995341273033,
+        "published": 0.17507,
+        "ratio_previous_over_finest": 0.8674421398785797,
+        "residual": {
+         "128": 0.004144311959835861,
+         "32": 0.0007912619597402193,
+         "64": 0.00359495083476441
+        },
+        "residual_over_uncertainty": 30.95662801682297,
+        "resolution_uncertainty": 0.00013387478628433593,
+        "richardson_limit": 0.17934818674612021,
+        "verdict": "consistent",
+        "x": 0.2266
+       },
+       {
+        "computed": {
+         "128": 0.17941629259451372,
+         "32": 0.17606873531516815,
+         "64": 0.17887482321645376
+        },
+        "convergence": "saturated",
+        "delta_signed_finest": 0.004146292594513712,
+        "inside_band": true,
+        "limit_residual": 0.004275757705025585,
+        "observed_order": 2.373608546458816,
+        "published": 0.17527,
+        "ratio_previous_over_finest": 0.8694087873160659,
+        "residual": {
+         "128": 0.004146292594513712,
+         "32": 0.0007987353151681365,
+         "64": 0.003604823216453751
+        },
+        "residual_over_uncertainty": 32.02633186748412,
+        "resolution_uncertainty": 0.00012946511051187178,
+        "richardson_limit": 0.1795457577050256,
+        "verdict": "consistent",
+        "x": 0.2344
+       },
+       {
+        "computed": {
+         "128": 0.057507010162975145,
+         "32": 0.05663443606778134,
+         "64": 0.05737176055195509
+        },
+        "convergence": "saturated",
+        "delta_signed_finest": 0.0029670101629751464,
+        "inside_band": true,
+        "limit_residual": 0.0029973925258617792,
+        "observed_order": 2.4466752201804045,
+        "published": 0.05454,
+        "ratio_previous_over_finest": 0.9544155214876523,
+        "residual": {
+         "128": 0.0029670101629751464,
+         "32": 0.002094436067781341,
+         "64": 0.0028317605519550884
+        },
+        "residual_over_uncertainty": 97.65567523653088,
+        "resolution_uncertainty": 3.0382362886629778e-05,
+        "richardson_limit": 0.05753739252586178,
+        "verdict": "consistent",
+        "x": 0.5
+       },
+       {
+        "computed": {
+         "128": -0.25337627129679513,
+         "32": -0.24838463092373372,
+         "64": -0.2525968166554889
+        },
+        "convergence": "saturated",
+        "delta_signed_finest": -0.008046271296795138,
+        "inside_band": true,
+        "limit_residual": 0.008223258518294752,
+        "observed_order": 2.434032075907338,
+        "published": -0.24533,
+        "ratio_previous_over_finest": 0.9031284662727315,
+        "residual": {
+         "128": 0.008046271296795138,
+         "32": 0.003054630923733731,
+         "64": 0.007266816655488895
+        },
+        "residual_over_uncertainty": 45.46244202615133,
+        "resolution_uncertainty": 0.00017698722149959932,
+        "richardson_limit": -0.25355325851829474,
+        "verdict": "consistent",
+        "x": 0.8047
+       },
+       {
+        "computed": {
+         "128": -0.23359602218614708,
+         "32": -0.23109381570806023,
+         "64": -0.23317776060095205
+        },
+        "convergence": "saturated",
+        "delta_signed_finest": -0.009146022186147074,
+        "inside_band": true,
+        "limit_residual": 0.009251049806248385,
+        "observed_order": 2.3168397216616436,
+        "published": -0.22445,
+        "ratio_previous_over_finest": 0.9542684703052055,
+        "residual": {
+         "128": 0.009146022186147074,
+         "32": 0.006643815708060219,
+         "64": 0.00872776060095204
+        },
+        "residual_over_uncertainty": 87.08206638715828,
+        "resolution_uncertainty": 0.00010502762010130491,
+        "richardson_limit": -0.2337010498062484,
+        "verdict": "consistent",
+        "x": 0.8594
+       },
+       {
+        "computed": {
+         "128": -0.17701380257795707,
+         "32": -0.1754888147761071,
+         "64": -0.17674034810862688
+        },
+        "convergence": "saturated",
+        "delta_signed_finest": -0.007873802577957056,
+        "inside_band": true,
+        "limit_residual": 0.007950255867779504,
+        "observed_order": 2.1943241685732207,
+        "published": -0.16914,
+        "ratio_previous_over_finest": 0.96527034217295,
+        "residual": {
+         "128": 0.007873802577957056,
+         "32": 0.006348814776107076,
+         "64": 0.007600348108626864
+        },
+        "residual_over_uncertainty": 102.98840764395567,
+        "resolution_uncertainty": 7.645328982246057e-05,
+        "richardson_limit": -0.17709025586777952,
+        "verdict": "consistent",
+        "x": 0.9063
+       },
+       {
+        "computed": {
+         "128": -0.10847976204116282,
+         "32": -0.10733099922187632,
+         "64": -0.10828091155022507
+        },
+        "convergence": "saturated",
+        "delta_signed_finest": -0.005349762041162817,
+        "inside_band": true,
+        "limit_residual": 0.005402409527397095,
+        "observed_order": 2.256110242832563,
+        "published": -0.10313,
+        "ratio_previous_over_finest": 0.962830030680294,
+        "residual": {
+         "128": 0.005349762041162817,
+         "32": 0.00420099922187632,
+         "64": 0.005150911550225068
+        },
+        "residual_over_uncertainty": 101.61476689232892,
+        "resolution_uncertainty": 5.2647486234273696e-05,
+        "richardson_limit": -0.1085324095273971,
+        "verdict": "consistent",
+        "x": 0.9453
+       },
+       {
+        "computed": {
+         "128": -0.0933369441663164,
+         "32": -0.09235690820110684,
+         "64": -0.09315032220661795
+        },
+        "convergence": "saturated",
+        "delta_signed_finest": -0.0046969441663164,
+        "inside_band": true,
+        "limit_residual": 0.004754340692988135,
+        "observed_order": 2.087955107192343,
+        "published": -0.08864,
+        "ratio_previous_over_finest": 0.9602673668048298,
+        "residual": {
+         "128": 0.0046969441663164,
+         "32": 0.0037169082011068444,
+         "64": 0.004510322206617956
+        },
+        "residual_over_uncertainty": 81.83324738757871,
+        "resolution_uncertainty": 5.739652667174172e-05,
+        "richardson_limit": -0.09339434069298813,
+        "verdict": "consistent",
+        "x": 0.9531
+       },
+       {
+        "computed": {
+         "128": -0.07792779226084942,
+         "32": -0.07715287523460741,
+         "64": -0.07775342529884836
+        },
+        "convergence": "saturated",
+        "delta_signed_finest": -0.004017792260849418,
+        "inside_band": true,
+        "limit_residual": 0.004089132108153745,
+        "observed_order": 1.7841578068741013,
+        "published": -0.07391,
+        "ratio_previous_over_finest": 0.9566012997485853,
+        "residual": {
+         "128": 0.004017792260849418,
+         "32": 0.003242875234607409,
+         "64": 0.0038434252988483603
+        },
+        "residual_over_uncertainty": 56.31904766644704,
+        "resolution_uncertainty": 7.13398473043265e-05,
+        "richardson_limit": -0.07799913210815375,
+        "verdict": "consistent",
+        "x": 0.9609
+       },
+       {
+        "computed": {
+         "128": -0.06214624868388364,
+         "32": -0.06141383031787196,
+         "64": -0.06198551381257128
+        },
+        "convergence": "saturated",
+        "delta_signed_finest": -0.003086248683883637,
+        "inside_band": true,
+        "limit_residual": 0.003149117123843033,
+        "observed_order": 1.830533683652998,
+        "published": -0.05906,
+        "ratio_previous_over_finest": 0.9479190150321605,
+        "residual": {
+         "128": 0.003086248683883637,
+         "32": 0.002353830317871959,
+         "64": 0.0029255138125712787
+        },
+        "residual_over_uncertainty": 49.09058799417994,
+        "resolution_uncertainty": 6.286843995939782e-05,
+        "richardson_limit": -0.062209117123843034,
+        "verdict": "consistent",
+        "x": 0.9688
+       },
+       {
+        "computed": {
+         "128": 0.00014637217500859667,
+         "32": 7.557262612171989e-05,
+         "64": 0.000399678938309736
+        },
+        "convergence": "shrinking",
+        "delta_signed_finest": 0.00014637217500859667,
+        "inside_band": true,
+        "limit_residual": null,
+        "observed_order": 0.3555815208014316,
+        "published": 0.0,
+        "ratio_previous_over_finest": 2.7305663681383585,
+        "residual": {
+         "128": 0.00014637217500859667,
+         "32": 7.557262612171989e-05,
+         "64": 0.000399678938309736
+        },
+        "residual_over_uncertainty": null,
+        "resolution_uncertainty": null,
+        "richardson_limit": null,
+        "verdict": "consistent",
+        "x": 1.0
+       }
+      ]
+     }
+    }
+   },
+   "1000.0": {
+    "grids": [
+     64
+    ],
+    "which": {
+     "u": {
+      "max_residual": {
+       "64": 0.029310305036261974
+      },
+      "max_residual_consistent": 0.029310305036261974,
+      "reference_points": 17,
+      "rows": [
+       {
+        "computed": {
+         "64": -0.004822897211099578
+        },
+        "convergence": "no_refinement_evidence",
+        "delta_signed_finest": -0.004822897211099578,
+        "inside_band": true,
+        "limit_residual": null,
+        "observed_order": null,
+        "published": 0.0,
+        "ratio_previous_over_finest": null,
+        "residual": {
+         "64": 0.004822897211099578
+        },
+        "residual_over_uncertainty": null,
+        "resolution_uncertainty": null,
+        "richardson_limit": null,
+        "verdict": "consistent",
+        "x": 0.0
+       },
+       {
+        "computed": {
+         "64": -0.16436229252716597
+        },
+        "convergence": "no_refinement_evidence",
+        "delta_signed_finest": 0.01672770747283403,
+        "inside_band": true,
+        "limit_residual": null,
+        "observed_order": null,
+        "published": -0.18109,
+        "ratio_previous_over_finest": null,
+        "residual": {
+         "64": 0.01672770747283403
+        },
+        "residual_over_uncertainty": null,
+        "resolution_uncertainty": null,
+        "richardson_limit": null,
+        "verdict": "consistent",
+        "x": 0.0547
+       },
+       {
+        "computed": {
+         "64": -0.18411161376634114
+        },
+        "convergence": "no_refinement_evidence",
+        "delta_signed_finest": 0.017848386233658864,
+        "inside_band": true,
+        "limit_residual": null,
+        "observed_order": null,
+        "published": -0.20196,
+        "ratio_previous_over_finest": null,
+        "residual": {
+         "64": 0.017848386233658864
+        },
+        "residual_over_uncertainty": null,
+        "resolution_uncertainty": null,
+        "richardson_limit": null,
+        "verdict": "consistent",
+        "x": 0.0625
+       },
+       {
+        "computed": {
+         "64": -0.2035392589716081
+        },
+        "convergence": "no_refinement_evidence",
+        "delta_signed_finest": 0.01866074102839191,
+        "inside_band": true,
+        "limit_residual": null,
+        "observed_order": null,
+        "published": -0.2222,
+        "ratio_previous_over_finest": null,
+        "residual": {
+         "64": 0.01866074102839191
+        },
+        "residual_over_uncertainty": null,
+        "resolution_uncertainty": null,
+        "richardson_limit": null,
+        "verdict": "consistent",
+        "x": 0.0703
+       },
+       {
+        "computed": {
+         "64": -0.27844615278390283
+        },
+        "convergence": "no_refinement_evidence",
+        "delta_signed_finest": 0.018853847216097175,
+        "inside_band": true,
+        "limit_residual": null,
+        "observed_order": null,
+        "published": -0.2973,
+        "ratio_previous_over_finest": null,
+        "residual": {
+         "64": 0.018853847216097175
+        },
+        "residual_over_uncertainty": null,
+        "resolution_uncertainty": null,
+        "richardson_limit": null,
+        "verdict": "consistent",
+        "x": 0.1016
+       },
+       {
+        "computed": {
+         "64": -0.3721841952508898
+        },
+        "convergence": "no_refinement_evidence",
+        "delta_signed_finest": 0.010705804749110204,
+        "inside_band": true,
+        "limit_residual": null,
+        "observed_order": null,
+        "published": -0.38289,
+        "ratio_previous_over_finest": null,
+        "residual": {
+         "64": 0.010705804749110204
+        },
+        "residual_over_uncertainty": null,
+        "resolution_uncertainty": null,
+        "richardson_limit": null,
+        "verdict": "consistent",
+        "x": 0.1719
+       },
+       {
+        "computed": {
+         "64": -0.2798403377661811
+        },
+        "convergence": "no_refinement_evidence",
+        "delta_signed_finest": -0.0017903377661810937,
+        "inside_band": true,
+        "limit_residual": null,
+        "observed_order": null,
+        "published": -0.27805,
+        "ratio_previous_over_finest": null,
+        "residual": {
+         "64": 0.0017903377661810937
+        },
+        "residual_over_uncertainty": null,
+        "resolution_uncertainty": null,
+        "richardson_limit": null,
+        "verdict": "consistent",
+        "x": 0.2813
+       },
+       {
+        "computed": {
+         "64": -0.10866679457104039
+        },
+        "convergence": "no_refinement_evidence",
+        "delta_signed_finest": -0.0021867945710403874,
+        "inside_band": true,
+        "limit_residual": null,
+        "observed_order": null,
+        "published": -0.10648,
+        "ratio_previous_over_finest": null,
+        "residual": {
+         "64": 0.0021867945710403874
+        },
+        "residual_over_uncertainty": null,
+        "resolution_uncertainty": null,
+        "richardson_limit": null,
+        "verdict": "consistent",
+        "x": 0.4531
+       },
+       {
+        "computed": {
+         "64": -0.06336243976109443
+        },
+        "convergence": "no_refinement_evidence",
+        "delta_signed_finest": -0.0025624397610944302,
+        "inside_band": true,
+        "limit_residual": null,
+        "observed_order": null,
+        "published": -0.0608,
+        "ratio_previous_over_finest": null,
+        "residual": {
+         "64": 0.0025624397610944302
+        },
+        "residual_over_uncertainty": null,
+        "resolution_uncertainty": null,
+        "richardson_limit": null,
+        "verdict": "consistent",
+        "x": 0.5
+       },
+       {
+        "computed": {
+         "64": 0.05371503303414444
+        },
+        "convergence": "no_refinement_evidence",
+        "delta_signed_finest": -0.0033049669658555617,
+        "inside_band": true,
+        "limit_residual": null,
+        "observed_order": null,
+        "published": 0.05702,
+        "ratio_previous_over_finest": null,
+        "residual": {
+         "64": 0.0033049669658555617
+        },
+        "residual_over_uncertainty": null,
+        "resolution_uncertainty": null,
+        "richardson_limit": null,
+        "verdict": "consistent",
+        "x": 0.6172
+       },
+       {
+        "computed": {
+         "64": 0.18322281869338902
+        },
+        "convergence": "no_refinement_evidence",
+        "delta_signed_finest": -0.003967181306610973,
+        "inside_band": true,
+        "limit_residual": null,
+        "observed_order": null,
+        "published": 0.18719,
+        "ratio_previous_over_finest": null,
+        "residual": {
+         "64": 0.003967181306610973
+        },
+        "residual_over_uncertainty": null,
+        "resolution_uncertainty": null,
+        "richardson_limit": null,
+        "verdict": "consistent",
+        "x": 0.7344
+       },
+       {
+        "computed": {
+         "64": 0.32780307419798266
+        },
+        "convergence": "no_refinement_evidence",
+        "delta_signed_finest": -0.005236925802017345,
+        "inside_band": true,
+        "limit_residual": null,
+        "observed_order": null,
+        "published": 0.33304,
+        "ratio_previous_over_finest": null,
+        "residual": {
+         "64": 0.005236925802017345
+        },
+        "residual_over_uncertainty": null,
+        "resolution_uncertainty": null,
+        "richardson_limit": null,
+        "verdict": "consistent",
+        "x": 0.8516
+       },
+       {
+        "computed": {
+         "64": 0.4606453434143254
+        },
+        "convergence": "no_refinement_evidence",
+        "delta_signed_finest": -0.005394656585674618,
+        "inside_band": true,
+        "limit_residual": null,
+        "observed_order": null,
+        "published": 0.46604,
+        "ratio_previous_over_finest": null,
+        "residual": {
+         "64": 0.005394656585674618
+        },
+        "residual_over_uncertainty": null,
+        "resolution_uncertainty": null,
+        "richardson_limit": null,
+        "verdict": "consistent",
+        "x": 0.9531
+       },
+       {
+        "computed": {
+         "64": 0.5028761377152857
+        },
+        "convergence": "no_refinement_evidence",
+        "delta_signed_finest": -0.008293862284714293,
+        "inside_band": true,
+        "limit_residual": null,
+        "observed_order": null,
+        "published": 0.51117,
+        "ratio_previous_over_finest": null,
+        "residual": {
+         "64": 0.008293862284714293
+        },
+        "residual_over_uncertainty": null,
+        "resolution_uncertainty": null,
+        "richardson_limit": null,
+        "verdict": "consistent",
+        "x": 0.9609
+       },
+       {
+        "computed": {
+         "64": 0.5648409458368175
+        },
+        "convergence": "no_refinement_evidence",
+        "delta_signed_finest": -0.010079054163182444,
+        "inside_band": true,
+        "limit_residual": null,
+        "observed_order": null,
+        "published": 0.57492,
+        "ratio_previous_over_finest": null,
+        "residual": {
+         "64": 0.010079054163182444
+        },
+        "residual_over_uncertainty": null,
+        "resolution_uncertainty": null,
+        "richardson_limit": null,
+        "verdict": "consistent",
+        "x": 0.9688
+       },
+       {
+        "computed": {
+         "64": 0.6456788379404194
+        },
+        "convergence": "no_refinement_evidence",
+        "delta_signed_finest": -0.013601162059580618,
+        "inside_band": true,
+        "limit_residual": null,
+        "observed_order": null,
+        "published": 0.65928,
+        "ratio_previous_over_finest": null,
+        "residual": {
+         "64": 0.013601162059580618
+        },
+        "residual_over_uncertainty": null,
+        "resolution_uncertainty": null,
+        "richardson_limit": null,
+        "verdict": "consistent",
+        "x": 0.9766
+       },
+       {
+        "computed": {
+         "64": 0.970689694963738
+        },
+        "convergence": "no_refinement_evidence",
+        "delta_signed_finest": -0.029310305036261974,
+        "inside_band": true,
+        "limit_residual": null,
+        "observed_order": null,
+        "published": 1.0,
+        "ratio_previous_over_finest": null,
+        "residual": {
+         "64": 0.029310305036261974
+        },
+        "residual_over_uncertainty": null,
+        "resolution_uncertainty": null,
+        "richardson_limit": null,
+        "verdict": "consistent",
+        "x": 1.0
+       }
+      ]
+     },
+     "v": {
+      "max_residual": {
+       "64": 0.019733918942391973
+      },
+      "max_residual_consistent": 0.019733918942391973,
+      "reference_points": 17,
+      "rows": [
+       {
+        "computed": {
+         "64": 0.01757312325206045
+        },
+        "convergence": "no_refinement_evidence",
+        "delta_signed_finest": 0.01757312325206045,
+        "inside_band": true,
+        "limit_residual": null,
+        "observed_order": null,
+        "published": 0.0,
+        "ratio_previous_over_finest": null,
+        "residual": {
+         "64": 0.01757312325206045
+        },
+        "residual_over_uncertainty": null,
+        "resolution_uncertainty": null,
+        "richardson_limit": null,
+        "verdict": "consistent",
+        "x": 0.0
+       },
+       {
+        "computed": {
+         "64": 0.2687635951478938
+        },
+        "convergence": "no_refinement_evidence",
+        "delta_signed_finest": -0.006086404852106209,
+        "inside_band": true,
+        "limit_residual": null,
+        "observed_order": null,
+        "published": 0.27485,
+        "ratio_previous_over_finest": null,
+        "residual": {
+         "64": 0.006086404852106209
+        },
+        "residual_over_uncertainty": null,
+        "resolution_uncertainty": null,
+        "richardson_limit": null,
+        "verdict": "consistent",
+        "x": 0.0625
+       },
+       {
+        "computed": {
+         "64": 0.2835775231646714
+        },
+        "convergence": "no_refinement_evidence",
+        "delta_signed_finest": -0.006542476835328603,
+        "inside_band": true,
+        "limit_residual": null,
+        "observed_order": null,
+        "published": 0.29012,
+        "ratio_previous_over_finest": null,
+        "residual": {
+         "64": 0.006542476835328603
+        },
+        "residual_over_uncertainty": null,
+        "resolution_uncertainty": null,
+        "richardson_limit": null,
+        "verdict": "consistent",
+        "x": 0.0703
+       },
+       {
+        "computed": {
+         "64": 0.2967168497020984
+        },
+        "convergence": "no_refinement_evidence",
+        "delta_signed_finest": -0.006813150297901638,
+        "inside_band": true,
+        "limit_residual": null,
+        "observed_order": null,
+        "published": 0.30353,
+        "ratio_previous_over_finest": null,
+        "residual": {
+         "64": 0.006813150297901638
+        },
+        "residual_over_uncertainty": null,
+        "resolution_uncertainty": null,
+        "richardson_limit": null,
+        "verdict": "consistent",
+        "x": 0.0781
+       },
+       {
+        "computed": {
+         "64": 0.3189570165055042
+        },
+        "convergence": "no_refinement_evidence",
+        "delta_signed_finest": -0.007312983494495828,
+        "inside_band": true,
+        "limit_residual": null,
+        "observed_order": null,
+        "published": 0.32627,
+        "ratio_previous_over_finest": null,
+        "residual": {
+         "64": 0.007312983494495828
+        },
+        "residual_over_uncertainty": null,
+        "resolution_uncertainty": null,
+        "richardson_limit": null,
+        "verdict": "consistent",
+        "x": 0.0938
+       },
+       {
+        "computed": {
+         "64": 0.36228283753525553
+        },
+        "convergence": "no_refinement_evidence",
+        "delta_signed_finest": -0.008667162464744471,
+        "inside_band": true,
+        "limit_residual": null,
+        "observed_order": null,
+        "published": 0.37095,
+        "ratio_previous_over_finest": null,
+        "residual": {
+         "64": 0.008667162464744471
+        },
+        "residual_over_uncertainty": null,
+        "resolution_uncertainty": null,
+        "richardson_limit": null,
+        "verdict": "consistent",
+        "x": 0.1563
+       },
+       {
+        "computed": {
+         "64": 0.3261334483834292
+        },
+        "convergence": "no_refinement_evidence",
+        "delta_signed_finest": -0.004616551616570763,
+        "inside_band": true,
+        "limit_residual": null,
+        "observed_order": null,
+        "published": 0.33075,
+        "ratio_previous_over_finest": null,
+        "residual": {
+         "64": 0.004616551616570763
+        },
+        "residual_over_uncertainty": null,
+        "resolution_uncertainty": null,
+        "richardson_limit": null,
+        "verdict": "consistent",
+        "x": 0.2266
+       },
+       {
+        "computed": {
+         "64": 0.3180443570735694
+        },
+        "convergence": "no_refinement_evidence",
+        "delta_signed_finest": -0.004305642926430653,
+        "inside_band": true,
+        "limit_residual": null,
+        "observed_order": null,
+        "published": 0.32235,
+        "ratio_previous_over_finest": null,
+        "residual": {
+         "64": 0.004305642926430653
+        },
+        "residual_over_uncertainty": null,
+        "resolution_uncertainty": null,
+        "richardson_limit": null,
+        "verdict": "consistent",
+        "x": 0.2344
+       },
+       {
+        "computed": {
+         "64": 0.02463832325274536
+        },
+        "convergence": "no_refinement_evidence",
+        "delta_signed_finest": -0.0006216767472546417,
+        "inside_band": true,
+        "limit_residual": null,
+        "observed_order": null,
+        "published": 0.02526,
+        "ratio_previous_over_finest": null,
+        "residual": {
+         "64": 0.0006216767472546417
+        },
+        "residual_over_uncertainty": null,
+        "resolution_uncertainty": null,
+        "richardson_limit": null,
+        "verdict": "consistent",
+        "x": 0.5
+       },
+       {
+        "computed": {
+         "64": -0.31554229926204685
+        },
+        "convergence": "no_refinement_evidence",
+        "delta_signed_finest": 0.004117700737953145,
+        "inside_band": true,
+        "limit_residual": null,
+        "observed_order": null,
+        "published": -0.31966,
+        "ratio_previous_over_finest": null,
+        "residual": {
+         "64": 0.004117700737953145
+        },
+        "residual_over_uncertainty": null,
+        "resolution_uncertainty": null,
+        "richardson_limit": null,
+        "verdict": "consistent",
+        "x": 0.8047
+       },
+       {
+        "computed": {
+         "64": -0.4250076802939074
+        },
+        "convergence": "no_refinement_evidence",
+        "delta_signed_finest": 0.0016423197060925765,
+        "inside_band": true,
+        "limit_residual": null,
+        "observed_order": null,
+        "published": -0.42665,
+        "ratio_previous_over_finest": null,
+        "residual": {
+         "64": 0.0016423197060925765
+        },
+        "residual_over_uncertainty": null,
+        "resolution_uncertainty": null,
+        "richardson_limit": null,
+        "verdict": "consistent",
+        "x": 0.8594
+       },
+       {
+        "computed": {
+         "64": -0.5026203073955013
+        },
+        "convergence": "no_refinement_evidence",
+        "delta_signed_finest": 0.012879692604498616,
+        "inside_band": true,
+        "limit_residual": null,
+        "observed_order": null,
+        "published": -0.5155,
+        "ratio_previous_over_finest": null,
+        "residual": {
+         "64": 0.012879692604498616
+        },
+        "residual_over_uncertainty": null,
+        "resolution_uncertainty": null,
+        "richardson_limit": null,
+        "verdict": "consistent",
+        "x": 0.9063
+       },
+       {
+        "computed": {
+         "64": -0.38111727617206465
+        },
+        "convergence": "no_refinement_evidence",
+        "delta_signed_finest": 0.010762723827935361,
+        "inside_band": true,
+        "limit_residual": null,
+        "observed_order": null,
+        "published": -0.39188,
+        "ratio_previous_over_finest": null,
+        "residual": {
+         "64": 0.010762723827935361
+        },
+        "residual_over_uncertainty": null,
+        "resolution_uncertainty": null,
+        "richardson_limit": null,
+        "verdict": "consistent",
+        "x": 0.9453
+       },
+       {
+        "computed": {
+         "64": -0.3261643072391342
+        },
+        "convergence": "no_refinement_evidence",
+        "delta_signed_finest": 0.010975692760865796,
+        "inside_band": true,
+        "limit_residual": null,
+        "observed_order": null,
+        "published": -0.33714,
+        "ratio_previous_over_finest": null,
+        "residual": {
+         "64": 0.010975692760865796
+        },
+        "residual_over_uncertainty": null,
+        "resolution_uncertainty": null,
+        "richardson_limit": null,
+        "verdict": "consistent",
+        "x": 0.9531
+       },
+       {
+        "computed": {
+         "64": -0.266220856833772
+        },
+        "convergence": "no_refinement_evidence",
+        "delta_signed_finest": 0.01046914316622799,
+        "inside_band": true,
+        "limit_residual": null,
+        "observed_order": null,
+        "published": -0.27669,
+        "ratio_previous_over_finest": null,
+        "residual": {
+         "64": 0.01046914316622799
+        },
+        "residual_over_uncertainty": null,
+        "resolution_uncertainty": null,
+        "richardson_limit": null,
+        "verdict": "consistent",
+        "x": 0.9609
+       },
+       {
+        "computed": {
+         "64": -0.20356186408171215
+        },
+        "convergence": "no_refinement_evidence",
+        "delta_signed_finest": 0.01031813591828784,
+        "inside_band": true,
+        "limit_residual": null,
+        "observed_order": null,
+        "published": -0.21388,
+        "ratio_previous_over_finest": null,
+        "residual": {
+         "64": 0.01031813591828784
+        },
+        "residual_over_uncertainty": null,
+        "resolution_uncertainty": null,
+        "richardson_limit": null,
+        "verdict": "consistent",
+        "x": 0.9688
+       },
+       {
+        "computed": {
+         "64": 0.019733918942391973
+        },
+        "convergence": "no_refinement_evidence",
+        "delta_signed_finest": 0.019733918942391973,
+        "inside_band": true,
+        "limit_residual": null,
+        "observed_order": null,
+        "published": 0.0,
+        "ratio_previous_over_finest": null,
+        "residual": {
+         "64": 0.019733918942391973
+        },
+        "residual_over_uncertainty": null,
+        "resolution_uncertainty": null,
+        "richardson_limit": null,
+        "verdict": "consistent",
+        "x": 1.0
+       }
+      ]
+     }
+    }
+   },
+   "400.0": {
+    "grids": [
+     32,
+     64,
+     128
+    ],
+    "which": {
+     "u": {
+      "max_residual": {
+       "128": 0.00134981727198058,
+       "32": 0.06836401423978111,
+       "64": 0.006596111540415894
+      },
+      "max_residual_consistent": 0.00134981727198058,
+      "reference_points": 17,
+      "rows": [
+       {
+        "computed": {
+         "128": -0.00031700370679199445,
+         "32": -0.002122174623236363,
+         "64": -0.001046387428888091
+        },
+        "convergence": "shrinking",
+        "delta_signed_finest": -0.00031700370679199445,
+        "inside_band": true,
+        "limit_residual": 0.0012187794382206786,
+        "observed_order": 0.5606428129651758,
+        "published": 0.0,
+        "ratio_previous_over_finest": 3.300868117528638,
+        "residual": {
+         "128": 0.00031700370679199445,
+         "32": 0.002122174623236363,
+         "64": 0.001046387428888091
+        },
+        "residual_over_uncertainty": 0.20641176315903545,
+        "resolution_uncertainty": 0.001535783145012673,
+        "richardson_limit": 0.0012187794382206786,
+        "verdict": "consistent",
+        "x": 0.0
+       },
+       {
+        "computed": {
+         "128": -0.08095199661047446,
+         "32": -0.06650259508993868,
+         "64": -0.07815098312992727
+        },
+        "convergence": "shrinking",
+        "delta_signed_finest": 0.0009080033895255413,
+        "inside_band": true,
+        "limit_residual": 2.122319665638639e-05,
+        "observed_order": 2.056109489750918,
+        "published": -0.08186,
+        "ratio_previous_over_finest": 4.084805093085394,
+        "residual": {
+         "128": 0.0009080033895255413,
+         "32": 0.015357404910061323,
+         "64": 0.0037090168700727316
+        },
+        "residual_over_uncertainty": 1.023932871783842,
+        "resolution_uncertainty": 0.0008867801928691531,
+        "richardson_limit": -0.08183877680334362,
+        "verdict": "consistent",
+        "x": 0.0547
+       },
+       {
+        "computed": {
+         "128": -0.09163218953395207,
+         "32": -0.07544384912651386,
+         "64": -0.08850824623519797
+        },
+        "convergence": "shrinking",
+        "delta_signed_finest": 0.0010278104660479404,
+        "inside_band": true,
+        "limit_residual": 4.6062356712950336e-05,
+        "observed_order": 2.0642003760566414,
+        "published": -0.09266,
+        "ratio_previous_over_finest": 4.039415730767995,
+        "residual": {
+         "128": 0.0010278104660479404,
+         "32": 0.017216150873486144,
+         "64": 0.004151753764802035
+        },
+        "residual_over_uncertainty": 1.046918711912925,
+        "resolution_uncertainty": 0.000981748109334993,
+        "richardson_limit": -0.09261393764328706,
+        "verdict": "consistent",
+        "x": 0.0625
+       },
+       {
+        "computed": {
+         "128": -0.10224468173952243,
+         "32": -0.0843899556770559,
+         "64": -0.09881532025122826
+        },
+        "convergence": "shrinking",
+        "delta_signed_finest": 0.0011353182604775663,
+        "inside_band": true,
+        "limit_residual": 6.5791440091445e-05,
+        "observed_order": 2.072595889165198,
+        "published": -0.10338,
+        "ratio_previous_over_finest": 4.020616868129673,
+        "residual": {
+         "128": 0.0011353182604775663,
+         "32": 0.0189900443229441,
+         "64": 0.004564679748771741
+        },
+        "residual_over_uncertainty": 1.0615145303861535,
+        "resolution_uncertainty": 0.0010695268203861183,
+        "richardson_limit": -0.10331420855990855,
+        "verdict": "consistent",
+        "x": 0.0703
+       },
+       {
+        "computed": {
+         "128": -0.14485079336553106,
+         "32": -0.12122478475772949,
+         "64": -0.14038953625311731
+        },
+        "convergence": "shrinking",
+        "delta_signed_finest": 0.0012692066344689446,
+        "inside_band": true,
+        "limit_residual": 8.44045891398304e-05,
+        "observed_order": 2.102933089765478,
+        "published": -0.14612,
+        "ratio_previous_over_finest": 4.514996684744245,
+        "residual": {
+         "128": 0.0012692066344689446,
+         "32": 0.024895215242270508,
+         "64": 0.005730463746882686
+        },
+        "residual_over_uncertainty": 0.9376448808434094,
+        "resolution_uncertainty": 0.0013536112236087678,
+        "richardson_limit": -0.14620440458913983,
+        "verdict": "consistent",
+        "x": 0.1016
+       },
+       {
+        "computed": {
+         "128": -0.24218620856366727,
+         "32": -0.20926221810114679,
+         "64": -0.23639388845958412
+        },
+        "convergence": "shrinking",
+        "delta_signed_finest": 0.0008037914363327459,
+        "inside_band": true,
+        "limit_residual": 0.0007684669402464595,
+        "observed_order": 2.227764631558358,
+        "published": -0.24299,
+        "ratio_previous_over_finest": 8.206247593916016,
+        "residual": {
+         "128": 0.0008037914363327459,
+         "32": 0.033727781898853226,
+         "64": 0.006596111540415894
+        },
+        "residual_over_uncertainty": 0.5112336803582975,
+        "resolution_uncertainty": 0.0015722583765791986,
+        "richardson_limit": -0.24375846694024647,
+        "verdict": "consistent",
+        "x": 0.1719
+       },
+       {
+        "computed": {
+         "128": -0.3278305780903923,
+         "32": -0.3037156568526348,
+         "64": -0.32410768143031227
+        },
+        "convergence": "shrinking",
+        "delta_signed_finest": -0.000570578090392293,
+        "inside_band": true,
+        "limit_residual": 0.0014020528748051597,
+        "observed_order": 2.4535075416713803,
+        "published": -0.32726,
+        "ratio_previous_over_finest": 5.524780258422465,
+        "residual": {
+         "128": 0.000570578090392293,
+         "32": 0.0235443431473652,
+         "64": 0.0031523185696877287
+        },
+        "residual_over_uncertainty": 0.6862241658899999,
+        "resolution_uncertainty": 0.0008314747844128755,
+        "richardson_limit": -0.32866205287480516,
+        "verdict": "consistent",
+        "x": 0.2813
+       },
+       {
+        "computed": {
+         "128": -0.17178407404173296,
+         "32": -0.18228580910805625,
+         "64": -0.1731458565532604
+        },
+        "convergence": "shrinking",
+        "delta_signed_finest": -0.0005940740417329504,
+        "inside_band": true,
+        "limit_residual": 0.0003556565735642059,
+        "observed_order": 2.74669036547614,
+        "published": -0.17119,
+        "ratio_previous_over_finest": 3.2922774197556826,
+        "residual": {
+         "128": 0.0005940740417329504,
+         "32": 0.011095809108056243,
+         "64": 0.0019558565532603878
+        },
+        "residual_over_uncertainty": 2.4917387400175763,
+        "resolution_uncertainty": 0.0002384174681687374,
+        "richardson_limit": -0.17154565657356421,
+        "verdict": "consistent",
+        "x": 0.4531
+       },
+       {
+        "computed": {
+         "128": -0.11537475873776173,
+         "32": -0.1252557666809178,
+         "64": -0.11669683573062672
+        },
+        "convergence": "shrinking",
+        "delta_signed_finest": -0.0006047587377617375,
+        "inside_band": true,
+        "limit_residual": 0.00036323285022198115,
+        "observed_order": 2.6946244121503025,
+        "published": -0.11477,
+        "ratio_previous_over_finest": 3.1861230112327226,
+        "residual": {
+         "128": 0.0006047587377617375,
+         "32": 0.010485766680917816,
+         "64": 0.0019268357306267275
+        },
+        "residual_over_uncertainty": 2.5039085620260555,
+        "resolution_uncertainty": 0.0002415258875397561,
+        "richardson_limit": -0.11513323285022198,
+        "verdict": "consistent",
+        "x": 0.5
+       },
+       {
+        "computed": {
+         "128": 0.020647612742748872,
+         "32": 0.012384692169804146,
+         "64": 0.01929279187672689
+        },
+        "convergence": "shrinking",
+        "delta_signed_finest": -0.0007023872572511289,
+        "inside_band": true,
+        "limit_residual": 0.00037185467792348603,
+        "observed_order": 2.350186794403496,
+        "published": 0.02135,
+        "ratio_previous_over_finest": 2.9288801897178858,
+        "residual": {
+         "128": 0.0007023872572511289,
+         "32": 0.008965307830195855,
+         "64": 0.002057208123273112
+        },
+        "residual_over_uncertainty": 2.1250167190172213,
+        "resolution_uncertainty": 0.0003305325793276437,
+        "richardson_limit": 0.020978145322076515,
+        "verdict": "consistent",
+        "x": 0.6172
+       },
+       {
+        "computed": {
+         "128": 0.1619762973564954,
+         "32": 0.15130870366223823,
+         "64": 0.15996608329783876
+        },
+        "convergence": "shrinking",
+        "delta_signed_finest": -0.0005837026435046022,
+        "inside_band": true,
+        "limit_residual": 2.4219713001316645e-05,
+        "observed_order": 2.106581288938649,
+        "published": 0.16256,
+        "ratio_previous_over_finest": 4.443900898901438,
+        "residual": {
+         "128": 0.0005837026435046022,
+         "32": 0.011251296337761785,
+         "64": 0.0025939167021612475
+        },
+        "residual_over_uncertainty": 0.9601598580112586,
+        "resolution_uncertainty": 0.0006079223565059287,
+        "richardson_limit": 0.16258421971300133,
+        "verdict": "consistent",
+        "x": 0.7344
+       },
+       {
+        "computed": {
+         "128": 0.2913335724683771,
+         "32": 0.2772607836311418,
+         "64": 0.2887356823265886
+        },
+        "convergence": "shrinking",
+        "delta_signed_finest": 0.00040357246837707805,
+        "inside_band": true,
+        "limit_residual": 0.001163854848190815,
+        "observed_order": 2.1430690878025382,
+        "published": 0.29093,
+        "ratio_previous_over_finest": 5.437233323263215,
+        "residual": {
+         "128": 0.00040357246837707805,
+         "32": 0.013669216368858206,
+         "64": 0.002194317673411439
+        },
+        "residual_over_uncertainty": 0.5308191786267148,
+        "resolution_uncertainty": 0.000760282379813711,
+        "richardson_limit": 0.29209385484819084,
+        "verdict": "consistent",
+        "x": 0.8516
+       },
+       {
+        "computed": {
+         "128": 0.5601113071351855,
+         "32": 0.5366827068160294,
+         "64": 0.555325434763887
+        },
+        "convergence": "shrinking",
+        "delta_signed_finest": 0.0011913071351855598,
+        "inside_band": true,
+        "limit_residual": 0.002844248830926821,
+        "observed_order": 1.9617591527187281,
+        "published": 0.55892,
+        "ratio_previous_over_finest": 3.017328722330801,
+        "residual": {
+         "128": 0.0011913071351855598,
+         "32": 0.022237293183970608,
+         "64": 0.003594565236113012
+        },
+        "residual_over_uncertainty": 0.7207193927377635,
+        "resolution_uncertainty": 0.0016529416957412459,
+        "richardson_limit": 0.5617642488309268,
+        "verdict": "consistent",
+        "x": 0.9531
+       },
+       {
+        "computed": {
+         "128": 0.6183847357595328,
+         "32": 0.5970494870018441,
+         "64": 0.613073971680003
+        },
+        "convergence": "shrinking",
+        "delta_signed_finest": 0.0008247357595327909,
+        "inside_band": true,
+        "limit_residual": 0.0034572680202707984,
+        "observed_order": 1.593286615803948,
+        "published": 0.61756,
+        "ratio_previous_over_finest": 5.43935226300642,
+        "residual": {
+         "128": 0.0008247357595327909,
+         "32": 0.020510512998155872,
+         "64": 0.004486028319997004
+        },
+        "residual_over_uncertainty": 0.3132860978887283,
+        "resolution_uncertainty": 0.00263253226073797,
+        "richardson_limit": 0.6210172680202708,
+        "verdict": "consistent",
+        "x": 0.9609
+       },
+       {
+        "computed": {
+         "128": 0.6857398172719806,
+         "32": 0.6689223460455148,
+         "64": 0.6808817716276785
+        },
+        "convergence": "shrinking",
+        "delta_signed_finest": 0.00134981727198058,
+        "inside_band": true,
+        "limit_residual": 0.004673200570527225,
+        "observed_order": 1.299700147607967,
+        "published": 0.68439,
+        "ratio_previous_over_finest": 2.599039473820007,
+        "residual": {
+         "128": 0.00134981727198058,
+         "32": 0.015467653954485239,
+         "64": 0.0035082283723215646
+        },
+        "residual_over_uncertainty": 0.4061575661678511,
+        "resolution_uncertainty": 0.0033233832985466202,
+        "richardson_limit": 0.6890632005705273,
+        "verdict": "consistent",
+        "x": 0.9688
+       },
+       {
+        "computed": {
+         "128": 0.7594534127183167,
+         "32": 0.7441090354315414,
+         "64": 0.7549536901314519
+        },
+        "convergence": "shrinking",
+        "delta_signed_finest": 0.0010834127183166897,
+        "inside_band": true,
+        "limit_residual": 0.004274542741144027,
+        "observed_order": 1.269076152027418,
+        "published": 0.75837,
+        "ratio_previous_over_finest": 3.153285733857811,
+        "residual": {
+         "128": 0.0010834127183166897,
+         "32": 0.0142609645684586,
+         "64": 0.0034163098685481286
+        },
+        "residual_over_uncertainty": 0.33950754452705767,
+        "resolution_uncertainty": 0.003191130022827358,
+        "richardson_limit": 0.762644542741144,
+        "verdict": "consistent",
+        "x": 0.9766
+       },
+       {
+        "computed": {
+         "128": 1.0011867066200058,
+         "32": 0.9316359857602189,
+         "64": 0.9967946143985291
+        },
+        "convergence": "shrinking",
+        "delta_signed_finest": 0.0011867066200057508,
+        "inside_band": true,
+        "limit_residual": 0.0015041588761230962,
+        "observed_order": 3.890975988211392,
+        "published": 1.0,
+        "ratio_previous_over_finest": 2.701076700368744,
+        "residual": {
+         "128": 0.0011867066200057508,
+         "32": 0.06836401423978111,
+         "64": 0.003205385601470878
+        },
+        "residual_over_uncertainty": 3.7382207785204855,
+        "resolution_uncertainty": 0.00031745225611726067,
+        "richardson_limit": 1.001504158876123,
+        "verdict": "consistent",
+        "x": 1.0
+       }
+      ]
+     },
+     "v": {
+      "max_residual": {
+       "128": 0.1493120683606132,
+       "32": 0.11456876276694808,
+       "64": 0.1423665470248758
+      },
+      "max_residual_consistent": 0.004307991766943214,
+      "reference_points": 17,
+      "rows": [
+       {
+        "computed": {
+         "128": 0.0019490276103892382,
+         "32": 0.024289948376211273,
+         "64": 0.007375703842637783
+        },
+        "convergence": "shrinking",
+        "delta_signed_finest": 0.0019490276103892382,
+        "inside_band": true,
+        "limit_residual": 0.0006145101338220168,
+        "observed_order": 1.6400979993869158,
+        "published": 0.0,
+        "ratio_previous_over_finest": 3.7842993107546534,
+        "residual": {
+         "128": 0.0019490276103892382,
+         "32": 0.024289948376211273,
+         "64": 0.007375703842637783
+        },
+        "residual_over_uncertainty": 0.7602882441619411,
+        "resolution_uncertainty": 0.002563537744211255,
+        "richardson_limit": -0.0006145101338220168,
+        "verdict": "consistent",
+        "x": 0.0
+       },
+       {
+        "computed": {
+         "128": 0.1844128071470456,
+         "32": 0.16761651624592458,
+         "64": 0.18154936694396998
+        },
+        "convergence": "shrinking",
+        "delta_signed_finest": 0.0008128071470455966,
+        "inside_band": true,
+        "limit_residual": 0.0015535231770741065,
+        "observed_order": 2.282669086116095,
+        "published": 0.1836,
+        "ratio_previous_over_finest": 2.5229023434202182,
+        "residual": {
+         "128": 0.0008128071470455966,
+         "32": 0.015983483754075434,
+         "64": 0.002050633056030038
+        },
+        "residual_over_uncertainty": 1.0973262547245284,
+        "resolution_uncertainty": 0.0007407160300285013,
+        "richardson_limit": 0.18515352317707412,
+        "verdict": "consistent",
+        "x": 0.0625
+       },
+       {
+        "computed": {
+         "128": 0.19798962777427587,
+         "32": 0.1795085393818073,
+         "64": 0.1948472886824935
+        },
+        "convergence": "shrinking",
+        "delta_signed_finest": 0.0008596277742758673,
+        "inside_band": true,
+        "limit_residual": 0.0016692344371064538,
+        "observed_order": 2.2872700761087006,
+        "published": 0.19713,
+        "ratio_previous_over_finest": 2.6554648253767685,
+        "residual": {
+         "128": 0.0008596277742758673,
+         "32": 0.017621460618192697,
+         "64": 0.002282711317506486
+        },
+        "residual_over_uncertainty": 1.061784461197978,
+        "resolution_uncertainty": 0.0008096066628305864,
+        "richardson_limit": 0.19879923443710645,
+        "verdict": "consistent",
+        "x": 0.0703
+       },
+       {
+        "computed": {
+         "128": 0.21009837741794446,
+         "32": 0.19045183232434199,
+         "64": 0.20672376048778596
+        },
+        "convergence": "shrinking",
+        "delta_signed_finest": 0.0008983774179444626,
+        "inside_band": true,
+        "limit_residual": 0.0017813552122557252,
+        "observed_order": 2.2695895662216623,
+        "published": 0.2092,
+        "ratio_previous_over_finest": 2.756346567436895,
+        "residual": {
+         "128": 0.0008983774179444626,
+         "32": 0.018748167675658012,
+         "64": 0.00247623951221404
+        },
+        "residual_over_uncertainty": 1.0174405559600759,
+        "resolution_uncertainty": 0.0008829777943112724,
+        "richardson_limit": 0.21098135521225572,
+        "verdict": "consistent",
+        "x": 0.0781
+       },
+       {
+        "computed": {
+         "128": 0.23074896272385495,
+         "32": 0.20912694829641557,
+         "64": 0.22700367133487556
+        },
+        "convergence": "shrinking",
+        "delta_signed_finest": 0.001098962723854957,
+        "inside_band": true,
+        "limit_residual": 0.0020915873875335944,
+        "observed_order": 2.2549324301057996,
+        "published": 0.22965,
+        "ratio_previous_over_finest": 2.4080240463858518,
+        "residual": {
+         "128": 0.001098962723854957,
+         "32": 0.020523051703584427,
+         "64": 0.002646328665124431
+        },
+        "residual_over_uncertainty": 1.1071281664332704,
+        "resolution_uncertainty": 0.0009926246636786243,
+        "richardson_limit": 0.2317415873875336,
+        "verdict": "consistent",
+        "x": 0.0938
+       },
+       {
+        "computed": {
+         "128": 0.28240949355734724,
+         "32": 0.2567338991929784,
+         "64": 0.27803046758001704
+        },
+        "convergence": "shrinking",
+        "delta_signed_finest": 0.0011694935573472454,
+        "inside_band": true,
+        "limit_residual": 0.002302983756203081,
+        "observed_order": 2.2819390678544402,
+        "published": 0.28124,
+        "ratio_previous_over_finest": 2.744378025701239,
+        "residual": {
+         "128": 0.0011694935573472454,
+         "32": 0.02450610080702159,
+         "64": 0.0032095324199829522
+        },
+        "residual_over_uncertainty": 1.0317632728785284,
+        "resolution_uncertainty": 0.0011334901988558496,
+        "richardson_limit": 0.28354298375620307,
+        "verdict": "consistent",
+        "x": 0.1563
+       },
+       {
+        "computed": {
+         "128": 0.30272319949399745,
+         "32": 0.2778574854787055,
+         "64": 0.29849783516425044
+        },
+        "convergence": "shrinking",
+        "delta_signed_finest": 0.0006931994939974317,
+        "inside_band": true,
+        "limit_residual": 0.0017808461371174866,
+        "observed_order": 2.2883197654118157,
+        "published": 0.30203,
+        "ratio_previous_over_finest": 5.095452126459099,
+        "residual": {
+         "128": 0.0006931994939974317,
+         "32": 0.02417251452129454,
+         "64": 0.003532164835749585
+        },
+        "residual_over_uncertainty": 0.6373388805843235,
+        "resolution_uncertainty": 0.001087646643120053,
+        "richardson_limit": 0.3038108461371175,
+        "verdict": "consistent",
+        "x": 0.2266
+       },
+       {
+        "computed": {
+         "128": 0.30238544000643347,
+         "32": 0.2781805106430114,
+         "64": 0.2983285022614685
+        },
+        "convergence": "shrinking",
+        "delta_signed_finest": 0.000645440006433462,
+        "inside_band": true,
+        "limit_residual": 0.001668290591355981,
+        "observed_order": 2.312172966749298,
+        "published": 0.30174,
+        "ratio_previous_over_finest": 5.285538089562455,
+        "residual": {
+         "128": 0.000645440006433462,
+         "32": 0.023559489356988594,
+         "64": 0.0034114977385314993
+        },
+        "residual_over_uncertainty": 0.6310208117858648,
+        "resolution_uncertainty": 0.0010228505849225308,
+        "richardson_limit": 0.303408290591356,
+        "verdict": "consistent",
+        "x": 0.2344
+       },
+       {
+        "computed": {
+         "128": 0.051970202497109846,
+         "32": 0.054583520958752754,
+         "64": 0.052061414121682754
+        },
+        "convergence": "shrinking",
+        "delta_signed_finest": 0.00011020249710984309,
+        "inside_band": true,
+        "limit_residual": 0.0001067800705015498,
+        "observed_order": 4.789267877578384,
+        "published": 0.05186,
+        "ratio_previous_over_finest": 1.8276729381367274,
+        "residual": {
+         "128": 0.00011020249710984309,
+         "32": 0.002723520958752751,
+         "64": 0.00020141412168275113
+        },
+        "residual_over_uncertainty": 32.20010528281739,
+        "resolution_uncertainty": 3.422426608295884e-06,
+        "richardson_limit": 0.05196678007050155,
+        "verdict": "consistent",
+        "x": 0.5
+       },
+       {
+        "computed": {
+         "128": -0.38512408090726624,
+         "32": -0.3700656036741023,
+         "64": -0.38318572320542676
+        },
+        "convergence": "shrinking",
+        "delta_signed_finest": 0.0008559190927337479,
+        "inside_band": true,
+        "limit_residual": 0.0005199049084239626,
+        "observed_order": 2.758874130367439,
+        "published": -0.38598,
+        "ratio_previous_over_finest": 3.264650617441531,
+        "residual": {
+         "128": 0.0008559190927337479,
+         "32": 0.015914396325897695,
+         "64": 0.002794276794573225
+        },
+        "residual_over_uncertainty": 2.547270718621518,
+        "resolution_uncertainty": 0.0003360141843097609,
+        "richardson_limit": -0.385460095091576,
+        "verdict": "consistent",
+        "x": 0.8047
+       },
+       {
+        "computed": {
+         "128": -0.45199281640456773,
+         "32": -0.4138916923928149,
+         "64": -0.44502900655254674
+        },
+        "convergence": "shrinking",
+        "delta_signed_finest": -0.0020628164045677355,
+        "inside_band": true,
+        "limit_residual": 0.004068923878180308,
+        "observed_order": 2.1606957902828743,
+        "published": -0.44993,
+        "ratio_previous_over_finest": 2.3758747683995987,
+        "residual": {
+         "128": 0.0020628164045677355,
+         "32": 0.03603830760718507,
+         "64": 0.004900993447453261
+        },
+        "residual_over_uncertainty": 1.0282681420118678,
+        "resolution_uncertainty": 0.002006107473612586,
+        "richardson_limit": -0.4539989238781803,
+        "verdict": "consistent",
+        "x": 0.8594
+       },
+       {
+        "computed": {
+         "128": -0.3875820683606132,
+         "32": -0.3528387627669481,
+         "64": -0.3806365470248758
+        },
+        "convergence": "saturated",
+        "delta_signed_finest": -0.1493120683606132,
+        "inside_band": false,
+        "limit_residual": 0.15162549912854426,
+        "observed_order": 2.000814998219725,
+        "published": -0.23827,
+        "ratio_previous_over_finest": 0.9534831885192105,
+        "residual": {
+         "128": 0.1493120683606132,
+         "32": 0.11456876276694808,
+         "64": 0.1423665470248758
+        },
+        "residual_over_uncertainty": 64.54140336957,
+        "resolution_uncertainty": 0.0023134307679310686,
+        "richardson_limit": -0.38989549912854427,
+        "verdict": "reference_defect",
+        "x": 0.9063
+       },
+       {
+        "computed": {
+         "128": -0.23277799176694322,
+         "32": -0.20358799169666655,
+         "64": -0.22671909643218388
+        },
+        "convergence": "saturated",
+        "delta_signed_finest": -0.004307991766943214,
+        "inside_band": true,
+        "limit_residual": 0.006458282442029395,
+        "observed_order": 1.9327074815035692,
+        "published": -0.22847,
+        "ratio_previous_over_finest": 0.40643150278314005,
+        "residual": {
+         "128": 0.004307991766943214,
+         "32": 0.024882008303333453,
+         "64": 0.0017509035678161256
+        },
+        "residual_over_uncertainty": 2.0034462395511063,
+        "resolution_uncertainty": 0.002150290675086179,
+        "richardson_limit": -0.2349282824420294,
+        "verdict": "consistent",
+        "x": 0.9453
+       },
+       {
+        "computed": {
+         "128": -0.1964053089458988,
+         "32": -0.1698639752346242,
+         "64": -0.1908271138133053
+        },
+        "convergence": "saturated",
+        "delta_signed_finest": -0.0038653089458988155,
+        "inside_band": true,
+        "limit_residual": 0.005887822778746388,
+        "observed_order": 1.90998442407531,
+        "published": -0.19254,
+        "ratio_previous_over_finest": 0.44314340992382956,
+        "residual": {
+         "128": 0.0038653089458988155,
+         "32": 0.02267602476537578,
+         "64": 0.0017128861866946843
+        },
+        "residual_over_uncertainty": 1.9111409193462459,
+        "resolution_uncertainty": 0.0020225138328475757,
+        "richardson_limit": -0.19842782277874638,
+        "verdict": "consistent",
+        "x": 0.9531
+       },
+       {
+        "computed": {
+         "128": -0.15995982621536883,
+         "32": -0.13758520255439413,
+         "64": -0.15493592289589583
+        },
+        "convergence": "saturated",
+        "delta_signed_finest": -0.003329826215368842,
+        "inside_band": true,
+        "limit_residual": 0.005377362454310919,
+        "observed_order": 1.7881149534889136,
+        "published": -0.15663,
+        "ratio_previous_over_finest": 0.5087584139632064,
+        "residual": {
+         "128": 0.003329826215368842,
+         "32": 0.01904479744560586,
+         "64": 0.001694077104104158
+        },
+        "residual_over_uncertainty": 1.626259966509457,
+        "resolution_uncertainty": 0.002047536238942077,
+        "richardson_limit": -0.1620073624543109,
+        "verdict": "consistent",
+        "x": 0.9609
+       },
+       {
+        "computed": {
+         "128": -0.123729939958633,
+         "32": -0.10520119922711275,
+         "64": -0.11941864969052642
+        },
+        "convergence": "saturated",
+        "delta_signed_finest": -0.002269939958633005,
+        "inside_band": true,
+        "limit_residual": 0.004146269778604619,
+        "observed_order": 1.7214711737933588,
+        "published": -0.12146,
+        "ratio_previous_over_finest": 0.899297050439571,
+        "residual": {
+         "128": 0.002269939958633005,
+         "32": 0.016258800772887244,
+         "64": 0.002041350309473583
+        },
+        "residual_over_uncertainty": 1.2097766258745146,
+        "resolution_uncertainty": 0.0018763298199716226,
+        "richardson_limit": -0.12560626977860462,
+        "verdict": "consistent",
+        "x": 0.9688
+       },
+       {
+        "computed": {
+         "128": 0.001970746248872446,
+         "32": 0.023302924799085842,
+         "64": 0.007125204387469206
+        },
+        "convergence": "shrinking",
+        "delta_signed_finest": 0.001970746248872446,
+        "inside_band": true,
+        "limit_residual": 0.0004394693519641857,
+        "observed_order": 1.650115655553918,
+        "published": 0.0,
+        "ratio_previous_over_finest": 3.615485449507191,
+        "residual": {
+         "128": 0.001970746248872446,
+         "32": 0.023302924799085842,
+         "64": 0.007125204387469206
+        },
+        "residual_over_uncertainty": 0.8176638837572715,
+        "resolution_uncertainty": 0.0024102156008366316,
+        "richardson_limit": -0.0004394693519641857,
+        "verdict": "consistent",
+        "x": 1.0
+       }
+      ]
+     }
+    }
+   }
+  }
+ },
+ "profile_error_reproduction": [
+  {
+   "agrees": true,
+   "committed_max_abs_error": 0.0069160981373702635,
+   "n": 32,
+   "recomputed_max_abs_error": 0.0069160981373702635,
+   "reynolds": 100.0,
+   "which": "u"
+  },
+  {
+   "agrees": true,
+   "committed_max_abs_error": 0.007785453957715589,
+   "n": 32,
+   "recomputed_max_abs_error": 0.007785453957715589,
+   "reynolds": 100.0,
+   "which": "v"
+  },
+  {
+   "agrees": true,
+   "committed_max_abs_error": 0.004452212009521672,
+   "n": 64,
+   "recomputed_max_abs_error": 0.004452212009521672,
+   "reynolds": 100.0,
+   "which": "u"
+  },
+  {
+   "agrees": true,
+   "committed_max_abs_error": 0.00872776060095204,
+   "n": 64,
+   "recomputed_max_abs_error": 0.00872776060095204,
+   "reynolds": 100.0,
+   "which": "v"
+  },
+  {
+   "agrees": true,
+   "committed_max_abs_error": 0.004922402895836425,
+   "n": 128,
+   "recomputed_max_abs_error": 0.004922402895836425,
+   "reynolds": 100.0,
+   "which": "u"
+  },
+  {
+   "agrees": true,
+   "committed_max_abs_error": 0.009146022186147074,
+   "n": 128,
+   "recomputed_max_abs_error": 0.009146022186147074,
+   "reynolds": 100.0,
+   "which": "v"
+  },
+  {
+   "agrees": true,
+   "committed_max_abs_error": 0.06836401423978111,
+   "n": 32,
+   "recomputed_max_abs_error": 0.06836401423978111,
+   "reynolds": 400.0,
+   "which": "u"
+  },
+  {
+   "agrees": true,
+   "committed_max_abs_error": 0.11456876276694808,
+   "n": 32,
+   "recomputed_max_abs_error": 0.11456876276694808,
+   "reynolds": 400.0,
+   "which": "v"
+  },
+  {
+   "agrees": true,
+   "committed_max_abs_error": 0.006596111540415894,
+   "n": 64,
+   "recomputed_max_abs_error": 0.006596111540415894,
+   "reynolds": 400.0,
+   "which": "u"
+  },
+  {
+   "agrees": true,
+   "committed_max_abs_error": 0.1423665470248758,
+   "n": 64,
+   "recomputed_max_abs_error": 0.1423665470248758,
+   "reynolds": 400.0,
+   "which": "v"
+  },
+  {
+   "agrees": true,
+   "committed_max_abs_error": 0.00134981727198058,
+   "n": 128,
+   "recomputed_max_abs_error": 0.00134981727198058,
+   "reynolds": 400.0,
+   "which": "u"
+  },
+  {
+   "agrees": true,
+   "committed_max_abs_error": 0.1493120683606132,
+   "n": 128,
+   "recomputed_max_abs_error": 0.1493120683606132,
+   "reynolds": 400.0,
+   "which": "v"
+  },
+  {
+   "agrees": true,
+   "committed_max_abs_error": 0.029310305036261974,
+   "n": 64,
+   "recomputed_max_abs_error": 0.029310305036261974,
+   "reynolds": 1000.0,
+   "which": "u"
+  },
+  {
+   "agrees": true,
+   "committed_max_abs_error": 0.019733918942391973,
+   "n": 64,
+   "recomputed_max_abs_error": 0.019733918942391973,
+   "reynolds": 1000.0,
+   "which": "v"
+  }
+ ],
+ "profile_errors_reproduced": true,
+ "reference_table_self_check": {
+  "cases": {
+   "100.0": {
+    "ok": true,
+    "u_min": [
+     0.4531,
+     -0.2109
+    ],
+    "v_max": [
+     0.2344,
+     0.17527
+    ]
+   },
+   "400.0": {
+    "ok": true,
+    "u_min": [
+     0.2813,
+     -0.32726
+    ],
+    "v_max": [
+     0.2266,
+     0.30203
+    ]
+   },
+   "1000.0": {
+    "ok": true,
+    "u_min": [
+     0.1719,
+     -0.38289
+    ],
+    "v_max": [
+     0.1563,
+     0.37095
+    ]
+   }
+  },
+  "ok": true
+ },
+ "register": {
+  "agreement": true,
+  "declared": [
+   {
+    "published": -0.23827,
+    "reynolds": 400.0,
+    "which": "v",
+    "x": 0.9063
+   }
+  ],
+  "detected": [
+   {
+    "reynolds": 400.0,
+    "which": "v",
+    "x": 0.9063
+   }
+  ],
+  "missing_from_detection": [],
+  "missing_from_register": [],
+  "records": {
+   "400/v/0.9063": {
+    "adjudication": "needs the printed Table II or an independent DNS; offline copies of the paper are not available in this checkout",
+    "computed_n": {
+     "32": -0.35284,
+     "64": -0.38064,
+     "128": -0.38758
+    },
+    "evidence": "scripts/audit_ghia_re400_v_attribution.py over the committed ladder bundle docs/verification-lid-cavity-ladder/summary.json; clean second-order convergence to a limit 64% away from the tabulated value while the three neighbouring entries are inside 0.3%, and the interpolation error of the metric path is two orders of magnitude smaller than the gap",
+    "limit_relative_error": 0.637,
+    "metric_interpolation_error_bound_n128": 0.001,
+    "neighbour_deltas_n128": {
+     "0.8047": 0.0028,
+     "0.8594": 0.0021,
+     "0.9453": 0.0016
+    },
+    "observed_order": 2.0,
+    "published": -0.23827,
+    "richardson_limit": -0.38989
+   }
+  }
+ },
+ "shape_control": {
+  "entries": 42,
+  "flagged": [
+   {
+    "key": "400/v/0.9063",
+    "reynolds": 400.0,
+    "slope_left": 4.513006396588492,
+    "slope_ratio": 17.959923414995025,
+    "slope_right": 0.25128205128205117,
+    "value": -0.23827,
+    "which": "v",
+    "x": 0.9063
+   },
+   {
+    "key": "400/v/0.9453",
+    "reynolds": 400.0,
+    "slope_left": 0.25128205128205117,
+    "slope_ratio": 18.331632653061433,
+    "slope_right": 4.606410256410307,
+    "value": -0.22847,
+    "which": "v",
+    "x": 0.9453
+   }
+  ],
+  "ok": true,
+  "registered": [
+   "400/v/0.9063"
+  ],
+  "registered_flagged": [
+   "400/v/0.9063"
+  ],
+  "threshold": 10.0,
+  "unexplained": [],
+  "used_for_verdict": false,
+  "why_not": "the genuine published near-extremum at Re = 400, x = 0.2344 produces a larger secant-slope jump than the flagged entry, so the control cannot separate a digitisation error from a thin feature; it is reported as context only and every verdict above comes from the residual under refinement"
+ },
+ "verdict": {
+  "counts": {
+   "consistent": 101,
+   "reference_defect": 1
+  },
+  "largest_consistent": {
+   "grids": [
+    64
+   ],
+   "residual": 0.029310305036261974,
+   "reynolds": 1000.0,
+   "which": "u",
+   "x": 1.0
+  },
+  "largest_consistent_residual": 0.029310305036261974,
+  "published_points": 102,
+  "reference_defects": [
+   {
+    "computed_finest": -0.3875820683606132,
+    "limit_residual": 0.15162549912854426,
+    "observed_order": 2.000814998219725,
+    "published": -0.23827,
+    "ratio_previous_over_finest": 0.9534831885192105,
+    "residual_finest": 0.1493120683606132,
+    "residual_over_uncertainty": 64.54140336957,
+    "reynolds": 400.0,
+    "richardson_limit": -0.38989549912854427,
+    "which": "v",
+    "x": 0.9063
+   }
+  ],
+  "single_grid_outside_band": [],
+  "under_resolved": []
+ }
+}

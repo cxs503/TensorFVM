@@ -288,3 +288,17 @@ def smoothness_audit(threshold: float = 10.0) -> dict:
             "unexplained": [item["key"] for item in unexplained],
             "ok": bool(flagged) and not unexplained
                   and registered <= {item["key"] for item in flagged}}
+
+
+def disputes_by_case() -> dict[tuple[float, str], dict[float, dict[str, object]]]:
+    """Group :data:`DISPUTES` as ``{(Re, component): {x: record}}``.
+
+    Both the acceptance gate (:func:`tensorfvm.lid_cavity.ghia_acceptance`) and the
+    consistency audit (:mod:`tensorfvm.verification.ghia_reference_audit`) need the
+    same view of the register; keeping one implementation means an exclusion can
+    never be keyed differently in the two places.
+    """
+    grouped: dict[tuple[float, str], dict[float, dict[str, object]]] = {}
+    for (reynolds, which, x), record in DISPUTES.items():
+        grouped.setdefault((float(reynolds), which), {})[round(float(x), 4)] = record
+    return grouped
