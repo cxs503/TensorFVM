@@ -1,0 +1,24 @@
+{
+ "pre": {
+  "ruff_check_rc": 1,
+  "ruff_check": "/tmp/r119/test_suboff_validation_integration.py:49:5: F841 Local variable `neighbor` is assigned to but never used\nFound 1 error.\nNo fixes available (1 hidden fix can be enabled with the `--unsafe-fixes` option).",
+  "ruff_format_rc": 1,
+  "ruff_format": "Would reformat: /tmp/r119/gen_suboff_radius_plot.py\nWould reformat: /tmp/r119/test_suboff_validation_integration.py\n2 files would be reformatted"
+ },
+ "tree": {
+  "check_tail": "Found 9822 errors.",
+  "check_files": 426,
+  "format_tail": "554 files would be reformatted, 5 files already formatted"
+ },
+ "post": {
+  "files": [
+   "scripts/gen_suboff_radius_plot.py",
+   "tests/test_suboff_validation_integration.py"
+  ],
+  "ruff_check_rc": 0,
+  "ruff_check": "All checks passed!",
+  "ruff_format_rc": 0,
+  "ruff_format": "2 files already formatted"
+ },
+ "tests": "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n13 passed, 2 warnings in 6.99s"
+}

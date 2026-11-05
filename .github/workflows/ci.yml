@@ -56,15 +56,27 @@ jobs:
           path: coverage.xml
 
   lint:
+    # Job name kept as "lint (advisory)" for continuity with the check-runs
+    # already recorded on open PRs.
     name: lint (advisory)
     runs-on: ubuntu-latest
-    # Advisory on purpose: the tree carries a large pre-existing ruff backlog
-    # (unused imports, import ordering, semicolon-packed statements).  Making
-    # it blocking would hide every other signal.  Fix the backlog, then drop
-    # this continue-on-error and promote it to a gate.
-    continue-on-error: true
+    # The *whole-tree* ruff signal is advisory on purpose: the tree carries a
+    # large pre-existing backlog (~9.4k E701/E702 semicolon-packed statements,
+    # 554 files off the `ruff format` style), so a whole-tree gate could never
+    # go green and stopped carrying information.  Advisory is expressed per
+    # *step* (`continue-on-error` on the step), not per job: a job-level
+    # `continue-on-error` keeps the workflow run green but leaves the job's
+    # check-run conclusion at "failure", which is what every PR reported as a
+    # red `lint (advisory)` check.  What is gated here is the *ratchet*: the
+    # .py files a PR itself touches must be clean under `ruff check` *and*
+    # `ruff format`, so new debt cannot enter and the backlog cannot grow.
+    # Drop the two advisory steps once the backlog reaches zero.
     steps:
       - uses: actions/checkout@v4
+        with:
+          # The ratchet diffs the PR head against its base branch, so the base
+          # ref (and not just the head commit) has to be fetched.
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -74,7 +86,24 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
-      - name: Lint (ruff)
+      - name: Lint changed files (ruff, ratchet gate)
+        if: github.event_name == 'pull_request'
+        run: |
+          base="origin/${{ github.base_ref }}"
+          git rev-parse --verify "$base"
+          mapfile -t files < <(git diff --name-only --diff-filter=ACMR "$base...HEAD" -- '*.py')
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "no changed .py files: ratchet gate has nothing to verify"
+            exit 0
+          fi
+          printf 'ratchet input: %s\n' "${files[@]}"
+          ruff check "${files[@]}"
+          ruff format --check "${files[@]}"
+      # Push events are covered by the pusher-side ruff pre-gate, which lints
+      # exactly the changed .py files of the commit it is about to push.
+      - name: Lint (ruff, whole tree, advisory)
+        continue-on-error: true
         run: ruff check src tests scripts
-      - name: Format check (ruff format)
+      - name: Format check (ruff format, whole tree, advisory)
+        continue-on-error: true
         run: ruff format --check src tests scripts
