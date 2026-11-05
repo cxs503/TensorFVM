@@ -38,6 +38,7 @@ from .solver import _neighbors
 from .two_phase_vof import (
     VOFTransport,
     TwoPhaseProperties,
+    balanced_csf_face_forces,
     mixture_density,
     mixture_viscosity,
 )
@@ -100,6 +101,15 @@ class TwoPhaseConfig:
     side_outlet: bool = False
     # VOF transport
     vof_cfl_limit: float = 0.5
+    # Surface-tension discretisation.  ``csf_balance="balanced"`` samples the
+    # CSF force on the MAC faces with the same two-point alpha difference the
+    # pressure gradient uses (Francois et al. 2006); ``"legacy"`` averages the
+    # cell-centred force, which leaves a residual curl that drives spurious
+    # currents growing with resolution (see docs/two-phase-csf-balance/).
+    csf_balance: str = "balanced"
+    #: Brackbill--Kothe--Zemach smoothing passes applied to alpha before the
+    #: normals/curvature are differentiated (0 = legacy, unsmoothed).
+    csf_smoothing: int = 3
     # Domain boundary type for two-phase (not using inlet/outlet channel)
     # "closed" = all walls except top atmosphere; "channel" = inlet+outlet
     domain_type: str = "closed"
@@ -462,6 +472,10 @@ class TwoPhaseSolver:
         if (self.props is None or not self.props.surface_tension
                 or self.props.sigma == 0.0):
             return None, None
+        if getattr(self.tp, 'csf_balance', 'balanced') == 'balanced':
+            return balanced_csf_face_forces(
+                self.alpha, self.props.sigma, self.dx, self.dy,
+                smoothing=getattr(self.tp, 'csf_smoothing', 3))
         f = self.props.csf(self.alpha, self.dx, self.dy)      # (ny, nx, 2)
         f_u = 0.5 * (f[:, :-1, 0] + f[:, 1:, 0])
         f_v = 0.5 * (f[:-1, :, 1] + f[1:, :, 1])

@@ -10,11 +10,16 @@ FAIL):
   assembled operator (``-V*div(u*)/dt``) and the top-atmosphere Dirichlet row is
   eliminated symmetrically; both were missing and are now regression-gated by
   ``test_projection_pressure_is_laplace_scaled``.
-* WITHHELD -- the 2D Young--Laplace jump ``dp = sigma/R`` is *not* reproduced: the
-  transient capillary chain is unstable after a few steps, so the analytic gate is
-  kept as a strict ``xfail`` rather than reported as passing.  Numbers and the
-  grid sweep live in ``docs/two-phase-surface-tension-audit/`` produced by
-  ``scripts/audit_two_phase_surface_tension.py``.
+* REAL -- the 2D Young--Laplace jump ``dp = sigma/R`` is reproduced inside the 3 %
+  gate once the CSF force is sampled on the MAC faces with the same two-point
+  ``alpha`` difference the pressure gradient uses (balanced force, Francois et
+  al. 2006) and the curvature is taken from a Brackbill--Kothe--Zemach smoothed
+  colour field.  Both are the solver defaults; the legacy cell-force average is
+  kept as ``csf_balance="legacy"`` for the negative control below.  Grid ladder,
+  curvature and spurious-current tables: ``docs/two-phase-csf-balance/``
+  (``scripts/audit_two_phase_csf_balance.py``).  The former strict ``xfail`` here
+  is retired by that change; the older unstable-chain evidence stays in
+  ``docs/two-phase-surface-tension-audit/``.
 """
 import math
 
@@ -69,11 +74,6 @@ def test_projection_pressure_is_laplace_scaled():
     assert math.isfinite(peak)
 
 
-@pytest.mark.xfail(strict=True, reason=(
-    "known verification debt: the explicit capillary source is added to the "
-    "transient predictor but the projection step does not hold it in balance, so "
-    "a static drop diverges within a few steps instead of carrying dp = sigma/R; "
-    "quantified in docs/two-phase-surface-tension-audit/summary.json"))
 def test_static_drop_young_laplace_jump():
     """2D Young-Laplace: a static circular drop must carry dp = sigma/R (<3%)."""
     radius, sigma = 0.2, 0.07
@@ -84,4 +84,26 @@ def test_static_drop_young_laplace_jump():
     inside = float(solver.p[rr < 0.5 * radius].mean())
     outside = float(solver.p[rr > 1.6 * radius].mean())
     exact = sigma / radius
-    assert abs((inside - outside) / exact - 1.0) < 0.03
+    assert abs((inside - outside) / exact - 1.0) < 0.03, (
+        f"dp {(inside - outside):.5f} Pa vs sigma/R {exact:.5f} Pa")
+
+
+def test_legacy_cell_force_is_the_negative_control():
+    """The retired discretisation must still be reachable and still be worse.
+
+    Averaging the *cell-centred* CSF force onto the faces leaves a residual curl
+    the projection cannot cancel, so the same static drop develops spurious
+    currents two orders of magnitude larger (measured 4.9e-5 vs 5.2e-7 m/s at
+    n=32 in ``docs/two-phase-csf-balance/summary.json``).  Keeping the legacy
+    path executable is what makes the balanced default falsifiable.
+    """
+    radius = 0.2
+    balanced, _ = _solver(radius=radius)
+    legacy, _ = _solver(radius=radius)
+    legacy.tp.csf_balance = 'legacy'
+    for _ in range(6):
+        balanced.step(1e-5)
+        legacy.step(1e-5)
+    u_bal = max(float(balanced.u.abs().max()), float(balanced.v.abs().max()))
+    u_leg = max(float(legacy.u.abs().max()), float(legacy.v.abs().max()))
+    assert u_bal < u_leg / 50.0, (u_bal, u_leg)
