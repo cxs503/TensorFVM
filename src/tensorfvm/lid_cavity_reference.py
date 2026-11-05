@@ -169,14 +169,33 @@ def _finite(*values: float) -> bool:
     return all(isinstance(v, (int, float)) and math.isfinite(v) for v in values)
 
 
-def table(reynolds: float, which: str) -> tuple[tuple[float, float], ...]:
-    """Return the published table for ``reynolds``; ``which`` is ``u`` or ``v``."""
+def table(reynolds: float, which: str, *,
+          corrected: bool = False) -> tuple[tuple[float, float], ...]:
+    """Return the published table for ``reynolds``; ``which`` is ``u`` or ``v``.
+
+    ``corrected=True`` substitutes every *proposal* (:func:`proposed_corrections`)
+    for its registered entry, i.e. it answers "what would the gate read if a human
+    adjudicated the dispute in the solver's favour?".  It is off by default and no
+    verification artefact uses it: everything that scores the solver runs against
+    the transcription exactly as printed.
+    """
     re = float(reynolds)
     if re not in U_CENTRELINE:
         raise KeyError(f"no Ghia table for Re={reynolds}; available {SUPPORTED_REYNOLDS}")
     if which not in ("u", "v"):
         raise ValueError("which must be 'u' or 'v'")
-    return (U_CENTRELINE if which == "u" else V_CENTRELINE)[re]
+    published = (U_CENTRELINE if which == "u" else V_CENTRELINE)[re]
+    if not corrected:
+        return published
+    substitutes = _correction_map().get((re, which))
+    if not substitutes:
+        return published
+    return tuple((x, substitutes.get(round(x, 4), value)) for x, value in published)
+
+
+def corrected_table(reynolds: float, which: str) -> tuple[tuple[float, float], ...]:
+    """The table as it would read with every proposal accepted (never the default)."""
+    return table(reynolds, which, corrected=True)
 
 
 def extrema(reynolds: float, which: str) -> tuple[tuple[float, float], tuple[float, float]]:
@@ -213,7 +232,76 @@ def self_check() -> dict[str, object]:
             if not all(_finite(*p) for p in pts):
                 report["ok"] = False
                 report.setdefault("nonfinite", []).append((re, which))
+    report["proposals"] = _check_proposals()
+    report["ok"] = bool(report["ok"]) and bool(report["proposals"]["ok"])
     return report
+
+
+def proposed_corrections() -> tuple[dict[str, object], ...]:
+    """Registered disputes restated as ``published`` vs *proposed* replacement.
+
+    A dispute says the printed entry cannot be reproduced; a proposal says which
+    value the solver's evidence would put there instead.  The proposed value is
+    the Richardson limit already recorded in :data:`DISPUTES` -- it is read from
+    the register, never retyped, so a proposal cannot drift from the evidence that
+    produced it.  Every record is ``status="proposed"`` and ``applied=False``:
+    nothing is corrected until a human adjudicates the entry against the printed
+    table (or an independent DNS), and :func:`table` keeps returning the
+    transcription until then.  ``limit_relative_error`` says how far the proposal
+    sits from the printed number, so the size of the claim travels with it.
+    """
+    records: list[dict[str, object]] = []
+    for (reynolds, which, x), record in sorted(DISPUTES.items()):
+        records.append({
+            "reynolds": reynolds, "which": which, "x": x,
+            "published": record["published"],
+            "proposed": record["richardson_limit"],
+            "limit_relative_error": record["limit_relative_error"],
+            "status": "proposed",
+            "applied": False,
+            "adjudication": record["adjudication"],
+        })
+    return tuple(records)
+
+
+def _correction_map() -> dict[tuple[float, str], dict[float, float]]:
+    """Group proposals by ``(Re, component)`` -> ``{x: proposed value}``."""
+    grouped: dict[tuple[float, str], dict[float, float]] = {}
+    for record in proposed_corrections():
+        key = (record["reynolds"], record["which"])
+        grouped.setdefault(key, {})[record["x"]] = record["proposed"]
+    return grouped
+
+
+def _check_proposals() -> dict[str, object]:
+    """Prove that the proposal layer cannot touch the transcription by accident."""
+    detail: dict[str, object] = {"ok": True, "count": 0, "applied": 0, "records": []}
+    for record in proposed_corrections():
+        re, which, x = record["reynolds"], record["which"], record["x"]
+        printed = dict(table(re, which))
+        corrected = dict(corrected_table(re, which))
+        touched = sorted(k for k in printed if printed[k] != corrected.get(k))
+        ok = (printed[x] == record["published"]
+              and touched == [x]
+              and corrected[x] == record["proposed"])
+        detail["count"] += 1
+        detail["applied"] += 1 if record["applied"] else 0
+        detail["records"].append({"key": f"{re:g}/{which}/{x:.4f}", "ok": bool(ok),
+                                  "touched": touched})
+        detail["ok"] = bool(detail["ok"]) and ok
+    # proposals must not move any extremum, otherwise they would also move the
+    # relative-error gate that is scored on the extrema
+    for (re, which) in _correction_map():
+        printed = extrema(re, which)
+        corrected_pts = corrected_table(re, which)
+        moved = (min(corrected_pts, key=lambda p: p[1]), max(corrected_pts, key=lambda p: p[1]))
+        if moved != printed:
+            detail["ok"] = False
+            detail["records"].append({"key": f"{re:g}/{which}/extrema", "ok": False})
+    detail["nothing_applied_by_default"] = detail["applied"] == 0
+    detail["ok"] = bool(detail["ok"]) and bool(detail["nothing_applied_by_default"])
+    return detail
+
 
 #: Bibliographic target, quoted verbatim in every artefact that scores against it.
 REFERENCE = ("U. Ghia, K.N. Ghia, C.T. Shin, J. Comput. Phys. 48 (1982) 387-411, "

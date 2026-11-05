@@ -58,9 +58,24 @@ cannot hide one. A second bad point anywhere else still fails the gate (test-cov
 The register record and the audit script carry the same numbers, and a test re-derives them from the
 committed bundle, so the claim cannot drift from its evidence.
 
+## Counterfactual: what the ladder would read if the entry were corrected
+
+The register says what is wrong; it cannot say what the numbers would look like if a human
+adjudicated the dispute in the solver's favour. `scripts/render_ghia_re400_v_proposal.py`
+supplies that, opt-in only: it rescoring every committed ladder row against
+`tensorfvm.lid_cavity_reference.corrected_table` (printed table with the proposal
+-0.23827 -> -0.38989 substituted, `status="proposed"`, `applied=False`) and writes
+`docs/verification-ghia-re400-v-centreline/{report.md,metrics.json,*.png}`. Result: Re = 400
+v goes from 0.1146/0.1424/0.1493 (growing under refinement) to 0.0371/0.0093/0.0043, i.e.
+inside the 3 % band from n = 64 up, while no other row changes. The transcription, the
+committed bundle and the default gate are untouched; `self_check()["proposals"]` proves the
+opt-in layer touches exactly the registered entry and moves no extremum.
+
 ## Reproduce
 
 ```bash
 PYTHONPATH=src python scripts/audit_ghia_re400_v_attribution.py
+PYTHONPATH=src python scripts/render_ghia_re400_v_proposal.py            # proposal bundle
 PYTHONPATH=src python -m pytest tests/test_ghia_reference_consistency.py -q   # 8 passed
+PYTHONPATH=src python -m pytest tests/test_ghia_re400_v_proposal.py -q        # 12 passed
 ```
