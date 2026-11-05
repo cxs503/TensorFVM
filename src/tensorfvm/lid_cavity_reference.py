@@ -162,6 +162,60 @@ VORTEX_CENTRE: Mapping[float, tuple[float, float]] = {
     1000.0: (0.5313, 0.5625),
 }
 
+#: Provenance of the transcribed tables, and what :func:`self_check` does *not* cover.
+#:
+#: The tables below are re-keys of circulating digital copies of the published
+#: centreline data, **not** a fresh transcription from the printed paper.  The
+#: self-check validates the published extrema, the coordinate ordering and
+#: finiteness only, so a single garbled interior entry passes it silently - see
+#: :data:`SUSPECT_ENTRIES` for the one such entry found so far.
+TABLE_PROVENANCE: Mapping[str, str] = {
+    "source": "U. Ghia, K. N. Ghia, C. T. Shin, J. Comput. Phys. 48 (1982) 387-411, "
+              "Table I (u, x/L = 0.5) and Table II (v, y/L = 0.5)",
+    "transcription": "re-keyed from a digital copy of the published tables; the printed "
+                     "article is not held in this repository, so no entry has been "
+                     "checked against the typeset original",
+    "self_check_coverage": "extrema + coordinate ordering + finiteness only; interior "
+                           "entries are otherwise unverified",
+    "consistency_audit": "scripts/audit_ghia_reference_consistency.py -> "
+                         "docs/verification-ghia-reference-consistency/results.json",
+}
+
+#: Table entries that the three-grid consistency audit rejects as suspect
+#: digitisation errors, keyed ``(reynolds, 'u'|'v')`` then by coordinate.
+#:
+#: Scoring keeps the value *as digitised* (so every committed evidence bundle stays
+#: reproducible) but excludes the entry from the consistent-point statistics and
+#: reports it explicitly, instead of letting one garbled number decide a pass/fail.
+SUSPECT_ENTRIES: Mapping[tuple[float, str], Mapping[float, Mapping[str, object]]] = {
+    (400.0, "v"): {
+        0.9063: {
+            "as_digitized": -0.23827,
+            "finest_grid_value": -0.38758,
+            "richardson_limit": -0.38989,
+            "resolution_uncertainty": 0.00694,
+            "discrepancy": 0.14931,
+            "ratio_prev_over_finest": 0.95,
+            "neighbourhood_delta_max": 0.00431,
+            "verdict": (
+                "reference defect: the entry sits outside the monotone wall-region "
+                "profile of its own neighbours (-0.22847 at x=0.9453, -0.44993 at "
+                "x=0.8594), and the residual does not shrink under refinement "
+                "(0.115/0.142/0.149 for n=32/64/128, ratio 0.95 = 21.5x the sample's "
+                "own resolution uncertainty), while the other 16 published v-points sit "
+                "inside 0.0045 and the u-centreline converges at ~2nd order. The three "
+                "discrete profiles converge to one smooth limit (-0.3528/-0.3806/-0.3876, "
+                "increment ratio 4.0) through the point."
+            ),
+            "evidence": "docs/verification-ghia-reference-consistency/results.json",
+            "action": (
+                "excluded from consistent-point statistics; the value must be re-keyed "
+                "from the printed Table II before it is scored again"
+            ),
+        }
+    },
+}
+
 SUPPORTED_REYNOLDS = tuple(sorted(U_CENTRELINE))
 
 
@@ -178,6 +232,25 @@ def table(reynolds: float, which: str) -> tuple[tuple[float, float], ...]:
         raise ValueError("which must be 'u' or 'v'")
     return (U_CENTRELINE if which == "u" else V_CENTRELINE)[re]
 
+
+
+def suspect_entries(reynolds: float, which: str) -> dict[float, Mapping[str, object]]:
+    """Return the audit-rejected entries for one table (may be empty)."""
+    return dict(SUSPECT_ENTRIES.get((float(reynolds), which), {}))
+
+
+def consistent_points(reynolds: float, which: str,
+                      *, include_suspect: bool = False) -> tuple[tuple[float, float], ...]:
+    """Return the table with audit-rejected entries removed.
+
+    ``include_suspect=True`` restores the raw digitised table, which is what the
+    committed evidence bundles and :func:`table` always report.
+    """
+    pts = table(reynolds, which)
+    if include_suspect:
+        return tuple(pts)
+    bad = suspect_entries(reynolds, which)
+    return tuple(p for p in pts if p[0] not in bad)
 
 def extrema(reynolds: float, which: str) -> tuple[tuple[float, float], tuple[float, float]]:
     """Return (argmin, argmax) points of the published centreline table."""
