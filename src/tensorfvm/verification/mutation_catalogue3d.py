@@ -20,7 +20,7 @@ CATALOGUE3D = [
         id="CV3-PFD-SIGN",
         file="src/tensorfvm/native_collocated3d.py",
         description="Compatible face-flux defect gets the wrong sign "
-                    "(interpolated gradient flux plus compact flux)",
+        "(interpolated gradient flux plus compact flux)",
         find="self.pressure_flux_defect=(self.interpolated_gradient_flux-self.compact_flux).tocsr()",
         replace="self.pressure_flux_defect=(self.interpolated_gradient_flux+self.compact_flux).tocsr()",
         tests=["tests/test_native_collocated3d.py"],
@@ -36,7 +36,7 @@ CATALOGUE3D = [
         id="CV3-PFD-DROP",
         file="src/tensorfvm/native_collocated3d.py",
         description="Compatible face-flux defect deleted: the compact two-point "
-                    "gradient is used as if it were a face flux",
+        "gradient is used as if it were a face flux",
         find="self.pressure_flux_defect=(self.interpolated_gradient_flux-self.compact_flux).tocsr()",
         replace="self.pressure_flux_defect=(-self.compact_flux).tocsr()",
         tests=["tests/test_native_collocated3d.py"],
@@ -52,7 +52,7 @@ CATALOGUE3D = [
         id="CV3-SKEW-DROP",
         file="src/tensorfvm/native_collocated3d.py",
         description="Face skewness correction silently disabled regardless of the "
-                    "caller's flag",
+        "caller's flag",
         find="if not skew_correction:self.skew[:]=0.",
         replace="self.skew[:]=0.",
         tests=["tests/test_native_collocated3d.py"],
@@ -68,7 +68,7 @@ CATALOGUE3D = [
         id="OP3-RECON-SWAP",
         file="src/tensorfvm/native_operators3d.py",
         description="Owner/neighbour interpolation weights swapped in the "
-                    "affine-exact face reconstruction",
+        "affine-exact face reconstruction",
         find="result[i]=(1-weight)*v[m.owner[i]]+weight*v[m.neighbor[i]]",
         replace="result[i]=weight*v[m.owner[i]]+(1-weight)*v[m.neighbor[i]]",
         tests=["tests/test_native_mesh3d.py"],
@@ -77,16 +77,18 @@ CATALOGUE3D = [
             "a graded mesh) inverts; any test that checks interpolation on a "
             "non-uniform mesh or affine reproduction must fail."
         ),
-        note=("首次审计时该变异体 survived：被指向的 tests/test_native_mesh3d.py 只用单胞网格，"
-              "没有内部面，权重路径从未被走到。已补 "
-              "test_face_reconstruction_reduces_to_geometric_projection_on_nonuniform_pair 把存活项关闭。"),
+        note=(
+            "首次审计时该变异体 survived：被指向的 tests/test_native_mesh3d.py 只用单胞网格，"
+            "没有内部面，权重路径从未被走到。已补 "
+            "test_face_reconstruction_reduces_to_geometric_projection_on_nonuniform_pair 把存活项关闭。"
+        ),
         expected="killed",
     ),
     dict(
         id="OP3-GAUSS-VOLUME",
         file="src/tensorfvm/native_operators3d.py",
         description="Gauss gradient returned as an integrated flux (cell volume "
-                    "division dropped)",
+        "division dropped)",
         find="return self.integrate(np.asarray(face_values)[:,None]*self.mesh.area_vectors)/self.mesh.cell_volumes[:,None]",
         replace="return self.integrate(np.asarray(face_values)[:,None]*self.mesh.area_vectors)",
         tests=["tests/test_native_mesh3d.py"],
