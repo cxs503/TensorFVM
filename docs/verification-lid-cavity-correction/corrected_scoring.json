@@ -1,0 +1,66 @@
+{
+ "artifact": "corrected_scoring.json",
+ "provenance": "extracted verbatim from branch agent/m3240 (SHA 99f8e6e) docs/verification-lid-cavity-ladder/summary.json before that bundle was superseded by main at merge of PR #82; regenerate with scripts/run_lid_cavity_ladder.py using lid_cavity_reference.RESOLVED",
+ "status": "SUPERSEDED_PROPOSAL - not a gate, not an acceptance basis",
+ "what_it_scores_against": "Ghia Re=400 v-centreline entry x=0.9063 with the *proposed* corrected value -0.38760 instead of the published -0.23827",
+ "published_value_in_force": -0.23827,
+ "proposed_value": -0.3876,
+ "rows": [
+  {
+   "reynolds": 100.0,
+   "n": 32,
+   "v_max_abs_error": 0.007784999999999993,
+   "u_max_abs_error": 0.0069160981373702635,
+   "v_rms_error": 0.0035769338255144667,
+   "acceptance_pass": true
+  },
+  {
+   "reynolds": 100.0,
+   "n": 64,
+   "v_max_abs_error": 0.008727850290834366,
+   "u_max_abs_error": 0.004452212009521672,
+   "v_rms_error": 0.004438325928649301,
+   "acceptance_pass": true
+  },
+  {
+   "reynolds": 100.0,
+   "n": 128,
+   "v_max_abs_error": 0.009146265075462096,
+   "u_max_abs_error": 0.004922402895836425,
+   "v_rms_error": 0.004709095738905082,
+   "acceptance_pass": true
+  },
+  {
+   "reynolds": 400.0,
+   "n": 32,
+   "v_max_abs_error": 0.036038227098636244,
+   "u_max_abs_error": 0.06836401423978111,
+   "v_rms_error": 0.0226738346174464,
+   "acceptance_pass": false
+  },
+  {
+   "reynolds": 400.0,
+   "n": 64,
+   "v_max_abs_error": 0.007375750000000007,
+   "u_max_abs_error": 0.006596111540415894,
+   "v_rms_error": 0.003877046652268086,
+   "acceptance_pass": true
+  },
+  {
+   "reynolds": 400.0,
+   "n": 128,
+   "v_max_abs_error": 0.004308301519374724,
+   "u_max_abs_error": 0.00134981727198058,
+   "v_rms_error": 0.0020015392854940395,
+   "acceptance_pass": true
+  },
+  {
+   "reynolds": 1000.0,
+   "n": 64,
+   "v_max_abs_error": 0.01973412499999999,
+   "u_max_abs_error": 0.029310305036261974,
+   "v_rms_error": 0.009795755360516988,
+   "acceptance_pass": true
+  }
+ ]
+}

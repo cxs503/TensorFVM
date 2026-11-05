@@ -110,3 +110,80 @@ def test_extrema_are_grid_converged_between_n64_and_n128():
 def test_re400_v_centreline_discrepancy_is_still_present_and_unexplained():
     row = _cases()[(400.0, 64)]
     assert row["acceptance"]["pass"], row["acceptance"]["criteria"]
+
+
+# --------------------------------------------------------------------------- #
+# union with PR #82 (agent/m3240): the same numbers, adjudicated instead of applied
+# --------------------------------------------------------------------------- #
+#: Proposed corrected value for the disputed entry (PR #82).  It is *recorded*, not
+#: applied: the published table stays verbatim and the gate above keeps failing.
+PROPOSED_CORRECTION = -0.38760
+
+
+def test_the_published_re400_entry_was_not_rewritten_by_the_merge():
+    """A merge must not touch an oracle.  PR #82 rewrote this number; the union
+    keeps the printed value and registers the proposal instead."""
+    from tensorfvm.lid_cavity_reference import DISPUTES, REFERENCE, V_CENTRELINE
+
+    published = dict(V_CENTRELINE[400.0])[0.9063]
+    assert published == -0.23827, published
+    record = DISPUTES[(400.0, "v", 0.9063)]
+    assert record["published"] == published
+    assert record["correction_proposed"] == PROPOSED_CORRECTION
+    assert "rejected" in str(record["correction_status"])
+    assert "Ghia" in REFERENCE and "1982" in REFERENCE
+
+
+def test_pr82_proposal_numbers_are_archived_and_reproduce_its_claim():
+    """The proposing branch claimed < 3 % error under its corrected reference.  That
+    claim is preserved as an archived artefact so the next adjudicator can re-check
+    it without the branch, but the archived rows are not an acceptance basis."""
+    import json
+    from pathlib import Path
+
+    path = (Path(__file__).resolve().parents[1] / "docs"
+            / "verification-lid-cavity-correction" / "corrected_scoring.json")
+    if not path.exists():
+        pytest.skip(f"archive missing: {path}")
+    archive = json.loads(path.read_text())
+    assert archive["published_value_in_force"] == -0.23827
+    assert archive["proposed_value"] == PROPOSED_CORRECTION
+    rows = {(row["reynolds"], row["n"]): row for row in archive["rows"]}
+    for n, archived in ((64, 0.0074), (128, 0.0043)):
+        row = rows[(400.0, n)]
+        assert row["v_max_abs_error"] == pytest.approx(archived, abs=5e-4), (n, row)
+        # under the published value the same field is 20x-35x worse -- which is why
+        # the ladder bundle in force (scored against the published table) is red.
+        assert below_by_published_value(n) > 0.1
+    # the archive is explicitly not a gate
+    assert "SUPERSEDED" in archive["status"]
+
+
+def below_by_published_value(n):
+    row = _cases()[(400.0, n)]
+    return row["v"]["max_abs_error"]
+
+
+def test_the_two_ladders_disagree_only_on_the_disputed_point():
+    """Union invariant: the archived (proposal-scored) rows and the bundle in force
+    must agree everywhere except the disputed entry, otherwise one of them is stale."""
+    import json
+    from pathlib import Path
+
+    path = (Path(__file__).resolve().parents[1] / "docs"
+            / "verification-lid-cavity-correction" / "corrected_scoring.json")
+    if not path.exists():
+        pytest.skip(f"archive missing: {path}")
+    archive = json.loads(path.read_text())
+    rows = {(row["reynolds"], row["n"]): row for row in archive["rows"]}
+    for key, case in _cases().items():
+        if key == (400.0, 32):
+            continue  # n=32 row is rejected by the n>=64 acceptance band on both sides
+        archived = rows.get(key)
+        if archived is None:
+            continue
+        if key in ((400.0, 64), (400.0, 128)):
+            assert case["v"]["max_abs_error"] > archived["v_max_abs_error"]
+        else:
+            assert case["v"]["max_abs_error"] == pytest.approx(
+                archived["v_max_abs_error"], abs=1e-6), key
