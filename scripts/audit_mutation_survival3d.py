@@ -12,6 +12,7 @@ here, so no number is transcribed by hand.
 
 Usage: ``PYTHONPATH=src python scripts/audit_mutation_survival3d.py``
 """
+
 import argparse
 import json
 import subprocess
@@ -20,6 +21,7 @@ import time
 from pathlib import Path
 
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
@@ -30,7 +32,13 @@ for extra in (REPO / "src", REPO / "scripts", REPO):
 
 from tensorfvm.verification.mutation_catalogue3d import CATALOGUE3D  # noqa: E402
 from audit_mutation_survival import (  # noqa: E402
-    _version, apply_mutation, first_failure, run_tests, sha256, status_of)
+    _version,
+    apply_mutation,
+    first_failure,
+    run_tests,
+    sha256,
+    status_of,
+)
 
 
 def audit(entries, timeout):
@@ -38,9 +46,15 @@ def audit(entries, timeout):
     for entry in entries:
         path = REPO / entry["file"]
         before = sha256(path)
-        row = dict(id=entry["id"], file=entry["file"], description=entry["description"], note=entry.get("note"),
-                   rationale=entry["rationale"], expected=entry["expected"],
-                   tests=entry["tests"])
+        row = dict(
+            id=entry["id"],
+            file=entry["file"],
+            description=entry["description"],
+            note=entry.get("note"),
+            rationale=entry["rationale"],
+            expected=entry["expected"],
+            tests=entry["tests"],
+        )
         started = time.perf_counter()
         try:
             target, mutated = apply_mutation(entry)
@@ -51,19 +65,28 @@ def audit(entries, timeout):
             row["status"] = status_of(proc)
             row["returncode"] = proc.returncode
             row["first_failure"] = first_failure(proc)
-            tail = [l for l in proc.stdout.strip().splitlines() if l.strip()][-1:] or [""]
+            tail = [l for l in proc.stdout.strip().splitlines() if l.strip()][-1:] or [
+                ""
+            ]
             row["summary_line"] = tail[-1][:200]
         except Exception as exc:
             row["status"] = "invalid(exception)"
             row["error"] = f"{type(exc).__name__}: {exc}"
         finally:
-            subprocess.run(["git", "checkout", "--", entry["file"]], cwd=REPO,
-                           capture_output=True, text=True)
+            subprocess.run(
+                ["git", "checkout", "--", entry["file"]],
+                cwd=REPO,
+                capture_output=True,
+                text=True,
+            )
             row["source_restored"] = bool(sha256(path) == before)
             row["source_sha256"] = before
         row["duration_seconds"] = round(time.perf_counter() - started, 2)
-        print(f"{entry['id']}: {row['status']} ({row['duration_seconds']}s) "
-              f"{row.get('first_failure') or ''}", flush=True)
+        print(
+            f"{entry['id']}: {row['status']} ({row['duration_seconds']}s) "
+            f"{row.get('first_failure') or ''}",
+            flush=True,
+        )
         rows.append(row)
     return rows
 
@@ -74,13 +97,20 @@ def write_figure(path, rows):
     fig, ax = plt.subplots(figsize=(9, 0.6 * len(ids) + 1.8), constrained_layout=True)
     ax.barh(ids, killed, color=["#2b7a3d" if k else "#b03030" for k in killed])
     for i, (row, k) in enumerate(zip(rows, killed)):
-        ax.text(k + .02, i, f"{row['status']} ({row['duration_seconds']}s)",
-                va="center", fontsize=9)
+        ax.text(
+            k + 0.02,
+            i,
+            f"{row['status']} ({row['duration_seconds']}s)",
+            va="center",
+            fontsize=9,
+        )
     ax.set_xlim(0, 1.6)
     ax.set_xticks([0, 1], ["survived", "killed"])
-    ax.set_title("TensorFVM mutation survival: 3-D native core "
-                 f"(killed {sum(killed)}/{len(ids)})")
-    ax.grid(axis="x", alpha=.3)
+    ax.set_title(
+        "TensorFVM mutation survival: 3-D native core "
+        f"(killed {sum(killed)}/{len(ids)})"
+    )
+    ax.grid(axis="x", alpha=0.3)
     fig.savefig(path, dpi=160)
     plt.close(fig)
 
@@ -121,14 +151,23 @@ def write_report(path, rows, environment):
         "|---|---|---|---|---|---|---:|",
     ]
     for r in rows:
-        lines.append("| `{}` | `{}` | {} | {} | {} | {} | {:.1f} |".format(
-            r["id"], r["file"], r["description"], r["expected"], r["status"],
-            r.get("first_failure") or "-", r["duration_seconds"]))
+        lines.append(
+            "| `{}` | `{}` | {} | {} | {} | {} | {:.1f} |".format(
+                r["id"],
+                r["file"],
+                r["description"],
+                r["expected"],
+                r["status"],
+                r.get("first_failure") or "-",
+                r["duration_seconds"],
+            )
+        )
     lines += [
         "",
         f"汇总：killed {len(killed)}，survived {len(survived)}，invalid {len(invalid)}，共 {len(rows)} 个。",
         "源码恢复校验：{} / {} 个变异体恢复了原始 sha256。".format(
-            sum(1 for r in rows if r["source_restored"]), len(rows)),
+            sum(1 for r in rows if r["source_restored"]), len(rows)
+        ),
         "",
         "每个变异体的处置：",
         "",
@@ -165,25 +204,39 @@ def write_report(path, rows, environment):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output", type=Path, default=REPO / "docs/mutation-survival3d")
+    parser.add_argument(
+        "--output", type=Path, default=REPO / "docs/mutation-survival3d"
+    )
     parser.add_argument("--timeout", type=int, default=900)
     parser.add_argument("--only", nargs="*", default=None)
     args = parser.parse_args()
     entries = [e for e in CATALOGUE3D if not args.only or e["id"] in args.only]
     args.output.mkdir(parents=True, exist_ok=True)
     rows = audit(entries, args.timeout)
-    environment = dict(python=sys.version.split()[0], numpy=_version("numpy"),
-                       torch=_version("torch"), scipy=_version("scipy"),
-                       omp_threads=1)
-    record = dict(tool="scripts/audit_mutation_survival3d.py", environment=environment,
-                  scope="3-D native finite-volume core", mutants=rows,
-                  killed=sum(r["status"] == "killed" for r in rows),
-                  survived=sum(r["status"] == "survived" for r in rows),
-                  invalid=sum(r["status"].startswith("invalid") for r in rows))
-    (args.output / "mutation-survival-3d.json").write_text(json.dumps(record, indent=1) + "\n")
+    environment = dict(
+        python=sys.version.split()[0],
+        numpy=_version("numpy"),
+        torch=_version("torch"),
+        scipy=_version("scipy"),
+        omp_threads=1,
+    )
+    record = dict(
+        tool="scripts/audit_mutation_survival3d.py",
+        environment=environment,
+        scope="3-D native finite-volume core",
+        mutants=rows,
+        killed=sum(r["status"] == "killed" for r in rows),
+        survived=sum(r["status"] == "survived" for r in rows),
+        invalid=sum(r["status"].startswith("invalid") for r in rows),
+    )
+    (args.output / "mutation-survival-3d.json").write_text(
+        json.dumps(record, indent=1) + "\n"
+    )
     write_figure(args.output / "mutation-survival-3d.png", rows)
     write_report(args.output / "report.md", rows, environment)
-    print(f"killed={record['killed']} survived={record['survived']} invalid={record['invalid']}")
+    print(
+        f"killed={record['killed']} survived={record['survived']} invalid={record['invalid']}"
+    )
     return 0
 
 

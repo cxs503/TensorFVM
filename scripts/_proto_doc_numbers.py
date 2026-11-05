@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Prototype: extract high-precision numeric claims from docs/*.md and see how many
 are sourced from a JSON artifact in the same doc directory (or the docs root)."""
+
 from __future__ import annotations
 
 import json
@@ -64,11 +65,19 @@ def main() -> int:
                 v = float(c)
             except ValueError:
                 continue
-            digits = len(c.replace("-", "").replace("+", "").split("e")[0].replace(".", "").lstrip("0"))
+            digits = len(
+                c.replace("-", "")
+                .replace("+", "")
+                .split("e")[0]
+                .replace(".", "")
+                .lstrip("0")
+            )
             if ("e" in c.lower()) or digits >= 5:
                 big.append(v)
         total += len(big)
-        print(f"{md.relative_to(ROOT)}  json={len(jsons)} pool={len(pool)} bigclaims={len(big)}")
+        print(
+            f"{md.relative_to(ROOT)}  json={len(jsons)} pool={len(pool)} bigclaims={len(big)}"
+        )
     print("TOTAL high-precision claims in dirs that have JSON:", total)
     return 0
 

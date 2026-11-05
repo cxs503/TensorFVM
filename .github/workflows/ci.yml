@@ -74,6 +74,14 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
+      - name: Pin the linter
+        # ruff floats in via the dev extra (`ruff>=0.6`).  0.17.0 shipped a
+        # documented breaking change to line-length accounting (trailing
+        # pragma comments are now ignored), so a tree formatted with one
+        # release fails `ruff format --check` under another.  The pin is the
+        # release the tree is formatted with; bump it together with a
+        # `ruff format` re-run (see docs/ci-lint-policy.md).
+        run: python -m pip install "ruff==0.15.0"
       - name: Lint (ruff)
         run: ruff check src tests scripts
       - name: Format check (ruff format)

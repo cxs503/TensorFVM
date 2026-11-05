@@ -41,6 +41,7 @@ Usage::
         [--bundle docs/verification-lid-cavity-ladder/summary.json] \
         [--out outputs/ghia-re400-v-attribution]
 """
+
 from __future__ import annotations
 
 import argparse
@@ -54,7 +55,9 @@ REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(REPO, "src"))
 
 from tensorfvm.lid_cavity_reference import (  # noqa: E402
-    DISPUTES, REFERENCE, smoothness_audit, table,
+    DISPUTES,
+    REFERENCE,
+    smoothness_audit,
 )
 
 DISPUTED = (400.0, "v", 0.9063)
@@ -72,8 +75,12 @@ def load_bundle(path: str) -> dict:
             return json.load(handle)
     relative = os.path.relpath(path, REPO)
     try:
-        raw = subprocess.run(["git", "show", f"HEAD:{relative}"], cwd=REPO,
-                             check=True, capture_output=True).stdout
+        raw = subprocess.run(
+            ["git", "show", f"HEAD:{relative}"],
+            cwd=REPO,
+            check=True,
+            capture_output=True,
+        ).stdout
     except subprocess.CalledProcessError as error:  # pragma: no cover
         raise SystemExit(f"bundle {path} neither on disk nor in HEAD: {error}")
     return json.loads(raw)
@@ -90,8 +97,9 @@ def pointwise(cases: dict, reynolds: float, which: str) -> dict:
         if rey != reynolds:
             continue
         block = case[which]["profiles"]
-        for x, ref, got, delta in zip(block["coord"], block["reference"],
-                                      block["computed"], block["delta"]):
+        for x, ref, got, delta in zip(
+            block["coord"], block["reference"], block["computed"], block["delta"]
+        ):
             rows.setdefault(float(x), {"reference": ref, "grid": {}})["grid"][n] = got
     return rows
 
@@ -131,24 +139,37 @@ def interpolation_bound(rows: dict, x_target: float, n: int) -> dict:
     h = 1.0 / n
     # nearest tabulated neighbours define the local curvature scale
     left, right = xs[i - 1], xs[i + 1]
-    refs = [rows[left]["reference"], rows[x_target]["reference"], rows[right]["reference"]]
+    refs = [
+        rows[left]["reference"],
+        rows[x_target]["reference"],
+        rows[right]["reference"],
+    ]
     # second divided difference (non-uniform spacing)
     d1 = (refs[1] - refs[0]) / (x_target - left)
     d2 = (refs[2] - refs[1]) / (right - x_target)
     curvature = 2.0 * (d2 - d1) / (right - left)
     inside_range = (0.5 * h) < x_target < (1.0 - 0.5 * h)
-    return {"grid": n, "h": h, "curvature_estimate": curvature,
-            "interpolation_error_bound": abs(curvature) * h * h / 8.0,
-            "target_inside_sampled_range": bool(inside_range),
-            "rule": "cubic Hermite (Catmull-Rom) on cell-centre samples"}
+    return {
+        "grid": n,
+        "h": h,
+        "curvature_estimate": curvature,
+        "interpolation_error_bound": abs(curvature) * h * h / 8.0,
+        "target_inside_sampled_range": bool(inside_range),
+        "rule": "cubic Hermite (Catmull-Rom) on cell-centre samples",
+    }
 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--bundle", default=os.path.join(
-        REPO, "docs", "verification-lid-cavity-ladder", "summary.json"))
-    parser.add_argument("--out", default=os.path.join(
-        REPO, "outputs", "ghia-re400-v-attribution"))
+    parser.add_argument(
+        "--bundle",
+        default=os.path.join(
+            REPO, "docs", "verification-lid-cavity-ladder", "summary.json"
+        ),
+    )
+    parser.add_argument(
+        "--out", default=os.path.join(REPO, "outputs", "ghia-re400-v-attribution")
+    )
     args = parser.parse_args()
 
     bundle = load_bundle(args.bundle)
@@ -161,40 +182,66 @@ def main() -> int:
     for x, row in rows.items():
         conv = observed_order(row["grid"])
         delta = {n: v - row["reference"] for n, v in row["grid"].items()}
-        per_point[x] = {"reference": row["reference"], "computed": row["grid"],
-                        "delta": delta, "finest_delta": delta[max(row["grid"])],
-                        "order": conv.get("order"),
-                        "richardson_limit": conv.get("richardson_limit")}
+        per_point[x] = {
+            "reference": row["reference"],
+            "computed": row["grid"],
+            "delta": delta,
+            "finest_delta": delta[max(row["grid"])],
+            "order": conv.get("order"),
+            "richardson_limit": conv.get("richardson_limit"),
+        }
     disputed = per_point[x_target]
     limit = disputed.get("richardson_limit")
     t1 = {
-        "point": x_target, "reference": disputed["reference"],
-        "computed": disputed["computed"], "delta": disputed["delta"],
-        "observed_order": disputed.get("order"), "richardson_limit": limit,
+        "point": x_target,
+        "reference": disputed["reference"],
+        "computed": disputed["computed"],
+        "delta": disputed["delta"],
+        "observed_order": disputed.get("order"),
+        "richardson_limit": limit,
         "limit_vs_reference": None if limit is None else limit - disputed["reference"],
-        "limit_relative_error": None if limit is None else abs(limit - disputed["reference"]) / abs(disputed["reference"]),
+        "limit_relative_error": None
+        if limit is None
+        else abs(limit - disputed["reference"]) / abs(disputed["reference"]),
         "verdict": "solver value is grid-converged at clean second order; the gap survives extrapolation",
     }
 
     # every *other* point: largest deviation after Richardson extrapolation
-    others = {x: p for x, p in per_point.items()
-              if x != x_target and p.get("richardson_limit") is not None
-              and abs(p["reference"]) > 1e-6}  # wall entries are exactly zero
-    worst_other = max(others.items(),
-                      key=lambda kv: abs(kv[1]["richardson_limit"] - kv[1]["reference"]) / abs(kv[1]["reference"]))
+    others = {
+        x: p
+        for x, p in per_point.items()
+        if x != x_target
+        and p.get("richardson_limit") is not None
+        and abs(p["reference"]) > 1e-6
+    }  # wall entries are exactly zero
+    worst_other = max(
+        others.items(),
+        key=lambda kv: (
+            abs(kv[1]["richardson_limit"] - kv[1]["reference"])
+            / abs(kv[1]["reference"])
+        ),
+    )
     t1["worst_other_point"] = {
-        "x": worst_other[0], "reference": worst_other[1]["reference"],
+        "x": worst_other[0],
+        "reference": worst_other[1]["reference"],
         "richardson_limit": worst_other[1]["richardson_limit"],
-        "limit_relative_error": abs(worst_other[1]["richardson_limit"] - worst_other[1]["reference"]) / abs(worst_other[1]["reference"]),
+        "limit_relative_error": abs(
+            worst_other[1]["richardson_limit"] - worst_other[1]["reference"]
+        )
+        / abs(worst_other[1]["reference"]),
     }
 
     # ---- T2: the metric path cannot manufacture the gap
     finest = max(rows[x_target]["grid"])
     t2 = interpolation_bound(rows, x_target, finest)
     t2["observed_gap"] = abs(disputed["finest_delta"])
-    t2["gap_over_bound"] = t2["observed_gap"] / max(t2["interpolation_error_bound"], 1e-16)
-    t2["verdict"] = ("interpolation error is orders of magnitude below the gap; "
-                     "the metric path is not the cause")
+    t2["gap_over_bound"] = t2["observed_gap"] / max(
+        t2["interpolation_error_bound"], 1e-16
+    )
+    t2["verdict"] = (
+        "interpolation error is orders of magnitude below the gap; "
+        "the metric path is not the cause"
+    )
 
     # ---- T3: the published table against its own neighbourhood
     t3 = smoothness_audit()
@@ -206,7 +253,9 @@ def main() -> int:
             "bundle_note": bundle.get("meta", {}).get("provenance"),
             "code": bundle.get("meta", {}).get("code"),
             "reference": REFERENCE,
-            "dispute_register": {f"{k[0]:g}/{k[1]}/{k[2]}": v for k, v in DISPUTES.items()},
+            "dispute_register": {
+                f"{k[0]:g}/{k[1]}/{k[2]}": v for k, v in DISPUTES.items()
+            },
         },
         "T1_order": t1,
         "T2_extraction": t2,
@@ -226,6 +275,7 @@ def main() -> int:
     # ---- figure
     try:
         import matplotlib
+
         matplotlib.use("Agg")
         import matplotlib.pyplot as plt
     except Exception:  # pragma: no cover - plotting is optional
@@ -235,50 +285,89 @@ def main() -> int:
         xs = [float(x) for x in sorted(per_point)]
 
         ax = axes[0]
-        ax.plot(xs, [per_point[x]["reference"] for x in xs], "ks", ms=5, label="Ghia et al. (1982) Table II, Re=400")
-        ax.plot(xs, [per_point[x]["computed"][finest] for x in xs], "-", color="tab:blue",
-                lw=1.6, label=f"TensorFVM n={finest}")
-        ax.plot([x_target], [disputed["reference"]], "rx", ms=11, mew=2.2, label="disputed entry")
-        ax.set_xlabel("x / L"); ax.set_ylabel("v / U"); ax.grid(alpha=.3)
+        ax.plot(
+            xs,
+            [per_point[x]["reference"] for x in xs],
+            "ks",
+            ms=5,
+            label="Ghia et al. (1982) Table II, Re=400",
+        )
+        ax.plot(
+            xs,
+            [per_point[x]["computed"][finest] for x in xs],
+            "-",
+            color="tab:blue",
+            lw=1.6,
+            label=f"TensorFVM n={finest}",
+        )
+        ax.plot(
+            [x_target],
+            [disputed["reference"]],
+            "rx",
+            ms=11,
+            mew=2.2,
+            label="disputed entry",
+        )
+        ax.set_xlabel("x / L")
+        ax.set_ylabel("v / U")
+        ax.grid(alpha=0.3)
         ax.set_title("v on the horizontal centreline (y = L/2)")
         ax.legend(fontsize=7, loc="upper left")
 
         ax = axes[1]
         for n in sorted(rows[x_target]["grid"]):
-            ax.semilogy(xs, [abs(per_point[x]["delta"][n]) + 1e-4 for x in xs], "o-",
-                        ms=3, lw=1.0, label=f"n={n}")
-        ax.set_xlabel("x / L"); ax.set_ylabel("|v_computed - v_Ghia|")
+            ax.semilogy(
+                xs,
+                [abs(per_point[x]["delta"][n]) + 1e-4 for x in xs],
+                "o-",
+                ms=3,
+                lw=1.0,
+                label=f"n={n}",
+            )
+        ax.set_xlabel("x / L")
+        ax.set_ylabel("|v_computed - v_Ghia|")
         ax.set_title("Pointwise error: one isolated spike at x=0.9063")
-        ax.legend(fontsize=7); ax.grid(alpha=.3, which="both")
+        ax.legend(fontsize=7)
+        ax.grid(alpha=0.3, which="both")
 
         ax = axes[2]
         grids = sorted(rows[x_target]["grid"])
         hs = [1.0 / n for n in grids]
-        ds = [abs(rows[x_target]["grid"][n] - rows[x_target]["reference"]) for n in grids]
+        ds = [
+            abs(rows[x_target]["grid"][n] - rows[x_target]["reference"]) for n in grids
+        ]
         ax.loglog(hs, ds, "o-", label=f"x={x_target}")
         ref_line = [ds[0] * (h / hs[0]) ** 2 for h in hs]
         ax.loglog(hs, ref_line, "k--", lw=1.0, label="slope 2")
-        ax.set_xlabel("h = 1/n"); ax.set_ylabel("|error| at x=0.9063")
-        ax.set_title(f"Error at the disputed point grows like h^-2\n(observed p = {t1['observed_order']:.2f})")
-        ax.legend(fontsize=7); ax.grid(alpha=.3, which="both")
+        ax.set_xlabel("h = 1/n")
+        ax.set_ylabel("|error| at x=0.9063")
+        ax.set_title(
+            f"Error at the disputed point grows like h^-2\n(observed p = {t1['observed_order']:.2f})"
+        )
+        ax.legend(fontsize=7)
+        ax.grid(alpha=0.3, which="both")
         fig.tight_layout()
         fig.savefig(os.path.join(args.out, "attribution.png"), dpi=150)
         plt.close(fig)
 
-    lines = [f"disputed point Re=400 v x={x_target}",
-             f"  reference      {disputed['reference']:+.5f}",
-             *[f"  n={n:<4d} computed {v:+.5f}  delta {v - disputed['reference']:+.5f}"
-               for n, v in sorted(disputed["computed"].items())],
-             f"  observed order p = {t1['observed_order']:.3f}",
-             f"  Richardson limit {t1['richardson_limit']:+.5f} "
-             f"(vs reference {t1['limit_vs_reference']:+.5f} = {100 * t1['limit_relative_error']:.1f}%)",
-             f"  worst other point after extrapolation: x={t1['worst_other_point']['x']:.4f} "
-             f"{100 * t1['worst_other_point']['limit_relative_error']:.2f}%",
-             f"  interpolation error bound (n={finest}) {t2['interpolation_error_bound']:.2e} "
-             f"-> gap/bound = {t2['gap_over_bound']:.0f}x",
-             f"  reference smoothness audit: flagged {len(t3['flagged'])} entry(ies) "
-             f"of {t3['entries']} -> {[f['key'] for f in t3['flagged']]}",
-             f"verdict: {report['verdict']['attribution']}"]
+    lines = [
+        f"disputed point Re=400 v x={x_target}",
+        f"  reference      {disputed['reference']:+.5f}",
+        *[
+            f"  n={n:<4d} computed {v:+.5f}  delta {v - disputed['reference']:+.5f}"
+            for n, v in sorted(disputed["computed"].items())
+        ],
+        f"  observed order p = {t1['observed_order']:.3f}",
+        f"  Richardson limit {t1['richardson_limit']:+.5f} "
+        f"(vs reference {t1['limit_vs_reference']:+.5f} = {100 * t1['limit_relative_error']:.1f}%)",
+        f"  worst other point after extrapolation: x={t1['worst_other_point']['x']:.4f} "
+        f"{100 * t1['worst_other_point']['limit_relative_error']:.2f}%",
+        f"  interpolation error bound (n={finest}) {t2['interpolation_error_bound']:.2e} "
+        f"-> gap/bound = {t2['gap_over_bound']:.0f}x",
+        f"  reference smoothness audit: flagged {len(t3['flagged'])} entry(ies) "
+        f"of {t3['entries']} -> {[f['key'] for f in t3['flagged']]}",
+        f"verdict: {report['verdict']['attribution']}",
+    ]
     text = "\n".join(lines)
     with open(os.path.join(args.out, "attribution.log"), "w") as handle:
         handle.write(text + "\n")

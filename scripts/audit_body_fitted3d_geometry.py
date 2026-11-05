@@ -35,6 +35,7 @@ identity that actually holds is the per-arc chord sum, which is what G1/G2 pin.
 Everything below is mesh data only, single-threaded, sub-second.
 Run: ``PYTHONPATH=src python scripts/audit_body_fitted3d_geometry.py``
 """
+
 from __future__ import annotations
 
 import argparse
@@ -52,8 +53,9 @@ STRETCHING = 2.5
 
 
 def _mesh(nx: int, ny: int, nz: int):
-    config = Cylinder3DConfig(nx=nx, ny=ny, nz=nz, mesh_type="body-fitted",
-                              body_fitted_stretching=STRETCHING)
+    config = Cylinder3DConfig(
+        nx=nx, ny=ny, nz=nz, mesh_type="body-fitted", body_fitted_stretching=STRETCHING
+    )
     return config, BodyFittedCylinderMesh3D.build(config, torch.device("cpu"))
 
 
@@ -78,10 +80,10 @@ def _arc_split(wall_ring: np.ndarray):
     """
     chords = np.linalg.norm(np.diff(wall_ring, axis=0), axis=1)
     arc = chords > 0.5 * chords.max()
-    endpoints = wall_ring[:-1][arc]                      # genuine arc vertices
+    endpoints = wall_ring[:-1][arc]  # genuine arc vertices
     # algebraic (Kasa) circle fit: centre from the arc vertices only
     A = np.column_stack([endpoints[:, 0], endpoints[:, 1], np.ones(len(endpoints))])
-    b = -(endpoints ** 2).sum(axis=1)
+    b = -(endpoints**2).sum(axis=1)
     sol, *_ = np.linalg.lstsq(A, b, rcond=None)
     centre = np.array([-0.5 * sol[0], -0.5 * sol[1]])
     radii = np.linalg.norm(wall_ring - centre, axis=1)
@@ -108,10 +110,15 @@ def geometry_report(nx: int = 32, ny: int = 8, nz: int = 6) -> dict:
     arc_radii = radii[:-1][arc]
 
     return {
-        "nx": nx, "ny": ny, "nz": nz, "cells": int(mesh.cell_count),
-        "span_m": span, "radius_m": radius,
+        "nx": nx,
+        "ny": ny,
+        "nz": nz,
+        "cells": int(mesh.cell_count),
+        "span_m": span,
+        "radius_m": radius,
         "cylinder_centre_recovered": [float(centre[0]), float(centre[1])],
-        "arc_faces": n_a, "wake_faces": int((~arc).sum()),
+        "arc_faces": n_a,
+        "wake_faces": int((~arc).sum()),
         "wake_to_arc_area_ratio": float(chords[~arc].sum() / chords[arc].sum()),
         "cylinder_area_analytic": analytic,
         "cylinder_area_inscribed_arc_exact": arc_area_inscribed,
@@ -119,9 +126,12 @@ def geometry_report(nx: int = 32, ny: int = 8, nz: int = 6) -> dict:
         "cylinder_area_arc_from_vertices": arc_area_vertices,
         "cylinder_area_stored": stored,
         "identity_stored_vs_vertices_rel": abs(stored - wall_area_vertices) / analytic,
-        "identity_arc_vs_inscribed_rel": abs(arc_area_vertices - arc_area_inscribed) / analytic,
+        "identity_arc_vs_inscribed_rel": abs(arc_area_vertices - arc_area_inscribed)
+        / analytic,
         "deficit_vs_analytic_rel": (analytic - stored) / analytic,
-        "arc_vertex_radius_rel_error": float(np.max(np.abs(arc_radii - radius)) / radius),
+        "arc_vertex_radius_rel_error": float(
+            np.max(np.abs(arc_radii - radius)) / radius
+        ),
         "cross_section_from_vertices": fluid_area,
         "cross_section_stored": stored_area,
         "cross_section_stored_rel": abs(stored_area - fluid_area) / fluid_area,
@@ -166,28 +176,35 @@ def refinement_ladder(nx_values=(8, 16, 32, 64, 128), ny=8, nz=4) -> dict:
     rows = []
     for nx in nx_values:
         case = geometry_report(nx=nx, ny=ny, nz=nz)
-        rows.append({"nx": nx, "cells": case["cells"],
-                     "arc_faces": case["arc_faces"],
-                     "deficit_vs_analytic_rel": case["deficit_vs_analytic_rel"],
-                     "identity_arc_vs_inscribed_rel": case["identity_arc_vs_inscribed_rel"],
-                     "cross_section_stored_rel": case["cross_section_stored_rel"]})
+        rows.append(
+            {
+                "nx": nx,
+                "cells": case["cells"],
+                "arc_faces": case["arc_faces"],
+                "deficit_vs_analytic_rel": case["deficit_vs_analytic_rel"],
+                "identity_arc_vs_inscribed_rel": case["identity_arc_vs_inscribed_rel"],
+                "cross_section_stored_rel": case["cross_section_stored_rel"],
+            }
+        )
 
     def slope(key):
         n = np.array([r["nx"] for r in rows], float)
         e = np.array([abs(r[key]) for r in rows], float)
         return float(np.polyfit(np.log(1 / n), np.log(e), 1)[0])
 
-    return {"rows": rows,
-            "deficit_observed_order": slope("deficit_vs_analytic_rel"),
-            "identity_observed_order": slope("identity_arc_vs_inscribed_rel")}
+    return {
+        "rows": rows,
+        "deficit_observed_order": slope("deficit_vs_analytic_rel"),
+        "identity_observed_order": slope("identity_arc_vs_inscribed_rel"),
+    }
 
 
 def main() -> dict:
     torch.set_num_threads(1)
     return {
         "description": "Exact vertex-level geometric identities, inscribed-polygon area law, "
-                       "refinement order and negative controls for the extruded body-fitted "
-                       "cylinder O-grid (TensorFVM).",
+        "refinement order and negative controls for the extruded body-fitted "
+        "cylinder O-grid (TensorFVM).",
         "stretching": STRETCHING,
         "cases": {f"nx{nx}": geometry_report(nx=nx, ny=8, nz=6) for nx in (16, 32, 64)},
         "refinement": refinement_ladder(),
@@ -197,6 +214,7 @@ def main() -> dict:
 
 def plot(out: dict, path: Path) -> None:
     import matplotlib
+
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
@@ -206,29 +224,43 @@ def plot(out: dict, path: Path) -> None:
     ax = axes[0]
     deficit = np.array([r["deficit_vs_analytic_rel"] for r in rows])
     ax.loglog(1 / n, deficit, "o-", label="wetted area deficit vs $2\\pi R L$")
-    ax.loglog(1 / n, deficit[0] * (n[0] / n) ** 2, "k--", lw=1, label="slope 2 reference")
+    ax.loglog(
+        1 / n, deficit[0] * (n[0] / n) ** 2, "k--", lw=1, label="slope 2 reference"
+    )
     ax.set_xlabel("angular spacing $1/n_\\theta$")
     ax.set_ylabel("relative deficit")
-    ax.set_title(f"Deficit is O($n_\\theta^{{-2}}$), observed "
-                 f"{out['refinement']['deficit_observed_order']:.3f}")
-    ax.grid(True, which="both", alpha=.3)
+    ax.set_title(
+        f"Deficit is O($n_\\theta^{{-2}}$), observed "
+        f"{out['refinement']['deficit_observed_order']:.3f}"
+    )
+    ax.grid(True, which="both", alpha=0.3)
     ax.legend(fontsize=8)
 
     ax = axes[1]
     nc = out["negative_controls"]
     case = out["cases"]["nx32"]
-    labels = ["stored vs\nvertices", "arc vs\npolygon law", "cross-section\nrecompute",
-              "1 % radius\ninflation", "1 % vertex\nshift"]
-    values = [case["identity_stored_vs_vertices_rel"], case["identity_arc_vs_inscribed_rel"],
-              case["cross_section_stored_rel"],
-              nc["radius_inflation_1pct_area_rel_change"],
-              nc["single_vertex_shift_1pct_area_rel_change"]]
+    labels = [
+        "stored vs\nvertices",
+        "arc vs\npolygon law",
+        "cross-section\nrecompute",
+        "1 % radius\ninflation",
+        "1 % vertex\nshift",
+    ]
+    values = [
+        case["identity_stored_vs_vertices_rel"],
+        case["identity_arc_vs_inscribed_rel"],
+        case["cross_section_stored_rel"],
+        nc["radius_inflation_1pct_area_rel_change"],
+        nc["single_vertex_shift_1pct_area_rel_change"],
+    ]
     colors = ["#2b8cbe"] * 3 + ["#de2d26"] * 2
     ax.bar(labels, [max(v, 1e-18) for v in values], color=colors)
     ax.set_yscale("log")
     ax.axhline(1e-12, color="k", ls=":", lw=1, label="round-off gate $10^{-12}$")
     ax.set_ylabel("relative discrepancy")
-    ax.set_title(f"Exact identities ($n_\\theta$={case['arc_faces']} arc faces) vs negative controls")
+    ax.set_title(
+        f"Exact identities ($n_\\theta$={case['arc_faces']} arc faces) vs negative controls"
+    )
     ax.legend(fontsize=8)
     fig.tight_layout()
     fig.savefig(path, dpi=150)
@@ -245,16 +277,32 @@ if __name__ == "__main__":
     (target / "results.json").write_text(json.dumps(results, indent=1) + "\n")
     plot(results, target / "geometry-convergence.png")
     case = results["cases"]["nx32"]
-    print(json.dumps({
-        "deficit_observed_order": results["refinement"]["deficit_observed_order"],
-        "identity_observed_order": results["refinement"]["identity_observed_order"],
-        "arc_faces_nx32": case["arc_faces"], "wake_faces_nx32": case["wake_faces"],
-        "identity_stored_vs_vertices_rel": case["identity_stored_vs_vertices_rel"],
-        "identity_arc_vs_inscribed_rel": case["identity_arc_vs_inscribed_rel"],
-        "cross_section_recompute_rel": case["cross_section_stored_rel"],
-        "cross_section_volume_rel": case["cross_section_volume_rel"],
-        "arc_vertex_radius_rel_error": case["arc_vertex_radius_rel_error"],
-        "deficit_vs_analytic_nx32": case["deficit_vs_analytic_rel"],
-        "negative_radius_inflation": results["negative_controls"]["radius_inflation_1pct_area_rel_change"],
-        "negative_vertex_shift": results["negative_controls"]["single_vertex_shift_1pct_area_rel_change"],
-    }, indent=1))
+    print(
+        json.dumps(
+            {
+                "deficit_observed_order": results["refinement"][
+                    "deficit_observed_order"
+                ],
+                "identity_observed_order": results["refinement"][
+                    "identity_observed_order"
+                ],
+                "arc_faces_nx32": case["arc_faces"],
+                "wake_faces_nx32": case["wake_faces"],
+                "identity_stored_vs_vertices_rel": case[
+                    "identity_stored_vs_vertices_rel"
+                ],
+                "identity_arc_vs_inscribed_rel": case["identity_arc_vs_inscribed_rel"],
+                "cross_section_recompute_rel": case["cross_section_stored_rel"],
+                "cross_section_volume_rel": case["cross_section_volume_rel"],
+                "arc_vertex_radius_rel_error": case["arc_vertex_radius_rel_error"],
+                "deficit_vs_analytic_nx32": case["deficit_vs_analytic_rel"],
+                "negative_radius_inflation": results["negative_controls"][
+                    "radius_inflation_1pct_area_rel_change"
+                ],
+                "negative_vertex_shift": results["negative_controls"][
+                    "single_vertex_shift_1pct_area_rel_change"
+                ],
+            },
+            indent=1,
+        )
+    )
