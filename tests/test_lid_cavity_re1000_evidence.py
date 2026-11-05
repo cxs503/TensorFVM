@@ -110,3 +110,23 @@ def test_extrema_are_grid_converged_between_n64_and_n128():
 def test_re400_v_centreline_discrepancy_is_still_present_and_unexplained():
     row = _cases()[(400.0, 64)]
     assert row["acceptance"]["pass"], row["acceptance"]["criteria"]
+
+
+def test_rejected_reference_correction_is_recorded_but_not_applied():
+    """m3240 proposed editing the printed Ghia value; keep the record, not the edit.
+
+    The proposal set ``V_CENTRELINE[400.0]`` at ``x = 0.9063`` to ``-0.38760`` -- the
+    solver's own Richardson limit -- which would have turned the strict xfail above
+    green without fixing anything.  It survives in ``REJECTED_CORRECTIONS`` for the
+    record and must never reach :func:`table`.
+    """
+    from tensorfvm.lid_cavity_reference import REJECTED_CORRECTIONS, table
+
+    published = dict(table(400.0, "v"))[0.9063]
+    assert abs(published - (-0.23827)) < 1e-12
+    record = REJECTED_CORRECTIONS[(400.0, "v", 0.9063)]
+    assert abs(record["published"] - published) < 1e-12
+    assert abs(record["proposed"] - (-0.38760)) < 1e-12
+    assert record["disposition"] == "rejected"
+    assert not any(abs(value - record["proposed"]) < 1e-6
+                   for _, value in table(400.0, "v"))

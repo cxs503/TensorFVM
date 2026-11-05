@@ -246,6 +246,44 @@ DISPUTES: dict[tuple[float, str, float], dict[str, object]] = {
 }
 
 
+#: Corrections that were *proposed* for a printed reference entry and *rejected*.
+#:
+#: A proposal is recorded verbatim so the reasoning stays auditable even though it
+#: is not in force.  Branch ``agent/m3240`` (mission m3240) proposed replacing the
+#: printed ``V_CENTRELINE[400.0]`` value at ``x = 0.9063`` with ``-0.38760``, calling
+#: ``-0.23827`` a transcription error.  The proposal is refused: ``-0.38760`` is the
+#: solver's *own* extrapolated limit (Richardson limit ``-0.38989``, see
+#: :data:`DISPUTES`, agreement 0.6 %), so scoring against it would be circular -- the
+#: reference would be fitted to the solver it exists to judge, and the Re = 400
+#: wall-adjacent field defect would leave the gate without being fixed.  It is also
+#: unsourced: the printed Table II has never been consulted in this checkout.  The
+#: published number therefore stays exactly as printed and the defect stays visible
+#: as a strict xfail; see ``docs/GHIA_RE400_V_ATTRIBUTION.md`` and ``revisit_if``.
+REJECTED_CORRECTIONS: dict[tuple[float, str, float], dict[str, object]] = {
+    (400.0, "v", 0.9063): {
+        "published": -0.23827,
+        "proposed": -0.38760,
+        "proposed_by": "branch agent/m3240 (mission m3240)",
+        "proposal_rationale": (
+            "the printed value was called a transcription error because it breaks "
+            "the boundary-layer profile between x = 0.9453 (-0.22847) and "
+            "x = 0.8594 (-0.44993), and because the solver's Re=400 v-centreline "
+            "error grew under refinement (0.1146/0.1424/0.1493 at n = 32/64/128)"),
+        "rejection_reasons": (
+            "circular: the replacement reproduces the solver's own Richardson limit "
+            "(-0.38989) to 0.6 %, so it cannot separate solver error from reference "
+            "error; unsourced: no printed Table II or independent DNS was consulted; "
+            "lossy: adopting it hides the wall-adjacent field defect that the strict "
+            "xfail exists to keep visible"),
+        "disposition": "rejected",
+        "revisit_if": (
+            "the printed Table II is checked against a physical copy of Ghia et al. "
+            "(1982), or an independent Re=400 DNS puts v(0.5, 0.9063) far from "
+            "-0.23827"),
+    },
+}
+
+
 def smoothness_audit(threshold: float = 10.0) -> dict:
     """Flag tabulated entries whose adjacent secant slopes jump by ``threshold``.
 
