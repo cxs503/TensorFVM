@@ -108,3 +108,21 @@ SIMPLEC 与 SIMPLE-default 的收敛场逐点对比（峰值差 / Ub，上限 1e
 - `src/tensorfvm/verification/cases.py`：`channel()` 增加 `algorithm`/松弛因子入参（默认不变），返回 `simplec_limited_dofs`。
 - `src/tensorfvm/verification/simplec_channel.py`：审计 CLI（矩阵实验 + 三张图 + JSON/Markdown）。
 - `tests/test_simplec.py`：5 组测试（配置校验、迁移率公式逐点核对、解析门禁、不动点一致、αp=1 稳定性）。
+
+## 7. 后续闭环：定义级守卫 + 负控（证据见 `scripts/artifacts/simplec-mobility/`）
+
+第 5 节局限 2（「分母下限在本案例从未生效，其必要性未被证明」）已在后续闭环，三层证据都在仓内：
+
+1. **定义级** `tests/test_simplec_mobility.py`（11 条守卫）：从 `_momentum()` 组装的模板独立重算 `aP`、`sum(aN)`，与 `_predict()` 返回的迁移率逐自由度比对；`alpha_u = 1` 强制分母退化，实测限幅恰为 `10 d_SIMPLE`（闭式），**该分支此前从未被执行**；纯扩散模板上比值等于闭式 `1/(1-alpha_u)`。
+2. **端到端** `verification/simplec_channel.py` 的 ny = 12/24 扫描：四项配置全部通过 3% 解析门（SIMPLEC αu=0.8/αp=1：剖面 L2 = 0.634%、压力梯度 = 1.370%、49 次迭代；SIMPLE 默认：0.634%、41 次）。SIMPLEC 与 SIMPLE 收敛到同一离散不动点（≤ 2.08e-06·Ub）。
+3. **负控**：把 SIMPLEC 分母替换成 SIMPLE 对角线（方案退化），8 条守卫变红（`8 failed, 3 deselected, 2 warnings in 6.57s`），源码在 `finally` 中恢复并校验 SHA-256 逐字节一致——守卫不是在测空气。
+
+复算与溯源：
+
+```bash
+python scripts/verify_simplec_mobility.py --output scripts/artifacts/simplec-mobility
+python -m pytest tests/test_simplec_mobility.py tests/test_simplec_artifacts.py -q
+```
+
+- 仓内只留摘要 `summary.json` + 缩小图，合计 95.3 KB（PR 工件帽 200 KB）；逐迭代完整证据写入仓外证据库（脚本打印路径），`--slim-from` 可重派生，二者不会漂移。
+- `summary.json.provenance` 记录 `src/tensorfvm/solver.py`（SHA-256 `f758b76e196844d7…`）等源码摘要；`tests/test_simplec_artifacts.py` 断言其与当前工作树一致，改动求解器必须重算证据，旧结论无法蒙混过关。
