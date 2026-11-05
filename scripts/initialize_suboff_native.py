@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 """Native SUBOFF Hodge initialization diagnostic, not a viscous flow run."""
-import argparse,json,shutil,time,sys,platform,subprocess
+import argparse
+import json
+import shutil
+import time
+import sys
+import platform
+import subprocess
 from pathlib import Path
 import numpy as np
 import scipy

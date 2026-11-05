@@ -29,11 +29,8 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 import torch  # noqa: E402
 
-from tensorfvm.multi_element_flow import MultiElementFlowSolver  # noqa: E402
-from tensorfvm.multi_element_skew_pressure import SkewPressureMultiElementSolver  # noqa: E402
 from tensorfvm.verification.multi_element_skew import (  # noqa: E402
-    _linear_field, face_reconstruction_exactness, force_conservation, gradient_error,
-    operator_consistency, order_study, smooth_field, smooth_gradient, solver_for,
+    _linear_field, face_reconstruction_exactness, force_conservation, operator_consistency, order_study, solver_for,
     solver_step_defect, wall_normal_removal)
 
 LEVELS = (8, 16, 32, 64)

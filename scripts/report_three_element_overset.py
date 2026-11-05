@@ -1,5 +1,7 @@
 """Publish saved three-element scalar evidence and figures without rerunning."""
-import argparse,csv,json
+import argparse
+import csv
+import json
 from pathlib import Path
 import numpy as np
 import matplotlib

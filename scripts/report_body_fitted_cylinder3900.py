@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Native mesh and actual startup-flow figures; no synthetic reference curves."""
-import argparse,json,hashlib,shutil
+import argparse
+import json
+import hashlib
+import shutil
 from pathlib import Path
 import numpy as np
 import matplotlib
@@ -14,7 +17,7 @@ def main():
     summary=json.loads((d/'summary.json').read_text());config=json.loads((d/'config.json').read_text())['config'];z=np.load(d/'checkpoint.npz',allow_pickle=False)
     nx,ny,nz=(config[k]for k in ('nx','ny','nz'));k=nz//2
     nodes=z['vertices'];cells=z['connectivity'].reshape(nz,ny,nx,8)[k].reshape(-1,8);polys=nodes.reshape(-1,3)[cells[:,:4],:2]-np.array([config['cylinder_x'],config['cylinder_y']])
-    centers=z['centers'].reshape(nz,ny,nx,3)[k];pressure=z['pressure'].reshape(nz,ny,nx)[k];velocity=z['velocity'].reshape(nz,ny,nx,3)[k]
+    pressure=z['pressure'].reshape(nz,ny,nx)[k];velocity=z['velocity'].reshape(nz,ny,nx,3)[k]
     figs=[]
     f=plt.figure(figsize=(11,5));ax=f.add_subplot(121,projection='3d')
     wall=nodes[:,0,:,:]

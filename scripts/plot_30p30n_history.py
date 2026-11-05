@@ -3,7 +3,9 @@
 Reads ``history-live.json`` (written every iteration) and the per-iteration
 coefficient lines of the run log when present, so it works on running jobs.
 """
-import argparse,json,re
+import argparse
+import json
+import re
 from pathlib import Path
 import matplotlib
 matplotlib.use('Agg')

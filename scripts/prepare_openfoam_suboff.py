@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Write a Foundation 12 SUBOFF case retaining the native diagnostic mesh."""
-import argparse,hashlib,json
+import argparse
+import hashlib
+import json
 from pathlib import Path
 from tensorfvm.native_mesh3d import NativeMesh3D
 from tensorfvm.openfoam_case import write_rans_case

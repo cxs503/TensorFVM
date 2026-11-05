@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Plot actual OpenFOAM cut cells, with cell-value pressure/velocity (no smoothing)."""
-import argparse,gzip,json,subprocess
+import argparse
+import gzip
+import json
+import subprocess
 from pathlib import Path
 import numpy as np
 import matplotlib

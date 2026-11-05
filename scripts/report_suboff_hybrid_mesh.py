@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Compile actual hybrid geometry evidence; replay quality from saved raw arrays."""
-import argparse,hashlib,json,shutil
+import argparse
+import hashlib
+import json
+import shutil
 from pathlib import Path
 import numpy as np
 from tensorfvm.suboff_geometry import radius

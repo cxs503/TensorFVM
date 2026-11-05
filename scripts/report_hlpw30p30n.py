@@ -3,7 +3,10 @@
 All experimental taps are plotted. Quantitative interpolation refuses ambiguous
 multi-valued abscissae and out-of-support taps; incomplete coverage cannot pass.
 """
-import argparse,csv,json,shutil
+import argparse
+import csv
+import json
+import shutil
 from pathlib import Path
 from types import SimpleNamespace
 import numpy as np
@@ -218,7 +221,7 @@ def main():
             fig,ax=plt.subplots(figsize=(12,4),constrained_layout=True);collection=PolyCollection(polys,array=data[field][ids],edgecolors='none',cmap='turbo',rasterized=True);ax.add_collection(collection);fig.colorbar(collection,ax=ax,label=label)
             for name,(_,body,_,_) in wall.items():ax.fill(body[:,0],body[:,1],color='white',edgecolor='black',linewidth=.6)
             ax.set_xlim(-.2,1.4);ax.set_ylim(-.35,.25);ax.set_aspect('equal');ax.set_title(f'Actual Gmsh cell field: {status}; accuracy NOT accepted');ax.set_xlabel('x/C');ax.set_ylabel('y/C');fig.savefig(out/(field+'.png'),dpi=300);pdf.savefig(fig);plt.close(fig)
-        history=summary['final_residuals'];all_history=json.loads((out/'history.json').read_text());fig,ax=plt.subplots(figsize=(10,5),constrained_layout=True)
+        all_history=json.loads((out/'history.json').read_text());fig,ax=plt.subplots(figsize=(10,5),constrained_layout=True)
         for key in ['momentum','turbulence','continuity','rhie_chow_flux_defect']:
             if all_history and key in all_history[-1]:ax.semilogy([r['iteration'] for r in all_history],[max(r.get(key,np.nan),1e-18) for r in all_history],label=key)
         ax.axhline(config['tolerance'],color='gray',linestyle='--',label='Outer tolerance');ax.set_xlabel('Completed iteration');ax.set_ylabel('Residual / defect');ax.legend();ax.grid(alpha=.25);fig.savefig(out/'convergence.png',dpi=250);pdf.savefig(fig);plt.close(fig)

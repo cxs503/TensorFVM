@@ -6,7 +6,8 @@ y+ 与 nu_tilde 场统计。用与 run_multiblock 相同的 c_forces 算法(blk.
 默认: 15000 8 0.05 2e-3 0 1   (CONV 稳定配置)
 输出: _cd_<tag>.npz + 文本摘要(分离区/块分解)
 """
-import sys, time
+import sys
+import time
 import numpy as np
 sys.path.insert(0, "/workspace")
 from tensorlbm import cgrid_gen as CGG, multiblock as MB, curve_grid as CG
@@ -99,7 +100,7 @@ def force_decomp(blk, nu, U, Lref):
 
 
 blocks = res["blocks"]
-print(f"\n=== 总力 (multiblock_forces) ===")
+print("\n=== 总力 (multiblock_forces) ===")
 Cd_t, Cl_t, Fxt, Fyt, Lref = MB.multiblock_forces(blocks, U, 8.1)
 print(f"  Cd={Cd_t:.4f}  Cl={Cl_t:.4f}  Lref={Lref:.4f}")
 

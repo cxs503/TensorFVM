@@ -1,6 +1,5 @@
 """Compare unmodified wall constants with NASA TMR public Coles correlation data."""
 import argparse
-import json
 from pathlib import Path
 import urllib.request
 import numpy as np

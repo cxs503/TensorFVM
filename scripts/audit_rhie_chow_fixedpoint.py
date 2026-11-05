@@ -1,5 +1,6 @@
 """Reconstruct inertia-free Rhie--Chow face flux at each saved steady state."""
-import argparse,json
+import argparse
+import json
 from pathlib import Path
 import numpy as np
 from tensorfvm.verification.core import sha,write_json,artifact_manifest

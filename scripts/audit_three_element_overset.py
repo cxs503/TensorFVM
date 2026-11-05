@@ -1,5 +1,6 @@
 """Independent NumPy replay of saved three-element overset nonorthogonal diffusion."""
-import argparse,json
+import argparse
+import json
 from pathlib import Path
 import numpy as np
 from tensorfvm.verification.core import sha,write_json,artifact_manifest
