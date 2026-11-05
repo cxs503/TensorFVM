@@ -1,0 +1,1189 @@
+{
+  "audit": {
+    "schema": "tensorfvm.simplec-audit/1",
+    "case": "developed channel, Re_H=1, Poiseuille analytic reference",
+    "provenance": {
+      "matplotlib": "3.10.8",
+      "git_base": "795da3d96cc205db4fe5a1f499576dad1f03ec65",
+      "python": "3.11.6",
+      "torch": "2.7.1",
+      "numpy": "2.4.6",
+      "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+      "torch_threads": 1,
+      "device": "cpu",
+      "source_sha256": {
+        "pyproject.toml": "423c47109f98776d5b9a4cc10f791438225f68d10bc6e0b3489709116204ff12",
+        "src/tensorfvm/__init__.py": "9f8d4d3a249d695e4e841e4c9d11d7158db8a2d33e2928d3565794718e2aba3c",
+        "src/tensorfvm/backend_registry.py": "e68b95fdb7c457b921b2f1c9e3920f80ebdcdb104ca8077e10e96d2a4182a13a",
+        "src/tensorfvm/body_fitted.py": "4e633fa42c1171cf57aca5bf930827f97a30dada4e405bf3ac9c1068ba1bb7a7",
+        "src/tensorfvm/mesh_api.py": "72f4f9d724084df335dca0e561877c5423c47a7f8bfffe950d631845e2dce22d",
+        "src/tensorfvm/periodic_mac.py": "b6b823c2c7972368a30fbba14f07d1222d062d00a9fe03c769c844407bfde5eb",
+        "src/tensorfvm/runtime.py": "ff383730f34f82030f28da424819eea670f28c663d5be834f30bebc6c74a2da5",
+        "src/tensorfvm/solver.py": "f758b76e196844d7e5e150af12b4885bbdbe5d27537c03616e4393ec24823d93",
+        "src/tensorfvm/verification/__init__.py": "2e93edad1f2e0ed881602c2f72592f32070e99f9a75433e6fa0ce4c485f52652",
+        "src/tensorfvm/verification/__main__.py": "bac1da0b8ea13da1d7e8de391d0da9fe5a69f8658d55c57d55fc9c861eb28096",
+        "src/tensorfvm/verification/annular.py": "be18e4e882ef3f03264e1e9e1b851e23a486100b78c451aa4fdaee7d3eb469fd",
+        "src/tensorfvm/verification/annular_convergence.py": "25f9a54c39863187d11431e9c97737dddc7955459b72680b13fb2d346fb21be0",
+        "src/tensorfvm/verification/annular_order.py": "ffbaf63d1b921d37635c99529d2281555ec1a4d22a425fb1bf5154f1cda40134",
+        "src/tensorfvm/verification/audit.py": "7df05206579b07718441e0ae894e60d8a7b2543fd8e557bd1f7fb7d8586ea414",
+        "src/tensorfvm/verification/cases.py": "5314907980c4ab04b398cd0fddb758388227411c9e887b6bd59305a957781e76",
+        "src/tensorfvm/verification/channel_dns.py": "bc127368baf312c7e7d4554986318fb2fbd225e1a91d3366a64e53cafca815a9",
+        "src/tensorfvm/verification/core.py": "088114b4c8ec39a0724213bfc00f83a4356bcaca1dd2398376ef35426866e12e",
+        "src/tensorfvm/verification/dfg.py": "f07412715767d7424c5a54fccd9c8b5f4aec964f8126532d45c1f7270351e1fc",
+        "src/tensorfvm/verification/engineering.py": "51a54c163066263eba16ec3b6532c37bf1fff3cb465a3ecd02cd98ea837b8079",
+        "src/tensorfvm/verification/engineering_audit.py": "987b3a75125152a634ebd116ca9df2913bfef5fa7ad78b306c980edc9d0359a1",
+        "src/tensorfvm/verification/extended.py": "9e28876cdd9681ad8dcd4075f897264703b1e8616a0694be5def3622ce030d1e",
+        "src/tensorfvm/verification/extended_audit.py": "8b2dcc2618d566b5abbdeed34312f2c8c1fb1349b12b90675080627a2a8cf4ce",
+        "src/tensorfvm/verification/extended_cases.py": "d5f58d4aca6706642d5e5d7307af3017d2c6c4840c3b485e68c98815edfc0796",
+        "src/tensorfvm/verification/external_flow.py": "f5ccc382d32d76afd0a454cf128af9f2984552930c2e2d00a6c2b86b94239447",
+        "src/tensorfvm/verification/external_gmsh.py": "5d77ea5ccf05d18055e33cf1d74266207676f8853d170d35d709b526a93b86e9",
+        "src/tensorfvm/verification/external_matched_naca.py": "bbd3a8584d7399dcd3c8c9200ba454d00c884bffc3818009e4e4ad012bb0b64d",
+        "src/tensorfvm/verification/external_mesh_report.py": "eb1beeff5743e9ed52a6929e48b7d830ef6c95e2e244f855305a171f4989d27e",
+        "src/tensorfvm/verification/fct_accuracy.py": "5d7cf5a95804e9d05fd55104aa52e07c1a23d7fdad8aa43bf190da22940d5e34",
+        "src/tensorfvm/verification/fct_conservation_audit.py": "a52f5edc806e43d41c52846f970adc9c3c12d0ccf8c2adabdc1a7e206dc41c5b",
+        "src/tensorfvm/verification/gpu.py": "1372d9c7deea0617673278b8b51220d529ca79b4a0b0b022fcd9783584c154e0",
+        "src/tensorfvm/verification/lbm.py": "0ad5bf5d1022752755f5f0ff47df597baf00dca3e64bf66e576014e6930be9a4",
+        "src/tensorfvm/verification/mac_time_order.py": "071dec368ed6e446a280e6cced8223d0b7f3ecf7d304fc4d70e138f93fd8317b",
+        "src/tensorfvm/verification/mesh_quality_audit.py": "0862417515454caea1ed4ac66ed68b91db697bac84be7ec87100ec7a57be345a",
+        "src/tensorfvm/verification/multi_element_ls.py": "189880400b7134ede05b97b996bdbae302f3d70759f21028d08f8d9013f3b0ca",
+        "src/tensorfvm/verification/native_developed_channel.py": "6d276124325ed26225e913a174bc29df4192eacfc3d24968de94e23989fff4ff",
+        "src/tensorfvm/verification/native_energy.py": "1d0da8eeced1c1630014a46bfbef94993ea82ff91ea64c10ecb8ff859609c169",
+        "src/tensorfvm/verification/native_hybrid_flow.py": "8b03c4acfa45924c354a1b30dce7e56b6285844f634a86135eedb7642ca8421a",
+        "src/tensorfvm/verification/native_hybrid_ns.py": "ed364ba9510e1f9a2eba2005b0cb17c3d07fa5a73b641fc9b1e665520104df48",
+        "src/tensorfvm/verification/native_hybrid_pressure.py": "2e6cb6f559e06ecf9c3e595bd140541c00efd1e09b2f7988d27eca3e6cd4ffb5",
+        "src/tensorfvm/verification/native_hybrid_rans.py": "8c082a9581caaa18c8a63c080d3693d24ccf0ba46d2f648f325d38b0d308ec45",
+        "src/tensorfvm/verification/native_hybrid_shear.py": "26d986ff7e326c090ccddb85bca6b4f3408b4bc1065d725117745e8b5143944b",
+        "src/tensorfvm/verification/native_order3d.py": "cafaddecbe7f75f745f4e16bd82e557e07efd930bff9d261d8acff868bb30d12",
+        "src/tensorfvm/verification/native_robin.py": "b0f06ba939ee6be1e5fa4aa2d52a4d764023ce0d0c9258868098d52dadb0474a",
+        "src/tensorfvm/verification/native_run.py": "c004151d4a2ef28dec780db01800fe8a91722fcb1b7d25a0066e62faa88e4230",
+        "src/tensorfvm/verification/native_spalding.py": "d1817e7fa354f038e0d58cd437d46b7616296a785a1dbda44c14cc74994d8766",
+        "src/tensorfvm/verification/native_sst_wall.py": "e6764d702c387befba9c149fefb79377c8cb75f31b79fc235209df7e17d82901",
+        "src/tensorfvm/verification/native_viscous_order3d.py": "b5c94c1e9ef03e95807e960293e44f80408301da272eb685d2957166a0c11e11",
+        "src/tensorfvm/verification/periodic_tgv.py": "5390397ddebd571dd52909b6344b0d3cede922d58e4ec7a07b49da666a067a8e",
+        "src/tensorfvm/verification/report.py": "d38464cbba0f152d4410589e6a66c8fe05f9f84da06ecab62d3895a8f77ead62",
+        "src/tensorfvm/verification/richardson.py": "e2c8f13c75b565e32d64c4940a8db3fe0924680ba31d31b9d809c1c610d4bb05",
+        "src/tensorfvm/verification/richardson_audit.py": "8a68d1c49776440f15f9ce51a55f988466095d92c016759a415b3d48ba790618",
+        "src/tensorfvm/verification/simple_gpu.py": "3c915805f1d81e29012457916437bfbd75e7a67413049e0f1f2ed463593e156f",
+        "src/tensorfvm/verification/simple_gpu_audit.py": "90a778cd314b9ab36183da98b428fbc0c4918587c80217de8fc8439e0db292f6",
+        "src/tensorfvm/verification/simplec_channel.py": "cdb41276348d96a0aea5f59767fa6324507724cda3ff4576adf78e073fb5048d",
+        "src/tensorfvm/verification/sst_channel_reference.py": "9ded60b9263f74d5bb6abb5c6cd5c2c7bdc938f22221322bc57728d30898a056",
+        "src/tensorfvm/verification/sst_channel_report.py": "0e3767af9dad934eabebefe17d6e999d29476c24eb89954f28e8a14496691eef",
+        "src/tensorfvm/verification/vof_rotation.py": "1f6e4a8976749955ba12fea74d4fff461f4bd7d37f377d8127612fbc040ac4fe",
+        "src/tensorfvm/verification/vof_transport_audit.py": "8c3c2f842b76e7dffffd06fb5300634fc10f0627b01c98d779d3e0853b4ad71a"
+      }
+    },
+    "error_limit": 0.03,
+    "resolutions": [
+      12,
+      24
+    ],
+    "summary_resolution": 12,
+    "max_iterations": 2000,
+    "fixed_point_delta_vs_simple_default": {
+      "simple-tuned": {
+        "u": 6.685001575738869e-08,
+        "v": 8.66608787362293e-09
+      },
+      "simple-default": {
+        "u": 0.0,
+        "v": 0.0
+      },
+      "simplec-a07-p10": {
+        "u": 2.0802836903175553e-06,
+        "v": 3.2719903037535004e-07
+      },
+      "simplec-a08-p10": {
+        "u": 6.684286999771027e-08,
+        "v": 3.6950314254722075e-08
+      }
+    },
+    "elapsed_s": 82.55835844017565,
+    "simplec_all_gates_passed": true,
+    "simplec_sustains_pressure_relaxation_one": true,
+    "fixed_point_agreement_max": 2.0802836903175553e-06,
+    "fixed_point_agreement_limit": 0.0001,
+    "fixed_point_agreement_passed": true,
+    "simple_alpha_p_one_failed": true,
+    "simplec_limited_dofs": {
+      "12/simple-default": 0,
+      "12/simple-tuned": 0,
+      "12/simplec-a07-p10": 0,
+      "12/simplec-a08-p10": 0,
+      "24/simple-default": 0,
+      "24/simple-tuned": 0,
+      "24/simplec-a07-p10": 0,
+      "24/simplec-a08-p10": 0,
+      "12/simplec-no-floor": 0
+    },
+    "limiter_observation": {
+      "limited_dofs_any": false,
+      "floor_free_equivalent": true
+    },
+    "passed": true,
+    "figures": [
+      "simplec-convergence.png",
+      "simplec-profile.png",
+      "simplec-iterations.png"
+    ]
+  },
+  "runs": [
+    {
+      "configuration": {
+        "label": "simple-default",
+        "algorithm": "simple",
+        "velocity_relaxation": 0.7,
+        "pressure_relaxation": 0.3
+      },
+      "resolution": 12,
+      "iterations": 41,
+      "converged": true,
+      "passed": true,
+      "elapsed_s": 3.4322989508509636,
+      "metrics": [
+        {
+          "name": "velocity_l2",
+          "value": 0.006343581084411816,
+          "limit": 0.03,
+          "description": "u profile at x nearest 5H",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "velocity_linf",
+          "value": 0.006801460833508293,
+          "limit": 0.03,
+          "description": "u profile peak-normalized maximum error",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "pressure_gradient",
+          "value": 0.013698530170547785,
+          "limit": 0.03,
+          "description": "least-squares dp/dx in 3H<=x<=5H",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "pressure_curve_l2",
+          "value": 0.013698530170547476,
+          "limit": 0.03,
+          "description": "mean-gauge aligned downstream pressure curve",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "wall_shear_linf",
+          "value": 0.013698549825190651,
+          "limit": 0.03,
+          "description": "half-cell wall shear, downstream only",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "force_balance",
+          "value": 1.959948359207804e-08,
+          "limit": 0.03,
+          "description": "developed pressure/wall-force balance",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "relative_mass_imbalance",
+          "value": 3.4694469519536127e-16,
+          "limit": 1e-06,
+          "description": "global inlet/outlet mass balance",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "scaled_divergence",
+          "value": 9.498198149162105e-15,
+          "limit": 1e-06,
+          "description": "authoritative face divergence H/Ub",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "solver_residual",
+          "value": 8.469435354622081e-07,
+          "limit": 1e-06,
+          "description": "final SIMPLE residual gate",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "convergence_failure",
+          "value": 0.0,
+          "limit": 0.5,
+          "description": "solver explicitly converged",
+          "unit": "1",
+          "passed": true
+        }
+      ],
+      "velocity_l2": 0.006343581084411816,
+      "velocity_linf": 0.006801460833508293,
+      "pressure_gradient": 0.013698530170547785,
+      "wall_shear_linf": 0.013698549825190651,
+      "relative_mass_imbalance": 3.4694469519536127e-16,
+      "scaled_divergence": 9.498198149162105e-15,
+      "solver_residual": 8.469435354622081e-07,
+      "simplec_limited_dofs": 0,
+      "history_length": 41,
+      "final_residuals": {
+        "iteration": 41,
+        "continuity": 9.498198149162105e-15,
+        "momentum": 8.469435354622081e-07,
+        "velocity_change": 2.8933689645571636e-08,
+        "mass_imbalance": 0.0
+      }
+    },
+    {
+      "configuration": {
+        "label": "simple-tuned",
+        "algorithm": "simple",
+        "velocity_relaxation": 0.8,
+        "pressure_relaxation": 0.3
+      },
+      "resolution": 12,
+      "iterations": 43,
+      "converged": true,
+      "passed": true,
+      "elapsed_s": 3.727704668417573,
+      "metrics": [
+        {
+          "name": "velocity_l2",
+          "value": 0.006343558452005869,
+          "limit": 0.03,
+          "description": "u profile at x nearest 5H",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "velocity_linf",
+          "value": 0.006801417763464114,
+          "limit": 0.03,
+          "description": "u profile peak-normalized maximum error",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "pressure_gradient",
+          "value": 0.013698630029014652,
+          "limit": 0.03,
+          "description": "least-squares dp/dx in 3H<=x<=5H",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "pressure_curve_l2",
+          "value": 0.013698630029014376,
+          "limit": 0.03,
+          "description": "mean-gauge aligned downstream pressure curve",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "wall_shear_linf",
+          "value": 0.013698630136801601,
+          "limit": 0.03,
+          "description": "half-cell wall shear, downstream only",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "force_balance",
+          "value": 2.166005861143176e-10,
+          "limit": 0.03,
+          "description": "developed pressure/wall-force balance",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "relative_mass_imbalance",
+          "value": 3.4694469519536127e-16,
+          "limit": 1e-06,
+          "description": "global inlet/outlet mass balance",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "scaled_divergence",
+          "value": 6.9360989784457155e-15,
+          "limit": 1e-06,
+          "description": "authoritative face divergence H/Ub",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "solver_residual",
+          "value": 8.229675279027499e-07,
+          "limit": 1e-06,
+          "description": "final SIMPLE residual gate",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "convergence_failure",
+          "value": 0.0,
+          "limit": 0.5,
+          "description": "solver explicitly converged",
+          "unit": "1",
+          "passed": true
+        }
+      ],
+      "velocity_l2": 0.006343558452005869,
+      "velocity_linf": 0.006801417763464114,
+      "pressure_gradient": 0.013698630029014652,
+      "wall_shear_linf": 0.013698630136801601,
+      "relative_mass_imbalance": 3.4694469519536127e-16,
+      "scaled_divergence": 6.9360989784457155e-15,
+      "solver_residual": 8.229675279027499e-07,
+      "simplec_limited_dofs": 0,
+      "history_length": 43,
+      "final_residuals": {
+        "iteration": 43,
+        "continuity": 6.9360989784457155e-15,
+        "momentum": 8.229675279027499e-07,
+        "velocity_change": 6.708302560361548e-09,
+        "mass_imbalance": 0.0
+      }
+    },
+    {
+      "configuration": {
+        "label": "simplec-a07-p10",
+        "algorithm": "simplec",
+        "velocity_relaxation": 0.7,
+        "pressure_relaxation": 1.0
+      },
+      "resolution": 12,
+      "iterations": 32,
+      "converged": true,
+      "passed": true,
+      "elapsed_s": 3.1963221598416567,
+      "metrics": [
+        {
+          "name": "velocity_l2",
+          "value": 0.006344304433284914,
+          "limit": 0.03,
+          "description": "u profile at x nearest 5H",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "velocity_linf",
+          "value": 0.006802805276027582,
+          "limit": 0.03,
+          "description": "u profile peak-normalized maximum error",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "pressure_gradient",
+          "value": 0.013695918836160725,
+          "limit": 0.03,
+          "description": "least-squares dp/dx in 3H<=x<=5H",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "pressure_curve_l2",
+          "value": 0.013695918836160573,
+          "limit": 0.03,
+          "description": "mean-gauge aligned downstream pressure curve",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "wall_shear_linf",
+          "value": 0.013695779850197784,
+          "limit": 0.03,
+          "description": "half-cell wall shear, downstream only",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "force_balance",
+          "value": 1.4191284990334088e-07,
+          "limit": 0.03,
+          "description": "developed pressure/wall-force balance",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "relative_mass_imbalance",
+          "value": 3.4694469519536127e-16,
+          "limit": 1e-06,
+          "description": "global inlet/outlet mass balance",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "scaled_divergence",
+          "value": 5.964443279322566e-15,
+          "limit": 1e-06,
+          "description": "authoritative face divergence H/Ub",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "solver_residual",
+          "value": 9.814256673603908e-07,
+          "limit": 1e-06,
+          "description": "final SIMPLE residual gate",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "convergence_failure",
+          "value": 0.0,
+          "limit": 0.5,
+          "description": "solver explicitly converged",
+          "unit": "1",
+          "passed": true
+        }
+      ],
+      "velocity_l2": 0.006344304433284914,
+      "velocity_linf": 0.006802805276027582,
+      "pressure_gradient": 0.013695918836160725,
+      "wall_shear_linf": 0.013695779850197784,
+      "relative_mass_imbalance": 3.4694469519536127e-16,
+      "scaled_divergence": 5.964443279322566e-15,
+      "solver_residual": 9.814256673603908e-07,
+      "simplec_limited_dofs": 0,
+      "history_length": 32,
+      "final_residuals": {
+        "iteration": 32,
+        "continuity": 5.964443279322566e-15,
+        "momentum": 9.814256673603908e-07,
+        "velocity_change": 1.026397029001147e-06,
+        "mass_imbalance": 0.0
+      }
+    },
+    {
+      "configuration": {
+        "label": "simplec-a08-p10",
+        "algorithm": "simplec",
+        "velocity_relaxation": 0.8,
+        "pressure_relaxation": 1.0
+      },
+      "resolution": 12,
+      "iterations": 49,
+      "converged": true,
+      "passed": true,
+      "elapsed_s": 4.876755030825734,
+      "metrics": [
+        {
+          "name": "velocity_l2",
+          "value": 0.006343558450405151,
+          "limit": 0.03,
+          "description": "u profile at x nearest 5H",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "velocity_linf",
+          "value": 0.006801417760477283,
+          "limit": 0.03,
+          "description": "u profile peak-normalized maximum error",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "pressure_gradient",
+          "value": 0.013698630034785775,
+          "limit": 0.03,
+          "description": "least-squares dp/dx in 3H<=x<=5H",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "pressure_curve_l2",
+          "value": 0.013698630034785522,
+          "limit": 0.03,
+          "description": "mean-gauge aligned downstream pressure curve",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "wall_shear_linf",
+          "value": 0.013698630141562694,
+          "limit": 0.03,
+          "description": "half-cell wall shear, downstream only",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "force_balance",
+          "value": 2.1761717309866084e-10,
+          "limit": 0.03,
+          "description": "developed pressure/wall-force balance",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "relative_mass_imbalance",
+          "value": 0.0,
+          "limit": 1e-06,
+          "description": "global inlet/outlet mass balance",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "scaled_divergence",
+          "value": 9.291252157385452e-15,
+          "limit": 1e-06,
+          "description": "authoritative face divergence H/Ub",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "solver_residual",
+          "value": 9.266167668253894e-07,
+          "limit": 1e-06,
+          "description": "final SIMPLE residual gate",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "convergence_failure",
+          "value": 0.0,
+          "limit": 0.5,
+          "description": "solver explicitly converged",
+          "unit": "1",
+          "passed": true
+        }
+      ],
+      "velocity_l2": 0.006343558450405151,
+      "velocity_linf": 0.006801417760477283,
+      "pressure_gradient": 0.013698630034785775,
+      "wall_shear_linf": 0.013698630141562694,
+      "relative_mass_imbalance": 0.0,
+      "scaled_divergence": 9.291252157385452e-15,
+      "solver_residual": 9.266167668253894e-07,
+      "simplec_limited_dofs": 0,
+      "history_length": 49,
+      "final_residuals": {
+        "iteration": 49,
+        "continuity": 9.291252157385452e-15,
+        "momentum": 9.266167668253894e-07,
+        "velocity_change": 5.92791777036944e-09,
+        "mass_imbalance": 0.0
+      }
+    },
+    {
+      "configuration": {
+        "label": "simple-default",
+        "algorithm": "simple",
+        "velocity_relaxation": 0.7,
+        "pressure_relaxation": 0.3
+      },
+      "resolution": 24,
+      "iterations": 87,
+      "converged": true,
+      "passed": true,
+      "elapsed_s": 19.159328810870647,
+      "metrics": [
+        {
+          "name": "velocity_l2",
+          "value": 0.001619709309362256,
+          "limit": 0.03,
+          "description": "u profile at x nearest 5H",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "velocity_linf",
+          "value": 0.0017380335467155194,
+          "limit": 0.03,
+          "description": "u profile peak-normalized maximum error",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "pressure_gradient",
+          "value": 0.003440186472073263,
+          "limit": 0.03,
+          "description": "least-squares dp/dx in 3H<=x<=5H",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "pressure_curve_l2",
+          "value": 0.003440186472073416,
+          "limit": 0.03,
+          "description": "mean-gauge aligned downstream pressure curve",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "wall_shear_linf",
+          "value": 0.0034402042283452707,
+          "limit": 0.03,
+          "description": "half-cell wall shear, downstream only",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "force_balance",
+          "value": 1.6056632422731997e-08,
+          "limit": 0.03,
+          "description": "developed pressure/wall-force balance",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "relative_mass_imbalance",
+          "value": 1.734723475976807e-16,
+          "limit": 1e-06,
+          "description": "global inlet/outlet mass balance",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "scaled_divergence",
+          "value": 9.052326180183146e-15,
+          "limit": 1e-06,
+          "description": "authoritative face divergence H/Ub",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "solver_residual",
+          "value": 9.080719215511874e-07,
+          "limit": 1e-06,
+          "description": "final SIMPLE residual gate",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "convergence_failure",
+          "value": 0.0,
+          "limit": 0.5,
+          "description": "solver explicitly converged",
+          "unit": "1",
+          "passed": true
+        }
+      ],
+      "velocity_l2": 0.001619709309362256,
+      "velocity_linf": 0.0017380335467155194,
+      "pressure_gradient": 0.003440186472073263,
+      "wall_shear_linf": 0.0034402042283452707,
+      "relative_mass_imbalance": 1.734723475976807e-16,
+      "scaled_divergence": 9.052326180183146e-15,
+      "solver_residual": 9.080719215511874e-07,
+      "simplec_limited_dofs": 0,
+      "history_length": 87,
+      "final_residuals": {
+        "iteration": 87,
+        "continuity": 9.052326180183146e-15,
+        "momentum": 9.080719215511874e-07,
+        "velocity_change": 2.1014182635756967e-06,
+        "mass_imbalance": 1.6940658945086004e-16
+      }
+    },
+    {
+      "configuration": {
+        "label": "simple-tuned",
+        "algorithm": "simple",
+        "velocity_relaxation": 0.8,
+        "pressure_relaxation": 0.3
+      },
+      "resolution": 24,
+      "iterations": 53,
+      "converged": true,
+      "passed": true,
+      "elapsed_s": 11.034344980493188,
+      "metrics": [
+        {
+          "name": "velocity_l2",
+          "value": 0.0016194553157564523,
+          "limit": 0.03,
+          "description": "u profile at x nearest 5H",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "velocity_linf",
+          "value": 0.0017375328430306288,
+          "limit": 0.03,
+          "description": "u profile peak-normalized maximum error",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "pressure_gradient",
+          "value": 0.0034422534698930196,
+          "limit": 0.03,
+          "description": "least-squares dp/dx in 3H<=x<=5H",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "pressure_curve_l2",
+          "value": 0.0034422534698930916,
+          "limit": 0.03,
+          "description": "mean-gauge aligned downstream pressure curve",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "wall_shear_linf",
+          "value": 0.0034413064692942474,
+          "limit": 0.03,
+          "description": "half-cell wall shear, downstream only",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "force_balance",
+          "value": 9.518189148986794e-07,
+          "limit": 0.03,
+          "description": "developed pressure/wall-force balance",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "relative_mass_imbalance",
+          "value": 1.734723475976807e-16,
+          "limit": 1e-06,
+          "description": "global inlet/outlet mass balance",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "scaled_divergence",
+          "value": 9.31465224552914e-15,
+          "limit": 1e-06,
+          "description": "authoritative face divergence H/Ub",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "solver_residual",
+          "value": 8.575968344848463e-07,
+          "limit": 1e-06,
+          "description": "final SIMPLE residual gate",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "convergence_failure",
+          "value": 0.0,
+          "limit": 0.5,
+          "description": "solver explicitly converged",
+          "unit": "1",
+          "passed": true
+        }
+      ],
+      "velocity_l2": 0.0016194553157564523,
+      "velocity_linf": 0.0017375328430306288,
+      "pressure_gradient": 0.0034422534698930196,
+      "wall_shear_linf": 0.0034413064692942474,
+      "relative_mass_imbalance": 1.734723475976807e-16,
+      "scaled_divergence": 9.31465224552914e-15,
+      "solver_residual": 8.575968344848463e-07,
+      "simplec_limited_dofs": 0,
+      "history_length": 53,
+      "final_residuals": {
+        "iteration": 53,
+        "continuity": 9.31465224552914e-15,
+        "momentum": 8.575968344848463e-07,
+        "velocity_change": 3.4347336455055333e-06,
+        "mass_imbalance": 1.6940658945086004e-16
+      }
+    },
+    {
+      "configuration": {
+        "label": "simplec-a07-p10",
+        "algorithm": "simplec",
+        "velocity_relaxation": 0.7,
+        "pressure_relaxation": 1.0
+      },
+      "resolution": 24,
+      "iterations": 87,
+      "converged": true,
+      "passed": true,
+      "elapsed_s": 16.25997531041503,
+      "metrics": [
+        {
+          "name": "velocity_l2",
+          "value": 0.0016197452697455782,
+          "limit": 0.03,
+          "description": "u profile at x nearest 5H",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "velocity_linf",
+          "value": 0.0017380922978307964,
+          "limit": 0.03,
+          "description": "u profile peak-normalized maximum error",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "pressure_gradient",
+          "value": 0.0034400835398568086,
+          "limit": 0.03,
+          "description": "least-squares dp/dx in 3H<=x<=5H",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "pressure_curve_l2",
+          "value": 0.0034400835398568186,
+          "limit": 0.03,
+          "description": "mean-gauge aligned downstream pressure curve",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "wall_shear_linf",
+          "value": 0.0034398109469527204,
+          "limit": 0.03,
+          "description": "half-cell wall shear, downstream only",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "force_balance",
+          "value": 2.7538072914045137e-07,
+          "limit": 0.03,
+          "description": "developed pressure/wall-force balance",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "relative_mass_imbalance",
+          "value": 0.0,
+          "limit": 1e-06,
+          "description": "global inlet/outlet mass balance",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "scaled_divergence",
+          "value": 1.2438550121126087e-14,
+          "limit": 1e-06,
+          "description": "authoritative face divergence H/Ub",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "solver_residual",
+          "value": 9.123708029484171e-07,
+          "limit": 1e-06,
+          "description": "final SIMPLE residual gate",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "convergence_failure",
+          "value": 0.0,
+          "limit": 0.5,
+          "description": "solver explicitly converged",
+          "unit": "1",
+          "passed": true
+        }
+      ],
+      "velocity_l2": 0.0016197452697455782,
+      "velocity_linf": 0.0017380922978307964,
+      "pressure_gradient": 0.0034400835398568086,
+      "wall_shear_linf": 0.0034398109469527204,
+      "relative_mass_imbalance": 0.0,
+      "scaled_divergence": 1.2438550121126087e-14,
+      "solver_residual": 9.123708029484171e-07,
+      "simplec_limited_dofs": 0,
+      "history_length": 87,
+      "final_residuals": {
+        "iteration": 87,
+        "continuity": 1.2438550121126087e-14,
+        "momentum": 9.123708029484171e-07,
+        "velocity_change": 2.1113656151119237e-06,
+        "mass_imbalance": 3.388131789017201e-16
+      }
+    },
+    {
+      "configuration": {
+        "label": "simplec-a08-p10",
+        "algorithm": "simplec",
+        "velocity_relaxation": 0.8,
+        "pressure_relaxation": 1.0
+      },
+      "resolution": 24,
+      "iterations": 53,
+      "converged": true,
+      "passed": true,
+      "elapsed_s": 12.974900679662824,
+      "metrics": [
+        {
+          "name": "velocity_l2",
+          "value": 0.0016194523303248913,
+          "limit": 0.03,
+          "description": "u profile at x nearest 5H",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "velocity_linf",
+          "value": 0.0017375131017887992,
+          "limit": 0.03,
+          "description": "u profile peak-normalized maximum error",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "pressure_gradient",
+          "value": 0.003440936860865107,
+          "limit": 0.03,
+          "description": "least-squares dp/dx in 3H<=x<=5H",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "pressure_curve_l2",
+          "value": 0.0034409368608650267,
+          "limit": 0.03,
+          "description": "mean-gauge aligned downstream pressure curve",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "wall_shear_linf",
+          "value": 0.0034407943992425215,
+          "limit": 0.03,
+          "description": "half-cell wall shear, downstream only",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "force_balance",
+          "value": 1.446188874620485e-07,
+          "limit": 0.03,
+          "description": "developed pressure/wall-force balance",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "relative_mass_imbalance",
+          "value": 1.734723475976807e-16,
+          "limit": 1e-06,
+          "description": "global inlet/outlet mass balance",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "scaled_divergence",
+          "value": 8.170599386444332e-15,
+          "limit": 1e-06,
+          "description": "authoritative face divergence H/Ub",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "solver_residual",
+          "value": 8.671058791707681e-07,
+          "limit": 1e-06,
+          "description": "final SIMPLE residual gate",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "convergence_failure",
+          "value": 0.0,
+          "limit": 0.5,
+          "description": "solver explicitly converged",
+          "unit": "1",
+          "passed": true
+        }
+      ],
+      "velocity_l2": 0.0016194523303248913,
+      "velocity_linf": 0.0017375131017887992,
+      "pressure_gradient": 0.003440936860865107,
+      "wall_shear_linf": 0.0034407943992425215,
+      "relative_mass_imbalance": 1.734723475976807e-16,
+      "scaled_divergence": 8.170599386444332e-15,
+      "solver_residual": 8.671058791707681e-07,
+      "simplec_limited_dofs": 0,
+      "history_length": 53,
+      "final_residuals": {
+        "iteration": 53,
+        "continuity": 8.170599386444332e-15,
+        "momentum": 8.671058791707681e-07,
+        "velocity_change": 3.4291294536987343e-06,
+        "mass_imbalance": 1.6940658945086004e-16
+      }
+    },
+    {
+      "configuration": {
+        "label": "simplec-no-floor",
+        "algorithm": "simplec",
+        "velocity_relaxation": 0.8,
+        "pressure_relaxation": 1.0
+      },
+      "resolution": 12,
+      "iterations": 49,
+      "converged": true,
+      "passed": true,
+      "elapsed_s": 5.097679629921913,
+      "metrics": [
+        {
+          "name": "velocity_l2",
+          "value": 0.006343558450405151,
+          "limit": 0.03,
+          "description": "u profile at x nearest 5H",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "velocity_linf",
+          "value": 0.006801417760477283,
+          "limit": 0.03,
+          "description": "u profile peak-normalized maximum error",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "pressure_gradient",
+          "value": 0.013698630034785775,
+          "limit": 0.03,
+          "description": "least-squares dp/dx in 3H<=x<=5H",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "pressure_curve_l2",
+          "value": 0.013698630034785522,
+          "limit": 0.03,
+          "description": "mean-gauge aligned downstream pressure curve",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "wall_shear_linf",
+          "value": 0.013698630141562694,
+          "limit": 0.03,
+          "description": "half-cell wall shear, downstream only",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "force_balance",
+          "value": 2.1761717309866084e-10,
+          "limit": 0.03,
+          "description": "developed pressure/wall-force balance",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "relative_mass_imbalance",
+          "value": 0.0,
+          "limit": 1e-06,
+          "description": "global inlet/outlet mass balance",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "scaled_divergence",
+          "value": 9.291252157385452e-15,
+          "limit": 1e-06,
+          "description": "authoritative face divergence H/Ub",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "solver_residual",
+          "value": 9.266167668253894e-07,
+          "limit": 1e-06,
+          "description": "final SIMPLE residual gate",
+          "unit": "1",
+          "passed": true
+        },
+        {
+          "name": "convergence_failure",
+          "value": 0.0,
+          "limit": 0.5,
+          "description": "solver explicitly converged",
+          "unit": "1",
+          "passed": true
+        }
+      ],
+      "velocity_l2": 0.006343558450405151,
+      "velocity_linf": 0.006801417760477283,
+      "pressure_gradient": 0.013698630034785775,
+      "wall_shear_linf": 0.013698630141562694,
+      "relative_mass_imbalance": 0.0,
+      "scaled_divergence": 9.291252157385452e-15,
+      "solver_residual": 9.266167668253894e-07,
+      "simplec_limited_dofs": 0,
+      "floor_fraction": 0.0,
+      "history_length": 49,
+      "final_residuals": {
+        "iteration": 49,
+        "continuity": 9.291252157385452e-15,
+        "momentum": 9.266167668253894e-07,
+        "velocity_change": 5.92791777036944e-09,
+        "mass_imbalance": 0.0
+      }
+    }
+  ],
+  "failed_simple_history": {
+    "SIMPLE alpha_u=0.8 alpha_p=1 (ny=12)": {
+      "failure": "RuntimeError",
+      "converged": false,
+      "history_length": 12,
+      "final_residuals": {
+        "iteration": 12,
+        "continuity": 1.8607406104820257e-06,
+        "momentum": 18355.016703017023,
+        "velocity_change": 5760.932756806184,
+        "mass_imbalance": 7.225501596238963e-08
+      }
+    }
+  },
+  "provenance": {
+    "src/tensorfvm/solver.py": "f758b76e196844d7e5e150af12b4885bbdbe5d27537c03616e4393ec24823d93",
+    "src/tensorfvm/verification/simplec_channel.py": "cdb41276348d96a0aea5f59767fa6324507724cda3ff4576adf78e073fb5048d",
+    "src/tensorfvm/verification/cases.py": "5314907980c4ab04b398cd0fddb758388227411c9e887b6bd59305a957781e76"
+  },
+  "guards": {
+    "returncode": 0,
+    "summary": "11 passed, 2 warnings in 23.87s",
+    "counts": {
+      "passed": 11
+    },
+    "failed": []
+  },
+  "mutation_control": {
+    "mutation": "mobility = relaxed  # MUTATION: SIMPLEC degenerates to SIMPLE",
+    "baseline": {
+      "returncode": 0,
+      "summary": "8 passed, 3 deselected, 2 warnings in 13.46s",
+      "counts": {
+        "passed": 8
+      },
+      "failed": []
+    },
+    "mutated": {
+      "returncode": 1,
+      "summary": "8 failed, 3 deselected, 2 warnings in 6.57s",
+      "counts": {
+        "failed": 8
+      },
+      "failed": [
+        "test_diffusion_dominated_ratio_is_one_over_one_minus_alpha[0.7]",
+        "test_diffusion_dominated_ratio_is_one_over_one_minus_alpha[0.8]",
+        "test_floor_limiter_engages_and_stays_finite",
+        "test_simplec_mobility_is_the_1984_denominator[u-0.7]",
+        "test_simplec_mobility_is_the_1984_denominator[u-0.8]",
+        "test_simplec_mobility_is_the_1984_denominator[v-0.7]",
+        "test_simplec_mobility_is_the_1984_denominator[v-0.8]",
+        "test_simplec_sustains_pressure_relaxation_one_where_simple_fails"
+      ]
+    },
+    "restored_sha256": "f758b76e196844d7e5e150af12b4885bbdbe5d27537c03616e4393ec24823d93",
+    "sensitive": true
+  },
+  "note": "Digest of the full evidence (per-iteration histories omitted). Full JSON is written to the evidence store by scripts/verify_simplec_mobility.py; regenerate it with the command recorded in the report."
+}
