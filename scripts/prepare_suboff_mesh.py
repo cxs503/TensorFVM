@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Prepare an actual unstructured SUBOFF body-fitted mesh and geometry report."""
-import argparse,json,hashlib
+import argparse
+import json
+import hashlib
 from pathlib import Path
 import numpy as np
 import matplotlib

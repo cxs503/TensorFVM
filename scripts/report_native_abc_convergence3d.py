@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Report source-bound nonlinear ABC 3D manufactured grid-refinement evidence."""
-import argparse,json,hashlib
+import argparse
+import json
+import hashlib
 from pathlib import Path
 import numpy as np
 import matplotlib

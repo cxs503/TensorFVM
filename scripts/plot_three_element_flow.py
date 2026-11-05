@@ -1,5 +1,6 @@
 """Show source geometry and actual saved cell flow fields, with convergence status."""
-import argparse,json
+import argparse
+import json
 from pathlib import Path
 import numpy as np
 import matplotlib

@@ -1,5 +1,9 @@
 """Add quantitative pressure/velocity curves and reproducible manuscript source."""
-import argparse,json,math,subprocess,tempfile
+import argparse
+import json
+import math
+import subprocess
+import tempfile
 from pathlib import Path
 import numpy as np
 from tensorfvm.verification.core import sha,write_json,artifact_manifest

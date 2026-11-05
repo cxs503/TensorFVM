@@ -1,5 +1,7 @@
 """Generate CAD triangle or polygon hybrid grids; CAD hybrid is experimental."""
-import argparse,json,shutil
+import argparse
+import json
+import shutil
 from pathlib import Path
 from types import SimpleNamespace
 import torch

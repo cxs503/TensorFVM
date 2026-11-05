@@ -1,0 +1,43 @@
+{
+ "spacings": [
+  0.015625,
+  0.03125,
+  0.0625,
+  0.125
+ ],
+ "values": [
+  1.0001220703125,
+  1.00048828125,
+  1.001953125,
+  1.0078125
+ ],
+ "order": 2.0000000000000306,
+ "order_used": 2.0000000000000306,
+ "extrapolated": 1.0,
+ "gci": 0.00015256926644696258,
+ "band": [
+  0.9998474307335531,
+  1.000152569266447
+ ],
+ "convergence": "monotone",
+ "fallback_reason": "none",
+ "safety_factor": 1.25,
+ "asymptotic": true,
+ "agree": {
+  "fallback_reason": "none",
+  "efficiency_index": 0.0,
+  "band_covered": true
+ },
+ "broken": {
+  "order_used": 1.0,
+  "extrapolated": 1.2,
+  "gci": 0.5999999999999999,
+  "convergence": "inconsistent",
+  "fallback_reason": "non-monotone",
+  "safety_factor": 3.0,
+  "band": [
+   0.4800000000000001,
+   1.92
+  ]
+ }
+}
