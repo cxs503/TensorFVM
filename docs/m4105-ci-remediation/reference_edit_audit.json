@@ -1,0 +1,81 @@
+{
+  "bundle": "docs/verification-lid-cavity-ladder/summary.json",
+  "dispute": {
+    "computed": {
+      "32": {
+        "computed": -0.3528387627669481,
+        "gap": 0.11456876276694808,
+        "rel_gap": 0.480835870092534
+      },
+      "64": {
+        "computed": -0.3806365470248758,
+        "gap": 0.1423665470248758,
+        "rel_gap": 0.5975009318205221
+      },
+      "128": {
+        "computed": -0.3875820683606132,
+        "gap": 0.1493120683606132,
+        "rel_gap": 0.6266507254820716
+      }
+    },
+    "gap_over_bound_n128": 149.31206836061318,
+    "metric_interpolation_error_bound_n128": 0.001,
+    "observed_order": 2.0,
+    "proposal_gap_to_limit": 0.0022900000000000142,
+    "proposal_gap_to_published": 0.14933,
+    "published": -0.23827,
+    "rejected_proposal": -0.3876,
+    "richardson_limit": -0.38989
+  },
+  "neighbour_gaps_n128": {
+    "0.8047": 0.0008559190927337479,
+    "0.8594": 0.0020628164045677355,
+    "0.9063": 0.1493120683606132,
+    "0.9453": 0.004307991766943214
+  },
+  "patched_table_audit": {
+    "entries": 42,
+    "flagged": [],
+    "ok": false,
+    "registered": [
+      "400/v/0.9063"
+    ],
+    "registered_flagged": [],
+    "threshold": 10.0,
+    "unexplained": []
+  },
+  "published_table_audit": {
+    "entries": 42,
+    "flagged": [
+      {
+        "key": "400/v/0.9063",
+        "reynolds": 400.0,
+        "slope_left": 4.513006396588492,
+        "slope_ratio": 17.959923414995025,
+        "slope_right": 0.25128205128205117,
+        "value": -0.23827,
+        "which": "v",
+        "x": 0.9063
+      },
+      {
+        "key": "400/v/0.9453",
+        "reynolds": 400.0,
+        "slope_left": 0.25128205128205117,
+        "slope_ratio": 18.331632653061433,
+        "slope_right": 4.606410256410307,
+        "value": -0.22847,
+        "which": "v",
+        "x": 0.9453
+      }
+    ],
+    "ok": true,
+    "registered": [
+      "400/v/0.9063"
+    ],
+    "registered_flagged": [
+      "400/v/0.9063"
+    ],
+    "threshold": 10.0,
+    "unexplained": []
+  }
+}
