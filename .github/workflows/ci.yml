@@ -59,10 +59,21 @@ jobs:
     name: lint (advisory)
     runs-on: ubuntu-latest
     # Advisory on purpose: the tree carries a large pre-existing ruff backlog
-    # (unused imports, import ordering, semicolon-packed statements).  Making
-    # it blocking would hide every other signal.  Fix the backlog, then drop
-    # this continue-on-error and promote it to a gate.
-    continue-on-error: true
+    # (~9.8k findings, ~550 files ruff-format would rewrite).  Making it
+    # blocking would hide every other signal.
+    #
+    # The advisory semantics are expressed on the STEPS, never on the job.
+    # A job-level `continue-on-error: true` only keeps the workflow *run*
+    # green: the job is still published as a failed check run, so every
+    # pull request reports "lint (advisory) = failure" and any merge gate
+    # keyed on check-run conclusions goes red over debt the PR did not
+    # create.  A step-level `continue-on-error: true` keeps the finding
+    # visible (red step, annotation, counts in the run summary) while the
+    # job/check-run conclusion stays success.
+    #
+    # Promotion path: clear the backlog, then delete the three per-step
+    # `continue-on-error` flags below to make this a gate.  See
+    # docs/ci-lint-advisory/README.md.
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -74,7 +85,27 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
+      - name: Backlog snapshot (advisory)
+        # Keeps the debt measurable in the run summary even while green, so
+        # "advisory" never degrades into "invisible".
+        continue-on-error: true
+        run: |
+          {
+            echo "### ruff backlog (advisory, non-blocking)"
+            echo ""
+            echo "Counts must be driven down before the lint job can become a gate."
+            echo ""
+            echo '```'
+            ruff check src tests scripts --statistics 2>&1 | tail -25 || true
+            echo '```'
+            echo ""
+            echo '```'
+            ruff format --check src tests scripts 2>&1 | tail -3 || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
       - name: Lint (ruff)
+        continue-on-error: true
         run: ruff check src tests scripts
       - name: Format check (ruff format)
+        continue-on-error: true
         run: ruff format --check src tests scripts
