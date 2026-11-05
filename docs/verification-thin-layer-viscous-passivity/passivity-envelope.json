@@ -1,0 +1,7051 @@
+{
+ "aspects": [
+  1.0,
+  2.0,
+  3.0,
+  5.0,
+  10.0,
+  20.0,
+  50.0
+ ],
+ "cells_per_family": 2,
+ "corrections": [
+  "over-relaxed",
+  "minimum",
+  "none"
+ ],
+ "damping_affine_cost": [
+  {
+   "damping": 0.0,
+   "maximum_relative_error": 4.09549e-14,
+   "zero_damping_reference": 3.79943e-14
+  },
+  {
+   "damping": 0.25,
+   "maximum_relative_error": 4.09549e-14,
+   "zero_damping_reference": 3.79943e-14
+  },
+  {
+   "damping": 0.5,
+   "maximum_relative_error": 3.79943e-14,
+   "zero_damping_reference": 3.79943e-14
+  },
+  {
+   "damping": 0.75,
+   "maximum_relative_error": 5.67447e-14,
+   "zero_damping_reference": 3.79943e-14
+  },
+  {
+   "damping": 1.0,
+   "maximum_relative_error": 3.79943e-14,
+   "zero_damping_reference": 3.79943e-14
+  }
+ ],
+ "damping_lines": {
+  "minimum": {
+   "correction": "minimum",
+   "full_damping_creation_rate": 2.07769,
+   "full_damping_passive": false,
+   "minimum_safe_damping": null,
+   "no_damping_creation_rate": 2.33385,
+   "rows": [
+    {
+     "creation_rate": 2.33385,
+     "damping": 0.0,
+     "lambda_min": -2.33385,
+     "passive": false
+    },
+    {
+     "creation_rate": 2.32092,
+     "damping": 0.05,
+     "lambda_min": -2.32092,
+     "passive": false
+    },
+    {
+     "creation_rate": 2.308,
+     "damping": 0.1,
+     "lambda_min": -2.308,
+     "passive": false
+    },
+    {
+     "creation_rate": 2.2951,
+     "damping": 0.15,
+     "lambda_min": -2.2951,
+     "passive": false
+    },
+    {
+     "creation_rate": 2.28221,
+     "damping": 0.2,
+     "lambda_min": -2.28221,
+     "passive": false
+    },
+    {
+     "creation_rate": 2.26933,
+     "damping": 0.25,
+     "lambda_min": -2.26933,
+     "passive": false
+    },
+    {
+     "creation_rate": 2.25646,
+     "damping": 0.3,
+     "lambda_min": -2.25646,
+     "passive": false
+    },
+    {
+     "creation_rate": 2.24361,
+     "damping": 0.35,
+     "lambda_min": -2.24361,
+     "passive": false
+    },
+    {
+     "creation_rate": 2.23077,
+     "damping": 0.4,
+     "lambda_min": -2.23077,
+     "passive": false
+    },
+    {
+     "creation_rate": 2.21794,
+     "damping": 0.45,
+     "lambda_min": -2.21794,
+     "passive": false
+    },
+    {
+     "creation_rate": 2.20513,
+     "damping": 0.5,
+     "lambda_min": -2.20513,
+     "passive": false
+    },
+    {
+     "creation_rate": 2.19233,
+     "damping": 0.55,
+     "lambda_min": -2.19233,
+     "passive": false
+    },
+    {
+     "creation_rate": 2.17954,
+     "damping": 0.6,
+     "lambda_min": -2.17954,
+     "passive": false
+    },
+    {
+     "creation_rate": 2.16676,
+     "damping": 0.65,
+     "lambda_min": -2.16676,
+     "passive": false
+    },
+    {
+     "creation_rate": 2.154,
+     "damping": 0.7,
+     "lambda_min": -2.154,
+     "passive": false
+    },
+    {
+     "creation_rate": 2.14125,
+     "damping": 0.75,
+     "lambda_min": -2.14125,
+     "passive": false
+    },
+    {
+     "creation_rate": 2.12851,
+     "damping": 0.8,
+     "lambda_min": -2.12851,
+     "passive": false
+    },
+    {
+     "creation_rate": 2.11579,
+     "damping": 0.85,
+     "lambda_min": -2.11579,
+     "passive": false
+    },
+    {
+     "creation_rate": 2.10308,
+     "damping": 0.9,
+     "lambda_min": -2.10308,
+     "passive": false
+    },
+    {
+     "creation_rate": 2.09038,
+     "damping": 0.95,
+     "lambda_min": -2.09038,
+     "passive": false
+    },
+    {
+     "creation_rate": 2.07769,
+     "damping": 1.0,
+     "lambda_min": -2.07769,
+     "passive": false
+    }
+   ]
+  },
+  "over-relaxed": {
+   "correction": "over-relaxed",
+   "full_damping_creation_rate": 0.0,
+   "full_damping_passive": true,
+   "minimum_safe_damping": 0.101513,
+   "no_damping_creation_rate": 2.33385,
+   "rows": [
+    {
+     "creation_rate": 2.33385,
+     "damping": 0.0,
+     "lambda_min": -2.33385,
+     "passive": false
+    },
+    {
+     "creation_rate": 1.15088,
+     "damping": 0.05,
+     "lambda_min": -1.15088,
+     "passive": false
+    },
+    {
+     "creation_rate": 0.0319784,
+     "damping": 0.1,
+     "lambda_min": -0.0319784,
+     "passive": false
+    },
+    {
+     "creation_rate": 0.0,
+     "damping": 0.15,
+     "lambda_min": 0.865993,
+     "passive": true
+    },
+    {
+     "creation_rate": 0.0,
+     "damping": 0.2,
+     "lambda_min": 1.6045,
+     "passive": true
+    },
+    {
+     "creation_rate": 0.0,
+     "damping": 0.25,
+     "lambda_min": 2.27295,
+     "passive": true
+    },
+    {
+     "creation_rate": 0.0,
+     "damping": 0.3,
+     "lambda_min": 2.80048,
+     "passive": true
+    },
+    {
+     "creation_rate": 0.0,
+     "damping": 0.35,
+     "lambda_min": 3.05885,
+     "passive": true
+    },
+    {
+     "creation_rate": 0.0,
+     "damping": 0.4,
+     "lambda_min": 3.1462,
+     "passive": true
+    },
+    {
+     "creation_rate": 0.0,
+     "damping": 0.45,
+     "lambda_min": 3.21832,
+     "passive": true
+    },
+    {
+     "creation_rate": 0.0,
+     "damping": 0.5,
+     "lambda_min": 3.28021,
+     "passive": true
+    },
+    {
+     "creation_rate": 0.0,
+     "damping": 0.55,
+     "lambda_min": 3.33435,
+     "passive": true
+    },
+    {
+     "creation_rate": 0.0,
+     "damping": 0.6,
+     "lambda_min": 3.38234,
+     "passive": true
+    },
+    {
+     "creation_rate": 0.0,
+     "damping": 0.65,
+     "lambda_min": 3.42529,
+     "passive": true
+    },
+    {
+     "creation_rate": 0.0,
+     "damping": 0.7,
+     "lambda_min": 3.46407,
+     "passive": true
+    },
+    {
+     "creation_rate": 0.0,
+     "damping": 0.75,
+     "lambda_min": 3.49934,
+     "passive": true
+    },
+    {
+     "creation_rate": 0.0,
+     "damping": 0.8,
+     "lambda_min": 3.53163,
+     "passive": true
+    },
+    {
+     "creation_rate": 0.0,
+     "damping": 0.85,
+     "lambda_min": 3.55836,
+     "passive": true
+    },
+    {
+     "creation_rate": 0.0,
+     "damping": 0.9,
+     "lambda_min": 3.57577,
+     "passive": true
+    },
+    {
+     "creation_rate": 0.0,
+     "damping": 0.95,
+     "lambda_min": 3.59196,
+     "passive": true
+    },
+    {
+     "creation_rate": 0.0,
+     "damping": 1.0,
+     "lambda_min": 3.60713,
+     "passive": true
+    }
+   ]
+  }
+ },
+ "description": "Thin-layer passivity envelope of the implicit native viscous operator",
+ "envelope": {
+  "hexa-tri/minimum": {
+   "first_failing_angle": 87.5706,
+   "first_failing_aspect_ratio": 50.0,
+   "passive_samples": 30,
+   "samples": 35,
+   "worst_creation_fraction": 0.258737
+  },
+  "hexa-tri/none": {
+   "first_failing_angle": 25.2394,
+   "first_failing_aspect_ratio": 1.0,
+   "passive_samples": 0,
+   "samples": 35,
+   "worst_creation_fraction": 0.445693
+  },
+  "hexa-tri/over-relaxed": {
+   "first_failing_angle": null,
+   "first_failing_aspect_ratio": null,
+   "passive_samples": 35,
+   "samples": 35,
+   "worst_creation_fraction": 0.0
+  },
+  "tetra/minimum": {
+   "first_failing_angle": 76.2558,
+   "first_failing_aspect_ratio": 5.0,
+   "passive_samples": 17,
+   "samples": 35,
+   "worst_creation_fraction": 0.0972819
+  },
+  "tetra/none": {
+   "first_failing_angle": 36.6992,
+   "first_failing_aspect_ratio": 1.0,
+   "passive_samples": 0,
+   "samples": 35,
+   "worst_creation_fraction": 0.162406
+  },
+  "tetra/over-relaxed": {
+   "first_failing_angle": null,
+   "first_failing_aspect_ratio": null,
+   "passive_samples": 35,
+   "samples": 35,
+   "worst_creation_fraction": 0.0
+  },
+  "wedge-quad/minimum": {
+   "first_failing_angle": null,
+   "first_failing_aspect_ratio": null,
+   "passive_samples": 35,
+   "samples": 35,
+   "worst_creation_fraction": 0.0
+  },
+  "wedge-quad/none": {
+   "first_failing_angle": 26.5651,
+   "first_failing_aspect_ratio": 1.0,
+   "passive_samples": 0,
+   "samples": 35,
+   "worst_creation_fraction": 0.0463542
+  },
+  "wedge-quad/over-relaxed": {
+   "first_failing_angle": null,
+   "first_failing_aspect_ratio": null,
+   "passive_samples": 35,
+   "samples": 35,
+   "worst_creation_fraction": 0.0
+  },
+  "wedge-tri/minimum": {
+   "first_failing_angle": null,
+   "first_failing_aspect_ratio": null,
+   "passive_samples": 35,
+   "samples": 35,
+   "worst_creation_fraction": 0.0
+  },
+  "wedge-tri/none": {
+   "first_failing_angle": 48.1897,
+   "first_failing_aspect_ratio": 1.0,
+   "passive_samples": 0,
+   "samples": 35,
+   "worst_creation_fraction": 0.0484195
+  },
+  "wedge-tri/over-relaxed": {
+   "first_failing_angle": null,
+   "first_failing_aspect_ratio": null,
+   "passive_samples": 35,
+   "samples": 35,
+   "worst_creation_fraction": 0.0
+  }
+ },
+ "families": [
+  "tetra",
+  "wedge-quad",
+  "wedge-tri",
+  "hexa-tri"
+ ],
+ "gamma_line": {
+  "any_passive": true,
+  "minimum_gamma": 3.18408,
+  "minimum_passive_gamma": 78.2926,
+  "over_relaxed_gamma": [
+   640.0,
+   1280.0
+  ],
+  "passive_fraction": 0.310345,
+  "rows": [
+   {
+    "creation_rate": 2.33385,
+    "gamma": 1e-08,
+    "passive": false
+   },
+   {
+    "creation_rate": 2.33385,
+    "gamma": 3.16228e-08,
+    "passive": false
+   },
+   {
+    "creation_rate": 2.33385,
+    "gamma": 1e-07,
+    "passive": false
+   },
+   {
+    "creation_rate": 2.33385,
+    "gamma": 3.16228e-07,
+    "passive": false
+   },
+   {
+    "creation_rate": 2.33385,
+    "gamma": 1e-06,
+    "passive": false
+   },
+   {
+    "creation_rate": 2.33385,
+    "gamma": 3.16228e-06,
+    "passive": false
+   },
+   {
+    "creation_rate": 2.33385,
+    "gamma": 1e-05,
+    "passive": false
+   },
+   {
+    "creation_rate": 2.33385,
+    "gamma": 3.16228e-05,
+    "passive": false
+   },
+   {
+    "creation_rate": 2.33385,
+    "gamma": 0.0001,
+    "passive": false
+   },
+   {
+    "creation_rate": 2.33384,
+    "gamma": 0.000316228,
+    "passive": false
+   },
+   {
+    "creation_rate": 2.33382,
+    "gamma": 0.001,
+    "passive": false
+   },
+   {
+    "creation_rate": 2.33375,
+    "gamma": 0.00316228,
+    "passive": false
+   },
+   {
+    "creation_rate": 2.33353,
+    "gamma": 0.01,
+    "passive": false
+   },
+   {
+    "creation_rate": 2.33284,
+    "gamma": 0.0316228,
+    "passive": false
+   },
+   {
+    "creation_rate": 2.33066,
+    "gamma": 0.1,
+    "passive": false
+   },
+   {
+    "creation_rate": 2.32376,
+    "gamma": 0.316228,
+    "passive": false
+   },
+   {
+    "creation_rate": 2.30195,
+    "gamma": 1.0,
+    "passive": false
+   },
+   {
+    "creation_rate": 2.23315,
+    "gamma": 3.16228,
+    "passive": false
+   },
+   {
+    "creation_rate": 2.01717,
+    "gamma": 10.0,
+    "passive": false
+   },
+   {
+    "creation_rate": 1.34998,
+    "gamma": 31.6228,
+    "passive": false
+   },
+   {
+    "creation_rate": 0.0,
+    "gamma": 100.0,
+    "passive": true
+   },
+   {
+    "creation_rate": 0.0,
+    "gamma": 316.228,
+    "passive": true
+   },
+   {
+    "creation_rate": 0.0,
+    "gamma": 1000.0,
+    "passive": true
+   },
+   {
+    "creation_rate": 0.0,
+    "gamma": 3162.28,
+    "passive": true
+   },
+   {
+    "creation_rate": 0.0,
+    "gamma": 10000.0,
+    "passive": true
+   },
+   {
+    "creation_rate": 0.0,
+    "gamma": 31622.8,
+    "passive": true
+   },
+   {
+    "creation_rate": 0.0,
+    "gamma": 100000.0,
+    "passive": true
+   },
+   {
+    "creation_rate": 0.0,
+    "gamma": 316228.0,
+    "passive": true
+   },
+   {
+    "creation_rate": 0.0,
+    "gamma": 1000000.0,
+    "passive": true
+   }
+  ]
+ },
+ "mesh_rows": [
+  {
+   "aspect_ratio": 1.0,
+   "cells": 48,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 0.60195,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.000330956,
+     "vector": {
+      "creation_fraction": 0.0363042,
+      "creation_rate": 0.112395,
+      "lambda_min": -0.112395,
+      "passive": false,
+      "wrong_sign_modes": 12
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 0.646971,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 120,
+   "family": "tetra",
+   "quality": {
+    "max_aspect_descriptor": 3.56762,
+    "max_nonorthogonality_degrees": 36.6992,
+    "min_cell_volume": 0.0208333,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.0,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 1.0,
+   "cells": 48,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 0.585292,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.0079736,
+     "vector": {
+      "creation_fraction": 0.0747122,
+      "creation_rate": 0.277104,
+      "lambda_min": -0.277104,
+      "passive": false,
+      "wrong_sign_modes": 18
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 0.648737,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 120,
+   "family": "tetra",
+   "quality": {
+    "max_aspect_descriptor": 4.14141,
+    "max_nonorthogonality_degrees": 43.7061,
+    "min_cell_volume": 0.0208333,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.2,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 1.0,
+   "cells": 48,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 0.571335,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.0309007,
+     "vector": {
+      "creation_fraction": 0.104245,
+      "creation_rate": 0.465672,
+      "lambda_min": -0.465672,
+      "passive": false,
+      "wrong_sign_modes": 22
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 0.663404,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 120,
+   "family": "tetra",
+   "quality": {
+    "max_aspect_descriptor": 4.78713,
+    "max_nonorthogonality_degrees": 50.8208,
+    "min_cell_volume": 0.0208333,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.4,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 1.0,
+   "cells": 48,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 0.556865,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.0623328,
+     "vector": {
+      "creation_fraction": 0.124888,
+      "creation_rate": 0.66782,
+      "lambda_min": -0.66782,
+      "passive": false,
+      "wrong_sign_modes": 26
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 0.691669,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 120,
+   "family": "tetra",
+   "quality": {
+    "max_aspect_descriptor": 5.49786,
+    "max_nonorthogonality_degrees": 57.2723,
+    "min_cell_volume": 0.0208333,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.6,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 1.0,
+   "cells": 48,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 0.517897,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.0945946,
+     "vector": {
+      "creation_fraction": 0.140007,
+      "creation_rate": 0.888363,
+      "lambda_min": -0.888363,
+      "passive": false,
+      "wrong_sign_modes": 32
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 0.733793,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 120,
+   "family": "tetra",
+   "quality": {
+    "max_aspect_descriptor": 6.26802,
+    "max_nonorthogonality_degrees": 62.7409,
+    "min_cell_volume": 0.0208333,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.8,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 2.0,
+   "cells": 48,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 0.547495,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.0485034,
+     "vector": {
+      "creation_fraction": 0.0915211,
+      "creation_rate": 0.321667,
+      "lambda_min": -0.321667,
+      "passive": false,
+      "wrong_sign_modes": 13
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 0.606486,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 120,
+   "family": "tetra",
+   "quality": {
+    "max_aspect_descriptor": 5.01555,
+    "max_nonorthogonality_degrees": 56.1455,
+    "min_cell_volume": 0.0104167,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.0,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 2.0,
+   "cells": 48,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 0.533412,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.0737442,
+     "vector": {
+      "creation_fraction": 0.113427,
+      "creation_rate": 0.457458,
+      "lambda_min": -0.457458,
+      "passive": false,
+      "wrong_sign_modes": 20
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 0.610736,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 120,
+   "family": "tetra",
+   "quality": {
+    "max_aspect_descriptor": 5.63509,
+    "max_nonorthogonality_degrees": 59.1168,
+    "min_cell_volume": 0.0104167,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.2,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 2.0,
+   "cells": 48,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 0.512032,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.0973968,
+     "vector": {
+      "creation_fraction": 0.131732,
+      "creation_rate": 0.616213,
+      "lambda_min": -0.616213,
+      "passive": false,
+      "wrong_sign_modes": 24
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 0.62028,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 120,
+   "family": "tetra",
+   "quality": {
+    "max_aspect_descriptor": 6.28856,
+    "max_nonorthogonality_degrees": 61.6989,
+    "min_cell_volume": 0.0104167,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.4,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 2.0,
+   "cells": 48,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 0.475041,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.116846,
+     "vector": {
+      "creation_fraction": 0.145742,
+      "creation_rate": 0.789713,
+      "lambda_min": -0.789713,
+      "passive": false,
+      "wrong_sign_modes": 31
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 0.635541,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 120,
+   "family": "tetra",
+   "quality": {
+    "max_aspect_descriptor": 6.97409,
+    "max_nonorthogonality_degrees": 63.942,
+    "min_cell_volume": 0.0104167,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.6,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 2.0,
+   "cells": 48,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 0.371442,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.131817,
+     "vector": {
+      "creation_fraction": 0.155887,
+      "creation_rate": 0.972528,
+      "lambda_min": -0.972528,
+      "passive": false,
+      "wrong_sign_modes": 35
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 0.656885,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 120,
+   "family": "tetra",
+   "quality": {
+    "max_aspect_descriptor": 7.69007,
+    "max_nonorthogonality_degrees": 65.8957,
+    "min_cell_volume": 0.0104167,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.8,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 3.0,
+   "cells": 48,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 0.603558,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.0688806,
+     "vector": {
+      "creation_fraction": 0.0986577,
+      "creation_rate": 0.439384,
+      "lambda_min": -0.439384,
+      "passive": false,
+      "wrong_sign_modes": 16
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 0.707311,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 120,
+   "family": "tetra",
+   "quality": {
+    "max_aspect_descriptor": 6.88725,
+    "max_nonorthogonality_degrees": 65.9052,
+    "min_cell_volume": 0.00694444,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.0,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 3.0,
+   "cells": 48,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 0.573738,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.0922271,
+     "vector": {
+      "creation_fraction": 0.118796,
+      "creation_rate": 0.589966,
+      "lambda_min": -0.589966,
+      "passive": false,
+      "wrong_sign_modes": 16
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 0.711349,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 120,
+   "family": "tetra",
+   "quality": {
+    "max_aspect_descriptor": 7.51831,
+    "max_nonorthogonality_degrees": 67.5201,
+    "min_cell_volume": 0.00694444,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.2,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 3.0,
+   "cells": 48,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 0.441044,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.11346,
+     "vector": {
+      "creation_fraction": 0.136387,
+      "creation_rate": 0.761107,
+      "lambda_min": -0.761107,
+      "passive": false,
+      "wrong_sign_modes": 21
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 0.718197,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 120,
+   "family": "tetra",
+   "quality": {
+    "max_aspect_descriptor": 8.17124,
+    "max_nonorthogonality_degrees": 68.9625,
+    "min_cell_volume": 0.00694444,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.4,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 3.0,
+   "cells": 48,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 0.266735,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.131389,
+     "vector": {
+      "creation_fraction": 0.150913,
+      "creation_rate": 0.946978,
+      "lambda_min": -0.946978,
+      "passive": false,
+      "wrong_sign_modes": 27
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 0.72817,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 120,
+   "family": "tetra",
+   "quality": {
+    "max_aspect_descriptor": 8.84524,
+    "max_nonorthogonality_degrees": 70.2529,
+    "min_cell_volume": 0.00694444,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.6,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 3.0,
+   "cells": 48,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 0.0742545,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.145807,
+     "vector": {
+      "creation_fraction": 0.162406,
+      "creation_rate": 1.14265,
+      "lambda_min": -1.14265,
+      "passive": false,
+      "wrong_sign_modes": 34
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 0.741606,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 120,
+   "family": "tetra",
+   "quality": {
+    "max_aspect_descriptor": 9.53962,
+    "max_nonorthogonality_degrees": 71.4103,
+    "min_cell_volume": 0.00694444,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.8,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 5.0,
+   "cells": 48,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 0.224894,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.0776767,
+     "vector": {
+      "creation_fraction": 0.0932411,
+      "creation_rate": 0.631405,
+      "lambda_min": -0.631405,
+      "passive": false,
+      "wrong_sign_modes": 16
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 0.999768,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 120,
+   "family": "tetra",
+   "quality": {
+    "max_aspect_descriptor": 10.9232,
+    "max_nonorthogonality_degrees": 74.9797,
+    "min_cell_volume": 0.00416667,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.0,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 5.0,
+   "cells": 48,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 0.093093,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.0953839,
+     "vector": {
+      "creation_fraction": 0.10944,
+      "creation_rate": 0.788771,
+      "lambda_min": -0.788771,
+      "passive": false,
+      "wrong_sign_modes": 16
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.0043,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 120,
+   "family": "tetra",
+   "quality": {
+    "max_aspect_descriptor": 11.5599,
+    "max_nonorthogonality_degrees": 75.6422,
+    "min_cell_volume": 0.00416667,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.2,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 5.0,
+   "cells": 48,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.00848092,
+      "creation_rate": 0.0634374,
+      "lambda_min": -0.0634374,
+      "passive": false,
+      "wrong_sign_modes": 2
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.111453,
+     "vector": {
+      "creation_fraction": 0.123913,
+      "creation_rate": 0.962235,
+      "lambda_min": -0.962235,
+      "passive": false,
+      "wrong_sign_modes": 21
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.00906,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 120,
+   "family": "tetra",
+   "quality": {
+    "max_aspect_descriptor": 12.2094,
+    "max_nonorthogonality_degrees": 76.2558,
+    "min_cell_volume": 0.00416667,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.4,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 5.0,
+   "cells": 48,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0294735,
+      "creation_rate": 0.238342,
+      "lambda_min": -0.238342,
+      "passive": false,
+      "wrong_sign_modes": 4
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.126098,
+     "vector": {
+      "creation_fraction": 0.137044,
+      "creation_rate": 1.14901,
+      "lambda_min": -1.14901,
+      "passive": false,
+      "wrong_sign_modes": 26
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.01504,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 120,
+   "family": "tetra",
+   "quality": {
+    "max_aspect_descriptor": 12.8715,
+    "max_nonorthogonality_degrees": 76.8249,
+    "min_cell_volume": 0.00416667,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.6,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 5.0,
+   "cells": 48,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0156175,
+     "vector": {
+      "creation_fraction": 0.048903,
+      "creation_rate": 0.427828,
+      "lambda_min": -0.427828,
+      "passive": false,
+      "wrong_sign_modes": 11
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.138939,
+     "vector": {
+      "creation_fraction": 0.148565,
+      "creation_rate": 1.34643,
+      "lambda_min": -1.34643,
+      "passive": false,
+      "wrong_sign_modes": 31
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.02246,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 120,
+   "family": "tetra",
+   "quality": {
+    "max_aspect_descriptor": 13.5458,
+    "max_nonorthogonality_degrees": 77.3534,
+    "min_cell_volume": 0.00416667,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.8,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 10.0,
+   "cells": 48,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0367266,
+     "vector": {
+      "creation_fraction": 0.0528365,
+      "creation_rate": 0.689068,
+      "lambda_min": -0.689068,
+      "passive": false,
+      "wrong_sign_modes": 12
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.0815767,
+     "vector": {
+      "creation_fraction": 0.0895509,
+      "creation_rate": 1.18287,
+      "lambda_min": -1.18287,
+      "passive": false,
+      "wrong_sign_modes": 24
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.844,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 120,
+   "family": "tetra",
+   "quality": {
+    "max_aspect_descriptor": 21.3721,
+    "max_nonorthogonality_degrees": 82.3586,
+    "min_cell_volume": 0.00208333,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.0,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 10.0,
+   "cells": 48,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0475774,
+     "vector": {
+      "creation_fraction": 0.0625631,
+      "creation_rate": 0.838264,
+      "lambda_min": -0.838264,
+      "passive": false,
+      "wrong_sign_modes": 12
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.091112,
+     "vector": {
+      "creation_fraction": 0.0981904,
+      "creation_rate": 1.33176,
+      "lambda_min": -1.33176,
+      "passive": false,
+      "wrong_sign_modes": 24
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.84734,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 120,
+   "family": "tetra",
+   "quality": {
+    "max_aspect_descriptor": 22.0101,
+    "max_nonorthogonality_degrees": 82.5362,
+    "min_cell_volume": 0.00208333,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.2,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 10.0,
+   "cells": 48,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0584423,
+     "vector": {
+      "creation_fraction": 0.0721689,
+      "creation_rate": 0.995187,
+      "lambda_min": -0.995187,
+      "passive": false,
+      "wrong_sign_modes": 14
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.100686,
+     "vector": {
+      "creation_fraction": 0.106801,
+      "creation_rate": 1.49004,
+      "lambda_min": -1.49004,
+      "passive": false,
+      "wrong_sign_modes": 24
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.85085,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 120,
+   "family": "tetra",
+   "quality": {
+    "max_aspect_descriptor": 22.6545,
+    "max_nonorthogonality_degrees": 82.7066,
+    "min_cell_volume": 0.00208333,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.4,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 10.0,
+   "cells": 48,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0688054,
+     "vector": {
+      "creation_fraction": 0.0810997,
+      "creation_rate": 1.15958,
+      "lambda_min": -1.15958,
+      "passive": false,
+      "wrong_sign_modes": 14
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.109317,
+     "vector": {
+      "creation_fraction": 0.114778,
+      "creation_rate": 1.66275,
+      "lambda_min": -1.66275,
+      "passive": false,
+      "wrong_sign_modes": 24
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.85461,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 120,
+   "family": "tetra",
+   "quality": {
+    "max_aspect_descriptor": 23.3051,
+    "max_nonorthogonality_degrees": 82.8703,
+    "min_cell_volume": 0.00208333,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.6,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 10.0,
+   "cells": 48,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0786714,
+     "vector": {
+      "creation_fraction": 0.0895652,
+      "creation_rate": 1.33146,
+      "lambda_min": -1.33146,
+      "passive": false,
+      "wrong_sign_modes": 15
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.11754,
+     "vector": {
+      "creation_fraction": 0.122578,
+      "creation_rate": 1.84658,
+      "lambda_min": -1.84658,
+      "passive": false,
+      "wrong_sign_modes": 24
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.85869,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 120,
+   "family": "tetra",
+   "quality": {
+    "max_aspect_descriptor": 23.962,
+    "max_nonorthogonality_degrees": 83.0276,
+    "min_cell_volume": 0.00208333,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.8,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 20.0,
+   "cells": 48,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0755911,
+     "vector": {
+      "creation_fraction": 0.0793992,
+      "creation_rate": 2.07769,
+      "lambda_min": -2.07769,
+      "passive": false,
+      "wrong_sign_modes": 20
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.0864815,
+     "vector": {
+      "creation_fraction": 0.0888726,
+      "creation_rate": 2.33385,
+      "lambda_min": -2.33385,
+      "passive": false,
+      "wrong_sign_modes": 24
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 3.60713,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 120,
+   "family": "tetra",
+   "quality": {
+    "max_aspect_descriptor": 42.5059,
+    "max_nonorthogonality_degrees": 86.1622,
+    "min_cell_volume": 0.00104167,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.0,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 20.0,
+   "cells": 48,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.080253,
+     "vector": {
+      "creation_fraction": 0.0839191,
+      "creation_rate": 2.22513,
+      "lambda_min": -2.22513,
+      "passive": false,
+      "wrong_sign_modes": 22
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.0909559,
+     "vector": {
+      "creation_fraction": 0.0932512,
+      "creation_rate": 2.48113,
+      "lambda_min": -2.48113,
+      "passive": false,
+      "wrong_sign_modes": 24
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 3.61012,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 120,
+   "family": "tetra",
+   "quality": {
+    "max_aspect_descriptor": 43.1435,
+    "max_nonorthogonality_degrees": 86.2077,
+    "min_cell_volume": 0.00104167,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.2,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 20.0,
+   "cells": 48,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0849199,
+     "vector": {
+      "creation_fraction": 0.0884048,
+      "creation_rate": 2.37631,
+      "lambda_min": -2.37631,
+      "passive": false,
+      "wrong_sign_modes": 24
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.095433,
+     "vector": {
+      "creation_fraction": 0.0976308,
+      "creation_rate": 2.63317,
+      "lambda_min": -2.63317,
+      "passive": false,
+      "wrong_sign_modes": 24
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 3.61306,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 120,
+   "family": "tetra",
+   "quality": {
+    "max_aspect_descriptor": 43.7843,
+    "max_nonorthogonality_degrees": 86.2522,
+    "min_cell_volume": 0.00104167,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.4,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 20.0,
+   "cells": 48,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0895764,
+     "vector": {
+      "creation_fraction": 0.0928581,
+      "creation_rate": 2.53144,
+      "lambda_min": -2.53144,
+      "passive": false,
+      "wrong_sign_modes": 24
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.0998989,
+     "vector": {
+      "creation_fraction": 0.101998,
+      "creation_rate": 2.78978,
+      "lambda_min": -2.78978,
+      "passive": false,
+      "wrong_sign_modes": 24
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 3.61597,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 120,
+   "family": "tetra",
+   "quality": {
+    "max_aspect_descriptor": 44.4282,
+    "max_nonorthogonality_degrees": 86.2958,
+    "min_cell_volume": 0.00104167,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.6,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 20.0,
+   "cells": 48,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0942094,
+     "vector": {
+      "creation_fraction": 0.0972819,
+      "creation_rate": 2.69071,
+      "lambda_min": -2.69071,
+      "passive": false,
+      "wrong_sign_modes": 24
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.104342,
+     "vector": {
+      "creation_fraction": 0.106341,
+      "creation_rate": 2.95079,
+      "lambda_min": -2.95079,
+      "passive": false,
+      "wrong_sign_modes": 24
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 3.6189,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 120,
+   "family": "tetra",
+   "quality": {
+    "max_aspect_descriptor": 45.0753,
+    "max_nonorthogonality_degrees": 86.3385,
+    "min_cell_volume": 0.00104167,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.8,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 50.0,
+   "cells": 48,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0865044,
+     "vector": {
+      "creation_fraction": 0.0871033,
+      "creation_rate": 5.70527,
+      "lambda_min": -5.70527,
+      "passive": false,
+      "wrong_sign_modes": 24
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.0882422,
+     "vector": {
+      "creation_fraction": 0.0886326,
+      "creation_rate": 5.80884,
+      "lambda_min": -5.80884,
+      "passive": false,
+      "wrong_sign_modes": 24
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 8.95844,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 120,
+   "family": "tetra",
+   "quality": {
+    "max_aspect_descriptor": 106.098,
+    "max_nonorthogonality_degrees": 88.463,
+    "min_cell_volume": 0.000416667,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.0,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 50.0,
+   "cells": 48,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0882825,
+     "vector": {
+      "creation_fraction": 0.0888701,
+      "creation_rate": 5.85136,
+      "lambda_min": -5.85136,
+      "passive": false,
+      "wrong_sign_modes": 24
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.0900082,
+     "vector": {
+      "creation_fraction": 0.0903925,
+      "creation_rate": 5.95504,
+      "lambda_min": -5.95504,
+      "passive": false,
+      "wrong_sign_modes": 24
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 8.96157,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 120,
+   "family": "tetra",
+   "quality": {
+    "max_aspect_descriptor": 106.735,
+    "max_nonorthogonality_degrees": 88.4703,
+    "min_cell_volume": 0.000416667,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.2,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 50.0,
+   "cells": 48,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0900623,
+     "vector": {
+      "creation_fraction": 0.090632,
+      "creation_rate": 5.99896,
+      "lambda_min": -5.99896,
+      "passive": false,
+      "wrong_sign_modes": 24
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.0917758,
+     "vector": {
+      "creation_fraction": 0.092154,
+      "creation_rate": 6.1032,
+      "lambda_min": -6.1032,
+      "passive": false,
+      "wrong_sign_modes": 24
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 8.96461,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 120,
+   "family": "tetra",
+   "quality": {
+    "max_aspect_descriptor": 107.373,
+    "max_nonorthogonality_degrees": 88.4776,
+    "min_cell_volume": 0.000416667,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.4,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 50.0,
+   "cells": 48,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0918428,
+     "vector": {
+      "creation_fraction": 0.0923907,
+      "creation_rate": 6.14822,
+      "lambda_min": -6.14822,
+      "passive": false,
+      "wrong_sign_modes": 24
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.093544,
+     "vector": {
+      "creation_fraction": 0.0939161,
+      "creation_rate": 6.2533,
+      "lambda_min": -6.2533,
+      "passive": false,
+      "wrong_sign_modes": 24
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 8.96757,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 120,
+   "family": "tetra",
+   "quality": {
+    "max_aspect_descriptor": 108.013,
+    "max_nonorthogonality_degrees": 88.4848,
+    "min_cell_volume": 0.000416667,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.6,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 50.0,
+   "cells": 48,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.093623,
+     "vector": {
+      "creation_fraction": 0.0941479,
+      "creation_rate": 6.29928,
+      "lambda_min": -6.29928,
+      "passive": false,
+      "wrong_sign_modes": 24
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.0953119,
+     "vector": {
+      "creation_fraction": 0.0956778,
+      "creation_rate": 6.40528,
+      "lambda_min": -6.40528,
+      "passive": false,
+      "wrong_sign_modes": 24
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 8.97046,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 120,
+   "family": "tetra",
+   "quality": {
+    "max_aspect_descriptor": 108.653,
+    "max_nonorthogonality_degrees": 88.492,
+    "min_cell_volume": 0.000416667,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.8,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 1.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.71702,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 2.50826e-16,
+     "vector": {
+      "creation_fraction": 0.0336219,
+      "creation_rate": 0.0993644,
+      "lambda_min": -0.0993644,
+      "passive": false,
+      "wrong_sign_modes": 4
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.79279,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 56,
+   "family": "wedge-quad",
+   "quality": {
+    "max_aspect_descriptor": 3.36359,
+    "max_nonorthogonality_degrees": 26.5651,
+    "min_cell_volume": 0.0625,
+    "min_projection_ratio": 0.375
+   },
+   "shear": 0.0,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 1.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.71755,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.00101914,
+     "vector": {
+      "creation_fraction": 0.0336731,
+      "creation_rate": 0.101431,
+      "lambda_min": -0.101431,
+      "passive": false,
+      "wrong_sign_modes": 5
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.80997,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 56,
+   "family": "wedge-quad",
+   "quality": {
+    "max_aspect_descriptor": 3.41391,
+    "max_nonorthogonality_degrees": 28.7105,
+    "min_cell_volume": 0.0625,
+    "min_projection_ratio": 0.375
+   },
+   "shear": 0.2,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 1.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.72451,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.00368259,
+     "vector": {
+      "creation_fraction": 0.0337431,
+      "creation_rate": 0.10731,
+      "lambda_min": -0.10731,
+      "passive": false,
+      "wrong_sign_modes": 5
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.86565,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 56,
+   "family": "wedge-quad",
+   "quality": {
+    "max_aspect_descriptor": 3.56345,
+    "max_nonorthogonality_degrees": 33.8545,
+    "min_cell_volume": 0.0625,
+    "min_projection_ratio": 0.375
+   },
+   "shear": 0.4,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 1.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.75218,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.00709307,
+     "vector": {
+      "creation_fraction": 0.0336464,
+      "creation_rate": 0.116172,
+      "lambda_min": -0.116172,
+      "passive": false,
+      "wrong_sign_modes": 5
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.96618,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 56,
+   "family": "wedge-quad",
+   "quality": {
+    "max_aspect_descriptor": 3.80815,
+    "max_nonorthogonality_degrees": 39.9179,
+    "min_cell_volume": 0.0625,
+    "min_projection_ratio": 0.375
+   },
+   "shear": 0.6,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 1.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.80991,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.0103826,
+     "vector": {
+      "creation_fraction": 0.0332238,
+      "creation_rate": 0.126996,
+      "lambda_min": -0.126996,
+      "passive": false,
+      "wrong_sign_modes": 5
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 2.11383,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 56,
+   "family": "wedge-quad",
+   "quality": {
+    "max_aspect_descriptor": 4.14222,
+    "max_nonorthogonality_degrees": 45.6988,
+    "min_cell_volume": 0.0625,
+    "min_projection_ratio": 0.375
+   },
+   "shear": 0.8,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 2.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.60664,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0434961,
+      "creation_rate": 0.0872196,
+      "lambda_min": -0.0872196,
+      "passive": false,
+      "wrong_sign_modes": 5
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.64437,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 56,
+   "family": "wedge-quad",
+   "quality": {
+    "max_aspect_descriptor": 2.37841,
+    "max_nonorthogonality_degrees": 26.5651,
+    "min_cell_volume": 0.03125,
+    "min_projection_ratio": 0.375
+   },
+   "shear": 0.0,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 2.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.59402,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.00138694,
+     "vector": {
+      "creation_fraction": 0.0437642,
+      "creation_rate": 0.0893316,
+      "lambda_min": -0.0893316,
+      "passive": false,
+      "wrong_sign_modes": 6
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.65543,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 56,
+   "family": "wedge-quad",
+   "quality": {
+    "max_aspect_descriptor": 2.414,
+    "max_nonorthogonality_degrees": 28.7105,
+    "min_cell_volume": 0.03125,
+    "min_projection_ratio": 0.375
+   },
+   "shear": 0.2,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 2.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.56372,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.0051359,
+     "vector": {
+      "creation_fraction": 0.0444871,
+      "creation_rate": 0.0954639,
+      "lambda_min": -0.0954639,
+      "passive": false,
+      "wrong_sign_modes": 6
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.68856,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 56,
+   "family": "wedge-quad",
+   "quality": {
+    "max_aspect_descriptor": 2.51974,
+    "max_nonorthogonality_degrees": 33.8545,
+    "min_cell_volume": 0.03125,
+    "min_projection_ratio": 0.375
+   },
+   "shear": 0.4,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 2.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.53167,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.0102674,
+     "vector": {
+      "creation_fraction": 0.0454424,
+      "creation_rate": 0.105074,
+      "lambda_min": -0.105074,
+      "passive": false,
+      "wrong_sign_modes": 6
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.74365,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 56,
+   "family": "wedge-quad",
+   "quality": {
+    "max_aspect_descriptor": 2.69277,
+    "max_nonorthogonality_degrees": 39.9179,
+    "min_cell_volume": 0.03125,
+    "min_projection_ratio": 0.375
+   },
+   "shear": 0.6,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 2.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.51102,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.0157348,
+     "vector": {
+      "creation_fraction": 0.0463542,
+      "creation_rate": 0.11744,
+      "lambda_min": -0.11744,
+      "passive": false,
+      "wrong_sign_modes": 6
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.82056,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 56,
+   "family": "wedge-quad",
+   "quality": {
+    "max_aspect_descriptor": 2.92899,
+    "max_nonorthogonality_degrees": 45.6988,
+    "min_cell_volume": 0.03125,
+    "min_projection_ratio": 0.375
+   },
+   "shear": 0.8,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 3.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.90399,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 3.0029e-17,
+     "vector": {
+      "creation_fraction": 0.0389043,
+      "creation_rate": 0.0711276,
+      "lambda_min": -0.0711276,
+      "passive": false,
+      "wrong_sign_modes": 5
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.92907,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 56,
+   "family": "wedge-quad",
+   "quality": {
+    "max_aspect_descriptor": 2.12132,
+    "max_nonorthogonality_degrees": 26.5651,
+    "min_cell_volume": 0.0208333,
+    "min_projection_ratio": 0.375
+   },
+   "shear": 0.0,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 3.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.8793,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.00115522,
+     "vector": {
+      "creation_fraction": 0.0391944,
+      "creation_rate": 0.0729848,
+      "lambda_min": -0.0729848,
+      "passive": false,
+      "wrong_sign_modes": 6
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.93635,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 56,
+   "family": "wedge-quad",
+   "quality": {
+    "max_aspect_descriptor": 2.12132,
+    "max_nonorthogonality_degrees": 28.7105,
+    "min_cell_volume": 0.0208333,
+    "min_projection_ratio": 0.375
+   },
+   "shear": 0.2,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 3.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.81477,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.00437463,
+     "vector": {
+      "creation_fraction": 0.0401458,
+      "creation_rate": 0.078431,
+      "lambda_min": -0.078431,
+      "passive": false,
+      "wrong_sign_modes": 6
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.95815,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 56,
+   "family": "wedge-quad",
+   "quality": {
+    "max_aspect_descriptor": 2.12132,
+    "max_nonorthogonality_degrees": 33.8545,
+    "min_cell_volume": 0.0208333,
+    "min_projection_ratio": 0.375
+   },
+   "shear": 0.4,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 3.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.73579,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.00903641,
+     "vector": {
+      "creation_fraction": 0.0416889,
+      "creation_rate": 0.0871262,
+      "lambda_min": -0.0871262,
+      "passive": false,
+      "wrong_sign_modes": 6
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.99441,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 56,
+   "family": "wedge-quad",
+   "quality": {
+    "max_aspect_descriptor": 2.19864,
+    "max_nonorthogonality_degrees": 39.9179,
+    "min_cell_volume": 0.0208333,
+    "min_projection_ratio": 0.375
+   },
+   "shear": 0.6,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 3.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.66256,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.0143971,
+     "vector": {
+      "creation_fraction": 0.0435454,
+      "creation_rate": 0.0986004,
+      "lambda_min": -0.0986004,
+      "passive": false,
+      "wrong_sign_modes": 6
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 2.0451,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 56,
+   "family": "wedge-quad",
+   "quality": {
+    "max_aspect_descriptor": 2.39151,
+    "max_nonorthogonality_degrees": 45.6988,
+    "min_cell_volume": 0.0208333,
+    "min_projection_ratio": 0.375
+   },
+   "shear": 0.8,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 5.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 2.73983,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 2.33236e-16,
+     "vector": {
+      "creation_fraction": 0.0236847,
+      "creation_rate": 0.049578,
+      "lambda_min": -0.049578,
+      "passive": false,
+      "wrong_sign_modes": 7
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 2.75724,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 56,
+   "family": "wedge-quad",
+   "quality": {
+    "max_aspect_descriptor": 3.53553,
+    "max_nonorthogonality_degrees": 26.5651,
+    "min_cell_volume": 0.0125,
+    "min_projection_ratio": 0.375
+   },
+   "shear": 0.0,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 5.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 2.6934,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.000651449,
+     "vector": {
+      "creation_fraction": 0.0240858,
+      "creation_rate": 0.0509627,
+      "lambda_min": -0.0509627,
+      "passive": false,
+      "wrong_sign_modes": 8
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 2.7615,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 56,
+   "family": "wedge-quad",
+   "quality": {
+    "max_aspect_descriptor": 3.53553,
+    "max_nonorthogonality_degrees": 28.7105,
+    "min_cell_volume": 0.0125,
+    "min_projection_ratio": 0.375
+   },
+   "shear": 0.2,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 5.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 2.57371,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.00253352,
+     "vector": {
+      "creation_fraction": 0.0252679,
+      "creation_rate": 0.0550582,
+      "lambda_min": -0.0550582,
+      "passive": false,
+      "wrong_sign_modes": 8
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 2.77426,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 56,
+   "family": "wedge-quad",
+   "quality": {
+    "max_aspect_descriptor": 3.53553,
+    "max_nonorthogonality_degrees": 33.8545,
+    "min_cell_volume": 0.0125,
+    "min_projection_ratio": 0.375
+   },
+   "shear": 0.4,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 5.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 2.42188,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.00544794,
+     "vector": {
+      "creation_fraction": 0.0271291,
+      "creation_rate": 0.0617056,
+      "lambda_min": -0.0617056,
+      "passive": false,
+      "wrong_sign_modes": 8
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 2.79542,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 56,
+   "family": "wedge-quad",
+   "quality": {
+    "max_aspect_descriptor": 3.53553,
+    "max_nonorthogonality_degrees": 39.9179,
+    "min_cell_volume": 0.0125,
+    "min_projection_ratio": 0.375
+   },
+   "shear": 0.6,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 5.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 2.27153,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.00911793,
+     "vector": {
+      "creation_fraction": 0.0294837,
+      "creation_rate": 0.0706837,
+      "lambda_min": -0.0706837,
+      "passive": false,
+      "wrong_sign_modes": 8
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 2.82493,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 56,
+   "family": "wedge-quad",
+   "quality": {
+    "max_aspect_descriptor": 3.53553,
+    "max_nonorthogonality_degrees": 45.6988,
+    "min_cell_volume": 0.0125,
+    "min_projection_ratio": 0.375
+   },
+   "shear": 0.8,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 10.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 5.11901,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 1.61857e-16,
+     "vector": {
+      "creation_fraction": 0.00762781,
+      "creation_rate": 0.0270833,
+      "lambda_min": -0.0270833,
+      "passive": false,
+      "wrong_sign_modes": 9
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 5.12798,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 56,
+   "family": "wedge-quad",
+   "quality": {
+    "max_aspect_descriptor": 7.07107,
+    "max_nonorthogonality_degrees": 26.5651,
+    "min_cell_volume": 0.00625,
+    "min_projection_ratio": 0.375
+   },
+   "shear": 0.0,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 10.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 5.02354,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.000206181,
+     "vector": {
+      "creation_fraction": 0.00783269,
+      "creation_rate": 0.027876,
+      "lambda_min": -0.027876,
+      "passive": false,
+      "wrong_sign_modes": 10
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 5.13007,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 56,
+   "family": "wedge-quad",
+   "quality": {
+    "max_aspect_descriptor": 7.07107,
+    "max_nonorthogonality_degrees": 28.7105,
+    "min_cell_volume": 0.00625,
+    "min_projection_ratio": 0.375
+   },
+   "shear": 0.2,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 10.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 4.77664,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.000817716,
+     "vector": {
+      "creation_fraction": 0.00843582,
+      "creation_rate": 0.0302333,
+      "lambda_min": -0.0302333,
+      "passive": false,
+      "wrong_sign_modes": 10
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 5.13631,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 56,
+   "family": "wedge-quad",
+   "quality": {
+    "max_aspect_descriptor": 7.07107,
+    "max_nonorthogonality_degrees": 33.8545,
+    "min_cell_volume": 0.00625,
+    "min_projection_ratio": 0.375
+   },
+   "shear": 0.4,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 10.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 4.46158,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.00181409,
+     "vector": {
+      "creation_fraction": 0.00940583,
+      "creation_rate": 0.0341005,
+      "lambda_min": -0.0341005,
+      "passive": false,
+      "wrong_sign_modes": 10
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 5.14663,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 56,
+   "family": "wedge-quad",
+   "quality": {
+    "max_aspect_descriptor": 7.07107,
+    "max_nonorthogonality_degrees": 39.9179,
+    "min_cell_volume": 0.00625,
+    "min_projection_ratio": 0.375
+   },
+   "shear": 0.6,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 10.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 4.14731,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.0031628,
+     "vector": {
+      "creation_fraction": 0.0106982,
+      "creation_rate": 0.0394056,
+      "lambda_min": -0.0394056,
+      "passive": false,
+      "wrong_sign_modes": 10
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 5.16096,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 56,
+   "family": "wedge-quad",
+   "quality": {
+    "max_aspect_descriptor": 7.07107,
+    "max_nonorthogonality_degrees": 45.6988,
+    "min_cell_volume": 0.00625,
+    "min_projection_ratio": 0.375
+   },
+   "shear": 0.8,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 20.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 10.0594,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 2.52769e-16,
+     "vector": {
+      "creation_fraction": 0.00205459,
+      "creation_rate": 0.0139217,
+      "lambda_min": -0.0139217,
+      "passive": false,
+      "wrong_sign_modes": 11
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 10.0638,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 56,
+   "family": "wedge-quad",
+   "quality": {
+    "max_aspect_descriptor": 14.1421,
+    "max_nonorthogonality_degrees": 26.5651,
+    "min_cell_volume": 0.003125,
+    "min_projection_ratio": 0.375
+   },
+   "shear": 0.0,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 20.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 9.86739,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 5.50092e-05,
+     "vector": {
+      "creation_fraction": 0.00211449,
+      "creation_rate": 0.014336,
+      "lambda_min": -0.014336,
+      "passive": false,
+      "wrong_sign_modes": 12
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 10.0649,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 56,
+   "family": "wedge-quad",
+   "quality": {
+    "max_aspect_descriptor": 14.1421,
+    "max_nonorthogonality_degrees": 28.7105,
+    "min_cell_volume": 0.003125,
+    "min_projection_ratio": 0.375
+   },
+   "shear": 0.2,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 20.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 9.37084,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.000219542,
+     "vector": {
+      "creation_fraction": 0.0022925,
+      "creation_rate": 0.0155704,
+      "lambda_min": -0.0155704,
+      "passive": false,
+      "wrong_sign_modes": 12
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 10.0679,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 56,
+   "family": "wedge-quad",
+   "quality": {
+    "max_aspect_descriptor": 14.1421,
+    "max_nonorthogonality_degrees": 33.8545,
+    "min_cell_volume": 0.003125,
+    "min_projection_ratio": 0.375
+   },
+   "shear": 0.4,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 20.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 8.73763,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.000492117,
+     "vector": {
+      "creation_fraction": 0.00258418,
+      "creation_rate": 0.0176032,
+      "lambda_min": -0.0176032,
+      "passive": false,
+      "wrong_sign_modes": 12
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 10.073,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 56,
+   "family": "wedge-quad",
+   "quality": {
+    "max_aspect_descriptor": 14.1421,
+    "max_nonorthogonality_degrees": 39.9179,
+    "min_cell_volume": 0.003125,
+    "min_projection_ratio": 0.375
+   },
+   "shear": 0.6,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 20.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 8.10888,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.000870288,
+     "vector": {
+      "creation_fraction": 0.0029835,
+      "creation_rate": 0.0204072,
+      "lambda_min": -0.0204072,
+      "passive": false,
+      "wrong_sign_modes": 12
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 10.0801,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 56,
+   "family": "wedge-quad",
+   "quality": {
+    "max_aspect_descriptor": 14.1421,
+    "max_nonorthogonality_degrees": 45.6988,
+    "min_cell_volume": 0.003125,
+    "min_projection_ratio": 0.375
+   },
+   "shear": 0.8,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 50.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 25.0237,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 1.17779e-17,
+     "vector": {
+      "creation_fraction": 0.000336063,
+      "creation_rate": 0.00561576,
+      "lambda_min": -0.00561576,
+      "passive": false,
+      "wrong_sign_modes": 11
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 25.0255,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 56,
+   "family": "wedge-quad",
+   "quality": {
+    "max_aspect_descriptor": 35.3553,
+    "max_nonorthogonality_degrees": 26.5651,
+    "min_cell_volume": 0.00125,
+    "min_projection_ratio": 0.375
+   },
+   "shear": 0.0,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 50.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 24.5431,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 8.96774e-06,
+     "vector": {
+      "creation_fraction": 0.000346085,
+      "creation_rate": 0.00578378,
+      "lambda_min": -0.00578378,
+      "passive": false,
+      "wrong_sign_modes": 12
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 25.0259,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 56,
+   "family": "wedge-quad",
+   "quality": {
+    "max_aspect_descriptor": 35.3553,
+    "max_nonorthogonality_degrees": 28.7105,
+    "min_cell_volume": 0.00125,
+    "min_projection_ratio": 0.375
+   },
+   "shear": 0.2,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 50.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 23.3,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 3.58578e-05,
+     "vector": {
+      "creation_fraction": 0.000375953,
+      "creation_rate": 0.00628472,
+      "lambda_min": -0.00628472,
+      "passive": false,
+      "wrong_sign_modes": 12
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 25.0272,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 56,
+   "family": "wedge-quad",
+   "quality": {
+    "max_aspect_descriptor": 35.3553,
+    "max_nonorthogonality_degrees": 33.8545,
+    "min_cell_volume": 0.00125,
+    "min_projection_ratio": 0.375
+   },
+   "shear": 0.4,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 50.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 21.7156,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 8.06307e-05,
+     "vector": {
+      "creation_fraction": 0.000425161,
+      "creation_rate": 0.00711068,
+      "lambda_min": -0.00711068,
+      "passive": false,
+      "wrong_sign_modes": 12
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 25.0292,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 56,
+   "family": "wedge-quad",
+   "quality": {
+    "max_aspect_descriptor": 35.3553,
+    "max_nonorthogonality_degrees": 39.9179,
+    "min_cell_volume": 0.00125,
+    "min_projection_ratio": 0.375
+   },
+   "shear": 0.6,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 50.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 20.1456,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.00014322,
+     "vector": {
+      "creation_fraction": 0.000493084,
+      "creation_rate": 0.00825218,
+      "lambda_min": -0.00825218,
+      "passive": false,
+      "wrong_sign_modes": 12
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 25.032,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 56,
+   "family": "wedge-quad",
+   "quality": {
+    "max_aspect_descriptor": 35.3553,
+    "max_nonorthogonality_degrees": 45.6988,
+    "min_cell_volume": 0.00125,
+    "min_projection_ratio": 0.375
+   },
+   "shear": 0.8,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 1.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.6188,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.00733854,
+     "vector": {
+      "creation_fraction": 0.0484195,
+      "creation_rate": 0.131991,
+      "lambda_min": -0.131991,
+      "passive": false,
+      "wrong_sign_modes": 5
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.80436,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 88,
+   "family": "wedge-tri",
+   "quality": {
+    "max_aspect_descriptor": 1.18921,
+    "max_nonorthogonality_degrees": 48.1897,
+    "min_cell_volume": 0.0625,
+    "min_projection_ratio": 0.333333
+   },
+   "shear": 0.0,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 1.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.63487,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.00529954,
+     "vector": {
+      "creation_fraction": 0.0424217,
+      "creation_rate": 0.116725,
+      "lambda_min": -0.116725,
+      "passive": false,
+      "wrong_sign_modes": 5
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.81565,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 88,
+   "family": "wedge-tri",
+   "quality": {
+    "max_aspect_descriptor": 1.207,
+    "max_nonorthogonality_degrees": 51.3035,
+    "min_cell_volume": 0.0625,
+    "min_projection_ratio": 0.333333
+   },
+   "shear": 0.2,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 1.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.65089,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.00727912,
+     "vector": {
+      "creation_fraction": 0.0380843,
+      "creation_rate": 0.110173,
+      "lambda_min": -0.110173,
+      "passive": false,
+      "wrong_sign_modes": 5
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.86416,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 88,
+   "family": "wedge-tri",
+   "quality": {
+    "max_aspect_descriptor": 1.25987,
+    "max_nonorthogonality_degrees": 55.5211,
+    "min_cell_volume": 0.0625,
+    "min_projection_ratio": 0.333333
+   },
+   "shear": 0.4,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 1.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.68937,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.0137905,
+     "vector": {
+      "creation_fraction": 0.0367796,
+      "creation_rate": 0.116032,
+      "lambda_min": -0.116032,
+      "passive": false,
+      "wrong_sign_modes": 5
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.95843,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 88,
+   "family": "wedge-tri",
+   "quality": {
+    "max_aspect_descriptor": 1.34638,
+    "max_nonorthogonality_degrees": 59.9934,
+    "min_cell_volume": 0.0625,
+    "min_projection_ratio": 0.333333
+   },
+   "shear": 0.6,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 1.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.76503,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.0253707,
+     "vector": {
+      "creation_fraction": 0.0404666,
+      "creation_rate": 0.143705,
+      "lambda_min": -0.143705,
+      "passive": false,
+      "wrong_sign_modes": 6
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 2.10025,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 88,
+   "family": "wedge-tri",
+   "quality": {
+    "max_aspect_descriptor": 1.4645,
+    "max_nonorthogonality_degrees": 64.1613,
+    "min_cell_volume": 0.0625,
+    "min_projection_ratio": 0.333333
+   },
+   "shear": 0.8,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 2.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.58609,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.00448676,
+     "vector": {
+      "creation_fraction": 0.0417877,
+      "creation_rate": 0.078403,
+      "lambda_min": -0.078403,
+      "passive": false,
+      "wrong_sign_modes": 5
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.65021,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 88,
+   "family": "wedge-tri",
+   "quality": {
+    "max_aspect_descriptor": 1.41421,
+    "max_nonorthogonality_degrees": 45.8683,
+    "min_cell_volume": 0.03125,
+    "min_projection_ratio": 0.333333
+   },
+   "shear": 0.0,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 2.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.5751,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.00388053,
+     "vector": {
+      "creation_fraction": 0.0385409,
+      "creation_rate": 0.0731289,
+      "lambda_min": -0.0731289,
+      "passive": false,
+      "wrong_sign_modes": 4
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.65827,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 88,
+   "family": "wedge-tri",
+   "quality": {
+    "max_aspect_descriptor": 1.41421,
+    "max_nonorthogonality_degrees": 48.2079,
+    "min_cell_volume": 0.03125,
+    "min_projection_ratio": 0.333333
+   },
+   "shear": 0.2,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 2.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.54535,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.00550554,
+     "vector": {
+      "creation_fraction": 0.0359194,
+      "creation_rate": 0.0712074,
+      "lambda_min": -0.0712074,
+      "passive": false,
+      "wrong_sign_modes": 4
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.68802,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 88,
+   "family": "wedge-tri",
+   "quality": {
+    "max_aspect_descriptor": 1.41421,
+    "max_nonorthogonality_degrees": 51.9817,
+    "min_cell_volume": 0.03125,
+    "min_projection_ratio": 0.333333
+   },
+   "shear": 0.4,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 2.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.51488,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.008733,
+     "vector": {
+      "creation_fraction": 0.0339553,
+      "creation_rate": 0.0721588,
+      "lambda_min": -0.0721588,
+      "passive": false,
+      "wrong_sign_modes": 4
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.73913,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 88,
+   "family": "wedge-tri",
+   "quality": {
+    "max_aspect_descriptor": 1.41421,
+    "max_nonorthogonality_degrees": 56.2723,
+    "min_cell_volume": 0.03125,
+    "min_projection_ratio": 0.333333
+   },
+   "shear": 0.6,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 2.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.4993,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.0133912,
+     "vector": {
+      "creation_fraction": 0.0330958,
+      "creation_rate": 0.0768642,
+      "lambda_min": -0.0768642,
+      "passive": false,
+      "wrong_sign_modes": 4
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.81119,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 88,
+   "family": "wedge-tri",
+   "quality": {
+    "max_aspect_descriptor": 1.41421,
+    "max_nonorthogonality_degrees": 60.4213,
+    "min_cell_volume": 0.03125,
+    "min_projection_ratio": 0.333333
+   },
+   "shear": 0.8,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 3.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.89403,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.00255836,
+     "vector": {
+      "creation_fraction": 0.0335132,
+      "creation_rate": 0.0581737,
+      "lambda_min": -0.0581737,
+      "passive": false,
+      "wrong_sign_modes": 4
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.93301,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 88,
+   "family": "wedge-tri",
+   "quality": {
+    "max_aspect_descriptor": 2.12132,
+    "max_nonorthogonality_degrees": 45.3924,
+    "min_cell_volume": 0.0208333,
+    "min_projection_ratio": 0.333333
+   },
+   "shear": 0.0,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 3.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.86823,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.00241373,
+     "vector": {
+      "creation_fraction": 0.0317792,
+      "creation_rate": 0.0559087,
+      "lambda_min": -0.0559087,
+      "passive": false,
+      "wrong_sign_modes": 4
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.93745,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 88,
+   "family": "wedge-tri",
+   "quality": {
+    "max_aspect_descriptor": 2.12132,
+    "max_nonorthogonality_degrees": 47.3606,
+    "min_cell_volume": 0.0208333,
+    "min_projection_ratio": 0.333333
+   },
+   "shear": 0.2,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 3.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.80383,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.00376887,
+     "vector": {
+      "creation_fraction": 0.0305836,
+      "creation_rate": 0.0561395,
+      "lambda_min": -0.0561395,
+      "passive": false,
+      "wrong_sign_modes": 4
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.95616,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 88,
+   "family": "wedge-tri",
+   "quality": {
+    "max_aspect_descriptor": 2.12132,
+    "max_nonorthogonality_degrees": 50.8807,
+    "min_cell_volume": 0.0208333,
+    "min_projection_ratio": 0.333333
+   },
+   "shear": 0.4,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 3.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.72617,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.00604187,
+     "vector": {
+      "creation_fraction": 0.0297981,
+      "creation_rate": 0.0581478,
+      "lambda_min": -0.0581478,
+      "passive": false,
+      "wrong_sign_modes": 4
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.98899,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 88,
+   "family": "wedge-tri",
+   "quality": {
+    "max_aspect_descriptor": 2.12132,
+    "max_nonorthogonality_degrees": 55.0249,
+    "min_cell_volume": 0.0208333,
+    "min_projection_ratio": 0.333333
+   },
+   "shear": 0.6,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 3.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.65657,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.00879593,
+     "vector": {
+      "creation_fraction": 0.0292828,
+      "creation_rate": 0.0615112,
+      "lambda_min": -0.0615112,
+      "passive": false,
+      "wrong_sign_modes": 4
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 2.03579,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 88,
+   "family": "wedge-tri",
+   "quality": {
+    "max_aspect_descriptor": 2.12132,
+    "max_nonorthogonality_degrees": 59.101,
+    "min_cell_volume": 0.0208333,
+    "min_projection_ratio": 0.333333
+   },
+   "shear": 0.8,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 5.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 2.73743,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.00104663,
+     "vector": {
+      "creation_fraction": 0.0186522,
+      "creation_rate": 0.0380789,
+      "lambda_min": -0.0380789,
+      "passive": false,
+      "wrong_sign_modes": 7
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 2.75963,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 88,
+   "family": "wedge-tri",
+   "quality": {
+    "max_aspect_descriptor": 3.53553,
+    "max_nonorthogonality_degrees": 45.1425,
+    "min_cell_volume": 0.0125,
+    "min_projection_ratio": 0.333333
+   },
+   "shear": 0.0,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 5.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 2.68931,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.00116444,
+     "vector": {
+      "creation_fraction": 0.0183098,
+      "creation_rate": 0.0376236,
+      "lambda_min": -0.0376236,
+      "passive": false,
+      "wrong_sign_modes": 6
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 2.7612,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 88,
+   "family": "wedge-tri",
+   "quality": {
+    "max_aspect_descriptor": 3.53553,
+    "max_nonorthogonality_degrees": 46.7801,
+    "min_cell_volume": 0.0125,
+    "min_projection_ratio": 0.333333
+   },
+   "shear": 0.2,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 5.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 2.56786,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.00209766,
+     "vector": {
+      "creation_fraction": 0.0185324,
+      "creation_rate": 0.0390112,
+      "lambda_min": -0.0390112,
+      "passive": false,
+      "wrong_sign_modes": 5
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 2.77113,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 88,
+   "family": "wedge-tri",
+   "quality": {
+    "max_aspect_descriptor": 3.53553,
+    "max_nonorthogonality_degrees": 50.0593,
+    "min_cell_volume": 0.0125,
+    "min_projection_ratio": 0.333333
+   },
+   "shear": 0.4,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 5.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 2.41397,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.00360883,
+     "vector": {
+      "creation_fraction": 0.0191484,
+      "creation_rate": 0.0418405,
+      "lambda_min": -0.0418405,
+      "passive": false,
+      "wrong_sign_modes": 5
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 2.7893,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 88,
+   "family": "wedge-tri",
+   "quality": {
+    "max_aspect_descriptor": 3.53553,
+    "max_nonorthogonality_degrees": 54.0522,
+    "min_cell_volume": 0.0125,
+    "min_projection_ratio": 0.333333
+   },
+   "shear": 0.6,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 5.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 2.26277,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.00545844,
+     "vector": {
+      "creation_fraction": 0.0199725,
+      "creation_rate": 0.0457265,
+      "lambda_min": -0.0457265,
+      "passive": false,
+      "wrong_sign_modes": 5
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 2.8156,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 88,
+   "family": "wedge-tri",
+   "quality": {
+    "max_aspect_descriptor": 3.53553,
+    "max_nonorthogonality_degrees": 58.0413,
+    "min_cell_volume": 0.0125,
+    "min_projection_ratio": 0.333333
+   },
+   "shear": 0.8,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 10.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 5.11881,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.000274852,
+     "vector": {
+      "creation_fraction": 0.00567603,
+      "creation_rate": 0.0199943,
+      "lambda_min": -0.0199943,
+      "passive": false,
+      "wrong_sign_modes": 8
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 5.12977,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 88,
+   "family": "wedge-tri",
+   "quality": {
+    "max_aspect_descriptor": 7.07107,
+    "max_nonorthogonality_degrees": 45.0358,
+    "min_cell_volume": 0.00625,
+    "min_projection_ratio": 0.333333
+   },
+   "shear": 0.0,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 10.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 5.02066,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.000365095,
+     "vector": {
+      "creation_fraction": 0.00572187,
+      "creation_rate": 0.0201775,
+      "lambda_min": -0.0201775,
+      "passive": false,
+      "wrong_sign_modes": 8
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 5.12928,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 88,
+   "family": "wedge-tri",
+   "quality": {
+    "max_aspect_descriptor": 7.07107,
+    "max_nonorthogonality_degrees": 46.4102,
+    "min_cell_volume": 0.00625,
+    "min_projection_ratio": 0.333333
+   },
+   "shear": 0.2,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 10.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 4.77089,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.000726424,
+     "vector": {
+      "creation_fraction": 0.006049,
+      "creation_rate": 0.0214453,
+      "lambda_min": -0.0214453,
+      "passive": false,
+      "wrong_sign_modes": 8
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 5.13287,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 88,
+   "family": "wedge-tri",
+   "quality": {
+    "max_aspect_descriptor": 7.07107,
+    "max_nonorthogonality_degrees": 49.4884,
+    "min_cell_volume": 0.00625,
+    "min_projection_ratio": 0.333333
+   },
+   "shear": 0.4,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 10.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 4.45307,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.00132273,
+     "vector": {
+      "creation_fraction": 0.00661454,
+      "creation_rate": 0.023674,
+      "lambda_min": -0.023674,
+      "passive": false,
+      "wrong_sign_modes": 8
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 5.14047,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 88,
+   "family": "wedge-tri",
+   "quality": {
+    "max_aspect_descriptor": 7.07107,
+    "max_nonorthogonality_degrees": 53.3481,
+    "min_cell_volume": 0.00625,
+    "min_projection_ratio": 0.333333
+   },
+   "shear": 0.6,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 10.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 4.13671,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.00211364,
+     "vector": {
+      "creation_fraction": 0.00736956,
+      "creation_rate": 0.0267342,
+      "lambda_min": -0.0267342,
+      "passive": false,
+      "wrong_sign_modes": 8
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 5.152,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 88,
+   "family": "wedge-tri",
+   "quality": {
+    "max_aspect_descriptor": 7.07107,
+    "max_nonorthogonality_degrees": 57.2549,
+    "min_cell_volume": 0.00625,
+    "min_projection_ratio": 0.333333
+   },
+   "shear": 0.8,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 20.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 10.0593,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 6.94962e-05,
+     "vector": {
+      "creation_fraction": 0.00149926,
+      "creation_rate": 0.0101373,
+      "lambda_min": -0.0101373,
+      "passive": false,
+      "wrong_sign_modes": 10
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 10.0649,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 88,
+   "family": "wedge-tri",
+   "quality": {
+    "max_aspect_descriptor": 14.1421,
+    "max_nonorthogonality_degrees": 45.0089,
+    "min_cell_volume": 0.003125,
+    "min_projection_ratio": 0.333333
+   },
+   "shear": 0.0,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 20.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 9.86453,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.000101049,
+     "vector": {
+      "creation_fraction": 0.00152857,
+      "creation_rate": 0.0103367,
+      "lambda_min": -0.0103367,
+      "passive": false,
+      "wrong_sign_modes": 10
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 10.0634,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 88,
+   "family": "wedge-tri",
+   "quality": {
+    "max_aspect_descriptor": 14.1421,
+    "max_nonorthogonality_degrees": 46.2481,
+    "min_cell_volume": 0.003125,
+    "min_projection_ratio": 0.333333
+   },
+   "shear": 0.2,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 20.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 9.365,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.000207902,
+     "vector": {
+      "creation_fraction": 0.00164167,
+      "creation_rate": 0.0111152,
+      "lambda_min": -0.0111152,
+      "passive": false,
+      "wrong_sign_modes": 10
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 10.0638,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 88,
+   "family": "wedge-tri",
+   "quality": {
+    "max_aspect_descriptor": 14.1421,
+    "max_nonorthogonality_degrees": 49.22,
+    "min_cell_volume": 0.003125,
+    "min_projection_ratio": 0.333333
+   },
+   "shear": 0.4,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 20.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 8.72881,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.000385797,
+     "vector": {
+      "creation_fraction": 0.00183245,
+      "creation_rate": 0.012436,
+      "lambda_min": -0.012436,
+      "passive": false,
+      "wrong_sign_modes": 9
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 10.0663,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 88,
+   "family": "wedge-tri",
+   "quality": {
+    "max_aspect_descriptor": 14.1421,
+    "max_nonorthogonality_degrees": 53.0071,
+    "min_cell_volume": 0.003125,
+    "min_projection_ratio": 0.333333
+   },
+   "shear": 0.6,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 20.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 8.09751,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.000630068,
+     "vector": {
+      "creation_fraction": 0.00209392,
+      "creation_rate": 0.0142593,
+      "lambda_min": -0.0142593,
+      "passive": false,
+      "wrong_sign_modes": 10
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 10.0706,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 88,
+   "family": "wedge-tri",
+   "quality": {
+    "max_aspect_descriptor": 14.1421,
+    "max_nonorthogonality_degrees": 56.8673,
+    "min_cell_volume": 0.003125,
+    "min_projection_ratio": 0.333333
+   },
+   "shear": 0.8,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 50.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 25.0237,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 1.11537e-05,
+     "vector": {
+      "creation_fraction": 0.000243728,
+      "creation_rate": 0.00407138,
+      "lambda_min": -0.00407138,
+      "passive": false,
+      "wrong_sign_modes": 10
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 25.026,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 88,
+   "family": "wedge-tri",
+   "quality": {
+    "max_aspect_descriptor": 35.3553,
+    "max_nonorthogonality_degrees": 45.0014,
+    "min_cell_volume": 0.00125,
+    "min_projection_ratio": 0.333333
+   },
+   "shear": 0.0,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 50.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 24.5402,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 1.70538e-05,
+     "vector": {
+      "creation_fraction": 0.000250063,
+      "creation_rate": 0.00417699,
+      "lambda_min": -0.00417699,
+      "passive": false,
+      "wrong_sign_modes": 10
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 25.0238,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 88,
+   "family": "wedge-tri",
+   "quality": {
+    "max_aspect_descriptor": 35.3553,
+    "max_nonorthogonality_degrees": 46.1586,
+    "min_cell_volume": 0.00125,
+    "min_projection_ratio": 0.333333
+   },
+   "shear": 0.2,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 50.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 23.294,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 3.55616e-05,
+     "vector": {
+      "creation_fraction": 0.000270664,
+      "creation_rate": 0.00452185,
+      "lambda_min": -0.00452185,
+      "passive": false,
+      "wrong_sign_modes": 10
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 25.0222,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 88,
+   "family": "wedge-tri",
+   "quality": {
+    "max_aspect_descriptor": 35.3553,
+    "max_nonorthogonality_degrees": 49.0649,
+    "min_cell_volume": 0.00125,
+    "min_projection_ratio": 0.333333
+   },
+   "shear": 0.4,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 50.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 21.7061,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 6.64417e-05,
+     "vector": {
+      "creation_fraction": 0.000305012,
+      "creation_rate": 0.00509748,
+      "lambda_min": -0.00509748,
+      "passive": false,
+      "wrong_sign_modes": 11
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 25.0214,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 88,
+   "family": "wedge-tri",
+   "quality": {
+    "max_aspect_descriptor": 35.3553,
+    "max_nonorthogonality_degrees": 52.8066,
+    "min_cell_volume": 0.00125,
+    "min_projection_ratio": 0.333333
+   },
+   "shear": 0.6,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 50.0,
+   "cells": 16,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 20.133,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.000109457,
+     "vector": {
+      "creation_fraction": 0.000352498,
+      "creation_rate": 0.00589423,
+      "lambda_min": -0.00589423,
+      "passive": false,
+      "wrong_sign_modes": 11
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 25.0213,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 88,
+   "family": "wedge-tri",
+   "quality": {
+    "max_aspect_descriptor": 35.3553,
+    "max_nonorthogonality_degrees": 56.6371,
+    "min_cell_volume": 0.00125,
+    "min_projection_ratio": 0.333333
+   },
+   "shear": 0.8,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 1.0,
+   "cells": 8,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 2.96954,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 5.34344e-05,
+     "vector": {
+      "creation_fraction": 0.000633581,
+      "creation_rate": 0.0010437,
+      "lambda_min": -0.0010437,
+      "passive": false,
+      "wrong_sign_modes": 6
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 3.32666,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 72,
+   "family": "hexa-tri",
+   "quality": {
+    "max_aspect_descriptor": 0.353553,
+    "max_nonorthogonality_degrees": 25.2394,
+    "min_cell_volume": 0.125,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.0,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 1.0,
+   "cells": 8,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 2.94336,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 6.03787e-05,
+     "vector": {
+      "creation_fraction": 0.000718343,
+      "creation_rate": 0.00120757,
+      "lambda_min": -0.00120757,
+      "passive": false,
+      "wrong_sign_modes": 7
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 3.30899,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 72,
+   "family": "hexa-tri",
+   "quality": {
+    "max_aspect_descriptor": 0.364108,
+    "max_nonorthogonality_degrees": 32.771,
+    "min_cell_volume": 0.125,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.2,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 1.0,
+   "cells": 8,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 2.93445,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.00039308,
+     "vector": {
+      "creation_fraction": 0.00104168,
+      "creation_rate": 0.00186161,
+      "lambda_min": -0.00186161,
+      "passive": false,
+      "wrong_sign_modes": 7
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 3.37286,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 72,
+   "family": "hexa-tri",
+   "quality": {
+    "max_aspect_descriptor": 0.395183,
+    "max_nonorthogonality_degrees": 40.8505,
+    "min_cell_volume": 0.125,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.4,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 1.0,
+   "cells": 8,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 2.96099,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.00108121,
+     "vector": {
+      "creation_fraction": 0.00172866,
+      "creation_rate": 0.00337862,
+      "lambda_min": -0.00337862,
+      "passive": false,
+      "wrong_sign_modes": 7
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 3.52654,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 72,
+   "family": "hexa-tri",
+   "quality": {
+    "max_aspect_descriptor": 0.445255,
+    "max_nonorthogonality_degrees": 48.3101,
+    "min_cell_volume": 0.125,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.6,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 1.0,
+   "cells": 8,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 3.03424,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.00223768,
+     "vector": {
+      "creation_fraction": 0.00311379,
+      "creation_rate": 0.00678344,
+      "lambda_min": -0.00678344,
+      "passive": false,
+      "wrong_sign_modes": 7
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 3.77014,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 72,
+   "family": "hexa-tri",
+   "quality": {
+    "max_aspect_descriptor": 0.512375,
+    "max_nonorthogonality_degrees": 54.7068,
+    "min_cell_volume": 0.125,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.8,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 2.0,
+   "cells": 8,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 2.44704,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 6.40472e-05,
+     "vector": {
+      "creation_fraction": 0.0131516,
+      "creation_rate": 0.0181587,
+      "lambda_min": -0.0181587,
+      "passive": false,
+      "wrong_sign_modes": 7
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 3.15784,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 72,
+   "family": "hexa-tri",
+   "quality": {
+    "max_aspect_descriptor": 0.707107,
+    "max_nonorthogonality_degrees": 43.3139,
+    "min_cell_volume": 0.0625,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.0,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 2.0,
+   "cells": 8,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 2.45831,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.000222882,
+     "vector": {
+      "creation_fraction": 0.011935,
+      "creation_rate": 0.0169278,
+      "lambda_min": -0.0169278,
+      "passive": false,
+      "wrong_sign_modes": 7
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 3.17493,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 72,
+   "family": "hexa-tri",
+   "quality": {
+    "max_aspect_descriptor": 0.707107,
+    "max_nonorthogonality_degrees": 47.555,
+    "min_cell_volume": 0.0625,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.2,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 2.0,
+   "cells": 8,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 2.48504,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.000731341,
+     "vector": {
+      "creation_fraction": 0.00911431,
+      "creation_rate": 0.0139751,
+      "lambda_min": -0.0139751,
+      "passive": false,
+      "wrong_sign_modes": 7
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 3.23376,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 72,
+   "family": "hexa-tri",
+   "quality": {
+    "max_aspect_descriptor": 0.707107,
+    "max_nonorthogonality_degrees": 51.5154,
+    "min_cell_volume": 0.0625,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.4,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 2.0,
+   "cells": 8,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 2.52266,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.000926868,
+     "vector": {
+      "creation_fraction": 0.00560242,
+      "creation_rate": 0.00950419,
+      "lambda_min": -0.00950419,
+      "passive": false,
+      "wrong_sign_modes": 7
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 3.3303,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 72,
+   "family": "hexa-tri",
+   "quality": {
+    "max_aspect_descriptor": 0.707107,
+    "max_nonorthogonality_degrees": 55.0611,
+    "min_cell_volume": 0.0625,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.6,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 2.0,
+   "cells": 8,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 2.56624,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.00117171,
+     "vector": {
+      "creation_fraction": 0.00377283,
+      "creation_rate": 0.00711768,
+      "lambda_min": -0.00711768,
+      "passive": false,
+      "wrong_sign_modes": 7
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 3.46132,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 72,
+   "family": "hexa-tri",
+   "quality": {
+    "max_aspect_descriptor": 0.707107,
+    "max_nonorthogonality_degrees": 58.1719,
+    "min_cell_volume": 0.0625,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.8,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 3.0,
+   "cells": 8,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 2.20376,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 7.01117e-05,
+     "vector": {
+      "creation_fraction": 0.0372156,
+      "creation_rate": 0.0519405,
+      "lambda_min": -0.0519405,
+      "passive": false,
+      "wrong_sign_modes": 7
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 3.76743,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 72,
+   "family": "hexa-tri",
+   "quality": {
+    "max_aspect_descriptor": 1.06066,
+    "max_nonorthogonality_degrees": 54.7356,
+    "min_cell_volume": 0.0416667,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.0,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 3.0,
+   "cells": 8,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 2.22482,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.00119016,
+     "vector": {
+      "creation_fraction": 0.0362452,
+      "creation_rate": 0.0518417,
+      "lambda_min": -0.0518417,
+      "passive": false,
+      "wrong_sign_modes": 7
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 3.78281,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 72,
+   "family": "hexa-tri",
+   "quality": {
+    "max_aspect_descriptor": 1.06066,
+    "max_nonorthogonality_degrees": 57.3733,
+    "min_cell_volume": 0.0416667,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.2,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 3.0,
+   "cells": 8,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 2.28483,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.00342694,
+     "vector": {
+      "creation_fraction": 0.03281,
+      "creation_rate": 0.0503493,
+      "lambda_min": -0.0503493,
+      "passive": false,
+      "wrong_sign_modes": 7
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 3.83379,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 72,
+   "family": "hexa-tri",
+   "quality": {
+    "max_aspect_descriptor": 1.06066,
+    "max_nonorthogonality_degrees": 59.8332,
+    "min_cell_volume": 0.0416667,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.4,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 3.0,
+   "cells": 8,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 2.37449,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.00389692,
+     "vector": {
+      "creation_fraction": 0.0254624,
+      "creation_rate": 0.0429884,
+      "lambda_min": -0.0429884,
+      "passive": false,
+      "wrong_sign_modes": 7
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 3.91628,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 72,
+   "family": "hexa-tri",
+   "quality": {
+    "max_aspect_descriptor": 1.06066,
+    "max_nonorthogonality_degrees": 62.0765,
+    "min_cell_volume": 0.0416667,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.6,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 3.0,
+   "cells": 8,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 2.48033,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.00275772,
+     "vector": {
+      "creation_fraction": 0.0162815,
+      "creation_rate": 0.031093,
+      "lambda_min": -0.031093,
+      "passive": false,
+      "wrong_sign_modes": 7
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 4.02488,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 72,
+   "family": "hexa-tri",
+   "quality": {
+    "max_aspect_descriptor": 1.06066,
+    "max_nonorthogonality_degrees": 64.0968,
+    "min_cell_volume": 0.0416667,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.8,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 5.0,
+   "cells": 8,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.72969,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 7.33884e-05,
+     "vector": {
+      "creation_fraction": 0.0916551,
+      "creation_rate": 0.126479,
+      "lambda_min": -0.126479,
+      "passive": false,
+      "wrong_sign_modes": 9
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 5.45609,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 72,
+   "family": "hexa-tri",
+   "quality": {
+    "max_aspect_descriptor": 1.76777,
+    "max_nonorthogonality_degrees": 67.0102,
+    "min_cell_volume": 0.025,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.0,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 5.0,
+   "cells": 8,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.7541,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.00602202,
+     "vector": {
+      "creation_fraction": 0.0941619,
+      "creation_rate": 0.134266,
+      "lambda_min": -0.134266,
+      "passive": false,
+      "wrong_sign_modes": 8
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 5.46877,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 72,
+   "family": "hexa-tri",
+   "quality": {
+    "max_aspect_descriptor": 1.76777,
+    "max_nonorthogonality_degrees": 68.2179,
+    "min_cell_volume": 0.025,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.2,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 5.0,
+   "cells": 8,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.82718,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.017528,
+     "vector": {
+      "creation_fraction": 0.0900051,
+      "creation_rate": 0.139117,
+      "lambda_min": -0.139117,
+      "passive": false,
+      "wrong_sign_modes": 7
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 5.50932,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 72,
+   "family": "hexa-tri",
+   "quality": {
+    "max_aspect_descriptor": 1.76777,
+    "max_nonorthogonality_degrees": 69.361,
+    "min_cell_volume": 0.025,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.4,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 5.0,
+   "cells": 8,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.94411,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.023683,
+     "vector": {
+      "creation_fraction": 0.0788115,
+      "creation_rate": 0.13583,
+      "lambda_min": -0.13583,
+      "passive": false,
+      "wrong_sign_modes": 7
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 5.57575,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 72,
+   "family": "hexa-tri",
+   "quality": {
+    "max_aspect_descriptor": 1.76777,
+    "max_nonorthogonality_degrees": 70.433,
+    "min_cell_volume": 0.025,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.6,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 5.0,
+   "cells": 8,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 2.09511,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.0227881,
+     "vector": {
+      "creation_fraction": 0.063807,
+      "creation_rate": 0.124198,
+      "lambda_min": -0.124198,
+      "passive": false,
+      "wrong_sign_modes": 7
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 5.66504,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 72,
+   "family": "hexa-tri",
+   "quality": {
+    "max_aspect_descriptor": 1.76777,
+    "max_nonorthogonality_degrees": 71.4321,
+    "min_cell_volume": 0.025,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.8,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 10.0,
+   "cells": 8,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 0.934176,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 7.44928e-05,
+     "vector": {
+      "creation_fraction": 0.244897,
+      "creation_rate": 0.336006,
+      "lambda_min": -0.336006,
+      "passive": false,
+      "wrong_sign_modes": 9
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 10.2259,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 72,
+   "family": "hexa-tri",
+   "quality": {
+    "max_aspect_descriptor": 3.53553,
+    "max_nonorthogonality_degrees": 78.0233,
+    "min_cell_volume": 0.0125,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.0,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 10.0,
+   "cells": 8,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 0.948229,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.03032,
+     "vector": {
+      "creation_fraction": 0.241521,
+      "creation_rate": 0.339992,
+      "lambda_min": -0.339992,
+      "passive": false,
+      "wrong_sign_modes": 9
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 10.2338,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 72,
+   "family": "hexa-tri",
+   "quality": {
+    "max_aspect_descriptor": 3.53553,
+    "max_nonorthogonality_degrees": 78.3673,
+    "min_cell_volume": 0.0125,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.2,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 10.0,
+   "cells": 8,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 0.989937,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.0788838,
+     "vector": {
+      "creation_fraction": 0.230853,
+      "creation_rate": 0.348629,
+      "lambda_min": -0.348629,
+      "passive": false,
+      "wrong_sign_modes": 8
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 10.2582,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 72,
+   "family": "hexa-tri",
+   "quality": {
+    "max_aspect_descriptor": 3.53553,
+    "max_nonorthogonality_degrees": 78.7008,
+    "min_cell_volume": 0.0125,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.4,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 10.0,
+   "cells": 8,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.05422,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.106602,
+     "vector": {
+      "creation_fraction": 0.212814,
+      "creation_rate": 0.354201,
+      "lambda_min": -0.354201,
+      "passive": false,
+      "wrong_sign_modes": 8
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 10.2989,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 72,
+   "family": "hexa-tri",
+   "quality": {
+    "max_aspect_descriptor": 3.53553,
+    "max_nonorthogonality_degrees": 79.0234,
+    "min_cell_volume": 0.0125,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.6,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 10.0,
+   "cells": 8,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 1.13196,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.114282,
+     "vector": {
+      "creation_fraction": 0.189501,
+      "creation_rate": 0.352238,
+      "lambda_min": -0.352238,
+      "passive": false,
+      "wrong_sign_modes": 7
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 10.3552,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 72,
+   "family": "hexa-tri",
+   "quality": {
+    "max_aspect_descriptor": 3.53553,
+    "max_nonorthogonality_degrees": 79.3346,
+    "min_cell_volume": 0.0125,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.8,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 20.0,
+   "cells": 8,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 0.179335,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 7.47099e-05,
+     "vector": {
+      "creation_fraction": 0.366226,
+      "creation_rate": 0.504109,
+      "lambda_min": -0.504109,
+      "passive": false,
+      "wrong_sign_modes": 9
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 20.1125,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 72,
+   "family": "hexa-tri",
+   "quality": {
+    "max_aspect_descriptor": 7.07107,
+    "max_nonorthogonality_degrees": 83.9455,
+    "min_cell_volume": 0.00625,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.0,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 20.0,
+   "cells": 8,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 0.178123,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.102395,
+     "vector": {
+      "creation_fraction": 0.36384,
+      "creation_rate": 0.513151,
+      "lambda_min": -0.513151,
+      "passive": false,
+      "wrong_sign_modes": 9
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 20.1168,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 72,
+   "family": "hexa-tri",
+   "quality": {
+    "max_aspect_descriptor": 7.07107,
+    "max_nonorthogonality_degrees": 84.035,
+    "min_cell_volume": 0.00625,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.2,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 20.0,
+   "cells": 8,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 0.175816,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.200152,
+     "vector": {
+      "creation_fraction": 0.356554,
+      "creation_rate": 0.537105,
+      "lambda_min": -0.537105,
+      "passive": false,
+      "wrong_sign_modes": 9
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 20.1298,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 72,
+   "family": "hexa-tri",
+   "quality": {
+    "max_aspect_descriptor": 7.07107,
+    "max_nonorthogonality_degrees": 84.1231,
+    "min_cell_volume": 0.00625,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.4,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 20.0,
+   "cells": 8,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 0.174293,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.240989,
+     "vector": {
+      "creation_fraction": 0.344517,
+      "creation_rate": 0.568344,
+      "lambda_min": -0.568344,
+      "passive": false,
+      "wrong_sign_modes": 9
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 20.1515,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 72,
+   "family": "hexa-tri",
+   "quality": {
+    "max_aspect_descriptor": 7.07107,
+    "max_nonorthogonality_degrees": 84.2097,
+    "min_cell_volume": 0.00625,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.6,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 20.0,
+   "cells": 8,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 0.175392,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.253585,
+     "vector": {
+      "creation_fraction": 0.328654,
+      "creation_rate": 0.600609,
+      "lambda_min": -0.600609,
+      "passive": false,
+      "wrong_sign_modes": 9
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 20.1817,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 72,
+   "family": "hexa-tri",
+   "quality": {
+    "max_aspect_descriptor": 7.07107,
+    "max_nonorthogonality_degrees": 84.2949,
+    "min_cell_volume": 0.00625,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.8,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 50.0,
+   "cells": 8,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.240788,
+      "creation_rate": 0.332575,
+      "lambda_min": -0.332575,
+      "passive": false,
+      "wrong_sign_modes": 5
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 7.4765e-05,
+     "vector": {
+      "creation_fraction": 0.445693,
+      "creation_rate": 0.613626,
+      "lambda_min": -0.613626,
+      "passive": false,
+      "wrong_sign_modes": 9
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 50.045,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 72,
+   "family": "hexa-tri",
+   "quality": {
+    "max_aspect_descriptor": 17.6777,
+    "max_nonorthogonality_degrees": 87.5706,
+    "min_cell_volume": 0.0025,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.0,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 50.0,
+   "cells": 8,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.242434,
+      "creation_rate": 0.343262,
+      "lambda_min": -0.343262,
+      "passive": false,
+      "wrong_sign_modes": 6
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.269331,
+     "vector": {
+      "creation_fraction": 0.444662,
+      "creation_rate": 0.62716,
+      "lambda_min": -0.62716,
+      "passive": false,
+      "wrong_sign_modes": 9
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 50.0467,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 72,
+   "family": "hexa-tri",
+   "quality": {
+    "max_aspect_descriptor": 17.6777,
+    "max_nonorthogonality_degrees": 87.5851,
+    "min_cell_volume": 0.0025,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.2,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 50.0,
+   "cells": 8,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.246937,
+      "creation_rate": 0.37289,
+      "lambda_min": -0.37289,
+      "passive": false,
+      "wrong_sign_modes": 6
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.357252,
+     "vector": {
+      "creation_fraction": 0.441512,
+      "creation_rate": 0.664359,
+      "lambda_min": -0.664359,
+      "passive": false,
+      "wrong_sign_modes": 9
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 50.052,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 72,
+   "family": "hexa-tri",
+   "quality": {
+    "max_aspect_descriptor": 17.6777,
+    "max_nonorthogonality_degrees": 87.5995,
+    "min_cell_volume": 0.0025,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.4,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 50.0,
+   "cells": 8,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.252916,
+      "creation_rate": 0.416498,
+      "lambda_min": -0.416498,
+      "passive": false,
+      "wrong_sign_modes": 6
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.38338,
+     "vector": {
+      "creation_fraction": 0.436309,
+      "creation_rate": 0.717637,
+      "lambda_min": -0.717637,
+      "passive": false,
+      "wrong_sign_modes": 11
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 50.0609,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 72,
+   "family": "hexa-tri",
+   "quality": {
+    "max_aspect_descriptor": 17.6777,
+    "max_nonorthogonality_degrees": 87.6139,
+    "min_cell_volume": 0.0025,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.6,
+   "valid": true
+  },
+  {
+   "aspect_ratio": 50.0,
+   "cells": 8,
+   "corrections": {
+    "minimum": {
+     "scalar_creation_fraction": 0.0713663,
+     "vector": {
+      "creation_fraction": 0.258737,
+      "creation_rate": 0.469105,
+      "lambda_min": -0.469105,
+      "passive": false,
+      "wrong_sign_modes": 6
+     }
+    },
+    "none": {
+     "scalar_creation_fraction": 0.391148,
+     "vector": {
+      "creation_fraction": 0.429395,
+      "creation_rate": 0.780308,
+      "lambda_min": -0.780308,
+      "passive": false,
+      "wrong_sign_modes": 12
+     }
+    },
+    "over-relaxed": {
+     "scalar_creation_fraction": 0.0,
+     "vector": {
+      "creation_fraction": 0.0,
+      "creation_rate": 0.0,
+      "lambda_min": 50.0733,
+      "passive": true,
+      "wrong_sign_modes": 0
+     }
+    }
+   },
+   "faces": 72,
+   "family": "hexa-tri",
+   "quality": {
+    "max_aspect_descriptor": 17.6777,
+    "max_nonorthogonality_degrees": 87.6281,
+    "min_cell_volume": 0.0025,
+    "min_projection_ratio": 0.5
+   },
+   "shear": 0.8,
+   "valid": true
+  }
+ ],
+ "shears": [
+  0.0,
+  0.2,
+  0.4,
+  0.6,
+  0.8
+ ],
+ "worst_configuration": {
+  "aspect_ratio": 20.0,
+  "family": "tetra",
+  "max_nonorthogonality_degrees": 86.1622,
+  "minimum": {
+   "creation_fraction": 0.0793992,
+   "creation_rate": 2.07769,
+   "dissipation_rate": 24.09,
+   "lambda_max": 24.09,
+   "lambda_min": -2.07769,
+   "modes": 144,
+   "passive": false,
+   "wrong_sign_modes": 20
+  },
+  "none": {
+   "creation_fraction": 0.0888726,
+   "creation_rate": 2.33385,
+   "dissipation_rate": 23.9268,
+   "lambda_max": 23.9268,
+   "lambda_min": -2.33385,
+   "modes": 144,
+   "passive": false,
+   "wrong_sign_modes": 24
+  },
+  "over_relaxed": {
+   "creation_fraction": 0.0,
+   "creation_rate": 0.0,
+   "dissipation_rate": 33.8251,
+   "lambda_max": 33.8251,
+   "lambda_min": 3.60713,
+   "modes": 144,
+   "passive": true,
+   "wrong_sign_modes": 0
+  },
+  "shear": 0.0
+ }
+}

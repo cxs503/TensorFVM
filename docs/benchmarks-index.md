@@ -1,5 +1,17 @@
 # TensorFVM benchmark 总览
 
+## 最新：薄层/四面体接口黏性算子的耗散性包络
+
+[薄层耗散性审计](verification-thin-layer-viscous-passivity/README.md)：偿还
+`verification-native-solver-audit` 中「优先检查三角化薄层/四面体接口」一项。
+四族网格（Kuhn 四面体、棱柱四边形面、棱柱三角面、六面体三角面）× 长宽比 1–50 ×
+横向剪切 0–0.8 共 140 个确定性网格上，默认 `over-relaxed` 修正 **140/140 无源**；
+`none` 与 `minimum` 在高长宽比界面制造能量（最差分别为 44.6% 与 25.9%，
+最差配置 `λ_min=-2.07769`），且 `minimum` **不存在**可修复的阻尼值；`over-relaxed`
+安全阻尼下界 `η*≈0.1015`，而阻尼对仿射牵引精确性无代价（≤5.7e−14）。
+真实 9,068 单元 SUBOFF 网格的 `−0.2458` 见证未复现（本 checkout 不含 `.msh` 且无 `gmsh`），
+该项仍为 `WITHHELD`。21 项测试通过。
+
 ## 最新：四项后续求解器问题
 
 [四项问题、修复与原始证据](verification-native-solver-audit/README.md)：
