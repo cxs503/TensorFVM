@@ -51,9 +51,14 @@ def test_no_row_hit_the_step_cap_instead_of_the_tolerance():
     for (rey, n), case in _cases().items():
         solver = case["solver"]
         assert solver["converged"], f"Re={rey:g} n={n} did not converge"
-        assert solver["residual_rate"] <= meta["tolerance"], (rey, n, solver["residual_rate"])
+        assert solver["residual_rate"] <= meta["tolerance"], (
+            rey,
+            n,
+            solver["residual_rate"],
+        )
         assert solver["steps"] < meta["max_steps"], (
-            f"Re={rey:g} n={n} consumed the whole cap {meta['max_steps']}")
+            f"Re={rey:g} n={n} consumed the whole cap {meta['max_steps']}"
+        )
 
 
 def test_every_row_is_divergence_free():
@@ -68,8 +73,12 @@ def test_u_centreline_and_both_extrema_are_inside_three_percent(reynolds, n):
         pytest.skip(f"Re={reynolds:g} n={n} not in this bundle")
     case = _cases()[key]
     u_ext, v_ext = case["u"]["extremum"], case["v"]["extremum"]
-    u_rel = abs(u_ext["min_computed"][1] - u_ext["min_reference"][1]) / abs(u_ext["min_reference"][1])
-    v_rel = abs(v_ext["max_computed"][1] - v_ext["max_reference"][1]) / abs(v_ext["max_reference"][1])
+    u_rel = abs(u_ext["min_computed"][1] - u_ext["min_reference"][1]) / abs(
+        u_ext["min_reference"][1]
+    )
+    v_rel = abs(v_ext["max_computed"][1] - v_ext["max_reference"][1]) / abs(
+        v_ext["max_reference"][1]
+    )
     assert u_rel < 0.03, (reynolds, n, u_rel)
     assert v_rel < 0.03, (reynolds, n, v_rel)
     assert case["u"]["max_abs_error"] < 0.03, (reynolds, n, case["u"]["max_abs_error"])
@@ -79,7 +88,10 @@ def test_no_row_that_resolves_the_shear_layer_loses_the_extrema():
     for (rey, n), case in _cases().items():
         if n < 64:
             continue
-        assert case["u"]["extremum"]["min_computed"][1] < 0.0, (rey, n)   # reverse flow exists
+        assert case["u"]["extremum"]["min_computed"][1] < 0.0, (
+            rey,
+            n,
+        )  # reverse flow exists
         assert case["v"]["extremum"]["max_computed"][1] > 0.0, (rey, n)
 
 
@@ -97,20 +109,25 @@ def test_extrema_are_grid_converged_between_n64_and_n128():
         assert abs(v_f - v_c) / abs(v_f) < 0.05, (rey, v_c, v_f)
 
 
-@pytest.mark.xfail(strict=True, reason=(
-    "Documented open question (docs/verification-lid-cavity-ladder/report.md 5.1): at "
-    "Re=400 the v-centreline error grows under refinement (0.115/0.142/0.149 for "
-    "n=32/64/128) while u and both extrema converge. Attribution updated by "
-    "scripts/audit_lid_cavity_v_centreline.py: the extraction path is exonerated -- on "
-    "an analytic staggered field it reproduces the profile to 1.5e-4 relative "
-    "(observed order 4.5 in h, 1000x below the recorded defect, and a half-cell "
-    "sampling error is detected at 100x), while a fresh n=32 run localises the "
-    "largest node error at x/L=0.9688, i.e. beside the right wall. So the defect is "
-    "in the stored solution field next to the wall, not in the extraction. Must be "
-    "resolved, not tolerated."))
+@pytest.mark.xfail(
+    strict=True,
+    reason=(
+        "Documented open question (docs/verification-lid-cavity-ladder/report.md 5.1): at "
+        "Re=400 the v-centreline error grows under refinement (0.115/0.142/0.149 for "
+        "n=32/64/128) while u and both extrema converge. Attribution updated by "
+        "scripts/audit_lid_cavity_v_centreline.py: the extraction path is exonerated -- on "
+        "an analytic staggered field it reproduces the profile to 1.5e-4 relative "
+        "(observed order 4.5 in h, 1000x below the recorded defect, and a half-cell "
+        "sampling error is detected at 100x), while a fresh n=32 run localises the "
+        "largest node error at x/L=0.9688, i.e. beside the right wall. So the defect is "
+        "in the stored solution field next to the wall, not in the extraction. Must be "
+        "resolved, not tolerated."
+    ),
+)
 def test_re400_v_centreline_discrepancy_is_still_present_and_unexplained():
     row = _cases()[(400.0, 64)]
     assert row["acceptance"]["pass"], row["acceptance"]["criteria"]
+
 
 def test_re400_v_centreline_correction_claim_is_recorded_not_applied():
     """PR #82 (agent/m3240) proposed rewriting the printed Ghia value at
@@ -125,7 +142,8 @@ def test_re400_v_centreline_correction_claim_is_recorded_not_applied():
     published = dict(V_CENTRELINE[400.0])[0.9063]
     assert published == pytest.approx(-0.23827, abs=1e-9), (
         "the printed value must stay as printed - a dispute is not a licence to "
-        "edit the transcription")
+        "edit the transcription"
+    )
     claim = DISPUTES[(400.0, "v", 0.9063)]["competing_transcription"]
     assert claim["value"] == pytest.approx(-0.38760, abs=1e-9)
     assert claim["printed_value"] == pytest.approx(published, abs=1e-9)
@@ -139,5 +157,6 @@ def test_re400_v_centreline_correction_claim_is_recorded_not_applied():
     at_point = profile["reference"][profile["coord"].index(0.9063)]
     assert at_point == pytest.approx(-0.23827), at_point
     assert row["v"]["max_abs_error"] == pytest.approx(
-        abs(at_point - profile["computed"][profile["coord"].index(0.9063)]), abs=5e-4)
+        abs(at_point - profile["computed"][profile["coord"].index(0.9063)]), abs=5e-4
+    )
     assert row["v"]["max_abs_error"] > 0.03, row["v"]["max_abs_error"]

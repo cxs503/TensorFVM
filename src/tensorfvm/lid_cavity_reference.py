@@ -195,7 +195,9 @@ def table(reynolds: float, which: str) -> tuple[tuple[float, float], ...]:
     return (U_CENTRELINE if which == "u" else V_CENTRELINE)[re]
 
 
-def extrema(reynolds: float, which: str) -> tuple[tuple[float, float], tuple[float, float]]:
+def extrema(
+    reynolds: float, which: str
+) -> tuple[tuple[float, float], tuple[float, float]]:
     """Return (argmin, argmax) points of the published centreline table."""
     pts = table(reynolds, which)
     lo = min(pts, key=lambda p: p[1])
@@ -214,8 +216,12 @@ def self_check() -> dict[str, object]:
     for re, ((u_min, y_min), (v_max, x_max)) in expected.items():
         ulo, _ = extrema(re, "u")
         _, vhi = extrema(re, "v")
-        ok = (abs(ulo[1] - u_min) < 1e-9 and abs(ulo[0] - y_min) < 1e-9
-              and abs(vhi[1] - v_max) < 1e-9 and abs(vhi[0] - x_max) < 1e-9)
+        ok = (
+            abs(ulo[1] - u_min) < 1e-9
+            and abs(ulo[0] - y_min) < 1e-9
+            and abs(vhi[1] - v_max) < 1e-9
+            and abs(vhi[0] - x_max) < 1e-9
+        )
         report["cases"][re] = {"ok": ok, "u_min": ulo, "v_max": vhi}
         report["ok"] = bool(report["ok"]) and ok
     # monotone coordinate ordering, unit walls
@@ -231,9 +237,12 @@ def self_check() -> dict[str, object]:
                 report.setdefault("nonfinite", []).append((re, which))
     return report
 
+
 #: Bibliographic target, quoted verbatim in every artefact that scores against it.
-REFERENCE = ("U. Ghia, K.N. Ghia, C.T. Shin, J. Comput. Phys. 48 (1982) 387-411, "
-             "Tables I (u at x = 0.5) and II (v at y = 0.5)")
+REFERENCE = (
+    "U. Ghia, K.N. Ghia, C.T. Shin, J. Comput. Phys. 48 (1982) 387-411, "
+    "Tables I (u at x = 0.5) and II (v at y = 0.5)"
+)
 
 #: Reference entries the solver cannot reproduce at *any* resolution.
 #:
@@ -250,14 +259,18 @@ DISPUTES: dict[tuple[float, str, float], dict[str, object]] = {
         "limit_relative_error": 0.637,
         "metric_interpolation_error_bound_n128": 1.0e-3,
         "neighbour_deltas_n128": {0.9453: 0.0016, 0.8594: 0.0021, 0.8047: 0.0028},
-        "evidence": ("scripts/audit_ghia_re400_v_attribution.py over the committed "
-                     "ladder bundle docs/verification-lid-cavity-ladder/summary.json; "
-                     "clean second-order convergence to a limit 64% away from the "
-                     "tabulated value while the three neighbouring entries are inside "
-                     "0.3%, and the interpolation error of the metric path is two "
-                     "orders of magnitude smaller than the gap"),
-        "adjudication": ("needs the printed Table II or an independent DNS; offline "
-                         "copies of the paper are not available in this checkout"),
+        "evidence": (
+            "scripts/audit_ghia_re400_v_attribution.py over the committed "
+            "ladder bundle docs/verification-lid-cavity-ladder/summary.json; "
+            "clean second-order convergence to a limit 64% away from the "
+            "tabulated value while the three neighbouring entries are inside "
+            "0.3%, and the interpolation error of the metric path is two "
+            "orders of magnitude smaller than the gap"
+        ),
+        "adjudication": (
+            "needs the printed Table II or an independent DNS; offline "
+            "copies of the paper are not available in this checkout"
+        ),
         # Preserved rather than merged-and-forgotten: PR #82 (agent/m3240) read
         # this entry as a transcription error and rewrote it.  The table above
         # keeps the number as printed, so the claim lives here, verbatim, with
@@ -265,17 +278,23 @@ DISPUTES: dict[tuple[float, str, float], dict[str, object]] = {
         "competing_transcription": {
             "value": -0.38760,
             "printed_value": -0.23827,
-            "source": ("PR #82 (branch agent/m3240): src/tensorfvm/"
-                       "lid_cavity_reference.py V_CENTRELINE[400.0]"),
-            "rationale": ("the entry is a corner in the sampled profile "
-                          "(smoothness_audit slope ratio >> 10) and the solver's "
-                          "n=128 value is -0.38758, i.e. the printed number looks "
-                          "like a transcription error"),
-            "rejected_because": ("the proposed replacement reproduces the computed "
-                                 "value to five digits, so a gate scored against it "
-                                 "would be circular, and the printed Table II is not "
-                                 "available in this checkout to settle the "
-                                 "transcription"),
+            "source": (
+                "PR #82 (branch agent/m3240): src/tensorfvm/"
+                "lid_cavity_reference.py V_CENTRELINE[400.0]"
+            ),
+            "rationale": (
+                "the entry is a corner in the sampled profile "
+                "(smoothness_audit slope ratio >> 10) and the solver's "
+                "n=128 value is -0.38758, i.e. the printed number looks "
+                "like a transcription error"
+            ),
+            "rejected_because": (
+                "the proposed replacement reproduces the computed "
+                "value to five digits, so a gate scored against it "
+                "would be circular, and the printed Table II is not "
+                "available in this checkout to settle the "
+                "transcription"
+            ),
             "kept_at": "docs/verification-lid-cavity-correction/report.md",
         },
     },
@@ -308,19 +327,37 @@ def smoothness_audit(threshold: float = 10.0) -> dict:
                 scale = max(abs(s_left), abs(s_right), 1e-12)
                 ratio = scale / max(min(abs(s_left), abs(s_right)), 1e-12)
                 if ratio >= threshold:
-                    flagged.append({
-                        "key": f"{reynolds:g}/{which}/{here[0]:.4f}",
-                        "reynolds": reynolds, "which": which, "x": here[0],
-                        "value": here[1], "slope_ratio": ratio,
-                        "slope_left": s_left, "slope_right": s_right,
-                    })
+                    flagged.append(
+                        {
+                            "key": f"{reynolds:g}/{which}/{here[0]:.4f}",
+                            "reynolds": reynolds,
+                            "which": which,
+                            "x": here[0],
+                            "value": here[1],
+                            "slope_ratio": ratio,
+                            "slope_left": s_left,
+                            "slope_right": s_right,
+                        }
+                    )
     registered = {f"{k[0]:g}/{k[1]}/{k[2]:.4f}" for k in DISPUTES}
-    unexplained = [item for item in flagged
-                   if not any(item["reynolds"] == k[0] and item["which"] == k[1]
-                              and abs(item["x"] - k[2]) <= 0.06 for k in DISPUTES)]
-    return {"entries": entries, "threshold": threshold, "flagged": flagged,
-            "registered": sorted(registered),
-            "registered_flagged": sorted(registered & {item["key"] for item in flagged}),
-            "unexplained": [item["key"] for item in unexplained],
-            "ok": bool(flagged) and not unexplained
-                  and registered <= {item["key"] for item in flagged}}
+    unexplained = [
+        item
+        for item in flagged
+        if not any(
+            item["reynolds"] == k[0]
+            and item["which"] == k[1]
+            and abs(item["x"] - k[2]) <= 0.06
+            for k in DISPUTES
+        )
+    ]
+    return {
+        "entries": entries,
+        "threshold": threshold,
+        "flagged": flagged,
+        "registered": sorted(registered),
+        "registered_flagged": sorted(registered & {item["key"] for item in flagged}),
+        "unexplained": [item["key"] for item in unexplained],
+        "ok": bool(flagged)
+        and not unexplained
+        and registered <= {item["key"] for item in flagged},
+    }
