@@ -60,11 +60,15 @@ jobs:
     runs-on: ubuntu-latest
     # Advisory on purpose: the tree carries a large pre-existing ruff backlog
     # (unused imports, import ordering, semicolon-packed statements).  Making
-    # it blocking would hide every other signal.  Fix the backlog, then drop
-    # this continue-on-error and promote it to a gate.
+    # it blocking would hide every other signal.  Drop this continue-on-error
+    # once `ruff check src tests scripts` is clean tree-wide.
     continue-on-error: true
     steps:
       - uses: actions/checkout@v4
+        with:
+          # The ratchet step diffs against origin/main, so it needs the merge
+          # base; the default shallow checkout does not have one.
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -74,7 +78,24 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
-      - name: Lint (ruff)
-        run: ruff check src tests scripts
-      - name: Format check (ruff format)
-        run: ruff format --check src tests scripts
+      - name: Pin the linter
+        # ruff floats in via the dev extra.  0.17.0 shipped a documented
+        # breaking change to line-length accounting (trailing pragma comments
+        # are now ignored), so a tree formatted with one release fails
+        # `ruff format --check` under another.  The pin is the release the
+        # gate is calibrated against; bump it together with a ratchet re-run
+        # (see docs/ci-lint-policy.md).  pyproject pins the same release.
+        run: python -m pip install "ruff==0.15.0"
+      - name: Lint fatal rules (whole tree)
+        # Rules whose findings are actual defects (syntax errors, undefined
+        # names, broken comparisons, invalid escape sequences) are clean
+        # tree-wide, so they stay a whole-tree gate: they cannot be dodged by
+        # only linting touched files.
+        run: ruff check --select E9,F63,F7,F82 src tests scripts
+      - name: Lint + format ratchet (changed Python only)
+        # The pre-existing style backlog is not gateable without reformatting
+        # the whole tree (see docs/ci-lint-policy.md), so style rules apply to
+        # the files a change actually touches: new code cannot add findings.
+        run: |
+          git fetch --no-tags origin main
+          python scripts/ci_lint_ratchet.py --base origin/main
