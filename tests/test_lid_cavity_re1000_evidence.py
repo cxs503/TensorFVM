@@ -7,8 +7,11 @@ it does not re-run the solver (that costs minutes to an hour per row).  Pinned h
 * the projection stays divergence free at every resolution,
 * both primary extrema and the u-centreline are inside 3 % on every grid that
   resolves the lid shear layer (n >= 64),
-* the defect the ladder exposed -- the Re = 400 v-centreline extraction, whose error
-  grows under refinement -- stays visible as a strict xfail instead of a green suite.
+* the Re=400 v-centreline entry at x=0.9063 stays a registered dispute: unit m3240
+  proposed it is a transcription error (-0.23827 -> -0.38760) and the proposal is
+  preserved in ``lid_cavity_reference.CORRECTIONS``, but the published table is
+  scored as printed here, so the debt is still visible as a strict xfail below;
+  a second test re-scores the committed ladder against the *proposed* table.
 
 A live smoke run of the same code path lives in ``tests/test_lid_cavity.py``.
 """
@@ -19,6 +22,8 @@ import json
 import os
 
 import pytest
+
+from tensorfvm.lid_cavity_reference import CORRECTIONS, table
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BUNDLE = os.path.join(ROOT, "docs", "verification-lid-cavity-ladder", "summary.json")
@@ -110,3 +115,42 @@ def test_extrema_are_grid_converged_between_n64_and_n128():
 def test_re400_v_centreline_discrepancy_is_still_present_and_unexplained():
     row = _cases()[(400.0, 64)]
     assert row["acceptance"]["pass"], row["acceptance"]["criteria"]
+
+
+def test_re400_v_centreline_discrepancy_resolved_by_the_proposed_correction():
+    """Unit m3240's claim, kept -- but scored the only way it can be true.
+
+    The proposal (-0.23827 -> -0.38760 at Re=400, x=0.9063) lives in
+    ``lid_cavity_reference.CORRECTIONS`` and is deliberately *not* written into
+    the published table, so the strict xfail above still describes the published
+    score.  Here the committed ladder's own computed profiles are re-scored
+    against the corrected table: if the proposal is right, the debt disappears on
+    every grid that resolves the lid shear layer (n >= 64), while n = 32 stays
+    above 3 % for the same reason the other quantities do -- it does not resolve
+    that layer.
+    """
+    published = dict(table(400.0, "v"))
+    corrected = dict(table(400.0, "v", corrected=True))
+    assert published[0.9063] == -0.23827, "the transcription must not be silently edited"
+    assert corrected[0.9063] == -0.38760, "the proposal must stay reproducible"
+    assert CORRECTIONS[(400.0, "v", 0.9063)]["applied"] is False
+    assert {x for x in published if published[x] != corrected[x]} == {0.9063}
+
+    cases = _cases()
+    for n in (64, 128):
+        case = cases.get((400.0, n))
+        if case is None:  # pragma: no cover - evidence checkout policy
+            continue
+        profiles = case["v"]["profiles"]
+        error = max(abs(c - corrected[x]) for x, c in zip(profiles["coord"],
+                                                         profiles["computed"]))
+        assert error < 0.03, (n, error)
+        # the debt really shrinks, it is not just renamed
+        assert error < case["v"]["max_abs_error"] / 10.0, (n, error)
+
+    coarse = cases.get((400.0, 32))
+    if coarse is not None:
+        profiles = coarse["v"]["profiles"]
+        error = max(abs(c - corrected[x]) for x, c in zip(profiles["coord"],
+                                                         profiles["computed"]))
+        assert error > 0.03, f"n=32 unexpectedly inside 3 % ({error:.4f})"

@@ -1,0 +1,905 @@
+{
+  "adjudication_usage": {
+    "src/tensorfvm/lid_cavity_reference.py [pr]: ------------------": 1,
+    "src/tensorfvm/lid_cavity_reference.py [pr]: -0.38760),  # CORRECTED": 1,
+    "src/tensorfvm/lid_cavity_reference.py [pr]: body-block": 7,
+    "src/tensorfvm/lid_cavity_reference.py [pr]: raise KeyError": 1,
+    "tests/test_lid_cavity_re1000_evidence.py [pr]: body-block": 14,
+    "tests/test_lid_cavity_re1000_evidence.py [pr]: def test_re400_v_centreline_discrepancy_resolved": 1
+  },
+  "adjudications_unused": [],
+  "base": "0e9bd51dfac1ec543dac9f64079855ba9368298c",
+  "both_sided_files": [
+    "src/tensorfvm/lid_cavity_reference.py",
+    "tests/test_lid_cavity_re1000_evidence.py"
+  ],
+  "files": [
+    {
+      "main_status": "A",
+      "path": "docs/GHIA_RE400_V_ATTRIBUTION.md",
+      "pr_status": null,
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 51,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "A",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": "A",
+      "path": "docs/WALL_CELL_GRADIENT_ATTRIBUTION.md",
+      "pr_status": null,
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 76,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "A",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": "A",
+      "path": "docs/gci-band-coverage/report.md",
+      "pr_status": null,
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 58,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "A",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": "A",
+      "path": "docs/m3050/outputs/wall_cell_gradient_attribution.json",
+      "pr_status": null,
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 180,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "A",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": "A",
+      "path": "docs/m3050/outputs/wall_cell_gradient_attribution.png",
+      "pr_status": null,
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 3522,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "A",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": "A",
+      "path": "docs/m3099/outputs/ghia-re400-v-attribution/attribution.json",
+      "pr_status": null,
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 379,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "A",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": "A",
+      "path": "docs/m3099/outputs/ghia-re400-v-attribution/attribution.png",
+      "pr_status": null,
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 3026,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "A",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": "A",
+      "path": "docs/m3149/outputs/gci-band-coverage/RESULTS.md",
+      "pr_status": null,
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 17,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "A",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": "A",
+      "path": "docs/m3149/outputs/gci-band-coverage/audit.json",
+      "pr_status": null,
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 396,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "A",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": "A",
+      "path": "docs/m3149/outputs/gci-band-coverage/gci_band_coverage.png",
+      "pr_status": null,
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 1016,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "A",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": "M",
+      "path": "docs/verification-analytic-reference-residuals/derivative-limit.png",
+      "pr_status": null,
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 1617,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "M",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": "M",
+      "path": "docs/verification-analytic-reference-residuals/reference-containment.png",
+      "pr_status": null,
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 1398,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "M",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": "M",
+      "path": "docs/verification-analytic-reference-residuals/results-table.md",
+      "pr_status": null,
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 1,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "M",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": "M",
+      "path": "docs/verification-analytic-reference-residuals/results.json",
+      "pr_status": null,
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 23,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "M",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": null,
+      "path": "docs/verification-lid-cavity-correction/all_centrelines.png",
+      "pr_status": "A",
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 4561,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "pr",
+          "status": "A",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": null,
+      "path": "docs/verification-lid-cavity-correction/error_summary.png",
+      "pr_status": "A",
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 1517,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "pr",
+          "status": "A",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": null,
+      "path": "docs/verification-lid-cavity-correction/ghia_correction.png",
+      "pr_status": "A",
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 2482,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "pr",
+          "status": "A",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": null,
+      "path": "docs/verification-lid-cavity-correction/report.md",
+      "pr_status": "A",
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 56,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "pr",
+          "status": "A",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": null,
+      "path": "docs/verification-lid-cavity-ladder/summary.json",
+      "pr_status": "M",
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 99289,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 83724,
+          "relocated_to": "docs/verification-lid-cavity-correction/summary.json",
+          "side": "pr",
+          "status": "M",
+          "unexplained": [],
+          "verdict": "preserved_by_relocation"
+        }
+      ]
+    },
+    {
+      "main_status": "A",
+      "path": "docs/verification-native-gradient-jump-algebra/README.md",
+      "pr_status": null,
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 174,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "A",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": "A",
+      "path": "docs/verification-native-gradient-jump-algebra/evidence.json",
+      "pr_status": null,
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 641,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "A",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": "A",
+      "path": "docs/verification-native-gradient-jump-algebra/gradient-jump-verification.png",
+      "pr_status": null,
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 3139,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "A",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": "A",
+      "path": "docs/verification-native-gradient-jump-algebra/report-table.md",
+      "pr_status": null,
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 83,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "A",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": "M",
+      "path": "scripts/audit_analytic_reference_residuals.py",
+      "pr_status": null,
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 97,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "M",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": "A",
+      "path": "scripts/audit_gci_band_coverage.py",
+      "pr_status": null,
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 300,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "A",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": "A",
+      "path": "scripts/audit_ghia_re400_v_attribution.py",
+      "pr_status": null,
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 250,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "A",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": "A",
+      "path": "scripts/audit_lid_cavity_v_centreline.py",
+      "pr_status": null,
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 226,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "A",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": "A",
+      "path": "scripts/audit_wall_cell_gradient_attribution.py",
+      "pr_status": null,
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 183,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "A",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": "A",
+      "path": "scripts/verify_native_gradient_jump_algebra.py",
+      "pr_status": null,
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 394,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "A",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": "M",
+      "path": "src/tensorfvm/lid_cavity.py",
+      "pr_status": null,
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 36,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "M",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": "M",
+      "path": "src/tensorfvm/lid_cavity_reference.py",
+      "pr_status": "M",
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 69,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "M",
+          "unexplained": [],
+          "verdict": "preserved"
+        },
+        {
+          "added_lines": 10,
+          "adjudications_applied": [
+            {
+              "lines": 1,
+              "why": "PR #82 rewrote the published Ghia entry v(Re=400, x=0.9063) -0.23827 -> -0.38760 inside V_CENTRELINE.  main (unit m3099) adopted the opposite invariant in the meantime: a published transcription is never overwritten, the mismatch is registered with evidence.  The proposal survives as a first-class opt-in register entry (CORRECTIONS / corrected_table / applied_corrections) instead of an edit of the reference table, so the correction is reproducible and the printed table is still the thing being scored."
+            },
+            {
+              "lines": 7,
+              "why": "PR #82's '+ Correction history' docstring block asserted the transcription had been fixed.  Kept as a history/proposal-register block that states what actually holds (proposal registered, never written into the table), while preserving the proposed value, its grid-convergence basis and the remaining debt numbers."
+            },
+            {
+              "lines": 1,
+              "why": "underline of the docstring heading above; the merged heading is 'Correction history / proposal register' with its own underline."
+            },
+            {
+              "lines": 1,
+              "why": "cosmetic rewording of the same KeyError; main's variant (which prints the Re= value and the supported list) is a superset of PR #82's text."
+            }
+          ],
+          "dropped_or_rewritten": 10,
+          "side": "pr",
+          "status": "M",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": "A",
+      "path": "src/tensorfvm/verification/artifacts/lid-cavity-extraction/report.md",
+      "pr_status": null,
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 33,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "A",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": "A",
+      "path": "src/tensorfvm/verification/artifacts/lid-cavity-extraction/results.json",
+      "pr_status": null,
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 339,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "A",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": "A",
+      "path": "src/tensorfvm/verification/artifacts/porous-forchheimer/REPORT.md",
+      "pr_status": null,
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 49,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "A",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": "A",
+      "path": "src/tensorfvm/verification/artifacts/porous-forchheimer/evidence.json",
+      "pr_status": null,
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 733,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "A",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": "A",
+      "path": "src/tensorfvm/verification/face_lsq3d.py",
+      "pr_status": null,
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 157,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "A",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": "A",
+      "path": "src/tensorfvm/verification/lid_cavity_extraction.py",
+      "pr_status": null,
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 211,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "A",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": "M",
+      "path": "src/tensorfvm/verification/native_order3d.py",
+      "pr_status": null,
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 12,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "M",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": "A",
+      "path": "src/tensorfvm/verification/porous_forchheimer.py",
+      "pr_status": null,
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 284,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "A",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": "M",
+      "path": "tests/test_analytic_reference_residuals.py",
+      "pr_status": null,
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 1,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "M",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": "A",
+      "path": "tests/test_gci_band_coverage.py",
+      "pr_status": null,
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 96,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "A",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": "A",
+      "path": "tests/test_ghia_reference_consistency.py",
+      "pr_status": null,
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 154,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "A",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": "A",
+      "path": "tests/test_lid_cavity_extraction.py",
+      "pr_status": null,
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 99,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "A",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": "M",
+      "path": "tests/test_lid_cavity_re1000_evidence.py",
+      "pr_status": "M",
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 8,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "M",
+          "unexplained": [],
+          "verdict": "preserved"
+        },
+        {
+          "added_lines": 19,
+          "adjudications_applied": [
+            {
+              "lines": 1,
+              "why": "PR #82 called its claim test 'test_re400_v_centreline_discrepancy_resolved'; the merge keeps the claim and renames it '..._resolved_by_the_proposed_correction' so the name states that it is scored against the proposal, not the print."
+            },
+            {
+              "lines": 14,
+              "why": "PR #82's test body asserted case['v']['max_abs_error'] from the committed ladder bundle -- which only passes if that shared bundle is scored against the proposed table.  The merge re-derives the same pointwise error from the committed published-scoring bundle, so the test no longer depends on which bundle is committed, and it is stronger: it pins the published value, the only-differing-x set, the 10x shrink and the n=32 > 3% control."
+            }
+          ],
+          "dropped_or_rewritten": 15,
+          "side": "pr",
+          "status": "M",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": "A",
+      "path": "tests/test_native_gradient_jump_verification.py",
+      "pr_status": null,
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 177,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "A",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": "A",
+      "path": "tests/test_porous_forchheimer_reference.py",
+      "pr_status": null,
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 67,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "A",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": "A",
+      "path": "tests/test_wall_cell_gradient_attribution.py",
+      "pr_status": null,
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 114,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "A",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    },
+    {
+      "main_status": "A",
+      "path": "tests/test_wall_functions.py",
+      "pr_status": null,
+      "present_in_merged": true,
+      "sides": [
+        {
+          "added_lines": 181,
+          "adjudications_applied": [],
+          "dropped_or_rewritten": 0,
+          "side": "main",
+          "status": "A",
+          "unexplained": [],
+          "verdict": "preserved"
+        }
+      ]
+    }
+  ],
+  "main": "db97955686af7832a7a56992e419aaf3c90d07ad",
+  "merged": "3386a61c37baa2f46c6f6303c1348fbec3029e5c",
+  "method": "line multiset (whitespace-only lines ignored): every line a parent added relative to the merge base must still be present in the merged tree with at least the same multiplicity; residual drops must be covered by an ADJUDICATIONS rule whose must_contain needles are found in the merged file; relocated files must be byte-identical.",
+  "pr": "99f8e6eab3a4ad0f7594b6d18730e4177e3ad54f",
+  "relocations": [
+    {
+      "from": "docs/verification-lid-cavity-ladder/summary.json",
+      "identical": true,
+      "sha256_from": "12dee9735eafb89911bc3b5fc0afc9be0250c7ec81d16a767f1c97fa2182377f",
+      "sha256_to": "12dee9735eafb89911bc3b5fc0afc9be0250c7ec81d16a767f1c97fa2182377f",
+      "to": "docs/verification-lid-cavity-correction/summary.json",
+      "why": "the shared ladder bundle is what the Re=1000 evidence tests score, and it must score against the printed Ghia table, so it is restored to the published-transcription scoring; PR #82's corrected-scoring regeneration is kept byte-for-byte next to the report that was computed from it"
+    }
+  ],
+  "summary": {
+    "adjudications_declared": 6,
+    "adjudications_used": 6,
+    "both_sided_files": [
+      "src/tensorfvm/lid_cavity_reference.py",
+      "tests/test_lid_cavity_re1000_evidence.py"
+    ],
+    "failures": 0,
+    "files_audited": 48,
+    "ok": true,
+    "relocations": 1
+  }
+}

@@ -26,6 +26,21 @@ check on the solution field rather than only on the two centrelines):
 * Re = 100:  (0.6172, 0.7344)
 * Re = 400:  (0.5547, 0.6055)
 * Re = 1000: (0.5313, 0.5625)
+
+Correction history / proposal register
+--------------------------------------
+* 2026-11-03 (unit m3240): the Re = 400 v-centreline entry at x = 0.9063 was
+  proposed to be a transcription error, -0.23827 -> -0.38760.  The proposal is
+  kept, but it is *not* written into :data:`V_CENTRELINE`: the published number
+  stays byte-for-byte as printed, and the disagreement is registered in
+  :data:`DISPUTES` (unit m3099) instead, so that the printed Table II can settle
+  it without an archaeologist.  The proposal stays reproducible through
+  :data:`CORRECTIONS` / :func:`corrected_table`, which is what an opt-in
+  corrected-reference score reads.
+* The verification debt the proposal targets is real either way: against the
+  published table the Re = 400 v-centreline error *grows* under refinement
+  (0.115/0.142/0.149 at n = 32/64/128), which is why it remains a strict xfail in
+  ``tests/test_lid_cavity_re1000_evidence.py``.
 """
 
 from __future__ import annotations
@@ -121,7 +136,7 @@ V_CENTRELINE: Mapping[float, tuple[tuple[float, float], ...]] = {
         (0.9609, -0.15663),
         (0.9531, -0.19254),
         (0.9453, -0.22847),
-        (0.9063, -0.23827),
+        (0.9063, -0.23827),  # published as printed; see DISPUTES / CORRECTIONS
         (0.8594, -0.44993),
         (0.8047, -0.38598),
         (0.5000, 0.05186),
@@ -164,19 +179,71 @@ VORTEX_CENTRE: Mapping[float, tuple[float, float]] = {
 
 SUPPORTED_REYNOLDS = tuple(sorted(U_CENTRELINE))
 
+#: Proposed corrections to published entries -- advisory, never applied on import.
+#:
+#: A proposal is evidence, not a licence: it must be reproducible from the
+#: committed data and it must say why it disagrees with the print.  Nothing here
+#: overwrites the transcription, and no gate reads it unless the caller asks for
+#: the corrected table explicitly.
+CORRECTIONS: dict[tuple[float, str, float], dict[str, object]] = {
+    (400.0, "v", 0.9063): {
+        "published": -0.23827,
+        "proposed": -0.38760,
+        "proposed_by": "unit m3240 (docs/verification-lid-cavity-correction/report.md)",
+        "basis": ("solver grid convergence at x = 0.9063: -0.35284 / -0.38064 / "
+                  "-0.38758 at n = 32/64/128, observed order 2.00, Richardson limit "
+                  "-0.38989; the proposed value is that limit rounded to the table's "
+                  "five decimals, i.e. it is fitted to the solver and cannot on its "
+                  "own decide whether the print or our transcription is wrong"),
+        "status": "proposed",
+        "applied": False,
+        "adjudication": ("needs the printed Table II or an independent DNS; until then "
+                         "score against the published table and register the mismatch"),
+    },
+}
+
 
 def _finite(*values: float) -> bool:
     return all(isinstance(v, (int, float)) and math.isfinite(v) for v in values)
 
 
-def table(reynolds: float, which: str) -> tuple[tuple[float, float], ...]:
-    """Return the published table for ``reynolds``; ``which`` is ``u`` or ``v``."""
+def table(reynolds: float, which: str,
+          corrected: bool = False) -> tuple[tuple[float, float], ...]:
+    """Return the published table for ``reynolds``; ``which`` is ``u`` or ``v``.
+
+    ``corrected=True`` returns the same table with every *proposed* entry of
+    :data:`CORRECTIONS` applied.  That path is opt-in on purpose: the default is
+    the transcription as printed, so a score computed here is never silently
+    flattered by a proposal that has not been adjudicated.
+    """
     re = float(reynolds)
     if re not in U_CENTRELINE:
         raise KeyError(f"no Ghia table for Re={reynolds}; available {SUPPORTED_REYNOLDS}")
     if which not in ("u", "v"):
         raise ValueError("which must be 'u' or 'v'")
+    if corrected:
+        return corrected_table(re, which)
     return (U_CENTRELINE if which == "u" else V_CENTRELINE)[re]
+
+
+def corrected_table(reynolds: float, which: str) -> tuple[tuple[float, float], ...]:
+    """Published table with every proposed correction applied (opt-in scoring)."""
+    pts = list(table(reynolds, which))
+    re = float(reynolds)
+    for (rey, kind, x), record in CORRECTIONS.items():
+        if rey != re or kind != which:
+            continue
+        for index, (coord, _) in enumerate(pts):
+            if abs(coord - x) < 1e-9:
+                pts[index] = (coord, float(record["proposed"]))
+    return tuple(pts)
+
+
+def applied_corrections(reynolds: float, which: str) -> list[dict[str, object]]:
+    """The corrections :func:`corrected_table` would apply, for reporting."""
+    re = float(reynolds)
+    return [{"x": key[2], **record} for key, record in CORRECTIONS.items()
+            if key[0] == re and key[1] == which]
 
 
 def extrema(reynolds: float, which: str) -> tuple[tuple[float, float], tuple[float, float]]:
@@ -228,6 +295,8 @@ REFERENCE = ("U. Ghia, K.N. Ghia, C.T. Shin, J. Comput. Phys. 48 (1982) 387-411,
 DISPUTES: dict[tuple[float, str, float], dict[str, object]] = {
     (400.0, "v", 0.9063): {
         "published": -0.23827,
+        "proposed_correction": -0.38760,
+        "proposed_correction_register": "CORRECTIONS (opt-in, never applied)",
         "computed_n": {32: -0.35284, 64: -0.38064, 128: -0.38758},
         "observed_order": 2.00,
         "richardson_limit": -0.38989,

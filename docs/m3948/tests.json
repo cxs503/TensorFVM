@@ -1,0 +1,143 @@
+{
+  "command": "PYTHONPATH=src python3 -m pytest <files> -q -p no:cacheprovider  (run from the tree root)",
+  "how": "tallies are the pytest tail lines of the runs listed per suite; the shared box caps a shell call at ~120 s and was at load ~760, so the matrix was run suite-by-suite (one full-suite attempt was reaped at 62 % and is not claimed)",
+  "trees": {
+    "main": {
+      "rev": "db97955",
+      "suites": {
+        "ladder-surface": {
+          "failed": 0,
+          "files": [
+            "tests/test_lid_cavity_extraction.py",
+            "tests/test_wall_functions.py",
+            "tests/test_gci_band_coverage.py",
+            "tests/test_wall_cell_gradient_attribution.py"
+          ],
+          "note": "",
+          "passed": 47,
+          "seconds_observed": 19.58,
+          "skipped": 0,
+          "status": "ok",
+          "xfailed": 0
+        },
+        "lid-cavity": {
+          "failed": 0,
+          "files": [
+            "tests/test_lid_cavity.py"
+          ],
+          "note": "",
+          "passed": 9,
+          "seconds_observed": 45.79,
+          "skipped": 0,
+          "status": "ok",
+          "xfailed": 0
+        },
+        "ref": {
+          "failed": 0,
+          "files": [
+            "tests/test_ghia_reference_consistency.py",
+            "tests/test_lid_cavity_re1000_evidence.py"
+          ],
+          "note": "",
+          "passed": 18,
+          "seconds_observed": 10.59,
+          "skipped": 1,
+          "status": "ok",
+          "xfailed": 1
+        },
+        "verification": {
+          "failed": 0,
+          "files": [
+            "tests/test_analytic_reference_residuals.py",
+            "tests/test_porous_forchheimer_reference.py"
+          ],
+          "note": "",
+          "passed": 21,
+          "seconds_observed": 60.25,
+          "skipped": 0,
+          "status": "ok",
+          "xfailed": 0
+        }
+      },
+      "totals": {
+        "failed": 0,
+        "passed": 95,
+        "skipped": 1,
+        "xfailed": 1
+      },
+      "what": "pristine main extracted with git archive"
+    },
+    "merged": {
+      "rev": "3386a61 + m3948 deliverables",
+      "suites": {
+        "ladder-surface": {
+          "failed": 0,
+          "files": [
+            "tests/test_lid_cavity_extraction.py",
+            "tests/test_wall_functions.py",
+            "tests/test_gci_band_coverage.py",
+            "tests/test_wall_cell_gradient_attribution.py"
+          ],
+          "note": "",
+          "passed": 47,
+          "seconds_observed": 44.66,
+          "skipped": 0,
+          "status": "ok",
+          "xfailed": 0
+        },
+        "lid-cavity": {
+          "failed": 0,
+          "files": [
+            "tests/test_lid_cavity.py"
+          ],
+          "note": "",
+          "passed": 9,
+          "seconds_observed": 74.88,
+          "skipped": 0,
+          "status": "ok",
+          "xfailed": 0
+        },
+        "native-gradient-jump": {
+          "files": [
+            "tests/test_native_gradient_jump_verification.py"
+          ],
+          "note": "its whole import closure (tensorfvm.native_hybrid_viscous3d, tensorfvm.native_mesh3d, tests/test_native_gradient_jump_verification.py) is byte-identical to main in the merged tree, so its verdict cannot differ between the two trees; a 105 s attempt was reaped by the harness after 4 green tests and is not claimed",
+          "status": "not_run"
+        },
+        "ref": {
+          "failed": 0,
+          "files": [
+            "tests/test_ghia_reference_consistency.py",
+            "tests/test_lid_cavity_re1000_evidence.py"
+          ],
+          "note": "",
+          "passed": 19,
+          "seconds_observed": 8.75,
+          "skipped": 1,
+          "status": "ok",
+          "xfailed": 1
+        },
+        "verification": {
+          "failed": 0,
+          "files": [
+            "tests/test_analytic_reference_residuals.py",
+            "tests/test_porous_forchheimer_reference.py"
+          ],
+          "note": "",
+          "passed": 21,
+          "seconds_observed": 91.72,
+          "skipped": 0,
+          "status": "ok",
+          "xfailed": 0
+        }
+      },
+      "totals": {
+        "failed": 0,
+        "passed": 96,
+        "skipped": 1,
+        "xfailed": 1
+      },
+      "what": "agent/m3240 with origin/main (db97955) merged in"
+    }
+  }
+}
