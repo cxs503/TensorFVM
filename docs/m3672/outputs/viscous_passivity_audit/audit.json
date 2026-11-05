@@ -1,0 +1,1402 @@
+{
+  "skew_sweep": {
+    "rows": [
+      {
+        "skew": 0.0,
+        "valid": true,
+        "nonorthogonality_degrees": 25.23940182067893,
+        "corrections": {
+          "over-relaxed": {
+            "modes": 6,
+            "lambda_max": 12.747064632295096,
+            "lambda_min": 8.906666666666665,
+            "creation_rate": 0.0,
+            "dissipation_rate": 12.747064632295096,
+            "creation_fraction": 0.0,
+            "wrong_sign_modes": 0,
+            "passive": true,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 11.093333333333334,
+              "lambda_min": 8.319999999999999,
+              "creation_rate": 0.0,
+              "dissipation_rate": 11.093333333333334,
+              "creation_fraction": 0.0,
+              "wrong_sign_modes": 0,
+              "passive": true
+            }
+          },
+          "minimum": {
+            "modes": 6,
+            "lambda_max": 11.90519021567533,
+            "lambda_min": 8.160000000000002,
+            "creation_rate": 0.0,
+            "dissipation_rate": 11.90519021567533,
+            "creation_fraction": 0.0,
+            "wrong_sign_modes": 0,
+            "passive": true,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 10.239999999999998,
+              "lambda_min": 7.679999999999997,
+              "creation_rate": 0.0,
+              "dissipation_rate": 10.239999999999998,
+              "creation_fraction": 0.0,
+              "wrong_sign_modes": 0,
+              "passive": true
+            }
+          }
+        }
+      },
+      {
+        "skew": 0.05,
+        "valid": true,
+        "nonorthogonality_degrees": 27.949330199879324,
+        "corrections": {
+          "over-relaxed": {
+            "modes": 6,
+            "lambda_max": 12.578864638611954,
+            "lambda_min": 8.630955983845995,
+            "creation_rate": 0.0,
+            "dissipation_rate": 12.578864638611954,
+            "creation_fraction": 0.0,
+            "wrong_sign_modes": 0,
+            "passive": true,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 10.813785924565266,
+              "lambda_min": 8.048124588556519,
+              "creation_rate": 0.0,
+              "dissipation_rate": 10.813785924565266,
+              "creation_fraction": 0.0,
+              "wrong_sign_modes": 0,
+              "passive": true
+            }
+          },
+          "minimum": {
+            "modes": 6,
+            "lambda_max": 11.597554635374317,
+            "lambda_min": 7.926702390464844,
+            "creation_rate": 0.0,
+            "dissipation_rate": 11.597554635374317,
+            "creation_fraction": 0.0,
+            "wrong_sign_modes": 0,
+            "passive": true,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 9.946386780936281,
+              "lambda_min": 7.442919517544794,
+              "creation_rate": 0.0,
+              "dissipation_rate": 9.946386780936281,
+              "creation_fraction": 0.0,
+              "wrong_sign_modes": 0,
+              "passive": true
+            }
+          }
+        }
+      },
+      {
+        "skew": 0.1,
+        "valid": true,
+        "nonorthogonality_degrees": 30.52667801458525,
+        "corrections": {
+          "over-relaxed": {
+            "modes": 6,
+            "lambda_max": 12.474559601668059,
+            "lambda_min": 8.346564458071052,
+            "creation_rate": 0.0,
+            "dissipation_rate": 12.474559601668059,
+            "creation_fraction": 0.0,
+            "wrong_sign_modes": 0,
+            "passive": true,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 10.638200124558473,
+              "lambda_min": 7.777926511439467,
+              "creation_rate": 0.0,
+              "dissipation_rate": 10.638200124558473,
+              "creation_fraction": 0.0,
+              "wrong_sign_modes": 0,
+              "passive": true
+            }
+          },
+          "minimum": {
+            "modes": 6,
+            "lambda_max": 11.315636782736155,
+            "lambda_min": 7.632375587193441,
+            "creation_rate": 0.0,
+            "dissipation_rate": 11.315636782736155,
+            "creation_fraction": 0.0,
+            "wrong_sign_modes": 0,
+            "passive": true,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 9.629753197571185,
+              "lambda_min": 7.159281405337376,
+              "creation_rate": 0.0,
+              "dissipation_rate": 9.629753197571185,
+              "creation_fraction": 0.0,
+              "wrong_sign_modes": 0,
+              "passive": true
+            }
+          }
+        }
+      },
+      {
+        "skew": 0.15000000000000002,
+        "valid": true,
+        "nonorthogonality_degrees": 32.95076988570684,
+        "corrections": {
+          "over-relaxed": {
+            "modes": 6,
+            "lambda_max": 12.41369405677265,
+            "lambda_min": 8.11779628100401,
+            "creation_rate": 0.0,
+            "dissipation_rate": 12.41369405677265,
+            "creation_fraction": 0.0,
+            "wrong_sign_modes": 0,
+            "passive": true,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 10.536774922598067,
+              "lambda_min": 7.569295021351518,
+              "creation_rate": 0.0,
+              "dissipation_rate": 10.536774922598067,
+              "creation_fraction": 0.0,
+              "wrong_sign_modes": 0,
+              "passive": true
+            }
+          },
+          "minimum": {
+            "modes": 6,
+            "lambda_max": 10.989794729493275,
+            "lambda_min": 7.2891290521273575,
+            "creation_rate": 0.0,
+            "dissipation_rate": 10.989794729493275,
+            "creation_fraction": 0.0,
+            "wrong_sign_modes": 0,
+            "passive": true,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 9.2973128896242,
+              "lambda_min": 6.841297661201552,
+              "creation_rate": 0.0,
+              "dissipation_rate": 9.2973128896242,
+              "creation_fraction": 0.0,
+              "wrong_sign_modes": 0,
+              "passive": true
+            }
+          }
+        }
+      },
+      {
+        "skew": 0.2,
+        "valid": true,
+        "nonorthogonality_degrees": 35.21763925388543,
+        "corrections": {
+          "over-relaxed": {
+            "modes": 6,
+            "lambda_max": 12.395365416477217,
+            "lambda_min": 7.997496811103326,
+            "creation_rate": 0.0,
+            "dissipation_rate": 12.395365416477217,
+            "creation_fraction": 0.0,
+            "wrong_sign_modes": 0,
+            "passive": true,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 10.487511865546539,
+              "lambda_min": 7.474551874382513,
+              "creation_rate": 0.0,
+              "dissipation_rate": 10.487511865546539,
+              "creation_fraction": 0.0,
+              "wrong_sign_modes": 0,
+              "passive": true
+            }
+          },
+          "minimum": {
+            "modes": 6,
+            "lambda_max": 10.627510950443503,
+            "lambda_min": 6.90672528154216,
+            "creation_rate": 0.0,
+            "dissipation_rate": 10.627510950443503,
+            "creation_fraction": 0.0,
+            "wrong_sign_modes": 0,
+            "passive": true,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 8.95522890479198,
+              "lambda_min": 6.497644681148549,
+              "creation_rate": 0.0,
+              "dissipation_rate": 8.95522890479198,
+              "creation_fraction": 0.0,
+              "wrong_sign_modes": 0,
+              "passive": true
+            }
+          }
+        }
+      },
+      {
+        "skew": 0.25,
+        "valid": true,
+        "nonorthogonality_degrees": 37.33170625264897,
+        "corrections": {
+          "over-relaxed": {
+            "modes": 6,
+            "lambda_max": 12.438771486310221,
+            "lambda_min": 8.009399641200531,
+            "creation_rate": 0.0,
+            "dissipation_rate": 12.438771486310221,
+            "creation_fraction": 0.0,
+            "wrong_sign_modes": 0,
+            "passive": true,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 10.486089463821756,
+              "lambda_min": 7.527489436025464,
+              "creation_rate": 0.0,
+              "dissipation_rate": 10.486089463821756,
+              "creation_fraction": 0.0,
+              "wrong_sign_modes": 0,
+              "passive": true
+            }
+          },
+          "minimum": {
+            "modes": 6,
+            "lambda_max": 10.241614351655935,
+            "lambda_min": 6.491866070114868,
+            "creation_rate": 0.0,
+            "dissipation_rate": 10.241614351655935,
+            "creation_fraction": 0.0,
+            "wrong_sign_modes": 0,
+            "passive": true,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 8.609824296644591,
+              "lambda_min": 6.1325177988896975,
+              "creation_rate": 0.0,
+              "dissipation_rate": 8.609824296644591,
+              "creation_fraction": 0.0,
+              "wrong_sign_modes": 0,
+              "passive": true
+            }
+          }
+        }
+      },
+      {
+        "skew": 0.30000000000000004,
+        "valid": true,
+        "nonorthogonality_degrees": 39.30139794755991,
+        "corrections": {
+          "over-relaxed": {
+            "modes": 6,
+            "lambda_max": 12.599654742572193,
+            "lambda_min": 8.144632569867987,
+            "creation_rate": 0.0,
+            "dissipation_rate": 12.599654742572193,
+            "creation_fraction": 0.0,
+            "wrong_sign_modes": 0,
+            "passive": true,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 10.554112853495708,
+              "lambda_min": 7.732405134889609,
+              "creation_rate": 0.0,
+              "dissipation_rate": 10.554112853495708,
+              "creation_fraction": 0.0,
+              "wrong_sign_modes": 0,
+              "passive": true
+            }
+          },
+          "minimum": {
+            "modes": 6,
+            "lambda_max": 9.846711389546442,
+            "lambda_min": 6.047052631460296,
+            "creation_rate": 0.0,
+            "dissipation_rate": 9.846711389546442,
+            "creation_fraction": 0.0,
+            "wrong_sign_modes": 0,
+            "passive": true,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 8.267810050655934,
+              "lambda_min": 5.7459867518483465,
+              "creation_rate": 0.0,
+              "dissipation_rate": 8.267810050655934,
+              "creation_fraction": 0.0,
+              "wrong_sign_modes": 0,
+              "passive": true
+            }
+          }
+        }
+      },
+      {
+        "skew": 0.35000000000000003,
+        "valid": true,
+        "nonorthogonality_degrees": 42.54943837381352,
+        "corrections": {
+          "over-relaxed": {
+            "modes": 6,
+            "lambda_max": 12.996840854939606,
+            "lambda_min": 8.395491216076573,
+            "creation_rate": 0.0,
+            "dissipation_rate": 12.996840854939606,
+            "creation_fraction": 0.0,
+            "wrong_sign_modes": 0,
+            "passive": true,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 10.754569569524742,
+              "lambda_min": 8.043474423984234,
+              "creation_rate": 0.0,
+              "dissipation_rate": 10.754569569524742,
+              "creation_fraction": 0.0,
+              "wrong_sign_modes": 0,
+              "passive": true
+            }
+          },
+          "minimum": {
+            "modes": 6,
+            "lambda_max": 9.458766800894297,
+            "lambda_min": 5.565277931683004,
+            "creation_rate": 0.0,
+            "dissipation_rate": 9.458766800894297,
+            "creation_fraction": 0.0,
+            "wrong_sign_modes": 0,
+            "passive": true,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 7.9358442568041125,
+              "lambda_min": 5.335240049245607,
+              "creation_rate": 0.0,
+              "dissipation_rate": 7.9358442568041125,
+              "creation_fraction": 0.0,
+              "wrong_sign_modes": 0,
+              "passive": true
+            }
+          }
+        }
+      },
+      {
+        "skew": 0.4,
+        "valid": true,
+        "nonorthogonality_degrees": 47.55961919413044,
+        "corrections": {
+          "over-relaxed": {
+            "modes": 6,
+            "lambda_max": 13.791925461961679,
+            "lambda_min": 8.689961424745338,
+            "creation_rate": 0.0,
+            "dissipation_rate": 13.791925461961679,
+            "creation_fraction": 0.0,
+            "wrong_sign_modes": 0,
+            "passive": true,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 11.19857414710265,
+              "lambda_min": 8.3498498839635,
+              "creation_rate": 0.0,
+              "dissipation_rate": 11.19857414710265,
+              "creation_fraction": 0.0,
+              "wrong_sign_modes": 0,
+              "passive": true
+            }
+          },
+          "minimum": {
+            "modes": 6,
+            "lambda_max": 9.094166452652793,
+            "lambda_min": 5.040720864456042,
+            "creation_rate": 0.0,
+            "dissipation_rate": 9.094166452652793,
+            "creation_fraction": 0.0,
+            "wrong_sign_modes": 0,
+            "passive": true,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 7.619854038481382,
+              "lambda_min": 4.896321831329988,
+              "creation_rate": 0.0,
+              "dissipation_rate": 7.619854038481382,
+              "creation_fraction": 0.0,
+              "wrong_sign_modes": 0,
+              "passive": true
+            }
+          }
+        }
+      },
+      {
+        "skew": 0.45,
+        "valid": true,
+        "nonorthogonality_degrees": 54.34327349220995,
+        "corrections": {
+          "over-relaxed": {
+            "modes": 6,
+            "lambda_max": 15.042950971951008,
+            "lambda_min": 8.908328015476018,
+            "creation_rate": 0.0,
+            "dissipation_rate": 15.042950971951008,
+            "creation_fraction": 0.0,
+            "wrong_sign_modes": 0,
+            "passive": true,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 11.973971088242058,
+              "lambda_min": 8.536139505180385,
+              "creation_rate": 0.0,
+              "dissipation_rate": 11.973971088242058,
+              "creation_fraction": 0.0,
+              "wrong_sign_modes": 0,
+              "passive": true
+            }
+          },
+          "minimum": {
+            "modes": 6,
+            "lambda_max": 8.766622882967212,
+            "lambda_min": 4.495859958672869,
+            "creation_rate": 0.0,
+            "dissipation_rate": 8.766622882967212,
+            "creation_fraction": 0.0,
+            "wrong_sign_modes": 0,
+            "passive": true,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 7.324508946896332,
+              "lambda_min": 4.426043498417367,
+              "creation_rate": 0.0,
+              "dissipation_rate": 7.324508946896332,
+              "creation_fraction": 0.0,
+              "wrong_sign_modes": 0,
+              "passive": true
+            }
+          }
+        }
+      },
+      {
+        "skew": 0.5,
+        "valid": true,
+        "nonorthogonality_degrees": 60.98753205958398,
+        "corrections": {
+          "over-relaxed": {
+            "modes": 6,
+            "lambda_max": 16.633560201426885,
+            "lambda_min": 8.988643884075222,
+            "creation_rate": 0.0,
+            "dissipation_rate": 16.633560201426885,
+            "creation_fraction": 0.0,
+            "wrong_sign_modes": 0,
+            "passive": true,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 13.035594167685044,
+              "lambda_min": 8.58012162488421,
+              "creation_rate": 0.0,
+              "dissipation_rate": 13.035594167685044,
+              "creation_fraction": 0.0,
+              "wrong_sign_modes": 0,
+              "passive": true
+            }
+          },
+          "minimum": {
+            "modes": 6,
+            "lambda_max": 8.483260920785257,
+            "lambda_min": 3.9373583266465038,
+            "creation_rate": 0.0,
+            "dissipation_rate": 8.483260920785257,
+            "creation_fraction": 0.0,
+            "wrong_sign_modes": 0,
+            "passive": true,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 7.053068046526038,
+              "lambda_min": 3.923829625843485,
+              "creation_rate": 0.0,
+              "dissipation_rate": 7.053068046526038,
+              "creation_fraction": 0.0,
+              "wrong_sign_modes": 0,
+              "passive": true
+            }
+          }
+        }
+      },
+      {
+        "skew": 0.55,
+        "valid": true,
+        "nonorthogonality_degrees": 66.49209091354166,
+        "corrections": {
+          "over-relaxed": {
+            "modes": 6,
+            "lambda_max": 18.354904697892025,
+            "lambda_min": 8.950721539628486,
+            "creation_rate": 0.0,
+            "dissipation_rate": 18.354904697892025,
+            "creation_fraction": 0.0,
+            "wrong_sign_modes": 0,
+            "passive": true,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 14.226939070186583,
+              "lambda_min": 8.5215890869562,
+              "creation_rate": 0.0,
+              "dissipation_rate": 14.226939070186583,
+              "creation_fraction": 0.0,
+              "wrong_sign_modes": 0,
+              "passive": true
+            }
+          },
+          "minimum": {
+            "modes": 6,
+            "lambda_max": 8.244100085655267,
+            "lambda_min": 3.365295498681918,
+            "creation_rate": 0.0,
+            "dissipation_rate": 8.244100085655267,
+            "creation_fraction": 0.0,
+            "wrong_sign_modes": 0,
+            "passive": true,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 6.807541329708699,
+              "lambda_min": 3.3933201372859996,
+              "creation_rate": 0.0,
+              "dissipation_rate": 6.807541329708699,
+              "creation_fraction": 0.0,
+              "wrong_sign_modes": 0,
+              "passive": true
+            }
+          }
+        }
+      },
+      {
+        "skew": 0.6000000000000001,
+        "valid": true,
+        "nonorthogonality_degrees": 70.96914280550693,
+        "corrections": {
+          "over-relaxed": {
+            "modes": 6,
+            "lambda_max": 19.94945242944184,
+            "lambda_min": 8.832604391012989,
+            "creation_rate": 0.0,
+            "dissipation_rate": 19.94945242944184,
+            "creation_fraction": 0.0,
+            "wrong_sign_modes": 0,
+            "passive": true,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 15.343538654455653,
+              "lambda_min": 8.397297848194485,
+              "creation_rate": 0.0,
+              "dissipation_rate": 15.343538654455653,
+              "creation_fraction": 0.0,
+              "wrong_sign_modes": 0,
+              "passive": true
+            }
+          },
+          "minimum": {
+            "modes": 6,
+            "lambda_max": 8.045275567846923,
+            "lambda_min": 2.784041614393617,
+            "creation_rate": 0.0,
+            "dissipation_rate": 8.045275567846923,
+            "creation_fraction": 0.0,
+            "wrong_sign_modes": 0,
+            "passive": true,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 6.5888909377647495,
+              "lambda_min": 2.8434813126971137,
+              "creation_rate": 0.0,
+              "dissipation_rate": 6.5888909377647495,
+              "creation_fraction": 0.0,
+              "wrong_sign_modes": 0,
+              "passive": true
+            }
+          }
+        }
+      },
+      {
+        "skew": 0.65,
+        "valid": true,
+        "nonorthogonality_degrees": 74.58395149760936,
+        "corrections": {
+          "over-relaxed": {
+            "modes": 6,
+            "lambda_max": 21.123459914130265,
+            "lambda_min": 8.658070376793916,
+            "creation_rate": 0.0,
+            "dissipation_rate": 21.123459914130265,
+            "creation_fraction": 0.0,
+            "wrong_sign_modes": 0,
+            "passive": true,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 16.157085090324323,
+              "lambda_min": 8.227624336378225,
+              "creation_rate": 0.0,
+              "dissipation_rate": 16.157085090324323,
+              "creation_fraction": 0.0,
+              "wrong_sign_modes": 0,
+              "passive": true
+            }
+          },
+          "minimum": {
+            "modes": 6,
+            "lambda_max": 7.88183649788463,
+            "lambda_min": 2.2043289361696132,
+            "creation_rate": 0.0,
+            "dissipation_rate": 7.88183649788463,
+            "creation_fraction": 0.0,
+            "wrong_sign_modes": 0,
+            "passive": true,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 6.397051632046272,
+              "lambda_min": 2.2887583468770454,
+              "creation_rate": 0.0,
+              "dissipation_rate": 6.397051632046272,
+              "creation_fraction": 0.0,
+              "wrong_sign_modes": 0,
+              "passive": true
+            }
+          }
+        }
+      },
+      {
+        "skew": 0.7000000000000001,
+        "valid": true,
+        "nonorthogonality_degrees": 77.50136526427929,
+        "corrections": {
+          "over-relaxed": {
+            "modes": 6,
+            "lambda_max": 21.572856953914695,
+            "lambda_min": 8.419906943741507,
+            "creation_rate": 0.0,
+            "dissipation_rate": 21.572856953914695,
+            "creation_fraction": 0.0,
+            "wrong_sign_modes": 0,
+            "passive": true,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 16.435328782191924,
+              "lambda_min": 8.020088450233404,
+              "creation_rate": 0.0,
+              "dissipation_rate": 16.435328782191924,
+              "creation_fraction": 0.0,
+              "wrong_sign_modes": 0,
+              "passive": true
+            }
+          },
+          "minimum": {
+            "modes": 6,
+            "lambda_max": 7.748507980952038,
+            "lambda_min": 1.641501811200381,
+            "creation_rate": 0.0,
+            "dissipation_rate": 7.748507980952038,
+            "creation_fraction": 0.0,
+            "wrong_sign_modes": 0,
+            "passive": true,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 6.230812369854192,
+              "lambda_min": 1.7477434292946725,
+              "creation_rate": 0.0,
+              "dissipation_rate": 6.230812369854192,
+              "creation_fraction": 0.0,
+              "wrong_sign_modes": 0,
+              "passive": true
+            }
+          }
+        }
+      },
+      {
+        "skew": 0.75,
+        "valid": true,
+        "nonorthogonality_degrees": 79.86419653696849,
+        "corrections": {
+          "over-relaxed": {
+            "modes": 6,
+            "lambda_max": 21.02317762029913,
+            "lambda_min": 8.093377160756352,
+            "creation_rate": 0.0,
+            "dissipation_rate": 21.02317762029913,
+            "creation_fraction": 0.0,
+            "wrong_sign_modes": 0,
+            "passive": true,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 15.970904259647732,
+              "lambda_min": 7.769386667889206,
+              "creation_rate": 0.0,
+              "dissipation_rate": 15.970904259647732,
+              "creation_fraction": 0.0,
+              "wrong_sign_modes": 0,
+              "passive": true
+            }
+          },
+          "minimum": {
+            "modes": 6,
+            "lambda_max": 7.639657443865502,
+            "lambda_min": 1.1107128609054047,
+            "creation_rate": 0.0,
+            "dissipation_rate": 7.639657443865502,
+            "creation_fraction": 0.0,
+            "wrong_sign_modes": 0,
+            "passive": true,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 6.087795817443255,
+              "lambda_min": 1.2402972739149394,
+              "creation_rate": 0.0,
+              "dissipation_rate": 6.087795817443255,
+              "creation_fraction": 0.0,
+              "wrong_sign_modes": 0,
+              "passive": true
+            }
+          }
+        }
+      },
+      {
+        "skew": 0.8,
+        "valid": true,
+        "nonorthogonality_degrees": 81.78847651971309,
+        "corrections": {
+          "over-relaxed": {
+            "modes": 6,
+            "lambda_max": 19.274385755207195,
+            "lambda_min": 7.673253540111363,
+            "creation_rate": 0.0,
+            "dissipation_rate": 19.274385755207195,
+            "creation_fraction": 0.0,
+            "wrong_sign_modes": 0,
+            "passive": true,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 14.615570051150915,
+              "lambda_min": 7.444324396540087,
+              "creation_rate": 0.0,
+              "dissipation_rate": 14.615570051150915,
+              "creation_fraction": 0.0,
+              "wrong_sign_modes": 0,
+              "passive": true
+            }
+          },
+          "minimum": {
+            "modes": 6,
+            "lambda_max": 7.549481890456052,
+            "lambda_min": 0.6188458121190631,
+            "creation_rate": 0.0,
+            "dissipation_rate": 7.549481890456052,
+            "creation_fraction": 0.0,
+            "wrong_sign_modes": 0,
+            "passive": true,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 5.964720674857084,
+              "lambda_min": 0.7839079956482123,
+              "creation_rate": 0.0,
+              "dissipation_rate": 5.964720674857084,
+              "creation_fraction": 0.0,
+              "wrong_sign_modes": 0,
+              "passive": true
+            }
+          }
+        }
+      },
+      {
+        "skew": 0.8500000000000001,
+        "valid": true,
+        "nonorthogonality_degrees": 83.36568586888842,
+        "corrections": {
+          "over-relaxed": {
+            "modes": 6,
+            "lambda_max": 16.283141632767443,
+            "lambda_min": 7.008100357603259,
+            "creation_rate": 0.0,
+            "dissipation_rate": 16.283141632767443,
+            "creation_fraction": 0.0,
+            "wrong_sign_modes": 0,
+            "passive": true,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 12.352413965119386,
+              "lambda_min": 6.916187614977069,
+              "creation_rate": 0.0,
+              "dissipation_rate": 12.352413965119386,
+              "creation_fraction": 0.0,
+              "wrong_sign_modes": 0,
+              "passive": true
+            }
+          },
+          "minimum": {
+            "modes": 6,
+            "lambda_max": 7.472526821402386,
+            "lambda_min": 0.1649592733548683,
+            "creation_rate": 0.0,
+            "dissipation_rate": 7.472526821402386,
+            "creation_fraction": 0.0,
+            "wrong_sign_modes": 0,
+            "passive": true,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 5.857913794094449,
+              "lambda_min": 0.39062607052562,
+              "creation_rate": 0.0,
+              "dissipation_rate": 5.857913794094449,
+              "creation_fraction": 0.0,
+              "wrong_sign_modes": 0,
+              "passive": true
+            }
+          }
+        }
+      },
+      {
+        "skew": 0.9,
+        "valid": true,
+        "nonorthogonality_degrees": 84.66704042287962,
+        "corrections": {
+          "over-relaxed": {
+            "modes": 6,
+            "lambda_max": 12.628031791477616,
+            "lambda_min": 5.377616745953782,
+            "creation_rate": 0.0,
+            "dissipation_rate": 12.628031791477616,
+            "creation_fraction": 0.0,
+            "wrong_sign_modes": 0,
+            "passive": true,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 9.708568638452522,
+              "lambda_min": 5.518977249085435,
+              "creation_rate": 0.0,
+              "dissipation_rate": 9.708568638452522,
+              "creation_fraction": 0.0,
+              "wrong_sign_modes": 0,
+              "passive": true
+            }
+          },
+          "minimum": {
+            "modes": 6,
+            "lambda_max": 7.404237096370837,
+            "lambda_min": -0.2320775239304376,
+            "creation_rate": 0.2320775239304376,
+            "dissipation_rate": 7.404237096370837,
+            "creation_fraction": 0.030391299398986975,
+            "wrong_sign_modes": 2,
+            "passive": false,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 5.763868775178814,
+              "lambda_min": 0.06565220284720111,
+              "creation_rate": 0.0,
+              "dissipation_rate": 5.763868775178814,
+              "creation_fraction": 0.0,
+              "wrong_sign_modes": 0,
+              "passive": true
+            }
+          }
+        }
+      },
+      {
+        "skew": 0.9500000000000001,
+        "valid": true,
+        "nonorthogonality_degrees": 85.74779830225418,
+        "corrections": {
+          "over-relaxed": {
+            "modes": 6,
+            "lambda_max": 10.441116647428716,
+            "lambda_min": 1.112013722357875,
+            "creation_rate": 0.0,
+            "dissipation_rate": 10.441116647428716,
+            "creation_fraction": 0.0,
+            "wrong_sign_modes": 0,
+            "passive": true,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 8.219077966498785,
+              "lambda_min": 1.5285885892149351,
+              "creation_rate": 0.0,
+              "dissipation_rate": 8.219077966498785,
+              "creation_fraction": 0.0,
+              "wrong_sign_modes": 0,
+              "passive": true
+            }
+          },
+          "minimum": {
+            "modes": 6,
+            "lambda_max": 7.341268616908957,
+            "lambda_min": -0.5523751279008915,
+            "creation_rate": 0.5523751279008915,
+            "dissipation_rate": 7.341268616908957,
+            "creation_fraction": 0.06997720517398366,
+            "wrong_sign_modes": 3,
+            "passive": false,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 5.679647004288343,
+              "lambda_min": -0.19221980346326675,
+              "creation_rate": 0.19221980346326675,
+              "dissipation_rate": 5.679647004288343,
+              "creation_fraction": 0.03273572268524759,
+              "wrong_sign_modes": 1,
+              "passive": false
+            }
+          }
+        }
+      },
+      {
+        "skew": 1.0,
+        "valid": true,
+        "nonorthogonality_degrees": 86.65091734406444,
+        "corrections": {
+          "over-relaxed": {
+            "modes": 6,
+            "lambda_max": 9.66036423821207,
+            "lambda_min": -7.147789007333797,
+            "creation_rate": 7.147789007333797,
+            "dissipation_rate": 9.66036423821207,
+            "creation_fraction": 0.42525724884308447,
+            "wrong_sign_modes": 3,
+            "passive": false,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 7.636947275902415,
+              "lambda_min": -5.141720073966639,
+              "creation_rate": 5.141720073966639,
+              "dissipation_rate": 7.636947275902415,
+              "creation_fraction": 0.4023674717551301,
+              "wrong_sign_modes": 1,
+              "passive": false
+            }
+          },
+          "minimum": {
+            "modes": 6,
+            "lambda_max": 7.281488842348811,
+            "lambda_min": -0.7952266738872628,
+            "creation_rate": 0.7952266738872628,
+            "dissipation_rate": 7.281488842348811,
+            "creation_fraction": 0.09845916601725944,
+            "wrong_sign_modes": 3,
+            "passive": false,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 5.603037877409865,
+              "lambda_min": -0.38890683296520373,
+              "creation_rate": 0.38890683296520373,
+              "dissipation_rate": 5.603037877409865,
+              "creation_fraction": 0.06490494351388297,
+              "wrong_sign_modes": 1,
+              "passive": false
+            }
+          }
+        }
+      },
+      {
+        "skew": 1.05,
+        "valid": true,
+        "nonorthogonality_degrees": 87.40995239804435,
+        "corrections": {
+          "over-relaxed": {
+            "modes": 6,
+            "lambda_max": 9.24604807278364,
+            "lambda_min": -19.45318389286294,
+            "creation_rate": 19.45318389286294,
+            "dissipation_rate": 9.24604807278364,
+            "creation_fraction": 0.6778294247089504,
+            "wrong_sign_modes": 3,
+            "passive": false,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 7.295900693831435,
+              "lambda_min": -14.46963530642703,
+              "creation_rate": 14.46963530642703,
+              "dissipation_rate": 7.295900693831435,
+              "creation_fraction": 0.664795725970415,
+              "wrong_sign_modes": 1,
+              "passive": false
+            }
+          },
+          "minimum": {
+            "modes": 6,
+            "lambda_max": 7.223755398836815,
+            "lambda_min": -0.9694971191877784,
+            "creation_rate": 0.9694971191877784,
+            "dissipation_rate": 7.223755398836815,
+            "creation_fraction": 0.11832872440522872,
+            "wrong_sign_modes": 3,
+            "passive": false,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 5.532517657825668,
+              "lambda_min": -0.5329581150831469,
+              "creation_rate": 0.5329581150831469,
+              "dissipation_rate": 5.532517657825668,
+              "creation_fraction": 0.08786748724042082,
+              "wrong_sign_modes": 1,
+              "passive": false
+            }
+          }
+        }
+      },
+      {
+        "skew": 1.1,
+        "valid": true,
+        "nonorthogonality_degrees": 88.05127839060388,
+        "corrections": {
+          "over-relaxed": {
+            "modes": 6,
+            "lambda_max": 8.947734921288735,
+            "lambda_min": -36.893750121935724,
+            "creation_rate": 36.893750121935724,
+            "dissipation_rate": 8.947734921288735,
+            "creation_fraction": 0.8048114079888159,
+            "wrong_sign_modes": 3,
+            "passive": false,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 7.035648186324099,
+              "lambda_min": -27.5944961203352,
+              "creation_rate": 27.5944961203352,
+              "dissipation_rate": 7.035648186324099,
+              "creation_fraction": 0.7968345692116806,
+              "wrong_sign_modes": 1,
+              "passive": false
+            }
+          },
+          "minimum": {
+            "modes": 6,
+            "lambda_max": 7.167610771753967,
+            "lambda_min": -1.0869834333934083,
+            "creation_rate": 1.0869834333934083,
+            "dissipation_rate": 7.167610771753967,
+            "creation_fraction": 0.13168223735524034,
+            "wrong_sign_modes": 3,
+            "passive": false,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 5.467100617476094,
+              "lambda_min": -0.6337552893631024,
+              "creation_rate": 0.6337552893631024,
+              "dissipation_rate": 5.467100617476094,
+              "creation_fraction": 0.10387973409643204,
+              "wrong_sign_modes": 1,
+              "passive": false
+            }
+          }
+        }
+      },
+      {
+        "skew": 1.1500000000000001,
+        "valid": true,
+        "nonorthogonality_degrees": 88.59577216396742,
+        "corrections": {
+          "over-relaxed": {
+            "modes": 6,
+            "lambda_max": 8.70120593883541,
+            "lambda_min": -63.1473097019963,
+            "creation_rate": 63.1473097019963,
+            "dissipation_rate": 8.70120593883541,
+            "creation_fraction": 0.8788951189704122,
+            "wrong_sign_modes": 3,
+            "passive": false,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 6.813546582217112,
+              "lambda_min": -47.31183928995334,
+              "creation_rate": 47.31183928995334,
+              "dissipation_rate": 6.813546582217112,
+              "creation_fraction": 0.874115510265204,
+              "wrong_sign_modes": 1,
+              "passive": false
+            }
+          },
+          "minimum": {
+            "modes": 6,
+            "lambda_max": 7.112998190284848,
+            "lambda_min": -1.1595102174276688,
+            "creation_rate": 1.1595102174276688,
+            "dissipation_rate": 7.112998190284848,
+            "creation_fraction": 0.14016428394882616,
+            "wrong_sign_modes": 3,
+            "passive": false,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 5.406166840541284,
+              "lambda_min": -0.7002779044074106,
+              "creation_rate": 0.7002779044074106,
+              "dissipation_rate": 5.406166840541284,
+              "creation_fraction": 0.11467849684330422,
+              "wrong_sign_modes": 1,
+              "passive": false
+            }
+          }
+        }
+      },
+      {
+        "skew": 1.2000000000000002,
+        "valid": true,
+        "nonorthogonality_degrees": 89.06007889012716,
+        "corrections": {
+          "over-relaxed": {
+            "modes": 6,
+            "lambda_max": 8.48396355137701,
+            "lambda_min": -107.81951784396863,
+            "creation_rate": 107.81951784396863,
+            "dissipation_rate": 8.48396355137701,
+            "creation_fraction": 0.9270532279034897,
+            "wrong_sign_modes": 3,
+            "passive": false,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 6.614405837911957,
+              "lambda_min": -80.83479835630541,
+              "creation_rate": 80.83479835630541,
+              "dissipation_rate": 6.614405837911957,
+              "creation_fraction": 0.9243628812993894,
+              "wrong_sign_modes": 1,
+              "passive": false
+            }
+          },
+          "minimum": {
+            "modes": 6,
+            "lambda_max": 7.060047908267071,
+            "lambda_min": -1.1976379619654376,
+            "creation_rate": 1.1976379619654376,
+            "dissipation_rate": 7.060047908267071,
+            "creation_fraction": 0.14503312196492116,
+            "wrong_sign_modes": 3,
+            "passive": false,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 5.349315675709872,
+              "lambda_min": -0.7404312140449197,
+              "creation_rate": 0.7404312140449197,
+              "dissipation_rate": 5.349315675709872,
+              "creation_fraction": 0.12158653347162902,
+              "wrong_sign_modes": 1,
+              "passive": false
+            }
+          }
+        }
+      },
+      {
+        "skew": 1.25,
+        "valid": true,
+        "nonorthogonality_degrees": 89.45756620848167,
+        "corrections": {
+          "over-relaxed": {
+            "modes": 6,
+            "lambda_max": 8.286297495862257,
+            "lambda_min": -203.87108685214832,
+            "creation_rate": 203.87108685214832,
+            "dissipation_rate": 8.286297495862257,
+            "creation_fraction": 0.9609426863866785,
+            "wrong_sign_modes": 3,
+            "passive": false,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 6.431577537548214,
+              "lambda_min": -152.88727382683626,
+              "creation_rate": 152.88727382683626,
+              "dissipation_rate": 6.431577537548214,
+              "creation_fraction": 0.9596307814017672,
+              "wrong_sign_modes": 1,
+              "passive": false
+            }
+          },
+          "minimum": {
+            "modes": 6,
+            "lambda_max": 7.008940393486752,
+            "lambda_min": -1.2101950761323625,
+            "creation_rate": 1.2101950761323625,
+            "dissipation_rate": 7.008940393486752,
+            "creation_fraction": 0.14724116430562306,
+            "wrong_sign_modes": 3,
+            "passive": false,
+            "scalar": {
+              "modes": 2,
+              "lambda_max": 5.296261430022924,
+              "lambda_min": -0.7607965699840188,
+              "creation_rate": 0.7607965699840188,
+              "dissipation_rate": 5.296261430022924,
+              "creation_fraction": 0.12560496696302836,
+              "wrong_sign_modes": 1,
+              "passive": false
+            }
+          }
+        }
+      }
+    ],
+    "valid_skews": [
+      0.0,
+      0.05,
+      0.1,
+      0.15000000000000002,
+      0.2,
+      0.25,
+      0.30000000000000004,
+      0.35000000000000003,
+      0.4,
+      0.45,
+      0.5,
+      0.55,
+      0.6000000000000001,
+      0.65,
+      0.7000000000000001,
+      0.75,
+      0.8,
+      0.8500000000000001,
+      0.9,
+      0.9500000000000001,
+      1.0,
+      1.05,
+      1.1,
+      1.1500000000000001,
+      1.2000000000000002,
+      1.25
+    ]
+  },
+  "correction_scan": {
+    "scales": [
+      0.0,
+      0.001,
+      0.002820054483103209,
+      0.007952707287670507,
+      0.022427067839402775,
+      0.0632455532033676,
+      0.1783559058474993,
+      0.5029733718731743,
+      1.4184123122324825,
+      3.5555555555555562,
+      4.0,
+      32.000000000000014
+    ],
+    "rows": [
+      {
+        "gamma": 0.0,
+        "scalar_lambda_max": 3.8113160705863636,
+        "scalar_creation_fraction": 0.17800017598364096,
+        "vector_lambda_max": 5.324322936538923,
+        "vector_creation_fraction": 0.209564556292925,
+        "passive": false
+      },
+      {
+        "gamma": 0.001,
+        "scalar_lambda_max": 3.812318579585811,
+        "scalar_creation_fraction": 0.17797169791780676,
+        "vector_lambda_max": 5.325414671479846,
+        "vector_creation_fraction": 0.20953349774904148,
+        "passive": false
+      },
+      {
+        "gamma": 0.002820054483103209,
+        "scalar_lambda_max": 3.8141432267432918,
+        "scalar_creation_fraction": 0.17791990327893048,
+        "vector_lambda_max": 5.3274017993361635,
+        "vector_creation_fraction": 0.20947700291368926,
+        "passive": false
+      },
+      {
+        "gamma": 0.007952707287670507,
+        "scalar_lambda_max": 3.8192890126837806,
+        "scalar_creation_fraction": 0.1777740962791534,
+        "vector_lambda_max": 5.333006378145976,
+        "vector_creation_fraction": 0.2093179163096814,
+        "passive": false
+      },
+      {
+        "gamma": 0.022427067839402775,
+        "scalar_lambda_max": 3.8338018461300156,
+        "scalar_creation_fraction": 0.17736494354820675,
+        "vector_lambda_max": 5.348817713916997,
+        "vector_creation_fraction": 0.20887112010502237,
+        "passive": false
+      },
+      {
+        "gamma": 0.0632455532033676,
+        "scalar_lambda_max": 3.8747400975878925,
+        "scalar_creation_fraction": 0.17622702916119568,
+        "vector_lambda_max": 5.393455079817622,
+        "vector_creation_fraction": 0.20762556794329787,
+        "passive": false
+      },
+      {
+        "gamma": 0.1783559058474993,
+        "scalar_lambda_max": 3.9902744719215035,
+        "scalar_creation_fraction": 0.17313962459768062,
+        "vector_lambda_max": 5.519718300690696,
+        "vector_creation_fraction": 0.2042241792517293,
+        "passive": false
+      },
+      {
+        "gamma": 0.5029733718731743,
+        "scalar_lambda_max": 4.316706072902578,
+        "scalar_creation_fraction": 0.16529889583048682,
+        "vector_lambda_max": 5.878782226170534,
+        "vector_creation_fraction": 0.1954399937143838,
+        "passive": false
+      },
+      {
+        "gamma": 1.4184123122324825,
+        "scalar_lambda_max": 5.241021767117142,
+        "scalar_creation_fraction": 0.14836913369172677,
+        "vector_lambda_max": 6.914075567514973,
+        "vector_creation_fraction": 0.1757342310728645,
+        "passive": false
+      },
+      {
+        "gamma": 3.5555555555555562,
+        "scalar_lambda_max": 7.411213049544221,
+        "scalar_creation_fraction": 0.12526740960288849,
+        "vector_lambda_max": 9.444470012871486,
+        "vector_creation_fraction": 0.14713303123942986,
+        "passive": false
+      },
+      {
+        "gamma": 4.0,
+        "scalar_lambda_max": 7.863780626436375,
+        "scalar_creation_fraction": 0.12207122135395364,
+        "vector_lambda_max": 9.986934511352217,
+        "vector_creation_fraction": 0.14302295662702863,
+        "passive": false
+      },
+      {
+        "gamma": 32.000000000000014,
+        "scalar_lambda_max": 36.51020852162893,
+        "scalar_creation_fraction": 0.08172260103449763,
+        "vector_lambda_max": 46.28631560665307,
+        "vector_creation_fraction": 0.09092229947680358,
+        "passive": false
+      }
+    ],
+    "any_passive": false
+  },
+  "shear_survey": {
+    "samples": 36,
+    "over_relaxed_failures": 0,
+    "minimum_failures": 1,
+    "max_nonorthogonality_degrees": 77.72897114439495,
+    "angle_creation_correlation": null
+  },
+  "affine_errors": {
+    "over-relaxed": 1.0744093786695064e-15,
+    "minimum": 8.774343259134302e-16,
+    "none": 6.446456272017038e-16,
+    "gamma_0": 6.446456272017038e-16,
+    "gamma_1": 5.013910433791029e-16,
+    "gamma_3": 8.774343259134302e-16
+  },
+  "passivity_boundary": {
+    "over_relaxed": {
+      "correction": "over-relaxed",
+      "passive_skew": 0.9586822986602783,
+      "creation_skew": 0.9586834907531738,
+      "passive_degrees": 85.91631792352472,
+      "creation_degrees": 85.91634070424121
+    },
+    "minimum": {
+      "correction": "minimum",
+      "passive_skew": 0.8697187900543213,
+      "creation_skew": 0.8697199821472168,
+      "passive_degrees": 83.908471561721,
+      "creation_degrees": 83.9085031590055
+    }
+  }
+}
