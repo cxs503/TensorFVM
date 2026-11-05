@@ -32,11 +32,20 @@ Everything here is pure NumPy arithmetic -- no solver, no heavy compute.
 
 Usage
 -----
-    PYTHONPATH=src python scripts/audit_gci_band_coverage.py out=gci-band-coverage
+    PYTHONPATH=src python scripts/audit_gci_band_coverage.py gci-band-coverage
+    PYTHONPATH=src python scripts/audit_gci_band_coverage.py gci-band-coverage --full
+
+Artifact discipline (owner 2026-11-04, 200 KB cap): the shipped ``audit.json``
+holds an *excerpt* -- the per-case arrays are cut to ``EXCERPT_SAMPLES``
+records each -- because the full 1920+1000 record dump is 1.4 MB and is a
+recomputable output.  The excerpt records the byte size and md5 of the full
+dump it was cut from, and ``--full`` regenerates that dump byte-identically,
+so nothing is lost by keeping the excerpt in git.
 """
 
 from __future__ import annotations
 
+import hashlib
 import json
 import math
 import os
@@ -54,6 +63,35 @@ S_ORDER = (1.0, 2.0)
 SIGNS = (1.0, -1.0)
 EXACT = 1.0
 H0 = 0.5   # finest spacing; keeps the fine-grid metric away from zero for sign=-1
+
+# Per-case records kept in the shipped audit.json (full arrays stay regenerable).
+EXCERPT_SAMPLES = 2
+
+
+def serialize(payload):
+    """Canonical on-disk encoding of ``payload`` (one definition, so the md5
+    recorded in the excerpt is the md5 of the file ``--full`` writes)."""
+    return json.dumps(payload, indent=1)
+
+
+def excerpt(payload, rows, noise_rows):
+    """Cut the per-case arrays but keep an auditable provenance header.
+
+    The recorded md5/byte count are computed from the *full* payload before the
+    cut, so a reader can re-run with ``--full`` and check the bytes match.
+    """
+    full = serialize(payload).encode()
+    cut = dict(payload)
+    cut["rows"] = rows[:EXCERPT_SAMPLES]
+    cut["noise_rows"] = noise_rows[:EXCERPT_SAMPLES]
+    cut["_excerpt_notice"] = (
+        "Per-case arrays excerpted to %d sample records each "
+        "(rows=%d, noise_rows=%d in the full dump). Full deterministic dump: "
+        "%d bytes, md5 %s. Regenerate byte-identically with --full "
+        "(PYTHONPATH=src python scripts/audit_gci_band_coverage.py <name> --full)."
+        % (EXCERPT_SAMPLES, len(rows), len(noise_rows), len(full),
+           hashlib.md5(full).hexdigest()))
+    return cut, len(full), hashlib.md5(full).hexdigest()
 
 
 def series(p, r21, r32, alpha, s, sign, exact=EXACT):
@@ -186,7 +224,7 @@ def noise_aggregate():
     return rows, table
 
 
-def write_docs(summary, by_alpha, by_p, noise_table, docs_dir):
+def write_docs(summary, by_alpha, by_p, noise_table, docs_dir, provenance):
     os.makedirs(docs_dir, exist_ok=True)
     w = summary["worst_row"]
     lines = [
@@ -267,7 +305,9 @@ def write_docs(summary, by_alpha, by_p, noise_table, docs_dir):
         "",
         "## 5. 产物",
         "",
-        "* `outputs/gci-band-coverage/audit.json`：全部 1920+1000 例逐例记录（含参数、GCI、误差、两种惯例判定）；",
+        "* `outputs/gci-band-coverage/audit.json`：审计摘要+聚合表+逐例记录节选（每档保留 %d 例样本；全量 %d+%d 例 dump 为 %d 字节、md5 `%s`，`--full` 确定性重生成，字节级可复核）；"
+        % (EXCERPT_SAMPLES, summary["cases"], summary["noise_cases"],
+           provenance[0], provenance[1]),
         "* `outputs/gci-band-coverage/RESULTS.md`：聚合表；",
         "* 本节数字与表格全部由该脚本生成（零手抄）。",
     ]
@@ -276,7 +316,11 @@ def write_docs(summary, by_alpha, by_p, noise_table, docs_dir):
 
 
 def main():
-    out = sys.argv[1] if len(sys.argv) > 1 else "gci-band-coverage"
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    out = args[0] if args else "gci-band-coverage"
+    if out.startswith("out="):      # tolerate the historical `out=<name>` usage
+        out = out.split("=", 1)[1]
+    full = "--full" in sys.argv[1:]
     target = os.path.join("outputs", out)
     os.makedirs(target, exist_ok=True)
     rows = [study_row(p, r21, r32, alpha, s, sign)
@@ -311,8 +355,12 @@ def main():
     summary["noise_cases"] = len(noise_rows)
     payload = dict(summary=summary, by_alpha=by_alpha, by_order=by_p,
                    noise=noise_table, rows=rows, noise_rows=noise_rows)
+    payload, full_bytes, full_md5 = excerpt(payload, rows, noise_rows)
+    if full:
+        payload = dict(summary=summary, by_alpha=by_alpha, by_order=by_p,
+                       noise=noise_table, rows=rows, noise_rows=noise_rows)
     with open(os.path.join(target, "audit.json"), "w") as handle:
-        json.dump(payload, handle, indent=1)
+        handle.write(serialize(payload))
     figures(rows, os.path.join(target, "gci_band_coverage.png"))
 
     lines = ["# GCI band coverage audit", "",
@@ -332,7 +380,8 @@ def main():
                      f"{entry['worst_efficiency']:.3f} |")
     with open(os.path.join(target, "RESULTS.md"), "w") as handle:
         handle.write("\n".join(lines) + "\n")
-    write_docs(summary, by_alpha, by_p, noise_table, os.path.join("docs", out))
+    write_docs(summary, by_alpha, by_p, noise_table, os.path.join("docs", out),
+               (full_bytes, full_md5))
     print(json.dumps(summary, indent=1))
     print("\n".join(lines))
 
