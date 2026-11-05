@@ -46,22 +46,44 @@ The SIMPLE path (`tp.enabled=False`) is untouched and stays bit-identical.
   now reaching the predictor, a static drop develops parasitic currents
   (`|v|` grows by ~3.4x per step) instead of a pressure jump.
 
-## 4. Open defect handed to the next agent (precise statement)
+## 4. Formerly open defect: CLOSED, kept for the record
 
-The corrected operator still does not remove divergence for a *non-gradient*
-body force. Measured with a random divergence field (`rho_l = rho_g`, `n = 32`,
-`dt = 1e-5`): `max |div|` before `2.07e-1`, after correction `4.15e-1`, and
-`median |div|` essentially unchanged (`8.7e-2`) — the solve returns
-`dphi ~ 2 dphi_exact`, i.e. the assembled operator is a factor ~2 from the
-operator that the velocity correction actually applies. The factor is absent in
-the gradient (gravity) case, which is why the hydrostatic anchors pass. Next
-step: assemble the Poisson matrix explicitly (scipy sparse) for one iteration
-and compare `A dphi` against `V * div(correction)` face by face; the mismatch is
-localised in the face-coefficient mapping, not in the CG.
+The defect that used to be handed over here — "the assembled operator is a
+factor ~2 from the operator the velocity correction applies", measured as
+`max|div|` growing from `2.07e-1` to `4.15e-1` — no longer reproduces. Measured
+through the production correction routine on the same random field
+(`n = 32`, `dt = 1e-5`):
+
+| quantity | as handed over | measured now |
+|---|---|---|
+| `max |div|` before -> after | `2.07e-1 -> 4.15e-1` (2.0x amplification) | `2.07e-1 -> 2.16e-11` (1.0e-10) |
+| median `|div|` | `8.7e-2`, essentially unchanged | `4.39e-2 -> 3.67e-12` |
+
+Residual causes of the old numbers: the audit drove `_projection_pressure`
+directly and re-implemented the correction inline, leaving the atmospheric top
+face uncorrected (that alone leaves 31-34% of the initial divergence), and the
+script read `solver.cg_info`, an attribute that no longer exists, so the
+published `reproduce` command crashed before printing anything.
+
+The operator is now verified independently at matrix level —
+`tests/test_two_phase_projection_operator_matrix.py` (12 checks) and
+`scripts/two_phase_projection_operator_verify.py`, reported in
+`docs/two-phase-projection-operator-verification/report.md`. Three
+configurations (isotropic, anisotropic `dx != dy`, anisotropic + 1000:1
+density) satisfy `||A dp - b||_inf / ||b||_inf < 1e-8`, and two mutation
+controls (swapped `dx/dy` face geometry, dropped top datum) are rejected with
+residuals of 0.20-0.34, so the gate is not vacuous.
+
+What is **not** closed: the 2D Young-Laplace jump `dp = sigma/R` of a static
+drop (section 3) still misses the 3% band (+4.9% / -12.2% / -7.9% for
+`R = 0.16 / 0.20 / 0.24 m` at 20 steps, tiny but time-growing parasitic
+currents). That belongs to the CSF source term, not to the projection operator,
+and is being handled on the balanced-force CSF lane.
 
 ## 5. Reproduce
 
 ```
 PYTHONPATH=src python3 scripts/two_phase_projection_audit.py   # metrics.json + png
-PYTHONPATH=src python3 -m pytest tests/test_two_phase_solver_verification.py -q
+PYTHONPATH=src python3 scripts/two_phase_projection_operator_verify.py
+PYTHONPATH=src python3 -m pytest tests/test_two_phase_solver_verification.py tests/test_two_phase_projection_operator_matrix.py -q
 ```
