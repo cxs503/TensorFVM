@@ -36,3 +36,27 @@ where = ["src"]
 [tool.pytest.ini_options]
 pythonpath = ["src", "."]
 testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 120
+
+[tool.ruff.lint]
+# Blocking CI gate (see .github/workflows/ci.yml, job "lint").  The tree carries
+# a large, deliberately dense house style (semicolon-packed kernels, one-line
+# test bodies), so the enforced set is restricted to correctness rules that are
+# already clean tree-wide:
+#   E9  -> syntax / runtime errors (E901..E999)
+#   F63 -> invalid comparison, F7 -> real pyflakes bugs (redefinition, ...),
+#   F82 -> undefined name
+# Local check: `ruff check src tests scripts` -> 0 errors.
+select = ["E9", "F63", "F7", "F82"]
+
+# Families still in the backlog (measured 2026-11-05 with
+# `ruff check --isolated src tests scripts --statistics`): E702 x7634,
+# E701 x1852, F401 x111, E401 x84, E731 x71, F841 x54, E402 x40, E741 x20,
+# F541 x6, E703 x3; `ruff format --check` would reformat 585 of 587 files.
+# The E1/E2/E3/E4/E7 layout families need a formatting campaign rather than a
+# gate; the pyflakes families (F) are enforced on *changed* files by
+# scripts/lint_ratchet.py so new code cannot grow the backlog while it is paid
+# down.  Adopt a family tree-wide once its count reaches zero.

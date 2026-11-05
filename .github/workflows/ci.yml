@@ -58,13 +58,19 @@ jobs:
   lint:
     name: lint (advisory)
     runs-on: ubuntu-latest
-    # Advisory on purpose: the tree carries a large pre-existing ruff backlog
-    # (unused imports, import ordering, semicolon-packed statements).  Making
-    # it blocking would hide every other signal.  Fix the backlog, then drop
-    # this continue-on-error and promote it to a gate.
-    continue-on-error: true
+    # Was `continue-on-error: true` because the tree carries a large pre-existing
+    # ruff backlog (E702 x7634, E701 x1852, ... see the note in pyproject.toml).
+    # The gate is now blocking, but only on the rule families that are already
+    # clean tree-wide (correctness: E9/F63/F7/F82, configured in
+    # [tool.ruff.lint]), and `scripts/lint_ratchet.py` additionally holds every
+    # file touched by a change to the full pyflakes set, so the remaining
+    # backlog can only shrink.  The job name is kept unchanged for continuity
+    # with the check-run accounting that already watches it.
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Full history so the ratchet can diff against the PR's merge base.
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -74,7 +80,23 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
-      - name: Lint (ruff)
+      - name: Lint (ruff, correctness gate)
+        # Rule set comes from [tool.ruff.lint].select in pyproject.toml; this is
+        # the blocking half of the gate.
         run: ruff check src tests scripts
-      - name: Format check (ruff format)
+      - name: Lint ratchet (changed files must not grow the backlog)
+        # Wider rule set (all of pyflakes + E9) applied to the files a PR
+        # touches.  Falls back to the last commit when the base ref cannot be
+        # resolved, so a local/fork run never hard-fails for setup reasons.
+        if: github.event_name == 'pull_request'
+        run: python scripts/lint_ratchet.py --base "origin/${{ github.base_ref }}"
+      - name: Backlog report (informational)
+        # Never fails: keeps the remaining debt visible without blocking.
+        continue-on-error: true
+        run: python scripts/lint_ratchet.py --report
+      - name: Format check (ruff format, informational)
+        # 585 of 587 files would be reformatted today: the house style is dense
+        # (semicolon-packed kernels, one-line test bodies).  Informational until
+        # the formatting campaign lands, then becomes a gate too.
+        continue-on-error: true
         run: ruff format --check src tests scripts
