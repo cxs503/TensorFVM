@@ -1,0 +1,17 @@
+$ ruff check src tests scripts --statistics
+7601	E702	[ ] multiple-statements-on-one-line-semicolon
+1852	E701	[ ] multiple-statements-on-one-line-colon
+  98	F401	[*] unused-import
+  84	E401	[*] multiple-imports-on-one-line
+  69	E731	[ ] lambda-assignment
+  50	F841	[ ] unused-variable
+  39	E402	[ ] module-import-not-at-top-of-file
+  20	E741	[ ] ambiguous-variable-name
+   6	F541	[*] f-string-missing-placeholders
+   3	E703	[*] useless-semicolon
+Found 9822 errors.
+[*] 191 fixable with the `--fix` option (117 hidden fixes can be enabled with the `--unsafe-fixes` option).
+
+$ ruff format --check src tests scripts
+550 files would be reformatted, 8 files already formatted
+

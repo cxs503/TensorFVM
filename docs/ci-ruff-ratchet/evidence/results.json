@@ -1,0 +1,39 @@
+{
+  "branch": "agent/m3787",
+  "head_before": "7f2587d",
+  "ruff": "ruff 0.15.0",
+  "whole_tree": {
+    "errors": 9822,
+    "by_rule": {
+      "E702": 7601,
+      "E701": 1852,
+      "F401": 98,
+      "E401": 84,
+      "E731": 69,
+      "F841": 50,
+      "E402": 39,
+      "E741": 20,
+      "F541": 6,
+      "E703": 3
+    },
+    "unformatted_files": 550
+  },
+  "scoped": {
+    "base": "87d4083",
+    "files": [
+      "scripts/audit_ghia_reference_consistency.py",
+      "src/tensorfvm/lid_cavity.py",
+      "src/tensorfvm/lid_cavity_reference.py",
+      "src/tensorfvm/verification/ghia_reference_audit.py",
+      "tests/test_ghia_reference_consistency.py",
+      "tests/test_lid_cavity_re1000_evidence.py"
+    ],
+    "exit": 0
+  },
+  "negative_control": {
+    "exit": 123
+  },
+  "restored": {
+    "exit": 0
+  }
+}

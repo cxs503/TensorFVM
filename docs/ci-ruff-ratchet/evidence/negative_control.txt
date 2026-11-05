@@ -1,0 +1,32 @@
+$ # inject unused import + semicolon into tests/test_lid_cavity_re1000_evidence.py
+$ BASE_SHA=87d4083 bash scripts/ci/lint_changed.sh
+lint scope: merge-base diff against 87d4083
+lint scope: 6 Python file(s)
+  scripts/audit_ghia_reference_consistency.py
+  src/tensorfvm/lid_cavity.py
+  src/tensorfvm/lid_cavity_reference.py
+  src/tensorfvm/verification/ghia_reference_audit.py
+  tests/test_ghia_reference_consistency.py
+  tests/test_lid_cavity_re1000_evidence.py
+E402 Module level import not at top of file
+   --> tests/test_lid_cavity_re1000_evidence.py:132:1
+    |
+130 |     assert "reference defect" in flagged[0.9063]["verdict"]
+131 |
+132 | import os
+    | ^^^^^^^^^
+133 | x=1;y=2
+    |
+
+E702 Multiple statements on one line (semicolon)
+   --> tests/test_lid_cavity_re1000_evidence.py:133:4
+    |
+132 | import os
+133 | x=1;y=2
+    |    ^
+    |
+
+Found 2 errors.
+Would reformat: tests/test_lid_cavity_re1000_evidence.py
+1 file would be reformatted, 5 files already formatted
+exit=123

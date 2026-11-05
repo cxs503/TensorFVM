@@ -1,0 +1,12 @@
+$ BASE_SHA=87d4083 bash scripts/ci/lint_changed.sh
+lint scope: merge-base diff against 87d4083
+lint scope: 6 Python file(s)
+  scripts/audit_ghia_reference_consistency.py
+  src/tensorfvm/lid_cavity.py
+  src/tensorfvm/lid_cavity_reference.py
+  src/tensorfvm/verification/ghia_reference_audit.py
+  tests/test_ghia_reference_consistency.py
+  tests/test_lid_cavity_re1000_evidence.py
+All checks passed!
+6 files already formatted
+exit=0

@@ -65,6 +65,11 @@ jobs:
     continue-on-error: true
     steps:
       - uses: actions/checkout@v4
+        with:
+          # The ratchet below resolves the changed Python files against the base
+          # commit, so the runner needs history (`github.event.before` /
+          # `pull_request.base.sha`).
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -74,7 +79,13 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
-      - name: Lint (ruff)
-        run: ruff check src tests scripts
-      - name: Format check (ruff format)
-        run: ruff format --check src tests scripts
+      - name: Lint changed files (ruff ratchet)
+        # Whole-tree `ruff check src tests scripts` is red by construction: the
+        # historic backlog (~9.8k findings, ~556 files `ruff format` would
+        # rewrite) was never swept.  Gate the change set instead, so this job
+        # reports "does this change add debt?" instead of a constant red.
+        # scripts/ci/lint_changed.sh documents the scope rules and the fallback.
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PUSH_BEFORE: ${{ github.event.before }}
+        run: bash scripts/ci/lint_changed.sh
