@@ -1,0 +1,33 @@
+{
+  "mission": 3910,
+  "repo": "TensorFVM",
+  "pr": 82,
+  "branch": "agent/m3240",
+  "old_sha": "99f8e6eab3a4ad0f7594b6d18730e4177e3ad54f",
+  "base_main": "db97955",
+  "merge_base": "0e9bd51",
+  "push": "not performed by the agent (policy: platform pushes the branch); branch refs/heads/agent/m3240 now points at new_sha",
+  "conflict_files": [
+    "src/tensorfvm/lid_cavity_reference.py",
+    "tests/test_lid_cavity_re1000_evidence.py"
+  ],
+  "silent_semantic_overwrite_reverted": [
+    "docs/verification-lid-cavity-ladder/summary.json"
+  ],
+  "preserved_as": [
+    "docs/verification-lid-cavity-correction/summary.json"
+  ],
+  "tests": {
+    "merged": "62 passed, 1 skipped, 1 xfailed",
+    "main_baseline": "61 passed, 1 skipped, 1 xfailed",
+    "subset": [
+      "test_lid_cavity",
+      "test_lid_cavity_extraction",
+      "test_ghia_reference_consistency",
+      "test_lid_cavity_re1000_evidence",
+      "test_wall_functions"
+    ]
+  },
+  "timestamp": "2026-11-05T05:12:55",
+  "new_sha_note": "final merge commit = refs/heads/agent/m3240 at hand-off; its SHA is self-referential to this file, so it is recorded in the mission 3910 report instead of here"
+}
