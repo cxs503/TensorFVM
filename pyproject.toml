@@ -36,3 +36,32 @@ where = ["src"]
 [tool.pytest.ini_options]
 pythonpath = ["src", "."]
 testpaths = ["tests"]
+
+[tool.ruff]
+# Ruff had no configuration here, so CI ran the *default* rule set over the whole
+# tree and measured a ~9,900-finding legacy backlog it could never clear; the
+# job was `continue-on-error`, so it carried no signal while still showing up as
+# a red check on every pull request. The enforced set is now declared.
+target-version = "py310"
+
+[tool.ruff.lint]
+# Blocking tree-wide half of the CI lint gate (see .github/workflows/ci.yml,
+# job "lint (advisory)"): correctness only. These families measure zero findings
+# on `src tests scripts` at adoption time, so the gate is satisfiable and future
+# reds are real regressions.
+#   E9  -> syntax errors / invalid constructs (E901..E999)
+#   F63 -> invalid comparisons (`is` against a literal, ...)
+#   F7  -> pyflakes correctness bugs (`break` outside a loop, ...)
+#   F82 -> undefined names (F821..F823)
+# Reproduction: `ruff check src tests scripts` -> "All checks passed!".
+select = ["E9", "F63", "F7", "F82"]
+
+# Measured backlog at adoption (ruff 0.15, `ruff check --isolated --statistics
+# src tests scripts`): E702 x7605, E701 x1852, F401 x98, E401 x84, E731 x69,
+# F841 x50, E402 x39, E741 x20, F541 x6, E703 x3; `ruff format --check` would
+# reformat 556 of 558 files. Clearing that is a layout/formatting campaign, not a
+# gate: the house style is dense on purpose (semicolon-packed kernels, one-line
+# test bodies), so E1/E2/E3/E4/E7 and the F-layout families stay out of the
+# blocking set until the campaign lands. `scripts/lint_ratchet.py` applies the
+# full pyflakes set to the files a change touches, and a family moves into
+# `select` above once its tree-wide count reaches zero.

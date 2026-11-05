@@ -58,13 +58,27 @@ jobs:
   lint:
     name: lint (advisory)
     runs-on: ubuntu-latest
-    # Advisory on purpose: the tree carries a large pre-existing ruff backlog
-    # (unused imports, import ordering, semicolon-packed statements).  Making
-    # it blocking would hide every other signal.  Fix the backlog, then drop
-    # this continue-on-error and promote it to a gate.
-    continue-on-error: true
+    # Was `continue-on-error: true` because ruff had no configuration in this
+    # repo: CI ran the *default* rule set over the whole tree and measured a
+    # ~9,900-finding legacy backlog (E702 x7634, E701 x1852, F401 x98, ...) plus
+    # a tree `ruff format` would rewrite, so the check was red by construction on
+    # every pull request while carrying no signal.
+    #
+    # The backlog is now split into a gate and a report:
+    #   * blocking -- `ruff check` over the correctness families declared in
+    #     [tool.ruff.lint] of pyproject.toml (E9/F63/F7/F82). Those measure zero
+    #     findings tree-wide today, so the gate is satisfiable and a red result
+    #     means a real regression;
+    #   * informational -- the layout/pyflakes backlog and the formatting check,
+    #     both reported without failing the run until the formatting campaign
+    #     lands.
+    # The job name is kept unchanged for continuity with the check-run accounting
+    # that already watches it.
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Full history so the changed-file ratchet can diff against the PR base.
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -74,7 +88,22 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
-      - name: Lint (ruff)
+      - name: Lint (ruff, correctness gate)
+        # Blocking half of the gate; rule set from [tool.ruff.lint].
         run: ruff check src tests scripts
-      - name: Format check (ruff format)
+      - name: Lint ratchet (touched files must stay clean)
+        # Stricter than the gate -- E9 plus all of pyflakes -- over the files a
+        # change touches, so new code cannot grow the backlog. Informational for
+        # now: a PR that edits a legacy file must not turn red for debt it did
+        # not create.
+        continue-on-error: true
+        run: python scripts/lint_ratchet.py --base "origin/${{ github.base_ref || 'main' }}"
+      - name: Backlog report (informational)
+        continue-on-error: true
+        run: python scripts/lint_ratchet.py --report
+      - name: Format check (ruff format, informational)
+        # 560 of 562 files would be reformatted: the house style is dense
+        # (semicolon-packed kernels, one-line test bodies). Informational until
+        # the formatting campaign lands, then this becomes a gate too.
+        continue-on-error: true
         run: ruff format --check src tests scripts
