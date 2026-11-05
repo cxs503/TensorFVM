@@ -84,6 +84,13 @@ class MultiGridStudy:
     theory_order: float
     refinement_ratio: float
     levels: int
+    #: Which fall-back rule produced the band: ``'none'`` for a fitted study,
+    #: ``'non-monotone'`` when the error does not decay monotonically, and
+    #: ``'unfittable'`` when the order fit itself failed.  Carried on the study
+    #: because :func:`~tensorfvm.verification.richardson.reference_agreement`
+    #: must echo the qualifier next to any coverage verdict; without the field
+    #: the multi-grid path raised ``AttributeError`` (CI red on test (3.11)).
+    fallback_reason: str = "none"
 
 
 def _check_levels(spacings, values):
@@ -251,7 +258,9 @@ def multi_grid_order(spacings, values, *, theory_order=None, order_tolerance=.2,
         rms_residual=rms,
         residual_relative=float("nan") if fallback else abs(rms/L) if L else float("nan"),
         theory_order=float("nan") if theory_order is None else float(theory_order),
-        refinement_ratio=r21, levels=int(n))
+        refinement_ratio=r21, levels=int(n),
+        fallback_reason="none" if not fallback else
+        ("non-monotone" if not monotone else "unfittable"))
 
 
 def per_level_residuals(study):
