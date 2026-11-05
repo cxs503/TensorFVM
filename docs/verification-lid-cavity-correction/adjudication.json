@@ -1,0 +1,257 @@
+{
+ "acceptance": [
+  {
+   "max_divergence": 1.4210854715202004e-14,
+   "n": 32,
+   "pass": true,
+   "residual": 7.23900110225865e-08,
+   "reynolds": 100.0,
+   "steps": 5750,
+   "u_max_abs_error": 0.0069160981373702635,
+   "v_max_abs_error": 0.007785453957715589
+  },
+  {
+   "max_divergence": 9.237055564881302e-14,
+   "n": 64,
+   "pass": true,
+   "residual": 9.780068902879672e-08,
+   "reynolds": 100.0,
+   "steps": 11250,
+   "u_max_abs_error": 0.004452212009521672,
+   "v_max_abs_error": 0.00872776060095204
+  },
+  {
+   "max_divergence": 6.750155989720952e-13,
+   "n": 128,
+   "pass": true,
+   "residual": 9.755562283923307e-08,
+   "reynolds": 100.0,
+   "steps": 22500,
+   "u_max_abs_error": 0.004922402895836425,
+   "v_max_abs_error": 0.009146022186147074
+  },
+  {
+   "max_divergence": 7.16093850883226e-15,
+   "n": 32,
+   "pass": false,
+   "residual": 9.488037022720164e-08,
+   "reynolds": 400.0,
+   "steps": 13250,
+   "u_max_abs_error": 0.06836401423978111,
+   "v_max_abs_error": 0.11456876276694808
+  },
+  {
+   "max_divergence": 3.197442310920451e-14,
+   "n": 64,
+   "pass": false,
+   "residual": 9.159485614418372e-08,
+   "reynolds": 400.0,
+   "steps": 25500,
+   "u_max_abs_error": 0.006596111540415894,
+   "v_max_abs_error": 0.1423665470248758
+  },
+  {
+   "max_divergence": 2.4868995751603507e-13,
+   "n": 128,
+   "pass": false,
+   "residual": 9.990181126795505e-08,
+   "reynolds": 400.0,
+   "steps": 50500,
+   "u_max_abs_error": 0.00134981727198058,
+   "v_max_abs_error": 0.1493120683606132
+  },
+  {
+   "max_divergence": 2.1316282072803006e-14,
+   "n": 64,
+   "pass": true,
+   "residual": 9.974947090540809e-08,
+   "reynolds": 1000.0,
+   "steps": 58750,
+   "u_max_abs_error": 0.029310305036261974,
+   "v_max_abs_error": 0.019733918942391973
+  }
+ ],
+ "branch_candidate": {
+  "gap_to_published": 0.14933,
+  "offset_from_finest": 1.793163938679232e-05,
+  "offset_from_limit": 0.002295499128544265,
+  "rel_offset_from_finest": 4.6265399900050084e-05,
+  "rel_offset_from_limit": 0.005887472755327868,
+  "value": -0.3876
+ },
+ "bundle": {
+  "cfl": 0.15,
+  "geometry": "unit square cavity, no-slip on x=0, x=L, y=0; lid u=U on y=L",
+  "grids": [
+   32,
+   64,
+   128
+  ],
+  "max_steps": 200000,
+  "path": "docs/verification-lid-cavity-ladder/summary.json",
+  "provenance": "assembled from summary.partial.json: the runner was still working on the Re=1000 n=128 row when the ladder was stopped, so that row is NOT included and is NOT claimed; every row present here is converged to the stated gate.",
+  "timestamp": "2026-11-03T23:30:28",
+  "tolerance": 1e-07
+ },
+ "disputed": {
+  "computed": {
+   "128": -0.3875820683606132,
+   "32": -0.3528387627669481,
+   "64": -0.3806365470248758
+  },
+  "finest": 128,
+  "gap_over_bound": 197.23439424079635,
+  "gap_to_published": 0.15162549912854426,
+  "interpolation_bound": 0.0007570285544534564,
+  "order": 2.000814998219725,
+  "published": -0.23827,
+  "registered_computed": {
+   "32": -0.35284,
+   "64": -0.38064,
+   "128": -0.38758
+  },
+  "registered_limit": -0.38989,
+  "registered_order": 2.0,
+  "rel_gap_to_published": 0.6363600080939449,
+  "reynolds": 400.0,
+  "richardson_limit": -0.38989549912854427,
+  "which": "v",
+  "x": 0.9063
+ },
+ "others_max_rel_gap": 0.021259185439372035,
+ "others_worst": 0.9609,
+ "profile": [
+  {
+   "abs_gap": 0.0019490276103892382,
+   "computed": 0.0019490276103892382,
+   "reference": 0.0,
+   "rel_gap": null,
+   "x": 0.0
+  },
+  {
+   "abs_gap": 0.0008128071470455966,
+   "computed": 0.1844128071470456,
+   "reference": 0.1836,
+   "rel_gap": 0.00442705417780826,
+   "x": 0.0625
+  },
+  {
+   "abs_gap": 0.0008596277742758673,
+   "computed": 0.19798962777427587,
+   "reference": 0.19713,
+   "rel_gap": 0.004360715133545718,
+   "x": 0.0703
+  },
+  {
+   "abs_gap": 0.0008983774179444626,
+   "computed": 0.21009837741794446,
+   "reference": 0.2092,
+   "rel_gap": 0.004294347122105462,
+   "x": 0.0781
+  },
+  {
+   "abs_gap": 0.001098962723854957,
+   "computed": 0.23074896272385495,
+   "reference": 0.22965,
+   "rel_gap": 0.00478538090074007,
+   "x": 0.0938
+  },
+  {
+   "abs_gap": 0.0011694935573472454,
+   "computed": 0.28240949355734724,
+   "reference": 0.28124,
+   "rel_gap": 0.0041583471673561564,
+   "x": 0.1563
+  },
+  {
+   "abs_gap": 0.0006931994939974317,
+   "computed": 0.30272319949399745,
+   "reference": 0.30203,
+   "rel_gap": 0.002295134569405131,
+   "x": 0.2266
+  },
+  {
+   "abs_gap": 0.000645440006433462,
+   "computed": 0.30238544000643347,
+   "reference": 0.30174,
+   "rel_gap": 0.002139060139303579,
+   "x": 0.2344
+  },
+  {
+   "abs_gap": 0.00011020249710984309,
+   "computed": 0.051970202497109846,
+   "reference": 0.05186,
+   "rel_gap": 0.002124999944270017,
+   "x": 0.5
+  },
+  {
+   "abs_gap": 0.0008559190927337479,
+   "computed": -0.38512408090726624,
+   "reference": -0.38598,
+   "rel_gap": 0.0022175218735005645,
+   "x": 0.8047
+  },
+  {
+   "abs_gap": 0.0020628164045677355,
+   "computed": -0.45199281640456773,
+   "reference": -0.44993,
+   "rel_gap": 0.0045847496378719705,
+   "x": 0.8594
+  },
+  {
+   "abs_gap": 0.1493120683606132,
+   "computed": -0.3875820683606132,
+   "reference": -0.23827,
+   "rel_gap": 0.6266507254820716,
+   "x": 0.9063
+  },
+  {
+   "abs_gap": 0.004307991766943214,
+   "computed": -0.23277799176694322,
+   "reference": -0.22847,
+   "rel_gap": 0.01885583125549619,
+   "x": 0.9453
+  },
+  {
+   "abs_gap": 0.0038653089458988155,
+   "computed": -0.1964053089458988,
+   "reference": -0.19254,
+   "rel_gap": 0.020075355489242837,
+   "x": 0.9531
+  },
+  {
+   "abs_gap": 0.003329826215368842,
+   "computed": -0.15995982621536883,
+   "reference": -0.15663,
+   "rel_gap": 0.021259185439372035,
+   "x": 0.9609
+  },
+  {
+   "abs_gap": 0.002269939958633005,
+   "computed": -0.123729939958633,
+   "reference": -0.12146,
+   "rel_gap": 0.018688786091165855,
+   "x": 0.9688
+  },
+  {
+   "abs_gap": 0.001970746248872446,
+   "computed": 0.001970746248872446,
+   "reference": 0.0,
+   "rel_gap": null,
+   "x": 1.0
+  }
+ ],
+ "reference": "U. Ghia, K.N. Ghia, C.T. Shin, J. Comput. Phys. 48 (1982) 387-411, Tables I (u at x = 0.5) and II (v at y = 0.5)",
+ "smoothness": {
+  "entries": 42,
+  "flagged": [
+   "400/v/0.9063",
+   "400/v/0.9453"
+  ],
+  "ok": true,
+  "registered": [
+   "400/v/0.9063"
+  ],
+  "unexplained": []
+ }
+}
