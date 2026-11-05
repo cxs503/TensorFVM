@@ -1,0 +1,16 @@
+### BEFORE (workflow on PR #103 head 908ad91): whole-tree sweep
+$ ruff check src tests scripts        -> exit 1, 9822 findings (see before_whole_tree_red.txt)
+$ ruff format --check src tests scripts -> exit 1, 554 files would reformat
+
+### AFTER (scoped delta gate) on PR #103's own change set
+change set:
+docs/gci-band-coverage/report.md
+docs/m3591/outputs/gci-band-coverage/RESULTS.md
+docs/m3591/outputs/gci-band-coverage/audit.json
+docs/m3591/outputs/gci-band-coverage/gci_band_coverage.png
+
+$ BASE_SHA=<base> bash scripts/ci/lint_changed.sh
+lint scope: three-dot diff db97955686af7832a7a56992e419aaf3c90d07ad...HEAD
+lint scope: the change set touches no Python file under src/, tests/ or scripts/
+lint scope: nothing to lint -> pass (pre-existing backlog is not re-reported)
+EXIT=0

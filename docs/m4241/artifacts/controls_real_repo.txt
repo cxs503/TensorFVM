@@ -1,0 +1,32 @@
+### CONTROL P: legacy dirty file edited WITHOUT adding findings (must be green)
+lint scope: three-dot diff db97955686af7832a7a56992e419aaf3c90d07ad...HEAD
+lint scope: 2 Python file(s) changed against db97955686af7832a7a56992e419aaf3c90d07ad
+  scripts/ci/ruff_ratchet.py
+  tests/test_wall_traction.py
+  ok   scripts/ci/ruff_ratchet.py
+  ok   tests/test_wall_traction.py
+notice: tests/test_wall_traction.py: 5 pre-existing finding(s), unchanged
+notice: tests/test_wall_traction.py: pre-existing format debt, not gated
+ruff ratchet: no new lint debt
+EXIT=0
+
+### CONTROL N1: same legacy file gains one finding (unused import) -> must be red
+lint scope: three-dot diff a7606d7e17288e0d3892cd719faa67b850df81e6...HEAD
+lint scope: 1 Python file(s) changed against a7606d7e17288e0d3892cd719faa67b850df81e6
+  tests/test_wall_traction.py
+
+new lint debt introduced by this change set:
+  - tests/test_wall_traction.py: new ruff findings (E402 +1, F401 +1)
+  red  tests/test_wall_traction.py
+notice: tests/test_wall_traction.py: pre-existing format debt, not gated
+EXIT=1
+
+### CONTROL N2: NEW file with an unused import -> must be red
+lint scope: three-dot diff 79baaec4eb631412b20d64fd0f6be1b97be093eb...HEAD
+lint scope: 1 Python file(s) changed against 79baaec4eb631412b20d64fd0f6be1b97be093eb
+  tests/probe_new_module.py
+
+new lint debt introduced by this change set:
+  - tests/probe_new_module.py: new ruff findings (F401 +1)
+  red  tests/probe_new_module.py
+EXIT=1

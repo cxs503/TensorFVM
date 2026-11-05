@@ -1,0 +1,21 @@
+=== final verification 2026-11-05T11:58:29Z on branch agent/m4241 (parent = PR #103 head 908ad91) ===
+
+--- pytest tests/test_ci_lint_ratchet.py (3 consecutive runs) ---
+7 passed, 1 warning in 3.83s
+7 passed, 1 warning in 3.28s
+7 passed, 1 warning in 3.77s
+
+--- workflow YAML parse ---
+jobs: ['test', 'lint']
+lint run steps: ['bash scripts/ci/lint_changed.sh']
+lint fetch-depth: {'fetch-depth': 0}
+
+--- scoped gate on this branch's own change set ---
+lint scope: three-dot diff 908ad91c32e61d67fe1aa7387f711390393d7e48...HEAD
+lint scope: 2 Python file(s) changed against 908ad91c32e61d67fe1aa7387f711390393d7e48
+  scripts/ci/ruff_ratchet.py
+  tests/test_ci_lint_ratchet.py
+  ok   scripts/ci/ruff_ratchet.py
+  ok   tests/test_ci_lint_ratchet.py
+ruff ratchet: no new lint debt
+EXIT=0

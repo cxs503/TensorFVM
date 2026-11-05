@@ -62,9 +62,20 @@ jobs:
     # (unused imports, import ordering, semicolon-packed statements).  Making
     # it blocking would hide every other signal.  Fix the backlog, then drop
     # this continue-on-error and promote it to a gate.
+    #
+    # The checks are scoped to the Python files this change set touches
+    # (scripts/ci/lint_changed.sh, a ratchet).  A whole-tree
+    # `ruff check src tests scripts` is red by construction -- 9822 findings and
+    # 554 unformatted files predate this workflow -- so it fails even for a
+    # docs-only pull request and reports nothing about the change under test.
+    # The ratchet keeps new debt out while the historic backlog is swept.
     continue-on-error: true
     steps:
       - uses: actions/checkout@v4
+        with:
+          # The ratchet diffs against the base commit of this change set
+          # (pull_request.base.sha / event.before), so the runner needs history.
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -74,7 +85,10 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
-      - name: Lint (ruff)
-        run: ruff check src tests scripts
-      - name: Format check (ruff format)
-        run: ruff format --check src tests scripts
+      - name: Lint changed files (ruff ratchet)
+        # Green when the change set touches no Python file; red when a touched
+        # file is unclean under `ruff check` or `ruff format --check`.
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PUSH_BEFORE: ${{ github.event.before }}
+        run: bash scripts/ci/lint_changed.sh

@@ -1,0 +1,9 @@
+### A. Reproduce PR #103 red on its own head commit (908ad91, docs-only)
+$ ruff check src tests scripts
+
+Found 9822 errors.
+[*] 191 fixable with the `--fix` option (117 hidden fixes can be enabled with the `--unsafe-fixes` option).
+$ ruff format --check src tests scripts
+Would reformat: tests/test_wall_traction.py
+554 files would be reformatted, 3 files already formatted
+exit codes: check=1 fmt=1  -> the two failing lint steps of PR #103
