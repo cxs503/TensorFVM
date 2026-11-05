@@ -1,0 +1,165 @@
+{
+ "schema": "tensorfvm.sst-log-law-constants/1",
+ "constants": {
+  "beta_star": 0.09,
+  "beta1": 0.075,
+  "beta2": 0.0828,
+  "gamma1": 0.5555555555555556,
+  "gamma2": 0.44,
+  "sigma_omega1": 0.5,
+  "sigma_omega2": 0.856,
+  "a1": 0.31,
+  "wall_kappa": 0.41,
+  "spalding_e": 9.8,
+  "spalding_B": 5.566786306528114
+ },
+ "symbolic": {
+  "k_residual": "0",
+  "k_budget_closes_identically": true,
+  "omega_residual": "u_tau**2*(-11.1111111111111*beta + gamma + 3.33333333333333*kappa**2*sigma_omega)/(kappa**2*y**2)",
+  "kappa_squared": "(3.33333333333333*beta - 0.3*gamma)/sigma_omega",
+  "identity_closes_symbolically": true,
+  "kappa_squared_latex": "\\frac{3.33333333333333 \\beta - 0.3 \\gamma}{\\sigma_{\\omega}}"
+ },
+ "families": {
+  "inner_k_omega": {
+   "beta": 0.075,
+   "gamma": 0.5555555555555556,
+   "sigma_omega": 0.5,
+   "kappa": 0.408248290463863,
+   "kappa_squared": 0.16666666666666669,
+   "deviation_from_wall_kappa_percent": -0.42724622832608744
+  },
+  "outer_k_epsilon": {
+   "beta": 0.0828,
+   "gamma": 0.44,
+   "sigma_omega": 0.856,
+   "kappa": 0.410151556214798,
+   "kappa_squared": 0.16822429906542058,
+   "deviation_from_wall_kappa_percent": 0.03696493043853899
+  }
+ },
+ "numeric": {
+  "root_kappa": 0.4082427078686056,
+  "closed_form_kappa": 0.408248290463863,
+  "closed_form_minus_root": 5.5825952574029e-06,
+  "convergence_ladder": [
+   {
+    "points": 81,
+    "root_kappa": 0.4079662983874527,
+    "gap_to_closed_form": -0.0002819920764103312
+   },
+   {
+    "points": 161,
+    "root_kappa": 0.4081673744102222,
+    "gap_to_closed_form": -8.091605364080046e-05
+   },
+   {
+    "points": 321,
+    "root_kappa": 0.4082266749838285,
+    "gap_to_closed_form": -2.16154800345425e-05
+   },
+   {
+    "points": 641,
+    "root_kappa": 0.4082427078686056,
+    "gap_to_closed_form": -5.5825952574029e-06
+   }
+  ],
+  "relative_residual_at_root": 0.00019209085453649036,
+  "relative_residual_at_closed_form": 0.00018662619201797667,
+  "relative_residual_at_wall_kappa": 0.0018111567893422317,
+  "molecular_share_at_root": 0.006520625403604121,
+  "nu_t_matches_kappa_u_tau_y_max_rel_error": 2.220446049250313e-16
+ },
+ "log_layer": {
+  "f1_min": 1.0,
+  "f1_max": 1.0,
+  "governing_family": "inner_k_omega"
+ },
+ "family_spread_percent": 0.46421115876462643,
+ "sigma_omega_for_exact_wall_kappa": 0.49573666468372013,
+ "limiter": {
+  "a1": 0.31,
+  "sqrt_beta_star": 0.3,
+  "ratio": 1.0333333333333334,
+  "margin_percent": 3.3333333333333437
+ },
+ "wall_law_consequence": [
+  {
+   "y_plus": 30.0,
+   "u_plus_model": 13.897984406090565,
+   "u_plus_wall": 13.86238967643581,
+   "delta_u_plus": 0.035594729654754076,
+   "delta_u_plus_percent": 0.2567719598537928,
+   "cf_bias_percent": 0.5135439197075856
+  },
+  {
+   "y_plus": 100.0,
+   "u_plus_model": 16.847103440876843,
+   "u_plus_wall": 16.798908711377116,
+   "delta_u_plus": 0.04819472949972692,
+   "delta_u_plus_percent": 0.28689202571287786,
+   "cf_bias_percent": 0.5737840514257557
+  },
+  {
+   "y_plus": 300.0,
+   "u_plus_model": 19.538142973264932,
+   "u_plus_wall": 19.47845087886031,
+   "delta_u_plus": 0.05969209440462109,
+   "delta_u_plus_percent": 0.3064519595313613,
+   "cf_bias_percent": 0.6129039190627226
+  },
+  {
+   "y_plus": 1000.0,
+   "u_plus_model": 22.48726200805121,
+   "u_plus_wall": 22.41496991380162,
+   "delta_u_plus": 0.07229209424959038,
+   "delta_u_plus_percent": 0.32251702557529555,
+   "cf_bias_percent": 0.6450340511505911
+  }
+ ],
+ "negative_controls": [
+  {
+   "perturbation": "sigma_omega1 +1%",
+   "kappa": 0.40622223185119377,
+   "relative_change_percent": -0.49628097900108337
+  },
+  {
+   "perturbation": "sigma_omega1 -1%",
+   "kappa": 0.4103049699311091,
+   "relative_change_percent": 0.5037815259212046
+  },
+  {
+   "perturbation": "beta1 +1%",
+   "kappa": 0.4143267631552018,
+   "relative_change_percent": 1.4889156509221966
+  },
+  {
+   "perturbation": "gamma1 +1%",
+   "kappa": 0.40414518843273806,
+   "relative_change_percent": -1.0050506338833416
+  },
+  {
+   "perturbation": "beta_star +1%",
+   "kappa": 0.4031410932510248,
+   "relative_change_percent": -1.2510027187218005
+  }
+ ],
+ "residual_at_wall_kappa_if_forced": 0.0018111567893422317,
+ "gates": {
+  "symbolic_identity_closes": true,
+  "numeric_root_matches_closed_form": true,
+  "numeric_gap_shrinks_under_refinement": true,
+  "constants_consistent_within_0p5_percent": true,
+  "family_spread_within_0p5_percent": true,
+  "eddy_viscosity_recovers_kappa_u_tau_y": true,
+  "audit_detects_1pct_constant_edit": true,
+  "cf_bias_below_acceptance_band": true,
+  "limiter_has_positive_margin": true
+ },
+ "figures": [
+  "docs/verification-sst-log-law-constants/fig1_omega_budget_vs_kappa.png",
+  "docs/verification-sst-log-law-constants/fig2_sigma_to_kappa.png",
+  "docs/verification-sst-log-law-constants/fig3_wall_law_consequence.png"
+ ]
+}
