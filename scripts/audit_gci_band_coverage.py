@@ -37,6 +37,7 @@ Usage
 
 from __future__ import annotations
 
+import hashlib
 import json
 import math
 import os
@@ -186,6 +187,59 @@ def noise_aggregate():
     return rows, table
 
 
+EXCERPT_ROWS = 24
+EXCERPT_NOISE_ROWS = 12
+
+
+def _payload_digest(payload):
+    blob = json.dumps(payload, sort_keys=True).encode()
+    return hashlib.sha256(blob).hexdigest(), len(blob)
+
+
+def _worst(records, n):
+    """Highest-efficiency records first (the cases a band can actually miss)."""
+    def key(r):
+        e = r["efficiency"]
+        return -(e if isinstance(e, (int, float)) and math.isfinite(e) else 1e9)
+    return sorted(records, key=key)[:n]
+
+
+def excerpt(payload):
+    """Git-artifact-sized view of the audit: aggregates + worst-efficiency cases.
+
+    The per-case tables are 1920 + 1000 rows (~1.4 MB); keeping them in git
+    blows the 200 KB artifact cap for zero review value, because the aggregate
+    tables and the worst-efficiency cases already carry every conclusion in
+    ``docs/gci-band-coverage/report.md``.  Nothing is lost: the full dump is
+    regenerated bit-identically by the same deterministic script
+    (``--full``), and its SHA-256 is recorded here so a regenerated dump can be
+    checked against the audited one.
+    """
+    digest, nbytes = _payload_digest(payload)
+    rows = payload["rows"]
+    noise_rows = payload["noise_rows"]
+    row_keep = _worst(rows, EXCERPT_ROWS)
+    noise_keep = _worst(noise_rows, EXCERPT_NOISE_ROWS)
+    return dict(
+        artifact="outputs/gci-band-coverage/audit.json",
+        kind="audit-excerpt",
+        summary=payload["summary"],
+        by_alpha=payload["by_alpha"],
+        by_order=payload["by_order"],
+        noise=payload["noise"],
+        case_counts=dict(rows=len(rows), noise_rows=len(noise_rows),
+                         rows_kept=len(row_keep),
+                         noise_rows_kept=len(noise_keep)),
+        full_dump=dict(
+            sha256=digest, bytes=nbytes, rows=len(rows),
+            noise_rows=len(noise_rows),
+            regenerate="PYTHONPATH=src python scripts/audit_gci_band_coverage.py "
+                       "gci-band-coverage --full"),
+        worst_efficiency_rows=row_keep,
+        worst_efficiency_noise_rows=noise_keep,
+    )
+
+
 def write_docs(summary, by_alpha, by_p, noise_table, docs_dir):
     os.makedirs(docs_dir, exist_ok=True)
     w = summary["worst_row"]
@@ -267,7 +321,8 @@ def write_docs(summary, by_alpha, by_p, noise_table, docs_dir):
         "",
         "## 5. 产物",
         "",
-        "* `outputs/gci-band-coverage/audit.json`：全部 1920+1000 例逐例记录（含参数、GCI、误差、两种惯例判定）；",
+        "* `outputs/gci-band-coverage/audit.json`：审计摘要 + 最差效率案例摘录（1920+1000 例全量逐例记录不入 git，"
+        "体积超 200 KB 工件帽；`--full` 可确定性重建，SHA-256 记在摘要的 `full_dump` 字段）；",
         "* `outputs/gci-band-coverage/RESULTS.md`：聚合表；",
         "* 本节数字与表格全部由该脚本生成（零手抄）。",
     ]
@@ -276,7 +331,9 @@ def write_docs(summary, by_alpha, by_p, noise_table, docs_dir):
 
 
 def main():
-    out = sys.argv[1] if len(sys.argv) > 1 else "gci-band-coverage"
+    write_full = "--full" in sys.argv
+    positional = [a for a in sys.argv[1:] if not a.startswith("--")]
+    out = positional[0] if positional else "gci-band-coverage"
     target = os.path.join("outputs", out)
     os.makedirs(target, exist_ok=True)
     rows = [study_row(p, r21, r32, alpha, s, sign)
@@ -311,8 +368,9 @@ def main():
     summary["noise_cases"] = len(noise_rows)
     payload = dict(summary=summary, by_alpha=by_alpha, by_order=by_p,
                    noise=noise_table, rows=rows, noise_rows=noise_rows)
+    dump = payload if write_full else excerpt(payload)
     with open(os.path.join(target, "audit.json"), "w") as handle:
-        json.dump(payload, handle, indent=1)
+        json.dump(dump, handle, indent=1)
     figures(rows, os.path.join(target, "gci_band_coverage.png"))
 
     lines = ["# GCI band coverage audit", "",
@@ -330,6 +388,11 @@ def main():
         lines.append(f"| {entry['p']:g} | {entry['cases']} | "
                      f"{entry['implementation_rate']:.3f} | {entry['published_rate']:.3f} | "
                      f"{entry['worst_efficiency']:.3f} |")
+    lines += ["",
+              "Data artifact: `outputs/gci-band-coverage/audit.json` holds the aggregates above",
+              "plus the worst-efficiency cases; the full 1920+1000 per-case tables are not",
+              "stored in git (artifact cap) and are rebuilt deterministically with",
+              "`PYTHONPATH=src python scripts/audit_gci_band_coverage.py gci-band-coverage --full`."]
     with open(os.path.join(target, "RESULTS.md"), "w") as handle:
         handle.write("\n".join(lines) + "\n")
     write_docs(summary, by_alpha, by_p, noise_table, os.path.join("docs", out))

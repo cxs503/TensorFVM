@@ -119,6 +119,14 @@ def richardson_gci(fine, medium, coarse, spacings, *, theory_order=None,
     back to ``theory_order`` (or first order if unknown) with the conservative
     two-grid safety factor 3.0, so that a broken refinement study can never
     report a confident band.
+    
+    **Non-asymptotic convention (m3520)**: when ``theory_order`` is declared and
+    ``|p_observed - p_theory| > order_tolerance``, the study is monotone but not
+    in the asymptotic range.  The GCI band is only trustworthy in the asymptotic
+    range, so we fall back to the two-point method: ``Fs=3``, use ``theory_order``
+    as the formal order, and compute ``eps`` as the maximum relative difference
+    between adjacent grids.  This widens the band to reflect the pre-asymptotic
+    uncertainty while preserving the ``asymptotic=False`` semantics.
     """
     h, v = _check(spacings, (fine, medium, coarse))
     if safety_factor is not None and not (math.isfinite(safety_factor) and safety_factor >= 1.):
@@ -130,18 +138,33 @@ def richardson_gci(fine, medium, coarse, spacings, *, theory_order=None,
     convergence = "inconsistent" if fallback else "monotone"
     if v[0] == 0.:
         raise ValueError("relative GCI needs a non-zero fine-grid metric")
-    eps = abs((v[1]-v[0])/v[0])
-    gci = (safety_factor or (SAFETY_FALLBACK if fallback else SAFETY_OBSERVED))*eps/(r21**p_used-1.)
-    correction = (v[1]-v[0])/(r21**p_used-1.)
-    extrapolated = float(v[0]-correction)
+    
+    # Determine asymptotic status and whether to apply non-asymptotic fallback
     if theory_order is None:
         asymptotic = not fallback
         order_ratio = float("nan")
+        non_asymptotic_fallback = False
     else:
         if not (math.isfinite(theory_order) and theory_order > 0.):
             raise ValueError("theory order must be finite and positive")
         order_ratio = float(p_used/theory_order)
         asymptotic = bool(not fallback and abs(p_used-theory_order) <= order_tolerance)
+        # Non-asymptotic fallback: monotone but |p_obs - p_theory| > tolerance
+        non_asymptotic_fallback = bool(not fallback and not asymptotic)
+    
+    # Compute eps and apply non-asymptotic fallback if needed
+    if non_asymptotic_fallback:
+        # Use maximum adjacent difference as eps, Fs=3, theory_order
+        eps = max(abs(v[1]-v[0])/abs(v[0]), abs(v[2]-v[1])/abs(v[1]))
+        p_used = float(theory_order)
+        safety = safety_factor or SAFETY_FALLBACK
+    else:
+        eps = abs((v[1]-v[0])/v[0])
+        safety = safety_factor or (SAFETY_FALLBACK if fallback else SAFETY_OBSERVED)
+    
+    gci = safety*eps/(r21**p_used-1.)
+    correction = (v[1]-v[0])/(r21**p_used-1.)
+    extrapolated = float(v[0]-correction)
     half = gci*abs(extrapolated)
     return RefinementStudy(
         spacings=tuple(float(x) for x in h), values=tuple(float(x) for x in v),
@@ -149,7 +172,7 @@ def richardson_gci(fine, medium, coarse, spacings, *, theory_order=None,
         convergence=convergence,
         asymptotic=asymptotic, extrapolated=extrapolated,
         gci=float(gci),
-        safety_factor=float(safety_factor or (SAFETY_FALLBACK if fallback else SAFETY_OBSERVED)),
+        safety_factor=float(safety),
         band=(float(extrapolated-half), float(extrapolated+half)),
         theory_order=float("nan") if theory_order is None else float(theory_order),
         refinement_ratio=float(r21))
@@ -181,6 +204,12 @@ def reference_agreement(study, reference):
     property a GCI can honestly claim) and the efficiency index
     ``actual_error/GCI`` (Roache: values far below one mean the band is
     conservative, values above one mean the band was not a bound).
+    
+    **Asymptotic gate (m3520)**: ``band_covered`` is only reported as ``True``
+    when ``study.asymptotic`` is ``True``.  A GCI band is only trustworthy in
+    the asymptotic range; outside it, the band may be too narrow to be a valid
+    uncertainty bound.  The ``band_covered`` field is set to ``False`` when
+    ``asymptotic=False``, even if the reference happens to lie within the band.
     """
     if not math.isfinite(reference):
         raise ValueError("finite reference required")
@@ -188,7 +217,8 @@ def reference_agreement(study, reference):
         raise ValueError("zero reference needs an explicitly scaled metric")
     error = abs(study.extrapolated-reference)/abs(reference)
     lo, hi = study.band
-    covered = bool(lo <= reference <= hi)
+    # Asymptotic gate: band_covered only valid when asymptotic=True
+    covered = bool(lo <= reference <= hi) if study.asymptotic else False
     efficiency = float("nan") if study.gci == 0. else error/study.gci
     return dict(reference=float(reference), extrapolated=study.extrapolated,
                 relative_error=float(error), gci=study.gci,

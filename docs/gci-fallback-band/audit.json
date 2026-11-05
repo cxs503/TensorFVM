@@ -1,0 +1,451 @@
+{
+  "artifact": "docs/gci-fallback-band/audit.json",
+  "kind": "audit-excerpt",
+  "summary": {
+    "total_cases": 640,
+    "non_asymptotic_fallback_cases": 142,
+    "asymptotic_cases": 498,
+    "inconsistent_cases": 0,
+    "non_asymptotic_coverage": 139,
+    "non_asymptotic_coverage_rate": 0.9788732394366197,
+    "asymptotic_coverage": 498,
+    "asymptotic_coverage_rate": 1.0,
+    "non_asymptotic_worst_efficiency": 0.2916666666666667,
+    "asymptotic_worst_efficiency": 0.22340822226569712
+  },
+  "case_counts": {
+    "non_asymptotic": 142,
+    "asymptotic": 498,
+    "non_asymptotic_kept": 10,
+    "asymptotic_kept": 10
+  },
+  "full_dump": {
+    "sha256": "66ad90688deb37e26213e42c1cb0132bff5c6c2b721785a23da4b95770b33661",
+    "bytes": 257078,
+    "regenerate": "PYTHONPATH=src python scripts/audit_gci_fallback_band.py"
+  },
+  "non_asymptotic_cases": [
+    {
+      "p": 1.0,
+      "r21": 3.0,
+      "r32": 1.2,
+      "alpha": 0.5,
+      "sign": 1.0,
+      "order_observed": 1.7012405515703937,
+      "order_used": 1.0,
+      "asymptotic": false,
+      "convergence": "monotone",
+      "safety_factor": 3.0,
+      "gci": 2.571428571428571,
+      "error": 0.75,
+      "efficiency": 0.2916666666666667,
+      "band": [
+        -0.3928571428571428,
+        0.8928571428571428
+      ],
+      "band_covers_exact": false,
+      "is_non_asymptotic_fallback": true
+    },
+    {
+      "p": 1.0,
+      "r21": 3.0,
+      "r32": 1.5,
+      "alpha": 0.5,
+      "sign": 1.0,
+      "order_observed": 1.7192043621248114,
+      "order_used": 1.0,
+      "asymptotic": false,
+      "convergence": "monotone",
+      "safety_factor": 3.0,
+      "gci": 2.571428571428571,
+      "error": 0.75,
+      "efficiency": 0.2916666666666667,
+      "band": [
+        -0.3928571428571428,
+        0.8928571428571428
+      ],
+      "band_covers_exact": false,
+      "is_non_asymptotic_fallback": true
+    },
+    {
+      "p": 1.0,
+      "r21": 3.0,
+      "r32": 2.0,
+      "alpha": 0.5,
+      "sign": 1.0,
+      "order_observed": 1.7416426093938804,
+      "order_used": 1.0,
+      "asymptotic": false,
+      "convergence": "monotone",
+      "safety_factor": 3.0,
+      "gci": 2.605263157894737,
+      "error": 0.75,
+      "efficiency": 0.28787878787878785,
+      "band": [
+        -0.4013157894736843,
+        0.9013157894736843
+      ],
+      "band_covers_exact": false,
+      "is_non_asymptotic_fallback": true
+    },
+    {
+      "p": 1.0,
+      "r21": 2.0,
+      "r32": 1.2,
+      "alpha": 0.5,
+      "sign": 1.0,
+      "order_observed": 1.6339366580611738,
+      "order_used": 1.0,
+      "asymptotic": false,
+      "convergence": "monotone",
+      "safety_factor": 3.0,
+      "gci": 2.142857142857143,
+      "error": 0.5,
+      "efficiency": 0.23333333333333334,
+      "band": [
+        -0.5714285714285714,
+        1.5714285714285714
+      ],
+      "band_covers_exact": true,
+      "is_non_asymptotic_fallback": true
+    },
+    {
+      "p": 1.0,
+      "r21": 2.0,
+      "r32": 1.5,
+      "alpha": 0.5,
+      "sign": 1.0,
+      "order_observed": 1.6532812139785538,
+      "order_used": 1.0,
+      "asymptotic": false,
+      "convergence": "monotone",
+      "safety_factor": 3.0,
+      "gci": 2.142857142857143,
+      "error": 0.5,
+      "efficiency": 0.23333333333333334,
+      "band": [
+        -0.5714285714285714,
+        1.5714285714285714
+      ],
+      "band_covers_exact": true,
+      "is_non_asymptotic_fallback": true
+    },
+    {
+      "p": 1.0,
+      "r21": 3.0,
+      "r32": 1.2,
+      "alpha": 0.3,
+      "sign": 1.0,
+      "order_observed": 1.5854034461235864,
+      "order_used": 1.0,
+      "asymptotic": false,
+      "convergence": "monotone",
+      "safety_factor": 3.0,
+      "gci": 2.0,
+      "error": 0.44999999999999996,
+      "efficiency": 0.22499999999999998,
+      "band": [
+        -0.55,
+        1.6500000000000001
+      ],
+      "band_covers_exact": true,
+      "is_non_asymptotic_fallback": true
+    },
+    {
+      "p": 1.0,
+      "r21": 3.0,
+      "r32": 1.5,
+      "alpha": 0.3,
+      "sign": 1.0,
+      "order_observed": 1.6066524338749946,
+      "order_used": 1.0,
+      "asymptotic": false,
+      "convergence": "monotone",
+      "safety_factor": 3.0,
+      "gci": 2.0,
+      "error": 0.44999999999999996,
+      "efficiency": 0.22499999999999998,
+      "band": [
+        -0.55,
+        1.6500000000000001
+      ],
+      "band_covers_exact": true,
+      "is_non_asymptotic_fallback": true
+    },
+    {
+      "p": 1.0,
+      "r21": 3.0,
+      "r32": 2.0,
+      "alpha": 0.3,
+      "sign": 1.0,
+      "order_observed": 1.6339793718043754,
+      "order_used": 1.0,
+      "asymptotic": false,
+      "convergence": "monotone",
+      "safety_factor": 3.0,
+      "gci": 2.162337662337662,
+      "error": 0.44999999999999996,
+      "efficiency": 0.20810810810810812,
+      "band": [
+        -0.6392857142857142,
+        1.7392857142857143
+      ],
+      "band_covers_exact": true,
+      "is_non_asymptotic_fallback": true
+    },
+    {
+      "p": 1.0,
+      "r21": 1.5,
+      "r32": 1.2,
+      "alpha": 0.5,
+      "sign": 1.0,
+      "order_observed": 1.5847063214042318,
+      "order_used": 1.0,
+      "asymptotic": false,
+      "convergence": "monotone",
+      "safety_factor": 3.0,
+      "gci": 1.9285714285714288,
+      "error": 0.375,
+      "efficiency": 0.19444444444444442,
+      "band": [
+        -0.580357142857143,
+        1.830357142857143
+      ],
+      "band_covers_exact": true,
+      "is_non_asymptotic_fallback": true
+    },
+    {
+      "p": 1.0,
+      "r21": 2.0,
+      "r32": 1.2,
+      "alpha": 0.3,
+      "sign": 1.0,
+      "order_observed": 1.5099829936409055,
+      "order_used": 1.0,
+      "asymptotic": false,
+      "convergence": "monotone",
+      "safety_factor": 3.0,
+      "gci": 1.7272727272727277,
+      "error": 0.30000000000000027,
+      "efficiency": 0.17368421052631589,
+      "band": [
+        -0.5090909090909093,
+        1.9090909090909087
+      ],
+      "band_covers_exact": true,
+      "is_non_asymptotic_fallback": true
+    }
+  ],
+  "asymptotic_cases": [
+    {
+      "p": 1.0,
+      "r21": 3.0,
+      "r32": 1.2,
+      "alpha": 0.05,
+      "sign": 1.0,
+      "order_observed": 1.1919476055633953,
+      "order_used": 1.1919476055633953,
+      "asymptotic": true,
+      "convergence": "monotone",
+      "safety_factor": 1.25,
+      "gci": 0.3637224673529399,
+      "error": 0.08125858982941336,
+      "efficiency": 0.22340822226569712,
+      "band": [
+        0.6879805476900988,
+        1.474536631968728
+      ],
+      "band_covers_exact": true,
+      "is_non_asymptotic_fallback": false
+    },
+    {
+      "p": 1.0,
+      "r21": 2.0,
+      "r32": 2.0,
+      "alpha": 0.05,
+      "sign": 1.0,
+      "order_observed": 1.1768777620840787,
+      "order_used": 1.1768777620840787,
+      "asymptotic": true,
+      "convergence": "monotone",
+      "safety_factor": 1.25,
+      "gci": 0.37379875635952564,
+      "error": 0.06896551724137856,
+      "efficiency": 0.18449905482041362,
+      "band": [
+        0.6693875363053342,
+        1.4685434981774228
+      ],
+      "band_covers_exact": true,
+      "is_non_asymptotic_fallback": false
+    },
+    {
+      "p": 3.0,
+      "r21": 3.0,
+      "r32": 3.0,
+      "alpha": 0.5,
+      "sign": 1.0,
+      "order_observed": 2.915265445302028,
+      "order_used": 2.915265445302028,
+      "asymptotic": true,
+      "convergence": "monotone",
+      "safety_factor": 1.25,
+      "gci": 0.16726137377341666,
+      "error": 0.028601694915254106,
+      "efficiency": 0.17099999999999915,
+      "band": [
+        0.8565563623580639,
+        1.2006470274724443
+      ],
+      "band_covers_exact": true,
+      "is_non_asymptotic_fallback": false
+    },
+    {
+      "p": 1.0,
+      "r21": 1.5,
+      "r32": 3.0,
+      "alpha": 0.05,
+      "sign": 1.0,
+      "order_observed": 1.1713272346731491,
+      "order_used": 1.1713272346731491,
+      "asymptotic": true,
+      "convergence": "monotone",
+      "safety_factor": 1.25,
+      "gci": 0.3792247866713707,
+      "error": 0.06234576026092764,
+      "efficiency": 0.16440317841079133,
+      "band": [
+        0.6594779159547421,
+        1.4652136045671131
+      ],
+      "band_covers_exact": true,
+      "is_non_asymptotic_fallback": false
+    },
+    {
+      "p": 1.0,
+      "r21": 2.0,
+      "r32": 1.5,
+      "alpha": 0.05,
+      "sign": 1.0,
+      "order_observed": 1.1599753957725634,
+      "order_used": 1.1599753957725634,
+      "asymptotic": true,
+      "convergence": "monotone",
+      "safety_factor": 1.25,
+      "gci": 0.38177210835188286,
+      "error": 0.059238027810702976,
+      "efficiency": 0.1551659393517107,
+      "band": [
+        0.6548504926869205,
+        1.4636255629344854
+      ],
+      "band_covers_exact": true,
+      "is_non_asymptotic_fallback": false
+    },
+    {
+      "p": 3.0,
+      "r21": 3.0,
+      "r32": 2.0,
+      "alpha": 0.5,
+      "sign": 1.0,
+      "order_observed": 2.9013768563494198,
+      "order_used": 2.9013768563494198,
+      "asymptotic": true,
+      "convergence": "monotone",
+      "safety_factor": 1.25,
+      "gci": 0.16994376336439615,
+      "error": 0.026053424803823777,
+      "efficiency": 0.15330615427151395,
+      "band": [
+        0.8516820443797345,
+        1.200424805227913
+      ],
+      "band_covers_exact": true,
+      "is_non_asymptotic_fallback": false
+    },
+    {
+      "p": 3.0,
+      "r21": 3.0,
+      "r32": 1.5,
+      "alpha": 0.5,
+      "sign": 1.0,
+      "order_observed": 2.890040834493022,
+      "order_used": 2.890040834493022,
+      "asymptotic": true,
+      "convergence": "monotone",
+      "safety_factor": 1.25,
+      "gci": 0.17216634644362702,
+      "error": 0.02394197087855443,
+      "efficiency": 0.13906301302847143,
+      "band": [
+        0.847653622782107,
+        1.2002303189750019
+      ],
+      "band_covers_exact": true,
+      "is_non_asymptotic_fallback": false
+    },
+    {
+      "p": 1.0,
+      "r21": 2.0,
+      "r32": 1.2,
+      "alpha": 0.05,
+      "sign": 1.0,
+      "order_observed": 1.1484299151732076,
+      "order_used": 1.1484299151732076,
+      "asymptotic": true,
+      "convergence": "monotone",
+      "safety_factor": 1.25,
+      "gci": 0.38736066889993986,
+      "error": 0.05241998394207337,
+      "efficiency": 0.13532603630342788,
+      "band": [
+        0.6447538749986079,
+        1.4600860928855388
+      ],
+      "band_covers_exact": true,
+      "is_non_asymptotic_fallback": false
+    },
+    {
+      "p": 1.0,
+      "r21": 1.5,
+      "r32": 2.0,
+      "alpha": 0.05,
+      "sign": 1.0,
+      "order_observed": 1.14752597747556,
+      "order_used": 1.14752597747556,
+      "asymptotic": true,
+      "convergence": "monotone",
+      "safety_factor": 1.25,
+      "gci": 0.38910930690522555,
+      "error": 0.05028664557562479,
+      "efficiency": 0.12923526804223417,
+      "band": [
+        0.6416103368638791,
+        1.4589629542873706
+      ],
+      "band_covers_exact": true,
+      "is_non_asymptotic_fallback": false
+    },
+    {
+      "p": 3.0,
+      "r21": 3.0,
+      "r32": 1.2,
+      "alpha": 0.5,
+      "sign": 1.0,
+      "order_observed": 2.8804382839272895,
+      "order_used": 2.8804382839272895,
+      "asymptotic": true,
+      "convergence": "monotone",
+      "safety_factor": 1.25,
+      "gci": 0.1740727444062908,
+      "error": 0.022130892814023806,
+      "efficiency": 0.1271358872953118,
+      "band": [
+        0.8442057631594344,
+        1.2000560224686132
+      ],
+      "band_covers_exact": true,
+      "is_non_asymptotic_fallback": false
+    }
+  ]
+}
