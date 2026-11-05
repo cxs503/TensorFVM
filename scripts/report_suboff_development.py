@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Integrate source-bound SUBOFF preparation and pressure-compatibility evidence."""
-import argparse,json,shutil
+import argparse
+import json
+import shutil
 from pathlib import Path
 from tensorfvm.verification.core import write_json,sha
 

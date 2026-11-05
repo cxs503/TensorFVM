@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Native mesh and actual startup-flow figures; no synthetic reference curves."""
-import argparse,json,hashlib,shutil
+import argparse
+import json
+import hashlib
+import shutil
 from pathlib import Path
 import numpy as np
 import matplotlib

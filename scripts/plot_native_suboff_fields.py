@@ -4,7 +4,10 @@
 No center interpolation, geometric projection, or fabricated experimental Cp.
 Default labels deliberately identify unqualified diagnostic computations.
 """
-import argparse,csv,hashlib,json
+import argparse
+import csv
+import hashlib
+import json
 from pathlib import Path
 import numpy as np
 

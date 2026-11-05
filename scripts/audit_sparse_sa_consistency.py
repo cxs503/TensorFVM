@@ -1,5 +1,6 @@
 """Verify exact prior five-step setup and raw CPU/CUDA differences independently."""
-import json,statistics
+import json
+import statistics
 from pathlib import Path
 import numpy as np
 from tensorfvm.verification.core import sha,write_json,artifact_manifest

@@ -3,7 +3,10 @@
 
 This is one momentum subproblem, not a full steady RANS qualification.
 """
-import argparse,hashlib,json,time
+import argparse
+import hashlib
+import json
+import time
 from pathlib import Path
 import numpy as np
 from tensorfvm.native_mesh3d import NativeMesh3D

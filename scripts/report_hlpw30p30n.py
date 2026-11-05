@@ -3,7 +3,10 @@
 All experimental taps are plotted. Quantitative interpolation refuses ambiguous
 multi-valued abscissae and out-of-support taps; incomplete coverage cannot pass.
 """
-import argparse,csv,json,shutil
+import argparse
+import csv
+import json
+import shutil
 from pathlib import Path
 from types import SimpleNamespace
 import numpy as np

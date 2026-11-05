@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Plot archived actual section polygons together and zoom into wall layers."""
-import argparse,hashlib,json,shutil
+import argparse
+import hashlib
+import json
+import shutil
 from pathlib import Path
 import numpy as np
 import matplotlib

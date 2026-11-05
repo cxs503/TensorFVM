@@ -1,5 +1,8 @@
 """Combine already computed NACA grids with per-run producer/source provenance."""
-import json,shutil,subprocess,sys
+import json
+import shutil
+import subprocess
+import sys
 from pathlib import Path
 from tensorfvm.verification.core import write_json,sha,artifact_manifest
 from tensorfvm.verification.external_flow import publish

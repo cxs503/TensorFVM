@@ -1,6 +1,5 @@
 """Render the VOF rotation verification report from the JSON artifact."""
 import json
-import sys
 
 src = json.load(open("src/tensorfvm/verification/artifacts/vof_rotation/vof_rotation.json"))
 hill, zal = src["cosine_hill"], src["zalesak"]

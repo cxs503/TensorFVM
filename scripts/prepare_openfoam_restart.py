@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """Copy a completed serial checkpoint into a separate, auditable continuation."""
-import argparse,hashlib,json,re,shutil
+import argparse
+import hashlib
+import json
+import re
+import shutil
 from pathlib import Path
 p=argparse.ArgumentParser(description=__doc__)
 p.add_argument('--source',type=Path,required=True)

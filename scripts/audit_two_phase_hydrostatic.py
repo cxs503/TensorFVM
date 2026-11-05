@@ -19,7 +19,6 @@ Writes ``evidence.json``, two PNG figures and ``report.md`` next to this file
 """
 import argparse
 import json
-import math
 import pathlib
 import sys
 
@@ -196,7 +195,7 @@ def main():
         f"{anchor['interface_jump_expected_Pa']:.2f} Pa | "
         f"{anchor['interface_jump_Pa']:.2f} Pa (缺 {anchor['missing_gas_offset_Pa']:.2f} Pa) | "
         f"{'PASS' if anchor['profile_continuous'] else 'FAIL'} |",
-        f"| B 静止分层柱保持静止 | max\\|v\\|<1e-9 | "
+        "| B 静止分层柱保持静止 | max\\|v\\|<1e-9 | "
         + ", ".join(f"n={n}: {hist[-1]['v_max']:.2e}" for n, hist in rest["history"].items())
         + f" | {'PASS' if evidence['verdicts']['B_resting_column_stays_at_rest'] else 'FAIL'} |",
         f"| C Young-Laplace 压差 σ/R | 误差 <3% (σ/R={laplace['dp_exact_Pa']:.3f} Pa) | "

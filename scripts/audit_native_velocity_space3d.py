@@ -24,7 +24,6 @@ import json
 from pathlib import Path
 
 import numpy as np
-import scipy.sparse as sparse
 
 from tensorfvm.native_mesh3d import NativeMesh3D
 from tensorfvm.native_hybrid_viscous3d import NativeHybridViscous3D

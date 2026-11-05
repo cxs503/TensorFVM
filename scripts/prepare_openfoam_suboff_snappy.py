@@ -3,7 +3,10 @@
 
 Literature-informed independent setup, not an exact AFF-8/v2112 reproduction.
 """
-import argparse,hashlib,json,re
+import argparse
+import hashlib
+import json
+import re
 from pathlib import Path
 import numpy as np
 from tensorfvm.openfoam_case import header,write_rans_case

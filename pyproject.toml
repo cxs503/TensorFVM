@@ -28,7 +28,7 @@ build-backend = "setuptools.build_meta"
 benchmark = ["numpy>=1.24", "matplotlib>=3.7", "scipy>=1.11"]
 mesh = ["gmsh>=4.12"]
 amg = ["numpy>=1.24", "scipy>=1.11", "pyamg>=5.3"]
-dev = ["pytest>=8", "pytest-timeout>=2.3", "pytest-cov>=5.0", "ruff>=0.6", "numpy>=1.24", "matplotlib>=3.7", "scipy>=1.11"]
+dev = ["pytest>=8", "pytest-timeout>=2.3", "pytest-cov>=5.0", "ruff>=0.6,<0.16", "numpy>=1.24", "matplotlib>=3.7", "scipy>=1.11"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -36,3 +36,63 @@ where = ["src"]
 [tool.pytest.ini_options]
 pythonpath = ["src", "."]
 testpaths = ["tests"]
+
+# ---------------------------------------------------------------------------
+# Lint policy (ruff).  Rationale, debt baseline and ratchet rules:
+# docs/lint-gate.md.  The gate is BLOCKING on CI (job "lint"); keep this file
+# and the CI step in sync -- tests/test_lint_gate.py asserts the configuration
+# still yields a clean run.
+# ---------------------------------------------------------------------------
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+# Import resolution roots: `from tensorfvm...` lives under src/, tests/ and
+# scripts/ import each other through the repo root.
+src = ["src", "tests", "scripts"]
+
+[tool.ruff.lint]
+# Gate scope = defects only: syntax errors, undefined/duplicate names, unused
+# imports and variables, malformed import blocks.
+# NOT enforced (see docs/lint-gate.md "House style"): the statement-packing
+# style below is used ~9.5k times in the shipped solvers; rewriting it is a
+# mechanical 5-digit-line diff with real regression risk and no defect value.
+select = ["E4", "E7", "E9", "F"]
+ignore = [
+    "E701",  # multiple statements on one line (colon)  -- house style
+    "E702",  # multiple statements on one line (semicolon) -- house style
+    "E703",  # useless semicolon -- same origin as E702
+    "E731",  # lambda assignment -- kernel-local closures, deliberately named
+    "E741",  # ambiguous name (l/I/O) -- physics notation (l = length)
+]
+
+[tool.ruff.lint.per-file-ignores]
+# sys.path shims executed before the imports they feed is the established CLI
+# / test-fixture pattern of this repo, not a defect.
+"scripts/*" = ["E402", "F841"]
+"tests/test_lbm_reference_audit.py" = ["E402"]
+"tests/test_two_phase_projection_operator_matrix.py" = ["E402"]
+# Late import kept below the class bodies on purpose: importing
+# conservative_pressure at module top would close an import cycle.
+"src/tensorfvm/external_high_order.py" = ["E402"]
+# F841 debt baseline (frozen 2026-11-05, 32 files / 50 sites): dead locals left
+# over from derivation scratch work in numeric routines.  Frozen per file so
+# that *new* dead locals anywhere else fail the gate.  Drop a path here once
+# its sites are cleaned -- never add one.
+"src/tensorfvm/conservative3d.py" = ["F841"]
+"src/tensorfvm/conservative_pressure.py" = ["F841"]
+"src/tensorfvm/coupled_coarse.py" = ["F841"]
+"src/tensorfvm/multi_element_flow.py" = ["F841"]
+"src/tensorfvm/native_hybrid_scalar3d.py" = ["F841"]
+"src/tensorfvm/overset_scalar.py" = ["F841"]
+"src/tensorfvm/sa_newton.py" = ["F841"]
+"src/tensorfvm/two_phase_solver.py" = ["F841"]
+"src/tensorfvm/verification/annular_convergence.py" = ["F841"]
+"src/tensorfvm/verification/dfg.py" = ["F841"]
+"src/tensorfvm/verification/engineering_audit.py" = ["F841"]
+"src/tensorfvm/verification/fct_conservation_audit.py" = ["F841"]
+"src/tensorfvm/verification/report.py" = ["F841"]
+"src/tensorfvm/verification/richardson.py" = ["F841"]
+"src/tensorfvm/verification/simple_gpu.py" = ["F841"]
+"src/tensorfvm/verification/taylor_green_mac.py" = ["F841"]
+"tests/test_suboff_geometry.py" = ["F841"]
+"tests/test_two_phase_vof.py" = ["F841"]

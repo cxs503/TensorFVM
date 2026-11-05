@@ -56,13 +56,16 @@ jobs:
           path: coverage.xml
 
   lint:
-    name: lint (advisory)
+    name: lint
     runs-on: ubuntu-latest
-    # Advisory on purpose: the tree carries a large pre-existing ruff backlog
-    # (unused imports, import ordering, semicolon-packed statements).  Making
-    # it blocking would hide every other signal.  Fix the backlog, then drop
-    # this continue-on-error and promote it to a gate.
-    continue-on-error: true
+    # Blocking gate since 2026-11-05.  The backlog that forced the advisory
+    # mode is resolved two ways: the policy in pyproject.toml [tool.ruff]
+    # codifies the tree's house style (E701/E702/E703/E731/E741 are not
+    # enforced, see docs/lint-gate.md), and the remaining real findings
+    # (F401/E401/F541) were fixed.  A frozen per-file F841 baseline keeps the
+    # rest of the F rules live, so *new* dead code fails here.
+    # tests/test_lint_gate.py re-runs this check inside the test job, so the
+    # policy cannot drift away from the CI step.
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -74,7 +77,12 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
-      - name: Lint (ruff)
+      - name: Lint (ruff check) — blocking
         run: ruff check src tests scripts
-      - name: Format check (ruff format)
+      - name: Format check (ruff format) — advisory
+        # 555 of 557 files predate `ruff format`; the whole-tree reformat is
+        # tracked as a separate mechanical change (docs/lint-gate.md).  Kept
+        # visible in the log but non-blocking so the formatting debt cannot
+        # mask the lint gate above.
+        continue-on-error: true
         run: ruff format --check src tests scripts

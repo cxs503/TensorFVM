@@ -240,7 +240,7 @@ def case_abc():
         symbolic_zero=all(_is_zero(v) for v in sym.values()) and all(_is_zero(v) for v in bda),
         numeric_max_rel=0.0,  # filled by the torch cross-check in case_torch_references
         numeric_per_component={},
-        nonvacuous=f"Beltrami property curl u = u verified symbolically (3/3 components), so the advective term is a pure gradient",
+        nonvacuous="Beltrami property curl u = u verified symbolically (3/3 components), so the advective term is a pure gradient",
         points=len(vel),
     )
 
