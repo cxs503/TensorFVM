@@ -1,0 +1,88 @@
+{
+  "schema": "two-phase-capillary-platform-scatter/v1",
+  "mission": "m4190",
+  "subject": "docs/two-phase-capillary-evidence-refresh/report.md",
+  "generator": "scripts/audit_two_phase_capillary_evidence.py (laplace_study / curvature_study, float64, no RNG)",
+  "exact_jump_pa": 0.35,
+  "why": "The n=64 Young-Laplace verdict is not architecture-portable (+0.72 % on x86_64 CI vs -6.27 % on loong64). PR #111 CI went red on a test that pinned the loong64 value, so the per-grid verdict is recorded here instead of being gated to one number; only the platform-independent part is asserted by tests/test_two_phase_capillary_evidence.py.",
+  "platforms": {
+    "loong64": {
+      "arch": "loongarch64",
+      "host": "702 cluster node (128 cores), repo checkout of agent/m3646",
+      "torch": "2.7.1",
+      "threads": 128,
+      "thread_sensitivity": "1/2/4/128 threads reproduce relative_error(n=64) = -0.0627259 identically, so the scatter is not a threading artefact",
+      "evidence": "full recompute in this checkout"
+    },
+    "x86_64-ci": {
+      "arch": "x86_64",
+      "host": "GitHub Actions ubuntu-latest, CI run 42001070379, job 127156115764 (test 3.11)",
+      "evidence": "n=64 value quoted verbatim from the pytest AssertionError (0.007211431870703056); n=24/32/48 recorded as gate outcomes only, since the CI log does not print the values"
+    }
+  },
+  "runs": [
+    {
+      "n": 24,
+      "pressure_jump_pa": 0.3558703126808913,
+      "relative_error": {
+        "loong64": 0.01677232194540368,
+        "x86_64-ci": null
+      },
+      "within_three_percent": {
+        "loong64": true,
+        "x86_64-ci": true
+      },
+      "x86_64_ci_basis": "test_young_laplace_within_three_percent_where_the_interface_is_grid_aligned passed"
+    },
+    {
+      "n": 32,
+      "pressure_jump_pa": 0.34378710959438763,
+      "relative_error": {
+        "loong64": -0.017751115444606835,
+        "x86_64-ci": null
+      },
+      "within_three_percent": {
+        "loong64": true,
+        "x86_64-ci": true
+      },
+      "x86_64_ci_basis": "test_young_laplace_within_three_percent_where_the_interface_is_grid_aligned passed"
+    },
+    {
+      "n": 48,
+      "pressure_jump_pa": 0.2840036469489714,
+      "relative_error": {
+        "loong64": -0.1885610087172247,
+        "x86_64-ci": null
+      },
+      "within_three_percent": {
+        "loong64": false,
+        "x86_64-ci": false
+      },
+      "x86_64_ci_basis": "the pytest assertion `rough < -0.10` executed before the n=64 failure and held, so |relative_error(48)| > 10 % on x86_64 CI as well"
+    },
+    {
+      "n": 64,
+      "pressure_jump_pa": 0.32804593937255344,
+      "relative_error": {
+        "loong64": -0.06272588750699026,
+        "x86_64-ci": 0.007211431870703056
+      },
+      "within_three_percent": {
+        "loong64": false,
+        "x86_64-ci": true
+      },
+      "x86_64_ci_basis": "quoted from the CI AssertionError message"
+    }
+  ],
+  "portable_claims": [
+    "Young-Laplace |relative_error| < 3 % at n = 24 and n = 32 on every platform measured",
+    "at n = 48 the 3 % bar is missed by more than 10 % on every platform measured",
+    "therefore h-refinement from 48 to 64 does not carry the 3 % bar: at least one finer grid misses it on each platform",
+    "every grid stays finite with Ca < 1e-2 and final divergence < 1e-12",
+    "the discrete curvature of the exact circle is inside 3 % at n = 64 and better there than at n = 32"
+  ],
+  "not_portable": [
+    "the sign and size of relative_error(n=64): ~7 percentage points between loong64 and x86_64 in float64",
+    "any claim of monotone (or anti-monotone) convergence in n at these grids"
+  ]
+}

@@ -1,3 +1,5 @@
+> **读数警告（m3646, 2026-11-04）**：本文件记录的 `dP = -1.19e+22 Pa` 等数字在当前源码上**不可复现**。重生成后 n=24/32 的 Δp 相对误差为 +1.68 % / −1.78 %，Ca ≤ 1.1e-5、迭代全部有界（无发散）。旧记录保留为历史 FAIL 证据不动；最新证据与分类结论见 `docs/two-phase-capillary-evidence-refresh/report.md`（平台报告 3790）。
+
 # Two-phase CSF surface-tension audit
 
 parameters: {"radius_m": 0.2, "sigma_n_m": 0.07, "mu_pa_s": 0.01, "dt_s": 1e-05, "steps": 10, "grids": [24, 32], "rho_liquid": 1000.0, "rho_gas": 1.0}
