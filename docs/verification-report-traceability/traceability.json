@@ -1,0 +1,1035 @@
+{
+ "summary": {
+  "reports": 127,
+  "claimable": 1822,
+  "traced": 15,
+  "untraced": 1807,
+  "trace_ratio": 0.00823271130625686,
+  "reports_with_artifacts": 88,
+  "reports_fully_untraced": 125,
+  "dead_scripts": 0,
+  "tree_traced": 286,
+  "nowhere": 1536,
+  "evidence_numbers_in_tree": 15213,
+  "tree_trace_ratio": 0.15697036223929747,
+  "dead_script_pointers": []
+ },
+ "reports": [
+  {
+   "doc": "docs/gci-band-coverage/report.md",
+   "artifacts": 0,
+   "claimable": 26,
+   "traced": 0,
+   "untraced": 26,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/periodic-tgv/report.md",
+   "artifacts": 1,
+   "claimable": 27,
+   "traced": 0,
+   "untraced": 27,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/two-phase-surface-tension-audit/report.md",
+   "artifacts": 1,
+   "claimable": 11,
+   "traced": 0,
+   "untraced": 11,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-30p30n-flow-retry/report.md",
+   "artifacts": 1,
+   "claimable": 8,
+   "traced": 0,
+   "untraced": 8,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-analytic-reference-residuals/report.md",
+   "artifacts": 1,
+   "claimable": 27,
+   "traced": 0,
+   "untraced": 27,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-benchmarks/report.md",
+   "artifacts": 1,
+   "claimable": 64,
+   "traced": 0,
+   "untraced": 64,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-cylinder3900-body-fitted/report.md",
+   "artifacts": 1,
+   "claimable": 11,
+   "traced": 0,
+   "untraced": 11,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-cylinder3900-body-fitted-primary/report.md",
+   "artifacts": 1,
+   "claimable": 28,
+   "traced": 0,
+   "untraced": 28,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-cylinder3900-pressure-coupling/report.md",
+   "artifacts": 5,
+   "claimable": 39,
+   "traced": 0,
+   "untraced": 39,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-cylinder3900-wall-refinement/report.md",
+   "artifacts": 4,
+   "claimable": 60,
+   "traced": 0,
+   "untraced": 60,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-dfg/report.md",
+   "artifacts": 1,
+   "claimable": 9,
+   "traced": 0,
+   "untraced": 9,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-dfg-control/report.md",
+   "artifacts": 1,
+   "claimable": 9,
+   "traced": 0,
+   "untraced": 9,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-engineering/report.md",
+   "artifacts": 1,
+   "claimable": 18,
+   "traced": 0,
+   "untraced": 18,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-engineering-export-failure/report.md",
+   "artifacts": 1,
+   "claimable": 18,
+   "traced": 0,
+   "untraced": 18,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-extended/report.md",
+   "artifacts": 1,
+   "claimable": 21,
+   "traced": 0,
+   "untraced": 21,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-external-cylinder/report.md",
+   "artifacts": 1,
+   "claimable": 14,
+   "traced": 0,
+   "untraced": 14,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-external-cylinder-simple-control/report.md",
+   "artifacts": 1,
+   "claimable": 8,
+   "traced": 0,
+   "untraced": 8,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-external-device-check/report.md",
+   "artifacts": 1,
+   "claimable": 6,
+   "traced": 0,
+   "untraced": 6,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-external-naca/report.md",
+   "artifacts": 1,
+   "claimable": 14,
+   "traced": 0,
+   "untraced": 14,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-external-naca-fine/report.md",
+   "artifacts": 1,
+   "claimable": 8,
+   "traced": 0,
+   "untraced": 8,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-external-naca-simple-control/report.md",
+   "artifacts": 1,
+   "claimable": 11,
+   "traced": 0,
+   "untraced": 11,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-gmsh-controls/report.md",
+   "artifacts": 1,
+   "claimable": 11,
+   "traced": 0,
+   "untraced": 11,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-gmsh-cylinder/report.md",
+   "artifacts": 2,
+   "claimable": 13,
+   "traced": 0,
+   "untraced": 13,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-gmsh-cylinder-wall/report.md",
+   "artifacts": 1,
+   "claimable": 15,
+   "traced": 0,
+   "untraced": 15,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-gmsh-naca/report.md",
+   "artifacts": 1,
+   "claimable": 10,
+   "traced": 0,
+   "untraced": 10,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-gmsh-naca-hybrid/report.md",
+   "artifacts": 1,
+   "claimable": 51,
+   "traced": 0,
+   "untraced": 51,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-gmsh-naca-matched/report.md",
+   "artifacts": 1,
+   "claimable": 14,
+   "traced": 0,
+   "untraced": 14,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-gmsh-naca-matched-initial/report.md",
+   "artifacts": 1,
+   "claimable": 14,
+   "traced": 0,
+   "untraced": 14,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-gpu/report.md",
+   "artifacts": 1,
+   "claimable": 43,
+   "traced": 0,
+   "untraced": 43,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-lid-cavity-ladder/report.md",
+   "artifacts": 1,
+   "claimable": 64,
+   "traced": 0,
+   "untraced": 64,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-native-abc3d-quadratic/quadratic-report/report.md",
+   "artifacts": 1,
+   "claimable": 13,
+   "traced": 0,
+   "untraced": 13,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-native-abc3d-quadratic-refinement/quadratic-report/report.md",
+   "artifacts": 1,
+   "claimable": 17,
+   "traced": 0,
+   "untraced": 17,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-native-abc3d-quadratic-warmstart/quadratic-report/report.md",
+   "artifacts": 1,
+   "claimable": 18,
+   "traced": 0,
+   "untraced": 18,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-native-abc3d-spatial/report.md",
+   "artifacts": 0,
+   "claimable": 25,
+   "traced": 0,
+   "untraced": 25,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-native-hybrid-suboff-startup/medium-mesh/report.md",
+   "artifacts": 1,
+   "claimable": 15,
+   "traced": 0,
+   "untraced": 15,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-native-hybrid-suboff-startup/mesh/report.md",
+   "artifacts": 1,
+   "claimable": 10,
+   "traced": 0,
+   "untraced": 10,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-native-quadratic-robustness/report.md",
+   "artifacts": 1,
+   "claimable": 31,
+   "traced": 0,
+   "untraced": 31,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-native-rans3d/converged/report.md",
+   "artifacts": 0,
+   "claimable": 9,
+   "traced": 0,
+   "untraced": 9,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-native-rans3d/converged-dt-01/report.md",
+   "artifacts": 0,
+   "claimable": 9,
+   "traced": 0,
+   "untraced": 9,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-native-rans3d/converged-dt-10/report.md",
+   "artifacts": 0,
+   "claimable": 9,
+   "traced": 0,
+   "untraced": 9,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-native-rans3d/nonzero-channel/report.md",
+   "artifacts": 0,
+   "claimable": 9,
+   "traced": 0,
+   "untraced": 9,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-native-rans3d/report.md",
+   "artifacts": 0,
+   "claimable": 19,
+   "traced": 0,
+   "untraced": 19,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-native-solver-audit/rejected-candidate-before-transaction-fix/report.md",
+   "artifacts": 0,
+   "claimable": 2,
+   "traced": 0,
+   "untraced": 2,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-native-solver-audit/suboff-state-preserved/report.md",
+   "artifacts": 0,
+   "claimable": 6,
+   "traced": 0,
+   "untraced": 6,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-native-suboff-linear/block/report.md",
+   "artifacts": 0,
+   "claimable": 1,
+   "traced": 0,
+   "untraced": 1,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-native-suboff-linear/report.md",
+   "artifacts": 0,
+   "claimable": 2,
+   "traced": 0,
+   "untraced": 2,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-native-suboff-linear/schur/report.md",
+   "artifacts": 0,
+   "claimable": 6,
+   "traced": 0,
+   "untraced": 6,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-native-suboff-mms/coarse/report.md",
+   "artifacts": 1,
+   "claimable": 6,
+   "traced": 0,
+   "untraced": 6,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-native-suboff-mms/medium/report.md",
+   "artifacts": 1,
+   "claimable": 6,
+   "traced": 0,
+   "untraced": 6,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-native-suboff-mms/merged-linear-small/report.md",
+   "artifacts": 1,
+   "claimable": 6,
+   "traced": 0,
+   "untraced": 6,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-native-suboff-mms/merged-quadratic-small-warm/report.md",
+   "artifacts": 4,
+   "claimable": 6,
+   "traced": 0,
+   "untraced": 6,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-native-suboff-mms/merged-quadratic-small-zero/report.md",
+   "artifacts": 2,
+   "claimable": 6,
+   "traced": 0,
+   "untraced": 6,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-native-suboff-mms/quadratic-assembled-coarse/report.md",
+   "artifacts": 5,
+   "claimable": 6,
+   "traced": 0,
+   "untraced": 6,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-native-suboff-mms/quadratic-assembled-medium/report.md",
+   "artifacts": 5,
+   "claimable": 6,
+   "traced": 0,
+   "untraced": 6,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-native-suboff-mms/quadratic-assembled-small/report.md",
+   "artifacts": 4,
+   "claimable": 6,
+   "traced": 0,
+   "untraced": 6,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-native-suboff-mms/quadratic-coarse-attempt-01/report.md",
+   "artifacts": 0,
+   "claimable": 7,
+   "traced": 0,
+   "untraced": 7,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-native-suboff-mms/reconstruction-audit/report.md",
+   "artifacts": 0,
+   "claimable": 18,
+   "traced": 0,
+   "untraced": 18,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-native-suboff-mms/tail-transition-cubic-viscosity/report.md",
+   "artifacts": 4,
+   "claimable": 6,
+   "traced": 0,
+   "untraced": 6,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-native-suboff-mms/tail-transition-quadratic/report.md",
+   "artifacts": 5,
+   "claimable": 6,
+   "traced": 0,
+   "untraced": 6,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-overset-30p30n/report.md",
+   "artifacts": 4,
+   "claimable": 10,
+   "traced": 0,
+   "untraced": 10,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-overset-flux/report.md",
+   "artifacts": 1,
+   "claimable": 4,
+   "traced": 0,
+   "untraced": 4,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-overset-naca/report.md",
+   "artifacts": 1,
+   "claimable": 13,
+   "traced": 0,
+   "untraced": 13,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-overset-poisson/report.md",
+   "artifacts": 1,
+   "claimable": 11,
+   "traced": 0,
+   "untraced": 11,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-overset3d/report.md",
+   "artifacts": 3,
+   "claimable": 9,
+   "traced": 0,
+   "untraced": 9,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-overset3d-graded/report.md",
+   "artifacts": 1,
+   "claimable": 14,
+   "traced": 0,
+   "untraced": 14,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-overset3d-graded-circumscribed/report.md",
+   "artifacts": 3,
+   "claimable": 19,
+   "traced": 0,
+   "untraced": 19,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-overset3d-graded-overlap/report.md",
+   "artifacts": 1,
+   "claimable": 19,
+   "traced": 0,
+   "untraced": 19,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-report-traceability/report.md",
+   "artifacts": 0,
+   "claimable": 9,
+   "traced": 0,
+   "untraced": 9,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-sa-diagnostic/report.md",
+   "artifacts": 1,
+   "claimable": 4,
+   "traced": 0,
+   "untraced": 4,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-sa-refinement/report.md",
+   "artifacts": 1,
+   "claimable": 11,
+   "traced": 0,
+   "untraced": 11,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-simple-gpu/report.md",
+   "artifacts": 1,
+   "claimable": 34,
+   "traced": 0,
+   "untraced": 34,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-simple-pressure-response/cp-comparison/report.md",
+   "artifacts": 0,
+   "claimable": 3,
+   "traced": 0,
+   "untraced": 3,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-simple-pressure-response/cp-matched-response/report.md",
+   "artifacts": 0,
+   "claimable": 3,
+   "traced": 0,
+   "untraced": 3,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-sparse-sa-consistency/report.md",
+   "artifacts": 1,
+   "claimable": 4,
+   "traced": 0,
+   "untraced": 4,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-adaptive-mesh/development/report.md",
+   "artifacts": 1,
+   "claimable": 12,
+   "traced": 0,
+   "untraced": 12,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-adaptive-mesh/report.md",
+   "artifacts": 3,
+   "claimable": 26,
+   "traced": 0,
+   "untraced": 26,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-adaptive-mesh/spacing-limited/report.md",
+   "artifacts": 1,
+   "claimable": 12,
+   "traced": 0,
+   "untraced": 12,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-development/report.md",
+   "artifacts": 1,
+   "claimable": 13,
+   "traced": 0,
+   "untraced": 13,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-hybrid-mesh/coarse/report.md",
+   "artifacts": 1,
+   "claimable": 13,
+   "traced": 0,
+   "untraced": 13,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-hybrid-mesh/diagnostic-near-coincident/report.md",
+   "artifacts": 1,
+   "claimable": 12,
+   "traced": 0,
+   "untraced": 12,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-hybrid-mesh/medium/report.md",
+   "artifacts": 1,
+   "claimable": 11,
+   "traced": 0,
+   "untraced": 11,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-hybrid-mesh/report.md",
+   "artifacts": 4,
+   "claimable": 18,
+   "traced": 0,
+   "untraced": 18,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-mesh/coarse/report.md",
+   "artifacts": 1,
+   "claimable": 4,
+   "traced": 0,
+   "untraced": 4,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-mesh/medium/report.md",
+   "artifacts": 1,
+   "claimable": 4,
+   "traced": 0,
+   "untraced": 4,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-mesh/report.md",
+   "artifacts": 3,
+   "claimable": 17,
+   "traced": 0,
+   "untraced": 17,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-mesh/source-bound-coarse/report.md",
+   "artifacts": 1,
+   "claimable": 4,
+   "traced": 0,
+   "untraced": 4,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-native-contract/report.md",
+   "artifacts": 0,
+   "claimable": 10,
+   "traced": 0,
+   "untraced": 10,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-physical-baseline/cp-comparison/report.md",
+   "artifacts": 0,
+   "claimable": 3,
+   "traced": 0,
+   "untraced": 3,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-physical-baseline/cp-consistent/report.md",
+   "artifacts": 0,
+   "claimable": 3,
+   "traced": 0,
+   "untraced": 3,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-physical-baseline/cp-first-order/report.md",
+   "artifacts": 0,
+   "claimable": 3,
+   "traced": 0,
+   "untraced": 3,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-physical-baseline/cp-first-order-comparison/report.md",
+   "artifacts": 0,
+   "claimable": 3,
+   "traced": 0,
+   "untraced": 3,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-physical-baseline/cp-original/report.md",
+   "artifacts": 0,
+   "claimable": 1,
+   "traced": 0,
+   "untraced": 1,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-physical-baseline/cp-projected/report.md",
+   "artifacts": 0,
+   "claimable": 3,
+   "traced": 0,
+   "untraced": 3,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-physical-baseline/cp-projected-comparison/report.md",
+   "artifacts": 0,
+   "claimable": 3,
+   "traced": 0,
+   "untraced": 3,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-physical-baseline/cp-pseudo/report.md",
+   "artifacts": 0,
+   "claimable": 3,
+   "traced": 0,
+   "untraced": 3,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-physical-baseline/cp-pseudo-comparison/report.md",
+   "artifacts": 0,
+   "claimable": 3,
+   "traced": 0,
+   "untraced": 3,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-physical-baseline/drag-comparison/report.md",
+   "artifacts": 0,
+   "claimable": 5,
+   "traced": 0,
+   "untraced": 5,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-physical-baseline/drag-consistent/report.md",
+   "artifacts": 0,
+   "claimable": 4,
+   "traced": 0,
+   "untraced": 4,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-physical-baseline/drag-pseudo/report.md",
+   "artifacts": 0,
+   "claimable": 4,
+   "traced": 0,
+   "untraced": 4,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-physical-baseline/drag-pseudo-comparison/report.md",
+   "artifacts": 0,
+   "claimable": 5,
+   "traced": 0,
+   "untraced": 5,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-physical-baseline/failed-pseudo-report/report.md",
+   "artifacts": 3,
+   "claimable": 20,
+   "traced": 0,
+   "untraced": 20,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-physical-baseline/physical-report/report.md",
+   "artifacts": 3,
+   "claimable": 20,
+   "traced": 0,
+   "untraced": 20,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-physical-baseline/wall-layer-comparison/report.md",
+   "artifacts": 1,
+   "claimable": 8,
+   "traced": 0,
+   "untraced": 8,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-physical-baseline/wall-resolved-pilot-mesh/report.md",
+   "artifacts": 1,
+   "claimable": 13,
+   "traced": 0,
+   "untraced": 13,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-projection/coarse/report.md",
+   "artifacts": 1,
+   "claimable": 11,
+   "traced": 0,
+   "untraced": 11,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-projection/medium/report.md",
+   "artifacts": 1,
+   "claimable": 11,
+   "traced": 0,
+   "untraced": 11,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-simple-sst-wall/cp-comparison/report.md",
+   "artifacts": 0,
+   "claimable": 3,
+   "traced": 0,
+   "untraced": 3,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-simple-sst-wall/cp-interleaved/report.md",
+   "artifacts": 0,
+   "claimable": 3,
+   "traced": 0,
+   "untraced": 3,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-simple-sst-wall/cp-linear-faces/report.md",
+   "artifacts": 0,
+   "claimable": 3,
+   "traced": 0,
+   "untraced": 3,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-simple-sst-wall/cp-pilot/report.md",
+   "artifacts": 0,
+   "claimable": 3,
+   "traced": 0,
+   "untraced": 3,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-simple-sst-wall/cp-projected-implicit/report.md",
+   "artifacts": 0,
+   "claimable": 3,
+   "traced": 0,
+   "untraced": 3,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-simple-sst-wall/drag-comparison/report.md",
+   "artifacts": 0,
+   "claimable": 5,
+   "traced": 0,
+   "untraced": 5,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-simple-sst-wall/drag-interleaved/report.md",
+   "artifacts": 0,
+   "claimable": 4,
+   "traced": 0,
+   "untraced": 4,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-simple-sst-wall/physical-report/report.md",
+   "artifacts": 3,
+   "claimable": 20,
+   "traced": 0,
+   "untraced": 20,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-single-domain-mesh/coarse/report.md",
+   "artifacts": 1,
+   "claimable": 12,
+   "traced": 0,
+   "untraced": 12,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-single-domain-mesh/coarse-tail-transition/report.md",
+   "artifacts": 1,
+   "claimable": 14,
+   "traced": 0,
+   "untraced": 14,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-single-domain-mesh/extra-fine/report.md",
+   "artifacts": 1,
+   "claimable": 12,
+   "traced": 0,
+   "untraced": 12,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-single-domain-mesh/fine/report.md",
+   "artifacts": 1,
+   "claimable": 11,
+   "traced": 0,
+   "untraced": 11,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-single-domain-mesh/medium-tail-transition/report.md",
+   "artifacts": 1,
+   "claimable": 13,
+   "traced": 0,
+   "untraced": 13,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-validation/report.md",
+   "artifacts": 0,
+   "claimable": 27,
+   "traced": 0,
+   "untraced": 27,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-wall-resolved-mesh/assessment/report.md",
+   "artifacts": 1,
+   "claimable": 26,
+   "traced": 0,
+   "untraced": 26,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-wall-resolved-mesh/attempt-01/report.md",
+   "artifacts": 1,
+   "claimable": 11,
+   "traced": 0,
+   "untraced": 11,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-suboff-wall-resolved-mesh/report.md",
+   "artifacts": 4,
+   "claimable": 27,
+   "traced": 0,
+   "untraced": 27,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-transient-pressure-compatibility/report.md",
+   "artifacts": 1,
+   "claimable": 36,
+   "traced": 0,
+   "untraced": 36,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-two-phase-projection/report.md",
+   "artifacts": 1,
+   "claimable": 22,
+   "traced": 2,
+   "untraced": 20,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-vof-transport/report.md",
+   "artifacts": 1,
+   "claimable": 158,
+   "traced": 13,
+   "untraced": 145,
+   "dead_scripts": []
+  },
+  {
+   "doc": "docs/verification-wall-law-reference/report.md",
+   "artifacts": 4,
+   "claimable": 2,
+   "traced": 0,
+   "untraced": 2,
+   "dead_scripts": []
+  }
+ ]
+}
