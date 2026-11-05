@@ -3,7 +3,8 @@
 若不成立 -> bug 在 run_multiblock 通用路径。
 用法: python3 _diag_cyl.py <nsteps> <reg_r>
 """
-import sys, time
+import sys
+import time
 import numpy as np
 sys.path.insert(0, "/workspace")
 from tensorlbm import cgrid_gen as CGG, multiblock as MB
@@ -27,7 +28,7 @@ res = MB.run_multiblock(geom, nsteps=nsteps, aoa_deg=0.0, Re=100.0, scheme="ppm"
                         p_exact=PEXACT, p_wall_nojump=PEXACT,
                         proj_ucap=UCAP, p_cap=PCAP, p_scale=PSCALE, p_scale_ref=2e-3)
 print(f"ran {time.time()-t0:.1f}s nan={res.get('nan')} Cl_end={res['cl'][-1]:.4f} Cd_end={res['cd'][-1]:.4f}")
-print(f"  (expect Cd≈1.09 for cylinder Re=100)")
+print("  (expect Cd≈1.09 for cylinder Re=100)")
 # Cp / force decomposition on final block  (physical Cp, referenced to far field)
 b = res["blocks"][0]
 U = 1.0; q_dyn = 0.5 * U * U
@@ -68,7 +69,7 @@ for name, (tx, ty) in [("front(+x)", (1.0, 0.0)), ("back(-x)", (-1.0, 0.0)),
 Cpw_min = np.where(body, Cp, 1e9)
 jmin = int(np.argmin(Cpw_min))
 print(f"  global-min body Cp={Cp[jmin]:+6.3f} @(i={jmin} x={b.xc[jmin,0]:+5.2f} y={b.yc[jmin,0]:+5.2f})")
-print(f"  >> physics: windward Cp=+1.0, sides=0, leeward=-1.0; |Cp|~2x & inverted => SIGN+2x pressure bug")
+print("  >> physics: windward Cp=+1.0, sides=0, leeward=-1.0; |Cp|~2x & inverted => SIGN+2x pressure bug")
 # velocity probe at cardinal body cells (j=2, first interior) to test flow orientation
 for name, (tx, ty) in [("front(+x)", (1.0, 0.0)), ("back(-x)", (-1.0, 0.0)),
                        ("top(+y)", (0.0, 1.0)), ("bot(-y)", (0.0, -1.0))]:

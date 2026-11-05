@@ -82,7 +82,6 @@ def plots(verdict, out):
                         ('none', dict(marker='^', color='C2', label='no skewness correction'))):
         axis.plot(range(1, 7), verdict['spectra'][name]['vector'], linestyle='-', linewidth=1.2,
                   markersize=5, **style)
-    two_point = verdict['counterexample']['two_point']['spectrum']
     axis.axhline(0., color='k', linewidth=1.)
     axis.set_xlabel('mode index (sorted)')
     axis.set_ylabel(r'eigenvalue of  $-L$  [mu = rho = 1]')

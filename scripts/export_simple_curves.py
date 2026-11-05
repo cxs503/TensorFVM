@@ -1,5 +1,6 @@
 """Export the raw numerical values plotted in the full SIMPLE profiles."""
-import argparse,json
+import argparse
+import json
 from pathlib import Path
 import numpy as np
 from tensorfvm.verification.core import sha,write_json,artifact_manifest

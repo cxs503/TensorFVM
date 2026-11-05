@@ -1,5 +1,7 @@
 """Recompute all matched SIMPLE timing medians and saved window field differences."""
-import argparse,json,statistics
+import argparse
+import json
+import statistics
 from pathlib import Path
 import numpy as np
 from tensorfvm.verification.audit import close

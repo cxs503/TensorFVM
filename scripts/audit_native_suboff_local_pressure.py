@@ -1,5 +1,10 @@
 """Audit local manufactured pressure errors without regional gauge fitting."""
-import sys,json,time,hashlib,argparse,shutil
+import sys
+import json
+import time
+import hashlib
+import argparse
+import shutil
 from pathlib import Path
 import numpy as np
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'src'))

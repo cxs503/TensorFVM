@@ -28,7 +28,10 @@ build-backend = "setuptools.build_meta"
 benchmark = ["numpy>=1.24", "matplotlib>=3.7", "scipy>=1.11"]
 mesh = ["gmsh>=4.12"]
 amg = ["numpy>=1.24", "scipy>=1.11", "pyamg>=5.3"]
-dev = ["pytest>=8", "pytest-timeout>=2.3", "pytest-cov>=5.0", "ruff>=0.6", "numpy>=1.24", "matplotlib>=3.7", "scipy>=1.11"]
+# ruff is pinned to a minor line so the lint gate is reproducible: the rule set
+# below is satisfied by exactly this minor.  Bump it only together with a run of
+# `ruff check src tests scripts` (see .github/workflows/ci.yml).
+dev = ["pytest>=8", "pytest-timeout>=2.3", "pytest-cov>=5.0", "ruff>=0.15,<0.16", "numpy>=1.24", "matplotlib>=3.7", "scipy>=1.11"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -36,3 +39,38 @@ where = ["src"]
 [tool.pytest.ini_options]
 pythonpath = ["src", "."]
 testpaths = ["tests"]
+
+[tool.ruff]
+# Keep in sync with `requires-python` above.
+target-version = "py310"
+# docs/ holds point-in-time evidence snapshots, including frozen copies of the
+# package under docs/**/source-snapshot/.  They are archived proof, never edited
+# and never linted by CI, so they must not be reformatted or "fixed".
+extend-exclude = ["docs"]
+
+[tool.ruff.lint]
+# The gate covers rules that catch defects, not layout:
+#   E4  import syntax (E401 one import per line, E402 import position)
+#   E9  syntax/runtime errors
+#   F   pyflakes (unused imports/variables, f-string placeholders, ...)
+# Deliberately NOT selected: E7 statement-layout rules.  This tree writes
+# numeric fixtures and short solver helpers as dense one-liners on purpose
+# (~9.4k E701/E702 as of PR #109); enforcing them would rewrite the whole
+# library and bury real diffs.  Enabling E7 needs a dedicated, mechanical
+# reformat PR first.
+select = ["E4", "E9", "F"]
+
+[tool.ruff.lint.per-file-ignores]
+# Module-level imports that must stay below sys.path setup (so the script runs
+# standalone from a checkout without the package installed).
+"scripts/_report_m2699.py" = ["E402"]
+"scripts/audit_external_evidence.py" = ["E402"]
+"scripts/audit_native_solver_consistency.py" = ["E402"]
+"scripts/prepare_suboff_mesh.py" = ["E402"]
+"scripts/probe_native_quadratic_ordering.py" = ["E402"]
+"scripts/verify_native_hybrid_foundations.py" = ["E402"]
+"scripts/verify_native_small_cases.py" = ["E402"]
+"tests/test_lbm_reference_audit.py" = ["E402"]
+# Deliberate late import: conservative_pressure imports this module back, so
+# hoisting it would build an import cycle at module load time.
+"src/tensorfvm/external_high_order.py" = ["E402"]

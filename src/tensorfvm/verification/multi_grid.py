@@ -36,6 +36,10 @@ routine so that numbers stay comparable across studies of this repository:
   extrapolated value, ``Fs`` = 1.25 for a resolved order, 3.0 for the
   fall-back), i.e. the uncertainty is normalised by the fine-pair difference
   and ``r21**p - 1``.
+* ``fallback_reason``: which rule demoted the ladder to the two-grid fall-back
+  (``'non-monotone'``, ``'implausible-order'`` or ``'none'``) -- the vocabulary of
+  :class:`richardson.RefinementStudy`, so a band or a coverage verdict travels with
+  the qualifier that produced it instead of being quoted as an ordinary GCI result.
 
 The known trap of this estimator is documented and measured in
 ``docs/multi-grid-gci/report.md``: adding coarse levels biases ``p`` low when a
@@ -61,7 +65,14 @@ REFINE_ITERATIONS = 90
 
 @dataclass(frozen=True)
 class MultiGridStudy:
-    """Result of an N-level (N >= 3) grid-convergence study."""
+    """Result of an N-level (N >= 3) grid-convergence study.
+
+    ``fallback_reason`` is declared last, with a default, so existing
+    positional construction of the study keeps working; it names the rule that
+    demoted the ladder to the two-grid fall-back, i.e. the qualifier
+    :func:`tensorfvm.verification.richardson.reference_agreement` echoes when a
+    band or coverage verdict is quoted.
+    """
 
     spacings: tuple
     values: tuple
@@ -84,6 +95,7 @@ class MultiGridStudy:
     theory_order: float
     refinement_ratio: float
     levels: int
+    fallback_reason: str = "none"
 
 
 def _check_levels(spacings, values):
@@ -210,6 +222,13 @@ def multi_grid_order(spacings, values, *, theory_order=None, order_tolerance=.2,
         p = _minimise_order(h, v)
         L, C, res, ss = _linear_fit(h, v, p)
     fallback = not (monotone and math.isfinite(p) and math.isfinite(L))
+    # Read the qualifier off the path that fired rather than assigning it per call
+    # site: a non-monotone ladder has no one-term decay at all, while a monotone
+    # ladder without a usable (p, L) has an order that is not identifiable (the
+    # minimiser sits on the bracket edge / the design is collinear for every trial
+    # order) -- an implausible order, not a missing signal.
+    fallback_reason = ("non-monotone" if not monotone else
+                       "implausible-order" if fallback else "none")
     if fallback:
         convergence = "inconsistent"
         p_used = float(1. if theory_order is None else theory_order)
@@ -242,7 +261,8 @@ def multi_grid_order(spacings, values, *, theory_order=None, order_tolerance=.2,
         spacings=tuple(float(x) for x in h), values=tuple(float(x) for x in v),
         order=float(p), order_stderr=stderr, order_dof=int(dof),
         order_used=float(p_used), order_ratio=order_ratio,
-        convergence=convergence, monotone=bool(monotone),
+        convergence=convergence, fallback_reason=fallback_reason,
+        monotone=bool(monotone),
         asymptotic=asymptotic, extrapolated=float(L),
         extrapolated_triple=triple, coefficient=float(C),
         gci=float(gci),

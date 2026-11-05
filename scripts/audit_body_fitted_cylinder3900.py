@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Common Metric gates for a source-bound 3-D cylinder run, not LES approval."""
-import argparse,json,shutil,sys
+import argparse
+import json
+import shutil
+import sys
 from pathlib import Path
 import numpy as np
 from tensorfvm.verification.core import Metric,evaluate,write_json,sha

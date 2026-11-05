@@ -240,7 +240,7 @@ def case_abc():
         symbolic_zero=all(_is_zero(v) for v in sym.values()) and all(_is_zero(v) for v in bda),
         numeric_max_rel=0.0,  # filled by the torch cross-check in case_torch_references
         numeric_per_component={},
-        nonvacuous=f"Beltrami property curl u = u verified symbolically (3/3 components), so the advective term is a pure gradient",
+        nonvacuous="Beltrami property curl u = u verified symbolically (3/3 components), so the advective term is a pure gradient",
         points=len(vel),
     )
 
@@ -321,7 +321,7 @@ def case_taylor_green():
     # kinetic energy: E = rho/4 exp(-4 nu t) per unit area (integral over [0,2pi]^2)
     # E(t) = rho * integral (u^2+v^2)/2 dA = rho/4 * (2pi)^2 * exp(-4 nu t) / (2pi)^2
     # => E per unit area = rho/4 exp(-4 nu t)
-    speed2 = sp.simplify(u**2 + v**2)
+    sp.simplify(u**2 + v**2)
     # average of sin^2(x)cos^2(y) + cos^2(x)sin^2(y) over [0,2pi]^2 = 1/2
     # so <speed2> = exp(-4 nu t) / 2, and E/V = rho * <speed2>/2 = rho/4 exp(-4 nu t)
     E_per_volume = rho / 4 * decay4
@@ -342,15 +342,6 @@ def case_taylor_green():
     # numeric containment: compare coded TaylorGreenReference formulas with symbolic
     rng = np.random.default_rng(20_114)
     pts = rng.uniform(0.1, 6.0, size=(3000, 3))
-    nu_val, rho_val, t_val = 0.05, 1.0, 0.5
-    subs = {nu: nu_val, rho: rho_val, t: t_val}
-    decay2_num = math.exp(-2 * nu_val * t_val)
-    decay4_num = math.exp(-4 * nu_val * t_val)
-
-    u_ref = np.sin(pts[:, 0]) * np.cos(pts[:, 1]) * decay2_num
-    v_ref = -np.cos(pts[:, 0]) * np.sin(pts[:, 1]) * decay2_num
-    p_ref = rho_val / 4 * (np.cos(2 * pts[:, 0]) + np.cos(2 * pts[:, 1])) * decay4_num
-    omega_ref = 2 * np.sin(pts[:, 0]) * np.sin(pts[:, 1]) * decay2_num
 
     dev = {
         "u_vs_symbolic": 0.0,  # the coded formula is the symbolic formula
@@ -358,9 +349,6 @@ def case_taylor_green():
         "p_vs_symbolic": 0.0,
         "omega_vs_symbolic": 0.0,
     }
-    # The periodic_tgv module uses torch; cross-check the formulas independently
-    import torch
-    xt = [torch.tensor(pts[:, i]) for i in range(3)]
     # We cannot instantiate TaylorGreenReference without a solver, but we can
     # verify the mathematical formulas by evaluating them directly.
     # The coded face_velocity uses: sin(x)*cos(y)*decay for axis=0,
