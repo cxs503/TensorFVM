@@ -137,6 +137,21 @@ def test_reference_agreement_accepts_a_multi_grid_study():
     assert agree['band_covered'] is True
     assert agree['efficiency_index'] <= 1.
     assert reference_agreement(study, inside + 10*study.gci)['band_covered'] is False
+    # The qualifier travels with the verdict, exactly as for a triplet study.
+    assert study.fallback_reason == 'none'
+    assert agree['fallback_reason'] == 'none'
+
+
+def test_fallback_reason_is_recorded_for_an_inconsistent_study():
+    """A broken N-level ladder names the rule that fired, not just 'inconsistent'."""
+    spacings = _ladder(4)
+    values = [1., .98, 1.01, .9]  # non-monotone: the fit carries no information
+    study = multi_grid_order(spacings, values, theory_order=2.)
+    assert study.convergence == 'inconsistent'
+    assert study.fallback_reason == 'non-monotone'
+    agree = reference_agreement(study, .999)
+    assert agree['fallback_reason'] == 'non-monotone'
+    assert agree['asymptotic'] is False
 
 
 def test_theory_order_mismatch_flags_non_asymptotic():

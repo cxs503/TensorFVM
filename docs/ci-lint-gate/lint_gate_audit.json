@@ -1,0 +1,54 @@
+{
+  "before_ref": "d1d51be",
+  "targets": [
+    "src",
+    "tests",
+    "scripts"
+  ],
+  "full_backlog_default_rules": {
+    "before_total": 9823,
+    "after_total": 9822,
+    "before_by_rule": {
+      "E702": 7601,
+      "E701": 1852,
+      "F401": 99,
+      "E401": 84,
+      "E731": 69,
+      "F841": 50,
+      "E402": 39,
+      "E741": 20,
+      "F541": 6,
+      "E703": 3
+    },
+    "after_by_rule": {
+      "E702": 7601,
+      "E701": 1852,
+      "F401": 98,
+      "E401": 84,
+      "E731": 69,
+      "F841": 50,
+      "E402": 39,
+      "E741": 20,
+      "F541": 6,
+      "E703": 3
+    }
+  },
+  "enforced_gate": {
+    "rule_set": "E9,F63,F7,F82",
+    "before_findings": 0,
+    "after_findings": 0
+  },
+  "changed_files": {
+    "rule_set": "E9,F",
+    "files": [
+      "tests/test_native_potential_convergence.py"
+    ],
+    "before_findings": 1,
+    "after_findings": 0
+  },
+  "format_unformatted_files": {
+    "line_length": 120,
+    "before": 555,
+    "after": 554
+  }
+}

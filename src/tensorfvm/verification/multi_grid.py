@@ -71,6 +71,12 @@ class MultiGridStudy:
     order_used: float
     order_ratio: float
     convergence: str
+    #: Which rule produced the fall-back band: ``'none'`` when the fit is usable,
+    #: ``'non-monotone'`` when the ladder does not decay monotonically and
+    #: ``'implausible-order'`` when the fit did not yield a usable order/limit.
+    #: Mirrors :class:`~tensorfvm.verification.richardson.RefinementStudy` so a
+    #: coverage verdict can be quoted together with the reason it was qualified.
+    fallback_reason: str
     monotone: bool
     asymptotic: bool
     extrapolated: float
@@ -189,6 +195,9 @@ def multi_grid_order(spacings, values, *, theory_order=None, order_tolerance=.2,
     back to ``theory_order`` (first order if unknown) with the conservative
     two-grid safety factor 3.0 -- exactly the behaviour of the three-grid
     routine, so a broken ladder still cannot report a confident band.
+    ``MultiGridStudy.fallback_reason`` records which rule fired (``'none'`` for a
+    usable fit), so :func:`~tensorfvm.verification.richardson.reference_agreement`
+    can echo the qualifier on an N-level study just as it does on a triplet.
     """
     h, v = _check_levels(spacings, values)
     n = h.size
@@ -205,11 +214,19 @@ def multi_grid_order(spacings, values, *, theory_order=None, order_tolerance=.2,
     L = C = float("nan")
     stderr = float("nan")
     ss = math.inf
-    res = np.full(h.shape, np.nan)
     if monotone:
         p = _minimise_order(h, v)
-        L, C, res, ss = _linear_fit(h, v, p)
+        L, C, _res, ss = _linear_fit(h, v, p)
     fallback = not (monotone and math.isfinite(p) and math.isfinite(L))
+    if not monotone:
+        fallback_reason = "non-monotone"
+    elif fallback:
+        # The order search is bracketed by ORDER_BOUNDS, so an out-of-range order
+        # cannot come out of the minimisation; what is left is a degenerate fit
+        # (non-finite order or limit).  Reported with the three-grid vocabulary.
+        fallback_reason = "implausible-order"
+    else:
+        fallback_reason = "none"
     if fallback:
         convergence = "inconsistent"
         p_used = float(1. if theory_order is None else theory_order)
@@ -219,7 +236,6 @@ def multi_grid_order(spacings, values, *, theory_order=None, order_tolerance=.2,
         C = float("nan")
         p = float("nan")
         stderr = float("nan")
-        res = np.full(h.shape, np.nan)
         ss = math.inf
     else:
         convergence = "monotone"
@@ -242,7 +258,8 @@ def multi_grid_order(spacings, values, *, theory_order=None, order_tolerance=.2,
         spacings=tuple(float(x) for x in h), values=tuple(float(x) for x in v),
         order=float(p), order_stderr=stderr, order_dof=int(dof),
         order_used=float(p_used), order_ratio=order_ratio,
-        convergence=convergence, monotone=bool(monotone),
+        convergence=convergence, fallback_reason=fallback_reason,
+        monotone=bool(monotone),
         asymptotic=asymptotic, extrapolated=float(L),
         extrapolated_triple=triple, coefficient=float(C),
         gci=float(gci),
