@@ -1,0 +1,240 @@
+{
+ "reference": "U. Ghia, K.N. Ghia, C.T. Shin, J. Comput. Phys. 48 (1982) 387-411, Tables I (u at x = 0.5) and II (v at y = 0.5)",
+ "bundle_reference_self_check_ok": true,
+ "gate": 0.03,
+ "proposals": [
+  {
+   "reynolds": 400.0,
+   "which": "v",
+   "x": 0.9063,
+   "published": -0.23827,
+   "proposed": -0.38989,
+   "limit_relative_error": 0.637,
+   "status": "proposed",
+   "applied": false,
+   "adjudication": "needs the printed Table II or an independent DNS; offline copies of the paper are not available in this checkout"
+  }
+ ],
+ "disputed": {
+  "key": "400/v/0.9063",
+  "reynolds": 400.0,
+  "which": "v",
+  "x": 0.9063,
+  "published": -0.23827,
+  "computed": [
+   {
+    "n": 32,
+    "value": -0.3528387627669481
+   },
+   {
+    "n": 64,
+    "value": -0.3806365470248758
+   },
+   {
+    "n": 128,
+    "value": -0.3875820683606132
+   }
+  ],
+  "richardson_limit": -0.38989,
+  "observed_order": 2.0,
+  "limit_relative_error": 0.637,
+  "interpolation_error_bound_n128": 0.001
+ },
+ "cases": [
+  {
+   "reynolds": 100.0,
+   "n": 32,
+   "u": {
+    "printed_max_abs_error": 0.0069160981373702635,
+    "proposed_max_abs_error": 0.0069160981373702635,
+    "printed_rms_error": 0.0021639655476262463,
+    "gate": 0.03,
+    "pass_printed": true,
+    "pass_proposed": true
+   },
+   "v": {
+    "printed_max_abs_error": 0.007785453957715589,
+    "proposed_max_abs_error": 0.007785453957715589,
+    "printed_rms_error": 0.003576986473904986,
+    "gate": 0.03,
+    "pass_printed": true,
+    "pass_proposed": true
+   },
+   "max_divergence": 1.4210854715202004e-14
+  },
+  {
+   "reynolds": 100.0,
+   "n": 64,
+   "u": {
+    "printed_max_abs_error": 0.004452212009521672,
+    "proposed_max_abs_error": 0.004452212009521672,
+    "printed_rms_error": 0.0018853994298272923,
+    "gate": 0.03,
+    "pass_printed": true,
+    "pass_proposed": true
+   },
+   "v": {
+    "printed_max_abs_error": 0.00872776060095204,
+    "proposed_max_abs_error": 0.00872776060095204,
+    "printed_rms_error": 0.004438314634001309,
+    "gate": 0.03,
+    "pass_printed": true,
+    "pass_proposed": true
+   },
+   "max_divergence": 9.237055564881302e-14
+  },
+  {
+   "reynolds": 100.0,
+   "n": 128,
+   "u": {
+    "printed_max_abs_error": 0.004922402895836425,
+    "proposed_max_abs_error": 0.004922402895836425,
+    "printed_rms_error": 0.0022724077152018775,
+    "gate": 0.03,
+    "pass_printed": true,
+    "pass_proposed": true
+   },
+   "v": {
+    "printed_max_abs_error": 0.009146022186147074,
+    "proposed_max_abs_error": 0.009146022186147074,
+    "printed_rms_error": 0.004709107455033141,
+    "gate": 0.03,
+    "pass_printed": true,
+    "pass_proposed": true
+   },
+   "max_divergence": 6.750155989720952e-13
+  },
+  {
+   "reynolds": 400.0,
+   "n": 32,
+   "u": {
+    "printed_max_abs_error": 0.06836401423978111,
+    "proposed_max_abs_error": 0.06836401423978111,
+    "printed_rms_error": 0.02409218405040562,
+    "gate": 0.03,
+    "pass_printed": false,
+    "pass_proposed": false
+   },
+   "v": {
+    "printed_max_abs_error": 0.11456876276694808,
+    "proposed_max_abs_error": 0.037051237233051926,
+    "printed_rms_error": 0.034858900359314465,
+    "gate": 0.03,
+    "pass_printed": false,
+    "pass_proposed": false
+   },
+   "disputed_point": {
+    "x": 0.9063,
+    "computed": -0.3528387627669481,
+    "published": -0.23827,
+    "proposed": -0.38989,
+    "delta_printed": -0.11456876276694808
+   },
+   "max_divergence": 7.16093850883226e-15
+  },
+  {
+   "reynolds": 400.0,
+   "n": 64,
+   "u": {
+    "printed_max_abs_error": 0.006596111540415894,
+    "proposed_max_abs_error": 0.006596111540415894,
+    "printed_rms_error": 0.0036768065065286267,
+    "gate": 0.03,
+    "pass_printed": true,
+    "pass_proposed": true
+   },
+   "v": {
+    "printed_max_abs_error": 0.1423665470248758,
+    "proposed_max_abs_error": 0.009253452975124199,
+    "printed_rms_error": 0.034704868689191884,
+    "gate": 0.03,
+    "pass_printed": false,
+    "pass_proposed": true
+   },
+   "disputed_point": {
+    "x": 0.9063,
+    "computed": -0.3806365470248758,
+    "published": -0.23827,
+    "proposed": -0.38989,
+    "delta_printed": -0.1423665470248758
+   },
+   "max_divergence": 3.197442310920451e-14
+  },
+  {
+   "reynolds": 400.0,
+   "n": 128,
+   "u": {
+    "printed_max_abs_error": 0.00134981727198058,
+    "proposed_max_abs_error": 0.00134981727198058,
+    "printed_rms_error": 0.0009098117951863307,
+    "gate": 0.03,
+    "pass_printed": true,
+    "pass_proposed": true
+   },
+   "v": {
+    "printed_max_abs_error": 0.1493120683606132,
+    "proposed_max_abs_error": 0.004307991766943214,
+    "printed_rms_error": 0.036268764139428464,
+    "gate": 0.03,
+    "pass_printed": false,
+    "pass_proposed": true
+   },
+   "disputed_point": {
+    "x": 0.9063,
+    "computed": -0.3875820683606132,
+    "published": -0.23827,
+    "proposed": -0.38989,
+    "delta_printed": -0.1493120683606132
+   },
+   "max_divergence": 2.4868995751603507e-13
+  },
+  {
+   "reynolds": 1000.0,
+   "n": 64,
+   "u": {
+    "printed_max_abs_error": 0.029310305036261974,
+    "proposed_max_abs_error": 0.029310305036261974,
+    "printed_rms_error": 0.012723646559264206,
+    "gate": 0.03,
+    "pass_printed": true,
+    "pass_proposed": true
+   },
+   "v": {
+    "printed_max_abs_error": 0.019733918942391973,
+    "proposed_max_abs_error": 0.019733918942391973,
+    "printed_rms_error": 0.009795721408776523,
+    "gate": 0.03,
+    "pass_printed": true,
+    "pass_proposed": true
+   },
+   "max_divergence": 2.1316282072803006e-14
+  }
+ ],
+ "max_printed_error_overall": 0.1493120683606132,
+ "max_proposed_error_overall": 0.06836401423978111,
+ "failed_rows_printed": [
+  "400/n32",
+  "400/n64",
+  "400/n128"
+ ],
+ "failed_rows_proposed": [
+  "400/n32"
+ ],
+ "disputed_rows": [
+  {
+   "n": 32,
+   "printed": 0.11456876276694808,
+   "proposed": 0.037051237233051926
+  },
+  {
+   "n": 64,
+   "printed": 0.1423665470248758,
+   "proposed": 0.009253452975124199
+  },
+  {
+   "n": 128,
+   "printed": 0.1493120683606132,
+   "proposed": 0.004307991766943214
+  }
+ ]
+}
