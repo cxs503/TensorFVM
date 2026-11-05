@@ -7,13 +7,14 @@ This script:
 3. Verifies the Young-Laplace jump dp = sigma/R within 3%
 4. Generates a comparison figure and summary JSON
 """
-import math
+
 import json
 import os
 import numpy as np
 import torch
 import matplotlib
-matplotlib.use('Agg')
+
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 from tensorfvm.two_phase_solver import GridConfig, TwoPhaseConfig, TwoPhaseSolver
@@ -21,8 +22,14 @@ from tensorfvm.two_phase_solver import GridConfig, TwoPhaseConfig, TwoPhaseSolve
 
 def _solver(n=32, radius=0.2, sigma=0.07, mu=1e-2, surface_tension=True):
     tp = TwoPhaseConfig(
-        enabled=True, rho_liquid=1000.0, rho_gas=1.0, mu_liquid=mu, mu_gas=mu,
-        gravity=0.0, sigma=sigma, surface_tension=surface_tension,
+        enabled=True,
+        rho_liquid=1000.0,
+        rho_gas=1.0,
+        mu_liquid=mu,
+        mu_gas=mu,
+        gravity=0.0,
+        sigma=sigma,
+        surface_tension=surface_tension,
         top_atmosphere=True,
     )
     solver = TwoPhaseSolver(GridConfig(nx=n, ny=n, length=1.0, height=1.0), tp)
@@ -57,23 +64,32 @@ def _projection_step_fixed(solver, dt):
 
     # Predictor WITHOUT CSF force
     d2udx2 = (solver.u[:, :-2] - 2 * solver.u[:, 1:-1] + solver.u[:, 2:]) / solver.dx**2
-    d2udy2_full = (solver.u[:-2, :] - 2 * solver.u[1:-1, :] + solver.u[2:, :]) / solver.dy**2
+    d2udy2_full = (
+        solver.u[:-2, :] - 2 * solver.u[1:-1, :] + solver.u[2:, :]
+    ) / solver.dy**2
     mu_u_face = 0.5 * (mu[:, :-1] + mu[:, 1:])
     rho_u_face = 0.5 * (rho[:, :-1] + rho[:, 1:])
     dpdx_old = (solver.p[:, 1:] - solver.p[:, :-1]) / solver.dx
     dpdy_old = (solver.p[1:, :] - solver.p[:-1, :]) / solver.dy
 
-    du_dt = (mu_u_face[1:-1, :] * (d2udx2[1:-1, :] + d2udy2_full[:, 1:-1])
-             - dpdx_old[1:-1, :]) / rho_u_face[1:-1, :]
+    du_dt = (
+        mu_u_face[1:-1, :] * (d2udx2[1:-1, :] + d2udy2_full[:, 1:-1])
+        - dpdx_old[1:-1, :]
+    ) / rho_u_face[1:-1, :]
     solver.u[1:-1, 1:-1] = u_old[1:-1, 1:-1] + dt * du_dt
 
-    d2vdx2_full = (solver.v[:, :-2] - 2 * solver.v[:, 1:-1] + solver.v[:, 2:]) / solver.dx**2
-    d2vdy2_full = (solver.v[:-2, :] - 2 * solver.v[1:-1, :] + solver.v[2:, :]) / solver.dy**2
+    d2vdx2_full = (
+        solver.v[:, :-2] - 2 * solver.v[:, 1:-1] + solver.v[:, 2:]
+    ) / solver.dx**2
+    d2vdy2_full = (
+        solver.v[:-2, :] - 2 * solver.v[1:-1, :] + solver.v[2:, :]
+    ) / solver.dy**2
     mu_v_face = 0.5 * (mu[:-1, :] + mu[1:, :])
     rho_v_face = 0.5 * (rho[:-1, :] + rho[1:, :])
-    dv_dt = (mu_v_face[:, 1:-1]
-             * (d2vdx2_full[1:-1, :] + d2vdy2_full[:, 1:-1])
-             - dpdy_old[:, 1:-1]) / rho_v_face[:, 1:-1]
+    dv_dt = (
+        mu_v_face[:, 1:-1] * (d2vdx2_full[1:-1, :] + d2vdy2_full[:, 1:-1])
+        - dpdy_old[:, 1:-1]
+    ) / rho_v_face[:, 1:-1]
     grav_v = -solver.tp.gravity
     dv_dt = dv_dt + grav_v
     solver.v[1:-1, 1:-1] = v_old[1:-1, 1:-1] + dt * dv_dt
@@ -93,14 +109,18 @@ def _projection_step_fixed(solver, dt):
     inv_rho_v = 2.0 / (rho[:-1, :] + rho[1:, :]).clamp_min(1e-10)
 
     # Divergence of u*
-    div_u = ((u_star[:, 1:] - u_star[:, :-1]) / solver.dx
-             + (v_star[1:] - v_star[:-1]) / solver.dy)
+    div_u = (u_star[:, 1:] - u_star[:, :-1]) / solver.dx + (
+        v_star[1:] - v_star[:-1]
+    ) / solver.dy
 
     # Divergence of CSF force (if present)
     if f_u is not None and f_v is not None:
-        div_f = ((f_u[:, 1:] - f_u[:, :-1]) / solver.dx
-                 + (f_v[1:, :] - f_v[:-1, :]) / solver.dy)
-        rhs = -(solver.dx * solver.dy * (div_u / dt - div_f)).masked_fill(~solver.fluid, 0)
+        div_f = (f_u[:, 1:] - f_u[:, :-1]) / solver.dx + (
+            f_v[1:, :] - f_v[:-1, :]
+        ) / solver.dy
+        rhs = -(solver.dx * solver.dy * (div_u / dt - div_f)).masked_fill(
+            ~solver.fluid, 0
+        )
     else:
         rhs = -(solver.dx * solver.dy * div_u / dt).masked_fill(~solver.fluid, 0)
 
@@ -186,7 +206,9 @@ def _projection_step_fixed(solver, dt):
         torch.max(torch.abs(solver.u - u_old)).item(),
         torch.max(torch.abs(solver.v - v_old)).item(),
     )
-    v_drift = solver.vof.volume_drift(solver.alpha, solver.vof.total_volume(solver.alpha))
+    v_drift = solver.vof.volume_drift(
+        solver.alpha, solver.vof.total_volume(solver.alpha)
+    )
 
     return {
         "iteration": len(solver.history) + 1,
@@ -246,7 +268,9 @@ def run_comparison(n=32, radius=0.2, sigma=0.07, mu=1e-2, steps=10, dt=1e-5):
         "exact_jump_pa": exact_jump,
         "original": {
             "diverged": diverged_orig,
-            "final_divergence": history_orig[-1]["continuity"] if history_orig else None,
+            "final_divergence": history_orig[-1]["continuity"]
+            if history_orig
+            else None,
             "history": history_orig,
         },
         "fixed": {
@@ -263,8 +287,9 @@ def run_comparison(n=32, radius=0.2, sigma=0.07, mu=1e-2, steps=10, dt=1e-5):
             "C1_young_laplace_within_3pct": rel_error < 0.03,
             "C2_capillary_number_below_0p01": capillary_number < 0.01,
             "C3_finite_iterates": torch.isfinite(solver_fix.p).all().item(),
-            "C4_divergence_bounded": (history_fix[-1]["continuity"] < 1e-6
-                                       if history_fix else False),
+            "C4_divergence_bounded": (
+                history_fix[-1]["continuity"] < 1e-6 if history_fix else False
+            ),
         },
     }
 
@@ -278,18 +303,20 @@ def main():
         print(f"Running n={n}...")
         r = run_comparison(n=n)
         results.append(r)
-        print(f"  Fixed: dp={r['fixed']['computed_jump_pa']:.4g} Pa "
-              f"(exact={r['exact_jump_pa']:.4g}, err={r['fixed']['relative_error']:.2%})")
-        print(f"  Ca={r['fixed']['capillary_number']:.2e}, "
-              f"div={r['fixed']['final_divergence']:.2e}")
+        print(
+            f"  Fixed: dp={r['fixed']['computed_jump_pa']:.4g} Pa "
+            f"(exact={r['exact_jump_pa']:.4g}, err={r['fixed']['relative_error']:.2%})"
+        )
+        print(
+            f"  Ca={r['fixed']['capillary_number']:.2e}, "
+            f"div={r['fixed']['final_divergence']:.2e}"
+        )
 
     # Summary
     summary = {
         "schema": "tensorfvm.two-phase-surface-tension-fix/1",
         "results": results,
-        "all_criteria_passed": all(
-            all(r["criteria"].values()) for r in results
-        ),
+        "all_criteria_passed": all(all(r["criteria"].values()) for r in results),
     }
 
     with open(os.path.join(outdir, "summary.json"), "w") as f:
@@ -304,13 +331,19 @@ def main():
         orig_hist = r["original"]["history"]
         fix_hist = r["fixed"]["history"]
         if orig_hist:
-            ax.semilogy([h["iteration"] for h in orig_hist],
-                        [h["continuity"] for h in orig_hist],
-                        'r--o', label=f"Original n={r['n']}")
+            ax.semilogy(
+                [h["iteration"] for h in orig_hist],
+                [h["continuity"] for h in orig_hist],
+                "r--o",
+                label=f"Original n={r['n']}",
+            )
         if fix_hist:
-            ax.semilogy([h["iteration"] for h in fix_hist],
-                        [h["continuity"] for h in fix_hist],
-                        'b-o', label=f"Fixed n={r['n']}")
+            ax.semilogy(
+                [h["iteration"] for h in fix_hist],
+                [h["continuity"] for h in fix_hist],
+                "b-o",
+                label=f"Fixed n={r['n']}",
+            )
     ax.set_xlabel("Iteration")
     ax.set_ylabel("Max |∇·u|")
     ax.set_title("Divergence History")
@@ -324,14 +357,16 @@ def main():
     computed = [r["fixed"]["computed_jump_pa"] for r in results]
     x = np.arange(len(ns))
     width = 0.35
-    ax.bar(x - width/2, exact, width, label="Exact (σ/R)", color='gray', alpha=0.7)
-    ax.bar(x + width/2, computed, width, label="Fixed solver", color='blue', alpha=0.7)
+    ax.bar(x - width / 2, exact, width, label="Exact (σ/R)", color="gray", alpha=0.7)
+    ax.bar(
+        x + width / 2, computed, width, label="Fixed solver", color="blue", alpha=0.7
+    )
     ax.set_xticks(x)
     ax.set_xticklabels([f"n={n}" for n in ns])
     ax.set_ylabel("Pressure jump (Pa)")
     ax.set_title("Young-Laplace Jump Comparison")
     ax.legend()
-    ax.grid(True, alpha=0.3, axis='y')
+    ax.grid(True, alpha=0.3, axis="y")
 
     plt.tight_layout()
     fig.savefig(os.path.join(outdir, "comparison.png"), dpi=150)

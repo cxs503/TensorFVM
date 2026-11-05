@@ -58,13 +58,20 @@ jobs:
   lint:
     name: lint (advisory)
     runs-on: ubuntu-latest
-    # Advisory on purpose: the tree carries a large pre-existing ruff backlog
-    # (unused imports, import ordering, semicolon-packed statements).  Making
-    # it blocking would hide every other signal.  Fix the backlog, then drop
-    # this continue-on-error and promote it to a gate.
-    continue-on-error: true
+    # The tree still carries a large pre-existing ruff backlog (F401/F841/
+    # E501/E702 and 550+ unformatted files).  Auditing that backlog is a
+    # separate job, so the checks below stay advisory -- but the flag lives on
+    # the *steps*, not on the job: a job-level `continue-on-error` still
+    # reports the job (and therefore its check run) as failed, which blocks the
+    # merge gate and hides every other signal.  Exactly one step is blocking:
+    # the ratchet that keeps *newly added* files clean, so the backlog can only
+    # shrink from here on.
     steps:
       - uses: actions/checkout@v4
+        with:
+          # fetch-depth: 0 gives the ratchet below a merge base to diff against
+          # on push events; pull_request events use the base sha directly.
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -74,7 +81,47 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
-      - name: Lint (ruff)
+      - name: Lint (ruff) -- full tree, advisory
+        continue-on-error: true
         run: ruff check src tests scripts
-      - name: Format check (ruff format)
+      - name: Format check (ruff format) -- full tree, advisory
+        continue-on-error: true
         run: ruff format --check src tests scripts
+      - name: Record lint debt in the job summary
+        if: always()
+        run: |
+          {
+            echo "### ruff debt (advisory)"
+            echo
+            echo "Baseline is not gated; only *newly added* files must be clean."
+            echo
+            echo '```'
+            ruff check src tests scripts --statistics || true
+            echo '```'
+            echo
+            echo -n "Unformatted files: "
+            ruff format --check src tests scripts 2>/dev/null | grep -c 'Would reformat' || true
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Lint newly added files (blocking ratchet)
+        # New files are entirely the author's responsibility, so they get the
+        # blocking treatment without touching the legacy backlog.  Edits to
+        # existing files stay advisory (they inherit pre-existing violations).
+        run: |
+          set -euo pipefail
+          BASE="${{ github.event.pull_request.base.sha }}"
+          if [ -z "$BASE" ]; then
+            BASE=$(git merge-base origin/main HEAD || true)
+          fi
+          if [ -z "$BASE" ]; then
+            echo "No merge base available; skipping the ratchet."
+            exit 0
+          fi
+          files=$(git diff --name-only --diff-filter=A "$BASE"...HEAD -- \
+                    'src' 'tests' 'scripts' | grep -E '\.py$' || true)
+          if [ -z "$files" ]; then
+            echo "No Python files added; nothing to ratchet."
+            exit 0
+          fi
+          echo "$files"
+          ruff check $files
+          ruff format --check $files
