@@ -1,0 +1,63 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_____________ test_reference_agreement_accepts_a_multi_grid_study ______________
+
+    def test_reference_agreement_accepts_a_multi_grid_study():
+        """The band bookkeeping of the three-grid routine applies unchanged."""
+        spacings = _ladder(4)
+        values = power_law_series(1., .5, 2., spacings)
+        study = multi_grid_order(spacings, values, theory_order=2.)
+        inside = study.extrapolated + .5*study.gci*abs(study.extrapolated)
+>       agree = reference_agreement(study, inside)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_multi_grid_gci.py:136: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+study = MultiGridStudy(spacings=(0.0078125, 0.015625, 0.03125, 0.0625), values=(1.000030517578125, 1.0001220703125, 1.00048828...dual=1.5700924586837752e-16, residual_relative=1.570092458683775e-16, theory_order=2.0, refinement_ratio=2.0, levels=4)
+reference = 1.0000190729042695
+
+    def reference_agreement(study, reference):
+        """Compare a study with an independent reference value.
+    
+        Returns the relative error of the extrapolated value, the relative GCI, the
+        coverage verdict (does the band contain the reference, which is the only
+        property a GCI can honestly claim) and the efficiency index
+        ``actual_error/GCI`` (Roache: values far below one mean the band is
+        conservative, values above one mean the band was not a bound).
+    
+        ``asymptotic`` and ``fallback_reason`` are echoed into the result: a coverage
+        verdict computed on a study that is outside the asymptotic range, or on a
+        fall-back band, must travel with that qualifier instead of being quoted as an
+        ordinary GCI agreement.  The verdict itself is not changed here.
+        """
+        if not math.isfinite(reference):
+            raise ValueError("finite reference required")
+        if reference == 0.:
+            raise ValueError("zero reference needs an explicitly scaled metric")
+        error = abs(study.extrapolated-reference)/abs(reference)
+        lo, hi = study.band
+        covered = bool(lo <= reference <= hi)
+        efficiency = float("nan") if study.gci == 0. else error/study.gci
+        return dict(reference=float(reference), extrapolated=study.extrapolated,
+                    relative_error=float(error), gci=study.gci,
+                    efficiency_index=efficiency, band_covered=covered,
+                    band=study.band, asymptotic=bool(study.asymptotic),
+>                   fallback_reason=study.fallback_reason,
+                                    ^^^^^^^^^^^^^^^^^^^^^
+                    safety_factor=study.safety_factor)
+E       AttributeError: 'MultiGridStudy' object has no attribute 'fallback_reason'
+
+src/tensorfvm/verification/richardson.py:242: AttributeError
+=============================== warnings summary ===============================
+../../../../usr/lib/python3.11/site-packages/anyio/pytest_plugin.py:14
+  /usr/lib/python3.11/site-packages/anyio/pytest_plugin.py:14: PytestRemovedIn10Warning: _pytest.python.CallSpec2 has been renamed to CallSpec.
+  The CallSpec2 alias will be removed in pytest 10.
+  Update imports to use CallSpec instead.
+  See https://docs.pytest.org/en/stable/deprecations.html#callspec2-renamed
+    from _pytest.python import CallSpec2
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_multi_grid_gci.py::test_reference_agreement_accepts_a_multi_grid_study
+1 failed, 1 warning in 4.61s
