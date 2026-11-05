@@ -394,12 +394,62 @@ def hermite_interpolate(x: torch.Tensor, f: torch.Tensor,
     return torch.as_tensor(out, dtype=f.dtype)
 
 
+def score_profiles(coords, values, reynolds: float, which: str) -> dict:
+    """Score one computed centreline against its published table.
+
+    ``coords``/``values`` are the discrete centreline sample (``x`` or ``y`` and the
+    velocity component).  The returned block reports the residual on *every*
+    published point - that is the historical, reproducible number - and separately on
+    the points that survived the reference audit
+    (:data:`tensorfvm.lid_cavity_reference.SUSPECT_ENTRIES`).  The two are reported
+    side by side so an excluded point can never be mistaken for a fixed solver.
+    """
+    from .lid_cavity_reference import consistent_points, suspect_entries
+
+    pts = table(reynolds, which)
+    targets = [p[0] for p in pts]
+    ref = torch.tensor([p[1] for p in pts], dtype=values.dtype)
+    got = hermite_interpolate(coords, values, targets)
+    delta = got - ref
+    jmin = int(torch.argmin(ref))
+    jmax = int(torch.argmax(ref))
+
+    flagged = suspect_entries(reynolds, which)
+    keep = [j for j, p in enumerate(pts) if p[0] not in flagged]
+    band = [float(delta[j]) for j in keep]
+    consistent_error = max((abs(v) for v in band), default=0.0)
+    consistent_rms = (sum(v * v for v in band) / len(band)) ** 0.5 if band else 0.0
+
+    return {
+        "profiles": {"coord": targets, "reference": ref.tolist(),
+                     "computed": got.tolist(), "delta": delta.tolist()},
+        "max_abs_error": float(delta.abs().max()),
+        "rms_error": float(torch.sqrt((delta ** 2).mean())),
+        "max_abs_error_consistent": float(consistent_error),
+        "rms_error_consistent": float(consistent_rms),
+        "consistent_point_count": len(keep),
+        "suspect_points": [
+            {"coord": p[0], "reference": p[1], "computed": float(got[j]),
+             "delta": float(delta[j]), **flagged[p[0]]}
+            for j, p in enumerate(pts) if p[0] in flagged
+        ],
+        "extremum": {
+            "min_reference": [pts[jmin][0], pts[jmin][1]],
+            "min_computed": [pts[jmin][0], float(got[jmin])],
+            "max_reference": [pts[jmax][0], pts[jmax][1]],
+            "max_computed": [pts[jmax][0], float(got[jmax])],
+        },
+    }
+
+
 def score_against_ghia(solver: LidCavitySolver, reynolds: float | None = None) -> dict:
     """Compare the centreline profiles with the Ghia et al. (1982) tables.
 
     Returns per-quantity error metrics (``max`` / ``rms``, both in units of the
-    lid speed), the computed extrema and their locations, the primary-vortex
-    centre, and the discretisation data needed to interpret them.
+    lid speed) over all published points, the same metrics over the
+    audit-consistent subset, the audit-rejected points, the computed extrema and
+    their locations, the primary-vortex centre, and the discretisation data needed
+    to interpret them.
     """
     re = float(solver.config.reynolds if reynolds is None else reynolds)
     if re not in SUPPORTED_REYNOLDS:
@@ -409,27 +459,8 @@ def score_against_ghia(solver: LidCavitySolver, reynolds: float | None = None) -
     x, v_prof = solver.centreline_v()
     out: dict = {"reynolds": re, "n": solver.n, "steps": solver.steps,
                  "residual": solver.residual, "lid_velocity": solver.config.lid_velocity}
-
-    for which, coords, vals in (("u", y, u_prof), ("v", x, v_prof)):
-        pts = table(re, which)
-        targets = [p[0] for p in pts]
-        ref = torch.tensor([p[1] for p in pts], dtype=vals.dtype)
-        got = hermite_interpolate(coords, vals, targets)
-        delta = got - ref
-        jmin = int(torch.argmin(ref))
-        jmax = int(torch.argmax(ref))
-        out[which] = {
-            "profiles": {"coord": targets, "reference": ref.tolist(),
-                          "computed": got.tolist(), "delta": delta.tolist()},
-            "max_abs_error": float(delta.abs().max()),
-            "rms_error": float(torch.sqrt((delta ** 2).mean())),
-            "extremum": {
-                "min_reference": [pts[jmin][0], pts[jmin][1]],
-                "min_computed": [pts[jmin][0], float(got[jmin])],
-                "max_reference": [pts[jmax][0], pts[jmax][1]],
-                "max_computed": [pts[jmax][0], float(got[jmax])],
-            },
-        }
+    out["u"] = score_profiles(y, u_prof, re, "u")
+    out["v"] = score_profiles(x, v_prof, re, "v")
 
     vx, vy = solver.vortex_centre()
     out["vortex_centre"] = {"computed": [vx, vy]}
@@ -471,32 +502,58 @@ def ghia_acceptance(result: dict, *, max_error: float = 0.03,
     re = float(result["reynolds"])
     checks: dict = {"reynolds": re, "criteria": {}}
     worst = 0.0
+    # Both mechanisms: dispute register (main) and excluded points (m3195)
     dispute_register = _registered_disputes() if allow_registered_disputes else {}
     checks["registered_disputes"] = []
+    excluded: list = []
     for which in ("u", "v"):
         block = result[which]
         disputed = dispute_register.get((re, which), {})
-        profile = block["profiles"]
-        pointwise, ignored = [], []
-        for coord, delta in zip(profile["coord"], profile["delta"]):
-            x = round(float(coord), 4)
-            if x in disputed:
-                ignored.append({"x": x, "delta": float(delta),
-                                "published": disputed[x]["published"],
-                                "evidence": disputed[x]["evidence"]})
-            else:
-                pointwise.append(abs(float(delta)))
-        value = max(pointwise) if pointwise else float("nan")
+        # Support legacy result dicts without "profiles" (m3195 compatibility)
+        if "profiles" in block:
+            profile = block["profiles"]
+            pointwise, ignored = [], []
+            for coord, delta in zip(profile["coord"], profile["delta"]):
+                x = round(float(coord), 4)
+                if x in disputed:
+                    ignored.append({"x": x, "delta": float(delta),
+                                    "published": disputed[x]["published"],
+                                    "evidence": disputed[x]["evidence"]})
+                else:
+                    pointwise.append(abs(float(delta)))
+            value = max(pointwise) if pointwise else float("nan")
+        else:
+            # Legacy path: use max_abs_error directly, no dispute filtering
+            value = block["max_abs_error"]
+            ignored = []
         worst = max(worst, value)
         checks["criteria"][f"{which}_max_abs_error"] = {
             "value": value, "limit": max_error,
-            "points": len(pointwise), "ignored": len(ignored),
+            "points": len(pointwise) if "profiles" in block else 0,
+            "ignored": len(ignored),
             "pass": bool(value <= max_error),
         }
+        # Registered disputes (main)
         if ignored:
             checks["registered_disputes"].extend(
                 [dict(item, component=which) for item in ignored])
+        # Consistent-point criterion (m3195)
+        # When disputes are ignored, use the non-disputed value for consistency
+        if ignored:
+            consistent = value  # already excludes disputed points
+        else:
+            consistent = block.get("max_abs_error_consistent", block["max_abs_error"])
+        checks["criteria"][f"{which}_max_abs_error_consistent"] = {
+            "value": consistent, "limit": max_error,
+            "pass": consistent <= max_error,
+        }
+        for item in block.get("suspect_points", []):
+            excluded.append({"which": which, "coord": item["coord"],
+                             "reference": item["reference"],
+                             "delta": item["delta"]})
     checks["disputes_declared"] = bool(checks["registered_disputes"]) if allow_registered_disputes else True
+    if excluded:
+        checks["excluded_reference_points"] = excluded
     ext = result["u"]["extremum"]
     u_ref, u_got = ext["min_reference"][1], ext["min_computed"][1]
     u_rel = abs(u_got - u_ref) / abs(u_ref)
