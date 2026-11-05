@@ -1,0 +1,163 @@
+{
+ "analytic_identities": {
+  "divergence_identically_zero": true,
+  "stokes_residual_identically_zero": true
+ },
+ "levels": [
+  {
+   "n": 32,
+   "metrics": {
+    "relative_l2_error_u": 0.007610513387767729,
+    "relative_l2_error_v": 0.007341097288080148,
+    "relative_l2_error_p": 0.47832818410123,
+    "relative_l2_error_velocity": 0.007477018905233874,
+    "double_counted_relative_l2_error_u": 0.007511434438917891,
+    "double_counted_relative_l2_error_v": 0.007309134704976137,
+    "double_counted_relative_l2_error_p": 0.4816651631962327,
+    "maximum_absolute_error_u": 0.35509194656467713,
+    "maximum_absolute_error_v": 0.35392383296198915,
+    "maximum_absolute_error_p": 13.011297643361608,
+    "velocity_scale": 94.77308689750743,
+    "maximum_absolute_error_velocity_normalised": 0.003746759319433081,
+    "maximum_discrete_divergence_defect": 0.02556843479919224,
+    "maximum_discrete_divergence_defect_relative": 0.0019308770788094172,
+    "relative_algebraic_residual": 1.960332867381291e-15,
+    "maximum_donor_constraint_residual": 3.3306690738754696e-14,
+    "pressure_gauge_rows_used": 1091,
+    "pressure_gauge_rows": 1,
+    "pressure_sign": "grad(p) as coded",
+    "active_cells": 1352,
+    "fringe_cells": 96,
+    "hole_cells": 88,
+    "unknowns": 4608,
+    "stokes_linear_verified": true,
+    "navier_stokes_verified": false,
+    "strict_local_conservation": false,
+    "error_norm_domain": "Single-cover weighted (1/#covering grids) over ACTIVE cells; double-counted norms also reported",
+    "boundary_condition": "Manufactured exact velocity on every physical face, including the polygonal inner wall",
+    "gauge_note": "One continuity row is replaced by a pressure gauge row; the reported divergence defect is the price",
+    "grid_0_active_cells": 904,
+    "grid_0_u_relative_l2_error": 0.007592487468841895,
+    "grid_0_v_relative_l2_error": 0.007296798674615378,
+    "grid_0_p_relative_l2_error": 0.47618064857567,
+    "grid_1_active_cells": 448,
+    "grid_1_u_relative_l2_error": 0.006251541202899232,
+    "grid_1_v_relative_l2_error": 0.007481678675353379,
+    "grid_1_p_relative_l2_error": 1.4941355611752023
+   }
+  },
+  {
+   "n": 48,
+   "metrics": {
+    "relative_l2_error_u": 0.0035906701048249363,
+    "relative_l2_error_v": 0.003476328754614969,
+    "relative_l2_error_p": 0.41282724665942594,
+    "relative_l2_error_velocity": 0.003533961899331003,
+    "double_counted_relative_l2_error_u": 0.003526162934197005,
+    "double_counted_relative_l2_error_v": 0.003443316481433758,
+    "double_counted_relative_l2_error_p": 0.4129496582532968,
+    "maximum_absolute_error_u": 0.19939371854632526,
+    "maximum_absolute_error_v": 0.24287062339070165,
+    "maximum_absolute_error_p": 18.599538621836825,
+    "velocity_scale": 95.59006188613131,
+    "maximum_absolute_error_velocity_normalised": 0.0025407518166481965,
+    "maximum_discrete_divergence_defect": 0.014811701136178579,
+    "maximum_discrete_divergence_defect_relative": 0.0015839548797183527,
+    "relative_algebraic_residual": 2.7518846692747485e-15,
+    "maximum_donor_constraint_residual": 7.638334409421077e-14,
+    "pressure_gauge_rows_used": 2390,
+    "pressure_gauge_rows": 1,
+    "pressure_sign": "grad(p) as coded",
+    "active_cells": 3120,
+    "fringe_cells": 144,
+    "hole_cells": 192,
+    "unknowns": 10368,
+    "stokes_linear_verified": true,
+    "navier_stokes_verified": false,
+    "strict_local_conservation": false,
+    "error_norm_domain": "Single-cover weighted (1/#covering grids) over ACTIVE cells; double-counted norms also reported",
+    "boundary_condition": "Manufactured exact velocity on every physical face, including the polygonal inner wall",
+    "gauge_note": "One continuity row is replaced by a pressure gauge row; the reported divergence defect is the price",
+    "grid_0_active_cells": 2064,
+    "grid_0_u_relative_l2_error": 0.0035939908985651325,
+    "grid_0_v_relative_l2_error": 0.0034666325531213567,
+    "grid_0_p_relative_l2_error": 0.4122804303193476,
+    "grid_1_active_cells": 1056,
+    "grid_1_u_relative_l2_error": 0.002460180193832742,
+    "grid_1_v_relative_l2_error": 0.0031189075579503523,
+    "grid_1_p_relative_l2_error": 0.5861292790936505
+   }
+  },
+  {
+   "n": 64,
+   "metrics": {
+    "relative_l2_error_u": 0.0021872991850008486,
+    "relative_l2_error_v": 0.0021494779467151532,
+    "relative_l2_error_p": 0.34541610540452805,
+    "relative_l2_error_velocity": 0.0021684710244917003,
+    "double_counted_relative_l2_error_u": 0.0021323603495110987,
+    "double_counted_relative_l2_error_v": 0.0021148238312471215,
+    "double_counted_relative_l2_error_p": 0.3454873342225313,
+    "maximum_absolute_error_u": 0.14767869852671112,
+    "maximum_absolute_error_v": 0.18042940784884642,
+    "maximum_absolute_error_p": 20.167578281439475,
+    "velocity_scale": 95.85621360350929,
+    "maximum_absolute_error_velocity_normalised": 0.0018822922486293671,
+    "maximum_discrete_divergence_defect": 0.009148071081440723,
+    "maximum_discrete_divergence_defect_relative": 0.0012683297837091548,
+    "relative_algebraic_residual": 4.142237013257934e-15,
+    "maximum_donor_constraint_residual": 1.305622276959184e-13,
+    "pressure_gauge_rows_used": 4490,
+    "pressure_gauge_rows": 1,
+    "pressure_sign": "grad(p) as coded",
+    "active_cells": 5624,
+    "fringe_cells": 188,
+    "hole_cells": 332,
+    "unknowns": 18432,
+    "stokes_linear_verified": true,
+    "navier_stokes_verified": false,
+    "strict_local_conservation": false,
+    "error_norm_domain": "Single-cover weighted (1/#covering grids) over ACTIVE cells; double-counted norms also reported",
+    "boundary_condition": "Manufactured exact velocity on every physical face, including the polygonal inner wall",
+    "gauge_note": "One continuity row is replaced by a pressure gauge row; the reported divergence defect is the price",
+    "grid_0_active_cells": 3704,
+    "grid_0_u_relative_l2_error": 0.002190761097624485,
+    "grid_0_v_relative_l2_error": 0.0021428680833180105,
+    "grid_0_p_relative_l2_error": 0.34484721896716214,
+    "grid_1_active_cells": 1920,
+    "grid_1_u_relative_l2_error": 0.0011481276625165608,
+    "grid_1_v_relative_l2_error": 0.001716240592000274,
+    "grid_1_p_relative_l2_error": 0.4953175451292524
+   }
+  }
+ ],
+ "observed_orders": {
+  "u": [
+   1.0837406673716867,
+   0.7151025407239273
+  ],
+  "v": [
+   1.078431198089247,
+   0.6935782149420393
+  ],
+  "p": [
+   0.2124626084606785,
+   0.2572028403171722
+  ]
+ },
+ "negative_controls_n32": {
+  "flipped_pressure_sign": {
+   "relative_l2_error_velocity": 19.188932174586867,
+   "relative_l2_error_p": 8200.104220865356
+  },
+  "no_rhie_chow": {
+   "relative_l2_error_velocity": 0.008173933171033574,
+   "relative_l2_error_p": 15.743117909545697
+  }
+ },
+ "verdict": {
+  "velocity_below_3_percent": true,
+  "pressure_below_3_percent": false,
+  "honest_note": "pressure L2 error 34.5-47.8 %, observed order ~0.2: recorded as an open defect"
+ }
+}
