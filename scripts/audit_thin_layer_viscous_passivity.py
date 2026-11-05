@@ -317,11 +317,13 @@ def figure(rows, damping, gamma, output):
             if xs:
                 ax.plot(xs, ys, styles[correction], color=colors[family], marker='o', ms=3,
                         label=f'{family} / {correction}')
-    ax.set_xscale('log'); ax.set_yscale('symlog', linthresh=1e-9)
+    ax.set_xscale('log')
+    ax.set_yscale('symlog', linthresh=1e-9)
     ax.set_xlabel('cell aspect ratio (in-plane / thickness)')
     ax.set_ylabel('creation fraction  max(0,-$\\lambda_{{min}}$)/$\\lambda_{{max}}$')
     ax.set_title('shear=0.4 passivity envelope')
-    ax.grid(alpha=.3); ax.legend(fontsize=6, ncol=2)
+    ax.grid(alpha=.3)
+    ax.legend(fontsize=6, ncol=2)
 
     ax = axes[1]
     for name, line, color in (('over-relaxed', damping['over-relaxed'], 'C4'),
@@ -336,7 +338,8 @@ def figure(rows, damping, gamma, output):
     ax.set_xlabel('correction damping  $\\eta$')
     ax.set_ylabel('creation rate')
     ax.set_title('damping line (worst failing configuration)')
-    ax.grid(alpha=.3); ax.legend(fontsize=8)
+    ax.grid(alpha=.3)
+    ax.legend(fontsize=8)
 
     ax = axes[2]
     ax.loglog([r['gamma'] for r in gamma['rows']],
@@ -349,7 +352,8 @@ def figure(rows, damping, gamma, output):
     ax.set_xlabel('uniform correction scale  $\\gamma$')
     ax.set_ylabel('creation rate')
     ax.set_title('$\\gamma$ threshold')
-    ax.grid(alpha=.3); ax.legend(fontsize=8)
+    ax.grid(alpha=.3)
+    ax.legend(fontsize=8)
     fig.tight_layout()
     path = Path(output)/'thin-layer-viscous-passivity.png'
     fig.savefig(path, dpi=118)
