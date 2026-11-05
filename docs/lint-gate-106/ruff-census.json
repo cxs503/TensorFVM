@@ -1,0 +1,43 @@
+{
+ "tool": "scripts/audit_ruff_backlog.py",
+ "ruff_version": "ruff 0.15.0",
+ "paths": [
+  "src",
+  "tests",
+  "scripts"
+ ],
+ "check": {
+  "total": 9812,
+  "files_with_findings": 425,
+  "by_rule": {
+   "E702": 7592,
+   "E701": 1851,
+   "F401": 98,
+   "E401": 84,
+   "E731": 69,
+   "F841": 50,
+   "E402": 39,
+   "E741": 20,
+   "F541": 6,
+   "E703": 3
+  },
+  "by_top_level_dir": {
+   "scripts": 5086,
+   "src": 3722,
+   "tests": 1004
+  }
+ },
+ "format": {
+  "would_reformat": 553,
+  "already_formatted": 7,
+  "files_scanned": 560,
+  "first_examples": [
+   "scripts/_diag_cd.py",
+   "scripts/_diag_cyl.py",
+   "scripts/_fuse_geom.py",
+   "scripts/_report_m2699.py",
+   "scripts/_vendor_gmsh/gmsh.py"
+  ]
+ },
+ "green": false
+}
