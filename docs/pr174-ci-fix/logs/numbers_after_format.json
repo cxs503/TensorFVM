@@ -1,0 +1,41 @@
+{
+  "broken_non_monotone": {
+    "asymptotic": false,
+    "band": [
+      0.8533333333333334,
+      1.28
+    ],
+    "convergence": "inconsistent",
+    "extrapolated": 1.0666666666666667,
+    "fallback_reason": "non-monotone",
+    "gci": 0.19999999999999996,
+    "order": NaN,
+    "safety_factor": 3.0
+  },
+  "pure_p1p5_n5": {
+    "asymptotic": false,
+    "band": [
+      0.998780487804878,
+      1.001219512195122
+    ],
+    "convergence": "monotone",
+    "extrapolated": 1.0,
+    "fallback_reason": "none",
+    "gci": 0.001219512195121934,
+    "order": 1.5000000000000249,
+    "safety_factor": 1.25
+  },
+  "pure_p2_n4": {
+    "asymptotic": true,
+    "band": [
+      0.9998474307335531,
+      1.000152569266447
+    ],
+    "convergence": "monotone",
+    "extrapolated": 1.0,
+    "fallback_reason": "none",
+    "gci": 0.00015256926644696258,
+    "order": 2.0000000000000306,
+    "safety_factor": 1.25
+  }
+}
