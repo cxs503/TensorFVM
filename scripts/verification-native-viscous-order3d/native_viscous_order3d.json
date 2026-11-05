@@ -1,0 +1,225 @@
+{
+ "operator": "NativeViscous3D",
+ "viscosity": 1.3,
+ "grids": [
+  4,
+  8,
+  16
+ ],
+ "warps": [
+  0.0
+ ],
+ "analytic_check_finite_difference_relative_error": 8.23828031262646e-06,
+ "affine_traction_relative_error": 1.5372318802502163e-14,
+ "affine_cell_divergence": 6.750155989720952e-14,
+ "truncation": [
+  {
+   "n": 4,
+   "h": 0.25,
+   "warp": 0.0,
+   "cells": 64,
+   "faces": 480,
+   "wall_cells": 56,
+   "field_scale": 43.262816035862365,
+   "l2_global": 3.160868182435565,
+   "linf_global": 6.825587786061819,
+   "l2_interior": 1.204190068151251,
+   "linf_interior": 1.5333443489726146,
+   "l2_wall": 3.3483178636792275,
+   "linf_wall": 6.825587786061819
+  },
+  {
+   "n": 8,
+   "h": 0.125,
+   "warp": 0.0,
+   "cells": 512,
+   "faces": 3456,
+   "wall_cells": 296,
+   "field_scale": 48.40938553954803,
+   "l2_global": 2.547558663443486,
+   "linf_global": 7.952931821162151,
+   "l2_interior": 0.2803220109504611,
+   "linf_interior": 0.4941789414385277,
+   "l2_wall": 3.341960330973716,
+   "linf_wall": 7.952931821162151
+  },
+  {
+   "n": 16,
+   "h": 0.0625,
+   "warp": 0.0,
+   "cells": 4096,
+   "faces": 26112,
+   "wall_cells": 1548,
+   "field_scale": 50.54612994389438,
+   "l2_global": 1.960215619757955,
+   "linf_global": 8.397422660945308,
+   "l2_interior": 0.08791474108678082,
+   "linf_interior": 0.2353580654827592,
+   "l2_wall": 3.18659197979462,
+   "linf_wall": 8.397422660945308
+  }
+ ],
+ "face_traction": [
+  {
+   "n": 4,
+   "h": 0.25,
+   "warp": 0.0,
+   "linf_internal_per_area": 1.182316620809257,
+   "rel_internal_per_area": 0.11529025267781633,
+   "linf_boundary_per_area": 1.8599258603745819,
+   "rel_boundary_per_area": 0.13737999947028995,
+   "wall_normal_derivative_error": 0.4846184458364009,
+   "rel_wall_normal_derivative": 0.061916377553895924,
+   "interior_normal_derivative_error": 0.5744699141323389
+  },
+  {
+   "n": 8,
+   "h": 0.125,
+   "warp": 0.0,
+   "linf_internal_per_area": 0.6098731830906935,
+   "rel_internal_per_area": 0.04564265774893405,
+   "linf_boundary_per_area": 0.9808241468016371,
+   "rel_boundary_per_area": 0.06918273371659064,
+   "wall_normal_derivative_error": 0.22564837136918983,
+   "rel_wall_normal_derivative": 0.02757356379931301,
+   "interior_normal_derivative_error": 0.3523409040404913
+  },
+  {
+   "n": 16,
+   "h": 0.0625,
+   "warp": 0.0,
+   "linf_internal_per_area": 0.31204682998018285,
+   "rel_internal_per_area": 0.02177836781040428,
+   "linf_boundary_per_area": 0.5150840196117553,
+   "rel_boundary_per_area": 0.03554337612394008,
+   "wall_normal_derivative_error": 0.11306844531721656,
+   "rel_wall_normal_derivative": 0.013522191465746732,
+   "interior_normal_derivative_error": 0.18747572418848746
+  }
+ ],
+ "solution": [
+  {
+   "n": 4,
+   "h": 0.25,
+   "warp": 0.0,
+   "cells": 64,
+   "l2_global": 0.037036220063999856,
+   "linf_global": 0.073779489414666,
+   "l2_interior": 0.03532567448556973,
+   "l2_wall": 0.03727417622960925,
+   "linf_wall": 0.073779489414666,
+   "field_scale": 2.199593341784506,
+   "residual": 1.0181251338588442e-15
+  },
+  {
+   "n": 8,
+   "h": 0.125,
+   "warp": 0.0,
+   "cells": 512,
+   "l2_global": 0.010628314061284191,
+   "linf_global": 0.026460425539487065,
+   "l2_interior": 0.008466880047191169,
+   "l2_wall": 0.011961571653326415,
+   "linf_wall": 0.026460425539487065,
+   "field_scale": 2.4996075040577956,
+   "residual": 2.436767612689531e-15
+  },
+  {
+   "n": 16,
+   "h": 0.0625,
+   "warp": 0.0,
+   "cells": 4096,
+   "l2_global": 0.0027938601815221116,
+   "linf_global": 0.008376819632086212,
+   "l2_interior": 0.002338021643724673,
+   "l2_wall": 0.003414109850835288,
+   "linf_wall": 0.008376819632086212,
+   "field_scale": 2.620653602222782,
+   "residual": 5.048961491568958e-15
+  }
+ ],
+ "harmonic_extension": [
+  {
+   "n": 4,
+   "h": 0.25,
+   "warp": 0.0,
+   "cells": 64,
+   "l2_global": 0.3803739945082596,
+   "linf_global": 0.8409844245525491,
+   "l2_interior": 0.7082226451145469,
+   "field_scale": 2.199593341784506,
+   "residual": 1.1184605422469032e-15
+  },
+  {
+   "n": 8,
+   "h": 0.125,
+   "warp": 0.0,
+   "cells": 512,
+   "l2_global": 0.3581940127545778,
+   "linf_global": 0.8699252372668312,
+   "l2_interior": 0.5183338916508913,
+   "field_scale": 2.4996075040577956,
+   "residual": 2.1449365174401092e-15
+  },
+  {
+   "n": 16,
+   "h": 0.0625,
+   "warp": 0.0,
+   "cells": 4096,
+   "l2_global": 0.35223106900944295,
+   "linf_global": 0.8915986542492753,
+   "l2_interior": 0.43569841700013606,
+   "field_scale": 2.620653602222782,
+   "residual": 3.926777357893254e-15
+  }
+ ],
+ "orders": {
+  "warp0.0": {
+   "truncation_l2_global": [
+    0.31120550366991884,
+    0.37810301156215637
+   ],
+   "truncation_l2_interior": [
+    2.1029061889214065,
+    1.6729080352040784
+   ],
+   "truncation_l2_wall": [
+    0.002741884089255309,
+    0.06868030452120409
+   ],
+   "traction_per_area_internal": [
+    1.3368158375551882,
+    1.0674869668010105
+   ],
+   "traction_per_area_wall": [
+    0.9896880568015279,
+    0.9608312983761711
+   ],
+   "wall_normal_derivative": [
+    1.1670353250672412,
+    1.0279567632843756
+   ],
+   "interior_normal_derivative": [
+    0.7052593684680714,
+    0.9102681738831654
+   ],
+   "solution_l2_global": [
+    1.8010240994237479,
+    1.9275810363520232
+   ],
+   "solution_l2_interior": [
+    2.0608147514772814,
+    1.8565421647522269
+   ],
+   "solution_l2_wall": [
+    1.639769508474485,
+    1.8088255766765367
+   ],
+   "harmonic_distance_l2": [
+    0.08667739233574384,
+    0.024219053132159694
+   ]
+  }
+ },
+ "figure": "native_viscous_order3d.png"
+}

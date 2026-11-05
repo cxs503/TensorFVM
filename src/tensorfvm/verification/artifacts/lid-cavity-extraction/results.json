@@ -1,0 +1,339 @@
+{
+ "analytic": {
+  "geometry": [
+   {
+    "n": 32,
+    "h": 0.03125,
+    "v_mid_plane_y": 0.5,
+    "v_mid_plane_is_exact": true,
+    "u_mid_plane_x": 0.5,
+    "u_mid_plane_is_exact": true,
+    "point_count": 32,
+    "first_ordinate": 0.015625,
+    "last_ordinate": 0.984375,
+    "min_ordinate_to_ghia": 0.015625,
+    "worst_point_offset_cells": 0.4984000000000002,
+    "nearest_node_index": [
+     31,
+     30,
+     30,
+     30,
+     29,
+     27,
+     25,
+     15,
+     7,
+     7,
+     5,
+     3,
+     2,
+     2,
+     1
+    ]
+   },
+   {
+    "n": 64,
+    "h": 0.015625,
+    "v_mid_plane_y": 0.5,
+    "v_mid_plane_is_exact": true,
+    "u_mid_plane_x": 0.5,
+    "u_mid_plane_is_exact": true,
+    "point_count": 64,
+    "first_ordinate": 0.0078125,
+    "last_ordinate": 0.9921875,
+    "min_ordinate_to_ghia": 0.0078125,
+    "worst_point_offset_cells": 0.49680000000000035,
+    "nearest_node_index": [
+     62,
+     61,
+     60,
+     60,
+     58,
+     55,
+     51,
+     31,
+     15,
+     14,
+     10,
+     6,
+     4,
+     4,
+     3
+    ]
+   },
+   {
+    "n": 128,
+    "h": 0.0078125,
+    "v_mid_plane_y": 0.5,
+    "v_mid_plane_is_exact": true,
+    "u_mid_plane_x": 0.5,
+    "u_mid_plane_is_exact": true,
+    "point_count": 128,
+    "first_ordinate": 0.00390625,
+    "last_ordinate": 0.99609375,
+    "min_ordinate_to_ghia": 0.00390625,
+    "worst_point_offset_cells": 0.4936000000000007,
+    "nearest_node_index": [
+     124,
+     122,
+     121,
+     120,
+     116,
+     110,
+     103,
+     63,
+     30,
+     29,
+     20,
+     12,
+     9,
+     8,
+     7
+    ]
+   }
+  ],
+  "interpolation": [
+   {
+    "n": 32,
+    "h": 0.03125,
+    "max_abs_error": 3.9426390888719354e-05,
+    "max_relative_error": 0.0001479997207501212,
+    "worst_point_argument": 0.2266,
+    "defective_point_error": 4.128576106815409e-06
+   },
+   {
+    "n": 64,
+    "h": 0.015625,
+    "max_abs_error": 1.2947210862312986e-06,
+    "max_relative_error": 4.86015470582552e-06,
+    "worst_point_argument": 0.0625,
+    "defective_point_error": 2.6526241412097584e-07
+   },
+   {
+    "n": 128,
+    "h": 0.0078125,
+    "max_abs_error": 8.205289520057946e-08,
+    "max_relative_error": 3.0801210312910727e-07,
+    "worst_point_argument": 0.0703,
+    "defective_point_error": 1.807317393659469e-08
+   }
+  ],
+  "observed_order": 4.454195848317177,
+  "index_shift_control": [
+   {
+    "n": 32,
+    "shift_cells": 0.5,
+    "max_abs_error": 0.028903709671807748,
+    "clean_max_abs_error": 3.9426390888719354e-05,
+    "detection_ratio": 733.105643714339
+   },
+   {
+    "n": 32,
+    "shift_cells": 1.0,
+    "max_abs_error": 0.053953931445937936,
+    "clean_max_abs_error": 3.9426390888719354e-05,
+    "detection_ratio": 1368.4724934174787
+   },
+   {
+    "n": 64,
+    "shift_cells": 0.5,
+    "max_abs_error": 0.014939197479489602,
+    "clean_max_abs_error": 1.2947210862312986e-06,
+    "detection_ratio": 11538.544971855625
+   },
+   {
+    "n": 64,
+    "shift_cells": 1.0,
+    "max_abs_error": 0.028922626008683117,
+    "clean_max_abs_error": 1.2947210862312986e-06,
+    "detection_ratio": 22338.885429657832
+   }
+  ],
+  "attribution": {
+   "extraction_relative_error": 0.0001479997207501212,
+   "observed_relative_defect": 0.149,
+   "ratio": 1006.7586563326537,
+   "verdict": "extraction path exonerated: it reproduces a smooth profile to 1.48e-04 relative, 1007x below the 0.149 the ladder records at x/L = 0.9063; the discrepancy belongs to the solution field, so the xfail's 'wall-adjacent extraction defect, not discretisation' hypothesis is refuted"
+  },
+  "ghia_v_abs_max": 0.44993,
+  "observed_relative_defect": 0.149,
+  "ghia_ordinates": [
+   0.9688,
+   0.9609,
+   0.9531,
+   0.9453,
+   0.9063,
+   0.8594,
+   0.8047,
+   0.5,
+   0.2344,
+   0.2266,
+   0.1563,
+   0.0938,
+   0.0781,
+   0.0703,
+   0.0625
+  ]
+ },
+ "live": {
+  "rows": [
+   {
+    "n": 32,
+    "steps": 18000,
+    "seconds": 101.3,
+    "converged": true,
+    "max_divergence": 5.329070518200751e-15,
+    "max_abs_error": 0.07992285571904745,
+    "max_relative_error": 0.17763397799446012,
+    "worst_ordinate": 0.9688,
+    "worst_computed": -0.04153714428095256,
+    "worst_reference": -0.12146,
+    "relative_error_at_0p9063": 0.2669195856314857,
+    "stored_peak_abs_v": 0.4138949943498613,
+    "stored_peak_exceeds_ghia_peak": false,
+    "ordinates_exceeding_ghia_peak": [],
+    "peak_ordinate": 0.859375,
+    "x_grid": [
+     0.015625,
+     0.046875,
+     0.078125,
+     0.109375,
+     0.140625,
+     0.171875,
+     0.203125,
+     0.234375,
+     0.265625,
+     0.296875,
+     0.328125,
+     0.359375,
+     0.390625,
+     0.421875,
+     0.453125,
+     0.484375,
+     0.515625,
+     0.546875,
+     0.578125,
+     0.609375,
+     0.640625,
+     0.671875,
+     0.703125,
+     0.734375,
+     0.765625,
+     0.796875,
+     0.828125,
+     0.859375,
+     0.890625,
+     0.921875,
+     0.953125,
+     0.984375
+    ],
+    "v_profile": [
+     0.05895280083564513,
+     0.13895512022678871,
+     0.1904862211850111,
+     0.2241505221748432,
+     0.24757632220866682,
+     0.2641928095290197,
+     0.2744483920560053,
+     0.27818024942498587,
+     0.2754419712337748,
+     0.2632967859969646,
+     0.24335738460839262,
+     0.2166645093218535,
+     0.1847216072017658,
+     0.149250096907325,
+     0.1118355487320813,
+     0.07368078011206866,
+     0.0355215954356342,
+     -0.0023479273945268596,
+     -0.04001367811396252,
+     -0.0778835946929835,
+     -0.11672674573469895,
+     -0.15775094116341146,
+     -0.20253660631989476,
+     -0.25237555744440204,
+     -0.30632236678006775,
+     -0.35861416898100124,
+     -0.39856935212012645,
+     -0.4138949943498613,
+     -0.3905107791292388,
+     -0.3018689296684141,
+     -0.1697599310172841,
+     -0.04153714428095256
+    ]
+   }
+  ],
+  "ghia_abs_v_max": 0.44993,
+  "reference_table_ii": [
+   [
+    1.0,
+    0.0
+   ],
+   [
+    0.9688,
+    -0.12146
+   ],
+   [
+    0.9609,
+    -0.15663
+   ],
+   [
+    0.9531,
+    -0.19254
+   ],
+   [
+    0.9453,
+    -0.22847
+   ],
+   [
+    0.9063,
+    -0.23827
+   ],
+   [
+    0.8594,
+    -0.44993
+   ],
+   [
+    0.8047,
+    -0.38598
+   ],
+   [
+    0.5,
+    0.05186
+   ],
+   [
+    0.2344,
+    0.30174
+   ],
+   [
+    0.2266,
+    0.30203
+   ],
+   [
+    0.1563,
+    0.28124
+   ],
+   [
+    0.0938,
+    0.22965
+   ],
+   [
+    0.0781,
+    0.2092
+   ],
+   [
+    0.0703,
+    0.19713
+   ],
+   [
+    0.0625,
+    0.1836
+   ],
+   [
+    0.0,
+    0.0
+   ]
+  ]
+ },
+ "figure": true
+}

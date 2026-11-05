@@ -96,6 +96,22 @@ def test_extrema_are_grid_converged_between_n64_and_n128():
         assert abs(v_f - v_c) / abs(v_f) < 0.05, (rey, v_c, v_f)
 
 
+@pytest.mark.xfail(strict=True, reason=(
+    "Documented open question (docs/verification-lid-cavity-ladder/report.md 5.1): at "
+    "Re=400 the v-centreline error grows under refinement (0.115/0.142/0.149 for "
+    "n=32/64/128) while u and both extrema converge. Attribution updated by "
+    "scripts/audit_lid_cavity_v_centreline.py: the extraction path is exonerated -- on "
+    "an analytic staggered field it reproduces the profile to 1.5e-4 relative "
+    "(observed order 4.5 in h, 1000x below the recorded defect, and a half-cell "
+    "sampling error is detected at 100x), while a fresh n=32 run localises the "
+    "largest node error at x/L=0.9688, i.e. beside the right wall. So the defect is "
+    "in the stored solution field next to the wall, not in the extraction. Must be "
+    "resolved, not tolerated."))
+def test_re400_v_centreline_discrepancy_is_still_present_and_unexplained():
+    row = _cases()[(400.0, 64)]
+    assert row["acceptance"]["pass"], row["acceptance"]["criteria"]
+
+
 def test_re400_v_centreline_defect_is_attributed_to_the_reference_table():
     """The ladder's one red row is resolved as a reference-table defect (m3195).
 

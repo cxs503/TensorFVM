@@ -1,12 +1,15 @@
 import json
-from pathlib import Path
 import numpy as np
 import pytest
 from tensorfvm.suboff_validation import drag_comparison, cp_comparison, require_reynolds, require_physical_iterate
+from tests.evidence_support import tracked
 
 
 def cases():
-    return json.loads((Path(__file__).resolve().parents[1] / 'benchmarks/suboff_aff1_validation.json').read_text())['cases']
+    # The AFF-1 validation spec is tracked at the repository root, outside the
+    # sparse development cone; ``tracked`` recovers the HEAD blob instead of
+    # reading a path that only exists in a full checkout.
+    return json.loads(tracked('benchmarks/suboff_aff1_validation.json').read_text())['cases']
 
 
 def test_dimensional_total_force_and_frontal_area_agree_with_reference():

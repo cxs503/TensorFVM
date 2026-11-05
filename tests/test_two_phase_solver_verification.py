@@ -372,3 +372,26 @@ def test_hydrostatic_anchor_is_continuous_at_the_interface():
     rho_face = 0.5 * (1000.0 + 1.0)
     np.testing.assert_allclose(jump, -rho_face * 9.81 * solver.dy, rtol=0,
                                atol=1e-9)
+
+
+def test_capillary_source_is_gated_by_the_switch():
+    """``sigma`` reaches the momentum predictor only when the switch is on.
+
+    Before m2766 the CSF term was never assembled, so ``surface_tension=True``
+    produced exactly the same trajectory as ``surface_tension=False``.  On the
+    merged solver the assembled source is exposed as ``_csf_face_forces()``
+    (m2654 API), which returns ``(None, None)`` when the switch is off or
+    ``sigma == 0`` (single-phase bit-identical guarantee) and non-zero face
+    forces at a curved interface when on.
+    """
+    off, _ = _solver(n=32, gravity=0.0, sigma=0.07, surface_tension=False,
+                     drop_radius=0.2)
+    assert off._csf_face_forces() == (None, None)
+    zero_sigma, _ = _solver(n=32, gravity=0.0, sigma=0.0, surface_tension=True,
+                            drop_radius=0.2)
+    assert zero_sigma._csf_face_forces() == (None, None)
+    on, _ = _solver(n=32, gravity=0.0, sigma=0.07, surface_tension=True,
+                    drop_radius=0.2)
+    f_u, f_v = on._csf_face_forces()
+    assert f_u is not None and f_v is not None
+    assert float(f_v.abs().max()) > 0.0
