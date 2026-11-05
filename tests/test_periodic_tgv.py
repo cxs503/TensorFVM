@@ -158,7 +158,7 @@ def test_published_study_gates_are_consistent():
     assert study['refinement'][0]['pressure_3_percent_passed'] is False
     # Honest limit: the published record states whether the high-Re probe failed.
     limit = study['limit_case']
-    assert limit['expected_failure_observed'] == (not limit['velocity_3_percent_passed'])
+    assert limit['expected_failure_observed'] == (not limit['all_quantities_passed'])
     assert study['negative_control_qualified'] == limit['expected_failure_observed']
     assert study['distributed_supported'] is False
 
@@ -170,3 +170,44 @@ def test_study_numbers_are_reproducible_from_the_module():
     assert smallest['n'] == rerun.n
     assert smallest['velocity_error'] == pytest.approx(rerun.velocity_error, rel=1e-9)
     assert smallest['pressure_error'] == pytest.approx(rerun.pressure_error, rel=1e-9)
+
+def test_negative_control_is_qualified():
+    """The negative control must fail on at least one physical quantity.
+    
+    This test verifies that the verification gate is discriminating: a challenging
+    case (high Re on coarse grid) must fail on pressure or vorticity, proving the
+    3% gate is not vacuous. Velocity alone is nearly exact on the staggered grid,
+    so we check multiple quantities.
+    """
+    # Use a quick study with coarse grids to test the negative control
+    study = tgv.run_study(
+        grids=(8, 16),
+        viscosity_pa_s=0.05,
+        time_end_s=0.5,
+        base_steps_per_unit_time=50,
+        limit_viscosity_pa_s=0.002,
+        limit_steps_per_unit_time=100,
+    )
+    
+    # The negative control must be qualified (i.e., the limit case must fail)
+    assert study['negative_control_qualified'] is True, (
+        "Negative control not qualified: the limit case passed all gates, "
+        "making the verification vacuous"
+    )
+    
+    # The limit case should fail on pressure or vorticity (not just velocity)
+    limit = study['limit_case']
+    assert limit['all_quantities_passed'] is False, (
+        "Limit case passed all quantities; negative control is not discriminating"
+    )
+    
+    # At least one of pressure/vorticity should fail
+    pressure_failed = not limit['pressure_3_percent_passed']
+    vorticity_failed = not limit['vorticity_3_percent_passed']
+    assert pressure_failed or vorticity_failed, (
+        "Neither pressure nor vorticity failed in the limit case; "
+        "the negative control is not challenging enough"
+    )
+    
+    # The expected failure should be observed
+    assert limit['expected_failure_observed'] is True
