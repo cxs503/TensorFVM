@@ -139,6 +139,18 @@ def test_reference_agreement_accepts_a_multi_grid_study():
     assert reference_agreement(study, inside + 10*study.gci)['band_covered'] is False
 
 
+def test_fallback_reason_is_echoed_for_multi_grid_studies():
+    """An N-grid study carries the same fallback qualifier as a three-grid one."""
+    spacings = _ladder(4)
+    converged = multi_grid_order(spacings, power_law_series(1., .5, 2., spacings),
+                                 theory_order=2.)
+    assert converged.fallback_reason == 'none'
+    broken = multi_grid_order(spacings, (1., 2., 3., 2.5), theory_order=2.)
+    assert broken.convergence == 'inconsistent'
+    assert broken.fallback_reason == 'non-monotone'
+    assert reference_agreement(broken, 1.)['fallback_reason'] == 'non-monotone'
+
+
 def test_theory_order_mismatch_flags_non_asymptotic():
     spacings = _ladder(4)
     values = power_law_series(1., .5, 2., spacings)
