@@ -173,3 +173,38 @@ def test_observed_order_agrees_on_the_finest_triple():
     assert abs(triple-2.) < 1e-9
     study = multi_grid_order(spacings, values, theory_order=2.)
     assert abs(study.order-triple) < 1e-6
+
+def test_fallback_reason_names_the_rule_that_fired():
+    """The qualifier is derived from the fall-back path, in the RefinementStudy vocabulary."""
+    spacings = _ladder(5)
+    converged = multi_grid_order(spacings, power_law_series(1., .5, 2., spacings), theory_order=2.)
+    assert converged.fallback_reason == 'none'
+    assert reference_agreement(converged, converged.extrapolated)['fallback_reason'] == 'none'
+
+    broken = multi_grid_order(spacings, (1., 2., 3., 2.5, 1.), theory_order=2.)
+    assert broken.convergence == 'inconsistent' and broken.monotone is False
+    assert broken.fallback_reason == 'non-monotone'
+    agree = reference_agreement(broken, broken.extrapolated)
+    assert agree['fallback_reason'] == 'non-monotone'
+    assert agree['band_covered'] is True          # the band, not the order, is what is claimed
+
+
+def test_infeasible_fit_of_a_monotone_ladder_is_an_implausible_order(monkeypatch):
+    """Defensive branch: a fall-back must always name its rule.
+
+    No real monotone ladder reached this branch in a 400-ladder fuzz (the order
+    minimiser always returns a finite fit when the values are monotone), so the
+    invariant ``fallback => fallback_reason != 'none'`` is pinned white-box.
+    """
+    from tensorfvm.verification import multi_grid as mg
+
+    def unusable(h, v, p):
+        return float('nan'), float('nan'), np.full(np.shape(h), np.nan), math.inf
+
+    monkeypatch.setattr(mg, '_linear_fit', unusable)
+    spacings = _ladder(4)
+    study = mg.multi_grid_order(spacings, power_law_series(1., .5, 2., spacings), theory_order=2.)
+    assert study.monotone is True and study.convergence == 'inconsistent'
+    assert study.fallback_reason == 'implausible-order'
+    assert study.safety_factor == 3.0 and study.order_used == 2.
+    assert reference_agreement(study, study.extrapolated)['fallback_reason'] == 'implausible-order'
