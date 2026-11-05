@@ -1,0 +1,253 @@
+{
+ "viscosity": 1.3,
+ "levels": [
+  4,
+  8
+ ],
+ "warps": [
+  0.0,
+  2.0
+ ],
+ "gate_order": 1.5,
+ "seconds": 30.4,
+ "families": {
+  "0.0": {
+   "cubic": [
+    {
+     "n": 4,
+     "h": 0.25,
+     "warp": 0.0,
+     "cells": 64,
+     "faces": 480,
+     "wall_cells": 56,
+     "field_scale": 43.262816035862365,
+     "samples_min": 45,
+     "samples_max": 58,
+     "face_gradient_nnz": 27072,
+     "l2_global": 0.7161311467000688,
+     "linf_global": 1.4826723326614877,
+     "l2_interior": 1.1413820810246773,
+     "linf_interior": 1.4826723326614877,
+     "l2_wall": 0.6324552496091743,
+     "linf_wall": 1.2943350389534454,
+     "l2_wall_wall_faces_only": 1.079929901402845,
+     "rel_l2_global": 0.016553040516512785,
+     "rel_l2_wall": 0.014618910823671432,
+     "closure": "cubic"
+    },
+    {
+     "n": 8,
+     "h": 0.125,
+     "warp": 0.0,
+     "cells": 512,
+     "faces": 3456,
+     "wall_cells": 296,
+     "field_scale": 48.40938553954803,
+     "samples_min": 42,
+     "samples_max": 100,
+     "face_gradient_nnz": 407232,
+     "l2_global": 0.1757883783045741,
+     "linf_global": 0.5619668497119805,
+     "l2_interior": 0.23725072193314092,
+     "linf_interior": 0.5619668497119805,
+     "l2_wall": 0.11124917443294347,
+     "linf_wall": 0.25164082985760716,
+     "l2_wall_wall_faces_only": 0.27000973977889176,
+     "rel_l2_global": 0.0036312871222247563,
+     "rel_l2_wall": 0.002298091024974041,
+     "closure": "cubic"
+    }
+   ],
+   "two_point": [
+    {
+     "n": 4,
+     "h": 0.25,
+     "warp": 0.0,
+     "cells": 64,
+     "faces": 480,
+     "wall_cells": 56,
+     "field_scale": 43.262816035862365,
+     "l2_global": 3.160868182435565,
+     "linf_global": 6.825587786061819,
+     "l2_interior": 1.204190068151251,
+     "linf_interior": 1.5333443489726146,
+     "l2_wall": 3.3483178636792275,
+     "linf_wall": 6.825587786061819,
+     "l2_wall_wall_faces_only": 3.071869333728492,
+     "l2_interior_wall_faces_only": 0.0,
+     "closure": "two_point",
+     "samples_min": 0,
+     "samples_max": 0,
+     "face_gradient_nnz": 0,
+     "rel_l2_global": 0.07306200733247205,
+     "rel_l2_wall": 0.07739482008992818
+    },
+    {
+     "n": 8,
+     "h": 0.125,
+     "warp": 0.0,
+     "cells": 512,
+     "faces": 3456,
+     "wall_cells": 296,
+     "field_scale": 48.40938553954803,
+     "l2_global": 2.547558663443486,
+     "linf_global": 7.952931821162151,
+     "l2_interior": 0.2803220109504611,
+     "linf_interior": 0.4941789414385277,
+     "l2_wall": 3.341960330973716,
+     "linf_wall": 7.952931821162151,
+     "l2_wall_wall_faces_only": 3.265954787782946,
+     "l2_interior_wall_faces_only": 0.0,
+     "closure": "two_point",
+     "samples_min": 0,
+     "samples_max": 0,
+     "face_gradient_nnz": 0,
+     "rel_l2_global": 0.05262530468109864,
+     "rel_l2_wall": 0.06903538009676868
+    }
+   ]
+  },
+  "2.0": {
+   "cubic": [
+    {
+     "n": 4,
+     "h": 0.25,
+     "warp": 2.0,
+     "cells": 64,
+     "faces": 480,
+     "wall_cells": 52,
+     "field_scale": 44.175148061459126,
+     "samples_min": 45,
+     "samples_max": 58,
+     "face_gradient_nnz": 27072,
+     "l2_global": 0.7206887873725596,
+     "linf_global": 1.580836258169213,
+     "l2_interior": 1.0610080313653496,
+     "linf_interior": 1.580836258169213,
+     "l2_wall": 0.6160084367583564,
+     "linf_wall": 1.1941854144112944,
+     "l2_wall_wall_faces_only": 1.185631459162495,
+     "rel_l2_global": 0.01631434910800738,
+     "rel_l2_wall": 0.013944683012750253,
+     "closure": "cubic"
+    },
+    {
+     "n": 8,
+     "h": 0.125,
+     "warp": 2.0,
+     "cells": 512,
+     "faces": 3456,
+     "wall_cells": 271,
+     "field_scale": 48.922516519691506,
+     "samples_min": 42,
+     "samples_max": 100,
+     "face_gradient_nnz": 407232,
+     "l2_global": 0.19449427857991947,
+     "linf_global": 0.5857620608787848,
+     "l2_interior": 0.24468668653344045,
+     "linf_interior": 0.5857620608787848,
+     "l2_wall": 0.13499896162491773,
+     "linf_wall": 0.3785799945862928,
+     "l2_wall_wall_faces_only": 0.32509819267950985,
+     "rel_l2_global": 0.003975557522713182,
+     "rel_l2_wall": 0.002759444346461207,
+     "closure": "cubic"
+    }
+   ],
+   "two_point": [
+    {
+     "n": 4,
+     "h": 0.25,
+     "warp": 2.0,
+     "cells": 64,
+     "faces": 480,
+     "wall_cells": 61,
+     "field_scale": 44.175148061459126,
+     "l2_global": 3.262327383330719,
+     "linf_global": 6.707054243457655,
+     "l2_interior": 1.194723372840377,
+     "linf_interior": 1.4241504059853638,
+     "l2_wall": 3.3310654657726477,
+     "linf_wall": 6.707054243457655,
+     "l2_wall_wall_faces_only": 3.2092741021898505,
+     "l2_interior_wall_faces_only": 0.0,
+     "closure": "two_point",
+     "samples_min": 0,
+     "samples_max": 0,
+     "face_gradient_nnz": 0,
+     "rel_l2_global": 0.0738498347258955,
+     "rel_l2_wall": 0.07540586986009122
+    },
+    {
+     "n": 8,
+     "h": 0.125,
+     "warp": 2.0,
+     "cells": 512,
+     "faces": 3456,
+     "wall_cells": 361,
+     "field_scale": 48.922516519691506,
+     "l2_global": 2.6335695222228135,
+     "linf_global": 8.905692453972183,
+     "l2_interior": 0.335829875718544,
+     "linf_interior": 0.6210517226572806,
+     "l2_wall": 3.1288322486953453,
+     "linf_wall": 8.905692453972183,
+     "l2_wall_wall_faces_only": 3.132848568606748,
+     "l2_interior_wall_faces_only": 0.0,
+     "closure": "two_point",
+     "samples_min": 0,
+     "samples_max": 0,
+     "face_gradient_nnz": 0,
+     "rel_l2_global": 0.05383144019508464,
+     "rel_l2_wall": 0.0639548508800846
+    }
+   ]
+  }
+ },
+ "orders": {
+  "0.0/cubic": {
+   "l2_global": [
+    2.0263841212656013
+   ],
+   "l2_interior": [
+    2.266297436546761
+   ],
+   "l2_wall": [
+    2.5071687731563674
+   ]
+  },
+  "0.0/two_point": {
+   "l2_global": [
+    0.31120550366991884
+   ],
+   "l2_interior": [
+    2.1029061889214065
+   ],
+   "l2_wall": [
+    0.002741884089255309
+   ]
+  },
+  "2.0/cubic": {
+   "l2_global": [
+    1.8896486835582427
+   ],
+   "l2_interior": [
+    2.116428065611388
+   ],
+   "l2_wall": [
+    2.1900017994853114
+   ]
+  },
+  "2.0/two_point": {
+   "l2_global": [
+    0.3088820226983569
+   ],
+   "l2_interior": [
+    1.8308741296584436
+   ],
+   "l2_wall": [
+    0.09035939668955593
+   ]
+  }
+ }
+}
