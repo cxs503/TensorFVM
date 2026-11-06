@@ -23,7 +23,6 @@ FAIL):
 """
 import math
 
-import pytest
 import torch
 
 from tensorfvm.two_phase_solver import GridConfig, TwoPhaseConfig, TwoPhaseSolver

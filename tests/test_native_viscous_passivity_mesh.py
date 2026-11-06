@@ -12,8 +12,8 @@ import unittest
 import numpy as np
 
 from tensorfvm.verification.native_viscous_passivity import (
-    analytic_anchor, compact, counterexample_sweep, creation_threshold, layered_mesh,
-    mosaic_pairs, passivity_margin, seven_point_flux_operator, uniform_cartesian)
+    analytic_anchor, compact, creation_threshold, layered_mesh,
+    mosaic_pairs, passivity_margin, seven_point_flux_operator)
 
 
 class AnalyticAnchor(unittest.TestCase):

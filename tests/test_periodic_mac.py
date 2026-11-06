@@ -1,6 +1,5 @@
 """Staggered momentum/energy invariants, solver failure and hardware scope."""
 import json
-from pathlib import Path
 import pytest
 import torch
 from tensorfvm.periodic_mac import PeriodicMACConfig,PeriodicMACSolver

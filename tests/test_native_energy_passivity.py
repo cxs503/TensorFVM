@@ -6,8 +6,6 @@ two-cell counterexample.  These tests pin the quantified verdict instead of the
 wish: where passivity holds (angle boundary), that it cannot be restored by
 re-weighting, and what the strictly passive alternative costs in consistency.
 """
-import numpy as np
-import pytest
 
 from tensorfvm.verification.native_energy import (affine_consistency, correction_family_scan,
                                                  passivity_audit, passivity_boundary,

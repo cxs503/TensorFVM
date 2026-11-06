@@ -1,7 +1,6 @@
-import copy
 import numpy as np
 import pytest
-from tensorfvm.fourth_round_audit import local_case,pop,feedback_case,unqualified
+from tensorfvm.fourth_round_audit import local_case,feedback_case
 
 def fixture():
     f=np.ones((9,2,2));return dict(initial={'f':f.tolist()},final={'f':f.tolist(),'history':[dict(wall_impulse_on_solid=[0,0],conversion_impulse_on_solid=[0,0],global_mass_rescale=False,maximum_transfer_radius=4)]},restart_bitwise=True)
