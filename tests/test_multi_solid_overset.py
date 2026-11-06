@@ -1,5 +1,4 @@
 """Reject invalid multiple-body domains before interpolation or area integration."""
-import numpy as np
 import pytest
 from tensorfvm.overset import annular_grid,cartesian_grid,circle_polygon,build_overset
 

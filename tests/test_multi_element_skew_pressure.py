@@ -16,8 +16,7 @@ import unittest
 import torch
 
 from tensorfvm.verification.multi_element_skew import (face_reconstruction_exactness,
-                                                       force_conservation, gradient_error,
-                                                       operator_consistency, order_study,
+                                                       force_conservation, operator_consistency, order_study,
                                                        solver_for, solver_step_defect,
                                                        wall_normal_removal)
 

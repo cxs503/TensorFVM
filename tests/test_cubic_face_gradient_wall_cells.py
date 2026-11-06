@@ -21,7 +21,6 @@ order better than the interior needs.
 from functools import lru_cache
 
 import numpy as np
-import pytest
 
 from tensorfvm.verification import cubic_wall_truncation as cw
 from tensorfvm.verification import native_order3d as study

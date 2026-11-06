@@ -19,12 +19,10 @@ Three claims are pinned, in the order they matter:
 """
 from __future__ import annotations
 
-import math
 
 import numpy as np
-import pytest
 
-from tensorfvm.overset import ACTIVE, annular_grid, build_overset, cartesian_grid, circle_polygon
+from tensorfvm.overset import annular_grid, build_overset, cartesian_grid, circle_polygon
 from tensorfvm.overset_stokes import (
     DIVERGENCE_IDENTICALLY_ZERO,
     STOKES_RESIDUAL_IDENTICALLY_ZERO,
