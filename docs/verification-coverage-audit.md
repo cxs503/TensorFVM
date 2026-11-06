@@ -100,7 +100,7 @@ TensorFVM has extensive verification infrastructure covering major solver compon
 
 ### High Priority
 
-1. **Pressure convergence order**: ABC verification shows pressure converging at ~1.5 order instead of expected 2nd order. Mechanism not fully understood.
+1. **Pressure convergence order**: ABC verification shows pressure converging at ~1.5 order instead of expected 2nd order. **Mechanism resolved** (2026-11-05): the squared error is carried by the shell of cells adjacent to the boundary (99.8% at n=3 falling to 78.7% at n=12) and the stencil available there is first order while the interior stencil is second order; a composite power-law model fitted on coarser grids reproduces the finest-grid error to 5.7%, so no additional interior defect is required. Fixing it means a higher-order near-boundary pressure/gradient closure, which is not implemented. See `docs/verification-native-abc-pressure-order/report.md`, `scripts/audit_native_abc_pressure_order3d.py` and `tests/test_native_abc_pressure_order_attribution.py`.
 
 2. **Wall-adjacent viscous truncation**: O(1) error at wall-adjacent cells. Mechanism identified (wall-flux deficit) but not yet fixed.
 
@@ -134,7 +134,7 @@ pytest tests/test_native_hybrid_stokes3d.py \
 
 ## Recommendations
 
-1. **Immediate**: Document pressure convergence mechanism in ABC verification. Is the 1.5 order expected for this discretization, or is there a fixable defect?
+1. **Done**: pressure convergence mechanism documented in `docs/verification-native-abc-pressure-order/report.md`; open follow-up is a higher-order near-boundary gradient closure and an n=16/24 extension.
 
 2. **Short-term**: Investigate wall-flux deficit mechanism. Can the one-sided wall flux be improved without breaking energy stability?
 
