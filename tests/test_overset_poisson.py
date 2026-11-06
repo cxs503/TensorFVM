@@ -1,7 +1,7 @@
 """Actual simultaneous donor-constrained FV diffusion, not analytic field fill."""
 import numpy as np
 import pytest
-from tensorfvm.overset import cartesian_grid,annular_grid,circle_polygon,build_overset,ACTIVE,FRINGE
+from tensorfvm.overset import cartesian_grid,annular_grid,circle_polygon,build_overset,ACTIVE
 from tensorfvm.overset_poisson import solve_overset_poisson
 
 

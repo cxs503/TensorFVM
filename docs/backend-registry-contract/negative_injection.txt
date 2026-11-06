@@ -1,0 +1,80 @@
+[1] RED (good) :: duplicate-name guard removed (register_backend)
+    selector: tests/test_backend_registry_contract.py::BackendRegistryContractTests::test_duplicate_registration_requires_explicit_replace
+    pytest rc=1
+    | =============================== warnings summary ===============================
+    | =========================== short test summary info ============================
+    | FAILED tests/test_backend_registry_contract.py::BackendRegistryContractTests::test_duplicate_registration_requires_explicit_replace
+    | 1 failed, 1 warning in 2.36s
+[2] RED (good) :: duplicate-name guard ignores replace=False (register_backend)
+    selector: tests/test_backend_registry_contract.py::BackendRegistryContractTests::test_duplicate_registration_requires_explicit_replace
+    pytest rc=1
+    | =============================== warnings summary ===============================
+    | =========================== short test summary info ============================
+    | FAILED tests/test_backend_registry_contract.py::BackendRegistryContractTests::test_duplicate_registration_requires_explicit_replace
+    | 1 failed, 1 warning in 2.82s
+[3] RED (good) :: unknown-name error downgraded to KeyError (get_backend)
+    selector: tests/test_backend_registry_contract.py::BackendRegistryContractTests::test_unknown_name_raises_configuration_friendly_valueerror
+    pytest rc=1
+    | =============================== warnings summary ===============================
+    | =========================== short test summary info ============================
+    | FAILED tests/test_backend_registry_contract.py::BackendRegistryContractTests::test_unknown_name_raises_configuration_friendly_valueerror
+    | 1 failed, 1 warning in 2.71s
+[4] RED (good) :: blank-name guard weakened to a non-str check (register_backend)
+    selector: tests/test_backend_registry_contract.py::BackendRegistryContractTests::test_registration_rejects_blank_names_without_mutation
+    pytest rc=1
+    | =============================== warnings summary ===============================
+    | =========================== short test summary info ============================
+    | FAILED tests/test_backend_registry_contract.py::BackendRegistryContractTests::test_registration_rejects_blank_names_without_mutation
+    | 4 failed, 1 warning in 2.33s
+[5] RED (good) :: required_mesh_masks guard removed (register_backend)
+    selector: tests/test_backend_registry_contract.py::BackendRegistryContractTests::test_invalid_specifications_are_rejected_and_never_registered
+    pytest rc=1
+    | =================================== FAILURES ===================================
+    | =============================== warnings summary ===============================
+    | =========================== short test summary info ============================
+    | 2 failed, 1 passed, 1 warning, 16 subtests passed in 2.86s
+[6] RED (good) :: cylinder/uses_cylinder consistency guard removed (register_backend)
+    selector: tests/test_backend_registry_contract.py::BackendRegistryContractTests::test_invalid_specifications_are_rejected_and_never_registered
+    pytest rc=1
+    | =================================== FAILURES ===================================
+    | =============================== warnings summary ===============================
+    | =========================== short test summary info ============================
+    | 7 failed, 1 passed, 1 warning, 11 subtests passed in 2.70s
+[7] RED (good) :: backend names silently normalised on write (register_backend)
+    selector: tests/test_backend_registry_contract.py::BackendRegistryContractTests::test_names_are_stored_and_looked_up_verbatim
+    pytest rc=1
+    | =============================== warnings summary ===============================
+    | =========================== short test summary info ============================
+    | FAILED tests/test_backend_registry_contract.py::BackendRegistryContractTests::test_names_are_stored_and_looked_up_verbatim
+    | 1 failed, 1 warning in 2.40s
+[8] RED (good) :: SimpleSolver factory hook disabled (solver.__new__)
+    selector: tests/test_backend_registry_contract.py::BackendRegistryContractTests::test_registered_factory_takes_over_the_simple_solver_entry_point
+    pytest rc=1
+    | =============================== warnings summary ===============================
+    | =========================== short test summary info ============================
+    | FAILED tests/test_backend_registry_contract.py::BackendRegistryContractTests::test_registered_factory_takes_over_the_simple_solver_entry_point
+    | 1 failed, 1 warning in 2.47s
+[9] RED (good) :: SimpleSolver factory hook ignores subclasses (solver.__new__)
+    selector: tests/test_backend_registry_contract.py::BackendRegistryContractTests::test_subclasses_bypass_the_registry_factory_hook
+    pytest rc=1
+    | =============================== warnings summary ===============================
+    | =========================== short test summary info ============================
+    | FAILED tests/test_backend_registry_contract.py::BackendRegistryContractTests::test_subclasses_bypass_the_registry_factory_hook
+    | 1 failed, 1 warning in 2.46s
+[10] RED (good) :: build_mesh skips the missing-factory guard
+    selector: tests/test_backend_registry_contract.py::BackendRegistryContractTests::test_build_mesh_reports_missing_and_unknown_mesh_backends
+    pytest rc=1
+    | =============================== warnings summary ===============================
+    | =========================== short test summary info ============================
+    | FAILED tests/test_backend_registry_contract.py::BackendRegistryContractTests::test_build_mesh_reports_missing_and_unknown_mesh_backends
+    | 1 failed, 1 warning in 3.02s
+[11] RED (good) :: residual_length fallback to reference_length dropped (SolverConfig)
+    selector: tests/test_backend_registry_contract.py::BackendRegistryContractTests::test_reference_length_fallback_chain_uses_registry_rules
+    pytest rc=1
+    | =============================== warnings summary ===============================
+    | =========================== short test summary info ============================
+    | FAILED tests/test_backend_registry_contract.py::BackendRegistryContractTests::test_reference_length_fallback_chain_uses_registry_rules
+    | 1 failed, 1 warning in 2.35s
+[baseline] contract suite rc=0 GREEN (good)
+
+MUTATION PROOF PASSED: 11 guards, all negative cases red

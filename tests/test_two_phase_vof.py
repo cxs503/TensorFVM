@@ -11,7 +11,6 @@ Tests cover:
 """
 
 import torch
-import pytest
 
 from tensorfvm.two_phase_vof import (
     VOFTransport,
@@ -75,7 +74,6 @@ class TestVOFVolumeConservation:
         u = torch.full((ny, nx + 1), 1.0, dtype=torch.float64)
         v = torch.full((ny + 1, nx), 1.0, dtype=torch.float64)
 
-        init_vol = float(alpha.sum()) * dx * dy
         dt = 0.4 * dx  # CFL < 1
         for _ in range(50):
             alpha = vof.advect(alpha, u, v, dt=dt)
@@ -289,7 +287,6 @@ class TestInterfaceGeometry:
 
         # Smooth interface (avoid sharp steps)
         y = (torch.arange(ny, dtype=torch.float64) + 0.5) * dy
-        x = (torch.arange(nx, dtype=torch.float64) + 0.5) * dx
         # 2D alpha: smooth step in y, constant in x
         alpha = 0.5 * (1 - torch.tanh((y.reshape(-1, 1).expand(ny, nx) - 0.5) / (3 * dy)))
 

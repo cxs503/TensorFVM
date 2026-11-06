@@ -4,13 +4,10 @@ These tests need no mesh generator, so they run everywhere (the previous only
 coverage lived inside ``gmsh``-gated tests).  Closed forms: a uniformly sheared
 grid has ``nonorthogonality == arctan(gamma)`` and vanishing internal skewness.
 """
-import math
 import numpy as np
 import pytest
 from tensorfvm.verification.mesh_quality_audit import (
-    GATE_DEGREES, NOISE_DEG, audit, curved_channel, gate_flip_angle,
-    independent_metrics, inverted_cell_control, inverted_face_control,
-    rotate, shear_closed_form)
+    GATE_DEGREES, NOISE_DEG, audit, curved_channel, independent_metrics, rotate, shear_closed_form)
 from tensorfvm.mesh_quality import mesh_quality
 
 

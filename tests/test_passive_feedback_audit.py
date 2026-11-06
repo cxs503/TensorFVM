@@ -1,8 +1,7 @@
-import copy
 import numpy as np
 import pytest
 from tensorfvm.passive_feedback_audit import energy,case
-from tensorfvm.fourth_round_audit import unqualified,require
+from tensorfvm.fourth_round_audit import unqualified
 
 def uniform():
     weights=np.array([4/9]+[1/9]*4+[1/36]*4);f=weights[:,None,None]*np.ones((9,4,4))

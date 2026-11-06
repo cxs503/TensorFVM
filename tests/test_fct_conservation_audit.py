@@ -14,7 +14,6 @@ attribution:
   gate is meaningful: upwind is conservative to machine precision and the
   FCT-limited scheme is conservative to 1e-6..1e-9 (converging) and bounded.
 """
-import pytest
 
 from tensorfvm.verification import fct_conservation_audit as fca
 

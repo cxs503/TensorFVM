@@ -43,7 +43,7 @@ def test_plane_outside_mesh_has_no_fake_projected_polygons():
 
 
 def test_plot_uses_supplied_wall_face_pressure_and_marks_unqualified(tmp_path,monkeypatch):
-    import csv,json
+    import csv
     from dataclasses import replace
     mesh=mixed_mesh()
     mesh=replace(mesh,patch_labels=np.where(mesh.neighbor<0,'wall','internal'))

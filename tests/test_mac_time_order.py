@@ -21,7 +21,6 @@ from tensorfvm.verification.mac_time_order import (
     TemporalStudyConfig,
     estimator_analytic_check,
     observed_orders,
-    relative_difference,
     richardson_order,
     run_midpoint,
     scaled_time_steps,

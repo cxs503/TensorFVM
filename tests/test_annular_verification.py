@@ -8,12 +8,10 @@ governing ODE and the no-slip conditions are proven on an independently
 re-derived profile in 30-digit arithmetic, and the volumetric flow rate is
 independently quadratured from the closed form.
 """
-import math
 
-import numpy as np
 import pytest
 
-from tensorfvm.annular import AnnularConfig, analytic_flow, solve
+from tensorfvm.annular import AnnularConfig
 from tensorfvm.verification.annular import (
     GATE,
     flow_rate_audit,
