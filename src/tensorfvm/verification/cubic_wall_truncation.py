@@ -25,12 +25,42 @@ manufactured field, same viscosity, same wall-cell mask, same measure
 :class:`NativeCubicFaceGradient3D` instead of :class:`NativeViscous3D`.  Nothing
 in the solver is modified; this is reconstruction + measurement only.
 """
+import copy
+
 import numpy as np
 
 from ..native_cubic_gradient3d import NativeCubicFaceGradient3D
 from . import native_order3d as _order
 
 MU = 1.3
+OPERATORS = {}
+
+#: How the prescribed wall data is allowed (or not) to enter the face gradient.
+#: Only the first mode is a closure; the other three are wrong-handling
+#: controls, kept as named modes so tests and audits cannot drift apart.
+HANDLINGS = ('all_wall_data', 'no_dirichlet_data', 'sign_flipped',
+             'one_axis_only')
+
+
+def cubic_operator(n, warp=0.0):
+    """Mesh and cubic operator, built once per refined family.
+
+    Stencil assembly dominates the runtime of the corner study (tens of
+    seconds at ``n = 8``), and the operator is read-only, so it is cached and
+    shared between studies, tests and audits.
+    """
+    key = (int(n), float(warp))
+    if key not in OPERATORS:
+        mesh = _order.hex_box(n, warp)
+        OPERATORS[key] = (mesh, NativeCubicFaceGradient3D(mesh, mesh.neighbor < 0))
+    return OPERATORS[key]
+
+
+def wall_axes(mesh, n, layers=1.5):
+    """Number of box faces (0..3) whose wall layer contains the cell centre."""
+    half = layers/(2.0*n)
+    c = mesh.cell_centers
+    return ((c < half) | (c > 1.0 - half)).sum(axis=1)
 
 
 def wall_mask(mesh, n, layers=1.5):
@@ -70,6 +100,87 @@ def cell_divergence(mesh, flux):
     return total/mesh.cell_volumes[:, None]
 
 
+def wrong_handling(operator, mode='all_wall_data'):
+    """The cubic operator with one wall/corner rule broken on purpose.
+
+    Only ``boundary_response`` is replaced (on a shallow copy, so the cached
+    operator is untouched): the cell part of the stencil is shared, which
+    isolates how the prescribed wall data enters the face gradient.
+
+    ``no_dirichlet_data`` drops it entirely (the one-sided extrapolation the
+    default operator suffers from), ``sign_flipped`` subtracts it where it must
+    be added, and ``one_axis_only`` keeps the wall data of a single face
+    direction per cell, i.e. a corner cell silently ignores its second and
+    third wall face.
+    """
+    if mode not in HANDLINGS:
+        raise ValueError(f'unknown handling {mode!r}; expected one of {HANDLINGS}')
+    if mode == 'all_wall_data':
+        return operator
+    mesh = operator.mesh
+    fixed = mesh.neighbor < 0
+    matrices = [m.tocsr().copy() for m in operator.boundary_response]
+    if mode == 'no_dirichlet_data':
+        matrices = [m*0.0 for m in matrices]
+    elif mode == 'sign_flipped':
+        matrices = [-m for m in matrices]
+    else:
+        axis = np.argmax(np.abs(mesh.area_vectors), axis=1)
+        faces = np.where(fixed)[0]
+        lowest = {}
+        for face in faces:
+            owner = int(mesh.owner[face])
+            lowest[owner] = min(lowest.get(owner, 3), int(axis[face]))
+        dropped = np.array([face for face in faces
+                            if axis[face] != lowest[int(mesh.owner[face])]], int)
+        pruned = []
+        for matrix in matrices:
+            matrix = matrix.tolil()
+            matrix[:, dropped] = 0.0
+            pruned.append(matrix.tocsr())
+        matrices = pruned
+    shim = copy.copy(operator)
+    shim.boundary_response = matrices
+    return shim
+
+
+def corner_study(n, warp=0.0, mode='all_wall_data', values=None, viscosity=MU):
+    """Cell divergence error split by wall layer: corner / face-only / interior.
+
+    ``corner`` are the cells within one layer of two or three box faces (box
+    edges and box corners), ``face`` the ones within one layer of exactly one
+    box face, ``interior`` the rest.  The pooled ``l2_wall`` of
+    :func:`truncation_study` averages the corner cells away -- they are 27 % of
+    the layer at ``n = 8`` -- so a corner-only defect hides there and shows up
+    here.
+    """
+    mesh, base = cubic_operator(n, warp)
+    operator = wrong_handling(base, mode)
+    if values is None:
+        cell_values = _order.manufactured(mesh.cell_centers)
+        face_values = _order.manufactured(mesh.face_centers)
+        exact = _order.divergence_of_stress(mesh.cell_centers, viscosity)
+    else:
+        cell_values, face_values, exact = values(mesh)
+    tensor = face_gradient_tensor(operator, cell_values, face_values)
+    flux = np.einsum('fij,fj->fi', face_traction(tensor, viscosity), mesh.area_vectors)
+    error = np.linalg.norm(cell_divergence(mesh, flux) - exact, axis=1)
+    axes = wall_axes(mesh, n)
+    scale = max(float(np.linalg.norm(exact, axis=1).max()), 1.0)  # affine control: div tau == 0
+    row = dict(n=n, h=1.0/n, warp=warp, mode=mode, cells=int(len(mesh.cells)),
+               faces=int(len(mesh.owner)), field_scale=scale,
+               n_corner=int((axes >= 2).sum()), n_face=int((axes == 1).sum()),
+               n_interior=int((axes == 0).sum()),
+               rel_l2_global=float(np.sqrt(np.mean(error**2))/scale))
+    for name, mask in (('corner', axes >= 2), ('face', axes == 1),
+                       ('interior', axes == 0)):
+        l2 = float(np.sqrt(np.mean(error[mask]**2)))
+        row['l2_'+name] = l2
+        row['linf_'+name] = float(error[mask].max())
+        row['rel_'+name] = l2/scale
+    return row
+
+
 def truncation_study(n, warp=0.0, viscosity=MU, values=None):
     """Cell divergence error with the cubic face gradient, interior vs wall cells.
 
@@ -77,9 +188,8 @@ def truncation_study(n, warp=0.0, viscosity=MU, values=None):
     :mod:`~tensorfvm.verification.native_order3d`; any smooth field with an
     analytic ``div tau`` (:func:`affine_study`) can be substituted.
     """
-    mesh = _order.hex_box(n, warp)
+    mesh, operator = cubic_operator(n, warp)
     fixed = mesh.neighbor < 0
-    operator = NativeCubicFaceGradient3D(mesh, fixed)
     if values is None:
         cell_values = _order.manufactured(mesh.cell_centers)
         face_values = _order.manufactured(mesh.face_centers)
