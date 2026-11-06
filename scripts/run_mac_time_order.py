@@ -10,7 +10,6 @@ full checkout is evidence nobody can re-derive.  Every number in the JSON comes 
 import argparse
 import hashlib
 import json
-import math
 from pathlib import Path
 
 import torch

@@ -32,7 +32,7 @@ import time
 
 import numpy as np
 
-from .core import Metric, relative_error
+from .core import Metric
 
 # Production defaults of AnnularConfig; kept explicit so the report is reproducible.
 RI, RO, DP_DZ, MU = 0.05, 0.10, 0.01, 0.001

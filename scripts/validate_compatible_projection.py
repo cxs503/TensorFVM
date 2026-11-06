@@ -1,5 +1,7 @@
 """Read-only actual solver exercise plus independent NumPy face operators."""
-import json,hashlib,argparse
+import json
+import hashlib
+import argparse
 from dataclasses import asdict
 from pathlib import Path
 import numpy as np
@@ -19,7 +21,7 @@ def exercise(device,output):
     c=Cylinder3DConfig(nx=32,ny=24,nz=4,max_steps=3,time_step=.001,pressure_iterations=500,device=device);s=Cylinder3DSolver(c);fluid=array(s.mesh.fluid);spacing=(s.mesh.dx,s.mesh.dy,s.mesh.dz);rng=np.random.default_rng(724);rows=[]
     for label,p in [('random',rng.normal(size=fluid.shape)),('checkerboard',(-1.)**np.indices(fluid.shape).sum(0))]:
         p=np.where(fluid,p,0);pt=torch.tensor(p,dtype=torch.float64,device=device);grad=np_grad(p,fluid,*spacing);actual=tuple(array(g) for g in s._face_gradient(pt));op=-np_div(grad,fluid,*spacing);image=array(s._pressure_operator(pt));error=max(float(np.max(abs(g-a))) for g,a in zip(grad,actual));operror=float(np.max(abs(op-image)));assert error<1e-12 and operror<1e-12;assert np.linalg.norm(image)>0;rows.append(dict(case=label,gradient_error=error,operator_error=operror,operator_norm=float(np.linalg.norm(image))))
-    initial=sum(array(s.face_velocity[0])[...,-1].ravel())-sum(array(s.face_velocity[0])[...,0].ravel());steps=[]
+    steps=[]
     for _ in range(3):
         record=s.step();faces=tuple(array(f) for f in s.face_velocity);div=np_div(faces,fluid,*spacing);actual=array(s._face_divergence(s.face_velocity));g=np_grad(array(s.pressure),fluid,*spacing);pred=tuple(array(t) for t in s.last_tentative_faces);correction_error=max(float(np.max(abs(after-before+c.time_step/c.density*grad))) for after,before,grad in zip(faces,pred,g));assert correction_error<1e-12;assert np.max(abs(div-actual))<1e-12
         x,y,z=faces;mx=fluid[...,:-1]&fluid[...,1:];my=fluid[:,:-1]&fluid[:,1:];mz=fluid&np.roll(fluid,-1,axis=0);wall=max(np.max(abs(x[...,1:-1][~mx]),initial=0),np.max(abs(y[:,1:-1][~my]),initial=0),np.max(abs(z[~mz]),initial=0));assert wall==0

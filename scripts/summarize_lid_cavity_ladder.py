@@ -108,7 +108,6 @@ def tables(summary: dict) -> dict[str, str]:
              "| Re | n = 32 | n = 64 | n = 128 | steps / (n = 32) | steps ∝ Re^? |",
              "|---|---|---|---|---|---|"]
     by = {(c["reynolds"], c["n"]): c for c in cases}
-    grids = sorted({c["n"] for c in cases})
     reys = sorted({c["reynolds"] for c in cases})
     for rey in reys:
         cells = []

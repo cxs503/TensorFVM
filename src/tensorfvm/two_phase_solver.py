@@ -29,7 +29,6 @@ Design principles
 
 from __future__ import annotations
 
-import math
 from dataclasses import dataclass
 
 import torch
@@ -259,7 +258,6 @@ class TwoPhaseSolver:
 
         Returns the max and RMS of |dp/dy + ρ·g| · dx (per-face residual).
         """
-        c = self.config
         g = self.tp.gravity
         rho_v = self._rho_face_v()
         # Discrete pressure gradient at v-faces: dp/dy ≈ (p_N - p_S) / dy
@@ -334,7 +332,7 @@ class TwoPhaseSolver:
 
     def _momentum_u(self) -> tuple:
         """Build u-momentum: diagonal, 4 neighbour coeffs, pressure, source, active."""
-        c, dx, dy = self.config, self.dx, self.dy
+        dx, dy = self.dx, self.dy
         field = self.u
         rho_face = self._rho_face_u()
         mu_face = self._mu_face_u()
@@ -384,7 +382,7 @@ class TwoPhaseSolver:
 
     def _momentum_v(self) -> tuple:
         """Build v-momentum with gravity body force."""
-        c, dx, dy = self.config, self.dx, self.dy
+        dx, dy = self.dx, self.dy
         field = self.v
         rho_face = self._rho_face_v()
         mu_face = self._mu_face_v()

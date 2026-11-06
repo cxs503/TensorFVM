@@ -26,8 +26,8 @@ Resolution ny=12 (nx=3ny, Re_H=1, Ub=5e-4 m/s):
 | simplec-no-floor | 0.8 | 1.0 | 49 | yes | 0.00634 | 0.00e+00 | 9.29e-15 | all pass |
 
 - Fixed-point agreement against `simple-default` (peak component difference / Ub):
-  - simple-tuned: u 6.685e-08, v 8.666e-09
   - simple-default: u 0.000e+00, v 0.000e+00
+  - simple-tuned: u 6.685e-08, v 8.666e-09
   - simplec-a07-p10: u 2.080e-06, v 3.272e-07
   - simplec-a08-p10: u 6.684e-08, v 3.695e-08
   limit 0.0001, passed=True.

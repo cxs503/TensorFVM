@@ -404,7 +404,7 @@ def score_profiles(coords, values, reynolds: float, which: str) -> dict:
     (:data:`tensorfvm.lid_cavity_reference.SUSPECT_ENTRIES`).  The two are reported
     side by side so an excluded point can never be mistaken for a fixed solver.
     """
-    from .lid_cavity_reference import consistent_points, suspect_entries
+    from .lid_cavity_reference import suspect_entries
 
     pts = table(reynolds, which)
     targets = [p[0] for p in pts]

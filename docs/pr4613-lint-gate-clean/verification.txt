@@ -1,0 +1,29 @@
+# m4613 verification log (ruff 0.15.0, python 3.11.6, torch 2.7.1)
+
+## ruff --statistics BEFORE repair (main @ d3ffecc9)
+99 F401 unused-import
+44 F841 unused-variable
+20 E401 multiple-imports-on-one-line
+1 E402 module-import-not-at-top-of-file
+1 F541 f-string-missing-placeholders
+Found 165 errors
+
+## ruff check src tests scripts AFTER repair
+All checks passed!
+rc=0
+
+## ruff check --statistics AFTER repair
+
+## python -m compileall -q src tests scripts
+ok
+
+## pytest -q --timeout=1800 -n 48 (full suite)
+tests/test_external_flow.py::ExternalFlowTests::test_direct_and_krylov_advance_same_fields
+  /root/tp-agent/work/m4613/src/tensorfvm/sparse_simple.py:68: UserWarning: Sparse CSR tensor support is in beta state. If you miss a functionality in the sparse tensor support, please submit a feature request to https://github.com/pytorch/pytorch/issues. (Triggered internally at /data/ci_env/slave_loongson_torch/jenkins_server/guozz/pytorch/aten/src/ATen/SparseCsrTensorImpl.cpp:53.)
+    M=torch.sparse_csr_tensor(torch.as_tensor(A.indptr,device=device),torch.as_tensor(A.indices,device=device),torch.as_tensor(A.data,**opts),size=A.shape,check_invariants=True)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+1424 passed, 37 skipped, 2 xfailed, 58 warnings, 50 subtests passed in 440.77s (0:07:20)
+
+## targeted artifact guards
+19 passed (tests/test_simplec_artifacts.py + tests/test_simplec_mobility.py)

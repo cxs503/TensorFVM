@@ -3,7 +3,11 @@
 
 Requires prior mesh gating and decomposition. A stopped run is never a pass.
 """
-import argparse,json,re,subprocess,sys
+import argparse
+import json
+import re
+import subprocess
+import sys
 from pathlib import Path
 # Executed as ``python scripts/run_openfoam_parallel.py`` from a source
 # checkout, the package is not installed; resolve it from the sibling src/

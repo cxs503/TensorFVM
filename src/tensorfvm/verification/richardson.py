@@ -148,7 +148,7 @@ def richardson_gci(fine, medium, coarse, spacings, *, theory_order=None,
         raise ValueError("safety factor must be finite and >= 1")
     if theory_order is not None and not (math.isfinite(theory_order) and theory_order > 0.):
         raise ValueError("theory order must be finite and positive")
-    r21, r32 = h[1]/h[0], h[2]/h[1]
+    r21 = h[1]/h[0]
     p = observed_order(h, v)
     limit = ORDER_CAP_ABS if theory_order is None else ORDER_CAP_FACTOR*theory_order
     if p != p:

@@ -107,7 +107,6 @@ def decompose_gaussian_drift(n=256):
     low_update = alpha - dt / cell_volume * transport._net_flux(flux_x, donor_x, flux_y, donor_y)
     clamp_clip = float(((low_update - 1.0).clamp_min(0.0).sum()
                         + (0.0 - low_update).clamp_min(0.0).sum()))
-    net = transport._net_flux(flux_x, donor_x, flux_y, donor_y)
     boundary_flux = float(
         (flux_x[:, -1] * donor_x[:, -1] - flux_x[:, 0] * donor_x[:, 0]).sum()
         + (flux_y[-1, :] * donor_y[-1, :] - flux_y[0, :] * donor_y[0, :]).sum())

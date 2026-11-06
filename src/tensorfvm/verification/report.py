@@ -97,8 +97,7 @@ def render_study(output, summary):
 
 def write_report(output, summary):
     """A printable HTML, English manuscript PDF, Chinese report and editable TeX."""
-    rows=summary["runs"];regular=[r for r in rows if r["role"]!="negative-control"]
-    controls=[r for r in rows if r["role"]=="negative-control"]
+    rows=summary["runs"];
     tables=[]
     for r in rows:
         pressure="pressure_gradient" if r["case"]=="poiseuille" else "pressure_l2"
@@ -306,7 +305,7 @@ def comparison_report(output,summary):
     matched=[]
     for lbm in rows:
         n=lbm["config"]["nx"];f=next(r for r in fvm if r["config"]["nx"]==n)
-        lf=np.load(output/lbm["directory"]/"fields.npz");ff=np.load(output/f["directory"]/"fields.npz")
+        lf=np.load(output/lbm["directory"]/"fields.npz")
         # Slice a single plane to avoid crediting replication in z as extra physical resolution.
         fbytes=(3*n*n+n*n)*8
         lbytes=9*n*n*8

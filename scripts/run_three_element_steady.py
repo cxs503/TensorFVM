@@ -1,12 +1,15 @@
 """Steady multi-element flow with exact sparse solves, live metrics and restart."""
-import argparse,json,time,shutil
+import argparse
+import json
+import time
+import shutil
 from pathlib import Path
 from dataclasses import replace,asdict
 import numpy as np
 import torch
 from tensorfvm.solver import SolverConfig
 from tensorfvm.multi_element_flow import MultiElementFlowSolver
-from tensorfvm.benchmark_30p30n import export_result,write_gmsh_geo
+from tensorfvm.benchmark_30p30n import export_result
 from tensorfvm.verification.core import provenance,sha,write_json,artifact_manifest
 
 
