@@ -1,0 +1,35 @@
+# Verification log — PR #188 CI repair (m4691)
+# host: node099 (loongarch64), 2026-11-06T03:02:20Z
+
+## repaired head under test
+5189073b ci: 切换 self-hosted ci-loong64 同池运行（与 agent 开发共用环境）
+
+## 1. workflow parses, no code-level matrix references
+test | name: test (3.11) | runs-on: ci-loong64 | continue-on-error: None
+lint | name: lint (advisory) | runs-on: ci-loong64 | continue-on-error: True
+matrix.* references outside comments: 0
+
+## 2. isolated build failure on the pool pip index (defect 3)
+##    first reproduction (2026-11-06T~02:50Z), recorded verbatim:
+#   ERROR: Could not find a version that satisfies the requirement setuptools>=84 (from versions: none)
+#   ERROR: No matching distribution found for setuptools>=84
+#   ERROR: Failed to build 'file:///root/tp-agent/work/m4691' when installing build dependencies
+##    retried later: rc=0 -- the pool mirror is intermittent, so the repair does not rely on it.
+
+## 3. same install with --no-build-isolation (repair)
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+rc=0
+
+## 4. lint gate (advisory)
+Found 55 errors.
+[*] 50 fixable with the `--fix` option (5 hidden fixes can be enabled with the `--unsafe-fixes` option).
+
+## 5. full test suite on the pool host
+1426 passed, 37 skipped, 2 xfailed, 16 warnings, 50 subtests passed in 588.12s (0:09:48)
+
+## 6. diff scope
+ .github/workflows/ci.yml | 71 ++++++++++++++++++++++++++++++------------------
+ 1 file changed, 45 insertions(+), 26 deletions(-)
+
+## 7. retry of the isolated build (documents the intermittency above)
+ISO_RC=0  (isolated build succeeded on retry; first run failed as quoted in section 2)
