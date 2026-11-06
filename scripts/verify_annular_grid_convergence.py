@@ -14,7 +14,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import math
 import os
 from pathlib import Path
 import sys
@@ -26,7 +25,7 @@ import torch
 
 torch.set_num_threads(1)
 
-from tensorfvm.annular import AnnularConfig, analytic_flow, analytic_velocity  # noqa: E402
+from tensorfvm.annular import AnnularConfig, analytic_velocity  # noqa: E402
 from tensorfvm.verification.annular_convergence import study  # noqa: E402
 
 
@@ -63,11 +62,6 @@ def figure(report, path):
     r, u, _ = _fd_annular_profile(config, 1201)
     ax.plot(r * 1e3, analytic_velocity(r, config), "k-", lw=2, label="closed form (backend)")
     ax.plot(r * 1e3, u, "r--", lw=1, label="independent 2nd-order FD BVP")
-    finest = rows[-1]
-    centre = np.linalg.norm(
-        np.array(np.meshgrid(
-            np.linspace(config.inner_radius_m, config.outer_radius_m, finest["grid"][1] + 1),
-            np.linspace(0, 2 * math.pi, finest["grid"][0] + 1), indexing="ij"))[0], axis=0)
     ax.set_xlabel("radius r (mm)")
     ax.set_ylabel("axial velocity u (m/s)")
     ax.set_title("Exact profile for the benchmark (G = 0.01 Pa/m, mu = 1 mPa s)")

@@ -1,14 +1,13 @@
 """Matched CPU/CUDA correctness and synchronized repeated runtime evidence."""
 import argparse
 from dataclasses import asdict
-import json
 import math
 from pathlib import Path
 import statistics
 import time
 import numpy as np
 import torch
-from .core import sha,write_json,provenance,artifact_manifest,evaluate,Metric
+from .core import sha,write_json,provenance,artifact_manifest,evaluate
 from .engineering_audit import annular_metrics
 from .extended_cases import exact_velocity,exact_pressure,analytic_metrics
 from .lbm import load_lbm

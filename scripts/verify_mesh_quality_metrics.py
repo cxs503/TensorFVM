@@ -7,12 +7,11 @@ the report table is never transcribed by hand.
 import argparse
 import hashlib
 import json
-import math
 from pathlib import Path
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-from tensorfvm.verification.mesh_quality_audit import GATE_DEGREES, audit, shear_closed_form
+from tensorfvm.verification.mesh_quality_audit import GATE_DEGREES, audit
 
 
 def figure(evidence, path):

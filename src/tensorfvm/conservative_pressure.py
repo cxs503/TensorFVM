@@ -42,7 +42,7 @@ class ConservativePressureGradient:
     def _geometry(self):
         if self._geometry_operators is not None:
             return self._geometry_operators
-        o,ni,f=host(self.o),host(self.ni),host(self.f);oi=o[f]
+        o,ni,f=host(self.o),host(self.ni),host(self.f)
         nf=len(o);index=np.arange(nf);w=host(self._face_owner_weights())
         H=sparse.coo_matrix((np.r_[np.ones(nf),-np.ones(len(ni))],(np.r_[o,ni],np.r_[index,index[f]])),shape=(self.count,nf)).tocsr()
         I=sparse.coo_matrix((np.r_[w,1-w[f]],(np.r_[index,index[f]],np.r_[o,ni])),shape=(nf,self.count)).tocsr()

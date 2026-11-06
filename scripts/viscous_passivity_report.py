@@ -23,9 +23,8 @@ import matplotlib.pyplot as plt
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / 'src'))
 
 from tensorfvm.verification.native_energy import (
-    affine_consistency, correction_family_scan, passivity_audit,
-    passivity_boundary, random_shear_survey, two_point_control,
-    two_tetrahedra, skew_sweep, CORRECTIONS,
+    affine_consistency, correction_family_scan, passivity_boundary, random_shear_survey, two_point_control,
+    two_tetrahedra, skew_sweep,
 )
 
 

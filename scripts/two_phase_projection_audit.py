@@ -5,7 +5,6 @@ figure.  Every number quoted in ``docs/two-phase-projection-audit.md`` comes
 from this script.
 """
 import json
-import math
 from pathlib import Path
 
 import matplotlib

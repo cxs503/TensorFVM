@@ -4,7 +4,7 @@ Actual scalar equations on polygonal grids; no fluid pressure/velocity claim.
 """
 from dataclasses import dataclass
 import numpy as np
-from scipy.sparse import coo_matrix,diags,block_diag
+from scipy.sparse import coo_matrix,block_diag
 from scipy.sparse.linalg import spsolve
 from .overset import ACTIVE,HOLE,FRINGE
 
@@ -59,7 +59,7 @@ def solve_manufactured_diffusion(conn):
             if boundary[i]:bc[i]=coefficients[:,len(nb):]@exact_value(np.array(boundary[i]))
         shape=(len(state),len(state));gx.append(coo_matrix((xx,(rows,cols)),shape=shape).tocsr());gy.append(coo_matrix((yy,(rows,cols)),shape=shape).tocsr());constant.append(bc)
     Gx,Gy=block_diag(gx,format='csr'),block_diag(gy,format='csr');bc=np.concatenate(constant)
-    ro=[];co=[];val=[];rhs=np.zeros(N);flux_rows=[];flux_cols=[];flux_data=[];physical=[]
+    ro=[];co=[];val=[];rhs=np.zeros(N);physical=[]
     for k,(g,state,faces) in enumerate(zip(grids,states,face_sets)):
         for o,n,cf,S in faces:
             if state[o]!=ACTIVE and (n<0 or state[n]!=ACTIVE):continue
@@ -70,7 +70,6 @@ def solve_manufactured_diffusion(conn):
             a=np.dot(S,S)/projection;T=S-a*d
             oi=offsets[k]+o;ni=offsets[k]+n if n>=0 else -1
             lam=np.dot(cf-g.centers[o],S)/projection if n>=0 else 0.
-            gradient=(1-lam)*np.array([oi]) # weights assembled below
             q= a*(coo_matrix(([1.,-1.],([0,0],[oi,ni])),shape=(1,N)).tocsr()) if n>=0 else coo_matrix(([a],([0],[oi])),shape=(1,N)).tocsr()
             q-=T[0]*((1-lam)*Gx[oi]+lam*Gx[ni]) if n>=0 else T[0]*Gx[oi]
             q-=T[1]*((1-lam)*Gy[oi]+lam*Gy[ni]) if n>=0 else T[1]*Gy[oi]

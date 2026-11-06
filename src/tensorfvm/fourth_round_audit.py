@@ -1,5 +1,6 @@
 """Independent NumPy checks of raw solver evidence; no external solver imports."""
-import hashlib,json
+import hashlib
+import json
 from pathlib import Path
 import numpy as np
 C=np.array([[0,0],[1,0],[0,1],[-1,0],[0,-1],[1,1],[-1,1],[-1,-1],[1,-1]],float)

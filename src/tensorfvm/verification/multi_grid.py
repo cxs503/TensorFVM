@@ -238,7 +238,6 @@ def multi_grid_order(spacings, values, *, theory_order=None, order_tolerance=.2,
         C = float("nan")
         p = float("nan")
         stderr = float("nan")
-        res = np.full(h.shape, np.nan)
         ss = math.inf
     else:
         convergence = "monotone"

@@ -1,15 +1,12 @@
 """Large conforming-wall annular benchmark and independently checked wall law."""
 import argparse
-from dataclasses import asdict
-import json
 import math
 from pathlib import Path
-import time
 import numpy as np
 import torch
 from .core import Metric,evaluate,save_run,write_json,provenance,sha,artifact_manifest,metric_value
 from .engineering_audit import annular_metrics,audit
-from ..annular import AnnularConfig,solve,analytic_velocity,analytic_flow
+from ..annular import AnnularConfig,solve,analytic_flow
 from ..wall_functions import wall_traction,u_plus_at_y_plus
 
 

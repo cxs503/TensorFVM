@@ -24,7 +24,6 @@ Acceptance gate: ``|dp/(sigma/R) - 1| < 3 %``.
 """
 import argparse
 import json
-import math
 from pathlib import Path
 
 import torch

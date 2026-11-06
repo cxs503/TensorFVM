@@ -6,7 +6,6 @@ import hashlib
 from pathlib import Path
 import time
 import numpy as np
-from scipy.sparse.linalg import eigsh
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt

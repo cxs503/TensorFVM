@@ -27,7 +27,7 @@ def main():
             tick=time.perf_counter();m,s,exact,tau,low,high,g=slip_couette_solver(n,ns=algorithm=='newton')
             if algorithm=='newton':s.initialize_stokes();r=s.solve_newton(tolerance=1e-10)
             else:r=s.solve(algorithm=algorithm,tolerance=1e-10,max_iterations=6000,relaxation=a.relaxation,pressure_relaxation=1.)
-            area=np.linalg.norm(m.area_vectors,axis=1);wall=low|high
+            area=np.linalg.norm(m.area_vectors,axis=1)
             robin_defect=r['total_traction_integrated']+r['robin_reaction_integrated']-area[:,None]*g
             slip=r['face_velocity'].copy();slip[high,0]-=1.
             slip_power=float(np.einsum('fi,fij,fj,f->',slip,s.viscous.robin_coefficient,slip,area))

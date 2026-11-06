@@ -18,8 +18,7 @@ class NewtonSaMixin:
 
     def sa_jacobian(self,q):
         H,I,Gp,G,Bp=operators(self);nf=len(self.o);n=self.count
-        o=array(self.o);ni=array(self.ni);f=array(self.f);fixed=array(self.mesh.boundary&~self.mesh.masks['outlet']);ids=np.arange(nf);oi=o[f]
-        B=sparse.coo_matrix((np.r_[-np.ones(f.sum()),np.ones(f.sum()),-np.ones(fixed.sum())],(np.r_[ids[f],ids[f],ids[fixed]],np.r_[oi,ni,o[fixed]])),shape=(nf,n)).tocsr()
+        fixed=array(self.mesh.boundary&~self.mesh.masks['outlet'])
         c=self.config;sigma=2/3;cb1=.1355;cb2=.622;kappa=.41;cw1=cb1/kappa**2+(1+cb2)/sigma
         wall=self._no_slip_faces();out=self.mesh.masks['outlet']
         gamma=self._interpolate(c.density*(self.kinematic_viscosity+q.clamp_min(0))/sigma);gamma[wall]=c.viscosity/sigma;gamma[out]=0
@@ -35,7 +34,7 @@ class NewtonSaMixin:
         matrix-=sum((sparse.diags(array(2*c.density*self.volume*cb2/sigma*grad[:,a]))@G[a] for a in (0,1)),start=sparse.csr_matrix((n,n)))
         vg=self._gradient(self.velocity);vorticity=(vg[:,1,0]-vg[:,0,1]).abs();d2=self.wall_distance.square()
         def local(z):
-            nu=z.clamp_min(0);chi=nu/self.kinematic_viscosity;fv1=chi**3/(chi**3+7.1**3);fv2=1-chi/(1+chi*fv1);st=self.sa_stilde(vorticity,nu);r=(nu/(st*kappa**2*d2)).clamp(max=10);g=r+.3*(r**6-r);fw=g*((1+2.**6)/(g**6+2.**6))**(1/6)
+            nu=z.clamp_min(0);st=self.sa_stilde(vorticity,nu);r=(nu/(st*kappa**2*d2)).clamp(max=10);g=r+.3*(r**6-r);fw=g*((1+2.**6)/(g**6+2.**6))**(1/6)
             destruction=c.density*self.volume*cw1*fw*nu/d2
             return destruction*z-c.density*self.volume*cb1*st*nu,destruction
         with torch.enable_grad():

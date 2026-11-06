@@ -9,7 +9,6 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.collections import PolyCollection
 from tensorfvm.native_hybrid_scalar3d import NativeHybridScalar3D
-from tensorfvm.native_hybrid_sst3d import NativeHybridSSTTransport3D
 from tensorfvm.native_manufactured3d import exact_boundary_velocity_means,volume_weighted_error
 from tensorfvm.native_sections3d import cell_section_polygons
 from tensorfvm.verification.native_hybrid_pressure import pressure_mesh
