@@ -2,7 +2,6 @@
 import importlib.util
 from dataclasses import replace
 from pathlib import Path
-import numpy as np
 import pytest
 import torch
 from tensorfvm.verification.external_flow import configuration

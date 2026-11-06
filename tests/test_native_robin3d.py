@@ -1,8 +1,6 @@
 import numpy as np
 import pytest
-from tensorfvm.native_robin3d import tangential_friction
 from tensorfvm.native_hybrid_stokes3d import NativeHybridStokes3D
-from tensorfvm.native_hybrid_ns3d import NativeHybridNavierStokes3D
 from tensorfvm.native_hybrid_viscous3d import NativeHybridViscous3D
 from tensorfvm.verification.native_hybrid_flow import channel_mesh
 

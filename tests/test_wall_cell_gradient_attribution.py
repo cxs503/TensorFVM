@@ -24,7 +24,6 @@ from functools import lru_cache
 from pathlib import Path
 
 import numpy as np
-import pytest
 
 from tensorfvm.native_viscous3d import NativeViscous3D
 from tensorfvm.verification import face_lsq3d as fl

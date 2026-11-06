@@ -1,5 +1,4 @@
 import hashlib
-from pathlib import Path
 import numpy as np
 import pytest
 from tensorfvm.suboff_geometry import radius,suboff_radius_profile,RADIUS_OVER_LENGTH,SOURCE_SHA256
@@ -30,7 +29,7 @@ def test_archived_source_sha_and_exact_numpy_port():
 
 
 def test_actual_generated_mesh_is_tetra_body_fitted(tmp_path):
-    gmsh=pytest.importorskip('gmsh')
+    pytest.importorskip('gmsh')
     from tensorfvm.suboff_mesh import generate_suboff_mesh
     result=generate_suboff_mesh(tmp_path/'suboff.msh',wall_size=.075,far_size=.6,stations=25)
     assert result['element_types']==[4]

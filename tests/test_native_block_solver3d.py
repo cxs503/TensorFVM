@@ -2,7 +2,6 @@ import numpy as np
 import pytest
 pytest.importorskip('pyamg')
 from tensorfvm.verification.native_hybrid_ns import potential_solver
-from tensorfvm.verification.native_hybrid_flow import channel_solver
 from tensorfvm.native_hybrid_stokes3d import NativeHybridStokes3D
 from tensorfvm.verification.native_hybrid_pressure import pressure_mesh
 

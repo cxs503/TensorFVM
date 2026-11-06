@@ -1,5 +1,4 @@
 """Verify physical no-slip wall identities and curved-wall consistency."""
-from pathlib import Path
 import json
 import numpy as np
 import torch

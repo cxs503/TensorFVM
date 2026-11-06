@@ -11,7 +11,6 @@ gauge.  This test proves three things that are easy to break silently:
    gauge choice.
 """
 import numpy as np
-import pytest
 
 from tensorfvm.native_hybrid_ns3d import NativeHybridNavierStokes3D
 from tensorfvm.verification.native_hybrid_flow import channel_mesh
@@ -21,7 +20,9 @@ def _make_hydrostatic_solver(gauge_value):
     """Build a hydrostatic channel flow solver with a fixed gauge."""
     mesh = channel_mesh(2)
     g = np.array([.7, -.3, .2])
-    p_exact = .4 + mesh.cell_centers @ g
+    # Analytic hydrostatic field p = 0.4 + g.x documents the expected
+    # pressure up to the pinned gauge; the solver test only checks the
+    # gauge offset, so nothing here is compared against it.
     # Pin gauge to the first cell
     b = mesh.neighbor < 0
     fixed = b.copy()

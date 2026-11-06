@@ -1,5 +1,4 @@
 import json
-import numpy as np
 import pytest
 from tensorfvm.suboff_validation import drag_comparison, cp_comparison, require_reynolds, require_physical_iterate
 from tests.evidence_support import tracked

@@ -46,7 +46,6 @@ def _make_mock_mesh():
     n_faces = 32
     vertices = np.array([[0.5, np.cos(2*np.pi*i/n_faces)*0.1, np.sin(2*np.pi*i/n_faces)*0.1] for i in range(n_faces)])
     faces = np.array([[i, (i+1)%n_faces, (i+n_faces//2)%n_faces] for i in range(n_faces)])
-    neighbor = np.full(n_faces, -1, dtype=int)
     patch_labels = np.array(['wall'] * n_faces)
     face_centers = vertices.mean(axis=1)  # Approximate
     return SimpleNamespace(
