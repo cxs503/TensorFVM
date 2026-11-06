@@ -1,0 +1,119 @@
+{
+ "grids": [
+  3,
+  6,
+  12
+ ],
+ "amplitude": 0.5,
+ "wavenumber": 0.7,
+ "nu": 0.1,
+ "rho": 1.0,
+ "shear": [
+  [
+   1.0,
+   0.18,
+   0.12
+  ],
+  [
+   0.0,
+   1.0,
+   0.2
+  ],
+  [
+   0.0,
+   0.0,
+   1.0
+  ]
+ ],
+ "stokes": [
+  {
+   "n": 3,
+   "cells": 27,
+   "convection": false,
+   "converged": true,
+   "velocity": 0.304132073585032,
+   "pressure": 23.379622572270886,
+   "boundary_velocity": 0.29133151481037556,
+   "boundary_pressure": 23.381556279815573,
+   "continuity_residual": 2.4505693844171093e-16
+  },
+  {
+   "n": 6,
+   "cells": 216,
+   "convection": false,
+   "converged": true,
+   "velocity": 0.08756823022854647,
+   "pressure": 8.849266663096424,
+   "boundary_velocity": 0.061175974818137455,
+   "boundary_pressure": 9.21035167021492,
+   "interior_velocity": 0.12977504341309148,
+   "interior_pressure": 5.904390766565568,
+   "continuity_residual": 3.824730892781588e-16,
+   "pressure_order": 1.4016218305634605,
+   "velocity_order": 1.7962185103274964
+  },
+  {
+   "n": 12,
+   "cells": 1728,
+   "convection": false,
+   "converged": true,
+   "velocity": 0.024279260501630588,
+   "pressure": 2.859943481638082,
+   "boundary_velocity": 0.013511022548957037,
+   "boundary_pressure": 3.3115250270323595,
+   "interior_velocity": 0.029687535390040827,
+   "interior_pressure": 2.0236021734990395,
+   "continuity_residual": 3.546699909295355e-16,
+   "pressure_order": 1.6295712676427494,
+   "velocity_order": 1.8506830740821298,
+   "interior_pressure_order": 1.5448625117125925
+  }
+ ],
+ "full_ns": [
+  {
+   "n": 3,
+   "cells": 27,
+   "convection": true,
+   "converged": true,
+   "velocity": 0.3218115558370983,
+   "pressure": 24.722960718681982,
+   "boundary_velocity": 0.3065689463078165,
+   "boundary_pressure": 24.693428834555842,
+   "continuity_residual": 9.410657377958987e-13
+  },
+  {
+   "n": 6,
+   "cells": 216,
+   "convection": true,
+   "converged": true,
+   "velocity": 0.08842699713756359,
+   "pressure": 9.07977091816151,
+   "boundary_velocity": 0.06137760059135498,
+   "boundary_pressure": 9.432212962949773,
+   "interior_velocity": 0.13148434702829415,
+   "interior_pressure": 6.19455182999731,
+   "continuity_residual": 1.3354171323558738e-12,
+   "pressure_order": 1.4451237207140815,
+   "velocity_order": 1.8636573294060814
+  },
+  {
+   "n": 12,
+   "cells": 1728,
+   "convection": true,
+   "converged": true,
+   "velocity": 0.024010659736794428,
+   "pressure": 2.9124077706043616,
+   "boundary_velocity": 0.013176307555402405,
+   "boundary_pressure": 3.3499864619741193,
+   "interior_velocity": 0.02941908931090198,
+   "interior_pressure": 2.112952583574531,
+   "continuity_residual": 2.253612762281902e-13,
+   "pressure_order": 1.6404435353165248,
+   "velocity_order": 1.8808118529893034,
+   "interior_pressure_order": 1.551739516160067
+  }
+ ],
+ "stokes_pressure_order": 1.6295712676427494,
+ "full_ns_pressure_order": 1.6404435353165248,
+ "order_agreement": 0.01087226767377536
+}
