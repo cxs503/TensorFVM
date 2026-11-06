@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 """Fixed-parameter nonlinear 3D ABC manufactured NS spatial convergence."""
-import argparse,json,hashlib,sys,shutil,time,traceback
+import argparse
+import json
+import hashlib
+import sys
+import shutil
+import time
+import traceback
 from pathlib import Path
 import numpy as np
 from tensorfvm.native_mesh3d import NativeMesh3D

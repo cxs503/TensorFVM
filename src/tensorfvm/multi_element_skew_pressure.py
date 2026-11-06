@@ -5,8 +5,6 @@ force is then integrated over faces, preserving equal/opposite internal forces.
 Neumann boundary reconstruction removes its wall-normal gradient component.
 The assembled pressure response uses precisely the same reconstruction.
 """
-import numpy as np
-import torch
 from scipy import sparse
 from .body_fitted import BodyFittedSolver
 from .sparse_simple import SparseBodyFittedSolver, host

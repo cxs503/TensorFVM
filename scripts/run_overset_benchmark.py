@@ -4,7 +4,7 @@ from pathlib import Path
 import time
 import numpy as np
 import torch
-from tensorfvm.overset import cartesian_grid,annular_grid,circle_polygon,build_overset,ACTIVE
+from tensorfvm.overset import cartesian_grid,annular_grid,circle_polygon,build_overset
 from tensorfvm.overset_poisson import solve_overset_poisson
 from tensorfvm.verification.core import Metric,evaluate,save_run,provenance,sha,write_json,artifact_manifest
 

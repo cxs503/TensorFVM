@@ -1,5 +1,8 @@
 """Full collocated SIMPLE: curved manufactured flow, steady SA and CUDA evidence."""
-import argparse,json,math,statistics,time
+import argparse
+import json
+import statistics
+import time
 from dataclasses import asdict
 from pathlib import Path
 import numpy as np
@@ -97,7 +100,7 @@ def publish(output,summary):
     tables=[]
     for case in summary['cases']:
         cpu,gpu=case['cpu'],case['cuda'];ratio=case['window_cpu_over_cuda'];err=max(case['steady_field_differences'].values());text+=f"| {case['name']} | {cpu['iterations']}/{gpu['iterations']} | {cpu['converged']}/{gpu['converged']} | {cpu['passed']}/{gpu['passed']} | {err:.3e} | {ratio:.3f} |\n";tables.append([case['name'],f"{cpu['iterations']}/{gpu['iterations']}",str(cpu['converged'] and gpu['converged']),str(cpu['passed'] and gpu['passed']),f'{err:.2e}',f'{ratio:.3f}'])
-        path=output/case['name']/'cuda';f=np.load(path/'fields.npz');ny,nx=gpu['config']['ny'],gpu['config']['nx'];v=f['vertices_m'];pol=np.stack((v[:-1,:-1],v[:-1,1:],v[1:,1:],v[1:,:-1]),2).reshape(-1,4,2)
+        path=output/case['name']/'cuda';f=np.load(path/'fields.npz');v=f['vertices_m'];pol=np.stack((v[:-1,:-1],v[:-1,1:],v[1:,1:],v[1:,:-1]),2).reshape(-1,4,2)
         for label,values in [('pressure',f['pressure_pa']),('speed',np.linalg.norm(f['velocity_m_s'],axis=1)),('eddy-viscosity',f['eddy_viscosity_m2_s'])]:
             if label=='eddy-viscosity' and cpu['case']!='sa':continue
             fig,ax=plt.subplots(figsize=(9,3));collection=PolyCollection(pol,array=values,edgecolors='none',rasterized=True);ax.add_collection(collection);ax.autoscale_view();ax.set_aspect('equal');ax.set(xlabel='x (m)',ylabel='y (m)',title=case['name']+' '+label);fig.colorbar(collection,ax=ax,label='Pa' if label=='pressure' else 'm²/s' if label=='eddy-viscosity' else 'm/s');figure(fig,figs,case['name']+'-'+label)

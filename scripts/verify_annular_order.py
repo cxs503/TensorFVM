@@ -28,7 +28,7 @@ from tensorfvm.verification.annular_order import (
     DP_DZ, ERROR_LIMIT, MU, ORDER_LIMIT, RI, RO, SELF_CHECK_LIMIT,
     acceptance, analytic_flow_rate, analytic_max_velocity, analytic_velocity,
     analytic_wall_shear,
-    convergence, geometry_audit, quadrature_flow_rate, reference_self_check,
+    convergence, quadrature_flow_rate, reference_self_check,
 )
 from tensorfvm.verification.core import jsonable, write_json
 
@@ -120,7 +120,6 @@ def figure_field(study):
     row = study["rows"][-1]
     a = row["arrays"]
     centers = a["centers_m"].reshape(-1, 2)
-    r = a["radius_m"]
     fig, axes = plt.subplots(1, 2, figsize=(8.6, 3.9))
     size = 2600.0 / max(row["cells"] ** 0.55, 1.0)
     ax = axes[0]
@@ -186,7 +185,7 @@ def render(study, self_check, verdict, runtime):
     add(f"| radius ratio | ri/ro | {RI / RO:.3f} |")
     add(f"| axial pressure gradient (volumetric source) | G | {DP_DZ:.4f} Pa/m |")
     add(f"| dynamic viscosity | mu | {MU:.4f} Pa s |")
-    add(f"| density | rho | 1.0 kg/m3 (irrelevant: Stokes limit) |")
+    add("| density | rho | 1.0 kg/m3 (irrelevant: Stokes limit) |")
     add(f"| exact flow rate | Q | {s['flow_rate_m3_s']:.6e} m3/s |")
     add(f"| exact peak velocity at r = {s['max_velocity_radius_m'] * 1e3:.2f} mm | u_max | "
         f"{s['max_velocity_m_s'] * 1e3:.5f} mm/s |")

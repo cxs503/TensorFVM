@@ -3,7 +3,11 @@
 Writes ``study.json`` (numbers only, no hand transcribed values), per-case gzip
 artifacts and the report figures into one output directory.
 """
-import argparse, gzip, hashlib, json, math
+import argparse
+import gzip
+import hashlib
+import json
+import math
 from pathlib import Path
 
 from tensorfvm.verification import periodic_tgv

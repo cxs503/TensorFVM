@@ -14,10 +14,9 @@ zero.
 from __future__ import annotations
 
 import numpy as np
-import torch
 
 from tensorfvm.lid_cavity_3d import LidCavity3DConfig, LidCavity3DSolver
-from tensorfvm.lid_cavity_reference import table, extrema
+from tensorfvm.lid_cavity_reference import table
 
 
 def centreline_error(n_x: int = 32, reynolds: float = 100.0, n_z: int = 4) -> dict:
@@ -44,7 +43,6 @@ def centreline_error(n_x: int = 32, reynolds: float = 100.0, n_z: int = 4) -> di
     # Compare with 2-D reference
     ref_u = np.array([p[1] for p in table(reynolds, "u")])
     ref_v = np.array([p[1] for p in table(reynolds, "v")])
-    coord = np.array([p[0] for p in table(reynolds, "u")])
 
     u_error = np.sqrt(np.mean((u_profile - ref_u) ** 2))
     v_error = np.sqrt(np.mean((v_profile - ref_v) ** 2))

@@ -275,7 +275,7 @@ class NativeHybridScalar3D:
         if not np.isfinite(inflow[incoming]).all():raise ValueError('finite incoming scalar required')
         upstream=np.where(q>=0,self.mesh.owner,self.mesh.neighbor)
         adv=q*cells[upstream.clip(min=0)];adv[incoming]=q[incoming]*inflow[incoming]
-        state=np.r_[cells,faces];diff=self.diffusion.diagnostics(state)
+        state=np.r_[cells,faces]
         cell_reaction,owner_reaction,neighbor_reaction=self._local_diffusion_reactions(state)
         reaction=np.r_[cell_reaction,owner_reaction+neighbor_reaction]
         load=self.diffusion._traction_load(gn[:,None])

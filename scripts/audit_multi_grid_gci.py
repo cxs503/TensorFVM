@@ -22,7 +22,6 @@ D  real ladder     the repository's lid-cavity ladder (3 levels), to show the
 """
 import json
 import math
-import os
 from dataclasses import asdict
 from pathlib import Path
 

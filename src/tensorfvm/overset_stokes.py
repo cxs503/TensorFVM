@@ -316,7 +316,6 @@ def solve_overset_stokes(connectivity, *, radius=0.3, mu=1.0, amplitude=1.0, pre
         data = [d for r, c, d in zip(keep_r, keep_c, keep_d) if r not in gauge_rows]
         centers0 = np.asarray(grids[0].centers, dtype=float)
         for gr in gauge_rows:
-            cells = sorted({int(i) for i in np.flatnonzero(np.arange(ndof) == gr)}) if False else None
             cell_local = (gr - 2) // 3 - int(offsets[0])
             add(gr, gr, 1.0)
             rhs[gr] = float(ref.p(centers0[cell_local]))

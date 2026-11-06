@@ -56,7 +56,7 @@ def audit(directory):
             z=.41*u;return u+(math.exp(z)-1-z-z*z/2-z*z*z/6)/9.8-value
         up.append(brentq(fn,0.,min(float(value),1000.) if value<1000 else 1000.,xtol=1e-13))
     close(up,f['u_plus_reference'],1e-9)
-    speed=np.asarray(up)*f['reference_friction_velocity_m_s'];tau=np.linalg.norm(f['computed_traction_pa'],axis=1);expected=f['density_kg_m3']*f['reference_friction_velocity_m_s']**2
+    tau=np.linalg.norm(f['computed_traction_pa'],axis=1);expected=f['density_kg_m3']*f['reference_friction_velocity_m_s']**2
     error=float(np.max(abs(tau-expected)/expected));close(error,row['maximum_traction_relative_error'],1e-9)
     if error>=1e-8 or row['passed']!=(error<1e-8):raise ValueError('wall-law inverse or badge failed')
     if np.any(np.sum(f['computed_traction_pa']*f['relative_tangential_velocity_m_s'],axis=1)>0):raise ValueError('wall traction adds energy')

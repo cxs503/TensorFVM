@@ -190,7 +190,6 @@ class MultiElementFlowSolver(ConservativePressureGradient,LinearUpwindMomentum,C
     lu_refresh_interval=0
 
     def _linear(self,diagonal,ao,an,rhs,initial,symmetric=False,operator=None,**kwargs):
-        kind='pressure' if operator is not None else 'momentum'
         if self.linear_backend=='krylov':pass  # O(N) preconditioners are always cached and refreshed adaptively
         elif self.lu_refresh_interval<=0:self._linear_calls.clear();self.gmres_max_restarts=10
         else:self.gmres_max_restarts=1

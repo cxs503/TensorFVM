@@ -1,5 +1,9 @@
 """Actual periodic MAC momentum/energy, variable-mu MMS and Taylor-Green refinement."""
-import argparse,gzip,hashlib,json,math
+import argparse
+import gzip
+import hashlib
+import json
+import math
 from pathlib import Path
 import torch
 from tensorfvm.periodic_mac import PeriodicMACSolver,PeriodicMACConfig

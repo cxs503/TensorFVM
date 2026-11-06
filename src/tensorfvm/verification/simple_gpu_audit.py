@@ -1,5 +1,6 @@
 """Independent NumPy reconstruction of curved SIMPLE geometry, forces and residuals."""
-import json,math,statistics
+import json
+import statistics
 from pathlib import Path
 import numpy as np
 from .core import sha,write_json,artifact_manifest

@@ -19,7 +19,6 @@ overwrites prior evidence.
 """
 import argparse
 import json
-import math
 from pathlib import Path
 import time
 import numpy as np
@@ -247,7 +246,10 @@ def run(output, resolutions=(12, 24), max_iterations=2000,
     fixed_points = {}
     reference = cases.get((summary_resolution, reference_label))
     if reference is not None:
-        for label in {c["label"] for c in CONFIGURATIONS}:
+        # Declared order, not a set: iterating a set of strings would make the
+        # shipped summary depend on PYTHONHASHSEED, so regenerating identical
+        # numbers would reorder the report's comparison table.
+        for label in dict.fromkeys(c["label"] for c in CONFIGURATIONS):
             other = cases.get((summary_resolution, label))
             if other is not None:
                 fixed_points[label] = _fixed_point_delta(reference, other)

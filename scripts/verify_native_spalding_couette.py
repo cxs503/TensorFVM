@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Unforced native NS with cell-sampled Spalding stress; not SST qualification."""
-import argparse,hashlib,time
+import argparse
+import hashlib
+import time
 from pathlib import Path
 import numpy as np
 from tensorfvm.verification.native_run import NativeRunEvidence,write_json

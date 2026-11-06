@@ -8,7 +8,7 @@ import platform
 import shutil
 import time
 import numpy as np
-from tensorfvm.overset3d import (ACTIVE, HOLE, FRINGE, CartesianGrid3D,
+from tensorfvm.overset3d import (ACTIVE, HOLE, CartesianGrid3D,
     SphereSolid, sphere_shell_mesh, shell_radial_coordinates, build_spherical_overset)
 from plot_native_suboff_fields import cell_section_polygons
 

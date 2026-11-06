@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Actual coupled native SST/Spalding shear diagnostic; no physical reference claim."""
-import argparse,hashlib,time
+import argparse
+import hashlib
+import time
 from pathlib import Path
 import numpy as np
 from tensorfvm.verification.native_run import NativeRunEvidence,write_json

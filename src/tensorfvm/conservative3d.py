@@ -142,7 +142,7 @@ class ConservativeCylinder3DSolver(Cylinder3DSolver):
 
     def wall_wrench(self, pressure_flux, viscous_flux):
         """Force on body: p*n_fluid - tau*n_fluid, with actual staircase facets."""
-        c,m=self.config,self.mesh;records=[];force=torch.zeros(3,dtype=self.velocity.dtype,device=self.velocity.device)
+        m=self.mesh;records=[];force=torch.zeros(3,dtype=self.velocity.dtype,device=self.velocity.device)
         moment=force.clone()
         for axis,area in enumerate((m.dy*m.dz,m.dx*m.dz,m.dx*m.dy)):
             fl,fr=self._fluid_pairs(axis);sign=fl.to(force.dtype)-fr.to(force.dtype)

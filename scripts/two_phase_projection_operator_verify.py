@@ -23,7 +23,6 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
-import torch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tests"))
 

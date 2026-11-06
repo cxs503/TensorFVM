@@ -45,7 +45,7 @@ def correct(s):
     if nx%cx or ny%cy:raise ValueError('coarse shape must divide fine shape')
     cache=getattr(s,'_coupled_coarse_cache',None)
     if cache is None:
-        coarse=SparseBodyFittedSolver(replace(s.config,nx=cx,ny=cy));fine_volume=s.volume.reshape(ny,nx);groups=(torch.arange(ny,device=device)[:,None]//(ny//cy)*cx+torch.arange(nx,device=device)[None,:]//(nx//cx)).reshape(-1);den=torch.zeros(cx*cy,device=device,dtype=dtype);den.index_add_(0,groups,s.volume)
+        coarse=SparseBodyFittedSolver(replace(s.config,nx=cx,ny=cy));groups=(torch.arange(ny,device=device)[:,None]//(ny//cy)*cx+torch.arange(nx,device=device)[None,:]//(nx//cx)).reshape(-1);den=torch.zeros(cx*cy,device=device,dtype=dtype);den.index_add_(0,groups,s.volume)
         x=(torch.arange(nx,device=device,dtype=dtype)+.5)/nx;y=(torch.arange(ny,device=device,dtype=dtype)+.5)/ny;yy,xx=torch.meshgrid(y,x,indexing='ij');grid=torch.stack((2*(xx+.5/cx)/(1+1/cx)-1,2*(yy+.5/cy)/(1+1/cy)-1),-1)[None]
         cache=dict(coarse=coarse,groups=groups,den=den,grid=grid,calls=0);s._coupled_coarse_cache=cache
     coarse,groups,den,grid=cache['coarse'],cache['groups'],cache['den'],cache['grid']

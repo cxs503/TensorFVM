@@ -4,7 +4,6 @@
 This script runs the existing solver on a static drop case and records
 the exponential divergence, confirming the verification debt.
 """
-import math
 import json
 import os
 import torch

@@ -71,6 +71,10 @@ select = ["E4", "E9", "F"]
 "scripts/verify_native_hybrid_foundations.py" = ["E402"]
 "scripts/verify_native_small_cases.py" = ["E402"]
 "tests/test_lbm_reference_audit.py" = ["E402"]
+# Deliberate late import: the module needs scipy.sparse, and importing it
+# below `pytest.importorskip("scipy.sparse")` turns a missing optional
+# dependency into a skip instead of a collection error.
+"tests/test_two_phase_projection_operator_matrix.py" = ["E402"]
 # Deliberate late import: conservative_pressure imports this module back, so
 # hoisting it would build an import cycle at module load time.
 "src/tensorfvm/external_high_order.py" = ["E402"]

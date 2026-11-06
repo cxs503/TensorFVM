@@ -1,5 +1,8 @@
 """Bounded 30P30N SIMPLE/SA diagnostic with live residuals and retained failures."""
-import argparse,json,signal,time
+import argparse
+import json
+import signal
+import time
 from pathlib import Path
 from dataclasses import replace
 import torch

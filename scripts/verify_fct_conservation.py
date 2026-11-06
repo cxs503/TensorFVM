@@ -10,7 +10,6 @@ import sys
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-import numpy as np
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 from tensorfvm.verification import fct_conservation_audit as fca  # noqa: E402

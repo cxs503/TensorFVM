@@ -209,8 +209,6 @@ def study(levels=4, safety=1.25, grids=_GRIDS, linear_backend="scipy"):
         config = AnnularConfig(ntheta=ntheta, nr=nr)
         raw = solve(config, linear_backend=linear_backend)
         metrics = annular_metrics(raw["fields"], raw["config"])
-        centres = raw["fields"]["cell_centers_m"]
-        analytic = analytic_velocity(np.linalg.norm(centres, axis=-1), config)
         computed = raw["fields"]["axial_velocity_m_s"].ravel()
         volumes = raw["fields"]["cell_volumes_m2"].ravel()
         # Independent functional: volume-weighted integral of the computed profile.

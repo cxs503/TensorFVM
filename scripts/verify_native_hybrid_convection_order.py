@@ -139,7 +139,6 @@ def exact_face_flux(mesh: NativeMesh3D) -> np.ndarray:
 def exact_face_flux_affine(mesh: NativeMesh3D) -> np.ndarray:
     """Same integral for the affine, divergence-free field u = c + G x (exact)."""
     face_velocity = .4 + mesh.face_centers @ AFFINE.T
-    area = np.linalg.norm(mesh.area_vectors, axis=1)
     normal_flux = np.einsum('fi,fi->f', face_velocity, mesh.area_vectors)
     return normal_flux[:, None] * face_velocity
 

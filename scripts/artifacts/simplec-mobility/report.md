@@ -32,7 +32,7 @@ d_SIMPLEC = A / max(aP/alpha_u - sum(aN), simplec_floor_fraction*aP)   # Van Doo
 `python scripts/verify_simplec_mobility.py --output scripts/artifacts/simplec-mobility`。
 仓内只放**摘要**（`summary.json`，标量与终态残差）与**缩小图件**（62% 线性尺寸）；图件落在 `docs/simplec-mobility/evidence/`（PR 推送门禁只放行 `docs/` 下的 `*.png`，放在工件目录会被静默滤除），逐迭代完整证据（含每一步连续性/动量残差）写入仓外证据库，路径由该脚本打印，可用同一命令重算；本页所有数字均程序化取自 `summary.json`，零手抄。
 
-溯源：本页数字由 `src/tensorfvm/solver.py`（SHA-256 `f758b76e196844d7…`）与 `src/tensorfvm/verification/simplec_channel.py`（`cdb41276348d96a0…`）产生并测量；两者任一字节变化都会使 `tests/test_simplec_artifacts.py` 变红，强制重新生成证据，而不是留下与被测代码脱节的旧结论。
+溯源：本页数字由 `src/tensorfvm/solver.py`（SHA-256 `f758b76e196844d7…`）与 `src/tensorfvm/verification/simplec_channel.py`（`0a993867e2ddaa89…`）产生并测量；两者任一字节变化都会使 `tests/test_simplec_artifacts.py` 变红，强制重新生成证据，而不是留下与被测代码脱节的旧结论。
 
 ## 3 计算结果
 
@@ -50,8 +50,8 @@ d_SIMPLEC = A / max(aP/alpha_u - sum(aN), simplec_floor_fraction*aP)   # Van Doo
 
 | 配置 | $\Delta u / U_b$ | $\Delta v / U_b$ |
 |---|---:|---:|
-| simple-tuned | 6.685e-08 | 8.666e-09 |
 | simple-default | 0.000e+00 | 0.000e+00 |
+| simple-tuned | 6.685e-08 | 8.666e-09 |
 | simplec-a07-p10 | 2.080e-06 | 3.272e-07 |
 | simplec-a08-p10 | 6.684e-08 | 3.695e-08 |
 
@@ -63,9 +63,9 @@ d_SIMPLEC = A / max(aP/alpha_u - sum(aN), simplec_floor_fraction*aP)   # Van Doo
 
 | 项 | 结果 |
 |---|---|
-| 守卫套件 `tests/test_simplec_mobility.py` | 11 passed, 2 warnings in 23.87s |
-| 负控基线（未变异，子集） | 8 passed, 3 deselected, 2 warnings in 13.46s |
-| 负控变异（SIMPLEC → SIMPLE） | 8 failed, 3 deselected, 2 warnings in 6.57s |
+| 守卫套件 `tests/test_simplec_mobility.py` | 11 passed, 1 warning in 23.23s |
+| 负控基线（未变异，子集） | 8 passed, 3 deselected, 1 warning in 11.36s |
+| 负控变异（SIMPLEC → SIMPLE） | 8 failed, 3 deselected, 1 warning in 6.55s |
 | 负控判定（变异后变红） | True |
 | 变异后源码 SHA-256 恢复一致 | `f758b76e196844d7…` |
 

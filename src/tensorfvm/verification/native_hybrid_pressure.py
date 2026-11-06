@@ -3,7 +3,7 @@ import numpy as np
 from tensorfvm.verification.native_hybrid_flow import channel_mesh
 from tensorfvm.native_mesh3d import NativeMesh3D
 from tensorfvm.native_hybrid_stokes3d import NativeHybridStokes3D
-from tensorfvm.native_manufactured3d import abc_fields,exact_boundary_velocity_means,volume_weighted_error
+from tensorfvm.native_manufactured3d import abc_fields,exact_boundary_velocity_means
 
 def pressure_mesh(n,mixed=True,skew=True):
  base=channel_mesh(n);cells=[];kinds=[]

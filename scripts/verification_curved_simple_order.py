@@ -23,7 +23,6 @@ the discrete operators converge at the expected rate.  It is not a validation
 against experiment and asserts nothing about turbulence or 3-D flow.
 """
 import argparse
-import json
 import math
 from pathlib import Path
 

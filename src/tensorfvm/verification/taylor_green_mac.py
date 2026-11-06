@@ -43,7 +43,7 @@ import math
 
 import torch
 
-from ..periodic_mac import PeriodicMACConfig, PeriodicMACSolver
+from ..periodic_mac import PeriodicMACSolver
 
 __all__ = [
     "TaylorGreenCase",
@@ -117,7 +117,7 @@ def exact_fields(solver: PeriodicMACSolver, case: TaylorGreenCase, time: float) 
     so that numeric and analytic arrays can be compared element by element.
     """
     xc, yc, zc = _centres(solver, 0), _centres(solver, 1), _centres(solver, 2)
-    xf, yf, zf = _faces(solver, 0), _faces(solver, 1), _faces(solver, 2)
+    xf, yf = _faces(solver, 0), _faces(solver, 1)
     amplitude = case.amplitude
     velocity_decay = math.exp(-case.decay_exponent * time)
     pressure_decay = math.exp(-case.energy_decay_exponent * time)

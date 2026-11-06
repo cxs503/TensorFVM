@@ -7,7 +7,6 @@ This script:
 3. Verifies the Young-Laplace jump dp = sigma/R within 3%
 4. Generates a comparison figure and summary JSON
 """
-import math
 import json
 import os
 import numpy as np

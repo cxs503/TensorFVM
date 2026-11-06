@@ -23,7 +23,6 @@ from tensorfvm.verification.taylor_green_mac import (
     compare,
     exact_fields,
     initialise,
-    relative_l2,
     run_to,
 )
 
@@ -329,7 +328,6 @@ def _figures(out: Path, study: dict, s: PeriodicMACSolver, case: TaylorGreenCase
 
     # figure 1: convergence ladder
     rows = study["spatial_ladder"]
-    n = np.array([r["n"] for r in rows], dtype=float)
     dx = np.array([r["dx_m"] for r in rows])
     fig, axes = plt.subplots(1, 2, figsize=(11, 4.2))
     ax = axes[0]

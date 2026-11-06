@@ -93,7 +93,6 @@ def solve_transient_diffusion(mesh, alpha, t_final, T0=0.0, T1=1.0, dt=None):
     """
     n = mesh['n']
     dx = mesh['dx']
-    x = mesh['x_centers']
     
     if dt is None:
         # Stability limit for explicit diffusion: dt <= dx² / (2*alpha)

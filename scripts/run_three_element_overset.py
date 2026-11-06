@@ -1,7 +1,8 @@
 """30P30N: three distinct solids on one fitted component, Cartesian background.
 Static manufactured diffusion; this does not solve overset Navier–Stokes.
 """
-import argparse, json, time
+import argparse
+import time
 from pathlib import Path
 from types import SimpleNamespace
 import numpy as np
@@ -9,7 +10,7 @@ import torch
 import gmsh
 from tensorfvm.benchmark_30p30n import write_gmsh_geo, PROFILE_DIRECTORY, _read_profile, _minimum_profile_gap
 from tensorfvm.multi_element import ThreeElementMesh
-from tensorfvm.overset import OversetGrid, cartesian_grid, build_overset, ACTIVE
+from tensorfvm.overset import OversetGrid, cartesian_grid, build_overset
 from tensorfvm.overset_scalar import solve_manufactured_diffusion
 from tensorfvm.verification.core import Metric, evaluate, save_run, provenance, sha, write_json, artifact_manifest
 

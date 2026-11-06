@@ -2,7 +2,6 @@
 import argparse
 from dataclasses import asdict
 import json
-import math
 from pathlib import Path
 import time
 import numpy as np
@@ -27,7 +26,7 @@ def run(nx,ny,max_iterations=1500):
     r=s.solve();mask=s.mesh.masks['cylinder'];owners=s.o[mask];grad=s._gradient(s.velocity)[owners].clone();wall_d=s.d[mask]
     error=-s.velocity[owners]-torch.einsum('fi,fij->fj',wall_d,grad)
     grad+=wall_d[:,:,None]*error[:,None,:]/wall_d.square().sum(-1)[:,None,None]
-    stress=c.viscosity*(grad+grad.transpose(-1,-2));pressure_force=s.p[owners,None]*s.S[mask];viscous_force=-torch.einsum('fij,fj->fi',stress,s.S[mask]);body_force=pressure_force+viscous_force
+    stress=c.viscosity*(grad+grad.transpose(-1,-2));pressure_force=s.p[owners,None]*s.S[mask];viscous_force=-torch.einsum('fij,fj->fi',stress,s.S[mask])
     centers=array(s.mesh.face_centers[mask]);angle=np.mod(np.arctan2(centers[:,1]-.2,centers[:,0]-.2),2*np.pi);order=np.argsort(angle)
     wallpressure=array(s.p[owners]+(s._gradient(s.p,pressure=True)[owners]*wall_d).sum(-1))
     angles=angle[order];wp=wallpressure[order];extended_angles=np.r_[angles[-1]-2*np.pi,angles,angles[0]+2*np.pi];extended_p=np.r_[wp[-1],wp,wp[0]]
@@ -72,7 +71,7 @@ def publish(output,rows):
         for k in REFERENCE:
             err=next(q['value'] for q in r['metrics'] if q['name']==k+'_relative_error');vals.append(f"{r['computed'][k]:.8g} / {100*err:.4f}%")
         text+=f"| {r['resolution']} | {r['converged']} | "+' | '.join(vals)+f" | {r['passed']} |\n"
-        directory=output/r['directory'];f=np.load(directory/'fields.npz');figs=directory/'figures';figs.mkdir(exist_ok=True);v=f['vertices_m'];ny,nx=r['config']['ny'],r['config']['nx'];cells=np.stack((v[:-1,:-1],v[1:,:-1],v[1:,1:],v[:-1,1:]),axis=2).reshape(-1,4,2)
+        directory=output/r['directory'];f=np.load(directory/'fields.npz');figs=directory/'figures';figs.mkdir(exist_ok=True);v=f['vertices_m'];cells=np.stack((v[:-1,:-1],v[1:,:-1],v[1:,1:],v[:-1,1:]),axis=2).reshape(-1,4,2)
         for name,value,label in [('pressure',f['cell_pressure_pa'],'Pressure (Pa)'),('speed',np.linalg.norm(f['cell_velocity_m_s'],axis=1),'Speed (m/s)')]:
             fig,ax=plt.subplots(figsize=(10,3));p=PolyCollection(cells,array=value,cmap='coolwarm' if name=='pressure' else 'viridis',edgecolors='none',rasterized=True);ax.add_collection(p);ax.autoscale_view();ax.set_aspect('equal');ax.set(xlabel='x (m)',ylabel='y (m)',title='DFG Re20 '+r['resolution']);fig.colorbar(p,ax=ax,label=label);figure(fig,figs,name)
         angle=f['cylinder_angle_rad'];order=np.argsort(angle);fig,ax=plt.subplots(figsize=(6,4));ax.plot(angle[order],f['cylinder_wall_pressure_pa'][order]);ax.set(xlabel='Cylinder angle (rad)',ylabel='Wall pressure (Pa)',title='Extrapolated cylinder pressure');ax.grid(alpha=.3);figure(fig,figs,'wall-pressure')

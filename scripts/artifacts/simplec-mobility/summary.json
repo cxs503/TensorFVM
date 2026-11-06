@@ -4,7 +4,7 @@
     "case": "developed channel, Re_H=1, Poiseuille analytic reference",
     "provenance": {
       "matplotlib": "3.10.8",
-      "git_base": "795da3d96cc205db4fe5a1f499576dad1f03ec65",
+      "git_base": "d3ffecc97a5a32b6ba96179421352095801ac19a",
       "python": "3.11.6",
       "torch": "2.7.1",
       "numpy": "2.4.6",
@@ -12,7 +12,7 @@
       "torch_threads": 1,
       "device": "cpu",
       "source_sha256": {
-        "pyproject.toml": "423c47109f98776d5b9a4cc10f791438225f68d10bc6e0b3489709116204ff12",
+        "pyproject.toml": "5a5e3d568f04df073d52928fe8a0e2853d0134f58b6294def52a711210ccfce0",
         "src/tensorfvm/__init__.py": "9f8d4d3a249d695e4e841e4c9d11d7158db8a2d33e2928d3565794718e2aba3c",
         "src/tensorfvm/backend_registry.py": "e68b95fdb7c457b921b2f1c9e3920f80ebdcdb104ca8077e10e96d2a4182a13a",
         "src/tensorfvm/body_fitted.py": "4e633fa42c1171cf57aca5bf930827f97a30dada4e405bf3ac9c1068ba1bb7a7",
@@ -21,53 +21,67 @@
         "src/tensorfvm/runtime.py": "ff383730f34f82030f28da424819eea670f28c663d5be834f30bebc6c74a2da5",
         "src/tensorfvm/solver.py": "f758b76e196844d7e5e150af12b4885bbdbe5d27537c03616e4393ec24823d93",
         "src/tensorfvm/verification/__init__.py": "2e93edad1f2e0ed881602c2f72592f32070e99f9a75433e6fa0ce4c485f52652",
-        "src/tensorfvm/verification/__main__.py": "bac1da0b8ea13da1d7e8de391d0da9fe5a69f8658d55c57d55fc9c861eb28096",
+        "src/tensorfvm/verification/__main__.py": "b45602bad376ae02b1539d9ca9f25c83addd81240c2ccbc01991869093441cba",
         "src/tensorfvm/verification/annular.py": "be18e4e882ef3f03264e1e9e1b851e23a486100b78c451aa4fdaee7d3eb469fd",
-        "src/tensorfvm/verification/annular_convergence.py": "25f9a54c39863187d11431e9c97737dddc7955459b72680b13fb2d346fb21be0",
-        "src/tensorfvm/verification/annular_order.py": "ffbaf63d1b921d37635c99529d2281555ec1a4d22a425fb1bf5154f1cda40134",
+        "src/tensorfvm/verification/annular_convergence.py": "08f239676a9b5a4b3d9ed67d62e536e1bdf7f7aab805b53aee9dfc7a701ed416",
+        "src/tensorfvm/verification/annular_order.py": "0e5f57bc949c5ba5570e2b75203b58810f0aaab40be0197518fe4cb57a7de340",
         "src/tensorfvm/verification/audit.py": "7df05206579b07718441e0ae894e60d8a7b2543fd8e557bd1f7fb7d8586ea414",
         "src/tensorfvm/verification/cases.py": "5314907980c4ab04b398cd0fddb758388227411c9e887b6bd59305a957781e76",
         "src/tensorfvm/verification/channel_dns.py": "bc127368baf312c7e7d4554986318fb2fbd225e1a91d3366a64e53cafca815a9",
         "src/tensorfvm/verification/core.py": "088114b4c8ec39a0724213bfc00f83a4356bcaca1dd2398376ef35426866e12e",
-        "src/tensorfvm/verification/dfg.py": "f07412715767d7424c5a54fccd9c8b5f4aec964f8126532d45c1f7270351e1fc",
-        "src/tensorfvm/verification/engineering.py": "51a54c163066263eba16ec3b6532c37bf1fff3cb465a3ecd02cd98ea837b8079",
-        "src/tensorfvm/verification/engineering_audit.py": "987b3a75125152a634ebd116ca9df2913bfef5fa7ad78b306c980edc9d0359a1",
-        "src/tensorfvm/verification/extended.py": "9e28876cdd9681ad8dcd4075f897264703b1e8616a0694be5def3622ce030d1e",
+        "src/tensorfvm/verification/cubic_wall_truncation.py": "5a7451dcfb5612d95fa31b4938a05aa588edc695698d2c37533171f0a8c5b62d",
+        "src/tensorfvm/verification/dfg.py": "92706aa5cd09f73cbf4d2cfe572a80cabdf76b4cc12e814c1d2fa81c07a25a6d",
+        "src/tensorfvm/verification/doc_claims.py": "20d6788a49d756bc9856ad274513fa77e58a608786252d2268ee8c005d6e8aaa",
+        "src/tensorfvm/verification/engineering.py": "7b3ce08e24b8be0e2470cdcc306d4f4f8728aba40bb968a8d4e92e1a8608b4c3",
+        "src/tensorfvm/verification/engineering_audit.py": "067c94f148463d1c4b162bd6f8f01f5be1c45e1528179e42d512ebf14751a20a",
+        "src/tensorfvm/verification/extended.py": "ac39f61a1c204c410deaaa277536e2eecec0b8212fdf2665d453109e28d8b2a9",
         "src/tensorfvm/verification/extended_audit.py": "8b2dcc2618d566b5abbdeed34312f2c8c1fb1349b12b90675080627a2a8cf4ce",
         "src/tensorfvm/verification/extended_cases.py": "d5f58d4aca6706642d5e5d7307af3017d2c6c4840c3b485e68c98815edfc0796",
         "src/tensorfvm/verification/external_flow.py": "f5ccc382d32d76afd0a454cf128af9f2984552930c2e2d00a6c2b86b94239447",
         "src/tensorfvm/verification/external_gmsh.py": "5d77ea5ccf05d18055e33cf1d74266207676f8853d170d35d709b526a93b86e9",
         "src/tensorfvm/verification/external_matched_naca.py": "bbd3a8584d7399dcd3c8c9200ba454d00c884bffc3818009e4e4ad012bb0b64d",
         "src/tensorfvm/verification/external_mesh_report.py": "eb1beeff5743e9ed52a6929e48b7d830ef6c95e2e244f855305a171f4989d27e",
+        "src/tensorfvm/verification/face_lsq3d.py": "9ea315fe9e959a695ac48fbcd1b1d41240973b19b4d0a50b99d58b25c56a07e6",
         "src/tensorfvm/verification/fct_accuracy.py": "5d7cf5a95804e9d05fd55104aa52e07c1a23d7fdad8aa43bf190da22940d5e34",
-        "src/tensorfvm/verification/fct_conservation_audit.py": "a52f5edc806e43d41c52846f970adc9c3c12d0ccf8c2adabdc1a7e206dc41c5b",
-        "src/tensorfvm/verification/gpu.py": "1372d9c7deea0617673278b8b51220d529ca79b4a0b0b022fcd9783584c154e0",
+        "src/tensorfvm/verification/fct_conservation_audit.py": "8e5b6dcea90b8447f4a836c0084603f371e09b52e347b393938f9aeb1a58533f",
+        "src/tensorfvm/verification/ghia_reference_audit.py": "f17a472f38ec343b446a618e76bc72a4b8c5593f79301416a3dc773b56309388",
+        "src/tensorfvm/verification/gpu.py": "432a6b2398a6649ea36254723a75d357fc0d448cafc010b540e42d3be675d5bd",
         "src/tensorfvm/verification/lbm.py": "0ad5bf5d1022752755f5f0ff47df597baf00dca3e64bf66e576014e6930be9a4",
+        "src/tensorfvm/verification/lid_cavity_extraction.py": "f57cbba7f7435bc6492b4435a8c7fae26f76cf3085fccb302ae50b385982114d",
         "src/tensorfvm/verification/mac_time_order.py": "071dec368ed6e446a280e6cced8223d0b7f3ecf7d304fc4d70e138f93fd8317b",
         "src/tensorfvm/verification/mesh_quality_audit.py": "0862417515454caea1ed4ac66ed68b91db697bac84be7ec87100ec7a57be345a",
         "src/tensorfvm/verification/multi_element_ls.py": "189880400b7134ede05b97b996bdbae302f3d70759f21028d08f8d9013f3b0ca",
+        "src/tensorfvm/verification/multi_element_skew.py": "9adbe6b021ca884c7a3099dd17a4432cc72c80eed385b55f5750f77fb7f0ab80",
+        "src/tensorfvm/verification/multi_grid.py": "97dc713e39f20fb4fa66e67df1f86ec5ec6db71c59c0c861092bfc7be128d9bd",
+        "src/tensorfvm/verification/mutation_catalogue.py": "19f579a2bff8dd061507049fd63bed6f4d4942d7844bd53273f6568d3bc22c2b",
+        "src/tensorfvm/verification/mutation_catalogue3d.py": "911a4ddb347502ee2034201bdf412b157f1fdf92c29bf7f96817e220cf925c95",
         "src/tensorfvm/verification/native_developed_channel.py": "6d276124325ed26225e913a174bc29df4192eacfc3d24968de94e23989fff4ff",
         "src/tensorfvm/verification/native_energy.py": "1d0da8eeced1c1630014a46bfbef94993ea82ff91ea64c10ecb8ff859609c169",
         "src/tensorfvm/verification/native_hybrid_flow.py": "8b03c4acfa45924c354a1b30dce7e56b6285844f634a86135eedb7642ca8421a",
         "src/tensorfvm/verification/native_hybrid_ns.py": "ed364ba9510e1f9a2eba2005b0cb17c3d07fa5a73b641fc9b1e665520104df48",
-        "src/tensorfvm/verification/native_hybrid_pressure.py": "2e6cb6f559e06ecf9c3e595bd140541c00efd1e09b2f7988d27eca3e6cd4ffb5",
+        "src/tensorfvm/verification/native_hybrid_pressure.py": "53f6f4530cb31031a3e91ccb36c5304e2696a2f2204ab5a7b38432feb0533379",
         "src/tensorfvm/verification/native_hybrid_rans.py": "8c082a9581caaa18c8a63c080d3693d24ccf0ba46d2f648f325d38b0d308ec45",
         "src/tensorfvm/verification/native_hybrid_shear.py": "26d986ff7e326c090ccddb85bca6b4f3408b4bc1065d725117745e8b5143944b",
-        "src/tensorfvm/verification/native_order3d.py": "cafaddecbe7f75f745f4e16bd82e557e07efd930bff9d261d8acff868bb30d12",
+        "src/tensorfvm/verification/native_order3d.py": "44c640880311c4bd4d92956d9dc0131cf2d5705f192d6b50b40157374305c693",
         "src/tensorfvm/verification/native_robin.py": "b0f06ba939ee6be1e5fa4aa2d52a4d764023ce0d0c9258868098d52dadb0474a",
         "src/tensorfvm/verification/native_run.py": "c004151d4a2ef28dec780db01800fe8a91722fcb1b7d25a0066e62faa88e4230",
         "src/tensorfvm/verification/native_spalding.py": "d1817e7fa354f038e0d58cd437d46b7616296a785a1dbda44c14cc74994d8766",
         "src/tensorfvm/verification/native_sst_wall.py": "e6764d702c387befba9c149fefb79377c8cb75f31b79fc235209df7e17d82901",
+        "src/tensorfvm/verification/native_taylor_green.py": "ed2ddcce0da4c5855a3c6b42887cf12c4146210e0ef9a64cb60f9c2be5d47a8d",
         "src/tensorfvm/verification/native_viscous_order3d.py": "b5c94c1e9ef03e95807e960293e44f80408301da272eb685d2957166a0c11e11",
-        "src/tensorfvm/verification/periodic_tgv.py": "5390397ddebd571dd52909b6344b0d3cede922d58e4ec7a07b49da666a067a8e",
-        "src/tensorfvm/verification/report.py": "d38464cbba0f152d4410589e6a66c8fe05f9f84da06ecab62d3895a8f77ead62",
-        "src/tensorfvm/verification/richardson.py": "e2c8f13c75b565e32d64c4940a8db3fe0924680ba31d31b9d809c1c610d4bb05",
+        "src/tensorfvm/verification/native_viscous_passivity.py": "d708edb7de556d34b90aac3a716ee3acc6ef714f6eac7c09280e1f59e6e76ee0",
+        "src/tensorfvm/verification/periodic_tgv.py": "87ea7efa67a9fc8fe33766f4c39302ca10307f5eb8ad59d58b5f2ec80f7f9c9a",
+        "src/tensorfvm/verification/porous_forchheimer.py": "70f6637fe7af303e380cf15f0ee2e1200b26375902fe168409cf275138d89fd0",
+        "src/tensorfvm/verification/report.py": "558e037960589296b3f9c083fd21bd8b517db5e63a3c9baec692be4b78bac6ec",
+        "src/tensorfvm/verification/richardson.py": "30ae8b0316a6cec4e680dc51901ea94c9e90a006eded57dd428f344bc1dce841",
         "src/tensorfvm/verification/richardson_audit.py": "8a68d1c49776440f15f9ce51a55f988466095d92c016759a415b3d48ba790618",
-        "src/tensorfvm/verification/simple_gpu.py": "3c915805f1d81e29012457916437bfbd75e7a67413049e0f1f2ed463593e156f",
-        "src/tensorfvm/verification/simple_gpu_audit.py": "90a778cd314b9ab36183da98b428fbc0c4918587c80217de8fc8439e0db292f6",
-        "src/tensorfvm/verification/simplec_channel.py": "cdb41276348d96a0aea5f59767fa6324507724cda3ff4576adf78e073fb5048d",
+        "src/tensorfvm/verification/scalar_transient_diffusion.py": "4e43fdaf22145ad76249ef5ab0c820e79a3c004e2b9a758fa85a093149a75a1b",
+        "src/tensorfvm/verification/simple_gpu.py": "4dfa4e090c3679e8aa5ecbba6799a8b06abe49f8595155ef85c862c7172eb955",
+        "src/tensorfvm/verification/simple_gpu_audit.py": "2854d0f7ef3d3f8e9a8987dbdcb1b73eb91b60737ae77be5e87dfd27516b7805",
+        "src/tensorfvm/verification/simplec_channel.py": "0a993867e2ddaa8919c83582df90216203f572f1d6b2de30a4cb8baf1b1b5ec4",
         "src/tensorfvm/verification/sst_channel_reference.py": "9ded60b9263f74d5bb6abb5c6cd5c2c7bdc938f22221322bc57728d30898a056",
         "src/tensorfvm/verification/sst_channel_report.py": "0e3767af9dad934eabebefe17d6e999d29476c24eb89954f28e8a14496691eef",
+        "src/tensorfvm/verification/taylor_green_mac.py": "58deece6f2311dc650e6972403684febdb19ea6a680a8693675013330e3d184b",
         "src/tensorfvm/verification/vof_rotation.py": "1f6e4a8976749955ba12fea74d4fff461f4bd7d37f377d8127612fbc040ac4fe",
         "src/tensorfvm/verification/vof_transport_audit.py": "8c3c2f842b76e7dffffd06fb5300634fc10f0627b01c98d779d3e0853b4ad71a"
       }
@@ -80,13 +94,13 @@
     "summary_resolution": 12,
     "max_iterations": 2000,
     "fixed_point_delta_vs_simple_default": {
-      "simple-tuned": {
-        "u": 6.685001575738869e-08,
-        "v": 8.66608787362293e-09
-      },
       "simple-default": {
         "u": 0.0,
         "v": 0.0
+      },
+      "simple-tuned": {
+        "u": 6.685001575738869e-08,
+        "v": 8.66608787362293e-09
       },
       "simplec-a07-p10": {
         "u": 2.0802836903175553e-06,
@@ -97,7 +111,7 @@
         "v": 3.6950314254722075e-08
       }
     },
-    "elapsed_s": 82.55835844017565,
+    "elapsed_s": 72.43796802870929,
     "simplec_all_gates_passed": true,
     "simplec_sustains_pressure_relaxation_one": true,
     "fixed_point_agreement_max": 2.0802836903175553e-06,
@@ -138,7 +152,7 @@
       "iterations": 41,
       "converged": true,
       "passed": true,
-      "elapsed_s": 3.4322989508509636,
+      "elapsed_s": 3.324453530833125,
       "metrics": [
         {
           "name": "velocity_l2",
@@ -249,7 +263,7 @@
       "iterations": 43,
       "converged": true,
       "passed": true,
-      "elapsed_s": 3.727704668417573,
+      "elapsed_s": 3.459137450903654,
       "metrics": [
         {
           "name": "velocity_l2",
@@ -360,7 +374,7 @@
       "iterations": 32,
       "converged": true,
       "passed": true,
-      "elapsed_s": 3.1963221598416567,
+      "elapsed_s": 2.670268191024661,
       "metrics": [
         {
           "name": "velocity_l2",
@@ -471,7 +485,7 @@
       "iterations": 49,
       "converged": true,
       "passed": true,
-      "elapsed_s": 4.876755030825734,
+      "elapsed_s": 3.834767861291766,
       "metrics": [
         {
           "name": "velocity_l2",
@@ -582,7 +596,7 @@
       "iterations": 87,
       "converged": true,
       "passed": true,
-      "elapsed_s": 19.159328810870647,
+      "elapsed_s": 15.829535270109773,
       "metrics": [
         {
           "name": "velocity_l2",
@@ -693,7 +707,7 @@
       "iterations": 53,
       "converged": true,
       "passed": true,
-      "elapsed_s": 11.034344980493188,
+      "elapsed_s": 10.961176630109549,
       "metrics": [
         {
           "name": "velocity_l2",
@@ -804,7 +818,7 @@
       "iterations": 87,
       "converged": true,
       "passed": true,
-      "elapsed_s": 16.25997531041503,
+      "elapsed_s": 15.718203820288181,
       "metrics": [
         {
           "name": "velocity_l2",
@@ -915,7 +929,7 @@
       "iterations": 53,
       "converged": true,
       "passed": true,
-      "elapsed_s": 12.974900679662824,
+      "elapsed_s": 10.703544409945607,
       "metrics": [
         {
           "name": "velocity_l2",
@@ -1026,7 +1040,7 @@
       "iterations": 49,
       "converged": true,
       "passed": true,
-      "elapsed_s": 5.097679629921913,
+      "elapsed_s": 3.8215298503637314,
       "metrics": [
         {
           "name": "velocity_l2",
@@ -1144,12 +1158,12 @@
   },
   "provenance": {
     "src/tensorfvm/solver.py": "f758b76e196844d7e5e150af12b4885bbdbe5d27537c03616e4393ec24823d93",
-    "src/tensorfvm/verification/simplec_channel.py": "cdb41276348d96a0aea5f59767fa6324507724cda3ff4576adf78e073fb5048d",
+    "src/tensorfvm/verification/simplec_channel.py": "0a993867e2ddaa8919c83582df90216203f572f1d6b2de30a4cb8baf1b1b5ec4",
     "src/tensorfvm/verification/cases.py": "5314907980c4ab04b398cd0fddb758388227411c9e887b6bd59305a957781e76"
   },
   "guards": {
     "returncode": 0,
-    "summary": "11 passed, 2 warnings in 23.87s",
+    "summary": "11 passed, 1 warning in 23.23s",
     "counts": {
       "passed": 11
     },
@@ -1159,7 +1173,7 @@
     "mutation": "mobility = relaxed  # MUTATION: SIMPLEC degenerates to SIMPLE",
     "baseline": {
       "returncode": 0,
-      "summary": "8 passed, 3 deselected, 2 warnings in 13.46s",
+      "summary": "8 passed, 3 deselected, 1 warning in 11.36s",
       "counts": {
         "passed": 8
       },
@@ -1167,7 +1181,7 @@
     },
     "mutated": {
       "returncode": 1,
-      "summary": "8 failed, 3 deselected, 2 warnings in 6.57s",
+      "summary": "8 failed, 3 deselected, 1 warning in 6.55s",
       "counts": {
         "failed": 8
       },

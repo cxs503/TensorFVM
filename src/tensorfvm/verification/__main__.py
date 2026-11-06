@@ -4,7 +4,7 @@ from pathlib import Path
 import sys
 import torch
 from .cases import channel, taylor_green
-from .core import provenance, save_run, write_json, observed_orders, artifact_manifest, metric_value
+from .core import provenance, save_run, write_json, observed_orders, artifact_manifest
 
 
 def main(argv=None):

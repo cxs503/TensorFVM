@@ -131,9 +131,6 @@ def build(rows):
     tet4_default = smallest(rows, 'tet', 1., n=4)
     tet4_best = min([r for r in rows if r['kind'] == 'tet' and r['n'] == 4 and r['stabilization'] == 1.
                      and r['solved'] and 'spectrum_ratio' in r], key=lambda r: r['cell_relative_l2'])
-    ladder = [r for r in rows if not r['affine'] and r['stabilization'] == 1.
-              and r.get('jump_energy_share') is not None and 'spectrum_ratio' not in r]
-    hex8 = max(ladder, key=lambda r: (r['kind'] == 'hex', r['n']))
     tables = '\n\n'.join([
         knob_table(rows, 'tet', 3), knob_table(rows, 'tet', 4),
         knob_table(rows, 'hex', 4), knob_table(rows, 'hex', 6)])
