@@ -9,7 +9,6 @@ error is produced by the extraction alone.
 import math
 
 import numpy as np
-import pytest
 import torch
 
 from tensorfvm.lid_cavity import LidCavityConfig, LidCavitySolver, hermite_interpolate

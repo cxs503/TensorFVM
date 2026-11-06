@@ -14,11 +14,9 @@ Full-resolution evidence and figures: ``scripts/verify_porous_drag.py`` ->
 ``docs/porous-darcy-forchheimer/``.
 """
 
-import math
 import sys
 from pathlib import Path
 
-import numpy as np
 import pytest
 import torch
 

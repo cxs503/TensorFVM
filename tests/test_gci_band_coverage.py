@@ -16,7 +16,6 @@ width and ``Fs``=1.25, so a coverage difference is a convention effect only.
 from __future__ import annotations
 
 import numpy as np
-import pytest
 
 from tensorfvm.verification.richardson import richardson_gci
 

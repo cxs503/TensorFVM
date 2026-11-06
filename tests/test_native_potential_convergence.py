@@ -9,7 +9,6 @@ This test verifies that the native hybrid NS solver converges to the exact solut
 at the expected second-order rate for velocity and first-to-second order for pressure.
 """
 import numpy as np
-import pytest
 
 from tensorfvm.verification.native_hybrid_ns import potential_solver
 

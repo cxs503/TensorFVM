@@ -1,6 +1,6 @@
 """Conservative cell momentum/full-stress subproblem qualifications."""
-import math,tempfile
-from pathlib import Path
+import math
+import tempfile
 import pytest
 import torch
 from tensorfvm.conservative3d import ConservativeCylinder3DSolver

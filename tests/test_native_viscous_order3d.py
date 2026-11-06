@@ -22,7 +22,6 @@ from functools import lru_cache
 import numpy as np
 import pytest
 
-from tensorfvm.native_mesh3d import NativeMesh3D
 from tensorfvm.native_viscous3d import NativeViscous3D
 from tensorfvm.verification import native_order3d as study
 from tensorfvm.verification import native_viscous_order3d as nv    # m2572 wall-closure module (name kept per m2530 ruling)
