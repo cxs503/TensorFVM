@@ -1,5 +1,17 @@
 # TensorFVM benchmark 总览
 
+## 最新：归档证据的源码陈旧性审计
+
+[审计与门禁](verification-archived-source-staleness/README.md)：把“归档证据绑定的生产者源码
+是否仍是当前工作树”变成可复算判据。53 个含源码绑定的案例、1378 条 SHA-256 绑定中
+**1275 fresh / 102 changed / 1 missing**，19 个案例陈旧（其中 16 个被本页引用）。
+陈旧集中在**未冻结源码快照的遗留验证套件**（`verification-benchmarks`/`-dfg`/`-engineering`/
+`-gpu`/`-extended`/`-sa-*`/`-cylinder3900-*`）与共享模块 `solver.py`；
+采用 `source_snapshot_root` 的近期案例全部 fresh。唯一 missing 为
+`verification-gmsh-controls` 记录的 `scale-1.msh` 未入库。新陈旧案例会红（棘轮），
+11 例新测试 + 27 例相关回归通过。**本审计不重算流场**，对“当前 HEAD 上这些数字是否仍成立”
+无结论；16 个对外主张案例的复算/补快照列为下一步。
+
 ## 最新：薄层/四面体接口黏性算子的耗散性包络
 
 [薄层耗散性审计](verification-thin-layer-viscous-passivity/README.md)：偿还
