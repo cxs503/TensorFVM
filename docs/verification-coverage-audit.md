@@ -170,3 +170,5 @@ TensorFVM has strong verification coverage for incompressible Navier-Stokes with
 **Audit performed by**: agent/m3732  
 **Verification date**: 2026-11-03  
 **Next review**: After wall-flux defect resolution
+1. **Pressure convergence order**: ABC verification shows pressure converging at ~1.5 order instead of expected 2nd order. **Attributed (m4773, 2026-11-06)**: the linear Stokes limit reproduces the same pressure order (agreement 0.011) and the reduction is distributed (interior order 1.54), so it is an expected property of the collocated pressure-continuity coupling (pressure as Lagrange multiplier), not a fixable defect. See `docs/verification-native-abc3d-pressure-order/report.md`; regression: `tests/test_native_abc_pressure_order3d.py`.
+1. **Immediate**: Document pressure convergence mechanism in ABC verification. Is the 1.5 order expected for this discretization, or is there a fixable defect?
