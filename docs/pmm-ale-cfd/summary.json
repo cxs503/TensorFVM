@@ -1,0 +1,67 @@
+{
+  "node": "IN52-N06",
+  "campaign": "KVLCC2 PMM virtual test - ALE moving-mesh capability",
+  "verdict": "PARTIAL: moving-mesh capability REAL and verified; KVLCC2 PMM force derivatives NOT computed (no verified open-boundary ALE flow solver) -> criteria C1/C2 FAIL",
+  "geometry_gate": {
+    "L": 7.0,
+    "B": 0.936,
+    "T": 0.342,
+    "Cb_target": 0.708,
+    "Cb_calibrated_analytic": 0.709447704115451,
+    "Cb_from_ale_mesh": 0.680714448618852,
+    "mesh_length": 6.984874988759386,
+    "rel_error_mesh": -0.04050087882435818,
+    "band": "|Cb_mesh - Cb_analytic| <= 6 % (mesh truncation at the tips)"
+  },
+  "ale_verification": {
+    "gcl_translation_abs": 1.6940658945086007e-20,
+    "gcl_morphing_abs": 9.442299779517313e-19,
+    "freestream_residual_relative": 4.1569275576702026e-14,
+    "galilean_invariance_relative": 5.582316996204744e-15,
+    "moving_wall_flux_abs": 1.6940658945086007e-21
+  },
+  "pmm_cycles": {
+    "sway": {
+      "min_volume_ratio": 0.867135260021709,
+      "max_gcl_abs": 6.873299672471855e-16,
+      "max_wall_flux_abs": 1.6263032587282567e-19,
+      "amplitude_m": 0.050544000000000006,
+      "period_s": 10.0
+    },
+    "yaw": {
+      "min_volume_ratio": 0.7509649694752033,
+      "max_gcl_abs": 1.8979206841744493e-05,
+      "max_wall_flux_abs": 6.505213034913027e-19,
+      "amplitude_deg": 3.0,
+      "period_s": 10.0
+    }
+  },
+  "criteria": {
+    "C1_derivatives_within_15pct_of_simman": false,
+    "C2_phase_within_5deg": false,
+    "C3_grid_convergence": false,
+    "geometry_gate": true,
+    "ale_space_conservation": true,
+    "ale_freestream_preservation": true,
+    "ale_galilean_invariance": true,
+    "ale_moving_wall_impermeable": true,
+    "kvlcc2_pmm_forces": false
+  },
+  "evidence": {
+    "moving_mesh": "REAL (ALE morphing with exact discrete space conservation)",
+    "ale_advection": "REAL (free-stream preserving, Galilean invariant)",
+    "hull_mesh": "REAL (body-fitted double-body O-grid, Cb gate passed)",
+    "pmm_force_derivatives": "WITHHELD (no verified open-boundary ALE flow solver)",
+    "si_overall_reference_table": false
+  },
+  "known_limitation": [
+    "single-block O-grid over the hull length: the end planes are solid caps, so no open inlet/outlet and therefore no forward-speed PMM forces;",
+    "the attempted incompressible ALE projection solver did not pass its added-mass verification and was withdrawn rather than shipped;",
+    "the fineness of the tip stations limits radial refinement (n_radial > 10 raises degenerate-face errors at the cut tips)."
+  ],
+  "figures": [
+    "fig1_kvlcc2_ale_mesh.png",
+    "fig2_pmm_mesh_quality.png",
+    "fig3_ale_verification.png"
+  ]
+}
