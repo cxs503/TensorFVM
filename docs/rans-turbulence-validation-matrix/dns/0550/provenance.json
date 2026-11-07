@@ -1,0 +1,44 @@
+{
+  "authors": [
+    "Myoungkyu Lee",
+    "Robert D. Moser"
+  ],
+  "title": "Direct numerical simulation of turbulent channel flow up to Re_tau = 5200",
+  "journal": "Journal of Fluid Mechanics 774 (2015), 395-415",
+  "doi": "10.1017/jfm.2015.268",
+  "source_type": "original authors DNS statistical data; not experiment",
+  "retrieved_utc": "2026-11-07T13:19:19.340781+00:00",
+  "files": {
+    "mean": {
+      "upstream_url": "https://turbulence.oden.utexas.edu/channel2015/data/LM_Channel_0550_mean_prof.dat",
+      "raw_sha256": "66ba256da33ac7401013d4c25d91d27bfecba4760c8a7cb43096c58572910e21",
+      "csv": "mean.csv",
+      "csv_sha256": "a1fc8c715dc83538d5a2aef8e0bd903675f1405ba84e7f4adb19a06bd2d2e767",
+      "rows": 192
+    },
+    "mean_standard_deviation": {
+      "upstream_url": "https://turbulence.oden.utexas.edu/channel2015/data/LM_Channel_0550_mean_stdev.dat",
+      "raw_sha256": "be9f7a8d216011a044dc145027d8b6edd7de3a11eda5f73f8f8476e042974061",
+      "csv": "mean_standard_deviation.csv",
+      "csv_sha256": "18470c6581ae7619015e3eec66ee3ca02f6404f98fba15a69788fdfca83a4bcb",
+      "rows": 192
+    }
+  },
+  "Re_tau_reported": 543.496,
+  "nu": 0.0001,
+  "half_width": 1.0,
+  "U_bulk": 1.0,
+  "u_tau": 0.0543496,
+  "U_bulk_plus": 18.39939944360216,
+  "Cf": 0.00590775804032,
+  "Cf_definition": "2*tau_wall/(rho*U_bulk^2)",
+  "normalization": "wall units except y_over_delta",
+  "uncertainty": "separate estimated sampling standard deviations; bulk/friction uncertainty unspecified",
+  "centerline_missing": true,
+  "interpolation": "PCHIP at all case cell centers; no extrapolation",
+  "license": "no explicit license in source header; numerical values transcribed with author attribution; raw files cached locally",
+  "metric_profile": "sqrt(sum(V*(U_calc-U_DNS)^2)/sum(V*U_DNS^2)) at all cell centers",
+  "metric_Cf": "abs(Cf_calc-Cf_DNS)/abs(Cf_DNS), bulk from actual outlet flux",
+  "threshold_strict": 0.03,
+  "source_values_changed": false
+}
