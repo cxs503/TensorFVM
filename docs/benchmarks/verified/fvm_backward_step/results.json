@@ -1,0 +1,186 @@
+{
+  "case": "fvm_backward_step",
+  "criteria": [
+    {
+      "id": "bfs.reattachment.finest",
+      "description": "|L_r/H - 6.0| / 6.0 on the finest grid H/40 (gate <= 10 %)",
+      "value": 6.963501677785078,
+      "reference": 6.0,
+      "error": 0.16058361296417964,
+      "passed": false,
+      "note": "family: H/10: 9.288, H/20: 7.788, H/40: 6.964"
+    },
+    {
+      "id": "bfs.reattachment.band",
+      "description": "L_r/H inside the 6.0 +- 0.2 experimental/benchmark band (finest grid)",
+      "value": 6.963501677785078,
+      "reference": 6.0,
+      "error": 0.16058361296417964,
+      "passed": false,
+      "note": ""
+    },
+    {
+      "id": "bfs.grid.monotone",
+      "description": "error in L_r/H decreases monotonically under refinement",
+      "value": 0.16058361296417964,
+      "reference": null,
+      "error": null,
+      "passed": true,
+      "note": "H/10: 54.80 %, H/20: 29.80 %, H/40: 16.06 %"
+    },
+    {
+      "id": "bfs.grid.order",
+      "description": "observed order of accuracy p >= 1.5",
+      "value": 0.8636454983009949,
+      "reference": 1.5,
+      "error": 0.6363545016990051,
+      "passed": false,
+      "note": "first-order upwind; the limited defect correction is not a contraction at Pe_cell ~ 40 (see VERIFICATION.md)"
+    },
+    {
+      "id": "bfs.friction.convergence",
+      "description": "mean |C_f(x; fine) - C_f(x; coarse)| decreases under refinement",
+      "value": 0.01576579744917914,
+      "reference": null,
+      "error": null,
+      "passed": false,
+      "note": "pair differences: 0.0132, 0.0158"
+    },
+    {
+      "id": "bfs.friction.developed_comparison",
+      "description": "downstream C_f vs fully developed 12 nu/(U_b H): reported only (developing boundary layer), not a gate",
+      "value": -0.11667692195202231,
+      "reference": 0.015,
+      "error": 8.778461463468153,
+      "passed": true,
+      "note": "not a gate: entrance length ~0.05 Re_H H = 40 H"
+    },
+    {
+      "id": "bfs.friction.trend",
+      "description": "C_f < 0 inside the bubble, upstream of the reattachment point, and zero-crossing consistent with L_r",
+      "value": -0.15345683312355415,
+      "reference": 0.0,
+      "error": null,
+      "passed": true,
+      "note": ""
+    },
+    {
+      "id": "bfs.mass.continuity",
+      "description": "max |div u| normalised by the inlet mass flux < 1e-5",
+      "value": 2.4423173997437098e-06,
+      "reference": 0.0,
+      "error": 2.4423173997437098e-06,
+      "passed": true,
+      "note": ""
+    },
+    {
+      "id": "bfs.friction.domain_length",
+      "description": "downstream C_f with a 20H outlet (vs the 10H case): positive and within 30 % of 12 nu/(U_b H)",
+      "value": 0.01840107656453514,
+      "reference": 0.015,
+      "error": 0.22673843763567603,
+      "passed": true,
+      "note": "the 10H case gives a negative C_f at the exit: an outflow boundary artefact, not physics"
+    },
+    {
+      "id": "bfs.convergence.H/10",
+      "description": "L_r/H drifts less than 1 % when the saved field is continued for the audit window",
+      "value": 9.285154210858211,
+      "reference": 9.287967803441472,
+      "error": 0.0003029287614689938,
+      "passed": true,
+      "note": "1000 extra iterations, dU=5.23e-02, continuity=1.15e-04"
+    },
+    {
+      "id": "bfs.convergence.H/20",
+      "description": "L_r/H drifts less than 1 % when the saved field is continued for the audit window",
+      "value": 7.802756524894603,
+      "reference": 7.787888472501673,
+      "error": 0.0019091249759710374,
+      "passed": true,
+      "note": "1000 extra iterations, dU=1.19e-02, continuity=1.16e-05"
+    },
+    {
+      "id": "bfs.convergence.H/40",
+      "description": "L_r/H drifts less than 1 % when the saved field is continued for the audit window",
+      "value": 7.012605515762292,
+      "reference": 6.963501677785078,
+      "error": 0.007051601370882868,
+      "passed": true,
+      "note": "1000 extra iterations, dU=1.73e-03, continuity=4.37e-06"
+    }
+  ],
+  "n_criteria": 12,
+  "n_passed": 8,
+  "verdict": "FAIL",
+  "figs": [
+    "docs/benchmarks/verified/fvm_backward_step/fig_backward_step.png",
+    "docs/benchmarks/verified/fvm_backward_step/fig_kernel_channel.png"
+  ],
+  "runs": [
+    "runs/incompressible-baselines/bfs_n010.json",
+    "runs/incompressible-baselines/bfs_n020.json",
+    "runs/incompressible-baselines/bfs_n040.json"
+  ],
+  "source": [
+    "src/tensorfvm/staggered_simple.py",
+    "src/tensorfvm/incompressible_baselines.py"
+  ],
+  "driver": "scripts/run_fvm_incompressible_baselines.py",
+  "audit_driver": "scripts/audit_fvm_incompressible_convergence.py",
+  "report": "scripts/report_fvm_incompressible.py",
+  "discretisation": "first-order upwind convection, central diffusion, SIMPLE, staggered MAC, blocked-cell step",
+  "observed_order": 0.8636454983009949,
+  "richardson_limit": 5.957698666992898,
+  "convergence_audit": {
+    "bfs_n010": {
+      "case": "backward_facing_step",
+      "qoi": "reattachment_over_H",
+      "iterations": 1000,
+      "qoi_before": 9.287967803441472,
+      "qoi_after": 9.285154210858211,
+      "drift": 0.002813592583260416,
+      "drift_rel": 0.0003029287614689938,
+      "change": 0.052259216258753405,
+      "continuity": 0.0001150071039502855
+    },
+    "bfs_n020": {
+      "case": "backward_facing_step",
+      "qoi": "reattachment_over_H",
+      "iterations": 1000,
+      "qoi_before": 7.787888472501673,
+      "qoi_after": 7.802756524894603,
+      "drift": 0.014868052392929876,
+      "drift_rel": 0.0019091249759710374,
+      "change": 0.011947344790195304,
+      "continuity": 1.1573289258522973e-05
+    },
+    "bfs_n040": {
+      "case": "backward_facing_step",
+      "qoi": "reattachment_over_H",
+      "iterations": 1000,
+      "qoi_before": 6.963501677785078,
+      "qoi_after": 7.012605515762292,
+      "drift": 0.049103837977214404,
+      "drift_rel": 0.007051601370882868,
+      "change": 0.0017273284028753721,
+      "continuity": 4.371080234539947e-06
+    },
+    "bfs_long_n020": {
+      "case": "backward_facing_step",
+      "qoi": "reattachment_over_H",
+      "iterations": 400,
+      "qoi_before": 7.662964988494439,
+      "qoi_after": 7.666470549490579,
+      "drift": 0.003505560996139856,
+      "drift_rel": 0.0004574679646068175,
+      "change": 0.008899080113689166,
+      "continuity": 1.138516109110815e-05
+    }
+  },
+  "reference": {
+    "reattachment": 6.0,
+    "band": 0.2,
+    "source": "2-D benchmark value for Re_Dh = 800 (Armaly 1983; Kim & Moin 1985; Ertink 2008 reproduce 6.0 +- 0.2)"
+  }
+}

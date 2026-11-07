@@ -1,0 +1,68 @@
+{
+  "job": {
+    "case": "sudden_expansion",
+    "level": 10,
+    "tag": "expansion_long_n010",
+    "re_d": 100.0,
+    "length_inlet_heights": 20.0
+  },
+  "metrics": {
+    "p_in": 0.7508338805530714,
+    "u_in": 1.0,
+    "p_out": 0.7753173492863119,
+    "u_out": 0.24999999987613686,
+    "k_total_head": 0.8885330625954506,
+    "k_static_recovery": 0.04896693746648095,
+    "k_identity_check": 0.8885330625954506,
+    "k_theory_borda_carnot": 0.5625,
+    "k_error_rel": 0.5796143335030233,
+    "reattachment_over_D": 12.866840978257702,
+    "continuity": 1.656316528375612e-09,
+    "iterations": 11330
+  },
+  "reference": {
+    "k_theory": 0.5625,
+    "re_d": 100.0
+  },
+  "convergence": {
+    "history": [
+      {
+        "stage": "first_order",
+        "iterations": 11330,
+        "continuity": 1.656316528375612e-09,
+        "change": 9.972317003059672e-06
+      }
+    ],
+    "final": {
+      "stage": "first_order",
+      "iterations": 11330,
+      "continuity": 1.656316528375612e-09,
+      "change": 9.972317003059672e-06
+    }
+  },
+  "meta": {
+    "case": "sudden_expansion",
+    "n_over_D": 10,
+    "re_D": 100.0,
+    "area_ratio": 4.0,
+    "inlet_profile": "uniform",
+    "u_mean_inlet": 1.0,
+    "nu": 0.01,
+    "D": 1.0,
+    "H2": 4.0,
+    "hx": 0.1,
+    "hy": 0.1,
+    "length_inlet_heights": 20.0,
+    "nx": 200,
+    "ny": 40,
+    "cells": 8000
+  },
+  "settings": {
+    "alpha_u": 0.8,
+    "alpha_p": 0.5,
+    "limited": false,
+    "dc_frozen": false,
+    "poisson_solver": "sparse"
+  },
+  "wall_seconds": 186.6
+}

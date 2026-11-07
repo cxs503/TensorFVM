@@ -20,7 +20,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from .staggered_simple import StaggeredSimple
+from .staggered_simple import DTYPE, StaggeredSimple
 
 # --------------------------------------------------------------------------- #
 # literature reference data
@@ -55,7 +55,8 @@ SUDDEN_EXPANSION_K_THEORY = (1.0 - 1.0 / SUDDEN_EXPANSION_AREA_RATIO) ** 2  # 0.
 def build_backward_facing_step(n_over_H: int, *, re_H: float = 800.0,
                                inlet_length_H: float = 2.0,
                                outlet_length_H: float = 10.0,
-                               limited: bool = True) -> StaggeredSimple:
+                               limited: bool = True,
+                               poisson_solver: str = "multigrid") -> StaggeredSimple:
     """Gartling BFS: step height ``H/2``, expansion ratio 2, ``Re_H = 800``.
 
     ``n_over_H`` cells resolve the downstream channel height ``H = 1``.  The
@@ -80,7 +81,8 @@ def build_backward_facing_step(n_over_H: int, *, re_H: float = 800.0,
     nu = u_bulk * H / re_H
     solver = StaggeredSimple(nx, ny, hx, hy, nu, fluid, inlet_profile=profile,
                              east_outlet=True, limited=limited,
-                             alpha_u=0.7, alpha_p=0.3)
+                             alpha_u=0.7, alpha_p=0.3,
+                             poisson_solver=poisson_solver)
     solver.meta = dict(case="backward_facing_step", n_over_H=n_over_H, re_H=re_H,
                        u_bulk=u_bulk, nu=nu, H=H, x_step=0.0, n_in=n_in,
                        hx=hx, hy=hy, inlet_length_H=inlet_length_H,
@@ -98,6 +100,28 @@ def _wall_reattachment(x: np.ndarray, tau: np.ndarray) -> float | None:
     return None
 
 
+def wall_friction_profile(solver: StaggeredSimple, axis: int = 0
+                          ) -> tuple[np.ndarray, np.ndarray]:
+    """``(x, C_f)`` on the stepped wall (``axis = 0``) or the top wall.
+
+    ``u[:, 0]`` is the streamwise velocity on the wall-adjacent row, i.e. at a
+    distance ``h/2`` from the no-slip wall (the staggered normal face carries no
+    tangential constraint), so the wall shear is ``rho*nu*u[:, 0]/(h/2)`` and
+
+    .. math:: C_f = \\frac{\\tau_w}{\\tfrac12 \\rho U_b^2}
+                  = \\frac{4 \\nu u_{w}}{h U_b^2}.
+
+    The sign of ``C_f`` is the sign of the wall shear, so its zero crossing *is*
+    the reattachment point -- the same quantity the length criterion uses.
+    """
+    m = solver.meta
+    nu, h, ub = solver.nu, solver.hy, m["u_bulk"]
+    u_wall = solver.u[:, -1] if axis == 1 else solver.u[:, 0]
+    cf = 4.0 * nu * u_wall / (h * ub ** 2)
+    x = np.arange(solver.nx + 1) * solver.hx - m["inlet_length_H"]
+    return x, cf
+
+
 def backward_facing_step_metrics(solver: StaggeredSimple) -> dict:
     """Reattachment length from the step, backflow statistics, mass imbalance."""
     m = solver.meta
@@ -111,10 +135,23 @@ def backward_facing_step_metrics(solver: StaggeredSimple) -> dict:
     recirc = np.where(fluid, uc, 0.0)
     min_u = float(recirc.min())
     area_neg = float((np.where(fluid, uc, 0.0) < 0).sum()) / float(fluid.sum())
+    x_cf, cf = wall_friction_profile(solver)
+    down = x_cf >= 0.0
+    # analytic fully developed plane-channel value C_f = 12 nu / (U_b H)
+    cf_analytic = 12.0 * solver.nu / (m["u_bulk"] * m["H"])
+    i_far = len(x_cf) - max(2, len(x_cf) // 100)
+    cf_far = float(cf[i_far])
+    keep = max(1, int(np.ceil(down.sum() / 120.0)))
     return dict(
         reattachment_over_H=None if x_r is None else float(x_r / m["H"]),
         min_u_in_recirculation=min_u,
         backflow_area_fraction=area_neg,
+        friction_min=float(cf[down].min()) if down.any() else None,
+        friction_far=cf_far,
+        friction_far_analytic=float(cf_analytic),
+        friction_far_rel_error=float(abs(cf_far - cf_analytic) / cf_analytic),
+        friction_profile=[[float(xx), float(cc)]
+                          for xx, cc in zip(x_cf[down][::keep], cf[down][::keep])],
         continuity=float(np.abs(solver.divergence()).max()),
         iterations=int(solver.iterations),
     )
@@ -127,7 +164,8 @@ def build_sudden_expansion(n_over_D: int, *, re_D: float = 100.0,
                            area_ratio: float = 4.0,
                            inlet_profile: str = "uniform",
                            length_inlet_heights: float = 12.0,
-                           limited: bool = True) -> StaggeredSimple:
+                           limited: bool = True,
+                           poisson_solver: str = "multigrid") -> StaggeredSimple:
     """Planar sudden expansion ``A2/A1 = area_ratio``, inlet height ``D = 1``.
 
     ``n_over_D`` cells resolve ``D``.  The inlet occupies ``y in [0, 1]`` on the
@@ -154,7 +192,8 @@ def build_sudden_expansion(n_over_D: int, *, re_D: float = 100.0,
     nu = u_mean * D / re_D
     solver = StaggeredSimple(nx, ny, hx, hy, nu, fluid, inlet_profile=profile,
                              east_outlet=True, limited=limited,
-                             alpha_u=0.7, alpha_p=0.3)
+                             alpha_u=0.7, alpha_p=0.3,
+                             poisson_solver=poisson_solver)
     solver.meta = dict(case="sudden_expansion", n_over_D=n_over_D, re_D=re_D,
                        area_ratio=area_ratio, inlet_profile=inlet_profile,
                        u_mean_inlet=u_mean, nu=nu, D=D, H2=H2, hx=hx, hy=hy,
@@ -197,6 +236,10 @@ def sudden_expansion_metrics(solver: StaggeredSimple) -> dict:
     q_in = 0.5 * u_in ** 2
     q_out = 0.5 * u_out ** 2
     k_total = ((p_in + q_in) - (p_out + q_out)) / q_in
+    #: signed *pressure rise* across the expansion, ``(p_out - p_in)/q_in``.  A
+    #: diffuser would recover dynamic head here; the measured value is negative
+    #: (a pressure *drop*) because the laminar recirculation plus wall friction
+    #: dissipate more than the deceleration recovers.
     static_recovery = (p_out - p_in) / q_in
     # momentum-integral (Borda-Carnot) prediction with the *measured* profiles:
     # the control volume between the two stations has only wall shear on the
@@ -204,7 +247,11 @@ def sudden_expansion_metrics(solver: StaggeredSimple) -> dict:
     # is not attempted here -- instead the dimensionless identity
     #   K = static_recovery + (1 - 1/AR^2)
     # is reported as an internal consistency check.
-    k_identity = static_recovery + (1.0 - (u_out / u_in) ** 2)
+    #: K decomposed into the static part plus the bulk kinetic-energy change:
+    #: ``K = (p_in - p_out)/q_in + (1 - (u_out/u_in)^2)``.  This is an identity
+    #: on the *measured* stations, so it is a self-consistency gate on the two
+    #: pressure/velocity post-processing paths, not a physical check.
+    k_identity = -static_recovery + (1.0 - (u_out / u_in) ** 2)
     # reattachment on the step-side wall (top wall, y = H2)
     tau = solver.v[:, -1] if False else solver.u[:, -1]
     x = np.arange(solver.nx + 1) * solver.hx
@@ -228,7 +275,8 @@ def sudden_expansion_metrics(solver: StaggeredSimple) -> dict:
 # --------------------------------------------------------------------------- #
 def build_natural_convection_cavity(n: int, *, rayleigh: float,
                                     prandtl: float = 0.71,
-                                    limited: bool = True) -> StaggeredSimple:
+                                    limited: bool = True,
+                                    poisson_solver: str = "multigrid") -> StaggeredSimple:
     """Square cavity, hot west wall (``T = 1``), cold east wall (``T = 0``).
 
     Adiabatic south/north walls, no inflow and no outflow.  The Boussinesq
@@ -243,7 +291,7 @@ def build_natural_convection_cavity(n: int, *, rayleigh: float,
                              east_outlet=False, limited=limited,
                              alpha_u=0.5, alpha_p=0.2, alpha_T=0.7,
                              buoyancy=1.0, t_ref=0.0, prandtl=prandtl,
-                             energy=True)
+                             energy=True, poisson_solver=poisson_solver)
     solver.t_bc = dict(west=("fixed", 1.0), east=("fixed", 0.0),
                        south=("adiabatic", 0.0), north=("adiabatic", 0.0))
     solver.T[:, 0] = 0.5
@@ -302,34 +350,103 @@ def natural_convection_metrics(solver: StaggeredSimple) -> dict:
 
 
 # --------------------------------------------------------------------------- #
+# grid sequencing
+# --------------------------------------------------------------------------- #
+def inject_coarse_solution(solver: StaggeredSimple, coarse: dict) -> StaggeredSimple:
+    """Initialise ``solver`` from a solution on the next coarser grid.
+
+    All three cases refine uniformly by a factor of two, so the coarse cell
+    centres coincide with fine cell corners and the injection is exact:
+    face values are copied on the common faces and averaged on the new ones,
+    cell-centre values are piecewise constant.  The resulting field is *not*
+    divergence free, but the first SIMPLE iteration removes the defect, and the
+    saved outer iterations are precisely the slow advective transient that makes
+    a cold start on the finest grid expensive.
+    """
+    fl = solver.fluid
+    u_c = np.asarray(coarse["u"], dtype=DTYPE)
+    v_c = np.asarray(coarse["v"], dtype=DTYPE)
+    p_c = np.asarray(coarse["p"], dtype=DTYPE)
+    T_c = np.asarray(coarse["T"], dtype=DTYPE)
+    nxc, nyc = u_c.shape[0] - 1, u_c.shape[1]
+    if (solver.nx, solver.ny) != (2 * nxc, 2 * nyc):
+        raise ValueError(f"coarse grid {(nxc, nyc)} is not a dyadic parent of "
+                         f"{(solver.nx, solver.ny)}")
+    u_f = np.zeros((2 * nxc + 1, 2 * nyc), dtype=DTYPE)
+    u_f[0::2] = np.repeat(u_c, 2, axis=1)
+    u_f[1::2] = 0.5 * np.repeat(u_c[:-1] + u_c[1:], 2, axis=1)
+    v_f = np.zeros((2 * nxc, 2 * nyc + 1), dtype=DTYPE)
+    v_f[:, 0::2] = np.repeat(v_c, 2, axis=0)
+    v_f[:, 1::2] = 0.5 * np.repeat(v_c[:, :-1] + v_c[:, 1:], 2, axis=0)
+    solver.u = np.where(solver.u_open, u_f, 0.0)
+    solver.v = np.where(solver.v_open, v_f, 0.0)
+    solver.p = np.repeat(np.repeat(p_c, 2, axis=0), 2, axis=1)
+    solver.T = np.repeat(np.repeat(T_c, 2, axis=0), 2, axis=1)
+    if solver.energy:
+        solver.T = np.where(fl, solver.T, 0.0)
+    solver.p = np.where(fl, solver.p - float(np.mean(solver.p[fl])), 0.0)
+    solver._outflow_initialised = False
+    solver.apply_bc()
+    return solver
+
+
+# --------------------------------------------------------------------------- #
 # convergence driver shared by all three cases
 # --------------------------------------------------------------------------- #
 def converge(solver: StaggeredSimple, *,
              max_iter: int = 6000, tol: float = 1e-6, check: int = 10,
              momentum_sweeps: int = 4, p_cycles: int = 2,
-             deferred_cycles: int = 2, first_order_iters: float = 0.35,
-             verbose: bool = False) -> dict:
-    """Converge a case: first-order upwind, then frozen van Leer defect cycles.
+             deferred_cycles: int = 1, first_order_iters: float = 0.35,
+             dc_relax: float = 0.05, verbose: bool = False) -> dict:
+    """Converge a case: first-order upwind, then a limited second-order defect.
 
-    The fully explicit van Leer correction is unstable above ``Pe_cell ~ 3``
-    (measured here: a cell-Peclet 6 channel diverges, cell-Peclet 0.6 converges),
-    so the higher-order terms are applied as a **frozen defect correction**: the
-    first-order solution is converged, the limited face fluxes are evaluated
-    once, and the momentum/energy equations are re-solved with that source held
-    fixed.  ``deferred_cycles`` Picard refreezes are performed.
+    The limiter is a *defect correction*: the first-order upwind solution comes
+    first, then the van Leer (harmonic, TVD) face flux is used to correct the
+    convective source.  Applying that correction with weight one every outer
+    iteration is only a contraction below ``Pe_cell ~ 3``; at ``Pe_cell = 10``
+    (sudden expansion) and ``Pe_cell = 40`` (backward-facing step, Re_H = 800) it
+    diverges within ~500 iterations, so the source is advanced with
+    ``dc_relax < 1`` (:meth:`StaggeredSimple._relax_dc`).  The fixed point is
+    unchanged -- at convergence the source equals the limiter evaluated on the
+    converged field -- only the path to it is damped.
+
+    ``dc_relax = 1`` recovers the legacy behaviour of freezing the correction
+    once (:meth:`StaggeredSimple.refresh_deferred`), which is what the cavity
+    cases still use because their cell Peclet numbers are small.
     """
     kw = dict(momentum_sweeps=momentum_sweeps, p_cycles=p_cycles)
     solver.limited = False
-    first = solver.run(max_iter=int(max_iter * first_order_iters), tol=tol * 10,
-                       check=check, **kw)
-    history = [dict(stage="first_order", **{k: first[k] for k in
-                                            ("iterations", "continuity", "change")})]
-    for cyc in range(deferred_cycles):
+    r0 = solver.run(max_iter=max(100, int(max_iter * first_order_iters)),
+                    tol=tol * 10, check=check, max_stall=10 ** 6,
+                    verbose=verbose, **kw)
+    first = solver.state()
+    history = [dict(stage="first_order", iterations=solver.iterations,
+                    continuity=first["continuity"], change=float(r0["change"]))]
+    if verbose:
+        print(f"    first order: it={solver.iterations} "
+              f"cont={first['continuity']:.2e}", flush=True)
+    if deferred_cycles <= 0:
+        return dict(history=history, final=history[-1])
+    #: Each stage gets the full budget: ``first_order_iters`` only controls how
+    #: the *first* stage is truncated, and the higher-order stage must be allowed
+    #: to converge on its own (a 100-iteration cap left the Ra = 1e6, 64^2 cavity
+    #: at Nu = 2.93 instead of 8.93 -- the frozen defect source needs thousands of
+    #: iterations there).
+    remaining = int(max_iter)
+    if dc_relax >= 1.0:
         solver.refresh_deferred(1.0)
-        r = solver.run(max_iter=max_iter, tol=tol, check=check, **kw)
-        history.append(dict(stage=f"deferred_{cyc + 1}",
-                            **{k: r[k] for k in ("iterations", "continuity", "change")}))
+        cycles = [(f"deferred_{c + 1}", remaining) for c in range(deferred_cycles)]
+    else:
+        solver.limited = True
+        solver.dc_relax = float(dc_relax)
+        cycles = [(f"limited_{c + 1}", remaining // deferred_cycles)
+                  for c in range(deferred_cycles)]
+    for stage, budget in cycles:
+        r = solver.run(max_iter=budget, tol=tol, check=check, max_stall=10 ** 6,
+                       verbose=verbose, **kw)
+        history.append(dict(stage=stage, iterations=r["iterations"],
+                            continuity=r["continuity"], change=r["change"]))
         if verbose:
-            print(f"    deferred cycle {cyc + 1}: it={r['iterations']} "
-                  f"cont={r['continuity']:.2e} dU={r['change']:.2e}", flush=True)
+            print(f"    {stage}: it={r['iterations']} cont={r['continuity']:.2e} "
+                  f"dU={r['change']:.2e}", flush=True)
     return dict(history=history, final=history[-1])

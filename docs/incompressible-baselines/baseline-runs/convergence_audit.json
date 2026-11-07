@@ -1,0 +1,222 @@
+{
+ "bfs_n010": {
+  "case": "backward_facing_step",
+  "qoi": "reattachment_over_H",
+  "iterations": 1000,
+  "qoi_before": 9.287967803441472,
+  "qoi_after": 9.285154210858211,
+  "drift": 0.002813592583260416,
+  "drift_rel": 0.0003029287614689938,
+  "change": 0.052259216258753405,
+  "continuity": 0.0001150071039502855
+ },
+ "bfs_n020": {
+  "case": "backward_facing_step",
+  "qoi": "reattachment_over_H",
+  "iterations": 1000,
+  "qoi_before": 7.787888472501673,
+  "qoi_after": 7.802756524894603,
+  "drift": 0.014868052392929876,
+  "drift_rel": 0.0019091249759710374,
+  "change": 0.011947344790195304,
+  "continuity": 1.1573289258522973e-05
+ },
+ "bfs_n040": {
+  "case": "backward_facing_step",
+  "qoi": "reattachment_over_H",
+  "iterations": 1000,
+  "qoi_before": 6.963501677785078,
+  "qoi_after": 7.012605515762292,
+  "drift": 0.049103837977214404,
+  "drift_rel": 0.007051601370882868,
+  "change": 0.0017273284028753721,
+  "continuity": 4.371080234539947e-06
+ },
+ "expansion_n010": {
+  "case": "sudden_expansion",
+  "qoi": "k_total_head",
+  "iterations": 1000,
+  "qoi_before": 1.0260453652660464,
+  "qoi_after": 1.0261072860178289,
+  "drift": 6.19207517824627e-05,
+  "drift_rel": 6.0348941556211876e-05,
+  "change": 3.6953239626602574e-07,
+  "continuity": 3.503420995150386e-10
+ },
+ "expansion_n020": {
+  "case": "sudden_expansion",
+  "qoi": "k_total_head",
+  "iterations": 1000,
+  "qoi_before": 1.1058190867564537,
+  "qoi_after": 1.1059845158786195,
+  "drift": 0.0001654291221657722,
+  "drift_rel": 0.00014959872202152216,
+  "change": 2.090247257557909e-06,
+  "continuity": 2.588072187115209e-10
+ },
+ "cavity_n064_ra1e04": {
+  "case": "natural_convection_cavity",
+  "qoi": "nusselt",
+  "iterations": 600,
+  "qoi_before": 2.2062475903536276,
+  "qoi_after": 2.2061891690810063,
+  "drift": 5.842127262134511e-05,
+  "drift_rel": 2.6479925859989755e-05,
+  "change": 3.168320578117445e-08,
+  "continuity": 5.059365710989531e-10
+ },
+ "cavity_n064_ra1e05": {
+  "case": "natural_convection_cavity",
+  "qoi": "nusselt",
+  "iterations": 600,
+  "qoi_before": 4.436368120289987,
+  "qoi_after": 4.4363341043654145,
+  "drift": 3.401592457219493e-05,
+  "drift_rel": 7.667516231716916e-06,
+  "change": 1.8620622127540898e-08,
+  "continuity": 3.1068225753943773e-10
+ },
+ "cavity_n064_ra1e06": {
+  "case": "natural_convection_cavity",
+  "qoi": "nusselt",
+  "iterations": 400,
+  "qoi_before": 8.92872098650816,
+  "qoi_after": 8.928628017237134,
+  "drift": 9.296927102653285e-05,
+  "drift_rel": 1.0412383942449883e-05,
+  "change": 1.9914520799080293e-07,
+  "continuity": 1.4125885454871203e-09
+ },
+ "cavity_n096_ra1e04": {
+  "case": "natural_convection_cavity",
+  "qoi": "nusselt",
+  "iterations": 600,
+  "qoi_before": 2.2156316497654687,
+  "qoi_after": 2.215552582480882,
+  "drift": 7.906728458673129e-05,
+  "drift_rel": 3.5686114429309944e-05,
+  "change": 5.9398597207493964e-08,
+  "continuity": 4.767372159200161e-10
+ },
+ "cavity_n096_ra1e05": {
+  "case": "natural_convection_cavity",
+  "qoi": "nusselt",
+  "iterations": 600,
+  "qoi_before": 4.441884535833445,
+  "qoi_after": 4.441818072209319,
+  "drift": 6.646362412610074e-05,
+  "drift_rel": 1.49629337705488e-05,
+  "change": 4.687733543007333e-08,
+  "continuity": 4.605639544172855e-10
+ },
+ "cavity_n096_ra1e06": {
+  "case": "natural_convection_cavity",
+  "qoi": "nusselt",
+  "iterations": 600,
+  "qoi_before": 8.735297896186518,
+  "qoi_after": 8.735253944716064,
+  "drift": 4.3951470454217656e-05,
+  "drift_rel": 5.031479289722347e-06,
+  "change": 2.9307737958728097e-08,
+  "continuity": 5.04926589494653e-10
+ },
+ "expansion_re0000100": {
+  "case": "sudden_expansion",
+  "qoi": "k_total_head",
+  "iterations": 300,
+  "qoi_before": 1.0262065246884258,
+  "qoi_after": 1.026210501184907,
+  "drift": 3.9764964812061265e-06,
+  "drift_rel": 3.874947571994302e-06,
+  "change": 5.381495045697626e-07,
+  "continuity": 1.0109106633390819e-09
+ },
+ "expansion_re0000200": {
+  "case": "sudden_expansion",
+  "qoi": "k_total_head",
+  "iterations": 300,
+  "qoi_before": 1.030667684943059,
+  "qoi_after": 1.0306764662265604,
+  "drift": 8.781283501457793e-06,
+  "drift_rel": 8.519994979703792e-06,
+  "change": 5.675491486778483e-07,
+  "continuity": 2.0910985443212127e-09
+ },
+ "expansion_re0000500": {
+  "case": "sudden_expansion",
+  "qoi": "k_total_head",
+  "iterations": 300,
+  "qoi_before": 1.0502533075709222,
+  "qoi_after": 1.050248234284051,
+  "drift": 5.0732868712710655e-06,
+  "drift_rel": 4.830536437923547e-06,
+  "change": 8.710162773539754e-07,
+  "continuity": 1.773389102233125e-09
+ },
+ "expansion_re0001000": {
+  "case": "sudden_expansion",
+  "qoi": "k_total_head",
+  "iterations": 300,
+  "qoi_before": 1.0850759510591477,
+  "qoi_after": 1.1623545159810598,
+  "drift": 0.0772785649219121,
+  "drift_rel": 0.07121949836458925,
+  "change": 0.035663762055878845,
+  "continuity": 0.00013108494296790174
+ },
+ "expansion_re0002000": {
+  "case": "sudden_expansion",
+  "qoi": "k_total_head",
+  "iterations": 300,
+  "qoi_before": 1.0922556567094885,
+  "qoi_after": 1.0922555544593036,
+  "drift": 1.0225018498566385e-07,
+  "drift_rel": 9.361378387702846e-08,
+  "change": 9.096373653656731e-07,
+  "continuity": 9.599167519885876e-10
+ },
+ "expansion_re0005000": {
+  "case": "sudden_expansion",
+  "qoi": "k_total_head",
+  "iterations": 300,
+  "qoi_before": 1.5189007365033147,
+  "qoi_after": 1.4828081921720182,
+  "drift": 0.036092544331296494,
+  "drift_rel": 0.02376227982770336,
+  "change": 0.001732404386005415,
+  "continuity": 3.234473170254937e-05
+ },
+ "bfs_long_n020": {
+  "case": "backward_facing_step",
+  "qoi": "reattachment_over_H",
+  "iterations": 400,
+  "qoi_before": 7.662964988494439,
+  "qoi_after": 7.666470549490579,
+  "drift": 0.003505560996139856,
+  "drift_rel": 0.0004574679646068175,
+  "change": 0.008899080113689166,
+  "continuity": 1.138516109110815e-05
+ },
+ "expansion_long_n010": {
+  "case": "sudden_expansion",
+  "qoi": "k_total_head",
+  "iterations": 400,
+  "qoi_before": 0.8885330625954506,
+  "qoi_after": 0.8885150346488806,
+  "drift": 1.8027946570020603e-05,
+  "drift_rel": 2.028956189582867e-05,
+  "change": 7.83726091851955e-06,
+  "continuity": 1.304473080769586e-09
+ },
+ "expansion_n030": {
+  "case": "sudden_expansion",
+  "qoi": "k_total_head",
+  "iterations": 400,
+  "qoi_before": 1.1312543698053101,
+  "qoi_after": 1.1313620202874775,
+  "drift": 0.00010765048216732076,
+  "drift_rel": 9.516027963352531e-05,
+  "change": 6.731508188362323e-06,
+  "continuity": 6.828798341615319e-10
+ }
+}
