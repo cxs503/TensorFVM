@@ -144,15 +144,15 @@
     "docs/benchmarks/verified/fvm_natural_convection/fig_natural_convection.png"
   ],
   "runs": [
-    "runs/incompressible-baselines/cavity_n032_ra1e04.json",
-    "runs/incompressible-baselines/cavity_n032_ra1e05.json",
-    "runs/incompressible-baselines/cavity_n032_ra1e06.json",
-    "runs/incompressible-baselines/cavity_n064_ra1e04.json",
-    "runs/incompressible-baselines/cavity_n064_ra1e05.json",
-    "runs/incompressible-baselines/cavity_n064_ra1e06.json",
-    "runs/incompressible-baselines/cavity_n096_ra1e04.json",
-    "runs/incompressible-baselines/cavity_n096_ra1e05.json",
-    "runs/incompressible-baselines/cavity_n096_ra1e06.json"
+    "docs/incompressible-baselines/baseline-runs/cavity_n032_ra1e04.json",
+    "docs/incompressible-baselines/baseline-runs/cavity_n032_ra1e05.json",
+    "docs/incompressible-baselines/baseline-runs/cavity_n032_ra1e06.json",
+    "docs/incompressible-baselines/baseline-runs/cavity_n064_ra1e04.json",
+    "docs/incompressible-baselines/baseline-runs/cavity_n064_ra1e05.json",
+    "docs/incompressible-baselines/baseline-runs/cavity_n064_ra1e06.json",
+    "docs/incompressible-baselines/baseline-runs/cavity_n096_ra1e04.json",
+    "docs/incompressible-baselines/baseline-runs/cavity_n096_ra1e05.json",
+    "docs/incompressible-baselines/baseline-runs/cavity_n096_ra1e06.json"
   ],
   "source": [
     "src/tensorfvm/staggered_simple.py",
