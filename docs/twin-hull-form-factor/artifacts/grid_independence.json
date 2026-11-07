@@ -1,0 +1,136 @@
+{
+  "levels": [
+    {
+      "level": {
+        "n_stations": 24,
+        "n_girth_half": 9,
+        "n_panels": 432
+      },
+      "C_F": 0.002879930201961748,
+      "C_VP": 0.0010709009273188433,
+      "C_V": 0.003950831129280592,
+      "k": 0.371849611698703,
+      "one_plus_k": 1.371849611698703,
+      "S_wet": 12.798158772412112,
+      "viscous_pressure_fraction": 0.27105712501405854,
+      "bare_hull_drag_error": 0.00013462726023021475,
+      "iterations": 3
+    },
+    {
+      "level": {
+        "n_stations": 36,
+        "n_girth_half": 14,
+        "n_panels": 1008
+      },
+      "C_F": 0.002898172141566848,
+      "C_VP": 0.0011013726638064085,
+      "C_V": 0.003999544805373257,
+      "k": 0.3800232042845356,
+      "one_plus_k": 1.3800232042845355,
+      "S_wet": 12.838712064036152,
+      "viscous_pressure_fraction": 0.27537450320015183,
+      "bare_hull_drag_error": 9.139971374962338e-05,
+      "iterations": 3
+    },
+    {
+      "level": {
+        "n_stations": 54,
+        "n_girth_half": 21,
+        "n_panels": 2268
+      },
+      "C_F": 0.0029080589596154134,
+      "C_VP": 0.0010590820296180123,
+      "C_V": 0.003967140989233425,
+      "k": 0.36418863727511025,
+      "one_plus_k": 1.3641886372751102,
+      "S_wet": 12.947283625812695,
+      "viscous_pressure_fraction": 0.266963546920136,
+      "bare_hull_drag_error": 6.954471706342278e-05,
+      "iterations": 3
+    }
+  ],
+  "convergence": {
+    "C_F": {
+      "coarse": 0.002879930201961748,
+      "medium": 0.002898172141566848,
+      "fine": 0.0029080589596154134,
+      "relative_change_medium_coarse": 0.006334160318425183,
+      "relative_change_fine_medium": 0.0034113977933761127,
+      "max_relative_change": 0.006334160318425183,
+      "sequence_monotone": true,
+      "observed_order": 1.5106625578767479,
+      "richardson_extrapolated": 0.002919758271284791,
+      "extrapolation_error": -0.00400694529558753
+    },
+    "C_VP": {
+      "coarse": 0.0010709009273188433,
+      "medium": 0.0011013726638064085,
+      "fine": 0.0010590820296180123,
+      "relative_change_medium_coarse": 0.02845430021603923,
+      "relative_change_fine_medium": 0.03839811498701746,
+      "max_relative_change": 0.03839811498701746,
+      "sequence_monotone": false,
+      "observed_order": null,
+      "richardson_extrapolated": null,
+      "extrapolation_error": null
+    },
+    "C_V": {
+      "coarse": 0.003950831129280592,
+      "medium": 0.003999544805373257,
+      "fine": 0.003967140989233425,
+      "relative_change_medium_coarse": 0.012329981843981107,
+      "relative_change_fine_medium": 0.008101876017565273,
+      "max_relative_change": 0.012329981843981107,
+      "sequence_monotone": false,
+      "observed_order": null,
+      "richardson_extrapolated": null,
+      "extrapolation_error": null
+    },
+    "k": {
+      "coarse": 0.371849611698703,
+      "medium": 0.3800232042845356,
+      "fine": 0.36418863727511025,
+      "relative_change_medium_coarse": 0.02198090929419981,
+      "relative_change_fine_medium": 0.04166736881037801,
+      "max_relative_change": 0.04166736881037801,
+      "sequence_monotone": false,
+      "observed_order": null,
+      "richardson_extrapolated": null,
+      "extrapolation_error": null
+    }
+  },
+  "refinement_ratio": 1.5,
+  "separation_ratio": null,
+  "Re": 10000000.0,
+  "geometry": {
+    "Lpp": 7.00004375027344,
+    "B": 1.2687579297370608,
+    "T": 0.45500284376777356,
+    "Cb_analytic": 0.809800808153721,
+    "Cb_target": 0.8098,
+    "Cb_grid": 0.8087704510633803,
+    "LCB_fraction_analytic": 0.03480028464412641,
+    "LCB_target": 0.0348,
+    "volume": 3.272441117361394,
+    "wetted_surface": 12.838712064036152,
+    "wetted_surface_published": 13.01195952398577,
+    "wetted_surface_error": -0.013314478855414503,
+    "midship_Cm": 0.98,
+    "Cm_target": 0.9989,
+    "n_panels": 1008,
+    "n_active_panels": 1008,
+    "n_stations": 36,
+    "n_girth_half": 14,
+    "fore_exponent": 2.4363033989787937,
+    "aft_exponent": 2.0280896247814577,
+    "parallel_body_half_length": 0.25,
+    "keel_breadth_ratio": 0.9,
+    "bilge_exponent": 4.0
+  },
+  "empirical": {
+    "one_plus_k": 1.2212479425123077,
+    "k": 0.22124794251230773,
+    "prismatic": 0.8106917609370307,
+    "c14": 0.7250000000000001
+  }
+}
