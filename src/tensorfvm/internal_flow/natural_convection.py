@@ -40,6 +40,10 @@ class NaturalConvectionConfig:
     rayleigh: float = 1e4
     prandtl: float = 0.71
     cfl: float = 0.4
+    #: Order of the one-sided wall-normal temperature gradient that defines
+    #: ``Nu``: ``first_order`` uses the half-cell difference, ``second_order``
+    #: the quadratic fit through the wall value and the first two cell centres.
+    wall_gradient: str = "second_order"
     time_step: float | None = None
     max_steps: int = 600_000
     tolerance: float = 1e-9
@@ -49,6 +53,8 @@ class NaturalConvectionConfig:
     def __post_init__(self) -> None:
         if isinstance(self.n, bool) or not isinstance(self.n, int) or self.n < 8:
             raise ValueError("n must be an integer >= 8")
+        if self.wall_gradient not in ("first_order", "second_order"):
+            raise ValueError("wall_gradient must be first_order or second_order")
         for name in ("rayleigh", "prandtl", "cfl"):
             value = getattr(self, name)
             if not math.isfinite(value) or value <= 0:
@@ -112,7 +118,15 @@ class NaturalConvectionCase:
         cfg = self.config
         solver = self.solver
         y = (torch.arange(solver.ny, dtype=solver.dtype) + 0.5) * solver.hy
-        gradient = (0.5 * cfg.temperature_drop - solver.theta[0, :]) / (0.5 * solver.hx)
+        wall = 0.5 * cfg.temperature_drop
+        if cfg.wall_gradient == "first_order":
+            # half-cell difference: O(h) one-sided
+            gradient = (wall - solver.theta[0, :]) / (0.5 * solver.hx)
+        else:
+            # quadratic fit through x = 0, h/2, 3h/2: -dtheta/dx|_0 =
+            # (8 wall - 9 theta_0 + theta_1) / (3h); exact for a linear profile
+            gradient = (8.0 * wall - 9.0 * solver.theta[0, :] + solver.theta[1, :]) \
+                / (3.0 * solver.hx)
         return y, gradient
 
     def diagnostics(self) -> dict[str, object]:
