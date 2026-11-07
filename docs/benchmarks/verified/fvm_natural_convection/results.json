@@ -1,0 +1,250 @@
+{
+  "case": "fvm_natural_convection",
+  "criteria": [
+    {
+      "id": "cavity.Nu.1e+04.finest",
+      "description": "|Nu - 2.243| / 2.243 at Ra=1e+04 on the finest grid (96^2 cells, target <= 3 %)",
+      "value": 2.2156316497654687,
+      "reference": 2.243,
+      "error": 0.012201671972595281,
+      "passed": true,
+      "note": "family: 32: 2.2036, 64: 2.2062, 96: 2.2156"
+    },
+    {
+      "id": "cavity.Nu.1e+04.monotone",
+      "description": "Nu error decreases monotonically under refinement",
+      "value": 0.012201671972595281,
+      "reference": null,
+      "error": null,
+      "passed": true,
+      "note": "32: 1.76 %, 64: 1.64 %, 96: 1.22 %"
+    },
+    {
+      "id": "cavity.Nu.1e+04.order",
+      "description": "observed order p >= 1.5",
+      "value": null,
+      "reference": 1.5,
+      "error": null,
+      "passed": false,
+      "note": "Richardson limit Nu = None"
+    },
+    {
+      "id": "cavity.psi.1e+04",
+      "description": "|psi/alpha - 5.071| / 5.071 at Ra=1e+04 (finest grid, target <= 15 %)",
+      "value": 5.10534280206384,
+      "reference": 5.071,
+      "error": 0.006772392440118297,
+      "passed": true,
+      "note": "psi is a cumulative integral of u from the wall: it accumulates the near-wall velocity error that Nu does not see"
+    },
+    {
+      "id": "cavity.energy.1e+04",
+      "description": "hot/cold wall Nusselt numbers agree within 1 %",
+      "value": 2.2156316497654687,
+      "reference": 2.212032520805994,
+      "error": 0.0016244256845922656,
+      "passed": true,
+      "note": ""
+    },
+    {
+      "id": "cavity.Nu.1e+05.finest",
+      "description": "|Nu - 4.519| / 4.519 at Ra=1e+05 on the finest grid (96^2 cells, target <= 3 %)",
+      "value": 4.441884535833445,
+      "reference": 4.519,
+      "error": 0.01706471877994136,
+      "passed": true,
+      "note": "family: 32: 4.5901, 64: 4.4364, 96: 4.4419"
+    },
+    {
+      "id": "cavity.Nu.1e+05.monotone",
+      "description": "Nu error decreases monotonically under refinement",
+      "value": 0.01706471877994136,
+      "reference": null,
+      "error": null,
+      "passed": false,
+      "note": "32: 1.57 %, 64: 1.83 %, 96: 1.71 %"
+    },
+    {
+      "id": "cavity.Nu.1e+05.order",
+      "description": "observed order p >= 1.5",
+      "value": null,
+      "reference": 1.5,
+      "error": null,
+      "passed": false,
+      "note": "Richardson limit Nu = None"
+    },
+    {
+      "id": "cavity.psi.1e+05",
+      "description": "|psi/alpha - 9.111| / 9.111 at Ra=1e+05 (finest grid, target <= 15 %)",
+      "value": 10.079484962239736,
+      "reference": 9.111,
+      "error": 0.10629842632419438,
+      "passed": true,
+      "note": "psi is a cumulative integral of u from the wall: it accumulates the near-wall velocity error that Nu does not see"
+    },
+    {
+      "id": "cavity.energy.1e+05",
+      "description": "hot/cold wall Nusselt numbers agree within 1 %",
+      "value": 4.441884535833445,
+      "reference": 4.429344745971751,
+      "error": 0.0028230787541938668,
+      "passed": true,
+      "note": ""
+    },
+    {
+      "id": "cavity.Nu.1e+06.finest",
+      "description": "|Nu - 8.8| / 8.8 at Ra=1e+06 on the finest grid (96^2 cells, target <= 3 %)",
+      "value": 8.735297896186518,
+      "reference": 8.8,
+      "error": 0.007352511796986674,
+      "passed": true,
+      "note": "family: 32: 10.6416, 64: 8.9287, 96: 8.7353"
+    },
+    {
+      "id": "cavity.Nu.1e+06.monotone",
+      "description": "Nu error decreases monotonically under refinement",
+      "value": 0.007352511796986674,
+      "reference": null,
+      "error": null,
+      "passed": true,
+      "note": "32: 20.93 %, 64: 1.46 %, 96: 0.74 %"
+    },
+    {
+      "id": "cavity.Nu.1e+06.order",
+      "description": "observed order p >= 1.5",
+      "value": 2.812400652141748,
+      "reference": 1.5,
+      "error": null,
+      "passed": true,
+      "note": "Richardson limit Nu = 8.644395103781175"
+    },
+    {
+      "id": "cavity.psi.1e+06",
+      "description": "|psi/alpha - 16.32| / 16.32 at Ra=1e+06 (finest grid, target <= 15 %)",
+      "value": 18.624587636585037,
+      "reference": 16.32,
+      "error": 0.14121247773192627,
+      "passed": true,
+      "note": "psi is a cumulative integral of u from the wall: it accumulates the near-wall velocity error that Nu does not see"
+    },
+    {
+      "id": "cavity.energy.1e+06",
+      "description": "hot/cold wall Nusselt numbers agree within 1 %",
+      "value": 8.735297896186518,
+      "reference": 8.673063064000763,
+      "error": 0.007124523161702858,
+      "passed": true,
+      "note": ""
+    }
+  ],
+  "n_criteria": 15,
+  "n_passed": 12,
+  "verdict": "FAIL",
+  "figs": [
+    "docs/benchmarks/verified/fvm_natural_convection/fig_natural_convection.png"
+  ],
+  "runs": [
+    "runs/incompressible-baselines/cavity_n032_ra1e04.json",
+    "runs/incompressible-baselines/cavity_n032_ra1e05.json",
+    "runs/incompressible-baselines/cavity_n032_ra1e06.json",
+    "runs/incompressible-baselines/cavity_n064_ra1e04.json",
+    "runs/incompressible-baselines/cavity_n064_ra1e05.json",
+    "runs/incompressible-baselines/cavity_n064_ra1e06.json",
+    "runs/incompressible-baselines/cavity_n096_ra1e04.json",
+    "runs/incompressible-baselines/cavity_n096_ra1e05.json",
+    "runs/incompressible-baselines/cavity_n096_ra1e06.json"
+  ],
+  "source": [
+    "src/tensorfvm/staggered_simple.py",
+    "src/tensorfvm/incompressible_baselines.py"
+  ],
+  "driver": "scripts/run_fvm_incompressible_baselines.py",
+  "audit_driver": "scripts/audit_fvm_incompressible_convergence.py",
+  "discretisation": "Boussinesq, first-order upwind + frozen van Leer defect correction, SIMPLE with multigrid/sparse pressure correction",
+  "convergence_audit": {
+    "cavity_n064_ra1e04": {
+      "case": "natural_convection_cavity",
+      "qoi": "nusselt",
+      "iterations": 600,
+      "qoi_before": 2.2062475903536276,
+      "qoi_after": 2.2061891690810063,
+      "drift": 5.842127262134511e-05,
+      "drift_rel": 2.6479925859989755e-05,
+      "change": 3.168320578117445e-08,
+      "continuity": 5.059365710989531e-10
+    },
+    "cavity_n064_ra1e05": {
+      "case": "natural_convection_cavity",
+      "qoi": "nusselt",
+      "iterations": 600,
+      "qoi_before": 4.436368120289987,
+      "qoi_after": 4.4363341043654145,
+      "drift": 3.401592457219493e-05,
+      "drift_rel": 7.667516231716916e-06,
+      "change": 1.8620622127540898e-08,
+      "continuity": 3.1068225753943773e-10
+    },
+    "cavity_n064_ra1e06": {
+      "case": "natural_convection_cavity",
+      "qoi": "nusselt",
+      "iterations": 400,
+      "qoi_before": 8.92872098650816,
+      "qoi_after": 8.928628017237134,
+      "drift": 9.296927102653285e-05,
+      "drift_rel": 1.0412383942449883e-05,
+      "change": 1.9914520799080293e-07,
+      "continuity": 1.4125885454871203e-09
+    },
+    "cavity_n096_ra1e04": {
+      "case": "natural_convection_cavity",
+      "qoi": "nusselt",
+      "iterations": 600,
+      "qoi_before": 2.2156316497654687,
+      "qoi_after": 2.215552582480882,
+      "drift": 7.906728458673129e-05,
+      "drift_rel": 3.5686114429309944e-05,
+      "change": 5.9398597207493964e-08,
+      "continuity": 4.767372159200161e-10
+    },
+    "cavity_n096_ra1e05": {
+      "case": "natural_convection_cavity",
+      "qoi": "nusselt",
+      "iterations": 600,
+      "qoi_before": 4.441884535833445,
+      "qoi_after": 4.441818072209319,
+      "drift": 6.646362412610074e-05,
+      "drift_rel": 1.49629337705488e-05,
+      "change": 4.687733543007333e-08,
+      "continuity": 4.605639544172855e-10
+    },
+    "cavity_n096_ra1e06": {
+      "case": "natural_convection_cavity",
+      "qoi": "nusselt",
+      "iterations": 600,
+      "qoi_before": 8.735297896186518,
+      "qoi_after": 8.735253944716064,
+      "drift": 4.3951470454217656e-05,
+      "drift_rel": 5.031479289722347e-06,
+      "change": 2.9307737958728097e-08,
+      "continuity": 5.04926589494653e-10
+    }
+  },
+  "reference": {
+    "nu_contract": {
+      "10000.0": 2.243,
+      "100000.0": 4.519,
+      "1000000.0": 8.8
+    },
+    "nu_de_vahl_davis": {
+      "10000.0": 2.238,
+      "100000.0": 4.509,
+      "1000000.0": 8.817
+    },
+    "psi_de_vahl_davis": {
+      "10000.0": 5.071,
+      "100000.0": 9.111,
+      "1000000.0": 16.32
+    },
+    "source": "de Vahl Davis 1983, J. Comput. Phys. 3, 249"
+  }
+}
