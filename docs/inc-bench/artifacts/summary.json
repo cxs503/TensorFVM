@@ -1,0 +1,372 @@
+{
+  "cases": {
+    "backward_facing_step": {
+      "levels": {
+        "coarse": {
+          "L_r_over_S": 10.696459469083017,
+          "cells": 8019,
+          "change": 0.10451800966112786,
+          "converged": false,
+          "expansion_ratio_mask": 1.9411764705882353,
+          "expansion_ratio_rel_error": 0.0005784530771583352,
+          "friction_far": -0.010086575486792456,
+          "friction_far_analytic": 0.030000000000000006,
+          "friction_far_rel_error": 1.3362191828930818,
+          "friction_min": -0.031049192938704985,
+          "iterations": 1300,
+          "nx": 243,
+          "ny": 33,
+          "wall_clock_seconds": 877.1278266906738
+        }
+      },
+      "richardson": {
+        "estimate": NaN,
+        "note": "three finite grid values required",
+        "order": NaN
+      },
+      "verdict": {
+        "criteria": [
+          {
+            "description": "|L_r/S - 6.0| <= 0.2 (2-D benchmark)",
+            "error": 4.696459469083017,
+            "id": "bfs.reattachment.coarse",
+            "passed": false,
+            "reference": 6.0,
+            "value": 10.696459469083017
+          },
+          {
+            "description": "downstream |C_f| within 15 % of the analytic plane-channel value",
+            "error": 1.3362191828930818,
+            "id": "bfs.friction_far",
+            "passed": false,
+            "reference": 0.030000000000000006,
+            "value": -0.010086575486792456
+          },
+          {
+            "description": "C_f(x) changes sign exactly at the reattachment point",
+            "error": 0.0,
+            "id": "bfs.friction_zero_crossing",
+            "passed": true,
+            "reference": 10.696459469083017,
+            "value": 10.696459469083017
+          }
+        ],
+        "passed": false
+      }
+    },
+    "natural_cavity": {
+      "levels": {
+        "10000": {
+          "cells": 1024,
+          "change": 7.26653096055907e-07,
+          "converged": true,
+          "energy_balance_rel": 0.004807304881755176,
+          "iterations": 641,
+          "nusselt": 2.28818723034714,
+          "nusselt_reference": 2.243,
+          "nusselt_rel_error": 0.020145889588560117,
+          "psi_max": 5.156269936819498,
+          "psi_max_reference": 5.071,
+          "psi_max_rel_error": 0.016815211362551506,
+          "rayleigh": 10000.0,
+          "u_max": 16.319383572410178,
+          "u_max_rel_error": 0.00873924912907512,
+          "wall_clock_seconds": 83.86129331588745
+        },
+        "100000": {
+          "cells": 2304,
+          "change": 8.331235586828134e-07,
+          "converged": true,
+          "energy_balance_rel": 0.0012132352330060747,
+          "iterations": 850,
+          "nusselt": 4.641181866026232,
+          "nusselt_reference": 4.519,
+          "nusselt_rel_error": 0.027037368007575013,
+          "psi_max": 10.030257054587825,
+          "psi_max_reference": 9.111,
+          "psi_max_rel_error": 0.10089529739741235,
+          "rayleigh": 100000.0,
+          "u_max": 43.71177362927009,
+          "u_max_rel_error": 0.2586171502813157,
+          "wall_clock_seconds": 195.76525259017944
+        },
+        "1e+06": {
+          "cells": 4096,
+          "change": 2.0155609186527586e+130,
+          "converged": false,
+          "energy_balance_rel": 3671724536964489.0,
+          "iterations": 3000,
+          "nusselt": 3.4861002973229915e-14,
+          "nusselt_reference": 8.8,
+          "nusselt_rel_error": 0.999999999999996,
+          "psi_max": 1.8844595139821358e+136,
+          "psi_max_reference": 16.32,
+          "psi_max_rel_error": 1.1546933296459165e+135,
+          "rayleigh": 1000000.0,
+          "u_max": 1.9232706328075776e+136,
+          "u_max_rel_error": 2.9758171635580654e+134,
+          "wall_clock_seconds": 805.4876279830933
+        }
+      },
+      "verdict": {
+        "criteria": [
+          {
+            "description": "|Nu - Nu_ref| / Nu_ref <= 15% (target 3%)",
+            "error": 0.020145889588560117,
+            "id": "cavity.nusselt.10000",
+            "meets_target": true,
+            "passed": true,
+            "reference": 2.243,
+            "value": 2.28818723034714
+          },
+          {
+            "description": "psi_max within 15 % of de Vahl Davis",
+            "error": 0.016815211362551506,
+            "id": "cavity.psi_max.10000",
+            "passed": true,
+            "reference": 5.071,
+            "value": 5.156269936819498
+          },
+          {
+            "description": "hot-wall and cold-wall Nusselt numbers agree within 1 %",
+            "error": 0.004807304881755176,
+            "id": "cavity.energy_balance.10000",
+            "passed": true,
+            "reference": 0.0,
+            "value": 0.004807304881755176
+          },
+          {
+            "description": "|Nu - Nu_ref| / Nu_ref <= 15% (target 3%)",
+            "error": 0.027037368007575013,
+            "id": "cavity.nusselt.100000",
+            "meets_target": true,
+            "passed": true,
+            "reference": 4.519,
+            "value": 4.641181866026232
+          },
+          {
+            "description": "psi_max within 15 % of de Vahl Davis",
+            "error": 0.10089529739741235,
+            "id": "cavity.psi_max.100000",
+            "passed": true,
+            "reference": 9.111,
+            "value": 10.030257054587825
+          },
+          {
+            "description": "hot-wall and cold-wall Nusselt numbers agree within 1 %",
+            "error": 0.0012132352330060747,
+            "id": "cavity.energy_balance.100000",
+            "passed": true,
+            "reference": 0.0,
+            "value": 0.0012132352330060747
+          },
+          {
+            "description": "|Nu - Nu_ref| / Nu_ref <= 15% (target 3%)",
+            "error": 0.999999999999996,
+            "id": "cavity.nusselt.1e+06",
+            "meets_target": false,
+            "passed": false,
+            "reference": 8.8,
+            "value": 3.4861002973229915e-14
+          },
+          {
+            "description": "psi_max within 15 % of de Vahl Davis",
+            "error": 1.1546933296459165e+135,
+            "id": "cavity.psi_max.1e+06",
+            "passed": false,
+            "reference": 16.32,
+            "value": 1.8844595139821358e+136
+          },
+          {
+            "description": "hot-wall and cold-wall Nusselt numbers agree within 1 %",
+            "error": 3671724536964489.0,
+            "id": "cavity.energy_balance.1e+06",
+            "passed": false,
+            "reference": 0.0,
+            "value": 3671724536964489.0
+          }
+        ],
+        "meets_target": false,
+        "passed": false
+      }
+    },
+    "sudden_expansion": {
+      "levels": {
+        "coarse": {
+          "K": 0.7918705754944849,
+          "K_borda_carnot": 0.5625,
+          "K_excess": 0.22937057549448492,
+          "L_r_over_h": 2.104148288292902,
+          "cells": 17408,
+          "change": 3.258237676343848e-05,
+          "converged": false,
+          "iterations": 1300,
+          "mass_imbalance": 2.8662944968409433e-07,
+          "wall_clock_seconds": 1193.5357999801636
+        }
+      },
+      "richardson": {
+        "estimate": NaN,
+        "note": "three finite grid values required",
+        "order": NaN
+      },
+      "verdict": {
+        "criteria": [
+          {
+            "description": "stair-step geometry reproduces A_out/A_in = 4 within 0.2 %",
+            "error": 0.0,
+            "id": "expansion.area_ratio.coarse",
+            "passed": true,
+            "reference": 4.0,
+            "value": 4.0
+          },
+          {
+            "description": "measured loss exceeds Borda-Carnot (viscous excess at Re_D = 100)",
+            "error": 0.22937057549448492,
+            "id": "expansion.borda_carnot_sign",
+            "passed": true,
+            "reference": 0.5625,
+            "value": 0.7918705754944849
+          },
+          {
+            "description": "inlet and outlet mass flux agree within 1e-4",
+            "error": 2.8662944968409433e-07,
+            "id": "expansion.mass_balance",
+            "passed": true,
+            "reference": 0.0,
+            "value": 2.8662944968409433e-07
+          }
+        ],
+        "passed": true,
+        "reattachment_band": [
+          2.104148288292902
+        ]
+      }
+    }
+  },
+  "criteria": [
+    {
+      "description": "|L_r/S - 6.0| <= 0.2 (2-D benchmark)",
+      "error": 4.696459469083017,
+      "id": "bfs.reattachment.coarse",
+      "passed": false,
+      "reference": 6.0,
+      "value": 10.696459469083017
+    },
+    {
+      "description": "downstream |C_f| within 15 % of the analytic plane-channel value",
+      "error": 1.3362191828930818,
+      "id": "bfs.friction_far",
+      "passed": false,
+      "reference": 0.030000000000000006,
+      "value": -0.010086575486792456
+    },
+    {
+      "description": "C_f(x) changes sign exactly at the reattachment point",
+      "error": 0.0,
+      "id": "bfs.friction_zero_crossing",
+      "passed": true,
+      "reference": 10.696459469083017,
+      "value": 10.696459469083017
+    },
+    {
+      "description": "stair-step geometry reproduces A_out/A_in = 4 within 0.2 %",
+      "error": 0.0,
+      "id": "expansion.area_ratio.coarse",
+      "passed": true,
+      "reference": 4.0,
+      "value": 4.0
+    },
+    {
+      "description": "measured loss exceeds Borda-Carnot (viscous excess at Re_D = 100)",
+      "error": 0.22937057549448492,
+      "id": "expansion.borda_carnot_sign",
+      "passed": true,
+      "reference": 0.5625,
+      "value": 0.7918705754944849
+    },
+    {
+      "description": "inlet and outlet mass flux agree within 1e-4",
+      "error": 2.8662944968409433e-07,
+      "id": "expansion.mass_balance",
+      "passed": true,
+      "reference": 0.0,
+      "value": 2.8662944968409433e-07
+    },
+    {
+      "description": "|Nu - Nu_ref| / Nu_ref <= 15% (target 3%)",
+      "error": 0.020145889588560117,
+      "id": "cavity.nusselt.10000",
+      "meets_target": true,
+      "passed": true,
+      "reference": 2.243,
+      "value": 2.28818723034714
+    },
+    {
+      "description": "psi_max within 15 % of de Vahl Davis",
+      "error": 0.016815211362551506,
+      "id": "cavity.psi_max.10000",
+      "passed": true,
+      "reference": 5.071,
+      "value": 5.156269936819498
+    },
+    {
+      "description": "hot-wall and cold-wall Nusselt numbers agree within 1 %",
+      "error": 0.004807304881755176,
+      "id": "cavity.energy_balance.10000",
+      "passed": true,
+      "reference": 0.0,
+      "value": 0.004807304881755176
+    },
+    {
+      "description": "|Nu - Nu_ref| / Nu_ref <= 15% (target 3%)",
+      "error": 0.027037368007575013,
+      "id": "cavity.nusselt.100000",
+      "meets_target": true,
+      "passed": true,
+      "reference": 4.519,
+      "value": 4.641181866026232
+    },
+    {
+      "description": "psi_max within 15 % of de Vahl Davis",
+      "error": 0.10089529739741235,
+      "id": "cavity.psi_max.100000",
+      "passed": true,
+      "reference": 9.111,
+      "value": 10.030257054587825
+    },
+    {
+      "description": "hot-wall and cold-wall Nusselt numbers agree within 1 %",
+      "error": 0.0012132352330060747,
+      "id": "cavity.energy_balance.100000",
+      "passed": true,
+      "reference": 0.0,
+      "value": 0.0012132352330060747
+    },
+    {
+      "description": "|Nu - Nu_ref| / Nu_ref <= 15% (target 3%)",
+      "error": 0.999999999999996,
+      "id": "cavity.nusselt.1e+06",
+      "meets_target": false,
+      "passed": false,
+      "reference": 8.8,
+      "value": 3.4861002973229915e-14
+    },
+    {
+      "description": "psi_max within 15 % of de Vahl Davis",
+      "error": 1.1546933296459165e+135,
+      "id": "cavity.psi_max.1e+06",
+      "passed": false,
+      "reference": 16.32,
+      "value": 1.8844595139821358e+136
+    },
+    {
+      "description": "hot-wall and cold-wall Nusselt numbers agree within 1 %",
+      "error": 3671724536964489.0,
+      "id": "cavity.energy_balance.1e+06",
+      "passed": false,
+      "reference": 0.0,
+      "value": 3671724536964489.0
+    }
+  ]
+}
