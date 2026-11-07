@@ -1,0 +1,14 @@
+{
+ "purpose": "end-to-end exercise of the double-body RANS path at an affordable (under-resolved) mesh",
+ "mesh_cells": 2184,
+ "spacing_m": 0.16,
+ "reynolds": 692117.6470588236,
+ "setup_s": 124.4,
+ "solve_s": 25.0,
+ "outer_iterations": 40,
+ "momentum_residual_first": 340147712052247.5,
+ "momentum_residual_last": 4.968373417869788e+72,
+ "outcome": "diverged: the momentum residual grew monotonically over the outer iterations",
+ "consequence": "no form factor can be extracted from this run; recorded as evidence for the WITHHELD verdict",
+ "raw_log": "artifacts/resistance-chain/rans_attempt.log"
+}
