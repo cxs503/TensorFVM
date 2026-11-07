@@ -1,0 +1,79 @@
+{
+  "job": {
+    "case": "sudden_expansion",
+    "level": 10,
+    "re_d": 1000.0,
+    "tag": "expansion_re0001000",
+    "budget": {
+      "max_iter": 20000
+    },
+    "init_from": null
+  },
+  "metrics": {
+    "p_in": 0.6277499506559283,
+    "u_in": 1.0,
+    "p_out": 0.5539614452935158,
+    "u_out": 0.2500021193223717,
+    "k_total_head": 1.0850759510591477,
+    "k_static_recovery": -0.1475770107248251,
+    "k_identity_check": 0.7899219296094975,
+    "k_theory_borda_carnot": 0.5625,
+    "k_error_rel": 0.9290239129940403,
+    "reattachment_over_D": 0.20571266758138332,
+    "continuity": 0.0007288131794348507,
+    "iterations": 14700
+  },
+  "reference": {
+    "k_theory": 0.5625,
+    "re_d": 1000.0
+  },
+  "convergence": {
+    "history": [
+      {
+        "stage": "first_order",
+        "iterations": 10680,
+        "continuity": 7.952393703913874e-05,
+        "change": 0.02287778703604393
+      },
+      {
+        "stage": "deferred_1",
+        "iterations": 14700,
+        "continuity": 0.0007288131794348507,
+        "change": 0.04662111194044734
+      }
+    ],
+    "final": {
+      "stage": "deferred_1",
+      "iterations": 14700,
+      "continuity": 0.0007288131794348507,
+      "change": 0.04662111194044734
+    }
+  },
+  "meta": {
+    "case": "sudden_expansion",
+    "n_over_D": 10,
+    "re_D": 1000.0,
+    "area_ratio": 4.0,
+    "inlet_profile": "uniform",
+    "u_mean_inlet": 1.0,
+    "nu": 0.001,
+    "D": 1.0,
+    "H2": 4.0,
+    "hx": 0.1,
+    "hy": 0.1,
+    "length_inlet_heights": 12.0,
+    "nx": 120,
+    "ny": 40,
+    "cells": 4800
+  },
+  "settings": {
+    "alpha_u": 0.7,
+    "alpha_p": 0.3,
+    "alpha_T": 0.8,
+    "limited": false,
+    "dc_frozen": true,
+    "poisson_solver": "sparse",
+    "grid_sequenced_from": null
+  },
+  "wall_seconds": 347.2
+}

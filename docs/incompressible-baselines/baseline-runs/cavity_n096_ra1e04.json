@@ -1,0 +1,78 @@
+{
+  "job": {
+    "case": "natural_convection_cavity",
+    "level": 96,
+    "rayleigh": 10000.0,
+    "tag": "cavity_n096_ra1e04",
+    "budget": {
+      "max_iter": 60000
+    },
+    "init_from": "cavity_n048_ra1e04"
+  },
+  "metrics": {
+    "nusselt": 2.2156316497654687,
+    "nusselt_cold": 2.212032520805994,
+    "nusselt_reference_contract": 2.243,
+    "nusselt_reference_dvd": 2.238,
+    "nusselt_error_rel": 0.012201671972595281,
+    "psi_max": 2.1119729892292049e-07,
+    "psi_min": -0.06058927196281377,
+    "psi_abs_max": 0.06058927196281377,
+    "psi_over_alpha": 5.10534280206384,
+    "psi_max_reference": 5.071,
+    "psi_error_rel": 0.006772392440118297,
+    "energy_imbalance_rel": 0.0016244256845922656,
+    "continuity": 1.963381201063792e-12,
+    "iterations": 11390
+  },
+  "reference": {
+    "nu_contract": 2.243,
+    "nu_dvd1983": 2.238,
+    "psi_max_dvd1983": 5.071
+  },
+  "convergence": {
+    "history": [
+      {
+        "stage": "first_order",
+        "iterations": 8710,
+        "continuity": 7.969213438969649e-09,
+        "change": 9.975857974964253e-07
+      },
+      {
+        "stage": "deferred_1",
+        "iterations": 11390,
+        "continuity": 7.980346187083258e-10,
+        "change": 9.945407594691424e-08
+      }
+    ],
+    "final": {
+      "stage": "deferred_1",
+      "iterations": 11390,
+      "continuity": 7.980346187083258e-10,
+      "change": 9.945407594691424e-08
+    }
+  },
+  "meta": {
+    "case": "natural_convection_cavity",
+    "n": 96,
+    "rayleigh": 10000.0,
+    "prandtl": 0.71,
+    "nu": 0.008426149773176359,
+    "alpha": 0.011867816581938534,
+    "nx": 96,
+    "ny": 96,
+    "hx": 0.010416666666666666,
+    "hy": 0.010416666666666666,
+    "cells": 9216
+  },
+  "settings": {
+    "alpha_u": 0.5,
+    "alpha_p": 0.2,
+    "alpha_T": 0.7,
+    "limited": false,
+    "dc_frozen": true,
+    "poisson_solver": "sparse",
+    "grid_sequenced_from": null
+  },
+  "wall_seconds": 371.4
+}

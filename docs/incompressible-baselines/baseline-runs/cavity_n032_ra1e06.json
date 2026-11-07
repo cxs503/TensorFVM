@@ -1,0 +1,78 @@
+{
+  "job": {
+    "case": "natural_convection_cavity",
+    "level": 32,
+    "rayleigh": 1000000.0,
+    "tag": "cavity_n032_ra1e06",
+    "budget": {
+      "max_iter": 28000
+    },
+    "init_from": null
+  },
+  "metrics": {
+    "nusselt": 10.64164934590735,
+    "nusselt_cold": 9.24368917345213,
+    "nusselt_reference_contract": 8.8,
+    "nusselt_reference_dvd": 8.817,
+    "nusselt_error_rel": 0.20927833476219876,
+    "psi_max": 0.0,
+    "psi_min": -0.02659178199103201,
+    "psi_abs_max": 0.02659178199103201,
+    "psi_over_alpha": 22.406633779208953,
+    "psi_max_reference": 16.32,
+    "psi_error_rel": 0.37295550117701914,
+    "energy_imbalance_rel": 0.1313668705869225,
+    "continuity": 2.804553052467018e-11,
+    "iterations": 1410
+  },
+  "reference": {
+    "nu_contract": 8.8,
+    "nu_dvd1983": 8.817,
+    "psi_max_dvd1983": 16.32
+  },
+  "convergence": {
+    "history": [
+      {
+        "stage": "first_order",
+        "iterations": 1200,
+        "continuity": 3.4745160082585556e-08,
+        "change": 9.391274503958713e-07
+      },
+      {
+        "stage": "deferred_1",
+        "iterations": 1410,
+        "continuity": 3.23508337689905e-09,
+        "change": 9.439342318895427e-08
+      }
+    ],
+    "final": {
+      "stage": "deferred_1",
+      "iterations": 1410,
+      "continuity": 3.23508337689905e-09,
+      "change": 9.439342318895427e-08
+    }
+  },
+  "meta": {
+    "case": "natural_convection_cavity",
+    "n": 32,
+    "rayleigh": 1000000.0,
+    "prandtl": 0.71,
+    "nu": 0.0008426149773176359,
+    "alpha": 0.0011867816581938534,
+    "nx": 32,
+    "ny": 32,
+    "hx": 0.03125,
+    "hy": 0.03125,
+    "cells": 1024
+  },
+  "settings": {
+    "alpha_u": 0.5,
+    "alpha_p": 0.2,
+    "alpha_T": 0.7,
+    "limited": false,
+    "dc_frozen": true,
+    "poisson_solver": "sparse",
+    "grid_sequenced_from": null
+  },
+  "wall_seconds": 13.9
+}
