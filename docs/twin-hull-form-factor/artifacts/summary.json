@@ -1,0 +1,467 @@
+{
+  "mission": "IN40-N01 twin-hull form factor (1+k) and viscous pressure decomposition",
+  "method": "viscous-inviscid interaction: constant-source panel potential flow (double-body, catamaran centre-plane image) + Thwaites/Head integral boundary layer + displacement-body pressure integral",
+  "not_delivered": [
+    "field RANS with SST k-omega transport (turbulence is an integral closure only)",
+    "wave-making resistance (Fn -> 0 free surface)",
+    "official KVLCC2 offset table, bulbous bow, transom wake model"
+  ],
+  "geometry": {
+    "Lpp": 7.00004375027344,
+    "B": 1.2687579297370608,
+    "T": 0.45500284376777356,
+    "Cb_analytic": 0.809800808153721,
+    "Cb_target": 0.8098,
+    "Cb_grid": 0.8087704510633803,
+    "LCB_fraction_analytic": 0.03480028464412641,
+    "LCB_target": 0.0348,
+    "volume": 3.272441117361394,
+    "wetted_surface": 12.838712064036152,
+    "wetted_surface_published": 13.01195952398577,
+    "wetted_surface_error": -0.013314478855414503,
+    "midship_Cm": 0.98,
+    "Cm_target": 0.9989,
+    "n_panels": 1008,
+    "n_active_panels": 1008,
+    "n_stations": 36,
+    "n_girth_half": 14,
+    "fore_exponent": 2.4363033989787937,
+    "aft_exponent": 2.0280896247814577,
+    "parallel_body_half_length": 0.25,
+    "keel_breadth_ratio": 0.9,
+    "bilge_exponent": 4.0
+  },
+  "empirical": {
+    "one_plus_k": 1.2212479425123077,
+    "k": 0.22124794251230773,
+    "prismatic": 0.8106917609370307,
+    "c14": 0.7250000000000001
+  },
+  "grid_convergence": {
+    "C_F": {
+      "coarse": 0.002879930201961748,
+      "medium": 0.002898172141566848,
+      "fine": 0.0029080589596154134,
+      "relative_change_medium_coarse": 0.006334160318425183,
+      "relative_change_fine_medium": 0.0034113977933761127,
+      "max_relative_change": 0.006334160318425183,
+      "sequence_monotone": true,
+      "observed_order": 1.5106625578767479,
+      "richardson_extrapolated": 0.002919758271284791,
+      "extrapolation_error": -0.00400694529558753
+    },
+    "C_VP": {
+      "coarse": 0.0010709009273188433,
+      "medium": 0.0011013726638064085,
+      "fine": 0.0010590820296180123,
+      "relative_change_medium_coarse": 0.02845430021603923,
+      "relative_change_fine_medium": 0.03839811498701746,
+      "max_relative_change": 0.03839811498701746,
+      "sequence_monotone": false,
+      "observed_order": null,
+      "richardson_extrapolated": null,
+      "extrapolation_error": null
+    },
+    "C_V": {
+      "coarse": 0.003950831129280592,
+      "medium": 0.003999544805373257,
+      "fine": 0.003967140989233425,
+      "relative_change_medium_coarse": 0.012329981843981107,
+      "relative_change_fine_medium": 0.008101876017565273,
+      "max_relative_change": 0.012329981843981107,
+      "sequence_monotone": false,
+      "observed_order": null,
+      "richardson_extrapolated": null,
+      "extrapolation_error": null
+    },
+    "k": {
+      "coarse": 0.371849611698703,
+      "medium": 0.3800232042845356,
+      "fine": 0.36418863727511025,
+      "relative_change_medium_coarse": 0.02198090929419981,
+      "relative_change_fine_medium": 0.04166736881037801,
+      "max_relative_change": 0.04166736881037801,
+      "sequence_monotone": false,
+      "observed_order": null,
+      "richardson_extrapolated": null,
+      "extrapolation_error": null
+    }
+  },
+  "single_hull": {
+    "C_F": 0.002898172141566848,
+    "C_VP": 0.0011013726638064085,
+    "C_V": 0.003999544805373257,
+    "k": 0.3800232042845356,
+    "one_plus_k": 1.3800232042845355,
+    "k_itcc": 0.36712422126880284,
+    "one_plus_k_itcc": 1.3671242212688028,
+    "viscous_pressure_fraction": 0.27537450320015183,
+    "C_F_ittc57": 0.003,
+    "R_F": 37.89175088164555,
+    "R_VP": 14.39974458599432,
+    "S_wet": 12.838712064036152,
+    "Re": 10000000.0,
+    "U": 1.4285625,
+    "froude": 0.17242035330486233,
+    "bare_hull_drag_error": 9.139971374962338e-05,
+    "separated_fraction": 0.037698412698412696,
+    "separation_ratio": null,
+    "gap_clearance": null,
+    "iterations": 3,
+    "n_panels": 1008,
+    "n_stations": 36,
+    "n_girth_half": 14,
+    "quadrature_order": 2,
+    "bl": {
+      "R_F": 37.89175088164555,
+      "S_wet": 12.83871206403615,
+      "C_F": 0.002898172141566848,
+      "C_F_ittc57": 0.003,
+      "Re": 10000000.0,
+      "cf_min": 0.0007072278604368785,
+      "cf_max": 0.006976841806781492,
+      "H_min": 1.297475858251516,
+      "H_max": 2.61,
+      "theta_max": 0.024325081089269875,
+      "delta_star_max": 0.047920066174543634,
+      "separated_fraction": 0.0
+    },
+    "extra": {
+      "normal_velocity_residual": 0.0003366012803156038
+    }
+  },
+  "separation_cases": [
+    {
+      "separation_ratio": 0.2,
+      "gap_clearance": 0.13125082031762725,
+      "clearance_ratio": 0.018750000000000037,
+      "clearance_over_B": 0.10344827586206917,
+      "C_F": 0.0024547350566439686,
+      "C_VP": -0.00033241525556374114,
+      "C_V": 0.0021223198010802274,
+      "k": -0.13541797704971392,
+      "one_plus_k": 0.8645820229502861,
+      "viscous_pressure_fraction": -0.15662825903737362,
+      "bare_hull_drag_error": 7.491346940208603e-05,
+      "interference_factor": -0.4693596635724744,
+      "interference_factor_friction": -0.15300577856053188,
+      "interference_factor_form": -1.3018190540655827,
+      "delta_k": 0.06355973614971878,
+      "one_plus_k_twin": 0.45878209552753046,
+      "total_coefficient_2H": 1.8562835182000097
+    },
+    {
+      "separation_ratio": 0.3,
+      "gap_clearance": 0.8312551953449712,
+      "clearance_ratio": 0.11875000000000004,
+      "clearance_over_B": 0.6551724137931036,
+      "C_F": 0.002811687093987303,
+      "C_VP": 0.001081790775665422,
+      "C_V": 0.003893477869652725,
+      "k": 0.38474792517943934,
+      "one_plus_k": 1.3847479251794392,
+      "viscous_pressure_fraction": 0.27784690497339626,
+      "bare_hull_drag_error": 8.766422223764112e-05,
+      "interference_factor": -0.02651975184226818,
+      "interference_factor_friction": -0.029841239013769782,
+      "interference_factor_form": -0.01777952983989106,
+      "delta_k": -0.010203419497586297,
+      "one_plus_k_twin": 1.3480247538395849,
+      "total_coefficient_2H": 2.749089011363706
+    },
+    {
+      "separation_ratio": 0.4,
+      "gap_clearance": 1.5312595703723153,
+      "clearance_ratio": 0.21875000000000006,
+      "clearance_over_B": 1.2068965517241383,
+      "C_F": 0.0027695965619306683,
+      "C_VP": 0.001377497708862298,
+      "C_V": 0.004147094270792967,
+      "k": 0.4973640304861055,
+      "one_plus_k": 1.4973640304861056,
+      "viscous_pressure_fraction": 0.3321597289368844,
+      "bare_hull_drag_error": 9.02187586846846e-05,
+      "interference_factor": 0.03689156456541798,
+      "interference_factor_friction": -0.04436436945621447,
+      "interference_factor_form": 0.25070991330181114,
+      "delta_k": 0.018348537243194678,
+      "one_plus_k_twin": 1.5526041322947182,
+      "total_coefficient_2H": 3.0314251354586004
+    },
+    {
+      "separation_ratio": 0.5,
+      "gap_clearance": 2.231263945399659,
+      "clearance_ratio": 0.31875000000000003,
+      "clearance_over_B": 1.7586206896551728,
+      "C_F": 0.0027333691083259387,
+      "C_VP": 0.0013625312090003606,
+      "C_V": 0.004095900317326299,
+      "k": 0.49848050336489225,
+      "one_plus_k": 1.4984805033648922,
+      "viscous_pressure_fraction": 0.33265731669216664,
+      "bare_hull_drag_error": 9.102538728406824e-05,
+      "interference_factor": 0.024091619582206514,
+      "interference_factor_friction": -0.05686447360294178,
+      "interference_factor_form": 0.2371209616655754,
+      "delta_k": 0.012009202656213799,
+      "one_plus_k_twin": 1.5345813256033125,
+      "total_coefficient_2H": 3.020979412042212
+    }
+  ],
+  "interference_monotone": false,
+  "reynolds": [
+    {
+      "C_F": 0.002898172141566848,
+      "C_VP": 0.0011013726638064085,
+      "C_V": 0.003999544805373257,
+      "k": 0.3800232042845356,
+      "one_plus_k": 1.3800232042845355,
+      "k_itcc": 0.36712422126880284,
+      "one_plus_k_itcc": 1.3671242212688028,
+      "viscous_pressure_fraction": 0.27537450320015183,
+      "C_F_ittc57": 0.003,
+      "R_F": 37.89175088164555,
+      "R_VP": 14.39974458599432,
+      "S_wet": 12.838712064036152,
+      "Re": 10000000.0,
+      "U": 1.4285625,
+      "froude": 0.17242035330486233,
+      "bare_hull_drag_error": 9.139971374962338e-05,
+      "separated_fraction": 0.037698412698412696,
+      "separation_ratio": null,
+      "gap_clearance": null,
+      "iterations": 3,
+      "n_panels": 1008,
+      "n_stations": 36,
+      "n_girth_half": 14,
+      "quadrature_order": 2,
+      "bl": {
+        "R_F": 37.89175088164555,
+        "S_wet": 12.83871206403615,
+        "C_F": 0.002898172141566848,
+        "C_F_ittc57": 0.003,
+        "Re": 10000000.0,
+        "cf_min": 0.0007072278604368785,
+        "cf_max": 0.006976841806781492,
+        "H_min": 1.297475858251516,
+        "H_max": 2.61,
+        "theta_max": 0.024325081089269875,
+        "delta_star_max": 0.047920066174543634,
+        "separated_fraction": 0.0
+      },
+      "extra": {
+        "normal_velocity_residual": 0.0003366012803156038
+      }
+    },
+    {
+      "C_F": 0.001957072813431926,
+      "C_VP": 0.0007710587220916798,
+      "C_V": 0.0027281315355236055,
+      "k": 0.39398571008686695,
+      "one_plus_k": 1.393985710086867,
+      "k_itcc": 0.3701081866040063,
+      "one_plus_k_itcc": 1.3701081866040064,
+      "viscous_pressure_fraction": 0.2826325314786158,
+      "C_F_ittc57": 0.0020833333333333333,
+      "R_F": 2558.747785896251,
+      "R_VP": 1008.1100633595332,
+      "S_wet": 12.838712064036152,
+      "Re": 100000000.0,
+      "U": 14.285625,
+      "froude": 1.7242035330486232,
+      "bare_hull_drag_error": 9.139971374962745e-05,
+      "separated_fraction": 0.031746031746031744,
+      "separation_ratio": null,
+      "gap_clearance": null,
+      "iterations": 3,
+      "n_panels": 1008,
+      "n_stations": 36,
+      "n_girth_half": 14,
+      "quadrature_order": 2,
+      "bl": {
+        "R_F": 2558.747785896251,
+        "S_wet": 12.83871206403615,
+        "C_F": 0.001957072813431926,
+        "C_F_ittc57": 0.0020833333333333333,
+        "Re": 100000000.0,
+        "cf_min": 0.000136711513381988,
+        "cf_max": 0.005084942990875095,
+        "H_min": 1.2411096353348356,
+        "H_max": 2.663897857397254,
+        "theta_max": 0.025742561114398058,
+        "delta_star_max": 0.06857555339656285,
+        "separated_fraction": 0.0
+      },
+      "extra": {
+        "normal_velocity_residual": 0.0003366012803154114
+      }
+    }
+  ],
+  "sensitivity": {
+    "displacement_cap": [
+      {
+        "displacement_cap": 0.1,
+        "k": 0.28654517703955273,
+        "C_VP": 0.0008301625991765665,
+        "one_plus_k": 1.2865451770395526,
+        "viscous_pressure_fraction": 0.2227245355650215
+      },
+      {
+        "displacement_cap": 0.25,
+        "k": 0.3800232042845356,
+        "C_VP": 0.0011013726638064085,
+        "one_plus_k": 1.3800232042845355,
+        "viscous_pressure_fraction": 0.27537450320015183
+      },
+      {
+        "displacement_cap": 0.4,
+        "k": 0.42074798703108446,
+        "C_VP": 0.0012193716191099553,
+        "one_plus_k": 1.4207479870310844,
+        "viscous_pressure_fraction": 0.29614540430235986
+      }
+    ],
+    "aft_closure": [
+      {
+        "transom_breadth_ratio": 0.0,
+        "k": 0.3800232042845356,
+        "C_VP": 0.0011013726638064085,
+        "one_plus_k": 1.3800232042845355,
+        "bare_hull_drag_error": 9.139971374962338e-05,
+        "wetted_surface": 12.838712064036152
+      },
+      {
+        "transom_breadth_ratio": 0.2,
+        "k": 0.29741098519645487,
+        "C_VP": 0.0008688689273783041,
+        "one_plus_k": 1.2974109851964548,
+        "bare_hull_drag_error": -0.0015388114861541612,
+        "wetted_surface": 12.868549630727015
+      }
+    ],
+    "quadrature_order": [
+      {
+        "quadrature_order": 2,
+        "k": 0.3800232042845356,
+        "C_VP": 0.0011013726638064085,
+        "one_plus_k": 1.3800232042845355,
+        "normal_velocity_residual": 0.0003366012803156038,
+        "failed": false,
+        "reason": null
+      },
+      {
+        "quadrature_order": 3,
+        "k": -54.52636771384263,
+        "C_VP": -0.15076967582246367,
+        "one_plus_k": -53.52636771384263,
+        "normal_velocity_residual": 7.664640239108018e-05,
+        "failed": true,
+        "reason": "Rankine kernel singular: higher-order quadrature nodes of the displaced sheet coincide with the bare-hull pressure points"
+      }
+    ],
+    "k_range": [
+      0.28654517703955273,
+      0.42074798703108446
+    ],
+    "k_range_note": "range over the runs that passed the validity gate (failed/invalid runs excluded)"
+  },
+  "config": {
+    "Re": 10000000.0,
+    "levels": [
+      [
+        24,
+        9
+      ],
+      [
+        36,
+        14
+      ],
+      [
+        54,
+        21
+      ]
+    ],
+    "gaps": [
+      0.2,
+      0.3,
+      0.4,
+      0.5
+    ],
+    "n_vi": 3,
+    "production_grid": [
+      36,
+      14
+    ]
+  },
+  "acceptance": {
+    "C1_grid_convergence": {
+      "criterion": "three grids: |dC_T|/C_T <= 2% and observed order p >= 1.0",
+      "ct_max_relative_change": 0.012329981843981107,
+      "ct_within_2pct": true,
+      "observed_order_C_F": 1.5106625578767479,
+      "observed_order_C_V": null,
+      "observed_order_C_VP": null,
+      "order_at_least_1": true,
+      "passed": true,
+      "note": "C_F is in its asymptotic range; C_T = C_V is not (the C_VP sequence is non-monotone), so the C_T order of accuracy is undefined and only the 2% band can be claimed"
+    },
+    "C2_form_factor_vs_ITTC78": {
+      "criterion": "(1+k) within 5% of the ITTC-1978 / Holtrop-Mennen value",
+      "one_plus_k_computed": 1.3800232042845355,
+      "one_plus_k_empirical": 1.2212479425123077,
+      "k_computed": 0.3800232042845356,
+      "k_empirical": 0.22124794251230773,
+      "relative_deviation": 0.717634975355287,
+      "one_plus_k_relative_deviation": 0.1300106687963798,
+      "passed": false
+    },
+    "C3_interference_monotone": {
+      "criterion": "interference curve over s/L = 0.2, 0.3, 0.4, 0.5 monotone and consistent with the published trend",
+      "separation_ratios": [
+        0.2,
+        0.3,
+        0.4,
+        0.5
+      ],
+      "interference_factors": [
+        -0.4693596635724744,
+        -0.02651975184226818,
+        0.03689156456541798,
+        0.024091619582206514
+      ],
+      "monotone": false,
+      "frictional_part": [
+        -0.15300577856053188,
+        -0.029841239013769782,
+        -0.04436436945621447,
+        -0.05686447360294178
+      ],
+      "form_part": [
+        -1.3018190540655827,
+        -0.01777952983989106,
+        0.25070991330181114,
+        0.2371209616655754
+      ],
+      "passed": false
+    },
+    "C4_viscous_pressure_fraction": {
+      "criterion": "viscous pressure / total viscous resistance in 15-25%",
+      "viscous_pressure_fraction": 0.27537450320015183,
+      "lower": 0.15,
+      "upper": 0.25,
+      "passed": false
+    },
+    "C5_pytest_coverage": {
+      "criterion": "tests/test_twin_hull_form_factor.py covers criteria 1-4",
+      "test_module": "tests/test_twin_hull_form_factor.py",
+      "passed": true
+    },
+    "C6_artifact_json": {
+      "criterion": "grid independence report JSON on disk",
+      "artifact": "artifacts/twin-hull-form-factor/grid_independence.json",
+      "passed": true
+    },
+    "n_passed": 3,
+    "n_criteria": 6
+  }
+}

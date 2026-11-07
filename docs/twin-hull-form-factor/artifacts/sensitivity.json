@@ -1,0 +1,68 @@
+{
+  "displacement_cap": [
+    {
+      "displacement_cap": 0.1,
+      "k": 0.28654517703955273,
+      "C_VP": 0.0008301625991765665,
+      "one_plus_k": 1.2865451770395526,
+      "viscous_pressure_fraction": 0.2227245355650215
+    },
+    {
+      "displacement_cap": 0.25,
+      "k": 0.3800232042845356,
+      "C_VP": 0.0011013726638064085,
+      "one_plus_k": 1.3800232042845355,
+      "viscous_pressure_fraction": 0.27537450320015183
+    },
+    {
+      "displacement_cap": 0.4,
+      "k": 0.42074798703108446,
+      "C_VP": 0.0012193716191099553,
+      "one_plus_k": 1.4207479870310844,
+      "viscous_pressure_fraction": 0.29614540430235986
+    }
+  ],
+  "aft_closure": [
+    {
+      "transom_breadth_ratio": 0.0,
+      "k": 0.3800232042845356,
+      "C_VP": 0.0011013726638064085,
+      "one_plus_k": 1.3800232042845355,
+      "bare_hull_drag_error": 9.139971374962338e-05,
+      "wetted_surface": 12.838712064036152
+    },
+    {
+      "transom_breadth_ratio": 0.2,
+      "k": 0.29741098519645487,
+      "C_VP": 0.0008688689273783041,
+      "one_plus_k": 1.2974109851964548,
+      "bare_hull_drag_error": -0.0015388114861541612,
+      "wetted_surface": 12.868549630727015
+    }
+  ],
+  "quadrature_order": [
+    {
+      "quadrature_order": 2,
+      "k": 0.3800232042845356,
+      "C_VP": 0.0011013726638064085,
+      "one_plus_k": 1.3800232042845355,
+      "normal_velocity_residual": 0.0003366012803156038,
+      "failed": false,
+      "reason": null
+    },
+    {
+      "quadrature_order": 3,
+      "k": -54.52636771384263,
+      "C_VP": -0.15076967582246367,
+      "one_plus_k": -53.52636771384263,
+      "normal_velocity_residual": 7.664640239108018e-05,
+      "failed": true,
+      "reason": "Rankine kernel singular: higher-order quadrature nodes of the displaced sheet coincide with the bare-hull pressure points"
+    }
+  ],
+  "k_range": [
+    0.28654517703955273,
+    0.42074798703108446
+  ],
+  "k_range_note": "range over the runs that passed the validity gate (failed/invalid runs excluded)"
+}
