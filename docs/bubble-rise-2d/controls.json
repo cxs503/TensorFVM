@@ -1,0 +1,103 @@
+{
+  "controls": {
+    "baseline_n12": {
+      "case": {
+        "name": "control",
+        "eotvos": 1.23,
+        "morton": 2.63e-11,
+        "density_ratio": 10.0,
+        "viscosity_ratio": 55.0,
+        "cells_per_diameter": 12,
+        "domain_width": 4.0,
+        "domain_height": 8.0,
+        "start_y": 2.0,
+        "end_time": 1.5,
+        "csf_smoothing": 3,
+        "momentum_advection": true
+      },
+      "terminal_velocity": 0.5408074119794616,
+      "anchor": 1.4982781445292406,
+      "relative_error": -0.6390473865255617,
+      "aspect_ratio": 1.2727272727272727,
+      "circularity": 0.5069699567388672,
+      "reynolds": 270.3497570129749,
+      "worst_step_drift": 1.6129954514911205e-14,
+      "steps": 282
+    },
+    "static_bubble_no_gravity": {
+      "case": {
+        "name": "control",
+        "eotvos": 1.23,
+        "morton": 2.63e-11,
+        "density_ratio": 10.0,
+        "viscosity_ratio": 55.0,
+        "cells_per_diameter": 12,
+        "domain_width": 4.0,
+        "domain_height": 8.0,
+        "start_y": 2.0,
+        "end_time": 0.5,
+        "csf_smoothing": 3,
+        "momentum_advection": false
+      },
+      "peak_spurious_velocity": 0.5315304606531746,
+      "relative_to_anchor": 0.3547608717339874,
+      "volume_drift": 6.780607821253528e-13,
+      "steps": 94
+    },
+    "density_ratio_100": {
+      "case": {
+        "name": "control",
+        "eotvos": 1.23,
+        "morton": 2.63e-11,
+        "density_ratio": 100.0,
+        "viscosity_ratio": 55.0,
+        "cells_per_diameter": 12,
+        "domain_width": 4.0,
+        "domain_height": 8.0,
+        "start_y": 2.0,
+        "end_time": 1.5,
+        "csf_smoothing": 3,
+        "momentum_advection": true
+      },
+      "terminal_velocity": 0.7142007189027042,
+      "anchor": 1.4982781445292406,
+      "relative_error": -0.5233190035438271,
+      "aspect_ratio": 1.5555555555555554,
+      "circularity": 0.8155603651885793,
+      "reynolds": 365.6384024245001,
+      "worst_step_drift": 1.541623971336646e-14,
+      "steps": 282
+    },
+    "domain_width_8d": {
+      "case": {
+        "name": "control",
+        "eotvos": 1.23,
+        "morton": 2.63e-11,
+        "density_ratio": 10.0,
+        "viscosity_ratio": 55.0,
+        "cells_per_diameter": 12,
+        "domain_width": 8.0,
+        "domain_height": 8.0,
+        "start_y": 2.0,
+        "end_time": 2.0,
+        "csf_smoothing": 3,
+        "momentum_advection": true
+      },
+      "terminal_velocity": 0.7276169092194881,
+      "anchor": 1.4982781445292406,
+      "relative_error": -0.5143645978710412,
+      "aspect_ratio": 1.2000000000000002,
+      "circularity": 0.5210524555371772,
+      "reynolds": 363.7358701982694,
+      "worst_step_drift": 2.997602166487923e-14,
+      "steps": 376
+    }
+  },
+  "findings": {
+    "spurious_current_floor": 0.3547608717339874,
+    "density_ratio_effect": 0.32061932414829336,
+    "confinement_effect": 0.3454270283690583,
+    "declared_tolerance": 0.15
+  },
+  "elapsed_seconds": 706.3
+}

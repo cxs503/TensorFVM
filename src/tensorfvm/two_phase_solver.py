@@ -29,6 +29,7 @@ Design principles
 
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass
 
 import torch
@@ -42,6 +43,7 @@ from .two_phase_vof import (
     mixture_viscosity,
 )
 from .free_surface_bc import FreeSurfaceBC
+from .vof_plic import advect_plic
 
 
 @dataclass
@@ -100,6 +102,50 @@ class TwoPhaseConfig:
     side_outlet: bool = False
     # VOF transport
     vof_cfl_limit: float = 0.5
+    #: Interface transport scheme.  ``"upwind"`` is the historical donor-cell
+    #: transport of :class:`~tensorfvm.two_phase_vof.VOFTransport`;
+    #: ``"plic"`` uses the geometric PLIC reconstruction of
+    #: :mod:`tensorfvm.vof_plic` (sharp interface, conservative, bounded).
+    vof_scheme: str = "upwind"
+    #: Momentum advection (``u·∇u``) in the transient projection predictor.
+    #: The historical predictor carried only diffusion + pressure + gravity +
+    #: CSF, i.e. it integrated a Stokes-like momentum balance.  That is
+    #: adequate for hydrostatics, capillary and dam-break anchors, but it
+    #: cannot represent the inertia that sets the terminal velocity of a rising
+    #: bubble (it would return the creeping-flow value instead).  ``False``
+    #: (default) keeps every existing caller bit-for-bit unchanged.
+    momentum_advection: bool = False
+    #: How the body force and the pressure are split.
+    #:
+    #: * ``"total"`` (historical default): the momentum equation carries the
+    #:   *total* pressure ``p`` and the full gravitational acceleration ``-g``.
+    #: * ``"reduced"``: the momentum equation carries the *dynamic* pressure
+    #:   ``p_dyn = p + ρ_ref g y`` and the buoyancy acceleration
+    #:   ``((ρ - ρ_ref)/ρ)·g`` with ``ρ_ref = ρ_liquid``.
+    #:
+    #: The two are algebraically equivalent for the continuous equations, but
+    #: not for the discrete incremental-projection scheme used here: the
+    #: corrector solves ``∇·(1/ρ ∇φ) = ∇·u*/Δt`` and the update ``p ← p + φ``
+    #: annihilates every pressure field whose ``(1/ρ)∇p`` is discretely
+    #: divergence-free.  A hydrostatic head over a *uniform* liquid column is
+    #: exactly such a field, so with ``"total"`` a pool at rest is not
+    #: supported: it free-falls (measured: ``|v|`` grows linearly from rest,
+    #: see ``tests/test_bubble_rise.py::test_hydrostatic_pool_stays_at_rest``).
+    #: ``"reduced"`` moves the head out of the pressure and leaves a body force
+    #: that vanishes in a uniform liquid, so a static pool is an exact solution
+    #: and the pressure stays O(dynamic).  Any caller with ``gravity != 0`` and
+    #: a free surface should use ``"reduced"``.
+    pressure_form: str = "total"
+    #: Reuse the previous step's pressure correction as the initial guess of
+    #: the CG solve.  Two-phase Poisson systems (1/rho contrast of 10-1000)
+    #: need several hundred Jacobi-preconditioned CG iterations from a zero
+    #: guess; consecutive time steps differ little, so the warm start removes
+    #: most of that cost (measured on a 120x240 bubble grid: 780 -> 45
+    #: iterations).  The iterate is *the same* linear system either way — the
+    #: flag only changes how many iterations are spent getting there, and the
+    #: solve still runs to its own residual target.  ``False`` (default) keeps
+    #: every existing caller bit-for-bit unchanged.
+    warm_start_pressure: bool = False
     # Surface-tension discretisation.  ``csf_balance="balanced"`` samples the
     # CSF force on the MAC faces with the same two-point alpha difference the
     # pressure gradient uses (Francois et al. 2006); ``"legacy"`` averages the
@@ -112,6 +158,18 @@ class TwoPhaseConfig:
     # Domain boundary type for two-phase (not using inlet/outlet channel)
     # "closed" = all walls except top atmosphere; "channel" = inlet+outlet
     domain_type: str = "closed"
+
+    def __post_init__(self):
+        if self.vof_scheme not in ("upwind", "plic"):
+            raise ValueError(
+                f"vof_scheme must be 'upwind' or 'plic', got {self.vof_scheme!r}")
+        if self.rho_liquid <= 0 or self.rho_gas <= 0:
+            raise ValueError("phase densities must be positive")
+        if self.mu_liquid < 0 or self.mu_gas < 0:
+            raise ValueError("phase viscosities must be non-negative")
+        if self.pressure_form not in ("total", "reduced"):
+            raise ValueError(
+                f"pressure_form must be 'total' or 'reduced', got {self.pressure_form!r}")
 
 
 class TwoPhaseSolver:
@@ -201,6 +259,10 @@ class TwoPhaseSolver:
         self.u[:, 0] = float(c.inlet_velocity)
         self.history = []
         self.time = 0.0
+        self._plic_sweeps = 0
+        self.plic_diagnostics: dict = {}
+        self.cg_diagnostics: dict = {}
+        self._last_dp = None
         self._current_dt = c.time_step  # may be None
 
     def _face_mask_u(self):
@@ -549,7 +611,9 @@ class TwoPhaseSolver:
             step = rz / denominator
             q += step * direction
             r -= step * ad
-            if torch.linalg.vector_norm(r).item() <= target:
+            self.cg_diagnostics["residual"] = torch.linalg.vector_norm(r).item()
+            if self.cg_diagnostics["residual"] <= target:
+                self.cg_diagnostics["converged"] = True
                 return q
             z = r / diagonal
             new_rz = torch.sum(r * z)
@@ -587,9 +651,132 @@ class TwoPhaseSolver:
         self.u.masked_fill_(~self._u_active, 0)
         self.v.masked_fill_(~self._v_active, 0)
 
+    def _advective_accel(self):
+        """Advective acceleration ``u·∇u`` on the interior MAC faces (upwind).
+
+        Written in *advective* (non-conservative) form because that is the form
+        of the single-fluid variable-density momentum balance the predictor
+        already integrates: ``∂u/∂t = (∇·τ - ∇p)/ρ + g - u·∇u``.  First-order
+        upwind is used deliberately: the predictor is explicit, so upwind keeps
+        the convection bounded for CFL ≤ 1 and cannot create a new extremum
+        next to a large density jump.
+
+        Index conventions (staggered MAC, ``dx``/``dy`` may differ):
+
+        * ``u[j, i]`` sits at ``(x = i·dx, y = (j + 1/2)·dy)``;
+        * ``v[j, i]`` sits at ``(x = (i + 1/2)·dx, y = j·dy)``.
+
+        Returns
+        -------
+        (adv_u, adv_v)
+            ``adv_u`` has the shape of the updated ``u`` block
+            ``(ny-2, nx-1)``, ``adv_v`` that of the updated ``v`` block
+            ``(ny-1, nx-2)`` — exactly the blocks the predictor adds to.
+        """
+        ny, nx = self.ny, self.nx
+        u, v = self.u, self.v
+        dx, dy = self.dx, self.dy
+
+        # --- u-momentum: interior faces rows 1..ny-2, cols 1..nx-1 ---
+        ri, ci = slice(1, ny - 1), slice(1, nx)
+        u_c = u[ri, ci]
+        u_w = u[ri, slice(0, nx - 1)]
+        u_e = u[ri, slice(2, nx + 1)]
+        u_s = u[slice(0, ny - 2), ci]
+        u_n = u[slice(2, ny), ci]
+        # v interpolated to the u-face: it lies between v rows j, j+1 and
+        # between v cols i-1, i.
+        v_at_u = 0.25 * (
+            v[slice(1, ny - 1), slice(0, nx - 1)] + v[slice(1, ny - 1), slice(1, nx)]
+            + v[slice(2, ny), slice(0, nx - 1)] + v[slice(2, ny), slice(1, nx)]
+        )
+        dudx = torch.where(u_c >= 0.0, (u_c - u_w) / dx, (u_e - u_c) / dx)
+        dudy = torch.where(v_at_u >= 0.0, (u_c - u_s) / dy, (u_n - u_c) / dy)
+        adv_u = u_c * dudx + v_at_u * dudy
+
+        # --- v-momentum: interior faces rows 1..ny-1, cols 1..nx-2 ---
+        rj, cj = slice(1, ny), slice(1, nx - 1)
+        v_c = v[rj, cj]
+        v_s = v[slice(0, ny - 1), cj]
+        v_n = v[slice(2, ny + 1), cj]
+        v_w = v[rj, slice(0, nx - 2)]
+        v_e = v[rj, slice(2, nx)]
+        # u interpolated to the v-face: between u rows j-1, j and between
+        # u cols i, i+1.
+        u_at_v = 0.25 * (
+            u[slice(0, ny - 1), slice(1, nx - 1)] + u[slice(0, ny - 1), slice(2, nx)]
+            + u[slice(1, ny), slice(1, nx - 1)] + u[slice(1, ny), slice(2, nx)]
+        )
+        dvdy = torch.where(v_c >= 0.0, (v_c - v_s) / dy, (v_n - v_c) / dy)
+        dvdx = torch.where(u_at_v >= 0.0, (v_c - v_w) / dx, (v_e - v_c) / dx)
+        adv_v = u_at_v * dvdx + v_c * dvdy
+        return adv_u, adv_v
+
+    def stable_time_step(
+        self,
+        cfl: float = 0.4,
+        capillary_safety: float = 0.5,
+        viscous_safety: float = 0.25,
+    ) -> float:
+        """Largest explicit step this discretisation tolerates right now.
+
+        The transient predictor is explicit in convection, diffusion and
+        surface tension, so the step is the minimum of three limits:
+
+        * CFL on the MAC faces: ``dt ≤ cfl·h/|u|_max``;
+        * explicit viscous diffusion: ``dt ≤ 0.25·h²/ν_max`` with
+          ``ν = μ/ρ`` taken *per cell* (the gas phase is the restrictive one in
+          an air/water pair, its kinematic viscosity is ~30× the liquid's);
+        * capillary wave: ``dt ≤ c·sqrt(ρ_l h³/(2πσ))`` (Brackbill et al. 1992).
+
+        ``h = min(dx, dy)``.  Returns a positive finite float; callers that step
+        manually must respect it or the interface transport raises (PLIC
+        rejects directional CFL > 1).
+        """
+        h = min(self.dx, self.dy)
+        umax = max(float(self.u.abs().max()), float(self.v.abs().max()))
+        dt_cfl = cfl * h / umax if umax > 0.0 else math.inf
+        dt_visc = math.inf
+        if self.props is not None and self.mu_field is not None:
+            nu_max = float((self.mu_field / self.rho_field.clamp_min(1e-12)).max())
+            if nu_max > 0.0:
+                dt_visc = viscous_safety * h * h / nu_max
+        dt_cap = math.inf
+        if (self.props is not None and self.props.surface_tension
+                and self.props.sigma > 0.0):
+            dt_cap = capillary_safety * math.sqrt(
+                self.props.rho_liquid * h ** 3 / (2.0 * math.pi * self.props.sigma))
+        dt = min(dt_cfl, dt_visc, dt_cap)
+        if not math.isfinite(dt) or dt <= 0.0:
+            raise ValueError("no finite stable step (check velocities and properties)")
+        return float(dt)
+
     def _advect_vof(self, dt: float):
-        """Advect volume fraction with donor-cell scheme."""
-        self.alpha = self.vof.advect(self.alpha, self.u, self.v, dt)
+        """Advect the volume fraction with the configured interface scheme."""
+        if getattr(self.tp, "vof_scheme", "upwind") == "plic":
+            u, v = self.u, self.v
+            if not self.tp.side_outlet:
+                # The geometric sweeps index-wrap (periodic stencil).  A closed
+                # domain is reproduced exactly by zeroing the boundary-normal
+                # face velocities: no flux crosses a wall either way, and the
+                # wrapped donor cell is then never asked for a flux.
+                u = u.clone()
+                u[:, 0] = 0.0
+                u[:, -1] = 0.0
+                v = v.clone()
+                v[0, :] = 0.0
+                v[-1, :] = 0.0
+            # Alternate the sweep order so the Lie splitting is not biased
+            # towards +x every step.
+            order = "xy" if self._plic_sweeps % 2 == 0 else "yx"
+            self._plic_sweeps += 1
+            self.plic_diagnostics = {}
+            self.alpha = advect_plic(
+                self.alpha, u, v, dt, self.dx, self.dy, order=order,
+                conservative_bounds=True,
+                diagnostics=self.plic_diagnostics)
+        else:
+            self.alpha = self.vof.advect(self.alpha, self.u, self.v, dt)
         self._update_properties()
 
     def _projection_pressure(self, u_star, v_star, dt):
@@ -689,15 +876,24 @@ class TwoPhaseSolver:
         b = (-div * (self.dx * self.dy) / dt).masked_fill(~self.fluid, 0)
 
         # CG solve (Jacobi preconditioned)
-        q = torch.zeros_like(b)
-        r = b.clone()
         norm = torch.linalg.vector_norm(b).item()
         if norm == 0:
-            return q
+            self._last_dp = None
+            return torch.zeros_like(b)
+        if (self.tp.warm_start_pressure and self._last_dp is not None
+                and self._last_dp.shape == b.shape):
+            q = self._last_dp.clone()
+            r = b - matvec_proj(q)
+        else:
+            q = torch.zeros_like(b)
+            r = b.clone()
         z = r / diag
         direction, rz = z.clone(), torch.sum(r * z)
         target = max(norm * 1e-10, 1e-14)
+        self.cg_diagnostics = {"rhs_norm": norm, "iterations": 0, "residual": norm,
+                               "converged": False, "residual_history": []}
         for _ in range(max(500, nx * ny)):
+            self.cg_diagnostics["iterations"] += 1
             ad = matvec_proj(direction)
             denominator = torch.sum(direction * ad)
             if denominator.item() <= 0 or not torch.isfinite(denominator):
@@ -705,12 +901,18 @@ class TwoPhaseSolver:
             step = rz / denominator
             q += step * direction
             r -= step * ad
-            if torch.linalg.vector_norm(r).item() <= target:
-                break
+            residual = torch.linalg.vector_norm(r).item()
+            self.cg_diagnostics["residual"] = residual
+            self.cg_diagnostics["residual_history"].append(residual / norm)
+            if residual <= target:
+                self.cg_diagnostics["converged"] = True
+                self._last_dp = q
+                return q
             z = r / diag
             new_rz = torch.sum(r * z)
             direction = z + (new_rz / rz) * direction
             rz = new_rz
+        self._last_dp = q
         return q
 
     def _velocity_correction(self, u_star, v_star, dp, dt: float) -> tuple:
@@ -766,6 +968,11 @@ class TwoPhaseSolver:
 
         u_old = self.u.clone()
         v_old = self.v.clone()
+        # Advective acceleration is evaluated once, from the step-start velocity
+        # field, so the u- and v-predictors see the same convection operator.
+        adv_u, adv_v = (
+            self._advective_accel() if getattr(self.tp, "momentum_advection", False)
+            else (None, None))
 
         # --- Step 1: Predict velocity (explicit Euler, diffusion + gravity) ---
         # We update interior faces only; boundaries handled by _boundaries().
@@ -796,6 +1003,8 @@ class TwoPhaseSolver:
                  - dpdx_old[1:-1, :]) / rho_u_face[1:-1, :]
         if f_u is not None:
             du_dt = du_dt + f_u[1:-1, :] / rho_u_face[1:-1, :]
+        if adv_u is not None:
+            du_dt = du_dt - adv_u
         self.u[1:-1, 1:-1] = u_old[1:-1, 1:-1] + dt * du_dt
 
         # v: shape (ny+1, nx). Interior v-faces: rows 1..ny-1, cols 1..nx-2
@@ -821,11 +1030,20 @@ class TwoPhaseSolver:
         dv_dt = (mu_v_face[:, 1:-1]
                  * (d2vdx2_full[1:-1, :] + d2vdy2_full[:, 1:-1])
                  - dpdy_old[:, 1:-1]) / rho_v_face[:, 1:-1]
-        # Gravity body force (same for all fluid)
-        grav_v = -self.tp.gravity
-        dv_dt = dv_dt + grav_v
+        # Body force.  With the reduced pressure the gravitational head is not
+        # in the pressure any more, so what remains is the buoyancy
+        # acceleration (rho - rho_ref)/rho * g on the v-faces; for a uniform
+        # liquid that term vanishes and a pool at rest is an exact solution.
+        rho_v_cell = rho_v_face[:, 1:-1]
+        if self.tp.pressure_form == "reduced" and self.props is not None:
+            buoy = ((rho_v_cell - self.props.rho_liquid) / rho_v_cell) * (-self.tp.gravity)
+            dv_dt = dv_dt + buoy
+        else:
+            dv_dt = dv_dt - self.tp.gravity
         if f_v is not None:
             dv_dt = dv_dt + f_v[:, 1:-1] / rho_v_face[:, 1:-1]
+        if adv_v is not None:
+            dv_dt = dv_dt - adv_v
         self.v[1:-1, 1:-1] = v_old[1:-1, 1:-1] + dt * dv_dt
 
         self._boundaries(projection=True)
