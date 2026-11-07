@@ -1,7 +1,14 @@
 # 不可压 FVM 验证面：后台阶 / 突扩管 / 自然对流方腔
 
-**节点**：P18W2-V1（TensorFVM，物理域）
+**节点**：P19-N03（续 P18W2-V1；上一轮的 FAIL/WITHHELD 原始记录保留在
+`RESULTS-previous-session.md`、`previous-backward-step-README.md`、
+`previous-sudden-expansion-README.md` 与 `benchmarks/` 目录，未被覆盖）
 **定位**：建立一条**独立于 LBM 验证链**的有限体积验证基线——同一份 FVM 内核（交错网格 SIMPLE + Boussinesq）同时覆盖三个经典不可压基准。
+
+> **阅读顺序**：§0 是 P18W2-V1 当时的判定（保留原样作为历史）。**当前判定以
+> `RESULTS.md` 与 `benchmarks/verified/fvm_*/results.json` 为准**（由
+> `scripts/report_fvm_incompressible.py` 从运行数据程序化生成），本轮的方法与
+> 数值结论见 §8。
 **代码**：`src/tensorfvm/staggered_simple.py`（数值内核）、`src/tensorfvm/incompressible_baselines.py`（三个算例 + 判据）、`scripts/run_fvm_incompressible_baselines.py`（执行）、`scripts/probe_fvm_incompressible.py`（低成本证据探针）、`scripts/report_fvm_incompressible.py`（结果表/图程序化生成）、`tests/test_incompressible_fvm_baselines.py`（15 个 pytest）。
 
 ---
@@ -148,3 +155,81 @@ python scripts/run_fvm_incompressible_baselines.py --out runs/incompressible-bas
 python scripts/run_fvm_incompressible_baselines.py --job 0 --nshards 8 --out runs/incompressible-baselines   # 分片
 python scripts/report_fvm_incompressible.py                         # 生成 RESULTS.md + benchmarks/verified/*/*
 ```
+
+---
+
+## 8. P19-N03：稳态收敛加速、三档网格基线与当前判定
+
+### 8.1 本轮做了什么（代码层面）
+
+1. **压力修正的稀疏直接解（`SparseDirectPoisson`）**：实测原多重网格路径把 96 %
+   （4400 单元：0.23 s 中的 0.22 s）的时间花在**粗层稠密解**上（`np.linalg.solve`，
+   长宽比大的算例粗层仍有 ~1200 未知数）。新路径用同一算子组装 CSC 矩阵 + SuperLU
+   （`permc_spec="MMD_AT_PLUS_A"`, `SymmetricMode`），并在系数缓慢变化时**复用分解**
+   （`refresh`/`min_age`/`stale_tol`），用 1 步迭代精化把陈旧分解解到**当前**算子的
+   ~1e−6 相对残差。等价性由 pytest 锁定（残差与多重网格路径对比、`factorizations <
+   solves`、pin 边界）。整迭代成本：H/20 从 230 ms → 25 ms（**约 10 倍**）。多重网格
+   仍是默认路径（无 SciPy 的 loong64 节点使用它）。
+2. **网格序贯（grid sequencing，`inject_coarse_solution`）**：粗糙档解经面拷贝/面平
+   均注入加密档（倍频嵌套，注入精确），省掉最贵的一段对流发展暂态。
+3. **发现并记录：延迟修正（van Leer）在 `Pe_cell ≫ 3` 不可用**。上一轮用「冻结源
+   项」绕过；本轮实测**冻结源在 `Pe_cell ≈ 10`（突扩）与 `≈ 40`（台阶 Re_H=800）
+   仍会指数发散**（400→600 次迭代内到 1e107），并且把缺陷修正量按 5 %/迭代松弛
+   （`dc_relax`）同样发散——这不是欠松弛能解决的问题，而是**反扩散算子的定常迭代
+   稳定性**问题：迭代矩阵失去 M 矩阵性质。因此**台阶与突扩两案本轮只用一阶迎风**
+   （二阶路径需要耦合 Newton 或九点/宽模板 + ILU，未实现，见 §8.4）。方腔 `Pe_cell`
+   很小，仍用二阶冻结缺陷修正。
+4. **`run(max_stall=...)`**：原实现的「改变量 400 个检查块无改进即停」会把仍在缓慢
+   推进的回流（`dU` 在衰减均值附近振荡）误判为停滞，导致**假收敛**（实测在 5800 次
+   迭代、`L_r/H` 仍差 30 % 时提前退出）。验证驱动改为只受迭代预算约束，并把
+   `dU`/连续性残差写入 JSON。
+5. **新增摩擦系数后处理**（`wall_friction_profile`）：`C_f = 4 ν u_w / (h U_b²)`，壁
+   面切应力取壁邻排（距壁 `h/2`），零点即再附点；报告给出 `C_f(x)` 分布、泡内最小值、
+   与充分发展值 `12 ν/(U_b H)` 的对照（**不设为判据**，因为台阶后 4H 处边界层远未
+   充分发展，入口段长度 ~0.05 Re_H H = 40H）。
+6. **报告与产物程序化**：`scripts/report_fvm_incompressible.py` 现在写出
+   `benchmarks/verified/fvm_*/results.json`（逐条判据 id / value / reference / error /
+   passed + 产物路径）、三算例 README 与 `RESULTS.md`，并绘制 `C_f(x)`、速度云图、
+   `L_r` 收敛、`K` 与 Borda–Carnot、`K(Re_D)` 扫描、`Nu` vs Ra、温度/压力云图。
+
+### 8.2 网格加密预算（为什么网格族改为 H/10、H/20、H/40）
+
+本内核的伪时间步 `Δt_p = CFL·min(hx,hy)/|u|` 是**稳定性**要求而非效率选择：
+`d = A/a_P ≤ α_u Δt_p/h`，要网格无关就必须 `Δt_p ∝ h`（见 §5 陷阱 4）。于是
+**到达同一定常状态的迭代数 ∝ 1/h**，而单次迭代成本随单元数超线性增长（H/80：
+~0.5 s/迭代，且需要约 4 倍于 H/20 的迭代数）——H/80 一档单独就需要约 10 小时。
+因此本轮的**三档等比网格族为 H/10、H/20、H/40**（合同建议的 H/20、H/40、H/80
+无法在本次会话预算内完成）；这是**判据偏离**，如实记录，不用未收敛的点凑收敛阶。
+
+### 8.3 当前判定
+
+逐条判据（含数值、基准、误差、是否通过）见
+`benchmarks/verified/fvm_backward_step/results.json`、
+`fvm_sudden_expansion/results.json`、`fvm_natural_convection/results.json` 与
+`RESULTS.md`。摘要：
+
+* **自然对流**：三档 Ra 的 Nu 均通过 3 % 门（见 `RESULTS.md` 数字）；`|ψ|_max` 在
+  Ra ≥ 10⁵ 仍偏大（已知缺陷：ψ 是 `u` 的壁面积分，累积了近壁速度误差）。
+* **后台阶**：H/10、H/20、H/40 三档 `L_r/H` 单调下降（见 `RESULTS.md`），最细网格的
+  误差**未达 10% 门**（FAIL，数值在 `results.json`）；但三档的 **h→0 Richardson 外推
+  落在 6.0 附近（约 −0.7%）**，说明偏差是**一阶迎风数值扩散**而非物理错误。**观测阶
+  ≈0.86 < 1.5**，该子判据 FAIL（原因见 §8.4）。另做了**出流长度敏感性**（20H vs 10H）：
+  再附长度变化 ~1.6%，而出口处 `C_f` 由负转正（=解析充分发展值量级），证明 10H 出口的
+  负 `C_f` 是出流边界伪影。
+* **突扩管**：`K` 三档网格单调上升并以**观测阶 ≈1.08**（非均匀比 2 与 1.5，由代码内
+  的非均匀 Richardson 求解器算出）收敛到 `K_∞ ≈ 1.18`，即 **≈2.1×Borda–Carnot**——
+  `K` 的 5 % 门（对 0.5625）在该 Re 下**不可能**满足，属物理（层流粘性超出）而非数值误差：
+  报告给出 `K(Re_D)` 扫描（Re_D = 100…5000）、**出流长度敏感性**（20D 出口把 D/10 的
+  `K` 从 1.026 降到 0.889，说明 12D 出口截断了回流区）、静压恢复与 `K` 分解恒等式
+  （自洽闭合到机器精度）。`L_r/D` 三档一致到 0.7%，但无离线可引文献值 → **WITHHELD**。
+
+### 8.4 未完成 / 下一步（如实）
+
+1. **二阶精度**：需把限制器重构纳入隐式（宽模板 + ILU/GMRES）或用**耦合 Newton**
+   （`J` 用冻结限制器）——这是把台阶/突扩的观测阶从 ~1 提到 ~2 的正路，本轮未实现。
+2. **H/80**：需要局部时间步（按单元 CFL）+ 更好的线性求解器（或 AMG），否则单算例
+   ~10 小时。
+3. **`C_f` 与实验对比**：Armaly (1983) 的数字化曲线离线不可得（`reference.py` 已把
+   它标为 WITHHELD）；当前给出分布收敛性与零点一致性，待有数字化数据后再加硬判据。
+4. **`|ψ|_max`**：Ra ≥ 10⁵ 的 10–15 % 偏差未解决；与 Nu 的一致性说明问题在近壁速度
+   分布而非整体热量输运，需在壁面附近加密或用二阶对流。

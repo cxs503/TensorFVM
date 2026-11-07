@@ -1,0 +1,231 @@
+{
+  "case": "fvm_sudden_expansion",
+  "criteria": [
+    {
+      "id": "expansion.K.finest",
+      "description": "|K - K_BC| / K_BC on the finest grid D/30 (gate <= 5 %)",
+      "value": 1.1312543698053101,
+      "reference": 0.5625,
+      "error": 1.0111188796538846,
+      "passed": false,
+      "note": "K_BC is the inviscid limit; family: D/10: 1.0260, D/20: 1.1058, D/30: 1.1313"
+    },
+    {
+      "id": "expansion.grid.monotone",
+      "description": "error in K decreases monotonically under refinement",
+      "value": 1.0111188796538846,
+      "reference": null,
+      "error": null,
+      "passed": false,
+      "note": "D/10: 82.41 %, D/20: 96.59 %, D/30: 101.11 %"
+    },
+    {
+      "id": "expansion.grid.order",
+      "description": "observed order of accuracy p >= 1.5",
+      "value": 1.0771143651041442,
+      "reference": 1.5,
+      "error": null,
+      "passed": false,
+      "note": ""
+    },
+    {
+      "id": "expansion.area_ratio",
+      "description": "A_out/A_in = 4 to within 0.2 %",
+      "value": 4.0,
+      "reference": 4.0,
+      "error": null,
+      "passed": true,
+      "note": ""
+    },
+    {
+      "id": "expansion.identity",
+      "description": "internal identity K = recovery + (1 - (U_out/U_in)^2)",
+      "value": 1.1312543698053101,
+      "reference": 1.1312543698053101,
+      "error": 0.0,
+      "passed": true,
+      "note": ""
+    },
+    {
+      "id": "expansion.K.domain_length",
+      "description": "K measured with a 30D outlet (vs 12D) at the same grid: quantifies the finite-domain bias of the 12D case",
+      "value": 0.8885330625954506,
+      "reference": 0.5625,
+      "error": 0.5796143335030233,
+      "passed": false,
+      "note": "L_r/D at 12D already reaches the exit, so the 12D loss is a lower bound; reported as a sensitivity, not a gate"
+    },
+    {
+      "id": "expansion.K.Re_sweep",
+      "description": "measured K(Re_D) does not reach the inviscid K_BC = 0.5625 within the sampled range (documents that the 5 % criterion is a high-Re criterion)",
+      "value": 1.5189007365033147,
+      "reference": 0.5625,
+      "error": 1.7002679760058927,
+      "passed": false,
+      "note": "Re=100: K=1.0262, Re=200: K=1.0307, Re=500: K=1.0503, Re=1000: K=1.0851, Re=2000: K=1.0923, Re=5000: K=1.5189"
+    }
+  ],
+  "n_criteria": 7,
+  "n_passed": 2,
+  "verdict": "FAIL",
+  "figs": [
+    "docs/benchmarks/verified/fvm_sudden_expansion/fig_sudden_expansion.png"
+  ],
+  "runs": [
+    "runs/incompressible-baselines/expansion_n010.json",
+    "runs/incompressible-baselines/expansion_n020.json",
+    "runs/incompressible-baselines/expansion_n030.json",
+    "runs/incompressible-baselines/expansion_re0000100.json",
+    "runs/incompressible-baselines/expansion_re0000200.json",
+    "runs/incompressible-baselines/expansion_re0000500.json",
+    "runs/incompressible-baselines/expansion_re0001000.json",
+    "runs/incompressible-baselines/expansion_re0002000.json",
+    "runs/incompressible-baselines/expansion_re0005000.json"
+  ],
+  "source": [
+    "src/tensorfvm/staggered_simple.py",
+    "src/tensorfvm/incompressible_baselines.py"
+  ],
+  "driver": "scripts/run_fvm_incompressible_baselines.py",
+  "audit_driver": "scripts/audit_fvm_incompressible_convergence.py",
+  "discretisation": "first-order upwind convection, central diffusion, SIMPLE, uniform inlet",
+  "observed_order": 1.0771143651041442,
+  "richardson_limit": 1.1776994866705244,
+  "withheld": {
+    "reattachment_over_D": {
+      "10": 11.704171546983218,
+      "20": 11.658244769024511,
+      "30": 11.625331685891409
+    },
+    "reason": "no citable 2-D L_r/D for (AR=4, Re_D=100) is available offline; the three grids agree to 0.67 %"
+  },
+  "convergence_audit": {
+    "expansion_n010": {
+      "case": "sudden_expansion",
+      "qoi": "k_total_head",
+      "iterations": 1000,
+      "qoi_before": 1.0260453652660464,
+      "qoi_after": 1.0261072860178289,
+      "drift": 6.19207517824627e-05,
+      "drift_rel": 6.0348941556211876e-05,
+      "change": 3.6953239626602574e-07,
+      "continuity": 3.503420995150386e-10
+    },
+    "expansion_n020": {
+      "case": "sudden_expansion",
+      "qoi": "k_total_head",
+      "iterations": 1000,
+      "qoi_before": 1.1058190867564537,
+      "qoi_after": 1.1059845158786195,
+      "drift": 0.0001654291221657722,
+      "drift_rel": 0.00014959872202152216,
+      "change": 2.090247257557909e-06,
+      "continuity": 2.588072187115209e-10
+    },
+    "expansion_re0000100": {
+      "case": "sudden_expansion",
+      "qoi": "k_total_head",
+      "iterations": 300,
+      "qoi_before": 1.0262065246884258,
+      "qoi_after": 1.026210501184907,
+      "drift": 3.9764964812061265e-06,
+      "drift_rel": 3.874947571994302e-06,
+      "change": 5.381495045697626e-07,
+      "continuity": 1.0109106633390819e-09
+    },
+    "expansion_re0000200": {
+      "case": "sudden_expansion",
+      "qoi": "k_total_head",
+      "iterations": 300,
+      "qoi_before": 1.030667684943059,
+      "qoi_after": 1.0306764662265604,
+      "drift": 8.781283501457793e-06,
+      "drift_rel": 8.519994979703792e-06,
+      "change": 5.675491486778483e-07,
+      "continuity": 2.0910985443212127e-09
+    },
+    "expansion_re0000500": {
+      "case": "sudden_expansion",
+      "qoi": "k_total_head",
+      "iterations": 300,
+      "qoi_before": 1.0502533075709222,
+      "qoi_after": 1.050248234284051,
+      "drift": 5.0732868712710655e-06,
+      "drift_rel": 4.830536437923547e-06,
+      "change": 8.710162773539754e-07,
+      "continuity": 1.773389102233125e-09
+    },
+    "expansion_re0001000": {
+      "case": "sudden_expansion",
+      "qoi": "k_total_head",
+      "iterations": 300,
+      "qoi_before": 1.0850759510591477,
+      "qoi_after": 1.1623545159810598,
+      "drift": 0.0772785649219121,
+      "drift_rel": 0.07121949836458925,
+      "change": 0.035663762055878845,
+      "continuity": 0.00013108494296790174
+    },
+    "expansion_re0002000": {
+      "case": "sudden_expansion",
+      "qoi": "k_total_head",
+      "iterations": 300,
+      "qoi_before": 1.0922556567094885,
+      "qoi_after": 1.0922555544593036,
+      "drift": 1.0225018498566385e-07,
+      "drift_rel": 9.361378387702846e-08,
+      "change": 9.096373653656731e-07,
+      "continuity": 9.599167519885876e-10
+    },
+    "expansion_re0005000": {
+      "case": "sudden_expansion",
+      "qoi": "k_total_head",
+      "iterations": 300,
+      "qoi_before": 1.5189007365033147,
+      "qoi_after": 1.4828081921720182,
+      "drift": 0.036092544331296494,
+      "drift_rel": 0.02376227982770336,
+      "change": 0.001732404386005415,
+      "continuity": 3.234473170254937e-05
+    },
+    "expansion_long_n010": {
+      "case": "sudden_expansion",
+      "qoi": "k_total_head",
+      "iterations": 400,
+      "qoi_before": 0.8885330625954506,
+      "qoi_after": 0.8885150346488806,
+      "drift": 1.8027946570020603e-05,
+      "drift_rel": 2.028956189582867e-05,
+      "change": 7.83726091851955e-06,
+      "continuity": 1.304473080769586e-09
+    },
+    "expansion_n030": {
+      "case": "sudden_expansion",
+      "qoi": "k_total_head",
+      "iterations": 400,
+      "qoi_before": 1.1312543698053101,
+      "qoi_after": 1.1313620202874775,
+      "drift": 0.00010765048216732076,
+      "drift_rel": 9.516027963352531e-05,
+      "change": 6.731508188362323e-06,
+      "continuity": 6.828798341615319e-10
+    }
+  },
+  "domain_length_sensitivity": {
+    "expansion_long_n010": {
+      "k_total_head": 0.8885330625954506,
+      "reattachment_over_D": 12.866840978257702,
+      "length_inlet_heights": 20.0
+    },
+    "expansion_long_n020": {
+      "k_total_head": 0.9512212954623545,
+      "reattachment_over_D": 13.161596547578297,
+      "length_inlet_heights": 30.0
+    }
+  },
+  "reference": {
+    "borda_carnot": 0.5625,
+    "area_ratio": 4.0,
+    "source": "Borda-Carnot sudden-enlargement momentum balance (inviscid)"
+  }
+}

@@ -275,6 +275,165 @@ class MaskedPoisson:
         return phi
 
 
+
+class SparseDirectPoisson:
+    """Sparse direct pressure-correction solver (optional SciPy fast path).
+
+    Solves exactly the same masked 5-point operator as :class:`MaskedPoisson`
+    (``sum_faces k_f (phi_nb - phi_c) = rhs``) but factorises it with SuperLU
+    instead of running V-cycles, which removes the multigrid coarse-grid dense
+    solve from the inner SIMPLE loop (measured: 96 % of the iteration time at
+    4.4k cells).
+
+    The conductances change every outer iteration, so the factorisation is
+    **reused** while they vary by less than ``stale_tol`` (and for at most
+    ``refresh`` calls); a stale factorisation is an approximate inverse, and the
+    returned field is polished with ``refine`` iterative-refinement steps so it
+    still solves the *current* operator to round-off.  Because the SIMPLE fixed
+    point only requires the *correction* to drive the continuity defect to zero,
+    neither the reuse policy nor ``refine`` changes the converged solution.
+
+    SciPy is an optional dependency for this kernel: the loong64 compute nodes
+    ship NumPy only, and :class:`MaskedPoisson` remains the default there.
+    """
+
+    def __init__(self, fluid: np.ndarray, *, refresh: int = 30,
+                 stale_tol: float = 1.0e-2, refine: int = 1,
+                 min_age: int = 4) -> None:
+        from scipy.sparse import csc_matrix  # noqa: F401  (availability probe)
+
+        if fluid.ndim != 2:
+            raise ValueError("fluid must be 2-D")
+        self.fluid = np.ascontiguousarray(fluid, dtype=bool)
+        self.nx, self.ny = self.fluid.shape
+        self.cells = np.argwhere(self.fluid)
+        self.index = -np.ones(self.fluid.shape, dtype=np.int64)
+        self.index[self.fluid] = np.arange(len(self.cells))
+        self.refresh = int(refresh)
+        self.stale_tol = float(stale_tol)
+        self.refine = int(refine)
+        self.min_age = int(min_age)
+        self.nlevels = 1
+        self.factorizations = 0
+        self.solves = 0
+        self._lu = None
+        self._ku = None
+        self._kv = None
+        self._age = 0
+
+    # ---------------------------------------------------------------- assembly
+    def _assemble(self, ku, kv, pinned):
+        from scipy.sparse import csc_matrix
+        fluid, index, cells = self.fluid, self.index, self.cells
+        e, w, n, s, diag = MaskedPoisson._operator(fluid, ku, kv)
+        m = len(cells)
+        diag_c = diag[fluid]
+        active = diag_c > 0
+        rows = [np.arange(m)]
+        cols = [np.arange(m)]
+        vals = [np.where(active, -diag_c, 1.0)]
+        nx, ny = self.nx, self.ny
+        for arr, di, dj in ((e, 1, 0), (w, -1, 0), (n, 0, 1), (s, 0, -1)):
+            kvals = np.where(active, arr[fluid], 0.0)
+            ii = cells[:, 0] + di
+            jj = cells[:, 1] + dj
+            ok = (ii >= 0) & (ii < nx) & (jj >= 0) & (jj < ny)
+            nb = np.full(m, -1, dtype=np.int64)
+            nb[ok] = index[ii[ok], jj[ok]]
+            has = nb >= 0
+            rows.append(np.arange(m)[has])
+            cols.append(nb[has])
+            vals.append(kvals[has])
+        A = csc_matrix((np.concatenate(vals),
+                        (np.concatenate(rows), np.concatenate(cols))),
+                       shape=(m, m))
+        if pinned is not None:
+            pi = min(int(pinned[0]), nx - 1)
+            pj = min(int(pinned[1]), ny - 1)
+            if fluid[pi, pj]:
+                row = int(index[pi, pj])
+                A = A.tolil()
+                A[row, :] = 0.0
+                A[:, row] = 0.0
+                A[row, row] = 1.0
+                A = A.tocsc()
+        return A, active
+
+    def _factorise(self, ku, kv, pinned):
+        from scipy.sparse.linalg import splu
+
+        A, _ = self._assemble(ku, kv, pinned)
+        #: symmetric-structure ordering keeps the fill of the 2-D Laplacian
+        #: factorisation 1.6x smaller than the COLAMD default (measured 3.6M vs
+        #: 5.7M nonzeros at 76,800 unknowns) and removes the pivoting search.
+        self._lu = splu(A, permc_spec="MMD_AT_PLUS_A",
+                        options=dict(SymmetricMode=True))
+        self._ku, self._kv = ku.copy(), kv.copy()
+        self._age = 0
+        self.factorizations += 1
+
+    def _reusable(self, ku, kv) -> bool:
+        """Reuse the factorisation while the conductances drift slowly.
+
+        Both criteria are checked: the age bound alone would keep a factorisation
+        computed during the start-up transient for ``refresh`` iterations, and the
+        coefficient bound alone would re-factorise every iteration while the field
+        is still developing (measured: every one of the first 3000 iterations).
+        A stale factorisation is only ever used as an approximate inverse -- the
+        ``refine`` steps in :meth:`solve` re-solve the *current* operator.
+        """
+        if self._lu is None or self._age >= self.refresh:
+            return False
+        if self._age < self.min_age:
+            return True
+        scale_u = max(float(np.abs(self._ku).max()), _TINY)
+        scale_v = max(float(np.abs(self._kv).max()), _TINY)
+        du = float(np.abs(ku - self._ku).max()) / scale_u
+        dv = float(np.abs(kv - self._kv).max()) / scale_v
+        return max(du, dv) <= self.stale_tol
+
+    # ------------------------------------------------------------------- solve
+    def solve(self, ku, kv, rhs, phi=None, *, cycles=8, tol=1e-6,
+              pre=1, post=1, pinned=None):
+        """Return ``phi`` with ``sum_faces k_f (phi_nb - phi_c) = rhs`` on fluid cells."""
+        del pre, post  # accepted for interface compatibility with MaskedPoisson
+        fluid = self.fluid
+        scale = float(np.abs(rhs).max())
+        if scale <= 0.0 or not fluid.any():
+            return np.zeros_like(rhs) if phi is None else phi
+        if not self._reusable(ku, kv):
+            self._factorise(ku, kv, pinned)
+        b = np.where(MaskedPoisson._operator(fluid, ku, kv)[4][fluid] > 0,
+                     rhs[fluid], 0.0)
+        if pinned is not None:
+            pi = min(int(pinned[0]), self.nx - 1)
+            pj = min(int(pinned[1]), self.ny - 1)
+            if fluid[pi, pj]:
+                b[int(self.index[pi, pj])] = 0.0
+        sol = self._lu.solve(b)
+        self.solves += 1
+        self._age += 1
+        e, w, n, s, diag = MaskedPoisson._operator(fluid, ku, kv)
+        for _ in range(self.refine):
+            field = np.zeros(self.nx * self.ny, dtype=DTYPE)
+            field[self._flat_fluid()] = sol
+            field = field.reshape(self.nx, self.ny)
+            res = rhs - MaskedPoisson._apply(e, w, n, s, diag, field)
+            res = np.where(fluid, res, 0.0)
+            if float(np.abs(res).max()) <= tol * scale:
+                break
+            corr = self._lu.solve(res[fluid])
+            if not np.all(np.isfinite(corr)):
+                break
+            sol = sol + corr
+        out = np.zeros((self.nx, self.ny), dtype=DTYPE)
+        out[fluid] = np.where(np.isfinite(sol), sol, 0.0)
+        return out
+
+    def _flat_fluid(self):
+        return self.fluid.ravel()
+
+
 def _vanleer_face(f: np.ndarray, vel_face: np.ndarray, axis: int) -> np.ndarray:
     """TVD (van Leer harmonic) limited upwind face value of ``f``.
 
@@ -319,7 +478,9 @@ class StaggeredSimple:
                  alpha_u: float = 0.7, alpha_p: float = 0.3, alpha_T: float = 0.8,
                  buoyancy: float = 0.0, t_ref: float = 0.0, prandtl: float = 0.71,
                  limited: bool = True, energy: bool = False,
-                 dc_blend: float = 1.0, pseudo_cfl: float = 0.5):
+                 dc_blend: float = 1.0, dc_relax: float = 1.0,
+                 pseudo_cfl: float = 0.5, pseudo_uref: float | None = None,
+                 poisson_solver: str = "multigrid"):
         if nx < 4 or ny < 4:
             raise ValueError("need at least 4x4 cells")
         self.nx, self.ny = int(nx), int(ny)
@@ -332,7 +493,9 @@ class StaggeredSimple:
         self.prandtl = float(prandtl)
         self.limited = bool(limited)
         self.dc_blend = float(dc_blend)
+        self.dc_relax = float(dc_relax)
         self.pseudo_cfl = float(pseudo_cfl)
+        self.pseudo_uref = None if pseudo_uref is None else float(pseudo_uref)
         self.energy = bool(energy) or self.buoyancy != 0.0
         self.east_outlet = bool(east_outlet)
         if fluid is None:
@@ -368,7 +531,13 @@ class StaggeredSimple:
         self._dc_v = None
         self._dc_T = None
         self.dc_frozen = False
-        self.poisson = MaskedPoisson(fl)
+        if poisson_solver not in ("multigrid", "sparse"):
+            raise ValueError("poisson_solver must be 'multigrid' or 'sparse'")
+        self.poisson_solver = poisson_solver
+        if poisson_solver == "sparse":
+            self.poisson = SparseDirectPoisson(fl)
+        else:
+            self.poisson = MaskedPoisson(fl)
         self.pinned = None if self.east_outlet else (0, 0)
         self.iterations = 0
         self._outflow_initialised = False
@@ -388,7 +557,15 @@ class StaggeredSimple:
         """
         if self.pseudo_cfl <= 0.0:
             return 0.0
-        uref = max(float(np.abs(self.u).max()), float(np.abs(self.v).max()), 1e-8)
+        if self.pseudo_uref is not None:
+            # Fixed reference velocity: the instantaneous max|u| oscillates (the
+            # global mode of the recirculation), and using it as the time-step
+            # scale feeds that oscillation back into every coefficient of the
+            # momentum equation, which shows up as a persistent dU ~ 1e-2 limit
+            # cycle instead of a decaying change.
+            uref = max(self.pseudo_uref, 1e-8)
+        else:
+            uref = max(float(np.abs(self.u).max()), float(np.abs(self.v).max()), 1e-8)
         dt = self.pseudo_cfl * min(self.hx, self.hy) / uref
         return self.rho * self.hx * self.hy / dt
 
@@ -431,6 +608,27 @@ class StaggeredSimple:
     def _mult(free, is_wall):
         """Diffusion multiplier: 2 at a wall (half-cell), 1 elsewhere."""
         return np.where(free, 1.0, np.where(is_wall, 2.0, 1.0))
+
+    # ------------------------------------------------------------------ #
+    def _relax_dc(self, target: np.ndarray, previous: np.ndarray | None
+                  ) -> np.ndarray:
+        """Relaxed update of a deferred-correction (van Leer) source.
+
+        The limited high-order flux is a *defect*: it is evaluated from the
+        current field and added to the momentum/energy source.  Recomputing it
+        every outer iteration (``dc_relax = 1``) is the textbook form, but it is
+        only a *contraction* while the cell Peclet number stays below ~3; above
+        that the explicit defect overshoots and the coupled SIMPLE iteration
+        diverges (measured here at ``Pe_cell = 10`` for the sudden expansion and
+        ``Pe_cell = 40`` for the backward-facing step, both blowing up within
+        500 iterations).  With ``0 < dc_relax < 1`` the source is advanced by a
+        fraction of the target per outer iteration, which keeps the same fixed
+        point -- at convergence ``dc = dc_target(field)`` exactly -- while making
+        the defect iteration a contraction at any Peclet number.
+        """
+        if previous is None or self.dc_relax >= 1.0:
+            return target
+        return previous + self.dc_relax * (target - previous)
 
     # ------------------------------------------------------------------ #
     def _u_coefficients(self):
@@ -489,8 +687,8 @@ class StaggeredSimple:
                                 - Uw * (uf_w - np.where(Uw > 0, uW, u)))
                     + rho * hx * (Vn * (uf_n - np.where(Vn > 0, u, uN))
                                   - Vs * (uf_s - np.where(Vs > 0, uS, u))))
-                self._dc_u = dc
-                b = b - dc
+                self._dc_u = self._relax_dc(dc, self._dc_u)
+                b = b - self._dc_u
         return aE, aW, aN, aS, aP, b
 
     def _v_coefficients(self):
@@ -543,8 +741,8 @@ class StaggeredSimple:
                                 - Vs * (vf_s - np.where(Vs > 0, vS, v)))
                     + rho * hy * (east * (_vanleer_face(v, east, 0) - np.where(east > 0, v, vE))
                                   - west * (_vanleer_face(v, west, 0) - np.where(west > 0, vW, v))))
-                self._dc_v = dc
-                b = b - dc
+                self._dc_v = self._relax_dc(dc, self._dc_v)
+                b = b - self._dc_v
         return aE, aW, aN, aS, aP, b
 
     # ------------------------------------------------------------------ #
@@ -579,8 +777,8 @@ class StaggeredSimple:
                                 - Uw * (_vanleer_face(T, Uw, 0) - np.where(Uw > 0, TW, T)))
                     + rho * hx * (Vn * (_vanleer_face(T, Vn, 1) - np.where(Vn > 0, T, TN))
                                   - Vs * (_vanleer_face(T, Vs, 1) - np.where(Vs > 0, TS, T))))
-                self._dc_T = dc
-                b = b - dc
+                self._dc_T = self._relax_dc(dc, self._dc_T)
+                b = b - self._dc_T
         bc = getattr(self, "t_bc", None)
         if bc is not None:
             for side, arr, add, dface in (("west", aW, 0, d_ew), ("east", aE, -1, d_ew),
@@ -697,7 +895,17 @@ class StaggeredSimple:
                 "max_velocity": float(max(np.abs(self.u).max(), np.abs(self.v).max()))}
 
     def run(self, max_iter: int = 6000, tol: float = 1e-7, check: int = 5,
-            verbose: bool = False, record_every: int = 200, **kw):
+            verbose: bool = False, record_every: int = 200,
+            max_stall: int = 400, **kw):
+        """Iterate at most ``max_iter`` steps.
+
+        ``max_stall`` bounds the number of consecutive check blocks without a
+        decrease of ``max|du|`` before the run gives up.  The default (400 blocks)
+        is fine for a quick probe, but a slowly marching recirculation is *not*
+        stalled -- its change per block oscillates around a decaying mean -- so the
+        verification driver passes a very large value and relies on the iteration
+        budget instead.
+        """
         prev_u, prev_v = self.u.copy(), self.v.copy()
         stall, best = 0, float("inf")
         state = self.state()
@@ -718,7 +926,7 @@ class StaggeredSimple:
                 best, stall = change, 0
             else:
                 stall += 1
-            if stall > 400:
+            if stall > max_stall:
                 break
         return {"iterations": self.iterations, "continuity": state["continuity"],
                 "change": change, "history": self.history}

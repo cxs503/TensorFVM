@@ -6,6 +6,8 @@ pressure operator; the case builders are locked down on geometry, inlet mass
 flux and the post-processing helpers.
 """
 
+import os
+
 import numpy as np
 import pytest
 
@@ -13,10 +15,12 @@ from tensorfvm.incompressible_baselines import (
     BFS_REFERENCE, NATURAL_CONVECTION_REFERENCE, SUDDEN_EXPANSION_K_THEORY,
     _wall_reattachment, backward_facing_step_metrics, build_backward_facing_step,
     build_natural_convection_cavity, build_sudden_expansion,
-    cavity_nusselt, cavity_streamfunction, natural_convection_metrics,
-    sudden_expansion_metrics,
+    cavity_nusselt, cavity_streamfunction, inject_coarse_solution,
+    natural_convection_metrics, sudden_expansion_metrics, wall_friction_profile,
 )
-from tensorfvm.staggered_simple import MaskedPoisson, StaggeredSimple, _shift
+from tensorfvm.staggered_simple import (
+    MaskedPoisson, SparseDirectPoisson, StaggeredSimple, _shift,
+)
 
 # --------------------------------------------------------------------------- #
 # kernel
@@ -255,3 +259,214 @@ def test_metrics_are_reported_with_relative_errors():
 def test_staggered_solver_rejects_tiny_grid():
     with pytest.raises(ValueError):
         StaggeredSimple(2, 2, 0.1, 0.1, 0.01)
+
+# --------------------------------------------------------------------------- #
+# sparse direct pressure solver (fast path) and grid sequencing
+# --------------------------------------------------------------------------- #
+def _masked_operator_case(seed=0, nx=40, ny=30):
+    rng = np.random.default_rng(seed)
+    fluid = np.ones((nx, ny), dtype=bool)
+    fluid[: nx // 5, : ny // 3] = False
+    ku = rng.uniform(0.5, 1.5, size=(nx + 1, ny))
+    kv = rng.uniform(0.5, 1.5, size=(nx, ny + 1))
+    rhs = np.where(fluid, rng.uniform(-1.0, 1.0, size=(nx, ny)), 0.0)
+    return fluid, ku, kv, rhs
+
+
+def test_sparse_direct_poisson_solves_the_masked_operator():
+    fluid, ku, kv, rhs = _masked_operator_case()
+    solver = SparseDirectPoisson(fluid, refine=2)
+    phi = solver.solve(ku, kv, rhs, cycles=1, tol=1e-12)
+    e, w, n, s, diag = MaskedPoisson._operator(fluid, ku, kv)
+    res = np.where(fluid, rhs - MaskedPoisson._apply(e, w, n, s, diag, phi), 0.0)
+    assert np.abs(res).max() < 1e-10 * np.abs(rhs).max()
+    assert np.all(phi[~fluid] == 0.0)
+
+
+def test_sparse_direct_poisson_matches_multigrid_solution():
+    fluid, ku, kv, rhs = _masked_operator_case(seed=1, nx=24, ny=20)
+    sparse = SparseDirectPoisson(fluid, refine=2).solve(ku, kv, rhs, cycles=1, tol=1e-12)
+    mg = MaskedPoisson(fluid).solve(ku, kv, rhs, cycles=60, tol=1e-12)
+    # the multigrid path stops at its own tolerance; compare against its residual
+    e, w, n, s, diag = MaskedPoisson._operator(fluid, ku, kv)
+    tol = 1e-3 * np.abs(rhs).max()
+    res_mg = np.abs(np.where(fluid, rhs - MaskedPoisson._apply(e, w, n, s, diag, mg), 0.0)).max()
+    diff = np.abs(np.where(fluid, mg - sparse, 0.0)).max()
+    assert res_mg < 1e-2 * np.abs(rhs).max()
+    assert diff < 10.0 * max(res_mg, tol) + 1e-8
+
+
+def test_sparse_direct_poisson_reuses_factorisation_and_stays_exact():
+    """With slowly drifting conductances the factorisation is reused, and the
+    refinement steps still solve the *current* operator."""
+    fluid, ku, kv, rhs = _masked_operator_case(seed=2)
+    solver = SparseDirectPoisson(fluid, refine=1, refresh=50)
+    for k in range(12):
+        phi = solver.solve(ku * (1.0 + 1e-4 * k), kv, rhs, cycles=1, tol=1e-12)
+        e, w, n, s, diag = MaskedPoisson._operator(fluid, ku * (1.0 + 1e-4 * k), kv)
+        res = np.abs(np.where(fluid, rhs - MaskedPoisson._apply(e, w, n, s, diag, phi), 0.0)).max()
+        # one refinement step on a stale factorisation leaves ~1e-6 of the rhs scale
+        assert res < 1e-5 * np.abs(rhs).max()
+    assert solver.factorizations < solver.solves
+    assert solver.factorizations == 1
+
+
+def test_sparse_direct_poisson_honours_the_pin():
+    fluid, ku, kv, rhs = _masked_operator_case(seed=3, nx=20, ny=18)
+    solver = SparseDirectPoisson(fluid)
+    phi = solver.solve(ku, kv, rhs, cycles=1, tol=1e-12, pinned=(0, 0))
+    assert abs(float(phi[0, 0])) < 1e-12
+
+
+def test_relaxed_defect_correction_moves_towards_the_target():
+    solver = build_backward_facing_step(8)
+    target = np.full((3, 3), 2.0)
+    previous = np.zeros((3, 3))
+    solver.dc_relax = 0.25
+    first = solver._relax_dc(target, previous)
+    second = solver._relax_dc(target, first)
+    assert np.allclose(first, 0.5)
+    assert np.allclose(second, 0.875)
+    solver.dc_relax = 1.0
+    assert np.allclose(solver._relax_dc(target, first), target)
+
+
+def test_inject_coarse_solution_reproduces_a_streamwise_invariant_field():
+    """A field that varies only in y must be injected exactly: on the common
+    faces the values are copied and on the new faces they are averaged, which is
+    exact for a streamwise-invariant profile.  The inlet column is excluded
+    because ``apply_bc`` re-imposes the fine-grid profile there."""
+    coarse = build_sudden_expansion(10)
+    ys = (np.arange(coarse.ny) + 0.5) * coarse.hy
+    profile = 1.0 + 0.5 * np.sin(2.0 * np.pi * ys / (coarse.ny * coarse.hy))
+    coarse.u[:] = profile[None, :]
+    coarse.v[:] = 0.0
+    coarse.p[:] = 0.0
+    coarse.T[:] = 0.0
+    fine = build_sudden_expansion(20)
+    inject_coarse_solution(fine, dict(u=coarse.u, v=coarse.v, p=coarse.p, T=coarse.T))
+    assert fine.u.shape == (2 * coarse.nx + 1, 2 * coarse.ny)
+    expected = profile.repeat(2)
+    for k in (3, 7, 11):
+        assert np.allclose(fine.u[k, :], expected)
+    assert np.allclose(fine.v, 0.0)
+
+
+def test_inject_coarse_solution_rejects_a_non_dyadic_parent():
+    coarse = build_sudden_expansion(10)
+    fine = build_sudden_expansion(40)
+    with pytest.raises(ValueError):
+        inject_coarse_solution(fine, dict(u=coarse.u, v=coarse.v, p=coarse.p, T=coarse.T))
+
+
+def test_wall_friction_profile_sign_and_zero_crossing():
+    """C_f must change sign where the wall shear does, and its formula must match
+    the definition 4 nu u_wall / (h U_b^2)."""
+    solver = build_backward_facing_step(20)
+    hx, hy = solver.hx, solver.hy
+    x = np.arange(solver.nx + 1) * hx - 2.0
+    solver.u[:, 0] = -np.exp(-((x - 1.0) ** 2)) + np.exp(-((x - 8.0) ** 2))
+    x_cf, cf = wall_friction_profile(solver)
+    assert np.allclose(x_cf, x)
+    peak = np.argmin(cf)
+    assert x_cf[peak] > 0.0 and cf[peak] < 0.0
+    expected = 4.0 * solver.nu * solver.u[:, 0] / (hy * solver.meta["u_bulk"] ** 2)
+    assert np.allclose(cf, expected)
+    metrics = backward_facing_step_metrics(solver)
+    assert metrics["friction_min"] is not None and metrics["friction_min"] < 0.0
+    assert len(metrics["friction_profile"]) > 10
+    assert metrics["friction_far_analytic"] == pytest.approx(
+        12.0 * solver.nu / (solver.meta["u_bulk"] * solver.meta["H"]))
+
+
+def test_sudden_expansion_identity_closes():
+    """With a synthetic zero-velocity field the measured K must equal the
+    decomposition K = (p_in - p_out)/q_in + (1 - (u_out/u_in)^2)."""
+    solver = build_sudden_expansion(10)
+    solver.u[:] = 1.0
+    solver.p[:] = 0.25
+    m = sudden_expansion_metrics(solver)
+    assert m["k_total_head"] == pytest.approx(m["k_identity_check"], abs=1e-12)
+
+
+# --------------------------------------------------------------------------- #
+# pipeline contract
+# --------------------------------------------------------------------------- #
+def _runner():
+    import importlib.util
+    import os
+    import types
+
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    path = os.path.join(root, "scripts", "run_fvm_incompressible_baselines.py")
+    spec = importlib.util.spec_from_file_location("_tfvm_runner_contract", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_job_table_covers_the_required_levels():
+    table = _runner().jobs()
+    tags = {job["tag"] for job in table}
+    for n in (10, 20, 40):
+        assert f"bfs_n{n:03d}" in tags
+    for n in (10, 20, 30):
+        assert f"expansion_n{n:03d}" in tags
+    for ra in (1.0e4, 1.0e5, 1.0e6):
+        for n in (32, 64, 96):
+            assert f"cavity_n{n:03d}_ra{ra:.0e}".replace("+", "") in tags
+    # grid sequencing: every level above the coarsest names its parent
+    for job in table:
+        if job["case"] == "backward_facing_step" and job["level"] != 10:
+            assert job["init_from"] == f"bfs_n{job['level'] // 2:03d}"
+
+
+# --------------------------------------------------------------------------- #
+# delivered artifacts (skipped until the report has been generated)
+# --------------------------------------------------------------------------- #
+BENCH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                     "docs", "benchmarks", "verified")
+CASES = ("fvm_backward_step", "fvm_sudden_expansion", "fvm_natural_convection")
+
+
+@pytest.mark.parametrize("case", CASES)
+def test_verified_case_artifact_is_self_consistent(case):
+    import json
+
+    path = os.path.join(BENCH, case, "results.json")
+    if not os.path.exists(path):
+        pytest.skip("run scripts/report_fvm_incompressible.py first")
+    with open(path) as fh:
+        payload = json.load(fh)
+    assert payload["case"] == case
+    criteria = payload["criteria"]
+    assert criteria, "a verified case must carry its criteria"
+    assert payload["n_criteria"] == len(criteria)
+    assert payload["n_passed"] == sum(1 for c in criteria if c["passed"])
+    expected = "PASS" if payload["n_passed"] == len(criteria) else "FAIL"
+    assert payload["verdict"] == expected
+    for c in criteria:
+        assert set(("id", "description", "value", "reference", "error", "passed")) <= set(c)
+        assert isinstance(c["passed"], bool)
+    assert os.path.exists(os.path.join(BENCH, case, "README.md"))
+    assert payload["runs"], "artifact must point at the run JSONs"
+
+
+def test_delivered_grid_families_have_three_levels():
+    import json
+    import glob as _glob
+
+    archive = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                           "docs", "incompressible-baselines", "baseline-runs")
+    if not os.path.isdir(archive):
+        pytest.skip("no archived runs")
+    for case in ("bfs", "expansion"):
+        levels = []
+        for path in _glob.glob(os.path.join(archive, f"{case}_n*.json")):
+            with open(path) as fh:
+                levels.append(int(json.load(fh)["job"]["level"]))
+        assert len(levels) == 3, f"{case}: expected three grid levels, got {sorted(levels)}"
+        levels.sort()
+        # both delivered families refine from n to 2n first, then by 1.5x or 2x
+        assert levels[1] == 2 * levels[0]
+        assert levels[2] in (3 * levels[0], 4 * levels[0])

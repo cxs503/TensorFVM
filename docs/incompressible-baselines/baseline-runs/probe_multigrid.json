@@ -1,0 +1,20 @@
+{
+  "levels": [
+    [
+      32,
+      16
+    ],
+    [
+      16,
+      8
+    ],
+    [
+      8,
+      4
+    ]
+  ],
+  "residual_reduction": 6.482059100593813e-07,
+  "error_vs_direct": 0.09178694145867758,
+  "note": "masked V-cycle is a correction-level solver; see VERIFICATION.md limitations",
+  "probe": "probe_multigrid"
+}
