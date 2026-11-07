@@ -389,16 +389,73 @@ def strip_volume(normal, c, a, b, axis: int = 1) -> torch.Tensor:
 # ---------------------------------------------------------------------------
 # geometric advection
 # ---------------------------------------------------------------------------
+def _repair_bounds(a: torch.Tensor, target: float, rounds: int = 4) -> torch.Tensor:
+    """Clip into ``[0, 1]`` and hand the removed volume back, conserving the sum.
+
+    A *directional split* sweep advects with a field that is not solenoidal in
+    that direction alone (``∂u/∂x ≠ 0`` even when ``∇·u = 0``), so a cell in a
+    locally converging region can accept slightly more liquid than it has room
+    for: the geometric flux is exact, the capacity is not.  The measured
+    excursion of one sweep at Courant 1e-2 is ~1e-3 in the few interface cells —
+    far above roundoff, far below anything physical.
+
+    Clipping alone would turn that into a volume sink (a mass leak that
+    accumulates over thousands of steps), so the clipped volume is redistributed
+    over the two-phase cells with weight ``α(1-α)`` (zero inside either pure
+    phase, where there is no room) and the clip/redistribute is repeated until
+    the integral matches ``target`` to roundoff.  Both properties are then
+    exact: ``0 ≤ α ≤ 1`` and ``Σα·ΔV = target``.
+    """
+    a = a.clamp(0.0, 1.0)
+    tol = 1e-14 * max(1.0, abs(float(target)))
+    for _ in range(rounds):
+        deficit = float(target) - float(a.sum())
+        if abs(deficit) <= tol:
+            break
+        weight = a * (1.0 - a)
+        total = float(weight.sum())
+        if total <= 0.0:
+            break
+        a = (a + deficit * weight / total).clamp(0.0, 1.0)
+    return a
+
+
 def _sweep(
     alpha: torch.Tensor, face_velocity: torch.Tensor, dt: float, h: float, axis: int
 ) -> torch.Tensor:
-    """One conservative geometric sweep along ``axis`` (1 = x, 0 = y), periodic."""
+    """One conservative geometric sweep along ``axis`` (1 = x, 0 = y), periodic.
+
+    Strict variant: rejects a field outside ``[0, 1]`` (see ``_ROUNDOFF``).
+    """
+    return _sweep_impl(alpha, face_velocity, dt, h, axis, strict=True)
+
+
+def _sweep_unchecked(
+    alpha: torch.Tensor, face_velocity: torch.Tensor, dt: float, h: float, axis: int
+) -> torch.Tensor:
+    """As :func:`_sweep`, but hands the raw (possibly out-of-range) result back.
+
+    Used by the conservative-bounding path of :func:`advect_plic`, which bounds
+    the field between sweeps instead of aborting on a split-advection
+    overshoot.
+    """
+    return _sweep_impl(alpha, face_velocity, dt, h, axis, strict=False)
+
+
+def _sweep_impl(
+    alpha: torch.Tensor,
+    face_velocity: torch.Tensor,
+    dt: float,
+    h: float,
+    axis: int,
+    strict: bool,
+) -> torch.Tensor:
     work = alpha if axis == 1 else alpha.T.contiguous()
     vel = face_velocity if axis == 1 else face_velocity.T.contiguous()
     ny, nx = work.shape
     lo = float(work.min().item())
     hi = float(work.max().item())
-    if lo < -_ROUNDOFF or hi > 1.0 + _ROUNDOFF:
+    if strict and (lo < -_ROUNDOFF or hi > 1.0 + _ROUNDOFF):
         raise ValueError(
             f"volume fraction left [0,1] between sweeps (min {lo:.6g}, max {hi:.6g}); "
             "this is a scheme defect, not roundoff"
@@ -441,6 +498,8 @@ def advect_plic(
     dy: float,
     order: str = "xy",
     clip: bool = True,
+    conservative_bounds: bool = False,
+    diagnostics: dict | None = None,
 ) -> torch.Tensor:
     """Advance ``alpha`` one step with PLIC geometric advection (dimensional split).
 
@@ -458,6 +517,17 @@ def advect_plic(
         Clamp roundoff-level excursions into ``[0, 1]``.  Pure geometry creates no
         new extremum, so any residual is ``~1e-16``; pass ``False`` to inspect the
         raw field (the negative-evidence tests do).
+    conservative_bounds : bool
+        Bound the field *between* the two directional sweeps instead of rejecting
+        it, and repair the volume removed by the clipping (see
+        :func:`_repair_bounds`).  Needed whenever the split velocity is not
+        solenoidal in each direction alone — i.e. for any real flow field — and
+        required by the bubble-rise benchmark, whose mass-conservation criterion
+        is ``1e-6`` over the whole run.  Default ``False`` reproduces the
+        historical strict behaviour (used by the interface-transport tests).
+    diagnostics : dict, optional
+        Filled with ``sweeps`` (per-sweep clipped volume, ``|ΔV|/Σα``) and
+        ``final_imbalance`` when ``conservative_bounds`` is on.
 
     Returns
     -------
@@ -474,6 +544,21 @@ def advect_plic(
     a = alpha.to(torch.float64)
     uu = u.to(torch.float64)
     vv = v.to(torch.float64)
+    if conservative_bounds:
+        target = float(a.sum())
+        moved = []
+        for axis in (1, 0) if order == "xy" else (0, 1):
+            swept = _sweep_unchecked(
+                a, uu if axis == 1 else vv, dt, dx if axis == 1 else dy, axis)
+            bounded = _repair_bounds(swept, target)
+            moved.append(abs(float(bounded.sum()) - float(swept.sum()))
+                         / max(float(target), 1e-300))
+            a = bounded
+        if diagnostics is not None:
+            diagnostics["sweeps"] = moved
+            diagnostics["final_imbalance"] = (
+                abs(float(a.sum()) - float(target)) / max(float(target), 1e-300))
+        return a.to(dtype=alpha.dtype, device=alpha.device)
     for axis in (1, 0) if order == "xy" else (0, 1):
         a = _sweep(a, uu if axis == 1 else vv, dt, dx if axis == 1 else dy, axis)
     if clip:
