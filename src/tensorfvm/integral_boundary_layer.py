@@ -52,11 +52,18 @@ _H1_SPLIT = float(np.atleast_1d(h1_of_h(np.array([1.6])))[0])
 
 
 def h_of_h1(H1):
-    """Inverse of :func:`h1_of_h`."""
+    """Inverse of :func:`h1_of_h`.
+
+    ``h1_of_h`` is the Cebeci-Bradshaw relation, which is *not* monotonic across
+    its branch switch: values below ``H1(1.6) = 5.309`` belong to the ``H > 1.6``
+    branch and values above it to the ``H <= 1.6`` branch.  Selecting the branch
+    the other way round made the inverse return ``H ~ 10`` for ``H = 4`` and
+    tripped the ``H > H_max`` separation guard as soon as ``H`` exceeded 1.6.
+    """
     H1 = np.clip(np.asarray(H1, dtype=float), 3.31, 60.0)
     lo = 1.1 + np.power(0.8234 / np.maximum(H1 - 3.3, 1e-6), 1.0 / 1.287)
     hi = 0.6778 + np.power(1.5501 / np.maximum(H1 - 3.3, 1e-6), 1.0 / 3.064)
-    return np.where(H1 <= _H1_SPLIT, lo, hi)
+    return np.where(H1 <= _H1_SPLIT, hi, lo)
 
 
 def ludwieg_tillmann_cf(H: float, Re_theta: float) -> float:

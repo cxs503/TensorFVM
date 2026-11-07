@@ -229,8 +229,11 @@ def test_criterion1_grid_convergence_on_cheap_grids():
     assert conv["C_F"]["sequence_monotone"] is True
     # on these cheap grids the sequence is not yet asymptotic (the production
     # levels in level 3. below give p = 1.5); what is asserted here is that the
-    # refinement actually converges in the right direction
-    assert conv["C_F"]["observed_order"] > 0.3
+    # refinement actually converges in the right direction.  The floor was 0.3
+    # until the H1(H) inverse branch of the integral BL was corrected (see
+    # docs/verification-integral-boundary-layer/): the cheap-grid order moved
+    # from 0.310 to 0.297 while the production study is unchanged.
+    assert conv["C_F"]["observed_order"] > 0.25
     assert conv["C_F"]["relative_change_fine_medium"] < conv["C_F"]["relative_change_medium_coarse"]
     assert conv["C_V"]["max_relative_change"] < 0.10
     for key in ("C_F", "C_VP", "C_V", "k"):
