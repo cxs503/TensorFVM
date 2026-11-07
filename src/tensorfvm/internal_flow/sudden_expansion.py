@@ -96,15 +96,31 @@ class SuddenExpansionConfig:
 
 
 def inlet_profile(config: SuddenExpansionConfig) -> tuple[float, ...]:
-    """Uniform inlet velocity over the centred opening, zero over the step faces."""
+    """Uniform inlet velocity over the centred opening, zero over the step faces.
+
+    The opening of height ``H_in = H_out / AR`` is anchored at the inlet plane
+    and generally does not coincide with a cell face (``H_in = 0.25`` on a
+    ``H_out / 20`` mesh straddles the faces).  Assigning a whole cell to the
+    opening -- the obvious ``|y - centre| < H_in/2`` test -- then makes the
+    *discrete* area ratio mesh dependent: 4 open cells out of 20 is ``AR = 5``
+    and ``Re = 80`` while 10 out of 40 is ``AR = 4``, ``Re = 100``, so the
+    nominal ``AR = 4``, ``Re_D = 100`` case was silently solved at two
+    different geometries on two meshes and could not converge under refinement.
+    The profile below weights each inlet cell by the fraction of it that lies
+    inside the opening, which keeps the inlet flux, area ratio and Reynolds
+    number exact on every mesh while leaving the geometry symmetric.
+    """
     n = config.cells_per_downstream_height
     h = config.downstream_height / n
     half_open = 0.5 * config.inlet_height
     centre = 0.5 * config.downstream_height
+    lower, upper = centre - half_open, centre + half_open
     values = []
     for j in range(n):
-        y = (j + 0.5) * h
-        values.append(config.inlet_velocity if abs(y - centre) < half_open else 0.0)
+        y0, y1 = j * h, (j + 1) * h
+        overlap = min(y1, upper) - max(y0, lower)
+        fraction = min(1.0, max(0.0, overlap / h))
+        values.append(config.inlet_velocity * fraction)
     return tuple(values)
 
 
