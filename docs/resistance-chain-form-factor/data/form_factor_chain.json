@@ -1,0 +1,550 @@
+{
+ "case": {
+  "model": {
+   "L": 7.0,
+   "B": 0.936,
+   "T": 0.342,
+   "Cb": 0.708,
+   "Cm": 0.985,
+   "Cwp": 0.808,
+   "lcb_pct": -1.688,
+   "design_speed_ms": 1.1765156327903168,
+   "Fn": 0.142,
+   "nu": 1.139e-06
+  },
+  "ship": {
+   "L": 320.0,
+   "B": 58.0,
+   "T": 20.8,
+   "Cb": 0.8098,
+   "Cm": 0.9982,
+   "Cwp": 0.87,
+   "lcb_pct": -3.0,
+   "speed_ms": 8.0,
+   "nu": 1.19e-06
+  }
+ },
+ "geometry": {
+  "fitted_parameters": {
+   "q_fore": 1.9223076415604963,
+   "q_aft": 1.9620710832052244,
+   "w_transom": 0.24949976323996403,
+   "p_fore": 2.0,
+   "p_aft": 2.0,
+   "m_mid": 2.3982881538215977,
+   "m_end": 0.8105651260120874,
+   "g_mid": 0.880313999907566,
+   "g_end": 0.1,
+   "section_power": 3.783120107691854
+  },
+  "coefficients": {
+   "Cb": 0.7080134201897311,
+   "Cm": 0.9850000000000008,
+   "Cwp": 0.8080289795891227,
+   "LCB_fraction": -0.016879050434462584,
+   "LCB_pct": -1.6879050434462584,
+   "nabla": 1.5865051437464268,
+   "target_Cb": 0.708,
+   "target_Cm": 0.985,
+   "target_Cwp": 0.808,
+   "target_LCB_pct": -1.688
+  },
+  "relative_errors": {
+   "Cb": 1.8955070241855054e-05,
+   "Cm": 8.881784197001252e-16,
+   "Cwp": 3.586582812209471e-05,
+   "LCB_fraction": 9.495655374155976e-07
+  },
+  "wetted_area_shape_m2": 8.69310498307572,
+  "wetted_area_holtrop_m2": 8.705806048081895,
+  "wetted_area_relative_difference": -0.0014589189026297245,
+  "mesh_checks": {
+   "0.120": {
+    "cells": 5308,
+    "body_cells": 628,
+    "body_volume_ratio": 0.9984941049088282,
+    "hull_faces": 588,
+    "hull_patch_area_m2": 20.769928874056685,
+    "hull_patch_area_ratio": 1.1946208468949173
+   },
+   "0.090": {
+    "cells": 11284,
+    "body_cells": 1316,
+    "body_volume_ratio": 0.998050401007712,
+    "hull_faces": 960,
+    "hull_patch_area_m2": 20.906877461856173,
+    "hull_patch_area_ratio": 1.2024976980353388
+   },
+   "0.060": {
+    "cells": 26272,
+    "body_cells": 3392,
+    "body_volume_ratio": 0.9963470108026046,
+    "hull_faces": 1852,
+    "hull_patch_area_m2": 21.343415617766293,
+    "hull_patch_area_ratio": 1.227605996897483
+   }
+  },
+  "audit": {
+   "mission_case": "KVLCC2_model_L7",
+   "L_over_B": 7.478632478632478,
+   "B_over_T": 2.736842105263158,
+   "real_kvlcc2_L_over_B": 5.517241379310345,
+   "real_kvlcc2_Cb": 0.8098,
+   "one_plus_k_mission_case": 1.1867361694951244,
+   "one_plus_k_real_kvlcc2": 1.3597148846136353,
+   "note": "the mission particulars L=7 m, Cb=0.708, B=0.936 are not geometrically similar to KVLCC2 (L/B 7.48 vs 5.52, Cb 0.708 vs 0.8098); the form factor target therefore depends on which of the two conventions is meant"
+  }
+ },
+ "cross_implementation_ittc78": {
+  "available": true,
+  "n_points": 25,
+  "max_relative_deviation": 0.0,
+  "note": "ITTC-78 dCf vs the platform implementation (independent copy)"
+ },
+ "conventions": {
+  "model": {
+   "reynolds": 7230561.395550674,
+   "one_plus_k_holtrop": 1.1867361694951244,
+   "C_F": 0.0031764111809067246,
+   "C_V_wetted": 0.003769562037570731,
+   "delta_cf_ittc78": 0.001382149624831888,
+   "holtrop_ca": 0.0007908600922694607,
+   "double_counted_sum": 0.002173009717101349,
+   "double_count_relative_to_C_V": 0.5764621182628766,
+   "C_T_ittc78": 0.005151711662402619,
+   "C_T_holtrop_ca": 0.004560422129840192,
+   "C_T_none": 0.003769562037570731,
+   "relative_difference_between_conventions": 0.12965675451257988
+  },
+  "ship": {
+   "reynolds": 2151260504.2016807,
+   "one_plus_k_holtrop": 1.3597148846136353,
+   "C_F": 0.0013948716823658958,
+   "C_V_wetted": 0.0018966277886389713,
+   "delta_cf_ittc78": 0.00017564853281288817,
+   "holtrop_ca": 0.0002326081518326784,
+   "double_counted_sum": 0.00040825668464556655,
+   "double_count_relative_to_C_V": 0.215253982405548,
+   "C_T_ittc78": 0.0020722763214518596,
+   "C_T_holtrop_ca": 0.0021292359404716495,
+   "C_T_none": 0.0018966277886389713,
+   "relative_difference_between_conventions": -0.026751201187771023
+  }
+ },
+ "uncertainty_budgets": {
+  "model_ittc78": {
+   "reynolds": 7230561.395550674,
+   "C_T": 0.005151711662402619,
+   "regime": "ittc78_roughness",
+   "allowance": 0.001382149624831888,
+   "cfd_form_factor_deviation": 0.05,
+   "form_factor_source": "prior_band",
+   "components": {
+    "friction": 0.005456687640647602,
+    "form": 0.02112266562783001,
+    "allowance": 0.003097939132660513
+   },
+   "U_V": 0.022034964717520582,
+   "U_V_percent": 2.203496471752058,
+   "tolerance": 0.05,
+   "passes": true,
+   "unmerged_double_counted_allowance": 0.002173009717101349,
+   "U_V_before_unification": 0.2445035595838424,
+   "U_V_before_unification_percent": 24.45035595838424,
+   "cfd_discretisation_withheld": true
+  },
+  "model_holtrop_ca": {
+   "reynolds": 7230561.395550674,
+   "C_T": 0.004560422129840192,
+   "regime": "holtrop_ca",
+   "allowance": 0.0007908600922694607,
+   "cfd_form_factor_deviation": 0.05,
+   "form_factor_source": "prior_band",
+   "components": {
+    "friction": 0.006164184050522876,
+    "form": 0.023861361899788873,
+    "allowance": 0.002002460623876965
+   },
+   "U_V": 0.024725929816118025,
+   "U_V_percent": 2.4725929816118026,
+   "tolerance": 0.05,
+   "passes": true,
+   "unmerged_double_counted_allowance": 0.0030673045197805384,
+   "U_V_before_unification": 0.38910255798695126,
+   "U_V_before_unification_percent": 38.910255798695125,
+   "cfd_discretisation_withheld": true
+  },
+  "ship_ittc78": {
+   "reynolds": 2151260504.2016807,
+   "C_T": 0.0020722763214518596,
+   "regime": "ittc78_roughness",
+   "allowance": 0.00017564853281288817,
+   "cfd_form_factor_deviation": 0.05,
+   "form_factor_source": "prior_band",
+   "components": {
+    "friction": 0.006632125125711804,
+    "form": 0.026420669699976418,
+    "allowance": 0.000978737503801948
+   },
+   "U_V": 0.027257930922571845,
+   "U_V_percent": 2.7257930922571845,
+   "tolerance": 0.05,
+   "passes": true,
+   "unmerged_double_counted_allowance": 0.00040825668464556655,
+   "U_V_before_unification": 0.11695950925741821,
+   "U_V_before_unification_percent": 11.69595092574182,
+   "cfd_discretisation_withheld": true
+  },
+  "ship_holtrop_ca": {
+   "reynolds": 2151260504.2016807,
+   "C_T": 0.0021292359404716495,
+   "regime": "holtrop_ca",
+   "allowance": 0.0002326081518326784,
+   "cfd_form_factor_deviation": 0.05,
+   "form_factor_source": "prior_band",
+   "components": {
+    "friction": 0.006454707812171416,
+    "form": 0.025713885049316702,
+    "allowance": 0.0012614513640658357
+   },
+   "U_V": 0.026541635157124047,
+   "U_V_percent": 2.654163515712405,
+   "tolerance": 0.05,
+   "passes": true,
+   "unmerged_double_counted_allowance": 0.00040825668464556655,
+   "U_V_before_unification": 0.11383070189445006,
+   "U_V_before_unification_percent": 11.383070189445005,
+   "cfd_discretisation_withheld": true
+  }
+ },
+ "gate_discrimination": {
+  "model": {
+   "U_V_unified_ittc78": 0.022034964717520582,
+   "U_V_unified_holtrop_ca": 0.024725929816118025,
+   "U_V_before_unification": 0.2445035595838424,
+   "gate": 0.05,
+   "rejects_double_counting": true,
+   "accepts_unified": true
+  },
+  "ship": {
+   "U_V_unified_ittc78": 0.027257930922571845,
+   "U_V_unified_holtrop_ca": 0.026541635157124047,
+   "U_V_before_unification": 0.11695950925741821,
+   "gate": 0.05,
+   "rejects_double_counting": true,
+   "accepts_unified": true
+  }
+ },
+ "extrapolation_demo": {
+  "reynolds_model": 25293139.947322212,
+  "reynolds_ship": 1106703919.3277311,
+  "one_plus_k": 1.3597148846136353,
+  "C_FM": 0.0025691584321550325,
+  "C_FS": 0.0015115366815869745,
+  "C_R": 0.0006761241872501821,
+  "delta_cf": 0.00017564853281288817,
+  "C_AA": 0.0,
+  "C_TS": 0.0029070316446563804,
+  "C_TM": 0.00416944714838201,
+  "scale_effect": -0.00126241550372563
+ },
+ "form_factor_gate_window": {
+  "one_plus_k_holtrop": 1.1867361694951244,
+  "lower_5pct": 1.127399361020368,
+  "upper_5pct": 1.2460729779698807
+ },
+ "feasibility": {
+  "cost_samples": [
+   {
+    "cells": 128,
+    "setup_s": 9.6,
+    "per_iteration_s": 0.08
+   },
+   {
+    "cells": 432,
+    "setup_s": 33.4,
+    "per_iteration_s": 0.09
+   },
+   {
+    "cells": 1024,
+    "setup_s": 75.8,
+    "per_iteration_s": 0.26
+   },
+   {
+    "cells": 3456,
+    "setup_s": 263.4,
+    "per_iteration_s": 2.5
+   }
+  ],
+  "setup_scaling_exponent": 1.0013294025519306,
+  "iteration_scaling_exponent": 1.0562164705638348,
+  "wall_cell_height_m_at_y_plus_100": 0.004858505037562796,
+  "hull_area_double_body_m2": 17.386190925213505,
+  "required_near_wall_cells": 736544.7355734525,
+  "required_cells_estimate": 2946178.94229381,
+  "predicted_setup_hours": 62.935359564859574,
+  "predicted_hours_per_100_iterations": 86.51186688520352,
+  "linear_solver": "direct (SuperLU) is the only supported segregated method; pyamg is not installed, so no AMG fallback",
+  "verdict": "a resolved double-body RANS is outside the compute budget of this node; the form factor is therefore withheld rather than reported from an under-resolved mesh"
+ },
+ "allowance_scale_table": [
+  {
+   "L_m": 7.0,
+   "ks_m": 5e-05,
+   "delta_cf": 0.001382149624831888,
+   "raw_value": 0.001382149624831888,
+   "floored_to_zero": false,
+   "ks_over_L": 7.1428571428571436e-06
+  },
+  {
+   "L_m": 7.0,
+   "ks_m": 0.00015,
+   "delta_cf": 0.0022764444275110776,
+   "raw_value": 0.0022764444275110776,
+   "floored_to_zero": false,
+   "ks_over_L": 2.1428571428571428e-05
+  },
+  {
+   "L_m": 7.0,
+   "ks_m": 0.0003,
+   "delta_cf": 0.0030344897250698093,
+   "raw_value": 0.0030344897250698093,
+   "floored_to_zero": false,
+   "ks_over_L": 4.2857142857142856e-05
+  },
+  {
+   "L_m": 320.0,
+   "ks_m": 5e-05,
+   "delta_cf": 0.0,
+   "raw_value": -7.446089386663035e-05,
+   "floored_to_zero": true,
+   "ks_over_L": 1.5625e-07
+  },
+  {
+   "L_m": 320.0,
+   "ks_m": 0.00015,
+   "delta_cf": 0.00017564853281288817,
+   "raw_value": 0.00017564853281288817,
+   "floored_to_zero": false,
+   "ks_over_L": 4.6874999999999996e-07
+  },
+  {
+   "L_m": 320.0,
+   "ks_m": 0.0003,
+   "delta_cf": 0.0003876527558068269,
+   "raw_value": 0.0003876527558068269,
+   "floored_to_zero": false,
+   "ks_over_L": 9.374999999999999e-07
+  }
+ ],
+ "friction_table": [
+  {
+   "case": "model",
+   "L_m": 7.0,
+   "ks_m": 5e-05,
+   "nu_m2_s": 1.139e-06,
+   "reynolds": 1000000.0,
+   "ittc57_cf": 0.0046875,
+   "schoenherr_cf": 0.004409433162164668,
+   "prandtl_schlichting_cf": 0.004470758085611552,
+   "law_spread": 0.06148433792246883,
+   "ittc78_delta_cf": 0.001382149624831888,
+   "holtrop_ca": 0.0007908600922694607
+  },
+  {
+   "case": "model",
+   "L_m": 7.0,
+   "ks_m": 5e-05,
+   "nu_m2_s": 1.139e-06,
+   "reynolds": 2682695.7952797273,
+   "ittc57_cf": 0.0038241415192507796,
+   "schoenherr_cf": 0.003672182751969462,
+   "prandtl_schlichting_cf": 0.003741761088614406,
+   "law_spread": 0.04056529980393926,
+   "ittc78_delta_cf": 0.001382149624831888,
+   "holtrop_ca": 0.0007908600922694607
+  },
+  {
+   "case": "model",
+   "L_m": 7.0,
+   "ks_m": 5e-05,
+   "nu_m2_s": 1.139e-06,
+   "reynolds": 7196856.730011513,
+   "ittc57_cf": 0.003179065743944637,
+   "schoenherr_cf": 0.003097556761103752,
+   "prandtl_schlichting_cf": 0.003167830584385868,
+   "law_spread": 0.025891064967670022,
+   "ittc78_delta_cf": 0.001382149624831888,
+   "holtrop_ca": 0.0007908600922694607
+  },
+  {
+   "case": "model",
+   "L_m": 7.0,
+   "ks_m": 5e-05,
+   "nu_m2_s": 1.139e-06,
+   "reynolds": 19306977.288832497,
+   "ittc57_cf": 0.0026844411979547113,
+   "schoenherr_cf": 0.0026424628840074336,
+   "prandtl_schlichting_cf": 0.002709151458956919,
+   "law_spread": 0.024896010714427527,
+   "ittc78_delta_cf": 0.001382149624831888,
+   "holtrop_ca": 0.0007908600922694607
+  },
+  {
+   "case": "model",
+   "L_m": 7.0,
+   "ks_m": 5e-05,
+   "nu_m2_s": 1.139e-06,
+   "reynolds": 51794746.79231212,
+   "ittc57_cf": 0.002296875,
+   "schoenherr_cf": 0.002276862878969442,
+   "prandtl_schlichting_cf": 0.00233769818444932,
+   "law_spread": 0.02640636689176817,
+   "ittc78_delta_cf": 0.001382149624831888,
+   "holtrop_ca": 0.0007908600922694607
+  },
+  {
+   "case": "model",
+   "L_m": 7.0,
+   "ks_m": 5e-05,
+   "nu_m2_s": 1.139e-06,
+   "reynolds": 138949549.4373136,
+   "ittc57_cf": 0.001987560843699297,
+   "schoenherr_cf": 0.0019793868569842076,
+   "prandtl_schlichting_cf": 0.002033326928321794,
+   "law_spread": 0.026968801266282105,
+   "ittc78_delta_cf": 0.001382149624831888,
+   "holtrop_ca": 0.0007908600922694607
+  },
+  {
+   "case": "model",
+   "L_m": 7.0,
+   "ks_m": 5e-05,
+   "nu_m2_s": 1.139e-06,
+   "reynolds": 372759372.0314938,
+   "ittc57_cf": 0.0017367674858223064,
+   "schoenherr_cf": 0.0017345487765503677,
+   "prandtl_schlichting_cf": 0.0017812878839313388,
+   "law_spread": 0.02669481998592587,
+   "ittc78_delta_cf": 0.001382149624831888,
+   "holtrop_ca": 0.0007908600922694607
+  },
+  {
+   "case": "model",
+   "L_m": 7.0,
+   "ks_m": 5e-05,
+   "nu_m2_s": 1.139e-06,
+   "reynolds": 1000000000.0,
+   "ittc57_cf": 0.001530612244897959,
+   "schoenherr_cf": 0.0015309369956983752,
+   "prandtl_schlichting_cf": 0.0015706004671983895,
+   "law_spread": 0.025898270666731955,
+   "ittc78_delta_cf": 0.001382149624831888,
+   "holtrop_ca": 0.0007908600922694607
+  },
+  {
+   "case": "ship",
+   "L_m": 320.0,
+   "ks_m": 0.00015,
+   "nu_m2_s": 1.19e-06,
+   "reynolds": 1000000.0,
+   "ittc57_cf": 0.0046875,
+   "schoenherr_cf": 0.004409433162164668,
+   "prandtl_schlichting_cf": 0.004470758085611552,
+   "law_spread": 0.06148433792246883,
+   "ittc78_delta_cf": 0.00017564853281288817,
+   "holtrop_ca": 0.0002326081518326784
+  },
+  {
+   "case": "ship",
+   "L_m": 320.0,
+   "ks_m": 0.00015,
+   "nu_m2_s": 1.19e-06,
+   "reynolds": 2682695.7952797273,
+   "ittc57_cf": 0.0038241415192507796,
+   "schoenherr_cf": 0.003672182751969462,
+   "prandtl_schlichting_cf": 0.003741761088614406,
+   "law_spread": 0.04056529980393926,
+   "ittc78_delta_cf": 0.00017564853281288817,
+   "holtrop_ca": 0.0002326081518326784
+  },
+  {
+   "case": "ship",
+   "L_m": 320.0,
+   "ks_m": 0.00015,
+   "nu_m2_s": 1.19e-06,
+   "reynolds": 7196856.730011513,
+   "ittc57_cf": 0.003179065743944637,
+   "schoenherr_cf": 0.003097556761103752,
+   "prandtl_schlichting_cf": 0.003167830584385868,
+   "law_spread": 0.025891064967670022,
+   "ittc78_delta_cf": 0.00017564853281288817,
+   "holtrop_ca": 0.0002326081518326784
+  },
+  {
+   "case": "ship",
+   "L_m": 320.0,
+   "ks_m": 0.00015,
+   "nu_m2_s": 1.19e-06,
+   "reynolds": 19306977.288832497,
+   "ittc57_cf": 0.0026844411979547113,
+   "schoenherr_cf": 0.0026424628840074336,
+   "prandtl_schlichting_cf": 0.002709151458956919,
+   "law_spread": 0.024896010714427527,
+   "ittc78_delta_cf": 0.00017564853281288817,
+   "holtrop_ca": 0.0002326081518326784
+  },
+  {
+   "case": "ship",
+   "L_m": 320.0,
+   "ks_m": 0.00015,
+   "nu_m2_s": 1.19e-06,
+   "reynolds": 51794746.79231212,
+   "ittc57_cf": 0.002296875,
+   "schoenherr_cf": 0.002276862878969442,
+   "prandtl_schlichting_cf": 0.00233769818444932,
+   "law_spread": 0.02640636689176817,
+   "ittc78_delta_cf": 0.00017564853281288817,
+   "holtrop_ca": 0.0002326081518326784
+  },
+  {
+   "case": "ship",
+   "L_m": 320.0,
+   "ks_m": 0.00015,
+   "nu_m2_s": 1.19e-06,
+   "reynolds": 138949549.4373136,
+   "ittc57_cf": 0.001987560843699297,
+   "schoenherr_cf": 0.0019793868569842076,
+   "prandtl_schlichting_cf": 0.002033326928321794,
+   "law_spread": 0.026968801266282105,
+   "ittc78_delta_cf": 0.00017564853281288817,
+   "holtrop_ca": 0.0002326081518326784
+  },
+  {
+   "case": "ship",
+   "L_m": 320.0,
+   "ks_m": 0.00015,
+   "nu_m2_s": 1.19e-06,
+   "reynolds": 372759372.0314938,
+   "ittc57_cf": 0.0017367674858223064,
+   "schoenherr_cf": 0.0017345487765503677,
+   "prandtl_schlichting_cf": 0.0017812878839313388,
+   "law_spread": 0.02669481998592587,
+   "ittc78_delta_cf": 0.00017564853281288817,
+   "holtrop_ca": 0.0002326081518326784
+  },
+  {
+   "case": "ship",
+   "L_m": 320.0,
+   "ks_m": 0.00015,
+   "nu_m2_s": 1.19e-06,
+   "reynolds": 1000000000.0,
+   "ittc57_cf": 0.001530612244897959,
+   "schoenherr_cf": 0.0015309369956983752,
+   "prandtl_schlichting_cf": 0.0015706004671983895,
+   "law_spread": 0.025898270666731955,
+   "ittc78_delta_cf": 0.00017564853281288817,
+   "holtrop_ca": 0.0002326081518326784
+  }
+ ]
+}
