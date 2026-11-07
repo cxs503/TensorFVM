@@ -1,0 +1,56 @@
+{
+ "C1_form_factor_vs_holtrop_within_5pct": {
+  "verdict": "WITHHELD",
+  "holtrop_1k": 1.1867361694951244,
+  "gate_window": [
+   1.127399361020368,
+   1.2460729779698807
+  ],
+  "cfd_value": null,
+  "reason": "no resolved double-body RANS is affordable on this node (required ~2.9e+06 cells, predicted setup 62.94 h before the first iteration), and on the largest affordable mesh (2184 cells, spacing 0.16 m) the native SST path diverged (momentum residual 3.4e14 -> 5.0e72 over 40 outer iterations; see artifacts/resistance-chain/rans_attempt.json); an under-resolved stair-step mesh would produce a number with an unquantified bias, which is worse than withholding",
+  "pipeline_status": "implemented and verified at mesh/force/decomposition level (see pytest); not exercised at resolution"
+ },
+ "C2_delta_cf_vs_ittc78_within_3pct": {
+  "verdict": "PASS",
+  "max_relative_deviation_vs_platform": 0.0,
+  "table_points": 16,
+  "re_range": [
+   1000000.0,
+   1000000000.0
+  ],
+  "note": "the ITTC-78 allowance has no inherent Reynolds dependence (it scales with (ks/L)^(1/3)); the per-Re table carries it alongside the three friction laws"
+ },
+ "C3_U_V_within_5pct_after_unification": {
+  "verdict": "PASS",
+  "U_V": {
+   "model_ittc78": 0.022034964717520582,
+   "model_holtrop_ca": 0.024725929816118025,
+   "ship_ittc78": 0.027257930922571845,
+   "ship_holtrop_ca": 0.026541635157124047
+  },
+  "before_unification": {
+   "model": 0.2445035595838424,
+   "ship": 0.11695950925741821
+  },
+  "gate": 0.05,
+  "discrimination": true
+ },
+ "C4_pytest_cases": {
+  "verdict": "PASS",
+  "n_cases": 34,
+  "files": [
+   "tests/test_resistance_chain.py",
+   "tests/test_kvlcc2_double_body.py"
+  ]
+ },
+ "C5_figures": {
+  "verdict": "PASS",
+  "figures": [
+   "fig_dual_convention.png",
+   "fig_feasibility.png",
+   "fig_friction_allowance.png",
+   "fig_geometry.png",
+   "fig_uncertainty.png"
+  ]
+ }
+}
