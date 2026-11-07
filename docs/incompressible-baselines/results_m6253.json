@@ -1,0 +1,155 @@
+{
+  "mission_id": "m6253",
+  "date": "2026-11-07",
+  "status": "HONEST_FAIL",
+  "summary": "部分门禁未通过，根本原因已识别。一阶格式精度不足，缺陷修正高Pe下不稳定。",
+  
+  "backward_facing_step": {
+    "verdict": "FAIL",
+    "passed": 8,
+    "total": 12,
+    "physics": {
+      "Re_H": 800,
+      "expansion_ratio": 2.0,
+      "target_Lr_H": 6.0,
+      "target_band": 0.2
+    },
+    "results": {
+      "grids": [10, 20, 40],
+      "Lr_H": [9.288, 7.788, 6.964],
+      "errors_rel": [0.548, 0.298, 0.161],
+      "convergence_order": 0.86,
+      "continuity_final": 4.88e-6
+    },
+    "criteria": {
+      "Lr_H_error_10pct": {"value": 0.161, "threshold": 0.10, "pass": false},
+      "convergence_order_1.5": {"value": 0.86, "threshold": 1.5, "pass": false},
+      "continuity_1e-3": {"value": 4.88e-6, "threshold": 1e-3, "pass": true},
+      "friction_trend": {"pass": true}
+    },
+    "root_cause": "一阶迎风格式数值扩散过大，缺陷修正高Pe下不稳定",
+    "recommendation": "需要实现二阶格式或接受一阶精度并使用极细网格"
+  },
+  
+  "natural_convection_cavity": {
+    "verdict": "FAIL",
+    "passed": 12,
+    "total": 15,
+    "physics": {
+      "Pr": 0.71,
+      "Ra": [1e4, 1e5, 1e6],
+      "Nu_reference": [2.243, 4.519, 8.800]
+    },
+    "results": {
+      "Ra_1e4": {
+        "grids": [32, 64, 96],
+        "Nu": [2.204, 2.206, 2.216],
+        "Nu_finest": 2.216,
+        "error_rel": 0.012,
+        "convergence_order": null,
+        "monotone": false
+      },
+      "Ra_1e5": {
+        "grids": [32, 64, 96],
+        "Nu": [4.590, 4.436, 4.442],
+        "Nu_finest": 4.442,
+        "error_rel": 0.017,
+        "convergence_order": null,
+        "monotone": false
+      },
+      "Ra_1e6": {
+        "grids": [32, 64, 96],
+        "Nu": [10.642, 8.929, 8.735],
+        "Nu_finest": 8.735,
+        "error_rel": 0.007,
+        "convergence_order": 2.81,
+        "monotone": true
+      }
+    },
+    "criteria": {
+      "Nu_error_3pct": {
+        "Ra_1e4": {"value": 0.012, "threshold": 0.03, "pass": true},
+        "Ra_1e5": {"value": 0.017, "threshold": 0.03, "pass": true},
+        "Ra_1e6": {"value": 0.007, "threshold": 0.03, "pass": true}
+      },
+      "convergence_order_1.5": {
+        "Ra_1e4": {"value": null, "threshold": 1.5, "pass": false},
+        "Ra_1e5": {"value": null, "threshold": 1.5, "pass": false},
+        "Ra_1e6": {"value": 2.81, "threshold": 1.5, "pass": true}
+      }
+    },
+    "root_cause": "Ra=1e4,1e5非单调收敛，可能未完全收敛或Nu计算需改进",
+    "recommendation": "增加迭代次数，改进Nu计算，或使用更细网格"
+  },
+  
+  "sudden_expansion": {
+    "verdict": "FAIL",
+    "passed": 2,
+    "total": 7,
+    "physics": {
+      "AR": 4.0,
+      "Re_D": 100,
+      "K_borda_carnot": 0.5625
+    },
+    "results": {
+      "grid_convergence": {
+        "grids": [10, 20, 30],
+        "K": [1.026, 1.106, 1.131],
+        "K_finest": 1.131,
+        "error_vs_borda": 1.011
+      },
+      "Re_sweep": {
+        "Re": [100, 200, 500, 1000, 2000, 5000],
+        "K": [1.026, 1.031, 1.050, 1.085, 1.092, 1.519]
+      }
+    },
+    "criteria": {
+      "K_vs_borda_carnot": {"value": 1.131, "reference": 0.5625, "error": 1.011, "pass": false},
+      "grid_monotone": {"pass": false},
+      "area_ratio": {"value": 4.0, "reference": 4.0, "pass": true},
+      "identity_check": {"pass": true}
+    },
+    "root_cause": "Borda-Carnot理论假设无粘流动，不适用于层流(Re=100)。层流K值物理上更高。",
+    "recommendation": "更换为层流突扩管参考值，或修改验收标准为内部一致性检查"
+  },
+  
+  "figures": [
+    "docs/incompressible-baselines/figures/bfs_convergence.png",
+    "docs/incompressible-baselines/figures/cavity_nu_comparison.png",
+    "docs/incompressible-baselines/figures/expansion_k_vs_re.png"
+  ],
+  
+  "data_files": [
+    "docs/incompressible-baselines/baseline-runs/bfs_n010.json",
+    "docs/incompressible-baselines/baseline-runs/bfs_n020.json",
+    "docs/incompressible-baselines/baseline-runs/bfs_n040.json",
+    "docs/incompressible-baselines/baseline-runs/cavity_n032_ra1e04.json",
+    "docs/incompressible-baselines/baseline-runs/cavity_n064_ra1e04.json",
+    "docs/incompressible-baselines/baseline-runs/cavity_n096_ra1e04.json",
+    "docs/incompressible-baselines/baseline-runs/cavity_n032_ra1e05.json",
+    "docs/incompressible-baselines/baseline-runs/cavity_n064_ra1e05.json",
+    "docs/incompressible-baselines/baseline-runs/cavity_n096_ra1e05.json",
+    "docs/incompressible-baselines/baseline-runs/cavity_n032_ra1e06.json",
+    "docs/incompressible-baselines/baseline-runs/cavity_n064_ra1e06.json",
+    "docs/incompressible-baselines/baseline-runs/cavity_n096_ra1e06.json",
+    "docs/incompressible-baselines/baseline-runs/expansion_n010.json",
+    "docs/incompressible-baselines/baseline-runs/expansion_n020.json",
+    "docs/incompressible-baselines/baseline-runs/expansion_n030.json"
+  ],
+  
+  "lessons_learned": [
+    "一阶迎风格式在高Pe数下精度不足，无法达到收敛阶≥1.5",
+    "缺陷修正方法在高Pe下不稳定，需要改进松弛策略或使用多重网格",
+    "Borda-Carnot理论不适用于层流突扩管，需要物理上合适的参考值",
+    "自然对流的Nu计算对温度梯度敏感，需要确保充分收敛",
+    "网格收敛阶计算需要单调序列，非单调收敛表明可能未达渐近区间"
+  ],
+  
+  "next_steps": [
+    "实现二阶对流格式（QUICK或二阶迎风）",
+    "改进缺陷修正的稳定性（非对称Gauss-Seidel或多重网格）",
+    "为突扩管寻找层流参考值或修改验收标准",
+    "自然对流使用更细网格（48→64→96）并增加迭代",
+    "后台阶使用极细网格（n≥80）评估一阶格式的渐近行为"
+  ]
+}
