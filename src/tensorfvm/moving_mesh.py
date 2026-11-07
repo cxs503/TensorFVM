@@ -29,7 +29,9 @@ displacement is blended across the radial layers.  No overset interpolation is
 needed for the wall-bounded configurations supported here.
 
 Verification: ``tests/test_moving_mesh_ale.py`` (GCL exactness, free-stream
-preservation to roundoff, Galilean invariance, second-order time accuracy).
+preservation to roundoff, Galilean invariance); ``tests/test_ale_transport_analytic.py``
+plus ``docs/verification-ale-transport`` (analytic advection-diffusion, measured
+first-order temporal accuracy, constant-field preservation under diffusion).
 """
 from __future__ import annotations
 
@@ -548,15 +550,23 @@ def build_kvlcc2_double_body_ogrid(hull, *, n_station: int = 48, n_around: int =
 def ale_scalar_step(geom_old: ALEGeometry, geom_new: ALEGeometry, *,
                     field_old: np.ndarray, face_velocity: np.ndarray,
                     sweep: np.ndarray, dt: float, diffusivity: float) -> np.ndarray:
-    """One implicit-diffusion, explicit-upwind ALE step for a passive scalar.
+    """One point-implicit-diffusion, explicit-upwind ALE step for a passive scalar.
 
     ``(V^{n+1} phi^{n+1} - V^n phi^n)/dt + sum_f (u_f - u_mf).S_f phi_f
       = sum_f D_f (phi_N - phi_P)``
 
     with ``u_mf.S_f = sweep/dt`` taken from the exact space-conservation
-    decomposition.  The step is conservative by construction (the flux leaves
-    one cell and enters the next) and free-stream preserving: a uniform field
-    is reproduced to roundoff on any moving mesh.
+    decomposition.  Diffusive face conductances are point-implicit (diagonal only,
+    old neighbour values in the numerator), convection is explicit upwind and the
+    time accuracy is **first order**.
+
+    Boundary faces are zero-gradient: the exterior state used for both the
+    upwind value (inflow) and the diffusive conductance is the owner cell's own
+    value, so no exterior datum can leak into the domain and the wall/flux
+    patch stays impermeable for a scalar.  Internally each face contributes
+    ``D_f`` to *both* adjacent cells' diagonal and ``D_f phi_other`` to *both*
+    numerators, hence a uniform field is reproduced to roundoff on any moving
+    mesh (see ``docs/verification-ale-transport``).
     """
     if dt <= 0.0:
         raise ValueError("dt must be positive")
@@ -564,13 +574,24 @@ def ale_scalar_step(geom_old: ALEGeometry, geom_new: ALEGeometry, *,
     area = geom_new.face_area
     flux = np.einsum("fi,fi->f", face_velocity, area) - sweep / dt
     diff = diffusivity * geom_new.area_mag / geom_new.dperp
-    up = np.where(flux > 0.0, field_old[m.owner], field_old[m.neighbor.clip(0)])
+    nc = m.n_cells
+    interior = m.interior
+    # State on the far side of every face: neighbour cell inside, owner on the
+    # boundary patch (zero-gradient).
+    other = np.where(interior, field_old[m.neighbor.clip(0)], field_old[m.owner])
+    up = np.where(flux > 0.0, field_old[m.owner], other)
+    # Symmetric point-implicit diffusion: both sides of a face see D_f phi_other.
+    diff_numerator = (
+        np.bincount(m.owner, weights=diff * other, minlength=nc)
+        + np.bincount(m.neighbor[interior],
+                      weights=diff[interior] * field_old[m.owner[interior]],
+                      minlength=nc))
+    diff_diagonal = (
+        np.bincount(m.owner, weights=diff, minlength=nc)
+        + np.bincount(m.neighbor[interior], weights=diff[interior], minlength=nc))
     rhs = (geom_old.volume * field_old / dt - geom_new.divergence(flux * up)
-           + geom_new.divergence(diff * field_old[m.neighbor.clip(0)]))
-    denom = (geom_new.volume / dt
-             + np.bincount(m.owner, weights=diff, minlength=m.n_cells)
-             + np.bincount(m.neighbor[m.interior], weights=diff[m.interior],
-                           minlength=m.n_cells))
+           + diff_numerator)
+    denom = geom_new.volume / dt + diff_diagonal
     return rhs / denom
 
 
