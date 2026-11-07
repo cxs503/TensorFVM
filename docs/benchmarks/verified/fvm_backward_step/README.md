@@ -20,4 +20,4 @@ Staircase step, expansion ratio 1.9423, parabolic inlet, Gartling/Armaly convent
 | bfs.convergence.H/40 | 7.012605515762292 | 6.963501677785078 | 0.007051601370882868 | PASS |
 
 Programmatic source: `scripts/report_fvm_incompressible.py`;
-raw runs: `runs/incompressible-baselines/bfs_n010.json`, `runs/incompressible-baselines/bfs_n020.json`, `runs/incompressible-baselines/bfs_n040.json`
+raw runs: `docs/incompressible-baselines/baseline-runs/bfs_n010.json`, `docs/incompressible-baselines/baseline-runs/bfs_n020.json`, `docs/incompressible-baselines/baseline-runs/bfs_n040.json`

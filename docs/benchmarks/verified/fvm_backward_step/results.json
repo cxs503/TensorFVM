@@ -118,9 +118,9 @@
     "docs/benchmarks/verified/fvm_backward_step/fig_kernel_channel.png"
   ],
   "runs": [
-    "runs/incompressible-baselines/bfs_n010.json",
-    "runs/incompressible-baselines/bfs_n020.json",
-    "runs/incompressible-baselines/bfs_n040.json"
+    "docs/incompressible-baselines/baseline-runs/bfs_n010.json",
+    "docs/incompressible-baselines/baseline-runs/bfs_n020.json",
+    "docs/incompressible-baselines/baseline-runs/bfs_n040.json"
   ],
   "source": [
     "src/tensorfvm/staggered_simple.py",

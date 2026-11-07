@@ -72,15 +72,15 @@
     "docs/benchmarks/verified/fvm_sudden_expansion/fig_sudden_expansion.png"
   ],
   "runs": [
-    "runs/incompressible-baselines/expansion_n010.json",
-    "runs/incompressible-baselines/expansion_n020.json",
-    "runs/incompressible-baselines/expansion_n030.json",
-    "runs/incompressible-baselines/expansion_re0000100.json",
-    "runs/incompressible-baselines/expansion_re0000200.json",
-    "runs/incompressible-baselines/expansion_re0000500.json",
-    "runs/incompressible-baselines/expansion_re0001000.json",
-    "runs/incompressible-baselines/expansion_re0002000.json",
-    "runs/incompressible-baselines/expansion_re0005000.json"
+    "docs/incompressible-baselines/baseline-runs/expansion_n010.json",
+    "docs/incompressible-baselines/baseline-runs/expansion_n020.json",
+    "docs/incompressible-baselines/baseline-runs/expansion_n030.json",
+    "docs/incompressible-baselines/baseline-runs/expansion_re0000100.json",
+    "docs/incompressible-baselines/baseline-runs/expansion_re0000200.json",
+    "docs/incompressible-baselines/baseline-runs/expansion_re0000500.json",
+    "docs/incompressible-baselines/baseline-runs/expansion_re0001000.json",
+    "docs/incompressible-baselines/baseline-runs/expansion_re0002000.json",
+    "docs/incompressible-baselines/baseline-runs/expansion_re0005000.json"
   ],
   "source": [
     "src/tensorfvm/staggered_simple.py",
@@ -216,11 +216,6 @@
       "k_total_head": 0.8885330625954506,
       "reattachment_over_D": 12.866840978257702,
       "length_inlet_heights": 20.0
-    },
-    "expansion_long_n020": {
-      "k_total_head": 0.9512212954623545,
-      "reattachment_over_D": 13.161596547578297,
-      "length_inlet_heights": 30.0
     }
   },
   "reference": {
