@@ -1,0 +1,40 @@
+{
+  "levels": [
+    {
+      "ny": 16,
+      "nx": 32,
+      "iterations": 180,
+      "continuity": 2.7302774746217477e-11,
+      "profile_max_error": 0.3956645536456581,
+      "dpdx": -44.23663162634287,
+      "dpdx_exact": -0.4,
+      "dpdx_error_rel": 109.59157906585718,
+      "flux_error": 8.579257538306257e-10
+    },
+    {
+      "ny": 32,
+      "nx": 64,
+      "iterations": 430,
+      "continuity": 1.778693347593535e-11,
+      "profile_max_error": 0.4482786297027974,
+      "dpdx": -88.022944183588,
+      "dpdx_exact": -0.4,
+      "dpdx_error_rel": 219.05736045896995,
+      "flux_error": 3.630187180629416e-09
+    },
+    {
+      "ny": 64,
+      "nx": 128,
+      "iterations": 970,
+      "continuity": 9.904821951358414e-12,
+      "profile_max_error": 0.4918205929788976,
+      "dpdx": -174.91392812912497,
+      "dpdx_exact": -0.4,
+      "dpdx_error_rel": 436.2848203228124,
+      "flux_error": 1.0321063433987123e-08
+    }
+  ],
+  "observed_order": -0.13373641815813536,
+  "note": "Re-independent analytic check of the momentum/pressure kernel",
+  "probe": "probe_channel_poiseuille"
+}

@@ -1,0 +1,74 @@
+{
+  "job": {
+    "case": "natural_convection_cavity",
+    "level": 64,
+    "rayleigh": 10000.0,
+    "tag": "cavity_n064_ra1e04",
+    "budget": {
+      "max_iter": 7000
+    }
+  },
+  "metrics": {
+    "nusselt": 2.206163900054888,
+    "nusselt_cold": 2.1990717538441666,
+    "nusselt_reference_contract": 2.243,
+    "nusselt_reference_dvd": 2.238,
+    "nusselt_error_rel": 0.016422692797642368,
+    "psi_max": 3.7388947178726054e-07,
+    "psi_min": -0.06076888776898291,
+    "psi_abs_max": 0.06076888776898291,
+    "psi_max_reference": 5.071,
+    "psi_error_rel": 0.9880163897122889,
+    "energy_imbalance_rel": 0.003214695975464451,
+    "continuity": 3.6743644940525407e-10,
+    "iterations": 7520
+  },
+  "reference": {
+    "nu_contract": 2.243,
+    "nu_dvd1983": 2.238,
+    "psi_max_dvd1983": 5.071
+  },
+  "convergence": {
+    "history": [
+      {
+        "stage": "first_order",
+        "iterations": 6320,
+        "continuity": 9.866848776028546e-07,
+        "change": 2.2537328503435816e-08
+      },
+      {
+        "stage": "deferred_1",
+        "iterations": 7520,
+        "continuity": 9.895621532294017e-08,
+        "change": 2.2599546956048044e-09
+      }
+    ],
+    "final": {
+      "stage": "deferred_1",
+      "iterations": 7520,
+      "continuity": 9.895621532294017e-08,
+      "change": 2.2599546956048044e-09
+    }
+  },
+  "meta": {
+    "case": "natural_convection_cavity",
+    "n": 64,
+    "rayleigh": 10000.0,
+    "prandtl": 0.71,
+    "nu": 0.008426149773176359,
+    "alpha": 0.011867816581938534,
+    "nx": 64,
+    "ny": 64,
+    "hx": 0.015625,
+    "hy": 0.015625,
+    "cells": 4096
+  },
+  "settings": {
+    "alpha_u": 0.5,
+    "alpha_p": 0.2,
+    "alpha_T": 0.7,
+    "limited": false,
+    "dc_frozen": true
+  },
+  "wall_seconds": 207.6
+}
