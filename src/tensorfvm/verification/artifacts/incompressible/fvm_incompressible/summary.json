@@ -1,0 +1,116 @@
+{
+  "raw_files": [
+    "raw_natural_convection_Ra1e+05_N16.json",
+    "raw_natural_convection_Ra1e+05_N32.json",
+    "raw_natural_convection_Ra1e+06_N16.json",
+    "raw_natural_convection_Ra1e+06_N32.json",
+    "raw_natural_convection_Ra1e+06_N64.json",
+    "raw_sudden_expansion_D10.json",
+    "raw_sudden_expansion_D20.json"
+  ],
+  "families": {
+    "bfs": {
+      "reattachment_length_over_H": {},
+      "convergence": {
+        "levels": [],
+        "order": null,
+        "reason": "fewer than three levels"
+      }
+    },
+    "expansion": {
+      "k_total_pressure": {
+        "10": 0.55524277940014,
+        "20": 0.6051790169073277
+      },
+      "convergence": {
+        "levels": [
+          20,
+          10
+        ],
+        "order": null,
+        "reason": "fewer than three levels"
+      }
+    },
+    "convection": {
+      "Ra1e+05": {
+        "nusselt_hot": {
+          "16": 5.115144534830588,
+          "32": 4.672091827715284
+        },
+        "convergence": {
+          "levels": [
+            32,
+            16
+          ],
+          "order": null,
+          "reason": "fewer than three levels"
+        },
+        "reference": 4.519
+      },
+      "Ra1e+06": {
+        "nusselt_hot": {
+          "16": 10.405129648471213,
+          "32": 9.778079571033292,
+          "64": 9.070063970499099
+        },
+        "convergence": {
+          "levels": [
+            64,
+            32,
+            16
+          ],
+          "order": 0.1752004851841311,
+          "richardson_limit": 3.586727111002314,
+          "finest": 9.070063970499099,
+          "middle": 9.778079571033292,
+          "coarse": 10.405129648471213
+        },
+        "reference": 8.8
+      }
+    }
+  },
+  "criteria": {
+    "expansion_k_within_5pct": {
+      "value": 0.6051790169073277,
+      "grid": "D/20",
+      "reference": 0.5625,
+      "error": 0.07587380783524919,
+      "threshold": 0.05,
+      "pass": false
+    },
+    "expansion_k_static_within_5pct": {
+      "value": [
+        0.035218792601903026,
+        0.043150112592219625
+      ],
+      "reference": 0.5625,
+      "error": [
+        0.9373888131521725,
+        0.923288688724943
+      ],
+      "threshold": 0.05
+    },
+    "convection_nu_Ra1e+05_within_3pct": {
+      "value": 4.672091827715284,
+      "grid": "N32",
+      "reference": 4.519,
+      "error": 0.03387736838134183,
+      "threshold": 0.03,
+      "pass": false
+    },
+    "convection_nu_Ra1e+06_within_3pct": {
+      "value": 9.070063970499099,
+      "grid": "N64",
+      "reference": 8.8,
+      "error": 0.03068908755671572,
+      "threshold": 0.03,
+      "pass": false
+    },
+    "grid_convergence_order_ge_1.5": {
+      "value": 0.1752004851841311,
+      "threshold": 1.5,
+      "pass": false
+    }
+  },
+  "observed_order_max": 0.1752004851841311
+}
