@@ -32,6 +32,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from tensorfvm.verification.source_staleness import (  # noqa: E402
     audit,
     source_entries,
+    unfrozen_names,
 )
 
 OUT = ROOT / "docs" / "verification-archived-source-staleness"
@@ -123,6 +124,29 @@ def table(report):
     return "\n".join(rows)
 
 
+def freeze_table(report):
+    """Markdown table of cases that bind producer code without freezing it."""
+    rows = [
+        "| case | producer bindings | changed | missing | cited by ledger |",
+        "|---|---:|---:|---:|:---:|",
+    ]
+    for case in sorted(
+        report["freeze"]["violations"],
+        key=lambda c: (-c["changed"] - c["missing"], c["case"]),
+    ):
+        rows.append(
+            "| `%s` | %d | %d | %d | %s |"
+            % (
+                case["case"],
+                case["producer_bindings"],
+                case["changed"],
+                case["missing"],
+                "yes" if case["cited_by_ledger"] else "no",
+            )
+        )
+    return "\n".join(rows)
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--check", action="store_true", help="print the summary only")
@@ -136,19 +160,30 @@ def main():
     report = audit(ROOT)
     summary = report["summary"]
     if args.check:
-        print(json.dumps(summary, indent=1))
+        print(
+            json.dumps(
+                dict(summary, **{"freeze": {k: v for k, v in report["freeze"].items() if k != "violations"}}),
+                indent=1,
+            )
+        )
         return 0
 
     census = key_census(ROOT, report["cases"])
     OUT.mkdir(parents=True, exist_ok=True)
-    known = []
+    known, known_unfrozen = [], []
     if LEDGER.is_file() and not args.update_ledger:
-        known = json.loads(LEDGER.read_text()).get("known_stale_cases", [])
+        previous = json.loads(LEDGER.read_text())
+        known = previous.get("known_stale_cases", [])
+        known_unfrozen = previous.get("known_unfrozen_cases", [])
     if args.update_ledger or not known:
         known = sorted(c["case"] for c in report["cases"] if c["stale"])
+    if args.update_ledger or not known_unfrozen:
+        known_unfrozen = sorted(unfrozen_names(report))
     payload = dict(
         summary=summary,
         known_stale_cases=known,
+        known_unfrozen_cases=known_unfrozen,
+        freeze={k: v for k, v in report["freeze"].items() if k != "violations"},
         census={"%s/%s" % k: v for k, v in sorted(census.items())},
         cases=report["cases"],
     )
@@ -163,6 +198,15 @@ def main():
         "|---:|---:|---:|---:|---:|---:|---:|\n"
         "| %d | %d | %d | %d | %d | %d | %d |\n\n"
         "## Stale cases\n\n%s\n\n"
+        "## Freeze policy\n\n"
+        "A case that records producer code (`.py`/`.toml`) without a "
+        "`source_snapshot_root` can only be judged against the live tree, so its"
+        " published numbers stop being checkable at the next edit to that code. "
+        "This is the rule those cases violate; the accepted ones are the ratchet "
+        "in `known_unfrozen_cases` (`freeze_violations` also flags an acceptance "
+        "that is already paid, so the ledger cannot outlive the fix).\n\n"
+        "| unfrozen cases | unfrozen producer bindings | frozen cases |\n"
+        "|---:|---:|---:|\n| %d | %d | %d |\n\n%s\n\n"
         "## Figure\n\n![staleness](staleness-bars.png)\n"
         % (
             summary["cases"],
@@ -173,6 +217,10 @@ def main():
             summary["stale_cases"],
             summary["headline_stale_cases"],
             table(report),
+            len(report["freeze"]["unfrozen_cases"]),
+            report["freeze"]["unfrozen_producer_bindings"],
+            report["freeze"]["frozen_cases"],
+            freeze_table(report),
         )
     )
     print(json.dumps(summary, indent=1))
