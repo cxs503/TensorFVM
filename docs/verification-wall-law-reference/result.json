@@ -1,0 +1,34 @@
+{
+  "metrics": [
+    {
+      "name": "log_window_uplus_l2",
+      "value": 0.019386640640940055,
+      "limit": 0.03,
+      "description": "specified 50<=y+<=200; NASA Coles/van-Driest correlation, Re_theta=10000",
+      "unit": "1",
+      "passed": true
+    },
+    {
+      "name": "log_window_uplus_linf",
+      "value": 0.025302055119971398,
+      "limit": 0.03,
+      "description": "reference-peak normalized maximum error in the same log window",
+      "unit": "1",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "matching_scope": "equilibrium wall-law versus independent published correlation only; not a RANS/SA flow or DNS qualification",
+  "reference_url": "https://tmbwg.github.io/turbmodels/FlatPlate_validation/u+y+.dat",
+  "reference_sha256": "314dc0b5e4aa666ee88ac507eeda8cbeaacc1279057d10430748231264277bcb",
+  "parameters": {
+    "kappa": 0.41,
+    "E": 9.8
+  },
+  "comparison_window_yplus": [
+    50,
+    200
+  ],
+  "window_samples": 550,
+  "producer_sha256": "aeb1d148e26c87e4926a237f2a877c5544199d634de546127a98d658d7f8869e"
+}
