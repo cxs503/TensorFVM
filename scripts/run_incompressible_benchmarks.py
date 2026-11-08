@@ -44,6 +44,12 @@ ROOT = (Path(__file__).resolve().parent.parent / "src" / "tensorfvm" / "verifica
         / "artifacts" / "incompressible")
 
 
+def _finite(value: float) -> float | None:
+    """``None`` for an unresolved (``nan``) metric, so the JSON stays strict."""
+    value = float(value)
+    return value if math.isfinite(value) else None
+
+
 def _step_report(step: int, residual: float, extra: str = "") -> None:
     print(f"  step {step:7d}  residual {residual:.3e}  {extra}", flush=True)
 
@@ -65,7 +71,7 @@ def run_bfs(resolution: int, root: Path, *, max_steps: int, tolerance: float,
     q = 0.5 * 1.0 * 1.0
     lower = x > 0.0
     cf = tau / q
-    lr = reattachment_length(x, tau, start=0.02)
+    lr = _finite(reattachment_length(x, tau, start=0.02, min_attached=1.0))
     # inlet/outlet flux balance as an independent mass-conservation probe
     return {
         "case": "backward_facing_step",
@@ -80,8 +86,12 @@ def run_bfs(resolution: int, root: Path, *, max_steps: int, tolerance: float,
             "reattachment_length_over_H": lr,
             "reattachment_reference_gartling": GARTLING_REATTACHMENT,
             "reattachment_reference_armaly": ARMALY_REATTACHMENT,
-            "reattachment_relative_error_gartling": abs(lr - GARTLING_REATTACHMENT) / GARTLING_REATTACHMENT,
-            "reattachment_relative_error_armaly": abs(lr - ARMALY_REATTACHMENT) / ARMALY_REATTACHMENT,
+            "reattachment_relative_error_gartling": (
+                None if lr is None
+                else abs(lr - GARTLING_REATTACHMENT) / GARTLING_REATTACHMENT),
+            "reattachment_relative_error_armaly": (
+                None if lr is None
+                else abs(lr - ARMALY_REATTACHMENT) / ARMALY_REATTACHMENT),
             "min_cf_lower_wall": float(np.min(cf[lower])),
             "x_at_min_cf": float(x[lower][np.argmin(cf[lower])]),
             "inflow_flux": float(np.sum(flow.u[0, :])),
@@ -112,8 +122,8 @@ def run_expansion(resolution: int, root: Path, *, max_steps: int, tolerance: flo
     q = 0.5 * 1.0 * 1.0
     tau_lo = flow.wall_shear_lower()
     tau_hi = flow.wall_shear_upper()
-    lr_lo = reattachment_length(x, tau_lo, start=0.02)
-    lr_hi = reattachment_length(x, tau_hi, start=0.02)
+    lr_lo = _finite(reattachment_length(x, tau_lo, start=0.02, min_attached=1.0))
+    lr_hi = _finite(reattachment_length(x, tau_hi, start=0.02, min_attached=1.0))
     i_in = int(round((3.0 - 0.4) / flow.h))     # 0.4 D upstream of the plane
     i_out = int(round((3.0 + 2.0) / flow.h))    # 2 D downstream of the plane
     k_raw = loss_coefficient(flow, i_in, i_out)
@@ -256,6 +266,8 @@ def summarise(root: Path) -> dict:
         }
 
     criteria = {}
+    bfs = {k: v for k, v in bfs.items() if v is not None}
+    exp = {k: v for k, v in exp.items() if v is not None}
     if bfs:
         best = min(bfs, key=lambda k: abs(k - 80))
         lr = bfs[best]
