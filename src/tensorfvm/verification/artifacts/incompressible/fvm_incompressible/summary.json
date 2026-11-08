@@ -1,5 +1,8 @@
 {
   "raw_files": [
+    "raw_natural_convection_Ra1e+04_N16.json",
+    "raw_natural_convection_Ra1e+04_N32.json",
+    "raw_natural_convection_Ra1e+04_N64.json",
     "raw_natural_convection_Ra1e+05_N16.json",
     "raw_natural_convection_Ra1e+05_N32.json",
     "raw_natural_convection_Ra1e+06_N16.json",
@@ -32,6 +35,26 @@
       }
     },
     "convection": {
+      "Ra1e+04": {
+        "nusselt_hot": {
+          "16": 2.332719546078751,
+          "32": 2.267026617707149,
+          "64": 2.2504269896395748
+        },
+        "convergence": {
+          "levels": [
+            64,
+            32,
+            16
+          ],
+          "order": -1.9845871607053582,
+          "richardson_limit": 2.2726393520369936,
+          "finest": 2.2504269896395748,
+          "middle": 2.267026617707149,
+          "coarse": 2.332719546078751
+        },
+        "reference": 2.243
+      },
       "Ra1e+05": {
         "nusselt_hot": {
           "16": 5.115144534830588,
@@ -89,6 +112,14 @@
         0.923288688724943
       ],
       "threshold": 0.05
+    },
+    "convection_nu_Ra1e+04_within_3pct": {
+      "value": 2.2504269896395748,
+      "grid": "N64",
+      "reference": 2.243,
+      "error": 0.0033111857510365085,
+      "threshold": 0.03,
+      "pass": true
     },
     "convection_nu_Ra1e+05_within_3pct": {
       "value": 4.672091827715284,

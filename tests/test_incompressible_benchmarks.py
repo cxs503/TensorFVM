@@ -136,6 +136,65 @@ def test_natural_convection_stays_bounded():
     assert np.abs(flow.divergence()).max() < 1e-9
     assert 1.0 < nu < 2.0 * DE_VAHL_DAVIS[1e4]["nu"], nu
 
+def test_stable_time_step_bounds_energy_diffusion():
+    """The step must respect *every* diffusive bound, not just the viscous one.
+
+    Regression for the m6444 defect: ``stable_time_step`` used ``0.25 h^2/nu``
+    only.  With ``nu = Pr = 0.71`` and the energy diffusivity ``alpha = 1`` that
+    admits ``dt = 0.352 h^2``, i.e. 1.41x the 2-D explicit bound ``h^2/(4
+    alpha)``, so the thermal mode grows whenever the advective limit is
+    inactive (slow low-Ra start-up).
+    """
+    flow = natural_convection(1e4, cells=8, cfl=0.5)
+    assert flow.alpha == 1.0 and flow.nu < flow.alpha
+    dt = flow.stable_time_step()
+    assert dt <= 0.25 * flow.h ** 2 / flow.alpha, (dt, flow.h)
+    # a larger thermal diffusivity must shrink the step (energy on) ...
+    flow.alpha = 4.0
+    assert flow.stable_time_step() < dt
+    # ... but momentum-only flows keep the historical viscous-only cap
+    momentum = sudden_expansion(area_ratio=4.0, re_d=100.0, cells_per_diameter=8)
+    momentum.nu = 4.0
+    h = momentum.h
+    momentum.cfl = 1.0e6                       # make the advective limit inactive
+    assert momentum.stable_time_step() == pytest.approx(0.25 * h ** 2 / 4.0)
+
+
+def test_natural_convection_square_cavity_ra1e4_verified():
+    """Ra = 1e4, Pr = 0.71 against de Vahl Davis (1983), default cfl.
+
+    Previously WITHHELD: the N = 64 run diverged at step 84 000.  The cause was
+    the missing thermal-diffusion step bound (see the test above); with the fix
+    the case converges to a steady state on every grid and the N = 32 Nusselt
+    number is within 3 % of the reference.
+    """
+    ref = DE_VAHL_DAVIS[1e4]
+    flow = natural_convection(1e4, cells=16)
+    ledger = flow.run_steady(tolerance=1e-7, max_steps=200_000)
+    assert ledger.converged
+    assert np.abs(flow.divergence()).max() < 1e-9
+    nu = mean_nusselt(flow)
+    assert 1.0 < nu < 2.0 * ref["nu"]
+    assert abs(nu / ref["nu"] - 1.0) < 0.06, nu          # 16^2: +4.0 %
+    psi_max = float(np.abs(flow.streamfunction()).max())
+    assert abs(psi_max / ref["psi_max"] - 1.0) < 0.05, psi_max
+
+
+def test_natural_convection_ra1e4_artifact_meets_criterion():
+    """The committed N = 32 artefact must satisfy the 3 % Nusselt criterion."""
+    root = ROOT / "fvm_natural_convection"
+    summary_path = root.parent / "fvm_incompressible" / "summary.json"
+    raw = root / "raw_natural_convection_Ra1e+04_N32.json"
+    if not raw.exists() or not summary_path.exists():
+        pytest.skip("natural-convection artefacts are not present in this checkout")
+    payload = json.loads(raw.read_text())
+    metrics = payload["metrics"]
+    assert payload["ledger"]["converged"]
+    assert metrics["nusselt_relative_error"] < 0.03, metrics["nusselt_hot"]
+    assert metrics["psi_max_relative_error"] < 0.01
+    assert metrics["nusselt_energy_imbalance"] < 1e-6
+
+
 def test_streamfunction_is_consistent_with_vorticity():
     flow = natural_convection(1e4, cells=16, cfl=0.3)
     for _ in range(300):
