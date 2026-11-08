@@ -1,0 +1,125 @@
+{
+ "case": "sudden_expansion",
+ "area_ratio": 4.0,
+ "reynolds_downstream": 100.0,
+ "meshes": [
+  10,
+  20,
+  30
+ ],
+ "reattachment_over_D": {
+  "10": 3.229534382138337,
+  "20": 3.3307544903904134,
+  "30": 3.347561612533875
+ },
+ "reattachment_symmetry_ratio": {
+  "10": 2.851243763549632e-12,
+  "20": 6.49316681313339e-14,
+  "30": 2.38788906748471e-15
+ },
+ "reverse_flow_extent_over_D": {
+  "10": {
+   "bottom": 3.3000000000000003,
+   "top": 3.3000000000000003,
+   "cells_per_D": 10
+  },
+  "20": {
+   "bottom": 3.35,
+   "top": 3.35,
+   "cells_per_D": 20
+  },
+  "30": {
+   "bottom": 3.3666666666666667,
+   "top": 3.3666666666666667,
+   "cells_per_D": 30
+  }
+ },
+ "max_mirror_residual": 1.8919310562637293e-12,
+ "symmetry_tolerance": 1e-10,
+ "symmetric": true,
+ "k_corrected": {
+  "10": 0.37794290193252295,
+  "20": 0.40334170691147136,
+  "30": 0.4496941830655501
+ },
+ "k_extrapolated": {
+  "10": 0.34462050942561223,
+  "20": 0.3453452907626928,
+  "30": 0.3799157330400036
+ },
+ "k_relative_error_corrected": {
+  "10": 0.32810150767551477,
+  "20": 0.2829480766018287,
+  "30": 0.20054367455013317
+ },
+ "k_relative_error_extrapolated": {
+  "10": 0.38734131657668935,
+  "20": 0.38605281642187944,
+  "30": 0.32459425237332695
+ },
+ "cp_momentum_balance": 0.375,
+ "cp_raw": {
+  "10": 0.1982271789088642,
+  "20": 0.23052231435869133,
+  "30": 0.2582767352931868
+ },
+ "cp_extrapolated": {
+  "10": 0.3666530921264687,
+  "20": 0.4016184099270531,
+  "30": 0.4301170959423952
+ },
+ "developed_friction_error": {
+  "10": 0.02365738805983608,
+  "20": 0.00920226911534372,
+  "30": 0.006294324908915605
+ },
+ "borda_carnot": 0.5625,
+ "predecessor_artifacts": {
+  "D10": {
+   "parameters": {
+    "area_ratio": 4.0,
+    "re_d": 100.0,
+    "cells_per_diameter": 10,
+    "nx": 150,
+    "ny": 40,
+    "h": 0.1,
+    "nu": 0.01,
+    "cfl": 0.3,
+    "upstream_length": 3.0,
+    "downstream_length": 12.0,
+    "pressure_stations_x_over_D": [
+     -0.4,
+     2.0
+    ]
+   },
+   "reattachment_length_over_D_lower": 0.2023015780813263,
+   "reattachment_length_over_D_upper": 11.855197762566915
+  },
+  "D20": {
+   "parameters": {
+    "area_ratio": 4.0,
+    "re_d": 100.0,
+    "cells_per_diameter": 20,
+    "nx": 300,
+    "ny": 80,
+    "h": 0.05,
+    "nu": 0.01,
+    "cfl": 0.3,
+    "upstream_length": 3.0,
+    "downstream_length": 12.0,
+    "pressure_stations_x_over_D": [
+     -0.4,
+     2.0
+    ]
+   },
+   "reattachment_length_over_D_lower": 0.22062715472940816,
+   "reattachment_length_over_D_upper": 11.879882059492905
+  }
+ },
+ "figures": [
+  "expansion_symmetry_wall_friction.png",
+  "expansion_total_pressure.png",
+  "expansion_speed_field.png"
+ ],
+ "wall_seconds_total": 111.20052218437195
+}
