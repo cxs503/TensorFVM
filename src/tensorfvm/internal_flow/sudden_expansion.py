@@ -29,6 +29,13 @@ Acceptance quantities
   the quantity Borda-Carnot refers to.
 * static-pressure recovery coefficient ``Cp = (p_out - p_in)/(0.5 rho U_in^2)``
   against the momentum-balance value ``2 (1/AR)(1 - 1/AR) = 0.375``.
+* ``k_from_static_recovery``: the same loss coefficient obtained from the exact
+  control-volume identity ``K = 1 - 1/AR^2 - Cp``.  The two routes are *not*
+  interchangeable: the total-pressure profiles are ``|u|``-weighted column means,
+  so ``K`` from them carries the ``<u^3>/<u>`` bias of a non-uniform profile,
+  while ``Cp`` is built from the static pressure only.  Both numbers are
+  reported; ``docs/verification-expansion-symmetry/REPORT.md`` documents the
+  20 % spread between them at ``D/20``.
 * reattachment length ``L_r / D`` measured from the step plane on both walls by
   the zero crossing of the wall shear stress.
 """
@@ -261,6 +268,14 @@ class SuddenExpansionCase:
             "k_extrapolated": k_extrap,
             "k_friction_correction": k_friction,
             "k_corrected": k_raw - k_friction,
+            # Independent route to the loss coefficient: the exact control-volume
+            # identity ``K = 1 - 1/AR**2 - Cp`` (p_t loss + static recovery =
+            # change of dynamic head).  It is evaluated on the *static* pressure,
+            # which is a primitive variable, and therefore does not depend on the
+            # ``u``-weighted averaging used by ``pressure_profiles``.
+            "k_from_static_recovery_raw": 1.0 - 1.0 / cfg.area_ratio ** 2
+            - (p_out - p_in) / dynamic,
+            "k_from_static_recovery": 1.0 - 1.0 / cfg.area_ratio ** 2 - cp_extrap,
             "cp_recovery_raw": (p_out - p_in) / dynamic,
             "cp_recovery_extrapolated": cp_extrap,
             "cp_recovery_momentum_balance": 2.0 * (1.0 / cfg.area_ratio) * (1.0 - 1.0 / cfg.area_ratio),
