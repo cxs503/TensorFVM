@@ -1,0 +1,56 @@
+{
+  "n6_re100_sweeps4": {
+    "level": 6,
+    "re_D": 100.0,
+    "momentum_sweeps": 4,
+    "iterations": 4320,
+    "continuity": 1.4909851131506002e-11,
+    "change": 9.500918898841526e-09,
+    "wall_seconds": 18.0,
+    "symmetry": {
+      "u_symmetry_rel": 0.7623443230296065,
+      "v_symmetry_rel": 0.7998777667345813,
+      "p_symmetry_rel": 0.49476950261700875,
+      "v_centreline_rel": 0.39993888336729067,
+      "symmetry_rel": 0.7998777667345813
+    },
+    "Lr_upper": 11.71119148938072,
+    "Lr_lower": 4.193820138140376
+  },
+  "n6_re100_sweeps20": {
+    "level": 6,
+    "re_D": 100.0,
+    "momentum_sweeps": 20,
+    "iterations": 4320,
+    "continuity": 1.4910512928512087e-11,
+    "change": 9.501390361987827e-09,
+    "wall_seconds": 46.0,
+    "symmetry": {
+      "u_symmetry_rel": 0.7623443230908321,
+      "v_symmetry_rel": 0.799877776441997,
+      "p_symmetry_rel": 0.49476950271743075,
+      "v_centreline_rel": 0.3999388882209985,
+      "symmetry_rel": 0.799877776441997
+    },
+    "Lr_upper": 11.711191482853653,
+    "Lr_lower": 4.193820137863405
+  },
+  "n6_re100_sweeps60": {
+    "level": 6,
+    "re_D": 100.0,
+    "momentum_sweeps": 60,
+    "iterations": 4320,
+    "continuity": 1.4910512928512087e-11,
+    "change": 9.501390361987827e-09,
+    "wall_seconds": 116.6,
+    "symmetry": {
+      "u_symmetry_rel": 0.7623443230908321,
+      "v_symmetry_rel": 0.799877776441997,
+      "p_symmetry_rel": 0.49476950271743075,
+      "v_centreline_rel": 0.3999388882209985,
+      "symmetry_rel": 0.799877776441997
+    },
+    "Lr_upper": 11.711191482853653,
+    "Lr_lower": 4.193820137863405
+  }
+}
