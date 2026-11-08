@@ -8,7 +8,7 @@ Steady incompressible Navier-Stokes manufactured solution on the logical cube [0
 
 ## How it was done
 
-Producer (unchanged, rerun here): `scripts/verify_native_abc_convergence3d.py`. Audit: `scripts/audit_native_abc_pressure_order3d.py`, which (1) recomputes the published pressure error from the stored fields, (2) groups cells by topological distance to the nearest face, (3) measures the truncation of the directional difference actually available at each cell against the analytically differentiated exact gradient, and (4) fits power laws on the coarser usable grid pairs and predicts the finest grid as a hold-out. Volume fractions and depths are exact geometry; the only fitted quantities are the two power-law exponents named in the model table.
+Producer (unchanged, rerun here): `scripts/verify_native_abc_convergence3d.py`. Audit driver: `audit_native_abc_pressure_order3d.py` -- **not committed in this tree** (dead reproduce pointer, recorded by the m6489 traceability pass; the recomputation cannot be re-run from a clean checkout, so the audit numbers below are WITHHELD as executable evidence until the driver is recovered) -- which (1) recomputes the published pressure error from the stored fields, (2) groups cells by topological distance to the nearest face, (3) measures the truncation of the directional difference actually available at each cell against the analytically differentiated exact gradient, and (4) fits power laws on the coarser usable grid pairs and predicts the finest grid as a hold-out. Volume fractions and depths are exact geometry; the only fitted quantities are the two power-law exponents named in the model table.
 
 Grids 3, 6, 12 and 4, 8 come from two invocations of the same producer with identical settings and are merged for the order fit; provenance is recorded in `outputs/abc-pressure-order/merged/config.json`.
 
@@ -97,7 +97,9 @@ Shell-0 local order rises {:.2f} -> {:.2f} across the sequence and the global or
 
 ```bash
 PYTHONPATH=src python scripts/verify_native_abc_convergence3d.py --grids 3 4 6 8 12 --output NEW_DIR
-PYTHONPATH=src python scripts/audit_native_abc_pressure_order3d.py --run-dir NEW_DIR --output OUT \
+# NOTE (m6489): the audit driver audit_native_abc_pressure_order3d.py is not committed in
+# this tree; this command is recorded as written by the original run and cannot be replayed.
+PYTHONPATH=src python audit_native_abc_pressure_order3d.py --run-dir NEW_DIR --output OUT \
     --fixture tests/data/abc-pressure-order/pressure-order-fixture.npz \
     --figure docs/verification-native-abc-pressure-order/abc-pressure-order.png \
     --report docs/verification-native-abc-pressure-order/report.md
