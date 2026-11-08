@@ -167,3 +167,92 @@ def test_summary_is_consistent_with_raw_artifacts():
                   if key.startswith("convection_nu_")]
         for value in stated:
             assert any(abs(value - candidate) < 1e-9 for candidate in nusselt)
+
+# ---------------------------------------------------------------------------
+# m6383: mirror symmetry of the expansion, wall-shear convention, outflow guard
+# ---------------------------------------------------------------------------
+
+
+def test_mirror_symmetry_is_an_operator_invariant():
+    """The discrete operators of a symmetric case preserve mirror symmetry.
+
+    ``docs/benchmarks/incompressible-verification.md`` §2.2 attributed an
+    ``L_r/D`` of 0.20 (lower) against 11.86 (upper) to a *solver* defect in the
+    step-corner/wake treatment. This test pins the opposite: on a mirror
+    symmetric field the momentum tendencies keep ``u`` symmetric and ``v``
+    antisymmetric to round-off, and the pressure solve maps a symmetric
+    right-hand side to a symmetric pressure.
+    """
+    flow = sudden_expansion(4.0, 100.0, 4)          # 60 x 16, cheap
+    rng = np.random.default_rng(0)
+    u = rng.standard_normal(flow.u.shape)
+    u = 0.5 * (u + u[:, ::-1])
+    v = rng.standard_normal(flow.v.shape)
+    v = 0.5 * (v - v[:, ::-1])
+    flow.u, flow.v = u, v
+    tu, tv = flow.tendencies()
+    assert np.abs(tu - tu[:, ::-1]).max() < 1e-12 * np.abs(tu).max()
+    assert np.abs(tv + tv[:, ::-1]).max() < 1e-12 * np.abs(tv).max()
+    div = ((u[1:, :] - u[:-1, :]) / flow.h + (v[:, 1:] - v[:, :-1]) / flow.h)
+    p = flow.solve_pressure(div / flow.h)
+    assert np.abs(p - p[:, ::-1]).max() < 1e-10 * max(np.abs(p).max(), 1.0)
+
+
+def test_wall_shear_convention_is_shared_by_both_walls():
+    """One orientation for both walls: ``tau < 0`` must mean *reversed* twice.
+
+    The pre-m6383 accessors returned ``-2 nu u/h`` below and ``+2 nu u/h``
+    above, i.e. ``tau_lower == -tau_upper`` on a mirror-symmetric field, so the
+    same reversal test flipped its meaning from one wall to the other.
+    """
+    flow = sudden_expansion(4.0, 100.0, 4)
+    rng = np.random.default_rng(1)
+    u = rng.standard_normal(flow.u.shape)
+    flow.u = 0.5 * (u + u[:, ::-1])
+    tau_lo, tau_hi = flow.wall_shear_lower(), flow.wall_shear_upper()
+    assert np.allclose(tau_lo, tau_hi, rtol=0.0, atol=1e-12 * np.abs(tau_lo).max())
+    # attached forward flow is positive on both walls ...
+    forward = flow.u.copy()
+    forward[:, :] = 0.5
+    flow.u = forward
+    assert np.all(flow.wall_shear_lower() > 0.0)
+    assert np.all(flow.wall_shear_upper() > 0.0)
+    # ... and a recirculation is negative on both walls
+    flow.u = -forward
+    assert np.all(flow.wall_shear_lower() < 0.0)
+    assert np.all(flow.wall_shear_upper() < 0.0)
+
+
+def test_reattachment_length_rejects_a_crossing_in_the_outflow_zone():
+    """A crossing in the last ``min_attached`` length units is *not resolved*."""
+    x = np.linspace(0.0, 12.0, 121)
+    tau = np.where(x < 11.8, -1.0, +1.0)           # bubble open up to the outflow
+    assert math.isnan(reattachment_length(x, tau, start=0.02))
+    assert reattachment_length(x, tau, start=0.02, min_attached=0.0) == pytest.approx(
+        11.75, abs=0.06)
+    # a genuinely closed bubble with attached wall downstream is still reported
+    tau2 = np.where(x < 5.0, -1.0, +1.0)
+    assert reattachment_length(x, tau2, start=0.02) == pytest.approx(5.0, abs=0.05)
+
+
+def test_committed_expansion_fields_are_mirror_symmetric():
+    """Regression on the committed snapshots behind the §2.2 asymmetry claim."""
+    root = ROOT / "src" / "tensorfvm" / "verification" / "artifacts" / "incompressible"
+    path = root / "fvm_sudden_expansion" / "fields_sudden_expansion_D10.npz"
+    if not path.exists():
+        pytest.skip("expansion field snapshots are not present in this checkout")
+    fields = np.load(path)
+    u, v, p = fields["u"], fields["v"], fields["p"]
+    assert np.abs(u - u[:, ::-1]).max() / np.abs(u).max() < 1e-10
+    assert np.abs(v + v[:, ::-1]).max() / np.abs(v).max() < 1e-10
+    assert np.abs(p - p[:, ::-1]).max() / np.abs(p).max() < 1e-10
+    flow = sudden_expansion(4.0, 100.0, 10)
+    flow.u, flow.v, flow.p = u, v, p
+    x = flow.x_face_coordinates() - 3.0
+    tau_lo, tau_hi = flow.wall_shear_lower(), flow.wall_shear_upper()
+    assert np.allclose(tau_lo, tau_hi, rtol=0.0, atol=1e-10)
+    # the bubble is still open where the 12 D domain ends -> no reattachment
+    assert math.isnan(reattachment_length(x, tau_lo, start=0.02))
+    assert math.isnan(reattachment_length(x, tau_hi, start=0.02))
+    # ... whereas the fabricated crossing appears as soon as the guard is off
+    assert reattachment_length(x, tau_lo, start=0.02, min_attached=0.0) > 11.0
