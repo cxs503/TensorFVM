@@ -1,0 +1,43 @@
+{
+ "source": "tensorfvm.verification.periodic_tgv.run_case (production PeriodicMACSolver)",
+ "resolutions": [
+  16,
+  32
+ ],
+ "time_end": 1.0,
+ "viscosity_viscous_case": 0.05,
+ "viscosity_inviscid_case": 1e-09,
+ "records": {
+  "n16": {
+   "cells": 16,
+   "steps_per_unit_time": 100,
+   "inviscid_energy_drift": 3.9093693681319925e-09,
+   "inviscid_convective_power_max": 1.8476053742050807e-15,
+   "viscous_integral_energy_error": 0.0012505917359208214,
+   "viscous_final_energy_error": 0.002560289769399144,
+   "viscous_velocity_error": 0.001279326546493289,
+   "viscous_initial_energy_error": 1.145804675431332e-16,
+   "nonlinear_all_converged": true,
+   "wall_time_s": {
+    "inviscid": 2.999520029872656,
+    "viscous": 4.772434199228883
+   }
+  },
+  "n32": {
+   "cells": 32,
+   "steps_per_unit_time": 200,
+   "inviscid_energy_drift": 3.967229295912898e-09,
+   "inviscid_convective_power_max": 9.436559490966787e-16,
+   "viscous_integral_energy_error": 0.0003119491901482056,
+   "viscous_final_energy_error": 0.0006419290126185641,
+   "viscous_velocity_error": 0.0003209130137280277,
+   "viscous_initial_energy_error": 0.0,
+   "nonlinear_all_converged": true,
+   "wall_time_s": {
+    "inviscid": 30.969432540237904,
+    "viscous": 40.301700450479984
+   }
+  }
+ },
+ "from_cache": false
+}

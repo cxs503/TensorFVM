@@ -1,0 +1,828 @@
+{
+ "generated_at": "2026-11-08T10:20:20Z",
+ "git_commit": "8a758f2b9a9ebed17ff07b7aa2f909652b5500f6",
+ "wall_seconds": 3.123997688293457,
+ "criteria": {
+  "C1a": {
+   "cid": "C1a",
+   "level": "L1a",
+   "quantity": "relative L2 error of the 1-D convection-diffusion profile",
+   "statement": "L2 error < 1e-6 for Pe <= 10 (central scheme, layer-resolved grid)",
+   "measured": 6.55200440388185e-07,
+   "threshold": 1e-06,
+   "comparator": "<",
+   "verdict": "PASS",
+   "source": "P97-N03 C1 (analytic exponential profile)",
+   "evidence": [],
+   "note": "central scheme on 5120 cells (cell Peclet 0.001953); monotone profile: True",
+   "detail": {
+    "peclet": 10.0,
+    "cells": 5120,
+    "scheme": "central",
+    "cell_peclet": 0.001953125,
+    "max_abs_error": 4.767034772479306e-07,
+    "resolution_table": {
+     "pe_0.1": {
+      "cells": 1024,
+      "cell_peclet": 9.765625e-05,
+      "l2_central": 2.092929768561697e-08,
+      "l2_upwind": 7.613643556572311e-07,
+      "l2_power_law": 3.332798421133166e-08
+     },
+     "pe_1": {
+      "cells": 1024,
+      "cell_peclet": 0.0009765625,
+      "l2_central": 2.5696929601073645e-07,
+      "l2_upwind": 8.368862838257509e-05,
+      "l2_power_law": 5.263149794642203e-07
+     },
+     "pe_10": {
+      "cells": 5120,
+      "cell_peclet": 0.001953125,
+      "l2_central": 6.55200440388185e-07,
+      "l2_upwind": 0.0006882508148023815,
+      "l2_power_law": 1.401055371249962e-06
+     },
+     "pe_100": {
+      "cells": 51200,
+      "cell_peclet": 0.001953125,
+      "l2_central": 6.553794700453603e-07,
+      "l2_upwind": 0.0006891303087323183,
+      "l2_power_law": 1.4010089038205587e-06
+     }
+    }
+   }
+  },
+  "C1b": {
+   "cid": "C1b",
+   "level": "L1a",
+   "quantity": "relative L2 error of the 1-D convection-diffusion profile",
+   "statement": "L2 error < 1e-3 for Pe = 100 (layer-resolved grid)",
+   "measured": 6.553794700453603e-07,
+   "threshold": 0.001,
+   "comparator": "<",
+   "verdict": "PASS",
+   "source": "P97-N03 C1 (Pe = 100 branch)",
+   "evidence": [],
+   "note": "central scheme on 51200 cells (cell Peclet 0.001953); monotone profile: True",
+   "detail": {
+    "peclet": 100.0,
+    "cells": 51200,
+    "scheme": "central",
+    "cell_peclet": 0.001953125,
+    "max_abs_error": 4.7668202263206894e-07,
+    "resolution_table": {
+     "pe_0.1": {
+      "cells": 1024,
+      "cell_peclet": 9.765625e-05,
+      "l2_central": 2.092929768561697e-08,
+      "l2_upwind": 7.613643556572311e-07,
+      "l2_power_law": 3.332798421133166e-08
+     },
+     "pe_1": {
+      "cells": 1024,
+      "cell_peclet": 0.0009765625,
+      "l2_central": 2.5696929601073645e-07,
+      "l2_upwind": 8.368862838257509e-05,
+      "l2_power_law": 5.263149794642203e-07
+     },
+     "pe_10": {
+      "cells": 5120,
+      "cell_peclet": 0.001953125,
+      "l2_central": 6.55200440388185e-07,
+      "l2_upwind": 0.0006882508148023815,
+      "l2_power_law": 1.401055371249962e-06
+     },
+     "pe_100": {
+      "cells": 51200,
+      "cell_peclet": 0.001953125,
+      "l2_central": 6.553794700453603e-07,
+      "l2_upwind": 0.0006891303087323183,
+      "l2_power_law": 1.4010089038205587e-06
+     }
+    }
+   }
+  },
+  "C2": {
+   "cid": "C2",
+   "level": "L1b",
+   "quantity": "max |u - u_Ghia| on the vertical centre line (U_lid = 1)",
+   "statement": "lid-driven cavity Re = 1000 centre-line deviation < 2 % of the lid speed",
+   "measured": 0.029310237261449212,
+   "threshold": 0.02,
+   "comparator": "<",
+   "verdict": "FAIL",
+   "source": "Ghia, Ghia & Shin (1982), J. Comput. Phys. 48, 387",
+   "evidence": [
+    "src/tensorfvm/verification/artifacts/verification_ladder/lid_cavity_Re100_n32.json",
+    "src/tensorfvm/verification/artifacts/verification_ladder/lid_cavity_Re400_n64.json",
+    "src/tensorfvm/verification/artifacts/verification_ladder/lid_cavity_Re1000_n64.json",
+    "docs/verification-lid-cavity-ladder/summary.json"
+   ],
+   "note": "evaluated on Re = 1000, n = 64 (converged: True, mass residual 1.45e-14); measured in units of U_lid = 1",
+   "detail": {
+    "runs": {
+     "Re100_n32": {
+      "path": "src/tensorfvm/verification/artifacts/verification_ladder/lid_cavity_Re100_n32.json",
+      "reynolds": 100.0,
+      "cells": 32,
+      "steps": 7500,
+      "converged": true,
+      "residual": 8.656719785449241e-10,
+      "max_divergence": 1.4072076837123859e-14,
+      "u_max_abs_error": 0.006916094118992744,
+      "v_max_abs_error": 0.007785461150284466,
+      "u_max_abs_error_consistent": 0.006916094118992744,
+      "v_max_abs_error_consistent": 0.007785461150284466,
+      "suspect_points": [],
+      "u_rms_error": 0.0021639467011130837,
+      "v_rms_error": 0.003577035852398124,
+      "wall_seconds": 42.61257791519165
+     },
+     "Re400_n64": {
+      "path": "src/tensorfvm/verification/artifacts/verification_ladder/lid_cavity_Re400_n64.json",
+      "reynolds": 400.0,
+      "cells": 64,
+      "steps": 33000,
+      "converged": true,
+      "residual": 9.641591229107387e-10,
+      "max_divergence": 2.842170943040401e-14,
+      "u_max_abs_error": 0.006595769175995747,
+      "v_max_abs_error": 0.1423667280843521,
+      "u_max_abs_error_consistent": 0.006595769175995747,
+      "v_max_abs_error_consistent": 0.00737571528273305,
+      "suspect_points": [],
+      "u_rms_error": 0.003676659673606472,
+      "v_rms_error": 0.03470490125521578,
+      "wall_seconds": 287.15936255455017
+     },
+     "Re1000_n64": {
+      "path": "src/tensorfvm/verification/artifacts/verification_ladder/lid_cavity_Re1000_n64.json",
+      "reynolds": 1000.0,
+      "cells": 64,
+      "steps": 87200,
+      "converged": true,
+      "residual": 9.847293351109936e-10,
+      "max_divergence": 1.454392162258955e-14,
+      "u_max_abs_error": 0.029310237261449212,
+      "v_max_abs_error": 0.019733954866251513,
+      "u_max_abs_error_consistent": 0.029310237261449212,
+      "v_max_abs_error_consistent": 0.019733954866251513,
+      "suspect_points": [],
+      "u_rms_error": 0.012723429225521981,
+      "v_rms_error": 0.00979529924228161,
+      "wall_seconds": 747.2335722446442
+     }
+    },
+    "evaluated_on": "src/tensorfvm/verification/artifacts/verification_ladder/lid_cavity_Re1000_n64.json",
+    "independent_reproduction": {
+     "available": true,
+     "source": "docs/verification-lid-cavity-ladder/summary.json",
+     "matched_rows": [
+      {
+       "reynolds": 100.0,
+       "cells": 32,
+       "delta_u": 4.018377519621197e-09,
+       "delta_v": 7.19256887729558e-09
+      },
+      {
+       "reynolds": 400.0,
+       "cells": 64,
+       "delta_u": 3.4236442014723423e-07,
+       "delta_v": 1.8105947630076002e-07
+      },
+      {
+       "reynolds": 1000.0,
+       "cells": 64,
+       "delta_u": 6.777481276198927e-08,
+       "delta_v": 3.592385953987698e-08
+      }
+     ],
+     "max_abs_delta_u": 3.4236442014723423e-07,
+     "max_abs_delta_v": 1.8105947630076002e-07,
+     "committed_provenance": "assembled from summary.partial.json: the runner was still working on the Re=1000 n=128 row when the ladder was stopped, so that row is NOT included and is NOT claimed; every row present here is converged to the stated gate.",
+     "committed_rows": [
+      "Re1000_n64",
+      "Re100_n128",
+      "Re100_n32",
+      "Re100_n64",
+      "Re400_n128",
+      "Re400_n32",
+      "Re400_n64"
+     ],
+     "rows_missing_from_committed_ladder": [
+      "Re1000_n128"
+     ]
+    },
+    "u_max_abs_error": 0.029310237261449212,
+    "v_max_abs_error": 0.019733954866251513,
+    "converged": true,
+    "max_divergence": 1.454392162258955e-14
+   }
+  },
+  "C3": {
+   "cid": "C3",
+   "level": "L1c",
+   "quantity": "relative error of the mean Nusselt number at Ra = 1e4",
+   "statement": "natural convection Nu within 3 % of de Vahl Davis (1983)",
+   "measured": 0.0033111857510365085,
+   "threshold": 0.03,
+   "comparator": "<",
+   "verdict": "PASS",
+   "source": "de Vahl Davis (1983), Int. J. Numer. Methods Fluids 3, 249",
+   "evidence": [
+    "src/tensorfvm/verification/artifacts/incompressible/fvm_natural_convection/raw_natural_convection_Ra1e+04_N16.json",
+    "src/tensorfvm/verification/artifacts/incompressible/fvm_natural_convection/raw_natural_convection_Ra1e+04_N32.json",
+    "src/tensorfvm/verification/artifacts/incompressible/fvm_natural_convection/raw_natural_convection_Ra1e+04_N64.json"
+   ],
+   "note": "finest stored grid N64: Nu = 2.25043 vs de Vahl Davis 2.243 (0.331%); energy-balance imbalance 0.0e+00",
+   "detail": {
+    "runs": {
+     "N16": {
+      "path": "src/tensorfvm/verification/artifacts/incompressible/fvm_natural_convection/raw_natural_convection_Ra1e+04_N16.json",
+      "cells": 16,
+      "nusselt": 2.332719546078751,
+      "relative_error": 0.0399997976276198,
+      "nusselt_energy_imbalance": 0.0,
+      "psi_extremum": -5.170849045819617,
+      "converged": true,
+      "git_commit": "dd13a8ace27435cdd5c1720d80cb7f334f7651fd"
+     },
+     "N32": {
+      "path": "src/tensorfvm/verification/artifacts/incompressible/fvm_natural_convection/raw_natural_convection_Ra1e+04_N32.json",
+      "cells": 32,
+      "nusselt": 2.267026617707149,
+      "relative_error": 0.010711822428510518,
+      "nusselt_energy_imbalance": 1.9589060242230882e-16,
+      "psi_extremum": -5.065480478021222,
+      "converged": true,
+      "git_commit": "dd13a8ace27435cdd5c1720d80cb7f334f7651fd"
+     },
+     "N64": {
+      "path": "src/tensorfvm/verification/artifacts/incompressible/fvm_natural_convection/raw_natural_convection_Ra1e+04_N64.json",
+      "cells": 64,
+      "nusselt": 2.2504269896395748,
+      "relative_error": 0.0033111857510365085,
+      "nusselt_energy_imbalance": 0.0,
+      "psi_extremum": -5.066606742608315,
+      "converged": true,
+      "git_commit": "dd13a8ace27435cdd5c1720d80cb7f334f7651fd"
+     }
+    },
+    "reference_nusselt": 2.243,
+    "reference_source": "de Vahl Davis (1983), mean Nu at Ra = 1e4, Pr = 0.71",
+    "evaluated_on": "src/tensorfvm/verification/artifacts/incompressible/fvm_natural_convection/raw_natural_convection_Ra1e+04_N64.json",
+    "cell_sequence": [
+     "N16",
+     "N32",
+     "N64"
+    ]
+   }
+  },
+  "C4a": {
+   "cid": "C4a",
+   "level": "L2",
+   "quantity": "max discrete divergence of the converged steady field",
+   "statement": "steady mass residual < 1e-10",
+   "measured": 1.454392162258955e-14,
+   "threshold": 1e-10,
+   "comparator": "<",
+   "verdict": "PASS",
+   "source": "P97-N03 C4 (mass conservation)",
+   "evidence": [
+    "src/tensorfvm/verification/artifacts/verification_ladder/lid_cavity_Re1000_n64.json"
+   ],
+   "note": "max |div u| of the converged MAC field; iteration residual 9.85e-10 is reported separately (a residual is not a conservation statement)",
+   "detail": {
+    "converged": true,
+    "iteration_residual": 9.847293351109936e-10,
+    "steps": 87200,
+    "solver": "tensorfvm.lid_cavity.LidCavitySolver",
+    "cells": 64,
+    "reynolds": 1000.0
+   }
+  },
+  "C4b": {
+   "cid": "C4b",
+   "level": "L2",
+   "quantity": "relative kinetic-energy drift of the inviscid Taylor-Green vortex",
+   "statement": "inviscid Taylor-Green kinetic-energy drift over t in [0, 1] < 1e-6",
+   "measured": 3.967229295912898e-09,
+   "threshold": 1e-06,
+   "comparator": "<",
+   "verdict": "PASS",
+   "source": "P97-N03 C4 (energy conservation)",
+   "evidence": [
+    "src/tensorfvm/verification/artifacts/verification_ladder/tgv_conservation.json"
+   ],
+   "note": "inviscid Taylor-Green, 32^3 cells: kinetic-energy drift 3.967e-09, peak convective power 9.437e-16",
+   "detail": {
+    "records": {
+     "n16": {
+      "cells": 16,
+      "steps_per_unit_time": 100,
+      "inviscid_energy_drift": 3.9093693681319925e-09,
+      "inviscid_convective_power_max": 1.8476053742050807e-15,
+      "viscous_integral_energy_error": 0.0012505917359208214,
+      "viscous_final_energy_error": 0.002560289769399144,
+      "viscous_velocity_error": 0.001279326546493289,
+      "viscous_initial_energy_error": 1.145804675431332e-16,
+      "nonlinear_all_converged": true,
+      "wall_time_s": {
+       "inviscid": 2.999520029872656,
+       "viscous": 4.772434199228883
+      }
+     },
+     "n32": {
+      "cells": 32,
+      "steps_per_unit_time": 200,
+      "inviscid_energy_drift": 3.967229295912898e-09,
+      "inviscid_convective_power_max": 9.436559490966787e-16,
+      "viscous_integral_energy_error": 0.0003119491901482056,
+      "viscous_final_energy_error": 0.0006419290126185641,
+      "viscous_velocity_error": 0.0003209130137280277,
+      "viscous_initial_energy_error": 0.0,
+      "nonlinear_all_converged": true,
+      "wall_time_s": {
+       "inviscid": 30.969432540237904,
+       "viscous": 40.301700450479984
+      }
+     }
+    },
+    "from_cache": true,
+    "evaluated_on_cells": 32
+   }
+  },
+  "C4c": {
+   "cid": "C4c",
+   "level": "L2",
+   "quantity": "relative error of the time-integrated kinetic-energy decay",
+   "statement": "Taylor-Green integral energy error < 1e-6",
+   "measured": 0.0003119491901482056,
+   "threshold": 1e-06,
+   "comparator": "<",
+   "verdict": "FAIL",
+   "source": "P97-N03 C4 (transient conservation integral)",
+   "evidence": [
+    "src/tensorfvm/verification/artifacts/verification_ladder/tgv_conservation.json"
+   ],
+   "note": "viscous Taylor-Green (nu = 0.05): time-integrated energy error 3.119e-04 at 32^3 cells; the second-order scheme needs roughly n ~ 500 to reach 1e-3 of this threshold, so the 1e-6 gate is a resolution-limited statement, not an implementation defect",
+   "detail": {
+    "records": {
+     "n16": {
+      "cells": 16,
+      "steps_per_unit_time": 100,
+      "inviscid_energy_drift": 3.9093693681319925e-09,
+      "inviscid_convective_power_max": 1.8476053742050807e-15,
+      "viscous_integral_energy_error": 0.0012505917359208214,
+      "viscous_final_energy_error": 0.002560289769399144,
+      "viscous_velocity_error": 0.001279326546493289,
+      "viscous_initial_energy_error": 1.145804675431332e-16,
+      "nonlinear_all_converged": true,
+      "wall_time_s": {
+       "inviscid": 2.999520029872656,
+       "viscous": 4.772434199228883
+      }
+     },
+     "n32": {
+      "cells": 32,
+      "steps_per_unit_time": 200,
+      "inviscid_energy_drift": 3.967229295912898e-09,
+      "inviscid_convective_power_max": 9.436559490966787e-16,
+      "viscous_integral_energy_error": 0.0003119491901482056,
+      "viscous_final_energy_error": 0.0006419290126185641,
+      "viscous_velocity_error": 0.0003209130137280277,
+      "viscous_initial_energy_error": 0.0,
+      "nonlinear_all_converged": true,
+      "wall_time_s": {
+       "inviscid": 30.969432540237904,
+       "viscous": 40.301700450479984
+      }
+     }
+    },
+    "from_cache": true,
+    "evaluated_on_cells": 32
+   }
+  },
+  "C5": {
+   "cid": "C5",
+   "level": "L3",
+   "quantity": "deviation of the observed order from the formal order",
+   "statement": "p(upwind) = 1 +- 0.2, p(central) = 2 +- 0.2, monotone, exact value in GCI band",
+   "measured": 0.06105779901457786,
+   "threshold": 0.2,
+   "comparator": "<",
+   "verdict": "PASS",
+   "source": "Roache (1994) ASME J. Fluids Eng. 116, 405; Celik et al. (2008)",
+   "evidence": [],
+   "note": "observed order 0.939 (upwind, formal 1) and 2.001 (central, formal 2); exact value inside the fine-grid GCI band: upwind True, central True; monotone: upwind True, central True",
+   "detail": {
+    "upwind": {
+     "scheme": "upwind",
+     "peclet": 1.0,
+     "probe": 0.5,
+     "cells": [
+      32,
+      64,
+      128
+     ],
+     "values": [
+      0.37928069535791875,
+      0.3784349271027383,
+      0.37799376153029024
+     ],
+     "runs": [
+      {
+       "cells": 32,
+       "value": 0.37928069535791875,
+       "relative_l2": 0.0022901697319868816
+      },
+      {
+       "cells": 64,
+       "value": 0.3784349271027383,
+       "relative_l2": 0.0012410670440565757
+      },
+      {
+       "cells": 128,
+       "value": 0.37799376153029024,
+       "relative_l2": 0.0006462244855815675
+      }
+     ],
+     "exact": 0.3775406687981455,
+     "fine_relative_error": 0.0012001163572313606,
+     "band_contains_exact": true,
+     "safety_factor": 1.25,
+     "refinement_ratio": 2.0,
+     "increments": {
+      "medium_minus_fine": 0.00044116557244805454,
+      "coarse_minus_medium": 0.0008457682551804568
+     },
+     "observed_order": 0.9389422009854221,
+     "gci_fine": 0.0015907423751099607,
+     "gci_medium": 0.003046092146881991,
+     "monotone": true,
+     "oscillatory": false,
+     "converged_exactly": false,
+     "ratio_d32_d21": 1.9171220693564945
+    },
+    "central": {
+     "scheme": "central",
+     "peclet": 1.0,
+     "probe": 0.5,
+     "cells": [
+      16,
+      32,
+      64
+     ],
+     "values": [
+      0.3775023978320144,
+      0.3775311051193042,
+      0.3775382781321924
+     ],
+     "runs": [
+      {
+       "cells": 16,
+       "value": 0.3775023978320144,
+       "relative_l2": 0.0010533825559581845
+      },
+      {
+       "cells": 32,
+       "value": 0.3775311051193042,
+       "relative_l2": 0.00026318902065668653
+      },
+      {
+       "cells": 64,
+       "value": 0.3775382781321924,
+       "relative_l2": 6.578747297932011e-05
+      }
+     ],
+     "exact": 0.3775406687981455,
+     "fine_relative_error": 6.332207761233078e-06,
+     "band_contains_exact": true,
+     "safety_factor": 1.25,
+     "refinement_ratio": 2.0,
+     "increments": {
+      "medium_minus_fine": -7.173012888161967e-06,
+      "coarse_minus_medium": -2.870728728981975e-05
+     },
+     "observed_order": 2.000765880702518,
+     "gci_fine": 7.91082908833076e-06,
+     "gci_medium": 3.166072077433636e-05,
+     "monotone": true,
+     "oscillatory": false,
+     "converged_exactly": false,
+     "ratio_d32_d21": 4.002124035939908
+    },
+    "order_deviation": {
+     "upwind": 0.06105779901457786,
+     "central": 0.0007658807025179293
+    },
+    "safety_factor": 1.25,
+    "monotone": true,
+    "exact_inside_gci_band": true
+   }
+  },
+  "C6": {
+   "cid": "C6",
+   "level": "L4",
+   "quantity": "panel-method Cl deviation from the thin-aerofoil slope",
+   "statement": "NACA 0012 Cl within 3 % of 2 pi alpha and cylinder Cp error < 1 %",
+   "measured": 0.00010753092590457482,
+   "threshold": 0.03,
+   "comparator": "<",
+   "verdict": "PASS",
+   "source": "Katz & Plotkin, Low-Speed Aerodynamics; Hess & Smith (1967)",
+   "evidence": [],
+   "note": "cylinder Cp reproduces the exact potential flow to 3.05e-15 (relative L2); flat-plate Cl matches 2 pi sin(alpha) to 0.011%; NACA 0012 lift slope is 10.112% above thin-aerofoil theory (documented limitation, not gated) and its circulation- and pressure-based Cl differ by 1.457%",
+   "detail": {
+    "n_panels": 160,
+    "naca0012_cases": {
+     "alpha_0": {
+      "alpha_deg": 0.0,
+      "cl_circulation": -3.806828448682403e-17,
+      "cl_pressure": 2.7755575615628914e-17,
+      "cl_theory": 0.0,
+      "relative_deviation": 0.0,
+      "circulation_vs_pressure_agreement": 6.582386010245293e-05,
+      "suction_peak_cp": -0.41278031225914313
+     },
+     "alpha_2": {
+      "alpha_deg": 2.0,
+      "cl_circulation": 0.24150341340892406,
+      "cl_pressure": 0.24502149870776221,
+      "cl_theory": 0.2193245422464302,
+      "relative_deviation": 0.10112352651156557,
+      "circulation_vs_pressure_agreement": 0.014567435089959486,
+      "suction_peak_cp": -0.790251317014939
+     },
+     "alpha_4": {
+      "alpha_deg": 4.0,
+      "cl_circulation": 0.4827125921093584,
+      "cl_pressure": 0.48884927730329497,
+      "cl_theory": 0.4386490844928604,
+      "relative_deviation": 0.10045275181057677,
+      "circulation_vs_pressure_agreement": 0.012712917156605478,
+      "suction_peak_cp": -1.5308062067154231
+     },
+     "alpha_6": {
+      "alpha_deg": 6.0,
+      "cl_circulation": 0.7233336598724822,
+      "cl_pressure": 0.7302954313587637,
+      "cl_theory": 0.6579736267392906,
+      "relative_deviation": 0.09933533879936082,
+      "circulation_vs_pressure_agreement": 0.009624564530162779,
+      "suction_peak_cp": -2.667876541013004
+     }
+    },
+    "naca0012_cp_min_alpha0": -0.41278031225914313,
+    "cylinder_cp_relative_l2": 3.0478323875808496e-15,
+    "cylinder_cp_relative_l2_fine": 5.519871564826831e-15,
+    "cylinder_cp_max_abs": 1.4654943925052066e-14,
+    "cylinder_pressure_drag": 1.124100812432971e-15,
+    "flat_plate_lift": {
+     "n_panels": 200,
+     "thickness": 0.02,
+     "cases": {
+      "alpha_2": {
+       "alpha_deg": 2.0,
+       "cl_circulation": 0.21930358429107674,
+       "cl_pressure": 0.24332601642996177,
+       "cl_exact": 0.2192800049091165,
+       "relative_deviation": 0.00010753092590457482,
+       "suction_peak_cp": -9.748043126739965
+      },
+      "alpha_4": {
+       "alpha_deg": 4.0,
+       "cl_circulation": 0.4383399809458223,
+       "cl_pressure": 0.4854665729669226,
+       "cl_exact": 0.4382928509097467,
+       "relative_deviation": 0.00010753092590450176,
+       "suction_peak_cp": -34.429485007836526
+      }
+     },
+     "worst_deviation": 0.00010753092590457482
+    },
+    "naca0012_circulation_vs_pressure_worst": 0.014567435089959486,
+    "naca0012_cl_refinement": {
+     "160": 0.7233336598724822,
+     "320": 0.7233675295571349
+    },
+    "naca0012_cl_refinement_delta": 3.386968465268758e-05
+   }
+  },
+  "C7": {
+   "cid": "C7",
+   "level": "L4",
+   "quantity": "Thwaites integral boundary layer vs Blasius similarity",
+   "statement": "theta, delta*, Cf within 3 % of the Blasius flat-plate solution",
+   "measured": 0.01745770942720542,
+   "threshold": 0.03,
+   "comparator": "<",
+   "verdict": "PASS",
+   "source": "Thwaites (1949); Blasius (1908)",
+   "evidence": [],
+   "note": "Thwaites/Ludwieg reference at lambda = 0: theta/x sqrt(Re_x) = 0.6708 vs Blasius 0.6640; Cf sqrt(Re_x) = 0.6559 vs 0.6640",
+   "detail": {
+    "reynolds": 1000000.0,
+    "relative_errors": {
+     "theta": 0.01027167658123008,
+     "delta_star": 0.01745770942720542,
+     "cf": 0.012178805120575033,
+     "shape_factor": 0.007527504342790909
+    },
+    "thwaites_coefficients": {
+     "theta": 0.6708203932499368,
+     "delta_star": 1.7508412263823352,
+     "cf": 0.6559132733999382,
+     "H": 2.61
+    },
+    "blasius_coefficients": {
+     "theta": 0.664,
+     "delta_star": 1.7208,
+     "cf": 0.664,
+     "H": 2.5905
+    },
+    "cf_sample_x": [
+     0.0025,
+     0.1275,
+     0.2525,
+     0.3775,
+     0.5025,
+     0.6275,
+     0.7525,
+     0.8775
+    ]
+   }
+  },
+  "C8": {
+   "cid": "C8",
+   "level": "L5",
+   "quantity": "SA flat-plate local Cf(x) against DNS",
+   "statement": "Cf(x) within 5 % of DNS for x/L > 0.1",
+   "measured": null,
+   "threshold": 0.05,
+   "comparator": "<",
+   "verdict": "WITHHELD",
+   "source": "Spalart (1988) DNS; P97-N03 C6",
+   "evidence": [
+    "docs/flat-plate-sa-criteria/results.json"
+   ],
+   "note": "no per-x wall shear is extracted by the production SA flat-plate solver: the stored evidence is an integrated C_F only, and the SA refinement audit records that its grid sequence is not asymptotic; the named DNS (Spalart 1988, Re_theta <= 1410) is also not a matched reference for a RANS-SA plate at Re >= 1e5",
+   "detail": {
+    "missing_capability": "per-face wall-shear export for flat-plate mesh",
+    "existing_evidence": "docs/flat-plate-sa-criteria/results.json",
+    "reference_note": "Blasius: Cf = 0.664 / sqrt(Re_x)"
+   }
+  },
+  "C9": {
+   "cid": "C9",
+   "level": "L6",
+   "quantity": "appended SUBOFF Cf distribution against experiment",
+   "statement": "Cf distribution within 10 % of experiment at Re = 1.2e7",
+   "measured": null,
+   "threshold": 0.1,
+   "comparator": "<",
+   "verdict": "WITHHELD",
+   "source": "Groves et al. (1989); P97-N03 C7",
+   "evidence": [
+    "docs/verification-suboff-validation/report.md",
+    "docs/verification-suboff-reference/README.md"
+   ],
+   "note": "the appended SUBOFF benchmark is unqualified in the repository: no experimental drag or Cp result has been accepted, and no wall-resolved 3-D RANS Cf distribution at Re = 1.2e7 exists",
+   "detail": {
+    "missing_capability": "wall-resolved appended-hull RANS at Re = 1.2e7",
+    "existing_evidence": [
+     "docs/verification-suboff-validation/report.md",
+     "docs/verification-suboff-reference/README.md"
+    ]
+   }
+  },
+  "C10": {
+   "cid": "C10",
+   "level": "all",
+   "quantity": "ladder self-audit",
+   "statement": "every criterion carries a machine-readable verdict and no WITHHELD is reported as PASS",
+   "measured": 0.0,
+   "threshold": 0.0,
+   "comparator": "<=",
+   "verdict": "PASS",
+   "source": "ladder self-audit",
+   "evidence": [],
+   "note": "structural self-audit of the ladder (no silent upgrade of a gap)",
+   "detail": {
+    "problems": [],
+    "criteria_evaluated": [
+     "C1a",
+     "C1b",
+     "C2",
+     "C3",
+     "C4a",
+     "C4b",
+     "C4c",
+     "C5",
+     "C6",
+     "C7",
+     "C8",
+     "C9"
+    ],
+    "verdict_counts": {
+     "PASS": 8,
+     "FAIL": 2,
+     "WITHHELD": 2
+    }
+   }
+  }
+ },
+ "levels": {
+  "L1a": {
+   "criteria": [
+    "C1a",
+    "C1b"
+   ],
+   "verdicts": [
+    "PASS",
+    "PASS"
+   ]
+  },
+  "L1b": {
+   "criteria": [
+    "C2"
+   ],
+   "verdicts": [
+    "FAIL"
+   ]
+  },
+  "L1c": {
+   "criteria": [
+    "C3"
+   ],
+   "verdicts": [
+    "PASS"
+   ]
+  },
+  "L2": {
+   "criteria": [
+    "C4a",
+    "C4b",
+    "C4c"
+   ],
+   "verdicts": [
+    "PASS",
+    "PASS",
+    "FAIL"
+   ]
+  },
+  "L3": {
+   "criteria": [
+    "C5"
+   ],
+   "verdicts": [
+    "PASS"
+   ]
+  },
+  "L4": {
+   "criteria": [
+    "C6",
+    "C7"
+   ],
+   "verdicts": [
+    "PASS",
+    "PASS"
+   ]
+  },
+  "L5": {
+   "criteria": [
+    "C8"
+   ],
+   "verdicts": [
+    "WITHHELD"
+   ]
+  },
+  "L6": {
+   "criteria": [
+    "C9"
+   ],
+   "verdicts": [
+    "WITHHELD"
+   ]
+  },
+  "all": {
+   "criteria": [
+    "C10"
+   ],
+   "verdicts": [
+    "PASS"
+   ]
+  }
+ },
+ "summary": {
+  "counts": {
+   "PASS": 9,
+   "FAIL": 2,
+   "WITHHELD": 2
+  },
+  "criteria_count": 13,
+  "all_pass": false
+ },
+ "artifacts": "src/tensorfvm/verification/artifacts/verification_ladder"
+}
