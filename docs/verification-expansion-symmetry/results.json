@@ -1,0 +1,2641 @@
+{
+  "case": "planar sudden expansion, AR = 4, Re_D = 100.0",
+  "commit": null,
+  "settings": {
+    "alpha_u": 0.8,
+    "alpha_p": 0.5,
+    "limited": false,
+    "momentum_sweeps": 4,
+    "p_cycles": 2,
+    "poisson": "sparse",
+    "max_iter": 20000,
+    "tol": 1e-06
+  },
+  "cases": {
+    "bottom": {
+      "tag": "expansion_bottom_n010",
+      "geometry": "bottom",
+      "level": 10,
+      "re_D": 100.0,
+      "inlet_window": [
+        0.0,
+        1.0
+      ],
+      "symmetric_geometry": false,
+      "wall_seconds": 37.9,
+      "convergence": {
+        "iterations": 4980,
+        "continuity": 8.278675557582549e-10,
+        "change": 9.931070026891753e-07,
+        "history": [
+          {
+            "iteration": 200,
+            "continuity": 1.7819871707993196e-05,
+            "change": 0.05810196411271468,
+            "u_symmetry_rel": 1.1160098303032207,
+            "v_symmetry_rel": 1.8908235403123066,
+            "p_symmetry_rel": 1.092196034991702,
+            "v_centreline_rel": 0.9454117701561533,
+            "symmetry_rel": 1.8908235403123066
+          },
+          {
+            "iteration": 400,
+            "continuity": 5.129033609557396e-06,
+            "change": 0.03679215974223632,
+            "u_symmetry_rel": 1.2062439066330413,
+            "v_symmetry_rel": 1.997835819032732,
+            "p_symmetry_rel": 1.3180736899986647,
+            "v_centreline_rel": 0.998917909516366,
+            "symmetry_rel": 1.997835819032732
+          },
+          {
+            "iteration": 600,
+            "continuity": 2.6453966382603347e-06,
+            "change": 0.01998861256117712,
+            "u_symmetry_rel": 1.182668745185174,
+            "v_symmetry_rel": 1.9773609413229984,
+            "p_symmetry_rel": 1.3804826710165332,
+            "v_centreline_rel": 0.9886804706614992,
+            "symmetry_rel": 1.9773609413229984
+          },
+          {
+            "iteration": 800,
+            "continuity": 1.3630346053098655e-05,
+            "change": 0.01763488793767884,
+            "u_symmetry_rel": 1.1443697806289053,
+            "v_symmetry_rel": 1.979132465557266,
+            "p_symmetry_rel": 1.2950684475531624,
+            "v_centreline_rel": 0.989566232778633,
+            "symmetry_rel": 1.979132465557266
+          },
+          {
+            "iteration": 1000,
+            "continuity": 7.924074874063845e-06,
+            "change": 0.010967510835108163,
+            "u_symmetry_rel": 1.1063923670821307,
+            "v_symmetry_rel": 1.9327065842964757,
+            "p_symmetry_rel": 1.2627563052878918,
+            "v_centreline_rel": 0.9663532921482378,
+            "symmetry_rel": 1.9327065842964757
+          },
+          {
+            "iteration": 1200,
+            "continuity": 1.3799195596937187e-06,
+            "change": 0.009052908436818219,
+            "u_symmetry_rel": 1.0729240554907047,
+            "v_symmetry_rel": 1.9630655354721744,
+            "p_symmetry_rel": 1.2485767645208519,
+            "v_centreline_rel": 0.9815327677360872,
+            "symmetry_rel": 1.9630655354721744
+          },
+          {
+            "iteration": 1400,
+            "continuity": 1.0811548289300574e-06,
+            "change": 0.007695841367081804,
+            "u_symmetry_rel": 1.0507236277938763,
+            "v_symmetry_rel": 1.9559686950130675,
+            "p_symmetry_rel": 1.2288061660017364,
+            "v_centreline_rel": 0.9779843475065337,
+            "symmetry_rel": 1.9559686950130675
+          },
+          {
+            "iteration": 1600,
+            "continuity": 1.8678737472447096e-06,
+            "change": 0.006840491596647125,
+            "u_symmetry_rel": 1.0336193010336348,
+            "v_symmetry_rel": 1.8945068162164118,
+            "p_symmetry_rel": 1.2078833365238342,
+            "v_centreline_rel": 0.9472534081082059,
+            "symmetry_rel": 1.8945068162164118
+          },
+          {
+            "iteration": 1800,
+            "continuity": 2.5289074956852745e-06,
+            "change": 0.006324226299138536,
+            "u_symmetry_rel": 1.0216053262104856,
+            "v_symmetry_rel": 1.7561641080224952,
+            "p_symmetry_rel": 1.1857685300100933,
+            "v_centreline_rel": 0.8780820540112476,
+            "symmetry_rel": 1.7561641080224952
+          },
+          {
+            "iteration": 2000,
+            "continuity": 2.791452516547055e-06,
+            "change": 0.005894770305181152,
+            "u_symmetry_rel": 1.0185130311979678,
+            "v_symmetry_rel": 1.5941304718264542,
+            "p_symmetry_rel": 1.1627100606272942,
+            "v_centreline_rel": 0.7970652359132271,
+            "symmetry_rel": 1.5941304718264542
+          },
+          {
+            "iteration": 2200,
+            "continuity": 3.1276029303557197e-06,
+            "change": 0.006038880766114849,
+            "u_symmetry_rel": 1.0192591015164167,
+            "v_symmetry_rel": 1.5786837396053262,
+            "p_symmetry_rel": 1.1404751390573598,
+            "v_centreline_rel": 0.7893418698026631,
+            "symmetry_rel": 1.5786837396053262
+          },
+          {
+            "iteration": 2400,
+            "continuity": 3.384471991613267e-06,
+            "change": 0.005803945865591922,
+            "u_symmetry_rel": 1.0198562842293009,
+            "v_symmetry_rel": 1.5655151605794666,
+            "p_symmetry_rel": 1.121536538124296,
+            "v_centreline_rel": 0.7827575802897333,
+            "symmetry_rel": 1.5655151605794666
+          },
+          {
+            "iteration": 2600,
+            "continuity": 3.3047406815755152e-06,
+            "change": 0.004884444506474989,
+            "u_symmetry_rel": 1.0202927802219897,
+            "v_symmetry_rel": 1.183357533623698,
+            "p_symmetry_rel": 1.1080218595398217,
+            "v_centreline_rel": 0.591678766811849,
+            "symmetry_rel": 1.183357533623698
+          },
+          {
+            "iteration": 2800,
+            "continuity": 2.746660259597515e-06,
+            "change": 0.003556387656113713,
+            "u_symmetry_rel": 1.0205929051145488,
+            "v_symmetry_rel": 0.9748574941810818,
+            "p_symmetry_rel": 1.100574996095851,
+            "v_centreline_rel": 0.4874287470905409,
+            "symmetry_rel": 1.100574996095851
+          },
+          {
+            "iteration": 3000,
+            "continuity": 1.8489762150545805e-06,
+            "change": 0.0021255065527767403,
+            "u_symmetry_rel": 1.020790394922297,
+            "v_symmetry_rel": 0.8789337498231248,
+            "p_symmetry_rel": 1.0979828223481707,
+            "v_centreline_rel": 0.4394668749115624,
+            "symmetry_rel": 1.0979828223481707
+          },
+          {
+            "iteration": 3200,
+            "continuity": 9.622639616153374e-07,
+            "change": 0.0009845633191079561,
+            "u_symmetry_rel": 1.0209174918281139,
+            "v_symmetry_rel": 0.8838040826755711,
+            "p_symmetry_rel": 1.0980514145220466,
+            "v_centreline_rel": 0.44190204133778554,
+            "symmetry_rel": 1.0980514145220466
+          },
+          {
+            "iteration": 3400,
+            "continuity": 3.573329243971267e-07,
+            "change": 0.0003633786610068024,
+            "u_symmetry_rel": 1.0209991722343925,
+            "v_symmetry_rel": 0.9208532401824633,
+            "p_symmetry_rel": 1.098917060658062,
+            "v_centreline_rel": 0.46042662009123164,
+            "symmetry_rel": 1.098917060658062
+          },
+          {
+            "iteration": 3600,
+            "continuity": 1.0869436166231761e-07,
+            "change": 0.0001634883219429617,
+            "u_symmetry_rel": 1.0210517151148728,
+            "v_symmetry_rel": 0.9297404964647464,
+            "p_symmetry_rel": 1.0996509308206088,
+            "v_centreline_rel": 0.4648702482323732,
+            "symmetry_rel": 1.0996509308206088
+          },
+          {
+            "iteration": 3800,
+            "continuity": 5.0789843036164184e-08,
+            "change": 6.61961922935328e-05,
+            "u_symmetry_rel": 1.021084931660534,
+            "v_symmetry_rel": 0.9281182231712879,
+            "p_symmetry_rel": 1.1000493009055583,
+            "v_centreline_rel": 0.46405911158564395,
+            "symmetry_rel": 1.1000493009055583
+          },
+          {
+            "iteration": 4000,
+            "continuity": 4.71560213793909e-08,
+            "change": 5.639967171489069e-05,
+            "u_symmetry_rel": 1.021105080691181,
+            "v_symmetry_rel": 0.9245783723966805,
+            "p_symmetry_rel": 1.100202213606123,
+            "v_centreline_rel": 0.46228918619834025,
+            "symmetry_rel": 1.100202213606123
+          },
+          {
+            "iteration": 4200,
+            "continuity": 2.969962221424302e-08,
+            "change": 3.1865616434367805e-05,
+            "u_symmetry_rel": 1.0211165709756393,
+            "v_symmetry_rel": 0.9219858304905278,
+            "p_symmetry_rel": 1.1002338579128588,
+            "v_centreline_rel": 0.4609929152452639,
+            "symmetry_rel": 1.1002338579128588
+          },
+          {
+            "iteration": 4400,
+            "continuity": 1.3927683731145002e-08,
+            "change": 1.346342529737199e-05,
+            "u_symmetry_rel": 1.0211226151256434,
+            "v_symmetry_rel": 0.9206470737573592,
+            "p_symmetry_rel": 1.100223288736869,
+            "v_centreline_rel": 0.4603235368786796,
+            "symmetry_rel": 1.100223288736869
+          },
+          {
+            "iteration": 4600,
+            "continuity": 4.647996005007621e-09,
+            "change": 5.304056636457055e-06,
+            "u_symmetry_rel": 1.021125485349876,
+            "v_symmetry_rel": 0.9201381604357683,
+            "p_symmetry_rel": 1.1002063616783484,
+            "v_centreline_rel": 0.4600690802178842,
+            "symmetry_rel": 1.1002063616783484
+          },
+          {
+            "iteration": 4800,
+            "continuity": 1.7653179647247885e-09,
+            "change": 2.3211634890829558e-06,
+            "u_symmetry_rel": 1.0211266799620657,
+            "v_symmetry_rel": 0.9200290800623399,
+            "p_symmetry_rel": 1.10019431634958,
+            "v_centreline_rel": 0.4600145400311699,
+            "symmetry_rel": 1.10019431634958
+          },
+          {
+            "iteration": 4980,
+            "continuity": 8.278675557582549e-10,
+            "change": 9.931070026891753e-07,
+            "u_symmetry_rel": 1.0211270687469691,
+            "v_symmetry_rel": 0.920053898062653,
+            "p_symmetry_rel": 1.100188445522542,
+            "v_centreline_rel": 0.4600269490313265,
+            "symmetry_rel": 1.100188445522542
+          }
+        ]
+      },
+      "metrics": {
+        "p_in": 0.7421264270392027,
+        "u_in": 1.0,
+        "p_out": 0.6978268670326815,
+        "u_out": 0.24999999995906874,
+        "k_total_head": 1.0260991200335081,
+        "k_static_recovery": -0.08859912001304249,
+        "k_identity_check": 1.0260991200335081,
+        "k_theory_borda_carnot": 0.5625,
+        "k_error_rel": 0.8241762133929034,
+        "reattachment_over_D": 11.704161403309966,
+        "reattachment_over_D_upper": 11.704161403309966,
+        "reattachment_over_D_lower": null,
+        "continuity": 8.278675557582549e-10,
+        "iterations": 4980
+      },
+      "symmetry": {
+        "u_symmetry_rel": 1.0211270687469691,
+        "v_symmetry_rel": 0.920053898062653,
+        "p_symmetry_rel": 1.100188445522542,
+        "v_centreline_rel": 0.4600269490313265,
+        "symmetry_rel": 1.100188445522542
+      }
+    },
+    "top": {
+      "tag": "expansion_top_n010",
+      "geometry": "top",
+      "level": 10,
+      "re_D": 100.0,
+      "inlet_window": [
+        3.0,
+        4.0
+      ],
+      "symmetric_geometry": false,
+      "wall_seconds": 40.7,
+      "convergence": {
+        "iterations": 5450,
+        "continuity": 3.336070239501332e-10,
+        "change": 9.642774059792636e-07,
+        "history": [
+          {
+            "iteration": 200,
+            "continuity": 3.239856048104731e-05,
+            "change": 0.05514986065262367,
+            "u_symmetry_rel": 1.1066405373211223,
+            "v_symmetry_rel": 1.6012727980561694,
+            "p_symmetry_rel": 1.042346362601076,
+            "v_centreline_rel": 0.8006363990280847,
+            "symmetry_rel": 1.6012727980561694
+          },
+          {
+            "iteration": 400,
+            "continuity": 5.390677252330254e-06,
+            "change": 0.02310921481538994,
+            "u_symmetry_rel": 1.2516742339031368,
+            "v_symmetry_rel": 1.9580516047116507,
+            "p_symmetry_rel": 1.2738364350368743,
+            "v_centreline_rel": 0.9790258023558254,
+            "symmetry_rel": 1.9580516047116507
+          },
+          {
+            "iteration": 600,
+            "continuity": 1.708790385717817e-06,
+            "change": 0.012461250598825246,
+            "u_symmetry_rel": 1.2601973944809952,
+            "v_symmetry_rel": 1.9935655626061268,
+            "p_symmetry_rel": 1.365306350049494,
+            "v_centreline_rel": 0.9967827813030634,
+            "symmetry_rel": 1.9935655626061268
+          },
+          {
+            "iteration": 800,
+            "continuity": 4.778762579113558e-06,
+            "change": 0.009973462612815148,
+            "u_symmetry_rel": 1.229307232475118,
+            "v_symmetry_rel": 1.9979307118172414,
+            "p_symmetry_rel": 1.2932620871481202,
+            "v_centreline_rel": 0.9989653559086207,
+            "symmetry_rel": 1.9979307118172414
+          },
+          {
+            "iteration": 1000,
+            "continuity": 7.953385667035413e-06,
+            "change": 0.008320350938870347,
+            "u_symmetry_rel": 1.185020266742783,
+            "v_symmetry_rel": 2.0,
+            "p_symmetry_rel": 1.2508776035273228,
+            "v_centreline_rel": 1.0,
+            "symmetry_rel": 2.0
+          },
+          {
+            "iteration": 1200,
+            "continuity": 1.7712723922092867e-06,
+            "change": 0.006905237417677623,
+            "u_symmetry_rel": 1.1413682865790133,
+            "v_symmetry_rel": 1.7637127181113184,
+            "p_symmetry_rel": 1.2345002288531108,
+            "v_centreline_rel": 0.8818563590556592,
+            "symmetry_rel": 1.7637127181113184
+          },
+          {
+            "iteration": 1400,
+            "continuity": 9.276531615655913e-07,
+            "change": 0.00617165937783809,
+            "u_symmetry_rel": 1.1037995428795004,
+            "v_symmetry_rel": 1.7565198785003946,
+            "p_symmetry_rel": 1.2189183540924324,
+            "v_centreline_rel": 0.8782599392501973,
+            "symmetry_rel": 1.7565198785003946
+          },
+          {
+            "iteration": 1600,
+            "continuity": 8.353550972851551e-07,
+            "change": 0.005588911129882801,
+            "u_symmetry_rel": 1.0758002200533763,
+            "v_symmetry_rel": 1.6853951863420622,
+            "p_symmetry_rel": 1.2019642486335755,
+            "v_centreline_rel": 0.8426975931710311,
+            "symmetry_rel": 1.6853951863420622
+          },
+          {
+            "iteration": 1800,
+            "continuity": 1.1480572284102396e-06,
+            "change": 0.0051524398102303914,
+            "u_symmetry_rel": 1.0518035253959979,
+            "v_symmetry_rel": 1.6230201435911285,
+            "p_symmetry_rel": 1.184832535069529,
+            "v_centreline_rel": 0.8115100717955642,
+            "symmetry_rel": 1.6230201435911285
+          },
+          {
+            "iteration": 2000,
+            "continuity": 1.3518845525806178e-06,
+            "change": 0.004784633089256252,
+            "u_symmetry_rel": 1.0315109949712795,
+            "v_symmetry_rel": 1.5761676173290902,
+            "p_symmetry_rel": 1.1674934416573266,
+            "v_centreline_rel": 0.7880838086645451,
+            "symmetry_rel": 1.5761676173290902
+          },
+          {
+            "iteration": 2200,
+            "continuity": 1.6235033083677151e-06,
+            "change": 0.0044698290070459,
+            "u_symmetry_rel": 1.0150670656732381,
+            "v_symmetry_rel": 1.5386077930151396,
+            "p_symmetry_rel": 1.1502801299424068,
+            "v_centreline_rel": 0.7693038965075698,
+            "symmetry_rel": 1.5386077930151396
+          },
+          {
+            "iteration": 2400,
+            "continuity": 1.884685133063304e-06,
+            "change": 0.004127096253245255,
+            "u_symmetry_rel": 1.0170673349880273,
+            "v_symmetry_rel": 1.5070464439258198,
+            "p_symmetry_rel": 1.1339234788439825,
+            "v_centreline_rel": 0.7535232219629099,
+            "symmetry_rel": 1.5070464439258198
+          },
+          {
+            "iteration": 2600,
+            "continuity": 2.0931764072419992e-06,
+            "change": 0.0037652117937573924,
+            "u_symmetry_rel": 1.0183438047668663,
+            "v_symmetry_rel": 1.482256028025248,
+            "p_symmetry_rel": 1.1193437766875554,
+            "v_centreline_rel": 0.741128014012624,
+            "symmetry_rel": 1.482256028025248
+          },
+          {
+            "iteration": 2800,
+            "continuity": 2.1815384882743413e-06,
+            "change": 0.003521406591802179,
+            "u_symmetry_rel": 1.01944051674843,
+            "v_symmetry_rel": 1.463961084711227,
+            "p_symmetry_rel": 1.1074845630193273,
+            "v_centreline_rel": 0.7319805423556135,
+            "symmetry_rel": 1.463961084711227
+          },
+          {
+            "iteration": 3000,
+            "continuity": 2.0778909767624892e-06,
+            "change": 0.0030049276411663883,
+            "u_symmetry_rel": 1.0202873830165051,
+            "v_symmetry_rel": 1.287748506648504,
+            "p_symmetry_rel": 1.098973923515726,
+            "v_centreline_rel": 0.643874253324252,
+            "symmetry_rel": 1.287748506648504
+          },
+          {
+            "iteration": 3200,
+            "continuity": 1.7281064439295113e-06,
+            "change": 0.0022850044318146467,
+            "u_symmetry_rel": 1.0207881236222602,
+            "v_symmetry_rel": 1.1209271966333891,
+            "p_symmetry_rel": 1.093835333746903,
+            "v_centreline_rel": 0.5604635983166946,
+            "symmetry_rel": 1.1209271966333891
+          },
+          {
+            "iteration": 3400,
+            "continuity": 1.2290646077411926e-06,
+            "change": 0.0014985484700074658,
+            "u_symmetry_rel": 1.021071459093037,
+            "v_symmetry_rel": 1.0277095045564106,
+            "p_symmetry_rel": 1.0914326167395743,
+            "v_centreline_rel": 0.5138547522782053,
+            "symmetry_rel": 1.0914326167395743
+          },
+          {
+            "iteration": 3600,
+            "continuity": 7.13161315235751e-07,
+            "change": 0.0008044862727537294,
+            "u_symmetry_rel": 1.0212286257706893,
+            "v_symmetry_rel": 0.9777607570945522,
+            "p_symmetry_rel": 1.0907609866440815,
+            "v_centreline_rel": 0.4888803785472761,
+            "symmetry_rel": 1.0907609866440815
+          },
+          {
+            "iteration": 3800,
+            "continuity": 3.1740978311553883e-07,
+            "change": 0.0003282392264049583,
+            "u_symmetry_rel": 1.0213169955332724,
+            "v_symmetry_rel": 0.9692326144884301,
+            "p_symmetry_rel": 1.090884079070946,
+            "v_centreline_rel": 0.48461630724421506,
+            "symmetry_rel": 1.090884079070946
+          },
+          {
+            "iteration": 4000,
+            "continuity": 8.868279772512866e-08,
+            "change": 0.00014547975963941084,
+            "u_symmetry_rel": 1.0213682493092973,
+            "v_symmetry_rel": 0.9802143030101838,
+            "p_symmetry_rel": 1.0912000130779662,
+            "v_centreline_rel": 0.4901071515050919,
+            "symmetry_rel": 1.0912000130779662
+          },
+          {
+            "iteration": 4200,
+            "continuity": 1.4166953311856023e-08,
+            "change": 5.536093973346201e-05,
+            "u_symmetry_rel": 1.0213988342535798,
+            "v_symmetry_rel": 0.9807528273463462,
+            "p_symmetry_rel": 1.0914507197791505,
+            "v_centreline_rel": 0.4903764136731731,
+            "symmetry_rel": 1.0914507197791505
+          },
+          {
+            "iteration": 4400,
+            "continuity": 3.110509014508239e-08,
+            "change": 4.0484915990846027e-05,
+            "u_symmetry_rel": 1.021417157121878,
+            "v_symmetry_rel": 0.9783088478970386,
+            "p_symmetry_rel": 1.0915859859109451,
+            "v_centreline_rel": 0.4891544239485193,
+            "symmetry_rel": 1.0915859859109451
+          },
+          {
+            "iteration": 4600,
+            "continuity": 2.5235866932607487e-08,
+            "change": 2.965702236298884e-05,
+            "u_symmetry_rel": 1.0214281089911583,
+            "v_symmetry_rel": 0.9759947381425598,
+            "p_symmetry_rel": 1.0916373215621746,
+            "v_centreline_rel": 0.4879973690712799,
+            "symmetry_rel": 1.0916373215621746
+          },
+          {
+            "iteration": 4800,
+            "continuity": 1.4468385700888015e-08,
+            "change": 1.5844323470987076e-05,
+            "u_symmetry_rel": 1.021434629081076,
+            "v_symmetry_rel": 0.9745643200740832,
+            "p_symmetry_rel": 1.0916459372429688,
+            "v_centreline_rel": 0.4872821600370416,
+            "symmetry_rel": 1.0916459372429688
+          },
+          {
+            "iteration": 5000,
+            "continuity": 6.264684854206948e-09,
+            "change": 6.4781683274950375e-06,
+            "u_symmetry_rel": 1.0214384273610013,
+            "v_symmetry_rel": 0.9738981767247754,
+            "p_symmetry_rel": 1.0916390918859995,
+            "v_centreline_rel": 0.4869490883623877,
+            "symmetry_rel": 1.0916390918859995
+          },
+          {
+            "iteration": 5200,
+            "continuity": 1.7738794322319507e-09,
+            "change": 2.9956137234110614e-06,
+            "u_symmetry_rel": 1.0214405461738216,
+            "v_symmetry_rel": 0.9736831666494775,
+            "p_symmetry_rel": 1.0916300619650983,
+            "v_centreline_rel": 0.48684158332473876,
+            "symmetry_rel": 1.0916300619650983
+          },
+          {
+            "iteration": 5400,
+            "continuity": 3.389184237076459e-10,
+            "change": 1.2122951706383667e-06,
+            "u_symmetry_rel": 1.0214416558846038,
+            "v_symmetry_rel": 0.9736680519478469,
+            "p_symmetry_rel": 1.0916234158829068,
+            "v_centreline_rel": 0.48683402597392345,
+            "symmetry_rel": 1.0916234158829068
+          },
+          {
+            "iteration": 5450,
+            "continuity": 3.336070239501332e-10,
+            "change": 9.642774059792636e-07,
+            "u_symmetry_rel": 1.0214418305186752,
+            "v_symmetry_rel": 0.973677117178837,
+            "p_symmetry_rel": 1.091622224423773,
+            "v_centreline_rel": 0.4868385585894185,
+            "symmetry_rel": 1.091622224423773
+          }
+        ]
+      },
+      "metrics": {
+        "p_in": 0.7340257533179045,
+        "u_in": 1.0,
+        "p_out": 0.7015594086937885,
+        "u_out": 0.25000000030640124,
+        "k_total_head": 1.0024326890950312,
+        "k_static_recovery": -0.06493268924823203,
+        "k_identity_check": 1.0024326890950315,
+        "k_theory_borda_carnot": 0.5625,
+        "k_error_rel": 0.7821025583911667,
+        "reattachment_over_D": null,
+        "reattachment_over_D_upper": null,
+        "reattachment_over_D_lower": 11.570492564631373,
+        "continuity": 3.336070239501332e-10,
+        "iterations": 5450
+      },
+      "symmetry": {
+        "u_symmetry_rel": 1.0214418305186752,
+        "v_symmetry_rel": 0.973677117178837,
+        "p_symmetry_rel": 1.091622224423773,
+        "v_centreline_rel": 0.4868385585894185,
+        "symmetry_rel": 1.091622224423773
+      }
+    },
+    "centred": {
+      "tag": "expansion_centred_n010",
+      "geometry": "centred",
+      "level": 10,
+      "re_D": 100.0,
+      "inlet_window": [
+        1.5,
+        2.5
+      ],
+      "symmetric_geometry": true,
+      "wall_seconds": 48.0,
+      "convergence": {
+        "iterations": 6440,
+        "continuity": 9.713451848414323e-10,
+        "change": 9.813449213212644e-07,
+        "history": [
+          {
+            "iteration": 200,
+            "continuity": 1.917732226903784e-05,
+            "change": 0.05203916367710071,
+            "u_symmetry_rel": 0.07597303566239397,
+            "v_symmetry_rel": 0.42622908176059304,
+            "p_symmetry_rel": 0.2789480936594952,
+            "v_centreline_rel": 0.15719012977923683,
+            "symmetry_rel": 0.42622908176059304
+          },
+          {
+            "iteration": 400,
+            "continuity": 4.079322288018145e-06,
+            "change": 0.034280455895922435,
+            "u_symmetry_rel": 0.07622992190067829,
+            "v_symmetry_rel": 0.531639718051728,
+            "p_symmetry_rel": 0.20281162982544637,
+            "v_centreline_rel": 0.265819859025864,
+            "symmetry_rel": 0.531639718051728
+          },
+          {
+            "iteration": 600,
+            "continuity": 1.2404564094716398e-06,
+            "change": 0.020754417973292416,
+            "u_symmetry_rel": 0.08727662481332327,
+            "v_symmetry_rel": 0.7094097727711158,
+            "p_symmetry_rel": 0.1414861136233993,
+            "v_centreline_rel": 0.3547048863855579,
+            "symmetry_rel": 0.7094097727711158
+          },
+          {
+            "iteration": 800,
+            "continuity": 5.148537254545064e-06,
+            "change": 0.013333850065525954,
+            "u_symmetry_rel": 0.08730547302003777,
+            "v_symmetry_rel": 0.8594239553637355,
+            "p_symmetry_rel": 0.14337777653269035,
+            "v_centreline_rel": 0.42971197768186775,
+            "symmetry_rel": 0.8594239553637355
+          },
+          {
+            "iteration": 1000,
+            "continuity": 6.258721875307231e-06,
+            "change": 0.007619488784092132,
+            "u_symmetry_rel": 0.11344417834221687,
+            "v_symmetry_rel": 0.18620846461414775,
+            "p_symmetry_rel": 0.13503461585001036,
+            "v_centreline_rel": 0.09310423230707388,
+            "symmetry_rel": 0.18620846461414775
+          },
+          {
+            "iteration": 1200,
+            "continuity": 1.218847509218418e-06,
+            "change": 0.0014527647461777538,
+            "u_symmetry_rel": 0.14178234170195803,
+            "v_symmetry_rel": 0.20491229116903728,
+            "p_symmetry_rel": 0.12160504997829823,
+            "v_centreline_rel": 0.10245614558451864,
+            "symmetry_rel": 0.20491229116903728
+          },
+          {
+            "iteration": 1400,
+            "continuity": 3.7141674832366287e-07,
+            "change": 0.0010395957166430825,
+            "u_symmetry_rel": 0.17782091161763047,
+            "v_symmetry_rel": 0.25137397441040144,
+            "p_symmetry_rel": 0.11749104777945941,
+            "v_centreline_rel": 0.12568698720520072,
+            "symmetry_rel": 0.25137397441040144
+          },
+          {
+            "iteration": 1600,
+            "continuity": 2.9931371435250147e-07,
+            "change": 0.0012709553488918779,
+            "u_symmetry_rel": 0.22137788988107782,
+            "v_symmetry_rel": 0.29267617490157505,
+            "p_symmetry_rel": 0.12978584463501636,
+            "v_centreline_rel": 0.14633808745078752,
+            "symmetry_rel": 0.29267617490157505
+          },
+          {
+            "iteration": 1800,
+            "continuity": 5.062140530698298e-07,
+            "change": 0.0015283922401658767,
+            "u_symmetry_rel": 0.27206710761335673,
+            "v_symmetry_rel": 0.3576318492318615,
+            "p_symmetry_rel": 0.15554500751736944,
+            "v_centreline_rel": 0.17881592461593074,
+            "symmetry_rel": 0.3576318492318615
+          },
+          {
+            "iteration": 2000,
+            "continuity": 5.495678937871961e-07,
+            "change": 0.0017705037597989803,
+            "u_symmetry_rel": 0.32871459124332275,
+            "v_symmetry_rel": 0.4332513774027192,
+            "p_symmetry_rel": 0.1859330330169406,
+            "v_centreline_rel": 0.2166256887013596,
+            "symmetry_rel": 0.4332513774027192
+          },
+          {
+            "iteration": 2200,
+            "continuity": 5.262700551039723e-07,
+            "change": 0.0020140345993983066,
+            "u_symmetry_rel": 0.38993980296997277,
+            "v_symmetry_rel": 0.5144242861076083,
+            "p_symmetry_rel": 0.2158737776570972,
+            "v_centreline_rel": 0.25721214305380413,
+            "symmetry_rel": 0.5144242861076083
+          },
+          {
+            "iteration": 2400,
+            "continuity": 4.7093799724912816e-07,
+            "change": 0.0022645741140876474,
+            "u_symmetry_rel": 0.45465095259230215,
+            "v_symmetry_rel": 0.603003633956207,
+            "p_symmetry_rel": 0.23989782386955147,
+            "v_centreline_rel": 0.3015018169781035,
+            "symmetry_rel": 0.603003633956207
+          },
+          {
+            "iteration": 2600,
+            "continuity": 4.4333085404699504e-07,
+            "change": 0.002471817008476873,
+            "u_symmetry_rel": 0.5209613762373838,
+            "v_symmetry_rel": 0.7001261151442404,
+            "p_symmetry_rel": 0.26415031695824986,
+            "v_centreline_rel": 0.3500630575721202,
+            "symmetry_rel": 0.7001261151442404
+          },
+          {
+            "iteration": 2800,
+            "continuity": 4.4095398923395257e-07,
+            "change": 0.002613669738684876,
+            "u_symmetry_rel": 0.5855533439276666,
+            "v_symmetry_rel": 0.7976680660743372,
+            "p_symmetry_rel": 0.29507216546402304,
+            "v_centreline_rel": 0.3988340330371686,
+            "symmetry_rel": 0.7976680660743372
+          },
+          {
+            "iteration": 3000,
+            "continuity": 4.0790606733835666e-07,
+            "change": 0.002640607818556795,
+            "u_symmetry_rel": 0.6438167080377782,
+            "v_symmetry_rel": 0.8696618015504947,
+            "p_symmetry_rel": 0.3133098041965935,
+            "v_centreline_rel": 0.43483090077524733,
+            "symmetry_rel": 0.8696618015504947
+          },
+          {
+            "iteration": 3200,
+            "continuity": 4.319709679036915e-07,
+            "change": 0.002528302241289637,
+            "u_symmetry_rel": 0.6923354847677197,
+            "v_symmetry_rel": 0.9172148791103859,
+            "p_symmetry_rel": 0.3269702093186892,
+            "v_centreline_rel": 0.45860743955519295,
+            "symmetry_rel": 0.9172148791103859
+          },
+          {
+            "iteration": 3400,
+            "continuity": 5.929665112896186e-07,
+            "change": 0.0022856861372034243,
+            "u_symmetry_rel": 0.7296200835866554,
+            "v_symmetry_rel": 0.9328624741844949,
+            "p_symmetry_rel": 0.33709182667334914,
+            "v_centreline_rel": 0.46643123709224743,
+            "symmetry_rel": 0.9328624741844949
+          },
+          {
+            "iteration": 3600,
+            "continuity": 8.554471334163566e-07,
+            "change": 0.001991582891739563,
+            "u_symmetry_rel": 0.7559301809742902,
+            "v_symmetry_rel": 0.9149401422466067,
+            "p_symmetry_rel": 0.3533674874644937,
+            "v_centreline_rel": 0.45747007112330335,
+            "symmetry_rel": 0.9149401422466067
+          },
+          {
+            "iteration": 3800,
+            "continuity": 1.0464198099604388e-06,
+            "change": 0.0017025585520220599,
+            "u_symmetry_rel": 0.7746527130901417,
+            "v_symmetry_rel": 0.8941256400448171,
+            "p_symmetry_rel": 0.3671638969396311,
+            "v_centreline_rel": 0.44706282002240855,
+            "symmetry_rel": 0.8941256400448171
+          },
+          {
+            "iteration": 4000,
+            "continuity": 1.1038104802242946e-06,
+            "change": 0.0015838831529852437,
+            "u_symmetry_rel": 0.7867794035408553,
+            "v_symmetry_rel": 0.8652444272514024,
+            "p_symmetry_rel": 0.37689774297068096,
+            "v_centreline_rel": 0.4326222136257012,
+            "symmetry_rel": 0.8652444272514024
+          },
+          {
+            "iteration": 4200,
+            "continuity": 9.971038536587228e-07,
+            "change": 0.001313901847846466,
+            "u_symmetry_rel": 0.7936845155067931,
+            "v_symmetry_rel": 0.8347746001833735,
+            "p_symmetry_rel": 0.38320207804736683,
+            "v_centreline_rel": 0.41738730009168673,
+            "symmetry_rel": 0.8347746001833735
+          },
+          {
+            "iteration": 4400,
+            "continuity": 7.700289970128879e-07,
+            "change": 0.0009474775087852383,
+            "u_symmetry_rel": 0.7973664366936057,
+            "v_symmetry_rel": 0.8111795145133492,
+            "p_symmetry_rel": 0.386936578679109,
+            "v_centreline_rel": 0.4055897572566746,
+            "symmetry_rel": 0.8111795145133492
+          },
+          {
+            "iteration": 4600,
+            "continuity": 5.210876903721795e-07,
+            "change": 0.0006045206904094352,
+            "u_symmetry_rel": 0.7992065193374123,
+            "v_symmetry_rel": 0.8483286501454422,
+            "p_symmetry_rel": 0.3889631759750277,
+            "v_centreline_rel": 0.4241643250727211,
+            "symmetry_rel": 0.8483286501454422
+          },
+          {
+            "iteration": 4800,
+            "continuity": 3.123827059439005e-07,
+            "change": 0.0003478928503857781,
+            "u_symmetry_rel": 0.8000634873215526,
+            "v_symmetry_rel": 0.8864424180503522,
+            "p_symmetry_rel": 0.38998581693531065,
+            "v_centreline_rel": 0.4432212090251761,
+            "symmetry_rel": 0.8864424180503522
+          },
+          {
+            "iteration": 5000,
+            "continuity": 1.7168200670261355e-07,
+            "change": 0.0001846956407044742,
+            "u_symmetry_rel": 0.8004357657414338,
+            "v_symmetry_rel": 0.9077528225030719,
+            "p_symmetry_rel": 0.3904736024103965,
+            "v_centreline_rel": 0.45387641125153594,
+            "symmetry_rel": 0.9077528225030719
+          },
+          {
+            "iteration": 5200,
+            "continuity": 8.851341356825443e-08,
+            "change": 9.316828007265021e-05,
+            "u_symmetry_rel": 0.800588414813473,
+            "v_symmetry_rel": 0.9190235896975804,
+            "p_symmetry_rel": 0.39069846686735116,
+            "v_centreline_rel": 0.4595117948487902,
+            "symmetry_rel": 0.9190235896975804
+          },
+          {
+            "iteration": 5400,
+            "continuity": 4.3991800141498366e-08,
+            "change": 4.548517176929806e-05,
+            "u_symmetry_rel": 0.8006478961757567,
+            "v_symmetry_rel": 0.9247390885505599,
+            "p_symmetry_rel": 0.3908005753270959,
+            "v_centreline_rel": 0.46236954427527993,
+            "symmetry_rel": 0.9247390885505599
+          },
+          {
+            "iteration": 5600,
+            "continuity": 2.1354025309290592e-08,
+            "change": 2.1834700854282685e-05,
+            "u_symmetry_rel": 0.8006704498886318,
+            "v_symmetry_rel": 0.9275573477774354,
+            "p_symmetry_rel": 0.39084699253046484,
+            "v_centreline_rel": 0.4637786738887177,
+            "symmetry_rel": 0.9275573477774354
+          },
+          {
+            "iteration": 5800,
+            "continuity": 1.0264379790569933e-08,
+            "change": 1.0403907019659875e-05,
+            "u_symmetry_rel": 0.8006789981668561,
+            "v_symmetry_rel": 0.9289252629794339,
+            "p_symmetry_rel": 0.39086834034027745,
+            "v_centreline_rel": 0.46446263148971695,
+            "symmetry_rel": 0.9289252629794339
+          },
+          {
+            "iteration": 6000,
+            "continuity": 4.909365350011519e-09,
+            "change": 4.96016384773923e-06,
+            "u_symmetry_rel": 0.8006823655799507,
+            "v_symmetry_rel": 0.9295844710184797,
+            "p_symmetry_rel": 0.3908783246015359,
+            "v_centreline_rel": 0.46479223550923987,
+            "symmetry_rel": 0.9295844710184797
+          },
+          {
+            "iteration": 6200,
+            "continuity": 2.348900252253927e-09,
+            "change": 2.3703372340581896e-06,
+            "u_symmetry_rel": 0.8006837873778894,
+            "v_symmetry_rel": 0.9299012984853587,
+            "p_symmetry_rel": 0.39088307247663173,
+            "v_centreline_rel": 0.46495064924267937,
+            "symmetry_rel": 0.9299012984853587
+          },
+          {
+            "iteration": 6400,
+            "continuity": 1.124997098516517e-09,
+            "change": 1.1362925956617809e-06,
+            "u_symmetry_rel": 0.8006844350329971,
+            "v_symmetry_rel": 0.9300534790999888,
+            "p_symmetry_rel": 0.3908853621204054,
+            "v_centreline_rel": 0.4650267395499944,
+            "symmetry_rel": 0.9300534790999888
+          },
+          {
+            "iteration": 6440,
+            "continuity": 9.713451848414323e-10,
+            "change": 9.813449213212644e-07,
+            "u_symmetry_rel": 0.8006845166095657,
+            "v_symmetry_rel": 0.9300726762842798,
+            "p_symmetry_rel": 0.39088565323618824,
+            "v_centreline_rel": 0.4650363381421399,
+            "symmetry_rel": 0.9300726762842798
+          }
+        ]
+      },
+      "metrics": {
+        "p_in": 0.588662406541734,
+        "u_in": 1.0,
+        "p_out": 0.7268481911994753,
+        "u_out": 0.2499999998723343,
+        "k_total_head": 0.66112843074835,
+        "k_static_recovery": 0.2763715693154827,
+        "k_identity_check": 0.6611284307483501,
+        "k_theory_borda_carnot": 0.5625,
+        "k_error_rel": 0.17533943244151118,
+        "reattachment_over_D": 11.520855954039924,
+        "reattachment_over_D_upper": 11.520855954039924,
+        "reattachment_over_D_lower": 4.556515767989772,
+        "continuity": 9.713451848414323e-10,
+        "iterations": 6440
+      },
+      "symmetry": {
+        "u_symmetry_rel": 0.8006845166095657,
+        "v_symmetry_rel": 0.9300726762842798,
+        "p_symmetry_rel": 0.39088565323618824,
+        "v_centreline_rel": 0.4650363381421399,
+        "symmetry_rel": 0.9300726762842798
+      }
+    },
+    "centred_fine": {
+      "tag": "expansion_centred_n020",
+      "geometry": "centred",
+      "level": 20,
+      "re_D": 100.0,
+      "inlet_window": [
+        1.5,
+        2.5
+      ],
+      "symmetric_geometry": true,
+      "wall_seconds": 355.7,
+      "convergence": {
+        "iterations": 16120,
+        "continuity": 5.204308921205429e-10,
+        "change": 9.901942036316669e-07,
+        "history": [
+          {
+            "iteration": 200,
+            "continuity": 7.072589830050039e-06,
+            "change": 0.04097271694980806,
+            "u_symmetry_rel": 0.0534831463398837,
+            "v_symmetry_rel": 0.34914200501498704,
+            "p_symmetry_rel": 0.1622272402172706,
+            "v_centreline_rel": 0.04241859052180135,
+            "symmetry_rel": 0.34914200501498704
+          },
+          {
+            "iteration": 400,
+            "continuity": 1.5933359706091991e-06,
+            "change": 0.02687687947464179,
+            "u_symmetry_rel": 0.04593062592284866,
+            "v_symmetry_rel": 0.26275329104059225,
+            "p_symmetry_rel": 0.12675677648844497,
+            "v_centreline_rel": 0.07929463298742774,
+            "symmetry_rel": 0.26275329104059225
+          },
+          {
+            "iteration": 600,
+            "continuity": 5.709551878829347e-07,
+            "change": 0.021745993406819708,
+            "u_symmetry_rel": 0.03980076979784176,
+            "v_symmetry_rel": 0.2206145433450396,
+            "p_symmetry_rel": 0.09460702570909067,
+            "v_centreline_rel": 0.1025986343453158,
+            "symmetry_rel": 0.2206145433450396
+          },
+          {
+            "iteration": 800,
+            "continuity": 4.2324700695587e-07,
+            "change": 0.01724026048656957,
+            "u_symmetry_rel": 0.03796853361283809,
+            "v_symmetry_rel": 0.2597991461573789,
+            "p_symmetry_rel": 0.08648314466820643,
+            "v_centreline_rel": 0.12989957307868946,
+            "symmetry_rel": 0.2597991461573789
+          },
+          {
+            "iteration": 1000,
+            "continuity": 2.5088618889717294e-07,
+            "change": 0.013546784229166109,
+            "u_symmetry_rel": 0.03693265937897357,
+            "v_symmetry_rel": 0.32488690918426283,
+            "p_symmetry_rel": 0.08848232952855381,
+            "v_centreline_rel": 0.16244345459213141,
+            "symmetry_rel": 0.32488690918426283
+          },
+          {
+            "iteration": 1200,
+            "continuity": 1.5867773577281092e-07,
+            "change": 0.010778566722675853,
+            "u_symmetry_rel": 0.038348231415591294,
+            "v_symmetry_rel": 0.39190008216036465,
+            "p_symmetry_rel": 0.09034013546392004,
+            "v_centreline_rel": 0.19595004108018232,
+            "symmetry_rel": 0.39190008216036465
+          },
+          {
+            "iteration": 1400,
+            "continuity": 1.70246873829749e-07,
+            "change": 0.008649304098526045,
+            "u_symmetry_rel": 0.038357254023005105,
+            "v_symmetry_rel": 0.39524632819063094,
+            "p_symmetry_rel": 0.09197182739585243,
+            "v_centreline_rel": 0.19762316409531547,
+            "symmetry_rel": 0.39524632819063094
+          },
+          {
+            "iteration": 1600,
+            "continuity": 5.526203521198701e-07,
+            "change": 0.006996685619490073,
+            "u_symmetry_rel": 0.03677985286963545,
+            "v_symmetry_rel": 0.36300033605824306,
+            "p_symmetry_rel": 0.09343864752250443,
+            "v_centreline_rel": 0.18150016802912153,
+            "symmetry_rel": 0.36300033605824306
+          },
+          {
+            "iteration": 1800,
+            "continuity": 2.3785514487118724e-06,
+            "change": 0.005316576211951363,
+            "u_symmetry_rel": 0.036784706926273975,
+            "v_symmetry_rel": 0.30266004370312044,
+            "p_symmetry_rel": 0.09482331430562055,
+            "v_centreline_rel": 0.15133002185156022,
+            "symmetry_rel": 0.30266004370312044
+          },
+          {
+            "iteration": 2000,
+            "continuity": 1.8550629139209686e-06,
+            "change": 0.004084036012025116,
+            "u_symmetry_rel": 0.036792772099561055,
+            "v_symmetry_rel": 0.1610987744441175,
+            "p_symmetry_rel": 0.09592376665824397,
+            "v_centreline_rel": 0.05837848759242127,
+            "symmetry_rel": 0.1610987744441175
+          },
+          {
+            "iteration": 2200,
+            "continuity": 5.606251235024226e-07,
+            "change": 0.001236358642407509,
+            "u_symmetry_rel": 0.03861887082204085,
+            "v_symmetry_rel": 0.1303862243722646,
+            "p_symmetry_rel": 0.09657113467522081,
+            "v_centreline_rel": 0.0380028876905189,
+            "symmetry_rel": 0.1303862243722646
+          },
+          {
+            "iteration": 2400,
+            "continuity": 2.4459641115998076e-07,
+            "change": 0.0008922307292965458,
+            "u_symmetry_rel": 0.041811428017137386,
+            "v_symmetry_rel": 0.12965426386971057,
+            "p_symmetry_rel": 0.09701447304828992,
+            "v_centreline_rel": 0.036345943716412824,
+            "symmetry_rel": 0.12965426386971057
+          },
+          {
+            "iteration": 2600,
+            "continuity": 2.7191799991939207e-07,
+            "change": 0.0006073020148605335,
+            "u_symmetry_rel": 0.0443731915137483,
+            "v_symmetry_rel": 0.13674043873362093,
+            "p_symmetry_rel": 0.09752643955163952,
+            "v_centreline_rel": 0.04308654393656291,
+            "symmetry_rel": 0.13674043873362093
+          },
+          {
+            "iteration": 2800,
+            "continuity": 1.0378387104093478e-07,
+            "change": 0.00027982712873357227,
+            "u_symmetry_rel": 0.04777339445919482,
+            "v_symmetry_rel": 0.14061079545216415,
+            "p_symmetry_rel": 0.09820674290157304,
+            "v_centreline_rel": 0.04240110914508815,
+            "symmetry_rel": 0.14061079545216415
+          },
+          {
+            "iteration": 3000,
+            "continuity": 3.743780714534099e-08,
+            "change": 0.00014180246382544193,
+            "u_symmetry_rel": 0.05223330601693721,
+            "v_symmetry_rel": 0.14085050839394372,
+            "p_symmetry_rel": 0.09903633148756255,
+            "v_centreline_rel": 0.03906607207244109,
+            "symmetry_rel": 0.14085050839394372
+          },
+          {
+            "iteration": 3200,
+            "continuity": 2.8180174817293065e-08,
+            "change": 0.0001304543737131736,
+            "u_symmetry_rel": 0.05724488852837506,
+            "v_symmetry_rel": 0.13984479054126353,
+            "p_symmetry_rel": 0.09997131897409242,
+            "v_centreline_rel": 0.041252201429047106,
+            "symmetry_rel": 0.13984479054126353
+          },
+          {
+            "iteration": 3400,
+            "continuity": 2.0489911370413002e-08,
+            "change": 0.00013734769156442672,
+            "u_symmetry_rel": 0.0625532115092895,
+            "v_symmetry_rel": 0.13951197863058526,
+            "p_symmetry_rel": 0.10099366950468679,
+            "v_centreline_rel": 0.04650047466414259,
+            "symmetry_rel": 0.13951197863058526
+          },
+          {
+            "iteration": 3600,
+            "continuity": 2.584981864533906e-08,
+            "change": 0.000151925145038867,
+            "u_symmetry_rel": 0.06827954652017093,
+            "v_symmetry_rel": 0.1397110944004234,
+            "p_symmetry_rel": 0.10211313288162177,
+            "v_centreline_rel": 0.051505915805690985,
+            "symmetry_rel": 0.1397110944004234
+          },
+          {
+            "iteration": 3800,
+            "continuity": 2.2969143267936865e-08,
+            "change": 0.0001697088036701211,
+            "u_symmetry_rel": 0.07462911719263293,
+            "v_symmetry_rel": 0.1399610412195958,
+            "p_symmetry_rel": 0.10334957595569476,
+            "v_centreline_rel": 0.055819680315339314,
+            "symmetry_rel": 0.1399610412195958
+          },
+          {
+            "iteration": 4000,
+            "continuity": 1.8268159273499007e-08,
+            "change": 0.00018877925298937948,
+            "u_symmetry_rel": 0.08172260499279715,
+            "v_symmetry_rel": 0.14009494213706297,
+            "p_symmetry_rel": 0.1047210228087902,
+            "v_centreline_rel": 0.06020555511998034,
+            "symmetry_rel": 0.14009494213706297
+          },
+          {
+            "iteration": 4200,
+            "continuity": 1.8304474889984534e-08,
+            "change": 0.0002086072533922234,
+            "u_symmetry_rel": 0.08959169904081504,
+            "v_symmetry_rel": 0.14018732305132403,
+            "p_symmetry_rel": 0.1062411885316093,
+            "v_centreline_rel": 0.06539310833756383,
+            "symmetry_rel": 0.14018732305132403
+          },
+          {
+            "iteration": 4400,
+            "continuity": 2.274362942977815e-08,
+            "change": 0.00022937173091763796,
+            "u_symmetry_rel": 0.09826117654038569,
+            "v_symmetry_rel": 0.143054656929332,
+            "p_symmetry_rel": 0.10792300019367325,
+            "v_centreline_rel": 0.071527328464666,
+            "symmetry_rel": 0.143054656929332
+          },
+          {
+            "iteration": 4600,
+            "continuity": 2.7490750434401546e-08,
+            "change": 0.0002527752612505596,
+            "u_symmetry_rel": 0.1077947827792094,
+            "v_symmetry_rel": 0.15680790796049812,
+            "p_symmetry_rel": 0.10978186849265233,
+            "v_centreline_rel": 0.07840395398024906,
+            "symmetry_rel": 0.15680790796049812
+          },
+          {
+            "iteration": 4800,
+            "continuity": 3.078560029123878e-08,
+            "change": 0.00027767422752839055,
+            "u_symmetry_rel": 0.11828655573290042,
+            "v_symmetry_rel": 0.1717305694224245,
+            "p_symmetry_rel": 0.11183576792405865,
+            "v_centreline_rel": 0.08586528471121226,
+            "symmetry_rel": 0.1717305694224245
+          },
+          {
+            "iteration": 5000,
+            "continuity": 3.328972932870011e-08,
+            "change": 0.00030619652831143096,
+            "u_symmetry_rel": 0.12981168730175735,
+            "v_symmetry_rel": 0.18800464322206392,
+            "p_symmetry_rel": 0.11410523268775853,
+            "v_centreline_rel": 0.09400232161103196,
+            "symmetry_rel": 0.18800464322206392
+          },
+          {
+            "iteration": 5200,
+            "continuity": 3.62423678096371e-08,
+            "change": 0.0003373498408437703,
+            "u_symmetry_rel": 0.1424601070931204,
+            "v_symmetry_rel": 0.20582891859947774,
+            "p_symmetry_rel": 0.11661107562416502,
+            "v_centreline_rel": 0.10291445929973887,
+            "symmetry_rel": 0.20582891859947774
+          },
+          {
+            "iteration": 5400,
+            "continuity": 3.965205508382752e-08,
+            "change": 0.0003710159223205278,
+            "u_symmetry_rel": 0.15630580172183228,
+            "v_symmetry_rel": 0.2254603582608013,
+            "p_symmetry_rel": 0.11937582117750645,
+            "v_centreline_rel": 0.11273017913040065,
+            "symmetry_rel": 0.2254603582608013
+          },
+          {
+            "iteration": 5600,
+            "continuity": 4.378440480040386e-08,
+            "change": 0.0004077243720398416,
+            "u_symmetry_rel": 0.17142819105229423,
+            "v_symmetry_rel": 0.24695905026248555,
+            "p_symmetry_rel": 0.12242239605144763,
+            "v_centreline_rel": 0.12347952513124277,
+            "symmetry_rel": 0.24695905026248555
+          },
+          {
+            "iteration": 5800,
+            "continuity": 4.80201622715616e-08,
+            "change": 0.000447848092519465,
+            "u_symmetry_rel": 0.1879054148544002,
+            "v_symmetry_rel": 0.27052786245601546,
+            "p_symmetry_rel": 0.12577354667251736,
+            "v_centreline_rel": 0.13526393122800773,
+            "symmetry_rel": 0.27052786245601546
+          },
+          {
+            "iteration": 6000,
+            "continuity": 5.260625361574198e-08,
+            "change": 0.0004907960611841844,
+            "u_symmetry_rel": 0.20580395595096057,
+            "v_symmetry_rel": 0.29626344645220487,
+            "p_symmetry_rel": 0.12945265543500634,
+            "v_centreline_rel": 0.14813172322610244,
+            "symmetry_rel": 0.29626344645220487
+          },
+          {
+            "iteration": 6200,
+            "continuity": 5.729821463129614e-08,
+            "change": 0.0005366094730704929,
+            "u_symmetry_rel": 0.2251902049591442,
+            "v_symmetry_rel": 0.32432962938880533,
+            "p_symmetry_rel": 0.1334804939054188,
+            "v_centreline_rel": 0.16216481469440266,
+            "symmetry_rel": 0.32432962938880533
+          },
+          {
+            "iteration": 6400,
+            "continuity": 6.217165367388713e-08,
+            "change": 0.0005862998000104591,
+            "u_symmetry_rel": 0.24611980046109733,
+            "v_symmetry_rel": 0.3548579225275502,
+            "p_symmetry_rel": 0.1378697887974192,
+            "v_centreline_rel": 0.1774289612637751,
+            "symmetry_rel": 0.3548579225275502
+          },
+          {
+            "iteration": 6600,
+            "continuity": 6.720771481558748e-08,
+            "change": 0.0006403651633845042,
+            "u_symmetry_rel": 0.26869024080189385,
+            "v_symmetry_rel": 0.38801050221867495,
+            "p_symmetry_rel": 0.14263368035266843,
+            "v_centreline_rel": 0.19400525110933747,
+            "symmetry_rel": 0.38801050221867495
+          },
+          {
+            "iteration": 6800,
+            "continuity": 7.242343984663097e-08,
+            "change": 0.0006951632237612304,
+            "u_symmetry_rel": 0.2929562784552603,
+            "v_symmetry_rel": 0.4239685165849521,
+            "p_symmetry_rel": 0.14779628939294048,
+            "v_centreline_rel": 0.21198425829247605,
+            "symmetry_rel": 0.4239685165849521
+          },
+          {
+            "iteration": 7000,
+            "continuity": 7.807231802438004e-08,
+            "change": 0.0007505591503748632,
+            "u_symmetry_rel": 0.3187309530840323,
+            "v_symmetry_rel": 0.46326853552267094,
+            "p_symmetry_rel": 0.15338122619737415,
+            "v_centreline_rel": 0.23163426776133547,
+            "symmetry_rel": 0.46326853552267094
+          },
+          {
+            "iteration": 7200,
+            "continuity": 8.398320458101634e-08,
+            "change": 0.0008055039557360866,
+            "u_symmetry_rel": 0.34591944707576283,
+            "v_symmetry_rel": 0.5054115680370298,
+            "p_symmetry_rel": 0.1594172921707904,
+            "v_centreline_rel": 0.2527057840185149,
+            "symmetry_rel": 0.5054115680370298
+          },
+          {
+            "iteration": 7400,
+            "continuity": 8.799343924825124e-08,
+            "change": 0.000862912500324553,
+            "u_symmetry_rel": 0.37441109573588,
+            "v_symmetry_rel": 0.5490273673649803,
+            "p_symmetry_rel": 0.1659263615017622,
+            "v_centreline_rel": 0.27451368368249013,
+            "symmetry_rel": 0.5490273673649803
+          },
+          {
+            "iteration": 7600,
+            "continuity": 8.999528744099705e-08,
+            "change": 0.0009199221194141072,
+            "u_symmetry_rel": 0.40406061557761025,
+            "v_symmetry_rel": 0.59369293704444,
+            "p_symmetry_rel": 0.17292620810355508,
+            "v_centreline_rel": 0.29684646852222,
+            "symmetry_rel": 0.59369293704444
+          },
+          {
+            "iteration": 7800,
+            "continuity": 9.072677923386207e-08,
+            "change": 0.0009785675572053232,
+            "u_symmetry_rel": 0.4347059298478898,
+            "v_symmetry_rel": 0.6392502789140379,
+            "p_symmetry_rel": 0.18042587565038556,
+            "v_centreline_rel": 0.3196251394570189,
+            "symmetry_rel": 0.6392502789140379
+          },
+          {
+            "iteration": 8000,
+            "continuity": 9.119356605827907e-08,
+            "change": 0.001034902511927227,
+            "u_symmetry_rel": 0.4661421280653674,
+            "v_symmetry_rel": 0.6856493649970031,
+            "p_symmetry_rel": 0.18842494374034033,
+            "v_centreline_rel": 0.34282468249850157,
+            "symmetry_rel": 0.6856493649970031
+          },
+          {
+            "iteration": 8200,
+            "continuity": 9.159448788320645e-08,
+            "change": 0.001090818132719995,
+            "u_symmetry_rel": 0.49812113561337706,
+            "v_symmetry_rel": 0.7328157433692951,
+            "p_symmetry_rel": 0.19588241415811514,
+            "v_centreline_rel": 0.36640787168464756,
+            "symmetry_rel": 0.7328157433692951
+          },
+          {
+            "iteration": 8400,
+            "continuity": 9.16382815345832e-08,
+            "change": 0.001140622456228535,
+            "u_symmetry_rel": 0.5302642263190886,
+            "v_symmetry_rel": 0.7805151397774257,
+            "p_symmetry_rel": 0.2030397836087615,
+            "v_centreline_rel": 0.39025756988871285,
+            "symmetry_rel": 0.7805151397774257
+          },
+          {
+            "iteration": 8600,
+            "continuity": 9.069871275687669e-08,
+            "change": 0.0011856610868278827,
+            "u_symmetry_rel": 0.5620931080210841,
+            "v_symmetry_rel": 0.8280877201563984,
+            "p_symmetry_rel": 0.21040002769091623,
+            "v_centreline_rel": 0.4140438600781992,
+            "symmetry_rel": 0.8280877201563984
+          },
+          {
+            "iteration": 8800,
+            "continuity": 8.807452507656995e-08,
+            "change": 0.0012222406253179496,
+            "u_symmetry_rel": 0.5931597625361713,
+            "v_symmetry_rel": 0.8745710235355646,
+            "p_symmetry_rel": 0.21789973217164801,
+            "v_centreline_rel": 0.4372855117677823,
+            "symmetry_rel": 0.8745710235355646
+          },
+          {
+            "iteration": 9000,
+            "continuity": 8.323500392127658e-08,
+            "change": 0.0012473027761307764,
+            "u_symmetry_rel": 0.6230085931642254,
+            "v_symmetry_rel": 0.9190140813556816,
+            "p_symmetry_rel": 0.22546509941782866,
+            "v_centreline_rel": 0.4595070406778408,
+            "symmetry_rel": 0.9190140813556816
+          },
+          {
+            "iteration": 9200,
+            "continuity": 7.650030127632265e-08,
+            "change": 0.0012624865869646507,
+            "u_symmetry_rel": 0.6516073341564823,
+            "v_symmetry_rel": 0.960154300782628,
+            "p_symmetry_rel": 0.2330051890423591,
+            "v_centreline_rel": 0.480077150391314,
+            "symmetry_rel": 0.960154300782628
+          },
+          {
+            "iteration": 9400,
+            "continuity": 6.735242430021705e-08,
+            "change": 0.0012610721020701599,
+            "u_symmetry_rel": 0.6785659874244919,
+            "v_symmetry_rel": 0.9967509151443825,
+            "p_symmetry_rel": 0.24042896274416795,
+            "v_centreline_rel": 0.49837545757219126,
+            "symmetry_rel": 0.9967509151443825
+          },
+          {
+            "iteration": 9600,
+            "continuity": 7.520611545048768e-08,
+            "change": 0.0012454503939539063,
+            "u_symmetry_rel": 0.7031847364377394,
+            "v_symmetry_rel": 1.028076011033123,
+            "p_symmetry_rel": 0.2476367263016853,
+            "v_centreline_rel": 0.5140380055165615,
+            "symmetry_rel": 1.028076011033123
+          },
+          {
+            "iteration": 9800,
+            "continuity": 9.23673512440268e-08,
+            "change": 0.0012116321019642329,
+            "u_symmetry_rel": 0.7251963111677672,
+            "v_symmetry_rel": 1.053101916474889,
+            "p_symmetry_rel": 0.2545314537047676,
+            "v_centreline_rel": 0.5265509582374445,
+            "symmetry_rel": 1.053101916474889
+          },
+          {
+            "iteration": 10000,
+            "continuity": 1.135328028048499e-07,
+            "change": 0.0011642915322981895,
+            "u_symmetry_rel": 0.7444458386457247,
+            "v_symmetry_rel": 1.071424728218754,
+            "p_symmetry_rel": 0.26101800225872057,
+            "v_centreline_rel": 0.535712364109377,
+            "symmetry_rel": 1.071424728218754
+          },
+          {
+            "iteration": 10200,
+            "continuity": 1.42287335664498e-07,
+            "change": 0.0011027782986494095,
+            "u_symmetry_rel": 0.7610749209888643,
+            "v_symmetry_rel": 1.0824553852925396,
+            "p_symmetry_rel": 0.2670167470726796,
+            "v_centreline_rel": 0.5412276926462698,
+            "symmetry_rel": 1.0824553852925396
+          },
+          {
+            "iteration": 10400,
+            "continuity": 1.703171019114269e-07,
+            "change": 0.0010295310008642256,
+            "u_symmetry_rel": 0.7757198919520983,
+            "v_symmetry_rel": 1.086655552252745,
+            "p_symmetry_rel": 0.2724633936204766,
+            "v_centreline_rel": 0.5433277761263725,
+            "symmetry_rel": 1.086655552252745
+          },
+          {
+            "iteration": 10600,
+            "continuity": 1.9584894877866044e-07,
+            "change": 0.0009539100147564206,
+            "u_symmetry_rel": 0.7877395847256583,
+            "v_symmetry_rel": 1.0858600376358631,
+            "p_symmetry_rel": 0.2773148238521405,
+            "v_centreline_rel": 0.5429300188179316,
+            "symmetry_rel": 1.0858600376358631
+          },
+          {
+            "iteration": 10800,
+            "continuity": 2.164903800873255e-07,
+            "change": 0.0008775482274839264,
+            "u_symmetry_rel": 0.7973742267310737,
+            "v_symmetry_rel": 1.0801765164450183,
+            "p_symmetry_rel": 0.28154957507387274,
+            "v_centreline_rel": 0.5400882582225092,
+            "symmetry_rel": 1.0801765164450183
+          },
+          {
+            "iteration": 11000,
+            "continuity": 2.3005038084569773e-07,
+            "change": 0.000797657166743071,
+            "u_symmetry_rel": 0.8049252139046552,
+            "v_symmetry_rel": 1.0718672736905681,
+            "p_symmetry_rel": 0.2851692993326971,
+            "v_centreline_rel": 0.5359336368452841,
+            "symmetry_rel": 1.0718672736905681
+          },
+          {
+            "iteration": 11200,
+            "continuity": 2.3557437449844365e-07,
+            "change": 0.000713707398768082,
+            "u_symmetry_rel": 0.8107073788813162,
+            "v_symmetry_rel": 1.0640415987670877,
+            "p_symmetry_rel": 0.2881974717186286,
+            "v_centreline_rel": 0.5320207993835439,
+            "symmetry_rel": 1.0640415987670877
+          },
+          {
+            "iteration": 11400,
+            "continuity": 2.32106481515954e-07,
+            "change": 0.0006252554819911604,
+            "u_symmetry_rel": 0.8152836766028055,
+            "v_symmetry_rel": 1.0570601560040933,
+            "p_symmetry_rel": 0.29067555620357294,
+            "v_centreline_rel": 0.5285300780020467,
+            "symmetry_rel": 1.0570601560040933
+          },
+          {
+            "iteration": 11600,
+            "continuity": 2.1976832192678424e-07,
+            "change": 0.0005358419142151294,
+            "u_symmetry_rel": 0.8188690504564395,
+            "v_symmetry_rel": 1.0520997411783766,
+            "p_symmetry_rel": 0.29266001358760046,
+            "v_centreline_rel": 0.5260498705891883,
+            "symmetry_rel": 1.0520997411783766
+          },
+          {
+            "iteration": 11800,
+            "continuity": 2.0062764099907423e-07,
+            "change": 0.0004595071990627225,
+            "u_symmetry_rel": 0.8214781121663457,
+            "v_symmetry_rel": 1.0498366400541153,
+            "p_symmetry_rel": 0.2942156041236148,
+            "v_centreline_rel": 0.5249183200270576,
+            "symmetry_rel": 1.0498366400541153
+          },
+          {
+            "iteration": 12000,
+            "continuity": 1.7647500372695076e-07,
+            "change": 0.000388390714283246,
+            "u_symmetry_rel": 0.823343703257646,
+            "v_symmetry_rel": 1.0501365551416408,
+            "p_symmetry_rel": 0.295411008257977,
+            "v_centreline_rel": 0.5250682775708204,
+            "symmetry_rel": 1.0501365551416408
+          },
+          {
+            "iteration": 12200,
+            "continuity": 1.497555468091055e-07,
+            "change": 0.000317811619607436,
+            "u_symmetry_rel": 0.8246557681423695,
+            "v_symmetry_rel": 1.0521049363164316,
+            "p_symmetry_rel": 0.29631316279834513,
+            "v_centreline_rel": 0.5260524681582158,
+            "symmetry_rel": 1.0521049363164316
+          },
+          {
+            "iteration": 12400,
+            "continuity": 1.2308411706377694e-07,
+            "change": 0.0002525703742338875,
+            "u_symmetry_rel": 0.825563675331667,
+            "v_symmetry_rel": 1.0550982204502517,
+            "p_symmetry_rel": 0.29698361081367847,
+            "v_centreline_rel": 0.5275491102251259,
+            "symmetry_rel": 1.0550982204502517
+          },
+          {
+            "iteration": 12600,
+            "continuity": 9.829963190790625e-08,
+            "change": 0.00019563350572181226,
+            "u_symmetry_rel": 0.8261828398272947,
+            "v_symmetry_rel": 1.0587912223627418,
+            "p_symmetry_rel": 0.29747584440990293,
+            "v_centreline_rel": 0.5293956111813709,
+            "symmetry_rel": 1.0587912223627418
+          },
+          {
+            "iteration": 12800,
+            "continuity": 7.652559230741929e-08,
+            "change": 0.0001483480774760737,
+            "u_symmetry_rel": 0.8265992415902903,
+            "v_symmetry_rel": 1.062609577102726,
+            "p_symmetry_rel": 0.2978341193072864,
+            "v_centreline_rel": 0.531304788551363,
+            "symmetry_rel": 1.062609577102726
+          },
+          {
+            "iteration": 13000,
+            "continuity": 5.841812773940084e-08,
+            "change": 0.00011067596381131306,
+            "u_symmetry_rel": 0.8268815940984212,
+            "v_symmetry_rel": 1.0662562796454416,
+            "p_symmetry_rel": 0.2980935338641869,
+            "v_centreline_rel": 0.5331281398227208,
+            "symmetry_rel": 1.0662562796454416
+          },
+          {
+            "iteration": 13200,
+            "continuity": 4.38685686276921e-08,
+            "change": 8.154496193450711e-05,
+            "u_symmetry_rel": 0.8270688724367462,
+            "v_symmetry_rel": 1.0694821875260472,
+            "p_symmetry_rel": 0.2982810002993776,
+            "v_centreline_rel": 0.5347410937630236,
+            "symmetry_rel": 1.0694821875260472
+          },
+          {
+            "iteration": 13400,
+            "continuity": 3.258681854846797e-08,
+            "change": 6.031312272924971e-05,
+            "u_symmetry_rel": 0.8271923220924183,
+            "v_symmetry_rel": 1.0720966216093164,
+            "p_symmetry_rel": 0.29841657212702943,
+            "v_centreline_rel": 0.5360483108046582,
+            "symmetry_rel": 1.0720966216093164
+          },
+          {
+            "iteration": 13600,
+            "continuity": 2.404567233803452e-08,
+            "change": 4.4924429109249875e-05,
+            "u_symmetry_rel": 0.8272737866176998,
+            "v_symmetry_rel": 1.074296061467527,
+            "p_symmetry_rel": 0.29851486723074067,
+            "v_centreline_rel": 0.5371480307337635,
+            "symmetry_rel": 1.074296061467527
+          },
+          {
+            "iteration": 13800,
+            "continuity": 1.7688840449358624e-08,
+            "change": 3.331960115193766e-05,
+            "u_symmetry_rel": 0.8273278847248242,
+            "v_symmetry_rel": 1.0759286390985645,
+            "p_symmetry_rel": 0.29858638805900606,
+            "v_centreline_rel": 0.5379643195492823,
+            "symmetry_rel": 1.0759286390985645
+          },
+          {
+            "iteration": 14000,
+            "continuity": 1.3006420640482817e-08,
+            "change": 2.4777298782252544e-05,
+            "u_symmetry_rel": 0.8273642212845294,
+            "v_symmetry_rel": 1.077272203373782,
+            "p_symmetry_rel": 0.29863861918337287,
+            "v_centreline_rel": 0.538636101686891,
+            "symmetry_rel": 1.077272203373782
+          },
+          {
+            "iteration": 14200,
+            "continuity": 9.575252548482942e-09,
+            "change": 1.836107735064818e-05,
+            "u_symmetry_rel": 0.8273890114804477,
+            "v_symmetry_rel": 1.0783167794585093,
+            "p_symmetry_rel": 0.2986769021785162,
+            "v_centreline_rel": 0.5391583897292547,
+            "symmetry_rel": 1.0783167794585093
+          },
+          {
+            "iteration": 14400,
+            "continuity": 7.056283776740464e-09,
+            "change": 1.3537386663931006e-05,
+            "u_symmetry_rel": 0.8274062188850526,
+            "v_symmetry_rel": 1.0790926191815382,
+            "p_symmetry_rel": 0.2987050439356813,
+            "v_centreline_rel": 0.5395463095907691,
+            "symmetry_rel": 1.0790926191815382
+          },
+          {
+            "iteration": 14600,
+            "continuity": 5.207187083594838e-09,
+            "change": 9.960854022217358e-06,
+            "u_symmetry_rel": 0.8274183455802929,
+            "v_symmetry_rel": 1.0796688065654807,
+            "p_symmetry_rel": 0.2987257788846391,
+            "v_centreline_rel": 0.5398344032827403,
+            "symmetry_rel": 1.0796688065654807
+          },
+          {
+            "iteration": 14800,
+            "continuity": 3.845912575927736e-09,
+            "change": 7.341305330144099e-06,
+            "u_symmetry_rel": 0.827427033121925,
+            "v_symmetry_rel": 1.0800964390273329,
+            "p_symmetry_rel": 0.29874108256498755,
+            "v_centreline_rel": 0.5400482195136664,
+            "symmetry_rel": 1.0800964390273329
+          },
+          {
+            "iteration": 15000,
+            "continuity": 2.841953813286554e-09,
+            "change": 5.420936277922284e-06,
+            "u_symmetry_rel": 0.8274333403904917,
+            "v_symmetry_rel": 1.0804135380795803,
+            "p_symmetry_rel": 0.29875239098683354,
+            "v_centreline_rel": 0.5402067690397901,
+            "symmetry_rel": 1.0804135380795803
+          },
+          {
+            "iteration": 15200,
+            "continuity": 2.1000501539028375e-09,
+            "change": 4.0019378884093015e-06,
+            "u_symmetry_rel": 0.8274379609106081,
+            "v_symmetry_rel": 1.0806484069438829,
+            "p_symmetry_rel": 0.2987607539231781,
+            "v_centreline_rel": 0.5403242034719414,
+            "symmetry_rel": 1.0806484069438829
+          },
+          {
+            "iteration": 15400,
+            "continuity": 1.5510963138898326e-09,
+            "change": 2.953676087769086e-06,
+            "u_symmetry_rel": 0.8274413664979103,
+            "v_symmetry_rel": 1.080822171518522,
+            "p_symmetry_rel": 0.2987669420323783,
+            "v_centreline_rel": 0.540411085759261,
+            "symmetry_rel": 1.080822171518522
+          },
+          {
+            "iteration": 15600,
+            "continuity": 1.1451900254369311e-09,
+            "change": 2.1797746853624567e-06,
+            "u_symmetry_rel": 0.8274438870373995,
+            "v_symmetry_rel": 1.0809506363219508,
+            "p_symmetry_rel": 0.2987715228184782,
+            "v_centreline_rel": 0.5404753181609754,
+            "symmetry_rel": 1.0809506363219508
+          },
+          {
+            "iteration": 15800,
+            "continuity": 8.454079006401001e-10,
+            "change": 1.6088075798226242e-06,
+            "u_symmetry_rel": 0.8274457576340597,
+            "v_symmetry_rel": 1.081045584055318,
+            "p_symmetry_rel": 0.29877491490740193,
+            "v_centreline_rel": 0.540522792027659,
+            "symmetry_rel": 1.081045584055318
+          },
+          {
+            "iteration": 16000,
+            "continuity": 6.242098324229887e-10,
+            "change": 1.1877214845523731e-06,
+            "u_symmetry_rel": 0.827447148265144,
+            "v_symmetry_rel": 1.081115762765733,
+            "p_symmetry_rel": 0.2987774273966504,
+            "v_centreline_rel": 0.5405578813828665,
+            "symmetry_rel": 1.081115762765733
+          },
+          {
+            "iteration": 16120,
+            "continuity": 5.204308921205429e-10,
+            "change": 9.901942036316669e-07,
+            "u_symmetry_rel": 0.8274478054187488,
+            "v_symmetry_rel": 1.0811487500229304,
+            "p_symmetry_rel": 0.29877861037403186,
+            "v_centreline_rel": 0.5405743750114652,
+            "symmetry_rel": 1.0811487500229304
+          }
+        ]
+      },
+      "metrics": {
+        "p_in": 0.7239337540213256,
+        "u_in": 1.0,
+        "p_out": 0.8486414700514535,
+        "u_out": 0.24999999993290292,
+        "k_total_head": 0.6880845679732925,
+        "k_static_recovery": 0.24941543206025574,
+        "k_identity_check": 0.6880845679732928,
+        "k_theory_borda_carnot": 0.5625,
+        "k_error_rel": 0.2232614541747423,
+        "reattachment_over_D": 11.525299971545996,
+        "reattachment_over_D_upper": 11.525299971545996,
+        "reattachment_over_D_lower": 4.914794856277728,
+        "continuity": 5.204308921205429e-10,
+        "iterations": 16120
+      },
+      "symmetry": {
+        "u_symmetry_rel": 0.8274478054187488,
+        "v_symmetry_rel": 1.0811487500229304,
+        "p_symmetry_rel": 0.29877861037403186,
+        "v_centreline_rel": 0.5405743750114652,
+        "symmetry_rel": 1.0811487500229304
+      }
+    }
+  },
+  "re_sweep_centred": {
+    "5": {
+      "tag": "expansion_centred_n010",
+      "geometry": "centred",
+      "level": 10,
+      "re_D": 5.0,
+      "inlet_window": [
+        1.5,
+        2.5
+      ],
+      "symmetric_geometry": true,
+      "wall_seconds": 4.0,
+      "convergence": {
+        "iterations": 570,
+        "continuity": 6.710006787940918e-11,
+        "change": 8.927631567900995e-07,
+        "history": [
+          {
+            "iteration": 200,
+            "continuity": 1.0814431976972363e-07,
+            "change": 0.000689921060982035,
+            "u_symmetry_rel": 0.006553988540459938,
+            "v_symmetry_rel": 0.058188104158990145,
+            "p_symmetry_rel": 0.03876958095318375,
+            "v_centreline_rel": 0.01563252575857536,
+            "symmetry_rel": 0.058188104158990145
+          },
+          {
+            "iteration": 400,
+            "continuity": 1.6304313120961422e-09,
+            "change": 9.94104910034821e-06,
+            "u_symmetry_rel": 0.006664698695434405,
+            "v_symmetry_rel": 0.058178738421154376,
+            "p_symmetry_rel": 0.038683177748973424,
+            "v_centreline_rel": 0.01566436594214477,
+            "symmetry_rel": 0.058178738421154376
+          },
+          {
+            "iteration": 570,
+            "continuity": 6.710006787940918e-11,
+            "change": 8.927631567900995e-07,
+            "u_symmetry_rel": 0.006673397200088511,
+            "v_symmetry_rel": 0.058178692747717115,
+            "p_symmetry_rel": 0.03868219716586927,
+            "v_centreline_rel": 0.01566864298304735,
+            "symmetry_rel": 0.058178692747717115
+          }
+        ]
+      },
+      "metrics": {
+        "p_in": 3.9752627732136205,
+        "u_in": 1.0,
+        "p_out": 3.3306899656424327,
+        "u_out": 0.2500000000300494,
+        "k_total_head": 2.2266456151273504,
+        "k_static_recovery": -1.2891456151423757,
+        "k_identity_check": 2.2266456151273513,
+        "k_theory_borda_carnot": 0.5625,
+        "k_error_rel": 2.958481093559734,
+        "reattachment_over_D": 1.2667086846158164,
+        "reattachment_over_D_upper": 1.2667086846158164,
+        "reattachment_over_D_lower": 1.2625856393585329,
+        "continuity": 6.710006787940918e-11,
+        "iterations": 570
+      },
+      "symmetry": {
+        "u_symmetry_rel": 0.006673397200088511,
+        "v_symmetry_rel": 0.058178692747717115,
+        "p_symmetry_rel": 0.03868219716586927,
+        "v_centreline_rel": 0.01566864298304735,
+        "symmetry_rel": 0.058178692747717115
+      }
+    },
+    "20": {
+      "tag": "expansion_centred_n010",
+      "geometry": "centred",
+      "level": 10,
+      "re_D": 20.0,
+      "inlet_window": [
+        1.5,
+        2.5
+      ],
+      "symmetric_geometry": true,
+      "wall_seconds": 9.3,
+      "convergence": {
+        "iterations": 1300,
+        "continuity": 7.946094886680105e-10,
+        "change": 9.033420257653635e-07,
+        "history": [
+          {
+            "iteration": 200,
+            "continuity": 1.0440579940764047e-06,
+            "change": 0.010831703705043216,
+            "u_symmetry_rel": 0.019737662064309942,
+            "v_symmetry_rel": 0.16728149844302703,
+            "p_symmetry_rel": 0.0749500358657734,
+            "v_centreline_rel": 0.04282196601640146,
+            "symmetry_rel": 0.16728149844302703
+          },
+          {
+            "iteration": 400,
+            "continuity": 2.4648370680700055e-07,
+            "change": 0.001880867461519331,
+            "u_symmetry_rel": 0.01966360146144128,
+            "v_symmetry_rel": 0.16750692350785812,
+            "p_symmetry_rel": 0.07314048575996471,
+            "v_centreline_rel": 0.016156107045412836,
+            "symmetry_rel": 0.16750692350785812
+          },
+          {
+            "iteration": 600,
+            "continuity": 5.031756229024022e-08,
+            "change": 0.00034409064473456263,
+            "u_symmetry_rel": 0.01966479484857672,
+            "v_symmetry_rel": 0.16749312083055723,
+            "p_symmetry_rel": 0.07298802820234511,
+            "v_centreline_rel": 0.015663625699331725,
+            "symmetry_rel": 0.16749312083055723
+          },
+          {
+            "iteration": 800,
+            "continuity": 2.151116583888309e-08,
+            "change": 6.405963105193813e-05,
+            "u_symmetry_rel": 0.019664051160871044,
+            "v_symmetry_rel": 0.16748445316886718,
+            "p_symmetry_rel": 0.07294729468800559,
+            "v_centreline_rel": 0.01597708552720734,
+            "symmetry_rel": 0.16748445316886718
+          },
+          {
+            "iteration": 1000,
+            "continuity": 5.0642743697594875e-09,
+            "change": 1.3172095111729787e-05,
+            "u_symmetry_rel": 0.01966381448531553,
+            "v_symmetry_rel": 0.16748198803536848,
+            "p_symmetry_rel": 0.07293811721469355,
+            "v_centreline_rel": 0.01602625227838595,
+            "symmetry_rel": 0.16748198803536848
+          },
+          {
+            "iteration": 1200,
+            "continuity": 2.2541167980566143e-09,
+            "change": 2.8761647058589412e-06,
+            "u_symmetry_rel": 0.019663738572647044,
+            "v_symmetry_rel": 0.16748117654800193,
+            "p_symmetry_rel": 0.07293548712903686,
+            "v_centreline_rel": 0.01604240006963356,
+            "symmetry_rel": 0.16748117654800193
+          },
+          {
+            "iteration": 1300,
+            "continuity": 7.946094886680105e-10,
+            "change": 9.033420257653635e-07,
+            "u_symmetry_rel": 0.019663721859470934,
+            "v_symmetry_rel": 0.16748099713686151,
+            "p_symmetry_rel": 0.07293491692590398,
+            "v_centreline_rel": 0.01604597175305534,
+            "symmetry_rel": 0.16748099713686151
+          }
+        ]
+      },
+      "metrics": {
+        "p_in": 1.2526171860738624,
+        "u_in": 1.0,
+        "p_out": 1.3197323071997147,
+        "u_out": 0.24999999998083675,
+        "k_total_head": 0.8032697577578771,
+        "k_static_recovery": 0.13423024225170455,
+        "k_identity_check": 0.8032697577578771,
+        "k_theory_borda_carnot": 0.5625,
+        "k_error_rel": 0.42803512490289264,
+        "reattachment_over_D": 2.948681666990148,
+        "reattachment_over_D_upper": 2.948681666990148,
+        "reattachment_over_D_lower": 2.9203902622970768,
+        "continuity": 7.946094886680105e-10,
+        "iterations": 1300
+      },
+      "symmetry": {
+        "u_symmetry_rel": 0.019663721859470934,
+        "v_symmetry_rel": 0.16748099713686151,
+        "p_symmetry_rel": 0.07293491692590398,
+        "v_centreline_rel": 0.01604597175305534,
+        "symmetry_rel": 0.16748099713686151
+      }
+    },
+    "50": {
+      "tag": "expansion_centred_n010",
+      "geometry": "centred",
+      "level": 10,
+      "re_D": 50.0,
+      "inlet_window": [
+        1.5,
+        2.5
+      ],
+      "symmetric_geometry": true,
+      "wall_seconds": 75.5,
+      "convergence": {
+        "iterations": 10800,
+        "continuity": 8.623626530750161e-11,
+        "change": 9.97170602368147e-07,
+        "history": [
+          {
+            "iteration": 200,
+            "continuity": 5.049178825852155e-06,
+            "change": 0.03348274618335989,
+            "u_symmetry_rel": 0.04377247761669771,
+            "v_symmetry_rel": 0.28953155229613886,
+            "p_symmetry_rel": 0.09114729415048264,
+            "v_centreline_rel": 0.1293163765040875,
+            "symmetry_rel": 0.28953155229613886
+          },
+          {
+            "iteration": 400,
+            "continuity": 7.619862831607753e-07,
+            "change": 0.014456001649396921,
+            "u_symmetry_rel": 0.036743067510214694,
+            "v_symmetry_rel": 0.321681907232307,
+            "p_symmetry_rel": 0.08383016695079401,
+            "v_centreline_rel": 0.1608409536161535,
+            "symmetry_rel": 0.321681907232307
+          },
+          {
+            "iteration": 600,
+            "continuity": 4.181790955415333e-07,
+            "change": 0.0064275324167875625,
+            "u_symmetry_rel": 0.036678224743380144,
+            "v_symmetry_rel": 0.2476873136133411,
+            "p_symmetry_rel": 0.08450451011509434,
+            "v_centreline_rel": 0.09812327328724428,
+            "symmetry_rel": 0.2476873136133411
+          },
+          {
+            "iteration": 800,
+            "continuity": 5.697071307986462e-07,
+            "change": 0.0029639223242814983,
+            "u_symmetry_rel": 0.03669201510381695,
+            "v_symmetry_rel": 0.24776576915885815,
+            "p_symmetry_rel": 0.08446277433443394,
+            "v_centreline_rel": 0.07270213145777779,
+            "symmetry_rel": 0.24776576915885815
+          },
+          {
+            "iteration": 1000,
+            "continuity": 1.2427276090095415e-06,
+            "change": 0.0012657487092496839,
+            "u_symmetry_rel": 0.03670084821000452,
+            "v_symmetry_rel": 0.24785895751261228,
+            "p_symmetry_rel": 0.08451996211300486,
+            "v_centreline_rel": 0.037598182618403066,
+            "symmetry_rel": 0.24785895751261228
+          },
+          {
+            "iteration": 1200,
+            "continuity": 1.086978480794188e-07,
+            "change": 0.00011952035044689169,
+            "u_symmetry_rel": 0.036709026359904,
+            "v_symmetry_rel": 0.2479490379307598,
+            "p_symmetry_rel": 0.0847998355490058,
+            "v_centreline_rel": 0.03708298217100441,
+            "symmetry_rel": 0.2479490379307598
+          },
+          {
+            "iteration": 1400,
+            "continuity": 3.1083299752155186e-08,
+            "change": 2.8728234285957388e-05,
+            "u_symmetry_rel": 0.036716449865315665,
+            "v_symmetry_rel": 0.24802935405102458,
+            "p_symmetry_rel": 0.08503401002811738,
+            "v_centreline_rel": 0.03817959057085646,
+            "symmetry_rel": 0.24802935405102458
+          },
+          {
+            "iteration": 1600,
+            "continuity": 2.923229058880532e-09,
+            "change": 1.939979832726868e-05,
+            "u_symmetry_rel": 0.03672338292086069,
+            "v_symmetry_rel": 0.24810448620368358,
+            "p_symmetry_rel": 0.0852549618166157,
+            "v_centreline_rel": 0.03919034052182873,
+            "symmetry_rel": 0.24810448620368358
+          },
+          {
+            "iteration": 1800,
+            "continuity": 1.4853334950881703e-09,
+            "change": 1.812920816024466e-05,
+            "u_symmetry_rel": 0.03672988763925519,
+            "v_symmetry_rel": 0.2481749921313796,
+            "p_symmetry_rel": 0.08546252100898609,
+            "v_centreline_rel": 0.04015347511096945,
+            "symmetry_rel": 0.2481749921313796
+          },
+          {
+            "iteration": 2000,
+            "continuity": 1.3798136078808573e-09,
+            "change": 1.7003886211064412e-05,
+            "u_symmetry_rel": 0.03673598862312569,
+            "v_symmetry_rel": 0.24824111027697515,
+            "p_symmetry_rel": 0.08565720871238322,
+            "v_centreline_rel": 0.04106632413440393,
+            "symmetry_rel": 0.24824111027697515
+          },
+          {
+            "iteration": 2200,
+            "continuity": 1.3761186204224937e-09,
+            "change": 1.5949063068343428e-05,
+            "u_symmetry_rel": 0.03674171148764263,
+            "v_symmetry_rel": 0.24830312482789543,
+            "p_symmetry_rel": 0.08583987491054222,
+            "v_centreline_rel": 0.041922449766800256,
+            "symmetry_rel": 0.24830312482789543
+          },
+          {
+            "iteration": 2400,
+            "continuity": 1.2831013626807622e-09,
+            "change": 1.495820692370975e-05,
+            "u_symmetry_rel": 0.036747079455486414,
+            "v_symmetry_rel": 0.24836128863730894,
+            "p_symmetry_rel": 0.08601125303863859,
+            "v_centreline_rel": 0.04272541905627256,
+            "symmetry_rel": 0.24836128863730894
+          },
+          {
+            "iteration": 2600,
+            "continuity": 1.204398411623446e-09,
+            "change": 1.4028764511453407e-05,
+            "u_symmetry_rel": 0.0367521144598604,
+            "v_symmetry_rel": 0.2484158401124983,
+            "p_symmetry_rel": 0.08617203525472253,
+            "v_centreline_rel": 0.04347851279265378,
+            "symmetry_rel": 0.2484158401124983
+          },
+          {
+            "iteration": 2800,
+            "continuity": 1.1309655295610455e-09,
+            "change": 1.3156528491486963e-05,
+            "u_symmetry_rel": 0.03675683699374688,
+            "v_symmetry_rel": 0.24846700210576006,
+            "p_symmetry_rel": 0.08632286944074695,
+            "v_centreline_rel": 0.04418481588341771,
+            "symmetry_rel": 0.24846700210576006
+          },
+          {
+            "iteration": 3000,
+            "continuity": 1.0614183115330994e-09,
+            "change": 1.2338389943078454e-05,
+            "u_symmetry_rel": 0.036761266246826296,
+            "v_symmetry_rel": 0.2485149832227092,
+            "p_symmetry_rel": 0.08646436299778378,
+            "v_centreline_rel": 0.04484720470337768,
+            "symmetry_rel": 0.2485149832227092
+          },
+          {
+            "iteration": 3200,
+            "continuity": 9.958794704688356e-10,
+            "change": 1.1570922699544184e-05,
+            "u_symmetry_rel": 0.03676542028946306,
+            "v_symmetry_rel": 0.24855997997175394,
+            "p_symmetry_rel": 0.08659708841178948,
+            "v_centreline_rel": 0.04546839449780747,
+            "symmetry_rel": 0.24855997997175394
+          },
+          {
+            "iteration": 3400,
+            "continuity": 9.343748010558206e-10,
+            "change": 1.0850806390128032e-05,
+            "u_symmetry_rel": 0.03676931611042869,
+            "v_symmetry_rel": 0.2486021769332352,
+            "p_symmetry_rel": 0.0867215840889875,
+            "v_centreline_rel": 0.046050930904546886,
+            "symmetry_rel": 0.2486021769332352
+          },
+          {
+            "iteration": 3600,
+            "continuity": 8.765118075793055e-10,
+            "change": 1.0175302550208265e-05,
+            "u_symmetry_rel": 0.03677296965690091,
+            "v_symmetry_rel": 0.2486417473486194,
+            "p_symmetry_rel": 0.08683835581924752,
+            "v_centreline_rel": 0.04659720551262631,
+            "symmetry_rel": 0.2486417473486194
+          },
+          {
+            "iteration": 3800,
+            "continuity": 8.224088882775524e-10,
+            "change": 9.542012396723809e-06,
+            "u_symmetry_rel": 0.03677639593644699,
+            "v_symmetry_rel": 0.24867885426948017,
+            "p_symmetry_rel": 0.08694788001593863,
+            "v_centreline_rel": 0.047109454665530695,
+            "symmetry_rel": 0.24867885426948017
+          },
+          {
+            "iteration": 4000,
+            "continuity": 7.713349111987053e-10,
+            "change": 8.947553335081349e-06,
+            "u_symmetry_rel": 0.036779608916295614,
+            "v_symmetry_rel": 0.24871364971685972,
+            "p_symmetry_rel": 0.0870506005532148,
+            "v_centreline_rel": 0.047589788548173785,
+            "symmetry_rel": 0.24871364971685972
+          },
+          {
+            "iteration": 4200,
+            "continuity": 7.233934202523218e-10,
+            "change": 8.39005022212902e-06,
+            "u_symmetry_rel": 0.036782621798291615,
+            "v_symmetry_rel": 0.24874627655461976,
+            "p_symmetry_rel": 0.08714693622673426,
+            "v_centreline_rel": 0.048040187417010785,
+            "symmetry_rel": 0.24874627655461976
+          },
+          {
+            "iteration": 4400,
+            "continuity": 6.785371057345044e-10,
+            "change": 7.86696837562495e-06,
+            "u_symmetry_rel": 0.03678544699743763,
+            "v_symmetry_rel": 0.2487768695225935,
+            "p_symmetry_rel": 0.08723728175698992,
+            "v_centreline_rel": 0.04846250739651621,
+            "symmetry_rel": 0.2487768695225935
+          },
+          {
+            "iteration": 4600,
+            "continuity": 6.36475819206124e-10,
+            "change": 7.376419767834985e-06,
+            "u_symmetry_rel": 0.036788096144591304,
+            "v_symmetry_rel": 0.24880555483642736,
+            "p_symmetry_rel": 0.08732200701005075,
+            "v_centreline_rel": 0.04885849274637749,
+            "symmetry_rel": 0.24880555483642736
+          },
+          {
+            "iteration": 4800,
+            "continuity": 5.969431434620434e-10,
+            "change": 6.916288152691852e-06,
+            "u_symmetry_rel": 0.03679058015842346,
+            "v_symmetry_rel": 0.24883245095899295,
+            "p_symmetry_rel": 0.08740145941947741,
+            "v_centreline_rel": 0.04922977856307644,
+            "symmetry_rel": 0.24883245095899295
+          },
+          {
+            "iteration": 5000,
+            "continuity": 5.598553883944674e-10,
+            "change": 6.484790226080062e-06,
+            "u_symmetry_rel": 0.036792909289325604,
+            "v_symmetry_rel": 0.2488576690952063,
+            "p_symmetry_rel": 0.08747596527691276,
+            "v_centreline_rel": 0.04957790095433591,
+            "symmetry_rel": 0.2488576690952063
+          },
+          {
+            "iteration": 5200,
+            "continuity": 5.249614923536275e-10,
+            "change": 6.0800684372197544e-06,
+            "u_symmetry_rel": 0.036795093156105324,
+            "v_symmetry_rel": 0.24888131355779408,
+            "p_symmetry_rel": 0.08754583086053373,
+            "v_centreline_rel": 0.049904299175569565,
+            "symmetry_rel": 0.24888131355779408
+          },
+          {
+            "iteration": 5400,
+            "continuity": 4.923191160299822e-10,
+            "change": 5.700524814133967e-06,
+            "u_symmetry_rel": 0.036797140782913684,
+            "v_symmetry_rel": 0.24890348221716374,
+            "p_symmetry_rel": 0.08761134366213208,
+            "v_centreline_rel": 0.05021032418797369,
+            "symmetry_rel": 0.24890348221716374
+          },
+          {
+            "iteration": 5600,
+            "continuity": 4.616373602828183e-10,
+            "change": 5.344632424353346e-06,
+            "u_symmetry_rel": 0.03679906063772165,
+            "v_symmetry_rel": 0.24892426689170266,
+            "p_symmetry_rel": 0.08767277353038064,
+            "v_centreline_rel": 0.05049724369195394,
+            "symmetry_rel": 0.24892426689170266
+          },
+          {
+            "iteration": 5800,
+            "continuity": 4.3283006204760527e-10,
+            "change": 5.0109935063047395e-06,
+            "u_symmetry_rel": 0.03680086066536592,
+            "v_symmetry_rel": 0.24894375371767535,
+            "p_symmetry_rel": 0.08773037373123645,
+            "v_centreline_rel": 0.05076624681497699,
+            "symmetry_rel": 0.24894375371767535
+          },
+          {
+            "iteration": 6000,
+            "continuity": 4.0581669415954563e-10,
+            "change": 4.698138377279282e-06,
+            "u_symmetry_rel": 0.03680254832220983,
+            "v_symmetry_rel": 0.24896202352368674,
+            "p_symmetry_rel": 0.08778438202444319,
+            "v_centreline_rel": 0.05101844934296397,
+            "symmetry_rel": 0.24896202352368674
+          },
+          {
+            "iteration": 6200,
+            "continuity": 3.8065606775602306e-10,
+            "change": 4.4047349024856075e-06,
+            "u_symmetry_rel": 0.03680457764708012,
+            "v_symmetry_rel": 0.24897915208546045,
+            "p_symmetry_rel": 0.08783502139450969,
+            "v_centreline_rel": 0.05125489757142222,
+            "symmetry_rel": 0.24897915208546045
+          },
+          {
+            "iteration": 6400,
+            "continuity": 3.56901122479554e-10,
+            "change": 4.129603073388388e-06,
+            "u_symmetry_rel": 0.03680814673259958,
+            "v_symmetry_rel": 0.24899521051207374,
+            "p_symmetry_rel": 0.08788250118290228,
+            "v_centreline_rel": 0.05147657304047641,
+            "symmetry_rel": 0.24899521051207374
+          },
+          {
+            "iteration": 6600,
+            "continuity": 3.345759974409876e-10,
+            "change": 3.871596338300698e-06,
+            "u_symmetry_rel": 0.03681149287262375,
+            "v_symmetry_rel": 0.24901026549394195,
+            "p_symmetry_rel": 0.08792701778667375,
+            "v_centreline_rel": 0.05168439651535628,
+            "symmetry_rel": 0.24901026549394195
+          },
+          {
+            "iteration": 6800,
+            "continuity": 3.136675461468813e-10,
+            "change": 3.6296643110000915e-06,
+            "u_symmetry_rel": 0.03681462995609691,
+            "v_symmetry_rel": 0.24902437958765572,
+            "p_symmetry_rel": 0.0879687554798148,
+            "v_centreline_rel": 0.05187923196079025,
+            "symmetry_rel": 0.24902437958765572
+          },
+          {
+            "iteration": 7000,
+            "continuity": 2.9406493353648783e-10,
+            "change": 3.402833331167532e-06,
+            "u_symmetry_rel": 0.036817571013295414,
+            "v_symmetry_rel": 0.24903761147094514,
+            "p_symmetry_rel": 0.08800788718270401,
+            "v_centreline_rel": 0.05206188897915779,
+            "symmetry_rel": 0.24903761147094514
+          },
+          {
+            "iteration": 7200,
+            "continuity": 2.757303316875889e-10,
+            "change": 3.1901467026362873e-06,
+            "u_symmetry_rel": 0.03682032826531895,
+            "v_symmetry_rel": 0.24905001617793576,
+            "p_symmetry_rel": 0.08804457511718086,
+            "v_centreline_rel": 0.052233127208981586,
+            "symmetry_rel": 0.24905001617793576
+          },
+          {
+            "iteration": 7400,
+            "continuity": 2.5853288401159885e-10,
+            "change": 2.990725190554766e-06,
+            "u_symmetry_rel": 0.03682291317525077,
+            "v_symmetry_rel": 0.24906164532393818,
+            "p_symmetry_rel": 0.08807897146924688,
+            "v_centreline_rel": 0.05239365923178633,
+            "symmetry_rel": 0.24906164532393818
+          },
+          {
+            "iteration": 7600,
+            "continuity": 2.4237302995774174e-10,
+            "change": 2.8037457525109666e-06,
+            "u_symmetry_rel": 0.036825336493275185,
+            "v_symmetry_rel": 0.249072547310853,
+            "p_symmetry_rel": 0.0881112189885268,
+            "v_centreline_rel": 0.0525441532364582,
+            "symmetry_rel": 0.249072547310853
+          },
+          {
+            "iteration": 7800,
+            "continuity": 2.2721970832639826e-10,
+            "change": 2.6284347288130228e-06,
+            "u_symmetry_rel": 0.03682760830156023,
+            "v_symmetry_rel": 0.2490827675299446,
+            "p_symmetry_rel": 0.08814145157664871,
+            "v_centreline_rel": 0.05268523583744852,
+            "symmetry_rel": 0.2490827675299446
+          },
+          {
+            "iteration": 8000,
+            "continuity": 2.1301500277223773e-10,
+            "change": 2.4640664465502837e-06,
+            "u_symmetry_rel": 0.03682973805551082,
+            "v_symmetry_rel": 0.24909234854807705,
+            "p_symmetry_rel": 0.08816979483130305,
+            "v_centreline_rel": 0.052817494657570206,
+            "symmetry_rel": 0.24909234854807705
+          },
+          {
+            "iteration": 8200,
+            "continuity": 1.9969390724350333e-10,
+            "change": 2.309959328095079e-06,
+            "u_symmetry_rel": 0.036831734622049084,
+            "v_symmetry_rel": 0.2491013302803388,
+            "p_symmetry_rel": 0.08819636655037644,
+            "v_centreline_rel": 0.05294148072494934,
+            "symmetry_rel": 0.2491013302803388
+          },
+          {
+            "iteration": 8400,
+            "continuity": 1.8720405358264164e-10,
+            "change": 2.165476992055382e-06,
+            "u_symmetry_rel": 0.036833606316235556,
+            "v_symmetry_rel": 0.2491097501559951,
+            "p_symmetry_rel": 0.08822127721926891,
+            "v_centreline_rel": 0.05305771072648205,
+            "symmetry_rel": 0.2491097501559951
+          },
+          {
+            "iteration": 8600,
+            "continuity": 1.7549558052436243e-10,
+            "change": 2.030017652920879e-06,
+            "u_symmetry_rel": 0.03683536093664974,
+            "v_symmetry_rel": 0.2491176432772506,
+            "p_symmetry_rel": 0.08824463047275088,
+            "v_centreline_rel": 0.05316666922098488,
+            "symmetry_rel": 0.2491176432772506
+          },
+          {
+            "iteration": 8800,
+            "continuity": 1.6451821979387993e-10,
+            "change": 1.903019710092213e-06,
+            "u_symmetry_rel": 0.03683700579577487,
+            "v_symmetry_rel": 0.2491250425568833,
+            "p_symmetry_rel": 0.08826652349828107,
+            "v_centreline_rel": 0.05326881056379608,
+            "symmetry_rel": 0.2491250425568833
+          },
+          {
+            "iteration": 9000,
+            "continuity": 1.5423242132224513e-10,
+            "change": 1.7839574639744171e-06,
+            "u_symmetry_rel": 0.03683854775072132,
+            "v_symmetry_rel": 0.24913197885677624,
+            "p_symmetry_rel": 0.08828704744219068,
+            "v_centreline_rel": 0.0533645607825462,
+            "symmetry_rel": 0.24913197885677624
+          },
+          {
+            "iteration": 9200,
+            "continuity": 1.4462016035676067e-10,
+            "change": 1.672335984304052e-06,
+            "u_symmetry_rel": 0.036839993231893076,
+            "v_symmetry_rel": 0.24913848111696527,
+            "p_symmetry_rel": 0.08830628778780307,
+            "v_centreline_rel": 0.05345431937127881,
+            "symmetry_rel": 0.24913848111696527
+          },
+          {
+            "iteration": 9400,
+            "continuity": 1.3557269619001583e-10,
+            "change": 1.5676908891593122e-06,
+            "u_symmetry_rel": 0.03684134826835872,
+            "v_symmetry_rel": 0.2491445764702324,
+            "p_symmetry_rel": 0.08832432469257438,
+            "v_centreline_rel": 0.053538460895981695,
+            "symmetry_rel": 0.2491445764702324
+          },
+          {
+            "iteration": 9600,
+            "continuity": 1.2708962072831287e-10,
+            "change": 1.469587084246271e-06,
+            "u_symmetry_rel": 0.03684261851310128,
+            "v_symmetry_rel": 0.2491502903559199,
+            "p_symmetry_rel": 0.0883412333206891,
+            "v_centreline_rel": 0.05361733653406537,
+            "symmetry_rel": 0.2491502903559199
+          },
+          {
+            "iteration": 9800,
+            "continuity": 1.1913656996695443e-10,
+            "change": 1.3776158866996013e-06,
+            "u_symmetry_rel": 0.03684380926653241,
+            "v_symmetry_rel": 0.24915564662598327,
+            "p_symmetry_rel": 0.08835708415499162,
+            "v_centreline_rel": 0.053691275546972804,
+            "symmetry_rel": 0.24915564662598327
+          },
+          {
+            "iteration": 10000,
+            "continuity": 1.1168086453457876e-10,
+            "change": 1.2913962502691945e-06,
+            "u_symmetry_rel": 0.03684492549898122,
+            "v_symmetry_rel": 0.24916066764619374,
+            "p_symmetry_rel": 0.08837194329447523,
+            "v_centreline_rel": 0.05376058666893296,
+            "symmetry_rel": 0.24916066764619374
+          },
+          {
+            "iteration": 10200,
+            "continuity": 1.0469140691079376e-10,
+            "change": 1.2105683764307429e-06,
+            "u_symmetry_rel": 0.036845971869981065,
+            "v_symmetry_rel": 0.2491653743831169,
+            "p_symmetry_rel": 0.088385872710076,
+            "v_centreline_rel": 0.05382555934774393,
+            "symmetry_rel": 0.2491653743831169
+          },
+          {
+            "iteration": 10400,
+            "continuity": 9.813797691160531e-11,
+            "change": 1.1347951991980132e-06,
+            "u_symmetry_rel": 0.036846952748106176,
+            "v_symmetry_rel": 0.24916978649358276,
+            "p_symmetry_rel": 0.08839893050747148,
+            "v_centreline_rel": 0.0538864649325754,
+            "symmetry_rel": 0.24916978649358276
+          },
+          {
+            "iteration": 10600,
+            "continuity": 9.199485335835422e-11,
+            "change": 1.0637612637975913e-06,
+            "u_symmetry_rel": 0.03684787222928154,
+            "v_symmetry_rel": 0.24917392240711123,
+            "p_symmetry_rel": 0.08841117116969845,
+            "v_centreline_rel": 0.05394355782948491,
+            "symmetry_rel": 0.24917392240711123
+          },
+          {
+            "iteration": 10800,
+            "continuity": 8.623626530750161e-11,
+            "change": 9.97170602368147e-07,
+            "u_symmetry_rel": 0.03684873415369194,
+            "v_symmetry_rel": 0.24917779940209103,
+            "p_symmetry_rel": 0.08842264578139175,
+            "v_centreline_rel": 0.053997076554970935,
+            "symmetry_rel": 0.24917779940209103
+          }
+        ]
+      },
+      "metrics": {
+        "p_in": 0.732996818032899,
+        "u_in": 1.0,
+        "p_out": 0.9099701033211538,
+        "u_out": 0.2500000000019843,
+        "k_total_head": 0.5835534294224982,
+        "k_static_recovery": 0.3539465705765097,
+        "k_identity_check": 0.5835534294224982,
+        "k_theory_borda_carnot": 0.5625,
+        "k_error_rel": 0.03742831897333016,
+        "reattachment_over_D": 6.6175176363956085,
+        "reattachment_over_D_upper": 6.6175176363956085,
+        "reattachment_over_D_lower": 6.336549873203158,
+        "continuity": 8.623626530750161e-11,
+        "iterations": 10800
+      },
+      "symmetry": {
+        "u_symmetry_rel": 0.03684873415369194,
+        "v_symmetry_rel": 0.24917779940209103,
+        "p_symmetry_rel": 0.08842264578139175,
+        "v_centreline_rel": 0.053997076554970935,
+        "symmetry_rel": 0.24917779940209103
+      }
+    }
+  },
+  "mirror_bottom_vs_top": {
+    "u_mirror_rel": 0.052247198966593716,
+    "v_mirror_rel": 0.16551004197318078,
+    "p_mirror_rel": 0.1208976177817458,
+    "mirror_rel": 0.16551004197318078
+  },
+  "mirror_bottom_vs_top_low_re": {
+    "u_mirror_rel": 0.017105277465562917,
+    "v_mirror_rel": 0.05531494496308167,
+    "p_mirror_rel": 0.02596964422085937,
+    "mirror_rel": 0.05531494496308167,
+    "re_D": 5.0
+  },
+  "verdict": {
+    "historical_geometry_symmetric": false,
+    "mirror_covariant_low_re": false,
+    "centred_symmetric_at_re100": false,
+    "symmetry_breaks_above_re": 5.0
+  }
+}
