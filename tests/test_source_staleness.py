@@ -195,3 +195,72 @@ def test_live_tree_ledger_reproduces_and_ratchet_is_respected():
                 assert entry["resolved"] is None
             else:
                 assert pathlib.Path(entry["resolved"]).is_file()
+
+# --------------------------------------------------------------------------
+# Freeze policy: "an archive must freeze the producer source it ran on"
+# --------------------------------------------------------------------------
+import hashlib  # noqa: E402
+
+
+def _digest(text):
+    return hashlib.sha256(text.encode()).hexdigest()
+
+
+def _case(root, name, bindings, snapshot=None):
+    case = root / "docs" / name
+    case.mkdir(parents=True, exist_ok=True)
+    manifest = {"schema": "fixture/1", "source_sha256": dict(bindings)}
+    if snapshot:
+        manifest["source_snapshot_root"] = snapshot
+        for relative in bindings:
+            frozen = case / snapshot / relative
+            frozen.parent.mkdir(parents=True, exist_ok=True)
+            frozen.write_text("run()\n")
+    (case / "manifest.json").write_text(json.dumps(manifest))
+    return case
+
+
+def test_freeze_policy_flags_only_unfrozen_producer_code(tmp_path):
+    """Producer code without a snapshot is a violation; data inputs are not."""
+    _case(tmp_path, "case-producer", {"src/fvm/solver.py": _digest("x = 1\n")})
+    _case(tmp_path, "case-frozen", {"src/fvm/frozen.py": _digest("run()\n")}, snapshot="source-snapshot")
+    _case(tmp_path, "case-data", {"docs/case/mesh.dat": _digest("1 2 3\n")})
+    (tmp_path / "docs" / "benchmarks-index.md").write_text("")
+    report = ss.audit(tmp_path)
+    assert ss.unfrozen_names(report) == ["case-producer"]
+    assert report["freeze"]["frozen_cases"] == 1
+    # A frozen case never violates, even though its live-tree twin is edited.
+    live = write(tmp_path / "src" / "fvm" / "frozen.py", "x = 99\n")
+    assert live != _digest("run()\n")
+    assert ss.unfrozen_names(ss.audit(tmp_path)) == ["case-producer"]
+
+
+def test_freeze_ratchet_is_bidirectional(tmp_path):
+    """New violations redden the gate; a paid acceptance may not stay accepted."""
+    _case(tmp_path, "case-a", {"src/fvm/a.py": _digest("x = 1\n")})
+    _case(tmp_path, "case-b", {"src/fvm/b.py": _digest("y = 1\n")})
+    (tmp_path / "docs" / "benchmarks-index.md").write_text("")
+    report = ss.audit(tmp_path)
+    assert ss.unregistered_unfrozen(report, ["case-a"]) == ["case-b"]
+    assert ss.retired_unfrozen(report, ["case-a"]) == []
+    # Fixing case-a while still listing it as accepted debt is also a defect.
+    assert ss.retired_unfrozen(report, ["case-a", "case-gone"]) == ["case-gone"]
+    _case(tmp_path, "case-a", {"src/fvm/a.py": _digest("x = 1\n")}, snapshot="source-snapshot")
+    assert ss.retired_unfrozen(ss.audit(tmp_path), ["case-a"]) == ["case-a"]
+
+
+def test_live_tree_freeze_ledger_reproduces():
+    """The committed acceptance list equals the tree, and paid debts must leave it."""
+    ledger_path = CASE / "staleness.json"
+    assert ledger_path.is_file(), "run scripts/audit_archived_source_staleness.py"
+    ledger = json.loads(ledger_path.read_text())
+    root = pathlib.Path(__file__).resolve().parents[1]
+    report = ss.audit(root)
+    accepted = ledger["known_unfrozen_cases"]
+    assert ss.unregistered_unfrozen(report, accepted) == []
+    assert ss.retired_unfrozen(report, accepted) == []
+    assert accepted == sorted(ss.unfrozen_names(report))
+    # The census in the ledger is re-derived, not trusted.
+    assert ledger["freeze"] == {
+        k: v for k, v in report["freeze"].items() if k != "violations"
+    }

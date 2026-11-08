@@ -1,5 +1,14 @@
 # TensorFVM benchmark 总览
 
+## 最新：壁律对外主张的 HEAD 复算 + 「冻结生产者源码」门禁
+
+[陈旧性审计的后续落地](verification-archived-source-staleness/README.md)：在 HEAD 上离线重跑
+`verification-wall-law-reference` 的生产者，对数区 50≤y+≤200 的 550 个参考点两项判据逐位复现
+（L2 1.938664%、L∞ 2.530206%，均 <3%，归档 `report.md` 逐字节相同，详见该案例 `REFRESH.md`），
+随后把 HEAD 生产者冻结进 `source-snapshot/`；该对外主张案例从陈旧清单退役（stale 19→18、
+对外主张 16→15）。同单把「归档必须冻结生产者源码」升级为机器门禁：19 个案例/253 条生产者绑定
+以 `known_unfrozen_cases` 显式接受，新增违规红、已修好仍挂账亦红（棘轮双向）。
+
 ## 最新：二维单气泡上升（两相 VOF/PLIC 第二刀）
 
 [气泡上升基准](bubble-rise-2d/report.md)：把 D10 的几何 PLIC 界面输运接进两相求解器，

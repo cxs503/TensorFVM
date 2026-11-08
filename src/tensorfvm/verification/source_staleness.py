@@ -26,6 +26,18 @@ path is interpreted as repository-relative, which is how the archiving missions
 of this repository wrote non-source inputs (``docs/*.json``, mesh files, data
 READMEs).  Every entry carries the provenance it resolved through, so a reader
 can tell which rule applied.
+
+Freeze policy
+-------------
+Classification alone is a *diagnosis*: a case that never froze its producer
+source can only ever be judged against the live tree, so the next edit silently
+converts its published numbers into claims about code nobody runs (that is how
+102 of 1378 bindings became ``changed``).  ``freeze_violations`` turns the
+archiving convention ("freeze the producer source") into a machine rule for
+cases whose bindings point at *producer code* (``.py`` / ``.toml``); data inputs
+stay outside it because they are audited for presence, not for freshness.  The
+accepted violations are a ratchet in the ledger, so the rule fires on new cases
+only and an acceptance cannot outlive the fix that pays the debt.
 """
 
 from __future__ import annotations
@@ -45,6 +57,10 @@ SOURCE_KEYS = (
 
 STATUSES = ("fresh", "changed", "missing")
 
+#: Suffixes that make a binding *producer code* rather than a data input: only
+#: code can be frozen to keep an archived number reproducible.
+PRODUCER_SUFFIXES = (".py", ".toml")
+
 #: The repository's public claim ledger; a stale case cited there is headline debt.
 HEADLINE = pathlib.Path("docs/benchmarks-index.md")
 
@@ -52,6 +68,11 @@ HEADLINE = pathlib.Path("docs/benchmarks-index.md")
 def sha256(path):
     """Hex SHA-256 of a file's bytes."""
     return hashlib.sha256(pathlib.Path(path).read_bytes()).hexdigest()
+
+
+def is_producer_binding(relative):
+    """Is *relative* a binding to producer code (and therefore freezable)?"""
+    return str(relative).endswith(PRODUCER_SUFFIXES)
 
 
 def source_entries(manifest):
@@ -120,6 +141,8 @@ def classify_case(case_dir, manifest=None, root="."):
         case=case_dir.name,
         doc=case_dir.as_posix(),
         snapshot_root=snapshot_root,
+        frozen=bool(snapshot_root),
+        producer_bindings=sum(is_producer_binding(e["path"]) for e in entries),
         entries=entries,
         counts=counts,
         stale=counts["changed"] + counts["missing"] > 0,
@@ -148,12 +171,66 @@ def audit(root="."):
         stale_cases=sum(c["stale"] for c in cases),
         headline_stale_cases=sum(c["stale"] and c["cited_by_ledger"] for c in cases),
     )
-    return dict(summary=summary, cases=cases)
+    violations = freeze_violations(cases)
+    freeze = dict(
+        unfrozen_cases=[v["case"] for v in violations],
+        unfrozen_producer_bindings=sum(v["producer_bindings"] for v in violations),
+        violations=violations,
+        frozen_cases=sum(c["frozen"] for c in cases),
+    )
+    return dict(summary=summary, freeze=freeze, cases=cases)
 
 
 def stale_cases(report):
     """Case names with a changed or missing binding."""
     return [c["case"] for c in report["cases"] if c["stale"]]
+
+
+def freeze_violations(cases):
+    """Cases that bind producer code but never froze the source they ran on.
+
+    Without ``source_snapshot_root`` the digests are compared against the live
+    tree, so the first later edit makes the archived numbers unverifiable while
+    the published text survives.  Freezing is the durable fix, hence a rule with
+    an explicit, reviewable acceptance list (the ratchet).
+    """
+    violations = []
+    for case in cases:
+        if case["frozen"] or not case["producer_bindings"]:
+            continue
+        violations.append(
+            dict(
+                case=case["case"],
+                doc=case["doc"],
+                producer_bindings=case["producer_bindings"],
+                changed=case["counts"]["changed"],
+                missing=case["counts"]["missing"],
+                cited_by_ledger=case.get("cited_by_ledger", False),
+            )
+        )
+    return violations
+
+
+def unfrozen_names(report_or_cases):
+    """Names of the freeze-policy violations in *report_or_cases*."""
+    cases = report_or_cases.get("cases", []) if isinstance(report_or_cases, dict) else report_or_cases
+    return [v["case"] for v in freeze_violations(cases)]
+
+
+def unregistered_unfrozen(report_or_cases, accepted_cases):
+    """Freeze violations the ledger has not accepted -- new debt, gate red."""
+    accepted = set(accepted_cases)
+    return [name for name in unfrozen_names(report_or_cases) if name not in accepted]
+
+
+def retired_unfrozen(report_or_cases, accepted_cases):
+    """Accepted violations that no longer violate: the fix must be recorded.
+
+    Leaving them accepted would let the ledger claim debt that is already paid,
+    which both hides the fix and pre-authorises a regression of the same case.
+    """
+    live = set(unfrozen_names(report_or_cases))
+    return [name for name in accepted_cases if name not in live]
 
 
 def unregistered_stale(report, ledger_cases):

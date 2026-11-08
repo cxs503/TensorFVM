@@ -95,3 +95,22 @@
    （缺 `source_snapshot_root` 且记录了 `source_sha256` → 门禁红）。
 3. 修 `verification-gmsh-controls` 的网格输入绑定：要么入库网格，要么把它降级为
    “生成式输入”（记录生成脚本与摘要），不要留不可核对的绑定。
+
+
+## 8. 后续落地（2026-11-08）：冻结生产者源码成为门禁，且一条欠账已实战退役
+
+第 7 节建议 1/2 的前半已执行，判据与数字都可复算：
+
+1. **规则化**：`source_staleness.freeze_violations` 把「归档必须冻结生产者源码」从惯例
+   变成机器判据——凡是记录了生产者代码（`.py`/`.toml`）绑定却没有 `source_snapshot_root`
+   的案例即为违规；数据输入（网格/`docs/*.json`）不在该规则内，它们由输入可追溯审计管。
+   当前 **19 个案例、253 条生产者绑定**违规，`staleness.json` 的 `known_unfrozen_cases`
+   是显式接受清单（棘轮）：新增违规立即红，**已修好的案例若仍留在清单里也红**
+   （`retired_unfrozen`），所以接受不能比修复活得更久。
+2. **一条欠账退役**：`docs/verification-wall-law-reference` 在 HEAD 上重跑了生产者
+   （离线，参考数据摘要与归档一致，单核 <5 s），两项判据逐位复现（L2 1.938664%、
+   L∞ 2.530206%，均 <3%），归档 `report.md` 逐字节相同；随后把 HEAD 生产者冻结为
+   `source-snapshot/` 并重写 `source_sha256`，该案例从陈旧清单与未冻结清单同时退出：
+   **stale 19→18（对外主张 16→15），未冻结 19→18**。复算记录见该案例 `REFRESH.md`。
+3. 仍未做：其余 17 个未冻结案例需要算力（GPU/长 CPU）才能重跑，本单按容量纪律不启动；
+   `verification-gmsh-controls` 的缺失网格输入仍未处理。
