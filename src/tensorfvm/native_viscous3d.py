@@ -39,6 +39,18 @@ Wall closure
     closure; the count of upgraded faces is exposed as
     ``wall_second_order_faces``.
 
+    ``wall_second_projection`` (default ``True``, only meaningful with
+    ``'three_point'``) moves the second-cell *datum* from the second cell
+    centre onto the normal line through the face: the stencil then samples
+    three points of one straight line, which is what makes it affine exact on
+    a non-orthogonal mesh too (measured 1.5e-15 / 2.5e-15 relative flux error
+    at ``warp=0.15`` / ``0.3`` versus 1.3e-3 / 2.8e-3 unprojected, see
+    ``docs/three-point-wall-projection``).  The projection is assembled as a
+    matrix row *and* a flux-source datum term; either half alone is not
+    self-consistent (the matrix-only variant is off by an O(1) factor, the
+    refuted fix F1 of ``docs/native-viscous-three-point-closure``).  It is
+    inert on an orthogonal mesh, where the lateral offset is zero.
+
 """
 import numpy as np
 from scipy.sparse import coo_matrix, diags, kron, eye, bmat
@@ -46,7 +58,7 @@ from .native_operators3d import NativeOperators3D
 
 
 class NativeViscous3D:
-    def __init__(self,mesh,dirichlet_mask,dynamic_viscosity=1.,*,deviatoric=True,correction='over-relaxed',correction_damping=1.,wall_closure='two_point'):
+    def __init__(self,mesh,dirichlet_mask,dynamic_viscosity=1.,*,deviatoric=True,correction='over-relaxed',correction_damping=1.,wall_closure='two_point',wall_second_projection=True):
         self.mesh=mesh;self.op=NativeOperators3D(mesh)
         self.internal=self.op.internal;self.boundary=self.op.boundary
         self.N=len(mesh.cells);self.F=len(mesh.owner)
@@ -95,6 +107,7 @@ class NativeViscous3D:
         damped_active=active*damping
         self.face_gradient_matrices=[(a+diags(self.correction_direction[:,k]*damped_active)@(self.delta_matrix-contraction)-diags(self.normal[:,k]*self.neumann)@normal_contraction).tocsr() for k,a in enumerate(self.raw_face_gradient)]
         self.wall_closure=wall_closure
+        self.wall_second_projection=bool(wall_second_projection)
         self.wall_second_cell=-np.ones(self.F,dtype=int)
         self.wall_coeff=np.zeros((self.F,3));self.wall_second_offset=np.zeros((self.F,3))
         self.wall_second_order_faces=0
@@ -140,16 +153,19 @@ class NativeViscous3D:
         The tangential part of the face gradient is left unchanged.  Faces
         without an aligned second cell keep the two-point closure.
 
-        Scope limitation (measured, see ``docs/native-viscous-three-point-closure``):
-        on a *non-orthogonal* mesh the second cell centre is laterally offset
-        from the normal line too (``wall_second_offset``), the stencil then
-        stops being affine exact (relative flux error 1.3e-3 at ``warp=0.15``,
-        2.8e-3 at ``warp=0.3``, versus ~1e-15 on an orthogonal mesh) and the
-        residual equals ``coeff2 * (t_cell . grad u)``.  Removing that offset
-        needs a datum-consistent tangential gradient on Dirichlet faces, which
-        the matrix-only assembly here cannot supply (a first-order correction
-        with the assembled two-point gradient makes the error worse, see the
-        report); the offset is exposed for diagnostics but not corrected.
+        Non-orthogonal meshes (see ``docs/native-viscous-three-point-closure``
+        and ``docs/three-point-wall-projection``): the second cell centre is
+        laterally offset from the normal line (``wall_second_offset``), so the
+        three points are not collinear and the raw stencil loses affine
+        exactness (relative flux error 1.3e-3 at ``warp=0.15``, 2.8e-3 at
+        ``warp=0.3``); its residual equals ``coeff2 * (t_cell . grad u)``
+        exactly.  With ``wall_second_projection`` the second-cell datum is
+        moved along ``-t_cell`` before it enters the stencil, using the
+        *two-point* face gradient (matrix part below, datum part in
+        :meth:`face_gradient_source`, applied as a pair).  The residual then
+        drops to round-off (<=3e-15 on the same family) and the smooth-field
+        wall derivative does not regress.  The offset stays exposed as
+        ``wall_second_offset`` for diagnostics either way.
         """
         F=self.F;N=self.N
         second=-np.ones(F,dtype=int)
@@ -196,6 +212,14 @@ class NativeViscous3D:
         mask=second[bd]>=0
         fb=f[bd][mask]
         if len(fb):
+            # Directional derivative along the lateral offset, matrix part:
+            # D_t u = t . grad u with t = wall_second_offset (t . n == 0 to
+            # round-off).  Built from the *two-point* rows, i.e. before the
+            # normal components below are replaced, and paired with the datum
+            # part assembled in ``face_gradient_source`` -- neither half is
+            # meaningful alone (matrix-only = the refuted F1 patch of m6435).
+            project=sum(diags(second_offset[:,a])@self.face_gradient_matrices[a]
+                        for a in range(3))
             # ncs[f,:] holds the coefficients of the current normal component
             # n.(grad u) of row f; it is removed from every component k below.
             ncs=sum(diags(nrm[:,a])@self.face_gradient_matrices[a] for a in range(3))
@@ -211,7 +235,10 @@ class NativeViscous3D:
                                 (np.r_[local,local],np.r_[o[fb],second[fb]])),shape=(len(fb),N))
                 # -n_k*coeff0 * w.grad_t: the face-centroid to normal-foot shift
                 corr=diags(nrm[fb,k]*(-coeff[fb,0]))@comb
-                self.face_gradient_matrices[k]=(self.face_gradient_matrices[k]+select.T@(add-drop+corr)).tocsr()
+                project_rows=(diags(nrm[fb,k]*(-coeff[fb,2]))@(select@project)
+                              if self.wall_second_projection else 0.)
+                self.face_gradient_matrices[k]=(self.face_gradient_matrices[k]
+                                                +select.T@(add-drop+corr+project_rows)).tocsr()
 
     def _boundary_data(self,neumann_gradients,dirichlet_values):
         g=np.broadcast_to(np.asarray(neumann_gradients,dtype=float),(self.F,))
@@ -239,7 +266,15 @@ class NativeViscous3D:
             tangent=old-np.einsum('fi,fi->f',old,n)[:,None]*n
             # Dirichlet datum moved from the face centroid to the normal foot
             foot=v[sel]-np.einsum('fi,fi->f',tangent,self.wall_offset[sel])
-            result[sel]=tangent+n*(self.wall_coeff[sel,0]*foot)[:,None]
+            normal_component=self.wall_coeff[sel,0]*foot
+            if self.wall_second_projection:
+                # Move the second-cell datum onto the normal line: the stencil
+                # needs u(c1 - t) = u(c1) - t . grad u; t . n == 0, so the
+                # tangential part of the two-point gradient is enough and no
+                # component of the stencil itself is used (no circularity).
+                lateral=np.einsum('fi,fi->f',tangent,self.wall_second_offset[sel])
+                normal_component=normal_component-self.wall_coeff[sel,2]*lateral
+            result[sel]=tangent+n*normal_component[:,None]
         return result
 
     def scalar_flux_source(self,neumann_gradients=0.,dirichlet_values=0.):

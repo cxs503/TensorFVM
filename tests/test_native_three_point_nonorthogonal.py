@@ -4,12 +4,22 @@ orthogonal meshes.
 ``docs/native-viscous-three-point-closure/report.md`` stated the one-sided
 three-point wall stencil is "exact for affine fields".  These gates re-test the
 claim on meshes whose *cells* are laterally displaced (interior warp, so the
-line owner-centre -> second-centre is no longer normal to the face) and pin the
-measured behaviour, including the open defect, so that it cannot be widened or
-silently reworded later.
+line owner-centre -> second-centre is no longer normal to the face).
+
+Two states are pinned, because both are results:
+
+* ``wall_second_projection=False`` (the pre-2026-11-08 behaviour) loses affine
+  exactness on a warped mesh and the residual is *exactly* ``coeff2 * (t . g)``
+  -- the negative result of ``docs/native-viscous-three-point-closure`` must not
+  be silently reworded;
+* ``wall_second_projection=True`` (the default) moves the second-cell datum onto
+  the normal line with a matrix+source pair, which restores affine exactness to
+  round-off and removes the ``coeff2 * (t . g)`` term
+  (``docs/three-point-wall-projection``).
 
 Measured on 2026-11-08, ``cube_mesh(n, warp=w)`` (see
-``docs/native-viscous-three-point-closure/nonorthogonal-audit.json``).
+``docs/native-viscous-three-point-closure/nonorthogonal-audit.json`` and
+``docs/three-point-wall-projection/projection-audit.json``).
 """
 
 import numpy as np
@@ -28,14 +38,16 @@ def affine_field(mesh):
             MU * (mesh.area_vectors @ GRADIENT))
 
 
-def build(divisions=(4, 4, 4), warp=0.0, closure="three_point"):
+def build(divisions=(4, 4, 4), warp=0.0, closure="three_point", projection=True):
     mesh = nvw.cube_mesh(divisions, warp=warp)
     mask = mesh.neighbor < 0
-    return mesh, mask, NativeViscous3D(mesh, mask, MU, wall_closure=closure)
+    return mesh, mask, NativeViscous3D(mesh, mask, MU, wall_closure=closure,
+                                       wall_second_projection=projection)
 
 
-def affine_error(divisions=(4, 4, 4), warp=0.0, closure="three_point"):
-    mesh, mask, op = build(divisions, warp, closure)
+def affine_error(divisions=(4, 4, 4), warp=0.0, closure="three_point",
+                 projection=True):
+    mesh, mask, op = build(divisions, warp, closure, projection)
     cell, face, exact = affine_field(mesh)
     residual = op.scalar_flux(cell, 0.0, face)[mask] - exact[mask]
     return (float(np.abs(residual).max() / np.linalg.norm(exact[mask])),
@@ -55,18 +67,40 @@ def test_two_point_closure_is_affine_exact_on_warped_meshes(warp):
 
 
 @pytest.mark.parametrize("warp, floor", [(0.15, 1e-3), (0.3, 2e-3)])
-def test_three_point_loses_affine_exactness_on_warped_meshes(warp, floor):
-    """Recorded open defect: the docstring's "exact for affine fields" is
-    false as soon as the second cell centre leaves the normal line (measured
-    1.25e-3 / 2.48e-3 relative flux error vs 1e-15 on an orthogonal mesh)."""
-    error, *_ = affine_error(warp=warp)
+def test_unprojected_stencil_loses_affine_exactness_on_warped_meshes(warp, floor):
+    """Negative-result gate (projection disabled): the raw one-sided stencil is
+    not affine exact once the second cell centre leaves the normal line
+    (measured 1.25e-3 / 2.48e-3 relative flux error vs 1e-15 orthogonal)."""
+    error, *_ = affine_error(warp=warp, projection=False)
     assert error > floor, error
     assert error < 1e-2, error
 
 
+@pytest.mark.parametrize("warp", [0.15, 0.3])
+@pytest.mark.parametrize("divisions", [(4, 4, 4), (6, 6, 6)])
+def test_projection_restores_affine_exactness_on_warped_meshes(warp, divisions):
+    """The projection (matrix+source pair) makes the closure exact again: the
+    second-cell datum is moved onto the normal line, so the stencil samples
+    three points of one straight line instead of a kinked one."""
+    error, *_ = affine_error(divisions=divisions, warp=warp)
+    assert error < 1e-12, error
+
+
+def test_projection_is_inert_on_an_orthogonal_mesh():
+    """No geometric offset -> no correction -> identical flux to round-off."""
+    mesh, mask, cell_face = build(warp=0.0, projection=True)
+    _, mask_off, op_off = build(warp=0.0, projection=False)
+    cell, face, _ = affine_field(mesh)
+    a = cell_face.scalar_flux(cell, 0.0, face)
+    b = op_off.scalar_flux(cell, 0.0, face)
+    assert np.abs(a - b).max() <= 1e-13 * np.abs(a).max()
+
+
 def test_warped_residual_is_carried_by_the_second_cell_offset():
-    """Mechanism gate: the residual equals coeff2 * (t_cell . grad u) exactly."""
-    error, residual, mesh, mask, op, exact = affine_error(warp=0.3)
+    """Mechanism gate (projection disabled): the residual equals
+    ``coeff2 * (t_cell . grad u)`` exactly, i.e. the defect has one cause."""
+    error, residual, mesh, mask, op, exact = affine_error(warp=0.3,
+                                                          projection=False)
     offset = op.wall_second_offset[mask]
     x = offset - np.einsum("ij,ij->i", offset, op.normal[mask])[:, None] * op.normal[mask]
     predicted = (op.wall_coeff[mask, 2] * (x @ GRADIENT)) * MU * op.area[mask]
@@ -140,3 +174,28 @@ def test_selection_already_minimises_predicted_truncation():
             best.append(min(r[0] for r in rows))
     assert len(chosen) == len(boundary)
     assert max(chosen) <= max(best) * (1 + 1e-12)
+
+
+def _wall_derivative_error(divisions, warp, projection):
+    mesh, mask, op = build(divisions, warp, projection=projection)
+    cell, _ = nvw.scalar_field(mesh.cell_centers, "trig3d")
+    face, gradient = nvw.scalar_field(mesh.face_centers, "trig3d")
+    computed = op.scalar_flux(cell, 0.0, face)[mask] / (MU * op.area[mask])
+    exact = np.einsum("ij,ij->i", gradient[mask], op.normal[mask])
+    return float(np.linalg.norm(computed - exact) / np.linalg.norm(exact))
+
+
+def test_projection_improves_the_smooth_field_wall_derivative_and_its_order():
+    """Affine exactness is cheap to win; the gate that matters is that the
+    smooth-field wall derivative does not pay for it.  On the warped family the
+    projection lowers the error at both grids and lifts the observed order
+    (1.39 -> 1.55) back to the orthogonal-mesh level."""
+    coarse = [4, 4, 4]
+    fine = [6, 6, 6]
+    raw = [_wall_derivative_error(d, 0.3, False) for d in (coarse, fine)]
+    projected = [_wall_derivative_error(d, 0.3, True) for d in (coarse, fine)]
+    assert projected[0] < raw[0]
+    assert projected[1] < raw[1]
+    ratio = np.log(fine[0] / coarse[0])
+    assert np.log(raw[0] / raw[1]) / ratio < 1.45          # measured 1.39
+    assert np.log(projected[0] / projected[1]) / ratio > 1.5  # measured 1.55
