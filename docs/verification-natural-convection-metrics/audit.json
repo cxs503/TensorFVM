@@ -1,0 +1,237 @@
+{
+  "ladders": {
+    "Ra=1e+04": {
+      "levels": [
+        32,
+        64
+      ],
+      "nusselt": [
+        2.2035503892348083,
+        2.206163900054888
+      ],
+      "nusselt_error_rel_finest": 0.016422692797642368,
+      "nusselt_monotone": null,
+      "nusselt_verdict": "PASS",
+      "observed_order_nusselt": null,
+      "observed_order_psi": null,
+      "psi_error_rel_finest": 0.009756951076306461,
+      "psi_monotone": null,
+      "psi_over_alpha": [
+        5.165357497642374,
+        5.12047749890795
+      ],
+      "psi_verdict": "PASS"
+    },
+    "Ra=1e+05": {
+      "levels": [
+        32,
+        64,
+        96
+      ],
+      "nusselt": [
+        4.590121081451628,
+        4.436326622135401,
+        4.441759443260588
+      ],
+      "nusselt_error_rel_finest": 0.017092400252138203,
+      "nusselt_monotone": false,
+      "nusselt_verdict": "PASS",
+      "observed_order_nusselt": null,
+      "observed_order_psi": 1.1610420034733826,
+      "psi_error_rel_finest": 0.10628773726017728,
+      "psi_monotone": true,
+      "psi_over_alpha": [
+        11.166992727842933,
+        10.33277016872829,
+        10.079387574177476
+      ],
+      "psi_richardson": 9.6579359083049,
+      "psi_richardson_error_rel": 0.060030282988135134,
+      "psi_verdict": "WITHHELD (monotone ladder still marching: discretisation-limited)"
+    },
+    "Ra=1e+06": {
+      "levels": [
+        32,
+        64,
+        96
+      ],
+      "nusselt": [
+        10.641650022705209,
+        8.928616393352343,
+        8.735236296197373
+      ],
+      "nusselt_error_rel_finest": 0.007359511795753165,
+      "nusselt_monotone": true,
+      "nusselt_verdict": "PASS",
+      "observed_order_nusselt": 2.8128600613331063,
+      "observed_order_psi": 0.9283803785609268,
+      "psi_error_rel_finest": 0.14120979456047436,
+      "psi_monotone": true,
+      "psi_over_alpha": [
+        22.406636676199522,
+        19.599541485743895,
+        18.624543847226942
+      ],
+      "psi_richardson": 16.491384850208117,
+      "psi_richardson_error_rel": 0.010501522684320894,
+      "psi_verdict": "WITHHELD (monotone ladder still marching: discretisation-limited)"
+    }
+  },
+  "legacy_psi_error_matches_pin": true,
+  "legacy_psi_error_records": [
+    "cavity_n032_ra1e04.json",
+    "cavity_n032_ra1e05.json",
+    "cavity_n032_ra1e06.json",
+    "cavity_n064_ra1e04.json",
+    "cavity_n064_ra1e05.json",
+    "cavity_n064_ra1e06.json",
+    "cavity_n096_ra1e05.json",
+    "cavity_n096_ra1e06.json"
+  ],
+  "records": [
+    {
+      "max_rel_mismatch": {
+        "energy_imbalance_rel": 0.0,
+        "nusselt_error_rel": 0.0
+      },
+      "n": 32,
+      "nusselt": 2.2035503892348083,
+      "nusselt_error_rel_stored": 0.017587878183322157,
+      "psi_error_rel_is_legacy_raw_psi": true,
+      "psi_error_rel_stored": 0.9879113556769552,
+      "psi_error_rel_true": 0.018607276206344708,
+      "psi_over_alpha": 5.165357497642374,
+      "rayleigh": 10000.0,
+      "record": "cavity_n032_ra1e04.json"
+    },
+    {
+      "max_rel_mismatch": {
+        "energy_imbalance_rel": 0.0,
+        "nusselt_error_rel": 0.0
+      },
+      "n": 32,
+      "nusselt": 4.590121081451628,
+      "nusselt_error_rel_stored": 0.015738234443821074,
+      "psi_error_rel_is_legacy_raw_psi": true,
+      "psi_error_rel_stored": 0.9954001781454028,
+      "psi_error_rel_true": 0.225660490378985,
+      "psi_over_alpha": 11.166992727842933,
+      "rayleigh": 100000.0,
+      "record": "cavity_n032_ra1e05.json"
+    },
+    {
+      "max_rel_mismatch": {
+        "energy_imbalance_rel": 0.0,
+        "nusselt_error_rel": 0.0
+      },
+      "n": 32,
+      "nusselt": 10.641650022705209,
+      "nusselt_error_rel_stored": 0.20927841167104633,
+      "psi_error_rel_is_legacy_raw_psi": true,
+      "psi_error_rel_stored": 0.9983706013830193,
+      "psi_error_rel_true": 0.37295567868869617,
+      "psi_over_alpha": 22.406636676199522,
+      "rayleigh": 1000000.0,
+      "record": "cavity_n032_ra1e06.json"
+    },
+    {
+      "max_rel_mismatch": {
+        "energy_imbalance_rel": 0.0,
+        "nusselt_error_rel": 0.0
+      },
+      "n": 64,
+      "nusselt": 2.206163900054888,
+      "nusselt_error_rel_stored": 0.016422692797642368,
+      "psi_error_rel_is_legacy_raw_psi": true,
+      "psi_error_rel_stored": 0.9880163897122889,
+      "psi_error_rel_true": 0.009756951076306461,
+      "psi_over_alpha": 5.12047749890795,
+      "rayleigh": 10000.0,
+      "record": "cavity_n064_ra1e04.json"
+    },
+    {
+      "max_rel_mismatch": {
+        "energy_imbalance_rel": 0.0,
+        "nusselt_error_rel": 0.0
+      },
+      "n": 64,
+      "nusselt": 4.436326622135401,
+      "nusselt_error_rel_stored": 0.018294617805841764,
+      "psi_error_rel_is_legacy_raw_psi": true,
+      "psi_error_rel_stored": 0.9957438046930809,
+      "psi_error_rel_true": 0.13409836118189983,
+      "psi_over_alpha": 10.33277016872829,
+      "rayleigh": 100000.0,
+      "record": "cavity_n064_ra1e05.json"
+    },
+    {
+      "max_rel_mismatch": {
+        "energy_imbalance_rel": 0.0,
+        "nusselt_error_rel": 0.0
+      },
+      "n": 64,
+      "nusselt": 8.928616393352343,
+      "nusselt_error_rel_stored": 0.014615499244584303,
+      "psi_error_rel_is_legacy_raw_psi": true,
+      "psi_error_rel_stored": 0.9985747318416489,
+      "psi_error_rel_true": 0.20095229692058178,
+      "psi_over_alpha": 19.599541485743895,
+      "rayleigh": 1000000.0,
+      "record": "cavity_n064_ra1e06.json"
+    },
+    {
+      "max_rel_mismatch": {
+        "energy_imbalance_rel": 0.0,
+        "nusselt_error_rel": 0.0
+      },
+      "n": 96,
+      "nusselt": 4.441759443260588,
+      "nusselt_error_rel_stored": 0.017092400252138203,
+      "psi_error_rel_is_legacy_raw_psi": true,
+      "psi_error_rel_stored": 0.9958481761048292,
+      "psi_error_rel_true": 0.10628773726017728,
+      "psi_over_alpha": 10.079387574177476,
+      "rayleigh": 100000.0,
+      "record": "cavity_n096_ra1e05.json"
+    },
+    {
+      "max_rel_mismatch": {
+        "energy_imbalance_rel": 0.0,
+        "nusselt_error_rel": 0.0
+      },
+      "n": 96,
+      "nusselt": 8.735236296197373,
+      "nusselt_error_rel_stored": 0.007359511795753165,
+      "psi_error_rel_is_legacy_raw_psi": true,
+      "psi_error_rel_stored": 0.9986456331476645,
+      "psi_error_rel_true": 0.14120979456047436,
+      "psi_over_alpha": 18.624543847226942,
+      "rayleigh": 1000000.0,
+      "record": "cavity_n096_ra1e06.json"
+    }
+  ],
+  "reproduced": {
+    "iterations": 1630,
+    "nusselt_rel_diff": 0.0,
+    "psi_over_alpha_rel_diff": 0.0,
+    "record": "reproduced_cavity_n032_ra1e05.json",
+    "settings": {
+      "alpha_T": 0.7,
+      "alpha_p": 0.2,
+      "alpha_u": 0.5,
+      "dc_relax": 1.0,
+      "poisson_solver": "multigrid"
+    }
+  },
+  "source": "docs/incompressible-baselines/cavity_n0*.json (+ reproduced n=32 Ra=1e5)",
+  "summary": {
+    "max_derived_rel_mismatch": 0.0,
+    "n_legacy_psi_error": 8,
+    "n_records": 8,
+    "nusselt_fail": [],
+    "order_withheld": [
+      "Ra=1e+04",
+      "Ra=1e+05"
+    ]
+  }
+}

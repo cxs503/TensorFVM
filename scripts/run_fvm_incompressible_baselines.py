@@ -132,7 +132,8 @@ def _resolve_init(table, tag, outdir):
 
 def run_one(job: dict, outdir: str, *, poisson_solver: str = "sparse",
             init_dir: str | None = None, table=None, alpha_u: float = 0.8,
-            alpha_p: float = 0.5, deferred: int = 1) -> dict:
+            alpha_p: float = 0.5, deferred: int = 1,
+            dc_relax: float = 0.05) -> dict:
     t0 = time.time()
     case = job["case"]
     if case == "backward_facing_step":
@@ -165,7 +166,8 @@ def run_one(job: dict, outdir: str, *, poisson_solver: str = "sparse",
     if case == "natural_convection_cavity":
         conv = converge(solver, max_iter=job["budget"]["max_iter"], tol=1e-7,
                         check=10, momentum_sweeps=5, p_cycles=3,
-                        deferred_cycles=deferred, first_order_iters=1.0, verbose=True)
+                        deferred_cycles=deferred, first_order_iters=1.0,
+                        dc_relax=dc_relax, verbose=True)
         metrics = natural_convection_metrics(solver)
         reference = dict(NATURAL_CONVECTION_REFERENCE[job["rayleigh"]])
     else:
@@ -210,6 +212,9 @@ def main(argv=None):
     ap.add_argument("--init-from", default=None,
                     help="directory holding the coarser level's *_fields.npz")
     ap.add_argument("--poisson", default="sparse", choices=("sparse", "multigrid"))
+    ap.add_argument("--dc-relax", type=float, default=0.05,
+                    help="defect-correction relaxation; the archived cavity ladder "
+                         "used the frozen path (1.0), the damped default diverges there")
     ap.add_argument("--deferred", type=int, default=1,
                     help="deferred-correction cycles for the cavity cases (0 = first order)")
     ap.add_argument("--max-iter", type=int, default=0,
@@ -232,7 +237,7 @@ def main(argv=None):
         rec = run_one(job, args.out, poisson_solver=args.poisson,
                       init_dir=args.init_from or args.out, table=table,
                       alpha_u=args.alpha_u, alpha_p=args.alpha_p,
-                      deferred=args.deferred)
+                      deferred=args.deferred, dc_relax=args.dc_relax)
         print(f"[{idx}] {job['tag']} done in {rec['wall_seconds']}s "
               f"metrics={json.dumps(rec['metrics'], default=float)[:400]}", flush=True)
     return 0
