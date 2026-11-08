@@ -164,13 +164,24 @@ def build_sudden_expansion(n_over_D: int, *, re_D: float = 100.0,
                            area_ratio: float = 4.0,
                            inlet_profile: str = "uniform",
                            length_inlet_heights: float = 12.0,
+                           inlet_window: tuple[float, float] | None = None,
                            limited: bool = True,
                            poisson_solver: str = "multigrid") -> StaggeredSimple:
     """Planar sudden expansion ``A2/A1 = area_ratio``, inlet height ``D = 1``.
 
-    ``n_over_D`` cells resolve ``D``.  The inlet occupies ``y in [0, 1]`` on the
-    west boundary, the remaining part of that boundary is the no-slip step face,
-    so no blocked cells are needed.  ``Re_D = U_in D / nu``.
+    ``n_over_D`` cells resolve ``D``.  The inlet occupies ``y in [y0, y0 + 1]``
+    on the west boundary, the remaining part of that boundary is the no-slip
+    step face, so no blocked cells are needed.  ``Re_D = U_in D / nu``.
+
+    ``inlet_window`` places the inlet band: the default ``None`` reproduces the
+    historical ``y in [0, 1]`` (inlet flush with the **bottom** wall, i.e. a
+    *geometrically asymmetric* expansion -- the jet hugs the bottom wall and the
+    step side is the top wall).  Passing ``(1.5, 2.5)`` for ``AR = 4`` gives a
+    **mirror-symmetric** expansion about ``y = H2/2``, which is what the
+    symmetry verification of :func:`expansion_symmetry_metrics` needs; passing
+    ``(3.0, 4.0)`` gives the exact y-mirror of the default geometry.  The band
+    edges must fall on cell faces so that the discrete geometry is exactly
+    mirror-symmetric.
     """
     D = 1.0
     H2 = area_ratio * D
@@ -180,12 +191,24 @@ def build_sudden_expansion(n_over_D: int, *, re_D: float = 100.0,
     nx = int(round(length_inlet_heights * D / hx))
     ys = (np.arange(ny) + 0.5) * hy
     fluid = np.ones((nx, ny), dtype=bool)
+    y0 = 0.0 if inlet_window is None else float(inlet_window[0])
+    y1 = y0 + D
+    if inlet_window is not None:
+        if not (0.0 <= y0 and y1 <= H2 + 1e-12):
+            raise ValueError(f"inlet_window {inlet_window} leaves [0, {H2}]")
+        for edge in (y0, y1):
+            n_edge = edge / hy
+            if abs(n_edge - round(n_edge)) > 1e-9:
+                raise ValueError(f"inlet_window edge {edge} is not on a cell face "
+                                 f"(hy = {hy}); the discrete geometry would not be "
+                                 "exactly mirror-symmetric")
+    band = (ys >= y0 - 1e-12) & (ys <= y1 + 1e-12)
     if inlet_profile == "uniform":
-        profile = np.where(ys <= D, 1.0, 0.0)
+        profile = np.where(band, 1.0, 0.0)
         u_mean = 1.0
     elif inlet_profile == "parabolic":
-        s = np.clip(ys, 0.0, D)
-        profile = np.where(ys <= D, 6.0 * (s / D) * (1.0 - s / D), 0.0)
+        s = np.clip(ys - y0, 0.0, D)
+        profile = np.where(band, 6.0 * (s / D) * (1.0 - s / D), 0.0)
         u_mean = 1.0
     else:
         raise ValueError("inlet_profile must be 'uniform' or 'parabolic'")
@@ -198,6 +221,9 @@ def build_sudden_expansion(n_over_D: int, *, re_D: float = 100.0,
                        area_ratio=area_ratio, inlet_profile=inlet_profile,
                        u_mean_inlet=u_mean, nu=nu, D=D, H2=H2, hx=hx, hy=hy,
                        length_inlet_heights=length_inlet_heights,
+                       inlet_window=(y0, y1),
+                       symmetric_about_midplane=bool(
+                           abs(0.5 * (y0 + y1) - 0.5 * H2) < 1e-12),
                        nx=nx, ny=ny, cells=int(fluid.sum()))
     return solver
 
@@ -227,10 +253,19 @@ def sudden_expansion_metrics(solver: StaggeredSimple) -> dict:
     nu, H2, D = solver.nu, m["H2"], m["D"]
     ny = solver.ny
     n_in = max(2, int(round(D / solver.hy)))
+    # inlet plane rows: the inlet band of the west boundary, not necessarily the
+    # bottom rows (the historical geometry is flush with the bottom wall, the
+    # mirror-symmetric one is centred -- see ``inlet_window``).
+    y0 = float(m.get("inlet_window", (0.0, D))[0])
+    j0 = int(round(y0 / solver.hy))
+    j1 = j0 + n_in
     # downstream fully-developed station: two inlet heights upstream of the exit
     i_out = solver.nx - max(3, int(round(2.0 * D / solver.hx)))
-    p_in = _section_pressure(solver, 0, 0, n_in)
-    u_in = _section_bulk(solver, 0, 0, n_in)
+    p_in = _section_pressure(solver, 0, j0, j1)
+    u_in = _section_bulk(solver, 0, j0, j1)
+    if not np.isfinite(u_in) or u_in <= 0.0:
+        raise ValueError(f"inlet station rows [{j0}, {j1}) carry no inflow "
+                         f"(bulk u = {u_in}); check meta['inlet_window']")
     p_out = _section_pressure(solver, i_out, 0, ny)
     u_out = _section_bulk(solver, i_out, 0, ny)
     q_in = 0.5 * u_in ** 2
@@ -252,10 +287,15 @@ def sudden_expansion_metrics(solver: StaggeredSimple) -> dict:
     #: on the *measured* stations, so it is a self-consistency gate on the two
     #: pressure/velocity post-processing paths, not a physical check.
     k_identity = -static_recovery + (1.0 - (u_out / u_in) ** 2)
-    # reattachment on the step-side wall (top wall, y = H2)
-    tau = solver.v[:, -1] if False else solver.u[:, -1]
+    # Wall shear is the sign of the wall-adjacent streamwise velocity (see
+    # :func:`wall_friction_profile`), so a negative-to-positive crossing of
+    # ``u`` on the wall-adjacent row is the reattachment point.  Both walls are
+    # reported: ``upper`` (``y = H2``, the step side for the default
+    # bottom-flush inlet) and ``lower`` (``y = 0``).  ``reattachment_over_D``
+    # keeps the historical meaning (upper wall).
     x = np.arange(solver.nx + 1) * solver.hx
-    x_r = _wall_reattachment(x, tau)
+    x_upper = _wall_reattachment(x, solver.u[:, -1])
+    x_lower = _wall_reattachment(x, solver.u[:, 0])
     return dict(
         p_in=p_in, u_in=u_in, p_out=p_out, u_out=u_out,
         k_total_head=float(k_total),
@@ -264,9 +304,69 @@ def sudden_expansion_metrics(solver: StaggeredSimple) -> dict:
         k_theory_borda_carnot=float(SUDDEN_EXPANSION_K_THEORY),
         k_error_rel=float(abs(k_total - SUDDEN_EXPANSION_K_THEORY)
                           / SUDDEN_EXPANSION_K_THEORY),
-        reattachment_over_D=None if x_r is None else float(x_r / D),
+        reattachment_over_D=None if x_upper is None else float(x_upper / D),
+        reattachment_over_D_upper=None if x_upper is None else float(x_upper / D),
+        reattachment_over_D_lower=None if x_lower is None else float(x_lower / D),
         continuity=float(np.abs(solver.divergence()).max()),
         iterations=int(solver.iterations),
+    )
+
+
+def expansion_symmetry_metrics(solver: StaggeredSimple) -> dict:
+    """Mirror-symmetry residuals of an expansion solution about ``y = H2/2``.
+
+    For a geometry that is exactly mirror-symmetric about the mid-plane the
+    discrete solution must satisfy ``u(x, y) = u(x, H2 - y)``,
+    ``v(x, y) = -v(x, H2 - y)`` and ``p(x, y) = p(x, H2 - y)``.  The cell rows
+    are mirrored with ``j -> ny - 1 - j`` for cell-centred quantities and the
+    y-faces with ``j -> ny - j`` (sign-flipped) for ``v``.  Every residual is
+    normalised by the corresponding field maximum so the numbers are
+    dimensionless and grid-independent to leading order.
+    """
+    u, v, p = solver.u, solver.v, solver.p
+    ny = solver.ny
+    u_scale = max(float(np.abs(u).max()), 1e-300)
+    v_scale = max(float(np.abs(v).max()), 1e-300)
+    p_scale = max(float(np.abs(p - float(p.mean())).max()), 1e-300)
+    du = float(np.abs(u - u[:, ::-1]).max()) / u_scale
+    dv = float(np.abs(v + v[:, ::-1]).max()) / v_scale
+    pm = p - float(p.mean())
+    dp = float(np.abs(pm - pm[:, ::-1]).max()) / p_scale
+    #: mean cross-plane velocity, i.e. the symmetry breaking of the global mode
+    v_mid = float(np.abs(v[:, ny // 2]).max()) / v_scale
+    return dict(
+        u_symmetry_rel=du,
+        v_symmetry_rel=dv,
+        p_symmetry_rel=dp,
+        v_centreline_rel=v_mid,
+        symmetry_rel=max(du, dv, dp),
+    )
+
+
+def expansion_mirror_metrics(a: StaggeredSimple, b: StaggeredSimple) -> dict:
+    """Residual between two expansion solutions that should be y-mirrors.
+
+    ``a`` and ``b`` must share the mesh; the check is
+    ``b(x, y) == mirror_y a(x, y)`` with ``u/p`` even and ``v`` odd.  A small
+    residual proves that a measured left/right (lower/upper) asymmetry of an
+    expansion solution comes from the *geometry*, not from the solver: it is
+    reproduced exactly when the geometry is mirrored.
+    """
+    if (a.nx, a.ny) != (b.nx, b.ny):
+        raise ValueError("mirror check needs matching grids")
+    ua, ub = a.u, b.u
+    va, vb = a.v, b.v
+    pa = a.p - a.p.mean()
+    pb = b.p - b.p.mean()
+    u_scale = max(float(np.abs(ua).max()), 1e-300)
+    v_scale = max(float(np.abs(va).max()), 1e-300)
+    p_scale = max(float(np.abs(pa).max()), 1e-300)
+    du = float(np.abs(ub - ua[:, ::-1]).max()) / u_scale
+    dv = float(np.abs(vb + va[:, ::-1]).max()) / v_scale
+    dp = float(np.abs(pb - pa[:, ::-1]).max()) / p_scale
+    return dict(
+        u_mirror_rel=du, v_mirror_rel=dv, p_mirror_rel=dp,
+        mirror_rel=max(du, dv, dp),
     )
 
 
