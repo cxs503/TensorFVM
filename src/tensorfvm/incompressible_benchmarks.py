@@ -149,6 +149,7 @@ class StaggeredFlow:
                  energy: bool = False,
                  rayleigh: float = 0.0,
                  prandtl: float = 0.71,
+                 alpha: float = 1.0,
                  theta_hot: float = 0.5,
                  cfl: float = 0.25) -> None:
         for name, value in (("nx", nx), ("ny", ny)):
@@ -175,8 +176,11 @@ class StaggeredFlow:
         self.kappa = float(kappa)
         self.wall_lo, self.wall_hi = float(wall_lo), float(wall_hi)
         self.energy_on = bool(energy)
+        if not (math.isfinite(alpha) and alpha > 0.0):
+            raise ValueError("alpha must be a positive finite number")
         self.rayleigh = float(rayleigh)
         self.prandtl = float(prandtl)
+        self.alpha = float(alpha)
         self.theta_hot = float(theta_hot)
         self.cfl = float(cfl)
         self.steps = 0
@@ -311,7 +315,7 @@ class StaggeredFlow:
                - 4.0 * self.theta) / h ** 2
         lap[0, :] += 2.0 * (self.theta_hot - self.theta[0, :]) / h ** 2
         lap[-1, :] -= 2.0 * (self.theta[-1, :] + self.theta_hot) / h ** 2
-        return -div + lap
+        return -div + self.alpha * lap
 
     # ---------------------------------------------------------------- pressure
     def solve_pressure(self, rhs: np.ndarray) -> np.ndarray:
@@ -340,10 +344,29 @@ class StaggeredFlow:
         return sfft.idct(out, type=2, norm="ortho", axis=1)
 
     # -------------------------------------------------------------- time step
+    #: Safety factor on the explicit-diffusion bound ``h^2 / (4 D)``.  The bare
+    #: bound is only *marginally* stable for the 2-D five-point Laplacian, so a
+    #: factor 0.5 is applied (verified: at 1.0 the diffusive mode of a buoyant
+    #: cavity at Ra = 1e4 grows during the slow start-up transient).
+    DIFFUSION_SAFETY = 0.5
+
     def stable_time_step(self) -> float:
+        """Largest explicit step: advective CFL *and* every diffusive bound.
+
+        The energy equation carries its own diffusivity ``alpha`` (hard-coded
+        as 1 before m6444, which is why this cap only used ``nu``); omitting it
+        lets ``dt`` exceed ``h^2 / (4 alpha)`` whenever the advective limit is
+        inactive -- exactly the slow low-Ra regime -- and the thermal mode then
+        grows without bound.  The momentum-only cases (``energy=False``) keep
+        the historical ``0.25 h^2 / nu`` value times the safety factor.
+        """
         speed = max(float(np.abs(self.u).max()), float(np.abs(self.v).max()),
                     abs(self.wall_lo), abs(self.wall_hi), 1e-8)
-        return min(self.cfl * self.h / speed, 0.25 * self.h ** 2 / self.nu)
+        diffusivity = max(self.nu, self.alpha if self.energy_on else 0.0)
+        bound = 0.25 * self.h ** 2 / diffusivity
+        if self.energy_on:
+            bound *= self.DIFFUSION_SAFETY
+        return min(self.cfl * self.h / speed, bound)
 
     def step(self, dt: float | None = None) -> float:
         """One explicit projection step; returns the time step used."""
@@ -541,7 +564,7 @@ def natural_convection(rayleigh: float, cells: int = 64, *, prandtl: float = 0.7
     h = 1.0 / cells
     return StaggeredFlow(cells, cells, h, nu=prandtl, outlet="wall",
                          energy=True, rayleigh=rayleigh, prandtl=prandtl,
-                         cfl=cfl)
+                         alpha=1.0, cfl=cfl)
 
 
 # ---------------------------------------------------------------------------
