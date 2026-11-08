@@ -450,13 +450,30 @@ class StaggeredFlow:
             if "theta" in data and self.energy_on:
                 self.theta = data["theta"].copy()
 
+    #: Wall-shear sign convention shared by both walls (single orientation):
+    #: the returned array is the streamwise skin friction ``2 nu u_near / h``,
+    #: where ``u_near`` is the first u-face row above the wall.  It is
+    #: **positive in attached forward flow and negative inside a recirculation
+    #: on both walls**, so a reversal test (``tau < 0``) can be applied to
+    #: either wall without an orientation factor.  (Signing the two walls with
+    #: opposite factors -- the pre-m6383 code returned ``-2 nu u/h`` on the
+    #: lower and ``+2 nu u/h`` on the upper wall -- makes the same test report
+    #: the *attached* region as reversed on one of them; see
+    #: docs/verification/sudden-expansion-symmetry-audit/report.md.)
     def wall_shear_lower(self) -> np.ndarray:
-        """Wall shear on the ``j = 0`` wall from the first u-face row."""
-        return -2.0 * self.nu * self.u[:, 0] / self.h
+        """Skin friction on the ``j = 0`` wall from the first u-face row.
+
+        Positive = near-wall flow in ``+x``; see the convention note above.
+        """
+        return 2.0 * self.nu * self.u[:, 0] / self.h
 
     def wall_shear_upper(self) -> np.ndarray:
-        """Wall shear on the ``j = ny`` wall from the last u-face row."""
-        return +2.0 * self.nu * self.u[:, -1] / self.h
+        """Skin friction on the ``j = ny`` wall from the last u-face row.
+
+        Same convention as :meth:`wall_shear_lower` (positive forward), so a
+        mirror-symmetric field gives identical arrays on the two walls.
+        """
+        return 2.0 * self.nu * self.u[:, -1] / self.h
 
 
 # ---------------------------------------------------------------------------
@@ -533,7 +550,7 @@ def natural_convection(rayleigh: float, cells: int = 64, *, prandtl: float = 0.7
 
 
 def reattachment_length(x: np.ndarray, tau: np.ndarray, start: float = 0.0,
-                        primary: bool = True) -> float:
+                        primary: bool = True, min_attached: float = 1.0) -> float:
     """Downstream reattachment point from the wall-shear zero crossing.
 
     With ``primary=True`` the *main* recirculation is measured: the longest
@@ -542,6 +559,15 @@ def reattachment_length(x: np.ndarray, tau: np.ndarray, start: float = 0.0,
     small counter-rotating corner eddy cannot be mistaken for the main bubble.
     ``primary=False`` returns the first crossing instead (the corner-eddy
     attachment, useful as a diagnostic).
+
+    ``min_attached`` (in the units of ``x``) guards the outflow boundary: a
+    crossing is only accepted when at least that much *re-attached* wall lies
+    downstream of it.  The open-outlet pressure condition contaminates the last
+    cells of a truncated domain and bends the near-wall profile back to positive
+    there, which otherwise fabricates a "reattachment" wherever the bubble is
+    still open (the m6253 sudden-expansion runs reported ``L_r/D = 11.86`` on a
+    12 D domain from exactly that artefact).  ``nan`` therefore means *not
+    resolved in this domain*, never "zero".
     """
     if x.size != tau.size:
         raise ValueError("x and tau must have the same length")
@@ -554,13 +580,16 @@ def reattachment_length(x: np.ndarray, tau: np.ndarray, start: float = 0.0,
         # longest run of reversed shear
         edges = np.flatnonzero(np.diff(np.concatenate(([0], negative.view(np.int8), [0]))))
         spans = list(zip(edges[::2], edges[1::2]))
-        i0, i1 = max(spans, key=lambda span: span[1] - span[0])
+        i0, i1 = max(spans, key=lambda span: span[1] - span[0])  # noqa: F841
         i = i1 - 1
         if i + 1 >= x.size:                       # bubble still open at the exit
             return float("nan")
         x0, x1 = x[i], x[i + 1]
         t0, t1 = tau[i], tau[i + 1]
-        return float(x0 - t0 * (x1 - x0) / (t1 - t0))
+        x_attach = float(x0 - t0 * (x1 - x0) / (t1 - t0))
+        if x[-1] - x_attach < min_attached:
+            return float("nan")                   # crossing sits in the outflow zone
+        return x_attach
     sign_change = np.where(np.sign(tau[:-1]) != np.sign(tau[1:]))[0]
     if sign_change.size == 0:
         return float("nan")

@@ -70,6 +70,14 @@ Reattachment lengths are **not claimed**: the D/10 solution is asymmetric
 exactly symmetric, which identifies a defect in the step-corner / wake
 treatment (see section 3).
 
+> **Correction (m6383, see section 6).** The asymmetry above is a *post-processing*
+> defect, not a solver defect: the stored fields are mirror symmetric to 1e-13,
+> and `wall_shear_lower`/`wall_shear_upper` disagreed in sign, so the reversal
+> test inverted its meaning on one wall. With the fixed accessor both walls give
+> the same array, and `L_r/D` is **WITHHELD** (bubble still open at the 12 D
+> outflow). The `K` numbers of this section are unaffected (re-derived to the
+> last digit).
+
 ### 2.3 Backward-facing step, `Re_H = 800`, expansion ratio 2
 
 **HONEST FAIL.** All three grid levels (H/20, H/40, H/80) were launched; the
@@ -138,3 +146,35 @@ at N = 64/96/128 is required.
    84 000) -- reproduce with a smaller `cfl` before claiming a Nusselt number.
 4. The expansion case is planar, not axisymmetric; Borda-Carnot holds for both,
    but the axisymmetric pipe expansion is a separate discretisation.
+
+## 6. Correction log (m6383): the "asymmetric" expansion was a metric-sign defect
+
+Audited in `docs/verification/sudden-expansion-symmetry-audit/` (script
+`scripts/audit_sudden_expansion_symmetry.py`, evidence `results.json`, figure
+`fig_symmetry_audit.png`).
+
+* **Falsified**: "the D/10 solution is asymmetric". The committed snapshots
+  satisfy `max|u - mirror(u)|/max|u| <= 1.6e-13`, `max|v + mirror(v)|/max|v| <=
+  6.0e-13`, `max|p - mirror(p)|/max|p| <= 1.7e-13`, and the discrete operators
+  preserve mirror symmetry on a symmetric random field (1.8e-15 / 8.9e-16 /
+  0.0, pinned by `tests/test_incompressible_benchmarks.py`).
+* **Root cause**: `StaggeredFlow.wall_shear_lower` returned `-2 nu u/h` while
+  `wall_shear_upper` returned `+2 nu u/h`, i.e. `tau_lower == -tau_upper` on a
+  symmetric field. Applying the old convention to the stored field reproduces
+  the recorded `L_r/D = 0.2023` bit for bit, so the `0.20` was the *attached*
+  region, not the bubble. Fixed: both accessors now share one orientation
+  (positive = attached forward flow), matching the `4 nu u/(h U^2)` skin-friction
+  definition used by the backward-facing-step runner.
+* **`L_r/D` is WITHHELD, not 11.86**: `reattachment_length(..., min_attached=)`
+  now refuses a crossing inside the outflow-contaminated last length unit. On a
+  reopened 25 D domain the bubble closes at `X_r/D = 13.79` (D/5) and `17.08`
+  (D/10), i.e. `X_r` grows with resolution -- still a discretisation debt, and
+  no literature anchor applies at `AR = 4` in this tree.
+* **Backward-facing step**: the same accessor produced the m6253 `L_r/H = 0.184`
+  (it measured the attached corner patch, which the inverted sign turned into
+  the longest "reversed" run). Re-measured with the corrected convention
+  (`--bfs` in the audit script) the *main* bubble is recovered; the step's
+  residual accuracy debt (first-order, ~16 % in `L_r/H` at H/40) is unchanged.
+  The HONEST FAIL of section 2.3 therefore stands **as an accuracy debt, not as
+  a missing-recirculation defect**; the `O(kappa)` mass-defect hypothesis above
+  loses its main piece of evidence.
