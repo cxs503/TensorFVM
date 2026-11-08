@@ -95,3 +95,56 @@ def band_membership(value: float, reynolds: float) -> bool:
     if not math.isfinite(value):
         raise ValueError("measured coefficient must be finite")
     return band["low"] <= float(value) <= band["high"]
+
+def window_to_band_ratio(reynolds: float, error_limit: float) -> float:
+    """Full two-sided gate window ``2 * error_limit`` over the literature spread.
+
+    ``gate_is_informative`` historically compared the *one-sided* limit with the
+    *full* band width, which understates the window by a factor of two; this
+    helper states the ratio with an explicit convention so that reports can
+    quote it without ambiguity: a gate whose full window exceeds the spread
+    cannot discriminate between accepted reference laws (ratio > 1).
+    """
+    if not math.isfinite(error_limit) or error_limit <= 0:
+        raise ValueError("error_limit must be finite and positive")
+    return 2.0 * error_limit / reference_band(reynolds)["spread"]
+
+
+def band_aware_verdict(value: float, reynolds: float) -> dict:
+    """Judge a measured mean ``C_f`` against the whole literature band.
+
+    A single-law relative error cannot decide accuracy when the reference laws
+    themselves disagree by more than the claim being tested.  The verdict here
+    is therefore band-relative and reports, in machine-readable form:
+
+    * ``error_per_law`` - relative error against every accepted correlation,
+      so that the spread of verdicts is visible instead of one chosen number,
+    * ``error_vs_band_mean`` and ``offset_in_band_widths`` - where the value
+      sits in the band, normalised by the band width,
+    * ``verdict`` - ``"in_band"`` or ``"outside_band"``.
+
+    ``"in_band"`` means the measurement cannot be resolved from the reference
+    uncertainty; it is not a claim that the solver is accurate to any
+    particular tolerance.
+    """
+    band = reference_band(reynolds)
+    value = float(value)
+    if not math.isfinite(value):
+        raise ValueError("measured coefficient must be finite")
+    if value <= 0.0:
+        raise ValueError("measured coefficient must be positive")
+    errors = {name: (value - law) / law for name, law in band["values"].items()}
+    in_band = band["low"] <= value <= band["high"]
+    return {
+        "value": value,
+        "reynolds": band["reynolds"],
+        "in_band": in_band,
+        "verdict": "in_band" if in_band else "outside_band",
+        "error_per_law": errors,
+        "error_vs_band_mean": (value - band["mean"]) / band["mean"],
+        "offset_in_band_widths": (value - band["mean"]) / band["spread"],
+        "band_low": band["low"],
+        "band_high": band["high"],
+        "band_mean": band["mean"],
+        "band_spread": band["spread"],
+    }

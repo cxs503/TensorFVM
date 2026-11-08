@@ -1,0 +1,157 @@
+{
+  "band": {
+    "full_window_to_band_ratio_at_documented_gate": 2.0944520655072685,
+    "half_window_to_band_ratio_at_documented_gate": 1.0472260327536342,
+    "high": 0.008333333333333333,
+    "low": 0.0069105343724189085,
+    "mean": 0.00744996055622203,
+    "spread": 0.19098073743841998,
+    "spread_percent": 19.098073743841997,
+    "values": {
+      "ittc57": 0.008333333333333333,
+      "prandtl_schlichting": 0.007155974519135878,
+      "schlichting_0.074": 0.007399999999999999,
+      "white": 0.0069105343724189085
+    }
+  },
+  "case": {
+    "chord_m": 1.0,
+    "domain_height_m": 0.2,
+    "metric": "mean skin-friction coefficient over the 1 m plate",
+    "name": "turbulent-flat-plate-SA",
+    "reynolds": 100000.0,
+    "stretching": 4.0
+  },
+  "convergence": {
+    "delta_12": 5.328000000000017e-05,
+    "delta_23": 6.177000000000005e-05,
+    "delta_ratio": 1.1593468468468442,
+    "differences_shrink": false,
+    "monotone": true,
+    "note": "successive differences grow by 1.159x per grid doubling, so the sequence is not in its asymptotic range; no observed order and no Richardson extrapolation are reported",
+    "observed_order": null,
+    "richardson_limit": null,
+    "richardson_usable": false,
+    "state": "differences_grow_not_asymptotic",
+    "values": [
+      0.00691056,
+      0.00696384,
+      0.00702561
+    ]
+  },
+  "criteria": {
+    "documented_gate": 0.2,
+    "documented_gate_source": "src/tensorfvm/benchmark_flat_plate.py:ERROR_LIMIT",
+    "refinement_criterion": 0.03,
+    "refinement_criterion_source": "docs/verification-sa-refinement/report.md (prose: 经验摩阻3%分别验收)",
+    "undocumented_factor_between_criteria": 6.666666666666667,
+    "verdict_flips_between_criteria": true
+  },
+  "evidence": {
+    "crosscheck": "stored error column re-derived from the correlations",
+    "levels_parsed": 3,
+    "source": "docs/verification-sa-refinement/report.md",
+    "source_sha256": "0525c57bb6e29d37e8bc81e1f174f07d5c56c61ccb84b7727347c029b4dfcf4a"
+  },
+  "levels": [
+    {
+      "band_verdict": "in_band",
+      "converged": true,
+      "error_percent_per_law": {
+        "ittc57": -17.073280000000004,
+        "prandtl_schlichting": -3.4295052124572645,
+        "schlichting_0.074": -6.614054054054042,
+        "white": 0.00037084803735868755
+      },
+      "error_percent_vs_schlichting_recomputed": -6.614054054054042,
+      "error_vs_band_mean_percent": -7.240314256047108,
+      "first_cell_y_plus": 0.812019811562859,
+      "in_band": true,
+      "iterations": 78,
+      "mean_cf": 0.00691056,
+      "name": "sa-64x56",
+      "nx": 64,
+      "ny": 56,
+      "offset_in_band_widths": -0.0028243715227875004,
+      "passes_documented_gate": true,
+      "passes_refinement_criterion": false,
+      "stored_error_matches_recomputed": true,
+      "stored_error_percent": 6.6141
+    },
+    {
+      "band_verdict": "in_band",
+      "converged": true,
+      "error_percent_per_law": {
+        "ittc57": -16.43392,
+        "prandtl_schlichting": -2.6849525333284685,
+        "schlichting_0.074": -5.894054054054039,
+        "white": 0.7713676643277096
+      },
+      "error_percent_vs_schlichting_recomputed": -5.894054054054039,
+      "error_vs_band_mean_percent": -6.525142684360034,
+      "first_cell_y_plus": 0.4002947575295625,
+      "in_band": true,
+      "iterations": 99,
+      "mean_cf": 0.00696384,
+      "name": "sa-128x112",
+      "nx": 128,
+      "ny": 112,
+      "offset_in_band_widths": -0.0025453905076619314,
+      "passes_documented_gate": true,
+      "passes_refinement_criterion": false,
+      "stored_error_matches_recomputed": true,
+      "stored_error_percent": 5.894
+    },
+    {
+      "band_verdict": "in_band",
+      "converged": true,
+      "error_percent_per_law": {
+        "ittc57": -15.692680000000001,
+        "prandtl_schlichting": -1.8217577324691283,
+        "schlichting_0.074": -5.059324324324308,
+        "white": 1.6652203922228836
+      },
+      "error_percent_vs_schlichting_recomputed": -5.059324324324308,
+      "error_vs_band_mean_percent": -5.696010777770122,
+      "first_cell_y_plus": 0.19923819272725377,
+      "in_band": true,
+      "iterations": 132,
+      "mean_cf": 0.00702561,
+      "name": "sa-256x224",
+      "nx": 256,
+      "ny": 224,
+      "offset_in_band_widths": -0.0022219547474459714,
+      "passes_documented_gate": true,
+      "passes_refinement_criterion": false,
+      "stored_error_matches_recomputed": true,
+      "stored_error_percent": 5.0593
+    }
+  ],
+  "limitations": [
+    "the three Cf numbers are re-used from the stored report table; the original fields.npz are not in the repository, so the integrated wall friction cannot be re-derived here",
+    "no solver rerun: one iteration costs 6.7 s single-core (measured), so the 78-iteration converged case needs ~9 min and does not fit the local 120 s shell budget; cluster reproduction is the documented follow-up",
+    "y+ uses the measured mean Cf, not the local wall shear, so it is a grid-level estimate of the first-cell requirement"
+  ],
+  "per_law_verdicts_at_3pct": {
+    "ittc57": [
+      "FAIL",
+      "FAIL",
+      "FAIL"
+    ],
+    "prandtl_schlichting": [
+      "FAIL",
+      "PASS",
+      "PASS"
+    ],
+    "schlichting_0.074": [
+      "FAIL",
+      "FAIL",
+      "FAIL"
+    ],
+    "white": [
+      "PASS",
+      "PASS",
+      "PASS"
+    ]
+  }
+}
