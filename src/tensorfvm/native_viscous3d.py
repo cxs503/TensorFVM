@@ -96,7 +96,7 @@ class NativeViscous3D:
         self.face_gradient_matrices=[(a+diags(self.correction_direction[:,k]*damped_active)@(self.delta_matrix-contraction)-diags(self.normal[:,k]*self.neumann)@normal_contraction).tocsr() for k,a in enumerate(self.raw_face_gradient)]
         self.wall_closure=wall_closure
         self.wall_second_cell=-np.ones(self.F,dtype=int)
-        self.wall_coeff=np.zeros((self.F,3))
+        self.wall_coeff=np.zeros((self.F,3));self.wall_second_offset=np.zeros((self.F,3))
         self.wall_second_order_faces=0
         if wall_closure=='three_point':
             self._assemble_three_point_wall(mesh,o,n,i,bd,f)
@@ -135,14 +135,25 @@ class NativeViscous3D:
         orthogonal mesh but the face *centroid* of a triangulated or skewed
         face is laterally offset from that line.  The Dirichlet datum therefore
         enters through ``v - grad_t.t`` (``grad_t`` = tangential part of the
-        two-point face gradient), which is exact for affine fields and keeps the
-        stencil second order for smooth fields.  The tangential part of the
-        face gradient is left unchanged.  Faces without an aligned second cell
-        keep the two-point closure.
+        two-point face gradient), which is exact for affine fields on an
+        orthogonal mesh and keeps the stencil second order for smooth fields.
+        The tangential part of the face gradient is left unchanged.  Faces
+        without an aligned second cell keep the two-point closure.
+
+        Scope limitation (measured, see ``docs/native-viscous-three-point-closure``):
+        on a *non-orthogonal* mesh the second cell centre is laterally offset
+        from the normal line too (``wall_second_offset``), the stencil then
+        stops being affine exact (relative flux error 1.3e-3 at ``warp=0.15``,
+        2.8e-3 at ``warp=0.3``, versus ~1e-15 on an orthogonal mesh) and the
+        residual equals ``coeff2 * (t_cell . grad u)``.  Removing that offset
+        needs a datum-consistent tangential gradient on Dirichlet faces, which
+        the matrix-only assembly here cannot supply (a first-order correction
+        with the assembled two-point gradient makes the error worse, see the
+        report); the offset is exposed for diagnostics but not corrected.
         """
         F=self.F;N=self.N
         second=-np.ones(F,dtype=int)
-        coeff=np.zeros((F,3));offset=np.zeros((F,3))
+        coeff=np.zeros((F,3));offset=np.zeros((F,3));second_offset=np.zeros((F,3))
         candidates={}
         for gf in np.where(i)[0]:
             candidates.setdefault(o[gf],[]).append((gf,self.normal[gf],1))
@@ -170,10 +181,16 @@ class NativeViscous3D:
             coeff[face,1]=-delta1/(delta0*gap)
             coeff[face,2]=delta0/(delta1*gap)
             offset[face]=fc[face]-cc[c0]-delta0*nf
+            # Diagnostic only: lateral offset of the second cell centre from
+            # the normal line through the owner centre.  Zero on an orthogonal
+            # mesh, nonzero as soon as the second cell is laterally displaced;
+            # it is the measured source of the non-orthogonal residual.
+            second_offset[face]=cc[c1]-cc[c0]-float((cc[c1]-cc[c0])@nf)*nf
             second[face]=c1
         self.wall_second_cell=second
         self.wall_coeff=coeff
         self.wall_offset=offset
+        self.wall_second_offset=second_offset
         self.wall_second_order_faces=int((second[bd]>=0).sum())
         nrm=self.normal
         mask=second[bd]>=0
