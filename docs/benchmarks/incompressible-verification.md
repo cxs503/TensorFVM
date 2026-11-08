@@ -47,9 +47,29 @@ Reference: de Vahl Davis (1983).
 | 1e6 | 64 | 9.070 | **+3.1 %** | 17.11 | +2.1 % |
 
 All quoted runs converged (`ledger.residual <= 1e-6`), `max|div| <= 1e-12`.
-`Ra = 1e4` is **WITHHELD**: the N = 64 run diverged late in the transient
-(`residual ~1e6` at step 84 000) and the N = 16/32 runs were killed by the
-mission wall clock; no converged `Ra = 1e4` Nusselt number is claimed.
+
+`Ra = 1e4` was **WITHHELD** (the N = 64 run diverged at step 84 000).  The cause
+was a missing time-step bound, not a physics limit: `stable_time_step()` capped
+`dt` with the *viscous* diffusivity only (`0.25 h^2/nu`, i.e. `0.352 h^2` for
+`nu = Pr = 0.71`) while the energy equation is marched with `alpha = 1`, whose
+2-D explicit bound is `h^2/(4 alpha) = 0.25 h^2`.  At low `Ra` the start-up flow
+is slow, the advective limit is inactive and `dt` sat on that 1.41x
+over-generous cap, so the thermal mode grew.  m6444 parameterised `alpha` and
+made the diffusive cap `0.5 * 0.25 h^2 / max(nu, alpha)` when energy is on
+(momentum-only cases keep the historical bound, so no momentum artefact
+needs to be regenerated -- none was re-run in this change).  Re-verified at the default `cfl = 0.5`:
+
+| Ra | grid | Nu (mean, hot wall) | error vs 2.243 | \|psi\|max | error vs 5.071 | u_max | error vs 16.178 |
+|---|---|---|---|---|---|---|---|
+| 16 | 2.3327 | +4.0 % | 5.171 | +2.0 % | 16.20 | +0.1 % |
+| 32 | 2.2670 | +1.1 % | 5.065 | -0.1 % | 16.23 | +0.3 % |
+| 64 | 2.2504 | +0.3 % | 5.067 | -0.1 % | 16.21 | +0.2 % |
+
+Evidence: `fvm_natural_convection/raw_natural_convection_Ra1e+04_N*.json`
+(programmatically injected above from those files), report
+`docs/verification-natural-convection-ra1e4/REPORT.md`, regression
+`tests/test_incompressible_benchmarks.py::test_stable_time_step_bounds_energy_diffusion`
+and `::test_natural_convection_square_cavity_ra1e4_verified`.
 
 ### 2.2 Sudden expansion, planar, `AR = 4`, `Re_D = 100`
 
