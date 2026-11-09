@@ -245,11 +245,13 @@ class SuddenExpansionCase:
         p_out = float(profiles["static"][-1])
         bottom = self.reattachment("bottom")
         top = self.reattachment("top")
+        momentum = solver.momentum_residual()
         k_extrap = (pt_in - pt0) / dynamic
         k_raw = (pt_in - pt_out) / dynamic
         k_friction = self.wall_friction_loss()
         cp_extrap = (p0 - p_in) / dynamic
         return {
+            "momentum_residual": momentum,
             "mesh": {"nx": solver.nx, "ny": solver.ny,
                      "cells_per_downstream_height": cfg.cells_per_downstream_height,
                      "h_over_D": float(solver.hx)},

@@ -235,6 +235,44 @@ class StaggeredMAC:
         return ((self.u[1:, :] - self.u[:-1, :]) / self.hx
                 + (self.v[:, 1:] - self.v[:, :-1]) / self.hy)
 
+    def momentum_residual(self) -> dict[str, float]:
+        """Discrete control-volume momentum residual of the steady equations.
+
+        The projection step enforces ``u = u* - dt grad p`` with ``u*`` the
+        explicit tendency, so the steady-state residual of the x-momentum
+        equation at an interior u-face ``(i, j)`` is the tendency (convection
+        plus diffusion, exactly the right-hand side of :meth:`_u_tendency`)
+        plus the pressure gradient ``(p[i, j] - p[i-1, j]) / hx``.  The same
+        holds for the v-faces with the y-gradient.  Boundary faces use the
+        single adjacent cell (the pressure is cell-centred and the face is
+        between the cell and the wall/outlet).
+
+        The returned dictionary carries the maximum and the volume-averaged
+        magnitude, each normalised by the convective scale
+        ``U_ref^2 / min(hx, hy)`` so that the numbers are dimensionless and
+        comparable across meshes and cases.  A converged steady solution has
+        a residual at the level of the time-marching tolerance; the campaign
+        acceptance gate is 1 % of the convective scale.
+        """
+        tu = self._u_tendency()
+        tv = self._v_tendency()
+        p = self.p
+        # x-momentum at the solved u-faces i = 1 .. nx-1: the face sits between
+        # cells i-1 and i, so the centred gradient is (p[i] - p[i-1]) / hx.
+        grad_px = (p[1:, :] - p[:-1, :]) / self.hx          # (nx-1, ny)
+        ru = tu[1:self.nx, :] - grad_px
+        # y-momentum at the solved v-faces j = 1 .. ny-1
+        grad_py = (p[:, 1:] - p[:, :-1]) / self.hy          # (nx, ny-1)
+        rv = tv[:, 1:self.ny] - grad_py
+        scale = self.config.reference_velocity ** 2 / min(self.hx, self.hy)
+        return {
+            "max": float(max(ru.abs().max(), rv.abs().max())) / scale,
+            "mean": float(max(ru.abs().mean(), rv.abs().mean())) / scale,
+            "x_max": float(ru.abs().max()) / scale,
+            "y_max": float(rv.abs().max()) / scale,
+            "scale": float(scale),
+        }
+
     def apply_boundary_conditions(self) -> None:
         """Impose the non-evolving velocity/temperature boundary values."""
         cfg = self.config
