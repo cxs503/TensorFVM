@@ -1,0 +1,578 @@
+{
+ "source": "docs/verification-lid-cavity-ladder/summary.json",
+ "source_digest": "sha256:7870531969b6ce5a6e7b400ec6949a636a836d93500ec0e35e6baf65040cdc5a",
+ "fs": 1.25,
+ "c2_limit": 0.02,
+ "target_reynolds": 1000.0,
+ "rows": [
+  {
+   "reynolds": 100.0,
+   "n": 32,
+   "source": "docs/verification-lid-cavity-ladder/summary.json",
+   "u": {
+    "max_abs_error": 0.0069160981373702635,
+    "consistent": 0.0069160981373702635,
+    "suspects": [],
+    "points_kept": 17,
+    "points_total": 17,
+    "extremum_reference": 1.0
+   },
+   "v": {
+    "max_abs_error": 0.007785453957715589,
+    "consistent": 0.007785453957715589,
+    "suspects": [],
+    "points_kept": 17,
+    "points_total": 17,
+    "extremum_reference": 0.17527
+   },
+   "converged": true,
+   "max_divergence": 1.4210854715202004e-14
+  },
+  {
+   "reynolds": 100.0,
+   "n": 64,
+   "source": "docs/verification-lid-cavity-ladder/summary.json",
+   "u": {
+    "max_abs_error": 0.004452212009521672,
+    "consistent": 0.004452212009521672,
+    "suspects": [],
+    "points_kept": 17,
+    "points_total": 17,
+    "extremum_reference": 1.0
+   },
+   "v": {
+    "max_abs_error": 0.00872776060095204,
+    "consistent": 0.00872776060095204,
+    "suspects": [],
+    "points_kept": 17,
+    "points_total": 17,
+    "extremum_reference": 0.17527
+   },
+   "converged": true,
+   "max_divergence": 9.237055564881302e-14
+  },
+  {
+   "reynolds": 100.0,
+   "n": 128,
+   "source": "docs/verification-lid-cavity-ladder/summary.json",
+   "u": {
+    "max_abs_error": 0.004922402895836425,
+    "consistent": 0.004922402895836425,
+    "suspects": [],
+    "points_kept": 17,
+    "points_total": 17,
+    "extremum_reference": 1.0
+   },
+   "v": {
+    "max_abs_error": 0.009146022186147074,
+    "consistent": 0.009146022186147074,
+    "suspects": [],
+    "points_kept": 17,
+    "points_total": 17,
+    "extremum_reference": 0.17527
+   },
+   "converged": true,
+   "max_divergence": 6.750155989720952e-13
+  },
+  {
+   "reynolds": 400.0,
+   "n": 32,
+   "source": "docs/verification-lid-cavity-ladder/summary.json",
+   "u": {
+    "max_abs_error": 0.06836401423978111,
+    "consistent": 0.06836401423978111,
+    "suspects": [],
+    "points_kept": 17,
+    "points_total": 17,
+    "extremum_reference": 1.0
+   },
+   "v": {
+    "max_abs_error": 0.11456876276694808,
+    "consistent": 0.03603830760718507,
+    "suspects": [
+     0.9063
+    ],
+    "points_kept": 16,
+    "points_total": 17,
+    "extremum_reference": 0.30203
+   },
+   "converged": true,
+   "max_divergence": 7.16093850883226e-15
+  },
+  {
+   "reynolds": 400.0,
+   "n": 64,
+   "source": "docs/verification-lid-cavity-ladder/summary.json",
+   "u": {
+    "max_abs_error": 0.006596111540415894,
+    "consistent": 0.006596111540415894,
+    "suspects": [],
+    "points_kept": 17,
+    "points_total": 17,
+    "extremum_reference": 1.0
+   },
+   "v": {
+    "max_abs_error": 0.1423665470248758,
+    "consistent": 0.007375703842637783,
+    "suspects": [
+     0.9063
+    ],
+    "points_kept": 16,
+    "points_total": 17,
+    "extremum_reference": 0.30203
+   },
+   "converged": true,
+   "max_divergence": 3.197442310920451e-14
+  },
+  {
+   "reynolds": 400.0,
+   "n": 128,
+   "source": "docs/verification-lid-cavity-ladder/summary.json",
+   "u": {
+    "max_abs_error": 0.00134981727198058,
+    "consistent": 0.00134981727198058,
+    "suspects": [],
+    "points_kept": 17,
+    "points_total": 17,
+    "extremum_reference": 1.0
+   },
+   "v": {
+    "max_abs_error": 0.1493120683606132,
+    "consistent": 0.004307991766943214,
+    "suspects": [
+     0.9063
+    ],
+    "points_kept": 16,
+    "points_total": 17,
+    "extremum_reference": 0.30203
+   },
+   "converged": true,
+   "max_divergence": 2.4868995751603507e-13
+  },
+  {
+   "reynolds": 1000.0,
+   "n": 64,
+   "source": "docs/verification-lid-cavity-ladder/summary.json",
+   "u": {
+    "max_abs_error": 0.029310305036261974,
+    "consistent": 0.029310305036261974,
+    "suspects": [],
+    "points_kept": 17,
+    "points_total": 17,
+    "extremum_reference": 1.0
+   },
+   "v": {
+    "max_abs_error": 0.019733918942391973,
+    "consistent": 0.019733918942391973,
+    "suspects": [],
+    "points_kept": 17,
+    "points_total": 17,
+    "extremum_reference": 0.37095
+   },
+   "converged": true,
+   "max_divergence": 2.1316282072803006e-14
+  }
+ ],
+ "cross_checks": [
+  {
+   "row": "Re100_n32",
+   "artefact": "src/tensorfvm/verification/artifacts/verification_ladder/lid_cavity_Re100_n32.json",
+   "available": true,
+   "committed_u": 0.0069160981373702635,
+   "artefact_u": 0.006916094118992744,
+   "committed_v_consistent": 0.007785453957715589,
+   "artefact_v_consistent": 0.007785461150284466
+  },
+  {
+   "row": "Re100_n64",
+   "artefact": "src/tensorfvm/verification/artifacts/verification_ladder/lid_cavity_Re100_n64.json",
+   "available": false
+  },
+  {
+   "row": "Re100_n128",
+   "artefact": "src/tensorfvm/verification/artifacts/verification_ladder/lid_cavity_Re100_n128.json",
+   "available": false
+  },
+  {
+   "row": "Re400_n32",
+   "artefact": "src/tensorfvm/verification/artifacts/verification_ladder/lid_cavity_Re400_n32.json",
+   "available": false
+  },
+  {
+   "row": "Re400_n64",
+   "artefact": "src/tensorfvm/verification/artifacts/verification_ladder/lid_cavity_Re400_n64.json",
+   "available": true,
+   "committed_u": 0.006596111540415894,
+   "artefact_u": 0.006595769175995747,
+   "committed_v_consistent": 0.007375703842637783,
+   "artefact_v_consistent": 0.00737571528273305
+  },
+  {
+   "row": "Re400_n128",
+   "artefact": "src/tensorfvm/verification/artifacts/verification_ladder/lid_cavity_Re400_n128.json",
+   "available": false
+  },
+  {
+   "row": "Re1000_n64",
+   "artefact": "src/tensorfvm/verification/artifacts/verification_ladder/lid_cavity_Re1000_n64.json",
+   "available": true,
+   "committed_u": 0.029310305036261974,
+   "artefact_u": 0.029310237261449212,
+   "committed_v_consistent": 0.019733918942391973,
+   "artefact_v_consistent": 0.019733954866251513
+  }
+ ],
+ "refinement": {
+  "100": {
+   "grids": [
+    32,
+    64,
+    128
+   ],
+   "u": {
+    "raw": [
+     {
+      "n": 32,
+      "error": 0.0069160981373702635
+     },
+     {
+      "n": 64,
+      "error": 0.004452212009521672
+     },
+     {
+      "n": 128,
+      "error": 0.004922402895836425
+     }
+    ],
+    "track": [
+     {
+      "n": 32,
+      "error": 0.0069160981373702635
+     },
+     {
+      "n": 64,
+      "error": 0.004452212009521672
+     },
+     {
+      "n": 128,
+      "error": 0.004922402895836425
+     }
+    ],
+    "pairs": [
+     {
+      "coarse_n": 32,
+      "fine_n": 64,
+      "ratio": 2.0,
+      "observed_order": 0.6354360466444011,
+      "gci_fine": 0.010056365609638223
+     },
+     {
+      "coarse_n": 64,
+      "fine_n": 128,
+      "ratio": 2.0,
+      "observed_order": -0.14484045249196198,
+      "gci_fine": 0.0644154612896911
+     }
+    ],
+    "excluded_pairs": [
+     {
+      "coarse_n": 32,
+      "fine_n": 64,
+      "ratio": 2.0,
+      "observed_order": 0.6354360466444011,
+      "gci_fine": 0.010056365609638223
+     },
+     {
+      "coarse_n": 64,
+      "fine_n": 128,
+      "ratio": 2.0,
+      "observed_order": -0.14484045249196198,
+      "gci_fine": 0.0644154612896911
+     }
+    ],
+    "measurable": true,
+    "suspect_points": []
+   },
+   "v": {
+    "raw": [
+     {
+      "n": 32,
+      "error": 0.007785453957715589
+     },
+     {
+      "n": 64,
+      "error": 0.00872776060095204
+     },
+     {
+      "n": 128,
+      "error": 0.009146022186147074
+     }
+    ],
+    "track": [
+     {
+      "n": 32,
+      "error": 0.007785453957715589
+     },
+     {
+      "n": 64,
+      "error": 0.00872776060095204
+     },
+     {
+      "n": 128,
+      "error": 0.009146022186147074
+     }
+    ],
+    "pairs": [
+     {
+      "coarse_n": 32,
+      "fine_n": 64,
+      "ratio": 2.0,
+      "observed_order": -0.16483036658381658,
+      "gci_fine": 0.10104699682194719
+     },
+     {
+      "coarse_n": 64,
+      "fine_n": 128,
+      "ratio": 2.0,
+      "observed_order": -0.0675328891501293,
+      "gci_fine": 0.24999224405968568
+     }
+    ],
+    "excluded_pairs": [
+     {
+      "coarse_n": 32,
+      "fine_n": 64,
+      "ratio": 2.0,
+      "observed_order": -0.16483036658381658,
+      "gci_fine": 0.10104699682194719
+     },
+     {
+      "coarse_n": 64,
+      "fine_n": 128,
+      "ratio": 2.0,
+      "observed_order": -0.0675328891501293,
+      "gci_fine": 0.24999224405968568
+     }
+    ],
+    "measurable": true,
+    "suspect_points": []
+   }
+  },
+  "400": {
+   "grids": [
+    32,
+    64,
+    128
+   ],
+   "u": {
+    "raw": [
+     {
+      "n": 32,
+      "error": 0.06836401423978111
+     },
+     {
+      "n": 64,
+      "error": 0.006596111540415894
+     },
+     {
+      "n": 128,
+      "error": 0.00134981727198058
+     }
+    ],
+    "track": [
+     {
+      "n": 32,
+      "error": 0.06836401423978111
+     },
+     {
+      "n": 64,
+      "error": 0.006596111540415894
+     },
+     {
+      "n": 128,
+      "error": 0.00134981727198058
+     }
+    ],
+    "pairs": [
+     {
+      "coarse_n": 32,
+      "fine_n": 64,
+      "ratio": 2.0,
+      "observed_order": 3.373549412441862,
+      "gci_fine": 0.0008804873881134481
+     },
+     {
+      "coarse_n": 64,
+      "fine_n": 128,
+      "ratio": 2.0,
+      "observed_order": 2.2888516756048025,
+      "gci_fine": 0.0004341175348043575
+     }
+    ],
+    "excluded_pairs": [
+     {
+      "coarse_n": 32,
+      "fine_n": 64,
+      "ratio": 2.0,
+      "observed_order": 3.373549412441862,
+      "gci_fine": 0.0008804873881134481
+     },
+     {
+      "coarse_n": 64,
+      "fine_n": 128,
+      "ratio": 2.0,
+      "observed_order": 2.2888516756048025,
+      "gci_fine": 0.0004341175348043575
+     }
+    ],
+    "measurable": true,
+    "suspect_points": []
+   },
+   "v": {
+    "raw": [
+     {
+      "n": 32,
+      "error": 0.11456876276694808
+     },
+     {
+      "n": 64,
+      "error": 0.1423665470248758
+     },
+     {
+      "n": 128,
+      "error": 0.1493120683606132
+     }
+    ],
+    "track": [
+     {
+      "n": 32,
+      "error": 0.03603830760718507
+     },
+     {
+      "n": 64,
+      "error": 0.007375703842637783
+     },
+     {
+      "n": 128,
+      "error": 0.004307991766943214
+     }
+    ],
+    "pairs": [
+     {
+      "coarse_n": 32,
+      "fine_n": 64,
+      "ratio": 2.0,
+      "observed_order": -0.3133964386976052,
+      "gci_fine": 0.9114140862686663
+     },
+     {
+      "coarse_n": 64,
+      "fine_n": 128,
+      "ratio": 2.0,
+      "observed_order": -0.06872059321748111,
+      "gci_fine": 4.012314677411741
+     }
+    ],
+    "excluded_pairs": [
+     {
+      "coarse_n": 32,
+      "fine_n": 64,
+      "ratio": 2.0,
+      "observed_order": 2.288678629059493,
+      "gci_fine": 0.002372473189333476
+     },
+     {
+      "coarse_n": 64,
+      "fine_n": 128,
+      "ratio": 2.0,
+      "observed_order": 0.7757652355220068,
+      "gci_fine": 0.0075621475411152194
+     }
+    ],
+    "measurable": true,
+    "suspect_points": [
+     0.9063
+    ]
+   }
+  },
+  "1000": {
+   "grids": [
+    64
+   ],
+   "u": {
+    "raw": [
+     {
+      "n": 64,
+      "error": 0.029310305036261974
+     }
+    ],
+    "track": [
+     {
+      "n": 64,
+      "error": 0.029310305036261974
+     }
+    ],
+    "pairs": [],
+    "excluded_pairs": [],
+    "measurable": false,
+    "suspect_points": []
+   },
+   "v": {
+    "raw": [
+     {
+      "n": 64,
+      "error": 0.019733918942391973
+     }
+    ],
+    "track": [
+     {
+      "n": 64,
+      "error": 0.019733918942391973
+     }
+    ],
+    "pairs": [],
+    "excluded_pairs": [],
+    "measurable": false,
+    "suspect_points": []
+   }
+  }
+ },
+ "projection": {
+  "available": true,
+  "reynolds": 1000.0,
+  "evaluated_n": 64,
+  "measured_error": 0.029310305036261974,
+  "limit": 0.02,
+  "measured_orders": [
+   0.6354360466444011,
+   3.373549412441862,
+   2.2888516756048025
+  ],
+  "assumed_order": 2.2888516756048025,
+  "n_required_estimate": 75.63123734673016,
+  "next_power_of_two_grid": 128,
+  "status": "estimate-only: no second Re = 1000 grid exists in the tree"
+ },
+ "projection_raw": {
+  "available": true,
+  "reynolds": 1000.0,
+  "evaluated_n": 64,
+  "measured_error": 0.029310305036261974,
+  "limit": 0.02,
+  "measured_orders": [
+   0.6354360466444011,
+   3.373549412441862,
+   2.2888516756048025
+  ],
+  "assumed_order": 2.2888516756048025,
+  "n_required_estimate": 75.63123734673016,
+  "next_power_of_two_grid": 128,
+  "status": "estimate-only: no second Re = 1000 grid exists in the tree"
+ },
+ "figures": [
+  {
+   "name": "error-vs-grid.png",
+   "caption": "Centre-line max error against grid with the documented suspect Ghia entries dropped; the dotted line is the ladder's 2 % C2 gate."
+  }
+ ]
+}
