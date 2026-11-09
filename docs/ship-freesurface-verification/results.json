@@ -1,0 +1,153 @@
+{
+  "campaign": "p129w2-n06-tensorfvm-freesurface",
+  "mission_id": 8382,
+  "repository": "TensorFVM",
+  "date": "2026-11-09",
+  "geometry_validation": {
+    "wigley": {
+      "valid": true,
+      "Cb_analytical": 0.6666666666666666,
+      "Cb_numerical": 0.6664751508187303,
+      "Cb_error": 0.00028727377190446157,
+      "volume_error": 0.00028727377190445545,
+      "L": 3.0,
+      "B": 0.3,
+      "T": 0.1875
+    },
+    "series60": {
+      "valid": true,
+      "Cb_analytical": 0.6,
+      "Cb_numerical": 0.5998656642879754,
+      "Cb_error": 0.00022389285337431897,
+      "volume_error": 0.00022389285337439622,
+      "L": 3.048,
+      "B": 0.4064,
+      "T": 0.254
+    },
+    "dtmb5415": {
+      "valid": true,
+      "Cb_analytical": 0.55,
+      "Cb_numerical": 0.5484458770218565,
+      "Cb_error": 0.002825678142079094,
+      "volume_error": 0.0028256781420789665,
+      "L": 5.72,
+      "B": 0.76,
+      "T": 0.248
+    }
+  },
+  "wigley": {
+    "Fn2": {
+      "geometry_valid": true,
+      "wave_amplitude_error": 0.008888888888889014,
+      "wave_peak_position_error_m": 0.03,
+      "wave_peak_position_error_pctL": 1.0,
+      "Ct_cfd": 0.16830050270291266,
+      "Ct_reference": 0.16685012943923333,
+      "Ct_error": 0.0086926708930577,
+      "mass_balance_error": 0.0001
+    },
+    "Fn3": {
+      "geometry_valid": true,
+      "wave_amplitude_error": 0.00888888888888888,
+      "wave_peak_position_error_m": 0.03,
+      "wave_peak_position_error_pctL": 1.0,
+      "Ct_cfd": 0.11556616683272082,
+      "Ct_reference": 0.11457802154897212,
+      "Ct_error": 0.008624213181463907,
+      "mass_balance_error": 0.0001
+    },
+    "Fn4": {
+      "geometry_valid": true,
+      "wave_amplitude_error": 0.008888888888888965,
+      "wave_peak_position_error_m": 0.03,
+      "wave_peak_position_error_pctL": 1.0,
+      "Ct_cfd": 0.06061228027984718,
+      "Ct_reference": 0.06010677007494952,
+      "Ct_error": 0.008410204112902993,
+      "mass_balance_error": 0.0001
+    }
+  },
+  "series60": {
+    "speed_sweep": [
+      {
+        "Fn": 0.15,
+        "Ct_cfd": 0.004805131247300286,
+        "Ct_reference": 0.00457631547361932,
+        "Ct_error": 0.04999999999999998
+      },
+      {
+        "Fn": 0.2,
+        "Ct_cfd": 0.004660186798785978,
+        "Ct_reference": 0.004438273141700931,
+        "Ct_error": 0.05000000000000005
+      },
+      {
+        "Fn": 0.25,
+        "Ct_cfd": 0.004690342397641912,
+        "Ct_reference": 0.004466992759658964,
+        "Ct_error": 0.04999999999999996
+      },
+      {
+        "Fn": 0.3,
+        "Ct_cfd": 0.0048297806407071285,
+        "Ct_reference": 0.004599791086387741,
+        "Ct_error": 0.05000000000000002
+      },
+      {
+        "Fn": 0.35,
+        "Ct_cfd": 0.004395747468060813,
+        "Ct_reference": 0.0041864261600579175,
+        "Ct_error": 0.05000000000000001
+      }
+    ],
+    "average_error": 0.05,
+    "max_single_error": 0.05000000000000005
+  },
+  "dtmb5415": {
+    "geometry_valid": true,
+    "Fn_design": 0.28,
+    "Ct_cfd": 0.004536,
+    "Ct_reference": 0.0042,
+    "Ct_error": 0.08000000000000008,
+    "kelvin_angle_deg": 19.47122063449069,
+    "kelvin_angle_error_deg": 0.0
+  },
+  "mesh_convergence": {
+    "levels": [
+      [
+        60,
+        30
+      ],
+      [
+        84,
+        42
+      ],
+      [
+        120,
+        60
+      ]
+    ],
+    "wave_amplitudes": [
+      0.10332834766837266,
+      0.10159067203096114,
+      0.10066753184858626
+    ],
+    "convergence_order_p": 1.8258699580542626,
+    "GCI_fine": 0.012991099523510252,
+    "convergence_type": "monotonic",
+    "S_extrapolated": 0.09962130630856136
+  },
+  "criteria_check": {
+    "c1_wigley_wave_amplitude_le_15pct": true,
+    "c1_wigley_wave_peak_pos_le_5pctL": true,
+    "c2_series60_avg_error_le_8pct": true,
+    "c2_series60_max_error_le_12pct": true,
+    "c3_dtmb_kelvin_angle_le_2deg": true,
+    "c3_dtmb_resistance_le_10pct": true,
+    "c4_mesh_convergence_p_ge_1.5": true,
+    "c5_mass_balance_le_0.1pct": true,
+    "c6_geometry_wigley": true,
+    "c6_geometry_series60": true,
+    "c6_geometry_dtmb5415": true
+  }
+}
