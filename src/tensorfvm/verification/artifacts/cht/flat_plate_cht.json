@@ -1,0 +1,151 @@
+{
+  "acceptance": {
+    "all_within_limit": true,
+    "nu_error_limit": 0.15
+  },
+  "case": "flat_plate_cht",
+  "cases": [
+    {
+      "classical_coefficient_0.332": 0.2947841285785434,
+      "interface_local_flux_imbalance_rel": 1.3308032772621668e-14,
+      "ledger": {
+        "advective_heat_rate": {
+          "inflow": 0.0,
+          "outflow": 0.002599992798662421
+        },
+        "boundary_heat_rate": {
+          "east": -0.002599992798662421,
+          "north": -4.1353305433436414e-23,
+          "south": 0.0026015342319197603,
+          "west": -1.541433260920899e-06
+        },
+        "imbalance": -3.5817703383764175e-15,
+        "inflow": 0.0,
+        "normalized_imbalance": 1.376791546476522e-12,
+        "outflow": 0.002599992798662421,
+        "residual_inf": 4.2400775273655766e-17,
+        "residual_scaled": 1.62983729959866e-14
+      },
+      "max_discrete_divergence": 2.168404344971009e-19,
+      "nu_l2_rel_error": 0.01778334409533502,
+      "nu_max_rel_error": 0.03855621375997886,
+      "nusselt_similarity_coefficient": 0.29268022279326045,
+      "prandtl": 0.7,
+      "wall_temperature_nonuniformity": 0.019458895892205175
+    },
+    {
+      "classical_coefficient_0.332": 0.332,
+      "interface_local_flux_imbalance_rel": 1.1585239437973295e-14,
+      "ledger": {
+        "advective_heat_rate": {
+          "inflow": 0.0,
+          "outflow": 0.0020637859954846837
+        },
+        "boundary_heat_rate": {
+          "east": -0.0020637859954846837,
+          "north": -8.584428956353337e-26,
+          "south": 0.0020647159318030192,
+          "west": -9.299363165896669e-07
+        },
+        "imbalance": 1.7459991784848121e-15,
+        "inflow": 0.0,
+        "normalized_imbalance": 8.456365118276165e-13,
+        "outflow": 0.0020637859954846837,
+        "residual_inf": 2.9944308751334026e-17,
+        "residual_scaled": 1.4502870971303577e-14
+      },
+      "max_discrete_divergence": 2.168404344971009e-19,
+      "nu_l2_rel_error": 0.01796587130546495,
+      "nu_max_rel_error": 0.038183889633816914,
+      "nusselt_similarity_coefficient": 0.3320573362152732,
+      "prandtl": 1.0,
+      "wall_temperature_nonuniformity": 0.021947407000815433
+    },
+    {
+      "classical_coefficient_0.332": 0.5677120142966634,
+      "interface_local_flux_imbalance_rel": 6.680118877141976e-15,
+      "ledger": {
+        "advective_heat_rate": {
+          "inflow": 0.0,
+          "outflow": 0.0007141444112280209
+        },
+        "boundary_heat_rate": {
+          "east": -0.0007141444112280209,
+          "north": -4.1063492386413614e-43,
+          "south": 0.0007142284804779901,
+          "west": -8.406925007876717e-08
+        },
+        "imbalance": -1.096128396382845e-16,
+        "inflow": 0.0,
+        "normalized_imbalance": 1.5347027265690558e-13,
+        "outflow": 0.0007141444112280209,
+        "residual_inf": 6.0986372202309624e-18,
+        "residual_scaled": 8.538776297676497e-15
+      },
+      "max_discrete_divergence": 2.168404344971009e-19,
+      "nu_l2_rel_error": 0.0240188766192759,
+      "nu_max_rel_error": 0.04903982292828091,
+      "nusselt_similarity_coefficient": 0.576688890581843,
+      "prandtl": 5.0,
+      "wall_temperature_nonuniformity": 0.03739954825128333
+    },
+    {
+      "classical_coefficient_0.332": 0.6350931526804332,
+      "interface_local_flux_imbalance_rel": 5.918348665609745e-15,
+      "ledger": {
+        "advective_heat_rate": {
+          "inflow": 0.0,
+          "outflow": 0.0005703294523762514
+        },
+        "boundary_heat_rate": {
+          "east": -0.0005703294523762514,
+          "north": -1.814683833940656e-46,
+          "south": 0.0005703791146022783,
+          "west": -4.966222598288304e-08
+        },
+        "imbalance": 4.401860820291148e-17,
+        "inflow": 0.0,
+        "normalized_imbalance": 7.717429877074895e-14,
+        "outflow": 0.0005703294523762514,
+        "residual_inf": 5.416252919544117e-18,
+        "residual_scaled": 9.495882266518184e-15
+      },
+      "max_discrete_divergence": 2.168404344971009e-19,
+      "nu_l2_rel_error": 0.02683665644055215,
+      "nu_max_rel_error": 0.05440048985799373,
+      "nusselt_similarity_coefficient": 0.6459219790006521,
+      "prandtl": 7.0,
+      "wall_temperature_nonuniformity": 0.04178011561598971
+    }
+  ],
+  "grid": {
+    "nx": 120,
+    "ny_fluid": 60,
+    "ny_solid": 16
+  },
+  "isothermal_control": {
+    "ledger": {
+      "advective_heat_rate": {
+        "inflow": 0.0,
+        "outflow": 0.002650325710108631
+      },
+      "boundary_heat_rate": {
+        "east": -0.002650325710108631,
+        "north": -4.437415766392836e-23,
+        "south": 0.0026521289772415847,
+        "west": -1.8032671329295534e-06
+      },
+      "imbalance": 2.4286084289517635e-17,
+      "inflow": 0.0,
+      "normalized_imbalance": 9.157203325298683e-15,
+      "outflow": 0.002650325710108631,
+      "residual_inf": 3.001335517142505e-17,
+      "residual_scaled": 1.1316702705251242e-14
+    },
+    "nu_l2_rel_error": 0.005198766736915408,
+    "nu_max_rel_error": 0.0154083030905936,
+    "prandtl": 0.7
+  },
+  "reynolds_length": 100000.0,
+  "solid_ratio": 100.0
+}
