@@ -1,0 +1,80 @@
+{
+  "case": "smoke",
+  "cg_iterations_last": 169,
+  "damping_zone": {
+    "enabled": true,
+    "length_over_lambda": 1.5000000000000002,
+    "start_x": 4.6621363153239095
+  },
+  "dispersion": {
+    "k_measured": 1.2424030067916776,
+    "k_theory": 4.031363343613927,
+    "relative_error": 0.6918156710533757
+  },
+  "grid": {
+    "depth": 0.9,
+    "dx": 0.07,
+    "dy": 0.0325,
+    "height": 1.3,
+    "length": 7.0,
+    "nx": 100,
+    "ny": 40,
+    "points_per_amplitude": 0.923076923076923,
+    "points_per_wavelength": 22.26536842548657
+  },
+  "probes": [
+    {
+      "amp": 0.006318340846794007,
+      "amp_over_target": 0.21061136155980023,
+      "height_error": 0.7893886384401997,
+      "phase": 1.1982777488618248,
+      "residual": 0.23782092943613878,
+      "x": 2.1040773162084814
+    },
+    {
+      "amp": 0.001120765565522402,
+      "amp_over_target": 0.03735885218408007,
+      "height_error": 0.9626411478159199,
+      "phase": -2.901613837453233,
+      "residual": 0.6637380044209971,
+      "x": 3.2730091585465266
+    },
+    {
+      "amp": 0.0036309364052023226,
+      "amp_over_target": 0.12103121350674409,
+      "height_error": 0.8789687864932558,
+      "phase": -2.1803386870071146,
+      "residual": 0.41786891303145807,
+      "x": 4.441941000884572
+    }
+  ],
+  "reflection": {
+    "gauge_spacing_over_lambda": 0.25,
+    "gauges": [
+      2.4157924741652934,
+      2.8054364216113084
+    ],
+    "goda_C_R": 0.37092224996005785,
+    "incident_amp": 0.0031370949769496197,
+    "reflected_amp": 0.0011636183271885488
+  },
+  "relaxation_zone_length_over_lambda": 1.0,
+  "time": {
+    "dt": 0.01,
+    "periods": 4.0,
+    "steps": 400,
+    "wall_seconds": 66.27115511894226
+  },
+  "volume_drift": 0.011838308570206875,
+  "wave": {
+    "amp": 0.03,
+    "depth": 0.9,
+    "g": 9.80665,
+    "k": 4.031363343613927,
+    "lambda": 1.5585757897840602,
+    "omega": 6.283185307179586,
+    "omega_over_sqrt_g": 2.0064092925890407,
+    "period": 1.0,
+    "phase0": 0.0
+  }
+}
