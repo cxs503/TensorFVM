@@ -155,6 +155,13 @@ class TwoPhaseConfig:
     #: Brackbill--Kothe--Zemach smoothing passes applied to alpha before the
     #: normals/curvature are differentiated (0 = legacy, unsmoothed).
     csf_smoothing: int = 3
+    #: Interface-curvature estimator used by the balanced CSF force:
+    #: ``"divergence"`` (default, ``kappa = div n`` on the smoothed colour
+    #: field -- existing behaviour, bit-for-bit) or ``"height_function"``
+    #: (second-order height-function curvature, see
+    #: :mod:`tensorfvm.two_phase_curvature` and
+    #: ``docs/height-function-curvature/report.md``).
+    csf_curvature: str = "divergence"
     # Domain boundary type for two-phase (not using inlet/outlet channel)
     # "closed" = all walls except top atmosphere; "channel" = inlet+outlet
     domain_type: str = "closed"
@@ -535,7 +542,8 @@ class TwoPhaseSolver:
         if getattr(self.tp, 'csf_balance', 'balanced') == 'balanced':
             return balanced_csf_face_forces(
                 self.alpha, self.props.sigma, self.dx, self.dy,
-                smoothing=getattr(self.tp, 'csf_smoothing', 3))
+                smoothing=getattr(self.tp, 'csf_smoothing', 3),
+                curvature=getattr(self.tp, 'csf_curvature', 'divergence'))
         f = self.props.csf(self.alpha, self.dx, self.dy)      # (ny, nx, 2)
         f_u = 0.5 * (f[:, :-1, 0] + f[:, 1:, 0])
         f_v = 0.5 * (f[:-1, :, 1] + f[1:, :, 1])
