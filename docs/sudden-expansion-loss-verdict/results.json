@@ -1,0 +1,358 @@
+{
+  "generated_by": "scripts/audit_expansion_loss_verdict.py",
+  "k_borda_carnot": 0.5625,
+  "new_run": {
+    "tag": "expansion_n010",
+    "meta": {
+      "case": "sudden_expansion",
+      "n_over_D": 10,
+      "re_D": 100.0,
+      "area_ratio": 4.0,
+      "inlet_profile": "uniform",
+      "u_mean_inlet": 1.0,
+      "nu": 0.01,
+      "D": 1.0,
+      "H2": 4.0,
+      "hx": 0.1,
+      "hy": 0.1,
+      "length_inlet_heights": 12.0,
+      "inlet_window": [
+        0.0,
+        1.0
+      ],
+      "symmetric_about_midplane": false,
+      "nx": 120,
+      "ny": 40,
+      "cells": 4800
+    },
+    "iterations": 4460,
+    "wall_seconds": 52.3,
+    "outlet_column": 100,
+    "developed_window": [
+      80,
+      100
+    ]
+  },
+  "station": {
+    "u_in": 1.0,
+    "u_out": 0.2500000029230967,
+    "p_in": 0.7421304302866625,
+    "p_out": 0.6978577469228651,
+    "q_in": 0.5,
+    "velocity_ratio": 0.2500000029230967,
+    "cp": -0.08854536672759483,
+    "k_station_bulk": 1.0260453652660464,
+    "k_station_flux": 0.7843748261785084,
+    "k_static_recovery": 1.0260453667275948,
+    "alpha_out": 3.5618827229284102,
+    "kinetic_energy_bias": 0.16011767392734116,
+    "outlet_column": 100
+  },
+  "slopes": {
+    "dp_dx": 0.019572154343913597,
+    "dpt_dx_bulk": 0.01771761941505113,
+    "dpt_dx_flux": -0.008822988203349518,
+    "dp_dx_fully_developed": -0.030000000350771605,
+    "development_ratio": -0.6524051371689467,
+    "r2_pressure": 0.9752848836415237,
+    "r2_total_bulk": 0.9810624675596488,
+    "r2_total_flux": 0.9756875587075702,
+    "window_length_over_D": 2.0
+  },
+  "routes": {
+    "station_bulk_D10": {
+      "value": 1.0260453652660464,
+      "reference": 0.5625,
+      "kind": "bulk station (archived QoI)",
+      "error_rel": 0.8240806493618602,
+      "verdict": "FAIL"
+    },
+    "station_flux_D10": {
+      "value": 0.7843748261785084,
+      "reference": 0.5625,
+      "kind": "mass-flux station",
+      "error_rel": 0.39444413542845935,
+      "verdict": "FAIL"
+    },
+    "static_station_D10": {
+      "value": 1.0260453667275948,
+      "reference": 0.5625,
+      "kind": "static recovery at station",
+      "error_rel": 0.8240806519601686,
+      "verdict": "FAIL"
+    },
+    "static_step_D10": {
+      "value": 1.4174884536058667,
+      "reference": 0.5625,
+      "kind": "static recovery extrapolated to step plane",
+      "error_rel": 1.5199794730770964,
+      "verdict": "FAIL"
+    },
+    "bulk_step_D10": {
+      "value": 0.6716929769650238,
+      "reference": 0.5625,
+      "kind": "bulk total pressure extrapolated",
+      "error_rel": 0.19412084793782014,
+      "verdict": "FAIL"
+    },
+    "flux_step_D10": {
+      "value": 0.9608345902454988,
+      "reference": 0.5625,
+      "kind": "flux total pressure extrapolated",
+      "error_rel": 0.7081503826586645,
+      "verdict": "FAIL"
+    }
+  },
+  "archived": {
+    "k_total_head": {
+      "expansion_n010": 1.0260453652660464,
+      "expansion_n020": 1.1058190867564537,
+      "expansion_n030": 1.1312543698053101,
+      "expansion_long_n010": 0.8885330625954506
+    },
+    "k_static_recovery": {
+      "expansion_n010": -0.08854536672759483,
+      "expansion_n020": -0.1683190874853075,
+      "expansion_n030": -0.19375437013878227,
+      "expansion_long_n010": 0.04896693746648095
+    },
+    "iterations": {
+      "expansion_n010": 4460,
+      "expansion_n020": 4280,
+      "expansion_n030": 15420,
+      "expansion_long_n010": 11330
+    }
+  },
+  "mac_implementation": {
+    "summary": {
+      "case": "sudden_expansion",
+      "area_ratio": 4.0,
+      "reynolds_downstream": 100.0,
+      "meshes": [
+        10,
+        20,
+        30
+      ],
+      "reattachment_over_D": {
+        "10": 3.229534382138337,
+        "20": 3.3307544903904134,
+        "30": 3.347561612533875
+      },
+      "reattachment_symmetry_ratio": {
+        "10": 2.851243763549632e-12,
+        "20": 6.49316681313339e-14,
+        "30": 2.38788906748471e-15
+      },
+      "reverse_flow_extent_over_D": {
+        "10": {
+          "bottom": 3.3000000000000003,
+          "top": 3.3000000000000003,
+          "cells_per_D": 10
+        },
+        "20": {
+          "bottom": 3.35,
+          "top": 3.35,
+          "cells_per_D": 20
+        },
+        "30": {
+          "bottom": 3.3666666666666667,
+          "top": 3.3666666666666667,
+          "cells_per_D": 30
+        }
+      },
+      "max_mirror_residual": 1.8919310562637293e-12,
+      "symmetry_tolerance": 1e-10,
+      "symmetric": true,
+      "k_corrected": {
+        "10": 0.37794290193252295,
+        "20": 0.40334170691147136,
+        "30": 0.4496941830655501
+      },
+      "k_extrapolated": {
+        "10": 0.34462050942561223,
+        "20": 0.3453452907626928,
+        "30": 0.3799157330400036
+      },
+      "k_relative_error_corrected": {
+        "10": 0.32810150767551477,
+        "20": 0.2829480766018287,
+        "30": 0.20054367455013317
+      },
+      "k_relative_error_extrapolated": {
+        "10": 0.38734131657668935,
+        "20": 0.38605281642187944,
+        "30": 0.32459425237332695
+      },
+      "cp_momentum_balance": 0.375,
+      "cp_raw": {
+        "10": 0.1982271789088642,
+        "20": 0.23052231435869133,
+        "30": 0.2582767352931868
+      },
+      "cp_extrapolated": {
+        "10": 0.3666530921264687,
+        "20": 0.4016184099270531,
+        "30": 0.4301170959423952
+      },
+      "developed_friction_error": {
+        "10": 0.02365738805983608,
+        "20": 0.00920226911534372,
+        "30": 0.006294324908915605
+      },
+      "borda_carnot": 0.5625,
+      "predecessor_artifacts": {
+        "D10": {
+          "parameters": {
+            "area_ratio": 4.0,
+            "re_d": 100.0,
+            "cells_per_diameter": 10,
+            "nx": 150,
+            "ny": 40,
+            "h": 0.1,
+            "nu": 0.01,
+            "cfl": 0.3,
+            "upstream_length": 3.0,
+            "downstream_length": 12.0,
+            "pressure_stations_x_over_D": [
+              -0.4,
+              2.0
+            ]
+          },
+          "reattachment_length_over_D_lower": 0.2023015780813263,
+          "reattachment_length_over_D_upper": 11.855197762566915
+        },
+        "D20": {
+          "parameters": {
+            "area_ratio": 4.0,
+            "re_d": 100.0,
+            "cells_per_diameter": 20,
+            "nx": 300,
+            "ny": 80,
+            "h": 0.05,
+            "nu": 0.01,
+            "cfl": 0.3,
+            "upstream_length": 3.0,
+            "downstream_length": 12.0,
+            "pressure_stations_x_over_D": [
+              -0.4,
+              2.0
+            ]
+          },
+          "reattachment_length_over_D_lower": 0.22062715472940816,
+          "reattachment_length_over_D_upper": 11.879882059492905
+        }
+      },
+      "figures": [
+        "expansion_symmetry_wall_friction.png",
+        "expansion_total_pressure.png",
+        "expansion_speed_field.png"
+      ],
+      "wall_seconds_total": 111.20052218437195
+    },
+    "note": "torch MAC companion implementation, docs/verification-expansion-symmetry/"
+  },
+  "other_evidence": {
+    "flux_weighted_station": {
+      "D10": {
+        "k_total_pressure": 0.55524277940014,
+        "k_static_raw": 0.035218792601903026,
+        "k_borda_carnot": 0.5625,
+        "k_relative_error_total_pressure": 0.012901725510862229
+      },
+      "D20": {
+        "k_total_pressure": 0.6051790169073277,
+        "k_static_raw": 0.043150112592219625,
+        "k_borda_carnot": 0.5625,
+        "k_relative_error_total_pressure": 0.07587380783524919
+      }
+    },
+    "bulk_minus_flux": {
+      "D10": {
+        "stations": {
+          "in": [
+            26,
+            -0.4
+          ],
+          "out": [
+            50,
+            2.0
+          ]
+        },
+        "K_flux": 0.55524277940014,
+        "K_signed": 0.28327426719266013,
+        "K_bulk": 0.9706460280859466,
+        "k_borda_carnot": 0.5625,
+        "error_flux": 0.012901725510862229,
+        "error_signed": 0.4964013027686042,
+        "error_bulk": 0.7255929388194606,
+        "spread_max_over_min": 3.4265238339696844,
+        "bulk_minus_flux": {
+          "gap": 0.4154032486858066,
+          "kinetic_energy_term": 0.3265292323929174,
+          "kinetic_energy_share": 0.7860536320453534,
+          "residual": 0.08887401629288916,
+          "residual_share": 0.21394636795464664
+        },
+        "inlet": {
+          "head_abs": 0.5136936678887349,
+          "head_signed": 0.5136936678887349,
+          "p_section": -0.1525165473497341,
+          "u_bulk": 1.0011173733726337,
+          "backflow_share": 0.0,
+          "kinetic_energy_factor": 1.331888877863859
+        },
+        "outlet": {
+          "head_abs": 0.23607227818866497,
+          "head_signed": 0.3720565342924049,
+          "p_section": -0.16933242474925003,
+          "u_bulk": 0.25125000000000003,
+          "backflow_share": 0.12686579347767443,
+          "kinetic_energy_factor": 1.0850930163171082
+        }
+      },
+      "D20": {
+        "stations": {
+          "in": [
+            52,
+            -0.4
+          ],
+          "out": [
+            100,
+            2.0
+          ]
+        },
+        "K_flux": 0.6051790169073277,
+        "K_signed": 0.3127035752929507,
+        "K_bulk": 0.9717557925927549,
+        "k_borda_carnot": 0.5625,
+        "error_flux": 0.07587380783524919,
+        "error_signed": 0.4440825328125321,
+        "error_bulk": 0.727565853498231,
+        "spread_max_over_min": 3.1075941222686154,
+        "bulk_minus_flux": {
+          "gap": 0.36657677568542724,
+          "kinetic_energy_term": 0.4067131557793352,
+          "kinetic_energy_share": 1.1094896969914714,
+          "residual": -0.040136380093907964,
+          "residual_share": -0.10948969699147128
+        },
+        "inlet": {
+          "head_abs": 0.5473838807329134,
+          "head_signed": 0.5473838807329134,
+          "p_section": -0.1607408435221977,
+          "u_bulk": 0.9989168269952613,
+          "backflow_share": 0.0,
+          "kinetic_energy_factor": 1.4155410248706057
+        },
+        "outlet": {
+          "head_abs": 0.24479437227924963,
+          "head_signed": 0.3910320930864381,
+          "p_section": -0.17801489173915905,
+          "u_bulk": 0.2503125,
+          "backflow_share": 0.12977223330056814,
+          "kinetic_energy_factor": 1.1405883930234588
+        }
+      }
+    }
+  }
+}
