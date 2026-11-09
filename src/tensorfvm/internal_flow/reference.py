@@ -27,6 +27,7 @@ from __future__ import annotations
 # --------------------------------------------------------------- natural convection
 #: de Vahl Davis (1983) mean Nusselt numbers on the hot wall, ``Pr = 0.71``.
 DE_VAHL_DAVIS_NU = {
+    1.0e3: 1.334,
     1.0e4: 2.243,
     1.0e5: 4.519,
     1.0e6: 8.800,
@@ -50,6 +51,41 @@ BACKWARD_STEP_REFERENCE = {
     "campaign_target": 6.0,
     "campaign_band": 0.2,
 }
+
+#: Armaly, Durst, Pereira & Schoenung (1983), J. Fluid Mech. 127, 473-496:
+#: two-dimensional reattachment length of the backward-facing step (ER = 2)
+#: versus Reynolds number.  The experimental channel had a 4.9 mm step in a
+#: 10.4 mm inlet (ER = 1.9423); the 2-D benchmark values quoted for the
+#: square-ER geometry follow the same Re dependence.  The Reynolds number is
+#: based on the inlet hydraulic diameter ``D_h = 2 H_in`` (the Armaly
+#: definition, see :mod:`tensorfvm.inc_bench.reference`), and the length is
+#: quoted in step heights ``S``.  In this package's convention
+#: (``Re_H = U H / nu`` with ``H = S`` the step height) the same physical flow
+#: is ``Re_H = Re_Dh / 2`` and ``L_r / H_out = (L_r / S) / 2``.
+ARMALY_1983_REATTACHMENT = {
+    # Re_Dh: (L_r / S, note)
+    100.0: 3.9,
+    200.0: 4.9,
+    400.0: 5.7,
+    800.0: 6.1,
+    1600.0: 6.5,
+    3200.0: 6.7,
+    6400.0: 6.8,
+}
+ARMALY_1983_SOURCE = (
+    "Armaly, Durst, Pereira & Schoenung (1983), J. Fluid Mech. 127, 473-496; "
+    "Re based on D_h = 2 H_in, L_r in step heights; 2-D benchmark values "
+    "(Kim & Moin 1985; Erturk 2008 reproduce 6.0 +/- 0.2 at Re_Dh = 800)")
+
+
+def armaly_reattachment(re_dh: float) -> float | None:
+    """Armaly (1983) reattachment length in step heights at ``Re_Dh``.
+
+    Returns ``None`` when the requested Reynolds number is outside the
+    tabulated range instead of interpolating: the acceptance comparison must
+    use a certified literature value, not a fit.
+    """
+    return ARMALY_1983_REATTACHMENT.get(float(re_dh))
 
 # ---------------------------------------------------------------- sudden expansion
 #: Borda-Carnot total-pressure loss coefficient for a sudden expansion.
@@ -96,6 +132,7 @@ PROVENANCE = {
     "DE_VAHL_DAVIS_NU": "primary check, transcribed from de Vahl Davis (1983)",
     "DE_VAHL_DAVIS_VELOCITY": "secondary check, transcribed; not machine-verified",
     "BACKWARD_STEP_REFERENCE": "primary check, transcribed from Gartling (1990)",
+    "ARMALY_1983_REATTACHMENT": "primary check, transcribed from Armaly et al. (1983)",
     "borda_carnot_loss": "analytic (closed form)",
     "developed_channel_friction": "analytic (closed form)",
 }
