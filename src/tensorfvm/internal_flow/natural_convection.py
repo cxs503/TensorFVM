@@ -145,7 +145,9 @@ class NaturalConvectionCase:
         velocity_reference = DE_VAHL_DAVIS_VELOCITY.get(cfg.rayleigh, {})
         idx = int(torch.argmax(psi))
         i_psi, j_psi = divmod(idx, solver.ny + 1)
+        momentum = solver.momentum_residual()
         return {
+            "momentum_residual": momentum,
             "n": cfg.n,
             "rayleigh": cfg.rayleigh,
             "prandtl": cfg.prandtl,
