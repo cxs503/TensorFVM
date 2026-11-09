@@ -1,0 +1,1084 @@
+{
+  "added_masses": {
+    "J_z": 13411.107777638656,
+    "J_z_over_mass_L2": 0.08378584000192965,
+    "m_x": 382.20371932424945,
+    "m_y": 3822.037193242494,
+    "m_y_over_mass": 1.1700299111107733
+  },
+  "arbitration": {
+    "direct": {},
+    "failures": {
+      "delta_10": "ValueError: the trajectory left the model envelope (diverged) before the turning circle closed; the derivative model is not valid at this rudder angle",
+      "delta_35": "ValueError: the trajectory left the model envelope (diverged) before the turning circle closed; the derivative model is not valid at this rudder angle"
+    },
+    "mmg": {}
+  },
+  "arbitration_difference": {},
+  "conditions": {
+    "Cb": 0.8098,
+    "beam_m": 1.2688,
+    "design_speed_m_s": 1.1765156327903168,
+    "draft_m": 0.455,
+    "froude": 0.142,
+    "length_m": 7.0,
+    "nu": 1.139e-06,
+    "reynolds": 7230561.395550674,
+    "rho": 998.2
+  },
+  "criteria": {
+    "a_self_propulsion_closure": {
+      "limit": 0.02,
+      "note": "closure of the model, not a validation of the resistance level",
+      "passed": true,
+      "unit": "relative",
+      "value": 3.5846359775798993e-13
+    },
+    "b_rudder_derivative": {
+      "note": "no primary SIMMAN 2008 (Stern & Agdrup) table for KVLCC2 turning circle / zig-zag / rudder force exists in this workspace and no network route to one was available",
+      "passed": null,
+      "reference": "SIMMAN 2008 EFD",
+      "status": "withheld",
+      "value": -0.04132729340404593
+    },
+    "c_tactical_diameter": {
+      "band": [
+        2.8,
+        3.8
+      ],
+      "note": "no provenance-verified EFD table; literature band shown",
+      "passed": null,
+      "status": "withheld",
+      "steady_radius_route_over_L": 3.2565935010980445,
+      "value_over_L": 4.612791663281485
+    },
+    "d_first_overshoot": {
+      "band_deg": [
+        4.0,
+        15.0
+      ],
+      "passed": null,
+      "status": "withheld",
+      "value_deg": 37.778627168746006
+    },
+    "e_mmg_arbitration": {
+      "failures": {
+        "delta_10": "ValueError: the trajectory left the model envelope (diverged) before the turning circle closed; the derivative model is not valid at this rudder angle",
+        "delta_35": "ValueError: the trajectory left the model envelope (diverged) before the turning circle closed; the derivative model is not valid at this rudder angle"
+      },
+      "limit": 0.1,
+      "passed": false,
+      "results": {}
+    },
+    "f_convergence": {
+      "cfd_mesh": "see artifacts/rudder_section_cfd.json (not converged)",
+      "limit": 0.05,
+      "passed": true,
+      "time_step_gci": {
+        "extrapolated": 4.612739387903154,
+        "gci_fine": 1.4165873441355195e-05,
+        "monotonic": false,
+        "observed_order": -4.689278396055029,
+        "relative_change": 1.0893440541301466e-05
+      }
+    },
+    "g_negative_control": {
+      "passed": true,
+      "results": {
+        "analytic": {
+          "F_y_over_lateral_force_scale": 0.0,
+          "hull_N_Nm": 0.0,
+          "hull_Y_N": 0.0,
+          "rudder_F_y_N": 0.0,
+          "rudder_M_z_Nm": 0.0
+        },
+        "loaded": {
+          "F_y_over_lateral_force_scale": 0.0,
+          "hull_N_Nm": 0.0,
+          "hull_Y_N": 0.0,
+          "rudder_F_y_N": 0.0,
+          "rudder_M_z_Nm": 0.0
+        }
+      }
+    }
+  },
+  "derivative_substitution": {
+    "analytic": {
+      "F_N_delta_prime_per_rad": 0.03472881798659322,
+      "F_y_delta_prime_per_deg": -0.0007212973408383366,
+      "F_y_delta_prime_per_rad": -0.04132729340404593,
+      "M_z_delta_prime_per_deg": 0.00040854121005021567,
+      "M_z_delta_prime_per_rad": 0.02340768709304501,
+      "area_ratio": 0.0169,
+      "interaction": {
+        "a_H": 0.19,
+        "gamma_R": 0.4,
+        "kappa": 0.6,
+        "t_R": 0.28,
+        "w_R": 0.35,
+        "x_H_over_l": -0.42
+      },
+      "polar_source": "analytic (Helmbold finite-AR + smooth stall)",
+      "rudder_inflow_speed_ratio_squared": 0.8458000283259699,
+      "section_lift_slope_per_rad": 2.429604605528738
+    },
+    "loaded": {
+      "F_N_delta_prime_per_rad": 0.03472881798659322,
+      "F_y_delta_prime_per_deg": -0.0007212973408383366,
+      "F_y_delta_prime_per_rad": -0.04132729340404593,
+      "M_z_delta_prime_per_deg": 0.00040854121005021567,
+      "M_z_delta_prime_per_rad": 0.02340768709304501,
+      "area_ratio": 0.0169,
+      "interaction": {
+        "a_H": 0.19,
+        "gamma_R": 0.4,
+        "kappa": 0.6,
+        "t_R": 0.28,
+        "w_R": 0.35,
+        "x_H_over_l": -0.42
+      },
+      "polar_source": "analytic (Helmbold finite-AR + smooth stall)",
+      "rudder_inflow_speed_ratio_squared": 0.8458000283259699,
+      "section_lift_slope_per_rad": 2.429604605528738
+    },
+    "relative_difference_F_y_delta": 0.0
+  },
+  "generated": "2026-11-08T14:15:08Z",
+  "geometry_gate": {
+    "checks": {
+      "B": {
+        "computed": 1.2688,
+        "passed": true,
+        "published": 1.2688
+      },
+      "Cb": {
+        "computed": 0.8098358022111999,
+        "deviation_pct": 0.0044211177080662025,
+        "passed": true,
+        "published": 0.8098,
+        "tolerance_pct": 0.5
+      },
+      "Cm": {
+        "computed": 0.9981999999999999,
+        "deviation_pct": -1.112225029678578e-14,
+        "passed": true,
+        "published": 0.9982,
+        "tolerance_pct": 0.5
+      },
+      "Cwp": {
+        "computed": 0.8700519715912913,
+        "deviation_pct": 0.0059737461254406,
+        "passed": true,
+        "published": 0.87,
+        "tolerance_pct": 0.5
+      },
+      "L": {
+        "computed": 7.0,
+        "passed": true,
+        "published": 7.0
+      },
+      "LCB_pct": {
+        "computed": -1.6893666794811806,
+        "deviation": 0.0013666794811806326,
+        "passed": true,
+        "published": -1.688,
+        "tolerance": 0.05,
+        "unit": "percent_of_L"
+      },
+      "T": {
+        "computed": 0.455,
+        "passed": true,
+        "published": 0.455
+      },
+      "volume": {
+        "computed": 3.2726501357181412,
+        "unit": "m^3"
+      }
+    },
+    "passed": true
+  },
+  "host": "36cb7828dbd5",
+  "hull_derivatives_operating_point": {
+    "N_0": 0.0006783316738177776,
+    "N_r": -0.02200921497666529,
+    "N_v": -0.004813106235638555,
+    "Y_0": 0.045605789614286914,
+    "Y_r": 0.039837796439803896,
+    "Y_v": -0.46273320526354905,
+    "r_ref_prime": 0.22,
+    "v_ref_prime": -0.13
+  },
+  "hull_derivatives_zero_drift": {
+    "N_0": 0.0,
+    "N_r": 0.000390319648115958,
+    "N_v": -0.04253522971815435,
+    "Y_0": 0.0,
+    "Y_r": 0.0015625220307656676,
+    "Y_v": -0.17015220589083474,
+    "r_ref_prime": 0.0,
+    "v_ref_prime": 0.0
+  },
+  "hull_interaction": {
+    "hull_efficiency": 1.2927007000769621,
+    "provenance": {
+      "thrust_deduction": "EMPIRICAL (Holtrop 1984 regression)",
+      "wake_fraction": "EMPIRICAL (Harvald/Taylor 0.5Cb-0.05)"
+    },
+    "thrust_deduction": 0.16607877838035168,
+    "wake_fraction": 0.3549
+  },
+  "negative_control": {
+    "analytic": {
+      "F_y_over_lateral_force_scale": 0.0,
+      "hull_N_Nm": 0.0,
+      "hull_Y_N": 0.0,
+      "rudder_F_y_N": 0.0,
+      "rudder_M_z_Nm": 0.0
+    },
+    "loaded": {
+      "F_y_over_lateral_force_scale": 0.0,
+      "hull_N_Nm": 0.0,
+      "hull_Y_N": 0.0,
+      "rudder_F_y_N": 0.0,
+      "rudder_M_z_Nm": 0.0
+    }
+  },
+  "node": "IN63-N02",
+  "open_water": [
+    {
+      "J": 0.05,
+      "KQ": 0.04859896099283097,
+      "KT": 0.3437853669541598,
+      "eta": 0.05629250028769846,
+      "momentum_residual": null,
+      "rps": 1.0,
+      "thrust_N": 0.742685353534363,
+      "torque_Nm": 0.022644849215086128
+    },
+    {
+      "J": 0.1,
+      "KQ": 0.07157634340344893,
+      "KT": 0.46610044696456837,
+      "eta": 0.10364065357965517,
+      "momentum_residual": null,
+      "rps": 1.0,
+      "thrust_N": 1.0069246934601574,
+      "torque_Nm": 0.03335123777599734
+    },
+    {
+      "J": 0.15,
+      "KQ": 0.08557249255050274,
+      "KT": 0.5179373249988173,
+      "eta": 0.14449553184986252,
+      "momentum_residual": 0.1717671156716583,
+      "rps": 1.0,
+      "thrust_N": 1.1189087794323715,
+      "torque_Nm": 0.03987279051194252
+    },
+    {
+      "J": 0.2,
+      "KQ": 0.0925155696219363,
+      "KT": 0.5291567124952294,
+      "eta": 0.18206212599247473,
+      "momentum_residual": 0.2177625253838158,
+      "rps": 1.0,
+      "thrust_N": 1.1431462123488312,
+      "torque_Nm": 0.04310794060896883
+    },
+    {
+      "J": 0.25,
+      "KQ": 0.09288020347370993,
+      "KT": 0.5140955761891197,
+      "eta": 0.22023221610225632,
+      "momentum_residual": 0.23391469153301298,
+      "rps": 1.0,
+      "thrust_N": 1.11060938438191,
+      "torque_Nm": 0.04327784297773239
+    },
+    {
+      "J": 0.3,
+      "KQ": 0.08627057921460915,
+      "KT": 0.4711104820723839,
+      "eta": 0.2607362648315053,
+      "momentum_residual": 0.2816955131375234,
+      "rps": 1.0,
+      "thrust_N": 1.0177479571965795,
+      "torque_Nm": 0.040198066339343114
+    },
+    {
+      "J": 0.35,
+      "KQ": 0.0741895628945143,
+      "KT": 0.40368490535940366,
+      "eta": 0.30310135242081726,
+      "momentum_residual": 0.3477988420230757,
+      "rps": 1.0,
+      "thrust_N": 0.87208734132454,
+      "torque_Nm": 0.034568876180856016
+    },
+    {
+      "J": 0.39999999999999997,
+      "KQ": 0.05895882783706188,
+      "KT": 0.3194244419322722,
+      "eta": 0.34490494972787866,
+      "momentum_residual": 0.17631348841507324,
+      "rps": 1.0,
+      "thrust_N": 0.6900580344236077,
+      "torque_Nm": 0.0274720639905334
+    },
+    {
+      "J": 0.44999999999999996,
+      "KQ": 0.05452723403790023,
+      "KT": 0.29450884212159983,
+      "eta": 0.3868276554960514,
+      "momentum_residual": 1.3217048465795031e-11,
+      "rps": 1.0,
+      "thrust_N": 0.6362324419679017,
+      "torque_Nm": 0.02540714796528484
+    },
+    {
+      "J": 0.49999999999999994,
+      "KQ": 0.05056304562475559,
+      "KT": 0.27203356185703487,
+      "eta": 0.42813368460586326,
+      "momentum_residual": 1.2983381738426461e-11,
+      "rps": 1.0,
+      "thrust_N": 0.5876787131778743,
+      "torque_Nm": 0.023560021050594335
+    },
+    {
+      "J": 0.5499999999999999,
+      "KQ": 0.045867485514822386,
+      "KT": 0.2455132998593594,
+      "eta": 0.46854673099827765,
+      "momentum_residual": 9.371474189929073e-12,
+      "rps": 1.0,
+      "thrust_N": 0.5303865418092372,
+      "torque_Nm": 0.02137210903565443
+    },
+    {
+      "J": 0.6,
+      "KQ": 0.041509606446459305,
+      "KT": 0.22042585299781642,
+      "eta": 0.5070902920040917,
+      "momentum_residual": 9.261300141949828e-12,
+      "rps": 1.0,
+      "thrust_N": 0.476189705257657,
+      "torque_Nm": 0.01934154063697572
+    },
+    {
+      "J": 0.65,
+      "KQ": 0.036974614475884036,
+      "KT": 0.19406590239153612,
+      "eta": 0.5429740447023674,
+      "momentum_residual": 8.542803339886852e-12,
+      "rps": 1.0,
+      "thrust_N": 0.4192438573042622,
+      "torque_Nm": 0.017228445886237075
+    },
+    {
+      "J": 0.7,
+      "KQ": 0.03226883660793059,
+      "KT": 0.16643845315916564,
+      "eta": 0.574630316050437,
+      "momentum_residual": 8.287246353582157e-12,
+      "rps": 1.0,
+      "thrust_N": 0.3595598105916758,
+      "torque_Nm": 0.015035772872605888
+    },
+    {
+      "J": 0.75,
+      "KQ": 0.027398311582342096,
+      "KT": 0.13754969718166118,
+      "eta": 0.5992626816107444,
+      "momentum_residual": 6.887391824953445e-12,
+      "rps": 1.0,
+      "thrust_N": 0.2971509415452464,
+      "torque_Nm": 0.012766335367161591
+    },
+    {
+      "J": 0.7999999999999999,
+      "KQ": 0.021646538737411663,
+      "KT": 0.10414772061679874,
+      "eta": 0.6125921469105674,
+      "momentum_residual": 8.373288715152478e-12,
+      "rps": 1.0,
+      "thrust_N": 0.22499208558925932,
+      "torque_Nm": 0.010086277478432446
+    },
+    {
+      "J": 0.85,
+      "KQ": 0.01643961770738131,
+      "KT": 0.07275663124333788,
+      "eta": 0.598714705811464,
+      "momentum_residual": 6.770183087096324e-12,
+      "rps": 1.0,
+      "thrust_N": 0.1571773833065231,
+      "torque_Nm": 0.007660095124095866
+    },
+    {
+      "J": 0.9,
+      "KQ": 0.011082990770861086,
+      "KT": 0.04013392053877035,
+      "eta": 0.5187012038823284,
+      "momentum_residual": 7.9119793000694e-12,
+      "rps": 1.0,
+      "thrust_N": 0.08670198859287437,
+      "torque_Nm": 0.005164156799470723
+    },
+    {
+      "J": 0.95,
+      "KQ": 0.00558125637674378,
+      "KT": 0.006288672100520455,
+      "eta": 0.17036120966056756,
+      "momentum_residual": 6.88801006049622e-12,
+      "rps": 1.0,
+      "thrust_N": 0.013585524897746688,
+      "torque_Nm": 0.0026006051672739392
+    },
+    {
+      "J": 1.0,
+      "KQ": -6.13654948281562e-05,
+      "KT": -0.02876956985727829,
+      "eta": 0.0,
+      "momentum_residual": 4.526020084638274e-12,
+      "rps": 1.0,
+      "thrust_N": -0.06215138925134447,
+      "torque_Nm": -2.8593458563810285e-05
+    }
+  ],
+  "open_water_eta_max": 0.6125921469105674,
+  "planform": {
+    "AR": 0.11871556233125324,
+    "L": 7.0,
+    "T_mean": 0.41550446815938635,
+    "draft_mean_uniform": 0.4137803832292644,
+    "side_area": 2.9085312771157046,
+    "x_p_over_l": 0.25
+  },
+  "python": "3.11.6",
+  "reference_status": {
+    "simmman2008": {
+      "in_repo_substitute_rejected": "tensorfvm.simman2021_reference -- audited by node IN40-N04 as internally inconsistent",
+      "reason": "no primary SIMMAN 2008 (Stern & Agdrup) table for KVLCC2 turning circle / zig-zag / rudder force exists in this workspace and no network route to one was available",
+      "status": "withheld"
+    },
+    "turning": {
+      "advance_over_L": {
+        "basis": "literature-recalled spread for Cb~0.8 single-screw tankers, 35 deg rudder",
+        "central": 3.1,
+        "high": 3.6,
+        "low": 2.6,
+        "note": "plausibility band only",
+        "quantity": "advance_over_L",
+        "status": "withheld_band",
+        "unit": "-"
+      },
+      "steady_drift_deg": {
+        "basis": "literature-recalled spread for Cb~0.8 single-screw tankers",
+        "central": 13.0,
+        "high": 18.0,
+        "low": 8.0,
+        "note": "plausibility band only",
+        "quantity": "steady_drift_deg",
+        "status": "withheld_band",
+        "unit": "deg"
+      },
+      "tactical_diameter_over_L": {
+        "basis": "literature-recalled spread for Cb~0.8 single-screw tankers, 35 deg rudder",
+        "central": 3.3,
+        "high": 3.8,
+        "low": 2.8,
+        "note": "plausibility band only; no digitized SIMMAN 2008 EFD table in workspace",
+        "quantity": "tactical_diameter_over_L",
+        "status": "withheld_band",
+        "unit": "-"
+      },
+      "transfer_over_L": {
+        "basis": "literature-recalled spread for Cb~0.8 single-screw tankers, 35 deg rudder",
+        "central": 1.5499999999999998,
+        "high": 1.9,
+        "low": 1.2,
+        "note": "plausibility band only",
+        "quantity": "transfer_over_L",
+        "status": "withheld_band",
+        "unit": "-"
+      }
+    },
+    "zigzag": {
+      "psi_1_deg": {
+        "basis": "literature-recalled spread for full tankers, 10/10 zig-zag",
+        "central": 9.5,
+        "high": 15.0,
+        "low": 4.0,
+        "note": "plausibility band only; second overshoot typically exceeds the first",
+        "quantity": "psi_1_deg",
+        "status": "withheld_band",
+        "unit": "deg"
+      },
+      "psi_2_deg": {
+        "basis": "literature-recalled spread for full tankers, 10/10 zig-zag",
+        "central": 14.0,
+        "high": 22.0,
+        "low": 6.0,
+        "note": "plausibility band only",
+        "quantity": "psi_2_deg",
+        "status": "withheld_band",
+        "unit": "deg"
+      }
+    }
+  },
+  "resistance": {
+    "band": {
+      "c_chain_design": 0.004285133939376406,
+      "c_t_anchor": 0.004,
+      "c_t_anchor_high": 0.0041,
+      "c_t_anchor_low": 0.0039,
+      "c_wave_negative_shortfall": 0.00028513393937640557,
+      "wetted_surface_spread_pct": 1.7641856186922056
+    },
+    "c_total": 0.004285133939376406,
+    "c_viscous": 0.004285133939376406,
+    "c_wave": 0.0,
+    "cf": 0.0031764111809067246,
+    "delta_cf": 0.0,
+    "flags": [
+      "anchor C_T below the viscous chain: wave term clamped to zero (anchor 4.000e-03 vs chain 4.285e-03)"
+    ],
+    "froude": 0.142,
+    "one_plus_k": 1.3490488779079257,
+    "provenance": {
+      "cf": "REAL (ITTC-1957 line)",
+      "form_factor": "EMPIRICAL (Holtrop-Mennen 1982 regression)",
+      "roughness_allowance": "zero (hydraulically smooth model surface)",
+      "wave_term": "WITHHELD: residual of the KVLCC2 anchor C_T 4.000e-03 (provenance=withheld); clamped to zero when negative",
+      "wetted_surface": "REAL (hull integral); Holtrop regression shown for scale"
+    },
+    "r_allowance": 0.0,
+    "r_friction": 27.520241283371284,
+    "r_total": 37.1261506230874,
+    "r_viscous": 37.1261506230874,
+    "r_wave": 0.0,
+    "reynolds": 7230561.395550674,
+    "roughness": 0.0,
+    "speed": 1.1765156327903168,
+    "wetted_surface": 12.54101094775277,
+    "wetted_surface_holtrop": 12.76225765933164
+  },
+  "resistance_sweep": [
+    {
+      "band": {
+        "c_chain_design": 0.004285133939376406,
+        "c_t_anchor": 0.004,
+        "c_t_anchor_high": 0.0041,
+        "c_t_anchor_low": 0.0039,
+        "c_wave_negative_shortfall": 0.00028513393937640557,
+        "wetted_surface_spread_pct": 1.7641856186922056
+      },
+      "c_total": 0.0050836931547870706,
+      "c_viscous": 0.0050836931547870706,
+      "c_wave": 0.0,
+      "cf": 0.0037683535697170187,
+      "delta_cf": 0.0,
+      "flags": [
+        "anchor C_T below the viscous chain: wave term clamped to zero (anchor 4.000e-03 vs chain 4.285e-03)"
+      ],
+      "froude": 0.056799999999999996,
+      "one_plus_k": 1.3490488779079257,
+      "provenance": {
+        "cf": "REAL (ITTC-1957 line)",
+        "form_factor": "EMPIRICAL (Holtrop-Mennen 1982 regression)",
+        "roughness_allowance": "zero (hydraulically smooth model surface)",
+        "wave_term": "WITHHELD: residual of the KVLCC2 anchor C_T 4.000e-03 (provenance=withheld); clamped to zero when negative",
+        "wetted_surface": "REAL (hull integral); Holtrop regression shown for scale"
+      },
+      "r_allowance": 0.0,
+      "r_friction": 5.2238073006687955,
+      "r_total": 7.047171377374469,
+      "r_viscous": 7.047171377374469,
+      "r_wave": 0.0,
+      "reynolds": 2892224.5582202696,
+      "roughness": 0.0,
+      "speed": 0.47060625311612675,
+      "wetted_surface": 12.54101094775277,
+      "wetted_surface_holtrop": 12.76225765933164
+    },
+    {
+      "band": {
+        "c_chain_design": 0.004285133939376406,
+        "c_t_anchor": 0.004,
+        "c_t_anchor_high": 0.0041,
+        "c_t_anchor_low": 0.0039,
+        "c_wave_negative_shortfall": 0.00028513393937640557,
+        "wetted_surface_spread_pct": 1.7641856186922056
+      },
+      "c_total": 0.0047049412527387525,
+      "c_viscous": 0.0047049412527387525,
+      "c_wave": 0.0,
+      "cf": 0.003487598803710558,
+      "delta_cf": 0.0,
+      "flags": [
+        "anchor C_T below the viscous chain: wave term clamped to zero (anchor 4.000e-03 vs chain 4.285e-03)"
+      ],
+      "froude": 0.08519999999999998,
+      "one_plus_k": 1.3490488779079257,
+      "provenance": {
+        "cf": "REAL (ITTC-1957 line)",
+        "form_factor": "EMPIRICAL (Holtrop-Mennen 1982 regression)",
+        "roughness_allowance": "zero (hydraulically smooth model surface)",
+        "wave_term": "WITHHELD: residual of the KVLCC2 anchor C_T 4.000e-03 (provenance=withheld); clamped to zero when negative",
+        "wetted_surface": "REAL (hull integral); Holtrop regression shown for scale"
+      },
+      "r_allowance": 0.0,
+      "r_friction": 10.87788697372389,
+      "r_total": 14.674801215911456,
+      "r_viscous": 14.674801215911456,
+      "r_wave": 0.0,
+      "reynolds": 4338336.837330405,
+      "roughness": 0.0,
+      "speed": 0.7059093796741901,
+      "wetted_surface": 12.54101094775277,
+      "wetted_surface_holtrop": 12.76225765933164
+    },
+    {
+      "band": {
+        "c_chain_design": 0.004285133939376406,
+        "c_t_anchor": 0.004,
+        "c_t_anchor_high": 0.0041,
+        "c_t_anchor_low": 0.0039,
+        "c_wave_negative_shortfall": 0.00028513393937640557,
+        "wetted_surface_spread_pct": 1.7641856186922056
+      },
+      "c_total": 0.004461309754088773,
+      "c_viscous": 0.004461309754088773,
+      "c_wave": 0.0,
+      "cf": 0.0033070037914469568,
+      "delta_cf": 0.0,
+      "flags": [
+        "anchor C_T below the viscous chain: wave term clamped to zero (anchor 4.000e-03 vs chain 4.285e-03)"
+      ],
+      "froude": 0.11359999999999999,
+      "one_plus_k": 1.3490488779079257,
+      "provenance": {
+        "cf": "REAL (ITTC-1957 line)",
+        "form_factor": "EMPIRICAL (Holtrop-Mennen 1982 regression)",
+        "roughness_allowance": "zero (hydraulically smooth model surface)",
+        "wave_term": "WITHHELD: residual of the KVLCC2 anchor C_T 4.000e-03 (provenance=withheld); clamped to zero when negative",
+        "wetted_surface": "REAL (hull integral); Holtrop regression shown for scale"
+      },
+      "r_allowance": 0.0,
+      "r_friction": 18.337080350342244,
+      "r_total": 24.73761767073668,
+      "r_viscous": 24.73761767073668,
+      "r_wave": 0.0,
+      "reynolds": 5784449.116440539,
+      "roughness": 0.0,
+      "speed": 0.9412125062322535,
+      "wetted_surface": 12.54101094775277,
+      "wetted_surface_holtrop": 12.76225765933164
+    },
+    {
+      "band": {
+        "c_chain_design": 0.004285133939376406,
+        "c_t_anchor": 0.004,
+        "c_t_anchor_high": 0.0041,
+        "c_t_anchor_low": 0.0039,
+        "c_wave_negative_shortfall": 0.00028513393937640557,
+        "wetted_surface_spread_pct": 1.7641856186922056
+      },
+      "c_total": 0.004285133939376406,
+      "c_viscous": 0.004285133939376406,
+      "c_wave": 0.0,
+      "cf": 0.0031764111809067246,
+      "delta_cf": 0.0,
+      "flags": [
+        "anchor C_T below the viscous chain: wave term clamped to zero (anchor 4.000e-03 vs chain 4.285e-03)"
+      ],
+      "froude": 0.142,
+      "one_plus_k": 1.3490488779079257,
+      "provenance": {
+        "cf": "REAL (ITTC-1957 line)",
+        "form_factor": "EMPIRICAL (Holtrop-Mennen 1982 regression)",
+        "roughness_allowance": "zero (hydraulically smooth model surface)",
+        "wave_term": "WITHHELD: residual of the KVLCC2 anchor C_T 4.000e-03 (provenance=withheld); clamped to zero when negative",
+        "wetted_surface": "REAL (hull integral); Holtrop regression shown for scale"
+      },
+      "r_allowance": 0.0,
+      "r_friction": 27.520241283371284,
+      "r_total": 37.1261506230874,
+      "r_viscous": 37.1261506230874,
+      "r_wave": 0.0,
+      "reynolds": 7230561.395550674,
+      "roughness": 0.0,
+      "speed": 1.1765156327903168,
+      "wetted_surface": 12.54101094775277,
+      "wetted_surface_holtrop": 12.76225765933164
+    },
+    {
+      "band": {
+        "c_chain_design": 0.004285133939376406,
+        "c_t_anchor": 0.004,
+        "c_t_anchor_high": 0.0041,
+        "c_t_anchor_low": 0.0039,
+        "c_wave_negative_shortfall": 0.00028513393937640557,
+        "wetted_surface_spread_pct": 1.7641856186922056
+      },
+      "c_total": 0.004213050774207654,
+      "c_viscous": 0.004213050774207654,
+      "c_wave": 0.0,
+      "cf": 0.00312297859862658,
+      "delta_cf": 0.0,
+      "flags": [
+        "anchor C_T below the viscous chain: wave term clamped to zero (anchor 4.000e-03 vs chain 4.285e-03)"
+      ],
+      "froude": 0.1562,
+      "one_plus_k": 1.3490488779079257,
+      "provenance": {
+        "cf": "REAL (ITTC-1957 line)",
+        "form_factor": "EMPIRICAL (Holtrop-Mennen 1982 regression)",
+        "roughness_allowance": "zero (hydraulically smooth model surface)",
+        "wave_term": "WITHHELD: residual of the KVLCC2 anchor C_T 4.000e-03 (provenance=withheld); clamped to zero when negative",
+        "wetted_surface": "REAL (hull integral); Holtrop regression shown for scale"
+      },
+      "r_allowance": 0.0,
+      "r_friction": 32.73933845186075,
+      "r_total": 44.166967801930554,
+      "r_viscous": 44.166967801930554,
+      "r_wave": 0.0,
+      "reynolds": 7953617.535105742,
+      "roughness": 0.0,
+      "speed": 1.2941671960693486,
+      "wetted_surface": 12.54101094775277,
+      "wetted_surface_holtrop": 12.76225765933164
+    }
+  ],
+  "rudder_derivatives": {
+    "F_N_delta_prime_per_rad": 0.03472881798659322,
+    "F_y_delta_prime_per_deg": -0.0007212973408383366,
+    "F_y_delta_prime_per_rad": -0.04132729340404593,
+    "M_z_delta_prime_per_deg": 0.00040854121005021567,
+    "M_z_delta_prime_per_rad": 0.02340768709304501,
+    "area_ratio": 0.0169,
+    "interaction": {
+      "a_H": 0.19,
+      "gamma_R": 0.4,
+      "kappa": 0.6,
+      "t_R": 0.28,
+      "w_R": 0.35,
+      "x_H_over_l": -0.42
+    },
+    "polar_source": "analytic (Helmbold finite-AR + smooth stall)",
+    "rudder_inflow_speed_ratio_squared": 0.8458000283259699,
+    "section_lift_slope_per_rad": 2.429604605528738
+  },
+  "rudder_derivatives_analytic": {
+    "F_N_delta_prime_per_rad": 0.03472881798659322,
+    "F_y_delta_prime_per_deg": -0.0007212973408383366,
+    "F_y_delta_prime_per_rad": -0.04132729340404593,
+    "M_z_delta_prime_per_deg": 0.00040854121005021567,
+    "M_z_delta_prime_per_rad": 0.02340768709304501,
+    "area_ratio": 0.0169,
+    "interaction": {
+      "a_H": 0.19,
+      "gamma_R": 0.4,
+      "kappa": 0.6,
+      "t_R": 0.28,
+      "w_R": 0.35,
+      "x_H_over_l": -0.42
+    },
+    "polar_source": "analytic (Helmbold finite-AR + smooth stall)",
+    "rudder_inflow_speed_ratio_squared": 0.8458000283259699,
+    "section_lift_slope_per_rad": 2.429604605528738
+  },
+  "rudder_geometry": {
+    "area_m2": 0.0538265,
+    "area_ratio_AR_over_LT": 0.0169,
+    "aspect_ratio": 1.85,
+    "chord_m": 0.1705737535654457,
+    "reynolds_design": 176191.99966064084,
+    "slipstream_fraction": 0.46723182919294504,
+    "span_m": 0.31556144409607456,
+    "thickness_ratio": 0.18,
+    "x_r_over_l": -0.4865977765055721
+  },
+  "rudder_polar": {
+    "angle_deg": [
+      -35.0,
+      -20.0,
+      -10.0,
+      -5.0,
+      0.0,
+      5.0,
+      10.0,
+      20.0,
+      35.0
+    ],
+    "cd": [
+      0.3170579716199732,
+      0.11612092275626616,
+      0.04355781855904814,
+      0.02019412839370352,
+      0.0116,
+      0.02019412839370352,
+      0.04355781855904814,
+      0.11612092275626616,
+      0.3170579716199732
+    ],
+    "cl": [
+      -0.9656381050477242,
+      -0.7184565481231838,
+      -0.4088562289319057,
+      -0.21202299944047254,
+      0.0,
+      0.21202299944047254,
+      0.4088562289319057,
+      0.7184565481231838,
+      0.9656381050477242
+    ],
+    "lift_slope_per_rad": 2.429604605528738,
+    "meta": {
+      "aspect_ratio": 1.85,
+      "cl_max": 1.1,
+      "lift_slope_per_rad": 2.4603817430875377,
+      "thickness_ratio": 0.18
+    },
+    "source": "analytic (Helmbold finite-AR + smooth stall)"
+  },
+  "rudder_polar_source": "analytic (Helmbold finite-AR + smooth stall)",
+  "self_propulsion": {
+    "J": 0.42752095507159404,
+    "KQ": 0.056245704401621105,
+    "KT": 0.3041954422738516,
+    "closure_pct": -3.584635977579899e-11,
+    "closure_residual_rel": -3.5846359775798993e-13,
+    "delivered_power_W": 91.82031101624017,
+    "effective_power_W": 43.67949659339028,
+    "eta_open_water": 0.36799412138797266,
+    "iterations": 45,
+    "provenance": {
+      "closure": "REAL (root-find residual reported)",
+      "propeller_model": "BEMT on nominal KP505 geometry (see propeller module)",
+      "resistance": "WITHHELD-anchored ITTC-78 chain (see resistance module)",
+      "thrust_deduction": "EMPIRICAL (Holtrop 1984 regression)",
+      "wake_fraction": "EMPIRICAL (Harvald/Taylor 0.5Cb-0.05)"
+    },
+    "quasi_propulsive_efficiency": 0.4757062583426093,
+    "resistance_N": 37.1261506230874,
+    "rpm": 493.84835463274015,
+    "rps": 8.23080591054567,
+    "speed_m_s": 1.1765156327903168,
+    "throttle_tau": 0.1116265122612109,
+    "thrust_N": 44.519973422630244,
+    "thrust_deduction": 0.16607877838035168,
+    "thrust_required_N": 44.5199734226462,
+    "torque_Nm": 1.7754830490834657,
+    "wake_fraction": 0.3549
+  },
+  "turning_circle": {
+    "dt_0.25": {
+      "advance_m": 33.23892653198083,
+      "advance_over_L": 4.748418075997262,
+      "delta_deg": 35.0,
+      "mode": "direct",
+      "steady_drift_deg": 20.156521090150832,
+      "steady_r_1_s": 0.037842286321987696,
+      "steady_speed_m_s": 0.43132930296006794,
+      "steady_turning_radius_over_L": 1.6282967505490222,
+      "tactical_diameter_2R_over_L": 3.2565935010980445,
+      "tactical_diameter_m": 32.2895416429704,
+      "tactical_diameter_over_L": 4.612791663281485,
+      "time_180_s": 78.79991895045697,
+      "time_270_s": 119.87241565384879,
+      "time_90_s": 40.47358647327752,
+      "transfer_m": 13.606933908991117,
+      "transfer_over_L": 1.9438477012844453,
+      "x_180_over_L": 3.584208543561313,
+      "y_180_over_L": 4.503641175666918
+    },
+    "dt_0.5": {
+      "advance_m": 33.23882313238967,
+      "advance_over_L": 4.748403304627096,
+      "delta_deg": 35.0,
+      "mode": "direct",
+      "steady_drift_deg": 20.15718318988149,
+      "steady_r_1_s": 0.03784048037929075,
+      "steady_speed_m_s": 0.43125691058372545,
+      "steady_turning_radius_over_L": 1.6281011621910093,
+      "tactical_diameter_2R_over_L": 3.2562023243820186,
+      "tactical_diameter_m": 32.289189898768406,
+      "tactical_diameter_over_L": 4.612741414109772,
+      "time_180_s": 78.79991638588665,
+      "time_270_s": 119.87238366867865,
+      "time_90_s": 40.4735898027365,
+      "transfer_m": 13.606946201816209,
+      "transfer_over_L": 1.9438494574023155,
+      "x_180_over_L": 3.5841881917247926,
+      "y_180_over_L": 4.503574022116458
+    },
+    "dt_1": {
+      "advance_m": 33.23543946366785,
+      "advance_over_L": 4.747919923381121,
+      "delta_deg": 35.0,
+      "mode": "direct",
+      "steady_drift_deg": 20.158495589162786,
+      "steady_r_1_s": 0.03783690058881693,
+      "steady_speed_m_s": 0.43111345180684385,
+      "steady_turning_radius_over_L": 1.6277135551268989,
+      "tactical_diameter_2R_over_L": 3.2554271102537977,
+      "tactical_diameter_m": 32.28920353246083,
+      "tactical_diameter_over_L": 4.612743361780119,
+      "time_180_s": 78.80019740459706,
+      "time_270_s": 119.87260986556193,
+      "time_90_s": 40.47472934648865,
+      "transfer_m": 13.607564545698262,
+      "transfer_over_L": 1.9439377922426089,
+      "x_180_over_L": 3.58416059748822,
+      "y_180_over_L": 4.503443090286693
+    }
+  },
+  "turning_gci": {
+    "extrapolated": 4.612739387903154,
+    "gci_fine": 1.4165873441355195e-05,
+    "monotonic": false,
+    "observed_order": -4.689278396055029,
+    "relative_change": 1.0893440541301466e-05
+  },
+  "turning_sweep": {
+    "delta_10": {
+      "advance_m": 43.77610866547737,
+      "advance_over_L": 6.253729809353911,
+      "delta_deg": 10.0,
+      "mode": "direct",
+      "steady_drift_deg": 12.7844118113286,
+      "steady_r_1_s": 0.03367413363848035,
+      "steady_speed_m_s": 0.7663635143570043,
+      "steady_turning_radius_over_L": 3.251175018379516,
+      "tactical_diameter_2R_over_L": 6.502350036759032,
+      "tactical_diameter_m": 50.10542676607891,
+      "tactical_diameter_over_L": 7.157918109439843,
+      "time_180_s": 96.12954066560914,
+      "time_270_s": 142.69062462472013,
+      "time_90_s": 50.79303283681181,
+      "transfer_m": 21.22644511098949,
+      "transfer_over_L": 3.032349301569927,
+      "x_180_over_L": 3.7312021792547547,
+      "y_180_over_L": 7.074751793323174
+    },
+    "delta_20": {
+      "advance_m": 35.2159051219498,
+      "advance_over_L": 5.030843588849971,
+      "delta_deg": 20.0,
+      "mode": "direct",
+      "steady_drift_deg": 16.79664464303345,
+      "steady_r_1_s": 0.038573184960623556,
+      "steady_speed_m_s": 0.5850576446212199,
+      "steady_turning_radius_over_L": 2.1667814986664253,
+      "tactical_diameter_2R_over_L": 4.333562997332851,
+      "tactical_diameter_m": 37.64554649568253,
+      "tactical_diameter_over_L": 5.377935213668933,
+      "time_180_s": 80.29779834161438,
+      "time_270_s": 120.79928437987432,
+      "time_90_s": 41.593866085623574,
+      "transfer_m": 15.758194337547488,
+      "transfer_over_L": 2.251170619649641,
+      "x_180_over_L": 3.437380042174129,
+      "y_180_over_L": 5.279958098906655
+    },
+    "delta_35": {
+      "advance_m": 33.23882313238967,
+      "advance_over_L": 4.748403304627096,
+      "delta_deg": 35.0,
+      "mode": "direct",
+      "steady_drift_deg": 20.15718318988149,
+      "steady_r_1_s": 0.03784048037929075,
+      "steady_speed_m_s": 0.43125691058372545,
+      "steady_turning_radius_over_L": 1.6281011621910093,
+      "tactical_diameter_2R_over_L": 3.2562023243820186,
+      "tactical_diameter_m": 32.289189898768406,
+      "tactical_diameter_over_L": 4.612741414109772,
+      "time_180_s": 78.79991638588665,
+      "time_270_s": 119.87238366867865,
+      "time_90_s": 40.4735898027365,
+      "transfer_m": 13.606946201816209,
+      "transfer_over_L": 1.9438494574023155,
+      "x_180_over_L": 3.5841881917247926,
+      "y_180_over_L": 4.503574022116458
+    },
+    "delta_5": {
+      "advance_m": 54.71977396887144,
+      "advance_over_L": 7.8171105669816345,
+      "delta_deg": 5.0,
+      "mode": "direct",
+      "steady_drift_deg": 10.616133167943735,
+      "steady_r_1_s": 0.029254533750958527,
+      "steady_speed_m_s": 0.8659241101999967,
+      "steady_turning_radius_over_L": 4.228522162320639,
+      "tactical_diameter_2R_over_L": 8.457044324641277,
+      "tactical_diameter_m": 62.467577666287745,
+      "tactical_diameter_over_L": 8.923939666612535,
+      "time_180_s": 115.17528796027818,
+      "time_270_s": 168.85282584792265,
+      "time_90_s": 62.44115176786662,
+      "transfer_m": 26.962158225832468,
+      "transfer_over_L": 3.851736889404638,
+      "x_180_over_L": 4.403129954830836,
+      "y_180_over_L": 8.849976872466678
+    }
+  },
+  "wake_sensitivity": {
+    "wake_0.300": {
+      "J": 0.4548198163871642,
+      "KT": 0.29239817003408436,
+      "residual": -9.735654257897322e-13,
+      "rps": 8.395206575751104
+    },
+    "wake_0.355": {
+      "J": 0.42746992553644747,
+      "KT": 0.30421713713206855,
+      "residual": -1.110822190737137e-13,
+      "rps": 8.230512420586535
+    },
+    "wake_0.400": {
+      "J": 0.4048435364815049,
+      "KT": 0.3153289846360802,
+      "residual": 2.250372541579545e-14,
+      "rps": 8.084194726896214
+    }
+  },
+  "wall_seconds": 10.982790470123291,
+  "zigzag": {
+    "dt_0.25": {
+      "A_TE_1_over_L": 3.2470256660516275,
+      "A_TE_2_over_L": 4.374450037297615,
+      "delta_deg": 10.0,
+      "max_psi_deg": 47.778627168746006,
+      "mode": "direct",
+      "overshoot_deg": [
+        37.778627168746006,
+        34.60433038567499,
+        34.36343931047011
+      ],
+      "psi_1_deg": 37.778627168746006,
+      "psi_2_deg": 34.60433038567499,
+      "psi_a_deg": 10.0,
+      "t_1_s": 56.5,
+      "t_2_s": 133.0
+    },
+    "dt_0.5": {
+      "A_TE_1_over_L": 3.2348593301827795,
+      "A_TE_2_over_L": 4.31132672253193,
+      "delta_deg": 10.0,
+      "max_psi_deg": 47.4051027967968,
+      "mode": "direct",
+      "overshoot_deg": [
+        37.40510279679679,
+        35.092189359056825,
+        34.35946108157769
+      ],
+      "psi_1_deg": 37.40510279679679,
+      "psi_2_deg": 35.092189359056825,
+      "psi_a_deg": 10.0,
+      "t_1_s": 56.5,
+      "t_2_s": 132.5
+    }
+  }
+}
