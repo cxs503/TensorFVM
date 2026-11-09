@@ -1,0 +1,45 @@
+{
+  "kcs_simplified": {
+    "B": 32.2,
+    "B_over_T": 2.9814814814814814,
+    "Cb": 0.6506183542240142,
+    "Cb_abs_error": 0.0005862454316219242,
+    "Cb_reference": 0.651,
+    "L": 230.0,
+    "L_over_B": 7.142857142857142,
+    "T": 10.8,
+    "cb_tolerance": 0.005,
+    "nabla_LBT": 0.6506183542240142,
+    "nabla_rel_error": 0.0,
+    "name": "kcs_simplified",
+    "passed": true,
+    "volume": 52039.57893893694
+  },
+  "passed": true,
+  "strip_2d": {
+    "Cb_2d": 1.0,
+    "L": 2.4,
+    "L_over_T": 8.0,
+    "T": 0.3,
+    "area": 0.72,
+    "draft_ratio_T_over_L": 0.125,
+    "name": "barge-2d"
+  },
+  "wigley": {
+    "B": 1.0,
+    "B_over_T": 1.6,
+    "Cb": 0.44441597265625,
+    "Cb_abs_error": 6.406152343746419e-05,
+    "Cb_reference": 0.4444444444444444,
+    "L": 10.0,
+    "L_over_B": 10.0,
+    "T": 0.625,
+    "cb_tolerance": 0.005,
+    "nabla_LBT": 0.44441597265625,
+    "nabla_rel_error": 0.0,
+    "name": "wigley",
+    "passed": true,
+    "volume": 2.7775998291015624,
+    "wetted_surface": 12.674656286106082
+  }
+}
