@@ -1,0 +1,56 @@
+{
+  "acceptance": {
+    "order_at_least_2_uniform": false,
+    "order_at_least_2_wall_normal": false,
+    "order_measured_on": "successive Nu_x profile increments"
+  },
+  "case": "flat_plate_grid_convergence",
+  "levels": [
+    {
+      "interface_local_flux_imbalance_rel": 1.1579782987178608e-14,
+      "nu_l2_rel_error": 0.02533245919571574,
+      "nu_max_rel_error": 0.0519096924722926,
+      "nx": 80,
+      "ny_fluid": 44
+    },
+    {
+      "interface_local_flux_imbalance_rel": 1.1386319018238407e-14,
+      "nu_l2_rel_error": 0.0201585979501971,
+      "nu_max_rel_error": 0.04222126401488624,
+      "nx": 120,
+      "ny_fluid": 66
+    },
+    {
+      "interface_local_flux_imbalance_rel": 1.303165023743485e-14,
+      "nu_l2_rel_error": 0.016815131997865246,
+      "nu_max_rel_error": 0.03483817611786577,
+      "nx": 180,
+      "ny_fluid": 99
+    }
+  ],
+  "nu_profile_increment_norms": {
+    "coarse_medium": 0.27759384018854194,
+    "medium_fine": 0.17334738369704958
+  },
+  "observed_order": [
+    1.1612872477437401
+  ],
+  "observed_order_vs_similarity": [
+    0.5634409628809022,
+    0.44726832437304226
+  ],
+  "refinement_ratio": 2.25,
+  "wall_normal_refinement": {
+    "nu_l2_rel_error": [
+      0.019678768065033443,
+      0.01800854149835068,
+      0.016815131997865246
+    ],
+    "ny_fluid": [
+      44,
+      66,
+      99
+    ],
+    "observed_order": 0.887746588812535
+  }
+}
