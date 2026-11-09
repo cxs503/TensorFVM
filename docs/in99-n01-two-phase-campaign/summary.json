@@ -1,0 +1,638 @@
+{
+  "campaign": "IN99-N01",
+  "repo": "TensorFVM",
+  "module": "src/tensorfvm/verification/two_phase_campaign.py",
+  "declared_tolerances": {
+    "C1_mass": 1e-06,
+    "C2_opening": 0.95,
+    "C3_velocity": 0.1,
+    "C4_front": 0.15,
+    "C5_convergence": 0.05
+  },
+  "zalesak": {
+    "cells": 128,
+    "dx": 0.0078125,
+    "steps": 1596,
+    "dt": 0.0006265664160401002,
+    "courant_max": 0.24998888910144343,
+    "geometry": {
+      "source": "tensorfvm.verification.vof_rotation.zalesak_disk",
+      "domain": 1.0,
+      "centre": [
+        0.5,
+        0.75
+      ],
+      "radius": 0.15,
+      "slot_half_width": 0.05,
+      "discrete_area": 0.043212890625,
+      "analytic_area": 0.05568583470577035
+    },
+    "schemes": {
+      "plic": {
+        "mass_relative_drift": 2.7297687023551872e-15,
+        "worst_step_relative_drift": 1.2845970364024414e-15,
+        "bounded": [
+          0.0,
+          1.0
+        ],
+        "peak_retention": 1.0,
+        "l1": 0.002784221523760091,
+        "linf": 1.0,
+        "distorted_fraction": 0.00787353515625,
+        "slot": {
+          "area_recovery": 0.9880147941274146,
+          "slot_fill": 0.011985205872585461,
+          "chord_recovery_at_2_3": 0.8702645779097429,
+          "measured_width_at_2_3": 0.08702645779097429,
+          "exact_width": 0.1,
+          "chord_profile": [
+            {
+              "y_frac": 0.1,
+              "recovery": 0.9371976578880326
+            },
+            {
+              "y_frac": 0.3,
+              "recovery": 0.9409042997077111
+            },
+            {
+              "y_frac": 0.5,
+              "recovery": 0.927354852033106
+            },
+            {
+              "y_frac": 0.7,
+              "recovery": 0.866324135372879
+            },
+            {
+              "y_frac": 0.9,
+              "recovery": 0.0
+            }
+          ],
+          "chord_recovery_depth_mean": 0.7343561890003457,
+          "chord_recovery_range": [
+            0.0,
+            0.9409042997077111
+          ]
+        }
+      },
+      "donor_cell": {
+        "mass_relative_drift": 0.0,
+        "worst_step_relative_drift": 4.817238886509156e-16,
+        "bounded": [
+          5.862534117950792e-08,
+          0.43699196710141924
+        ],
+        "peak_retention": 0.43699196710141924,
+        "l1": 0.05844345048553177,
+        "linf": 0.818329085710291,
+        "distorted_fraction": 0.1982421875,
+        "slot": {
+          "area_recovery": 0.7735139338321531,
+          "slot_fill": 0.22648606616784694,
+          "chord_recovery_at_2_3": 0.0,
+          "measured_width_at_2_3": 0.0,
+          "exact_width": 0.1,
+          "chord_profile": [
+            {
+              "y_frac": 0.1,
+              "recovery": 0.0
+            },
+            {
+              "y_frac": 0.3,
+              "recovery": 0.0
+            },
+            {
+              "y_frac": 0.5,
+              "recovery": 0.0
+            },
+            {
+              "y_frac": 0.7,
+              "recovery": 0.0
+            },
+            {
+              "y_frac": 0.9,
+              "recovery": 0.0
+            }
+          ],
+          "chord_recovery_depth_mean": 0.0,
+          "chord_recovery_range": [
+            0.0,
+            0.0
+          ]
+        }
+      }
+    },
+    "_leg": "zalesak"
+  },
+  "bubble": [
+    {
+      "case": {
+        "name": "water-air-3mm",
+        "eotvos": 1.23,
+        "morton": 2.63e-11,
+        "density_ratio": 10.0,
+        "viscosity_ratio": 55.0,
+        "cells_per_diameter": 16,
+        "domain_width": 4.0,
+        "domain_height": 8.0,
+        "start_y": 2.0,
+        "end_time": 2.5,
+        "csf_smoothing": 3,
+        "momentum_advection": true
+      },
+      "derived": {
+        "sigma": 0.8130081300813008,
+        "mu_liquid": 0.001990670937971673,
+        "mu_gas": 3.6194017054030415e-05,
+        "u_ref_sqrt_gd": 1.0
+      },
+      "grid": {
+        "nx": 64,
+        "ny": 128,
+        "dx": 0.0625,
+        "dy": 0.0625,
+        "cells_per_diameter": 16
+      },
+      "geometry_validation": {
+        "analytic_area": 0.7853981633974483,
+        "initial_area": 0.8125,
+        "relative_error": 0.034507130097319726,
+        "cells_across_bubble": 16.0
+      },
+      "terminal_velocity": 0.587217483427661,
+      "peak_velocity": 0.7939290511719866,
+      "terminal_velocity_anchor": 1.4982781445292406,
+      "dimensionless": {
+        "eotvos": 1.23,
+        "morton": 2.63e-11,
+        "reynolds": 300.0310801112012,
+        "weber": 0.43138973878414466,
+        "capillary": 0.001437816837589818,
+        "density_ratio": 10.0,
+        "viscosity_ratio": 55.0
+      },
+      "regime": {
+        "regime": "ellipsoidal",
+        "eotvos": 1.23,
+        "morton": 2.63e-11,
+        "reynolds": 300.0310801112012,
+        "window": "0.4 < Eo < 40, Re <~ 1e3: oblate ellipsoid, no cap"
+      },
+      "shape": {
+        "aspect_ratio": 1.0625,
+        "aspect_second_moment": 0.7718755274970958,
+        "circularity": 0.6908835938198402,
+        "d_equivalent": 1.0171072362820675,
+        "centroid": [
+          1.9776705360172615,
+          3.204272764912685
+        ]
+      },
+      "conservation": {
+        "initial_volume": 0.8125,
+        "final_volume": 0.81250000000002,
+        "total_relative_drift": 2.459571008400347e-14,
+        "worst_step_relative_drift": 1.298106921100183e-14,
+        "worst_bound_repair_fraction": 4.556586682229108e-16
+      },
+      "cost": {
+        "steps": 724,
+        "final_time": 2.5,
+        "elapsed_seconds": 690.7221620082855,
+        "cg_iterations_last": 512,
+        "cg_converged_last": true
+      },
+      "grace_anchor": 1.4982781445292406,
+      "relative_error": -0.6080717818838872,
+      "pass_c3": false,
+      "2d_reference": null,
+      "_leg": "bubble",
+      "_level_index": 0
+    },
+    {
+      "case": {
+        "name": "Eo10-M1e-3",
+        "eotvos": 10.0,
+        "morton": 0.001,
+        "density_ratio": 10.0,
+        "viscosity_ratio": 55.0,
+        "cells_per_diameter": 16,
+        "domain_width": 4.0,
+        "domain_height": 8.0,
+        "start_y": 2.0,
+        "end_time": 2.5,
+        "csf_smoothing": 3,
+        "momentum_advection": true
+      },
+      "derived": {
+        "sigma": 0.1,
+        "mu_liquid": 0.03246679154750989,
+        "mu_gas": 0.0005903053008638162,
+        "u_ref_sqrt_gd": 1.0
+      },
+      "grid": {
+        "nx": 64,
+        "ny": 128,
+        "dx": 0.0625,
+        "dy": 0.0625,
+        "cells_per_diameter": 16
+      },
+      "geometry_validation": {
+        "analytic_area": 0.7853981633974483,
+        "initial_area": 0.8125,
+        "relative_error": 0.034507130097319726,
+        "cells_across_bubble": 16.0
+      },
+      "terminal_velocity": 0.4348051663808299,
+      "peak_velocity": 0.4804385032934332,
+      "terminal_velocity_anchor": 0.8479386770280031,
+      "dimensionless": {
+        "eotvos": 10.0,
+        "morton": 0.001,
+        "reynolds": 13.621410063005406,
+        "weber": 1.9228975037997944,
+        "capillary": 0.1411672870066676,
+        "density_ratio": 10.0,
+        "viscosity_ratio": 55.0
+      },
+      "regime": {
+        "regime": "ellipsoidal",
+        "eotvos": 10.0,
+        "morton": 0.001,
+        "reynolds": 13.621410063005406,
+        "window": "0.4 < Eo < 40, Re <~ 1e3: oblate ellipsoid, no cap"
+      },
+      "shape": {
+        "aspect_ratio": 2.4,
+        "aspect_second_moment": 1.235944525381671,
+        "circularity": 0.7303626563237976,
+        "d_equivalent": 1.0171072362820208,
+        "centroid": [
+          2.001443960122174,
+          2.9284844299166695
+        ]
+      },
+      "conservation": {
+        "initial_volume": 0.8125,
+        "final_volume": 0.8124999999999455,
+        "total_relative_drift": -6.709163139580946e-14,
+        "worst_step_relative_drift": 8.745141363201234e-15,
+        "worst_bound_repair_fraction": 3.41744001167182e-16
+      },
+      "cost": {
+        "steps": 254,
+        "final_time": 2.5,
+        "elapsed_seconds": 229.66533875465393,
+        "cg_iterations_last": 524,
+        "cg_converged_last": true
+      },
+      "grace_anchor": 0.8479386770280031,
+      "relative_error": -0.48722097698761946,
+      "pass_c3": false,
+      "2d_reference": null,
+      "_leg": "bubble",
+      "_level_index": 1
+    },
+    {
+      "case": {
+        "name": "Eo40-M1e-3",
+        "eotvos": 40.0,
+        "morton": 0.001,
+        "density_ratio": 10.0,
+        "viscosity_ratio": 55.0,
+        "cells_per_diameter": 16,
+        "domain_width": 4.0,
+        "domain_height": 8.0,
+        "start_y": 2.0,
+        "end_time": 2.5,
+        "csf_smoothing": 3,
+        "momentum_advection": true
+      },
+      "derived": {
+        "sigma": 0.025,
+        "mu_liquid": 0.011478744233307164,
+        "mu_gas": 0.0002087044406055848,
+        "u_ref_sqrt_gd": 1.0
+      },
+      "grid": {
+        "nx": 64,
+        "ny": 128,
+        "dx": 0.0625,
+        "dy": 0.0625,
+        "cells_per_diameter": 16
+      },
+      "geometry_validation": {
+        "analytic_area": 0.7853981633974483,
+        "initial_area": 0.8125,
+        "relative_error": 0.034507130097319726,
+        "cells_across_bubble": 16.0
+      },
+      "terminal_velocity": 0.36043911272508433,
+      "peak_velocity": 0.4389004143321274,
+      "terminal_velocity_anchor": 0.7473285756613351,
+      "dimensionless": {
+        "eotvos": 40.0,
+        "morton": 0.001,
+        "reynolds": 31.937747051459926,
+        "weber": 5.285554549860827,
+        "capillary": 0.1654955354660565,
+        "density_ratio": 10.0,
+        "viscosity_ratio": 55.0
+      },
+      "regime": {
+        "regime": "spherical-cap",
+        "eotvos": 40.0,
+        "morton": 0.001,
+        "reynolds": 31.937747051459926,
+        "window": "Eo > 40: cap with a flattened rear"
+      },
+      "shape": {
+        "aspect_ratio": 1.6,
+        "aspect_second_moment": 1.210843547634625,
+        "circularity": 0.5112538594266782,
+        "d_equivalent": 1.0171072362820603,
+        "centroid": [
+          1.9973938973895249,
+          2.831020617662219
+        ]
+      },
+      "conservation": {
+        "initial_volume": 0.8125,
+        "final_volume": 0.8125000000000088,
+        "total_relative_drift": 1.0794783870201522e-14,
+        "worst_step_relative_drift": 7.788641526601099e-15,
+        "worst_bound_repair_fraction": 4.556586682229103e-16
+      },
+      "cost": {
+        "steps": 127,
+        "final_time": 2.5,
+        "elapsed_seconds": 106.72192764282227,
+        "cg_iterations_last": 529,
+        "cg_converged_last": true
+      },
+      "grace_anchor": 0.7473285756613351,
+      "relative_error": -0.5176966003124929,
+      "pass_c3": false,
+      "2d_reference": null,
+      "_leg": "bubble",
+      "_level_index": 2
+    }
+  ],
+  "dam_break": [
+    {
+      "name": "mm-plic",
+      "config": {
+        "name": "mm-plic",
+        "nx": 100,
+        "ny": 30,
+        "column_width": 0.05715,
+        "domain_length": 0.5,
+        "domain_height": 0.15,
+        "gravity": 9.81,
+        "rho_liquid": 1000.0,
+        "rho_gas": 1.2,
+        "mu_liquid": 0.001,
+        "mu_gas": 1.8e-05,
+        "sigma": 0.0,
+        "vof_cfl": 0.4,
+        "max_t_star": 5.0,
+        "vof_scheme": "plic",
+        "momentum_advection": true,
+        "pressure_form": "total"
+      },
+      "grid": {
+        "nx": 100,
+        "ny": 30,
+        "dx": 0.005,
+        "dy": 0.005,
+        "cells_across_column": 11.43
+      },
+      "steps": null,
+      "elapsed_seconds": null,
+      "worst_step_relative_drift": null,
+      "final_volume_drift": null,
+      "evaluation": {
+        "pass": false,
+        "points": [
+          {
+            "t_star": 1.0,
+            "measured": 1.27,
+            "reference": 1.4,
+            "relative_error": -0.09285714285714279,
+            "reached": true
+          },
+          {
+            "t_star": 2.0,
+            "measured": 1.88,
+            "reference": 2.45,
+            "relative_error": -0.2326530612244899,
+            "reached": true
+          },
+          {
+            "t_star": 3.0,
+            "measured": 2.76,
+            "reference": 3.3,
+            "relative_error": -0.16363636363636366,
+            "reached": true
+          }
+        ],
+        "reference": "Martin & Moyce (1952), digitised surge-front curve",
+        "worst_relative_error": 0.2326530612244899,
+        "points_reached": "3/3"
+      }
+    },
+    {
+      "name": "mm-upwind-stokes",
+      "config": {
+        "name": "mm-upwind-stokes",
+        "nx": 100,
+        "ny": 30,
+        "column_width": 0.05715,
+        "domain_length": 0.5,
+        "domain_height": 0.15,
+        "gravity": 9.81,
+        "rho_liquid": 1000.0,
+        "rho_gas": 1.2,
+        "mu_liquid": 0.001,
+        "mu_gas": 1.8e-05,
+        "sigma": 0.0,
+        "vof_cfl": 0.4,
+        "max_t_star": 5.0,
+        "vof_scheme": "upwind",
+        "momentum_advection": false,
+        "pressure_form": "total"
+      },
+      "grid": {
+        "nx": 100,
+        "ny": 30,
+        "dx": 0.005,
+        "dy": 0.005,
+        "cells_across_column": 11.43
+      },
+      "steps": 575,
+      "elapsed_seconds": 127.72628474235535,
+      "worst_step_relative_drift": 0.0004401022775947631,
+      "final_volume_drift": -0.1266554197155273,
+      "evaluation": {
+        "pass": false,
+        "points": [
+          {
+            "t_star": 1.0,
+            "measured": 1.3560804899387577,
+            "reference": 1.4,
+            "relative_error": -0.031371078615172986,
+            "reached": true
+          },
+          {
+            "t_star": 2.0,
+            "measured": 1.7935258092738409,
+            "reference": 2.45,
+            "relative_error": -0.2679486492759834,
+            "reached": true
+          },
+          {
+            "t_star": 3.0,
+            "measured": 2.493438320209974,
+            "reference": 3.3,
+            "relative_error": -0.2444126302394018,
+            "reached": true
+          }
+        ],
+        "reference": "Martin & Moyce (1952), digitised surge-front curve",
+        "worst_relative_error": 0.2679486492759834,
+        "points_reached": "3/3"
+      }
+    }
+  ],
+  "criteria": {
+    "C1_zalesak_mass": {
+      "pass": true,
+      "mass_relative_drift": 2.7297687023551872e-15,
+      "worst_step_relative_drift": 1.2845970364024414e-15,
+      "criterion": "|dm/m0| <= 1e-06 after one revolution"
+    },
+    "C2_zalesak_slot_opening": {
+      "pass": true,
+      "recovery": 0.9880147941274146,
+      "recovery_basis": "area: 1 - mean(alpha inside the exact slot region)",
+      "chord_recovery_at_2_3": 0.8702645779097429,
+      "chord_recovery_at_2_3_pass": false,
+      "chord_recovery_depth_mean": 0.7343561890003457,
+      "chord_recovery_range": [
+        0.0,
+        0.9409042997077111
+      ],
+      "cells": 128,
+      "criterion": "recovered slot-opening width >= 95% at 128x128"
+    },
+    "C3_bubble_terminal_velocity": {
+      "pass": false,
+      "levels": [
+        {
+          "name": "water-air-3mm",
+          "eotvos": 1.23,
+          "morton": 2.63e-11,
+          "cells_per_diameter": 16,
+          "terminal_velocity": 0.587217483427661,
+          "grace_anchor": 1.4982781445292406,
+          "relative_error": -0.6080717818838872,
+          "relative_error_2d": null,
+          "pass": false
+        },
+        {
+          "name": "Eo10-M1e-3",
+          "eotvos": 10.0,
+          "morton": 0.001,
+          "cells_per_diameter": 16,
+          "terminal_velocity": 0.4348051663808299,
+          "grace_anchor": 0.8479386770280031,
+          "relative_error": -0.48722097698761946,
+          "relative_error_2d": null,
+          "pass": false
+        },
+        {
+          "name": "Eo40-M1e-3",
+          "eotvos": 40.0,
+          "morton": 0.001,
+          "cells_per_diameter": 16,
+          "terminal_velocity": 0.36043911272508433,
+          "grace_anchor": 0.7473285756613351,
+          "relative_error": -0.5176966003124929,
+          "relative_error_2d": null,
+          "pass": false
+        }
+      ],
+      "criterion": "|U_T - U_Grace-anchor|/U_anchor <= 10% at every level (Eo 1..40, three levels)"
+    },
+    "C4_dam_break_front": {
+      "pass": false,
+      "points": [
+        {
+          "t_star": 1.0,
+          "measured": 1.27,
+          "reference": 1.4,
+          "relative_error": -0.09285714285714279,
+          "reached": true
+        },
+        {
+          "t_star": 2.0,
+          "measured": 1.88,
+          "reference": 2.45,
+          "relative_error": -0.2326530612244899,
+          "reached": true
+        },
+        {
+          "t_star": 3.0,
+          "measured": 2.76,
+          "reference": 3.3,
+          "relative_error": -0.16363636363636366,
+          "reached": true
+        }
+      ],
+      "reference": "Martin & Moyce (1952), digitised surge-front curve",
+      "worst_relative_error": 0.2326530612244899,
+      "points_reached": "3/3",
+      "criterion": "surge-front relative error <= 15% at three dimensionless times"
+    },
+    "C5_grid_convergence": {
+      "pass": false,
+      "velocities": [
+        0.6246901564842476,
+        0.587217483427661
+      ],
+      "successive_changes": [
+        0.06381396009848687
+      ],
+      "finest_change": 0.06381396009848687,
+      "cells_per_diameter": [
+        12,
+        16
+      ],
+      "level": "water-air-3mm",
+      "criterion": "coarse->fine terminal-velocity change <= 5%"
+    },
+    "all_pass": false
+  },
+  "all_pass": false,
+  "figures": [
+    {
+      "name": "fig1-zalesak-slot.png",
+      "path": "docs/in99-n01-two-phase-campaign/fig1-zalesak-slot.png",
+      "caption": "Zalesak slotted disk after one revolution, 128x128: exact field, geometric PLIC and donor-cell baseline (left), and the $\\alpha$ profile on the C2 measurement line $y=0.850$ (right)."
+    },
+    {
+      "name": "fig2-slot-recovery.png",
+      "path": "docs/in99-n01-two-phase-campaign/fig2-slot-recovery.png",
+      "caption": "Slot-opening width recovered after one revolution, PLIC vs the donor-cell baseline, against the C2 gate (95 %)."
+    },
+    {
+      "name": "fig6-dam-break.png",
+      "path": "docs/in99-n01-two-phase-campaign/fig6-dam-break.png",
+      "caption": "Dam-break surge-front trajectory (left) and residual column height (right) against the digitised Martin & Moyce (1952) curves, for each dam-break configuration run."
+    },
+    {
+      "name": "fig7-criteria.png",
+      "path": "docs/in99-n01-two-phase-campaign/fig7-criteria.png",
+      "caption": "Acceptance-criteria gauge C1-C5."
+    }
+  ]
+}
