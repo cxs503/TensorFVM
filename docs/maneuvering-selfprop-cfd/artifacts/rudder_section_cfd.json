@@ -1,0 +1,129 @@
+{
+  "node": "IN63-N02",
+  "what": "2-D body-fitted RANS of the KVLCC2 rudder section (NACA-0018 idealisation, chord 0.17057 m) at model-scale Reynolds number",
+  "solver": "tensorfvm.body_fitted.BodyFittedSolver (steady SIMPLE, C-grid, Spalart-Allmaras)",
+  "runner": "scripts/run_rudder_section_cfd.py",
+  "cluster": {
+    "machine": "node315 (loong64)",
+    "python": "3.11.6"
+  },
+  "conditions": {
+    "speed_m_s": 1.1765,
+    "chord_m": 0.1705737535654457,
+    "reynolds": 176189.7,
+    "density": 998.2,
+    "thickness_ratio": 0.18
+  },
+  "runs": [
+    {
+      "angle_deg": 0.0,
+      "level": "coarse",
+      "mesh": {
+        "nx": 96,
+        "ny": 32,
+        "length": 12.0,
+        "height": 8.0
+      },
+      "cl": -0.0009517465990501067,
+      "cd": 0.6721193507485906,
+      "converged": false,
+      "iterations": 1500,
+      "wall_seconds": 1737.2
+    },
+    {
+      "angle_deg": 5.0,
+      "level": "coarse",
+      "mesh": {
+        "nx": 96,
+        "ny": 32,
+        "length": 12.0,
+        "height": 8.0
+      },
+      "cl": -0.06508168826785495,
+      "cd": 0.6731400732324504,
+      "converged": true,
+      "iterations": 502,
+      "wall_seconds": 430.8
+    },
+    {
+      "angle_deg": 10.0,
+      "level": "coarse",
+      "mesh": {
+        "nx": 96,
+        "ny": 32,
+        "length": 12.0,
+        "height": 8.0
+      },
+      "cl": -0.14123288912014142,
+      "cd": 0.6659304239207692,
+      "converged": true,
+      "iterations": 531,
+      "wall_seconds": 417.6
+    },
+    {
+      "angle_deg": 20.0,
+      "level": "coarse",
+      "mesh": {
+        "nx": 96,
+        "ny": 32,
+        "length": 12.0,
+        "height": 8.0
+      },
+      "cl": -0.41444199454319963,
+      "cd": 0.6155924395240275,
+      "converged": true,
+      "iterations": 629,
+      "wall_seconds": 542.0
+    },
+    {
+      "angle_deg": 35.0,
+      "level": "coarse",
+      "mesh": {
+        "nx": 96,
+        "ny": 32,
+        "length": 12.0,
+        "height": 8.0
+      },
+      "cl": -0.4895566897940221,
+      "cd": 0.5772476478907995,
+      "converged": true,
+      "iterations": 593,
+      "wall_seconds": 526.4
+    },
+    {
+      "angle_deg": 10.0,
+      "level": "medium",
+      "mesh": {
+        "nx": 160,
+        "ny": 48,
+        "length": 12.0,
+        "height": 8.0
+      },
+      "cl": -0.16896723207370015,
+      "cd": 0.49444955009065933,
+      "converged": true,
+      "iterations": 834,
+      "wall_seconds": 1665.6
+    }
+  ],
+  "audit": {
+    "verdict": "FAILED / WITHHELD \u2014 the polar is not physically admissible and is not used for any verdict",
+    "symmetry_check": {
+      "angle_deg": 0.0,
+      "cl": -0.000952,
+      "cl_over_cd": 0.00142,
+      "comment": "the zero-incidence lift vanishes to 1e-3 of the drag scale, so the discrete symmetry of the solver holds"
+    },
+    "lift_sign": "cl becomes *negative* as the incidence rises (+10 deg -> cl = -0.141), which cannot be a physical rudder polar",
+    "drag_level": "cd = 0.58-0.67, two orders of magnitude above a 0.18-thickness section at Re = 1.8e5 (expected cd ~ 0.01-0.03): the force is dominated by an unresolved boundary layer / numerical diffusion",
+    "mesh_convergence": {
+      "cl_coarse": -0.1412,
+      "cl_medium": -0.169,
+      "cd_coarse": 0.6659,
+      "cd_medium": 0.4944,
+      "comment": "cd changes by 35 % between coarse and medium and cl by 20 %; a three-level GCI was attempted but the fine run did not finish inside the 70 min budget, so criterion (f) on the CFD mesh is NOT met"
+    },
+    "root_cause": "the C-grid resolves neither the wall-normal boundary layer nor the wake at this cell count; with Spalart-Allmaras at y+ >> 1 the eddy viscosity destroys the pressure distribution. The repository's verified NACA cases used 2000+ iterations on a hybrid gmsh mesh, not a structured 96x32 C-grid",
+    "consequence": "the analytic finite-aspect polar is used for the manoeuvring chain; the CFD rudder face is recorded as an honest failure with the numbers needed to reproduce it"
+  }
+}
