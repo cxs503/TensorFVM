@@ -1,0 +1,145 @@
+{
+ "cases": {
+  "annulus_rings": [
+   {
+    "analytic_sin_over_t_minus_one": -0.09968368384289394,
+    "area_min": 0.11048543456039801,
+    "closed_form_area": 2.1213203435596424,
+    "hull_area": 2.82842712474619,
+    "hull_rel_overestimate": 0.33333333333333326,
+    "n_polygons": 16,
+    "n_polygons_expected": 16,
+    "n_theta": 8,
+    "pi_area": 2.356194490192345,
+    "rel_error_vs_closed_form": 2.093456611578367e-16,
+    "rel_error_vs_pi": -0.09968368384289379,
+    "section_area": 2.121320343559643
+   },
+   {
+    "analytic_sin_over_t_minus_one": -0.025504641595567312,
+    "area_min": 0.05979428630704519,
+    "closed_form_area": 2.2961005941905386,
+    "hull_area": 3.0614674589207183,
+    "hull_rel_overestimate": 0.3333333333333335,
+    "n_polygons": 32,
+    "n_polygons_expected": 32,
+    "n_theta": 16,
+    "pi_area": 2.356194490192345,
+    "rel_error_vs_closed_form": 0.0,
+    "rel_error_vs_pi": -0.02550464159556734,
+    "section_area": 2.2961005941905386
+   },
+   {
+    "analytic_sin_over_t_minus_one": -0.006413148855794248,
+    "area_min": 0.03048286281501992,
+    "closed_form_area": 2.341083864193539,
+    "hull_area": 3.121445152258052,
+    "hull_rel_overestimate": 0.33333333333333326,
+    "n_polygons": 64,
+    "n_polygons_expected": 64,
+    "n_theta": 32,
+    "pi_area": 2.356194490192345,
+    "rel_error_vs_closed_form": 0.0,
+    "rel_error_vs_pi": -0.006413148855794202,
+    "section_area": 2.341083864193539
+   },
+   {
+    "analytic_sin_over_t_minus_one": -0.0016056069643816118,
+    "area_min": 0.01531517817649377,
+    "closed_form_area": 2.3524113679094545,
+    "hull_area": 3.1365484905459393,
+    "hull_rel_overestimate": 0.33333333333333326,
+    "n_polygons": 128,
+    "n_polygons_expected": 128,
+    "n_theta": 64,
+    "pi_area": 2.356194490192345,
+    "rel_error_vs_closed_form": 1.887804216167841e-16,
+    "rel_error_vs_pi": -0.0016056069643817746,
+    "section_area": 2.352411367909454
+   }
+  ],
+  "boundary_face": {
+   "n_polygons": 1,
+   "polygon_sum_area": 1.0,
+   "unique_area": 1.0
+  },
+  "box_mid_plane": [
+   {
+    "area_min": 1.0,
+    "coincident_interior_plane": false,
+    "max_vertices": 4,
+    "n": 1,
+    "n_polygons": 1,
+    "n_polygons_expected": 1,
+    "polygon_sum_area": 1.0,
+    "unique_area": 1.0
+   },
+   {
+    "area_min": 0.25,
+    "coincident_interior_plane": true,
+    "max_vertices": 4,
+    "n": 2,
+    "n_polygons": 8,
+    "n_polygons_expected": 8,
+    "polygon_sum_area": 2.0,
+    "unique_area": 1.0
+   },
+   {
+    "area_min": 0.0625,
+    "coincident_interior_plane": true,
+    "max_vertices": 4,
+    "n": 4,
+    "n_polygons": 32,
+    "n_polygons_expected": 32,
+    "polygon_sum_area": 2.0,
+    "unique_area": 1.0
+   },
+   {
+    "area_min": 0.015625,
+    "coincident_interior_plane": true,
+    "max_vertices": 4,
+    "n": 8,
+    "n_polygons": 128,
+    "n_polygons_expected": 128,
+    "polygon_sum_area": 2.0,
+    "unique_area": 1.0
+   }
+  ],
+  "graded_box": {
+   "n_polygons": 6,
+   "polygon_sum_area": 1.0,
+   "unique_area": 1.0
+  },
+  "outside_plane": {
+   "n_polygons": 0,
+   "polygon_sum_area": 0.0
+  },
+  "tangency": {
+   "face_n_polygons": 1,
+   "face_total_area": 0.5,
+   "n_polygons": 0,
+   "total_area": 0.0
+  }
+ },
+ "claims": {
+  "boundary_face_unique_area_error": 0.0,
+  "box_polygon_count_matches_semantics": true,
+  "box_polygon_sum_excess_equals_two": [
+   1.0,
+   2.0,
+   2.0,
+   2.0
+  ],
+  "box_polygons_stay_quads": 4,
+  "box_unique_area_max_error": 0.0,
+  "coincident_planes_are_double_sided": true,
+  "graded_box_unique_area_error": 0.0,
+  "hull_control_rel_overestimate": 0.33333333333333326,
+  "outside_plane_empty": true,
+  "ring_closed_form_max_rel_error": 2.093456611578367e-16,
+  "ring_deficit_tracks_analytic": 1.6284716630732277e-16,
+  "ring_polygon_count_ok": true,
+  "tangency_dropped": true,
+  "tangency_face_area": 0.5
+ }
+}
