@@ -1,0 +1,121 @@
+{
+  "_leg": "dam",
+  "config": {
+    "name": "mm-plic",
+    "nx": 100,
+    "ny": 30,
+    "column_width": 0.05715,
+    "domain_length": 0.5,
+    "domain_height": 0.15,
+    "gravity": 9.81,
+    "rho_liquid": 1000.0,
+    "rho_gas": 1.2,
+    "mu_liquid": 0.001,
+    "mu_gas": 1.8e-05,
+    "sigma": 0.0,
+    "vof_cfl": 0.4,
+    "max_t_star": 5.0,
+    "vof_scheme": "plic",
+    "momentum_advection": true,
+    "pressure_form": "total"
+  },
+  "grid": {
+    "nx": 100,
+    "ny": 30,
+    "dx": 0.005,
+    "dy": 0.005,
+    "cells_across_column": 11.43
+  },
+  "history": [
+    {
+      "t_star": 0.87,
+      "front_star": 1.27,
+      "height_star": null
+    },
+    {
+      "t_star": 1.4,
+      "front_star": 1.53,
+      "height_star": null
+    },
+    {
+      "t_star": 1.77,
+      "front_star": 1.71,
+      "height_star": null
+    },
+    {
+      "t_star": 2.14,
+      "front_star": 1.88,
+      "height_star": null
+    },
+    {
+      "t_star": 2.36,
+      "front_star": 2.41,
+      "height_star": null
+    },
+    {
+      "t_star": 2.68,
+      "front_star": 2.49,
+      "height_star": null
+    },
+    {
+      "t_star": 3.03,
+      "front_star": 2.76,
+      "height_star": null
+    },
+    {
+      "t_star": 3.37,
+      "front_star": 3.11,
+      "height_star": null
+    },
+    {
+      "t_star": 3.7,
+      "front_star": 3.19,
+      "height_star": null
+    },
+    {
+      "t_star": 4.01,
+      "front_star": 3.37,
+      "height_star": null
+    },
+    {
+      "t_star": 4.31,
+      "front_star": 3.37,
+      "height_star": null
+    }
+  ],
+  "steps": null,
+  "elapsed_seconds": null,
+  "worst_step_relative_drift": null,
+  "final_volume_drift": null,
+  "truncated_at_wall_clock": true,
+  "provenance": "reconstructed from runs/in99/logs/dam_plic.log (the run was stopped at t*=4.31 by the mission wall clock; the printed trajectory every 50 steps is the only record)",
+  "evaluation": {
+    "pass": false,
+    "points": [
+      {
+        "t_star": 1.0,
+        "measured": 1.27,
+        "reference": 1.4,
+        "relative_error": -0.09285714285714279,
+        "reached": true
+      },
+      {
+        "t_star": 2.0,
+        "measured": 1.88,
+        "reference": 2.45,
+        "relative_error": -0.2326530612244899,
+        "reached": true
+      },
+      {
+        "t_star": 3.0,
+        "measured": 2.76,
+        "reference": 3.3,
+        "relative_error": -0.16363636363636366,
+        "reached": true
+      }
+    ],
+    "reference": "Martin & Moyce (1952), digitised surge-front curve",
+    "worst_relative_error": 0.2326530612244899,
+    "points_reached": "3/3"
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "cells": 128,
+  "dx": 0.0078125,
+  "steps": 1596,
+  "dt": 0.0006265664160401002,
+  "courant_max": 0.24998888910144343,
+  "geometry": {
+    "source": "tensorfvm.verification.vof_rotation.zalesak_disk",
+    "domain": 1.0,
+    "centre": [
+      0.5,
+      0.75
+    ],
+    "radius": 0.15,
+    "slot_half_width": 0.05,
+    "discrete_area": 0.043212890625,
+    "analytic_area": 0.05568583470577035
+  },
+  "schemes": {
+    "plic": {
+      "mass_relative_drift": 2.7297687023551872e-15,
+      "worst_step_relative_drift": 1.2845970364024414e-15,
+      "bounded": [
+        0.0,
+        1.0
+      ],
+      "peak_retention": 1.0,
+      "l1": 0.002784221523760091,
+      "linf": 1.0,
+      "distorted_fraction": 0.00787353515625,
+      "slot": {
+        "area_recovery": 0.9880147941274146,
+        "slot_fill": 0.011985205872585461,
+        "chord_recovery_at_2_3": 0.8702645779097429,
+        "measured_width_at_2_3": 0.08702645779097429,
+        "exact_width": 0.1,
+        "chord_profile": [
+          {
+            "y_frac": 0.1,
+            "recovery": 0.9371976578880326
+          },
+          {
+            "y_frac": 0.3,
+            "recovery": 0.9409042997077111
+          },
+          {
+            "y_frac": 0.5,
+            "recovery": 0.927354852033106
+          },
+          {
+            "y_frac": 0.7,
+            "recovery": 0.866324135372879
+          },
+          {
+            "y_frac": 0.9,
+            "recovery": 0.0
+          }
+        ],
+        "chord_recovery_depth_mean": 0.7343561890003457,
+        "chord_recovery_range": [
+          0.0,
+          0.9409042997077111
+        ]
+      }
+    },
+    "donor_cell": {
+      "mass_relative_drift": 0.0,
+      "worst_step_relative_drift": 4.817238886509156e-16,
+      "bounded": [
+        5.862534117950792e-08,
+        0.43699196710141924
+      ],
+      "peak_retention": 0.43699196710141924,
+      "l1": 0.05844345048553177,
+      "linf": 0.818329085710291,
+      "distorted_fraction": 0.1982421875,
+      "slot": {
+        "area_recovery": 0.7735139338321531,
+        "slot_fill": 0.22648606616784694,
+        "chord_recovery_at_2_3": 0.0,
+        "measured_width_at_2_3": 0.0,
+        "exact_width": 0.1,
+        "chord_profile": [
+          {
+            "y_frac": 0.1,
+            "recovery": 0.0
+          },
+          {
+            "y_frac": 0.3,
+            "recovery": 0.0
+          },
+          {
+            "y_frac": 0.5,
+            "recovery": 0.0
+          },
+          {
+            "y_frac": 0.7,
+            "recovery": 0.0
+          },
+          {
+            "y_frac": 0.9,
+            "recovery": 0.0
+          }
+        ],
+        "chord_recovery_depth_mean": 0.0,
+        "chord_recovery_range": [
+          0.0,
+          0.0
+        ]
+      }
+    }
+  },
+  "_leg": "zalesak"
+}
