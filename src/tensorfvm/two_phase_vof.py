@@ -186,6 +186,7 @@ def balanced_csf_face_forces(
     dy: float,
     *,
     smoothing: int = 3,
+    curvature: str = "divergence",
 ) -> tuple:
     """Balanced-force (Francois et al. 2006) CSF force sampled on MAC faces.
 
@@ -203,7 +204,15 @@ def balanced_csf_face_forces(
     field ``p = sigma*kappa*alpha`` cancels it exactly and the interface stays
     at rest to round-off (``docs/two-phase-csf-balance/``).
     """
-    kappa = interface_curvature(smooth_alpha(alpha, smoothing), dx, dy)
+    if curvature in ("height_function", "hf"):
+        from .two_phase_curvature import height_function_curvature
+        kappa = height_function_curvature(alpha, dx, dy)
+    elif curvature in ("divergence", "div_n", "legacy"):
+        kappa = interface_curvature(smooth_alpha(alpha, smoothing), dx, dy)
+    else:
+        raise ValueError(
+            f"unknown curvature model {curvature!r}; "
+            "expected 'divergence' or 'height_function'")
     f_u = sigma * 0.5 * (kappa[:, :-1] + kappa[:, 1:]) * (alpha[:, 1:] - alpha[:, :-1]) / dx
     f_v = sigma * 0.5 * (kappa[:-1, :] + kappa[1:, :]) * (alpha[1:, :] - alpha[:-1, :]) / dy
     return f_u, f_v
