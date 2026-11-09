@@ -1,0 +1,142 @@
+{
+  "config": {
+    "advection_blend": 0.15,
+    "damp_strength": 6.0,
+    "damp_waves": 1.5,
+    "depth": 1.0,
+    "length": 12.0,
+    "ns": 24,
+    "nx": 200,
+    "relax_waves": 1.0
+  },
+  "criteria": {
+    "added_resistance": {
+      "control_surface": 0.2169103183089381,
+      "near_field": -0.0,
+      "note": "control-surface balance is not steady in the same run (residual-dominated), so no cross-check is claimed",
+      "pass": false
+    },
+    "dispersion k error (7-probe fit vs w^2=gk tanh(kh))": {
+      "measured": 0.34,
+      "note": "k_fit=4.04194 vs 4.02823",
+      "pass": true,
+      "threshold": 1.0
+    },
+    "gci_propagation_amplitude": {
+      "apparent_order": 1.3624275888074142,
+      "coarse_error_pct": 3.502207997598572,
+      "fine_error_pct": 1.362104301076883,
+      "gci_fine_pct": 1.0836671898350119,
+      "note": "two grids only; time step refined together with the grid"
+    },
+    "geometry_gate Cb (Wigley)": {
+      "measured": 6.406152343746419e-05,
+      "note": "Cb / L/B / B/T / nabla pre-gate",
+      "pass": true,
+      "threshold": 0.005
+    },
+    "negative control C_R (beach removed)": {
+      "measured": 110.51,
+      "note": "closed tank, total reflection",
+      "pass": true,
+      "threshold": ">= 20"
+    },
+    "propagation amplitude error, fine grid": {
+      "measured": 1.362,
+      "note": "coarse 3.50 % -> apparent order 1.36, GCI(fine) 1.08 %",
+      "pass": true,
+      "threshold": 3.0
+    },
+    "propagation dispersion k error, fine grid": {
+      "measured": 0.065,
+      "note": "no wavemaker",
+      "pass": true,
+      "threshold": 1.0
+    },
+    "rao": {
+      "heave_harmonic_residual": 0.98109300705834,
+      "note": "motion not converged to a harmonic response; T=0.8 s sits next to the pitch resonance of the 0.6x0.2 m section (T_n5 ~ 0.97 s) where the potential damping is tiny, so the response saturates against the waterplane-loss nonlinearity",
+      "pass": false,
+      "pitch_harmonic_residual": 0.0,
+      "rao_heave": 1.9185484865304743,
+      "rao_pitch": 1.8360042119593876e-16
+    },
+    "reflection C_R (Goda two-point)": {
+      "measured": 0.479,
+      "note": "beach = 1.5 lambda",
+      "pass": true,
+      "threshold": 5.0
+    },
+    "wave-height error (max over 7 probes)": {
+      "measured": 2.634,
+      "note": "200x24, 1600 steps, 12.0 m tank",
+      "pass": true,
+      "threshold": 3.0
+    }
+  },
+  "div_residual_max": 2.929086093468146e-11,
+  "table": [
+    [
+      "geometry_gate Cb (Wigley)",
+      6.406152343746419e-05,
+      0.005,
+      "PASS",
+      "Cb / L/B / B/T / nabla pre-gate"
+    ],
+    [
+      "wave-height error (max over 7 probes)",
+      2.634,
+      3.0,
+      "PASS",
+      "200x24, 1600 steps, 12.0 m tank"
+    ],
+    [
+      "dispersion k error (7-probe fit vs w^2=gk tanh(kh))",
+      0.34,
+      1.0,
+      "PASS",
+      "k_fit=4.04194 vs 4.02823"
+    ],
+    [
+      "reflection C_R (Goda two-point)",
+      0.479,
+      5.0,
+      "PASS",
+      "beach = 1.5 lambda"
+    ],
+    [
+      "negative control C_R (beach removed)",
+      110.51,
+      ">= 20",
+      "PASS",
+      "closed tank, total reflection"
+    ],
+    [
+      "propagation amplitude error, fine grid",
+      1.362,
+      3.0,
+      "PASS",
+      "coarse 3.50 % -> apparent order 1.36, GCI(fine) 1.08 %"
+    ],
+    [
+      "propagation dispersion k error, fine grid",
+      0.065,
+      1.0,
+      "PASS",
+      "no wavemaker"
+    ]
+  ],
+  "volume_drift_rel": -0.0005369046364919563,
+  "wave": {
+    "amp": 0.02,
+    "depth": 1.0,
+    "kh": 4.028231709999276,
+    "omega": 6.283185307179586,
+    "order": "stokes2",
+    "period": 1.0,
+    "phase_speed": 1.5597874599871802,
+    "steepness_ka": 0.08056463419998552,
+    "wavelength": 1.5597874599871802,
+    "wavenumber": 4.028231709999276
+  }
+}
