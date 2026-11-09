@@ -1,0 +1,18 @@
+{
+ "stages": {
+  "sweep": "docs/expansion-momentum-closure/artifacts/sweep.json"
+ },
+ "reynolds_reference": 200.0,
+ "length_in_downstream_heights": 15.0,
+ "tolerance": 1e-07,
+ "area_fractions": [
+  0.1,
+  0.2,
+  0.25,
+  0.4,
+  0.5,
+  0.75,
+  0.8,
+  0.9
+ ]
+}
