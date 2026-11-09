@@ -1,0 +1,85 @@
+{
+  "case": {
+    "name": "water-air-3mm",
+    "eotvos": 1.23,
+    "morton": 2.63e-11,
+    "density_ratio": 10.0,
+    "viscosity_ratio": 55.0,
+    "cells_per_diameter": 20,
+    "domain_width": 4.0,
+    "domain_height": 8.0,
+    "start_y": 2.0,
+    "end_time": 2.5,
+    "csf_smoothing": 3,
+    "momentum_advection": true
+  },
+  "derived": {
+    "sigma": 0.8130081300813008,
+    "mu_liquid": 0.001990670937971673,
+    "mu_gas": 3.6194017054030415e-05,
+    "u_ref_sqrt_gd": 1.0
+  },
+  "grid": {
+    "nx": 80,
+    "ny": 160,
+    "dx": 0.05,
+    "dy": 0.05,
+    "cells_per_diameter": 20
+  },
+  "geometry_validation": {
+    "analytic_area": 0.7853981633974483,
+    "initial_area": 0.79,
+    "relative_error": 0.005859240340778607,
+    "cells_across_bubble": 20.0
+  },
+  "terminal_velocity": 0.507988432769325,
+  "peak_velocity": 0.70006453091665,
+  "terminal_velocity_anchor": 1.4982781445292406,
+  "dimensionless": {
+    "eotvos": 1.23,
+    "morton": 2.63e-11,
+    "reynolds": 255.93103441842348,
+    "weber": 0.3183327806512842,
+    "capillary": 0.0012438225062257969,
+    "density_ratio": 10.0,
+    "viscosity_ratio": 55.0
+  },
+  "regime": {
+    "regime": "ellipsoidal",
+    "eotvos": 1.23,
+    "morton": 2.63e-11,
+    "reynolds": 255.93103441842348,
+    "window": "0.4 < Eo < 40, Re <~ 1e3: oblate ellipsoid, no cap"
+  },
+  "shape": {
+    "aspect_ratio": 1.1578947368421053,
+    "aspect_second_moment": 0.8113519890258402,
+    "circularity": 0.7001739743363583,
+    "d_equivalent": 1.0029253413593637,
+    "centroid": [
+      1.9939046590725897,
+      3.142928928173516
+    ]
+  },
+  "conservation": {
+    "initial_volume": 0.79,
+    "final_volume": 0.7900000000000138,
+    "total_relative_drift": 1.7426285449812582e-14,
+    "worst_step_relative_drift": 1.4475059688150774e-14,
+    "worst_bound_repair_fraction": 5.828226220909517e-16
+  },
+  "cost": {
+    "steps": 1011,
+    "final_time": 2.5,
+    "elapsed_seconds": 1429.7799532413483,
+    "cg_iterations_last": 646,
+    "cg_converged_last": true
+  },
+  "grace_anchor": 1.4982781445292406,
+  "relative_error": -0.6609518502127419,
+  "pass_c3": false,
+  "2d_reference": null,
+  "_leg": "bubble",
+  "_leg_name": "bubble_l0_n20_W4",
+  "_level_index": 0
+}

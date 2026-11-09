@@ -1,0 +1,85 @@
+{
+  "case": {
+    "name": "Eo40-M1e-3",
+    "eotvos": 40.0,
+    "morton": 0.001,
+    "density_ratio": 10.0,
+    "viscosity_ratio": 55.0,
+    "cells_per_diameter": 16,
+    "domain_width": 4.0,
+    "domain_height": 8.0,
+    "start_y": 2.0,
+    "end_time": 2.5,
+    "csf_smoothing": 3,
+    "momentum_advection": true
+  },
+  "derived": {
+    "sigma": 0.025,
+    "mu_liquid": 0.011478744233307164,
+    "mu_gas": 0.0002087044406055848,
+    "u_ref_sqrt_gd": 1.0
+  },
+  "grid": {
+    "nx": 64,
+    "ny": 128,
+    "dx": 0.0625,
+    "dy": 0.0625,
+    "cells_per_diameter": 16
+  },
+  "geometry_validation": {
+    "analytic_area": 0.7853981633974483,
+    "initial_area": 0.8125,
+    "relative_error": 0.034507130097319726,
+    "cells_across_bubble": 16.0
+  },
+  "terminal_velocity": 0.36043911272508433,
+  "peak_velocity": 0.4389004143321274,
+  "terminal_velocity_anchor": 0.7473285756613351,
+  "dimensionless": {
+    "eotvos": 40.0,
+    "morton": 0.001,
+    "reynolds": 31.937747051459926,
+    "weber": 5.285554549860827,
+    "capillary": 0.1654955354660565,
+    "density_ratio": 10.0,
+    "viscosity_ratio": 55.0
+  },
+  "regime": {
+    "regime": "spherical-cap",
+    "eotvos": 40.0,
+    "morton": 0.001,
+    "reynolds": 31.937747051459926,
+    "window": "Eo > 40: cap with a flattened rear"
+  },
+  "shape": {
+    "aspect_ratio": 1.6,
+    "aspect_second_moment": 1.210843547634625,
+    "circularity": 0.5112538594266782,
+    "d_equivalent": 1.0171072362820603,
+    "centroid": [
+      1.9973938973895249,
+      2.831020617662219
+    ]
+  },
+  "conservation": {
+    "initial_volume": 0.8125,
+    "final_volume": 0.8125000000000088,
+    "total_relative_drift": 1.0794783870201522e-14,
+    "worst_step_relative_drift": 7.788641526601099e-15,
+    "worst_bound_repair_fraction": 4.556586682229103e-16
+  },
+  "cost": {
+    "steps": 127,
+    "final_time": 2.5,
+    "elapsed_seconds": 106.72192764282227,
+    "cg_iterations_last": 529,
+    "cg_converged_last": true
+  },
+  "grace_anchor": 0.7473285756613351,
+  "relative_error": -0.5176966003124929,
+  "pass_c3": false,
+  "2d_reference": null,
+  "_leg": "bubble",
+  "_leg_name": "bubble_l2_n16_W4",
+  "_level_index": 2
+}

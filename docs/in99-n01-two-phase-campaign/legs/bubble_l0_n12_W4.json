@@ -1,0 +1,85 @@
+{
+  "case": {
+    "name": "water-air-3mm",
+    "eotvos": 1.23,
+    "morton": 2.63e-11,
+    "density_ratio": 10.0,
+    "viscosity_ratio": 55.0,
+    "cells_per_diameter": 12,
+    "domain_width": 4.0,
+    "domain_height": 8.0,
+    "start_y": 2.0,
+    "end_time": 2.5,
+    "csf_smoothing": 3,
+    "momentum_advection": true
+  },
+  "derived": {
+    "sigma": 0.8130081300813008,
+    "mu_liquid": 0.001990670937971673,
+    "mu_gas": 3.6194017054030415e-05,
+    "u_ref_sqrt_gd": 1.0
+  },
+  "grid": {
+    "nx": 48,
+    "ny": 96,
+    "dx": 0.08333333333333333,
+    "dy": 0.08333333333333333,
+    "cells_per_diameter": 12
+  },
+  "geometry_validation": {
+    "analytic_area": 0.7853981633974483,
+    "initial_area": 0.7777777777777777,
+    "relative_error": 0.009702576317095776,
+    "cells_across_bubble": 12.0
+  },
+  "terminal_velocity": 0.6246901564842476,
+  "peak_velocity": 0.7070981653762779,
+  "terminal_velocity_anchor": 1.4982781445292406,
+  "dimensionless": {
+    "eotvos": 1.23,
+    "morton": 2.63e-11,
+    "reynolds": 312.2827614284319,
+    "weber": 0.4776582259462625,
+    "capillary": 0.0015295696238927072,
+    "density_ratio": 10.0,
+    "viscosity_ratio": 55.0
+  },
+  "regime": {
+    "regime": "ellipsoidal",
+    "eotvos": 1.23,
+    "morton": 2.63e-11,
+    "reynolds": 312.2827614284319,
+    "window": "0.4 < Eo < 40, Re <~ 1e3: oblate ellipsoid, no cap"
+  },
+  "shape": {
+    "aspect_ratio": 1.090909090909091,
+    "aspect_second_moment": 0.8247877272538211,
+    "circularity": 0.6699245856906312,
+    "d_equivalent": 0.9951368869069036,
+    "centroid": [
+      2.0353001082391136,
+      3.170641719442555
+    ]
+  },
+  "conservation": {
+    "initial_volume": 0.7777777777777777,
+    "final_volume": 0.7777777777776672,
+    "total_relative_drift": -1.4202924550740397e-13,
+    "worst_step_relative_drift": 1.6272697475220153e-14,
+    "worst_bound_repair_fraction": 6.068692405068462e-16
+  },
+  "cost": {
+    "steps": 470,
+    "final_time": 2.5,
+    "elapsed_seconds": 248.19667649269104,
+    "cg_iterations_last": 394,
+    "cg_converged_last": true
+  },
+  "grace_anchor": 1.4982781445292406,
+  "relative_error": -0.5830612902115545,
+  "pass_c3": false,
+  "2d_reference": null,
+  "_leg": "bubble",
+  "_leg_name": "bubble_l0_n12_W4",
+  "_level_index": 0
+}
