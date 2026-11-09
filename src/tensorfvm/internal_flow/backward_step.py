@@ -141,8 +141,10 @@ class BackwardStepCase:
                 station_cf[f"x/H={station:g}"] = float(cf[i])
         bubble = cf[1:solver.nx]
         min_index = int(torch.argmin(bubble)) + 1
+        momentum = solver.momentum_residual()
         h_out = 2.0 * cfg.step_height
         return {
+            "momentum_residual": momentum,
             "mesh": {"nx": solver.nx, "ny": solver.ny,
                      "cells_per_step_height": n,
                      "h_over_H": float(solver.hx)},
