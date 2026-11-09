@@ -47,7 +47,7 @@ from dataclasses import dataclass
 
 import torch
 
-from .mac import MACConfig, StaggeredMAC
+from .mac import OPEN_RIGHT, MACConfig, StaggeredMAC
 from .reference import SUDDEN_EXPANSION_AREA_RATIO, borda_carnot_loss
 
 
@@ -65,6 +65,8 @@ class SuddenExpansionConfig:
     tolerance: float = 1e-9
     check_every: int = 200
     device: str = "cpu"
+    #: downstream closure, see :data:`tensorfvm.internal_flow.mac.OPEN_RIGHT`
+    right: str = "outlet"
 
     def __post_init__(self) -> None:
         if not math.isfinite(self.area_ratio) or self.area_ratio <= 1.0:
@@ -75,6 +77,8 @@ class SuddenExpansionConfig:
                 raise ValueError(f"{name} must be finite and positive")
         if self.cells_per_downstream_height < 4:
             raise ValueError("cells_per_downstream_height must be >= 4")
+        if self.right not in OPEN_RIGHT:
+            raise ValueError("right must be one of the open outlet closures")
 
     @property
     def downstream_height(self) -> float:
@@ -149,7 +153,7 @@ class SuddenExpansionCase:
             tolerance=self.config.tolerance,
             check_every=self.config.check_every,
             left="inlet",
-            right="outlet",
+            right=self.config.right,
             inlet_profile=inlet_profile(self.config),
             device=self.config.device,
         ))

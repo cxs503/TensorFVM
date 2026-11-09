@@ -47,8 +47,15 @@ Boundary options
             inlet plane is a no-slip wall, which is how the step face of a
             backward-facing step or the face of a sudden expansion is
             represented),
-``right`` : ``"wall"`` or ``"outlet"`` (zero-gradient velocity + global flux
-            balance),
+``right`` : ``"wall"``, ``"outlet"`` (zero-gradient velocity + global flux
+            balance), ``"developed"`` (the fully developed plane-Poiseuille
+            profile at the exact inlet flux) or ``"convective"`` (first-order
+            Orlanski convective outflow relaxation).  The three open closures
+            all finish with the same global flux correction, so every one of
+            them is mass consistent and the pressure Poisson problem keeps its
+            compatibility; they differ only in what they assume about the
+            downstream flow, which is what an outlet-sensitivity study has to
+            separate,
 ``bottom``/``top`` are always no-slip walls.
 
 Steady state is reached by explicit forward-Euler marching with a
@@ -68,6 +75,13 @@ import torch
 from ._dct import dct2, idct2
 
 TINY = 1e-300
+
+#: Right-hand boundary closures that let mass leave the domain.  ``"outlet"`` is
+#: the zero-gradient column used by the published channel benchmarks,
+#: ``"developed"`` imposes the analytic plane-Poiseuille profile, and
+#: ``"convective"`` relaxes the outflow column towards the interior at the local
+#: convective speed (first-order Orlanski).
+OPEN_RIGHT = ("outlet", "developed", "convective")
 
 
 def vanleer_face(f: torch.Tensor, vel: torch.Tensor, axis: int) -> torch.Tensor:
@@ -142,8 +156,10 @@ class MACConfig:
             raise ValueError("time_step must be a finite positive number")
         if self.left not in ("wall", "inlet"):
             raise ValueError("left must be wall or inlet")
-        if self.right not in ("wall", "outlet"):
-            raise ValueError("right must be wall or outlet")
+        if self.right not in OPEN_RIGHT + ("wall",):
+            raise ValueError("right must be wall, outlet, developed or convective")
+        if self.right == "developed" and self.left != "inlet":
+            raise ValueError("a developed outlet needs an inlet to set its flux")
         if self.left == "inlet":
             if self.inlet_profile is None or len(self.inlet_profile) != self.ny:
                 raise ValueError("an inlet requires inlet_profile with ny entries")
@@ -271,7 +287,7 @@ class StaggeredMAC:
         face_v = vanleer_face(v, adv, axis=0)              # (nx-1, ny+1)
         fxv = torch.zeros(nx + 1, ny + 1, dtype=u.dtype, device=u.device)
         fxv[1:nx, :] = adv * face_v
-        if self.config.right == "outlet":
+        if self.config.right != "wall":
             fxv[nx, :] = uau[nx, :] * v[nx - 1, :]          # upwind outflow flux
         conv -= (fxv[1:, :] - fxv[:-1, :]) / hx
 
@@ -281,7 +297,7 @@ class StaggeredMAC:
         lap[0, :] += (-3.0 * v[0, :] + v[1, :]) / hx ** 2
         if nx > 2:
             lap[1:nx - 1, :] += (v[:-2, :] - 2.0 * v[1:-1, :] + v[2:, :]) / hx ** 2
-        if self.config.right == "outlet":
+        if self.config.right != "wall":
             lap[nx - 1, :] += (v[nx - 2, :] - v[nx - 1, :]) / hx ** 2   # zero gradient
         else:
             lap[nx - 1, :] += (v[nx - 2, :] - 3.0 * v[nx - 1, :]) / hx ** 2
@@ -344,6 +360,37 @@ class StaggeredMAC:
         visc = 0.18 * h ** 2 / diff
         return min(conv, visc)
 
+    def developed_profile(self) -> torch.Tensor:
+        """Plane-Poiseuille profile at the face column, scaled to the inlet flux.
+
+        ``u(eta) = 6 Ubar eta (1 - eta)`` with ``eta = (j + 1/2) / ny`` and
+        ``Ubar`` taken so that the *discrete* sum of the column equals the inlet
+        flux; the analytic quadrature of the parabola is only exact in the
+        continuum, so the discrete rescaling is what makes the closure mass
+        consistent on every mesh.
+        """
+        if self._inlet is None:
+            raise ValueError("a developed outlet needs an inlet profile")
+        eta = (torch.arange(self.ny, dtype=self.dtype, device=self.device) + 0.5) / self.ny
+        shape = 6.0 * eta * (1.0 - eta)
+        target = self._inlet.sum()
+        return shape * (target / shape.sum())
+
+    def _outlet_column(self, u_out: torch.Tensor, u_in: torch.Tensor,
+                       u_inlet: torch.Tensor, dt: float) -> torch.Tensor:
+        """Close the outflow face column and enforce the global flux balance."""
+        cfg = self.config
+        if cfg.right == "developed":
+            u_out = self.developed_profile()
+        elif cfg.right == "convective":
+            # first-order Orlanski: d u / dt + c d u / dx = 0 at the local speed c
+            speed = float(torch.clamp(u_in, min=0.0).max())
+            courant = speed * dt / self.hx
+            u_out = (u_out + courant * u_in) / (1.0 + courant)
+        # global mass balance: the Neumann pressure solve needs sum(div u*) = 0
+        deficit = (u_inlet.sum() - u_out.sum()) / self.ny
+        return u_out + deficit
+
     def step(self, dt: float | None = None) -> float:
         """Advance one explicit projection step and return the step size used."""
         dt = self.stable_time_step() if dt is None else float(dt)
@@ -364,13 +411,12 @@ class StaggeredMAC:
         if tt is not None:
             theta_star = self.theta + dt * tt
 
-        if cfg.right == "outlet":
-            u_star[self.nx, :] = u_star[self.nx - 1, :]
-            # global mass balance: the outflow must carry exactly the inflow
-            deficit = (u_star[0, :].sum() - u_star[self.nx, :].sum()) / self.ny
-            u_star[self.nx, :] = u_star[self.nx, :] + deficit
-        else:
+        if cfg.right == "wall":
             u_star[self.nx, :] = 0.0
+        else:
+            u_star[self.nx, :] = self._outlet_column(u_star[self.nx, :],
+                                                    u_star[self.nx - 1, :],
+                                                    u_star[0, :], dt)
 
         div = ((u_star[1:, :] - u_star[:-1, :]) / self.hx
                + (v_star[:, 1:] - v_star[:, :-1]) / self.hy)
