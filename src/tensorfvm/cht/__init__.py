@@ -27,6 +27,12 @@ check ``q_fluid - q_solid <= 1e-6`` and the global energy balance without
 re-running the solver.
 """
 
+from .ice_steel import (ICE, STEEL, LayeredWall, LayeredWall2D, Material,
+                        TwoDomainCHT, analytic_series_field, interface_audit)
+from .icing import (IcingEnvironment, IcingState, icing_state_adiabatic,
+                    icing_state_with_conduction, load_w4n08_reference)
+from .phase_change import (EnthalpySlab1D, NeumannSolution, PhaseChangeMaterial,
+                           RadialBoundary, stefan_lambda)
 from .similarity import BlasiusSolution, pohlhausen_nusselt, solve_blasius, solve_pohlhausen
 from .flatplate import FlatPlateCHT, FlatPlateResult
 from .polar import ConjugateCylinder, CylinderCHTResult, PolarVorticitySolver
@@ -38,6 +44,24 @@ __all__ = [
     "FlatPlateCHT",
     "FlatPlateResult",
     "PolarVorticitySolver",
+    "EnthalpySlab1D",
+    "IcingEnvironment",
+    "IcingState",
+    "LayeredWall",
+    "LayeredWall2D",
+    "Material",
+    "NeumannSolution",
+    "PhaseChangeMaterial",
+    "RadialBoundary",
+    "STEEL",
+    "ICE",
+    "TwoDomainCHT",
+    "analytic_series_field",
+    "icing_state_adiabatic",
+    "icing_state_with_conduction",
+    "interface_audit",
+    "load_w4n08_reference",
+    "stefan_lambda",
     "pohlhausen_nusselt",
     "solve_blasius",
     "solve_pohlhausen",

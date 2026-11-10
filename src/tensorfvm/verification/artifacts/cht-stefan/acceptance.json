@@ -1,0 +1,30 @@
+{
+  "all_passed": true,
+  "ice_steel": {
+    "l2_rel": 1.9901328612923908e-14,
+    "limit_rel": 0.05,
+    "max_abs_error_K": 1.6484591469634324e-12,
+    "passed": true
+  },
+  "icing": {
+    "field_l2_rel": 8.98715129712701e-15,
+    "limit_rel": 0.05,
+    "max_closure_rel_error": 1.723891439543371e-07,
+    "passed": true
+  },
+  "interface": {
+    "all_mutations_red": true,
+    "flux_imbalance_rel": 1.5288685799431715e-12,
+    "flux_residual_limit": 1e-06,
+    "passed": true,
+    "q_vs_analytic_rel": 1.4344081478157023e-13,
+    "temperature_continuity_limit": 0.01,
+    "temperature_continuity_rel": 3.508136542205691e-14
+  },
+  "stefan": {
+    "energy_imbalance_rel": 2.5759208260280523e-15,
+    "limit_rel": 0.03,
+    "max_front_rel_error": 0.011003981621082737,
+    "passed": true
+  }
+}
