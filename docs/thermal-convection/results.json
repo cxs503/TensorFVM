@@ -1,0 +1,903 @@
+{
+ "case": "thermal_convection",
+ "prandtl": 0.71,
+ "design": {
+  "case_list": [
+   {
+    "label": "ra1e4_n48",
+    "rayleigh": 10000.0,
+    "cells": 48,
+    "aspect": 2,
+    "role": "sweep+energy",
+    "max_time": 300.0,
+    "average_from": null
+   },
+   {
+    "label": "ra1e5_n48",
+    "rayleigh": 100000.0,
+    "cells": 48,
+    "aspect": 2,
+    "role": "sweep+grid",
+    "max_time": 300.0,
+    "average_from": null
+   },
+   {
+    "label": "ra1e6_n48",
+    "rayleigh": 1000000.0,
+    "cells": 48,
+    "aspect": 2,
+    "role": "sweep",
+    "max_time": 400.0,
+    "average_from": 150.0
+   },
+   {
+    "label": "ra1e7_n64",
+    "rayleigh": 10000000.0,
+    "cells": 64,
+    "aspect": 2,
+    "role": "sweep",
+    "max_time": 300.0,
+    "average_from": 120.0
+   },
+   {
+    "label": "ra1e5_n24",
+    "rayleigh": 100000.0,
+    "cells": 24,
+    "aspect": 2,
+    "role": "grid",
+    "max_time": 300.0,
+    "average_from": null
+   },
+   {
+    "label": "ra1e5_n32",
+    "rayleigh": 100000.0,
+    "cells": 32,
+    "aspect": 2,
+    "role": "grid",
+    "max_time": 300.0,
+    "average_from": null
+   },
+   {
+    "label": "ra1e5_n64",
+    "rayleigh": 100000.0,
+    "cells": 64,
+    "aspect": 2,
+    "role": "grid",
+    "max_time": 300.0,
+    "average_from": null
+   },
+   {
+    "label": "ra1e4_n32",
+    "rayleigh": 10000.0,
+    "cells": 32,
+    "aspect": 2,
+    "role": "grid+energy",
+    "max_time": 300.0,
+    "average_from": null
+   },
+   {
+    "label": "ra1e6_n64",
+    "rayleigh": 1000000.0,
+    "cells": 64,
+    "aspect": 2,
+    "role": "grid",
+    "max_time": 400.0,
+    "average_from": 150.0
+   }
+  ]
+ },
+ "cases": {
+  "ra1e4_n32": {
+   "parameters": {
+    "rayleigh": 10000.0,
+    "prandtl": 0.71,
+    "aspect": 2,
+    "cells": 32,
+    "h": 0.03125,
+    "viscosity": 0.008426149773176359,
+    "diffusivity": 0.011867816581938534,
+    "cfl": 0.4,
+    "wall_gradient": "second_order",
+    "temperature_drop": 1.0
+   },
+   "metrics": {
+    "nusselt": 2.4228111594483965,
+    "nusselt_history_mean": 2.2715430841164364,
+    "nusselt_top": 2.420454492663711,
+    "nusselt_asymmetry": 0.0009726993271824102,
+    "nusselt_fluctuation": 3.719689522967737e-10,
+    "nusselt_min": 2.422811159064987,
+    "nusselt_max": 2.42281116023158,
+    "nusselt_budget": 2.418011549248355,
+    "energy_imbalance": 8.268504889017031e-11,
+    "flux_profile_mean": 2.414706764584969,
+    "flux_profile_spread": 0.02094110636117108,
+    "psi_abs_max": 0.0968473104193202,
+    "u_max": 0.3215258414291142,
+    "v_max": 0.37667865002153095,
+    "divergence_max": 2.0539125955565396e-15
+   },
+   "march": {
+    "steps": 12250,
+    "time": 153.12499999999767,
+    "dt": 0.0125,
+    "window_start": 133.12499999999767,
+    "window": 18.749999999982947,
+    "samples": 98,
+    "stop_reason": "steady",
+    "wall_seconds": 156.7731649875641
+   },
+   "role": "grid+energy"
+  },
+  "ra1e4_n48": {
+   "parameters": {
+    "rayleigh": 10000.0,
+    "prandtl": 0.71,
+    "aspect": 2,
+    "cells": 48,
+    "h": 0.020833333333333332,
+    "viscosity": 0.008426149773176359,
+    "diffusivity": 0.011867816581938534,
+    "cfl": 0.4,
+    "wall_gradient": "second_order",
+    "temperature_drop": 1.0
+   },
+   "metrics": {
+    "nusselt": 2.412056307618819,
+    "nusselt_history_mean": 2.2553675269307907,
+    "nusselt_top": 2.411380974196409,
+    "nusselt_asymmetry": 0.000279982444968946,
+    "nusselt_fluctuation": 4.588584989992924e-10,
+    "nusselt_min": 2.412056307125136,
+    "nusselt_max": 2.41205630871246,
+    "nusselt_budget": 2.4106686755409177,
+    "energy_imbalance": 9.948689180046787e-11,
+    "flux_profile_mean": 2.4092985807512814,
+    "flux_profile_spread": 0.00904373748442966,
+    "psi_abs_max": 0.09670109033662283,
+    "u_max": 0.3214852334891739,
+    "v_max": 0.377561301711386,
+    "divergence_max": 2.831068712794149e-15
+   },
+   "march": {
+    "steps": 22991,
+    "time": 151.3481323711339,
+    "dt": 0.006582929510294029,
+    "window_start": 131.3481323711339,
+    "window": 19.66979337678083,
+    "samples": 277,
+    "stop_reason": "steady",
+    "wall_seconds": 329.8425633907318
+   },
+   "role": "sweep+energy"
+  },
+  "ra1e5_n24": {
+   "parameters": {
+    "rayleigh": 100000.0,
+    "prandtl": 0.71,
+    "aspect": 2,
+    "cells": 24,
+    "h": 0.041666666666666664,
+    "viscosity": 0.0026645825188948455,
+    "diffusivity": 0.003752933125204008,
+    "cfl": 0.4,
+    "wall_gradient": "second_order",
+    "temperature_drop": 1.0
+   },
+   "metrics": {
+    "nusselt": 4.766322088851347,
+    "nusselt_history_mean": 4.643292806368976,
+    "nusselt_top": 4.643466284052408,
+    "nusselt_asymmetry": 0.025775808371470428,
+    "nusselt_fluctuation": 6.623401613044344e-07,
+    "nusselt_min": 4.766321272778462,
+    "nusselt_max": 4.766323276933847,
+    "nusselt_budget": 4.546463724295542,
+    "energy_imbalance": 2.6989563042102236e-07,
+    "flux_profile_mean": 4.536288269741342,
+    "flux_profile_spread": 0.2836901047068343,
+    "psi_abs_max": 0.11534776856826547,
+    "u_max": 0.4534822088261167,
+    "v_max": 0.5227989466222176,
+    "divergence_max": 1.7763568394002505e-15
+   },
+   "march": {
+    "steps": 18036,
+    "time": 300.6000000000553,
+    "dt": 0.016666666666666666,
+    "window_start": 270.54000000004976,
+    "window": 27.83333333330802,
+    "samples": 108,
+    "stop_reason": "max_time",
+    "wall_seconds": 189.01819229125977
+   },
+   "role": "grid"
+  },
+  "ra1e5_n32": {
+   "parameters": {
+    "rayleigh": 100000.0,
+    "prandtl": 0.71,
+    "aspect": 2,
+    "cells": 32,
+    "h": 0.03125,
+    "viscosity": 0.0026645825188948455,
+    "diffusivity": 0.003752933125204008,
+    "cfl": 0.4,
+    "wall_gradient": "second_order",
+    "temperature_drop": 1.0
+   },
+   "metrics": {
+    "nusselt": 4.5867725098178695,
+    "nusselt_history_mean": 4.457483989245743,
+    "nusselt_top": 4.531878928888867,
+    "nusselt_asymmetry": 0.011967801065237971,
+    "nusselt_fluctuation": 6.539540885641714e-07,
+    "nusselt_min": 4.586771670227422,
+    "nusselt_max": 4.5867737892206115,
+    "nusselt_budget": 4.494511694897138,
+    "energy_imbalance": 2.618814841217917e-07,
+    "flux_profile_mean": 4.489316032226791,
+    "flux_profile_spread": 0.17416187475482214,
+    "psi_abs_max": 0.11461554746136329,
+    "u_max": 0.45437388002307266,
+    "v_max": 0.5251944592472051,
+    "divergence_max": 3.073929999430902e-15
+   },
+   "march": {
+    "steps": 24125,
+    "time": 301.56249999986267,
+    "dt": 0.0125,
+    "window_start": 271.4062499998764,
+    "window": 29.687499999973,
+    "samples": 193,
+    "stop_reason": "max_time",
+    "wall_seconds": 266.01587200164795
+   },
+   "role": "grid"
+  },
+  "ra1e5_n48": {
+   "parameters": {
+    "rayleigh": 100000.0,
+    "prandtl": 0.71,
+    "aspect": 2,
+    "cells": 48,
+    "h": 0.020833333333333332,
+    "viscosity": 0.0026645825188948455,
+    "diffusivity": 0.003752933125204008,
+    "cfl": 0.4,
+    "wall_gradient": "second_order",
+    "temperature_drop": 1.0
+   },
+   "metrics": {
+    "nusselt": 4.4813477042000835,
+    "nusselt_history_mean": 4.350399052081492,
+    "nusselt_top": 4.466448546712157,
+    "nusselt_asymmetry": 0.0033247046360545592,
+    "nusselt_fluctuation": 6.624983362648873e-07,
+    "nusselt_min": 4.481346822026039,
+    "nusselt_max": 4.481349066854235,
+    "nusselt_budget": 4.456386543218305,
+    "energy_imbalance": 2.806770369354855e-07,
+    "flux_profile_mean": 4.454491916477357,
+    "flux_profile_spread": 0.08050368207816128,
+    "psi_abs_max": 0.11402690718819686,
+    "u_max": 0.45580441987723097,
+    "v_max": 0.526334283407845,
+    "divergence_max": 4.884981308350689e-15
+   },
+   "march": {
+    "steps": 36022,
+    "time": 300.18333333322465,
+    "dt": 0.008333333333333333,
+    "window_start": 270.1649999999022,
+    "window": 29.741666666639617,
+    "samples": 434,
+    "stop_reason": "max_time",
+    "wall_seconds": 522.2676937580109
+   },
+   "role": "sweep+grid"
+  },
+  "ra1e5_n64": {
+   "parameters": {
+    "rayleigh": 100000.0,
+    "prandtl": 0.71,
+    "aspect": 2,
+    "cells": 64,
+    "h": 0.015625,
+    "viscosity": 0.0026645825188948455,
+    "diffusivity": 0.003752933125204008,
+    "cfl": 0.4,
+    "wall_gradient": "second_order",
+    "temperature_drop": 1.0
+   },
+   "metrics": {
+    "nusselt": 4.452924633695373,
+    "nusselt_history_mean": 4.321457241099935,
+    "nusselt_top": 4.446971649745886,
+    "nusselt_asymmetry": 0.001336870582636994,
+    "nusselt_fluctuation": 6.471219410757618e-07,
+    "nusselt_min": 4.452923760978273,
+    "nusselt_max": 4.452925989519088,
+    "nusselt_budget": 4.442880444125686,
+    "energy_imbalance": 2.786588992819505e-07,
+    "flux_profile_mean": 4.441975508862888,
+    "flux_profile_spread": 0.046069516326865845,
+    "psi_abs_max": 0.1137898401395588,
+    "u_max": 0.45715381616821604,
+    "v_max": 0.526549083434884,
+    "divergence_max": 7.771561172376096e-15
+   },
+   "march": {
+    "steps": 48050,
+    "time": 300.3124999999968,
+    "dt": 0.00625,
+    "window_start": 270.28124999999716,
+    "window": 29.837500000108548,
+    "samples": 775,
+    "stop_reason": "max_time",
+    "wall_seconds": 909.2920794487
+   },
+   "role": "grid"
+  },
+  "ra1e6_n48": {
+   "parameters": {
+    "rayleigh": 1000000.0,
+    "prandtl": 0.71,
+    "aspect": 2,
+    "cells": 48,
+    "h": 0.020833333333333332,
+    "viscosity": 0.0008426149773176359,
+    "diffusivity": 0.0011867816581938534,
+    "cfl": 0.4,
+    "wall_gradient": "second_order",
+    "temperature_drop": 1.0
+   },
+   "metrics": {
+    "nusselt": 7.87461906865398,
+    "nusselt_history_mean": 7.770484681671212,
+    "nusselt_top": 7.71352233025446,
+    "nusselt_asymmetry": 0.020457718271197134,
+    "nusselt_fluctuation": 0.05150785368561933,
+    "nusselt_min": 7.820621308111387,
+    "nusselt_max": 8.013211895764343,
+    "nusselt_budget": 7.4531482898346715,
+    "energy_imbalance": 0.0007559684120080104,
+    "flux_profile_mean": 7.428378601821862,
+    "flux_profile_spread": 0.43402225531009186,
+    "psi_abs_max": 0.11624002070640858,
+    "u_max": 0.5180869546241329,
+    "v_max": 0.5840592449855757,
+    "divergence_max": 5.495603971894525e-15
+   },
+   "march": {
+    "steps": 48057,
+    "time": 400.4749999998001,
+    "dt": 0.008333333333333333,
+    "window_start": 150.0,
+    "window": 250.3833333331056,
+    "samples": 579,
+    "stop_reason": "max_time",
+    "wall_seconds": 681.227044582367
+   },
+   "role": "sweep"
+  },
+  "ra1e7_n64": {
+   "parameters": {
+    "rayleigh": 10000000.0,
+    "prandtl": 0.71,
+    "aspect": 2,
+    "cells": 64,
+    "h": 0.015625,
+    "viscosity": 0.00026645825188948455,
+    "diffusivity": 0.0003752933125204008,
+    "cfl": 0.4,
+    "wall_gradient": "second_order",
+    "temperature_drop": 1.0
+   },
+   "metrics": {
+    "nusselt": 14.563310952099783,
+    "nusselt_history_mean": 14.293505396108788,
+    "nusselt_top": 14.166464134485992,
+    "nusselt_asymmetry": 0.027249766136221463,
+    "nusselt_fluctuation": 2.028271205919192,
+    "nusselt_min": 7.517912753697959,
+    "nusselt_max": 22.943888882623337,
+    "nusselt_budget": 14.762581236755647,
+    "energy_imbalance": 0.06090101666277175,
+    "flux_profile_mean": 14.055659400136536,
+    "flux_profile_spread": 2.474574534477842,
+    "psi_abs_max": 0.15227692176445312,
+    "u_max": 0.59150547257226,
+    "v_max": 0.6085278734623603,
+    "divergence_max": 7.993605777301127e-15
+   },
+   "march": {
+    "steps": 48050,
+    "time": 300.30579233914,
+    "dt": 0.00625,
+    "window_start": 120.0,
+    "window": 180.18750000003763,
+    "samples": 775,
+    "stop_reason": "max_time",
+    "wall_seconds": 865.111311674118
+   },
+   "role": "sweep"
+  }
+ },
+ "stability": {
+  "rigid": [
+   {
+    "nodes": 32,
+    "rayleigh_critical": 1695.5963421950794,
+    "wavenumber_critical": 3.114630098192755,
+    "growth_at_critical": 8.62183944742759e-05,
+    "relative_error": 0.007123743123995356,
+    "curve": {
+     "k": [
+      2.3,
+      2.4187499999999997,
+      2.5374999999999996,
+      2.65625,
+      2.775,
+      2.89375,
+      3.0125,
+      3.13125,
+      3.25,
+      3.36875,
+      3.4875,
+      3.60625,
+      3.725,
+      3.84375,
+      3.9625000000000004,
+      4.081250000000001,
+      4.2
+     ],
+     "rayleigh": [
+      1910.2206441371814,
+      1844.7809626723404,
+      1793.7346469737981,
+      1755.004250879203,
+      1726.9707791595326,
+      1708.366359095308,
+      1698.1933364814597,
+      1695.6650643596377,
+      1700.1615372555161,
+      1711.1957700470155,
+      1728.3880495282883,
+      1751.4460213894142,
+      1780.1491484527858,
+      1814.336478078639,
+      1853.8969367811262,
+      1898.7615730582672,
+      1948.8973129143635
+     ]
+    }
+   },
+   {
+    "nodes": 48,
+    "rayleigh_critical": 1702.2230020667637,
+    "wavenumber_critical": 3.116389359995273,
+    "growth_at_critical": 7.738837539144304e-05,
+    "relative_error": 0.0032434249814882053,
+    "curve": {
+     "k": [
+      2.3,
+      2.4187499999999997,
+      2.5374999999999996,
+      2.65625,
+      2.775,
+      2.89375,
+      3.0125,
+      3.13125,
+      3.25,
+      3.36875,
+      3.4875,
+      3.60625,
+      3.725,
+      3.84375,
+      3.9625000000000004,
+      4.081250000000001,
+      4.2
+     ],
+     "rayleigh": [
+      1918.4131454013361,
+      1852.6018228722226,
+      1801.2465343681538,
+      1762.2595639185759,
+      1734.0137749608582,
+      1715.2348429593633,
+      1704.9199192386188,
+      1702.2781416802718,
+      1706.686059363272,
+      1717.6538517825154,
+      1734.7994570540905,
+      1757.8285658958362,
+      1786.5190058380902,
+      1820.7084482457572,
+      1860.284658385587,
+      1905.177701349378,
+      1955.353667084236
+     ]
+    }
+   },
+   {
+    "nodes": 64,
+    "rayleigh_critical": 1704.6134008089919,
+    "wavenumber_critical": 3.117015109388068,
+    "growth_at_critical": 7.42166129932275e-05,
+    "relative_error": 0.0018436990581873168,
+    "curve": {
+     "k": [
+      2.3,
+      2.4187499999999997,
+      2.5374999999999996,
+      2.65625,
+      2.775,
+      2.89375,
+      3.0125,
+      3.13125,
+      3.25,
+      3.36875,
+      3.4875,
+      3.60625,
+      3.725,
+      3.84375,
+      3.9625000000000004,
+      4.081250000000001,
+      4.2
+     ],
+     "rayleigh": [
+      1921.366380812368,
+      1855.4213866563568,
+      1803.9549872316068,
+      1764.8758076824254,
+      1736.5537638292744,
+      1717.7122173118928,
+      1707.3464408183863,
+      1704.6640595775018,
+      1709.0403836877117,
+      1719.9845670275126,
+      1737.1137127729874,
+      1760.1328047569773,
+      1788.8190808393465,
+      1823.0097224103158,
+      1862.5920764095447,
+      1907.495857441077,
+      1957.6868527235072
+     ]
+    }
+   }
+  ],
+  "free": [
+   {
+    "nodes": 32,
+    "rayleigh_critical": 656.5335571326442,
+    "wavenumber_critical": 2.222318990764957,
+    "growth_at_critical": 0.0001325999798322566,
+    "relative_error": 0.0014865802509095092,
+    "curve": {
+     "k": [
+      1.5,
+      1.60625,
+      1.7125,
+      1.81875,
+      1.925,
+      2.03125,
+      2.1375,
+      2.2437500000000004,
+      2.35,
+      2.45625,
+      2.5625,
+      2.66875,
+      2.7750000000000004,
+      2.88125,
+      2.9875000000000003,
+      3.09375,
+      3.2
+     ],
+     "rayleigh": [
+      789.7350972366081,
+      746.5595690174048,
+      714.2335547336885,
+      690.5763921834505,
+      674.0074301167671,
+      663.3643802001357,
+      657.7825522339599,
+      656.6132231952149,
+      659.3672313783984,
+      665.6752654929846,
+      675.2594304382349,
+      687.9125737232064,
+      703.4830425858979,
+      721.8633007557958,
+      742.9814496989221,
+      766.7938995881276,
+      793.2821794318799
+     ]
+    }
+   },
+   {
+    "nodes": 48,
+    "rayleigh_critical": 657.0754591711827,
+    "wavenumber_critical": 2.2227876405818736,
+    "growth_at_critical": 0.00012997134216044353,
+    "relative_error": 0.0006624084293908976,
+    "curve": {
+     "k": [
+      1.5,
+      1.60625,
+      1.7125,
+      1.81875,
+      1.925,
+      2.03125,
+      2.1375,
+      2.2437500000000004,
+      2.35,
+      2.45625,
+      2.5625,
+      2.66875,
+      2.7750000000000004,
+      2.88125,
+      2.9875000000000003,
+      3.09375,
+      3.2
+     ],
+     "rayleigh": [
+      790.5317502423209,
+      747.2926875871091,
+      714.915590755245,
+      691.217044735551,
+      674.6143748935931,
+      663.9437842232944,
+      658.3394421841894,
+      657.1517473403787,
+      659.8908522111292,
+      666.1869084510748,
+      675.7615893254588,
+      688.4073970141319,
+      703.9723972063532,
+      722.3488231111141,
+      743.4645892954447,
+      767.2759406487157,
+      793.7642785338028
+     ]
+    }
+   },
+   {
+    "nodes": 64,
+    "rayleigh_critical": 657.269739353177,
+    "wavenumber_critical": 2.2229555254273174,
+    "growth_at_critical": 0.00012899437131380642,
+    "relative_error": 0.000366930206221614,
+    "curve": {
+     "k": [
+      1.5,
+      1.60625,
+      1.7125,
+      1.81875,
+      1.925,
+      2.03125,
+      2.1375,
+      2.2437500000000004,
+      2.35,
+      2.45625,
+      2.5625,
+      2.66875,
+      2.7750000000000004,
+      2.88125,
+      2.9875000000000003,
+      3.09375,
+      3.2
+     ],
+     "rayleigh": [
+      790.817418949644,
+      747.5555709097637,
+      715.1601479477182,
+      691.4467636052361,
+      674.8320021034333,
+      664.1515355563246,
+      658.5391172951012,
+      657.3448345783272,
+      660.0785955836523,
+      666.3703539177465,
+      675.9416325908816,
+      688.584807206829,
+      704.1478444454333,
+      722.5228960860081,
+      743.6378063212755,
+      767.4487621583354,
+      793.9371184893879
+     ]
+    }
+   }
+  ]
+ },
+ "scaling": {
+  "exponent": 0.2566005021043279,
+  "coefficient": 0.22867414500478642,
+  "stderr": 0.0036857295617146067,
+  "r2": 0.9995875391262677,
+  "residual_max": 0.019686139747101983,
+  "points": 4,
+  "local": [
+   {
+    "ra_from": 10000.0,
+    "ra_to": 100000.0,
+    "exponent": 0.2683594504216369
+   },
+   {
+    "ra_from": 100000.0,
+    "ra_to": 1000000.0,
+    "exponent": 0.24107825031765856
+   },
+   {
+    "ra_from": 1000000.0,
+    "ra_to": 10000000.0,
+    "exponent": 0.26553788950257784
+   }
+  ],
+  "labels": [
+   "ra1e4_n48",
+   "ra1e5_n48",
+   "ra1e6_n48",
+   "ra1e7_n64"
+  ]
+ },
+ "scaling_excess": {
+  "exponent": 0.32199644619090145,
+  "coefficient": 0.07783675025890074,
+  "stderr": 0.01699011132489139,
+  "r2": 0.9944625639128428,
+  "residual_max": 0.09559527809355384,
+  "points": 4,
+  "local": [
+   {
+    "ra_from": 10000.0,
+    "ra_to": 100000.0,
+    "exponent": 0.3910689289495343
+   },
+   {
+    "ra_from": 100000.0,
+    "ra_to": 1000000.0,
+    "exponent": 0.29131298354663315
+   },
+   {
+    "ra_from": 1000000.0,
+    "ra_to": 10000000.0,
+    "exponent": 0.2938352469579594
+   }
+  ]
+ },
+ "scaling_reference_mesh": {
+  "exponent": 0.2547188503696479,
+  "coefficient": 0.2333447882615545,
+  "stderr": 0.007875404111923924,
+  "r2": 0.9990449885691001,
+  "residual_max": 0.021159855893039925,
+  "points": 3,
+  "local": [
+   {
+    "ra_from": 10000.0,
+    "ra_to": 100000.0,
+    "exponent": 0.2683594504216369
+   },
+   {
+    "ra_from": 100000.0,
+    "ra_to": 1000000.0,
+    "exponent": 0.24107825031765856
+   }
+  ]
+ },
+ "grid_convergence": {
+  "1e+04": {
+   "cells": [
+    32,
+    48
+   ],
+   "nusselt": [
+    2.4216328260560536,
+    2.411718640907614
+   ],
+   "change_last_pair": 0.004094008406958208
+  },
+  "1e+05": {
+   "cells": [
+    24,
+    32,
+    48,
+    64
+   ],
+   "nusselt": [
+    4.704894186451877,
+    4.559325719353368,
+    4.47389812545612,
+    4.449948141720629
+   ],
+   "change_last_pair": 0.005353269802729259
+  }
+ },
+ "criteria": {
+  "criteria": [
+   {
+    "id": "onset.rigid.Ra_c",
+    "description": "critical Rayleigh number of the rigid-plate layer vs 1707.762 (64 interior nodes, <= 5 %)",
+    "value": 1704.6134008089919,
+    "reference": 1707.762,
+    "error": 0.0018436990581873168,
+    "tolerance": 0.05,
+    "relative": true,
+    "passed": true,
+    "note": "k_c = 3.1170 vs 3.11632; mesh family 32: 1695.6, 48: 1702.2, 64: 1704.6"
+   },
+   {
+    "id": "onset.free.Ra_c",
+    "description": "critical Rayleigh number of the stress-free layer vs the exact 27 pi^4/4 = 657.511 (discretisation check, <= 2 %)",
+    "value": 657.269739353177,
+    "reference": 657.511,
+    "error": 0.000366930206221614,
+    "tolerance": 0.02,
+    "relative": true,
+    "passed": true,
+    "note": "closed-form anchor of the same eigen-solver"
+   },
+   {
+    "id": "scaling.nu_exponent",
+    "description": "Nu(Ra) exponent over the swept Rayleigh numbers vs 1/3 (deviation <= 10 %)",
+    "value": 0.2566005021043279,
+    "reference": 0.3333333333333333,
+    "error": 0.23019849368701628,
+    "tolerance": 0.1,
+    "relative": true,
+    "passed": false,
+    "note": "fit points Ra = 1e+04, 1e+05, 1e+06, 1e+07; exponent stderr 0.0037, R^2 = 0.99959, max residual 1.97%"
+   },
+   {
+    "id": "scaling.nu_excess_exponent",
+    "description": "exponent of the convective excess (Nu - 1) vs 1/3 (deviation <= 10 %); this is the quantity the classical Malkus/Howard 1/3 law is derived for",
+    "value": 0.32199644619090145,
+    "reference": 0.3333333333333333,
+    "error": 0.034010661427295585,
+    "tolerance": 0.1,
+    "relative": true,
+    "passed": true,
+    "note": "Nu - 1 = 0.07784 Ra^0.3220, stderr 0.0170, R^2 0.99446"
+   },
+   {
+    "id": "energy.plate_budget",
+    "description": "bottom/top plate heat flux of the converged layer agree to <= 1e-8 (relative)",
+    "value": 8.268504889017031e-11,
+    "reference": 0.0,
+    "error": 8.268504889017031e-11,
+    "tolerance": 1e-08,
+    "relative": false,
+    "passed": true,
+    "note": "case ra1e4_n32; steady runs: ra1e4_n32: 8.3e-11, ra1e4_n48: 9.9e-11"
+   },
+   {
+    "id": "grid.nusselt_change",
+    "description": "change of the mean Nusselt number between the two finest meshes is < 2 %",
+    "value": 0.005353269802729259,
+    "reference": 0.0,
+    "error": 0.005353269802729259,
+    "tolerance": 0.02,
+    "relative": false,
+    "passed": true,
+    "note": "Ra=1e+04: cells [32, 48] -> Nu [2.4216, 2.4117], change 0.409%; Ra=1e+05: cells [24, 32, 48, 64] -> Nu [4.7049, 4.5593, 4.4739, 4.4499], change 0.535%"
+   },
+   {
+    "id": "cavity.devahldavis.Ra1e6",
+    "description": "de Vahl Davis (1983) mean Nusselt number at Ra=1e6, Pr=0.71 vs 8.8 (<= 3 %), inherited from the verified cavity artifact",
+    "value": 8.735297896186518,
+    "reference": 8.8,
+    "error": 0.007352511796986674,
+    "tolerance": 0.03,
+    "relative": true,
+    "passed": true,
+    "note": "inherited from docs/benchmarks/verified/fvm_natural_convection/results.json (finest mesh 96^2, this node does not re-run that case); all three Rayleigh numbers: 1e+04: 1.22%, 1e+05: 1.71%, 1e+06: 0.74%; the parent case's overall verdict is FAIL on its Richardson-order criteria, not on the Nusselt numbers"
+   }
+  ],
+  "count": 7,
+  "passed_count": 6,
+  "all_passed": false
+ }
+}

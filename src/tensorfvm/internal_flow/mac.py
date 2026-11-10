@@ -138,6 +138,16 @@ class MACConfig:
     buoyancy: float = 0.0
     temperature_left: float = 0.0
     temperature_right: float = 0.0
+    #: Which pair of walls carries the Dirichlet temperature: ``"sides"`` is the
+    #: differentially heated cavity of :mod:`tensorfvm.internal_flow.natural_convection`
+    #: (``x = 0`` hot, ``x = Lx`` cold, ``y`` walls adiabatic); ``"plates"`` is the
+    #: Rayleigh--Benard layer (:mod:`tensorfvm.thermal.rayleigh_benard`,
+    #: ``y = 0`` hot, ``y = Ly`` cold, ``x`` walls adiabatic) driven by the same
+    #: ``buoyancy`` coefficient acting along ``+y``.  The momentum
+    #: discretisation is unchanged: both plate walls stay no-slip.
+    thermal_walls: str = "sides"
+    temperature_bottom: float = 0.0
+    temperature_top: float = 0.0
     device: str = "cpu"
 
     def __post_init__(self) -> None:
@@ -174,6 +184,11 @@ class MACConfig:
             raise ValueError("diffusivity requires energy=True")
         if not math.isfinite(self.buoyancy):
             raise ValueError("buoyancy must be finite")
+        if self.thermal_walls not in ("sides", "plates"):
+            raise ValueError("thermal_walls must be 'sides' or 'plates'")
+        for name in ("temperature_bottom", "temperature_top"):
+            if not math.isfinite(getattr(self, name)):
+                raise ValueError(f"{name} must be finite")
 
 
 class StaggeredMAC:
@@ -195,7 +210,10 @@ class StaggeredMAC:
         self.p = torch.zeros(self.nx, self.ny, **opts)
         self.theta = torch.zeros(self.nx, self.ny, **opts)
         if config.energy:
-            self.theta.fill_(0.5 * (config.temperature_left + config.temperature_right))
+            if config.thermal_walls == "plates":
+                self.theta.fill_(0.5 * (config.temperature_bottom + config.temperature_top))
+            else:
+                self.theta.fill_(0.5 * (config.temperature_left + config.temperature_right))
         self.steps = 0
         self.residual = float("inf")
         self.dt = 0.0
@@ -363,6 +381,21 @@ class StaggeredMAC:
             conv -= (fy[:, 1:] - fy[:, :-1]) / hy
 
         lap = torch.zeros_like(theta)
+        if self.config.thermal_walls == "plates":
+            # Dirichlet plates at y = 0 and y = Ly, adiabatic (Neumann) at x = 0, Lx
+            bottom_ghost = 2.0 * self.config.temperature_bottom - theta[:, 0]
+            lap[:, 0] += (bottom_ghost - 2.0 * theta[:, 0] + theta[:, 1]) / hy ** 2
+            if ny > 2:
+                lap[:, 1:ny - 1] += (theta[:, :-2] - 2.0 * theta[:, 1:-1]
+                                     + theta[:, 2:]) / hy ** 2
+            top_ghost = 2.0 * self.config.temperature_top - theta[:, ny - 1]
+            lap[:, ny - 1] += (theta[:, ny - 2] - 2.0 * theta[:, ny - 1] + top_ghost) / hy ** 2
+            lap[0, :] += (theta[1, :] - theta[0, :]) / hx ** 2
+            if nx > 2:
+                lap[1:nx - 1, :] += (theta[:-2, :] - 2.0 * theta[1:-1, :]
+                                     + theta[2:, :]) / hx ** 2
+            lap[nx - 1, :] += (theta[nx - 2, :] - theta[nx - 1, :]) / hx ** 2
+            return conv + alpha * lap
         # Dirichlet walls at x = 0 and x = Lx, adiabatic (Neumann) at y = 0, Ly
         left_ghost = 2.0 * self.config.temperature_left - theta[0, :]
         lap[0, :] += (left_ghost - 2.0 * theta[0, :] + theta[1, :]) / hx ** 2
