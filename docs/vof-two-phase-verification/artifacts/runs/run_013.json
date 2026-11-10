@@ -1,0 +1,30 @@
+{
+ "alpha_max": 0.3583148979624888,
+ "alpha_min": 1.3929209187900443e-28,
+ "bounded": [
+  1.3929209187900443e-28,
+  0.3583148979624888
+ ],
+ "case": "single_vortex",
+ "cells": [
+  64,
+  64
+ ],
+ "cfl": 0.75,
+ "cou": 0.75,
+ "divergence_max": 7.105427357601002e-15,
+ "dt": 0.011730205278592375,
+ "dx": 0.015625,
+ "l1": 0.10465300216125226,
+ "linf": 0.927898224926731,
+ "liquid_volume": 0.07068583470574982,
+ "mass_drift_relative": 0.0,
+ "mass_final": 0.07068583470574982,
+ "mass_initial": 0.07068583470574982,
+ "note": "Rider-Kothe 1995 vortex; at t=T the analytic solution is the initial field",
+ "relative_l1": 1.4805371202999946,
+ "scheme": "fct",
+ "steps": 682,
+ "symmetric_difference": 1.0,
+ "worst_step_drift_relative": 1.9633053589286667e-16
+}
