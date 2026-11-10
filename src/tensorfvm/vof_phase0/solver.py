@@ -65,6 +65,7 @@ class Phase0TwoPhaseSolver:
         surface_model: str = "void",
         liquid_cut: float = 1.0e-6,
         bed: str = "free_slip",
+        well_balanced_surface: bool = False,
         cg_rtol: float = 1.0e-9,
         cg_max_iter: int = 3000,
     ) -> None:
@@ -85,6 +86,7 @@ class Phase0TwoPhaseSolver:
         self.alpha_cfl = float(alpha_cfl)
         self.surface_model = surface_model
         self.bed = bed
+        self.well_balanced_surface = bool(well_balanced_surface)
         self.liquid_cut = float(liquid_cut)
         self.cg_rtol, self.cg_max_iter = float(cg_rtol), int(cg_max_iter)
 
@@ -212,11 +214,27 @@ class Phase0TwoPhaseSolver:
         visc_v = (mu_v / rho_v) * lap_v
         return visc_u, visc_v
 
+    def _free_surface_faces(self) -> tuple[torch.Tensor, torch.Tensor]:
+        """Faces with exactly one liquid cell: the staircase free surface."""
+        liquid = self.liquid_mask
+        return (liquid[:, :-1] ^ liquid[:, 1:]), (liquid[:-1, :] ^ liquid[1:, :])
+
     def _pressure_gradient(self) -> tuple[torch.Tensor, torch.Tensor]:
-        """``(1/rho)_face grad(p)`` on the interior u- and v-faces."""
+        """``(1/rho)_face grad(p)`` on the interior u- and v-faces.
+
+        With ``well_balanced_surface`` the faces that touch a void cell use the
+        one-sided distance ``h/2`` (ghost-fluid stair-step treatment): the
+        pressure datum ``p = 0`` lives *on the surface*, half a cell away from
+        the cell centre, so dividing by the full ``h`` halves the surface force
+        and leaves a residual acceleration ``g/2`` in the surface cell.
+        """
         inv_u, inv_v = self._face_inv_rho()
         gx = (self.p[:, 1:] - self.p[:, :-1]) / self.dx
         gy = (self.p[1:, :] - self.p[:-1, :]) / self.dy
+        if self.well_balanced_surface and self.surface_model == "void":
+            xfs, yfs = self._free_surface_faces()
+            gx = torch.where(xfs, (self.p[:, 1:] - self.p[:, :-1]) / (0.5 * self.dx), gx)
+            gy = torch.where(yfs, (self.p[1:, :] - self.p[:-1, :]) / (0.5 * self.dy), gy)
         return inv_u * gx, inv_v * gy
 
     # ------------------------------------------------------------------ #
@@ -248,6 +266,24 @@ class Phase0TwoPhaseSolver:
                                  torch.zeros_like(ce))
             cn_off = torch.where(liquid[:-1, :] & liquid[1:, :], cn,
                                  torch.zeros_like(cn))
+            if self.well_balanced_surface:
+                # Explicit p = 0 Dirichlet datum on every interior free-surface
+                # face, at the half-cell distance of the surface from the cell
+                # centre.  Without it the face is simply dropped from the
+                # operator, i.e. a homogeneous Neumann condition, which is not
+                # the free-surface condition and leaves the rest state O(h) off.
+                xfs, yfs = self._free_surface_faces()
+                coef_x = inv_u * self.dy / (0.5 * self.dx)
+                coef_y = inv_v * self.dx / (0.5 * self.dy)
+                diag = diag.clone()
+                diag[:, :-1] += torch.where(xfs & liquid[:, :-1], coef_x,
+                                            torch.zeros_like(coef_x))
+                diag[:, 1:] += torch.where(xfs & liquid[:, 1:], coef_x,
+                                           torch.zeros_like(coef_x))
+                diag[:-1, :] += torch.where(yfs & liquid[:-1, :], coef_y,
+                                            torch.zeros_like(coef_y))
+                diag[1:, :] += torch.where(yfs & liquid[1:, :], coef_y,
+                                           torch.zeros_like(coef_y))
             diag = torch.where(liquid, diag, torch.ones_like(diag))
             b = torch.where(liquid, -div * cell_vol / dt, torch.zeros_like(div))
         else:
@@ -308,6 +344,12 @@ class Phase0TwoPhaseSolver:
         v_top = self.v[-1, :].clone()
         grad_x = (q[:, 1:] - q[:, :-1]) / self.dx
         grad_y = (q[1:, :] - q[:-1, :]) / self.dy
+        if self.well_balanced_surface and self.surface_model == "void":
+            xfs, yfs = self._free_surface_faces()
+            grad_x = torch.where(xfs, (q[:, 1:] - q[:, :-1]) / (0.5 * self.dx),
+                                 grad_x)
+            grad_y = torch.where(yfs, (q[1:, :] - q[:-1, :]) / (0.5 * self.dy),
+                                 grad_y)
         self.u[:, 1:-1] -= dt * inv_u * grad_x
         self.v[1:-1, :] -= dt * inv_v * grad_y
         if self.surface_model == "void":

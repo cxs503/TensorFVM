@@ -1,0 +1,2722 @@
+{
+ "campaign": "vof-two-phase-verification",
+ "cases": {
+  "double_vortex": {
+   "schemes": {
+    "donor": {
+     "finest": {
+      "alpha_max": 0.45306044467136886,
+      "alpha_min": 8.39935693608132e-37,
+      "bounded": [
+       8.39935693608132e-37,
+       0.45306044467136886
+      ],
+      "case": "double_vortex",
+      "cells": [
+       128,
+       64
+      ],
+      "cfl": 0.75,
+      "cou": 0.75,
+      "divergence_max": 1.3322676295501878e-14,
+      "dt": 0.005865102639296188,
+      "dx": 0.015625,
+      "l1": 0.09431106643440403,
+      "linf": 0.7943845749530108,
+      "liquid_volume": 0.07068583470574982,
+      "mass_drift_relative": 0.0006082231062001862,
+      "mass_final": 0.07064284194780074,
+      "mass_initial": 0.07068583470574982,
+      "note": "two counter-rotating cells (psi = sin(pi x) sin(2 pi y)/pi) on a 2:1 box; at t=T the analytic solution is the initial field",
+      "relative_l1": 1.3342286587829237,
+      "scheme": "donor",
+      "steps": 1364,
+      "symmetric_difference": 1.0,
+      "worst_step_drift_relative": 0.0006082231062001862
+     },
+     "gci": {
+      "relative_l1": {
+       "cells": [
+        [
+         32,
+         16
+        ],
+        [
+         64,
+         32
+        ],
+        [
+         128,
+         64
+        ]
+       ],
+       "errors": [
+        1.5205346425656978,
+        1.5047551417680711,
+        1.3342286587829237
+       ],
+       "gci_fine": 13.04904436802882,
+       "gci_relative_to_fine_error": 9.780215918860632,
+       "metric": "relative_l1",
+       "observed_order": 0.173522811100305,
+       "p_coarse": 0.015049939422129788,
+       "p_fine": 0.173522811100305,
+       "p_successive": -3.433872339175054,
+       "pair_orders": [
+        0.015049939422129788,
+        0.173522811100305
+       ],
+       "refinement_ratio": 2.0,
+       "safety_factor": 1.25,
+       "status": "outside asymptotic range (p_fine indicative only)"
+      },
+      "symmetric_difference": {
+       "cells": [
+        [
+         32,
+         16
+        ],
+        [
+         64,
+         32
+        ],
+        [
+         128,
+         64
+        ]
+       ],
+       "errors": [
+        1.0,
+        1.0,
+        1.0
+       ],
+       "gci_fine": null,
+       "metric": "symmetric_difference",
+       "observed_order": null,
+       "p_coarse": 0.0,
+       "p_fine": 0.0,
+       "p_successive": null,
+       "pair_orders": [
+        0.0,
+        0.0
+       ],
+       "refinement_ratio": 2.0,
+       "safety_factor": 1.25,
+       "status": "order not defined (non-monotone or zero error; honest)"
+      }
+     },
+     "levels": [
+      {
+       "alpha_max": 0.175236133071006,
+       "alpha_min": 6.515332837378342e-33,
+       "bounded": [
+        6.515332837378342e-33,
+        0.175236133071006
+       ],
+       "case": "double_vortex",
+       "cells": [
+        32,
+        16
+       ],
+       "cfl": 0.75,
+       "cou": 0.75,
+       "divergence_max": 2.6645352591003757e-15,
+       "dt": 0.024024024024024024,
+       "dx": 0.0625,
+       "l1": 0.10748026040870476,
+       "linf": 0.8287632062187741,
+       "liquid_volume": 0.07068583470571001,
+       "mass_drift_relative": 7.657009658734062e-05,
+       "mass_final": 0.07068042228451923,
+       "mass_initial": 0.07068583470571001,
+       "note": "two counter-rotating cells (psi = sin(pi x) sin(2 pi y)/pi) on a 2:1 box; at t=T the analytic solution is the initial field",
+       "relative_l1": 1.5205346425656978,
+       "scheme": "donor",
+       "steps": 333,
+       "symmetric_difference": 1.0,
+       "worst_step_drift_relative": 7.657009658734062e-05
+      },
+      {
+       "alpha_max": 0.24665251769174898,
+       "alpha_min": 4.844353685934403e-34,
+       "bounded": [
+        4.844353685934403e-34,
+        0.24665251769174898
+       ],
+       "case": "double_vortex",
+       "cells": [
+        64,
+        32
+       ],
+       "cfl": 0.75,
+       "cou": 0.75,
+       "divergence_max": 6.217248937900877e-15,
+       "dt": 0.011782032400589101,
+       "dx": 0.03125,
+       "l1": 0.10636487322360075,
+       "linf": 0.8070613734563158,
+       "liquid_volume": 0.0706858347057204,
+       "mass_drift_relative": 0.00034579378948719415,
+       "mass_final": 0.07066139198307445,
+       "mass_initial": 0.0706858347057204,
+       "note": "two counter-rotating cells (psi = sin(pi x) sin(2 pi y)/pi) on a 2:1 box; at t=T the analytic solution is the initial field",
+       "relative_l1": 1.5047551417680711,
+       "scheme": "donor",
+       "steps": 679,
+       "symmetric_difference": 1.0,
+       "worst_step_drift_relative": 0.0003457937894875868
+      },
+      {
+       "alpha_max": 0.45306044467136886,
+       "alpha_min": 8.39935693608132e-37,
+       "bounded": [
+        8.39935693608132e-37,
+        0.45306044467136886
+       ],
+       "case": "double_vortex",
+       "cells": [
+        128,
+        64
+       ],
+       "cfl": 0.75,
+       "cou": 0.75,
+       "divergence_max": 1.3322676295501878e-14,
+       "dt": 0.005865102639296188,
+       "dx": 0.015625,
+       "l1": 0.09431106643440403,
+       "linf": 0.7943845749530108,
+       "liquid_volume": 0.07068583470574982,
+       "mass_drift_relative": 0.0006082231062001862,
+       "mass_final": 0.07064284194780074,
+       "mass_initial": 0.07068583470574982,
+       "note": "two counter-rotating cells (psi = sin(pi x) sin(2 pi y)/pi) on a 2:1 box; at t=T the analytic solution is the initial field",
+       "relative_l1": 1.3342286587829237,
+       "scheme": "donor",
+       "steps": 1364,
+       "symmetric_difference": 1.0,
+       "worst_step_drift_relative": 0.0006082231062001862
+      }
+     ]
+    },
+    "fct": {
+     "finest": {
+      "alpha_max": 0.9227284508256787,
+      "alpha_min": 2.3784813953969793e-44,
+      "bounded": [
+       2.3784813953969793e-44,
+       0.9227284508256787
+      ],
+      "case": "double_vortex",
+      "cells": [
+       128,
+       64
+      ],
+      "cfl": 0.75,
+      "cou": 0.75,
+      "divergence_max": 1.3322676295501878e-14,
+      "dt": 0.005865102639296188,
+      "dx": 0.015625,
+      "l1": 0.05046651910952471,
+      "linf": 0.7818385367237073,
+      "liquid_volume": 0.07068583470574982,
+      "mass_drift_relative": 0.0,
+      "mass_final": 0.07068583470574982,
+      "mass_initial": 0.07068583470574982,
+      "note": "two counter-rotating cells (psi = sin(pi x) sin(2 pi y)/pi) on a 2:1 box; at t=T the analytic solution is the initial field",
+      "relative_l1": 0.7139551979488699,
+      "scheme": "fct",
+      "steps": 1364,
+      "symmetric_difference": 0.34507042253521125,
+      "worst_step_drift_relative": 1.9633053589286667e-16
+     },
+     "gci": {
+      "relative_l1": {
+       "cells": [
+        [
+         32,
+         16
+        ],
+        [
+         64,
+         32
+        ],
+        [
+         128,
+         64
+        ]
+       ],
+       "errors": [
+        1.2237539795063208,
+        0.9348742175377026,
+        0.7139551979488699
+       ],
+       "gci_fine": 2.884156520491687,
+       "gci_relative_to_fine_error": 4.039688384898119,
+       "metric": "relative_l1",
+       "observed_order": 0.38893872571717425,
+       "p_coarse": 0.38846937525626907,
+       "p_fine": 0.38893872571717425,
+       "p_successive": 0.3869515066122099,
+       "pair_orders": [
+        0.38846937525626907,
+        0.38893872571717425
+       ],
+       "refinement_ratio": 2.0,
+       "safety_factor": 1.25,
+       "status": "asymptotic"
+      },
+      "symmetric_difference": {
+       "cells": [
+        [
+         32,
+         16
+        ],
+        [
+         64,
+         32
+        ],
+        [
+         128,
+         64
+        ]
+       ],
+       "errors": [
+        1.0,
+        0.47368421052631576,
+        0.34507042253521125
+       ],
+       "gci_fine": 1.1572786865283926,
+       "gci_relative_to_fine_error": 3.3537463976945254,
+       "metric": "symmetric_difference",
+       "observed_order": 0.45703476338820065,
+       "p_coarse": 1.0780025120012733,
+       "p_fine": 0.45703476338820065,
+       "p_successive": 2.032883361813784,
+       "pair_orders": [
+        1.0780025120012733,
+        0.45703476338820065
+       ],
+       "refinement_ratio": 2.0,
+       "safety_factor": 1.25,
+       "status": "outside asymptotic range (p_fine indicative only)"
+      }
+     },
+     "levels": [
+      {
+       "alpha_max": 0.3248411163003836,
+       "alpha_min": 2.6232386398084408e-34,
+       "bounded": [
+        2.6232386398084408e-34,
+        0.3248411163003836
+       ],
+       "case": "double_vortex",
+       "cells": [
+        32,
+        16
+       ],
+       "cfl": 0.75,
+       "cou": 0.75,
+       "divergence_max": 2.6645352591003757e-15,
+       "dt": 0.024024024024024024,
+       "dx": 0.0625,
+       "l1": 0.08650207151583862,
+       "linf": 0.7137786014348129,
+       "liquid_volume": 0.07068583470571001,
+       "mass_drift_relative": 1.9633053589297726e-16,
+       "mass_final": 0.07068583470571002,
+       "mass_initial": 0.07068583470571001,
+       "note": "two counter-rotating cells (psi = sin(pi x) sin(2 pi y)/pi) on a 2:1 box; at t=T the analytic solution is the initial field",
+       "relative_l1": 1.2237539795063208,
+       "scheme": "fct",
+       "steps": 333,
+       "symmetric_difference": 1.0,
+       "worst_step_drift_relative": 3.926610717859545e-16
+      },
+      {
+       "alpha_max": 0.6464121841151479,
+       "alpha_min": 1.742120632174002e-37,
+       "bounded": [
+        1.742120632174002e-37,
+        0.6464121841151479
+       ],
+       "case": "double_vortex",
+       "cells": [
+        64,
+        32
+       ],
+       "cfl": 0.75,
+       "cou": 0.75,
+       "divergence_max": 6.217248937900877e-15,
+       "dt": 0.011782032400589101,
+       "dx": 0.03125,
+       "l1": 0.06608236441150975,
+       "linf": 0.647472378700729,
+       "liquid_volume": 0.0706858347057204,
+       "mass_drift_relative": 1.963305358929484e-16,
+       "mass_final": 0.07068583470572039,
+       "mass_initial": 0.0706858347057204,
+       "note": "two counter-rotating cells (psi = sin(pi x) sin(2 pi y)/pi) on a 2:1 box; at t=T the analytic solution is the initial field",
+       "relative_l1": 0.9348742175377026,
+       "scheme": "fct",
+       "steps": 679,
+       "symmetric_difference": 0.47368421052631576,
+       "worst_step_drift_relative": 1.963305358929484e-16
+      },
+      {
+       "alpha_max": 0.9227284508256787,
+       "alpha_min": 2.3784813953969793e-44,
+       "bounded": [
+        2.3784813953969793e-44,
+        0.9227284508256787
+       ],
+       "case": "double_vortex",
+       "cells": [
+        128,
+        64
+       ],
+       "cfl": 0.75,
+       "cou": 0.75,
+       "divergence_max": 1.3322676295501878e-14,
+       "dt": 0.005865102639296188,
+       "dx": 0.015625,
+       "l1": 0.05046651910952471,
+       "linf": 0.7818385367237073,
+       "liquid_volume": 0.07068583470574982,
+       "mass_drift_relative": 0.0,
+       "mass_final": 0.07068583470574982,
+       "mass_initial": 0.07068583470574982,
+       "note": "two counter-rotating cells (psi = sin(pi x) sin(2 pi y)/pi) on a 2:1 box; at t=T the analytic solution is the initial field",
+       "relative_l1": 0.7139551979488699,
+       "scheme": "fct",
+       "steps": 1364,
+       "symmetric_difference": 0.34507042253521125,
+       "worst_step_drift_relative": 1.9633053589286667e-16
+      }
+     ]
+    },
+    "plic": {
+     "finest": {
+      "alpha_max": 1.0,
+      "alpha_min": 0.0,
+      "bounded": [
+       0.0,
+       1.0
+      ],
+      "case": "double_vortex",
+      "cells": [
+       128,
+       64
+      ],
+      "cfl": 0.75,
+      "cou": 0.75,
+      "divergence_max": 1.3322676295501878e-14,
+      "dt": 0.005865102639296188,
+      "dx": 0.015625,
+      "l1": 0.01472043715909674,
+      "linf": 1.0,
+      "liquid_volume": 0.07068583470574982,
+      "mass_drift_relative": 3.1412885742858668e-15,
+      "mass_final": 0.07068583470575004,
+      "mass_initial": 0.07068583470574982,
+      "note": "two counter-rotating cells (psi = sin(pi x) sin(2 pi y)/pi) on a 2:1 box; at t=T the analytic solution is the initial field",
+      "relative_l1": 0.2082515856306261,
+      "scheme": "plic",
+      "steps": 1364,
+      "symmetric_difference": 0.20422535211267606,
+      "worst_step_drift_relative": 6.8715687562503335e-15
+     },
+     "gci": {
+      "relative_l1": {
+       "cells": [
+        [
+         32,
+         16
+        ],
+        [
+         64,
+         32
+        ],
+        [
+         128,
+         64
+        ]
+       ],
+       "errors": [
+        0.4475878739219283,
+        0.3056635890357435,
+        0.2082515856306261
+       ],
+       "gci_fine": 0.556511536074615,
+       "gci_relative_to_fine_error": 2.6723039557628834,
+       "metric": "relative_l1",
+       "observed_order": 0.5536172267940522,
+       "p_coarse": 0.5502262441335277,
+       "p_fine": 0.5536172267940522,
+       "p_successive": 0.5429500106531198,
+       "pair_orders": [
+        0.5502262441335277,
+        0.5536172267940522
+       ],
+       "refinement_ratio": 2.0,
+       "safety_factor": 1.25,
+       "status": "asymptotic"
+      },
+      "symmetric_difference": {
+       "cells": [
+        [
+         32,
+         16
+        ],
+        [
+         64,
+         32
+        ],
+        [
+         128,
+         64
+        ]
+       ],
+       "errors": [
+        0.375,
+        0.23684210526315788,
+        0.20422535211267606
+       ],
+       "gci_fine": 1.5984114916773373,
+       "gci_relative_to_fine_error": 7.8267045454545485,
+       "metric": "symmetric_difference",
+       "observed_order": 0.21376361237583677,
+       "p_coarse": 0.6629650127224295,
+       "p_fine": 0.21376361237583677,
+       "p_successive": 2.0826329236461465,
+       "pair_orders": [
+        0.6629650127224295,
+        0.21376361237583677
+       ],
+       "refinement_ratio": 2.0,
+       "safety_factor": 1.25,
+       "status": "outside asymptotic range (p_fine indicative only)"
+      }
+     },
+     "levels": [
+      {
+       "alpha_max": 1.0,
+       "alpha_min": 0.0,
+       "bounded": [
+        0.0,
+        1.0
+       ],
+       "case": "double_vortex",
+       "cells": [
+        32,
+        16
+       ],
+       "cfl": 0.75,
+       "cou": 0.75,
+       "divergence_max": 2.6645352591003757e-15,
+       "dt": 0.024024024024024024,
+       "dx": 0.0625,
+       "l1": 0.03163812247232559,
+       "linf": 0.6566924628562453,
+       "liquid_volume": 0.07068583470571001,
+       "mass_drift_relative": 3.926610717859545e-16,
+       "mass_final": 0.07068583470570998,
+       "mass_initial": 0.07068583470571001,
+       "note": "two counter-rotating cells (psi = sin(pi x) sin(2 pi y)/pi) on a 2:1 box; at t=T the analytic solution is the initial field",
+       "relative_l1": 0.4475878739219283,
+       "scheme": "plic",
+       "steps": 333,
+       "symmetric_difference": 0.375,
+       "worst_step_drift_relative": 2.3559664307157273e-15
+      },
+      {
+       "alpha_max": 1.0,
+       "alpha_min": 0.0,
+       "bounded": [
+        0.0,
+        1.0
+       ],
+       "case": "double_vortex",
+       "cells": [
+        64,
+        32
+       ],
+       "cfl": 0.75,
+       "cou": 0.75,
+       "divergence_max": 6.217248937900877e-15,
+       "dt": 0.011782032400589101,
+       "dx": 0.03125,
+       "l1": 0.021606085930137815,
+       "linf": 0.9962917496487506,
+       "liquid_volume": 0.0706858347057204,
+       "mass_drift_relative": 7.853221435717936e-16,
+       "mass_final": 0.07068583470572035,
+       "mass_initial": 0.0706858347057204,
+       "note": "two counter-rotating cells (psi = sin(pi x) sin(2 pi y)/pi) on a 2:1 box; at t=T the analytic solution is the initial field",
+       "relative_l1": 0.3056635890357435,
+       "scheme": "plic",
+       "steps": 679,
+       "symmetric_difference": 0.23684210526315788,
+       "worst_step_drift_relative": 2.1596358948224322e-15
+      },
+      {
+       "alpha_max": 1.0,
+       "alpha_min": 0.0,
+       "bounded": [
+        0.0,
+        1.0
+       ],
+       "case": "double_vortex",
+       "cells": [
+        128,
+        64
+       ],
+       "cfl": 0.75,
+       "cou": 0.75,
+       "divergence_max": 1.3322676295501878e-14,
+       "dt": 0.005865102639296188,
+       "dx": 0.015625,
+       "l1": 0.01472043715909674,
+       "linf": 1.0,
+       "liquid_volume": 0.07068583470574982,
+       "mass_drift_relative": 3.1412885742858668e-15,
+       "mass_final": 0.07068583470575004,
+       "mass_initial": 0.07068583470574982,
+       "note": "two counter-rotating cells (psi = sin(pi x) sin(2 pi y)/pi) on a 2:1 box; at t=T the analytic solution is the initial field",
+       "relative_l1": 0.2082515856306261,
+       "scheme": "plic",
+       "steps": 1364,
+       "symmetric_difference": 0.20422535211267606,
+       "worst_step_drift_relative": 6.8715687562503335e-15
+      }
+     ]
+    }
+   }
+  },
+  "single_vortex": {
+   "schemes": {
+    "donor": {
+     "finest": {
+      "alpha_max": 0.23062607414545777,
+      "alpha_min": 2.7618644300926533e-45,
+      "bounded": [
+       2.7618644300926533e-45,
+       0.23062607414545777
+      ],
+      "case": "single_vortex",
+      "cells": [
+       128,
+       128
+      ],
+      "cfl": 0.75,
+      "cou": 0.75,
+      "divergence_max": 1.4210854715202004e-14,
+      "dt": 0.005860805860805861,
+      "dx": 0.0078125,
+      "l1": 0.11596787179838397,
+      "linf": 0.9402931263065949,
+      "liquid_volume": 0.07068583470575535,
+      "mass_drift_relative": 0.003512552518206878,
+      "mass_final": 0.07043754699905809,
+      "mass_initial": 0.07068583470575535,
+      "note": "Rider-Kothe 1995 vortex; at t=T the analytic solution is the initial field",
+      "relative_l1": 1.640609781027905,
+      "scheme": "donor",
+      "steps": 1365,
+      "symmetric_difference": 1.0,
+      "worst_step_drift_relative": 0.0035125525182070744
+     },
+     "gci": {
+      "relative_l1": {
+       "cells": [
+        [
+         32,
+         32
+        ],
+        [
+         64,
+         64
+        ],
+        [
+         128,
+         128
+        ]
+       ],
+       "errors": [
+        1.7133038611873745,
+        1.6998624381498755,
+        1.640609781027905
+       ],
+       "gci_fine": 56.78227324185283,
+       "gci_relative_to_fine_error": 34.610468557780116,
+       "metric": "relative_l1",
+       "observed_order": 0.05118586588647223,
+       "p_coarse": 0.011363041180281157,
+       "p_fine": 0.05118586588647223,
+       "p_successive": -2.1401939678891857,
+       "pair_orders": [
+        0.011363041180281157,
+        0.05118586588647223
+       ],
+       "refinement_ratio": 2.0,
+       "safety_factor": 1.25,
+       "status": "outside asymptotic range (p_fine indicative only)"
+      },
+      "symmetric_difference": {
+       "cells": [
+        [
+         32,
+         32
+        ],
+        [
+         64,
+         64
+        ],
+        [
+         128,
+         128
+        ]
+       ],
+       "errors": [
+        1.0,
+        1.0,
+        1.0
+       ],
+       "gci_fine": null,
+       "metric": "symmetric_difference",
+       "observed_order": null,
+       "p_coarse": 0.0,
+       "p_fine": 0.0,
+       "p_successive": null,
+       "pair_orders": [
+        0.0,
+        0.0
+       ],
+       "refinement_ratio": 2.0,
+       "safety_factor": 1.25,
+       "status": "order not defined (non-monotone or zero error; honest)"
+      }
+     },
+     "levels": [
+      {
+       "alpha_max": 0.16546798707969335,
+       "alpha_min": 1.7471496993101497e-08,
+       "bounded": [
+        1.7471496993101497e-08,
+        0.16546798707969335
+       ],
+       "case": "single_vortex",
+       "cells": [
+        32,
+        32
+       ],
+       "cfl": 0.75,
+       "cou": 0.75,
+       "divergence_max": 1.7763568394002505e-15,
+       "dt": 0.023529411764705882,
+       "dx": 0.03125,
+       "l1": 0.12110631353256329,
+       "linf": 0.9247136184645113,
+       "liquid_volume": 0.0706858347057204,
+       "mass_drift_relative": 0.005975179393012439,
+       "mass_final": 0.0702634741628089,
+       "mass_initial": 0.0706858347057204,
+       "note": "Rider-Kothe 1995 vortex; at t=T the analytic solution is the initial field",
+       "relative_l1": 1.7133038611873745,
+       "scheme": "donor",
+       "steps": 340,
+       "symmetric_difference": 1.0,
+       "worst_step_drift_relative": 0.005975179393012635
+      },
+      {
+       "alpha_max": 0.18254149187430027,
+       "alpha_min": 7.010032285385109e-20,
+       "bounded": [
+        7.010032285385109e-20,
+        0.18254149187430027
+       ],
+       "case": "single_vortex",
+       "cells": [
+        64,
+        64
+       ],
+       "cfl": 0.75,
+       "cou": 0.75,
+       "divergence_max": 7.105427357601002e-15,
+       "dt": 0.011730205278592375,
+       "dx": 0.015625,
+       "l1": 0.12015619532557498,
+       "linf": 0.933537608582065,
+       "liquid_volume": 0.07068583470574982,
+       "mass_drift_relative": 0.004570918276219748,
+       "mass_final": 0.07036273553202346,
+       "mass_initial": 0.07068583470574982,
+       "note": "Rider-Kothe 1995 vortex; at t=T the analytic solution is the initial field",
+       "relative_l1": 1.6998624381498755,
+       "scheme": "donor",
+       "steps": 682,
+       "symmetric_difference": 1.0,
+       "worst_step_drift_relative": 0.004570918276219944
+      },
+      {
+       "alpha_max": 0.23062607414545777,
+       "alpha_min": 2.7618644300926533e-45,
+       "bounded": [
+        2.7618644300926533e-45,
+        0.23062607414545777
+       ],
+       "case": "single_vortex",
+       "cells": [
+        128,
+        128
+       ],
+       "cfl": 0.75,
+       "cou": 0.75,
+       "divergence_max": 1.4210854715202004e-14,
+       "dt": 0.005860805860805861,
+       "dx": 0.0078125,
+       "l1": 0.11596787179838397,
+       "linf": 0.9402931263065949,
+       "liquid_volume": 0.07068583470575535,
+       "mass_drift_relative": 0.003512552518206878,
+       "mass_final": 0.07043754699905809,
+       "mass_initial": 0.07068583470575535,
+       "note": "Rider-Kothe 1995 vortex; at t=T the analytic solution is the initial field",
+       "relative_l1": 1.640609781027905,
+       "scheme": "donor",
+       "steps": 1365,
+       "symmetric_difference": 1.0,
+       "worst_step_drift_relative": 0.0035125525182070744
+      }
+     ]
+    },
+    "fct": {
+     "finest": {
+      "alpha_max": 0.5116687706294036,
+      "alpha_min": 3.154514986827633e-63,
+      "bounded": [
+       3.154514986827633e-63,
+       0.5116687706294036
+      ],
+      "case": "single_vortex",
+      "cells": [
+       128,
+       128
+      ],
+      "cfl": 0.75,
+      "cou": 0.75,
+      "divergence_max": 1.4210854715202004e-14,
+      "dt": 0.005860805860805861,
+      "dx": 0.0078125,
+      "l1": 0.08908320141914106,
+      "linf": 0.9188654185271201,
+      "liquid_volume": 0.07068583470575535,
+      "mass_drift_relative": 1.9633053589285134e-16,
+      "mass_final": 0.07068583470575536,
+      "mass_initial": 0.07068583470575535,
+      "note": "Rider-Kothe 1995 vortex; at t=T the analytic solution is the initial field",
+      "relative_l1": 1.2602694979831337,
+      "scheme": "fct",
+      "steps": 1365,
+      "symmetric_difference": 0.9353448275862069,
+      "worst_step_drift_relative": 3.926610717857027e-16
+     },
+     "gci": {
+      "relative_l1": {
+       "cells": [
+        [
+         32,
+         32
+        ],
+        [
+         64,
+         64
+        ],
+        [
+         128,
+         128
+        ]
+       ],
+       "errors": [
+        1.6076489585795402,
+        1.4805371202999946,
+        1.2602694979831337
+       ],
+       "gci_fine": 9.01334925465054,
+       "gci_relative_to_fine_error": 7.151922084185177,
+       "metric": "relative_l1",
+       "observed_order": 0.23238838762546574,
+       "p_coarse": 0.11883175584408236,
+       "p_fine": 0.23238838762546574,
+       "p_successive": -0.7931590464998701,
+       "pair_orders": [
+        0.11883175584408236,
+        0.23238838762546574
+       ],
+       "refinement_ratio": 2.0,
+       "safety_factor": 1.25,
+       "status": "outside asymptotic range (p_fine indicative only)"
+      },
+      "symmetric_difference": {
+       "cells": [
+        [
+         32,
+         32
+        ],
+        [
+         64,
+         64
+        ],
+        [
+         128,
+         128
+        ]
+       ],
+       "errors": [
+        1.0,
+        1.0,
+        0.9353448275862069
+       ],
+       "gci_fine": 16.914152298850563,
+       "gci_relative_to_fine_error": 18.083333333333325,
+       "metric": "symmetric_difference",
+       "observed_order": 0.09642976268309286,
+       "p_coarse": 0.0,
+       "p_fine": 0.09642976268309286,
+       "p_successive": null,
+       "pair_orders": [
+        0.0,
+        0.09642976268309286
+       ],
+       "refinement_ratio": 2.0,
+       "safety_factor": 1.25,
+       "status": "non-monotone on the coarse pair: p_fine is indicative only (honest, not clipped)"
+      }
+     },
+     "levels": [
+      {
+       "alpha_max": 0.26384359045919115,
+       "alpha_min": 1.7089610496450905e-12,
+       "bounded": [
+        1.7089610496450905e-12,
+        0.26384359045919115
+       ],
+       "case": "single_vortex",
+       "cells": [
+        32,
+        32
+       ],
+       "cfl": 0.75,
+       "cou": 0.75,
+       "divergence_max": 1.7763568394002505e-15,
+       "dt": 0.023529411764705882,
+       "dx": 0.03125,
+       "l1": 0.11363800855097692,
+       "linf": 0.9321970125611706,
+       "liquid_volume": 0.0706858347057204,
+       "mass_drift_relative": 0.0,
+       "mass_final": 0.0706858347057204,
+       "mass_initial": 0.0706858347057204,
+       "note": "Rider-Kothe 1995 vortex; at t=T the analytic solution is the initial field",
+       "relative_l1": 1.6076489585795402,
+       "scheme": "fct",
+       "steps": 340,
+       "symmetric_difference": 1.0,
+       "worst_step_drift_relative": 1.963305358929484e-16
+      },
+      {
+       "alpha_max": 0.3583148979624888,
+       "alpha_min": 1.3929209187900443e-28,
+       "bounded": [
+        1.3929209187900443e-28,
+        0.3583148979624888
+       ],
+       "case": "single_vortex",
+       "cells": [
+        64,
+        64
+       ],
+       "cfl": 0.75,
+       "cou": 0.75,
+       "divergence_max": 7.105427357601002e-15,
+       "dt": 0.011730205278592375,
+       "dx": 0.015625,
+       "l1": 0.10465300216125226,
+       "linf": 0.927898224926731,
+       "liquid_volume": 0.07068583470574982,
+       "mass_drift_relative": 0.0,
+       "mass_final": 0.07068583470574982,
+       "mass_initial": 0.07068583470574982,
+       "note": "Rider-Kothe 1995 vortex; at t=T the analytic solution is the initial field",
+       "relative_l1": 1.4805371202999946,
+       "scheme": "fct",
+       "steps": 682,
+       "symmetric_difference": 1.0,
+       "worst_step_drift_relative": 1.9633053589286667e-16
+      },
+      {
+       "alpha_max": 0.5116687706294036,
+       "alpha_min": 3.154514986827633e-63,
+       "bounded": [
+        3.154514986827633e-63,
+        0.5116687706294036
+       ],
+       "case": "single_vortex",
+       "cells": [
+        128,
+        128
+       ],
+       "cfl": 0.75,
+       "cou": 0.75,
+       "divergence_max": 1.4210854715202004e-14,
+       "dt": 0.005860805860805861,
+       "dx": 0.0078125,
+       "l1": 0.08908320141914106,
+       "linf": 0.9188654185271201,
+       "liquid_volume": 0.07068583470575535,
+       "mass_drift_relative": 1.9633053589285134e-16,
+       "mass_final": 0.07068583470575536,
+       "mass_initial": 0.07068583470575535,
+       "note": "Rider-Kothe 1995 vortex; at t=T the analytic solution is the initial field",
+       "relative_l1": 1.2602694979831337,
+       "scheme": "fct",
+       "steps": 1365,
+       "symmetric_difference": 0.9353448275862069,
+       "worst_step_drift_relative": 3.926610717857027e-16
+      }
+     ]
+    },
+    "plic": {
+     "finest": {
+      "alpha_max": 1.0,
+      "alpha_min": 0.0,
+      "bounded": [
+       0.0,
+       1.0
+      ],
+      "case": "single_vortex",
+      "cells": [
+       128,
+       128
+      ],
+      "cfl": 0.75,
+      "cou": 0.75,
+      "divergence_max": 1.4210854715202004e-14,
+      "dt": 0.005860805860805861,
+      "dx": 0.0078125,
+      "l1": 0.057113071775276185,
+      "linf": 1.0,
+      "liquid_volume": 0.07068583470575535,
+      "mass_drift_relative": 3.926610717857027e-16,
+      "mass_final": 0.07068583470575537,
+      "mass_initial": 0.07068583470575535,
+      "note": "Rider-Kothe 1995 vortex; at t=T the analytic solution is the initial field",
+      "relative_l1": 0.8079846833954972,
+      "scheme": "plic",
+      "steps": 1365,
+      "symmetric_difference": 0.8008620689655173,
+      "worst_step_drift_relative": 2.94495803839277e-15
+     },
+     "gci": {
+      "relative_l1": {
+       "cells": [
+        [
+         32,
+         32
+        ],
+        [
+         64,
+         64
+        ],
+        [
+         128,
+         128
+        ]
+       ],
+       "errors": [
+        1.593101871201309,
+        1.162509358172426,
+        0.8079846833954972
+       ],
+       "gci_fine": 2.3018117462927528,
+       "gci_relative_to_fine_error": 2.848830916719306,
+       "metric": "relative_l1",
+       "observed_order": 0.5248424801039953,
+       "p_coarse": 0.4545961932930874,
+       "p_fine": 0.5248424801039953,
+       "p_successive": 0.28043719275386814,
+       "pair_orders": [
+        0.4545961932930874,
+        0.5248424801039953
+       ],
+       "refinement_ratio": 2.0,
+       "safety_factor": 1.25,
+       "status": "asymptotic"
+      },
+      "symmetric_difference": {
+       "cells": [
+        [
+         32,
+         32
+        ],
+        [
+         64,
+         64
+        ],
+        [
+         128,
+         128
+        ]
+       ],
+       "errors": [
+        1.605263157894737,
+        1.2007042253521127,
+        0.8008620689655173
+       ],
+       "gci_fine": 2.0051038993234545,
+       "gci_relative_to_fine_error": 2.50368194102821,
+       "metric": "symmetric_difference",
+       "observed_order": 0.584255113151772,
+       "p_coarse": 0.4189290145998105,
+       "p_fine": 0.584255113151772,
+       "p_successive": 0.01691928978074047,
+       "pair_orders": [
+        0.4189290145998105,
+        0.584255113151772
+       ],
+       "refinement_ratio": 2.0,
+       "safety_factor": 1.25,
+       "status": "outside asymptotic range (p_fine indicative only)"
+      }
+     },
+     "levels": [
+      {
+       "alpha_max": 1.0,
+       "alpha_min": 0.0,
+       "bounded": [
+        0.0,
+        1.0
+       ],
+       "case": "single_vortex",
+       "cells": [
+        32,
+        32
+       ],
+       "cfl": 0.75,
+       "cou": 0.75,
+       "divergence_max": 1.7763568394002505e-15,
+       "dt": 0.023529411764705882,
+       "dx": 0.03125,
+       "l1": 0.1126097355371096,
+       "linf": 1.0,
+       "liquid_volume": 0.0706858347057204,
+       "mass_drift_relative": 5.889916076788452e-16,
+       "mass_final": 0.07068583470572044,
+       "mass_initial": 0.0706858347057204,
+       "note": "Rider-Kothe 1995 vortex; at t=T the analytic solution is the initial field",
+       "relative_l1": 1.593101871201309,
+       "scheme": "plic",
+       "steps": 340,
+       "symmetric_difference": 1.605263157894737,
+       "worst_step_drift_relative": 1.9633053589294838e-15
+      },
+      {
+       "alpha_max": 1.0,
+       "alpha_min": 0.0,
+       "bounded": [
+        0.0,
+        1.0
+       ],
+       "case": "single_vortex",
+       "cells": [
+        64,
+        64
+       ],
+       "cfl": 0.75,
+       "cou": 0.75,
+       "divergence_max": 7.105427357601002e-15,
+       "dt": 0.011730205278592375,
+       "dx": 0.015625,
+       "l1": 0.08217294433566343,
+       "linf": 1.0,
+       "liquid_volume": 0.07068583470574982,
+       "mass_drift_relative": 3.5339496460716003e-15,
+       "mass_final": 0.07068583470574957,
+       "mass_initial": 0.07068583470574982,
+       "note": "Rider-Kothe 1995 vortex; at t=T the analytic solution is the initial field",
+       "relative_l1": 1.162509358172426,
+       "scheme": "plic",
+       "steps": 682,
+       "symmetric_difference": 1.2007042253521127,
+       "worst_step_drift_relative": 4.908263397321667e-15
+      },
+      {
+       "alpha_max": 1.0,
+       "alpha_min": 0.0,
+       "bounded": [
+        0.0,
+        1.0
+       ],
+       "case": "single_vortex",
+       "cells": [
+        128,
+        128
+       ],
+       "cfl": 0.75,
+       "cou": 0.75,
+       "divergence_max": 1.4210854715202004e-14,
+       "dt": 0.005860805860805861,
+       "dx": 0.0078125,
+       "l1": 0.057113071775276185,
+       "linf": 1.0,
+       "liquid_volume": 0.07068583470575535,
+       "mass_drift_relative": 3.926610717857027e-16,
+       "mass_final": 0.07068583470575537,
+       "mass_initial": 0.07068583470575535,
+       "note": "Rider-Kothe 1995 vortex; at t=T the analytic solution is the initial field",
+       "relative_l1": 0.8079846833954972,
+       "scheme": "plic",
+       "steps": 1365,
+       "symmetric_difference": 0.8008620689655173,
+       "worst_step_drift_relative": 2.94495803839277e-15
+      }
+     ]
+    }
+   }
+  },
+  "zalesak": {
+   "schemes": {
+    "donor": {
+     "finest": {
+      "alpha_max": 0.928965463313893,
+      "alpha_min": 1.6533396941345848e-65,
+      "bounded": [
+       1.6533396941345848e-65,
+       0.928965463313893
+      ],
+      "case": "zalesak",
+      "cells": [
+       256,
+       256
+      ],
+      "cfl": 0.75,
+      "cou": 0.75,
+      "divergence_max": 0.0,
+      "dt": 0.0009354536950420954,
+      "dx": 0.00390625,
+      "l1": 0.042614640120922455,
+      "linf": 0.8125469245973527,
+      "liquid_volume": 0.06322070305888186,
+      "mass_drift_relative": 6.585400257992593e-16,
+      "mass_final": 0.06322070305888182,
+      "mass_initial": 0.06322070305888186,
+      "note": "solid-body rotation, one revolution == analytic initial field",
+      "relative_l1": 0.6740614713068354,
+      "scheme": "donor",
+      "steps": 1069,
+      "symmetric_difference": 0.2793764988009592,
+      "worst_step_drift_relative": 1.097566709665432e-15
+     },
+     "gci": {
+      "relative_l1": {
+       "cells": [
+        [
+         64,
+         64
+        ],
+        [
+         128,
+         128
+        ],
+        [
+         256,
+         256
+        ]
+       ],
+       "errors": [
+        1.0455878410181183,
+        0.8578413296696096,
+        0.6740614713068354
+       ],
+       "gci_fine": 3.090374478112347,
+       "gci_relative_to_fine_error": 4.5847071960972485,
+       "metric": "relative_l1",
+       "observed_order": 0.3478306602410323,
+       "p_coarse": 0.2855315395479381,
+       "p_fine": 0.3478306602410323,
+       "p_successive": 0.0308074393446878,
+       "pair_orders": [
+        0.2855315395479381,
+        0.3478306602410323
+       ],
+       "refinement_ratio": 2.0,
+       "safety_factor": 1.25,
+       "status": "asymptotic"
+      },
+      "symmetric_difference": {
+       "cells": [
+        [
+         64,
+         64
+        ],
+        [
+         128,
+         128
+        ],
+        [
+         256,
+         256
+        ]
+       ],
+       "errors": [
+        0.7642276422764228,
+        0.4416826003824092,
+        0.2793764988009592
+       ],
+       "gci_fine": 0.6011113208451528,
+       "gci_relative_to_fine_error": 2.1516173458577574,
+       "metric": "symmetric_difference",
+       "observed_order": 0.6607993339594997,
+       "p_coarse": 0.7909924411692815,
+       "p_fine": 0.6607993339594997,
+       "p_successive": 0.9907834039502613,
+       "pair_orders": [
+        0.7909924411692815,
+        0.6607993339594997
+       ],
+       "refinement_ratio": 2.0,
+       "safety_factor": 1.25,
+       "status": "asymptotic"
+      }
+     },
+     "levels": [
+      {
+       "alpha_max": 0.5950562459254369,
+       "alpha_min": 1.1333438469326662e-17,
+       "bounded": [
+        1.1333438469326662e-17,
+        0.5950562459254369
+       ],
+       "case": "zalesak",
+       "cells": [
+        64,
+        64
+       ],
+       "cfl": 0.75,
+       "cou": 0.75,
+       "divergence_max": 0.0,
+       "dt": 0.003787878787878788,
+       "dx": 0.015625,
+       "l1": 0.06610279841896494,
+       "linf": 0.7234290841321825,
+       "liquid_volume": 0.06322070305886379,
+       "mass_drift_relative": 0.0,
+       "mass_final": 0.06322070305886379,
+       "mass_initial": 0.06322070305886379,
+       "note": "solid-body rotation, one revolution == analytic initial field",
+       "relative_l1": 1.0455878410181183,
+       "scheme": "donor",
+       "steps": 264,
+       "symmetric_difference": 0.7642276422764228,
+       "worst_step_drift_relative": 2.1951334193314916e-16
+      },
+      {
+       "alpha_max": 0.7979328293376643,
+       "alpha_min": 1.1329059534198018e-33,
+       "bounded": [
+        1.1329059534198018e-33,
+        0.7979328293376643
+       ],
+       "case": "zalesak",
+       "cells": [
+        128,
+        128
+       ],
+       "cfl": 0.75,
+       "cou": 0.75,
+       "divergence_max": 0.0,
+       "dt": 0.0018796992481203006,
+       "dx": 0.0078125,
+       "l1": 0.05423333197466906,
+       "linf": 0.7466343824149418,
+       "liquid_volume": 0.06322070305887055,
+       "mass_drift_relative": 2.195133419331257e-16,
+       "mass_final": 0.06322070305887054,
+       "mass_initial": 0.06322070305887055,
+       "note": "solid-body rotation, one revolution == analytic initial field",
+       "relative_l1": 0.8578413296696096,
+       "scheme": "donor",
+       "steps": 532,
+       "symmetric_difference": 0.4416826003824092,
+       "worst_step_drift_relative": 4.390266838662514e-16
+      },
+      {
+       "alpha_max": 0.928965463313893,
+       "alpha_min": 1.6533396941345848e-65,
+       "bounded": [
+        1.6533396941345848e-65,
+        0.928965463313893
+       ],
+       "case": "zalesak",
+       "cells": [
+        256,
+        256
+       ],
+       "cfl": 0.75,
+       "cou": 0.75,
+       "divergence_max": 0.0,
+       "dt": 0.0009354536950420954,
+       "dx": 0.00390625,
+       "l1": 0.042614640120922455,
+       "linf": 0.8125469245973527,
+       "liquid_volume": 0.06322070305888186,
+       "mass_drift_relative": 6.585400257992593e-16,
+       "mass_final": 0.06322070305888182,
+       "mass_initial": 0.06322070305888186,
+       "note": "solid-body rotation, one revolution == analytic initial field",
+       "relative_l1": 0.6740614713068354,
+       "scheme": "donor",
+       "steps": 1069,
+       "symmetric_difference": 0.2793764988009592,
+       "worst_step_drift_relative": 1.097566709665432e-15
+      }
+     ]
+    },
+    "fct": {
+     "finest": {
+      "alpha_max": 0.9998186173483621,
+      "alpha_min": 2.328066629895226e-103,
+      "bounded": [
+       2.328066629895226e-103,
+       0.9998186173483621
+      ],
+      "case": "zalesak",
+      "cells": [
+       256,
+       256
+      ],
+      "cfl": 0.75,
+      "cou": 0.75,
+      "divergence_max": 0.0,
+      "dt": 0.0009354536950420954,
+      "dx": 0.00390625,
+      "l1": 0.016764867311888764,
+      "linf": 0.7471327139788322,
+      "liquid_volume": 0.06322070305888186,
+      "mass_drift_relative": 2.1951334193308642e-16,
+      "mass_final": 0.06322070305888185,
+      "mass_initial": 0.06322070305888186,
+      "note": "solid-body rotation, one revolution == analytic initial field",
+      "relative_l1": 0.26518002016324416,
+      "scheme": "fct",
+      "steps": 1069,
+      "symmetric_difference": 0.042925659472422065,
+      "worst_step_drift_relative": 4.3902668386617285e-16
+     },
+     "gci": {
+      "relative_l1": {
+       "cells": [
+        [
+         64,
+         64
+        ],
+        [
+         128,
+         128
+        ],
+        [
+         256,
+         256
+        ]
+       ],
+       "errors": [
+        0.557282309581381,
+        0.4047649946087669,
+        0.26518002016324416
+       ],
+       "gci_fine": 0.6297279074369788,
+       "gci_relative_to_fine_error": 2.374718529130965,
+       "metric": "relative_l1",
+       "observed_order": 0.6101124459611715,
+       "p_coarse": 0.46132383062996174,
+       "p_fine": 0.6101124459611715,
+       "p_successive": 0.12782938640959346,
+       "pair_orders": [
+        0.46132383062996174,
+        0.6101124459611715
+       ],
+       "refinement_ratio": 2.0,
+       "safety_factor": 1.25,
+       "status": "outside asymptotic range (p_fine indicative only)"
+      },
+      "symmetric_difference": {
+       "cells": [
+        [
+         64,
+         64
+        ],
+        [
+         128,
+         128
+        ],
+        [
+         256,
+         256
+        ]
+       ],
+       "errors": [
+        0.22357723577235772,
+        0.12906309751434034,
+        0.042925659472422065
+       ],
+       "gci_fine": 0.026739421949223192,
+       "gci_relative_to_fine_error": 0.6229239638450319,
+       "metric": "symmetric_difference",
+       "observed_order": 1.588164351871659,
+       "p_coarse": 0.7926967473815303,
+       "p_fine": 1.588164351871659,
+       "p_successive": 0.13388974191563421,
+       "pair_orders": [
+        0.7926967473815303,
+        1.588164351871659
+       ],
+       "refinement_ratio": 2.0,
+       "safety_factor": 1.25,
+       "status": "outside asymptotic range (p_fine indicative only)"
+      }
+     },
+     "levels": [
+      {
+       "alpha_max": 0.9088013341353803,
+       "alpha_min": 4.022342048238358e-27,
+       "bounded": [
+        4.022342048238358e-27,
+        0.9088013341353803
+       ],
+       "case": "zalesak",
+       "cells": [
+        64,
+        64
+       ],
+       "cfl": 0.75,
+       "cou": 0.75,
+       "divergence_max": 0.0,
+       "dt": 0.003787878787878788,
+       "dx": 0.015625,
+       "l1": 0.035231779414002296,
+       "linf": 0.8372168457760867,
+       "liquid_volume": 0.06322070305886379,
+       "mass_drift_relative": 0.0,
+       "mass_final": 0.06322070305886379,
+       "mass_initial": 0.06322070305886379,
+       "note": "solid-body rotation, one revolution == analytic initial field",
+       "relative_l1": 0.557282309581381,
+       "scheme": "fct",
+       "steps": 264,
+       "symmetric_difference": 0.22357723577235772,
+       "worst_step_drift_relative": 2.1951334193314916e-16
+      },
+      {
+       "alpha_max": 0.988394596017919,
+       "alpha_min": 1.3252358943015466e-52,
+       "bounded": [
+        1.3252358943015466e-52,
+        0.988394596017919
+       ],
+       "case": "zalesak",
+       "cells": [
+        128,
+        128
+       ],
+       "cfl": 0.75,
+       "cou": 0.75,
+       "divergence_max": 0.0,
+       "dt": 0.0018796992481203006,
+       "dx": 0.0078125,
+       "l1": 0.02558952753278619,
+       "linf": 0.7554090182010433,
+       "liquid_volume": 0.06322070305887055,
+       "mass_drift_relative": 0.0,
+       "mass_final": 0.06322070305887055,
+       "mass_initial": 0.06322070305887055,
+       "note": "solid-body rotation, one revolution == analytic initial field",
+       "relative_l1": 0.4047649946087669,
+       "scheme": "fct",
+       "steps": 532,
+       "symmetric_difference": 0.12906309751434034,
+       "worst_step_drift_relative": 2.195133419331257e-16
+      },
+      {
+       "alpha_max": 0.9998186173483621,
+       "alpha_min": 2.328066629895226e-103,
+       "bounded": [
+        2.328066629895226e-103,
+        0.9998186173483621
+       ],
+       "case": "zalesak",
+       "cells": [
+        256,
+        256
+       ],
+       "cfl": 0.75,
+       "cou": 0.75,
+       "divergence_max": 0.0,
+       "dt": 0.0009354536950420954,
+       "dx": 0.00390625,
+       "l1": 0.016764867311888764,
+       "linf": 0.7471327139788322,
+       "liquid_volume": 0.06322070305888186,
+       "mass_drift_relative": 2.1951334193308642e-16,
+       "mass_final": 0.06322070305888185,
+       "mass_initial": 0.06322070305888186,
+       "note": "solid-body rotation, one revolution == analytic initial field",
+       "relative_l1": 0.26518002016324416,
+       "scheme": "fct",
+       "steps": 1069,
+       "symmetric_difference": 0.042925659472422065,
+       "worst_step_drift_relative": 4.3902668386617285e-16
+      }
+     ]
+    },
+    "plic": {
+     "finest": {
+      "alpha_max": 1.0,
+      "alpha_min": 0.0,
+      "bounded": [
+       0.0,
+       1.0
+      ],
+      "case": "zalesak",
+      "cells": [
+       256,
+       256
+      ],
+      "cfl": 0.75,
+      "cou": 0.75,
+      "divergence_max": 0.0,
+      "dt": 0.0009354536950420954,
+      "dx": 0.00390625,
+      "l1": 0.0005473601216768602,
+      "linf": 1.0,
+      "liquid_volume": 0.06322070305888186,
+      "mass_drift_relative": 1.5804960619182222e-14,
+      "mass_final": 0.06322070305888086,
+      "mass_initial": 0.06322070305888186,
+      "note": "solid-body rotation, one revolution == analytic initial field",
+      "relative_l1": 0.008657925255387708,
+      "scheme": "plic",
+      "steps": 1069,
+      "symmetric_difference": 0.007913669064748202,
+      "worst_step_drift_relative": 1.602447396111531e-14
+     },
+     "gci": {
+      "relative_l1": {
+       "cells": [
+        [
+         64,
+         64
+        ],
+        [
+         128,
+         128
+        ],
+        [
+         256,
+         256
+        ]
+       ],
+       "errors": [
+        0.04166370972290611,
+        0.019562472853748816,
+        0.008657925255387708
+       ],
+       "gci_fine": 0.008592707429140195,
+       "gci_relative_to_fine_error": 0.9924672685055894,
+       "metric": "relative_l1",
+       "observed_order": 1.175995499255948,
+       "p_coarse": 1.0907025521236853,
+       "p_fine": 1.175995499255948,
+       "p_successive": 1.019197193057111,
+       "pair_orders": [
+        1.0907025521236853,
+        1.175995499255948
+       ],
+       "refinement_ratio": 2.0,
+       "safety_factor": 1.25,
+       "status": "asymptotic"
+      },
+      "symmetric_difference": {
+       "cells": [
+        [
+         64,
+         64
+        ],
+        [
+         128,
+         128
+        ],
+        [
+         256,
+         256
+        ]
+       ],
+       "errors": [
+        0.056910569105691054,
+        0.011472275334608031,
+        0.007913669064748202
+       ],
+       "gci_fine": 0.021998134001496136,
+       "gci_relative_to_fine_error": 2.7797642056436023,
+       "metric": "symmetric_difference",
+       "observed_order": 0.5357329134477874,
+       "p_coarse": 2.3105450522441493,
+       "p_fine": 0.5357329134477874,
+       "p_successive": 3.674524437392941,
+       "pair_orders": [
+        2.3105450522441493,
+        0.5357329134477874
+       ],
+       "refinement_ratio": 2.0,
+       "safety_factor": 1.25,
+       "status": "outside asymptotic range (p_fine indicative only)"
+      }
+     },
+     "levels": [
+      {
+       "alpha_max": 1.0,
+       "alpha_min": 0.0,
+       "bounded": [
+        0.0,
+        1.0
+       ],
+       "case": "zalesak",
+       "cells": [
+        64,
+        64
+       ],
+       "cfl": 0.75,
+       "cou": 0.75,
+       "divergence_max": 0.0,
+       "dt": 0.003787878787878788,
+       "dx": 0.015625,
+       "l1": 0.0026340090207225436,
+       "linf": 0.6410256316633243,
+       "liquid_volume": 0.06322070305886379,
+       "mass_drift_relative": 4.390266838662983e-16,
+       "mass_final": 0.06322070305886376,
+       "mass_initial": 0.06322070305886379,
+       "note": "solid-body rotation, one revolution == analytic initial field",
+       "relative_l1": 0.04166370972290611,
+       "scheme": "plic",
+       "steps": 264,
+       "symmetric_difference": 0.056910569105691054,
+       "worst_step_drift_relative": 2.63416010319779e-15
+      },
+      {
+       "alpha_max": 1.0,
+       "alpha_min": 0.0,
+       "bounded": [
+        0.0,
+        1.0
+       ],
+       "case": "zalesak",
+       "cells": [
+        128,
+        128
+       ],
+       "cfl": 0.75,
+       "cou": 0.75,
+       "divergence_max": 0.0,
+       "dt": 0.0018796992481203006,
+       "dx": 0.0078125,
+       "l1": 0.0012367532873840698,
+       "linf": 0.9384363128329422,
+       "liquid_volume": 0.06322070305887055,
+       "mass_drift_relative": 3.512213470930011e-15,
+       "mass_final": 0.06322070305887033,
+       "mass_initial": 0.06322070305887055,
+       "note": "solid-body rotation, one revolution == analytic initial field",
+       "relative_l1": 0.019562472853748816,
+       "scheme": "plic",
+       "steps": 532,
+       "symmetric_difference": 0.011472275334608031,
+       "worst_step_drift_relative": 4.390266838662514e-15
+      },
+      {
+       "alpha_max": 1.0,
+       "alpha_min": 0.0,
+       "bounded": [
+        0.0,
+        1.0
+       ],
+       "case": "zalesak",
+       "cells": [
+        256,
+        256
+       ],
+       "cfl": 0.75,
+       "cou": 0.75,
+       "divergence_max": 0.0,
+       "dt": 0.0009354536950420954,
+       "dx": 0.00390625,
+       "l1": 0.0005473601216768602,
+       "linf": 1.0,
+       "liquid_volume": 0.06322070305888186,
+       "mass_drift_relative": 1.5804960619182222e-14,
+       "mass_final": 0.06322070305888086,
+       "mass_initial": 0.06322070305888186,
+       "note": "solid-body rotation, one revolution == analytic initial field",
+       "relative_l1": 0.008657925255387708,
+       "scheme": "plic",
+       "steps": 1069,
+       "symmetric_difference": 0.007913669064748202,
+       "worst_step_drift_relative": 1.602447396111531e-14
+      }
+     ]
+    }
+   }
+  }
+ },
+ "criteria": {
+  "C1_zalesak_area_conservation": {
+   "detail": "relative liquid-area drift after one revolution",
+   "passed": true,
+   "threshold": 0.01,
+   "value": 1.5804960619182222e-14
+  },
+  "C2_single_vortex": {
+   "detail": "misplaced-area fraction of the reconstructed interface vs the analytic initial field at t = T",
+   "passed": false,
+   "relative_l1": 0.8079846833954972,
+   "threshold": 0.05,
+   "value": 0.8008620689655173
+  },
+  "C3_double_vortex": {
+   "detail": "misplaced-area fraction of the reconstructed interface vs the analytic initial field at t = T",
+   "passed": false,
+   "relative_l1": 0.2082515856306261,
+   "threshold": 0.05,
+   "value": 0.20422535211267606
+  },
+  "C4_hydrostatic": {
+   "detail": "worst pressure oscillation over the grid/depth/density sweep, well-balanced vs shipped control",
+   "passed": true,
+   "shipped_control": 0.06250034007949602,
+   "threshold": 0.005,
+   "value": 0.0
+  },
+  "C5_mass_conservation": {
+   "detail": "worst global volume drift over every benchmark and scheme",
+   "passed": true,
+   "threshold": 0.01,
+   "value": 0.005975179393012439
+  },
+  "C6_grid_convergence": {
+   "detail": "GCI observed order of the PLIC interface error against the exact solution on three grids; criterion judged on the relative-L1 norm (Rider-Kothe), the symmetric-difference order is reported alongside",
+   "gci_fine": {
+    "double_vortex": 0.556511536074615,
+    "single_vortex": 2.3018117462927528,
+    "zalesak": 0.008592707429140195
+   },
+   "gci_fine_symmetric_difference": {
+    "double_vortex": 1.5984114916773373,
+    "single_vortex": 2.0051038993234545,
+    "zalesak": 0.021998134001496136
+   },
+   "observed_orders": {
+    "double_vortex": 0.5536172267940522,
+    "single_vortex": 0.5248424801039953,
+    "zalesak": 1.175995499255948
+   },
+   "observed_orders_symmetric_difference": {
+    "double_vortex": 0.21376361237583677,
+    "single_vortex": 0.584255113151772,
+    "zalesak": 0.5357329134477874
+   },
+   "passed": false,
+   "threshold": 1.0,
+   "value": 0.5248424801039953
+  }
+ },
+ "hydrostatic": {
+  "cases": [
+   {
+    "cells": [
+     32,
+     32
+    ],
+    "density_ratio": 1.0,
+    "depth": 0.25,
+    "shipped": {
+     "cg": {
+      "converged": true,
+      "iterations": 23,
+      "residual_ratio": 8.120438417816984e-10
+     },
+     "dt": 0.007981885710176261,
+     "mass_drift_relative": 2.220446049250313e-16,
+     "pressure_oscillation": 0.06250034007949602,
+     "spurious_velocity": 3.348888764818746e-08
+    },
+    "well_balanced": {
+     "cg": {
+      "converged": true,
+      "iterations": 0,
+      "residual_ratio": 0.0
+     },
+     "dt": 0.007981885710176261,
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.0,
+     "spurious_velocity": 0.0
+    }
+   },
+   {
+    "cells": [
+     32,
+     32
+    ],
+    "density_ratio": 100.0,
+    "depth": 0.25,
+    "shipped": {
+     "cg": {
+      "converged": true,
+      "iterations": 26,
+      "residual_ratio": 8.217018291398052e-10
+     },
+     "dt": 0.007981885710176261,
+     "mass_drift_relative": 1.1102230246251565e-16,
+     "pressure_oscillation": 0.06250034007911684,
+     "spurious_velocity": 3.348888764818746e-08
+    },
+    "well_balanced": {
+     "cg": {
+      "converged": true,
+      "iterations": 0,
+      "residual_ratio": 0.0
+     },
+     "dt": 0.007981885710176261,
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.0,
+     "spurious_velocity": 0.0
+    }
+   },
+   {
+    "cells": [
+     32,
+     32
+    ],
+    "density_ratio": 1000.0,
+    "depth": 0.25,
+    "shipped": {
+     "cg": {
+      "converged": true,
+      "iterations": 26,
+      "residual_ratio": 8.111302359253456e-10
+     },
+     "dt": 0.007981885710176261,
+     "mass_drift_relative": 2.220446049250313e-16,
+     "pressure_oscillation": 0.06250034007910997,
+     "spurious_velocity": 3.348888764818746e-08
+    },
+    "well_balanced": {
+     "cg": {
+      "converged": true,
+      "iterations": 0,
+      "residual_ratio": 0.0
+     },
+     "dt": 0.007981885710176261,
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.0,
+     "spurious_velocity": 0.0
+    }
+   },
+   {
+    "cells": [
+     32,
+     32
+    ],
+    "density_ratio": 1.0,
+    "depth": 0.5,
+    "shipped": {
+     "cg": {
+      "converged": true,
+      "iterations": 21,
+      "residual_ratio": 9.105896398946739e-10
+     },
+     "dt": 0.005644045512321636,
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.03125069854316787,
+     "spurious_velocity": 3.488704462377402e-08
+    },
+    "well_balanced": {
+     "cg": {
+      "converged": true,
+      "iterations": 0,
+      "residual_ratio": 0.0
+     },
+     "dt": 0.005644045512321636,
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.0,
+     "spurious_velocity": 0.0
+    }
+   },
+   {
+    "cells": [
+     32,
+     32
+    ],
+    "density_ratio": 100.0,
+    "depth": 0.5,
+    "shipped": {
+     "cg": {
+      "converged": true,
+      "iterations": 24,
+      "residual_ratio": 8.330821459927052e-10
+     },
+     "dt": 0.005644045512321636,
+     "mass_drift_relative": 2.220446049250313e-16,
+     "pressure_oscillation": 0.031250698542907164,
+     "spurious_velocity": 3.488704462377402e-08
+    },
+    "well_balanced": {
+     "cg": {
+      "converged": true,
+      "iterations": 0,
+      "residual_ratio": 0.0
+     },
+     "dt": 0.005644045512321636,
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.0,
+     "spurious_velocity": 0.0
+    }
+   },
+   {
+    "cells": [
+     32,
+     32
+    ],
+    "density_ratio": 1000.0,
+    "depth": 0.5,
+    "shipped": {
+     "cg": {
+      "converged": true,
+      "iterations": 23,
+      "residual_ratio": 9.963490990477612e-10
+     },
+     "dt": 0.005644045512321636,
+     "mass_drift_relative": 2.220446049250313e-16,
+     "pressure_oscillation": 0.03125069854290253,
+     "spurious_velocity": 3.488704462377402e-08
+    },
+    "well_balanced": {
+     "cg": {
+      "converged": true,
+      "iterations": 0,
+      "residual_ratio": 0.0
+     },
+     "dt": 0.005644045512321636,
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.0,
+     "spurious_velocity": 0.0
+    }
+   },
+   {
+    "cells": [
+     32,
+     32
+    ],
+    "density_ratio": 1.0,
+    "depth": 0.75,
+    "shipped": {
+     "cg": {
+      "converged": true,
+      "iterations": 20,
+      "residual_ratio": 9.108070654793551e-10
+     },
+     "dt": 0.004608343863411092,
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.020834388819861955,
+     "spurious_velocity": 3.5259884915581314e-08
+    },
+    "well_balanced": {
+     "cg": {
+      "converged": true,
+      "iterations": 0,
+      "residual_ratio": 0.0
+     },
+     "dt": 0.004608343863411092,
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.0,
+     "spurious_velocity": 0.0
+    }
+   },
+   {
+    "cells": [
+     32,
+     32
+    ],
+    "density_ratio": 100.0,
+    "depth": 0.75,
+    "shipped": {
+     "cg": {
+      "converged": true,
+      "iterations": 23,
+      "residual_ratio": 9.26660914601538e-10
+     },
+     "dt": 0.004608343863411092,
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.020834388819650572,
+     "spurious_velocity": 3.5259884915581314e-08
+    },
+    "well_balanced": {
+     "cg": {
+      "converged": true,
+      "iterations": 0,
+      "residual_ratio": 0.0
+     },
+     "dt": 0.004608343863411092,
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.0,
+     "spurious_velocity": 0.0
+    }
+   },
+   {
+    "cells": [
+     32,
+     32
+    ],
+    "density_ratio": 1000.0,
+    "depth": 0.75,
+    "shipped": {
+     "cg": {
+      "converged": true,
+      "iterations": 23,
+      "residual_ratio": 9.098689745350341e-10
+     },
+     "dt": 0.004608343863411092,
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.02083438881964674,
+     "spurious_velocity": 3.5259884915581314e-08
+    },
+    "well_balanced": {
+     "cg": {
+      "converged": true,
+      "iterations": 0,
+      "residual_ratio": 0.0
+     },
+     "dt": 0.004608343863411092,
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.0,
+     "spurious_velocity": 0.0
+    }
+   },
+   {
+    "cells": [
+     64,
+     64
+    ],
+    "density_ratio": 1.0,
+    "depth": 0.25,
+    "shipped": {
+     "cg": {
+      "converged": true,
+      "iterations": 26,
+      "residual_ratio": 8.895196735163091e-10
+     },
+     "dt": 0.0039909428550881304,
+     "mass_drift_relative": 2.220446049250313e-16,
+     "pressure_oscillation": 0.03125071979259856,
+     "spurious_velocity": 3.573169380634512e-08
+    },
+    "well_balanced": {
+     "cg": {
+      "converged": true,
+      "iterations": 0,
+      "residual_ratio": 0.0
+     },
+     "dt": 0.0039909428550881304,
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.0,
+     "spurious_velocity": 0.0
+    }
+   },
+   {
+    "cells": [
+     64,
+     64
+    ],
+    "density_ratio": 100.0,
+    "depth": 0.25,
+    "shipped": {
+     "cg": {
+      "converged": true,
+      "iterations": 30,
+      "residual_ratio": 9.282293906229783e-10
+     },
+     "dt": 0.0039909428550881304,
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.03125071979183518,
+     "spurious_velocity": 3.573169380634512e-08
+    },
+    "well_balanced": {
+     "cg": {
+      "converged": true,
+      "iterations": 0,
+      "residual_ratio": 0.0
+     },
+     "dt": 0.0039909428550881304,
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.0,
+     "spurious_velocity": 0.0
+    }
+   },
+   {
+    "cells": [
+     64,
+     64
+    ],
+    "density_ratio": 1000.0,
+    "depth": 0.25,
+    "shipped": {
+     "cg": {
+      "converged": true,
+      "iterations": 29,
+      "residual_ratio": 9.917775968095358e-10
+     },
+     "dt": 0.0039909428550881304,
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.03125071979182127,
+     "spurious_velocity": 3.573169380634512e-08
+    },
+    "well_balanced": {
+     "cg": {
+      "converged": true,
+      "iterations": 0,
+      "residual_ratio": 0.0
+     },
+     "dt": 0.0039909428550881304,
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.0,
+     "spurious_velocity": 0.0
+    }
+   },
+   {
+    "cells": [
+     64,
+     64
+    ],
+    "density_ratio": 1.0,
+    "depth": 0.5,
+    "shipped": {
+     "cg": {
+      "converged": true,
+      "iterations": 26,
+      "residual_ratio": 9.088458191291818e-10
+     },
+     "dt": 0.002822022756160818,
+     "mass_drift_relative": 1.1102230246251565e-16,
+     "pressure_oscillation": 0.015626457250626814,
+     "spurious_velocity": 3.6418907388171374e-08
+    },
+    "well_balanced": {
+     "cg": {
+      "converged": true,
+      "iterations": 0,
+      "residual_ratio": 0.0
+     },
+     "dt": 0.002822022756160818,
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.0,
+     "spurious_velocity": 0.0
+    }
+   },
+   {
+    "cells": [
+     64,
+     64
+    ],
+    "density_ratio": 100.0,
+    "depth": 0.5,
+    "shipped": {
+     "cg": {
+      "converged": true,
+      "iterations": 30,
+      "residual_ratio": 9.117052911180809e-10
+     },
+     "dt": 0.002822022756160818,
+     "mass_drift_relative": 2.220446049250313e-16,
+     "pressure_oscillation": 0.015626457250094653,
+     "spurious_velocity": 3.6418907388171374e-08
+    },
+    "well_balanced": {
+     "cg": {
+      "converged": true,
+      "iterations": 0,
+      "residual_ratio": 0.0
+     },
+     "dt": 0.002822022756160818,
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.0,
+     "spurious_velocity": 0.0
+    }
+   },
+   {
+    "cells": [
+     64,
+     64
+    ],
+    "density_ratio": 1000.0,
+    "depth": 0.5,
+    "shipped": {
+     "cg": {
+      "converged": true,
+      "iterations": 29,
+      "residual_ratio": 9.899155478782719e-10
+     },
+     "dt": 0.002822022756160818,
+     "mass_drift_relative": 2.220446049250313e-16,
+     "pressure_oscillation": 0.01562645725008501,
+     "spurious_velocity": 3.6418907388171374e-08
+    },
+    "well_balanced": {
+     "cg": {
+      "converged": true,
+      "iterations": 0,
+      "residual_ratio": 0.0
+     },
+     "dt": 0.002822022756160818,
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.0,
+     "spurious_velocity": 0.0
+    }
+   },
+   {
+    "cells": [
+     64,
+     64
+    ],
+    "density_ratio": 1.0,
+    "depth": 0.75,
+    "shipped": {
+     "cg": {
+      "converged": true,
+      "iterations": 25,
+      "residual_ratio": 9.193465605987266e-10
+     },
+     "dt": 0.002304171931705546,
+     "mass_drift_relative": 1.4802973661668753e-16,
+     "pressure_oscillation": 0.010418859688661,
+     "spurious_velocity": 3.660580010397396e-08
+    },
+    "well_balanced": {
+     "cg": {
+      "converged": true,
+      "iterations": 0,
+      "residual_ratio": 0.0
+     },
+     "dt": 0.002304171931705546,
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.0,
+     "spurious_velocity": 0.0
+    }
+   },
+   {
+    "cells": [
+     64,
+     64
+    ],
+    "density_ratio": 100.0,
+    "depth": 0.75,
+    "shipped": {
+     "cg": {
+      "converged": true,
+      "iterations": 28,
+      "residual_ratio": 9.805478355987922e-10
+     },
+     "dt": 0.002304171931705546,
+     "mass_drift_relative": 1.4802973661668753e-16,
+     "pressure_oscillation": 0.010418859688227856,
+     "spurious_velocity": 3.660580010397396e-08
+    },
+    "well_balanced": {
+     "cg": {
+      "converged": true,
+      "iterations": 0,
+      "residual_ratio": 0.0
+     },
+     "dt": 0.002304171931705546,
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.0,
+     "spurious_velocity": 0.0
+    }
+   },
+   {
+    "cells": [
+     64,
+     64
+    ],
+    "density_ratio": 1000.0,
+    "depth": 0.75,
+    "shipped": {
+     "cg": {
+      "converged": true,
+      "iterations": 28,
+      "residual_ratio": 9.615362469591916e-10
+     },
+     "dt": 0.002304171931705546,
+     "mass_drift_relative": 1.4802973661668753e-16,
+     "pressure_oscillation": 0.010418859688220067,
+     "spurious_velocity": 3.660580010397396e-08
+    },
+    "well_balanced": {
+     "cg": {
+      "converged": true,
+      "iterations": 0,
+      "residual_ratio": 0.0
+     },
+     "dt": 0.002304171931705546,
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.0,
+     "spurious_velocity": 0.0
+    }
+   },
+   {
+    "cells": [
+     128,
+     128
+    ],
+    "density_ratio": 1.0,
+    "depth": 0.25,
+    "shipped": {
+     "cg": {
+      "converged": true,
+      "iterations": 33,
+      "residual_ratio": 9.780607766133524e-10
+     },
+     "dt": 0.0019954714275440652,
+     "mass_drift_relative": 2.220446049250313e-16,
+     "pressure_oscillation": 0.015626479373573487,
+     "spurious_velocity": 3.686179827541901e-08
+    },
+    "well_balanced": {
+     "cg": {
+      "converged": true,
+      "iterations": 0,
+      "residual_ratio": 0.0
+     },
+     "dt": 0.0019954714275440652,
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.0,
+     "spurious_velocity": 0.0
+    }
+   },
+   {
+    "cells": [
+     128,
+     128
+    ],
+    "density_ratio": 100.0,
+    "depth": 0.25,
+    "shipped": {
+     "cg": {
+      "converged": true,
+      "iterations": 38,
+      "residual_ratio": 9.583819179449767e-10
+     },
+     "dt": 0.0019954714275440652,
+     "mass_drift_relative": 2.220446049250313e-16,
+     "pressure_oscillation": 0.0156264793720419,
+     "spurious_velocity": 3.686179827541901e-08
+    },
+    "well_balanced": {
+     "cg": {
+      "converged": true,
+      "iterations": 0,
+      "residual_ratio": 0.0
+     },
+     "dt": 0.0019954714275440652,
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.0,
+     "spurious_velocity": 0.0
+    }
+   },
+   {
+    "cells": [
+     128,
+     128
+    ],
+    "density_ratio": 1000.0,
+    "depth": 0.25,
+    "shipped": {
+     "cg": {
+      "converged": true,
+      "iterations": 38,
+      "residual_ratio": 9.310385369891042e-10
+     },
+     "dt": 0.0019954714275440652,
+     "mass_drift_relative": 2.220446049250313e-16,
+     "pressure_oscillation": 0.015626479372014085,
+     "spurious_velocity": 3.686179827541901e-08
+    },
+    "well_balanced": {
+     "cg": {
+      "converged": true,
+      "iterations": 0,
+      "residual_ratio": 0.0
+     },
+     "dt": 0.0019954714275440652,
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.0,
+     "spurious_velocity": 0.0
+    }
+   },
+   {
+    "cells": [
+     128,
+     128
+    ],
+    "density_ratio": 1.0,
+    "depth": 0.5,
+    "shipped": {
+     "cg": {
+      "converged": true,
+      "iterations": 31,
+      "residual_ratio": 9.663256915395061e-10
+     },
+     "dt": 0.001411011378080409,
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.007815474215423631,
+     "spurious_velocity": 3.719361167308753e-08
+    },
+    "well_balanced": {
+     "cg": {
+      "converged": true,
+      "iterations": 0,
+      "residual_ratio": 0.0
+     },
+     "dt": 0.001411011378080409,
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.0,
+     "spurious_velocity": 0.0
+    }
+   },
+   {
+    "cells": [
+     128,
+     128
+    ],
+    "density_ratio": 100.0,
+    "depth": 0.5,
+    "shipped": {
+     "cg": {
+      "converged": true,
+      "iterations": 35,
+      "residual_ratio": 9.788740392997382e-10
+     },
+     "dt": 0.001411011378080409,
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.007815474214348741,
+     "spurious_velocity": 3.719361167308753e-08
+    },
+    "well_balanced": {
+     "cg": {
+      "converged": true,
+      "iterations": 0,
+      "residual_ratio": 0.0
+     },
+     "dt": 0.001411011378080409,
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.0,
+     "spurious_velocity": 0.0
+    }
+   },
+   {
+    "cells": [
+     128,
+     128
+    ],
+    "density_ratio": 1000.0,
+    "depth": 0.5,
+    "shipped": {
+     "cg": {
+      "converged": true,
+      "iterations": 35,
+      "residual_ratio": 9.753716792310555e-10
+     },
+     "dt": 0.001411011378080409,
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.007815474214329087,
+     "spurious_velocity": 3.719361167308753e-08
+    },
+    "well_balanced": {
+     "cg": {
+      "converged": true,
+      "iterations": 0,
+      "residual_ratio": 0.0
+     },
+     "dt": 0.001411011378080409,
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.0,
+     "spurious_velocity": 0.0
+    }
+   },
+   {
+    "cells": [
+     128,
+     128
+    ],
+    "density_ratio": 1.0,
+    "depth": 0.75,
+    "shipped": {
+     "cg": {
+      "converged": true,
+      "iterations": 48,
+      "residual_ratio": 9.862127854725002e-10
+     },
+     "dt": 0.001152085965852773,
+     "mass_drift_relative": 2.9605947323337506e-16,
+     "pressure_oscillation": 0.005212797176755581,
+     "spurious_velocity": 3.727878992951483e-08
+    },
+    "well_balanced": {
+     "cg": {
+      "converged": true,
+      "iterations": 0,
+      "residual_ratio": 0.0
+     },
+     "dt": 0.001152085965852773,
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.0,
+     "spurious_velocity": 0.0
+    }
+   },
+   {
+    "cells": [
+     128,
+     128
+    ],
+    "density_ratio": 100.0,
+    "depth": 0.75,
+    "shipped": {
+     "cg": {
+      "converged": true,
+      "iterations": 83,
+      "residual_ratio": 9.860500219489614e-10
+     },
+     "dt": 0.001152085965852773,
+     "mass_drift_relative": 2.9605947323337506e-16,
+     "pressure_oscillation": 0.005212797175879772,
+     "spurious_velocity": 3.727878992951483e-08
+    },
+    "well_balanced": {
+     "cg": {
+      "converged": true,
+      "iterations": 0,
+      "residual_ratio": 0.0
+     },
+     "dt": 0.001152085965852773,
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.0,
+     "spurious_velocity": 0.0
+    }
+   },
+   {
+    "cells": [
+     128,
+     128
+    ],
+    "density_ratio": 1000.0,
+    "depth": 0.75,
+    "shipped": {
+     "cg": {
+      "converged": true,
+      "iterations": 33,
+      "residual_ratio": 9.889062537135683e-10
+     },
+     "dt": 0.001152085965852773,
+     "mass_drift_relative": 2.9605947323337506e-16,
+     "pressure_oscillation": 0.005212797175863825,
+     "spurious_velocity": 3.727878992951483e-08
+    },
+    "well_balanced": {
+     "cg": {
+      "converged": true,
+      "iterations": 0,
+      "residual_ratio": 0.0
+     },
+     "dt": 0.001152085965852773,
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.0,
+     "spurious_velocity": 0.0
+    }
+   }
+  ],
+  "density_ratios": [
+   1.0,
+   100.0,
+   1000.0
+  ],
+  "depths": [
+   0.25,
+   0.5,
+   0.75
+  ],
+  "grids": [
+   32,
+   64,
+   128
+  ],
+  "steps": 40
+ },
+ "parameters": {
+  "cfl": 0.75,
+  "grids": {
+   "double_vortex": [
+    [
+     32,
+     16
+    ],
+    [
+     64,
+     32
+    ],
+    [
+     128,
+     64
+    ]
+   ],
+   "single_vortex": [
+    [
+     32,
+     32
+    ],
+    [
+     64,
+     64
+    ],
+    [
+     128,
+     128
+    ]
+   ],
+   "zalesak": [
+    [
+     64,
+     64
+    ],
+    [
+     128,
+     128
+    ],
+    [
+     256,
+     256
+    ]
+   ]
+  },
+  "schemes": [
+   "plic",
+   "fct",
+   "donor"
+  ]
+ }
+}
