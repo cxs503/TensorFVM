@@ -1,0 +1,111 @@
+{
+  "acceptance": {
+    "interface_conserved": true,
+    "interface_residual_limit": 0.001,
+    "nu_error_limit": 0.1,
+    "reference": "Eckert & Soehngen 1952 mean correlation",
+    "within_limit": false
+  },
+  "case": "cylinder_cross_flow_cht",
+  "coupling_iterations": 300,
+  "defect_baseline": {
+    "note": "same configuration run through the pre-fix operator",
+    "nusselt_mean_before_fixes": 326.87,
+    "provenance": "session log of the P295 run before the sign and one_sided_derivative fixes (recorded, not recomputed)"
+  },
+  "energy_rate_balance_rel": 0.0,
+  "error_vs_churchill_bernstein_rel": 0.16121243403667657,
+  "error_vs_eckert_soehngen_rel": 0.24521107016267116,
+  "figures": [
+    "runs/cht_p295/figures/cht_cylinder_re40.png"
+  ],
+  "flow": {
+    "drag_coefficient": 1.9269804079787658,
+    "drag_drift_last_step": 2.2504282431877972e-13,
+    "drag_history": [
+      [
+        35.6,
+        1.9269804081236919,
+        6.108129707137617e-15
+      ],
+      [
+        36.0,
+        1.926980408083578,
+        1.057502351549006e-15
+      ],
+      [
+        36.4,
+        1.926980408052485,
+        1.1103048051994144e-14
+      ],
+      [
+        36.8,
+        1.9269804080283413,
+        5.6462293442416116e-15
+      ],
+      [
+        37.2,
+        1.9269804080095974,
+        1.781295618158332e-14
+      ],
+      [
+        37.6,
+        1.9269804079950903,
+        5.027132685845081e-16
+      ],
+      [
+        38.0,
+        1.9269804079838349,
+        -6.118302656923475e-16
+      ],
+      [
+        38.122,
+        1.926980407980947,
+        -2.8268689750179686e-15
+      ],
+      [
+        38.142,
+        1.9269804079804893,
+        9.019288837524126e-15
+      ],
+      [
+        38.162000000000006,
+        1.9269804079800268,
+        5.067340058808235e-15
+      ],
+      [
+        38.18200000000001,
+        1.9269804079796007,
+        8.00017726076223e-15
+      ],
+      [
+        38.20200000000001,
+        1.926980407979167,
+        7.998723982221393e-15
+      ]
+    ],
+    "lift_coefficient": 9.272159303629753e-15,
+    "steady": true,
+    "steps": 19111,
+    "time": 38.222000000000016
+  },
+  "interface_global_residual_rel": 0.00023796149989965213,
+  "interface_local_residual_rel": 0.00018438609542298175,
+  "mesh": {
+    "dt": 0.002,
+    "n_r": 71,
+    "n_theta": 72,
+    "r_out": 15.0,
+    "t_end": 38.222000000000016,
+    "wall_cell": 0.008
+  },
+  "nusselt_churchill_bernstein": 3.3638641477044606,
+  "nusselt_eckert_soehngen_1952": 3.136946794260604,
+  "nusselt_mean": 3.9061608747246073,
+  "nusselt_mean_flux_weighted": 3.9156086906937113,
+  "prandtl": 0.7,
+  "reynolds": 40.0,
+  "solid_ratio": 100.0,
+  "wall_temperature_mean": 0.9770280774807083,
+  "wall_temperature_ptp": 0.0175500854483972
+}
