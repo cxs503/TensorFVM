@@ -1,0 +1,524 @@
+{
+ "all_criteria_met": false,
+ "config": {
+  "quick": false
+ },
+ "figures": {
+  "bubble": [
+   "/root/tp-agent/work/m9839/artifacts/ab_main/fig_shock_bubble.png"
+  ],
+  "interface": [
+   "/root/tp-agent/work/m9839/artifacts/ab_main/fig_interface_convergence.png"
+  ],
+  "rm": [
+   "/root/tp-agent/work/m9839/artifacts/ab_main/fig_rm_instability.png"
+  ],
+  "sod": [
+   "/root/tp-agent/work/m9839/artifacts/ab_main/fig_sod_profiles.png"
+  ],
+  "vortex": [
+   "/root/tp-agent/work/m9839/artifacts/ab_vortex/fig_vortex_merger.png"
+  ]
+ },
+ "legs": {
+  "bubble": {
+   "analytic": {
+    "arrival_time": 0.3463746945608675,
+    "crossing_time": 0.5167495407186797,
+    "incident_shock_speed": 1.4435234670763062,
+    "interface_speed": 0.5624090188867439,
+    "p_interface": 1.300387086937434,
+    "post_p": 1.5697999999999999,
+    "post_rho": 1.3763639726280747,
+    "post_u": 0.3947286019215645,
+    "reflected_is_rarefaction": true,
+    "reflected_wave_speed": -0.7722619192465454,
+    "transmitted_shock_speed": 3.8703469329038205
+   },
+   "circulation_peak": 0.8945835718258295,
+   "crossing_time": 0.5167495407186797,
+   "drift": {
+    "energy": -1.1759285299150103e-16,
+    "mass": -4.72476694431305e-16,
+    "mass_mat1": -2.448201146703535e-09,
+    "momentum_x": 6.103305264031088e-15,
+    "momentum_y": null
+   },
+   "formation_reference": 0.8631242352795472,
+   "formation_time": 1.633679912689429,
+   "formation_time_error": 0.8927517568317562,
+   "incident_shock_speed": 1.4520778092031037,
+   "incident_shock_speed_error": 0.005926015282677298,
+   "mesh": {
+    "d": 0.025,
+    "nx": 360,
+    "ny": 200
+   },
+   "peak_swirl_mach": 0.5968129783281023,
+   "reflected_rarefaction": true,
+   "seconds": 956.09,
+   "steps": 2378,
+   "transmitted_shock_speed": 1.9418888099418008,
+   "transmitted_shock_speed_error": 0.49826492466791544,
+   "verdicts": {
+    "conservation_drift_le_0p5pct": true,
+    "formation_time_le_10pct": false,
+    "incident_shock_speed_le_10pct": true,
+    "reflected_wave_is_rarefaction": true,
+    "transmitted_shock_speed_le_10pct": false,
+    "vortex_pair_forms": true
+   }
+  },
+  "interface": {
+   "gfm_over_hllc_pressure_pp": {
+    "100": 0.9317439710974138,
+    "200": 0.8662493554315026,
+    "400": 0.9550150866359494
+   },
+   "observed_order": [
+    0.8351434751764698,
+    0.8565934550731761
+   ],
+   "rows": [
+    {
+     "drift_energy": -1.230242358126268e-16,
+     "drift_mass": -1.3414524154679574e-16,
+     "dx": 0.01,
+     "flux_mode": "hllc",
+     "interface_error": 0.020913308586617108,
+     "interface_error_rel": 0.0329859364186675,
+     "interface_exact": 0.6340068179717278,
+     "interface_position": 0.6549201265583449,
+     "nx": 100,
+     "positivity_fixes": 0,
+     "pressure_pp": 0.0010478222164904683,
+     "pressure_rms": 0.0058746331082549594
+    },
+    {
+     "drift_energy": -1.230242358126268e-16,
+     "drift_mass": 1.3414524154679574e-16,
+     "dx": 0.005,
+     "flux_mode": "hllc",
+     "interface_error": 0.013179841861605812,
+     "interface_error_rel": 0.020788170549600526,
+     "interface_exact": 0.6340068179717278,
+     "interface_position": 0.6471866598333336,
+     "nx": 200,
+     "positivity_fixes": 0,
+     "pressure_pp": 0.0007303983788400359,
+     "pressure_rms": 0.0035210798843054014
+    },
+    {
+     "drift_energy": -3.6907270743788036e-16,
+     "drift_mass": -5.365809661871826e-16,
+     "dx": 0.0025,
+     "flux_mode": "hllc",
+     "interface_error": 0.008291532053382844,
+     "interface_error_rel": 0.013077985627833718,
+     "interface_exact": 0.6340068179717278,
+     "interface_position": 0.6422983500251106,
+     "nx": 400,
+     "positivity_fixes": 0,
+     "pressure_pp": 0.0012427636491956218,
+     "pressure_rms": 0.002206106245715822
+    },
+    {
+     "drift_energy": 1.230242358126268e-16,
+     "drift_mass": -4.024357246403872e-16,
+     "dx": 0.01,
+     "flux_mode": "gfm",
+     "interface_error": 0.02087454379824827,
+     "interface_error_rel": 0.03292479387686825,
+     "interface_exact": 0.6340068179717278,
+     "interface_position": 0.654881361769976,
+     "nx": 100,
+     "positivity_fixes": 0,
+     "pressure_pp": 0.000976302032996923,
+     "pressure_rms": 0.005703862773937468
+    },
+    {
+     "drift_energy": 1.230242358126268e-16,
+     "drift_mass": -2.682904830935915e-16,
+     "dx": 0.005,
+     "flux_mode": "gfm",
+     "interface_error": 0.013161682068092428,
+     "interface_error_rel": 0.020759527650189003,
+     "interface_exact": 0.6340068179717278,
+     "interface_position": 0.6471685000398202,
+     "nx": 200,
+     "positivity_fixes": 0,
+     "pressure_pp": 0.0006327071248783955,
+     "pressure_rms": 0.0035091129088958314
+    },
+    {
+     "drift_energy": 4.920969432505072e-16,
+     "drift_mass": -9.390166908275695e-16,
+     "dx": 0.0025,
+     "flux_mode": "gfm",
+     "interface_error": 0.008282859606920101,
+     "interface_error_rel": 0.013064306837295649,
+     "interface_exact": 0.6340068179717278,
+     "interface_position": 0.6422896775786479,
+     "nx": 400,
+     "positivity_fixes": 0,
+     "pressure_pp": 0.0011868580341045654,
+     "pressure_rms": 0.0022036514839466593
+    }
+   ],
+   "verdicts": {
+    "gfm_reduces_pressure_wiggle": true,
+    "interface_order_ge": true,
+    "interface_pressure_constant": false,
+    "mass_conserved": true
+   }
+  },
+  "rm": {
+   "alpha_model_error": {},
+   "alpha_used": 0.06,
+   "analytic": {
+    "a0_post": 0.013827855441637392,
+    "atwood_post": 0.7718839367906506,
+    "compression": 0.3456963860409348,
+    "incident_shock_speed": 1.7748239349298847,
+    "k_a0_post": 0.17376595628139868,
+    "linear_growth_rate": 0.07286301311720216,
+    "mach": 1.5,
+    "p_star": 3.255129794675367,
+    "post_p": 2.458333333333333,
+    "post_rho": 1.8620689655172413,
+    "post_u": 0.8216777476527245,
+    "reflected_shock_speed": -0.7151350327472396,
+    "rho_sf6_post": 14.463558781340389,
+    "shock_transit_time": 0.33806170189140666,
+    "transmitted_shock_speed": 0.8302542544830178,
+    "u_star": 0.543238359213128,
+    "wavenumber": 12.566370614359172
+   },
+   "drift_max": 1.2670320053139143e-12,
+   "linear_growth_error": {
+    "40": 0.06316763436022936,
+    "56": 0.15471015557958007,
+    "72": 0.1598708751874753
+   },
+   "linear_width_error": {
+    "40": 0.44327217727779733,
+    "56": 0.44277545603486196,
+    "72": 0.38224689506399057
+   },
+   "resolution_consistency": 0.004469277058800045,
+   "rows": [
+    {
+     "amplitude_final": 0.07960775896909364,
+     "amplitude_growth_n": 555,
+     "amplitude_growth_rate": 0.07746559728817418,
+     "drift": {
+      "energy": -1.2293982600532736e-16,
+      "mass": -2.907950795518333e-16,
+      "mass_mat1": -1.5516369982713035e-15,
+      "momentum_x": -2.7815670157510927e-15,
+      "momentum_y": null
+     },
+     "dx": 0.012499999999999999,
+     "interface_cells": 0.01628787878787879,
+     "nx": 264,
+     "ny": 40,
+     "positivity_fixes": 0,
+     "seconds": 78.01,
+     "species_clamps": 0,
+     "steps": 916,
+     "t_end": 1.1,
+     "width_final": 0.2001673479828315
+    },
+    {
+     "amplitude_final": 0.0861287474440593,
+     "amplitude_growth_n": 779,
+     "amplitude_growth_rate": 0.08413566121256148,
+     "drift": {
+      "energy": -3.68942669797061e-16,
+      "mass": 1.4541836279511844e-16,
+      "mass_mat1": 2.0714836141051387e-15,
+      "momentum_x": -1.0928698203588153e-15,
+      "momentum_y": null
+     },
+     "dx": 0.008918918918918918,
+     "interface_cells": 0.012837837837837839,
+     "nx": 370,
+     "ny": 56,
+     "positivity_fixes": 0,
+     "seconds": 173.94,
+     "species_clamps": 0,
+     "steps": 1285,
+     "t_end": 1.1,
+     "width_final": 0.2000984577378379
+    },
+    {
+     "amplitude_final": 0.08555514371855849,
+     "amplitude_growth_n": 1001,
+     "amplitude_growth_rate": 0.08451168679304576,
+     "drift": {
+      "energy": -4.918531034261742e-16,
+      "mass": -2.90788456029802e-16,
+      "mass_mat1": 1.2670320053139143e-12,
+      "momentum_x": 2.428981216070906e-16,
+      "momentum_y": null
+     },
+     "dx": 0.006947368421052631,
+     "interface_cells": 0.010760233918128656,
+     "nx": 475,
+     "ny": 72,
+     "positivity_fixes": 0,
+     "seconds": 326.63,
+     "species_clamps": 20,
+     "steps": 1651,
+     "t_end": 1.1,
+     "width_final": 0.19170375456438069
+    }
+   ],
+   "verdicts": {
+    "alpha_model_regime_reached": false,
+    "conservation_drift_le_0p5pct": true,
+    "linear_growth_error_le_15pct": false,
+    "linear_width_error_le_15pct": false,
+    "no_positivity_repair": true,
+    "resolution_consistent_le_5pct": true
+   }
+  },
+  "sod": {
+   "max_abs_mass_drift": 1.9737298215558337e-16,
+   "observed_order": {
+    "1": [
+     0.6554515168312275,
+     0.6575887556927342
+    ],
+    "2": [
+     0.9633792615890192,
+     0.8692511644532577
+    ]
+   },
+   "rows": [
+    {
+     "drift_energy": -1.6148698540002275e-16,
+     "drift_mass": 0.0,
+     "drift_momentum_x": null,
+     "l1_p": 0.016041472976049444,
+     "l1_rho": 0.01832721705386654,
+     "l1_u": 0.032863938154344435,
+     "nx": 100,
+     "order": 1,
+     "positivity_fixes": 0,
+     "seconds": 2.29,
+     "species_clamps": 0,
+     "steps": 106
+    },
+    {
+     "drift_energy": 0.0,
+     "drift_mass": 0.0,
+     "drift_momentum_x": null,
+     "l1_p": 0.009688323480849319,
+     "l1_rho": 0.011635524261864549,
+     "l1_u": 0.018800234973689513,
+     "nx": 200,
+     "order": 1,
+     "positivity_fixes": 0,
+     "seconds": 4.86,
+     "species_clamps": 0,
+     "steps": 216
+    },
+    {
+     "drift_energy": -1.6148698540002275e-16,
+     "drift_mass": 1.9737298215558337e-16,
+     "drift_momentum_x": null,
+     "l1_p": 0.005760900364176995,
+     "l1_rho": 0.0073761886549925,
+     "l1_u": 0.010630734814854546,
+     "nx": 400,
+     "order": 1,
+     "positivity_fixes": 0,
+     "seconds": 10.49,
+     "species_clamps": 0,
+     "steps": 435
+    },
+    {
+     "drift_energy": 3.229739708000455e-16,
+     "drift_mass": 0.0,
+     "drift_momentum_x": null,
+     "l1_p": 0.0033725824866940035,
+     "l1_rho": 0.004757024248873118,
+     "l1_u": 0.008645437334356031,
+     "nx": 100,
+     "order": 2,
+     "positivity_fixes": 0,
+     "seconds": 3.23,
+     "species_clamps": 0,
+     "steps": 109
+    },
+    {
+     "drift_energy": 0.0,
+     "drift_mass": 0.0,
+     "drift_momentum_x": null,
+     "l1_p": 0.0016695055098579917,
+     "l1_rho": 0.0024396600259508922,
+     "l1_u": 0.004375397313457314,
+     "nx": 200,
+     "order": 2,
+     "positivity_fixes": 0,
+     "seconds": 6.93,
+     "species_clamps": 0,
+     "steps": 219
+    },
+    {
+     "drift_energy": 0.0,
+     "drift_mass": -1.9737298215558337e-16,
+     "drift_momentum_x": null,
+     "l1_p": 0.0008514199825405455,
+     "l1_rho": 0.0013355453390761374,
+     "l1_u": 0.0023015536544029602,
+     "nx": 400,
+     "order": 2,
+     "positivity_fixes": 0,
+     "seconds": 15.23,
+     "species_clamps": 0,
+     "steps": 439
+    }
+   ],
+   "verdicts": {
+    "mass_conserved": true,
+    "order_first_ge": true,
+    "order_second_ge": true
+   }
+  },
+  "vortex": {
+   "ic_circulation": 1.9999331771577868,
+   "main": {
+    "analytic": {
+     "circulation": 1.0,
+     "core_radius": 0.3,
+     "peak_swirl": 0.3353503718919206,
+     "rotation_period": 28.42446067513735,
+     "rotation_rate": 0.22104853207207686,
+     "separation": 1.2,
+     "separation_over_core": 4.0
+    },
+    "circulation_error": 0.9615085988300771,
+    "circulation_measured": 0.07698280233984585,
+    "circulation_theory": 2.0,
+    "core": 0.3,
+    "drift": {
+     "energy": 0.0,
+     "mass": 0.0,
+     "mass_mat1": 1.812327862611933e-16,
+     "momentum_x": 5.125,
+     "momentum_y": -1.2999999999999998
+    },
+    "final_separation": 1.2676336089550329,
+    "merged": false,
+    "n": 160,
+    "peak_swirl_mach": 0.38439371739498424,
+    "rotation_error": 0.04805913278864057,
+    "rotation_rate_measured": 0.23167193282766288,
+    "rotation_rate_theory": 0.22104853207207686,
+    "seconds": 259.95,
+    "separation": 1.2,
+    "separation_over_core": 4.0,
+    "steps": 1378
+   },
+   "merge_scan": [
+    {
+     "final_separation": 0.28622618181689813,
+     "final_separation_over_core": 0.9540872727229938,
+     "merged_by_core_radius": true,
+     "rotation_error": NaN,
+     "seconds": 120.63,
+     "separation_over_core": 2.0
+    },
+    {
+     "final_separation": 0.5053855627344126,
+     "final_separation_over_core": 1.684618542448042,
+     "merged_by_core_radius": false,
+     "rotation_error": NaN,
+     "seconds": 115.31,
+     "separation_over_core": 2.5
+    },
+    {
+     "final_separation": 0.8473796512316322,
+     "final_separation_over_core": 2.824598837438774,
+     "merged_by_core_radius": false,
+     "rotation_error": NaN,
+     "seconds": 117.68,
+     "separation_over_core": 3.0
+    }
+   ],
+   "merged_definition": "final core separation < one core radius",
+   "sweep": [
+    {
+     "final_separation": 1.5107435314281223,
+     "merged": false,
+     "rotation_error": 0.0007813390924075947,
+     "seconds": 24.88,
+     "separation_over_core": 5.2
+    },
+    {
+     "final_separation": 1.8882252487173057,
+     "merged": false,
+     "rotation_error": 0.06909391777589163,
+     "seconds": 25.36,
+     "separation_over_core": 6.4
+    }
+   ],
+   "verdicts": {
+    "circulation_le_1pct": false,
+    "keeps_two_cores_at_wide_separation": true,
+    "merges_at_close_separation": true,
+    "rotation_rate_le_5pct": true
+   }
+  }
+ },
+ "seconds": 2352.8,
+ "thresholds": {
+  "bubble_formation_time_error": 0.1,
+  "bubble_shock_speed_error": 0.1,
+  "conservation_drift": 0.005,
+  "interface_order": 1.0,
+  "rm_alpha_model_error": 0.15,
+  "rm_linear_growth_error": 0.15,
+  "sod_order_first": 0.6,
+  "sod_order_second": 0.8,
+  "vortex_circulation_error": 0.01,
+  "vortex_rotation_error": 0.05
+ },
+ "verdicts": {
+  "bubble": {
+   "conservation_drift_le_0p5pct": true,
+   "formation_time_le_10pct": false,
+   "incident_shock_speed_le_10pct": true,
+   "reflected_wave_is_rarefaction": true,
+   "transmitted_shock_speed_le_10pct": false,
+   "vortex_pair_forms": true
+  },
+  "interface": {
+   "contact_pressure_dip_le_15pct": true,
+   "gfm_reduces_pressure_wiggle": true,
+   "interface_order_ge": true,
+   "mass_conserved": true
+  },
+  "rm": {
+   "alpha_model_regime_reached": false,
+   "conservation_drift_le_0p5pct": true,
+   "linear_growth_error_le_15pct": false,
+   "linear_width_error_le_15pct": false,
+   "no_positivity_repair": true,
+   "resolution_consistent_le_5pct": true
+  },
+  "sod": {
+   "mass_conserved": true,
+   "order_first_ge": true,
+   "order_second_ge": true
+  },
+  "vortex": {
+   "circulation_le_1pct": false,
+   "keeps_two_cores_at_wide_separation": true,
+   "merges_at_close_separation": true,
+   "rotation_rate_le_5pct": true
+  }
+ }
+}
