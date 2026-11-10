@@ -195,7 +195,7 @@ class SigmaWaveTank:
         return self.wave
 
     def set_body(self, polygon, mass=None, inertia=None, added_mass=(0.0, 0.0),
-                 ref=None):
+                 ref=None, damping=(0.0, 0.0), motion="free", forced=None):
         """Install a floating 2-D section.
 
         ``ref`` is the reference point for the pitch rotation and the moment; it
@@ -217,6 +217,9 @@ class SigmaWaveTank:
             "poly": poly, "mass": float(mass), "inertia": float(inertia),
             "area": float(area), "cg": np.array([cx, cy]),
             "added": np.asarray(added_mass, dtype=float),
+            "damping": np.asarray(damping, dtype=float),
+            "motion": str(motion),
+            "forced": forced,
             "ref": np.asarray(ref, dtype=float),
             "xi": np.zeros(2), "vel": np.zeros(2), "acc": np.zeros(2),
             "force": np.zeros(2), "moment": 0.0,
@@ -240,13 +243,24 @@ class SigmaWaveTank:
 
     # -------------------------------------------------------------- body mask
     def body_polygon(self):
+        """Section polygon in tank coordinates for the current heave/pitch.
+
+        The rotation is taken about :attr:`body["ref"]`, *not* about the tank
+        origin.  Rotating the absolute polygon about ``(0, 0)`` displaces a
+        section sitting at ``x0`` vertically by ``-x0 * theta``; at
+        ``x0 = 4 m`` and ``theta = 0.02 rad`` that is 8 cm of spurious heave,
+        which the buoyancy then reads back as a real draft change and the
+        heave/pitch coupling runs away.  That was the defect behind the
+        diverging RAO case recorded in ``docs/wave-tank-td/README.md``.
+        """
         b = self.body
         if b is None:
             return None
         th = float(b["xi"][1])
         c, s = math.cos(th), math.sin(th)
-        p = b["poly"] @ np.array([[c, s], [-s, c]])       # rotate
-        p = p + np.array([0.0, float(b["xi"][0])])
+        rel = b["poly"] - b["ref"]                        # shift to reference
+        p = rel @ np.array([[c, s], [-s, c]]) + b["ref"]   # rotate about ref
+        p = p + np.array([0.0, float(b["xi"][0])])        # heave = pure vertical
         return p
 
     def _update_mask(self):
@@ -443,6 +457,39 @@ class SigmaWaveTank:
         M = sparse.diags(free.astype(float)) @ M + sparse.diags((~free).astype(float))
         return M, free
 
+    def body_normal_flux(self):
+        """Divergence source produced by the moving section (per cell).
+
+        The cut-cell mask alone makes the body a *static* obstacle: without this
+        term a forced oscillation produces no fluid motion at all, so the tank
+        can measure no added mass, no radiation damping and no radiation
+        reaction (measured: a driven heave of 1 cm returned exactly zero force).
+        The faces that the mask blocks are body surface, and the fluid must
+        leave them at the body's normal velocity,
+
+            v_x = -th' (z - z_ref),          v_z = h' + th' (x - x_ref),
+
+        so the continuity statement gains ``A_blocked v_body . n``.  The pressure
+        correction only acts on the open fraction, which keeps the projection
+        exact (``max|div u|`` stays at round-off).
+        """
+        if self.body is None:
+            return 0.0
+        b = self.body
+        vel = np.asarray(b["vel"], dtype=float)
+        ref = np.asarray(b["ref"], dtype=float)
+        Hf = self.Hf
+        y_sig = -self.cfg.depth + np.outer(Hf, self.sigc)          # (nx+1, ns)
+        # xi = (heave, pitch): heave is vertical, so it only feeds the
+        # horizontal faces; pitch feeds both through the rigid rotation.
+        u_body = -vel[1] * (y_sig - ref[1])
+        x_face = np.broadcast_to(self.x[:, None], (self.nx, self.ns + 1))
+        w_body = vel[0] + vel[1] * (x_face - ref[0])
+        A_block_x = (1.0 - self.ox) * self.Ax[:, None]
+        A_block_s = (1.0 - self.os) * self.dx
+        return (A_block_x[1:, :] * u_body[1:, :] - A_block_x[:-1, :] * u_body[:-1, :]
+                + A_block_s[:, 1:] * w_body[:, 1:] - A_block_s[:, :-1] * w_body[:, :-1])
+
     def _project(self, us, ws, dt):
         nx, ns = self.nx, self.ns
         Aopen_x = self.ox * self.Ax[:, None]
@@ -450,6 +497,8 @@ class SigmaWaveTank:
         M, free = self._poisson_matrix()
         flux = (Aopen_x[1:, :] * us[1:, :] - Aopen_x[:-1, :] * us[:-1, :]
                 + Aopen_s[:, 1:] * ws[:, 1:] - Aopen_s[:, :-1] * ws[:, :-1])
+        if self.body is not None:
+            flux = flux + self.body_normal_flux()
         rhs = -flux.ravel() / dt
         rhs[~free] = 0.0
         p, info = _solve_spd(M, rhs, self.p.ravel(), self.cfg.cg_rtol,
@@ -466,6 +515,11 @@ class SigmaWaveTank:
         w_new[:, 0] = 0.0
         flux_new = (Aopen_x[1:, :] * u_new[1:, :] - Aopen_x[:-1, :] * u_new[:-1, :]
                     + Aopen_s[:, 1:] * w_new[:, 1:] - Aopen_s[:, :-1] * w_new[:, :-1])
+        if self.body is not None:
+            # the body flux is prescribed, not corrected, so it must enter the
+            # residual diagnostic as well -- otherwise the report of "exact
+            # projection with a body inside" would just be measuring the body.
+            flux_new = flux_new + self.body_normal_flux()
         scale = max(float(np.abs(flux).max()), 1e-30)
         self.div_residual = (float(np.abs(flux_new.ravel()[free]).max() / scale)
                              if free.any() else 0.0)
@@ -504,6 +558,93 @@ class SigmaWaveTank:
         return g * (self.eta[:, None] - self.yc) + self.p
 
     # ----------------------------------------------------------- body forces
+    def pressure_at(self, xq, yq):
+        """Bilinear ``(x, sigma)`` interpolation of the projected pressure ``q``.
+
+        The vertical coordinate is normalised by the local water column, so the
+        interpolation follows the moving grid instead of smearing across it.
+        Points outside the water column are clamped to the nearest interior
+        sample; callers sample slightly outside the body for exactly that
+        reason.
+        """
+        xq = np.atleast_1d(np.asarray(xq, dtype=float))
+        yq = np.atleast_1d(np.asarray(yq, dtype=float))
+        eta = self.eta_at(xq)
+        height = self.cfg.depth + eta
+        sig = np.clip((yq + self.cfg.depth) / np.maximum(height, 1e-12), 0.0, 1.0)
+        # the top sigma node is the Dirichlet surface row: stay inside it
+        sig = np.minimum(sig, 1.0 - 1e-6)
+        fi = np.clip(np.searchsorted(self.x, xq) - 1, 0, self.nx - 2)
+        tx = (xq - self.x[fi]) / self.dx
+        fj = np.clip(sig * self.ns - 0.5, 0.0, self.ns - 1.0 - 1e-9)
+        j0 = np.floor(fj).astype(int)
+        tj = fj - j0
+        p00 = self.p[fi, j0]
+        p10 = self.p[fi + 1, j0]
+        p01 = self.p[fi, j0 + 1]
+        p11 = self.p[fi + 1, j0 + 1]
+        return ((1 - tx) * (1 - tj) * p00 + tx * (1 - tj) * p10
+                + (1 - tx) * tj * p01 + tx * tj * p11)
+
+    def body_force_interpolated(self, sub: int = 4, offset: float | None = None):
+        """Dynamic-pressure force and pitch moment on the section, smooth in ``xi``.
+
+        The cut-cell face-fraction integral in :meth:`body_force` is exact in
+        calm water but *discontinuous* in the body position: every time a face
+        flips between fully solid and partly open the integrated force jumps by
+        ``O(p dx)``.  In a time-domain run that is force noise, and feeding it
+        back into the 2-DOF dynamics destabilises the body (the failure mode
+        recorded in ``docs/wave-tank-td/README.md``: the heave force jumped
+        ``412 -> 23018 N/m`` within one period at fixed geometry).
+
+        Here the pressure is integrated on the *contour* instead: each wetted
+        edge is split into ``sub`` segments and ``q`` is sampled a fraction of a
+        cell outside the body with :meth:`pressure_at`.  The quadrature points
+        move continuously with the body, so the force is continuous.  The
+        hydrostatic part is added exactly from the displaced-area polygon
+        (Archimedes), exactly as in :meth:`body_force`, so the calm-water limit
+        is unchanged.
+        """
+        b = self.body
+        if b is None:
+            return 0.0, 0.0, 0.0
+        g = self.cfg.gravity
+        rho = self.cfg.density
+        poly = self.body_polygon()
+        ref = np.asarray(b["ref"], dtype=float)
+        offset = 0.5 * self.dx if offset is None else float(offset)
+        fx = fy = m5 = 0.0
+        n = len(poly)
+        for k in range(n):
+            a = poly[k]
+            c = poly[(k + 1) % n]
+            d = c - a
+            dl = float(math.hypot(d[0], d[1]))
+            if dl < 1e-14:
+                continue
+            nx_, nz_ = d[1] / dl, -d[0] / dl          # outward normal (CCW polygon)
+            for m in range(sub):
+                t0 = (m + 0.5) / sub
+                mid = a + t0 * d
+                if mid[1] > 0.0:                     # dry part of the section
+                    continue
+                sx = mid[0] + offset * nx_
+                sz = min(mid[1] + offset * nz_, -1e-6)
+                q = float(self.pressure_at(sx, sz)[0])
+                seg = dl / sub
+                dfx = -q * nx_ * seg
+                dfz = -q * nz_ * seg
+                fx += dfx
+                fy += dfz
+                m5 += (mid[0] - ref[0]) * dfz - (mid[1] - ref[1]) * dfx
+        wet = self.wetted_section()
+        fx, fy, m5 = rho * fx, rho * fy, rho * m5
+        if wet is not None and len(wet) >= 3:
+            area, cx, _cz, _ = polygon_properties(wet, rho)
+            fy += rho * g * area
+            m5 += rho * g * area * (cx - ref[0])
+        return fx, fy, m5
+
     def _cell_coverage(self):
         return 0.25 * ((1 - self.ox[:-1, :]) + (1 - self.ox[1:, :])
                        + (1 - self.os[:, :-1]) + (1 - self.os[:, 1:]))
@@ -606,10 +747,42 @@ class SigmaWaveTank:
                 frac[idx] += cnt.mean(axis=(1, 2))
         return float(np.sum(frac * self.V))
 
+    def _apply_prescribed_motion(self, dt: float):
+        """Prescribed kinematics for ``motion='fixed'`` / ``'forced'`` runs.
+
+        A diffraction run holds the section still; a forced-oscillation run
+        drives one DOF with ``xi = xi0 + amp * cos(omega t + phase)``.  Both keep
+        the measured force, which is what the radiation/diffraction evidence
+        needs, and neither feeds the force back into the kinematics -- so the
+        explicit staggered coupling that destabilises the free-body run cannot
+        be excited.
+        """
+        b = self.body
+        mode = b.get("motion", "free")
+        fx, fy, m5 = self.body_force_interpolated()
+        b["force"] = np.array([fx, fy])
+        b["moment"] = m5
+        if mode == "fixed":
+            b["vel"] = np.zeros(2)
+            b["acc"] = np.zeros(2)
+            return
+        spec = b.get("forced") or {}
+        dof = int(spec["dof"])
+        amp = float(spec["amp"])
+        omega = float(spec["omega"])
+        phase = float(spec.get("phase", 0.0))
+        t = self.t
+        b["xi"][dof] = amp * math.cos(omega * t + phase)
+        b["vel"][dof] = -amp * omega * math.sin(omega * t + phase)
+        b["acc"][dof] = -amp * omega ** 2 * math.cos(omega * t + phase)
+
     def _body_dynamics(self, dt: float):
         b = self.body
+        if b.get("motion", "free") != "free":
+            self._apply_prescribed_motion(dt)
+            return
         g = self.cfg.gravity
-        fx, fy, m5 = self.body_force()
+        fx, fy, m5 = self.body_force_interpolated()
         b["force"] = np.array([fx, fy])
         b["moment"] = m5
         m_eff = b["mass"] + b["added"][0]
@@ -624,7 +797,22 @@ class SigmaWaveTank:
         c, sn = math.cos(th), math.sin(th)
         xg = b["ref"][0] + dx * c - dz * sn
         m_weight = -(xg - b["ref"][0]) * b["mass"] * g
-        b["acc"] = np.array([(fy - b["mass"] * g) / m_eff, (m5 + m_weight) / i_eff])
+        # linear radiation damping, supplied at the forcing frequency by the
+        # potential-flow reference (:func:`tensormfvm.wave_tank_td.potential2d`);
+        # without it a 2-DOF section in a tank has no radiation resistance and
+        # the response never settles into a harmonic (see README).
+        damp = b.get("damping", np.zeros(2))
+        force = np.array([fy - b["mass"] * g - damp[0] * b["vel"][0],
+                          m5 + m_weight - damp[1] * b["vel"][1]])
+        # the CG is not at the rotation reference, so the mass matrix couples
+        # heave and pitch (T = m h'^2/2 + m d h' th' + I_ref th'^2/2).  Using
+        # the diagonal (m, I_ref) is a few-percent error on the natural
+        # frequencies of a shallow section; the coupled form is what the
+        # frequency-domain reference solves, so both sides must use it.
+        dcg = float(b["ref"][1] - b["cg"][1])
+        mass_matrix = np.array([[m_eff, m_eff * dcg],
+                                [m_eff * dcg, i_eff]])
+        b["acc"] = np.linalg.solve(mass_matrix, force)
         b["vel"] = b["vel"] + dt * b["acc"]
         b["xi"] = b["xi"] + dt * b["vel"]
         b["xi"][1] = float(np.clip(b["xi"][1], -0.35, 0.35))
