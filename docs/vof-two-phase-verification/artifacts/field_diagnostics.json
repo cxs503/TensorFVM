@@ -1,0 +1,48 @@
+{
+ "fields": {
+  "zalesak_plic": {
+   "bulk_area_error": 0.0038240917782026767,
+   "centroid_offset": 0.000160827452890089,
+   "centroid_numeric": [
+    0.49995159911730136,
+    0.7410291678830885
+   ],
+   "centroid_exact": [
+    0.5,
+    0.7411825394063811
+   ]
+  },
+  "single_vortex_plic": {
+   "bulk_area_error": 0.045774647887323945,
+   "centroid_offset": 0.1107579164646754,
+   "centroid_numeric": [
+    0.3965059070092104,
+    0.7105501739470272
+   ],
+   "centroid_exact": [
+    0.5,
+    0.75
+   ]
+  },
+  "double_vortex_plic": {
+   "bulk_area_error": 0.02631578947368421,
+   "centroid_offset": 3.371633460692653e-05,
+   "centroid_numeric": [
+    0.4999665134331289,
+    0.7499960704887689
+   ],
+   "centroid_exact": [
+    0.5,
+    0.75
+   ]
+  }
+ },
+ "grids": {
+  "zalesak": 128,
+  "single_vortex": 64,
+  "double_vortex": [
+   64,
+   32
+  ]
+ }
+}
