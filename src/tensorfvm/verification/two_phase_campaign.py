@@ -480,7 +480,8 @@ def measure_front_height(liquid: torch.Tensor, dx: float, dy: float,
 
 
 def run_dam_break_case(cfg: DamBreakRun, progress: bool = True,
-                       max_wall_seconds: float | None = None) -> dict:
+                       max_wall_seconds: float | None = None,
+                       return_field: bool = False) -> dict:
     """Integrate the dam break and record the surge front / residual height.
 
     Front position = rightmost column containing liquid (``alpha > 0.5``);
@@ -558,7 +559,7 @@ def run_dam_break_case(cfg: DamBreakRun, progress: bool = True,
         if max_wall_seconds and time.time() - t0 > max_wall_seconds:
             truncated = True
             break
-    return {
+    result = {
         "config": asdict(cfg),
         "grid": {"nx": cfg.nx, "ny": cfg.ny, "dx": dx, "dy": dy,
                  "cells_across_column": cfg.column_width / dx},
@@ -569,6 +570,12 @@ def run_dam_break_case(cfg: DamBreakRun, progress: bool = True,
         "worst_step_relative_drift": worst_step,
         "final_volume_drift": history[-1]["volume_drift"] if history else float("nan"),
     }
+    if return_field:
+        # Liquid fraction at the end of the run, for field figures / artifact
+        # dumps.  Kept out of the default return so existing callers (and their
+        # JSON payloads) are unchanged bit-for-bit.
+        result["final_alpha"] = solver.alpha.detach().cpu().clone()
+    return result
 
 
 def _interp(x: float, xs, ys) -> float:
