@@ -1,0 +1,30 @@
+{
+ "alpha_max": 1.0,
+ "alpha_min": 0.0,
+ "bounded": [
+  0.0,
+  1.0
+ ],
+ "case": "zalesak",
+ "cells": [
+  256,
+  256
+ ],
+ "cfl": 0.75,
+ "cou": 0.75,
+ "divergence_max": 0.0,
+ "dt": 0.0009354536950420954,
+ "dx": 0.00390625,
+ "l1": 0.0005473601216768602,
+ "linf": 1.0,
+ "liquid_volume": 0.06322070305888186,
+ "mass_drift_relative": 1.5804960619182222e-14,
+ "mass_final": 0.06322070305888086,
+ "mass_initial": 0.06322070305888186,
+ "note": "solid-body rotation, one revolution == analytic initial field",
+ "relative_l1": 0.008657925255387708,
+ "scheme": "plic",
+ "steps": 1069,
+ "symmetric_difference": 0.007913669064748202,
+ "worst_step_drift_relative": 1.602447396111531e-14
+}

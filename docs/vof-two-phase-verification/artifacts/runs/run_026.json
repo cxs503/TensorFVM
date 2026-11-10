@@ -1,0 +1,30 @@
+{
+ "alpha_max": 0.45306044467136886,
+ "alpha_min": 8.39935693608132e-37,
+ "bounded": [
+  8.39935693608132e-37,
+  0.45306044467136886
+ ],
+ "case": "double_vortex",
+ "cells": [
+  128,
+  64
+ ],
+ "cfl": 0.75,
+ "cou": 0.75,
+ "divergence_max": 1.3322676295501878e-14,
+ "dt": 0.005865102639296188,
+ "dx": 0.015625,
+ "l1": 0.09431106643440403,
+ "linf": 0.7943845749530108,
+ "liquid_volume": 0.07068583470574982,
+ "mass_drift_relative": 0.0006082231062001862,
+ "mass_final": 0.07064284194780074,
+ "mass_initial": 0.07068583470574982,
+ "note": "two counter-rotating cells (psi = sin(pi x) sin(2 pi y)/pi) on a 2:1 box; at t=T the analytic solution is the initial field",
+ "relative_l1": 1.3342286587829237,
+ "scheme": "donor",
+ "steps": 1364,
+ "symmetric_difference": 1.0,
+ "worst_step_drift_relative": 0.0006082231062001862
+}

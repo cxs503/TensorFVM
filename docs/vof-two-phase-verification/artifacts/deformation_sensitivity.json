@@ -1,0 +1,381 @@
+{
+ "durations": [
+  1.0,
+  2.0,
+  4.0
+ ],
+ "rows": [
+  {
+   "T": 1.0,
+   "alpha_max": 1.0,
+   "alpha_min": 0.0,
+   "bounded": [
+    0.0,
+    1.0
+   ],
+   "case": "single_vortex",
+   "cells": [
+    64,
+    64
+   ],
+   "cfl": 0.75,
+   "cou": 0.75,
+   "divergence_max": 7.105427357601002e-15,
+   "dt": 0.011627906976744186,
+   "dx": 0.015625,
+   "l1": 0.013146369887984993,
+   "linf": 1.0,
+   "liquid_volume": 0.07068583470574982,
+   "mass_drift_relative": 5.889916076786e-16,
+   "mass_final": 0.07068583470574986,
+   "mass_initial": 0.07068583470574982,
+   "note": "Rider-Kothe 1995 vortex; at t=T the analytic solution is the initial field",
+   "relative_l1": 0.18598308901225472,
+   "scheme": "plic",
+   "steps": 86,
+   "symmetric_difference": 0.18309859154929578,
+   "worst_step_drift_relative": 1.1779832153572e-15
+  },
+  {
+   "T": 1.0,
+   "alpha_max": 1.0,
+   "alpha_min": 0.0,
+   "bounded": [
+    0.0,
+    1.0
+   ],
+   "case": "single_vortex",
+   "cells": [
+    128,
+    128
+   ],
+   "cfl": 0.75,
+   "cou": 0.75,
+   "divergence_max": 1.4210854715202004e-14,
+   "dt": 0.005847953216374269,
+   "dx": 0.0078125,
+   "l1": 0.011835255671440597,
+   "linf": 1.0,
+   "liquid_volume": 0.07068583470575535,
+   "mass_drift_relative": 1.3743137512499593e-15,
+   "mass_final": 0.07068583470575525,
+   "mass_initial": 0.07068583470575535,
+   "note": "Rider-Kothe 1995 vortex; at t=T the analytic solution is the initial field",
+   "relative_l1": 0.16743461714369418,
+   "scheme": "plic",
+   "steps": 171,
+   "symmetric_difference": 0.1482758620689655,
+   "worst_step_drift_relative": 1.9633053589285135e-15
+  },
+  {
+   "T": 1.0,
+   "alpha_max": 1.0,
+   "alpha_min": 0.0,
+   "bounded": [
+    0.0,
+    1.0
+   ],
+   "case": "double_vortex",
+   "cells": [
+    64,
+    32
+   ],
+   "cfl": 0.75,
+   "cou": 0.75,
+   "divergence_max": 6.217248937900877e-15,
+   "dt": 0.011764705882352941,
+   "dx": 0.03125,
+   "l1": 0.0036521874956234306,
+   "linf": 0.2520286425375976,
+   "liquid_volume": 0.0706858347057204,
+   "mass_drift_relative": 1.9633053589294838e-15,
+   "mass_final": 0.07068583470572054,
+   "mass_initial": 0.0706858347057204,
+   "note": "two counter-rotating cells (psi = sin(pi x) sin(2 pi y)/pi) on a 2:1 box; at t=T the analytic solution is the initial field",
+   "relative_l1": 0.05166788382464796,
+   "scheme": "plic",
+   "steps": 85,
+   "symmetric_difference": 0.05263157894736842,
+   "worst_step_drift_relative": 2.3559664307153806e-15
+  },
+  {
+   "T": 1.0,
+   "alpha_max": 1.0,
+   "alpha_min": 0.0,
+   "bounded": [
+    0.0,
+    1.0
+   ],
+   "case": "double_vortex",
+   "cells": [
+    128,
+    64
+   ],
+   "cfl": 0.75,
+   "cou": 0.75,
+   "divergence_max": 1.3322676295501878e-14,
+   "dt": 0.005847953216374269,
+   "dx": 0.015625,
+   "l1": 0.0024997962794430337,
+   "linf": 0.3487394100967567,
+   "liquid_volume": 0.07068583470574982,
+   "mass_drift_relative": 1.3743137512500668e-15,
+   "mass_final": 0.07068583470574973,
+   "mass_initial": 0.07068583470574982,
+   "note": "two counter-rotating cells (psi = sin(pi x) sin(2 pi y)/pi) on a 2:1 box; at t=T the analytic solution is the initial field",
+   "relative_l1": 0.03536488307521807,
+   "scheme": "plic",
+   "steps": 171,
+   "symmetric_difference": 0.04929577464788732,
+   "worst_step_drift_relative": 1.3743137512500668e-15
+  },
+  {
+   "T": 2.0,
+   "alpha_max": 1.0,
+   "alpha_min": 0.0,
+   "bounded": [
+    0.0,
+    1.0
+   ],
+   "case": "single_vortex",
+   "cells": [
+    64,
+    64
+   ],
+   "cfl": 0.75,
+   "cou": 0.75,
+   "divergence_max": 7.105427357601002e-15,
+   "dt": 0.011695906432748537,
+   "dx": 0.015625,
+   "l1": 0.020966626121973825,
+   "linf": 1.0,
+   "liquid_volume": 0.07068583470574982,
+   "mass_drift_relative": 7.853221435714667e-16,
+   "mass_final": 0.07068583470574988,
+   "mass_initial": 0.07068583470574982,
+   "note": "Rider-Kothe 1995 vortex; at t=T the analytic solution is the initial field",
+   "relative_l1": 0.2966170833131342,
+   "scheme": "plic",
+   "steps": 171,
+   "symmetric_difference": 0.31690140845070425,
+   "worst_step_drift_relative": 1.1779832153572e-15
+  },
+  {
+   "T": 2.0,
+   "alpha_max": 1.0,
+   "alpha_min": 0.0,
+   "bounded": [
+    0.0,
+    1.0
+   ],
+   "case": "single_vortex",
+   "cells": [
+    128,
+    128
+   ],
+   "cfl": 0.75,
+   "cou": 0.75,
+   "divergence_max": 1.4210854715202004e-14,
+   "dt": 0.005847953216374269,
+   "dx": 0.0078125,
+   "l1": 0.01837909399266953,
+   "linf": 1.0,
+   "liquid_volume": 0.07068583470575535,
+   "mass_drift_relative": 1.5706442871428107e-15,
+   "mass_final": 0.07068583470575546,
+   "mass_initial": 0.07068583470575535,
+   "note": "Rider-Kothe 1995 vortex; at t=T the analytic solution is the initial field",
+   "relative_l1": 0.26001099186529203,
+   "scheme": "plic",
+   "steps": 342,
+   "symmetric_difference": 0.23879310344827587,
+   "worst_step_drift_relative": 2.7486275024999187e-15
+  },
+  {
+   "T": 2.0,
+   "alpha_max": 1.0,
+   "alpha_min": 0.0,
+   "bounded": [
+    0.0,
+    1.0
+   ],
+   "case": "double_vortex",
+   "cells": [
+    64,
+    32
+   ],
+   "cfl": 0.75,
+   "cou": 0.75,
+   "divergence_max": 6.217248937900877e-15,
+   "dt": 0.011764705882352941,
+   "dx": 0.03125,
+   "l1": 0.006441797898839791,
+   "linf": 0.3513409122575241,
+   "liquid_volume": 0.0706858347057204,
+   "mass_drift_relative": 5.889916076788452e-16,
+   "mass_final": 0.07068583470572044,
+   "mass_initial": 0.0706858347057204,
+   "note": "two counter-rotating cells (psi = sin(pi x) sin(2 pi y)/pi) on a 2:1 box; at t=T the analytic solution is the initial field",
+   "relative_l1": 0.09113279804444999,
+   "scheme": "plic",
+   "steps": 170,
+   "symmetric_difference": 0.10526315789473684,
+   "worst_step_drift_relative": 9.816526794647419e-16
+  },
+  {
+   "T": 2.0,
+   "alpha_max": 1.0,
+   "alpha_min": 0.0,
+   "bounded": [
+    0.0,
+    1.0
+   ],
+   "case": "double_vortex",
+   "cells": [
+    128,
+    64
+   ],
+   "cfl": 0.75,
+   "cou": 0.75,
+   "divergence_max": 1.3322676295501878e-14,
+   "dt": 0.005865102639296188,
+   "dx": 0.015625,
+   "l1": 0.004068622040292388,
+   "linf": 0.5129187694448007,
+   "liquid_volume": 0.07068583470574982,
+   "mass_drift_relative": 3.9266107178573335e-16,
+   "mass_final": 0.0706858347057498,
+   "mass_initial": 0.07068583470574982,
+   "note": "two counter-rotating cells (psi = sin(pi x) sin(2 pi y)/pi) on a 2:1 box; at t=T the analytic solution is the initial field",
+   "relative_l1": 0.05755922749203148,
+   "scheme": "plic",
+   "steps": 341,
+   "symmetric_difference": 0.06338028169014084,
+   "worst_step_drift_relative": 1.3743137512500668e-15
+  },
+  {
+   "T": 4.0,
+   "alpha_max": 1.0,
+   "alpha_min": 0.0,
+   "bounded": [
+    0.0,
+    1.0
+   ],
+   "case": "single_vortex",
+   "cells": [
+    64,
+    64
+   ],
+   "cfl": 0.75,
+   "cou": 0.75,
+   "divergence_max": 7.105427357601002e-15,
+   "dt": 0.011730205278592375,
+   "dx": 0.015625,
+   "l1": 0.03628820615975431,
+   "linf": 1.0,
+   "liquid_volume": 0.07068583470574982,
+   "mass_drift_relative": 2.3559664307144e-15,
+   "mass_final": 0.07068583470574966,
+   "mass_initial": 0.07068583470574982,
+   "note": "Rider-Kothe 1995 vortex; at t=T the analytic solution is the initial field",
+   "relative_l1": 0.5133731010012746,
+   "scheme": "plic",
+   "steps": 341,
+   "symmetric_difference": 0.528169014084507,
+   "worst_step_drift_relative": 2.3559664307144e-15
+  },
+  {
+   "T": 4.0,
+   "alpha_max": 1.0,
+   "alpha_min": 0.0,
+   "bounded": [
+    0.0,
+    1.0
+   ],
+   "case": "single_vortex",
+   "cells": [
+    128,
+    128
+   ],
+   "cfl": 0.75,
+   "cou": 0.75,
+   "divergence_max": 1.4210854715202004e-14,
+   "dt": 0.005856515373352855,
+   "dx": 0.0078125,
+   "l1": 0.029050604391068626,
+   "linf": 1.0,
+   "liquid_volume": 0.07068583470575535,
+   "mass_drift_relative": 0.0,
+   "mass_final": 0.07068583470575535,
+   "mass_initial": 0.07068583470575535,
+   "note": "Rider-Kothe 1995 vortex; at t=T the analytic solution is the initial field",
+   "relative_l1": 0.41098198121303764,
+   "scheme": "plic",
+   "steps": 683,
+   "symmetric_difference": 0.4,
+   "worst_step_drift_relative": 3.5339496460713242e-15
+  },
+  {
+   "T": 4.0,
+   "alpha_max": 1.0,
+   "alpha_min": 0.0,
+   "bounded": [
+    0.0,
+    1.0
+   ],
+   "case": "double_vortex",
+   "cells": [
+    64,
+    32
+   ],
+   "cfl": 0.75,
+   "cou": 0.75,
+   "divergence_max": 6.217248937900877e-15,
+   "dt": 0.011764705882352941,
+   "dx": 0.03125,
+   "l1": 0.012781432602872386,
+   "linf": 0.6650648441832653,
+   "liquid_volume": 0.0706858347057204,
+   "mass_drift_relative": 1.5706442871435872e-15,
+   "mass_final": 0.07068583470572051,
+   "mass_initial": 0.0706858347057204,
+   "note": "two counter-rotating cells (psi = sin(pi x) sin(2 pi y)/pi) on a 2:1 box; at t=T the analytic solution is the initial field",
+   "relative_l1": 0.1808202825372878,
+   "scheme": "plic",
+   "steps": 340,
+   "symmetric_difference": 0.13157894736842105,
+   "worst_step_drift_relative": 1.7669748230365356e-15
+  },
+  {
+   "T": 4.0,
+   "alpha_max": 1.0,
+   "alpha_min": 0.0,
+   "bounded": [
+    0.0,
+    1.0
+   ],
+   "case": "double_vortex",
+   "cells": [
+    128,
+    64
+   ],
+   "cfl": 0.75,
+   "cou": 0.75,
+   "divergence_max": 1.3322676295501878e-14,
+   "dt": 0.005865102639296188,
+   "dx": 0.015625,
+   "l1": 0.008092335102614728,
+   "linf": 0.7964040570281081,
+   "liquid_volume": 0.07068583470574982,
+   "mass_drift_relative": 3.1412885742858668e-15,
+   "mass_final": 0.0706858347057496,
+   "mass_initial": 0.07068583470574982,
+   "note": "two counter-rotating cells (psi = sin(pi x) sin(2 pi y)/pi) on a 2:1 box; at t=T the analytic solution is the initial field",
+   "relative_l1": 0.11448312291000605,
+   "scheme": "plic",
+   "steps": 682,
+   "symmetric_difference": 0.09859154929577464,
+   "worst_step_drift_relative": 4.1229412537502e-15
+  }
+ ]
+}
