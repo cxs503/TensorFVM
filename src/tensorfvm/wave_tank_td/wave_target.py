@@ -80,8 +80,10 @@ class WaveTarget:
     def __init__(self, amp: float, period: float, depth: float,
                  gravity: float = GRAVITY, phase0: float = 0.0,
                  order2: bool = True):
-        if amp <= 0.0 or period <= 0.0 or depth <= 0.0:
-            raise ValueError("amp, period and depth must be positive")
+        if amp < 0.0 or period <= 0.0 or depth <= 0.0:
+            # amp = 0 is the calm-water target used by forced-oscillation runs:
+            # the length scale (and hence k, omega) must still be defined.
+            raise ValueError("amp must be non-negative and period/depth positive")
         self.amp = float(amp)
         self.period = float(period)
         self.omega = 2.0 * math.pi / self.period
