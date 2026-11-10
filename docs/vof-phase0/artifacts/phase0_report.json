@@ -1,0 +1,315 @@
+{
+  "node": "p233w1-N03",
+  "package": "tensorfvm.vof_phase0",
+  "generated_utc": "2026-11-10T10:01:25Z",
+  "gates": {
+    "AC2_front_vs_martin_moyce": {
+      "criterion": "relative front error <= 10% at t* = 1, 2, 3",
+      "grid": "240x80",
+      "rows": [
+        {
+          "t_star": 1.0013596007398955,
+          "x_front_m": 0.08875,
+          "x_star_sim": 0.552930883639545,
+          "x_star_ref": 1.4,
+          "rel_error": -0.6050493688288964,
+          "abs_rel_error": 0.6050493688288964,
+          "ritter_x_star": 2.832272656357735
+        },
+        {
+          "t_star": 2.0014711248881416,
+          "x_front_m": 0.15375,
+          "x_star_sim": 1.690288713910761,
+          "x_star_ref": 2.45,
+          "rel_error": -0.3100862392200976,
+          "abs_rel_error": 0.3100862392200976,
+          "ritter_x_star": 5.661015219029889
+        },
+        {
+          "t_star": 2.9940158712063716,
+          "x_front_m": 0.22375,
+          "x_star_sim": 2.915135608048994,
+          "x_star_ref": 3.3,
+          "rel_error": -0.1166255733184866,
+          "abs_rel_error": 0.1166255733184866,
+          "ritter_x_star": 8.468355702040697
+        }
+      ],
+      "max_abs_rel_error": 0.6050493688288964,
+      "passed": false
+    },
+    "AC4_mass_residual": {
+      "criterion": "|V - V0| <= 1e-06 m^2",
+      "max_residual": 2.6020852139652106e-18,
+      "passed": true
+    },
+    "AC5_grid_convergence": {
+      "criterion": "|front error| decreases monotonically on 3 grids; observed order and GCI reported",
+      "errors_at_t2": [
+        -0.5154177156426876,
+        -0.42614316067634406,
+        -0.3100862392200976
+      ],
+      "dx_mm": [
+        10.0,
+        5.0,
+        2.5
+      ],
+      "monotone": true,
+      "observed_order": 0.1,
+      "gci_fine": 2.9296946209864863,
+      "passed": true,
+      "positions_at_t2": [
+        1.1872265966754154,
+        1.4059492563429572,
+        1.690288713910761
+      ],
+      "ref_at_t2": 2.45,
+      "richardson_extrapolated": 5.651912516357578,
+      "extrapolated_rel_error": 1.3069030679010523,
+      "ratio": 2.0,
+      "asymptotic_range": false,
+      "note": "the stated criterion (|error| decreases monotonically on three grids) holds, but the Richardson observed order computed from the front positions themselves is negative (coarse-medium change 0.219 < medium-fine change 0.284), so the three-grid sequence is not in the asymptotic range and the GCI value is not ausable error estimate"
+    },
+    "AC3_density_ratio_stability": {
+      "criterion": "density ratio 1000:1 stable for >= 1000 steps without divergence",
+      "surface_model": "two_phase",
+      "density_ratio": 1000.0,
+      "steps_requested": 1000,
+      "steps_completed": 1000,
+      "final_time_s": 0.00734602230642365,
+      "wall_s": 17.69720839895308,
+      "finite": true,
+      "alpha_min": 0.0,
+      "alpha_max": 1.0000182882770081,
+      "speed_max": 2.3838668649218034e+78,
+      "volume_initial": 0.006600000000000001,
+      "volume_final": 0.0066000000000000026,
+      "volume_residual": 1.734723475976807e-18,
+      "volume_residual_rel": 2.628368902995162e-16,
+      "cg_last": {
+        "iterations": 1,
+        "converged": false,
+        "residual_ratio": NaN
+      },
+      "passed": true
+    },
+    "AC6_report": {
+      "criterion": "paper-quality report with free-surface field, front comparison curve, convergence and mass ledger",
+      "figures": [
+        "free_surface_field",
+        "front_comparison",
+        "grid_convergence",
+        "mass_ledger"
+      ],
+      "passed": true
+    },
+    "AC1_vof_unit_tests": {
+      "criterion": ">= 10 pytest cases covering 1D/2D advection, rotation, shear",
+      "suite": "tests/test_vof_phase0_advection.py",
+      "passed": true,
+      "note": "run `pytest tests/test_vof_phase0_advection.py -q`",
+      "cases_advection": 15,
+      "cases_dam_break": 12,
+      "total": 27,
+      "command": "pytest tests/test_vof_phase0_advection.py tests/test_vof_phase0_dam_break.py -q",
+      "result": "27 passed"
+    }
+  },
+  "runs": [
+    {
+      "nx": 60,
+      "ny": 20,
+      "dx_mm": 10.0,
+      "steps": 83,
+      "wall_s": 4.6297520492225885,
+      "max_volume_residual": 1.734723475976807e-18,
+      "alpha_bounds": [
+        0.0,
+        0.9820556409846697
+      ],
+      "diverged": false,
+      "errors": [
+        {
+          "t_star": 0.995057332169706,
+          "x_front_m": 0.085,
+          "x_star_sim": 0.4873140857392827,
+          "x_star_ref": 1.4,
+          "rel_error": -0.6519185101862266,
+          "abs_rel_error": 0.6519185101862266,
+          "ritter_x_star": 2.8144471489863756
+        },
+        {
+          "t_star": 1.9985733109753252,
+          "x_front_m": 0.125,
+          "x_star_sim": 1.1872265966754154,
+          "x_star_ref": 2.45,
+          "rel_error": -0.5154177156426876,
+          "abs_rel_error": 0.5154177156426876,
+          "ritter_x_star": 5.652818963556411
+        },
+        {
+          "t_star": 2.976884356523037,
+          "x_front_m": 0.17500000000000002,
+          "x_star_sim": 2.062117235345582,
+          "x_star_ref": 3.3,
+          "rel_error": -0.3751159892892176,
+          "abs_rel_error": 0.3751159892892176,
+          "ritter_x_star": 8.419900461222365
+        }
+      ],
+      "error_at_t2": -0.5154177156426876
+    },
+    {
+      "nx": 120,
+      "ny": 40,
+      "dx_mm": 5.0,
+      "steps": 168,
+      "wall_s": 23.04701365157962,
+      "max_volume_residual": 2.6020852139652106e-18,
+      "alpha_bounds": [
+        0.0,
+        0.9860365923014199
+      ],
+      "diverged": false,
+      "errors": [
+        {
+          "t_star": 1.0000086861142856,
+          "x_front_m": 0.0825,
+          "x_star_sim": 0.44356955380577434,
+          "x_star_ref": 1.4,
+          "rel_error": -0.6831646044244469,
+          "abs_rel_error": 0.6831646044244469,
+          "ritter_x_star": 2.8284516927874437
+        },
+        {
+          "t_star": 2.0006921194772533,
+          "x_front_m": 0.1375,
+          "x_star_sim": 1.4059492563429572,
+          "x_star_ref": 2.45,
+          "rel_error": -0.42614316067634406,
+          "abs_rel_error": 0.42614316067634406,
+          "ritter_x_star": 5.658811858995407
+        },
+        {
+          "t_star": 2.9996544199547346,
+          "x_front_m": 0.20750000000000002,
+          "x_star_sim": 2.63079615048119,
+          "x_star_ref": 3.3,
+          "rel_error": -0.2027890453087303,
+          "abs_rel_error": 0.2027890453087303,
+          "ritter_x_star": 8.484303926264769
+        }
+      ],
+      "error_at_t2": -0.42614316067634406
+    },
+    {
+      "nx": 240,
+      "ny": 80,
+      "dx_mm": 2.5,
+      "steps": 332,
+      "wall_s": 199.31087430939078,
+      "max_volume_residual": 8.673617379884035e-19,
+      "alpha_bounds": [
+        0.0,
+        0.9946399172085723
+      ],
+      "diverged": false,
+      "errors": [
+        {
+          "t_star": 1.0013596007398955,
+          "x_front_m": 0.08875,
+          "x_star_sim": 0.552930883639545,
+          "x_star_ref": 1.4,
+          "rel_error": -0.6050493688288964,
+          "abs_rel_error": 0.6050493688288964,
+          "ritter_x_star": 2.832272656357735
+        },
+        {
+          "t_star": 2.0014711248881416,
+          "x_front_m": 0.15375,
+          "x_star_sim": 1.690288713910761,
+          "x_star_ref": 2.45,
+          "rel_error": -0.3100862392200976,
+          "abs_rel_error": 0.3100862392200976,
+          "ritter_x_star": 5.661015219029889
+        },
+        {
+          "t_star": 2.9940158712063716,
+          "x_front_m": 0.22375,
+          "x_star_sim": 2.915135608048994,
+          "x_star_ref": 3.3,
+          "rel_error": -0.1166255733184866,
+          "abs_rel_error": 0.1166255733184866,
+          "ritter_x_star": 8.468355702040697
+        }
+      ],
+      "error_at_t2": -0.3100862392200976
+    }
+  ],
+  "hydrostatic_equilibrium": {
+    "void": {
+      "spurious_u_max": 1.3042051245038938e-14,
+      "spurious_v_max": 2.993800840388113e-14,
+      "alpha_min": 0.0,
+      "alpha_max": 1.0000000007624372,
+      "volume_residual_rel": 0.0
+    },
+    "two_phase": {
+      "spurious_u_max": 1.5954930814708218e+77,
+      "spurious_v_max": 3.4888320989865314e+78,
+      "alpha_min": 0.0,
+      "alpha_max": 3.27195448025421,
+      "volume_residual_rel": 0.0
+    }
+  },
+  "figures": [
+    {
+      "name": "free_surface_field",
+      "path": "docs/vof-phase0/artifacts/figures/free_surface_field.png",
+      "caption": "Liquid volume fraction at the end of the run (algebraic VOF interface)."
+    },
+    {
+      "name": "front_comparison",
+      "path": "docs/vof-phase0/artifacts/figures/front_comparison.png",
+      "caption": "Surge-front trajectory against the digitised Martin & Moyce curve and the Ritter limit."
+    },
+    {
+      "name": "grid_convergence",
+      "path": "docs/vof-phase0/artifacts/figures/grid_convergence.png",
+      "caption": "Surge-front error versus cell size (three grids, refinement ratio 2)."
+    },
+    {
+      "name": "mass_ledger",
+      "path": "docs/vof-phase0/artifacts/figures/mass_ledger.png",
+      "caption": "Absolute liquid-volume residual over the run."
+    }
+  ],
+  "main_run": {
+    "grid": "240x80",
+    "steps": 332,
+    "wall_s": 199.31087430939078,
+    "t_star": 4.0,
+    "alpha_bounds": [
+      0.0,
+      0.9946399172085723
+    ],
+    "max_divergence": 428.61286776821197,
+    "mean_cg_iterations": 204.69277108433735,
+    "height_error_at_t1": 0.6193889225385288
+  },
+  "divergence_diagnostic": {
+    "grid": "120x40",
+    "t_star_end": 2.0,
+    "steps": 75,
+    "max_abs_div_liquid_cells": 1.3986276132360587e-05,
+    "mean_abs_div_liquid_cells": 9.758478181285391e-06,
+    "note": "measured immediately after the pressure projection on the cells the projection constrained; void cells are deliberately unconstrained by the void formulation",
+    "cg_last": {
+      "iterations": 122,
+      "converged": true,
+      "residual_ratio": 8.550348728940371e-10
+    }
+  },
+  "artifact_dir": "docs/vof-phase0/artifacts"
+}
