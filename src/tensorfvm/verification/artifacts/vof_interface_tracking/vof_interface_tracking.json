@@ -1,0 +1,810 @@
+{
+ "analytic_area_slotted_disk": 0.055968436431187124,
+ "diagonal": {
+  "cfl": 0.4,
+  "donor_cell": [
+   {
+    "case": "diagonal_advection",
+    "cells": 32,
+    "courant": 0.4,
+    "dt": 0.0125,
+    "l1": 0.23835590234212387,
+    "linf": 0.8189757578826147,
+    "mass_drift": 0.0,
+    "max_step_residual": 1.8947806286936009e-16,
+    "metrics": {
+     "contour_area": 0.21321487426757812,
+     "l1": 0.23835590234212387,
+     "linf": 0.8189757578826147,
+     "mass": 0.29296875,
+     "max_transition_width": 32.0,
+     "maximum": 0.8514369928940465,
+     "minimum": 0.009325839820807752,
+     "mixed_fraction": 0.8837890625,
+     "peak_retention": 0.8514369928940465,
+     "relative_l1": 0.8135881466611161,
+     "row_transition_width": 23.0
+    },
+    "observed_order": null,
+    "relative_l1": 0.8135881466611161,
+    "scheme": "donor_cell",
+    "steps": 80
+   },
+   {
+    "case": "diagonal_advection",
+    "cells": 64,
+    "courant": 0.4,
+    "dt": 0.00625,
+    "l1": 0.1766115713676812,
+    "linf": 0.8439456207461292,
+    "mass_drift": 0.0,
+    "max_step_residual": 1.9334496211159193e-16,
+    "metrics": {
+     "contour_area": 0.24715423583984375,
+     "l1": 0.1766115713676812,
+     "linf": 0.8439456207461292,
+     "mass": 0.287109375,
+     "max_transition_width": 64.0,
+     "maximum": 0.9674071350532992,
+     "minimum": 0.0001981993064427385,
+     "mixed_fraction": 0.708251953125,
+     "peak_retention": 0.9674071350532992,
+     "relative_l1": 0.6151369016343726,
+     "row_transition_width": 43.0
+    },
+    "observed_order": 0.4325374812684879,
+    "relative_l1": 0.6151369016343726,
+    "scheme": "donor_cell",
+    "steps": 160
+   },
+   {
+    "case": "diagonal_advection",
+    "cells": 128,
+    "courant": 0.4,
+    "dt": 0.003125,
+    "l1": 0.12901852395311536,
+    "linf": 0.854581410463554,
+    "mass_drift": 0.0,
+    "max_step_residual": 3.9067641828734025e-16,
+    "metrics": {
+     "contour_area": 0.26429128646850586,
+     "l1": 0.12901852395311536,
+     "linf": 0.854581410463554,
+     "mass": 0.2841796875,
+     "max_transition_width": 103.0,
+     "maximum": 0.9980890487386689,
+     "minimum": 9.904772481701297e-08,
+     "mixed_fraction": 0.5072021484375,
+     "peak_retention": 0.9980890487386689,
+     "relative_l1": 0.45400332827488016,
+     "row_transition_width": 84.0
+    },
+    "observed_order": 0.45300165285893745,
+    "relative_l1": 0.45400332827488016,
+    "scheme": "donor_cell",
+    "steps": 320
+   }
+  ],
+  "donor_cell_order_fit": 0.4427695670637128,
+  "donor_cell_order_last": 0.45300165285893745,
+  "donor_cell_order_min": 0.4325374812684879,
+  "plic": [
+   {
+    "case": "diagonal_advection",
+    "cells": 32,
+    "courant": 0.4,
+    "dt": 0.0125,
+    "l1": 0.016414209974329786,
+    "linf": 1.0,
+    "mass_drift": 5.305385760342082e-15,
+    "max_step_residual": 2.0842586915629617e-15,
+    "metrics": {
+     "contour_area": 0.2920951843261719,
+     "l1": 0.016414209974329786,
+     "linf": 1.0,
+     "mass": 0.29296875000000155,
+     "max_transition_width": 6.0,
+     "maximum": 1.0,
+     "minimum": 0.0,
+     "mixed_fraction": 0.0654296875,
+     "peak_retention": 1.0,
+     "relative_l1": 0.05602717004571234,
+     "row_transition_width": 22.0
+    },
+    "observed_order": null,
+    "relative_l1": 0.05602717004571234,
+    "scheme": "plic",
+    "steps": 80
+   },
+   {
+    "case": "diagonal_advection",
+    "cells": 64,
+    "courant": 0.4,
+    "dt": 0.00625,
+    "l1": 0.007310708748751197,
+    "linf": 1.0,
+    "mass_drift": 5.607003901236165e-15,
+    "max_step_residual": 1.3534147347811437e-15,
+    "metrics": {
+     "contour_area": 0.2870464324951172,
+     "l1": 0.007310708748751197,
+     "linf": 1.0,
+     "mass": 0.2871093750000016,
+     "max_transition_width": 14.0,
+     "maximum": 1.0,
+     "minimum": 0.0,
+     "mixed_fraction": 0.03466796875,
+     "peak_retention": 1.0,
+     "relative_l1": 0.025463148839187842,
+     "row_transition_width": 42.0
+    },
+    "observed_order": 1.1668621312857506,
+    "relative_l1": 0.025463148839187842,
+    "scheme": "plic",
+    "steps": 160
+   },
+   {
+    "case": "diagonal_advection",
+    "cells": 128,
+    "courant": 0.4,
+    "dt": 0.003125,
+    "l1": 0.003322799116784689,
+    "linf": 1.0,
+    "mass_drift": 8.985557620608827e-15,
+    "max_step_residual": 5.8601462743101055e-16,
+    "metrics": {
+     "contour_area": 0.28419017791748047,
+     "l1": 0.003322799116784689,
+     "linf": 1.0,
+     "mass": 0.28417968750000255,
+     "max_transition_width": 43.0,
+     "maximum": 1.0,
+     "minimum": 0.0,
+     "mixed_fraction": 0.01812744140625,
+     "peak_retention": 1.0,
+     "relative_l1": 0.01169259895390901,
+     "row_transition_width": 84.0
+    },
+    "observed_order": 1.1376122013510308,
+    "relative_l1": 0.01169259895390901,
+    "scheme": "plic",
+    "steps": 320
+   }
+  ],
+  "plic_order_fit": 1.1522371663183906,
+  "plic_order_last": 1.1376122013510308,
+  "plic_order_min": 1.1376122013510308,
+  "resolutions": [
+   32,
+   64,
+   128
+  ]
+ },
+ "figures": [
+  "zalesak_rotation.png",
+  "vortex_reversal.png",
+  "diagonal_convergence.png",
+  "zalesak_area_drift.png"
+ ],
+ "module": "tensorfvm.verification.vof_interface_tracking",
+ "reference": "tensorfvm.verification.vof_plic_interface.donor_advect_periodic",
+ "scheme_under_test": "tensorfvm.vof_plic.advect_plic: PLIC with Youngs normal, exact cut-area inverse (bisection), dimensional splitting, alternating sweep order",
+ "settings": {
+  "cfl": 0.4,
+  "domain": 1.0,
+  "resolutions": [
+   32,
+   64,
+   128
+  ],
+  "subcells": 16
+ },
+ "verdict": {
+  "all_pass": true,
+  "checks": {
+   "diagonal_l1_order": {
+    "fit": 1.1522371663183906,
+    "pass": true,
+    "rule": "value >= threshold (finest resolution pair, PLIC)",
+    "target": 1.0,
+    "threshold": 0.95,
+    "value": 1.1376122013510308
+   },
+   "step_mass_residual": {
+    "pass": true,
+    "rule": "value < threshold (worst per-step relative drift, all PLIC runs)",
+    "threshold": 1e-12,
+    "value": 1.0150610510858548e-15
+   },
+   "vortex_mass_drift": {
+    "cells": 128,
+    "pass": true,
+    "rule": "value < threshold on the finest PLIC grid",
+    "threshold": 0.001,
+    "value": 6.207739532979034e-15
+   },
+   "zalesak_area_drift": {
+    "cells": 128,
+    "pass": true,
+    "rule": "value < threshold on the finest PLIC grid",
+    "threshold": 0.02,
+    "value": 0.00015480394289826453
+   }
+  },
+  "criteria": {
+   "diagonal_order_min": 0.95,
+   "diagonal_order_target": 1.0,
+   "step_mass_residual_max": 1e-12,
+   "vortex_mass_drift_max": 0.001,
+   "zalesak_area_drift_max": 0.02
+  }
+ },
+ "vortex": [
+  {
+   "case": "vortex_reversal",
+   "cells": 32,
+   "courant_max": 0.4,
+   "dt": 0.0125,
+   "half_period": 1.0,
+   "initial_metrics": {
+    "contour_area": 0.0543365478515625,
+    "l1": 0.0,
+    "linf": 0.0,
+    "mass": 0.0546875,
+    "max_transition_width": 0.0,
+    "maximum": 1.0,
+    "minimum": 0.0,
+    "mixed_fraction": 0.0,
+    "peak_retention": 1.0,
+    "relative_l1": 0.0,
+    "row_transition_width": 8.0
+   },
+   "mass_drift": 2.4107699963289115e-15,
+   "max_step_residual": 5.075305255429283e-16,
+   "metrics": {
+    "contour_area": 0.053966522216796875,
+    "l1": 0.017642121053921045,
+    "linf": 1.0,
+    "mass": 0.05468750000000013,
+    "max_transition_width": 5.0,
+    "maximum": 1.0,
+    "minimum": 0.0,
+    "mixed_fraction": 0.0361328125,
+    "peak_retention": 1.0,
+    "relative_l1": 0.3225987849859848,
+    "row_transition_width": 8.0
+   },
+   "minimum_at_turn": 0.0,
+   "peak_at_turn": 1.0,
+   "scheme": "plic",
+   "steps": 160,
+   "total_time": 2.0,
+   "velocity": {
+    "max_discrete_divergence": 1.4210854715202004e-14,
+    "source": "LeVeque 1996 (time reversal of Rider & Kothe 1995)",
+    "u": "-sin^2(pi x) sin(2 pi y) cos(pi t / T)",
+    "v": "sin(2 pi x) sin^2(pi y) cos(pi t / T)"
+   }
+  },
+  {
+   "case": "vortex_reversal",
+   "cells": 32,
+   "courant_max": 0.4,
+   "dt": 0.0125,
+   "half_period": 1.0,
+   "initial_metrics": {
+    "contour_area": 0.0543365478515625,
+    "l1": 0.0,
+    "linf": 0.0,
+    "mass": 0.0546875,
+    "max_transition_width": 0.0,
+    "maximum": 1.0,
+    "minimum": 0.0,
+    "mixed_fraction": 0.0,
+    "peak_retention": 1.0,
+    "relative_l1": 0.0,
+    "row_transition_width": 8.0
+   },
+   "mass_drift": 0.01141494649140221,
+   "max_step_residual": 0.006973059138257679,
+   "metrics": {
+    "contour_area": 0.0,
+    "l1": 0.07430798724566659,
+    "linf": 0.810466459537919,
+    "mass": 0.05406324511375144,
+    "max_transition_width": 20.0,
+    "maximum": 0.3890978601813455,
+    "minimum": 1.1786415100074432e-20,
+    "mixed_fraction": 0.271484375,
+    "peak_retention": 0.3890978601813455,
+    "relative_l1": 1.3587746239207605,
+    "row_transition_width": 9.0
+   },
+   "minimum_at_turn": 1.8238265411763751e-34,
+   "peak_at_turn": 0.5826935694203592,
+   "scheme": "donor_cell",
+   "steps": 160,
+   "total_time": 2.0,
+   "velocity": {
+    "max_discrete_divergence": 1.4210854715202004e-14,
+    "source": "LeVeque 1996 (time reversal of Rider & Kothe 1995)",
+    "u": "-sin^2(pi x) sin(2 pi y) cos(pi t / T)",
+    "v": "sin(2 pi x) sin^2(pi y) cos(pi t / T)"
+   }
+  },
+  {
+   "case": "vortex_reversal",
+   "cells": 64,
+   "courant_max": 0.4,
+   "dt": 0.00625,
+   "half_period": 1.0,
+   "initial_metrics": {
+    "contour_area": 0.055576324462890625,
+    "l1": 0.0,
+    "linf": 0.0,
+    "mass": 0.0556640625,
+    "max_transition_width": 0.0,
+    "maximum": 1.0,
+    "minimum": 0.0,
+    "mixed_fraction": 0.0,
+    "peak_retention": 1.0,
+    "relative_l1": 0.0,
+    "row_transition_width": 16.0
+   },
+   "mass_drift": 2.243819165558211e-15,
+   "max_step_residual": 3.7396986092636766e-16,
+   "metrics": {
+    "contour_area": 0.056105613708496094,
+    "l1": 0.014029685057512023,
+    "linf": 1.0,
+    "mass": 0.055664062500000125,
+    "max_transition_width": 6.0,
+    "maximum": 1.0,
+    "minimum": 0.0,
+    "mixed_fraction": 0.02392578125,
+    "peak_retention": 1.0,
+    "relative_l1": 0.25204206138407564,
+    "row_transition_width": 19.0
+   },
+   "minimum_at_turn": 0.0,
+   "peak_at_turn": 1.0,
+   "scheme": "plic",
+   "steps": 320,
+   "total_time": 2.0,
+   "velocity": {
+    "max_discrete_divergence": 4.263256414560601e-14,
+    "source": "LeVeque 1996 (time reversal of Rider & Kothe 1995)",
+    "u": "-sin^2(pi x) sin(2 pi y) cos(pi t / T)",
+    "v": "sin(2 pi x) sin^2(pi y) cos(pi t / T)"
+   }
+  },
+  {
+   "case": "vortex_reversal",
+   "cells": 64,
+   "courant_max": 0.4,
+   "dt": 0.00625,
+   "half_period": 1.0,
+   "initial_metrics": {
+    "contour_area": 0.055576324462890625,
+    "l1": 0.0,
+    "linf": 0.0,
+    "mass": 0.0556640625,
+    "max_transition_width": 0.0,
+    "maximum": 1.0,
+    "minimum": 0.0,
+    "mixed_fraction": 0.0,
+    "peak_retention": 1.0,
+    "relative_l1": 0.0,
+    "row_transition_width": 16.0
+   },
+   "mass_drift": 0.007402004899059796,
+   "max_step_residual": 0.0036500795631508602,
+   "metrics": {
+    "contour_area": 0.015716552734375,
+    "l1": 0.06321469956916524,
+    "linf": 0.8184552952446402,
+    "mass": 0.05525203683667343,
+    "max_transition_width": 37.0,
+    "maximum": 0.5750797683665969,
+    "minimum": 1.6416991185667363e-45,
+    "mixed_fraction": 0.21826171875,
+    "peak_retention": 0.5750797683665969,
+    "relative_l1": 1.1356465326109686,
+    "row_transition_width": 18.0
+   },
+   "minimum_at_turn": 4.137462248005789e-75,
+   "peak_at_turn": 0.7742053182272488,
+   "scheme": "donor_cell",
+   "steps": 320,
+   "total_time": 2.0,
+   "velocity": {
+    "max_discrete_divergence": 4.263256414560601e-14,
+    "source": "LeVeque 1996 (time reversal of Rider & Kothe 1995)",
+    "u": "-sin^2(pi x) sin(2 pi y) cos(pi t / T)",
+    "v": "sin(2 pi x) sin^2(pi y) cos(pi t / T)"
+   }
+  },
+  {
+   "case": "vortex_reversal",
+   "cells": 128,
+   "courant_max": 0.4,
+   "dt": 0.003125,
+   "half_period": 1.0,
+   "initial_metrics": {
+    "contour_area": 0.056984901428222656,
+    "l1": 0.0,
+    "linf": 0.0,
+    "mass": 0.0570068359375,
+    "max_transition_width": 0.0,
+    "maximum": 1.0,
+    "minimum": 0.0,
+    "mixed_fraction": 0.0,
+    "peak_retention": 1.0,
+    "relative_l1": 0.0,
+    "row_transition_width": 33.0
+   },
+   "mass_drift": 6.207739532979034e-15,
+   "max_step_residual": 8.520426809971172e-16,
+   "metrics": {
+    "contour_area": 0.058049917221069336,
+    "l1": 0.013071548127328478,
+    "linf": 1.0,
+    "mass": 0.057006835937500354,
+    "max_transition_width": 14.0,
+    "maximum": 1.0,
+    "minimum": 0.0,
+    "mixed_fraction": 0.016357421875,
+    "peak_retention": 1.0,
+    "relative_l1": 0.2292979063363488,
+    "row_transition_width": 37.0
+   },
+   "minimum_at_turn": 0.0,
+   "peak_at_turn": 1.0,
+   "scheme": "plic",
+   "steps": 640,
+   "total_time": 2.0,
+   "velocity": {
+    "max_discrete_divergence": 8.526512829121202e-14,
+    "source": "LeVeque 1996 (time reversal of Rider & Kothe 1995)",
+    "u": "-sin^2(pi x) sin(2 pi y) cos(pi t / T)",
+    "v": "sin(2 pi x) sin^2(pi y) cos(pi t / T)"
+   }
+  },
+  {
+   "case": "vortex_reversal",
+   "cells": 128,
+   "courant_max": 0.4,
+   "dt": 0.003125,
+   "half_period": 1.0,
+   "initial_metrics": {
+    "contour_area": 0.056984901428222656,
+    "l1": 0.0,
+    "linf": 0.0,
+    "mass": 0.0570068359375,
+    "max_transition_width": 0.0,
+    "maximum": 1.0,
+    "minimum": 0.0,
+    "mixed_fraction": 0.0,
+    "peak_retention": 1.0,
+    "relative_l1": 0.0,
+    "row_transition_width": 33.0
+   },
+   "mass_drift": 0.004544629117682902,
+   "max_step_residual": 0.0018984122827003947,
+   "metrics": {
+    "contour_area": 0.03825640678405762,
+    "l1": 0.05289911249672875,
+    "linf": 0.8349904172958184,
+    "mass": 0.056747761010991465,
+    "max_transition_width": 66.0,
+    "maximum": 0.7744234097577474,
+    "minimum": 6.770309105949235e-98,
+    "mixed_fraction": 0.17572021484375,
+    "peak_retention": 0.7744234097577474,
+    "relative_l1": 0.9279433181439013,
+    "row_transition_width": 35.0
+   },
+   "minimum_at_turn": 2.995531573921415e-160,
+   "peak_at_turn": 0.9295303192465415,
+   "scheme": "donor_cell",
+   "steps": 640,
+   "total_time": 2.0,
+   "velocity": {
+    "max_discrete_divergence": 8.526512829121202e-14,
+    "source": "LeVeque 1996 (time reversal of Rider & Kothe 1995)",
+    "u": "-sin^2(pi x) sin(2 pi y) cos(pi t / T)",
+    "v": "sin(2 pi x) sin^2(pi y) cos(pi t / T)"
+   }
+  }
+ ],
+ "vortex_time_symmetry": [
+  {
+   "cells": 32,
+   "cfl": 0.4,
+   "mass_drift": 2.4107699963289115e-15,
+   "max_transition_width": 5.0,
+   "peak_retention": 1.0,
+   "relative_l1": 0.3225987849859848,
+   "reversal": "smooth",
+   "steps": 160
+  },
+  {
+   "cells": 32,
+   "cfl": 0.1,
+   "mass_drift": 1.522591576628786e-15,
+   "max_transition_width": 6.0,
+   "peak_retention": 1.0,
+   "relative_l1": 0.27101148085018806,
+   "reversal": "smooth",
+   "steps": 640
+  },
+  {
+   "cells": 32,
+   "cfl": 0.4,
+   "mass_drift": 2.4107699963289115e-15,
+   "max_transition_width": 5.0,
+   "peak_retention": 1.0,
+   "relative_l1": 0.5265400837150318,
+   "reversal": "hard",
+   "steps": 160
+  },
+  {
+   "cells": 32,
+   "cfl": 0.1,
+   "mass_drift": 4.567774729886359e-15,
+   "max_transition_width": 4.0,
+   "peak_retention": 1.0,
+   "relative_l1": 0.4384294366405248,
+   "reversal": "hard",
+   "steps": 640
+  }
+ ],
+ "zalesak": [
+  {
+   "area_drift": 0.007652344846953103,
+   "area_final": 0.053920745849609375,
+   "area_initial": 0.0543365478515625,
+   "area_vs_analytic": 0.03658652469406347,
+   "case": "zalesak_rotation",
+   "cells": 32,
+   "courant_max": 0.4007793097172164,
+   "dt": 0.00411522633744856,
+   "geometry": {
+    "analytic_area": 0.055968436431187124,
+    "centre": [
+     0.5,
+     0.75
+    ],
+    "domain": 1.0,
+    "radius": 0.15,
+    "slot_half_width": 0.05,
+    "source": "tensorfvm.verification.vof_interface_tracking.classic_slotted_disk"
+   },
+   "mass_drift": 8.628018934229787e-15,
+   "max_clip_imbalance": 1.0150610510858548e-15,
+   "max_step_residual": 1.0150610510858548e-15,
+   "metrics": {
+    "contour_area": 0.053920745849609375,
+    "l1": 0.013200648437019888,
+    "linf": 1.0,
+    "mass": 0.05468750000000047,
+    "max_transition_width": 3.0,
+    "maximum": 1.0,
+    "minimum": 0.0,
+    "mixed_fraction": 0.0263671875,
+    "peak_retention": 1.0,
+    "relative_l1": 0.24138328570550652,
+    "row_transition_width": 7.0
+   },
+   "radians": 6.283185307179586,
+   "revolutions": 1,
+   "scheme": "plic",
+   "steps": 243
+  },
+  {
+   "area_drift": 1.0,
+   "area_final": 0.0,
+   "area_initial": 0.0543365478515625,
+   "area_vs_analytic": 1.0,
+   "case": "zalesak_rotation",
+   "cells": 32,
+   "courant_max": 0.4007793097172164,
+   "dt": 0.00411522633744856,
+   "geometry": {
+    "analytic_area": 0.055968436431187124,
+    "centre": [
+     0.5,
+     0.75
+    ],
+    "domain": 1.0,
+    "radius": 0.15,
+    "slot_half_width": 0.05,
+    "source": "tensorfvm.verification.vof_interface_tracking.classic_slotted_disk"
+   },
+   "mass_drift": 0.0,
+   "max_clip_imbalance": 0.0,
+   "max_step_residual": 3.8064789415719656e-16,
+   "metrics": {
+    "contour_area": 0.0,
+    "l1": 0.08271636131201748,
+    "linf": 0.8517481444309575,
+    "mass": 0.0546875,
+    "max_transition_width": 22.0,
+    "maximum": 0.30957436161834434,
+    "minimum": 0.0021360418082537287,
+    "mixed_fraction": 0.306640625,
+    "peak_retention": 0.30957436161834434,
+    "relative_l1": 1.5125277497054626,
+    "row_transition_width": 8.0
+   },
+   "radians": 6.283185307179586,
+   "revolutions": 1,
+   "scheme": "donor_cell",
+   "steps": 243
+  },
+  {
+   "area_drift": 0.003946736220742673,
+   "area_final": 0.05535697937011719,
+   "area_initial": 0.055576324462890625,
+   "area_vs_analytic": 0.010925033823693102,
+   "case": "zalesak_rotation",
+   "cells": 64,
+   "courant_max": 0.39983906500233735,
+   "dt": 0.00202020202020202,
+   "geometry": {
+    "analytic_area": 0.055968436431187124,
+    "centre": [
+     0.5,
+     0.75
+    ],
+    "domain": 1.0,
+    "radius": 0.15,
+    "slot_half_width": 0.05,
+    "source": "tensorfvm.verification.vof_interface_tracking.classic_slotted_disk"
+   },
+   "mass_drift": 3.989011849881264e-15,
+   "max_clip_imbalance": 4.986264812351574e-16,
+   "max_step_residual": 4.986264812351574e-16,
+   "metrics": {
+    "contour_area": 0.05535697937011719,
+    "l1": 0.005796263317350689,
+    "linf": 0.9999999999999996,
+    "mass": 0.05566406250000022,
+    "max_transition_width": 6.0,
+    "maximum": 1.0,
+    "minimum": 0.0,
+    "mixed_fraction": 0.01611328125,
+    "peak_retention": 1.0,
+    "relative_l1": 0.10412936205205449,
+    "row_transition_width": 16.0
+   },
+   "radians": 6.283185307179586,
+   "revolutions": 1,
+   "scheme": "plic",
+   "steps": 495
+  },
+  {
+   "area_drift": 0.9970828471411902,
+   "area_final": 0.0001621246337890625,
+   "area_initial": 0.055576324462890625,
+   "area_vs_analytic": 0.9971032845631056,
+   "case": "zalesak_rotation",
+   "cells": 64,
+   "courant_max": 0.39983906500233735,
+   "dt": 0.00202020202020202,
+   "geometry": {
+    "analytic_area": 0.055968436431187124,
+    "centre": [
+     0.5,
+     0.75
+    ],
+    "domain": 1.0,
+    "radius": 0.15,
+    "slot_half_width": 0.05,
+    "source": "tensorfvm.verification.vof_interface_tracking.classic_slotted_disk"
+   },
+   "mass_drift": 1.246566203087895e-16,
+   "max_clip_imbalance": 0.0,
+   "max_step_residual": 3.7396986092636845e-16,
+   "metrics": {
+    "contour_area": 0.0001621246337890625,
+    "l1": 0.0705722259280401,
+    "linf": 0.8158743995114892,
+    "mass": 0.05566406249999999,
+    "max_transition_width": 40.0,
+    "maximum": 0.5016107605615857,
+    "minimum": 4.542274574905258e-05,
+    "mixed_fraction": 0.2509765625,
+    "peak_retention": 0.5016107605615857,
+    "relative_l1": 1.2678238482511064,
+    "row_transition_width": 17.0
+   },
+   "radians": 6.283185307179586,
+   "revolutions": 1,
+   "scheme": "donor_cell",
+   "steps": 495
+  },
+  {
+   "area_drift": 0.00015480394289826453,
+   "area_final": 0.056993722915649414,
+   "area_initial": 0.056984901428222656,
+   "area_vs_analytic": 0.018319012462012833,
+   "case": "zalesak_rotation",
+   "cells": 128,
+   "courant_max": 0.40018281545226053,
+   "dt": 0.0010030090270812437,
+   "geometry": {
+    "analytic_area": 0.055968436431187124,
+    "centre": [
+     0.5,
+     0.75
+    ],
+    "domain": 1.0,
+    "radius": 0.15,
+    "slot_half_width": 0.05,
+    "source": "tensorfvm.verification.vof_interface_tracking.classic_slotted_disk"
+   },
+   "mass_drift": 4.868815319983556e-16,
+   "max_clip_imbalance": 3.6516114899876693e-16,
+   "max_step_residual": 3.6516114899876693e-16,
+   "metrics": {
+    "contour_area": 0.056993722915649414,
+    "l1": 0.0028716241473310386,
+    "linf": 1.0,
+    "mass": 0.05700683593750003,
+    "max_transition_width": 6.0,
+    "maximum": 1.0,
+    "minimum": 0.0,
+    "mixed_fraction": 0.00811767578125,
+    "peak_retention": 1.0,
+    "relative_l1": 0.05037332979643655,
+    "row_transition_width": 33.0
+   },
+   "radians": 6.283185307179586,
+   "revolutions": 1,
+   "scheme": "plic",
+   "steps": 997
+  },
+  {
+   "area_drift": 0.4708382842702458,
+   "area_final": 0.03015422821044922,
+   "area_initial": 0.056984901428222656,
+   "area_vs_analytic": 0.4612279682402121,
+   "case": "zalesak_rotation",
+   "cells": 128,
+   "courant_max": 0.40018281545226053,
+   "dt": 0.0010030090270812437,
+   "geometry": {
+    "analytic_area": 0.055968436431187124,
+    "centre": [
+     0.5,
+     0.75
+    ],
+    "domain": 1.0,
+    "radius": 0.15,
+    "slot_half_width": 0.05,
+    "source": "tensorfvm.verification.vof_interface_tracking.classic_slotted_disk"
+   },
+   "mass_drift": 0.0,
+   "max_clip_imbalance": 0.0,
+   "max_step_residual": 2.4344076599917786e-16,
+   "metrics": {
+    "contour_area": 0.03015422821044922,
+    "l1": 0.05850628337615104,
+    "linf": 0.8052773302670341,
+    "mass": 0.0570068359375,
+    "max_transition_width": 71.0,
+    "maximum": 0.7231702113938289,
+    "minimum": 2.836846218240196e-08,
+    "mixed_fraction": 0.204345703125,
+    "peak_retention": 0.7231702113938289,
+    "relative_l1": 1.0263029409366795,
+    "row_transition_width": 34.0
+   },
+   "radians": 6.283185307179586,
+   "revolutions": 1,
+   "scheme": "donor_cell",
+   "steps": 997
+  }
+ ]
+}
