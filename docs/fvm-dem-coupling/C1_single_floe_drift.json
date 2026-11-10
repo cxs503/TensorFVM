@@ -1,0 +1,29 @@
+[
+  {
+    "u_inlet": 0.5,
+    "v_drift_computed": 0.4819513448184013,
+    "v_drift_analytical": 0.5,
+    "relative_error": 0.03609731036319741,
+    "passed": true,
+    "n_steps": 800,
+    "final_time": 7.999999999999874
+  },
+  {
+    "u_inlet": 1.0,
+    "v_drift_computed": 0.9817271312583377,
+    "v_drift_analytical": 1.0,
+    "relative_error": 0.01827286874166234,
+    "passed": true,
+    "n_steps": 800,
+    "final_time": 7.999999999999874
+  },
+  {
+    "u_inlet": 1.5,
+    "v_drift_computed": 1.4816614966582384,
+    "v_drift_analytical": 1.5,
+    "relative_error": 0.012225668894507713,
+    "passed": true,
+    "n_steps": 800,
+    "final_time": 7.999999999999874
+  }
+]
