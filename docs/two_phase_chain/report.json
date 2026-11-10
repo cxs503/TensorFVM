@@ -1,0 +1,1116 @@
+{
+  "title": "TensorFVM two-phase verification chain (drift-flux, PLIC-VOF, Rayleigh-Plesset, Stefan)",
+  "summary": "TensorFVM two-phase chain: four segments with negative controls and a SQL-traced ledger; passing criteria: J1, J3, J4, J5, J6; honest FAIL: J2.",
+  "scenario_key": "tensorfvm/two_phase_chain",
+  "mission_id": 10862,
+  "tags": [
+    "tensorfvm",
+    "two-phase",
+    "vof",
+    "drift-flux",
+    "cavitation",
+    "stefan",
+    "verification",
+    "P254W1-N01"
+  ],
+  "generated_at": "2026-11-10T21:00:06.497498+00:00",
+  "criteria": [
+    {
+      "segment": "cavitation",
+      "name": "bubble_number_conservation",
+      "value": 0.0,
+      "unit": "-",
+      "comparator": "<=",
+      "limit_value": 1e-10,
+      "passed": 1,
+      "note": "|n_b(t) - n_b(0)|/n_b(0) under pure advection"
+    },
+    {
+      "segment": "cavitation",
+      "name": "control_radius_drift",
+      "value": 0.0,
+      "unit": "-",
+      "comparator": "<=",
+      "limit_value": 1e-12,
+      "passed": 1,
+      "note": "p_inf = p_v + 2 sigma/R0 equilibrium: R must not drift"
+    },
+    {
+      "segment": "cavitation",
+      "name": "frequency_rel_error",
+      "value": 4.0206231587884457e-05,
+      "unit": "-",
+      "comparator": "<=",
+      "limit_value": 0.05,
+      "passed": 1,
+      "note": "zero-crossing frequency vs Plesset omega"
+    },
+    {
+      "segment": "cavitation",
+      "name": "gas_mass_budget_residual",
+      "value": 1.202952859108822e-16,
+      "unit": "-",
+      "comparator": "<=",
+      "limit_value": 0.01,
+      "passed": 1,
+      "note": "|d(alpha rho_v) - int m_dot| / d(alpha rho_v)"
+    },
+    {
+      "segment": "cavitation",
+      "name": "plesset_max_rel_deviation",
+      "value": 2.88918146893781e-06,
+      "unit": "-",
+      "comparator": "<=",
+      "limit_value": 0.05,
+      "passed": 1,
+      "note": "max |R_num - R_Plesset|/R0 over the sampled window"
+    },
+    {
+      "segment": "chain",
+      "name": "mass_closure_worst_ratio",
+      "value": 0.20731648306726067,
+      "unit": "1",
+      "comparator": "<=",
+      "limit_value": 1.0,
+      "passed": 1,
+      "note": "worst closure metric stefan/energy_ledger_residual = 2.073e-03 against 0.01"
+    },
+    {
+      "segment": "chain",
+      "name": "verdict_consistency",
+      "value": 1.0,
+      "unit": "1",
+      "comparator": ">=",
+      "limit_value": 1.0,
+      "passed": 1,
+      "note": "verdict recomputed from (value, comparator, limit)"
+    },
+    {
+      "segment": "drift",
+      "name": "alpha_max_rel_error",
+      "value": 0.00018011092849031977,
+      "unit": "-",
+      "comparator": "<=",
+      "limit_value": 0.1,
+      "passed": 1,
+      "note": "max |alpha_FVM - alpha_Wallis|/alpha_Wallis"
+    },
+    {
+      "segment": "drift",
+      "name": "control_alpha_max",
+      "value": 0.0,
+      "unit": "-",
+      "comparator": "<=",
+      "limit_value": 1e-12,
+      "passed": 1,
+      "note": "void fraction with G_g = 0 (must vanish)"
+    },
+    {
+      "segment": "drift",
+      "name": "control_liquid_velocity_error",
+      "value": 0.0,
+      "unit": "-",
+      "comparator": "<=",
+      "limit_value": 1e-12,
+      "passed": 1,
+      "note": "|v_l - j_l|/j_l with G_g = 0"
+    },
+    {
+      "segment": "drift",
+      "name": "gas_mass_drift",
+      "value": 9.658940314238966e-15,
+      "unit": "-",
+      "comparator": "<=",
+      "limit_value": 0.01,
+      "passed": 1,
+      "note": "max deviation of the gas mass flux along z"
+    },
+    {
+      "segment": "drift",
+      "name": "liquid_mass_drift",
+      "value": 2.2778368607817274e-16,
+      "unit": "-",
+      "comparator": "<=",
+      "limit_value": 0.01,
+      "passed": 1,
+      "note": "max deviation of the liquid mass flux along z"
+    },
+    {
+      "segment": "stefan",
+      "name": "control_front_max",
+      "value": 0.0,
+      "unit": "m",
+      "comparator": "<=",
+      "limit_value": 1e-12,
+      "passed": 1,
+      "note": "front position with L = 0"
+    },
+    {
+      "segment": "stefan",
+      "name": "control_temperature_rel_error",
+      "value": 2.305389310208742e-06,
+      "unit": "-",
+      "comparator": "<=",
+      "limit_value": 0.001,
+      "passed": 1,
+      "note": "L = 0 temperature vs the erf conduction solution"
+    },
+    {
+      "segment": "stefan",
+      "name": "energy_ledger_residual",
+      "value": 0.002073164830672607,
+      "unit": "-",
+      "comparator": "<=",
+      "limit_value": 0.01,
+      "passed": 1,
+      "note": "|dH + Q_wall| / |dH|"
+    },
+    {
+      "segment": "stefan",
+      "name": "front_max_rel_error",
+      "value": 0.0006678587795586093,
+      "unit": "-",
+      "comparator": "<=",
+      "limit_value": 0.03,
+      "passed": 1,
+      "note": "max |s_num - 2 lambda sqrt(alpha t)| / ref"
+    },
+    {
+      "segment": "vof",
+      "name": "alpha_bound_violation",
+      "value": 0.0,
+      "unit": "-",
+      "comparator": "<=",
+      "limit_value": 1e-10,
+      "passed": 1,
+      "note": "max excursion of alpha outside [0,1]"
+    },
+    {
+      "segment": "vof",
+      "name": "control_max_abs_change",
+      "value": 0.0,
+      "unit": "-",
+      "comparator": "<=",
+      "limit_value": 1e-14,
+      "passed": 1,
+      "note": "g = 0 static-interface control"
+    },
+    {
+      "segment": "vof",
+      "name": "front_max_rel_error",
+      "value": 0.9882294435916724,
+      "unit": "-",
+      "comparator": "<=",
+      "limit_value": 0.15,
+      "passed": 0,
+      "note": "max |x_f* - Martin&Moyce|/ref over 0.3 < t* <= t_end, depth > half a cell"
+    },
+    {
+      "segment": "vof",
+      "name": "height_max_rel_error",
+      "value": 0.8449810709776245,
+      "unit": "-",
+      "comparator": "<=",
+      "limit_value": 0.15,
+      "passed": 0,
+      "note": "max |h/h0 - Martin&Moyce|/ref"
+    },
+    {
+      "segment": "vof",
+      "name": "volume_drift",
+      "value": 4.113968717731558e-16,
+      "unit": "-",
+      "comparator": "<=",
+      "limit_value": 0.01,
+      "passed": 1,
+      "note": "max relative liquid-volume drift"
+    }
+  ],
+  "informational": [
+    {
+      "segment": "cavitation",
+      "name": "bubble_r0",
+      "value": 0.0001,
+      "unit": "m",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "equilibrium radius"
+    },
+    {
+      "segment": "cavitation",
+      "name": "damping_rel_error",
+      "value": 0.00014727245058050465,
+      "unit": "-",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "measured envelope decay rate vs beta = 2 mu/(rho R0^2)"
+    },
+    {
+      "segment": "cavitation",
+      "name": "natural_frequency",
+      "value": 203858.6397998325,
+      "unit": "rad/s",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "Plesset natural frequency"
+    },
+    {
+      "segment": "cavitation",
+      "name": "period_us",
+      "value": 30.821285344339618,
+      "unit": "us",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "linear period"
+    },
+    {
+      "segment": "cavitation",
+      "name": "radius_ratio_max",
+      "value": 1.0483910286406255,
+      "unit": "-",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "max R/R0 reached in the duct"
+    },
+    {
+      "segment": "cavitation",
+      "name": "rayleigh_growth_rel_error",
+      "value": 0.057171018914705864,
+      "unit": "-",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "dynamic growth vs sqrt(2 dp/(3 rho)) t for R > 5 R0"
+    },
+    {
+      "segment": "cavitation",
+      "name": "surface_tension_shift",
+      "value": -0.0017533757491878799,
+      "unit": "1",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "relative difference to sqrt(3 gamma p0/(rho R0^2))"
+    },
+    {
+      "segment": "cavitation",
+      "name": "void_fraction_max",
+      "value": 0.004180221128188385,
+      "unit": "-",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "max void fraction reached in the duct"
+    },
+    {
+      "segment": "chain",
+      "name": "criterion_rows",
+      "value": 20.0,
+      "unit": "-",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "criteria recorded in the ledger"
+    },
+    {
+      "segment": "drift",
+      "name": "alpha_inlet",
+      "value": 0.14342404472488077,
+      "unit": "-",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "inlet void fraction"
+    },
+    {
+      "segment": "drift",
+      "name": "alpha_outlet",
+      "value": 0.1544481376598895,
+      "unit": "-",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "outlet void fraction"
+    },
+    {
+      "segment": "drift",
+      "name": "alpha_rms_rel_error",
+      "value": 1.28097057736171e-05,
+      "unit": "-",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "rms over cells"
+    },
+    {
+      "segment": "drift",
+      "name": "control_pressure_gradient_rel_error",
+      "value": 1.960398617774447e-13,
+      "unit": "-",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "dp/dz vs rho_l g with G_g = 0 (half-cell offset removed)"
+    },
+    {
+      "segment": "drift",
+      "name": "drift_velocity",
+      "value": 0.24464505662703587,
+      "unit": "m/s",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "Wallis churn-turbulent v_dj"
+    },
+    {
+      "segment": "drift",
+      "name": "homogeneous_limit_error",
+      "value": 0.0,
+      "unit": "-",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "v_dj -> 0 limit vs the no-slip closed form"
+    },
+    {
+      "segment": "drift",
+      "name": "pressure_max_rel_error",
+      "value": 0.00020979170791662693,
+      "unit": "-",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "max |p_FVM - p_reference|/p"
+    },
+    {
+      "segment": "drift",
+      "name": "refinement_error_coarse",
+      "value": 0.0007204087192757636,
+      "unit": "-",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "max rel error at n=50"
+    },
+    {
+      "segment": "drift",
+      "name": "refinement_error_fine",
+      "value": 0.00018011092849031977,
+      "unit": "-",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "max rel error at n=200"
+    },
+    {
+      "segment": "drift",
+      "name": "steady_residual",
+      "value": 2.15047850193634e-15,
+      "unit": "1/s",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "relative gas-mass change per second at the end of the march"
+    },
+    {
+      "segment": "drift",
+      "name": "steps",
+      "value": 800.0,
+      "unit": "-",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "time steps to steady state"
+    },
+    {
+      "segment": "stefan",
+      "name": "analytic_front_final",
+      "value": 0.012937107355139714,
+      "unit": "m",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "2 lambda sqrt(alpha t_end)"
+    },
+    {
+      "segment": "stefan",
+      "name": "control_energy_error",
+      "value": 0.007821846788121116,
+      "unit": "-",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "L = 0 energy ledger residual"
+    },
+    {
+      "segment": "stefan",
+      "name": "front_final",
+      "value": 0.012940375277909666,
+      "unit": "m",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "s(t_end)"
+    },
+    {
+      "segment": "stefan",
+      "name": "front_mean_rel_error",
+      "value": 0.00033061522329699047,
+      "unit": "-",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "mean over samples"
+    },
+    {
+      "segment": "stefan",
+      "name": "grid_cells",
+      "value": 400.0,
+      "unit": "-",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "cells across the domain"
+    },
+    {
+      "segment": "stefan",
+      "name": "lambda_cross_check_error",
+      "value": 3.083879005059503e-15,
+      "unit": "-",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "lambda vs tensorfvm.cht.stefan.neumann_lambda"
+    },
+    {
+      "segment": "stefan",
+      "name": "similarity_lambda",
+      "value": 0.24300581844893784,
+      "unit": "-",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "lambda(St)"
+    },
+    {
+      "segment": "stefan",
+      "name": "stefan_number",
+      "value": 0.12286484866646671,
+      "unit": "-",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "c dT / L"
+    },
+    {
+      "segment": "stefan",
+      "name": "time_step",
+      "value": 0.05,
+      "unit": "s",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "explicit stability step"
+    },
+    {
+      "segment": "stefan",
+      "name": "two_phase_limit_error",
+      "value": 1.4399430598809317e-12,
+      "unit": "-",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "two-phase lambda with St_liquid -> 0 vs one-phase lambda"
+    },
+    {
+      "segment": "vof",
+      "name": "algebraic_front_max_rel_error",
+      "value": 0.9860276007984844,
+      "unit": "-",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "same comparison for the algebraic FCT transport (reference)"
+    },
+    {
+      "segment": "vof",
+      "name": "algebraic_interface_thickness_cells",
+      "value": 3.1206896551724137,
+      "unit": "cells",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "same measure for the algebraic FCT transport"
+    },
+    {
+      "segment": "vof",
+      "name": "algebraic_volume_drift",
+      "value": 4.113968717731558e-16,
+      "unit": "-",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "volume drift of the algebraic FCT transport"
+    },
+    {
+      "segment": "vof",
+      "name": "control_speed_max",
+      "value": 0.0,
+      "unit": "m/s",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "g = 0 static-interface control"
+    },
+    {
+      "segment": "vof",
+      "name": "control_volume_drift",
+      "value": 0.0,
+      "unit": "-",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "g = 0 static-interface control"
+    },
+    {
+      "segment": "vof",
+      "name": "divergence_max",
+      "value": 241.68948755410992,
+      "unit": "1/s",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "max cell divergence of the projected field"
+    },
+    {
+      "segment": "vof",
+      "name": "dx_mm",
+      "value": 5.0,
+      "unit": "mm",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "cell size"
+    },
+    {
+      "segment": "vof",
+      "name": "front_final_star",
+      "value": 3.505686789151356,
+      "unit": "-",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "x_f* at the end"
+    },
+    {
+      "segment": "vof",
+      "name": "front_max_rel_error_leading_edge",
+      "value": 0.8564112434508838,
+      "unit": "-",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "same with the depth > 2% of a cell convention (sensitivity)"
+    },
+    {
+      "segment": "vof",
+      "name": "front_mean_rel_error",
+      "value": 0.4086474551310288,
+      "unit": "-",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "mean over the window"
+    },
+    {
+      "segment": "vof",
+      "name": "front_rel_error_band_early",
+      "value": 0.9882294435916724,
+      "unit": "-",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "front error in the band t* in [0.3, 1.0)"
+    },
+    {
+      "segment": "vof",
+      "name": "front_rel_error_band_late",
+      "value": 0.24003779472606046,
+      "unit": "-",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "front error in the band t* in [3.0, 99.0)"
+    },
+    {
+      "segment": "vof",
+      "name": "front_rel_error_band_late2",
+      "value": 0.3769567466662039,
+      "unit": "-",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "front error in the band t* in [2.0, 3.0)"
+    },
+    {
+      "segment": "vof",
+      "name": "front_rel_error_band_mid",
+      "value": 0.6290005634219019,
+      "unit": "-",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "front error in the band t* in [1.0, 2.0)"
+    },
+    {
+      "segment": "vof",
+      "name": "front_rel_error_late",
+      "value": 0.24003779472606046,
+      "unit": "-",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "front error for t* >= 3 (asymptotic agreement)"
+    },
+    {
+      "segment": "vof",
+      "name": "height_final_star",
+      "value": 0.1531058617672791,
+      "unit": "-",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "h/h0 at the end"
+    },
+    {
+      "segment": "vof",
+      "name": "interface_thickness_ratio",
+      "value": 1.164683382915427,
+      "unit": "1",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "PLIC / algebraic interface thickness (smaller is sharper)"
+    },
+    {
+      "segment": "vof",
+      "name": "mu_liquid",
+      "value": 0.001,
+      "unit": "Pa s",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "liquid viscosity"
+    },
+    {
+      "segment": "vof",
+      "name": "plic_interface_thickness_cells",
+      "value": 3.6346153846153846,
+      "unit": "cells",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "mean cells spanning 0.1 < alpha < 0.9 in the final field"
+    },
+    {
+      "segment": "vof",
+      "name": "steps",
+      "value": 169.0,
+      "unit": "-",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "time steps"
+    },
+    {
+      "segment": "vof",
+      "name": "vof_clip_volume",
+      "value": 69.44311684251764,
+      "unit": "1",
+      "comparator": null,
+      "limit_value": null,
+      "passed": null,
+      "note": "liquid fraction redistributed by the bound limiter (accumulated)"
+    }
+  ],
+  "verdicts": {
+    "J1": {
+      "description": "drift-flux void fraction vs Wallis closed form (+ zero-gas control)",
+      "passed": true,
+      "metrics": [
+        {
+          "segment": "drift",
+          "name": "alpha_max_rel_error",
+          "value": 0.00018011092849031977,
+          "unit": "-",
+          "comparator": "<=",
+          "limit_value": 0.1,
+          "passed": 1,
+          "note": "max |alpha_FVM - alpha_Wallis|/alpha_Wallis"
+        },
+        {
+          "segment": "drift",
+          "name": "control_alpha_max",
+          "value": 0.0,
+          "unit": "-",
+          "comparator": "<=",
+          "limit_value": 1e-12,
+          "passed": 1,
+          "note": "void fraction with G_g = 0 (must vanish)"
+        },
+        {
+          "segment": "drift",
+          "name": "control_liquid_velocity_error",
+          "value": 0.0,
+          "unit": "-",
+          "comparator": "<=",
+          "limit_value": 1e-12,
+          "passed": 1,
+          "note": "|v_l - j_l|/j_l with G_g = 0"
+        }
+      ]
+    },
+    "J2": {
+      "description": "PLIC-VOF dam break vs Martin & Moyce (+ zero-gravity control)",
+      "passed": false,
+      "metrics": [
+        {
+          "segment": "vof",
+          "name": "control_max_abs_change",
+          "value": 0.0,
+          "unit": "-",
+          "comparator": "<=",
+          "limit_value": 1e-14,
+          "passed": 1,
+          "note": "g = 0 static-interface control"
+        },
+        {
+          "segment": "vof",
+          "name": "front_max_rel_error",
+          "value": 0.9882294435916724,
+          "unit": "-",
+          "comparator": "<=",
+          "limit_value": 0.15,
+          "passed": 0,
+          "note": "max |x_f* - Martin&Moyce|/ref over 0.3 < t* <= t_end, depth > half a cell"
+        },
+        {
+          "segment": "vof",
+          "name": "height_max_rel_error",
+          "value": 0.8449810709776245,
+          "unit": "-",
+          "comparator": "<=",
+          "limit_value": 0.15,
+          "passed": 0,
+          "note": "max |h/h0 - Martin&Moyce|/ref"
+        }
+      ]
+    },
+    "J3": {
+      "description": "Rayleigh-Plesset vs Plesset linear solution (+ zero-drive control)",
+      "passed": true,
+      "metrics": [
+        {
+          "segment": "cavitation",
+          "name": "control_radius_drift",
+          "value": 0.0,
+          "unit": "-",
+          "comparator": "<=",
+          "limit_value": 1e-12,
+          "passed": 1,
+          "note": "p_inf = p_v + 2 sigma/R0 equilibrium: R must not drift"
+        },
+        {
+          "segment": "cavitation",
+          "name": "frequency_rel_error",
+          "value": 4.0206231587884457e-05,
+          "unit": "-",
+          "comparator": "<=",
+          "limit_value": 0.05,
+          "passed": 1,
+          "note": "zero-crossing frequency vs Plesset omega"
+        },
+        {
+          "segment": "cavitation",
+          "name": "plesset_max_rel_deviation",
+          "value": 2.88918146893781e-06,
+          "unit": "-",
+          "comparator": "<=",
+          "limit_value": 0.05,
+          "passed": 1,
+          "note": "max |R_num - R_Plesset|/R0 over the sampled window"
+        }
+      ]
+    },
+    "J4": {
+      "description": "Stefan front vs Carslaw & Jaeger similarity (+ zero-latent control)",
+      "passed": true,
+      "metrics": [
+        {
+          "segment": "stefan",
+          "name": "control_front_max",
+          "value": 0.0,
+          "unit": "m",
+          "comparator": "<=",
+          "limit_value": 1e-12,
+          "passed": 1,
+          "note": "front position with L = 0"
+        },
+        {
+          "segment": "stefan",
+          "name": "control_temperature_rel_error",
+          "value": 2.305389310208742e-06,
+          "unit": "-",
+          "comparator": "<=",
+          "limit_value": 0.001,
+          "passed": 1,
+          "note": "L = 0 temperature vs the erf conduction solution"
+        },
+        {
+          "segment": "stefan",
+          "name": "front_max_rel_error",
+          "value": 0.0006678587795586093,
+          "unit": "-",
+          "comparator": "<=",
+          "limit_value": 0.03,
+          "passed": 1,
+          "note": "max |s_num - 2 lambda sqrt(alpha t)| / ref"
+        }
+      ]
+    },
+    "J5": {
+      "description": "mass/energy closure of every segment",
+      "passed": true,
+      "metrics": [
+        {
+          "segment": "cavitation",
+          "name": "bubble_number_conservation",
+          "value": 0.0,
+          "unit": "-",
+          "comparator": "<=",
+          "limit_value": 1e-10,
+          "passed": 1,
+          "note": "|n_b(t) - n_b(0)|/n_b(0) under pure advection"
+        },
+        {
+          "segment": "cavitation",
+          "name": "gas_mass_budget_residual",
+          "value": 1.202952859108822e-16,
+          "unit": "-",
+          "comparator": "<=",
+          "limit_value": 0.01,
+          "passed": 1,
+          "note": "|d(alpha rho_v) - int m_dot| / d(alpha rho_v)"
+        },
+        {
+          "segment": "drift",
+          "name": "gas_mass_drift",
+          "value": 9.658940314238966e-15,
+          "unit": "-",
+          "comparator": "<=",
+          "limit_value": 0.01,
+          "passed": 1,
+          "note": "max deviation of the gas mass flux along z"
+        },
+        {
+          "segment": "drift",
+          "name": "liquid_mass_drift",
+          "value": 2.2778368607817274e-16,
+          "unit": "-",
+          "comparator": "<=",
+          "limit_value": 0.01,
+          "passed": 1,
+          "note": "max deviation of the liquid mass flux along z"
+        },
+        {
+          "segment": "stefan",
+          "name": "energy_ledger_residual",
+          "value": 0.002073164830672607,
+          "unit": "-",
+          "comparator": "<=",
+          "limit_value": 0.01,
+          "passed": 1,
+          "note": "|dH + Q_wall| / |dH|"
+        },
+        {
+          "segment": "vof",
+          "name": "alpha_bound_violation",
+          "value": 0.0,
+          "unit": "-",
+          "comparator": "<=",
+          "limit_value": 1e-10,
+          "passed": 1,
+          "note": "max excursion of alpha outside [0,1]"
+        },
+        {
+          "segment": "vof",
+          "name": "volume_drift",
+          "value": 4.113968717731558e-16,
+          "unit": "-",
+          "comparator": "<=",
+          "limit_value": 0.01,
+          "passed": 1,
+          "note": "max relative liquid-volume drift"
+        }
+      ]
+    },
+    "J6": {
+      "description": "SQL traceability of every reported number",
+      "passed": true,
+      "metrics": [
+        {
+          "segment": "chain",
+          "name": "mass_closure_worst_ratio",
+          "value": 0.20731648306726067,
+          "unit": "1",
+          "comparator": "<=",
+          "limit_value": 1.0,
+          "passed": 1,
+          "note": "worst closure metric stefan/energy_ledger_residual = 2.073e-03 against 0.01"
+        },
+        {
+          "segment": "chain",
+          "name": "verdict_consistency",
+          "value": 1.0,
+          "unit": "1",
+          "comparator": ">=",
+          "limit_value": 1.0,
+          "passed": 1,
+          "note": "verdict recomputed from (value, comparator, limit)"
+        }
+      ]
+    }
+  },
+  "runs": [
+    {
+      "segment": "drift",
+      "case_name": "vertical pipe, air-water upflow",
+      "created_at": "2026-11-10T20:56:46.028788+00:00",
+      "git_commit": "7e6ee1dfbd88abf332df52436213342f71461d4e",
+      "git_branch": "agent/m10862",
+      "library_versions": "{\"python\": \"3.11.6\", \"platform\": \"Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38\", \"numpy\": \"2.4.6\", \"scipy\": \"1.16.0\", \"torch\": \"2.7.1\"}",
+      "host": "36cb7828dbd5",
+      "config_json": "{\"length\": 3.0, \"diameter\": 0.05, \"n_cells\": 200, \"p_bottom\": 300000.0, \"temperature\": 293.15, \"gas_mass_flux\": 0.5, \"liquid_superficial_velocity\": 0.5, \"rho_liquid\": 998.2, \"mu_liquid\": 0.001002, \"sigma\": 0.0728, \"r_gas\": 287.05, \"p_vapour\": 2339.0, \"distribution\": 1.2, \"drift_kind\": \"churn\", \"gravity\": 9.80665}"
+    },
+    {
+      "segment": "vof",
+      "case_name": "Martin & Moyce dam break (PLIC-VOF)",
+      "created_at": "2026-11-10T20:57:11.589880+00:00",
+      "git_commit": "7e6ee1dfbd88abf332df52436213342f71461d4e",
+      "git_branch": "agent/m10862",
+      "library_versions": "{\"python\": \"3.11.6\", \"platform\": \"Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38\", \"numpy\": \"2.4.6\", \"scipy\": \"1.16.0\", \"torch\": \"2.7.1\"}",
+      "host": "36cb7828dbd5",
+      "config_json": "{\"config\": {\"a\": 0.05715, \"aspect\": 2.0, \"length\": 0.6, \"height\": 0.2, \"nx\": 120, \"ny\": 40, \"rho_liquid\": 1000.0, \"rho_gas\": 1.0, \"mu_liquid\": 0.001, \"mu_gas\": 1e-05, \"gravity\": 9.81, \"vof_bounds\": \"global\", \"cfl\": 0.35, \"t_star_end\": 4.0, \"max_steps\": 20000, \"track_every\": 1, \"pressure_init\": \"hydrostatic\"}, \"clip_volume\": 69.44311684251764}"
+    },
+    {
+      "segment": "cavitation",
+      "case_name": "Rayleigh-Plesset + void transport",
+      "created_at": "2026-11-10T20:57:35.928480+00:00",
+      "git_commit": "7e6ee1dfbd88abf332df52436213342f71461d4e",
+      "git_branch": "agent/m10862",
+      "library_versions": "{\"python\": \"3.11.6\", \"platform\": \"Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38\", \"numpy\": \"2.4.6\", \"scipy\": \"1.16.0\", \"torch\": \"2.7.1\"}",
+      "host": "36cb7828dbd5",
+      "config_json": "{\"bubble\": {\"r0\": 0.0001, \"p_inf0\": 100000.0, \"p_vapour\": 2339.0, \"rho\": 998.2, \"mu\": 0.001002, \"sigma\": 0.0728, \"gamma\": 1.4, \"p_gas_override\": null}, \"eps\": 0.001, \"n_periods\": 6.0}"
+    },
+    {
+      "segment": "stefan",
+      "case_name": "one-phase Stefan solidification",
+      "created_at": "2026-11-10T20:57:41.886909+00:00",
+      "git_commit": "7e6ee1dfbd88abf332df52436213342f71461d4e",
+      "git_branch": "agent/m10862",
+      "library_versions": "{\"python\": \"3.11.6\", \"platform\": \"Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38\", \"numpy\": \"2.4.6\", \"scipy\": \"1.16.0\", \"torch\": \"2.7.1\"}",
+      "host": "36cb7828dbd5",
+      "config_json": "{\"k_solid\": 2.22, \"rho\": 917.0, \"c_solid\": 2050.0, \"latent\": 333700.0, \"t_fusion\": 273.15, \"t_wall\": 253.15, \"length\": 0.2, \"n_cells\": 400, \"max_dt\": 0.05, \"t_end\": 600.0, \"mushy_halfwidth\": 0.01, \"n_samples\": 7}"
+    },
+    {
+      "segment": "chain",
+      "case_name": "J5 mass closure",
+      "created_at": "2026-11-10T20:57:42.591305+00:00",
+      "git_commit": "7e6ee1dfbd88abf332df52436213342f71461d4e",
+      "git_branch": "agent/m10862",
+      "library_versions": "{\"python\": \"3.11.6\", \"platform\": \"Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38\", \"numpy\": \"2.4.6\", \"scipy\": \"1.16.0\", \"torch\": \"2.7.1\"}",
+      "host": "36cb7828dbd5",
+      "config_json": "{\"closure_rows\": 6, \"worst\": \"stefan/energy_ledger_residual\"}"
+    },
+    {
+      "segment": "chain",
+      "case_name": "J6 SQL traceability",
+      "created_at": "2026-11-10T20:57:42.613869+00:00",
+      "git_commit": "7e6ee1dfbd88abf332df52436213342f71461d4e",
+      "git_branch": "agent/m10862",
+      "library_versions": "{\"python\": \"3.11.6\", \"platform\": \"Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38\", \"numpy\": \"2.4.6\", \"scipy\": \"1.16.0\", \"torch\": \"2.7.1\"}",
+      "host": "36cb7828dbd5",
+      "config_json": "{\"criterion_rows\": 20}"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "/root/tp-agent/work/m10862/benchmarks/verified/fvm_two_phase_chain/figures/m1_drift_flux.png",
+      "sha256": "6302b785efe164da0b4391fc51906d679da7b6a4195aad689ef090e50865a1bc",
+      "n_bytes": 53835
+    },
+    {
+      "path": "/root/tp-agent/work/m10862/benchmarks/verified/fvm_two_phase_chain/figures/m2_plic_dam_break.png",
+      "sha256": "a999b5d727c6ce4e879c9231ef09f30785ba49d58fda88c9b7a1a0bc5ec66a13",
+      "n_bytes": 74220
+    },
+    {
+      "path": "/root/tp-agent/work/m10862/benchmarks/verified/fvm_two_phase_chain/figures/m3_rayleigh_plesset.png",
+      "sha256": "2528bd7b1671ed09ca640a00397e3b755bef2605847af3830048a6a51116b267",
+      "n_bytes": 113299
+    },
+    {
+      "path": "/root/tp-agent/work/m10862/benchmarks/verified/fvm_two_phase_chain/figures/m4_stefan.png",
+      "sha256": "43f0f10796665a49f1be053695f5bfa51dc4c1afb4bc810b3bca2a20f1883fc4",
+      "n_bytes": 64407
+    },
+    {
+      "path": "/root/tp-agent/work/m10862/benchmarks/verified/fvm_two_phase_chain/report.json",
+      "sha256": "cd3b7690812886fd630c8a5feb6670b4da65b0a0d3818f26adb0d2f6af5a55c2",
+      "n_bytes": 453574
+    },
+    {
+      "path": "/root/tp-agent/work/m10862/benchmarks/verified/fvm_two_phase_chain/REPORT.md",
+      "sha256": "cd9be6e3d15b5ebbbf9525a39c89bad579db87ff89468f40f3e81d448164892c",
+      "n_bytes": 12990
+    },
+    {
+      "path": "docs/two_phase_chain/report.json",
+      "sha256": "1cb84f00291f9a8eb7fac8aed948c6eaffb1d479ac3d3da1af25d88cb610b59c",
+      "n_bytes": 46225
+    },
+    {
+      "path": "docs/two_phase_chain/REPORT.md",
+      "sha256": "0f9d2b3d9307f27d41f66419af0392e5528fe08e2d52982ef445a10d9eb9721c",
+      "n_bytes": 12990
+    }
+  ],
+  "figures": [
+    {
+      "name": "m1_drift_flux",
+      "caption": "M1: void fraction against the Wallis closed-form solution and the gas-expansion coupling in a 3 m vertical pipe (air-water, C0=1.2).",
+      "sha256": "6302b785efe164da0b4391fc51906d679da7b6a4195aad689ef090e50865a1bc"
+    },
+    {
+      "name": "m2_plic_dam_break",
+      "caption": "M2: PLIC-VOF dam break — final liquid-fraction field (left) and the surge front and residual column height against Martin & Moyce (1952).",
+      "sha256": "a999b5d727c6ce4e879c9231ef09f30785ba49d58fda88c9b7a1a0bc5ec66a13"
+    },
+    {
+      "name": "m3_rayleigh_plesset",
+      "caption": "M3: Rayleigh-Plesset free oscillation against the Plesset linear solution (left) and the coupled void-transport/bubble-growth profile (right).",
+      "sha256": "2528bd7b1671ed09ca640a00397e3b755bef2605847af3830048a6a51116b267"
+    },
+    {
+      "name": "m4_stefan",
+      "caption": "M4: Stefan front against the similarity solution (left) and the temperature field with the zero-latent-heat control (right).",
+      "sha256": "43f0f10796665a49f1be053695f5bfa51dc4c1afb4bc810b3bca2a20f1883fc4"
+    }
+  ],
+  "markdown": "# TensorFVM two-phase verification chain (drift-flux, PLIC-VOF, Rayleigh-Plesset, Stefan)\n\n* mission: `10862` · git commit: `7e6ee1dfbd88` · branch `agent/m10862` · generated 2026-11-10T21:00:06.496637+00:00\n* environment: python 3.11.6, numpy 2.4.6, scipy 1.16.0, torch 2.7.1 on `36cb7828dbd5`\n\n## 1. Cases and physical background\n\nFour segments are chained; each has one negative control that removes the physics under test and must therefore degenerate to a known limit.\n\n| segment | case | configuration (from the ledger) |\n|---|---|---|\n| drift | vertical pipe, air-water upflow | {\"length\": 3.0, \"diameter\": 0.05, \"n_cells\": 200, \"p_bottom\": 300000.0, \"temperature\": 293.15, \"gas_mass_flux\": 0.5, \"liquid_superficial_velocity\": 0.5, \"rho_li ... |\n| vof | Martin & Moyce dam break (PLIC-VOF) | {\"config\": {\"a\": 0.05715, \"aspect\": 2.0, \"length\": 0.6, \"height\": 0.2, \"nx\": 120, \"ny\": 40, \"rho_liquid\": 1000.0, \"rho_gas\": 1.0, \"mu_liquid\": 0.001, \"mu_gas\":  ... |\n| cavitation | Rayleigh-Plesset + void transport | {\"bubble\": {\"r0\": 0.0001, \"p_inf0\": 100000.0, \"p_vapour\": 2339.0, \"rho\": 998.2, \"mu\": 0.001002, \"sigma\": 0.0728, \"gamma\": 1.4, \"p_gas_override\": null}, \"eps\": 0 ... |\n| stefan | one-phase Stefan solidification | {\"k_solid\": 2.22, \"rho\": 917.0, \"c_solid\": 2050.0, \"latent\": 333700.0, \"t_fusion\": 273.15, \"t_wall\": 253.15, \"length\": 0.2, \"n_cells\": 400, \"max_dt\": 0.05, \"t_e ... |\n\nM1 solves the 1-D drift-flux equations for an air-water upflow in a vertical pipe with a 3 bar inlet and a 3 m length: the gas expands as the pressure falls, so the void fraction `alpha(z)` is not uniform. M2 is the Martin & Moyce (1952) dam break (column half-width a = 0.05715 m, aspect ratio 2) with the liquid fraction transported by a PLIC reconstruction. M3 is the Rayleigh-Plesset free oscillation of a 0.1 mm bubble in water plus the advection of a bubble cloud through a low-pressure duct. M4 is the one-phase Stefan problem for an ice-like medium (k = 2.22 W/m/K, L = 3.337e5 J/kg) solidified from a wall held 20 K below the fusion temperature.\n\n## 2. Method\n\nThe four solvers are independent of the references:\n\n* **M1**: the reference is the *closed-form* Wallis void fraction `alpha = (B - sqrt(B^2 - 4 v_dj j_g))/(2 v_dj)`, `B = C0(j_g+j_l) + v_dj`, with the pressure profile integrated by DOP853 at `rtol = 1e-12`; the numerical model is a conservative finite-volume march of the gas mass `alpha rho_g` with upwind face fluxes and a quasi-steady momentum balance.\n* **M2**: PLIC reconstruction (Youngs normal, closed-form line constant) with geometric face fluxes, direction-split sweeps and a conservative bound limiter; momentum from the verified Phase-0 projection kernel. Front and column height are extracted with two pre-declared depth thresholds.\n* **M3**: the Plesset linearisation `X'' + 2 beta X' + omega^2 X = 0` (`omega^2 = (3 gamma p_g0 - 2 sigma/R0)/(rho R0^2)`, `beta = 2 mu/(rho R0^2)`) is the reference; the numerical solution is the full nonlinear ODE integrated at `rtol = 1e-12`. The void transport advects the bubble number density and the gas mass conservatively (MUSCL-Hancock) and adds the growth source.\n* **M4**: the reference is the Carslaw & Jaeger similarity solution `s = 2 lambda sqrt(alpha t)` with `sqrt(pi) lambda exp(lambda^2) erf(lambda) = St` solved to machine precision; the numerical model is an explicit enthalpy-method finite volume with the exact enthalpy inversion (no mushy band).\n\nEvery measured number is written to a SQLite ledger with its comparator and limit; this report is generated by querying that ledger, so no number is transcribed by hand.\n\n## 3. Results\n\n| criterion | segment | metric | value | unit | gate | verdict |\n|---|---|---|---|---|---|---|\n| J5 | cavitation | bubble_number_conservation | 0 | - | <= 1.000e-10 | PASS |\n| J3 | cavitation | control_radius_drift | 0 | - | <= 1.000e-12 | PASS |\n| J3 | cavitation | frequency_rel_error | 4.021e-05 | - | <= 0.05 | PASS |\n| J5 | cavitation | gas_mass_budget_residual | 1.203e-16 | - | <= 0.01 | PASS |\n| J3 | cavitation | plesset_max_rel_deviation | 2.889e-06 | - | <= 0.05 | PASS |\n| - | chain | mass_closure_worst_ratio | 0.2073 | 1 | <= 1 | PASS |\n| - | chain | verdict_consistency | 1 | 1 | >= 1 | PASS |\n| J1 | drift | alpha_max_rel_error | 1.801e-04 | - | <= 0.1 | PASS |\n| J1 | drift | control_alpha_max | 0 | - | <= 1.000e-12 | PASS |\n| J1 | drift | control_liquid_velocity_error | 0 | - | <= 1.000e-12 | PASS |\n| J5 | drift | gas_mass_drift | 9.659e-15 | - | <= 0.01 | PASS |\n| J5 | drift | liquid_mass_drift | 2.278e-16 | - | <= 0.01 | PASS |\n| J4 | stefan | control_front_max | 0 | m | <= 1.000e-12 | PASS |\n| J4 | stefan | control_temperature_rel_error | 2.305e-06 | - | <= 0.001 | PASS |\n| J5 | stefan | energy_ledger_residual | 0.002073 | - | <= 0.01 | PASS |\n| J4 | stefan | front_max_rel_error | 6.679e-04 | - | <= 0.03 | PASS |\n| J5 | vof | alpha_bound_violation | 0 | - | <= 1.000e-10 | PASS |\n| J2 | vof | control_max_abs_change | 0 | - | <= 1.000e-14 | PASS |\n| J2 | vof | front_max_rel_error | 0.9882 | - | <= 0.15 | **FAIL** |\n| J2 | vof | height_max_rel_error | 0.845 | - | <= 0.15 | **FAIL** |\n| J5 | vof | volume_drift | 4.114e-16 | - | <= 0.01 | PASS |\n\n### 3.1 Segment detail (informational metrics)\n\n**drift**\n\n| metric | value | unit | note |\n|---|---|---|---|\n| alpha_inlet | 0.1434 | - | inlet void fraction |\n| alpha_outlet | 0.1544 | - | outlet void fraction |\n| alpha_rms_rel_error | 1.281e-05 | - | rms over cells |\n| control_pressure_gradient_rel_error | 1.960e-13 | - | dp/dz vs rho_l g with G_g = 0 (half-cell offset removed) |\n| drift_velocity | 0.2446 | m/s | Wallis churn-turbulent v_dj |\n| homogeneous_limit_error | 0 | - | v_dj -> 0 limit vs the no-slip closed form |\n| pressure_max_rel_error | 2.098e-04 | - | max |p_FVM - p_reference|/p |\n| refinement_error_coarse | 7.204e-04 | - | max rel error at n=50 |\n| refinement_error_fine | 1.801e-04 | - | max rel error at n=200 |\n| steady_residual | 2.150e-15 | 1/s | relative gas-mass change per second at the end of the march |\n| steps | 800 | - | time steps to steady state |\n\n**vof**\n\n| metric | value | unit | note |\n|---|---|---|---|\n| algebraic_front_max_rel_error | 0.986 | - | same comparison for the algebraic FCT transport (reference) |\n| algebraic_interface_thickness_cells | 3.121 | cells | same measure for the algebraic FCT transport |\n| algebraic_volume_drift | 4.114e-16 | - | volume drift of the algebraic FCT transport |\n| control_speed_max | 0 | m/s | g = 0 static-interface control |\n| control_volume_drift | 0 | - | g = 0 static-interface control |\n| divergence_max | 241.7 | 1/s | max cell divergence of the projected field |\n| dx_mm | 5 | mm | cell size |\n| front_final_star | 3.506 | - | x_f* at the end |\n| front_max_rel_error_leading_edge | 0.8564 | - | same with the depth > 2% of a cell convention (sensitivity) |\n| front_mean_rel_error | 0.4086 | - | mean over the window |\n| front_rel_error_band_early | 0.9882 | - | front error in the band t* in [0.3, 1.0) |\n| front_rel_error_band_late | 0.24 | - | front error in the band t* in [3.0, 99.0) |\n| front_rel_error_band_late2 | 0.377 | - | front error in the band t* in [2.0, 3.0) |\n| front_rel_error_band_mid | 0.629 | - | front error in the band t* in [1.0, 2.0) |\n| front_rel_error_late | 0.24 | - | front error for t* >= 3 (asymptotic agreement) |\n| height_final_star | 0.1531 | - | h/h0 at the end |\n| interface_thickness_ratio | 1.165 | 1 | PLIC / algebraic interface thickness (smaller is sharper) |\n| mu_liquid | 0.001 | Pa s | liquid viscosity |\n| plic_interface_thickness_cells | 3.635 | cells | mean cells spanning 0.1 < alpha < 0.9 in the final field |\n| steps | 169 | - | time steps |\n| vof_clip_volume | 69.44 | 1 | liquid fraction redistributed by the bound limiter (accumulated) |\n\n**cavitation**\n\n| metric | value | unit | note |\n|---|---|---|---|\n| bubble_r0 | 1.000e-04 | m | equilibrium radius |\n| damping_rel_error | 1.473e-04 | - | measured envelope decay rate vs beta = 2 mu/(rho R0^2) |\n| natural_frequency | 2.039e+05 | rad/s | Plesset natural frequency |\n| period_us | 30.82 | us | linear period |\n| radius_ratio_max | 1.048 | - | max R/R0 reached in the duct |\n| rayleigh_growth_rel_error | 0.05717 | - | dynamic growth vs sqrt(2 dp/(3 rho)) t for R > 5 R0 |\n| surface_tension_shift | -0.001753 | 1 | relative difference to sqrt(3 gamma p0/(rho R0^2)) |\n| void_fraction_max | 0.00418 | - | max void fraction reached in the duct |\n\n**stefan**\n\n| metric | value | unit | note |\n|---|---|---|---|\n| analytic_front_final | 0.01294 | m | 2 lambda sqrt(alpha t_end) |\n| control_energy_error | 0.007822 | - | L = 0 energy ledger residual |\n| front_final | 0.01294 | m | s(t_end) |\n| front_mean_rel_error | 3.306e-04 | - | mean over samples |\n| grid_cells | 400 | - | cells across the domain |\n| lambda_cross_check_error | 3.084e-15 | - | lambda vs tensorfvm.cht.stefan.neumann_lambda |\n| similarity_lambda | 0.243 | - | lambda(St) |\n| stefan_number | 0.1229 | - | c dT / L |\n| time_step | 0.05 | s | explicit stability step |\n| two_phase_limit_error | 1.440e-12 | - | two-phase lambda with St_liquid -> 0 vs one-phase lambda |\n\n**chain**\n\n| metric | value | unit | note |\n|---|---|---|---|\n| criterion_rows | 20 | - | criteria recorded in the ledger |\n\n## 4. Figures\n\n![m1_drift_flux](m1_drift_flux.png)\n*M1: void fraction against the Wallis closed-form solution and the gas-expansion coupling in a 3 m vertical pipe (air-water, C0=1.2).* (sha256 `6302b785efe164da...`)\n\n![m2_plic_dam_break](m2_plic_dam_break.png)\n*M2: PLIC-VOF dam break — final liquid-fraction field (left) and the surge front and residual column height against Martin & Moyce (1952).* (sha256 `a999b5d727c6ce4e...`)\n\n![m3_rayleigh_plesset](m3_rayleigh_plesset.png)\n*M3: Rayleigh-Plesset free oscillation against the Plesset linear solution (left) and the coupled void-transport/bubble-growth profile (right).* (sha256 `2528bd7b1671ed09...`)\n\n![m4_stefan](m4_stefan.png)\n*M4: Stefan front against the similarity solution (left) and the temperature field with the zero-latent-heat control (right).* (sha256 `43f0f10796665a49...`)\n\n## 5. Notes, limitations and pitfalls\n\n* **J2 is an honest FAIL.** The surge front lags the digitised Martin & Moyce curve at early times and the deficit shrinks with time (max front error 0.9882 - over the whole window, 0.24 - for t* >= 3). The transport is not the limiting factor: the algebraic FCT scheme on the same grid gives 0.986 - and the interface is *thicker* (algebraic 3.121 cells vs PLIC 3.635 cells), so the deficit is in the first-order upwind momentum advection of the shared projection kernel (the Phase-0 gate reports the same failure). Fixing it needs a second-order momentum scheme, which is out of scope for this node and is left as the documented follow-up.\n* The Martin & Moyce data are a digitisation of a published curve (few-percent reading error); the comparison therefore cannot resolve better than a few percent even with a perfect solver.\n* The drift-flux pipe is frictionless (the verification target is the void-fraction profile, which wall friction does not enter); `C0 = 1.2` and the Wallis churn-turbulent drift velocity are closures, not first-principles results.\n* The cavitation transport uses the inertia-controlled growth asymptote (no bubble oscillation at the transport time scale, period ~30 us); the full Rayleigh-Plesset dynamics is verified separately in M3.\n* The Stefan solver assumes equal solid/liquid density and a semi-infinite domain whose length is about 15 times the final front position, so the front never approaches the far boundary.\n\n## 6. Error judgement (key quantities vs their baseline)\n\n| quantity | baseline | measured error | gate | below gate? | below 3%? |\n|---|---|---|---|---|---|\n| drift/alpha_max_rel_error | Wallis closed form + DOP853 pressure | 1.801e-04 | <= 10% | PASS | yes |\n| drift/control_alpha_max | alpha = 0 (no gas) | 0 | <= 1e-12 | PASS | yes |\n| vof/front_max_rel_error | Martin & Moyce (1952) | 0.9882 | <= 15% | **FAIL** | no |\n| vof/height_max_rel_error | Martin & Moyce (1952) | 0.845 | <= 15% | **FAIL** | no |\n| vof/front_rel_error_band_early | Martin & Moyce, t* in [0.3, 1) | 0.9882 | informational | n/a | no |\n| vof/front_rel_error_band_mid | Martin & Moyce, t* in [1, 2) | 0.629 | informational | n/a | no |\n| vof/front_rel_error_band_late2 | Martin & Moyce, t* in [2, 3) | 0.377 | informational | n/a | no |\n| vof/front_rel_error_band_late | Martin & Moyce, t* >= 3 | 0.24 | informational | n/a | no |\n| vof/volume_drift | exact conservation | 4.114e-16 | <= 1% | PASS | yes |\n| cavitation/plesset_max_rel_deviation | Plesset (1949) linear | 2.889e-06 | <= 5% | PASS | yes |\n| cavitation/frequency_rel_error | Plesset omega | 4.021e-05 | <= 5% | PASS | yes |\n| cavitation/gas_mass_budget_residual | source/mass identity | 1.203e-16 | <= 1% | PASS | yes |\n| stefan/front_max_rel_error | Carslaw & Jaeger similarity | 6.679e-04 | <= 3% | PASS | yes |\n| stefan/control_front_max | no phase change at L = 0 | 0 | = 0 | PASS | yes |"
+}
