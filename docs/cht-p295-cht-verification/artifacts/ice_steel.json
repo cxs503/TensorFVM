@@ -1,0 +1,266 @@
+{
+  "acceptance": {
+    "interface_flux_residual_limit": 0.01,
+    "mutation_loose_coupling_detected": 1,
+    "partitioned_residual_ok": 1,
+    "single_field_residual_ok": 1,
+    "two_d_energy_balance_ok": 1,
+    "two_d_residual_ok": 1,
+    "w4n08_deviation_limit": 0.3,
+    "w4n08_within_limit": 1
+  },
+  "boundary": {
+    "h_air_W_m2K": 25.0,
+    "h_water_W_m2K": 500.0,
+    "t_air_surface_C": -10.0,
+    "t_water_C": -1.8
+  },
+  "case": "ice_steel_conjugate",
+  "figures": [
+    "runs/cht_p295/figures/cht_ice_steel.png"
+  ],
+  "geometry": {
+    "ice_thickness_m": 0.03,
+    "nx_ice": 30,
+    "nx_steel": 20,
+    "steel_thickness_m": 0.02
+  },
+  "materials": {
+    "conductivity_ratio": 22.52252252252252,
+    "k_ice_W_mK": 2.22,
+    "k_steel_W_mK": 50.0
+  },
+  "partitioned_1d": {
+    "analytic_flux_W_m2": 293.3101314771848,
+    "analytic_interface_temperature_C": -2.503944315545244,
+    "converged": 1,
+    "energy_residual": 1.0786504342757343e-11,
+    "flux_error_rel": 1.0300648466027563e-11,
+    "flux_residual": 1.0751038995552703e-11,
+    "interface_temperature_C": -2.5039443155379737,
+    "interface_temperature_error_rel": 2.9034928649650356e-12,
+    "iterations": 14,
+    "mutation_flux_residual": 0.028109843348591592,
+    "mutation_loose_iterations": 2,
+    "q_ice_W_m2": 293.31013147731693,
+    "q_steel_W_m2": 293.31013147416354
+  },
+  "runtime_s": 0.10403609275817871,
+  "single_field_1d": {
+    "analytic_flux_W_m2": 589.3550893550894,
+    "analytic_interface_temperature_C": -2.035742035742036,
+    "global_flux_residual": 3.0478264605588344e-14,
+    "interface_flux_error_rel": 2.6813156836563026e-14,
+    "interface_temperature_C": -2.0357420357420395,
+    "interface_temperature_error_rel": 1.7451688948916962e-15,
+    "local_flux_residual": 3.0478264605588344e-14,
+    "q_ice_W_m2": 589.3550893550962,
+    "q_steel_W_m2": 589.3550893551142
+  },
+  "two_dimensional": {
+    "global_flux_residual": 2.7173922501225114e-14,
+    "heat_into_ice_W_per_m": 692.671911421907,
+    "heat_out_of_air_side_W_per_m": 692.6719114219131,
+    "interface_flux_profile_W_m2": [
+      589.7306695719359,
+      594.0169449295921,
+      605.6553774109029,
+      624.0631109295938,
+      647.8914285182524,
+      675.3740072956919,
+      704.4726427323368,
+      733.0292254172231,
+      758.925844469656,
+      780.2418661394779,
+      795.3963786149991,
+      803.2654410332475,
+      803.26544103324,
+      795.3963786149916,
+      780.2418661394742,
+      758.9258444696484,
+      733.0292254172156,
+      704.4726427323349,
+      675.3740072956899,
+      647.891428518243,
+      624.0631109295749,
+      605.6553774109124,
+      594.0169449296035,
+      589.7306695719284
+    ],
+    "interface_temperature_profile_C": [
+      -2.0360310876319856,
+      -2.037824154278124,
+      -2.0424673919275644,
+      -2.0497904003278675,
+      -2.0592679857706093,
+      -2.070198879056726,
+      -2.0817725285804056,
+      -2.093130581831671,
+      -2.103430664978415,
+      -2.111908868058277,
+      -2.117936401541105,
+      -2.1210662308431374,
+      -2.1210662308431445,
+      -2.1179364015410833,
+      -2.1119088680583142,
+      -2.1034306649784393,
+      -2.0931305818316965,
+      -2.08177252858042,
+      -2.0701988790567216,
+      -2.0592679857706226,
+      -2.049790400327938,
+      -2.0424673919275795,
+      -2.0378241542781113,
+      -2.036031087632005
+    ],
+    "interfacial_energy_balance_residual": 8.862910615741552e-15,
+    "ledger": {
+      "advective": {
+        "inflow": 0.0,
+        "outflow": 0.0
+      },
+      "boundary": {
+        "east": -692.6719114219131,
+        "north": 0.0,
+        "south": 0.0,
+        "west": 692.6719114222526
+      },
+      "imbalance": 3.3946889743674546e-10,
+      "inflow": 0.0,
+      "normalized_imbalance": 4.900861314553945e-13,
+      "outflow": 0.0,
+      "residual_inf": 4.65032352903183e-12,
+      "residual_scaled": 6.713601998792462e-15
+    },
+    "local_flux_residual_max": 3.62421807011984e-14,
+    "nz": 24,
+    "span_surface_variation_K": 3.0
+  },
+  "w4n08_cross_check": {
+    "conditions": {
+      "char_length_m": 2.0,
+      "relative_humidity": 0.8,
+      "spray_flux_kg_m2_s": 0.002535607967,
+      "t_air_C": -10.0,
+      "t_sea_C": -1.8,
+      "wind_m_s": 10.0
+    },
+    "design_case": {
+      "conduction_into_ice_W_m2": 2.4646951146678455e-12,
+      "deviation_vs_w4n08_rel": 0.02895870333758259,
+      "freezing_fraction": 0.5590302108014831,
+      "ice_flux_kg_m2_s": 0.00141748145630193,
+      "interface_flux_residual": 4.9293902293356915,
+      "interface_temperature_C": -1.799999999999917,
+      "regime": "wet",
+      "t_water_C": -1.8
+    },
+    "ice_flux_deviation_rel": 0.02895870333758259,
+    "ice_flux_deviation_rel_surface_only": 0.028958703337587943,
+    "my_growth": {
+      "freezing_fraction": 0.559030210801486,
+      "ice_flux_kg_m2_s": 0.0014174814563019374,
+      "q_req_W_m2": 473.01356196795643,
+      "regime": "wet"
+    },
+    "my_surface_balance": {
+      "h_conv_W_m2K": 28.703256176410754,
+      "length": 2.0,
+      "q_conv_W_m2": 235.36670064656818,
+      "q_evap_W_m2": 139.50978184485572,
+      "q_lw_W_m2": 98.13707947653256,
+      "q_required_W_m2": 473.01356196795643,
+      "q_spray_W_m2": 0.0,
+      "t_air": -10.0,
+      "t_surface": -1.8,
+      "wind": 10.0
+    },
+    "reference_panel": {
+      "freezing_fraction": 0.543297,
+      "ice_flux_kg_m2_s": 0.0013775882858117778,
+      "q_conv_W_m2": 218.9928,
+      "q_evap_W_m2": 142.5713,
+      "q_lw_W_m2": 98.1371,
+      "q_req_W_m2": 459.701211,
+      "regime": "wet"
+    },
+    "reference_source": "artifacts/marine_icing_w4n08/validation.json:results.reference_panel",
+    "sea_temperature_sweep": [
+      {
+        "conduction_into_ice_W_m2": 2.4646951146678455e-12,
+        "deviation_vs_w4n08_rel": 0.02895870333758259,
+        "freezing_fraction": 0.5590302108014831,
+        "ice_flux_kg_m2_s": 0.00141748145630193,
+        "interface_flux_residual": 4.9293902293356915,
+        "interface_temperature_C": -1.799999999999917,
+        "regime": "wet",
+        "t_water_C": -1.8
+      },
+      {
+        "conduction_into_ice_W_m2": 50.27173913043706,
+        "deviation_vs_w4n08_rel": -0.08039871824451095,
+        "freezing_fraction": 0.4996166480982893,
+        "ice_flux_kg_m2_s": 0.0012668319533638579,
+        "interface_flux_residual": 2.939880171136186e-14,
+        "interface_temperature_C": -1.120652173912993,
+        "regime": "wet",
+        "t_water_C": -1.0
+      },
+      {
+        "conduction_into_ice_W_m2": 113.1114130434803,
+        "deviation_vs_w4n08_rel": -0.2170954952221276,
+        "freezing_fraction": 0.4253496947192973,
+        "ice_flux_kg_m2_s": 0.001078520074691268,
+        "interface_flux_residual": 2.5001545045132525e-14,
+        "interface_temperature_C": -0.2714673913043363,
+        "regime": "wet",
+        "t_water_C": 0.0
+      },
+      {
+        "conduction_into_ice_W_m2": 175.951086956518,
+        "deviation_vs_w4n08_rel": -0.35379227219973225,
+        "freezing_fraction": 0.35108274134031175,
+        "ice_flux_kg_m2_s": 0.0008902081960186947,
+        "interface_flux_residual": 2.2291399099825235e-14,
+        "interface_temperature_C": 0.5777173913043204,
+        "regime": "wet",
+        "t_water_C": 1.0
+      },
+      {
+        "conduction_into_ice_W_m2": 238.79076086956314,
+        "deviation_vs_w4n08_rel": -0.4904890491773531,
+        "freezing_fraction": 0.27681578796131745,
+        "ice_flux_kg_m2_s": 0.0007018963173460992,
+        "interface_flux_residual": 3.201731846298188e-14,
+        "interface_temperature_C": 1.4269021739129766,
+        "regime": "wet",
+        "t_water_C": 2.0
+      },
+      {
+        "conduction_into_ice_W_m2": 427.30978260868017,
+        "deviation_vs_w4n08_rel": -0.9005793801101756,
+        "freezing_fraction": 0.05401492782435622,
+        "ice_flux_kg_m2_s": 0.0001369606813283676,
+        "interface_flux_residual": 2.1949331594457398e-14,
+        "interface_temperature_C": 3.9744565217389436,
+        "regime": "wet",
+        "t_water_C": 5.0
+      },
+      {
+        "conduction_into_ice_W_m2": 741.5081521738778,
+        "deviation_vs_w4n08_rel": -1.0,
+        "freezing_fraction": 0.0,
+        "ice_flux_kg_m2_s": 0.0,
+        "interface_flux_residual": 3.832959805914566e-14,
+        "interface_temperature_C": 8.220380434782223,
+        "regime": "melting",
+        "t_water_C": 10.0
+      }
+    ],
+    "term_deviation_rel": {
+      "q_conv_W_m2": 0.074769127782138,
+      "q_evap_W_m2": -0.021473593599443116,
+      "q_lw_W_m2": -2.0913056775755912e-07
+    }
+  }
+}

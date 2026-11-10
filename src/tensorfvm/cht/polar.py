@@ -77,21 +77,38 @@ def periodic_overlap_matrix(n_from: int, n_to: int) -> np.ndarray:
     h_from, h_to = 1.0 / n_from, 1.0 / n_to
     for j in range(n_to):
         a, b = j * h_to, (j + 1) * h_to
-        pos = a
-        while pos < b - 1e-15:
-            i = int(math.floor(pos / h_from))
-            seg_end = min(b, (i + 1) * h_from)
-            w[j, i % n_from] += (seg_end - pos) / h_to
-            pos = seg_end
+        # enumerate the source cells the target cell overlaps instead of walking
+        # ``pos`` forward: advancing by ``seg_end - pos`` stalls forever whenever
+        # rounding makes ``floor(pos / h_from) * h_from`` land back on ``pos``
+        # (which is what happened for every equal-partition case).
+        i0 = int(math.floor(a / h_from))
+        i1 = int(math.ceil(b / h_from))
+        for i in range(i0, i1 + 1):
+            low = max(a, i * h_from)
+            high = min(b, (i + 1) * h_from)
+            if high > low:
+                w[j, i % n_from] += (high - low) / h_to
     return w
 
 
 def one_sided_derivative(f0, f1, f2, s1: float, s2: float):
-    """``df/dx`` at x=0 from values at 0, ``s1``, ``s2`` (quadratic, 2nd order)."""
-    c0 = -(2.0 * s1 + s2) / (s1 * (s1 + s2))
-    c1 = (s1 + s2) / (s1 * s2)
-    c2 = -s1 / (s2 * (s1 + s2))
-    return c0 * f0 + c1 * f1 + c2 * f2
+    """``df/dx`` at x=0 from values at 0, ``s1``, ``s2`` (quadratic, 2nd order).
+
+    Lagrange coefficients differentiated at ``x = 0`` on the non-uniform stencil
+    ``{0, s1, s2}``:
+
+    ``a0 = -(s1+s2)/(s1 s2)``, ``a1 = s2/(s1 (s2-s1))``, ``a2 = -s1/(s2 (s2-s1))``.
+
+    They reproduce a linear function exactly (``a0+a1+a2 = 0`` and
+    ``a1 s1 + a2 s2 = 1``) -- the check that the previous coefficients failed,
+    which biased every wall heat flux taken through this function by O(s2/s1-1).
+    """
+    if s1 <= 0.0 or s2 <= s1:
+        raise ValueError("stencil must satisfy 0 < s1 < s2")
+    a0 = -(s1 + s2) / (s1 * s2)
+    a1 = s2 / (s1 * (s2 - s1))
+    a2 = -s1 / (s2 * (s2 - s1))
+    return a0 * f0 + a1 * f1 + a2 * f2
 
 
 class _PolarGrid:
@@ -278,12 +295,24 @@ class PolarVorticitySolver:
 
     def march(self, *, t_end: float, dt: float, tol_steady: float = 1e-8,
               max_steps: int = 400000, sample_from: float | None = None,
-              check_from: int = 100, t_ramp: float = 5.0):
+              check_from: int = 100, t_ramp: float = 5.0,
+              state: tuple | None = None):
+        """March the vorticity-streamfunction system in time.
+
+        ``state=(psi, omega)`` restarts a run from a saved pair of fields, which is
+        what makes it possible to walk a long march forward in wall-clock-bounded
+        segments (the flow solve of a cross-flow CHT case costs minutes).
+        """
         nt = self.n_theta
         outer_psi = self.u_inf * self.r_node[-1] * np.sin(self.theta)
-        psi = np.zeros((self.n_node, nt))
-        omega = np.zeros((self.n_node, nt))
+        if state is None:
+            psi = np.zeros((self.n_node, nt))
+            omega = np.zeros((self.n_node, nt))
+        else:
+            psi = np.array(state[0], dtype=float, copy=True)
+            omega = np.array(state[1], dtype=float, copy=True)
         hist, samples, sample_t = [], [], []
+        drag_history = []
         prev = np.zeros(self.n_theta)
         n_steps = min(int(round(t_end / dt)), max_steps)
         steady = False
@@ -302,6 +331,9 @@ class PolarVorticitySolver:
             prev = omega[0, :].copy() if step == 0 else prev
             hist.append(float(np.max(np.abs(omega[0, :] - prev))))
             prev = omega[0, :].copy()
+            if (step % 200) == 0:
+                cd, cl = self.drag_lift(omega[0, :])
+                drag_history.append((float(step * dt), float(cd), float(cl)))
             if sample_from is not None and step * dt >= sample_from:
                 samples.append(omega[0, :].copy())
                 sample_t.append(step * dt)
@@ -311,6 +343,7 @@ class PolarVorticitySolver:
                     break
         return {
             "psi": psi, "omega": omega, "steps": step + 1, "dt": dt,
+            "drag_history": drag_history,
             "time": (step + 1) * dt, "steady": steady,
             "wall_vorticity": omega[0, :].copy(),
             "wall_vorticity_history": hist,
@@ -408,10 +441,15 @@ class ConjugateCylinder:
         b = np.zeros(ni * nt)
         # inner Dirichlet value contributes g_inner * T_inner
         b[self._solid_idx[0, :]] += self._g_inner * 1.0
-        # Neumann flux entering the last node through its outer CV face
+        # Neumann flux entering the last node through its outer CV face.
+        # ``_A_solid`` is assembled in the same negated-diagonal convention as the
+        # fluid operator, so the right-hand side is negated on the way in
+        # (``+q`` = heat added to the outer cell) -- without this the solid runs
+        # the other way, e.g. an adiabatic interface leaves ``T = -1`` instead of
+        # the prescribed core value ``T = +1``.
         area = g.r_face[-1] * g.dtheta
         b[self._solid_idx[-1, :]] += q_interface * area
-        T = self._lu_solid.solve(b).reshape(ni, nt)
+        T = self._lu_solid.solve(-b).reshape(ni, nt)
         full = np.zeros((ni + 1, nt))
         full[1:, :] = T
         full[0, :] = 1.0
@@ -492,10 +530,17 @@ class ConjugateCylinder:
             rows += [P, N]
             cols += [N, P]
             vals += [np.where(pos, 0.0, -F), np.where(pos, F, 0.0)]
+        # Sign convention: the assembly puts the (negative) sum of the face
+        # conductances on the diagonal and the positive conductances off it, i.e.
+        # it assembles ``-(M T) = b``.  The inhomogeneous Dirichlet terms above are
+        # written for ``+M T = b``, so the right-hand side must be negated when the
+        # system is solved -- otherwise a pure-conduction annulus comes out with the
+        # correct shape but the opposite sign in the interior (the wall nodes are
+        # overwritten afterwards, which is exactly why the error hides).
         A = sp.coo_matrix((np.concatenate(vals), (np.concatenate(rows), np.concatenate(cols))),
                           shape=(ni * nt, ni * nt)).tocsc()
         A = (A + sp.diags(diag)).tocsc()
-        T = spla.spsolve(A, b).reshape(ni, nt)
+        T = spla.spsolve(A, -b).reshape(ni, nt)
         full = np.zeros((flow.n_node, nt))
         full[1:-1, :] = T
         full[0, :] = t_wall
@@ -515,8 +560,11 @@ class ConjugateCylinder:
         qf = np.zeros(self.n_theta)
         for it in range(max_iter):
             T_fluid, qf = self.solve_fluid(t_wall, psi, outer_temperature)
+            # ``qf`` is the heat flux *into the fluid*, i.e. the flux leaving the
+            # solid: that is the quantity compared with the solid-side flux below.
+            # What *enters* the solid across the interface is ``-qf``.
             q_to_solid = self.overlap @ qf
-            T_solid = self.solve_solid(q_to_solid)
+            T_solid = self.solve_solid(-q_to_solid)
             t_iface, q_solid_side = self.solid_interface_state(T_solid)
             t_wall_solid = self.overlap @ t_wall
             q_solid_at_wall = q_solid_side + self.kappa_solid * (t_iface - t_wall_solid) / (
@@ -533,7 +581,7 @@ class ConjugateCylinder:
 
         T_fluid, qf = self.solve_fluid(t_wall, psi, outer_temperature)
         q_to_solid = self.overlap @ qf
-        T_solid = self.solve_solid(q_to_solid)
+        T_solid = self.solve_solid(-q_to_solid)
         t_iface, q_solid_side = self.solid_interface_state(T_solid)
         t_wall_solid = self.overlap @ t_wall
         q_solid_at_wall = q_solid_side + self.kappa_solid * (t_iface - t_wall_solid) / (
