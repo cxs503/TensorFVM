@@ -109,7 +109,12 @@ def test_projection_is_exact_and_conserves_volume(with_body):
     tank = SigmaWaveTank(cfg)
     tank.set_wave(0.02, 1.0)
     if with_body:
-        tank.set_body(rectangular_section(0.4, 0.15, x0=2.0), added_mass=(200.0, 2.0))
+        # the body is held still on purpose: the test asks whether the *projection*
+        # stays exact with a body inside the tank, and a freely floating section
+        # in this cut-cell tank is a separate (unstable, documented) problem --
+        # see docs/wave-tank-td-seakeeping/README.md section 4.
+        tank.set_body(rectangular_section(0.4, 0.15, x0=2.0), added_mass=(200.0, 2.0),
+                      motion="fixed")
     vol0 = tank.volume()
     for _ in range(20):
         tank.step(2e-3)
@@ -232,8 +237,10 @@ def test_hydrostatic_restoring_matches_box_formula():
     poly = rectangular_section(b, t)
     rest = hydrostatic_restoring(poly)
     assert abs(rest["C33"] - 1000.0 * G * b) / (1000.0 * G * b) < 1e-12
-    # C55 = rho g (I_wl - nabla z_G) with I_wl = b^3/12, z_G = -T/2
-    expected = 1000.0 * G * (b ** 3 / 12.0 + b * t * t / 2.0)
+    # C55 = rho g nabla GM with GM = I_wl/nabla - (z_G - z_B).  For a box with
+    # its deck on the waterline z_G = z_B = -T/2, so GM = I_wl/nabla and
+    # C55 = rho g I_wl (a freeboard would subtract rho g nabla (z_G - z_B)).
+    expected = 1000.0 * G * (b ** 3 / 12.0)
     assert abs(rest["C55"] - expected) / expected < 1e-9
 
 
