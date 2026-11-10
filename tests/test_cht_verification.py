@@ -82,7 +82,11 @@ def test_two_layer_slab_flux_continuity_is_machine_exact():
         cond = 1.0 / (0.5 * dx[nx - 1] / 1.0 + 0.5 * dx[nx] / ratio)
         q = cond * (T[0, nx - 1] - T[0, nx])
         t_iface = T[0, nx - 1] - 0.5 * dx[nx - 1] * q
-        exact = 1.0 - (0.5 / 1.0) / (0.5 / 1.0 + 0.5 / ratio)
+        # interface temperature measured from the cold (west) wall: the drop is
+        # q * R_west, i.e. the *west* resistance over the total -- subtracting the
+        # east resistance from 1 gives the drop across the east half instead, and
+        # inverts the answer whenever ratio != 1.
+        exact = (0.5 / 1.0) / (0.5 / 1.0 + 0.5 / ratio)
         assert t_iface == pytest.approx(exact, abs=1e-9)
         assert info["ledger"].normalized_imbalance < 1e-10
 
@@ -91,9 +95,11 @@ def test_conservative_overlap_matrix_preserves_integral():
     for n_from, n_to in ((48, 48), (48, 32), (48, 96), (30, 44)):
         w = periodic_overlap_matrix(n_from, n_to)
         assert np.allclose(w.sum(axis=1), 1.0, atol=1e-12)
-        # the transferred *integral* is preserved whatever the resolution ratio
+        # a constant field is transferred unchanged ...
+        assert np.allclose(w @ np.ones(n_from), 1.0, atol=1e-12)
+        # ... and the transferred *integral* is preserved whatever the ratio, i.e.
+        # the mean of the target field equals the mean of the source field
         q = np.random.default_rng(0).normal(size=n_from)
-        assert math.isclose(w @ q, np.full(n_to, (w @ q)[0]).mean(), rel_tol=1.0)
         assert math.isclose(float(np.sum(w @ q) / n_to), float(np.mean(q)),
                             rel_tol=1e-12)
 

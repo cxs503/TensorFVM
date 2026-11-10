@@ -1,0 +1,107 @@
+{
+  "acceptance": {
+    "energy_balance_within_1e-6": 1,
+    "front_error_limit": 0.05,
+    "mutation_no_latent_detected": 1,
+    "three_times_within_limit": 1
+  },
+  "case": "stefan_1d_solidification",
+  "energy_ledger": {
+    "imbalance_J_m2": -1.1082738637924194e-07,
+    "newton_history_tail": [
+      [
+        2,
+        1.3391517963675508e-14
+      ],
+      [
+        2,
+        1.3722199855175242e-14
+      ],
+      [
+        2,
+        1.4053100477297875e-14
+      ]
+    ],
+    "newton_iterations_max": 7,
+    "newton_steps_not_converged": 0,
+    "normalized_imbalance": 1.6141928050025467e-14,
+    "stored_enthalpy_change_J_m2": -6865808.473174856,
+    "wall_heat_removed_J_m2": 6865808.473174745
+  },
+  "figures": [
+    "runs/cht_p295/figures/cht_stefan_front.png"
+  ],
+  "materials": {
+    "c_ice_J_kgK": 2050.0,
+    "k_ice_W_mK": 2.22,
+    "latent_J_kg": 333700.0,
+    "rho_ice_kg_m3": 917.0
+  },
+  "max_error_enthalpy_rel": 0.0012435243113758817,
+  "max_error_half_liquid_rel": 0.03334401778751443,
+  "mutant_no_latent_ledger": {
+    "imbalance_J_m2": 56790816.61119927,
+    "newton_history_tail": [
+      [
+        60,
+        12.452152430331672
+      ],
+      [
+        60,
+        12.519016341083105
+      ],
+      [
+        60,
+        12.623248829112823
+      ]
+    ],
+    "newton_iterations_max": 60,
+    "newton_steps_not_converged": 200,
+    "normalized_imbalance": 0.9999982800358669,
+    "stored_enthalpy_change_J_m2": -97.67833566464314,
+    "wall_heat_removed_J_m2": 56790914.289534934
+  },
+  "mutant_no_latent_max_error_rel": 17.900069654728256,
+  "runtime_s": 13.299213409423828,
+  "setup": {
+    "alpha_solid_m2_s": 1.1809452881878875e-06,
+    "dt_s": 0.5,
+    "dx_m": 0.000375,
+    "length_m": 0.15,
+    "mushy_band_K": 0.05,
+    "n_cells": 400,
+    "similarity_lambda": 0.24300581844893887,
+    "stefan_number": 0.12286484866646688,
+    "t_fusion_C": 0.0,
+    "t_wall_C": -20.0
+  },
+  "times": [
+    {
+      "error_enthalpy_rel": 0.0010193928729507714,
+      "error_half_liquid_rel": 0.03334401778751443,
+      "front_enthalpy_m": 0.005286935937710731,
+      "front_half_liquid_m": 0.005457660123825991,
+      "front_neumann_exact_m": 0.005281551961283279,
+      "mutant_no_latent_error_rel": 17.900069654728256,
+      "t_s": 100.0
+    },
+    {
+      "error_enthalpy_rel": 0.00110159302837904,
+      "error_half_liquid_rel": 0.01619676981210236,
+      "front_enthalpy_m": 0.011822918925780619,
+      "front_half_liquid_m": 0.012001191593137395,
+      "front_neumann_exact_m": 0.01180990921212675,
+      "mutant_no_latent_error_rel": 7.887588683330852,
+      "t_s": 500.0
+    },
+    {
+      "error_enthalpy_rel": 0.0012435243113758817,
+      "error_half_liquid_rel": 0.00810143585954867,
+      "front_enthalpy_m": 0.02115247879819572,
+      "front_half_liquid_m": 0.021297360462945957,
+      "front_neumann_exact_m": 0.021126207845133117,
+      "mutant_no_latent_error_rel": 4.042052544252877,
+      "t_s": 1600.0
+    }
+  ]
+}
