@@ -1,0 +1,103 @@
+{
+  "acceptance": {
+    "all_mutations_red": true,
+    "flux_imbalance_rel": 1.5288685799431715e-12,
+    "flux_residual_limit": 1e-06,
+    "passed": true,
+    "q_vs_analytic_rel": 1.4344081478157023e-13,
+    "temperature_continuity_limit": 0.01,
+    "temperature_continuity_rel": 3.508136542205691e-14
+  },
+  "analytic": {
+    "contacts": [
+      {
+        "layer": 0,
+        "q": 852.6130358191457,
+        "t_left": 258.4057839107457,
+        "t_right": 258.3205226071638,
+        "x": 0.0334
+      }
+    ],
+    "q": 852.6130358191457,
+    "r_total": 0.01548181818181818
+  },
+  "case": "ice_steel_interface_ch1",
+  "clean": {
+    "coupling_residual": 5.861422458508514e-13,
+    "flux_imbalance_rel": 1.5288685799431715e-12,
+    "interface_area_resistance_error_rel": 5.4313107830661345e-12,
+    "iterations": 45,
+    "jump_rel": 5.431233210337086e-12,
+    "q": 852.6130358192679,
+    "q_ice": 852.6130358192784,
+    "q_mean": 852.6130358199301,
+    "q_steel": 852.6130358205819,
+    "t_iface_ice": 258.40578391074655,
+    "t_iface_jump": 0.0852613035824561,
+    "t_iface_jump_expected": 0.08526130358199302,
+    "t_iface_steel": 258.3205226071641,
+    "temperature_continuity_rel": 3.508136542205691e-14
+  },
+  "design": {
+    "h_ice_m": 0.0334,
+    "h_steel_m": 0.01,
+    "k_ice": 2.2,
+    "k_steel": 50.0,
+    "r_contact_m2K_W": 0.0001,
+    "t_back_K": 258.15,
+    "t_surface_K": 271.35
+  },
+  "mutations": {
+    "sign_flipped": {
+      "coupling_residual": 6.46455111663613e-13,
+      "flux_imbalance_rel": 1.9999999999997082,
+      "interface_area_resistance_error_rel": 1.0488803274807877e+33,
+      "iterations": 45,
+      "jump_rel": 8219197264753.784,
+      "q": 874.0669395619008,
+      "q_ice": 874.0669395618573,
+      "q_mean": -1.27613475342514e-10,
+      "q_steel": -874.0669395621126,
+      "red": true,
+      "t_iface_ice": 258.08007464483563,
+      "t_iface_jump": 0.10488803274807879,
+      "t_iface_jump_expected": -1.27613475342514e-14,
+      "t_iface_steel": 257.97518661208755,
+      "temperature_continuity_rel": 0.007946063086976606
+    },
+    "single_sweep": {
+      "coupling_residual": 11.65181818182082,
+      "flux_imbalance_rel": 5.6841997775065085e-12,
+      "interface_area_resistance_error_rel": 1165.1818181798337,
+      "iterations": 1,
+      "jump_rel": 1165.1818181798337,
+      "q": 476.3065179109418,
+      "q_ice": 99.99999999990906,
+      "q_mean": 100.00000000019327,
+      "q_steel": 100.00000000047748,
+      "red": true,
+      "t_iface_ice": 269.83181818182095,
+      "t_iface_jump": 11.661818181820877,
+      "t_iface_jump_expected": 0.010000000000019327,
+      "t_iface_steel": 258.1700000000001,
+      "temperature_continuity_rel": 0.8827134986227891
+    },
+    "steel_decoupled": {
+      "coupling_residual": 7.315120731377078e-13,
+      "flux_imbalance_rel": 1.0,
+      "interface_area_resistance_error_rel": 1.2000000000165247,
+      "iterations": 45,
+      "jump_rel": 1.200000000016525,
+      "q": 863.2067059034688,
+      "q_ice": 863.2067059034216,
+      "q_mean": 431.6033529517108,
+      "q_steel": 0.0,
+      "red": true,
+      "t_iface_ice": 258.24495273765007,
+      "t_iface_jump": 0.0949527376500896,
+      "t_iface_jump_expected": 0.04316033529517108,
+      "t_iface_steel": 258.15,
+      "temperature_continuity_rel": 0.003923666845069571
+    }
+  }
+}
