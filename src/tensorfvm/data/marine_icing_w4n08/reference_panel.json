@@ -1,0 +1,32 @@
+{
+  "_provenance": {
+    "source_repository": "ship-performance-platform (W4-N08 marine icing)",
+    "source_artifact": "/root/tp-agent/work/m10000/artifacts/marine_icing_w4n08/validation.json",
+    "source_sha256": "26dc58b25e4bd0a1fed830bd7bfd592bcf40aefc1751e01c079dad2ac0a15d5b",
+    "source_code": "backend/api/marine_icing.py",
+    "extracted_by": "scripts/extract_w4n08_reference.py",
+    "extraction_note": "raw artifact numbers, no transcription"
+  },
+  "condition_string": "T_a=-10 C, U=10 m/s, T_sea=-1.8 C, RH=0.8, 2 m x 2 m wall",
+  "environment": {
+    "t_air_degC": -10.0,
+    "wind_speed_m_s": 10.0,
+    "t_sea_degC": -1.8,
+    "relative_humidity": 0.8,
+    "char_length_m": 2.0,
+    "spray_flux_kg_m2_s": 0.002535607967
+  },
+  "module_output": {
+    "regime": "wet",
+    "surface_temperature_degC": -1.8,
+    "freezing_fraction": 0.543297,
+    "q_conv_W_m2": 218.9928,
+    "q_evap_W_m2": 142.5713,
+    "q_lw_W_m2": 98.1371,
+    "q_spray_W_m2": 0.0,
+    "q_req_W_m2": 459.701211,
+    "ice_flux_kg_m2_s": 0.0013775882858117778,
+    "icing_rate_mm_per_h": 5.572267,
+    "reference_icing_rate_mm_per_h": 6.35
+  }
+}
