@@ -96,7 +96,9 @@ def run(output, grids=(12, 24, 48), max_iterations=1000):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--output', type=Path, default=Path('docs/suite-channel'))
+    # Default outside docs/: that tree holds published evidence snapshots which the
+    # evidence-checkout policy keeps read-only, so a plain run must not rewrite them.
+    parser.add_argument('--output', type=Path, default=Path('results/suite-channel'))
     parser.add_argument('--max-iterations', type=int, default=1000)
     args = parser.parse_args()
     torch.set_num_threads(1)

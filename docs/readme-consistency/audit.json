@@ -1,0 +1,223 @@
+{
+  "schema": "tensorfvm.readme-consistency/1",
+  "readme_lines": 548,
+  "checks": [
+    {
+      "id": "A1",
+      "area": "示例命令/选项",
+      "claim": "README 每个示例命令的选项都被目标程序接受",
+      "status": "PASS",
+      "detail": "15 条命令、36 个选项 token；全部可解析",
+      "evidence": {
+        "commands": [
+          "tensorfvm-cylinder --output results/cylinder",
+          "python -m tensorfvm --mesh-type body-fitted --nx 80 --ny 40 --reynolds 20 --max-iterations 1000",
+          "python -m tensorfvm --mesh-type c-grid --airfoil-code 0012 --reynolds 100  --nx 160 --ny 40 --domain-length 10 --domain-height 8  --airfoil-x 2 --airfoil-y 4 --output results/naca0012",
+          "python -m tensorfvm.benchmark --output results/benchmark",
+          "python -m tensorfvm.benchmark_dfg --output results/dfg",
+          "python -m tensorfvm.benchmark_airfoil --output results/airfoil-benchmark",
+          "python -m tensorfvm.benchmark_30p30n --output results/30p30n",
+          "PYTHONPATH=src python scripts/mesh_hlpw30p30n.py  --output results/30p-mesh --level 0 --layer-thickness .001",
+          "PYTHONPATH=src python scripts/run_three_element_steady.py  --mesh-file results/30p-mesh/mesh.msh --output results/30p-flow  --chord 1 --alpha 8.10 --pressure-gradient gauss-skew-corrected",
+          "python scripts/report_hlpw30p30n.py results/30p-flow",
+          "python -m tensorfvm.benchmark_flat_plate --output results/flat-plate",
+          "python -m tensorfvm.benchmark_cylinder_urans --output results/cylinder-urans",
+          "python -m tensorfvm.benchmark_cylinder3d --output results/cylinder-3d",
+          "tensorfvm-mesh-cylinder-3d --output results/cylinder-3d-o-grid  --nx 48 --ny 24 --nz 12 --stretching 2.5",
+          "python -m pytest -q"
+        ]
+      }
+    },
+    {
+      "id": "A2",
+      "area": "示例命令/选项",
+      "claim": "README 中的 `python -m tensorfvm.*` 模块可执行",
+      "status": "PASS",
+      "detail": "8 个模块；全部存在且可执行",
+      "evidence": {
+        "modules": [
+          "tensorfvm",
+          "tensorfvm.benchmark",
+          "tensorfvm.benchmark_30p30n",
+          "tensorfvm.benchmark_airfoil",
+          "tensorfvm.benchmark_cylinder3d",
+          "tensorfvm.benchmark_cylinder_urans",
+          "tensorfvm.benchmark_dfg",
+          "tensorfvm.benchmark_flat_plate"
+        ]
+      }
+    },
+    {
+      "id": "A3",
+      "area": "控制台入口",
+      "claim": "pyproject [project.scripts] 的条目都指向真实模块函数",
+      "status": "PASS",
+      "detail": "9 个入口；全部可解析",
+      "evidence": {
+        "scripts": {
+          "tensorfvm-benchmark": "tensorfvm.verification.__main__:main",
+          "tensorfvm-cylinder": "tensorfvm.cylinder:main",
+          "tensorfvm-benchmark-dfg": "tensorfvm.benchmark_dfg:main",
+          "tensorfvm-benchmark-airfoil": "tensorfvm.benchmark_airfoil:main",
+          "tensorfvm-benchmark-flat-plate": "tensorfvm.benchmark_flat_plate:main",
+          "tensorfvm-benchmark-cylinder-urans": "tensorfvm.benchmark_cylinder_urans:main",
+          "tensorfvm-benchmark-30p30n": "tensorfvm.benchmark_30p30n:main",
+          "tensorfvm-benchmark-cylinder-3d": "tensorfvm.benchmark_cylinder3d:main",
+          "tensorfvm-mesh-cylinder-3d": "tensorfvm.mesh_cylinder3d:main"
+        }
+      }
+    },
+    {
+      "id": "A4",
+      "area": "示例命令/选项",
+      "claim": "README 引用的 scripts/*.py 存在",
+      "status": "PASS",
+      "detail": "6 个脚本指针；全部存在",
+      "evidence": {}
+    },
+    {
+      "id": "B1",
+      "area": "公开 API",
+      "claim": "README 列出的导出名可由 `import tensorfvm` 取得",
+      "status": "PASS",
+      "detail": "6 个名称；全部可导入",
+      "evidence": {}
+    },
+    {
+      "id": "B2",
+      "area": "配置默认值",
+      "claim": "`SolverConfig` 默认 mesh_type=cartesian（README 兼容性说明）",
+      "status": "PASS",
+      "detail": "实测 mesh_type='cartesian'",
+      "evidence": {}
+    },
+    {
+      "id": "B3",
+      "area": "配置默认值",
+      "claim": "README 默认算例（4×2 域、中心 (1,1)、R=0.2、U=1、rho=1、Re=20、mu=rho U 2R/Re）",
+      "status": "PASS",
+      "detail": "mu=0.02 = rho*U*(2R)/Re，与 8 个默认字段一致",
+      "evidence": {}
+    },
+    {
+      "id": "B4",
+      "area": "网格约束",
+      "claim": "README 的贴体/C 型网格约束（body-fitted nx≥8 且 4 的倍数、ny≥4；c-grid nx≥16 且 4 的倍数）",
+      "status": "PASS",
+      "detail": "5 个边界用例逐一符合",
+      "evidence": {}
+    },
+    {
+      "id": "B5",
+      "area": "输出文件",
+      "claim": "README 列的运行输出（fields.csv 含 x,y,u,v,p,fluid 等 10 个文件）由导出处写出",
+      "status": "PASS",
+      "detail": "10 个文件名全部出现在 cylinder.py；fields.csv 表头 x,y,u,v,p,fluid",
+      "evidence": {}
+    },
+    {
+      "id": "C1",
+      "area": "基准常数",
+      "claim": "DFG Re=20：Cd=5.579535、最细网格 256×96、误差门 3%",
+      "status": "PASS",
+      "detail": "REFERENCE_DRAG=5.579535, GRIDS=((64, 24), (128, 48), (256, 96)), ERROR_LIMIT=0.03",
+      "evidence": {}
+    },
+    {
+      "id": "C2",
+      "area": "基准常数",
+      "claim": "NACA 0012 Re=1000 α=4°：Cl≈0.2009636、Cd≈0.1250065、读图 ±0.0001、3% 门",
+      "status": "PASS",
+      "detail": "lift=0.2009636, drag=0.1250065, band=0.0001",
+      "evidence": {}
+    },
+    {
+      "id": "C3",
+      "area": "基准常数",
+      "claim": "平板：Cf=0.074 Re^-1/5、Re_L=1e5、平均 Cf 误差门 20%、首层 y+<1",
+      "status": "PASS",
+      "detail": "ERROR_LIMIT=0.2, Re=100000, Cf(1e5)=0.0074",
+      "evidence": {}
+    },
+    {
+      "id": "C4",
+      "area": "基准常数",
+      "claim": "Re=3900 外流圆柱：参考 Cd=1.12、St=0.20",
+      "status": "PASS",
+      "detail": "mean_drag=1.12, strouhal=0.2",
+      "evidence": {}
+    },
+    {
+      "id": "C5",
+      "area": "基准常数",
+      "claim": "30P30N：原始表 Cl=2.167089、Cd=0.033243",
+      "status": "PASS",
+      "detail": "lift=2.167089, drag=0.033243",
+      "evidence": {}
+    },
+    {
+      "id": "D1",
+      "area": "文档指针",
+      "claim": "README 引用的 docs/* 路径在检出中存在",
+      "status": "PASS",
+      "detail": "38 个指针；全部存在",
+      "evidence": {}
+    },
+    {
+      "id": "D2",
+      "area": "数字可溯源",
+      "claim": "README 引用的实测数字都能在 docs/ 证据中找到同一数值",
+      "status": "PASS",
+      "detail": "41 个三位以上有效数字；全部可溯源到 docs/",
+      "evidence": {}
+    },
+    {
+      "id": "D3",
+      "area": "测试入口",
+      "claim": "README 记的测试运行方式与本仓库测试语料一致",
+      "status": "PASS",
+      "detail": "tests/ 共 233 个文件：176 个 import pytest、26 个定义 unittest.TestCase、1399 个模块级 test 函数；README 当前写的是 pytest",
+      "evidence": {
+        "pytest_files": 176,
+        "unittest_files": 26,
+        "test_functions": 1399
+      }
+    },
+    {
+      "id": "D4",
+      "area": "前置依赖",
+      "claim": "README 文档化的 benchmark/verification 命令所需可选依赖有安装说明",
+      "status": "PASS",
+      "detail": "verification/report.py 需要 ['matplotlib', 'numpy']；pyproject extras=['amg', 'benchmark', 'dev', 'mesh']；安装节已说明 extras 安装方式",
+      "evidence": {}
+    },
+    {
+      "id": "E1",
+      "area": "证据树只读",
+      "claim": "文档化的示例命令默认输出不落在已发布的 docs/ 证据树内",
+      "status": "PASS",
+      "detail": "benchmark_suite_channel 默认 --output='results/suite-channel'（results/ 下，与其它 benchmark 一致）",
+      "evidence": {
+        "docs_tree_readonly_policy": true
+      }
+    },
+    {
+      "id": "E2",
+      "area": "示例可运行",
+      "claim": "README 的贴体圆柱示例按文档参数小规模重跑，产出全部声明文件",
+      "status": "PASS",
+      "detail": "exit=2（0=收敛 2=达迭代上限）；产出 ['cells.csv', 'fields.csv', 'history.json', 'nodes.csv', 'pressure.svg', 'summary.json', 'velocity.svg']；表头 'x,y,u,v,p,fluid'",
+      "evidence": {
+        "command": "/usr/local/bin/python -m tensorfvm --mesh-type body-fitted --nx 16 --ny --output <tmp>",
+        "returncode": 2
+      }
+    }
+  ],
+  "summary": {
+    "total": 20,
+    "pass": 20,
+    "fail": 0,
+    "skip": 0
+  },
+  "failed": []
+}

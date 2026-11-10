@@ -43,7 +43,10 @@ TensorFVM 是 Tensor 工程仿真体系中的**有限体积流体求解器**，�
 安装
 ----
 
-需要 Python 3.10 或以上。仅依赖 PyTorch；测试使用标准库 unittest。
+需要 Python 3.10 或以上。核心求解器只用 PyTorch；测试、benchmark 报告与网格生成
+需要可选依赖：``.[dev]``（pytest、numpy、matplotlib、scipy、ruff）、
+``.[benchmark]``（numpy、matplotlib、scipy）与 ``.[mesh]``（Gmsh Python 包）。
+未安装 ``.[benchmark]`` 时 ``tensorfvm-benchmark`` 会在导入报告模块处失败。
 在仓库根目录运行::
 
     python -m venv .venv
@@ -382,8 +385,12 @@ CPU 可用相同命令配合 ``--device cpu``，使用 Gloo；CUDA 使用 NCCL �
 
 运行测试::
 
-    python -m unittest discover -s tests -v
+    python -m pip install -e ".[dev]"
+    python -m pytest -q
 
+测试以 pytest 编写（``tests/`` 中绝大多数文件是模块级 ``test_*`` 函数加 fixture），
+因此 ``python -m pytest`` 才是完整回归入口；``python -m unittest discover -s tests``
+只能收集到少量 ``unittest.TestCase`` 风格文件，看到的“通过”不代表回归全绿。
 测试覆盖输入检查、交错网格及边界、贴体几何与周期接缝、连续性和质量平衡、
 无障碍通道及小网格圆柱案例，并检查真实坐标、网格导出、命令行状态，以及
 三段翼 Gmsh v2 拓扑解析、物理边界分组和几何脚本生成。
@@ -397,7 +404,9 @@ GNU GPL v3，见 LICENSE。
 --------------------
 
 新增 ``python -m tensorfvm.benchmark_suite_channel``，输出三网格 SI 实际场、
-MAC 面流量、压力梯度、壁面剪切及质量守恒。结果见 ``docs/suite-channel/``。
+MAC 面流量、压力梯度、壁面剪切及质量守恒；默认写入 ``results/suite-channel``，
+与其它 benchmark 一致。已发布的三网格证据快照在 ``docs/suite-channel/``，只用于
+只读复核；重建必须显式 ``--output docs/suite-channel``，避免默认运行覆盖已提交证据。
 ``scripts/compare_lbm_channel_reference.py`` 可调用独立 TensorLBM 解析 benchmark；
 两套入口/出口不同，仅共同解析验证，尚不构成移动冰流固耦合资格。
 
@@ -412,7 +421,7 @@ MAC 面流量、压力梯度、壁面剪切及质量守恒。结果见 ``docs/su
 共性解析 benchmark 与论文报告
 -----------------------------
 
-新增 tensorfvm-benchmark（或 python -m tensorfvm.verification），通过共性模块
+新增 tensorfvm-benchmark（或 python -m tensorfvm.verification；需 ``.[benchmark]``），通过共性模块
 执行 Poiseuille 固壁通道、Taylor–Green 瞬态涡、空间/时间加密及失败对照。
 正式案例速度、压力和适用壁面误差严格小于3%，另设质量/求解/能量门。
 --lbm-repo 指向独立 TensorLBM 仓库，开展实际匹配解析对照。
