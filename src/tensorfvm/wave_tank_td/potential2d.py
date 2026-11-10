@@ -91,12 +91,17 @@ def hydrostatic_restoring(poly, rho: float = 1000.0, g: float = GRAVITY,
     Linear waterplane theory about the origin at the still-water line::
 
         C33 = rho g B_wl
-        C55 = rho g I_wl - rho g nabla * z_G ,   I_wl = integral(x^2 dx) on z=0
+        C55 = rho g I_wl + rho g nabla (z_B - z_G),   I_wl = integral(x^2 dx) on z=0
 
-    ``z_G`` is the centre of gravity of the (uniform) section, so the
-    ``- rho g nabla z_G`` term is the moment of the weight about the rotation
-    reference -- dropping it is the classic factor-of-two error in pitch
-    restoring.  ``C35 = 0`` for a section symmetric about ``x = 0``.
+    i.e. ``C55 = rho g nabla GM`` with ``GM = I_wl/nabla - (z_G - z_B)``.
+    ``z_B`` is the centroid of the *displaced* area and ``z_G`` that of the
+    section.  Both terms are needed: dropping ``z_B`` (the usual slip) inflates
+    ``C55`` by ``rho g nabla |z_B|`` and, for the 0.6 x 0.2 m box, doubles it
+    (294.2 instead of the exact 147.1 N m/rad).  The closed form is checked
+    against the second derivative of the hydrostatic potential energy in
+    :func:`tensorfvm.wave_tank_td.seakeeping.potential_energy_stiffness`, which
+    knows nothing about this algebra.  ``C35 = 0`` for a section symmetric about
+    ``x = 0``.
     """
     wet = wetted_polygon(poly)
     area0, cx0, cz0, _ = polygon_properties(wet, rho)
@@ -117,7 +122,7 @@ def hydrostatic_restoring(poly, rho: float = 1000.0, g: float = GRAVITY,
         x1, x2 = sorted((segs[i], segs[i + 1]))
         i_wl += (x2 ** 3 - x1 ** 3) / 3.0
     c33 = rho * g * b_wl
-    c55 = rho * g * i_wl - rho * g * area0 * czg
+    c55 = rho * g * i_wl + rho * g * area0 * (cz0 - czg)
     return {"C33": float(c33), "C55": float(c55), "C35": 0.0,
             "C53": 0.0, "waterline": float(b_wl), "I_waterline": float(i_wl),
             "displaced_area": float(area0),
