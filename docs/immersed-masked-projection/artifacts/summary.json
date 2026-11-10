@@ -1,0 +1,286 @@
+{
+ "records": 4,
+ "studies": {
+  "bfs|masked": {
+   "case": "bfs",
+   "arm": "masked",
+   "cells_per_h": [
+    40
+   ],
+   "steps": [
+    5998
+   ],
+   "time": [
+    40.00035865102792
+   ],
+   "reattachment_over_h": [
+    6.152531401633496
+   ],
+   "drift": [
+    0.0
+   ],
+   "div_max_fluid": [
+    2.7308125379044152e-14
+   ],
+   "div_max_solid": [
+    0.0
+   ],
+   "solid_speed_max": [
+    0.0
+   ],
+   "mass_imbalance_max": [
+    1.0416667528545533e-11
+   ],
+   "step_seconds": [
+    0.1320089250433446
+   ],
+   "u_max": [
+    1.498532161444063
+   ],
+   "pressure_drop": [
+    -1.4642631252723133
+   ]
+  },
+  "bfs|legacy": {
+   "case": "bfs",
+   "arm": "legacy",
+   "cells_per_h": [
+    40
+   ],
+   "steps": [
+    5999
+   ],
+   "time": [
+    40.00325766862918
+   ],
+   "reattachment_over_h": [
+    6.151519324604323
+   ],
+   "drift": [
+    -9.911502341466025e-20
+   ],
+   "div_max_fluid": [
+    0.024336684860217436
+   ],
+   "div_max_solid": [
+    3.584318172128454e-16
+   ],
+   "solid_speed_max": [
+    0.013789833093912088
+   ],
+   "mass_imbalance_max": [
+    1.2858492048906102e-11
+   ],
+   "step_seconds": [
+    0.20946652782454672
+   ],
+   "u_max": [
+    1.498532116178863
+   ],
+   "pressure_drop": [
+    -1.4645321125985433
+   ]
+  },
+  "expansion|masked": {
+   "case": "expansion",
+   "arm": "masked",
+   "cells_per_h": [
+    40
+   ],
+   "steps": [
+    18022
+   ],
+   "time": [
+    100.00187495347086
+   ],
+   "reattachment_over_h": [
+    1.6295201974878373
+   ],
+   "drift": [
+    0.0
+   ],
+   "div_max_fluid": [
+    3.268496584496461e-14
+   ],
+   "div_max_solid": [
+    0.0
+   ],
+   "solid_speed_max": [
+    0.0
+   ],
+   "mass_imbalance_max": [
+    1.042210762136619e-11
+   ],
+   "step_seconds": [
+    0.07027968376707076
+   ],
+   "u_max": [
+    1.4985145587681448
+   ],
+   "pressure_drop": [
+    -7.50357720125859
+   ]
+  }
+ },
+ "criteria": [
+  {
+   "id": "C1.divergence",
+   "quantity": "max_cells |int div u| / (U H), masked arm",
+   "value": 2.7308125379044152e-14,
+   "threshold": 1e-08,
+   "passed": true
+  },
+  {
+   "id": "C1.drift",
+   "quantity": "accumulated spurious volume / (U H^2), masked arm",
+   "value": 0.0,
+   "threshold": 0.01,
+   "passed": true
+  },
+  {
+   "id": "C1.legacy_divergence_defect",
+   "quantity": "max_cells |int div u| / (U H), legacy arm",
+   "value": 0.024336684860217436,
+   "threshold": 1e-08,
+   "passed": true
+  },
+  {
+   "id": "C1.legacy_net_drift",
+   "quantity": "accumulated *net* spurious volume / (U H^2), legacy arm",
+   "value": 9.911502341466025e-20,
+   "threshold": 0.01,
+   "passed": false,
+   "detail": "the post-projection relaxation scales both interface faces of a boundary cell, so the *net* surface flux telescopes to ~0; the source is cell-local (see C1.legacy_divergence_defect)"
+  },
+  {
+   "id": "C2.legacy_slip",
+   "quantity": "max |u| inside the body / U (legacy)",
+   "value": 0.013789833093912088,
+   "threshold": 1e-06,
+   "passed": false
+  },
+  {
+   "id": "C2.solid_at_rest",
+   "quantity": "max |u| inside the body / U (masked)",
+   "value": 0.0,
+   "threshold": 1e-06,
+   "passed": true
+  },
+  {
+   "id": "C3.reattachment_vs_Armaly",
+   "quantity": "|L_r/H - 6.0| / 6.0 on the finest masked mesh",
+   "value": 0.02542190027224933,
+   "threshold": 0.1,
+   "passed": true,
+   "detail": {
+    "computed": 6.152531401633496,
+    "reference": 6.0,
+    "source": "2-D limit of Armaly et al. (1983) Re_Dh = 800 (Kim & Moin 1985; Erturk 2008): L_r/S = 6.0 +/- 0.2"
+   }
+  },
+  {
+   "id": "C3.arms_differ",
+   "quantity": "relative difference of L_r between arms (coarsest mesh)",
+   "value": 0.0001644976617110646,
+   "threshold": 0.1,
+   "passed": false,
+   "detail": "a small value means the legacy defect is a conservation bookkeeping error that does not move the reattachment point at this resolution -- reported, not hidden"
+  },
+  {
+   "id": "C1.arms_continuity_gap",
+   "quantity": "ratio of legacy to masked single-step divergence",
+   "value": 891188410863.7147,
+   "threshold": 1000.0,
+   "passed": true,
+   "detail": {
+    "absolute_gap": 0.024336684860190128
+   }
+  },
+  {
+   "id": "C5.cost_ratio",
+   "quantity": "masked / legacy step cost on the same mesh",
+   "value": 0.6302148912017002,
+   "threshold": 1.5,
+   "passed": true
+  }
+ ],
+ "references": {
+  "bfs": {
+   "reattachment_over_step": {
+    "value": 6.0,
+    "band": 0.2,
+    "grade": "REAL",
+    "source": "2-D limit of Armaly et al. (1983) Re_Dh = 800 (Kim & Moin 1985; Erturk 2008): L_r/S = 6.0 +/- 0.2"
+   },
+   "expansion_ratio": {
+    "value": 2.0,
+    "band": 0.0,
+    "grade": "REAL",
+    "source": "geometry definition (ER = H_out / H_in)"
+   }
+  },
+  "expansion": {
+   "loss_coefficient": {
+    "value": 0.25,
+    "band": 0.0,
+    "grade": "REAL",
+    "source": "Borda-Carnot K = (1 - A_in/A_out)^2 = 0.25 for area ratio 2 (inviscid/turbulent jet limit; used as an order-of-magnitude reference only, laminar viscous flow adds excess loss)"
+   },
+   "reattachment": {
+    "value": NaN,
+    "band": NaN,
+    "grade": "WITHHELD",
+    "source": "no citable 2-D laminar symmetric-expansion reattachment correlation available offline; the criterion used instead is cross-arm agreement"
+   }
+  }
+ },
+ "run_records": [
+  {
+   "case": "bfs",
+   "cells_per_h": 40,
+   "arm": "legacy",
+   "steps": 5999,
+   "time": 40.00325766862918,
+   "step_seconds": 0.20946652782454672,
+   "t_end": 40.0,
+   "expansion_ratio_realised": 2.0
+  },
+  {
+   "case": "bfs",
+   "cells_per_h": 40,
+   "arm": "masked",
+   "steps": 1819,
+   "time": 6.0021708147934705,
+   "step_seconds": 0.10188050227113776,
+   "t_end": 6.0,
+   "expansion_ratio_realised": 2.0
+  },
+  {
+   "case": "bfs",
+   "cells_per_h": 40,
+   "arm": "masked",
+   "steps": 5998,
+   "time": 40.00035865102792,
+   "step_seconds": 0.1320089250433446,
+   "t_end": 40.0,
+   "expansion_ratio_realised": 2.0
+  },
+  {
+   "case": "expansion",
+   "cells_per_h": 40,
+   "arm": "masked",
+   "steps": 18022,
+   "time": 100.00187495347086,
+   "step_seconds": 0.07027968376707076,
+   "t_end": 100.0,
+   "expansion_ratio_realised": 2.0
+  }
+ ],
+ "figures": [
+  "docs/immersed-masked-projection/artifacts/figures/fig1_mass_ledger.png",
+  "docs/immersed-masked-projection/artifacts/figures/fig2_reattachment_convergence.png",
+  "docs/immersed-masked-projection/artifacts/figures/fig3_speed_fields.png",
+  "docs/immersed-masked-projection/artifacts/figures/fig4_wall_shear.png",
+  "docs/immersed-masked-projection/artifacts/figures/fig5_step_cost.png"
+ ]
+}
