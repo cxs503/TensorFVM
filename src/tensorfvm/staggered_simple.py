@@ -596,12 +596,27 @@ class StaggeredSimple:
         return out
 
     def _u_on_v(self, u):
-        """u on the west/east faces of a v-cv -> two ``(nx, ny+1)`` arrays."""
-        ua = 0.5 * (u + _shift(u, 0, -1))
+        """u on the west/east faces of a v-cv -> two ``(nx, ny+1)`` arrays.
+
+        The v-face *j* sits between y-cells *j-1* and *j*; the u value needed
+        there is the average of the two adjacent u-cell values.  At the walls
+        (j=0 and j=ny) the adjacent-cell value is used (one-sided, consistent
+        with the no-slip mirror image).  Using ``_shift_clamped`` instead of
+        ``_shift`` and assigning to ``[:, :ny]`` instead of ``[:, 1:]`` makes
+        the stencil mirror-covariant: under j -> ny-j the pattern is preserved,
+        so a mirror-symmetric velocity field produces mirror-covariant v-momentum
+        coefficients.  The previous implementation offset the stencil by one row
+        and treated the two walls differently (zero at j=0, extrapolated at j=ny),
+        breaking mirror covariance and causing spurious asymmetry in symmetric
+        geometries (sudden expansion, backward-facing step).
+        """
+        ua = 0.5 * (u + _shift_clamped(u, 0, -1))
         west = np.zeros((self.nx, self.ny + 1), dtype=DTYPE)
         east = np.zeros((self.nx, self.ny + 1), dtype=DTYPE)
-        west[:, 1:] = ua[: self.nx, :]
-        east[:, 1:] = ua[1:, :]
+        west[:, : self.ny] = ua[: self.nx, :]
+        east[:, : self.ny] = ua[1:, :]
+        west[:, self.ny] = u[: self.nx, -1]
+        east[:, self.ny] = u[1:, -1]
         return west, east
 
     @staticmethod
