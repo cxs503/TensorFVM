@@ -24,7 +24,15 @@ C5  discrete added-mass matrix symmetric and (for an axisymmetric body)
     off-diagonal-free: ``max|M_ij| / M_ii < 1e-10`` for ``i != j`` and
     ``|M_yy - M_zz| / M_yy < 1e-10``;
 C6  Richardson extrapolation of the two finest levels within 1 % of the exact
-    value (checks that the error ladder is in its asymptotic range).
+    value (checks that the error ladder is in its asymptotic range);
+C7  the **consistent** surface quadrature (the solver's own ``order x order``
+    Gauss rule, ``quadrature="gauss"``) is more accurate than the historical
+    midpoint rule (``quadrature="centroid"``) at *every* level of *every*
+    ladder -- the midpoint rule integrates ``phi n_j`` with one node per panel
+    while the Neumann problem is already represented by the Gauss rule, so the
+    integral is the inconsistent (lower-order) half of the discretisation;
+C8  the consistent rule reduces the finest-level error of every ladder by at
+    least a factor 1.5 (measured quantity: the minimum reduction factor).
 
 Usage
 -----
@@ -59,6 +67,13 @@ TOL_PCT = 3.0
 TOL_RICHARDSON_PCT = 1.0
 MIN_ORDER = 1.0
 SYMMETRY_TOL = 1.0e-10
+MIN_ERROR_REDUCTION = 1.5
+
+#: the surface-integral rule used for the verdict ladder, and the rule it is
+#: compared against (the midpoint rule is the historical default of
+#: :func:`tensorfvm.panel_added_mass.added_mass_matrix`)
+PRIMARY_QUADRATURE = "gauss"
+BASELINE_QUADRATURE = "centroid"
 
 
 def _case_metrics(a: float, b: float) -> dict:
@@ -78,13 +93,23 @@ def _case_metrics(a: float, b: float) -> dict:
 
 
 def run_level(a: float, b: float, n_theta: int, n_phi: int, *, rho: float = 1.0) -> dict:
-    """One panelisation: added-mass matrix, geometric volume, symmetry, residual."""
+    """One panelisation: added-mass matrix, geometric volume, symmetry, residual.
+
+    Both surface-integral rules are evaluated on the same panels so the report can
+    compare them level by level; ``k_*_panel`` and ``M_matrix`` are the primary
+    (consistent) rule, ``k_*_centroid`` the midpoint baseline.
+    """
     panels = spheroid_panels(a, b, n_theta, n_phi)
-    started = time.time()
-    M = added_mass_matrix(panels, rho=rho, order=3)
-    elapsed = time.time() - started
     volume_panel = displaced_volume(panels)
     volume_exact = 4.0 / 3.0 * math.pi * a * b * b
+    matrices = {}
+    elapsed = {}
+    for rule in (PRIMARY_QUADRATURE, BASELINE_QUADRATURE):
+        started = time.time()
+        matrices[rule] = added_mass_matrix(panels, rho=rho, order=3, quadrature=rule)
+        elapsed[rule] = time.time() - started
+    M = matrices[PRIMARY_QUADRATURE]
+    M_centroid = matrices[BASELINE_QUADRATURE]
     U = np.zeros(3)
     U[0] = 1.0
     sigma = solve_sources(panels, U, order=3)
@@ -100,11 +125,16 @@ def run_level(a: float, b: float, n_theta: int, n_phi: int, *, rho: float = 1.0)
         "volume_rel_error": volume_panel / volume_exact - 1.0,
         "k_axial_panel": M[0, 0] / (rho * volume_exact),
         "k_transverse_panel": float(np.mean([M[1, 1], M[2, 2]]) / (rho * volume_exact)),
+        "k_axial_centroid": M_centroid[0, 0] / (rho * volume_exact),
+        "k_transverse_centroid": float(np.mean([M_centroid[1, 1], M_centroid[2, 2]])
+                                       / (rho * volume_exact)),
         "M_matrix": M.tolist(),
+        "M_matrix_centroid": M_centroid.tolist(),
         "M_offdiag_rel": float(offdiag / diag.max()),
         "M_transverse_split": float(abs(M[1, 1] - M[2, 2]) / M[1, 1]),
         "neumann_residual": neumann,
-        "solve_seconds": elapsed,
+        "solve_seconds": elapsed[PRIMARY_QUADRATURE],
+        "solve_seconds_centroid": elapsed[BASELINE_QUADRATURE],
     }
 
 
@@ -131,9 +161,13 @@ def run_study(levels=LEVELS) -> dict:
         for row in rows:
             row["k_axial_rel_error"] = row["k_axial_panel"] / exact_a - 1.0
             row["k_transverse_rel_error"] = row["k_transverse_panel"] / exact_t - 1.0
+            row["k_axial_rel_error_centroid"] = row["k_axial_centroid"] / exact_a - 1.0
+            row["k_transverse_rel_error_centroid"] = row["k_transverse_centroid"] / exact_t - 1.0
         h = [row["h_rel"] for row in rows]
         p_a = _observed_order([row["k_axial_rel_error"] for row in rows], h)
         p_t = _observed_order([row["k_transverse_rel_error"] for row in rows], h)
+        p_a_c = _observed_order([row["k_axial_rel_error_centroid"] for row in rows], h)
+        p_t_c = _observed_order([row["k_transverse_rel_error_centroid"] for row in rows], h)
         r = h[-2] / h[-1]
         rich_a = _richardson(rows[-1]["k_axial_panel"], rows[-2]["k_axial_panel"], r, p_a)
         rich_t = _richardson(rows[-1]["k_transverse_panel"], rows[-2]["k_transverse_panel"], r, p_t)
@@ -142,11 +176,31 @@ def run_study(levels=LEVELS) -> dict:
             levels=rows,
             order_axial=p_a,
             order_transverse=p_t,
+            order_axial_centroid=p_a_c,
+            order_transverse_centroid=p_t_c,
             richardson_k_axial=rich_a,
             richardson_k_transverse=rich_t,
             richardson_axial_rel_error=rich_a / exact_a - 1.0,
             richardson_transverse_rel_error=rich_t / exact_t - 1.0,
         )
+        # per-ladder error reduction of the consistent rule over the midpoint rule
+        pairs = [("axial", "k_axial_rel_error", "k_axial_rel_error_centroid"),
+                 ("transverse", "k_transverse_rel_error", "k_transverse_rel_error_centroid")]
+        case["quadrature_comparison"] = [
+            {
+                "ladder": name,
+                "levels": [
+                    {
+                        "n_panels": row["n_panels"],
+                        "err_centroid_pct": abs(row[base_key]) * 100.0,
+                        "err_gauss_pct": abs(row[key]) * 100.0,
+                        "reduction": (abs(row[base_key]) / abs(row[key])) if row[key] else float("inf"),
+                    }
+                    for row in rows
+                ],
+            }
+            for name, key, base_key in pairs
+        ]
         results.append(case)
 
     criteria = _criteria(results)
@@ -158,6 +212,7 @@ def run_study(levels=LEVELS) -> dict:
             "min_observed_order": MIN_ORDER,
             "symmetry_tol": SYMMETRY_TOL,
         },
+        "quadrature": {"primary": PRIMARY_QUADRATURE, "baseline": BASELINE_QUADRATURE},
         "levels": [{"n_theta": nt, "n_phi": nph} for nt, nph in levels],
         "cases": results,
         "criteria": criteria,
@@ -235,6 +290,44 @@ def _criteria(cases: list[dict]) -> list[dict]:
             "pass": bool(sym < SYMMETRY_TOL and split < SYMMETRY_TOL),
         }
     )
+    # C7/C8: the consistent surface quadrature against the midpoint baseline
+    worst_ratio = 0.0
+    worst_where = ""
+    worst_reduction = float("inf")
+    for case in cases:
+        for cmp_entry in case["quadrature_comparison"]:
+            for lvl in cmp_entry["levels"]:
+                ratio = lvl["err_gauss_pct"] / lvl["err_centroid_pct"]
+                if ratio > worst_ratio:
+                    worst_ratio = ratio
+                    worst_where = "%s/%s at %d panels" % (case["label"], cmp_entry["ladder"],
+                                                          lvl["n_panels"])
+    # C8 is a finest-level statement: the consistent rule must pay off where the
+    # numbers are quoted (intermediate levels can be non-asymptotic).
+    for case in cases:
+        for cmp_entry in case["quadrature_comparison"]:
+            worst_reduction = min(worst_reduction, cmp_entry["levels"][-1]["reduction"])
+    out.append(
+        {
+            "id": "C7",
+            "statement": "Gauss-rule surface integral more accurate than the midpoint rule "
+                         "at every level of every ladder",
+            "measured_ratio": worst_ratio,
+            "measured_worst_case": worst_where,
+            "limit": 1.0,
+            "pass": bool(worst_ratio < 1.0),
+        }
+    )
+    out.append(
+        {
+            "id": "C8",
+            "statement": "consistent quadrature reduces the finest-level error by at least a "
+                         "factor 1.5 on every ladder",
+            "measured_reduction": worst_reduction,
+            "limit": MIN_ERROR_REDUCTION,
+            "pass": bool(worst_reduction >= MIN_ERROR_REDUCTION),
+        }
+    )
     return out
 
 
@@ -252,13 +345,16 @@ def make_figures(summary: dict, out_dir: pathlib.Path) -> list[dict]:
     spheroid = next(c for c in summary["cases"] if c["label"] == "spheroid_ar2")
 
     fig, ax = plt.subplots(figsize=(6.4, 4.2))
-    for case, key, style, label in (
-        (sphere, "k_axial_panel", "o-", "sphere $k = M/(\\rho V)$"),
-        (spheroid, "k_axial_panel", "s-", "spheroid a/b=2 axial $k_1$"),
-        (spheroid, "k_transverse_panel", "^-", "spheroid a/b=2 transverse $k_2$"),
+    for case, key, key_c, style, label in (
+        (sphere, "k_axial_panel", "k_axial_centroid", "o-", "sphere $k = M/(\\rho V)$"),
+        (spheroid, "k_axial_panel", "k_axial_centroid", "s-", "spheroid a/b=2 axial $k_1$"),
+        (spheroid, "k_transverse_panel", "k_transverse_centroid", "^-",
+         "spheroid a/b=2 transverse $k_2$"),
     ):
         n = [row["n_panels"] for row in case["levels"]]
-        ax.plot(n, [row[key] for row in case["levels"]], style, label=label)
+        ax.plot(n, [row[key] for row in case["levels"]], style, label=label + " (Gauss rule)")
+        ax.plot(n, [row[key_c] for row in case["levels"]], style, mfc="none", ls=":",
+                label=label + " (midpoint)")
     ax.axhline(sphere["k_axial_exact"], color="k", lw=0.8, ls="--")
     ax.axhline(spheroid["k_axial_exact"], color="0.35", lw=0.8, ls=":")
     ax.axhline(spheroid["k_transverse_exact"], color="0.55", lw=0.8, ls="-.")
@@ -275,20 +371,25 @@ def make_figures(summary: dict, out_dir: pathlib.Path) -> list[dict]:
     figures.append(
         {
             "name": path.name,
-            "caption": "Added-mass coefficients versus panel count; dashed lines are the exact "
-            "Lamb values (sphere Cm=0.5, spheroid a/b=2: k1, k2).",
+            "caption": "Added-mass coefficients versus panel count. Solid filled markers: "
+            "consistent Gauss surface quadrature; dotted open markers: the historical midpoint "
+            "rule; dashed/dotted/dash-dot horizontal lines are the exact Lamb values "
+            "(sphere Cm=0.5, spheroid a/b=2: k1, k2).",
         }
     )
 
     fig, ax = plt.subplots(figsize=(6.4, 4.2))
-    for case, key, style, label in (
-        (sphere, "k_axial_rel_error", "o-", "sphere Cm"),
-        (spheroid, "k_axial_rel_error", "s-", "spheroid k1"),
-        (spheroid, "k_transverse_rel_error", "^-", "spheroid k2"),
+    for case, key, key_c, style, label in (
+        (sphere, "k_axial_rel_error", "k_axial_rel_error_centroid", "o-", "sphere Cm"),
+        (spheroid, "k_axial_rel_error", "k_axial_rel_error_centroid", "s-", "spheroid k1"),
+        (spheroid, "k_transverse_rel_error", "k_transverse_rel_error_centroid", "^-",
+         "spheroid k2"),
     ):
         h = [row["h_rel"] for row in case["levels"]]
         e = [abs(row[key]) * 100.0 for row in case["levels"]]
-        ax.loglog(h, e, style, label=label)
+        ec = [abs(row[key_c]) * 100.0 for row in case["levels"]]
+        ax.loglog(h, e, style, label=label + " (Gauss)")
+        ax.loglog(h, ec, style, mfc="none", ls=":", label=label + " (midpoint)")
     h = [row["h_rel"] for row in sphere["levels"]]
     anchor = abs(sphere["levels"][0]["k_axial_rel_error"]) * 100.0
     ax.loglog(h, [anchor * (x / h[0]) for x in h], "k--", lw=0.8, label="first order")
@@ -304,8 +405,9 @@ def make_figures(summary: dict, out_dir: pathlib.Path) -> list[dict]:
     figures.append(
         {
             "name": path.name,
-            "caption": "Relative added-mass error versus mesh spacing on log-log axes; "
-            "the dashed guide has slope one.",
+            "caption": "Relative added-mass error versus mesh spacing on log-log axes, for the "
+            "consistent Gauss rule (solid) and the midpoint rule (dotted); the dashed guide "
+            "has slope one.",
         }
     )
     return figures
@@ -351,10 +453,16 @@ def render_report(summary: dict, figures: list[dict], *, generated: str) -> str:
     add("")
     add("The Neumann problem is solved by the existing constant-strength source panel method")
     add("(`tensorfvm.panel_potential.solve_sources`, Hess-Smith 1964), once per translation")
-    add("direction with `U = e_i`; the single-layer potential is evaluated at the panel")
-    add("centroids with the same bilinear Gauss rule (order 3) and integrated,")
-    add("`M_ij -> -rho * sum_p phi_i(x_p) n_j A_p`. The panelisation is a latitude/longitude")
-    add("spheroid mesh with the polar axis along the translation axis.")
+    add("direction with `U = e_i`. The single-layer potential is evaluated with the same")
+    add("bilinear Gauss rule (order 3) that the solver uses, and the surface integral is")
+    add("collocated at those Gauss nodes,")
+    add("`M_ij -> -rho * sum_n phi_i(x_n) n_j(x_n) w_n` over the `order x order` nodes of")
+    add("every panel. The historical midpoint rule `-rho * sum_p phi_i(x_c,p) n_j A_p` (one")
+    add("node per panel) is carried through the same ladder as the baseline, because it is")
+    add("the inconsistent half of the discretisation: the Neumann problem is already")
+    add("represented by the Gauss rule, so a one-node surface integral caps the added-mass")
+    add("accuracy at first order even though the solve is not. The panelisation is a")
+    add("latitude/longitude spheroid mesh with the polar axis along the translation axis.")
     add("")
     ladder = ", ".join("%dx%d (%d panels)" % (row["n_theta"], row["n_phi"], row["n_panels"])
                        for row in sphere["levels"])
@@ -379,15 +487,45 @@ def render_report(summary: dict, figures: list[dict], *, generated: str) -> str:
                 case["richardson_k_axial"], case["richardson_axial_rel_error"] * 100.0,
                 case["richardson_k_transverse"], case["richardson_transverse_rel_error"] * 100.0))
         add("")
-    add("### Geometry error dominates")
+    add("### Quadrature consistency: the solver's Gauss rule vs the midpoint rule")
     add("")
+    for case in (sphere, spheroid):
+        add("**%s (a/b = %.3g)**" % (case["label"], case["aspect_ratio"]))
+        add("")
+        add("| ladder | panels | err midpoint [%] | err Gauss [%] | reduction |")
+        add("|---|---|---|---|---|")
+        for cmp_entry in case["quadrature_comparison"]:
+            for lvl in cmp_entry["levels"]:
+                add("| %s | %d | %.3f | %.3f | x%.2f |" % (
+                    cmp_entry["ladder"], lvl["n_panels"], lvl["err_centroid_pct"],
+                    lvl["err_gauss_pct"], lvl["reduction"]))
+        add("")
+        add("Observed order, midpoint -> Gauss: axial %.3f -> %.3f, transverse %.3f -> %.3f." % (
+            case["order_axial_centroid"], case["order_axial"],
+            case["order_transverse_centroid"], case["order_transverse"]))
+        add("")
+    add("The consistent rule lowers the error at every level of every ladder (worst ratio")
+    add("%.3f) and cuts the finest-level error by at least a factor %.2f; the residual is" % (
+        next(c for c in summary["criteria"] if c["id"] == "C7")["measured_ratio"],
+        next(c for c in summary["criteria"] if c["id"] == "C8")["measured_reduction"]))
+    add("now the panel *representation* of the curved surface, not the quadrature.")
+    add("")
+    add("### Residual error: panel geometry, not quadrature")
+    add("")
+    deficit = (sphere["levels"][-1]["volume_panel"] / sphere["volume_exact"] - 1.0) * 100.0
     add("At the finest level the panelised volume is %.6f of the exact volume (sphere) and "
-        "%.6f (spheroid): the inscribed polyhedron is smaller than the body, and the "
-        "added-mass error tracks that geometric deficit almost one-to-one. The residual is "
-        "therefore a discretisation limit of the mesh, not a solver inconsistency -- "
-        "confirmed by the asymptotic-range criteria." % (
+        "%.6f (spheroid), i.e. an inscribed-polyhedron deficit of %+.3f %%. After the "
+        "quadrature fix the finest-level added-mass errors are %+.3f %% (sphere Cm), %+.3f %% "
+        "(spheroid k1) and %+.3f %% (spheroid k2): the axial ladders now sit at or below the "
+        "volume deficit, so the residual is not a global volume bias but the per-direction "
+        "combination of the area deficit with the flat-panel normal tilt, which is worst for "
+        "transverse flow across the meridian mesh. Removing it needs curved (or "
+        "higher-order) panels, not more integration nodes." % (
             sphere["levels"][-1]["volume_panel"] / sphere["volume_exact"],
-            spheroid["levels"][-1]["volume_panel"] / spheroid["volume_exact"]))
+            spheroid["levels"][-1]["volume_panel"] / spheroid["volume_exact"], deficit,
+            sphere["levels"][-1]["k_axial_rel_error"] * 100.0,
+            spheroid["levels"][-1]["k_axial_rel_error"] * 100.0,
+            spheroid["levels"][-1]["k_transverse_rel_error"] * 100.0))
     add("")
     add("### Slender-body upper bound (bridge to the manoeuvring model)")
     add("")
@@ -417,6 +555,13 @@ def render_report(summary: dict, figures: list[dict], *, generated: str) -> str:
         elif c["id"] == "C4":
             measured = "p = %.3f" % c["measured"]
             limit = "p >= %.3f" % c["limit"]
+        elif c["id"] == "C7":
+            measured = "worst err ratio %.3f (%s)" % (c["measured_ratio"],
+                                                      c["measured_worst_case"])
+            limit = "< %.3f" % c["limit"]
+        elif c["id"] == "C8":
+            measured = "reduction x%.2f" % c["measured_reduction"]
+            limit = ">= x%.2f" % c["limit"]
         else:
             measured = "off-diag %.2e, split %.2e" % (
                 c["measured_max_offdiag_rel"], c["measured_transverse_split"])
@@ -432,14 +577,23 @@ def render_report(summary: dict, figures: list[dict], *, generated: str) -> str:
     add("")
     add("## 6. Notes and limits")
     add("")
-    add("* Translational added mass only. Rotational added inertia (M_44..M_66) is not")
-    add("  implemented; `maneuvering.dynamics` also needs J_z, which requires the same")
-    add("  surface integral with phi driven by unit rotation -- a follow-up, not a claim.")
+    add("* Translational added mass only **in this study**. The rotational block and the")
+    add("  translation-rotation coupling exist in the same module")
+    add("  (`panel_added_mass.added_mass_matrix_6dof`, `rotational_added_inertia`) and are")
+    add("  verified separately against spheroid/ellipsoid anchors in")
+    add("  `docs/verification-rotational-added-mass/REPORT.md`; the yaw entry of a real hull")
+    add("  (KVLCC2, double-body closure) is in `docs/verification-added-inertia-panel/`.")
+    add("* `added_mass_matrix(quadrature='centroid')` remains the default so that the numbers")
+    add("  published in the older reports stay bit-reproducible; the study above (and any new")
+    add("  work) uses `quadrature='gauss'`. Switching the global default is a follow-up that")
+    add("  must regenerate every report quoting an added-mass number.")
     add("* The verification is for a body in an **unbounded** fluid; free-surface (zero phi")
     add("  on the waterplane) and double-body images exist in `panel_potential` for the hull")
     add("  case but are not verified here against an analytic anchor.")
-    add("* Constant-strength flat panels give first-order convergence on a curved body;")
-    add("  higher order needs curved panels or a higher-order singularity distribution.")
+    add("* The residual error is the flat-panel representation of the curved surface")
+    add("  (inscribed polyhedron: area deficit and normal tilt); beating it needs curved panels")
+    add("  or a higher-order singularity distribution, not more integration nodes -- the")
+    add("  quadrature refinement of this study is already exhausted (C7/C8).")
     add("* All numbers use rho = 1; the matrix scales linearly with rho.")
     add("")
     return "\n".join(lines)
