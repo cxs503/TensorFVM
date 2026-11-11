@@ -1,279 +1,201 @@
-"""Generate figures for the wave tank metrology report."""
+#!/usr/bin/env python3
+"""Generate cross-validation report figures for Sod shock tube."""
+import json
+import os
 import sys
-sys.path.insert(0, '/root/tp-agent/work/m9065/src')
-
 import math
+import base64
+import io
+
 import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
-from tensorfvm.wave_tank_td import SigmaWaveTank, TankConfig
-from tensorfvm.wave_tank.theory import dispersion_k, stokes2_elevation
-from tensorfvm.wave_tank_td.wave_target import fit_harmonics
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
-# ============================================================================
-# Figure 1: Wave propagation and probe signals
-# ============================================================================
-def fig_wave_propagation():
-    cfg = TankConfig(length=10.0, depth=1.0, nx=120, ns=20,
-                     relax_waves=1.5, damp_waves=2.0, damp_strength=5.0)
-    tank = SigmaWaveTank(cfg)
-    tank.set_wave(0.02, 1.2)  # H=0.04m, T=1.2s
-    
-    dt = 0.005
-    T = 1.2
-    n_steps = int(4 * T / dt)
-    
-    probe_x = [2.5, 4.0, 5.5, 7.0]
-    etas = {x: [] for x in probe_x}
-    times = []
-    snapshots = []
-    
-    for i in range(n_steps):
-        tank.step(dt)
-        if i % 4 == 0:
-            times.append(tank.t)
-            for x in probe_x:
-                etas[x].append(float(tank.eta_at(x)))
-        if i % 40 == 0:
-            snapshots.append((tank.t, tank.eta.copy()))
-    
-    fig, axes = plt.subplots(2, 1, figsize=(10, 8))
-    
-    # Top: surface snapshots
-    ax = axes[0]
-    x = tank.x
-    for t_snap, eta_snap in snapshots[::2]:
-        ax.plot(x, eta_snap, label=f't={t_snap:.1f}s', alpha=0.7)
-    ax.axvspan(0, tank.x_relax if hasattr(tank, 'x_relax') else 2.0, 
-               alpha=0.1, color='red', label='Relaxation zone')
-    ax.set_xlabel('x (m)')
-    ax.set_ylabel('η (m)')
-    ax.set_title('Free Surface Evolution (H=0.04m, T=1.2s, h=1.0m)')
-    ax.legend(fontsize=8)
-    ax.grid(True, alpha=0.3)
-    
-    # Bottom: probe time series
-    ax = axes[1]
-    times_arr = np.array(times)
-    for x in probe_x:
-        ax.plot(times_arr, np.array(etas[x]), label=f'x={x}m')
-    ax.axhline(0, color='k', linewidth=0.5)
-    ax.set_xlabel('Time (s)')
-    ax.set_ylabel('η (m)')
-    ax.set_title('Wave Probe Time Series')
-    ax.legend(fontsize=8)
-    ax.grid(True, alpha=0.3)
-    
-    plt.tight_layout()
-    plt.savefig('/root/tp-agent/work/m9065/docs/fig1_wave_propagation.png', dpi=150)
-    plt.close()
-    print("Figure 1 saved: wave propagation")
+# Load TensorFVM results
+with open(os.path.join(os.path.dirname(__file__), "..", "artifacts", "sod_tensorfvm.json")) as f:
+    tfvm_data = json.load(f)
 
-# ============================================================================
-# Figure 2: Harmonic analysis and Stokes II verification
-# ============================================================================
-def fig_harmonic_analysis():
-    cfg = TankConfig(length=10.0, depth=1.0, nx=120, ns=20,
-                     relax_waves=1.5, damp_waves=2.0, damp_strength=5.0)
-    tank = SigmaWaveTank(cfg)
-    
-    # Stokes II wave with ka ≈ 0.05
-    omega = 2.0 * math.pi / 1.2
-    k = dispersion_k(omega, 1.0)
-    a = 0.05 / k  # ka = 0.05
-    tank.set_wave(a, 1.2)
-    
-    dt = 0.005
-    T = 1.2
-    n_steps = int(6 * T / dt)
-    
-    probe_x = 4.0
-    etas = []
-    times = []
-    
-    for i in range(n_steps):
-        tank.step(dt)
-        if i % 2 == 0:
-            times.append(tank.t)
-            etas.append(float(tank.eta_at(probe_x)))
-    
-    times_arr = np.array(times)
-    eta_arr = np.array(etas)
-    
-    # Harmonic fit
-    mask = times_arr > 2 * T
-    result = fit_harmonics(times_arr[mask], eta_arr[mask], omega, n_harm=2)
-    
-    # Theoretical Stokes II elevation
-    x_probe = np.array([probe_x])
-    t_fine = np.linspace(2*T, times_arr[-1], 500)
-    eta_theory = stokes2_elevation(x_probe, t_fine, a, omega, k, 1.0, order2=True)
-    
-    fig, axes = plt.subplots(2, 1, figsize=(10, 8))
-    
-    # Top: time series with fit
-    ax = axes[0]
-    ax.plot(times_arr, eta_arr, 'b.', markersize=2, label='CFD probe')
-    ax.plot(t_fine, eta_theory.flatten(), 'r-', linewidth=1.5, label='Stokes II theory')
-    
-    # Reconstruct fit
-    t_fit = times_arr[mask]
-    eta_fit = (result["mean"] + 
-               result["amp"][0] * np.cos(omega * t_fit - result["phase"][0]) +
-               result["amp"][1] * np.cos(2 * omega * t_fit - result["phase"][1]))
-    ax.plot(t_fit, eta_fit, 'g--', linewidth=1, label='Harmonic fit (2 harmonics)')
-    
-    ax.set_xlabel('Time (s)')
-    ax.set_ylabel('η (m)')
-    ax.set_title(f'Harmonic Analysis (ka={k*a:.4f})')
-    ax.legend()
-    ax.grid(True, alpha=0.3)
-    
-    # Bottom: spectrum
-    ax = axes[1]
-    eta_centered = eta_arr[mask] - eta_arr[mask].mean()
-    N = len(eta_centered)
-    dt_sample = times_arr[1] - times_arr[0]
-    eta_fft = np.fft.rfft(eta_centered)
-    psd = np.abs(eta_fft) ** 2 * dt_sample / N
-    freqs = np.fft.rfftfreq(N, d=dt_sample)
-    
-    ax.semilogy(freqs, psd, 'b-')
-    ax.axvline(1/T, color='r', linestyle='--', label=f'f₁=1/T={1/T:.3f} Hz')
-    ax.axvline(2/T, color='g', linestyle='--', label=f'f₂=2/T={2/T:.3f} Hz')
-    ax.set_xlabel('Frequency (Hz)')
-    ax.set_ylabel('PSD')
-    ax.set_title('Power Spectral Density')
-    ax.legend()
-    ax.grid(True, alpha=0.3)
-    ax.set_xlim(0, 3/T)
-    
-    # Add text box with results
-    a2_over_a1 = result["amp"][1] / result["amp"][0] if result["amp"][0] > 1e-10 else 0.0
-    theory_a2_a1 = (k * a / 4.0) * (3 - math.tanh(k*1.0)**2) / math.tanh(k*1.0)**3
-    textstr = (f'a₁ = {result["amp"][0]:.5f} m\n'
-               f'a₂ = {result["amp"][1]:.6f} m\n'
-               f'a₂/a₁ = {a2_over_a1:.4f}\n'
-               f'Theory a₂/a₁ = {theory_a2_a1:.4f}')
-    props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
-    ax.text(0.6, 0.7, textstr, transform=ax.transAxes, fontsize=9,
-            verticalalignment='top', bbox=props)
-    
-    plt.tight_layout()
-    plt.savefig('/root/tp-agent/work/m9065/docs/fig2_harmonic_analysis.png', dpi=150)
-    plt.close()
-    print("Figure 2 saved: harmonic analysis")
+# Exact solution (from TensorFVM's ExactRiemann)
+from tensorfvm.compressible.cases import sod, GAMMA_AIR
 
-# ============================================================================
-# Figure 3: Volume conservation
-# ============================================================================
-def fig_volume_conservation():
-    cfg = TankConfig(length=8.0, depth=1.0, nx=100, ns=16,
-                     relax_waves=1.0, damp_waves=1.5, damp_strength=5.0)
-    tank = SigmaWaveTank(cfg)
-    tank.set_wave(0.02, 1.0)
-    
-    dt = 0.005
-    T = 1.0
-    n_steps = int(8 * T / dt)
-    
-    vol_history = []
-    times = []
-    
-    for i in range(n_steps):
-        tank.step(dt)
-        if i % 10 == 0:
-            times.append(tank.t)
-            vol_history.append(tank.volume())
-    
-    vol0 = tank.volume0
-    times_arr = np.array(times)
-    vol_arr = np.array(vol_history)
-    drift_percent = (vol_arr - vol0) / vol0 * 100
-    
-    fig, ax = plt.subplots(figsize=(10, 4))
-    ax.plot(times_arr, drift_percent, 'b-')
-    ax.axhline(0, color='k', linewidth=0.5)
-    ax.set_xlabel('Time (s)')
-    ax.set_ylabel('Volume Drift (%)')
-    ax.set_title(f'Volume Conservation (drift = {drift_percent[-1]:.4f}% after {times_arr[-1]:.1f}s)')
-    ax.grid(True, alpha=0.3)
-    
-    plt.tight_layout()
-    plt.savefig('/root/tp-agent/work/m9065/docs/fig3_volume_conservation.png', dpi=150)
-    plt.close()
-    print("Figure 3 saved: volume conservation")
+torch = __import__('torch')
+torch.set_num_threads(1)
 
-# ============================================================================
-# Figure 4: Grid convergence
-# ============================================================================
-def fig_grid_convergence():
-    H_target = 0.04
-    amp = H_target / 2.0
-    T = 1.2
-    
-    resolutions = [(60, 12), (80, 16), (100, 20), (120, 24)]
-    H_values = []
-    dx_values = []
-    
-    for nx, ns in resolutions:
-        cfg = TankConfig(length=8.0, depth=1.0, nx=nx, ns=ns,
-                         relax_waves=1.0, damp_waves=1.5)
-        tank = SigmaWaveTank(cfg)
-        tank.set_wave(amp, T)
-        
-        dt = 0.005
-        n_steps = int(3 * T / dt)
-        probe_x = 4.0
-        etas = []
-        times = []
-        for i in range(n_steps):
-            tank.step(dt)
-            if i % 4 == 0:
-                times.append(tank.t)
-                etas.append(float(tank.eta_at(probe_x)))
-        
-        times_arr = np.array(times)
-        eta_arr = np.array(etas)
-        mask = times_arr > 1.5 * T
-        if mask.sum() > 10:
-            result = fit_harmonics(times_arr[mask], eta_arr[mask], 
-                                  tank.wave.omega, n_harm=1)
-            H_meas = 2.0 * result["amp"][0]
-        else:
-            H_meas = 2.0 * float(np.abs(eta_arr).max())
-        H_values.append(H_meas)
-        dx_values.append(8.0 / nx)
-    
-    fig, ax = plt.subplots(figsize=(8, 5))
-    ax.loglog(dx_values, [abs(H - H_target) for H in H_values], 'bo-', 
-              markersize=8, linewidth=2, label='Wave height error')
-    
-    # Reference slopes
-    dx_ref = np.array(dx_values)
-    ax.loglog(dx_ref, 0.01 * dx_ref / dx_ref[0], 'r--', alpha=0.5, label='O(h)')
-    ax.loglog(dx_ref, 0.01 * (dx_ref / dx_ref[0])**2, 'g--', alpha=0.5, label='O(h²)')
-    
-    ax.set_xlabel('Grid spacing dx (m)')
-    ax.set_ylabel('|H_measured - H_target| (m)')
-    ax.set_title('Grid Convergence: Wave Height Error')
-    ax.legend()
-    ax.grid(True, alpha=0.3, which='both')
-    
-    plt.tight_layout()
-    plt.savefig('/root/tp-agent/work/m9065/docs/fig4_grid_convergence.png', dpi=150)
-    plt.close()
-    print("Figure 4 saved: grid convergence")
+solver, meta = sod(800, order=2, t_end=0.2, cfl=0.4)
+solver.run(0.2)
+prim = solver.primitive()
 
-# ============================================================================
-# Run all
-# ============================================================================
-if __name__ == '__main__':
-    print("Generating figures...")
-    fig_wave_propagation()
-    fig_harmonic_analysis()
-    fig_volume_conservation()
-    fig_grid_convergence()
-    print("All figures generated in artifacts/")
+xc = meta["xc"].numpy()
+rho_num = prim["rho"][:, 0].numpy()
+u_num = prim["u"][:, 0].numpy()
+p_num = prim["p"][:, 0].numpy()
+
+xi = (meta["xc"].numpy() - 0.5) / 0.2
+rho_exact, u_exact, p_exact = meta["exact"].sample(xi)
+rho_exact = rho_exact.numpy()
+u_exact = u_exact.numpy()
+p_exact = p_exact.numpy()
+
+outdir = os.path.join(os.path.dirname(__file__), "..", "artifacts")
+os.makedirs(outdir, exist_ok=True)
+
+# Figure 1: Density comparison
+fig, axes = plt.subplots(3, 1, figsize=(10, 12), sharex=True)
+
+axes[0].plot(xc, rho_num, 'b-', linewidth=1.5, label='TensorFVM (nx=800, order=2)')
+axes[0].plot(xc, rho_exact, 'r--', linewidth=1.0, label='Exact Riemann')
+axes[0].set_ylabel('Density')
+axes[0].legend(loc='upper right')
+axes[0].grid(True, alpha=0.3)
+axes[0].set_title('Sod Shock Tube: Density Profile at t=0.2')
+
+axes[1].plot(xc, u_num, 'b-', linewidth=1.5, label='TensorFVM')
+axes[1].plot(xc, u_exact, 'r--', linewidth=1.0, label='Exact')
+axes[1].set_ylabel('Velocity')
+axes[1].legend(loc='upper right')
+axes[1].grid(True, alpha=0.3)
+
+axes[2].plot(xc, p_num, 'b-', linewidth=1.5, label='TensorFVM')
+axes[2].plot(xc, p_exact, 'r--', linewidth=1.0, label='Exact')
+axes[2].set_ylabel('Pressure')
+axes[2].set_xlabel('x')
+axes[2].legend(loc='upper right')
+axes[2].grid(True, alpha=0.3)
+
+# Mark wave positions
+exact_p_star = float(meta["exact"].pstar)
+exact_u_star = float(meta["exact"].ustar)
+exact_rho_star_r = float(meta["exact"].density_star_r())
+exact_rho_star_l = float(meta["exact"].density_star_l())
+exact_shock_speed = float(meta["exact"].shock_speed_r())
+c_left = math.sqrt(GAMMA_AIR)
+c_star_l = math.sqrt(GAMMA_AIR * exact_p_star / exact_rho_star_l)
+
+shock_pos = 0.5 + exact_shock_speed * 0.2
+contact_pos = 0.5 + exact_u_star * 0.2
+rare_head = 0.5 - c_left * 0.2
+rare_tail = 0.5 + (exact_u_star - c_star_l) * 0.2
+
+for ax in axes:
+    ax.axvline(x=rare_head, color='g', linestyle=':', alpha=0.5, label='Rarefaction head')
+    ax.axvline(x=rare_tail, color='g', linestyle='-.', alpha=0.5, label='Rarefaction tail')
+    ax.axvline(x=contact_pos, color='m', linestyle=':', alpha=0.5, label='Contact')
+    ax.axvline(x=shock_pos, color='r', linestyle=':', alpha=0.5, label='Shock')
+
+plt.tight_layout()
+png_path = os.path.join(outdir, "sod_density_velocity_pressure.png")
+fig.savefig(png_path, dpi=150, bbox_inches='tight')
+plt.close()
+
+# Figure 2: Convergence plot
+fig, ax = plt.subplots(figsize=(8, 6))
+
+nx_list = [100, 200, 400, 800]
+l1_rho_list = [r["l1_rho"] for r in tfvm_data["results"]]
+l1_p_list = [r["l1_p"] for r in tfvm_data["results"]]
+
+ax.loglog(nx_list, l1_rho_list, 'bo-', linewidth=2, markersize=8, label='L1(ρ)')
+ax.loglog(nx_list, l1_p_list, 'rs-', linewidth=2, markersize=8, label='L1(p)')
+
+# Reference slopes
+nx_ref = np.array([100, 800])
+ax.loglog(nx_ref, l1_rho_list[0] * (nx_ref / 100)**(-1), 'k--', alpha=0.5, label='O(Δx) slope')
+ax.loglog(nx_ref, l1_rho_list[0] * (nx_ref / 100)**(-2), 'k:', alpha=0.5, label='O(Δx²) slope')
+
+ax.set_xlabel('Grid resolution (nx)')
+ax.set_ylabel('L1 error')
+ax.set_title('TensorFVM Sod Shock Tube: Convergence Study')
+ax.legend()
+ax.grid(True, alpha=0.3, which='both')
+
+png_path2 = os.path.join(outdir, "sod_convergence.png")
+fig.savefig(png_path2, dpi=150, bbox_inches='tight')
+plt.close()
+
+# Figure 3: Error distribution
+fig, axes = plt.subplots(3, 1, figsize=(10, 10), sharex=True)
+
+err_rho = np.abs(rho_num - rho_exact)
+err_u = np.abs(u_num - u_exact)
+err_p = np.abs(p_num - p_exact)
+
+axes[0].plot(xc, err_rho, 'b-', linewidth=1)
+axes[0].set_ylabel('|ρ_num - ρ_exact|')
+axes[0].set_title('Pointwise Error Distribution (nx=800)')
+axes[0].grid(True, alpha=0.3)
+
+axes[1].plot(xc, err_u, 'b-', linewidth=1)
+axes[1].set_ylabel('|u_num - u_exact|')
+axes[1].grid(True, alpha=0.3)
+
+axes[2].plot(xc, err_p, 'b-', linewidth=1)
+axes[2].set_ylabel('|p_num - p_exact|')
+axes[2].set_xlabel('x')
+axes[2].grid(True, alpha=0.3)
+
+# Mark discontinuities
+for ax in axes:
+    ax.axvline(x=contact_pos, color='m', linestyle=':', alpha=0.5)
+    ax.axvline(x=shock_pos, color='r', linestyle=':', alpha=0.5)
+
+plt.tight_layout()
+png_path3 = os.path.join(outdir, "sod_error_distribution.png")
+fig.savefig(png_path3, dpi=150, bbox_inches='tight')
+plt.close()
+
+# Encode figures as base64 for the report
+def encode_png(path):
+    with open(path, 'rb') as f:
+        return base64.b64encode(f.read()).decode('ascii')
+
+figures = {
+    "sod_profile": encode_png(png_path),
+    "sod_convergence": encode_png(png_path2),
+    "sod_error": encode_png(png_path3),
+}
+
+# Save figure metadata
+fig_meta = {
+    "sod_profile": {"path": png_path, "caption": "Density, velocity, and pressure profiles at t=0.2. TensorFVM (nx=800, order=2) vs exact Riemann solution. Vertical lines mark wave positions."},
+    "sod_convergence": {"path": png_path2, "caption": "L1 error convergence with grid refinement. Observed order ~0.84-0.96 for density, ~0.93-1.01 for pressure."},
+    "sod_error": {"path": png_path3, "caption": "Pointwise error distribution. Largest errors near discontinuities (contact and shock), as expected for shock-capturing schemes."},
+}
+
+with open(os.path.join(outdir, "figures_meta.json"), "w") as f:
+    json.dump(fig_meta, f, indent=2)
+
+print("Figures generated:")
+print(f"  {png_path}")
+print(f"  {png_path2}")
+print(f"  {png_path3}")
+
+# Print key metrics for the report
+print("\n=== Key Metrics (nx=800, order=2) ===")
+result_800 = [r for r in tfvm_data["results"] if r["nx"] == 800][0]
+print(f"L1(ρ) = {result_800['l1_rho']:.6e}")
+print(f"L1(u) = {result_800['l1_u']:.6e}")
+print(f"L1(p) = {result_800['l1_p']:.6e}")
+print(f"L∞(ρ) = {result_800['linf_rho']:.6e}")
+print(f"L∞(u) = {result_800['linf_u']:.6e}")
+print(f"L∞(p) = {result_800['linf_p']:.6e}")
+
+# Wave position errors
+positions = result_800["positions"]
+exact_pos = result_800["exact_positions"]
+print(f"\nWave position errors:")
+print(f"  Shock:    num={positions['shock']:.6f}, exact={exact_pos['shock']:.6f}, err={abs(positions['shock']-exact_pos['shock'])/exact_pos['shock']*100:.3f}%")
+print(f"  Contact:  num={positions['contact']:.6f}, exact={exact_pos['contact']:.6f}, err={abs(positions['contact']-exact_pos['contact'])/exact_pos['contact']*100:.3f}%")
+print(f"  Rare head: num={positions['rarefaction_head']:.6f}, exact={exact_pos['rarefaction_head']:.6f}")
+print(f"  Rare tail: num={positions['rarefaction_tail']:.6f}, exact={exact_pos['rarefaction_tail']:.6f}")
+
+# Star region errors
+star = result_800["star_region"]
+exact_star = result_800["exact_star_region"]
+print(f"\nStar region errors:")
+print(f"  p_star_l: num={star['p_star_l']:.6f}, exact={exact_star['p_star']:.6f}, err={abs(star['p_star_l']-exact_star['p_star'])/exact_star['p_star']*100:.3f}%")
+print(f"  p_star_r: num={star['p_star_r']:.6f}, exact={exact_star['p_star']:.6f}, err={abs(star['p_star_r']-exact_star['p_star'])/exact_star['p_star']*100:.3f}%")
+print(f"  rho_star_l: num={star['rho_star_l']:.6f}, exact={exact_star['rho_star_l']:.6f}, err={abs(star['rho_star_l']-exact_star['rho_star_l'])/exact_star['rho_star_l']*100:.3f}%")
+print(f"  rho_star_r: num={star['rho_star_r']:.6f}, exact={exact_star['rho_star_r']:.6f}, err={abs(star['rho_star_r']-exact_star['rho_star_r'])/exact_star['rho_star_r']*100:.3f}%")
