@@ -1,0 +1,283 @@
+{
+  "all_pass": true,
+  "criteria": {
+    "C1": {
+      "pass": true,
+      "statement": "sphere rotational block ~ 0: max|I_rot|/(m_a a^2) < 1e-2",
+      "threshold": 0.01,
+      "value": 1.1425192841032535e-05
+    },
+    "C2": {
+      "pass": true,
+      "statement": "spheroid roll about the symmetry axis = 0: |I_44|/(rho V a^2) < 1e-10",
+      "threshold": 1e-10,
+      "value": 5.135079859529735e-34
+    },
+    "C3": {
+      "pass": true,
+      "statement": "offset-axis sphere: I_xx, I_yy within 3% of m_a d^2, I_zz within 3% of 0, translational block within 3%",
+      "threshold": 0.03,
+      "value": {
+        "max_rel_err_rotation": 0.014597472134483544,
+        "translation_rel_err": 0.014598509643049854,
+        "zz_rel_err": 4.645702020267853e-33
+      }
+    },
+    "C4": {
+      "note": "the observed order is reported as a diagnostic only: the latitude resolution dominates and the estimate is noise-dominated at the reachable panel counts (see section 5 of REPORT.md)",
+      "pass": true,
+      "statement": "spheroid transverse: |I_55-I_66|/I_55 < 1e-8 and the two-finest-mesh spread < 3%",
+      "threshold": {
+        "axisym": 1e-08,
+        "spread": 0.03
+      },
+      "value": {
+        "max_axisym_rel": 6.804453105275055e-16,
+        "observed_order_diagnostic": 5.570381715107755,
+        "two_finest_spread": 0.010402695388162632
+      }
+    },
+    "C5": {
+      "pass": true,
+      "statement": "raw reciprocity max|A_ab-A_ba|/max|A| < 5e-2 (why the API symmetrises)",
+      "threshold": 0.05,
+      "value": 1.6751691270641872e-16
+    },
+    "C6": {
+      "pass": true,
+      "statement": "I_55/(rho b (a^2-b^2)^2) finite and of the same order for a/b=1.25,1.5,2",
+      "threshold": {
+        "max_over_min": 3.0
+      },
+      "value": [
+        0.25706058840889845,
+        0.2353208997576359,
+        0.20784324506339646
+      ]
+    }
+  },
+  "elapsed_s": 84.94632863998413,
+  "near_sphere": [
+    {
+      "I_55": 0.08133557680125303,
+      "I_55_over_rho_b_da4": 0.25706058840889845,
+      "I_55_scaled": 0.010133182083735573,
+      "a_over_b": 1.25
+    },
+    {
+      "I_55": 0.3676889058713061,
+      "I_55_over_rho_b_da4": 0.2353208997576359,
+      "I_55_scaled": 0.02650953340962394,
+      "a_over_b": 1.5
+    },
+    {
+      "I_55": 1.8705892055705682,
+      "I_55_over_rho_b_da4": 0.20784324506339646,
+      "I_55_scaled": 0.056896266820301265,
+      "a_over_b": 2.0
+    }
+  ],
+  "rho": 1.0,
+  "slender_limit": {
+    "note": "strip theory (I = integral rho pi r(x)^2 x^2 dx) gives 4 pi/15 rho a^3 b^2 = (1/5) rho V a^2 in the slender limit; the panel values approach it monotonically with a/b -- a limit check, not an exact anchor (the 1/ln correction is still ~10% at a/b=8)",
+    "rows": [
+      {
+        "I_55": 1.8920585751558852,
+        "I_55_scaled": 0.05646196403540016,
+        "a_over_b": 2.0
+      },
+      {
+        "I_55": 32.882450618883226,
+        "I_55_scaled": 0.1226579193039942,
+        "a_over_b": 4.0
+      },
+      {
+        "I_55": 362.0260432550863,
+        "I_55_scaled": 0.16880342083607608,
+        "a_over_b": 8.0
+      }
+    ],
+    "strip_theory_scaled": 0.2
+  },
+  "sphere": {
+    "coupling_trans_rot_max": 3.760518226969472e-17,
+    "exact_anchor": "I_44=I_55=I_66=0 (r x n = 0 on a sphere)",
+    "m_a_exact": 2.0943951023931953,
+    "m_a_panel": [
+      2.040501899429972,
+      2.040501899429972,
+      2.052042193328217
+    ],
+    "n_panels": 576,
+    "rotation_diag_about_diameter": [
+      2.392886793015634e-05,
+      2.3928867930156e-05,
+      1.6284910024083973e-32
+    ],
+    "rotation_exact": 0.0,
+    "rotation_scaled_max": 1.1425192841032535e-05,
+    "translation_rel_err": 0.02573210895195521
+  },
+  "sphere_offset_axis": {
+    "I_xx_I_yy_exact_m_a_d2": 4.71238898038469,
+    "coupling_block_exact_m_a_d": 3.141592653589793,
+    "coupling_block_panel": [
+      [
+        9.259820864669931e-17,
+        3.0957300829418295,
+        -5.423314467441834e-18
+      ],
+      [
+        -3.095730082941832,
+        2.165152077172011e-16,
+        -4.3324383322062924e-18
+      ],
+      [
+        -4.210629896153159e-17,
+        7.621316458699113e-17,
+        1.4356394302811982e-18
+      ]
+    ],
+    "d_over_a": 1.5,
+    "exact_anchor": "I_oo = m_a d^2 (parallel-axis for added mass), I_center = 0",
+    "ladder": [
+      {
+        "I_xx": 4.529480118428457,
+        "I_yy": 4.529480118428455,
+        "I_zz": 5.6198491506867655e-33,
+        "coupling_max": 3.0196049478584532,
+        "mesh": [
+          24,
+          14
+        ],
+        "n_panels": 336,
+        "rel_err_xx": 0.03881446602086345,
+        "rel_err_yy": 0.03881446602086383,
+        "rel_err_zz": 1.1925690290167848e-33,
+        "translation_rel_err": 0.03882989272716547
+      },
+      {
+        "I_xx": 4.591153202585367,
+        "I_yy": 4.591153202585364,
+        "I_zz": 1.6284910024083967e-32,
+        "coupling_max": 3.0607528491449587,
+        "mesh": [
+          32,
+          18
+        ],
+        "n_panels": 576,
+        "rel_err_xx": 0.025727031088470406,
+        "rel_err_yy": 0.02572703108847116,
+        "rel_err_zz": 3.455765237519627e-33,
+        "translation_rel_err": 0.02573210895195542
+      },
+      {
+        "I_xx": 4.643600013556677,
+        "I_yy": 4.643600013556677,
+        "I_zz": 2.1892355006461122e-32,
+        "coupling_max": 3.095730082941832,
+        "mesh": [
+          48,
+          26
+        ],
+        "n_panels": 1248,
+        "rel_err_xx": 0.014597472134483544,
+        "rel_err_yy": 0.014597472134483544,
+        "rel_err_zz": 4.645702020267853e-33,
+        "translation_rel_err": 0.014598509643049854
+      }
+    ],
+    "observed_order": 0.7329297354427499,
+    "rel_err_xx_yy_zz": [
+      0.014597472134483544,
+      0.014597472134483544,
+      4.645702020267853e-33
+    ],
+    "richardson_I_xx": 4.7228235140463815,
+    "richardson_rel_err": 0.0022142768148226957,
+    "rotation_diag_panel": [
+      4.643600013556677,
+      4.643600013556677,
+      2.1892355006461122e-32
+    ],
+    "translational_block_rel_err": 0.014598509643049854
+  },
+  "spheroid_roll": {
+    "I_44": 1.6882698095671455e-32,
+    "a_over_b": 2.0,
+    "exact_anchor": "0 (body of revolution: (r x n)_x = 0 on the symmetry axis)",
+    "n_panels": 432,
+    "rel": 5.135079859529735e-34,
+    "scale": 32.877187030188765
+  },
+  "spheroid_transverse": {
+    "I_55_scaled_finest": 0.05842781617154944,
+    "V_exact": 8.377580409572781,
+    "a_over_b": 2.0,
+    "ladder": [
+      {
+        "I_55": 1.732308699180153,
+        "I_55_scaled": 0.05437847963346329,
+        "I_55_scaled_exactV": 0.05169477983167735,
+        "I_66": 1.7323086991801526,
+        "V_panel": 7.964128046870445,
+        "asym_raw": 1.1090935873134905e-16,
+        "axisym_rel": 2.563568549071167e-16,
+        "mesh": [
+          16,
+          10
+        ],
+        "n_panels": 160
+      },
+      {
+        "I_55": 1.8417567227183982,
+        "I_55_scaled": 0.056299535455253805,
+        "I_55_scaled_exactV": 0.05496087869875544,
+        "I_66": 1.841756722718397,
+        "V_panel": 8.178383302035433,
+        "asym_raw": 1.1988510613901622e-16,
+        "axisym_rel": 6.028065547041893e-16,
+        "mesh": [
+          24,
+          14
+        ],
+        "n_panels": 336
+      },
+      {
+        "I_55": 1.9375671120466547,
+        "I_55_scaled": 0.05819762489409317,
+        "I_55_scaled_exactV": 0.05782000939772125,
+        "I_66": 1.9375671120466542,
+        "V_panel": 8.323222449252006,
+        "asym_raw": 1.1778652693331338e-16,
+        "axisym_rel": 2.291993949984889e-16,
+        "mesh": [
+          48,
+          26
+        ],
+        "n_panels": 1248
+      },
+      {
+        "I_55": 1.9579349125315693,
+        "I_55_scaled": 0.058646867747045674,
+        "I_55_scaled_exactV": 0.05842781617154944,
+        "I_66": 1.9579349125315706,
+        "V_panel": 8.346289357585512,
+        "asym_raw": 1.6751691270641872e-16,
+        "axisym_rel": 6.804453105275055e-16,
+        "mesh": [
+          64,
+          34
+        ],
+        "n_panels": 2176
+      }
+    ],
+    "max_axisymmetry_rel": 6.804453105275055e-16,
+    "max_raw_asymmetry": 1.6751691270641872e-16,
+    "note": "no elementary closed form for a spheroid's transverse added inertia in this tree: reported as a converged, symmetric, positive value; NOT scored against an analytic value",
+    "observed_order_diagnostic": 5.570381715107755,
+    "richardson_scaled": 0.05844088241674723,
+    "slender_limit_reference": 0.2,
+    "two_finest_spread": 0.010402695388162632
+  }
+}
