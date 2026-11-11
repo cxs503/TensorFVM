@@ -134,10 +134,17 @@ class PolarVorticitySolver:
     """Streamfunction-vorticity FVM on a body-fitted polar O-grid."""
 
     def __init__(self, *, re: float, n_r: int = 120, n_theta: int = 180,
-                 r_out: float = 12.0, wall_cell: float = 5.0e-3, u_inf: float = 1.0):
+                 r_out: float = 12.0, wall_cell: float = 5.0e-3, u_inf: float = 1.0,
+                 order: int = 1):
         if re <= 0:
             raise ValueError("Reynolds number must be positive")
         self.re = float(re)
+        # ``order=1``: first-order upwind vorticity advection (legacy scheme; its
+        # numerical viscosity ``U r dtheta/2`` is a large fraction of ``nu`` at
+        # Re <= 40 and biases both the drag and the wall heat flux).
+        # ``order=2``: van Leer limited flux-form reconstruction plus a deferred
+        # correction of the radial flux; both remain conservative.
+        self.order = int(order)
         self.nu = 1.0 / self.re
         self.u_inf = float(u_inf)
         self.grid = _PolarGrid(0.5, r_out, n_r - 1, wall_cell, n_theta)
@@ -204,20 +211,36 @@ class PolarVorticitySolver:
         dpsi_t = psi_ext[:, 1:] - psi_ext[:, :-1]                # (nr, nt) dpsi/dtheta*dtheta
         urf = np.zeros((nr, nt))                                 # at r_face[f], theta_{j+1/2}
         urf[1:-1, :] = 0.5 * (dpsi_t[:-2, :] + dpsi_t[1:-1, :])
+        # the flow *does* leave through the outer circle (psi varies along it);
+        # leaving this face at zero made the outermost cell accumulate vorticity.
+        urf[0, :] = 0.0
+        urf[-1, :] = self.r_face[-1] * self.dtheta * self.u_inf * np.cos(self.theta)
         dpsi_r = np.zeros((nr, nt))
         denom = (self.r_node[2:] - self.r_node[:-2])[:, None]
         dpsi_r[1:-1, :] = (psi[2:, :] - psi[:-2, :]) / denom
         ut = -dpsi_r                                             # u_theta at nodes
         return urf, ut
 
-    def wall_vorticity(self, psi):
-        """``omega = -d^2 psi/dr^2`` on the wall from a quadratic fit (2nd order).
+    def wall_vorticity(self, psi, order: int = 2):
+        """``omega = -d^2 psi/dr^2`` at the wall.
 
-        ``psi`` vanishes on the wall, so the local profile is
-        ``psi = a s^2 + b s^3``; the wall vorticity is ``-2a``.
+        ``psi`` vanishes on the wall, so the local profile is fitted as
+        ``psi = a s^2 + b s^3`` through the first two interior nodes.  For a
+        uniform first step (``s2 = 2 s1``) this reduces to
+        ``omega_w = -(8 psi_1 - psi_2) / (2 s1^2)``, which is second-order
+        accurate; ``order=1`` keeps the older ``-2 psi_1/s1^2`` form, whose
+        truncation error is ``O(s1)`` and which biases both the drag and the wall
+        heat flux.
         """
         s1 = self.r_node[1] - self.r_node[0]
-        return -2.0 * psi[1, :] / (s1 * s1)
+        if order == 1:
+            return -2.0 * psi[1, :] / (s1 * s1)
+        s2 = self.r_node[2] - self.r_node[0]
+        a1 = psi[1, :] / (s1 * s1)
+        a2 = psi[2, :] / (s2 * s2)
+        b = (a2 - a1) / (s2 - s1)
+        a = a1 - b * s1
+        return -2.0 * a
 
     def solve_psi(self, omega, outer_psi):
         ni, nt = self.n_int, self.n_theta
@@ -229,23 +252,39 @@ class PolarVorticitySolver:
         return psi
 
     # ------------------------------------------------------------ time march
-    def _azimuthal_explicit(self, omega, ut):
-        """Azimuthal upwind convection (advective form) + central diffusion."""
+    @staticmethod
+    def _harmonic_limiter(d_up, d_down):
+        """van Leer / harmonic limiter on two consecutive differences.
+
+        Returns ``2 d1 d2/(d1+d2)`` where the differences share a sign (smooth
+        data: the second-order upwind slope) and zero where they do not (an
+        extremum: fall back to the first-order upwind slope).  Bounded and TVD.
+        """
+        same = d_up * d_down > 0.0
+        denom = np.where(same, d_up + d_down, 1.0)
+        return np.where(same, 2.0 * d_up * d_down / denom, 0.0)
+
+    def _azimuthal_explicit(self, omega, ut, high_order=False):
+        """Explicit azimuthal advection, ``-(u_theta/r) d omega/d theta``.
+
+        ``high_order`` replaces the first-order upwind difference by the limited
+        second-order upwind slope.  First-order upwind adds a numerical viscosity
+        ``u_theta r dtheta/2`` which at ``Re = 40`` with ``n_theta = 72`` is of the
+        same order as the molecular viscosity -- that is the dominant error of the
+        legacy scheme, not the wall boundary condition.
+        """
         nt = self.n_theta
         r = self.r_node[1:-1]
         adv = np.zeros_like(omega)
         for j in range(nt):
             jp, jm = (j + 1) % nt, (j - 1) % nt
             u = ut[:, j]
-            dT = np.where(u > 0, omega[:, j] - omega[:, jm], omega[:, jp] - omega[:, j])
+            d_up = omega[:, j] - omega[:, jm]
+            d_down = omega[:, jp] - omega[:, j]
+            dT = np.where(u > 0.0, d_up, d_down) if not high_order else \
+                self._harmonic_limiter(d_up, d_down)
             adv[:, j] = -u / r * dT / self.dtheta
-        g_t = self.dr_cv[1:-1] / (r * self.dtheta)
-        lap = np.zeros_like(omega)
-        for j in range(nt):
-            jp, jm = (j + 1) % nt, (j - 1) % nt
-            lap[:, j] = g_t * (omega[:, jp] - 2.0 * omega[:, j] + omega[:, jm])
-        vol = self.vol[1:-1, None]
-        return adv + self.nu * lap / vol
+        return adv
 
     def radial_velocity(self, psi):
         """Radial velocity at the nodes from a centred azimuthal difference."""
@@ -259,7 +298,16 @@ class PolarVorticitySolver:
         return ur
 
     def _radial_implicit(self, omega, dt, ur, wall_value, outer_value):
-        """Backward Euler radial diffusion + upwind convection (banded lines)."""
+        """Backward Euler radial diffusion + upwind convection (banded lines).
+
+        ``ur`` is the nodal radial velocity; the face value is the mean of the two
+        bracketing nodes.  The convective assembly adds the *inflow* magnitudes to
+        the diagonal, which keeps the line matrix an M-matrix (positive solution)
+        even where the radial flux is strongly convergent -- assembling the exact
+        ``sum face flux`` diagonal instead makes the line solve blow up in the
+        stagnation region, where the radial inflow is carried away by the
+        azimuthal flux.
+        """
         ni, nt = self.n_int, self.n_theta
         nu = self.nu
         vol = self.vol[1:-1]
@@ -319,9 +367,11 @@ class PolarVorticitySolver:
         step = 0
         for step in range(n_steps):
             urf, ut = self.face_fluxes(psi)
-            ur = self.radial_velocity(psi)
-            w = omega[1:-1, :] + dt * self._azimuthal_explicit(omega[1:-1, :], ut[1:-1, :])
-            w = self._radial_implicit(w, dt, ur, omega[0, :], 0.0)
+            inner = omega[1:-1, :]
+            w = inner + dt * self._azimuthal_explicit(inner, ut[1:-1, :],
+                                                      high_order=self.order >= 2)
+            w = self._radial_implicit(w, dt, self.radial_velocity(psi),
+                                      omega[0, :], 0.0)
             omega[1:-1, :] = w
             omega[0, :] = 0.0
             omega[-1, :] = 0.0
@@ -466,12 +516,86 @@ class ConjugateCylinder:
         return T_solid[-1, :], q_solid
 
     # ------------------------------------------------------------ fluid solve
-    def solve_fluid(self, t_wall, psi, outer_temperature=None):
+    def _advective_net_out(self, T, urf, ut, wall_values, high_order: bool):
+        """Net advective heat *leaving* each interior cell (per unit depth).
+
+        ``T`` is the interior field ``(n_int, n_theta)``; the radial upstream
+        value at the first interior row is the wall value and the azimuthal
+        direction is periodic.  With ``high_order`` the face values are the
+        van Leer limited linear reconstruction, otherwise plain upwind.  Both
+        variants are *flux* differences over the same faces, so their cell sums
+        telescope and the deferred correction below cannot create heat.
+        """
+        flow = self.flow
+        ni, nt = flow.n_int, flow.n_theta
+        net = np.zeros((ni, nt))
+        kap = self.kappa_fluid
+
+        def van_leer(up, down):
+            r = np.where(np.abs(down) > 1e-300, up / np.where(down == 0.0, 1e-300, down), 0.0)
+            psi = (r + np.abs(r)) / (1.0 + np.abs(r))
+            return psi
+
+        # --- radial faces ---------------------------------------------------
+        for k in range(ni - 1):
+            F = 0.5 * (urf[k + 1, :] + np.roll(urf[k + 1, :], 1))
+            pos = F > 0
+            if k == 0:
+                up_p = np.full(nt, 0.0)
+                up_n = np.full(nt, 0.0)
+            else:
+                up_p = T[k - 1, :]
+                up_n = T[k + 1, :] if k + 1 < ni else np.zeros(nt)
+            up_n2 = T[k + 2, :] if k + 2 < ni else T[k + 1, :]
+            t_p, t_n = T[k, :], T[k + 1, :]
+            if high_order:
+                face = np.where(
+                    pos,
+                    t_p + 0.5 * van_leer(t_p - up_p, t_n - t_p) * (t_n - t_p),
+                    t_n + 0.5 * van_leer(t_n - up_n2, t_p - t_n) * (t_p - t_n),
+                )
+                face = np.where(k == 0, np.where(pos, t_p, face), face)
+            else:
+                face = np.where(pos, t_p, t_n)
+            net[k, :] += F * face
+            net[k + 1, :] -= F * face
+
+        # --- azimuthal faces (periodic) -------------------------------------
+        area = flow.dr_cv[1:-1]
+        for j in range(nt):
+            jp = (j + 1) % nt
+            F = 0.5 * (ut[:, j] + ut[:, jp]) * area
+            pos = F > 0
+            jm = (j - 1) % nt
+            jpp = (jp + 1) % nt
+            t_p, t_n = T[:, j], T[:, jp]
+            if high_order:
+                face = np.where(
+                    pos,
+                    t_p + 0.5 * van_leer(t_p - T[:, jm], t_n - t_p) * (t_n - t_p),
+                    t_n + 0.5 * van_leer(t_n - T[:, jpp], t_p - t_n) * (t_p - t_n),
+                )
+            else:
+                face = np.where(pos, t_p, t_n)
+            net[:, j] += F * face
+            net[:, jp] -= F * face
+        return net
+
+    def solve_fluid(self, t_wall, psi, outer_temperature=None, order: int = 1,
+                    dc_max_iter: int = 200, dc_tol: float = 1e-13):
         """Steady fluid energy equation with a wall temperature ``t_wall(theta)``.
 
         ``outer_temperature`` (a scalar) turns the outer boundary into a cold
         Dirichlet wall; left as ``None`` the outer boundary is adiabatic, which is
         the convective cross-flow configuration.
+
+        ``order=1`` uses first-order upwind convection (the original scheme).
+        ``order=2`` keeps that matrix but adds a *conservative* deferred
+        correction: the face values are replaced by van Leer limited linear
+        reconstructions and the difference of the two flux divergences is lagged
+        on the right-hand side until it stops changing.  Because both face-value
+        sets are flux differences over the same faces, the converged solution is
+        the second-order flux balance and the energy ledger still closes.
         """
         flow = self.flow
         ni, nt = flow.n_int, flow.n_theta
@@ -541,6 +665,20 @@ class ConjugateCylinder:
                           shape=(ni * nt, ni * nt)).tocsc()
         A = (A + sp.diags(diag)).tocsc()
         T = spla.spsolve(A, -b).reshape(ni, nt)
+        self._dc_iterations = 1
+        if order == 2:
+            lu = spla.splu(A.tocsc())
+            for dc_it in range(dc_max_iter):
+                up = self._advective_net_out(T, urf, ut, t_wall, high_order=False)
+                ho = self._advective_net_out(T, urf, ut, t_wall, high_order=True)
+                dc = (ho - up).ravel()
+                T_new = lu.solve(dc - b).reshape(ni, nt)
+                delta = float(np.max(np.abs(T_new - T)))
+                T = T_new
+                self._dc_iterations += 1
+                if delta < dc_tol:
+                    break
+            self._dc_residual = delta
         full = np.zeros((flow.n_node, nt))
         full[1:-1, :] = T
         full[0, :] = t_wall

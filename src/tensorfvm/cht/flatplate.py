@@ -31,8 +31,9 @@ from dataclasses import dataclass, field
 import numpy as np
 
 from .energy import Grid2D, solve_steady_energy
-from .similarity import (BlasiusSolution, classical_correlation, pohlhausen_nusselt,
-                         solve_blasius, unheated_start_factor)
+from .similarity import (BlasiusSolution, classical_correlation,
+                         classical_uniform_flux_correlation, pohlhausen_nusselt,
+                         solve_blasius, solve_uniform_flux, unheated_start_factor)
 
 __all__ = ["FlatPlateCHT", "FlatPlateResult"]
 
@@ -61,7 +62,8 @@ class FlatPlateCHT:
                  thickness: float = 0.01, height: float = 0.08, length: float = 1.0,
                  nx: int = 240, ny_fluid: int = 90, ny_solid: int = 16,
                  x_start: float = 1.0e-4, y_power: float = 2.0,
-                 blasius: BlasiusSolution | None = None):
+                 blasius: BlasiusSolution | None = None,
+                 wall_flux: float | None = None):
         if re_l <= 0 or pr <= 0 or solid_ratio <= 0:
             raise ValueError("re_l, pr and solid_ratio must be positive")
         self.re_l = float(re_l)
@@ -76,6 +78,14 @@ class FlatPlateCHT:
         self.x_start = float(x_start)
         self.y_power = float(y_power)
         self.blasius = blasius if blasius is not None else solve_blasius()
+        # ``wall_flux`` switches the substrate bottom from Dirichlet (T=1) to a
+        # prescribed heat flux q'' into the plate.  That is the configuration for
+        # which the uniform-heat-flux similarity solution is the exact reference
+        # (``Nu_x = sqrt(Re_x)/phi(0)``); with a Dirichlet bottom the wall flux is
+        # an output and only the quasi-isothermal Pohlhausen solution applies.
+        self.wall_flux = None if wall_flux is None else float(wall_flux)
+        if self.wall_flux is not None and self.ny_solid == 0:
+            raise ValueError("a prescribed wall flux needs a solid substrate")
 
         self.u_inf = 1.0
         self.nu = self.u_inf * self.length / self.re_l
@@ -122,7 +132,9 @@ class FlatPlateCHT:
         bc = {
             "west": {"types": types_west, "values": values_west},
             "east": {"type": "outflow", "values": 0.0},
-            "south": {"type": "dirichlet", "values": 1.0},
+            "south": ({"type": "neumann", "values": self.wall_flux}
+                      if self.wall_flux is not None
+                      else {"type": "dirichlet", "values": 1.0}),
             "north": {"type": "dirichlet", "values": 0.0},
         }
         T, info = solve_steady_energy(self.grid.dx, self.grid.dy, self.kappa,
@@ -156,9 +168,15 @@ class FlatPlateCHT:
 
         re_x = xs / self.nu
         nu_x = q * xs / (kf * np.maximum(t_int, 1e-300))
-        theta0 = pohlhausen_nusselt(self.pr, blasius=self.blasius)
-        nu_ref = np.sqrt(re_x) * theta0
-        nu_corr = classical_correlation(self.pr) * np.sqrt(re_x)
+        if self.wall_flux is None:
+            theta0 = pohlhausen_nusselt(self.pr, blasius=self.blasius)
+            nu_ref = np.sqrt(re_x) * theta0
+            nu_corr = classical_correlation(self.pr) * np.sqrt(re_x)
+        else:                                  # uniform-flux similarity anchor
+            uhf = solve_uniform_flux(self.pr, blasius=self.blasius)
+            theta0 = uhf.coefficient
+            nu_ref = np.sqrt(re_x) * theta0
+            nu_corr = classical_uniform_flux_correlation(self.pr) * np.sqrt(re_x)
 
         mask = (xs >= 0.1) & (xs <= 0.95)
         err = nu_x[mask] / nu_ref[mask] - 1.0
@@ -168,6 +186,7 @@ class FlatPlateCHT:
             "solid_ratio": self.solid_ratio,
             "nusselt_similarity_coefficient": theta0,
             "classical_coefficient_0.332": nu_corr[0] / np.sqrt(re_x[0]),
+            "wall_flux": self.wall_flux,
             "nu_max_rel_error": float(np.max(np.abs(err))),
             "nu_l2_rel_error": float(np.sqrt(np.mean(err ** 2))),
             "nu_evaluation_band": [0.1, 0.95],
@@ -183,11 +202,43 @@ class FlatPlateCHT:
                      "thickness": self.thickness, "height": self.height},
             "picard_iterations": info["picard_iterations"],
         }
+        if self.wall_flux is not None:
+            # Analytic conjugate reference for a uniformly fluxed plate:
+            #   T_w(x) = q'' / (k_f * Nu_x / x)  with  Nu_x = sqrt(Re_x)/phi(0)
+            #   T_s(x, y) = T_w(x) - q'' y / k_s   (axial conduction neglected)
+            # Nothing from the discrete solution enters this reference: it is the
+            # uniform-heat-flux similarity solution plus one-dimensional conduction.
+            tw_analytic = self.wall_flux * xs / (kf * nu_ref)
+            y_cells = 0.5 * (self.grid.y_faces[:-1] + self.grid.y_faces[1:])
+            rows = slice(0, self.ny_solid)
+            ts_analytic = tw_analytic[None, :] - self.wall_flux * y_cells[rows, None] / ks
+            band = (xs >= 0.1) & (xs <= 0.95)
+            ts_num = T[rows, :][:, band]
+            ts_ref = ts_analytic[:, band]
+            scale = max(float(np.max(np.abs(ts_ref))), 1e-300)
+            metrics["wall_temperature_analytic"] = tw_analytic
+            metrics["solid_analytic_max_rel_error"] = float(
+                np.max(np.abs(ts_num - ts_ref)) / scale)
+            metrics["solid_analytic_max_abs_error"] = float(np.max(np.abs(ts_num - ts_ref)))
+            metrics["wall_temperature_rel_error_max"] = float(
+                np.max(np.abs(t_int[band] - tw_analytic[band]) / tw_analytic[band]))
+            q_band = q[band]
+            metrics["wall_flux_uniformity_rel"] = float(
+                (np.max(q_band) - np.min(q_band)) / np.mean(q_band))
+            # global interface conservation: heat supplied at the bottom of the
+            # slab must equal the heat entering the fluid through the interface.
+            q_in = self.wall_flux * (self.length - self.x_start)
+            q_out = float(np.sum(q * self.grid.dx))
+            metrics["global_interface_balance_rel"] = abs(q_out - q_in) / abs(q_in)
+            metrics["global_interface_heat_rate_in"] = q_in
+            metrics["global_interface_heat_rate_out"] = q_out
         dy_div = np.abs(flux_e[:, 1:] - flux_e[:, :-1] + flux_n[1:, :] - flux_n[:-1, :])
         metrics["max_discrete_divergence"] = float(np.max(dy_div))
         fields = {
             "x": xs, "nu_x": nu_x, "nu_reference": nu_ref, "t_wall": t_int, "q_wall": q,
             "T": T, "y_faces": self.grid.y_faces, "x_faces": self.grid.x_faces,
+            "y_cells": 0.5 * (self.grid.y_faces[:-1] + self.grid.y_faces[1:]),
+            "solid_analytic": (None if self.wall_flux is None else ts_analytic),
             "psi": psi,
         }
         return FlatPlateResult(x=xs, nu_x=nu_x, nu_reference=nu_ref, nu_correlation=nu_corr,

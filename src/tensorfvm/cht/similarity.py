@@ -144,6 +144,81 @@ def unheated_start_factor(x_over_x0: float) -> float:
     return 1.0 / (1.0 - x_over_x0 ** -0.75) ** (1.0 / 3.0)
 
 
+@dataclass(frozen=True)
+class UniformFluxSolution:
+    """Uniform-wall-heat-flux (UHF) thermal similarity solution.
+
+    The temperature is written ``T - T_inf = (q_w / k) sqrt(nu x / U) phi(eta)``,
+    which turns the boundary-layer energy equation into
+
+    ``phi'' + Pr/2 (f phi' - f' phi) = 0,  phi'(0) = -1,  phi(inf) = 0``
+
+    and gives ``Nu_x = q_w x / (k (T_w - T_inf)) = sqrt(Re_x) / phi(0)``.  The
+    extra ``-f' phi`` term (absent from the isothermal Pohlhausen problem) is what
+    makes the uniform-flux coefficient about 36 % larger.
+    """
+
+    phi0: float
+    coefficient: float
+    prandtl: float
+
+    @property
+    def nusselt_coefficient(self) -> float:
+        """``Nu_x / sqrt(Re_x)`` for a uniform wall heat flux."""
+        return self.coefficient
+
+
+def solve_uniform_flux(pr: float, blasius: BlasiusSolution | None = None,
+                       eta_max: float = 12.0, h: float = 0.002) -> UniformFluxSolution:
+    """Integrate the uniform-heat-flux thermal problem and return ``phi(0)``.
+
+    The problem is linear, so the wall value is split as ``phi = s A + B`` with
+    ``A(0)=1, A'(0)=0`` and ``B(0)=0, B'(0)=-1``; ``phi(inf)=0`` then fixes
+    ``s = -B(inf)/A(inf)``.
+    """
+    if pr <= 0.0:
+        raise ValueError("Prandtl number must be positive")
+    if blasius is None:
+        blasius = solve_blasius(eta_max=eta_max, h=h)
+    n = int(round(eta_max / h))
+    eta = np.linspace(0.0, eta_max, n + 1)
+    f = np.interp(eta, blasius.eta, blasius.f)
+    fp = np.interp(eta, blasius.eta, blasius.fp)
+
+    def march(phi0: float, dphi0: float) -> tuple[float, float]:
+        state = np.array([phi0, dphi0], dtype=float)
+        for k in range(n):
+            def rhs(st, i=k):
+                return np.array([st[1], -0.5 * pr * (f[i] * st[1] - fp[i] * st[0])])
+
+            k1 = rhs(state)
+            k2 = rhs(state + 0.5 * h * k1)
+            k3 = rhs(state + 0.5 * h * k2)
+            k4 = rhs(state + h * k3)
+            state = state + h / 6.0 * (k1 + 2.0 * k2 + 2.0 * k3 + k4)
+        return float(state[0]), float(state[1])
+
+    a_inf, _ = march(1.0, 0.0)
+    b_inf, _ = march(0.0, -1.0)
+    if a_inf <= 0.0:
+        raise RuntimeError("uniform-flux similarity: A(inf) must stay positive")
+    phi0 = -b_inf / a_inf
+    if phi0 <= 0.0:
+        raise RuntimeError("uniform-flux similarity: phi(0) must be positive")
+    return UniformFluxSolution(phi0=float(phi0), coefficient=float(1.0 / phi0),
+                               prandtl=float(pr))
+
+
+def uniform_flux_nusselt(pr: float, blasius: BlasiusSolution | None = None) -> float:
+    """``Nu_x / sqrt(Re_x)`` for a uniform wall heat flux."""
+    return solve_uniform_flux(pr, blasius=blasius).coefficient
+
+
+def classical_uniform_flux_correlation(pr: float) -> float:
+    """Engineering form ``0.453 Pr^(1/3)`` (laminar, uniform heat flux)."""
+    return 0.453 * pr ** (1.0 / 3.0)
+
+
 def blasius_streamfunction(traj: BlasiusSolution):
     """Convenience closure ``psi(x, y)`` bound to the tabulated solution."""
     def psi(x, y, u_inf: float = 1.0, nu: float = 1.0):

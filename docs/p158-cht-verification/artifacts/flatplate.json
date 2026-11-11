@@ -1,0 +1,181 @@
+{
+ "case": "flatplate_uniform_flux",
+ "targets": [
+  {
+   "re_x": 10000.0,
+   "re_l": 20000.0,
+   "nusselt": 40.50917384267825,
+   "nusselt_similarity": 40.490327529653264,
+   "nusselt_classical": 40.14019152060649,
+   "rel_error_similarity": 0.00046545222463767466,
+   "rel_error_classical": 0.009192340845766367,
+   "solid_rel_error_max": 0.0013904920551337163,
+   "wall_flux_uniformity_rel": 0.006425215728775542,
+   "interface_local_imbalance_rel": 1.4307409407396892e-13,
+   "interface_global_balance_rel": 8.771639058444581e-15,
+   "ledger_normalized_imbalance": 1.421283393853647e-14,
+   "max_discrete_divergence": 4.336808689942018e-19,
+   "wall_temperature": 171.9907659599842,
+   "wall_temperature_analytic": 172.17781814420653,
+   "grid": {
+    "nx": 240,
+    "ny_fluid": 90,
+    "ny_solid": 10,
+    "x_start": 0.0001,
+    "y_power": 2.0,
+    "thickness": 0.005,
+    "height": 0.08
+   },
+   "phi0": 2.4646992624540607,
+   "classical_coefficient": 0.40222051278939813
+  },
+  {
+   "re_x": 30000.0,
+   "re_l": 60000.0,
+   "nusselt": 70.15783587393841,
+   "nusselt_similarity": 70.13130449646428,
+   "nusselt_classical": 69.52485113923588,
+   "rel_error_similarity": 0.0003783100523313543,
+   "rel_error_classical": 0.009104438547230753,
+   "solid_rel_error_max": 0.0008154249028161648,
+   "wall_flux_uniformity_rel": 0.0037146068208700365,
+   "interface_local_imbalance_rel": 1.1025125916550967e-13,
+   "interface_global_balance_rel": 3.0201086378442104e-14,
+   "ledger_normalized_imbalance": 1.4767443205495706e-14,
+   "max_discrete_divergence": 1.0842021724855044e-19,
+   "wall_temperature": 298.0013995631767,
+   "wall_temperature_analytic": 298.22072896212023,
+   "grid": {
+    "nx": 240,
+    "ny_fluid": 90,
+    "ny_solid": 10,
+    "x_start": 0.0001,
+    "y_power": 2.0,
+    "thickness": 0.005,
+    "height": 0.08
+   },
+   "phi0": 2.4646992624540607,
+   "classical_coefficient": 0.40222051278939813
+  },
+  {
+   "re_x": 100000.0,
+   "re_l": 200000.0,
+   "nusselt": 128.08791349555426,
+   "nusselt_similarity": 128.04165819992323,
+   "nusselt_classical": 126.9344309204941,
+   "rel_error_similarity": 0.00036125192598501776,
+   "rel_error_classical": 0.00908723162577263,
+   "solid_rel_error_max": 0.0005001973530186725,
+   "wall_flux_uniformity_rel": 0.002036323727987011,
+   "interface_local_imbalance_rel": 7.575113742267079e-14,
+   "interface_global_balance_rel": 2.087428029098204e-14,
+   "ledger_normalized_imbalance": 2.1984614349013e-14,
+   "max_discrete_divergence": 2.710505431213761e-20,
+   "wall_temperature": 544.1703263197517,
+   "wall_temperature_analytic": 544.4740678939582,
+   "grid": {
+    "nx": 240,
+    "ny_fluid": 90,
+    "ny_solid": 10,
+    "x_start": 0.0001,
+    "y_power": 2.0,
+    "thickness": 0.005,
+    "height": 0.08
+   },
+   "phi0": 2.4646992624540607,
+   "classical_coefficient": 0.40222051278939813
+  },
+  {
+   "re_x": 300000.0,
+   "re_l": 600000.0,
+   "nusselt": 221.84855728137475,
+   "nusselt_similarity": 221.77465748763524,
+   "nusselt_classical": 219.85688358413773,
+   "rel_error_similarity": 0.00033322019105641587,
+   "rel_error_classical": 0.009058955374825928,
+   "solid_rel_error_max": 0.00034935074894721637,
+   "wall_flux_uniformity_rel": 0.001175667458135978,
+   "interface_local_imbalance_rel": 5.485150511440233e-14,
+   "interface_global_balance_rel": 1.8320511957510835e-14,
+   "ledger_normalized_imbalance": 1.3101941884765324e-14,
+   "max_discrete_divergence": 2.710505431213761e-20,
+   "wall_temperature": 942.6361866193276,
+   "wall_temperature_analytic": 943.0567489960418,
+   "grid": {
+    "nx": 240,
+    "ny_fluid": 90,
+    "ny_solid": 10,
+    "x_start": 0.0001,
+    "y_power": 2.0,
+    "thickness": 0.005,
+    "height": 0.08
+   },
+   "phi0": 2.4646992624540607,
+   "classical_coefficient": 0.40222051278939813
+  },
+  {
+   "re_x": 1000000.0,
+   "re_l": 2000000.0,
+   "nusselt": 405.0002904543978,
+   "nusselt_similarity": 404.9032752965327,
+   "nusselt_classical": 401.4019152060649,
+   "rel_error_similarity": 0.0002396008226757118,
+   "rel_error_classical": 0.008964519380744829,
+   "solid_rel_error_max": 0.00024205783241784847,
+   "wall_flux_uniformity_rel": 0.000643935161642718,
+   "interface_local_imbalance_rel": 3.658875522992776e-14,
+   "interface_global_balance_rel": 1.7987411740101545e-14,
+   "ledger_normalized_imbalance": 1.432330934859938e-14,
+   "max_discrete_divergence": 2.710505431213761e-20,
+   "wall_temperature": 1721.2584434316998,
+   "wall_temperature_analytic": 1721.7781814420655,
+   "grid": {
+    "nx": 240,
+    "ny_fluid": 90,
+    "ny_solid": 10,
+    "x_start": 0.0001,
+    "y_power": 2.0,
+    "thickness": 0.005,
+    "height": 0.08
+   },
+   "phi0": 2.4646992624540607,
+   "classical_coefficient": 0.40222051278939813
+  }
+ ],
+ "gci": {
+  "grids": [
+   [
+    120,
+    48,
+    12
+   ],
+   [
+    240,
+    96,
+    24
+   ],
+   [
+    480,
+    192,
+    48
+   ]
+  ],
+  "y_power": 1.0,
+  "re_x": 100000.0,
+  "nusselt": [
+   129.53779997880554,
+   128.50647463942656,
+   128.33075030834755
+  ],
+  "ratio": 2.0,
+  "observed_order": 2.5531136453572283,
+  "gci_fine_rel": 0.00035153760486839714,
+  "richardson_extrapolated": 128.29465984067207,
+  "similarity_reference": 128.30277950502372,
+  "errors_vs_similarity": [
+   0.009625827893568362,
+   0.0015876127952072494,
+   0.00021800621492173988
+  ]
+ }
+}
