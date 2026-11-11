@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import torch
 
-__all__ = ["minmod", "vanleer", "mc", "LIMITERS", "limited_slope"]
+__all__ = ["minmod", "vanleer", "mc", "superbee", "LIMITERS", "limited_slope"]
 
 
 def minmod(a: torch.Tensor, b: torch.Tensor) -> torch.Tensor:
@@ -40,7 +40,18 @@ def mc(a: torch.Tensor, b: torch.Tensor) -> torch.Tensor:
     return torch.sign(centered) * lim
 
 
-LIMITERS = {"minmod": minmod, "vanleer": vanleer, "mc": mc}
+def superbee(a: torch.Tensor, b: torch.Tensor) -> torch.Tensor:
+    """Superbee limiter (Roe 1986): the least diffusive member of the TVD family.
+
+    ``phi(r) = max(0, min(2r, 1), min(r, 2))`` written on the two slopes
+    directly: ``maxmod(minmod(2a, b), minmod(a, 2b))``.
+    """
+    s1 = minmod(2.0 * a, b)
+    s2 = minmod(a, 2.0 * b)
+    return torch.where(s1.abs() >= s2.abs(), s1, s2)
+
+
+LIMITERS = {"minmod": minmod, "vanleer": vanleer, "mc": mc, "superbee": superbee}
 
 
 def limited_slope(q: torch.Tensor, axis: int, limiter: str = "mc") -> torch.Tensor:
