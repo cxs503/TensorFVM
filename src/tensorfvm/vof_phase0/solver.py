@@ -110,6 +110,44 @@ class Phase0TwoPhaseSolver:
         self.mu = 1.0 / (self.alpha / self.mu_l + (1.0 - self.alpha) / self.mu_g)
         self.liquid_mask = self.alpha > self.liquid_cut
 
+    def verify_interface_transport(
+        self,
+        cells: int = 128,
+        *,
+        revolutions: float = 1.0,
+        cfl: float | None = None,
+    ) -> dict:
+        """Grade this solver's VOF interface transport on the Zalesak gate.
+
+        The scheme that is actually installed on the solver is the one graded:
+        the geometric :class:`tensorfvm.vof_plic.PLICVOF` when present,
+        otherwise the algebraic CICSAM/HRIC transport.  This is the integration
+        hook of the ``GAP-FVM-TWOPHASE`` face into the production two-phase
+        solver -- call it once before a campaign to prove that the interface
+        transport still captures a shape (the criterion is declared at
+        ``cells = 128``; other resolutions are reported but not graded).
+        """
+        from ..twophase_gap.zalesak_gate import (
+            DECLARED_CELLS,
+            GEOMETRIC_ERROR_MAX,
+            run_zalesak_leg,
+        )
+
+        scheme = "plic" if type(self.vof).__name__ == "PLICVOF" else "cicsam"
+        leg = run_zalesak_leg(
+            cells, scheme,
+            cfl=self.alpha_cfl if cfl is None else cfl,
+            revolutions=revolutions)
+        record = leg["record"]
+        graded = int(cells) == DECLARED_CELLS
+        record["solver"] = {"nx": self.nx, "ny": self.ny,
+                            "scheme_class": type(self.vof).__name__}
+        record["graded"] = graded
+        record["passed"] = (bool(record["geometric_error"] <= GEOMETRIC_ERROR_MAX)
+                            if graded else None)
+        record["field_shape"] = list(leg["field"].shape)
+        return record
+
     def set_alpha(self, alpha: torch.Tensor) -> None:
         self.alpha = alpha.to(torch.float64).clone()
         self._update_properties()
