@@ -1,0 +1,126 @@
+{
+  "raw_files": [
+    "raw_natural_convection_Ra1e+05_N16.json",
+    "raw_natural_convection_Ra1e+05_N32.json",
+    "raw_natural_convection_Ra1e+05_N64.json",
+    "raw_natural_convection_Ra1e+06_N16.json",
+    "raw_natural_convection_Ra1e+06_N32.json",
+    "raw_natural_convection_Ra1e+06_N64.json"
+  ],
+  "families": {
+    "Ra1e+05": {
+      "levels": [
+        16,
+        32,
+        64
+      ],
+      "nusselt_hot": {
+        "16": 5.115144534833998,
+        "32": 4.672091827695748,
+        "64": 4.559125336258933
+      },
+      "psi_extremum_abs": {
+        "16": 11.329826966705335,
+        "32": 9.815922613699147,
+        "64": 9.622446477759087
+      },
+      "convergence_nu": {
+        "levels": [
+          64,
+          32,
+          16
+        ],
+        "order": 1.9715834389214462,
+        "richardson_limit": 4.520464442284835
+      },
+      "convergence_psi": {
+        "levels": [
+          64,
+          32,
+          16
+        ],
+        "order": 2.9680465250133103,
+        "richardson_limit": 9.594097329585422
+      },
+      "reference": {
+        "nu": 4.519,
+        "psi_max": 9.111,
+        "u_max": 34.73,
+        "v_max": 68.59
+      },
+      "cfl": [
+        0.5
+      ]
+    },
+    "Ra1e+06": {
+      "levels": [
+        16,
+        32,
+        64
+      ],
+      "nusselt_hot": {
+        "16": 10.405129648454793,
+        "32": 9.778079571038008,
+        "64": 9.07006397048386
+      },
+      "psi_extremum_abs": {
+        "16": 26.60592521758983,
+        "32": 19.74125888472419,
+        "64": 17.11143488083734
+      },
+      "convergence_nu": {
+        "levels": [
+          64,
+          32,
+          16
+        ],
+        "order": -0.17520048527342477,
+        "richardson_limit": null,
+        "reason": "observed order p = -0.18 < 0.5: three finest levels not in the asymptotic range"
+      },
+      "convergence_psi": {
+        "levels": [
+          64,
+          32,
+          16
+        ],
+        "order": 1.3842233447290075,
+        "richardson_limit": 15.47832229855917
+      },
+      "reference": {
+        "nu": 8.8,
+        "psi_max": 16.75,
+        "u_max": 64.63,
+        "v_max": 219.36
+      },
+      "cfl": [
+        0.5
+      ]
+    }
+  },
+  "criteria": {
+    "convection_nu_Ra1e+05_within_3pct": {
+      "value": 4.559125336258933,
+      "grid": "N64",
+      "reference": 4.519,
+      "error": 0.008879251219060066,
+      "threshold": 0.03,
+      "pass": true
+    },
+    "convection_nu_Ra1e+05_richardson_within_3pct": {
+      "value": 4.520464442284835,
+      "reference": 4.519,
+      "error": 0.00032406335136864087,
+      "threshold": 0.03,
+      "pass": true
+    },
+    "convection_nu_Ra1e+06_within_3pct": {
+      "value": 9.07006397048386,
+      "grid": "N64",
+      "reference": 8.8,
+      "error": 0.030689087554983976,
+      "threshold": 0.03,
+      "pass": false
+    }
+  }
+}
