@@ -42,6 +42,7 @@ from dataclasses import dataclass, field
 
 import torch
 
+from ..vof_cicsam import CICSAMVOF
 from ..vof_phase0.advection import AlgebraicVOF
 from ..vof_plic import advect_plic
 
@@ -264,13 +265,15 @@ def face_divergence(u: torch.Tensor, v: torch.Tensor, dx: float,
 class Transport:
     """Dimensionally split transport wrapper used by the benchmark driver."""
 
-    scheme: str = "plic"        # "plic" | "fct"
+    scheme: str = "plic"        # "plic" | "fct" | "cicsam" | "donor"
     cfl: float = 0.5
     sweep: str = "xy"
 
     def build(self, nx: int, ny: int, dx: float, dy: float):
         if self.scheme == "fct":
             return AlgebraicVOF(nx, ny, dx, dy, boundary="wall", bounds="global")
+        if self.scheme == "cicsam":
+            return CICSAMVOF(nx, ny, dx, dy, boundary="wall")
         return None
 
     def step(self, state, alpha: torch.Tensor, u: torch.Tensor, v: torch.Tensor,
@@ -280,7 +283,7 @@ class Transport:
         if self.scheme == "plic":
             return advect_plic(alpha, u, v, dt, dx, dy, order=order, clip=True,
                                conservative_bounds=True)
-        if self.scheme == "fct":
+        if self.scheme in ("fct", "cicsam"):
             return state.advect(alpha, u, v, dt, order=order)
         if self.scheme == "donor":
             return _donor_step(alpha, u, v, dt, dx, dy, order)

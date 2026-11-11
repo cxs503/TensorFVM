@@ -1,0 +1,31 @@
+{
+ "note": "P167W2B-N03 集群分片作业（run_cluster submit，repo=TensorFVM，stage_dir=worktree 快照）。递交后队列积压（每作业 queued_ahead≈272），在本次交付窗口内未派发；报告中的数字由**同一条命令**在本机 128 核 CPU 上跑出（产物见 runs/p167/*.json，字段 elapsed_s 记录墙钟）。集群作业保留在队列中作为交叉复核，终态需事后 fetch。",
+ "submitted_at": "2026-11-10T23:45Z",
+ "jobs": [
+  {
+   "jid": "cj734",
+   "task": "zalesak",
+   "cmd": "--task zalesak --nx 128 --revs 1,2,4,8 --schemes cicsam,plic,fct --out runs/p167 --threads 8",
+   "state_at_finish": "queued"
+  },
+  {
+   "jid": "cj735",
+   "task": "hydrostatic",
+   "cmd": "--task hydrostatic --grids 32,64,128 --steps 200 --out runs/p167 --threads 8",
+   "state_at_finish": "queued"
+  },
+  {
+   "jid": "cj736",
+   "task": "dam",
+   "cmd": "--task dam --scheme cicsam --nx 100 --ny 30 --tstar 3.0 --out runs/p167 --threads 8",
+   "state_at_finish": "queued"
+  },
+  {
+   "jid": "cj737",
+   "task": "dam",
+   "cmd": "--task dam --scheme fct --nx 100 --ny 30 --tstar 3.0 --out runs/p167 --threads 8",
+   "state_at_finish": "queued"
+  }
+ ],
+ "state_checked_at_finish": "all four jobs still 'queued' (age ~36 min, queued_ahead≈272 at submit)"
+}
