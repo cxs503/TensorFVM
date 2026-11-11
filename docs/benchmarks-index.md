@@ -1,5 +1,15 @@
 # TensorFVM benchmark 总览
 
+## 最新：开源 FVM 技术盘点波（30 仓注册表 + 8 条 GAP-FVM 锚点 + Sod 外部锚实测）
+
+[盘点报告](oss-inventory-fvm/README.md)：第 1 轮功能点全扫。30 个开源 FVM 项目分三档（T1 可即采 8 /
+T2 参考 17 / T3 语境 5），元数据（stars/licence/最近 push）21 仓由 GitHub API 实测、9 仓主仓不在 GitHub
+则明示留空；8 条缺口锚点（AMR / 隐式推进 / 低马赫预条件 / MRF-AMI / 并行域分解 / AMG-Krylov /
+组分燃烧 / 辐射）每条都附本仓 grep 反证与机器可裁判据。同场用独立 NumPy 精确 Riemann 解（先自检复现
+Sod 1978 星状态值 <0.01%）实测可压基线：nx=400 二阶 HLLC 的 p*/u*/ρ*_L/ρ*_R 误差 0.004/0.009/0.009/0.002%，
+四道波位置误差 ≤1.16 单元，观测阶 0.96/0.87。`pytest tests/test_oss_inventory_fvm.py` 13 项门禁防
+「手抄数字/缺证据路径/外部锚自证」。
+
 ## 最新：热对流验证面（Rayleigh-Benard 起振 + Nu(Ra) 标度律，FVM 首个热验证闭环）
 
 [热对流验证面](thermal-convection/README.md)：给 FVM 补上"零热验证"空白，两条主线分开证——
