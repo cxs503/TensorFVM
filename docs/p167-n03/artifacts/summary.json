@@ -1,0 +1,93 @@
+{
+ "accuracy": {
+  "dam_front_relative": 0.1,
+  "hydrostatic_pressure": 0.01,
+  "interface_thickness_cells": 2.0,
+  "zalesak_mass_drift": 0.001
+ },
+ "all_pass": false,
+ "criteria": {
+  "G1_zalesak_mass": {
+   "detail": "worst relative area drift over every grid, scheme and over 1/2/4/8 revolutions (flux form => roundoff)",
+   "passed": true,
+   "threshold": 0.001,
+   "value": 4.170753496729834e-15
+  },
+  "G2_cicsam_sharpness": {
+   "detail": "CICSAM interface thickness, 90th percentile of 1/max|d alpha| over interface cells, worst over every grid and revolution count",
+   "grid_floor": 128,
+   "passed": true,
+   "per_grid": {
+    "128/rev1": 1.8988297743214768,
+    "128/rev2": 1.9365118539152053,
+    "128/rev4": 1.905089336474906,
+    "128/rev8": 1.8892592080969566,
+    "256/rev1": 1.888911727449996,
+    "256/rev2": 1.8755350015033172,
+    "64/rev1": 2.0567581732056968,
+    "64/rev2": 1.9478919753406219,
+    "64/rev4": 1.935060059481151,
+    "64/rev8": 1.9630712820026146
+   },
+   "threshold": 2.0,
+   "value": 1.9365118539152053
+  },
+  "G3_cicsam_vs_plic": {
+   "cicsam_relative_l1": {
+    "128x128/rev1": 0.039834888009050454,
+    "128x128/rev2": 0.06235107421965369,
+    "128x128/rev4": 0.09259031599532634,
+    "128x128/rev8": 0.14042237217061293,
+    "256x256/rev1": 0.017847403514651056,
+    "256x256/rev2": 0.028096842902026898,
+    "64x64/rev1": 0.08657049694420291,
+    "64x64/rev2": 0.13784024031598896,
+    "64x64/rev4": 0.21114214545348708,
+    "64x64/rev8": 0.3078971290788408
+   },
+   "cicsam_thicker_than_plic_by": 0.06774619116380998,
+   "detail": "side-by-side quality table (no threshold: the gate reports the comparison the node asks for)",
+   "passed": true,
+   "plic_relative_l1": {
+    "64x64/rev1": 0.04807642780195799,
+    "64x64/rev2": 0.07582390256388927
+   }
+  },
+  "G4_hydrostatic_pressure": {
+   "control_not_well_balanced": [
+    {
+     "128x64": 0.01563069443293135
+    }
+   ],
+   "detail": "max |p - rho g (H - y)| / (rho g H) over the well-balanced grid sweep",
+   "passed": true,
+   "threshold": 0.01,
+   "value": 0.0
+  },
+  "G5_dam_front": {
+   "detail": "worst surge-front error vs the digitised Martin & Moyce (1952) curve over schemes and grids",
+   "passed": false,
+   "per_run": {
+    "cicsam-100x30": 0.5895610175679805,
+    "cicsam-200x60": 0.5721393057384916,
+    "fct-100x30": 0.6625297288552762
+   },
+   "threshold": 0.1,
+   "value": 0.6625297288552762
+  }
+ },
+ "inputs": {
+  "dam": [
+   "cicsam-100x30",
+   "cicsam-200x60",
+   "fct-100x30"
+  ],
+  "hydrostatic": 4,
+  "zalesak_grids": [
+   64,
+   128,
+   256
+  ]
+ },
+ "task": "P167W2B-N03 two-phase VOF verification gate"
+}
