@@ -21,13 +21,17 @@ import pytest
 
 from tensorfvm.panel_added_mass import (
     added_mass_matrix,
+    added_mass_matrix_6dof,
     displaced_volume,
     lamb_ellipsoid_factors,
     lamb_integral_factors,
     lamb_spheroid_factors,
+    rotational_added_inertia,
     source_potential,
     sphere_added_mass,
     spheroid_panels,
+    surface_generators,
+    surface_quadrature,
 )
 from tensorfvm.panel_potential import normal_velocity_residual, solve_sources
 
@@ -144,3 +148,86 @@ def test_slender_body_bound_is_an_upper_bound():
     k_slender = np.pi * b * b * 2.0 * a / volume
     assert k_slender > k_transverse
     assert k_slender / k_transverse == pytest.approx(2.130, abs=0.01)
+
+# ---------------------------------------------------------------------------
+# surface-integral quadrature consistency (the solver's Gauss rule vs midpoint)
+# ---------------------------------------------------------------------------
+def test_surface_quadrature_rules_share_the_generators():
+    """``"centroid"`` is the one-node special case; ``"gauss"`` adds area weights."""
+    panels = spheroid_panels(2.0, 1.0, 16, 12)
+    nodes_c, weights_c, psi_c = surface_quadrature(panels, order=3, quadrature="centroid")
+    assert nodes_c.shape == (panels.n_panels, 3)
+    assert np.allclose(weights_c, panels.areas)
+    assert np.allclose(psi_c, surface_generators(panels))
+
+    nodes, weights, psi = surface_quadrature(panels, order=3, quadrature="gauss")
+    per_panel = nodes.shape[0] // panels.n_panels
+    assert per_panel == 9  # order 3 -> 3 x 3 nodes
+    assert psi.shape == (nodes.shape[0], 6)
+    # the rule partitions each flat panel exactly: sum of weights == flat area
+    assert np.allclose(weights.reshape(per_panel, panels.n_panels).sum(axis=0), panels.areas)
+    # the nodes live on their own panel: each cluster stays inside the bounding
+    # box of the panel's four corners (the quadrature does not move between panels)
+    clusters = nodes.reshape(per_panel, panels.n_panels, 3)
+    corners = panels.corners
+    assert corners is not None and corners.shape == (panels.n_panels, 4, 3)
+    lo = corners.min(axis=1) - 1e-12
+    hi = corners.max(axis=1) + 1e-12
+    assert np.all(clusters >= lo[None, :, :]) and np.all(clusters <= hi[None, :, :])
+    with pytest.raises(ValueError):
+        surface_quadrature(panels, quadrature="trapezoid")
+
+
+@pytest.mark.parametrize("a,b", [(1.0, 1.0), (2.0, 1.0)])
+def test_gauss_quadrature_beats_midpoint_at_fixed_panelisation(a, b):
+    """The consistent rule must lower the added-mass error (baseline comparison)."""
+    volume = 4.0 / 3.0 * np.pi * a * b * b
+    k_axial, k_transverse = lamb_spheroid_factors(a, b)
+    for n_theta, n_phi in ((16, 12), (24, 18)):
+        panels = spheroid_panels(a, b, n_theta, n_phi)
+        M_mid = added_mass_matrix(panels, order=3, quadrature="centroid")
+        M_gauss = added_mass_matrix(panels, order=3, quadrature="gauss")
+        for (i, k) in ((0, k_axial), (1, k_transverse), (2, k_transverse)):
+            err_mid = abs(M_mid[i, i] / (k * volume) - 1.0)
+            err_gauss = abs(M_gauss[i, i] / (k * volume) - 1.0)
+            assert err_gauss < err_mid, (a, b, n_theta, i, err_mid, err_gauss)
+        if (a, b) == (2.0, 1.0) and (n_theta, n_phi) == (24, 18):
+            # the consistent rule meets the 3 % criterion one level earlier: at this
+            # panelisation the transverse midpoint error is above it, Gauss below
+            err_mid_t = abs(M_mid[1, 1] / (k_transverse * volume) - 1.0)
+            err_gauss_t = abs(M_gauss[1, 1] / (k_transverse * volume) - 1.0)
+            assert err_mid_t > 0.03 > err_gauss_t, (err_mid_t, err_gauss_t)
+
+
+def test_gauss_quadrature_keeps_the_discrete_invariants():
+    """Symmetry, axisymmetry and the exact zero roll entry survive the refinement."""
+    panels = spheroid_panels(2.0, 1.0, 24, 18)
+    M = added_mass_matrix(panels, order=3, quadrature="gauss")
+    assert np.allclose(M, M.T, atol=0.0)
+    diag = np.diag(M)
+    assert np.all(diag > 0.0)
+    assert np.abs(M - np.diag(diag)).max() < 1e-10 * diag.max()
+    assert abs(M[1, 1] - M[2, 2]) < 1e-10 * M[1, 1]
+    # the 3x3 block of the 6x6 matrix is the translational block, rule by rule
+    block = added_mass_matrix_6dof(panels, order=3, quadrature="gauss")[:3, :3]
+    assert np.allclose(block, M, rtol=1e-12, atol=1e-14)
+    # roll about the symmetry axis stays identically zero (the Neumann data is zero)
+    I_gauss = rotational_added_inertia(panels, order=3, quadrature="gauss")
+    I_mid = rotational_added_inertia(panels, order=3, quadrature="centroid")
+    assert abs(I_gauss[0, 0]) < 1e-12 * I_gauss[1, 1]
+    assert abs(I_mid[0, 0]) < 1e-12 * I_mid[1, 1]
+    assert I_gauss[1, 1] == pytest.approx(I_mid[1, 1], rel=5e-2)
+
+
+def test_stacked_source_potential_matches_single_calls():
+    """The batched kernel (all directions at once) must reproduce ``sigma``-by-``sigma``."""
+    panels = spheroid_panels(2.0, 1.0, 16, 12)
+    sigmas = np.array([solve_sources(panels, U, order=3)
+                       for U in (np.array([1.0, 0.0, 0.0]), np.array([0.0, 1.0, 0.0]))])
+    stacked = source_potential(panels.centroids, sigmas, panels, order=3)
+    assert stacked.shape == (2, panels.n_panels)
+    for k in range(2):
+        single = source_potential(panels.centroids, sigmas[k], panels, order=3)
+        assert np.allclose(stacked[k], single, rtol=1e-13, atol=1e-15)
+    # a 1-D sigma still returns the 1-D result (public API unchanged)
+    assert source_potential(panels.centroids, sigmas[0], panels, order=3).shape == (panels.n_panels,)
