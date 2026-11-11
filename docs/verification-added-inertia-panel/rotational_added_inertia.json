@@ -1,0 +1,141 @@
+{
+  "case": "rotational added inertia M_44..M_66 of a prolate spheroid in an ideal fluid",
+  "sphere_exact_zero": [
+    {
+      "n_theta": 16,
+      "n_phi": 12,
+      "n_panels": 192,
+      "I_diag": [
+        8.528067562058038e-33,
+        0.0003458685668649714,
+        0.00034586856686496983
+      ],
+      "offdiag_max": 5.478566089448962e-19,
+      "I_max_abs_scaled": 0.0003458685668649714
+    },
+    {
+      "n_theta": 24,
+      "n_phi": 18,
+      "n_panels": 432,
+      "I_diag": [
+        9.37359580536919e-33,
+        7.431171805352758e-05,
+        7.431171805352723e-05
+      ],
+      "offdiag_max": 8.470329472543003e-20,
+      "I_max_abs_scaled": 7.431171805352758e-05
+    },
+    {
+      "n_theta": 32,
+      "n_phi": 24,
+      "n_panels": 768,
+      "I_diag": [
+        1.8787502775571602e-32,
+        2.4304959246292203e-05,
+        2.4304959246292014e-05
+      ],
+      "offdiag_max": 4.997494388800372e-20,
+      "I_max_abs_scaled": 2.4304959246292203e-05
+    },
+    {
+      "n_theta": 40,
+      "n_phi": 30,
+      "n_panels": 1200,
+      "I_diag": [
+        3.202291179737364e-32,
+        1.0127085087665417e-05,
+        1.0127085087665453e-05
+      ],
+      "offdiag_max": 1.8740603958001395e-20,
+      "I_max_abs_scaled": 1.0127085087665453e-05
+    }
+  ],
+  "spheroid_a2b1": {
+    "a": 2.0,
+    "b": 1.0,
+    "volume": 8.377580409572781,
+    "meshes": [
+      {
+        "n_theta": 24,
+        "n_phi": 18,
+        "n_panels": 432,
+        "I_transverse": 1.870589205570568,
+        "I_symmetry_axis": 1.6882698095671452e-32,
+        "offdiag_max": 5.551115123125783e-17,
+        "relerr_vs_lamb": -0.06740661535115244
+      },
+      {
+        "n_theta": 40,
+        "n_phi": 28,
+        "n_panels": 1120,
+        "I_transverse": 1.9307562576319408,
+        "I_symmetry_axis": 5.34308186151376e-32,
+        "offdiag_max": 5.551115123125783e-17,
+        "relerr_vs_lamb": -0.03740997335238494
+      },
+      {
+        "n_theta": 60,
+        "n_phi": 42,
+        "n_panels": 2520,
+        "I_transverse": 1.9594136117088414,
+        "I_symmetry_axis": 7.15940801294218e-32,
+        "offdiag_max": 1.1102230246251565e-16,
+        "relerr_vs_lamb": -0.02312267887101571
+      },
+      {
+        "n_theta": 80,
+        "n_phi": 56,
+        "n_panels": 4480,
+        "I_transverse": 1.972387704345451,
+        "I_symmetry_axis": 9.99614122506986e-32,
+        "offdiag_max": 1.942890293094024e-16,
+        "relerr_vs_lamb": -0.016654367748139998
+      }
+    ],
+    "lamb_closed_form": 2.0057929172153703,
+    "semi_analytic_reference": 2.0057929169048037,
+    "reference_neumann_residual": 2.603542508917928e-15,
+    "reference_far_field_ratio": 0.00031596343901254116,
+    "reference_vs_closed_form_rel": 1.5483492266099574e-10,
+    "observed_order": 0.6511247443762781,
+    "richardson_extrapolated": 2.0007370516479934,
+    "richardson_rel": 0.002520631877789281
+  },
+  "aspect_sweep_reference_vs_closed_form": [
+    {
+      "aspect": 1.05,
+      "reference": 0.002899253498057531,
+      "closed_form": 0.0028992534985135348,
+      "rel_diff": 1.5728318647489914e-10,
+      "neumann_residual": 2.6884687070765398e-15
+    },
+    {
+      "aspect": 1.5,
+      "reference": 0.38849454254825644,
+      "closed_form": 0.38849454253891114,
+      "rel_diff": 2.4055202274553267e-11,
+      "neumann_residual": 1.1321185740909447e-15
+    },
+    {
+      "aspect": 2.0,
+      "reference": 2.0057929169048037,
+      "closed_form": 2.0057929172153703,
+      "rel_diff": 1.5483492266099574e-10,
+      "neumann_residual": 2.603542508917928e-15
+    },
+    {
+      "aspect": 3.0,
+      "reference": 11.703770325243223,
+      "closed_form": 11.703770322599352,
+      "rel_diff": 2.2589907722192493e-10,
+      "neumann_residual": 1.811764838532011e-15
+    },
+    {
+      "aspect": 6.0,
+      "reference": 141.7770609179259,
+      "closed_form": 141.77706134007673,
+      "rel_diff": 2.9775679699639568e-09,
+      "neumann_residual": 2.173608192161698e-15
+    }
+  ]
+}
