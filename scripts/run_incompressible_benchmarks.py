@@ -171,6 +171,14 @@ def run_convection(rayleigh: float, resolution: int, *, max_steps: int,
     psi = flow.streamfunction()
     psi_ext = float(psi.max()) if abs(psi.max()) > abs(psi.min()) else float(psi.min())
     u_c, v_c = flow.cell_velocity()
+    # ``de Vahl Davis`` tabulates ``u_max`` on the *vertical mid-line* (x = 0.5)
+    # and ``v_max`` on the *horizontal mid-line* (y = 0.5), not the field
+    # maxima.  At Ra >= 1e5 the horizontal velocity extremum sits in the wall
+    # boundary layer, so a whole-field ``max|u|`` is up to 2x the reference
+    # value and reports a spurious O(100 %) error.  Both are stored; only the
+    # mid-line pair is compared against the reference contract.
+    u_mid = flow.u[resolution // 2, :]
+    v_mid = flow.v[:, resolution // 2]
     ref = DE_VAHL_DAVIS[float(rayleigh)]
     nu_hot = mean_nusselt(flow)
     cold_flux = (flow.theta[-1, :] - (-flow.theta_hot)) / (0.5 * flow.h)
@@ -200,6 +208,12 @@ def run_convection(rayleigh: float, resolution: int, *, max_steps: int,
             "v_max": float(np.abs(v_c).max()),
             "u_max_reference": ref["u_max"],
             "v_max_reference": ref["v_max"],
+            "u_max_midheight": float(np.abs(u_mid).max()),
+            "v_max_midwidth": float(np.abs(v_mid).max()),
+            "u_max_midheight_relative_error":
+                abs(float(np.abs(u_mid).max()) - ref["u_max"]) / ref["u_max"],
+            "v_max_midwidth_relative_error":
+                abs(float(np.abs(v_mid).max()) - ref["v_max"]) / ref["v_max"],
             "steps_to_steady": ledger.steps,
             "time_step": ledger.dt,
         },
@@ -226,7 +240,11 @@ def observed_order(values: dict[int, float], level: str) -> dict:
     if abs(denom) < 1e-14 or abs(f1 - f2) < 1e-14:
         return {"levels": keys, "order": None,
                 "reason": "degenerate differences (grid-converged to round-off)"}
-    order = math.log(abs((f1 - f2) / denom)) / math.log(r)
+    # ``p = log|(f2-f3)/(f1-f2)| / log r``: the *coarse* difference is the larger
+    # one for a converging series.  The previous form used the inverted ratio and
+    # therefore reported a *negative* order (and extrapolated away from the limit)
+    # for every monotonically converging metric.
+    order = math.log(abs(denom / (f1 - f2))) / math.log(r)
     extrap = f1 + (f1 - f2) / (r ** order - 1.0)
     return {"levels": keys, "order": order, "richardson_limit": extrap,
             "finest": f1, "middle": f2, "coarse": f3}
@@ -346,6 +364,11 @@ def main(argv=None) -> int:
         target = ROOT / "fvm_sudden_expansion"
     else:
         target = ROOT / "fvm_natural_convection"
+    if args.root is not None:
+        # ``--root`` selects the artifact directory for the *case* runs too, so a
+        # new ladder (or a re-run with a different time step) can be archived
+        # beside -- instead of on top of -- the committed reference artifacts.
+        target = args.root
     target.mkdir(parents=True, exist_ok=True)
 
     started = time.time()
