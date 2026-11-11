@@ -226,20 +226,46 @@ class ExactRiemann:
         )
 
     def density_star_r(self) -> torch.Tensor:
-        """Post-shock density on the right side (Hugoniot)."""
+        """Star-region density on the right side.
+
+        Hugoniot behind a right-going shock (``p* > p_R``), isentrope inside a
+        right-going rarefaction; ``_sample_side`` applies the same branch, so the
+        accessor cannot disagree with the sampled exact solution.
+        """
         ratio = (self.pstar + self.pinf_r) / (self.p_r + self.pinf_r)
         g = self.gamma_r
-        return self.rho_r * (
+        hugoniot = self.rho_r * (
             (ratio + (g - 1.0) / (g + 1.0)) / ((g - 1.0) / (g + 1.0) * ratio + 1.0)
         )
+        isentrope = self.rho_r * torch.pow(torch.clamp(ratio, min=_TINY), 1.0 / g)
+        return torch.where(self.pstar > self.p_r, hugoniot, isentrope)
 
     def density_star_l(self) -> torch.Tensor:
-        """Post-shock density on the left side (Hugoniot)."""
+        """Star-region density on the left side (shock: Hugoniot, else isentrope)."""
         ratio = (self.pstar + self.pinf_l) / (self.p_l + self.pinf_l)
         g = self.gamma_l
-        return self.rho_l * (
+        hugoniot = self.rho_l * (
             (ratio + (g - 1.0) / (g + 1.0)) / ((g - 1.0) / (g + 1.0) * ratio + 1.0)
         )
+        isentrope = self.rho_l * torch.pow(torch.clamp(ratio, min=_TINY), 1.0 / g)
+        return torch.where(self.pstar > self.p_l, hugoniot, isentrope)
+
+    def wave_speed_l(self) -> torch.Tensor:
+        """Leading-edge speed of the left-going wave, whichever family it is.
+
+        Shock (``p* > p_L``): ``S_L``; rarefaction: the fan head ``u_L - c_L``.
+        Use this instead of :meth:`shock_speed_l` when the family is not known in
+        advance -- ``shock_speed_l`` evaluates the shock branch unconditionally
+        and therefore returns a speed *inside* the fan when the left wave is a
+        rarefaction.
+        """
+        head = self.u_l - self.c_l
+        return torch.where(self.pstar > self.p_l, self.shock_speed_l(), head)
+
+    def wave_speed_r(self) -> torch.Tensor:
+        """Leading-edge speed of the right-going wave (see :meth:`wave_speed_l`)."""
+        head = self.u_r + self.c_r
+        return torch.where(self.pstar > self.p_r, self.shock_speed_r(), head)
 
     # -- exact sampling ---------------------------------------------------
     def sample(self, xi: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:

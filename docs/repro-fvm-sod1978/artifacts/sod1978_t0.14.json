@@ -1,0 +1,647 @@
+{
+ "case": "sod_shock_tube",
+ "anchor": "REPRO-FVM-SOD1978",
+ "external_anchor": "Sod, G. A. (1978) J. Comput. Phys. 27:1-31",
+ "generated_at": "2026-11-11T20:06:53+00:00",
+ "setup": {
+  "geometry": "1-D, x in [0,1], diaphragm at x0 = 0.5, ny = 1 (periodic y)",
+  "initial_state": {
+   "left": {
+    "rho": 1.0,
+    "u": 0.0,
+    "p": 1.0
+   },
+   "right": {
+    "rho": 0.125,
+    "u": 0.0,
+    "p": 0.1
+   },
+   "gamma": 1.4
+  },
+  "t_end": 0.14,
+  "t_paper_profiles": 0.2,
+  "flux": "HLLC",
+  "reconstruction": "MUSCL-Hancock + MC limiter (order 2), donor cell (order 1)",
+  "cfl": 0.4,
+  "boundaries": "outflow at both ends of x",
+  "grids": [
+   100,
+   200,
+   400,
+   800
+  ],
+  "orders": [
+   1,
+   2
+  ],
+  "reference_grid": {
+   "nx": 400,
+   "order": 2
+  },
+  "smooth_case": "rho = 1 + 0.2 sin(2 pi x), u = 0.5, p = 1, periodic, t_end = 0.2 (exact advected entropy wave)"
+ },
+ "reference": {
+  "published_values": {
+   "p_star": 0.30313,
+   "u_star": 0.92745,
+   "rho_star_left": 0.42632,
+   "rho_star_right": 0.26557,
+   "shock_speed": 1.75216,
+   "contact_speed": 0.92745,
+   "rarefaction_head_speed": -1.18322,
+   "rarefaction_tail_speed": -0.07042
+  },
+  "source": "G. A. Sod (1978), 'A survey of several finite difference methods for systems of nonlinear hyperbolic conservation laws', J. Comput. Phys. 27, 1-31; star-state and wave-speed values as tabulated for the standard Sod test in Toro (2009), 'Riemann Solvers and Numerical Methods for Fluid Dynamics', 3rd ed., Ch. 4.",
+  "independent_exact_star_state": {
+   "p_star": 0.3031301780506468,
+   "u_star": 0.9274526200489499,
+   "rho_star_left": 0.42631942817849516,
+   "rho_star_right": 0.2655737117053071,
+   "c_star_left": 0.9977254326101332,
+   "c_star_right": 1.2641134827518206,
+   "rarefaction_head_speed": -1.1832159566199232,
+   "rarefaction_tail_speed": -0.07027281256118334,
+   "contact_speed": 0.9274526200489499,
+   "shock_speed": 1.752155732030178,
+   "c_left": 1.1832159566199232,
+   "c_right": 1.058300524425836
+  },
+  "cross_check": {
+   "p_star": {
+    "independent": 0.3031301780506468,
+    "tensorfvm": 0.30313017805064685,
+    "published": 0.30313,
+    "independent_vs_published_pct": 5.873738883709661e-05,
+    "tensorfvm_vs_published_pct": 5.873738885540927e-05,
+    "independent_vs_tensorfvm_pct": 1.8312644286436913e-14
+   },
+   "u_star": {
+    "independent": 0.9274526200489499,
+    "tensorfvm": 0.9274526200489499,
+    "published": 0.92745,
+    "independent_vs_published_pct": 0.0002825002911109403,
+    "tensorfvm_vs_published_pct": 0.0002825002911109403,
+    "independent_vs_tensorfvm_pct": 0.0
+   },
+   "rho_star_left": {
+    "independent": 0.42631942817849516,
+    "tensorfvm": 0.4263194281784952,
+    "published": 0.42632,
+    "independent_vs_published_pct": 0.00013412964552762848,
+    "tensorfvm_vs_published_pct": 0.00013412964551460745,
+    "independent_vs_tensorfvm_pct": 1.302102310195817e-14
+   },
+   "rho_star_right": {
+    "independent": 0.2655737117053071,
+    "tensorfvm": 0.2655737117053071,
+    "published": 0.26557,
+    "independent_vs_published_pct": 0.0013976372734525169,
+    "tensorfvm_vs_published_pct": 0.0013976372734525169,
+    "independent_vs_tensorfvm_pct": 0.0
+   },
+   "shock_speed": {
+    "independent": 1.752155732030178,
+    "tensorfvm": 1.7521557320301782,
+    "published": 1.75216,
+    "independent_vs_published_pct": 0.0002435833383939096,
+    "tensorfvm_vs_published_pct": 0.000243583338381237,
+    "independent_vs_tensorfvm_pct": 1.267265237135936e-14
+   },
+   "contact_speed": {
+    "independent": 0.9274526200489499,
+    "tensorfvm": 0.9274526200489499,
+    "published": 0.92745,
+    "independent_vs_published_pct": 0.0002825002911109403,
+    "tensorfvm_vs_published_pct": 0.0002825002911109403,
+    "independent_vs_tensorfvm_pct": 0.0
+   },
+   "rarefaction_head_speed": {
+    "independent": -1.1832159566199232,
+    "tensorfvm": -1.1832159566199232,
+    "published": -1.18322,
+    "independent_vs_published_pct": 0.0003417268197593833,
+    "tensorfvm_vs_published_pct": 0.0003417268197593833,
+    "independent_vs_tensorfvm_pct": 0.0
+   },
+   "rarefaction_tail_speed": {
+    "independent": -0.07027281256118334,
+    "tensorfvm": -0.07027281256118334,
+    "published": -0.07042,
+    "independent_vs_published_pct": 0.20901368761240646,
+    "tensorfvm_vs_published_pct": 0.20901368761240646,
+    "independent_vs_tensorfvm_pct": 0.0
+   }
+  },
+  "position_rule": "x_ref = x0 + S t with S from the published wave speeds"
+ },
+ "tables": {
+  "order1": [
+   {
+    "order": 1,
+    "nx": 100,
+    "dx": 0.01,
+    "t_end": 0.14,
+    "l1_rho": 0.01574960009960188,
+    "l1_u": 0.02892222530071957,
+    "l1_p": 0.014400588883408151,
+    "l1_rho_cellavg": 0.015303817293826776,
+    "steps": 73,
+    "seconds": 0.62,
+    "positivity_fixes": 0,
+    "drift_mass": 0.0,
+    "drift_energy": -1.6148698540002275e-16,
+    "plateau": {
+     "rho_star_left": 0.41183254171714667,
+     "rho_star_right": 0.2682570102717344,
+     "u_star": 0.9304200367534047,
+     "p_star": 0.30223563663920844
+    },
+    "waves": {
+     "rarefaction_head_x": 0.3181229956741867,
+     "rarefaction_tail_x": 0.5260784609329653,
+     "contact_x": 0.624927789180289,
+     "shock_x": 0.7495078984368325,
+     "fan_fit_max_residual": 0.04603722380321587
+    }
+   },
+   {
+    "order": 1,
+    "nx": 200,
+    "dx": 0.005,
+    "t_end": 0.14,
+    "l1_rho": 0.010268927698272003,
+    "l1_u": 0.017592495211671746,
+    "l1_p": 0.008810698142057989,
+    "l1_rho_cellavg": 0.010172526704525665,
+    "steps": 150,
+    "seconds": 1.4,
+    "positivity_fixes": 0,
+    "drift_mass": 0.0,
+    "drift_energy": 0.0,
+    "plateau": {
+     "rho_star_left": 0.4192395606121259,
+     "rho_star_right": 0.2672651195053499,
+     "u_star": 0.9288879822873032,
+     "p_star": 0.3026598685891089
+    },
+    "waves": {
+     "rarefaction_head_x": 0.32450944209886634,
+     "rarefaction_tail_x": 0.5118026167142259,
+     "contact_x": 0.62616000342385,
+     "shock_x": 0.7479635701259039,
+     "fan_fit_max_residual": 0.04628390452526789
+    }
+   },
+   {
+    "order": 1,
+    "nx": 400,
+    "dx": 0.0025,
+    "t_end": 0.14,
+    "l1_rho": 0.006540801760378331,
+    "l1_u": 0.009973045742822323,
+    "l1_p": 0.005275496350915687,
+    "l1_rho_cellavg": 0.006470344778316377,
+    "steps": 303,
+    "seconds": 3.28,
+    "positivity_fixes": 0,
+    "drift_mass": 0.0,
+    "drift_energy": 0.0,
+    "plateau": {
+     "rho_star_left": 0.4232122446725403,
+     "rho_star_right": 0.26609498216631405,
+     "u_star": 0.9279703879525278,
+     "p_star": 0.3029758120770113
+    },
+    "waves": {
+     "rarefaction_head_x": 0.32951594140241414,
+     "rarefaction_tail_x": 0.5020357279785654,
+     "contact_x": 0.6275178180623371,
+     "shock_x": 0.7467591558323716,
+     "fan_fit_max_residual": 0.03719803567873506
+    }
+   },
+   {
+    "order": 1,
+    "nx": 800,
+    "dx": 0.00125,
+    "t_end": 0.14,
+    "l1_rho": 0.004139558592748517,
+    "l1_u": 0.005638550947552321,
+    "l1_p": 0.0031203431288466398,
+    "l1_rho_cellavg": 0.0040694920401640145,
+    "steps": 610,
+    "seconds": 16.55,
+    "positivity_fixes": 0,
+    "drift_mass": 1.9737298215558337e-16,
+    "drift_energy": 0.0,
+    "plateau": {
+     "rho_star_left": 0.42483264670591364,
+     "rho_star_right": 0.2656144266003923,
+     "u_star": 0.9275922874981941,
+     "p_star": 0.3031055697350823
+    },
+    "waves": {
+     "rarefaction_head_x": 0.331810928697497,
+     "rarefaction_tail_x": 0.49681494998366516,
+     "contact_x": 0.6284802237279604,
+     "shock_x": 0.7460511591041452,
+     "fan_fit_max_residual": 0.029932528253705744
+    }
+   }
+  ],
+  "order2": [
+   {
+    "order": 2,
+    "nx": 100,
+    "dx": 0.01,
+    "t_end": 0.14,
+    "l1_rho": 0.004644811631165467,
+    "l1_u": 0.008156812216007132,
+    "l1_p": 0.0035759590029006954,
+    "l1_rho_cellavg": 0.0041393924777673894,
+    "steps": 76,
+    "seconds": 1.06,
+    "positivity_fixes": 0,
+    "drift_mass": 0.0,
+    "drift_energy": 3.229739708000455e-16,
+    "plateau": {
+     "rho_star_left": 0.4254844278339556,
+     "rho_star_right": 0.2627849098104531,
+     "u_star": 0.9293657755556657,
+     "p_star": 0.3025469383260658
+    },
+    "waves": {
+     "rarefaction_head_x": 0.33121540211813505,
+     "rarefaction_tail_x": 0.49698150711162303,
+     "contact_x": 0.6290397345793096,
+     "shock_x": 0.7469490478171175,
+     "fan_fit_max_residual": 0.0023558605766730023
+    }
+   },
+   {
+    "order": 2,
+    "nx": 200,
+    "dx": 0.005,
+    "t_end": 0.14,
+    "l1_rho": 0.0023597574623605818,
+    "l1_u": 0.004296369403507729,
+    "l1_p": 0.0016574965038371153,
+    "l1_rho_cellavg": 0.0022637271530433264,
+    "steps": 153,
+    "seconds": 2.38,
+    "positivity_fixes": 0,
+    "drift_mass": -1.9737298215558337e-16,
+    "drift_energy": 0.0,
+    "plateau": {
+     "rho_star_left": 0.4260291741921162,
+     "rho_star_right": 0.2652851345184841,
+     "u_star": 0.9281750443522482,
+     "p_star": 0.3028807144131775
+    },
+    "waves": {
+     "rarefaction_head_x": 0.33261602883126135,
+     "rarefaction_tail_x": 0.4936708076225047,
+     "contact_x": 0.6294214126326805,
+     "shock_x": 0.7457625999028088,
+     "fan_fit_max_residual": 0.002592071294656023
+    }
+   },
+   {
+    "order": 2,
+    "nx": 400,
+    "dx": 0.0025,
+    "t_end": 0.14,
+    "l1_rho": 0.0012695661226941669,
+    "l1_u": 0.002225446662145113,
+    "l1_p": 0.0008372777673929736,
+    "l1_rho_cellavg": 0.001199248152577388,
+    "steps": 307,
+    "seconds": 5.73,
+    "positivity_fixes": 0,
+    "drift_mass": 0.0,
+    "drift_energy": 0.0,
+    "plateau": {
+     "rho_star_left": 0.42628377483399477,
+     "rho_star_right": 0.2655796393256155,
+     "u_star": 0.9275817459769103,
+     "p_star": 0.30309204992556016
+    },
+    "waves": {
+     "rarefaction_head_x": 0.3334104632665081,
+     "rarefaction_tail_x": 0.4919520600404128,
+     "contact_x": 0.6296513199383662,
+     "shock_x": 0.7455426617804162,
+     "fan_fit_max_residual": 0.002033820323254956
+    }
+   },
+   {
+    "order": 2,
+    "nx": 800,
+    "dx": 0.00125,
+    "t_end": 0.14,
+    "l1_rho": 0.0007007685913964693,
+    "l1_u": 0.001200544681029383,
+    "l1_p": 0.0004328545051961467,
+    "l1_rho_cellavg": 0.0006307427446104721,
+    "steps": 615,
+    "seconds": 29.88,
+    "positivity_fixes": 0,
+    "drift_mass": 0.0,
+    "drift_energy": 0.0,
+    "plateau": {
+     "rho_star_left": 0.4263136196748945,
+     "rho_star_right": 0.26556782309782995,
+     "u_star": 0.9274764089123426,
+     "p_star": 0.30312444069773886
+    },
+    "waves": {
+     "rarefaction_head_x": 0.33386921952023707,
+     "rarefaction_tail_x": 0.49106304923093963,
+     "contact_x": 0.6297845844662332,
+     "shock_x": 0.7454376223706372,
+     "fan_fit_max_residual": 0.001169708671866193
+    }
+   }
+  ]
+ },
+ "criteria": [
+  {
+   "criterion": "C1_position",
+   "quantity": "rarefaction_head_x",
+   "ref": 0.33434976607321076,
+   "got": 0.3334104632665081,
+   "rel_err_pct": 0.2809341898857515,
+   "tol_pct": 2.0,
+   "err_cells": 0.37572112268107194,
+   "pass": true
+  },
+  {
+   "criterion": "C1_position",
+   "quantity": "rarefaction_tail_x",
+   "ref": 0.49016180624143435,
+   "got": 0.4919520600404128,
+   "rel_err_pct": 0.36523731065587145,
+   "tol_pct": 2.0,
+   "err_cells": 0.7161015195913834,
+   "pass": true
+  },
+  {
+   "criterion": "C1_position",
+   "quantity": "contact_x",
+   "ref": 0.629843366806853,
+   "got": 0.6296513199383662,
+   "rel_err_pct": 0.03049121076887234,
+   "tol_pct": 2.0,
+   "err_cells": 0.07681874739473571,
+   "pass": true
+  },
+  {
+   "criterion": "C1_position",
+   "quantity": "shock_x",
+   "ref": 0.745301802484225,
+   "got": 0.7455426617804162,
+   "rel_err_pct": 0.032317015119028694,
+   "tol_pct": 2.0,
+   "err_cells": 0.09634371847648815,
+   "pass": true
+  },
+  {
+   "criterion": "C2_star",
+   "quantity": "rho_star_left",
+   "ref": 0.42632,
+   "got": 0.42628377483399477,
+   "rel_err_pct": 0.008497177238977862,
+   "tol_pct": 5.0,
+   "pass": true
+  },
+  {
+   "criterion": "C2_star",
+   "quantity": "rho_star_right",
+   "ref": 0.26557,
+   "got": 0.2655796393256155,
+   "rel_err_pct": 0.003629674140731356,
+   "tol_pct": 5.0,
+   "pass": true
+  },
+  {
+   "criterion": "C2_star",
+   "quantity": "u_star",
+   "ref": 0.92745,
+   "got": 0.9275817459769103,
+   "rel_err_pct": 0.014205183773825743,
+   "tol_pct": 5.0,
+   "pass": true
+  },
+  {
+   "criterion": "C2_star",
+   "quantity": "p_star",
+   "ref": 0.30313,
+   "got": 0.30309204992556016,
+   "rel_err_pct": 0.012519405680682213,
+   "tol_pct": 5.0,
+   "pass": true
+  }
+ ],
+ "l1_orders_sod": {
+  "order1": [
+   0.6170296569436852,
+   0.6507461456683455,
+   0.6599905504510304
+  ],
+  "order2": [
+   0.9769815038332116,
+   0.8943030492362277,
+   0.8573255171043481
+  ]
+ },
+ "l1_orders_sod_min": {
+  "order1": 0.6170296569436852,
+  "order2": 0.8573255171043481
+ },
+ "l1_orders_sod_cellavg_control": {
+  "order1": [
+   0.589213487414467,
+   0.65276357300349,
+   0.6689938631437141
+  ],
+  "order2": [
+   0.8707189639621261,
+   0.9165698635716965,
+   0.9270066059026129
+  ]
+ },
+ "sensitivity": {
+  "limiter": [
+   {
+    "limiter": "mc",
+    "l1_rho": 0.0012695661226941669,
+    "contact_x": 0.6296513199383662,
+    "shock_x": 0.7455426617804162,
+    "positivity_fixes": 0
+   },
+   {
+    "limiter": "minmod",
+    "l1_rho": 0.0020333935051522075,
+    "contact_x": 0.6291791094878969,
+    "shock_x": 0.7458719160830796,
+    "positivity_fixes": 0
+   },
+   {
+    "limiter": "vanleer",
+    "l1_rho": 0.0013947932309236,
+    "contact_x": 0.6296117764372957,
+    "shock_x": 0.7456117037079972,
+    "positivity_fixes": 0
+   }
+  ],
+  "cfl": [
+   {
+    "cfl": 0.2,
+    "l1_rho": 0.0012621777517930108,
+    "steps": 614,
+    "seconds": 11.62,
+    "contact_x": 0.629829428057074,
+    "shock_x": 0.7456224138788417
+   },
+   {
+    "cfl": 0.4,
+    "l1_rho": 0.0012695661226941669,
+    "steps": 307,
+    "seconds": 5.7,
+    "contact_x": 0.6296513199383662,
+    "shock_x": 0.7455426617804162
+   },
+   {
+    "cfl": 0.8,
+    "l1_rho": 0.0012773547880945318,
+    "steps": 154,
+    "seconds": 2.99,
+    "contact_x": 0.6294296648723909,
+    "shock_x": 0.7453304782996675
+   }
+  ]
+ },
+ "smooth_wave": {
+  "order1": [
+   {
+    "nx": 100,
+    "l1_rho": 0.0022180314909138864
+   },
+   {
+    "nx": 200,
+    "l1_rho": 0.0011139427119032318
+   },
+   {
+    "nx": 400,
+    "l1_rho": 0.0005581889107446697
+   },
+   {
+    "nx": 800,
+    "l1_rho": 0.0002793838357665952
+   }
+  ],
+  "order2": [
+   {
+    "nx": 100,
+    "l1_rho": 5.2763699424033253e-05
+   },
+   {
+    "nx": 200,
+    "l1_rho": 1.2036017838358836e-05
+   },
+   {
+    "nx": 400,
+    "l1_rho": 2.8156612505256253e-06
+   },
+   {
+    "nx": 800,
+    "l1_rho": 6.82110137338876e-07
+   }
+  ]
+ },
+ "smooth_wave_orders": {
+  "order1": [
+   0.9936048092355894,
+   0.9968496708277893,
+   0.9985049098462108
+  ],
+  "order2": [
+   2.1321875699119066,
+   2.095812469690273,
+   2.045397166348823
+  ]
+ },
+ "smooth_wave_thresholds": {
+  "order1": 0.98,
+  "order2": 1.96
+ },
+ "verdicts": {
+  "C1_positions_within_2pct": true,
+  "C2_star_within_5pct": true,
+  "C3_sod_l1_order_ge_1_literal": false,
+  "C3_design_order_within_2pct_of_design": true,
+  "C3_design_order_ge_1_strict": false,
+  "conservation_accounted_drift_ok": true,
+  "no_positivity_repair": true,
+  "C3_grading_note": "C3 is graded twice: 'literal' is the L1 rate of the Sod solution itself, where a TVD/shock-capturing scheme cannot reach 1 because the contact and the fan edges are diffused (theory: first-order upwind ~0.5 at a moving contact); 'design' is the rate on a smooth periodic entropy wave with the same solver, which is how a scheme's order is certified.",
+  "all_mission_criteria_met": false
+ },
+ "thresholds": {
+  "position_rel_pct": 2.0,
+  "star_rel_pct": 5.0,
+  "sod_l1_order_min": 1.0,
+  "smooth_order_design_band": 0.02,
+  "conservation_drift": 0.005
+ },
+ "paper_time_run": {
+  "t_end": 0.2,
+  "nx": 800,
+  "order": 2,
+  "note": "the published profiles are drawn at t = 0.2; this run only feeds the direct visual comparison with Sod (1978) fig. 3"
+ },
+ "ecosystem_friction": [
+  {
+   "stage": "preflight (three checks)",
+   "blocker": "knowledge engine at http://127.0.0.1:8021 is unreachable, so tensor/knowledge/search answers available=false engine_offline for 'sod'/'shock tube' and the pre-flight lookup silently returns nothing",
+   "evidence": "GET /api/v1/tensor/knowledge/search?q=sod -> {'available': false, 'reason': 'engine_offline', 'detail': '[Errno 111] Connection refused'}",
+   "suggestion": "start the knowledge engine or let the endpoint fall back to the repository docs index; an empty result must not look like 'no prior knowledge exists'"
+  },
+  {
+   "stage": "reuse of the existing Sod benchmark",
+   "blocker": "scripts/oss_inventory_fvm/sod_literature_benchmark.py hard-codes T_END = 0.2 at module level and exposes no --t-end flag, so the t = 0.14 target cannot be reproduced without editing the script",
+   "evidence": "sod_literature_benchmark.py:41 'T_END = 0.2', used as a default argument in five functions and in main()",
+   "suggestion": "thread --t-end / --orders through the CLI, or move the case constants into tensorfvm.compressible.cases so a reproduction driver can override them"
+  },
+  {
+   "stage": "case API",
+   "blocker": "cases.sod(nx, t_end=...) only stores t_end in meta and returns an un-integrated solver, so a caller that reads the builder as 'run the Sod case' silently grades the initial condition at t = 0",
+   "evidence": "cases.sod returns (solver, meta) with solver.time == 0.0 while meta['t_end'] == 0.2; solver.run(meta['t_end']) is mandatory but is not part of the documented return contract",
+   "suggestion": "return an integrated solver behind an explicit integrate=True flag, or add a documented one-liner helper"
+  },
+  {
+   "stage": "exact-solution API",
+   "blocker": "ExactRiemann.sample() expects the similarity coordinate xi = (x - x0)/t, not x; passing a mesh silently returns a plausible but wrong profile, and there is no helper that maps (x, t, x0) to xi",
+   "evidence": "riemann.py:245 'def sample(self, xi)' with docstring 'xi = x/t'; the class never sees x0 or t",
+   "suggestion": "add sample_at(x, t, x0) (or validate the argument range against the wave speeds) to remove the self-similarity footgun"
+  },
+  {
+   "stage": "order of accuracy",
+   "blocker": "the compressible surface has no smooth-solution case, so 'the scheme is first order' can only be tested on the shock tube, where a TVD scheme cannot reach L1 order 1",
+   "evidence": "tensorfvm.compressible.verification measures an L1 order but only on Sod itself; this reproduction measures 0.62-0.66 (order 1) and 0.86-0.98 (order 2) there",
+   "suggestion": "add the periodic entropy wave (uniform p and u) to cases.py: five lines of initial data that give the true design order 1.0 / 2.0"
+  },
+  {
+   "stage": "documentation",
+   "blocker": "no document names the time at which the Sod profiles are reproduced (t = 0.2 as in Toro's figures vs the t = 0.14 fixed by this mission), and the two are not interchangeable for wave positions",
+   "evidence": "docs/oss-inventory-fvm/artifacts/sod_literature_benchmark.json records t_end 0.2 only; no doc line names the profile time",
+   "suggestion": "record t_end next to every published comparison and put x0 + S t in the same table"
+  }
+ ],
+ "repro_cmd": "python scripts/repro_fvm_sod1978.py --out docs/repro-fvm-sod1978",
+ "figures": [
+  "sod_profiles_t0.14.png",
+  "sod_convergence.png",
+  "sod_criteria_margins.png",
+  "sod_profiles_t0.2_paper_time.png"
+ ]
+}
