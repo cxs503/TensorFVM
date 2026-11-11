@@ -134,8 +134,15 @@ def subsect(panels: PanelSet, mask: np.ndarray) -> PanelSet:
 
 
 def solve_sources(panels: PanelSet, U: np.ndarray, *, order: int = 2,
-                  images=IMAGE_SPECS["body"], active: np.ndarray | None = None) -> np.ndarray:
+                  images=IMAGE_SPECS["body"], active: np.ndarray | None = None,
+                  normal_velocity: np.ndarray | None = None) -> np.ndarray:
     """Source strengths satisfying ``V . n = 0`` on every (active) panel.
+
+    ``U`` is the uniform onset flow (the classical use).  For a non-uniform
+    onset normal velocity -- e.g. the rotational surface velocity
+    ``(Omega x r) . n`` of :func:`tensorfvm.panel_added_mass.added_mass_matrix_6dof`
+    -- pass the per-panel value ``psi`` through ``normal_velocity``; ``U`` is
+    then ignored and the solved perturbation satisfies ``dphi/dn = -psi``.
 
     Degenerate panels (zero-area tips, mesh poles) carry no reliable normal, so
     they are excluded from the unknowns; their source strength is returned as
@@ -144,10 +151,13 @@ def solve_sources(panels: PanelSet, U: np.ndarray, *, order: int = 2,
     n_all = panels.n_panels
     mask = panels.active_mask() if active is None else np.asarray(active, bool)
     sub = subsect(panels, mask)
-    U = np.broadcast_to(np.asarray(U, float), (n_all, 3))
     A = influence_matrix(sub.centroids, sub.normals, sub, order=order, images=images)
     A[np.diag_indices(sub.n_panels)] += 0.5
-    rhs = -np.einsum("ij,ij->i", U[mask], sub.normals)
+    if normal_velocity is None:
+        U = np.broadcast_to(np.asarray(U, float), (n_all, 3))
+        rhs = -np.einsum("ij,ij->i", U[mask], sub.normals)
+    else:
+        rhs = -np.asarray(normal_velocity, float).reshape(n_all)[mask]
     sigma = np.zeros(n_all)
     sigma[mask] = np.linalg.solve(A, rhs)
     return sigma

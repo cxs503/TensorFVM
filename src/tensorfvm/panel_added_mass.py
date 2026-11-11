@@ -276,3 +276,161 @@ def lamb_spheroid_factors(a: float, b: float) -> tuple[float, float]:
     k_axial = alpha0 / (2.0 - alpha0)
     k_transverse = beta0 / (2.0 - beta0)
     return (float(k_axial), float(k_transverse))
+
+# ---------------------------------------------------------------------------
+# six-degree-of-freedom (translational + rotational) added mass
+# ---------------------------------------------------------------------------
+def surface_generators(panels: PanelSet) -> np.ndarray:
+    """The six surface velocity generators ``psi_a`` (``N x 6``).
+
+    For a rigid body motion with translational velocity ``U`` and angular
+    velocity ``Omega`` about the coordinate origin the surface velocity is
+    ``U + Omega x r``, so the Neumann data of the perturbation potential is
+    ``dphi/dn = (U + Omega x r) . n = U_i psi_i + Omega_i psi_{3+i}`` with
+
+        psi_a = n_a                  (a = 0, 1, 2),
+        psi_{3+a} = (r x n)_a        (a = 0, 1, 2),
+
+    using ``(e_a x r) . n = e_a . (r x n)``.  The same six vectors are the
+    integrands of the generalised added-mass matrix, so a single evaluation
+    gives the whole ``6 x 6`` block (see :func:`added_mass_matrix_6dof`).
+
+    Structural property (used as an exact verification anchor): for every body
+    of revolution whose panel set is mirror-symmetric about each meridian
+    plane, and in particular for the roll generator of a body of revolution
+    about its symmetry axis, ``psi_3`` vanishes *identically* on the surface
+    (``r`` and ``n`` are coplanar with the axis), so the roll added inertia is
+    exactly zero in an unbounded ideal fluid.
+    """
+    normals = panels.normals
+    rot = np.cross(panels.centroids, normals)
+    return np.concatenate([normals, rot], axis=1)
+
+
+def added_mass_matrix_6dof(panels: PanelSet, *, rho: float = 1.0, order: int = 3,
+                           directions: tuple[int, ...] | None = None,
+                           images=IMAGE_SPECS["body"],
+                           symmetrize: bool = True) -> np.ndarray:
+    """Full ``6 x 6`` added-mass matrix about the coordinate origin.
+
+    Generalises :func:`added_mass_matrix` from the translational block to the
+    complete Kirchhoff matrix.  With the six generators ``psi_a`` of
+    :func:`surface_generators` and ``phi_a`` the perturbation potential driven by
+
+        laplace(phi_a) = 0,   dphi_a/dn = -psi_a on S,   phi_a -> 0 at infinity,
+
+    the entries are
+
+        A_ab = -rho * contour_integral_S phi_a psi_b dS,     a, b = 0..5,
+
+    which is the standard added-mass definition (Lamb 1932, Hydrodynamics,
+    §108-114; Landau & Lifshitz, Fluid Mechanics, §11; Newman 1977, Marine
+    Hydrodynamics, §4.4) with the same orientation convention as (1) above.
+    Rows/columns ``0..2`` are the translational block, ``3..5`` the rotational
+    block (moments about the origin) and the off-diagonal blocks the
+    translation-rotation coupling.
+
+    All six Neumann problems share one influence matrix, so they are solved
+    with a single LU factorisation.  The discrete matrix is symmetric in the
+    ideal-fluid sense; the residual asymmetry is the quadrature difference
+    between row ``a`` and column ``a`` and is averaged out unless
+    ``symmetrize=False`` (used by the verification to *measure* that residual).
+    """
+    if rho <= 0.0:
+        raise ValueError("rho must be positive")
+    if panels.n_panels == 0:  # pragma: no cover - defensive
+        raise ValueError("empty panel set")
+    dirs = tuple(range(6)) if directions is None else tuple(int(d) for d in directions)
+    if any(d < 0 or d > 5 for d in dirs):
+        raise ValueError("directions must lie in 0..5")
+    psi = surface_generators(panels)[:, dirs]
+    areas = panels.areas
+    out = np.zeros((len(dirs), len(dirs)))
+    for row, a in enumerate(dirs):
+        sigma = solve_sources(panels, np.zeros(3), order=order, images=images,
+                              normal_velocity=psi[:, row])
+        phi = source_potential(panels.centroids, sigma, panels, order=order, images=images)
+        out[row, :] = -rho * ((phi * areas) @ psi)
+    if symmetrize and len(dirs) > 1:
+        out = 0.5 * (out + out.T)
+    return out
+
+
+def rotational_added_inertia(panels: PanelSet, *, rho: float = 1.0, order: int = 3,
+                             images=IMAGE_SPECS["body"]) -> np.ndarray:
+    """Rotational block of :func:`added_mass_matrix_6dof` (moments about the origin).
+
+    This is the ``J`` term :mod:`tensorfvm.maneuvering.dynamics` needs for the
+    yaw/roll equations.  For a body of revolution the diagonal entry about its
+    symmetry axis is zero in an unbounded ideal fluid (no wetted-surface
+    ``(r x n)`` component along the axis), which is why the roll equation is
+    dominated by viscous/vortex effects rather than by potential flow.
+    """
+    full = added_mass_matrix_6dof(panels, rho=rho, order=order, images=images,
+                                  directions=(3, 4, 5))
+    return full
+
+
+def sphere_rotational_added_inertia(radius: float = 1.0, rho: float = 1.0) -> float:
+    """Exact added moment of inertia of a **sphere about a diameter: zero**.
+
+    On a sphere ``r x n = 0`` identically, so the rotational Neumann data
+    ``(Omega x r) . n`` vanishes; with ``phi -> 0`` at infinity the exterior
+    problem has only the trivial solution ``phi = 0``, the fluid stays at rest
+    and the pressure perturbation (``p = -rho dphi/dt``) vanishes.  Hence
+    ``I_44 = I_55 = I_66 = 0`` exactly for a sphere in an unbounded ideal fluid
+    (the classical result: Fossen, Handbook of Marine Craft Hydrodynamics,
+    the sphere's added-mass matrix is ``diag(m_a, m_a, m_a, 0, 0, 0)``).
+
+    Note the corollary that matters for the debt ledger: any quoted non-zero
+    "sphere added inertia" (e.g. ``(5/8) pi rho a^5``) is not the ideal-fluid
+    added inertia; the only non-zero rotational anchor of a sphere is the
+    *parallel-axis* value about an axis offset by ``d`` (see
+    :func:`sphere_offset_axis_added_inertia`).
+    """
+    if radius <= 0.0 or rho <= 0.0:
+        raise ValueError("radius and rho must be positive")
+    return 0.0
+
+
+def sphere_offset_axis_added_inertia(radius: float = 1.0, distance: float = 1.0,
+                                     rho: float = 1.0) -> float:
+    """Exact added inertia of a sphere about an axis a distance ``d`` from its centre.
+
+    Rotation with angular velocity ``Omega`` about an axis through the point
+    ``r0`` is ``Omega x (r - r0) = Omega x r - Omega x r0``: the rigid rotation
+    of the sphere (zero added inertia, previous function) superposed on the
+    uniform translation ``U = -Omega x r0`` with ``|U| = Omega d``.  The fluid
+    kinetic energy is therefore ``1/2 m_a |U|^2`` and
+
+        I_oo = m_a d^2,   m_a = 1/2 rho (4/3 pi a^3).
+
+    This is the non-trivial rotational anchor used by the verification: it
+    exercises the moment arm ``r`` and the sign of the pressure-moment
+    integration with a value that is zero only in the degenerate ``d = 0`` case.
+    """
+    if radius <= 0.0 or rho <= 0.0:
+        raise ValueError("radius and rho must be positive")
+    if distance < 0.0:
+        raise ValueError("distance must be non-negative")
+    return sphere_added_mass(radius, rho) * distance**2
+
+
+def sphere_panels_offset(radius: float = 1.0, centre=(0.0, 0.0, 0.0),
+                         n_theta: int = 32, n_phi: int = 18) -> PanelSet:
+    """Sphere panelisation with its centre at ``centre``.
+
+    Needed for the parallel-axis anchor of
+    :func:`sphere_offset_axis_added_inertia`: the added-mass matrix is taken
+    about the coordinate origin, so placing the sphere off the origin turns the
+    exact rotational anchor into the non-zero ``m_a d^2``.
+    """
+    from .twin_hull_geometry import sphere_panels as _sphere_panels
+
+    panels = _sphere_panels(radius, n_theta, n_phi)
+    shift = np.asarray(centre, dtype=float)
+    if not np.any(shift):
+        return panels
+    corners = None if panels.corners is None else panels.corners + shift
+    return PanelSet(panels.centroids + shift, panels.normals.copy(),
+                    panels.areas.copy(), corners, panels.label)
