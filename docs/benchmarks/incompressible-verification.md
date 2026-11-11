@@ -44,6 +44,10 @@ Reference: de Vahl Davis (1983).
 | 1e5 | 32 | 4.672 | **+3.4 %** | 9.82 | +7.8 % |
 | 1e6 | 16 | 10.405 | +18.2 % | 26.61 | +58.9 % |
 | 1e6 | 32 | 9.778 | +11.1 % | 19.74 | +17.9 % |
+| 1e5 | 64 | 4.559 | **+0.9 %** | 9.62 | +5.6 % |
+| 1e6 | 64 | 9.070 | **+3.1 %** | 17.11 | +2.2 % |
+
+N = 64 rows from the m13757 ladder (`docs/verification-natural-convection-highra/REPORT.md`, artifacts `.../artifacts/incompressible/fvm_natural_convection_highra/raw_*.json`, `cfl = 0.5` for every level).
 | 1e6 | 64 | 9.070 | **+3.1 %** | 17.11 | +2.1 % |
 
 All quoted runs converged (`ledger.residual <= 1e-6`), `max|div| <= 1e-12`.
@@ -131,16 +135,21 @@ should feed the main bubble.
 |---|---|---|---|
 | BFS `L_r/H` error | 0.184 vs 6.10 (`-97 %`) | < 10 % | **FAIL** |
 | expansion `K` error (total pressure, D/10) | -1.3 % | < 5 % | **PASS** (D/10); +7.6 % at D/20 -> FAIL at the finer level |
-| NC `Nu` error, Ra = 1e5 (N32) | +3.4 % | < 3 % | **FAIL** (marginal) |
-| NC `Nu` error, Ra = 1e6 (N64) | +3.1 % | < 3 % | **FAIL** (marginal) |
+| NC `Nu` error, Ra = 1e5 (N32) | +3.4 % | < 3 % | **FAIL** (marginal) -> **PASS at N=64**: +0.9 % (m13757) |
+| NC `Nu` error, Ra = 1e6 (N64) | +3.1 % | < 3 % | **FAIL** (marginal); N=128 ladder still running (m13757) |
 | NC `Nu` error, Ra = 1e4 | -- | < 3 % | **WITHHELD** (no converged run) |
-| observed grid order | -0.18 (NC 16/32/64), n/a (BFS/expansion) | >= 1.5 | **FAIL** |
+| observed grid order | Ra=1e5: **+1.97** (16/32/64, `Nu`); Ra=1e6: -0.18 (not yet asymptotic), n/a (BFS/expansion) | >= 1.5 | **PASS (Ra=1e5) / FAIL (Ra=1e6)** |
 
-The negative observed order is not a bug in the order routine but the honest
-statement that the NC sequence (10.405, 9.778, 9.070) is *not* inside the
-asymptotic range at N = 16/32/64: the differences do not decrease by a factor
-`2^p` with `p > 0`, so no order can be extracted. A uniform-refinement study
-at N = 64/96/128 is required.
+The observed order used to come out negative because the estimator divided the
+*fine* difference by the *coarse* one (`|f1-f2| / |f2-f3|`, finest first).
+m13757 corrected it to `|f2-f3| / |f1-f2|`; a synthetic second-order sequence
+now returns `p = +2` and the right Richardson limit
+(`tests/test_natural_convection_highra_gate.py`). With the corrected estimator
+the Ra = 1e5 family is asymptotic: `p = 1.97` over N = 16/32/64 with a
+Richardson limit of `Nu_inf = 4.5205` (+0.03 % vs 4.519), so its 3 % gate is
+met from N = 64 on. Ra = 1e6 still returns `p = -0.18` at N = 16/32/64, i.e. it
+is *not* inside the asymptotic range yet, and its extrapolated value is
+deliberately withheld rather than quoted.
 
 ## 4. What is actually established
 
