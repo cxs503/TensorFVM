@@ -1,0 +1,221 @@
+{
+ "case": "hydrostatic rest state",
+ "control_not_well_balanced": {
+  "aligned": true,
+  "cells": [
+   128,
+   64
+  ],
+  "cg": {
+   "converged": true,
+   "iterations": 36,
+   "residual_ratio": 9.240828752438543e-10
+  },
+  "criterion": {
+   "pressure": 0.01
+  },
+  "density_ratio": 1000.0,
+  "depth": 0.5,
+  "depth_requested": 0.5,
+  "dt": 0.001411011378080409,
+  "dx": 0.0078125,
+  "dy": 0.015625,
+  "elapsed_s": 16.445391269400716,
+  "history": [
+   {
+    "mass_drift_relative": 0.0,
+    "pressure_oscillation": 0.015624663362120213,
+    "spurious_velocity": 6.967941848307571e-08,
+    "step": 1,
+    "time": 0.001411011378080409
+   },
+   {
+    "mass_drift_relative": 0.0,
+    "pressure_oscillation": 0.015625,
+    "spurious_velocity": 3.715058902989954e-15,
+    "step": 101,
+    "time": 0.14251214918612123
+   },
+   {
+    "mass_drift_relative": 1.1102230246251565e-16,
+    "pressure_oscillation": 0.015625,
+    "spurious_velocity": 3.713962250394483e-15,
+    "step": 200,
+    "time": 0.2822022756160826
+   }
+  ],
+  "mass_drift_relative": 2.220446049250313e-16,
+  "passed": false,
+  "pressure_oscillation": 0.01563069443293135,
+  "pressure_scale": 4905.0,
+  "spurious_velocity": 6.967941848307571e-08,
+  "steps": 200,
+  "surface_model": "void",
+  "velocity_scale": 2.2147234590350102,
+  "well_balanced_surface": false
+ },
+ "runs": [
+  {
+   "aligned": true,
+   "cells": [
+    32,
+    16
+   ],
+   "cg": {
+    "converged": true,
+    "iterations": 0,
+    "residual_ratio": 0.0
+   },
+   "criterion": {
+    "pressure": 0.01
+   },
+   "density_ratio": 1000.0,
+   "depth": 0.5,
+   "depth_requested": 0.5,
+   "dt": 0.005644045512321636,
+   "dx": 0.03125,
+   "dy": 0.0625,
+   "elapsed_s": 1.7172847297042608,
+   "history": [
+    {
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.0,
+     "spurious_velocity": 0.0,
+     "step": 1,
+     "time": 0.005644045512321636
+    },
+    {
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.0,
+     "spurious_velocity": 0.0,
+     "step": 101,
+     "time": 0.5700485967444849
+    },
+    {
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.0,
+     "spurious_velocity": 0.0,
+     "step": 200,
+     "time": 1.1288091024643303
+    }
+   ],
+   "mass_drift_relative": 0.0,
+   "passed": true,
+   "pressure_oscillation": 0.0,
+   "pressure_scale": 4905.0,
+   "spurious_velocity": 0.0,
+   "steps": 200,
+   "surface_model": "void",
+   "velocity_scale": 2.2147234590350102,
+   "well_balanced_surface": true
+  },
+  {
+   "aligned": true,
+   "cells": [
+    64,
+    32
+   ],
+   "cg": {
+    "converged": true,
+    "iterations": 0,
+    "residual_ratio": 0.0
+   },
+   "criterion": {
+    "pressure": 0.01
+   },
+   "density_ratio": 1000.0,
+   "depth": 0.5,
+   "depth_requested": 0.5,
+   "dt": 0.002822022756160818,
+   "dx": 0.015625,
+   "dy": 0.03125,
+   "elapsed_s": 1.9681212902069092,
+   "history": [
+    {
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.0,
+     "spurious_velocity": 0.0,
+     "step": 1,
+     "time": 0.002822022756160818
+    },
+    {
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.0,
+     "spurious_velocity": 0.0,
+     "step": 101,
+     "time": 0.28502429837224247
+    },
+    {
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.0,
+     "spurious_velocity": 0.0,
+     "step": 200,
+     "time": 0.5644045512321652
+    }
+   ],
+   "mass_drift_relative": 0.0,
+   "passed": true,
+   "pressure_oscillation": 0.0,
+   "pressure_scale": 4905.0,
+   "spurious_velocity": 0.0,
+   "steps": 200,
+   "surface_model": "void",
+   "velocity_scale": 2.2147234590350102,
+   "well_balanced_surface": true
+  },
+  {
+   "aligned": true,
+   "cells": [
+    128,
+    64
+   ],
+   "cg": {
+    "converged": true,
+    "iterations": 0,
+    "residual_ratio": 0.0
+   },
+   "criterion": {
+    "pressure": 0.01
+   },
+   "density_ratio": 1000.0,
+   "depth": 0.5,
+   "depth_requested": 0.5,
+   "dt": 0.001411011378080409,
+   "dx": 0.0078125,
+   "dy": 0.015625,
+   "elapsed_s": 4.4032317996025085,
+   "history": [
+    {
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.0,
+     "spurious_velocity": 0.0,
+     "step": 1,
+     "time": 0.001411011378080409
+    },
+    {
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.0,
+     "spurious_velocity": 0.0,
+     "step": 101,
+     "time": 0.14251214918612123
+    },
+    {
+     "mass_drift_relative": 0.0,
+     "pressure_oscillation": 0.0,
+     "spurious_velocity": 0.0,
+     "step": 200,
+     "time": 0.2822022756160826
+    }
+   ],
+   "mass_drift_relative": 0.0,
+   "passed": true,
+   "pressure_oscillation": 0.0,
+   "pressure_scale": 4905.0,
+   "spurious_velocity": 0.0,
+   "steps": 200,
+   "surface_model": "void",
+   "velocity_scale": 2.2147234590350102,
+   "well_balanced_surface": true
+  }
+ ]
+}
