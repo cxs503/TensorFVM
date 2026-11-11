@@ -1,0 +1,176 @@
+{
+  "case": "dam_break_variants",
+  "grid": "25x50",
+  "records": [
+    {
+      "label": "baseline (reduced, rho_g=1, advection on)",
+      "mass_drift": 1.885113380588021e-15,
+      "max_u": 1.5152573245476653,
+      "momentum_advection": true,
+      "nx": 50,
+      "ny": 25,
+      "pressure_form": "reduced",
+      "rho_gas": 1.0,
+      "samples": [
+        {
+          "relative_error": -0.4787345377739104,
+          "t": 0.1,
+          "t_star": 1.3101661852875255,
+          "x_front": 0.10902039493478813,
+          "x_star_sim": 0.9076184590514108
+        },
+        {
+          "relative_error": -0.1673555394614637,
+          "t": 0.2,
+          "t_star": 2.620332370575051,
+          "x_front": 0.1997292030864633,
+          "x_star_sim": 2.4948242009879844
+        },
+        {
+          "relative_error": 0.03684686064805205,
+          "t": 0.3,
+          "t_star": 3.9304985558625765,
+          "x_front": 0.2902699564456972,
+          "x_star_sim": 4.079089351630747
+        }
+      ],
+      "wall_seconds": 35.723461866378784
+    },
+    {
+      "label": "rho_g = 10",
+      "mass_drift": 5.800348863347756e-16,
+      "max_u": 1.4270578385792954,
+      "momentum_advection": true,
+      "nx": 50,
+      "ny": 25,
+      "pressure_form": "reduced",
+      "rho_gas": 10.0,
+      "samples": [
+        {
+          "relative_error": -0.5181372464965835,
+          "t": 0.1,
+          "t_star": 1.3101661852875255,
+          "x_front": 0.10509948666241346,
+          "x_star_sim": 0.8390111401997107
+        },
+        {
+          "relative_error": -0.2040998190708309,
+          "t": 0.2,
+          "t_star": 2.620332370575051,
+          "x_front": 0.19343723772431906,
+          "x_star_sim": 2.3847285691044453
+        },
+        {
+          "relative_error": -0.0010490736148300397,
+          "t": 0.3,
+          "t_star": 3.9304985558625765,
+          "x_front": 0.28174960606405025,
+          "x_star_sim": 3.9300018558888934
+        }
+      ],
+      "wall_seconds": 33.437734842300415
+    },
+    {
+      "label": "rho_g = 100",
+      "mass_drift": 2.900174431673878e-16,
+      "max_u": 0.9599251111873282,
+      "momentum_advection": true,
+      "nx": 50,
+      "ny": 25,
+      "pressure_form": "reduced",
+      "rho_gas": 100.0,
+      "samples": [
+        {
+          "relative_error": -0.5745843056810713,
+          "t": 0.1,
+          "t_star": 1.3101661852875255,
+          "x_front": 0.09948251898474907,
+          "x_star_sim": 0.740726491421681
+        },
+        {
+          "relative_error": -0.3185756168467367,
+          "t": 0.2,
+          "t_star": 2.620332370575051,
+          "x_front": 0.17383479179077,
+          "x_star_sim": 2.0417286402584427
+        },
+        {
+          "relative_error": -0.1524704777061432,
+          "t": 0.3,
+          "t_star": 3.9304985558625765,
+          "x_front": 0.24770470274568523,
+          "x_star_sim": 3.3342905117355244
+        }
+      ],
+      "wall_seconds": 28.509550094604492
+    },
+    {
+      "label": "pressure_form = total",
+      "mass_drift": 1.3050784942532453e-15,
+      "max_u": 1.3150822813503662,
+      "momentum_advection": true,
+      "nx": 50,
+      "ny": 25,
+      "pressure_form": "total",
+      "rho_gas": 1.0,
+      "samples": [
+        {
+          "relative_error": -0.46114101231483795,
+          "t": 0.1,
+          "t_star": 1.3101661852875255,
+          "x_front": 0.11077110197369323,
+          "x_star_sim": 0.9382520030392517
+        },
+        {
+          "relative_error": -0.16702930226697765,
+          "t": 0.2,
+          "t_star": 2.620332370575051,
+          "x_front": 0.19978506683313005,
+          "x_star_sim": 2.4958016943679797
+        },
+        {
+          "relative_error": 0.04147920075616456,
+          "t": 0.3,
+          "t_star": 3.9304985558625765,
+          "x_front": 0.2913114708343986,
+          "x_star_sim": 4.0973135754050505
+        }
+      ],
+      "wall_seconds": 32.03688597679138
+    },
+    {
+      "label": "momentum advection off",
+      "mass_drift": 0.0,
+      "max_u": 2.0265505160230943,
+      "momentum_advection": false,
+      "nx": 50,
+      "ny": 25,
+      "pressure_form": "reduced",
+      "rho_gas": 1.0,
+      "samples": [
+        {
+          "relative_error": -0.5754204148848366,
+          "t": 0.1,
+          "t_star": 1.3101661852875255,
+          "x_front": 0.09939931893074451,
+          "x_star_sim": 0.7392706724539722
+        },
+        {
+          "relative_error": -0.41650519244800394,
+          "t": 0.2,
+          "t_star": 2.620332370575051,
+          "x_front": 0.15706566461877938,
+          "x_star_sim": 1.7483055926295603
+        },
+        {
+          "relative_error": -0.31178133380072853,
+          "t": 0.3,
+          "t_star": 3.9304985558625765,
+          "x_front": 0.2118859707384493,
+          "x_star_sim": 2.707541045292201
+        }
+      ],
+      "wall_seconds": 45.085338830947876
+    }
+  ]
+}
