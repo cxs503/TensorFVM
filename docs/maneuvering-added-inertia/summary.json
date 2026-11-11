@@ -1,0 +1,137 @@
+{
+  "hull": {
+    "L": 7.0,
+    "B": 1.2688,
+    "T": 0.455,
+    "Cb_fit": 0.8098358022111999,
+    "Cwp_fit": 0.8700519715912913,
+    "LCB_pct_fit": -1.6893666794811806,
+    "volume_fit": 3.2726501357181412
+  },
+  "ladder": [
+    {
+      "n_stations": 21,
+      "n_girth": 5,
+      "n_panels": 252,
+      "volume": 3.141827166058759,
+      "volume_rel_err": -0.039932183509591754,
+      "lid_area": 7.698087951923439,
+      "lid_area_rel_err": -0.0037406597647002006,
+      "geometry_passed": false,
+      "surface_area": 20.421582632011848,
+      "J_z": 4416.158243450976,
+      "lid_flux_max": 0.0
+    },
+    {
+      "n_stations": 41,
+      "n_girth": 9,
+      "n_panels": 820,
+      "volume": 3.233273935306624,
+      "volume_rel_err": -0.011988221147386399,
+      "lid_area": 7.719887933253164,
+      "lid_area_rel_err": -0.000919383214947759,
+      "geometry_passed": true,
+      "surface_area": 20.571459006436875,
+      "J_z": 4723.417195041921,
+      "lid_flux_max": 0.0
+    },
+    {
+      "n_stations": 61,
+      "n_girth": 13,
+      "n_panels": 1708,
+      "volume": 3.254250698021574,
+      "volume_rel_err": -0.005578220306365349,
+      "lid_area": 7.724110309115691,
+      "lid_area_rel_err": -0.0003729382513024915,
+      "geometry_passed": true,
+      "surface_area": 20.601541614961057,
+      "J_z": 4822.362817730271,
+      "lid_flux_max": 0.0
+    }
+  ],
+  "richardson": {
+    "J_z_inf": 4978.177314978236,
+    "order_q": 0.6704602301150576,
+    "J_z_slender": 13411.107777638656,
+    "adjusted_panel": 4978.177314978236,
+    "panel_over_slender": 0.37119806935551763
+  },
+  "slender": {
+    "m_x": 382.20371932424945,
+    "m_y": 3822.037193242494,
+    "J_z": 13411.107777638656,
+    "m_y_over_mass": 1.1700299111107733,
+    "J_z_over_mass_L2": 0.08378584000192965
+  },
+  "sway": {
+    "41x9": {
+      "m_y": 2554.2532710683663,
+      "ratio_to_slender": 0.6682962885825345
+    },
+    "61x13": {
+      "m_y": 2573.4704442360435,
+      "ratio_to_slender": 0.673324280775194
+    }
+  },
+  "manoeuvres": {
+    "J_z_slender": 13411.107777638656,
+    "J_z_panel": 4978.177314978236,
+    "dt": 0.5,
+    "delta_deg": 35.0,
+    "turning": {
+      "slender": {
+        "tactical_diameter_over_L": 4.612741414109772,
+        "advance_over_L": 4.748403304627096,
+        "transfer_over_L": 1.9438494574023155,
+        "time_90_s": 40.4735898027365,
+        "time_180_s": 78.79991638588665,
+        "steady_turning_radius_over_L": 1.6281011621910093,
+        "steady_drift_deg": 20.15718318988149
+      },
+      "panel": {
+        "tactical_diameter_over_L": 4.605458943743458,
+        "advance_over_L": 4.229480526980163,
+        "transfer_over_L": 1.89401825018154,
+        "time_90_s": 36.99743990282812,
+        "time_180_s": 75.72894099727142,
+        "steady_turning_radius_over_L": 1.633073844064268,
+        "steady_drift_deg": 20.12621424820803
+      },
+      "delta_pct": {
+        "tactical_diameter_over_L": -0.1578772732422803,
+        "advance_over_L": -10.928363585739792,
+        "transfer_over_L": -2.563532223702554,
+        "time_90_s": -8.58868688656164,
+        "time_180_s": -3.897181024376375,
+        "steady_turning_radius_over_L": 0.3054283105213658,
+        "steady_drift_deg": -0.15363724872534
+      }
+    },
+    "zigzag": {
+      "slender": {
+        "psi_1_deg": 37.40510279679679,
+        "overshoot_1_deg": null,
+        "time_1_s": null,
+        "period_1_s": null
+      },
+      "panel": {
+        "psi_1_deg": 33.014490174169104,
+        "overshoot_1_deg": null,
+        "time_1_s": null,
+        "period_1_s": null
+      },
+      "delta_pct": {
+        "psi_1_deg": -11.738004428111553,
+        "overshoot_1_deg": NaN,
+        "time_1_s": NaN,
+        "period_1_s": NaN
+      }
+    },
+    "max_abs_delta_pct": {
+      "turning": 10.928363585739792,
+      "zigzag": 11.738004428111553,
+      "threshold_pct": 15.0,
+      "switch_default": true
+    }
+  }
+}
