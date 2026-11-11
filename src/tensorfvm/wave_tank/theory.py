@@ -41,6 +41,7 @@ __all__ = [
     "goda_two_point",
     "added_resistance_energy",
     "rao_from_series",
+    "compute_added_resistance_gerritsma_meijers",
 ]
 
 GRAVITY = 9.80665
@@ -225,3 +226,65 @@ def rao_from_series(t, signal, omega: float, wave_amp: float, scale: float = 1.0
     """
     amp, phase, mean, resid = harmonic_fit(t, signal, omega)
     return amp / (scale * wave_amp), phase, mean, resid
+
+
+def compute_added_resistance_gerritsma_meijers(
+    wave_amplitude: float,
+    omega: float,
+    k: float,
+    h: float,
+    rho: float,
+    g: float,
+    B: float,
+    L: float,
+    Cb: float,
+    speed: float = 0.0,
+) -> float:
+    """Gerritsma-Meijers energy method for added resistance in waves.
+
+    Semi-empirical formula based on wave energy flux and ship breadth.
+    Reference: Gerritsma & Meijers (1962).
+
+    Parameters
+    ----------
+    wave_amplitude : float
+        Wave amplitude [m]
+    omega : float
+        Wave frequency [rad/s]
+    k : float
+        Wavenumber [1/m]
+    h : float
+        Water depth [m]
+    rho : float
+        Water density [kg/m^3]
+    g : float
+        Gravitational acceleration [m/s^2]
+    B : float
+        Ship breadth [m]
+    L : float
+        Ship length [m]
+    Cb : float
+        Block coefficient [-]
+    speed : float, optional
+        Ship speed [m/s], default 0
+
+    Returns
+    -------
+    float
+        Added resistance [N]
+    """
+    E = 0.5 * rho * g * wave_amplitude ** 2
+
+    kh = k * h
+    cg = 0.5 * (omega / k) * (1 + 2 * kh / math.sinh(2 * kh))
+
+    P = E * cg * B * Cb
+
+    c = omega / k
+    delta_R = P / (c + 1e-12)
+
+    if speed > 0:
+        Fn = speed / math.sqrt(g * L)
+        delta_R *= (1 + 2 * Fn)
+
+    return delta_R
