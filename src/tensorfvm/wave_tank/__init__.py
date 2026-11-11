@@ -13,8 +13,13 @@ Public surface
 """
 from .geometry import BargeSection, KCSSimplifiedHull, WigleyHull, geometry_gate, polygon_mask
 from .solver import RigidBody2D, TankConfig, WaveTank
+from .theory import compute_added_resistance_gerritsma_meijers
+
+# Backward-compatible alias (old API used WaveTankConfig)
+WaveTankConfig = TankConfig
 
 __all__ = [
-    "WaveTank", "TankConfig", "RigidBody2D",
+    "WaveTank", "TankConfig", "WaveTankConfig", "RigidBody2D",
     "WigleyHull", "KCSSimplifiedHull", "BargeSection", "geometry_gate", "polygon_mask",
+    "compute_added_resistance_gerritsma_meijers",
 ]
