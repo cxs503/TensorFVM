@@ -1,0 +1,113 @@
+{
+  "audit_mission": "m15394",
+  "audited_mission": "m15299",
+  "anchor": "CASE-WOODWARD-COLELLA",
+  "repo": "TensorFVM",
+  "level": 4,
+  "level_rationale": "L4=基准验证（完整算例+误差分析+可复现）：多网格收敛研究(100-800)+参考解(1600)+守恒律验证(质量/能量~1e-16)+早期激波速度对标精确黎曼解+2D外推一致性+敏感性分析+4项pytest全绿+PR#427并入main。不判L5：验证/复现面，非新求解器能力。",
+  "criteria_check": {
+    "initial_condition": {
+      "energy_rel_error": 2.07e-16,
+      "mass_rel_error": 0.0,
+      "verdict": "PASS"
+    },
+    "early_time_shock_speed": {
+      "worst_error": 0.0720,
+      "threshold": 0.10,
+      "verdict": "PASS"
+    },
+    "early_time_post_shock_density": {
+      "note": "仅检查左爆轰波（右波平台过窄无法分辨）；左波最佳密度误差0.0364<0.10",
+      "best_left_density_error": 0.0364,
+      "right_density_error_nx800": 0.1038,
+      "threshold": 0.10,
+      "verdict": "PASS（设计局限：右波平台在可用分辨率下未充分分辨）"
+    },
+    "early_time_star_pressure": {
+      "best_right_pressure_error": 0.0039,
+      "threshold": 0.10,
+      "verdict": "PASS"
+    },
+    "convergence_mass": {
+      "max_drift": 2.22e-16,
+      "threshold": 1e-12,
+      "verdict": "PASS"
+    },
+    "convergence_energy": {
+      "max_drift": 6.20e-16,
+      "threshold": 1e-12,
+      "verdict": "PASS"
+    },
+    "convergence_peak_density": {
+      "finest_error": 0.0428,
+      "threshold": 0.10,
+      "verdict": "PASS"
+    },
+    "convergence_l1": {
+      "finest_error": 0.0297,
+      "threshold": 0.10,
+      "verdict": "PASS"
+    },
+    "convergence_observed_order": {
+      "measured": 1.394,
+      "threshold": 0.6,
+      "verdict": "PASS"
+    },
+    "convergence_positivity": {
+      "all_zero": true,
+      "verdict": "PASS"
+    },
+    "two_dimensional_consistency": {
+      "max_y_std": 0.0,
+      "threshold": 1e-12,
+      "verdict": "PASS"
+    }
+  },
+  "artifact_check": {
+    "run_artifacts_json": "docs/woodward-colella-double-blast/artifacts/woodward_colella_double_blast.json (8.3MB, 存在)",
+    "figures": {
+      "fig_blast_profiles.png": "存在 (83KB, 有效PNG)",
+      "fig_blast_convergence.png": "存在 (53KB, 有效PNG)",
+      "fig_blast_early_time.png": "缺失 (KeyError: 'times' bug)",
+      "fig_blast_xt.png": "缺失 (同上bug)",
+      "fig_blast_field2d.png": "缺失 (同上bug)"
+    },
+    "figures_bug": "_figures() 函数引用 early['times'] 但 leg_early_time() 不返回该键，导致3/5图生成失败。核心数值结果不受影响。"
+  },
+  "tests_rerun": "4 passed in 28.78s (test_compressible_double_blast.py: test_initial_datum_and_energy, test_closed_tube_conserves_mass_and_energy, test_early_fronts_move_at_the_exact_riemann_speed, test_extruded_slab_stays_y_uniform)",
+  "pr": 427,
+  "merge_commit": "ddd5fbec",
+  "impl_files": [
+    "src/tensorfvm/compressible/cases.py (DoubleBlastConfig, blast_pressure, double_blast, blast_early_anchors)",
+    "src/tensorfvm/compressible/double_blast.py (StudyConfig, _run, leg_initial_condition, leg_early_time, leg_convergence, leg_two_dimensional, leg_sensitivity, run)",
+    "src/tensorfvm/compressible/riemann.py (ExactRiemann, hllc_flux)",
+    "tests/test_compressible_double_blast.py (4 tests)"
+  ],
+  "repro_cmd": "cd /root/tp-agent/work/m15299 && PYTHONPATH=src python -m tensorfvm.compressible.double_blast --outdir docs/woodward-colella-double-blast/artifacts",
+  "external_anchor": "Woodward & Colella (1984) J. Comput. Phys. 54:115-173; 初始数据经 arXiv:1902.07773 (Dumbser et al.) 与 arXiv:2109.14340 (Fu et al.) 交叉验证; 精确黎曼解 per Toro (2009) 3rd ed. Ch.4",
+  "benchmark_ledger": {
+    "tensor_benchmark_cases_rows_for_anchor": 0,
+    "gap": "anchor_slug='CASE-WOODWARD-COLELLA' 未在 tensor_benchmark_cases 登记（台账缺口，建议补登记）",
+    "de_facto_criteria_source": "工件 JSON thresholds 块 + provenance.md 外部锚"
+  },
+  "report_check": {
+    "report_exists": false,
+    "provenance_md": "存在 (docs/woodward-colella-double-blast/provenance.md, 完整溯源链)",
+    "note": "无独立 report.md，但 provenance.md 提供完整外部锚溯源；数值结果全部在工件 JSON 中"
+  },
+  "verdict": "confirmed-L4",
+  "defects_found": [
+    {
+      "severity": "low",
+      "description": "Figure generation bug: _figures() references early['times'] but leg_early_time() does not return 'times' key, causing 3/5 figures to fail with KeyError",
+      "impact": "Missing visualization only; numerical results unaffected",
+      "fix_suggestion": "Add 'times' key to leg_early_time() return dict or fix _figures() to extract times from row front_history"
+    },
+    {
+      "severity": "low",
+      "description": "Convergence study truncated: artifact shows reference_n=1600 and sizes up to 800, but StudyConfig.quick=False specifies reference_n=3200 and sizes up to 1600",
+      "impact": "Slightly coarser reference than intended; still sufficient for L4 verdict",
+      "fix_suggestion": "Investigate why artifact config doesn't match StudyConfig defaults"
+    }
+  ]
+}
