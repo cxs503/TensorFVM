@@ -1,0 +1,336 @@
+{
+  "all_pass": true,
+  "c1_normal_derivative": {
+    "spheroid_a_over_b_2": {
+      "max_abs_data": 0.93628083358323,
+      "max_rel_residual": 1.7606306301874916e-10,
+      "n_points": 288
+    },
+    "triaxial": {
+      "max_abs_data": 0.3894857527920519,
+      "max_rel_residual": 4.70396183775922e-11,
+      "n_points": 288
+    }
+  },
+  "c2_surface_moment": {
+    "closed_form": 2.6683009132477626,
+    "quadrature_n100": 2.668300913247748,
+    "quadrature_n200": 2.6683009132477826,
+    "rel_err_closed_vs_quad": 7.48941558428992e-15,
+    "rel_spread_n100_n200": 1.2981653679435763e-14,
+    "semi_axes": [
+      1.6,
+      1.2,
+      0.9
+    ]
+  },
+  "c3_harmonicity": {
+    "spheroid_a_over_b_2": {
+      "h_squared_ratios": [
+        0.2502221369294531,
+        0.25005549809925365
+      ],
+      "point": [
+        2.4,
+        0.9,
+        0.6
+      ],
+      "rel_laplacian_extrapolated": [
+        7.869684805541602e-07,
+        4.919720293574282e-08
+      ],
+      "rel_laplacian_raw": [
+        0.0026570384396179983,
+        0.0006648498362649152,
+        0.0001662493569684306
+      ]
+    },
+    "triaxial": {
+      "h_squared_ratios": [
+        0.2500934611073721,
+        0.25002346757757765
+      ],
+      "point": [
+        1.1,
+        -1.4,
+        0.5
+      ],
+      "rel_laplacian_extrapolated": [
+        5.36889987274615e-07,
+        3.3715141081385715e-08
+      ],
+      "rel_laplacian_raw": [
+        0.004308396313485031,
+        0.0010775017458617138,
+        0.0002694007228212395
+      ]
+    }
+  },
+  "c4_decay": {
+    "direction": [
+      0.36964900009574436,
+      -0.5494782433855661,
+      0.74928851370759
+    ],
+    "expected_quadrupole": 0.125,
+    "pairs": [
+      {
+        "phi_2r_over_phi_r": 0.12580356068049767,
+        "r_over_a": 8.0
+      },
+      {
+        "phi_2r_over_phi_r": 0.12520056350509876,
+        "r_over_a": 16.0
+      }
+    ]
+  },
+  "c5_exact_zeros": {
+    "sphere_about_diameter": 0.0,
+    "spheroid_roll_about_symmetry_axis": 0.0
+  },
+  "c6_slender": {
+    "monotone": true,
+    "rel_err_at_100": 0.0004953603523895622,
+    "rows": [
+      {
+        "I_55": 34.6327353215429,
+        "I_55_over_rho_V_a2": 0.12918682076289456,
+        "a_over_b": 4.0
+      },
+      {
+        "I_55": 365.6692718628816,
+        "I_55_over_rho_V_a2": 0.17050216451306172,
+        "a_over_b": 8.0
+      },
+      {
+        "I_55": 6451.01702673658,
+        "I_55_over_rho_V_a2": 0.19250835895783286,
+        "a_over_b": 20.0
+      },
+      {
+        "I_55": 103857.89206623682,
+        "I_55_over_rho_V_a2": 0.19835396281735357,
+        "a_over_b": 50.0
+      },
+      {
+        "I_55": 835683.0803653492,
+        "I_55_over_rho_V_a2": 0.19950463964761045,
+        "a_over_b": 100.0
+      }
+    ],
+    "strip_limit": 0.2
+  },
+  "c7_near_sphere": {
+    "monotone_increasing_towards_sphere": true,
+    "rows": [
+      {
+        "I_55": 0.05887018481621871,
+        "I_55_over_a2_minus_b2_sq": 0.14372603714897145,
+        "b_over_a": 0.6
+      },
+      {
+        "I_55": 0.027298657233527895,
+        "I_55_over_a2_minus_b2_sq": 0.2106377872957401,
+        "b_over_a": 0.8
+      },
+      {
+        "I_55": 0.00010921811386611674,
+        "I_55_over_a2_minus_b2_sq": 0.2757963532893523,
+        "b_over_a": 0.99
+      },
+      {
+        "I_55": 1.114512449831281e-06,
+        "I_55_over_a2_minus_b2_sq": 0.2789069496807711,
+        "b_over_a": 0.999
+      },
+      {
+        "I_55": 1.1167607406897672e-08,
+        "I_55_over_a2_minus_b2_sq": 0.27921810628522686,
+        "b_over_a": 0.9999
+      }
+    ],
+    "spread_three_nearest": 0.01230962399297316
+  },
+  "c8_panel_vs_closed_form": {
+    "rows": [
+      {
+        "a_over_b": 2.0,
+        "exact": 2.0057929172153717,
+        "h": [
+          0.14384239566619703,
+          0.0928813398299218,
+          0.07716973987482605
+        ],
+        "meshes": [
+          {
+            "I_55": 1.8417567227183982,
+            "axisym_rel": 6.028065547041896e-16,
+            "mesh": "24x14",
+            "panels": 336,
+            "rel_err": 0.0817812213260299
+          },
+          {
+            "I_55": 1.9375671120466547,
+            "axisym_rel": 2.2919939499848895e-16,
+            "mesh": "48x26",
+            "panels": 1248,
+            "rel_err": 0.03401438133675057
+          },
+          {
+            "I_55": 1.9579349125315693,
+            "axisym_rel": 6.80445310527505e-16,
+            "mesh": "64x34",
+            "panels": 2176,
+            "rel_err": 0.02385989314901129
+          }
+        ],
+        "observed_order": 2.121219204082406,
+        "richardson": 2.000230513250498,
+        "richardson_rel_err": 0.002773169611445277,
+        "two_finest_spread": 0.010402695388162549
+      },
+      {
+        "a_over_b": 4.0,
+        "exact": 34.6327353215429,
+        "h": [
+          0.14384239566619703,
+          0.0928813398299218,
+          0.07716973987482605
+        ],
+        "meshes": [
+          {
+            "I_55": 31.967492788602826,
+            "axisym_rel": 7.779463943593949e-16,
+            "mesh": "24x14",
+            "panels": 336,
+            "rel_err": 0.07695732110660612
+          },
+          {
+            "I_55": 33.66139489797217,
+            "axisym_rel": 1.2665121060736057e-15,
+            "mesh": "48x26",
+            "panels": 1248,
+            "rel_err": 0.028046887274494857
+          },
+          {
+            "I_55": 33.98709656554695,
+            "axisym_rel": 4.181249989329095e-16,
+            "mesh": "64x34",
+            "panels": 2176,
+            "rel_err": 0.01864244189786365
+          }
+        ],
+        "observed_order": 2.4160844499329186,
+        "richardson": 34.56379654205763,
+        "richardson_rel_err": 0.0019905669836707777,
+        "two_finest_spread": 0.009583097719060336
+      },
+      {
+        "a_over_b": 8.0,
+        "exact": 365.6692718628816,
+        "h": [
+          0.14384239566619703,
+          0.0928813398299218,
+          0.07716973987482605
+        ],
+        "meshes": [
+          {
+            "I_55": 355.9971987684636,
+            "axisym_rel": 1.277390250427861e-15,
+            "mesh": "24x14",
+            "panels": 336,
+            "rel_err": 0.02645033049986447
+          },
+          {
+            "I_55": 366.0861576966346,
+            "axisym_rel": 7.763666785226079e-16,
+            "mesh": "48x26",
+            "panels": 1248,
+            "rel_err": 0.0011400625259792379
+          },
+          {
+            "I_55": 367.1889950852334,
+            "axisym_rel": 6.192279139260514e-16,
+            "mesh": "64x34",
+            "panels": 2176,
+            "rel_err": 0.004156004726920699
+          }
+        ],
+        "observed_order": 4.021354900328889,
+        "richardson": 368.185322681516,
+        "richardson_rel_err": 0.006880673363163785,
+        "two_finest_spread": 0.003003459807783197
+      }
+    ],
+    "worst_finest_rel_err": 0.02385989314901129,
+    "worst_richardson_rel_err": 0.006880673363163785,
+    "worst_two_finest_spread": 0.010402695388162549
+  },
+  "criteria": {
+    "C1": {
+      "pass": true,
+      "statement": "closed-form potential reproduces the rotation data: max|dphi/dn - psi|/max|psi| < 1e-6",
+      "threshold": 1e-06,
+      "value": 1.7606306301874916e-10
+    },
+    "C2": {
+      "pass": true,
+      "statement": "I = (2 pi/15) a^3 b^3 c matches surface quadrature (triaxial): rel < 1e-10",
+      "threshold": 1e-10,
+      "value": 7.48941558428992e-15
+    },
+    "C3": {
+      "pass": true,
+      "statement": "harmonicity: |laplace(phi)|/|phi| < 1e-6 (Richardson-extrapolated FD)",
+      "threshold": 1e-06,
+      "value": 4.919720293574282e-08
+    },
+    "C4": {
+      "pass": true,
+      "statement": "quadrupole decay phi(2r)/phi(r) = 1/8 within 1%",
+      "threshold": 0.01,
+      "value": 0.0008035606804976669
+    },
+    "C5": {
+      "pass": true,
+      "statement": "sphere and spheroid-roll added inertia are exactly zero",
+      "threshold": 0.0,
+      "value": 0.0
+    },
+    "C6": {
+      "pass": true,
+      "statement": "slender asymptote: monotone and within 2% of 1/5 at a/b = 100",
+      "threshold": 0.02,
+      "value": 0.0004953603523895622
+    },
+    "C7": {
+      "pass": true,
+      "statement": "near-sphere: I_55 ~ (a^2-b^2)^2, spread over b/a = 0.99/0.999/0.9999 < 2%",
+      "threshold": 0.02,
+      "value": 0.01230962399297316
+    },
+    "C8": {
+      "pass": true,
+      "statement": "panel solver within 3% of the closed form at the finest mesh (a/b = 2, 4, 8)",
+      "threshold": 0.03,
+      "value": 0.02385989314901129
+    },
+    "C9": {
+      "pass": true,
+      "statement": "two-finest-mesh spread of the panel I_55 < 10% (mesh uncertainty, all ratios)",
+      "threshold": 0.1,
+      "value": 0.010402695388162549
+    }
+  },
+  "elapsed_s": 57.02831220626831,
+  "module": "tensorfvm.ellipsoid_added_inertia",
+  "n_criteria": 9,
+  "n_pass": 9,
+  "quadrature_crosscheck": {
+    "a_over_b": 3.0,
+    "closed_form": 0.028077983535093293,
+    "quadrature": 0.028077983535093363,
+    "rel_diff": 2.471293529763149e-15
+  },
+  "rho": 1.0
+}
