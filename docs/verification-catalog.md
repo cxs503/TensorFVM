@@ -667,3 +667,38 @@ python scripts/verification-taylor-green-mac/run.py
 ---
 
 **Note**: This catalog is a living document. As new verification cases are added or existing ones are improved, update this document accordingly. All verification claims must be backed by passing tests and documented evidence.
+
+---
+
+## 14. Added Mass and Added Inertia (Potential Flow)
+
+### 14.1 Potential-Flow Added Mass of Spheroids (Lamb Anchors)
+
+**Reference**: Lamb (1932) Hydrodynamics SS108-114; Newman (1977) SS4.4 -- exact ellipsoid
+added-mass factors (`M_ii = k_i rho V`, `k_1 = alpha0/(2-alpha0)`), with the closed form
+cross-checked against the defining elliptic integral.
+
+**Physics**: Added mass of a body in an unbounded ideal fluid,
+`M_ij = -rho * integral_S phi_i n_j dS` with `lap(phi_i) = 0`, `dphi_i/dn = -n_i` on the
+body; sphere (`Cm = 0.5`) and prolate spheroid (`a/b = 2`: `k1 = 0.210015`,
+`k2 = 0.704210`) as the analytic anchors.
+
+**Implementation**: `src/tensorfvm/panel_added_mass.py`
+**Driver**: `python -m tensorfvm.verification.added_mass_potential`
+**Tests**: `tests/test_added_mass_potential.py`
+**Report**: `docs/verification-added-mass-potential/REPORT.md`
+**Artifact**: `docs/verification-added-mass-potential/summary.json`
+
+**Verification Status**: PASS (8/8 criteria)
+
+**Key Metrics** (finest latitude/longitude panelisation, 1200 panels, consistent Gauss
+surface quadrature):
+- sphere `Cm` error -0.712 % (criterion < 3 %), Richardson -0.073 %
+- spheroid axial `k1` error -0.235 %, transverse `k2` error -1.092 % (< 3 %)
+- observed convergence order 1.791 to 3.205 on the four ladders
+- added-mass matrix symmetric, off-diagonals < 1e-10 of the diagonal
+- surface-integral quadrature consistency: the solver's Gauss rule beats the one-node
+  midpoint rule at every level of every ladder (worst error ratio 0.922, finest-level
+  reduction up to x3.91), i.e. the residual is the flat-panel geometry, not the quadrature
+
+---

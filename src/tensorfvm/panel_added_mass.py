@@ -90,6 +90,7 @@ __all__ = [
     "source_potential",
     "sphere_added_mass",
     "spheroid_panels",
+    "surface_quadrature",
 ]
 
 
@@ -147,53 +148,109 @@ def source_potential(points: np.ndarray, sigma: np.ndarray, panels: PanelSet, *,
     over the flat self-panel, and quadrature nodes that would coincide with the
     field point are dropped (the same near-field cutoff used for the velocity
     kernel).
+
+    ``sigma`` may be a single panel vector or a ``(k, n_panels)`` stack, in which
+    case ``(k, len(points))`` is returned.  The stacked form exists because the
+    :math:`1/|x - r'|` kernel does not depend on ``sigma``: the added-mass study
+    needs the potential of three (six) Neumann solutions at the same nodes, and
+    building the kernel once instead of per direction is what makes the
+    consistent Gauss quadrature affordable.
     """
     points = np.ascontiguousarray(points, dtype=float)
-    sigma = np.asarray(sigma, dtype=float)
+    sig = np.asarray(sigma, dtype=float)
+    single = sig.ndim == 1
+    sig = np.atleast_2d(sig)
     q, w = panel_quadrature(panels, order)
     nq, npan, _ = q.shape
     qf = q.reshape(-1, 3)
-    sw = sigma[None, :] * w.reshape(nq, npan)
-    out = np.zeros(points.shape[0])
+    sw = sig[:, None, :] * w.reshape(1, nq, npan)          # (k, nq, npan)
+    out = np.zeros((sig.shape[0], points.shape[0]))
     for spec in images:
         qq = image_points(qf, spec)
         for start in range(0, points.shape[0], chunk):
             stop = min(start + chunk, points.shape[0])
             d = (points[start:stop, None, :] - qq[None, :, :]).reshape(stop - start, nq, npan, 3)
             r2 = np.einsum("iqjk,iqjk->iqj", d, d)
-            r = np.sqrt(r2)
             with np.errstate(divide="ignore", invalid="ignore"):
-                k = sw.reshape(1, nq, npan) / (4.0 * np.pi * r)
-            k[~np.isfinite(k) | (r2 < 1.0e-20)] = 0.0
-            out[start:stop] += np.einsum("iqj->i", k)
-    return out
+                g = 1.0 / (4.0 * np.pi * np.sqrt(r2))
+            g[~np.isfinite(g) | (r2 < 1.0e-20)] = 0.0
+            out[:, start:stop] += np.einsum("kqj,iqj->ki", sw, g)
+    return out[0] if single else out
 
 
 # ---------------------------------------------------------------------------
 # added mass
 # ---------------------------------------------------------------------------
+def surface_quadrature(panels: PanelSet, *, order: int = 3, quadrature: str = "centroid"):
+    """Nodes, weights and six generators for the added-mass surface integral.
+
+    The Neumann problem is discretised with the bilinear Gauss rule of
+    :func:`panel_potential.panel_quadrature` (``order x order`` nodes per panel);
+    the added-mass integral must use the *same* rule, otherwise the surface
+    integral is only first-order accurate while the solver already represents the
+    double layer to higher order.  Two rules are available:
+
+    ``"centroid"``
+        One node per panel: ``(centroid, flat area, generators at the centroid)``
+        -- the historical midpoint rule, kept as the default so the numbers
+        published in the existing reports stay bit-reproducible.
+    ``"gauss"``
+        The solver's own ``order x order`` Gauss nodes with their area weights and
+        the generators evaluated at the nodes.  For a translation the generator
+        ``n_a`` is constant over the flat panel, for a rotation
+        ``psi_{3+a} = (r x n)_a`` varies linearly, so the Gauss rule integrates
+        both exactly up to the panel-representation (geometry) error.  This is the
+        rule used by the added-mass verification study; it removes the
+        *quadrature* part of the error and typically halves to thirds the
+        panel-count error at fixed panelisation.
+
+    Returns ``(nodes, weights, psi)`` with ``nodes``/``psi`` shaped ``(n, 3)`` and
+    ``(n, 6)``: ``psi[:, 0:3] = n`` (translation generators) and
+    ``psi[:, 3:6] = r x n`` (rotation generators), i.e. the values of
+    :func:`surface_generators` at the quadrature nodes.
+    """
+    if quadrature == "centroid":
+        nodes = panels.centroids
+        weights = panels.areas
+        psi = surface_generators(panels)
+        return nodes, weights, psi
+    if quadrature != "gauss":
+        raise ValueError("quadrature must be 'centroid' or 'gauss'")
+    q, w = panel_quadrature(panels, order)
+    nq, npan, _ = q.shape
+    nodes = np.ascontiguousarray(q.reshape(-1, 3))
+    weights = np.asarray(w, dtype=float).reshape(-1)
+    normals = np.broadcast_to(panels.normals[None, :, :], (nq, npan, 3)).reshape(-1, 3)
+    psi = np.concatenate([normals, np.cross(nodes, normals)], axis=1)
+    return nodes, weights, psi
+
+
 def added_mass_matrix(panels: PanelSet, *, rho: float = 1.0, order: int = 3,
                       directions: tuple[int, ...] = (0, 1, 2),
-                      images=IMAGE_SPECS["body"]) -> np.ndarray:
+                      images=IMAGE_SPECS["body"], quadrature: str = "centroid") -> np.ndarray:
     """Translational added-mass matrix ``M_ij = -rho * closed_integral phi_i n_j dS``.
 
     Row/column ``i`` are set only for the requested ``directions``; the other
     entries stay zero.  ``phi_i`` solves (2) via
     :func:`panel_potential.solve_sources` with ``U = e_i``, and the surface
-    integral is the panel-sum ``sum_p phi_i(x_p) n_j(x_p) A_p``.
+    integral is the panel-sum ``sum_n phi_i(x_n) n_j(x_n) w_n`` over the nodes of
+    :func:`surface_quadrature` (midpoint rule by default, the solver's own Gauss
+    rule with ``quadrature="gauss"``).
     """
     if rho <= 0.0:
         raise ValueError("rho must be positive")
     n = panels.n_panels
     out = np.zeros((3, 3))
-    areas = panels.areas
+    nodes, weights, psi = surface_quadrature(panels, order=order, quadrature=quadrature)
+    sigmas = []
     for i in directions:
         U = np.zeros(3)
         U[i] = 1.0
-        sigma = solve_sources(panels, U, order=order, images=images)
-        phi = source_potential(panels.centroids, sigma, panels, order=order, images=images)
-        # n points into the fluid (outward from the body) -> minus sign of (1)
-        out[i, :] = -rho * np.sum((phi * areas)[:, None] * panels.normals, axis=0)
+        sigmas.append(solve_sources(panels, U, order=order, images=images))
+    phi = source_potential(nodes, np.array(sigmas), panels, order=order, images=images)
+    # n points into the fluid (outward from the body) -> minus sign of (1)
+    for row, i in enumerate(directions):
+        out[i, :] = -rho * np.sum((phi[row] * weights)[:, None] * psi[:, :3], axis=0)
     if len(directions) == 3:
         # the discrete problem is symmetric in the ideal-fluid sense; average out
         # the quadrature asymmetry so the returned matrix is exactly symmetric
@@ -310,7 +367,8 @@ def surface_generators(panels: PanelSet) -> np.ndarray:
 def added_mass_matrix_6dof(panels: PanelSet, *, rho: float = 1.0, order: int = 3,
                            directions: tuple[int, ...] | None = None,
                            images=IMAGE_SPECS["body"],
-                           symmetrize: bool = True) -> np.ndarray:
+                           symmetrize: bool = True,
+                           quadrature: str = "centroid") -> np.ndarray:
     """Full ``6 x 6`` added-mass matrix about the coordinate origin.
 
     Generalises :func:`added_mass_matrix` from the translational block to the
@@ -343,21 +401,27 @@ def added_mass_matrix_6dof(panels: PanelSet, *, rho: float = 1.0, order: int = 3
     dirs = tuple(range(6)) if directions is None else tuple(int(d) for d in directions)
     if any(d < 0 or d > 5 for d in dirs):
         raise ValueError("directions must lie in 0..5")
-    psi = surface_generators(panels)[:, dirs]
-    areas = panels.areas
-    out = np.zeros((len(dirs), len(dirs)))
-    for row, a in enumerate(dirs):
-        sigma = solve_sources(panels, np.zeros(3), order=order, images=images,
-                              normal_velocity=psi[:, row])
-        phi = source_potential(panels.centroids, sigma, panels, order=order, images=images)
-        out[row, :] = -rho * ((phi * areas) @ psi)
+    nodes, weights, psi_all = surface_quadrature(panels, order=order, quadrature=quadrature)
+    psi = psi_all[:, dirs]
+    # The Neumann problem is solved on the flat panels, so its data is the
+    # panel-centroid generator (constant strength per panel); only the *surface
+    # integral* is refined by ``quadrature``.
+    solve_psi = surface_generators(panels)
+    sigmas = np.array([
+        solve_sources(panels, np.zeros(3), order=order, images=images,
+                      normal_velocity=solve_psi[:, a])
+        for a in dirs
+    ])
+    phi = source_potential(nodes, sigmas, panels, order=order, images=images)
+    out = -rho * ((phi * weights[None, :]) @ psi)
     if symmetrize and len(dirs) > 1:
         out = 0.5 * (out + out.T)
     return out
 
 
 def rotational_added_inertia(panels: PanelSet, *, rho: float = 1.0, order: int = 3,
-                             images=IMAGE_SPECS["body"]) -> np.ndarray:
+                             images=IMAGE_SPECS["body"],
+                             quadrature: str = "centroid") -> np.ndarray:
     """Rotational block of :func:`added_mass_matrix_6dof` (moments about the origin).
 
     This is the ``J`` term :mod:`tensorfvm.maneuvering.dynamics` needs for the
@@ -367,7 +431,7 @@ def rotational_added_inertia(panels: PanelSet, *, rho: float = 1.0, order: int =
     dominated by viscous/vortex effects rather than by potential flow.
     """
     full = added_mass_matrix_6dof(panels, rho=rho, order=order, images=images,
-                                  directions=(3, 4, 5))
+                                  directions=(3, 4, 5), quadrature=quadrature)
     return full
 
 
