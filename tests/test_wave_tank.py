@@ -24,7 +24,7 @@ from tensorfvm.six_dof import (
     hydrostatic_restoring_heave, hydrostatic_restoring_pitch,
 )
 from tensorfvm.wave_tank import (
-    WaveTankConfig, WaveTank,
+    TankConfig, WaveTank,
     compute_added_resistance_gerritsma_meijers,
 )
 
@@ -272,25 +272,23 @@ class TestSixDOF:
 
 class TestWaveTank:
     def test_wave_tank_creation(self):
-        cfg = WaveTankConfig(
+        cfg = TankConfig(
             nx=40, ny=20, length=4.0, height=2.0,
-            water_depth=0.5, wave_height=0.02, wave_period=1.0,
-            relaxation_length=0.5, damping_length=1.0,
-            device="cpu",
+            depth=0.5,
         )
         tank = WaveTank(cfg)
+        tank.set_wave(amp=0.02, period=1.0)
         assert tank.solver.alpha is not None
         assert tank.wp.k > 0
 
     def test_wave_tank_single_step(self):
         """Test a single step completes without error."""
-        cfg = WaveTankConfig(
-            nx=20, ny=10, length=2.0, height=1.5,
-            water_depth=0.5, wave_height=0.02, wave_period=1.0,
-            relaxation_length=0.3, damping_length=0.5,
-            device="cpu",
+        cfg = TankConfig(
+            nx=20, ny=12, length=2.0, height=1.5,
+            depth=0.5,
         )
         tank = WaveTank(cfg)
+        tank.set_wave(amp=0.02, period=1.0)
         tank.step(0.01)
         assert tank.time == 0.01
         assert tank.step_count == 1
