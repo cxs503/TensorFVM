@@ -1,0 +1,42 @@
+{
+ "artifact": "docs/repro-fvm-sod1978/artifacts/sod1978_t0.14.json",
+ "artifact_sha256": "c3aa16c302c0c01e542828d41874e625219c3706d4781596e01f08f1ce78cba9",
+ "figure": "docs/audit-m15310-repro-fvm-sod1978/m15310_audit_orders_vs_criterion.png",
+ "figure_sha256": "1c7e0c02914a550523856aa314cce97a4262d57f77fc5f8792f235ce0894a15a",
+ "c3_floor": 1.0,
+ "sod_l1_orders": {
+  "order1": [
+   0.6170296569436852,
+   0.6507461456683455,
+   0.6599905504510304
+  ],
+  "order2": [
+   0.9769815038332116,
+   0.8943030492362277,
+   0.8573255171043481
+  ]
+ },
+ "smooth_wave_orders": {
+  "order1": [
+   0.9936048092355894,
+   0.9968496708277893,
+   0.9985049098462108
+  ],
+  "order2": [
+   2.1321875699119066,
+   2.095812469690273,
+   2.045397166348823
+  ]
+ },
+ "verdicts": {
+  "C1_positions_within_2pct": true,
+  "C2_star_within_5pct": true,
+  "C3_sod_l1_order_ge_1_literal": false,
+  "C3_design_order_within_2pct_of_design": true,
+  "C3_design_order_ge_1_strict": false,
+  "conservation_accounted_drift_ok": true,
+  "no_positivity_repair": true,
+  "C3_grading_note": "C3 is graded twice: 'literal' is the L1 rate of the Sod solution itself, where a TVD/shock-capturing scheme cannot reach 1 because the contact and the fan edges are diffused (theory: first-order upwind ~0.5 at a moving contact); 'design' is the rate on a smooth periodic entropy wave with the same solver, which is how a scheme's order is certified.",
+  "all_mission_criteria_met": false
+ }
+}
