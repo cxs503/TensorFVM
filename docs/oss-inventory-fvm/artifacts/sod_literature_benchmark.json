@@ -1,0 +1,201 @@
+{
+ "case": "sod_shock_tube",
+ "feature_slug": "FEAT-OSS-INVENTORY-FVM",
+ "mission": 14887,
+ "generated_at": "2026-11-11T12:21:02+00:00",
+ "tensorfvm_commit": "f27c0c49",
+ "setup": {
+  "geometry": "1-D, x in [0,1], diaphragm at x0=0.5",
+  "initial_state": {
+   "left": {
+    "rho": 1.0,
+    "u": 0.0,
+    "p": 1.0
+   },
+   "right": {
+    "rho": 0.125,
+    "u": 0.0,
+    "p": 0.1
+   },
+   "gamma": 1.4
+  },
+  "t_end": 0.2,
+  "cfl": 0.4,
+  "flux": "HLLC",
+  "reconstruction": "MUSCL-MC",
+  "order": 2,
+  "nx_family": [
+   100,
+   200,
+   400
+  ]
+ },
+ "reference": {
+  "type": "published exact solution (independent of the repository)",
+  "published_values": {
+   "p_star": 0.30313,
+   "u_star": 0.92745,
+   "rho_star_left": 0.42632,
+   "rho_star_right": 0.26557,
+   "shock_speed": 1.75216,
+   "contact_speed": 0.92745,
+   "rarefaction_head_speed": -1.18322,
+   "rarefaction_tail_speed": -0.07042
+  },
+  "source": "Sod, G.A. (1978) 'A survey of several finite difference methods for systems of nonlinear hyperbolic conservation laws', J. Comput. Phys. 27, 1-31; star-state values as tabulated in Toro, E.F. (2009) 'Riemann Solvers and Numerical Methods for Fluid Dynamics', 3rd ed., Ch. 4 (standard Sod test).",
+  "independent_solver_self_check": {
+   "p_star": {
+    "computed": 0.3031301780506468,
+    "published": 0.30313,
+    "rel_err_pct": 5.873738883709661e-05
+   },
+   "u_star": {
+    "computed": 0.9274526200489499,
+    "published": 0.92745,
+    "rel_err_pct": 0.0002825002911109403
+   },
+   "rho_star_left": {
+    "computed": 0.42631942817849516,
+    "published": 0.42632,
+    "rel_err_pct": 0.00013412964552762848
+   },
+   "rho_star_right": {
+    "computed": 0.2655737117053071,
+    "published": 0.26557,
+    "rel_err_pct": 0.0013976372734525169
+   },
+   "shock_speed": {
+    "computed": 1.752155732030178,
+    "published": 1.75216,
+    "rel_err_pct": 0.0002435833383939096
+   },
+   "contact_speed": {
+    "computed": 0.9274526200489499,
+    "published": 0.92745,
+    "rel_err_pct": 0.0002825002911109403
+   }
+  },
+  "self_check_note": "the NumPy exact solver in this script is validated against the published star state before it is used to grade TensorFVM; errors are reported, not hidden"
+ },
+ "rows": [
+  {
+   "quantity": "p_star",
+   "ref": 0.30313,
+   "got": 0.30311733828071635,
+   "rel_err_pct": 0.004176993132866281,
+   "kind": "plateau",
+   "criterion_pct": 3.0
+  },
+  {
+   "quantity": "u_star",
+   "ref": 0.92745,
+   "got": 0.9275326334324898,
+   "rel_err_pct": 0.00890974526818916,
+   "kind": "plateau",
+   "criterion_pct": 3.0
+  },
+  {
+   "quantity": "rho_star_left",
+   "ref": 0.42632,
+   "got": 0.4262829217851162,
+   "rel_err_pct": 0.008697273147823498,
+   "kind": "plateau",
+   "criterion_pct": 3.0
+  },
+  {
+   "quantity": "rho_star_right",
+   "ref": 0.26557,
+   "got": 0.2655752069242614,
+   "rel_err_pct": 0.0019606598115092045,
+   "kind": "plateau",
+   "criterion_pct": 3.0
+  },
+  {
+   "quantity": "rarefaction_head_x",
+   "ref": 0.26335600000000003,
+   "got": 0.26625,
+   "rel_err_pct": 0.5787999999999904,
+   "kind": "position (rel. to unit domain)",
+   "criterion_pct": 1.0,
+   "criterion_cells": 4.0,
+   "err_cells": 1.157599999999981
+  },
+  {
+   "quantity": "rarefaction_tail_x",
+   "ref": 0.485916,
+   "got": 0.48625,
+   "rel_err_pct": 0.06680000000000019,
+   "kind": "position (rel. to unit domain)",
+   "criterion_pct": 1.0,
+   "criterion_cells": 4.0,
+   "err_cells": 0.1336000000000004
+  },
+  {
+   "quantity": "contact_x",
+   "ref": 0.68549,
+   "got": 0.68375,
+   "rel_err_pct": 0.34800000000001496,
+   "kind": "position (rel. to unit domain)",
+   "criterion_pct": 1.0,
+   "criterion_cells": 2.0,
+   "err_cells": 0.69600000000003
+  },
+  {
+   "quantity": "shock_x",
+   "ref": 0.8504320000000001,
+   "got": 0.84875,
+   "rel_err_pct": 0.33640000000001447,
+   "kind": "position (rel. to unit domain)",
+   "criterion_pct": 1.0,
+   "criterion_cells": 2.0,
+   "err_cells": 0.672800000000029
+  }
+ ],
+ "convergence": [
+  {
+   "nx": 100,
+   "l1_rho_vs_independent_exact": 0.004757024248873104,
+   "l1_u_vs_independent_exact": 0.008645437334356038,
+   "l1_p_vs_independent_exact": 0.003372582486694002,
+   "steps": 109,
+   "seconds": 1.6
+  },
+  {
+   "nx": 200,
+   "l1_rho_vs_independent_exact": 0.002439660025950866,
+   "l1_u_vs_independent_exact": 0.00437539731345732,
+   "l1_p_vs_independent_exact": 0.0016695055098579741,
+   "steps": 219,
+   "seconds": 3.67
+  },
+  {
+   "nx": 400,
+   "l1_rho_vs_independent_exact": 0.001335545339076122,
+   "l1_u_vs_independent_exact": 0.0023015536544029654,
+   "l1_p_vs_independent_exact": 0.000851419982540532,
+   "steps": 439,
+   "seconds": 8.62
+  }
+ ],
+ "verdict": {
+  "plateau_max_rel_err_pct": 0.00890974526818916,
+  "plateau_all_within_3pct": true,
+  "max_position_error_cells": 1.157599999999981,
+  "positions_within_tolerance": true,
+  "observed_order_rho": [
+   0.9633792615890304,
+   0.869251164453259
+  ],
+  "observed_order_ge_0_7": true
+ },
+ "repro_cmd": "python scripts/oss_inventory_fvm/sod_literature_benchmark.py --out docs/oss-inventory-fvm/artifacts",
+ "caveats": [
+  "plateau means are averaged over the interior of each constant region, so they measure the scheme's diffusion bias, not pointwise accuracy",
+  "positions are located by half-jump crossings; one-cell uncertainty is inherent and reported as err_cells",
+  "this verifies the compressible baseline that two proposed gaps (implicit dual time, low-Mach preconditioning) will be measured against; it does not validate any of the proposed gaps themselves"
+ ],
+ "figures": [
+  "sod_profiles_vs_exact.png",
+  "sod_published_errors.png"
+ ]
+}
