@@ -37,7 +37,7 @@
           "n_phi": 12,
           "n_theta": 16,
           "neumann_residual": 2.4424906541753444e-15,
-          "solve_seconds": 0.31441664695739746,
+          "solve_seconds": 0.18873381614685059,
           "volume_panel": 4.012411962557205,
           "volume_rel_error": -0.042107203656951864
         },
@@ -70,7 +70,7 @@
           "n_phi": 18,
           "n_theta": 24,
           "neumann_residual": 2.1538326677728037e-14,
-          "solve_seconds": 1.007178783416748,
+          "solve_seconds": 0.6139645576477051,
           "volume_panel": 4.109648378773596,
           "volume_rel_error": -0.018893719222882632
         },
@@ -103,7 +103,7 @@
           "n_phi": 24,
           "n_theta": 32,
           "neumann_residual": 2.3314683517128287e-14,
-          "solve_seconds": 3.032642126083374,
+          "solve_seconds": 1.7912607192993164,
           "volume_panel": 4.144123939016326,
           "volume_rel_error": -0.01066328548014328
         },
@@ -136,7 +136,7 @@
           "n_phi": 30,
           "n_theta": 40,
           "neumann_residual": 8.992806499463768e-14,
-          "solve_seconds": 6.4421164989471436,
+          "solve_seconds": 5.266071796417236,
           "volume_panel": 4.160159542839509,
           "volume_rel_error": -0.006835067059258959
         }
@@ -187,7 +187,7 @@
           "n_phi": 12,
           "n_theta": 16,
           "neumann_residual": 1.6653345369377348e-15,
-          "solve_seconds": 0.5971503257751465,
+          "solve_seconds": 0.21556520462036133,
           "volume_panel": 8.02482392511441,
           "volume_rel_error": -0.042107203656951864
         },
@@ -220,7 +220,7 @@
           "n_phi": 18,
           "n_theta": 24,
           "neumann_residual": 3.186340080674199e-14,
-          "solve_seconds": 1.8736493587493896,
+          "solve_seconds": 0.8255105018615723,
           "volume_panel": 8.219296757547191,
           "volume_rel_error": -0.018893719222882632
         },
@@ -253,7 +253,7 @@
           "n_phi": 24,
           "n_theta": 32,
           "neumann_residual": 4.030109579389318e-14,
-          "solve_seconds": 3.804720163345337,
+          "solve_seconds": 2.2721269130706787,
           "volume_panel": 8.288247878032651,
           "volume_rel_error": -0.01066328548014328
         },
@@ -286,7 +286,7 @@
           "n_phi": 30,
           "n_theta": 40,
           "neumann_residual": 1.4377388168895777e-13,
-          "solve_seconds": 7.300897121429443,
+          "solve_seconds": 5.156440496444702,
           "volume_panel": 8.320319085679017,
           "volume_rel_error": -0.006835067059258959
         }
@@ -354,7 +354,7 @@
       "statement": "added-mass matrix symmetric, off-diagonals and transverse split < 1e-10"
     }
   ],
-  "generated": "2026-11-11T05:18:01",
+  "generated": "2026-11-11T19:22:09",
   "levels": [
     {
       "n_phi": 12,
