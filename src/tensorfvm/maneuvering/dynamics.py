@@ -113,6 +113,11 @@ class ManoeuvreModel:
     ct_table_size: int = 21
     #: radius of gyration of the ship about z as a fraction of L
     k_zz_ratio: float = 0.25
+    #: replace the slender-body yaw added inertia ``J_z`` by an independently
+    #: computed value [kg m^2] (e.g. the potential-flow panel value of
+    #: :mod:`tensorfvm.maneuvering.added_inertia_panel`).  ``None`` keeps the
+    #: documented slender-body upper bound, which is the default.
+    j_z_override: Optional[float] = None
     _kt_table: Optional[Tuple[np.ndarray, np.ndarray]] = field(default=None,
                                                                repr=False)
     _derivatives: Optional[Dict[str, float]] = field(default=None, repr=False)
@@ -134,7 +139,16 @@ class ManoeuvreModel:
     @property
     def masses(self) -> Dict[str, float]:
         if self._masses is None:
-            self._masses = added_masses(self.hull_model)
+            masses = added_masses(self.hull_model)
+            if self.j_z_override is not None:
+                if self.j_z_override <= 0.0:
+                    raise ValueError("j_z_override must be positive")
+                masses = dict(masses)
+                masses["J_z"] = float(self.j_z_override)
+                masses["J_z_over_mass_L2"] = (
+                    masses["J_z"] / (self.conditions.mass * self.conditions.length ** 2))
+                masses["J_z_source"] = "override"
+            self._masses = masses
         return self._masses
 
     @property
