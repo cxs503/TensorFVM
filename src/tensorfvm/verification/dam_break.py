@@ -196,20 +196,28 @@ def run_dam_break(cfg: DamBreakConfig) -> dict:
         t = solver.time
         step_count += 1
 
-        # Extract surge front: rightmost cell with alpha > 0.5 at bottom row
+        # Extract surge front and column height
+        # alpha shape: (ny, nx) - first index is y (rows), second is x (columns)
         alpha = solver.alpha.detach().cpu().numpy()
-        # Surge front: find rightmost cell with alpha > 0.5 in the bottom half
-        bottom_mask = alpha[:, :cfg.nx//2].max(axis=0) > 0.5
-        if bottom_mask.any():
-            front_idx = int(np.where(bottom_mask)[0][-1])
+
+        # Surge front: rightmost cell with alpha > 0.5 in the bottom half (low y)
+        # Take bottom ny//4 rows, find max alpha in each column
+        bottom_rows = alpha[:cfg.ny // 4, :]  # shape: (ny//4, nx)
+        col_max = bottom_rows.max(axis=0)  # shape: (nx,)
+        wet_cols = np.where(col_max > 0.5)[0]
+        if len(wet_cols) > 0:
+            front_idx = int(wet_cols[-1])
             x_front = (front_idx + 0.5) * dx
         else:
             x_front = cfg.column_width
 
-        # Column height: max y with alpha > 0.5 at left edge
-        left_mask = alpha[:cfg.nx//4, :].max(axis=1) > 0.5
-        if left_mask.any():
-            h_idx = int(np.where(left_mask)[0][-1])
+        # Column height: highest cell with alpha > 0.5 in the left quarter (low x)
+        # Take left nx//4 columns, find max alpha in each row
+        left_cols = alpha[:, :cfg.nx // 4]  # shape: (ny, nx//4)
+        row_max = left_cols.max(axis=1)  # shape: (ny,)
+        wet_rows = np.where(row_max > 0.5)[0]
+        if len(wet_rows) > 0:
+            h_idx = int(wet_rows[-1])
             h_residual = (h_idx + 0.5) * dy
         else:
             h_residual = 0.0
