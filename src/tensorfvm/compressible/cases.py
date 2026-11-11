@@ -149,7 +149,8 @@ def two_gas_interface(nx: int = 400, *, flux_mode: str = "gfm", order: int = 2,
         "u_star": float(u_star),
         "p_star": float(p_star),
         "shock_speed_right": float(riem.shock_speed_r()),
-        "reflected_wave_speed": float(riem.shock_speed_l()),
+        "reflected_wave_speed": float(riem.wave_speed_l()),
+        "reflected_wave_kind": ("rarefaction" if float(p_star) < post["p"] else "shock"),
     }
     return solver, meta
 
@@ -250,7 +251,7 @@ def rm_analytic(cfg: RMConfig) -> Dict[str, float]:
         "k_a0_post": float(k * a0_post),
         "linear_growth_rate": float(k * a0_post * atwood * u_star),
         "shock_transit_time": float((cfg.x0 - cfg.shock_x) / post["shock_speed"]),
-        "reflected_shock_speed": float(riem.shock_speed_l()),
+        "reflected_shock_speed": float(riem.wave_speed_l()),
     }
 
 
@@ -339,7 +340,7 @@ def bubble_analytic(cfg: BubbleConfig) -> Dict[str, float]:
         "post_p": float(post["p"]),
         "incident_shock_speed": float(post["shock_speed"]),
         "transmitted_shock_speed": float(d_t),
-        "reflected_wave_speed": float(riem.shock_speed_l()),
+        "reflected_wave_speed": float(riem.wave_speed_l()),
         "reflected_is_rarefaction": bool(float(p_star) < post["p"]),
         "interface_speed": float(u_star),
         "p_interface": float(p_star),
