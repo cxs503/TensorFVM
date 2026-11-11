@@ -15,6 +15,8 @@ import torch
 from tensorfvm.compressible.eos import StiffenedGasMixture
 from tensorfvm.compressible.riemann import ExactRiemann, hllc_flux
 from tensorfvm.compressible.cases import (
+    BubbleConfig,
+    bubble_analytic,
     material_advection,
     normal_shock_state,
     sod,
@@ -68,6 +70,55 @@ def test_exact_riemann_matches_sod_star_state():
     assert float(u_star) == pytest.approx(0.92745, rel=2e-4)
     assert float(riem.density_star_r()) == pytest.approx(0.26557, rel=2e-4)
     assert float(riem.residual_norm()) < 1e-12
+
+
+def test_star_density_is_isentropic_when_the_wave_is_a_rarefaction():
+    """Regression: ``density_star_l`` applied the Hugoniot unconditionally.
+
+    The left wave of the Sod problem is a centred rarefaction, so
+    ``rho*_L = rho_L (p*/p_L)^(1/gamma) = 0.42632`` (Toro 2009 table 4.1).  The
+    Hugoniot branch returned 0.44720 (4.9 % high) and the star sound speed built
+    from it moved the fan tail from -0.07042 to -0.04670 (33.7 %).
+    """
+    riem = ExactRiemann(1.0, 0.0, 1.0, 1.4, 0.125, 0.0, 0.1, 1.4)
+    riem.solve()
+    assert float(riem.density_star_l()) == pytest.approx(0.42632, rel=2e-4)
+    assert float(riem.density_star_r()) == pytest.approx(0.26557, rel=2e-4)
+    # leading edge of the left rarefaction is the fan head u_L - c_L
+    assert float(riem.wave_speed_l()) == pytest.approx(-1.18322, rel=2e-4)
+    # the tabulated -0.07042 is rounded from -0.070273, hence the 0.5 % band
+    c_star_l = math.sqrt(1.4 * float(riem.pstar) / float(riem.density_star_l()))
+    assert float(riem.ustar) - c_star_l == pytest.approx(-0.07042, rel=5e-3)
+    # the accessor and the sampled exact solution must agree on both star states
+    # xi = -0.03 sits in the left star state, xi = 1.2 in the right one
+    rho, _, _ = riem.sample(torch.tensor([-0.03, 1.2], dtype=torch.float64))
+    assert float(rho[0]) == pytest.approx(float(riem.density_star_l()), rel=1e-12)
+    assert float(rho[1]) == pytest.approx(float(riem.density_star_r()), rel=1e-12)
+
+
+def test_star_density_keeps_the_hugoniot_behind_shocks():
+    """Converging flow: both waves are shocks, so the Hugoniot branch is used."""
+    riem = ExactRiemann(1.0, 0.5, 1.0, 1.4, 1.0, -0.5, 1.0, 1.4)
+    riem.solve()
+    g, ratio = 1.4, float(riem.pstar) / 1.0
+    assert ratio > 1.0                       # indeed two shocks
+    hugoniot = (ratio + (g - 1.0) / (g + 1.0)) / ((g - 1.0) / (g + 1.0) * ratio + 1.0)
+    assert float(riem.density_star_l()) == pytest.approx(hugoniot, rel=1e-12)
+    assert float(riem.density_star_r()) == pytest.approx(hugoniot, rel=1e-12)
+    # on a shock the leading-edge speed is the shock speed
+    assert float(riem.wave_speed_l()) == pytest.approx(float(riem.shock_speed_l()), rel=1e-12)
+    assert float(riem.wave_speed_r()) == pytest.approx(float(riem.shock_speed_r()), rel=1e-12)
+
+
+def test_reflected_wave_speed_reports_the_rarefaction_head():
+    """Shock--bubble metadata: the reflected wave is a rarefaction, so the speed
+    quoted for it must be the fan head ``u_post - c_post``, not the shock branch
+    (which gave -0.77226 instead of -0.86890, 11 % off)."""
+    analytic = bubble_analytic(BubbleConfig())
+    assert analytic["reflected_is_rarefaction"] is True
+    c_post = math.sqrt(1.4 * analytic["post_p"] / analytic["post_rho"])
+    assert analytic["reflected_wave_speed"] == pytest.approx(
+        analytic["post_u"] - c_post, rel=1e-12)
 
 
 def test_exact_riemann_sampling_is_consistent_at_both_ends():
