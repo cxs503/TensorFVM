@@ -1,0 +1,383 @@
+{
+  "all_pass": true,
+  "cases": [
+    {
+      "aspect_ratio": 1.0,
+      "k_axial_exact": 0.49999999999999994,
+      "k_transverse_exact": 0.49999999999999994,
+      "k_transverse_slender_bound": 1.5,
+      "label": "sphere",
+      "levels": [
+        {
+          "M_matrix": [
+            [
+              1.95554230397468,
+              -3.848917712323541e-18,
+              4.8043708768263915e-17
+            ],
+            [
+              -3.848917712323541e-18,
+              1.976617473656932,
+              -1.5842565432265532e-16
+            ],
+            [
+              4.8043708768263915e-17,
+              -1.5842565432265532e-16,
+              1.976617473656932
+            ]
+          ],
+          "M_offdiag_rel": 8.014988050750793e-17,
+          "M_transverse_split": 0.0,
+          "h_rel": 0.07216878364870323,
+          "k_axial_panel": 0.46685133615432617,
+          "k_axial_rel_error": -0.06629732769134755,
+          "k_transverse_panel": 0.47188266230147247,
+          "k_transverse_rel_error": -0.056234675397054956,
+          "n_panels": 192,
+          "n_phi": 12,
+          "n_theta": 16,
+          "neumann_residual": 2.4424906541753444e-15,
+          "solve_seconds": 0.31441664695739746,
+          "volume_panel": 4.012411962557205,
+          "volume_rel_error": -0.042107203656951864
+        },
+        {
+          "M_matrix": [
+            [
+              2.026156012524073,
+              2.0816681711721685e-17,
+              -9.225035828546585e-17
+            ],
+            [
+              2.0816681711721685e-17,
+              2.0333619313633515,
+              9.618927324843516e-17
+            ],
+            [
+              -9.225035828546585e-17,
+              9.618927324843516e-17,
+              2.033361931363354
+            ]
+          ],
+          "M_offdiag_rel": 4.730553462459138e-17,
+          "M_transverse_split": 1.3104087462254336e-15,
+          "h_rel": 0.048112522432468816,
+          "k_axial_panel": 0.4837091173028557,
+          "k_axial_rel_error": -0.032581765394288476,
+          "k_transverse_panel": 0.4854294037070413,
+          "k_transverse_rel_error": -0.029141192585917297,
+          "n_panels": 432,
+          "n_phi": 18,
+          "n_theta": 24,
+          "neumann_residual": 2.1538326677728037e-14,
+          "solve_seconds": 1.007178783416748,
+          "volume_panel": 4.109648378773596,
+          "volume_rel_error": -0.018893719222882632
+        },
+        {
+          "M_matrix": [
+            [
+              2.052698632274871,
+              1.4907779871675686e-17,
+              1.1436638853827563e-17
+            ],
+            [
+              1.4907779871675686e-17,
+              2.055227239866251,
+              1.6286246583993255e-16
+            ],
+            [
+              1.1436638853827563e-17,
+              1.6286246583993255e-16,
+              2.0552272398662534
+            ]
+          ],
+          "M_offdiag_rel": 7.924304557705795e-17,
+          "M_transverse_split": 1.0803895579910735e-15,
+          "h_rel": 0.036084391824351615,
+          "k_axial_panel": 0.4900457010067778,
+          "k_axial_rel_error": -0.019908597986444287,
+          "k_transverse_panel": 0.49064936160273986,
+          "k_transverse_rel_error": -0.01870127679452016,
+          "n_panels": 768,
+          "n_phi": 24,
+          "n_theta": 32,
+          "neumann_residual": 2.3314683517128287e-14,
+          "solve_seconds": 3.032642126083374,
+          "volume_panel": 4.144123939016326,
+          "volume_rel_error": -0.01066328548014328
+        },
+        {
+          "M_matrix": [
+            [
+              2.0656666659876812,
+              1.4505947441498246e-16,
+              3.396284481134524e-18
+            ],
+            [
+              1.4505947441498246e-16,
+              2.0662395348287834,
+              -2.7196844890351395e-17
+            ],
+            [
+              3.396284481134524e-18,
+              -2.7196844890351395e-17,
+              2.066239534828784
+            ]
+          ],
+          "M_offdiag_rel": 7.020457791550417e-17,
+          "M_transverse_split": 2.1492629599058637e-16,
+          "h_rel": 0.028867513459481284,
+          "k_axial_panel": 0.4931415910081419,
+          "k_axial_rel_error": -0.013716817983716045,
+          "k_transverse_panel": 0.49327835336984904,
+          "k_transverse_rel_error": -0.013443293260301803,
+          "n_panels": 1200,
+          "n_phi": 30,
+          "n_theta": 40,
+          "neumann_residual": 8.992806499463768e-14,
+          "solve_seconds": 6.4421164989471436,
+          "volume_panel": 4.160159542839509,
+          "volume_rel_error": -0.006835067059258959
+        }
+      ],
+      "order_axial": 1.7211977669468184,
+      "order_transverse": 1.564159736693859,
+      "richardson_axial_rel_error": -0.0004937055384101052,
+      "richardson_k_axial": 0.4997531472307949,
+      "richardson_k_transverse": 0.4995724032115775,
+      "richardson_transverse_rel_error": -0.000855193576844937,
+      "semi_axis_a": 1.0,
+      "semi_axis_b": 1.0,
+      "volume_exact": 4.1887902047863905
+    },
+    {
+      "aspect_ratio": 2.0,
+      "k_axial_exact": 0.21001504897664153,
+      "k_transverse_exact": 0.704210425850353,
+      "k_transverse_slender_bound": 1.5,
+      "label": "spheroid_ar2",
+      "levels": [
+        {
+          "M_matrix": [
+            [
+              1.6705586178279708,
+              3.122502256758253e-17,
+              3.3285006695304986e-17
+            ],
+            [
+              3.122502256758253e-17,
+              5.4085432442856165,
+              -3.6385147282255725e-16
+            ],
+            [
+              3.3285006695304986e-17,
+              -3.6385147282255725e-16,
+              5.408543244285617
+            ]
+          ],
+          "M_offdiag_rel": 6.727347020974337e-17,
+          "M_transverse_split": 1.6421767925005092e-16,
+          "h_rel": 0.07216878364870323,
+          "k_axial_panel": 0.19940824631406454,
+          "k_axial_rel_error": -0.050504964831147414,
+          "k_transverse_panel": 0.6455972941907494,
+          "k_transverse_rel_error": -0.08323241109193558,
+          "n_panels": 192,
+          "n_phi": 12,
+          "n_theta": 16,
+          "neumann_residual": 1.6653345369377348e-15,
+          "solve_seconds": 0.5971503257751465,
+          "volume_panel": 8.02482392511441,
+          "volume_rel_error": -0.042107203656951864
+        },
+        {
+          "M_matrix": [
+            [
+              1.7213378019020649,
+              -8.68445940160889e-17,
+              -6.776263578034403e-19
+            ],
+            [
+              -8.68445940160889e-17,
+              5.627034367054027,
+              -3.810174425316129e-16
+            ],
+            [
+              -6.776263578034403e-19,
+              -3.810174425316129e-16,
+              5.627034367054029
+            ]
+          ],
+          "M_offdiag_rel": 6.77119451699902e-17,
+          "M_transverse_split": 3.156826000211978e-16,
+          "h_rel": 0.048112522432468816,
+          "k_axial_panel": 0.20546956492773852,
+          "k_axial_rel_error": -0.021643611117642236,
+          "k_transverse_panel": 0.6716777508484675,
+          "k_transverse_rel_error": -0.04619737766960985,
+          "n_panels": 432,
+          "n_phi": 18,
+          "n_theta": 24,
+          "neumann_residual": 3.186340080674199e-14,
+          "solve_seconds": 1.8736493587493896,
+          "volume_panel": 8.219296757547191,
+          "volume_rel_error": -0.018893719222882632
+        },
+        {
+          "M_matrix": [
+            [
+              1.739029574757445,
+              -2.4245471082207093e-17,
+              1.1056659873689284e-16
+            ],
+            [
+              -2.4245471082207093e-17,
+              5.716092882512448,
+              -8.237494938419373e-16
+            ],
+            [
+              1.1056659873689284e-16,
+              -8.237494938419373e-16,
+              5.716092882512445
+            ]
+          ],
+          "M_offdiag_rel": 1.4411058580977204e-16,
+          "M_transverse_split": 4.661462495216151e-16,
+          "h_rel": 0.036084391824351615,
+          "k_axial_panel": 0.20758136475423308,
+          "k_axial_rel_error": -0.011588142060615536,
+          "k_transverse_panel": 0.6823083280681924,
+          "k_transverse_rel_error": -0.031101638058983805,
+          "n_panels": 768,
+          "n_phi": 24,
+          "n_theta": 32,
+          "neumann_residual": 4.030109579389318e-14,
+          "solve_seconds": 3.804720163345337,
+          "volume_panel": 8.288247878032651,
+          "volume_rel_error": -0.01066328548014328
+        },
+        {
+          "M_matrix": [
+            [
+              1.7470760642849594,
+              5.685285141970864e-17,
+              -7.969923583128844e-17
+            ],
+            [
+              5.685285141970864e-17,
+              5.762907618071656,
+              9.696968176043199e-17
+            ],
+            [
+              -7.969923583128844e-17,
+              9.696968176043199e-17,
+              5.76290761807166
+            ]
+          ],
+          "M_offdiag_rel": 1.6826520254523748e-17,
+          "M_transverse_split": 6.164793736515396e-16,
+          "h_rel": 0.028867513459481284,
+          "k_axial_panel": 0.20854184369136392,
+          "k_axial_rel_error": -0.007014760572902845,
+          "k_transverse_panel": 0.6878964254985337,
+          "k_transverse_rel_error": -0.023166371517603812,
+          "n_panels": 1200,
+          "n_phi": 30,
+          "n_theta": 40,
+          "neumann_residual": 1.4377388168895777e-13,
+          "solve_seconds": 7.300897121429443,
+          "volume_panel": 8.320319085679017,
+          "volume_rel_error": -0.006835067059258959
+        }
+      ],
+      "order_axial": 2.1513119448189686,
+      "order_transverse": 1.3978257552974993,
+      "richardson_axial_rel_error": 0.0004076628464599885,
+      "richardson_k_axial": 0.21010066430930677,
+      "richardson_k_transverse": 0.7031627964917548,
+      "richardson_transverse_rel_error": -0.001487665220708867,
+      "semi_axis_a": 2.0,
+      "semi_axis_b": 1.0,
+      "volume_exact": 8.377580409572781
+    }
+  ],
+  "criteria": [
+    {
+      "id": "C1",
+      "limit_pct": 3.0,
+      "measured_pct": 1.3716817983716045,
+      "pass": true,
+      "statement": "sphere Cm = M/(rho V) within 3 % of 0.5 (finest panelisation)"
+    },
+    {
+      "id": "C2",
+      "limit_pct": 3.0,
+      "measured_pct": 0.7014760572902845,
+      "pass": true,
+      "statement": "spheroid axial k within 3 % of Lamb value (finest panelisation)"
+    },
+    {
+      "id": "C3",
+      "limit_pct": 3.0,
+      "measured_pct": 2.316637151760381,
+      "pass": true,
+      "statement": "spheroid transverse k within 3 % of Lamb value (finest panelisation)"
+    },
+    {
+      "id": "C6a",
+      "limit_pct": 1.0,
+      "measured_pct": 0.04937055384101052,
+      "pass": true,
+      "statement": "Richardson-extrapolated sphere Cm within 1 % of 0.5"
+    },
+    {
+      "id": "C6b",
+      "limit_pct": 1.0,
+      "measured_pct": 0.1487665220708867,
+      "pass": true,
+      "statement": "Richardson-extrapolated spheroid transverse k within 1 % of Lamb"
+    },
+    {
+      "id": "C4",
+      "limit": 1.0,
+      "measured": 1.3978257552974993,
+      "pass": true,
+      "statement": "observed convergence order p >= 1 on every ladder"
+    },
+    {
+      "id": "C5",
+      "limit": 1e-10,
+      "measured_max_offdiag_rel": 7.020457791550417e-17,
+      "measured_transverse_split": 6.164793736515396e-16,
+      "pass": true,
+      "statement": "added-mass matrix symmetric, off-diagonals and transverse split < 1e-10"
+    }
+  ],
+  "generated": "2026-11-11T05:18:01",
+  "levels": [
+    {
+      "n_phi": 12,
+      "n_theta": 16
+    },
+    {
+      "n_phi": 18,
+      "n_theta": 24
+    },
+    {
+      "n_phi": 24,
+      "n_theta": 32
+    },
+    {
+      "n_phi": 30,
+      "n_theta": 40
+    }
+  ],
+  "schema": "tensorfvm.potential-added-mass-verification/1",
+  "tolerances": {
+    "min_observed_order": 1.0,
+    "panel_error_pct": 3.0,
+    "richardson_error_pct": 1.0,
+    "symmetry_tol": 1e-10
+  }
+}
