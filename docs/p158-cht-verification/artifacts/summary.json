@@ -1,0 +1,16 @@
+{
+ "A1_flat_plate_max_rel_error_vs_similarity": 0.00046545222463767466,
+ "A1_pass": true,
+ "A2_solid_max_rel_error": 0.0013904920551337163,
+ "A2_pass": true,
+ "A3_cylinder_max_rel_error_vs_churchill_bernstein": 0.13045926427307053,
+ "A3_pass": false,
+ "A4_interface_max_rel_residual": 1.4307409407396892e-13,
+ "A4_pass": true,
+ "A5_observed_order": 2.5531136453572283,
+ "A5_pass": true,
+ "cylinder_cases": [
+  "cyl_re100_pr0.7_coarse",
+  "cyl_re40_pr0.7_coarse"
+ ]
+}
