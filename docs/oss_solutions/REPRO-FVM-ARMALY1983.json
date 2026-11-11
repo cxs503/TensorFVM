@@ -1,0 +1,62 @@
+{
+  "feature_slug": "REPRO-FVM-ARMALY1983",
+  "title": "Armaly et al. (1983) backward-facing step reproduction in TensorFVM",
+  "status": "in_progress",
+  "round": 2,
+  "external_anchor": "Armaly, B. F., Durst, F., Pereira, J. C. F. & Schoenung, B. (1983), J. Fluid Mech. 127, 473-496",
+  "quantitative_targets": {
+    "reattachment_Re100": {"value": 3.0, "tolerance": 0.15, "unit": "step_heights"},
+    "reattachment_Re389": {"value": 7.9, "tolerance": 0.15, "unit": "step_heights"},
+    "profile_deviation": {"value": 0.0, "tolerance": 0.05, "unit": "fraction_of_peak"}
+  },
+  "method_survey": {
+    "survey_date": "2026-11-11",
+    "survey_doc": "docs/repro-armaly1983-bfs/research/method_survey.md",
+    "key_findings": [
+      "一阶迎风+延迟修正在粗网格(S/16)上误差~11%，主因是数值耗散",
+      "网格加密至S/49可将误差降至~3-5%（文献Erturk 2008支持）",
+      "Re=389需要>20S下游长度才能使出口剖面充分发展",
+      "QUICK格式+细网格可达<1%误差，但实现复杂度较高"
+    ],
+    "selected_approach": "网格加密（fine: S/49）+ 长域（40S）验证，保持现有SIMPLE框架",
+    "rationale": "最小改动路径：不改求解器物理，仅通过网格分辨率提升精度"
+  },
+  "previous_rounds": {
+    "round1_m15213": {
+      "status": "partial_pass",
+      "results": {
+        "Re100_coarse_12S": {"L_r/S": 2.645, "error_pct": 11.84, "pass_15pct": true},
+        "Re389_coarse_12S": {"L_r/S": 7.086, "error_pct": 10.31, "pass_15pct": true},
+        "Re389_profile_12S": {"max_rel": 0.109, "pass_5pct": false, "reason": "domain_too_short"}
+      },
+      "artifacts": "docs/repro-armaly1983-bfs/artifacts/"
+    },
+    "round2_m15341": {
+      "status": "honest_fail",
+      "fail_stage": "unknown",
+      "failure_reason": "未留记录"
+    }
+  },
+  "current_round_m15386": {
+    "status": "in_progress",
+    "cluster_jobs": ["cj1103 (7 shards, original matrix)", "cj1105 (11 shards, extended with fine grid)"],
+    "deliverables": [
+      "方法调研文档 (docs/repro-armaly1983-bfs/research/method_survey.md)",
+      "扩展集群作业（含fine网格和40S域）",
+      "网格收敛性分析（待集群结果）",
+      "更新版复现报告（待集群结果）"
+    ]
+  },
+  "code_pointers": {
+    "solver": "src/tensorfvm/inc_bench/solver.py (SteadyFlow, SIMPLE on staggered MAC)",
+    "case_factory": "src/tensorfvm/inc_bench/cases.py (backward_step)",
+    "analysis": "src/tensorfvm/inc_bench/armaly.py (ReproductionRun, metrics)",
+    "reference": "src/tensorfvm/inc_bench/reference.py (benchmark values)",
+    "tests": "tests/test_armaly1983_reproduction.py (5 tests, all passing)",
+    "scripts": [
+      "scripts/repro_armaly1983_bfs.py (CLI runner)",
+      "scripts/plot_armaly1983.py (figure generation)",
+      "scripts/_cluster_armaly.sh (cluster shard launcher)"
+    ]
+  }
+}
