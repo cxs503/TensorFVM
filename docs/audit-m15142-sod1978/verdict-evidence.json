@@ -1,0 +1,35 @@
+{
+  "impl_files": [
+    "src/tensorfvm/verification/sod1978.py",
+    "src/tensorfvm/compressible/riemann.py",
+    "src/tensorfvm/compressible/cases.py",
+    "scripts/repro_fvm_sod1978.py"
+  ],
+  "entry": "scripts/repro_fvm_sod1978.py (CLI) -> tensorfvm.verification.sod1978:main",
+  "run_artifacts": [
+    "docs/repro-fvm-sod1978/README.md",
+    "docs/repro-fvm-sod1978/artifacts/sod1978_t0.14.json",
+    "docs/repro-fvm-sod1978/artifacts/sod_profiles_t0.14.png",
+    "docs/repro-fvm-sod1978/artifacts/sod_convergence.png",
+    "docs/repro-fvm-sod1978/artifacts/sod_criteria_margins.png",
+    "docs/repro-fvm-sod1978/artifacts/sod_profiles_t0.2_paper_time.png"
+  ],
+  "tests": [
+    "tests/test_repro_fvm_sod1978.py (6 passed)",
+    "tests/test_compressible_eos_riemann.py (15 passed)"
+  ],
+  "integration_callers": "tensorfvm.compressible public layer (HLLC flux, ExactRiemann); merged to main via PR #419 (merge commit 47f1056f)",
+  "benchmark": "tensor_benchmark_cases: 0 rows for anchor_slug='REPRO-FVM-SOD1978' (ledger gap, recommend registering case); de facto criteria = mission goal tolerances + artifact JSON criteria block: C1 4/4 PASS (max 0.365% < 2%), C2 4/4 PASS (max 0.014% < 5%), C3 literal FAIL (Sod L1 order 0.617-0.660 o1 / 0.857-0.977 o2 < 1, honest FAIL), smooth-wave design order 0.994-0.999 (o1) / 2.045-2.132 (o2) within 2% band",
+  "repro_cmd": "python scripts/repro_fvm_sod1978.py --out docs/repro-fvm-sod1978",
+  "external_anchor": "Sod (1978) J. Comput. Phys. 27:1-31; star-state values per Toro (2009) 3rd ed. Ch.4",
+  "audit": {
+    "auditor_mission": "m15222",
+    "tests_rerun": "21 passed in 87.08s (2026-11-11)",
+    "report_id": 14285,
+    "report_sections": 7,
+    "report_numbers_match_artifact_json": true,
+    "pr": 419,
+    "merge_commit": "47f1056f",
+    "c3_note": "C3 literal FAIL honestly declared; TVD scheme cannot reach L1 order 1 on discontinuous solution; design order certified on smooth entropy wave; conservation drift ~1e-16, positivity_fixes=0"
+  }
+}
