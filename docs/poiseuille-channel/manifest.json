@@ -1,0 +1,45 @@
+{
+  "torch": "2.7.1",
+  "python": "3.11.6",
+  "dtype": "float64",
+  "solver": "tensorfvm.inc_bench.solver.SteadyFlow",
+  "tolerance": 0.02,
+  "plan": [
+    {
+      "case": "mesh-ny8",
+      "ny": 8,
+      "re_h": 100.0,
+      "aspect": 4.0
+    },
+    {
+      "case": "mesh-ny16",
+      "ny": 16,
+      "re_h": 100.0,
+      "aspect": 4.0
+    },
+    {
+      "case": "mesh-ny32",
+      "ny": 32,
+      "re_h": 100.0,
+      "aspect": 4.0
+    },
+    {
+      "case": "re-10",
+      "ny": 16,
+      "re_h": 10.0,
+      "aspect": 4.0
+    },
+    {
+      "case": "re-1000",
+      "ny": 16,
+      "re_h": 1000.0,
+      "aspect": 4.0
+    },
+    {
+      "case": "aspect-8",
+      "ny": 16,
+      "re_h": 100.0,
+      "aspect": 8.0
+    }
+  ]
+}
