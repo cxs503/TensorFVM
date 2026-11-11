@@ -1,0 +1,97 @@
+{
+  "zalesak": [
+    {
+      "case": "zalesak",
+      "scheme": "cicsam",
+      "cells": 128,
+      "geom_err_reported": 0.043785310734463276,
+      "geom_err_audited": 0.043785310734463276,
+      "geom_err_audited_vs_independent_ref": 0.043785310734463276,
+      "exact_field_maxdiff_vs_independent": 0.0,
+      "mass_drift_reported": 4.817238886509154e-16,
+      "mass_drift_audited": 4.817238886509154e-16,
+      "bound_violation_reported": 0.0,
+      "bound_violation_audited": 0.0,
+      "peak_retention_report": 1.0,
+      "rel_delta_geom": 0.0
+    },
+    {
+      "case": "zalesak",
+      "scheme": "cicsam",
+      "cells": 64,
+      "geom_err_reported": 0.11046511627906977,
+      "geom_err_audited": 0.11046511627906977,
+      "geom_err_audited_vs_independent_ref": 0.11046511627906977,
+      "exact_field_maxdiff_vs_independent": 0.0,
+      "mass_drift_reported": 5.419953891379369e-14,
+      "mass_drift_audited": 5.419953891379369e-14,
+      "bound_violation_reported": 0.0,
+      "bound_violation_audited": 0.0,
+      "peak_retention_report": 1.0,
+      "rel_delta_geom": 0.0
+    },
+    {
+      "case": "zalesak",
+      "scheme": "plic",
+      "cells": 128,
+      "geom_err_reported": 0.03954802259887006,
+      "geom_err_audited": 0.03954802259887006,
+      "geom_err_audited_vs_independent_ref": 0.03954802259887006,
+      "exact_field_maxdiff_vs_independent": 0.0,
+      "mass_drift_reported": 6.422985182012205e-16,
+      "mass_drift_audited": 6.422985182012205e-16,
+      "bound_violation_reported": 0.0,
+      "bound_violation_audited": 0.0,
+      "peak_retention_report": 1.0,
+      "rel_delta_geom": 0.0
+    },
+    {
+      "case": "zalesak",
+      "scheme": "plic",
+      "cells": 64,
+      "geom_err_reported": 0.09302325581395349,
+      "geom_err_audited": 0.09302325581395349,
+      "geom_err_audited_vs_independent_ref": 0.09302325581395349,
+      "exact_field_maxdiff_vs_independent": 0.0,
+      "mass_drift_reported": 8.757852324484956e-15,
+      "mass_drift_audited": 8.757852324484956e-15,
+      "bound_violation_reported": 0.0,
+      "bound_violation_audited": 0.0,
+      "peak_retention_report": 1.0,
+      "rel_delta_geom": 0.0
+    }
+  ],
+  "dambreak": [
+    {
+      "case": "dambreak",
+      "grid": [
+        120,
+        40
+      ],
+      "front_max_rel_reported": 0.9882294435916724,
+      "front_max_rel_audited": 83.95775096005731,
+      "front_mean_rel_audited": 2.5682625261246312,
+      "height_max_rel_reported": 0.8449810709776245,
+      "height_max_rel_audited": 9.514018691588783,
+      "volume_drift_reported": 4.113968717731558e-16,
+      "control_max_abs_change": 0.0
+    },
+    {
+      "case": "dambreak",
+      "grid": [
+        240,
+        80
+      ],
+      "front_max_rel_reported": 0.8477377462128339,
+      "front_max_rel_audited": 5.567615906945733,
+      "front_mean_rel_audited": 0.8248223821500651,
+      "height_max_rel_reported": 0.826482959658176,
+      "height_max_rel_audited": 7.428030303030302,
+      "volume_drift_reported": 1.3117001708709316e-16,
+      "control_max_abs_change": 0.0
+    }
+  ],
+  "gates_total": 10,
+  "gates_passed": 8,
+  "gates_reported": "8/10"
+}
