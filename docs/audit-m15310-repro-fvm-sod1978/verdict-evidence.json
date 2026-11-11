@@ -1,0 +1,43 @@
+{
+ "repo": "TensorFVM",
+ "scope": "m15310 REPRO-FVM-SOD1978",
+ "mission_id": 15344,
+ "level": 3,
+ "verdict_by": "board-audit",
+ "impl_files": "src/tensorfvm/verification/sod1978.py:1-852 (tracked, HEAD dfd36259) + src/tensorfvm/verification/sod1978_convergence.py:1-519 (UNTRACKED in /root/tp-agent/work/m15310) + src/tensorfvm/compressible/reconstruct.py:43-57 superbee limiter (UNCOMMITTED diff +13/-2)",
+ "entry": "scripts/repro_fvm_sod1978.py:22 -> tensorfvm.verification.sod1978:main (tracked); scripts/sod1978_convergence_study.py:31 -> tensorfvm.verification.sod1978_convergence:run_study (UNTRACKED)",
+ "run_artifacts": "docs/repro-fvm-sod1978/artifacts/sod1978_t0.14.json sha256=c3aa16c302c0c01e542828d41874e625219c3706d4781596e01f08f1ce78cba9 + 4 png (tracked) | docs/repro-fvm-sod1978-convergence/study.json (UNTRACKED, config.grids=[50,100,200] = --quick smoke, declared CLI default 100..6400)",
+ "tests": "tests/test_repro_fvm_sod1978.py 6 passed in 40.94s (rerun in clean worktree m15344); tests/test_sod1978_convergence.py 14 passed in 15.88s (rerun in m15310)",
+ "integration_callers": "src/tensorfvm/compressible/cases.py:95 cases.sod -> src/tensorfvm/compressible/solver.py:61 EulerSolver + solver.py:522 run(); flux src/tensorfvm/compressible/riemann.py (ExactRiemann)",
+ "benchmark": "tensor_benchmark_cases id=15 anchor_slug=REPRO-FVM-SOD1978 status=pending -> C1 PASS (4/4, 0.03049-0.36524% < 2%); C2 PASS (4/4, 0.00363-0.01421% < 5%); C3 FAIL (literal L1 order order1=0.6170296569436852/0.6507461456683455/0.6599905504510304, order2=0.9769815038332116/0.8943030492362277/0.8573255171043481, requirement >=1.0 unchanged); R3 PASS only on quick grids (restricted rate order2=1.8215153533644675 >= 2*0.85); R5 order1 PASS (0.9936048092355894/0.9968496708277893/0.9985049098462108, <=0.64% of 1.0), R5 order2 WINDOW-DEPENDENT (2.1321875699119066/2.095812469690273/2.045397166348823: finest pair +2.27% inside 3%, coarsest pair +6.6% outside; round-2 quick pair 50-100 gives 1.9382388818828327 = -3.09% -> its own verdict smooth_design_order_met.order2=false while round-1 verdict C3_design_order_within_2pct_of_design=true). all_mission_criteria_met=false in the artifact itself.",
+ "repro_cmd": "PYTHONPATH=src python scripts/repro_fvm_sod1978.py --out /tmp/audit_sod_partial --grids 100,200,400 --orders 1,2 --no-figures -> reproduced C1/C2 all 8 rows and l1_orders_sod digit-for-digit vs committed artifact, verdicts dict equal; real exit code = 1 (script returns 1 when all_mission_criteria_met is false). Shorter run --grids 100,200 --orders 1 -> exit code 1 confirmed.",
+ "external_anchor": "Sod, G. A. (1978) J. Comput. Phys. 27:1-31; published star state p*=0.30313 u*=0.92745 rho*_L=0.42632 rho*_R=0.26557 vs the module's own NumPy exact Riemann solver: max gap 0.209% (S_tail), others <=0.0014%",
+ "audit": {
+  "auditor_mission": "m15344",
+  "audited_mission": "m15310 (repro-fvm-sod1978-r2, status=succeeded via TP_AUTO_APPROVE_DEV_ACCEPTANCE)",
+  "audited_head": "dfd36259",
+  "findings": [
+   "B1 blocking: benchmark C3 (L1 order >= 1.0 literal) measured FAIL (order1 0.617/0.651/0.660, order2 0.977/0.894/0.857) -> L4 benchmark validation not granted",
+   "B2 blocking: round-2 deliverables untracked (git status ?? x4, M reconstruct.py, head_commit=null); running the round-2 CLI on clean HEAD raises ValueError unknown limiter 'superbee'",
+   "B3 blocking: the only round-2 artifact is a --quick run (grids [50,100,200], smooth_grids [50,100]) while the asymptotic verdicts (c3_asymptotic_met, sublinear_convergence_observed) need the declared nx>=1600 sweep that never returned from cluster job cj1062",
+   "B4 blocking: benchmark row id=15 created at 2026-11-11 22:20:21, inside m15310's own window (report 22:20:20, finish 22:20:40) and m15310's result states it inserted that row; judge authored by the graded party, row left pending",
+   "N1 non-blocking: R5/R3 order criteria are window-dependent (same solver, order2 rate 2.045 at 100-800 vs 1.938 at 50-100) while the benchmark text fixes no window -> opposite verdicts from round 1 and round 2",
+   "positive: independent reference (own exact Riemann solver, <=0.209% vs published), C1/C2 pass with large margin, conservation drift <=1.6e-16, positivity_fixes=0, artifacts reproduce bit-identically"
+  ],
+  "checks_run": [
+   "clean-worktree rerun of repro_cmd (numbers identical, exit code 1)",
+   "pytest tests/test_repro_fvm_sod1978.py (6 passed)",
+   "pytest tests/test_sod1978_convergence.py (14 passed)",
+   "LIMITERS inspection on clean HEAD vs m15310 worktree",
+   "git ls-files / git status on both worktrees",
+   "SQL: tensor_benchmark_cases id=15, tensor_dev_missions 15310, tensor_reports 14406/14285, tensor_maturity_verdicts 261/282"
+  ],
+  "checks_not_run": [
+   "full declaration grid sweep to nx=6400 (cluster job cj1073 submitted by this audit is still queued; cj1062 from m15310 never returned)",
+   "no PDF re-parse of Sod (1978): reference numbers are the published star state as tabulated in Toro (2009) ch.4; the independent exact solver is the cross-check"
+  ],
+  "disposition": "request changes (commit round-2 files, run the declared grid set, fix R5/R3 window definition through the benchmark-change channel); board level L3 confirmed, L4 withheld"
+ },
+ "doc": "docs/audit-m15310-repro-fvm-sod1978.md",
+ "figure": "docs/audit-m15310-repro-fvm-sod1978/m15310_audit_orders_vs_criterion.png"
+}
