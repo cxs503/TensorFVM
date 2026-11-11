@@ -461,3 +461,135 @@ def vortex_pair(cfg: VortexConfig | None = None):
         "initial_integrals": solver.integrals(),
     }
     return solver, meta
+
+# ----------------------------------------------------------------------
+# Woodward-Colella two interacting blast waves
+# ----------------------------------------------------------------------
+#: Initial data of the "two interacting blast waves" problem of Woodward &
+#: Colella (1984, J. Comput. Phys. 54, 115-173).  The 1984 article is not open
+#: access, so the pressure plateaus below are taken from two independent
+#: open-access restatements of that initial datum, which agree digit for digit:
+#:
+#:   * arXiv:1902.07773 (Dumbser et al., J. Comput. Phys. 2019), Sec. 5.1.4,
+#:     (rho0, u0, p0) = [1, 0, 1e3] on [0, 0.1], [1, 0, 1e-2] on (0.1, 0.9),
+#:     [1, 0, 1e2] on [0.9, 1]; "the expected solution has been computed via
+#:     the pure RPJ on a mesh of 3200 cells"; T = 0.038.
+#:   * arXiv:2109.14340 (Fu et al.), Eq. (37): the same plateaus, reflective
+#:     walls at x = 0 and x = 1, T = 0.038.
+#:
+#: Both restatements cite W&C 1984.  ``docs/woodward-colella-double-blast/
+#: provenance.md`` records the fetched documents and their sha256 so the digit
+#: strings can be re-checked instead of trusted.
+WC_BLAST_X1 = 0.1
+WC_BLAST_X2 = 0.9
+WC_BLAST_P_LEFT = 1000.0
+WC_BLAST_P_MIDDLE = 0.01
+WC_BLAST_P_RIGHT = 100.0
+WC_BLAST_RHO = 1.0
+WC_BLAST_T_END = 0.038
+
+
+@dataclass
+class DoubleBlastConfig:
+    """Resolution and scheme knobs for the two interacting blast waves."""
+
+    nx: int = 800
+    ny: int = 1
+    order: int = 2
+    limiter: str = "mc"
+    cfl: float = 0.4
+    t_end: float = WC_BLAST_T_END
+    flux_mode: str = "hllc"
+
+
+def blast_pressure(x: torch.Tensor) -> torch.Tensor:
+    """Three-plateau initial pressure of the Woodward-Colella blast problem."""
+    return torch.where(
+        x < WC_BLAST_X1,
+        torch.full_like(x, WC_BLAST_P_LEFT),
+        torch.where(x < WC_BLAST_X2,
+                    torch.full_like(x, WC_BLAST_P_MIDDLE),
+                    torch.full_like(x, WC_BLAST_P_RIGHT)),
+    )
+
+
+def double_blast(cfg: DoubleBlastConfig | None = None):
+    """Two interacting blast waves in a closed tube: returns ``(solver, meta)``.
+
+    ``ny == 1`` is the one-dimensional problem as posed in the paper.  ``ny > 1``
+    extrudes the same profile in ``y`` and closes *all* walls with reflective
+    boundaries; the exact solution of that configuration is y-independent, so the
+    extrusion is a round-off-level test of the two-dimensional path (a slab has
+    no y flux), not a new physics case.
+    """
+    cfg = cfg or DoubleBlastConfig()
+    eos = StiffenedGasMixture([GAMMA_AIR, GAMMA_AIR], names=["air", "air"])
+    bc = (("reflective",) * 4 if cfg.ny > 1
+          else ("reflective", "reflective", "periodic", "periodic"))
+    solver = EulerSolver(
+        nx=cfg.nx, ny=cfg.ny, lx=1.0, ly=1.0, eos=eos, bc=bc,
+        flux_mode=cfg.flux_mode, order=cfg.order, limiter=cfg.limiter, cfl=cfg.cfl,
+    )
+    x = (torch.arange(cfg.nx, dtype=torch.float64) + 0.5) / cfg.nx
+    p0 = blast_pressure(x)
+    zeros = torch.zeros(cfg.nx, dtype=torch.float64)
+    if cfg.ny > 1:  # extrude the 1-D datum over the y cells
+        x, p0, zeros = x.reshape(cfg.nx, 1), p0.reshape(cfg.nx, 1), zeros.reshape(cfg.nx, 1)
+    solver.set_primitive({
+        "rho": torch.full_like(x, WC_BLAST_RHO),
+        "u": zeros,
+        "v": zeros,
+        "p": p0,
+        "Y": torch.zeros_like(x),
+    })
+    meta = {
+        "case": "double_blast",
+        "config": cfg,
+        "nx": cfg.nx,
+        "ny": cfg.ny,
+        "x": x,
+        "p0": p0,
+        "t_end": cfg.t_end,
+        "initial_integrals": solver.integrals(),
+        # exact reference states for the two initial discontinuities, used by
+        # the early-time criterion (before either wave reaches a wall)
+        "raster": 0.0,
+    }
+    meta.update(blast_early_anchors())
+    return solver, meta
+
+
+def blast_early_anchors() -> Dict[str, Dict[str, float]]:
+    """Exact Riemann states of the two initial discontinuities.
+
+    Up to the time the first rarefaction head reaches a wall
+    (``t < 0.1/37.416 = 2.67e-3``) each initial jump is an isolated Riemann
+    problem, so its shock speed and post-shock plateau are exact.  ``left`` is
+    the jump at ``x = 0.1`` (high pressure on the left of the jump), ``right``
+    the jump at ``x = 0.9`` (high pressure on the right of the jump), both with
+    the plateau pair read off the same initial datum.
+    """
+    out: Dict[str, Dict[str, float]] = {}
+    left = ExactRiemann(WC_BLAST_RHO, 0.0, WC_BLAST_P_LEFT, GAMMA_AIR,
+                        WC_BLAST_RHO, 0.0, WC_BLAST_P_MIDDLE, GAMMA_AIR)
+    left.solve()
+    out["left"] = {
+        "x_jump": WC_BLAST_X1,
+        "p_star": float(left.pstar),
+        "u_star": float(left.ustar),
+        "shock_speed": float(left.shock_speed_r()),      # moves +x
+        "rarefaction_head": float(left.wave_speed_l()),  # moves -x
+        "rho_post_shock": float(left.density_star_r()),
+    }
+    right = ExactRiemann(WC_BLAST_RHO, 0.0, WC_BLAST_P_MIDDLE, GAMMA_AIR,
+                         WC_BLAST_RHO, 0.0, WC_BLAST_P_RIGHT, GAMMA_AIR)
+    right.solve()
+    out["right"] = {
+        "x_jump": WC_BLAST_X2,
+        "p_star": float(right.pstar),
+        "u_star": float(right.ustar),
+        "shock_speed": float(right.shock_speed_l()),     # moves -x
+        "rarefaction_head": float(right.wave_speed_r()),  # moves +x
+        "rho_post_shock": float(right.density_star_l()),
+    }
+    return out
