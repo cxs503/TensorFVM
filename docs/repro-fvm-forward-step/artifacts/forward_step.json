@@ -1,0 +1,441 @@
+{
+  "case": "woodward-colella-1984-problem-2-forward-facing-step",
+  "reproduction": "REPRO-FVM-FORWARD-STEP",
+  "reference": {
+    "citation": "Woodward & Colella, J. Comput. Phys. 54 (1984) 115-173, problem 2",
+    "reported_as": "density contour plots at fixed times (no tables in the paper)",
+    "reference_numbers_computed_from": "exact Rankine-Hugoniot / isentropic relations for the paper's stated inflow state (M = 3, gamma = 1.4, rho = 1.4, p = 1)",
+    "values": {
+      "mach": 3.0,
+      "gamma": 1.4,
+      "rho1": 1.4,
+      "u1": 3.0,
+      "p1": 1.0,
+      "c1": 1.0,
+      "rho2": 5.3999999999999995,
+      "u2": 0.7777777777777778,
+      "p2": 10.333333333333334,
+      "c2": 1.6367688736284707,
+      "mach2": 0.47519096331149147,
+      "p_ratio": 10.333333333333334,
+      "rho_ratio": 3.857142857142857,
+      "t_ratio": 2.6790123456790123,
+      "u_ratio": 0.25925925925925924,
+      "p0_ratio": 0.32834388819073695,
+      "p01": 36.732721804952064,
+      "p02": 12.060964701266625,
+      "rho02": 6.030482350633311
+    }
+  },
+  "setup": {
+    "lx": 3.0,
+    "ly": 1.0,
+    "step_x": 0.6,
+    "step_h": 0.2,
+    "t_end": 4.0,
+    "cfl": 0.4,
+    "order": 2,
+    "limiter": "mc",
+    "bc": [
+      "inflow (M=3 uniform)",
+      "outflow (zero gradient)",
+      "reflective",
+      "reflective"
+    ],
+    "wall_representation": "embedded solid mask on cell faces (no staircase error)",
+    "scheme": "MUSCL-Hancock (MC limiter) + HLLC"
+  },
+  "repro_cmd": "python scripts/repro_fvm_forward_step.py --out docs/repro-fvm-forward-step --t-end 4",
+  "grids": [
+    {
+      "nx": 60,
+      "ny": 20,
+      "dx": 0.05,
+      "dy": 0.05,
+      "nsteps": 1363,
+      "wall_seconds": 36.18220233917236
+    }
+  ],
+  "results": [
+    {
+      "grid": {
+        "nx": 60,
+        "ny": 20,
+        "dx": 0.05,
+        "dy": 0.05
+      },
+      "wall_seconds": 36.18220233917236,
+      "nsteps": 1363,
+      "time": 4.0,
+      "positivity_fixes": 2,
+      "shock": {
+        "y": 0.1,
+        "x_shock": 0.31271147754022216,
+        "standoff": 0.2872885224597778,
+        "window": 0.02,
+        "n_cells_behind": 1,
+        "x_window": [
+          0.325,
+          0.325
+        ],
+        "rho_at_shock": 4.051712595809657,
+        "rho_window_mean": 4.051712595809657,
+        "p_at_shock": 7.116843758048484,
+        "p_window_mean": 7.116843758048484,
+        "u_at_shock": 1.3672758009655988,
+        "u_window_mean": 1.3672758009655988,
+        "p_ratio": 7.116843758048484,
+        "rho_ratio": 2.8940804255783266,
+        "u_ratio": 0.45575860032186627,
+        "mach2": 0.871902071714665,
+        "errors": {
+          "p_ratio": -0.31127318470498544,
+          "rho_ratio": -0.2496828526278413,
+          "u_ratio": 0.7579260298129129,
+          "mach2": 0.8348456495018115
+        },
+        "sensitivity": {
+          "0.5x": {
+            "window": 0.01,
+            "n_cells_behind": 1,
+            "p_ratio": 7.116843758048484,
+            "rho_ratio": 2.8940804255783266,
+            "u_ratio": 0.45575860032186627,
+            "mach2": 0.871902071714665,
+            "err_p_ratio": -0.31127318470498544,
+            "err_rho_ratio": -0.2496828526278413,
+            "err_u_ratio": 0.7579260298129129,
+            "err_mach2": 0.8348456495018115
+          },
+          "1x": {
+            "window": 0.02,
+            "n_cells_behind": 1,
+            "p_ratio": 7.116843758048484,
+            "rho_ratio": 2.8940804255783266,
+            "u_ratio": 0.45575860032186627,
+            "mach2": 0.871902071714665,
+            "err_p_ratio": -0.31127318470498544,
+            "err_rho_ratio": -0.2496828526278413,
+            "err_u_ratio": 0.7579260298129129,
+            "err_mach2": 0.8348456495018115
+          },
+          "2x": {
+            "window": 0.04,
+            "n_cells_behind": 1,
+            "p_ratio": 7.116843758048484,
+            "rho_ratio": 2.8940804255783266,
+            "u_ratio": 0.45575860032186627,
+            "mach2": 0.871902071714665,
+            "err_p_ratio": -0.31127318470498544,
+            "err_rho_ratio": -0.2496828526278413,
+            "err_u_ratio": 0.7579260298129129,
+            "err_mach2": 0.8348456495018115
+          }
+        }
+      },
+      "stagnation": {
+        "p_max_face": 11.472181195281955,
+        "j_argmax": 0,
+        "y_argmax": 0.025,
+        "p_ratio": 11.472181195281955,
+        "p_ratio_ref": 12.060964701266625,
+        "err_p_ratio": -0.04881728125137763,
+        "rho_wall": 5.7837195698062445,
+        "rho_ratio": 4.1312282641473175,
+        "rho_ratio_ref": 4.307487393309508,
+        "err_rho_ratio": -0.040919244345545946
+      },
+      "wall_pressure": {
+        "floor": {
+          "x": [
+            0.025,
+            0.07500000000000001,
+            0.125,
+            0.17500000000000002,
+            0.225,
+            0.275,
+            0.325,
+            0.375,
+            0.42500000000000004,
+            0.47500000000000003,
+            0.525,
+            0.5750000000000001
+          ],
+          "p": [
+            1.0000000000000009,
+            1.0000000000000009,
+            1.0000000000000009,
+            1.0000000000000009,
+            1.0000000000000009,
+            1.0000000000000009,
+            7.604817495534869,
+            11.08725589842193,
+            10.976276373477221,
+            11.321621000327506,
+            11.524837101002674,
+            11.472181195281955
+          ]
+        },
+        "step_face": {
+          "y": [
+            0.025,
+            0.07500000000000001,
+            0.125,
+            0.17500000000000002
+          ],
+          "p": [
+            11.472181195281955,
+            11.330206040551104,
+            11.05262109204744,
+            10.198150415512849
+          ]
+        },
+        "roof": {
+          "x": [
+            0.625,
+            0.675,
+            0.7250000000000001,
+            0.775,
+            0.8250000000000001,
+            0.875,
+            0.925,
+            0.9750000000000001,
+            1.0250000000000001,
+            1.075,
+            1.125,
+            1.175,
+            1.225,
+            1.2750000000000001,
+            1.3250000000000002,
+            1.375,
+            1.425,
+            1.475,
+            1.5250000000000001,
+            1.5750000000000002,
+            1.625,
+            1.675,
+            1.725,
+            1.7750000000000001,
+            1.8250000000000002,
+            1.875,
+            1.925,
+            1.975,
+            2.025,
+            2.075,
+            2.125,
+            2.1750000000000003,
+            2.225,
+            2.275,
+            2.325,
+            2.375,
+            2.4250000000000003,
+            2.475,
+            2.5250000000000004,
+            2.575,
+            2.625,
+            2.6750000000000003,
+            2.725,
+            2.7750000000000004,
+            2.825,
+            2.875,
+            2.9250000000000003,
+            2.975
+          ],
+          "p": [
+            2.217765768630626,
+            1.2748664181836127,
+            0.9512476439814386,
+            0.9533934804206587,
+            0.9823776530596859,
+            1.0266177511688015,
+            1.073375612544652,
+            1.119161168079104,
+            1.1563914450860495,
+            1.1845990559611055,
+            1.2075278108436553,
+            1.230756966196515,
+            1.2521402922449723,
+            1.2604473923380195,
+            1.2480490262387194,
+            1.1747945943595575,
+            1.3565981521513153,
+            3.2108859021493,
+            6.938400663581613,
+            6.729831203752106,
+            6.055642806091678,
+            5.802553493245721,
+            5.566380473474948,
+            5.384463953436759,
+            5.219634850019385,
+            5.055465037688621,
+            4.89888737264965,
+            4.753527059677224,
+            4.615443852225525,
+            4.47823481637932,
+            4.338633968187503,
+            4.193317004503543,
+            4.045291714810307,
+            3.9007539222158534,
+            3.7636944734300135,
+            3.635093183610153,
+            3.514242138863016,
+            3.400690554813658,
+            3.293108094929572,
+            3.1898458153043814,
+            3.090214090862106,
+            2.9945826036851955,
+            2.9036077908735507,
+            2.8175587875135344,
+            2.7365453858699516,
+            2.6570333601466207,
+            2.5917725399777516,
+            2.4793281719555385
+          ]
+        }
+      },
+      "mass_flux": {
+        "x_in": 0.025,
+        "x_out": 2.9250000000000003,
+        "flux_in": 4.199999999999999,
+        "flux_out": 4.024133289819183,
+        "rel_diff": -0.04187302623352773
+      },
+      "step_force": {
+        "force_x_face": 2.2026579371696675,
+        "force_y_roof": -7.446238765870629,
+        "cd_face": 1.7481412199759265
+      },
+      "budget": {
+        "mass_fluid": 6.11790270463985,
+        "mass_outflow": -2.5899027046398544,
+        "mass_drift": -1.1328806373726087e-15,
+        "energy_fluid": 34.87042691351417,
+        "energy_outflow": -12.694426913514173,
+        "energy_drift": 1.6020534265875275e-16
+      }
+    }
+  ],
+  "criteria": {
+    "grid_of_record": {
+      "nx": 60,
+      "ny": 20,
+      "dx": 0.05,
+      "dy": 0.05
+    },
+    "tolerance": 0.08,
+    "items": [
+      {
+        "quantity": "p2/p1",
+        "reference": 10.333333333333334,
+        "got": 7.116843758048484,
+        "rel_error": -0.31127318470498544,
+        "tolerance": 0.08,
+        "pass": false,
+        "note": "shock jump, pressure"
+      },
+      {
+        "quantity": "rho2/rho1",
+        "reference": 3.857142857142857,
+        "got": 2.8940804255783266,
+        "rel_error": -0.2496828526278413,
+        "tolerance": 0.08,
+        "pass": false,
+        "note": "shock jump, density"
+      },
+      {
+        "quantity": "u2/u1",
+        "reference": 0.25925925925925924,
+        "got": 0.45575860032186627,
+        "rel_error": 0.7579260298129129,
+        "tolerance": 0.08,
+        "pass": false,
+        "note": "shock jump, velocity"
+      },
+      {
+        "quantity": "M2",
+        "reference": 0.47519096331149147,
+        "got": 0.871902071714665,
+        "rel_error": 0.8348456495018115,
+        "tolerance": 0.08,
+        "pass": false,
+        "note": "shock jump, downstream Mach"
+      },
+      {
+        "quantity": "p_stag/p1",
+        "reference": 12.060964701266625,
+        "got": 11.472181195281955,
+        "rel_error": -0.04881728125137763,
+        "tolerance": 0.08,
+        "pass": true,
+        "note": "wall stagnation pressure"
+      },
+      {
+        "quantity": "rho_stag/rho1",
+        "reference": 4.307487393309508,
+        "got": 4.1312282641473175,
+        "rel_error": -0.040919244345545835,
+        "tolerance": 0.08,
+        "pass": true,
+        "note": "wall stagnation density"
+      },
+      {
+        "quantity": "mass_budget_drift",
+        "reference": 0.0,
+        "got": -1.1328806373726087e-15,
+        "rel_error": -1.1328806373726087e-15,
+        "tolerance": 1e-06,
+        "pass": true,
+        "note": "fluid mass + open-end outflow ledger vs initial"
+      },
+      {
+        "quantity": "energy_budget_drift",
+        "reference": 0.0,
+        "got": 1.6020534265875275e-16,
+        "rel_error": 1.6020534265875275e-16,
+        "tolerance": 0.01,
+        "pass": true,
+        "note": "fluid energy + open-end outflow ledger vs initial"
+      }
+    ],
+    "all_graded_pass": false,
+    "all_pass": false,
+    "ungraded": {
+      "mass_flux_imbalance": -0.04187302623352773,
+      "note": "quasi-steady indicator only: the recirculation behind the step is unsteady at t = 4, so this is not an exact reference value"
+    }
+  },
+  "wall_treatment_ablation": {
+    "mirror_only": {
+      "mass_drift": -0.015897197861075008,
+      "energy_drift": -0.01771851148795827,
+      "p_ratio": 7.568774691523825,
+      "t_end": 0.5,
+      "grid": [
+        60,
+        20
+      ]
+    },
+    "projected": {
+      "mass_drift": 1.258756263747343e-16,
+      "energy_drift": 1.6020534265875275e-16,
+      "p_ratio": 11.292367289842456,
+      "t_end": 0.5,
+      "grid": [
+        60,
+        20
+      ]
+    }
+  },
+  "wall_seconds_total": 45.43185615539551,
+  "ecosystem_friction": [
+    "control-node load average was >300 on 128 cores during development, so the grid triple was run on the cluster queue instead of the control node",
+    "the platform knowledge-base search endpoint (:8021) answered 'engine_offline', so the same-domain prior-art check had to be done with grep in the repository",
+    "EulerSolver had no embedded-wall support: the step had to be added as a mirrored solid mask (solid=) before the case could be run at all"
+  ],
+  "figures": [
+    "figures/forward_step_density.png",
+    "figures/forward_step_centreline.png",
+    "figures/forward_step_wall_pressure.png",
+    "figures/forward_step_error_vs_dx.png"
+  ]
+}

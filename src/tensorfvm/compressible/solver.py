@@ -98,6 +98,8 @@ class EulerSolver:
         interface_solver: str = "acoustic",
         rho_floor: float = 1e-10,
         p_floor: float = 1e-12,
+        solid: torch.Tensor | None = None,
+        project_wall_flux: bool = True,
     ) -> None:
         if nx < 4 or ny < 1:
             raise ValueError("grid must be at least 4 cells in x and 1 in y")
@@ -131,6 +133,129 @@ class EulerSolver:
         self.boundary_outflow = torch.zeros(5, dtype=torch.float64)
         self.positivity_fixes = 0
         self.species_clamps = 0
+        self.solid = None
+        self.project_wall_flux = bool(project_wall_flux)
+        self._solid_cells = None
+        self._solid_interior: list = []
+        self._solid_padded: list = []
+        if solid is not None:
+            self.set_solid(solid)
+
+    # ------------------------------------------------------------------
+    # embedded solid (masked) walls
+    # ------------------------------------------------------------------
+    def set_solid(self, solid: torch.Tensor) -> None:
+        """Install an embedded-wall mask: ``True`` marks a solid cell.
+
+        A solid cell carries no state of its own.  Before every flux evaluation
+        its primitive values are mirrored from a neighbouring fluid cell with
+        the wall-normal velocity component negated, which is the classical
+        reflection ("ghost-cell") treatment of a slip wall: at the face between
+        the fluid cell and its mirror the two Riemann states share a pressure
+        and have equal and opposite normal velocity, so the HLLC star velocity
+        is zero and no mass crosses the wall.  For a solid region that is a
+        rectangle aligned with the grid the wall is represented *exactly* (no
+        staircase error); for an oblique wall the mask is a staircase and the
+        mirror fills every solid cell from the nearest already-filled cell, so
+        a run of solid cells reproduces a reflection about the fluid-facing
+        face of the block.
+        """
+        mask = torch.as_tensor(solid, dtype=torch.bool)
+        if tuple(mask.shape) != (self.nx, self.ny):
+            raise ValueError(f"solid mask must have shape {(self.nx, self.ny)}, "
+                             f"got {tuple(mask.shape)}")
+        if bool(mask.all()):
+            raise ValueError("the solid mask cannot cover the whole domain")
+        ng = _NG
+        padded = torch.zeros((self.nx + 2 * ng, self.ny + 2 * ng), dtype=torch.bool)
+        padded[ng:ng + self.nx, ng:ng + self.ny] = mask
+        # a ghost cell inherits the mask of the nearest interior cell, so the
+        # solid block is continued past the domain boundary instead of being
+        # reflected into fluid
+        padded[:ng, :] = padded[ng:ng + 1, :]
+        padded[ng + self.nx:, :] = padded[ng + self.nx - 1:ng + self.nx, :]
+        padded[:, :ng] = padded[:, ng:ng + 1]
+        padded[:, ng + self.ny:] = padded[:, ng + self.ny - 1:ng + self.ny]
+        self.solid = mask
+        self._solid_cells = mask.reshape(-1).nonzero().squeeze(-1)
+        self._solid_interior = self._solid_fill_layers(mask)
+        self._solid_padded = self._solid_fill_layers(padded)
+        # a wall face separates a fluid cell from a solid one: the mirrored
+        # Riemann states make its normal velocity vanish only to truncation
+        # error, so the wall fluxes are projected exactly (see ``step``)
+        self._wall_x = padded[:-1, :] != padded[1:, :]
+        self._wall_y = padded[:, :-1] != padded[:, 1:]
+
+    def _solid_fill_layers(self, mask: torch.Tensor) -> list:
+        """Breadth-first fill order for a mask as ``(index, parent, axis)``.
+
+        ``index``/``parent`` are flat cell indices of the (possibly padded)
+        array, ``axis`` is ``0`` when the state is mirrored about a face normal
+        to x (flip ``u``) and ``1`` when it is mirrored about a face normal to
+        y (flip ``v``).
+        """
+        nxp, nyp = mask.shape
+        solid = mask.numpy().copy()
+        filled = ~solid
+        if not bool(solid.any()):
+            return []
+        # prefer the vertical mirror: a block roof is the usual fluid-facing face
+        dirs = ((0, 1, 1), (0, -1, 1), (-1, 0, 0), (1, 0, 0))
+        layers: list = []
+        remaining = solid
+        while bool(remaining.any()):
+            groups: dict = {}
+            progressed = filled.copy()
+            idx_i, idx_j = remaining.nonzero()
+            for i, j in zip(idx_i.tolist(), idx_j.tolist()):
+                for di, dj, axis in dirs:
+                    ii, jj = i + di, j + dj
+                    if 0 <= ii < nxp and 0 <= jj < nyp and filled[ii, jj]:
+                        groups.setdefault(axis, ([], []))
+                        groups[axis][0].append(i * nyp + j)
+                        groups[axis][1].append(ii * nyp + jj)
+                        progressed[i, j] = True
+                        break
+            if not groups:
+                raise ValueError("solid region is not reachable from any fluid cell")
+            for axis in sorted(groups):
+                idx, par = groups[axis]
+                layers.append((torch.tensor(idx, dtype=torch.long),
+                               torch.tensor(par, dtype=torch.long), axis))
+            filled = progressed
+            remaining = solid & ~filled
+        return layers
+
+    def _project_wall_fluxes(self, fx, gy):
+        """Enforce an impermeable adiabatic wall on fluid--solid faces.
+
+        The reflected states already give a star velocity of zero up to
+        truncation error; the residual (a fraction of a per cent of the inlet
+        mass flux) is not acceptable for a conservation budget, so the mass and
+        energy fluxes through wall faces are set to zero exactly.  The normal
+        momentum flux is left untouched: it is the pressure force that the wall
+        exerts on the fluid (the convective part is already zero to the same
+        order).
+        """
+        fx = list(fx)
+        gy = list(gy)
+        for fluxes, wall in ((fx, self._wall_x), (gy, self._wall_y)):
+            for k in (0, 3, 4):
+                fluxes[k] = torch.where(wall, torch.zeros_like(fluxes[k]), fluxes[k])
+        return tuple(fx), tuple(gy)
+
+    @staticmethod
+    def _mirror_solid(prim: Dict[str, torch.Tensor],
+                      layers: list) -> Dict[str, torch.Tensor]:
+        """Overwrite solid cells with the reflected neighbouring fluid state."""
+        for idx, par, axis in layers:
+            for name in PRIMITIVE_NAMES:
+                q = prim[name].reshape(-1)
+                q[idx] = q[par]
+            comp = "u" if axis == 0 else "v"
+            qc = prim[comp].reshape(-1)
+            qc[idx] = -qc[par]
+        return prim
 
     # ------------------------------------------------------------------
     # state handling
@@ -195,6 +320,8 @@ class EulerSolver:
             out[name] = q
         self._fill_x(out, ng, nx, ny)
         self._fill_y(out, ng, nx, ny)
+        if self.solid is not None:
+            self._mirror_solid(out, self._solid_padded)
         return out
 
     def _fill_x(self, out, ng, nx, ny) -> None:
@@ -416,7 +543,10 @@ class EulerSolver:
         if dt <= 0 or not torch.isfinite(torch.tensor(dt)):
             raise ValueError("dt must be positive and finite")
         ng, nx, ny = _NG, self.nx, self.ny
-        prim = self._pad(self.primitive())
+        prim = self.primitive()
+        if self.solid is not None:
+            prim = self._mirror_solid(prim, self._solid_interior)
+        prim = self._pad(prim)
         U_pad = self._conserved_from_prim(prim)
 
         if self.order == 2:
@@ -471,6 +601,8 @@ class EulerSolver:
         # the normal/tangential ordering of the y-face flux is (mass, mom_y, mom_x,
         # energy, species); store it as (mass, mom_x, mom_y, energy, species)
         gy = (gy_raw[0], gy_raw[2], gy_raw[1], gy_raw[3], gy_raw[4])
+        if self.solid is not None and self.project_wall_flux:
+            fx, gy = self._project_wall_fluxes(fx, gy)
 
         # face element j sits between padded cells j and j+1, so interior cell i
         # (padded index i+ng) owns face elements i+ng-1 (left) and i+ng (right)
@@ -486,16 +618,50 @@ class EulerSolver:
                 - dt / self.dy * (gy_t[k] - gy_b[k])
             )
 
-        # open-boundary ledger: outward flux through the four domain faces
+        # open-boundary ledger: outward flux through the four domain faces.
+        # Only the fluid part of a face is open: where an embedded solid block
+        # reaches the boundary the cell there is a mirror, not a reservoir, and
+        # counting it would corrupt the budget.
         outward = torch.zeros(5, dtype=torch.float64)
+        open_r = open_l = open_t = open_b = None
+        if self.solid is not None:
+            open_l, open_r = ~self.solid[0, :], ~self.solid[-1, :]
+            open_b, open_t = ~self.solid[:, 0], ~self.solid[:, -1]
         for k in range(5):
-            outward[k] += (fx_r[k][-1, :].sum() - fx_l[k][0, :].sum()) * self.dy
-            outward[k] += (gy_t[k][:, -1].sum() - gy_b[k][:, 0].sum()) * self.dx
+            fr = fx_r[k][-1, :]
+            fl = fx_l[k][0, :]
+            gt = gy_t[k][:, -1]
+            gb = gy_b[k][:, 0]
+            if self.solid is not None:
+                fr = fr * open_r
+                fl = fl * open_l
+                gt = gt * open_t
+                gb = gb * open_b
+            outward[k] += (fr.sum() - fl.sum()) * self.dy
+            outward[k] += (gt.sum() - gb.sum()) * self.dx
         self.boundary_outflow = self.boundary_outflow + dt * outward
 
         self._enforce_positivity()
+        self._sync_solid_state()
         self.time += dt
         self.nsteps += 1
+
+    def _sync_solid_state(self) -> None:
+        """Replace the conserved state of solid cells by the mirrored fluid state.
+
+        Solid cells take part in the flux sum like any other cell, so their own
+        storage accumulates the wall momentum flux and would otherwise drift
+        without bound (which shows up as a collapsing time step through
+        :meth:`max_speed`).  Their state carries no information: only the
+        reflected value used at the wall face does.  Overwriting it keeps
+        :meth:`primitive` and :meth:`integrals` finite; the fluid-domain budget
+        must still exclude the solid cells.
+        """
+        if self.solid is None:
+            return
+        prim = self._mirror_solid(self.primitive(), self._solid_interior)
+        U = self._conserved_from_prim(prim)
+        self.U[:, self.solid] = U[:, self.solid]
 
     def _enforce_positivity(self) -> None:
         """Repair non-positive density/pressure (counted, non-conservative)."""
