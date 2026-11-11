@@ -1,0 +1,92 @@
+{
+  "title": "Stefan Problem Grid Convergence Study",
+  "physical_problem": {
+    "description": "One-phase Stefan solidification problem",
+    "geometry": "Semi-infinite domain x > 0, wall at x=0",
+    "boundary_conditions": "T(0,t) = T_w < T_f, T(\u221e,t) = T_f",
+    "initial_condition": "Liquid at fusion temperature T_f",
+    "parameters": {
+      "stefan_number": 0.12286484866646671,
+      "lambda_analytical": 0.24300581844893784,
+      "t_end": 300.0
+    },
+    "analytical_solution": "s(t) = 2 \u03bb \u221a(\u03b1 t), Neumann (1860)"
+  },
+  "numerical_method": {
+    "scheme": "Explicit enthalpy-method FVM",
+    "time_integration": "Backward Euler with Picard iteration",
+    "interface_tracking": "Exact enthalpy inversion (no mushy band)",
+    "conservation": "Cell-integrated enthalpy balance"
+  },
+  "grid_convergence": {
+    "grids": [
+      50,
+      100,
+      200,
+      400,
+      800
+    ],
+    "refinement_ratio": 2.0,
+    "front_max_errors": [
+      0.10083107705999571,
+      0.030691147614074453,
+      0.010650768788134552,
+      0.001437880590268812,
+      0.0004565455736294722
+    ],
+    "front_mean_errors": [
+      0.03707432227504665,
+      0.010329516026965654,
+      0.0026938055132304135,
+      0.0007374569738162532,
+      0.00024181106238135624
+    ],
+    "temp_max_errors": [
+      0.06303767657044554,
+      0.006390823252522191,
+      0.017360999032251835,
+      0.008611451954212168,
+      0.001237133265368586
+    ],
+    "energy_residuals": [
+      0.00030395633877952687,
+      0.000668604957139786,
+      0.0014125939886785264,
+      0.002907713739090418,
+      0.00249695914808496
+    ]
+  },
+  "richardson_extrapolation": {
+    "f_exact": 0.0015548716846201039,
+    "order_p": -3.2308358600887,
+    "gci_percent": NaN,
+    "grids_used": [
+      200,
+      400,
+      800
+    ]
+  },
+  "convergence_orders": [
+    {
+      "grids": "N=50->100",
+      "order_p": 1.7160458614982814
+    },
+    {
+      "grids": "N=100->200",
+      "order_p": 1.5268650225114815
+    },
+    {
+      "grids": "N=200->400",
+      "order_p": 2.888941793742633
+    },
+    {
+      "grids": "N=400->800",
+      "order_p": 1.6551130849208504
+    }
+  ],
+  "verification_verdict": {
+    "front_accuracy": "PASS",
+    "energy_conservation": "PASS",
+    "convergence_order": "MARGINAL"
+  }
+}
