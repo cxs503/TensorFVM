@@ -1,0 +1,70 @@
+{
+ "case": "geometry_gate_body",
+ "discrete_added_mass_still_water": [
+  [
+   768.4310879901873,
+   -0.0006000921571072126
+  ],
+  [
+   -0.0005966019762007058,
+   26.709071331276117
+  ]
+ ],
+ "displaced_volume": 0.2416666666666667,
+ "mask_blocked_fraction_s": 6.0,
+ "mask_blocked_fraction_x": 4.968749999999999,
+ "mask_solid_cells": 120,
+ "note": "geometry/hydrostatics pre-gate: no wave run may be interpreted before this is green",
+ "section": {
+  "block_coefficient_2d": 1.0,
+  "cg": [
+   4.0,
+   -0.07500000000000001
+  ],
+  "draft": 0.2,
+  "freeboard": 0.05,
+  "inertia_about_cg": 30.049999999999997,
+  "inertia_about_ref": 31.4,
+  "length": 1.2,
+  "length_to_draft": 5.999999999999999,
+  "mass_per_length": 240.0,
+  "ref": [
+   4.0,
+   0.0
+  ],
+  "wetted_area": 0.24,
+  "x0": 4.0
+ },
+ "stiffness": {
+  "BG": 0.024999999999999994,
+  "BM": 0.6,
+  "C33": 11767.98,
+  "C35": 0.0,
+  "C55": 1353.3176999999998,
+  "GM": 0.575,
+  "I_waterline": 0.144,
+  "displaced_area": 0.24,
+  "metacentric_height": 0.575,
+  "waterline": 1.2,
+  "z_B": -0.1,
+  "z_G": -0.07500000000000001
+ },
+ "stiffness_energy_hessian": {
+  "C33": 11767.980024046665,
+  "C35": 2.8421709430404007e-06,
+  "C55": 1353.3177281033204
+ },
+ "stiffness_route_difference": {
+  "C33_rel": 2.0433978646342953e-09,
+  "C55_rel": 2.0766240309863147e-08
+ },
+ "tank_hydrostatic_load": {
+  "f": [
+   -7.105427357601002e-15,
+   2353.5959999999995
+  ],
+  "force_rel_error": 1.9321385271153762e-16,
+  "m": -4.440892098500626e-13,
+  "weight": 2353.596
+ }
+}

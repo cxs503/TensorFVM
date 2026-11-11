@@ -1,0 +1,37 @@
+{
+ "added_mass_from_frequency": 674.9774452442316,
+ "added_mass_potential": 404.74921549424283,
+ "added_mass_rel_error": 0.6676436158622585,
+ "amplitude_final": 0.0034654813040538007,
+ "amplitude_start": 0.01,
+ "case": "decay_heave_nx160",
+ "config": {
+  "dt": 0.015000000000000001,
+  "ns": 20,
+  "nx": 160,
+  "periods": 6.0,
+  "spp": 60,
+  "wall_seconds": 58.47796392440796
+ },
+ "cross_dof_max": 0.005359305838547884,
+ "decay_period": 1.7519999999999967,
+ "discrete_added_mass": [
+  [
+   864.41642989139,
+   -12.003623613204482
+  ],
+  [
+   -6.7369502452867405,
+   29.991196225190123
+  ]
+ ],
+ "dof": 0,
+ "hydrostatic_stiffness": {
+  "C33": 11767.98,
+  "C55": 1353.3176999999998
+ },
+ "numerics": {
+  "div_residual_max": 9.72258423205064e-13,
+  "volume_drift_rel": 0.000664656660595379
+ }
+}
