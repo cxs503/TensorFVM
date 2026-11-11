@@ -1,0 +1,28 @@
+{
+  "audit_mission": "m15222",
+  "audited_mission": "m15142",
+  "anchor": "REPRO-FVM-SOD1978",
+  "repo": "TensorFVM",
+  "level": 4,
+  "level_rationale": "L4=基准验证（完整算例+误差分析+可复现）：4网格x2阶+光滑熵波+敏感性；逐项 ref vs got 误差分析；repro_cmd+21 测试+PR#419 并入 main。不判 L5：验证/复现面，非新求解器能力。",
+  "criteria_check": {
+    "C1_positions_tol_2pct": {"pass": true, "max_err_pct": 0.3652, "items": 4},
+    "C2_star_tol_5pct": {"pass": true, "max_err_pct": 0.0142, "items": 4},
+    "C3_sod_l1_order_ge_1_literal": {"pass": false, "measured": {"order1": [0.617, 0.651, 0.660], "order2": [0.977, 0.894, 0.857]}, "honest_fail": true},
+    "C3_design_order_smooth_wave": {"pass": true, "measured": {"order1": [0.994, 0.997, 0.999], "order2": [2.132, 2.096, 2.045]}, "band_pct": 2.0},
+    "conservation_drift": "~1e-16 (PASS)",
+    "positivity_fixes": 0,
+    "all_mission_criteria_met": false
+  },
+  "benchmark_ledger": {
+    "tensor_benchmark_cases_rows_for_anchor": 0,
+    "gap": "anchor_slug='REPRO-FVM-SOD1978' 未在 tensor_benchmark_cases 登记（全表 13 行无匹配）→ 建议补登记 case（metric=四波位置/星区/L1阶, tolerance=2%/5%/order>=1）",
+    "de_facto_criteria_source": "tensor_dev_missions.id=15142.goal 内嵌容差 + 工件 JSON criteria 块"
+  },
+  "report_check": {"report_id": 14285, "sections": 7, "required_six_present": true, "numbers_match_artifact_json": true},
+  "tests_rerun": "21 passed in 87.08s (test_repro_fvm_sod1978.py 6 + test_compressible_eos_riemann.py 15)",
+  "pr": 419,
+  "merge_commit": "47f1056f",
+  "external_anchor": "Sod (1978) J. Comput. Phys. 27:1-31; star-state per Toro (2009) 3rd ed. Ch.4",
+  "verdict": "confirmed-L4 (C3 literal FAIL 如实申报，不粉饰)"
+}
