@@ -45,6 +45,35 @@ TensorFVM maintains extensive verification against analytical solutions and lite
 
 ---
 
+### 1.1b Lid-Driven Cavity (3D, periodic span)
+
+**Reference**: Ghia, Ghia & Shin (1982) 2-D tables used through the exact 2-D
+reduction; symmetry, mass conservation and spanwise linearity as internal anchors
+
+**Physics**: Steady incompressible flow in an `n_x x n_y x n_z` prism with a
+periodic span; no-slip on `x = 0,1` and `y = 0,1`, tangential lid `U(z)` on `y = 1`
+- Reynolds numbers verified: 100 (converged); 400 WITHHELD (not converged)
+- Geometry: unit cross-section, cubic cells, span length `n_z h`
+
+**Implementation**: `src/tensorfvm/lid_cavity_3d.py`
+**Driver**: `scripts/verify_lid_cavity_3d.py`
+**Tests**: `tests/test_native_lid_cavity_3d.py`
+**Artifact**: `src/tensorfvm/verification/artifacts/lid-cavity-3d/verification.json`
+**Report**: `docs/verification-lid-cavity-3d/REPORT.md`
+
+**Verification Status**: ✅ PASS (Re = 100) / ⚠️ WITHHELD (Re = 400)
+
+**Key Metrics** (32 x 32 x 4 prism, Re = 100, 5750 steps, residual 8.7e-10):
+- 2-D reduction vs `lid_cavity.py`: max abs delta `u`,`v`,`p` = 1.1e-16 / 1.1e-16 / 5.0e-16
+- Ghia centreline: `u` max 0.0069 U (rms 0.0022), `v` max 0.0078 U (rms 0.0036) -> < 3%
+- Mass conservation: max|div u| = 1.6e-14; spanwise symmetry: max|w| = 0.0 exactly
+- Spanwise response linearity (modulated lid): ratio 1.997 for halved amplitude
+
+**Not verified**: spanwise end walls (Ku, Hirsh & Taylor 1989 geometry), turbulent
+or high-Re 3-D states; Re = 400 convergence.
+
+---
+
 ### 1.2 Annular Pipe Flow (Axial)
 
 **Reference**: Analytical solution of axial Navier-Stokes in annulus
