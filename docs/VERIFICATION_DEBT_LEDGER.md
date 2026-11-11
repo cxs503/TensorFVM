@@ -32,6 +32,20 @@
 - 建议总账条目: `GAP-FVM-ADDED-MASS-ROT`（13305 已建议 GAP-FVM-ADDED-MASS，
   本条为其转动扩展；若总账已收 GAP-FVM-ADDED-MASS 则并入）。
 
+
+> **D1 已结（m14707, 2026-11-11）——且原锚点被证伪。** 原文提出的球体锚点
+> `I_add = (5/8) pi rho a^5` 不是理想流体附加转动惯量：球面上 `r x n = 0`，
+> 故转动 Neumann 数据 `(Omega x r) . n = 0`，外域问题只有 `phi = 0`，
+> 流体动能与压力扰动同时为零 → **球绕任意直径的附加转动惯量恰好为 0**
+> （Fossen：球的附加质量矩阵 = diag(m_a, m_a, m_a, 0, 0, 0)）。
+> 若按原锚点验收，正确实现会被判 100% 错。已改为下列正确锚点族并交付：
+> 球的平行轴锚 `I_oo = m_a d^2`（d=1.5a，Richardson 后 0.22%）、
+> 回转体横摇 `I_44 ≡ 0`（5e-34）、球绕直径 `≡0`（面元残差 1.1e-5）。
+> 证据：`docs/verification-rotational-added-mass/{REPORT.md,summary.json}`、
+> `tests/test_rotational_added_mass.py`（7 测全绿）、
+> `src/tensorfvm/panel_added_mass.py::added_mass_matrix_6dof`。
+> 明示未完成：长球横摇/艏摇块无解析式，只做了结构性验证 → 见 D6/D7。
+
 ### D2 自由面/双体镜像附加质量验证
 - 来源: 报告 13305 §6（`panel_potential` 已有 single_hull/twin_hull 镜像，未对解析锚验证）。
 - 量化验收: 半浸没球（双体镜像）平移附加质量 vs 镜像解析解 <3%；
@@ -51,6 +65,22 @@
 ### D5 自然对流 Ra~1e8 振荡起始 / 3D 腔（重算力，需拆单）
 - 来源: 报告 13277 §5。超出单干范围 → 若认领走 POST missions 派单（runner=native）。
 
+
+### D6 长球横摇/艏摇附加惯量的解析锚（D1 的 honest 未完成部分）
+- 现象: `I_55` a/b=2 收敛到 `I_55/(rho V a^2)=0.0584`，两级网格不确定度 1.0%，
+  但**没有解析式可对标**；观测阶估计被纬度分辨率噪声污染（诊断值 5.57 不可信）。
+- 做法: 均匀面积/等弧长网格 + 椭球调和函数闭式（`phi ∝ x y ∫_lambda^inf ...`），
+  或等价的椭球转动势闭式，得 `I_55(a,b)` 解析值再判 <3%。
+- 量化验收: 解析 vs 面元 <3%；观测阶 p≥1；a/b=2,4,8 三点一致。
+- 现状: 已有的结构性验证（轴对性 <1e-15、互易 <1e-16、近球 (a^2-b^2)^2 消失、
+  细长极限单调趋向 strip 值 0.2）留作回归护栏。
+
+### D7 转动附加质量接进 maneuvering.dynamics 的 J_z（能力落地）
+- 现象: `maneuvering/dynamics.py` 的 J_z 仍用细长体公式；本单提供了
+  `rotational_added_inertia(panels)`，但尚未接线，也没量细长体公式的高估幅度。
+- 做法: 用面元 `I_44/I_55/I_66` 替换细长体 J_z 或给出修正系数，并做操舵响应对比。
+- 量化验收: 同一船的 J_z 两法差异报告 + 回转直径/初转期变化 <15% 才可换默认值。
+
 ## 3. 给下次自找活的建议线索
 1. 首选 D1：单干、解析锚明确、直接喂 maneuvering.dynamics 的 J_z 缺口，
    且总账无对应锚（新缺口，finish 时申报 NEW 条目）。
@@ -61,4 +91,15 @@
    完成移 §4（append-only，不删旧条）。
 
 ## 4. 已完成（done，不得重做）
-（空——本账首建）
+
+### D1 转动附加惯量 M_44..M_66 —— 已交付（m14707, 2026-11-11）
+- 实现: `panel_added_mass.added_mass_matrix_6dof / rotational_added_inertia /
+  surface_generators / sphere_offset_axis_added_inertia / sphere_panels_offset`；
+  `panel_potential.solve_sources(..., normal_velocity=...)`（非均匀 onset 正态速度入口，
+  均匀来流路径行为不变）。
+- 验证: `python -m tensorfvm.verification.rotational_added_mass`；
+  6/6 判据 PASS；产物 `docs/verification-rotational-added-mass/{REPORT.md,summary.json}`。
+- 关键数字: 球绕直径 1.14e-5（相对 m_a a^2，理论 0）；长球横摇 5.1e-34（理论 0）；
+  偏置轴球 `m_a d^2` 面元 1.46% / Richardson 0.22%；长球横摇块两级网格 1.0%；
+  细长极限 a/b=2/4/8 → 0.0565/0.1227/0.1688（strip 0.2）。
+- 反例资产: 原 D1 锚点 `(5/8) pi rho a^5` 已证伪并入档（球转动附加惯量恒为 0）。
