@@ -25,7 +25,8 @@ ledger.
 
 Boundary conditions are per-side and, where a side is shared by fluid and solid
 (for example the inlet plane of a plate with a conducting substrate), per-cell:
-``dirichlet``, ``adiabatic`` (no conduction, upwind convection) and ``outflow``
+``dirichlet``, ``neumann`` (prescribed heat flux into the domain),
+``adiabatic`` (no conduction, upwind convection) and ``outflow``
 (no conduction, extrapolated convection).
 """
 
@@ -291,23 +292,31 @@ def solve_steady_energy(dx, dy, kappa, flux_e, flux_n, bc, *,
     add(Nn, Pn, np.where(posn, Fn, 0.0))
 
     # --- boundary faces ----------------------------------------------------
+    # the face areas travel with the boundary sides: a prescribed Neumann flux
+    # is a heat *rate* q * A, and the conductance does not carry A explicitly.
     side_specs = [
-        ("west", idx[:, 0], cond_e[:, 0], flux_e[:, 0], -1.0),
-        ("east", idx[:, nx - 1], cond_e[:, nx], flux_e[:, nx], +1.0),
-        ("south", idx[0, :], cond_n[0, :], flux_n[0, :], -1.0),
-        ("north", idx[ny - 1, :], cond_n[ny, :], flux_n[ny, :], +1.0),
+        ("west", idx[:, 0], cond_e[:, 0], flux_e[:, 0], -1.0, dy),
+        ("east", idx[:, nx - 1], cond_e[:, nx], flux_e[:, nx], +1.0, dy),
+        ("south", idx[0, :], cond_n[0, :], flux_n[0, :], -1.0, dx),
+        ("north", idx[ny - 1, :], cond_n[ny, :], flux_n[ny, :], +1.0, dx),
     ]
     btype, bval = {}, {}
-    for side, cells, cf, ff, sign_out in side_specs:
+    for side, cells, cf, ff, sign_out, area in side_specs:
         types, values = _bc_arrays(bc, side, cells.size)
         btype[side] = types
         bval[side] = values
         cf = np.asarray(cf).ravel()
         ff = np.asarray(ff).ravel()
+        area = np.broadcast_to(np.asarray(area, dtype=float).ravel(), cells.shape)
         cells = cells.ravel()
         dirichlet = types == "dirichlet"
         diag[cells[dirichlet]] -= cf[dirichlet]
         b[cells[dirichlet]] -= cf[dirichlet] * values[dirichlet]
+        # ``neumann`` = prescribed heat flux *into the domain* (per unit area):
+        # no conduction unknown on that face, the flux lands on the right-hand
+        # side as a heat rate.  Same sign convention as the Dirichlet branch.
+        neumann = types == "neumann"
+        b[cells[neumann]] -= values[neumann] * area[neumann]
         out = sign_out * ff                       # positive = leaving the domain
         diag[cells] -= np.where(out > 0.0, out, 0.0)
         inflow = out < 0.0
@@ -369,14 +378,16 @@ def _ledger(dx, dy, kappa, cond_e, cond_n, flux_e, flux_n, side_specs, btype, bv
     residual[1:, :] += face_y
     boundary = {}
     advective = {"inflow": 0.0, "outflow": 0.0}
-    for side, cells, cf, ff, sign_out in side_specs:
+    for side, cells, cf, ff, sign_out, area in side_specs:
         types = btype[side]
         values = bval[side]
-        cells = cells.ravel()
         cf = np.asarray(cf).ravel()
         ff = np.asarray(ff).ravel()
+        area = np.broadcast_to(np.asarray(area, dtype=float).ravel(), cells.shape)
+        cells = cells.ravel()
         Tc = T.ravel()[cells]
         q_cond = np.where(types == "dirichlet", cf * (values - Tc), 0.0)
+        q_cond = np.where(types == "neumann", values * area, q_cond)
         out = sign_out * ff
         q_conv = np.where(out < 0.0, -out * values, -out * Tc)
         boundary[side] = float(np.sum(q_cond + q_conv))
