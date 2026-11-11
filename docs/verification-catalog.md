@@ -79,7 +79,7 @@ TensorFVM maintains extensive verification against analytical solutions and lite
 - Mean velocity: U_mean = G h² / (3μ)
 
 **Implementation**: `src/tensorfvm/solver.py` (SIMPLE solver)  
-**Tests**: Multiple channel tests across test suite
+**Tests**: `tests/test_native_developed_channel.py`, `tests/test_suite_channel.py`
 
 **Verification Status**: ✅ PASS
 - Parabolic profile recovered exactly
@@ -208,7 +208,7 @@ TensorFVM maintains extensive verification against analytical solutions and lite
 - Boundary: No-slip on airfoil surfaces, freestream at infinity
 
 **Implementation**: `src/tensorfvm/multi_element.py`, `src/tensorfvm/multi_element_flow.py`  
-**Tests**: `tests/test_multi_element.py`, `tests/test_multi_element_flow.py`, `tests/test_multi_element_least_squares.py`, `tests/test_multi_element_skew_pressure.py`
+**Tests**: `tests/test_multi_element_flow.py`, `tests/test_multi_element_least_squares.py`, `tests/test_multi_element_skew_pressure.py`
 
 **Verification Status**: ✅ PASS
 - Pressure operator reproduces nonlinear gradient
@@ -349,7 +349,7 @@ TensorFVM maintains extensive verification against analytical solutions and lite
 - Aspect ratio: cell stretching
 
 **Implementation**: `src/tensorfvm/mesh_quality.py`, `src/tensorfvm/hybrid_mesh_quality.py`  
-**Tests**: `tests/test_mesh_quality.py` (if exists), verification scripts
+**Tests**: `tests/test_mesh_quality_metrics.py` (if exists), verification scripts
 
 **Verification Status**: ✅ PASS
 - Metrics computed correctly
@@ -432,7 +432,7 @@ TensorFVM maintains extensive verification against analytical solutions and lite
 - Iteration: until convergence
 
 **Implementation**: `src/tensorfvm/solver.py` (SimpleSolver)  
-**Tests**: Extensive across test suite
+**Tests**: `tests/test_sparse_simple.py`, `tests/test_simplec.py`, `tests/test_curved_simple_order_verification.py`
 
 **Verification Status**: ✅ PASS
 - Mass conservation: |∑div u| < tolerance
@@ -451,7 +451,7 @@ TensorFVM maintains extensive verification against analytical solutions and lite
 - Prevents: checkerboard pressure oscillations
 
 **Implementation**: `src/tensorfvm/native_collocated3d.py`  
-**Tests**: Verification scripts
+**Tests**: `tests/test_native_collocated3d.py`, `tests/test_periodic_mac.py`
 
 **Verification Status**: ✅ PASS
 - Checkerboard suppressed
@@ -509,6 +509,8 @@ TensorFVM maintains extensive verification against analytical solutions and lite
 - Collocated: Rhie-Chow interpolation
 - Tolerance: < 1e-10 (relative)
 
+**Tests**: `tests/test_fct_conservation_audit.py`, `tests/test_conservative3d.py`
+
 ---
 
 ### 9.2 Momentum Conservation
@@ -519,6 +521,8 @@ TensorFVM maintains extensive verification against analytical solutions and lite
 - Pressure: telescoping sum
 - Viscous: negative work (passivity)
 - Source: consistent discretization
+
+**Tests**: `tests/test_expansion_momentum_closure.py`, `tests/test_p40w3b_n03_momentum_closure.py`
 
 ---
 
@@ -531,21 +535,26 @@ TensorFVM maintains extensive verification against analytical solutions and lite
 - Work: negative (passivity)
 - Pressure: orthogonal to divergence-free
 
+**Tests**: `tests/test_native_energy_passivity.py`, `tests/test_native_energy_small.py`
+
 ---
 
 ## 10. Verification Gaps & Future Work
 
 ### 10.1 Current Gaps
 
-1. **3D Lid-Driven Cavity**: Only 2D verified against Ghia
-2. **Compressible Flow**: No verification (incompressible only)
-3. **Moving Mesh**: ALE formulation not verified
-4. **Combustion**: No species transport verification
-5. **Radiation**: No heat transfer verification
+Every item carries a `[[gap-status: open]]` or `[[gap-status: closed-by <paths>]]` annotation. `src/tensorfvm/verification/catalog_gate.py` (tests: `tests/test_verification_catalog_gate.py`) fails when an annotation is missing or a closure path is dead, so a gap going stale becomes a gate failure instead of a reader's chance discovery.
+
+
+1. **3D Lid-Driven Cavity**: Only 2D verified against Ghia  [[gap-status: open]]
+2. **Compressible Flow**: No verification (incompressible only)  [[gap-status: closed-by src/tensorfvm/compressible/verification.py, tests/test_compressible_eos_riemann.py, tests/test_compressible_multimaterial.py]]
+3. **Moving Mesh**: ALE formulation not verified  [[gap-status: closed-by src/tensorfvm/moving_mesh.py, tests/test_moving_mesh_ale.py, tests/test_ale_transport_analytic.py, docs/pmm-ale-cfd/summary.json]]
+4. **Combustion**: No species transport verification  [[gap-status: open]]
+5. **Radiation**: No heat transfer verification  [[gap-status: open]]
 
 ### 10.2 Planned Additions
 
-1. **3D Lid-Driven Cavity**: Extend Ghia comparison to 3D
+1. **3D Lid-Driven Cavity**: Extend Ghia comparison to 3D  [[gap-status: open]]
 2. **Rotating Machinery**: MRF verification against literature
 3. **Heat Transfer**: Natural convection (de Vahl Davis 1983)
 4. **Compressible**: Isentropic vortex (exact solution)

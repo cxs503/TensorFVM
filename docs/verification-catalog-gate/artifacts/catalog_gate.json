@@ -1,0 +1,16 @@
+{
+ "catalog": "docs/verification-catalog.md",
+ "verdict": "PASS",
+ "counts": {
+  "entries": 31,
+  "entries_passing": 26,
+  "pointers": 84,
+  "gaps": 5,
+  "gaps_open": 3,
+  "gaps_closed": 2
+ },
+ "dangling_pointers": [],
+ "entries_without_live_test": [],
+ "gaps_without_status": [],
+ "dangling_gap_closures": []
+}
