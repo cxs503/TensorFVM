@@ -74,6 +74,20 @@
 - 量化验收: 解析 vs 面元 <3%；观测阶 p≥1；a/b=2,4,8 三点一致。
 - 现状: 已有的结构性验证（轴对性 <1e-15、互易 <1e-16、近球 (a^2-b^2)^2 消失、
   细长极限单调趋向 strip 值 0.2）留作回归护栏。
+> **D6 已结（m14810, 2026-11-11）——解析锚已建立并交付，判据全 PASS。** 新增
+> `src/tensorfvm/ellipsoid_added_inertia.py`：三轴椭球绕主轴转动附加惯量的**闭式解**
+> （椭球坐标二次 Lamé 势 `phi = C2 x y FF(lambda)`，振幅由 Neumann 数据定出，
+> 表面积分闭式 `I = (2 pi/15) a^3 b^3 c`）；唯一数值成分为一维积分 `FF(0)`（quadrature
+> 1e-13，另有 prolate 闭式独立互证 1e-15）。验证驱动
+> `python -m tensorfvm.verification.ellipsoid_rotational_reference`（9/9 判据 PASS）：
+> 闭式势的**数值法向导数**复现转动数据残差 1.76e-10（不依赖推导自身代数）；调和性
+> 4.9e-8；四极子衰减 8e-4；细长极限 a/b=100 → 0.1995（strip 1/5，误差 0.05%）；
+> 近球 (a^2-b^2)^2 律 1.23%；**面元 vs 闭式 a/b=2/4/8 最细网格误差 2.39%/1.86%/0.42%
+> —— 全 <3%，D1 的「解析 <3%」判据兑现**。证据
+> `docs/verification-ellipsoid-rotational-reference/{REPORT.md,summary.json,fig_rotational_reference.png}`、
+> `tests/test_ellipsoid_rotational_reference.py`（15 测全绿）。D7（接进
+> `maneuvering.dynamics.J_z`）仍未做。
+
 
 ### D7 转动附加质量接进 maneuvering.dynamics 的 J_z（能力落地）
 - 现象: `maneuvering/dynamics.py` 的 J_z 仍用细长体公式；本单提供了
@@ -91,6 +105,21 @@
    完成移 §4（append-only，不删旧条）。
 
 ## 4. 已完成（done，不得重做）
+### D6 长球横摇/艏摇附加惯量的解析锚 —— 已交付（m14810, 2026-11-11）
+- 实现: `ellipsoid_added_inertia.{rotational_added_inertia, harmonic_integral,
+  harmonic_integral_spheroid, surface_product_moment, rotation_potential,
+  neumann_data, ellipsoidal_coordinate}`（闭式解，无面元依赖）。
+- 验证: `python -m tensorfvm.verification.ellipsoid_rotational_reference`；9/9 判据 PASS；
+  产物 `docs/verification-ellipsoid-rotational-reference/{REPORT.md,summary.json,png}`。
+- 关键数字: 闭式 vs 面元 a/b=2/4/8 → 2.39%/1.86%/0.42%（最细网格 2176 面元）；
+  三点外推（仅用面元序列）复现闭式值 0.28%/0.20%/0.69%；细长极限 a/b=100 → 0.1995
+  （strip 1/5）；球与长球横摇严格 0。
+- 反例/踩坑: ①`FF(lambda)` 的调和结构靠恒等式 `D = |grad F|^2/4`，符号取错
+  （`d lambda/dn` 应为 `+4/|grad F|`）会把细长极限算成 1/15 而非 1/5——用 strip 极限
+  与面元双向校核才发现；②`quad` 截断到有限上界会低估 `FF(0)` 达 31%（尾部为 t^-7，
+  局部误差估计看不见），必须积分到 inf；③转动势是**二阶**调和（`phi ~ r^-3`），
+  衰减判据应是 phi(2r)/phi(r)=1/8，不是偶极的 1/2。
+
 
 ### D1 转动附加惯量 M_44..M_66 —— 已交付（m14707, 2026-11-11）
 - 实现: `panel_added_mass.added_mass_matrix_6dof / rotational_added_inertia /
