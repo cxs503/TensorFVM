@@ -1,0 +1,197 @@
+{
+ "cells": [
+  64,
+  64
+ ],
+ "cfl": 0.5,
+ "dx": 0.015625,
+ "radius": 0.15,
+ "schemes": {
+  "cicsam": {
+   "finer_reference_available": true,
+   "revolutions": {
+    "1": {
+     "alpha_bounds": [
+      1.0436575891459854e-24,
+      0.9999998009576585
+     ],
+     "dt": 0.0025252525252525255,
+     "elapsed_s": 2.188546909019351,
+     "linf": 0.9862817684440424,
+     "mass_drift_relative": 0.0,
+     "mass_final": 0.06322070305886379,
+     "mass_initial": 0.06322070305886379,
+     "peak_retention": 0.9999998009576585,
+     "relative_l1": 0.08657049694420291,
+     "steps": 396,
+     "symmetric_difference": 0.10569105691056911,
+     "thickness": {
+      "cells": [
+       64,
+       64
+      ],
+      "interface_cells": 72,
+      "max": 2.779706979164987,
+      "mean": 1.6172850714875093,
+      "median": 1.5460352929054189,
+      "p90": 2.0567581732056968
+     },
+     "worst_step_drift_relative": 4.390266838662983e-16
+    },
+    "2": {
+     "alpha_bounds": [
+      1.959869753222099e-21,
+      0.9999997831554173
+     ],
+     "dt": 0.0025252525252525255,
+     "elapsed_s": 4.298545800149441,
+     "linf": 0.9999757319406488,
+     "mass_drift_relative": 0.0,
+     "mass_final": 0.06322070305886379,
+     "mass_initial": 0.06322070305886379,
+     "peak_retention": 0.9999997831554173,
+     "relative_l1": 0.13784024031598896,
+     "steps": 792,
+     "symmetric_difference": 0.14634146341463414,
+     "thickness": {
+      "cells": [
+       64,
+       64
+      ],
+      "interface_cells": 72,
+      "max": 2.230926742847544,
+      "mean": 1.5215939625625101,
+      "median": 1.4255210258208009,
+      "p90": 1.9478919753406219
+     },
+     "worst_step_drift_relative": 4.390266838662983e-16
+    }
+   }
+  },
+  "fct": {
+   "finer_reference_available": true,
+   "revolutions": {
+    "1": {
+     "alpha_bounds": [
+      1.2881351822342678e-23,
+      0.9005864070893466
+     ],
+     "dt": 0.0025252525252525255,
+     "elapsed_s": 1.9206684697419405,
+     "linf": 0.8397149239306129,
+     "mass_drift_relative": 0.0,
+     "mass_final": 0.06322070305886379,
+     "mass_initial": 0.06322070305886379,
+     "peak_retention": 0.9005864070893466,
+     "relative_l1": 0.5812409050494314,
+     "steps": 396,
+     "symmetric_difference": 0.25609756097560976,
+     "thickness": {
+      "cells": [
+       64,
+       64
+      ],
+      "interface_cells": 513,
+      "max": 198.5690643141017,
+      "mean": 16.290068658125925,
+      "median": 12.50636224923327,
+      "p90": 24.512465278806285
+     },
+     "worst_step_drift_relative": 2.1951334193314916e-16
+    },
+    "2": {
+     "alpha_bounds": [
+      6.387754448333932e-19,
+      0.8096762181991816
+     ],
+     "dt": 0.0025252525252525255,
+     "elapsed_s": 3.881566459313035,
+     "linf": 0.7876232388108233,
+     "mass_drift_relative": 0.0,
+     "mass_final": 0.06322070305886379,
+     "mass_initial": 0.06322070305886379,
+     "peak_retention": 0.8096762181991816,
+     "relative_l1": 0.7015999452043681,
+     "steps": 792,
+     "symmetric_difference": 0.3170731707317073,
+     "thickness": {
+      "cells": [
+       64,
+       64
+      ],
+      "interface_cells": 567,
+      "max": 565.1875528841142,
+      "mean": 21.141133507586694,
+      "median": 15.387972618537846,
+      "p90": 28.91473958370633
+     },
+     "worst_step_drift_relative": 2.1951334193314916e-16
+    }
+   }
+  },
+  "plic": {
+   "finer_reference_available": true,
+   "revolutions": {
+    "1": {
+     "alpha_bounds": [
+      0.0,
+      1.0
+     ],
+     "dt": 0.0025252525252525255,
+     "elapsed_s": 25.600494960322976,
+     "linf": 0.8674352782577183,
+     "mass_drift_relative": 4.170753496729834e-15,
+     "mass_final": 0.06322070305886353,
+     "mass_initial": 0.06322070305886379,
+     "peak_retention": 1.0,
+     "relative_l1": 0.04807642780195799,
+     "steps": 396,
+     "symmetric_difference": 0.056910569105691054,
+     "thickness": {
+      "cells": [
+       64,
+       64
+      ],
+      "interface_cells": 62,
+      "max": 1.9916179453310814,
+      "mean": 1.5374487464845346,
+      "median": 1.5330967107704088,
+      "p90": 1.8660856894321192
+     },
+     "worst_step_drift_relative": 4.170753496729834e-15
+    },
+    "2": {
+     "alpha_bounds": [
+      0.0,
+      1.0
+     ],
+     "dt": 0.0025252525252525255,
+     "elapsed_s": 51.71977784112096,
+     "linf": 0.9999999999999972,
+     "mass_drift_relative": 2.63416010319779e-15,
+     "mass_final": 0.06322070305886363,
+     "mass_initial": 0.06322070305886379,
+     "peak_retention": 1.0,
+     "relative_l1": 0.07582390256388927,
+     "steps": 792,
+     "symmetric_difference": 0.08943089430894309,
+     "thickness": {
+      "cells": [
+       64,
+       64
+      ],
+      "interface_cells": 61,
+      "max": 1.9896599264169794,
+      "mean": 1.5006051400918818,
+      "median": 1.4259559455726278,
+      "p90": 1.8687656627513953
+     },
+     "worst_step_drift_relative": 4.390266838662983e-15
+    }
+   }
+  }
+ },
+ "slot_half_width": 0.025,
+ "time_step": 0.0025262689379665884,
+ "umax": 3.092505268377458
+}
