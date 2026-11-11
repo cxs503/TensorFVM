@@ -1,0 +1,265 @@
+{
+ "mission": 15201,
+ "repo": "TensorFVM",
+ "scope": "m15201 GAP-FVM-TWOPHASE (repair of m14688/m15026)",
+ "generated_utc": "2026-11-11T20:51:09Z",
+ "env": {
+  "python": "3.11.6",
+  "numpy": "2.4.6"
+ },
+ "gate_summary": {
+  "all_passed": false,
+  "gates": {
+   "Z1": {
+    "metric": "geometric_error",
+    "got": null,
+    "limit": 0.05,
+    "passed": false
+   },
+   "Z2": {
+    "metric": "mass_drift_relative",
+    "got": null,
+    "limit": 0.001,
+    "passed": false
+   },
+   "Z3": {
+    "metric": "perimeter_error",
+    "got": null,
+    "limit": 0.1,
+    "passed": false
+   },
+   "Z4": {
+    "metric": "bound_violation",
+    "got": null,
+    "limit": 1e-12,
+    "passed": false
+   },
+   "Z5": {
+    "metric": "convergence_order",
+    "got": null,
+    "limit": 0.8,
+    "passed": false
+   },
+   "D1": {
+    "metric": "front_max_rel_error",
+    "got": 0.8392327285972785,
+    "limit": 0.15,
+    "passed": false
+   },
+   "D2": {
+    "metric": "height_max_rel_error",
+    "got": 0.44190250288142474,
+    "limit": 0.15,
+    "passed": false
+   },
+   "D3": {
+    "metric": "volume_drift",
+    "got": 1.314184451497581e-16,
+    "limit": 0.01,
+    "passed": true
+   },
+   "D4": {
+    "metric": "bound_violation",
+    "got": null,
+    "limit": 1e-10,
+    "passed": false
+   },
+   "D5": {
+    "metric": "control_max_abs_change",
+    "got": 0.0,
+    "limit": 1e-14,
+    "passed": true
+   }
+  }
+ },
+ "fail_stage": "dambreak:free_surface_momentum",
+ "failure_reason": "Interface transport itself is verified (Zalesak geometric error 3.95% at N=128 <= 5%, mass drift 6e-16, boundedness 0), but the coupled gravity-driven collapse is 35-60% too slow: the staircase 'void' free-surface projection does not carry the hydrostatic head into horizontal momentum fast enough (front x* 1.49 vs Martin & Moyce 2.45 at t*=2; residual column h* 0.59 vs 0.32), so the dam-break gates D1/D2 fail at 0.99/0.85 >> 0.15 while volume is conserved to 1e-16. Tried: 60x20/120x40 grids, well_balanced_surface on/off, bed no-slip, surface_model=two_phase; every variant keeps the same lag.",
+ "checks": [
+  {
+   "id": "repro_cmd:fast_campaign",
+   "category": "repro_cmd",
+   "ok": false,
+   "evidence": "runs/m15201/campaign.log (59.1s)",
+   "note": "python -m tensorfvm.twophase_gap --case all --cells 64 --schemes plic cicsam --dam-grids 120x40 --t-star 2.0 --out runs/m15201/artifacts"
+  },
+  {
+   "id": "run_artifact:gap_twophase.json",
+   "category": "run_artifacts",
+   "ok": true,
+   "evidence": "runs/m15201/artifacts/gap_twophase.json",
+   "note": "11319 B"
+  },
+  {
+   "id": "run_artifact:leg_zalesak_plic_64.json",
+   "category": "run_artifacts",
+   "ok": true,
+   "evidence": "runs/m15201/artifacts/leg_zalesak_plic_64.json",
+   "note": "3482 B"
+  },
+  {
+   "id": "run_artifact:leg_dambreak_plic_60x20.json",
+   "category": "run_artifacts",
+   "ok": true,
+   "evidence": "runs/m15201/artifacts/leg_dambreak_plic_60x20.json",
+   "note": "3247 B"
+  },
+  {
+   "id": "run_artifact:fields_zalesak_plic_64.npz",
+   "category": "run_artifacts",
+   "ok": true,
+   "evidence": "runs/m15201/artifacts/fields_zalesak_plic_64.npz",
+   "note": "6628 B"
+  },
+  {
+   "id": "run_artifact:fields_dambreak_plic_60x20.npz",
+   "category": "run_artifacts",
+   "ok": true,
+   "evidence": "runs/m15201/artifacts/fields_dambreak_plic_60x20.npz",
+   "note": "2279 B"
+  },
+  {
+   "id": "run_artifact:GAP-FVM-TWOPHASE.md",
+   "category": "run_artifacts",
+   "ok": true,
+   "evidence": "runs/m15201/artifacts/GAP-FVM-TWOPHASE.md",
+   "note": "1672 B"
+  },
+  {
+   "id": "benchmark:zalesak_recompute",
+   "category": "benchmark",
+   "ok": true,
+   "evidence": "runs/m15201/artifacts/fields_zalesak_plic_64.npz vs leg_zalesak_plic_64.json",
+   "note": "record geometric_error=0.0930 vs independent symmetric-difference 0.0930 (N=64, limit 0.05@N=128)"
+  },
+  {
+   "id": "benchmark:zalesak_N128_declared",
+   "category": "benchmark",
+   "ok": true,
+   "evidence": "docs/GAP-FVM-TWOPHASE/artifacts/gap_twophase.json:Z1",
+   "note": "declared N=128 PLIC geometric error ref<=limit 0.05 vs got 0.0395"
+  },
+  {
+   "id": "benchmark:dambreak_D1_declared",
+   "category": "benchmark",
+   "ok": false,
+   "evidence": "docs/GAP-FVM-TWOPHASE/artifacts/gap_twophase.json:D1",
+   "note": "front_max_rel_error: ref Martin&Moyce limit 0.15 vs got 0.988 -> HONEST FAIL"
+  },
+  {
+   "id": "benchmark:dambreak_D2_declared",
+   "category": "benchmark",
+   "ok": false,
+   "evidence": "docs/GAP-FVM-TWOPHASE/artifacts/gap_twophase.json:D2",
+   "note": "height_max_rel_error: ref Martin&Moyce limit 0.15 vs got 0.845 -> HONEST FAIL"
+  },
+  {
+   "id": "benchmark:dambreak_front",
+   "category": "benchmark",
+   "ok": false,
+   "evidence": "runs/m15201/artifacts/leg_dambreak_plic_60x20.json:comparison",
+   "note": "ref(Martin&Moyce) vs got half-cell front, max|rel|=0.839 (gate 0.15) -> HONEST FAIL, see failure_reason"
+  },
+  {
+   "id": "benchmark:dambreak_height",
+   "category": "benchmark",
+   "ok": false,
+   "evidence": "runs/m15201/artifacts/leg_dambreak_plic_60x20.json:height_max_rel_error",
+   "note": "column height max rel err=0.442 (gate 0.15)"
+  },
+  {
+   "id": "benchmark:dam_volume_conservation",
+   "category": "benchmark",
+   "ok": true,
+   "evidence": "leg_dambreak_plic_60x20.json:volume_drift",
+   "note": "relative liquid-volume drift=1.31e-16 (gate 1e-2)"
+  },
+  {
+   "id": "impl_file:campaign.py",
+   "category": "impl_files",
+   "ok": true,
+   "evidence": "src/tensorfvm/twophase_gap/campaign.py",
+   "note": "408 sloc"
+  },
+  {
+   "id": "impl_file:zalesak_gate.py",
+   "category": "impl_files",
+   "ok": true,
+   "evidence": "src/tensorfvm/twophase_gap/zalesak_gate.py",
+   "note": "101 sloc"
+  },
+  {
+   "id": "impl_file:dambreak_gate.py",
+   "category": "impl_files",
+   "ok": true,
+   "evidence": "src/tensorfvm/twophase_gap/dambreak_gate.py",
+   "note": "140 sloc"
+  },
+  {
+   "id": "impl_file:vof_plic.py",
+   "category": "impl_files",
+   "ok": true,
+   "evidence": "src/tensorfvm/vof_plic.py",
+   "note": "535 sloc"
+  },
+  {
+   "id": "impl_file:advection.py",
+   "category": "impl_files",
+   "ok": true,
+   "evidence": "src/tensorfvm/vof_phase0/advection.py",
+   "note": "274 sloc"
+  },
+  {
+   "id": "impl_file:solver.py",
+   "category": "impl_files",
+   "ok": true,
+   "evidence": "src/tensorfvm/vof_phase0/solver.py",
+   "note": "386 sloc"
+  },
+  {
+   "id": "impl_file:dam_break.py",
+   "category": "impl_files",
+   "ok": true,
+   "evidence": "src/tensorfvm/vof_phase0/dam_break.py",
+   "note": "196 sloc"
+  },
+  {
+   "id": "impl_file:anchors.py",
+   "category": "impl_files",
+   "ok": true,
+   "evidence": "src/tensorfvm/vof_phase0/anchors.py",
+   "note": "110 sloc"
+  },
+  {
+   "id": "entry:module_main",
+   "category": "entry",
+   "ok": true,
+   "evidence": "src/tensorfvm/twophase_gap/__main__.py",
+   "note": "python -m tensorfvm.twophase_gap"
+  },
+  {
+   "id": "entry:console_script",
+   "category": "entry",
+   "ok": true,
+   "evidence": "pyproject.toml:[project.scripts]",
+   "note": "tensorfvm-twophase-gap"
+  },
+  {
+   "id": "integration_callers:main_solver",
+   "category": "integration_callers",
+   "ok": true,
+   "evidence": "src/tensorfvm/vof_phase0/solver.py:130:        from ..twophase_gap.zalesak_gate import (",
+   "note": "1 src-level caller(s): Phase0TwoPhaseSolver.verify_interface_transport imports the graded Zalesak face"
+  },
+  {
+   "id": "integration_callers:solver_hook",
+   "category": "integration_callers",
+   "ok": true,
+   "evidence": "src/tensorfvm/twophase_gap/__init__.py:34:* :meth:`tensorfvm.vof_phase0.solver.Phase0TwoPhaseSolver.verify_interface_transport`; src/tensorfvm/vof_phase0/solver.py:113:    def verify_interface_transport(",
+   "note": "solver method + its Zalesak import (solver self-check face)"
+  }
+ ],
+ "counts": {
+  "total": 26,
+  "ok": 21
+ }
+}
