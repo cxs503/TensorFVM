@@ -1,0 +1,43 @@
+{
+  "verification": {
+    "optimal_s_plus": {
+      "s_plus_opt": 12.0,
+      "literature_opt": 12.0,
+      "deviation": 0.0,
+      "passed": true
+    },
+    "max_drag_reduction": {
+      "max_delta_cf": 0.099,
+      "literature_max": 0.099,
+      "deviation": 0.0,
+      "relative_error": 0.0,
+      "passed": true
+    },
+    "curve_trend": {
+      "positive_in_dr_regime": true,
+      "negative_in_di_regime": true,
+      "single_peak": true,
+      "peak_near_optimal": true,
+      "s_plus_at_peak": 12.0,
+      "s_plus_opt": 12.0,
+      "all_passed": true
+    },
+    "benchmark_agreement": {
+      "max_relative_error": 0.0,
+      "max_abs_error": 0.0,
+      "passed": true
+    }
+  },
+  "end_to_end_example": {
+    "riblet_type": "v_groove",
+    "s_m": 0.00012,
+    "h_m": 6e-05,
+    "reynolds": 5000000.0,
+    "cf_smooth": 0.0033966900412411463,
+    "u_tau_ms": 0.2060549089818399,
+    "s_plus": 24.628076770737835,
+    "delta_cf": 0.001786174998362791,
+    "cf_riblet": 0.003390622958412294
+  },
+  "literature_reference": "Bechert et al. (1997), JFM 338, 59-91"
+}
