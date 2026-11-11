@@ -163,6 +163,8 @@ class SigmaWaveTank:
         self.p = np.zeros((self.nx, self.ns))               # non-hydrostatic pressure
         self.ox = np.ones((self.nx + 1, self.ns))
         self.os = np.ones((self.nx, self.ns + 1))
+        self.bfrac_x = np.zeros((self.nx + 1, self.ns))     # body-blocked only
+        self.bfrac_s = np.zeros((self.nx, self.ns + 1))     # body-blocked only
         self.solid = np.zeros((self.nx, self.ns), dtype=bool)
         self.div_residual = 0.0
         self.volume0 = self.volume()
@@ -308,8 +310,197 @@ class SigmaWaveTank:
         closed = ((self.ox[:-1, :] <= 1e-12) & (self.ox[1:, :] <= 1e-12)
                   & (self.os[:, :-1] <= 1e-12) & (self.os[:, 1:] <= 1e-12))
         self.solid = self.solid | closed
+        # Body-only blocked fractions.  ``ox``/``os`` also carry the *walls* (the
+        # inlet, the outlet and the tank bottom are set to zero there), so a
+        # moving-body flux built from ``1 - ox`` / ``1 - os`` lets the 12 m tank
+        # bottom follow the section: the measured "added mass" then came out at a
+        # basin-scale 1.1e4 kg/m instead of O(rho B^2) and the harmonic radiation
+        # force lost its reactive part.  The walls are boundaries of the fluid
+        # domain, not body surface; only the section may move them.
+        self.bfrac_x = np.where(closed_x, 1.0, 1.0 - ox_sub)
+        self.bfrac_s = np.where(closed_s, 1.0, 1.0 - os_sub)
+        self.bfrac_x[0, :] = 0.0
+        self.bfrac_x[-1, :] = 0.0
+        self.bfrac_s[:, 0] = 0.0
+        self.bfrac_s[:, -1] = 0.0
 
     # ------------------------------------------------------------- predictor
+    def body_flux_gradient(self):
+        """``d(body volume source)/d(heave rate)`` and ``.../d(pitch rate)``.
+
+        The body enters the continuity statement *only* through the blocked
+        face fractions (see :meth:`body_normal_flux`), so the source is exactly
+        linear in the rigid-body velocity.  These two cell fields are that
+        linear map's columns; they are what turns the body force into the
+        discrete adjoint of the constraint (and, in :meth:`step`, into the
+        implicit added-mass matrix).
+        """
+        A_block_x = self.bfrac_x * self.Ax[:, None]
+        A_block_s = self.bfrac_s * self.dx
+        ref = np.asarray(self.body["ref"], dtype=float)
+        y_sig = -self.cfg.depth + np.outer(self.Hf, self.sigc)      # (nx+1, ns)
+        x_face = np.broadcast_to(self.x[:, None], (self.nx, self.ns + 1))
+        du_h = np.zeros_like(y_sig)
+        dw_h = np.ones_like(x_face)
+        du_p = -(y_sig - ref[1])
+        dw_p = (x_face - ref[0])
+        out = []
+        for du, dw in ((du_h, dw_h), (du_p, dw_p)):
+            out.append(A_block_x[1:, :] * du[1:, :] - A_block_x[:-1, :] * du[:-1, :]
+                       + A_block_s[:, 1:] * dw[:, 1:] - A_block_s[:, :-1] * dw[:, :-1])
+        return out
+
+    def body_force_reaction(self, p=None):
+        """Generalised fluid force that is the *discrete reaction* of the mask.
+
+        ``F_k = -sum_cells q * d(source)/d(v_k)``.  This is the discrete adjoint
+        of the body-velocity constraint, so the power identity
+
+            F . v_body = -sum_cells q * source(v_body)
+
+        holds at round-off (test ``test_reaction_force_consistent_with_flux``).
+        Integrating a *separately reconstructed* pressure field over the
+        stair-step wetted faces instead (what :meth:`body_force_interpolated`
+        does, and what the previous campaign node used) breaks that identity and
+        pumps energy into the coupling -- that is what made the free-body run
+        diverge at ``A33/m ~ 2.7``.
+
+        Returns ``(force[2], moment_about_ref)`` for the *non-hydrostatic*
+        pressure ``q`` only; the hydrostatic + Froude-Krylov part comes from
+        :meth:`hydrostatic_force`.
+        """
+        if self.body is None:
+            return np.zeros(2), 0.0
+        p = self.p if p is None else np.asarray(p, dtype=float)
+        grads = self.body_flux_gradient()
+        rho = self.cfg.density
+        f = -rho * np.array([float((p * gk).sum()) for gk in grads])
+        return np.array([f[0], 0.0]), float(f[1])
+
+    def wetted_quadrature(self, sub: int = 8):
+        """Quadrature weights of the wetted (rotated) section contour.
+
+        Returns ``(points, sample points, normals, weights)``: the mid-points of
+        ``sub`` pieces
+        per polygon edge restricted to the submerged part, the outward normal
+        of each piece, and ``dl``.  Because the elevation is interpolated
+        linearly along an edge and the pressure of the model is
+        ``g(eta(x) - y) + q`` (linear in ``y``, piecewise linear in ``x``), the
+        contour integral on these weights is *exact* for the hydrostatic part --
+        the waterplane restoring and the Froude-Krylov force of the section
+        therefore carry no stair-step dependence at all, unlike the cut-cell
+        face-fraction sum.
+        """
+        poly = np.asarray(self.body_polygon(), dtype=float)
+        pts, nrm, wgt = [], [], []
+        s = (np.arange(sub) + 0.5) / sub
+        n = len(poly)
+        for k in range(n):
+            a, b = poly[k], poly[(k + 1) % n]
+            d = b - a
+            length = math.hypot(d[0], d[1])
+            if length <= 0.0:
+                continue
+            n_out = np.array([d[1], -d[0]]) / length      # outward normal (CCW)
+            p_mid = a[None, :] + s[:, None] * d[None, :]
+            eta = self.eta_at(p_mid[:, 0])
+            wet = p_mid[:, 1] < eta
+            if not wet.any():
+                continue
+            pts.append(p_mid[wet])
+            nrm.append(np.broadcast_to(n_out, p_mid[wet].shape))
+            wgt.append(np.full(int(wet.sum()), length / sub))
+        if not pts:
+            z = np.zeros((0, 2))
+            return z, z, z, np.zeros(0)
+        pts, nrm, wgt = np.vstack(pts), np.vstack(nrm), np.concatenate(wgt)
+        # ``q`` lives on cell centres and is *zero* inside the body (the solid rows
+        # are masked out of the Poisson system), so the field must be sampled half
+        # a cell outside the section; the moment arm stays on the exact contour.
+        return pts, pts + 0.5 * self.dx * nrm, nrm, wgt
+
+    def hydrostatic_force(self, quad=None):
+        """Froude-Krylov + hydrostatic load ``-oint rho g (eta - y) n dl``.
+
+        The tank's pressure is split as ``p = g(eta - y) + q`` (a surface-fitted
+        sigma grid, see the module docstring), so the body load splits the same
+        way.  The still-water Archimedes formula used by the previous node
+        (``rho g * area(wetted at z = 0)``) misses the Froude-Krylov force
+        entirely: it cannot see the incident elevation over the footprint, which
+        is ``O(rho g B a) = 235 N/m`` here -- of the same order as the whole
+        heave excitation.
+        """
+        if self.body is None:
+            return np.zeros(2), 0.0
+        pts, _ps, nrm, wgt = self.wetted_quadrature() if quad is None else quad
+        if pts.shape[0] == 0:
+            return np.zeros(2), 0.0
+        rho, g = self.cfg.density, self.cfg.gravity
+        ref = np.asarray(self.body["ref"], dtype=float)
+        p = rho * g * (self.eta_at(pts[:, 0]) - pts[:, 1]) * wgt
+        force = -np.array([float((p * nrm[:, 0]).sum()), float((p * nrm[:, 1]).sum())])
+        r = pts - ref
+        mom = -float(np.sum(p * (r[:, 0] * nrm[:, 1] - r[:, 1] * nrm[:, 0])))
+        return force, mom
+
+    def body_force_dynamic(self, p, quad=None):
+        """``q``-part of the load: ``-oint rho q n dl`` -- a linear functional of q."""
+        if self.body is None:
+            return np.zeros(2), 0.0
+        pts, ps, nrm, wgt = self.wetted_quadrature() if quad is None else quad
+        if pts.shape[0] == 0:
+            return np.zeros(2), 0.0
+        rho = self.cfg.density
+        ref = np.asarray(self.body["ref"], dtype=float)
+        q = rho * np.asarray(self.pressure_at(ps[:, 0], ps[:, 1], p), dtype=float) * wgt
+        force = -np.array([float((q * nrm[:, 0]).sum()), float((q * nrm[:, 1]).sum())])
+        r = pts - ref
+        mom = -float(np.sum(q * (r[:, 0] * nrm[:, 1] - r[:, 1] * nrm[:, 0])))
+        return force, mom
+
+    def body_loads(self, p=None, quad=None):
+        """Total fluid load on the section: Froude-Krylov/hydrostatic + ``q``.
+
+        Both terms are integrated on the *same* contour weights, so the load is
+        one linear functional of the pressure field -- which is what the implicit
+        free-body step needs to keep the added mass inside the mass matrix.
+        """
+        if self.body is None:
+            return np.zeros(2), 0.0
+        quad = self.wetted_quadrature() if quad is None else quad
+        fh, mh = self.hydrostatic_force(quad)
+        fq, mq = self.body_force_dynamic(self.p if p is None else p, quad)
+        return fh + fq, mh + mq
+
+    def discrete_added_mass(self):
+        """The tank's own added-mass matrix ``A = -dF/d(acceleration)`` [kg/m].
+
+        Obtained from the linearity of the projection: the pressure produced by
+        a unit acceleration in each DOF is a solve of the *same* Poisson matrix
+        with the body-flux pattern as the right-hand side, and the reaction of
+        that pressure is the added mass.  It is therefore a measurement of the
+        discretisation, not an input: the free-body time integration uses it as
+        an implicit mass augmentation (so the coupling is added-mass free) and
+        the potential-flow reference adjudicates its value.
+        """
+        if self.body is None:
+            return np.zeros((2, 2))
+        M, free = self._poisson_matrix()
+        grads = self.body_flux_gradient()
+        quad = self.wetted_quadrature()
+        pk = []
+        for gk in grads:
+            rhs = -gk.ravel()
+            rhs[~free] = 0.0
+            pk.append(self._cg_solve(M, rhs))
+        # dF_j / d(acceleration_k): the pressure produced by a unit acceleration
+        # in DOF k, integrated with the same contour functional as the load
+        g = np.zeros((2, 2))
+        for k in range(2):
+            f, m = self.body_force_dynamic(pk[k], quad)
+            g[:, k] = (f[1], m)
+        return -g
+
     def _ddx(self, f, uvel):
         cen = np.empty_like(f)
         cen[1:-1] = (f[2:] - f[:-2]) / (2.0 * self.dx)
@@ -388,15 +579,35 @@ class SigmaWaveTank:
         t = np.clip(self.xf / xr, 0.0, 1.0)
         return 1.0 - (3.0 * t ** 2 - 2.0 * t ** 3)
 
+    def set_sponge(self, period: float):
+        """Activate the absorbing beach for a *radiation* run (no incident wave).
+
+        A forced-oscillation run in otherwise still water still needs the beach:
+        without it the tank is a closed basin whose longitudinal seiche period is
+        ``2L / sqrt(g h) = 7.7 s`` here, and a forcing at 0.8 s excites it
+        resonantly (measured: the velocity grew linearly from 0 to 0.58 m/s in
+        0.6 s and the harmonic fit never settled).  The sponge rate is scaled by
+        the radiation frequency exactly as it is by the wave frequency in a wave
+        run, so the beach length stays ``damp_waves`` radiation wavelengths.
+        """
+        from ..wave_tank.theory import dispersion_k
+        omega = 2.0 * math.pi / float(period)
+        k = dispersion_k(omega, self.cfg.depth, self.cfg.gravity)
+        self._sponge_reference = (omega, 2.0 * math.pi / k)
+        return self._sponge_reference
+
     def sponge_rate(self, x) -> np.ndarray:
         """Quadratic ramp of the absorbing-beach rate [1/s] along the tank."""
-        cfg, wave = self.cfg, self.wave
+        cfg = self.cfg
         x = np.asarray(x, dtype=float)
-        if wave is None or cfg.damp_waves <= 0.0 or cfg.damp_strength <= 0.0:
+        ref = (self.wave.omega, self.wave.wavelength) if self.wave is not None \
+            else getattr(self, "_sponge_reference", None)
+        if ref is None or cfg.damp_waves <= 0.0 or cfg.damp_strength <= 0.0:
             return np.zeros_like(x)
-        x0 = cfg.length - cfg.damp_waves * wave.wavelength
+        omega, wavelength = ref
+        x0 = cfg.length - cfg.damp_waves * wavelength
         s = np.clip((x - x0) / max(cfg.length - x0, 1e-12), 0.0, 1.0) ** 2
-        return cfg.damp_strength * wave.omega * s
+        return cfg.damp_strength * omega * s
 
     def _target_fields(self, t):
         wave = self.wave
@@ -457,7 +668,7 @@ class SigmaWaveTank:
         M = sparse.diags(free.astype(float)) @ M + sparse.diags((~free).astype(float))
         return M, free
 
-    def body_normal_flux(self):
+    def body_normal_flux(self, vel=None):
         """Divergence source produced by the moving section (per cell).
 
         The cut-cell mask alone makes the body a *static* obstacle: without this
@@ -476,7 +687,7 @@ class SigmaWaveTank:
         if self.body is None:
             return 0.0
         b = self.body
-        vel = np.asarray(b["vel"], dtype=float)
+        vel = np.asarray(b["vel"] if vel is None else vel, dtype=float)
         ref = np.asarray(b["ref"], dtype=float)
         Hf = self.Hf
         y_sig = -self.cfg.depth + np.outer(Hf, self.sigc)          # (nx+1, ns)
@@ -485,45 +696,149 @@ class SigmaWaveTank:
         u_body = -vel[1] * (y_sig - ref[1])
         x_face = np.broadcast_to(self.x[:, None], (self.nx, self.ns + 1))
         w_body = vel[0] + vel[1] * (x_face - ref[0])
-        A_block_x = (1.0 - self.ox) * self.Ax[:, None]
-        A_block_s = (1.0 - self.os) * self.dx
+        A_block_x = self.bfrac_x * self.Ax[:, None]
+        A_block_s = self.bfrac_s * self.dx
         return (A_block_x[1:, :] * u_body[1:, :] - A_block_x[:-1, :] * u_body[:-1, :]
                 + A_block_s[:, 1:] * w_body[:, 1:] - A_block_s[:, :-1] * w_body[:, :-1])
 
-    def _project(self, us, ws, dt):
-        nx, ns = self.nx, self.ns
+    def _divergence(self, u, w):
         Aopen_x = self.ox * self.Ax[:, None]
         Aopen_s = self.os * self.dx
-        M, free = self._poisson_matrix()
-        flux = (Aopen_x[1:, :] * us[1:, :] - Aopen_x[:-1, :] * us[:-1, :]
-                + Aopen_s[:, 1:] * ws[:, 1:] - Aopen_s[:, :-1] * ws[:, :-1])
-        if self.body is not None:
-            flux = flux + self.body_normal_flux()
-        rhs = -flux.ravel() / dt
-        rhs[~free] = 0.0
-        p, info = _solve_spd(M, rhs, self.p.ravel(), self.cfg.cg_rtol,
-                             self.cfg.cg_maxiter)
-        p = p.reshape(nx, ns)
+        return (Aopen_x[1:, :] * u[1:, :] - Aopen_x[:-1, :] * u[:-1, :]
+                + Aopen_s[:, 1:] * w[:, 1:] - Aopen_s[:, :-1] * w[:, :-1])
+
+    def _cg_solve(self, M, rhs, x0=None):
+        if x0 is None:
+            x0 = np.zeros_like(rhs)
+        p, info = _solve_spd(M, np.asarray(rhs, dtype=float).ravel(),
+                             np.asarray(x0, dtype=float).ravel(),
+                             self.cfg.cg_rtol, self.cfg.cg_maxiter)
+        self.cg_info = int(info)
+        return p.reshape(self.nx, self.ns)
+
+    def _correct(self, us, ws, p, dt):
+        Aopen_x = self.ox * self.Ax[:, None]
+        Aopen_s = self.os * self.dx
         coef_u = dt * Aopen_x / self.Wx[:, None]
         coef_s = dt * Aopen_s / self.Ws[:, None]
         u_new = us.copy()
         u_new[1:-1, :] -= coef_u[1:-1, :] * (p[1:, :] - p[:-1, :])
         w_new = ws.copy()
-        if ns > 1:
+        if self.ns > 1:
             w_new[:, 1:-1] -= coef_s[:, 1:-1] * (p[:, 1:] - p[:, :-1])
         w_new[:, -1] = ws[:, -1] + 2.0 * coef_s[:, -1] * p[:, -1]   # p_out = 0, half cell
         w_new[:, 0] = 0.0
-        flux_new = (Aopen_x[1:, :] * u_new[1:, :] - Aopen_x[:-1, :] * u_new[:-1, :]
-                    + Aopen_s[:, 1:] * w_new[:, 1:] - Aopen_s[:, :-1] * w_new[:, :-1])
+        flux_new = self._divergence(u_new, w_new)
+        scale_field = self._divergence(us, ws)
         if self.body is not None:
-            # the body flux is prescribed, not corrected, so it must enter the
-            # residual diagnostic as well -- otherwise the report of "exact
-            # projection with a body inside" would just be measuring the body.
-            flux_new = flux_new + self.body_normal_flux()
-        scale = max(float(np.abs(flux).max()), 1e-30)
-        self.div_residual = (float(np.abs(flux_new.ravel()[free]).max() / scale)
+            body_flux = self.body_normal_flux()
+            flux_new = flux_new + body_flux
+            scale_field = scale_field + body_flux
+        if self.body is not None:
+            # Direct forcing at the *fully blocked* faces: the fluid there must
+            # move with the body (no penetration).  Without it those face values
+            # are never touched by the projection, they are advected from the
+            # solid interior, and they feed the momentum of the neighbouring
+            # fluid cell -- measured: the face velocity next to the section's
+            # waterline corner grew 0 -> 3.3 m/s in 4 s of a 1 cm forced heave
+            # while the fluid field itself stayed bounded.
+            vel = np.asarray(self.body["vel"], dtype=float)
+            ref = np.asarray(self.body["ref"], dtype=float)
+            y_sig = -self.cfg.depth + np.outer(self.Hf, self.sigc)
+            x_face = np.broadcast_to(self.x[:, None], (self.nx, self.ns + 1))
+            fill_u = np.zeros_like(u_new)
+            fill_u[:, :] = (-vel[1] * (y_sig - ref[1]))
+            fill_w = vel[0] + vel[1] * (x_face - ref[0])
+            bu = (self.bfrac_x >= 1.0 - 1e-12)
+            u_new[bu] = fill_u[bu]
+            bw = (self.bfrac_s >= 1.0 - 1e-12)
+            w_new[bw] = fill_w[bw]
+        free = ~self.solid
+        scale = max(float(np.abs(scale_field).max()), 1e-30)
+        self.div_residual = (float(np.abs(flux_new[free]).max() / scale)
                              if free.any() else 0.0)
         self.p = p
+        return u_new, w_new
+
+    def _project(self, us, ws, dt):
+        M, free = self._poisson_matrix()
+        div = self._divergence(us, ws)
+        if self.body is not None:
+            div = div + self.body_normal_flux()
+        rhs = -div.ravel() / dt
+        rhs[~free] = 0.0
+        p = self._cg_solve(M, rhs, self.p.ravel())
+        return self._correct(us, ws, p, dt)
+
+    def _step_free_body(self, us, ws, dt):
+        """One time step with a *free* heave/pitch section (implicit coupling).
+
+        The rigid-body acceleration is eliminated from the projection instead of
+        being lagged: the body source is linear in the acceleration, so the
+        pressure of this step is ``q = q0 + a3 q3 + a5 q5`` with the ``q_k``
+        solved from the same Poisson matrix.  The body equation then closes on
+        the same linear combination, giving the 2x2 system
+
+            (M_body + A) a = F0 + F_ext,     A = -dF/d(a)   (discrete added mass)
+
+        so the *whole* added mass the fluid can exert in this discretisation is
+        inside the implicit mass matrix.  Nothing is left to the lagged coupling
+        that made the explicit staggered version unstable at ``A33/m ~ 2.7``
+        (previous node, honest FAIL in ``docs/wave-tank-td-seakeeping``).
+        """
+        b = self.body
+        grav = self.cfg.gravity
+        M, free = self._poisson_matrix()
+        div_adv = self._divergence(us, ws)
+        v_n = np.asarray(b["vel"], dtype=float)
+        rhs0 = -(div_adv + self.body_normal_flux(v_n)).ravel() / dt
+        rhs0[~free] = 0.0
+        p0 = self._cg_solve(M, rhs0, self.p.ravel())
+        grads = self.body_flux_gradient()
+        pk = []
+        for gk in grads:
+            rhs = -gk.ravel()
+            rhs[~free] = 0.0
+            pk.append(self._cg_solve(M, rhs, p0.ravel()))
+        rho = self.cfg.density
+        quad = self.wetted_quadrature()
+        fh, mh = self.hydrostatic_force(quad)
+        Fq0, Mq0 = self.body_force_dynamic(p0, quad)
+        # G[j][k] = dF_j/d(acceleration in DOF k) from the same contour
+        # functional: the added mass the fluid can exert at this time step is
+        # therefore *inside* the implicit mass matrix, not left to the lagged
+        # coupling that destabilised the explicit version.
+        G = np.zeros((2, 2))
+        for k in range(2):
+            fk, mk = self.body_force_dynamic(pk[k], quad)
+            G[:, k] = (fk[1], mk)
+        # weight and its moment about the reference point; the CG rides with the
+        # body, so an off-centre CG really does couple heave and pitch
+        th = float(b["xi"][1])
+        dx_cg = b["cg"][0] - b["ref"][0]
+        dz_cg = b["cg"][1] - b["ref"][1]
+        c, sn = math.cos(th), math.sin(th)
+        xg = b["ref"][0] + dx_cg * c - dz_cg * sn
+        m_weight = -(xg - b["ref"][0]) * b["mass"] * grav
+        damp = np.asarray(b.get("damping", np.zeros(2)), dtype=float)
+        rhs = np.array([Fq0[1] + fh[1] - b["mass"] * grav - damp[0] * v_n[0],
+                        Mq0 + mh + m_weight - damp[1] * v_n[1]])
+        dcg = float(b["ref"][1] - b["cg"][1])
+        m_body = np.array([[b["mass"], b["mass"] * dcg],
+                           [b["mass"] * dcg, b["inertia"]]])
+        acc = np.linalg.solve(m_body - G, rhs)
+        vel = v_n + dt * acc
+        p = p0 + acc[0] * pk[0] + acc[1] * pk[1]
+        b["vel"] = vel
+        b["acc"] = acc
+        b["added_mass_discrete"] = (-G).tolist()
+        u_new, w_new = self._correct(us, ws, p, dt)
+        # the recorded load is the *fluid* load on the section (no weight), so a
+        # wave-drift analysis of ``force[0]`` is not contaminated by gravity
+        b["force"] = np.array([Fq0[0], Fq0[1]]) + fh + G @ acc
+        b["moment"] = float(Mq0 + mh + float(G[1] @ acc))
+        b["xi"] = b["xi"] + dt * vel
+        b["xi"][1] = float(np.clip(b["xi"][1], -0.35, 0.35))
         return u_new, w_new
 
     # ------------------------------------------------------------------- step
@@ -533,7 +848,15 @@ class SigmaWaveTank:
         self._update_mask()
         us, ws = self._predict(dt)
         us, ws = self._apply_zones(us, ws, t, dt)
-        u_new, w_new = self._project(us, ws, dt)
+        mode = None if self.body is None else str(self.body.get("motion", "free"))
+        if mode == "free":
+            u_new, w_new = self._step_free_body(us, ws, dt)
+        else:
+            if self.body is not None:
+                self._prescribe(dt)
+            u_new, w_new = self._project(us, ws, dt)
+            if self.body is not None:
+                self.body["force"], self.body["moment"] = self.body_loads()
         self.u, self.w = u_new, w_new
         top_open = ~self.solid[:, -1]
         self.eta = self.eta + np.where(top_open, dt * w_new[:, -1], 0.0)
@@ -548,7 +871,6 @@ class SigmaWaveTank:
         self._build_grid()
         self.volume_drift = self.volume() - self.volume0
         if self.body is not None:
-            self._body_dynamics(dt)
             self._record_body(self.t)
         return self.t
 
@@ -558,7 +880,7 @@ class SigmaWaveTank:
         return g * (self.eta[:, None] - self.yc) + self.p
 
     # ----------------------------------------------------------- body forces
-    def pressure_at(self, xq, yq):
+    def pressure_at(self, xq, yq, p=None):
         """Bilinear ``(x, sigma)`` interpolation of the projected pressure ``q``.
 
         The vertical coordinate is normalised by the local water column, so the
@@ -567,6 +889,7 @@ class SigmaWaveTank:
         sample; callers sample slightly outside the body for exactly that
         reason.
         """
+        field = self.p if p is None else np.asarray(p, dtype=float)
         xq = np.atleast_1d(np.asarray(xq, dtype=float))
         yq = np.atleast_1d(np.asarray(yq, dtype=float))
         eta = self.eta_at(xq)
@@ -579,10 +902,10 @@ class SigmaWaveTank:
         fj = np.clip(sig * self.ns - 0.5, 0.0, self.ns - 1.0 - 1e-9)
         j0 = np.floor(fj).astype(int)
         tj = fj - j0
-        p00 = self.p[fi, j0]
-        p10 = self.p[fi + 1, j0]
-        p01 = self.p[fi, j0 + 1]
-        p11 = self.p[fi + 1, j0 + 1]
+        p00 = field[fi, j0]
+        p10 = field[fi + 1, j0]
+        p01 = field[fi, j0 + 1]
+        p11 = field[fi + 1, j0 + 1]
         return ((1 - tx) * (1 - tj) * p00 + tx * (1 - tj) * p10
                 + (1 - tx) * tj * p01 + tx * tj * p11)
 
@@ -747,21 +1070,16 @@ class SigmaWaveTank:
                 frac[idx] += cnt.mean(axis=(1, 2))
         return float(np.sum(frac * self.V))
 
-    def _apply_prescribed_motion(self, dt: float):
+    def _prescribe(self, dt: float):
         """Prescribed kinematics for ``motion='fixed'`` / ``'forced'`` runs.
 
         A diffraction run holds the section still; a forced-oscillation run
-        drives one DOF with ``xi = xi0 + amp * cos(omega t + phase)``.  Both keep
-        the measured force, which is what the radiation/diffraction evidence
-        needs, and neither feeds the force back into the kinematics -- so the
-        explicit staggered coupling that destabilises the free-body run cannot
-        be excited.
+        drives one DOF with ``xi = amp * cos(omega t + phase)``.  The load is
+        measured after the projection (``step``), so the radiation force is the
+        one of the field that the *prescribed* motion actually produced.
         """
         b = self.body
-        mode = b.get("motion", "free")
-        fx, fy, m5 = self.body_force_interpolated()
-        b["force"] = np.array([fx, fy])
-        b["moment"] = m5
+        mode = b.get("motion", "fixed")
         if mode == "fixed":
             b["vel"] = np.zeros(2)
             b["acc"] = np.zeros(2)
@@ -777,45 +1095,10 @@ class SigmaWaveTank:
         b["acc"][dof] = -amp * omega ** 2 * math.cos(omega * t + phase)
 
     def _body_dynamics(self, dt: float):
-        b = self.body
-        if b.get("motion", "free") != "free":
-            self._apply_prescribed_motion(dt)
+        """Kept for API compatibility: a free step is fully handled by ``step``."""
+        if self.body is None or self.body.get("motion", "free") != "free":
             return
-        g = self.cfg.gravity
-        fx, fy, m5 = self.body_force_interpolated()
-        b["force"] = np.array([fx, fy])
-        b["moment"] = m5
-        m_eff = b["mass"] + b["added"][0]
-        i_eff = b["inertia"] + b["added"][1]
-        # moment of the weight about the reference point: the CG rides with the
-        # body, so this is what cancels the buoyancy moment of an off-centre
-        # section and what makes the pitch restoring (via the rotating wetted
-        # polygon) a physical rather than a bookkeeping quantity.
-        th = float(b["xi"][1])
-        dx = b["cg"][0] - b["ref"][0]
-        dz = b["cg"][1] - b["ref"][1]
-        c, sn = math.cos(th), math.sin(th)
-        xg = b["ref"][0] + dx * c - dz * sn
-        m_weight = -(xg - b["ref"][0]) * b["mass"] * g
-        # linear radiation damping, supplied at the forcing frequency by the
-        # potential-flow reference (:func:`tensormfvm.wave_tank_td.potential2d`);
-        # without it a 2-DOF section in a tank has no radiation resistance and
-        # the response never settles into a harmonic (see README).
-        damp = b.get("damping", np.zeros(2))
-        force = np.array([fy - b["mass"] * g - damp[0] * b["vel"][0],
-                          m5 + m_weight - damp[1] * b["vel"][1]])
-        # the CG is not at the rotation reference, so the mass matrix couples
-        # heave and pitch (T = m h'^2/2 + m d h' th' + I_ref th'^2/2).  Using
-        # the diagonal (m, I_ref) is a few-percent error on the natural
-        # frequencies of a shallow section; the coupled form is what the
-        # frequency-domain reference solves, so both sides must use it.
-        dcg = float(b["ref"][1] - b["cg"][1])
-        mass_matrix = np.array([[m_eff, m_eff * dcg],
-                                [m_eff * dcg, i_eff]])
-        b["acc"] = np.linalg.solve(mass_matrix, force)
-        b["vel"] = b["vel"] + dt * b["acc"]
-        b["xi"] = b["xi"] + dt * b["vel"]
-        b["xi"][1] = float(np.clip(b["xi"][1], -0.35, 0.35))
+        self.body["force"], self.body["moment"] = self.body_loads()
 
     def _record_body(self, t):
         b = self.body

@@ -1,0 +1,215 @@
+{
+ "artifacts": {
+  "decay": [
+   "docs/wave-tank-td-body/artifacts/decay_heave_nx160.json",
+   "docs/wave-tank-td-body/artifacts/decay_heave_nx240.json",
+   "docs/wave-tank-td-body/artifacts/decay_pitch_nx160.json"
+  ],
+  "diffraction": [],
+  "forced": [
+   "docs/wave-tank-td-body/artifacts/forced_heave_T0.80.json",
+   "docs/wave-tank-td-body/artifacts/forced_heave_T1.00.json",
+   "docs/wave-tank-td-body/artifacts/forced_heave_T1.00_fine.json",
+   "docs/wave-tank-td-body/artifacts/forced_heave_T1.20.json",
+   "docs/wave-tank-td-body/artifacts/forced_pitch_T1.00.json"
+  ],
+  "gate": "docs/wave-tank-td-body/artifacts/geometry_gate_body.json",
+  "rao": []
+ },
+ "decay": [
+  {
+   "added_mass_from_frequency": 674.9774452442316,
+   "added_mass_potential": 404.74921549424283,
+   "added_mass_rel_error": 0.6676436158622585,
+   "amplitude_final": 0.0034654813040538007,
+   "amplitude_start": 0.01,
+   "case": "decay_heave_nx160",
+   "config": {
+    "dt": 0.015000000000000001,
+    "ns": 20,
+    "nx": 160,
+    "periods": 6.0,
+    "spp": 60,
+    "wall_seconds": 58.47796392440796
+   },
+   "cross_dof_max": 0.005359305838547884,
+   "decay_period": 1.7519999999999967,
+   "discrete_added_mass": [
+    [
+     864.41642989139,
+     -12.003623613204482
+    ],
+    [
+     -6.7369502452867405,
+     29.991196225190123
+    ]
+   ],
+   "dof": 0,
+   "hydrostatic_stiffness": {
+    "C33": 11767.98,
+    "C55": 1353.3176999999998
+   },
+   "numerics": {
+    "div_residual_max": 9.72258423205064e-13,
+    "volume_drift_rel": 0.000664656660595379
+   }
+  },
+  {
+   "added_mass_from_frequency": 650.0812678074874,
+   "added_mass_potential": 386.73796708201087,
+   "added_mass_rel_error": 0.6809346977552697,
+   "amplitude_final": 0.0028367049801387013,
+   "amplitude_start": 0.01,
+   "case": "decay_heave_nx240",
+   "config": {
+    "dt": 0.015000000000000001,
+    "ns": 28,
+    "nx": 240,
+    "periods": 6.0,
+    "spp": 60,
+    "wall_seconds": 129.30242013931274
+   },
+   "cross_dof_max": 0.005323851600507087,
+   "decay_period": 1.7279999999999973,
+   "discrete_added_mass": [
+    [
+     839.6561569965318,
+     -2.619204798585997
+    ],
+    [
+     -1.9627664520602246,
+     29.711778946273814
+    ]
+   ],
+   "dof": 0,
+   "hydrostatic_stiffness": {
+    "C33": 11767.98,
+    "C55": 1353.3176999999998
+   },
+   "numerics": {
+    "div_residual_max": 1.150269820370884e-12,
+    "volume_drift_rel": 0.0007285568854443387
+   }
+  },
+  {
+   "added_mass_from_frequency": 26.78802568818943,
+   "added_mass_potential": 39.56194783104973,
+   "added_mass_rel_error": 0.32288405508777396,
+   "amplitude_final": 0.003650769222193045,
+   "amplitude_start": 0.01,
+   "case": "decay_pitch_nx160",
+   "config": {
+    "dt": 0.015000000000000001,
+    "ns": 20,
+    "nx": 160,
+    "periods": 6.0,
+    "spp": 60,
+    "wall_seconds": 52.84388756752014
+   },
+   "cross_dof_max": 0.0005832956570309015,
+   "decay_period": 1.3028571428571405,
+   "discrete_added_mass": [
+    [
+     858.9333226175683,
+     -11.294419727154098
+    ],
+    [
+     -6.469304698281146,
+     28.95553144077893
+    ]
+   ],
+   "dof": 1,
+   "hydrostatic_stiffness": {
+    "C33": 11767.98,
+    "C55": 1353.3176999999998
+   },
+   "numerics": {
+    "div_residual_max": 2.7507476343975077e-13,
+    "volume_drift_rel": -3.7686224322393734e-05
+   }
+  }
+ ],
+ "diffraction": [],
+ "radiation": [
+  {
+   "A_direct": 660.2237076598661,
+   "A_potential": 674.5328568574558,
+   "A_rel_error": 0.021213420594889648,
+   "B_direct": 651.8970629772137,
+   "B_potential": 97.46558715020805,
+   "B_rel_error": 5.688484438846601,
+   "case": "forced_heave_T0.80",
+   "dof": 0,
+   "dt": 0.01,
+   "dx": 0.06,
+   "period": 0.8
+  },
+  {
+   "A_direct": 551.0873973678287,
+   "A_potential": 595.917244654286,
+   "A_rel_error": 0.07522831011957853,
+   "B_direct": 585.3190657494531,
+   "B_potential": 422.78959056743906,
+   "B_rel_error": 0.38442165750551754,
+   "case": "forced_heave_T1.00",
+   "dof": 0,
+   "dt": 0.0125,
+   "dx": 0.06,
+   "period": 1.0
+  },
+  {
+   "A_direct": 524.7118978114758,
+   "A_potential": 595.917244654286,
+   "A_rel_error": 0.11948864960959332,
+   "B_direct": 841.9313876277043,
+   "B_potential": 422.78959056743906,
+   "B_rel_error": 0.991372082973287,
+   "case": "forced_heave_T1.00_fine",
+   "dof": 0,
+   "dt": 0.00909090909090909,
+   "dx": 0.04,
+   "period": 1.0
+  },
+  {
+   "A_direct": 450.5116127937686,
+   "A_potential": 501.7528636441771,
+   "A_rel_error": 0.1021244811205437,
+   "B_direct": 1699.8570956060917,
+   "B_potential": 533.8200442569865,
+   "B_rel_error": 2.184326092460782,
+   "case": "forced_heave_T1.20",
+   "dof": 0,
+   "dt": 0.015,
+   "dx": 0.06,
+   "period": 1.2
+  },
+  {
+   "A_direct": 302.6427307399455,
+   "A_potential": 25.41938047798369,
+   "A_rel_error": 10.905983743469724,
+   "B_direct": 21.662474246329925,
+   "B_potential": 15.964071648692801,
+   "B_rel_error": 0.35695170524392694,
+   "case": "forced_pitch_T1.00",
+   "dof": 1,
+   "dt": 0.0125,
+   "dx": 0.06,
+   "period": 1.0
+  }
+ ],
+ "rao": [],
+ "rows": [
+  {
+   "criterion": "geometry gate: hydrostatic load vs weight",
+   "measured": 1.9321385271153762e-16,
+   "threshold": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "criterion": "geometry gate: K55 closed form vs energy Hessian",
+   "measured": 2.0766240309863147e-08,
+   "threshold": 1e-05,
+   "verdict": "PASS"
+  }
+ ]
+}
