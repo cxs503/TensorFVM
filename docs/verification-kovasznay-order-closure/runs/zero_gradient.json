@@ -1,0 +1,30 @@
+{
+  "8": {
+    "n": 8,
+    "converged": true,
+    "outer": 24,
+    "seconds": 7.747159481048584,
+    "cells": 64,
+    "faces": 544,
+    "total_l2": 0.04005422522815509,
+    "inplane_l2": 0.040054225228155084,
+    "spanwise_l2": 0.0,
+    "max_abs_w": 0.0,
+    "tie_residual": 0.0,
+    "linear_residual": NaN
+  },
+  "16": {
+    "n": 16,
+    "converged": true,
+    "outer": 18,
+    "seconds": 65.77946734428406,
+    "cells": 256,
+    "faces": 2112,
+    "total_l2": 0.01332787507585613,
+    "inplane_l2": 0.01332787507585613,
+    "spanwise_l2": 0.0,
+    "max_abs_w": 0.0,
+    "tie_residual": 0.0,
+    "linear_residual": NaN
+  }
+}

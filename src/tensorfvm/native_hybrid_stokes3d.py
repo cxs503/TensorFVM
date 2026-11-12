@@ -25,7 +25,8 @@ class NativeHybridStokes3D:
     def __init__(self, mesh, velocity_dirichlet, velocity_boundary=0., *,
                  viscosity=1., body_force=0., boundary_traction=0.,
                  gauge_value=0., body_force_discretization='face', coupled_linear_method='direct',
-                 gradient_jump_stabilization=1., momentum_relaxation_basis='diagonal',robin_coefficient=None,normal_velocity_faces=None):
+                 gradient_jump_stabilization=1., momentum_relaxation_basis='diagonal',robin_coefficient=None,normal_velocity_faces=None,
+                 zero_gradient_faces=None):
         if coupled_linear_method not in ('direct', 'reused_lu', 'block_amg'):
             raise ValueError('coupled_linear_method must be direct, reused_lu or block_amg')
         if momentum_relaxation_basis not in ('diagonal','absolute_row_sum'):
@@ -39,7 +40,8 @@ class NativeHybridStokes3D:
         self.gradient_jump_stabilization = gradient_jump_stabilization
         self.viscous = NativeHybridViscous3D(
             mesh, viscosity, dirichlet_mask=velocity_dirichlet,
-            gradient_jump_stabilization=gradient_jump_stabilization,robin_coefficient=robin_coefficient,normal_velocity_faces=normal_velocity_faces)
+            gradient_jump_stabilization=gradient_jump_stabilization,robin_coefficient=robin_coefficient,normal_velocity_faces=normal_velocity_faces,
+            zero_gradient_faces=zero_gradient_faces)
         v = self.viscous
         self.rigid_motion_constraints = require_rigid_motion_constraints(mesh, v.dirichlet_components,v.robin_coefficient,v.normal_velocity_faces)
         self.N, self.F = v.N, v.F
@@ -104,7 +106,8 @@ class NativeHybridStokes3D:
         """
         new = NativeHybridViscous3D(self.mesh,viscosity,
             dirichlet_mask=self.viscous.dirichlet_components,
-            gradient_jump_stabilization=self.gradient_jump_stabilization,robin_coefficient=self.viscous.robin_coefficient,normal_velocity_faces=self.viscous.normal_velocity_faces)
+            gradient_jump_stabilization=self.gradient_jump_stabilization,robin_coefficient=self.viscous.robin_coefficient,normal_velocity_faces=self.viscous.normal_velocity_faces,
+            zero_gradient_faces=self.viscous.zero_gradient_faces)
         self.viscous = new
         self.A = new.matrix
         self.rhs = new.velocity_space.restrict(self.load-new.full_matrix @ self.prescribed)
