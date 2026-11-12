@@ -90,8 +90,8 @@ GATES = (
      "minimum circularity vs Hysing et al. (2009) ref"),
     ("B3", "hysing", "worst_step_drift", "<=", HYSING_MASS_DRIFT_MAX,
      "worst per-step relative volume drift"),
-    ("B4", "hysing", "hysing_convergence_order", ">=", HYSING_CONVERGENCE_MAX,
-     "terminal velocity convergence coarse -> fine"),
+    ("B4", "hysing", "hysing_convergence_change", "<=", HYSING_CONVERGENCE_MAX,
+     "relative change of U_T coarse -> fine"),
 )
 
 
@@ -256,6 +256,7 @@ def evaluate_gates(legs: dict) -> tuple[list[dict], dict]:
         "hysing_circularity_error": None,
         "hysing_worst_step_drift": None,
         "hysing_convergence_order": None,
+        "hysing_convergence_change": None,
     }
     if zalesak_declared and zalesak_coarse:
         ratio = zalesak_declared["cells"] / zalesak_coarse["cells"]
@@ -285,9 +286,19 @@ def evaluate_gates(legs: dict) -> tuple[list[dict], dict]:
         metrics["hysing_worst_step_drift"] = hysing_declared[
             "worst_step_drift"]
     if hysing_declared and hysing_coarse:
+        # B4 is a *relative change* criterion ("U_T coarse -> fine change <= 5 %",
+        # see hysing_gate.CONVERGENCE_MAX).  It used to be evaluated by feeding
+        # the two velocities into the observed-order formula and comparing that
+        # order against the 5 % limit with ">=", which is satisfied by any
+        # change of >= 3.5 % in U_T -- i.e. the gate could never catch the
+        # divergence it was written for.  The change is now what is compared;
+        # the observed order stays as an informational metric.
+        coarse_ut = float(hysing_coarse["terminal_velocity"])
+        fine_ut = float(hysing_declared["terminal_velocity"])
+        metrics["hysing_convergence_change"] = abs(fine_ut - coarse_ut) / max(
+            abs(fine_ut), 1e-16)
         metrics["hysing_convergence_order"] = hysing_convergence_order(
-            hysing_coarse["terminal_velocity"],
-            hysing_declared["terminal_velocity"])
+            coarse_ut, fine_ut)
 
     gates = []
     for gid, case, metric, comparator, limit, description in GATES:
@@ -331,6 +342,7 @@ _METRIC_KEY = {
     "circularity_rel_error": "hysing_circularity_error",
     "worst_step_drift": "hysing_worst_step_drift",
     "hysing_convergence_order": "hysing_convergence_order",
+    "hysing_convergence_change": "hysing_convergence_change",
 }
 
 
