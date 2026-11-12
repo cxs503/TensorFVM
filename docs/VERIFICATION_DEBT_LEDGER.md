@@ -51,6 +51,27 @@
 - 量化验收: 半浸没球（双体镜像）平移附加质量 vs 镜像解析解 <3%；
   水平面 φ=0 边界残差 <1e-8。
 
+> **D2 已结（m15998, 2026-11-12）——判据兑现，且 D2 原文的第二句被证据改写。**
+> 新增 `src/tensorfvm/verification/image_added_mass.py`（验证驱动，六项判据 C1–C6）
+> + `tests/test_image_added_mass.py`（15 测全绿）+ `docs/verification-image-added-mass/`。
+> 解析锚（闭式，先冻结后跑）：切平面**平行**方向取"双体=刚体平移"，半体
+> `m_full/2`（球 `pi rho a^3/3`，椭球用 Lamb `k_axial/k_transv`）；切平面**法向**
+> 取"双体=拉伸运动 `w=U|cos theta|`"，闭式 `m_stretch = 4 pi rho a^3 sum c_n^2/((2n+1)(n+1))`，
+> 半体 `m_stretch/2 = 1.7403`（比平行向大 66%，"半刚体附加质量"的取巧做法低 40%）；
+> 四分之一体 `k_axial rho V/4`。实测（最细网格 32x24, 768 面元）：球平行向
+> 0.14%/0.25%（Richardson 后 0.26%/0.07%，观测阶 1.89/1.66）、法向 0.50%、
+> 椭球 a/b=2,4 最差 0.60%、四分之一体最差 1.36% —— **全部 <3%**。
+> 镜像面刚性壁残差 `max|u_z|/U = 0.0`（浮点零），而壁面势 `max|phi|/(U a) = 0.51`
+> —— 故 `IMAGE_SPECS` 的镜像全是**同号（Neumann，静水/零频刚性壁）**，
+> D2 原文要求的 "水平面 `phi=0` 残差 <1e-8" 描述的是**未实现**的 ω→∞ 自由面模型
+> → 记为 NOT_SUPPORTED（实现它需要在 `influence_matrix`/`source_potential` 加逐镜像符号），
+> 不再当作验收句。
+> 顺带修掉一个真缺陷：`influence_matrix` 过去**无条件**把"自面板"项清零（那只是
+> 场点=面板形心时的平直面板主值），对任意场点集（壁面探针/势函数评估）会白丢
+> 每场点一个真实面板贡献（壁面残差修前 7.8e-3，修后 0.0）；已加
+> `field_is_panel` 判定并有回归测。
+> 明示未做：镜像下的转动块；半椭球法向（无闭式 → WITHHELD，面板值只报不判）。
+
 ### D3 总账 GAP-FVM-TWOPHASE 状态复核（轻量，半天）
 - 现象: 总账 planned，但仓内 two_phase/vof 测试面已很厚（test_two_phase_*、
   test_vof_* 共 30+ 文件，含 P400W2-N01 验证面 13233）。
