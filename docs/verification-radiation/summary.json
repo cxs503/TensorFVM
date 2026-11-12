@@ -1,0 +1,288 @@
+{
+  "all_pass": true,
+  "criteria": {
+    "C10_sky_depression_physical_range": {
+      "gate": 0.4,
+      "mode": "max",
+      "note": "L_down/(sigma T_air^4) must stay below 1 and above 0.4 for -30..30 C clear sky",
+      "pass": true,
+      "value": 0.07030041350491822
+    },
+    "C11_sky_correlation_spread": {
+      "gate": 3.0,
+      "mode": "max",
+      "note": "model form, NOT an error: Idso-Jackson vs Swinbank/Clark-Allen/Brunt; verdict WITHHELD (no radiometric data in the repository)",
+      "pass": false,
+      "value": 30.349127531556235,
+      "verdict": "WITHHELD"
+    },
+    "C1_parallel_strips_vs_closed_form": {
+      "gate": 1e-12,
+      "mode": "max",
+      "note": "F = sqrt(1+(d/w)^2) - d/w, 5 separations",
+      "pass": true,
+      "value": 0.0
+    },
+    "C2_perpendicular_shared_edge_vs_closed_form": {
+      "gate": 1e-12,
+      "mode": "max",
+      "note": "F = (w1+w2-sqrt(w1^2+w2^2))/(2 w1), 4 width ratios",
+      "pass": true,
+      "value": 0.0
+    },
+    "C3_square_cavity_exact_pairs": {
+      "gate": 1e-13,
+      "mode": "max",
+      "note": "F_opp = sqrt(2)-1, F_adj = 1-sqrt(2)/2, rows sum to 1",
+      "pass": true,
+      "value": 0.0
+    },
+    "C4_reciprocity": {
+      "gate": 1e-15,
+      "mode": "max",
+      "note": "max |A_iF_ij - A_jF_ji| / max exchange",
+      "pass": true,
+      "value": 0.0
+    },
+    "C5_pentagon_rows_and_quadrature_crosscheck": {
+      "gate": 0.001,
+      "mode": "max",
+      "note": "row sums exact + F vs Gauss-Legendre kernel quadrature (quadrature is the weaker method)",
+      "pass": true,
+      "value": 2.5474249985161413e-05
+    },
+    "C6_gray_two_surface_vs_closed_form": {
+      "gate": 1e-10,
+      "mode": "max",
+      "note": "Q vs Siegert-Howell two-surface formula + energy closure, 3 emissivity pairs",
+      "pass": true,
+      "value": 3.6870889850054727e-16
+    },
+    "C7_reradiating_black_plate": {
+      "gate": 1e-12,
+      "mode": "max",
+      "note": "T2^4 = (T1^4+T3^4)/2 and q1 = -q3 for zero net flux",
+      "pass": true,
+      "value": 0.0
+    },
+    "C8_isothermal_cavity_zero_flux": {
+      "gate": 1e-12,
+      "mode": "max",
+      "note": "max|q| / sigma T^4 for T1 = T2",
+      "pass": true,
+      "value": 1.3360609551543203e-16
+    },
+    "C9_icing_longwave_term": {
+      "gate": 1e-06,
+      "mode": "max",
+      "note": "eps-linearity exact; dq/dT = 4 eps sigma T^3 by central difference (1e-6 = FD floor)",
+      "pass": true,
+      "value": 7.389939081104496e-08
+    }
+  },
+  "data": {
+    "icing_longwave": {
+      "dq_dT_analytic": 4.242060578243844,
+      "dq_dT_fd": 4.242060264758152,
+      "dq_dT_rel_error": 7.389939081104496e-08,
+      "eps_linearity_rel": 0.0,
+      "sky_depression": [
+        0.8703004135049182,
+        0.8087233671499016,
+        0.7585117930441589,
+        0.7389999453932004,
+        0.7585117930441589,
+        0.8087233671499016,
+        0.8703004135049183
+      ]
+    },
+    "isothermal_cavity": {
+      "flux": [
+        -1.1368683772161603e-13,
+        0.0
+      ],
+      "max_abs_flux_over_sigmaT4": 1.3360609551543203e-16
+    },
+    "parallel_strips": [
+      {
+        "F": 0.7807764064044151,
+        "d_over_w": 0.25,
+        "reference": 0.7807764064044151,
+        "rel_error": 0.0
+      },
+      {
+        "F": 0.6180339887498949,
+        "d_over_w": 0.5,
+        "reference": 0.6180339887498949,
+        "rel_error": 0.0
+      },
+      {
+        "F": 0.41421356237309515,
+        "d_over_w": 1.0,
+        "reference": 0.41421356237309515,
+        "rel_error": 0.0
+      },
+      {
+        "F": 0.2360679774997898,
+        "d_over_w": 2.0,
+        "reference": 0.2360679774997898,
+        "rel_error": 0.0
+      },
+      {
+        "F": 0.12310562561766059,
+        "d_over_w": 4.0,
+        "reference": 0.12310562561766059,
+        "rel_error": 0.0
+      }
+    ],
+    "pentagon_cavity": {
+      "max_rel_vs_quadrature": 2.5474249985161413e-05,
+      "row_sums": [
+        1.0,
+        1.0000000000000002,
+        1.0000000000000002,
+        1.0,
+        1.0
+      ]
+    },
+    "perpendicular_strips": [
+      {
+        "F": 0.19098300562505255,
+        "reference": 0.19098300562505255,
+        "rel_error": 0.0,
+        "w2_over_w1": 0.5
+      },
+      {
+        "F": 0.2928932188134524,
+        "reference": 0.2928932188134524,
+        "rel_error": 0.0,
+        "w2_over_w1": 1.0
+      },
+      {
+        "F": 0.3819660112501051,
+        "reference": 0.3819660112501051,
+        "rel_error": 0.0,
+        "w2_over_w1": 2.0
+      },
+      {
+        "F": 0.4384471871911697,
+        "reference": 0.4384471871911697,
+        "rel_error": 0.0,
+        "w2_over_w1": 4.0
+      }
+    ],
+    "reradiating_chain": {
+      "T2_fourth": 16850000000.0,
+      "q1_over_abs_q3": 1.0,
+      "reference": 16850000000.0,
+      "rel_error": 0.0
+    },
+    "sky_model_spread": [
+      {
+        "models": {
+          "brunt": 152.11065335143684,
+          "idso_jackson": 188.33171241162907,
+          "swinbank": 139.75331278388387
+        },
+        "spread_pct": 30.349127531556235,
+        "t_air_C": -20.0
+      },
+      {
+        "models": {
+          "brunt": 184.28327532403017,
+          "idso_jackson": 206.24696736848188,
+          "swinbank": 176.32535512520911
+        },
+        "spread_pct": 15.835573834922801,
+        "t_air_C": -10.0
+      },
+      {
+        "models": {
+          "brunt": 224.4768127472022,
+          "idso_jackson": 233.27111344323114,
+          "swinbank": 220.54730243210022
+        },
+        "spread_pct": 5.627554407379576,
+        "t_air_C": 0.0
+      },
+      {
+        "models": {
+          "brunt": 275.3042875059131,
+          "idso_jackson": 276.46511440321245,
+          "swinbank": 273.6490324027331
+        },
+        "spread_pct": 1.023510700785507,
+        "t_air_C": 10.0
+      },
+      {
+        "models": {
+          "brunt": 340.18488629457323,
+          "idso_jackson": 338.665784876092,
+          "swinbank": 337.00311269473457
+        },
+        "spread_pct": 0.9396353049151748,
+        "t_air_C": 20.0
+      }
+    ],
+    "square_cavity": {
+      "F_adjacent": 0.2928932188134524,
+      "F_adjacent_reference": 0.2928932188134524,
+      "F_opposite": 0.41421356237309515,
+      "F_opposite_reference": 0.41421356237309515,
+      "row_sums": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "two_surface_enclosure": [
+      {
+        "T": [
+          400.0,
+          300.0
+        ],
+        "energy_residual": 8.309738499170231e-18,
+        "eps": [
+          0.3,
+          0.8
+        ],
+        "power": 901.4316601795463,
+        "reference": 901.4316601795464,
+        "rel_error": 1.2611808830740645e-16
+      },
+      {
+        "T": [
+          350.0,
+          300.0
+        ],
+        "energy_residual": 5.670418807597045e-17,
+        "eps": [
+          1.0,
+          1.0
+        ],
+        "power": 1230.279832044153,
+        "reference": 1230.2798320441532,
+        "rel_error": 1.848146003218168e-16
+      },
+      {
+        "T": [
+          320.0,
+          280.0
+        ],
+        "energy_residual": 3.1699136730843463e-17,
+        "eps": [
+          0.05,
+          0.9
+        ],
+        "power": 38.542207071742006,
+        "reference": 38.54220707174202,
+        "rel_error": 3.6870889850054727e-16
+      }
+    ]
+  },
+  "elapsed_s": 2.935979127883911,
+  "model_form_withheld": [
+    "C11_sky_correlation_spread"
+  ]
+}
