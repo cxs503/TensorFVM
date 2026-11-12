@@ -1,0 +1,38 @@
+{
+  "variant": "zdiri",
+  "n": 8,
+  "reynolds": 40.0,
+  "cells": 64,
+  "faces": 544,
+  "divisions": [
+    1,
+    1,
+    1
+  ],
+  "converged": true,
+  "outer_iterations": 24,
+  "budgets": {
+    "inplane_l2": 0.039457820187194556,
+    "spanwise_l2": 5.715671515577987e-18,
+    "max_abs_w": 1.8617343843669444e-17,
+    "face_max_abs_w": 3.577349254052067e-17,
+    "span_share_of_squared_error": 2.098303690256241e-32,
+    "worst_cell": {
+      "center": [
+        0.8125,
+        0.5625,
+        0.4999999999999999
+      ],
+      "w": -1.8617343843669444e-17
+    },
+    "zplane_tangential_face_range": [
+      0.088137549706884,
+      1.9118624502931156
+    ],
+    "zplane_tangential_exact_range": [
+      0.13012640928795616,
+      1.8698735907120438
+    ]
+  },
+  "seconds": 7.200888395309448
+}
