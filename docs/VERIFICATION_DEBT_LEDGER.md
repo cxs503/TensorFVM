@@ -116,6 +116,25 @@
 - 做法: 用面元 `I_44/I_55/I_66` 替换细长体 J_z 或给出修正系数，并做操舵响应对比。
 - 量化验收: 同一船的 J_z 两法差异报告 + 回转直径/初转期变化 <15% 才可换默认值。
 
+
+### D11 CASE-FVM-PERIODIC-HILLS 第二回合（m16503, 2026-11-12）—— 四个装配缺陷已修，锚点仍 OPEN
+- 起因: `docs/case-periodic-hills/README.md` round-1 honest FAIL，其诊断（"momentum 对角 ~265x 过刚"）不完整。
+- 交付: `src/tensorfvm/periodic_hill.py` 五处修复 + `src/tensorfvm/verification/periodic_hill_round2.py`
+  （8 条预声明判据 C1–C8）+ `tests/test_periodic_hill_round2.py`（8 测，连同旧 7 测共 15 绿）
+  + `docs/case-periodic-hills/{ROUND2.md,round2_summary.json,fig_round2.png}`。
+- 四个真缺陷: ①`diag_mom += coef`（(nx,) 广播进 (ny,nx)）→ 对角 56208 vs off-diag 892（16x64）；
+  ②`c_n[0]`/`c_n[-1]` 从未赋值 → 壁面无粘项恒 0，**无壁面摩擦**（round-1 栓塞流 u_max/u_b=1.0031 的真因）；
+  ③压力算子 off-diag 除体积、diag 不除 → 同一行两半差一个 Vol；④周期接缝未取最小像（8.4375 vs 0.5625，接缝扩散弱 15x）。
+- 关键数字: 平面槽道 vs 解析 Poiseuille —— u_max 相对误差 **2.57e-4**、u_max/u_b 1.34717 vs 解析 1.34748
+  （**注意 ERCOFTAC bulk 只积 [H,3.035H] 带，1.5 是满高平均，用 1.5 判会判错正确实现**）、
+  G 0.011690 vs 2νu_b/H²=0.011686；flux 级质量守恒 3.3e-16（round-1 山丘首步 2.33）。
+- 反例/踩坑: ①奇偶(棋盘)模对"面平均散度"和"宽 LSQ 梯度"都**精确不可见**（0.0/0.0）→
+  `div(grad)` 型 Poisson 有半个谱的零空间，Rhie-Chow 是必需而非可选；②把 Rhie-Chow 项做成隐式会
+  退化（1D 下 M+N(G)=O(h³)，前导项相消）；③修好对角而不补壁面项只会得到"更刚的栓塞流"。
+- 未完成(honest FAIL): Re=2800 场解仍不收敛——48x24 第 293 步、64x32 第 156 步发散（越细越早，
+  dt 0.02/0.01/0.005 与 blend 1.0/0.75/0.5/0.0 全试过，非 CFL）；故 x_r/H、x_s/H 不报。
+  剩余症结=地形贴体网格的非正交延迟修正（或 MAC 交错），已列为 round-3 首项。
+
 ## 3. 给下次自找活的建议线索
 1. 首选 D1：单干、解析锚明确、直接喂 maneuvering.dynamics 的 J_z 缺口，
    且总账无对应锚（新缺口，finish 时申报 NEW 条目）。
