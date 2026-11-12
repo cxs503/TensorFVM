@@ -1,0 +1,145 @@
+{
+ "case": "CASE-CYLINDER-DRAG-FVM",
+ "reference": {
+  "case": "DFG 2D-1 (channel with cylinder, Re_D = 20, steady laminar)",
+  "values": {
+   "drag": 5.57953523384,
+   "lift": 0.010618948146,
+   "pressure_difference_pa": 0.11752016697
+  },
+  "citation": "Turek & Schaefer 1996, Benchmark computations of laminar flow around a cylinder, NNFM 52, 547-566",
+  "source_url": "https://wwwold.mathematik.tu-dortmund.de/~featflow/en/benchmarks/cfdbenchmarking/flow/dfg_benchmark1_re20.html",
+  "source_sha256": null,
+  "provenance": "Values are the 'Reference results' row of the DFG benchmark-1 Re=20 page. They are byte-identical to the REFERENCE constant in src/tensorfvm/verification/dfg.py:14, which an earlier mission parsed from that page; this file is the case-level reference the analyze/report entry point reads (scripts/case_cylinder_drag_fvm.py:224). source_sha256 is null because this round had no network egress to re-fetch and re-hash the page; re-run scripts/case_cylinder_drag_fvm.py's parse step with page access to bind the digest.",
+  "units": {
+   "drag": "C_D (dimensionless)",
+   "lift": "C_L (dimensionless)",
+   "pressure_difference_pa": "Pa"
+  }
+ },
+ "tolerance": 0.05,
+ "grids": [
+  {
+   "resolution": "32x12",
+   "cells": null,
+   "spacing_m": 0.03125,
+   "iterations": 200,
+   "converged": false,
+   "elapsed_s": 52.896827979013324,
+   "computed": {
+    "drag": 6.670193228309547,
+    "lift": 0.0518042935723559,
+    "pressure_difference_pa": 0.12944081915392777
+   },
+   "error_pct": {
+    "drag": 19.54747033148358,
+    "lift": 387.8476931999127,
+    "pressure_difference_pa": 10.143494934763677
+   },
+   "passed": {
+    "drag": false,
+    "lift": false,
+    "pressure_difference_pa": false
+   },
+   "dp_nearest_cell_pa": 0.07246094288142343,
+   "force_split": {
+    "pressure": 4.401559998556965,
+    "viscous": 2.2686332297525813,
+    "total": 6.670193228309547,
+    "lift_total": 0.05180429357235588
+   },
+   "case_passed": false
+  },
+  {
+   "resolution": "64x24",
+   "cells": null,
+   "spacing_m": 0.015625,
+   "iterations": 976,
+   "converged": true,
+   "elapsed_s": 530.8118827305734,
+   "computed": {
+    "drag": 6.324792325348436,
+    "lift": 0.015101713033618411,
+    "pressure_difference_pa": 0.13099148760911483
+   },
+   "error_pct": {
+    "drag": 13.356974376439743,
+    "lift": 42.21477330885171,
+    "pressure_difference_pa": 11.462986299665248
+   },
+   "passed": {
+    "drag": false,
+    "lift": false,
+    "pressure_difference_pa": false
+   },
+   "dp_nearest_cell_pa": 0.08117145028064124,
+   "force_split": {
+    "pressure": 4.207670851425274,
+    "viscous": 2.11712147392316,
+    "total": 6.324792325348433,
+    "lift_total": 0.015101713033618324
+   },
+   "case_passed": false
+  }
+ ],
+ "convergence": {
+  "drag": {
+   "available": false,
+   "reason": "needs three grids"
+  },
+  "lift": {
+   "available": false,
+   "reason": "needs three grids"
+  },
+  "pressure_difference_pa": {
+   "available": false,
+   "reason": "needs three grids"
+  }
+ },
+ "sensitivity": {
+  "grid_refinement": {
+   "drag": {
+    "available": false,
+    "reason": "needs three grids"
+   },
+   "lift": {
+    "available": false,
+    "reason": "needs three grids"
+   },
+   "pressure_difference_pa": {
+    "available": false,
+    "reason": "needs three grids"
+   }
+  },
+  "pressure_probe_interpolation": {
+   "dfg_wall_extrapolation_pa": 0.13099148760911483,
+   "inverse_distance_cell_centre_pa": 0.08117145028064124,
+   "delta_pa": -0.04982003732847359,
+   "relative_to_reference_pct": -30.929769440029556,
+   "note": "the official metric uses least-squares wall extrapolation + periodic angle interpolation; the crude probe shows how much of the residual is sampling rather than flow error"
+  },
+  "force_decomposition_finest": {
+   "pressure": 4.207670851425274,
+   "viscous": 2.11712147392316,
+   "total": 6.324792325348433,
+   "lift_total": 0.015101713033618324
+  },
+  "iteration_counts": {
+   "32x12": [
+    200,
+    false
+   ],
+   "64x24": [
+    976,
+    true
+   ]
+  }
+ },
+ "case_passed": false,
+ "verdict_scope": "case pass = every quantity within tolerance on the finest computed grid AND a converged SIMPLE solve; it is not a grid-independence proof (see observed order / GCI)",
+ "provenance": {
+  "torch": "2.7.1",
+  "numpy": "2.4.6",
+  "python": "3.11.6"
+ }
+}
