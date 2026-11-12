@@ -1,0 +1,307 @@
+{
+  "generated_at": "2026-11-12T17:02:57.929144+00:00",
+  "reference": "Audusse et al. (2004) SIAM J. Sci. Comput. 25, 2050",
+  "thresholds": {
+    "max_rest_velocity": 1e-10,
+    "max_surface_drift": 1e-12,
+    "naive_min_velocity": 0.01,
+    "mass_tolerance": 1e-13,
+    "flat_reduction_tolerance": 0.0
+  },
+  "cases": {
+    "smooth": {
+      "case": "lake_at_rest",
+      "bed": "smooth_bed",
+      "surface": 1.0,
+      "n": 200,
+      "order": 2,
+      "well_balanced": true,
+      "t_end": 20.0,
+      "steps": 3133,
+      "max_velocity": 5.027745696670693e-14,
+      "surface_drift": 5.551115123125783e-15,
+      "h_min": 0.8000555478402204,
+      "h_max": 0.9999966605875835,
+      "dry_cells": 0,
+      "dry_mask_unchanged": true,
+      "volume_drift": 1.3132815463850266e-15,
+      "clipped_cells": 0,
+      "dry_flips": 0
+    },
+    "step": {
+      "case": "lake_at_rest",
+      "bed": "step_bed",
+      "surface": 1.0,
+      "n": 200,
+      "order": 2,
+      "well_balanced": true,
+      "t_end": 20.0,
+      "steps": 3133,
+      "max_velocity": 0.0,
+      "surface_drift": 0.0,
+      "h_min": 0.6,
+      "h_max": 1.0,
+      "dry_cells": 0,
+      "dry_mask_unchanged": true,
+      "volume_drift": 0.0,
+      "clipped_cells": 0,
+      "dry_flips": 0
+    },
+    "step_first_order": {
+      "case": "lake_at_rest",
+      "bed": "step_bed",
+      "surface": 1.0,
+      "n": 200,
+      "order": 1,
+      "well_balanced": true,
+      "t_end": 20.0,
+      "steps": 3133,
+      "max_velocity": 0.0,
+      "surface_drift": 0.0,
+      "h_min": 0.6,
+      "h_max": 1.0,
+      "dry_cells": 0,
+      "dry_mask_unchanged": true,
+      "volume_drift": 0.0,
+      "clipped_cells": 0,
+      "dry_flips": 0
+    },
+    "wet_dry": {
+      "case": "lake_at_rest",
+      "bed": "piercing_bump",
+      "surface": 0.45,
+      "n": 200,
+      "order": 2,
+      "well_balanced": true,
+      "t_end": 20.0,
+      "steps": 2102,
+      "max_velocity": 2.571920317952241e-14,
+      "surface_drift": 3.3306690738754696e-15,
+      "h_min": 0.0,
+      "h_max": 0.44999999998930573,
+      "dry_cells": 22,
+      "dry_mask_unchanged": true,
+      "volume_drift": 6.27119198907604e-15,
+      "clipped_cells": 0,
+      "dry_flips": 126120
+    },
+    "naive_control": {
+      "case": "lake_at_rest",
+      "bed": "step_bed",
+      "surface": 1.0,
+      "n": 200,
+      "order": 2,
+      "well_balanced": false,
+      "t_end": 2.0,
+      "steps": 332,
+      "max_velocity": 0.3937807405385857,
+      "surface_drift": 0.09924549385844061,
+      "h_min": 0.5988293847823181,
+      "h_max": 1.0008991698885779,
+      "dry_cells": 0,
+      "dry_mask_unchanged": true,
+      "volume_drift": 0.0003612763987586032,
+      "clipped_cells": 0,
+      "dry_flips": 0
+    },
+    "flat_reduction": {
+      "case": "flat_reduction",
+      "n": 400,
+      "t_end": 1.0,
+      "max_depth_difference": 0.0,
+      "max_momentum_difference": 0.0,
+      "steps_flat": 276,
+      "steps_bed": 276
+    },
+    "constant_bed": {
+      "case": "constant_bed_invariance",
+      "n": 400,
+      "bed_offset": 0.5,
+      "max_depth_difference": 1.820592288037659e-15,
+      "max_momentum_difference": 9.658940314238862e-15
+    },
+    "sill": {
+      "case": "dam_break_over_sill",
+      "n": 800,
+      "t_end": 1.5,
+      "steps": 636,
+      "h_min": 0.9029279663086327,
+      "h_max": 2.000000001625381,
+      "u_max": 1.905456841608828,
+      "volume_drift": 4.360462172762557e-12,
+      "clipped_cells": 0,
+      "dry_flips": 0,
+      "finite": true
+    }
+  },
+  "criteria": [
+    {
+      "id": "W1a_smooth_bed_max_velocity",
+      "value": 5.027745696670693e-14,
+      "threshold": 1e-10,
+      "mode": "lt",
+      "verdict": "PASS"
+    },
+    {
+      "id": "W1b_smooth_bed_surface_drift",
+      "value": 5.551115123125783e-15,
+      "threshold": 1e-12,
+      "mode": "lt",
+      "verdict": "PASS"
+    },
+    {
+      "id": "W2a_step_bed_max_velocity",
+      "value": 0.0,
+      "threshold": 1e-10,
+      "mode": "lt",
+      "verdict": "PASS"
+    },
+    {
+      "id": "W2b_step_bed_surface_drift",
+      "value": 0.0,
+      "threshold": 1e-12,
+      "mode": "lt",
+      "verdict": "PASS"
+    },
+    {
+      "id": "W2c_first_order_step_max_velocity",
+      "value": 0.0,
+      "threshold": 1e-10,
+      "mode": "lt",
+      "verdict": "PASS"
+    },
+    {
+      "id": "W3a_wet_dry_max_velocity",
+      "value": 2.571920317952241e-14,
+      "threshold": 1e-10,
+      "mode": "lt",
+      "verdict": "PASS"
+    },
+    {
+      "id": "W3b_wet_dry_surface_drift",
+      "value": 3.3306690738754696e-15,
+      "threshold": 1e-12,
+      "mode": "lt",
+      "verdict": "PASS"
+    },
+    {
+      "id": "W3c_wet_dry_mask_unchanged",
+      "value": 0.0,
+      "threshold": 0.5,
+      "mode": "lt",
+      "verdict": "PASS"
+    },
+    {
+      "id": "W3d_wet_dry_positivity",
+      "value": -0.0,
+      "threshold": 0.0,
+      "mode": "le",
+      "verdict": "PASS"
+    },
+    {
+      "id": "W4_naive_control_spurious_velocity",
+      "value": 0.3937807405385857,
+      "threshold": 0.01,
+      "mode": "gt",
+      "verdict": "PASS"
+    },
+    {
+      "id": "M1a_smooth_bed_volume_drift",
+      "value": 1.3132815463850266e-15,
+      "threshold": 1e-13,
+      "mode": "lt",
+      "verdict": "PASS"
+    },
+    {
+      "id": "M1b_step_bed_volume_drift",
+      "value": 0.0,
+      "threshold": 1e-13,
+      "mode": "lt",
+      "verdict": "PASS"
+    },
+    {
+      "id": "M1c_wet_dry_volume_drift",
+      "value": 6.27119198907604e-15,
+      "threshold": 1e-13,
+      "mode": "lt",
+      "verdict": "PASS"
+    },
+    {
+      "id": "F1a_flat_reduction_depth",
+      "value": 0.0,
+      "threshold": 0.0,
+      "mode": "le",
+      "verdict": "PASS"
+    },
+    {
+      "id": "F1b_flat_reduction_momentum",
+      "value": 0.0,
+      "threshold": 0.0,
+      "mode": "le",
+      "verdict": "PASS"
+    },
+    {
+      "id": "F2a_constant_bed_depth",
+      "value": 1.820592288037659e-15,
+      "threshold": 0.0,
+      "mode": "le",
+      "verdict": "FAIL"
+    },
+    {
+      "id": "F2b_constant_bed_momentum",
+      "value": 9.658940314238862e-15,
+      "threshold": 0.0,
+      "mode": "le",
+      "verdict": "FAIL"
+    },
+    {
+      "id": "D1a_sill_positivity",
+      "value": -0.9029279663086327,
+      "threshold": 0.0,
+      "mode": "le",
+      "verdict": "PASS"
+    },
+    {
+      "id": "D1b_sill_volume_drift",
+      "value": 4.360462172762557e-12,
+      "threshold": 1e-13,
+      "mode": "lt",
+      "verdict": "FAIL"
+    }
+  ],
+  "n_pass": 16,
+  "n_total": 19,
+  "roundoff_tolerance": 1e-11,
+  "criteria_roundoff": [
+    {
+      "id": "F2a' constant_bed_depth_roundoff",
+      "value": 1.820592288037659e-15,
+      "threshold": 1e-11,
+      "mode": "le",
+      "verdict": "PASS"
+    },
+    {
+      "id": "F2b' constant_bed_momentum_roundoff",
+      "value": 9.658940314238862e-15,
+      "threshold": 1e-11,
+      "mode": "le",
+      "verdict": "PASS"
+    },
+    {
+      "id": "D1b' sill_volume_drift_roundoff",
+      "value": 4.360462172762557e-12,
+      "threshold": 1e-11,
+      "mode": "le",
+      "verdict": "PASS"
+    }
+  ],
+  "superseded_by_roundoff": [
+    "F2a_constant_bed_depth",
+    "F2b_constant_bed_momentum",
+    "D1b_sill_volume_drift"
+  ],
+  "n_pass_roundoff": 19,
+  "n_total_roundoff": 19,
+  "all_pass": false,
+  "all_pass_roundoff": true
+}

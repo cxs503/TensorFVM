@@ -68,6 +68,7 @@ class ShallowWater1D:
         self.hu = np.zeros(self.n)
         self.time = 0.0
         self.steps = 0
+        self.dt_last = 0.0
         self.clipped_cells = 0
         self.dry_flips = 0
 
@@ -85,6 +86,7 @@ class ShallowWater1D:
             self.hu = np.where(self.h > self.dry_depth, self.h * u, 0.0)
         self.time = 0.0
         self.steps = 0
+        self.dt_last = 0.0
         self.clipped_cells = 0
         self.dry_flips = 0
 
@@ -230,6 +232,7 @@ class ShallowWater1D:
         self._sanitise()
         self.time += dt
         self.steps += 1
+        self.dt_last = dt
 
     def advance(self, t_end: float, max_steps: int = 2_000_000,
                 callback=None) -> int:
@@ -248,6 +251,7 @@ class ShallowWater1D:
             dt = self.cfl * self.dx / speed
             dt = min(dt, t_end - self.time)
             self.step(dt)
+            self.dt_last = dt
             if callback is not None:
                 callback(self)
             if self.steps - start_steps > max_steps:
@@ -264,8 +268,16 @@ class ShallowWater1D:
         return float(self.hu.sum()) * self.dx
 
     def cfl_number(self) -> float:
-        """Current ``max((|u| + c) dt / dx)``-style Courant number."""
-        return self.max_wave_speed() * self.dx / max(self.dx, 1e-300)
+        """Courant number of the last accepted step, ``max(|u| + c) dt / dx``.
+
+        Fixed in m16596: the previous body returned
+        ``max_wave_speed() * dx / dx`` -- i.e. the wave speed in m/s, a
+        dimensionally wrong quantity that merely *looks* like a Courant number
+        and would silently pass any ``cfl < 1`` assertion.  The number is now
+        the actual dimensionless Courant number of the last step
+        (``dt_last`` is the step the solver took; 0 before the first step).
+        """
+        return self.max_wave_speed() * self.dt_last / max(self.dx, 1e-300)
 
     def summary(self) -> dict:
         h, u = self.primitive()
