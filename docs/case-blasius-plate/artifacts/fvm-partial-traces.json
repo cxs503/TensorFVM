@@ -1,0 +1,63 @@
+{
+  "case": "CASE-FVM-BLASIUS-PLATE",
+  "kind": "partial-traces",
+  "source": "runs/logs/fvm-*.log",
+  "note": "iterations actually completed by the 2-D FVM device in this session; the Blasius target is cf = 0.00209975",
+  "traces": {
+    "fvm-baseline": [
+      {
+        "iteration": 1,
+        "cf_trailing": 0.1583122,
+        "H_trailing": 3.01721,
+        "momentum": 0.08247,
+        "elapsed_s": 8.0
+      },
+      {
+        "iteration": 25,
+        "cf_trailing": 0.02676099,
+        "H_trailing": 2.37289,
+        "momentum": 0.01761,
+        "elapsed_s": 149.0
+      },
+      {
+        "iteration": 50,
+        "cf_trailing": 0.01732297,
+        "H_trailing": 2.36218,
+        "momentum": 0.01149,
+        "elapsed_s": 256.0
+      },
+      {
+        "iteration": 75,
+        "cf_trailing": 0.01353338,
+        "H_trailing": 2.35405,
+        "momentum": 0.008952,
+        "elapsed_s": 327.0
+      }
+    ],
+    "fvm-relaxation": [
+      {
+        "iteration": 1,
+        "cf_trailing": 0.1301969,
+        "H_trailing": 2.14066,
+        "momentum": 0.06818,
+        "elapsed_s": 8.0
+      }
+    ],
+    "fvm-stream-coarse": [
+      {
+        "iteration": 1,
+        "cf_trailing": 0.1286503,
+        "H_trailing": 2.08529,
+        "momentum": 0.0663,
+        "elapsed_s": 5.0
+      },
+      {
+        "iteration": 25,
+        "cf_trailing": 0.01483316,
+        "H_trailing": 2.14919,
+        "momentum": 0.008942,
+        "elapsed_s": 82.0
+      }
+    ]
+  }
+}
