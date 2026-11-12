@@ -146,6 +146,7 @@ class HysingCase:
             rho_liquid=1.0, rho_gas=self.rho_gas,
             mu_liquid=self.mu_liquid, mu_gas=self.mu_gas,
             sigma=self.sigma, gravity=1.0,
+            surface_tension=True,
             csf_smoothing=self.csf_smoothing,
             momentum_advection=True,
         )
@@ -186,7 +187,7 @@ def bubble_metrics(alpha: torch.Tensor, dx: float, dy: float) -> dict:
 
     # Centroid
     xs = (np.arange(bubble_np.shape[1]) + 0.5) * dx
-    ys = (np.arange(bubble_np.shape[0]) + 0.5) dy
+    ys = (np.arange(bubble_np.shape[0]) + 0.5) * dy
     total = bubble_np.sum()
     if total < 1e-12:
         return {"volume": volume, "xc": 0.0, "yc": 0.0, "circularity": 0.0}
