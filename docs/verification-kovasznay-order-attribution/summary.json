@@ -1,0 +1,52 @@
+{
+  "delivered_ladder": {
+    "16": {
+      "max_abs_z_velocity": 0.009413573327409101,
+      "velocity_l2": 0.012574784561427162
+    },
+    "32": {
+      "max_abs_z_velocity": 0.004526069239740493,
+      "velocity_l2": 0.0038396931227579947
+    }
+  },
+  "grids": {
+    "16": {
+      "inplane_l2": 0.012015736967494663,
+      "max_abs_spanwise": 0.009413573327409101,
+      "numerically_converged": true,
+      "pressure_mean_free_l2": 0.09732921617131668,
+      "spanwise_l2": 0.0037077313676005495,
+      "velocity_l2": 0.012574784561427162
+    },
+    "32": {
+      "inplane_l2": 0.00343161371450676,
+      "max_abs_spanwise": 0.004526069239740493,
+      "numerically_converged": true,
+      "pressure_mean_free_l2": 0.02895337359121729,
+      "spanwise_l2": 0.0017225767301818976,
+      "velocity_l2": 0.0038396931227579947
+    }
+  },
+  "orders": {
+    "inplane_l2": 1.8079660691087422,
+    "pressure_mean_free_l2": 1.74914147849285,
+    "spanwise_l2": 1.1059684741308398,
+    "velocity_l2": 1.7114707660368638
+  },
+  "quadrature_closure": 1.129467525474263e-16,
+  "span_share_of_squared_error": {
+    "16": 0.0869391552139193,
+    "32": 0.20126308273039606
+  },
+  "verdict": {
+    "inplane_passes_1.8": true,
+    "spanwise_exact_value": 0.0,
+    "total_passes_1.8": false
+  },
+  "zero_row_scan": {
+    "extruded_cell_w_rowsum_med": 0.4016,
+    "extruded_cell_w_rowsum_min": 0.3016,
+    "note": "n=8 probe: the spanwise cell DOF carries a real momentum row, so the artefact is driven, not a massless DOF",
+    "zero_rows": 0
+  }
+}
