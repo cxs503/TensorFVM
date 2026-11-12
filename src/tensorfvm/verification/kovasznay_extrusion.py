@@ -54,24 +54,36 @@ def extrusion_solver(n, reynolds=40., *, tangential='symmetry', divisions=None,
     ``tangential='dirichlet'`` same mesh, tangential z-plane values prescribed
         to the analytic area means -- a strong-BC control that removes those
         unknowns without touching the discretisation.
+    ``tangential='zero_gradient'`` same mesh, and the tangential z-plane
+        components get the solver-level strong zero-normal-derivative
+        constraint (``zero_gradient_faces``) instead of a free traction row --
+        the discrete symmetry condition proper.  Neither free unknowns nor
+        prescribed data: the face value is tied to its owner cell.  This is the
+        closure a continuum symmetry plane actually asks for, and the only one
+        of the three that is available without knowing the exact solution.
     ``divisions`` overrides the mesh (e.g. ``(n, n, 4)``) for z-refinement.
     """
-    if tangential not in ('symmetry', 'dirichlet'):
-        raise ValueError("tangential must be 'symmetry' or 'dirichlet'")
+    if tangential not in ('symmetry', 'dirichlet', 'zero_gradient'):
+        raise ValueError("tangential must be 'symmetry', 'dirichlet' or 'zero_gradient'")
     divisions = (n, n, 1) if divisions is None else tuple(divisions)
     mesh = channel_mesh(divisions, triangulate_faces=True)
     fields = lambda points: kovasznay_fields(points, reynolds)
     exact = fields(mesh.cell_centers)
     boundary = exact_boundary_velocity_means(mesh, fields)
     fixed = np.repeat((mesh.neighbor < 0)[:, None], 3, axis=1)
+    z = mesh.face_centers[:, 2]
+    planes = (mesh.neighbor < 0) & ((z < 1e-10) | (z > 1 - 1e-10))
+    zero_gradient = None
     if tangential == 'symmetry':
-        z = mesh.face_centers[:, 2]
-        planes = (mesh.neighbor < 0) & ((z < 1e-10) | (z > 1 - 1e-10))
         fixed[planes, :2] = False
+    elif tangential == 'zero_gradient':
+        fixed[planes, :2] = False
+        zero_gradient = np.zeros((len(mesh.owner), 3), bool)
+        zero_gradient[planes, :2] = True
     solver = NativeHybridNavierStokes3D(
         mesh, fixed, boundary, viscosity=1. / reynolds, body_force=0.,
         gauge_value=exact['pressure'][0], convection_order=convection_order,
-        coupled_linear_method='reused_lu')
+        coupled_linear_method='reused_lu', zero_gradient_faces=zero_gradient)
     return mesh, solver, exact
 
 
