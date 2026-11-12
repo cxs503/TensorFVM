@@ -1,0 +1,194 @@
+{
+  "all_pass": true,
+  "criteria": {
+    "c10_order_sway": {
+      "pass": true,
+      "statement": "observed order p of M11 (two finest intervals)",
+      "threshold": 1.0,
+      "value": 1.2815819590188682
+    },
+    "c11_wall_control_factor": {
+      "pass": true,
+      "statement": "full-sphere (wall / double-body) M33 / free-surface M33 - 2 (control)",
+      "threshold": 0.05,
+      "value": 0.009047573201204973
+    },
+    "c12_sway_tail": {
+      "pass": true,
+      "statement": "relative drift of the sway series between the two largest truncations",
+      "threshold": 0.001,
+      "value": 3.7079161457153394e-05
+    },
+    "c1_spectral_selfcheck": {
+      "pass": true,
+      "statement": "|heave series / (1/3 pi rho a^3) - 1| (validates the sway reference)",
+      "threshold": 1e-10,
+      "value": 1.176836406102666e-14
+    },
+    "c2_odd_extension_exact": {
+      "pass": true,
+      "statement": "|M33(half) / M33(full sphere) - 1/2| at the finest mesh",
+      "threshold": 1e-10,
+      "value": 1.8318679906315083e-15
+    },
+    "c3_heave_finest": {
+      "pass": true,
+      "statement": "|M33 / ((1/3) pi rho a^3) - 1| at the finest mesh",
+      "threshold": 0.03,
+      "value": 0.0007945437735794592
+    },
+    "c4_sway_finest": {
+      "pass": true,
+      "statement": "|M11 / M11(odd-harmonic series) - 1| at the finest mesh",
+      "threshold": 0.03,
+      "value": 0.019977083264974382
+    },
+    "c5_heave_richardson": {
+      "pass": true,
+      "statement": "|Richardson(M33) / exact - 1|",
+      "threshold": 0.01,
+      "value": 0.0014776577013801973
+    },
+    "c6_sway_richardson": {
+      "pass": true,
+      "statement": "|Richardson(M11) / series - 1|",
+      "threshold": 0.01,
+      "value": 0.002407439636765263
+    },
+    "c7_decoupling": {
+      "pass": true,
+      "statement": "max off-diagonal |M_ij| / (rho a^3) at the finest mesh",
+      "threshold": 1e-10,
+      "value": 1.3183898417423734e-16
+    },
+    "c8_surge_sway_symmetry": {
+      "pass": true,
+      "statement": "|M11 - M22| / M11 at the finest mesh",
+      "threshold": 1e-10,
+      "value": 0.0
+    },
+    "c9_order_heave": {
+      "pass": true,
+      "statement": "observed order p of M33 (two finest intervals)",
+      "threshold": 1.0,
+      "value": 2.931222288948412
+    }
+  },
+  "elapsed_s": 181.79685926437378,
+  "extrapolation": {
+    "p_heave": 2.931222288948412,
+    "p_sway": 1.2815819590188682,
+    "richardson_heave": 1.0487449507229898,
+    "richardson_sway": 0.5709026914986501
+  },
+  "meshes": [
+    [
+      12,
+      6
+    ],
+    [
+      24,
+      12
+    ],
+    [
+      48,
+      24
+    ],
+    [
+      96,
+      48
+    ]
+  ],
+  "odd_extension": {
+    "elapsed_s": 20.864825010299683,
+    "full_sphere_M11": 2.0840568607750845,
+    "full_sphere_M33": 2.0865770664989864,
+    "ratio_half_over_full_M33": 0.49999999999999817
+  },
+  "panel_sweep": [
+    {
+      "M11": 0.40925492234611904,
+      "M11_rel_err": -0.2848699578683156,
+      "M22": 0.4092549223461188,
+      "M33": 0.9063463948499568,
+      "M33_rel_err": -0.13450294663666362,
+      "elapsed_s": 0.19385600090026855,
+      "n_phi": 6,
+      "n_theta": 12,
+      "offdiag_max": 1.3010426069826053e-16,
+      "panels": 72,
+      "surge_sway_asymmetry": 5.42558177803031e-16,
+      "wet_panels": 36
+    },
+    {
+      "M11": 0.5095071964687098,
+      "M11_rel_err": -0.10968962624006895,
+      "M22": 0.5095071964687099,
+      "M33": 1.0173812685088715,
+      "M33_rel_err": -0.028472452646261526,
+      "elapsed_s": 1.0935044288635254,
+      "n_phi": 12,
+      "n_theta": 24,
+      "offdiag_max": 8.326672684688674e-17,
+      "panels": 288,
+      "surge_sway_asymmetry": 2.179013431645098e-16,
+      "wet_panels": 144
+    },
+    {
+      "M11": 0.5464590191883163,
+      "M11_rel_err": -0.045120192629283795,
+      "M22": 0.5464590191883163,
+      "M33": 1.0432885332494894,
+      "M33_rel_err": -0.003732837173503256,
+      "elapsed_s": 11.575788974761963,
+      "n_phi": 24,
+      "n_theta": 48,
+      "offdiag_max": 1.6653345369377348e-16,
+      "panels": 1152,
+      "surge_sway_asymmetry": 0.0,
+      "wet_panels": 576
+    },
+    {
+      "M11": 0.5608479284274777,
+      "M11_rel_err": -0.019977083264974382,
+      "M22": 0.5608479284274777,
+      "M33": 1.0480295954906085,
+      "M33_rel_err": 0.0007945437735794592,
+      "elapsed_s": 124.79141759872437,
+      "n_phi": 48,
+      "n_theta": 96,
+      "offdiag_max": 1.3183898417423734e-16,
+      "panels": 4608,
+      "surge_sway_asymmetry": 0.0,
+      "wet_panels": 2304
+    }
+  ],
+  "quadrature_order": 3,
+  "radius": 1.0,
+  "references": {
+    "deep_submergence": 2.0943951023931953,
+    "displaced_mass": 2.0943951023931953,
+    "heave_exact": 1.0471975511965976,
+    "heave_over_displaced_mass": 0.5,
+    "heave_series_value": 1.04719755119661,
+    "sway_over_displaced_mass": 0.2732437740215114,
+    "sway_reference": 0.5722804220700864,
+    "sway_series": [
+      0.5731420846091823,
+      0.5725784507297829,
+      0.5723702459719485,
+      0.5723016417482552,
+      0.5722804220700864
+    ],
+    "sway_tail_rel": 3.7079161457153394e-05,
+    "sway_terms": [
+      16,
+      32,
+      64,
+      128,
+      256
+    ]
+  },
+  "rho": 1.0,
+  "title": "half-submerged sphere: free-surface added mass by the odd extension"
+}
