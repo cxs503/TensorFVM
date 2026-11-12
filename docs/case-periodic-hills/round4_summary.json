@@ -1,0 +1,145 @@
+{
+  "node": "CASE-FVM-PERIODIC-HILLS",
+  "round": 4,
+  "defects": [
+    "viii east-face donor volume",
+    "ix eta-face sign inversion",
+    "x marginally unstable bulk-velocity controller"
+  ],
+  "criteria": {
+    "C1_conservative_convection": {
+      "max_abs_conv_of_constant": 1.5131427638648276e-09,
+      "max_abs_flux_divergence": 1.5131425510788834e-09,
+      "pass": true
+    },
+    "C2_round3_assembly_negative_control": {
+      "max_abs_conv_of_constant_legacy": 4.268825013951836,
+      "pass": true
+    },
+    "C3_upwind_stencil_identity": {
+      "max_abs_mismatch": 0.0,
+      "pass": true
+    },
+    "C4_bulk_velocity_constraint": {
+      "max_abs_bulk_error_exact": 2.7243829414658194e-09,
+      "trace_exact": [
+        2.7243829414658194e-09,
+        1.91152138562245e-09,
+        1.4884116161795191e-09,
+        7.812319680056135e-10
+      ],
+      "body_force": 0.0038099618967388726,
+      "observed_ratio_relaxation_half": [
+        0.5001729079242593,
+        0.0004600828347499196,
+        1086.0091105987026
+      ],
+      "legacy_growth_factor_sqrt_1_plus_relaxation": {
+        "0.1": 1.0488088481701516,
+        "0.2": 1.0954451150103321,
+        "0.5": 1.224744871391589,
+        "1.0": 1.4142135623730951
+      },
+      "pass": true
+    },
+    "C5_plane_channel_gate": {
+      "u_max_over_ub": 1.3458891193760438,
+      "analytic": 1.3463747307968414,
+      "rel_error": 0.00036068073002990073,
+      "max_cell_divergence": 6.298602876596722e-16,
+      "pass": true
+    },
+    "C6_re2800_reach_stable": {
+      "steps": 30000,
+      "trace": [
+        {
+          "step": 3000,
+          "t": 30.0,
+          "max_abs_velocity": 1.2546278453789366,
+          "bulk_velocity": 0.9999999997136352,
+          "max_cell_divergence": 0.13530821566763038
+        },
+        {
+          "step": 6000,
+          "t": 60.0,
+          "max_abs_velocity": 1.1929081281669354,
+          "bulk_velocity": 0.9999999997077699,
+          "max_cell_divergence": 0.10377020548909897
+        },
+        {
+          "step": 9000,
+          "t": 90.0,
+          "max_abs_velocity": 1.2354980499762422,
+          "bulk_velocity": 0.999999999946689,
+          "max_cell_divergence": 0.08392871723182814
+        },
+        {
+          "step": 12000,
+          "t": 120.0,
+          "max_abs_velocity": 1.2638215925721459,
+          "bulk_velocity": 0.9999999998960086,
+          "max_cell_divergence": 0.07728209853246717
+        },
+        {
+          "step": 15000,
+          "t": 150.0,
+          "max_abs_velocity": 1.2836036077117414,
+          "bulk_velocity": 1.0000000002306038,
+          "max_cell_divergence": 0.07031425473040215
+        },
+        {
+          "step": 18000,
+          "t": 180.0,
+          "max_abs_velocity": 1.2712560124703094,
+          "bulk_velocity": 0.9999999996540613,
+          "max_cell_divergence": 0.0720771898749289
+        },
+        {
+          "step": 21000,
+          "t": 210.0,
+          "max_abs_velocity": 1.287296040617272,
+          "bulk_velocity": 1.0000000000379918,
+          "max_cell_divergence": 0.0693717622856637
+        },
+        {
+          "step": 24000,
+          "t": 240.0,
+          "max_abs_velocity": 1.3064416553567522,
+          "bulk_velocity": 1.0000000001523657,
+          "max_cell_divergence": 0.06517588010593468
+        },
+        {
+          "step": 27000,
+          "t": 270.0,
+          "max_abs_velocity": 1.2834839806279128,
+          "bulk_velocity": 0.9999999999685113,
+          "max_cell_divergence": 0.06778308532241652
+        },
+        {
+          "step": 30000,
+          "t": 300.0,
+          "max_abs_velocity": 1.2853821210980139,
+          "bulk_velocity": 0.999999999816586,
+          "max_cell_divergence": 0.0700715774878713
+        }
+      ],
+      "pass": true
+    },
+    "C7_baseline_accuracy": {
+      "x_r_over_H": 8.137417572169372,
+      "ref": 5.34,
+      "rel_error": 0.5238609685710436,
+      "x_s_over_H": 0.6311709680493076,
+      "x_s_ref": 0.227,
+      "x_s_rel_error": 1.7804888460321922,
+      "pass": false
+    },
+    "C8_grid_sensitivity": {
+      "x_r_48x24": 8.137417572169372,
+      "x_r_96x48": 8.135346300222016,
+      "relative_change": 0.0002545367653787415
+    }
+  },
+  "all_pass": false,
+  "note": "C1-C6 are the round-4 defect gates; C7 is the acceptance metric of the anchor (10 % on the Breuer mean reattachment); C8 is reported, not gated."
+}
