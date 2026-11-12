@@ -572,7 +572,7 @@ class EulerSolver:
                 U_half[k] = (
                     U_pad[k]
                     - dt / (2.0 * self.dx) * (fxl[k] - fxr[k])
-                    - dt / (2.0 * self.dy) * (gyb[k] - gyt[k])
+                    - dt / (2.0 * self.dy) * (gyt[k] - gyb[k])
                 )
             half = self._primitive_from_conserved(U_half)
             left_x = {n: half[n] + 0.5 * slopes[n][0] for n in PRIMITIVE_NAMES}
