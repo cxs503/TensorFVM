@@ -76,8 +76,10 @@ class ShallowWaterBed1D(ShallowWater1D):
 
     def __init__(self, n: int, x_min: float, x_max: float, bed=None,
                  gravity: float = 9.81, cfl: float = 0.4, order: int = 2,
-                 dry_depth: float = 1e-12, well_balanced: bool = True):
-        super().__init__(n, x_min, x_max, gravity, cfl, order, dry_depth)
+                 dry_depth: float = 1e-12, well_balanced: bool = True,
+                 manning_n: float = 0.0, slope: float = 0.0):
+        super().__init__(n, x_min, x_max, gravity, cfl, order, dry_depth,
+                         manning_n=manning_n, slope=slope)
         self.bed = np.zeros(self.n)
         if bed is not None:
             self.set_bed(bed)
@@ -159,8 +161,12 @@ class ShallowWaterBed1D(ShallowWater1D):
         return hL, uL, hR, uR, hsL, hsR
 
     # ------------------------------------------------------------- residual
-    def rhs(self, h: np.ndarray, hu: np.ndarray):
-        """Semi-discrete right-hand side ``d/dt (h, hu)`` with bed terms."""
+    def rhs(self, h: np.ndarray, hu: np.ndarray, dt: float | None = None):
+        """Semi-discrete right-hand side ``d/dt (h, hu)`` with bed terms.
+
+        ``dt`` (optional) is forwarded to the bottom-friction reversal guard;
+        with ``manning_n == 0`` and ``slope == 0`` nothing is added.
+        """
         saved = self.h, self.hu
         self.h, self.hu = h, hu
         try:
@@ -189,6 +195,8 @@ class ShallowWaterBed1D(ShallowWater1D):
             dz[0] = (self.bed[1] - self.bed[0]) / self.dx
             dz[-1] = (self.bed[-1] - self.bed[-2]) / self.dx
             dhu = -(flux_hu[1:] - flux_hu[:-1]) / self.dx - g * h * dz
+        if self.has_sources:
+            dhu = dhu + self._source_momentum(h, hu, dt)
         return dh, dhu
 
     # ---------------------------------------------------------- diagnostics
