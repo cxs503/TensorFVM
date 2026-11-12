@@ -26,6 +26,15 @@ is clipped at zero as a positivity safeguard and the momentum is zeroed where
 the cell is dry.  Both safeguards are *counted* (``clipped_cells``,
 ``dry_flips``) so a benchmark can prove they never fired on the accepted grid.
 
+Optional source terms (both default to off, in which case every operator is
+bit-for-bit the inviscid flat-bed solver): a constant longitudinal bed-slope
+gravity forcing ``g h S_0`` and a Manning bottom-friction momentum sink
+``-g h S_f`` with ``S_f = n^2 u |u| / h^(4/3)``.  They are what turns the
+solver from a dam-break demonstrator into a channel-flow model, and they are
+verified against the closed-form decay ``u(t) = u0 / (1 + C u0 t)`` and the
+normal-flow relaxation ``u(t) = u_n tanh(g S_0 t / u_n)`` in
+:mod:`tensorfvm.verification.shallow_water_friction`.
+
 Reference: Toro, *Riemann Solvers and Numerical Methods for Fluid Dynamics*
 (3rd ed., 2009), chapters 6-7 and 13; Audusse et al. (2004) for the wet/dry
 treatment rationale (flat bed here, so the hydrostatic reconstruction reduces
@@ -45,7 +54,8 @@ class ShallowWater1D:
     """Explicit FV solver for the 1-D shallow-water equations on a flat bed."""
 
     def __init__(self, n: int, x_min: float, x_max: float, gravity: float = 9.81,
-                 cfl: float = 0.4, order: int = 2, dry_depth: float = 1e-12):
+                 cfl: float = 0.4, order: int = 2, dry_depth: float = 1e-12,
+                 manning_n: float = 0.0, slope: float = 0.0):
         if n < 4:
             raise ValueError("need at least 4 cells")
         if not x_max > x_min:
@@ -71,6 +81,13 @@ class ShallowWater1D:
         self.dt_last = 0.0
         self.clipped_cells = 0
         self.dry_flips = 0
+        if not manning_n >= 0.0:
+            raise ValueError("manning_n must be non-negative")
+        self.manning_n = float(manning_n)
+        if not math.isfinite(slope):
+            raise ValueError("slope must be finite")
+        self.slope = float(slope)
+        self.friction_clipped = 0
 
     # ------------------------------------------------------------------ state
     def set_state(self, h, u=None) -> None:
@@ -170,8 +187,14 @@ class ShallowWater1D:
         flux_hu = np.where(dry_pair, 0.0, flux_hu)
         return flux_h, flux_hu
 
-    def rhs(self, h: np.ndarray, hu: np.ndarray):
-        """Semi-discrete right-hand side ``d/dt (h, hu)``."""
+    def rhs(self, h: np.ndarray, hu: np.ndarray, dt: float | None = None):
+        """Semi-discrete right-hand side ``d/dt (h, hu)``.
+
+        ``dt`` is the stage step length; it is only used to cap the friction
+        impulse so that a stage can never reverse the flow.  With
+        ``manning_n == 0`` and ``slope == 0`` the returned residual is
+        bit-for-bit the flux-only residual of the inviscid solver.
+        """
         self_h, self_hu = self.h, self.hu
         self.h, self.hu = h, hu
         try:
@@ -181,7 +204,84 @@ class ShallowWater1D:
         flux_h, flux_hu = self._hll_flux(hL, uL, hR, uR)
         dh = -(flux_h[1:] - flux_h[:-1]) / self.dx
         dhu = -(flux_hu[1:] - flux_hu[:-1]) / self.dx
+        if self.has_sources:
+            dhu = dhu + self._source_momentum(h, hu, dt)
         return dh, dhu
+
+    # ---------------------------------------------------------------- sources
+    @property
+    def has_sources(self) -> bool:
+        """``True`` when a bottom-friction and/or slope term is active."""
+        return self.manning_n > 0.0 or self.slope != 0.0
+
+    def friction_slope(self, h=None, hu=None) -> np.ndarray:
+        """Manning friction slope ``S_f = n^2 u|u| / h^(4/3)`` (SI, ``R ~ h``).
+
+        The wide-rectangular-channel Manning law ``S_f = n^2 q^2 / (h^2
+        R^(4/3))`` with ``q = u h`` and ``R ~ h`` reduces to the expression
+        above.  Dry cells return ``0``.
+        """
+        h, u = self.primitive(h, hu)
+        wet = h > self.dry_depth
+        hw = np.where(wet, h, 1.0)
+        sf = self.manning_n ** 2 * u * np.abs(u) / hw ** (4.0 / 3.0)
+        return np.where(wet, sf, 0.0)
+
+    def normal_velocity(self, h=None, manning_n=None, slope=None) -> np.ndarray:
+        """Manning normal-flow velocity ``u_n = h^(2/3) sqrt(S_0) / n``."""
+        h = self.h if h is None else np.asarray(h, dtype=float)
+        n = self.manning_n if manning_n is None else float(manning_n)
+        s0 = self.slope if slope is None else float(slope)
+        if n <= 0.0:
+            raise ValueError("normal flow needs manning_n > 0")
+        if s0 < 0.0:
+            raise ValueError("normal flow needs slope >= 0")
+        return (h ** (2.0 / 3.0)) * math.sqrt(s0) / n
+
+    def _source_momentum(self, h, hu, dt=None) -> np.ndarray:
+        """Momentum-density source: along-channel gravity ``g h S_0`` + drag.
+
+        * the slope term is the gravity forcing of a channel of constant
+          longitudinal bed slope ``S_0 = -dz_b/dx`` -- ``d(hu)/dt = g h S_0``;
+        * the friction term is the Manning bed shear written as a momentum
+          sink ``-g h S_f``.
+
+        When ``dt`` is given the friction impulse of one stage is capped at
+        ``|hu|`` so that a stage can never drive the velocity through zero
+        (standard drag reversal guard: it keeps the scheme positive without
+        changing the smooth-flow answer, since the cap only binds when the
+        drag would remove more momentum than the cell holds).
+        """
+        h = np.asarray(h, dtype=float)
+        hu = np.asarray(hu, dtype=float)
+        out = np.zeros_like(h)
+        if self.slope != 0.0:
+            out = out + self.gravity * h * self.slope
+        if self.manning_n > 0.0:
+            wet = h > self.dry_depth
+            hw = np.where(wet, h, 1.0)
+            u = np.where(wet, hu / hw, 0.0)
+            friction = -self.gravity * self.manning_n ** 2 * u * np.abs(u) \
+                / hw ** (4.0 / 3.0) * h
+            friction = np.where(wet, friction, 0.0)
+            if dt is not None and dt > 0.0:
+                cap = np.abs(hu) / dt
+                over = np.abs(friction) > cap
+                if np.any(over):
+                    self.friction_clipped += int(np.count_nonzero(over))
+                    friction = np.where(over, np.sign(friction) * cap, friction)
+            out = out + friction
+        return out
+
+    def kinetic_energy(self, h=None, hu=None) -> float:
+        """Total mechanical energy ``int (h u^2 / 2 + g h^2 / 2) dx``."""
+        h = self.h if h is None else h
+        hu = self.hu if hu is None else hu
+        wet = h > self.dry_depth
+        hw = np.where(wet, h, 1.0)
+        u = np.where(wet, hu / hw, 0.0)
+        density = 0.5 * hw * u * u + 0.5 * self.gravity * h * h
+        return float(density.sum()) * self.dx
 
     # ---------------------------------------------------------------- stepping
     def max_wave_speed(self) -> float:
@@ -214,19 +314,19 @@ class ShallowWater1D:
         solvers (Shu & Osher 1988) and is stable there.
         """
         h0, hu0 = self.h, self.hu
-        k1h, k1hu = self.rhs(h0, hu0)
+        k1h, k1hu = self.rhs(h0, hu0, dt)
         h1 = h0 + dt * k1h
         hu1 = hu0 + dt * k1hu
         self.h, self.hu = h1, hu1
         self._sanitise()
         h1, hu1 = self.h, self.hu
-        k2h, k2hu = self.rhs(h1, hu1)
+        k2h, k2hu = self.rhs(h1, hu1, dt)
         h2 = 0.75 * h0 + 0.25 * (h1 + dt * k2h)
         hu2 = 0.75 * hu0 + 0.25 * (hu1 + dt * k2hu)
         self.h, self.hu = h2, hu2
         self._sanitise()
         h2, hu2 = self.h, self.hu
-        k3h, k3hu = self.rhs(h2, hu2)
+        k3h, k3hu = self.rhs(h2, hu2, dt)
         self.h = (1.0 / 3.0) * h0 + (2.0 / 3.0) * (h2 + dt * k3h)
         self.hu = (1.0 / 3.0) * hu0 + (2.0 / 3.0) * (hu2 + dt * k3hu)
         self._sanitise()
@@ -298,6 +398,9 @@ class ShallowWater1D:
             "momentum": self.momentum(),
             "clipped_cells": self.clipped_cells,
             "dry_flips": self.dry_flips,
+            "manning_n": self.manning_n,
+            "slope": self.slope,
+            "friction_clipped": self.friction_clipped,
         }
 
 
