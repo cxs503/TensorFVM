@@ -87,15 +87,22 @@ from .twin_hull_geometry import PanelSet, panelise_nodes
 
 __all__ = [
     "added_mass_matrix",
+    "added_mass_matrix_6dof",
     "added_mass_matrix_about_point",
     "displaced_volume",
+    "ellipsoid_panels",
     "lamb_ellipsoid_factors",
     "lamb_integral_factors",
     "lamb_spheroid_factors",
     "rigid_shift_matrix",
+    "rotational_added_inertia",
     "source_potential",
     "sphere_added_mass",
+    "sphere_offset_axis_added_inertia",
+    "sphere_panels_offset",
+    "sphere_rotational_added_inertia",
     "spheroid_panels",
+    "surface_generators",
     "surface_quadrature",
 ]
 
@@ -133,6 +140,42 @@ def displaced_volume(panels: PanelSet) -> float:
     return float(np.sum(np.einsum("ij,ij->i", panels.centroids, panels.normals) * panels.areas) / 3.0)
 
 
+def ellipsoid_panels(a: float, b: float, c: float, n_theta: int = 24,
+                     n_phi: int = 18) -> PanelSet:
+    """Triaxial ellipsoid (semi-axes ``a, b, c`` along x, y, z) as quad panels.
+
+    Latitude/longitude topology identical to
+    :func:`tensorfvm.twin_hull_geometry.sphere_panels`, so ``a = b = c`` reproduces
+    the sphere panelisation and ``b = c`` the prolate spheroid of
+    :func:`spheroid_panels`.  Normals are oriented outward (into the fluid) by
+    comparing them with the outward gradient of ``(x/a)^2 + (y/b)^2 + (z/c)^2``.
+
+    The triaxial form matters for verification: on a body of revolution two of the
+    three rotational added-inertia entries are equal by axisymmetry and the third
+    is identically zero, so a spheroid cannot test the three rotational moment
+    arms independently.  ``a, b, c`` all distinct gives three different non-zero
+    entries whose values are known in closed form
+    (:func:`tensorfvm.ellipsoid_added_inertia.rotational_added_inertia`).
+    """
+    if a <= 0.0 or b <= 0.0 or c <= 0.0:
+        raise ValueError("ellipsoid semi-axes must be positive")
+    th = np.linspace(0.0, 2.0 * np.pi, n_theta + 1)
+    ph = np.linspace(0.0, np.pi, n_phi + 1)
+    nodes = np.empty((n_theta + 1, n_phi + 1, 3))
+    for i, t in enumerate(th):
+        for j, p in enumerate(ph):
+            nodes[i, j] = (a * np.cos(p), b * np.sin(p) * np.cos(t), c * np.sin(p) * np.sin(t))
+    panels = panelise_nodes(nodes, label="ellipsoid")
+    out_grad = np.stack(
+        [panels.centroids[:, 0] / a**2, panels.centroids[:, 1] / b**2,
+         panels.centroids[:, 2] / c**2],
+        axis=1,
+    )
+    flip = np.einsum("ij,ij->i", panels.normals, out_grad) < 0.0
+    panels.normals[flip] *= -1.0
+    return panels
+
+
 def spheroid_panels(a: float, b: float, n_theta: int = 24, n_phi: int = 18) -> PanelSet:
     """Prolate spheroid (semi-axes ``a`` along x, ``b = c``) as quad panels.
 
@@ -140,23 +183,12 @@ def spheroid_panels(a: float, b: float, n_theta: int = 24, n_phi: int = 18) -> P
     :func:`tensorfvm.twin_hull_geometry.sphere_panels`, so ``a = b`` reproduces
     the sphere panelisation.  Normals are oriented outward (into the fluid) by
     comparing them with the outward gradient of ``(x/a)^2 + (y/b)^2 + (z/b)^2``.
+    Thin wrapper over :func:`ellipsoid_panels` with ``c = b`` (bit-identical: the
+    published spheroid numbers are unchanged).
     """
     if a <= 0.0 or b <= 0.0:
         raise ValueError("spheroid semi-axes must be positive")
-    th = np.linspace(0.0, 2.0 * np.pi, n_theta + 1)
-    ph = np.linspace(0.0, np.pi, n_phi + 1)
-    nodes = np.empty((n_theta + 1, n_phi + 1, 3))
-    for i, t in enumerate(th):
-        for j, p in enumerate(ph):
-            nodes[i, j] = (a * np.cos(p), b * np.sin(p) * np.cos(t), b * np.sin(p) * np.sin(t))
-    panels = panelise_nodes(nodes, label="spheroid")
-    out_grad = np.stack(
-        [panels.centroids[:, 0] / a**2, panels.centroids[:, 1] / b**2, panels.centroids[:, 2] / b**2],
-        axis=1,
-    )
-    flip = np.einsum("ij,ij->i", panels.normals, out_grad) < 0.0
-    panels.normals[flip] *= -1.0
-    return panels
+    return ellipsoid_panels(a, b, b, n_theta, n_phi)
 
 
 # ---------------------------------------------------------------------------
