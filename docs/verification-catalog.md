@@ -767,3 +767,38 @@ NOT implemented (the `GAP-FVM-COMBUSTION-SPECIES` proposal's laminar flame speed
 WITHHELD -- Cantera is not installable here); the constant-`cp` Burke-Schumann temperature
 gives `T_ad = 2589 K` vs the 2226 K dissociation-affected literature value, so `T_ad` is *not*
 used as an external criterion (only its enthalpy closure is verified).
+
+## 17. Pulsatile (Womersley) Plane-Channel Flow -- Unsteady Verification Face
+
+The staggered MAC solver `channel_periodic.PeriodicChannelSolver` (x-periodic, wall
+bounded, explicit convection + implicit diffusion + exact discrete projection) was
+verified only in its **steady** Poiseuille limit.  Section 17 covers its **unsteady**
+behaviour against the exact Womersley (1955) periodic solution of
+
+    du/dt = G0 cos(omega t) + nu d2u/dy2,   u(0,t) = u(H,t) = 0,
+
+    uhat(y) = G0/(i omega) [1 - cosh(m (y - H/2)) / cosh(m H/2)],  m = sqrt(i omega/nu).
+
+| item | result |
+|---|---|
+| closed form PDE residual (numerical derivatives) | 2.7e-09 (rel. to G0) |
+| `omega -> 0` limit vs analytic parabola | 1.1e-09 rel. |
+| Stokes-layer decay slope vs `-1/delta` (W=40/80) | 0.41 % / 0.074 % |
+| solver vs closed form, W=2/5/10 (ny=32, dt/T=1/200, 8 phases) | 1.54 % / 0.61 % / 0.39 % |
+| bulk-velocity amplitude / phase (W=5) | 0.33 % / 0.11 deg |
+| wall-shear amplitude (W=5, ny=64, 3-point fit) | 1.65 % |
+| temporal convergence order (W=5) | 0.875 (first order, as designed) |
+| discrimination (oscillatory vs steady profile) | 134 % apart |
+
+Capability added: `PeriodicChannelSolver.step(body_force_m_s2=...)` -- per-step
+time-dependent body force; `None` reproduces the configured constant forcing
+bit-for-bit (steady regression 4.9e-04 at ny=64, O(dy^2)).
+
+Evidence: `src/tensorfvm/verification/pulsatile_channel.py`,
+`tests/test_pulsatile_channel.py` (12 tests),
+`docs/verification-pulsatile-channel/{REPORT.md,criteria.md,summary.json,fig_pulsatile_channel.png}`.
+
+**Not supported**: oscillating-wall drive (Stokes' second problem) -- the solver's walls
+are homogeneous no-slip; second-order time integration; turbulent/compressible channels.
+
+[[gap-status: closed-by src/tensorfvm/verification/pulsatile_channel.py, src/tensorfvm/channel_periodic.py, tests/test_pulsatile_channel.py, docs/verification-pulsatile-channel/summary.json]]
