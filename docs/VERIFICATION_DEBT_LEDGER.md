@@ -225,3 +225,19 @@
   2226 K 的对比（常数 cp + 无离解，实测 2589 K，不作判据）。
 - 顺带修的一处陈旧索引: catalog gap 5（Radiation）早已由 m16116 交付却仍标 open，
   本单补上 `closed-by`（gate 只查死链，查不出"陈旧 open"）。
+
+### D10 CASE-FVM-KOVASZNAY-ORDER 的 FAIL 归属（m16396, 2026-11-12）—— 已归属，锚点仍 OPEN
+- 起因: 交付轮 m16130 用**单一速度 L2 范数**判 1.684 < 1.8 → honest FAIL；m16173 交差审计指出
+  原始 cases.json 缺失、无法独立复算。
+- 交付: `scripts/audit_kovasznay_order_components.py`（误差预算三分解）+ `tests/test_kovasznay_order_budget.py`
+  + `docs/verification-kovasznay-order-attribution/{REPORT.md,summary.json,fig_order_budget.png,make_report.py}`
+  + `runs/kovasznay-order/`（n=16/32 复现产物）。
+- 关键数字: 交付轮阶梯**逐位复现**（n16 1.2575e-02 / n32 3.8397e-03）；同一解拆范数后
+  **面内 (u,v) 阶 1.808（过 1.8 门）**、**挤出向 w 阶 1.106**（w 精确值恒 0）、total 1.711；
+  w 误差平方份额 8.7%(n16) → 20.1%(n32)（网格越细越主导）；勾股闭合 1.1e-16。
+- 结构探针(n=8): 挤出向 cell-w 自由度行和 0.30–0.40、零行 0 → **不是无质量自由度**，
+  是真被离散耦合驱动的 O(h) 伪速度。
+- 未完成: 未定位 z 动量里产生该 O(h) 驱动力的具体项（未改求解器）；`planar` 无挤出对照
+  在 9600×9600 耦合直接解上超时 → "去掉挤出向即二阶"记 WITHHELD；n=64 未跑。
+- 给下次: 在 `native_face_mean3d` / thin-layer viscous 两侧拆项做 n=8 的逐项残差探针，
+  定位后或改离散、或在验证口径里把 w 预算单列（本单已提供分解工具）。
