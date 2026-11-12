@@ -1,0 +1,133 @@
+{
+ "mission": 15326,
+ "anchor": "CASE-FORWARD-STEP",
+ "repo": "TensorFVM",
+ "worktree_head": "c5da8f7d",
+ "pr": 429,
+ "checks": {
+  "A1_artifacts_exist": {
+   "forward_step.json": {
+    "bytes": 12880,
+    "sha256": "e6759de7cb269efa1c2a7008a31c1979ae0d469480f20a9a823e1969b27c35d2"
+   },
+   "forward_step_120x40_t1.json": {
+    "bytes": 24110,
+    "sha256": "870b700a8f81d3fcf9d5a1c40448147f787bc1b66ceff2641a076028532478df",
+    "note": "contains 60x20 t=1.0 AND 120x40 t=1.0 (transient, not graded); criteria block = 120x40 t=1: p2/p1 -3.61% pass, rho2/rho1 -12.01% / u2/u1 -20.19% / M2 -23.75% fail"
+   },
+   "forward_step_fields.npz": {
+    "bytes": 29153,
+    "sha256": "9d6ba95543f362141255447bd57afe95ac63c7d440237f30920a3f18e678cce2",
+    "fields": "x(60) y(20) rho/u/v/p(60,20) solid(60,20)bool"
+   },
+   "figures": {
+    "forward_step_density.png": "edf6041f557beb810182d11e593e06132a7b034590e67eb705d913691ae96924",
+    "forward_step_centreline.png": "5cae30abcc252e2a4189c3cef19c25859999ee7d3a02e223418c966159d51a4f",
+    "forward_step_wall_pressure.png": "58399e00539aade192040484f21959ee6c8aa476a9fea79b0973a775af5937ca",
+    "forward_step_error_vs_dx.png": "3b05dc2c03e754c6713953f70e947b4dfe182ed9dd54ee04af039f6979ec0635"
+   }
+  },
+  "A2_report_six_sections": {
+   "present": [
+    "①问题与ref出处",
+    "②方法与实现",
+    "③参数表",
+    "④对照表",
+    "⑤收敛性与参数敏感性",
+    "⑥失败模式与工件"
+   ],
+   "all_six": true,
+   "platform_report_id": 14437,
+   "renderer": "scripts/render_forward_step_report.py (report regenerated from artifacts)"
+  },
+  "A3_zero_handcopy": {
+   "method": "all 8 criteria (ref,got,rel_error) formatted and searched in report md",
+   "all_match": true
+  },
+  "A4_tests": {
+   "cmd": "OMP_NUM_THREADS=4 python3 -m pytest tests/test_repro_fvm_forward_step.py -q",
+   "rc": 0,
+   "result": "8 passed in 15.49s (audit re-run)"
+  },
+  "A5_repro_cmd": {
+   "cmd": "python scripts/repro_fvm_forward_step.py --out /tmp/audit_fs --grids 60x20 --t-end 0.5 --no-figures",
+   "rc": 0,
+   "note": "smoke run OK; full default triple (120x40,240x80,480x160) ~30min not re-run in audit"
+  },
+  "A6_benchmark_judge": {
+   "registered_case": "ABSENT: SELECT ... FROM tensor_benchmark_cases WHERE anchor_slug='CASE-FORWARD-STEP' -> 0 rows (table has 16 rows, FVM anchors: GAP-FVM-TWOPHASE, REPRO-FVM-SOD1978 only)",
+   "mission_goal_tolerance": "<8% (from tensor_dev_missions.goal id=15326)",
+   "graded_grid_of_record": "480x160 (DESIGN.md §4) - NEVER RUN: cluster job cj1080 state=queued 89min at audit time; mission fail_stage=budget_exhausted+forced_finish",
+   "only_t4_run": "60x20 (coarser than pre-registered coarsest 120x40)",
+   "got_vs_ref": {
+    "p2/p1": {
+     "ref": 10.333333333333334,
+     "got": 7.116843758048484,
+     "rel_error_pct": -31.13,
+     "tolerance": 0.08,
+     "pass": false
+    },
+    "rho2/rho1": {
+     "ref": 3.857142857142857,
+     "got": 2.8940804255783266,
+     "rel_error_pct": -24.97,
+     "tolerance": 0.08,
+     "pass": false
+    },
+    "u2/u1": {
+     "ref": 0.25925925925925924,
+     "got": 0.45575860032186627,
+     "rel_error_pct": 75.79,
+     "tolerance": 0.08,
+     "pass": false
+    },
+    "M2": {
+     "ref": 0.47519096331149147,
+     "got": 0.871902071714665,
+     "rel_error_pct": 83.48,
+     "tolerance": 0.08,
+     "pass": false
+    },
+    "p_stag/p1": {
+     "ref": 12.060964701266625,
+     "got": 11.472181195281955,
+     "rel_error_pct": -4.88,
+     "tolerance": 0.08,
+     "pass": true
+    },
+    "rho_stag/rho1": {
+     "ref": 4.307487393309508,
+     "got": 4.1312282641473175,
+     "rel_error_pct": -4.09,
+     "tolerance": 0.08,
+     "pass": true
+    },
+    "mass_budget_drift": {
+     "ref": 0.0,
+     "got": -1.1328806373726087e-15,
+     "rel_error_pct": -0.0,
+     "tolerance": 1e-06,
+     "pass": true
+    },
+    "energy_budget_drift": {
+     "ref": 0.0,
+     "got": 1.6020534265875275e-16,
+     "rel_error_pct": 0.0,
+     "tolerance": 0.01,
+     "pass": true
+    }
+   },
+   "physical_pass": "2/6 (p_stag/p1 -4.88%, rho_stag/rho1 -4.09%); C1-C4 all FAIL",
+   "budget_pass": "mass -1.13e-15 (tol 1e-6) / energy 1.60e-16 (tol 1e-2) both pass",
+   "in_tolerance": false
+  },
+  "A7_renderer_idempotence": {
+   "rc": 0,
+   "sha_match_after_rerender": false,
+   "note": "re-running renderer drops the manually-appended '附：本轮运行状态（fail_stage）' section (6 lines); restored via git checkout"
+  },
+  "A8_unbacked_claim": "report §附 claims '120x40, t=2 交互诊断 p2/p1 -0.49%' - no saved artifact for t=2; the 120x40 artifact is t=1.0 transient"
+ },
+ "proposed_level": 3,
+ "level_rationale": "L1✅(8 passed, ref=closed-form) L2✅(467+174 lines real code, ablation) L3✅(solid= is first-class EulerSolver ctor arg, used by forward_step.py) L4❌(no registered benchmark row; grid of record 480x160 never run; only t=4 run fails C1-C4 by 25-83%) -> L3"
+}
