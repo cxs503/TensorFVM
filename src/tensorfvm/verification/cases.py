@@ -128,3 +128,26 @@ def taylor_green(n=32,dt=.0125,end_time=.5,role="spatial"):
        profile_y_m=array(y[0,:,0]),profile_u_m_s=faces[0,0,:,n//4],
        reference_u_profile_m_s=array(exact[0,0,:,n//4]),
        divergence_s_inv=array(s.divergence(s.velocity))))
+
+
+def channel_periodic(nx=16, ny=64, re_h=100.0, time_step_s=20.0):
+    """Periodic plane channel (streamwise periodic, no-slip walls, body force driven).
+
+    Wrapper around :func:`tensorfvm.benchmark_channel_periodic.run_case` so the
+    shared analytic-benchmark suite can drive the case through the same export and
+    acceptance objects as the inlet-driven channel.  The reference is the exact
+    parabola ``u = 6 Ubar (y/H)(1-y/H)``, re-derived symbolically by
+    ``tensorfvm.channel_periodic.symbolic_checks``.
+    """
+    from ..benchmark_channel_periodic import run_case
+    started = time.perf_counter()
+    case = run_case(nx=nx, ny=ny, re_h=re_h, time_step_s=time_step_s)
+    metrics = [Metric(m["name"], m["relative_error"], m["tolerance"], m["note"])
+               for m in case["metrics"]]
+    rows, passed = evaluate(metrics)
+    return dict(case="channel-periodic", role="spatial", resolution=case["resolution"],
+                spacing_m=case["dy"], elapsed_s=time.perf_counter() - started,
+                iterations=case["steps"], converged=case["converged"],
+                time_s=case["physical_time_s"], pressure_time_s=None,
+                metrics=rows, passed=bool(passed), reference=case["reference"],
+                history=case["history"], fields=case["fields"])
