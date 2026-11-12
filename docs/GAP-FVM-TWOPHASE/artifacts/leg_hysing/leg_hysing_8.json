@@ -1,0 +1,23 @@
+{
+  "case": "hysing",
+  "cells_per_diameter": 8,
+  "circularity_rel_error": 1.1589858175926744,
+  "declared": false,
+  "diverged": false,
+  "end_time": 3.0,
+  "eotvos": 10.0,
+  "min_circularity": 1.0026330136900379,
+  "morton": 0.001,
+  "peak_velocity": 0.2450796092786887,
+  "reference": {
+    "centroid_y_at_t3": 1.984,
+    "min_circularity": 0.4644,
+    "source": "Hysing et al. (2009) Int. J. Numer. Meth. Fluids 60, 1259-1288, Table II, Case 2 (Eo=10, M=1e-3)",
+    "terminal_velocity": 0.2342
+  },
+  "steps": 734,
+  "terminal_velocity": 0.1839538198189404,
+  "terminal_velocity_rel_error": 0.2145438948806985,
+  "total_volume_drift": 7.980296758561063e-05,
+  "worst_step_drift": 7.2071090548306175e-06
+}

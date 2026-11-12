@@ -61,11 +61,32 @@ class TestHysingCase:
     def test_solve_config(self):
         case = HysingCase(cells_per_diameter=32)
         grid, tp = case.solve_config()
-        assert grid.nx == 32
-        assert grid.ny == 64  # domain_height/domain_width = 4/2 = 2
+        # cells_per_diameter is a resolution: the Hysing box is 2d x 4d, so a
+        # 32-cells-per-diameter grid is 64 x 128 (historic bug: nx = cpd).
+        assert grid.nx == 64
+        assert grid.ny == 128
+        assert abs(grid.length / grid.nx - case.diameter / 32) < 1e-12
         assert tp.enabled is True
         assert tp.surface_tension is True
         assert tp.gravity == 1.0
+
+    @pytest.mark.parametrize("cpd", [8, 16, 32])
+    def test_bubble_spans_cells_per_diameter(self, cpd):
+        case = HysingCase(cells_per_diameter=cpd)
+        grid, _ = case.solve_config()
+        alpha = case.initial_alpha(grid.nx, grid.ny, grid.length / grid.nx,
+                                   grid.height / grid.ny)
+        # cells crossed by the gas phase across the bubble's horizontal diameter
+        dy = grid.height / grid.ny
+        row = alpha[int(round(case.start_y / dy - 0.5)), :]
+        span = float((row < 0.5).sum()) * (grid.length / grid.nx)
+        assert abs(span - case.diameter) <= 2.0 * grid.length / grid.nx
+
+    def test_bubble_clear_of_wall(self):
+        case = HysingCase()
+        # Hysing places the d=0.5 bubble at (0.5, 0.5) in [0,1]x[0,2] -> (1d, 1d)
+        assert abs(case.start_y - 1.0) < 1e-12
+        assert case.start_y - case.bubble_radius > 0.4
 
     def test_initial_alpha_shape(self):
         case = HysingCase(cells_per_diameter=16)
@@ -103,8 +124,39 @@ class TestBubbleMetrics:
         dx = dy = 0.1
         m = bubble_metrics(alpha, dx, dy)
         assert m["volume"] > 0
-        # circularity should be close to 1 for a circle
-        assert 0.5 < m["circularity"] <= 1.0
+        # circularity close to 1; this blob is only ~5 cells in radius, and the
+        # marching-squares contour is exact for a smooth field but carries a few
+        # per-cent discretisation wobble for a binary one (see _interface_perimeter)
+        assert 0.9 < m["circularity"] <= 1.06
+
+    def test_metric_orientation_not_double_inverted(self):
+        """A gas blob near the *top* must report a high yc.
+
+        ``bubble_metrics`` takes the liquid fraction and inverts it itself; the
+        historic caller passed ``1 - alpha`` which made the helper measure the
+        *liquid* region, so a rising bubble appeared to sink (recorded FAIL:
+        U_T = -0.022 vs 0.2342, circularity 5.62 > 1).
+        """
+        import torch
+        alpha = torch.ones((20, 20), dtype=torch.float64)
+        alpha[15:18, 8:12] = 0.0  # gas near the top
+        m = bubble_metrics(alpha, 0.1, 0.1)
+        assert m["yc"] > 1.5  # top half of the 2.0 domain
+        in_liquid = bubble_metrics(1.0 - alpha, 0.1, 0.1)
+        assert in_liquid["yc"] < 1.5  # double inversion puts the centroid low
+
+    def test_analytic_disc_circularity(self):
+        import numpy as np
+        import torch
+
+        n, h = 96, 1.0 / 32.0
+        xs = (np.arange(n) + 0.5) * h
+        a = np.ones((n, n))
+        xc, yc, r = n * h / 2.0, n * h / 2.0, 0.75
+        a[(xs[None, :] - xc) ** 2 + (xs[:, None] - yc) ** 2 < r ** 2] = 0.0
+        m = bubble_metrics(torch.from_numpy(a), h, h)
+        assert abs(m["circularity"] - 1.0) < 0.02
+        assert abs(m["volume"] - math.pi * r ** 2) / (math.pi * r ** 2) < 0.03
 
     def test_centroid_centered(self):
         import torch
