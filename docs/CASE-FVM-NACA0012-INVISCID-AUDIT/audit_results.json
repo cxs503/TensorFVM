@@ -1,0 +1,200 @@
+{
+  "case": "CASE-FVM-NACA0012-INVISCID",
+  "audit_mission": 16236,
+  "cl_thin_2pa": 0.2193245422464302,
+  "card_value": 0.2198,
+  "card_tolerance": 0.03,
+  "A_geometry": {
+    "t_over_c": 0.12001259140210008,
+    "chord": 1.0,
+    "te_gap": 0.0,
+    "x_first_panel": 0.9999691581204151,
+    "normal_upper_out": true,
+    "normal_lower_out": true
+  },
+  "B_panel_convergence": [
+    {
+      "panels_per_side": 50,
+      "panels": 100,
+      "cl": 0.24098282542311456,
+      "err_vs_thin_pct": 9.874992992051656,
+      "te_speed": 0.7488148263114777,
+      "kutta_residual": 2.220446049250313e-16,
+      "normal_residual": 3.885780586188048e-16
+    },
+    {
+      "panels_per_side": 100,
+      "panels": 200,
+      "cl": 0.24115573179502786,
+      "err_vs_thin_pct": 9.953828844228664,
+      "te_speed": 0.700240840679805,
+      "kutta_residual": 2.220446049250313e-16,
+      "normal_residual": 1.5543122344752192e-15
+    },
+    {
+      "panels_per_side": 200,
+      "panels": 400,
+      "cl": 0.24123949926589114,
+      "err_vs_thin_pct": 9.99202223107234,
+      "te_speed": 0.6549457088192026,
+      "kutta_residual": 3.3306690738754696e-16,
+      "normal_residual": 1.0269562977782698e-15
+    },
+    {
+      "panels_per_side": 400,
+      "panels": 800,
+      "cl": 0.24127923597097103,
+      "err_vs_thin_pct": 10.01013999603968,
+      "te_speed": 0.6126223940539126,
+      "kutta_residual": 4.440892098500626e-16,
+      "normal_residual": 2.3314683517128287e-15
+    },
+    {
+      "panels_per_side": 800,
+      "panels": 1600,
+      "cl": 0.24129814590529647,
+      "err_vs_thin_pct": 10.018761892217709,
+      "te_speed": 0.5730485827586154,
+      "kutta_residual": 1.7763568394002505e-15,
+      "normal_residual": 3.885780586188048e-15
+    }
+  ],
+  "C_force_bookkeeping": {
+    "cl_pressure": 0.24127923597097103,
+    "cl_joukowski_as_coded": -0.11848355059359728,
+    "gamma": -0.05924177529679864,
+    "perimeter": 2.039546060136892,
+    "cl_kj_with_perimeter": -0.24165265880420142,
+    "ratio_as_coded_over_pressure": -0.4910640160011629,
+    "ratio_with_perimeter_over_pressure": -1.0015476791101714
+  },
+  "D_exact_joukowski": {
+    "law": "Cl = 8*pi*(R/c)*sin(alpha)  (Kutta at cusped TE, flat-plate limit -> 2*pi*alpha)",
+    "anchors": [
+      {
+        "mu": 0.015163449397933959,
+        "t_over_c": 0.02000000000000003,
+        "chord": 4.000948485411664,
+        "cl": 0.2159037682570696,
+        "slope_ratio": 0.9844031408691278
+      },
+      {
+        "mu": 0.04417141550537759,
+        "t_over_c": 0.060000000000000074,
+        "chord": 4.008560735390967,
+        "cl": 0.20914648477173425,
+        "slope_ratio": 0.9535936226267829
+      },
+      {
+        "mu": 0.06486601027262459,
+        "t_over_c": 0.09,
+        "chord": 4.019339327140702,
+        "cl": 0.20406954394066995,
+        "slope_ratio": 0.9304455481839332
+      },
+      {
+        "mu": 0.08473050897707429,
+        "t_over_c": 0.11999999999999998,
+        "chord": 4.034576386210456,
+        "cl": 0.19898029361459965,
+        "slope_ratio": 0.9072413491739013
+      }
+    ],
+    "deliverable_claim": "Cl/Cl_thin ~ 1 + 0.83*(t/c)  (linear, slope-raising)",
+    "panel_measured": [
+      {
+        "t_over_c": 0.02,
+        "naca_panel_ratio": 1.0160517408193888
+      },
+      {
+        "t_over_c": 0.06,
+        "naca_panel_ratio": 1.0495236962947505
+      },
+      {
+        "t_over_c": 0.09,
+        "naca_panel_ratio": 1.0746448556370138
+      },
+      {
+        "t_over_c": 0.12,
+        "naca_panel_ratio": 1.0999202223107234
+      }
+    ],
+    "sign_of_claimed_effect_vs_exact": "opposite: exact Joukowski family slope ratio falls below 1 with thickness",
+    "note": "the Joukowski family is not the NACA 0012 geometry; the anchor is used only to disprove the unconditional statement '12 % thickness raises the inviscid slope by ~10 %', not to predict the NACA 0012 value"
+  },
+  "E_kutta_options": {
+    "equal_pressure": [
+      {
+        "cl": 0.24098282542311456,
+        "gamma": -0.059536953528864234,
+        "v_te_up": 0.7488148263114778,
+        "v_te_lo": 0.7488148263114776,
+        "panels_per_side": 50
+      },
+      {
+        "cl": 0.24115573179502786,
+        "gamma": -0.05937361747585507,
+        "v_te_up": 0.7002408406798049,
+        "v_te_lo": 0.7002408406798051,
+        "panels_per_side": 100
+      },
+      {
+        "cl": 0.24123949926589114,
+        "gamma": -0.059286832606997415,
+        "v_te_up": 0.6549457088192027,
+        "v_te_lo": 0.6549457088192023,
+        "panels_per_side": 200
+      }
+    ],
+    "te_stagnation": [
+      {
+        "cl": 1.809163673519231,
+        "gamma": -0.44440333784037434,
+        "v_te_up": 4.551914400963142e-15,
+        "v_te_lo": 2.4424906541753444e-15,
+        "panels_per_side": 50
+      },
+      {
+        "cl": 1.0089040910556892,
+        "gamma": -0.2460123178652166,
+        "v_te_up": 2.1094237467877974e-15,
+        "v_te_lo": 4.3298697960381105e-15,
+        "panels_per_side": 100
+      },
+      {
+        "cl": 0.6128308363754604,
+        "gamma": -0.14964489914031245,
+        "v_te_up": 8.881784197001252e-16,
+        "v_te_lo": 1.454392162258955e-14,
+        "panels_per_side": 200
+      }
+    ],
+    "module_option_stagnation_call": {
+      "cl": -162479996928.0,
+      "kutta_residual": 0.0126953125
+    },
+    "te_stagnation_verdict": "rejected as an audit fix: Cl(alpha=0) != 0 and no convergence; reported only to show the module has no well-posed finite-angle-TE Kutta variant"
+  },
+  "F_te_speed_trend": [
+    {
+      "panels_per_side": 50,
+      "te_speed": 0.7488148263114777
+    },
+    {
+      "panels_per_side": 100,
+      "te_speed": 0.700240840679805
+    },
+    {
+      "panels_per_side": 200,
+      "te_speed": 0.6549457088192026
+    },
+    {
+      "panels_per_side": 400,
+      "te_speed": 0.6126223940539126
+    },
+    {
+      "panels_per_side": 800,
+      "te_speed": 0.5730485827586154
+    }
+  ]
+}
