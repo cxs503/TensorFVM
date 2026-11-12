@@ -581,9 +581,15 @@ def sphere_rotational_added_inertia(radius: float = 1.0, rho: float = 1.0) -> fl
     return 0.0
 
 
-def sphere_offset_axis_added_inertia(radius: float = 1.0, distance: float = 1.0,
+def sphere_offset_axis_added_inertia(radius: float, distance: float,
                                      rho: float = 1.0) -> float:
     """Exact added inertia of a sphere about an axis a distance ``d`` from its centre.
+
+    ``radius`` and ``distance`` are **mandatory** (debt ledger D8, m16122): the
+    historical default ``distance = 1.0`` let a caller silently compare a panel
+    value at ``d = 1.5`` against the ``d = 1.0`` anchor (``m_a`` vs ``m_a d^2``),
+    which is the phantom inconsistency flagged in
+    ``docs/maneuvering-added-inertia/REPORT.md`` (m14901).
 
     Rotation with angular velocity ``Omega`` about an axis through the point
     ``r0`` is ``Omega x (r - r0) = Omega x r - Omega x r0``: the rigid rotation
