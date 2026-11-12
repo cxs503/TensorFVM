@@ -1,0 +1,61 @@
+{
+ "source": "docs/verification-kovasznay-order-closure/runs/zero_gradient.json (m16695, tied zero_gradient closure)",
+ "levels": {
+  "8": {
+   "n": 8,
+   "cells": 64,
+   "faces": 544,
+   "dofs": 1824,
+   "total_l2": 0.04005422522815509,
+   "inplane_l2": 0.040054225228155084,
+   "spanwise_l2": 0.0,
+   "seconds": 7.747159481048584
+  },
+  "16": {
+   "n": 16,
+   "cells": 256,
+   "faces": 2112,
+   "dofs": 7104,
+   "total_l2": 0.01332787507585613,
+   "inplane_l2": 0.01332787507585613,
+   "spanwise_l2": 0.0,
+   "seconds": 65.77946734428406
+  }
+ },
+ "order_8_16": {
+  "total": 1.5875076539597763,
+  "gate": 1.8,
+  "passes": false
+ },
+ "control_n8": {
+  "note": "delivered free-traction closure + exact-Dirichlet control, n=8, same mesh/discretisation; measured in this round, digits coincide with m16524 (4.0092e-02 / 9.0032e-03)",
+  "symmetry": {
+   "n": 8,
+   "inplane_l2": 0.040092,
+   "spanwise_l2": 0.0090032,
+   "max_abs_w": 0.018955
+  },
+  "dirichlet": {
+   "n": 8,
+   "inplane_l2": 0.039458,
+   "spanwise_l2": 5.7157e-18,
+   "max_abs_w": 1.8617e-17
+  },
+  "zero_gradient": {
+   "n": 8,
+   "inplane_l2": 0.040054225228155084,
+   "spanwise_l2": 0.0,
+   "max_abs_w": 0.0
+  }
+ },
+ "this_round": {
+  "n32_status": "not_completed",
+  "n32_wall_clock_s_at_least": 660.0,
+  "host_load15_at_start": 103.55,
+  "host_nproc": 128,
+  "note": "n=32 level of the tied ladder was still running when this round closed; no payload written, hence C4/C7/C8 ungradeable this round (WITHHELD)",
+  "free_traction_n16_seconds": 17.9,
+  "tied_n16_seconds": 65.77946734428406,
+  "cost_ratio_n16": 3.674830577892964
+ }
+}
