@@ -232,7 +232,11 @@ class LidCavity3DSolver:
         vi = va[1:m]
         from_left = fa + 0.5 * slope        # face i, upwind cell i-1 (its right face)
         from_right = fa - 0.5 * slope       # face i, upwind cell i (its left face)
-        out[1:m] = torch.where(vi >= 0.0, from_left[0:m - 1], from_right[0:m - 1])
+        # face i lies between cells i-1 and i: the positive branch takes the
+        # right face of cell i-1, the negative branch the LEFT face of cell i
+        # (``from_right[0:m-1]`` was one cell upstream-wrong: a linear profile
+        # was reconstructed with a uniform offset of h on every inflow face).
+        out[1:m] = torch.where(vi >= 0.0, from_left[0:m - 1], from_right[1:m])
         return out.movedim(0, axis)
 
     # ---------------------------------------------------------------- diagnostics
