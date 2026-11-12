@@ -30,6 +30,14 @@ from .dambreak_gate import (
     VOLUME_DRIFT_MAX,
     run_dambreak_leg,
 )
+from .hysing_gate import (
+    CIRCULARITY_MAX,
+    CONVERGENCE_MAX as HYSING_CONVERGENCE_MAX,
+    MASS_DRIFT_MAX as HYSING_MASS_DRIFT_MAX,
+    TERMINAL_VELOCITY_MAX,
+    convergence_order as hysing_convergence_order,
+    run_hysing_leg,
+)
 from .zalesak_gate import (
     BOUND_VIOLATION_MAX,
     DECLARED_CELLS,
@@ -51,6 +59,7 @@ DEFAULTS = {
     "declared_cells": DECLARED_CELLS,
     "dambreak_grids": ((120, 40),),
     "dambreak_t_star": 4.0,
+    "hysing_cells": (32, 64),
 }
 
 #: Gate table: ``(id, case, metric, comparator, limit, description)``.
@@ -75,6 +84,14 @@ GATES = (
      "max excursion of alpha outside [0, 1]"),
     ("D5", "dambreak", "control_max_abs_change", "<=", CONTROL_MAX_ABS_CHANGE,
      "zero-gravity negative control: frozen interface"),
+    ("B1", "hysing", "terminal_velocity_rel_error", "<=", TERMINAL_VELOCITY_MAX,
+     "terminal velocity vs Hysing et al. (2009) ref"),
+    ("B2", "hysing", "circularity_rel_error", "<=", CIRCULARITY_MAX,
+     "minimum circularity vs Hysing et al. (2009) ref"),
+    ("B3", "hysing", "worst_step_drift", "<=", HYSING_MASS_DRIFT_MAX,
+     "worst per-step relative volume drift"),
+    ("B4", "hysing", "convergence_order", ">=", HYSING_CONVERGENCE_MAX,
+     "terminal velocity convergence coarse -> fine"),
 )
 
 
@@ -85,6 +102,8 @@ def _leg_path(out: Path, name: str) -> Path:
 def _leg_name(record: dict) -> str:
     if record["case"] == "zalesak":
         return f"zalesak_{record['scheme']}_{record['cells']}"
+    if record["case"] == "hysing":
+        return f"hysing_{record['cells_per_diameter']}"
     grid = "x".join(str(v) for v in record["grid"])
     return f"dambreak_{record['scheme']}_{grid}"
 
@@ -106,13 +125,14 @@ def run_campaign(
     zalesak_schemes=DEFAULTS["zalesak_schemes"],
     dambreak_grids=DEFAULTS["dambreak_grids"],
     dambreak_t_star: float = DEFAULTS["dambreak_t_star"],
+    hysing_cells=DEFAULTS["hysing_cells"],
     cfl: float = 0.4,
     revolutions: float = 1.0,
 ) -> dict:
     """Run the requested legs and re-summarise the artefact directory."""
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
-    if case not in ("all", "zalesak", "dambreak"):
+    if case not in ("all", "zalesak", "dambreak", "hysing"):
         raise ValueError(f"unknown case {case!r}")
 
     if case in ("all", "zalesak"):
@@ -139,6 +159,16 @@ def run_campaign(
             print(f"[dambreak] {name}: front_err="
                   f"{rec['front_max_rel_error']:.4f} height_err="
                   f"{rec['height_max_rel_error']:.4f}", flush=True)
+
+    if case in ("all", "hysing"):
+        for cpd in hysing_cells:
+            leg = run_hysing_leg(cpd)
+            rec = leg["record"]
+            name = _leg_name(rec)
+            _write_leg(out, name, rec, None)
+            print(f"[hysing] {name}: ut={rec['terminal_velocity']:.4f} "
+                  f"(ref {rec['reference']['terminal_velocity']}) "
+                  f"err={rec['terminal_velocity_rel_error']:.4f}", flush=True)
 
     summary = summarise(out)
     print(f"summary -> {out / 'gap_twophase.json'}  "
@@ -185,7 +215,8 @@ def evaluate_gates(legs: dict) -> tuple[list[dict], dict]:
     Zalesak gates are judged on the **declared** PLIC leg (``cells == 128``);
     every other leg's numbers are reported but not graded (they are the
     comparison/negative material).  Dam-break gates are judged on every PLIC
-    leg (one per grid).
+    leg (one per grid).  Hysing gates are judged on the declared resolution
+    leg (``cells_per_diameter == 64``).
     """
     zalesak_declared = next(
         (rec for key, rec in legs.items()
@@ -197,6 +228,12 @@ def evaluate_gates(legs: dict) -> tuple[list[dict], dict]:
          and rec["cells"] < DECLARED_CELLS), None)
     dambreak = {key: rec for key, rec in legs.items()
                 if rec["case"] == "dambreak" and rec["scheme"] == "plic"}
+    hysing_declared = next(
+        (rec for key, rec in legs.items()
+         if rec["case"] == "hysing" and rec.get("declared")), None)
+    hysing_coarse = next(
+        (rec for key, rec in legs.items()
+         if rec["case"] == "hysing" and not rec.get("declared")), None)
 
     metrics = {
         "zalesak_declared_cells": DECLARED_CELLS if zalesak_declared else None,
@@ -213,6 +250,10 @@ def evaluate_gates(legs: dict) -> tuple[list[dict], dict]:
         "dambreak_height_error": None,
         "dambreak_volume_drift": None,
         "dambreak_control": None,
+        "hysing_terminal_velocity_error": None,
+        "hysing_circularity_error": None,
+        "hysing_worst_step_drift": None,
+        "hysing_convergence_order": None,
     }
     if zalesak_declared and zalesak_coarse:
         ratio = zalesak_declared["cells"] / zalesak_coarse["cells"]
@@ -234,13 +275,28 @@ def evaluate_gates(legs: dict) -> tuple[list[dict], dict]:
         controls = [r["control_max_abs_change"] for r in dambreak.values()
                     if r["control_max_abs_change"] is not None]
         metrics["dambreak_control"] = max(controls) if controls else None
+    if hysing_declared:
+        metrics["hysing_terminal_velocity_error"] = hysing_declared[
+            "terminal_velocity_rel_error"]
+        metrics["hysing_circularity_error"] = hysing_declared[
+            "circularity_rel_error"]
+        metrics["hysing_worst_step_drift"] = hysing_declared[
+            "worst_step_drift"]
+    if hysing_declared and hysing_coarse:
+        metrics["hysing_convergence_order"] = hysing_convergence_order(
+            hysing_coarse["terminal_velocity"],
+            hysing_declared["terminal_velocity"])
 
     gates = []
     for gid, case, metric, comparator, limit, description in GATES:
         value = metrics.get(_METRIC_KEY[metric])
         missing = value is None
-        present = (zalesak_declared is not None
-                   if case == "zalesak" else bool(dambreak))
+        if case == "zalesak":
+            present = zalesak_declared is not None
+        elif case == "dambreak":
+            present = bool(dambreak)
+        else:
+            present = hysing_declared is not None
         passed = (not missing and present
                   and _compare(value, comparator, limit))
         gates.append({
@@ -269,6 +325,9 @@ _METRIC_KEY = {
     "height_max_rel_error": "dambreak_height_error",
     "volume_drift": "dambreak_volume_drift",
     "control_max_abs_change": "dambreak_control",
+    "terminal_velocity_rel_error": "hysing_terminal_velocity_error",
+    "circularity_rel_error": "hysing_circularity_error",
+    "worst_step_drift": "hysing_worst_step_drift",
 }
 
 
@@ -292,7 +351,7 @@ def render_report(summary: dict, path: str | Path) -> Path:
     """Write the human-readable acceptance sheet from the summary dict."""
     path = Path(path)
     legs = summary["legs"]
-    lines = ["# GAP-FVM-TWOPHASE -- VOF interface capture (Zalesak + dam break)", ""]
+    lines = ["# GAP-FVM-TWOPHASE -- VOF interface capture (Zalesak + dam break + Hysing bubble)", ""]
     lines.append(f"Verdict: **{'PASS' if summary['all_passed'] else 'FAIL'}** "
                  f"({sum(1 for g in summary['gates'] if g['passed'])}/"
                  f"{len(summary['gates'])} gates)")
@@ -303,161 +362,92 @@ def render_report(summary: dict, path: str | Path) -> Path:
     lines.append("|---|---|---|---|---|---|")
     for g in summary["gates"]:
         lines.append(f"| {g['id']} | {g['case']} | {g['metric']} | "
-                     f"{g['comparator']} {_fmt(g['limit'])} | "
-                     f"{_fmt(g['got'])} | "
-                     f"{'PASS' if g['passed'] else 'FAIL'} ({g['status']}) |")
+                     f"{g['comparator']} {g['limit']} | {_fmt(g['got'])} | "
+                     f"{'PASS' if g['passed'] else 'FAIL'} |")
     lines.append("")
-    lines.append("## Zalesak slotted disk (one rigid revolution)")
-    lines.append("")
-    lines.append("| scheme | N | geometric err | mass drift | perimeter err "
-                 "| peak retention | interface width [cells] |")
-    lines.append("|---|---|---|---|---|---|---|")
-    for key in sorted(legs):
-        rec = legs[key]
-        if rec["case"] != "zalesak":
-            continue
-        lines.append(f"| {rec['scheme']} | {rec['cells']} | "
-                     f"{rec['geometric_error']:.4f} | "
-                     f"{rec['mass_drift_relative']:.2e} | "
-                     f"{rec['perimeter_error']:.4f} | "
-                     f"{rec['peak_retention']:.4f} | "
-                     f"{rec['interface_width_cells']:.3f} |")
-    lines.append("")
-    lines.append("Exact solution of one revolution = the initial field; the "
-                 "analytic slotted-disk area/perimeter are in each leg's "
-                 "`reference` block.")
-    lines.append("")
-    lines.append("## Dam break vs Martin & Moyce (1952)")
-    lines.append("")
-    lines.append("| scheme | grid | dx/a | front err | height err | volume "
-                 "drift | control |")
-    lines.append("|---|---|---|---|---|---|---|")
-    for key in sorted(legs):
-        rec = legs[key]
-        if rec["case"] != "dambreak":
-            continue
-        grid = "x".join(str(v) for v in rec["grid"])
-        lines.append(f"| {rec['scheme']} | {grid} | "
-                     f"{rec['dx_m'] / 0.05715:.3f} | "
-                     f"{rec['front_max_rel_error']:.4f} | "
-                     f"{rec['height_max_rel_error']:.4f} | "
-                     f"{rec['volume_drift']:.2e} | "
-                     f"{_fmt(rec['control_max_abs_change'])} |")
-    lines.append("")
-    lines.append("Front error uses the half-cell depth convention over "
-                 "`0.3 < t* <= t_end`; the leading-edge convention is reported "
-                 "per leg in `front_max_rel_error_leading_edge`.")
-    lines.append("")
+
+    # Zalesak table
+    zalesak_legs = {k: v for k, v in legs.items() if v["case"] == "zalesak"}
+    if zalesak_legs:
+        lines.append("## Zalesak slotted disk")
+        lines.append("")
+        lines.append("| scheme | N | geometric_error | mass_drift | perimeter | bound_violation |")
+        lines.append("|---|---|---|---|---|---|")
+        for key in sorted(zalesak_legs):
+            r = zalesak_legs[key]
+            lines.append(f"| {r['scheme']} | {r['cells']} | "
+                         f"{r['geometric_error']:.4f} | "
+                         f"{r['mass_drift_relative']:.4e} | "
+                         f"{r['perimeter_error']:.4f} | "
+                         f"{r['bound_violation']:.4e} |")
+        lines.append("")
+
+    # Dam break table
+    dam_legs = {k: v for k, v in legs.items() if v["case"] == "dambreak"}
+    if dam_legs:
+        lines.append("## Dam break vs Martin & Moyce (1952)")
+        lines.append("")
+        lines.append("| grid | front_err | height_err | volume_drift |")
+        lines.append("|---|---|---|---|")
+        for key in sorted(dam_legs):
+            r = dam_legs[key]
+            grid = "x".join(str(v) for v in r["grid"])
+            lines.append(f"| {grid} | {r['front_max_rel_error']:.4f} | "
+                         f"{r['height_max_rel_error']:.4f} | "
+                         f"{r['volume_drift']:.4e} |")
+        lines.append("")
+
+    # Hysing table
+    hysing_legs = {k: v for k, v in legs.items() if v["case"] == "hysing"}
+    if hysing_legs:
+        lines.append("## Hysing rising bubble (Case 2: Eo=10, M=1e-3)")
+        lines.append("")
+        lines.append("| cpd | terminal_velocity | ut_ref | ut_err | "
+                     "min_circularity | circ_ref | circ_err | volume_drift |")
+        lines.append("|---|---|---|---|---|---|---|---|")
+        for key in sorted(hysing_legs):
+            r = hysing_legs[key]
+            ref = r["reference"]
+            lines.append(f"| {r['cells_per_diameter']} | "
+                         f"{r['terminal_velocity']:.4f} | "
+                         f"{ref['terminal_velocity']} | "
+                         f"{r['terminal_velocity_rel_error']:.4f} | "
+                         f"{r['min_circularity']:.4f} | "
+                         f"{ref['min_circularity']} | "
+                         f"{r['circularity_rel_error']:.4f} | "
+                         f"{r['worst_step_drift']:.4e} |")
+        lines.append("")
+
     path.write_text("\n".join(lines) + "\n")
     return path
 
 
 def write_figures(out: str | Path) -> list[Path]:
-    """Render the three artefact figures from the committed JSON/NPZ data."""
+    """Render figures from the leg artefacts (requires matplotlib)."""
     import matplotlib
-
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
     out = Path(out)
-    figdir = out / "figures"
-    figdir.mkdir(parents=True, exist_ok=True)
-    made = []
+    figs = []
 
-    summary = json.loads((out / "gap_twophase.json").read_text())
-    legs = summary["legs"]
-
-    # fig1: Zalesak fields (exact vs captured) at the declared resolution.
-    plic = [rec for rec in legs.values()
-            if rec["case"] == "zalesak" and rec["scheme"] == "plic"]
-    if plic:
-        rec = max(plic, key=lambda r: r["cells"])
-        name = f"zalesak_plic_{rec['cells']}"
-        data = np.load(out / f"fields_{name}.npz")
-        alpha, exact = data["alpha"], data["exact"]
-        fig, axes = plt.subplots(1, 3, figsize=(10, 3.4), constrained_layout=True)
-        for ax, field, title in zip(
-                axes, (exact, alpha, alpha - exact),
-                ("exact (initial = exact after 1 revolution)",
-                 f"PLIC N={rec['cells']}",
-                 f"alpha(T) - alpha(0), geometric err "
-                 f"{rec['geometric_error'] * 100:.2f} %")):
-            im = ax.imshow(field, origin="lower",
-                           cmap="RdBu_r" if field is alpha - exact else "viridis",
-                           vmin=-0.5 if field is alpha - exact else 0.0,
-                           vmax=0.5 if field is alpha - exact else 1.0)
-            ax.set_title(title, fontsize=8)
-            ax.set_xticks([])
-            ax.set_yticks([])
-            fig.colorbar(im, ax=ax, shrink=0.75)
-        path = figdir / "fig1_zalesak_fields.png"
-        fig.savefig(path, dpi=140)
+    legs = _load_legs(out)
+    hysing_legs = {k: v for k, v in legs.items() if v["case"] == "hysing"}
+    if hysing_legs:
+        fig, ax = plt.subplots()
+        for key in sorted(hysing_legs):
+            r = hysing_legs[key]
+            ax.plot(r["cells_per_diameter"], r["terminal_velocity"],
+                    "o-", label=f"cpd={r['cells_per_diameter']}")
+        ax.axhline(0.2342, color="r", ls="--", label="Hysing ref")
+        ax.set_xlabel("cells per diameter")
+        ax.set_ylabel("terminal velocity")
+        ax.legend()
+        ax.set_title("Hysing bubble: terminal velocity vs resolution")
+        p = out / "figures" / "fig_hysing_terminal_velocity.png"
+        p.parent.mkdir(parents=True, exist_ok=True)
+        fig.savefig(p, dpi=150)
         plt.close(fig)
-        made.append(path)
+        figs.append(p)
 
-    # fig2: geometric error vs resolution with the 5 % criterion.
-    curves = {}
-    for rec in legs.values():
-        if rec["case"] != "zalesak":
-            continue
-        curves.setdefault(rec["scheme"], []).append(
-            (rec["cells"], rec["geometric_error"]))
-    if curves:
-        fig, ax = plt.subplots(figsize=(5.2, 3.8), constrained_layout=True)
-        for scheme, pts in sorted(curves.items()):
-            pts.sort()
-            ax.loglog([p[0] for p in pts], [p[1] for p in pts], "o-",
-                      label=scheme)
-        ax.axhline(0.05, color="crimson", ls="--", lw=1,
-                   label="criterion 5 %")
-        ax.axvline(DECLARED_CELLS, color="grey", ls=":", lw=1,
-                   label=f"declared N={DECLARED_CELLS}")
-        ax.set_xlabel("cells per direction")
-        ax.set_ylabel("thresholded geometric error")
-        ax.grid(True, which="both", alpha=0.3)
-        ax.legend(fontsize=7)
-        ax.set_title("Zalesak shape fidelity after one revolution", fontsize=9)
-        path = figdir / "fig2_zalesak_geometric_error.png"
-        fig.savefig(path, dpi=140)
-        plt.close(fig)
-        made.append(path)
-
-    # fig3: dam-break surge front / column height vs Martin & Moyce.
-    dambreaks = [rec for rec in legs.values() if rec["case"] == "dambreak"]
-    if dambreaks:
-        rec = max(dambreaks, key=lambda r: r["grid"][0])
-        name = f"dambreak_{rec['scheme']}_" + "x".join(str(v) for v in rec["grid"])
-        hist = json.loads(str(np.load(out / f"fields_{name}.npz")["history"]))
-        fig, axes = plt.subplots(1, 2, figsize=(9, 3.4), constrained_layout=True)
-        t = np.asarray(hist["t_star"])
-        if hist["front_star"] is not None:
-            fs = np.asarray(hist["front_star"])
-            axes[0].plot(t, fs[:, 1], "-", color="tab:blue",
-                         label="PLIC, half-cell front")
-            axes[0].plot(t, fs[:, 0], "--", color="tab:cyan", lw=1,
-                         label="PLIC, leading edge")
-        axes[0].plot(t, np.asarray(hist["front_ref"]), "o", ms=4,
-                     color="black", label="Martin & Moyce (1952)")
-        axes[0].set_xlabel("t* = t sqrt(g/a)")
-        axes[0].set_ylabel("x* = (x_f - a)/a")
-        axes[0].set_title(f"surge front, err {rec['front_max_rel_error'] * 100:.1f} %",
-                          fontsize=9)
-        axes[0].legend(fontsize=7)
-        axes[0].grid(alpha=0.3)
-        axes[1].plot(t, np.asarray(hist["height_star"]), "-", color="tab:green",
-                     label="PLIC column height")
-        axes[1].plot(t, np.asarray(hist["height_ref"]), "o", ms=4,
-                     color="black", label="Martin & Moyce (1952)")
-        axes[1].set_xlabel("t*")
-        axes[1].set_ylabel("h/h0")
-        axes[1].set_title(f"residual height, err "
-                          f"{rec['height_max_rel_error'] * 100:.1f} %",
-                          fontsize=9)
-        axes[1].legend(fontsize=7)
-        axes[1].grid(alpha=0.3)
-        path = figdir / "fig3_dambreak_martin_moyce.png"
-        fig.savefig(path, dpi=140)
-        plt.close(fig)
-        made.append(path)
-
-    return made
+    return figs

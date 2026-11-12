@@ -11,6 +11,11 @@ Fast subset (used by the pytest gate and by the solver's self-check)::
     python -m tensorfvm.twophase_gap --case zalesak --cells 64 --schemes plic \
         --out /tmp/gap_zalesak64
 
+Hysing bubble benchmark only::
+
+    python -m tensorfvm.twophase_gap --case hysing --hysing-cells 32 64 \
+        --out /tmp/gap_hysing
+
 Re-render the report/figures from already committed artefacts (no solve)::
 
     python -m tensorfvm.twophase_gap --summary-only --out docs/GAP-FVM-TWOPHASE/artifacts
@@ -36,12 +41,12 @@ def _grid(text: str) -> tuple[int, int]:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="tensorfvm-twophase-gap",
-        description="VOF interface-capture verification (Zalesak + dam break) "
+        description="VOF interface-capture verification (Zalesak + dam break + Hysing bubble) "
                     "with machine-evaluated gates.")
     parser.add_argument("--out", default="docs/GAP-FVM-TWOPHASE/artifacts",
                         help="artefact directory (JSON/NPZ/figures/markdown)")
     parser.add_argument("--case", default="all",
-                        choices=("all", "zalesak", "dambreak"),
+                        choices=("all", "zalesak", "dambreak", "hysing"),
                         help="which legs to run")
     parser.add_argument("--cells", type=int, nargs="+",
                         default=list(DEFAULTS["zalesak_cells"]),
@@ -55,6 +60,9 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--t-star", type=float,
                         default=DEFAULTS["dambreak_t_star"],
                         help="dimensionless end time of the dam break")
+    parser.add_argument("--hysing-cells", type=int, nargs="+",
+                        default=list(DEFAULTS["hysing_cells"]),
+                        help="Hysing bubble cells per diameter")
     parser.add_argument("--cfl", type=float, default=0.4,
                         help="Zalesak advective Courant number")
     parser.add_argument("--summary-only", action="store_true",
@@ -76,6 +84,7 @@ def main(argv=None) -> int:
             zalesak_schemes=tuple(args.schemes),
             dambreak_grids=tuple(tuple(g) for g in args.dam_grids),
             dambreak_t_star=args.t_star,
+            hysing_cells=tuple(args.hysing_cells),
             cfl=args.cfl,
         )
     summary = summarise(args.out)
