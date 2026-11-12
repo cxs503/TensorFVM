@@ -1,8 +1,10 @@
 """Experimental energy-based hybrid FV diffusion on native polyhedral cells.
 
 Cell and shared-face unknowns are independent. Face equilibrium enforces a
-single conservative flux. Boundary faces may prescribe values or outward
-traction (scalar diffusive flux for components=1). Optional symmetric Robin
+single conservative flux. Boundary faces may prescribe values, outward
+traction (scalar diffusive flux for components=1) or a zero normal derivative
+of the component (``zero_gradient_faces``: the face value is tied to its owner
+cell, i.e. the strong form of the symmetry / free-slip condition). Optional symmetric Robin
 tensors impose outward traction + C u = g on free boundary components.
 Diagnostics keep physical viscous flux and Robin reaction separate.
 
@@ -21,7 +23,8 @@ from .native_velocity_space3d import NativeVelocitySpace3D
 class NativeHybridViscous3D:
     def __init__(self, mesh, dynamic_viscosity=1., *, components=3,
                  deviatoric=True, stabilization=1., dirichlet_mask=None,
-                 gradient_jump_stabilization=1., robin_coefficient=None,normal_velocity_faces=None):
+                 gradient_jump_stabilization=1., robin_coefficient=None,normal_velocity_faces=None,
+                 zero_gradient_faces=None):
         if components not in (1, 3):
             raise ValueError('components must be 1 or 3')
         if not np.isfinite(stabilization) or stabilization <= 0:
@@ -42,11 +45,20 @@ class NativeHybridViscous3D:
         if mask.shape != (self.F,components) or np.any(mask & ~self.boundary[:,None]):
             raise ValueError('Dirichlet mask must select boundary faces or their components')
         self.dirichlet_components = mask.copy()
-        self.velocity_space=NativeVelocitySpace3D(mesh,components,mask,normal_velocity_faces)
+        if zero_gradient_faces is not None and np.any(np.asarray(zero_gradient_faces,bool)):
+            zero_gradient_faces=np.asarray(zero_gradient_faces,bool)
+            if zero_gradient_faces.shape==(self.F,):
+                zero_gradient_faces=np.broadcast_to(zero_gradient_faces[:,None],(self.F,components))
+            if zero_gradient_faces.shape!=(self.F,components) or np.any(zero_gradient_faces & ~self.boundary[:,None]):
+                raise ValueError('zero-gradient mask must select boundary face components')
+        self.zero_gradient_faces=(np.zeros((self.F,components),bool) if zero_gradient_faces is None
+                                  else zero_gradient_faces.copy())
+        self.velocity_space=NativeVelocitySpace3D(mesh,components,mask,normal_velocity_faces,
+            zero_gradient_components=self.zero_gradient_faces)
         self.normal_velocity_faces=self.velocity_space.normal_faces
         self.robin_coefficient = validate_robin(mesh,robin_coefficient,components,mask)
         self.dirichlet = mask.all(axis=1)
-        self.traction_components = self.boundary[:,None] & ~mask
+        self.traction_components = self.boundary[:,None] & ~mask & ~self.velocity_space.zero_gradient_components
         self.traction_boundary = self.traction_components.any(axis=1)
         self.free_faces = np.flatnonzero(~self.dirichlet)
         self.local = []
