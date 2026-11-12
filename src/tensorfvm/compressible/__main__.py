@@ -1,8 +1,13 @@
 """CLI: ``python -m tensorfvm.compressible --output <dir>``.
 
-Runs the compressible multi-material verification legs and writes the JSON
-artifact plus the report figures.  ``--quick`` shrinks every grid so the run
-finishes in about a minute (the pytest gate uses the same configuration).
+Runs the compressible verification legs and writes the JSON artifact plus the
+report figures.  ``--quick`` shrinks every grid so the run finishes in about a
+minute (the pytest gate uses the same configuration).  Leg ``forward_step`` is
+the Mach-3 forward-facing step (Woodward & Colella problem 2); it is not in the
+default leg list because its production grid is expensive, so select it
+explicitly::
+
+    python -m tensorfvm.compressible --legs forward_step --output runs/forward_step
 """
 
 from __future__ import annotations
