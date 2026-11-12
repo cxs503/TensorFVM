@@ -1,0 +1,133 @@
+{
+  "a": 1.0,
+  "d": 1.5,
+  "rho": 1.0,
+  "m_a": 2.0943951023931953,
+  "exact_pair": 4.71238898038469,
+  "config_A": {
+    "tag": "A: centre (0,0,d), d=1.5",
+    "centre": [
+      0.0,
+      0.0,
+      1.5
+    ],
+    "m_a": 2.0943951023931953,
+    "exact_pair": 4.71238898038469,
+    "exact_zero": 0.0,
+    "zero_axis": 2,
+    "pair_axes": [
+      0,
+      1
+    ],
+    "ladder": [
+      {
+        "n_theta": 24,
+        "n_phi": 14,
+        "n_panels": 336,
+        "I_xx": 4.529480118428458,
+        "I_yy": 4.529480118428455,
+        "I_zz": 5.6198491506867655e-33,
+        "max_offdiag": 1.1102230246251565e-16
+      },
+      {
+        "n_theta": 32,
+        "n_phi": 18,
+        "n_panels": 576,
+        "I_xx": 4.591153202585366,
+        "I_yy": 4.591153202585364,
+        "I_zz": 1.6284910024083965e-32,
+        "max_offdiag": 1.6653345369377348e-16
+      },
+      {
+        "n_theta": 48,
+        "n_phi": 26,
+        "n_panels": 1248,
+        "I_xx": 4.6436000135566795,
+        "I_yy": 4.643600013556679,
+        "I_zz": 2.1892355006461125e-32,
+        "max_offdiag": 2.0816681711721685e-16
+      }
+    ],
+    "I_xx_finest_rel": -0.014597472134482979,
+    "I_xx_extrap": 4.7038389772763125,
+    "I_xx_extrap_rel": -0.0018143670108657288,
+    "I_xx_q": 0.81,
+    "I_yy_finest_rel": -0.014597472134483168,
+    "I_yy_extrap": 4.7038389772763125,
+    "I_yy_extrap_rel": -0.0018143670108657288,
+    "I_yy_q": 0.81,
+    "I_zz_finest_rel": 1.0452829545602673e-32,
+    "I_zz_extrap": null
+  },
+  "config_B": {
+    "tag": "B: centre (d,0,0), d=1.5",
+    "centre": [
+      1.5,
+      0.0,
+      0.0
+    ],
+    "m_a": 2.0943951023931953,
+    "exact_pair": 4.71238898038469,
+    "exact_zero": 0.0,
+    "zero_axis": 0,
+    "pair_axes": [
+      1,
+      2
+    ],
+    "ladder": [
+      {
+        "n_theta": 24,
+        "n_phi": 14,
+        "n_panels": 336,
+        "I_xx": 7.2696640779833e-05,
+        "I_yy": 4.553056072143462,
+        "I_zz": 4.5294074217876785,
+        "max_offdiag": 6.938893903907228e-18
+      },
+      {
+        "n_theta": 32,
+        "n_phi": 18,
+        "n_panels": 576,
+        "I_xx": 2.392886793015634e-05,
+        "I_yy": 4.617118863856421,
+        "I_zz": 4.591129273717437,
+        "max_offdiag": 9.020562075079397e-17
+      },
+      {
+        "n_theta": 48,
+        "n_phi": 26,
+        "n_panels": 1248,
+        "I_xx": 4.8891439316379705e-06,
+        "I_yy": 4.666259093566939,
+        "I_zz": 4.643595124412748,
+        "max_offdiag": 4.423544863740858e-16
+      }
+    ],
+    "I_xx_finest_rel": 2.33439427262378e-06,
+    "I_xx_extrap": null,
+    "I_yy_finest_rel": -0.00978906601508619,
+    "I_yy_extrap": 4.7102526208190545,
+    "I_yy_extrap_rel": -0.00045334958012332484,
+    "I_yy_q": 0.9700000000000001,
+    "I_zz_finest_rel": -0.014598509643048558,
+    "I_zz_extrap": 4.703855956635382,
+    "I_zz_extrap_rel": -0.0018107638789637288,
+    "I_zz_q": 0.81
+  },
+  "phantom_2p05_mechanism": {
+    "old_default_distance": 1.0,
+    "old_default_anchor_value": 2.0943951023931953,
+    "m14901_reported_value": 2.05,
+    "panel_value_at_d_1p5": 4.6436000135566795,
+    "mismatch_vs_default_anchor": 1.2171556876974134,
+    "note": "m14901 compared the d=1.5 panel value against the distance=1.0 default anchor (m_a*1.0=2.094 ~ 2.05); the current code passes all exact anchors, so the flag is a footgun, not a solver defect"
+  },
+  "gates": {
+    "A_I_xx": 0.014597472134482979,
+    "A_I_yy": 0.014597472134483168,
+    "B_I_yy": 0.00978906601508619,
+    "B_I_zz": 0.014598509643048558
+  },
+  "offdiag_ok": true,
+  "all_gates_pass_3pct": true
+}
