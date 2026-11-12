@@ -1,0 +1,622 @@
+{
+ "theory_order": 2.0,
+ "spacings": [
+  0.25,
+  0.5,
+  1.0
+ ],
+ "implementations": [
+  "verification.richardson.richardson_gci",
+  "verification.multi_grid.multi_grid_order",
+  "verification.ladder.gci_three_grid",
+  "verification.annular_convergence.observed_order",
+  "immersed.study.richardson",
+  "rans_ship_resistance.speed_sweep.grid_convergence_index"
+ ],
+ "rows": [
+  {
+   "implementation": "verification.richardson.richardson_gci",
+   "regime": "asymptotic_p1",
+   "status": "ok",
+   "order": 1.0000000000000013,
+   "gci": 0.11363636363636327,
+   "extrapolated": 1.0000000000000004,
+   "covered": true,
+   "confident": false,
+   "detail": {
+    "convergence": "monotone",
+    "fallback_reason": "none",
+    "asymptotic": false,
+    "observed_order": 1.0000000000000013
+   }
+  },
+  {
+   "implementation": "verification.richardson.richardson_gci",
+   "regime": "asymptotic_p2",
+   "status": "ok",
+   "order": 1.9999999999999956,
+   "gci": 0.03048780487804898,
+   "extrapolated": 0.9999999999999998,
+   "covered": true,
+   "confident": false,
+   "detail": {
+    "convergence": "monotone",
+    "fallback_reason": "none",
+    "asymptotic": true,
+    "observed_order": 1.9999999999999956
+   }
+  },
+  {
+   "implementation": "verification.richardson.richardson_gci",
+   "regime": "pre_asymptotic",
+   "status": "flagged",
+   "order": 3.415037499278844,
+   "gci": 0.02625097225823178,
+   "extrapolated": 1.0172413793103448,
+   "covered": false,
+   "confident": false,
+   "detail": {
+    "convergence": "monotone",
+    "fallback_reason": "none",
+    "asymptotic": false,
+    "observed_order": 3.415037499278844
+   }
+  },
+  {
+   "implementation": "verification.richardson.richardson_gci",
+   "regime": "near_cancellation",
+   "status": "ok",
+   "order": 2.0,
+   "gci": 0.00099999900000089,
+   "extrapolated": 1.0000006666666665,
+   "covered": true,
+   "confident": false,
+   "detail": {
+    "convergence": "order-implausible",
+    "fallback_reason": "implausible-order",
+    "asymptotic": false,
+    "observed_order": 9.965784284460273
+   }
+  },
+  {
+   "implementation": "verification.richardson.richardson_gci",
+   "regime": "sign_alternating",
+   "status": "ok",
+   "order": 2.0,
+   "gci": 0.002997002997003,
+   "extrapolated": 1.0016666666666665,
+   "covered": true,
+   "confident": false,
+   "detail": {
+    "convergence": "inconsistent",
+    "fallback_reason": "non-monotone",
+    "asymptotic": false,
+    "observed_order": NaN
+   }
+  },
+  {
+   "implementation": "verification.richardson.richardson_gci",
+   "regime": "stagnant",
+   "status": "raises",
+   "order": NaN,
+   "gci": NaN,
+   "extrapolated": NaN,
+   "covered": false,
+   "confident": false,
+   "detail": {
+    "error": "ValueError('fine and medium metrics are identical: no order signal')"
+   }
+  },
+  {
+   "implementation": "verification.multi_grid.multi_grid_order",
+   "regime": "asymptotic_p1",
+   "status": "ok",
+   "order": 0.9999999999999891,
+   "gci": 0.1136363636363652,
+   "extrapolated": 0.999999999999998,
+   "covered": true,
+   "confident": false,
+   "detail": {
+    "convergence": "monotone",
+    "fallback_reason": "none",
+    "asymptotic": false,
+    "observed_order": 0.9999999999999891
+   }
+  },
+  {
+   "implementation": "verification.multi_grid.multi_grid_order",
+   "regime": "asymptotic_p2",
+   "status": "ok",
+   "order": 2.000000000000001,
+   "gci": 0.03048780487804883,
+   "extrapolated": 0.9999999999999999,
+   "covered": true,
+   "confident": false,
+   "detail": {
+    "convergence": "monotone",
+    "fallback_reason": "none",
+    "asymptotic": true,
+    "observed_order": 2.000000000000001
+   }
+  },
+  {
+   "implementation": "verification.multi_grid.multi_grid_order",
+   "regime": "pre_asymptotic",
+   "status": "flagged",
+   "order": 3.4150374992788444,
+   "gci": 0.02625097225823177,
+   "extrapolated": 1.0172413793103448,
+   "covered": false,
+   "confident": false,
+   "detail": {
+    "convergence": "monotone",
+    "fallback_reason": "none",
+    "asymptotic": false,
+    "observed_order": 3.4150374992788444
+   }
+  },
+  {
+   "implementation": "verification.multi_grid.multi_grid_order",
+   "regime": "near_cancellation",
+   "status": "flagged",
+   "order": 9.96578428485334,
+   "gci": 1.2512500000101086e-09,
+   "extrapolated": 1.0000009989989993,
+   "covered": false,
+   "confident": false,
+   "detail": {
+    "convergence": "monotone",
+    "fallback_reason": "none",
+    "asymptotic": false,
+    "observed_order": 9.96578428485334
+   }
+  },
+  {
+   "implementation": "verification.multi_grid.multi_grid_order",
+   "regime": "sign_alternating",
+   "status": "ok",
+   "order": 2.0,
+   "gci": 0.001998001998001889,
+   "extrapolated": 1.0016666666666665,
+   "covered": true,
+   "confident": false,
+   "detail": {
+    "convergence": "inconsistent",
+    "fallback_reason": "non-monotone",
+    "asymptotic": false,
+    "observed_order": NaN
+   }
+  },
+  {
+   "implementation": "verification.multi_grid.multi_grid_order",
+   "regime": "stagnant",
+   "status": "ok",
+   "order": 2.0,
+   "gci": 0.0,
+   "extrapolated": 1.0,
+   "covered": true,
+   "confident": false,
+   "detail": {
+    "convergence": "inconsistent",
+    "fallback_reason": "non-monotone",
+    "asymptotic": false,
+    "observed_order": NaN
+   }
+  },
+  {
+   "implementation": "verification.ladder.gci_three_grid",
+   "regime": "asymptotic_p1",
+   "status": "ok",
+   "order": 1.0000000000000016,
+   "gci": 0.11363636363636323,
+   "extrapolated": NaN,
+   "covered": true,
+   "confident": false,
+   "detail": {
+    "monotone": true,
+    "oscillatory": false
+   }
+  },
+  {
+   "implementation": "verification.ladder.gci_three_grid",
+   "regime": "asymptotic_p2",
+   "status": "ok",
+   "order": 1.9999999999999958,
+   "gci": 0.03048780487804897,
+   "extrapolated": NaN,
+   "covered": true,
+   "confident": false,
+   "detail": {
+    "monotone": true,
+    "oscillatory": false
+   }
+  },
+  {
+   "implementation": "verification.ladder.gci_three_grid",
+   "regime": "pre_asymptotic",
+   "status": "overconfident",
+   "order": 3.415037499278844,
+   "gci": 0.02625097225823178,
+   "extrapolated": NaN,
+   "covered": false,
+   "confident": true,
+   "detail": {
+    "monotone": true,
+    "oscillatory": false
+   }
+  },
+  {
+   "implementation": "verification.ladder.gci_three_grid",
+   "regime": "near_cancellation",
+   "status": "overconfident",
+   "order": 9.965784284460272,
+   "gci": 1.2512500003513584e-09,
+   "extrapolated": NaN,
+   "covered": false,
+   "confident": true,
+   "detail": {
+    "monotone": true,
+    "oscillatory": false
+   }
+  },
+  {
+   "implementation": "verification.ladder.gci_three_grid",
+   "regime": "sign_alternating",
+   "status": "no_band",
+   "order": NaN,
+   "gci": Infinity,
+   "extrapolated": NaN,
+   "covered": false,
+   "confident": false,
+   "detail": {
+    "monotone": false,
+    "oscillatory": true
+   }
+  },
+  {
+   "implementation": "verification.ladder.gci_three_grid",
+   "regime": "stagnant",
+   "status": "ok",
+   "order": NaN,
+   "gci": 0.0,
+   "extrapolated": NaN,
+   "covered": true,
+   "confident": false,
+   "detail": {
+    "monotone": true,
+    "oscillatory": null
+   }
+  },
+  {
+   "implementation": "verification.annular_convergence.observed_order",
+   "regime": "asymptotic_p1",
+   "status": "ok",
+   "order": 1.0000000000000016,
+   "gci": 0.11363636363636323,
+   "extrapolated": 1.0000000000000004,
+   "covered": true,
+   "confident": false,
+   "detail": {
+    "consistent": null
+   }
+  },
+  {
+   "implementation": "verification.annular_convergence.observed_order",
+   "regime": "asymptotic_p2",
+   "status": "ok",
+   "order": 1.9999999999999958,
+   "gci": 0.03048780487804897,
+   "extrapolated": 0.9999999999999998,
+   "covered": true,
+   "confident": false,
+   "detail": {
+    "consistent": null
+   }
+  },
+  {
+   "implementation": "verification.annular_convergence.observed_order",
+   "regime": "pre_asymptotic",
+   "status": "overconfident",
+   "order": 3.415037499278844,
+   "gci": 0.026250972258231788,
+   "extrapolated": 1.0172413793103448,
+   "covered": false,
+   "confident": true,
+   "detail": {
+    "consistent": null
+   }
+  },
+  {
+   "implementation": "verification.annular_convergence.observed_order",
+   "regime": "near_cancellation",
+   "status": "overconfident",
+   "order": 9.965784284460272,
+   "gci": 1.2512500003513584e-09,
+   "extrapolated": 1.0000009989989989,
+   "covered": false,
+   "confident": true,
+   "detail": {
+    "consistent": null
+   }
+  },
+  {
+   "implementation": "verification.annular_convergence.observed_order",
+   "regime": "sign_alternating",
+   "status": "raises",
+   "order": NaN,
+   "gci": NaN,
+   "extrapolated": NaN,
+   "covered": false,
+   "confident": false,
+   "detail": {
+    "error": "ValueError('functional changes are not monotone under refinement; no asymptotic order')"
+   }
+  },
+  {
+   "implementation": "verification.annular_convergence.observed_order",
+   "regime": "stagnant",
+   "status": "raises",
+   "order": NaN,
+   "gci": NaN,
+   "extrapolated": NaN,
+   "covered": false,
+   "confident": false,
+   "detail": {
+    "error": "ValueError('change between the two coarsest levels is at round-off level; order is not observable')"
+   }
+  },
+  {
+   "implementation": "immersed.study.richardson",
+   "regime": "asymptotic_p1",
+   "status": "ok",
+   "order": 1.0000000000000013,
+   "gci": 0.11363636363636327,
+   "extrapolated": 1.0000000000000004,
+   "covered": true,
+   "confident": false,
+   "detail": {
+    "ratio_eps32_eps21": 2.000000000000002
+   }
+  },
+  {
+   "implementation": "immersed.study.richardson",
+   "regime": "asymptotic_p2",
+   "status": "ok",
+   "order": 1.9999999999999956,
+   "gci": 0.03048780487804898,
+   "extrapolated": 0.9999999999999998,
+   "covered": true,
+   "confident": false,
+   "detail": {
+    "ratio_eps32_eps21": 3.999999999999988
+   }
+  },
+  {
+   "implementation": "immersed.study.richardson",
+   "regime": "pre_asymptotic",
+   "status": "overconfident",
+   "order": 3.415037499278844,
+   "gci": 0.02625097225823178,
+   "extrapolated": 1.0172413793103448,
+   "covered": false,
+   "confident": true,
+   "detail": {
+    "ratio_eps32_eps21": 10.666666666666666
+   }
+  },
+  {
+   "implementation": "immersed.study.richardson",
+   "regime": "near_cancellation",
+   "status": "ok",
+   "order": 9.965784284460273,
+   "gci": 0.00299999700000267,
+   "extrapolated": 0.9999999999999998,
+   "covered": true,
+   "confident": false,
+   "detail": {
+    "ratio_eps32_eps21": 999.9999998601119
+   }
+  },
+  {
+   "implementation": "immersed.study.richardson",
+   "regime": "sign_alternating",
+   "status": "ok",
+   "order": NaN,
+   "gci": 0.008991008991009,
+   "extrapolated": 1.0029999999999997,
+   "covered": true,
+   "confident": false,
+   "detail": {
+    "ratio_eps32_eps21": -1.5000000000000833
+   }
+  },
+  {
+   "implementation": "immersed.study.richardson",
+   "regime": "stagnant",
+   "status": "no_band",
+   "order": NaN,
+   "gci": NaN,
+   "extrapolated": NaN,
+   "covered": false,
+   "confident": false,
+   "detail": {
+    "ratio_eps32_eps21": NaN
+   }
+  },
+  {
+   "implementation": "rans_ship_resistance.speed_sweep.grid_convergence_index",
+   "regime": "asymptotic_p1",
+   "status": "ok",
+   "order": 1.0000000000000013,
+   "gci": 0.11363636363636327,
+   "extrapolated": 1.0000000000000004,
+   "covered": true,
+   "confident": false,
+   "detail": {
+    "monotonic": true,
+    "relative_change": 0.09090909090909079
+   }
+  },
+  {
+   "implementation": "rans_ship_resistance.speed_sweep.grid_convergence_index",
+   "regime": "asymptotic_p2",
+   "status": "ok",
+   "order": 1.9999999999999956,
+   "gci": 0.03048780487804898,
+   "extrapolated": 0.9999999999999998,
+   "covered": true,
+   "confident": false,
+   "detail": {
+    "monotonic": true,
+    "relative_change": 0.07317073170731725
+   }
+  },
+  {
+   "implementation": "rans_ship_resistance.speed_sweep.grid_convergence_index",
+   "regime": "pre_asymptotic",
+   "status": "overconfident",
+   "order": 3.415037499278844,
+   "gci": 0.02625097225823178,
+   "extrapolated": 1.0172413793103448,
+   "covered": false,
+   "confident": true,
+   "detail": {
+    "monotonic": true,
+    "relative_change": 0.20300751879699247
+   }
+  },
+  {
+   "implementation": "rans_ship_resistance.speed_sweep.grid_convergence_index",
+   "regime": "near_cancellation",
+   "status": "ok",
+   "order": NaN,
+   "gci": 0.00299999700000267,
+   "extrapolated": 0.9999999999999998,
+   "covered": true,
+   "confident": false,
+   "detail": {
+    "monotonic": false,
+    "relative_change": 9.999990001407779e-07
+   }
+  },
+  {
+   "implementation": "rans_ship_resistance.speed_sweep.grid_convergence_index",
+   "regime": "sign_alternating",
+   "status": "ok",
+   "order": NaN,
+   "gci": 0.008991008991009,
+   "extrapolated": 1.0029999999999997,
+   "covered": true,
+   "confident": false,
+   "detail": {
+    "monotonic": false,
+    "relative_change": 0.001998001998001889
+   }
+  },
+  {
+   "implementation": "rans_ship_resistance.speed_sweep.grid_convergence_index",
+   "regime": "stagnant",
+   "status": "raises",
+   "order": NaN,
+   "gci": NaN,
+   "extrapolated": NaN,
+   "covered": false,
+   "confident": false,
+   "detail": {
+    "error": "ValueError('refinement must give distinct values')"
+   }
+  }
+ ],
+ "summary": {
+  "verification.richardson.richardson_gci": {
+   "overconfident": [],
+   "raises": [
+    "stagnant"
+   ],
+   "covered": [
+    "asymptotic_p1",
+    "asymptotic_p2",
+    "near_cancellation",
+    "sign_alternating"
+   ],
+   "not_run": [],
+   "no_band": []
+  },
+  "verification.multi_grid.multi_grid_order": {
+   "overconfident": [],
+   "raises": [],
+   "covered": [
+    "asymptotic_p1",
+    "asymptotic_p2",
+    "sign_alternating",
+    "stagnant"
+   ],
+   "not_run": [],
+   "no_band": []
+  },
+  "verification.ladder.gci_three_grid": {
+   "overconfident": [
+    "pre_asymptotic",
+    "near_cancellation"
+   ],
+   "raises": [],
+   "covered": [
+    "asymptotic_p1",
+    "asymptotic_p2",
+    "stagnant"
+   ],
+   "not_run": [],
+   "no_band": [
+    "sign_alternating"
+   ]
+  },
+  "verification.annular_convergence.observed_order": {
+   "overconfident": [
+    "pre_asymptotic",
+    "near_cancellation"
+   ],
+   "raises": [
+    "sign_alternating",
+    "stagnant"
+   ],
+   "covered": [
+    "asymptotic_p1",
+    "asymptotic_p2"
+   ],
+   "not_run": [],
+   "no_band": []
+  },
+  "immersed.study.richardson": {
+   "overconfident": [
+    "pre_asymptotic"
+   ],
+   "raises": [],
+   "covered": [
+    "asymptotic_p1",
+    "asymptotic_p2",
+    "near_cancellation",
+    "sign_alternating"
+   ],
+   "not_run": [],
+   "no_band": [
+    "stagnant"
+   ]
+  },
+  "rans_ship_resistance.speed_sweep.grid_convergence_index": {
+   "overconfident": [
+    "pre_asymptotic"
+   ],
+   "raises": [
+    "stagnant"
+   ],
+   "covered": [
+    "asymptotic_p1",
+    "asymptotic_p2",
+    "near_cancellation",
+    "sign_alternating"
+   ],
+   "not_run": [],
+   "no_band": []
+  }
+ }
+}
