@@ -1,0 +1,69 @@
+{
+  "schema": "tensorfvm.case-channel-periodic/1",
+  "case": "CASE-CHANNEL-PERIODIC",
+  "entry": "src/tensorfvm/benchmark_channel_periodic.py",
+  "impl_files": [
+    "src/tensorfvm/channel_periodic.py",
+    "src/tensorfvm/benchmark_channel_periodic.py"
+  ],
+  "repro_cmd": "PYTHONPATH=src python -m tensorfvm.benchmark_channel_periodic --out docs/case-channel-periodic",
+  "tolerance": 0.02,
+  "verdict": "PASS",
+  "environment": {
+    "python": "3.11.6",
+    "torch": "2.7.1",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "machine": "loongarch64",
+    "git_commit": "1ef75dfb2bebef80bf7da49600f845b7c852f668",
+    "git_dirty": true
+  },
+  "artifacts": [
+    {
+      "path": "benchmark.json",
+      "sha256": "fee3974e67f2ed748f69853aec1d8d803c55ce5e8186ff641dafc320dcf847fb",
+      "bytes": 253010
+    },
+    {
+      "path": "metrics.csv",
+      "sha256": "d7e418e9d56664205d776114f726eaa74b33278d03260cdb17c7c51c903c07b7",
+      "bytes": 19069
+    },
+    {
+      "path": "profiles.csv",
+      "sha256": "7ac011cdca62d277c4019cc4a2b744ae15a27c61e6864b0263f0775c881150a3",
+      "bytes": 95465
+    },
+    {
+      "path": "REPORT.md",
+      "sha256": "d52b0d7c5f176faa96499e84d450c15f05d95cbaceed8affcb641d83378dc9c6",
+      "bytes": 9471
+    },
+    {
+      "path": "figures/profile.png",
+      "sha256": "8d6c69de6317114f470f467901b492e5104c24cc4dac0c99d4a2ab67fd32317e",
+      "bytes": 75307
+    },
+    {
+      "path": "figures/convergence.png",
+      "sha256": "1f23eb241fb64ea843e218c7c378fc81a343c21fd9fd56c0c860fa5977621248",
+      "bytes": 75413
+    },
+    {
+      "path": "figures/perturbation.png",
+      "sha256": "32c0aa2a27d35689ba5f1abf2aa59778af9c3a051ba17852a03a355aa0042e8d",
+      "bytes": 60005
+    }
+  ],
+  "symbolic_checks": {
+    "profile_solves_stokes_equation": true,
+    "profile_satisfies_both_walls": true,
+    "peak_over_bulk_is_three_halves": true,
+    "wall_shear_equals_half_body_force_times_height": true,
+    "wall_shear_equals_six_mu_ubar_over_h": true,
+    "nu_is_mu_over_rho": true,
+    "poiseuille_is_96": true,
+    "bulk_velocity_is_g_h2_over_12_nu": true,
+    "quoted_peak_over_bulk": true,
+    "quoted_poiseuille": true
+  }
+}
