@@ -10,12 +10,21 @@ The benchmark is the shallow-water analogue of the Sod shock tube: a dam at
 
 Metrics (predeclared, see ``docs/shallow-water-dam-break/REPORT.md``):
 
-``front_wetted`` / ``shock_position``
-    Wave position.  Dry bed: the outer edge of the wetted region (outermost
-    cell with ``h > 0``) -- a definition that needs no threshold and no
-    knowledge of the exact profile.  Wet bed: the sub-cell position where the
-    depth crosses ``(h1 + h2) / 2``, linearly interpolated between cell
-    centres.  Relative error against the closed form.
+``front_fan`` (dry bed headline) / ``shock_position`` (wet bed headline)
+    Wave position.  Dry bed: mean over ``FAN_WINDOW`` of the per-cell exact
+    identity ``x_f = x_i + 3 t sqrt(g h_i)`` of the Ritter fan
+    (:func:`fan_front_estimate`) -- the estimator inherits the *shape* of the
+    closed form instead of a depth threshold.  Wet bed: the sub-cell position
+    where the depth crosses ``(h1 + h2) / 2``, linearly interpolated between
+    cell centres.  Relative error against the closed form.
+
+``front_wetted`` (dry bed, legacy diagnostic)
+    Outermost cell with ``h > 0``.  It looks threshold-free but is in fact a
+    depth-floor detector: the tip is a zero-depth cusp, so the reading is fixed
+    by the numerical depth floor and does **not** converge under refinement
+    (1.56 % -> 2.66 % -> 2.89 % -> 2.46 % for n = 400 ... 3200, while the fan
+    estimator on the same states goes 0.106 % -> 0.039 % -> 0.017 % -> 0.008 %).
+    Reported in every run and in the verdict for continuity, not as a headline.
 
 ``step_ratio``
     The still-water level step across the bore, ``h2 / h1`` measured as the
@@ -83,6 +92,15 @@ FRONT_LEVEL_FRACTION = 1e-2
 
 #: amplitude (fraction of h0) above which a local extremum counts as oscillation
 EXTREMUM_FRACTION = 1e-4
+
+#: depth-fraction window ``(h / h0)`` used by :func:`fan_front_estimate`.
+#:
+#: The window must sit **inside the resolved rarefaction** -- deep enough that
+#: the numerical depth is not dominated by the smeared zero-depth cusp, shallow
+#: enough that it is not buried in the still-water plateau.  The bounds are
+#: declared here (not inferred from a run) and the sensitivity to them is
+#: measured in ``docs/verification-dam-break-front-metric/REPORT.md``.
+FAN_WINDOW = (1e-2, 2e-1)
 
 
 @dataclass(frozen=True)
@@ -199,6 +217,66 @@ def _local_extrema(h: np.ndarray, amplitude: float) -> int:
     return int(np.count_nonzero(peak | dip))
 
 
+def fan_front_estimate(x, h, t: float, gravity: float, h0: float,
+                       window=FAN_WINDOW) -> dict:
+    """Dry-bed front position from the **exact rarefaction shape**.
+
+    Behind the tip the Ritter (1892) solution is a straight line in
+    ``c = sqrt(g h)``::
+
+        c(x, t) = (2 c0 - x / t) / 3,        c0 = sqrt(g h0),
+
+    so every cell inside the fan individually carries the front,
+
+    .. math:: x_f = 2 c0 t = x_i + 3 t \sqrt{g h_i},
+
+    *exactly* -- no threshold, no extrapolation length.  Averaging that identity
+    over a window of well-resolved fan cells is therefore a front estimator whose
+    error measures the **shape** error of the numerical fan, not the position of
+    a user-chosen depth contour.  This is the property that a ``h > 0`` wetted
+    edge does *not* have: the tip is a zero-depth cusp with ``h ~ (x_f - x)^2``,
+    so "outermost wetted cell" is a depth-floor detector whose reading depends on
+    the numerical floor rather than on ``dx`` (measured non-convergence: 1.56 % ->
+    2.66 % -> 2.89 % -> 2.46 % for n = 400 ... 3200).
+
+    Parameters
+    ----------
+    x, h
+        Cell centres and depths of the numerical solution.
+    t, gravity, h0
+        Time of the state, gravity, undisturbed upstream depth.
+    window
+        ``(lo, hi)`` in units of ``h / h0``; cells outside are ignored.
+
+    Returns
+    -------
+    dict with ``front`` (mean estimate, m), ``cells`` (window size),
+    ``spread`` (std of the per-cell estimates, m -- a resolution diagnostic),
+    ``slope`` / ``slope_error`` (fitted ``dc/dx`` vs the exact ``-1/(3t)``).
+    """
+    x = np.asarray(x, dtype=float)
+    h = np.asarray(h, dtype=float)
+    nan = float("nan")
+    out = {"front": nan, "cells": 0, "spread": nan, "slope": nan,
+           "slope_error": nan, "window": [float(window[0]), float(window[1])]}
+    if t <= 0.0 or h.size < 3:
+        return out
+    c = np.sqrt(np.maximum(gravity * h, 0.0))
+    frac = h / h0
+    sel = (frac >= window[0]) & (frac <= window[1])
+    if int(np.count_nonzero(sel)) < 3:
+        return out
+    xs = x[sel]
+    per_cell = xs + 3.0 * t * c[sel]
+    out["front"] = float(np.mean(per_cell))
+    out["cells"] = int(per_cell.size)
+    out["spread"] = float(np.std(per_cell))
+    slope = float(np.polyfit(xs, c[sel], 1)[0])
+    out["slope"] = slope
+    out["slope_error"] = abs(slope + 1.0 / (3.0 * t)) / (1.0 / (3.0 * t))
+    return out
+
+
 def front_sample(case: DamBreakCase, solver: ShallowWater1D) -> dict:
     """Wave position of the current state vs the exact position at that time."""
     if case.kind == "dry":
@@ -225,11 +303,26 @@ def _dry_metrics(case: DamBreakCase, solver: ShallowWater1D, volume0: float) -> 
     x_level = _level_crossing(solver.x, solver.h, level)
     # exact fan: h = (x_f - x)^2 / (9 g t^2)  =>  x_f = x + 3 t sqrt(g h)
     x_level_scaled = x_level + 3.0 * t * math.sqrt(case.gravity * level)
+    fan = fan_front_estimate(solver.x, solver.h, t, case.gravity, case.h0)
     tv_num = float(np.abs(np.diff(solver.h)).sum())
+    ahead = solver.x > x_f
     return {
         "front_exact": x_f,
+        # headline metric: shape-consistent fan estimator (see fan_front_estimate)
+        "front_fan": fan["front"],
+        "front_fan_error": _relative(fan["front"], x_f),
+        "front_fan_cells": fan["cells"],
+        "front_fan_spread": fan["spread"],
+        "front_fan_slope": fan["slope"],
+        "front_fan_slope_error": fan["slope_error"],
+        "front_fan_window": fan["window"],
+        # legacy/diagnostic definitions -- kept for continuity, NOT headline
         "front_wetted": front_wetted,
         "front_wetted_error": _relative(front_wetted, x_f),
+        # signed shortfall of the wetted edge (negative => spurious wetting ahead)
+        "wetted_shortfall": x_f - front_wetted,
+        "precursor_length": float(max(0.0, front_wetted - x_f)),
+        "precursor_depth": float(solver.h[ahead].max() / case.h0) if np.any(ahead) else 0.0,
         "front_level": x_level,
         "front_level_scaled": x_level_scaled,
         "front_level_scaled_error": _relative(x_level_scaled, x_f),
@@ -293,7 +386,12 @@ def _wet_metrics(case: DamBreakCase, solver: ShallowWater1D, volume0: float) -> 
 def _verdict(case: DamBreakCase, metrics: dict) -> dict:
     """Headline checks against the predeclared 5 % tolerance."""
     if case.kind == "dry":
+        # ``front_wetted<5%`` is retained as a legacy diagnostic: the wetted edge
+        # is a depth-floor detector (it does not converge under refinement, see
+        # docs/verification-dam-break-front-metric/REPORT.md), so the headline is
+        # the shape-consistent fan estimator.
         checks = {
+            "front_fan<5%": metrics["front_fan_error"],
             "front_wetted<5%": metrics["front_wetted_error"],
             "depth_l1<5%": metrics["depth_l1"],
             "monotone(no_extrema)": 0.0 if metrics["local_extrema"] == 0 else 1.0,
@@ -393,7 +491,9 @@ def convergence_study(case: DamBreakCase, resolutions=(100, 200, 400, 800, 1600,
     for n in resolutions:
         run = run_case(case, n=n, cfl=cfl, order=order)
         m = run["metrics"]
-        headline = ({"front": m["front_wetted_error"]} if case.kind == "dry"
+        headline = ({"front_fan": m["front_fan_error"],
+                     "front_wetted_diagnostic": m["front_wetted_error"]}
+                    if case.kind == "dry"
                     else {"shock": m["shock_error"], "step": m["step_ratio_error"]})
         rows.append({
             "n": n,
@@ -409,15 +509,29 @@ def convergence_study(case: DamBreakCase, resolutions=(100, 200, 400, 800, 1600,
     headline_errors = np.array([
         next(iter(row["headline"].values())) for row in rows
     ])
+    positive = headline_errors > 0.0
+    fit_head = (np.polyfit(np.log(dx[positive]), np.log(headline_errors[positive]), 1)[0]
+                if int(np.count_nonzero(positive)) > 2 else float("nan"))
     return {
         "case": case.key,
         "order": order,
         "cfl": cfl,
         "rows": rows,
         "observed_order_l1": float(fit[0]),
+        "observed_order_headline": float(fit_head),
         "headline_error_at_finest": float(headline_errors[-1]),
         "headline_error_at_coarsest": float(headline_errors[0]),
     }
+
+
+def _max_over_accepted(rows, key: str, accepted_n: int = 800) -> float:
+    """Max of ``row[key]`` over the grids the benchmark accepts (``n >= 800``).
+
+    A coarse-only study has no accepted grid; that returns NaN instead of raising
+    ``max() arg is an empty sequence`` (found by the metric-repair tests).
+    """
+    values = [row[key] for row in rows if row["n"] >= accepted_n]
+    return float(max(values)) if values else float("nan")
 
 
 def front_definition_study(resolutions=(400, 800, 1600, 3200)) -> dict:
@@ -428,13 +542,18 @@ def front_definition_study(resolutions=(400, 800, 1600, 3200)) -> dict:
     Three definitions are evaluated on every grid:
 
     ``wetted_edge``
-        outermost cell with ``h > 0`` -- threshold-free, and the primary metric.
+        outermost cell with ``h > 0`` -- threshold-free in appearance only: it is
+        a *depth-floor* detector (the reading is set by the numerical depth floor,
+        not by ``dx``), so it does **not** converge.  Kept as a diagnostic.
     ``level_raw``
         abscissa where ``h`` crosses ``level * h0`` (a level inside the smeared
         tail is *not* the front, so this is reported to keep that visible).
     ``level_scaled``
         the same crossing plus the exact fan offset ``3 t sqrt(g * level * h0)``
         back to the tip.
+    ``fan_shape``
+        mean of the per-cell exact identity ``x_f = x_i + 3 t sqrt(g h_i)`` over
+        ``FAN_WINDOW`` -- the headline metric (:func:`fan_front_estimate`).
     """
     levels = (FRONT_LEVEL_FRACTION, 1e-3)
     rows = []
@@ -447,6 +566,9 @@ def front_definition_study(resolutions=(400, 800, 1600, 3200)) -> dict:
             "front_exact": m["front_exact"],
             "wetted_edge": m["front_wetted"],
             "wetted_edge_error": m["front_wetted_error"],
+            "fan_shape": m["front_fan"],
+            "fan_shape_error": m["front_fan_error"],
+            "fan_shape_spread": m["front_fan_spread"],
             "level_raw_error": {},
             "level_scaled_error": {},
         }
@@ -467,8 +589,8 @@ def front_definition_study(resolutions=(400, 800, 1600, 3200)) -> dict:
         rows.append(row)
     return {
         "case": RITTER_DRY.key,
-        "max_wetted_edge_error_at_accepted_grid": max(
-            row["wetted_edge_error"] for row in rows if row["n"] >= 800),
+        "max_wetted_edge_error_at_accepted_grid": _max_over_accepted(rows, "wetted_edge_error"),
+        "max_fan_shape_error_at_accepted_grid": _max_over_accepted(rows, "fan_shape_error"),
         "rows": rows,
     }
 
