@@ -1,0 +1,473 @@
+{
+  "all_pass": false,
+  "criteria": {
+    "C1": {
+      "pass": true,
+      "statement": "M(r0) = S(r0) M(0) S(r0)^T, max relative residual over 3 bodies x 3 offsets",
+      "threshold": 1e-12,
+      "value": 1.5602762061707744e-15
+    },
+    "C2": {
+      "pass": true,
+      "statement": "sphere offset along the rotation axis: |I_zz|/(m_a a^2) < 1e-9 and I_xx = I_yy",
+      "threshold": {
+        "abs_I_zz_over_m_a_a2": 1e-09,
+        "axisym_rel": 1e-06
+      },
+      "value": {
+        "abs_I_zz_over_m_a_a2": 1.8429223063276534e-32,
+        "axisym_rel": 3.8056347291781207e-16
+      }
+    },
+    "C3": {
+      "pass": true,
+      "statement": "sphere parallel axis: |I_xx(d e_z) - m_a d^2| / m_a d^2 < 3% at the finest mesh",
+      "threshold": {
+        "finest_rel_err": 0.03,
+        "observed_order": 1.0
+      },
+      "value": {
+        "finest_rel_err": -0.00948289644286715,
+        "observed_order": 1.3913818982762163
+      }
+    },
+    "C4": {
+      "pass": true,
+      "statement": "attribution: I_xx(d e_z) - I_xx(0) = d^2 M_yy(0) to 1e-12 (residual of C3 is the common-mode m_a bias)",
+      "threshold": 1e-12,
+      "value": {
+        "exact_ratio_rel_err": 6.661338147750939e-16,
+        "mesh_anisotropy_M_yy_over_M_xx": 2.220446049250313e-16,
+        "spurious_I_xx_centre_over_m_a_a2": 7.501452212521884e-07
+      }
+    },
+    "C5": {
+      "pass": true,
+      "statement": "spheroid I_zz(d e_y) vs I_zz(0)_closed + d^2 k_axial rho V < 3% (finest)",
+      "threshold": {
+        "error_not_growing": true,
+        "worst_finest_rel_err": 0.03
+      },
+      "value": {
+        "per_ratio": {
+          "2.0": -0.0034554594536397865,
+          "4.0": -0.011321749220110533
+        },
+        "worst_finest_rel_err": 0.011321749220110533
+      }
+    },
+    "C6": {
+      "pass": true,
+      "statement": "power of the test: dropping the parallel-axis term or flipping the moment-arm sign changes M by > 1e-2 (relative)",
+      "threshold": 0.01,
+      "value": {
+        "min_detection_margin": 0.4610228470900332
+      }
+    },
+    "C7": {
+      "pass": false,
+      "statement": "asymptotic-range check: three-level Richardson extrapolation within 1% of m_a d^2",
+      "threshold": {
+        "richardson_rel_err": 0.01
+      },
+      "value": {
+        "asymptotic_order_expected": 2.0,
+        "observed_order": 1.3913818982762163,
+        "richardson_rel_err": -0.014641313010338775
+      }
+    }
+  },
+  "d8_configurations": [
+    {
+      "centre": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "closest_entry_to_2_05": {
+        "index": [
+          2,
+          2
+        ],
+        "value": 2.052042193328217
+      },
+      "config": "sphere centre (0, 0, 0)",
+      "has_entry_near_2_05": true,
+      "n_panels": 576,
+      "rotational_diag": [
+        2.392886793015634e-05,
+        2.3928867930156018e-05,
+        1.6284910024083967e-32
+      ],
+      "rotational_entries_max_abs": 2.392886793015634e-05,
+      "translational_diag": [
+        2.0405018994299713,
+        2.0405018994299704,
+        2.052042193328217
+      ]
+    },
+    {
+      "centre": [
+        0.0,
+        0.0,
+        1.5
+      ],
+      "closest_entry_to_2_05": {
+        "index": [
+          2,
+          2
+        ],
+        "value": 2.0520421933282194
+      },
+      "config": "sphere centre (0, 0, 1.5a)",
+      "has_entry_near_2_05": true,
+      "n_panels": 576,
+      "rotational_diag": [
+        4.591153202585366,
+        4.591153202585364,
+        1.628491002408397e-32
+      ],
+      "rotational_entries_max_abs": 4.591153202585366,
+      "translational_diag": [
+        2.0405018994299713,
+        2.0405018994299704,
+        2.0520421933282194
+      ]
+    },
+    {
+      "centre": [
+        1.5,
+        0.0,
+        0.0
+      ],
+      "closest_entry_to_2_05": {
+        "index": [
+          2,
+          2
+        ],
+        "value": 2.052042193328217
+      },
+      "config": "sphere centre (1.5a, 0, 0)",
+      "has_entry_near_2_05": true,
+      "n_panels": 576,
+      "rotational_diag": [
+        2.392886793015634e-05,
+        4.617118863856421,
+        4.59112927371744
+      ],
+      "rotational_entries_max_abs": 4.617118863856421,
+      "translational_diag": [
+        2.0405018994299717,
+        2.040501899429971,
+        2.052042193328217
+      ]
+    }
+  ],
+  "d8_resolution": {
+    "claim": 2.05,
+    "configs_with_rotational_entry_near_claim": [],
+    "configs_with_translational_entry_near_claim": [
+      "sphere centre (0, 0, 0)",
+      "sphere centre (0, 0, 1.5a)",
+      "sphere centre (1.5a, 0, 0)"
+    ],
+    "verdict": "unreproducible in the rotational block; the only 2.05-shaped value is the z-translational added mass M_zz"
+  },
+  "elapsed_s": 171.94353318214417,
+  "identity": [
+    {
+      "body": "sphere",
+      "max_abs_residual": 7.105427357601002e-15,
+      "n_panels": 384,
+      "offset": [
+        0.0,
+        0.0,
+        1.5
+      ],
+      "rel_residual": 1.5602762061707744e-15,
+      "scale": 4.553954825113383
+    },
+    {
+      "body": "sphere",
+      "max_abs_residual": 2.6645352591003757e-15,
+      "n_panels": 384,
+      "offset": [
+        1.5,
+        0.0,
+        0.0
+      ],
+      "rel_residual": 5.849552738391516e-16,
+      "scale": 4.555109387445334
+    },
+    {
+      "body": "sphere",
+      "max_abs_residual": 3.1086244689504383e-15,
+      "n_panels": 384,
+      "offset": [
+        0.7,
+        -1.1,
+        0.4
+      ],
+      "rel_residual": 9.034833571123558e-16,
+      "scale": 3.4407102737188047
+    },
+    {
+      "body": "spheroid a/b=2",
+      "max_abs_residual": 3.552713678800501e-15,
+      "n_panels": 384,
+      "offset": [
+        0.0,
+        0.0,
+        1.5
+      ],
+      "rel_residual": 2.817828013632947e-16,
+      "scale": 12.607986227733205
+    },
+    {
+      "body": "spheroid a/b=2",
+      "max_abs_residual": 1.7763568394002505e-15,
+      "n_panels": 384,
+      "offset": [
+        1.5,
+        0.0,
+        0.0
+      ],
+      "rel_residual": 1.22801269255087e-16,
+      "scale": 14.465297062283138
+    },
+    {
+      "body": "spheroid a/b=2",
+      "max_abs_residual": 2.6645352591003757e-15,
+      "n_panels": 384,
+      "offset": [
+        0.7,
+        -1.1,
+        0.4
+      ],
+      "rel_residual": 3.470864797814303e-16,
+      "scale": 7.676862725330889
+    },
+    {
+      "body": "spheroid a/b=4",
+      "max_abs_residual": 1.4210854715202004e-14,
+      "n_panels": 384,
+      "offset": [
+        0.0,
+        0.0,
+        1.5
+      ],
+      "rel_residual": 4.053540027489969e-16,
+      "scale": 35.05788673314679
+    },
+    {
+      "body": "spheroid a/b=4",
+      "max_abs_residual": 2.1316282072803006e-14,
+      "n_panels": 384,
+      "offset": [
+        1.5,
+        0.0,
+        0.0
+      ],
+      "rel_residual": 3.4081413655805655e-16,
+      "scale": 62.545181629142455
+    },
+    {
+      "body": "spheroid a/b=4",
+      "max_abs_residual": 2.842170943040401e-14,
+      "n_panels": 384,
+      "offset": [
+        0.7,
+        -1.1,
+        0.4
+      ],
+      "rel_residual": 7.051896364884447e-16,
+      "scale": 40.30364026892464
+    }
+  ],
+  "mutations": [
+    {
+      "body": "sphere",
+      "no_parallel_axis": 1.0,
+      "sign_flip_moment_arm": 1.2944457494857744
+    },
+    {
+      "body": "spheroid a/b=2",
+      "no_parallel_axis": 1.0,
+      "sign_flip_moment_arm": 1.6058394160583938
+    },
+    {
+      "body": "spheroid a/b=4",
+      "no_parallel_axis": 0.4610228470900332,
+      "sign_flip_moment_arm": 0.7403286595606373
+    }
+  ],
+  "rho": 1.0,
+  "sphere_m_a": 2.0943951023931953,
+  "sphere_offset_ladder": [
+    {
+      "I_xx": 4.591153202585366,
+      "I_xx_centre": 2.392886793015634e-05,
+      "I_yy": 4.591153202585364,
+      "I_zz": 1.628491002408397e-32,
+      "I_zz_scale": 7.775471784419162e-33,
+      "M_xx_centre": 2.0405018994299713,
+      "M_zz_centre": 2.052042193328217,
+      "axisym_rel": 3.8690863951129974e-16,
+      "exact_m_a_d2": 4.71238898038469,
+      "h": 0.03125,
+      "increment_rel_err": 6.661338147750939e-16,
+      "mesh": [
+        32,
+        18
+      ],
+      "mesh_anisotropy": 4.440892098500626e-16,
+      "n_panels": 576,
+      "rel_err_I_xx": -0.025727031088470742,
+      "spurious_I_xx_centre_over_m_a_a2": 1.1425192841032535e-05
+    },
+    {
+      "I_xx": 4.645705288498111,
+      "I_xx_centre": 4.894336717451744e-06,
+      "I_yy": 4.645705288498111,
+      "I_zz": 2.2697398334977302e-32,
+      "I_zz_scale": 1.0837209421012179e-32,
+      "M_xx_centre": 2.064755730738397,
+      "M_zz_centre": 2.07354338990745,
+      "axisym_rel": 0.0,
+      "exact_m_a_d2": 4.71238898038469,
+      "h": 0.020833333333333332,
+      "increment_rel_err": 0.0,
+      "mesh": [
+        48,
+        27
+      ],
+      "mesh_anisotropy": 2.220446049250313e-16,
+      "n_panels": 1296,
+      "rel_err_I_xx": -0.014150718916487892,
+      "spurious_I_xx_centre_over_m_a_a2": 2.3368736452158185e-06
+    },
+    {
+      "I_xx": 4.667701883685194,
+      "I_xx_centre": 1.5711004774742434e-06,
+      "I_yy": 4.667701883685192,
+      "I_zz": 3.859807452463809e-32,
+      "I_zz_scale": 1.8429223063276534e-32,
+      "M_xx_centre": 2.074533472259874,
+      "M_zz_centre": 2.08156823780027,
+      "axisym_rel": 3.8056347291781207e-16,
+      "exact_m_a_d2": 4.71238898038469,
+      "h": 0.015625,
+      "increment_rel_err": 2.220446049250313e-16,
+      "mesh": [
+        64,
+        36
+      ],
+      "mesh_anisotropy": 2.220446049250313e-16,
+      "n_panels": 2304,
+      "rel_err_I_xx": -0.00948289644286715,
+      "spurious_I_xx_centre_over_m_a_a2": 7.501452212521884e-07
+    }
+  ],
+  "sphere_radius": 1.0,
+  "sphere_richardson": {
+    "I_xx_inf": 4.643393418296406,
+    "observed_order": 1.3913818982762163,
+    "rel_err": -0.014641313010338775
+  },
+  "spheroid_offset": [
+    {
+      "I_zz_0_closed": 2.0057929172153717,
+      "a": 2.0,
+      "a_over_b": 2.0,
+      "b": 1.0,
+      "d": 3.0,
+      "exact_I_zz_offset": 17.840554557414993,
+      "finest_rel_err": -0.0034554594536397865,
+      "k_axial": 0.21001504897664153,
+      "ladder": [
+        {
+          "I_zz_0": 1.892058575155885,
+          "I_zz_offset": 17.570168036603786,
+          "axial_yaw_coupling": 1.1102230246251565e-16,
+          "exact_I_zz_offset": 17.840554557414993,
+          "mesh": [
+            32,
+            18
+          ],
+          "n_panels": 576,
+          "rel_err": -0.015155723996193138,
+          "volume_exact": 8.377580409572781,
+          "volume_panel": 8.260624718405538
+        },
+        {
+          "I_zz_0": 1.9386129707017925,
+          "I_zz_offset": 17.725429947701432,
+          "axial_yaw_coupling": 2.220446049250313e-16,
+          "exact_I_zz_offset": 17.840554557414993,
+          "mesh": [
+            48,
+            27
+          ],
+          "n_panels": 1296,
+          "rel_err": -0.006452972599201634,
+          "volume_exact": 8.377580409572781,
+          "volume_panel": 8.325434016736153
+        },
+        {
+          "I_zz_0": 1.9587191406320743,
+          "I_zz_offset": 17.778907244511398,
+          "axial_yaw_coupling": 1.8735013540549517e-16,
+          "exact_I_zz_offset": 17.840554557414993,
+          "mesh": [
+            64,
+            36
+          ],
+          "n_panels": 2304,
+          "rel_err": -0.0034554594536397865,
+          "volume_exact": 8.377580409572781,
+          "volume_panel": 8.348215289513961
+        }
+      ]
+    },
+    {
+      "I_zz_0_closed": 34.6327353215429,
+      "a": 4.0,
+      "a_over_b": 4.0,
+      "b": 1.0,
+      "d": 6.0,
+      "exact_I_zz_offset": 83.82690960441226,
+      "finest_rel_err": -0.011321749220110533,
+      "k_axial": 0.0815572500879464,
+      "ladder": [
+        {
+          "I_zz_0": 32.882450618883226,
+          "I_zz_offset": 81.86057993439245,
+          "axial_yaw_coupling": 7.771561172376096e-16,
+          "exact_I_zz_offset": 83.82690960441226,
+          "mesh": [
+            32,
+            18
+          ],
+          "n_panels": 576,
+          "rel_err": -0.023457022086333934,
+          "volume_exact": 16.755160819145562,
+          "volume_panel": 16.521249436811075
+        },
+        {
+          "I_zz_0": 33.64684608544155,
+          "I_zz_offset": 82.87784235597424,
+          "axial_yaw_coupling": 1.1657341758564144e-15,
+          "exact_I_zz_offset": 83.82690960441226,
+          "mesh": [
+            48,
+            27
+          ],
+          "n_panels": 1296,
+          "rel_err": -0.011321749220110533,
+          "volume_exact": 16.755160819145562,
+          "volume_panel": 16.650868033472307
+        }
+      ]
+    }
+  ]
+}

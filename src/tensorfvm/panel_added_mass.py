@@ -87,10 +87,12 @@ from .twin_hull_geometry import PanelSet, panelise_nodes
 
 __all__ = [
     "added_mass_matrix",
+    "added_mass_matrix_about_point",
     "displaced_volume",
     "lamb_ellipsoid_factors",
     "lamb_integral_factors",
     "lamb_spheroid_factors",
+    "rigid_shift_matrix",
     "source_potential",
     "sphere_added_mass",
     "spheroid_panels",
@@ -281,6 +283,72 @@ def added_mass_matrix(panels: PanelSet, *, rho: float = 1.0, order: int = 3,
         out = 0.5 * (out + out.T)
     if n == 0:  # pragma: no cover - defensive
         raise ValueError("empty panel set")
+    return out
+
+
+# ---------------------------------------------------------------------------
+# reference-point changes (parallel-axis algebra for the full 6 x 6 matrix)
+# ---------------------------------------------------------------------------
+def rigid_shift_matrix(offset) -> np.ndarray:
+    r"""``6 x 6`` matrix ``S`` linking the six velocity generators of two origins.
+
+    Let ``g_O(r) = [e_1, e_2, e_3, e_1 x r, e_2 x r, e_3 x r]`` be the six
+    rigid-body surface velocity generators expressed **about the reference point
+    ``O``** (``r`` measured from ``O``), and ``g_P`` the same six generators about
+    a second point ``P = O + offset``.  Since ``r_O = r_P + offset``,
+
+        g_O(r) = S(offset) g_P(r),   S = [[I3, 0], [ [e_i x offset], I3 ]],
+
+    i.e. ``S[3+i, 0:3] = e_i x offset`` and the rest is the identity.  The
+    rotational generators acquire a *translational* component -- this is exactly
+    the parallel-axis content of added mass, and forgetting it is the classic
+    error that makes an offset body look like it has centre-of-body inertia.
+    """
+    off = np.asarray(offset, dtype=float)
+    if off.shape != (3,):
+        raise ValueError("offset must be a 3-vector")
+    S = np.eye(6)
+    for i in range(3):
+        e = np.zeros(3)
+        e[i] = 1.0
+        S[3 + i, 0:3] = np.cross(e, off)
+    return S
+
+
+def added_mass_matrix_about_point(matrix, offset, *, symmetrize: bool = True) -> np.ndarray:
+    r"""Re-express a ``6 x 6`` added-mass matrix about a displaced reference point.
+
+    :func:`added_mass_matrix_6dof` returns the matrix *about the coordinate
+    origin*.  Because the added-mass quadratic form is a functional of the
+    velocity generators (``M_ab = -rho * closed_integral phi_a psi_b dS`` with
+    ``dphi_a/dn`` given by generator ``a``), the reference-point change is the
+    congruence transformation implied by :func:`rigid_shift_matrix`:
+
+        M_P = S(-offset) M_O S(-offset)^T,     ``offset = P - O``,
+
+    so the translational block is invariant, the rotational block gains the
+    parallel-axis terms and the translation-rotation blocks mix.  The relation is
+    **exact** for the continuous problem and holds to rounding for the discrete
+    one (it is pinned to ``1e-12`` by ``tests/test_added_mass_parallel_axis.py``
+    and by ``tensorfvm.verification.added_mass_parallel_axis``).
+
+    Parameters
+    ----------
+    matrix : array_like, shape (6, 6)
+        Added-mass matrix about some origin ``O``.
+    offset : array_like, shape (3,)
+        Displacement ``P - O`` of the wanted reference point.
+    symmetrize : bool
+        Average the result with its transpose (the input is symmetric up to
+        quadrature asymmetry; see :func:`added_mass_matrix_6dof`).
+    """
+    M = np.asarray(matrix, dtype=float)
+    if M.shape != (6, 6):
+        raise ValueError("matrix must be 6 x 6")
+    S = rigid_shift_matrix(-np.asarray(offset, dtype=float))
+    out = S @ M @ S.T
+    if symmetrize:
+        out = 0.5 * (out + out.T)
     return out
 
 
