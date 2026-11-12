@@ -1,0 +1,74 @@
+{
+  "march.json": {
+    "n_diffs": 0,
+    "diffs": [],
+    "bitwise_identical": true
+  },
+  "march-sensitivity.json": {
+    "n_diffs": 0,
+    "diffs": [],
+    "bitwise_identical": true
+  },
+  "summary.json": {
+    "n_diffs": 0,
+    "diffs": [],
+    "bitwise_identical": true
+  },
+  "headline_numbers": {
+    "cf": 0.002084919373887167,
+    "cf_relative_error": -0.007064162756681722,
+    "H": 2.5794504209068565,
+    "H_relative_error": -0.004688061079311477,
+    "ref_cf": 0.002099752366351804,
+    "ref_H": 2.5916,
+    "error_limit": 0.03,
+    "passed": true
+  },
+  "sensitivity": [
+    {
+      "tag": "ny-128",
+      "ny": 128,
+      "stations": 401,
+      "cf_relative_error": -0.01813058310387742,
+      "H_relative_error": -0.008325176898784727,
+      "passed": true
+    },
+    {
+      "tag": "ny-256",
+      "ny": 256,
+      "stations": 401,
+      "cf_relative_error": -0.007064162756681722,
+      "H_relative_error": -0.004688061079311477,
+      "passed": true
+    },
+    {
+      "tag": "ny-512",
+      "ny": 512,
+      "stations": 401,
+      "cf_relative_error": -0.0015238811635742613,
+      "H_relative_error": -0.003004298524383232,
+      "passed": true
+    },
+    {
+      "tag": "stations-101",
+      "ny": 256,
+      "stations": 101,
+      "cf_relative_error": -0.009907900568378602,
+      "H_relative_error": -0.007134717010373751,
+      "passed": true
+    },
+    {
+      "tag": "stations-1601",
+      "ny": 256,
+      "stations": 1601,
+      "cf_relative_error": -0.00542359851914973,
+      "H_relative_error": -0.004063300021614454,
+      "passed": true
+    }
+  ],
+  "summary_only_in_fresh_dir": {
+    "rows": 0,
+    "all_passed": false,
+    "note": "CLI --summary-only skips execution and only merges existing *.json; in an empty --out directory it reports rows=[] and exit code 2, so the mission's quoted check line is only valid on a pre-populated out directory"
+  }
+}
