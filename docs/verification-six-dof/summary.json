@@ -1,0 +1,317 @@
+{
+ "criteria": {
+  "V1_restoring_coefficients_exact": {
+   "value": 0.0,
+   "gate": 1e-15,
+   "mode": "max",
+   "pass": true,
+   "note": "max relative deviation of F=-rho g A_wp z and M=-rho g I_wp theta, including the zero at equilibrium"
+  },
+  "V2_natural_frequency_exact": {
+   "value": 0.0,
+   "gate": 1e-15,
+   "mode": "max",
+   "pass": true,
+   "note": "sqrt(C33/(m+a33)) and sqrt(C55/(Iyy+a55)) with 60 %/40 % added mass"
+  },
+  "V3a_undamped_harmonic_observed_order": {
+   "value": 1.0246509265778474,
+   "gate": 0.85,
+   "mode": "min",
+   "pass": true,
+   "note": "observed order p from the two finest grids vs z0 cos(wn t)"
+  },
+  "V3b_undamped_harmonic_fine_grid_error": {
+   "value": 0.01198535202089767,
+   "gate": 0.03,
+   "mode": "max",
+   "pass": true,
+   "note": "relative L2 error at n=800 steps over 3 periods"
+  },
+  "V3c_undamped_harmonic_order_upper": {
+   "value": 1.0246509265778474,
+   "gate": 1.15,
+   "mode": "max",
+   "pass": true,
+   "note": "observed order must not exceed 1.15: symplectic Euler is first order, a second-order reading would mean the anchor is not measuring what it claims"
+  },
+  "V4a_damped_decay_rate": {
+   "value": 0.0005924818183479604,
+   "gate": 0.003,
+   "mode": "max",
+   "pass": true,
+   "note": "peak-envelope decay rate vs zeta*wn (zeta = 0.05, 0.2)"
+  },
+  "V4b_damped_trace_vs_closed_form": {
+   "value": 0.0020756462750353456,
+   "gate": 0.03,
+   "mode": "max",
+   "pass": true,
+   "note": "relative L2 of the damped trace over the first natural period vs the closed form (multi-period pointwise comparison is dominated by the scheme's O(dt*t) phase drift, reported but not gated)"
+  },
+  "V5a_energy_bounded": {
+   "value": 0.007915909716542137,
+   "gate": 0.05,
+   "mode": "max",
+   "pass": true,
+   "note": "max |E-E0|/E0 for symplectic Euler over 50 periods"
+  },
+  "V5b_energy_not_secular": {
+   "value": 0.005000454454610648,
+   "gate": 0.010000664845332942,
+   "mode": "max",
+   "pass": true,
+   "note": "late-window mean energy deviation <= 2x the early-window value (no growing trend)"
+  },
+  "V5c_control_explicit_euler_grows": {
+   "value": 138.1079042144051,
+   "gate": 1.0,
+   "mode": "min",
+   "pass": true,
+   "note": "control: non-symplectic explicit Euler on the same oscillator must grow by >= 100 % over the same window"
+  },
+  "V6_pitch_dof_harmonic": {
+   "value": 0.011985352020896902,
+   "gate": 0.03,
+   "mode": "max",
+   "pass": true,
+   "note": "pitch free response vs theta0 cos(wn t), 3 periods"
+  },
+  "V7a_rao_time_domain_vs_formula": {
+   "value": 0.008023883705933741,
+   "gate": 0.03,
+   "mode": "max",
+   "pass": true,
+   "note": "steady-state amplitude from the integrator vs (F0/k)*rao(w) over zeta in {0.05,0.2} x r in {0.5,0.9,1,1.5,2}"
+  },
+  "V7b_damping_ratio_from_config": {
+   "value": 0.0,
+   "gate": 1e-12,
+   "mode": "max",
+   "pass": true,
+   "note": "damping_ratio() recovers c/(2 sqrt(k m_eff)) from config.damping"
+  },
+  "V7c_resonance_equals_one_over_2zeta": {
+   "value": 0.0,
+   "gate": 1e-12,
+   "mode": "max",
+   "pass": true,
+   "note": "rao(omega_n) = 1/(2 zeta) with the configured damping"
+  },
+  "V7d_rao_limits": {
+   "value": 0.00010000995098513454,
+   "gate": 0.01,
+   "mode": "max",
+   "pass": true,
+   "note": "rao -> 1 as omega -> 0 and rao -> 0 as omega -> inf"
+  },
+  "V7e_control_ignoring_configured_damping": {
+   "value": 3.0,
+   "gate": 0.5,
+   "mode": "min",
+   "pass": true,
+   "note": "control: the pre-fix hard-coded zeta=0.05 must disagree with the configured zeta=0.2 by >= 50 % at resonance"
+  },
+  "V8_independent_integrator_crosscheck": {
+   "value": 0.006055984704583301,
+   "gate": 0.01,
+   "mode": "max",
+   "pass": true,
+   "note": "damped trajectory vs scipy DOP853 (rtol 1e-12) on the same time grid"
+  },
+  "V9_history_time_nonuniform_dt": {
+   "value": 0.0,
+   "gate": 1e-12,
+   "mode": "max",
+   "pass": true,
+   "note": "history['time'] equals the cumulative sum of the actual dt values (pre-fix it was len(history)*dt)"
+  },
+  "V10_control_flipped_restoring_rejected": {
+   "value": 18073131.13369762,
+   "gate": 0.5,
+   "mode": "min",
+   "pass": true,
+   "note": "control: sign-flipped restoring must miss the harmonic anchor by >= 50 %"
+  }
+ },
+ "data": {
+  "reference": {
+   "A_wp": 50.0,
+   "I_wp": 416.6666666666667,
+   "mass": 100000.0,
+   "Iyy": 866666.6666666666,
+   "C33": 490500.0,
+   "C55": 4087500.0,
+   "omega_n_heave": 2.2147234590350102,
+   "omega_n_pitch": 2.1717150259290823
+  },
+  "heave_ladder": [
+   {
+    "n": 100,
+    "dt": 0.08511020120657324,
+    "rel_l2": 0.10781066449617359
+   },
+   {
+    "n": 200,
+    "dt": 0.04255510060328662,
+    "rel_l2": 0.050445807617288556
+   },
+   {
+    "n": 400,
+    "dt": 0.02127755030164331,
+    "rel_l2": 0.024383803966982642
+   },
+   {
+    "n": 800,
+    "dt": 0.010638775150821655,
+    "rel_l2": 0.01198535202089767
+   }
+  ],
+  "heave_ladder_order": 1.0246509265778474,
+  "damped_decay": [
+   {
+    "zeta": 0.05,
+    "measured_decay": 0.11075614240002457,
+    "analytic_decay": 0.11073617295175052,
+    "rel_error": 0.00018033355986351858,
+    "trace_rel_l2_one_period": 0.0017882292757537793,
+    "trace_rel_l2_full": 0.002365702901846667,
+    "first_peak_time_shift_s": -0.001418503353442624
+   },
+   {
+    "zeta": 0.2,
+    "measured_decay": 0.44320712848343147,
+    "analytic_decay": 0.4429446918070021,
+    "rel_error": 0.0005924818183479604,
+    "trace_rel_l2_one_period": 0.0020756462750353456,
+    "trace_rel_l2_full": 0.002305959990894703,
+    "first_peak_time_shift_s": -0.001418503353443068
+   }
+  ],
+  "energy": {
+   "symplectic_max_drift": 0.007915909716542137,
+   "explicit_euler_max_drift": 138.1079042144051,
+   "window_mean_first": 0.005000332422666471,
+   "window_mean_last": 0.005000454454610648,
+   "periods": 50
+  },
+  "pitch": {
+   "rel_l2": 0.011985352020896902,
+   "omega_n": 2.1717150259290823
+  },
+  "rao_grid": [
+   {
+    "time_domain": 0.027113250969688616,
+    "formula": 0.027122940070855837,
+    "rel_error": 0.0003572290150665414,
+    "omega": 1.1073617295175051,
+    "dt": 0.009456689022952582,
+    "steps": 24000,
+    "zeta": 0.05,
+    "ratio": 0.5
+   },
+   {
+    "time_domain": 0.09677546520552843,
+    "formula": 0.09697278168287343,
+    "rel_error": 0.002034761444611094,
+    "omega": 1.9932511131315092,
+    "dt": 0.0052537161238625455,
+    "steps": 24000,
+    "zeta": 0.05,
+    "ratio": 0.9
+   },
+   {
+    "time_domain": 0.2038709925579346,
+    "formula": 0.2038735983690112,
+    "rel_error": 1.2781503330778905e-05,
+    "omega": 2.2147234590350102,
+    "dt": 0.004728344511476291,
+    "steps": 24000,
+    "zeta": 0.05,
+    "ratio": 1.0
+   },
+   {
+    "time_domain": 0.016225917780919887,
+    "formula": 0.016193709903966107,
+    "rel_error": 0.001988912802858816,
+    "omega": 3.3220851885525153,
+    "dt": 0.0031522296743175275,
+    "steps": 24000,
+    "zeta": 0.05,
+    "ratio": 1.5
+   },
+   {
+    "time_domain": 0.0068351428469368486,
+    "formula": 0.006780735017713959,
+    "rel_error": 0.008023883705933741,
+    "omega": 4.4294469180700204,
+    "dt": 0.0023641722557381454,
+    "steps": 24000,
+    "zeta": 0.05,
+    "ratio": 2.0
+   },
+   {
+    "time_domain": 0.026231036377245723,
+    "formula": 0.026265305867516037,
+    "rel_error": 0.0013047436204692037,
+    "omega": 1.1073617295175051,
+    "dt": 0.009456689022952582,
+    "steps": 24000,
+    "zeta": 0.2,
+    "ratio": 0.5
+   },
+   {
+    "time_domain": 0.04997578472954988,
+    "formula": 0.05008408386266676,
+    "rel_error": 0.002162346293761504,
+    "omega": 1.9932511131315092,
+    "dt": 0.0052537161238625455,
+    "steps": 24000,
+    "zeta": 0.2,
+    "ratio": 0.9
+   },
+   {
+    "time_domain": 0.050967933788927625,
+    "formula": 0.0509683995922528,
+    "rel_error": 9.13906123993974e-06,
+    "omega": 2.2147234590350102,
+    "dt": 0.004728344511476291,
+    "steps": 24000,
+    "zeta": 0.2,
+    "ratio": 1.0
+   },
+   {
+    "time_domain": 0.014734052868518336,
+    "formula": 0.014703739979095186,
+    "rel_error": 0.0020615768142151374,
+    "omega": 3.3220851885525153,
+    "dt": 0.0031522296743175275,
+    "steps": 24000,
+    "zeta": 0.2,
+    "ratio": 1.5
+   },
+   {
+    "time_domain": 0.006574977337677272,
+    "formula": 0.006566326466879009,
+    "rel_error": 0.0013174597458560531,
+    "omega": 4.4294469180700204,
+    "dt": 0.0023641722557381454,
+    "steps": 24000,
+    "zeta": 0.2,
+    "ratio": 2.0
+   }
+  ],
+  "independent_integrator": {
+   "rel_l2": 0.006055984704583301,
+   "method": "DOP853",
+   "rtol": 1e-12,
+   "steps": 4000
+  }
+ },
+ "meta": {
+  "driver": "tensorfvm.verification.six_dof",
+  "runtime_s": 1.669412612915039,
+  "quick": false
+ },
+ "figure": "docs/verification-six-dof/fig_six_dof.png"
+}
