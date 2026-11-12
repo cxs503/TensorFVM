@@ -702,3 +702,34 @@ surface quadrature):
   reduction up to x3.91), i.e. the residual is the flat-panel geometry, not the quadrature
 
 ---
+5. **Radiation**: No heat transfer verification  [[gap-status: closed-by src/tensorfvm/radiation.py, tests/test_radiation.py, docs/verification-radiation/REPORT.md]]
+## 15. Surface Radiation (2-D View Factors, Gray Enclosures, Sky Long-Wave)
+**Reference**: Hottel's crossed-strings construction for two-dimensional (infinite-strip)
+view factors; Siegel & Howell two-surface gray enclosure formula; Stefan-Boltzmann and
+Idso-Jackson clear-sky long-wave correlation.
+**Physics**: Radiative exchange between cross-sectional surfaces -- `F_ij` as the subtended
+angle fraction, the radiosity (net-radiation) equations `J_i = eps_i sigma T_i^4 +
+(1 - eps_i) sum_j F_ij J_j`, reradiating (adiabatic) surfaces, and the `q_lw = eps (sigma T_s^4
+- L_down)` term of the ice-accretion surface balance.
+**Implementation**: `src/tensorfvm/radiation.py`
+**Driver**: `python -m tensorfvm.verification.radiation`
+**Tests**: `tests/test_radiation.py`
+**Report**: `docs/verification-radiation/REPORT.md`
+**Artifact**: `docs/verification-radiation/summary.json`, `docs/verification-radiation/fig_radiation.png`
+**Verification Status**: PASS (10/10 graded criteria; the clear-sky correlation spread is
+model form and is recorded as WITHHELD)
+- crossed strings vs closed forms: parallel strips (`d/w` = 0.25..4) and perpendicular strips
+  sharing an edge (`w2/w1` = 0.5..4) agree to `0.0e+00` relative (round-off)
+- square cavity: `F_opposite = 0.41421356` (exact `sqrt(2)-1`), `F_adjacent = 0.29289322`
+  (exact `1-sqrt(2)/2`), row sums 1 to 1e-14; reciprocity structural (`exchange` symmetric)
+- regular pentagon cavity vs independent Gauss-Legendre kernel quadrature: 2.55e-05
+- gray two-surface enclosure vs the closed-form exchange: 3.7e-16 (three emissivity pairs,
+  energy closure `<= 3.7e-16` of `sigma T^4 sum A`)
+- reradiating black plate: `T2^4 = (T1^4+T3^4)/2` exact, `q1 = -q3`
+- icing long-wave term: `eps`-linearity exact, `dq/dT = 4 eps sigma T^3` to 7.4e-08 (FD floor)
+- clear-sky correlation spread (Idso-Jackson vs Brunt-Swinbank vs Swinbank): 1 % at +10 C,
+  up to 30 % at -20 C -- **model form, WITHHELD, not an error of the implementation**
+**Known limitation**: crossed strings are exact only for mutually visible pairs and convex
+strip enclosures; they are invalid for an annular (wrapping) wire frame, where the inner-strip
+row sum cancels to 0.0 (measured) instead of 1.0. Concentric circles are handled by their
+closed form instead.
