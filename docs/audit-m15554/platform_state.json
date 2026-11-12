@@ -1,0 +1,147 @@
+{
+ "login_status": 200,
+ "token_ok": true,
+ "mission": {
+  "http": 200,
+  "id": 15458,
+  "repo": "TensorFVM",
+  "status": "succeeded",
+  "updated_at": null,
+  "result_keys": [
+   "accepted",
+   "agent_session_id",
+   "changed_files",
+   "checks",
+   "compactions",
+   "decided_by",
+   "decision_note",
+   "evidence",
+   "fail_stage",
+   "git_status",
+   "headline",
+   "model",
+   "on_disk_changes",
+   "pr_gate",
+   "tool_calls"
+  ],
+  "pr": null,
+  "commit": null,
+  "maturity_gate_round": null,
+  "headline": "CASE-CAVITY-RE1000-FVM 第2轮：用「网格延拓+逐例检查点」重跑 Ghia 1982 方腔 Re=1000。n=64 冷启动 58750 步收敛到 max|Δu|/Δt≤1e-7，对照 Ghia 表 I/II：u_min 误差 2.80%、v_max 2.34%、主涡中心偏差 0.0079L、中心线 max|Δu|=0.0293U / m",
+  "fail_stage": "budget_exhausted+forced_finish",
+  "changed_files": [
+   "/root/tp-agent/work/m15458/docs/CASE-CAVITY-RE1000-FVM/method-selection.md",
+   "/root/tp-agent/work/m15458/scripts/render_cavity_re1000_m15458.py",
+   "/root/tp-agent/work/m15458/scripts/run_cavity_re1000_m15458.py",
+   "/root/tp-agent/work/m15458/tests/test_case_cavity_re1000_m15458.py"
+  ]
+ },
+ "bench_results": {
+  "http": 200,
+  "data": {
+   "mission_id": 15458,
+   "total": 0,
+   "rows": []
+  }
+ },
+ "l4_verdict": {
+  "http": 200,
+  "data": {
+   "status": "CLAIMED_NOT_PROVEN",
+   "l4_benchmark_pass": false,
+   "rows": 0,
+   "claimed_level": null,
+   "failed_checks": [
+    "execution_success",
+    "source_cluster_job",
+    "cluster_job_bound",
+    "ref_got_error_present",
+    "within_tolerance"
+   ],
+   "reason": "no tensorbench_results row for this mission: the L4 benchmark claim is self-declared, not measured",
+   "rule": "L4 requires >=1 platform-recomputed benchmark row (ref/got/error)"
+  }
+ },
+ "reports": {
+  "http": 200,
+  "data": {
+   "items": [
+    {
+     "id": 14539,
+     "title": "CASE-CAVITY-RE1000-FVM 第2轮：TensorFVM 方腔 Re=1000 收敛解与 <5% 基准对照（n=64 PASS）",
+     "summary": "Re=1000 二维顶盖驱动方腔，Ghia et al. 1982 表 I/II 为基准。本轮以网格延拓（n=32→64→128）+ 逐例检查点重跑：n=64 冷启动 58750 步收敛（max|Δu|/Δt≤1e-7），u_min 误差 2.80%、v_max 2.34%、主涡中心偏差 0.0079、中心线 max|Δu|=0.0293U / max|Δv|=0.0197U，5% 判据全项 PASS；延续性经冷启动场对比验证（同 n=64 场一致性）。n=128 因容器 CPU 争用在本单墙钟内未达门限（5.25e-6→3.72e-6），按梯子旧例排除并保留检查点，留第3轮续算。",
+     "scenario_key": "CASE-CAVITY-RE1000-FVM",
+     "mission_id": 15458,
+     "stage": null,
+     "tags": [
+      "FVM",
+      "lid-driven-cavity",
+      "Ghia1982",
+      "Re1000",
+      "verification",
+      "grid-continuation"
+     ],
+     "figures": [
+      {
+       "name": "fig1_centrelines.png",
+       "caption": "Fig.1 Re=1000 中心线速度剖面 vs Ghia et al. (1982) 表 I/II：n=32/64 计算值（线）与文献符号点"
+      },
+      {
+       "name": "fig2_vorticity.png",
+       "caption": "Fig.2 涡量场云图（n=32/64），十字为计算主涡中心"
+      },
+      {
+       "name": "fig3_convergence.png",
+       "caption": "Fig.3 左：中心线最大误差随分辨率的收敛；右：主极值 u_min/v_max vs 文献值"
+      }
+     ],
+     "status": "published",
+     "created_by": 1,
+     "created_at": "2026-11-12T00:38:08.557042+00:00"
+    }
+   ],
+   "total": 1
+  }
+ },
+ "benchmark_cases": [
+  [
+   "18",
+   "CASE-CAVITY-RE1000-FVM",
+   "TensorFVM",
+   "passed",
+   "u_min/v_max 相对误差 <3%；逐点 max|Δu|/U <3%（内点）；ledger band 5%；主涡中心 |Δ|/L <= 0.01 @ n>=128"
+  ]
+ ],
+ "prior_verdicts": [
+  [
+   "328",
+   "TensorLBM",
+   "m15370 CASE-CAVITY-RE5000",
+   "15488",
+   "2",
+   "reopened",
+   "1"
+  ],
+  [
+   "338",
+   "TensorFVM",
+   "m15458 CASE-CAVITY-RE1000-FVM",
+   "15553",
+   "4",
+   "pending",
+   ""
+  ]
+ ],
+ "prior_missions": [
+  [
+   "15369",
+   "failed",
+   "case-cavity-re1000-fvm"
+  ],
+  [
+   "15458",
+   "succeeded",
+   "case-cavity-re1000-fvm-r2"
+  ]
+ ]
+}
