@@ -1,0 +1,201 @@
+{
+  "levels": [
+    8,
+    16,
+    32
+  ],
+  "closures": [
+    "symmetry",
+    "zero_gradient"
+  ],
+  "sources": [
+    "/root/tp-agent/work/m16838/docs/verification-kovasznay-order-closure/runs/lower_8_16/summary.json",
+    "/root/tp-agent/work/m16838/docs/verification-kovasznay-order-closure/runs/level_32/summary.json"
+  ],
+  "table": {
+    "zero_gradient": [
+      {
+        "n": 8,
+        "closure": "zero_gradient",
+        "cells": 64,
+        "faces": 544,
+        "dofs": 1824,
+        "converged": true,
+        "outer_iterations": 24,
+        "seconds": 11.241875648498535,
+        "peak_rss_mb": 505.6875,
+        "total_l2": 0.04005422522815509,
+        "inplane_l2": 0.040054225228155084,
+        "spanwise_l2": 0.0,
+        "max_abs_w": 0.0,
+        "tie_residual": 0.0,
+        "tied_components": 512,
+        "prescribed_tangential_on_planes": 0.0,
+        "pressure_l2": 0.285280688756023,
+        "pressure_mean_free_l2": 0.103358051599226
+      },
+      {
+        "n": 16,
+        "closure": "zero_gradient",
+        "cells": 256,
+        "faces": 2112,
+        "dofs": 7104,
+        "converged": true,
+        "outer_iterations": 18,
+        "seconds": 66.7245614528656,
+        "peak_rss_mb": 540.890625,
+        "total_l2": 0.01332787507585613,
+        "inplane_l2": 0.01332787507585613,
+        "spanwise_l2": 0.0,
+        "max_abs_w": 0.0,
+        "tie_residual": 0.0,
+        "tied_components": 2048,
+        "prescribed_tangential_on_planes": 0.0,
+        "pressure_l2": 0.1577111774100738,
+        "pressure_mean_free_l2": 0.03820324242795779
+      },
+      {
+        "n": 32,
+        "closure": "zero_gradient",
+        "cells": 1024,
+        "faces": 8320,
+        "dofs": 28032,
+        "converged": true,
+        "outer_iterations": 14,
+        "seconds": 1008.21693110466,
+        "peak_rss_mb": 858.21875,
+        "total_l2": 0.003805383187612432,
+        "inplane_l2": 0.003805383187612432,
+        "spanwise_l2": 0.0,
+        "max_abs_w": 0.0,
+        "tie_residual": 0.0,
+        "tied_components": 8192,
+        "prescribed_tangential_on_planes": 0.0,
+        "pressure_l2": 0.0784349322368888,
+        "pressure_mean_free_l2": 0.011395037726476884
+      }
+    ],
+    "symmetry": [
+      {
+        "n": 8,
+        "closure": "symmetry",
+        "inplane_l2": 0.040092,
+        "spanwise_l2": 0.0090032,
+        "max_abs_w": 0.018955
+      }
+    ]
+  },
+  "orders": [
+    {
+      "pair": "8->16",
+      "coarse_n": 8,
+      "total": 1.5875076539597763,
+      "inplane": 1.5875076539597757,
+      "spanwise": null,
+      "pressure_mean_free": 1.4358837845989445
+    },
+    {
+      "pair": "16->32",
+      "coarse_n": 16,
+      "total": 1.8083331432262804,
+      "inplane": 1.8083331432262804,
+      "spanwise": null,
+      "pressure_mean_free": 1.7452893884121665
+    }
+  ],
+  "verdict": {
+    "checks": [
+      {
+        "id": "C1",
+        "statement": "constraint manifold max|u_face-u_cell| on tied dofs <= 1e-12",
+        "value": 0.0,
+        "verdict": "PASS"
+      },
+      {
+        "id": "C2",
+        "statement": "spanwise L2 and max|w| exactly 0 at every level (w exact = 0)",
+        "value": 0.0,
+        "verdict": "PASS"
+      },
+      {
+        "id": "C3",
+        "statement": "in-plane L2 (tied) <= 1.02 x in-plane L2 (delivered free traction) at n=8",
+        "value": 0.9990577977690083,
+        "verdict": "PASS"
+      },
+      {
+        "id": "C4",
+        "statement": "anchor: total velocity L2 order >= 1.8 on the finest pair 16->32",
+        "value": 1.8083331432262804,
+        "verdict": "PASS"
+      },
+      {
+        "id": "C5",
+        "statement": "in-plane L2 order >= 1.8 on the finest pair",
+        "value": 1.8083331432262804,
+        "verdict": "PASS"
+      },
+      {
+        "id": "C6",
+        "statement": "Picard reported numerical convergence at every level",
+        "value": [
+          true,
+          true,
+          true
+        ],
+        "verdict": "PASS"
+      },
+      {
+        "id": "C7",
+        "statement": "every level pair with n_coarse >= 16 reports total order >= 1.8",
+        "value": 1.8083331432262804,
+        "verdict": "PASS"
+      },
+      {
+        "id": "C8",
+        "statement": "three-level f(h)=L+C h^p gives p >= 1.8 with stderr <= 0.1 and a consistent ladder",
+        "value": {
+          "order": 1.4888517724055252,
+          "order_stderr": NaN,
+          "convergence": "monotone"
+        },
+        "verdict": "FAIL"
+      }
+    ],
+    "orders": [
+      {
+        "pair": "8->16",
+        "coarse_n": 8,
+        "total": 1.5875076539597763,
+        "inplane": 1.5875076539597757,
+        "spanwise": null,
+        "pressure_mean_free": 1.4358837845989445
+      },
+      {
+        "pair": "16->32",
+        "coarse_n": 16,
+        "total": 1.8083331432262804,
+        "inplane": 1.8083331432262804,
+        "spanwise": null,
+        "pressure_mean_free": 1.7452893884121665
+      }
+    ],
+    "three_level_fit": {
+      "levels": [
+        32,
+        16,
+        8
+      ],
+      "order": 1.4888517724055252,
+      "order_stderr": NaN,
+      "convergence": "monotone",
+      "monotone": true,
+      "asymptotic": false,
+      "order_ratio": 0.7444258862027626,
+      "extrapolated": -0.0014654026076369796,
+      "gci": 1.7313584254823797
+    },
+    "anchor_closed": false,
+    "not_run": []
+  }
+}
