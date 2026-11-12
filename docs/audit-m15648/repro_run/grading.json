@@ -1,0 +1,296 @@
+{
+ "all_graded_pass": false,
+ "case": {
+  "anchor_slug": "CASE-FORWARD-STEP",
+  "domain": "TensorFVM",
+  "geometry": {
+   "height": 1.0,
+   "length": 3.0,
+   "step_h": 0.2,
+   "step_x": 0.6
+  },
+  "grid_of_record": [
+   480,
+   160
+  ],
+  "reference": "Woodward, P. & Colella, P., 'The numerical simulation of two-dimensional fluid flow with strong shocks', J. Comput. Phys. 54 (1984) 115-173, problem 2 (pp. 161-166, figs. 6-7: t = 4 density contours; no tables)",
+  "reference_kind": "exact Rankine-Hugoniot / isentropic relations for the paper's stated inflow state, evaluated in code (the paper publishes contours only)",
+  "repro_cmd": "python scripts/repro_fvm_forward_step.py --out docs/repro-fvm-forward-step/run --grids 120x40,240x80,480x160 --t-end 4",
+  "solver": "tensorfvm.compressible.solver.EulerSolver (MUSCL-Hancock + HLLC, CFL 0.4)",
+  "state": {
+   "gamma": 1.4,
+   "mach": 3.0,
+   "p": 1.0,
+   "rho": 1.4,
+   "t_end": 4.0
+  },
+  "title": "Mach 3 wind tunnel with a forward-facing step (Woodward & Colella problem 2)",
+  "tolerance": 0.08
+ },
+ "convergence": {
+  "note": "need at least two grids",
+  "per_quantity": {}
+ },
+ "grid_of_record": [
+  120,
+  40
+ ],
+ "grids": [
+  [
+   120,
+   40
+  ]
+ ],
+ "is_grid_of_record": false,
+ "per_grid": [
+  {
+   "all_graded_pass": false,
+   "all_pass": false,
+   "dx": 0.025,
+   "grid": [
+    120,
+    40
+   ],
+   "items": [
+    {
+     "got": 10.221757397776765,
+     "pass": true,
+     "quantity": "p2/p1",
+     "reference": 10.333333333333334,
+     "rel_error": -0.010797671182893764,
+     "tolerance": 0.08
+    },
+    {
+     "got": 3.727063477063343,
+     "pass": true,
+     "quantity": "rho2/rho1",
+     "reference": 3.857142857142857,
+     "rel_error": -0.03372428372431857,
+     "tolerance": 0.08
+    },
+    {
+     "got": 0.22193781261409287,
+     "pass": false,
+     "quantity": "u2/u1",
+     "reference": 0.25925925925925924,
+     "rel_error": -0.1439541513456417,
+     "tolerance": 0.08
+    },
+    {
+     "got": 0.4020436121188107,
+     "pass": false,
+     "quantity": "M2",
+     "reference": 0.47519096331149147,
+     "rel_error": -0.153932538369279,
+     "tolerance": 0.08
+    },
+    {
+     "got": 11.726282185627017,
+     "pass": true,
+     "quantity": "p_stag/p1",
+     "reference": 12.060964701266625,
+     "rel_error": -0.02774923266332585,
+     "tolerance": 0.08
+    },
+    {
+     "got": 4.20062538580221,
+     "pass": true,
+     "quantity": "rho_stag/rho1",
+     "reference": 4.307487393309508,
+     "rel_error": -0.024808431865239622,
+     "tolerance": 0.08
+    },
+    {
+     "got": 0.000455830428353179,
+     "pass": false,
+     "quantity": "mass_budget_drift",
+     "reference": 0.0,
+     "rel_error": 0.000455830428353179,
+     "tolerance": 1e-06
+    },
+    {
+     "got": -0.0001255720191202319,
+     "pass": true,
+     "quantity": "energy_budget_drift",
+     "reference": 0.0,
+     "rel_error": -0.0001255720191202319,
+     "tolerance": 0.01
+    }
+   ],
+   "nsteps": 2829,
+   "positivity_fixes": 2,
+   "shock_sampling": {
+    "n_cells_behind": 1,
+    "sensitivity": {
+     "0.5x": {
+      "err_mach2": -0.153932538369279,
+      "err_p_ratio": -0.010797671182893764,
+      "err_rho_ratio": -0.03372428372431857,
+      "err_u_ratio": -0.1439541513456417,
+      "mach2": 0.4020436121188107,
+      "n_cells_behind": 1,
+      "p_ratio": 10.221757397776765,
+      "rho_ratio": 3.727063477063343,
+      "u_ratio": 0.22193781261409287,
+      "window": 0.01
+     },
+     "1x": {
+      "err_mach2": -0.153932538369279,
+      "err_p_ratio": -0.010797671182893764,
+      "err_rho_ratio": -0.03372428372431857,
+      "err_u_ratio": -0.1439541513456417,
+      "mach2": 0.4020436121188107,
+      "n_cells_behind": 1,
+      "p_ratio": 10.221757397776765,
+      "rho_ratio": 3.727063477063343,
+      "u_ratio": 0.22193781261409287,
+      "window": 0.02
+     },
+     "2x": {
+      "err_mach2": -0.153932538369279,
+      "err_p_ratio": -0.010797671182893764,
+      "err_rho_ratio": -0.03372428372431857,
+      "err_u_ratio": -0.1439541513456417,
+      "mach2": 0.4020436121188107,
+      "n_cells_behind": 1,
+      "p_ratio": 10.221757397776765,
+      "rho_ratio": 3.727063477063343,
+      "u_ratio": 0.22193781261409287,
+      "window": 0.04
+     }
+    },
+    "standoff": 0.2908806301038237,
+    "window": 0.02,
+    "x_shock": 0.3091193698961763,
+    "y": 0.1
+   },
+   "t_end": 4.0,
+   "wall_seconds": 166.82710123062134
+  }
+ ],
+ "record": {
+  "all_graded_pass": false,
+  "all_pass": false,
+  "dx": 0.025,
+  "grid": [
+   120,
+   40
+  ],
+  "items": [
+   {
+    "got": 10.221757397776765,
+    "pass": true,
+    "quantity": "p2/p1",
+    "reference": 10.333333333333334,
+    "rel_error": -0.010797671182893764,
+    "tolerance": 0.08
+   },
+   {
+    "got": 3.727063477063343,
+    "pass": true,
+    "quantity": "rho2/rho1",
+    "reference": 3.857142857142857,
+    "rel_error": -0.03372428372431857,
+    "tolerance": 0.08
+   },
+   {
+    "got": 0.22193781261409287,
+    "pass": false,
+    "quantity": "u2/u1",
+    "reference": 0.25925925925925924,
+    "rel_error": -0.1439541513456417,
+    "tolerance": 0.08
+   },
+   {
+    "got": 0.4020436121188107,
+    "pass": false,
+    "quantity": "M2",
+    "reference": 0.47519096331149147,
+    "rel_error": -0.153932538369279,
+    "tolerance": 0.08
+   },
+   {
+    "got": 11.726282185627017,
+    "pass": true,
+    "quantity": "p_stag/p1",
+    "reference": 12.060964701266625,
+    "rel_error": -0.02774923266332585,
+    "tolerance": 0.08
+   },
+   {
+    "got": 4.20062538580221,
+    "pass": true,
+    "quantity": "rho_stag/rho1",
+    "reference": 4.307487393309508,
+    "rel_error": -0.024808431865239622,
+    "tolerance": 0.08
+   },
+   {
+    "got": 0.000455830428353179,
+    "pass": false,
+    "quantity": "mass_budget_drift",
+    "reference": 0.0,
+    "rel_error": 0.000455830428353179,
+    "tolerance": 1e-06
+   },
+   {
+    "got": -0.0001255720191202319,
+    "pass": true,
+    "quantity": "energy_budget_drift",
+    "reference": 0.0,
+    "rel_error": -0.0001255720191202319,
+    "tolerance": 0.01
+   }
+  ],
+  "nsteps": 2829,
+  "positivity_fixes": 2,
+  "shock_sampling": {
+   "n_cells_behind": 1,
+   "sensitivity": {
+    "0.5x": {
+     "err_mach2": -0.153932538369279,
+     "err_p_ratio": -0.010797671182893764,
+     "err_rho_ratio": -0.03372428372431857,
+     "err_u_ratio": -0.1439541513456417,
+     "mach2": 0.4020436121188107,
+     "n_cells_behind": 1,
+     "p_ratio": 10.221757397776765,
+     "rho_ratio": 3.727063477063343,
+     "u_ratio": 0.22193781261409287,
+     "window": 0.01
+    },
+    "1x": {
+     "err_mach2": -0.153932538369279,
+     "err_p_ratio": -0.010797671182893764,
+     "err_rho_ratio": -0.03372428372431857,
+     "err_u_ratio": -0.1439541513456417,
+     "mach2": 0.4020436121188107,
+     "n_cells_behind": 1,
+     "p_ratio": 10.221757397776765,
+     "rho_ratio": 3.727063477063343,
+     "u_ratio": 0.22193781261409287,
+     "window": 0.02
+    },
+    "2x": {
+     "err_mach2": -0.153932538369279,
+     "err_p_ratio": -0.010797671182893764,
+     "err_rho_ratio": -0.03372428372431857,
+     "err_u_ratio": -0.1439541513456417,
+     "mach2": 0.4020436121188107,
+     "n_cells_behind": 1,
+     "p_ratio": 10.221757397776765,
+     "rho_ratio": 3.727063477063343,
+     "u_ratio": 0.22193781261409287,
+     "window": 0.04
+    }
+   },
+   "standoff": 0.2908806301038237,
+   "window": 0.02,
+   "x_shock": 0.3091193698961763,
+   "y": 0.1
+  },
+  "t_end": 4.0,
+  "wall_seconds": 166.82710123062134
+ },
+ "tolerance": 0.08
+}

@@ -1,0 +1,61 @@
+{
+ "rerun_grid": [
+  120,
+  40
+ ],
+ "nsteps": 2829,
+ "positivity_fixes": 2,
+ "pass_count": 5,
+ "items_total": 8,
+ "items": {
+  "p2/p1": {
+   "delivered_got": 10.467838832604375,
+   "rerun_got": 10.221757397776765,
+   "rerun_rel_error": -0.010797671182893764,
+   "pass": true
+  },
+  "rho2/rho1": {
+   "delivered_got": 3.8075117103644964,
+   "rerun_got": 3.727063477063343,
+   "rerun_rel_error": -0.03372428372431857,
+   "pass": true
+  },
+  "u2/u1": {
+   "delivered_got": 0.2293746612390499,
+   "rerun_got": 0.22193781261409287,
+   "rerun_rel_error": -0.1439541513456417,
+   "pass": false
+  },
+  "M2": {
+   "delivered_got": 0.4150102327295989,
+   "rerun_got": 0.4020436121188107,
+   "rerun_rel_error": -0.153932538369279,
+   "pass": false
+  },
+  "p_stag/p1": {
+   "delivered_got": 11.72407025081728,
+   "rerun_got": 11.726282185627017,
+   "rerun_rel_error": -0.02774923266332585,
+   "pass": true
+  },
+  "rho_stag/rho1": {
+   "delivered_got": 4.199114324635957,
+   "rerun_got": 4.20062538580221,
+   "rerun_rel_error": -0.024808431865239622,
+   "pass": true
+  },
+  "mass_budget_drift": {
+   "delivered_got": -5.035025054989373e-16,
+   "rerun_got": 0.000455830428353179,
+   "rerun_rel_error": 0.000455830428353179,
+   "pass": false
+  },
+  "energy_budget_drift": {
+   "delivered_got": 0.002858265095226436,
+   "rerun_got": -0.0001255720191202319,
+   "rerun_rel_error": -0.0001255720191202319,
+   "pass": true
+  }
+ },
+ "note": "independent 16-thread re-run of the same 120x40 configuration by the audit (docs/audit-m15648/repro_run)"
+}
