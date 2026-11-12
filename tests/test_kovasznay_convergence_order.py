@@ -11,11 +11,13 @@ The analytic solution satisfies div(u)=0 and (u·∇)u + ∇p − μΔu = 0 exac
 with no body force, making it an ideal manufactured-solution benchmark for
 Navier–Stokes solver verification.
 
-This test uses coarse grids (n=8,16,32) for CI-speed execution and pins the
-observed order so that a future regression cannot silently lose accuracy.
-The full 32/64/128 convergence study is delegated to the verification script
-``scripts/verify_native_kovasznay.py``.
+Coarse-grid tests (4/8/16) run in CI; the full 32/64/128 study is executed
+on the HPC cluster via ``scripts/run_kovasznay_32_64_128.py`` and its results
+are consumed by ``test_kovasznay_full_convergence_order_from_cluster``.
 """
+
+import json
+import pathlib
 
 import numpy as np
 import pytest
@@ -62,7 +64,7 @@ def test_kovasznay_second_order_convergence_on_coarse_grids():
 
     On coarse grids (4/8/16), the asymptotic regime is not fully reached,
     so we require order > 1.5 as a conservative CI gate.  The full
-    32/64/128 study (order >= 1.8) is in the verification script.
+    32/64/128 study (order >= 1.8) is validated separately.
     """
     errors = []
     for n in COARSE_NS:
@@ -104,9 +106,7 @@ def test_kovasznay_pressure_error_decreases_with_refinement():
 def test_kovasznay_32_grid_meets_3_percent_threshold():
     """At n=32, both velocity and pressure errors must be < 3%.
 
-    This is the acceptance threshold from the feature_ledger for
-    CASE-FVM-KOVASZNAY-ORDER.  Marked slow because n=32 takes >60s
-    under load.
+    Marked slow because n=32 takes >60s under load.
     """
     mesh, solver, exact = kovasznay_solver(
         32, 40., symmetry_extrusion=True, convection_order=2)
@@ -158,3 +158,78 @@ def test_kovasznay_analytic_solution_satisfies_ns_equations():
     conv = np.einsum('cij,cj->ci', grad_u, f['velocity'])
     residual = conv + grad_p - lap_u / re
     assert np.max(np.abs(residual)) < 1e-5, f'Momentum residual max: {np.max(np.abs(residual))}'
+
+
+# --------------------------------------------------------------------------- #
+# Full 32/64/128 convergence order test (reads cluster artifacts)
+# --------------------------------------------------------------------------- #
+
+CLUSTER_RUN_DIR = pathlib.Path(__file__).parents[1] / 'runs' / 'kovasznay-32-64-128'
+
+
+def _load_cluster_results():
+    """Load cases.json from each grid directory."""
+    results = []
+    for n in (32, 64, 128):
+        cases_file = CLUSTER_RUN_DIR / f'n{n}' / 'cases.json'
+        if not cases_file.exists():
+            return None
+        with open(cases_file) as f:
+            cases = json.load(f)
+        results.append(cases[0])
+    return sorted(results, key=lambda r: r['n'])
+
+
+def _least_squares_slope(rows, quantity):
+    """Compute log-log slope via least squares."""
+    if len(rows) < 2:
+        return None
+    x = np.log([row['h'] for row in rows])
+    y = np.log([row[quantity] for row in rows])
+    slope, _ = np.polyfit(x, y, 1)
+    return float(slope)
+
+
+@pytest.mark.slow
+def test_kovasznay_full_convergence_order_from_cluster():
+    """CASE-FVM-KOVASZNAY-ORDER acceptance gate.
+
+    Reads the 32/64/128 cluster run results and verifies:
+    1. All three grids converged numerically
+    2. Velocity L2 log-log slope >= 1.8 (nominal second order)
+    3. Pressure L2 log-log slope >= 1.5 (pressure converges slower)
+
+    This is the definitive acceptance test for the feature_ledger entry.
+    """
+    results = _load_cluster_results()
+    if results is None:
+        pytest.skip(
+            f'Cluster run artifacts not found at {CLUSTER_RUN_DIR}; '
+            'run scripts/run_kovasznay_32_64_128.py first')
+
+    # Check all grids converged
+    for r in results:
+        assert r['numerically_converged'], (
+            f"n={r['n']} did not converge: {r['final_residuals']}")
+
+    # Velocity convergence order
+    vel_slope = _least_squares_slope(results, 'velocity_l2')
+    assert vel_slope is not None
+    assert abs(vel_slope) >= 1.8, (
+        f'Velocity L2 log-log slope = {abs(vel_slope):.3f}, '
+        f'required >= 1.8; errors={[r["velocity_l2"] for r in results]}')
+
+    # Pressure convergence order (more lenient threshold)
+    pres_slope = _least_squares_slope(results, 'pressure_l2')
+    assert pres_slope is not None
+    assert abs(pres_slope) >= 1.5, (
+        f'Pressure L2 log-log slope = {abs(pres_slope):.3f}, '
+        f'required >= 1.5; errors={[r["pressure_l2"] for r in results]}')
+
+    # Report the results for visibility
+    print(f'\nKovasznay 32/64/128 convergence order:')
+    for r in results:
+        print(f"  n={r['n']}: vel_L2={r['velocity_l2']:.6e}, "
+              f"pres_L2={r['pressure_l2']:.6e}")
+    print(f'  Velocity slope: {abs(vel_slope):.3f} (threshold: 1.8)')
+    print(f'  Pressure slope: {abs(pres_slope):.3f} (threshold: 1.5)')
