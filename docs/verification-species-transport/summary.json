@@ -1,0 +1,374 @@
+{
+  "C0_pure_diffusion_max_err": 1.5543122344752192e-15,
+  "C1": {
+    "errs": [
+      0.00011776430386983838,
+      1.1067966310757127e-05,
+      2.767284764504385e-06
+    ],
+    "order": [
+      3.4114402400542705,
+      1.999847142015163
+    ],
+    "profile": [
+      {
+        "dt": 0.00128,
+        "dx": 0.00025298221281347036,
+        "max_err": 0.00011776430386983838,
+        "n": 100,
+        "steps": 781
+      },
+      {
+        "dt": 0.00032,
+        "dx": 0.00012649110640673518,
+        "max_err": 1.1067966310757127e-05,
+        "n": 200,
+        "steps": 3125
+      },
+      {
+        "dt": 8e-05,
+        "dx": 6.324555320336759e-05,
+        "max_err": 2.767284764504385e-06,
+        "n": 400,
+        "steps": 12500
+      }
+    ]
+  },
+  "C2": {
+    "D": 0.0001,
+    "L": 0.1,
+    "Pe": 10.0,
+    "cells": [
+      {
+        "order": 2.0002852296526137,
+        "rel_l2_finest": 0.00010735499939796028,
+        "scheme": "central"
+      },
+      {
+        "order": 0.9810526490228498,
+        "rel_l2_finest": 0.008709615763422017,
+        "scheme": "upwind"
+      }
+    ],
+    "central": {
+      "order": [
+        2.0045572139163848,
+        2.001140595665721,
+        2.0002852296526137
+      ],
+      "rel_l2": [
+        0.006899272873547525,
+        0.001719378424329666,
+        0.0004295049049505801,
+        0.00010735499939796028
+      ]
+    },
+    "u": 0.01,
+    "upwind": {
+      "order": [
+        0.9319043856057533,
+        0.9634504866835812,
+        0.9810526490228498
+      ],
+      "rel_l2": [
+        0.0639563896268597,
+        0.03352376336638063,
+        0.017191955194001643,
+        0.008709615763422017
+      ]
+    }
+  },
+  "C3": {
+    "D": 1e-05,
+    "delta": 0.00447213595499958,
+    "order": [
+      1.8736310726278365,
+      1.9324636761605625
+    ],
+    "profile": [
+      {
+        "max_err": 0.0008333333275971633,
+        "n": 200,
+        "rel_l2": 0.0008273746425708619
+      },
+      {
+        "max_err": 0.00022727272620381989,
+        "n": 400,
+        "rel_l2": 0.0002257787440345791
+      },
+      {
+        "max_err": 5.952380930485113e-05,
+        "n": 800,
+        "rel_l2": 5.914983272073083e-05
+      }
+    ],
+    "rel_err": [
+      0.0008273746425708619,
+      0.0002257787440345791,
+      5.914983272073083e-05
+    ],
+    "strain": 1.0
+  },
+  "C3_trap": {
+    "flip_sign": {
+      "field_range": [
+        -23937779.23532622,
+        23937768.962471634
+      ],
+      "max_err": 23937779.394922756,
+      "rel_l2": 15479608.450667396
+    },
+    "flip_sign_rel_l2": 15479608.450667396,
+    "n": 400,
+    "omit": {
+      "field_range": [
+        0.048666781992492504,
+        249525153.2044507
+      ],
+      "max_err": 249525152.69814312,
+      "rel_l2": 138428104.19511265
+    },
+    "rel_l2": 138428104.19511265
+  },
+  "C4": {
+    "rel_err": 3.5201523982066626e-06,
+    "x_f_closed": -0.005054985532466985,
+    "x_f_exact_field": -0.005055136988823923,
+    "x_f_numeric": -0.00505500332678643
+  },
+  "C5": {
+    "T_at_zst": 2588.6761956993396,
+    "Y_F_at_zst": 0.0,
+    "Y_O_at_zst": 0.0,
+    "Z_st": 0.05496289493354024,
+    "enthalpy_mismatch": 6.984919309616089e-10,
+    "second_difference": 2.220446049250313e-16,
+    "sum_Y_max_dev": 2.220446049250313e-16
+  },
+  "C6": {
+    "Z_st_bilger": 0.05496289493354024,
+    "Z_st_coupling": 0.05496289493354025,
+    "Z_st_literature": 0.055,
+    "beta_fuel": 0.2493299258243471,
+    "beta_ox": -0.014500906306644166,
+    "beta_stoichiometric": 1.734723475976807e-18,
+    "rel_bilger_vs_coupling": 1.2624687823116968e-16,
+    "rel_vs_literature": 0.0006746375719955803
+  },
+  "C7": {
+    "control_Y_oxidant_ox": 0.23290921795842315,
+    "control_Z_difference": 2.7755575615628914e-17,
+    "control_element_difference": 2.7755575615628914e-17,
+    "max_Z_difference": 5.551115123125783e-17,
+    "max_element_difference": 5.551115123125783e-17
+  },
+  "C8": {
+    "corrected_abs_sum": 0.0,
+    "corrected_sum": 0.0,
+    "uncorrected_sum": 0.1428571428571429
+  },
+  "C9": {
+    "corrected": {
+      "sum_Y_drift": 2.1094237467877974e-15
+    },
+    "dt": 0.00024801587301587306,
+    "dx": 0.0004166666666666667,
+    "species_mass_rel_drift": {
+      "A": 4.2294210463765227e-16,
+      "B": 2.1147105230337198e-16,
+      "C": 7.40148683007712e-16
+    },
+    "steps": 400,
+    "uncorrected": {
+      "sum_Y_drift": 0.07124232402334185
+    },
+    "worst_species_mass_rel_drift": 7.40148683007712e-16
+  },
+  "all_pass": true,
+  "catalog_gap": "docs/verification-catalog.md 10.1 gap 4 (combustion)",
+  "criteria": {
+    "C0_pure_diffusion": {
+      "gate": 1e-12,
+      "mode": "max",
+      "note": "max |Y - linear|, Dirichlet ghost algebra",
+      "pass": true,
+      "value": 1.5543122344752192e-15
+    },
+    "C1_erfc_error": {
+      "gate": 0.005,
+      "mode": "max",
+      "note": "max |Y - erfc| at t=1 s, D=1e-5, n=400",
+      "pass": true,
+      "value": 2.767284764504385e-06
+    },
+    "C1_erfc_order": {
+      "gate": 1.8,
+      "mode": "min",
+      "note": "observed spatial order, 400 vs 200 cells",
+      "pass": true,
+      "value": 1.999847142015163
+    },
+    "C2_central_error": {
+      "gate": 0.005,
+      "mode": "max",
+      "note": "rel-L2 vs exponential solution, Pe=10, n=400",
+      "pass": true,
+      "value": 0.00010735499939796028
+    },
+    "C2_central_order": {
+      "gate": 1.8,
+      "mode": "min",
+      "note": "central scheme observed order",
+      "pass": true,
+      "value": 2.0002852296526137
+    },
+    "C2_upwind_error": {
+      "gate": 0.03,
+      "mode": "max",
+      "note": "upwind rel-L2 at n=400 (documented 1st-order error)",
+      "pass": true,
+      "value": 0.008709615763422017
+    },
+    "C2_upwind_order": {
+      "gate": 0.85,
+      "mode": "min",
+      "note": "upwind is 1st order by construction",
+      "pass": true,
+      "value": 0.9810526490228498
+    },
+    "C3_layer_error": {
+      "gate": 0.005,
+      "mode": "max",
+      "note": "rel-L2 of Z vs erf similarity solution, n=800",
+      "pass": true,
+      "value": 5.914983272073083e-05
+    },
+    "C3_layer_order": {
+      "gate": 1.8,
+      "mode": "min",
+      "note": "observed order, 800 vs 400 cells",
+      "pass": true,
+      "value": 1.9324636761605625
+    },
+    "C3_trap_confirmed": {
+      "gate": 0.2,
+      "mode": "min",
+      "note": "counter-example: 1-D conservative form without the transverse term is wrong by more than 20% (the trap is real, not hypothetical)",
+      "pass": true,
+      "value": 138428104.19511265
+    },
+    "C4_standoff": {
+      "gate": 0.01,
+      "mode": "max",
+      "note": "|x_f - sqrt(2D/a) erfinv(2 Z_st - 1)| / x_f",
+      "pass": true,
+      "value": 3.5201523982066626e-06
+    },
+    "C5_enthalpy_closure": {
+      "gate": 1e-06,
+      "mode": "max",
+      "note": "max |sum_k Y_k h_f,k + cp (T - T0) - h(Z)| [J/kg]: temperature is consistent with the conserved enthalpy, not fitted",
+      "pass": true,
+      "value": 6.984919309616089e-10
+    },
+    "C5_piecewise_linear": {
+      "gate": 1e-10,
+      "mode": "max",
+      "note": "max |second difference of Y_k(Z)| each side of Z_st",
+      "pass": true,
+      "value": 2.220446049250313e-16
+    },
+    "C5_sheet_at_Zst": {
+      "gate": 1e-15,
+      "mode": "max",
+      "note": "both reactants vanish exactly at Z = Z_st",
+      "pass": true,
+      "value": 0.0
+    },
+    "C5_sum_Y": {
+      "gate": 1e-14,
+      "mode": "max",
+      "note": "max |sum_k Y_k - 1| over Z in [0, 1]",
+      "pass": true,
+      "value": 2.220446049250313e-16
+    },
+    "C6_Zst_literature": {
+      "gate": 0.01,
+      "mode": "max",
+      "note": "|Z_st - 0.055| / 0.055 (external anchor)",
+      "pass": true,
+      "value": 0.0006746375719955803
+    },
+    "C6_Zst_two_routes": {
+      "gate": 0.01,
+      "mode": "max",
+      "note": "Bilger element route vs coupling-function route to Z_st",
+      "pass": true,
+      "value": 1.2624687823116968e-16
+    },
+    "C6_beta_at_stoich": {
+      "gate": 1e-12,
+      "mode": "max",
+      "note": "Bilger beta of the stoichiometric mixture (exact zero by construction)",
+      "pass": true,
+      "value": 1.734723475976807e-18
+    },
+    "C7_element_conservation": {
+      "gate": 1e-12,
+      "mode": "max",
+      "note": "max |Z_e(fresh) - Z_e(burnt)| for C, H, O",
+      "pass": true,
+      "value": 5.551115123125783e-17
+    },
+    "C7_reaction_invariance": {
+      "gate": 1e-12,
+      "mode": "max",
+      "note": "max |Z(fresh) - Z(burnt)|: Z is a conserved scalar",
+      "pass": true,
+      "value": 5.551115123125783e-17
+    },
+    "C8_flux_zero_sum": {
+      "gate": 1e-14,
+      "mode": "max",
+      "note": "|sum_k j_k| / sum_k |j_k| with unequal D_k, corrected",
+      "pass": true,
+      "value": 0.0
+    },
+    "C8_uncorrected_drift": {
+      "gate": 0.001,
+      "mode": "min",
+      "note": "same, uncorrected -- the number that justifies the correction",
+      "pass": true,
+      "value": 0.1428571428571429
+    },
+    "C9_species_mass_closed": {
+      "gate": 1e-12,
+      "mode": "max",
+      "note": "relative species-mass drift on a closed (zero-gradient) domain",
+      "pass": true,
+      "value": 7.40148683007712e-16
+    },
+    "C9_sum_Y_transport": {
+      "gate": 1e-12,
+      "mode": "max",
+      "note": "max |sum_k Y_k - 1| after 400 explicit steps, unequal D_k",
+      "pass": true,
+      "value": 2.1094237467877974e-15
+    }
+  },
+  "driver": "src/tensorfvm/verification/species_transport.py",
+  "elapsed_s": 1.55194091796875,
+  "module": "src/tensorfvm/species.py",
+  "stoichiometry": {
+    "Y_oxidant_ox": 0.232,
+    "Z_st": 0.05496289493354024,
+    "fuel": "CH4",
+    "oxidant": "O2",
+    "s_mass_O2_per_fuel": 3.989029483263729
+  },
+  "study": "species transport / mixture fraction / Burke-Schumann",
+  "withheld": {
+    "adiabatic_flame_temperature_vs_literature": "constant-cp Burke-Schumann gives T_ad = 2588.7 K; the literature CH4/air value 2226 K additionally needs dissociation and a temperature-dependent cp -> no external judgment.",
+    "laminar_flame_speed_vs_cantera": "GAP-FVM-COMBUSTION-SPECIES outer acceptance needs a Cantera reference; Cantera is not installable here and finite-rate chemistry is not implemented -> WITHHELD, not passed."
+  }
+}
