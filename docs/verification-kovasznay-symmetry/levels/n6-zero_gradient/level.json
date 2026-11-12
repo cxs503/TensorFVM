@@ -1,0 +1,66 @@
+{
+  "n": 6,
+  "closure": "zero_gradient",
+  "Reynolds": 40.0,
+  "convection_order": 2,
+  "divisions": [
+    6,
+    6,
+    1
+  ],
+  "cells": 36,
+  "faces": 312,
+  "seconds": 2.029301131144166,
+  "numerically_converged": true,
+  "boundary_velocity_error": 0.0,
+  "divergence_max": 1.6336405297422492e-13,
+  "momentum_residual": 2.0021939636074095e-09,
+  "outer_iterations": 30,
+  "pressure_l2": 0.33038624753444895,
+  "velocity_l2": 0.05513178815574019,
+  "inplane_l2": 0.05513178815574019,
+  "spanwise_l2": 3.973375196357748e-17,
+  "quadrature_closure": 0.0,
+  "max_abs_spanwise": 1.747024714235865e-16,
+  "drive": {
+    "faces_interior": 120,
+    "residual_max": 4.0463097931937474e-19,
+    "blocks": {
+      "cell_u": {
+        "advection": 0.0,
+        "viscous": 0.0
+      },
+      "cell_v": {
+        "advection": 0.0,
+        "viscous": 0.0
+      },
+      "cell_w": {
+        "advection": 0.0,
+        "viscous": 0.0
+      },
+      "face_u": {
+        "advection": 0.0,
+        "viscous": 4.0463097931937474e-19
+      },
+      "face_v": {
+        "advection": 0.0,
+        "viscous": 1.9499173432312392e-20
+      },
+      "face_w": {
+        "advection": 0.0,
+        "viscous": 0.0
+      }
+    },
+    "convection_source": 0.0,
+    "pressure": 0.0,
+    "viscous_cross": 4.0463097931937474e-19,
+    "viscous_spanwise": 0.0,
+    "advection_total": 0.0
+  },
+  "analytic_defect": 1.067660790267168e-18,
+  "plane_shear": {
+    "max_abs_plane_shear": 0.0,
+    "dimensionless": 0.0,
+    "max_abs_plane_offset": 0.0
+  }
+}
