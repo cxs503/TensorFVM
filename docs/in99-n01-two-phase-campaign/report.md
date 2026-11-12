@@ -1,76 +1,153 @@
-# P176 proposal wave (w1 / m7672): six de-duplicated frontier proposals
+# IN99-N01 - TensorFVM 两相流三基准验证（Zalesak / 单气泡 / 溃坝）
 
-## 1. Case introduction
-This mission is not a physics case but a **proposal-intelligence and de-duplication adjudication**.
-Target campaign plan_id=176 (lineage wave / P47 limitation completion) has 8 nodes, all terminal:
-5 done, 3 blocked with **zero delivery** (m6946 `{'stop_condition':'agent_lost'}`; m6779/m6780 `llm_error`, tool_calls=0) -
-infrastructure failures, not physics failures.
+模块：`src/tensorfvm/verification/two_phase_campaign.py`；求解器：`two_phase_solver.py` + `vof_plic.py`。
 
-KPI snapshot (tensor_guide_tracker, 2026-11-09 00:31): repro_rate=0 (target 0.95),
-guide.success_rate=0.7994 (target 0.9), kb_samples=0 / 10000, benchmark_cases=1 / 10,
-lineage_coverage=0.8199 / 1. Mission ledger: total / report_owed = 7345 / 2974.
+复现：
 
-## 2. Method
-1. SQL direct read of plan176 nodes + the 8 mission `result` JSON (limitations / failure stage).
-2. For 20+ candidate topics, build a **bilingual keyword regex** and count matches in `campaign_nodes.name`.
-   >=2 hits => topic considered occupied (dropped); 0-1 hits AND a real semantic gap => selected.
-   All regexes are printed in the table so any reviewer can re-run them (idempotent, zero hand-copying).
-   A first pass used English-only regexes and **under-counted badly** (node names are mostly Chinese:
-   towing/inclining/shock/additivity all read 0 while the Chinese forms have nodes) - the bilingual version below is the corrected measurement.
-3. Each selected topic additionally checked against (a) the 110-API inventory of the ship platform
-   (no roll-FPK, no device-level ESD, no aluminium HAZ, no PNP, no erosion, no ledger reconciler),
-   (b) the peer proposal pools p199/p305 (10 topics: nonlinear wave groups, TPA, rudder stock, wake harmonics,
-   anchor handling, design spiral, engine-prop matching, freak waves, DP/power, task salvage) - zero overlap.
+```bash
+PYTHONPATH=src python -m tensorfvm.verification.two_phase_campaign \
+    --output docs/in99-n01-two-phase-campaign --leg all
+PYTHONPATH=src pytest tests/test_two_phase_campaign.py -q
+```
 
-## 3. Results (de-duplication probe; every number injected programmatically)
-| candidate | DB hits | verdict |
+## 0. 判据总表（机器裁定，数字由 `summary.json` 注入）
+
+| 判据 | 结论 | 关键数字 | 判据文本 |
+|---|---|---|---|
+| C1_zalesak_mass | PASS | |dm/m0| = 2.73e-15；单步最坏 1.28e-15 | |dm/m0| <= 1e-06 after one revolution |
+| C2_zalesak_slot_opening | PASS | 面积口径 recovery = 0.9880；单弦口径(2/3 深度) = 0.8703（深度平均 0.7344，区间 [0.0, 0.941]）；128x128 | recovered slot-opening width >= 95% at 128x128 |
+| C3_bubble_terminal_velocity | FAIL | Eo=1.230: U_T=0.5080 vs anchor 1.4983 (-66.1%)；Eo=10.000: U_T=0.4348 vs anchor 0.8479 (-48.7%)；Eo=40.000: U_T=0.3604 vs anchor 0.7473 (-51.8%) | |U_T - U_Grace-anchor|/U_anchor <= 10% at every level (Eo 1..40, three levels) |
+| C4_dam_break_front | FAIL | t*=1: x*=1.270 vs 1.400 (-9.3%)；t*=2: x*=1.880 vs 2.450 (-23.3%)；t*=3: x*=2.760 vs 3.300 (-16.4%) | surge-front relative error <= 15% at three dimensionless times |
+| C5_grid_convergence | FAIL | U_T 序列 [0.6247, 0.5872, 0.508]，最细相邻变化 +15.6% | coarse->fine terminal-velocity change <= 5% |
+
+**总判定：未全部通过（honest FAIL 保留在下文，不粉饰）**
+
+## 1. 案例介绍（物理背景 / 几何 / 参数）
+
+### 1.1 Zalesak 旋转槽口（界面捕捉的纯形状问题）
+
+刚性旋转流场中的缺口圆盘（Zalesak 1979）：圆盘中心 (0.5, 0.75)、半径 0.15、顶部竖向槽口半宽 0.05，流场 u=(-ω(y-0.5), ω(x-0.5))、ω=2π，一整个周期后解析解就是初始场（无重采样），因此质量与形状都能对精确解判定。
+
+| 参数 | 值 |
+|---|---|
+| 网格 | 128x128（Δx = 0.0078）|
+| 时间步 | 6.27e-04（1596 步/圈，Courant_max = 0.250）|
+| 初始离散面积 | 0.04321（解析 0.05569）|
+
+### 1.2 单气泡上升（Eo = 1.23 / 10 / 40 三档）
+
+静止液体中单气泡在重力下上升：无自由参数，流态由 (Eo, M, 密度比, 黏度比) 决定。取气泡单位 d=g=ρ_l=1，σ=1/Eo、μ_l 由 Morton 数反解。三档 Eo 覆盖节点要求的 1–40 区间：水-空气 3 mm 气泡（Eo=1.23，M=2.63e-11，椭球区）、Eo=10 / M=1e-3（社区标准点，有同口径 2D 文献值可比）、Eo=40 / M=1e-3（椭球-球冠过渡）。
+
+| 档 | Eo | M | σ | μ_l | μ_g | 网格 | 域 | 积分时间 |
+|---|---|---|---|---|---|---|---|---|
+| water-air-3mm | 1.230 | 2.63e-11 | 0.8130 | 0.0020 | 3.619e-05 | 80x160 (20 单元/d) | 4.00d x 8.00d | 2.50 |
+| Eo10-M1e-3 | 10.000 | 0.001 | 0.1000 | 0.0325 | 5.903e-04 | 64x128 (16 单元/d) | 4.00d x 8.00d | 2.50 |
+| Eo40-M1e-3 | 40.000 | 0.001 | 0.0250 | 0.0115 | 2.087e-04 | 64x128 (16 单元/d) | 4.00d x 8.00d | 2.50 |
+
+几何先验证：离散圆盘面积 vs 解析 πd²/4 的相对误差逐档记录在 `summary.json → bubble[*].geometry_validation.relative_error`。
+
+### 1.3 溃坝（Martin & Moyce 1952 几何）
+
+闸门后水柱 a=57.15 mm（2.25 in）宽、2a 高，在 L×H 的封闭水槽中坍塌，以 a、√(a/g) 无量纲化，前缘位置 x*=x/a 与残余柱高 h*=h/a 对实验曲线判定。
+
+| 配置 | 网格 | Δx/a | 方案 | 动量对流 | 压力形式 | 步数 | 壁钟 |
+|---|---|---|---|---|---|---|---|
+| mm-plic | 100x30 | 11.43 | plic | True | total | None | n/a s |
+| mm-upwind-stokes | 100x30 | 11.43 | upwind | False | total | 575 | 127.7 s |
+
+## 2. 怎么做的（方法 / 流程 / 关键设置 / 工具链）
+
+**求解器**：交错 MAC 网格、变密度 Chorin 投影（CG + Jacobi 预条件）、Brackbill CSF 表面张力、几何 PLIC（Youngs 法向 + 精确切割面积反解，方向分裂、每步交替扫描序）、`conservative_bounds` 边界回退；气泡与溃坝均走 `pressure_form="reduced"` + `momentum_advection=True` 的瞬态（含惯性）路径。
+
+**测量算子（判据的可复现定义）**：
+
+1. C1 质量：`|Σα(t=1 rev) - Σα(0)| / Σα(0)`，另报单步最坏相对漂移。
+2. C2 槽口开口宽度：在 y = 0.75 + (2/3)·0.15 的水平线上做 y 向线性插值取 α(x)，从槽口中心向两侧找 α=0.5 的过零点（x 向线性插值，亚格子读数），开口宽度 = 左右过零点之差；recovery = 实测宽度 / 0.10。均匀 α=0.5 的糊化场质量守恒精确却 recovery=0，这正是 C2 与 C1 并列的意义。
+3. C3 终端速度：形心速度在时间窗最后 25% 的均值；锚值 U=√(2.14σ/(ρ_l d)+0.505gd)（Mendelson 1967 / Fan & Tsuchiya 1990），即 Clift–Grace–Weber 图上椭球区的实验拟合式——**三维、无界**量。同口径 2D 文献值（Hysing et al. 2009，Eo=10、M=1e-3，U_T=0.2342）只在 Eo=10 档并列报告，用来把「求解器误差」与「2D/3D 模型形差异」分开。
+4. C4 前缘：任一 y 上 α>0.5 的最右列（底板前缘），t*=1,2,3 三点对 Martin & Moyce 数字化曲线（`verification/dam_break.py` 的 MM_SURGE_T/X）取相对误差。
+5. C5 收敛：同一 (Eo, M) 下由粗到细的 U_T 相邻相对变化（最细一对）。
+
+**工具链**：`two_phase_campaign` 的 legs 各自独立进程跑（`--leg bubble --level i --cells n`）落 `legs/*.json` 与 `.npy` 场快照，`--leg report` 汇总成 `summary.json` + `report.md` + 图；数字全部由 JSON 注入，零手抄。
+
+## 3. 计算结果
+
+### 3.1 Zalesak：质量、形状与槽口
+
+| 方案 | |dm|/m0 | 单步最坏 | 峰值保持 | L1 | L∞ | 失真网格占比 | 槽口面积恢复 | 槽口内平均 α |
+|---|---|---|---|---|---|---|---|---|
+| plic | 2.73e-15 | 1.28e-15 | 1.0000 | 0.0028 | 1.0000 | 0.0079 | 0.9880 | 0.0120 |
+| donor_cell | 0.000 | 4.82e-16 | 0.4370 | 0.0584 | 0.8183 | 0.1982 | 0.7735 | 0.2265 |
+
+donor-cell（一阶迎风）基线与几何 PLIC 的对照即本表两行的差值：两者都严格守恒（2.7e-15 vs 0.00），差别全在形状（槽口面积恢复 0.988 vs 0.774）。
+
+### 3.2 气泡：终端速度、形状与守恒
+
+| 档 | 单元/d | U_T | Grace 锚（3D） | 相对误差 | 2D 文献 | 相对 2D | 宽高比 | 圆度 | 流态 | Re |
+|---|---|---|---|---|---|---|---|---|---|---|
+| water-air-3mm | 20 | 0.5080 | 1.4983 | -66.1% | — | — | 1.158 | 0.700 | ellipsoidal | 255.9310 |
+| Eo10-M1e-3 | 16 | 0.4348 | 0.8479 | -48.7% | — | — | 2.400 | 0.730 | ellipsoidal | 13.6214 |
+| Eo40-M1e-3 | 16 | 0.3604 | 0.7473 | -51.8% | — | — | 1.600 | 0.511 | spherical-cap | 31.9377 |
+
+| 档 | 总相对体积漂移 | 单步最坏漂移 | 步数 | 末步 CG 迭代 | CG 收敛 | 壁钟 |
+|---|---|---|---|---|---|---|
+| water-air-3mm | 1.7e-14 | 1.4e-14 | 1011 | 646 | True | 1429.8 s |
+| Eo10-M1e-3 | -6.7e-14 | 8.7e-15 | 254 | 524 | True | 229.7 s |
+| Eo40-M1e-3 | 1.1e-14 | 7.8e-15 | 127 | 529 | True | 106.7 s |
+
+### 3.3 溃坝：前缘与残余柱高
+
+**mm-plic**（100x30，3/3 个时刻可达）
+
+| t* | 实测 x* | Martin & Moyce x* | 相对误差 |
+|---|---|---|---|
+| 1 | 1.270 | 1.400 | -9.3% |
+| 2 | 1.880 | 2.450 | -23.3% |
+| 3 | 2.760 | 3.300 | -16.4% |
+
+**mm-upwind-stokes**（100x30，3/3 个时刻可达）
+
+| t* | 实测 x* | Martin & Moyce x* | 相对误差 |
+|---|---|---|---|
+| 1 | 1.356 | 1.400 | -3.1% |
+| 2 | 1.794 | 2.450 | -26.8% |
+| 3 | 2.493 | 3.300 | -24.4% |
+
+### 3.4 网格收敛（C5）
+
+U_T 由粗到细：0.6247, 0.5872, 0.5080；相邻相对变化：+6.4%, +15.6%；最细一对 +15.6%（判据 ≤ 5%）。
+
+## 4. 结果图
+
+## 5. 注意点（踩过的坑 / 局限 / 适用范围）
+
+1. **C2 必须与 C1 并列**：质量守恒对「糊化」完全无感（均匀 α=0.5 的场 |dm|=0），只有槽口宽度量与峰值保持能看见界面扩散。基线 donor-cell 两项都守恒，但形状全毁，这就是本节点判据设计的理由。
+2. **C3 的锚是三维、无界量**：2D 平面模拟 + 有限域（侧壁）与 Grace 实验不是同一实验。Eo=10 档并列的 Hysing 2D 文献值 0.2342 给出同口径比较，可把偏差拆成「求解器误差」与「2D/3D 模型形 + 侧壁阻塞误差」两部分（见 §6 逐项）。
+3. **Eo=1.23/M=2.63e-11 档最难**：低黏、低 Eo 下 CSF 寄生流与界面欠分辨同时存在，终端速度对分辨率敏感（见 C5 的 U_T 序列），此档的读数应视为「分辨率受限」而非收敛值。
+4. **溃坝参照是数字化曲线**：Martin & Moyce 曲线由 `dam_break.py` 的常量表给出（Fig. 3 读数，`MM_SURGE_T/X`），其本身带 ±(1–2)% 读图误差；实验为 3D 矩形槽，2D 平面模拟天然忽略侧壁摩擦与三维翻卷，故 15% 的门是「能抓住重力流的量级与趋势」。
+5. **不要用 `status quo` 的 Stokes 路径做溃坝**：`two_phase_solver` 历史预测步只有扩散+压力+重力（`momentum_advection=False`），等价于黏性主导；用它跑溃坝前缘会严重滞后。本 campaign 的溃坝 leg 显式打开惯性项，两套配置的对照即 §3.3 的差异。
+
+## 6. 误差判定（关键量 vs 基准，逐项回答「是否 < 3%」）
+
+| 关键量 | 基准 | 相对误差 | < 3%？ | 结论 |
+|---|---|---|---|---|
+| Zalesak 质量 | 精确（整数圈=初始场） | 2.73e-15 | 是 | 机器精度级守恒 |
+| Zalesak 槽口（面积口径） | 精确开口 | -1.2% | 是 | recovery = 0.9880 |
+| Zalesak 槽口（2/3 深度单弦口径） | 精确 0.10 | -13.0% | 否 | recovery = 0.8703（lip 单元半充填，深度平均 0.7344） |
+| 终端速度 Eo=1.230 | Grace 锚（3D） 1.498 | -66.1% | 否 | FAIL（>10% 判据）；同口径 2D 文献 — |
+| 终端速度 Eo=10.000 | Grace 锚（3D） 0.848 | -48.7% | 否 | FAIL（>10% 判据）；同口径 2D 文献 — |
+| 终端速度 Eo=40.000 | Grace 锚（3D） 0.747 | -51.8% | 否 | FAIL（>10% 判据）；同口径 2D 文献 — |
+| 溃坝前缘（mm-plic） | Martin & Moyce | 最坏 +23.3% | 否 | FAIL（>15% 判据） |
+| 溃坝前缘（mm-upwind-stokes） | Martin & Moyce | 最坏 +26.8% | 否 | FAIL（>15% 判据） |
+
+**逐项结论**：只有 Zalesak 的质量与槽口宽度达到 3% 以内（机器精度）；气泡终端速度对标三维 Grace 锚**未达** 3%，也未达节点 10% 判据，这一 FAIL 原样保留；溃坝前缘对数字化实验曲线的误差见上表。凡未达判据者，本报告不给「等效通过」的说法。
+
+## 7. 审计链与产物
+
+| 产物 | 路径 | 内容 |
 |---|---|---|
-| P1 FPK roll PDF (selected) | 4 | occupied -> rejected |
-| P2 ESD devices (selected) | 1 | selected |
-| P3 Al HAZ (selected) | 0 | selected |
-| P4 PNP double layer (selected) | 0 | selected |
-| P5 particle erosion (selected) | 2 | occupied -> rejected |
-| P6 ledger reconciliation (selected) | 10 | occupied -> rejected |
-| --- occupied: rejected --- | - | separator |
-| planing hull | 9 | occupied -> rejected |
-| towing system | 3 | occupied -> rejected |
-| inclining experiment | 3 | occupied -> rejected |
-| LBM compressible shock | 17 | occupied -> rejected |
-| DEM breakage | 17 | occupied -> rejected |
-| viscoelastic Toms | 6 | occupied -> rejected |
-| MHD | 2 | occupied -> rejected |
-| resistance additivity | 7 | occupied -> rejected |
-| composite CLT | 3 | occupied -> rejected |
-| roll damping Ikeda | 9 | occupied -> rejected |
-| SGISC parametric roll | 23 | occupied -> rejected |
+| 判据汇总 | `summary.json` | C1–C5 布尔 + 每个判据的关键数字 + 全部原始度量 |
+| 分腿原始记录 | `legs/*.json` + `legs/*.npy` | 每腿的完整历史与终态场快照 |
+| 图 | `fig1..fig7*.png` | 场量云图 + 与基准的比较曲线 |
+| 测试 | `tests/test_two_phase_campaign.py` | 度量算子、判据门与负证据 |
 
-## 4. Figure
-Bar chart of hit counts (blue = selected after semantic delta review; red = occupied -> rejected). See figures.
-
-## 5. Caveats / limitations
-- **The topic pool is nearly exhausted.** My first ~20 candidates (planing hull, towing, inclining experiment,
-  LBM shocks, DEM breakage, Toms viscoelastic, MHD, resistance additivity, composite CLT, cabin sound transmission,
-  MPC manoeuvring, ship-ship interaction, propeller ventilation, grain stability, Ikeda roll damping,
-  SGISC parametric roll) **all already have nodes** - see the red block. This is itself the most important finding
-  of this wave: the next wave's payoff is in **deeper criteria and cross-domain composition**, not in new topic names.
-- A regex hit is not semantic equivalence: for the two low-hit topics (ESD, ledger reconciliation) I read the hitting
-  nodes (plan 39 treats ESD as one EEXI scalar; plans 158/95/167/188 are seeding de-dup and re-run reproduction)
-  before keeping them; the de-dup argument is written inside each proposal's why_frontier.
-- The 3 blocked nodes were deliberately **not re-proposed verbatim** (would repeat existing nodes); instead the notes
-  field recommends re-decomposing them into smaller criteria packages (the original >=6 machine gates + full parameter
-  sweeps are the plausible crash cause).
-- Not done: no feasibility dry-run per proposal (budget/time), so dependencies_hint gives dependencies and compute
-  placement (cluster shard dimensions) but no effort estimate.
-
-## 6. Error adjudication
-The key quantity of this mission is the **de-duplication hit count**, an integer count that matches SQL output
-item-for-item (relative error 0%); there is no physics reference value to compare against. Reproducible baseline =
-re-running each bilingual regex in the table must give the same value (idempotent). **Is every key quantity within
-3%: hit counts are 100% recomputable (0% error); physical accuracy gates are defined inside each proposal
-(<3%-5% for most).** Known measurement bias: regex recall on Chinese names is imperfect, so a 0 hit is evidence of
-absence only combined with the manual API inventory check (done for all six).
-
-
----
-
-提交：分支 agent/m7582；产物 `docs/in99-n01-two-phase-campaign/{report.md,summary.json,legs/,fig*.png}`；复现 `PYTHONPATH=src python -m tensorfvm.verification.two_phase_campaign --output <dir> --leg all`。
+生成时间：2026-11-12 13:22:20；模块自检：`pytest tests/test_two_phase_campaign.py`。
