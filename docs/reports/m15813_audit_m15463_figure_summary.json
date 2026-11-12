@@ -1,0 +1,31 @@
+{
+  "production_case": "mesh-ny32",
+  "gate_percent": 2.0,
+  "metrics_percent": {
+    "velocity L2": 0.054288433547890085,
+    "velocity Linf": 0.08732304035631022,
+    "u_max": 0.038312614277340534,
+    "dp/dx (json)": 0.19253038068754494,
+    "dp/dx (audit, momentum)": 0.19253038068756806,
+    "tau_w (2nd order fit)": 0.16621769517944965,
+    "Po = f Re_Dh (json)": 0.16621769517946028,
+    "Po (audit, momentum)": 0.19253038068757594
+  },
+  "all_verified_within_gate": true,
+  "mesh_ny": [
+    8,
+    16,
+    32
+  ],
+  "velocity_l2_percent": [
+    0.810590757469967,
+    0.2150876383793479,
+    0.054288433547890085
+  ],
+  "missing_from_declared_plan": [
+    "re-10"
+  ],
+  "zero_filled_records": [
+    "re-1000"
+  ]
+}
