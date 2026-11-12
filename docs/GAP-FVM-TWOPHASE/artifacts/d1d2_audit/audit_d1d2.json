@@ -1,0 +1,163 @@
+{
+  "case": "dambreak_resolution_audit",
+  "reference": "Martin & Moyce (1952) digitised anchors, t* = t sqrt(g/a), x* = (x_f - a)/a, h* = h/h0",
+  "window_t_star": [
+    0.3,
+    4.0
+  ],
+  "gates": {
+    "D1_front": 0.15,
+    "D2_height": 0.15
+  },
+  "grids": [
+    {
+      "grid": [
+        60,
+        20
+      ],
+      "steps": 82,
+      "D1_front_max_rel_error": 0.8392327285972785,
+      "D2_height_max_rel_error": 0.7984541633255593,
+      "D1_pass": false,
+      "D2_pass": false,
+      "front": {
+        "phase_lag_t_star": 0.8700000000000019,
+        "rms_at_zero_shift": 0.7705244472607923,
+        "rms_at_best_shift": 0.1316006151314885,
+        "max_rel_at_best_shift": 2.852790861095282,
+        "speed_got": 0.985768444834885,
+        "speed_ref": 0.7542706886043224,
+        "speed_ratio": 1.30691601798675,
+        "time_scale_zero_shift": 1.540000000000001,
+        "rms_at_best_scale": 0.2893751919931054,
+        "shift_explained_fraction": 0.8292064377719259,
+        "late_max_rel_error": 0.3927422068589844,
+        "early_max_rel_error": 1.5681557178505765,
+        "verdict": "phase_lag",
+        "reason": "late-window slope 0.986 vs reference 0.754 (ratio 1.307), best time shift +0.87 t*: RMS 0.771 -> 0.132 x* (83 % of the misfit is a pure time shift)"
+      },
+      "height": {
+        "phase_lag_t_star": 0.7700000000000022,
+        "rms_at_zero_shift": 0.16591837701364848,
+        "rms_at_best_shift": 0.06468429777809641,
+        "max_rel_at_best_shift": 0.2935812401624504,
+        "speed_got": -0.16737243457033582,
+        "speed_ref": -0.06868096179854667,
+        "speed_ratio": 2.436955310283344,
+        "time_scale_zero_shift": 1.830000000000001,
+        "rms_at_best_scale": 0.05808787764060871,
+        "shift_explained_fraction": 0.610143861443537,
+        "late_max_rel_error": 0.7984541633255593,
+        "early_max_rel_error": 0.7653004633286727,
+        "verdict": "phase_lag",
+        "reason": "late-window slope -0.167 vs reference -0.069 (ratio 2.437), best time shift +0.77 t*: RMS 0.166 -> 0.065 x* (61 % of the misfit is a pure time shift)"
+      },
+      "resolvable_front": {
+        "quantum": 0.17497812773403326,
+        "floor_at_window_start": 0.37631296277535486,
+        "floor_max": 0.37631296277535486,
+        "violating_fraction": 0.15789473684210525,
+        "samples": 76
+      },
+      "resolvable_height": {
+        "quantum": 0.08748906386701663,
+        "floor_at_window_start": 0.10586675539766716,
+        "floor_max": 0.48605035481675907,
+        "violating_fraction": 0.8421052631578947,
+        "samples": 76
+      },
+      "quantisation": {
+        "height_quantum_rel": 0.08748906386701663,
+        "front_quantum_star": 0.17497812773403326,
+        "height_gate_levels": 1.7144999999999997,
+        "front_gate_levels": 2.1128862393872887,
+        "front_quantum_rel": 0.07099293715098366
+      },
+      "volume_drift": 2.628368902995162e-16,
+      "control_max_abs_change": 0.0
+    },
+    {
+      "grid": [
+        120,
+        40
+      ],
+      "steps": 169,
+      "D1_front_max_rel_error": 0.9882294435916724,
+      "D2_height_max_rel_error": 0.8449810709776245,
+      "D1_pass": false,
+      "D2_pass": false,
+      "front": {
+        "phase_lag_t_star": 0.8200000000000021,
+        "rms_at_zero_shift": 0.7660152388261262,
+        "rms_at_best_shift": 0.11962205955499516,
+        "max_rel_at_best_shift": 5.792118978906906,
+        "speed_got": 0.9899442799868794,
+        "speed_ref": 0.7559102698879643,
+        "speed_ratio": 1.3096055437024317,
+        "time_scale_zero_shift": 1.5300000000000007,
+        "rms_at_best_scale": 0.30078423592363124,
+        "shift_explained_fraction": 0.8438385380709801,
+        "late_max_rel_error": 0.3769567466662039,
+        "early_max_rel_error": 3.5128377510192523,
+        "verdict": "phase_lag",
+        "reason": "late-window slope 0.990 vs reference 0.756 (ratio 1.310), best time shift +0.82 t*: RMS 0.766 -> 0.120 x* (84 % of the misfit is a pure time shift)"
+      },
+      "height": {
+        "phase_lag_t_star": 0.9600000000000022,
+        "rms_at_zero_shift": 0.1941513220827901,
+        "rms_at_best_shift": 0.06480937699012043,
+        "max_rel_at_best_shift": 0.36281628271510347,
+        "speed_got": -0.21710764352171577,
+        "speed_ref": -0.0691151230924378,
+        "speed_ratio": 3.141246572495369,
+        "time_scale_zero_shift": 1.9400000000000013,
+        "rms_at_best_scale": 0.08358296329449551,
+        "shift_explained_fraction": 0.6661914207182973,
+        "late_max_rel_error": 0.8209499503414907,
+        "early_max_rel_error": 0.8449810709776245,
+        "verdict": "phase_lag",
+        "reason": "late-window slope -0.217 vs reference -0.069 (ratio 3.141), best time shift +0.96 t*: RMS 0.194 -> 0.065 x* (67 % of the misfit is a pure time shift)"
+      },
+      "resolvable_front": {
+        "quantum": 0.08748906386701663,
+        "floor_at_window_start": 0.1923666094666612,
+        "floor_max": 0.1923666094666612,
+        "violating_fraction": 0.02564102564102564,
+        "samples": 156
+      },
+      "resolvable_height": {
+        "quantum": 0.043744531933508315,
+        "floor_at_window_start": 0.0526911407394386,
+        "floor_max": 0.24302517740837953,
+        "violating_fraction": 0.46794871794871795,
+        "samples": 156
+      },
+      "quantisation": {
+        "height_quantum_rel": 0.043744531933508315,
+        "front_quantum_star": 0.08748906386701663,
+        "height_gate_levels": 3.4289999999999994,
+        "front_gate_levels": 4.221888716981767,
+        "front_quantum_rel": 0.03552912216673375
+      },
+      "volume_drift": 4.113968717731558e-16,
+      "control_max_abs_change": 0.0
+    }
+  ],
+  "conclusions": {
+    "front_phase_lag_t_star_range": [
+      0.8200000000000021,
+      0.8700000000000019
+    ],
+    "height_phase_lag_t_star_range": [
+      0.7700000000000022,
+      0.9600000000000022
+    ],
+    "front_speed_ratio_range": [
+      1.30691601798675,
+      1.3096055437024317
+    ],
+    "D1_monotone_in_resolution": false,
+    "max_front_resolvable_floor": 0.37631296277535486
+  },
+  "note": "Diagnostic only.  D1/D2 values are copied verbatim from the leg records; the audit decomposes them into time shift, rate ratio and cell-quantisation floor."
+}
