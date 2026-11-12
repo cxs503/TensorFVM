@@ -1,0 +1,21 @@
+{
+  "note": "delivered free-traction closure + exact-Dirichlet control, n=8, same mesh/discretisation; measured in this round, digits coincide with m16524 (4.0092e-02 / 9.0032e-03)",
+  "symmetry": {
+    "n": 8,
+    "inplane_l2": 0.040092,
+    "spanwise_l2": 0.0090032,
+    "max_abs_w": 0.018955
+  },
+  "dirichlet": {
+    "n": 8,
+    "inplane_l2": 0.039458,
+    "spanwise_l2": 5.7157e-18,
+    "max_abs_w": 1.8617e-17
+  },
+  "zero_gradient": {
+    "n": 8,
+    "inplane_l2": 0.040054225228155084,
+    "spanwise_l2": 0.0,
+    "max_abs_w": 0.0
+  }
+}
