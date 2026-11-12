@@ -1,0 +1,79 @@
+{
+  "mission_id": 16261,
+  "audit_mission_id": 16336,
+  "anchor": "CASE-FVM-CHANNEL-KMM180",
+  "repo": "TensorFVM",
+  "scope": "m16261 CASE-FVM-CHANNEL-KMM180",
+  "level": 4,
+  "evidence": {
+    "impl_files": [
+      "src/tensorfvm/verification/kmm1987.py (353 lines, 13330 bytes)",
+      "src/tensorfvm/benchmark_channel_kmm1987.py (562 lines, 24883 bytes)",
+      "src/tensorfvm/rans_validation/channel.py (240 lines, 12112 bytes)"
+    ],
+    "entry": "scripts/run_case_channel_kmm180.py + python -m tensorfvm.benchmark_channel_kmm1987",
+    "run_artifacts": [
+      "docs/case-fvm-channel-kmm180/benchmark.json (sha256 verified)",
+      "docs/case-fvm-channel-kmm180/metrics.csv (sha256 verified)",
+      "docs/case-fvm-channel-kmm180/stations.csv (sha256 verified)",
+      "docs/case-fvm-channel-kmm180/profiles.csv (sha256 verified)",
+      "docs/case-fvm-channel-kmm180/manifest.json (sha256 verified)",
+      "docs/case-fvm-channel-kmm180/REPORT.md (sha256 verified)",
+      "docs/case-fvm-channel-kmm180/fig_velocity_profiles.png (sha256 verified)",
+      "docs/case-fvm-channel-kmm180/fig_log_region_error.png (sha256 verified)"
+    ],
+    "tests": [
+      "tests/test_channel_kmm1987.py: 12/12 passed (22.39s)",
+      "TestReference::test_load_reference PASSED",
+      "TestReference::test_viscous_sublayer_is_linear PASSED",
+      "TestMetrics::test_perfect_match PASSED",
+      "TestMetrics::test_constant_offset PASSED",
+      "TestMetrics::test_cf_and_bulk_deviation PASSED",
+      "TestMetrics::test_station_table_shape_and_identity PASSED",
+      "TestMetrics::test_log_law_fit_reproduces_a_synthetic_log_law PASSED",
+      "TestGrading::test_graded_closure_passes_the_case_criterion PASSED",
+      "TestGrading::test_negative_control_is_rejected PASSED",
+      "TestGrading::test_tolerance_is_honoured PASSED",
+      "TestSuiteIntegration::test_verification_suite_caller_runs_the_case PASSED",
+      "TestArtifacts::test_delivered_artifact_set_is_complete_and_consistent PASSED"
+    ],
+    "integration_callers": [
+      "tensorfvm.verification.cases.channel_kmm180 (verified: returns PASS)",
+      "tensorfvm.verification.__main__ --channel-kmm180 flag (lines 17,59-66)"
+    ],
+    "benchmark": {
+      "criterion": "RMS relative deviation of u+(y+) over y+>30 (to centreline) < 5%",
+      "tolerance": 0.05,
+      "ref_log_region_rms": 0.0,
+      "got_log_region_rms": 0.03628,
+      "rel_error": 0.03628,
+      "within_tolerance": true,
+      "verdict": "PASS",
+      "resolution": 512,
+      "cf_ref": 0.008123,
+      "cf_got": 0.008667,
+      "cf_rel_error": 0.0669,
+      "bulk_u_plus_ref": 15.6910,
+      "bulk_u_plus_got": 15.1909,
+      "bulk_u_plus_rel_error": 0.0319
+    },
+    "repro_cmd": "PYTHONPATH=src python scripts/run_case_channel_kmm180.py --out docs/case-fvm-channel-kmm180",
+    "repro_verified": true,
+    "external_anchor": "Kim, Moin & Moser 1987 J. Fluid Mech. 177:133, DOI:10.1017/S0022112087000892; numerical proxy: Lee & Moser 2015 JFM 774:395 (Re_tau=182.088)"
+  },
+  "verdict_by": "board-audit",
+  "audit_date": "2026-11-12",
+  "findings": {
+    "artifact_completeness": "PASS - all 8 artifacts present with verified SHA256",
+    "benchmark_criterion": "PASS - log_region_rms 3.63% < 5% tolerance",
+    "test_coverage": "PASS - 12/12 tests pass, covering reference loading, metrics, grading, suite integration, and artifact consistency",
+    "repro_cmd": "PASS - repro_cmd executes successfully (quick mode, 12.25s)",
+    "integration": "PASS - verification suite caller and CLI flag both functional",
+    "report_six_elements": "PASS - report contains: ① problem/ref, ② method, ③ results table, ④ figures, ⑤ notes/limitations, ⑥ error判定",
+    "window_disclosure": "PASS - report discloses that strict log window (30<y+<0.2Re_tau) gives 4.61-6.30%, above 5% bar; verdict uses full y+>30 range per case-pool spec",
+    "negative_controls": "PASS - k-omega (10.6%) and k-epsilon (6.9%) both correctly rejected",
+    "grid_ladder": "PASS - 4 resolutions (64/128/256/512) all PASS, convergence monotonic",
+    "concern": "C_f error 6.69% exceeds 5% but criterion is specifically log_region_rms; this is disclosed in report"
+  },
+  "level_rationale": "L4 (基准验证): Real implementation code + full benchmark with DNS reference + error analysis (grid ladder, window sensitivity) + reproducible (repro_cmd verified, 12 tests pass) + artifact set with SHA256. Not L5 because the solve is 1-D equilibrium channel (does not exercise convection, geometry, or pressure-velocity coupling of the 3-D solver), as explicitly disclosed in the report."
+}
