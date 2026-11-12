@@ -133,6 +133,7 @@ class EulerSolver:
         self.boundary_outflow = torch.zeros(5, dtype=torch.float64)
         self.positivity_fixes = 0
         self.species_clamps = 0
+        self.troubled_repairs = 0
         self.solid = None
         self.project_wall_flux = bool(project_wall_flux)
         self._solid_cells = None
@@ -580,12 +581,16 @@ class EulerSolver:
             right_y = {n: half[n] - 0.5 * slopes[n][1] for n in PRIMITIVE_NAMES}
         else:
             left_x = right_x = left_y = right_y = prim
-        # the reconstructed mass fraction must stay physical: a slope overshoot
-        # here is what produces out-of-range Y after the update
+        # the reconstructed states must stay physical: a slope overshoot here is
+        # what produces out-of-range Y, negative density or negative pressure at
+        # a face, and a single such face poisons the whole update (the HLLC
+        # pressure estimate then returns garbage and the run dies).
         for fields in (left_x, right_x, left_y, right_y):
             if fields is prim:
                 continue
             fields["Y"] = torch.clamp(fields["Y"], 0.0, 1.0)
+            fields["rho"] = torch.clamp(fields["rho"], min=self.rho_floor)
+            fields["p"] = torch.clamp(fields["p"], min=self.p_floor)
 
         # face k sits between padded cells k-1 and k
         fx = self._face_flux(
@@ -663,8 +668,82 @@ class EulerSolver:
         U = self._conserved_from_prim(prim)
         self.U[:, self.solid] = U[:, self.solid]
 
+    def _troubled_mask(self) -> torch.Tensor:
+        """Cells whose state is unusable (non-finite, or density/pressure gone).
+
+        The thresholds are ``10 x`` the floors so a cell that is about to be
+        floored is repaired *before* the floor is applied: flooring alone keeps
+        the run alive but leaves the momentum of a near-vacuum cell attached to
+        a floor density, so the velocity explodes and the next step is
+        poisoned.
+        """
+        U = self.U
+        finite = torch.isfinite(U).all(dim=0)
+        safe = torch.where(finite.unsqueeze(0), U, torch.zeros_like(U))
+        prim = self._primitive_from_conserved(safe)
+        bad = (~finite) | (safe[0] <= 10.0 * self.rho_floor) | (prim["p"] <= 10.0 * self.p_floor)
+        if self.solid is not None:
+            bad = bad & ~self.solid
+        return bad
+
+    def _repair_troubled(self, sweeps: int = 3) -> int:
+        """Replace unusable cells by the mean of their usable neighbours.
+
+        Non-conservative by construction and counted in ``troubled_repairs``;
+        it is the standard troubled-cell fallback (the cell carries no usable
+        information any more, its neighbours do).  Solid cells are skipped and
+        never used as a source, so an embedded wall is not smeared.
+        """
+        repaired = 0
+        for _ in range(sweeps):
+            bad = self._troubled_mask()
+            if not bool(bad.any()):
+                break
+            good = ~bad if self.solid is None else (~bad & ~self.solid)
+            if not bool(good.any()):  # pragma: no cover - defensive
+                break
+            finite = torch.isfinite(self.U).all(dim=0)
+            U = torch.where(finite.unsqueeze(0), self.U, torch.zeros_like(self.U))
+            acc = torch.zeros_like(U)
+            cnt = torch.zeros_like(U[0])
+            for axis in (0, 1):
+                for shift in (1, -1):
+                    src = torch.roll(U, shifts=shift, dims=axis)
+                    src_good = torch.roll(good, shifts=shift, dims=axis)
+                    if axis == 0:
+                        if shift == 1:
+                            src[:, 0, :] = 0.0
+                            src_good[0, :] = False
+                        else:
+                            src[:, -1, :] = 0.0
+                            src_good[-1, :] = False
+                    else:
+                        if shift == 1:
+                            src[:, :, 0] = 0.0
+                            src_good[:, 0] = False
+                        else:
+                            src[:, :, -1] = 0.0
+                            src_good[:, -1] = False
+                    acc += src * src_good.unsqueeze(0)
+                    cnt += src_good
+            fill = bad & (cnt > 0)
+            if not bool(fill.any()):  # pragma: no cover - defensive
+                break
+            mean = acc / cnt.clamp(min=1.0).unsqueeze(0)
+            self.U = torch.where(fill.unsqueeze(0), mean, self.U)
+            repaired += int(fill.sum())
+        self.troubled_repairs += repaired
+        return repaired
+
     def _enforce_positivity(self) -> None:
-        """Repair non-positive density/pressure (counted, non-conservative)."""
+        """Repair unusable cells, then clamp non-positive density/pressure.
+
+        The clamps are counted (``positivity_fixes``) and non-conservative; the
+        neighbourhood repair runs first so a cell that has lost its state is
+        restored from its neighbours instead of being pinned to a floor with
+        its (now meaningless) momentum attached.
+        """
+        self._repair_troubled()
         rho = self.U[0]
         bad = rho <= self.rho_floor
         if bool(bad.any()):
