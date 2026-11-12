@@ -1,0 +1,168 @@
+{
+  "case": "temporal plane mixing layer (TensorFVM)",
+  "diffusion_max_errors": {
+    "delta_omega": 5.201537523407749e-05,
+    "profile": 6.990805439865966e-06,
+    "theta": 3.828728271594309e-06
+  },
+  "external_literature_anchor": {
+    "reason": "offline work cell: no internet egress, knowledge engine :8021 unreachable; no reference text available to quote a published spreading rate without transcribing it by hand",
+    "status": "WITHHELD"
+  },
+  "figures": [
+    {
+      "caption": "Left: temporal growth rate vs wavenumber, independent Rayleigh/Orr-Sommerfeld reference against the FVM linear phase. Right: exponential growth of the streamwise fundamental with the least-squares fit.",
+      "name": "fig1_linear_growth.png"
+    },
+    {
+      "caption": "Viscous spreading of the undisturbed layer against the exact heat-kernel solution of the same initial profile.",
+      "name": "fig2_diffusion_exact.png"
+    },
+    {
+      "caption": "Momentum-thickness history for the grid/time-step ladder in the nonlinear regime.",
+      "name": "fig3_nonlinear_spreading.png"
+    },
+    {
+      "caption": "Out-of-plane vorticity of the rolled-up mixing layer at the end of the production run.",
+      "name": "fig4_vorticity.png"
+    },
+    {
+      "caption": "Collapse of the normalised mean profile against the vorticity thickness in the late window.",
+      "name": "fig5_self_similarity.png"
+    }
+  ],
+  "linear_errors": {
+    "rate": [
+      0.18108570656311,
+      0.1822448067235896,
+      0.18246507124244185
+    ],
+    "time_step_ladder": [
+      {
+        "dt": 0.025000005989654215,
+        "rate": 0.18226331227828174
+      },
+      {
+        "dt": 0.012500002994827107,
+        "rate": 0.18226369262853503
+      },
+      {
+        "dt": 0.006250001497413554,
+        "rate": 0.18226377418498044
+      }
+    ],
+    "vs_frozen_reference": [
+      -0.014337445160517936,
+      -0.008028379430390808,
+      -0.006829463775958722
+    ],
+    "vs_instantaneous_reference": [
+      0.022447679999489933,
+      0.02086956759674008,
+      0.0205876839751431
+    ]
+  },
+  "nonlinear_spreading": [
+    {
+      "diffusive_baseline": 0.0012625619297066482,
+      "dt": 0.033242198969284445,
+      "grid": [
+        64,
+        192
+      ],
+      "label": "coarse",
+      "max_divergence": 4.9960036108132044e-15,
+      "spreading_rate": 0.01658089956600044,
+      "spreading_rate_minus_baseline": 0.015318337636293793,
+      "spreading_rate_normalised": 0.00829044978300022
+    },
+    {
+      "diffusive_baseline": 0.0012625820685482087,
+      "dt": 0.024931859285559514,
+      "grid": [
+        96,
+        256
+      ],
+      "label": "production",
+      "max_divergence": 6.9475675212871124e-15,
+      "spreading_rate": 0.016651351870362922,
+      "spreading_rate_minus_baseline": 0.015388769801814714,
+      "spreading_rate_normalised": 0.008325675935181461
+    },
+    {
+      "diffusive_baseline": 0.0012625918604127959,
+      "dt": 0.016621099484642222,
+      "grid": [
+        64,
+        192
+      ],
+      "label": "coarse-dt-halved",
+      "max_divergence": 2.6194324487249787e-15,
+      "spreading_rate": 0.016580122082199868,
+      "spreading_rate_minus_baseline": 0.015317530221787072,
+      "spreading_rate_normalised": 0.008290061041099934
+    }
+  ],
+  "params": {
+    "alpha_delta": 0.5,
+    "half_velocity": 1.0,
+    "height_over_thickness": 16.0,
+    "reynolds_delta": 500.0,
+    "thickness": 1.0,
+    "velocity_difference": 2.0,
+    "viscosity": 0.002,
+    "wavelength_over_thickness": 12.566370614359172
+  },
+  "self_similarity_deviation": 0.022703567579791917,
+  "stability": {
+    "alpha_sweep_argmax": {
+      "alpha": 0.65,
+      "amplification": 0.10461787438258388,
+      "growth": 0.16095057597320597
+    },
+    "inviscid_limit": [
+      {
+        "growth": 0.18371977881679832,
+        "reynolds": 500.0
+      },
+      {
+        "growth": 0.18637471456776086,
+        "reynolds": 2000.0
+      },
+      {
+        "growth": 0.18709663740750446,
+        "reynolds": 10000.0
+      },
+      {
+        "growth": 0.18725992448345802,
+        "reynolds": 100000.0
+      }
+    ],
+    "production_reference": {
+      "alpha": 0.5,
+      "delta": 1.0,
+      "inviscid_growth": 0.18727808715053876,
+      "reynolds_delta": 500.0,
+      "viscous_c": [
+        6.551489451898148e-13,
+        0.36743955763359665
+      ],
+      "viscous_growth": 0.18371977881679832
+    },
+    "rayleigh_refinement": [
+      {
+        "growth": 0.18727808715053876,
+        "nodes": 301
+      },
+      {
+        "growth": 0.18729370755472685,
+        "nodes": 401
+      },
+      {
+        "growth": 0.18730485631347085,
+        "nodes": 601
+      }
+    ]
+  },
+  "table": "table.md"
+}

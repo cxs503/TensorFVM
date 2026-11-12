@@ -1,0 +1,117 @@
+{
+  "grid": {
+    "dt": 0.025000005989654215,
+    "horizon": 6.0,
+    "nx": 96,
+    "ny": 256
+  },
+  "history": [
+    {
+      "delta_omega_error": 2.552764311524362e-07,
+      "momentum_thickness": 0.5000332033715413,
+      "momentum_thickness_exact": 0.5000332120351237,
+      "profile_error": 3.3138580268765594e-08,
+      "theta_error": 1.7326013949695008e-08,
+      "time": 0.025000005989654215
+    },
+    {
+      "delta_omega_error": 5.035267866212689e-06,
+      "momentum_thickness": 0.5006658417634908,
+      "momentum_thickness_exact": 0.5006660140760884,
+      "profile_error": 6.554959592064424e-07,
+      "theta_error": 3.4416675524082997e-07,
+      "time": 0.5000001197930846
+    },
+    {
+      "delta_omega_error": 9.9264236988175e-06,
+      "momentum_thickness": 0.5013307448483214,
+      "momentum_thickness_exact": 0.5013310874877958,
+      "profile_error": 1.295918686472497e-06,
+      "theta_error": 6.834594600264292e-07,
+      "time": 1.0000002395861693
+    },
+    {
+      "delta_omega_error": 1.4679088542717445e-05,
+      "momentum_thickness": 0.5019945952554241,
+      "momentum_thickness_exact": 0.5019951062804889,
+      "profile_error": 1.9216372933450465e-06,
+      "theta_error": 1.0179881405744044e-06,
+      "time": 1.5000003593792541
+    },
+    {
+      "delta_omega_error": 1.929858457055804e-05,
+      "momentum_thickness": 0.5026573988748297,
+      "momentum_thickness_exact": 0.5026580763826737,
+      "profile_error": 2.5330125149047866e-06,
+      "theta_error": 1.3478503097247867e-06,
+      "time": 2.0000004791723387
+    },
+    {
+      "delta_omega_error": 2.3789955791812357e-05,
+      "momentum_thickness": 0.5033191615354068,
+      "momentum_thickness_exact": 0.5033200036581656,
+      "profile_error": 3.1303966732121324e-06,
+      "theta_error": 1.6731358832133102e-06,
+      "time": 2.500000598965419
+    },
+    {
+      "delta_omega_error": 2.8157986950272988e-05,
+      "momentum_thickness": 0.5039798890047305,
+      "momentum_thickness_exact": 0.5039808939072214,
+      "profile_error": 3.714133677557019e-06,
+      "theta_error": 1.9939297365159413e-06,
+      "time": 3.0000007187584994
+    },
+    {
+      "delta_omega_error": 3.240722083193957e-05,
+      "momentum_thickness": 0.5046395869895324,
+      "momentum_thickness_exact": 0.5046407528676398,
+      "profile_error": 4.284559057071702e-06,
+      "theta_error": 2.310313031130814e-06,
+      "time": 3.5000008385515797
+    },
+    {
+      "delta_omega_error": 3.6541974129526536e-05,
+      "momentum_thickness": 0.5052982611363916,
+      "momentum_thickness_exact": 0.5052995862158423,
+      "profile_error": 4.846655964230173e-06,
+      "theta_error": 2.622364012867421e-06,
+      "time": 4.0000009583446605
+    },
+    {
+      "delta_omega_error": 4.056635199987435e-05,
+      "momentum_thickness": 0.5059559170325603,
+      "momentum_thickness_exact": 0.5059573995679159,
+      "profile_error": 5.399131279337777e-06,
+      "theta_error": 2.930158461673575e-06,
+      "time": 4.50000107813775
+    },
+    {
+      "delta_omega_error": 4.448426147408796e-05,
+      "momentum_thickness": 0.5066125602068483,
+      "momentum_thickness_exact": 0.5066141984806414,
+      "profile_error": 5.940502734558262e-06,
+      "theta_error": 3.2337699929908327e-06,
+      "time": 5.000001197930839
+    },
+    {
+      "delta_omega_error": 4.8299423788691544e-05,
+      "momentum_thickness": 0.5072681961305252,
+      "momentum_thickness_exact": 0.507269988452492,
+      "profile_error": 6.470989304452335e-06,
+      "theta_error": 3.5332702656238344e-06,
+      "time": 5.500001317723928
+    },
+    {
+      "delta_omega_error": 5.201537523407749e-05,
+      "momentum_thickness": 0.5079228283375684,
+      "momentum_thickness_exact": 0.5079247730435068,
+      "profile_error": 6.990805439865966e-06,
+      "theta_error": 3.828728271594309e-06,
+      "time": 6.0
+    }
+  ],
+  "max_delta_omega_error": 5.201537523407749e-05,
+  "max_profile_error": 6.990805439865966e-06,
+  "max_theta_error": 3.828728271594309e-06
+}
