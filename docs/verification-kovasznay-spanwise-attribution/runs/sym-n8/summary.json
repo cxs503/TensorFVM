@@ -1,0 +1,38 @@
+{
+  "variant": "symmetry",
+  "n": 8,
+  "reynolds": 40.0,
+  "cells": 64,
+  "faces": 544,
+  "divisions": [
+    1,
+    1,
+    1
+  ],
+  "converged": true,
+  "outer_iterations": 26,
+  "budgets": {
+    "inplane_l2": 0.04009177980019786,
+    "spanwise_l2": 0.00900321082110795,
+    "max_abs_w": 0.018954606658946667,
+    "face_max_abs_w": 0.0217128196026293,
+    "span_share_of_squared_error": 0.048008405360313484,
+    "worst_cell": {
+      "center": [
+        0.5625,
+        0.5625,
+        0.4999999999999999
+      ],
+      "w": -0.018954606658946667
+    },
+    "zplane_tangential_face_range": [
+      0.1119054450504721,
+      1.8271822437233478
+    ],
+    "zplane_tangential_exact_range": [
+      0.13012640928795616,
+      1.8698735907120438
+    ]
+  },
+  "seconds": 33.038440227508545
+}
