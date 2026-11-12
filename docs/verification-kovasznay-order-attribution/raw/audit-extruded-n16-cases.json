@@ -1,0 +1,28 @@
+[
+  {
+    "config": "extruded",
+    "n": 16,
+    "h": 0.0625,
+    "reynolds": 40.0,
+    "symmetry_extrusion": true,
+    "convection_order": 2,
+    "cells": 256,
+    "faces": 2112,
+    "numerically_converged": true,
+    "boundary_velocity_error": 0.0,
+    "divergence_max": 2.7338131758369855e-12,
+    "outer_iterations": 24,
+    "pressure_l2": 0.1564750494571082,
+    "pressure_mean_free_l2": 0.09732921617131668,
+    "build_seconds": 1.8918433506041765,
+    "solve_seconds": 20.551705030724406,
+    "velocity_l2": 0.012574784561427162,
+    "inplane_l2": 0.012015736967494663,
+    "spanwise_l2": 0.0037077313676005495,
+    "quadrature_closure": 0.0,
+    "max_abs_spanwise": 0.009413573327409101,
+    "max_abs_inplane": 1.9124750877091041,
+    "inplane_u_l2": 0.011282238068503717,
+    "inplane_v_l2": 0.06441815148049122
+  }
+]
