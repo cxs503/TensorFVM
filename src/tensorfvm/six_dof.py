@@ -200,6 +200,12 @@ class SixDOFIntegrator:
         Gravity (m/s²).
     """
 
+    #: Placeholder damping ratio used when ``config.damping`` does not cover a
+    #: requested DOF.  Kept for backward compatibility with the historical
+    #: hard-coded 5 %; it is not a physical model and should be overridden by
+    #: configuring real damping coefficients.
+    DEFAULT_DAMPING_RATIO = 0.05
+
     def __init__(self, config: SixDOFConfig, rho: float = 1000.0,
                  g: float = 9.81):
         self.config = config
@@ -207,6 +213,7 @@ class SixDOFIntegrator:
         self.g = g
         self.state = SixDOFState()
         self.history: list[dict] = []
+        self.time: float = 0.0
 
         # Effective mass (mass + added mass)
         self.effective_mass = {
@@ -290,9 +297,13 @@ class SixDOFIntegrator:
                 setattr(self.state, pos_attr,
                         getattr(self.state, pos_attr) + getattr(self.state, vel_attr) * dt)
 
-        # Record history
+        # Record history.  Time is accumulated from the actual dt values rather
+        # than inferred from the history length: ``len(history) * dt`` silently
+        # reports wrong times whenever the caller changes dt during a run
+        # (e.g. adaptive sub-stepping inside the fluid solver).
+        self.time += dt
         self.history.append({
-            "time": len(self.history) * dt,
+            "time": self.time,
             "z": self.state.z,
             "pitch": self.state.pitch,
             "w": self.state.w,
@@ -319,10 +330,42 @@ class SixDOFIntegrator:
             return 0.0
         return math.sqrt(self.rho * self.g * self.config.waterplane_pitch_moi / i_eff)
 
-    def rao(self, omega: float, dof: str = "heave") -> float:
-        """Compute RAO magnitude at given frequency (undamped, linear).
+    def restoring_stiffness(self, dof: str = "heave") -> float:
+        """Hydrostatic restoring stiffness ``k`` for ``dof`` (N/m or N·m/rad).
 
-        RAO = 1 / |1 − (ω/ω_n)²|
+        ``k = rho * g * A_wp`` for heave and ``k = rho * g * I_wp`` for pitch,
+        i.e. exactly the coefficient used by :func:`hydrostatic_restoring_heave`
+        and :func:`hydrostatic_restoring_pitch`.
+        """
+        if dof == "heave":
+            return self.rho * self.g * self.config.waterplane_area
+        if dof == "pitch":
+            return self.rho * self.g * self.config.waterplane_pitch_moi
+        return 0.0
+
+    def damping_ratio(self, dof: str = "heave") -> float:
+        """Damping ratio ``zeta`` implied by the configured linear damping.
+
+        ``zeta = c / (2 * sqrt(k * m_eff))`` with ``c`` taken from
+        ``config.damping[dof]``.  When no damping coefficient is configured for
+        ``dof`` (the historical default) ``DEFAULT_DAMPING_RATIO = 0.05`` is
+        returned so that callers relying on the old behaviour are unaffected;
+        that value is a placeholder, not a physical model.
+        """
+        c = (self.config.damping or {}).get(dof, 0.0)
+        if c <= 0.0:
+            return self.DEFAULT_DAMPING_RATIO
+        m_eff = self.effective_mass.get(dof, 0.0)
+        k = self.restoring_stiffness(dof)
+        if m_eff <= 0.0 or k <= 0.0:
+            return self.DEFAULT_DAMPING_RATIO
+        return c / (2.0 * math.sqrt(k * m_eff))
+
+    def rao(self, omega: float, dof: str = "heave",
+            zeta: float | None = None) -> float:
+        """Magnitude of the linear SDOF transfer function.
+
+        ``RAO = 1 / sqrt((1 - r^2)^2 + (2 zeta r)^2)`` with ``r = omega/omega_n``.
 
         Parameters
         ----------
@@ -330,11 +373,16 @@ class SixDOFIntegrator:
             Wave frequency (rad/s).
         dof : str
             Degree of freedom ('heave' or 'pitch').
+        zeta : float, optional
+            Damping ratio.  When omitted it is derived from
+            ``config.damping[dof]`` via :meth:`damping_ratio` (which falls back
+            to ``DEFAULT_DAMPING_RATIO = 0.05`` if no damping is configured).
 
         Returns
         -------
         rao : float
-            RAO magnitude (m/m for heave, rad/m for pitch).
+            RAO magnitude (m/m for heave, rad/m for pitch).  ``1 / (2 zeta)`` at
+            resonance, so a finite value is returned for any ``zeta > 0``.
         """
         if dof == "heave":
             omega_n = self.natural_frequency_heave()
@@ -347,7 +395,7 @@ class SixDOFIntegrator:
             return 0.0
 
         ratio = omega / omega_n
-        # With small damping for numerical stability
-        zeta = 0.05  # 5% damping
+        if zeta is None:
+            zeta = self.damping_ratio(dof)
         denom = math.sqrt((1 - ratio ** 2) ** 2 + (2 * zeta * ratio) ** 2)
         return 1.0 / denom
