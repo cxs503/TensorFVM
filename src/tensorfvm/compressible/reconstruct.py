@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import torch
 
-__all__ = ["minmod", "vanleer", "mc", "superbee", "LIMITERS", "limited_slope"]
+__all__ = ["minmod", "vanleer", "mc", "superbee", "none", "LIMITERS", "limited_slope"]
 
 
 def minmod(a: torch.Tensor, b: torch.Tensor) -> torch.Tensor:
@@ -51,7 +51,25 @@ def superbee(a: torch.Tensor, b: torch.Tensor) -> torch.Tensor:
     return torch.where(s1.abs() >= s2.abs(), s1, s2)
 
 
-LIMITERS = {"minmod": minmod, "vanleer": vanleer, "mc": mc, "superbee": superbee}
+def none(a: torch.Tensor, b: torch.Tensor) -> torch.Tensor:
+    """No limiting: the centred (unlimited) slope ``(a + b)/2``.
+
+    This is *not* a TVD limiter -- it is the second-order baseline the limiters
+    are measured against.  Selecting it makes the reconstruction formally second
+    order on smooth flow (and oscillatory across shocks), which is what an
+    order-of-accuracy study needs in order to separate a limiter's accuracy loss
+    from a truncation error in the flux or the time integrator.
+    """
+    return 0.5 * (a + b)
+
+
+LIMITERS = {
+    "minmod": minmod,
+    "vanleer": vanleer,
+    "mc": mc,
+    "superbee": superbee,
+    "none": none,
+}
 
 
 def limited_slope(q: torch.Tensor, axis: int, limiter: str = "mc") -> torch.Tensor:
