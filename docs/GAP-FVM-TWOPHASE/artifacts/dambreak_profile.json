@@ -1,0 +1,238 @@
+{
+ "anchor": "GAP-FVM-TWOPHASE",
+ "developed_min_t": 2.0,
+ "kind": "dambreak_error_profile",
+ "legs": {
+  "plic_120x40": {
+   "case": "dambreak",
+   "developed": {
+    "exceeds_gate": true,
+    "front_gate": 0.15,
+    "front_max_at_t": 2.0971422005663736,
+    "front_max_rel_error": 0.3769567466662039,
+    "front_mean_rel_error": 0.237431892762056,
+    "height_gate": 0.15,
+    "height_max_rel_error": 0.8209499503414907,
+    "height_mean_rel_error": 0.425436653372392,
+    "n_samples": 84,
+    "t_min": 2.0
+   },
+   "front_crossing": {
+    "delay_t_star": 0.7924146861193667,
+    "front_half": 1.4847223784270591,
+    "ref_front": 0.6923076923076924,
+    "target_front_star": 1.0
+   },
+   "front_speed": {
+    "n_samples": 125,
+    "numeric_slope": 0.9934214394200074,
+    "ratio": 1.1662894654473932,
+    "reference_slope": 0.851779484297174,
+    "t_from": 1.0,
+    "t_to": 4.0
+   },
+   "gated_front_limit": 0.15,
+   "gated_front_max_rel_error": 0.9882294435916724,
+   "gated_height_max_rel_error": 0.8449810709776245,
+   "gated_window": [
+    0.3,
+    8.0
+   ],
+   "grid": [
+    120,
+    40
+   ],
+   "height_peak_segment_index": 2,
+   "scheme": "plic",
+   "segments": [
+    {
+     "front_max_at_t": 0.34686745798798857,
+     "front_max_rel_error": 0.9882294435916724,
+     "front_mean_rel_error": 0.896818776765512,
+     "height_max_at_t": 0.47877516179329227,
+     "height_max_rel_error": 0.285046514076094,
+     "height_mean_rel_error": 0.2238261235421969,
+     "n_samples": 9,
+     "t_from": 0.3,
+     "t_to": 0.5
+    },
+    {
+     "front_max_at_t": 0.5009160507301469,
+     "front_max_rel_error": 0.8753801429422071,
+     "front_mean_rel_error": 0.7202600834849144,
+     "height_max_at_t": 0.9102253029306131,
+     "height_max_rel_error": 0.5344544236237876,
+     "height_mean_rel_error": 0.4133701295056731,
+     "n_samples": 22,
+     "t_from": 0.5,
+     "t_to": 1.0
+    },
+    {
+     "front_max_at_t": 1.028570017569529,
+     "front_max_rel_error": 0.6290005634219019,
+     "front_mean_rel_error": 0.48506422392366005,
+     "height_max_at_t": 1.999467344164136,
+     "height_max_rel_error": 0.8449810709776245,
+     "height_mean_rel_error": 0.6726000566652434,
+     "n_samples": 41,
+     "t_from": 1.0,
+     "t_to": 2.0
+    },
+    {
+     "front_max_at_t": 2.0971422005663736,
+     "front_max_rel_error": 0.3769567466662039,
+     "front_mean_rel_error": 0.237431892762056,
+     "height_max_at_t": 2.437364392464471,
+     "height_max_rel_error": 0.8209499503414907,
+     "height_mean_rel_error": 0.425436653372392,
+     "n_samples": 84,
+     "t_from": 2.0,
+     "t_to": 4.0
+    }
+   ],
+   "startup": {
+    "max_rel_error_reduction": 0.2661794804575412,
+    "shift": {
+     "best_t_star_delay": 0.435,
+     "max_rel_error": 0.4284389688788009,
+     "mean_rel_error": 0.21400498471562965
+    },
+    "shift_wins": true,
+    "t_min": 0.5,
+    "timescale": {
+     "best_alpha": 2.455,
+     "max_rel_error": 0.6946184493363421,
+     "mean_rel_error": 0.39112578781523055
+    }
+   },
+   "steps": 169,
+   "t_star_end": 4.0
+  },
+  "plic_240x80": {
+   "case": "dambreak",
+   "developed": {
+    "exceeds_gate": true,
+    "front_gate": 0.15,
+    "front_max_at_t": 2.027724359615668,
+    "front_max_rel_error": 0.35239160214582377,
+    "front_mean_rel_error": 0.20773091836936602,
+    "height_gate": 0.15,
+    "height_max_rel_error": 0.7718838854573289,
+    "height_mean_rel_error": 0.3794311890215421,
+    "n_samples": 173,
+    "t_min": 2.0
+   },
+   "front_crossing": {
+    "delay_t_star": 0.7189732698550276,
+    "front_half": 1.41128096216272,
+    "ref_front": 0.6923076923076924,
+    "target_front_star": 1.0
+   },
+   "front_speed": {
+    "n_samples": 254,
+    "numeric_slope": 1.006174542880673,
+    "ratio": 1.1818109002479418,
+    "reference_slope": 0.8513837050153958,
+    "t_from": 1.0,
+    "t_to": 4.0
+   },
+   "gated_front_limit": 0.15,
+   "gated_front_max_rel_error": 0.8477377462128339,
+   "gated_height_max_rel_error": 0.826482959658176,
+   "gated_window": [
+    0.3,
+    8.0
+   ],
+   "grid": [
+    240,
+    80
+   ],
+   "height_peak_segment_index": 2,
+   "scheme": "plic",
+   "segments": [
+    {
+     "front_max_at_t": 0.31411169692012253,
+     "front_max_rel_error": 0.8477377462128339,
+     "front_mean_rel_error": 0.776554781460269,
+     "height_max_at_t": 0.4898395534322167,
+     "height_max_rel_error": 0.31108843461376123,
+     "height_mean_rel_error": 0.2400272927839818,
+     "n_samples": 18,
+     "t_from": 0.3,
+     "t_to": 0.5
+    },
+    {
+     "front_max_at_t": 0.5342178979555325,
+     "front_max_rel_error": 0.7445199458378833,
+     "front_mean_rel_error": 0.6425579625539902,
+     "height_max_at_t": 0.9923693045157468,
+     "height_max_rel_error": 0.5681223616610147,
+     "height_mean_rel_error": 0.43409023069496766,
+     "n_samples": 44,
+     "t_from": 0.5,
+     "t_to": 1.0
+    },
+    {
+     "front_max_at_t": 1.004229525314337,
+     "front_max_rel_error": 0.5752149197158447,
+     "front_mean_rel_error": 0.4442642226467638,
+     "height_max_at_t": 1.9417844041975525,
+     "height_max_rel_error": 0.826482959658176,
+     "height_mean_rel_error": 0.7118037273840695,
+     "n_samples": 81,
+     "t_from": 1.0,
+     "t_to": 2.0
+    },
+    {
+     "front_max_at_t": 2.027724359615668,
+     "front_max_rel_error": 0.35239160214582377,
+     "front_mean_rel_error": 0.20773091836936602,
+     "height_max_at_t": 2.0522611062164735,
+     "height_max_rel_error": 0.7718838854573289,
+     "height_mean_rel_error": 0.3794311890215421,
+     "n_samples": 173,
+     "t_from": 2.0,
+     "t_to": 4.0
+    }
+   ],
+   "startup": {
+    "max_rel_error_reduction": 0.15136589824361174,
+    "shift": {
+     "best_t_star_delay": 0.395,
+     "max_rel_error": 0.3382382784656036,
+     "mean_rel_error": 0.17932185835547873
+    },
+    "shift_wins": true,
+    "t_min": 0.5,
+    "timescale": {
+     "best_alpha": 2.015,
+     "max_rel_error": 0.48960417670921536,
+     "mean_rel_error": 0.26837219302159127
+    }
+   },
+   "steps": 343,
+   "t_star_end": 4.0
+  }
+ },
+ "notes": "Diagnostic decomposition of the committed dam-break legs. The graded gates D1/D2 (max relative error over the declared window) are unchanged and still FAIL; nothing here is a re-tuned tolerance.",
+ "verdicts": {
+  "developed_phase_still_exceeds_gate": true,
+  "developed_phase_still_exceeds_height_gate": true,
+  "error_peaks_at_startup": true,
+  "front_speed_ratio_developed": {
+   "plic_120x40": 1.1662894654473932,
+   "plic_240x80": 1.1818109002479418
+  },
+  "height_error_peaks_mid_transient": true,
+  "height_peak_segment_index": {
+   "plic_120x40": 2,
+   "plic_240x80": 2
+  },
+  "mechanism": "delayed collapse: developed-phase front speed matches the experiment (ratio ~1.1-1.2) but the curve is shifted in time, and the column drains late through the mid-transient; interface diffusion of the front is not the dominant mechanism",
+  "shift_beats_timescale": {
+   "plic_120x40": true,
+   "plic_240x80": true
+  },
+  "startup_to_developed_error_ratio": 2.5172706468657324
+ }
+}
