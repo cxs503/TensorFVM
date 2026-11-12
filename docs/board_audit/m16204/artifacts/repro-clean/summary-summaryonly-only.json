@@ -1,0 +1,25 @@
+{
+  "case": "CASE-FVM-BLASIUS-PLATE",
+  "error_limit": 0.03,
+  "reference_re_x": 100000.0,
+  "literature": {
+    "cf_sqrt_re_x": 0.664,
+    "delta_star_sqrt_re_x": 1.7208,
+    "theta_sqrt_re_x": 0.664,
+    "shape_factor": 2.5916,
+    "wall_curvature": 0.332057
+  },
+  "similarity_crosscheck": {
+    "fpp0": 0.33205733621619327,
+    "two_fpp0": 0.6641146724323865,
+    "cf_sqrt_re_x_literature": 0.664,
+    "cf_constant_relative_deviation": 0.00017269944636520755,
+    "delta_star_sqrt_re_x": 1.7207904246782528,
+    "theta_sqrt_re_x": 0.664111905298853,
+    "H": 2.591115158376645,
+    "shape_factor_literature": 2.5916,
+    "shape_factor_relative_deviation": 0.00018708196610401254
+  },
+  "rows": [],
+  "all_passed": false
+}
