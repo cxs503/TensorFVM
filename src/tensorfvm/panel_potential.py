@@ -100,6 +100,15 @@ def influence_matrix(points: np.ndarray, normals: np.ndarray, panels: PanelSet, 
     nq, npan, _ = q.shape
     qf = q.reshape(-1, 3)
     n_pts = points.shape[0]
+    # The principal value is only defined where the field point *is* the source
+    # panel: the flat-panel self term is dropped from the diagonal when -- and only
+    # when -- the field points are the panel centroids themselves (the Neumann
+    # solve).  For any other field-point set (wall probes, potential evaluation,
+    # verification sweeps) every panel contributes and nothing may be dropped;
+    # silently zeroing the "diagonal" there deletes one real panel contribution per
+    # field point.
+    field_is_panel = (points.shape == panels.centroids.shape
+                      and np.array_equal(points, panels.centroids))
     A = np.zeros((n_pts, npan))
     for spec in images:
         qq = image_points(qf, spec)
@@ -119,7 +128,7 @@ def influence_matrix(points: np.ndarray, normals: np.ndarray, panels: PanelSet, 
             k[~np.isfinite(k) | (r2 < _NEAR_FIELD_CUTOFF)] = 0.0
             dn = np.einsum("ik,iqjk->iqj", normals[start:stop], d)
             Amat = np.einsum("iqj,iqj->ij", k * w.reshape(1, nq, npan), dn)
-            if self_image:
+            if self_image and field_is_panel:
                 idx = np.arange(stop - start)
                 Amat[idx, start + idx] = 0.0  # flat-panel principal value
             A[start:stop] += Amat
