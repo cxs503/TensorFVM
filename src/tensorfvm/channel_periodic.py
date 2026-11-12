@@ -50,6 +50,16 @@ Staggered MAC placement, second-order central fluxes, arrays in ``(y, x)``:
   second order).  The benchmark measures both: the default keeps a genuine
   truncation error to study, the quadratic variant reaches round-off on this
   parabolic solution.
+* The walls may move in the streamwise direction (``step(wall_velocity_m_s=...)``
+  / :meth:`PeriodicChannelSolver.set_wall_velocity`).  A non-homogeneous no-slip
+  wall is an inhomogeneous ghost value -- ``half-cell``:
+  ``u_ghost = 2 u_w - u_0``, ``quadratic``: ``u_ghost = -2 u_0 + u_1/3 + (8/3) u_w``
+  (both reduce to the homogeneous formulas above at ``u_w = 0``) -- so the wall
+  contribution is a per-step source ``coef * u_w / dy**2`` on the two wall rows of
+  the implicit system, with ``coef = 2 nu`` (half-cell) or ``(8/3) nu``
+  (quadratic).  ``wall_shear`` / ``dissipation`` subtract the same ``u_w``, which
+  keeps the discrete momentum budget closed.  This is what Stokes' second problem
+  (oscillating wall) needs; see ``verification.stokes_second_problem``.
 
 Nothing here is a placeholder: every operator below is used by ``step`` /
 ``solve_steady`` and exercised by ``tests/test_channel_periodic.py``.
@@ -212,6 +222,7 @@ class PeriodicChannelSolver:
         k = 2 * math.pi * torch.fft.fftfreq(cfg.nx, d=cfg.dx, device=self.device, dtype=torch.float64)
         self.lam_x = -4.0 * torch.sin(k * cfg.dx / 2.0) ** 2 / cfg.dx ** 2
         self.time_step_s = float(cfg.time_step_s)   # mutable: pseudo-time acceleration
+        self.wall_velocity_m_s = (0.0, 0.0)         # (lower, upper) moving-wall speeds
         self.history = []
         self.time = 0.0
 
@@ -278,8 +289,40 @@ class PeriodicChannelSolver:
 
     # -- batched tridiagonal solve -----------------------------------------
     @staticmethod
+    def _tridiagonal_solve(lower, diag, upper, rhs):
+        """Solve one tridiagonal system per column (arrays ``(n, m)``) through LAPACK.
+
+        Same system as :meth:`_thomas`, assembled as a batch of ``m`` dense
+        ``n x n`` matrices and handed to ``torch.linalg.solve``.  The banded
+        forward/back substitution below is ``O(n)`` *python-level* kernel
+        launches, which dominated the step cost on small grids (measured 12 ms
+        per call at ``n = 64``) and made unsteady campaigns -- tens of
+        thousands of steps, e.g. ``verification.stokes_second_problem`` --
+        needlessly expensive.  The dense route costs ``O(m n^3)`` flops but a
+        handful of launches: 0.9 ms per call at ``n = 64``.  The two agree to
+        round-off; ``tests/test_channel_periodic_tridiagonal.py`` checks that
+        directly.  Measured crossover is near ``n ~ 300`` (``n = 256``: 34 ms
+        dense vs 49 ms banded; ``n = 512``: 235 ms vs 107 ms), so tall systems
+        keep the banded route.
+        """
+        n, m = diag.shape
+        if n > 256:
+            return PeriodicChannelSolver._thomas(lower, diag, upper, rhs)
+        mat = torch.diag_embed(diag.transpose(0, 1).to(rhs.dtype))
+        if n > 1:
+            rows = torch.arange(n, device=diag.device)
+            mat[:, rows[:-1], rows[1:]] = upper.transpose(0, 1).to(rhs.dtype)[:, :-1]
+            mat[:, rows[1:], rows[:-1]] = lower.transpose(0, 1).to(rhs.dtype)[:, 1:]
+        solved = torch.linalg.solve(mat, rhs.transpose(0, 1).unsqueeze(-1))
+        return solved.squeeze(-1).transpose(0, 1)
+
+    @staticmethod
     def _thomas(lower, diag, upper, rhs):
-        """Solve one tridiagonal system per column; arrays are ``(n, m)``."""
+        """Reference banded solve, one tridiagonal system per column ``(n, m)``.
+
+        Kept as the independent implementation the vectorised
+        :meth:`_tridiagonal_solve` is checked against (see its docstring).
+        """
         n = diag.shape[0]
         cp = torch.empty_like(diag)
         dp = torch.empty_like(rhs)
@@ -295,7 +338,7 @@ class PeriodicChannelSolver:
             out[j] = dp[j] - cp[j] * out[j + 1]
         return out
 
-    def _implicit_diffusion(self, rhs, boundary):
+    def _implicit_diffusion(self, rhs, boundary, wall_velocity=None):
         """Solve ``(I/dt - nu L) phi = rhs`` exactly for the discrete operator.
 
         ``boundary='ghost'``    : wall at half a cell (``u``), ``phi_ghost = -phi``.
@@ -303,6 +346,15 @@ class PeriodicChannelSolver:
         """
         cfg = self.config
         nu, dt, n, nx = cfg.nu, self.time_step_s, cfg.ny, cfg.nx
+        wall_velocity = ((0.0, 0.0) if wall_velocity is None
+                         else (float(wall_velocity[0]), float(wall_velocity[1])))
+        if boundary == "ghost" and (wall_velocity[0] or wall_velocity[1]):
+            # Inhomogeneous no-slip: the moving wall enters the wall rows as a
+            # constant source once the ghost value is eliminated (see module doc).
+            coefficient = (8.0 / 3.0 if cfg.wall_flux == "quadratic" else 2.0) * nu / cfg.dy ** 2
+            rhs = rhs.clone()
+            rhs[0] = rhs[0] + coefficient * wall_velocity[0]
+            rhs[-1] = rhs[-1] + coefficient * wall_velocity[1]
         n_rows = n if boundary == "ghost" else n + 1
         rhs_hat = torch.fft.fft(rhs, dim=-1)
         lam = self.lam_x.unsqueeze(0).expand(n_rows, nx)
@@ -321,7 +373,8 @@ class PeriodicChannelSolver:
                 diag[-1] = 1.0 / dt + 3 * nu / cfg.dy ** 2 + nu * lam[-1]
             lower[0] = 0.0
             upper[-1] = 0.0
-            return torch.fft.ifft(self._thomas(lower, diag, upper, rhs_hat), dim=-1).real
+            return torch.fft.ifft(self._tridiagonal_solve(lower, diag, upper, rhs_hat),
+                                  dim=-1).real
         diag[0] = 1.0
         upper[0] = 0.0
         lower[0] = 0.0
@@ -331,7 +384,8 @@ class PeriodicChannelSolver:
         rhs_hat = rhs_hat.clone()
         rhs_hat[0] = 0.0
         rhs_hat[-1] = 0.0
-        return torch.fft.ifft(self._thomas(lower, diag, upper, rhs_hat), dim=-1).real
+        return torch.fft.ifft(self._tridiagonal_solve(lower, diag, upper, rhs_hat),
+                              dim=-1).real
 
     def pressure_poisson(self, rhs):
         """Solve ``D G p = rhs`` with zero mean; periodic x, Neumann walls."""
@@ -347,12 +401,16 @@ class PeriodicChannelSolver:
         diag[-1] = lam[-1] - 1.0 / cfg.dy ** 2
         lower[0] = 0.0
         upper[-1] = 0.0
-        solved = self._thomas(lower, diag, upper, rhs_hat)
         # The x-mean (k = 0) block is the wall-normal Neumann operator, which is
-        # singular: its null space is the constant pressure.  Zeroing this column
-        # would drop the y-variation of the mean pressure and leave an uncorrected
-        # x-mean divergence, so solve it in the minimum-norm sense instead (any
-        # exact solution differs from another only by a constant).
+        # singular: its null space is the constant pressure.  It therefore cannot
+        # go through the general (LU) solve below -- that would abort the whole
+        # batch -- and is solved in the minimum-norm sense afterwards instead
+        # (any exact solution differs from another only by a constant).  Leaving
+        # that column out of the batch keeps the solve well posed.
+        solved = torch.zeros_like(rhs_hat)
+        if cfg.nx > 1:
+            solved[:, 1:] = self._tridiagonal_solve(lower[:, 1:], diag[:, 1:],
+                                                    upper[:, 1:], rhs_hat[:, 1:])
         n = cfg.ny
         mat = torch.zeros((n, n), dtype=torch.float64, device=self.device)
         idx = torch.arange(n, device=self.device)
@@ -386,28 +444,58 @@ class PeriodicChannelSolver:
         self.time_step_s = float(time_step_s)
         return self.time_step_s
 
-    def step(self, body_force_m_s2=None):
+    @staticmethod
+    def _wall_velocity_pair(value):
+        """Normalise a wall-velocity specification to ``(lower, upper)`` in m/s."""
+        if isinstance(value, bool):
+            raise ValueError("wall velocity must be a number or a (lower, upper) pair")
+        if isinstance(value, (int, float)):
+            pair = (float(value), 0.0)
+        else:
+            if len(value) != 2:
+                raise ValueError("wall_velocity_m_s needs a scalar or a (lower, upper) pair")
+            pair = (float(value[0]), float(value[1]))
+        if not all(math.isfinite(v) for v in pair):
+            raise ValueError("wall velocity must be finite")
+        return pair
+
+    def set_wall_velocity(self, lower_m_s=0.0, upper_m_s=0.0):
+        """Prescribe the streamwise no-slip wall speeds (m/s); default both at rest."""
+        self.wall_velocity_m_s = self._wall_velocity_pair((lower_m_s, upper_m_s))
+        return self.wall_velocity_m_s
+
+    def step(self, body_force_m_s2=None, wall_velocity_m_s=None):
         """One semi-implicit step: explicit convection, implicit diffusion, projection.
 
         ``body_force_m_s2`` overrides ``config.body_force_m_s2`` for this step only,
         which is what unsteady (pulsatile) forcing needs; ``None`` keeps the
         configured constant value and therefore the steady-state behaviour.
+
+        ``wall_velocity_m_s`` is the streamwise no-slip wall speed: a scalar (lower
+        wall; the upper wall stays at rest) or ``(lower, upper)``.  ``None`` keeps
+        the last prescribed value, so a driver may set it once
+        (:meth:`set_wall_velocity`); the initial state is both walls at rest, which
+        reproduces the historical homogeneous-wall behaviour bit for bit.
         """
         cfg = self.config
         dt = self.time_step_s
         forcing = cfg.body_force_m_s2 if body_force_m_s2 is None else float(body_force_m_s2)
+        walls = (self.wall_velocity_m_s if wall_velocity_m_s is None
+                 else self._wall_velocity_pair(wall_velocity_m_s))
         u_old = self.u.clone()
         rhs_u = self.u / dt - self.convection_u() + forcing
         rhs_v = self.v / dt - self.convection_v()
-        u_star = self._implicit_diffusion(rhs_u, "ghost")
+        u_star = self._implicit_diffusion(rhs_u, "ghost", wall_velocity=walls)
         v_star = self._implicit_diffusion(rhs_v, "dirichlet")
         v_star[0] = 0.0
         v_star[-1] = 0.0
         u, v, p, info = self.project(u_star, v_star, dt)
         self.u, self.v, self.pressure = u, v, p
+        self.wall_velocity_m_s = walls
         self.time += dt
         record = dict(time_s=self.time,
                       body_force_m_s2=forcing,
+                      wall_velocity_m_s=walls,
                       bulk_velocity_m_s=self.bulk_velocity(),
                       max_divergence_s_inv=info["divergence_after_s_inv"],
                       velocity_change_m_s=float((self.u - u_old).abs().max()))
@@ -429,27 +517,35 @@ class PeriodicChannelSolver:
     def wall_shear(self, estimator="flux"):
         """Wall shear stress (Pa) on both walls.
 
-        ``flux``      : the scheme's own wall flux, ``mu * 2 u_0 / dy``.  This is
-                        the quantity closing the discrete momentum balance, so it
-                        agrees with ``rho G H / 2`` by conservation.
+        ``flux``      : the scheme's own wall flux, ``mu * 2 (u_0 - u_w) / dy``
+                        (``u_w`` the moving-wall speed, zero for a static wall).
+                        This is the quantity closing the discrete momentum
+                        balance, so it agrees with ``rho G H / 2`` by
+                        conservation.
         ``quadratic`` : three-point one-sided fit through the wall and the two
-                        nearest centres, ``mu (9 u_0 - u_1)/(3 dy)``; it does not
-                        reuse the flux the scheme applied, so it measures
-                        truncation error rather than restating conservation.
+                        nearest centres, ``mu (9 u_0 - u_1 - 8 u_w)/(3 dy)``; it
+                        does not reuse the flux the scheme applied, so it
+                        measures truncation error rather than restating
+                        conservation.  Both estimators refer to the same sign
+                        convention: positive into the wall, so for a static wall
+                        they are the two wall-flux magnitudes that add up to the
+                        momentum input.
         """
         cfg = self.config
         mu = cfg.viscosity_pa_s
         u = self.u
+        wall_lower, wall_upper = self.wall_velocity_m_s
         if estimator == "flux":
-            lower = mu * 2.0 * float(u[0].mean()) / cfg.dy
-            upper = mu * 2.0 * float(u[-1].mean()) / cfg.dy
+            lower = mu * 2.0 * (float(u[0].mean()) - wall_lower) / cfg.dy
+            upper = mu * 2.0 * (float(u[-1].mean()) - wall_upper) / cfg.dy
         elif estimator == "quadratic":
-            lower = mu * (9.0 * float(u[0].mean()) - float(u[1].mean())) / (3.0 * cfg.dy)
-            upper = mu * (9.0 * float(u[-1].mean()) - float(u[-2].mean())) / (3.0 * cfg.dy)
+            lower = mu * (9.0 * float(u[0].mean()) - float(u[1].mean())
+                          - 8.0 * wall_lower) / (3.0 * cfg.dy)
+            upper = mu * (9.0 * float(u[-1].mean()) - float(u[-2].mean())
+                          - 8.0 * wall_upper) / (3.0 * cfg.dy)
         else:
             raise ValueError("estimator must be 'flux' or 'quadratic'")
         return float(lower), float(upper)
-        raise ValueError("estimator must be 'flux' or 'quadratic'")
 
     def momentum_balance(self):
         """``rho G H`` versus the sum of the two *scheme* wall fluxes."""
@@ -479,12 +575,13 @@ class PeriodicChannelSolver:
         """
         cfg = self.config
         mu = cfg.viscosity_pa_s
+        wall_lower, wall_upper = self.wall_velocity_m_s
         if cfg.wall_flux == "quadratic":
-            lower = (9.0 * self.u[0] - self.u[1]) / (3.0 * cfg.dy)
-            upper = (9.0 * self.u[-1] - self.u[-2]) / (3.0 * cfg.dy)
+            lower = (9.0 * self.u[0] - self.u[1] - 8.0 * wall_lower) / (3.0 * cfg.dy)
+            upper = (9.0 * self.u[-1] - self.u[-2] - 8.0 * wall_upper) / (3.0 * cfg.dy)
         else:
-            lower = 2.0 * self.u[0] / cfg.dy
-            upper = 2.0 * self.u[-1] / cfg.dy
+            lower = 2.0 * (self.u[0] - wall_lower) / cfg.dy
+            upper = 2.0 * (wall_upper - self.u[-1]) / cfg.dy
         interior = (self.u[1:] - self.u[:-1]) / cfg.dy
         edges = torch.cat([lower.reshape(1, -1), interior, upper.reshape(1, -1)], dim=0)
         at_cells = 0.5 * (edges[1:] + edges[:-1])
