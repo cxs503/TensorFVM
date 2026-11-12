@@ -575,7 +575,7 @@ or high-Re 3-D states; Re = 400 convergence.
 Every item carries a `[[gap-status: open]]` or `[[gap-status: closed-by <paths>]]` annotation. `src/tensorfvm/verification/catalog_gate.py` (tests: `tests/test_verification_catalog_gate.py`) fails when an annotation is missing or a closure path is dead, so a gap going stale becomes a gate failure instead of a reader's chance discovery.
 
 
-1. **3D Lid-Driven Cavity**: Only 2D verified against Ghia  [[gap-status: open]]
+1. **3D Lid-Driven Cavity**: Only 2D verified against Ghia  [[gap-status: closed-by src/tensorfvm/lid_cavity_3d.py, scripts/verify_lid_cavity_3d.py, tests/test_native_lid_cavity_3d.py, src/tensorfvm/verification/artifacts/lid-cavity-3d/verification.json, docs/verification-lid-cavity-3d/REPORT.md]]
 2. **Compressible Flow**: No verification (incompressible only)  [[gap-status: closed-by src/tensorfvm/compressible/verification.py, tests/test_compressible_eos_riemann.py, tests/test_compressible_multimaterial.py]]
 3. **Moving Mesh**: ALE formulation not verified  [[gap-status: closed-by src/tensorfvm/moving_mesh.py, tests/test_moving_mesh_ale.py, tests/test_ale_transport_analytic.py, docs/pmm-ale-cfd/summary.json]]
 4. **Combustion**: No species transport verification  [[gap-status: closed-by src/tensorfvm/species.py, src/tensorfvm/verification/species_transport.py, tests/test_species_transport.py, docs/verification-species-transport/summary.json]]
@@ -583,7 +583,7 @@ Every item carries a `[[gap-status: open]]` or `[[gap-status: closed-by <paths>]
 
 ### 10.2 Planned Additions
 
-1. **3D Lid-Driven Cavity**: Extend Ghia comparison to 3D  [[gap-status: open]]
+1. **3D Lid-Driven Cavity**: Extend Ghia comparison to 3D  [[gap-status: closed-by src/tensorfvm/lid_cavity_3d.py, scripts/verify_lid_cavity_3d.py, tests/test_native_lid_cavity_3d.py, src/tensorfvm/verification/artifacts/lid-cavity-3d/verification.json, docs/verification-lid-cavity-3d/REPORT.md]]
 2. **Rotating Machinery**: MRF verification against literature
 3. **Heat Transfer**: Natural convection (de Vahl Davis 1983)
 4. **Compressible**: Isentropic vortex (exact solution)  [[gap-status: closed-by src/tensorfvm/compressible/isentropic_vortex.py, tests/test_compressible_isentropic_vortex.py, docs/verification-compressible-isentropic-vortex/envelope.json]]
