@@ -1,0 +1,321 @@
+{
+  "all_pass": true,
+  "c1_half_sphere": {
+    "anchor_xx": 1.0471975511965974,
+    "anchor_yy": 1.0471975511965974,
+    "anchor_zz": 1.7403402966737704,
+    "anisotropy_zz_over_xx": 1.6619025652658777,
+    "richardson": {
+      "M_xx": {
+        "anchor": 1.0471975511965974,
+        "observed_order": 1.8859901526107885,
+        "richardson": 1.0498948326796704,
+        "richardson_rel_err": 0.0025757140856478597
+      },
+      "M_yy": {
+        "anchor": 1.0471975511965974,
+        "observed_order": 1.6610405134535107,
+        "richardson": 1.046446238507338,
+        "richardson_rel_err": 0.000717450769819716
+      },
+      "M_zz": {
+        "anchor": 1.7403402966737704,
+        "observed_order": 2.724234212103811,
+        "richardson": 1.7493050263019212,
+        "richardson_rel_err": 0.005151136042350234
+      }
+    },
+    "rows": [
+      {
+        "M_xx": 0.95299401186496,
+        "M_yy": 0.954683481101165,
+        "M_zz": 1.6613814498791626,
+        "err_xx": 0.08995775364829127,
+        "err_yy": 0.08834442936742903,
+        "err_zz": 0.04536977448922957,
+        "mesh": "8x6",
+        "offdiag_max": 3.8963515573697816e-17,
+        "panels": 48
+      },
+      {
+        "M_xx": 1.013066683696762,
+        "M_yy": 1.0093498494220732,
+        "M_zz": 1.720870501352681,
+        "err_xx": 0.03259257764768006,
+        "err_yy": 0.03614189293250059,
+        "err_zz": 0.011187349599558824,
+        "mesh": "12x9",
+        "offdiag_max": 1.5929301606064372e-16,
+        "panels": 108
+      },
+      {
+        "M_xx": 1.0328712947337342,
+        "M_yy": 1.0280155804275164,
+        "M_zz": 1.7384787827914605,
+        "err_xx": 0.013680567192401375,
+        "err_yy": 0.018317432796860936,
+        "err_zz": 0.0010696263747197899,
+        "mesh": "16x12",
+        "offdiag_max": 1.6132875387025103e-16,
+        "panels": 192
+      },
+      {
+        "M_xx": 1.0452889781661145,
+        "M_yy": 1.0406182615803157,
+        "M_zz": 1.7476666955686193,
+        "err_xx": 0.0018225529923193583,
+        "err_yy": 0.006282758786786508,
+        "err_zz": 0.0042097507647507046,
+        "mesh": "24x18",
+        "offdiag_max": 1.7574239589632223e-17,
+        "panels": 432
+      },
+      {
+        "M_xx": 1.0486486818579426,
+        "M_yy": 1.044603368062083,
+        "M_zz": 1.7490570984228662,
+        "err_xx": 0.0013857277069517684,
+        "err_yy": 0.002477262414861591,
+        "err_zz": 0.005008676616725898,
+        "mesh": "32x24",
+        "offdiag_max": 3.409357243535312e-16,
+        "panels": 768
+      }
+    ]
+  },
+  "c3_half_spheroid": {
+    "rows": [
+      {
+        "a_over_b": 2.0,
+        "anchor_xx": 0.8797089800110901,
+        "anchor_yy": 2.9497897339104115,
+        "k_axial": 0.21001504897664153,
+        "k_transv": 0.704210425850353,
+        "meshes": [
+          {
+            "M_xx": 0.882952039512956,
+            "M_yy": 2.9191492442952494,
+            "M_zz_withheld": 5.253569977384298,
+            "err_xx": 0.0036865140353858736,
+            "err_yy": 0.01038734702440753,
+            "mesh": "24x18",
+            "panels": 432
+          },
+          {
+            "M_xx": 0.8845537600036546,
+            "M_yy": 2.933584236396983,
+            "M_zz_withheld": 5.26273968948085,
+            "err_xx": 0.005507253083290591,
+            "err_yy": 0.005493780565825462,
+            "mesh": "32x24",
+            "panels": 768
+          }
+        ]
+      },
+      {
+        "a_over_b": 4.0,
+        "anchor_xx": 0.6832524205954077,
+        "anchor_yy": 7.202713411539342,
+        "k_axial": 0.0815572500879464,
+        "k_transv": 0.8597605823405816,
+        "meshes": [
+          {
+            "M_xx": 0.6861322812660272,
+            "M_yy": 7.164652688646661,
+            "M_zz_withheld": 14.573828100377831,
+            "err_xx": 0.004214929334769008,
+            "err_yy": 0.005284220087350005,
+            "mesh": "24x18",
+            "panels": 432
+          },
+          {
+            "M_xx": 0.6873171280551699,
+            "M_yy": 7.190727383791689,
+            "M_zz_withheld": 14.60821009516641,
+            "err_xx": 0.005949056801321039,
+            "err_yy": 0.0016640989392207014,
+            "mesh": "32x24",
+            "panels": 768
+          }
+        ]
+      }
+    ]
+  },
+  "c4_quarter_spheroid": {
+    "rows": [
+      {
+        "a_over_b": 1.0,
+        "anchor_xx": 0.5235987755982987,
+        "meshes": [
+          {
+            "M_xx": 0.5310142871658112,
+            "err_xx": 0.01416258385829697,
+            "mesh": "24x18",
+            "panels": 432
+          },
+          {
+            "M_xx": 0.5301877871825306,
+            "err_xx": 0.01258408516464314,
+            "mesh": "32x24",
+            "panels": 768
+          }
+        ]
+      },
+      {
+        "a_over_b": 2.0,
+        "anchor_xx": 0.43985449000554505,
+        "meshes": [
+          {
+            "M_xx": 0.4466731026358195,
+            "err_xx": 0.015501973459878712,
+            "mesh": "24x18",
+            "panels": 432
+          },
+          {
+            "M_xx": 0.4458385033660594,
+            "err_xx": 0.013604529444359914,
+            "mesh": "32x24",
+            "panels": 768
+          }
+        ]
+      },
+      {
+        "a_over_b": 4.0,
+        "anchor_xx": 0.34162621029770385,
+        "meshes": [
+          {
+            "M_xx": 0.34547576487156784,
+            "err_xx": 0.011268323266266268,
+            "mesh": "24x18",
+            "panels": 432
+          },
+          {
+            "M_xx": 0.3452115874562697,
+            "err_xx": 0.010495029510298456,
+            "mesh": "32x24",
+            "panels": 768
+          }
+        ]
+      }
+    ]
+  },
+  "c5_image_convention": {
+    "max_wall_normal_velocity": 0.0,
+    "max_wall_potential_over_ua": 0.5111560176570542,
+    "n_probe": 81
+  },
+  "c6_double_body_identity": {
+    "M_xx_full_over_2": 1.0452889781661356,
+    "M_xx_half": 1.0452889781661145,
+    "M_yy_full_over_2": 1.0406182615803152,
+    "M_yy_half": 1.0406182615803157,
+    "mesh": "half 24x18 vs full 48x18",
+    "panels_full": 864,
+    "panels_half": 432,
+    "rel_xx": 2.0180292635330275e-14,
+    "rel_yy": 4.267551572424406e-16
+  },
+  "criteria": {
+    "C1": {
+      "pass": true,
+      "statement": "half sphere tangential M_xx, M_yy vs pi rho a^3/3 < 3% (Richardson < 1%, p >= 1)",
+      "threshold": {
+        "order": 1.0,
+        "panel": 0.03,
+        "richardson": 0.01
+      },
+      "value": {
+        "err_xx_finest": 0.0013857277069517684,
+        "err_yy_finest": 0.002477262414861591,
+        "observed_order_min": 1.6610405134535107,
+        "richardson_rel_err_max": 0.005151136042350234
+      }
+    },
+    "C2": {
+      "pass": true,
+      "statement": "half sphere normal M_zz vs m_stretch/2 < 3%",
+      "threshold": {
+        "panel": 0.03
+      },
+      "value": {
+        "M_zz": 1.7490570984228662,
+        "anchor": 1.7403402966737704,
+        "err_zz_finest": 0.005008676616725898
+      }
+    },
+    "C3": {
+      "pass": true,
+      "statement": "half spheroid a/b=2,4: M_xx vs k_axial rho V/2, M_yy vs k_transv rho V/2, each < 3%",
+      "threshold": {
+        "panel": 0.03
+      },
+      "value": {
+        "worst_err_finest": 0.005949056801321039
+      }
+    },
+    "C4": {
+      "pass": true,
+      "statement": "quarter spheroid (twin_hull) M_xx vs k_axial rho V/4 < 3%",
+      "threshold": {
+        "panel": 0.03
+      },
+      "value": {
+        "worst_err_finest": 0.013604529444359914
+      }
+    },
+    "C5": {
+      "pass": true,
+      "statement": "rigid-wall residual < 1e-8 and wall potential > 1e-3 (mirror is Neumann, not phi=0)",
+      "threshold": {
+        "wall_potential_min": 0.001,
+        "wall_residual": 1e-08
+      },
+      "value": {
+        "max_wall_normal_velocity": 0.0,
+        "max_wall_potential_over_ua": 0.5111560176570542,
+        "n_probe": 81
+      }
+    },
+    "C6": {
+      "pass": true,
+      "statement": "discrete identity m(half+image) = m(full)/2 for tangential directions, < 1e-9",
+      "threshold": {
+        "identity": 1e-09
+      },
+      "value": {
+        "rel_xx": 2.0180292635330275e-14,
+        "rel_yy": 4.267551572424406e-16
+      }
+    }
+  },
+  "elapsed_s": 108.46102547645569,
+  "mesh_ladder": [
+    [
+      8,
+      6
+    ],
+    [
+      12,
+      9
+    ],
+    [
+      16,
+      12
+    ],
+    [
+      24,
+      18
+    ],
+    [
+      32,
+      24
+    ]
+  ],
+  "rho": 1.0,
+  "tolerances": {
+    "identity": 1e-09,
+    "panel": 0.03,
+    "richardson": 0.01,
+    "wall_residual": 1e-08
+  }
+}
