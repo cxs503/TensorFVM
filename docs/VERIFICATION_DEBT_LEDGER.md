@@ -352,3 +352,25 @@
 - **明示未做**：n=64 三级阶；`planar`（无挤出全 3D 立方）对照仍未跑（9600² 耦合直接解超时问题不变，
   本单用 1e-18 的解析态缺陷替代该对照的作用）；未把二阶壁面闭合（`NativeViscous3D.wall_closure=
   'three_point'`）接到 hybrid 粘性路径（本单证伪了"壁面闭合是元凶"——元凶是 `z` 平面切向自由度）。
+
+### D15 Stokes 第二问题（壁面振荡驱动）—— 已交付（m16924, 2026-11-12）
+- 来源: D14 明示 NOT_SUPPORTED 项（`PeriodicChannelSolver` 壁面原为齐次 no-slip，无法提壁面驱动）。
+- 能力: `step(wall_velocity_m_s=...)` / `set_wall_velocity()` —— 非齐次 no-slip（half-cell ghost
+  `2u_w-u_0`、quadratic ghost `-2u_0+u_1/3+(8/3)u_w`），壁面贡献为隐式壁行常源 `coef·u_w/dy²`；
+  `wall_shear`/`dissipation` 同口径减 `u_w`。默认 (0,0) 逐位复现历史齐次壁结果。
+- 验证: `src/tensorfvm/verification/stokes_second_problem.py`（19 条预声明判据 **19/19 PASS**, 39.9 s）
+  + `tests/test_stokes_second_problem.py` + `docs/verification-stokes-second/{REPORT.md,criteria.md,summary.json,fig_stokes_second.png}`。
+- 关键数字（ny=64, dt/T=1/200, W=H/δ=2/5/10）: 剖面 L2 相对闭式 **0.735%/0.682%/0.760%**；
+  bulk 幅值 0.067%、相位 0.385°；壁面切应力三点估计 2.64%（方案自洽通量 4.6e-3%）；
+  非定常动量收支残差 **3.8e-15**（ρU0Hω 归一）；时间阶 1.025、壁法向阶 0.662（quadratic 闭合）；
+  定常运动壁 = Couette 1.2e-11（两种闭合）；负对照（振荡 vs 定常壁）差 282%。
+- 附带缺陷修复（性能）: 每步三对角求解 Python Thomas → LAPACK 批解（n>256 回退），
+  单次 11.7 ms → 0.94 ms（n=64），单步 40 ms → 5.6 ms；等价性专测 1.4e-16；
+  `test_channel_periodic.py` 43 s→23 s、`test_pulsatile_channel.py` 53 s→21 s。
+- 踩坑: ①离散动量收支必须**逐步**记账且含**两侧**壁面通量（漏上壁得 9.3% 假残差，W 越大越小=漏项特征）；
+  ②启动瞬变慢（νπ²/H²），5 时间常数≈93 s，W=10 需 ~30 周期；收敛研究改用闭式初值；
+  ③`half-cell` 一阶壁面闭合 + 时间误差同量级会把空间阶压到 0.134（假 FAIL），需 quadratic + dt/T=1/1000；
+  ④`μ∂u/∂y` 与教科书「+45°」差 180°（后者是平板受的力），判据按平板反力口径写。
+- 明示未做: 壁面法向运动/行波壁（`v` 钉零，NOT_SUPPORTED）；多频/随机驱动；二阶时间格式；
+  可压缩/湍流/变物性；实验对标（层流振荡通道的闭式解即精确解，无更优基准）。
+- 建议总账条目: `CASE-FVM-STOKES-SECOND`（算例池），验收=本文件 19 判据。
