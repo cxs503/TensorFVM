@@ -1,0 +1,109 @@
+{
+  "meta": {
+    "generated_at": "2026-11-12T11:08:52Z",
+    "tolerance": 0.05,
+    "t_star": 2.0,
+    "python": "3.11.6",
+    "numpy": "2.4.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "git_commit": "0cd53fa5",
+    "command": "PYTHONPATH=src python scripts/run_shallow_water_dam_break.py ",
+    "wall_time_s": 56.1392083093524
+  },
+  "artifacts": {
+    "profile_ritter-dry_n1600.csv": "profile_ritter-dry_n1600.csv",
+    "profile_stoker-wet_n1600.csv": "profile_stoker-wet_n1600.csv",
+    "metrics.json": "metrics.json",
+    "convergence.json": "convergence.json",
+    "exactness.json": "exactness.json",
+    "sensitivity.json": "sensitivity.json",
+    "front_definitions.json": "front_definitions.json",
+    "SUMMARY.md": "SUMMARY.md"
+  },
+  "cases": {
+    "ritter-dry": {
+      "key": "ritter-dry",
+      "kind": "dry",
+      "h0": 1.0,
+      "h1": 0.0,
+      "gravity": 9.81,
+      "x_dam": 0.0,
+      "x_min": -4.0,
+      "x_max": 6.0,
+      "t_star_end": 2.0,
+      "t_end": 0.638550856814101,
+      "reference": "Ritter (1892) Z. Ver. Deutsch. Ing. 36:947-954"
+    },
+    "stoker-wet": {
+      "key": "stoker-wet",
+      "kind": "wet",
+      "h0": 1.0,
+      "h1": 0.5,
+      "gravity": 9.81,
+      "x_dam": 0.0,
+      "x_min": -4.0,
+      "x_max": 6.0,
+      "t_star_end": 2.0,
+      "t_end": 0.638550856814101,
+      "reference": "Stoker (1957) Water Waves, ch. 10 (bore on a wet bed)"
+    }
+  },
+  "verdict": {
+    "ritter-dry": {
+      "front_wetted<5%": {
+        "value": 0.02890624999999991,
+        "limit": 0.05,
+        "pass": true
+      },
+      "depth_l1<5%": {
+        "value": 0.0007715065657630972,
+        "limit": 0.05,
+        "pass": true
+      },
+      "monotone(no_extrema)": {
+        "value": 0.0,
+        "limit": 0.05,
+        "pass": true
+      },
+      "tv_no_growth<0.5%": {
+        "value": 0.0,
+        "limit": 0.005,
+        "pass": true
+      },
+      "all_pass": true
+    },
+    "stoker-wet": {
+      "shock_position<5%": {
+        "value": 0.00021023436657714858,
+        "limit": 0.05,
+        "pass": true
+      },
+      "step_ratio<5%": {
+        "value": 5.762518619591793e-07,
+        "limit": 0.05,
+        "pass": true
+      },
+      "plateau_h2<5%": {
+        "value": 5.762518619591793e-07,
+        "limit": 0.05,
+        "pass": true
+      },
+      "depth_l1<5%": {
+        "value": 0.0004271934800380538,
+        "limit": 0.05,
+        "pass": true
+      },
+      "monotone(no_extrema)": {
+        "value": 0.0,
+        "limit": 0.05,
+        "pass": true
+      },
+      "tv_no_growth<0.5%": {
+        "value": 0.0010049771738320779,
+        "limit": 0.005,
+        "pass": true
+      },
+      "all_pass": true
+    }
+  }
+}
