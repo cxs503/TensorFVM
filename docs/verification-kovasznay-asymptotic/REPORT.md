@@ -5,8 +5,8 @@
 
 ## 0. 结论
 
-- 本单实际完成网格: 8, 16（判据在**最细一对** 8->16 上评估）。
-- 锚点验收句（总速度 L2 观测阶 ≥ 1.8）在最细对上 = **1.5875** → **honest FAIL（锚点不闭合）**。
+- 本单实际完成网格: 8, 16, 32（判据在**最细一对** 16->32 上评估）。
+- 锚点验收句（总速度 L2 观测阶 ≥ 1.8）在最细对上 = **1.8083** → **honest FAIL（锚点不闭合）**。
 - 挤出向伪速度 `w` 在每一级都**恰好为 0**（C2），对称面 tied 约束残差 `0.0000`（C1）——m16695 的闭包在更细网格上依然精确。
 
 ## 1. 案例介绍
@@ -30,20 +30,22 @@ Kovasznay (1948) 二维稳态不可压解析解（Re = 40，κ = 2π，λ = −2
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | 8 | 64 | 544 | 864 | 9.7258 | 24 | True | 2.6955e-09 | 0.0000 | 0.0000 | 0.0000 | 0.0401 | 0.0401 | 0.1034 |
 | 16 | 256 | 2112 | 3648 | 77.7948 | 18 | True | 2.0626e-09 | 0.0000 | 0.0000 | 0.0000 | 0.0133 | 0.0133 | 0.0382 |
+| 32 | 1024 | 8320 | 28032 | 1008.2169 | 14 | True | n/a | 0.0000 | 0.0000 | 0.0000 | 0.0038 | 0.0038 | 0.0114 |
 
 ### 3.2 观测阶（逐级对）
 
 | pair | h ratio | total | in-plane | pressure (mean-free) |
 |---|---:|---:|---:|---:|
 | 8->16 | 2.0000 | 1.5875 | 1.5875 | 1.4359 |
+| 16->32 | 2.0000 | 1.8083 | 1.8083 | 1.7453 |
 
 ### 3.3 全阶梯最小二乘斜率（log e vs log h）
 
 | budget | slope | max log residual | levels |
 |---|---:|---:|---:|
-| total | 1.5875 | 8.8818e-16 | 2 |
-| in-plane | 1.5875 | 8.8818e-16 | 2 |
-| pressure mean-free | 1.4359 | 1.3323e-15 | 2 |
+| total | 1.6979 | 0.0510 | 3 |
+| in-plane | 1.6979 | 0.0510 | 3 |
+| pressure mean-free | 1.5906 | 0.0715 | 3 |
 
 ### 3.4 判据
 
@@ -51,11 +53,11 @@ Kovasznay (1948) 二维稳态不可压解析解（Re = 40，κ = 2π，λ = −2
 |---|---|---|---|
 | C1 | tied-dof residual max|u_face-u_cell| <= 1e-12 at every level | 0.0000 | **PASS** |
 | C2 | spanwise L2 and max|w| exactly 0 at every level (w exact = 0) | 0.0000 | **PASS** |
-| C3 | ANCHOR: total velocity L2 order >= 1.8 on the finest pair 8->16 | 1.5875 | **FAIL** |
-| C4 | in-plane L2 order >= 1.8 on the finest pair | 1.5875 | **FAIL** |
-| C5 | least-squares total L2 slope over all levels >= 1.8 | 1.5875 | **FAIL** |
-| C6 | Picard reported numerical convergence at every level | True, True | **PASS** |
-| C7 | informational: pressure (mean-free) order on the finest pair | 1.4359 | **INFO** |
+| C3 | ANCHOR: total velocity L2 order >= 1.8 on the finest pair 16->32 | 1.8083 | **PASS** |
+| C4 | in-plane L2 order >= 1.8 on the finest pair | 1.8083 | **PASS** |
+| C5 | least-squares total L2 slope over all levels >= 1.8 | 1.6979 | **FAIL** |
+| C6 | Picard reported numerical convergence at every level | True, True, True | **PASS** |
+| C7 | informational: pressure (mean-free) order on the finest pair | 1.7453 | **INFO** |
 | C8 | informational: linear-configuration independence of total L2 <= 1e-06 | n/a | **INFO** |
 
 ## 4. 结果图
@@ -74,9 +76,9 @@ Kovasznay (1948) 二维稳态不可压解析解（Re = 40，κ = 2π，λ = −2
 
 | 关键量 | 值 | 基准/门槛 | 判定 |
 |---|---:|---|---|
-| 总速度 L2 观测阶（最细对 8->16） | 1.5875 | ≥ 1.8 | FAIL |
-| 面内 L2 观测阶（最细对） | 1.5875 | ≥ 1.8 | FAIL |
-| 全阶梯最小二乘斜率（total） | 1.5875 | ≥ 1.8 | FAIL |
+| 总速度 L2 观测阶（最细对 16->32） | 1.8083 | ≥ 1.8 | PASS |
+| 面内 L2 观测阶（最细对） | 1.8083 | ≥ 1.8 | PASS |
+| 全阶梯最小二乘斜率（total） | 1.6979 | ≥ 1.8 | FAIL |
 | 挤出向 max\|w\|（各级最大） | 0.0000 | 应为 0（w 精确为零） | PASS |
 | 对称面 tied 约束残差（各级最大） | 0.0000 | ≤ 1e-12 | PASS |
 

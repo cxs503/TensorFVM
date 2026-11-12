@@ -21,8 +21,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[2]
-RUNS = ROOT / 'runs' / 'kovasznay-asymptotic'
 OUT = Path(__file__).resolve().parent
+#: The level records are *committed* next to this report (``OUT/runs``); the
+#: script originally pointed at a repo-root ``runs/kovasznay-asymptotic`` that
+#: is not tracked, so the report could not be regenerated from the evidence in
+#: the repository.  Prefer the committed copy, keep the old path as a fallback.
+RUNS = OUT / 'runs'
+if not (RUNS / 'summary.json').is_file():
+    RUNS = ROOT / 'runs' / 'kovasznay-asymptotic'
 
 
 def load():
