@@ -1,0 +1,326 @@
+{
+  "all_pass": true,
+  "case": {
+    "gravity": 9.81,
+    "h0": 1.0,
+    "h1": 0.0,
+    "key": "ritter-dry",
+    "kind": "dry",
+    "reference": "Ritter (1892) Z. Ver. Deutsch. Ing. 36:947-954",
+    "t_end": 0.638550856814101,
+    "t_star_end": 2.0,
+    "x_dam": 0.0,
+    "x_max": 6.0,
+    "x_min": -4.0
+  },
+  "criteria": [
+    {
+      "detail": {
+        "cells": 1864,
+        "exact": 4.384928733742431,
+        "front": 4.384928733742429
+      },
+      "id": "F1",
+      "limit": 1e-10,
+      "pass": true,
+      "value": 4.051050649309351e-16,
+      "what": "estimator is the exact fan identity (not a fit)"
+    },
+    {
+      "detail": {
+        "error_n1600": 0.00017261518056277403,
+        "errors": [
+          0.0033225297692960343,
+          0.0010590824433118762,
+          0.0003911308005408731,
+          0.00017261518056277403,
+          8.214527790695314e-05
+        ],
+        "monotone": true,
+        "order_from_n400": 1.2245572133901834
+      },
+      "id": "F2",
+      "limit": 0.8,
+      "pass": true,
+      "value": 1.2245572133901834,
+      "what": "headline (front_fan) converges: order >= 0.8, <= 0.05 % at n=1600"
+    },
+    {
+      "detail": {
+        "error_ratio_3200_over_400": 1.5749999999999886,
+        "floor_ratio_n_ge_400": 3.4224999999999786,
+        "implied_depth_floor_fraction": [
+          0.0,
+          0.00010850694444444445,
+          0.0003135850694444402,
+          0.0003713650173611088,
+          0.00026916503906249605
+        ],
+        "wetted_errors": [
+          0.018750000000000266,
+          0.015625,
+          0.026562499999999822,
+          0.02890624999999991,
+          0.024609374999999822
+        ]
+      },
+      "id": "F3",
+      "limit": 1.0,
+      "pass": true,
+      "value": 1.5749999999999886,
+      "what": "front_wetted does NOT converge and its implied depth floor is dx-independent"
+    },
+    {
+      "detail": {
+        "front_estimated": 4.100284851636754,
+        "front_nominal": 4.0,
+        "gravity_factor": 1.05,
+        "measured_relative": 0.025071212909188567,
+        "n": 800,
+        "predicted_relative": 0.02469507659595993,
+        "relative_deviation": 0.01523122683045947
+      },
+      "id": "F4",
+      "limit": 0.05,
+      "pass": true,
+      "value": 0.01523122683045947,
+      "what": "a 5 % gravity error is reported as 2.47 % front error"
+    },
+    {
+      "detail": {
+        "fan_error_order1": 0.003948223781027327,
+        "fan_error_order2": 0.0003911308005408731,
+        "inversion_reproduced": true,
+        "n": 800,
+        "wetted_error_order1": 0.014062500000000089,
+        "wetted_error_order2": 0.026562499999999822
+      },
+      "id": "F5",
+      "limit": 3.0,
+      "pass": true,
+      "value": 10.094382174882538,
+      "what": "fan metric ranks order-1 worse than order-2 (wetted edge ranks it backwards)"
+    },
+    {
+      "detail": {
+        "0.0001-0.1": {
+          "errors": [
+            0.02416425351123519,
+            0.012311076862581372,
+            0.0059809653255020745,
+            0.0032067276299352354,
+            0.0018530721109232262
+          ],
+          "max_from_n800": 0.0059809653255020745,
+          "monotone_last3": true
+        },
+        "0.001-0.05": {
+          "errors": [
+            0.032348028229136405,
+            0.012649053745940275,
+            0.006302903420665196,
+            0.003649755906918073,
+            0.0022017793762600935
+          ],
+          "max_from_n800": 0.006302903420665196,
+          "monotone_last3": true
+        },
+        "0.01-0.2": {
+          "errors": [
+            0.0033225297692960343,
+            0.0010590824433118762,
+            0.0003911308005408731,
+            0.00017261518056277403,
+            8.214527790695314e-05
+          ],
+          "max_from_n800": 0.0003911308005408731,
+          "monotone_last3": true
+        }
+      },
+      "id": "F6",
+      "limit": 0.05,
+      "pass": true,
+      "value": 0.006302903420665196,
+      "what": "all windows converge and stay < 5 % from n=800"
+    },
+    {
+      "detail": {
+        "0.2": 0.00039574752435878047,
+        "0.4": 0.0003911308005408731,
+        "0.8": 0.00027488040773193667
+      },
+      "id": "F7",
+      "limit": 2.0,
+      "pass": true,
+      "value": 1.439708008381279,
+      "what": "front_fan varies < 2x over CFL 0.2/0.4/0.8 (n=800)"
+    },
+    {
+      "detail": {
+        "clipped_cells": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "h_min": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mass_drift": [
+          6.328271240363392e-15,
+          1.021405182655144e-14,
+          1.7541523789077473e-14,
+          3.2307490016592055e-14,
+          6.317169010117141e-14
+        ]
+      },
+      "id": "F8",
+      "limit": 1e-12,
+      "pass": true,
+      "value": 6.317169010117141e-14,
+      "what": "mass drift <= 1e-12, no clipping, h >= 0 on all grids"
+    },
+    {
+      "detail": {
+        "keys": [
+          "depth_l1<5%",
+          "monotone(no_extrema)",
+          "plateau_h2<5%",
+          "shock_position<5%",
+          "step_ratio<5%",
+          "tv_no_growth<0.5%"
+        ],
+        "plateau_error": 5.762518619591793e-07,
+        "shock_error": 0.00021023436657714858,
+        "step_ratio_error": 5.762518619591793e-07
+      },
+      "id": "F9",
+      "limit": 0.05,
+      "pass": true,
+      "value": 0.00021023436657714858,
+      "what": "Stoker branch unchanged: same verdict keys, all pass"
+    },
+    {
+      "detail": {
+        "dry_verdict_keys": [
+          "depth_l1<5%",
+          "front_fan<5%",
+          "front_wetted<5%",
+          "monotone(no_extrema)",
+          "tv_no_growth<0.5%"
+        ],
+        "measured": 0.02890624999999991,
+        "published": 0.02891,
+        "relative_deviation": 0.00012971290211312648
+      },
+      "id": "F10",
+      "limit": 0.034692,
+      "pass": true,
+      "value": 0.02890624999999991,
+      "what": "front_wetted_error still reproduces the published 2.891 % (n=1600)"
+    }
+  ],
+  "figure": "docs/verification-dam-break-front-metric/fig_dam_break_front_metric.png",
+  "generated_at": "2026-11-12T22:59:51Z",
+  "ladder": [
+    {
+      "depth_l1": 0.006226707907984355,
+      "dx": 0.05,
+      "front_exact": 4.0,
+      "front_fan": 4.013290119077184,
+      "front_fan_cells": 36,
+      "front_fan_error": 0.0033225297692960343,
+      "front_fan_slope_error": 0.04048138922348027,
+      "front_fan_spread": 0.04016918450554303,
+      "front_wetted": 4.075000000000001,
+      "front_wetted_error": 0.018750000000000266,
+      "n": 200,
+      "precursor_depth": 9.243373543106022e-12,
+      "precursor_length": 0.07500000000000107,
+      "steps": 171,
+      "wall_time_s": 0.33814544044435024
+    },
+    {
+      "depth_l1": 0.0030833597748260435,
+      "dx": 0.025,
+      "front_exact": 4.0,
+      "front_fan": 4.0042363297732475,
+      "front_fan_cells": 80,
+      "front_fan_error": 0.0010590824433118762,
+      "front_fan_slope_error": 0.022051068144669967,
+      "front_fan_spread": 0.018152589459767596,
+      "front_wetted": 3.9375,
+      "front_wetted_error": 0.015625,
+      "n": 400,
+      "precursor_depth": 0.0,
+      "precursor_length": 0.0,
+      "steps": 357,
+      "wall_time_s": 0.4880489408969879
+    },
+    {
+      "depth_l1": 0.0015419003450595436,
+      "dx": 0.0125,
+      "front_exact": 4.0,
+      "front_fan": 4.0015645232021635,
+      "front_fan_cells": 163,
+      "front_fan_error": 0.0003911308005408731,
+      "front_fan_slope_error": 0.011993054142604282,
+      "front_fan_spread": 0.009505254945786778,
+      "front_wetted": 3.8937500000000007,
+      "front_wetted_error": 0.026562499999999822,
+      "n": 800,
+      "precursor_depth": 0.0,
+      "precursor_length": 0.0,
+      "steps": 739,
+      "wall_time_s": 1.2197190802544355
+    },
+    {
+      "depth_l1": 0.0007715065657630972,
+      "dx": 0.00625,
+      "front_exact": 4.0,
+      "front_fan": 4.000690460722251,
+      "front_fan_cells": 330,
+      "front_fan_error": 0.00017261518056277403,
+      "front_fan_slope_error": 0.006115583281641764,
+      "front_fan_spread": 0.004884612203509444,
+      "front_wetted": 3.8843750000000004,
+      "front_wetted_error": 0.02890624999999991,
+      "n": 1600,
+      "precursor_depth": 0.0,
+      "precursor_length": 0.0,
+      "steps": 1513,
+      "wall_time_s": 3.2587645910680294
+    },
+    {
+      "depth_l1": 0.0003859625825704671,
+      "dx": 0.003125,
+      "front_exact": 4.0,
+      "front_fan": 4.000328581111628,
+      "front_fan_cells": 663,
+      "front_fan_error": 8.214527790695314e-05,
+      "front_fan_slope_error": 0.003078401346057024,
+      "front_fan_spread": 0.002459440684720256,
+      "front_wetted": 3.9015625000000007,
+      "front_wetted_error": 0.024609374999999822,
+      "n": 3200,
+      "precursor_depth": 0.0,
+      "precursor_length": 0.0,
+      "steps": 3081,
+      "wall_time_s": 8.36374636925757
+    }
+  ],
+  "n_pass": 10,
+  "n_total": 10,
+  "order": {
+    "front_fan_from_n400": 1.2245572133901834
+  },
+  "window": [
+    0.01,
+    0.2
+  ]
+}
