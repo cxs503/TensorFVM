@@ -1,6 +1,6 @@
 """Pipeline E2E smoke test: code path + test path (mission m4626)."""
 
-import smoke_marker_m4626
+from tensorfvm import smoke_marker_m4626
 
 
 def test_smoke_marker_value():
