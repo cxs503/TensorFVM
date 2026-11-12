@@ -294,11 +294,18 @@ def _shock_crossing(xvals: List[float], rho: List[float], level: float,
     raise RuntimeError("no shock crossing found upstream of the step face")
 
 
-def _sample_behind(prof, xvals, crossing, cfg, x_start, x_end, sel_keys):
+def _sample_behind(prof, xvals, crossing, cfg, x_start, x_end, sel_keys,
+                   dx: float | None = None):
     """Line-fit the cells in ``[x_start, x_end]`` behind the shock back to it."""
+    dx = cfg.dx if dx is None else dx
     behind = [k for k in range(len(xvals)) if x_start <= xvals[k] <= x_end]
     if not behind:
-        behind = [k for k in range(len(xvals)) if xvals[k] >= crossing][:1]
+        # the requested window is narrower than one cell: fall back to the first
+        # cell centre at least half a cell behind the crossing, i.e. the first
+        # cell whose upstream face lies at/behind the half-jump point.  A centre
+        # merely >= crossing can still sit inside the numerical transition, and
+        # sampling it reports a state between pre- and post-shock.
+        behind = [k for k in range(len(xvals)) if xvals[k] >= crossing + 0.5 * dx][:1]
     if not behind:  # pragma: no cover - defensive
         raise RuntimeError("no cell behind the shock before the step face")
     sel = torch.tensor(behind, dtype=torch.long)

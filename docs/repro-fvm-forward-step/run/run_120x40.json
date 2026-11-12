@@ -1,0 +1,44 @@
+{
+ "budget": {
+  "energy_drift": 0.002858265095226436,
+  "energy_fluid": 35.27900951121303,
+  "energy_outflow": -13.039624624461283,
+  "mass_drift": -5.035025054989373e-16,
+  "mass_fluid": 6.204191408512706,
+  "mass_outflow": -2.6761914085127083
+ },
+ "config": {
+  "cfl": 0.4,
+  "dx": 0.025,
+  "dy": 0.025,
+  "gamma": 1.4,
+  "limiter": "mc",
+  "lx": 3.0,
+  "ly": 1.0,
+  "mach": 3.0,
+  "nx": 120,
+  "ny": 40,
+  "order": 2,
+  "p": 1.0,
+  "project_wall_flux": true,
+  "rho": 1.4,
+  "step_h": 0.2,
+  "step_x": 0.6,
+  "t_end": 4.0,
+  "u_in": 3.0
+ },
+ "fields": "fields_120x40.npz",
+ "grid": {
+  "cells": 4800,
+  "cells_over_step": 8,
+  "dx": 0.025,
+  "dy": 0.025,
+  "nx": 120,
+  "ny": 40
+ },
+ "nsteps": 2834,
+ "positivity_fixes": 147,
+ "time": 4.0,
+ "torch_threads": 4,
+ "wall_seconds": 133.47114896774292
+}
