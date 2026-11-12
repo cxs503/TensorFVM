@@ -1,0 +1,188 @@
+{
+ "reynolds": 40.0,
+ "levels": [
+  {
+   "n": 32,
+   "closure": "dirichlet",
+   "tolerance": 1e-08,
+   "wall_seconds": 38.91,
+   "converged": true,
+   "outer_iterations": 14,
+   "cells": 1024,
+   "unknowns": 28032,
+   "velocity_l2": 0.003784596496571497,
+   "inplane_l2": 0.003784596496571497,
+   "spanwise_l2": 9.135485142443686e-18,
+   "max_abs_spanwise": 2.797051660325968e-17
+  },
+  {
+   "n": 16,
+   "closure": "dirichlet",
+   "tolerance": 1e-08,
+   "wall_seconds": 7.5,
+   "converged": true,
+   "outer_iterations": 18,
+   "cells": 256,
+   "unknowns": 7104,
+   "velocity_l2": 0.013223632501459814,
+   "inplane_l2": 0.013223632501459814,
+   "spanwise_l2": 3.556229104274308e-15,
+   "max_abs_spanwise": 1.296662681981379e-14
+  },
+  {
+   "n": 8,
+   "closure": "dirichlet",
+   "tolerance": 1e-08,
+   "wall_seconds": 1.62,
+   "converged": true,
+   "outer_iterations": 24,
+   "cells": 64,
+   "unknowns": 1824,
+   "velocity_l2": 0.0394578201005295,
+   "inplane_l2": 0.0394578201005295,
+   "spanwise_l2": 5.7156715155780026e-18,
+   "max_abs_spanwise": 1.8617343843669527e-17
+  },
+  {
+   "n": 16,
+   "closure": "symmetry",
+   "tolerance": 1e-08,
+   "wall_seconds": 17.94,
+   "converged": true,
+   "outer_iterations": 18,
+   "cells": 256,
+   "unknowns": 7104,
+   "velocity_l2": 0.01392759669253434,
+   "inplane_l2": 0.01330840601081513,
+   "spanwise_l2": 0.004106614065284585,
+   "max_abs_spanwise": 0.009413573338625912
+  },
+  {
+   "n": 8,
+   "closure": "symmetry",
+   "tolerance": 1e-08,
+   "wall_seconds": 4.06,
+   "converged": true,
+   "outer_iterations": 26,
+   "cells": 64,
+   "unknowns": 1824,
+   "velocity_l2": 0.04109024910609304,
+   "inplane_l2": 0.040091779838495635,
+   "spanwise_l2": 0.009003208371595907,
+   "max_abs_spanwise": 0.018954599632934034
+  }
+ ],
+ "asymptotic": [
+  {
+   "closure": "dirichlet",
+   "pair": "8->16",
+   "budget": "velocity_l2",
+   "coarse": 0.0394578201005295,
+   "fine": 0.013223632501459814,
+   "order": 1.5771927183669847
+  },
+  {
+   "closure": "dirichlet",
+   "pair": "8->16",
+   "budget": "inplane_l2",
+   "coarse": 0.0394578201005295,
+   "fine": 0.013223632501459814,
+   "order": 1.5771927183669847
+  },
+  {
+   "closure": "dirichlet",
+   "pair": "8->16",
+   "budget": "spanwise_l2",
+   "coarse": 5.7156715155780026e-18,
+   "fine": 3.556229104274308e-15,
+   "order": -9.28120954917895
+  },
+  {
+   "closure": "dirichlet",
+   "pair": "16->32",
+   "budget": "velocity_l2",
+   "coarse": 0.013223632501459814,
+   "fine": 0.003784596496571497,
+   "order": 1.8049071390151437
+  },
+  {
+   "closure": "dirichlet",
+   "pair": "16->32",
+   "budget": "inplane_l2",
+   "coarse": 0.013223632501459814,
+   "fine": 0.003784596496571497,
+   "order": 1.8049071390151437
+  },
+  {
+   "closure": "dirichlet",
+   "pair": "16->32",
+   "budget": "spanwise_l2",
+   "coarse": 3.556229104274308e-15,
+   "fine": 9.135485142443686e-18,
+   "order": 8.604651209501673
+  },
+  {
+   "closure": "symmetry",
+   "pair": "8->16",
+   "budget": "velocity_l2",
+   "coarse": 0.04109024910609304,
+   "fine": 0.01392759669253434,
+   "order": 1.5608497447866934
+  },
+  {
+   "closure": "symmetry",
+   "pair": "8->16",
+   "budget": "inplane_l2",
+   "coarse": 0.040091779838495635,
+   "fine": 0.01330840601081513,
+   "order": 1.5909686805342766
+  },
+  {
+   "closure": "symmetry",
+   "pair": "8->16",
+   "budget": "spanwise_l2",
+   "coarse": 0.009003208371595907,
+   "fine": 0.004106614065284585,
+   "order": 1.1324898390727018
+  }
+ ],
+ "criteria": [
+  {
+   "id": "C1",
+   "what": "dirichlet planes: spanwise L2 at n=16 is round-off",
+   "threshold": "<= 1e-12",
+   "measured": 3.556229104274308e-15,
+   "passed": true
+  },
+  {
+   "id": "C2",
+   "what": "dirichlet planes: in-plane order 8->16",
+   "threshold": ">= 1.5",
+   "measured": 1.5771927183669847,
+   "passed": true
+  },
+  {
+   "id": "C3",
+   "what": "symmetry planes: spurious spanwise L2 at n=16",
+   "threshold": "> 1e-3",
+   "measured": 0.004106614065284585,
+   "passed": true
+  },
+  {
+   "id": "C4",
+   "what": "symmetry planes: spurious spanwise order 8->16",
+   "threshold": "0.8 <= p <= 2.6",
+   "measured": 1.1324898390727018,
+   "passed": true
+  },
+  {
+   "id": "C5",
+   "what": "cross-closure in-plane difference at n=8",
+   "threshold": "<= 5 %",
+   "measured": 0.016066770448822355,
+   "passed": true
+  }
+ ],
+ "tolerance": 1e-08,
+ "all_pass": true
+}

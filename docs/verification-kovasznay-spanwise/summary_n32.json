@@ -1,0 +1,23 @@
+{
+ "reynolds": 40.0,
+ "tolerance": 1e-08,
+ "convection_order": 2,
+ "gradient_jump_stabilization": 1.0,
+ "levels": [
+  {
+   "n": 32,
+   "closure": "dirichlet",
+   "tolerance": 1e-08,
+   "wall_seconds": 38.91,
+   "converged": true,
+   "outer_iterations": 14,
+   "cells": 1024,
+   "unknowns": 28032,
+   "velocity_l2": 0.003784596496571497,
+   "inplane_l2": 0.003784596496571497,
+   "spanwise_l2": 9.135485142443686e-18,
+   "max_abs_spanwise": 2.797051660325968e-17
+  }
+ ],
+ "asymptotic": []
+}
