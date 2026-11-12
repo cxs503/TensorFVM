@@ -34,9 +34,13 @@ What this module makes executable
 ---------------------------------
 ``vortex_primitive``
     The exact solution as a function of ``(x, y, t)``, with the periodic image
-    of the core chosen by minimum-image wrapping (the amplitude ``e^{(1-r^2)/2}``
-    is below ``1e-11`` at ``r = 5``, so a *single* image is exact to double
-    precision whenever the box exceeds ~10 core radii).
+    of the core chosen by minimum-image wrapping.  On the default 10 x 10 box the
+    nearest *neglected* image sits ``r = 5`` from the wall cells, i.e. amplitude
+    ``e^{(1-25)/2} = 6.1e-6`` -- three to four orders below the N=32 truncation
+    error and dt-independent, but *not* double precision; the envelope is pinned
+    by ``tests/test_compressible_isentropic_vortex.py::
+    test_single_image_representation_is_bounded_by_the_nearest_image`` and
+    ``envelope.json:periodic_image``.
 ``set_vortex`` / ``initial_state``
     Install the ``t``-snapshot as the solver state.
 ``error_norms``

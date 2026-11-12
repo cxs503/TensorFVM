@@ -61,28 +61,83 @@ ORDER_FLOOR = 1.8  # a second-order scheme has to measure clearly above 1
 # the exact solution itself
 # ----------------------------------------------------------------------
 def test_exact_solution_is_isentropic_and_bounded():
-    """``p = rho**gamma`` exactly and the swirl never makes the state non-physical.
+    """``p = rho**gamma`` exactly, and the closed-form envelope of the swirl.
 
-    NOT YET CALIBRATED: one envelope assertion in this test is still red on the
-    committed grid (the ``rho``/``p`` range assertions pass in the study itself,
-    see ``study.json:rows[min_rho, min_p]``), so the check is skipped rather than
-    silently weakened.  Closing it is recorded as a follow-up in
-    ``docs/verification-compressible-isentropic-vortex/report.md`` §5.
+    Calibrated 2026-11-12 (m16364) against the *closed form*
+    ``T(r) = 1 - K e^{1-r^2}``, ``K = (gamma-1) beta^2 / (8 gamma pi^2)``,
+    ``rho = T^{1/(gamma-1)}`` -- the same expression ``vortex_primitive``
+    evaluates, so the numbers below are derived, not fitted.  The values are
+    reproduced independently by
+    ``docs/verification-compressible-isentropic-vortex/envelope_calibration.py``
+    (``envelope.json``): beta=5 -> K=0.0905, T_min=0.7541, rho_min=0.4938,
+    p_min=0.3724; beta=1 -> rho_min=0.9756, p_min=0.9660.
+
+    Three distinct things are pinned: the isentropic identity (an algebraic
+    invariant), the *positivity* of the temperature (the condition
+    ``K e < 1``, which is what keeps the case physical), and the radial
+    monotonicity of a field whose only structure is a core-centred swirl.
     """
-    pytest.skip("analytic envelope assertion not yet calibrated (report.md §5)")
     x, y = torch.meshgrid(
         torch.linspace(0.0, L, 41, dtype=torch.float64),
         torch.linspace(0.0, L, 41, dtype=torch.float64),
         indexing="ij",
     )
+    r2 = (x - 0.5 * L) ** 2 + (y - 0.5 * L) ** 2
     for beta in (1.0, 5.0):
         state = vortex_primitive(x, y, lx=L, ly=L, beta=beta)
-        assert torch.allclose(state["p"], state["rho"] ** 1.4, rtol=1e-13)
-        rho = state["rho"]
-        assert float(rho.min()) > 0.4          # T_min > 0 => rho_min ~ 0.494 at beta=5
-        assert float(rho.max()) <= 1.0 + 1e-12  # undisturbed free stream is the maximum
-        assert float(state["p"].min()) > 0.3
-        assert float(state["u"].abs().max()) < 1.2  # |u_inf| = 1 plus the swirl increment
+        rho, p = state["rho"], state["p"]
+        # (1) isentropic identity, exact in the closed form
+        assert torch.allclose(p, rho ** 1.4, rtol=1e-13, atol=0.0)
+
+        # (2) the closed-form amplitude scale and the extrema it implies
+        k = (1.4 - 1.0) * beta * beta / (8.0 * 1.4 * math.pi ** 2)
+        t_min = 1.0 - k * math.e            # e^{1-r^2} = e at the core r = 0
+        rho_min = t_min ** (1.0 / (1.4 - 1.0))
+        # positivity of T everywhere: the physicality condition K e < 1
+        assert 1.0 - k * math.e > 0.0 and t_min > 0.7
+        # the 41-point grid samples the core exactly, so the extrema are exact
+        assert float(rho.min()) == pytest.approx(rho_min, rel=1e-13)
+        assert float(p.min()) == pytest.approx(rho_min ** 1.4, rel=1e-13)
+        # far field: the swirl decays to the unit free stream, never above it
+        assert float(rho.max()) <= 1.0 + 1e-15 and float(p.max()) <= 1.0 + 1e-15
+        # the swirl speed peaks at |delta u| = beta/(2 pi) (max of d*e^{(1-d^2)/2}
+        # at d = 1), so the streamwise velocity can never exceed that envelope
+        swirl = beta / (2.0 * math.pi)
+        assert float(state["u"].max()) <= 1.0 + swirl + 1e-12
+        assert float(state["u"].max()) >= 1.0 + 0.9 * swirl
+
+        # (3) the field is a function of r alone: rho non-decreasing in r^2
+        radial = rho.flatten()[torch.argsort(r2.flatten())]
+        assert float(torch.diff(radial).min()) >= -1e-14
+
+
+def test_single_image_representation_is_bounded_by_the_nearest_image():
+    """The neglected periodic images are bounded and far below the truncation error.
+
+    ``vortex_primitive`` keeps one image of the core; on a 10 x 10 box the
+    nearest *neglected* image sits 5 core radii away, so its amplitude is
+    ``exp((1 - 25)/2) = 6.1e-6`` at the wall cells (exactly the number
+    ``envelope.json:periodic_image`` reports).  That is the honest size of the
+    "no interpolation" claim: three to four orders below the N=32 truncation
+    error (~1e-2) that the order study measures, and dt-independent, so it
+    cannot bend the observed order -- but it is *not* double precision, and the
+    old module docstring said it was.  This gate keeps the comparison explicit.
+    """
+    x, y = torch.meshgrid(
+        torch.linspace(0.0, L, 41, dtype=torch.float64),
+        torch.linspace(0.0, L, 41, dtype=torch.float64),
+        indexing="ij",
+    )
+    dx, dy = x - 0.5 * L, y - 0.5 * L
+    worst = 0.0
+    for sx in (-L, 0.0, L):
+        for sy in (-L, 0.0, L):
+            if sx == 0.0 and sy == 0.0:
+                continue
+            r2 = (dx + sx) ** 2 + (dy + sy) ** 2
+            worst = max(worst, float(torch.exp(0.5 * (1.0 - r2)).max()))
+    assert worst == pytest.approx(math.exp(0.5 * (1.0 - 25.0)), rel=1e-12)
+    assert worst < 1e-4
 
 
 def test_exact_solution_is_periodic_across_the_seam():
