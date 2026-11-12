@@ -1,0 +1,247 @@
+{
+  "audit": {
+    "checks": {
+      "replay_diff": 2.2194785484023454e-15,
+      "tests_rerun": "12 passed",
+      "dt_independence": {
+        "1.0": {
+          "steps": 284,
+          "max_abs_u": 3.7499999999903664,
+          "bulk_velocity": 2.5021701388827524
+        },
+        "5.0": {
+          "steps": 71,
+          "max_abs_u": 3.749999999998215,
+          "bulk_velocity": 2.5021701388877506,
+          "max_abs_diff_vs_dt1": 7.848832694890007e-12
+        },
+        "25.0": {
+          "steps": 25,
+          "max_abs_u": 3.7499999999999076,
+          "bulk_velocity": 2.50217013888883,
+          "max_abs_diff_vs_dt1": 9.541256673628595e-12
+        }
+      },
+      "manifest_sha256": "7/7 match disk",
+      "out_of_plan_case": {
+        "half-cell": {
+          "steps": 71,
+          "converged": true,
+          "bulk_velocity": 2.5021701388877506,
+          "tau_wall_target": 0.3,
+          "velocity_l2_rel_peak": 0.0004340277774741494,
+          "max_divergence_scaled": 0.0,
+          "velocity_linf_rel_peak": 0.000434027777762321,
+          "bulk_rel_diff_vs_algebra": 0.0008680555551002555,
+          "profile_is_machine_exact": false,
+          "scheme_closure_estimator": "flux",
+          "scheme_closure_rel_residual": 3.7507034515253207e-13,
+          "tau_wall_sum_flux_estimator": 0.29999999999988747,
+          "momentum_balance_rel_residual": 3.7507034515253207e-13,
+          "quadratic_estimator_rel_error": 0.013888888888513584,
+          "tau_wall_sum_quadratic_estimator": 0.30416666666655406,
+          "body_force_rel_diff_vs_own_algebra": 0.0
+        },
+        "quadratic": {
+          "steps": 71,
+          "converged": true,
+          "bulk_velocity": 2.5005425347210926,
+          "tau_wall_target": 0.3,
+          "velocity_l2_rel_peak": 3.34651520909137e-13,
+          "max_divergence_scaled": 0.0,
+          "velocity_linf_rel_peak": 4.7333988580552e-13,
+          "bulk_rel_diff_vs_algebra": 0.00021701388843702317,
+          "profile_is_machine_exact": true,
+          "scheme_closure_estimator": "quadratic",
+          "scheme_closure_rel_residual": 3.7210975042019833e-13,
+          "tau_wall_sum_flux_estimator": 0.29687499999988853,
+          "momentum_balance_rel_residual": 0.010416666667038185,
+          "quadratic_estimator_rel_error": 3.7210975042019833e-13,
+          "tau_wall_sum_quadratic_estimator": 0.29999999999988836,
+          "body_force_rel_diff_vs_own_algebra": 0.0
+        }
+      },
+      "report_sections_1_to_6": "all present + error statement; quoted numbers cross-checked against benchmark.json (max rel diff < 0.5%, rounding only)",
+      "gate_arithmetic_recheck": "163/163 metric flags recomputed, 0 mismatches; all_gated_passed recomputed true",
+      "profile_error_recompute_from_csv": "velocity_l2 2.441406e-04 identical, csv error column deviation 0.0"
+    },
+    "not_run": [
+      "GitHub CI x86 (repo has no .github/workflows)",
+      "full repo pytest suite",
+      "cluster (702 loong64) submission - heaviest item was 26 s",
+      "third-party CFD cross-check (analytic reference suffices)"
+    ],
+    "findings": [
+      {
+        "id": "F1",
+        "what": "no tensor_benchmark_cases row for CASE-CHANNEL-PERIODIC -> gate referee table empty",
+        "action": "register one row (metric list + '<2%')",
+        "impact": "non-blocking, numbers independently recomputed",
+        "severity": "medium"
+      },
+      {
+        "id": "F2",
+        "what": "REPORT.md section 5 column headers print relative_error under physical-value names; section 5.2 axis inferred by inequality at benchmark_channel_periodic.py:514-517 so L/H and dt=20 rows render as duplicate 'wall_flux half-cell'; prose says dt 0.25-2 while PLAN is 2/8/20",
+        "action": "fix render_report labels",
+        "impact": "labels/wording only, numbers verified correct",
+        "severity": "low"
+      },
+      {
+        "id": "F3",
+        "what": "duplicate unreachable raise ValueError after return in wall_shear (channel_periodic.py:445)",
+        "action": "delete",
+        "impact": "none",
+        "severity": "low"
+      },
+      {
+        "id": "F4",
+        "what": "PASS is scoped: 3 coarse grid cases exceed 2% by design (gate=False predeclared)",
+        "action": "none",
+        "impact": "must be quoted as 14 gated cases",
+        "severity": "info"
+      },
+      {
+        "id": "F5",
+        "what": "velocity_l2 == velocity_linf under half-cell (uniform O(dy^2) offset)",
+        "action": "none",
+        "impact": "two metrics not independent",
+        "severity": "info"
+      }
+    ],
+    "worktree": "/root/tp-agent/work/m15888",
+    "artifacts": [
+      "TensorFVM/docs/reports/m15888_audit_m15859.md",
+      "TensorFVM/docs/reports/m15888_audit_m15859_verify.py",
+      "TensorFVM/docs/reports/m15888_audit_m15859_verify.json",
+      "TensorFVM/docs/reports/m15888_audit_m15859_figure.py",
+      "TensorFVM/docs/reports/figures/m15888_audit_m15859.png"
+    ],
+    "disposition": "approve with notes",
+    "audit_mission": 15888,
+    "level_rationale": "L4: real staggered MAC kernel + CLI entry + programmatic artifacts with per-file sha256 + official verification-suite caller + predeclared 2% plan with grid/Re/dt/domain/wall-flux studies; audit replay identical to 2.2e-15 and independent recomputation of every headline number. Not L5: textbook plane Poiseuille, no new physics or numerical result.",
+    "reviewed_commit": "22790eb0 (merged as 9be2ac53 -> c3a883a2)",
+    "overstated_claims": [
+      "if the delivery is read as 'all cases pass': 3 coarse grid cases fail their 2% shear criterion by design; report shows them as FAIL"
+    ],
+    "artifact_paths_pending_merge": [
+      "TensorFVM/docs/reports/m15888_audit_m15859.md",
+      "TensorFVM/docs/reports/m15888_audit_m15859_verify.py",
+      "TensorFVM/docs/reports/m15888_audit_m15859_verify.json",
+      "TensorFVM/docs/reports/m15888_audit_m15859_figure.py",
+      "TensorFVM/docs/reports/figures/m15888_audit_m15859.png"
+    ]
+  },
+  "entry": "TensorFVM/src/tensorfvm/benchmark_channel_periodic.py",
+  "tests": [
+    "tests/test_channel_periodic.py (12 tests, audit rerun: 12 passed in 40.6 s)",
+    "test_steady_solution_reproduces_the_exact_parabola_and_the_momentum_balance",
+    "test_quadratic_wall_flux_is_exact_for_a_parabolic_solution",
+    "test_grid_refinement_orders_match_the_discretisation",
+    "test_steady_state_does_not_depend_on_the_pseudo_time_step",
+    "test_normalised_error_is_reynolds_independent",
+    "test_verification_suite_caller_runs_the_case",
+    "test_benchmark_cli_writes_a_complete_artifact_set"
+  ],
+  "benchmark": {
+    "ref": {
+      "poiseuille": 96.0,
+      "velocity_l2": 0.0,
+      "bulk_velocity": 1.0,
+      "peak_velocity": 1.5,
+      "velocity_linf": 0.0,
+      "wall_shear_flux": 0.06,
+      "momentum_balance": 0.0,
+      "scaled_divergence": 0.0,
+      "wall_shear_quadratic": 0.06,
+      "convection_at_solution": 0.0
+    },
+    "tolerance": {
+      "value": 0.02,
+      "source": "code const src/tensorfvm/benchmark_channel_periodic.py:56 TOLERANCE=0.02; tensor_case_pool id=37 case_code=CHANNEL-PERIODIC tol_policy='<2%'"
+    },
+    "ref_source": "analytic: u=6*Ubar*(y/H)*(1-y/H), Ubar=G*H^2/(12*nu), tau_w=rho*G*H/2, f*Re_Dh=96; re-derived with sympy (symbolic_checks 10/10 true) and independently re-derived again by this audit",
+    "gated_scope": "14 gated cases of 17; coarse grids 16x8/16x16/16x32 declared gate=False in PLAN before numbers (they are the order study)",
+    "registry_gap": "tensor_benchmark_cases has 0 rows for anchor_slug CASE-CHANNEL-PERIODIC (26 anchors total; case_name ILIKE %channel% -> 0 rows) -> finding F1, registry row to be added",
+    "grid_convergence": {
+      "errors_l2_vs_dy": {
+        "ny8": 0.015625,
+        "ny16": 0.0039062,
+        "ny32": 0.00097656,
+        "ny64": 0.00024414
+      },
+      "predeclared_bands": {
+        "velocity_l2": [
+          1.7,
+          2.3
+        ],
+        "wall_shear_quadratic": [
+          0.8,
+          1.2
+        ]
+      },
+      "observed_orders_velocity_l2": [
+        2.0,
+        2.0,
+        2.0
+      ],
+      "observed_orders_wall_shear_quadratic": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "honest_disclosures": [
+      "ny=8 quadratic wall shear 8.33% > 2% (coarse grid, outside the gate by design, shown as FAIL in report section 5.1)",
+      "half-cell wall flux gives a uniform O(dy^2) profile offset, so velocity_l2 == velocity_linf (the two metrics are not independent)"
+    ],
+    "all_10_metrics_under_2pct": true,
+    "audit_independent_recompute": {
+      "all_under_2pct": true,
+      "bulk_rel_error": 0.0004882812498610001,
+      "delivered_poiseuille": 96.95265983406813,
+      "poiseuille_rel_error": 0.009923539938208345,
+      "poiseuille_recomputed": 96.952659834068,
+      "tau_wall_flux_estimator": 0.05999999999999321,
+      "tau_wall_flux_rel_error": 1.1310397063368782e-13,
+      "bulk_velocity_recomputed": 1.000488281249861,
+      "tau_wall_quadratic_estimator": 0.0606249999999932,
+      "tau_wall_quadratic_rel_error": 0.010416666666553342,
+      "poiseuille_rel_diff_vs_delivered": 1.319176726618037e-15
+    },
+    "rel_error_max_of_10_metrics": 0.0104167,
+    "got_main_case_16x64_ReH100_dt20_halfcell": {
+      "poiseuille": 96.9527,
+      "velocity_l2": 0.0002441406,
+      "bulk_velocity": 1.000488,
+      "peak_velocity": 1.5,
+      "velocity_linf": 0.0002441406,
+      "wall_shear_flux": 0.06,
+      "momentum_balance": 1.131e-13,
+      "scaled_divergence": 0.0,
+      "wall_shear_quadratic": 0.060625,
+      "convection_at_solution": 0.0
+    }
+  },
+  "repro_cmd": "cd /root/tp-agent/work/m15888 && PYTHONPATH=src python -m tensorfvm.benchmark_channel_periodic --out /tmp/m15888-repro  # audit ran it: 26.4 s, verdict PASS, 163 metrics match published values to max rel diff 2.2e-15",
+  "impl_files": [
+    "TensorFVM/src/tensorfvm/channel_periodic.py",
+    "TensorFVM/src/tensorfvm/benchmark_channel_periodic.py"
+  ],
+  "run_artifacts": [
+    "TensorFVM/docs/case-channel-periodic/benchmark.json",
+    "TensorFVM/docs/case-channel-periodic/metrics.csv",
+    "TensorFVM/docs/case-channel-periodic/profiles.csv",
+    "TensorFVM/docs/case-channel-periodic/manifest.json",
+    "TensorFVM/docs/case-channel-periodic/REPORT.md",
+    "TensorFVM/docs/case-channel-periodic/figures/profile.png",
+    "TensorFVM/docs/case-channel-periodic/figures/convergence.png",
+    "TensorFVM/docs/case-channel-periodic/figures/perturbation.png"
+  ],
+  "external_anchor": "plane-channel f*Re_Dh = 96 (Shah & London 1978 Laminar Flow Forced Convection in Ducts; White, Viscous Fluid Flow section 3); audit re-derived all targets independently and also ran an out-of-plan case (nx=12, ny=48, Re_H=250) matching the analytic parabola to 2.2e-13 (quadratic wall flux) with scheme closure 3.7e-13",
+  "integration_callers": [
+    "from ..benchmark_channel_periodic import run_case",
+    "TensorFVM/src/tensorfvm/verification/cases.py:133 channel_periodic() -> run_case()",
+    "TensorFVM/src/tensorfvm/verification/__main__.py:48 --channel-periodic flag + summary channel_periodic_passed",
+    "TensorFVM/docs/benchmarks-index.md:355-361 case index entry"
+  ]
+}
