@@ -45,7 +45,7 @@ COMPONENTS = ('u', 'v', 'w')
 
 
 def extrusion_solver(n, reynolds=40., *, tangential='symmetry', divisions=None,
-                     convection_order=2):
+                     convection_order=2, linear_method='reused_lu'):
     """Kovasznay solver on an extruded mesh.
 
     ``tangential='symmetry'``  delivered setup: tangential components of the
@@ -62,6 +62,9 @@ def extrusion_solver(n, reynolds=40., *, tangential='symmetry', divisions=None,
         closure a continuum symmetry plane actually asks for, and the only one
         of the three that is available without knowing the exact solution.
     ``divisions`` overrides the mesh (e.g. ``(n, n, 4)``) for z-refinement.
+    ``linear_method`` is forwarded to the coupled Stokes/NS linear solver
+    (``reused_lu``/``direct``/``block_amg``); the default keeps every published
+    number of the earlier rounds bit-identical.
     """
     if tangential not in ('symmetry', 'dirichlet', 'zero_gradient'):
         raise ValueError("tangential must be 'symmetry', 'dirichlet' or 'zero_gradient'")
@@ -83,7 +86,7 @@ def extrusion_solver(n, reynolds=40., *, tangential='symmetry', divisions=None,
     solver = NativeHybridNavierStokes3D(
         mesh, fixed, boundary, viscosity=1. / reynolds, body_force=0.,
         gauge_value=exact['pressure'][0], convection_order=convection_order,
-        coupled_linear_method='reused_lu', zero_gradient_faces=zero_gradient)
+        coupled_linear_method=linear_method, zero_gradient_faces=zero_gradient)
     return mesh, solver, exact
 
 

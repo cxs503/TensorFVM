@@ -1,0 +1,146 @@
+{
+  "levels": [
+    8,
+    16
+  ],
+  "linear_method": "reused_lu",
+  "records": [
+    {
+      "n": 8,
+      "h": 0.125,
+      "reynolds": 40.0,
+      "convection_order": 2,
+      "closure": "zero_gradient",
+      "linear_method": "reused_lu",
+      "cells": 64,
+      "faces": 544,
+      "unknowns": 864,
+      "converged": true,
+      "outer_iterations": 24,
+      "final_momentum_residual": 2.6955155358871457e-09,
+      "final_divergence_max": 2.886579864025407e-15,
+      "inner_iterations": 21,
+      "seconds": 9.725822687149048,
+      "tie_residual": 0.0,
+      "tied_components": 512,
+      "spanwise_l2": 0.0,
+      "max_abs_w": 0.0,
+      "inplane_l2": 0.040054225228155084,
+      "total_l2": 0.04005422522815509,
+      "linear_true_relative_residual": null,
+      "linear_gmres_iterations": null,
+      "gate": 1.8,
+      "pressure_l2": 0.285280688756023,
+      "pressure_mean_free_l2": 0.103358051599226
+    },
+    {
+      "n": 16,
+      "h": 0.0625,
+      "reynolds": 40.0,
+      "convection_order": 2,
+      "closure": "zero_gradient",
+      "linear_method": "reused_lu",
+      "cells": 256,
+      "faces": 2112,
+      "unknowns": 3648,
+      "converged": true,
+      "outer_iterations": 18,
+      "final_momentum_residual": 2.0625554583861743e-09,
+      "final_divergence_max": 2.7144952952085077e-14,
+      "inner_iterations": 36,
+      "seconds": 77.79482698440552,
+      "tie_residual": 0.0,
+      "tied_components": 2048,
+      "spanwise_l2": 0.0,
+      "max_abs_w": 0.0,
+      "inplane_l2": 0.01332787507585613,
+      "total_l2": 0.01332787507585613,
+      "linear_true_relative_residual": null,
+      "linear_gmres_iterations": null,
+      "gate": 1.8,
+      "pressure_l2": 0.1577111774100738,
+      "pressure_mean_free_l2": 0.03820324242795779
+    }
+  ],
+  "ledger_others": [],
+  "checks": [
+    {
+      "id": "C1",
+      "statement": "tied-dof residual max|u_face-u_cell| <= 1e-12 at every level",
+      "value": 0.0,
+      "verdict": "PASS"
+    },
+    {
+      "id": "C2",
+      "statement": "spanwise L2 and max|w| exactly 0 at every level (w exact = 0)",
+      "value": 0.0,
+      "verdict": "PASS"
+    },
+    {
+      "id": "C3",
+      "statement": "ANCHOR: total velocity L2 order >= 1.8 on the finest pair 8->16",
+      "value": 1.5875076539597763,
+      "verdict": "FAIL"
+    },
+    {
+      "id": "C4",
+      "statement": "in-plane L2 order >= 1.8 on the finest pair",
+      "value": 1.5875076539597757,
+      "verdict": "FAIL"
+    },
+    {
+      "id": "C5",
+      "statement": "least-squares total L2 slope over all levels >= 1.8",
+      "value": 1.5875076539597752,
+      "verdict": "FAIL"
+    },
+    {
+      "id": "C6",
+      "statement": "Picard reported numerical convergence at every level",
+      "value": [
+        true,
+        true
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "id": "C7",
+      "statement": "informational: pressure (mean-free) order on the finest pair",
+      "value": 1.4358837845989445,
+      "verdict": "INFO"
+    },
+    {
+      "id": "C8",
+      "statement": "informational: linear-configuration independence of total L2 <= 1e-06",
+      "value": null,
+      "verdict": "INFO"
+    }
+  ],
+  "orders": [
+    {
+      "pair": "8->16",
+      "h_ratio": 2.0,
+      "total": 1.5875076539597763,
+      "inplane": 1.5875076539597757,
+      "pressure_mean_free": 1.4358837845989445
+    }
+  ],
+  "fits": {
+    "total_l2": {
+      "slope": 1.5875076539597752,
+      "max_log_residual": 8.881784197001252e-16,
+      "levels": 2
+    },
+    "inplane_l2": {
+      "slope": 1.5875076539597752,
+      "max_log_residual": 8.881784197001252e-16,
+      "levels": 2
+    },
+    "pressure_mean_free_l2": {
+      "slope": 1.4358837845989443,
+      "max_log_residual": 1.3322676295501878e-15,
+      "levels": 2
+    }
+  },
+  "anchor_closed": false
+}
