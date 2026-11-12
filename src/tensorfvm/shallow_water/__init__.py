@@ -32,6 +32,7 @@ from .exact import (
     t_star_to_time,
     time_to_t_star,
 )
+from .bed import ShallowWaterBed1D
 from .swe1d import ShallowWater1D
 
 __all__ = [
@@ -41,6 +42,7 @@ __all__ = [
     "TOLERANCE",
     "DamBreakCase",
     "ShallowWater1D",
+    "ShallowWaterBed1D",
     "check_stoker_solution",
     "convergence_study",
     "exactness_checks",
