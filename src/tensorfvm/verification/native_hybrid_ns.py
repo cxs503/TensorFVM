@@ -58,21 +58,47 @@ def kovasznay_fields(points, reynolds=40.):
 
 
 def kovasznay_solver(n, reynolds=40., *, convection_order=2, triangulate_faces=True,
-                     coupled_linear_method='direct', symmetry_extrusion=False):
+                     coupled_linear_method='direct', symmetry_extrusion=False,
+                     symmetry_closure='free'):
 
-    """Unit cube segment of an analytic 2D flow, fixed exact boundary means."""
+    """Unit cube segment of an analytic 2D flow, fixed exact boundary means.
+
+    ``symmetry_closure`` only matters with ``symmetry_extrusion`` and names how the
+    tangential components of the two extrusion planes are closed:
+
+    ``'free'`` (default, historical)
+        They are un-fixed, i.e. left as free unknowns with their own momentum rows
+        -- a traction-free closure, *not* a symmetry condition.
+    ``'zero_gradient'``
+        The symmetry condition: the same faces are handed to the solver's
+        ``zero_gradient_faces`` mechanism so the tangential face value is tied to
+        the owner cell value, making the discrete normal derivative vanish.  The
+        free closure leaves a spurious O(h) spanwise velocity on this mesh
+        (max|w| ~ 1.9e-2 at n=8, first order) which caps the observed L2 order at
+        1.684; the zero-gradient closure removes it to round-off and the order is
+        1.808 (see :mod:`tensorfvm.verification.kovasznay_symmetry`).
+    """
+    if symmetry_closure not in ('free', 'zero_gradient'):
+        raise ValueError("symmetry_closure must be 'free' or 'zero_gradient'")
+    if symmetry_closure == 'zero_gradient' and not symmetry_extrusion:
+        raise ValueError('symmetry_closure only applies to the extruded mesh')
     mesh = channel_mesh((n,n,1) if symmetry_extrusion else n,triangulate_faces=triangulate_faces)
     fields = lambda points: kovasznay_fields(points,reynolds)
     exact = fields(mesh.cell_centers)
     boundary = exact_boundary_velocity_means(mesh,fields)
     fixed = np.repeat((mesh.neighbor<0)[:,None],3,axis=1)
+    zero_gradient = None
     if symmetry_extrusion:
         z = mesh.face_centers[:,2]
         planes = (mesh.neighbor<0) & ((z<1e-10)|(z>1-1e-10))
         fixed[planes,:2] = False
+        if symmetry_closure == 'zero_gradient':
+            zero_gradient = np.zeros((len(mesh.owner),3),bool)
+            zero_gradient[planes,:2] = True
     solver = NativeHybridNavierStokes3D(mesh,fixed,boundary,
         viscosity=1/reynolds,body_force=0.,gauge_value=exact['pressure'][0],
-        convection_order=convection_order,coupled_linear_method=coupled_linear_method)
+        convection_order=convection_order,coupled_linear_method=coupled_linear_method,
+        zero_gradient_faces=zero_gradient)
     return mesh,solver,exact
 
 
