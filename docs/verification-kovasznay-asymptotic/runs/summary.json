@@ -1,7 +1,8 @@
 {
   "levels": [
     8,
-    16
+    16,
+    32
   ],
   "linear_method": "reused_lu",
   "records": [
@@ -60,6 +61,49 @@
       "gate": 1.8,
       "pressure_l2": 0.1577111774100738,
       "pressure_mean_free_l2": 0.03820324242795779
+    },
+    {
+      "n": 32,
+      "h": 0.03125,
+      "reynolds": 40.0,
+      "convection_order": 2,
+      "closure": "zero_gradient",
+      "linear_method": "reused_lu",
+      "cells": 1024,
+      "faces": 8320,
+      "unknowns": 28032,
+      "converged": true,
+      "outer_iterations": 14,
+      "final_momentum_residual": NaN,
+      "final_divergence_max": NaN,
+      "inner_iterations": null,
+      "seconds": 1008.21693110466,
+      "tie_residual": 0.0,
+      "tied_components": 8192,
+      "spanwise_l2": 0.0,
+      "max_abs_w": 0.0,
+      "inplane_l2": 0.003805383187612432,
+      "total_l2": 0.003805383187612432,
+      "linear_true_relative_residual": null,
+      "linear_gmres_iterations": null,
+      "gate": 1.8,
+      "pressure_l2": 0.0784349322368888,
+      "pressure_mean_free_l2": 0.011395037726476884,
+      "peak_rss_mb": 858.21875,
+      "source": "docs/verification-kovasznay-order-closure/runs/level_32/summary.json",
+      "adopted_by": "docs/verification-kovasznay-asymptotic/asymptotic_note.py",
+      "provenance": {
+        "reynolds": "from the campaign configuration (kovasznay_order_closure.py default Re=40)",
+        "convection_order": "second-order deferred correction (same solver factory)",
+        "linear_method": "reused_lu (same solver factory default)",
+        "unknowns": "campaign field `dofs`",
+        "final_momentum_residual": "not recorded by the campaign (convergence flag only)",
+        "final_divergence_max": "not recorded by the campaign (convergence flag only)",
+        "inner_iterations": "not recorded by the campaign",
+        "linear_true_relative_residual": "not recorded by the campaign",
+        "linear_gmres_iterations": "not recorded by the campaign",
+        "gate": 1.8
+      }
     }
   ],
   "ledger_others": [],
@@ -78,26 +122,27 @@
     },
     {
       "id": "C3",
-      "statement": "ANCHOR: total velocity L2 order >= 1.8 on the finest pair 8->16",
-      "value": 1.5875076539597763,
-      "verdict": "FAIL"
+      "statement": "ANCHOR: total velocity L2 order >= 1.8 on the finest pair 16->32",
+      "value": 1.8083331432262804,
+      "verdict": "PASS"
     },
     {
       "id": "C4",
       "statement": "in-plane L2 order >= 1.8 on the finest pair",
-      "value": 1.5875076539597757,
-      "verdict": "FAIL"
+      "value": 1.8083331432262804,
+      "verdict": "PASS"
     },
     {
       "id": "C5",
       "statement": "least-squares total L2 slope over all levels >= 1.8",
-      "value": 1.5875076539597752,
+      "value": 1.697920398593029,
       "verdict": "FAIL"
     },
     {
       "id": "C6",
       "statement": "Picard reported numerical convergence at every level",
       "value": [
+        true,
         true,
         true
       ],
@@ -106,7 +151,7 @@
     {
       "id": "C7",
       "statement": "informational: pressure (mean-free) order on the finest pair",
-      "value": 1.4358837845989445,
+      "value": 1.7452893884121665,
       "verdict": "INFO"
     },
     {
@@ -123,23 +168,30 @@
       "total": 1.5875076539597763,
       "inplane": 1.5875076539597757,
       "pressure_mean_free": 1.4358837845989445
+    },
+    {
+      "pair": "16->32",
+      "h_ratio": 2.0,
+      "total": 1.8083331432262804,
+      "inplane": 1.8083331432262804,
+      "pressure_mean_free": 1.7452893884121665
     }
   ],
   "fits": {
     "total_l2": {
-      "slope": 1.5875076539597752,
-      "max_log_residual": 8.881784197001252e-16,
-      "levels": 2
+      "slope": 1.697920398593029,
+      "max_log_residual": 0.051021521760284294,
+      "levels": 3
     },
     "inplane_l2": {
-      "slope": 1.5875076539597752,
-      "max_log_residual": 8.881784197001252e-16,
-      "levels": 2
+      "slope": 1.697920398593029,
+      "max_log_residual": 0.051021521760284294,
+      "levels": 3
     },
     "pressure_mean_free_l2": {
-      "slope": 1.4358837845989443,
-      "max_log_residual": 1.3322676295501878e-15,
-      "levels": 2
+      "slope": 1.590586586505556,
+      "max_log_residual": 0.07148787397752798,
+      "levels": 3
     }
   },
   "anchor_closed": false
