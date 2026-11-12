@@ -1,0 +1,302 @@
+{
+  "all_pass": true,
+  "criteria": {
+    "C1_waterplane_neumann_residual": {
+      "limit": 1e-08,
+      "note": "sphere R=1 at depth 2R, lateral translation, 112 field probes on z=0",
+      "pass": true,
+      "value": 0.0
+    },
+    "C2_mirror_pairing_identity": {
+      "limit": 1e-06,
+      "note": "|2 M_half(single_hull) - M_full(body)| / M_full on cell-matched meshes; a flipped image or a missing factor 2 breaks it by O(1)",
+      "pass": true,
+      "value": 4.706866123650728e-14
+    },
+    "C3_analytic_half_body_anchor": {
+      "limit": "finest mesh < 3 % vs (1/2) Lamb closed form",
+      "pass": true,
+      "value": {
+        "a_over_b_1": {
+          "M_xx": 0.0006576917179546889,
+          "M_yy": 0.006640610477510448
+        },
+        "a_over_b_2": {
+          "M_xx": 0.004846646775301751,
+          "M_yy": 0.009968541049525442
+        },
+        "a_over_b_4": {
+          "M_xx": 0.0045931069058490325,
+          "M_yy": 0.00221054803777107
+        }
+      }
+    },
+    "C4_cross_term_zero": {
+      "limit": 0.01,
+      "note": "|M_xy| / sqrt(M_xx M_yy); exact zero by the y -> -y symmetry",
+      "pass": true,
+      "value": 3.0501813516153675e-17
+    },
+    "C5_normal_anchor_falsified": {
+      "limit": "> 3 %",
+      "note": "M_zz (translation normal to the wall) is WITHHELD: the wall image reflects the normal velocity, so the reassembled body is not a rigid translation and (1/2) M_full is not an anchor",
+      "pass": true,
+      "value": 1.0199940697013892
+    },
+    "C6_twin_hull_two_body_equivalence": {
+      "limit": 0.01,
+      "note": "twin_hull split solve vs per-body integral of the merged two-body solve",
+      "pass": true,
+      "value": 3.609717086363073e-15
+    },
+    "C7_twin_hull_decay": {
+      "limit": "[-3.5, -2.5]",
+      "note": "log-log slope of |M_twin - M_single| vs demihull separation",
+      "pass": true,
+      "value": -3.0009295931328506
+    }
+  },
+  "elapsed_s": 60.00982831045985,
+  "meshes_full_body": [
+    "24x8",
+    "36x12",
+    "48x16"
+  ],
+  "quadrature": "gauss (order 3) for the surface integral, order 3 in the solver",
+  "rho": 1.0,
+  "tables": {
+    "c1_waterplane_residual": {
+      "max_abs_dphi_dz": 0.0,
+      "n_points": 112,
+      "rms": 0.0
+    },
+    "half_body": [
+      {
+        "M_xx": 1.046508818040113,
+        "M_xy": 3.182472189423857e-17,
+        "M_yy": 1.040243520166098,
+        "M_zz": 1.7464919194137403,
+        "a_over_b": 1.0,
+        "cross_term_ratio": 3.0501813516153675e-17,
+        "err_x": 0.0006576917179546889,
+        "err_y": 0.006640610477510448,
+        "half_of_full_transverse": 1.0471975511965974,
+        "naive_gap": 0.6677769322684939,
+        "pairing": [
+          {
+            "M_full_xx": 2.0210596666806784,
+            "M_full_yy": 2.0074023509016987,
+            "M_half_xx": 1.0105298333403334,
+            "M_half_yy": 1.0037011754508531,
+            "gap_x": 5.713002761103496e-15,
+            "gap_y": 3.760838759633773e-15,
+            "mesh_full": "24x8",
+            "mesh_half": "12x8",
+            "panels_full": 192,
+            "panels_half": 96
+          },
+          {
+            "M_full_xx": 2.0766879418428243,
+            "M_full_yy": 2.062581116428595,
+            "M_half_xx": 1.0383439709214226,
+            "M_half_yy": 1.0312905582142957,
+            "gap_x": 1.0050712214581092e-14,
+            "gap_y": 1.7224601013278467e-15,
+            "mesh_full": "36x12",
+            "mesh_half": "18x12",
+            "panels_full": 432,
+            "panels_half": 216
+          },
+          {
+            "M_full_xx": 2.0930176360802486,
+            "M_full_yy": 2.0804870403322004,
+            "M_half_xx": 1.046508818040113,
+            "M_half_yy": 1.040243520166098,
+            "gap_x": 1.0821002800897958e-14,
+            "gap_y": 2.134544465987892e-15,
+            "mesh_full": "48x16",
+            "mesh_half": "24x16",
+            "panels_full": 768,
+            "panels_half": 384
+          }
+        ],
+        "panels_half": 384,
+        "reference": {
+          "M_axial": 2.094395102393195,
+          "M_transverse": 2.094395102393195,
+          "k_axial": 0.49999999999999994,
+          "k_transverse": 0.49999999999999994,
+          "volume": 4.1887902047863905
+        },
+        "rim_area": 3.1214451522586275
+      },
+      {
+        "M_xx": 0.8839726187022648,
+        "M_xy": -2.1651856197714425e-17,
+        "M_yy": 2.920384633860457,
+        "M_zz": 5.248263039971822,
+        "a_over_b": 2.0,
+        "cross_term_ratio": 1.347583548128471e-17,
+        "err_x": 0.004846646775301751,
+        "err_y": 0.009968541049525442,
+        "half_of_full_transverse": 2.9497897339104115,
+        "naive_gap": 0.7791990322694701,
+        "pairing": [
+          {
+            "M_full_xx": 1.717762311493355,
+            "M_full_yy": 5.613440628437057,
+            "M_half_xx": 0.8588811557466747,
+            "M_half_yy": 2.8067203142185395,
+            "gap_x": 3.2315967616613163e-15,
+            "gap_y": 3.955588374804899e-15,
+            "mesh_full": "24x8",
+            "mesh_half": "12x8",
+            "panels_full": 192,
+            "panels_half": 96
+          },
+          {
+            "M_full_xx": 1.7575224264796283,
+            "M_full_yy": 5.783204281455491,
+            "M_half_xx": 0.8787612132398082,
+            "M_half_yy": 2.891602140727745,
+            "gap_x": 6.822336082486782e-15,
+            "gap_y": 3.071578925711379e-16,
+            "mesh_full": "36x12",
+            "mesh_half": "18x12",
+            "panels_full": 432,
+            "panels_half": 216
+          },
+          {
+            "M_full_xx": 1.7679452374045161,
+            "M_full_yy": 5.840769267720905,
+            "M_half_xx": 0.8839726187022648,
+            "M_half_yy": 2.920384633860457,
+            "gap_x": 7.661278536156263e-15,
+            "gap_y": 1.520653151989167e-15,
+            "mesh_full": "48x16",
+            "mesh_half": "24x16",
+            "panels_full": 768,
+            "panels_half": 384
+          }
+        ],
+        "panels_half": 384,
+        "reference": {
+          "M_axial": 1.7594179600221802,
+          "M_transverse": 5.899579467820823,
+          "k_axial": 0.21001504897664153,
+          "k_transverse": 0.704210425850353,
+          "volume": 8.377580409572781
+        },
+        "rim_area": 6.242890304516342
+      },
+      {
+        "M_xx": 0.6863906720068825,
+        "M_xy": -3.5453411040275995e-17,
+        "M_yy": 7.186791467540837,
+        "M_zz": 14.549438377068133,
+        "a_over_b": 4.0,
+        "cross_term_ratio": 1.5962643616127084e-17,
+        "err_x": 0.0045931069058490325,
+        "err_y": 0.00221054803777107,
+        "half_of_full_transverse": 7.202713411539342,
+        "naive_gap": 1.0199940697013892,
+        "pairing": [
+          {
+            "M_full_xx": 1.3334419300387186,
+            "M_full_yy": 13.937179129216931,
+            "M_half_xx": 0.6667209650193628,
+            "M_half_yy": 6.968589564608461,
+            "gap_x": 5.328636513923546e-15,
+            "gap_y": 6.372727303462793e-16,
+            "mesh_full": "24x8",
+            "mesh_half": "12x8",
+            "panels_full": 192,
+            "panels_half": 96
+          },
+          {
+            "M_full_xx": 1.3645168550717024,
+            "M_full_yy": 14.270802832564225,
+            "M_half_xx": 0.6822584275358686,
+            "M_half_yy": 7.135401416282117,
+            "gap_x": 2.5548239176128057e-14,
+            "gap_y": 6.223745293946678e-16,
+            "mesh_full": "36x12",
+            "mesh_half": "18x12",
+            "panels_full": 432,
+            "panels_half": 216
+          },
+          {
+            "M_full_xx": 1.3727813440138297,
+            "M_full_yy": 14.37358293508157,
+            "M_half_xx": 0.6863906720068825,
+            "M_half_yy": 7.186791467540837,
+            "gap_x": 4.706866123650728e-14,
+            "gap_y": 7.167920284771351e-15,
+            "mesh_full": "48x16",
+            "mesh_half": "24x16",
+            "panels_full": 768,
+            "panels_half": 384
+          }
+        ],
+        "panels_half": 384,
+        "reference": {
+          "M_axial": 1.3665048411908154,
+          "M_transverse": 14.405426823078685,
+          "k_axial": 0.0815572500879464,
+          "k_transverse": 0.8597605823405816,
+          "volume": 16.755160819145562
+        },
+        "rim_area": 12.485780609032883
+      }
+    ],
+    "twin_hull": {
+      "mesh": "18x12 per demihull",
+      "rows": [
+        {
+          "M_twin": 1.0457213663602496,
+          "M_two_body": 1.0457213663602458,
+          "delta_vs_single": 0.0073773954388269836,
+          "rel_gap": 3.609717086363073e-15,
+          "s_over_a": 6.0
+        },
+        {
+          "M_twin": 1.0399347835864852,
+          "M_two_body": 1.0399347835864854,
+          "delta_vs_single": 0.0015908126650625576,
+          "rel_gap": 2.1351781710700438e-16,
+          "s_over_a": 10.0
+        },
+        {
+          "M_twin": 1.038732253590664,
+          "M_two_body": 1.0387322535906642,
+          "delta_vs_single": 0.0003882826692414021,
+          "rel_gap": 2.137650045596187e-16,
+          "s_over_a": 16.0
+        },
+        {
+          "M_twin": 1.0384590135792608,
+          "M_two_body": 1.0384590135792615,
+          "delta_vs_single": 0.00011504265783823797,
+          "rel_gap": 6.414637516401613e-16,
+          "s_over_a": 24.0
+        },
+        {
+          "M_twin": 1.0383688201056023,
+          "M_two_body": 1.0383688201056016,
+          "delta_vs_single": 2.4849184179664974e-05,
+          "rel_gap": 6.415194696498572e-16,
+          "s_over_a": 40.0
+        }
+      ],
+      "single_hull_M_xx": 1.0383439709214226
+    }
+  },
+  "task": "D2 double-body / waterplane mirror added-mass verification",
+  "withheld": [
+    {
+      "quantity": "M_zz (translation normal to the wall)",
+      "reason": "the wall image reflects the normal velocity component, so the reassembled body is not a rigid translation of the full body; no closed-form reference exists in this reduction (C5 measures how wrong the naive half-body anchor is)",
+      "status": "WITHHELD"
+    }
+  ]
+}
