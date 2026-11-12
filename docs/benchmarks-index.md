@@ -351,3 +351,11 @@ NACA三网格（64×26、128×52、256×104）全部达到稳态并通过独立�
 报告包含五档网格参数、真实切面、数值/解析压力与速度、尾部放大图、三网格误差曲线、
 七项原始门限收敛曲线和逐项原始数据。24,284 单元采样峰值 RSS **17.465 GiB**，
 下一步优先改进求解扩展能力和尾部四面体过渡，再推进 61,282 单元完整流场。
+
+## CASE-CHANNEL-PERIODIC (TensorFVM)
+Streamwise-periodic plane channel driven by a body force (no inlet/outlet): the exact
+parabola is the reference, bulk velocity and wall shear are outputs. Kernel
+`src/tensorfvm/channel_periodic.py`, driver `src/tensorfvm/benchmark_channel_periodic.py`,
+artifacts `docs/case-channel-periodic/` (benchmark.json, metrics.csv, profiles.csv,
+figures/, manifest.json, REPORT.md). Verdict: PASS, tolerance 2 %, reproduced by
+`PYTHONPATH=src python -m tensorfvm.benchmark_channel_periodic --out docs/case-channel-periodic`.
