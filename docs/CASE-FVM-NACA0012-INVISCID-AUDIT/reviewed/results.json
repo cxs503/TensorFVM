@@ -1,0 +1,186 @@
+{
+  "case": "CASE-FVM-NACA0012-INVISCID",
+  "method": "lifting source+vortex panel (Hess-Smith with equal-pressure Kutta)",
+  "card_thin_aerofoil_cl_2deg": 0.2198,
+  "thin_aerofoil_cl_2deg_exact": 0.2193245422464302,
+  "tolerance": 0.03,
+  "angle_scan_panels400": [
+    {
+      "alpha_deg": 0.0,
+      "cl": 2.6978419498391304e-14,
+      "cd": 2.9471506133666977e-05,
+      "cl_thin": 0.0,
+      "slope_per_deg": null,
+      "error_percent_vs_thin": 0.0,
+      "kutta_residual": 0.0,
+      "normal_residual": 2.3314683517128287e-15,
+      "te_speed": 0.6129958145415766,
+      "cp_min": -0.4137321218879113
+    },
+    {
+      "alpha_deg": 1.0,
+      "cl": 0.12071315317685405,
+      "cd": -0.0020773513974225374,
+      "cl_thin": 0.1096622711232151,
+      "slope_per_deg": 0.12071315317685405,
+      "error_percent_vs_thin": 10.077196049699104,
+      "kutta_residual": 3.3306690738754696e-16,
+      "normal_residual": 2.220446049250313e-15,
+      "te_speed": 0.6129024523098903,
+      "cp_min": -0.567367586263682
+    },
+    {
+      "alpha_deg": 2.0,
+      "cl": 0.24127923597097103,
+      "cd": -0.008395253268913418,
+      "cl_thin": 0.2193245422464302,
+      "slope_per_deg": 0.12063961798548552,
+      "error_percent_vs_thin": 10.010139996039674,
+      "kutta_residual": 4.440892098500626e-16,
+      "normal_residual": 2.3314683517128287e-15,
+      "te_speed": 0.6126223940539128,
+      "cp_min": -0.7938868321255825
+    },
+    {
+      "alpha_deg": 3.0,
+      "cl": 0.3615513571822744,
+      "cd": -0.01891653671810675,
+      "cl_thin": 0.3289868133696453,
+      "slope_per_deg": 0.12051711906075813,
+      "error_percent_vs_thin": 9.898434371605035,
+      "kutta_residual": 1.1102230246251565e-15,
+      "normal_residual": 2.886579864025407e-15,
+      "te_speed": 0.6121557250820977,
+      "cp_min": -1.1150349269594275
+    },
+    {
+      "alpha_deg": 4.0,
+      "cl": 0.48138298375756844,
+      "cd": -0.033628383181799115,
+      "cl_thin": 0.4386490844928604,
+      "slope_per_deg": 0.12034574593939211,
+      "error_percent_vs_thin": 9.742160824093459,
+      "kutta_residual": 6.661338147750939e-16,
+      "normal_residual": 3.1502578323738817e-15,
+      "te_speed": 0.6115025875463371,
+      "cp_min": -1.5374033953269532
+    }
+  ],
+  "panel_convergence_alpha2": [
+    {
+      "panels_per_side": 25,
+      "panels": 50,
+      "cl": 0.24065078479198282,
+      "delta_vs_previous": null,
+      "error_percent_vs_thin": 9.723600618115386,
+      "te_speed": 0.8012139653027184
+    },
+    {
+      "panels_per_side": 50,
+      "panels": 100,
+      "cl": 0.24098282542311456,
+      "delta_vs_previous": 0.0003320406311317359,
+      "error_percent_vs_thin": 9.87499299205166,
+      "te_speed": 0.7488148263114778
+    },
+    {
+      "panels_per_side": 100,
+      "panels": 200,
+      "cl": 0.24115573179502786,
+      "delta_vs_previous": 0.00017290637191330616,
+      "error_percent_vs_thin": 9.953828844228672,
+      "te_speed": 0.7002408406798049
+    },
+    {
+      "panels_per_side": 200,
+      "panels": 400,
+      "cl": 0.24123949926589114,
+      "delta_vs_previous": 8.37674708632774e-05,
+      "error_percent_vs_thin": 9.992022231072339,
+      "te_speed": 0.6549457088192027
+    },
+    {
+      "panels_per_side": 400,
+      "panels": 800,
+      "cl": 0.24127923597097103,
+      "delta_vs_previous": 3.9736705079895795e-05,
+      "error_percent_vs_thin": 10.010139996039674,
+      "te_speed": 0.6126223940539128
+    },
+    {
+      "panels_per_side": 800,
+      "panels": 1600,
+      "cl": 0.24129814590529647,
+      "delta_vs_previous": 1.8909934325433975e-05,
+      "error_percent_vs_thin": 10.018761892217707,
+      "te_speed": 0.5730485827586145
+    },
+    {
+      "panels_per_side": 1600,
+      "panels": 3200,
+      "cl": 0.24130725323700947,
+      "delta_vs_previous": 9.107331712998601e-06,
+      "error_percent_vs_thin": 10.022914337548137,
+      "te_speed": 0.536036559331717
+    }
+  ],
+  "thickness_sensitivity_alpha2": [
+    {
+      "thickness_ratio": 0.02,
+      "cl": 0.2228157001931741,
+      "error_percent_vs_thin": 1.5917771495090052
+    },
+    {
+      "thickness_ratio": 0.06,
+      "cl": 0.23018786610121234,
+      "error_percent_vs_thin": 4.953081740654566
+    },
+    {
+      "thickness_ratio": 0.09,
+      "cl": 0.23571949876958118,
+      "error_percent_vs_thin": 7.475203803106459
+    },
+    {
+      "thickness_ratio": 0.12,
+      "cl": 0.24127923597097103,
+      "error_percent_vs_thin": 10.010139996039674
+    },
+    {
+      "thickness_ratio": 0.15,
+      "cl": 0.24686720179576965,
+      "error_percent_vs_thin": 12.557946897886552
+    }
+  ],
+  "cylinder_cp_verification": [
+    {
+      "panels": 32,
+      "max_abs_cp_error": 0.39018064403225794
+    },
+    {
+      "panels": 64,
+      "max_abs_cp_error": 0.19603428065912376
+    },
+    {
+      "panels": 128,
+      "max_abs_cp_error": 0.09813534865484286
+    },
+    {
+      "panels": 256,
+      "max_abs_cp_error": 0.049082457045834804
+    }
+  ],
+  "final": {
+    "panels": 800,
+    "cl": 0.24127923597097103,
+    "cd": -0.008395253268913418,
+    "cl_thin_exact": 0.2193245422464302,
+    "cl_thin_card": 0.2198,
+    "error_percent_vs_thin_exact": 10.010139996039674,
+    "error_percent_vs_card": 9.772172871233412,
+    "within_3_percent": false,
+    "kutta_residual": 4.440892098500626e-16,
+    "normal_residual": 2.3314683517128287e-15,
+    "cp_min": -0.7938868321255825,
+    "cp_min_x": 0.031591158311912115
+  }
+}
