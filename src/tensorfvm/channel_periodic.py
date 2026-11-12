@@ -386,12 +386,18 @@ class PeriodicChannelSolver:
         self.time_step_s = float(time_step_s)
         return self.time_step_s
 
-    def step(self):
-        """One semi-implicit step: explicit convection, implicit diffusion, projection."""
+    def step(self, body_force_m_s2=None):
+        """One semi-implicit step: explicit convection, implicit diffusion, projection.
+
+        ``body_force_m_s2`` overrides ``config.body_force_m_s2`` for this step only,
+        which is what unsteady (pulsatile) forcing needs; ``None`` keeps the
+        configured constant value and therefore the steady-state behaviour.
+        """
         cfg = self.config
         dt = self.time_step_s
+        forcing = cfg.body_force_m_s2 if body_force_m_s2 is None else float(body_force_m_s2)
         u_old = self.u.clone()
-        rhs_u = self.u / dt - self.convection_u() + cfg.body_force_m_s2
+        rhs_u = self.u / dt - self.convection_u() + forcing
         rhs_v = self.v / dt - self.convection_v()
         u_star = self._implicit_diffusion(rhs_u, "ghost")
         v_star = self._implicit_diffusion(rhs_v, "dirichlet")
@@ -401,6 +407,7 @@ class PeriodicChannelSolver:
         self.u, self.v, self.pressure = u, v, p
         self.time += dt
         record = dict(time_s=self.time,
+                      body_force_m_s2=forcing,
                       bulk_velocity_m_s=self.bulk_velocity(),
                       max_divergence_s_inv=info["divergence_after_s_inv"],
                       velocity_change_m_s=float((self.u - u_old).abs().max()))

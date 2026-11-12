@@ -1,0 +1,287 @@
+{
+  "generated": "2026-11-12T20:44:38+00:00",
+  "module": "tensorfvm.verification.pulsatile_channel",
+  "capability": "PeriodicChannelSolver under time-dependent (pulsatile) forcing",
+  "parameters": {
+    "nu": 0.01,
+    "height": 1.0,
+    "g0": 0.012,
+    "rho": 1.0,
+    "ny_main": 64,
+    "dt_fraction": 0.0033333333333333335,
+    "n_cycles": 2.0,
+    "ny_wall": 128
+  },
+  "criteria": [
+    {
+      "id": "A1",
+      "name": "closed-form PDE residual (numerical derivatives)",
+      "value": 2.6570259302934516e-09,
+      "threshold": 1e-06,
+      "mode": "lt",
+      "unit": "rel. to G0",
+      "verdict": "PASS",
+      "note": "max|residual|=3.188e-11 m/s^2"
+    },
+    {
+      "id": "A2",
+      "name": "omega->0 limit equals the analytic parabola",
+      "value": 1.1244574160684806e-09,
+      "threshold": 1e-09,
+      "mode": "lt",
+      "unit": "rel.",
+      "verdict": "FAIL",
+      "note": "centre 0.150000000 vs 0.150000000"
+    },
+    {
+      "id": "A3",
+      "name": "bulk / wall-gradient formulas vs numeric",
+      "value": 4.9802005852583875e-09,
+      "threshold": 1e-06,
+      "mode": "lt",
+      "unit": "rel.",
+      "verdict": "PASS",
+      "note": ""
+    },
+    {
+      "id": "A4",
+      "name": "Stokes-layer decay slope vs -1/delta",
+      "value": 0.004129327602497401,
+      "threshold": 0.02,
+      "mode": "lt",
+      "unit": "rel.",
+      "verdict": "PASS",
+      "note": "W=40: slope*delta=-0.99587; W=80: slope*delta=-0.99926"
+    },
+    {
+      "id": "A5",
+      "name": "steady solver bulk velocity vs G0 H^2/(12 nu)",
+      "value": 0.0004882812468733899,
+      "threshold": 0.001,
+      "mode": "lt",
+      "unit": "rel.",
+      "verdict": "PASS",
+      "note": "bulk_num=0.100048828 m/s"
+    },
+    {
+      "id": "B1",
+      "name": "solver vs closed form, W=2, ny=64, dt/T=1/300",
+      "value": 0.00966607362006812,
+      "threshold": 0.03,
+      "mode": "lt",
+      "unit": "rel. L2",
+      "verdict": "PASS",
+      "note": "9 phases, 888 steps, 38.3 s, delta/H=0.707"
+    },
+    {
+      "id": "B2",
+      "name": "solver vs closed form, W=5, ny=64, dt/T=1/300",
+      "value": 0.0037750872196336592,
+      "threshold": 0.03,
+      "mode": "lt",
+      "unit": "rel. L2",
+      "verdict": "PASS",
+      "note": "9 phases, 912 steps, 37.3 s, delta/H=0.283"
+    },
+    {
+      "id": "B3",
+      "name": "solver vs closed form, W=10, ny=64, dt/T=1/300",
+      "value": 0.0018376453120297165,
+      "threshold": 0.03,
+      "mode": "lt",
+      "unit": "rel. L2",
+      "verdict": "PASS",
+      "note": "9 phases, 912 steps, 43.6 s, delta/H=0.141"
+    },
+    {
+      "id": "B4a",
+      "name": "bulk-velocity amplitude, W=5",
+      "value": 0.036298255539554014,
+      "threshold": 0.03,
+      "mode": "lt",
+      "unit": "rel.",
+      "verdict": "FAIL",
+      "note": "0.035673 vs 0.037017 m/s"
+    },
+    {
+      "id": "B4b",
+      "name": "bulk-velocity phase lag, W=5",
+      "value": 6.625357188005533,
+      "threshold": 5.0,
+      "mode": "lt",
+      "unit": "deg",
+      "verdict": "FAIL",
+      "note": "-60.070 vs -66.696 deg"
+    },
+    {
+      "id": "B5",
+      "name": "wall-shear amplitude, W=5, ny=128 (3-point fit)",
+      "value": 0.05913794992769783,
+      "threshold": 0.03,
+      "mode": "lt",
+      "unit": "rel.",
+      "verdict": "FAIL",
+      "note": "2.682508e-03 vs 2.532728e-03 Pa; scheme-consistent wall flux (not graded) err=4.827e-02"
+    },
+    {
+      "id": "B6",
+      "name": "temporal convergence order at W=5",
+      "value": 1.8999693404077478,
+      "threshold": 0.7,
+      "mode": "gt",
+      "unit": "p",
+      "verdict": "PASS",
+      "note": "dt/T=1/150: 7.545e-03 (456 steps); dt/T=1/300: 3.775e-03 (912 steps); dt/T=1/600: 2.022e-03 (1800 steps)"
+    },
+    {
+      "id": "B7",
+      "name": "wall-normal convergence ny/2 -> ny at W=5",
+      "value": 0.0,
+      "threshold": 0.5,
+      "mode": "gt",
+      "unit": "flag",
+      "verdict": "FAIL",
+      "note": "ny=32: 3.730e-03 -> ny=64: 3.775e-03"
+    },
+    {
+      "id": "B8a",
+      "name": "spanwise/normal velocity stays zero at W=5",
+      "value": 0.0,
+      "threshold": 1e-12,
+      "mode": "lt",
+      "unit": "m/s",
+      "verdict": "PASS",
+      "note": ""
+    },
+    {
+      "id": "B8b",
+      "name": "cell divergence after projection at W=5",
+      "value": 0.0,
+      "threshold": 1e-10,
+      "mode": "lt",
+      "unit": "1/s",
+      "verdict": "PASS",
+      "note": ""
+    },
+    {
+      "id": "C1",
+      "name": "oscillatory vs steady profile difference (W=5)",
+      "value": 1.3612039652596044,
+      "threshold": 0.1,
+      "mode": "gt",
+      "unit": "rel. L2",
+      "verdict": "PASS",
+      "note": "a steady solver cannot pass B1..B3"
+    }
+  ],
+  "n_pass": 11,
+  "n_total": 16,
+  "steady_regression": {
+    "bulk": 0.10004882812468735,
+    "target": 0.1,
+    "bulk_relative_error": 0.0004882812468733899,
+    "steps": 147,
+    "final_change": 9.692247004977617e-14
+  },
+  "runs": {
+    "2.0": {
+      "womersley": 2.0,
+      "delta": 0.7071067811865476,
+      "dt": 0.5235987755982989,
+      "steps": 888,
+      "seconds": 38.32882356643677,
+      "max_relative_l2": 0.00966607362006812,
+      "errors": [
+        0.0077399415315781515,
+        0.001383383306770398,
+        0.005838856279605248,
+        0.00966607362006812,
+        0.007983731157245169,
+        0.0017763837979220558,
+        0.005505541440489207,
+        0.00959337333269493,
+        0.008213560343103662
+      ]
+    },
+    "5.0": {
+      "womersley": 5.0,
+      "delta": 0.282842712474619,
+      "dt": 0.08377580409572782,
+      "steps": 912,
+      "seconds": 37.274521827697754,
+      "max_relative_l2": 0.0037750872196336592,
+      "errors": [
+        0.0030801359854448307,
+        0.0037750872196336592,
+        0.002350082261489738,
+        0.0010912093028154345,
+        0.0031908365758546247,
+        0.003766196543269192,
+        0.0022429741392026156,
+        0.0011795830618826007,
+        0.003267089693410715
+      ]
+    },
+    "10.0": {
+      "womersley": 10.0,
+      "delta": 0.1414213562373095,
+      "dt": 0.020943951023931956,
+      "steps": 912,
+      "seconds": 43.62822699546814,
+      "max_relative_l2": 0.0018376453120297165,
+      "errors": [
+        0.001822952673282452,
+        0.0015045023355172357,
+        0.0013761064111293662,
+        0.0017241502890278705,
+        0.0018376453120297165,
+        0.0015427743608685178,
+        0.0014413659662023046,
+        0.001754808221921031,
+        0.0018106994795026759
+      ]
+    }
+  },
+  "wall_shear": {
+    "numeric": {
+      "amplitude": 0.0026825079664619038,
+      "phase_rad": -0.6972866600865947,
+      "phase_deg": -39.95158273373511
+    },
+    "exact": {
+      "amplitude": 0.0025327276457660923,
+      "phase_rad": -0.8077855473629956,
+      "phase_deg": -46.28270261556471
+    },
+    "scheme_flux_relative_error": 0.04826917940641029
+  },
+  "wall_shear_run": {
+    "ny": 128,
+    "dt": 0.08377580409572782
+  },
+  "temporal_ladder": [
+    {
+      "dt_fraction": 0.006666666666666667,
+      "max_relative_l2": 0.00754463231703467,
+      "steps": 456
+    },
+    {
+      "dt_fraction": 0.0033333333333333335,
+      "max_relative_l2": 0.0037750872196336592,
+      "steps": 912
+    },
+    {
+      "dt_fraction": 0.0016666666666666668,
+      "max_relative_l2": 0.0020215771368101145,
+      "steps": 1800
+    }
+  ],
+  "wall_normal": {
+    "coarse": 0.003729967287975438,
+    "fine": 0.0037750872196336592,
+    "ny_coarse": 32,
+    "ny_fine": 64
+  },
+  "runtime_s": 793.6001310348511,
+  "all_pass": false
+}

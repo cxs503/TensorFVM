@@ -308,3 +308,22 @@
   `docs/GAP-FVM-TWOPHASE/artifacts/fig_hysing_leg.png`、`tests/test_hysing_gate.py`(26 passed)。
 - 遗留: B1 度量错配（ref 是全程最大、门用末窗均值）→ 只加记 `peak_velocity`，不改门；
   形状门需 cpd≥32（显式气相黏性 dt∝h²，cpd=32 ≈10 h）→ 记分辨率受限；`DECLARED_CPD` 由 64 改 16。
+
+### D14 脉动（Womersley）非定常验证面 —— 已交付（m16821, 2026-11-13）
+- 缺口来源：`PeriodicChannelSolver` 的**定常** Poiseuille 已对解析抛物线验证，但**非定常**行为
+  （时间精度/相位关系/振荡驱动下的壁面切应力）全无验证面；catalog 无对应条目，属总账外新缺口（NEW）。
+- 交付：`PeriodicChannelSolver.step(body_force_m_s2=None)`（逐位置时变体积力；`None` 与旧常量路径
+  逐位同解，A5 + 回归测把关）+ `src/tensorfvm/verification/pulsatile_channel.py`（16 条预声明判据）
+  + `tests/test_pulsatile_channel.py`（12 测全绿，53 s）+ `docs/verification-pulsatile-channel/`
+  `{REPORT.md,criteria.md,summary.json,fig_pulsatile_channel.png}`；catalog 新增 §17。
+- 关键数字：闭式解数值残差 2.7e-9（数值微分，不依赖推导）；`omega->0` 归抛物线 1.1e-9；
+  Stokes 层衰减律斜率 `slope*delta` = −0.9959/−0.9993（W=40/80）；生产求解器 vs 闭式剖面
+  **1.54 %/0.61 %/0.39 %**（W=2/5/10，ny=32，dt/T=1/200，8 相位，按周期包络归一）；流量幅值
+  0.33 %、相位差 0.11 deg；壁面切应力幅值 1.65 %（ny=64 三点单边）；格式自洽一阶壁面通量 8.2e-4；
+  时间收敛阶 **0.875**（一阶，理论自洽）；ny/2→ny 误差 7.6e-3→6.1e-3；`max|v| = 0`、`max|div| = 0`；
+  负对照（振荡 vs 定常剖面）差 134 %。定常回归 ny=32/64 误差 1.95e-3/4.88e-4（O(dy^2)）。
+- 反例/踩坑：①采样窗口含 `t+T` 重复端点 → 单频 DFT 幅值低 7.6 %（假 FAIL），去重后 0.33 %；
+  ②按逐相位范数归一化在过零点放大成 5.6 % 假误差 → 改按周期包络归一；③收敛阶公式分母写反会得
+  p=−0.87（假 FAIL）；④`omega H^2/nu=1e-6` 时 `1−cosh/cosh` 相消，舍入地板 1e-10，判据阈值应为 1e-6。
+- 明示未做：壁面振荡驱动（Stokes 第二问题，求解器壁面为齐次无滑移 → NOT_SUPPORTED）；
+  二阶时间格式；湍流/可压缩/可变形槽道；实验数据对标（层流振荡槽道无更好基准，闭式解即精确解）。
