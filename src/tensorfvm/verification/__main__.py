@@ -12,6 +12,8 @@ def main(argv=None):
     parser.add_argument("--output",type=Path,required=True)
     parser.add_argument("--max-channel-iterations",type=int,default=1000)
     parser.add_argument("--lbm-repo",type=Path,help="external TensorLBM checkout; enables actual matched periodic comparison")
+    parser.add_argument("--channel-periodic",action="store_true",
+                        help="also run the streamwise-periodic body-force channel (CASE-CHANNEL-PERIODIC)")
     args=parser.parse_args(argv)
     if args.output.exists() and any(args.output.iterdir()):
         parser.error("output directory must be empty; preserve prior run evidence")
@@ -43,6 +45,15 @@ def main(argv=None):
         from .lbm import taylor_green_lbm
         for n,mach in ((32,.05),(64,.05),(32,.025)):
             execute(f"lbm-tg-{n}-ma-{mach}",lambda n=n,mach=mach:taylor_green_lbm(args.lbm_repo,n,mach))
+    if args.channel_periodic:
+        from .cases import channel_periodic
+        periodic=channel_periodic(nx=8,ny=64)
+        write_json(args.output/"channel-periodic.json",periodic)
+        summary["channel_periodic"]=dict(passed=periodic["passed"],
+                                         resolution=periodic["resolution"],
+                                         metrics=periodic["metrics"])
+        summary["channel_periodic_passed"]=periodic["passed"]
+        print("channel-periodic",periodic["passed"],flush=True)
     spatial=lambda case:[r for r in summary["runs"] if r["case"]==case and r["role"]=="spatial"]
     temporal=[r for r in summary["runs"] if r["role"]=="temporal"]
     summary["observed_orders"]={
