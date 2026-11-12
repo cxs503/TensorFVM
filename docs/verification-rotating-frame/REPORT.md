@@ -3,7 +3,7 @@
 Driver: `PYTHONPATH=src python -m tensorfvm.verification.rotating_frame`  
 Module: `src/tensorfvm/rotating_frame.py`  
 Tests: `tests/test_rotating_frame.py`  
-Criteria: **18/18 PASS** (wall 2.1 s, generated 2026-11-12T14:36:43Z)
+Criteria: **18/18 PASS** (wall 1.0 s, generated 2026-11-12T20:52:41Z)
 
 ## 1. Case introduction (physics, geometry, parameters)
 
