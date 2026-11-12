@@ -277,3 +277,22 @@
   以推导的舍入门 1e-11 复判）；②静水重构下动量通量**刻意不守恒**（压力修正两侧不同），只有体积守恒；
   ③干胞里每级会有舍入级 hu 被清零（`dry_flips` 1.2e5 次），是簿记量不是失稳。
 - 明示未做（WITHHELD）: 摩阻/科氏力、2-D、Goutal–Maurel 跨临界堰流半解析锚、变床面光滑解的空间收敛阶。
+
+## 4c. 追加欠账（append-only，2026-11-12）
+
+### D13 CASE-FVM-PERIODIC-HILLS 第三回合（m16672, 2026-11-12）—— 梯度算子不一致（缺陷 vi/vii）已修，Re=2800 仍 honest FAIL
+- 交付: `periodic_hill.compact_gradient` 两处修复 + `src/tensorfvm/verification/periodic_hill_round3.py`
+  （6 条预声明判据 C1–C6，全 PASS）+ `tests/test_periodic_hill_round3.py`（7 测，连同 round-2/round-1 共 22 绿）
+  + `docs/case-periodic-hills/{ROUND3.md,round3_summary.json,fig_round3.png}`。
+- 缺陷 vi（南面索引错位，round-2 未发现）: eta 面项写成 `c_n[j] n[j] (phi[j+1]-phi[j])`，行 0 用壁面系数乘内部跳量、
+  行 ny-1 丢掉南面 → 算子在任何网格上都不收敛（实测 18.8/19.2/19.3 % 于 32x16/64x32/128x64，比值 0.973）；
+  改为按**层号**配对、两个 Neumann 壁层既不进 b 也不进归一化矩阵。
+- 缺陷 vii（两侧面族都无非正交修正）: `|beta/alpha|` 最大 0.843（eta）、`|beta|/dn_e` 0.843（东面），
+  两点法一阶偏差在丘区是 O(1) 相对误差；加标准显式延迟修正 `g_n = jump/alpha - (beta/alpha)(grad phi).t`。
+- 陷阱: 延迟修正**不能**从自身输出迭代（|beta/alpha|~1 时非压缩，实测误差 1.9e-1→2.1e-1→3.0e-1），
+  round-2 计划的“两次 sweep”写法会失败；必须用宽 LSQ 梯度作切向估计。
+- 关键数字: 修正后梯度误差 2.49/0.87/0.30 %（比值 2.86/2.85 → p=1.51，一阶）；最细网格增益 63x；
+  平面槽道 `u_max/u_b` 1.34547 vs 解析 1.34637（0.067 %，<3 %）；`max|div_cell|` 4.0e-16。
+- 未完成(honest FAIL): Re=2800 48x24 第 500 步 max|u|=1.86、第 1000 步 NaN（64x32 500 步内 NaN）；
+  `x_s/H`、`x_r/H` 继续 withheld。round-2 的“第 293 步发散”与本回合不可直接比较（旧算子带 O(1) 梯度误差=数值阻尼）。
+- 下一回合首项（round-4）: 交错（MAC）布置使单元速度=面速度，或对压力梯度修正做限制器；不要再用 `div(grad)` 型一致化。
