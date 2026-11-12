@@ -128,6 +128,14 @@ class HysingCase:
     start_y: float = 1.0
     end_time: float = 3.0
     csf_smoothing: int = 3
+    #: Pressure split handed to :class:`TwoPhaseConfig` (see its docstring):
+    #: ``"total"`` carries the full gravity head in the pressure, ``"reduced"``
+    #: carries the dynamic pressure and the buoyancy acceleration
+    #: ``((rho - rho_l)/rho) g``.  The solver documents ``"reduced"`` as the
+    #: form to use whenever ``gravity != 0`` and a free surface is present;
+    #: ``"total"`` is kept as the default so that the historic artefacts stay
+    #: bit-for-bit reproducible and the two forms can be compared directly.
+    pressure_form: str = "total"
 
     @property
     def bubble_radius(self) -> float:
@@ -173,6 +181,7 @@ class HysingCase:
             surface_tension=True,
             csf_smoothing=self.csf_smoothing,
             momentum_advection=True,
+            pressure_form=self.pressure_form,
         )
         return grid, tp
 
@@ -373,6 +382,7 @@ def run_hysing_leg(
     *,
     end_time: float = 3.0,
     csf_smoothing: int = 3,
+    pressure_form: str = "total",
 ) -> dict:
     """Run the Hysing Case 2 benchmark and return the metrics record.
 
@@ -395,6 +405,7 @@ def run_hysing_leg(
         cells_per_diameter=cells_per_diameter,
         end_time=end_time,
         csf_smoothing=csf_smoothing,
+        pressure_form=pressure_form,
     )
     grid, tp = case.solve_config()
     solver = TwoPhaseSolver(grid, tp)
@@ -452,6 +463,7 @@ def run_hysing_leg(
     record = {
         "case": "hysing",
         "cells_per_diameter": cells_per_diameter,
+        "pressure_form": case.pressure_form,
         "eotvos": case.eotvos,
         "morton": case.morton,
         "end_time": end_time,

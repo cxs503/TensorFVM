@@ -1,6 +1,5 @@
 """Tests for the Hysing rising-bubble verification leg."""
 
-import json
 import math
 import pytest
 
@@ -234,3 +233,55 @@ class TestHysingLegFast:
         # Reference values are present
         assert rec["reference"]["terminal_velocity"] == HYSING_REF_UT
         assert rec["reference"]["min_circularity"] == HYSING_REF_CIRCULARITY
+
+
+class TestConvergenceGateB4:
+    """B4 must be a *relative change* gate, not an observed-order gate.
+
+    Historic defect (m16901): the B4 gate compared the observed order
+    ``log(U_c/U_f)/log 2`` against ``CONVERGENCE_MAX = 0.05`` with ``>=``.
+    That is satisfied by any coarse->fine change above ~3.5 %, so the gate
+    could not fail on the divergence it was written to catch.
+    """
+
+    @staticmethod
+    def _legs(coarse_ut: float, fine_ut: float) -> dict:
+        base = {
+            "case": "hysing", "eotvos": 10.0, "morton": 1e-3,
+            "end_time": 3.0, "min_circularity": 0.5,
+            "worst_step_drift": 1e-8, "diverged": False, "steps": 10,
+            "peak_velocity": fine_ut,
+            "circularity_rel_error": 0.0,
+            "terminal_velocity_rel_error": 0.0,
+        }
+        coarse = dict(base, cells_per_diameter=8, terminal_velocity=coarse_ut,
+                      declared=False)
+        fine = dict(base, cells_per_diameter=16, terminal_velocity=fine_ut,
+                    declared=True)
+        return {"hysing_8": coarse, "hysing_16": fine}
+
+    @staticmethod
+    def _gate(legs: dict, gid: str) -> dict:
+        from tensorfvm.twophase_gap.campaign import evaluate_gates
+
+        gates, _ = evaluate_gates(legs)
+        return next(g for g in gates if g["id"] == gid)
+
+    def test_b4_fails_on_a_20_percent_change(self):
+        gate = self._gate(self._legs(coarse_ut=0.30, fine_ut=0.24), "B4")
+        assert gate["metric"] == "hysing_convergence_change"
+        assert gate["got"] == pytest.approx(0.25, rel=1e-6)  # |0.24-0.30|/0.24
+        assert gate["passed"] is False
+
+    def test_b4_passes_on_a_converged_pair(self):
+        gate = self._gate(self._legs(coarse_ut=0.240, fine_ut=0.245), "B4")
+        assert gate["got"] == pytest.approx(0.005 / 0.245, rel=1e-6)
+        assert gate["passed"] is True
+
+    def test_b4_not_run_without_a_declared_leg(self):
+        legs = self._legs(coarse_ut=0.30, fine_ut=0.24)
+        legs["hysing_16"]["declared"] = False
+        gate = self._gate(legs, "B4")
+        assert gate["got"] is None
+        assert gate["passed"] is False
+        assert gate["status"] == "not_run"
