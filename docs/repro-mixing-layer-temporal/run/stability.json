@@ -1,0 +1,117 @@
+{
+  "alpha_sweep": [
+    {
+      "alpha": 0.2,
+      "inviscid_c_imag": 0.6804054643084049,
+      "inviscid_growth": 0.136081092861681
+    },
+    {
+      "alpha": 0.25,
+      "inviscid_c_imag": 0.6256346067392528,
+      "inviscid_growth": 0.1564086516848132
+    },
+    {
+      "alpha": 0.3,
+      "inviscid_c_imag": 0.5716104268460506,
+      "inviscid_growth": 0.17148312805381516
+    },
+    {
+      "alpha": 0.35,
+      "inviscid_c_imag": 0.5192291443755076,
+      "inviscid_growth": 0.18173020053142766
+    },
+    {
+      "alpha": 0.4,
+      "inviscid_c_imag": 0.4688759322107248,
+      "inviscid_growth": 0.18755037288428994
+    },
+    {
+      "alpha": 0.45,
+      "inviscid_c_imag": 0.4206633667809832,
+      "inviscid_growth": 0.18929851505144243
+    },
+    {
+      "alpha": 0.5,
+      "inviscid_c_imag": 0.3745561743010775,
+      "inviscid_growth": 0.18727808715053876
+    },
+    {
+      "alpha": 0.55,
+      "inviscid_c_imag": 0.33044344665591074,
+      "inviscid_growth": 0.18174389566075091
+    },
+    {
+      "alpha": 0.6,
+      "inviscid_c_imag": 0.28818115955267526,
+      "inviscid_growth": 0.17290869573160514
+    },
+    {
+      "alpha": 0.65,
+      "inviscid_c_imag": 0.24761627072800918,
+      "inviscid_growth": 0.16095057597320597
+    },
+    {
+      "alpha": 0.7,
+      "inviscid_c_imag": 0.208599462546546,
+      "inviscid_growth": 0.14601962378258218
+    },
+    {
+      "alpha": 0.75,
+      "inviscid_c_imag": 0.17099118453467493,
+      "inviscid_growth": 0.1282433884010062
+    },
+    {
+      "alpha": 0.8,
+      "inviscid_c_imag": 0.1346639236788665,
+      "inviscid_growth": 0.10773113894309322
+    }
+  ],
+  "alpha_sweep_argmax": {
+    "alpha": 0.65,
+    "amplification": 0.10461787438258388,
+    "growth": 0.16095057597320597
+  },
+  "orr_sommerfeld_reynolds_limit_at_alpha_0p5": [
+    {
+      "growth": 0.18371977881679832,
+      "reynolds": 500.0
+    },
+    {
+      "growth": 0.18637471456776086,
+      "reynolds": 2000.0
+    },
+    {
+      "growth": 0.18709663740750446,
+      "reynolds": 10000.0
+    },
+    {
+      "growth": 0.18725992448345802,
+      "reynolds": 100000.0
+    }
+  ],
+  "production_reference": {
+    "alpha": 0.5,
+    "delta": 1.0,
+    "inviscid_growth": 0.18727808715053876,
+    "reynolds_delta": 500.0,
+    "viscous_c": [
+      6.551489451898148e-13,
+      0.36743955763359665
+    ],
+    "viscous_growth": 0.18371977881679832
+  },
+  "rayleigh_refinement_at_alpha_0p5": [
+    {
+      "growth": 0.18727808715053876,
+      "nodes": 301
+    },
+    {
+      "growth": 0.18729370755472685,
+      "nodes": 401
+    },
+    {
+      "growth": 0.18730485631347085,
+      "nodes": 601
+    }
+  ]
+}

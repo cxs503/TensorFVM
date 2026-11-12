@@ -1,0 +1,1136 @@
+{
+  "alpha_scan": [
+    {
+      "alpha": 0.3,
+      "amplification": 0.16941054331815497,
+      "error": 0.014608456759722444,
+      "rate": 0.16941054331815497,
+      "reference_inviscid": 0.16925392032017939,
+      "reference_viscous": 0.1669713495777361
+    },
+    {
+      "alpha": 0.4,
+      "amplification": 0.18438185210984023,
+      "error": 0.017178527557035528,
+      "rate": 0.18438185210984023,
+      "reference_inviscid": 0.18407193667440305,
+      "reference_viscous": 0.1812679358781505
+    },
+    {
+      "alpha": 0.5,
+      "amplification": 0.18280083075160108,
+      "error": 0.02134279143974749,
+      "rate": 0.18280083075160108,
+      "reference_inviscid": 0.1823891029171135,
+      "reference_viscous": 0.1789808791756525
+    },
+    {
+      "alpha": 0.6,
+      "amplification": 0.16691447689016847,
+      "error": 0.027866874445949597,
+      "rate": 0.16691447689016847,
+      "reference_inviscid": 0.16647958711625818,
+      "reference_viscous": 0.16238919751173056
+    },
+    {
+      "alpha": 0.7,
+      "amplification": 0.1383139769352708,
+      "error": 0.03892112526563207,
+      "rate": 0.1383139769352708,
+      "reference_inviscid": 0.13798319852608407,
+      "reference_viscous": 0.1331323173353575
+    }
+  ],
+  "alpha_scan_argmax": 0.4,
+  "grid_ladder": [
+    {
+      "dt": 0.04999999001873115,
+      "energy_rate": 0.17951117426746976,
+      "error_vs_frozen": -0.014337445160517936,
+      "error_vs_instantaneous": 0.022447679999489933,
+      "grid": [
+        48,
+        128
+      ],
+      "history": [
+        {
+          "fluctuation_energy": 8.852159732516853e-11,
+          "fundamental_amplitude": 6.965413960785704e-06,
+          "kinetic_energy": 87.96292348259165,
+          "max_divergence": 5.737625293015177e-16,
+          "momentum_thickness": 0.5000664638083387,
+          "time": 0.04999999001873115,
+          "vorticity_thickness": 2.0185365092901826
+        },
+        {
+          "fluctuation_energy": 9.704617087002235e-11,
+          "fundamental_amplitude": 7.296246699635048e-06,
+          "kinetic_energy": 87.95455926896484,
+          "max_divergence": 6.93736196541278e-16,
+          "momentum_thickness": 0.5003992651559361,
+          "time": 0.2999999401123869,
+          "vorticity_thickness": 2.020478898323304
+        },
+        {
+          "fluctuation_energy": 1.0638446255855208e-10,
+          "fundamental_amplitude": 7.642538959369497e-06,
+          "kinetic_energy": 87.94620168545583,
+          "max_divergence": 8.37393738784326e-16,
+          "momentum_thickness": 0.5007318027029996,
+          "time": 0.5499998902060426,
+          "vorticity_thickness": 2.0224178252671123
+        },
+        {
+          "fluctuation_energy": 1.1661282749142827e-10,
+          "fundamental_amplitude": 8.004981136789316e-06,
+          "kinetic_energy": 87.93785071350042,
+          "max_divergence": 7.963412811440215e-16,
+          "momentum_thickness": 0.5010640771880152,
+          "time": 0.7999998402996982,
+          "vorticity_thickness": 2.024353313311471
+        },
+        {
+          "fluctuation_energy": 1.2781463745262708e-10,
+          "fundamental_amplitude": 8.38429185388753e-06,
+          "kinetic_energy": 87.9295063346349,
+          "max_divergence": 7.321239017644103e-16,
+          "momentum_thickness": 0.5013960893454937,
+          "time": 1.0499997903933538,
+          "vorticity_thickness": 2.0262853853633533
+        },
+        {
+          "fluctuation_energy": 1.4008091436788684e-10,
+          "fundamental_amplitude": 8.78121924185258e-06,
+          "kinetic_energy": 87.92116853049498,
+          "max_divergence": 7.95511723214388e-16,
+          "momentum_thickness": 0.501727839906003,
+          "time": 1.2999997404870094,
+          "vorticity_thickness": 2.0282140640519075
+        },
+        {
+          "fluctuation_energy": 1.5351102029326907e-10,
+          "fundamental_amplitude": 9.1965422856322e-06,
+          "kinetic_energy": 87.91283728281508,
+          "max_divergence": 7.782608533416211e-16,
+          "momentum_thickness": 0.502059329596203,
+          "time": 1.549999690580665,
+          "vorticity_thickness": 2.0301393717334024
+        },
+        {
+          "fluctuation_energy": 1.6821340893183246e-10,
+          "fundamental_amplitude": 9.631072230857439e-06,
+          "kinetic_energy": 87.90451257342741,
+          "max_divergence": 7.714651146232447e-16,
+          "momentum_thickness": 0.5023905591388764,
+          "time": 1.7999996406743206,
+          "vorticity_thickness": 2.032061330496062
+        },
+        {
+          "fluctuation_energy": 1.843064441047434e-10,
+          "fundamental_amplitude": 1.0085654054774781e-05,
+          "kinetic_energy": 87.8961943842612,
+          "max_divergence": 7.842927800998109e-16,
+          "momentum_thickness": 0.5027215292529633,
+          "time": 2.0499995907679764,
+          "vorticity_thickness": 2.033979962164783
+        },
+        {
+          "fluctuation_energy": 2.0191929107850316e-10,
+          "fundamental_amplitude": 1.0561168002948372e-05,
+          "kinetic_energy": 87.88788269734177,
+          "max_divergence": 7.281583052636025e-16,
+          "momentum_thickness": 0.5030522406535929,
+          "time": 2.299999540861632,
+          "vorticity_thickness": 2.035895288305741
+        },
+        {
+          "fluctuation_energy": 2.2119288715928338e-10,
+          "fundamental_amplitude": 1.1058531193441562e-05,
+          "kinetic_energy": 87.87957749478987,
+          "max_divergence": 8.070318692597752e-16,
+          "momentum_thickness": 0.5033826940521147,
+          "time": 2.5499994909552877,
+          "vorticity_thickness": 2.0378073302309034
+        },
+        {
+          "fluctuation_energy": 2.4228099851882896e-10,
+          "fundamental_amplitude": 1.1578699290240814e-05,
+          "kinetic_energy": 87.87127875882075,
+          "max_divergence": 7.345176962826898e-16,
+          "momentum_thickness": 0.5037128901561312,
+          "time": 2.7999994410489433,
+          "vorticity_thickness": 2.039716109002427
+        },
+        {
+          "fluctuation_energy": 2.65351370820976e-10,
+          "fundamental_amplitude": 1.2122668247708989e-05,
+          "kinetic_energy": 87.86298647174341,
+          "max_divergence": 7.90943325459627e-16,
+          "momentum_thickness": 0.5040428296695291,
+          "time": 3.049999391142599,
+          "vorticity_thickness": 2.0416216454369653
+        },
+        {
+          "fluctuation_energy": 2.9058698186570656e-10,
+          "fundamental_amplitude": 1.2691476127894545e-05,
+          "kinetic_energy": 87.85470061595984,
+          "max_divergence": 8.445019069287861e-16,
+          "momentum_thickness": 0.5043725132925108,
+          "time": 3.2999993412362545,
+          "vorticity_thickness": 2.0435239601098756
+        },
+        {
+          "fluctuation_energy": 3.181874051754418e-10,
+          "fundamental_amplitude": 1.3286204992527362e-05,
+          "kinetic_energy": 87.84642117396422,
+          "max_divergence": 7.778181992173419e-16,
+          "momentum_thickness": 0.5047019417216239,
+          "time": 3.54999929132991,
+          "vorticity_thickness": 2.0454230733593315
+        },
+        {
+          "fluctuation_energy": 3.4837029421666526e-10,
+          "fundamental_amplitude": 1.3907982871679106e-05,
+          "kinetic_energy": 87.8381481283421,
+          "max_divergence": 7.929491524182844e-16,
+          "momentum_thickness": 0.5050311156497952,
+          "time": 3.7999992414235657,
+          "vorticity_thickness": 2.047319005290346
+        },
+        {
+          "fluctuation_energy": 3.8137299777311194e-10,
+          "fundamental_amplitude": 1.4557985810993046e-05,
+          "kinetic_energy": 87.8298814617698,
+          "max_divergence": 7.891609563803672e-16,
+          "momentum_thickness": 0.5053600357663574,
+          "time": 4.049999191517221,
+          "vorticity_thickness": 2.0492117757787143
+        },
+        {
+          "fluctuation_energy": 4.1745431789579144e-10,
+          "fundamental_amplitude": 1.5237439999605542e-05,
+          "kinetic_energy": 87.82162115701344,
+          "max_divergence": 8.389121247516181e-16,
+          "momentum_thickness": 0.5056887027570807,
+          "time": 4.299999141610879,
+          "vorticity_thickness": 2.0511014044748546
+        },
+        {
+          "fluctuation_energy": 4.568964228189434e-10,
+          "fundamental_amplitude": 1.5947623980845348e-05,
+          "kinetic_energy": 87.81336719692844,
+          "max_divergence": 7.919389068100061e-16,
+          "momentum_thickness": 0.5060171173042047,
+          "time": 4.549999091704537,
+          "vorticity_thickness": 2.052987910807579
+        },
+        {
+          "fluctuation_energy": 5.000069282960259e-10,
+          "fundamental_amplitude": 1.6689870947997298e-05,
+          "kinetic_energy": 87.80511956445862,
+          "max_divergence": 8.074099106520466e-16,
+          "momentum_thickness": 0.5063452800864654,
+          "time": 4.799999041798195,
+          "vorticity_thickness": 2.0548713139877823
+        },
+        {
+          "fluctuation_energy": 5.471211619473239e-10,
+          "fundamental_amplitude": 1.746557112743387e-05,
+          "kinetic_energy": 87.79687824263554,
+          "max_divergence": 8.282322568966031e-16,
+          "momentum_thickness": 0.5066731917791253,
+          "time": 5.049998991891853,
+          "vorticity_thickness": 2.0567516330120457
+        },
+        {
+          "fluctuation_energy": 5.986046264545356e-10,
+          "fundamental_amplitude": 1.8276174251624458e-05,
+          "kinetic_energy": 87.78864321457779,
+          "max_divergence": 7.65959651928998e-16,
+          "momentum_thickness": 0.5070008530540032,
+          "time": 5.2999989419855105,
+          "vorticity_thickness": 2.058628886666174
+        },
+        {
+          "fluctuation_energy": 6.548556787750293e-10,
+          "fundamental_amplitude": 1.91231921246108e-05,
+          "kinetic_energy": 87.78041446349029,
+          "max_divergence": 8.307576326892826e-16,
+          "momentum_thickness": 0.5073282645795046,
+          "time": 5.549998892079168,
+          "vorticity_thickness": 2.0605030935286495
+        },
+        {
+          "fluctuation_energy": 7.163084440075531e-10,
+          "fundamental_amplitude": 2.0008201282710113e-05,
+          "kinetic_energy": 87.7721919726635,
+          "max_divergence": 7.928085449490402e-16,
+          "momentum_thickness": 0.5076554270206479,
+          "time": 5.799998842172826,
+          "vorticity_thickness": 2.0623742719740257
+        },
+        {
+          "fluctuation_energy": 7.834359841124884e-10,
+          "fundamental_amplitude": 2.09328457533929e-05,
+          "kinetic_energy": 87.76397572547293,
+          "max_divergence": 7.945201867772043e-16,
+          "momentum_thickness": 0.5079823410390942,
+          "time": 6.049998792266484,
+          "vorticity_thickness": 2.06424244017624
+        },
+        {
+          "fluctuation_energy": 8.567537433959335e-10,
+          "fundamental_amplitude": 2.189883991540731e-05,
+          "kinetic_energy": 87.75576570537827,
+          "max_divergence": 8.147003761686236e-16,
+          "momentum_thickness": 0.508309007293178,
+          "time": 6.299998742360142,
+          "vorticity_thickness": 2.066107616111866
+        },
+        {
+          "fluctuation_energy": 9.36823294512394e-10,
+          "fundamental_amplitude": 2.2907971463453883e-05,
+          "kinetic_energy": 87.74756189592279,
+          "max_divergence": 7.96926925017709e-16,
+          "momentum_thickness": 0.5086354264379322,
+          "time": 6.5499986924538,
+          "vorticity_thickness": 2.067969817563305
+        },
+        {
+          "fluctuation_energy": 1.0242564107416773e-09,
+          "fundamental_amplitude": 2.396210448090972e-05,
+          "kinetic_energy": 87.7393642807327,
+          "max_divergence": 7.542128534326876e-16,
+          "momentum_thickness": 0.5089615991251187,
+          "time": 6.7999986425474575,
+          "vorticity_thickness": 2.0698290621218995
+        },
+        {
+          "fluctuation_energy": 1.1197194924615401e-09,
+          "fundamental_amplitude": 2.506318262431406e-05,
+          "kinetic_energy": 87.7311728435164,
+          "max_divergence": 8.33858726188299e-16,
+          "momentum_thickness": 0.5092875260032563,
+          "time": 7.049998592641115,
+          "vorticity_thickness": 2.071685367191008
+        },
+        {
+          "fluctuation_energy": 1.2239383780767315e-09,
+          "fundamental_amplitude": 2.621323242352785e-05,
+          "kinetic_energy": 87.72298756806403,
+          "max_divergence": 7.753684012628702e-16,
+          "momentum_thickness": 0.509613207717648,
+          "time": 7.299998542734773,
+          "vorticity_thickness": 2.0735387499889946
+        },
+        {
+          "fluctuation_energy": 1.3377035722093386e-09,
+          "fundamental_amplitude": 2.741436670179277e-05,
+          "kinetic_energy": 87.71480843824654,
+          "max_divergence": 8.390366915344237e-16,
+          "momentum_thickness": 0.5099386449104094,
+          "time": 7.549998492828431,
+          "vorticity_thickness": 2.0753892275521855
+        },
+        {
+          "fluctuation_energy": 1.4618759266944537e-09,
+          "fundamental_amplitude": 2.8668788120054638e-05,
+          "kinetic_energy": 87.70663543801531,
+          "max_divergence": 7.631368749276037e-16,
+          "momentum_thickness": 0.5102638382204979,
+          "time": 7.799998442922089,
+          "vorticity_thickness": 2.0772368167377557
+        },
+        {
+          "fluctuation_energy": 1.5973928129047652e-09,
+          "fundamental_amplitude": 2.997879285028737e-05,
+          "kinetic_energy": 87.69846855140138,
+          "max_divergence": 8.275214341264567e-16,
+          "momentum_thickness": 0.5105887882837391,
+          "time": 8.049998393015747,
+          "vorticity_thickness": 2.079081534226567
+        },
+        {
+          "fluctuation_energy": 1.7452748271399508e-09,
+          "fundamental_amplitude": 3.13467743827335e-05,
+          "kinetic_energy": 87.69030776251483,
+          "max_divergence": 8.150912818737815e-16,
+          "momentum_thickness": 0.5109134957328552,
+          "time": 8.299998343109404,
+          "vorticity_thickness": 2.080923396525955
+        },
+        {
+          "fluctuation_energy": 1.9066330743036283e-09,
+          "fundamental_amplitude": 3.277522747230005e-05,
+          "kinetic_energy": 87.6821530555443,
+          "max_divergence": 8.117530720890931e-16,
+          "momentum_thickness": 0.5112379611974929,
+          "time": 8.549998293203062,
+          "vorticity_thickness": 2.0827624199724672
+        },
+        {
+          "fluctuation_energy": 2.082677078855511e-09,
+          "fundamental_amplitude": 3.4266752229637534e-05,
+          "kinetic_energy": 87.67400441475621,
+          "max_divergence": 8.05686939758213e-16,
+          "momentum_thickness": 0.5115621853042528,
+          "time": 8.79999824329672,
+          "vorticity_thickness": 2.0845986207345506
+        },
+        {
+          "fluctuation_energy": 2.234968325922492e-09,
+          "fundamental_amplitude": 3.55072121027059e-05,
+          "kinetic_energy": 87.66748980074964,
+          "max_divergence": 8.259987898333711e-16,
+          "momentum_thickness": 0.5118213935589283,
+          "time": 9.0,
+          "vorticity_thickness": 2.086065572940613
+        }
+      ],
+      "instantaneous_delta": 1.0302515467643247,
+      "max_divergence": 8.445019069287861e-16,
+      "rate": 0.18108570656311,
+      "rate_log_residual": 0.0019170277604154279,
+      "reference_frozen_profile": 0.18371977881679832,
+      "reference_inviscid": 0.1804614344247035,
+      "reference_viscous": 0.17710999800322333,
+      "wall_seconds": 0.7762212753295898,
+      "window": [
+        2.0,
+        9.0
+      ]
+    },
+    {
+      "dt": 0.024999994714385562,
+      "energy_rate": 0.180835569451635,
+      "error_vs_frozen": -0.008028379430390808,
+      "error_vs_instantaneous": 0.02086956759674008,
+      "grid": [
+        96,
+        256
+      ],
+      "history": [
+        {
+          "fluctuation_energy": 8.629332189253497e-11,
+          "fundamental_amplitude": 6.878301774580717e-06,
+          "kinetic_energy": 87.96375962173207,
+          "max_divergence": 1.6300298662064857e-15,
+          "momentum_thickness": 0.5000332033569149,
+          "time": 0.024999994714385562,
+          "vorticity_thickness": 2.0047507329368606
+        },
+        {
+          "fluctuation_energy": 9.464184869899576e-11,
+          "fundamental_amplitude": 7.205947772636234e-06,
+          "kinetic_energy": 87.95538823350427,
+          "max_divergence": 1.5008362916579766e-15,
+          "momentum_thickness": 0.5003662901954901,
+          "time": 0.2749999418582412,
+          "vorticity_thickness": 2.0067342346410943
+        },
+        {
+          "fluctuation_energy": 1.0379218491082977e-10,
+          "fundamental_amplitude": 7.548979975721706e-06,
+          "kinetic_energy": 87.94702351401543,
+          "max_divergence": 1.6433089274520444e-15,
+          "momentum_thickness": 0.5006991117045946,
+          "time": 0.5249998890020969,
+          "vorticity_thickness": 2.008713905743815
+        },
+        {
+          "fluctuation_energy": 1.1382018432903889e-10,
+          "fundamental_amplitude": 7.908093922608688e-06,
+          "kinetic_energy": 87.93866544438933,
+          "max_divergence": 1.6407564201352732e-15,
+          "momentum_thickness": 0.5010316686330714,
+          "time": 0.7749998361459521,
+          "vorticity_thickness": 2.0106897751798756
+        },
+        {
+          "fluctuation_energy": 1.248087506094908e-10,
+          "fundamental_amplitude": 8.284014755896934e-06,
+          "kinetic_energy": 87.93031400585373,
+          "max_divergence": 1.6848505466193883e-15,
+          "momentum_thickness": 0.5013639617262048,
+          "time": 1.0249997832898075,
+          "vorticity_thickness": 2.0126618714707476
+        },
+        {
+          "fluctuation_energy": 1.3684848204993549e-10,
+          "fundamental_amplitude": 8.677498552814272e-06,
+          "kinetic_energy": 87.92196917973946,
+          "max_divergence": 1.6302647788830058e-15,
+          "momentum_thickness": 0.5016959917255941,
+          "time": 1.2749997304336627,
+          "vorticity_thickness": 2.0146302227335284
+        },
+        {
+          "fluctuation_energy": 1.500383745741592e-10,
+          "fundamental_amplitude": 9.08933371181985e-06,
+          "kinetic_energy": 87.9136309474796,
+          "max_divergence": 1.6195379536389774e-15,
+          "momentum_thickness": 0.5020277593690755,
+          "time": 1.5249996775775179,
+          "vorticity_thickness": 2.016594856689684
+        },
+        {
+          "fluctuation_energy": 1.6448658808639712e-10,
+          "fundamental_amplitude": 9.520342396894529e-06,
+          "kinetic_energy": 87.90529929060838,
+          "max_divergence": 1.5937349080807778e-15,
+          "momentum_thickness": 0.5023592653906789,
+          "time": 1.774999624721373,
+          "vorticity_thickness": 2.018555800673529
+        },
+        {
+          "fluctuation_energy": 1.80311281823758e-10,
+          "fundamental_amplitude": 9.97138204150244e-06,
+          "kinetic_energy": 87.89697419076052,
+          "max_divergence": 1.6922763521190688e-15,
+          "momentum_thickness": 0.5026905105206061,
+          "time": 2.0249995718652283,
+          "vorticity_thickness": 2.020513081640462
+        },
+        {
+          "fluctuation_energy": 1.976415248284311e-10,
+          "fundamental_amplitude": 1.0443346914235972e-05,
+          "kinetic_energy": 87.88865562967017,
+          "max_divergence": 1.6482944310306852e-15,
+          "momentum_thickness": 0.5030214954852263,
+          "time": 2.2749995190090857,
+          "vorticity_thickness": 2.022466726174957
+        },
+        {
+          "fluctuation_energy": 2.1661828819685802e-10,
+          "fundamental_amplitude": 1.0937169748283721e-05,
+          "kinetic_energy": 87.88034358917017,
+          "max_divergence": 1.6234863977226033e-15,
+          "momentum_thickness": 0.5033522210070818,
+          "time": 2.524999466152943,
+          "vorticity_thickness": 2.024416760498328
+        },
+        {
+          "fluctuation_energy": 2.3739552634201524e-10,
+          "fundamental_amplitude": 1.1453823436891723e-05,
+          "kinetic_energy": 87.8720380511911,
+          "max_divergence": 1.649391643099845e-15,
+          "momentum_thickness": 0.5036826878048994,
+          "time": 2.7749994132968006,
+          "vorticity_thickness": 2.026363210476279
+        },
+        {
+          "fluctuation_energy": 2.6014135513543343e-10,
+          "fundamental_amplitude": 1.199432279710896e-05,
+          "kinetic_energy": 87.86373899776054,
+          "max_divergence": 1.6280540195819496e-15,
+          "momentum_thickness": 0.50401289659361,
+          "time": 3.024999360440658,
+          "vorticity_thickness": 2.0283061016262285
+        },
+        {
+          "fluctuation_energy": 2.8503933547805375e-10,
+          "fundamental_amplitude": 1.2559726404155161e-05,
+          "kinetic_energy": 87.85544641100216,
+          "max_divergence": 1.6184607659580863e-15,
+          "momentum_thickness": 0.5043428480843717,
+          "time": 3.2749993075845154,
+          "vorticity_thickness": 2.030245459124441
+        },
+        {
+          "fluctuation_energy": 3.12289871591221e-10,
+          "fundamental_amplitude": 1.3151138498902868e-05,
+          "kinetic_energy": 87.84716027313493,
+          "max_divergence": 1.6925931689111215e-15,
+          "momentum_thickness": 0.5046725429845917,
+          "time": 3.524999254728373,
+          "vorticity_thickness": 2.032181307812954
+        },
+        {
+          "fluctuation_energy": 3.421117341220409e-10,
+          "fundamental_amplitude": 1.376971097099201e-05,
+          "kinetic_energy": 87.83888056647227,
+          "max_divergence": 1.6080566602669617e-15,
+          "momentum_thickness": 0.505001981997955,
+          "time": 3.7749992018722303,
+          "vorticity_thickness": 2.034113672206316
+        },
+        {
+          "fluctuation_energy": 3.7474371903312096e-10,
+          "fundamental_amplitude": 1.4416645420279015e-05,
+          "kinetic_energy": 87.83060727342126,
+          "max_divergence": 1.6444025263962885e-15,
+          "momentum_thickness": 0.5053311658244507,
+          "time": 4.024999149016088,
+          "vorticity_thickness": 2.0360425764981493
+        },
+        {
+          "fluctuation_energy": 4.10446454188149e-10,
+          "fundamental_amplitude": 1.5093195299348971e-05,
+          "kinetic_energy": 87.82234037648196,
+          "max_divergence": 1.6471188419441249e-15,
+          "momentum_thickness": 0.5056600951604011,
+          "time": 4.274999096159945,
+          "vorticity_thickness": 2.037968044567521
+        },
+        {
+          "fluctuation_energy": 4.4950436657835905e-10,
+          "fundamental_amplitude": 1.5800668140049547e-05,
+          "kinetic_energy": 87.81407985824644,
+          "max_divergence": 1.6312049457497887e-15,
+          "momentum_thickness": 0.5059887706984895,
+          "time": 4.5249990433038025,
+          "vorticity_thickness": 2.039890099985159
+        },
+        {
+          "fluctuation_energy": 4.922278242433165e-10,
+          "fundamental_amplitude": 1.6540427866990272e-05,
+          "kinetic_energy": 87.80582570139815,
+          "max_divergence": 1.638586427603526e-15,
+          "momentum_thickness": 0.5063171931277914,
+          "time": 4.77499899044766,
+          "vorticity_thickness": 2.0418087660194995
+        },
+        {
+          "fluctuation_energy": 5.389554681510377e-10,
+          "fundamental_amplitude": 1.731389720124049e-05,
+          "kinetic_energy": 87.79757788871105,
+          "max_divergence": 1.6506704378570723e-15,
+          "momentum_thickness": 0.5066453631338024,
+          "time": 5.024998937591517,
+          "vorticity_thickness": 2.0437240656425644
+        },
+        {
+          "fluctuation_energy": 5.900567506109872e-10,
+          "fundamental_amplitude": 1.8122560157471115e-05,
+          "kinetic_energy": 87.78933640304898,
+          "max_divergence": 1.6764936666222182e-15,
+          "momentum_thickness": 0.5069732813984695,
+          "time": 5.274998884735375,
+          "vorticity_thickness": 2.045636021535708
+        },
+        {
+          "fluctuation_energy": 6.459346982143263e-10,
+          "fundamental_amplitude": 1.8967964637999063e-05,
+          "kinetic_energy": 87.78110122736479,
+          "max_divergence": 1.6407139890785717e-15,
+          "momentum_thickness": 0.5073009486002189,
+          "time": 5.524998831879232,
+          "vorticity_thickness": 2.047544656095199
+        },
+        {
+          "fluctuation_energy": 7.070289188369038e-10,
+          "fundamental_amplitude": 1.9851725127341548e-05,
+          "kinetic_energy": 87.77287234469966,
+          "max_divergence": 1.660094036737301e-15,
+          "momentum_thickness": 0.5076283654139869,
+          "time": 5.77499877902309,
+          "vorticity_thickness": 2.049449991437667
+        },
+        {
+          "fluctuation_energy": 7.73818873910281e-10,
+          "fundamental_amplitude": 2.0775525491039412e-05,
+          "kinetic_energy": 87.76464973818246,
+          "max_divergence": 1.67786321301881e-15,
+          "momentum_thickness": 0.5079555325112503,
+          "time": 6.024998726166947,
+          "vorticity_thickness": 2.0513520494054127
+        },
+        {
+          "fluctuation_energy": 8.468274389744559e-10,
+          "fundamental_amplitude": 2.1741121882680486e-05,
+          "kinetic_energy": 87.75643339102882,
+          "max_divergence": 1.6647352611275524e-15,
+          "momentum_thickness": 0.5082824505600543,
+          "time": 6.2749986733108045,
+          "vorticity_thickness": 2.0532508515715837
+        },
+        {
+          "fluctuation_energy": 9.266247774912991e-10,
+          "fundamental_amplitude": 2.2750345763233943e-05,
+          "kinetic_energy": 87.7482232865406,
+          "max_divergence": 1.6141785511885728e-15,
+          "momentum_thickness": 0.5086091202250433,
+          "time": 6.524998620454662,
+          "vorticity_thickness": 2.055146419245226
+        },
+        {
+          "fluctuation_energy": 1.0138325550212146e-09,
+          "fundamental_amplitude": 2.3805107036986445e-05,
+          "kinetic_energy": 87.74001940810513,
+          "max_divergence": 1.6607738997914808e-15,
+          "momentum_thickness": 0.5089355421674918,
+          "time": 6.774998567598519,
+          "vorticity_thickness": 2.057038773476208
+        },
+        {
+          "fluctuation_energy": 1.109128523174129e-09,
+          "fundamental_amplitude": 2.490739730858826e-05,
+          "kinetic_energy": 87.73182173919452,
+          "max_divergence": 1.658095899249618e-15,
+          "momentum_thickness": 0.5092617170453297,
+          "time": 7.024998514742377,
+          "vorticity_thickness": 2.0589279350600345
+        },
+        {
+          "fluctuation_energy": 1.2132515052372845e-09,
+          "fundamental_amplitude": 2.6059293265852753e-05,
+          "kinetic_energy": 87.72363026336497,
+          "max_divergence": 1.6744114478796303e-15,
+          "momentum_thickness": 0.5095876455131758,
+          "time": 7.274998461886234,
+          "vorticity_thickness": 2.060813924542534
+        },
+        {
+          "fluctuation_energy": 1.3270068180971259e-09,
+          "fundamental_amplitude": 2.72629601932553e-05,
+          "kinetic_energy": 87.71544496425605,
+          "max_divergence": 1.6566938479636753e-15,
+          "momentum_thickness": 0.5099133282223662,
+          "time": 7.524998409030092,
+          "vorticity_thickness": 2.0626967622244496
+        },
+        {
+          "fluctuation_energy": 1.4512721679936828e-09,
+          "fundamental_amplitude": 2.8520655621175366e-05,
+          "kinetic_energy": 87.70726582559014,
+          "max_divergence": 1.6328932015276747e-15,
+          "momentum_thickness": 0.510238765820982,
+          "time": 7.774998356173949,
+          "vorticity_thickness": 2.064576468165913
+        },
+        {
+          "fluctuation_energy": 1.5870040608330744e-09,
+          "fundamental_amplitude": 2.9834733116242754e-05,
+          "kinetic_energy": 87.69909283117165,
+          "max_divergence": 1.6154999887607385e-15,
+          "momentum_thickness": 0.5105639589538804,
+          "time": 8.024998303317807,
+          "vorticity_thickness": 2.066453062190822
+        },
+        {
+          "fluctuation_energy": 1.735244771214996e-09,
+          "fundamental_amplitude": 3.120764621832851e-05,
+          "kinetic_energy": 87.6909259648864,
+          "max_divergence": 1.6262584718611706e-15,
+          "momentum_thickness": 0.5108889082627233,
+          "time": 8.274998250461655,
+          "vorticity_thickness": 2.06832656389112
+        },
+        {
+          "fluctuation_energy": 1.897129918062741e-09,
+          "fundamental_amplitude": 3.264195252993853e-05,
+          "kinetic_energy": 87.68276521070105,
+          "max_divergence": 1.6495715714266875e-15,
+          "momentum_thickness": 0.5112136143860068,
+          "time": 8.524998197605504,
+          "vorticity_thickness": 2.070196992630977
+        },
+        {
+          "fluctuation_energy": 2.073896698777271e-09,
+          "fundamental_amplitude": 3.414031796403839e-05,
+          "kinetic_energy": 87.67461055266234,
+          "max_divergence": 1.66495455994283e-15,
+          "momentum_thickness": 0.5115380779590909,
+          "time": 8.774998144749352,
+          "vorticity_thickness": 2.072064367550887
+        },
+        {
+          "fluctuation_energy": 2.2468235758456667e-09,
+          "fundamental_amplitude": 3.554592366651031e-05,
+          "kinetic_energy": 87.66727649750894,
+          "max_divergence": 1.6700544162780726e-15,
+          "momentum_thickness": 0.5118298907840749,
+          "time": 9.0,
+          "vorticity_thickness": 2.0737424237861015
+        }
+      ],
+      "instantaneous_delta": 1.0237723280475994,
+      "max_divergence": 1.6925931689111215e-15,
+      "rate": 0.1822448067235896,
+      "rate_log_residual": 0.0016682564409601101,
+      "reference_frozen_profile": 0.18371977881679832,
+      "reference_inviscid": 0.18191327238490865,
+      "reference_viscous": 0.1785191884528575,
+      "wall_seconds": 4.5353052616119385,
+      "window": [
+        2.0,
+        9.0
+      ]
+    },
+    {
+      "dt": 0.016666663072370122,
+      "energy_rate": 0.18108694903462672,
+      "error_vs_frozen": -0.006829463775958722,
+      "error_vs_instantaneous": 0.0205876839751431,
+      "grid": [
+        144,
+        384
+      ],
+      "history": [
+        {
+          "fluctuation_energy": 8.572944418820674e-11,
+          "fundamental_amplitude": 6.8559509219213485e-06,
+          "kinetic_energy": 87.96403870335514,
+          "max_divergence": 2.505628754761476e-15,
+          "momentum_thickness": 0.5000221016548742,
+          "time": 0.016666663072370122,
+          "vorticity_thickness": 2.002157352573285
+        },
+        {
+          "fluctuation_energy": 9.403064867292737e-11,
+          "fundamental_amplitude": 7.182713534244948e-06,
+          "kinetic_energy": 87.9556658850616,
+          "max_divergence": 2.3574488308211434e-15,
+          "momentum_thickness": 0.5003552454065224,
+          "time": 0.26666660915792206,
+          "vorticity_thickness": 2.00414878809531
+        },
+        {
+          "fluctuation_energy": 1.0313004690462359e-10,
+          "fundamental_amplitude": 7.524835200251377e-06,
+          "kinetic_energy": 87.94729974298632,
+          "max_divergence": 2.389905816488393e-15,
+          "momentum_thickness": 0.5006881235389617,
+          "time": 0.516666555243474,
+          "vorticity_thickness": 2.0061363180961296
+        },
+        {
+          "fluctuation_energy": 1.1310326568567323e-10,
+          "fundamental_amplitude": 7.883011828166854e-06,
+          "kinetic_energy": 87.93894025819279,
+          "max_divergence": 2.368959882842876e-15,
+          "momentum_thickness": 0.501020736798798,
+          "time": 0.7666665013290253,
+          "vorticity_thickness": 2.008119972769039
+        },
+        {
+          "fluctuation_energy": 1.240329765165441e-10,
+          "fundamental_amplitude": 8.257969162670629e-06,
+          "kinetic_energy": 87.93058741184929,
+          "max_divergence": 2.4412346101936847e-15,
+          "momentum_thickness": 0.501353085931559,
+          "time": 1.0166664474145766,
+          "vorticity_thickness": 2.010099781862992
+        },
+        {
+          "fluctuation_energy": 1.3600954079220659e-10,
+          "fundamental_amplitude": 8.650464123624116e-06,
+          "kinetic_energy": 87.92224118522782,
+          "max_divergence": 2.501895907032706e-15,
+          "momentum_thickness": 0.5016851716802082,
+          "time": 1.2666663935001294,
+          "vorticity_thickness": 2.0120757746924074
+        },
+        {
+          "fluctuation_energy": 1.491317138471874e-10,
+          "fundamental_amplitude": 9.06128619967459e-06,
+          "kinetic_energy": 87.91390155970322,
+          "max_divergence": 2.4697224193224353e-15,
+          "momentum_thickness": 0.5020169947844546,
+          "time": 1.5166663395856823,
+          "vorticity_thickness": 2.014047980146761
+        },
+        {
+          "fluctuation_energy": 1.6350741272678593e-10,
+          "fundamental_amplitude": 9.491258898626019e-06,
+          "kinetic_energy": 87.90556851675234,
+          "max_divergence": 2.5087847465833863e-15,
+          "momentum_thickness": 0.5023485559804305,
+          "time": 1.7666662856712352,
+          "vorticity_thickness": 2.0160164266999923
+        },
+        {
+          "fluctuation_energy": 1.7925455326346143e-10,
+          "fundamental_amplitude": 9.941241256653913e-06,
+          "kinetic_energy": 87.897242037953,
+          "max_divergence": 2.5310041413255407e-15,
+          "momentum_thickness": 0.5026798560005367,
+          "time": 2.016666231756788,
+          "vorticity_thickness": 2.017981142419616
+        },
+        {
+          "fluctuation_energy": 1.9650196258707435e-10,
+          "fundamental_amplitude": 1.0412129408403631e-05,
+          "kinetic_energy": 87.88892210498322,
+          "max_divergence": 2.4985570355035274e-15,
+          "momentum_thickness": 0.5030108955733736,
+          "time": 2.2666661778423407,
+          "vorticity_thickness": 2.0199421549756025
+        },
+        {
+          "fluctuation_energy": 2.153903737532697e-10,
+          "fundamental_amplitude": 1.0904858220154598e-05,
+          "kinetic_energy": 87.88060869962025,
+          "max_divergence": 2.499316718178096e-15,
+          "momentum_thickness": 0.5033416754237154,
+          "time": 2.5166661239278936,
+          "vorticity_thickness": 2.0218994916490054
+        },
+        {
+          "fluctuation_energy": 2.360735097646235e-10,
+          "fundamental_amplitude": 1.1420402988345325e-05,
+          "kinetic_energy": 87.87230180373986,
+          "max_divergence": 2.462879183893286e-15,
+          "momentum_thickness": 0.5036721962725084,
+          "time": 2.7666660700134464,
+          "vorticity_thickness": 2.0238531793403194
+        },
+        {
+          "fluctuation_energy": 2.587192648932082e-10,
+          "fundamental_amplitude": 1.1959781205806695e-05,
+          "kinetic_energy": 87.86400139931524,
+          "max_divergence": 2.507332085078845e-15,
+          "momentum_thickness": 0.5040024588368809,
+          "time": 3.0166660160989993,
+          "vorticity_thickness": 2.025803244577608
+        },
+        {
+          "fluctuation_energy": 2.8351099190250073e-10,
+          "fundamental_amplitude": 1.2524054398151493e-05,
+          "kinetic_energy": 87.85570746841645,
+          "max_divergence": 2.4935549353730763e-15,
+          "momentum_thickness": 0.5043324638301636,
+          "time": 3.266665962184552,
+          "vorticity_thickness": 2.027749713524394
+        },
+        {
+          "fluctuation_energy": 3.1064890451462964e-10,
+          "fundamental_amplitude": 1.3114330032906255e-05,
+          "kinetic_energy": 87.84741999320933,
+          "max_divergence": 2.516743574034906e-15,
+          "momentum_thickness": 0.5046622119619106,
+          "time": 3.516665908270105,
+          "vorticity_thickness": 2.0296926119873184
+        },
+        {
+          "fluctuation_energy": 3.403516052774137e-10,
+          "fundamental_amplitude": 1.3731763504049307e-05,
+          "kinetic_energy": 87.83913895595485,
+          "max_divergence": 2.5247324711560534e-15,
+          "momentum_thickness": 0.5049917039379277,
+          "time": 3.766665854355658,
+          "vorticity_thickness": 2.0316319654235806
+        },
+        {
+          "fluctuation_energy": 3.728577498679032e-10,
+          "fundamental_amplitude": 1.4377560194745978e-05,
+          "kinetic_energy": 87.83086433900824,
+          "max_divergence": 2.4345846074643504e-15,
+          "momentum_thickness": 0.5053209404602974,
+          "time": 4.016665800441211,
+          "vorticity_thickness": 2.0335677989481735
+        },
+        {
+          "fluctuation_energy": 4.084278598203688e-10,
+          "fundamental_amplitude": 1.5052977621190286e-05,
+          "kinetic_energy": 87.82259612481818,
+          "max_divergence": 2.5195164422668614e-15,
+          "momentum_thickness": 0.5056499222274108,
+          "time": 4.266665746526764,
+          "vorticity_thickness": 2.035500137340911
+        },
+        {
+          "fluctuation_energy": 4.4734629670535494e-10,
+          "fundamental_amplitude": 1.5759327660585072e-05,
+          "kinetic_energy": 87.81433429592597,
+          "max_divergence": 2.4866283763864635e-15,
+          "momentum_thickness": 0.5059786499339953,
+          "time": 4.5166656926123165,
+          "vorticity_thickness": 2.037429005053258
+        },
+        {
+          "fluctuation_energy": 4.899234119069987e-10,
+          "fundamental_amplitude": 1.649797886643867e-05,
+          "kinetic_energy": 87.8060788349649,
+          "max_divergence": 2.5029963881196464e-15,
+          "momentum_thickness": 0.5063071242711449,
+          "time": 4.766665638697869,
+          "vorticity_thickness": 2.039354426214982
+        },
+        {
+          "fluctuation_energy": 5.364978873657401e-10,
+          "fundamental_amplitude": 1.727035887447041e-05,
+          "kinetic_energy": 87.79782972465924,
+          "max_divergence": 2.490515304702295e-15,
+          "momentum_thickness": 0.5066353459263502,
+          "time": 5.016665584783422,
+          "vorticity_thickness": 2.0412764246406074
+        },
+        {
+          "fluctuation_energy": 5.874392839743098e-10,
+          "fundamental_amplitude": 1.8077956902576044e-05,
+          "kinetic_energy": 87.78958694782372,
+          "max_divergence": 2.4889122948496163e-15,
+          "momentum_thickness": 0.5069633155835297,
+          "time": 5.266665530868975,
+          "vorticity_thickness": 2.0431950238357186
+        },
+        {
+          "fluctuation_energy": 6.431508157501447e-10,
+          "fundamental_amplitude": 1.8922326348466398e-05,
+          "kinetic_energy": 87.78135048736267,
+          "max_divergence": 2.4220244852851084e-15,
+          "momentum_thickness": 0.5072910339230593,
+          "time": 5.516665476954528,
+          "vorticity_thickness": 2.045110247003069
+        },
+        {
+          "fluctuation_energy": 7.040723694574354e-10,
+          "fundamental_amplitude": 1.9805087488707577e-05,
+          "kinetic_energy": 87.77312032626918,
+          "max_divergence": 2.5244165278667276e-15,
+          "momentum_thickness": 0.5076185016218007,
+          "time": 5.766665423040081,
+          "vorticity_thickness": 2.0470221170485483
+        },
+        {
+          "fluctuation_energy": 7.706837910451713e-10,
+          "fundamental_amplitude": 2.072793028312328e-05,
+          "kinetic_energy": 87.76489644762454,
+          "max_divergence": 2.509136794652089e-15,
+          "momentum_thickness": 0.5079457193531363,
+          "time": 6.016665369125634,
+          "vorticity_thickness": 2.048930656586986
+        },
+        {
+          "fluctuation_energy": 8.435084620842971e-10,
+          "fundamental_amplitude": 2.169261728859642e-05,
+          "kinetic_energy": 87.7566788345974,
+          "max_divergence": 2.51812029374177e-15,
+          "momentum_thickness": 0.5082726877869939,
+          "time": 6.266665315211187,
+          "vorticity_thickness": 2.0508358879478057
+        },
+        {
+          "fluctuation_energy": 9.231171913798616e-10,
+          "fundamental_amplitude": 2.270098668656321e-05,
+          "kinetic_energy": 87.74846747044309,
+          "max_divergence": 2.5291356660532365e-15,
+          "momentum_thickness": 0.5085994075898815,
+          "time": 6.5166652612967395,
+          "vorticity_thickness": 2.052737833180535
+        },
+        {
+          "fluctuation_energy": 1.0101324490721828e-09,
+          "fundamental_amplitude": 2.3754955428644505e-05,
+          "kinetic_energy": 87.74026233850292,
+          "max_divergence": 2.502663742399392e-15,
+          "momentum_thickness": 0.5089258794249137,
+          "time": 6.766665207382292,
+          "vorticity_thickness": 2.054636514060177
+        },
+        {
+          "fluctuation_energy": 1.1052329728744834e-09,
+          "fundamental_amplitude": 2.485652250501617e-05,
+          "kinetic_energy": 87.73206342220342,
+          "max_divergence": 2.502024682510468e-15,
+          "momentum_thickness": 0.5092521039518442,
+          "time": 7.016665153467845,
+          "vorticity_thickness": 2.0565319520924445
+        },
+        {
+          "fluctuation_energy": 1.2091587786159861e-09,
+          "fundamental_amplitude": 2.6007772340369367e-05,
+          "kinetic_energy": 87.72387070505576,
+          "max_divergence": 2.5011505445089017e-15,
+          "momentum_thickness": 0.5095780818270926,
+          "time": 7.266665099553398,
+          "vorticity_thickness": 2.058424168518871
+        },
+        {
+          "fluctuation_energy": 1.3227166099919341e-09,
+          "fundamental_amplitude": 2.7210878322460897e-05,
+          "kinetic_energy": 87.71568417065491,
+          "max_divergence": 2.5071937010710875e-15,
+          "momentum_thickness": 0.5099038137037777,
+          "time": 7.516665045638951,
+          "vorticity_thickness": 2.0603131843217906
+        },
+        {
+          "fluctuation_energy": 1.4467858653880087e-09,
+          "fundamental_amplitude": 2.8468106468495457e-05,
+          "kinetic_energy": 87.70750380267913,
+          "max_divergence": 2.5247929281326637e-15,
+          "momentum_thickness": 0.5102293002317442,
+          "time": 7.766664991724504,
+          "vorticity_thickness": 2.0621990202292078
+        },
+        {
+          "fluctuation_energy": 1.5823250428524811e-09,
+          "fundamental_amplitude": 2.978181923476054e-05,
+          "kinetic_energy": 87.69932958488916,
+          "max_divergence": 2.5199521348391054e-15,
+          "momentum_thickness": 0.5105545420575944,
+          "time": 8.016664937810056,
+          "vorticity_thickness": 2.064081696719533
+        },
+        {
+          "fluctuation_energy": 1.730378747771523e-09,
+          "fundamental_amplitude": 3.115447947518173e-05,
+          "kinetic_energy": 87.69116150112765,
+          "max_divergence": 2.5043218358634218e-15,
+          "momentum_thickness": 0.5108795398247171,
+          "time": 8.266664883895595,
+          "vorticity_thickness": 2.0659612340262377
+        },
+        {
+          "fluctuation_energy": 1.892085311565952e-09,
+          "fundamental_amplitude": 3.25886545546662e-05,
+          "kinetic_energy": 87.68299953531846,
+          "max_divergence": 2.5246611086302473e-15,
+          "momentum_thickness": 0.5112042941733158,
+          "time": 8.516664829981135,
+          "vorticity_thickness": 2.067837652142367
+        },
+        {
+          "fluctuation_energy": 2.068685073810694e-09,
+          "fundamental_amplitude": 3.40870206233389e-05,
+          "kinetic_energy": 87.67484367146602,
+          "max_divergence": 2.5366138023071895e-15,
+          "momentum_thickness": 0.5115288057404418,
+          "time": 8.766664776066674,
+          "vorticity_thickness": 2.069710970824987
+        },
+        {
+          "fluctuation_energy": 2.2481404287173672e-09,
+          "fundamental_amplitude": 3.554588153658984e-05,
+          "kinetic_energy": 87.66723695989808,
+          "max_divergence": 2.480745150232631e-15,
+          "momentum_thickness": 0.5118314672362426,
+          "time": 9.0,
+          "vorticity_thickness": 2.071456636955394
+        }
+      ],
+      "instantaneous_delta": 1.0225551235015344,
+      "max_divergence": 2.5366138023071895e-15,
+      "rate": 0.18246507124244185,
+      "rate_log_residual": 0.0016218769256450165,
+      "reference_frozen_profile": 0.18371977881679832,
+      "reference_inviscid": 0.18218650983078033,
+      "reference_viscous": 0.17878431623998106,
+      "wall_seconds": 14.758880853652954,
+      "window": [
+        2.0,
+        9.0
+      ]
+    }
+  ],
+  "seed": {
+    "amplitude": 1e-05,
+    "mode": "Rayleigh eigenfunction at alpha=0.5"
+  },
+  "time_step_ladder": [
+    {
+      "dt": 0.025000005989654215,
+      "rate": 0.18226331227828174
+    },
+    {
+      "dt": 0.012500002994827107,
+      "rate": 0.18226369262853503
+    },
+    {
+      "dt": 0.006250001497413554,
+      "rate": 0.18226377418498044
+    }
+  ]
+}
