@@ -374,3 +374,19 @@
 - 明示未做: 壁面法向运动/行波壁（`v` 钉零，NOT_SUPPORTED）；多频/随机驱动；二阶时间格式；
   可压缩/湍流/变物性；实验对标（层流振荡通道的闭式解即精确解，无更优基准）。
 - 建议总账条目: `CASE-FVM-STOKES-SECOND`（算例池），验收=本文件 19 判据。
+## 4d. 追加欠账（append-only，2026-11-13）
+### D16 2-D 浅水（SWE-2D）能力与 Thacker (1981) 精确解验证面 —— 已交付（m16944），长时程仍 honest FAIL
+- 缺口来源：`shallow_water/` 只有 1-D（`swe1d`/`bed`）；2-D 算子与 2-D 精确解验证面全缺，总账无条目。
+- 交付：`src/tensorfvm/shallow_water/{swe2d.py,thacker.py}`（Audusse 静水重构 + 三分量 HLL + SSP-RK3，
+  闭式解 + `check_thacker_solution` PDE 残差认证）、`verification/thacker_basin.py`（C1–C9 预声明判据）、
+  `scripts/run_thacker_basin.py`、`tests/test_shallow_water_2d.py`（11 测，1 xfail）、
+  `docs/case-fvm-thacker-basin/{criteria.md,REPORT.md,artifacts/*}`。
+- 关键数字（`--periods 0.5`、n=160、窗口 0 ≤ t ≤ 0.5T）：静湖 `max|u| = 5.7e-15`；闭式解 PDE 残差
+  `7.75e-8`；水量 vs 解析 `πa²H/2` 差 `0.0038 %`、漂移 `1.1e-14`；中心水深史 L2 **0.726 %**；
+  岸线平均 **2.354 %**；对称性缺陷 **0.000 %**；负对照（中心源项）静湖爆炸到 `5.0e10 m/s`。
+  C7 **honest FAIL**：中心误差阶 0.98，岸线误差饱和（阶 0.43）。
+- 两个真实缺陷（实测、已修）：①HLL 必须吃星态深度，否则静湖假质量通量 `0.15 m²/s`；
+  ②跨湿/干界面必须关掉 `eta` 重构，否则静湖 `max|dh| = 1.3`（水漏干滩）。
+- 下一回合首项：**长时程动量注入**——满 2 周期时 n=40 第 200 步出现 `18.2 m/s` 非物理速度
+  （同刻物理上界 ≈9），CFL 步长塌缩；需正性保持（positivity-preserving）通量限制或干湿翻转时的
+  动量重投影，再谈 2 周期精度；次项：岸线一阶饱和（干湿重构加二阶/界面追踪），转置对照口径未定位。
