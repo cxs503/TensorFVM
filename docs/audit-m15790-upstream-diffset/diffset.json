@@ -1,0 +1,1278 @@
+{
+  "upstream": {
+    "remotes": [
+      "origin\thttps://github.com/cxs503/TensorFVM.git (fetch) [blob:none]",
+      "origin\thttps://github.com/cxs503/TensorFVM.git (push)"
+    ],
+    "local_head": "0f13a8d347c18776771952b57e8b1730dc481e4a",
+    "origin_main_sha": "1ef75dfb2bebef80bf7da49600f845b7c852f668",
+    "origin_main_source": "ls-remote(远端实测)",
+    "ls_remote_ok": true,
+    "fetched_to_sync_tracking_ref": false,
+    "head_equals_origin_main": false,
+    "commits_ahead_of_origin_main": 0,
+    "commits_behind_origin_main": 4,
+    "diffset_pairs": 4,
+    "remote_branch_total": 215,
+    "remote_branches_not_merged_into_main": 100,
+    "unmerged_examples": [
+      {
+        "ref": "origin/arena/28d3c5fa-tensorfvm",
+        "commits_ahead_of_main": 26
+      },
+      {
+        "ref": "origin/arena/92be1edd-tensorfvm",
+        "commits_ahead_of_main": 17
+      },
+      {
+        "ref": "origin/arena/99e9d945-tensorfvm",
+        "commits_ahead_of_main": 24
+      },
+      {
+        "ref": "origin/copilot/benchmark",
+        "commits_ahead_of_main": 13
+      },
+      {
+        "ref": "origin/copilot/benchmark-calculation-error-analysis",
+        "commits_ahead_of_main": 12
+      },
+      {
+        "ref": "origin/copilot/cylinder-flow-benchmark",
+        "commits_ahead_of_main": 15
+      },
+      {
+        "ref": "origin/copilot/develop-fvm-code",
+        "commits_ahead_of_main": 3
+      },
+      {
+        "ref": "origin/copilot/extend-c-grid-naca-airfoil",
+        "commits_ahead_of_main": 10
+      }
+    ],
+    "git_cmd_failures": []
+  },
+  "diffset": {
+    "upstream_only_commits": [
+      "1ef75dfb2bebef80bf7da49600f845b7c852f668",
+      "1abcbdf656fef84aeef202b9656bf736b7f4767a",
+      "6f184685ea20e56935e86637d6f681e9056f36fa",
+      "c436b6d218a9a4590e3d711bd35d3a86729bf71f"
+    ],
+    "upstream_only_first_parent_chain": [
+      "1ef75dfb2bebef80bf7da49600f845b7c852f668",
+      "6f184685ea20e56935e86637d6f681e9056f36fa",
+      "c436b6d218a9a4590e3d711bd35d3a86729bf71f"
+    ],
+    "local_only_commits": [],
+    "upstream_only_records": [
+      {
+        "sha": "1ef75dfb",
+        "date": "2026-11-12 10:44:00 +0800",
+        "author": "chuxuesen",
+        "subject": "Merge #451 (m15715) via push-merge",
+        "n_parents": 2,
+        "files": 5,
+        "insertions": 212,
+        "deletions": 0,
+        "files_by_cat": {
+          "docs": 5
+        },
+        "ins_by_cat": {
+          "docs": 212
+        },
+        "top_files": [
+          {
+            "path": "docs/board-audit-m15715-m15435/AUDIT.md",
+            "ins": 85,
+            "del_": 0
+          },
+          {
+            "path": "docs/board-audit-m15715-m15435/indep_chebyshev_shear.py",
+            "ins": 50,
+            "del_": 0
+          },
+          {
+            "path": "docs/board-audit-m15715-m15435/make_fig.py",
+            "ins": 49,
+            "del_": 0
+          }
+        ],
+        "themes": [
+          "audit-verdict"
+        ],
+        "mission_in_subject": [
+          "15715"
+        ],
+        "missions_referenced_in_paths": [
+          "15435",
+          "15715"
+        ],
+        "docs_src_snapshot_files": 0,
+        "risks": [
+          "R4:no-src-change(证据/文档型)",
+          "R5:meta-audit-chain(审计对象为既往任务号)"
+        ]
+      },
+      {
+        "sha": "1abcbdf6",
+        "date": "2026-11-12 10:42:52 +0800",
+        "author": "chuxuesen",
+        "subject": "m15715: matured mission deliverables",
+        "n_parents": 1,
+        "files": 5,
+        "insertions": 212,
+        "deletions": 0,
+        "files_by_cat": {
+          "docs": 5
+        },
+        "ins_by_cat": {
+          "docs": 212
+        },
+        "top_files": [
+          {
+            "path": "docs/board-audit-m15715-m15435/AUDIT.md",
+            "ins": 85,
+            "del_": 0
+          },
+          {
+            "path": "docs/board-audit-m15715-m15435/indep_chebyshev_shear.py",
+            "ins": 50,
+            "del_": 0
+          },
+          {
+            "path": "docs/board-audit-m15715-m15435/make_fig.py",
+            "ins": 49,
+            "del_": 0
+          }
+        ],
+        "themes": [
+          "audit-verdict"
+        ],
+        "mission_in_subject": [
+          "15715"
+        ],
+        "missions_referenced_in_paths": [
+          "15435",
+          "15715"
+        ],
+        "docs_src_snapshot_files": 0,
+        "risks": [
+          "R4:no-src-change(证据/文档型)",
+          "R5:meta-audit-chain(审计对象为既往任务号)"
+        ]
+      },
+      {
+        "sha": "6f184685",
+        "date": "2026-11-12 10:41:41 +0800",
+        "author": "chuxuesen",
+        "subject": "Merge #450 (m15655) via merge-master",
+        "n_parents": 1,
+        "files": 18,
+        "insertions": 6252,
+        "deletions": 0,
+        "files_by_cat": {
+          "docs": 15,
+          "scripts": 2,
+          "tests": 1
+        },
+        "ins_by_cat": {
+          "docs": 5718,
+          "scripts": 424,
+          "tests": 110
+        },
+        "top_files": [
+          {
+            "path": "docs/audit-m15410-heated-cavity/original-artifacts/summary.json",
+            "ins": 2565,
+            "del_": 0
+          },
+          {
+            "path": "docs/audit-m15410-heated-cavity/original-artifacts/case_Ra100000.json",
+            "ins": 637,
+            "del_": 0
+          },
+          {
+            "path": "docs/audit-m15410-heated-cavity/original-artifacts/case_Ra1000000.json",
+            "ins": 637,
+            "del_": 0
+          }
+        ],
+        "themes": [
+          "audit-verdict",
+          "case-cavity",
+          "benchmark",
+          "report-pipeline"
+        ],
+        "mission_in_subject": [
+          "15655"
+        ],
+        "missions_referenced_in_paths": [
+          "15410"
+        ],
+        "docs_src_snapshot_files": 0,
+        "risks": [
+          "R4:no-src-change(证据/文档型)",
+          "R5:meta-audit-chain(审计对象为既往任务号)",
+          "R7:merge-subject-without-merge-topology"
+        ]
+      },
+      {
+        "sha": "c436b6d2",
+        "date": "2026-11-12 10:41:37 +0800",
+        "author": "chuxuesen",
+        "subject": "Merge #447 (m15542) via merge-master",
+        "n_parents": 1,
+        "files": 20,
+        "insertions": 1752,
+        "deletions": 8,
+        "files_by_cat": {
+          "docs": 11,
+          "scripts": 3,
+          "src": 5,
+          "tests": 1
+        },
+        "ins_by_cat": {
+          "docs": 577,
+          "scripts": 546,
+          "src": 456,
+          "tests": 173
+        },
+        "top_files": [
+          {
+            "path": "src/tensorfvm/compressible/forward_step_benchmark.py",
+            "ins": 304,
+            "del_": 0
+          },
+          {
+            "path": "docs/repro-fvm-forward-step/run/grading.json",
+            "ins": 296,
+            "del_": 0
+          },
+          {
+            "path": "scripts/forward_step_report.py",
+            "ins": 247,
+            "del_": 0
+          }
+        ],
+        "themes": [
+          "reproducibility",
+          "benchmark",
+          "report-pipeline"
+        ],
+        "mission_in_subject": [
+          "15542"
+        ],
+        "missions_referenced_in_paths": [],
+        "docs_src_snapshot_files": 0,
+        "risks": [
+          "R7:merge-subject-without-merge-topology"
+        ]
+      }
+    ]
+  },
+  "commits": [
+    {
+      "sha": "0f13a8d3",
+      "date": "2026-11-12 10:29:34 +0800",
+      "author": "chuxuesen",
+      "subject": "Merge #449 (m15648) via push-merge",
+      "n_parents": 2,
+      "files": 36,
+      "insertions": 6546,
+      "deletions": 0,
+      "files_by_cat": {
+        "docs": 36
+      },
+      "ins_by_cat": {
+        "docs": 6546
+      },
+      "top_files": [
+        {
+          "path": "docs/audit-m15648/reviewed/src/tensorfvm/compressible/solver.py",
+          "ins": 832,
+          "del_": 0
+        },
+        {
+          "path": "docs/audit-m15648/reviewed/src/tensorfvm/compressible/verification.py",
+          "ins": 779,
+          "del_": 0
+        },
+        {
+          "path": "docs/audit-m15648/reviewed/run/grading_240x80_postclose.json",
+          "ins": 508,
+          "del_": 0
+        }
+      ],
+      "themes": [
+        "audit-verdict",
+        "reproducibility",
+        "benchmark",
+        "report-pipeline"
+      ],
+      "mission_in_subject": [
+        "15648"
+      ],
+      "missions_referenced_in_paths": [
+        "15542",
+        "15648"
+      ],
+      "docs_src_snapshot_files": 5,
+      "risks": [
+        "R4:no-src-change(证据/文档型)",
+        "R5:meta-audit-chain(审计对象为既往任务号)",
+        "R6:docs-embedded-source-snapshot(5 files)"
+      ]
+    },
+    {
+      "sha": "9928dbcc",
+      "date": "2026-11-12 10:22:07 +0800",
+      "author": "chuxuesen",
+      "subject": "Merge #448 (m15615) via push-merge",
+      "n_parents": 2,
+      "files": 1,
+      "insertions": 51,
+      "deletions": 118,
+      "files_by_cat": {
+        "docs": 1
+      },
+      "ins_by_cat": {
+        "docs": 51
+      },
+      "top_files": [
+        {
+          "path": "docs/case-cylinder-drag-fvm/report.md",
+          "ins": 51,
+          "del_": 118
+        }
+      ],
+      "themes": [
+        "case-cylinder",
+        "report-pipeline"
+      ],
+      "mission_in_subject": [
+        "15615"
+      ],
+      "missions_referenced_in_paths": [],
+      "docs_src_snapshot_files": 0,
+      "risks": [
+        "R4:no-src-change(证据/文档型)"
+      ]
+    },
+    {
+      "sha": "486ee056",
+      "date": "2026-11-12 10:12:07 +0800",
+      "author": "chuxuesen",
+      "subject": "Merge #446 (m15556) via merge-master",
+      "n_parents": 1,
+      "files": 1,
+      "insertions": 99,
+      "deletions": 0,
+      "files_by_cat": {
+        "docs": 1
+      },
+      "ins_by_cat": {
+        "docs": 99
+      },
+      "top_files": [
+        {
+          "path": "docs/audit/M15406_BOARD_AUDIT.md",
+          "ins": 99,
+          "del_": 0
+        }
+      ],
+      "themes": [
+        "audit-verdict"
+      ],
+      "mission_in_subject": [
+        "15556"
+      ],
+      "missions_referenced_in_paths": [],
+      "docs_src_snapshot_files": 0,
+      "risks": [
+        "R4:no-src-change(证据/文档型)",
+        "R7:merge-subject-without-merge-topology"
+      ]
+    },
+    {
+      "sha": "5d20438d",
+      "date": "2026-11-12 10:12:03 +0800",
+      "author": "chuxuesen",
+      "subject": "Merge #444 (m15553) via merge-master",
+      "n_parents": 1,
+      "files": 5,
+      "insertions": 619,
+      "deletions": 0,
+      "files_by_cat": {
+        "docs": 2,
+        "scripts": 2,
+        "tests": 1
+      },
+      "ins_by_cat": {
+        "docs": 107,
+        "scripts": 374,
+        "tests": 138
+      },
+      "top_files": [
+        {
+          "path": "scripts/audit_cavity_re1000_m15458.py",
+          "ins": 199,
+          "del_": 0
+        },
+        {
+          "path": "scripts/report_audit_cavity_re1000_m15458.py",
+          "ins": 175,
+          "del_": 0
+        },
+        {
+          "path": "tests/test_audit_cavity_re1000_m15458.py",
+          "ins": 138,
+          "del_": 0
+        }
+      ],
+      "themes": [
+        "audit-verdict",
+        "case-cavity",
+        "report-pipeline"
+      ],
+      "mission_in_subject": [
+        "15553"
+      ],
+      "missions_referenced_in_paths": [
+        "15458"
+      ],
+      "docs_src_snapshot_files": 0,
+      "risks": [
+        "R4:no-src-change(证据/文档型)",
+        "R5:meta-audit-chain(审计对象为既往任务号)",
+        "R7:merge-subject-without-merge-topology"
+      ]
+    },
+    {
+      "sha": "60092342",
+      "date": "2026-11-12 09:55:41 +0800",
+      "author": "chuxuesen",
+      "subject": "Merge #445 (m15554) via push-merge",
+      "n_parents": 2,
+      "files": 16,
+      "insertions": 2281,
+      "deletions": 4,
+      "files_by_cat": {
+        "docs": 15,
+        "tests": 1
+      },
+      "ins_by_cat": {
+        "docs": 2189,
+        "tests": 92
+      },
+      "top_files": [
+        {
+          "path": "docs/audit-m15554/cavity_audit.json",
+          "ins": 750,
+          "del_": 0
+        },
+        {
+          "path": "docs/audit-m15554/build_audit_report.py",
+          "ins": 329,
+          "del_": 0
+        },
+        {
+          "path": "docs/audit-m15554/verify_cavity_m15458.py",
+          "ins": 294,
+          "del_": 0
+        }
+      ],
+      "themes": [
+        "audit-verdict",
+        "case-cavity",
+        "benchmark",
+        "report-pipeline"
+      ],
+      "mission_in_subject": [
+        "15554"
+      ],
+      "missions_referenced_in_paths": [
+        "15458",
+        "15554"
+      ],
+      "docs_src_snapshot_files": 0,
+      "risks": [
+        "R4:no-src-change(证据/文档型)",
+        "R5:meta-audit-chain(审计对象为既往任务号)"
+      ]
+    },
+    {
+      "sha": "d8c7d4b7",
+      "date": "2026-11-12 09:35:51 +0800",
+      "author": "chuxuesen",
+      "subject": "Merge #443 (m15410) via merge-master",
+      "n_parents": 1,
+      "files": 6,
+      "insertions": 653,
+      "deletions": 10,
+      "files_by_cat": {
+        "scripts": 5,
+        "src": 1
+      },
+      "ins_by_cat": {
+        "scripts": 636,
+        "src": 17
+      },
+      "top_files": [
+        {
+          "path": "scripts/assemble_cavity_benchmark.py",
+          "ins": 214,
+          "del_": 0
+        },
+        {
+          "path": "scripts/run_heated_cavity_benchmark.py",
+          "ins": 148,
+          "del_": 0
+        },
+        {
+          "path": "scripts/make_report.py",
+          "ins": 127,
+          "del_": 0
+        }
+      ],
+      "themes": [
+        "reproducibility",
+        "case-cavity",
+        "benchmark",
+        "report-pipeline"
+      ],
+      "mission_in_subject": [
+        "15410"
+      ],
+      "missions_referenced_in_paths": [],
+      "docs_src_snapshot_files": 0,
+      "risks": [
+        "R1:src-change-without-test-delta",
+        "R7:merge-subject-without-merge-topology"
+      ]
+    },
+    {
+      "sha": "6c20b16a",
+      "date": "2026-11-12 09:10:46 +0800",
+      "author": "chuxuesen",
+      "subject": "Merge #442 (m15491) via merge-master",
+      "n_parents": 1,
+      "files": 2,
+      "insertions": 146,
+      "deletions": 0,
+      "files_by_cat": {
+        "docs": 2
+      },
+      "ins_by_cat": {
+        "docs": 146
+      },
+      "top_files": [
+        {
+          "path": "docs/reports/m15491_audit_m15373.md",
+          "ins": 146,
+          "del_": 0
+        },
+        {
+          "path": "docs/reports/m15491_audit_figures.png",
+          "ins": 0,
+          "del_": 0
+        }
+      ],
+      "themes": [
+        "audit-verdict",
+        "report-pipeline"
+      ],
+      "mission_in_subject": [
+        "15491"
+      ],
+      "missions_referenced_in_paths": [
+        "15373",
+        "15491"
+      ],
+      "docs_src_snapshot_files": 0,
+      "risks": [
+        "R4:no-src-change(证据/文档型)",
+        "R5:meta-audit-chain(审计对象为既往任务号)",
+        "R7:merge-subject-without-merge-topology"
+      ]
+    },
+    {
+      "sha": "1b7a50e0",
+      "date": "2026-11-12 08:46:16 +0800",
+      "author": "chuxuesen",
+      "subject": "Merge #441 (m15458) via merge-master",
+      "n_parents": 1,
+      "files": 6,
+      "insertions": 938,
+      "deletions": 0,
+      "files_by_cat": {
+        "docs": 3,
+        "scripts": 2,
+        "tests": 1
+      },
+      "ins_by_cat": {
+        "docs": 222,
+        "scripts": 614,
+        "tests": 102
+      },
+      "top_files": [
+        {
+          "path": "scripts/render_cavity_re1000_m15458.py",
+          "ins": 358,
+          "del_": 0
+        },
+        {
+          "path": "scripts/run_cavity_re1000_m15458.py",
+          "ins": 256,
+          "del_": 0
+        },
+        {
+          "path": "docs/CASE-CAVITY-RE1000-FVM/method-selection.md",
+          "ins": 121,
+          "del_": 0
+        }
+      ],
+      "themes": [
+        "case-cavity",
+        "report-pipeline"
+      ],
+      "mission_in_subject": [
+        "15458"
+      ],
+      "missions_referenced_in_paths": [],
+      "docs_src_snapshot_files": 0,
+      "risks": [
+        "R4:no-src-change(证据/文档型)",
+        "R7:merge-subject-without-merge-topology"
+      ]
+    },
+    {
+      "sha": "d43d4f69",
+      "date": "2026-11-12 08:44:50 +0800",
+      "author": "chuxuesen",
+      "subject": "Merge #440 (m15452) via merge-master",
+      "n_parents": 1,
+      "files": 16,
+      "insertions": 8650,
+      "deletions": 0,
+      "files_by_cat": {
+        "docs": 12,
+        "scripts": 2,
+        "src": 1,
+        "tests": 1
+      },
+      "ins_by_cat": {
+        "docs": 7752,
+        "scripts": 466,
+        "src": 315,
+        "tests": 117
+      },
+      "top_files": [
+        {
+          "path": "docs/case-cavity-re100/artifacts/cavity_re100_n32.json",
+          "ins": 3590,
+          "del_": 0
+        },
+        {
+          "path": "docs/case-cavity-re100/artifacts/cavity_re100_n64.json",
+          "ins": 3590,
+          "del_": 0
+        },
+        {
+          "path": "src/tensorfvm/case_cavity_re100.py",
+          "ins": 315,
+          "del_": 0
+        }
+      ],
+      "themes": [
+        "case-cavity",
+        "report-pipeline"
+      ],
+      "mission_in_subject": [
+        "15452"
+      ],
+      "missions_referenced_in_paths": [],
+      "docs_src_snapshot_files": 0,
+      "risks": [
+        "R7:merge-subject-without-merge-topology"
+      ]
+    },
+    {
+      "sha": "4704c5a8",
+      "date": "2026-11-12 08:43:21 +0800",
+      "author": "chuxuesen",
+      "subject": "Merge #439 (m15451) via merge-master",
+      "n_parents": 1,
+      "files": 2,
+      "insertions": 180,
+      "deletions": 0,
+      "files_by_cat": {
+        "docs": 2
+      },
+      "ins_by_cat": {
+        "docs": 180
+      },
+      "top_files": [
+        {
+          "path": "docs/board_audit/m15451/verify_output.json",
+          "ins": 133,
+          "del_": 0
+        },
+        {
+          "path": "docs/board_audit/m15451/VERDICT_m15326.md",
+          "ins": 47,
+          "del_": 0
+        }
+      ],
+      "themes": [
+        "audit-verdict"
+      ],
+      "mission_in_subject": [
+        "15451"
+      ],
+      "missions_referenced_in_paths": [
+        "15326",
+        "15451"
+      ],
+      "docs_src_snapshot_files": 0,
+      "risks": [
+        "R4:no-src-change(证据/文档型)",
+        "R5:meta-audit-chain(审计对象为既往任务号)",
+        "R7:merge-subject-without-merge-topology"
+      ]
+    },
+    {
+      "sha": "2f0b4dc6",
+      "date": "2026-11-12 08:34:21 +0800",
+      "author": "chuxuesen",
+      "subject": "Merge #438 (m15456) via merge-master",
+      "n_parents": 1,
+      "files": 12,
+      "insertions": 1315,
+      "deletions": 0,
+      "files_by_cat": {
+        "docs": 12
+      },
+      "ins_by_cat": {
+        "docs": 1315
+      },
+      "top_files": [
+        {
+          "path": "docs/audit-m15456/audit_double_mach.py",
+          "ins": 221,
+          "del_": 0
+        },
+        {
+          "path": "docs/audit-m15456/land_verdict.py",
+          "ins": 176,
+          "del_": 0
+        },
+        {
+          "path": "docs/audit-m15456/publish_report.py",
+          "ins": 173,
+          "del_": 0
+        }
+      ],
+      "themes": [
+        "audit-verdict",
+        "report-pipeline"
+      ],
+      "mission_in_subject": [
+        "15456"
+      ],
+      "missions_referenced_in_paths": [
+        "15456"
+      ],
+      "docs_src_snapshot_files": 0,
+      "risks": [
+        "R4:no-src-change(证据/文档型)",
+        "R7:merge-subject-without-merge-topology"
+      ]
+    },
+    {
+      "sha": "03ec798e",
+      "date": "2026-11-12 08:29:29 +0800",
+      "author": "chuxuesen",
+      "subject": "Merge #437 (m15435) via merge-master",
+      "n_parents": 1,
+      "files": 18,
+      "insertions": 55256,
+      "deletions": 0,
+      "files_by_cat": {
+        "docs": 15,
+        "scripts": 1,
+        "src": 1,
+        "tests": 1
+      },
+      "ins_by_cat": {
+        "docs": 54014,
+        "scripts": 627,
+        "src": 509,
+        "tests": 106
+      },
+      "top_files": [
+        {
+          "path": "docs/repro-mixing-layer-temporal/run/nonlinear.json",
+          "ins": 51825,
+          "del_": 0
+        },
+        {
+          "path": "docs/repro-mixing-layer-temporal/run/linear.json",
+          "ins": 1136,
+          "del_": 0
+        },
+        {
+          "path": "scripts/verify_mixing_layer.py",
+          "ins": 627,
+          "del_": 0
+        }
+      ],
+      "themes": [
+        "reproducibility",
+        "model-mixing-layer",
+        "report-pipeline"
+      ],
+      "mission_in_subject": [
+        "15435"
+      ],
+      "missions_referenced_in_paths": [],
+      "docs_src_snapshot_files": 0,
+      "risks": [
+        "R2:data-blob-inflation",
+        "R7:merge-subject-without-merge-topology"
+      ]
+    },
+    {
+      "sha": "aeef9031",
+      "date": "2026-11-12 08:02:43 +0800",
+      "author": "chuxuesen",
+      "subject": "Merge #436 (m15417) via merge-master",
+      "n_parents": 1,
+      "files": 5,
+      "insertions": 385,
+      "deletions": 0,
+      "files_by_cat": {
+        "docs": 5
+      },
+      "ins_by_cat": {
+        "docs": 385
+      },
+      "top_files": [
+        {
+          "path": "docs/board-audit-m15417-armaly1983/make_figures.py",
+          "ins": 133,
+          "del_": 0
+        },
+        {
+          "path": "docs/board-audit-m15417-armaly1983/REPORT.md",
+          "ins": 118,
+          "del_": 0
+        },
+        {
+          "path": "docs/board-audit-m15417-armaly1983/verdict.json",
+          "ins": 101,
+          "del_": 0
+        }
+      ],
+      "themes": [
+        "audit-verdict",
+        "report-pipeline"
+      ],
+      "mission_in_subject": [
+        "15417"
+      ],
+      "missions_referenced_in_paths": [
+        "15386",
+        "15417"
+      ],
+      "docs_src_snapshot_files": 0,
+      "risks": [
+        "R4:no-src-change(证据/文档型)",
+        "R5:meta-audit-chain(审计对象为既往任务号)",
+        "R7:merge-subject-without-merge-topology"
+      ]
+    },
+    {
+      "sha": "9506e05f",
+      "date": "2026-11-12 07:51:05 +0800",
+      "author": "chuxuesen",
+      "subject": "Merge #435 (m13993) via merge-master",
+      "n_parents": 1,
+      "files": 0,
+      "insertions": 0,
+      "deletions": 0,
+      "files_by_cat": {},
+      "ins_by_cat": {},
+      "top_files": [],
+      "themes": [
+        "misc"
+      ],
+      "mission_in_subject": [
+        "13993"
+      ],
+      "missions_referenced_in_paths": [],
+      "docs_src_snapshot_files": 0,
+      "risks": [
+        "R3:no-tree-change",
+        "R7:merge-subject-without-merge-topology"
+      ]
+    },
+    {
+      "sha": "7cfa9d75",
+      "date": "2026-11-12 07:46:52 +0800",
+      "author": "chuxuesen",
+      "subject": "Merge #434 (m15406) via push-merge",
+      "n_parents": 2,
+      "files": 3,
+      "insertions": 712,
+      "deletions": 0,
+      "files_by_cat": {
+        "docs": 1,
+        "scripts": 1,
+        "tests": 1
+      },
+      "ins_by_cat": {
+        "docs": 145,
+        "scripts": 492,
+        "tests": 75
+      },
+      "top_files": [
+        {
+          "path": "scripts/case_cylinder_drag_fvm.py",
+          "ins": 492,
+          "del_": 0
+        },
+        {
+          "path": "docs/case-cylinder-drag-fvm/report.md",
+          "ins": 145,
+          "del_": 0
+        },
+        {
+          "path": "tests/test_case_cylinder_drag_fvm.py",
+          "ins": 75,
+          "del_": 0
+        }
+      ],
+      "themes": [
+        "case-cylinder",
+        "report-pipeline"
+      ],
+      "mission_in_subject": [
+        "15406"
+      ],
+      "missions_referenced_in_paths": [],
+      "docs_src_snapshot_files": 0,
+      "risks": [
+        "R4:no-src-change(证据/文档型)"
+      ]
+    }
+  ],
+  "theme_summary": [
+    {
+      "theme": "report-pipeline",
+      "n_commits": 12,
+      "commits": [
+        "0f13a8d3",
+        "9928dbcc",
+        "5d20438d",
+        "60092342",
+        "d8c7d4b7",
+        "6c20b16a",
+        "1b7a50e0",
+        "d43d4f69",
+        "2f0b4dc6",
+        "03ec798e",
+        "aeef9031",
+        "7cfa9d75"
+      ],
+      "files": 126,
+      "insertions": 77552
+    },
+    {
+      "theme": "audit-verdict",
+      "n_commits": 8,
+      "commits": [
+        "0f13a8d3",
+        "486ee056",
+        "5d20438d",
+        "60092342",
+        "6c20b16a",
+        "4704c5a8",
+        "2f0b4dc6",
+        "aeef9031"
+      ],
+      "files": 79,
+      "insertions": 11571
+    },
+    {
+      "theme": "case-cavity",
+      "n_commits": 5,
+      "commits": [
+        "5d20438d",
+        "60092342",
+        "d8c7d4b7",
+        "1b7a50e0",
+        "d43d4f69"
+      ],
+      "files": 49,
+      "insertions": 13141
+    },
+    {
+      "theme": "reproducibility",
+      "n_commits": 3,
+      "commits": [
+        "0f13a8d3",
+        "d8c7d4b7",
+        "03ec798e"
+      ],
+      "files": 60,
+      "insertions": 62455
+    },
+    {
+      "theme": "benchmark",
+      "n_commits": 3,
+      "commits": [
+        "0f13a8d3",
+        "60092342",
+        "d8c7d4b7"
+      ],
+      "files": 58,
+      "insertions": 9480
+    },
+    {
+      "theme": "case-cylinder",
+      "n_commits": 2,
+      "commits": [
+        "9928dbcc",
+        "7cfa9d75"
+      ],
+      "files": 4,
+      "insertions": 763
+    },
+    {
+      "theme": "model-mixing-layer",
+      "n_commits": 1,
+      "commits": [
+        "03ec798e"
+      ],
+      "files": 18,
+      "insertions": 55256
+    },
+    {
+      "theme": "misc",
+      "n_commits": 1,
+      "commits": [
+        "9506e05f"
+      ],
+      "files": 0,
+      "insertions": 0
+    }
+  ],
+  "risk_summary": {
+    "R4": 11,
+    "R5": 6,
+    "R6": 1,
+    "R7": 11,
+    "R1": 1,
+    "R2": 1,
+    "R3": 1
+  },
+  "diffset_risk_summary": {
+    "R4": 3,
+    "R5": 3,
+    "R7": 2
+  },
+  "duplicate_scan": {
+    "added_py_files": 46,
+    "added_py_with_ge5_funcs": 22,
+    "threshold_jaccard": 0.45,
+    "min_funcs": 5,
+    "pairs": []
+  },
+  "vendored_copies": {
+    "n_py_under_docs": 5730,
+    "doc_roots": [
+      "audit-m15648",
+      "m4756",
+      "verification-30p30n-cad-geometry",
+      "verification-30p30n-flow-preview",
+      "verification-30p30n-flow-retry",
+      "verification-30p30n-hlpw4-diagnostic",
+      "verification-cylinder3900-body-fitted",
+      "verification-cylinder3900-body-fitted-primary",
+      "verification-cylinder3900-pressure-coupling",
+      "verification-cylinder3900-wall-refinement",
+      "verification-engineering-export-failure",
+      "verification-external-coupled-rejected",
+      "verification-external-cylinder",
+      "verification-external-cylinder-simple-control",
+      "verification-external-device-check",
+      "verification-external-naca",
+      "verification-external-naca-cache-partial",
+      "verification-external-naca-fine",
+      "verification-external-naca-simple-control",
+      "verification-gmsh-controls",
+      "verification-gmsh-cylinder",
+      "verification-gmsh-cylinder-wall",
+      "verification-gmsh-evidence",
+      "verification-gmsh-naca",
+      "verification-gmsh-naca-hybrid",
+      "verification-gmsh-naca-matched",
+      "verification-gmsh-naca-matched-initial",
+      "verification-native-abc3d-quadratic",
+      "verification-native-abc3d-quadratic-refinement",
+      "verification-native-abc3d-quadratic-warmstart",
+      "verification-native-abc3d-spatial",
+      "verification-native-boundary-pressure",
+      "verification-native-channel-sst",
+      "verification-native-channel-sst-re1000",
+      "verification-native-compatible-inertia",
+      "verification-native-gradient-jump",
+      "verification-native-hybrid-flow",
+      "verification-native-hybrid-foundations",
+      "verification-native-hybrid-ns",
+      "verification-native-hybrid-rans",
+      "verification-native-hybrid-scalar",
+      "verification-native-hybrid-shear",
+      "verification-native-hybrid-suboff-startup",
+      "verification-native-kovasznay",
+      "verification-native-mmp-continuation",
+      "verification-native-newton",
+      "verification-native-normal-constraints",
+      "verification-native-quadratic-robustness",
+      "verification-native-rans3d",
+      "verification-native-robin",
+      "verification-native-scalar-cell-constraints",
+      "verification-native-scalar-mmp",
+      "verification-native-small-cases",
+      "verification-native-solver-audit",
+      "verification-native-spalding-couette",
+      "verification-native-sst-model-limit",
+      "verification-native-suboff-linear",
+      "verification-native-suboff-mms",
+      "verification-native-suboff-sst-startup",
+      "verification-overset-30p30n",
+      "verification-overset-30p30n-failed",
+      "verification-overset-flux",
+      "verification-overset-naca",
+      "verification-overset-naca-connectivity-failed",
+      "verification-overset-poisson",
+      "verification-overset3d",
+      "verification-overset3d-graded",
+      "verification-overset3d-graded-circumscribed",
+      "verification-overset3d-graded-overlap",
+      "verification-sa-refinement-cpu-partial",
+      "verification-simple-gpu-aggregation",
+      "verification-simple-gpu-anderson",
+      "verification-simple-gpu-initial",
+      "verification-simple-gpu-linear-budget",
+      "verification-simple-gpu-preconditioner",
+      "verification-simple-gpu-projection",
+      "verification-simple-pressure-response",
+      "verification-suboff-adaptive-mesh",
+      "verification-suboff-development",
+      "verification-suboff-hybrid-mesh",
+      "verification-suboff-mesh",
+      "verification-suboff-physical-baseline",
+      "verification-suboff-projection",
+      "verification-suboff-simple-sst-wall",
+      "verification-suboff-single-domain-mesh",
+      "verification-suboff-wall-resolved-mesh",
+      "verification-transient-pressure-compatibility",
+      "verification-wall-law-reference"
+    ],
+    "n_twin_missing": 1,
+    "n_twin_diverged": 1883,
+    "files": [
+      {
+        "path": "docs/audit-m15648/reviewed/src/tensorfvm/compressible/__main__.py",
+        "twin": "src/tensorfvm/compressible/__main__.py",
+        "twin_exists": true,
+        "identical": false
+      },
+      {
+        "path": "docs/audit-m15648/reviewed/src/tensorfvm/compressible/forward_step.py",
+        "twin": "src/tensorfvm/compressible/forward_step.py",
+        "twin_exists": true,
+        "identical": false
+      },
+      {
+        "path": "docs/audit-m15648/reviewed/src/tensorfvm/compressible/forward_step_benchmark.py",
+        "twin": "src/tensorfvm/compressible/forward_step_benchmark.py",
+        "twin_exists": false,
+        "identical": false
+      },
+      {
+        "path": "docs/audit-m15648/reviewed/src/tensorfvm/compressible/solver.py",
+        "twin": "src/tensorfvm/compressible/solver.py",
+        "twin_exists": true,
+        "identical": false
+      },
+      {
+        "path": "docs/audit-m15648/reviewed/src/tensorfvm/compressible/verification.py",
+        "twin": "src/tensorfvm/compressible/verification.py",
+        "twin_exists": true,
+        "identical": false
+      },
+      {
+        "path": "docs/m4756/outputs/abc-pressure-order/run-n24/source-snapshot/src/tensorfvm/__init__.py",
+        "twin": "src/tensorfvm/__init__.py",
+        "twin_exists": true,
+        "identical": true
+      },
+      {
+        "path": "docs/m4756/outputs/abc-pressure-order/run-n24/source-snapshot/src/tensorfvm/backend_registry.py",
+        "twin": "src/tensorfvm/backend_registry.py",
+        "twin_exists": true,
+        "identical": true
+      },
+      {
+        "path": "docs/m4756/outputs/abc-pressure-order/run-n24/source-snapshot/src/tensorfvm/body_fitted.py",
+        "twin": "src/tensorfvm/body_fitted.py",
+        "twin_exists": true,
+        "identical": true
+      },
+      {
+        "path": "docs/m4756/outputs/abc-pressure-order/run-n24/source-snapshot/src/tensorfvm/body_fitted3d.py",
+        "twin": "src/tensorfvm/body_fitted3d.py",
+        "twin_exists": true,
+        "identical": true
+      },
+      {
+        "path": "docs/m4756/outputs/abc-pressure-order/run-n24/source-snapshot/src/tensorfvm/mesh3d.py",
+        "twin": "src/tensorfvm/mesh3d.py",
+        "twin_exists": true,
+        "identical": true
+      },
+      {
+        "path": "docs/m4756/outputs/abc-pressure-order/run-n24/source-snapshot/src/tensorfvm/mesh_api.py",
+        "twin": "src/tensorfvm/mesh_api.py",
+        "twin_exists": true,
+        "identical": true
+      },
+      {
+        "path": "docs/m4756/outputs/abc-pressure-order/run-n24/source-snapshot/src/tensorfvm/multi_element.py",
+        "twin": "src/tensorfvm/multi_element.py",
+        "twin_exists": true,
+        "identical": true
+      }
+    ],
+    "src_files_in_twin_package": 14
+  },
+  "repo_shape": {
+    "docs_bytes": 137836527,
+    "src_bytes": 7846176,
+    "docs_over_src_ratio": 17.57,
+    "json_files_total": 1027,
+    "docs_entries": 334,
+    "src_py": 410,
+    "tests_py": 300,
+    "scripts_py": 418,
+    "authors_last_window": {
+      "chuxuesen": 15
+    },
+    "commit_window": [
+      "2026-11-12 07:46:52 +0800",
+      "2026-11-12 10:29:34 +0800"
+    ]
+  }
+}
