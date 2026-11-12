@@ -47,6 +47,21 @@ Limitations (stated, not hidden)
   manoeuvring force model uses -- not digitized tank offsets.
 * The panel value is an unbounded-fluid potential-flow result: viscosity and
   free-surface elevation (both absent from strip theory too) are out of scope.
+
+Correction (debt D9, ``verification.double_body_added_mass_gate``)
+-----------------------------------------------------------------
+The lid closure is **not** the double body, so the numbers here are not directly
+comparable with the slender-body strip formulas or with
+:func:`sway_added_mass_panel` (which uses the waterplane-mirror route).  Zero flux
+through the lid only makes the potential even across it; the fluid still exists
+above ``z = 0`` in this model and streams over the deck, whereas the double body
+has the mirrored hull there.  Measured on the calibrated KVLCC2 hull the lid cap
+under-states ``J_z`` by ~32 % and ``M_22`` by ~36 % at every mesh, and the gap is
+mesh-independent (model, not discretisation).  For the double-body (like-for-like
+with strip theory) yaw value use the mirror route,
+``rotational_added_inertia(panels_without_lid, images=IMAGE_SPECS["single_hull"],
+origin=<midship>)``; the audited value is ``J_z = 7048 kg m^2`` against the
+slender ``13411 kg m^2``.
 """
 from __future__ import annotations
 
