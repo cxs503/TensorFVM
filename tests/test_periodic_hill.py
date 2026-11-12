@@ -56,16 +56,18 @@ def test_hill_profile_matches_published_contour():
 
 
 def test_bulk_velocity_of_analytic_poiseuille():
-    """The ERCOFTAC bulk functional must reproduce the analytic channel value."""
+    """The ERCOFTAC bulk functional must reproduce the analytic channel value.
+
+    The bulk velocity is the volume-weighted average of u over the band
+    [h, 3.035h]: sum(weight * u * volume) / sum(weight * volume).
+    The previous test erroneously multiplied by volume twice.
+    """
     config = PeriodicHillConfig(nx=8, ny=64, hill_amplitude=0.0, reynolds=100.0)
     solver = PeriodicHillSolver(config)
     g = 0.05
     solver.u = analytic_flat_channel(solver.mesh.yc, config.channel_top_m, g, config.nu)
-    expected = sum(
-        overlap * area * u
-        for overlap, area, u in zip(solver._weight.ravel() * solver.mesh.volume.ravel(),
-                                    solver.mesh.volume.ravel(), solver.u.ravel())
-    ) / solver._weight_sum
+    # Correct: same formula as bulk_velocity() — volume-weighted average
+    expected = (solver._weight * solver.u * solver.mesh.volume).sum() / solver._weight_sum
     assert solver.bulk_velocity() == pytest.approx(expected, rel=1e-12)
 
 
