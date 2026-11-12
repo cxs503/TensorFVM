@@ -31,8 +31,11 @@ from ..two_phase.vof import dam_break_history, plic_solver, static_interface_dri
 from ..vof_phase0.anchors import martin_moyce_front, martin_moyce_height
 from ..vof_phase0.dam_break import DamBreakConfig
 
-__all__ = ["run_dambreak_leg", "FRONT_ERROR_MAX", "HEIGHT_ERROR_MAX",
-           "VOLUME_DRIFT_MAX", "CONTROL_MAX_ABS_CHANGE", "WINDOW"]
+__all__ = ["run_dambreak_leg", "decompose_dambreak_error",
+           "quantisation_floor", "resolvable_error_floor",
+           "FRONT_ERROR_MAX", "HEIGHT_ERROR_MAX",
+           "VOLUME_DRIFT_MAX", "CONTROL_MAX_ABS_CHANGE", "WINDOW",
+           "LATE_T_STAR"]
 
 #: Max relative front error against Martin & Moyce over the comparison window.
 FRONT_ERROR_MAX = 0.15
@@ -44,6 +47,217 @@ VOLUME_DRIFT_MAX = 0.01
 CONTROL_MAX_ABS_CHANGE = 1.0e-14
 #: Dimensionless-time window of the quantitative comparison.
 WINDOW = (0.3, 8.0)
+
+#: Late-time window used by the decomposition diagnostics (``t* >= LATE_T_STAR``).
+LATE_T_STAR = 2.0
+#: Shift grid searched by :func:`decompose_dambreak_error` [t*].
+SHIFT_GRID = (-1.5, 2.0, 0.01)
+
+
+def decompose_dambreak_error(
+    t_star,
+    got,
+    ref,
+    *,
+    late_t_star: float = LATE_T_STAR,
+    shift_grid=SHIFT_GRID,
+) -> dict:
+    """Split a dam-break error into *phase lag* and *rate deficit*.
+
+    The D1/D2 gates are max-relative-error criteria: they say *how far off* the
+    curve is but not *why*, and a curve that starts late and then runs at the
+    right speed is indistinguishable from one that runs too slowly.  This
+    function is a **diagnostic, not a gate** -- it never changes a verdict, it
+    only reports, from the same history arrays the gates use, the three
+    separable components:
+
+    ``phase_lag_t_star``
+        the time shift ``Δ`` that, applied to the reference
+        (``ref(t - Δ)``), minimises the RMS difference *in x\*\** units over the
+        full window.  ``Δ > 0`` means the numerical curve is late.
+    ``speed_ratio``
+        least-squares slope of ``got`` over ``t* >= late_t_star`` divided by
+        the slope of ``ref`` over the same window on the same samples
+        (``> 1``: the late curve is steeper than the reference, i.e. the defect
+        is a delayed release rather than a slow wave).
+    ``verdict``
+        ``"phase_lag"`` (ratio >= 0.95 and Δ >= 0.05), ``"rate_deficit"``
+        (ratio < 0.85) or ``"mixed"``.
+
+    The helper is a pure function of the sampled curves so it can be unit
+    tested on synthetic histories with a known shift (see
+    ``tests/test_dambreak_error_decomposition.py``).
+    """
+    t = np.asarray(t_star, dtype=float)
+    g = np.asarray(got, dtype=float)
+    r = np.asarray(ref, dtype=float)
+    out = {
+        "phase_lag_t_star": float("nan"),
+        "rms_at_zero_shift": float("nan"),
+        "rms_at_best_shift": float("nan"),
+        "max_rel_at_best_shift": float("nan"),
+        "speed_got": float("nan"),
+        "speed_ref": float("nan"),
+        "speed_ratio": float("nan"),
+        "time_scale_zero_shift": float("nan"),
+        "rms_at_best_scale": float("nan"),
+        "shift_explained_fraction": float("nan"),
+        "late_max_rel_error": float("nan"),
+        "early_max_rel_error": float("nan"),
+        "verdict": "unavailable",
+        "reason": "",
+    }
+
+    usable = np.isfinite(t) & np.isfinite(g) & np.isfinite(r)
+    if usable.sum() < 4:
+        out["reason"] = "fewer than 4 finite samples"
+        return out
+    t, g, r = t[usable], g[usable], r[usable]
+    order = np.argsort(t)
+    t, g, r = t[order], g[order], r[order]
+
+    def _rms(a, b):
+        d = a - b
+        d = d[np.isfinite(d)]
+        return float(np.sqrt(np.mean(d * d))) if d.size else float("nan")
+
+    out["rms_at_zero_shift"] = _rms(g, r)
+
+    lo, hi, step = shift_grid
+    shifts = np.arange(lo, hi + 0.5 * step, step)
+    best = None
+    for s in shifts:
+        # got(t) is compared with the reference taken at t - s: a positive
+        # shift means the reference attained these values *earlier*.
+        rs = np.interp(t - s, t, r, left=np.nan, right=np.nan)
+        val = _rms(g, rs)
+        if not np.isfinite(val):
+            continue
+        if best is None or val < best[0]:
+            best = (val, float(s), rs)
+    if best is None:
+        out["reason"] = "no shift keeps the reference inside the history"
+        return out
+    out["rms_at_best_shift"] = best[0]
+    out["phase_lag_t_star"] = best[1]
+
+    # Falsification control for the reference's time normalisation: if the
+    # digitised curve were normalised with sqrt(2 g / a) instead of sqrt(g / a)
+    # (a common convention clash) the misfit would be absorbed by a *scale*
+    # factor, not by a shift.  Report the best pure time scale at zero shift so
+    # the two hypotheses can be told apart from the same history.
+    best_scale = None
+    for sc in np.arange(0.6, 2.2 + 0.5 * 0.005, 0.005):
+        rs = np.interp(t / sc, t, r, left=np.nan, right=np.nan)
+        val = _rms(g, rs)
+        if not np.isfinite(val):
+            continue
+        if best_scale is None or val < best_scale[0]:
+            best_scale = (val, float(sc))
+    if best_scale is not None:
+        out["time_scale_zero_shift"] = best_scale[1]
+        out["rms_at_best_scale"] = best_scale[0]
+    rs = best[2]
+    with np.errstate(divide="ignore", invalid="ignore"):
+        rel = np.abs(g - rs) / np.maximum(np.abs(rs), 1.0e-6)
+    out["max_rel_at_best_shift"] = float(np.nanmax(rel))
+
+    late = t >= late_t_star
+    if late.sum() >= 3:
+        sg = float(np.polyfit(t[late], g[late], 1)[0])
+        sr = float(np.polyfit(t[late], r[late], 1)[0])
+        out["speed_got"] = sg
+        out["speed_ref"] = sr
+        if abs(sr) > 1.0e-12:
+            out["speed_ratio"] = sg / sr
+        with np.errstate(divide="ignore", invalid="ignore"):
+            late_rel = np.abs(g[late] - r[late]) / np.maximum(np.abs(r[late]), 1e-6)
+        out["late_max_rel_error"] = float(np.nanmax(late_rel))
+    with np.errstate(divide="ignore", invalid="ignore"):
+        early = t < late_t_star
+        if early.any():
+            early_rel = np.abs(g[early] - r[early]) / np.maximum(np.abs(r[early]), 1e-6)
+            out["early_max_rel_error"] = float(np.nanmax(early_rel))
+
+    ratio = out["speed_ratio"]
+    lag = out["phase_lag_t_star"]
+    if np.isfinite(ratio) and np.isfinite(lag):
+        if ratio >= 0.95 and lag >= 0.05:
+            out["verdict"] = "phase_lag"
+        elif ratio < 0.85:
+            out["verdict"] = "rate_deficit"
+        else:
+            out["verdict"] = "mixed"
+        zero = out["rms_at_zero_shift"]
+        explained = (100.0 * (1.0 - out["rms_at_best_shift"] / zero)
+                     if zero > 1.0e-12 else float("nan"))
+        out["shift_explained_fraction"] = (
+            float(1.0 - out["rms_at_best_shift"] / zero)
+            if zero > 1.0e-12 else 1.0)
+        out["reason"] = (
+            f"late-window slope {out['speed_got']:.3f} vs reference "
+            f"{out['speed_ref']:.3f} (ratio {ratio:.3f}), best time shift "
+            f"{lag:+.2f} t*: RMS {zero:.3f} -> "
+            f"{out['rms_at_best_shift']:.3f} x* "
+            f"({explained:.0f} % of the misfit is a pure time shift)")
+    return out
+
+
+def resolvable_error_floor(
+    t_star, ref, *, quantum: float, gate: float,
+) -> dict:
+    """Smallest relative error the cell-quantised observable can exhibit.
+
+    A half-cell front (or a cell-count column height) moves in whole cells, so
+    the smallest non-zero relative error at a sample is ``quantum / |ref|``.
+    Where that floor already exceeds the gate, *any* deviation violates the gate
+    and the criterion is decided by quantisation noise instead of by model
+    accuracy.  ``violating_fraction`` is the share of window samples in that
+    state; a non-zero value means the gate cannot be read as an accuracy bound
+    on that grid.
+    """
+    t = np.asarray(t_star, dtype=float)
+    r = np.asarray(ref, dtype=float)
+    ok = np.isfinite(t) & np.isfinite(r) & (np.abs(r) > 1.0e-9)
+    if not ok.any():
+        return {"quantum": float(quantum), "violating_fraction": float("nan")}
+    floor = quantum / np.abs(r[ok])
+    return {
+        "quantum": float(quantum),
+        "floor_at_window_start": float(floor[0]),
+        "floor_max": float(np.max(floor)),
+        "violating_fraction": float(np.mean(floor > gate)),
+        "samples": int(ok.sum()),
+    }
+
+
+def quantisation_floor(
+    *, dx: float, dy: float, a: float, h0: float, gate: float,
+    ref_mean: float | None = None,
+) -> dict:
+    """Resolution floor of the two dam-break observables.
+
+    Both observables are cell-quantised: the residual column height moves in
+    whole ``dy`` steps (it is a cell count times ``dy``) and the half-cell front
+    in whole ``dx`` steps, so a gate of ``15 %`` can only be *measured* if it
+    contains several quantisation levels.  ``*_gate_levels`` is how many
+    quantisation steps fit inside the gate (``< 3`` means the criterion is
+    resolution-limited, not physics-limited).
+    """
+    h_q = dy / h0
+    f_q = dx / a
+    out = {
+        "height_quantum_rel": float(h_q),
+        "front_quantum_star": float(f_q),
+        "height_gate_levels": float(gate / h_q) if h_q > 0 else float("inf"),
+        "front_gate_levels": float("nan"),
+    }
+    if ref_mean is not None and abs(ref_mean) > 1.0e-12:
+        f_rel = f_q / abs(ref_mean)
+        out["front_quantum_rel"] = float(f_rel)
+        out["front_gate_levels"] = float(gate / f_rel)
+    return out
+
 
 
 def run_dambreak_leg(
@@ -121,6 +335,31 @@ def run_dambreak_leg(
         ctrl_cfg = replace(cfg, gravity=0.0, t_star_end=0.5, max_steps=control_steps)
         control = static_interface_drift(ctrl_cfg, n_steps=control_steps)
 
+    # ---- diagnostics (never gates): why D1/D2 read what they read ----------
+    front_for_diag = (front_star[:, 1] if front_star is not None
+                      else np.full(t_star.shape, np.nan))
+    in_window = window
+    diagnostics = {
+        "front": decompose_dambreak_error(t_star, front_for_diag, front_ref),
+        "height": decompose_dambreak_error(t_star, height_star, height_ref),
+        "quantisation": quantisation_floor(
+            dx=float(cfg.dx), dy=float(cfg.dy), a=float(cfg.a),
+            h0=float(cfg.h0), gate=HEIGHT_ERROR_MAX,
+            ref_mean=float(np.mean(front_ref[in_window])),
+        ),
+        "resolvable": {
+            "front": resolvable_error_floor(
+                t_star[in_window], front_ref[in_window],
+                quantum=float(cfg.dx / cfg.a), gate=FRONT_ERROR_MAX),
+            "height": resolvable_error_floor(
+                t_star[in_window], height_ref[in_window],
+                quantum=float(cfg.dy / cfg.h0), gate=HEIGHT_ERROR_MAX),
+        },
+        "note": ("diagnostic only: D1/D2 verdicts above are unchanged; this "
+                 "block decomposes the misfit into time shift vs rate deficit "
+                 "and reports the cell-quantisation floor of the observables"),
+    }
+
     record = {
         "case": "dambreak",
         "scheme": scheme,
@@ -154,6 +393,7 @@ def run_dambreak_leg(
             "window_t_star": list(WINDOW),
         },
         "comparison": rows,
+        "diagnostics": diagnostics,
     }
     return {"record": record,
             "history": {"t_star": t_star.tolist(),

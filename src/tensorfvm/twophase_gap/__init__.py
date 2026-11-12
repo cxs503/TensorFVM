@@ -53,12 +53,18 @@ from .campaign import (
     run_campaign,
     summarise,
 )
-from .dambreak_gate import run_dambreak_leg
+from .dambreak_gate import (
+    decompose_dambreak_error,
+    quantisation_floor,
+    run_dambreak_leg,
+)
 from .hysing_gate import run_hysing_leg
 from .zalesak_gate import run_zalesak_leg
 
 __all__ = [
     "DEFAULTS",
+    "decompose_dambreak_error",
+    "quantisation_floor",
     "GATES",
     "evaluate_gates",
     "render_report",

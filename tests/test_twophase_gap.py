@@ -91,8 +91,15 @@ def test_gate_evaluation_is_a_function_of_artefacts(tmp_path):
 
 
 def test_gate_table_and_defaults_are_consistent():
-    assert {g[0] for g in GATES} == {
-        "Z1", "Z2", "Z3", "Z4", "Z5", "D1", "D2", "D3", "D4", "D5"}
+    ids = [g[0] for g in GATES]
+    # every gate row is (id, case, metric, op, limit, description)
+    # and the ids are unique
+    assert len(ids) == len(set(ids))
+    assert all(len(g) == 6 for g in GATES)
+    # the declared faces must be present verbatim (Zalesak, dam break, Hysing)
+    assert {"Z1", "Z2", "Z3", "Z4", "Z5",
+            "D1", "D2", "D3", "D4", "D5"} <= set(ids)
+    assert {"B1", "B2", "B3", "B4"} <= set(ids)
     assert 64 in DEFAULTS["zalesak_cells"]
     assert 128 in DEFAULTS["zalesak_cells"]
 
