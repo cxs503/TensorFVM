@@ -1,0 +1,33 @@
+{
+  "feature_slug": "CASE-FVM-CHANNEL-KMM180",
+  "title": "Turbulent channel flow validation vs KMM1987 DNS (Re_tau=180)",
+  "summary": "SST turbulence model reproduces KMM1987 mean velocity profile u+(y+) in y+>30 region with 2.2-3.4% RMS error (<5% tolerance). k-omega and k-epsilon models fail with 10.6% and 6.9% errors respectively.",
+  "reference": "Kim, J., Moin, P. & Moser, R. D. 1987 J. Fluid Mech. 177, 133-166. DOI: 10.1017/S0022112087000892",
+  "dns_proxy": "Lee & Moser 2015 JFM 774:395 (Re_tau=182.088)",
+  "method": "1-D equilibrium channel solver with SST/k-omega/k-epsilon turbulence models",
+  "key_results": {
+    "sst_n64": {"log_rms": 0.022, "cf_error": 0.036, "bulk_u_plus_error": 0.017, "verdict": "PASS"},
+    "sst_n128": {"log_rms": 0.031, "cf_error": 0.054, "bulk_u_plus_error": 0.026, "verdict": "PASS"},
+    "sst_n256": {"log_rms": 0.034, "cf_error": 0.063, "bulk_u_plus_error": 0.030, "verdict": "PASS"},
+    "komega_n128": {"log_rms": 0.106, "cf_error": 0.237, "bulk_u_plus_error": 0.101, "verdict": "FAIL"},
+    "kepsilon_n128": {"log_rms": 0.069, "cf_error": 0.150, "bulk_u_plus_error": 0.067, "verdict": "FAIL"}
+  },
+  "acceptance_criterion": "RMS relative deviation of u+(y+) in y+>30 region < 5%",
+  "verdict": "PASS (SST model)",
+  "impl_files": [
+    "src/tensorfvm/verification/kmm1987.py",
+    "src/tensorfvm/benchmark_channel_kmm1987.py",
+    "tests/test_channel_kmm1987.py"
+  ],
+  "artifacts": [
+    "docs/case-fvm-channel-kmm180/results.json",
+    "docs/case-fvm-channel-kmm180/results.csv",
+    "docs/case-fvm-channel-kmm180/REPORT.md",
+    "docs/case-fvm-channel-kmm180/fig_velocity_profiles.png",
+    "docs/case-fvm-channel-kmm180/fig_log_region_error.png",
+    "docs/case-fvm-channel-kmm180/manifest.json"
+  ],
+  "repro_cmd": "PYTHONPATH=src python -m tensorfvm.benchmark_channel_kmm1987 --out docs/case-fvm-channel-kmm180",
+  "test_cmd": "PYTHONPATH=src python -m pytest tests/test_channel_kmm1987.py -v",
+  "notes": "k-omega and k-epsilon have known biases in the log region; SST is the recommended model for this Re_tau range."
+}
