@@ -1,0 +1,126 @@
+{
+  "source_worktree": "/root/tp-agent/work/m16219",
+  "delivery_commit": "4f87f691",
+  "delivery_head": "4f87f691becfd34a1364d777b78d3ab2050e3850",
+  "committed_files": 10064,
+  "case_files_in_commit": [
+    "docs/case-blasius-plate/REPORT.md",
+    "docs/case-blasius-plate/artifacts/fvm-baseline.trace.jsonl",
+    "docs/case-blasius-plate/artifacts/march-sensitivity.json",
+    "docs/case-blasius-plate/artifacts/march.json",
+    "docs/case-blasius-plate/artifacts/summary.json",
+    "docs/case-blasius-plate/figures/fig1_blasius_reference.png",
+    "docs/case-blasius-plate/figures/fig2_ref_vs_got.png",
+    "docs/case-blasius-plate/figures/fig3_march_sensitivity.png",
+    "docs/case-blasius-plate/figures/fig4_fvm_convergence.png",
+    "docs/case-blasius-plate/metrics.csv",
+    "docs/case-cavity-re100/metrics.csv",
+    "docs/case-channel-periodic/metrics.csv",
+    "docs/poiseuille-channel/metrics.csv",
+    "docs/verification-ladder/figures/fig5_level4_thwaites_blasius.png",
+    "scripts/render_case_blasius_plate_report.py",
+    "scripts/run_case_blasius_plate.py",
+    "src/tensorfvm/case_blasius_plate.py",
+    "tests/test_case_blasius_plate.py"
+  ],
+  "eco_mirror_head": "0cd53fa5ce432e1b86037cdd5f69f3ee040e9dce",
+  "eco_mirror_has_case": false,
+  "files": [
+    {
+      "path": "src/tensorfvm/case_blasius_plate.py",
+      "present": true,
+      "bytes": 23868,
+      "sha256": "52407796b261caf85a32cec562e055f872b385ac4dd0949e0fe3d78be817e40f"
+    },
+    {
+      "path": "scripts/run_case_blasius_plate.py",
+      "present": true,
+      "bytes": 6145,
+      "sha256": "3eec619717700b7cac52942fb83a7e5d7fe0ade8cc0de96f7de063a2bde1562b"
+    },
+    {
+      "path": "scripts/render_case_blasius_plate_report.py",
+      "present": true,
+      "bytes": 18013,
+      "sha256": "f14d5256bcdf7634a3a55b2cbfc92c65cd8a37aaa0934917e364423882f16501"
+    },
+    {
+      "path": "src/tensorfvm/verification/cases.py",
+      "present": true,
+      "bytes": 12175,
+      "sha256": "5e4a3cacff7808811eafb59bee69c9bdd7ce1545b9fab27aca9dd86398456f5d"
+    },
+    {
+      "path": "src/tensorfvm/verification/__main__.py",
+      "present": true,
+      "bytes": 6033,
+      "sha256": "0416121a149d0a85df81d022011a731c17f6465cb8af3df5baf3853a8d1ca5c6"
+    },
+    {
+      "path": "tests/test_case_blasius_plate.py",
+      "present": true,
+      "bytes": 6226,
+      "sha256": "a848b6328ee95495c989344e88dd0ba5367048cb2cff38da1180cd2af07fcfe1"
+    },
+    {
+      "path": "docs/case-blasius-plate/REPORT.md",
+      "present": true,
+      "bytes": 7225,
+      "sha256": "4359ef9bb2aebed09650101c43e9e2da0f1cf57811a726b988554d82474cbb68"
+    },
+    {
+      "path": "docs/case-blasius-plate/metrics.csv",
+      "present": true,
+      "bytes": 191,
+      "sha256": "773156190b1f97a8084029423b57cd4e6332de770afe349dab91d45f199e05c9"
+    },
+    {
+      "path": "docs/case-blasius-plate/artifacts/march.json",
+      "present": true,
+      "bytes": 1157,
+      "sha256": "7ec0d9b57647cd85f1d750223188cf1672102510c67a25892d5c6ccb7597b038"
+    },
+    {
+      "path": "docs/case-blasius-plate/artifacts/march-sensitivity.json",
+      "present": true,
+      "bytes": 1938,
+      "sha256": "f4644c341997257e2e06c72843473ae5176523a887d8a69fcfcf03e1dd97d6e0"
+    },
+    {
+      "path": "docs/case-blasius-plate/artifacts/summary.json",
+      "present": true,
+      "bytes": 1109,
+      "sha256": "b246e8c78f1948b5b2808ae3a2c48458302bc2ca63e5500eaeaa2e924e0eed24"
+    },
+    {
+      "path": "docs/case-blasius-plate/artifacts/fvm-baseline.trace.jsonl",
+      "present": true,
+      "bytes": 1001,
+      "sha256": "38ab9e00c3041e434897c52e4a7746c0e9f75d1a5b4036e5f909c0824cbd468d"
+    },
+    {
+      "path": "docs/case-blasius-plate/figures/fig1_blasius_reference.png",
+      "present": true,
+      "bytes": 86750,
+      "sha256": "1aa34b1412246775e96b064797efb47dd8dd20ffbba37ed6698e065f8a89e398"
+    },
+    {
+      "path": "docs/case-blasius-plate/figures/fig2_ref_vs_got.png",
+      "present": true,
+      "bytes": 70229,
+      "sha256": "94f3f22aa2d2fcd5e8b617640a4574d2fc051c31983c795613d0622093f6f377"
+    },
+    {
+      "path": "docs/case-blasius-plate/figures/fig3_march_sensitivity.png",
+      "present": true,
+      "bytes": 58603,
+      "sha256": "508bed9a8b2f66b54752d44f73830e89534daba4f89d08f93a820fc45d982888"
+    },
+    {
+      "path": "docs/case-blasius-plate/figures/fig4_fvm_convergence.png",
+      "present": true,
+      "bytes": 73206,
+      "sha256": "2a920ed8c0af6207579a9a1fafce01d72416d69b49f063ddeb06e1dcc3c2eb91"
+    }
+  ]
+}
