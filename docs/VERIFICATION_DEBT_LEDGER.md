@@ -260,3 +260,20 @@
   在 9600×9600 耦合直接解上超时 → "去掉挤出向即二阶"记 WITHHELD；n=64 未跑。
 - 给下次: 在 `native_face_mean3d` / thin-layer viscous 两侧拆项做 n=8 的逐项残差探针，
   定位后或改离散、或在验证口径里把 w 预算单列（本单已提供分解工具）。
+
+### D12 浅水变床面（bed + well-balanced）能力缺失 —— 已交付（m16596, 2026-11-12）
+- 缺口来源: `shallow_water/swe1d.py` docstring 明写 "flat bed here"；仓内无任何
+  `[[gap-status: open]]` 覆盖它（catalog 全部已闭合），属总账外新缺口（NEW）。
+- 交付: `src/tensorfvm/shallow_water/bed.py`（Audusse 2004 静水重构 + HLL + MUSCL + SSP-RK3；
+  `well_balanced=False` 保留朴素中心源项作负对照）+ `src/tensorfvm/verification/shallow_water_well_balanced.py`
+  （19 条预声明判据 + 3 条舍入复判）+ `tests/test_shallow_water_well_balanced.py`（11 测全绿）
+  + `docs/verification-swe-well-balanced/{REPORT.md,summary.json,criteria.md,fig_well_balanced.png}`。
+- 关键数字: 静止湖（光滑/台阶/干湿）max|u| = 5.0e-14 / **0.0** / 2.6e-14 m/s，η 漂移 ≤5.6e-15，
+  体积漂移 ≤6.3e-15；**负对照**（朴素中心源项）在台阶床上 max|u| = 3.94e-01 m/s（超门 39 倍）⇒ 判据非空；
+  z=0 与已发布平床求解器**逐位同解**（0.0/0.0，276 步）；常床面偏移 1.8e-15/9.7e-15。
+- 附带缺陷修复: `ShallowWater1D.cfl_number()` 原返回 `max_wave_speed()*dx/dx` = 波速（m/s，量纲错），
+  现返回真实 Courant 数（`dt_last` 记账），回归测 `test_cfl_number_is_a_dimensionless_courant_number`。
+- 反例/踩坑: ①"常床面不改变解"不能写成 `==0`——`η-z` 往返有 eps·|h| 舍入，实测 1.8e-15（判 FAIL 后
+  以推导的舍入门 1e-11 复判）；②静水重构下动量通量**刻意不守恒**（压力修正两侧不同），只有体积守恒；
+  ③干胞里每级会有舍入级 hu 被清零（`dry_flips` 1.2e5 次），是簿记量不是失稳。
+- 明示未做（WITHHELD）: 摩阻/科氏力、2-D、Goutal–Maurel 跨临界堰流半解析锚、变床面光滑解的空间收敛阶。
