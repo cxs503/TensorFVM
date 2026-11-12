@@ -1,0 +1,85 @@
+{
+  "audited_mission": "m15410",
+  "audit_mission": "m15655",
+  "anchor_slug": "CASE-HEATED-CAVITY-FVM",
+  "repo": "TensorFVM",
+  "claimed_level": 4,
+  "impl_files": [
+    "src/tensorfvm/internal_flow/natural_convection.py",
+    "src/tensorfvm/internal_flow/reference.py",
+    "/root/tp-agent/work/m15410/scripts/run_cavity_case.py"
+  ],
+  "entry": [
+    "/root/tp-agent/work/m15410/scripts/run_cavity_case.py",
+    "src/tensorfvm/internal_flow/natural_convection.py"
+  ],
+  "run_artifacts": [
+    "docs/audit-m15410-heated-cavity/original-artifacts/summary.json",
+    "docs/audit-m15410-heated-cavity/original-artifacts/case_Ra100000.json",
+    "docs/audit-m15410-heated-cavity/original-artifacts/RUN_ARTIFACTS.md",
+    "/root/tp-agent/work/m15410/artifacts/heated-cavity-benchmark/summary.json"
+  ],
+  "tests": [
+    "tests/test_heated_cavity_benchmark_ledger.py::test_ledger_covers_every_paper_rayleigh_number (PASS, 审计新增)",
+    "tests/test_heated_cavity_benchmark_ledger.py::test_recorded_references_match_the_paper (PASS)",
+    "tests/test_heated_cavity_benchmark_ledger.py::test_finest_mesh_is_inside_the_three_percent_band (PASS)",
+    "tests/test_heated_cavity_benchmark_ledger.py::test_nu_error_shrinks_with_mesh_refinement (PASS)",
+    "tests/test_heated_cavity_benchmark_ledger.py::test_nu_mean_is_the_mean_of_the_wall_profile (PASS)",
+    "tests/test_heated_cavity_benchmark_ledger.py::test_hot_wall_profile_is_physical (PASS)",
+    "tests/test_fvm_internal_flow_verified.py::test_second_order_wall_gradient_is_exact_for_a_quadratic (PASS, m15410 树内实跑)",
+    "tests/test_fvm_internal_flow_verified.py::test_explicit_solver_records_reference_values (PASS)",
+    "tests/test_fvm_internal_flow_verified.py::test_cavity_nusselt_against_de_vahl_davis (SKIPPED — benchmarks/verified/fvm_natural_convection/summary.json 缺失, 该门禁不在普通检出上执行)"
+  ],
+  "integration_callers": [
+    "NaturalConvectionCase"
+  ],
+  "benchmark": {
+    "judge": "de Vahl Davis (1983) Int. J. Numer. Methods Fluids 3:249-264, Tables 2-3 (Pr=0.71)",
+    "tolerance": {"code_gate": 0.03, "platform_limit": 0.15},
+    "finest_mesh": 128,
+    "per_rayleigh": {
+      "1000": {"nu_ref": 1.118, "nu_got": 1.1179, "nu_err": 0.00009, "u_err": 0.0006, "v_err": 0.0007, "pass_3pct": true},
+      "10000": {"nu_ref": 2.243, "nu_got": 2.2463, "nu_err": 0.0015, "u_err": 0.001, "v_err": 0.001, "pass_3pct": true},
+      "100000": {"nu_ref": 4.519, "nu_got": 4.5320, "nu_err": 0.0029, "u_err": 0.0071, "v_err": 0.001, "pass_3pct": true},
+      "1000000": {"nu_ref": 8.8, "nu_got": 8.9009, "nu_err": 0.0115, "u_err": 0.0109, "v_err": 0.0062, "pass_3pct": true}
+    },
+    "mesh_convergence_nu": {
+      "10000": [2.2716, 2.2510, 2.2463],
+      "100000": [4.7445, 4.5675, 4.5320],
+      "1000000": [10.6663, 9.1972, 8.9009]
+    },
+    "independent_repro": {
+      "command": "cd /tmp/audit_m15410 && python <m15410>/scripts/run_cavity_case.py --rayleigh 10000 --meshes 32,64",
+      "n32": {"nu_ledger": 2.27161, "nu_rerun": 2.27161, "delta": 0.0},
+      "n64": {"nu_ledger": 2.25101, "nu_rerun": 2.25101, "delta": 0.0, "u_delta": 0.0, "v_delta": 0.0},
+      "verdict": "bit-identical (max |delta| < 1e-6 across Nu / u_max / v_max)"
+    },
+    "registered_row_in_tensor_benchmark_cases": "was ABSENT at audit time (only CASE-CAVITY-RE1000-FVM existed) — audit registered CASE-HEATED-CAVITY-FVM row, see docs/audit-m15410-heated-cavity/README.md"
+  },
+  "repro_cmd": "cd /root/tp-agent/work/m15410 && bash scripts/repro_heated_cavity.sh   # full suite; audit's independent spot check: cd /tmp/audit_m15410 && python /root/tp-agent/work/m15410/scripts/run_cavity_case.py --rayleigh 10000 --meshes 32,64 -> Nu bit-identical to ledger at n=32,n=64",
+  "external_anchor": [
+    "docs/audit-m15410-heated-cavity/original-artifacts/RUN_ARTIFACTS.md",
+    "src/tensorfvm/internal_flow/reference.py"
+  ],
+  "audit_findings": {
+    "blocking": [],
+    "non_blocking": [
+      "P1 benchmark criterion row for CASE-HEATED-CAVITY-FVM was never registered in tensor_benchmark_cases (audit registered it)",
+      "P2 scripts/make_report.py hand-types the results tables (零手抄 violation) instead of injecting summary.json",
+      "P3 tensor_reports #14620 figure entries carry name+caption only, png_base64 absent (4 figures, no image payload)",
+      "P4 report section 6 quotes a <5% band and never answers the mandatory <3% question (measured: max 1.15%)",
+      "P5 artifacts/heated-cavity-benchmark/ was left untracked (git status '?? artifacts/') while commit message claims artifacts added; audit archived them into docs/audit-m15410-heated-cavity/original-artifacts/",
+      "P6 no executing regression test covered the deliverable; audit added tests/test_heated_cavity_benchmark_ledger.py (6 tests, 0.16 s)",
+      "P7 src/tensorfvm/internal_flow/mac.py:589 streamfunction() is the open-channel form (cumsum of u anchored at the bottom wall); on the closed cavity psi_max degenerates to 1.5e-5 (physical O(1), de Vahl Davis 1.94 at Ra=1e5) so diagnostics psi_max/psi_max_location are meaningless. Pre-existing, does NOT affect Nu/u_max/v_max which come from theta and cell_velocity."
+    ],
+    "overstated_claims": [
+      "commit b16f518f message: 'Add benchmark scripts and artifacts (summary.json, comparison figures)' — artifacts were not committed",
+      "RUN_ARTIFACTS.md / report: 'All cases pass the <5% tolerance criterion' — true, but the platform/code gate is 3%; the stronger true statement (max 1.15% < 3%) was not made"
+    ]
+  },
+  "verdict": {
+    "level": 4,
+    "why_level_4": "real solver path (StaggeredMAC + Boussinesq energy) -> full 4-Rayleigh case set on 32/64/128 meshes -> mesh-convergence error analysis -> independent re-run reproduces the ledger bit-identically -> literature anchor de Vahl Davis (1983) with all metrics <=1.15% << 3%",
+    "why_not_level_5": "no new capability or new physics: the solver predates m15410 (natural_convection.py already on eco main), the deliverable is verification of an existing module; no research-grade new result, and the automated-regression + criterion-registration gaps above are not L5 grade"
+  }
+}
