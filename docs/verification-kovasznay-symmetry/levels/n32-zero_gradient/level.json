@@ -1,0 +1,25 @@
+{
+  "n": 32,
+  "closure": "zero_gradient",
+  "Reynolds": 40.0,
+  "convection_order": 2,
+  "divisions": [
+    32,
+    32,
+    1
+  ],
+  "cells": 1024,
+  "faces": 8320,
+  "seconds": 49.05588782951236,
+  "numerically_converged": true,
+  "boundary_velocity_error": 0.0,
+  "divergence_max": 2.0616042206711427e-10,
+  "momentum_residual": 7.816161446699918e-10,
+  "outer_iterations": 22,
+  "pressure_l2": 0.07843493416161752,
+  "velocity_l2": 0.0034356154111469706,
+  "inplane_l2": 0.0034356154111469706,
+  "spanwise_l2": 6.779240884088528e-18,
+  "quadrature_closure": 0.0,
+  "max_abs_spanwise": 1.6022438471154331e-16
+}

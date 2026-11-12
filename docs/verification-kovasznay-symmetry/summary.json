@@ -1,0 +1,438 @@
+{
+  "levels": [
+    {
+      "n": 16,
+      "closure": "free",
+      "Reynolds": 40.0,
+      "convection_order": 2,
+      "divisions": [
+        16,
+        16,
+        1
+      ],
+      "cells": 256,
+      "faces": 2112,
+      "seconds": 21.198054591193795,
+      "numerically_converged": true,
+      "boundary_velocity_error": 0.0,
+      "divergence_max": 2.7338131758369855e-12,
+      "momentum_residual": 8.648494886264777e-10,
+      "outer_iterations": 24,
+      "pressure_l2": 0.1564750494571082,
+      "velocity_l2": 0.012574784561427162,
+      "inplane_l2": 0.012015736967494663,
+      "spanwise_l2": 0.0037077313676005495,
+      "quadrature_closure": 0.0,
+      "max_abs_spanwise": 0.009413573327409101,
+      "drive": {
+        "faces_interior": 960,
+        "residual_max": 1.9648107750362905e-05,
+        "blocks": {
+          "cell_u": {
+            "advection": 0.0,
+            "viscous": 0.0
+          },
+          "cell_v": {
+            "advection": 0.0,
+            "viscous": 0.0
+          },
+          "cell_w": {
+            "advection": 0.0,
+            "viscous": 0.0
+          },
+          "face_u": {
+            "advection": 0.0,
+            "viscous": 1.4134592388168762e-05
+          },
+          "face_v": {
+            "advection": 0.0,
+            "viscous": 1.9648107750362905e-05
+          },
+          "face_w": {
+            "advection": 0.0,
+            "viscous": 0.0
+          }
+        },
+        "convection_source": 0.0,
+        "pressure": 0.0,
+        "viscous_cross": 1.9648107750362905e-05,
+        "viscous_spanwise": 0.0,
+        "advection_total": 0.0
+      },
+      "analytic_defect": 5.581693877940241e-19,
+      "plane_shear": {
+        "max_abs_plane_shear": 0.1403777406575142,
+        "dimensionless": 0.03596317154143113,
+        "max_abs_plane_offset": 0.07018887032875709
+      },
+      "source": "docs/verification-kovasznay-symmetry/levels/n16-free/level.json",
+      "velocity_order": 1.711468182040244,
+      "spanwise_order": 1.105948985289594
+    },
+    {
+      "n": 16,
+      "closure": "zero_gradient",
+      "Reynolds": 40.0,
+      "convection_order": 2,
+      "divisions": [
+        16,
+        16,
+        1
+      ],
+      "cells": 256,
+      "faces": 2112,
+      "seconds": 9.782628079876304,
+      "numerically_converged": true,
+      "boundary_velocity_error": 0.0,
+      "divergence_max": 8.567369036427408e-12,
+      "momentum_residual": 8.131390270093636e-10,
+      "outer_iterations": 24,
+      "pressure_l2": 0.15771117731296852,
+      "velocity_l2": 0.012033314860893353,
+      "inplane_l2": 0.012033314860893353,
+      "spanwise_l2": 1.492575898531464e-17,
+      "quadrature_closure": 0.0,
+      "max_abs_spanwise": 1.7843406380574296e-16,
+      "drive": {
+        "faces_interior": 960,
+        "residual_max": 2.1049336640883079e-19,
+        "blocks": {
+          "cell_u": {
+            "advection": 0.0,
+            "viscous": 0.0
+          },
+          "cell_v": {
+            "advection": 0.0,
+            "viscous": 0.0
+          },
+          "cell_w": {
+            "advection": 0.0,
+            "viscous": 0.0
+          },
+          "face_u": {
+            "advection": 0.0,
+            "viscous": 2.1049336640883079e-19
+          },
+          "face_v": {
+            "advection": 0.0,
+            "viscous": 1.3140639538987084e-20
+          },
+          "face_w": {
+            "advection": 0.0,
+            "viscous": 0.0
+          }
+        },
+        "convection_source": 0.0,
+        "pressure": 0.0,
+        "viscous_cross": 2.1049336640883079e-19,
+        "viscous_spanwise": 0.0,
+        "advection_total": 0.0
+      },
+      "analytic_defect": 5.581693877940241e-19,
+      "plane_shear": {
+        "max_abs_plane_shear": 0.0,
+        "dimensionless": 0.0,
+        "max_abs_plane_offset": 0.0
+      },
+      "source": "docs/verification-kovasznay-symmetry/levels/n16-zero_gradient/level.json",
+      "velocity_order": 1.8083936689017797,
+      "spanwise_order": 1.1386086558851904
+    },
+    {
+      "n": 32,
+      "closure": "zero_gradient",
+      "Reynolds": 40.0,
+      "convection_order": 2,
+      "divisions": [
+        32,
+        32,
+        1
+      ],
+      "cells": 1024,
+      "faces": 8320,
+      "seconds": 49.05588782951236,
+      "numerically_converged": true,
+      "boundary_velocity_error": 0.0,
+      "divergence_max": 2.0616042206711427e-10,
+      "momentum_residual": 7.816161446699918e-10,
+      "outer_iterations": 22,
+      "pressure_l2": 0.07843493416161752,
+      "velocity_l2": 0.0034356154111469706,
+      "inplane_l2": 0.0034356154111469706,
+      "spanwise_l2": 6.779240884088528e-18,
+      "quadrature_closure": 0.0,
+      "max_abs_spanwise": 1.6022438471154331e-16,
+      "source": "docs/verification-kovasznay-symmetry/levels/n32-zero_gradient/level.json",
+      "velocity_order": 1.8083936689017797,
+      "spanwise_order": 1.1386086558851904
+    },
+    {
+      "n": 6,
+      "closure": "free",
+      "Reynolds": 40.0,
+      "convection_order": 2,
+      "divisions": [
+        6,
+        6,
+        1
+      ],
+      "cells": 36,
+      "faces": 312,
+      "seconds": 2.6357717607170343,
+      "numerically_converged": true,
+      "boundary_velocity_error": 0.0,
+      "divergence_max": 4.885798068297412e-13,
+      "momentum_residual": 2.3133371227768145e-09,
+      "outer_iterations": 31,
+      "pressure_l2": 0.3281804062418347,
+      "velocity_l2": 0.056338233428032056,
+      "inplane_l2": 0.05522520756336979,
+      "spanwise_l2": 0.01114329373992056,
+      "quadrature_closure": 0.0,
+      "max_abs_spanwise": 0.024135082984673997,
+      "drive": {
+        "faces_interior": 120,
+        "residual_max": 0.00047591600414632055,
+        "blocks": {
+          "cell_u": {
+            "advection": 0.0,
+            "viscous": 0.0
+          },
+          "cell_v": {
+            "advection": 0.0,
+            "viscous": 0.0
+          },
+          "cell_w": {
+            "advection": 0.0,
+            "viscous": 0.0
+          },
+          "face_u": {
+            "advection": 0.0,
+            "viscous": 0.00016821159210104176
+          },
+          "face_v": {
+            "advection": 0.0,
+            "viscous": 0.00047591600414632055
+          },
+          "face_w": {
+            "advection": 0.0,
+            "viscous": 0.0
+          }
+        },
+        "convection_source": 0.0,
+        "pressure": 0.0,
+        "viscous_cross": 0.00047591600414632055,
+        "viscous_spanwise": 0.0,
+        "advection_total": 0.0
+      },
+      "analytic_defect": 1.067660790267168e-18,
+      "plane_shear": {
+        "max_abs_plane_shear": 0.31654053082416095,
+        "dimensionless": 0.08796736149987784,
+        "max_abs_plane_offset": 0.15827026541208045
+      },
+      "source": "docs/verification-kovasznay-symmetry/levels/n6-free/level.json",
+      "velocity_order": 1.5289917365838863,
+      "spanwise_order": 1.121925816247783
+    },
+    {
+      "n": 6,
+      "closure": "zero_gradient",
+      "Reynolds": 40.0,
+      "convection_order": 2,
+      "divisions": [
+        6,
+        6,
+        1
+      ],
+      "cells": 36,
+      "faces": 312,
+      "seconds": 2.029301131144166,
+      "numerically_converged": true,
+      "boundary_velocity_error": 0.0,
+      "divergence_max": 1.6336405297422492e-13,
+      "momentum_residual": 2.0021939636074095e-09,
+      "outer_iterations": 30,
+      "pressure_l2": 0.33038624753444895,
+      "velocity_l2": 0.05513178815574019,
+      "inplane_l2": 0.05513178815574019,
+      "spanwise_l2": 3.973375196357748e-17,
+      "quadrature_closure": 0.0,
+      "max_abs_spanwise": 1.747024714235865e-16,
+      "drive": {
+        "faces_interior": 120,
+        "residual_max": 4.0463097931937474e-19,
+        "blocks": {
+          "cell_u": {
+            "advection": 0.0,
+            "viscous": 0.0
+          },
+          "cell_v": {
+            "advection": 0.0,
+            "viscous": 0.0
+          },
+          "cell_w": {
+            "advection": 0.0,
+            "viscous": 0.0
+          },
+          "face_u": {
+            "advection": 0.0,
+            "viscous": 4.0463097931937474e-19
+          },
+          "face_v": {
+            "advection": 0.0,
+            "viscous": 1.9499173432312392e-20
+          },
+          "face_w": {
+            "advection": 0.0,
+            "viscous": 0.0
+          }
+        },
+        "convection_source": 0.0,
+        "pressure": 0.0,
+        "viscous_cross": 4.0463097931937474e-19,
+        "viscous_spanwise": 0.0,
+        "advection_total": 0.0
+      },
+      "analytic_defect": 1.067660790267168e-18,
+      "plane_shear": {
+        "max_abs_plane_shear": 0.0,
+        "dimensionless": 0.0,
+        "max_abs_plane_offset": 0.0
+      },
+      "source": "docs/verification-kovasznay-symmetry/levels/n6-zero_gradient/level.json",
+      "velocity_order": 1.5517965243141534,
+      "spanwise_order": 0.9982496827293487
+    },
+    {
+      "n": 32,
+      "closure": "free",
+      "source": "docs/verification-kovasznay-order-attribution (m16396)",
+      "velocity_l2": 0.0038397,
+      "inplane_l2": 0.0034316,
+      "spanwise_l2": 0.0017226,
+      "max_abs_spanwise": 0.0045261,
+      "analytically_recomputed": false,
+      "velocity_order": 1.711468182040244,
+      "spanwise_order": 1.105948985289594
+    }
+  ],
+  "pairwise_orders": [
+    {
+      "closure": "free",
+      "coarse": 6,
+      "fine": 16,
+      "ratio": 2.6666666666666665,
+      "velocity_l2": 1.5289917365838863,
+      "inplane_l2": 1.5550130652465135,
+      "spanwise_l2": 1.121925816247783,
+      "max_abs_spanwise": 0.9599161992938616
+    },
+    {
+      "closure": "free",
+      "coarse": 16,
+      "fine": 32,
+      "ratio": 2.0,
+      "velocity_l2": 1.711468182040244,
+      "inplane_l2": 1.8079718348772913,
+      "spanwise_l2": 1.105948985289594,
+      "max_abs_spanwise": 1.0564740040199414
+    },
+    {
+      "closure": "zero_gradient",
+      "coarse": 6,
+      "fine": 16,
+      "ratio": 2.6666666666666665,
+      "velocity_l2": 1.5517965243141534,
+      "inplane_l2": 1.5517965243141534,
+      "spanwise_l2": 0.9982496827293487,
+      "max_abs_spanwise": -0.021547867539069763
+    },
+    {
+      "closure": "zero_gradient",
+      "coarse": 16,
+      "fine": 32,
+      "ratio": 2.0,
+      "velocity_l2": 1.8083936689017797,
+      "inplane_l2": 1.8083936689017797,
+      "spanwise_l2": 1.1386086558851904,
+      "max_abs_spanwise": 0.15529732836392043
+    }
+  ],
+  "criteria": [
+    {
+      "id": "C1",
+      "description": "zero-gradient symmetry closure pins the spanwise velocity to zero",
+      "value": 1.7843406380574296e-16,
+      "target": "< 1e-10",
+      "passed": true
+    },
+    {
+      "id": "C2",
+      "description": "free tangential z-planes leave a spurious spanwise velocity",
+      "value": 0.024135082984673997,
+      "target": "> 1e-6 (negative control is not vacuous)",
+      "passed": true
+    },
+    {
+      "id": "C3",
+      "description": "free planes settle on a tangential value that differs from their owner cell",
+      "value": 0.31654053082416095,
+      "target": "> 0",
+      "passed": true
+    },
+    {
+      "id": "C4",
+      "description": "spurious spanwise budget is first order in h",
+      "value": 1.121925816247783,
+      "target": "< 1.5",
+      "passed": true
+    },
+    {
+      "id": "C5",
+      "description": "the drive of the spanwise rows is the viscous cross-derivative block",
+      "value": 1.0,
+      "target": "> 0.99 of the residual",
+      "passed": true
+    },
+    {
+      "id": "C6",
+      "description": "advection, pressure and same-component blocks contribute nothing",
+      "value": 0.0,
+      "target": "< 1e-9 of the residual",
+      "passed": true
+    },
+    {
+      "id": "C7",
+      "description": "the assembled spanwise rows accept the analytic state (consistent equations)",
+      "value": 5.581693877940241e-19,
+      "target": "< 1e-9",
+      "passed": true
+    },
+    {
+      "id": "C8",
+      "description": "velocity L2 order with the symmetry closure meets the anchor gate",
+      "value": 1.8083936689017797,
+      "target": ">= 1.8",
+      "passed": true
+    }
+  ],
+  "uniqueness": {
+    "levels": [
+      {
+        "amplitude": 0.0,
+        "max_abs_spanwise": 0.024135082984673997
+      },
+      {
+        "amplitude": 0.1,
+        "max_abs_spanwise": 0.02413508333826134
+      },
+      {
+        "amplitude": -0.1,
+        "max_abs_spanwise": 0.024135082791004715
+      }
+    ],
+    "max_pairwise_spanwise_difference": 1.5926118167308712e-09,
+    "relative": 6.598741830480527e-08
+  }
+}
