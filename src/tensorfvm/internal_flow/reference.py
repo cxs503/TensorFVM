@@ -8,8 +8,13 @@ Sources
 -------
 * de Vahl Davis, G. (1983), *Natural convection of air in a square cavity: a
   bench mark numerical solution*, Int. J. Numer. Methods Fluids 3, 249-264.
-  Mean Nusselt numbers for ``Pr = 0.71``: ``Ra = 1e4 -> 2.243``,
-  ``Ra = 1e5 -> 4.519``, ``Ra = 1e6 -> 8.800``.
+  Mean Nusselt numbers for ``Pr = 0.71``: ``Ra = 1e3 -> 1.118``,
+  ``Ra = 1e4 -> 2.243``, ``Ra = 1e5 -> 4.519``, ``Ra = 1e6 -> 8.800``.
+  Velocity extrema (Table 3, normalised by ``alpha/H``):
+  ``Ra = 1e3 -> |u|max = 3.649, |v|max = 3.697``;
+  ``Ra = 1e4 -> |u|max = 16.178, |v|max = 19.617``;
+  ``Ra = 1e5 -> |u|max = 34.73, |v|max = 68.59``;
+  ``Ra = 1e6 -> |u|max = 64.63, |v|max = 219.36``.
 * Gartling, D. K. (1990), *A test problem for outflow boundary conditions --
   flow over a backward-facing step*, Int. J. Numer. Methods Fluids 11, 953-967.
   Backward-facing step, expansion ratio 2, ``Re = 800``: lower-wall
@@ -26,18 +31,20 @@ from __future__ import annotations
 
 # --------------------------------------------------------------- natural convection
 #: de Vahl Davis (1983) mean Nusselt numbers on the hot wall, ``Pr = 0.71``.
+#: Source: Table 2 of de Vahl Davis (1983), Int. J. Numer. Methods Fluids 3, 249-264.
 DE_VAHL_DAVIS_NU = {
-    1.0e3: 1.334,
+    1.0e3: 1.118,
     1.0e4: 2.243,
     1.0e5: 4.519,
     1.0e6: 8.800,
 }
 
-#: Widely quoted de Vahl Davis extrema of the velocity components, normalised by
-#: ``alpha/H``.  These are used only as *secondary* checks: the transcription is
-#: from the literature table, not machine-verified from the paper.
+#: de Vahl Davis (1983) extrema of the velocity components, normalised by
+#: ``alpha/H``.  Source: Table 3 of de Vahl Davis (1983).
+#: These are used only as *secondary* checks.
 DE_VAHL_DAVIS_VELOCITY = {
-    1.0e4: {"u_max": 4.535, "v_max": 6.776},
+    1.0e3: {"u_max": 3.649, "v_max": 3.697},
+    1.0e4: {"u_max": 16.178, "v_max": 19.617},
     1.0e5: {"u_max": 34.73, "v_max": 68.59},
     1.0e6: {"u_max": 64.63, "v_max": 219.36},
 }
@@ -129,8 +136,8 @@ def channel_wall_friction(height: float, mean_velocity: float, viscosity: float,
 
 
 PROVENANCE = {
-    "DE_VAHL_DAVIS_NU": "primary check, transcribed from de Vahl Davis (1983)",
-    "DE_VAHL_DAVIS_VELOCITY": "secondary check, transcribed; not machine-verified",
+    "DE_VAHL_DAVIS_NU": "primary check, transcribed from de Vahl Davis (1983) Table 2",
+    "DE_VAHL_DAVIS_VELOCITY": "secondary check, transcribed from de Vahl Davis (1983) Table 3",
     "BACKWARD_STEP_REFERENCE": "primary check, transcribed from Gartling (1990)",
     "ARMALY_1983_REATTACHMENT": "primary check, transcribed from Armaly et al. (1983)",
     "borda_carnot_loss": "analytic (closed form)",
