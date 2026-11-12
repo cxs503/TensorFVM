@@ -417,24 +417,50 @@ class PeriodicHillSolver:
         net = flux_e - flux_e[:, m.im] + flux_n[1:] - flux_n[:-1]
         return net / m.volume
 
-    def _convection(self, phi, flux_e, flux_n):
-        """Net convective outflow of ``phi`` per unit volume (blended scheme)."""
-        m, beta = self.mesh, self.config.convection_blend
+    def _convection(self, phi, flux_e, flux_n, blend=None):
+        """Net convective outflow of ``phi`` per unit volume (blended scheme).
+
+        ``blend`` overrides ``config.convection_blend`` (0 = pure upwind,
+        1 = pure central); the verification driver uses it to compare against an
+        independently assembled upwind stencil.
+        """
+        m = self.mesh
+        beta = self.config.convection_blend if blend is None else float(blend)
         out = np.zeros_like(phi)
         # east faces: between (j, i) and (j, i+1)
         face = beta * 0.5 * (phi + phi[:, m.ip]) + (1.0 - beta) * np.where(
             flux_e > 0.0, phi, phi[:, m.ip])
-        contrib = flux_e * face / m.volume
-        out += contrib
-        out[:, m.ip] -= contrib
+        # Round 4 (defect viii): the *same* face flux must be divided by the
+        # volume of the cell that receives it.  Round 3 divided both the outflow
+        # and the inflow of a face by the **donor** cell's volume, so on this
+        # mesh -- where the column thickness, and hence the cell volume, varies
+        # by a factor 1.49 between the hill crest and the trough -- the two sides
+        # of one face were weighted differently and the convective operator no
+        # longer annihilated a constant field on a divergence-free flux
+        # (measured: max|C(1)| = 4.67 with max|div flux| = 2.9e-09).  A
+        # non-conservative convective term on a non-uniform mesh is a volume
+        # source of kinetic energy, which is what blew the Re=2800 run up.
+        contrib = flux_e * face
+        out += contrib / m.volume
+        out[:, m.ip] -= contrib / m.volume[:, m.ip]
         # eta faces: level L between rows L-1 and L
         f = flux_n[1:-1]
         lower = phi[:-1]
         upper = phi[1:]
         face = beta * 0.5 * (lower + upper) + (1.0 - beta) * np.where(f > 0.0, lower, upper)
+        # Round 4 (defect ix): the two eta-face signs were inverted.  ``out`` is
+        # the *net outflow*, so the cell a face flux leaves must gain
+        # ``+flux*face/V`` and the cell it enters must lose it -- exactly what
+        # the east branch above does.  Round 3 wrote it the other way round, i.e.
+        # the eta direction was discretised as an *anti-upwind* (negative
+        # diffusion) operator: convection pumped variance/energy into the field
+        # instead of smoothing it, which is why every run with a curved wall
+        # blew up while the plane channel (where ``flux_n`` vanishes) did not.
+        # Measured on a divergence-free flux: ``max|C(1)|`` = 4.13 before the fix
+        # (should be 0 for a conservative operator) and 2.9e-09 after.
         contrib = f * face
-        out[:-1] -= contrib / m.volume[:-1]
-        out[1:] += contrib / m.volume[1:]
+        out[:-1] += contrib / m.volume[:-1]
+        out[1:] -= contrib / m.volume[1:]
         return out
 
     def compact_gradient(self, field, nonorthogonal_sweeps=2):
@@ -656,6 +682,17 @@ class PeriodicHillSolver:
         self.pressure = pressure + sparse.identity(n, format="csr") * self._pressure_regularisation
         self._pressure_lu = spla.splu(self.pressure.tocsc())
         self._volume_flat = vols.ravel()
+        # Bulk-velocity control (round 4).  The body force enters the impulse
+        # predictor as ``+G`` *inside* the implicit solve, so the predictor is
+        # affine in ``G``:  ``us(G) = us(0) + G * M^{-1} 1``.  Discretising that
+        # affine map once per build gives the *exact* force that puts the bulk
+        # velocity on its target -- no feedback loop, hence no gain to tune.
+        self._bulk_response = self._momentum_lu.solve(np.ones(n)).reshape(ny, nx)
+        self._bulk_gain = self.bulk_velocity(self._bulk_response)
+        if not np.isfinite(self._bulk_gain) or self._bulk_gain <= 0.0:
+            raise RuntimeError(
+                "bulk-velocity response is not positive definite "
+                f"(gain={self._bulk_gain!r}); cannot impose u_b")
 
     def set_time_step(self, dt, rebuild=True):
         if rebuild or float(dt) != self.time_step_s:
@@ -680,17 +717,25 @@ class PeriodicHillSolver:
         """
         m, c, dt = self.mesh, self.config, self.time_step_s
         for _ in range(int(steps)):
-            ub = self.bulk_velocity()
-            self.body_force += c.body_force_relaxation * (c.bulk_velocity - ub) / dt
             gpx, gpy = self.compact_gradient(self.p)
             if self._flux_e is None or self._flux_steps != self.steps:
                 self.refresh_fluxes()
             flux_e, flux_n = self._flux_e, self._flux_n
-            rhs_u = (self.u / dt - self._convection(self.u, flux_e, flux_n)
-                     - gpx + self.body_force)
+            rhs_u = (self.u / dt - self._convection(self.u, flux_e, flux_n) - gpx)
             rhs_v = (self.v / dt - self._convection(self.v, flux_e, flux_n) - gpy)
-            us = self._momentum_lu.solve(rhs_u.ravel()).reshape(self.ny, self.nx)
+            us0 = self._momentum_lu.solve(rhs_u.ravel()).reshape(self.ny, self.nx)
             vs = self._momentum_lu.solve(rhs_v.ravel()).reshape(self.ny, self.nx)
+            # Body force from the *affine* bulk-velocity constraint (round 4):
+            # bulk(us0 + G * response) = u_b  =>  G_target is explicit.
+            # body_force_relaxation is now an under-relaxation towards that
+            # exact value (1.0 = impose u_b to round-off, <1 = first-order lag
+            # whose bulk error decays by (1 - relaxation) per step).
+            g_target = (c.bulk_velocity - self.bulk_velocity(us0)) / self._bulk_gain
+            if not np.isfinite(g_target):
+                raise FloatingPointError(
+                    f"bulk-velocity control produced a non-finite body force at step {self.steps}")
+            self.body_force += c.body_force_relaxation * (g_target - self.body_force)
+            us = us0 + self.body_force * self._bulk_response
             us_e, us_n = self._face_flux(us, vs)
             # Rhie-Chow damping (explicit): replace the *interpolated cell*
             # pressure gradient in the face flux by the *compact* face
