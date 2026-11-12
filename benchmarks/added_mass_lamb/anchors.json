@@ -1,0 +1,463 @@
+{
+  "anchor_id": "AN-LAMB-ELLIPSOID",
+  "generated_utc": "2026-11-12T07:12:00+00:00",
+  "git_commit": "fea32d475b52a86fe552a084a8e22f3bed9f8311",
+  "reference": {
+    "primary": "Lamb, H. (1932) Hydrodynamics, 6th ed., sec. 108-114 (ellipsoid added-mass coefficients alpha0/beta0/gamma0)",
+    "cross_checks": [
+      "Landau & Lifshitz (1987) Fluid Mechanics sec. 11 (definition of added mass)",
+      "Newman (1977) Marine Hydrodynamics sec. 4.4 (k_i = alpha0/(2-alpha0))"
+    ],
+    "catalogue_lookup": "ship API :8002 /anchors/AN-LAMB-ELLIPSOID returns 404 (checked 2026-11-12), so the anchor numbers are regenerated from the two in-repo routes instead of transcribed"
+  },
+  "implementation": {
+    "closed_form_route": "tensorfvm.panel_added_mass.lamb_ellipsoid_factors (sphere / prolate eq.4 / oblate eq.5)",
+    "integral_route": "tensorfvm.panel_added_mass.lamb_integral_factors (defining integral 3, log-mapped Gauss-Legendre)",
+    "added_mass_definition": "M_ij = -rho * integral_S phi_i n_j dS, dphi_i/dn = -n_i, phi_i -> 0 at infinity"
+  },
+  "limit_checks": [
+    {
+      "limit": "sphere",
+      "parameter": "a = b = c = 1",
+      "quantity": "k_1, k_2, k_3 (= Cm)",
+      "value": [
+        0.49999999999999994,
+        0.49999999999999994,
+        0.49999999999999994
+      ],
+      "reference": 0.5,
+      "worst_deviation_pct": 1.1102230246251565e-14,
+      "tolerance_pct": 0.1,
+      "verdict": "PASS"
+    },
+    {
+      "limit": "sphere",
+      "parameter": "a = b = c = 1",
+      "quantity": "M_11 vs 0.5 rho (4/3) pi a^3",
+      "value": [
+        2.094395102393195
+      ],
+      "reference": 2.0943951023931953,
+      "worst_deviation_pct": 2.220446049250313e-14,
+      "tolerance_pct": 0.1,
+      "verdict": "PASS"
+    },
+    {
+      "limit": "slender prolate",
+      "parameter": "a = 1, b = c in {0.5, 0.2, 0.1, 0.05, 0.01}",
+      "quantity": "k_axial -> 0, k_transverse -> 1",
+      "value": [
+        {
+          "b_over_a": 0.5,
+          "eccentricity": 0.8660254037844386,
+          "k_axial": 0.21001504897664153,
+          "k_transverse": 0.704210425850353,
+          "transverse_gap_from_1": 0.295789574149647
+        },
+        {
+          "b_over_a": 0.2,
+          "eccentricity": 0.9797958971132712,
+          "k_axial": 0.05912117089782871,
+          "k_transverse": 0.8942605396198953,
+          "transverse_gap_from_1": 0.10573946038010473
+        },
+        {
+          "b_over_a": 0.1,
+          "eccentricity": 0.99498743710662,
+          "k_axial": 0.02070591807721217,
+          "k_transverse": 0.9602349092676494,
+          "transverse_gap_from_1": 0.03976509073235057
+        },
+        {
+          "b_over_a": 0.05,
+          "eccentricity": 0.998749217771909,
+          "k_axial": 0.0067949140012563075,
+          "k_transverse": 0.9865923792573036,
+          "transverse_gap_from_1": 0.013407620742696413
+        },
+        {
+          "b_over_a": 0.01,
+          "eccentricity": 0.9999499987499375,
+          "k_axial": 0.00043008361227621367,
+          "k_transverse": 0.9991405720272216,
+          "transverse_gap_from_1": 0.0008594279727783816
+        }
+      ],
+      "reference": [
+        0.0,
+        1.0
+      ],
+      "final_gap": [
+        0.00043008361227621367,
+        0.0008594279727783816
+      ],
+      "tolerance_pct": null,
+      "verdict": "PASS"
+    },
+    {
+      "limit": "flat oblate disc",
+      "parameter": "a = b = 1, c in {0.5, 0.25, 0.1, 0.01, 0.001}",
+      "quantity": "M_33/(8/3 rho a^3) -> 1, k_in_plane -> 0, gamma0 -> 2",
+      "value": [
+        {
+          "c_over_a": 0.5,
+          "gamma0": 1.0544005651251394,
+          "gamma0_gap_from_2": 0.9455994348748606,
+          "k_normal": 1.1150604856956976,
+          "k_in_plane": 0.30958592847042615,
+          "M_normal": 2.3353772201132466,
+          "disc_reference_M": 2.6666666666666665,
+          "M_normal_over_disc": 0.8757664575424675
+        },
+        {
+          "c_over_a": 0.25,
+          "gamma0": 1.4072829733148866,
+          "gamma0_gap_from_2": 0.5927170266851134,
+          "k_normal": 2.3742914577389373,
+          "k_in_plane": 0.17395591482337883,
+          "M_normal": 2.4863522003712153,
+          "disc_reference_M": 2.6666666666666665,
+          "M_normal_over_disc": 0.9323820751392058
+        },
+        {
+          "c_over_a": 0.1,
+          "gamma0": 1.721608553055601,
+          "gamma0_gap_from_2": 0.2783914469443991,
+          "k_normal": 6.184128758091638,
+          "k_in_plane": 0.07480406468752006,
+          "M_normal": 2.590401796703208,
+          "disc_reference_M": 2.6666666666666665,
+          "M_normal_over_disc": 0.971400673763703
+        },
+        {
+          "c_over_a": 0.01,
+          "gamma0": 1.96897941382574,
+          "gamma0_gap_from_2": 0.031020586174260067,
+          "k_normal": 63.47331422961758,
+          "k_in_plane": 0.00781575889917731,
+          "M_normal": 2.658763969103507,
+          "disc_reference_M": 2.6666666666666665,
+          "M_normal_over_disc": 0.9970364884138152
+        },
+        {
+          "c_over_a": 0.001,
+          "gamma0": 1.9968624026394777,
+          "gamma0_gap_from_2": 0.003137597360522326,
+          "k_normal": 636.4304189454868,
+          "k_in_plane": 0.000785015105461298,
+          "M_normal": 2.665873504906954,
+          "disc_reference_M": 2.6666666666666665,
+          "M_normal_over_disc": 0.9997025643401077
+        }
+      ],
+      "reference": 1.0,
+      "final_gap": [
+        0.0002974356598922645,
+        0.000785015105461298
+      ],
+      "tolerance_pct": null,
+      "verdict": "PASS"
+    }
+  ],
+  "cases": [
+    {
+      "semi_axes": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "volume": 4.1887902047863905,
+      "alpha0_beta0_gamma0": [
+        0.6666666666666666,
+        0.6666666666666666,
+        0.6666666666666666
+      ],
+      "alpha0_beta0_gamma0_integral_route": [
+        0.6666666666666846,
+        0.6666666666666846,
+        0.6666666666666846
+      ],
+      "route_max_abs_diff": 1.7985612998927536e-14,
+      "sum_rule_abs_dev": 0.0,
+      "k": [
+        0.49999999999999994,
+        0.49999999999999994,
+        0.49999999999999994
+      ],
+      "M_diag": [
+        2.094395102393195,
+        2.094395102393195,
+        2.094395102393195
+      ],
+      "label": "sphere_1_1_1",
+      "family": "sphere",
+      "aspect_ratios": {
+        "a/b": 1.0,
+        "a/c": 1.0,
+        "b/c": 1.0
+      }
+    },
+    {
+      "semi_axes": [
+        2.0,
+        1.0,
+        1.0
+      ],
+      "volume": 8.377580409572781,
+      "alpha0_beta0_gamma0": [
+        0.34712799506792863,
+        0.8264360024660357,
+        0.8264360024660357
+      ],
+      "alpha0_beta0_gamma0_integral_route": [
+        0.34712799506793784,
+        0.8264360024660581,
+        0.8264360024660581
+      ],
+      "route_max_abs_diff": 2.2426505097428162e-14,
+      "sum_rule_abs_dev": 0.0,
+      "k": [
+        0.21001504897664153,
+        0.704210425850353,
+        0.704210425850353
+      ],
+      "M_diag": [
+        1.7594179600221802,
+        5.899579467820823,
+        5.899579467820823
+      ],
+      "label": "prolate_2_1_1",
+      "family": "prolate",
+      "aspect_ratios": {
+        "a/b": 2.0,
+        "a/c": 2.0,
+        "b/c": 1.0
+      }
+    },
+    {
+      "semi_axes": [
+        3.0,
+        1.0,
+        1.0
+      ],
+      "volume": 12.566370614359172,
+      "alpha0_beta0_gamma0": [
+        0.21741893010517296,
+        0.8912905349474135,
+        0.8912905349474135
+      ],
+      "alpha0_beta0_gamma0_integral_route": [
+        0.21741893010517874,
+        0.8912905349474377,
+        0.8912905349474377
+      ],
+      "route_max_abs_diff": 2.4202861936828413e-14,
+      "sum_rule_abs_dev": 0.0,
+      "k": [
+        0.12196860708164076,
+        0.8038990944351136,
+        0.8038990944351136
+      ],
+      "M_diag": [
+        1.5327027199050505,
+        10.102093957219362,
+        10.102093957219362
+      ],
+      "label": "prolate_3_1_1",
+      "family": "prolate",
+      "aspect_ratios": {
+        "a/b": 3.0,
+        "a/c": 3.0,
+        "b/c": 1.0
+      }
+    },
+    {
+      "semi_axes": [
+        5.0,
+        1.0,
+        1.0
+      ],
+      "volume": 20.94395102393195,
+      "alpha0_beta0_gamma0": [
+        0.11164193960491044,
+        0.9441790301975448,
+        0.9441790301975448
+      ],
+      "alpha0_beta0_gamma0_integral_route": [
+        0.1116419396049133,
+        0.9441790301975702,
+        0.9441790301975702
+      ],
+      "route_max_abs_diff": 2.5424107263916085e-14,
+      "sum_rule_abs_dev": 0.0,
+      "k": [
+        0.05912117089782871,
+        0.8942605396198953,
+        0.8942605396198953
+      ],
+      "M_diag": [
+        1.2382309077616356,
+        18.729348944434044,
+        18.729348944434044
+      ],
+      "label": "prolate_5_1_1",
+      "family": "prolate-slender",
+      "aspect_ratios": {
+        "a/b": 5.0,
+        "a/c": 5.0,
+        "b/c": 1.0
+      }
+    },
+    {
+      "semi_axes": [
+        1.0,
+        1.0,
+        0.5
+      ],
+      "volume": 2.0943951023931953,
+      "alpha0_beta0_gamma0": [
+        0.4727997174374303,
+        0.4727997174374303,
+        1.0544005651251394
+      ],
+      "alpha0_beta0_gamma0_integral_route": [
+        0.472799717437443,
+        0.472799717437443,
+        1.0544005651251682
+      ],
+      "route_max_abs_diff": 2.886579864025407e-14,
+      "sum_rule_abs_dev": 0.0,
+      "k": [
+        0.30958592847042615,
+        0.30958592847042615,
+        1.1150604856956976
+      ],
+      "M_diag": [
+        0.6483952523583106,
+        0.6483952523583106,
+        2.3353772201132466
+      ],
+      "label": "oblate_1_1_0.5",
+      "family": "oblate",
+      "aspect_ratios": {
+        "a/b": 1.0,
+        "a/c": 2.0,
+        "b/c": 2.0
+      }
+    },
+    {
+      "semi_axes": [
+        1.0,
+        1.0,
+        0.25
+      ],
+      "volume": 1.0471975511965976,
+      "alpha0_beta0_gamma0": [
+        0.2963585133425567,
+        0.2963585133425567,
+        1.4072829733148866
+      ],
+      "alpha0_beta0_gamma0_integral_route": [
+        0.29635851334256436,
+        0.29635851334256436,
+        1.4072829733149244
+      ],
+      "route_max_abs_diff": 3.774758283725532e-14,
+      "sum_rule_abs_dev": 0.0,
+      "k": [
+        0.17395591482337883,
+        0.17395591482337883,
+        2.3742914577389373
+      ],
+      "M_diag": [
+        0.18216620801920622,
+        0.18216620801920622,
+        2.4863522003712153
+      ],
+      "label": "oblate_1_1_0.25",
+      "family": "oblate-flat",
+      "aspect_ratios": {
+        "a/b": 1.0,
+        "a/c": 4.0,
+        "b/c": 4.0
+      }
+    },
+    {
+      "semi_axes": [
+        2.0,
+        1.0,
+        0.5
+      ],
+      "volume": 4.1887902047863905,
+      "alpha0_beta0_gamma0": [
+        0.22470088315101358,
+        0.5695609633856894,
+        1.2057381534633511
+      ],
+      "alpha0_beta0_gamma0_integral_route": [
+        0.22470088315101358,
+        0.5695609633856894,
+        1.2057381534633511
+      ],
+      "route_max_abs_diff": 0.0,
+      "sum_rule_abs_dev": 5.417888360170764e-14,
+      "k": [
+        0.12657071758692678,
+        0.3981721337343929,
+        1.5180612775508862
+      ],
+      "M_diag": [
+        0.5301781820409035,
+        1.6678595336055217,
+        6.358840209670666
+      ],
+      "label": "triaxial_2_1_0.5",
+      "family": "triaxial",
+      "aspect_ratios": {
+        "a/b": 2.0,
+        "a/c": 4.0,
+        "b/c": 2.0
+      }
+    },
+    {
+      "semi_axes": [
+        1.5,
+        1.0,
+        0.75
+      ],
+      "volume": 4.71238898038469,
+      "alpha0_beta0_gamma0": [
+        0.40092757455493494,
+        0.6707129177981099,
+        0.9283595076470095
+      ],
+      "alpha0_beta0_gamma0_integral_route": [
+        0.40092757455493494,
+        0.6707129177981099,
+        0.9283595076470095
+      ],
+      "route_max_abs_diff": 0.0,
+      "sum_rule_abs_dev": 5.417888360170764e-14,
+      "k": [
+        0.25072508797926774,
+        0.5045658885717232,
+        0.8662975263361126
+      ],
+      "M_diag": [
+        1.181514141699483,
+        2.377710733183398,
+        4.082330916840812
+      ],
+      "label": "triaxial_1.5_1_0.75",
+      "family": "triaxial",
+      "aspect_ratios": {
+        "a/b": 1.5,
+        "a/c": 2.0,
+        "b/c": 1.3333333333333333
+      }
+    }
+  ],
+  "route_agreement_max_abs": 3.774758283725532e-14,
+  "sum_rule_max_abs_dev": 5.417888360170764e-14,
+  "criterion_1_verdict": "PASS"
+}
