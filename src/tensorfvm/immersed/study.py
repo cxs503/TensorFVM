@@ -208,20 +208,41 @@ def run_case(case: str, cells_per_h: int, projection: str, t_end: float, *,
 # ---------------------------------------------------------------- convergence
 def richardson(fine: float, medium: float, coarse: float, ratio: float = 2.0
                ) -> dict[str, float]:
-    """Observed order and GCI for a fixed-refinement-ratio triple."""
+    """Observed order and GCI for a fixed-refinement-ratio triple.
+
+    Delegates to the canonical
+    :func:`tensorfvm.verification.richardson.richardson_gci`.  The local
+    re-derivation that used to live here took ``abs(log(...))`` of the increment
+    ratio and applied Roache's three-grid formula to whatever exponent came out,
+    so a near cancellation between the two finest grids (observed ``p`` well
+    above twice the formal order) published a band about ``2^-p`` wide over an
+    error that was ``2^p`` times that band.  The canonical estimator demotes such
+    a series to the two-grid fall-back (safety factor 3, band driven by the
+    larger adjacent change) and labels it, so the study cannot look converged
+    where it carries no order signal.  ``gci_fine_pct`` stays in percent of the
+    fine value; an unusable series still returns ``nan`` like before, but the
+    returned ``convergence`` key now says which rule fired.
+    """
+    from ..verification.richardson import richardson_gci
+
+    ratio = float(ratio)
+    if not ratio > 1.0:
+        raise ValueError("refinement ratio must exceed one")
+    out = {"value_fine": fine, "value_medium": medium, "value_coarse": coarse}
     eps21 = medium - fine
     eps32 = coarse - medium
-    out = {"value_fine": fine, "value_medium": medium, "value_coarse": coarse}
-    if eps21 == 0.0 or eps32 == 0.0 or (eps32 / eps21) <= 0.0:
+    out["ratio_eps32_eps21"] = (float(eps32 / eps21) if eps21 else float("nan"))
+    try:
+        study = richardson_gci(fine, medium, coarse,
+                               (1.0 / ratio ** 2, 1.0 / ratio, 1.0))
+    except ValueError:
         out.update({"observed_order": float("nan"), "gci_fine_pct": float("nan"),
-                    "extrapolated": float("nan")})
+                    "extrapolated": float("nan"), "convergence": "not-observable"})
         return out
-    r = ratio
-    p = abs(math.log(abs(eps32 / eps21)) / math.log(r))
-    extrap = fine + (fine - medium) / (r ** p - 1.0)
-    gci = 1.25 * abs((fine - medium) / fine) / (r ** p - 1.0) * 100.0
-    out.update({"observed_order": p, "extrapolated": extrap, "gci_fine_pct": gci,
-                "ratio_eps32_eps21": eps32 / eps21})
+    out.update({"observed_order": float(study.order),
+                "gci_fine_pct": float(study.gci * 100.0),
+                "extrapolated": float(study.extrapolated),
+                "convergence": study.convergence})
     return out
 
 

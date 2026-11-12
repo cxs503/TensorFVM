@@ -29,6 +29,8 @@ equivalent body of KVLCC2 (edge velocity from the axisymmetric source flow,
 """
 from __future__ import annotations
 
+import math
+
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Sequence
 
@@ -184,16 +186,40 @@ def fit_ct_froude(fn: Sequence[float], ct: Sequence[float]) -> Dict[str, float]:
 
 def grid_convergence_index(fine: float, medium: float, coarse: float,
                            ratio: float = 2.0) -> Dict[str, float]:
-    """Observed-order Richardson extrapolation and the ASME V&V-20 GCI."""
+    """Observed-order Richardson extrapolation and the ASME V&V-20 GCI.
+
+    Delegates to :func:`tensorfvm.verification.richardson.richardson_gci`.
+    The previous local formula evaluated ``log|(coarse-medium)/(medium-fine)|``
+    and ``ratio**order - 1`` for any sign of the increment ratio.  On the
+    published KVLCC2 sweep that produced ``observed_order = -8.21`` (a negative
+    exponent has no meaning for a converging study) together with a GCI of 313 %,
+    and on a near cancellation between the two finest grids it produces the
+    opposite failure: an order of about 10 and a band of ``1e-9`` over an error
+    of ``1e-6``.  The canonical estimator flags both cases (``convergence``,
+    ``fallback_reason``) and falls back to the two-grid safety factor 3.
+    ``monotonic`` keeps its old meaning (monotone decay and a usable order).
+    """
     if not (coarse != medium != fine):
         raise ValueError("refinement must give distinct values")
-    order = np.log(abs((coarse - medium) / (medium - fine))) / np.log(ratio)
-    extrapolated = fine + (fine - medium) / (ratio ** order - 1.0)
-    gci_fine = 1.25 * abs((medium - fine) / fine) / (ratio ** order - 1.0)
-    monotonic = (abs(coarse - medium) > abs(medium - fine)) and order > 0.1
-    return {"observed_order": float(order), "extrapolated": float(extrapolated),
-            "gci_fine": float(abs(gci_fine)), "monotonic": bool(monotonic),
-            "relative_change": float(abs(fine - medium) / fine)}
+    from ..verification.richardson import richardson_gci
+
+    ratio = float(ratio)
+    if not ratio > 1.0:
+        raise ValueError("refinement ratio must exceed one")
+    try:
+        study = richardson_gci(fine, medium, coarse, (1.0 / ratio ** 2, 1.0 / ratio, 1.0))
+    except ValueError as exc:
+        raise ValueError(f"refinement study is not observable: {exc}") from None
+    usable = study.convergence == 'monotone'
+    extrapolated = study.extrapolated if math.isfinite(study.extrapolated) else float("nan")
+    return {"observed_order": float(study.order) if usable else float("nan"),
+            "extrapolated": float(extrapolated),
+            "gci_fine": float(study.gci),
+            "monotonic": bool(usable and study.order_used > 0.1),
+            "relative_change": float(abs(fine - medium) / fine),
+            "convergence": study.convergence,
+            "fallback_reason": study.fallback_reason,
+            "safety_factor": float(study.safety_factor)}
 
 
 def criterion_c3(points: Dict[str, List[Dict[str, float]]],
