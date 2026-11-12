@@ -1,0 +1,143 @@
+{
+  "A_case_definition": {
+    "code_post_shock": {
+      "rho": 8.096385542168676,
+      "u": 3.2761720504591825,
+      "v": 4.775167851422531,
+      "p": 155.3888888888889,
+      "shock_speed": 11.547005383792516,
+      "mn": 11.547005383792516
+    },
+    "normal_shock_M10": {
+      "rho": 8.000000000000002,
+      "p": 116.50000000000001,
+      "du_over_c1": 8.25
+    },
+    "normal_shock_M_10_over_sin60": {
+      "rho": 8.096385542168676,
+      "p": 155.3888888888889,
+      "du_over_c1": 9.55033570284506
+    },
+    "implied_normal_mach_from_code_pressure": 11.547005383792516,
+    "implied_normal_mach_from_code_density": 11.547005383792516,
+    "textbook_lab_velocity_M10": {
+      "front_speed_x": 11.547005383792516,
+      "rho": 8.000000000000002,
+      "p": 116.50000000000001,
+      "u": 7.144709581221618,
+      "v": -4.125000000000001,
+      "M_n": 10.0,
+      "tangential_y": -5.000000000000001,
+      "note": "textbook: u = 8.25 cos30 = 7.1436, v = -8.25 sin30 = -4.1250 for M_n=10"
+    },
+    "code_velocity_error": {
+      "u_rel_err_vs_textbook": 0.5414548326680879,
+      "v_sign_flipped": true,
+      "p_rel_err_vs_M10": 0.3338102050548403
+    },
+    "top_bc_sweep_speed_used": 11.547005383792516,
+    "top_bc_sweep_speed_note": "cases.py uses cfg.mach*c1 = 10.0 for the x-sweep of the top boundary, while the same file uses 11.547 as the front speed -> the prescribed top-BC front lags 1.547*0.2 = 0.309 in x at t=0.2"
+  },
+  "B_shipped_ic": {
+    "nx": 120,
+    "ny": 30,
+    "t_end": 0.2,
+    "cfl": 0.4,
+    "nsteps": 366,
+    "elapsed_s": 14.35,
+    "ic": {
+      "rho_min": 1.4,
+      "rho_max": 8.096385542168676,
+      "p_min": 1.0,
+      "p_max": 155.38888888888889,
+      "u_min": 0.0,
+      "u_max": 3.2761720504591825,
+      "v_min": 0.0,
+      "v_max": 4.775167851422531
+    },
+    "max_density": 6.3612,
+    "max_density_xy": [
+      0.0167,
+      0.9833
+    ],
+    "max_density_interior": 6.3256,
+    "max_density_interior_xy": [
+      0.0167,
+      0.95
+    ],
+    "min_density": 0.808173,
+    "wall_row_max_density": 3.4837,
+    "wall_row_mean_density": 2.5175,
+    "max_pressure": 110.83,
+    "positivity_fixes": 0,
+    "drift": {
+      "mass": 4.843111450946716e-16,
+      "momentum_x": 3.022094348642778e-16,
+      "momentum_y": -2.0734142436322147e-16,
+      "energy": -6.1127722297556475e-16,
+      "mass_mat1": 4.843111450946716e-16
+    },
+    "wall_shock_x": NaN
+  },
+  "C_textbook_ic": {
+    "nx": 120,
+    "ny": 30,
+    "t_end": 0.2,
+    "cfl": 0.4,
+    "nsteps": 404,
+    "elapsed_s": 13.79,
+    "ic": {
+      "rho_min": 1.4,
+      "rho_max": 8.000000000000002,
+      "p_min": 1.0,
+      "p_max": 116.50000000000004,
+      "u_min": 0.0,
+      "u_max": 7.144709581221618,
+      "v_min": -4.125000000000001,
+      "v_max": 0.0
+    },
+    "max_density": 19.2769,
+    "max_density_xy": [
+      0.0167,
+      0.0167
+    ],
+    "max_density_interior": 19.2769,
+    "max_density_interior_xy": [
+      0.0167,
+      0.0167
+    ],
+    "min_density": 3.876401,
+    "wall_row_max_density": 19.2769,
+    "wall_row_mean_density": 11.784,
+    "max_pressure": 536.3104,
+    "positivity_fixes": 0,
+    "drift": {
+      "mass": 3.675136561137044e-16,
+      "momentum_x": 1.4024627438369058e-16,
+      "momentum_y": 6.072841820119941e-16,
+      "energy": 0.0,
+      "mass_mat1": 3.675136561137044e-16
+    },
+    "wall_shock_x": 0.0167
+  },
+  "B_vs_reported": {
+    "reported": {
+      "nx": 120,
+      "ny": 30,
+      "nsteps": 485,
+      "max_density": 6.3608,
+      "mach_stem_height": 0.9833,
+      "triple_point_x": 0.0167,
+      "min_rho": 0.810116
+    },
+    "reproduced": {
+      "nx": 120,
+      "ny": 30,
+      "nsteps": 366,
+      "max_density": 6.3612,
+      "min_density": 0.808173
+    },
+    "delta_max_density": 0.0004,
+    "delta_min_density": -0.001943
+  }
+}
