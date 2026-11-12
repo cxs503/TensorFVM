@@ -327,3 +327,28 @@
   p=−0.87（假 FAIL）；④`omega H^2/nu=1e-6` 时 `1−cosh/cosh` 相消，舍入地板 1e-10，判据阈值应为 1e-6。
 - 明示未做：壁面振荡驱动（Stokes 第二问题，求解器壁面为齐次无滑移 → NOT_SUPPORTED）；
   二阶时间格式；湍流/可压缩/可变形槽道；实验数据对标（层流振荡槽道无更好基准，闭式解即精确解）。
+
+### D10 续（m16864, 2026-11-13）—— 机制已定位且可修：挤出面缺对称闭合（不 是方程不一致）
+- **结论**：交付轮 1.684 的根因是**算例边值只做了一半**。`kovasznay_solver(..., symmetry_extrusion=True)`
+  只把 `w` 钉在 `z` 平面上，切向 `u,v` 被设成自由未知量（= traction-free），而对称面要求
+  `du_t/dz = 0`（Neumann）。实测自由面值与 owner 单元值差到 0.07（n=16），两点法向导数因此看到
+  0.14 的假剪切，粘性交叉项 `mu(du_i/dz + dw/dx_i)` 在面内面上给出 O(h) 源项 → 一阶伪 `w`。
+- **逐项证据**（`spanwise_drive_terms`，收敛态把 `w` 置零后重建）：对流 0、对流源 0、压力 0、
+  同分量粘性 0，**全部残差 = 粘性交叉分量**（交叉/残差 = 1.000000，n=6/16 两级）；
+  解析态代入同一批挤出向行残差 1e-18 ⇒ 方程本身是自洽的，问题在边值闭合。
+- **修复**：同一批面交给既有 `zero_gradient_faces` 机制（`symmetry_closure='zero_gradient'`）。
+  修复后 n=16/32：`max|w|` 1.8e-16/1.6e-16（机器零），`spanwise_l2` 1.5e-17/6.8e-18，
+  in-plane 预算不变（1.2033e-2 / 3.4356e-3，相对差 0.15%），**速度 total L2 阶 16→32 = 1.808 ≥ 1.8**。
+- **负对照**：`free` 闭合 n=16 复现交付轮逐位数字（1.257478e-02 / 1.201574e-02 / 3.707731e-03），
+  唯一性对照三初值（含 ±0.1 随机扰动）解出的 `w` 位级一致 ⇒ 排除"零空间污染"。
+- **产物**：`src/tensorfvm/verification/kovasznay_symmetry.py`（C1–C8 预声明判据，全 PASS）、
+  `tests/test_kovasznay_symmetry.py`（10 测全绿，19 s）、`docs/verification-kovasznay-symmetry/`
+  `{REPORT.md,summary.json,fig_kovasznay_symmetry.png,make_report.py}`、`runs/kovasznay-symmetry/`；
+  `kovasznay_solver` 新增 `symmetry_closure`（默认 `'free'` 保历史口径，**新算例应用
+  `'zero_gradient'`**）。
+- **账本动作建议**：`CASE-FVM-KOVASZNAY-ORDER` 的验收条款（速度 L2 阶 ≥1.8）在正确闭合下达成
+  → 建议升 `done`，并把"挤出/对称面必须用 zero-gradient 闭合"写进算例规格；仓内默认值未改，
+  故任何仍用 `'free'` 的旧结果都保留可复现。D10 原文"未定位 z 动量里产生该 O(h) 驱动力的具体项"至此结清。
+- **明示未做**：n=64 三级阶；`planar`（无挤出全 3D 立方）对照仍未跑（9600² 耦合直接解超时问题不变，
+  本单用 1e-18 的解析态缺陷替代该对照的作用）；未把二阶壁面闭合（`NativeViscous3D.wall_closure=
+  'three_point'`）接到 hybrid 粘性路径（本单证伪了"壁面闭合是元凶"——元凶是 `z` 平面切向自由度）。
