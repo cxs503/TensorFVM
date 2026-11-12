@@ -578,8 +578,8 @@ Every item carries a `[[gap-status: open]]` or `[[gap-status: closed-by <paths>]
 1. **3D Lid-Driven Cavity**: Only 2D verified against Ghia  [[gap-status: open]]
 2. **Compressible Flow**: No verification (incompressible only)  [[gap-status: closed-by src/tensorfvm/compressible/verification.py, tests/test_compressible_eos_riemann.py, tests/test_compressible_multimaterial.py]]
 3. **Moving Mesh**: ALE formulation not verified  [[gap-status: closed-by src/tensorfvm/moving_mesh.py, tests/test_moving_mesh_ale.py, tests/test_ale_transport_analytic.py, docs/pmm-ale-cfd/summary.json]]
-4. **Combustion**: No species transport verification  [[gap-status: open]]
-5. **Radiation**: No heat transfer verification  [[gap-status: open]]
+4. **Combustion**: No species transport verification  [[gap-status: closed-by src/tensorfvm/species.py, src/tensorfvm/verification/species_transport.py, tests/test_species_transport.py, docs/verification-species-transport/summary.json]]
+5. **Radiation**: No heat transfer verification (stale 2026-11-12: the face was delivered by m16116 and the annotation was missed)  [[gap-status: closed-by src/tensorfvm/radiation.py, src/tensorfvm/verification/radiation.py, tests/test_radiation.py, docs/verification-radiation/summary.json]]
 
 ### 10.2 Planned Additions
 
@@ -733,3 +733,37 @@ model form and is recorded as WITHHELD)
 strip enclosures; they are invalid for an annular (wrapping) wire frame, where the inner-strip
 row sum cancels to 0.0 (measured) instead of 1.0. Concentric circles are handled by their
 closed form instead.
+
+## 16. Species Transport, Mixture Fraction and Burke-Schumann Flame Sheet
+**Reference**: Burke & Schumann (1928) flame sheet; Bilger (1977, Combust. Sci. Tech. 13:87)
+element-based mixture fraction; Peters (1984) strained counter-flow similarity solution;
+analytic solutions (`erfc` semi-infinite diffusion, exponential advection-diffusion); the
+closed-form flame stand-off `x_f = sqrt(2D/a) erfinv(2 Z_st - 1)`.
+**Physics**: transport of species mass fractions `Y_k` (Fickian diffusion with mixture-averaged
+`D_k` plus the zero-sum correction velocity), the conserved scalar `Z`, and infinitely fast
+single-step chemistry `CH4 + 3.989 kg O2/kg CH4 -> CO2 + H2O` (piecewise-linear species and
+enthalpy-consistent temperature in `Z`).
+**Implementation**: `src/tensorfvm/species.py`
+**Driver**: `python -m tensorfvm.verification.species_transport`
+**Tests**: `tests/test_species_transport.py`
+**Report**: `docs/verification-species-transport/REPORT.md`
+**Artifact**: `docs/verification-species-transport/summary.json`, `docs/verification-species-transport/fig_species_transport.png`
+**Verification Status**: PASS (24/24 graded criteria)
+- pure diffusion linear profile: 1.6e-15; unsteady vs `erfc`: 2.8e-06 with observed order 2.00
+- steady advection-diffusion vs exponential solution (Pe=10): central 1.1e-04 (order 2.00),
+  upwind 8.7e-03 (order 0.98, first order by construction)
+- strained mixing layer vs the erf similarity solution: 5.9e-05 (order 1.93); the *trap*
+  counter-example (1-D conservative form without the transverse convective term) blows up to
+  rel-L2 1.4e+08 -- the term is structural, not cosmetic
+- flame stand-off vs closed form: 3.5e-06
+- Burke-Schumann structure: `sum Y = 1` to 2.2e-16, piecewise linearity 2.2e-16, enthalpy
+  closure 7.0e-10 J/kg, both reactants zero exactly at `Z_st`
+- `Z_st = 0.05496` vs the literature 0.055: 0.067 %; Bilger vs coupling-function route: 1.3e-16
+- `Z` invariant under the single-step reaction and element (C,H,O) conservation: 5.6e-17
+- zero-sum diffusive flux with unequal `D_k`: 0.0 (uncorrected drift 0.14, measured)
+- `sum_k Y_k = 1` after transport with unequal `D_k`: 2.1e-15; closed-domain species mass: 7.4e-16
+**Known limitation / WITHHELD**: finite-rate Arrhenius chemistry and detailed mechanisms are
+NOT implemented (the `GAP-FVM-COMBUSTION-SPECIES` proposal's laminar flame speed vs Cantera is
+WITHHELD -- Cantera is not installable here); the constant-`cp` Burke-Schumann temperature
+gives `T_ad = 2589 K` vs the 2226 K dissociation-affected literature value, so `T_ad` is *not*
+used as an external criterion (only its enthalpy closure is verified).
