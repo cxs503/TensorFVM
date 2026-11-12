@@ -802,3 +802,5 @@ Evidence: `src/tensorfvm/verification/pulsatile_channel.py`,
 are homogeneous no-slip; second-order time integration; turbulent/compressible channels.
 
 [[gap-status: closed-by src/tensorfvm/verification/pulsatile_channel.py, src/tensorfvm/channel_periodic.py, tests/test_pulsatile_channel.py, docs/verification-pulsatile-channel/summary.json]]
+
+## 18. Buoyant-cavity anchor recheck (de Vahl Davis velocity/streamfunction)  [[gap-status: closed-by src/tensorfvm/verification/cavity_anchor.py, src/tensorfvm/verification/reference_families.py, src/tensorfvm/internal_flow/natural_convection.py, tests/test_cavity_anchor.py, docs/verification-cavity-anchor/summary.json]]
