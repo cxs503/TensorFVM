@@ -239,6 +239,9 @@ class PeriodicHillMesh:
         self.ip = (np.arange(nx) + 1) % nx
         self.im = (np.arange(nx) - 1) % nx
         dx_e = self.xc[:, self.ip] - self.xc
+        # minimum image: the face between i = nx-1 and i = 0 is a +dx step across
+        # the periodic seam, not a -(L - dx) step the other way round the domain
+        dx_e = dx_e - c.length_m * np.round(dx_e / c.length_m)
         self.dn_e = np.abs(dx_e)
         dn_n = np.zeros((ny + 1, nx))
         dn_n[1:-1] = ((self.xc[1:] - self.xc[:-1]) * self.unx_n[1:-1]
@@ -256,6 +259,40 @@ class PeriodicHillMesh:
         self.tau_bottom = tau_b * np.where(tau_b[:, 0] < 0.0, -1.0, 1.0)[:, None]
         self.tau_top = tau_t * np.where(tau_t[:, 0] < 0.0, -1.0, 1.0)[:, None]
         self._least_squares_weights()
+        self._compact_weights()
+
+    def _compact_weights(self):
+        """Per-cell 2x2 inverse for the compact (face-normal) gradient.
+
+        Each face supplies one equation ``(grad phi) . n_f = (phi_N - phi_P)/d_n``
+        weighted by ``|A_f|``; the wall faces supply the Neumann condition
+        ``(grad phi) . n_f = 0``.  Unlike the wide (2 dx) central least-squares
+        stencil in :meth:`_least_squares_weights`, this operator is **not** blind
+        to the odd-even (checkerboard) mode: a checkerboard has
+        ``(phi_N - phi_P)/d_n = +-2 phi_P / d_n != 0``, so the pressure couples to
+        it and the fractional-step scheme stays non-singular.
+        """
+        c = self.config
+        ny, nx = c.ny, c.nx
+        a11 = np.zeros((ny, nx))
+        a12 = np.zeros((ny, nx))
+        a22 = np.zeros((ny, nx))
+        # east / west faces: n = (+-1, 0), area = area_e, distance = dn_e
+        a11 += self.area_e / self.dn_e
+        a11 += self.area_e[:, self.im] / self.dn_e[:, self.im]
+        # eta faces (both walls included: Neumann -> n n^T only)
+        nx_n, ny_n, area_n = self.unx_n, self.uny_n, self.area_n
+        for level in (np.arange(ny) + 1, np.arange(ny)):
+            a = area_n[level] / self.dn_n[level]
+            a11 += a * nx_n[level] ** 2
+            a12 += a * nx_n[level] * ny_n[level]
+            a22 += a * ny_n[level] ** 2
+        det = a11 * a22 - a12 * a12
+        if np.any(det <= 0.0):
+            raise ValueError("degenerate compact-gradient stencil")
+        self.cg_i11 = a22 / det
+        self.cg_i12 = -a12 / det
+        self.cg_i22 = a11 / det
 
     def _least_squares_weights(self):
         """Per-cell 2x2 inverse of the weighted least-squares gradient stencil."""
@@ -267,6 +304,7 @@ class PeriodicHillMesh:
         for shift in (1, -1):
             ii = (np.arange(nx) + shift) % nx
             dx = self.xc[:, ii] - self.xc
+            dx = dx - c.length_m * np.round(dx / c.length_m)      # minimum image
             dy = self.yc[:, ii] - self.yc
             w = 1.0 / np.maximum(dx * dx + dy * dy, 1e-300)
             a11 += w * dx * dx
@@ -313,6 +351,9 @@ class PeriodicHillSolver:
         self.body_force = 0.0
         self.steps = 0
         self._weight, self._weight_sum = self._bulk_weights()
+        self._flux_e = None            # projected (divergence-free) face fluxes
+        self._flux_n = None
+        self._flux_steps = -1
         self._build(config.time_step_s)
 
     # -------------------------------------------------------------- geometry
@@ -377,6 +418,42 @@ class PeriodicHillSolver:
         out[1:] += contrib / m.volume[1:]
         return out
 
+    def compact_gradient(self, field):
+        """Compact face-normal gradient (see :meth:`PeriodicHillMesh._compact_weights`).
+
+        Each face supplies the normal-derivative equation
+        ``(grad phi) . n_f = (phi_N - phi_P) / d_n``, so it contributes
+        ``|A_f| / d_n^2 * n_f * (phi_N - phi_P)``; the per-cell 2x2 inverse of
+        ``sum_f |A_f| / d_n * n_f n_f^T`` turns that set into a gradient.  This is the pressure-gradient operator of the projection:
+        the momentum predictor, the velocity corrector and the pressure Poisson
+        operator in :meth:`_build` all derive from the *same* compact face
+        differences ``(phi_N - phi_P) / d_n``.  The wide central stencil of
+        :meth:`gradient` does not have that property (it annihilates the
+        odd-even mode exactly, see the module log), so it is kept only as a
+        diagnostic.
+        """
+        m = self.mesh
+        phi = np.asarray(field, dtype=float)
+        b1 = np.zeros_like(phi)
+        b2 = np.zeros_like(phi)
+        ce = m.area_e / m.dn_e ** 2
+        ce_w = m.area_e[:, m.im] / m.dn_e[:, m.im] ** 2
+        b1 += ce * (phi[:, m.ip] - phi)                  # east face, n = (+1, 0)
+        b1 += ce_w * (phi - phi[:, m.im])                # west face, n = (-1, 0)
+        cn = m.area_n / m.dn_n ** 2
+        jump = np.zeros_like(phi)
+        jump[:-1] = phi[1:] - phi[:-1]                   # cell j -> j+1
+        # north face of cell j is level j+1, outward normal +n[j+1]; the wall
+        # (j = ny-1) is Neumann and contributes a zero jump
+        b1 += cn[1:] * m.unx_n[1:] * jump
+        b2 += cn[1:] * m.uny_n[1:] * jump
+        # south face of cell j is level j, outward normal -n[j] and jump -(phi_j
+        # - phi_{j-1}); the two minus signs cancel
+        b1 += cn[:-1] * m.unx_n[:-1] * jump
+        b2 += cn[:-1] * m.uny_n[:-1] * jump
+        return (m.cg_i11 * b1 + m.cg_i12 * b2,
+                m.cg_i12 * b1 + m.cg_i22 * b2)
+
     def gradient(self, field):
         """Weighted least-squares cell gradient (periodic in x, one-sided at walls)."""
         m = self.mesh
@@ -386,6 +463,7 @@ class PeriodicHillSolver:
         for shift in (1, -1):
             ii = (np.arange(nx) + shift) % nx
             dx = m.xc[:, ii] - m.xc
+            dx = dx - self.config.length_m * np.round(dx / self.config.length_m)
             dy = m.yc[:, ii] - m.yc
             dphi = field[:, ii] - field
             w = 1.0 / np.maximum(dx * dx + dy * dy, 1e-300)
@@ -411,54 +489,98 @@ class PeriodicHillSolver:
         return j * self.nx + (i % self.nx)
 
     def _build(self, dt):
+        """Assemble the fixed diffusion and pressure-correction operators.
+
+        Face coefficients are ``c_f = |A_f| / d_n``.  The momentum operator is
+        the volume-normalised Laplacian ``(1/Vol) sum_f c_f (phi_N - phi_P)``
+        with a *Dirichlet* contribution from both no-slip walls, which carries
+        the wall shear and therefore the whole momentum balance.  The pressure
+        operator is the same face-coefficient sum **without** the volume
+        normalisation, because the right-hand side is the net face *flux*
+        (``sum_f A_f u_f``) rather than its volume average:
+
+            sum_f c_f (p_P - p_N) = -(1/dt) sum_f A_f u*_f ,
+
+        i.e. ``(diag_prs - off) p = -net/dt`` as used by :meth:`advance`.
+        Wall faces are Neumann (``dp/dn = 0``) for the pressure and therefore
+        do not appear in the pressure matrix at all.
+
+        Round-2 fixes (mission 16503), both regression-tested in
+        ``tests/test_periodic_hill.py``:
+
+        * the diagonal accumulators were 1-D but written into ``(ny, nx)``
+          arrays, so ``diag += coef`` broadcast row ``j``'s coefficients onto
+          *every* row (diagonal ~``ny`` times too stiff, LU returned ``O(1e-3)``
+          of the right-hand side);
+        * ``c_n[0]`` / ``c_n[-1]`` (the two wall faces) were never filled, so
+          the wall Dirichlet term was exactly zero and the channel free-slipped
+          (plug flow, ``u_max / u_b = 1.003`` instead of ``1.5``).
+        """
         from scipy import sparse
         from scipy.sparse import linalg as spla
 
         self.time_step_s = float(dt)
-        m, c = self.mesh, self.config
+        m = self.mesh
         ny, nx = self.ny, self.nx
         n = self.n
         self.c_e = m.area_e / m.dn_e
-        self.c_n = np.zeros((ny + 1, nx))
-        self.c_n[1:-1] = m.area_n[1:-1] / m.dn_n[1:-1]
-        vols = m.volume.ravel()
+        self.c_n = m.area_n / m.dn_n                     # all ny+1 eta levels
+        vols = m.volume
         rows, cols, vals = [], [], []
+        prows, pcols, pvals = [], [], []
         diag_mom = np.zeros((ny, nx))
         diag_prs = np.zeros((ny, nx))
         for j in range(ny):
             p = np.arange(j * nx, (j + 1) * nx)
-            coef = self.c_e[j] / vols[j * nx:(j + 1) * nx]
-            rows.append(p); cols.append(self._cell(j, np.arange(nx) + 1)); vals.append(coef)
-            diag_mom += coef
-            diag_prs += self.c_e[j]
-            coef = self.c_e[j, (np.arange(nx) - 1) % nx] / vols[j * nx:(j + 1) * nx]
-            rows.append(p); cols.append(self._cell(j, np.arange(nx) - 1)); vals.append(coef)
-            diag_mom += coef
-            diag_prs += self.c_e[j, (np.arange(nx) - 1) % nx]
+            ce_e = self.c_e[j]
+            ce_w = self.c_e[j, m.im]
+            cn_s = self.c_n[j]                           # wall when j == 0
+            cn_n = self.c_n[j + 1]                       # wall when j == ny - 1
+            # momentum: (1/Vol) sum_f c_f, wall Dirichlet enters the diagonal only
+            rows.append(p); cols.append(self._cell(j, np.arange(nx) + 1))
+            vals.append(ce_e / vols[j])
+            rows.append(p); cols.append(self._cell(j, np.arange(nx) - 1))
+            vals.append(ce_w / vols[j])
             if j > 0:
-                coef = self.c_n[j] / vols[j * nx:(j + 1) * nx]
-                rows.append(p); cols.append(self._cell(j - 1, np.arange(nx))); vals.append(coef)
-                diag_mom += coef
-                diag_prs += self.c_n[j]
+                rows.append(p); cols.append(self._cell(j - 1, np.arange(nx)))
+                vals.append(cn_s / vols[j])
             if j < ny - 1:
-                coef = self.c_n[j + 1] / vols[j * nx:(j + 1) * nx]
-                rows.append(p); cols.append(self._cell(j + 1, np.arange(nx))); vals.append(coef)
-                diag_mom += coef
-                diag_prs += self.c_n[j + 1]
-        # no-slip wall faces: pure Dirichlet contributions (diagonal only)
-        diag_mom[0] += self.c_n[0] / vols[:nx]
-        diag_mom[-1] += self.c_n[ny] / vols[(ny - 1) * nx:]
+                rows.append(p); cols.append(self._cell(j + 1, np.arange(nx)))
+                vals.append(cn_n / vols[j])
+            diag_mom[j] = (ce_e + ce_w + cn_s + cn_n) / vols[j]
+            # pressure: same c_f, no volume division, walls are Neumann
+            prows.append(p); pcols.append(self._cell(j, np.arange(nx) + 1))
+            pvals.append(ce_e)
+            prows.append(p); pcols.append(self._cell(j, np.arange(nx) - 1))
+            pvals.append(ce_w)
+            if j > 0:
+                prows.append(p); pcols.append(self._cell(j - 1, np.arange(nx)))
+                pvals.append(cn_s)
+            if j < ny - 1:
+                prows.append(p); pcols.append(self._cell(j + 1, np.arange(nx)))
+                pvals.append(cn_n)
+            diag_prs[j] = (ce_e + ce_w
+                           + (cn_s if j > 0 else 0.0) + (cn_n if j < ny - 1 else 0.0))
         off = sparse.csr_matrix(
             (np.concatenate(vals), (np.concatenate(rows), np.concatenate(cols))), shape=(n, n))
-        self.laplacian = off - sparse.diags(diag_mom.ravel())      # wall Dirichlet included
+        # L = (1/Vol) sum_f c_f (phi_N - phi_P); wall Dirichlet already in diag_mom
+        self.laplacian = off - sparse.diags(diag_mom.ravel())
         self.momentum = (sparse.diags(np.full(n, 1.0 / self.time_step_s))
                          - self.nu * self.laplacian).tocsc()
         self._momentum_lu = spla.splu(self.momentum)
-        pressure = (-off + sparse.diags(diag_prs.ravel())).tolil()
-        pressure[0, :] = 0.0
-        pressure[0, 0] = 1.0                                 # pin the null space
-        self._pressure_lu = spla.splu(pressure.tocsc())
-        self._volume_flat = vols
+        p_off = sparse.csr_matrix(
+            (np.concatenate(pvals), (np.concatenate(prows), np.concatenate(pcols))),
+            shape=(n, n))
+        pressure = (sparse.diags(diag_prs.ravel()) - p_off).tocsr()
+        # The operator has the constant vector in its null space (periodic in xi,
+        # Neumann on both walls).  It is regularised with ~1e-10 * |diag| instead
+        # of pinning a row: a pinned row would leave that one cell's continuity
+        # equation unsatisfied, which is exactly what the mass-conservation gate
+        # below measures.
+        self._pressure_regularisation = 1e-10 * float(np.mean(diag_prs))
+        self.pressure = pressure + sparse.identity(n, format="csr") * self._pressure_regularisation
+        self._pressure_lu = spla.splu(self.pressure.tocsc())
+        self._volume_flat = vols.ravel()
 
     def set_time_step(self, dt, rebuild=True):
         if rebuild or float(dt) != self.time_step_s:
@@ -466,29 +588,81 @@ class PeriodicHillSolver:
 
     # ------------------------------------------------------------------ step
     def advance(self, steps=1, statistics=None):
+        """Advance ``steps`` fractional steps and leave a mass-conserving state.
+
+        Convection uses the *projected* face fluxes of the previous step (they
+        are divergence-free by construction), the pressure-correction Poisson is
+        the compact face-coefficient operator of :meth:`_build`, and the
+        correction is applied to the **face fluxes** as well as to the cell
+        velocities::
+
+            net_new = net - dt * sum_f c_f (phi_N - phi_P) = 0
+
+        Correcting only the cell velocities (as round 1 did) cannot conserve mass
+        here: the least-squares cell gradient annihilates the checkerboard mode
+        exactly (measured 0.0), so it is not the adjoint of the face-averaged
+        divergence and ``div(u)`` stays O(1).
+        """
         m, c, dt = self.mesh, self.config, self.time_step_s
         for _ in range(int(steps)):
             ub = self.bulk_velocity()
             self.body_force += c.body_force_relaxation * (c.bulk_velocity - ub) / dt
-            gpx, gpy = self.gradient(self.p)
-            flux_e, flux_n = self._face_flux(self.u, self.v)
+            gpx, gpy = self.compact_gradient(self.p)
+            if self._flux_e is None or self._flux_steps != self.steps:
+                self.refresh_fluxes()
+            flux_e, flux_n = self._flux_e, self._flux_n
             rhs_u = (self.u / dt - self._convection(self.u, flux_e, flux_n)
                      - gpx + self.body_force)
             rhs_v = (self.v / dt - self._convection(self.v, flux_e, flux_n) - gpy)
             us = self._momentum_lu.solve(rhs_u.ravel()).reshape(self.ny, self.nx)
             vs = self._momentum_lu.solve(rhs_v.ravel()).reshape(self.ny, self.nx)
-            flux_e, flux_n = self._face_flux(us, vs)
-            net = flux_e - flux_e[:, m.im] + flux_n[1:] - flux_n[:-1]
-            rhs = -net.ravel() / dt
-            phi = self._pressure_lu.solve(rhs).reshape(self.ny, self.nx)
-            phix, phiy = self.gradient(phi)
+            us_e, us_n = self._face_flux(us, vs)
+            # Rhie-Chow damping (explicit): replace the *interpolated cell*
+            # pressure gradient in the face flux by the *compact* face
+            # difference.  Only the compact difference enters the implicit
+            # operator below; if the interpolated gradient were made implicit as
+            # well, the two would cancel at leading order (measured: both are
+            # O(h) phi'' with equal magnitude and opposite sign) and the Poisson
+            # operator would degenerate.
+            p_n = self.p
+            gp_x, gp_y = gpx, gpy
+            rc_e = dt * (0.5 * (gp_x[:, m.ip] + gp_x) - (p_n[:, m.ip] - p_n) / m.dn_e)
+            us_e = us_e + m.area_e * rc_e
+            gp_nx = 0.5 * (gp_x[1:] + gp_x[:-1])
+            gp_ny = 0.5 * (gp_y[1:] + gp_y[:-1])
+            gp_dot_n = (gp_nx * m.unx_n[1:-1] + gp_ny * m.uny_n[1:-1])
+            d_n = (p_n[1:] - p_n[:-1]) / m.dn_n[1:-1]
+            us_n = us_n.copy()
+            us_n[1:-1] = us_n[1:-1] + m.area_n[1:-1] * dt * (gp_dot_n - d_n)
+            net = us_e - us_e[:, m.im] + us_n[1:] - us_n[:-1]
+            # (diag_prs - off) phi = sum_f c_f (phi_P - phi_N) = -net/dt, so that
+            # the flux correction below leaves net_new = net + dt*M(phi) = 0
+            phi = self._pressure_lu.solve(-net.ravel() / dt).reshape(self.ny, self.nx)
+            # flux correction: compact face differences of phi -> exact continuity
+            self._flux_e = us_e - dt * self.c_e * (phi[:, m.ip] - phi)
+            self._flux_n = np.zeros_like(us_n)
+            self._flux_n[1:-1] = us_n[1:-1] - dt * self.c_n[1:-1] * (phi[1:] - phi[:-1])
+            phix, phiy = self.compact_gradient(phi)
             self.u = us - dt * phix
             self.v = vs - dt * phiy
             self.p = self.p + phi
             self.steps += 1
+            self._flux_steps = self.steps
             if statistics is not None:
                 statistics.accumulate(self)
         return self
+
+    def refresh_fluxes(self):
+        """Recompute the face fluxes from the current cell velocities."""
+        self._flux_e, self._flux_n = self._face_flux(self.u, self.v)
+        self._flux_steps = self.steps
+
+    def flux_divergence(self):
+        """Discrete ``div u`` of the conservative (projected) face fluxes."""
+        m = self.mesh
+        flux_e, flux_n = self._flux_e, self._flux_n
+        net = flux_e - flux_e[:, m.im] + flux_n[1:] - flux_n[:-1]
+        return net / m.volume
 
     # --------------------------------------------------------- diagnostics
     def wall_shear(self, u=None, v=None):
