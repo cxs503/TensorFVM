@@ -57,8 +57,12 @@ def load_run(directory: Path) -> dict:
 def probe_pressure(fields, point) -> float:
     """Inverse-distance (1/r^2) interpolation of cell pressure at a probe point."""
     import numpy as np
-    centers = fields["cell_centers_m"]
-    pressure = fields["cell_pressure_pa"]
+    # The package exports structured cell centres as (ny, nx, 2) next to a flat
+    # (nx*ny,) pressure array, so flatten to a (n_cells, 2) table before use.
+    centers = np.asarray(fields["cell_centers_m"]).reshape(-1, 2)
+    pressure = np.asarray(fields["cell_pressure_pa"]).reshape(-1)
+    if centers.shape[0] != pressure.shape[0]:
+        raise ValueError(f"cell centre/pressure length mismatch: {centers.shape[0]} vs {pressure.shape[0]}")
     d2 = ((centers - np.asarray(point)) ** 2).sum(1)
     weight = 1.0 / np.maximum(d2, 1e-30)
     return float((weight * pressure).sum() / weight.sum())
@@ -166,7 +170,7 @@ def figures(runs: list[dict], reference: dict, tolerance: float, out: Path) -> l
 
     # 4. Fields of the finest grid (pressure and speed).
     from scipy.interpolate import griddata
-    centers = fields["cell_centers_m"]
+    centers = np.asarray(fields["cell_centers_m"]).reshape(-1, 2)
     xi = np.linspace(0.0, 2.2, 440)
     yi = np.linspace(0.0, 0.41, 84)
     XI, YI = np.meshgrid(xi, yi)
@@ -290,7 +294,8 @@ def analyze(args) -> int:
 
     lines = ["# CASE-CYLINDER-DRAG-FVM - reference vs computed", "",
              f"Reference: {reference['citation']}", "",
-             f"Source page: {reference['source_url']} (sha256 {reference['source_sha256'][:16]}...)",
+             f"Source page: {reference['source_url']} "
+    f"(sha256 {(reference.get('source_sha256') or 'unbound, see provenance')[:16]}...)",
              "", "| grid | C_D | err % | C_L | err % | p_diff (Pa) | err % | verdict |",
              "|---|---|---|---|---|---|---|---|"]
     for row in table:
