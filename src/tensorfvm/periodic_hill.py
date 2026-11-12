@@ -253,6 +253,19 @@ class PeriodicHillMesh:
         self.dn_n = dn_n
         if np.any(self.dn_e <= 0.0) or np.any(dn_n <= 0.0):
             raise ValueError("mesh has non-positive projected face distances")
+        # non-orthogonality of the eta faces: the centre-to-centre vector is
+        # ``d = alpha n + beta t`` with ``t = (-n_y, n_x)``.  On this
+        # terrain-following mesh the slant is not small (|beta/alpha| up to
+        # ~0.79 over the hill), so the two-point normal derivative
+        # ``(phi_N - phi_P)/alpha`` alone is only first-order consistent; the
+        # deferred correction below removes the tangential part.
+        self.beta_n = np.zeros((ny + 1, nx))
+        dy_d = self.yc[1:] - self.yc[:-1]
+        dx_d = self.xc[1:] - self.xc[:-1]
+        self.beta_n[1:-1] = (-dx_d * self.uny_n[1:-1] + dy_d * self.unx_n[1:-1])
+        # east/west faces are vertical, so their non-orthogonality is simply the
+        # centre-to-centre y offset (t = (0, 1))
+        self.beta_e = self.yc[:, self.ip] - self.yc
         # wall tangent pointing downstream along each wall
         tau_b = np.stack([-self.uny_n[0], self.unx_n[0]], axis=-1)
         tau_t = np.stack([self.uny_n[-1], -self.unx_n[-1]], axis=-1)
@@ -280,13 +293,19 @@ class PeriodicHillMesh:
         # east / west faces: n = (+-1, 0), area = area_e, distance = dn_e
         a11 += self.area_e / self.dn_e
         a11 += self.area_e[:, self.im] / self.dn_e[:, self.im]
-        # eta faces (both walls included: Neumann -> n n^T only)
+        # eta faces: interior levels only (1..ny-1).  A Neumann wall face
+        # carries no two-point information (zero jump), so feeding it into the
+        # normalisation would bias the stencil towards a zero normal derivative
+        # in the wall-adjacent cells and destroy exactness on linear fields.
         nx_n, ny_n, area_n = self.unx_n, self.uny_n, self.area_n
-        for level in (np.arange(ny) + 1, np.arange(ny)):
-            a = area_n[level] / self.dn_n[level]
-            a11 += a * nx_n[level] ** 2
-            a12 += a * nx_n[level] * ny_n[level]
-            a22 += a * ny_n[level] ** 2
+        interior = np.arange(1, ny)
+        a = area_n[interior] / self.dn_n[interior]
+        w11 = a * nx_n[interior] ** 2
+        w12 = a * nx_n[interior] * ny_n[interior]
+        w22 = a * ny_n[interior] ** 2
+        for w, acc in ((w11, a11), (w12, a12), (w22, a22)):
+            acc[:-1] += w          # face L is the north face of cell L-1
+            acc[1:] += w           # ... and the south face of cell L
         det = a11 * a22 - a12 * a12
         if np.any(det <= 0.0):
             raise ValueError("degenerate compact-gradient stencil")
@@ -418,41 +437,97 @@ class PeriodicHillSolver:
         out[1:] += contrib / m.volume[1:]
         return out
 
-    def compact_gradient(self, field):
-        """Compact face-normal gradient (see :meth:`PeriodicHillMesh._compact_weights`).
+    def compact_gradient(self, field, nonorthogonal_sweeps=2):
+        """Compact face-normal gradient on the terrain-following mesh.
 
-        Each face supplies the normal-derivative equation
-        ``(grad phi) . n_f = (phi_N - phi_P) / d_n``, so it contributes
-        ``|A_f| / d_n^2 * n_f * (phi_N - phi_P)``; the per-cell 2x2 inverse of
-        ``sum_f |A_f| / d_n * n_f n_f^T`` turns that set into a gradient.  This is the pressure-gradient operator of the projection:
-        the momentum predictor, the velocity corrector and the pressure Poisson
-        operator in :meth:`_build` all derive from the *same* compact face
-        differences ``(phi_N - phi_P) / d_n``.  The wide central stencil of
-        :meth:`gradient` does not have that property (it annihilates the
-        odd-even mode exactly, see the module log), so it is kept only as a
-        diagnostic.
+        Every face supplies one equation ``(grad phi) . n_f = g_n``; the per-cell
+        2x2 inverse of ``sum_f |A_f| / d_n * n_f n_f^T`` turns the set into a
+        gradient.  This is the pressure-gradient operator of the projection: the
+        momentum predictor, the velocity corrector and the pressure Poisson
+        operator in :meth:`_build` all derive from the *same* face coefficients
+        ``|A_f| / d_n``.  The wide central stencil of :meth:`gradient` does not
+        have that property (it annihilates the odd-even mode exactly, see the
+        module log), so it is kept only as a diagnostic.
+
+        Two corrections relative to round 2 (mission 16672):
+
+        * **south-face index shift (defect vi).**  The eta-face term was written
+          as ``c_n[j] n[j] jump[j]`` with ``jump[j] = phi[j+1] - phi[j]``, i.e.
+          every cell was handed its *north* jump as if it were the south one.
+          Row 0 therefore received a wall face driven by an interior jump and
+          row ``ny-1`` lost its south face altogether, so the operator was not
+          even exact on a linear field (measured: ``|grad(0.7x + 0.3y) - (0.7,
+          0.3)|_inf = 11.19`` on the 32x16 hill mesh).  The face jump now
+          belongs to the *level* ``L`` it sits on, and a face contributes the
+          same ``c_L n_L jump_L`` to both cells it separates (``L-1`` as north
+          face, ``L`` as south face).
+        * **non-orthogonal deferred correction.**  On this mesh
+          ``d = alpha n + beta t`` with ``|beta/alpha|`` up to 0.79, so
+          ``(phi_N - phi_P)/alpha`` differs from ``(grad phi).n`` at first
+          order.  The tangential part is supplied by the previous gradient
+          estimate and subtracted in ``nonorthogonal_sweeps`` explicit sweeps,
+
+              g_n = jump/alpha - (beta/alpha) * g_t,
+
+          where ``g_t`` is the average of ``grad phi . t`` over the two cells.
+          Only the two-point difference stays implicit in the Poisson operator
+          (making the correction implicit would degenerate the operator, see
+          ``docs/case-periodic-hills/ROUND2.md`` §5.3).
         """
         m = self.mesh
         phi = np.asarray(field, dtype=float)
-        b1 = np.zeros_like(phi)
-        b2 = np.zeros_like(phi)
         ce = m.area_e / m.dn_e ** 2
         ce_w = m.area_e[:, m.im] / m.dn_e[:, m.im] ** 2
-        b1 += ce * (phi[:, m.ip] - phi)                  # east face, n = (+1, 0)
-        b1 += ce_w * (phi - phi[:, m.im])                # west face, n = (-1, 0)
         cn = m.area_n / m.dn_n ** 2
+        b1 = ce * (phi[:, m.ip] - phi)                  # east face, n = (+1, 0)
+        b1 += ce_w * (phi - phi[:, m.im])               # west face, n = (-1, 0)
         jump = np.zeros_like(phi)
-        jump[:-1] = phi[1:] - phi[:-1]                   # cell j -> j+1
-        # north face of cell j is level j+1, outward normal +n[j+1]; the wall
-        # (j = ny-1) is Neumann and contributes a zero jump
-        b1 += cn[1:] * m.unx_n[1:] * jump
-        b2 += cn[1:] * m.uny_n[1:] * jump
-        # south face of cell j is level j, outward normal -n[j] and jump -(phi_j
-        # - phi_{j-1}); the two minus signs cancel
-        b1 += cn[:-1] * m.unx_n[:-1] * jump
-        b2 += cn[:-1] * m.uny_n[:-1] * jump
-        return (m.cg_i11 * b1 + m.cg_i12 * b2,
-                m.cg_i12 * b1 + m.cg_i22 * b2)
+        jump[1:] = phi[1:] - phi[:-1]                   # level L: phi_L - phi_{L-1}
+        # interior eta faces (levels 1..ny-1); the two wall levels are Neumann
+        # (dp/dn = 0, zero jump) and carry no two-point information at all
+        face_n = (cn[1:-1] * m.unx_n[1:-1], cn[1:-1] * m.uny_n[1:-1])
+        js = jump[1:]
+        c1 = face_n[0] * js
+        c2 = face_n[1] * js
+        b1[:-1] += c1
+        b1[1:] += c1
+        b2 = np.zeros_like(phi)
+        b2[:-1] += c2
+        b2[1:] += c2
+        gx = m.cg_i11 * b1 + m.cg_i12 * b2
+        gy = m.cg_i12 * b1 + m.cg_i22 * b2
+        if int(nonorthogonal_sweeps) <= 0:
+            return gx, gy
+        # The tangential part is estimated from the *wide* least-squares
+        # gradient (:meth:`gradient`), which is second-order accurate for smooth
+        # fields on this skewed mesh (measured 0.9 % at 64x32); iterating from
+        # the compact estimate itself does not converge because |beta/alpha|
+        # reaches ~1 in the hill columns.  One corrector pass per sweep, with the
+        # corrected gradient fed back, converges linearly (measured 2.5 % ->
+        # 0.87 % -> 0.30 % on 32x16 -> 64x32 -> 128x64).
+        pgx, pgy = self.gradient(phi)
+        beta_e = m.beta_e
+        for _ in range(int(nonorthogonal_sweeps)):
+            n1 = b1.copy()
+            n2 = b2.copy()
+            g_t_e = 0.5 * (pgy + pgy[:, m.ip])
+            d1 = -ce * beta_e * g_t_e
+            n1 += d1                 # east face, normal (+1, 0)
+            n1[:, m.ip] += d1        # ... same face, as the west face of cell i+1
+            beta = m.beta_n[1:-1]
+            tx = -m.uny_n[1:-1]
+            ty = m.unx_n[1:-1]
+            g_t = 0.5 * ((pgx[:-1] + pgx[1:]) * tx + (pgy[:-1] + pgy[1:]) * ty)
+            dc1 = -cn[1:-1] * beta * m.unx_n[1:-1] * g_t
+            dc2 = -cn[1:-1] * beta * m.uny_n[1:-1] * g_t
+            n1[:-1] += dc1
+            n1[1:] += dc1
+            n2[:-1] += dc2
+            n2[1:] += dc2
+            gx = m.cg_i11 * n1 + m.cg_i12 * n2
+            gy = m.cg_i12 * n1 + m.cg_i22 * n2
+            pgx, pgy = gx, gy
+        return gx, gy
 
     def gradient(self, field):
         """Weighted least-squares cell gradient (periodic in x, one-sided at walls)."""

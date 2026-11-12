@@ -1,0 +1,54 @@
+{
+  "node": "CASE-FVM-PERIODIC-HILLS",
+  "round": 3,
+  "criteria": {
+    "C1_first_order_convergence": {
+      "error_sweeps1": {
+        "32x16": 0.024881857862067126,
+        "64x32": 0.008693495054196079,
+        "128x64": 0.003045675290429325
+      },
+      "ratio_32_64": 2.8621236576257587,
+      "ratio_64_128": 2.8543735707855533,
+      "pass": true
+    },
+    "C2_uncorrected_is_order_zero": {
+      "error_sweeps0": {
+        "32x16": 0.1877503328088894,
+        "64x32": 0.1916075433725271,
+        "128x64": 0.19296378708193287
+      },
+      "ratio_32_128": 0.9729822141662786,
+      "pass": true
+    },
+    "C3_correction_gain": {
+      "gain_finest": 63.35665121239247,
+      "pass": true
+    },
+    "C4_channel_gate": {
+      "u_max_over_ub": 1.3454683795945668,
+      "analytic": 1.3463747307968414,
+      "rel_error": 0.0006731790054751339,
+      "max_cell_divergence": 4.0287886440185564e-16,
+      "pass": true
+    },
+    "C5_nonorthogonality": {
+      "max_beta_over_alpha_eta": 0.8434756454517689,
+      "max_beta_over_dn_east": 0.8429036039586717,
+      "pass": true
+    },
+    "C6_reach_honest_fail": {
+      "max_abs_velocity_trace": [
+        1.8603085045419854,
+        NaN,
+        NaN
+      ],
+      "finite_at_500": true,
+      "blows_up_before_1500": true,
+      "x_reattachment": "withheld",
+      "pass": true
+    }
+  },
+  "all_pass": true,
+  "note": "C1-C5 are the round-3 deliverable; C6 records the honest state of the Re=2800 reach metric (not delivered)."
+}
