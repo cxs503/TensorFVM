@@ -358,7 +358,18 @@ class PeriodicHillSolver:
     no-slip and impermeable; the streamwise direction wraps.
     """
 
-    def __init__(self, config: PeriodicHillConfig):
+    def __init__(self, config: PeriodicHillConfig, turbulence=None,
+                 turbulence_momentum_interval: int = 1):
+        """``turbulence`` is an optional eddy-viscosity closure provider.
+
+        Round 5 (mission 16880): passing e.g.
+        ``SpalartAllmaras(solver)`` (see :mod:`tensorfvm.periodic_hill_turbulence`)
+        turns the solver into 2D URANS -- the transport equation is advanced at
+        the end of every fractional step and the momentum operator is
+        re-factored with ``mu = nu + nu_t`` every
+        ``turbulence_momentum_interval`` steps.  With ``turbulence=None`` the
+        solver is bit-for-bit the round-4 laminar one.
+        """
         self.config = config
         self.mesh = PeriodicHillMesh(config)
         self.nx, self.ny = config.nx, config.ny
@@ -373,6 +384,9 @@ class PeriodicHillSolver:
         self._flux_e = None            # projected (divergence-free) face fluxes
         self._flux_n = None
         self._flux_steps = -1
+        self.nu_t = np.zeros((self.ny, self.nx))
+        self.turbulence = turbulence
+        self.turbulence_momentum_interval = max(1, int(turbulence_momentum_interval))
         self._build(config.time_step_s)
 
     # -------------------------------------------------------------- geometry
@@ -627,9 +641,7 @@ class PeriodicHillSolver:
         self.c_e = m.area_e / m.dn_e
         self.c_n = m.area_n / m.dn_n                     # all ny+1 eta levels
         vols = m.volume
-        rows, cols, vals = [], [], []
         prows, pcols, pvals = [], [], []
-        diag_mom = np.zeros((ny, nx))
         diag_prs = np.zeros((ny, nx))
         for j in range(ny):
             p = np.arange(j * nx, (j + 1) * nx)
@@ -637,19 +649,10 @@ class PeriodicHillSolver:
             ce_w = self.c_e[j, m.im]
             cn_s = self.c_n[j]                           # wall when j == 0
             cn_n = self.c_n[j + 1]                       # wall when j == ny - 1
-            # momentum: (1/Vol) sum_f c_f, wall Dirichlet enters the diagonal only
-            rows.append(p); cols.append(self._cell(j, np.arange(nx) + 1))
-            vals.append(ce_e / vols[j])
-            rows.append(p); cols.append(self._cell(j, np.arange(nx) - 1))
-            vals.append(ce_w / vols[j])
-            if j > 0:
-                rows.append(p); cols.append(self._cell(j - 1, np.arange(nx)))
-                vals.append(cn_s / vols[j])
-            if j < ny - 1:
-                rows.append(p); cols.append(self._cell(j + 1, np.arange(nx)))
-                vals.append(cn_n / vols[j])
-            diag_mom[j] = (ce_e + ce_w + cn_s + cn_n) / vols[j]
-            # pressure: same c_f, no volume division, walls are Neumann
+            # pressure operator: sum_f c_f (phi_P - phi_N), no volume division,
+            # both walls Neumann (they do not appear in the matrix at all).
+            # The momentum operator is assembled once by _assemble_momentum()
+            # below, because from round 5 on it takes a per-cell viscosity.
             prows.append(p); pcols.append(self._cell(j, np.arange(nx) + 1))
             pvals.append(ce_e)
             prows.append(p); pcols.append(self._cell(j, np.arange(nx) - 1))
@@ -662,13 +665,7 @@ class PeriodicHillSolver:
                 pvals.append(cn_n)
             diag_prs[j] = (ce_e + ce_w
                            + (cn_s if j > 0 else 0.0) + (cn_n if j < ny - 1 else 0.0))
-        off = sparse.csr_matrix(
-            (np.concatenate(vals), (np.concatenate(rows), np.concatenate(cols))), shape=(n, n))
-        # L = (1/Vol) sum_f c_f (phi_N - phi_P); wall Dirichlet already in diag_mom
-        self.laplacian = off - sparse.diags(diag_mom.ravel())
-        self.momentum = (sparse.diags(np.full(n, 1.0 / self.time_step_s))
-                         - self.nu * self.laplacian).tocsc()
-        self._momentum_lu = spla.splu(self.momentum)
+        self._assemble_momentum(np.full((ny, nx), self.nu))
         p_off = sparse.csr_matrix(
             (np.concatenate(pvals), (np.concatenate(prows), np.concatenate(pcols))),
             shape=(n, n))
@@ -693,6 +690,71 @@ class PeriodicHillSolver:
             raise RuntimeError(
                 "bulk-velocity response is not positive definite "
                 f"(gain={self._bulk_gain!r}); cannot impose u_b")
+
+    # ------------------------------------------------- per-cell viscosity
+    def _assemble_momentum(self, mu_cell):
+        """Assemble ``M = I/dt - (1/Vol) sum_f c_f mu_f (phi_N - phi_P)``.
+
+        ``mu_cell`` is the *total* kinematic viscosity (``nu + nu_t``) per cell.
+        Faces use the arithmetic mean of the two neighbouring cells; the two
+        walls are Dirichlet with the adjacent cell's value (the wall-normal
+        distance is already inside ``c_f``), so a uniform ``mu_cell`` reproduces
+        the round-4 operator bit-for-bit (``0.5*(a+a) == a``).
+        """
+        from scipy import sparse
+        from scipy.sparse import linalg as spla
+
+        m = self.mesh
+        ny, nx = self.ny, self.nx
+        n = self.n
+        c_e, c_n = self.c_e, self.c_n
+        vols = m.volume
+        mu = np.asarray(mu_cell, dtype=float)
+        if mu.shape != (ny, nx):
+            raise ValueError(f"mu_cell must be {(ny, nx)}, got {mu.shape}")
+        if not np.all(np.isfinite(mu)) or np.any(mu <= 0.0):
+            raise ValueError("mu_cell must be finite and positive")
+        mue = 0.5 * (mu + mu[:, m.ip])
+        muw = 0.5 * (mu + mu[:, m.im])
+        rows, cols, vals = [], [], []
+        diag = np.zeros((ny, nx))
+        for j in range(ny):
+            p = np.arange(j * nx, (j + 1) * nx)
+            ce_e = c_e[j] * mue[j]
+            ce_w = c_e[j, m.im] * muw[j]
+            cn_s = c_n[j] * mu[j]                       # wall when j == 0
+            cn_n = c_n[j + 1] * (mu[j] if j == ny - 1 else 0.5 * (mu[j] + mu[j + 1]))
+            rows.append(p); cols.append(self._cell(j, np.arange(nx) + 1))
+            vals.append(ce_e / vols[j])
+            rows.append(p); cols.append(self._cell(j, np.arange(nx) - 1))
+            vals.append(ce_w / vols[j])
+            if j > 0:
+                rows.append(p); cols.append(self._cell(j - 1, np.arange(nx)))
+                vals.append(cn_s / vols[j])
+            if j < ny - 1:
+                rows.append(p); cols.append(self._cell(j + 1, np.arange(nx)))
+                vals.append(cn_n / vols[j])
+            diag[j] = (ce_e + ce_w + cn_s + cn_n) / vols[j]
+        off = sparse.csr_matrix(
+            (np.concatenate(vals), (np.concatenate(rows), np.concatenate(cols))), shape=(n, n))
+        self.mu_cell = mu
+        self.laplacian = off - sparse.diags(diag.ravel())
+        self.momentum = (sparse.diags(np.full(n, 1.0 / self.time_step_s))
+                         - self.laplacian).tocsc()
+        self._momentum_lu = spla.splu(self.momentum)
+        self._bulk_response = self._momentum_lu.solve(np.ones(n)).reshape(ny, nx)
+        self._bulk_gain = self.bulk_velocity(self._bulk_response)
+        if not np.isfinite(self._bulk_gain) or self._bulk_gain <= 0.0:
+            raise RuntimeError(
+                "bulk-velocity response is not positive definite "
+                f"(gain={self._bulk_gain!r}); cannot impose u_b")
+        return self.momentum
+
+    def set_eddy_viscosity(self, nu_t):
+        """Refresh the momentum operator with ``mu = nu + max(nu_t, 0)``."""
+        nu_t = np.asarray(nu_t, dtype=float)
+        self.nu_t = np.maximum(nu_t, 0.0)
+        return self._assemble_momentum(self.nu + self.nu_t)
 
     def set_time_step(self, dt, rebuild=True):
         if rebuild or float(dt) != self.time_step_s:
@@ -768,6 +830,12 @@ class PeriodicHillSolver:
             self.p = self.p + phi
             self.steps += 1
             self._flux_steps = self.steps
+            if self.turbulence is not None:
+                nu_t = self.turbulence.update(dt)
+                if self.steps % self.turbulence_momentum_interval == 0:
+                    self.set_eddy_viscosity(nu_t)
+                else:
+                    self.nu_t = np.maximum(nu_t, 0.0)
             if statistics is not None:
                 statistics.accumulate(self)
         return self
