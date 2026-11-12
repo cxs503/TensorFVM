@@ -1,0 +1,204 @@
+{
+  "artifacts": "/root/tp-agent/work/m15463/runs/poiseuille-channel",
+  "declared_plan_cases": 6,
+  "cases_in_artifact": [
+    "mesh-ny8",
+    "mesh-ny16",
+    "mesh-ny32",
+    "re-1000",
+    "aspect-8"
+  ],
+  "missing_from_plan": [
+    "re-10"
+  ],
+  "production_case": "mesh-ny32",
+  "production_passed": true,
+  "all_cases_passed": false,
+  "observed_orders": [
+    {
+      "pair": "8->16",
+      "velocity_l2_order": 1.9140491136823432,
+      "pressure_gradient_order": 1.9216046451265751
+    },
+    {
+      "pair": "16->32",
+      "velocity_l2_order": 1.98620785018228,
+      "pressure_gradient_order": 1.9570019328319783
+    }
+  ],
+  "tolerance": 0.02,
+  "rows": [
+    {
+      "case": "mesh-ny8",
+      "registered_in_json": {
+        "velocity_l2": 0.00810590757469967,
+        "velocity_linf": 0.009415398315766618,
+        "u_max": 1.4678831820920175,
+        "u_max_sampled_reference": 1.4765625,
+        "u_max_relative_error": 0.005878056572601896,
+        "u_max_continuous_reference": 1.5,
+        "u_max_continuous_relative_error": 0.02141121193865499,
+        "bar_velocity_measured": 1.0078124988634773,
+        "bar_velocity_discrete_reference": 1.0078125,
+        "flux_conservation_error": 1.1277124006363209e-09,
+        "pressure_gradient": -0.11660173347895762,
+        "pressure_gradient_relative_error": 0.028318887675353108,
+        "tau_w_half_cell": 0.05850392335105463,
+        "tau_w_half_cell_relative_error": 0.024934610815756146,
+        "tau_w_quadratic": 0.05844663125816213,
+        "tau_w_quadratic_relative_error": 0.02588947903063114,
+        "poiseuille": 93.51461001305941,
+        "poiseuille_half_cell": 93.6062773616874,
+        "mass_inlet": 1.0078125,
+        "mass_outlet": 1.0078128535842117,
+        "relative_mass_imbalance": 3.5084324880622016e-07,
+        "max_cell_divergence": 0.00023596450243627595,
+        "poiseuille_relative_error": 0.02588947903063114,
+        "passed": false
+      },
+      "recomputed_from_csv": {
+        "velocity_l2": 0.00810590757469967,
+        "velocity_linf": 0.014123097473649926,
+        "u_max_exact": 1.4765625,
+        "velocity_l2_rel_diff": 0.0
+      },
+      "csv_vs_json_l2_consistent": true,
+      "zero_filled_record": false
+    },
+    {
+      "case": "mesh-ny16",
+      "registered_in_json": {
+        "velocity_l2": 0.002150876383793479,
+        "velocity_linf": 0.003095864085856437,
+        "u_max": 1.4918446060570059,
+        "u_max_sampled_reference": 1.494140625,
+        "u_max_relative_error": 0.001536681959232678,
+        "u_max_continuous_reference": 1.5,
+        "u_max_continuous_relative_error": 0.005436929295329425,
+        "bar_velocity_measured": 1.0019531219124902,
+        "bar_velocity_discrete_reference": 1.001953125,
+        "flux_conservation_error": 3.081491265750488e-09,
+        "pressure_gradient": -0.11910299100317334,
+        "pressure_gradient_relative_error": 0.007475074973555448,
+        "tau_w_half_cell": 0.059609999880844235,
+        "tau_w_half_cell_relative_error": 0.006500001985929385,
+        "tau_w_quadratic": 0.05960709709937561,
+        "tau_w_quadratic_relative_error": 0.006548381677073135,
+        "poiseuille": 95.37135535900097,
+        "poiseuille_half_cell": 95.37599980935077,
+        "mass_inlet": 1.001953125,
+        "mass_outlet": 1.0019531578143521,
+        "relative_mass_imbalance": 3.275038652574974e-08,
+        "max_cell_divergence": 6.505297254071617e-05,
+        "poiseuille_relative_error": 0.006548381677073205,
+        "passed": true
+      },
+      "recomputed_from_csv": {
+        "velocity_l2": 0.002150876383793479,
+        "velocity_linf": 0.004643796128784655,
+        "u_max_exact": 1.494140625,
+        "velocity_l2_rel_diff": 0.0
+      },
+      "csv_vs_json_l2_consistent": true,
+      "zero_filled_record": false
+    },
+    {
+      "case": "mesh-ny32",
+      "registered_in_json": {
+        "velocity_l2": 0.0005428843354789008,
+        "velocity_linf": 0.0008732304035631022,
+        "u_max": 1.4979610282557756,
+        "u_max_sampled_reference": 1.49853515625,
+        "u_max_relative_error": 0.00038312614277340537,
+        "u_max_continuous_reference": 1.5,
+        "u_max_continuous_relative_error": 0.0013593144961496033,
+        "bar_velocity_measured": 1.0004882599867133,
+        "bar_velocity_discrete_reference": 1.00048828125,
+        "flux_conservation_error": 2.1252909289831374e-08,
+        "pressure_gradient": -0.11976896354317494,
+        "pressure_gradient_relative_error": 0.0019253038068754494,
+        "tau_w_half_cell": 0.05990069764845048,
+        "tau_w_half_cell_relative_error": 0.0016550391924920194,
+        "tau_w_quadratic": 0.05990026938289233,
+        "tau_w_quadratic_relative_error": 0.0016621769517944965,
+        "poiseuille": 95.84043101262772,
+        "poiseuille_half_cell": 95.84111623752077,
+        "mass_inlet": 1.00048828125,
+        "mass_outlet": 1.0004882873305259,
+        "relative_mass_imbalance": 6.077558302831654e-09,
+        "max_cell_divergence": 6.723595802866585e-05,
+        "poiseuille_relative_error": 0.0016621769517946028,
+        "passed": true
+      },
+      "recomputed_from_csv": {
+        "velocity_l2": 0.0005428843354789008,
+        "velocity_linf": 0.0013098456053446533,
+        "u_max_exact": 1.49853515625,
+        "velocity_l2_rel_diff": 0.0
+      },
+      "csv_vs_json_l2_consistent": true,
+      "independent_checks": {
+        "dpdx": -0.11976896354317491,
+        "dpdx_rel": 0.0019253038068756806,
+        "tau_w_from_momentum": 0.05988448177158746,
+        "tau_w_rel": 0.0019253038068756806,
+        "poiseuille": 95.81517083453993,
+        "poiseuille_rel": 0.0019253038068757593,
+        "all_within_tolerance": true
+      },
+      "zero_filled_record": false
+    },
+    {
+      "case": "re-1000",
+      "registered_in_json": {
+        "passed": false,
+        "velocity_l2": 0,
+        "velocity_linf": 0,
+        "u_max_relative_error": 0,
+        "pressure_gradient_relative_error": 0,
+        "tau_w_quadratic_relative_error": 0,
+        "poiseuille_relative_error": 0,
+        "flux_conservation_error": 0,
+        "poiseuille": 0
+      },
+      "zero_filled_record": true
+    },
+    {
+      "case": "aspect-8",
+      "registered_in_json": {
+        "velocity_l2": 0.002304488275662739,
+        "velocity_linf": 0.003161339809454674,
+        "u_max": 1.4914083187038547,
+        "u_max_sampled_reference": 1.494140625,
+        "u_max_relative_error": 0.0018286808151978951,
+        "u_max_continuous_reference": 1.5,
+        "u_max_continuous_relative_error": 0.005727787530763528,
+        "bar_velocity_measured": 1.0019531238852686,
+        "bar_velocity_discrete_reference": 1.001953125,
+        "flux_conservation_error": 1.112558452555906e-09,
+        "pressure_gradient": -0.11926345813854218,
+        "pressure_gradient_relative_error": 0.006137848845481793,
+        "tau_w_half_cell": 0.05964224166365169,
+        "tau_w_half_cell_relative_error": 0.005962638939138501,
+        "tau_w_quadratic": 0.05964166120142188,
+        "tau_w_quadratic_relative_error": 0.005972313309635334,
+        "poiseuille": 95.426657922275,
+        "poiseuille_half_cell": 95.4275866618427,
+        "mass_inlet": 1.001953125,
+        "mass_outlet": 1.0019531273824152,
+        "relative_mass_imbalance": 2.3777710699243016e-09,
+        "max_cell_divergence": 2.234161158514228e-05,
+        "poiseuille_relative_error": 0.005972313309635435,
+        "passed": true
+      },
+      "recomputed_from_csv": {
+        "velocity_l2": 0.002304488275662739,
+        "velocity_linf": 0.0047420097141820106,
+        "u_max_exact": 1.494140625,
+        "velocity_l2_rel_diff": 0.0
+      },
+      "csv_vs_json_l2_consistent": true,
+      "zero_filled_record": false
+    }
+  ]
+}
