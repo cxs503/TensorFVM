@@ -1,0 +1,74 @@
+{
+  "feature_slug": "REPRO-FVM-MIXING-LAYER",
+  "title": "Temporally developing plane mixing layer in TensorFVM: linear growth and roll-up spreading",
+  "status": "in_progress",
+  "round": 1,
+  "external_anchor": {
+    "status": "WITHHELD",
+    "reason": "offline cell: no internet egress and knowledge engine :8021 unreachable; a published spreading rate cannot be quoted without hand transcription",
+    "candidate": "Rogers & Moser (1994) / Michalke (1964) - to be filled from the original text when reachable"
+  },
+  "quantitative_targets": {
+    "linear_growth_alpha_0p5_Re500": {
+      "value": 0.18371977881679832,
+      "tolerance": 0.1,
+      "unit": "sigma*delta/U",
+      "source": "tensorfvm.mixing_layer.orr_sommerfeld_modes"
+    },
+    "diffusion_theta": {
+      "value": 0.0,
+      "tolerance": 0.05,
+      "unit": "relative error",
+      "source": "exact heat-kernel solution"
+    },
+    "spreading_rate": {
+      "value": 0.016651351870362922,
+      "tolerance": 0.1,
+      "unit": "dtheta/dt (U=1, delta=1)",
+      "source": "self-convergence"
+    }
+  },
+  "method_survey": {
+    "survey_date": "2026-11-12",
+    "key_findings": [
+      "knowledge engine :8021 offline and no internet egress: literature spreading rate not quotable; exact heat-kernel solution + independent Rayleigh/Orr-Sommerfeld eigenvalues used as anchors",
+      "a single-wavelength periodic box cannot represent subharmonic pairing: the layer saturates near tU/delta~28 and then oscillates, so the spreading rate is only defined on the growth window",
+      "second-order central diffusion makes sigma rise slightly with refinement (48x128 -> 144x384: +0.8 percent) while the linear-phase error stays under 3 percent"
+    ],
+    "selected_approach": "reuse the existing FFT/DCT projection and staggered MAC structure; add a mixing_layer module plus an independent Rayleigh/Orr-Sommerfeld solver",
+    "code_pointers": [
+      "src/tensorfvm/mixing_layer.py",
+      "scripts/verify_mixing_layer.py",
+      "tests/test_mixing_layer.py",
+      "docs/repro-mixing-layer-temporal/REPORT.md"
+    ]
+  },
+  "current_round_m15435": {
+    "artifacts": [
+      "docs/repro-mixing-layer-temporal/run/summary.json",
+      "docs/repro-mixing-layer-temporal/run/table.md",
+      "docs/repro-mixing-layer-temporal/run/stability.json",
+      "docs/repro-mixing-layer-temporal/run/diffusion.json",
+      "docs/repro-mixing-layer-temporal/run/linear.json",
+      "docs/repro-mixing-layer-temporal/run/nonlinear.json",
+      "docs/repro-mixing-layer-temporal/run/self_similarity.json"
+    ],
+    "checks_passed": [
+      "linear growth vs Orr-Sommerfeld (2.1 percent)",
+      "diffusion vs exact heat kernel (0.0004 percent)",
+      "OS inviscid limit vs Rayleigh (0.010 percent)",
+      "spreading rate grid convergence (0.4 percent)",
+      "mean-profile collapse (0.023)"
+    ],
+    "open_items": [
+      "external literature anchor (WITHHELD)",
+      "subharmonic pairing in a 2-wavelength box",
+      "three-dimensional secondary instability"
+    ]
+  },
+  "code_pointers": [
+    "src/tensorfvm/mixing_layer.py",
+    "scripts/verify_mixing_layer.py",
+    "tests/test_mixing_layer.py"
+  ]
+}
