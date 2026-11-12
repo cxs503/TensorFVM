@@ -1,0 +1,56 @@
+{
+ "rerun_grid": [
+  120,
+  40
+ ],
+ "pass_count": 6,
+ "items_total": 8,
+ "equal_to_committed": {
+  "all_graded_pass": true,
+  "per_grid": true,
+  "convergence": true
+ },
+ "all_graded_pass": false,
+ "recomputed_items": {
+  "p2/p1": {
+   "got": 10.467838832604375,
+   "rel_error": 0.01301666121977818,
+   "pass": true
+  },
+  "rho2/rho1": {
+   "got": 3.8075117103644964,
+   "rel_error": -0.012867334349945359,
+   "pass": true
+  },
+  "u2/u1": {
+   "got": 0.2293746612390499,
+   "rel_error": -0.11526916379223606,
+   "pass": false
+  },
+  "M2": {
+   "got": 0.4150102327295989,
+   "rel_error": -0.12664535992542347,
+   "pass": false
+  },
+  "p_stag/p1": {
+   "got": 11.72407025081728,
+   "rel_error": -0.027932628839711815,
+   "pass": true
+  },
+  "rho_stag/rho1": {
+   "got": 4.199114324635957,
+   "rel_error": -0.02515923060898062,
+   "pass": true
+  },
+  "mass_budget_drift": {
+   "got": -5.035025054989373e-16,
+   "rel_error": -5.035025054989373e-16,
+   "pass": true
+  },
+  "energy_budget_drift": {
+   "got": 0.002858265095226436,
+   "rel_error": 0.002858265095226436,
+   "pass": true
+  }
+ }
+}
