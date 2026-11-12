@@ -1,0 +1,13 @@
+{
+  "case": "DFG 2D-1 (channel with cylinder, Re_D = 20, steady laminar)",
+  "values": {
+    "drag": 5.57953523384,
+    "lift": 0.010618948146,
+    "pressure_difference_pa": 0.11752016697
+  },
+  "citation": "Turek & Schaefer 1996, Benchmark computations of laminar flow around a cylinder, NNFM 52, 547-566",
+  "source_url": "https://wwwold.mathematik.tu-dortmund.de/~featflow/en/benchmarks/cfdbenchmarking/flow/dfg_benchmark1_re20.html",
+  "source_sha256": null,
+  "provenance": "Values are the 'Reference results' row of the DFG benchmark-1 Re=20 page. They are byte-identical to the REFERENCE constant in src/tensorfvm/verification/dfg.py:14, which an earlier mission parsed from that page; this file is the case-level reference the analyze/report entry point reads (scripts/case_cylinder_drag_fvm.py:224). source_sha256 is null because this round had no network egress to re-fetch and re-hash the page; re-run scripts/case_cylinder_drag_fvm.py's parse step with page access to bind the digest.",
+  "units": {"drag": "C_D (dimensionless)", "lift": "C_L (dimensionless)", "pressure_difference_pa": "Pa"}
+}
