@@ -1,0 +1,453 @@
+{
+ "audit": "m15648 board audit of m15542 (CASE-FORWARD-STEP, TensorFVM); non-redo verification",
+ "audited_commit": "054dbb84acbebcf7f0aebc7d7e3653d4c2aa8a20 (agent/m15542, NOT merged: ECO TensorFVM HEAD 4704c5a8)",
+ "mission_self_report": {
+  "status": "succeeded",
+  "fail_stage": "",
+  "headline": ""
+ },
+ "platform_reports": [
+  {
+   "id": "14644",
+   "title": "CASE-FORWARD-STEP 返修轮: 超声速前台阶 (TensorFVM) — 测量缺陷修复 + 求解器稳健性修复 + 基准判分面"
+  }
+ ],
+ "artifacts": [
+  {
+   "path": "/root/tp-agent/work/m15542/docs/repro-fvm-forward-step/run/grading.json",
+   "exists": true,
+   "bytes": 7436,
+   "sha256": "8bcc9e0f99cb409c6147837017f188e661996ba1d114c02199cbca9f3c83b2c7"
+  },
+  {
+   "path": "/root/tp-agent/work/m15542/docs/repro-fvm-forward-step/run/run_120x40.json",
+   "exists": true,
+   "bytes": 802,
+   "sha256": "91a99b801fc0c374380d356b0b56efb38819a844df4d730841092bd869752576"
+  },
+  {
+   "path": "/root/tp-agent/work/m15542/docs/repro-fvm-forward-step/run/fields_120x40.npz",
+   "exists": true,
+   "bytes": 109945,
+   "sha256": "cb5f6272c139b019cc632b7421076e4a4b164e79e0c45b594965f88f27c3750e"
+  },
+  {
+   "path": "/root/tp-agent/work/m15542/docs/repro-fvm-forward-step/run/table.md",
+   "exists": true,
+   "bytes": 629,
+   "sha256": "afb15e4b9707b08dc6c78a4fde23a1150b4d45f314a291e76a899ed3537fd4a7"
+  },
+  {
+   "path": "/root/tp-agent/work/m15542/docs/repro-fvm-forward-step/REPORT-v2.md",
+   "exists": true,
+   "bytes": 9122,
+   "sha256": "cb7636404007c09094bd1e1c2538781b3d767e3fcac2731116b15d7c946cf256"
+  },
+  {
+   "path": "/root/tp-agent/work/m15542/docs/repro-fvm-forward-step/DESIGN-ADDENDUM-r1.md",
+   "exists": true,
+   "bytes": 3059,
+   "sha256": "bbf73ab6bd5f2bf08e3f56ba4ca8a00801064dfda75fd1581bba9b4eacdb7277"
+  },
+  {
+   "path": "docs/repro-fvm-forward-step/run/manifest.json",
+   "exists": true,
+   "bytes": 0,
+   "sha256": null,
+   "note": "figures/manifest.json 内嵌于提交树（本单 reviewed/run/figures/ 逐字节拷贝）"
+  }
+ ],
+ "grid_of_record": {
+  "declared": [
+   480,
+   160
+  ],
+  "produced": [],
+  "verdict": "never run"
+ },
+ "benchmark_referee": {
+  "table": "tensor_benchmark_cases",
+  "anchor": "CASE-FORWARD-STEP",
+  "rows": [],
+  "registered": false,
+  "tensorfvm_registered_anchors": [
+   "CASE-CAVITY-RE1000-FVM",
+   "GAP-FVM-TWOPHASE",
+   "REPRO-FVM-SOD1978"
+  ],
+  "consequence": "平台裁判表内无本锚点判据行：本轮容差/判据仅存在于仓内 grading.json（自声明面）"
+ },
+ "graded_delivered_grid": {
+  "grid": [
+   120,
+   40
+  ],
+  "t": 4.0,
+  "nsteps": 2834,
+  "positivity_fixes": 147,
+  "is_grid_of_record": false,
+  "pass_count": 6,
+  "items_total": 8,
+  "items": {
+   "p2/p1": {
+    "reference": 10.333333333333334,
+    "got": 10.467838832604375,
+    "rel_error": 0.01301666121977818,
+    "tolerance": 0.08,
+    "pass": true
+   },
+   "rho2/rho1": {
+    "reference": 3.857142857142857,
+    "got": 3.8075117103644964,
+    "rel_error": -0.012867334349945359,
+    "tolerance": 0.08,
+    "pass": true
+   },
+   "u2/u1": {
+    "reference": 0.25925925925925924,
+    "got": 0.2293746612390499,
+    "rel_error": -0.11526916379223606,
+    "tolerance": 0.08,
+    "pass": false
+   },
+   "M2": {
+    "reference": 0.47519096331149147,
+    "got": 0.4150102327295989,
+    "rel_error": -0.12664535992542347,
+    "tolerance": 0.08,
+    "pass": false
+   },
+   "p_stag/p1": {
+    "reference": 12.060964701266625,
+    "got": 11.72407025081728,
+    "rel_error": -0.027932628839711815,
+    "tolerance": 0.08,
+    "pass": true
+   },
+   "rho_stag/rho1": {
+    "reference": 4.307487393309508,
+    "got": 4.199114324635957,
+    "rel_error": -0.02515923060898062,
+    "tolerance": 0.08,
+    "pass": true
+   },
+   "mass_budget_drift": {
+    "reference": 0.0,
+    "got": -5.035025054989373e-16,
+    "rel_error": -5.035025054989373e-16,
+    "tolerance": 1e-06,
+    "pass": true
+   },
+   "energy_budget_drift": {
+    "reference": 0.0,
+    "got": 0.002858265095226436,
+    "rel_error": 0.002858265095226436,
+    "tolerance": 0.01,
+    "pass": true
+   }
+  }
+ },
+ "graded_finer_grid_uncommitted": {
+  "grid": [
+   240,
+   80
+  ],
+  "t": 4.0,
+  "nsteps": 5924,
+  "positivity_fixes": 19,
+  "pass_count": 2,
+  "items_total": 8,
+  "items": {
+   "p2/p1": {
+    "reference": 10.333333333333334,
+    "got": 9.374153773712301,
+    "rel_error": -0.09282382835042258,
+    "tolerance": 0.08,
+    "pass": false
+   },
+   "rho2/rho1": {
+    "reference": 3.857142857142857,
+    "got": 3.2698662214506213,
+    "rel_error": -0.15225690554983895,
+    "tolerance": 0.08,
+    "pass": false
+   },
+   "u2/u1": {
+    "reference": 0.25925925925925924,
+    "got": 0.1977170455801274,
+    "rel_error": -0.23737710990522287,
+    "tolerance": 0.08,
+    "pass": false
+   },
+   "M2": {
+    "reference": 0.47519096331149147,
+    "got": 0.3503195084442114,
+    "rel_error": -0.2627816278261711,
+    "tolerance": 0.08,
+    "pass": false
+   },
+   "p_stag/p1": {
+    "reference": 12.060964701266625,
+    "got": 11.905097206475876,
+    "rel_error": -0.012923302459742714,
+    "tolerance": 0.08,
+    "pass": true
+   },
+   "rho_stag/rho1": {
+    "reference": 4.307487393309508,
+    "got": 4.236345953282981,
+    "rel_error": -0.01651576279411182,
+    "tolerance": 0.08,
+    "pass": true
+   },
+   "mass_budget_drift": {
+    "reference": 0.0,
+    "got": 0.08343259545642132,
+    "rel_error": 0.08343259545642132,
+    "tolerance": 1e-06,
+    "pass": false
+   },
+   "energy_budget_drift": {
+    "reference": 0.0,
+    "got": -0.029213930682361576,
+    "rel_error": -0.029213930682361576,
+    "tolerance": 0.01,
+    "pass": false
+   }
+  },
+  "status": "worktree runs/ 未提交（git status: ?? runs/）；交付树 054dbb84 内无此网格"
+ },
+ "refinement_delta": {
+  "p2/p1": {
+   "err_120x40": 0.01301666121977818,
+   "err_240x80": -0.09282382835042258,
+   "moves_away_from_ref": true
+  },
+  "rho2/rho1": {
+   "err_120x40": -0.012867334349945359,
+   "err_240x80": -0.15225690554983895,
+   "moves_away_from_ref": true
+  },
+  "u2/u1": {
+   "err_120x40": -0.11526916379223606,
+   "err_240x80": -0.23737710990522287,
+   "moves_away_from_ref": true
+  },
+  "M2": {
+   "err_120x40": -0.12664535992542347,
+   "err_240x80": -0.2627816278261711,
+   "moves_away_from_ref": true
+  },
+  "p_stag/p1": {
+   "err_120x40": -0.027932628839711815,
+   "err_240x80": -0.012923302459742714,
+   "moves_away_from_ref": false
+  },
+  "rho_stag/rho1": {
+   "err_120x40": -0.02515923060898062,
+   "err_240x80": -0.01651576279411182,
+   "moves_away_from_ref": false
+  },
+  "mass_budget_drift": {
+   "err_120x40": -5.035025054989373e-16,
+   "err_240x80": 0.08343259545642132,
+   "moves_away_from_ref": true
+  },
+  "energy_budget_drift": {
+   "err_120x40": 0.002858265095226436,
+   "err_240x80": -0.029213930682361576,
+   "moves_away_from_ref": true
+  }
+ },
+ "repro_cmd": {
+  "declared": "python scripts/repro_fvm_forward_step.py --out docs/repro-fvm-forward-step/run --grids 120x40,240x80,480x160 --t-end 4",
+  "declared_script_writes": [
+   "(outdir / \"artifacts\" / \"forward_step.json\").write_text(",
+   "np.savez_compressed("
+  ],
+  "grader_expects": "fields_<tag>.npz + run_<tag>.json in the --runs dir (forward_step_benchmark.load_run)",
+  "match": false,
+  "actual_chain": "python scripts/forward_step_study.py --out <dir> --grids 120x40 --t-end 4 && python -m tensorfvm.compressible.forward_step_benchmark --runs <dir>",
+  "note": "declared repro_cmd 可执行（argparse 接受 --out/--grids/--t-end）但产物布局不同 → 不能复现被判工件"
+ },
+ "regrade": {
+  "rerun_grid": [
+   120,
+   40
+  ],
+  "pass_count": 6,
+  "items_total": 8,
+  "equal_to_committed": {
+   "all_graded_pass": true,
+   "per_grid": true,
+   "convergence": true
+  },
+  "all_graded_pass": false,
+  "recomputed_items": {
+   "p2/p1": {
+    "got": 10.467838832604375,
+    "rel_error": 0.01301666121977818,
+    "pass": true
+   },
+   "rho2/rho1": {
+    "got": 3.8075117103644964,
+    "rel_error": -0.012867334349945359,
+    "pass": true
+   },
+   "u2/u1": {
+    "got": 0.2293746612390499,
+    "rel_error": -0.11526916379223606,
+    "pass": false
+   },
+   "M2": {
+    "got": 0.4150102327295989,
+    "rel_error": -0.12664535992542347,
+    "pass": false
+   },
+   "p_stag/p1": {
+    "got": 11.72407025081728,
+    "rel_error": -0.027932628839711815,
+    "pass": true
+   },
+   "rho_stag/rho1": {
+    "got": 4.199114324635957,
+    "rel_error": -0.02515923060898062,
+    "pass": true
+   },
+   "mass_budget_drift": {
+    "got": -5.035025054989373e-16,
+    "rel_error": -5.035025054989373e-16,
+    "pass": true
+   },
+   "energy_budget_drift": {
+    "got": 0.002858265095226436,
+    "rel_error": 0.002858265095226436,
+    "pass": true
+   }
+  }
+ },
+ "reviewed_copy_integrity": [
+  {
+   "copy": "reviewed/src/tensorfvm/compressible/forward_step_benchmark.py",
+   "source": "/root/tp-agent/work/m15542/src/tensorfvm/compressible/forward_step_benchmark.py",
+   "identical": true,
+   "sha256": "f6c718e6ba39ac53acc9c914b21c398032ca68279787b7c150ac63e9aa116690"
+  },
+  {
+   "copy": "reviewed/src/tensorfvm/compressible/forward_step.py",
+   "source": "/root/tp-agent/work/m15542/src/tensorfvm/compressible/forward_step.py",
+   "identical": true,
+   "sha256": "ca6a9acf1a983e237454f7a86529304845c9bdab3569fefe5569eb7d9bafba31"
+  },
+  {
+   "copy": "reviewed/src/tensorfvm/compressible/solver.py",
+   "source": "/root/tp-agent/work/m15542/src/tensorfvm/compressible/solver.py",
+   "identical": true,
+   "sha256": "73d203c341954b86222f7eea09d21039fd1729bb073ce1737e72e1cc28482528"
+  },
+  {
+   "copy": "reviewed/src/tensorfvm/compressible/verification.py",
+   "source": "/root/tp-agent/work/m15542/src/tensorfvm/compressible/verification.py",
+   "identical": true,
+   "sha256": "df85609378dd4ad81ef17760aeed41cedc339a94f43e4ecf1b9e33b3029a8bb1"
+  },
+  {
+   "copy": "reviewed/src/tensorfvm/compressible/__main__.py",
+   "source": "/root/tp-agent/work/m15542/src/tensorfvm/compressible/__main__.py",
+   "identical": true,
+   "sha256": "4d690162afe0c7e908e4cf436c2fa083186447b0aab74fa8eb9add413b13d62f"
+  },
+  {
+   "copy": "reviewed/tests/test_forward_step_benchmark.py",
+   "source": "/root/tp-agent/work/m15542/tests/test_forward_step_benchmark.py",
+   "identical": true,
+   "sha256": "3d4afec8f790389a7712dd21dccc30905f541645595df71fbec07022105f9a08"
+  },
+  {
+   "copy": "reviewed/tests/test_repro_fvm_forward_step.py",
+   "source": "/root/tp-agent/work/m15542/tests/test_repro_fvm_forward_step.py",
+   "identical": true,
+   "sha256": "920c6f4bafa77f09cf0097041b0a843a4dd3e5a80448e9e662d8aad42e301b80"
+  },
+  {
+   "copy": "reviewed/scripts/forward_step_study.py",
+   "source": "/root/tp-agent/work/m15542/scripts/forward_step_study.py",
+   "identical": true,
+   "sha256": "45b2b8d8e82464a17c30909be287f0f2d92b69c670ff30d5df499413c58eab45"
+  },
+  {
+   "copy": "reviewed/scripts/repro_fvm_forward_step.py",
+   "source": "/root/tp-agent/work/m15542/scripts/repro_fvm_forward_step.py",
+   "identical": true,
+   "sha256": "9922f3ce1d465edbdc3cded3108d1763644946e8f7b6f8f3a8f43f0ceadb60fe"
+  }
+ ],
+ "reviewed_copy_all_identical": true,
+ "not_run": {
+  "independent_full_solver_rerun": "COMPLETED after the first draft: the audit ran scripts/forward_step_study.py --grids 120x40 --t-end 4 --threads 16 on the audited code (166.8 s, docs/audit-m15648/repro_run/) and regraded it -> 5/8 pass (delivered 6/8). Same configuration gives a different answer: nsteps 2834 -> 2829, positivity fixes 147 -> 2, mass drift -5e-16 -> +4.56e-4 (fails the 1e-6 identity), energy drift 2.86e-3 -> -1.26e-4, p2/p1 10.4678 -> 10.2218, u2/u1 0.2294 -> 0.2219, M2 0.4150 -> 0.4020. The cluster job cj1169 repeating this was still queued at close (not used).",
+  "grid_of_record_480x160": "not run by the audited mission and not run by this audit (multi-hour single-socket cost; the mission's own addendum documents the same blocker)",
+  "root_cause_of_mass_drift": "not diagnosed (this audit does not redo algorithms); recorded as an open defect with the measured 5.04e-16 -> 8.34e-2 swing"
+ },
+ "independence_limitations": "the audit ran in a different worktree (m15648) but against the audited tree's own code and artifacts; two of the reviewed sources are byte-identical copies (sha256 pinned) because the branch is unmerged; the platform referee table had no row for this anchor before this audit, so the tolerance used is the one pre-registered in the case's own DESIGN.md, which the audit re-derived from Rankine-Hugoniot and checked numerically",
+ "independent_rerun_120x40": {
+  "rerun_grid": [
+   120,
+   40
+  ],
+  "nsteps": 2829,
+  "positivity_fixes": 2,
+  "pass_count": 5,
+  "items_total": 8,
+  "items": {
+   "p2/p1": {
+    "delivered_got": 10.467838832604375,
+    "rerun_got": 10.221757397776765,
+    "rerun_rel_error": -0.010797671182893764,
+    "pass": true
+   },
+   "rho2/rho1": {
+    "delivered_got": 3.8075117103644964,
+    "rerun_got": 3.727063477063343,
+    "rerun_rel_error": -0.03372428372431857,
+    "pass": true
+   },
+   "u2/u1": {
+    "delivered_got": 0.2293746612390499,
+    "rerun_got": 0.22193781261409287,
+    "rerun_rel_error": -0.1439541513456417,
+    "pass": false
+   },
+   "M2": {
+    "delivered_got": 0.4150102327295989,
+    "rerun_got": 0.4020436121188107,
+    "rerun_rel_error": -0.153932538369279,
+    "pass": false
+   },
+   "p_stag/p1": {
+    "delivered_got": 11.72407025081728,
+    "rerun_got": 11.726282185627017,
+    "rerun_rel_error": -0.02774923266332585,
+    "pass": true
+   },
+   "rho_stag/rho1": {
+    "delivered_got": 4.199114324635957,
+    "rerun_got": 4.20062538580221,
+    "rerun_rel_error": -0.024808431865239622,
+    "pass": true
+   },
+   "mass_budget_drift": {
+    "delivered_got": -5.035025054989373e-16,
+    "rerun_got": 0.000455830428353179,
+    "rerun_rel_error": 0.000455830428353179,
+    "pass": false
+   },
+   "energy_budget_drift": {
+    "delivered_got": 0.002858265095226436,
+    "rerun_got": -0.0001255720191202319,
+    "rerun_rel_error": -0.0001255720191202319,
+    "pass": true
+   }
+  },
+  "note": "independent 16-thread re-run of the same 120x40 configuration by the audit (docs/audit-m15648/repro_run)"
+ }
+}
