@@ -586,7 +586,7 @@ Every item carries a `[[gap-status: open]]` or `[[gap-status: closed-by <paths>]
 1. **3D Lid-Driven Cavity**: Extend Ghia comparison to 3D  [[gap-status: open]]
 2. **Rotating Machinery**: MRF verification against literature
 3. **Heat Transfer**: Natural convection (de Vahl Davis 1983)
-4. **Compressible**: Isentropic vortex (exact solution)
+4. **Compressible**: Isentropic vortex (exact solution)  [[gap-status: closed-by src/tensorfvm/compressible/isentropic_vortex.py, tests/test_compressible_isentropic_vortex.py, docs/verification-compressible-isentropic-vortex/envelope.json]]
 5. **Multiphase**: Rising bubble (benchmark)
 
 ---
