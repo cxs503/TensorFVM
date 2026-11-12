@@ -52,13 +52,17 @@ For a prolate spheroid (``a > b = c``, eccentricity ``e = sqrt(1 - b^2/a^2)``)
 
     alpha0 = ((1 - e^2) / e^3) * (ln((1+e)/(1-e)) - 2e).                  (4)
 
-Both (3) and (4) are implemented here (:func:`lamb_ellipsoid_factors`,
-:func:`lamb_integral_factors`) and the tests require them to agree, so a typo in
-either route is caught.  The three physical limits are also pinned:
+An oblate spheroid (``a = b > c``) has the companion closed form (5) in
+:func:`lamb_ellipsoid_factors`.  Both closed forms and the defining integral (3)
+are implemented here and the tests require them to agree, so a typo in any route
+is caught.  The physical limits are also pinned:
 
 * ``e -> 0`` (sphere): ``alpha0 = beta0 = 2/3`` so ``k = 1/2`` for every axis --
   the classical added-mass coefficient of a sphere, ``M = 0.5 rho V``;
 * ``e -> 1`` (slender prolate): axial ``k -> 0``, transverse ``k -> 1``;
+* ``e -> 1`` (flat oblate): ``gamma0 -> 2`` so ``k_3 -> inf`` at fixed displaced
+  volume while the added mass itself keeps the finite disc value
+  ``M_33 -> (8/3) rho a**3``;
 * combination with the slender-body estimate ``m_perp ~ rho pi b^2 L`` shows the
   latter exceeds the exact value (see ``docs/verification-added-mass-potential``).
 
@@ -92,6 +96,26 @@ __all__ = [
     "spheroid_panels",
     "surface_quadrature",
 ]
+
+
+# ---------------------------------------------------------------------------
+# quadrature shared by the analytic anchor integrals
+# ---------------------------------------------------------------------------
+_GL_CACHE: dict[int, tuple[np.ndarray, np.ndarray]] = {}
+
+
+def _gauss_legendre(n: int) -> tuple[np.ndarray, np.ndarray]:
+    """Cached ``n``-point Gauss-Legendre nodes/weights on ``[-1, 1]``.
+
+    ``numpy.polynomial.legendre.leggauss`` costs O(n**2) Newton iterations
+    (seconds for n ~ 600); the anchor integrals below ask for the same rule on
+    every call, so caching keeps an aspect-ratio sweep cheap.
+    """
+    hit = _GL_CACHE.get(n)
+    if hit is None:
+        hit = np.polynomial.legendre.leggauss(n)
+        _GL_CACHE[n] = hit
+    return hit
 
 
 # ---------------------------------------------------------------------------
@@ -270,37 +294,64 @@ def sphere_added_mass(radius: float = 1.0, rho: float = 1.0) -> float:
 # ---------------------------------------------------------------------------
 # exact Lamb factors for spheroids / ellipsoids
 # ---------------------------------------------------------------------------
-def lamb_integral_factors(a: float, b: float, c: float) -> tuple[float, float, float]:
+def lamb_integral_factors(a: float, b: float, c: float, n: int = 400) -> tuple[float, float, float]:
     """Lamb ``alpha0, beta0, gamma0`` from the defining integral (equation 3).
 
-    The integral over ``lambda in [0, inf)`` is transformed with
-    ``lambda = u/(1-u)`` so plain Gauss-Legendre quadrature on ``[0, 1]``
-    converges exponentially (the branch point at ``u = 1`` is not touched).
-    Independent of :func:`lamb_ellipsoid_factors`; the tests require agreement.
+    The integral over ``lambda in [0, inf)`` is mapped with a **logarithmic**
+    substitution,
+
+        lambda = lmin**2 * exp(v),   dlambda = lambda dv,   lmin = min(a, b, c),
+
+    so the rule resolves every decade of ``lambda`` equally.  This matters when
+    the axes are far apart: the integrand of the flattened/slender expect is
+    concentrated at ``lambda ~ (minor axis)**2``, and the previous
+    ``lambda = u/(1-u)`` mapping -- which clusters its nodes towards
+    ``lambda -> inf`` -- returned ``alpha0+beta0+gamma0 = 0.53`` instead of ``2``
+    for ``c/a = 1e-3``, silently corrupting the flat-body anchor.  With the log
+    mapping the sum rule holds to round-off for ``c/a`` down to ``1e-6`` and the
+    route agrees with the closed forms of :func:`lamb_ellipsoid_factors` to
+    ``~1e-12`` for every spheroid (prolate and oblate).  The truncated tails
+    (``lambda -> 0``, ``lambda -> inf``) contribute below ``1e-15``.
+
+    Independent of :func:`lamb_ellipsoid_factors`, so a typo in either route is
+    caught by the tests.
     """
     axes = np.array([a, b, c], dtype=float)
     if np.any(axes <= 0.0):
         raise ValueError("ellipsoid semi-axes must be positive")
-    u, w = np.polynomial.legendre.leggauss(400)
-    u = 0.5 * (u + 1.0)          # [-1, 1] -> [0, 1]
-    w = 0.5 * w
-    lam = u / (1.0 - u)
-    dlam_du = 1.0 / (1.0 - u) ** 2
+    x, w = _gauss_legendre(n)
+    v_min, v_max = -45.0, 25.0
+    v = 0.5 * (x + 1.0) * (v_max - v_min) + v_min       # [-1, 1] -> [v_min, v_max]
+    w = 0.5 * w * (v_max - v_min)
+    lam = float(axes.min()) ** 2 * np.exp(v)            # dlambda = lambda dv
     delta = np.sqrt(np.prod([axes[k] ** 2 + lam for k in range(3)], axis=0))
     out = []
     for axis in range(3):
-        integrand = a * b * c / ((axes[axis] ** 2 + lam) * delta) * dlam_du
-        out.append(float(np.sum(w * integrand)))
+        out.append(float(np.sum(w * a * b * c / ((axes[axis] ** 2 + lam) * delta) * lam)))
     return (out[0], out[1], out[2])
 
 
 def lamb_ellipsoid_factors(a: float, b: float, c: float) -> tuple[float, float, float]:
-    """``alpha0, beta0, gamma0`` by the closed forms (equation 4 and permutations).
+    """``alpha0, beta0, gamma0`` from the closed forms; integral route otherwise.
 
-    * ``a == b == c``  -> sphere: ``(2/3, 2/3, 2/3)``;
-    * ``a != b == c``  -> prolate spheroid along x: closed form (4), and
-      ``beta0 = gamma0 = (2 - alpha0)/2`` from the sum rule;
-    * everything else  -> :func:`lamb_integral_factors`.
+    * ``a == b == c``: sphere, ``(2/3, 2/3, 2/3)`` (hence ``k = 1/2`` on every axis);
+    * ``a == b > c``: **oblate** spheroid with flattening
+      ``e = sqrt(1 - c^2/a^2)``, closed form
+
+          gamma0 = (2/e^2) * (1 - (sqrt(1 - e^2)/e) * arcsin(e)),
+          alpha0 = beta0 = (2 - gamma0)/2,                                 (5)
+
+      which gives ``gamma0 -> 2`` (``k_3 -> inf`` at fixed displaced volume) for
+      a flat circular disc ``e -> 1`` -- the disc's finite added mass
+      ``M_33 -> (8/3) rho a^3`` is the invariant form of that limit, see
+      ``benchmarks/added_mass_lamb``;
+    * ``b == c < a``: prolate spheroid, closed form (4);
+    * otherwise (three unequal axes): :func:`lamb_integral_factors`.
+
+    The oblate branch was added because without it the flattened family fell
+    through to the integral route, i.e. the "closed form vs integral" cross-check
+    of ``tests/test_added_mass_potential.py`` had no oblate instance at all and
+    the flat-disc limit was only reachable numerically.
     """
     axes = np.array([a, b, c], dtype=float)
     if np.any(axes <= 0.0):
@@ -308,18 +359,23 @@ def lamb_ellipsoid_factors(a: float, b: float, c: float) -> tuple[float, float, 
     if np.isclose(a, b) and np.isclose(b, c):
         third = 2.0 / 3.0
         return (third, third, third)
-    if not np.isclose(b, c):  # general triaxial ellipsoid
-        return lamb_integral_factors(a, b, c)
-    # prolate spheroid with the major axis along x (a > b = c)
-    if a < b:
-        raise ValueError("prolate spheroid requires a >= b")
-    e = np.sqrt(1.0 - (b / a) ** 2)
-    if b / a > 1.0 - 1e-12:
-        third = 2.0 / 3.0
-        return (third, third, third)
-    alpha0 = ((1.0 - e**2) / e**3) * (np.log((1.0 + e) / (1.0 - e)) - 2.0 * e)
-    beta0 = 0.5 * (2.0 - alpha0)
-    return (float(alpha0), float(beta0), float(beta0))
+    if np.isclose(a, b) and c < a:               # oblate spheroid, minor axis c
+        e = np.sqrt(1.0 - (c / a) ** 2)
+        if e == 0.0:                             # pragma: no cover - guarded above
+            third = 2.0 / 3.0
+            return (third, third, third)
+        gamma0 = (2.0 / e**2) * (1.0 - (np.sqrt(1.0 - e**2) / e) * np.arcsin(e))
+        alpha0 = 0.5 * (2.0 - gamma0)
+        return (float(alpha0), float(alpha0), float(gamma0))
+    if np.isclose(b, c) and a > b:               # prolate spheroid, major axis a
+        e = np.sqrt(1.0 - (b / a) ** 2)
+        if b / a > 1.0 - 1e-12:
+            third = 2.0 / 3.0
+            return (third, third, third)
+        alpha0 = ((1.0 - e**2) / e**3) * (np.log((1.0 + e) / (1.0 - e)) - 2.0 * e)
+        beta0 = 0.5 * (2.0 - alpha0)
+        return (float(alpha0), float(beta0), float(beta0))
+    return lamb_integral_factors(a, b, c)
 
 
 def lamb_spheroid_factors(a: float, b: float) -> tuple[float, float]:
