@@ -8,8 +8,17 @@ DOI: 10.1017/S0022112087000892
 
 The original DNS was performed at Re_tau = 180.  For practical validation the
 repository uses the Lee & Moser (2015) DNS at Re_tau = 182 as the numerical
-reference — the two datasets agree to within 1 % in the log region and the
-1-unit Reynolds-number difference is negligible for RANS-model grading.
+reference: no machine-readable KMM1987 table is available in this repository,
+and the 2-unit Reynolds-number difference (1 %) is small compared with the
+model error being graded.
+
+**WITHHELD**: an earlier revision of this docstring asserted that "the two
+datasets agree to within 1 % in the log region".  That claim is not checkable
+here -- the KMM1987 tables are not imported (no ``docs/.../kmm1987`` data, no
+digitised table, no DOI-resolvable copy in-tree) -- so it is withdrawn.  The
+substitution is a *documented proxy*, not an equivalence: this module grades
+RANS models against LM2015, and the anchor name keeps the KMM1987 label only
+because that is the slug recorded in ``feature_ledger``.
 
 Lee, M. & Moser, R. D. 2015 *Direct numerical simulation of turbulent channel
 flow up to Re_tau = 5200*. J. Fluid Mech. **774**, 395–415.
@@ -189,18 +198,31 @@ def validate_kmm1987(y_plus, u_plus, cf_model, bulk_u_plus_model, *,
     if dns is None:
         dns = load_kmm1987_reference()
 
-    # Primary metric: y+ > 30 to centreline (per task spec)
+    # Legacy metric: y+ > 30 to centreline (the literal anchor wording).
     log_dev = log_region_deviation(y_plus, u_plus, dns, low=30.0, high_fraction=None)
-    # Supplementary: narrow log region (30 < y+ < 0.2*Re_tau)
+    # Physical log layer: 30 < y+ < 0.2*Re_tau (~36 at Re_tau = 182)
     log_dev_narrow = log_region_deviation(y_plus, u_plus, dns, low=30.0, high_fraction=0.2)
 
     cf_dev = cf_deviation(cf_model, dns)
     bulk_dev = bulk_velocity_deviation(bulk_u_plus_model, dns)
 
     verdict = 'PASS' if log_dev['rms_relative'] < tolerance else 'FAIL'
+    verdict_log_layer = ('PASS' if log_dev_narrow['rms_relative'] < tolerance
+                         else 'FAIL')
 
     return dict(
         verdict=verdict,
+        # ``verdict`` is the legacy full-range grading (30 <= y+ <= centreline).
+        # Its denominator includes the outer/wake layer, where u+ is largest, so
+        # a near-constant u+ offset is divided down and the metric can pass
+        # without the log layer being reproduced (see
+        # :mod:`tensorfvm.verification.kmm180_windows` for the measured
+        # dilution, 6.32 % -> 3.63 % for SST at 512 cells).  A claim of the form
+        # "u+ within 5 % in the log layer" must therefore quote
+        # ``verdict_log_layer``; ``overall_verdict`` is PASS only when both do.
+        verdict_log_layer=verdict_log_layer,
+        overall_verdict=('PASS' if verdict == 'PASS' and verdict_log_layer == 'PASS'
+                         else 'FAIL'),
         tolerance=tolerance,
         log_region=log_dev,
         log_region_narrow=log_dev_narrow,
