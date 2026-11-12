@@ -1,0 +1,543 @@
+{
+  "module": "stokes_second_problem",
+  "timestamp": "2026-11-12T22:37:57.388788+00:00",
+  "working_point": {
+    "nu": 0.01,
+    "height": 1.0,
+    "rho": 1.0,
+    "amplitude": 1.0,
+    "ny_main": 64,
+    "dt_fraction": 0.005,
+    "n_phases": 10,
+    "womersley_study": 5.0
+  },
+  "limits": {
+    "couette_relative_error": 2.5087343313856536e-10,
+    "semi_infinite_relative_error": 2.708944180085382e-14,
+    "delta_slow": 99.99999999999999,
+    "delta_fast": 0.005,
+    "omega_slow": 2.0000000000000003e-06,
+    "omega_fast": 800.0
+  },
+  "criteria": [
+    {
+      "id": "A1",
+      "name": "closed-form PDE residual (numerical derivatives)",
+      "value": 1.585398478609612e-07,
+      "threshold": 1e-06,
+      "mode": "lt",
+      "verdict": "PASS",
+      "note": "max|residual|=7.927e-08 m/s^2"
+    },
+    {
+      "id": "A2",
+      "name": "omega->0 branch equals Couette",
+      "value": 2.5087343313856536e-10,
+      "threshold": 0.001,
+      "mode": "lt",
+      "verdict": "PASS",
+      "note": "delta = 100 H"
+    },
+    {
+      "id": "A3",
+      "name": "delta<<H branch equals the semi-infinite Stokes layer",
+      "value": 2.708944180085382e-14,
+      "threshold": 1e-09,
+      "mode": "lt",
+      "verdict": "PASS",
+      "note": "delta = H/200, y <= 20 delta"
+    },
+    {
+      "id": "A4",
+      "name": "closed-form wall shear vs central difference of the profile",
+      "value": 4.6356833370268844e-11,
+      "threshold": 1e-06,
+      "mode": "lt",
+      "verdict": "PASS",
+      "note": "4 phases, W=5"
+    },
+    {
+      "id": "A5",
+      "name": "semi-infinite wall-shear amplitude rho U0 sqrt(nu omega)",
+      "value": 0.0,
+      "threshold": 0.001,
+      "mode": "lt",
+      "verdict": "PASS",
+      "note": "ratio=1.000000000"
+    },
+    {
+      "id": "A5b",
+      "name": "semi-infinite wall-shear lead of 45 deg (plate convention)",
+      "value": 0.0,
+      "threshold": 0.5,
+      "mode": "lt",
+      "verdict": "PASS",
+      "note": "mu du/dy phase=-135.0000 deg, plate stress phase=45.000000 deg"
+    },
+    {
+      "id": "A6",
+      "name": "steady moving wall equals Couette (both wall_flux variants)",
+      "value": 1.24082966124206e-11,
+      "threshold": 1e-10,
+      "mode": "lt",
+      "verdict": "PASS",
+      "note": "half-cell: 1.241e-11 (314 steps); quadratic: 1.240e-11 (314 steps)"
+    },
+    {
+      "id": "B1",
+      "name": "solver vs closed form, W=2, ny=64, dt/T=5e-03",
+      "value": 0.0073502460108562555,
+      "threshold": 0.03,
+      "mode": "lt",
+      "verdict": "PASS",
+      "note": "10 phases, settled after 3 periods (600 steps), delta/H=0.500, 4.1 s"
+    },
+    {
+      "id": "B2",
+      "name": "solver vs closed form, W=5, ny=64, dt/T=5e-03",
+      "value": 0.006821451660896677,
+      "threshold": 0.03,
+      "mode": "lt",
+      "verdict": "PASS",
+      "note": "10 phases, settled after 6 periods (1200 steps), delta/H=0.200, 7.1 s"
+    },
+    {
+      "id": "B3",
+      "name": "solver vs closed form, W=10, ny=64, dt/T=5e-03",
+      "value": 0.007604959940627496,
+      "threshold": 0.03,
+      "mode": "lt",
+      "verdict": "PASS",
+      "note": "10 phases, settled after 7 periods (1400 steps), delta/H=0.100, 8.1 s"
+    },
+    {
+      "id": "B4a",
+      "name": "bulk-velocity amplitude, W=5",
+      "value": 0.0006661393305646968,
+      "threshold": 0.03,
+      "mode": "lt",
+      "verdict": "PASS",
+      "note": "1.409757e-01 vs 1.408818e-01 m/s"
+    },
+    {
+      "id": "B4b",
+      "name": "bulk-velocity phase, W=5",
+      "value": 0.3851269854335868,
+      "threshold": 5.0,
+      "mode": "lt",
+      "verdict": "PASS",
+      "note": "-45.355 vs -45.740 deg"
+    },
+    {
+      "id": "B5",
+      "name": "wall-shear amplitude (3-point estimator), W=5",
+      "value": 0.02640735816146167,
+      "threshold": 0.03,
+      "mode": "lt",
+      "verdict": "PASS",
+      "note": "7.257243e-02 vs 7.070529e-02 Pa; scheme flux estimator (not graded) err=4.550e-05"
+    },
+    {
+      "id": "B6",
+      "name": "discrete unsteady momentum budget rho H dUbar/dt + tau_0 + tau_H",
+      "value": 3.788636071533347e-15,
+      "threshold": 1e-08,
+      "mode": "lt",
+      "verdict": "PASS",
+      "note": "max|residual|=1.894e-15 Pa"
+    },
+    {
+      "id": "B7a",
+      "name": "no wall-normal velocity, W=5",
+      "value": 0.0,
+      "threshold": 1e-12,
+      "mode": "lt",
+      "verdict": "PASS",
+      "note": ""
+    },
+    {
+      "id": "B7b",
+      "name": "cell divergence after projection, W=5",
+      "value": 0.0,
+      "threshold": 1e-10,
+      "mode": "lt",
+      "verdict": "PASS",
+      "note": ""
+    },
+    {
+      "id": "B8",
+      "name": "temporal convergence order",
+      "value": 1.0247098323360035,
+      "threshold": 0.7,
+      "mode": "gt",
+      "verdict": "PASS",
+      "note": "dt/T=1e-02: 1.751e-02, 5e-03: 8.606e-03, 3e-03: 4.213e-03"
+    },
+    {
+      "id": "B9",
+      "name": "wall-normal convergence order",
+      "value": 0.6619323402193193,
+      "threshold": 0.5,
+      "mode": "gt",
+      "verdict": "PASS",
+      "note": "monotone ny=16: 8.213e-03, ny=32: 3.690e-03, ny=64: 2.332e-03"
+    },
+    {
+      "id": "C1",
+      "name": "oscillating vs steady-wall profile difference, W=5",
+      "value": 2.817833929177404,
+      "threshold": 0.1,
+      "mode": "gt",
+      "verdict": "PASS",
+      "note": "a solver without wall motion cannot pass B1..B3"
+    }
+  ],
+  "n_pass": 19,
+  "n_total": 19,
+  "all_pass": true,
+  "runtime_s": 39.74341583251953,
+  "couette": {
+    "half-cell": {
+      "converged": true,
+      "steps": 314,
+      "max_profile_error": 1.24082966124206e-11,
+      "max_wall_normal_velocity": 0.0,
+      "max_divergence": 0.0,
+      "bulk_velocity": 0.5000000000082789,
+      "wall_shear_lower_pa": -0.009999999999497505,
+      "wall_shear_exact_pa": -0.01
+    },
+    "quadratic": {
+      "converged": true,
+      "steps": 314,
+      "max_profile_error": 1.2404854921044262e-11,
+      "max_wall_normal_velocity": 0.0,
+      "max_divergence": 0.0,
+      "bulk_velocity": 0.5000000000082756,
+      "wall_shear_lower_pa": -0.00999999999950281,
+      "wall_shear_exact_pa": -0.01
+    }
+  },
+  "runs": {
+    "2.0": {
+      "womersley": 2.0,
+      "omega": 0.08,
+      "period_s": 78.53981633974483,
+      "delta": 0.5,
+      "dt": 0.39269908169872414,
+      "dt_fraction": 0.005,
+      "ny": 64,
+      "nx": 4,
+      "wall_flux": "half-cell",
+      "amplitude": 1.0,
+      "settle_periods": 3,
+      "settle_steps": 600,
+      "settle_tol": 0.0001,
+      "envelope": 0.46629979751449846,
+      "profile_relative_l2": 0.0073502460108562555,
+      "bulk_amplitude": {
+        "amplitude": 0.3929049249460332,
+        "phase_deg": -30.6129769086445
+      },
+      "shear_amplitude_quadratic": {
+        "amplitude": 0.027917235427027034,
+        "phase_deg": -133.40252495146686
+      },
+      "shear_amplitude_flux": {
+        "amplitude": 0.027611636252185417,
+        "phase_deg": -133.96801479394964
+      },
+      "max_wall_normal_velocity": 0.0,
+      "max_divergence": 0.0,
+      "runtime_s": 4.05089807510376
+    },
+    "5.0": {
+      "womersley": 5.0,
+      "omega": 0.5,
+      "period_s": 12.566370614359172,
+      "delta": 0.2,
+      "dt": 0.06283185307179587,
+      "dt_fraction": 0.005,
+      "ny": 64,
+      "nx": 4,
+      "wall_flux": "half-cell",
+      "amplitude": 1.0,
+      "settle_periods": 6,
+      "settle_steps": 1200,
+      "settle_tol": 0.0001,
+      "envelope": 0.28550710616212,
+      "profile_relative_l2": 0.006821451660896677,
+      "bulk_amplitude": {
+        "amplitude": 0.14097565941377194,
+        "phase_deg": -45.35526221317923
+      },
+      "shear_amplitude_quadratic": {
+        "amplitude": 0.07257243099327189,
+        "phase_deg": -134.20417237046917
+      },
+      "shear_amplitude_flux": {
+        "amplitude": 0.07070207390533002,
+        "phase_deg": -135.53520148273
+      },
+      "max_wall_normal_velocity": 0.0,
+      "max_divergence": 0.0,
+      "runtime_s": 7.078058481216431
+    },
+    "10.0": {
+      "womersley": 10.0,
+      "omega": 2.0,
+      "period_s": 3.141592653589793,
+      "delta": 0.1,
+      "dt": 0.015707963267948967,
+      "dt_fraction": 0.005,
+      "ny": 64,
+      "nx": 4,
+      "wall_flux": "half-cell",
+      "amplitude": 1.0,
+      "settle_periods": 7,
+      "settle_steps": 1400,
+      "settle_tol": 0.0001,
+      "envelope": 0.20177725372124697,
+      "profile_relative_l2": 0.007604959940627496,
+      "bulk_amplitude": {
+        "amplitude": 0.07070168865167221,
+        "phase_deg": -44.89287272311633
+      },
+      "shear_amplitude_quadratic": {
+        "amplitude": 0.14888850414209553,
+        "phase_deg": -133.41234761297088
+      },
+      "shear_amplitude_flux": {
+        "amplitude": 0.14139907263487111,
+        "phase_deg": -135.7996990678538
+      },
+      "max_wall_normal_velocity": 0.0,
+      "max_divergence": 0.0,
+      "runtime_s": 8.066896438598633
+    }
+  },
+  "exact_study": {
+    "omega": 0.5,
+    "delta": 0.2,
+    "bulk_amplitude": 0.14088181249750611,
+    "bulk_phase_deg": -45.74038919861282,
+    "shear_amplitude": 0.07070529104864005,
+    "shear_phase_deg": -134.9971697580584,
+    "plate_shear_phase_deg": 45.0028302419416,
+    "semi_infinite_shear_amplitude": 0.07071067811865475
+  },
+  "momentum_budget": {
+    "max_abs_residual": 1.8943180357666733e-15,
+    "relative": 3.788636071533347e-15,
+    "scale": 0.5
+  },
+  "temporal": {
+    "0.01": {
+      "womersley": 5.0,
+      "omega": 0.5,
+      "period_s": 12.566370614359172,
+      "delta": 0.2,
+      "dt": 0.12566370614359174,
+      "dt_fraction": 0.01,
+      "ny": 64,
+      "nx": 4,
+      "wall_flux": "half-cell",
+      "amplitude": 1.0,
+      "settle_periods": 0,
+      "settle_steps": 0,
+      "settle_tol": 0.0001,
+      "envelope": 0.2855071061621791,
+      "profile_relative_l2": 0.017508355433670738,
+      "bulk_amplitude": {
+        "amplitude": 0.14082101088115812,
+        "phase_deg": -44.73877877609839
+      },
+      "shear_amplitude_quadratic": {
+        "amplitude": 0.07255613628467791,
+        "phase_deg": -134.667486240321
+      },
+      "shear_amplitude_flux": {
+        "amplitude": 0.07067436661338194,
+        "phase_deg": -135.98729076763956
+      },
+      "max_wall_normal_velocity": 0.0,
+      "max_divergence": 0.0,
+      "runtime_s": 0.5145566463470459
+    },
+    "0.005": {
+      "womersley": 5.0,
+      "omega": 0.5,
+      "period_s": 12.566370614359172,
+      "delta": 0.2,
+      "dt": 0.06283185307179587,
+      "dt_fraction": 0.005,
+      "ny": 64,
+      "nx": 4,
+      "wall_flux": "half-cell",
+      "amplitude": 1.0,
+      "settle_periods": 0,
+      "settle_steps": 0,
+      "settle_tol": 0.0001,
+      "envelope": 0.2855071061621796,
+      "profile_relative_l2": 0.008605516827502395,
+      "bulk_amplitude": {
+        "amplitude": 0.14085544509911657,
+        "phase_deg": -45.284259752051256
+      },
+      "shear_amplitude_quadratic": {
+        "amplitude": 0.07256224572193978,
+        "phase_deg": -134.2033367724392
+      },
+      "shear_amplitude_flux": {
+        "amplitude": 0.07069187347628172,
+        "phase_deg": -135.53457535010224
+      },
+      "max_wall_normal_velocity": 0.0,
+      "max_divergence": 0.0,
+      "runtime_s": 1.018747091293335
+    },
+    "0.0025": {
+      "womersley": 5.0,
+      "omega": 0.5,
+      "period_s": 12.566370614359172,
+      "delta": 0.2,
+      "dt": 0.031415926535897934,
+      "dt_fraction": 0.0025,
+      "ny": 64,
+      "nx": 4,
+      "wall_flux": "half-cell",
+      "amplitude": 1.0,
+      "settle_periods": 0,
+      "settle_steps": 0,
+      "settle_tol": 0.0001,
+      "envelope": 0.28550710616217995,
+      "profile_relative_l2": 0.004212559905496718,
+      "bulk_amplitude": {
+        "amplitude": 0.14087530676090312,
+        "phase_deg": -45.55696621420159
+      },
+      "shear_amplitude_quadratic": {
+        "amplitude": 0.0725641996861228,
+        "phase_deg": -133.97097306864674
+      },
+      "shear_amplitude_flux": {
+        "amplitude": 0.07069961705712109,
+        "phase_deg": -135.3078816044214
+      },
+      "max_wall_normal_velocity": 0.0,
+      "max_divergence": 0.0,
+      "runtime_s": 2.040102958679199
+    }
+  },
+  "spatial": {
+    "16": {
+      "womersley": 5.0,
+      "omega": 0.5,
+      "period_s": 12.566370614359172,
+      "delta": 0.2,
+      "dt": 0.012566370614359173,
+      "dt_fraction": 0.001,
+      "ny": 16,
+      "nx": 4,
+      "wall_flux": "quadratic",
+      "amplitude": 1.0,
+      "settle_periods": 0,
+      "settle_steps": 0,
+      "settle_tol": 0.0001,
+      "envelope": 0.28500341082663166,
+      "profile_relative_l2": 0.00821305507035656,
+      "bulk_amplitude": {
+        "amplitude": 0.14125971210012597,
+        "phase_deg": -45.771013519170054
+      },
+      "shear_amplitude_quadratic": {
+        "amplitude": 0.07089909817198177,
+        "phase_deg": -135.31036510793828
+      },
+      "shear_amplitude_flux": {
+        "amplitude": 0.06560687361830578,
+        "phase_deg": -138.75182293973515
+      },
+      "max_wall_normal_velocity": 0.0,
+      "max_divergence": 0.0,
+      "runtime_s": 3.282930612564087
+    },
+    "32": {
+      "womersley": 5.0,
+      "omega": 0.5,
+      "period_s": 12.566370614359172,
+      "delta": 0.2,
+      "dt": 0.012566370614359173,
+      "dt_fraction": 0.001,
+      "ny": 32,
+      "nx": 4,
+      "wall_flux": "quadratic",
+      "amplitude": 1.0,
+      "settle_periods": 0,
+      "settle_steps": 0,
+      "settle_tol": 0.0001,
+      "envelope": 0.2854100164731803,
+      "profile_relative_l2": 0.0036904621087324925,
+      "bulk_amplitude": {
+        "amplitude": 0.14092435206732534,
+        "phase_deg": -45.63635451240066
+      },
+      "shear_amplitude_quadratic": {
+        "amplitude": 0.07072979280096581,
+        "phase_deg": -135.1164892948309
+      },
+      "shear_amplitude_flux": {
+        "amplitude": 0.06802061677944748,
+        "phase_deg": -137.09147076243883
+      },
+      "max_wall_normal_velocity": 0.0,
+      "max_divergence": 0.0,
+      "runtime_s": 3.6671769618988037
+    },
+    "64": {
+      "womersley": 5.0,
+      "omega": 0.5,
+      "period_s": 12.566370614359172,
+      "delta": 0.2,
+      "dt": 0.012566370614359173,
+      "dt_fraction": 0.001,
+      "ny": 64,
+      "nx": 4,
+      "wall_flux": "quadratic",
+      "amplitude": 1.0,
+      "settle_periods": 0,
+      "settle_steps": 0,
+      "settle_tol": 0.0001,
+      "envelope": 0.28550710616217906,
+      "profile_relative_l2": 0.0023324871569322648,
+      "bulk_amplitude": {
+        "amplitude": 0.14087919248654984,
+        "phase_deg": -45.62883387770964
+      },
+      "shear_amplitude_quadratic": {
+        "amplitude": 0.07070610727567324,
+        "phase_deg": -135.09169704517942
+      },
+      "shear_amplitude_flux": {
+        "amplitude": 0.06933687950413393,
+        "phase_deg": -136.14381953358284
+      },
+      "max_wall_normal_velocity": 0.0,
+      "max_divergence": 0.0,
+      "runtime_s": 5.168486833572388
+    }
+  },
+  "control": {
+    "relative_difference": 2.817833929177404,
+    "steady_wall": {
+      "converged": true,
+      "steps": 314,
+      "max_profile_error": 1.24082966124206e-11,
+      "max_wall_normal_velocity": 0.0,
+      "max_divergence": 0.0,
+      "bulk_velocity": 0.5000000000082789,
+      "wall_shear_lower_pa": -0.009999999999497505,
+      "wall_shear_exact_pa": -0.01
+    }
+  }
+}
