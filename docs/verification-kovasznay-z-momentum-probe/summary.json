@@ -1,0 +1,37 @@
+{
+  "anchor": "CASE-FVM-KOVASZNAY-ORDER",
+  "mission": "m16552",
+  "conclusion": "The O(h) spanwise (w) pseudo-velocity in the extruded n x n x 1 Kovasznay order study is NOT a defect of the z-momentum discretisation: the z-momentum residual at the exact solution (w==0) is machine-zero, the w DOF is fully decoupled from the in-plane (x,y) viscous momentum, and the in-plane viscous consistency error is O(h^2) (ratio 3.65 ~ 2^2 between n=8 and n=16), consistent with the in-plane order 1.808 that already passes the 1.8 gate.",
+  "probe": {
+    "n8": {
+      "z_momentum_exact_residual_max": 0.0,
+      "inplane_viscous_defect_x_max": 0.007988807831946878,
+      "inplane_viscous_defect_y_max": 0.0012253558714301186,
+      "w_viscous_coupling_xy_max": 0.0,
+      "max_abs_w": 0.018954599689623625
+    },
+    "n16": {
+      "z_momentum_exact_residual_max": 0.0,
+      "inplane_viscous_defect_x_max": 0.00219495475709168,
+      "inplane_viscous_defect_y_max": 0.00033667109732821247,
+      "w_viscous_coupling_xy_max": 0.0,
+      "max_abs_w": 0.009413573327409101
+    }
+  },
+  "orders": {
+    "inplane_viscous_defect_ratio_8_to_16": 3.65,
+    "expected_for_O_h2": 4.0,
+    "w_ratio_8_to_16": 2.02,
+    "expected_for_O_h": 2.0
+  },
+  "verdict": {
+    "z_momentum_trivially_satisfied": true,
+    "w_decoupled_from_inplane_viscous": true,
+    "inplane_viscous_defect_is_O_h2": true,
+    "w_is_parasitic_spanwise_artifact": true,
+    "z_momentum_discretization_defect": false
+  },
+  "tests": ["tests/test_kovasznay_z_momentum_probe.py"],
+  "script": "scripts/probe_kovasznay_z_momentum.py",
+  "runs": ["runs/kovasznay-zprobe/n8", "runs/kovasznay-zprobe/n16"]
+}
