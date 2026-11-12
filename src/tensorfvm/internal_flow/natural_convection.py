@@ -141,10 +141,26 @@ class NaturalConvectionCase:
         j_mid = solver.ny // 2
         u_max = float(u_cell[i_mid, :].abs().max()) / alpha
         v_max = float(v_cell[:, j_mid].abs().max()) / alpha
+        # Global (whole-field) extrema, next to the mid-plane ones.  de Vahl
+        # Davis (1983) Table 3 quotes the mid-plane maxima; for this flow the two
+        # routes coincide, and reporting both makes that a measured statement
+        # rather than an assumption (``mid_plane_vs_global`` in the diagnostics).
+        u_max_global = float(u_cell.abs().max()) / alpha
+        v_max_global = float(v_cell.abs().max()) / alpha
         reference = DE_VAHL_DAVIS_NU.get(cfg.rayleigh)
         velocity_reference = DE_VAHL_DAVIS_VELOCITY.get(cfg.rayleigh, {})
-        idx = int(torch.argmax(psi))
-        i_psi, j_psi = divmod(idx, solver.ny + 1)
+        # The primary vortex of this flow has psi < 0 under the sign convention of
+        # ``StaggeredMAC.streamfunction`` (u = dpsi/dy with u > 0 on the hot side), so
+        # the *benchmark* streamfunction extremum is ``|psi|_max = -psi.min()``.
+        # Before m16902 this block took ``argmax(psi)`` on the signed field: that
+        # lands on a zero of psi (the top corner) and reported psi_max = 0 while
+        # the de Vahl Davis reference is 5.071 -- a factor-infinity "error" that
+        # was read as an unverified reference transcription.  See
+        # docs/verification-cavity-anchor/REPORT.md.
+        psi_abs = psi.abs()
+        idx = int(torch.argmax(psi_abs))
+        i_psi, j_psi = divmod(idx, psi_abs.shape[1])
+        psi_extremum = float(psi[i_psi, j_psi])
         momentum = solver.momentum_residual()
         return {
             "momentum_residual": momentum,
@@ -164,12 +180,22 @@ class NaturalConvectionCase:
             "nu_reference": reference,
             "nu_error_percent": None if reference is None
             else 100.0 * (nu_mean - reference) / reference,
+            #: signed extrema of psi/alpha (raw field, *not* normalised by alpha)
             "psi_max": float(psi.max()),
             "psi_min": float(psi.min()),
+            #: |psi|_max = H/alpha streamfunction extremum, the benchmark quantity
+            "psi_abs_max_over_alpha": float(psi_abs.max()),
+            "psi_extremum_signed_over_alpha": psi_extremum,
             "psi_max_location": [float((i_psi + 0.5) * solver.hx),
                                  float(j_psi * solver.hy)],
             "u_max_over_alpha": u_max,
             "v_max_over_alpha": v_max,
+            "u_max_global_over_alpha": u_max_global,
+            "v_max_global_over_alpha": v_max_global,
+            "mid_plane_vs_global": {
+                "u": abs(u_max - u_max_global) / u_max_global,
+                "v": abs(v_max - v_max_global) / v_max_global,
+            },
             "u_max_reference": velocity_reference.get("u_max"),
             "v_max_reference": velocity_reference.get("v_max"),
             "y": y.tolist(),

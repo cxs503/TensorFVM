@@ -1,0 +1,587 @@
+{
+  "benchmark": "de Vahl Davis 1983, differentially heated square cavity, Pr = 0.71",
+  "criteria": [
+    {
+      "id": "A1/A2 psi/u/v psi_abs_max Ra=1000 n=32",
+      "limit": 3.0,
+      "pass": true,
+      "value": 0.7847753552947251
+    },
+    {
+      "id": "A1/A2 psi/u/v u_max Ra=1000 n=32",
+      "limit": 3.0,
+      "pass": true,
+      "value": -0.1387021501807226
+    },
+    {
+      "id": "A1/A2 psi/u/v v_max Ra=1000 n=32",
+      "limit": 3.0,
+      "pass": true,
+      "value": 0.1935428102765861
+    },
+    {
+      "id": "A3 streamfunction quadrature gap Ra=1000 n=32",
+      "limit": 0.01,
+      "pass": true,
+      "value": 0.007315873169090654
+    },
+    {
+      "id": "A4 kinematic |dpsi/dy-u|/max|u| Ra=1000 n=32",
+      "limit": 0.1,
+      "pass": true,
+      "value": 0.07598677539331054
+    },
+    {
+      "id": "A5 mid-plane vs global extrema Ra=1000 n=32",
+      "limit": 0.01,
+      "pass": true,
+      "value": 2.3977893827728345e-16
+    },
+    {
+      "id": "A6 |psi| diagnostic Ra=1000 n=32",
+      "limit": null,
+      "pass": true,
+      "value": 1.18321326267116
+    },
+    {
+      "id": "A1/A2 psi/u/v psi_abs_max Ra=10000 n=32",
+      "limit": 3.0,
+      "pass": true,
+      "value": 0.6913694250472222
+    },
+    {
+      "id": "A1/A2 psi/u/v u_max Ra=10000 n=32",
+      "limit": 3.0,
+      "pass": true,
+      "value": 0.3468153407275476
+    },
+    {
+      "id": "A1/A2 psi/u/v v_max Ra=10000 n=32",
+      "limit": 3.0,
+      "pass": true,
+      "value": 0.08164672649709835
+    },
+    {
+      "id": "A3 streamfunction quadrature gap Ra=10000 n=32",
+      "limit": 0.01,
+      "pass": true,
+      "value": 0.007859530188947543
+    },
+    {
+      "id": "A4 kinematic |dpsi/dy-u|/max|u| Ra=10000 n=32",
+      "limit": 0.1,
+      "pass": true,
+      "value": 0.07905181492240435
+    },
+    {
+      "id": "A5 mid-plane vs global extrema Ra=10000 n=32",
+      "limit": 0.01,
+      "pass": true,
+      "value": 0.0
+    },
+    {
+      "id": "A6 |psi| diagnostic Ra=10000 n=32",
+      "limit": null,
+      "pass": true,
+      "value": 5.106059343544144
+    },
+    {
+      "id": "A1/A2 psi/u/v psi_abs_max Ra=10000 n=64",
+      "limit": 3.0,
+      "pass": true,
+      "value": 0.212012133635716
+    },
+    {
+      "id": "A1/A2 psi/u/v u_max Ra=10000 n=64",
+      "limit": 3.0,
+      "pass": true,
+      "value": 0.15005342182496725
+    },
+    {
+      "id": "A1/A2 psi/u/v v_max Ra=10000 n=64",
+      "limit": 3.0,
+      "pass": true,
+      "value": 0.19706668468985986
+    },
+    {
+      "id": "A3 streamfunction quadrature gap Ra=10000 n=64",
+      "limit": 0.01,
+      "pass": true,
+      "value": 0.0023096234209462976
+    },
+    {
+      "id": "A4 kinematic |dpsi/dy-u|/max|u| Ra=10000 n=64",
+      "limit": 0.1,
+      "pass": true,
+      "value": 0.04633133456587616
+    },
+    {
+      "id": "A5 mid-plane vs global extrema Ra=10000 n=64",
+      "limit": 0.01,
+      "pass": true,
+      "value": 0.0005608850565888892
+    },
+    {
+      "id": "A6 |psi| diagnostic Ra=10000 n=64",
+      "limit": null,
+      "pass": true,
+      "value": 5.081751135296667
+    },
+    {
+      "id": "A1/A2 psi/u/v psi_abs_max Ra=100000 n=32",
+      "limit": 5.0,
+      "pass": false,
+      "value": 7.65033448803707
+    },
+    {
+      "id": "A1/A2 psi/u/v u_max Ra=100000 n=32",
+      "limit": 5.0,
+      "pass": true,
+      "value": 4.266302803659576
+    },
+    {
+      "id": "A1/A2 psi/u/v v_max Ra=100000 n=32",
+      "limit": 5.0,
+      "pass": true,
+      "value": -2.3848770251657516
+    },
+    {
+      "id": "A3 streamfunction quadrature gap Ra=100000 n=32",
+      "limit": 0.01,
+      "pass": false,
+      "value": 0.014477580738409098
+    },
+    {
+      "id": "A4 kinematic |dpsi/dy-u|/max|u| Ra=100000 n=32",
+      "limit": 0.1,
+      "pass": false,
+      "value": 0.10244711501524183
+    },
+    {
+      "id": "A5 mid-plane vs global extrema Ra=100000 n=32",
+      "limit": 0.2,
+      "pass": true,
+      "value": 0.18349510881599324
+    },
+    {
+      "id": "A6 |psi| diagnostic Ra=100000 n=32",
+      "limit": null,
+      "pass": true,
+      "value": 9.808021975205058
+    },
+    {
+      "id": "A7 registry hygiene (no superseded reference digits)",
+      "limit": 0,
+      "pass": false,
+      "value": 14
+    }
+  ],
+  "figure": "fig_cavity_anchor.png",
+  "ladder": [
+    [
+      1000.0,
+      32
+    ],
+    [
+      10000.0,
+      32
+    ],
+    [
+      10000.0,
+      64
+    ],
+    [
+      100000.0,
+      32
+    ]
+  ],
+  "passed": false,
+  "registry": {
+    "ambiguities": {
+      "psi_abs_max": {
+        "grade": "WITHHELD",
+        "note": "2.6 % spread; the finite-grid error of the solver at n = 64 is of the same size (4.8 % vs 16.32, 2.2 % vs 16.75), so an unpinned comparison cannot distinguish solver error from variant choice. Judge on the Richardson extrapolation instead (docs/verification-natural-convection-metrics/report.md).",
+        "rayleigh": [
+          1000000.0
+        ],
+        "spread_percent": 2.6348039215686256,
+        "variants": {
+          "acceptance": 16.75,
+          "finite_grid": 16.32
+        }
+      }
+    },
+    "benchmark": "de Vahl Davis 1983 square cavity, Pr = 0.71",
+    "families": {
+      "nusselt": {
+        "1000": {
+          "acceptance": 1.118
+        },
+        "10000": {
+          "acceptance": 2.243,
+          "finite_grid": 2.238
+        },
+        "100000": {
+          "acceptance": 4.519,
+          "finite_grid": 4.509
+        },
+        "1e+06": {
+          "acceptance": 8.8,
+          "finite_grid": 8.817
+        }
+      },
+      "psi_abs_max": {
+        "1000": {
+          "acceptance": 1.174
+        },
+        "10000": {
+          "acceptance": 5.071,
+          "finite_grid": 5.024
+        },
+        "100000": {
+          "acceptance": 9.111
+        },
+        "1e+06": {
+          "acceptance": 16.75,
+          "finite_grid": 16.32
+        }
+      },
+      "u_max": {
+        "1000": {
+          "acceptance": 3.649
+        },
+        "10000": {
+          "acceptance": 16.178
+        },
+        "100000": {
+          "acceptance": 34.73
+        },
+        "1e+06": {
+          "acceptance": 64.63
+        }
+      },
+      "v_max": {
+        "1000": {
+          "acceptance": 3.697
+        },
+        "10000": {
+          "acceptance": 19.617
+        },
+        "100000": {
+          "acceptance": 68.59
+        },
+        "1e+06": {
+          "acceptance": 219.36
+        }
+      }
+    },
+    "source": "de Vahl Davis, G. (1983), Natural convection of air in a square cavity: a bench mark numerical solution, Int. J. Numer. Methods Fluids 3, 249-264",
+    "superseded": {
+      "1.334": {
+        "evidence": "docs/audit-m15790-upstream-diffset/REPORT.md",
+        "quantity": "nusselt",
+        "rayleigh": "1e3",
+        "reason": "wrong Nu(1e3); repaired to 1.118 by m15410"
+      },
+      "4.535": {
+        "evidence": "docs/audit-m15790-upstream-diffset/REPORT.md",
+        "quantity": "u_max",
+        "rayleigh": "1e4",
+        "reason": "order-of-magnitude error for u_max(1e4); repaired to 16.178 by m15410"
+      },
+      "6.776": {
+        "evidence": "docs/audit-m15790-upstream-diffset/REPORT.md",
+        "quantity": "v_max",
+        "rayleigh": "1e4",
+        "reason": "order-of-magnitude error for v_max(1e4); repaired to 19.617 by m15410"
+      }
+    }
+  },
+  "results": [
+    {
+      "converged": true,
+      "errors_percent": {
+        "nusselt": {
+          "acceptance": 0.20149058753165136
+        },
+        "psi_abs_max": {
+          "acceptance": 0.7847753552947251
+        },
+        "u_max": {
+          "acceptance": -0.1387021501807226
+        },
+        "v_max": {
+          "acceptance": 0.1935428102765861
+        }
+      },
+      "kinematic_u_residual": 0.07598677539331054,
+      "max_divergence": 8.049116928532385e-16,
+      "measured": {
+        "nusselt": 1.120252664768604,
+        "psi_abs_max": 1.18321326267116,
+        "u_max": 3.6439387585399055,
+        "v_max": 3.7041552776959255
+      },
+      "mid_plane_vs_global": {
+        "u": 0.0,
+        "v": 2.3977893827728345e-16
+      },
+      "n": 32,
+      "nu_mean": 1.120252664768604,
+      "psi_abs_max_over_alpha": 1.18321326267116,
+      "psi_extremum_signed_over_alpha": -1.18321326267116,
+      "psi_max_location": [
+        0.515625,
+        0.5
+      ],
+      "psi_route_gap": 0.007315873169090654,
+      "rayleigh": 1000.0,
+      "residual": 1.6818664657045547e-10,
+      "steps": 3800,
+      "u_max_global_over_alpha": 3.6439387585399055,
+      "u_max_over_alpha": 3.6439387585399055,
+      "v_max_global_over_alpha": 3.7041552776959263,
+      "v_max_over_alpha": 3.7041552776959255
+    },
+    {
+      "converged": true,
+      "errors_percent": {
+        "nusselt": {
+          "acceptance": 1.2753155392623436,
+          "finite_grid": 1.5015785319774022
+        },
+        "psi_abs_max": {
+          "acceptance": 0.6913694250472222,
+          "finite_grid": 1.6333468062130643
+        },
+        "u_max": {
+          "acceptance": 0.3468153407275476
+        },
+        "v_max": {
+          "acceptance": 0.08164672649709835
+        }
+      },
+      "kinematic_u_residual": 0.07905181492240435,
+      "max_divergence": 1.7763568394002505e-15,
+      "measured": {
+        "nusselt": 2.2716053275456543,
+        "psi_abs_max": 5.106059343544144,
+        "u_max": 16.234107785822903,
+        "v_max": 19.633016638336937
+      },
+      "mid_plane_vs_global": {
+        "u": 0.0,
+        "v": 0.0
+      },
+      "n": 32,
+      "nu_mean": 2.2716053275456543,
+      "psi_abs_max_over_alpha": 5.106059343544144,
+      "psi_extremum_signed_over_alpha": -5.106059343544144,
+      "psi_max_location": [
+        0.515625,
+        0.5
+      ],
+      "psi_route_gap": 0.007859530188947543,
+      "rayleigh": 10000.0,
+      "residual": 5.805245173462481e-10,
+      "steps": 3600,
+      "u_max_global_over_alpha": 16.234107785822903,
+      "u_max_over_alpha": 16.234107785822903,
+      "v_max_global_over_alpha": 19.633016638336937,
+      "v_max_over_alpha": 19.633016638336937
+    },
+    {
+      "converged": true,
+      "errors_percent": {
+        "nusselt": {
+          "acceptance": 0.355980263335727,
+          "finite_grid": 0.5801893345227994
+        },
+        "psi_abs_max": {
+          "acceptance": 0.212012133635716,
+          "finite_grid": 1.149505081541936
+        },
+        "u_max": {
+          "acceptance": 0.15005342182496725
+        },
+        "v_max": {
+          "acceptance": 0.19706668468985986
+        }
+      },
+      "kinematic_u_residual": 0.04633133456587616,
+      "max_divergence": 2.6645352591003757e-15,
+      "measured": {
+        "nusselt": 2.2509846373066202,
+        "psi_abs_max": 5.081751135296667,
+        "u_max": 16.202275642582844,
+        "v_max": 19.65565857153561
+      },
+      "mid_plane_vs_global": {
+        "u": 0.0003147639886761325,
+        "v": 0.0005608850565888892
+      },
+      "n": 64,
+      "nu_mean": 2.2509846373066202,
+      "psi_abs_max_over_alpha": 5.081751135296667,
+      "psi_extremum_signed_over_alpha": -5.081751135296667,
+      "psi_max_location": [
+        0.5078125,
+        0.5
+      ],
+      "psi_route_gap": 0.0023096234209462976,
+      "rayleigh": 10000.0,
+      "residual": 9.98051471837204e-10,
+      "steps": 11200,
+      "u_max_global_over_alpha": 16.207377141257805,
+      "u_max_over_alpha": 16.202275642582844,
+      "v_max_global_over_alpha": 19.666689323689845,
+      "v_max_over_alpha": 19.65565857153561
+    },
+    {
+      "converged": true,
+      "errors_percent": {
+        "nusselt": {
+          "acceptance": 4.989695154186993,
+          "finite_grid": 5.222539898374584
+        },
+        "psi_abs_max": {
+          "acceptance": 7.65033448803707
+        },
+        "u_max": {
+          "acceptance": 4.266302803659576
+        },
+        "v_max": {
+          "acceptance": -2.3848770251657516
+        }
+      },
+      "kinematic_u_residual": 0.10244711501524183,
+      "max_divergence": 1.3322676295501878e-15,
+      "measured": {
+        "nusselt": 4.74448432401771,
+        "psi_abs_max": 9.808021975205058,
+        "u_max": 36.21168696371097,
+        "v_max": 66.95421284843881
+      },
+      "mid_plane_vs_global": {
+        "u": 0.18349510881599324,
+        "v": 0.0022263318589811026
+      },
+      "n": 32,
+      "nu_mean": 4.74448432401771,
+      "psi_abs_max_over_alpha": 9.808021975205058,
+      "psi_extremum_signed_over_alpha": -9.808021975205058,
+      "psi_max_location": [
+        0.296875,
+        0.59375
+      ],
+      "psi_route_gap": 0.014477580738409098,
+      "rayleigh": 100000.0,
+      "residual": 5.301042937944089e-10,
+      "steps": 8000,
+      "u_max_global_over_alpha": 44.349626505238334,
+      "u_max_over_alpha": 36.21168696371097,
+      "v_max_global_over_alpha": 67.10360774822125,
+      "v_max_over_alpha": 66.95421284843881
+    }
+  ],
+  "superseded_hits": [
+    {
+      "line": 67,
+      "path": "docs/native-viscous-three-point-closure/nonorthogonal-audit-report.md",
+      "quantity": "nusselt",
+      "reason": "wrong Nu(1e3); repaired to 1.118 by m15410",
+      "value": 1.334
+    },
+    {
+      "line": 34,
+      "path": "docs/three-point-wall-projection/report.md",
+      "quantity": "nusselt",
+      "reason": "wrong Nu(1e3); repaired to 1.118 by m15410",
+      "value": 1.334
+    },
+    {
+      "line": 107,
+      "path": "scripts/audit_m15410_report.py",
+      "quantity": "nusselt",
+      "reason": "wrong Nu(1e3); repaired to 1.118 by m15410",
+      "value": 1.334
+    },
+    {
+      "line": 107,
+      "path": "scripts/audit_m15410_report.py",
+      "quantity": "u_max",
+      "reason": "order-of-magnitude error for u_max(1e4); repaired to 16.178 by m15410",
+      "value": 4.535
+    },
+    {
+      "line": 107,
+      "path": "scripts/audit_m15410_report.py",
+      "quantity": "v_max",
+      "reason": "order-of-magnitude error for v_max(1e4); repaired to 19.617 by m15410",
+      "value": 6.776
+    },
+    {
+      "line": 104,
+      "path": "scripts/make_report.py",
+      "quantity": "u_max",
+      "reason": "order-of-magnitude error for u_max(1e4); repaired to 16.178 by m15410",
+      "value": 4.535
+    },
+    {
+      "line": 104,
+      "path": "scripts/make_report.py",
+      "quantity": "v_max",
+      "reason": "order-of-magnitude error for v_max(1e4); repaired to 19.617 by m15410",
+      "value": 6.776
+    },
+    {
+      "line": 104,
+      "path": "scripts/make_report.py",
+      "quantity": "nusselt",
+      "reason": "wrong Nu(1e3); repaired to 1.118 by m15410",
+      "value": 1.334
+    },
+    {
+      "line": 150,
+      "path": "src/tensorfvm/verification/reference_families.py",
+      "quantity": "nusselt",
+      "reason": "wrong Nu(1e3); repaired to 1.118 by m15410",
+      "value": 1.334
+    },
+    {
+      "line": 156,
+      "path": "src/tensorfvm/verification/reference_families.py",
+      "quantity": "u_max",
+      "reason": "order-of-magnitude error for u_max(1e4); repaired to 16.178 by m15410",
+      "value": 4.535
+    },
+    {
+      "line": 162,
+      "path": "src/tensorfvm/verification/reference_families.py",
+      "quantity": "v_max",
+      "reason": "order-of-magnitude error for v_max(1e4); repaired to 19.617 by m15410",
+      "value": 6.776
+    },
+    {
+      "line": 224,
+      "path": "src/tensorfvm/verification/reference_families.py",
+      "quantity": "nusselt",
+      "reason": "wrong Nu(1e3); repaired to 1.118 by m15410",
+      "value": 1.334
+    },
+    {
+      "line": 72,
+      "path": "tests/test_cavity_anchor.py",
+      "quantity": "u_max",
+      "reason": "order-of-magnitude error for u_max(1e4); repaired to 16.178 by m15410",
+      "value": 4.535
+    },
+    {
+      "line": 75,
+      "path": "tests/test_cavity_anchor.py",
+      "quantity": "u_max",
+      "reason": "order-of-magnitude error for u_max(1e4); repaired to 16.178 by m15410",
+      "value": 4.535
+    }
+  ]
+}
