@@ -1,0 +1,279 @@
+{
+  "all_pass": true,
+  "criteria": {
+    "C10a_frame_radial_balance_exact": {
+      "gate": 1e-14,
+      "mode": "max",
+      "note": "conv + 2 Omega x u + grad p/rho - Omega x (Omega x r) = 0",
+      "pass": true,
+      "value": 1.9810671071378258e-16
+    },
+    "C10b_controls_reject_missing_frame_terms": {
+      "gate": 0.05,
+      "mode": "min",
+      "note": "dropping the centrifugal term or flipping Coriolis must violate C10a by >= 5%",
+      "pass": true,
+      "value": 1.0
+    },
+    "C1_inert_limit_is_exact": {
+      "gate": 0.0,
+      "mode": "max",
+      "note": "omega=0 gives identically zero sources and p_m == p (bitwise), not 'small'",
+      "pass": true,
+      "value": 0.0
+    },
+    "C2_frame_kinematics": {
+      "gate": 1e-06,
+      "mode": "max",
+      "note": "2*Omega x u components (axis-swap trap), abs<->rel roundtrip, grad(|Omega x r|^2/2) = -Omega x (Omega x r) by central differences",
+      "pass": true,
+      "value": 1.776663177041675e-10
+    },
+    "C3_solid_body_rotation_exact": {
+      "gate": 1e-14,
+      "mode": "max",
+      "note": "u_rel = 0 with p = rho/2 |Omega x r|^2: Coriolis 0, p_m 0, source 0 (machine zero)",
+      "pass": true,
+      "value": 0.0
+    },
+    "C3b_solid_body_full_momentum_residual": {
+      "gate": 1e-06,
+      "mode": "max",
+      "note": "-grad p/rho - Omega x (Omega x r) = 0 for the solid-body pressure (FD gradient)",
+      "pass": true,
+      "value": 3.6284532101206006e-10
+    },
+    "C4_closed_form_satisfies_odes": {
+      "gate": 1e-13,
+      "mode": "max",
+      "note": "nu u'' + 2 omega w = -G/rho and nu w'' - 2 omega u = 0 with analytic derivatives",
+      "pass": true,
+      "value": 2.220446049250313e-16
+    },
+    "C4b_closed_form_vs_independent_bvp": {
+      "gate": 1e-08,
+      "mode": "max",
+      "note": "collocation BVP (scipy solve_bvp) vs closed form on 401 points",
+      "pass": true,
+      "value": 9.121309862843024e-15
+    },
+    "C5_rotating_channel_vs_closed_form": {
+      "gate": 0.03,
+      "mode": "max",
+      "note": "finite-volume (u,w) vs closed form, N=640: u and secondary flow w < 3%",
+      "pass": true,
+      "value": 1.2701770137232382e-05
+    },
+    "C5b_rotating_channel_second_order": {
+      "gate": 1.8,
+      "mode": "min",
+      "note": "observed order from N=320/640, streamwise and spanwise",
+      "pass": true,
+      "value": 1.9740198485222198
+    },
+    "C6_anchor_rejects_no_coriolis_solver": {
+      "gate": 0.5,
+      "mode": "min",
+      "note": "a solver without Coriolis must FAIL the w anchor (measured error >= 50%)",
+      "pass": true,
+      "value": 1.0
+    },
+    "C7a_spanwise_axis_leaves_mean_flow_inert": {
+      "gate": 1e-12,
+      "mode": "max",
+      "note": "rotation along the span: parabolic u reproduced to round-off for any omega",
+      "pass": true,
+      "value": 1.3288072081909128e-14
+    },
+    "C7b_spanwise_axis_pressure_correction": {
+      "gate": 1e-12,
+      "mode": "max",
+      "note": "2 omega u + p_y/rho = 0 with the implemented Coriolis y component",
+      "pass": true,
+      "value": 0.0
+    },
+    "C7c_controls_reject_wrong_coriolis": {
+      "gate": 0.5,
+      "mode": "min",
+      "note": "dropping or sign-flipping Coriolis must violate C7b by >= 50%",
+      "pass": true,
+      "value": 1.0
+    },
+    "C8a_couette_absolute_profile_vs_exact": {
+      "gate": 0.03,
+      "mode": "max",
+      "note": "v_theta = A r + B/r from every frame, n=320",
+      "pass": true,
+      "value": 8.228599573515762e-07
+    },
+    "C8b_mrf_frame_invariance": {
+      "gate": 1e-12,
+      "mode": "max",
+      "note": "absolute profile and torque identical for omega_frame = 0, 1.0, 1.7 rad/s",
+      "pass": true,
+      "value": 4.1457613225294167e-13
+    },
+    "C8c_frozen_rotor_statement": {
+      "gate": 1e-15,
+      "mode": "max",
+      "note": "omega_frame = omega_inner makes the inner wall's relative velocity exactly 0",
+      "pass": true,
+      "value": 0.0
+    },
+    "C9_couette_torque_vs_taylor_closed_form": {
+      "gate": 0.03,
+      "mode": "max",
+      "note": "M/L = 4 pi mu r1^2 r2^2 |omega_i - omega_o| / (r2^2 - r1^2) at n=320",
+      "pass": true,
+      "value": 3.0517488593201736e-06
+    }
+  },
+  "data": {
+    "circular_couette": {
+      "absolute_profile_spread": 4.1457613225294167e-13,
+      "frames": [
+        {
+          "abs_vs_exact_rel": 8.228599573515762e-07,
+          "inner_wall_relative_velocity": 1.0,
+          "omega_frame": 0.0,
+          "rel_vs_exact_rel": 8.228599573515762e-07,
+          "torque_coefficient": -16.75521195168848
+        },
+        {
+          "abs_vs_exact_rel": 8.228597264119969e-07,
+          "inner_wall_relative_velocity": 0.0,
+          "omega_frame": 1.0,
+          "rel_vs_exact_rel": 3.4453782433533545e-07,
+          "torque_coefficient": -16.755211951691013
+        },
+        {
+          "abs_vs_exact_rel": 8.228595642981662e-07,
+          "inner_wall_relative_velocity": 0.7,
+          "omega_frame": 1.7,
+          "rel_vs_exact_rel": 1.8549562556141833e-07,
+          "torque_coefficient": -16.755211951692743
+        }
+      ],
+      "frozen_rotor_inner_wall_relative_velocity": 0.0,
+      "parameters": {
+        "omega_inner": 1.0,
+        "omega_outer": 0.0,
+        "r1": 1.0,
+        "r2": 2.0
+      },
+      "torque_spread": 2.5444359801912133e-13
+    },
+    "closed_form_residual": {
+      "F_closed_form_reproduction": 0.0,
+      "bvp_cross_check": 9.121309862843024e-15,
+      "ekman_like_length": 0.11180339887498948,
+      "spanwise_ode_residual": 1.1102230246251565e-16,
+      "streamwise_ode_residual": 2.220446049250313e-16,
+      "u_max": 0.07977574037041628,
+      "w_max": 0.2711309856635073
+    },
+    "couette_torque": {
+      "mu": 0.8,
+      "numerical_torque_per_length": -13.404169561350784,
+      "rel_error": 3.0517488593201736e-06,
+      "rho": 800.0,
+      "taylor_torque_per_length": -13.40412865531645
+    },
+    "discriminating_power": {
+      "anchor_w_max": 0.2711357532395971,
+      "no_coriolis_u_rel_error": 37.07147602909807,
+      "no_coriolis_w_max": 0.0,
+      "no_coriolis_w_rel_error": 1.0
+    },
+    "frame_kinematics": {
+      "absolute_relative_roundtrip": 1.426807600827982e-16,
+      "coriolis_component_error": 0.0,
+      "coriolis_reference": [
+        -0.84,
+        0.0,
+        -1.48
+      ],
+      "coriolis_vector": [
+        -0.84,
+        0.0,
+        -1.48
+      ],
+      "potential_gradient_vs_centrifugal": 1.776663177041675e-10
+    },
+    "frame_radial_balance": {
+      "control_drop_centrifugal_rel": 1.0,
+      "control_flip_coriolis_rel": 2.0,
+      "omega_frame": 1.0,
+      "residual_rel": 1.9810671071378258e-16
+    },
+    "inert_limit": {
+      "centrifugal_max_abs": 0.0,
+      "coriolis_max_abs": 0.0,
+      "modified_pressure_bitwise_identical": true,
+      "sources_total_max_abs": 0.0
+    },
+    "rotating_channel": {
+      "finest_u_rel_l2": 1.2701770137232382e-05,
+      "finest_w_rel_l2": 2.1147753403178173e-06,
+      "grid_ladder": [
+        {
+          "n": 40,
+          "u_rel_l2": 0.002520078358774168,
+          "w_rel_l2": 0.0004756526359857426
+        },
+        {
+          "n": 80,
+          "u_rel_l2": 0.0007177693183096179,
+          "w_rel_l2": 0.00012680646610510664
+        },
+        {
+          "n": 160,
+          "u_rel_l2": 0.00019256738238141919,
+          "w_rel_l2": 3.286758859691207e-05
+        },
+        {
+          "n": 320,
+          "u_rel_l2": 4.9900332048251925e-05,
+          "w_rel_l2": 8.375988983190036e-06
+        },
+        {
+          "n": 640,
+          "u_rel_l2": 1.2701770137232382e-05,
+          "w_rel_l2": 2.1147753403178173e-06
+        }
+      ],
+      "observed_order_u": 1.9740198485222198,
+      "observed_order_w": 1.9857551355661376,
+      "order_80_160_u": 1.8981568991561257,
+      "order_80_160_w": 1.947890794230672,
+      "parameters": {
+        "G": 1.0,
+        "h": 1.0,
+        "nu": 0.05,
+        "omega": 2.0,
+        "rho": 1.0
+      }
+    },
+    "solid_body_rotation": {
+      "absolute_velocity_rel_error": 0.0,
+      "coriolis_at_rest_max_abs": 0.0,
+      "full_momentum_residual_rel": 3.6284532101206006e-10,
+      "modified_pressure_max_abs": 0.0,
+      "reduced_source_max_abs": 0.0
+    },
+    "spanwise_axis": {
+      "control_drop_coriolis_residual": 1.0,
+      "control_flip_coriolis_residual": 2.0,
+      "inert_solve_vs_parabola": 1.3288072081909128e-14,
+      "p_scale": 6.666617889404298,
+      "u_max": 2.4999755859375,
+      "wall_normal_balance_residual": 0.0
+    }
+  },
+  "driver": "tensorfvm.verification.rotating_frame",
+  "generated_utc": "2026-11-12T14:36:43Z",
+  "module": "tensorfvm.rotating_frame",
+  "passed": 18,
+  "total": 18,
+  "wall_time_s": 2.1047732830047607
+}
