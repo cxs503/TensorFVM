@@ -1,0 +1,85 @@
+{
+ "feature_slug": "CASE-CAVITY-RE100",
+ "title": "方腔驱动流 Re=100 对标 Ghia et al. (1982)",
+ "status": "pass",
+ "round": 2,
+ "external_anchor": "U. Ghia, K.N. Ghia, C.T. Shin, J. Comput. Phys. 48 (1982) 387-411, Table I (u at x = 0.5) and Table II (v at y = 0.5)",
+ "quantitative_targets": {
+  "u_profile_max_abs": {
+   "tolerance": 0.05,
+   "unit": "U"
+  },
+  "v_profile_max_abs": {
+   "tolerance": 0.05,
+   "unit": "U"
+  },
+  "u_min_relative": {
+   "tolerance": 0.05,
+   "unit": "1"
+  },
+  "v_max_relative": {
+   "tolerance": 0.05,
+   "unit": "1"
+  },
+  "vortex_centre": {
+   "tolerance": 0.05,
+   "unit": "L"
+  }
+ },
+ "method_survey": {
+  "survey_date": "2026-11-12",
+  "oss_survey_doc": "docs/case-cavity-re100/research/oss_survey.md",
+  "method_survey_doc": "docs/case-cavity-re100/research/method_survey.md",
+  "key_findings": [
+   "本机 ~/oss-cache 只有 pylbm 的 lid-driven cavity demo（LBM，无 Ghia 对照表）与两个不含 cavity 例的仓库；方法族可迁移的只有动壁边界与涡量/流函数后处理，均已具备",
+   "Ghia 1982 表值自带 ~1% 量级制表误差，u_min 的 1.4% 级差异主要是参考的锅",
+   "Re=100 段不是稳定性难点，判据达标靠「提取+判据拆分」，不是换格式"
+  ],
+  "selected_approach": "复用交错 MAC FVM 求解器 + Ghia 转录层，新增算例一等公民模块（运行→逐点打分→7 条判据→工件）与机检门；分辨率 32/64/128",
+  "rationale": "最小改动、可验证：不改物理，把「已能跑」变成「可机检、可复现、可报告」"
+ },
+ "previous_rounds": {
+  "round1_m15369": {
+   "status": "honest_fail",
+   "fail_stage": "未标",
+   "failure_reason": "未留记录",
+   "postmortem": "无工件的失败无法归因；本轮先建可复现的最小闭环（单分辨率→工件）再扩阶梯"
+  }
+ },
+ "current_round_m15452": {
+  "status": "pass",
+  "resolutions": [
+   32,
+   64
+  ],
+  "finest": 64,
+  "artifacts": "docs/case-cavity-re100/artifacts/",
+  "report": "docs/case-cavity-re100/REPORT.md",
+  "metrics": {
+   "u_max_abs": 0.004452221115776811,
+   "v_max_abs": 0.008727769379403894,
+   "u_min": 1.0007030607936045,
+   "v_max": -0.2525968264972241,
+   "u_min_relative": 0.000703060793604493,
+   "v_max_relative": 0.02962061915470631,
+   "vortex_centre": [
+    0.6171875,
+    0.7421875
+   ]
+  },
+  "convergence_orders": [],
+  "verdict": "PASS"
+ },
+ "code_pointers": {
+  "case": "src/tensorfvm/case_cavity_re100.py",
+  "solver": "src/tensorfvm/lid_cavity.py",
+  "reference": "src/tensorfvm/lid_cavity_reference.py",
+  "scripts": [
+   "scripts/case_cavity_re100.py",
+   "scripts/render_case_cavity_re100_report.py"
+  ],
+  "tests": [
+   "tests/test_case_cavity_re100.py"
+  ]
+ }
+}

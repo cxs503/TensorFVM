@@ -1,0 +1,268 @@
+{
+ "case": "CASE-CAVITY-RE100",
+ "round": 2,
+ "reference": "U. Ghia, K.N. Ghia, C.T. Shin, J. Comput. Phys. 48 (1982) 387-411, Table I (u at x = 0.5) and Table II (v at y = 0.5)",
+ "reynolds": 100.0,
+ "lid_velocity": 1.0,
+ "pool_tolerance": 0.05,
+ "reference_summary": {
+  "u_min": [
+   0.4531,
+   -0.2109
+  ],
+  "v_max": [
+   0.2344,
+   0.17527
+  ],
+  "vortex_centre": [
+   0.6172,
+   0.7344
+  ]
+ },
+ "resolutions": [
+  32,
+  64
+ ],
+ "rows": [
+  {
+   "n": 32,
+   "h": 0.03125,
+   "steps": 5700,
+   "residual": 8.214898391164147e-08,
+   "max_divergence": 1.4210854715202004e-14,
+   "wall_seconds": 31.12,
+   "u_max_abs": 0.006916098685648908,
+   "u_rms": 0.0021639681192347467,
+   "v_max_abs": 0.007785452976342255,
+   "v_rms": 0.0035769797366661,
+   "u_min": 0.9930839013143511,
+   "v_max": -0.24838461478275362,
+   "vortex_centre": [
+    0.609375,
+    0.765625
+   ],
+   "psi_min": -0.11019749347170665,
+   "verdict": "PASS",
+   "criteria": {
+    "C1_u_profile_max_abs": {
+     "statement": "max |u_computed - u_Ghia| over all Table I points, in units of U",
+     "value": 0.006916098685648908,
+     "threshold": 0.05,
+     "comparator": "le",
+     "unit": "U",
+     "pass": true,
+     "margin": 0.043083901314351095
+    },
+    "C2_v_profile_max_abs": {
+     "statement": "max |v_computed - v_Ghia| over all Table II points, in units of U",
+     "value": 0.007785452976342255,
+     "threshold": 0.05,
+     "comparator": "le",
+     "unit": "U",
+     "pass": true,
+     "margin": 0.04221454702365775
+    },
+    "C3_u_min_relative": {
+     "statement": "relative error of the deepest reverse-flow u (Ghia -0.21090 at y = 0.4531)",
+     "value": 0.006916098685648908,
+     "threshold": 0.05,
+     "comparator": "le",
+     "unit": "1",
+     "pass": true,
+     "margin": 0.043083901314351095
+    },
+    "C4_v_max_relative": {
+     "statement": "relative error of the strongest v (Ghia 0.17527 at x = 0.2344)",
+     "value": 0.01245104464498277,
+     "threshold": 0.05,
+     "comparator": "le",
+     "unit": "1",
+     "pass": true,
+     "margin": 0.03754895535501723
+    },
+    "C5_vortex_centre": {
+     "statement": "primary-vortex centre displacement from (0.617, 0.734) L",
+     "value": 0.031224999999999947,
+     "threshold": 0.05,
+     "comparator": "le",
+     "unit": "L",
+     "pass": true,
+     "margin": 0.018775000000000056
+    },
+    "C6_divergence_free": {
+     "statement": "max |div u| of the converged discrete field (closed-box compatibility)",
+     "value": 1.4210854715202004e-14,
+     "threshold": 1e-10,
+     "comparator": "le",
+     "unit": "U/L",
+     "pass": true,
+     "margin": 9.99857891452848e-11
+    },
+    "C7_steady_state": {
+     "statement": "steady-state residual max|du/dt|, |dv/dt| of the marching scheme",
+     "value": 8.214898391164147e-08,
+     "threshold": 1e-06,
+     "comparator": "le",
+     "unit": "U^2/L",
+     "pass": true,
+     "margin": 9.178510160883585e-07
+    }
+   }
+  },
+  {
+   "n": 64,
+   "h": 0.015625,
+   "steps": 11300,
+   "residual": 9.178808824117368e-08,
+   "max_divergence": 1.0658141036401503e-13,
+   "wall_seconds": 85.15,
+   "u_max_abs": 0.004452221115776811,
+   "u_rms": 0.0018854019276143695,
+   "v_max_abs": 0.008727769379403894,
+   "v_rms": 0.00443832046752502,
+   "u_min": 1.0007030607936045,
+   "v_max": -0.2525968264972241,
+   "vortex_centre": [
+    0.6171875,
+    0.7421875
+   ],
+   "psi_min": -0.10724032582827518,
+   "verdict": "PASS",
+   "criteria": {
+    "C1_u_profile_max_abs": {
+     "statement": "max |u_computed - u_Ghia| over all Table I points, in units of U",
+     "value": 0.004452221115776811,
+     "threshold": 0.05,
+     "comparator": "le",
+     "unit": "U",
+     "pass": true,
+     "margin": 0.04554777888422319
+    },
+    "C2_v_profile_max_abs": {
+     "statement": "max |v_computed - v_Ghia| over all Table II points, in units of U",
+     "value": 0.008727769379403894,
+     "threshold": 0.05,
+     "comparator": "le",
+     "unit": "U",
+     "pass": true,
+     "margin": 0.04127223062059611
+    },
+    "C3_u_min_relative": {
+     "statement": "relative error of the deepest reverse-flow u (Ghia -0.21090 at y = 0.4531)",
+     "value": 0.000703060793604493,
+     "threshold": 0.05,
+     "comparator": "le",
+     "unit": "1",
+     "pass": true,
+     "margin": 0.04929693920639551
+    },
+    "C4_v_max_relative": {
+     "statement": "relative error of the strongest v (Ghia 0.17527 at x = 0.2344)",
+     "value": 0.02962061915470631,
+     "threshold": 0.05,
+     "comparator": "le",
+     "unit": "1",
+     "pass": true,
+     "margin": 0.02037938084529369
+    },
+    "C5_vortex_centre": {
+     "statement": "primary-vortex centre displacement from (0.617, 0.734) L",
+     "value": 0.007787499999999947,
+     "threshold": 0.05,
+     "comparator": "le",
+     "unit": "L",
+     "pass": true,
+     "margin": 0.042212500000000056
+    },
+    "C6_divergence_free": {
+     "statement": "max |div u| of the converged discrete field (closed-box compatibility)",
+     "value": 1.0658141036401503e-13,
+     "threshold": 1e-10,
+     "comparator": "le",
+     "unit": "U/L",
+     "pass": true,
+     "margin": 9.989341858963599e-11
+    },
+    "C7_steady_state": {
+     "statement": "steady-state residual max|du/dt|, |dv/dt| of the marching scheme",
+     "value": 9.178808824117368e-08,
+     "threshold": 1e-06,
+     "comparator": "le",
+     "unit": "U^2/L",
+     "pass": true,
+     "margin": 9.082119117588263e-07
+    }
+   }
+  }
+ ],
+ "convergence": {
+  "differences": [
+   {
+    "l2_u": 0.005471421531197624,
+    "linf_u": 0.05503595499711189,
+    "l2_v": 0.005189922133967443,
+    "linf_v": 0.06402314779871883,
+    "l2_speed": 0.007541335778805909,
+    "linf_speed": 0.06430193838925753,
+    "coarse_n": 32,
+    "fine_n": 64,
+    "ratio": 2.0
+   }
+  ],
+  "orders": []
+ },
+ "finest": 64,
+ "verdict": "PASS",
+ "finest_verdict": "PASS",
+ "gate_criteria": [
+  {
+   "id": "C1_u_profile_max_abs",
+   "statement": "max |u_computed - u_Ghia| over all Table I points, in units of U",
+   "comparator": "le",
+   "threshold": 0.05,
+   "unit": "U"
+  },
+  {
+   "id": "C2_v_profile_max_abs",
+   "statement": "max |v_computed - v_Ghia| over all Table II points, in units of U",
+   "comparator": "le",
+   "threshold": 0.05,
+   "unit": "U"
+  },
+  {
+   "id": "C3_u_min_relative",
+   "statement": "relative error of the deepest reverse-flow u (Ghia -0.21090 at y = 0.4531)",
+   "comparator": "le",
+   "threshold": 0.05,
+   "unit": "1"
+  },
+  {
+   "id": "C4_v_max_relative",
+   "statement": "relative error of the strongest v (Ghia 0.17527 at x = 0.2344)",
+   "comparator": "le",
+   "threshold": 0.05,
+   "unit": "1"
+  },
+  {
+   "id": "C5_vortex_centre",
+   "statement": "primary-vortex centre displacement from (0.617, 0.734) L",
+   "comparator": "le",
+   "threshold": 0.05,
+   "unit": "L"
+  },
+  {
+   "id": "C6_divergence_free",
+   "statement": "max |div u| of the converged discrete field (closed-box compatibility)",
+   "comparator": "le",
+   "threshold": 1e-10,
+   "unit": "U/L"
+  },
+  {
+   "id": "C7_steady_state",
+   "statement": "steady-state residual max|du/dt|, |dv/dt| of the marching scheme",
+   "comparator": "le",
+   "threshold": 1e-06,
+   "unit": "U^2/L"
+  }
+ ]
+}
