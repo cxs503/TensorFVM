@@ -21,6 +21,10 @@ D2           dam break column height vs Martin & Moyce (1952): ``<= 15 %``    ``
 D3           dam break liquid volume drift ``<= 1 %``                          ``volume_drift``
 D4           dam break boundedness ``<= 1e-10``                                ``bound_violation``
 D5           zero-gravity control: a resting interface must not move (``<=1e-14``)  ``control_max_abs_change``
+B1           Hysing bubble terminal velocity vs ref (Eo=10, M=1e-3): ``<= 10 %``  ``terminal_velocity_rel_error``
+B2           Hysing bubble minimum circularity vs ref: ``<= 10 %``             ``circularity_rel_error``
+B3           Hysing bubble mass conservation: ``<= 1e-6``                      ``worst_step_drift``
+B4           Hysing bubble convergence: order ``>= 0.5``                       ``convergence_order``
 ===========  ===============================================================  ==========
 
 Every gate is *evaluated by the driver*, written to JSON next to the numbers it
@@ -50,6 +54,7 @@ from .campaign import (
     summarise,
 )
 from .dambreak_gate import run_dambreak_leg
+from .hysing_gate import run_hysing_leg
 from .zalesak_gate import run_zalesak_leg
 
 __all__ = [
@@ -59,6 +64,7 @@ __all__ = [
     "render_report",
     "run_campaign",
     "run_dambreak_leg",
+    "run_hysing_leg",
     "run_zalesak_leg",
     "summarise",
 ]
