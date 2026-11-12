@@ -308,3 +308,28 @@
   `docs/GAP-FVM-TWOPHASE/artifacts/fig_hysing_leg.png`、`tests/test_hysing_gate.py`(26 passed)。
 - 遗留: B1 度量错配（ref 是全程最大、门用末窗均值）→ 只加记 `peak_velocity`，不改门；
   形状门需 cpd≥32（显式气相黏性 dt∝h²，cpd=32 ≈10 h）→ 记分辨率受限；`DECLARED_CPD` 由 64 改 16。
+
+### D14 等效沙粒粗糙度 k_s（粗糙壁 RANS）验证面 —— 已交付（m16801, 2026-11-13），高 k_s^+ 段 honest FAIL
+- 缺口来源: `rans_validation` 只支持水力光滑壁（`wall_values` 给光滑 ω_w），任何 k_s/粗糙度
+  能力在仓内**完全缺失**（`grep -i rough` 只命中 `biomimetic_riblet` 的相关式库，无壁面条件）；
+  而 KMM180 只锚定了光滑壁 → 工程阻力（涂装/污损/ plating roughness）无入口。总账外新缺口。
+- 交付: `src/tensorfvm/rans_validation/roughness.py`（Nikuradse 差分锚 + Wilcox(1988) `S_R` +
+  壁值封顶 + 穿越点二分 + 粗糙对数律拟合）+ `channel.solve_channel(..., k_s=)` 最小挂钩
+  （默认 None 逐位同旧解）+ `src/tensorfvm/verification/rough_wall_channel.py`（预声明判据 R1–R10，
+  机器判级，`summary.json`）+ `tests/test_rough_wall_roughness.py`（合成/契约/登记三层）+
+  `docs/verification-rough-wall-rans/{REPORT.md,summary.json,fig_roughness_function.png,make_report.py}`。
+- 关键数字（Re_τ=20000, n=512, y₁⁺=0.40, κ 用各模型自含值）: k-ω 的 ΔU_b⁺ 对 Nikuradse
+  差分锚误差 k_s⁺=30/70/100 → **−0.130/−0.166/−0.236 w.u.（≤3.2% of u⁺）**，300/1000 →
+  −0.609/−0.978（FAIL）；粗糙对数层斜率 −2.608 vs −2.306（**13.1% FAIL**）；截距差
+  B_rough−B_smooth = 3.064 vs 3.30（k_s⁺=100）；平移 y 无关性极差 0.018 w.u.；Re 独立性
+  |ΔU_b⁺(Re2000)−ΔU_b⁺(Re20000)| = 0.086 w.u.；光滑极限逐位为 0.0。
+- 反例/踩坑: ①封顶必须 `min(ω_smooth, ω_rough)`——`ω_rough ∝ S_R` 随 k_s⁺ **下降**，取 `max`
+  会让粗糙度永远被光滑值盖住；`y₁⁺=10` 实测 `ω_smooth=3.2e3 < ω_rough=4.0e3`，旧写法会
+  **静默返回光滑解**，现改为抛 `ValueError`（失败即抛）；②网格是标定的一部分：`y₁⁺=3` 同一
+  k_s⁺=100 只给 −5.55（欠 1.73 w.u.），低 Re 处理本来就要求 `y₁⁺ ≲ 1`；③SST 上迁移 Wilcox `S_R`
+  **不合规**（k_s⁺≥70 起饱和，斜率 −0.757 vs −2.450，69% 偏差）→ 只登记不给"SST+k_s 已验证"；
+  k_s⁺≥300 的高估经带内漂移检验（0.03 w.u.）确认不是外区污染，是 `S_R` 高段偏陡的模型行为。
+- 明示未做（WITHHELD）: k-ε 壁面函数粗糙化（`u_wall` 与 ε_w 需一致化，现抛 NotImplementedError）、
+  过渡区（k_s⁺<30）Hama 型过渡函数、方向性粗糙（riblet/砂纹）、粗糙层内分辨。
+- 给下次: 建议总账新条目 `FEAT-FVM-ROUGH-WALL-KS`（验收=本文 R1–R10，工程可用域 k_s⁺≤100）；
+  后续首项=k-ε 粗糙壁面函数（工业船体常用模型），次项=Eça/Hoekstra `k_s` 型 ω 壁条件替代 `S_R` 以修高 k_s⁺ 段。
