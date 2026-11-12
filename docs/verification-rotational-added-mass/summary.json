@@ -1,5 +1,5 @@
 {
-  "all_pass": true,
+  "all_pass": false,
   "criteria": {
     "C1": {
       "pass": true,
@@ -11,15 +11,15 @@
       "pass": true,
       "statement": "spheroid roll about the symmetry axis = 0: |I_44|/(rho V a^2) < 1e-10",
       "threshold": 1e-10,
-      "value": 5.135079859529735e-34
+      "value": 5.1350798595297345e-34
     },
     "C3": {
       "pass": true,
       "statement": "offset-axis sphere: I_xx, I_yy within 3% of m_a d^2, I_zz within 3% of 0, translational block within 3%",
       "threshold": 0.03,
       "value": {
-        "max_rel_err_rotation": 0.014597472134483544,
-        "translation_rel_err": 0.014598509643049854,
+        "max_rel_err_rotation": 0.014597472134483168,
+        "translation_rel_err": 0.014598509643048159,
         "zz_rel_err": 4.645702020267853e-33
       }
     },
@@ -32,16 +32,16 @@
         "spread": 0.03
       },
       "value": {
-        "max_axisym_rel": 6.804453105275055e-16,
-        "observed_order_diagnostic": 5.570381715107755,
-        "two_finest_spread": 0.010402695388162632
+        "max_axisym_rel": 5.670377587729206e-16,
+        "observed_order_diagnostic": 0.25778743506171103,
+        "two_finest_spread": 0.00930678039697462
       }
     },
     "C5": {
       "pass": true,
       "statement": "raw reciprocity max|A_ab-A_ba|/max|A| < 5e-2 (why the API symmetrises)",
       "threshold": 0.05,
-      "value": 1.6751691270641872e-16
+      "value": 1.9915429757168732e-16
     },
     "C6": {
       "pass": true,
@@ -50,30 +50,78 @@
         "max_over_min": 3.0
       },
       "value": [
-        0.25706058840889845,
-        0.2353208997576359,
-        0.20784324506339646
+        0.2570605884088984,
+        0.23532089975763582,
+        0.20784324506339644
       ]
+    },
+    "C7": {
+      "pass": true,
+      "statement": "spheroid pitch/yaw vs closed form: finest-mesh rel. err < 3 % and Richardson rel. err < 1 %",
+      "threshold": {
+        "finest": 0.03,
+        "richardson": 0.01
+      },
+      "value": {
+        "finest_rel_err": 0.014689827753002238,
+        "observed_order_fit": 1.3141069800061371,
+        "richardson_rel_err": 0.00852086314974564
+      }
+    },
+    "C8": {
+      "note": "the sub-verdicts are reported separately on purpose: if the Richardson half fails, the < 3 % half still stands or falls on its own number and the failure is not hidden inside one boolean",
+      "pass": false,
+      "statement": "triaxial 2:1.5:1: each I_44/I_55/I_66 within 3 % of the closed form at the finest mesh, Richardson < 1 %, I_45=I_46=I_56=0 to 1e-10 relative, fitted order p >= 1",
+      "sub_verdict": {
+        "cross_lt_1e-10": true,
+        "finest_mesh_lt_3pct": true,
+        "order_ge_1": true,
+        "richardson_lt_1pct": false
+      },
+      "threshold": {
+        "cross": 1e-10,
+        "finest": 0.03,
+        "order": 1.0,
+        "richardson": 0.01
+      },
+      "value": {
+        "cross_rel_max": 4.0305951446044634e-17,
+        "finest_rel_err": [
+          0.020289122236454394,
+          0.01226115784978347,
+          0.0030480868269462634
+        ],
+        "observed_order_fit": [
+          1.355532313029813,
+          1.3398453258404648,
+          1.4038499990434326
+        ],
+        "richardson_rel_err": [
+          0.011647054289657784,
+          0.006968118681443951,
+          0.0016858836298895927
+        ]
+      }
     }
   },
-  "elapsed_s": 84.94632863998413,
+  "elapsed_s": 271.17529797554016,
   "near_sphere": [
     {
-      "I_55": 0.08133557680125303,
-      "I_55_over_rho_b_da4": 0.25706058840889845,
-      "I_55_scaled": 0.010133182083735573,
+      "I_55": 0.08133557680125302,
+      "I_55_over_rho_b_da4": 0.2570605884088984,
+      "I_55_scaled": 0.010133182083735572,
       "a_over_b": 1.25
     },
     {
-      "I_55": 0.3676889058713061,
-      "I_55_over_rho_b_da4": 0.2353208997576359,
-      "I_55_scaled": 0.02650953340962394,
+      "I_55": 0.367688905871306,
+      "I_55_over_rho_b_da4": 0.23532089975763582,
+      "I_55_scaled": 0.026509533409623934,
       "a_over_b": 1.5
     },
     {
-      "I_55": 1.8705892055705682,
-      "I_55_over_rho_b_da4": 0.20784324506339646,
-      "I_55_scaled": 0.056896266820301265,
+      "I_55": 1.870589205570568,
+      "I_55_over_rho_b_da4": 0.20784324506339644,
+      "I_55_scaled": 0.05689626682030126,
       "a_over_b": 2.0
     }
   ],
@@ -87,131 +135,160 @@
         "a_over_b": 2.0
       },
       {
-        "I_55": 32.882450618883226,
-        "I_55_scaled": 0.1226579193039942,
+        "I_55": 32.88245061888322,
+        "I_55_scaled": 0.12265791930399417,
         "a_over_b": 4.0
       },
       {
-        "I_55": 362.0260432550863,
-        "I_55_scaled": 0.16880342083607608,
+        "I_55": 362.0260432550861,
+        "I_55_scaled": 0.168803420836076,
         "a_over_b": 8.0
       }
     ],
     "strip_theory_scaled": 0.2
   },
   "sphere": {
-    "coupling_trans_rot_max": 3.760518226969472e-17,
+    "coupling_trans_rot_max": 3.8272336688738307e-17,
     "exact_anchor": "I_44=I_55=I_66=0 (r x n = 0 on a sphere)",
     "m_a_exact": 2.0943951023931953,
     "m_a_panel": [
-      2.040501899429972,
-      2.040501899429972,
+      2.0405018994299713,
+      2.0405018994299704,
       2.052042193328217
     ],
     "n_panels": 576,
     "rotation_diag_about_diameter": [
       2.392886793015634e-05,
-      2.3928867930156e-05,
-      1.6284910024083973e-32
+      2.3928867930156018e-05,
+      1.6284910024083967e-32
     ],
     "rotation_exact": 0.0,
     "rotation_scaled_max": 1.1425192841032535e-05,
-    "translation_rel_err": 0.02573210895195521
+    "translation_rel_err": 0.025732108951956056
   },
   "sphere_offset_axis": {
     "I_xx_I_yy_exact_m_a_d2": 4.71238898038469,
     "coupling_block_exact_m_a_d": 3.141592653589793,
     "coupling_block_panel": [
       [
-        9.259820864669931e-17,
-        3.0957300829418295,
-        -5.423314467441834e-18
+        -9.020562075079397e-17,
+        3.0957300829418326,
+        -5.4233144674418855e-18
       ],
       [
-        -3.095730082941832,
-        2.165152077172011e-16,
-        -4.3324383322062924e-18
+        -3.0957300829418326,
+        -5.551115123125783e-17,
+        -4.332438332206274e-18
       ],
       [
-        -4.210629896153159e-17,
-        7.621316458699113e-17,
-        1.4356394302811982e-18
+        -1.222980050563649e-16,
+        7.806255641895632e-17,
+        1.4356394302812045e-18
       ]
     ],
     "d_over_a": 1.5,
     "exact_anchor": "I_oo = m_a d^2 (parallel-axis for added mass), I_center = 0",
     "ladder": [
       {
-        "I_xx": 4.529480118428457,
+        "I_xx": 4.529480118428458,
         "I_yy": 4.529480118428455,
-        "I_zz": 5.6198491506867655e-33,
-        "coupling_max": 3.0196049478584532,
+        "I_zz": 5.619849150686764e-33,
+        "coupling_max": 3.0196049478584523,
         "mesh": [
           24,
           14
         ],
         "n_panels": 336,
-        "rel_err_xx": 0.03881446602086345,
+        "rel_err_xx": 0.03881446602086326,
         "rel_err_yy": 0.03881446602086383,
-        "rel_err_zz": 1.1925690290167848e-33,
+        "rel_err_zz": 1.1925690290167844e-33,
         "translation_rel_err": 0.03882989272716547
       },
       {
-        "I_xx": 4.591153202585367,
+        "I_xx": 4.591153202585366,
         "I_yy": 4.591153202585364,
-        "I_zz": 1.6284910024083967e-32,
-        "coupling_max": 3.0607528491449587,
+        "I_zz": 1.628491002408397e-32,
+        "coupling_max": 3.060752849144958,
         "mesh": [
           32,
           18
         ],
         "n_panels": 576,
-        "rel_err_xx": 0.025727031088470406,
+        "rel_err_xx": 0.02572703108847078,
         "rel_err_yy": 0.02572703108847116,
-        "rel_err_zz": 3.455765237519627e-33,
-        "translation_rel_err": 0.02573210895195542
+        "rel_err_zz": 3.4557652375196274e-33,
+        "translation_rel_err": 0.025732108951956056
       },
       {
-        "I_xx": 4.643600013556677,
-        "I_yy": 4.643600013556677,
+        "I_xx": 4.6436000135566795,
+        "I_yy": 4.643600013556679,
         "I_zz": 2.1892355006461122e-32,
-        "coupling_max": 3.095730082941832,
+        "coupling_max": 3.0957300829418326,
         "mesh": [
           48,
           26
         ],
         "n_panels": 1248,
-        "rel_err_xx": 0.014597472134483544,
-        "rel_err_yy": 0.014597472134483544,
+        "rel_err_xx": 0.014597472134482979,
+        "rel_err_yy": 0.014597472134483168,
         "rel_err_zz": 4.645702020267853e-33,
-        "translation_rel_err": 0.014598509643049854
+        "translation_rel_err": 0.014598509643048159
       }
     ],
-    "observed_order": 0.7329297354427499,
+    "observed_order": 0.7329297354428188,
     "rel_err_xx_yy_zz": [
-      0.014597472134483544,
-      0.014597472134483544,
+      0.014597472134482979,
+      0.014597472134483168,
       4.645702020267853e-33
     ],
     "richardson_I_xx": 4.7228235140463815,
     "richardson_rel_err": 0.0022142768148226957,
     "rotation_diag_panel": [
-      4.643600013556677,
-      4.643600013556677,
+      4.6436000135566795,
+      4.643600013556679,
       2.1892355006461122e-32
     ],
-    "translational_block_rel_err": 0.014598509643049854
+    "translational_block_rel_err": 0.014598509643048159
+  },
+  "spheroid_analytic": {
+    "I_55_exact": 2.0057929172153717,
+    "I_66_exact": 2.0057929172153717,
+    "finest_mesh": [
+      96,
+      50
+    ],
+    "finest_n_panels": 4800,
+    "finest_rel_err": 0.014689827753002238,
+    "note": "the previous revision of this file declared the analytic half of the D1 acceptance WITHHELD because no closed form existed in the tree; D6 supplied it, so the block is now scored",
+    "observed_order_fit": 1.3141069800061371,
+    "reference": "ellipsoid_added_inertia.rotational_added_inertia(2.0, 1.0, 1.0, axis=1/2) -- closed-form degree-2 Lame potential (ledger D6/m14810, 9/9 criteria, 1e-13 quadrature)",
+    "rel_err_I_55_by_mesh": {
+      "16_10": 0.13634718503986684,
+      "24_14": 0.08178122132603034,
+      "48_26": 0.03401438133675178,
+      "64_34": 0.023859893149010183,
+      "96_50": 0.014689827753002127
+    },
+    "rel_err_I_66_by_mesh": {
+      "16_10": 0.13634718503986729,
+      "24_14": 0.08178122132603034,
+      "48_26": 0.034014381336752005,
+      "64_34": 0.023859893149010734,
+      "96_50": 0.014689827753002238
+    },
+    "richardson_I_55": 1.9887018302610504,
+    "richardson_rel_err": 0.00852086314974564
   },
   "spheroid_roll": {
-    "I_44": 1.6882698095671455e-32,
+    "I_44": 1.6882698095671452e-32,
     "a_over_b": 2.0,
     "exact_anchor": "0 (body of revolution: (r x n)_x = 0 on the symmetry axis)",
     "n_panels": 432,
-    "rel": 5.135079859529735e-34,
+    "rel": 5.1350798595297345e-34,
     "scale": 32.877187030188765
   },
   "spheroid_transverse": {
-    "I_55_scaled_finest": 0.05842781617154944,
+    "I_55_scaled_finest": 0.05897669936104111,
     "V_exact": 8.377580409572781,
     "a_over_b": 2.0,
     "ladder": [
@@ -219,10 +296,10 @@
         "I_55": 1.732308699180153,
         "I_55_scaled": 0.05437847963346329,
         "I_55_scaled_exactV": 0.05169477983167735,
-        "I_66": 1.7323086991801526,
+        "I_66": 1.7323086991801522,
         "V_panel": 7.964128046870445,
-        "asym_raw": 1.1090935873134905e-16,
-        "axisym_rel": 2.563568549071167e-16,
+        "asym_raw": 1.9915429757168732e-16,
+        "axisym_rel": 5.127137098142334e-16,
         "mesh": [
           16,
           10
@@ -230,13 +307,13 @@
         "n_panels": 160
       },
       {
-        "I_55": 1.8417567227183982,
-        "I_55_scaled": 0.056299535455253805,
-        "I_55_scaled_exactV": 0.05496087869875544,
-        "I_66": 1.841756722718397,
+        "I_55": 1.8417567227183973,
+        "I_55_scaled": 0.05629953545525378,
+        "I_55_scaled_exactV": 0.05496087869875541,
+        "I_66": 1.8417567227183973,
         "V_panel": 8.178383302035433,
-        "asym_raw": 1.1988510613901622e-16,
-        "axisym_rel": 6.028065547041893e-16,
+        "asym_raw": 7.961241808453479e-17,
+        "axisym_rel": 0.0,
         "mesh": [
           24,
           14
@@ -244,13 +321,13 @@
         "n_panels": 336
       },
       {
-        "I_55": 1.9375671120466547,
-        "I_55_scaled": 0.05819762489409317,
-        "I_55_scaled_exactV": 0.05782000939772125,
-        "I_66": 1.9375671120466542,
+        "I_55": 1.9375671120466522,
+        "I_55_scaled": 0.058197624894093095,
+        "I_55_scaled_exactV": 0.05782000939772118,
+        "I_66": 1.9375671120466518,
         "V_panel": 8.323222449252006,
-        "asym_raw": 1.1778652693331338e-16,
-        "axisym_rel": 2.291993949984889e-16,
+        "asym_raw": 1.3464918918241655e-16,
+        "axisym_rel": 2.291993949984892e-16,
         "mesh": [
           48,
           26
@@ -258,26 +335,164 @@
         "n_panels": 1248
       },
       {
-        "I_55": 1.9579349125315693,
-        "I_55_scaled": 0.058646867747045674,
-        "I_55_scaled_exactV": 0.05842781617154944,
-        "I_66": 1.9579349125315706,
+        "I_55": 1.9579349125315715,
+        "I_55_scaled": 0.05864686774704574,
+        "I_55_scaled_exactV": 0.058427816171549504,
+        "I_66": 1.9579349125315704,
         "V_panel": 8.346289357585512,
-        "asym_raw": 1.6751691270641872e-16,
-        "axisym_rel": 6.804453105275055e-16,
+        "asym_raw": 1.2986082677182316e-16,
+        "axisym_rel": 5.670377587729206e-16,
         "mesh": [
           64,
           34
         ],
         "n_panels": 2176
+      },
+      {
+        "I_55": 1.9763281647532862,
+        "I_55_scaled": 0.05907711425089235,
+        "I_55_scaled_exactV": 0.05897669936104111,
+        "I_66": 1.976328164753286,
+        "V_panel": 8.363340820779149,
+        "asym_raw": 1.1054441112144162e-16,
+        "axisym_rel": 1.1235209257504565e-16,
+        "mesh": [
+          96,
+          50
+        ],
+        "n_panels": 4800
       }
     ],
-    "max_axisymmetry_rel": 6.804453105275055e-16,
-    "max_raw_asymmetry": 1.6751691270641872e-16,
-    "note": "no elementary closed form for a spheroid's transverse added inertia in this tree: reported as a converged, symmetric, positive value; NOT scored against an analytic value",
-    "observed_order_diagnostic": 5.570381715107755,
-    "richardson_scaled": 0.05844088241674723,
+    "max_axisymmetry_rel": 5.670377587729206e-16,
+    "max_raw_asymmetry": 1.9915429757168732e-16,
+    "note": "structural check only (axisymmetry / reciprocity / spread): the analytic score of this block is criterion C7, which uses the closed form of ellipsoid_added_inertia (ledger D6, m14810)",
+    "observed_order_diagnostic": 0.25778743506171103,
+    "richardson_scaled": 0.061782224999807414,
     "slender_limit_reference": 0.2,
-    "two_finest_spread": 0.010402695388162632
+    "two_finest_spread": 0.00930678039697462
+  },
+  "triaxial": {
+    "I_exact": [
+      1.0488456905208323,
+      3.763207486956632,
+      0.6197918127135711
+    ],
+    "V_exact": 12.566370614359172,
+    "cross_rel_max": 4.0305951446044634e-17,
+    "elapsed_s": 144.84087657928467,
+    "ladder": [
+      {
+        "I_diag": [
+          0.959275211713803,
+          3.572228004561953,
+          0.6114314488522793
+        ],
+        "V_panel": 12.390937077608308,
+        "V_rel_err": -0.01396055727899681,
+        "cross_max": 1.43982048506075e-16,
+        "cross_rel": 4.0305951446044634e-17,
+        "mesh": [
+          32,
+          18
+        ],
+        "n_panels": 576,
+        "rel_err": [
+          0.08539910076052339,
+          0.05074912373463817,
+          0.013488987253136617
+        ]
+      },
+      {
+        "I_diag": [
+          0.9972267539558133,
+          3.6519185316891987,
+          0.6149307300280965
+        ],
+        "V_panel": 12.484833673878008,
+        "V_rel_err": -0.006488503561083547,
+        "cross_max": 5.204170427930421e-17,
+        "cross_rel": 1.4250510745986513e-17,
+        "mesh": [
+          48,
+          26
+        ],
+        "n_panels": 1248,
+        "rel_err": [
+          0.04921499609669586,
+          0.029572899090247726,
+          0.007843089543554636
+        ]
+      },
+      {
+        "I_diag": [
+          1.0134352200217194,
+          3.6865656998060183,
+          0.6165128874445842
+        ],
+        "V_panel": 12.519434036378266,
+        "V_rel_err": -0.0037350941987397412,
+        "cross_max": 6.331740687315346e-17,
+        "cross_rel": 1.717517386886259e-17,
+        "mesh": [
+          64,
+          34
+        ],
+        "n_panels": 2176,
+        "rel_err": [
+          0.03376137292562925,
+          0.020366080641648333,
+          0.005290365573935372
+        ]
+      },
+      {
+        "I_diag": [
+          1.0275655320986767,
+          3.7170662059375696,
+          0.6179026334537897
+        ],
+        "V_panel": 12.545011231168724,
+        "V_rel_err": -0.0016997257080769712,
+        "cross_max": 5.141828803012505e-17,
+        "cross_rel": 1.3833029916978737e-17,
+        "mesh": [
+          96,
+          50
+        ],
+        "n_panels": 4800,
+        "rel_err": [
+          0.020289122236454394,
+          0.01226115784978347,
+          0.0030480868269462634
+        ]
+      }
+    ],
+    "note": "three distinct rotation entries; the rotation/rotation cross terms are zero by symmetry and come out at machine precision, so a wrong moment arm in any single direction cannot hide",
+    "observed_order_fit": [
+      1.355532313029813,
+      1.3398453258404648,
+      1.4038499990434326
+    ],
+    "quadrature": "gauss",
+    "reference": "ellipsoid_added_inertia.rotational_added_inertia(a, b, c, axis=k), k = 0 (roll/x), 1 (pitch/y), 2 (yaw/z)",
+    "rel_err_finest": [
+      0.020289122236454394,
+      0.01226115784978347,
+      0.0030480868269462634
+    ],
+    "richardson": [
+      1.0366297278218626,
+      3.7369850105646196,
+      0.6187469158425777
+    ],
+    "richardson_rel_err": [
+      0.011647054289657784,
+      0.006968118681443951,
+      0.0016858836298895927
+    ],
+    "semi_axes": [
+      2.0,
+      1.5,
+      1.0
+    ]
   }
 }

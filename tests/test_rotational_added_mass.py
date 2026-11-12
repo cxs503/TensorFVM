@@ -8,7 +8,11 @@ structure on coarse meshes so they stay fast:
 * body of revolution roll -> exactly zero to machine precision;
 * parallel-axis anchor ``I_oo = m_a d^2`` for a sphere off the reference point;
 * the ``6 x 6`` translational block reproduces the existing translational API;
-* symmetry of the assembled matrix and the per-panel normal-velocity entry point.
+* symmetry of the assembled matrix and the per-panel normal-velocity entry point;
+* triaxial geometry: ``ellipsoid_panels`` reduces to ``spheroid_panels`` for
+  ``c = b`` (bit-identical), carries the analytic volume, and the three
+  rotational entries of a genuinely triaxial body match the closed form of
+  :mod:`tensorfvm.ellipsoid_added_inertia` with zero rotation/rotation coupling.
 """
 
 from __future__ import annotations
@@ -16,10 +20,12 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
+from tensorfvm.ellipsoid_added_inertia import rotational_added_inertia as closed_form
 from tensorfvm.panel_added_mass import (
     added_mass_matrix,
     added_mass_matrix_6dof,
     displaced_volume,
+    ellipsoid_panels,
     rotational_added_inertia,
     sphere_added_mass,
     sphere_offset_axis_added_inertia,
@@ -103,3 +109,70 @@ def test_requested_directions_and_validation():
         added_mass_matrix_6dof(panels, rho=0.0)
     with pytest.raises(ValueError):
         added_mass_matrix_6dof(panels, directions=(6,))
+
+
+def test_ellipsoid_panels_reduces_to_spheroid_panels_bit_identically():
+    """``c = b`` must reproduce the published spheroid panelisation exactly."""
+    for a, b in ((2.0, 1.0), (1.0, 1.0), (4.0, 0.5)):
+        spheroid = spheroid_panels(a, b, 16, 10)
+        ellipsoid = ellipsoid_panels(a, b, b, 16, 10)
+        assert np.array_equal(spheroid.centroids, ellipsoid.centroids)
+        assert np.array_equal(spheroid.normals, ellipsoid.normals)
+        assert np.array_equal(spheroid.areas, ellipsoid.areas)
+        assert np.array_equal(spheroid.corners, ellipsoid.corners)
+
+
+def test_triaxial_panels_volume_normals_and_validation():
+    a, b, c = 2.0, 1.5, 1.0
+    panels = ellipsoid_panels(a, b, c, 32, 18)
+    v_exact = 4.0 / 3.0 * np.pi * a * b * c
+    assert displaced_volume(panels) == pytest.approx(v_exact, rel=3.0e-2)
+    # outward (into the fluid) normals: positive projection on grad(F)
+    grad = np.stack([panels.centroids[:, 0] / a**2, panels.centroids[:, 1] / b**2,
+                     panels.centroids[:, 2] / c**2], axis=1)
+    assert np.all(np.einsum("ij,ij->i", panels.normals, grad) > 0.0)
+    with pytest.raises(ValueError):
+        ellipsoid_panels(1.0, 0.0, 1.0)
+
+
+def test_closed_form_anchor_landmarks():
+    """The reference used by criteria C7/C8: exact zeros, equality, positivity."""
+    for axis in range(3):
+        assert closed_form(1.0, 1.0, 1.0, axis=axis) == 0.0        # sphere
+    assert closed_form(2.0, 1.0, 1.0, axis=0) == 0.0               # spheroid roll
+    assert closed_form(2.0, 1.0, 1.0, axis=1) == pytest.approx(
+        closed_form(2.0, 1.0, 1.0, axis=2), rel=1.0e-14)           # axisymmetry
+    triax = [closed_form(2.0, 1.5, 1.0, axis=axis) for axis in range(3)]
+    assert all(v > 0.0 for v in triax)
+    assert len({round(v, 9) for v in triax}) == 3                   # all distinct
+
+
+def test_triaxial_rotational_block_matches_closed_form():
+    """Three distinct entries against the closed form + machine-precision decoupling."""
+    a, b, c = 2.0, 1.5, 1.0
+    panels = ellipsoid_panels(a, b, c, 24, 14)
+    rot = rotational_added_inertia(panels, rho=1.0, order=3, quadrature="gauss")
+    exact = [closed_form(a, b, c, axis=axis) for axis in range(3)]
+    for axis in range(3):
+        # coarse mesh: faceting error only, but a wrong moment arm or a wrong
+        # normal orientation would show up as an O(1) discrepancy
+        assert rot[axis, axis] == pytest.approx(exact[axis], rel=2.0e-1)
+    scale = max(float(rot[axis, axis]) for axis in range(3))
+    assert abs(rot[0, 1]) / scale < 1.0e-10
+    assert abs(rot[0, 2]) / scale < 1.0e-10
+    assert abs(rot[1, 2]) / scale < 1.0e-10
+    # symmetric by construction
+    assert np.array_equal(rot, rot.T)
+
+
+def test_triaxial_rotational_block_narrows_with_mesh():
+    """The panel value must move *towards* the closed form under refinement."""
+    a, b, c = 2.0, 1.5, 1.0
+    exact = [closed_form(a, b, c, axis=axis) for axis in range(3)]
+    err = []
+    for n_theta, n_phi in ((16, 10), (32, 18)):
+        panels = ellipsoid_panels(a, b, c, n_theta, n_phi)
+        rot = rotational_added_inertia(panels, rho=1.0, order=3, quadrature="gauss")
+        err.append(max(abs(float(rot[k, k]) - exact[k]) / exact[k] for k in range(3)))
+    assert err[1] < err[0]
+    assert err[1] < 1.5e-1
