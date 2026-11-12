@@ -1,0 +1,50 @@
+{
+  "case": "CASE-FVM-BLASIUS-PLATE",
+  "device": "march",
+  "config": {
+    "stations": 401,
+    "length": 1.0,
+    "reynolds": 100000.0,
+    "kinematic_viscosity": 1e-05,
+    "ny": 256,
+    "stretching": 8.0,
+    "model": "laminar",
+    "trip_x": null
+  },
+  "measured": {
+    "x_trailing": 1.0,
+    "re_x": 100000.0,
+    "cf": 0.002084919373887167,
+    "H": 2.5794504209068565,
+    "delta_star": 0.005506555607985809,
+    "theta": 0.002134778619257148,
+    "continuity_residual": 3.3235129067573805e-13
+  },
+  "comparison": {
+    "re_x": 100000.0,
+    "error_limit": 0.03,
+    "reference": {
+      "re_x": 100000.0,
+      "cf": 0.002099752366351804,
+      "delta_star": 0.005441647397617747,
+      "theta": 0.002099752366351804,
+      "H": 2.5916
+    },
+    "got": {
+      "cf": 0.002084919373887167,
+      "H": 2.5794504209068565
+    },
+    "cf": {
+      "relative_error": -0.007064162756681722,
+      "abs_relative_error": 0.007064162756681722,
+      "passed": true
+    },
+    "H": {
+      "relative_error": -0.004688061079311477,
+      "abs_relative_error": 0.004688061079311477,
+      "passed": true
+    },
+    "passed": true
+  },
+  "tag": "march"
+}

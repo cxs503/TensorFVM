@@ -1,0 +1,64 @@
+{
+  "delivered_commit": "4f87f691",
+  "rerun_dir": "/root/tp-agent/work/m16253/runs/m16253/repro",
+  "identical_numbers": true,
+  "fields": {
+    "cf": {
+      "delivered": 0.002084919373887167,
+      "rerun": 0.002084919373887167,
+      "abs_diff": 0.0,
+      "rel_diff": 0.0
+    },
+    "H": {
+      "delivered": 2.5794504209068565,
+      "rerun": 2.5794504209068565,
+      "abs_diff": 0.0,
+      "rel_diff": 0.0
+    },
+    "re_x": {
+      "delivered": 100000.0,
+      "rerun": 100000.0,
+      "abs_diff": 0.0,
+      "rel_diff": 0.0
+    }
+  },
+  "sensitivity": {
+    "ny-128": {
+      "cf_delivered": 0.002061682631576099,
+      "cf_rerun": 0.002061682631576099,
+      "abs_diff": 0.0
+    },
+    "ny-256": {
+      "cf_delivered": 0.002084919373887167,
+      "cf_rerun": 0.002084919373887167,
+      "abs_diff": 0.0
+    },
+    "ny-512": {
+      "cf_delivered": 0.00209655259327255,
+      "cf_rerun": 0.00209655259327255,
+      "abs_diff": 0.0
+    },
+    "stations-101": {
+      "cf_delivered": 0.0020789482286877724,
+      "cf_rerun": 0.0020789482286877724,
+      "abs_diff": 0.0
+    },
+    "stations-1601": {
+      "cf_delivered": 0.002088364152527077,
+      "cf_rerun": 0.002088364152527077,
+      "abs_diff": 0.0
+    }
+  },
+  "criterion": {
+    "tolerance": 0.03,
+    "ref_cf": 0.002099752366351804,
+    "ref_H": 2.5916,
+    "got_cf": 0.002084919373887167,
+    "got_H": 2.5794504209068565,
+    "cf_relative_error": -0.007064162756681722,
+    "H_relative_error": -0.004688061079311477,
+    "passed": true
+  },
+  "delivered_summary_all_passed": true,
+  "rerun_summary_all_passed": true
+}
