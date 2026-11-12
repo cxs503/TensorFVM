@@ -1,0 +1,51 @@
+{
+  "analytic": [
+    {
+      "K": 0.09046534253780157,
+      "T_min": 0.7540897032741709,
+      "beta": 5.0,
+      "p_min": 0.3723750183508543,
+      "positivity_margin": 0.7540897032741709,
+      "rho_min": 0.49380732389534654
+    },
+    {
+      "K": 0.0036186137015120625,
+      "T_min": 0.9901635881309668,
+      "beta": 1.0,
+      "p_min": 0.9659937822470435,
+      "positivity_margin": 0.9901635881309668,
+      "rho_min": 0.9755900881696263
+    }
+  ],
+  "case": "isentropic vortex (Shu 1998), box 10x10, gamma=1.4",
+  "measured": [
+    {
+      "beta": 5.0,
+      "grid": 41,
+      "isentropic_residual": 0.0,
+      "min_radial_step": 0.0,
+      "monotone_step_floor": -1e-14,
+      "p_max": 1.0,
+      "p_min": 0.3723750183508543,
+      "rho_max": 1.0,
+      "rho_min": 0.49380732389534654
+    },
+    {
+      "beta": 1.0,
+      "grid": 41,
+      "isentropic_residual": 0.0,
+      "min_radial_step": 0.0,
+      "monotone_step_floor": -1e-14,
+      "p_max": 1.0,
+      "p_min": 0.9659937822470435,
+      "rho_max": 1.0,
+      "rho_min": 0.9755900881696263
+    }
+  ],
+  "periodic_image": {
+    "corner_radius": 7.0710678118654755,
+    "grid": 41,
+    "lx": 10.0,
+    "max_image_amplitude": 6.14421235332821e-06
+  }
+}
