@@ -1,0 +1,387 @@
+{
+  "mission": "m15410",
+  "anchor_slug": "CASE-HEATED-CAVITY-FVM",
+  "repo": "TensorFVM",
+  "reference": "de Vahl Davis (1983), Int. J. Numer. Methods Fluids 3, 249-264",
+  "tolerances": {
+    "code_gate": 0.03,
+    "platform_limit": 0.15
+  },
+  "acceptance_finest_mesh": {
+    "1000": {
+      "finest_mesh": 128,
+      "nu_ref": 1.118,
+      "nu_got": 1.1179400962392576,
+      "nu_rel_err": 5.3581181343914854e-05,
+      "u_ref": 3.649,
+      "u_got": 3.6511090585695216,
+      "u_rel_err": 0.0005779826170242789,
+      "v_ref": 3.697,
+      "v_got": 3.6994469887528405,
+      "v_rel_err": 0.0006618849750717988,
+      "u_got_matches_ledger_block": true,
+      "converged": true,
+      "within_code_gate_3pct": true,
+      "within_platform_limit_15pct": true
+    },
+    "10000": {
+      "finest_mesh": 128,
+      "nu_ref": 2.243,
+      "nu_got": 2.2462951120664667,
+      "nu_rel_err": 0.0014690646751969777,
+      "u_ref": 16.178,
+      "u_got": 16.194102600721216,
+      "u_rel_err": 0.0009953393943141955,
+      "v_ref": 19.617,
+      "v_got": 19.637531010513513,
+      "v_rel_err": 0.0010465927773620795,
+      "u_got_matches_ledger_block": true,
+      "converged": true,
+      "within_code_gate_3pct": true,
+      "within_platform_limit_15pct": true
+    },
+    "100000": {
+      "finest_mesh": 128,
+      "nu_ref": 4.519,
+      "nu_got": 4.532049907491031,
+      "nu_rel_err": 0.0028877865658400747,
+      "u_ref": 34.73,
+      "u_got": 34.97630242790314,
+      "u_rel_err": 0.007091921333231956,
+      "v_ref": 68.59,
+      "v_got": 68.65797772907675,
+      "v_rel_err": 0.0009910734666386456,
+      "u_got_matches_ledger_block": true,
+      "converged": true,
+      "within_code_gate_3pct": true,
+      "within_platform_limit_15pct": true
+    },
+    "1000000": {
+      "finest_mesh": 128,
+      "nu_ref": 8.8,
+      "nu_got": 8.90093938425401,
+      "nu_rel_err": 0.011470384574319146,
+      "u_ref": 64.63,
+      "u_got": 65.3356532601123,
+      "u_rel_err": 0.010918354635808442,
+      "v_ref": 219.36,
+      "v_got": 220.7140048478714,
+      "v_rel_err": 0.006172523923556618,
+      "u_got_matches_ledger_block": true,
+      "converged": true,
+      "within_code_gate_3pct": true,
+      "within_platform_limit_15pct": true
+    }
+  },
+  "ledger_consistency": {
+    "1000": {
+      "32": {
+        "nu_mean": 1.1202526610549772,
+        "mean_of_nu_local": 1.1202526610549772,
+        "recomputed_mean_matches": true,
+        "nu_local_peak_location_y": 0.078125,
+        "nu_local_decays_after_peak": true,
+        "nu_local_first_last": [
+          1.5113412716958468,
+          0.6889583806798795
+        ],
+        "steps": 6000,
+        "converged": true,
+        "max_divergence": 8.881784197001252e-16,
+        "momentum_residual_max": 1.9081958235744878e-16,
+        "psi_max": 3.4378459253457005e-16
+      },
+      "64": {
+        "nu_mean": 1.118392285126755,
+        "mean_of_nu_local": 1.1183922851267547,
+        "recomputed_mean_matches": true,
+        "nu_local_peak_location_y": 0.0859375,
+        "nu_local_decays_after_peak": true,
+        "nu_local_first_last": [
+          1.504499606663978,
+          0.6906818045851134
+        ],
+        "steps": 9600,
+        "converged": true,
+        "max_divergence": 1.7763568394002505e-15,
+        "momentum_residual_max": 3.1923079197443416e-11,
+        "psi_max": 7.632864386053458e-06
+      },
+      "128": {
+        "nu_mean": 1.1179400962392576,
+        "mean_of_nu_local": 1.1179400962392576,
+        "recomputed_mean_matches": true,
+        "nu_local_peak_location_y": 0.08984375,
+        "nu_local_decays_after_peak": true,
+        "nu_local_first_last": [
+          1.5028240638685613,
+          0.6911063719511764
+        ],
+        "steps": 19200,
+        "converged": true,
+        "max_divergence": 3.774758283725532e-15,
+        "momentum_residual_max": 3.2674123907807523e-09,
+        "psi_max": 2.426362550722929e-06
+      },
+      "_convergence": {
+        "nu_by_mesh": [
+          1.1202526610549772,
+          1.118392285126755,
+          1.1179400962392576
+        ],
+        "monotone_in_mesh": true,
+        "error_vs_reference": [
+          0.0020149025536468006,
+          0.0003508811509434893,
+          5.3581181343914854e-05
+        ]
+      }
+    },
+    "10000": {
+      "32": {
+        "nu_mean": 2.271605323854745,
+        "mean_of_nu_local": 2.271605323854745,
+        "recomputed_mean_matches": true,
+        "nu_local_peak_location_y": 0.140625,
+        "nu_local_decays_after_peak": true,
+        "nu_local_first_last": [
+          3.476642013979316,
+          0.5829594014500353
+        ],
+        "steps": 6000,
+        "converged": true,
+        "max_divergence": 1.5543122344752192e-15,
+        "momentum_residual_max": 5.0306980803327406e-17,
+        "psi_max": 9.13564988976605e-16
+      },
+      "64": {
+        "nu_mean": 2.2509846629705947,
+        "mean_of_nu_local": 2.2509846629705947,
+        "recomputed_mean_matches": true,
+        "nu_local_peak_location_y": 0.1484375,
+        "nu_local_decays_after_peak": true,
+        "nu_local_first_last": [
+          3.3986679475332764,
+          0.5845466545837384
+        ],
+        "steps": 9600,
+        "converged": true,
+        "max_divergence": 2.6645352591003757e-15,
+        "momentum_residual_max": 3.8455089806932463e-13,
+        "psi_max": 2.7498306168195805e-15
+      },
+      "128": {
+        "nu_mean": 2.2462951120664667,
+        "mean_of_nu_local": 2.2462951120664667,
+        "recomputed_mean_matches": true,
+        "nu_local_peak_location_y": 0.14453125,
+        "nu_local_decays_after_peak": true,
+        "nu_local_first_last": [
+          3.3802938815762027,
+          0.5848655862710525
+        ],
+        "steps": 19200,
+        "converged": true,
+        "max_divergence": 5.329070518200751e-15,
+        "momentum_residual_max": 2.293114441821037e-10,
+        "psi_max": 9.56727202663963e-06
+      },
+      "_convergence": {
+        "nu_by_mesh": [
+          2.271605323854745,
+          2.2509846629705947,
+          2.2462951120664667
+        ],
+        "monotone_in_mesh": true,
+        "error_vs_reference": [
+          0.012753153747099873,
+          0.0035598140751648944,
+          0.0014690646751969777
+        ]
+      }
+    },
+    "100000": {
+      "32": {
+        "nu_mean": 4.744484348521921,
+        "mean_of_nu_local": 4.744484348521921,
+        "recomputed_mean_matches": true,
+        "nu_local_peak_location_y": 0.078125,
+        "nu_local_decays_after_peak": true,
+        "nu_local_first_last": [
+          8.399878052329571,
+          0.7094891177810604
+        ],
+        "steps": 8000,
+        "converged": true,
+        "max_divergence": 1.2490009027033011e-15,
+        "momentum_residual_max": 9.349951368697873e-13,
+        "psi_max": 3.871187848708603e-15
+      },
+      "64": {
+        "nu_mean": 4.567475354725117,
+        "mean_of_nu_local": 4.567475354725116,
+        "recomputed_mean_matches": true,
+        "nu_local_peak_location_y": 0.0703125,
+        "nu_local_decays_after_peak": true,
+        "nu_local_first_last": [
+          7.556245436626033,
+          0.7244120779848728
+        ],
+        "steps": 9600,
+        "converged": true,
+        "max_divergence": 4.6074255521944e-15,
+        "momentum_residual_max": 1.8396920055049892e-11,
+        "psi_max": 7.93015719754113e-15
+      },
+      "128": {
+        "nu_mean": 4.532049907491031,
+        "mean_of_nu_local": 4.532049907491032,
+        "recomputed_mean_matches": true,
+        "nu_local_peak_location_y": 0.08203125,
+        "nu_local_decays_after_peak": true,
+        "nu_local_first_last": [
+          7.354878101531374,
+          0.7271584236398662
+        ],
+        "steps": 19200,
+        "converged": true,
+        "max_divergence": 9.992007221626409e-15,
+        "momentum_residual_max": 6.712344850952345e-11,
+        "psi_max": 1.4783443522413124e-05
+      },
+      "_convergence": {
+        "nu_by_mesh": [
+          4.744484348521921,
+          4.567475354725117,
+          4.532049907491031
+        ],
+        "monotone_in_mesh": true,
+        "error_vs_reference": [
+          0.049896956964355046,
+          0.010727009233263257,
+          0.0028877865658400747
+        ]
+      }
+    },
+    "1000000": {
+      "32": {
+        "nu_mean": 10.666328534280286,
+        "mean_of_nu_local": 10.666328534280286,
+        "recomputed_mean_matches": true,
+        "nu_local_peak_location_y": 0.015625,
+        "nu_local_decays_after_peak": true,
+        "nu_local_first_last": [
+          23.705099876280645,
+          0.8322409341487518
+        ],
+        "steps": 8000,
+        "converged": true,
+        "max_divergence": 1.3877787807814457e-15,
+        "momentum_residual_max": 1.1965882358491026e-07,
+        "psi_max": 9.50107588535669e-15
+      },
+      "64": {
+        "nu_mean": 9.19718194339813,
+        "mean_of_nu_local": 9.19718194339813,
+        "recomputed_mean_matches": true,
+        "nu_local_peak_location_y": 0.0234375,
+        "nu_local_decays_after_peak": true,
+        "nu_local_first_last": [
+          19.435506231609374,
+          0.9570030855868126
+        ],
+        "steps": 9600,
+        "converged": true,
+        "max_divergence": 3.774758283725532e-15,
+        "momentum_residual_max": 5.7720705487398355e-08,
+        "psi_max": 1.0049214878742653e-14
+      },
+      "128": {
+        "nu_mean": 8.90093938425401,
+        "mean_of_nu_local": 8.90093938425401,
+        "recomputed_mean_matches": true,
+        "nu_local_peak_location_y": 0.03515625,
+        "nu_local_decays_after_peak": true,
+        "nu_local_first_last": [
+          17.22346235498399,
+          0.9745177067018437
+        ],
+        "steps": 19200,
+        "converged": true,
+        "max_divergence": 7.882583474838611e-15,
+        "momentum_residual_max": 7.399436971781623e-09,
+        "psi_max": 2.0109849319847514e-14
+      },
+      "_convergence": {
+        "nu_by_mesh": [
+          10.666328534280286,
+          9.19718194339813,
+          8.90093938425401
+        ],
+        "monotone_in_mesh": true,
+        "error_vs_reference": [
+          0.21208278798639602,
+          0.0451343117497874,
+          0.011470384574319146
+        ]
+      }
+    }
+  },
+  "independent_repro": {
+    "available": true,
+    "command": "python <m15410>/scripts/run_cavity_case.py --rayleigh 10000 --meshes 32,64 (cwd=/tmp/audit_m15410, imports <m15410>/src)",
+    "meshes": {
+      "32": {
+        "nu_ledger": 2.271605323854745,
+        "nu_rerun": 2.271605323854745,
+        "nu_abs_delta": 0.0,
+        "u_ledger": 16.23410776822736,
+        "u_rerun": 16.23410776822736,
+        "u_abs_delta": 0.0,
+        "v_ledger": 19.633016625222833,
+        "v_rerun": 19.633016625222833,
+        "v_abs_delta": 0.0,
+        "steps_ledger": 6000,
+        "steps_rerun": 6000,
+        "reproduces_within_1e-6": true
+      },
+      "64": {
+        "nu_ledger": 2.2509846629705947,
+        "nu_rerun": 2.2509846629705947,
+        "nu_abs_delta": 0.0,
+        "u_ledger": 16.202275251688295,
+        "u_rerun": 16.202275251688295,
+        "u_abs_delta": 0.0,
+        "v_ledger": 19.65565829980453,
+        "v_rerun": 19.65565829980453,
+        "v_abs_delta": 0.0,
+        "steps_ledger": 9600,
+        "steps_rerun": 9600,
+        "reproduces_within_1e-6": true
+      }
+    }
+  },
+  "artifacts_copied": [
+    "docs/audit-m15410-heated-cavity/original-artifacts/RUN_ARTIFACTS.md",
+    "docs/audit-m15410-heated-cavity/original-artifacts/case_Ra1000.json",
+    "docs/audit-m15410-heated-cavity/original-artifacts/case_Ra10000.json",
+    "docs/audit-m15410-heated-cavity/original-artifacts/case_Ra100000.json",
+    "docs/audit-m15410-heated-cavity/original-artifacts/case_Ra1000000.json",
+    "docs/audit-m15410-heated-cavity/original-artifacts/nu_comparison.png",
+    "docs/audit-m15410-heated-cavity/original-artifacts/nu_convergence.png",
+    "docs/audit-m15410-heated-cavity/original-artifacts/nu_profile_Ra1e5.png",
+    "docs/audit-m15410-heated-cavity/original-artifacts/summary.json",
+    "docs/audit-m15410-heated-cavity/original-artifacts/velocity_comparison.png"
+  ],
+  "figures": [
+    "docs/audit-m15410-heated-cavity/fig_nu_vs_mesh.png",
+    "docs/audit-m15410-heated-cavity/fig_error_budget.png"
+  ],
+  "summary_flags": {
+    "all_ra_within_code_gate_3pct": true,
+    "all_ra_monotone_mesh_convergence": true,
+    "repro_bitwise_identical": true,
+    "psi_diagnostic_degenerate": true,
+    "hot_wall_nu_peaks_near_bottom_corner_then_decays": true
+  }
+}
