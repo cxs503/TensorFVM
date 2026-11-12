@@ -1,0 +1,135 @@
+{
+  "levels": [
+    8,
+    16
+  ],
+  "closures": [
+    "zero_gradient"
+  ],
+  "table": {
+    "zero_gradient": [
+      {
+        "n": 8,
+        "closure": "zero_gradient",
+        "cells": 64,
+        "faces": 544,
+        "dofs": 1824,
+        "converged": true,
+        "outer_iterations": 24,
+        "seconds": 11.241875648498535,
+        "peak_rss_mb": 505.6875,
+        "total_l2": 0.04005422522815509,
+        "inplane_l2": 0.040054225228155084,
+        "spanwise_l2": 0.0,
+        "max_abs_w": 0.0,
+        "tie_residual": 0.0,
+        "tied_components": 512,
+        "prescribed_tangential_on_planes": 0.0,
+        "pressure_l2": 0.285280688756023,
+        "pressure_mean_free_l2": 0.103358051599226
+      },
+      {
+        "n": 16,
+        "closure": "zero_gradient",
+        "cells": 256,
+        "faces": 2112,
+        "dofs": 7104,
+        "converged": true,
+        "outer_iterations": 18,
+        "seconds": 66.7245614528656,
+        "peak_rss_mb": 540.890625,
+        "total_l2": 0.01332787507585613,
+        "inplane_l2": 0.01332787507585613,
+        "spanwise_l2": 0.0,
+        "max_abs_w": 0.0,
+        "tie_residual": 0.0,
+        "tied_components": 2048,
+        "prescribed_tangential_on_planes": 0.0,
+        "pressure_l2": 0.1577111774100738,
+        "pressure_mean_free_l2": 0.03820324242795779
+      }
+    ]
+  },
+  "orders": [
+    {
+      "pair": "8->16",
+      "coarse_n": 8,
+      "total": 1.5875076539597763,
+      "inplane": 1.5875076539597757,
+      "spanwise": null,
+      "pressure_mean_free": 1.4358837845989445
+    }
+  ],
+  "verdict": {
+    "checks": [
+      {
+        "id": "C1",
+        "statement": "constraint manifold max|u_face-u_cell| on tied dofs <= 1e-12",
+        "value": 0.0,
+        "verdict": "PASS"
+      },
+      {
+        "id": "C2",
+        "statement": "spanwise L2 and max|w| exactly 0 at every level (w exact = 0)",
+        "value": 0.0,
+        "verdict": "PASS"
+      },
+      {
+        "id": "C3",
+        "statement": "in-plane L2 transfer check needs a free-traction control level",
+        "value": null,
+        "verdict": "NOT_RUN"
+      },
+      {
+        "id": "C4",
+        "statement": "anchor: total velocity L2 order >= 1.8 on the finest pair 8->16",
+        "value": 1.5875076539597763,
+        "verdict": "FAIL"
+      },
+      {
+        "id": "C5",
+        "statement": "in-plane L2 order >= 1.8 on the finest pair",
+        "value": 1.5875076539597757,
+        "verdict": "FAIL"
+      },
+      {
+        "id": "C6",
+        "statement": "Picard reported numerical convergence at every level",
+        "value": [
+          true,
+          true
+        ],
+        "verdict": "PASS"
+      },
+      {
+        "id": "C7",
+        "statement": "asymptotic pairs (n_coarse >= 16) available",
+        "value": null,
+        "verdict": "NOT_RUN"
+      },
+      {
+        "id": "C8",
+        "statement": "three-level fit needs >= 3 converged levels",
+        "value": null,
+        "verdict": "NOT_RUN"
+      }
+    ],
+    "orders": [
+      {
+        "pair": "8->16",
+        "coarse_n": 8,
+        "total": 1.5875076539597763,
+        "inplane": 1.5875076539597757,
+        "spanwise": null,
+        "pressure_mean_free": 1.4358837845989445
+      }
+    ],
+    "three_level_fit": null,
+    "anchor_closed": false,
+    "not_run": [
+      "C3",
+      "C7",
+      "C8"
+    ]
+  }
+}
