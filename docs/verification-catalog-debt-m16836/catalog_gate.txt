@@ -1,0 +1,25 @@
+# Verification catalog gate
+
+catalog: `docs/verification-catalog.md`
+verdict: **PASS**
+
+| check | count |
+|---|---:|
+| entries | 32 |
+| entries marked PASS | 26 |
+| quoted pointers | 107 |
+| gaps declared (§10.1) | 5 |
+| gaps open | 0 |
+| gaps closed-by | 5 |
+| gaps partially-closed-by | 0 |
+| planned items declared (§10.2) | 5 |
+| planned open | 0 |
+| planned closed-by | 3 |
+| planned partially-closed-by | 2 |
+| dangling pointers | 0 |
+| PASS entries without live test | 0 |
+| gaps without status | 0 |
+| dangling gap closures | 0 |
+| planned items without status | 0 |
+| dangling planned closures | 0 |
+
