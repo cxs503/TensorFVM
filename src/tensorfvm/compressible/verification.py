@@ -70,6 +70,9 @@ from .diagnostics import (
     pressure_oscillation,
     transverse_mean,
 )
+from .forward_step import ForwardStepConfig
+from .forward_step import run_case as run_forward_step
+from .forward_step_benchmark import grade_run as grade_forward_step
 from .vortex import (
     core_positions,
     core_separation,
@@ -646,6 +649,54 @@ def leg_vortex(cfg: RunConfig) -> Dict:
 # ----------------------------------------------------------------------
 # driver
 # ----------------------------------------------------------------------
+# ----------------------------------------------------------------------
+# leg 6: Mach-3 forward-facing step (Woodward & Colella problem 2)
+# ----------------------------------------------------------------------
+def leg_forward_step(cfg: RunConfig) -> Dict:
+    """Supersonic forward-facing step graded against the exact shock state.
+
+    Woodward & Colella (1984) problem 2: uniform Mach 3 flow over a reflecting
+    step in a 3 x 1 tunnel, run to ``t = 4``.  The graded numbers are the
+    near-normal shock jump and the wall stagnation state, both closed-form for
+    the stated inflow (the paper publishes contours, not tables), plus the
+    mass/energy budget identities; the tolerances are the ones pre-registered
+    in ``docs/repro-fvm-forward-step/DESIGN.md``.  The production grid of
+    record is 480 x 160 -- one grid finer than the ``cfg.quick`` leg below,
+    which only exercises the path inside a smoke run.
+    """
+    nx, ny = (60, 20) if cfg.quick else (240, 80)
+    t_end = 2.0 if cfg.quick else 4.0
+    import time
+
+    case = ForwardStepConfig(nx=nx, ny=ny, t_end=t_end)
+    t0 = time.time()
+    result = run_forward_step(case)
+    wall = time.time() - t0
+    meta = {
+        "nsteps": result["nsteps"],
+        "budget": result["budget"],
+        "positivity_fixes": result["positivity_fixes"],
+        "wall_seconds": wall,
+    }
+    grading = grade_forward_step(result["prim"], case, meta)
+    out = {
+        "reference": ("Woodward & Colella (1984) J. Comput. Phys. 54, problem 2; "
+                      "graded against the exact Rankine-Hugoniot/isentropic state"),
+        "grid": [nx, ny],
+        "t_end": t_end,
+        "wall_seconds": wall,
+        "nsteps": result["nsteps"],
+        "positivity_fixes": result["positivity_fixes"],
+        "troubled_repairs": int(getattr(result["solver"], "troubled_repairs", 0)),
+        "shock_sampling": grading["shock_sampling"],
+        "criteria": grading["items"],
+        "all_pass": grading["all_graded_pass"] and grading["all_pass"],
+        "note": ("quick grid 60x20 is a smoke check only: the step is 4 cells high "
+                 "there, so the graded numbers are not the benchmark verdict"),
+    }
+    return out
+
+
 def _jsonable(obj):
     if isinstance(obj, torch.Tensor):
         return obj.detach().to(torch.float64).cpu().numpy().tolist()
@@ -706,6 +757,8 @@ def run_all(outdir: Path | str = DEFAULT_OUT, cfg: RunConfig | None = None,
         result["legs"]["bubble"] = leg_bubble(cfg)
     if "vortex" in legs:
         result["legs"]["vortex"] = leg_vortex(cfg)
+    if "forward_step" in legs:
+        result["legs"]["forward_step"] = leg_forward_step(cfg)
     result["seconds"] = round(time.time() - t_start, 1)
     result["verdicts"] = {leg: data.get("verdicts", {})
                           for leg, data in result["legs"].items()}
