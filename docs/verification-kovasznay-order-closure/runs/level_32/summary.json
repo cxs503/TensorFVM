@@ -1,0 +1,95 @@
+{
+  "levels": [
+    32
+  ],
+  "closures": [
+    "zero_gradient"
+  ],
+  "table": {
+    "zero_gradient": [
+      {
+        "n": 32,
+        "closure": "zero_gradient",
+        "cells": 1024,
+        "faces": 8320,
+        "dofs": 28032,
+        "converged": true,
+        "outer_iterations": 14,
+        "seconds": 1008.21693110466,
+        "peak_rss_mb": 858.21875,
+        "total_l2": 0.003805383187612432,
+        "inplane_l2": 0.003805383187612432,
+        "spanwise_l2": 0.0,
+        "max_abs_w": 0.0,
+        "tie_residual": 0.0,
+        "tied_components": 8192,
+        "prescribed_tangential_on_planes": 0.0,
+        "pressure_l2": 0.0784349322368888,
+        "pressure_mean_free_l2": 0.011395037726476884
+      }
+    ]
+  },
+  "orders": [],
+  "verdict": {
+    "checks": [
+      {
+        "id": "C1",
+        "statement": "constraint manifold max|u_face-u_cell| on tied dofs <= 1e-12",
+        "value": 0.0,
+        "verdict": "PASS"
+      },
+      {
+        "id": "C2",
+        "statement": "spanwise L2 and max|w| exactly 0 at every level (w exact = 0)",
+        "value": 0.0,
+        "verdict": "PASS"
+      },
+      {
+        "id": "C3",
+        "statement": "in-plane L2 transfer check needs a free-traction control level",
+        "value": null,
+        "verdict": "NOT_RUN"
+      },
+      {
+        "id": "C4",
+        "statement": "anchor: total velocity L2 order >= 1.8 on the finest pair None",
+        "value": null,
+        "verdict": "FAIL"
+      },
+      {
+        "id": "C5",
+        "statement": "in-plane L2 order >= 1.8 on the finest pair",
+        "value": null,
+        "verdict": "FAIL"
+      },
+      {
+        "id": "C6",
+        "statement": "Picard reported numerical convergence at every level",
+        "value": [
+          true
+        ],
+        "verdict": "PASS"
+      },
+      {
+        "id": "C7",
+        "statement": "asymptotic pairs (n_coarse >= 16) available",
+        "value": null,
+        "verdict": "NOT_RUN"
+      },
+      {
+        "id": "C8",
+        "statement": "three-level fit needs >= 3 converged levels",
+        "value": null,
+        "verdict": "NOT_RUN"
+      }
+    ],
+    "orders": [],
+    "three_level_fit": null,
+    "anchor_closed": false,
+    "not_run": [
+      "C3",
+      "C7",
+      "C8"
+    ]
+  }
+}
