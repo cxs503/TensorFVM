@@ -1,0 +1,69 @@
+{
+  "schema": "CASE-FVM-CHANNEL-KMM180/artifact-manifest-v1",
+  "case": "CASE-FVM-CHANNEL-KMM180",
+  "verdict": "PASS",
+  "controls_rejected": true,
+  "graded_closure": "sst",
+  "criterion": {
+    "metric": "RMS relative deviation of u+(y+) over y+>30 (to centreline)",
+    "tolerance": 0.05,
+    "graded_closure": "sst",
+    "source": "tensor_case_pool CASE-FVM-CHANNEL-KMM180; tol <5%; ref KMM1987 DNS u+(y+)"
+  },
+  "reference": {
+    "citation": "Kim, Moin & Moser 1987 J. Fluid Mech. 177:133, DOI:10.1017/S0022112087000892",
+    "numerical_reference": "Lee & Moser 2015 J. Fluid Mech. 774:395 (Re_tau = 182.088, same flow)",
+    "re_tau": 182.088,
+    "Cf": 0.008123255229619998,
+    "U_bulk_plus": 15.690975649174892,
+    "u_plus_centre": 18.26830831045079,
+    "data_file": "docs/rans-turbulence-validation-matrix/dns/0180/mean.csv"
+  },
+  "repro_cmd": "PYTHONPATH=src python scripts/run_case_channel_kmm180.py --out docs/case-fvm-channel-kmm180",
+  "entry": {
+    "module": "tensorfvm.benchmark_channel_kmm1987:main",
+    "script": "scripts/run_case_channel_kmm180.py",
+    "suite": "tensorfvm.verification.cases.channel_kmm180"
+  },
+  "impl_files": [
+    "src/tensorfvm/verification/kmm1987.py",
+    "src/tensorfvm/benchmark_channel_kmm1987.py",
+    "src/tensorfvm/rans_validation/channel.py"
+  ],
+  "environment": {
+    "python": "3.11.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "numpy": "2.4.6"
+  },
+  "elapsed_s": 41.32,
+  "artifacts": [
+    {
+      "path": "benchmark.json",
+      "sha256": "e8ad79c259c4d5ae4ea9694b605178fb8d6604679c915747f73861790c5c729c"
+    },
+    {
+      "path": "metrics.csv",
+      "sha256": "0109bfa800214245197f7651f50dfcdd9b1fdab7594944d57a2161a2cc5cca3b"
+    },
+    {
+      "path": "stations.csv",
+      "sha256": "c139cab8bde4b4357d770a7f3f9a11a4ed7250397dcfa1859ede0329318fbb7c"
+    },
+    {
+      "path": "profiles.csv",
+      "sha256": "936ea4db982a79538fdc93c495b9eb16e4d047b5c7279d6f1f7a5719db459fb6"
+    },
+    {
+      "path": "fig_velocity_profiles.png",
+      "sha256": "489b2936e362571e14e105a2ce84d78f1efaba282526fbc90559536b63392f85"
+    },
+    {
+      "path": "fig_log_region_error.png",
+      "sha256": "334f726d5e0830da04571056b0b605ef33ddcb411448619167e42f0ad8762121"
+    },
+    {
+      "path": "REPORT.md",
+      "sha256": "656db1c9cdfa799d2adb4f182278a13e800153bfde544f6b5643b9134cfd9c9c"
+    }
+  ]
+}
