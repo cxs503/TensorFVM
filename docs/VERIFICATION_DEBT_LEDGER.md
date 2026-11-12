@@ -296,3 +296,15 @@
 - 未完成(honest FAIL): Re=2800 48x24 第 500 步 max|u|=1.86、第 1000 步 NaN（64x32 500 步内 NaN）；
   `x_s/H`、`x_r/H` 继续 withheld。round-2 的“第 293 步发散”与本回合不可直接比较（旧算子带 O(1) 梯度误差=数值阻尼）。
 - 下一回合首项（round-4）: 交错（MAC）布置使单元速度=面速度，或对压力梯度修正做限制器；不要再用 `div(grad)` 型一致化。
+### D9 Hysing 腿修复 —— 已处置（m16730, 2026-11-12），形状门仍未结
+- 结论: **"气泡下沉"归因被证伪**。三条缺陷全是测量/几何，不是物理：
+  ①`bubble_metrics()` 内部已取反、调用点又传 `1-alpha` → 量的是液相（液相 c=5.645 vs 气相 0.638，
+  与旧 FAIL 记录的 `c=5.621` 对上）；②`nx = cells_per_diameter`（应 `dx = d/cpd`）；
+  ③`start_y = 0.5 = r` 使气泡底缘贴壁（Hysing 为 1 d）。
+  附带：子格面积分数初值（初体积偏差 3.45%→0.96%）、marching-squares 周长（数字圆盘 c 0.638→0.993）。
+- 修后 cpd=8: 峰值 U_T 0.2451 vs 0.2342 = **+4.6 %**；y_c(3)=1.5225 vs 1.984（−23.3%）；
+  c_min 1.0026 vs 0.4644（**FAIL，分辨率受限**）；最差单步体积漂移 7.2e-6（门 1e-6，FAIL）。
+- 证据: `docs/GAP-FVM-TWOPHASE/HYSING-LEG-REPAIR.md`、`docs/GAP-FVM-TWOPHASE/artifacts/leg_hysing/`、
+  `docs/GAP-FVM-TWOPHASE/artifacts/fig_hysing_leg.png`、`tests/test_hysing_gate.py`(26 passed)。
+- 遗留: B1 度量错配（ref 是全程最大、门用末窗均值）→ 只加记 `peak_velocity`，不改门；
+  形状门需 cpd≥32（显式气相黏性 dt∝h²，cpd=32 ≈10 h）→ 记分辨率受限；`DECLARED_CPD` 由 64 改 16。

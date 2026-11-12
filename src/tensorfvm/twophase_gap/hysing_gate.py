@@ -74,6 +74,15 @@ __all__ = [
 # Reference values from Hysing et al. (2009), Table II, Case 2
 # --------------------------------------------------------------------------- #
 
+#: Declared (gated) resolution in cells per bubble diameter.  The Hysing leg is
+#: limited by the *explicit* viscous step of the gas phase --
+#: dt ~ 0.25 h^2 / nu_gas with nu_gas = mu_gas/rho_gas ~ 3.2 (d = g = rho_l = 1),
+#: so dt scales as h^2 and 64 cells/diameter needs ~3e5 steps (~10 h on one
+#: core); 16 cells/diameter is the finest resolution that fits a normal
+#: verification budget (~13 min).  B1/B2 are judged on this leg, B4 on the
+#: 8 -> 16 pair.
+DECLARED_CPD = 16
+
 #: Terminal velocity reference (dimensionless, sqrt(g d) units).
 HYSING_REF_UT = 0.2342
 #: Minimum circularity reference (at t = 3).
@@ -110,9 +119,19 @@ class HysingCase:
     cells_per_diameter: int = 32
     domain_width: float = 2.0
     domain_height: float = 4.0
-    start_y: float = 0.5
+    diameter: float = 1.0
+    #: Bubble centre height.  Hysing et al. put the d=0.5 bubble at (0.5, 0.5)
+    #: in the [0,1]x[0,2] box, i.e. at (1 d, 1 d) after scaling by d -> the
+    #: bottom of the bubble is 0.5 d above the lower wall.  The historic value
+    #: 0.5 put the bubble *bottom on the wall* (start_y = r), which is neither
+    #: the benchmark geometry nor free of wall contact.
+    start_y: float = 1.0
     end_time: float = 3.0
     csf_smoothing: int = 3
+
+    @property
+    def bubble_radius(self) -> float:
+        return 0.5 * self.diameter
 
     @property
     def sigma(self) -> float:
@@ -135,8 +154,13 @@ class HysingCase:
 
     def solve_config(self) -> tuple[GridConfig, TwoPhaseConfig]:
         """Build the solver configuration."""
-        nx = self.cells_per_diameter
-        ny = int(self.domain_height / self.domain_width * nx)
+        # ``cells_per_diameter`` is a *resolution*, not a cell count: the
+        # historic code used nx = cells_per_diameter, which put only
+        # nx/domain_width = cpd/2 cells across one diameter (cpd=16 resolved the
+        # bubble with 8 cells).  h = d / cpd keeps the bubble spanning cpd cells.
+        h = self.diameter / self.cells_per_diameter
+        nx = int(round(self.domain_width / h))
+        ny = int(round(self.domain_height / h))
         grid = GridConfig(
             nx=nx, ny=ny,
             length=self.domain_width, height=self.domain_height,
@@ -152,26 +176,132 @@ class HysingCase:
         )
         return grid, tp
 
-    def initial_alpha(self, nx: int, ny: int, dx: float, dy: float) -> torch.Tensor:
+    def initial_alpha(self, nx: int, ny: int, dx: float, dy: float,
+                      subcell: int = 4) -> torch.Tensor:
         """Initial volume fraction field.
 
         The solver convention: ``alpha = 1`` is liquid, ``alpha = 0`` is gas.
         The bubble is gas, so alpha = 0 inside the bubble, alpha = 1 outside.
+
+        ``subcell > 1`` builds the field from the *area fraction* of each cell
+        covered by the gas disc (``subcell x subcell`` sub-samples): a
+        cell-centre mask quantises the initial bubble area by O(dx) (at 8
+        cells/diameter the area came out 3.4 % high, and with it the buoyancy
+        force that drives the whole benchmark).  ``subcell=1`` reproduces the
+        historic sharp mask.
         """
-        xs = (np.arange(nx) + 0.5) * dx
-        ys = (np.arange(ny) + 0.5) * dy
         xc, yc = self.domain_width / 2.0, self.start_y
-        r = 0.5  # bubble radius (d=1)
-        # alpha = 1 (liquid) everywhere, 0 (gas) inside bubble
+        r = self.bubble_radius
         alpha = np.ones((ny, nx), dtype=np.float64)
-        mask = (xs[None, :] - xc) ** 2 + (ys[:, None] - yc) ** 2 < r ** 2
-        alpha[mask] = 0.0
+        if subcell <= 1:
+            xs = (np.arange(nx) + 0.5) * dx
+            ys = (np.arange(ny) + 0.5) * dy
+            alpha[(xs[None, :] - xc) ** 2 + (ys[:, None] - yc) ** 2 < r ** 2] = 0.0
+            return torch.from_numpy(alpha)
+        offs = (np.arange(subcell) + 0.5) / subcell
+        x = (np.arange(nx)[None, :] + offs[:, None]) * dx      # (subcell, nx)
+        y = (np.arange(ny)[:, None] + offs[None, :]) * dy      # (ny, subcell)
+        gas = np.zeros((ny, nx), dtype=np.float64)
+        # fully vectorised: sum over the subcell lattice
+        for i in range(subcell):
+            for j in range(subcell):
+                dx2 = (x[j, :][None, :] - xc) ** 2
+                dy2 = (y[:, i][:, None] - yc) ** 2
+                gas += (dx2 + dy2 < r * r)
+        alpha -= gas / float(subcell * subcell)
         return torch.from_numpy(alpha)
 
 
 # --------------------------------------------------------------------------- #
 # Bubble metrics
 # --------------------------------------------------------------------------- #
+
+
+def _interface_perimeter(field: np.ndarray, dx: float, dy: float, level: float = 0.5) -> float:
+    """Length of the ``field = level`` contour by marching squares.
+
+    The stair-case perimeter of a thresholded mask (edge-count estimator) is
+    orientation biased and over-estimates by up to ~40 % on a coarse circle,
+    which corrupts the circularity gate.  Here the contour is reconstructed on
+    the *node* field (cell-corner average of the cell-centred data) with linear
+    edge interpolation, i.e. the usual 16-case marching-squares table, and the
+    segment lengths are summed.
+    """
+    ny, nx = field.shape
+    if ny < 2 or nx < 2:
+        return 0.0
+    pad = np.pad(field, 1, mode="edge")
+    nodes = 0.25 * (pad[:-1, :-1] + pad[:-1, 1:] + pad[1:, :-1] + pad[1:, 1:])
+    a = nodes[:-1, :-1]          # SW corner of each cell
+    b = nodes[:-1, 1:]           # SE
+    c = nodes[1:, 1:]            # NE
+    d = nodes[1:, :-1]           # NW
+
+    def _frac(v0, v1):
+        # Degenerate edge (both endpoints exactly at the level) is ambiguous for
+        # a *binary* indicator -- whole node plateaus sit at 0.5 when two of the
+        # four averaged cells are inside.  Taking t -> 0 there (as a bare
+        # np.clip((l-v0)/den) does) throws the contour onto one endpoint and
+        # inflates the length by ~1.4 % even on a perfect disc; the midpoint is
+        # the neutral choice.
+        den = v1 - v0
+        flat = np.abs(den) < 1e-300
+        den = np.where(flat, 1.0, den)
+        return np.where(flat, 0.5, np.clip((level - v0) / den, 0.0, 1.0))
+
+    idx_row, idx_col = np.meshgrid(np.arange(ny), np.arange(nx), indexing="ij")
+    x0 = idx_col * dx
+    y0 = idx_row * dy
+    # crossing points of the four cell edges
+    px = (
+        x0 + _frac(a, b) * dx,        # bottom edge (a -> b)
+        x0 + dx,
+        x0 + _frac(d, c) * dx,        # top edge (d -> c)
+        x0,
+    )
+    py = (
+        y0,
+        y0 + _frac(b, c) * dy,        # right edge (b -> c)
+        y0 + dy,
+        y0 + _frac(a, d) * dy,        # left edge (a -> d)
+    )
+    case = (8 * (a > level) + 4 * (b > level) + 2 * (c > level) + 1 * (d > level)).astype(np.int64)
+
+    # edge-pair connectivity per case; saddles (5, 10) resolved by the centre value
+    pairs = {
+        0: (), 15: (),
+        1: ((2, 3),), 2: ((1, 2),), 3: ((1, 3),), 4: ((0, 1),),
+        5: ((0, 1), (2, 3)), 6: ((0, 2),), 7: ((0, 3),),
+        8: ((0, 3),), 9: ((0, 2),), 10: ((0, 3), (1, 2)),
+        11: ((0, 1),), 12: ((1, 3),), 13: ((1, 2),), 14: ((2, 3),),
+    }
+    total = 0.0
+    for k, segs in pairs.items():
+        if not segs:
+            continue
+        sel = case == k
+        if not sel.any():
+            continue
+        if k in (5, 10):
+            centre = 0.25 * (a + b + c + d)
+            inside = sel & (centre > level)
+            outside = sel & ~(centre > level)
+            use_in = ((0, 3), (1, 2)) if k == 5 else ((0, 1), (2, 3))
+            use_out = ((0, 1), (2, 3)) if k == 5 else ((0, 3), (1, 2))
+            for mask_sel, seg_pair in ((inside, use_in), (outside, use_out)):
+                if not mask_sel.any():
+                    continue
+                for e0, e1 in seg_pair:
+                    total += _segment_lengths(
+                        px[e0][mask_sel], py[e0][mask_sel], px[e1][mask_sel], py[e1][mask_sel])
+            continue
+        for e0, e1 in segs:
+            total += _segment_lengths(px[e0][sel], py[e0][sel], px[e1][sel], py[e1][sel])
+    return float(total)
+
+
+def _segment_lengths(x1, y1, x2, y2) -> float:
+    return float(np.hypot(x2 - x1, y2 - y1).sum())
 
 
 def bubble_metrics(alpha: torch.Tensor, dx: float, dy: float) -> dict:
@@ -195,19 +325,22 @@ def bubble_metrics(alpha: torch.Tensor, dx: float, dy: float) -> dict:
     xc = float((bubble_np * xs[None, :]).sum() / total)
     yc = float((bubble_np * ys[:, None]).sum() / total)
 
-    # Circularity: 4 * pi * area / perimeter^2
-    # Use marching squares for a more accurate perimeter estimate
-    mask = bubble_np > 0.5
-    area = float(mask.sum()) * dx * dy
-    if mask.sum() < 4:
+    # Circularity c = 4 pi A / P^2 with sub-cell area and a marching-squares
+    # contour length (a stair-case edge count biases P high => c far below 1
+    # even for a perfect disc; measured 0.64 at 8 cells/diameter).
+    if (bubble_np > 0.5).sum() < 4:
         return {"volume": volume, "xc": xc, "yc": yc, "circularity": 0.0}
-
-    # Approximate perimeter by counting edge transitions
-    # Horizontal edges
-    h_diff = np.abs(np.diff(mask.astype(int), axis=1))
-    v_diff = np.abs(np.diff(mask.astype(int), axis=0))
-    perimeter = (float(h_diff.sum()) * dy + float(v_diff.sum()) * dx)
-
+    area = volume
+    # One Laplacian pass before contouring: a *binary* indicator has whole node
+    # plateaus pinned at the 0.5 level, so the raw marching-squares length is
+    # ~+1.5 % high on a perfect digital disc (=> circularity 2-3 % low, a third
+    # of the 10 % gate).  One pass costs 0.5 % and keeps c <= 1 for a disc;
+    # the estimator is exact (1e-6) on an analytically smooth field.
+    smooth = bubble_np
+    for _ in range(1):
+        pad = np.pad(smooth, 1, mode="edge")
+        smooth = 0.25 * (pad[:-2, 1:-1] + pad[2:, 1:-1] + pad[1:-1, :-2] + pad[1:-1, 2:])
+    perimeter = _interface_perimeter(smooth, dx, dy, level=0.5)
     if perimeter < 1e-12:
         circularity = 0.0
     else:
@@ -295,7 +428,7 @@ def run_hysing_leg(
         worst_step_drift = max(worst_step_drift, step_drift)
         volume_prev = vol
 
-        m = bubble_metrics(1.0 - solver.alpha, dx, dy)
+        m = bubble_metrics(solver.alpha, dx, dy)  # alpha=liquid; helper inverts
         m["time"] = float(solver.time)
         m["volume_drift"] = (vol - volume0) / max(volume0, 1e-12)
         m["umax"] = float(max(solver.u.abs().max(), solver.v.abs().max()))
@@ -303,6 +436,14 @@ def run_hysing_leg(
 
     # Terminal velocity from the last 25% of the history
     u_t = compute_terminal_velocity(history, window_frac=0.25)
+
+    # Peak climb velocity: Hysing's U_T is the maximum of the rise velocity over
+    # the run, the window mean above is a conservative (low) proxy.
+    peak_velocity = 0.0
+    for prev, cur in zip(history[:-1], history[1:]):
+        dt = cur["time"] - prev["time"]
+        if dt > 0.0:
+            peak_velocity = max(peak_velocity, (cur["yc"] - prev["yc"]) / dt)
 
     # Minimum circularity over the run
     circularities = [m["circularity"] for m in history if m["circularity"] > 0]
@@ -315,12 +456,13 @@ def run_hysing_leg(
         "morton": case.morton,
         "end_time": end_time,
         "terminal_velocity": u_t,
+        "peak_velocity": peak_velocity,
         "min_circularity": min_circularity,
         "worst_step_drift": worst_step_drift,
         "total_volume_drift": history[-1]["volume_drift"] if history else 0.0,
         "diverged": diverged,
         "steps": len(history),
-        "declared": cells_per_diameter == 64,  # declared resolution
+        "declared": cells_per_diameter == DECLARED_CPD,
         "reference": {
             "source": "Hysing et al. (2009) Int. J. Numer. Meth. Fluids 60, "
                       "1259-1288, Table II, Case 2 (Eo=10, M=1e-3)",

@@ -59,7 +59,7 @@ DEFAULTS = {
     "declared_cells": DECLARED_CELLS,
     "dambreak_grids": ((120, 40),),
     "dambreak_t_star": 4.0,
-    "hysing_cells": (32, 64),
+    "hysing_cells": (8, 16),  # 32+ is ~10 h (explicit gas-viscous step, see hysing_gate.DECLARED_CPD)
 }
 
 #: Gate table: ``(id, case, metric, comparator, limit, description)``.
@@ -165,7 +165,9 @@ def run_campaign(
             leg = run_hysing_leg(cpd)
             rec = leg["record"]
             name = _leg_name(rec)
-            _write_leg(out, name, rec, None)
+            # keep the time series: the report needs yc(t), U(t), circularity(t)
+            _write_leg(out, name, rec,
+                       {"history": np.array(json.dumps(leg["history"]))})
             print(f"[hysing] {name}: ut={rec['terminal_velocity']:.4f} "
                   f"(ref {rec['reference']['terminal_velocity']}) "
                   f"err={rec['terminal_velocity_rel_error']:.4f}", flush=True)
