@@ -14,6 +14,8 @@ def main(argv=None):
     parser.add_argument("--lbm-repo",type=Path,help="external TensorLBM checkout; enables actual matched periodic comparison")
     parser.add_argument("--channel-periodic",action="store_true",
                         help="also run the streamwise-periodic body-force channel (CASE-CHANNEL-PERIODIC)")
+    parser.add_argument("--channel-kmm180",action="store_true",
+                        help="also grade the turbulent channel against the KMM1987 DNS (CASE-FVM-CHANNEL-KMM180)")
     args=parser.parse_args(argv)
     if args.output.exists() and any(args.output.iterdir()):
         parser.error("output directory must be empty; preserve prior run evidence")
@@ -54,6 +56,14 @@ def main(argv=None):
                                          metrics=periodic["metrics"])
         summary["channel_periodic_passed"]=periodic["passed"]
         print("channel-periodic",periodic["passed"],flush=True)
+    if args.channel_kmm180:
+        from .cases import channel_kmm180
+        kmm=channel_kmm180()
+        write_json(args.output/"channel-kmm180.json",kmm)
+        summary["channel_kmm180"]=dict(passed=kmm["passed"],verdict=kmm["verdict"],
+                                       resolution=kmm["resolution"],metrics=kmm["metrics"])
+        summary["channel_kmm180_passed"]=kmm["passed"]
+        print("channel-kmm180",kmm["passed"],flush=True)
     spatial=lambda case:[r for r in summary["runs"] if r["case"]==case and r["role"]=="spatial"]
     temporal=[r for r in summary["runs"] if r["role"]=="temporal"]
     summary["observed_orders"]={

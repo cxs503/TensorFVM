@@ -151,3 +151,36 @@ def channel_periodic(nx=16, ny=64, re_h=100.0, time_step_s=20.0):
                 time_s=case["physical_time_s"], pressure_time_s=None,
                 metrics=rows, passed=bool(passed), reference=case["reference"],
                 history=case["history"], fields=case["fields"])
+
+
+def channel_kmm180(n=256, re_tau=180.0, tolerance=None):
+    """Turbulent channel at Re_tau = 180 graded against the KMM1987 DNS.
+
+    Suite wrapper around :func:`tensorfvm.benchmark_channel_kmm1987.run_case`
+    (CASE-FVM-CHANNEL-KMM180).  The single graded metric is the RMS relative
+    deviation of ``u+(y+)`` over ``y+ > 30``; the closure is SST-2003 and the
+    tolerance comes from the case pool row (<5 %).
+    """
+    from ..benchmark_channel_kmm1987 import run_case
+    from ..verification.kmm1987 import CASE_TOLERANCE, GATED_MODEL, load_kmm1987_reference
+    started = time.perf_counter()
+    tol = CASE_TOLERANCE if tolerance is None else float(tolerance)
+    dns = load_kmm1987_reference()
+    case = run_case(GATED_MODEL, n, re_tau=re_tau, dns=dns)
+    metrics = [Metric('log_region_rms_relative', case['got']['log_region_rms'], tol,
+                      'RMS relative deviation of u+(y+) over y+>30'),
+               Metric('cf_relative_error', case['rel_error']['cf'], tol,
+                      'skin-friction coefficient vs DNS'),
+               Metric('bulk_velocity_relative_error', case['rel_error']['bulk_u_plus'], tol,
+                      'bulk velocity in wall units vs DNS')]
+    rows, passed = evaluate(metrics)
+    return dict(case='channel-kmm180', role='spatial', resolution=f'{n} cells, Re_tau={re_tau:g}',
+                spacing_m=None, elapsed_s=time.perf_counter() - started,
+                iterations=case.get('iterations'), converged=case.get('converged', False),
+                time_s=None, pressure_time_s=None, metrics=rows, passed=bool(passed),
+                verdict=case['verdict'],
+                reference=dict(criterion=case['criterion'], tolerance=tol,
+                               citation='Kim, Moin & Moser 1987 JFM 177:133',
+                               stations=case['stations']),
+                fields={'y_plus': case['y_plus'], 'u_plus': case['u_plus']},
+                history=None)

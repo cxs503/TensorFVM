@@ -1,0 +1,97 @@
+{
+  "feature_slug": "CASE-FVM-CHANNEL-KMM180",
+  "title": "Turbulent channel flow validation vs KMM1987 DNS (Re_tau=180)",
+  "summary": "SST turbulence model reproduces KMM1987 mean velocity profile u+(y+) in y+>30 region with 2.2-3.4% RMS error (<5% tolerance). k-omega and k-epsilon models fail with 10.6% and 6.9% errors respectively.",
+  "reference": "Kim, J., Moin, P. & Moser, R. D. 1987 J. Fluid Mech. 177, 133-166. DOI: 10.1017/S0022112087000892",
+  "dns_proxy": "Lee & Moser 2015 JFM 774:395 (Re_tau=182.088)",
+  "method": "1-D equilibrium channel solver with SST/k-omega/k-epsilon turbulence models",
+  "key_results": {
+    "sst_n64": {
+      "log_rms": 0.022,
+      "cf_error": 0.036,
+      "bulk_u_plus_error": 0.017,
+      "verdict": "PASS"
+    },
+    "sst_n128": {
+      "log_rms": 0.031,
+      "cf_error": 0.054,
+      "bulk_u_plus_error": 0.026,
+      "verdict": "PASS"
+    },
+    "sst_n256": {
+      "log_rms": 0.034,
+      "cf_error": 0.063,
+      "bulk_u_plus_error": 0.03,
+      "verdict": "PASS"
+    },
+    "komega_n128": {
+      "log_rms": 0.106,
+      "cf_error": 0.237,
+      "bulk_u_plus_error": 0.101,
+      "verdict": "FAIL"
+    },
+    "kepsilon_n128": {
+      "log_rms": 0.069,
+      "cf_error": 0.15,
+      "bulk_u_plus_error": 0.067,
+      "verdict": "FAIL"
+    }
+  },
+  "acceptance_criterion": "RMS relative deviation of u+(y+) in y+>30 region < 5%",
+  "verdict": "PASS (SST model)",
+  "impl_files": [
+    "src/tensorfvm/verification/kmm1987.py",
+    "src/tensorfvm/benchmark_channel_kmm1987.py",
+    "src/tensorfvm/verification/cases.py",
+    "src/tensorfvm/verification/__main__.py",
+    "scripts/run_case_channel_kmm180.py",
+    "tests/test_channel_kmm1987.py"
+  ],
+  "artifacts": [
+    "docs/case-fvm-channel-kmm180/benchmark.json",
+    "docs/case-fvm-channel-kmm180/stations.csv",
+    "docs/case-fvm-channel-kmm180/metrics.csv",
+    "docs/case-fvm-channel-kmm180/profiles.csv",
+    "docs/case-fvm-channel-kmm180/manifest.json",
+    "docs/case-fvm-channel-kmm180/REPORT.md",
+    "docs/case-fvm-channel-kmm180/fig_velocity_profiles.png",
+    "docs/case-fvm-channel-kmm180/fig_log_region_error.png"
+  ],
+  "repro_cmd": "PYTHONPATH=src python scripts/run_case_channel_kmm180.py --out docs/case-fvm-channel-kmm180",
+  "test_cmd": "PYTHONPATH=src python -m pytest tests/test_channel_kmm1987.py -q",
+  "notes": "k-omega and k-epsilon have known biases in the log region; SST is the recommended model for this Re_tau range.",
+  "round": 2,
+  "research": {
+    "open_source_horizontal": {
+      "scope": "cluster ~/oss-cache inventory (33 repos in oss_inventory; local cache: Maarten-vd-Sande_lbm, pylbm, hschwane/GraSPH)",
+      "finding": "no RANS/DNS channel mean-profile benchmark implementation in the cache (LBM/SPH codes only); nothing transferable for a Re_tau-resolved u+(y+) grading harness",
+      "transferable_pattern": "reference-data + normalized-error + regression-gate harness pattern, taken from this repo's own rans-turbulence-validation-matrix (matrix.py) and verification/core.py"
+    },
+    "method_lineage": [
+      {
+        "item": "equilibrium channel closure solve ((nu+nu_t) dU/dy = 1-y, half channel, u_tau=1)",
+        "source": "src/tensorfvm/rans_validation/channel.py module header (derivation in-file)"
+      },
+      {
+        "item": "SST-2003 / Wilcox k-omega low-Re wall treatment, Spalding all-y+ wall law for k-epsilon",
+        "source": "Menter 2003 (SST), Wilcox 1988 (k-omega), Spalding 1961 (wall law) - as cited in rans_validation/models.py"
+      },
+      {
+        "item": "reference data Re_tau=182.088 (Lee & Moser 2015 JFM 774:395) imported via scripts/import_channel_dns.py",
+        "source": "docs/rans-turbulence-validation-matrix/dns/0180/provenance.json"
+      },
+      {
+        "item": "case-pool citation KMM1987 Re_tau=180 u+(y+)",
+        "source": "Kim, Moin & Moser 1987 JFM 177:133 DOI:10.1017/S0022112087000892"
+      }
+    ],
+    "selection": "keep the 1-D FVM equilibrium channel (wall-normal FV discretisation) as the graded solver; grade SST only, run k-omega/k-epsilon as negative controls; declare the graded window (y+>30 to centreline) before running and report the narrow-window sensitivity",
+    "migration_plan": "same run_case/grade_case API is reused by verification.cases.channel_kmm180 and the verification suite CLI (--channel-kmm180), so a 3-D channel case can be graded through the same evidence objects later"
+  },
+  "criterion_window_disclosure": "verdict PASS over y+>30 to centreline (case-pool wording); in the strict window 30<y+<0.2Re_tau SST gives 4.61-6.30%, i.e. above 5% - declared in docs/case-fvm-channel-kmm180/REPORT.md",
+  "entry": "scripts/run_case_channel_kmm180.py + python -m tensorfvm.benchmark_channel_kmm1987",
+  "integration_callers": [
+    "from ..benchmark_channel_kmm1987 import run_case  (src/tensorfvm/verification/cases.py::channel_kmm180)",
+    "src/tensorfvm/verification/__main__.py --channel-kmm180 flag"
+  ]
+}

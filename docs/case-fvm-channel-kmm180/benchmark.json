@@ -1,0 +1,399 @@
+{
+  "case": "CASE-FVM-CHANNEL-KMM180",
+  "criterion": {
+    "metric": "RMS relative deviation of u+(y+) over y+>30 (to centreline)",
+    "tolerance": 0.05,
+    "graded_closure": "sst",
+    "source": "tensor_case_pool CASE-FVM-CHANNEL-KMM180; tol <5%; ref KMM1987 DNS u+(y+)"
+  },
+  "reference": {
+    "citation": "Kim, Moin & Moser 1987 J. Fluid Mech. 177:133, DOI:10.1017/S0022112087000892",
+    "numerical_reference": "Lee & Moser 2015 J. Fluid Mech. 774:395 (Re_tau = 182.088, same flow)",
+    "re_tau": 182.088,
+    "Cf": 0.008123255229619998,
+    "U_bulk_plus": 15.690975649174892,
+    "u_plus_centre": 18.26830831045079,
+    "data_file": "docs/rans-turbulence-validation-matrix/dns/0180/mean.csv"
+  },
+  "benchmark": {
+    "ref": {
+      "log_region_rms": 0.0,
+      "cf": 0.008123255229619998,
+      "bulk_u_plus": 15.690975649174892,
+      "u_plus_centre": 18.26830831045079,
+      "kappa_apparent": 0.37799340370017875,
+      "B_apparent": 4.933699759844412
+    },
+    "got": {
+      "log_region_rms": 0.03627989751237343,
+      "log_region_max": 0.06679504156487166,
+      "cf": 0.008666917322191702,
+      "bulk_u_plus": 15.190870834244967,
+      "u_plus_centre": 17.849666573124253,
+      "kappa_apparent": 0.3107538997490957,
+      "B_apparent": 2.033127311268888,
+      "station_max_rel_error": 0.06689601718329984
+    },
+    "rel_error": {
+      "log_region_rms": 0.03627989751237343,
+      "cf": 0.06692662943660042,
+      "bulk_u_plus": 0.031872129949817536,
+      "u_plus_centre": 0.022916283774729443
+    },
+    "tolerance": 0.05,
+    "verdict": "PASS",
+    "resolution": 512
+  },
+  "stations": [
+    {
+      "y_plus": 30.0,
+      "u_plus_ref": 13.855064030937001,
+      "u_plus_model": 12.92821542944772,
+      "abs_error": 0.9268486014892812,
+      "rel_error": -0.06689601718329984
+    },
+    {
+      "y_plus": 40.0,
+      "u_plus_ref": 14.718164051166788,
+      "u_plus_model": 13.920367880434915,
+      "abs_error": 0.797796170731873,
+      "rel_error": -0.054204870115483424
+    },
+    {
+      "y_plus": 50.0,
+      "u_plus_ref": 15.303267379541142,
+      "u_plus_model": 14.640470260266044,
+      "abs_error": 0.6627971192750977,
+      "rel_error": -0.04331082394608015
+    },
+    {
+      "y_plus": 75.0,
+      "u_plus_ref": 16.318548196979204,
+      "u_plus_model": 15.88068188971791,
+      "abs_error": 0.43786630726129516,
+      "rel_error": -0.026832430310335477
+    },
+    {
+      "y_plus": 100.0,
+      "u_plus_ref": 17.0673963115867,
+      "u_plus_model": 16.72357559283586,
+      "abs_error": 0.34382071875083753,
+      "rel_error": -0.020144883992494207
+    },
+    {
+      "y_plus": 125.0,
+      "u_plus_ref": 17.64946270564159,
+      "u_plus_model": 17.316656334059942,
+      "abs_error": 0.33280637158164694,
+      "rel_error": -0.018856459096359152
+    },
+    {
+      "y_plus": 150.0,
+      "u_plus_ref": 18.060979527520107,
+      "u_plus_model": 17.690904511908666,
+      "abs_error": 0.37007501561144096,
+      "rel_error": -0.020490307020587975
+    },
+    {
+      "y_plus": 175.0,
+      "u_plus_ref": 18.25827455775147,
+      "u_plus_model": 17.845308139390326,
+      "abs_error": 0.4129664183611439,
+      "rel_error": -0.022618041866711923
+    }
+  ],
+  "controls": [
+    {
+      "model": "komega",
+      "n": 64,
+      "verdict": "FAIL",
+      "log_region_rms": 0.10621247320603976,
+      "cf_rel_error": 0.23889959368993577,
+      "bulk_rel_error": 0.10157475912589027
+    },
+    {
+      "model": "komega",
+      "n": 128,
+      "verdict": "FAIL",
+      "log_region_rms": 0.10612302437887641,
+      "cf_rel_error": 0.23721211139405995,
+      "bulk_rel_error": 0.10096226913033148
+    },
+    {
+      "model": "komega",
+      "n": 256,
+      "verdict": "FAIL",
+      "log_region_rms": 0.10591043006669862,
+      "cf_rel_error": 0.23664015689369028,
+      "bulk_rel_error": 0.10075438762543361
+    },
+    {
+      "model": "kepsilon",
+      "n": 64,
+      "verdict": "FAIL",
+      "log_region_rms": 0.06878214576563776,
+      "cf_rel_error": 0.14995385448654425,
+      "bulk_rel_error": 0.0674764821039338
+    },
+    {
+      "model": "kepsilon",
+      "n": 128,
+      "verdict": "FAIL",
+      "log_region_rms": 0.0687621402693324,
+      "cf_rel_error": 0.1499002322450731,
+      "bulk_rel_error": 0.06745473960101138
+    },
+    {
+      "model": "kepsilon",
+      "n": 256,
+      "verdict": "FAIL",
+      "log_region_rms": 0.06875716156638934,
+      "cf_rel_error": 0.14988682419352922,
+      "bulk_rel_error": 0.06744930272748328
+    }
+  ],
+  "grid_ladder": [
+    {
+      "n": 64,
+      "log_region_rms": 0.022477565155236304,
+      "cf_rel_error": 0.035589510498758546,
+      "bulk_rel_error": 0.017333437127461826,
+      "verdict": "PASS"
+    },
+    {
+      "n": 128,
+      "log_region_rms": 0.030553335188856546,
+      "cf_rel_error": 0.05357441954906964,
+      "bulk_rel_error": 0.025756781990737863,
+      "verdict": "PASS"
+    },
+    {
+      "n": 256,
+      "log_region_rms": 0.034388245937951326,
+      "cf_rel_error": 0.06253769207697232,
+      "bulk_rel_error": 0.029874707248982824,
+      "verdict": "PASS"
+    },
+    {
+      "n": 512,
+      "log_region_rms": 0.03627989751237343,
+      "cf_rel_error": 0.06692662943660042,
+      "bulk_rel_error": 0.031872129949817536,
+      "verdict": "PASS"
+    }
+  ],
+  "discretisation": [
+    {
+      "n_coarse": 64,
+      "n_fine": 128,
+      "station_max_abs_diff": 0.1444972296959719,
+      "station_rms_abs_diff": 0.13918695718467497,
+      "graded_rms_coarse": 0.022477565155236304,
+      "graded_rms_fine": 0.030553335188856546
+    },
+    {
+      "n_coarse": 128,
+      "n_fine": 256,
+      "station_max_abs_diff": 0.07053496032052209,
+      "station_rms_abs_diff": 0.06823191648719858,
+      "graded_rms_coarse": 0.030553335188856546,
+      "graded_rms_fine": 0.034388245937951326
+    },
+    {
+      "n_coarse": 256,
+      "n_fine": 512,
+      "station_max_abs_diff": 0.03418899131185782,
+      "station_rms_abs_diff": 0.03311819553925659,
+      "graded_rms_coarse": 0.034388245937951326,
+      "graded_rms_fine": 0.03627989751237343
+    }
+  ],
+  "window_sensitivity": {
+    "y+>30_to_centreline": {
+      "sst_n64": 0.022477565155236304,
+      "sst_n128": 0.030553335188856546,
+      "sst_n256": 0.034388245937951326,
+      "sst_n512": 0.03627989751237343,
+      "komega_n64": 0.10621247320603976,
+      "komega_n128": 0.10612302437887641,
+      "komega_n256": 0.10591043006669862,
+      "kepsilon_n64": 0.06878214576563776,
+      "kepsilon_n128": 0.0687621402693324,
+      "kepsilon_n256": 0.06875716156638934
+    },
+    "y+>30_to_0.2Re_tau": {
+      "sst_n64": 0.046095362639422766,
+      "sst_n128": 0.056575015626923686,
+      "sst_n256": 0.0607947249342571,
+      "sst_n512": 0.06300084445316707,
+      "komega_n64": 0.13457471548336483,
+      "komega_n128": 0.1347802609937494,
+      "komega_n256": 0.13428656508656064,
+      "kepsilon_n64": 0.06358200947563061,
+      "kepsilon_n128": 0.06334148286482433,
+      "kepsilon_n256": 0.06345752856193311
+    },
+    "y+>30_to_0.5Re_tau": {
+      "sst_n64": 0.029124647577285005,
+      "sst_n128": 0.03774746577614782,
+      "sst_n256": 0.04188652141130827,
+      "sst_n512": 0.0439118599077767,
+      "komega_n64": 0.11578052345885236,
+      "komega_n128": 0.11523826546578837,
+      "komega_n256": 0.11501578570189844,
+      "kepsilon_n64": 0.0692512856118666,
+      "kepsilon_n128": 0.06920447298251925,
+      "kepsilon_n256": 0.06922067537853499
+    }
+  },
+  "cases": [
+    {
+      "model": "sst",
+      "n": 64,
+      "converged": true,
+      "verdict": "PASS",
+      "role": "gated",
+      "tolerance": 0.05,
+      "log_region_rms": 0.022477565155236304,
+      "log_region_max": 0.048576941322405705,
+      "cf_rel_error": 0.035589510498758546,
+      "bulk_rel_error": 0.017333437127461826,
+      "iterations": 2223,
+      "relative_local_residual": 9.854788785542543e-11
+    },
+    {
+      "model": "sst",
+      "n": 128,
+      "converged": true,
+      "verdict": "PASS",
+      "role": "gated",
+      "tolerance": 0.05,
+      "log_region_rms": 0.030553335188856546,
+      "log_region_max": 0.05958615814367866,
+      "cf_rel_error": 0.05357441954906964,
+      "bulk_rel_error": 0.025756781990737863,
+      "iterations": 2229,
+      "relative_local_residual": 9.793435680425568e-11
+    },
+    {
+      "model": "sst",
+      "n": 256,
+      "converged": true,
+      "verdict": "PASS",
+      "role": "gated",
+      "tolerance": 0.05,
+      "log_region_rms": 0.034388245937951326,
+      "log_region_max": 0.06443286457515271,
+      "cf_rel_error": 0.06253769207697232,
+      "bulk_rel_error": 0.029874707248982824,
+      "iterations": 2231,
+      "relative_local_residual": 9.799500040398663e-11
+    },
+    {
+      "model": "sst",
+      "n": 512,
+      "converged": true,
+      "verdict": "PASS",
+      "role": "gated",
+      "tolerance": 0.05,
+      "log_region_rms": 0.03627989751237343,
+      "log_region_max": 0.06679504156487166,
+      "cf_rel_error": 0.06692662943660042,
+      "bulk_rel_error": 0.031872129949817536,
+      "iterations": 2231,
+      "relative_local_residual": 9.906544755869917e-11
+    },
+    {
+      "model": "komega",
+      "n": 64,
+      "converged": true,
+      "verdict": "FAIL",
+      "role": "control",
+      "tolerance": 0.05,
+      "log_region_rms": 0.10621247320603976,
+      "log_region_max": 0.13650569384889222,
+      "cf_rel_error": 0.23889959368993577,
+      "bulk_rel_error": 0.10157475912589027,
+      "iterations": 2773,
+      "relative_local_residual": 9.911608736612339e-11
+    },
+    {
+      "model": "komega",
+      "n": 128,
+      "converged": true,
+      "verdict": "FAIL",
+      "role": "control",
+      "tolerance": 0.05,
+      "log_region_rms": 0.10612302437887641,
+      "log_region_max": 0.13692587524667071,
+      "cf_rel_error": 0.23721211139405995,
+      "bulk_rel_error": 0.10096226913033148,
+      "iterations": 2776,
+      "relative_local_residual": 9.866263044230631e-11
+    },
+    {
+      "model": "komega",
+      "n": 256,
+      "converged": true,
+      "verdict": "FAIL",
+      "role": "control",
+      "tolerance": 0.05,
+      "log_region_rms": 0.10591043006669862,
+      "log_region_max": 0.13684871667453513,
+      "cf_rel_error": 0.23664015689369028,
+      "bulk_rel_error": 0.10075438762543361,
+      "iterations": 2776,
+      "relative_local_residual": 9.91564454043995e-11
+    },
+    {
+      "model": "kepsilon",
+      "n": 64,
+      "converged": true,
+      "verdict": "FAIL",
+      "role": "control",
+      "tolerance": 0.05,
+      "log_region_rms": 0.06878214576563776,
+      "log_region_max": 0.07406342916518424,
+      "cf_rel_error": 0.14995385448654425,
+      "bulk_rel_error": 0.0674764821039338,
+      "iterations": 1940,
+      "relative_local_residual": 9.847285800064831e-11
+    },
+    {
+      "model": "kepsilon",
+      "n": 128,
+      "converged": true,
+      "verdict": "FAIL",
+      "role": "control",
+      "tolerance": 0.05,
+      "log_region_rms": 0.0687621402693324,
+      "log_region_max": 0.0740610404108865,
+      "cf_rel_error": 0.1499002322450731,
+      "bulk_rel_error": 0.06745473960101138,
+      "iterations": 1940,
+      "relative_local_residual": 9.819888044982882e-11
+    },
+    {
+      "model": "kepsilon",
+      "n": 256,
+      "converged": true,
+      "verdict": "FAIL",
+      "role": "control",
+      "tolerance": 0.05,
+      "log_region_rms": 0.06875716156638934,
+      "log_region_max": 0.07405995591660737,
+      "cf_rel_error": 0.14988682419352922,
+      "bulk_rel_error": 0.06744930272748328,
+      "iterations": 1940,
+      "relative_local_residual": 9.818732860835578e-11
+    }
+  ],
+  "verdict": "PASS",
+  "controls_rejected": true,
+  "elapsed_s": 41.32,
+  "environment": {
+    "python": "3.11.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "numpy": "2.4.6"
+  }
+}
