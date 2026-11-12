@@ -90,7 +90,7 @@ GATES = (
      "minimum circularity vs Hysing et al. (2009) ref"),
     ("B3", "hysing", "worst_step_drift", "<=", HYSING_MASS_DRIFT_MAX,
      "worst per-step relative volume drift"),
-    ("B4", "hysing", "convergence_order", ">=", HYSING_CONVERGENCE_MAX,
+    ("B4", "hysing", "hysing_convergence_order", ">=", HYSING_CONVERGENCE_MAX,
      "terminal velocity convergence coarse -> fine"),
 )
 
@@ -218,7 +218,7 @@ def evaluate_gates(legs: dict) -> tuple[list[dict], dict]:
     every other leg's numbers are reported but not graded (they are the
     comparison/negative material).  Dam-break gates are judged on every PLIC
     leg (one per grid).  Hysing gates are judged on the declared resolution
-    leg (``cells_per_diameter == 64``).
+    leg (``cells_per_diameter == DECLARED_CPD``).
     """
     zalesak_declared = next(
         (rec for key, rec in legs.items()
@@ -330,6 +330,7 @@ _METRIC_KEY = {
     "terminal_velocity_rel_error": "hysing_terminal_velocity_error",
     "circularity_rel_error": "hysing_circularity_error",
     "worst_step_drift": "hysing_worst_step_drift",
+    "hysing_convergence_order": "hysing_convergence_order",
 }
 
 
@@ -437,11 +438,13 @@ def write_figures(out: str | Path) -> list[Path]:
     hysing_legs = {k: v for k, v in legs.items() if v["case"] == "hysing"}
     if hysing_legs:
         fig, ax = plt.subplots()
+        xs, ys = [], []
         for key in sorted(hysing_legs):
             r = hysing_legs[key]
-            ax.plot(r["cells_per_diameter"], r["terminal_velocity"],
-                    "o-", label=f"cpd={r['cells_per_diameter']}")
-        ax.axhline(0.2342, color="r", ls="--", label="Hysing ref")
+            xs.append(r["cells_per_diameter"])
+            ys.append(r["terminal_velocity"])
+        ax.plot(xs, ys, "o-", label="TensorFVM PLIC-VOF")
+        ax.axhline(0.2342, color="r", ls="--", label="Hysing ref (0.2342)")
         ax.set_xlabel("cells per diameter")
         ax.set_ylabel("terminal velocity")
         ax.legend()

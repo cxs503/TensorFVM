@@ -129,3 +129,45 @@ def test_solver_self_check_uses_installed_scheme():
     assert record["graded"] is False          # 32 != declared 128
     assert record["passed"] is None
     assert record["field_shape"] == [32, 32]
+
+def test_hysing_b4_uses_own_convergence_order_not_zalesak():
+    """B4 (Hysing convergence) must NOT read the Zalesak convergence order.
+
+    Regression: _METRIC_KEY mapped "convergence_order" -> "zalesak_convergence_order"
+    for ALL gates, so B4 silently reported the Zalesak value instead of the Hysing one.
+    """
+    from tensorfvm.twophase_gap.campaign import evaluate_gates, _METRIC_KEY
+
+    legs = {
+        "zalesak_plic_64": {
+            "case": "zalesak", "scheme": "plic", "cells": 64, "declared": False,
+            "geometric_error": 0.10, "mass_drift_relative": 1e-14,
+            "perimeter_error": 0.12, "bound_violation": 0.0,
+        },
+        "zalesak_plic_128": {
+            "case": "zalesak", "scheme": "plic", "cells": 128, "declared": True,
+            "geometric_error": 0.04, "mass_drift_relative": 6e-16,
+            "perimeter_error": 0.06, "bound_violation": 0.0,
+        },
+        "hysing_8": {
+            "case": "hysing", "cells_per_diameter": 8, "declared": False,
+            "terminal_velocity": 0.240, "terminal_velocity_rel_error": 0.025,
+            "circularity_rel_error": 0.5, "worst_step_drift": 5e-7,
+        },
+        "hysing_16": {
+            "case": "hysing", "cells_per_diameter": 16, "declared": True,
+            "terminal_velocity": 0.235, "terminal_velocity_rel_error": 0.003,
+            "circularity_rel_error": 0.3, "worst_step_drift": 8e-7,
+        },
+    }
+    gates, metrics = evaluate_gates(legs)
+    by_id = {g["id"]: g for g in gates}
+
+    # B4 must use hysing_convergence_order, not zalesak_convergence_order
+    assert _METRIC_KEY["hysing_convergence_order"] == "hysing_convergence_order"
+    b4_val = by_id["B4"]["got"]
+    z5_val = by_id["Z5"]["got"]
+    # They must be different numbers (Hysing U_T convergence ≠ Zalesak shape convergence)
+    assert b4_val != z5_val, f"B4 ({b4_val}) must not equal Z5 ({z5_val})"
+    # B4 should be the Hysing convergence order computed from terminal velocities
+    assert metrics["hysing_convergence_order"] == b4_val
