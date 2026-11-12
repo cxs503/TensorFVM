@@ -1,0 +1,34 @@
+{
+  "cpd": 8,
+  "end_time": 3.0,
+  "reference": {
+    "peak_velocity": 0.2342,
+    "yc_end": 1.984
+  },
+  "forms": {
+    "total": {
+      "wall_seconds": 49.25349426269531,
+      "steps": 734,
+      "peak_velocity": 0.2450796092786887,
+      "terminal_velocity": 0.1839538198189404,
+      "min_circularity": 1.0026330136900379,
+      "yc_end": 1.5224514739938093,
+      "umax_end": 0.5567052597339656,
+      "total_volume_drift": 7.980296758561063e-05,
+      "worst_step_drift": 7.2071090548306175e-06,
+      "diverged": false
+    },
+    "reduced": {
+      "wall_seconds": 55.34458351135254,
+      "steps": 733,
+      "peak_velocity": 0.24547324940338328,
+      "terminal_velocity": 0.18430487898320683,
+      "min_circularity": 1.0024480064218246,
+      "yc_end": 1.5234524450543647,
+      "umax_end": 0.5566632651963017,
+      "total_volume_drift": 8.040809428439836e-05,
+      "worst_step_drift": 7.274227536007467e-06,
+      "diverged": false
+    }
+  }
+}
