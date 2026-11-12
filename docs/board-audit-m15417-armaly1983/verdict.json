@@ -1,0 +1,101 @@
+{
+  "impl_files": [
+    "src/tensorfvm/inc_bench/armaly.py",
+    "src/tensorfvm/inc_bench/cases.py",
+    "src/tensorfvm/inc_bench/solver.py"
+  ],
+  "impl_pointers": {
+    "armaly.py": "src/tensorfvm/inc_bench/armaly.py:64 citation, :58 experiment anchors (3.0/7.9, band 0.2), :69 TOLERANCE_REATTACHMENT=0.15, :70 TOLERANCE_PROFILE=0.05, :74 experiment_point (no interpolation), :99 profile_development, :137 ReproductionRun",
+    "cases.py": "src/tensorfvm/inc_bench/cases.py:backward_step (S=1, H_in=1.061, H_out=2.0625)",
+    "solver.py": "src/tensorfvm/inc_bench/solver.py:SteadyFlow (staggered MAC SIMPLE + deferred correction), driven but not forked"
+  },
+  "entry": "scripts/repro_armaly1983_bfs.py",
+  "run_artifacts": [
+    "docs/repro-armaly1983-bfs/artifacts/armaly1983_re100_coarse_ld12.json",
+    "docs/repro-armaly1983-bfs/artifacts/armaly1983_re389_coarse_ld12.json",
+    "docs/repro-armaly1983-bfs/artifacts/armaly1983_matrix_re100_coarse_ld12.json",
+    "docs/repro-armaly1983-bfs/artifacts/armaly1983_matrix_re389_coarse_ld12.json",
+    "docs/repro-armaly1983-bfs/figures/fig_field.png"
+  ],
+  "tests": [
+    "tests/test_armaly1983_reproduction.py::test_experimental_anchors_are_certified_values",
+    "tests/test_armaly1983_reproduction.py::test_no_interpolation_between_anchors",
+    "tests/test_armaly1983_reproduction.py::test_development_metric_is_zero_for_a_parabolic_profile",
+    "tests/test_armaly1983_reproduction.py::test_column_at_locates_the_step_plane_and_outlet",
+    "tests/test_armaly1983_reproduction.py::test_short_run_produces_a_complete_record"
+  ],
+  "tests_rerun": "python -m pytest tests/test_armaly1983_reproduction.py -q -> 5 passed in 20.83s (worktree m15417, 2026-11-11)",
+  "integration_callers": [
+    "armaly_reattachment",
+    "src/tensorfvm/internal_flow/ledger_report.py:201",
+    "src/tensorfvm/internal_flow/maturation.py:271",
+    "scripts/run_incompressible_benchmarks.py:88"
+  ],
+  "benchmark": {
+    "judge": "tensor_benchmark_cases rows for anchor REPRO-FVM-ARMALY1983 = 0 (no machine tolerance registered; targets taken from docs/oss_solutions/REPRO-FVM-ARMALY1983.json)",
+    "reattachment_Re100": {
+      "ref": 3.0,
+      "got": 2.644902,
+      "rel_error": 0.118366,
+      "tolerance": 0.15,
+      "pass": true
+    },
+    "reattachment_Re389": {
+      "ref": 7.9,
+      "got": 7.085588,
+      "rel_error": 0.10309,
+      "tolerance": 0.15,
+      "pass": true
+    },
+    "outlet_profile_Re100": {
+      "ref_deviation": 0.0,
+      "got_max_rel": 0.000985,
+      "tolerance": 0.05,
+      "pass": true
+    },
+    "outlet_profile_Re389": {
+      "ref_deviation": 0.0,
+      "got_max_rel": 0.109081,
+      "tolerance": 0.05,
+      "pass": false,
+      "note": "x/S=11.97 outlet; cause 12S < entrance length ~19S, not solver fraud"
+    },
+    "expansion_ratio": {
+      "ref": 1.9423,
+      "got": 1.94118,
+      "rel_error": 0.00058,
+      "pass": true
+    },
+    "under_3pct": "NO - 11.84% / 10.31% (15% gate only); report makes no 3% claim"
+  },
+  "repro_cmd": "PYTHONPATH=src python scripts/repro_armaly1983_bfs.py --re 100 389 --levels coarse --downstream 12 --pressure-iterations 300 --threads 4 --out runs/armaly_local",
+  "repro_verification": {
+    "status": "WITHHELD (full-case rerun not finished at audit close)",
+    "smoke": "pytest test_short_run_produces_a_complete_record runs the same CLI path and writes a complete JSON record -> PASS",
+    "attempts": [
+      "cluster cj1113 submitted 2026-11-11T23:32 (state=queued, 318 jobs ahead at submit)",
+      "detached local rerun started 23:35, no numbers at audit close"
+    ]
+  },
+  "external_anchor": "Armaly, B. F., Durst, F., Pereira, J. C. F. & Schoenung, B. (1983), J. Fluid Mech. 127, 473-496",
+  "external_anchor_doc": "docs/repro-armaly1983-bfs/REPORT.md",
+  "round2_status": {
+    "fine_grid_and_40S": "NOT RUN - convergence/convergence_analysis.json status=insufficient_data (single grid level)",
+    "cluster_jobs": "cj1103 (7 shards), cj1105 (11 shards) still state=queued in cluster_jobs, finished_at NULL",
+    "uncommitted": "REPORT_ROUND2.md, research/, convergence/, scripts/convergence_armaly1983.py, tests/test_armaly1983_extended.py are untracked in the m15386 worktree and absent from main (653e63a6)",
+    "platform_report": "tensor_reports rows for mission 15386 = 0 (sibling m15213 has report id=14339)"
+  },
+  "findings": [
+    "D1 mesh convergence absent (blocking for L4)",
+    "D2 third predeclared criterion FAIL 10.91% > 5%",
+    "D3 round-2 deliverables uncommitted / not in main",
+    "D4 no registered benchmark case for the anchor",
+    "D5 mission marked succeeded without a platform report",
+    "D6 inherited defect: inc_bench/reference.py ARMALY_1983_REATTACHMENT normalisation mix-up (L_r/H_out vs step heights)",
+    "D7 ambiguous 'cells' vs 'fluid_cells' field naming"
+  ],
+  "level_rationale": "L3: real non-placeholder implementation driving the existing SIMPLE kernel, runnable entry, non-empty run artifacts, grep-verified integration callers, tests 5 passed. L4 refused: mesh-convergence leg missing (single coarse grid), third predeclared criterion FAILs, and full-case reproducibility unverified at audit close. m15386's own increment is docs + a convergence script returning insufficient_data (L1 substance) on top of m15213's L3 capability.",
+  "audit_report": "docs/board-audit-m15417-armaly1983/REPORT.md",
+  "audit_figure": "docs/board-audit-m15417-armaly1983/fig_m15386_armaly_audit.png",
+  "audit_mission": 15417
+}

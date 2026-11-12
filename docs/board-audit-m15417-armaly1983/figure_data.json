@@ -1,0 +1,33 @@
+{
+  "figure": "docs/board-audit-m15417-armaly1983/fig_m15386_armaly_audit.png",
+  "source_artifacts": {
+    "100": "docs/repro-armaly1983-bfs/artifacts/armaly1983_re100_coarse_ld12.json",
+    "389": "docs/repro-armaly1983-bfs/artifacts/armaly1983_re389_coarse_ld12.json"
+  },
+  "reattachment": {
+    "100": {
+      "got": 2.6449018588393858,
+      "ref": 3.0,
+      "rel_error": 0.11836604705353808,
+      "pass_15pct": true
+    },
+    "389": {
+      "got": 7.085587930302103,
+      "ref": 7.9,
+      "rel_error": 0.1030901354047971,
+      "pass_15pct": true
+    }
+  },
+  "outlet_profile": {
+    "100": {
+      "max_rel": 0.0009848491143222271,
+      "x_over_step": 11.96875,
+      "pass_5pct": true
+    },
+    "389": {
+      "max_rel": 0.10908074060716957,
+      "x_over_step": 11.96875,
+      "pass_5pct": false
+    }
+  }
+}
