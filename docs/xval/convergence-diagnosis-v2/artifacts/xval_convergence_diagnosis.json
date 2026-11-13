@@ -1,0 +1,5100 @@
+{
+  "anchor": "XVAL-FVM-CONVERGENCE-DIAGNOSIS-V2",
+  "mission": 17360,
+  "case": "Sod (1978) shock tube + periodic entropy wave (design-order control)",
+  "generated_at": "2026-11-13T05:15:01+00:00",
+  "environment": {
+    "python": "3.11.6",
+    "machine": "loongarch64",
+    "numpy": "2.4.6"
+  },
+  "thresholds": {
+    "p_rel_diff": 0.15,
+    "value_rel_diff": 0.15,
+    "asymptotic_band": 0.15,
+    "fs": 1.25
+  },
+  "reference": {
+    "procedure": "three-grid GCI (Roache 1994; Celik et al. 2008, ASME J. Fluids Eng. 130:078001; ITTC 7.5-03-01-01)",
+    "implementation": "docs/xval/convergence-diagnosis-v2/gci_reference.py (independent; imports nothing from tensorfvm)",
+    "second_implementation": "tensorfvm.ship_freesurface.mesh_convergence.richardson_extrapolation (pre-existing in tree)"
+  },
+  "got": "tensorfvm.verification.sod1978_convergence (successive rates + log-log fitted exponent on the error series)",
+  "sweeps_config": {
+    "main_100_200_400": {
+      "grids": [
+        100,
+        200,
+        400
+      ],
+      "order": 2,
+      "cfl": 0.4,
+      "wall_seconds": 26.6
+    },
+    "fine_200_400_800": {
+      "grids": [
+        200,
+        400,
+        800
+      ],
+      "order": 2,
+      "cfl": 0.4,
+      "wall_seconds": 148.1
+    },
+    "combined_100_200_400_800": {
+      "grids": [
+        100,
+        200,
+        400,
+        800
+      ],
+      "order": 2,
+      "cfl": 0.4,
+      "wall_seconds": 0.0,
+      "assembled_from": [
+        [
+          100,
+          200,
+          400
+        ],
+        [
+          200,
+          400,
+          800
+        ]
+      ]
+    },
+    "cfl0.2_100_200_400": {
+      "grids": [
+        100,
+        200,
+        400
+      ],
+      "order": 2,
+      "cfl": 0.2,
+      "wall_seconds": 43.8
+    },
+    "order1_100_200_400": {
+      "grids": [
+        100,
+        200,
+        400
+      ],
+      "order": 1,
+      "cfl": 0.4,
+      "wall_seconds": 14.5
+    }
+  },
+  "raw": {
+    "main_100_200_400": [
+      {
+        "nx": 100,
+        "dx": 0.009999999999999998,
+        "order": 2,
+        "cfl": 0.4,
+        "t_end": 0.14,
+        "steps": 76,
+        "seconds": 1.1475591659545898,
+        "l1_rho_full": 0.004644811631165467,
+        "l1_rho_cellavg": 0.0041393924777673894,
+        "l1_rho_plateaus": 0.000572179300956856,
+        "l1_rho_restricted": 0.0014461617659891478,
+        "shock_x": 0.7469490478171175,
+        "contact_x": 0.6290397345793096,
+        "shock_exact": 0.745301802484225,
+        "contact_exact": 0.629843366806853,
+        "positivity_fixes": 0,
+        "budget_drift_mass": 0.0
+      },
+      {
+        "nx": 200,
+        "dx": 0.004999999999999999,
+        "order": 2,
+        "cfl": 0.4,
+        "t_end": 0.14,
+        "steps": 153,
+        "seconds": 2.604759931564331,
+        "l1_rho_full": 0.0023597574623605818,
+        "l1_rho_cellavg": 0.0022637271530433264,
+        "l1_rho_plateaus": 7.300614300125107e-05,
+        "l1_rho_restricted": 0.00040915335476501656,
+        "shock_x": 0.7457625999028088,
+        "contact_x": 0.6294214126326805,
+        "shock_exact": 0.745301802484225,
+        "contact_exact": 0.629843366806853,
+        "positivity_fixes": 0,
+        "budget_drift_mass": -1.9737298215558337e-16
+      },
+      {
+        "nx": 400,
+        "dx": 0.0024999999999999996,
+        "order": 2,
+        "cfl": 0.4,
+        "t_end": 0.14,
+        "steps": 307,
+        "seconds": 6.28707218170166,
+        "l1_rho_full": 0.0012695661226941669,
+        "l1_rho_cellavg": 0.001199248152577388,
+        "l1_rho_plateaus": 1.0679153878828283e-05,
+        "l1_rho_restricted": 0.00016273979801110128,
+        "shock_x": 0.7455426617804162,
+        "contact_x": 0.6296513199383662,
+        "shock_exact": 0.745301802484225,
+        "contact_exact": 0.629843366806853,
+        "positivity_fixes": 0,
+        "budget_drift_mass": 0.0
+      },
+      {
+        "nx": 100,
+        "dx": 0.01,
+        "order": 2,
+        "smooth_wave_l1": 5.2763699424033253e-05,
+        "steps": 92
+      },
+      {
+        "nx": 200,
+        "dx": 0.005,
+        "order": 2,
+        "smooth_wave_l1": 1.2036017838358836e-05,
+        "steps": 183
+      },
+      {
+        "nx": 400,
+        "dx": 0.0025,
+        "order": 2,
+        "smooth_wave_l1": 2.8156612505256253e-06,
+        "steps": 365
+      }
+    ],
+    "fine_200_400_800": [
+      {
+        "nx": 200,
+        "dx": 0.004999999999999999,
+        "order": 2,
+        "cfl": 0.4,
+        "t_end": 0.14,
+        "steps": 153,
+        "seconds": 2.739194631576538,
+        "l1_rho_full": 0.0023597574623605818,
+        "l1_rho_cellavg": 0.0022637271530433264,
+        "l1_rho_plateaus": 7.300614300125107e-05,
+        "l1_rho_restricted": 0.00040915335476501656,
+        "shock_x": 0.7457625999028088,
+        "contact_x": 0.6294214126326805,
+        "shock_exact": 0.745301802484225,
+        "contact_exact": 0.629843366806853,
+        "positivity_fixes": 0,
+        "budget_drift_mass": -1.9737298215558337e-16
+      },
+      {
+        "nx": 400,
+        "dx": 0.0024999999999999996,
+        "order": 2,
+        "cfl": 0.4,
+        "t_end": 0.14,
+        "steps": 307,
+        "seconds": 6.851074934005737,
+        "l1_rho_full": 0.0012695661226941669,
+        "l1_rho_cellavg": 0.001199248152577388,
+        "l1_rho_plateaus": 1.0679153878828283e-05,
+        "l1_rho_restricted": 0.00016273979801110128,
+        "shock_x": 0.7455426617804162,
+        "contact_x": 0.6296513199383662,
+        "shock_exact": 0.745301802484225,
+        "contact_exact": 0.629843366806853,
+        "positivity_fixes": 0,
+        "budget_drift_mass": 0.0
+      },
+      {
+        "nx": 800,
+        "dx": 0.0012499999999999998,
+        "order": 2,
+        "cfl": 0.4,
+        "t_end": 0.14,
+        "steps": 615,
+        "seconds": 58.50402855873108,
+        "l1_rho_full": 0.0007007685913964693,
+        "l1_rho_cellavg": 0.0006307427446104721,
+        "l1_rho_plateaus": 8.360860416578805e-06,
+        "l1_rho_restricted": 0.0001328596017625224,
+        "shock_x": 0.7454376223706372,
+        "contact_x": 0.6297845844662332,
+        "shock_exact": 0.745301802484225,
+        "contact_exact": 0.629843366806853,
+        "positivity_fixes": 0,
+        "budget_drift_mass": 0.0
+      },
+      {
+        "nx": 200,
+        "dx": 0.005,
+        "order": 2,
+        "smooth_wave_l1": 1.2036017838358836e-05,
+        "steps": 183
+      },
+      {
+        "nx": 400,
+        "dx": 0.0025,
+        "order": 2,
+        "smooth_wave_l1": 2.8156612505256253e-06,
+        "steps": 365
+      },
+      {
+        "nx": 800,
+        "dx": 0.00125,
+        "order": 2,
+        "smooth_wave_l1": 6.82110137338876e-07,
+        "steps": 730
+      }
+    ],
+    "combined_100_200_400_800": [
+      {
+        "nx": 100,
+        "dx": 0.009999999999999998,
+        "order": 2,
+        "cfl": 0.4,
+        "t_end": 0.14,
+        "steps": 76,
+        "seconds": 1.1475591659545898,
+        "l1_rho_full": 0.004644811631165467,
+        "l1_rho_cellavg": 0.0041393924777673894,
+        "l1_rho_plateaus": 0.000572179300956856,
+        "l1_rho_restricted": 0.0014461617659891478,
+        "shock_x": 0.7469490478171175,
+        "contact_x": 0.6290397345793096,
+        "shock_exact": 0.745301802484225,
+        "contact_exact": 0.629843366806853,
+        "positivity_fixes": 0,
+        "budget_drift_mass": 0.0
+      },
+      {
+        "nx": 200,
+        "dx": 0.004999999999999999,
+        "order": 2,
+        "cfl": 0.4,
+        "t_end": 0.14,
+        "steps": 153,
+        "seconds": 2.739194631576538,
+        "l1_rho_full": 0.0023597574623605818,
+        "l1_rho_cellavg": 0.0022637271530433264,
+        "l1_rho_plateaus": 7.300614300125107e-05,
+        "l1_rho_restricted": 0.00040915335476501656,
+        "shock_x": 0.7457625999028088,
+        "contact_x": 0.6294214126326805,
+        "shock_exact": 0.745301802484225,
+        "contact_exact": 0.629843366806853,
+        "positivity_fixes": 0,
+        "budget_drift_mass": -1.9737298215558337e-16
+      },
+      {
+        "nx": 400,
+        "dx": 0.0024999999999999996,
+        "order": 2,
+        "cfl": 0.4,
+        "t_end": 0.14,
+        "steps": 307,
+        "seconds": 6.851074934005737,
+        "l1_rho_full": 0.0012695661226941669,
+        "l1_rho_cellavg": 0.001199248152577388,
+        "l1_rho_plateaus": 1.0679153878828283e-05,
+        "l1_rho_restricted": 0.00016273979801110128,
+        "shock_x": 0.7455426617804162,
+        "contact_x": 0.6296513199383662,
+        "shock_exact": 0.745301802484225,
+        "contact_exact": 0.629843366806853,
+        "positivity_fixes": 0,
+        "budget_drift_mass": 0.0
+      },
+      {
+        "nx": 800,
+        "dx": 0.0012499999999999998,
+        "order": 2,
+        "cfl": 0.4,
+        "t_end": 0.14,
+        "steps": 615,
+        "seconds": 58.50402855873108,
+        "l1_rho_full": 0.0007007685913964693,
+        "l1_rho_cellavg": 0.0006307427446104721,
+        "l1_rho_plateaus": 8.360860416578805e-06,
+        "l1_rho_restricted": 0.0001328596017625224,
+        "shock_x": 0.7454376223706372,
+        "contact_x": 0.6297845844662332,
+        "shock_exact": 0.745301802484225,
+        "contact_exact": 0.629843366806853,
+        "positivity_fixes": 0,
+        "budget_drift_mass": 0.0
+      },
+      {
+        "nx": 100,
+        "dx": 0.01,
+        "order": 2,
+        "smooth_wave_l1": 5.2763699424033253e-05,
+        "steps": 92
+      },
+      {
+        "nx": 200,
+        "dx": 0.005,
+        "order": 2,
+        "smooth_wave_l1": 1.2036017838358836e-05,
+        "steps": 183
+      },
+      {
+        "nx": 400,
+        "dx": 0.0025,
+        "order": 2,
+        "smooth_wave_l1": 2.8156612505256253e-06,
+        "steps": 365
+      },
+      {
+        "nx": 800,
+        "dx": 0.00125,
+        "order": 2,
+        "smooth_wave_l1": 6.82110137338876e-07,
+        "steps": 730
+      }
+    ],
+    "cfl0.2_100_200_400": [
+      {
+        "nx": 100,
+        "dx": 0.009999999999999998,
+        "order": 2,
+        "cfl": 0.2,
+        "t_end": 0.14,
+        "steps": 152,
+        "seconds": 2.3334221839904785,
+        "l1_rho_full": 0.004656035952771257,
+        "l1_rho_cellavg": 0.004206380397735976,
+        "l1_rho_plateaus": 0.0008990347465956058,
+        "l1_rho_restricted": 0.0016640730283099428,
+        "shock_x": 0.747412492183281,
+        "contact_x": 0.629047446236948,
+        "shock_exact": 0.745301802484225,
+        "contact_exact": 0.629843366806853,
+        "positivity_fixes": 0,
+        "budget_drift_mass": 0.0
+      },
+      {
+        "nx": 200,
+        "dx": 0.004999999999999999,
+        "order": 2,
+        "cfl": 0.2,
+        "t_end": 0.14,
+        "steps": 306,
+        "seconds": 5.151053428649902,
+        "l1_rho_full": 0.0023346851047958504,
+        "l1_rho_cellavg": 0.002238654795478595,
+        "l1_rho_plateaus": 0.0001287499900136447,
+        "l1_rho_restricted": 0.00043957609474333986,
+        "shock_x": 0.7459168602963494,
+        "contact_x": 0.6295967963678053,
+        "shock_exact": 0.745301802484225,
+        "contact_exact": 0.629843366806853,
+        "positivity_fixes": 0,
+        "budget_drift_mass": 1.9737298215558337e-16
+      },
+      {
+        "nx": 400,
+        "dx": 0.0024999999999999996,
+        "order": 2,
+        "cfl": 0.2,
+        "t_end": 0.14,
+        "steps": 614,
+        "seconds": 12.257936239242554,
+        "l1_rho_full": 0.0012621777517930108,
+        "l1_rho_cellavg": 0.0011918597816762317,
+        "l1_rho_plateaus": 1.0910196249827413e-05,
+        "l1_rho_restricted": 0.00015487008676878743,
+        "shock_x": 0.7456224138788417,
+        "contact_x": 0.629829428057074,
+        "shock_exact": 0.745301802484225,
+        "contact_exact": 0.629843366806853,
+        "positivity_fixes": 0,
+        "budget_drift_mass": 0.0
+      },
+      {
+        "nx": 100,
+        "dx": 0.01,
+        "order": 2,
+        "smooth_wave_l1": 5.7494116863369136e-05,
+        "steps": 183
+      },
+      {
+        "nx": 200,
+        "dx": 0.005,
+        "order": 2,
+        "smooth_wave_l1": 1.3364168547519428e-05,
+        "steps": 365
+      },
+      {
+        "nx": 400,
+        "dx": 0.0025,
+        "order": 2,
+        "smooth_wave_l1": 3.169676319286219e-06,
+        "steps": 730
+      }
+    ],
+    "order1_100_200_400": [
+      {
+        "nx": 100,
+        "dx": 0.009999999999999998,
+        "order": 1,
+        "cfl": 0.4,
+        "t_end": 0.14,
+        "steps": 73,
+        "seconds": 0.6541087627410889,
+        "l1_rho_full": 0.01574960009960188,
+        "l1_rho_cellavg": 0.015303817293826776,
+        "l1_rho_plateaus": 0.0032673761584445004,
+        "l1_rho_restricted": 0.008112300972859105,
+        "shock_x": 0.7495078984368325,
+        "contact_x": 0.624927789180289,
+        "shock_exact": 0.745301802484225,
+        "contact_exact": 0.629843366806853,
+        "positivity_fixes": 0,
+        "budget_drift_mass": 0.0
+      },
+      {
+        "nx": 200,
+        "dx": 0.004999999999999999,
+        "order": 1,
+        "cfl": 0.4,
+        "t_end": 0.14,
+        "steps": 150,
+        "seconds": 1.509012222290039,
+        "l1_rho_full": 0.010268927698272003,
+        "l1_rho_cellavg": 0.010172526704525665,
+        "l1_rho_plateaus": 0.0010983832744833884,
+        "l1_rho_restricted": 0.0037406228999523625,
+        "shock_x": 0.7479635701259039,
+        "contact_x": 0.62616000342385,
+        "shock_exact": 0.745301802484225,
+        "contact_exact": 0.629843366806853,
+        "positivity_fixes": 0,
+        "budget_drift_mass": 0.0
+      },
+      {
+        "nx": 400,
+        "dx": 0.0024999999999999996,
+        "order": 1,
+        "cfl": 0.4,
+        "t_end": 0.14,
+        "steps": 303,
+        "seconds": 3.4375925064086914,
+        "l1_rho_full": 0.006540801760378331,
+        "l1_rho_cellavg": 0.006470344778316377,
+        "l1_rho_plateaus": 0.00041686274165197426,
+        "l1_rho_restricted": 0.002001786949728181,
+        "shock_x": 0.7467591558323716,
+        "contact_x": 0.6275178180623371,
+        "shock_exact": 0.745301802484225,
+        "contact_exact": 0.629843366806853,
+        "positivity_fixes": 0,
+        "budget_drift_mass": 0.0
+      },
+      {
+        "nx": 100,
+        "dx": 0.01,
+        "order": 1,
+        "smooth_wave_l1": 0.0022180314909138864,
+        "steps": 92
+      },
+      {
+        "nx": 200,
+        "dx": 0.005,
+        "order": 1,
+        "smooth_wave_l1": 0.0011139427119032318,
+        "steps": 183
+      },
+      {
+        "nx": 400,
+        "dx": 0.0025,
+        "order": 1,
+        "smooth_wave_l1": 0.0005581889107446697,
+        "steps": 365
+      }
+    ]
+  },
+  "sweeps": {
+    "main_100_200_400": {
+      "shock_x": {
+        "phi": [
+          0.7469490478171175,
+          0.7457625999028088,
+          0.7455426617804162
+        ],
+        "err_fitted_by_v2": [
+          0.0016472453328925107,
+          0.00046079741858384704,
+          0.00024085929619122037
+        ],
+        "h": [
+          0.009999999999999998,
+          0.004999999999999999,
+          0.0024999999999999996
+        ],
+        "nx": [
+          100,
+          200,
+          400
+        ],
+        "exact_limit": 0.745301802484225,
+        "limit_form": "nonzero_limit",
+        "limit_form_heuristic": "nonzero_limit",
+        "ref": {
+          "phi_coarse_medium_fine": [
+            0.7469490478171175,
+            0.7457625999028088,
+            0.7455426617804162
+          ],
+          "h_coarse_medium_fine": [
+            0.009999999999999998,
+            0.004999999999999999,
+            0.0024999999999999996
+          ],
+          "r21": 2.0,
+          "r32": 2.0,
+          "r_uniformity": 0.0,
+          "convergence_class": "monotonic",
+          "observed_order": 2.431479170137526,
+          "extrapolated": 0.7454926128537668,
+          "gci_fine": 8.391358606149826e-05,
+          "gci_medium": 0.00045253517854957487,
+          "asymptotic_ratio": 0.99970508292797,
+          "asymptotic_band": 0.15,
+          "in_asymptotic_range": true,
+          "fs": 1.25,
+          "estimated_relative_error_fine": 6.713537570520569e-05,
+          "loglog_v2_estimator": {
+            "exponent": 0.0013594626678452143,
+            "valid": true,
+            "reason": ""
+          },
+          "limit_form": "nonzero_limit",
+          "gci_absolute_fine": 6.256115831182944e-05,
+          "triplet_consistency": null
+        },
+        "got": {
+          "successive": [
+            {
+              "nx_pair": [
+                100,
+                200
+              ],
+              "rate": 1.8378508993635347
+            },
+            {
+              "nx_pair": [
+                200,
+                400
+              ],
+              "rate": 0.935942027562044
+            }
+          ],
+          "successive_finest": 0.935942027562044,
+          "loglog_exponent_finest3": 1.3868964634627905
+        },
+        "agreement_ref_vs_got": {
+          "p_ref": 2.431479170137526,
+          "p_got_loglog": 1.3868964634627905,
+          "p_got_successive": 0.935942027562044,
+          "rel_diff_loglog": 0.4296079191234252,
+          "rel_diff_successive": 0.6150729814769063,
+          "pass_loglog": false,
+          "pass_successive": false
+        },
+        "agreement_ref_vs_repo_gci": {
+          "p_ref": 2.431479170137526,
+          "p_repo_gci": 2.431479170137526,
+          "rel_diff_p": 0.0,
+          "extrapolated_ref": 0.7454926128537668,
+          "extrapolated_repo_gci": 0.7454926128537667,
+          "rel_diff_extrapolated": 1.4892475196705055e-16,
+          "gci_ref": 8.391358606149826e-05,
+          "gci_repo_gci": 8.391358606156626e-05,
+          "rel_diff_gci": 8.102743778840143e-13,
+          "class_ref": "monotonic",
+          "class_repo_gci": "monotonic"
+        },
+        "derived_values": {
+          "extrapolated_ref": 0.7454926128537668,
+          "extrapolated_from_got_exponent": 0.7454064902545263,
+          "rel_diff_extrapolated": 0.00011552441668171211,
+          "gci_relative_ref": 8.391358606149826e-05,
+          "gci_absolute_ref": 6.256115831182944e-05,
+          "gci_absolute_from_got_exponent": 0.00017021440736242547,
+          "gci_relative_from_got_exponent": 0.0002283094128455905,
+          "relative_form_applicable": true,
+          "exact": 0.745301802484225,
+          "relerr_fine": 0.00032317015119028697,
+          "relerr_extrapolated_ref": 0.00025601758764814736,
+          "gci_covers_exact": false
+        }
+      },
+      "contact_x": {
+        "phi": [
+          0.6290397345793096,
+          0.6294214126326805,
+          0.6296513199383662
+        ],
+        "err_fitted_by_v2": [
+          0.0008036322275434271,
+          0.0004219541741725674,
+          0.00019204686848683927
+        ],
+        "h": [
+          0.009999999999999998,
+          0.004999999999999999,
+          0.0024999999999999996
+        ],
+        "nx": [
+          100,
+          200,
+          400
+        ],
+        "exact_limit": 0.629843366806853,
+        "limit_form": "nonzero_limit",
+        "limit_form_heuristic": "nonzero_limit",
+        "ref": {
+          "phi_coarse_medium_fine": [
+            0.6290397345793096,
+            0.6294214126326805,
+            0.6296513199383662
+          ],
+          "h_coarse_medium_fine": [
+            0.009999999999999998,
+            0.004999999999999999,
+            0.0024999999999999996
+          ],
+          "r21": 2.0,
+          "r32": 2.0,
+          "r_uniformity": 0.0,
+          "convergence_class": "monotonic",
+          "observed_order": 0.7313039226294805,
+          "extrapolated": 0.6299995910644817,
+          "gci_fine": 0.0006913967998777686,
+          "gci_medium": 0.0011482339578001112,
+          "asymptotic_ratio": 1.000365267690408,
+          "asymptotic_band": 0.15,
+          "in_asymptotic_range": true,
+          "fs": 1.25,
+          "estimated_relative_error_fine": 0.0005528116701266498,
+          "loglog_v2_estimator": {
+            "exponent": -0.000700991105689249,
+            "valid": false,
+            "reason": ""
+          },
+          "limit_form": "nonzero_limit",
+          "gci_absolute_fine": 0.00043533890764419934,
+          "triplet_consistency": null
+        },
+        "got": {
+          "successive": [
+            {
+              "nx_pair": [
+                100,
+                200
+              ],
+              "rate": 0.9294490954234497
+            },
+            {
+              "nx_pair": [
+                200,
+                400
+              ],
+              "rate": 1.1356278857753892
+            }
+          ],
+          "successive_finest": 1.1356278857753892,
+          "loglog_exponent_finest3": 1.0325384905994197
+        },
+        "agreement_ref_vs_got": {
+          "p_ref": 0.7313039226294805,
+          "p_got_loglog": 1.0325384905994197,
+          "p_got_successive": 1.1356278857753892,
+          "rel_diff_loglog": 0.4119143336286485,
+          "rel_diff_successive": 0.5528808893737629,
+          "pass_loglog": false,
+          "pass_successive": false
+        },
+        "agreement_ref_vs_repo_gci": {
+          "p_ref": 0.7313039226294805,
+          "p_repo_gci": 0.7313039226294805,
+          "rel_diff_p": 0.0,
+          "extrapolated_ref": 0.6299995910644817,
+          "extrapolated_repo_gci": 0.6299995910644816,
+          "rel_diff_extrapolated": 1.7622599131362342e-16,
+          "gci_ref": 0.0006913967998777686,
+          "gci_repo_gci": 0.0006913967998777526,
+          "rel_diff_gci": 2.3051555833574208e-14,
+          "class_ref": "monotonic",
+          "class_repo_gci": "monotonic"
+        },
+        "derived_values": {
+          "extrapolated_ref": 0.6299995910644817,
+          "extrapolated_from_got_exponent": 0.6298711963810859,
+          "rel_diff_extrapolated": 0.00020380121704336013,
+          "gci_relative_ref": 0.0006913967998777686,
+          "gci_absolute_ref": 0.00043533890764419934,
+          "gci_absolute_from_got_exponent": 0.0002748455533996322,
+          "gci_relative_from_got_exponent": 0.00043650437106450534,
+          "relative_form_applicable": true,
+          "exact": 0.629843366806853,
+          "relerr_fine": 0.0003049121076887234,
+          "relerr_extrapolated_ref": 0.000248036680009255,
+          "gci_covers_exact": true
+        }
+      },
+      "l1_rho_full": {
+        "phi": [
+          0.004644811631165467,
+          0.0023597574623605818,
+          0.0012695661226941669
+        ],
+        "err_fitted_by_v2": [
+          0.004644811631165467,
+          0.0023597574623605818,
+          0.0012695661226941669
+        ],
+        "h": [
+          0.009999999999999998,
+          0.004999999999999999,
+          0.0024999999999999996
+        ],
+        "nx": [
+          100,
+          200,
+          400
+        ],
+        "exact_limit": 0.0,
+        "limit_form": "zero_limit",
+        "limit_form_heuristic": "nonzero_limit",
+        "ref": {
+          "phi_coarse_medium_fine": [
+            0.004644811631165467,
+            0.0023597574623605818,
+            0.0012695661226941669
+          ],
+          "h_coarse_medium_fine": [
+            0.009999999999999998,
+            0.004999999999999999,
+            0.0024999999999999996
+          ],
+          "r21": 2.0,
+          "r32": 2.0,
+          "r_uniformity": 0.0,
+          "convergence_class": "monotonic",
+          "observed_order": 1.0676470009065013,
+          "extrapolated": 0.0002748769181261354,
+          "gci_fine": 0.9793593917514761,
+          "gci_medium": 1.1043934479970015,
+          "asymptotic_ratio": 0.5380070379877756,
+          "asymptotic_band": 0.15,
+          "in_asymptotic_range": false,
+          "fs": 1.25,
+          "estimated_relative_error_fine": 3.6186712633018856,
+          "loglog_v2_estimator": {
+            "exponent": 0.9356422765347201,
+            "valid": true,
+            "reason": ""
+          },
+          "limit_form": "nonzero_limit",
+          "gci_absolute_fine": 0.001243361505710039,
+          "triplet_consistency": null
+        },
+        "got": {
+          "successive": [
+            {
+              "nx_pair": [
+                100,
+                200
+              ],
+              "rate": 0.9769815038332116
+            },
+            {
+              "nx_pair": [
+                200,
+                400
+              ],
+              "rate": 0.8943030492362277
+            }
+          ],
+          "successive_finest": 0.8943030492362277,
+          "loglog_exponent_finest3": 0.9356422765347208
+        },
+        "agreement_ref_vs_got": {
+          "p_ref": 1.0676470009065013,
+          "p_got_loglog": 0.9356422765347208,
+          "p_got_successive": 0.8943030492362277,
+          "rel_diff_loglog": 0.12364079537496947,
+          "rel_diff_successive": 0.16236073488999023,
+          "pass_loglog": true,
+          "pass_successive": false
+        },
+        "agreement_ref_vs_repo_gci": {
+          "p_ref": 1.0676470009065013,
+          "p_repo_gci": 1.0676470009065009,
+          "rel_diff_p": 4.159513485946218e-16,
+          "extrapolated_ref": 0.0002748769181261354,
+          "extrapolated_repo_gci": 0.0002748769181261351,
+          "rel_diff_extrapolated": 1.1832956144989804e-15,
+          "gci_ref": 0.9793593917514761,
+          "gci_repo_gci": 0.9793593917514766,
+          "rel_diff_gci": 4.534486661284353e-16,
+          "class_ref": "monotonic",
+          "class_repo_gci": "monotonic"
+        },
+        "derived_values": {
+          "extrapolated_ref": 0.0002748769181261354,
+          "extrapolated_from_got_exponent": 7.515263074288245e-05,
+          "rel_diff_extrapolated": 0.7265953385420436,
+          "gci_relative_ref": 0.9793593917514761,
+          "gci_absolute_ref": 0.001243361505710039,
+          "gci_absolute_from_got_exponent": 0.0014930168649391052,
+          "gci_relative_from_got_exponent": 1.1760055961250369,
+          "relative_form_applicable": false
+        }
+      },
+      "l1_rho_cellavg": {
+        "phi": [
+          0.0041393924777673894,
+          0.0022637271530433264,
+          0.001199248152577388
+        ],
+        "err_fitted_by_v2": [
+          0.0041393924777673894,
+          0.0022637271530433264,
+          0.001199248152577388
+        ],
+        "h": [
+          0.009999999999999998,
+          0.004999999999999999,
+          0.0024999999999999996
+        ],
+        "nx": [
+          100,
+          200,
+          400
+        ],
+        "exact_limit": 0.0,
+        "limit_form": "zero_limit",
+        "limit_form_heuristic": "nonzero_limit",
+        "ref": {
+          "phi_coarse_medium_fine": [
+            0.0041393924777673894,
+            0.0022637271530433264,
+            0.001199248152577388
+          ],
+          "h_coarse_medium_fine": [
+            0.009999999999999998,
+            0.004999999999999999,
+            0.0024999999999999996
+          ],
+          "r21": 2.0,
+          "r32": 2.0,
+          "r_uniformity": 0.0,
+          "convergence_class": "monotonic",
+          "observed_order": 0.8172549412289708,
+          "extrapolated": -0.00019761408307391042,
+          "gci_fine": 1.4559770559675287,
+          "gci_medium": 1.3591198661067878,
+          "asymptotic_ratio": 0.52976709271925,
+          "asymptotic_band": 0.15,
+          "in_asymptotic_range": false,
+          "fs": 1.25,
+          "estimated_relative_error_fine": 7.068637082554751,
+          "loglog_v2_estimator": {
+            "exponent": 0.8936444137669117,
+            "valid": true,
+            "reason": ""
+          },
+          "limit_form": "nonzero_limit",
+          "gci_absolute_fine": 0.001746077794564123,
+          "triplet_consistency": null
+        },
+        "got": {
+          "successive": [
+            {
+              "nx_pair": [
+                100,
+                200
+              ],
+              "rate": 0.8707189639621261
+            },
+            {
+              "nx_pair": [
+                200,
+                400
+              ],
+              "rate": 0.9165698635716965
+            }
+          ],
+          "successive_finest": 0.9165698635716965,
+          "loglog_exponent_finest3": 0.8936444137669113
+        },
+        "agreement_ref_vs_got": {
+          "p_ref": 0.8172549412289708,
+          "p_got_loglog": 0.8936444137669113,
+          "p_got_successive": 0.9165698635716965,
+          "rel_diff_loglog": 0.09347079923807815,
+          "rel_diff_successive": 0.12152257188360092,
+          "pass_loglog": true,
+          "pass_successive": true
+        },
+        "agreement_ref_vs_repo_gci": {
+          "p_ref": 0.8172549412289708,
+          "p_repo_gci": 0.8172549412289708,
+          "rel_diff_p": 0.0,
+          "extrapolated_ref": -0.00019761408307391042,
+          "extrapolated_repo_gci": -0.00019761408307391042,
+          "rel_diff_extrapolated": 0.0,
+          "gci_ref": 1.4559770559675287,
+          "gci_repo_gci": 1.4559770559675287,
+          "rel_diff_gci": 0.0,
+          "class_ref": "monotonic",
+          "class_repo_gci": "monotonic"
+        },
+        "derived_values": {
+          "extrapolated_ref": -0.00019761408307391042,
+          "extrapolated_from_got_exponent": -4.1600947655974785e-05,
+          "rel_diff_extrapolated": 0.7894838919935911,
+          "gci_relative_ref": 1.4559770559675287,
+          "gci_absolute_ref": 0.001746077794564123,
+          "gci_absolute_from_got_exponent": 0.0015510613752917034,
+          "gci_relative_from_got_exponent": 1.2933614881609024,
+          "relative_form_applicable": false
+        }
+      },
+      "l1_rho_plateaus": {
+        "phi": [
+          0.000572179300956856,
+          7.300614300125107e-05,
+          1.0679153878828283e-05
+        ],
+        "err_fitted_by_v2": [
+          0.000572179300956856,
+          7.300614300125107e-05,
+          1.0679153878828283e-05
+        ],
+        "h": [
+          0.009999999999999998,
+          0.004999999999999999,
+          0.0024999999999999996
+        ],
+        "nx": [
+          100,
+          200,
+          400
+        ],
+        "exact_limit": 0.0,
+        "limit_form": "zero_limit",
+        "limit_form_heuristic": "nonzero_limit",
+        "ref": {
+          "phi_coarse_medium_fine": [
+            0.000572179300956856,
+            7.300614300125107e-05,
+            1.0679153878828283e-05
+          ],
+          "h_coarse_medium_fine": [
+            0.009999999999999998,
+            0.004999999999999999,
+            0.0024999999999999996
+          ],
+          "r21": 2.0,
+          "r32": 2.0,
+          "r_uniformity": 0.0,
+          "convergence_class": "monotonic",
+          "observed_order": 3.0016114320566483,
+          "extrapolated": 1.786656129694912e-06,
+          "gci_fine": 1.0408710570650865,
+          "gci_medium": 1.219409147363389,
+          "asymptotic_ratio": 0.14627746981024983,
+          "asymptotic_band": 0.15,
+          "in_asymptotic_range": false,
+          "fs": 1.25,
+          "estimated_relative_error_fine": 4.977173615748794,
+          "loglog_v2_estimator": {
+            "exponent": 2.871799028808624,
+            "valid": true,
+            "reason": ""
+          },
+          "limit_form": "nonzero_limit",
+          "gci_absolute_fine": 1.1115622186416715e-05,
+          "triplet_consistency": null
+        },
+        "got": {
+          "successive": [
+            {
+              "nx_pair": [
+                100,
+                200
+              ],
+              "rate": 2.9703775401618437
+            },
+            {
+              "nx_pair": [
+                200,
+                400
+              ],
+              "rate": 2.7732205174554028
+            }
+          ],
+          "successive_finest": 2.7732205174554028,
+          "loglog_exponent_finest3": 2.871799028808624
+        },
+        "agreement_ref_vs_got": {
+          "p_ref": 3.0016114320566483,
+          "p_got_loglog": 2.871799028808624,
+          "p_got_successive": 2.7732205174554028,
+          "rel_diff_loglog": 0.04324757090862993,
+          "rel_diff_successive": 0.07608943388277152,
+          "pass_loglog": true,
+          "pass_successive": true
+        },
+        "agreement_ref_vs_repo_gci": {
+          "p_ref": 3.0016114320566483,
+          "p_repo_gci": 3.0016114320566487,
+          "rel_diff_p": 1.4795026601620482e-16,
+          "extrapolated_ref": 1.786656129694912e-06,
+          "extrapolated_repo_gci": 1.7866561296949158e-06,
+          "rel_diff_extrapolated": 2.1333978034683294e-15,
+          "gci_ref": 1.0408710570650865,
+          "gci_repo_gci": 1.040871057065086,
+          "rel_diff_gci": 4.266515115736313e-16,
+          "class_ref": "monotonic",
+          "class_repo_gci": "monotonic"
+        },
+        "derived_values": {
+          "extrapolated_ref": 1.786656129694912e-06,
+          "extrapolated_from_got_exponent": 8.169352354435559e-07,
+          "rel_diff_extrapolated": 0.5427574328009862,
+          "gci_relative_ref": 1.0408710570650865,
+          "gci_absolute_ref": 1.1115622186416715e-05,
+          "gci_absolute_from_got_exponent": 1.2327773304230908e-05,
+          "gci_relative_from_got_exponent": 1.154377345256824,
+          "relative_form_applicable": false
+        }
+      },
+      "smooth_wave_l1": {
+        "phi": [
+          5.2763699424033253e-05,
+          1.2036017838358836e-05,
+          2.8156612505256253e-06
+        ],
+        "err_fitted_by_v2": [
+          5.2763699424033253e-05,
+          1.2036017838358836e-05,
+          2.8156612505256253e-06
+        ],
+        "h": [
+          0.009999999999999998,
+          0.004999999999999999,
+          0.0024999999999999996
+        ],
+        "nx": [
+          100,
+          200,
+          400
+        ],
+        "exact_limit": 0.0,
+        "limit_form": "zero_limit",
+        "limit_form_heuristic": "zero_limit",
+        "ref": {
+          "phi_coarse_medium_fine": [
+            5.2763699424033253e-05,
+            1.2036017838358836e-05,
+            2.8156612505256253e-06
+          ],
+          "h_coarse_medium_fine": [
+            0.009999999999999998,
+            0.004999999999999999,
+            0.0024999999999999996
+          ],
+          "r21": 2.0,
+          "r32": 2.0,
+          "r_uniformity": 0.0,
+          "convergence_class": "monotonic",
+          "observed_order": 2.1431152399834654,
+          "extrapolated": 1.1740058851689301e-07,
+          "gci_fine": 1.1978805429386363,
+          "gci_medium": 1.2378073680500523,
+          "asymptotic_ratio": 0.23393628094768207,
+          "asymptotic_band": 0.15,
+          "in_asymptotic_range": false,
+          "fs": 1.25,
+          "estimated_relative_error_fine": 22.98336572325167,
+          "loglog_v2_estimator": {
+            "exponent": 2.1140000198010913,
+            "valid": true,
+            "reason": ""
+          },
+          "limit_form": "zero_limit",
+          "gci_absolute_fine": 3.3728258275109158e-06,
+          "triplet_consistency": null
+        },
+        "got": {
+          "successive": [
+            {
+              "nx_pair": [
+                100,
+                200
+              ],
+              "rate": 2.1321875699119066
+            },
+            {
+              "nx_pair": [
+                200,
+                400
+              ],
+              "rate": 2.095812469690273
+            }
+          ],
+          "successive_finest": 2.095812469690273,
+          "loglog_exponent_finest3": 2.1140000198010918
+        },
+        "agreement_ref_vs_got": {
+          "p_ref": 2.1431152399834654,
+          "p_got_loglog": 2.1140000198010918,
+          "p_got_successive": 2.095812469690273,
+          "rel_diff_loglog": 0.013585466445844647,
+          "rel_diff_successive": 0.022071967671489973,
+          "pass_loglog": true,
+          "pass_successive": true
+        },
+        "agreement_ref_vs_repo_gci": {
+          "p_ref": 2.1431152399834654,
+          "p_repo_gci": 2.1431152399834654,
+          "rel_diff_p": 0.0,
+          "extrapolated_ref": 1.1740058851689301e-07,
+          "extrapolated_repo_gci": 1.1740058851689248e-07,
+          "rel_diff_extrapolated": 4.509309524949799e-15,
+          "gci_ref": 1.1978805429386363,
+          "gci_repo_gci": 1.1978805429386363,
+          "rel_diff_gci": 0.0,
+          "class_ref": "monotonic",
+          "class_repo_gci": "monotonic"
+        },
+        "derived_values": {
+          "extrapolated_ref": 1.1740058851689301e-07,
+          "extrapolated_from_got_exponent": 4.586931876834767e-08,
+          "rel_diff_extrapolated": 0.6092922586861866,
+          "gci_relative_ref": 1.1978805429386363,
+          "gci_absolute_ref": 3.3728258275109158e-06,
+          "gci_absolute_from_got_exponent": 3.462239914696597e-06,
+          "gci_relative_from_got_exponent": 1.2296365246530523,
+          "relative_form_applicable": false
+        }
+      }
+    },
+    "fine_200_400_800": {
+      "shock_x": {
+        "phi": [
+          0.7457625999028088,
+          0.7455426617804162,
+          0.7454376223706372
+        ],
+        "err_fitted_by_v2": [
+          0.00046079741858384704,
+          0.00024085929619122037,
+          0.00013581988641220288
+        ],
+        "h": [
+          0.004999999999999999,
+          0.0024999999999999996,
+          0.0012499999999999998
+        ],
+        "nx": [
+          200,
+          400,
+          800
+        ],
+        "exact_limit": 0.745301802484225,
+        "limit_form": "nonzero_limit",
+        "limit_form_heuristic": "nonzero_limit",
+        "ref": {
+          "phi_coarse_medium_fine": [
+            0.7457625999028088,
+            0.7455426617804162,
+            0.7454376223706372
+          ],
+          "h_coarse_medium_fine": [
+            0.004999999999999999,
+            0.0024999999999999996,
+            0.0012499999999999998
+          ],
+          "r21": 2.0,
+          "r32": 2.0,
+          "r_uniformity": 0.0,
+          "convergence_class": "monotonic",
+          "observed_order": 1.0661669767956368,
+          "extrapolated": 0.7453415962502765,
+          "gci_fine": 0.00016102306463839657,
+          "gci_medium": 0.00033711271743249496,
+          "asymptotic_ratio": 0.9998591101285494,
+          "asymptotic_band": 0.15,
+          "in_asymptotic_range": true,
+          "fs": 1.25,
+          "estimated_relative_error_fine": 0.00012883504804204272,
+          "loglog_v2_estimator": {
+            "exponent": 0.0003144067942612838,
+            "valid": true,
+            "reason": ""
+          },
+          "limit_form": "nonzero_limit",
+          "gci_absolute_fine": 0.00012003265045087977,
+          "triplet_consistency": null
+        },
+        "got": {
+          "successive": [
+            {
+              "nx_pair": [
+                200,
+                400
+              ],
+              "rate": 0.935942027562044
+            },
+            {
+              "nx_pair": [
+                400,
+                800
+              ],
+              "rate": 0.8264958762804226
+            }
+          ],
+          "successive_finest": 0.8264958762804226,
+          "loglog_exponent_finest3": 0.8812189519212341
+        },
+        "agreement_ref_vs_got": {
+          "p_ref": 1.0661669767956368,
+          "p_got_loglog": 0.8812189519212341,
+          "p_got_successive": 0.8264958762804226,
+          "rel_diff_loglog": 0.17347003696387564,
+          "rel_diff_successive": 0.22479696495153625,
+          "pass_loglog": false,
+          "pass_successive": false
+        },
+        "agreement_ref_vs_repo_gci": {
+          "p_ref": 1.0661669767956368,
+          "p_repo_gci": 1.0661669767956365,
+          "rel_diff_p": 2.082643804935565e-16,
+          "extrapolated_ref": 0.7453415962502765,
+          "extrapolated_repo_gci": 0.7453415962502764,
+          "rel_diff_extrapolated": 1.4895492619901457e-16,
+          "gci_ref": 0.00016102306463839657,
+          "gci_repo_gci": 0.000161023064638471,
+          "rel_diff_gci": 4.622348935432052e-13,
+          "class_ref": "monotonic",
+          "class_repo_gci": "monotonic"
+        },
+        "derived_values": {
+          "extrapolated_ref": 0.7453415962502765,
+          "extrapolated_from_got_exponent": 0.7453128622414587,
+          "rel_diff_extrapolated": 3.8551462795613325e-05,
+          "gci_relative_ref": 0.00016102306463839657,
+          "gci_absolute_ref": 0.00012003265045087977,
+          "gci_absolute_from_got_exponent": 0.0001559501614732146,
+          "gci_relative_from_got_exponent": 0.0002092061854582314,
+          "relative_form_applicable": true,
+          "exact": 0.745301802484225,
+          "relerr_fine": 0.00018223474833884847,
+          "relerr_extrapolated_ref": 5.339282143009171e-05,
+          "gci_covers_exact": true
+        }
+      },
+      "contact_x": {
+        "phi": [
+          0.6294214126326805,
+          0.6296513199383662,
+          0.6297845844662332
+        ],
+        "err_fitted_by_v2": [
+          0.0004219541741725674,
+          0.00019204686848683927,
+          5.878234061984511e-05
+        ],
+        "h": [
+          0.004999999999999999,
+          0.0024999999999999996,
+          0.0012499999999999998
+        ],
+        "nx": [
+          200,
+          400,
+          800
+        ],
+        "exact_limit": 0.629843366806853,
+        "limit_form": "nonzero_limit",
+        "limit_form_heuristic": "nonzero_limit",
+        "ref": {
+          "phi_coarse_medium_fine": [
+            0.6294214126326805,
+            0.6296513199383662,
+            0.6297845844662332
+          ],
+          "h_coarse_medium_fine": [
+            0.004999999999999999,
+            0.0024999999999999996,
+            0.0012499999999999998
+          ],
+          "r21": 2.0,
+          "r32": 2.0,
+          "r_uniformity": 0.0,
+          "convergence_class": "monotonic",
+          "observed_order": 0.786759493479747,
+          "extrapolated": 0.6299683481657921,
+          "gci_fine": 0.0003647352287024055,
+          "gci_medium": 0.000629372593582547,
+          "asymptotic_ratio": 1.000211648135479,
+          "asymptotic_band": 0.15,
+          "in_asymptotic_range": true,
+          "fs": 1.25,
+          "estimated_relative_error_fine": 0.00029170306745394877,
+          "loglog_v2_estimator": {
+            "exponent": -0.000416092536877871,
+            "valid": false,
+            "reason": ""
+          },
+          "limit_form": "nonzero_limit",
+          "gci_absolute_fine": 0.00022970462444854098,
+          "triplet_consistency": null
+        },
+        "got": {
+          "successive": [
+            {
+              "nx_pair": [
+                200,
+                400
+              ],
+              "rate": 1.1356278857753892
+            },
+            {
+              "nx_pair": [
+                400,
+                800
+              ],
+              "rate": 1.7080037284178833
+            }
+          ],
+          "successive_finest": 1.7080037284178833,
+          "loglog_exponent_finest3": 1.4218158070966387
+        },
+        "agreement_ref_vs_got": {
+          "p_ref": 0.786759493479747,
+          "p_got_loglog": 1.4218158070966387,
+          "p_got_successive": 1.7080037284178833,
+          "rel_diff_loglog": 0.8071797275786408,
+          "rel_diff_successive": 1.170935009457056,
+          "pass_loglog": false,
+          "pass_successive": false
+        },
+        "agreement_ref_vs_repo_gci": {
+          "p_ref": 0.786759493479747,
+          "p_repo_gci": 0.786759493479747,
+          "rel_diff_p": 0.0,
+          "extrapolated_ref": 0.6299683481657921,
+          "extrapolated_repo_gci": 0.6299683481657921,
+          "rel_diff_extrapolated": 0.0,
+          "gci_ref": 0.0003647352287024055,
+          "gci_repo_gci": 0.000364735228702457,
+          "rel_diff_gci": 1.4119722785286796e-13,
+          "class_ref": "monotonic",
+          "class_repo_gci": "monotonic"
+        },
+        "derived_values": {
+          "extrapolated_ref": 0.6299683481657921,
+          "extrapolated_from_got_exponent": 0.629863945194208,
+          "rel_diff_extrapolated": 0.00016572732882226985,
+          "gci_relative_ref": 0.0003647352287024055,
+          "gci_absolute_ref": 0.00022970462444854098,
+          "gci_absolute_from_got_exponent": 9.920090996853013e-05,
+          "gci_relative_from_got_exponent": 0.0001575156210795581,
+          "relative_form_applicable": true,
+          "exact": 0.629843366806853,
+          "relerr_fine": 9.332850628856623e-05,
+          "relerr_extrapolated_ref": 0.0001984324445181309,
+          "gci_covers_exact": true
+        }
+      },
+      "l1_rho_full": {
+        "phi": [
+          0.0023597574623605818,
+          0.0012695661226941669,
+          0.0007007685913964693
+        ],
+        "err_fitted_by_v2": [
+          0.0023597574623605818,
+          0.0012695661226941669,
+          0.0007007685913964693
+        ],
+        "h": [
+          0.004999999999999999,
+          0.0024999999999999996,
+          0.0012499999999999998
+        ],
+        "nx": [
+          200,
+          400,
+          800
+        ],
+        "exact_limit": 0.0,
+        "limit_form": "zero_limit",
+        "limit_form_heuristic": "nonzero_limit",
+        "ref": {
+          "phi_coarse_medium_fine": [
+            0.0023597574623605818,
+            0.0012695661226941669,
+            0.0007007685913964693
+          ],
+          "h_coarse_medium_fine": [
+            0.004999999999999999,
+            0.0024999999999999996,
+            0.0012499999999999998
+          ],
+          "r21": 2.0,
+          "r32": 2.0,
+          "r_uniformity": 0.0,
+          "convergence_class": "monotonic",
+          "observed_order": 0.9385942563955672,
+          "extrapolated": 8.025751815878692e-05,
+          "gci_fine": 1.1068401909986214,
+          "gci_medium": 1.1709793835034061,
+          "asymptotic_ratio": 0.5519748667437322,
+          "asymptotic_band": 0.15,
+          "in_asymptotic_range": false,
+          "fs": 1.25,
+          "estimated_relative_error_fine": 7.731500892041305,
+          "loglog_v2_estimator": {
+            "exponent": 0.8758142831702883,
+            "valid": true,
+            "reason": ""
+          },
+          "limit_form": "nonzero_limit",
+          "gci_absolute_fine": 0.000775638841547103,
+          "triplet_consistency": null
+        },
+        "got": {
+          "successive": [
+            {
+              "nx_pair": [
+                200,
+                400
+              ],
+              "rate": 0.8943030492362277
+            },
+            {
+              "nx_pair": [
+                400,
+                800
+              ],
+              "rate": 0.8573255171043481
+            }
+          ],
+          "successive_finest": 0.8573255171043481,
+          "loglog_exponent_finest3": 0.8758142831702883
+        },
+        "agreement_ref_vs_got": {
+          "p_ref": 0.9385942563955672,
+          "p_got_loglog": 0.8758142831702883,
+          "p_got_successive": 0.8573255171043481,
+          "rel_diff_loglog": 0.06688723353834422,
+          "rel_diff_successive": 0.08658559195036093,
+          "pass_loglog": true,
+          "pass_successive": true
+        },
+        "agreement_ref_vs_repo_gci": {
+          "p_ref": 0.9385942563955672,
+          "p_repo_gci": 0.9385942563955674,
+          "rel_diff_p": 2.3657145077547906e-16,
+          "extrapolated_ref": 8.025751815878692e-05,
+          "extrapolated_repo_gci": 8.025751815878717e-05,
+          "rel_diff_extrapolated": 3.2083974420421995e-15,
+          "gci_ref": 1.1068401909986214,
+          "gci_repo_gci": 1.106840190998621,
+          "rel_diff_gci": 4.012225192594364e-16,
+          "class_ref": "monotonic",
+          "class_repo_gci": "monotonic"
+        },
+        "derived_values": {
+          "extrapolated_ref": 8.025751815878692e-05,
+          "extrapolated_from_got_exponent": 1.960944981782532e-05,
+          "rel_diff_extrapolated": 0.7556683751542298,
+          "gci_relative_ref": 1.1068401909986214,
+          "gci_absolute_ref": 0.000775638841547103,
+          "gci_absolute_from_got_exponent": 0.0008514489269733051,
+          "gci_relative_from_got_exponent": 1.215021531254083,
+          "relative_form_applicable": false
+        }
+      },
+      "l1_rho_cellavg": {
+        "phi": [
+          0.0022637271530433264,
+          0.001199248152577388,
+          0.0006307427446104721
+        ],
+        "err_fitted_by_v2": [
+          0.0022637271530433264,
+          0.001199248152577388,
+          0.0006307427446104721
+        ],
+        "h": [
+          0.004999999999999999,
+          0.0024999999999999996,
+          0.0012499999999999998
+        ],
+        "nx": [
+          200,
+          400,
+          800
+        ],
+        "exact_limit": 0.0,
+        "limit_form": "zero_limit",
+        "limit_form_heuristic": "zero_limit",
+        "ref": {
+          "phi_coarse_medium_fine": [
+            0.0022637271530433264,
+            0.001199248152577388,
+            0.0006307427446104721
+          ],
+          "h_coarse_medium_fine": [
+            0.004999999999999999,
+            0.0024999999999999996,
+            0.0012499999999999998
+          ],
+          "r21": 2.0,
+          "r32": 2.0,
+          "r_uniformity": 0.0,
+          "convergence_class": "monotonic",
+          "observed_order": 0.9049015111889002,
+          "extrapolated": -2.0901624718054765e-05,
+          "gci_fine": 1.2914226419896495,
+          "gci_medium": 1.2717861756479816,
+          "asymptotic_ratio": 0.5259484813505018,
+          "asymptotic_band": 0.15,
+          "in_asymptotic_range": false,
+          "fs": 1.25,
+          "estimated_relative_error_fine": 31.176732819513227,
+          "loglog_v2_estimator": {
+            "exponent": 0.9217882347371552,
+            "valid": true,
+            "reason": ""
+          },
+          "limit_form": "zero_limit",
+          "gci_absolute_fine": 0.0008145554616606587,
+          "triplet_consistency": null
+        },
+        "got": {
+          "successive": [
+            {
+              "nx_pair": [
+                200,
+                400
+              ],
+              "rate": 0.9165698635716965
+            },
+            {
+              "nx_pair": [
+                400,
+                800
+              ],
+              "rate": 0.9270066059026129
+            }
+          ],
+          "successive_finest": 0.9270066059026129,
+          "loglog_exponent_finest3": 0.9217882347371577
+        },
+        "agreement_ref_vs_got": {
+          "p_ref": 0.9049015111889002,
+          "p_got_loglog": 0.9217882347371577,
+          "p_got_successive": 0.9270066059026129,
+          "rel_diff_loglog": 0.018661393908018735,
+          "rel_diff_successive": 0.02442817747609906,
+          "pass_loglog": true,
+          "pass_successive": true
+        },
+        "agreement_ref_vs_repo_gci": {
+          "p_ref": 0.9049015111889002,
+          "p_repo_gci": 0.9049015111889002,
+          "rel_diff_p": 0.0,
+          "extrapolated_ref": -2.0901624718054765e-05,
+          "extrapolated_repo_gci": -2.0901624718054884e-05,
+          "rel_diff_extrapolated": 5.673463867771436e-15,
+          "gci_ref": 1.2914226419896495,
+          "gci_repo_gci": 1.2914226419896495,
+          "rel_diff_gci": 0.0,
+          "class_ref": "monotonic",
+          "class_repo_gci": "monotonic"
+        },
+        "derived_values": {
+          "extrapolated_ref": -2.0901624718054765e-05,
+          "extrapolated_from_got_exponent": -4.840858215800611e-06,
+          "rel_diff_extrapolated": 0.7683979938832654,
+          "gci_relative_ref": 1.2914226419896495,
+          "gci_absolute_ref": 0.0008145554616606587,
+          "gci_absolute_from_got_exponent": 0.0007944795035328408,
+          "gci_relative_from_got_exponent": 1.259593566983458,
+          "relative_form_applicable": false
+        }
+      },
+      "l1_rho_plateaus": {
+        "phi": [
+          7.300614300125107e-05,
+          1.0679153878828283e-05,
+          8.360860416578805e-06
+        ],
+        "err_fitted_by_v2": [
+          7.300614300125107e-05,
+          1.0679153878828283e-05,
+          8.360860416578805e-06
+        ],
+        "h": [
+          0.004999999999999999,
+          0.0024999999999999996,
+          0.0012499999999999998
+        ],
+        "nx": [
+          200,
+          400,
+          800
+        ],
+        "exact_limit": 0.0,
+        "limit_form": "zero_limit",
+        "limit_form_heuristic": "nonzero_limit",
+        "ref": {
+          "phi_coarse_medium_fine": [
+            7.300614300125107e-05,
+            1.0679153878828283e-05,
+            8.360860416578805e-06
+          ],
+          "h_coarse_medium_fine": [
+            0.004999999999999999,
+            0.0024999999999999996,
+            0.0012499999999999998
+          ],
+          "r21": 2.0,
+          "r32": 2.0,
+          "r_uniformity": 0.0,
+          "convergence_class": "monotonic",
+          "observed_order": 4.748721913822956,
+          "extrapolated": 8.271298653604582e-06,
+          "gci_fine": 0.013390033817068258,
+          "gci_medium": 0.28184059015168544,
+          "asymptotic_ratio": 0.7829141251681406,
+          "asymptotic_band": 0.15,
+          "in_asymptotic_range": false,
+          "fs": 1.25,
+          "estimated_relative_error_fine": 0.010828017065396621,
+          "loglog_v2_estimator": {
+            "exponent": 1.5631472699026157,
+            "valid": true,
+            "reason": ""
+          },
+          "limit_form": "nonzero_limit",
+          "gci_absolute_fine": 1.1195220371777759e-07,
+          "triplet_consistency": null
+        },
+        "got": {
+          "successive": [
+            {
+              "nx_pair": [
+                200,
+                400
+              ],
+              "rate": 2.7732205174554028
+            },
+            {
+              "nx_pair": [
+                400,
+                800
+              ],
+              "rate": 0.35307402234982715
+            }
+          ],
+          "successive_finest": 0.35307402234982715,
+          "loglog_exponent_finest3": 1.563147269902616
+        },
+        "agreement_ref_vs_got": {
+          "p_ref": 4.748721913822956,
+          "p_got_loglog": 1.563147269902616,
+          "p_got_successive": 0.35307402234982715,
+          "rel_diff_loglog": 0.670827793610638,
+          "rel_diff_successive": 0.9256486210906409,
+          "pass_loglog": false,
+          "pass_successive": false
+        },
+        "agreement_ref_vs_repo_gci": {
+          "p_ref": 4.748721913822956,
+          "p_repo_gci": 4.748721913822956,
+          "rel_diff_p": 0.0,
+          "extrapolated_ref": 8.271298653604582e-06,
+          "extrapolated_repo_gci": 8.271298653604582e-06,
+          "rel_diff_extrapolated": 0.0,
+          "gci_ref": 0.013390033817068258,
+          "gci_repo_gci": 0.013390033817068324,
+          "rel_diff_gci": 4.923026557490182e-15,
+          "class_ref": "monotonic",
+          "class_repo_gci": "monotonic"
+        },
+        "derived_values": {
+          "extrapolated_ref": 8.271298653604582e-06,
+          "extrapolated_from_got_exponent": 7.175019065574642e-06,
+          "rel_diff_extrapolated": 0.13254020123577426,
+          "gci_relative_ref": 0.013390033817068258,
+          "gci_absolute_ref": 1.1195220371777759e-07,
+          "gci_absolute_from_got_exponent": 1.4823016887552029e-06,
+          "gci_relative_from_got_exponent": 0.17729056758511808,
+          "relative_form_applicable": false
+        }
+      },
+      "smooth_wave_l1": {
+        "phi": [
+          1.2036017838358836e-05,
+          2.8156612505256253e-06,
+          6.82110137338876e-07
+        ],
+        "err_fitted_by_v2": [
+          1.2036017838358836e-05,
+          2.8156612505256253e-06,
+          6.82110137338876e-07
+        ],
+        "h": [
+          0.004999999999999999,
+          0.0024999999999999996,
+          0.0012499999999999998
+        ],
+        "nx": [
+          200,
+          400,
+          800
+        ],
+        "exact_limit": 0.0,
+        "limit_form": "zero_limit",
+        "limit_form_heuristic": "zero_limit",
+        "ref": {
+          "phi_coarse_medium_fine": [
+            1.2036017838358836e-05,
+            2.8156612505256253e-06,
+            6.82110137338876e-07
+          ],
+          "h_coarse_medium_fine": [
+            0.004999999999999999,
+            0.0024999999999999996,
+            0.0012499999999999998
+          ],
+          "r21": 2.0,
+          "r32": 2.0,
+          "r_uniformity": 0.0,
+          "convergence_class": "monotonic",
+          "observed_order": 2.1115658730872813,
+          "extrapolated": 3.9784004800646116e-08,
+          "gci_fine": 1.177093876371901,
+          "gci_medium": 1.2323380720988633,
+          "asymptotic_ratio": 0.24225575331959417,
+          "asymptotic_band": 0.15,
+          "in_asymptotic_range": false,
+          "fs": 1.25,
+          "estimated_relative_error_fine": 16.14533619118702,
+          "loglog_v2_estimator": {
+            "exponent": 2.070604818019548,
+            "valid": true,
+            "reason": ""
+          },
+          "limit_form": "zero_limit",
+          "gci_absolute_fine": 8.029076656727874e-07,
+          "triplet_consistency": null
+        },
+        "got": {
+          "successive": [
+            {
+              "nx_pair": [
+                200,
+                400
+              ],
+              "rate": 2.095812469690273
+            },
+            {
+              "nx_pair": [
+                400,
+                800
+              ],
+              "rate": 2.045397166348823
+            }
+          ],
+          "successive_finest": 2.045397166348823,
+          "loglog_exponent_finest3": 2.070604818019551
+        },
+        "agreement_ref_vs_got": {
+          "p_ref": 2.1115658730872813,
+          "p_got_loglog": 2.070604818019551,
+          "p_got_successive": 2.045397166348823,
+          "rel_diff_loglog": 0.019398426347856143,
+          "rel_diff_successive": 0.03133632134417581,
+          "pass_loglog": true,
+          "pass_successive": true
+        },
+        "agreement_ref_vs_repo_gci": {
+          "p_ref": 2.1115658730872813,
+          "p_repo_gci": 2.1115658730872813,
+          "rel_diff_p": 0.0,
+          "extrapolated_ref": 3.9784004800646116e-08,
+          "extrapolated_repo_gci": 3.978400480064606e-08,
+          "rel_diff_extrapolated": 1.4970087702897812e-15,
+          "gci_ref": 1.177093876371901,
+          "gci_repo_gci": 1.1770938763719012,
+          "rel_diff_gci": 1.8863797474626966e-16,
+          "class_ref": "monotonic",
+          "class_repo_gci": "monotonic"
+        },
+        "derived_values": {
+          "extrapolated_ref": 3.9784004800646116e-08,
+          "extrapolated_from_got_exponent": 1.5506107526730136e-08,
+          "rel_diff_extrapolated": 0.6102426690216389,
+          "gci_relative_ref": 1.177093876371901,
+          "gci_absolute_ref": 8.029076656727874e-07,
+          "gci_absolute_from_got_exponent": 8.332550372651824e-07,
+          "gci_relative_from_got_exponent": 1.2215843038427336,
+          "relative_form_applicable": false
+        }
+      }
+    },
+    "combined_100_200_400_800": {
+      "shock_x": {
+        "phi": [
+          0.7469490478171175,
+          0.7457625999028088,
+          0.7455426617804162,
+          0.7454376223706372
+        ],
+        "err_fitted_by_v2": [
+          0.0016472453328925107,
+          0.00046079741858384704,
+          0.00024085929619122037,
+          0.00013581988641220288
+        ],
+        "h": [
+          0.009999999999999998,
+          0.004999999999999999,
+          0.0024999999999999996,
+          0.0012499999999999998
+        ],
+        "nx": [
+          100,
+          200,
+          400,
+          800
+        ],
+        "exact_limit": 0.745301802484225,
+        "limit_form": "nonzero_limit",
+        "limit_form_heuristic": "nonzero_limit",
+        "ref": {
+          "phi_coarse_medium_fine": [
+            0.7457625999028088,
+            0.7455426617804162,
+            0.7454376223706372
+          ],
+          "h_coarse_medium_fine": [
+            0.004999999999999999,
+            0.0024999999999999996,
+            0.0012499999999999998
+          ],
+          "r21": 2.0,
+          "r32": 2.0,
+          "r_uniformity": 0.0,
+          "convergence_class": "monotonic",
+          "observed_order": 1.0661669767956368,
+          "extrapolated": 0.7453415962502765,
+          "gci_fine": 0.00016102306463839657,
+          "gci_medium": 0.00033711271743249496,
+          "asymptotic_ratio": 0.9998591101285494,
+          "asymptotic_band": 0.15,
+          "in_asymptotic_range": true,
+          "fs": 1.25,
+          "estimated_relative_error_fine": 0.00012883504804204272,
+          "loglog_v2_estimator": {
+            "exponent": 0.0003144067942612838,
+            "valid": true,
+            "reason": ""
+          },
+          "limit_form": "nonzero_limit",
+          "gci_absolute_fine": 0.0002513319126746516,
+          "triplet_consistency": {
+            "p_triplet_coarse": 2.431479170137526,
+            "p_triplet_fine": 1.0661669767956368,
+            "rel_diff": 0.561515068732695,
+            "consistent": false,
+            "class_coarse": "monotonic",
+            "class_fine": "monotonic",
+            "band": 0.15,
+            "phi_coarse_to_fine": [
+              0.7469490478171175,
+              0.7457625999028088,
+              0.7455426617804162,
+              0.7454376223706372
+            ],
+            "h_coarse_to_fine": [
+              0.009999999999999998,
+              0.004999999999999999,
+              0.0024999999999999996,
+              0.0012499999999999998
+            ]
+          }
+        },
+        "got": {
+          "successive": [
+            {
+              "nx_pair": [
+                100,
+                200
+              ],
+              "rate": 1.8378508993635347
+            },
+            {
+              "nx_pair": [
+                200,
+                400
+              ],
+              "rate": 0.935942027562044
+            },
+            {
+              "nx_pair": [
+                400,
+                800
+              ],
+              "rate": 0.8264958762804226
+            }
+          ],
+          "successive_finest": 0.8264958762804226,
+          "loglog_exponent_finest3": 0.8812189519212341
+        },
+        "agreement_ref_vs_got": {
+          "p_ref": 1.0661669767956368,
+          "p_got_loglog": 0.8812189519212341,
+          "p_got_successive": 0.8264958762804226,
+          "rel_diff_loglog": 0.17347003696387564,
+          "rel_diff_successive": 0.22479696495153625,
+          "pass_loglog": false,
+          "pass_successive": false
+        },
+        "agreement_ref_vs_repo_gci": {
+          "p_ref": 1.0661669767956368,
+          "p_repo_gci": 1.0661669767956365,
+          "rel_diff_p": 2.082643804935565e-16,
+          "extrapolated_ref": 0.7453415962502765,
+          "extrapolated_repo_gci": 0.7453415962502764,
+          "rel_diff_extrapolated": 1.4895492619901457e-16,
+          "gci_ref": 0.00016102306463839657,
+          "gci_repo_gci": 0.000161023064638471,
+          "rel_diff_gci": 4.622348935432052e-13,
+          "class_ref": "monotonic",
+          "class_repo_gci": "monotonic"
+        },
+        "derived_values": {
+          "extrapolated_ref": 0.7453415962502765,
+          "extrapolated_from_got_exponent": 0.7453128622414587,
+          "rel_diff_extrapolated": 3.8551462795613325e-05,
+          "gci_relative_ref": 0.00016102306463839657,
+          "gci_absolute_ref": 0.00012003265045087977,
+          "gci_absolute_from_got_exponent": 0.0001559501614732146,
+          "gci_relative_from_got_exponent": 0.0002092061854582314,
+          "relative_form_applicable": true,
+          "exact": 0.745301802484225,
+          "relerr_fine": 0.00018223474833884847,
+          "relerr_extrapolated_ref": 5.339282143009171e-05,
+          "gci_covers_exact": true
+        }
+      },
+      "contact_x": {
+        "phi": [
+          0.6290397345793096,
+          0.6294214126326805,
+          0.6296513199383662,
+          0.6297845844662332
+        ],
+        "err_fitted_by_v2": [
+          0.0008036322275434271,
+          0.0004219541741725674,
+          0.00019204686848683927,
+          5.878234061984511e-05
+        ],
+        "h": [
+          0.009999999999999998,
+          0.004999999999999999,
+          0.0024999999999999996,
+          0.0012499999999999998
+        ],
+        "nx": [
+          100,
+          200,
+          400,
+          800
+        ],
+        "exact_limit": 0.629843366806853,
+        "limit_form": "nonzero_limit",
+        "limit_form_heuristic": "nonzero_limit",
+        "ref": {
+          "phi_coarse_medium_fine": [
+            0.6294214126326805,
+            0.6296513199383662,
+            0.6297845844662332
+          ],
+          "h_coarse_medium_fine": [
+            0.004999999999999999,
+            0.0024999999999999996,
+            0.0012499999999999998
+          ],
+          "r21": 2.0,
+          "r32": 2.0,
+          "r_uniformity": 0.0,
+          "convergence_class": "monotonic",
+          "observed_order": 0.786759493479747,
+          "extrapolated": 0.6299683481657921,
+          "gci_fine": 0.0003647352287024055,
+          "gci_medium": 0.000629372593582547,
+          "asymptotic_ratio": 1.000211648135479,
+          "asymptotic_band": 0.15,
+          "in_asymptotic_range": true,
+          "fs": 1.25,
+          "estimated_relative_error_fine": 0.00029170306745394877,
+          "loglog_v2_estimator": {
+            "exponent": -0.000416092536877871,
+            "valid": false,
+            "reason": ""
+          },
+          "limit_form": "nonzero_limit",
+          "gci_absolute_fine": 0.00039628528428228366,
+          "triplet_consistency": {
+            "p_triplet_coarse": 0.7313039226294805,
+            "p_triplet_fine": 0.786759493479747,
+            "rel_diff": 0.07583108627514286,
+            "consistent": true,
+            "class_coarse": "monotonic",
+            "class_fine": "monotonic",
+            "band": 0.15,
+            "phi_coarse_to_fine": [
+              0.6290397345793096,
+              0.6294214126326805,
+              0.6296513199383662,
+              0.6297845844662332
+            ],
+            "h_coarse_to_fine": [
+              0.009999999999999998,
+              0.004999999999999999,
+              0.0024999999999999996,
+              0.0012499999999999998
+            ]
+          }
+        },
+        "got": {
+          "successive": [
+            {
+              "nx_pair": [
+                100,
+                200
+              ],
+              "rate": 0.9294490954234497
+            },
+            {
+              "nx_pair": [
+                200,
+                400
+              ],
+              "rate": 1.1356278857753892
+            },
+            {
+              "nx_pair": [
+                400,
+                800
+              ],
+              "rate": 1.7080037284178833
+            }
+          ],
+          "successive_finest": 1.7080037284178833,
+          "loglog_exponent_finest3": 1.4218158070966387
+        },
+        "agreement_ref_vs_got": {
+          "p_ref": 0.786759493479747,
+          "p_got_loglog": 1.4218158070966387,
+          "p_got_successive": 1.7080037284178833,
+          "rel_diff_loglog": 0.8071797275786408,
+          "rel_diff_successive": 1.170935009457056,
+          "pass_loglog": false,
+          "pass_successive": false
+        },
+        "agreement_ref_vs_repo_gci": {
+          "p_ref": 0.786759493479747,
+          "p_repo_gci": 0.786759493479747,
+          "rel_diff_p": 0.0,
+          "extrapolated_ref": 0.6299683481657921,
+          "extrapolated_repo_gci": 0.6299683481657921,
+          "rel_diff_extrapolated": 0.0,
+          "gci_ref": 0.0003647352287024055,
+          "gci_repo_gci": 0.000364735228702457,
+          "rel_diff_gci": 1.4119722785286796e-13,
+          "class_ref": "monotonic",
+          "class_repo_gci": "monotonic"
+        },
+        "derived_values": {
+          "extrapolated_ref": 0.6299683481657921,
+          "extrapolated_from_got_exponent": 0.629863945194208,
+          "rel_diff_extrapolated": 0.00016572732882226985,
+          "gci_relative_ref": 0.0003647352287024055,
+          "gci_absolute_ref": 0.00022970462444854098,
+          "gci_absolute_from_got_exponent": 9.920090996853013e-05,
+          "gci_relative_from_got_exponent": 0.0001575156210795581,
+          "relative_form_applicable": true,
+          "exact": 0.629843366806853,
+          "relerr_fine": 9.332850628856623e-05,
+          "relerr_extrapolated_ref": 0.0001984324445181309,
+          "gci_covers_exact": true
+        }
+      },
+      "l1_rho_full": {
+        "phi": [
+          0.004644811631165467,
+          0.0023597574623605818,
+          0.0012695661226941669,
+          0.0007007685913964693
+        ],
+        "err_fitted_by_v2": [
+          0.004644811631165467,
+          0.0023597574623605818,
+          0.0012695661226941669,
+          0.0007007685913964693
+        ],
+        "h": [
+          0.009999999999999998,
+          0.004999999999999999,
+          0.0024999999999999996,
+          0.0012499999999999998
+        ],
+        "nx": [
+          100,
+          200,
+          400,
+          800
+        ],
+        "exact_limit": 0.0,
+        "limit_form": "zero_limit",
+        "limit_form_heuristic": "nonzero_limit",
+        "ref": {
+          "phi_coarse_medium_fine": [
+            0.0023597574623605818,
+            0.0012695661226941669,
+            0.0007007685913964693
+          ],
+          "h_coarse_medium_fine": [
+            0.004999999999999999,
+            0.0024999999999999996,
+            0.0012499999999999998
+          ],
+          "r21": 2.0,
+          "r32": 2.0,
+          "r_uniformity": 0.0,
+          "convergence_class": "monotonic",
+          "observed_order": 0.9385942563955672,
+          "extrapolated": 8.025751815878692e-05,
+          "gci_fine": 1.1068401909986214,
+          "gci_medium": 1.1709793835034061,
+          "asymptotic_ratio": 0.5519748667437322,
+          "asymptotic_band": 0.15,
+          "in_asymptotic_range": false,
+          "fs": 1.25,
+          "estimated_relative_error_fine": 7.731500892041305,
+          "loglog_v2_estimator": {
+            "exponent": 0.8758142831702883,
+            "valid": true,
+            "reason": ""
+          },
+          "limit_form": "nonzero_limit",
+          "gci_absolute_fine": 0.001486635755669225,
+          "triplet_consistency": {
+            "p_triplet_coarse": 1.0676470009065013,
+            "p_triplet_fine": 0.9385942563955672,
+            "rel_diff": 0.12087585541041192,
+            "consistent": true,
+            "class_coarse": "monotonic",
+            "class_fine": "monotonic",
+            "band": 0.15,
+            "phi_coarse_to_fine": [
+              0.004644811631165467,
+              0.0023597574623605818,
+              0.0012695661226941669,
+              0.0007007685913964693
+            ],
+            "h_coarse_to_fine": [
+              0.009999999999999998,
+              0.004999999999999999,
+              0.0024999999999999996,
+              0.0012499999999999998
+            ]
+          }
+        },
+        "got": {
+          "successive": [
+            {
+              "nx_pair": [
+                100,
+                200
+              ],
+              "rate": 0.9769815038332116
+            },
+            {
+              "nx_pair": [
+                200,
+                400
+              ],
+              "rate": 0.8943030492362277
+            },
+            {
+              "nx_pair": [
+                400,
+                800
+              ],
+              "rate": 0.8573255171043481
+            }
+          ],
+          "successive_finest": 0.8573255171043481,
+          "loglog_exponent_finest3": 0.8758142831702883
+        },
+        "agreement_ref_vs_got": {
+          "p_ref": 0.9385942563955672,
+          "p_got_loglog": 0.8758142831702883,
+          "p_got_successive": 0.8573255171043481,
+          "rel_diff_loglog": 0.06688723353834422,
+          "rel_diff_successive": 0.08658559195036093,
+          "pass_loglog": true,
+          "pass_successive": true
+        },
+        "agreement_ref_vs_repo_gci": {
+          "p_ref": 0.9385942563955672,
+          "p_repo_gci": 0.9385942563955674,
+          "rel_diff_p": 2.3657145077547906e-16,
+          "extrapolated_ref": 8.025751815878692e-05,
+          "extrapolated_repo_gci": 8.025751815878717e-05,
+          "rel_diff_extrapolated": 3.2083974420421995e-15,
+          "gci_ref": 1.1068401909986214,
+          "gci_repo_gci": 1.106840190998621,
+          "rel_diff_gci": 4.012225192594364e-16,
+          "class_ref": "monotonic",
+          "class_repo_gci": "monotonic"
+        },
+        "derived_values": {
+          "extrapolated_ref": 8.025751815878692e-05,
+          "extrapolated_from_got_exponent": 1.960944981782532e-05,
+          "rel_diff_extrapolated": 0.7556683751542298,
+          "gci_relative_ref": 1.1068401909986214,
+          "gci_absolute_ref": 0.000775638841547103,
+          "gci_absolute_from_got_exponent": 0.0008514489269733051,
+          "gci_relative_from_got_exponent": 1.215021531254083,
+          "relative_form_applicable": false
+        }
+      },
+      "l1_rho_cellavg": {
+        "phi": [
+          0.0041393924777673894,
+          0.0022637271530433264,
+          0.001199248152577388,
+          0.0006307427446104721
+        ],
+        "err_fitted_by_v2": [
+          0.0041393924777673894,
+          0.0022637271530433264,
+          0.001199248152577388,
+          0.0006307427446104721
+        ],
+        "h": [
+          0.009999999999999998,
+          0.004999999999999999,
+          0.0024999999999999996,
+          0.0012499999999999998
+        ],
+        "nx": [
+          100,
+          200,
+          400,
+          800
+        ],
+        "exact_limit": 0.0,
+        "limit_form": "zero_limit",
+        "limit_form_heuristic": "zero_limit",
+        "ref": {
+          "phi_coarse_medium_fine": [
+            0.0022637271530433264,
+            0.001199248152577388,
+            0.0006307427446104721
+          ],
+          "h_coarse_medium_fine": [
+            0.004999999999999999,
+            0.0024999999999999996,
+            0.0012499999999999998
+          ],
+          "r21": 2.0,
+          "r32": 2.0,
+          "r_uniformity": 0.0,
+          "convergence_class": "monotonic",
+          "observed_order": 0.9049015111889002,
+          "extrapolated": -2.0901624718054765e-05,
+          "gci_fine": 1.2914226419896495,
+          "gci_medium": 1.2717861756479816,
+          "asymptotic_ratio": 0.5259484813505018,
+          "asymptotic_band": 0.15,
+          "in_asymptotic_range": false,
+          "fs": 1.25,
+          "estimated_relative_error_fine": 31.176732819513227,
+          "loglog_v2_estimator": {
+            "exponent": 0.9217882347371552,
+            "valid": true,
+            "reason": ""
+          },
+          "limit_form": "zero_limit",
+          "gci_absolute_fine": 0.0015251872216193033,
+          "triplet_consistency": {
+            "p_triplet_coarse": 0.8172549412289708,
+            "p_triplet_fine": 0.9049015111889002,
+            "rel_diff": 0.10724507805132177,
+            "consistent": true,
+            "class_coarse": "monotonic",
+            "class_fine": "monotonic",
+            "band": 0.15,
+            "phi_coarse_to_fine": [
+              0.0041393924777673894,
+              0.0022637271530433264,
+              0.001199248152577388,
+              0.0006307427446104721
+            ],
+            "h_coarse_to_fine": [
+              0.009999999999999998,
+              0.004999999999999999,
+              0.0024999999999999996,
+              0.0012499999999999998
+            ]
+          }
+        },
+        "got": {
+          "successive": [
+            {
+              "nx_pair": [
+                100,
+                200
+              ],
+              "rate": 0.8707189639621261
+            },
+            {
+              "nx_pair": [
+                200,
+                400
+              ],
+              "rate": 0.9165698635716965
+            },
+            {
+              "nx_pair": [
+                400,
+                800
+              ],
+              "rate": 0.9270066059026129
+            }
+          ],
+          "successive_finest": 0.9270066059026129,
+          "loglog_exponent_finest3": 0.9217882347371577
+        },
+        "agreement_ref_vs_got": {
+          "p_ref": 0.9049015111889002,
+          "p_got_loglog": 0.9217882347371577,
+          "p_got_successive": 0.9270066059026129,
+          "rel_diff_loglog": 0.018661393908018735,
+          "rel_diff_successive": 0.02442817747609906,
+          "pass_loglog": true,
+          "pass_successive": true
+        },
+        "agreement_ref_vs_repo_gci": {
+          "p_ref": 0.9049015111889002,
+          "p_repo_gci": 0.9049015111889002,
+          "rel_diff_p": 0.0,
+          "extrapolated_ref": -2.0901624718054765e-05,
+          "extrapolated_repo_gci": -2.0901624718054884e-05,
+          "rel_diff_extrapolated": 5.673463867771436e-15,
+          "gci_ref": 1.2914226419896495,
+          "gci_repo_gci": 1.2914226419896495,
+          "rel_diff_gci": 0.0,
+          "class_ref": "monotonic",
+          "class_repo_gci": "monotonic"
+        },
+        "derived_values": {
+          "extrapolated_ref": -2.0901624718054765e-05,
+          "extrapolated_from_got_exponent": -4.840858215800611e-06,
+          "rel_diff_extrapolated": 0.7683979938832654,
+          "gci_relative_ref": 1.2914226419896495,
+          "gci_absolute_ref": 0.0008145554616606587,
+          "gci_absolute_from_got_exponent": 0.0007944795035328408,
+          "gci_relative_from_got_exponent": 1.259593566983458,
+          "relative_form_applicable": false
+        }
+      },
+      "l1_rho_plateaus": {
+        "phi": [
+          0.000572179300956856,
+          7.300614300125107e-05,
+          1.0679153878828283e-05,
+          8.360860416578805e-06
+        ],
+        "err_fitted_by_v2": [
+          0.000572179300956856,
+          7.300614300125107e-05,
+          1.0679153878828283e-05,
+          8.360860416578805e-06
+        ],
+        "h": [
+          0.009999999999999998,
+          0.004999999999999999,
+          0.0024999999999999996,
+          0.0012499999999999998
+        ],
+        "nx": [
+          100,
+          200,
+          400,
+          800
+        ],
+        "exact_limit": 0.0,
+        "limit_form": "zero_limit",
+        "limit_form_heuristic": "nonzero_limit",
+        "ref": {
+          "phi_coarse_medium_fine": [
+            7.300614300125107e-05,
+            1.0679153878828283e-05,
+            8.360860416578805e-06
+          ],
+          "h_coarse_medium_fine": [
+            0.004999999999999999,
+            0.0024999999999999996,
+            0.0012499999999999998
+          ],
+          "r21": 2.0,
+          "r32": 2.0,
+          "r_uniformity": 0.0,
+          "convergence_class": "monotonic",
+          "observed_order": 4.748721913822956,
+          "extrapolated": 8.271298653604582e-06,
+          "gci_fine": 0.013390033817068258,
+          "gci_medium": 0.28184059015168544,
+          "asymptotic_ratio": 0.7829141251681406,
+          "asymptotic_band": 0.15,
+          "in_asymptotic_range": false,
+          "fs": 1.25,
+          "estimated_relative_error_fine": 0.010828017065396621,
+          "loglog_v2_estimator": {
+            "exponent": 1.5631472699026157,
+            "valid": true,
+            "reason": ""
+          },
+          "limit_form": "nonzero_limit",
+          "gci_absolute_fine": 3.0098190315296244e-06,
+          "triplet_consistency": {
+            "p_triplet_coarse": 3.0016114320566483,
+            "p_triplet_fine": 4.748721913822956,
+            "rel_diff": 0.5820575118776183,
+            "consistent": false,
+            "class_coarse": "monotonic",
+            "class_fine": "monotonic",
+            "band": 0.15,
+            "phi_coarse_to_fine": [
+              0.000572179300956856,
+              7.300614300125107e-05,
+              1.0679153878828283e-05,
+              8.360860416578805e-06
+            ],
+            "h_coarse_to_fine": [
+              0.009999999999999998,
+              0.004999999999999999,
+              0.0024999999999999996,
+              0.0012499999999999998
+            ]
+          }
+        },
+        "got": {
+          "successive": [
+            {
+              "nx_pair": [
+                100,
+                200
+              ],
+              "rate": 2.9703775401618437
+            },
+            {
+              "nx_pair": [
+                200,
+                400
+              ],
+              "rate": 2.7732205174554028
+            },
+            {
+              "nx_pair": [
+                400,
+                800
+              ],
+              "rate": 0.35307402234982715
+            }
+          ],
+          "successive_finest": 0.35307402234982715,
+          "loglog_exponent_finest3": 1.563147269902616
+        },
+        "agreement_ref_vs_got": {
+          "p_ref": 4.748721913822956,
+          "p_got_loglog": 1.563147269902616,
+          "p_got_successive": 0.35307402234982715,
+          "rel_diff_loglog": 0.670827793610638,
+          "rel_diff_successive": 0.9256486210906409,
+          "pass_loglog": false,
+          "pass_successive": false
+        },
+        "agreement_ref_vs_repo_gci": {
+          "p_ref": 4.748721913822956,
+          "p_repo_gci": 4.748721913822956,
+          "rel_diff_p": 0.0,
+          "extrapolated_ref": 8.271298653604582e-06,
+          "extrapolated_repo_gci": 8.271298653604582e-06,
+          "rel_diff_extrapolated": 0.0,
+          "gci_ref": 0.013390033817068258,
+          "gci_repo_gci": 0.013390033817068324,
+          "rel_diff_gci": 4.923026557490182e-15,
+          "class_ref": "monotonic",
+          "class_repo_gci": "monotonic"
+        },
+        "derived_values": {
+          "extrapolated_ref": 8.271298653604582e-06,
+          "extrapolated_from_got_exponent": 7.175019065574642e-06,
+          "rel_diff_extrapolated": 0.13254020123577426,
+          "gci_relative_ref": 0.013390033817068258,
+          "gci_absolute_ref": 1.1195220371777759e-07,
+          "gci_absolute_from_got_exponent": 1.4823016887552029e-06,
+          "gci_relative_from_got_exponent": 0.17729056758511808,
+          "relative_form_applicable": false
+        }
+      },
+      "smooth_wave_l1": {
+        "phi": [
+          5.2763699424033253e-05,
+          1.2036017838358836e-05,
+          2.8156612505256253e-06,
+          6.82110137338876e-07
+        ],
+        "err_fitted_by_v2": [
+          5.2763699424033253e-05,
+          1.2036017838358836e-05,
+          2.8156612505256253e-06,
+          6.82110137338876e-07
+        ],
+        "h": [
+          0.009999999999999998,
+          0.004999999999999999,
+          0.0024999999999999996,
+          0.0012499999999999998
+        ],
+        "nx": [
+          100,
+          200,
+          400,
+          800
+        ],
+        "exact_limit": 0.0,
+        "limit_form": "zero_limit",
+        "limit_form_heuristic": "zero_limit",
+        "ref": {
+          "phi_coarse_medium_fine": [
+            1.2036017838358836e-05,
+            2.8156612505256253e-06,
+            6.82110137338876e-07
+          ],
+          "h_coarse_medium_fine": [
+            0.004999999999999999,
+            0.0024999999999999996,
+            0.0012499999999999998
+          ],
+          "r21": 2.0,
+          "r32": 2.0,
+          "r_uniformity": 0.0,
+          "convergence_class": "monotonic",
+          "observed_order": 2.1115658730872813,
+          "extrapolated": 3.9784004800646116e-08,
+          "gci_fine": 1.177093876371901,
+          "gci_medium": 1.2323380720988633,
+          "asymptotic_ratio": 0.24225575331959417,
+          "asymptotic_band": 0.15,
+          "in_asymptotic_range": false,
+          "fs": 1.25,
+          "estimated_relative_error_fine": 16.14533619118702,
+          "loglog_v2_estimator": {
+            "exponent": 2.070604818019548,
+            "valid": true,
+            "reason": ""
+          },
+          "limit_form": "zero_limit",
+          "gci_absolute_fine": 3.469846557156224e-06,
+          "triplet_consistency": {
+            "p_triplet_coarse": 2.1431152399834654,
+            "p_triplet_fine": 2.1115658730872813,
+            "rel_diff": 0.014721264777356332,
+            "consistent": true,
+            "class_coarse": "monotonic",
+            "class_fine": "monotonic",
+            "band": 0.15,
+            "phi_coarse_to_fine": [
+              5.2763699424033253e-05,
+              1.2036017838358836e-05,
+              2.8156612505256253e-06,
+              6.82110137338876e-07
+            ],
+            "h_coarse_to_fine": [
+              0.009999999999999998,
+              0.004999999999999999,
+              0.0024999999999999996,
+              0.0012499999999999998
+            ]
+          }
+        },
+        "got": {
+          "successive": [
+            {
+              "nx_pair": [
+                100,
+                200
+              ],
+              "rate": 2.1321875699119066
+            },
+            {
+              "nx_pair": [
+                200,
+                400
+              ],
+              "rate": 2.095812469690273
+            },
+            {
+              "nx_pair": [
+                400,
+                800
+              ],
+              "rate": 2.045397166348823
+            }
+          ],
+          "successive_finest": 2.045397166348823,
+          "loglog_exponent_finest3": 2.070604818019551
+        },
+        "agreement_ref_vs_got": {
+          "p_ref": 2.1115658730872813,
+          "p_got_loglog": 2.070604818019551,
+          "p_got_successive": 2.045397166348823,
+          "rel_diff_loglog": 0.019398426347856143,
+          "rel_diff_successive": 0.03133632134417581,
+          "pass_loglog": true,
+          "pass_successive": true
+        },
+        "agreement_ref_vs_repo_gci": {
+          "p_ref": 2.1115658730872813,
+          "p_repo_gci": 2.1115658730872813,
+          "rel_diff_p": 0.0,
+          "extrapolated_ref": 3.9784004800646116e-08,
+          "extrapolated_repo_gci": 3.978400480064606e-08,
+          "rel_diff_extrapolated": 1.4970087702897812e-15,
+          "gci_ref": 1.177093876371901,
+          "gci_repo_gci": 1.1770938763719012,
+          "rel_diff_gci": 1.8863797474626966e-16,
+          "class_ref": "monotonic",
+          "class_repo_gci": "monotonic"
+        },
+        "derived_values": {
+          "extrapolated_ref": 3.9784004800646116e-08,
+          "extrapolated_from_got_exponent": 1.5506107526730136e-08,
+          "rel_diff_extrapolated": 0.6102426690216389,
+          "gci_relative_ref": 1.177093876371901,
+          "gci_absolute_ref": 8.029076656727874e-07,
+          "gci_absolute_from_got_exponent": 8.332550372651824e-07,
+          "gci_relative_from_got_exponent": 1.2215843038427336,
+          "relative_form_applicable": false
+        }
+      }
+    },
+    "cfl0.2_100_200_400": {
+      "shock_x": {
+        "phi": [
+          0.747412492183281,
+          0.7459168602963494,
+          0.7456224138788417
+        ],
+        "err_fitted_by_v2": [
+          0.002110689699056034,
+          0.0006150578121244532,
+          0.00032061139461669885
+        ],
+        "h": [
+          0.009999999999999998,
+          0.004999999999999999,
+          0.0024999999999999996
+        ],
+        "nx": [
+          100,
+          200,
+          400
+        ],
+        "exact_limit": 0.745301802484225,
+        "limit_form": "nonzero_limit",
+        "limit_form_heuristic": "nonzero_limit",
+        "ref": {
+          "phi_coarse_medium_fine": [
+            0.747412492183281,
+            0.7459168602963494,
+            0.7456224138788417
+          ],
+          "h_coarse_medium_fine": [
+            0.009999999999999998,
+            0.004999999999999999,
+            0.0024999999999999996
+          ],
+          "r21": 2.0,
+          "r32": 2.0,
+          "r_uniformity": 0.0,
+          "convergence_class": "monotonic",
+          "observed_order": 2.344678109295582,
+          "extrapolated": 0.7455502362718108,
+          "gci_fine": 0.0001210022755607908,
+          "gci_medium": 0.0006143848665534788,
+          "asymptotic_ratio": 0.9996052557152404,
+          "asymptotic_band": 0.15,
+          "in_asymptotic_range": true,
+          "fs": 1.25,
+          "estimated_relative_error_fine": 9.681119194831395e-05,
+          "loglog_v2_estimator": {
+            "exponent": 0.0017297240135430779,
+            "valid": true,
+            "reason": ""
+          },
+          "limit_form": "nonzero_limit",
+          "gci_absolute_fine": 9.02220087884696e-05,
+          "triplet_consistency": null
+        },
+        "got": {
+          "successive": [
+            {
+              "nx_pair": [
+                100,
+                200
+              ],
+              "rate": 1.778920570391423
+            },
+            {
+              "nx_pair": [
+                200,
+                400
+              ],
+              "rate": 0.9398963222152984
+            }
+          ],
+          "successive_finest": 0.9398963222152984,
+          "loglog_exponent_finest3": 1.3594084463033624
+        },
+        "agreement_ref_vs_got": {
+          "p_ref": 2.344678109295582,
+          "p_got_loglog": 1.3594084463033624,
+          "p_got_successive": 0.9398963222152984,
+          "rel_diff_loglog": 0.42021532042546633,
+          "rel_diff_successive": 0.5991363085239559,
+          "pass_loglog": false,
+          "pass_successive": false
+        },
+        "agreement_ref_vs_repo_gci": {
+          "p_ref": 2.344678109295582,
+          "p_repo_gci": 2.344678109295582,
+          "rel_diff_p": 0.0,
+          "extrapolated_ref": 0.7455502362718108,
+          "extrapolated_repo_gci": 0.7455502362718108,
+          "rel_diff_extrapolated": 0.0,
+          "gci_ref": 0.0001210022755607908,
+          "gci_repo_gci": 0.00012100227556086694,
+          "rel_diff_gci": 6.292286422708079e-13,
+          "class_ref": "monotonic",
+          "class_repo_gci": "monotonic"
+        },
+        "derived_values": {
+          "extrapolated_ref": 0.7455502362718108,
+          "extrapolated_from_got_exponent": 0.7454343652719169,
+          "rel_diff_extrapolated": 0.0001554167569892894,
+          "gci_relative_ref": 0.0001210022755607908,
+          "gci_absolute_ref": 9.02220087884696e-05,
+          "gci_absolute_from_got_exponent": 0.00023506075865591743,
+          "gci_relative_from_got_exponent": 0.00031525441601613804,
+          "relative_form_applicable": true,
+          "exact": 0.745301802484225,
+          "relerr_fine": 0.0004301765989939155,
+          "relerr_extrapolated_ref": 0.0003333331366673249,
+          "gci_covers_exact": false
+        }
+      },
+      "contact_x": {
+        "phi": [
+          0.629047446236948,
+          0.6295967963678053,
+          0.629829428057074
+        ],
+        "err_fitted_by_v2": [
+          0.0007959205699050731,
+          0.0002465704390477441,
+          1.3938749779063286e-05
+        ],
+        "h": [
+          0.009999999999999998,
+          0.004999999999999999,
+          0.0024999999999999996
+        ],
+        "nx": [
+          100,
+          200,
+          400
+        ],
+        "exact_limit": 0.629843366806853,
+        "limit_form": "nonzero_limit",
+        "limit_form_heuristic": "nonzero_limit",
+        "ref": {
+          "phi_coarse_medium_fine": [
+            0.629047446236948,
+            0.6295967963678053,
+            0.629829428057074
+          ],
+          "h_coarse_medium_fine": [
+            0.009999999999999998,
+            0.004999999999999999,
+            0.0024999999999999996
+          ],
+          "r21": 2.0,
+          "r32": 2.0,
+          "r_uniformity": 0.0,
+          "convergence_class": "monotonic",
+          "observed_order": 1.2396783155340294,
+          "extrapolated": 0.63000029749739,
+          "gci_fine": 0.000339118483323097,
+          "gci_medium": 0.0008011101944778115,
+          "asymptotic_ratio": 1.0003694931273646,
+          "asymptotic_band": 0.15,
+          "in_asymptotic_range": true,
+          "fs": 1.25,
+          "estimated_relative_error_fine": 0.00027122120575931343,
+          "loglog_v2_estimator": {
+            "exponent": -0.0008961650357561412,
+            "valid": false,
+            "reason": ""
+          },
+          "limit_form": "nonzero_limit",
+          "gci_absolute_fine": 0.00021358680039496855,
+          "triplet_consistency": null
+        },
+        "got": {
+          "successive": [
+            {
+              "nx_pair": [
+                100,
+                200
+              ],
+              "rate": 1.6906246144134496
+            },
+            {
+              "nx_pair": [
+                200,
+                400
+              ],
+              "rate": 4.144826776443439
+            }
+          ],
+          "successive_finest": 4.144826776443439,
+          "loglog_exponent_finest3": 2.917725695428445
+        },
+        "agreement_ref_vs_got": {
+          "p_ref": 1.2396783155340294,
+          "p_got_loglog": 2.917725695428445,
+          "p_got_successive": 4.144826776443439,
+          "rel_diff_loglog": 1.3536151748944203,
+          "rel_diff_successive": 2.34346961183872,
+          "pass_loglog": false,
+          "pass_successive": false
+        },
+        "agreement_ref_vs_repo_gci": {
+          "p_ref": 1.2396783155340294,
+          "p_repo_gci": 1.2396783155340296,
+          "rel_diff_p": 1.791146962422899e-16,
+          "extrapolated_ref": 0.63000029749739,
+          "extrapolated_repo_gci": 0.63000029749739,
+          "rel_diff_extrapolated": 0.0,
+          "gci_ref": 0.000339118483323097,
+          "gci_repo_gci": 0.000339118483323084,
+          "rel_diff_gci": 3.836542892718206e-14,
+          "class_ref": "monotonic",
+          "class_repo_gci": "monotonic"
+        },
+        "derived_values": {
+          "extrapolated_ref": 0.63000029749739,
+          "extrapolated_from_got_exponent": 0.6298649089218469,
+          "rel_diff_extrapolated": 0.0002149023993812203,
+          "gci_relative_ref": 0.000339118483323097,
+          "gci_absolute_ref": 0.00021358680039496855,
+          "gci_absolute_from_got_exponent": 4.4351080966253954e-05,
+          "gci_relative_from_got_exponent": 7.041760672102946e-05,
+          "relative_form_applicable": true,
+          "exact": 0.629843366806853,
+          "relerr_fine": 2.2130501825762222e-05,
+          "relerr_extrapolated_ref": 0.0002491582809429335,
+          "gci_covers_exact": true
+        }
+      },
+      "l1_rho_full": {
+        "phi": [
+          0.004656035952771257,
+          0.0023346851047958504,
+          0.0012621777517930108
+        ],
+        "err_fitted_by_v2": [
+          0.004656035952771257,
+          0.0023346851047958504,
+          0.0012621777517930108
+        ],
+        "h": [
+          0.009999999999999998,
+          0.004999999999999999,
+          0.0024999999999999996
+        ],
+        "nx": [
+          100,
+          200,
+          400
+        ],
+        "exact_limit": 0.0,
+        "limit_form": "zero_limit",
+        "limit_form_heuristic": "nonzero_limit",
+        "ref": {
+          "phi_coarse_medium_fine": [
+            0.004656035952771257,
+            0.0023346851047958504,
+            0.0012621777517930108
+          ],
+          "h_coarse_medium_fine": [
+            0.009999999999999998,
+            0.004999999999999999,
+            0.0024999999999999996
+          ],
+          "r21": 2.0,
+          "r32": 2.0,
+          "r_uniformity": 0.0,
+          "convergence_class": "monotonic",
+          "observed_order": 1.1139770487428096,
+          "extrapolated": 0.0003411079565178032,
+          "gci_fine": 0.9121831235406072,
+          "gci_medium": 1.0673693982236043,
+          "asymptotic_ratio": 0.5406201244014782,
+          "asymptotic_band": 0.15,
+          "in_asymptotic_range": false,
+          "fs": 1.25,
+          "estimated_relative_error_fine": 2.7002295832613767,
+          "loglog_v2_estimator": {
+            "exponent": 0.9415935499282957,
+            "valid": true,
+            "reason": ""
+          },
+          "limit_form": "nonzero_limit",
+          "gci_absolute_fine": 0.0011513372440940097,
+          "triplet_consistency": null
+        },
+        "got": {
+          "successive": [
+            {
+              "nx_pair": [
+                100,
+                200
+              ],
+              "rate": 0.9958742216768851
+            },
+            {
+              "nx_pair": [
+                200,
+                400
+              ],
+              "rate": 0.8873128781797046
+            }
+          ],
+          "successive_finest": 0.8873128781797046,
+          "loglog_exponent_finest3": 0.9415935499282954
+        },
+        "agreement_ref_vs_got": {
+          "p_ref": 1.1139770487428096,
+          "p_got_loglog": 0.9415935499282954,
+          "p_got_successive": 0.8873128781797046,
+          "rel_diff_loglog": 0.15474600577189576,
+          "rel_diff_successive": 0.2034729268604853,
+          "pass_loglog": false,
+          "pass_successive": false
+        },
+        "agreement_ref_vs_repo_gci": {
+          "p_ref": 1.1139770487428096,
+          "p_repo_gci": 1.1139770487428096,
+          "rel_diff_p": 0.0,
+          "extrapolated_ref": 0.0003411079565178032,
+          "extrapolated_repo_gci": 0.000341107956517803,
+          "rel_diff_extrapolated": 6.356944490850171e-16,
+          "gci_ref": 0.9121831235406072,
+          "gci_repo_gci": 0.9121831235406073,
+          "rel_diff_gci": 1.2171054210210165e-16,
+          "class_ref": "monotonic",
+          "class_repo_gci": "monotonic"
+        },
+        "derived_values": {
+          "extrapolated_ref": 0.0003411079565178032,
+          "extrapolated_from_got_exponent": 9.723011194456789e-05,
+          "rel_diff_extrapolated": 0.7149579478088391,
+          "gci_relative_ref": 0.9121831235406072,
+          "gci_absolute_ref": 0.0011513372440940097,
+          "gci_absolute_from_got_exponent": 0.0014561845498105533,
+          "gci_relative_from_got_exponent": 1.1537079842692066,
+          "relative_form_applicable": false
+        }
+      },
+      "l1_rho_cellavg": {
+        "phi": [
+          0.004206380397735976,
+          0.002238654795478595,
+          0.0011918597816762317
+        ],
+        "err_fitted_by_v2": [
+          0.004206380397735976,
+          0.002238654795478595,
+          0.0011918597816762317
+        ],
+        "h": [
+          0.009999999999999998,
+          0.004999999999999999,
+          0.0024999999999999996
+        ],
+        "nx": [
+          100,
+          200,
+          400
+        ],
+        "exact_limit": 0.0,
+        "limit_form": "zero_limit",
+        "limit_form_heuristic": "zero_limit",
+        "ref": {
+          "phi_coarse_medium_fine": [
+            0.004206380397735976,
+            0.002238654795478595,
+            0.0011918597816762317
+          ],
+          "h_coarse_medium_fine": [
+            0.009999999999999998,
+            0.004999999999999999,
+            0.0024999999999999996
+          ],
+          "r21": 2.0,
+          "r32": 2.0,
+          "r_uniformity": 0.0,
+          "convergence_class": "monotonic",
+          "observed_order": 0.9105500945203345,
+          "extrapolated": 1.998336461555575e-06,
+          "gci_fine": 1.2479041825092618,
+          "gci_medium": 1.248884186797362,
+          "asymptotic_ratio": 0.5323999859573829,
+          "asymptotic_band": 0.15,
+          "in_asymptotic_range": false,
+          "fs": 1.25,
+          "estimated_relative_error_fine": 595.4259796112844,
+          "loglog_v2_estimator": {
+            "exponent": 0.9096824032071712,
+            "valid": true,
+            "reason": ""
+          },
+          "limit_form": "zero_limit",
+          "gci_absolute_fine": 0.0014873268065183454,
+          "triplet_consistency": null
+        },
+        "got": {
+          "successive": [
+            {
+              "nx_pair": [
+                100,
+                200
+              ],
+              "rate": 0.9099472447241648
+            },
+            {
+              "nx_pair": [
+                200,
+                400
+              ],
+              "rate": 0.9094175616901766
+            }
+          ],
+          "successive_finest": 0.9094175616901766,
+          "loglog_exponent_finest3": 0.9096824032071711
+        },
+        "agreement_ref_vs_got": {
+          "p_ref": 0.9105500945203345,
+          "p_got_loglog": 0.9096824032071711,
+          "p_got_successive": 0.9094175616901766,
+          "rel_diff_loglog": 0.0009529308913207367,
+          "rel_diff_successive": 0.0012437897013832164,
+          "pass_loglog": true,
+          "pass_successive": true
+        },
+        "agreement_ref_vs_repo_gci": {
+          "p_ref": 0.9105500945203345,
+          "p_repo_gci": 0.9105500945203345,
+          "rel_diff_p": 0.0,
+          "extrapolated_ref": 1.998336461555575e-06,
+          "extrapolated_repo_gci": 1.9983364615554656e-06,
+          "rel_diff_extrapolated": 5.467910549495119e-14,
+          "gci_ref": 1.2479041825092618,
+          "gci_repo_gci": 1.2479041825092618,
+          "rel_diff_gci": 0.0,
+          "class_ref": "monotonic",
+          "class_repo_gci": "monotonic"
+        },
+        "derived_values": {
+          "extrapolated_ref": 1.998336461555575e-06,
+          "extrapolated_from_got_exponent": 4.677691323165441e-07,
+          "rel_diff_extrapolated": 0.7659207339126384,
+          "gci_relative_ref": 1.2479041825092618,
+          "gci_absolute_ref": 0.0014873268065183454,
+          "gci_absolute_from_got_exponent": 0.001489240015679894,
+          "gci_relative_from_got_exponent": 1.249509412579915,
+          "relative_form_applicable": false
+        }
+      },
+      "l1_rho_plateaus": {
+        "phi": [
+          0.0008990347465956058,
+          0.0001287499900136447,
+          1.0910196249827413e-05
+        ],
+        "err_fitted_by_v2": [
+          0.0008990347465956058,
+          0.0001287499900136447,
+          1.0910196249827413e-05
+        ],
+        "h": [
+          0.009999999999999998,
+          0.004999999999999999,
+          0.0024999999999999996
+        ],
+        "nx": [
+          100,
+          200,
+          400
+        ],
+        "exact_limit": 0.0,
+        "limit_form": "zero_limit",
+        "limit_form_heuristic": "nonzero_limit",
+        "ref": {
+          "phi_coarse_medium_fine": [
+            0.0008990347465956058,
+            0.0001287499900136447,
+            1.0910196249827413e-05
+          ],
+          "h_coarse_medium_fine": [
+            0.009999999999999998,
+            0.004999999999999999,
+            0.0024999999999999996
+          ],
+          "r21": 2.0,
+          "r32": 2.0,
+          "r_uniformity": 0.0,
+          "convergence_class": "monotonic",
+          "observed_order": 2.7085650650618303,
+          "extrapolated": -1.0373157574101954e-05,
+          "gci_fine": 2.438470552748541,
+          "gci_medium": 1.3507102755212121,
+          "asymptotic_ratio": 0.08473939492089413,
+          "asymptotic_band": 0.15,
+          "in_asymptotic_range": false,
+          "fs": 1.25,
+          "estimated_relative_error_fine": 2.0517719577562623,
+          "loglog_v2_estimator": {
+            "exponent": 3.1823139586908313,
+            "valid": true,
+            "reason": ""
+          },
+          "limit_form": "nonzero_limit",
+          "gci_absolute_fine": 2.6604192279911707e-05,
+          "triplet_consistency": null
+        },
+        "got": {
+          "successive": [
+            {
+              "nx_pair": [
+                100,
+                200
+              ],
+              "rate": 2.8038045548248807
+            },
+            {
+              "nx_pair": [
+                200,
+                400
+              ],
+              "rate": 3.5608233625567784
+            }
+          ],
+          "successive_finest": 3.5608233625567784,
+          "loglog_exponent_finest3": 3.182313958690832
+        },
+        "agreement_ref_vs_got": {
+          "p_ref": 2.7085650650618303,
+          "p_got_loglog": 3.182313958690832,
+          "p_got_successive": 3.5608233625567784,
+          "rel_diff_loglog": 0.17490770287926863,
+          "rel_diff_successive": 0.31465306426947254,
+          "pass_loglog": false,
+          "pass_successive": false
+        },
+        "agreement_ref_vs_repo_gci": {
+          "p_ref": 2.7085650650618303,
+          "p_repo_gci": 2.7085650650618307,
+          "rel_diff_p": 1.6395737195994776e-16,
+          "extrapolated_ref": -1.0373157574101954e-05,
+          "extrapolated_repo_gci": -1.0373157574101947e-05,
+          "rel_diff_extrapolated": 6.53249845057044e-16,
+          "gci_ref": 2.438470552748541,
+          "gci_repo_gci": 2.43847055274854,
+          "rel_diff_gci": 3.6423586034246265e-16,
+          "class_ref": "monotonic",
+          "class_repo_gci": "monotonic"
+        },
+        "derived_values": {
+          "extrapolated_ref": -1.0373157574101954e-05,
+          "extrapolated_from_got_exponent": -3.6782352960047768e-06,
+          "rel_diff_extrapolated": 0.6454083272399131,
+          "gci_relative_ref": 2.438470552748541,
+          "gci_absolute_ref": 2.6604192279911707e-05,
+          "gci_absolute_from_got_exponent": 1.8235539432290236e-05,
+          "gci_relative_from_got_exponent": 1.67142176132521,
+          "relative_form_applicable": false
+        }
+      },
+      "smooth_wave_l1": {
+        "phi": [
+          5.7494116863369136e-05,
+          1.3364168547519428e-05,
+          3.169676319286219e-06
+        ],
+        "err_fitted_by_v2": [
+          5.7494116863369136e-05,
+          1.3364168547519428e-05,
+          3.169676319286219e-06
+        ],
+        "h": [
+          0.009999999999999998,
+          0.004999999999999999,
+          0.0024999999999999996
+        ],
+        "nx": [
+          100,
+          200,
+          400
+        ],
+        "exact_limit": 0.0,
+        "limit_form": "zero_limit",
+        "limit_form_heuristic": "zero_limit",
+        "ref": {
+          "phi_coarse_medium_fine": [
+            5.7494116863369136e-05,
+            1.3364168547519428e-05,
+            3.169676319286219e-06
+          ],
+          "h_coarse_medium_fine": [
+            0.009999999999999998,
+            0.004999999999999999,
+            0.0024999999999999996
+          ],
+          "r21": 2.0,
+          "r32": 2.0,
+          "r_uniformity": 0.0,
+          "convergence_class": "monotonic",
+          "observed_order": 2.1139681389051845,
+          "extrapolated": 1.0716637325275766e-07,
+          "gci_fine": 1.207737651081006,
+          "gci_medium": 1.2399763336499663,
+          "asymptotic_ratio": 0.23717721817228604,
+          "asymptotic_band": 0.15,
+          "in_asymptotic_range": false,
+          "fs": 1.25,
+          "estimated_relative_error_fine": 28.577153943712986,
+          "loglog_v2_estimator": {
+            "exponent": 2.090503455278247,
+            "valid": true,
+            "reason": ""
+          },
+          "limit_form": "zero_limit",
+          "gci_absolute_fine": 3.828137432541827e-06,
+          "triplet_consistency": null
+        },
+        "got": {
+          "successive": [
+            {
+              "nx_pair": [
+                100,
+                200
+              ],
+              "rate": 2.1050442555347937
+            },
+            {
+              "nx_pair": [
+                200,
+                400
+              ],
+              "rate": 2.075962655021699
+            }
+          ],
+          "successive_finest": 2.075962655021699,
+          "loglog_exponent_finest3": 2.090503455278248
+        },
+        "agreement_ref_vs_got": {
+          "p_ref": 2.1139681389051845,
+          "p_got_loglog": 2.090503455278248,
+          "p_got_successive": 2.075962655021699,
+          "rel_diff_loglog": 0.011099828419878083,
+          "rel_diff_successive": 0.017978267119564174,
+          "pass_loglog": true,
+          "pass_successive": true
+        },
+        "agreement_ref_vs_repo_gci": {
+          "p_ref": 2.1139681389051845,
+          "p_repo_gci": 2.1139681389051845,
+          "rel_diff_p": 0.0,
+          "extrapolated_ref": 1.0716637325275766e-07,
+          "extrapolated_repo_gci": 1.0716637325275749e-07,
+          "rel_diff_extrapolated": 1.6054809189560998e-15,
+          "gci_ref": 1.207737651081006,
+          "gci_repo_gci": 1.207737651081006,
+          "rel_diff_gci": 0.0,
+          "class_ref": "monotonic",
+          "class_repo_gci": "monotonic"
+        },
+        "derived_values": {
+          "extrapolated_ref": 1.0716637325275766e-07,
+          "extrapolated_from_got_exponent": 4.153997546771085e-08,
+          "rel_diff_extrapolated": 0.6123786388689614,
+          "gci_relative_ref": 1.207737651081006,
+          "gci_absolute_ref": 3.828137432541827e-06,
+          "gci_absolute_from_got_exponent": 3.910170429773135e-06,
+          "gci_relative_from_got_exponent": 1.2336182107874247,
+          "relative_form_applicable": false
+        }
+      }
+    },
+    "order1_100_200_400": {
+      "shock_x": {
+        "phi": [
+          0.7495078984368325,
+          0.7479635701259039,
+          0.7467591558323716
+        ],
+        "err_fitted_by_v2": [
+          0.004206095952607569,
+          0.0026617676416789138,
+          0.0014573533481466727
+        ],
+        "h": [
+          0.009999999999999998,
+          0.004999999999999999,
+          0.0024999999999999996
+        ],
+        "nx": [
+          100,
+          200,
+          400
+        ],
+        "exact_limit": 0.745301802484225,
+        "limit_form": "nonzero_limit",
+        "limit_form_heuristic": "nonzero_limit",
+        "ref": {
+          "phi_coarse_medium_fine": [
+            0.7495078984368325,
+            0.7479635701259039,
+            0.7467591558323716
+          ],
+          "h_coarse_medium_fine": [
+            0.009999999999999998,
+            0.004999999999999999,
+            0.0024999999999999996
+          ],
+          "r21": 2.0,
+          "r32": 2.0,
+          "r_uniformity": 0.0,
+          "convergence_class": "monotonic",
+          "observed_order": 0.3586477551461193,
+          "extrapolated": 0.7424915654529697,
+          "gci_fine": 0.0071435186734419565,
+          "gci_medium": 0.0091448382172092,
+          "asymptotic_ratio": 0.9983897420387337,
+          "asymptotic_band": 0.15,
+          "in_asymptotic_range": true,
+          "fs": 1.25,
+          "estimated_relative_error_fine": 0.0057476617620543955,
+          "loglog_v2_estimator": {
+            "exponent": 0.0026503302160413755,
+            "valid": true,
+            "reason": ""
+          },
+          "limit_form": "nonzero_limit",
+          "gci_absolute_fine": 0.005334487974252298,
+          "triplet_consistency": null
+        },
+        "got": {
+          "successive": [
+            {
+              "nx_pair": [
+                100,
+                200
+              ],
+              "rate": 0.6600971252294896
+            },
+            {
+              "nx_pair": [
+                200,
+                400
+              ],
+              "rate": 0.8690339231285371
+            }
+          ],
+          "successive_finest": 0.8690339231285371,
+          "loglog_exponent_finest3": 0.7645655241790145
+        },
+        "agreement_ref_vs_got": {
+          "p_ref": 0.3586477551461193,
+          "p_got_loglog": 0.7645655241790145,
+          "p_got_successive": 0.8690339231285371,
+          "rel_diff_loglog": 1.1318006685069513,
+          "rel_diff_successive": 1.4230847974344008,
+          "pass_loglog": false,
+          "pass_successive": false
+        },
+        "agreement_ref_vs_repo_gci": {
+          "p_ref": 0.3586477551461193,
+          "p_repo_gci": 0.35864775514611935,
+          "rel_diff_p": 1.547790288235364e-16,
+          "extrapolated_ref": 0.7424915654529697,
+          "extrapolated_repo_gci": 0.7424915654529698,
+          "rel_diff_extrapolated": 1.4952668505370106e-16,
+          "gci_ref": 0.0071435186734419565,
+          "gci_repo_gci": 0.0071435186734419434,
+          "rel_diff_gci": 1.821290972220172e-15,
+          "class_ref": "monotonic",
+          "class_repo_gci": "monotonic"
+        },
+        "derived_values": {
+          "extrapolated_ref": 0.7424915654529697,
+          "extrapolated_from_got_exponent": 0.745035753115589,
+          "rel_diff_extrapolated": 0.0034265542950204404,
+          "gci_relative_ref": 0.0071435186734419565,
+          "gci_absolute_ref": 0.005334487974252298,
+          "gci_absolute_from_got_exponent": 0.0021542533959781917,
+          "gci_relative_from_got_exponent": 0.002884803459258512,
+          "relative_form_applicable": true,
+          "exact": 0.745301802484225,
+          "relerr_fine": 0.001955386855753001,
+          "relerr_extrapolated_ref": 0.0037706027570150024,
+          "gci_covers_exact": true
+        }
+      },
+      "contact_x": {
+        "phi": [
+          0.624927789180289,
+          0.62616000342385,
+          0.6275178180623371
+        ],
+        "err_fitted_by_v2": [
+          0.004915577626564027,
+          0.0036833633830030132,
+          0.0023255487445159595
+        ],
+        "h": [
+          0.009999999999999998,
+          0.004999999999999999,
+          0.0024999999999999996
+        ],
+        "nx": [
+          100,
+          200,
+          400
+        ],
+        "exact_limit": 0.629843366806853,
+        "limit_form": "nonzero_limit",
+        "limit_form_heuristic": "undefined",
+        "ref": {
+          "phi_coarse_medium_fine": [
+            0.624927789180289,
+            0.62616000342385,
+            0.6275178180623371
+          ],
+          "h_coarse_medium_fine": [
+            0.009999999999999998,
+            0.004999999999999999,
+            0.0024999999999999996
+          ],
+          "r21": 2.0,
+          "r32": 2.0,
+          "r_uniformity": 0.0,
+          "convergence_class": "divergent",
+          "observed_order": NaN,
+          "extrapolated": NaN,
+          "gci_fine": NaN,
+          "gci_medium": NaN,
+          "asymptotic_ratio": NaN,
+          "asymptotic_band": 0.15,
+          "in_asymptotic_range": false,
+          "fs": 1.25,
+          "estimated_relative_error_fine": NaN,
+          "loglog_v2_estimator": {
+            "exponent": -0.0029834646142607663,
+            "valid": false,
+            "reason": ""
+          },
+          "limit_form": "undefined",
+          "gci_absolute_fine": NaN,
+          "triplet_consistency": null
+        },
+        "got": {
+          "successive": [
+            {
+              "nx_pair": [
+                100,
+                200
+              ],
+              "rate": 0.4163372231050383
+            },
+            {
+              "nx_pair": [
+                200,
+                400
+              ],
+              "rate": 0.6634525539502386
+            }
+          ],
+          "successive_finest": 0.6634525539502386,
+          "loglog_exponent_finest3": 0.5398948885276393
+        },
+        "agreement_ref_vs_got": {
+          "p_ref": NaN,
+          "p_got_loglog": 0.5398948885276393,
+          "p_got_successive": 0.6634525539502386,
+          "rel_diff_loglog": NaN,
+          "rel_diff_successive": NaN,
+          "pass_loglog": false,
+          "pass_successive": false
+        },
+        "agreement_ref_vs_repo_gci": {
+          "p_ref": NaN,
+          "p_repo_gci": NaN,
+          "rel_diff_p": NaN,
+          "extrapolated_ref": NaN,
+          "extrapolated_repo_gci": 0.6275178180623371,
+          "rel_diff_extrapolated": NaN,
+          "gci_ref": NaN,
+          "gci_repo_gci": 0.0027047332350652264,
+          "rel_diff_gci": NaN,
+          "class_ref": "divergent",
+          "class_repo_gci": "divergent"
+        },
+        "derived_values": {
+          "extrapolated_ref": NaN,
+          "extrapolated_from_got_exponent": 0.6305094783303994,
+          "rel_diff_extrapolated": NaN,
+          "gci_relative_ref": NaN,
+          "gci_absolute_ref": NaN,
+          "gci_absolute_from_got_exponent": 0.0037395753350777747,
+          "gci_relative_from_got_exponent": 0.005959313389100113,
+          "relative_form_applicable": true
+        }
+      },
+      "l1_rho_full": {
+        "phi": [
+          0.01574960009960188,
+          0.010268927698272003,
+          0.006540801760378331
+        ],
+        "err_fitted_by_v2": [
+          0.01574960009960188,
+          0.010268927698272003,
+          0.006540801760378331
+        ],
+        "h": [
+          0.009999999999999998,
+          0.004999999999999999,
+          0.0024999999999999996
+        ],
+        "nx": [
+          100,
+          200,
+          400
+        ],
+        "exact_limit": 0.0,
+        "limit_form": "zero_limit",
+        "limit_form_heuristic": "nonzero_limit",
+        "ref": {
+          "phi_coarse_medium_fine": [
+            0.01574960009960188,
+            0.010268927698272003,
+            0.006540801760378331
+          ],
+          "h_coarse_medium_fine": [
+            0.009999999999999998,
+            0.004999999999999999,
+            0.0024999999999999996
+          ],
+          "r21": 2.0,
+          "r32": 2.0,
+          "r_uniformity": 0.0,
+          "convergence_class": "monotonic",
+          "observed_order": 0.555902306660915,
+          "extrapolated": -0.00138989982087621,
+          "gci_fine": 1.5156210721168182,
+          "gci_medium": 1.4191875556186475,
+          "asymptotic_ratio": 0.636950804656944,
+          "asymptotic_band": 0.15,
+          "in_asymptotic_range": false,
+          "fs": 1.25,
+          "estimated_relative_error_fine": 5.705951941381595,
+          "loglog_v2_estimator": {
+            "exponent": 0.633887901306015,
+            "valid": true,
+            "reason": ""
+          },
+          "limit_form": "nonzero_limit",
+          "gci_absolute_fine": 0.009913376976568177,
+          "triplet_consistency": null
+        },
+        "got": {
+          "successive": [
+            {
+              "nx_pair": [
+                100,
+                200
+              ],
+              "rate": 0.6170296569436852
+            },
+            {
+              "nx_pair": [
+                200,
+                400
+              ],
+              "rate": 0.6507461456683455
+            }
+          ],
+          "successive_finest": 0.6507461456683455,
+          "loglog_exponent_finest3": 0.6338879013060149
+        },
+        "agreement_ref_vs_got": {
+          "p_ref": 0.555902306660915,
+          "p_got_loglog": 0.6338879013060149,
+          "p_got_successive": 0.6507461456683455,
+          "rel_diff_loglog": 0.14028651025668248,
+          "rel_diff_successive": 0.17061242213064365,
+          "pass_loglog": true,
+          "pass_successive": false
+        },
+        "agreement_ref_vs_repo_gci": {
+          "p_ref": 0.555902306660915,
+          "p_repo_gci": 0.555902306660915,
+          "rel_diff_p": 0.0,
+          "extrapolated_ref": -0.00138989982087621,
+          "extrapolated_repo_gci": -0.0013898998208762116,
+          "rel_diff_extrapolated": 1.0920808958179547e-15,
+          "gci_ref": 1.5156210721168182,
+          "gci_repo_gci": 1.5156210721168182,
+          "rel_diff_gci": 0.0,
+          "class_ref": "monotonic",
+          "class_repo_gci": "monotonic"
+        },
+        "derived_values": {
+          "extrapolated_ref": -0.00138989982087621,
+          "extrapolated_from_got_exponent": -0.0002162183716503619,
+          "rel_diff_extrapolated": 0.8444360029386468,
+          "gci_relative_ref": 1.5156210721168182,
+          "gci_absolute_ref": 0.009913376976568177,
+          "gci_absolute_from_got_exponent": 0.008446275165035865,
+          "gci_relative_from_got_exponent": 1.2913210756822138,
+          "relative_form_applicable": false
+        }
+      },
+      "l1_rho_cellavg": {
+        "phi": [
+          0.015303817293826776,
+          0.010172526704525665,
+          0.006470344778316377
+        ],
+        "err_fitted_by_v2": [
+          0.015303817293826776,
+          0.010172526704525665,
+          0.006470344778316377
+        ],
+        "h": [
+          0.009999999999999998,
+          0.004999999999999999,
+          0.0024999999999999996
+        ],
+        "nx": [
+          100,
+          200,
+          400
+        ],
+        "exact_limit": 0.0,
+        "limit_form": "zero_limit",
+        "limit_form_heuristic": "nonzero_limit",
+        "ref": {
+          "phi_coarse_medium_fine": [
+            0.015303817293826776,
+            0.010172526704525665,
+            0.006470344778316377
+          ],
+          "h_coarse_medium_fine": [
+            0.009999999999999998,
+            0.004999999999999999,
+            0.0024999999999999996
+          ],
+          "r21": 2.0,
+          "r32": 2.0,
+          "r_uniformity": 0.0,
+          "convergence_class": "monotonic",
+          "observed_order": 0.4709459375058727,
+          "extrapolated": -0.0031203542138078235,
+          "gci_fine": 1.8528183815383477,
+          "gci_medium": 1.6334291008078166,
+          "asymptotic_ratio": 0.6360607316408203,
+          "asymptotic_band": 0.15,
+          "in_asymptotic_range": false,
+          "fs": 1.25,
+          "estimated_relative_error_fine": 3.0735930394326934,
+          "loglog_v2_estimator": {
+            "exponent": 0.6209885302089788,
+            "valid": true,
+            "reason": ""
+          },
+          "limit_form": "nonzero_limit",
+          "gci_absolute_fine": 0.01198837374015525,
+          "triplet_consistency": null
+        },
+        "got": {
+          "successive": [
+            {
+              "nx_pair": [
+                100,
+                200
+              ],
+              "rate": 0.589213487414467
+            },
+            {
+              "nx_pair": [
+                200,
+                400
+              ],
+              "rate": 0.65276357300349
+            }
+          ],
+          "successive_finest": 0.65276357300349,
+          "loglog_exponent_finest3": 0.620988530208979
+        },
+        "agreement_ref_vs_got": {
+          "p_ref": 0.4709459375058727,
+          "p_got_loglog": 0.620988530208979,
+          "p_got_successive": 0.65276357300349,
+          "rel_diff_loglog": 0.3185983374179447,
+          "rel_diff_successive": 0.3860690177316796,
+          "pass_loglog": false,
+          "pass_successive": false
+        },
+        "agreement_ref_vs_repo_gci": {
+          "p_ref": 0.4709459375058727,
+          "p_repo_gci": 0.47094593750587266,
+          "rel_diff_p": 1.1787160013577057e-16,
+          "extrapolated_ref": -0.0031203542138078235,
+          "extrapolated_repo_gci": -0.003120354213807822,
+          "rel_diff_extrapolated": 5.559379984171391e-16,
+          "gci_ref": 1.8528183815383477,
+          "gci_repo_gci": 1.8528183815383477,
+          "rel_diff_gci": 0.0,
+          "class_ref": "monotonic",
+          "class_repo_gci": "monotonic"
+        },
+        "derived_values": {
+          "extrapolated_ref": -0.0031203542138078235,
+          "extrapolated_from_got_exponent": -0.000411947586539391,
+          "rel_diff_extrapolated": 0.8679805053168358,
+          "gci_relative_ref": 1.8528183815383477,
+          "gci_absolute_ref": 0.01198837374015525,
+          "gci_absolute_from_got_exponent": 0.008602865456069713,
+          "gci_relative_from_got_exponent": 1.329583778116416,
+          "relative_form_applicable": false
+        }
+      },
+      "l1_rho_plateaus": {
+        "phi": [
+          0.0032673761584445004,
+          0.0010983832744833884,
+          0.00041686274165197426
+        ],
+        "err_fitted_by_v2": [
+          0.0032673761584445004,
+          0.0010983832744833884,
+          0.00041686274165197426
+        ],
+        "h": [
+          0.009999999999999998,
+          0.004999999999999999,
+          0.0024999999999999996
+        ],
+        "nx": [
+          100,
+          200,
+          400
+        ],
+        "exact_limit": 0.0,
+        "limit_form": "zero_limit",
+        "limit_form_heuristic": "nonzero_limit",
+        "ref": {
+          "phi_coarse_medium_fine": [
+            0.0032673761584445004,
+            0.0010983832744833884,
+            0.00041686274165197426
+          ],
+          "h_coarse_medium_fine": [
+            0.009999999999999998,
+            0.004999999999999999,
+            0.0024999999999999996
+          ],
+          "r21": 2.0,
+          "r32": 2.0,
+          "r_uniformity": 0.0,
+          "convergence_class": "monotonic",
+          "observed_order": 1.6701962915459334,
+          "extrapolated": 0.00010460803902300698,
+          "gci_fine": 0.9363234928106714,
+          "gci_medium": 1.1309522579080966,
+          "asymptotic_ratio": 0.3795239342551358,
+          "asymptotic_band": 0.15,
+          "in_asymptotic_range": false,
+          "fs": 1.25,
+          "estimated_relative_error_fine": 2.9849971908974555,
+          "loglog_v2_estimator": {
+            "exponent": 1.4852441087621737,
+            "valid": true,
+            "reason": ""
+          },
+          "limit_form": "nonzero_limit",
+          "gci_absolute_fine": 0.0003903183782862091,
+          "triplet_consistency": null
+        },
+        "got": {
+          "successive": [
+            {
+              "nx_pair": [
+                100,
+                200
+              ],
+              "rate": 1.5727509931061219
+            },
+            {
+              "nx_pair": [
+                200,
+                400
+              ],
+              "rate": 1.3977372244182251
+            }
+          ],
+          "successive_finest": 1.3977372244182251,
+          "loglog_exponent_finest3": 1.4852441087621744
+        },
+        "agreement_ref_vs_got": {
+          "p_ref": 1.6701962915459334,
+          "p_got_loglog": 1.4852441087621744,
+          "p_got_successive": 1.3977372244182251,
+          "rel_diff_loglog": 0.11073679406422782,
+          "rel_diff_successive": 0.16312996772105165,
+          "pass_loglog": true,
+          "pass_successive": false
+        },
+        "agreement_ref_vs_repo_gci": {
+          "p_ref": 1.6701962915459334,
+          "p_repo_gci": 1.6701962915459334,
+          "rel_diff_p": 0.0,
+          "extrapolated_ref": 0.00010460803902300698,
+          "extrapolated_repo_gci": 0.00010460803902300695,
+          "rel_diff_extrapolated": 2.5911062443466946e-16,
+          "gci_ref": 0.9363234928106714,
+          "gci_repo_gci": 0.9363234928106715,
+          "rel_diff_gci": 1.1857259089937716e-16,
+          "class_ref": "monotonic",
+          "class_repo_gci": "monotonic"
+        },
+        "derived_values": {
+          "extrapolated_ref": 0.00010460803902300698,
+          "extrapolated_from_got_exponent": 3.816562015454491e-05,
+          "rel_diff_extrapolated": 0.6351559544467615,
+          "gci_relative_ref": 0.9363234928106714,
+          "gci_absolute_ref": 0.0003903183782862091,
+          "gci_absolute_from_got_exponent": 0.00047337140187178665,
+          "gci_relative_from_got_exponent": 1.1355569941220356,
+          "relative_form_applicable": false
+        }
+      },
+      "smooth_wave_l1": {
+        "phi": [
+          0.0022180314909138864,
+          0.0011139427119032318,
+          0.0005581889107446697
+        ],
+        "err_fitted_by_v2": [
+          0.0022180314909138864,
+          0.0011139427119032318,
+          0.0005581889107446697
+        ],
+        "h": [
+          0.009999999999999998,
+          0.004999999999999999,
+          0.0024999999999999996
+        ],
+        "nx": [
+          100,
+          200,
+          400
+        ],
+        "exact_limit": 0.0,
+        "limit_form": "zero_limit",
+        "limit_form_heuristic": "zero_limit",
+        "ref": {
+          "phi_coarse_medium_fine": [
+            0.0022180314909138864,
+            0.0011139427119032318,
+            0.0005581889107446697
+          ],
+          "h_coarse_medium_fine": [
+            0.009999999999999998,
+            0.004999999999999999,
+            0.0024999999999999996
+          ],
+          "r21": 2.0,
+          "r32": 2.0,
+          "r_uniformity": 0.0,
+          "convergence_class": "monotonic",
+          "observed_order": 0.990338366964742,
+          "extrapolated": -5.0840883845281474e-06,
+          "gci_fine": 1.2613852324156387,
+          "gci_medium": 1.2557050604243392,
+          "asymptotic_ratio": 0.5010930138327971,
+          "asymptotic_band": 0.15,
+          "in_asymptotic_range": false,
+          "fs": 1.25,
+          "estimated_relative_error_fine": 110.79134675222116,
+          "loglog_v2_estimator": {
+            "exponent": 0.9952272400316897,
+            "valid": true,
+            "reason": ""
+          },
+          "limit_form": "zero_limit",
+          "gci_absolute_fine": 0.0007040912489114974,
+          "triplet_consistency": null
+        },
+        "got": {
+          "successive": [
+            {
+              "nx_pair": [
+                100,
+                200
+              ],
+              "rate": 0.9936048092355894
+            },
+            {
+              "nx_pair": [
+                200,
+                400
+              ],
+              "rate": 0.9968496708277893
+            }
+          ],
+          "successive_finest": 0.9968496708277893,
+          "loglog_exponent_finest3": 0.99522724003169
+        },
+        "agreement_ref_vs_got": {
+          "p_ref": 0.990338366964742,
+          "p_got_loglog": 0.99522724003169,
+          "p_got_successive": 0.9968496708277893,
+          "rel_diff_loglog": 0.004936568379080205,
+          "rel_diff_successive": 0.006574827432974875,
+          "pass_loglog": true,
+          "pass_successive": true
+        },
+        "agreement_ref_vs_repo_gci": {
+          "p_ref": 0.990338366964742,
+          "p_repo_gci": 0.9903383669647418,
+          "rel_diff_p": 2.242108478595746e-16,
+          "extrapolated_ref": -5.0840883845281474e-06,
+          "extrapolated_repo_gci": -5.084088384528463e-06,
+          "rel_diff_extrapolated": 6.214354775722031e-14,
+          "gci_ref": 1.2613852324156387,
+          "gci_repo_gci": 1.2613852324156394,
+          "rel_diff_gci": 5.28097045737092e-16,
+          "class_ref": "monotonic",
+          "class_repo_gci": "monotonic"
+        },
+        "derived_values": {
+          "extrapolated_ref": -5.0840883845281474e-06,
+          "extrapolated_from_got_exponent": -1.2603424906730477e-06,
+          "rel_diff_extrapolated": 0.7521005939809169,
+          "gci_relative_ref": 1.2613852324156387,
+          "gci_absolute_ref": 0.0007040912489114974,
+          "gci_absolute_from_got_exponent": 0.0006993115665441785,
+          "gci_relative_from_got_exponent": 1.2528223923532262,
+          "relative_form_applicable": false
+        }
+      }
+    }
+  },
+  "committed_v2_artifact": {
+    "artifact": "docs/repro-fvm-sod1978-convergence/study.json",
+    "sha256": "ee50854fa62486707f2a15ea3b10e34fe65190aa72c22ab59eea028e2d89b504",
+    "before": {
+      "grids": [
+        50,
+        100,
+        200
+      ],
+      "contact_exponent_finest3": 1.4695245380636839,
+      "shock_exponent_finest3": -1.2494149735724402,
+      "contact_successive": [
+        2.0095999807039138,
+        0.9294490954234497
+      ],
+      "shock_successive": [
+        -4.336680846508414,
+        1.8378508993635347
+      ],
+      "sublinear_convergence_observed": false
+    },
+    "after": {
+      "contact_exponent": 1.4695245380636819,
+      "contact_source": "loglog_lsq",
+      "contact_loglog_admissible": true,
+      "contact_class": "monotonic",
+      "contact_reason": "",
+      "shock_exponent": 1.8378508993635347,
+      "shock_source": "successive_finest",
+      "shock_loglog_admissible": false,
+      "shock_class": "oscillatory",
+      "shock_reason": "error sequence not monotone -> slope is not an order of accuracy",
+      "sublinear_convergence_observed": true,
+      "ordering_holds_with_finest_successive": true,
+      "ordering_holds_with_effective_exponent": true
+    },
+    "reference": {
+      "shock_position_error": {
+        "class": "oscillatory",
+        "observed_order": NaN,
+        "asymptotic_ratio": NaN,
+        "gci_relative_fine": NaN
+      },
+      "contact_position_error": {
+        "class": "monotonic",
+        "observed_order": 2.6719275189395932,
+        "asymptotic_ratio": 0.5250588014151853,
+        "gci_relative_fine": 0.210446250195371
+      }
+    },
+    "series": {
+      "shock_position_error": [
+        8.152433582642171e-05,
+        0.0016472453328925107,
+        0.00046079741858384704
+      ],
+      "contact_position_error": [
+        0.0032359903521973488,
+        0.0008036322275434271,
+        0.0004219541741725674
+      ]
+    }
+  },
+  "wall_seconds": 232.9,
+  "repro_cmd": "PYTHONPATH=src python docs/xval/convergence-diagnosis-v2/xval_driver.py --out docs/xval/convergence-diagnosis-v2",
+  "summary": [
+    {
+      "sweep": "main_100_200_400",
+      "grids": [
+        100,
+        200,
+        400
+      ],
+      "functional": "shock_x",
+      "limit_form": "nonzero_limit",
+      "class_ref": "monotonic",
+      "p_ref": 2.431479170137526,
+      "p_got_loglog": 1.3868964634627905,
+      "p_got_successive": 0.935942027562044,
+      "rel_diff_loglog": 0.4296079191234252,
+      "rel_diff_successive": 0.6150729814769063,
+      "pass_loglog": false,
+      "pass_successive": false,
+      "asymptotic_ratio": 0.99970508292797,
+      "triplet_p_coarse": NaN,
+      "triplet_p_fine": NaN,
+      "triplet_consistent": null,
+      "gci_relative_ref": 8.391358606149826e-05,
+      "gci_absolute_ref": 6.256115831182944e-05,
+      "gci_absolute_from_got": 0.00017021440736242547,
+      "extrapolated_ref": 0.7454926128537668,
+      "extrapolated_from_got": 0.7454064902545263,
+      "rel_diff_extrapolated": 0.00011552441668171211,
+      "relerr_fine": 0.00032317015119028697,
+      "relerr_extrapolated_ref": 0.00025601758764814736,
+      "gci_covers_exact": false
+    },
+    {
+      "sweep": "main_100_200_400",
+      "grids": [
+        100,
+        200,
+        400
+      ],
+      "functional": "contact_x",
+      "limit_form": "nonzero_limit",
+      "class_ref": "monotonic",
+      "p_ref": 0.7313039226294805,
+      "p_got_loglog": 1.0325384905994197,
+      "p_got_successive": 1.1356278857753892,
+      "rel_diff_loglog": 0.4119143336286485,
+      "rel_diff_successive": 0.5528808893737629,
+      "pass_loglog": false,
+      "pass_successive": false,
+      "asymptotic_ratio": 1.000365267690408,
+      "triplet_p_coarse": NaN,
+      "triplet_p_fine": NaN,
+      "triplet_consistent": null,
+      "gci_relative_ref": 0.0006913967998777686,
+      "gci_absolute_ref": 0.00043533890764419934,
+      "gci_absolute_from_got": 0.0002748455533996322,
+      "extrapolated_ref": 0.6299995910644817,
+      "extrapolated_from_got": 0.6298711963810859,
+      "rel_diff_extrapolated": 0.00020380121704336013,
+      "relerr_fine": 0.0003049121076887234,
+      "relerr_extrapolated_ref": 0.000248036680009255,
+      "gci_covers_exact": true
+    },
+    {
+      "sweep": "main_100_200_400",
+      "grids": [
+        100,
+        200,
+        400
+      ],
+      "functional": "l1_rho_full",
+      "limit_form": "zero_limit",
+      "class_ref": "monotonic",
+      "p_ref": 1.0676470009065013,
+      "p_got_loglog": 0.9356422765347208,
+      "p_got_successive": 0.8943030492362277,
+      "rel_diff_loglog": 0.12364079537496947,
+      "rel_diff_successive": 0.16236073488999023,
+      "pass_loglog": true,
+      "pass_successive": false,
+      "asymptotic_ratio": 0.5380070379877756,
+      "triplet_p_coarse": NaN,
+      "triplet_p_fine": NaN,
+      "triplet_consistent": null,
+      "gci_relative_ref": 0.9793593917514761,
+      "gci_absolute_ref": 0.001243361505710039,
+      "gci_absolute_from_got": 0.0014930168649391052,
+      "extrapolated_ref": 0.0002748769181261354,
+      "extrapolated_from_got": 7.515263074288245e-05,
+      "rel_diff_extrapolated": 0.7265953385420436,
+      "relerr_fine": null,
+      "relerr_extrapolated_ref": null,
+      "gci_covers_exact": null
+    },
+    {
+      "sweep": "main_100_200_400",
+      "grids": [
+        100,
+        200,
+        400
+      ],
+      "functional": "l1_rho_cellavg",
+      "limit_form": "zero_limit",
+      "class_ref": "monotonic",
+      "p_ref": 0.8172549412289708,
+      "p_got_loglog": 0.8936444137669113,
+      "p_got_successive": 0.9165698635716965,
+      "rel_diff_loglog": 0.09347079923807815,
+      "rel_diff_successive": 0.12152257188360092,
+      "pass_loglog": true,
+      "pass_successive": true,
+      "asymptotic_ratio": 0.52976709271925,
+      "triplet_p_coarse": NaN,
+      "triplet_p_fine": NaN,
+      "triplet_consistent": null,
+      "gci_relative_ref": 1.4559770559675287,
+      "gci_absolute_ref": 0.001746077794564123,
+      "gci_absolute_from_got": 0.0015510613752917034,
+      "extrapolated_ref": -0.00019761408307391042,
+      "extrapolated_from_got": -4.1600947655974785e-05,
+      "rel_diff_extrapolated": 0.7894838919935911,
+      "relerr_fine": null,
+      "relerr_extrapolated_ref": null,
+      "gci_covers_exact": null
+    },
+    {
+      "sweep": "main_100_200_400",
+      "grids": [
+        100,
+        200,
+        400
+      ],
+      "functional": "l1_rho_plateaus",
+      "limit_form": "zero_limit",
+      "class_ref": "monotonic",
+      "p_ref": 3.0016114320566483,
+      "p_got_loglog": 2.871799028808624,
+      "p_got_successive": 2.7732205174554028,
+      "rel_diff_loglog": 0.04324757090862993,
+      "rel_diff_successive": 0.07608943388277152,
+      "pass_loglog": true,
+      "pass_successive": true,
+      "asymptotic_ratio": 0.14627746981024983,
+      "triplet_p_coarse": NaN,
+      "triplet_p_fine": NaN,
+      "triplet_consistent": null,
+      "gci_relative_ref": 1.0408710570650865,
+      "gci_absolute_ref": 1.1115622186416715e-05,
+      "gci_absolute_from_got": 1.2327773304230908e-05,
+      "extrapolated_ref": 1.786656129694912e-06,
+      "extrapolated_from_got": 8.169352354435559e-07,
+      "rel_diff_extrapolated": 0.5427574328009862,
+      "relerr_fine": null,
+      "relerr_extrapolated_ref": null,
+      "gci_covers_exact": null
+    },
+    {
+      "sweep": "main_100_200_400",
+      "grids": [
+        100,
+        200,
+        400
+      ],
+      "functional": "smooth_wave_l1",
+      "limit_form": "zero_limit",
+      "class_ref": "monotonic",
+      "p_ref": 2.1431152399834654,
+      "p_got_loglog": 2.1140000198010918,
+      "p_got_successive": 2.095812469690273,
+      "rel_diff_loglog": 0.013585466445844647,
+      "rel_diff_successive": 0.022071967671489973,
+      "pass_loglog": true,
+      "pass_successive": true,
+      "asymptotic_ratio": 0.23393628094768207,
+      "triplet_p_coarse": NaN,
+      "triplet_p_fine": NaN,
+      "triplet_consistent": null,
+      "gci_relative_ref": 1.1978805429386363,
+      "gci_absolute_ref": 3.3728258275109158e-06,
+      "gci_absolute_from_got": 3.462239914696597e-06,
+      "extrapolated_ref": 1.1740058851689301e-07,
+      "extrapolated_from_got": 4.586931876834767e-08,
+      "rel_diff_extrapolated": 0.6092922586861866,
+      "relerr_fine": null,
+      "relerr_extrapolated_ref": null,
+      "gci_covers_exact": null
+    },
+    {
+      "sweep": "fine_200_400_800",
+      "grids": [
+        200,
+        400,
+        800
+      ],
+      "functional": "shock_x",
+      "limit_form": "nonzero_limit",
+      "class_ref": "monotonic",
+      "p_ref": 1.0661669767956368,
+      "p_got_loglog": 0.8812189519212341,
+      "p_got_successive": 0.8264958762804226,
+      "rel_diff_loglog": 0.17347003696387564,
+      "rel_diff_successive": 0.22479696495153625,
+      "pass_loglog": false,
+      "pass_successive": false,
+      "asymptotic_ratio": 0.9998591101285494,
+      "triplet_p_coarse": NaN,
+      "triplet_p_fine": NaN,
+      "triplet_consistent": null,
+      "gci_relative_ref": 0.00016102306463839657,
+      "gci_absolute_ref": 0.00012003265045087977,
+      "gci_absolute_from_got": 0.0001559501614732146,
+      "extrapolated_ref": 0.7453415962502765,
+      "extrapolated_from_got": 0.7453128622414587,
+      "rel_diff_extrapolated": 3.8551462795613325e-05,
+      "relerr_fine": 0.00018223474833884847,
+      "relerr_extrapolated_ref": 5.339282143009171e-05,
+      "gci_covers_exact": true
+    },
+    {
+      "sweep": "fine_200_400_800",
+      "grids": [
+        200,
+        400,
+        800
+      ],
+      "functional": "contact_x",
+      "limit_form": "nonzero_limit",
+      "class_ref": "monotonic",
+      "p_ref": 0.786759493479747,
+      "p_got_loglog": 1.4218158070966387,
+      "p_got_successive": 1.7080037284178833,
+      "rel_diff_loglog": 0.8071797275786408,
+      "rel_diff_successive": 1.170935009457056,
+      "pass_loglog": false,
+      "pass_successive": false,
+      "asymptotic_ratio": 1.000211648135479,
+      "triplet_p_coarse": NaN,
+      "triplet_p_fine": NaN,
+      "triplet_consistent": null,
+      "gci_relative_ref": 0.0003647352287024055,
+      "gci_absolute_ref": 0.00022970462444854098,
+      "gci_absolute_from_got": 9.920090996853013e-05,
+      "extrapolated_ref": 0.6299683481657921,
+      "extrapolated_from_got": 0.629863945194208,
+      "rel_diff_extrapolated": 0.00016572732882226985,
+      "relerr_fine": 9.332850628856623e-05,
+      "relerr_extrapolated_ref": 0.0001984324445181309,
+      "gci_covers_exact": true
+    },
+    {
+      "sweep": "fine_200_400_800",
+      "grids": [
+        200,
+        400,
+        800
+      ],
+      "functional": "l1_rho_full",
+      "limit_form": "zero_limit",
+      "class_ref": "monotonic",
+      "p_ref": 0.9385942563955672,
+      "p_got_loglog": 0.8758142831702883,
+      "p_got_successive": 0.8573255171043481,
+      "rel_diff_loglog": 0.06688723353834422,
+      "rel_diff_successive": 0.08658559195036093,
+      "pass_loglog": true,
+      "pass_successive": true,
+      "asymptotic_ratio": 0.5519748667437322,
+      "triplet_p_coarse": NaN,
+      "triplet_p_fine": NaN,
+      "triplet_consistent": null,
+      "gci_relative_ref": 1.1068401909986214,
+      "gci_absolute_ref": 0.000775638841547103,
+      "gci_absolute_from_got": 0.0008514489269733051,
+      "extrapolated_ref": 8.025751815878692e-05,
+      "extrapolated_from_got": 1.960944981782532e-05,
+      "rel_diff_extrapolated": 0.7556683751542298,
+      "relerr_fine": null,
+      "relerr_extrapolated_ref": null,
+      "gci_covers_exact": null
+    },
+    {
+      "sweep": "fine_200_400_800",
+      "grids": [
+        200,
+        400,
+        800
+      ],
+      "functional": "l1_rho_cellavg",
+      "limit_form": "zero_limit",
+      "class_ref": "monotonic",
+      "p_ref": 0.9049015111889002,
+      "p_got_loglog": 0.9217882347371577,
+      "p_got_successive": 0.9270066059026129,
+      "rel_diff_loglog": 0.018661393908018735,
+      "rel_diff_successive": 0.02442817747609906,
+      "pass_loglog": true,
+      "pass_successive": true,
+      "asymptotic_ratio": 0.5259484813505018,
+      "triplet_p_coarse": NaN,
+      "triplet_p_fine": NaN,
+      "triplet_consistent": null,
+      "gci_relative_ref": 1.2914226419896495,
+      "gci_absolute_ref": 0.0008145554616606587,
+      "gci_absolute_from_got": 0.0007944795035328408,
+      "extrapolated_ref": -2.0901624718054765e-05,
+      "extrapolated_from_got": -4.840858215800611e-06,
+      "rel_diff_extrapolated": 0.7683979938832654,
+      "relerr_fine": null,
+      "relerr_extrapolated_ref": null,
+      "gci_covers_exact": null
+    },
+    {
+      "sweep": "fine_200_400_800",
+      "grids": [
+        200,
+        400,
+        800
+      ],
+      "functional": "l1_rho_plateaus",
+      "limit_form": "zero_limit",
+      "class_ref": "monotonic",
+      "p_ref": 4.748721913822956,
+      "p_got_loglog": 1.563147269902616,
+      "p_got_successive": 0.35307402234982715,
+      "rel_diff_loglog": 0.670827793610638,
+      "rel_diff_successive": 0.9256486210906409,
+      "pass_loglog": false,
+      "pass_successive": false,
+      "asymptotic_ratio": 0.7829141251681406,
+      "triplet_p_coarse": NaN,
+      "triplet_p_fine": NaN,
+      "triplet_consistent": null,
+      "gci_relative_ref": 0.013390033817068258,
+      "gci_absolute_ref": 1.1195220371777759e-07,
+      "gci_absolute_from_got": 1.4823016887552029e-06,
+      "extrapolated_ref": 8.271298653604582e-06,
+      "extrapolated_from_got": 7.175019065574642e-06,
+      "rel_diff_extrapolated": 0.13254020123577426,
+      "relerr_fine": null,
+      "relerr_extrapolated_ref": null,
+      "gci_covers_exact": null
+    },
+    {
+      "sweep": "fine_200_400_800",
+      "grids": [
+        200,
+        400,
+        800
+      ],
+      "functional": "smooth_wave_l1",
+      "limit_form": "zero_limit",
+      "class_ref": "monotonic",
+      "p_ref": 2.1115658730872813,
+      "p_got_loglog": 2.070604818019551,
+      "p_got_successive": 2.045397166348823,
+      "rel_diff_loglog": 0.019398426347856143,
+      "rel_diff_successive": 0.03133632134417581,
+      "pass_loglog": true,
+      "pass_successive": true,
+      "asymptotic_ratio": 0.24225575331959417,
+      "triplet_p_coarse": NaN,
+      "triplet_p_fine": NaN,
+      "triplet_consistent": null,
+      "gci_relative_ref": 1.177093876371901,
+      "gci_absolute_ref": 8.029076656727874e-07,
+      "gci_absolute_from_got": 8.332550372651824e-07,
+      "extrapolated_ref": 3.9784004800646116e-08,
+      "extrapolated_from_got": 1.5506107526730136e-08,
+      "rel_diff_extrapolated": 0.6102426690216389,
+      "relerr_fine": null,
+      "relerr_extrapolated_ref": null,
+      "gci_covers_exact": null
+    },
+    {
+      "sweep": "combined_100_200_400_800",
+      "grids": [
+        100,
+        200,
+        400,
+        800
+      ],
+      "functional": "shock_x",
+      "limit_form": "nonzero_limit",
+      "class_ref": "monotonic",
+      "p_ref": 1.0661669767956368,
+      "p_got_loglog": 0.8812189519212341,
+      "p_got_successive": 0.8264958762804226,
+      "rel_diff_loglog": 0.17347003696387564,
+      "rel_diff_successive": 0.22479696495153625,
+      "pass_loglog": false,
+      "pass_successive": false,
+      "asymptotic_ratio": 0.9998591101285494,
+      "triplet_p_coarse": 2.431479170137526,
+      "triplet_p_fine": 1.0661669767956368,
+      "triplet_consistent": false,
+      "gci_relative_ref": 0.00016102306463839657,
+      "gci_absolute_ref": 0.00012003265045087977,
+      "gci_absolute_from_got": 0.0001559501614732146,
+      "extrapolated_ref": 0.7453415962502765,
+      "extrapolated_from_got": 0.7453128622414587,
+      "rel_diff_extrapolated": 3.8551462795613325e-05,
+      "relerr_fine": 0.00018223474833884847,
+      "relerr_extrapolated_ref": 5.339282143009171e-05,
+      "gci_covers_exact": true
+    },
+    {
+      "sweep": "combined_100_200_400_800",
+      "grids": [
+        100,
+        200,
+        400,
+        800
+      ],
+      "functional": "contact_x",
+      "limit_form": "nonzero_limit",
+      "class_ref": "monotonic",
+      "p_ref": 0.786759493479747,
+      "p_got_loglog": 1.4218158070966387,
+      "p_got_successive": 1.7080037284178833,
+      "rel_diff_loglog": 0.8071797275786408,
+      "rel_diff_successive": 1.170935009457056,
+      "pass_loglog": false,
+      "pass_successive": false,
+      "asymptotic_ratio": 1.000211648135479,
+      "triplet_p_coarse": 0.7313039226294805,
+      "triplet_p_fine": 0.786759493479747,
+      "triplet_consistent": true,
+      "gci_relative_ref": 0.0003647352287024055,
+      "gci_absolute_ref": 0.00022970462444854098,
+      "gci_absolute_from_got": 9.920090996853013e-05,
+      "extrapolated_ref": 0.6299683481657921,
+      "extrapolated_from_got": 0.629863945194208,
+      "rel_diff_extrapolated": 0.00016572732882226985,
+      "relerr_fine": 9.332850628856623e-05,
+      "relerr_extrapolated_ref": 0.0001984324445181309,
+      "gci_covers_exact": true
+    },
+    {
+      "sweep": "combined_100_200_400_800",
+      "grids": [
+        100,
+        200,
+        400,
+        800
+      ],
+      "functional": "l1_rho_full",
+      "limit_form": "zero_limit",
+      "class_ref": "monotonic",
+      "p_ref": 0.9385942563955672,
+      "p_got_loglog": 0.8758142831702883,
+      "p_got_successive": 0.8573255171043481,
+      "rel_diff_loglog": 0.06688723353834422,
+      "rel_diff_successive": 0.08658559195036093,
+      "pass_loglog": true,
+      "pass_successive": true,
+      "asymptotic_ratio": 0.5519748667437322,
+      "triplet_p_coarse": 1.0676470009065013,
+      "triplet_p_fine": 0.9385942563955672,
+      "triplet_consistent": true,
+      "gci_relative_ref": 1.1068401909986214,
+      "gci_absolute_ref": 0.000775638841547103,
+      "gci_absolute_from_got": 0.0008514489269733051,
+      "extrapolated_ref": 8.025751815878692e-05,
+      "extrapolated_from_got": 1.960944981782532e-05,
+      "rel_diff_extrapolated": 0.7556683751542298,
+      "relerr_fine": null,
+      "relerr_extrapolated_ref": null,
+      "gci_covers_exact": null
+    },
+    {
+      "sweep": "combined_100_200_400_800",
+      "grids": [
+        100,
+        200,
+        400,
+        800
+      ],
+      "functional": "l1_rho_cellavg",
+      "limit_form": "zero_limit",
+      "class_ref": "monotonic",
+      "p_ref": 0.9049015111889002,
+      "p_got_loglog": 0.9217882347371577,
+      "p_got_successive": 0.9270066059026129,
+      "rel_diff_loglog": 0.018661393908018735,
+      "rel_diff_successive": 0.02442817747609906,
+      "pass_loglog": true,
+      "pass_successive": true,
+      "asymptotic_ratio": 0.5259484813505018,
+      "triplet_p_coarse": 0.8172549412289708,
+      "triplet_p_fine": 0.9049015111889002,
+      "triplet_consistent": true,
+      "gci_relative_ref": 1.2914226419896495,
+      "gci_absolute_ref": 0.0008145554616606587,
+      "gci_absolute_from_got": 0.0007944795035328408,
+      "extrapolated_ref": -2.0901624718054765e-05,
+      "extrapolated_from_got": -4.840858215800611e-06,
+      "rel_diff_extrapolated": 0.7683979938832654,
+      "relerr_fine": null,
+      "relerr_extrapolated_ref": null,
+      "gci_covers_exact": null
+    },
+    {
+      "sweep": "combined_100_200_400_800",
+      "grids": [
+        100,
+        200,
+        400,
+        800
+      ],
+      "functional": "l1_rho_plateaus",
+      "limit_form": "zero_limit",
+      "class_ref": "monotonic",
+      "p_ref": 4.748721913822956,
+      "p_got_loglog": 1.563147269902616,
+      "p_got_successive": 0.35307402234982715,
+      "rel_diff_loglog": 0.670827793610638,
+      "rel_diff_successive": 0.9256486210906409,
+      "pass_loglog": false,
+      "pass_successive": false,
+      "asymptotic_ratio": 0.7829141251681406,
+      "triplet_p_coarse": 3.0016114320566483,
+      "triplet_p_fine": 4.748721913822956,
+      "triplet_consistent": false,
+      "gci_relative_ref": 0.013390033817068258,
+      "gci_absolute_ref": 1.1195220371777759e-07,
+      "gci_absolute_from_got": 1.4823016887552029e-06,
+      "extrapolated_ref": 8.271298653604582e-06,
+      "extrapolated_from_got": 7.175019065574642e-06,
+      "rel_diff_extrapolated": 0.13254020123577426,
+      "relerr_fine": null,
+      "relerr_extrapolated_ref": null,
+      "gci_covers_exact": null
+    },
+    {
+      "sweep": "combined_100_200_400_800",
+      "grids": [
+        100,
+        200,
+        400,
+        800
+      ],
+      "functional": "smooth_wave_l1",
+      "limit_form": "zero_limit",
+      "class_ref": "monotonic",
+      "p_ref": 2.1115658730872813,
+      "p_got_loglog": 2.070604818019551,
+      "p_got_successive": 2.045397166348823,
+      "rel_diff_loglog": 0.019398426347856143,
+      "rel_diff_successive": 0.03133632134417581,
+      "pass_loglog": true,
+      "pass_successive": true,
+      "asymptotic_ratio": 0.24225575331959417,
+      "triplet_p_coarse": 2.1431152399834654,
+      "triplet_p_fine": 2.1115658730872813,
+      "triplet_consistent": true,
+      "gci_relative_ref": 1.177093876371901,
+      "gci_absolute_ref": 8.029076656727874e-07,
+      "gci_absolute_from_got": 8.332550372651824e-07,
+      "extrapolated_ref": 3.9784004800646116e-08,
+      "extrapolated_from_got": 1.5506107526730136e-08,
+      "rel_diff_extrapolated": 0.6102426690216389,
+      "relerr_fine": null,
+      "relerr_extrapolated_ref": null,
+      "gci_covers_exact": null
+    },
+    {
+      "sweep": "cfl0.2_100_200_400",
+      "grids": [
+        100,
+        200,
+        400
+      ],
+      "functional": "shock_x",
+      "limit_form": "nonzero_limit",
+      "class_ref": "monotonic",
+      "p_ref": 2.344678109295582,
+      "p_got_loglog": 1.3594084463033624,
+      "p_got_successive": 0.9398963222152984,
+      "rel_diff_loglog": 0.42021532042546633,
+      "rel_diff_successive": 0.5991363085239559,
+      "pass_loglog": false,
+      "pass_successive": false,
+      "asymptotic_ratio": 0.9996052557152404,
+      "triplet_p_coarse": NaN,
+      "triplet_p_fine": NaN,
+      "triplet_consistent": null,
+      "gci_relative_ref": 0.0001210022755607908,
+      "gci_absolute_ref": 9.02220087884696e-05,
+      "gci_absolute_from_got": 0.00023506075865591743,
+      "extrapolated_ref": 0.7455502362718108,
+      "extrapolated_from_got": 0.7454343652719169,
+      "rel_diff_extrapolated": 0.0001554167569892894,
+      "relerr_fine": 0.0004301765989939155,
+      "relerr_extrapolated_ref": 0.0003333331366673249,
+      "gci_covers_exact": false
+    },
+    {
+      "sweep": "cfl0.2_100_200_400",
+      "grids": [
+        100,
+        200,
+        400
+      ],
+      "functional": "contact_x",
+      "limit_form": "nonzero_limit",
+      "class_ref": "monotonic",
+      "p_ref": 1.2396783155340294,
+      "p_got_loglog": 2.917725695428445,
+      "p_got_successive": 4.144826776443439,
+      "rel_diff_loglog": 1.3536151748944203,
+      "rel_diff_successive": 2.34346961183872,
+      "pass_loglog": false,
+      "pass_successive": false,
+      "asymptotic_ratio": 1.0003694931273646,
+      "triplet_p_coarse": NaN,
+      "triplet_p_fine": NaN,
+      "triplet_consistent": null,
+      "gci_relative_ref": 0.000339118483323097,
+      "gci_absolute_ref": 0.00021358680039496855,
+      "gci_absolute_from_got": 4.4351080966253954e-05,
+      "extrapolated_ref": 0.63000029749739,
+      "extrapolated_from_got": 0.6298649089218469,
+      "rel_diff_extrapolated": 0.0002149023993812203,
+      "relerr_fine": 2.2130501825762222e-05,
+      "relerr_extrapolated_ref": 0.0002491582809429335,
+      "gci_covers_exact": true
+    },
+    {
+      "sweep": "cfl0.2_100_200_400",
+      "grids": [
+        100,
+        200,
+        400
+      ],
+      "functional": "l1_rho_full",
+      "limit_form": "zero_limit",
+      "class_ref": "monotonic",
+      "p_ref": 1.1139770487428096,
+      "p_got_loglog": 0.9415935499282954,
+      "p_got_successive": 0.8873128781797046,
+      "rel_diff_loglog": 0.15474600577189576,
+      "rel_diff_successive": 0.2034729268604853,
+      "pass_loglog": false,
+      "pass_successive": false,
+      "asymptotic_ratio": 0.5406201244014782,
+      "triplet_p_coarse": NaN,
+      "triplet_p_fine": NaN,
+      "triplet_consistent": null,
+      "gci_relative_ref": 0.9121831235406072,
+      "gci_absolute_ref": 0.0011513372440940097,
+      "gci_absolute_from_got": 0.0014561845498105533,
+      "extrapolated_ref": 0.0003411079565178032,
+      "extrapolated_from_got": 9.723011194456789e-05,
+      "rel_diff_extrapolated": 0.7149579478088391,
+      "relerr_fine": null,
+      "relerr_extrapolated_ref": null,
+      "gci_covers_exact": null
+    },
+    {
+      "sweep": "cfl0.2_100_200_400",
+      "grids": [
+        100,
+        200,
+        400
+      ],
+      "functional": "l1_rho_cellavg",
+      "limit_form": "zero_limit",
+      "class_ref": "monotonic",
+      "p_ref": 0.9105500945203345,
+      "p_got_loglog": 0.9096824032071711,
+      "p_got_successive": 0.9094175616901766,
+      "rel_diff_loglog": 0.0009529308913207367,
+      "rel_diff_successive": 0.0012437897013832164,
+      "pass_loglog": true,
+      "pass_successive": true,
+      "asymptotic_ratio": 0.5323999859573829,
+      "triplet_p_coarse": NaN,
+      "triplet_p_fine": NaN,
+      "triplet_consistent": null,
+      "gci_relative_ref": 1.2479041825092618,
+      "gci_absolute_ref": 0.0014873268065183454,
+      "gci_absolute_from_got": 0.001489240015679894,
+      "extrapolated_ref": 1.998336461555575e-06,
+      "extrapolated_from_got": 4.677691323165441e-07,
+      "rel_diff_extrapolated": 0.7659207339126384,
+      "relerr_fine": null,
+      "relerr_extrapolated_ref": null,
+      "gci_covers_exact": null
+    },
+    {
+      "sweep": "cfl0.2_100_200_400",
+      "grids": [
+        100,
+        200,
+        400
+      ],
+      "functional": "l1_rho_plateaus",
+      "limit_form": "zero_limit",
+      "class_ref": "monotonic",
+      "p_ref": 2.7085650650618303,
+      "p_got_loglog": 3.182313958690832,
+      "p_got_successive": 3.5608233625567784,
+      "rel_diff_loglog": 0.17490770287926863,
+      "rel_diff_successive": 0.31465306426947254,
+      "pass_loglog": false,
+      "pass_successive": false,
+      "asymptotic_ratio": 0.08473939492089413,
+      "triplet_p_coarse": NaN,
+      "triplet_p_fine": NaN,
+      "triplet_consistent": null,
+      "gci_relative_ref": 2.438470552748541,
+      "gci_absolute_ref": 2.6604192279911707e-05,
+      "gci_absolute_from_got": 1.8235539432290236e-05,
+      "extrapolated_ref": -1.0373157574101954e-05,
+      "extrapolated_from_got": -3.6782352960047768e-06,
+      "rel_diff_extrapolated": 0.6454083272399131,
+      "relerr_fine": null,
+      "relerr_extrapolated_ref": null,
+      "gci_covers_exact": null
+    },
+    {
+      "sweep": "cfl0.2_100_200_400",
+      "grids": [
+        100,
+        200,
+        400
+      ],
+      "functional": "smooth_wave_l1",
+      "limit_form": "zero_limit",
+      "class_ref": "monotonic",
+      "p_ref": 2.1139681389051845,
+      "p_got_loglog": 2.090503455278248,
+      "p_got_successive": 2.075962655021699,
+      "rel_diff_loglog": 0.011099828419878083,
+      "rel_diff_successive": 0.017978267119564174,
+      "pass_loglog": true,
+      "pass_successive": true,
+      "asymptotic_ratio": 0.23717721817228604,
+      "triplet_p_coarse": NaN,
+      "triplet_p_fine": NaN,
+      "triplet_consistent": null,
+      "gci_relative_ref": 1.207737651081006,
+      "gci_absolute_ref": 3.828137432541827e-06,
+      "gci_absolute_from_got": 3.910170429773135e-06,
+      "extrapolated_ref": 1.0716637325275766e-07,
+      "extrapolated_from_got": 4.153997546771085e-08,
+      "rel_diff_extrapolated": 0.6123786388689614,
+      "relerr_fine": null,
+      "relerr_extrapolated_ref": null,
+      "gci_covers_exact": null
+    },
+    {
+      "sweep": "order1_100_200_400",
+      "grids": [
+        100,
+        200,
+        400
+      ],
+      "functional": "shock_x",
+      "limit_form": "nonzero_limit",
+      "class_ref": "monotonic",
+      "p_ref": 0.3586477551461193,
+      "p_got_loglog": 0.7645655241790145,
+      "p_got_successive": 0.8690339231285371,
+      "rel_diff_loglog": 1.1318006685069513,
+      "rel_diff_successive": 1.4230847974344008,
+      "pass_loglog": false,
+      "pass_successive": false,
+      "asymptotic_ratio": 0.9983897420387337,
+      "triplet_p_coarse": NaN,
+      "triplet_p_fine": NaN,
+      "triplet_consistent": null,
+      "gci_relative_ref": 0.0071435186734419565,
+      "gci_absolute_ref": 0.005334487974252298,
+      "gci_absolute_from_got": 0.0021542533959781917,
+      "extrapolated_ref": 0.7424915654529697,
+      "extrapolated_from_got": 0.745035753115589,
+      "rel_diff_extrapolated": 0.0034265542950204404,
+      "relerr_fine": 0.001955386855753001,
+      "relerr_extrapolated_ref": 0.0037706027570150024,
+      "gci_covers_exact": true
+    },
+    {
+      "sweep": "order1_100_200_400",
+      "grids": [
+        100,
+        200,
+        400
+      ],
+      "functional": "contact_x",
+      "limit_form": "nonzero_limit",
+      "class_ref": "divergent",
+      "p_ref": NaN,
+      "p_got_loglog": 0.5398948885276393,
+      "p_got_successive": 0.6634525539502386,
+      "rel_diff_loglog": NaN,
+      "rel_diff_successive": NaN,
+      "pass_loglog": false,
+      "pass_successive": false,
+      "asymptotic_ratio": NaN,
+      "triplet_p_coarse": NaN,
+      "triplet_p_fine": NaN,
+      "triplet_consistent": null,
+      "gci_relative_ref": NaN,
+      "gci_absolute_ref": NaN,
+      "gci_absolute_from_got": 0.0037395753350777747,
+      "extrapolated_ref": NaN,
+      "extrapolated_from_got": 0.6305094783303994,
+      "rel_diff_extrapolated": NaN,
+      "relerr_fine": null,
+      "relerr_extrapolated_ref": null,
+      "gci_covers_exact": null
+    },
+    {
+      "sweep": "order1_100_200_400",
+      "grids": [
+        100,
+        200,
+        400
+      ],
+      "functional": "l1_rho_full",
+      "limit_form": "zero_limit",
+      "class_ref": "monotonic",
+      "p_ref": 0.555902306660915,
+      "p_got_loglog": 0.6338879013060149,
+      "p_got_successive": 0.6507461456683455,
+      "rel_diff_loglog": 0.14028651025668248,
+      "rel_diff_successive": 0.17061242213064365,
+      "pass_loglog": true,
+      "pass_successive": false,
+      "asymptotic_ratio": 0.636950804656944,
+      "triplet_p_coarse": NaN,
+      "triplet_p_fine": NaN,
+      "triplet_consistent": null,
+      "gci_relative_ref": 1.5156210721168182,
+      "gci_absolute_ref": 0.009913376976568177,
+      "gci_absolute_from_got": 0.008446275165035865,
+      "extrapolated_ref": -0.00138989982087621,
+      "extrapolated_from_got": -0.0002162183716503619,
+      "rel_diff_extrapolated": 0.8444360029386468,
+      "relerr_fine": null,
+      "relerr_extrapolated_ref": null,
+      "gci_covers_exact": null
+    },
+    {
+      "sweep": "order1_100_200_400",
+      "grids": [
+        100,
+        200,
+        400
+      ],
+      "functional": "l1_rho_cellavg",
+      "limit_form": "zero_limit",
+      "class_ref": "monotonic",
+      "p_ref": 0.4709459375058727,
+      "p_got_loglog": 0.620988530208979,
+      "p_got_successive": 0.65276357300349,
+      "rel_diff_loglog": 0.3185983374179447,
+      "rel_diff_successive": 0.3860690177316796,
+      "pass_loglog": false,
+      "pass_successive": false,
+      "asymptotic_ratio": 0.6360607316408203,
+      "triplet_p_coarse": NaN,
+      "triplet_p_fine": NaN,
+      "triplet_consistent": null,
+      "gci_relative_ref": 1.8528183815383477,
+      "gci_absolute_ref": 0.01198837374015525,
+      "gci_absolute_from_got": 0.008602865456069713,
+      "extrapolated_ref": -0.0031203542138078235,
+      "extrapolated_from_got": -0.000411947586539391,
+      "rel_diff_extrapolated": 0.8679805053168358,
+      "relerr_fine": null,
+      "relerr_extrapolated_ref": null,
+      "gci_covers_exact": null
+    },
+    {
+      "sweep": "order1_100_200_400",
+      "grids": [
+        100,
+        200,
+        400
+      ],
+      "functional": "l1_rho_plateaus",
+      "limit_form": "zero_limit",
+      "class_ref": "monotonic",
+      "p_ref": 1.6701962915459334,
+      "p_got_loglog": 1.4852441087621744,
+      "p_got_successive": 1.3977372244182251,
+      "rel_diff_loglog": 0.11073679406422782,
+      "rel_diff_successive": 0.16312996772105165,
+      "pass_loglog": true,
+      "pass_successive": false,
+      "asymptotic_ratio": 0.3795239342551358,
+      "triplet_p_coarse": NaN,
+      "triplet_p_fine": NaN,
+      "triplet_consistent": null,
+      "gci_relative_ref": 0.9363234928106714,
+      "gci_absolute_ref": 0.0003903183782862091,
+      "gci_absolute_from_got": 0.00047337140187178665,
+      "extrapolated_ref": 0.00010460803902300698,
+      "extrapolated_from_got": 3.816562015454491e-05,
+      "rel_diff_extrapolated": 0.6351559544467615,
+      "relerr_fine": null,
+      "relerr_extrapolated_ref": null,
+      "gci_covers_exact": null
+    },
+    {
+      "sweep": "order1_100_200_400",
+      "grids": [
+        100,
+        200,
+        400
+      ],
+      "functional": "smooth_wave_l1",
+      "limit_form": "zero_limit",
+      "class_ref": "monotonic",
+      "p_ref": 0.990338366964742,
+      "p_got_loglog": 0.99522724003169,
+      "p_got_successive": 0.9968496708277893,
+      "rel_diff_loglog": 0.004936568379080205,
+      "rel_diff_successive": 0.006574827432974875,
+      "pass_loglog": true,
+      "pass_successive": true,
+      "asymptotic_ratio": 0.5010930138327971,
+      "triplet_p_coarse": NaN,
+      "triplet_p_fine": NaN,
+      "triplet_consistent": null,
+      "gci_relative_ref": 1.2613852324156387,
+      "gci_absolute_ref": 0.0007040912489114974,
+      "gci_absolute_from_got": 0.0006993115665441785,
+      "extrapolated_ref": -5.0840883845281474e-06,
+      "extrapolated_from_got": -1.2603424906730477e-06,
+      "rel_diff_extrapolated": 0.7521005939809169,
+      "relerr_fine": null,
+      "relerr_extrapolated_ref": null,
+      "gci_covers_exact": null
+    }
+  ],
+  "figures": [
+    "figures/xval_error_vs_h.png",
+    "figures/xval_order_agreement.png",
+    "figures/xval_committed_artifact.png"
+  ],
+  "verdicts": {
+    "n_rows": 30,
+    "note_non_vacuous_test": "single-triplet Celik eq.(17) ratio is an identity; the asymptotic-range claim above uses the overlapping-triplet consistency on 4 grids",
+    "asymptotic_range_functionals": [
+      "combined_100_200_400_800/contact_x",
+      "combined_100_200_400_800/l1_rho_full",
+      "combined_100_200_400_800/l1_rho_cellavg",
+      "combined_100_200_400_800/smooth_wave_l1"
+    ],
+    "outside_asymptotic_range": [
+      "combined_100_200_400_800/shock_x",
+      "combined_100_200_400_800/l1_rho_plateaus"
+    ],
+    "agreement_required_rows": 4,
+    "agreement_pass_rows": 3,
+    "agreement_fail_rows": [
+      "combined_100_200_400_800/contact_x"
+    ],
+    "estimators_interchangeable_in_asymptotic_range": false,
+    "both_reference_implementations_agree": true,
+    "n_numeric_comparisons_two_references": 29,
+    "reference_class_disagreements": [],
+    "non_asymptotic_rows_where_single_triplet_eq17_looks_fine": [
+      "combined_100_200_400_800/shock_x"
+    ],
+    "committed_artifact": {
+      "grids": [
+        50,
+        100,
+        200
+      ],
+      "shock_loglog_exponent_published": -1.2494149735724402,
+      "reference_class_shock": "oscillatory",
+      "reference_order_shock": NaN,
+      "shock_loglog_admissible": false,
+      "effective_shock_exponent": 1.8378508993635347,
+      "effective_contact_exponent": 1.4695245380636819,
+      "verdict_before": false,
+      "verdict_after": true,
+      "ordering_robust": true
+    }
+  }
+}
