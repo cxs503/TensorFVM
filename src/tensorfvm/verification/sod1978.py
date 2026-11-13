@@ -453,12 +453,19 @@ def run_case(nx: int, order: int = 2, t_end: float = T_TARGET, *,
 
 def run_smooth_wave(nx: int, order: int = 2, t_end: float = 0.2, *,
                     amplitude: float = 0.2, velocity: float = 0.5,
-                    cfl: float = 0.4) -> Dict:
+                    cfl: float = 0.4, limiter: str = "mc",
+                    phase: float = 0.0) -> Dict:
     """Periodic entropy wave: the smooth case used to measure design order.
 
     ``rho = 1 + A sin(2 pi x)`` with uniform ``u`` and ``p`` is an exact solution
     of the Euler equations (the density wave is advected unchanged), so the L1
     error of this run measures the scheme, not the discontinuity handling.
+
+    ``limiter`` selects the MUSCL slope limiter (``mc``, ``minmod``,
+    ``vanleer``, ``superbee`` or ``none`` = unlimited centred slope) and
+    ``phase`` shifts the wave, ``rho = 1 + A sin(2 pi (x - phase - u t))``, so a
+    study can place the crest on a face or in the middle of a cell.  Both
+    default to the values used by every earlier caller.
     """
     import torch
     from tensorfvm.compressible.eos import StiffenedGasMixture
@@ -467,9 +474,9 @@ def run_smooth_wave(nx: int, order: int = 2, t_end: float = 0.2, *,
     eos = StiffenedGasMixture([GAMMA, GAMMA], names=["air", "air"])
     solver = EulerSolver(nx=nx, ny=1, lx=1.0, ly=1.0, eos=eos,
                          bc=("periodic", "periodic", "periodic", "periodic"),
-                         flux_mode="hllc", order=order, limiter="mc", cfl=cfl)
+                         flux_mode="hllc", order=order, limiter=limiter, cfl=cfl)
     xc = (np.arange(nx) + 0.5) / nx
-    rho0 = 1.0 + amplitude * np.sin(2.0 * np.pi * xc)
+    rho0 = 1.0 + amplitude * np.sin(2.0 * np.pi * (xc - phase))
     solver.set_primitive({
         "rho": torch.tensor(rho0, dtype=torch.float64),
         "u": torch.full((nx,), velocity, dtype=torch.float64),
@@ -479,8 +486,10 @@ def run_smooth_wave(nx: int, order: int = 2, t_end: float = 0.2, *,
     })
     solver.run(t_end)
     rho = solver.primitive()["rho"][:, 0].numpy()
-    exact = 1.0 + amplitude * np.sin(2.0 * np.pi * (xc - velocity * solver.time))
+    exact = 1.0 + amplitude * np.sin(
+        2.0 * np.pi * (xc - phase - velocity * solver.time))
     return {"nx": nx, "order": order, "x": xc, "rho": rho, "rho_exact": exact,
+            "limiter": limiter, "phase": float(phase),
             "l1_rho": float(np.abs(rho - exact).mean()), "steps": int(solver.nsteps),
             # additive (m17904): the actual final time, needed to evaluate the
             # analytic solution at the time the solver really reached (dt is
