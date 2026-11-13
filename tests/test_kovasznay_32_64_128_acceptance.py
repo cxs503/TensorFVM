@@ -10,11 +10,18 @@ every relative L2 error from the saved cell-centred fields, and only then
 evaluates the criterion.  A hand-edited ``cases.json`` therefore cannot make the
 gate green, and a regenerated report cannot drift from the numbers below.
 
-Two artifact sets are parametrised:
+Three artifact sets are parametrised:
 
-* ``anchor`` — the acceptance triple 32/64/128; the >= 1.8 criterion applies.
-  It is skipped until the n=64 and n=128 levels exist, so the skip is an
-  honest "not measured yet", never a pass.
+* ``anchor`` — the acceptance triple 32/64/128 solved with the historical
+  *free* tangential closure on the two extrusion planes.  That closure is a
+  traction-free condition, not a symmetry condition, so it leaves an O(h)
+  spurious spanwise velocity and the criterion is only meaningful on the
+  in-plane budget.  It is skipped until the n=64 and n=128 levels exist, so the
+  skip is an honest "not measured yet", never a pass.
+* ``anchor_zg`` — the same 32/64/128 triple with the physical symmetry closure
+  (``du/dz = dv/dz = 0``) applied on those planes.  The spurious spanwise mode
+  drops to round-off, so the ledger criterion is evaluated on the *full 3D*
+  velocity norm, with no decomposition defence needed.
 * ``selftest`` — the 4/8/16 triplet, far inside the pre-asymptotic range.  It
   exists to prove the *pipeline* (recompute checks, slopes, honest verdict
   flags) works on real field dumps; it is an expected FAIL of the >= 1.8
@@ -33,7 +40,9 @@ from tensorfvm.native_manufactured3d import volume_weighted_error
 
 ROOT = Path(__file__).resolve().parents[1] / 'docs' / 'CASE-FVM-KOVASZNAY-ORDER'
 SETS = {'anchor': (ROOT / 'runs-32-64-128', (32, 64, 128)),
+        'anchor_zg': (ROOT / 'runs-32-64-128-zero_gradient', (32, 64, 128)),
         'selftest': (ROOT / 'selftest-4-8-16', (4, 8, 16))}
+SPANWISE_MACHINE_ZERO = 1e-12
 THRESHOLD = 1.8
 RECOMPUTE_RTOL = 1e-10
 
@@ -160,3 +169,32 @@ def test_anchor_inplane_velocity_and_pressure_orders_meet_acceptance():
     pressure_order = _slope(levels, 'pressure_meanfree')
     assert velocity_order >= THRESHOLD, f'in-plane velocity slope {velocity_order:.4f} < 1.8'
     assert pressure_order >= THRESHOLD, f'mean-free pressure slope {pressure_order:.4f} < 1.8'
+
+def test_anchor_zg_symmetry_closure_is_uniform_and_removes_spurious_spanwise_mode():
+    """The zero-gradient closure must be uniform across the triple and effective.
+
+    Mixed closures inside one grid sequence would make the slope meaningless, so
+    every level has to declare the same closure; and because the analytic
+    spanwise velocity is identically zero, the closure is only doing its job if
+    the discrete spanwise velocity stays at round-off on every level.
+    """
+    directory, levels = _load('anchor_zg')
+    closures = [level['row'].get('symmetry_closure') for level in levels]
+    assert closures == ['zero_gradient'] * len(closures)
+    for level in levels:
+        assert level['row']['max_abs_z_velocity'] <= SPANWISE_MACHINE_ZERO, (
+            f"n={level['row']['n']} spurious max|w| "
+            f"{level['row']['max_abs_z_velocity']!r} above round-off")
+        assert level['recomputed']['velocity_spanwise'] <= SPANWISE_MACHINE_ZERO
+
+
+def test_anchor_zg_full_3d_velocity_order_meets_acceptance():
+    """Ledger criterion on the physical closure, on the full 3D velocity norm."""
+    directory, levels = _load('anchor_zg')
+    velocity_order = _slope(levels, 'velocity_full')
+    inplane_order = _slope(levels, 'velocity_inplane')
+    pressure_order = _slope(levels, 'pressure_meanfree')
+    assert velocity_order >= THRESHOLD, f'full-3D velocity slope {velocity_order:.4f} < 1.8'
+    assert inplane_order >= THRESHOLD, f'in-plane velocity slope {inplane_order:.4f} < 1.8'
+    assert pressure_order >= THRESHOLD, f'mean-free pressure slope {pressure_order:.4f} < 1.8'
+    assert _summary(directory)['verdict']['pass'] is True

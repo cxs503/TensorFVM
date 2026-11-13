@@ -6,6 +6,17 @@ as independent jobs:
 
     python scripts/verify_kovasznay_order.py --output runs/order/n32 --n 32
 
+``--symmetry-closure {free,zero_gradient}`` selects how the two extrusion planes
+of the ``n x n x 1`` mesh are closed.  ``free`` (default, historical) leaves the
+in-plane components there as free unknowns, which is a traction-free closure, not
+a symmetry condition, and it leaves a spurious O(h) spanwise velocity that caps
+the observed full-velocity L2 order at ~1.68.  ``zero_gradient`` applies the
+physical symmetry condition (``du/dz = dv/dz = 0``) through the solver's
+``zero_gradient_faces`` mechanism, drops the spurious mode to round-off and lets
+the order criterion be evaluated on the full 3D velocity norm.  The closure used
+is recorded in ``cases.json`` so a mixed-closure grid sequence cannot be
+summarised by accident.
+
 Per grid the runner records the volume-weighted relative L2 error of the
 computed velocity and pressure against the analytic field evaluated at cell
 centres, together with the discrete conservation identities (energy balance,
@@ -26,7 +37,7 @@ from tensorfvm.verification.native_run import NativeRunEvidence, write_json
 from tensorfvm.native_manufactured3d import volume_weighted_error
 
 
-def sampling_bias(n, reynolds, subsamples=6):
+def sampling_bias(n, reynolds, subsamples=6, symmetry_closure='free'):
     """Relative L2 gap between the pointwise and the cell-averaged exact field.
 
     A cell-centred finite-volume unknown approximates a *cell average*, so the
@@ -34,7 +45,8 @@ def sampling_bias(n, reynolds, subsamples=6):
     decays at least at the measured order.  Measuring it keeps the reported
     slopes from being an artefact of the sampling rule itself.
     """
-    mesh, _, exact = kovasznay_solver(n, reynolds, symmetry_extrusion=True)
+    mesh, _, exact = kovasznay_solver(n, reynolds, symmetry_extrusion=True,
+                                     symmetry_closure=symmetry_closure)
     centres = np.asarray(mesh.cell_centers)
     h = 1. / n
     offsets = (np.arange(subsamples) + .5) / subsamples - .5
@@ -54,6 +66,8 @@ def main():
     p.add_argument('--output', type=Path, required=True)
     p.add_argument('--n', type=int, required=True)
     p.add_argument('--reynolds', type=float, default=40.)
+    p.add_argument('--symmetry-closure', choices=('free', 'zero_gradient'), default='free',
+                   help='tangential closure on the extrusion planes')
     p.add_argument('--convection-order', type=int, default=2)
     p.add_argument('--outer-relaxation', type=float, default=.7)
     p.add_argument('--tolerance', type=float, default=1e-8)
@@ -68,6 +82,7 @@ def main():
     tick = time.perf_counter()
 
     mesh, solver, exact = kovasznay_solver(args.n, args.reynolds, symmetry_extrusion=True,
+                                           symmetry_closure=args.symmetry_closure,
                                            convection_order=args.convection_order,
                                            coupled_linear_method='reused_lu')
     build_seconds = time.perf_counter() - tick
@@ -92,6 +107,7 @@ def main():
         n=args.n, h=1. / args.n, reynolds=args.reynolds,
         cells=len(mesh.cells), faces=len(mesh.owner), total_volume=total_volume,
         convection_order=args.convection_order, coupled_linear_method='reused_lu',
+        symmetry_closure=args.symmetry_closure,
         algorithm='coupled', outer_relaxation=args.outer_relaxation, tolerance=args.tolerance,
         outer_iterations=len(result['outer_history']),
         inner_iterations=len(result['history']),
@@ -111,7 +127,8 @@ def main():
         build_seconds=build_seconds, solve_seconds=solve_seconds,
     )
     if not args.skip_sampling_check:
-        row['sampling_bias'] = sampling_bias(args.n, args.reynolds)
+        row['sampling_bias'] = sampling_bias(args.n, args.reynolds,
+                                            symmetry_closure=args.symmetry_closure)
     write_json(out / 'cases.json', [row])
     for kind, data in [('outer', result['outer_history']), ('inner', result['history']),
                        ('linear', solver.coupled_linear_history)]:
