@@ -1,0 +1,1212 @@
+{
+ "key": "poisson-n32-richardson",
+ "solver": "richardson",
+ "tolerance": 1e-08,
+ "rel_tol": 0.0,
+ "history": [
+  {
+   "iteration": 0,
+   "residual": 1.0
+  },
+  {
+   "iteration": 1,
+   "residual": 0.6805267000810677
+  },
+  {
+   "iteration": 2,
+   "residual": 0.5588229020383001
+  },
+  {
+   "iteration": 3,
+   "residual": 0.4802783508053208
+  },
+  {
+   "iteration": 4,
+   "residual": 0.4277043320133688
+  },
+  {
+   "iteration": 5,
+   "residual": 0.3875428514413289
+  },
+  {
+   "iteration": 6,
+   "residual": 0.35700885672595567
+  },
+  {
+   "iteration": 7,
+   "residual": 0.33298043353879003
+  },
+  {
+   "iteration": 8,
+   "residual": 0.31506760666234473
+  },
+  {
+   "iteration": 9,
+   "residual": 0.3023993422160281
+  },
+  {
+   "iteration": 10,
+   "residual": 0.29590836158855044
+  },
+  {
+   "iteration": 11,
+   "residual": 0.295670166729179
+  },
+  {
+   "iteration": 12,
+   "residual": 0.3035617402109164
+  },
+  {
+   "iteration": 13,
+   "residual": 0.3198761245792509
+  },
+  {
+   "iteration": 14,
+   "residual": 0.34925917288548824
+  },
+  {
+   "iteration": 15,
+   "residual": 0.3936526380792334
+  },
+  {
+   "iteration": 16,
+   "residual": 0.4587110768099692
+  },
+  {
+   "iteration": 17,
+   "residual": 0.5509772268804545
+  },
+  {
+   "iteration": 18,
+   "residual": 0.6791515295178969
+  },
+  {
+   "iteration": 19,
+   "residual": 0.8569793369239519
+  },
+  {
+   "iteration": 20,
+   "residual": 1.1002959043059966
+  },
+  {
+   "iteration": 21,
+   "residual": 1.4329702954106371
+  },
+  {
+   "iteration": 22,
+   "residual": 1.8865725788642955
+  },
+  {
+   "iteration": 23,
+   "residual": 2.504857125143035
+  },
+  {
+   "iteration": 24,
+   "residual": 3.3458725167050276
+  },
+  {
+   "iteration": 25,
+   "residual": 4.4915542524976475
+  },
+  {
+   "iteration": 26,
+   "residual": 6.050864222427796
+  },
+  {
+   "iteration": 27,
+   "residual": 8.175915057281577
+  },
+  {
+   "iteration": 28,
+   "residual": 11.072415072477105
+  },
+  {
+   "iteration": 29,
+   "residual": 15.02363839957902
+  },
+  {
+   "iteration": 30,
+   "residual": 20.41672072343563
+  },
+  {
+   "iteration": 31,
+   "residual": 27.783587257146547
+  },
+  {
+   "iteration": 32,
+   "residual": 37.852540262965384
+  },
+  {
+   "iteration": 33,
+   "residual": 51.624895788485155
+  },
+  {
+   "iteration": 34,
+   "residual": 70.47278363323552
+  },
+  {
+   "iteration": 35,
+   "residual": 96.2852570852226
+  },
+  {
+   "iteration": 36,
+   "residual": 131.6558358546405
+  },
+  {
+   "iteration": 37,
+   "residual": 180.15122443632495
+  },
+  {
+   "iteration": 38,
+   "residual": 246.67763335592457
+  },
+  {
+   "iteration": 39,
+   "residual": 337.9883393888599
+  },
+  {
+   "iteration": 40,
+   "residual": 463.3799520212364
+  },
+  {
+   "iteration": 41,
+   "residual": 635.656774782217
+  },
+  {
+   "iteration": 42,
+   "residual": 872.458275290116
+  },
+  {
+   "iteration": 43,
+   "residual": 1198.094894531249
+  },
+  {
+   "iteration": 44,
+   "residual": 1646.0793025568107
+  },
+  {
+   "iteration": 45,
+   "residual": 2262.6254493543875
+  },
+  {
+   "iteration": 46,
+   "residual": 3111.4785953840606
+  },
+  {
+   "iteration": 47,
+   "residual": 4280.591623060809
+  },
+  {
+   "iteration": 48,
+   "residual": 5891.347858432825
+  },
+  {
+   "iteration": 49,
+   "residual": 8111.311308143308
+  },
+  {
+   "iteration": 50,
+   "residual": 11171.849786679475
+  },
+  {
+   "iteration": 51,
+   "residual": 15392.504310922634
+  },
+  {
+   "iteration": 52,
+   "residual": 21214.686556312772
+  },
+  {
+   "iteration": 53,
+   "residual": 29248.288943553005
+  },
+  {
+   "iteration": 54,
+   "residual": 40336.15946991716
+  },
+  {
+   "iteration": 55,
+   "residual": 55643.30805043288
+  },
+  {
+   "iteration": 56,
+   "residual": 76780.34329272975
+  },
+  {
+   "iteration": 57,
+   "residual": 105974.30443217739
+  },
+  {
+   "iteration": 58,
+   "residual": 146305.1130985966
+  },
+  {
+   "iteration": 59,
+   "residual": 202032.8989909728
+  },
+  {
+   "iteration": 60,
+   "residual": 279051.17648084013
+  },
+  {
+   "iteration": 61,
+   "residual": 385514.34113178164
+  },
+  {
+   "iteration": 62,
+   "residual": 532706.6376698894
+  },
+  {
+   "iteration": 63,
+   "residual": 736245.6631973118
+  },
+  {
+   "iteration": 64,
+   "residual": 1017749.3730732104
+  },
+  {
+   "iteration": 65,
+   "residual": 1407145.3464609827
+  },
+  {
+   "iteration": 66,
+   "residual": 1945870.082787802
+  },
+  {
+   "iteration": 67,
+   "residual": 2691301.8057472236
+  },
+  {
+   "iteration": 68,
+   "residual": 3722902.94515657
+  },
+  {
+   "iteration": 69,
+   "residual": 5150732.491903433
+  },
+  {
+   "iteration": 70,
+   "residual": 7127243.618390364
+  },
+  {
+   "iteration": 71,
+   "residual": 9863635.909293879
+  },
+  {
+   "iteration": 72,
+   "residual": 13652522.47112273
+  },
+  {
+   "iteration": 73,
+   "residual": 18899353.163728345
+  },
+  {
+   "iteration": 74,
+   "residual": 26165979.825047776
+  },
+  {
+   "iteration": 75,
+   "residual": 36231059.83054062
+  },
+  {
+   "iteration": 76,
+   "residual": 50173812.40497923
+  },
+  {
+   "iteration": 77,
+   "residual": 69490164.58020489
+  },
+  {
+   "iteration": 78,
+   "residual": 96253823.65114854
+  },
+  {
+   "iteration": 79,
+   "residual": 133339669.50151217
+  },
+  {
+   "iteration": 80,
+   "residual": 184733599.3774542
+  },
+  {
+   "iteration": 81,
+   "residual": 255962309.944166
+  },
+  {
+   "iteration": 82,
+   "residual": 354689480.58244604
+  },
+  {
+   "iteration": 83,
+   "residual": 491542835.31545025
+  },
+  {
+   "iteration": 84,
+   "residual": 681261562.388578
+  },
+  {
+   "iteration": 85,
+   "residual": 944288273.0625037
+  },
+  {
+   "iteration": 86,
+   "residual": 1308977850.8934445
+  },
+  {
+   "iteration": 87,
+   "residual": 1814662409.0019376
+  },
+  {
+   "iteration": 88,
+   "residual": 2515904396.512559
+  },
+  {
+   "iteration": 89,
+   "residual": 3488398758.792379
+  },
+  {
+   "iteration": 90,
+   "residual": 4837163959.740901
+  },
+  {
+   "iteration": 91,
+   "residual": 6707910060.144033
+  },
+  {
+   "iteration": 92,
+   "residual": 9302816913.356812
+  },
+  {
+   "iteration": 93,
+   "residual": 12902434384.196701
+  },
+  {
+   "iteration": 94,
+   "residual": 17896081393.765594
+  },
+  {
+   "iteration": 95,
+   "residual": 24824043866.921955
+  },
+  {
+   "iteration": 96,
+   "residual": 34436153763.20809
+  },
+  {
+   "iteration": 97,
+   "residual": 47773111831.06666
+  },
+  {
+   "iteration": 98,
+   "residual": 66279389339.552734
+  },
+  {
+   "iteration": 99,
+   "residual": 91959978009.40773
+  },
+  {
+   "iteration": 100,
+   "residual": 127598026626.68869
+  },
+  {
+   "iteration": 101,
+   "residual": 177057026830.38388
+  },
+  {
+   "iteration": 102,
+   "residual": 245700410932.45703
+  },
+  {
+   "iteration": 103,
+   "residual": 340974203830.2099
+  },
+  {
+   "iteration": 104,
+   "residual": 473216121803.882
+  },
+  {
+   "iteration": 105,
+   "residual": 656779168128.0874
+  },
+  {
+   "iteration": 106,
+   "residual": 911592027152.0106
+  },
+  {
+   "iteration": 107,
+   "residual": 1265326139723.0
+  },
+  {
+   "iteration": 108,
+   "residual": 1756405442865.6355
+  },
+  {
+   "iteration": 109,
+   "residual": 2438186585794.1685
+  },
+  {
+   "iteration": 110,
+   "residual": 3384765011266.427
+  },
+  {
+   "iteration": 111,
+   "residual": 4699039537111.631
+  },
+  {
+   "iteration": 112,
+   "residual": 6523914331712.713
+  },
+  {
+   "iteration": 113,
+   "residual": 9057859329916.662
+  },
+  {
+   "iteration": 114,
+   "residual": 12576525536348.602
+  },
+  {
+   "iteration": 115,
+   "residual": 17462772220932.223
+  },
+  {
+   "iteration": 116,
+   "residual": 24248380864962.395
+  },
+  {
+   "iteration": 117,
+   "residual": 33672006118048.4
+  },
+  {
+   "iteration": 118,
+   "residual": 46759686303830.82
+  },
+  {
+   "iteration": 119,
+   "residual": 64936698801280.7
+  },
+  {
+   "iteration": 120,
+   "residual": 90182968047867.0
+  },
+  {
+   "iteration": 121,
+   "residual": 125248989997138.53
+  },
+  {
+   "iteration": 122,
+   "residual": 173955846482939.66
+  },
+  {
+   "iteration": 123,
+   "residual": 241612068664865.28
+  },
+  {
+   "iteration": 124,
+   "residual": 335592874884087.9
+  },
+  {
+   "iteration": 125,
+   "residual": 466145050833880.8
+  },
+  {
+   "iteration": 126,
+   "residual": 647505399367740.9
+  },
+  {
+   "iteration": 127,
+   "residual": 899454960769710.4
+  },
+  {
+   "iteration": 128,
+   "residual": 1249478841206075.2
+  },
+  {
+   "iteration": 129,
+   "residual": 1735767699210434.0
+  },
+  {
+   "iteration": 130,
+   "residual": 2411388972452593.0
+  },
+  {
+   "iteration": 131,
+   "residual": 3350083851265272.5
+  },
+  {
+   "iteration": 132,
+   "residual": 4654323822528588.0
+  },
+  {
+   "iteration": 133,
+   "residual": 6466507781631800.0
+  },
+  {
+   "iteration": 134,
+   "residual": 8984524300523108.0
+  },
+  {
+   "iteration": 135,
+   "residual": 1.2483381264934076e+16
+  },
+  {
+   "iteration": 136,
+   "residual": 1.7345269053343186e+16
+  },
+  {
+   "iteration": 137,
+   "residual": 2.410134643539161e+16
+  },
+  {
+   "iteration": 138,
+   "residual": 3.3489821509230716e+16
+  },
+  {
+   "iteration": 139,
+   "residual": 4.653668382540779e+16
+  },
+  {
+   "iteration": 140,
+   "residual": 6.4667923773064456e+16
+  },
+  {
+   "iteration": 141,
+   "residual": 8.986552303071819e+16
+  },
+  {
+   "iteration": 142,
+   "residual": 1.2488429317722504e+17
+  },
+  {
+   "iteration": 143,
+   "residual": 1.735533036751463e+17
+  },
+  {
+   "iteration": 144,
+   "residual": 2.4119490571645917e+17
+  },
+  {
+   "iteration": 145,
+   "residual": 3.3520724036596717e+17
+  },
+  {
+   "iteration": 146,
+   "residual": 4.658740300949342e+17
+  },
+  {
+   "iteration": 147,
+   "residual": 6.474903556177368e+17
+  },
+  {
+   "iteration": 148,
+   "residual": 8.999277451522761e+17
+  },
+  {
+   "iteration": 149,
+   "residual": 1.250810047315362e+18
+  },
+  {
+   "iteration": 150,
+   "residual": 1.7385385011014374e+18
+  },
+  {
+   "iteration": 151,
+   "residual": 2.4164974980268636e+18
+  },
+  {
+   "iteration": 152,
+   "residual": 3.3589019613028593e+18
+  },
+  {
+   "iteration": 153,
+   "residual": 4.668927241319326e+18
+  },
+  {
+   "iteration": 154,
+   "residual": 6.490012687964629e+18
+  },
+  {
+   "iteration": 155,
+   "residual": 9.021578062973528e+18
+  },
+  {
+   "iteration": 156,
+   "residual": 1.2540875880000973e+19
+  },
+  {
+   "iteration": 157,
+   "residual": 1.7433375703669471e+19
+  },
+  {
+   "iteration": 158,
+   "residual": 2.423501224422918e+19
+  },
+  {
+   "iteration": 159,
+   "residual": 3.369093044686324e+19
+  },
+  {
+   "iteration": 160,
+   "residual": 4.68371705167172e+19
+  },
+  {
+   "iteration": 161,
+   "residual": 6.511425257452264e+19
+  },
+  {
+   "iteration": 162,
+   "residual": 9.05251206561317e+19
+  },
+  {
+   "iteration": 163,
+   "residual": 1.2585477326300103e+20
+  },
+  {
+   "iteration": 164,
+   "residual": 1.7497567700323146e+20
+  },
+  {
+   "iteration": 165,
+   "residual": 2.4327247424021456e+20
+  },
+  {
+   "iteration": 166,
+   "residual": 3.382325887690341e+20
+  },
+  {
+   "iteration": 167,
+   "residual": 4.702675430699865e+20
+  },
+  {
+   "iteration": 168,
+   "residual": 6.53855126298935e+20
+  },
+  {
+   "iteration": 169,
+   "residual": 9.091277751562741e+20
+  },
+  {
+   "iteration": 170,
+   "residual": 1.2640815186264622e+21
+  },
+  {
+   "iteration": 171,
+   "residual": 1.7576479730448146e+21
+  },
+  {
+   "iteration": 172,
+   "residual": 2.4439666402599203e+21
+  },
+  {
+   "iteration": 173,
+   "residual": 3.398326568953745e+21
+  },
+  {
+   "iteration": 174,
+   "residual": 4.725429767496764e+21
+  },
+  {
+   "iteration": 175,
+   "residual": 6.570883747346114e+21
+  },
+  {
+   "iteration": 176,
+   "residual": 9.137185245135066e+21
+  },
+  {
+   "iteration": 177,
+   "residual": 1.2705950489666105e+22
+  },
+  {
+   "iteration": 178,
+   "residual": 1.7668833555202406e+22
+  },
+  {
+   "iteration": 179,
+   "residual": 2.4570528779528137e+22
+  },
+  {
+   "iteration": 180,
+   "residual": 3.4168580814842867e+22
+  },
+  {
+   "iteration": 181,
+   "residual": 4.751657252942277e+22
+  },
+  {
+   "iteration": 182,
+   "residual": 6.607982965439247e+22
+  },
+  {
+   "iteration": 183,
+   "residual": 9.189635411337326e+22
+  },
+  {
+   "iteration": 184,
+   "residual": 1.2780066814214545e+23
+  },
+  {
+   "iteration": 185,
+   "residual": 1.7773516496553798e+23
+  },
+  {
+   "iteration": 186,
+   "residual": 2.471831790007457e+23
+  },
+  {
+   "iteration": 187,
+   "residual": 3.437713666204787e+23
+  },
+  {
+   "iteration": 188,
+   "residual": 4.781075983040104e+23
+  },
+  {
+   "iteration": 189,
+   "residual": 6.649464507119827e+23
+  },
+  {
+   "iteration": 190,
+   "residual": 9.248103993890986e+23
+  },
+  {
+   "iteration": 191,
+   "residual": 1.2862449094327683e+24
+  },
+  {
+   "iteration": 192,
+   "residual": 1.7889553116110793e+24
+  },
+  {
+   "iteration": 193,
+   "residual": 2.488170299153679e+24
+  },
+  {
+   "iteration": 194,
+   "residual": 3.46071174798518e+24
+  },
+  {
+   "iteration": 195,
+   "residual": 4.813438183811001e+24
+  },
+  {
+   "iteration": 196,
+   "residual": 6.694990229446742e+24
+  },
+  {
+   "iteration": 197,
+   "residual": 9.312129474696166e+24
+  },
+  {
+   "iteration": 198,
+   "residual": 1.295246736060955e+25
+  },
+  {
+   "iteration": 199,
+   "residual": 1.801608342858316e+25
+  },
+  {
+   "iteration": 200,
+   "residual": 2.505950996215235e+25
+  },
+  {
+   "iteration": 201,
+   "residual": 3.4856920203259794e+25
+  },
+  {
+   "iteration": 202,
+   "residual": 4.848524959696093e+25
+  },
+  {
+   "iteration": 203,
+   "residual": 6.744261210205609e+25
+  },
+  {
+   "iteration": 204,
+   "residual": 9.381303615613744e+25
+  },
+  {
+   "iteration": 205,
+   "residual": 1.3049564039899753e+26
+  },
+  {
+   "iteration": 206,
+   "residual": 1.8152345842922885e+26
+  },
+  {
+   "iteration": 207,
+   "residual": 2.5250698479092184e+26
+  },
+  {
+   "iteration": 208,
+   "residual": 3.512512364233054e+26
+  },
+  {
+   "iteration": 209,
+   "residual": 4.886142150513285e+26
+  },
+  {
+   "iteration": 210,
+   "residual": 6.79701217499473e+26
+  },
+  {
+   "iteration": 211,
+   "residual": 9.45526395957376e+26
+  },
+  {
+   "iteration": 212,
+   "residual": 1.3153243861284373e+27
+  },
+  {
+   "iteration": 213,
+   "residual": 1.8297663570470667e+27
+  },
+  {
+   "iteration": 214,
+   "residual": 2.545434366034526e+27
+  },
+  {
+   "iteration": 215,
+   "residual": 3.541046381288684e+27
+  },
+  {
+   "iteration": 216,
+   "residual": 4.926117006266475e+27
+  },
+  {
+   "iteration": 217,
+   "residual": 6.85300701367269e+27
+  },
+  {
+   "iteration": 218,
+   "residual": 9.5336877831232e+27
+  },
+  {
+   "iteration": 219,
+   "residual": 1.3263065696552464e+28
+  },
+  {
+   "iteration": 220,
+   "residual": 1.8451433612069768e+28
+  },
+  {
+   "iteration": 221,
+   "residual": 2.5669621205884766e+28
+  },
+  {
+   "iteration": 222,
+   "residual": 3.5711813855222146e+28
+  },
+  {
+   "iteration": 223,
+   "residual": 4.968295474181919e+28
+  },
+  {
+   "iteration": 224,
+   "residual": 6.912035114022698e+28
+  },
+  {
+   "iteration": 225,
+   "residual": 9.616287140157284e+28
+  },
+  {
+   "iteration": 226,
+   "residual": 1.3378635858106962e+29
+  },
+  {
+   "iteration": 227,
+   "residual": 1.8613117692464934e+29
+  },
+  {
+   "iteration": 228,
+   "residual": 2.5895795131402802e+29
+  },
+  {
+   "iteration": 229,
+   "residual": 3.602816743228095e+29
+  },
+  {
+   "iteration": 230,
+   "residual": 5.012539951078141e+29
+  },
+  {
+   "iteration": 231,
+   "residual": 6.973908317939482e+29
+  },
+  {
+   "iteration": 232,
+   "residual": 9.702804738730087e+29
+  },
+  {
+   "iteration": 233,
+   "residual": 1.3499602512090704e+30
+  },
+  {
+   "iteration": 234,
+   "residual": 1.878223468808846e+30
+  },
+  {
+   "iteration": 235,
+   "residual": 2.6132207502496795e+30
+  },
+  {
+   "iteration": 236,
+   "residual": 3.635862480840168e+30
+  },
+  {
+   "iteration": 237,
+   "residual": 5.0587273950434156e+30
+  },
+  {
+   "iteration": 238,
+   "residual": 7.038458359397113e+30
+  },
+  {
+   "iteration": 239,
+   "residual": 9.79301046407833e+30
+  },
+  {
+   "iteration": 240,
+   "residual": 1.3625650958564358e+31
+  },
+  {
+   "iteration": 241,
+   "residual": 1.895835421859061e+31
+  },
+  {
+   "iteration": 242,
+   "residual": 2.637826973133155e+31
+  },
+  {
+   "iteration": 243,
+   "residual": 3.6702381026574793e+31
+  },
+  {
+   "iteration": 244,
+   "residual": 5.106747719051485e+31
+  },
+  {
+   "iteration": 245,
+   "residual": 7.1055346813291205e+31
+  },
+  {
+   "iteration": 246,
+   "residual": 9.886698411053478e+31
+  },
+  {
+   "iteration": 247,
+   "residual": 1.3756499596755554e+32
+  },
+  {
+   "iteration": 248,
+   "residual": 1.9141091159980434e+32
+  },
+  {
+   "iteration": 249,
+   "residual": 2.663345511352643e+32
+  },
+  {
+   "iteration": 250,
+   "residual": 3.705871575523258e+32
+  },
+  {
+   "iteration": 251,
+   "residual": 5.156502409394372e+32
+  },
+  {
+   "iteration": 252,
+   "residual": 7.175002555342039e+32
+  },
+  {
+   "iteration": 253,
+   "residual": 9.983684324607695e+32
+  },
+  {
+   "iteration": 254,
+   "residual": 1.3891896440316698e+33
+  },
+  {
+   "iteration": 255,
+   "residual": 1.933010089934848e+33
+  },
+  {
+   "iteration": 256,
+   "residual": 2.6897292365239286e+33
+  },
+  {
+   "iteration": 257,
+   "residual": 3.742698448446029e+33
+  },
+  {
+   "iteration": 258,
+   "residual": 5.20790332622967e+33
+  },
+  {
+   "iteration": 259,
+   "residual": 7.246741447281737e+33
+  },
+  {
+   "iteration": 260,
+   "residual": 1.0083803372280034e+34
+  },
+  {
+   "iteration": 261,
+   "residual": 1.403161608105248e+34
+  },
+  {
+   "iteration": 262,
+   "residual": 1.9525075195569357e+34
+  },
+  {
+   "iteration": 263,
+   "residual": 2.7169359979303906e+34
+  },
+  {
+   "iteration": 264,
+   "residual": 3.7806610829580646e+34
+  },
+  {
+   "iteration": 265,
+   "residual": 5.260871653890009e+34
+  },
+  {
+   "iteration": 266,
+   "residual": 7.320643585397779e+34
+  },
+  {
+   "iteration": 267,
+   "residual": 1.0186908190834863e+35
+  },
+  {
+   "iteration": 268,
+   "residual": 1.4175457023729861e+35
+  },
+  {
+   "iteration": 269,
+   "residual": 1.972573854242736e+35
+  },
+  {
+   "iteration": 270,
+   "residual": 2.7449281261803973e+35
+  },
+  {
+   "iteration": 271,
+   "residual": 3.819707975650927e+35
+  },
+  {
+   "iteration": 272,
+   "residual": 5.315336976095955e+35
+  },
+  {
+   "iteration": 273,
+   "residual": 7.396612697801047e+35
+  },
+  {
+   "iteration": 274,
+   "residual": 1.0292867162418718e+36
+  },
+  {
+   "iteration": 275,
+   "residual": 1.432323933213577e+36
+  },
+  {
+   "iteration": 276,
+   "residual": 1.9931844953928132e+36
+  },
+  {
+   "iteration": 277,
+   "residual": 2.773671994145483e+36
+  },
+  {
+   "iteration": 278,
+   "residual": 3.8597931584465484e+36
+  },
+  {
+   "iteration": 279,
+   "residual": 5.371236456688697e+36
+  },
+  {
+   "iteration": 280,
+   "residual": 7.474562893189816e+36
+  },
+  {
+   "iteration": 281,
+   "residual": 1.0401562885283325e+37
+  },
+  {
+   "iteration": 282,
+   "residual": 1.4474802539425963e+37
+  },
+  {
+   "iteration": 283,
+   "residual": 2.0143175108693105e+37
+  },
+  {
+   "iteration": 284,
+   "residual": 2.803137626696467e+37
+  },
+  {
+   "iteration": 285,
+   "residual": 3.9008756651970266e+37
+  },
+  {
+   "iteration": 286,
+   "residual": 5.42851411053916e+37
+  },
+  {
+   "iteration": 287,
+   "residual": 7.554417664199365e+37
+  },
+  {
+   "iteration": 288,
+   "residual": 1.0512890811288061e+38
+  },
+  {
+   "iteration": 289,
+   "residual": 1.4630003785354371e+38
+  },
+  {
+   "iteration": 290,
+   "residual": 2.035953380305359e+38
+  },
+  {
+   "iteration": 291,
+   "residual": 2.8332983524500237e+38
+  },
+  {
+   "iteration": 292,
+   "residual": 3.942919055466406e+38
+  },
+  {
+   "iteration": 293,
+   "residual": 5.4871201523038335e+38
+  },
+  {
+   "iteration": 294,
+   "residual": 7.63610899674976e+38
+  },
+  {
+   "iteration": 295,
+   "residual": 1.0626758027757504e+39
+  },
+  {
+   "iteration": 296,
+   "residual": 1.4788716150127825e+39
+  },
+  {
+   "iteration": 297,
+   "residual": 2.0580747672011777e+39
+  },
+  {
+   "iteration": 298,
+   "residual": 2.8641304920132746e+39
+  },
+  {
+   "iteration": 299,
+   "residual": 3.985890988050466e+39
+  },
+  {
+   "iteration": 300,
+   "residual": 5.547010412971954e+39
+  }
+ ]
+}
