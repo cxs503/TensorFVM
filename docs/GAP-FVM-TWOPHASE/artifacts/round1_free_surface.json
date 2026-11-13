@@ -1,0 +1,190 @@
+{
+  "schema": "gap-fvm-twophase-round1-free-surface-1",
+  "case": "GAP-FVM-TWOPHASE round 1: free-surface pressure datum",
+  "question": "does the shipped ghost-fluid surface datum (p = 0 half a cell from the cell centre) change the dam-break D1/D2 misfit and the rest state, versus the historical centred gradient?",
+  "grids": [
+    [
+      60,
+      20
+    ],
+    [
+      120,
+      40
+    ]
+  ],
+  "gates_unchanged": {
+    "D1": 0.15,
+    "D2": 0.15,
+    "window_t_star": [
+      0.3,
+      4.0
+    ]
+  },
+  "legs": [
+    {
+      "arm": "shipped",
+      "grid": [
+        60,
+        20
+      ],
+      "surface_treatment": "shipped-default",
+      "well_balanced_surface": true,
+      "steps": 94,
+      "elapsed_s": 3.8315257411450148,
+      "front_max_rel_error": 0.8130242978098216,
+      "front_max_rel_error_leading_edge": 0.7418622145711387,
+      "height_max_rel_error": 0.7246210911114204,
+      "volume_drift": 2.628368902995162e-16,
+      "bound_violation": 0.0,
+      "front_phase_lag_t_star": 0.5400000000000018,
+      "front_speed_ratio": 1.5932657087292443,
+      "front_rms_at_zero_shift": 0.5440866181773789,
+      "front_rms_at_best_shift": 0.20890656543477257,
+      "height_phase_lag_t_star": 0.7300000000000022,
+      "height_speed_ratio": 2.6012933947478643,
+      "front_final_star": 4.16185476815398,
+      "height_final_star": 0.13123359580052493
+    },
+    {
+      "arm": "control",
+      "grid": [
+        60,
+        20
+      ],
+      "surface_treatment": "centred-control",
+      "well_balanced_surface": false,
+      "steps": 82,
+      "elapsed_s": 3.326694570481777,
+      "front_max_rel_error": 0.8392327285972785,
+      "front_max_rel_error_leading_edge": 0.770725844528721,
+      "height_max_rel_error": 0.7984541633255593,
+      "volume_drift": 2.628368902995162e-16,
+      "bound_violation": 0.0,
+      "front_phase_lag_t_star": 0.8700000000000019,
+      "front_speed_ratio": 1.30691601798675,
+      "front_rms_at_zero_shift": 0.7705244472607923,
+      "front_rms_at_best_shift": 0.1316006151314885,
+      "height_phase_lag_t_star": 0.7700000000000022,
+      "height_speed_ratio": 2.436955310283344,
+      "front_final_star": 3.461942257217848,
+      "height_final_star": 0.21872265966754156
+    },
+    {
+      "arm": "shipped",
+      "grid": [
+        120,
+        40
+      ],
+      "surface_treatment": "shipped-default",
+      "well_balanced_surface": true,
+      "steps": 196,
+      "elapsed_s": 23.37600584886968,
+      "front_max_rel_error": 0.9874407213052687,
+      "front_max_rel_error_leading_edge": 0.8402971434245725,
+      "height_max_rel_error": 0.7124707656951619,
+      "volume_drift": 4.113968717731558e-16,
+      "bound_violation": 0.0,
+      "front_phase_lag_t_star": 0.5200000000000018,
+      "front_speed_ratio": 1.6164920053587721,
+      "front_rms_at_zero_shift": 0.5500789468179597,
+      "front_rms_at_best_shift": 0.22556593350394274,
+      "height_phase_lag_t_star": 0.780000000000002,
+      "height_speed_ratio": 3.0329394285938704,
+      "front_final_star": 4.2055993000874885,
+      "height_final_star": 0.10936132983377078
+    },
+    {
+      "arm": "control",
+      "grid": [
+        120,
+        40
+      ],
+      "surface_treatment": "centred-control",
+      "well_balanced_surface": false,
+      "steps": 169,
+      "elapsed_s": 24.17560074850917,
+      "front_max_rel_error": 0.9882294435916724,
+      "front_max_rel_error_leading_edge": 0.8564112434508838,
+      "height_max_rel_error": 0.8449810709776245,
+      "volume_drift": 4.113968717731558e-16,
+      "bound_violation": 0.0,
+      "front_phase_lag_t_star": 0.8200000000000021,
+      "front_speed_ratio": 1.3096055437024317,
+      "front_rms_at_zero_shift": 0.7660152388261262,
+      "front_rms_at_best_shift": 0.11962205955499516,
+      "height_phase_lag_t_star": 0.9600000000000022,
+      "height_speed_ratio": 3.141246572495369,
+      "front_final_star": 3.505686789151356,
+      "height_final_star": 0.1531058617672791
+    }
+  ],
+  "rest_state": [
+    {
+      "arm": "shipped",
+      "cells": 20,
+      "well_balanced_surface": true,
+      "pressure_oscillation": 1.158887234674985e-16,
+      "spurious_velocity": 1.690044345578886e-17,
+      "mass_drift_relative": 0.0
+    },
+    {
+      "arm": "control",
+      "cells": 20,
+      "well_balanced_surface": false,
+      "pressure_oscillation": 0.05000041482117151,
+      "spurious_velocity": 3.311162660709715e-08,
+      "mass_drift_relative": 0.0
+    },
+    {
+      "arm": "shipped",
+      "cells": 40,
+      "well_balanced_surface": true,
+      "pressure_oscillation": 1.0719706920743611e-16,
+      "spurious_velocity": 2.5350663145332048e-17,
+      "mass_drift_relative": 0.0
+    },
+    {
+      "arm": "control",
+      "cells": 40,
+      "well_balanced_surface": false,
+      "pressure_oscillation": 0.02500088810566949,
+      "spurious_velocity": 3.549478481981443e-08,
+      "mass_drift_relative": 2.220446049250313e-16
+    }
+  ],
+  "pairs": [
+    {
+      "grid": [
+        60,
+        20
+      ],
+      "D1_shipped": 0.8130242978098216,
+      "D1_control": 0.8392327285972785,
+      "D2_shipped": 0.7246210911114204,
+      "D2_control": 0.7984541633255593,
+      "lag_shipped": 0.5400000000000018,
+      "lag_control": 0.8700000000000019,
+      "speed_ratio_shipped": 1.5932657087292443,
+      "speed_ratio_control": 1.30691601798675,
+      "D2_rel_change": -0.09247001970235134
+    },
+    {
+      "grid": [
+        120,
+        40
+      ],
+      "D1_shipped": 0.9874407213052687,
+      "D1_control": 0.9882294435916724,
+      "D2_shipped": 0.7124707656951619,
+      "D2_control": 0.8449810709776245,
+      "lag_shipped": 0.5200000000000018,
+      "lag_control": 0.8200000000000021,
+      "speed_ratio_shipped": 1.6164920053587721,
+      "speed_ratio_control": 1.3096055437024317,
+      "D2_rel_change": -0.1568204422960045
+    }
+  ],
+  "verdict": "FAIL: no arm satisfies D1/D2 <= 15 % on any grid; the fix moves the *mechanism* (release lag and rest state), not the gate",
+  "figure": "docs/GAP-FVM-TWOPHASE/artifacts/figures/fig_round1_free_surface.png",
+  "any_arm_passes": false
+}
