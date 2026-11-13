@@ -1,0 +1,113 @@
+{
+  "committed_reference": {
+    "window_x": [
+      0.4,
+      1.0
+    ],
+    "peak_density": {
+      "ref": 6.2960765,
+      "got": 6.189783163404389,
+      "rel_error_percent": 1.6882472218311024
+    },
+    "peak_position": {
+      "ref": 0.777951,
+      "got": 0.780625,
+      "abs_error": 0.002674000000000065
+    },
+    "l1_relative": {
+      "value": 0.029569679382539165,
+      "percent": 2.9569679382539165
+    },
+    "low_plateau": {
+      "ref": 0.157112,
+      "got": 0.1794491134266039,
+      "abs_error": 0.02233711342660391,
+      "rel_error_percent": 14.21731849037878,
+      "percent_of_peak_density": 0.3547783040216222
+    },
+    "faces_ref": [
+      0.646917,
+      0.761947,
+      0.798957,
+      0.865974
+    ],
+    "faces": [
+      0.646875,
+      0.763125,
+      0.799375,
+      0.865625
+    ],
+    "faces_abs_error": [
+      4.199999999998649e-05,
+      0.0011780000000000124,
+      0.00041799999999991844,
+      0.0003490000000000437
+    ],
+    "checks": {
+      "peak_density_lt_10pct": true,
+      "peak_position_lt_tol": true,
+      "l1_lt_10pct": true,
+      "faces_lt_tol": true,
+      "low_plateau_lt_10pct": false
+    },
+    "verdict": "FAIL",
+    "tolerance_percent": 10.0,
+    "position_tolerance": 0.02
+  },
+  "calibrated_reference": {
+    "window_x": [
+      0.4,
+      1.0
+    ],
+    "peak_density": {
+      "ref": 6.3180935,
+      "got": 6.189783163404389,
+      "rel_error_percent": 2.030839470729752
+    },
+    "peak_position": {
+      "ref": 0.777951,
+      "got": 0.780625,
+      "abs_error": 0.002674000000000065
+    },
+    "l1_relative": {
+      "value": 0.020086357892998338,
+      "percent": 2.008635789299834
+    },
+    "low_plateau": {
+      "ref": 0.179129,
+      "got": 0.1794491134266039,
+      "abs_error": 0.00032011342660390185,
+      "rel_error_percent": 0.1787055287551998,
+      "percent_of_peak_density": 0.0050666142659000196
+    },
+    "faces_ref": [
+      0.646917,
+      0.761947,
+      0.798957,
+      0.865974
+    ],
+    "faces": [
+      0.646875,
+      0.763125,
+      0.799375,
+      0.865625
+    ],
+    "faces_abs_error": [
+      4.199999999998649e-05,
+      0.0011780000000000124,
+      0.00041799999999991844,
+      0.0003490000000000437
+    ],
+    "checks": {
+      "peak_density_lt_10pct": true,
+      "peak_position_lt_tol": true,
+      "l1_lt_10pct": true,
+      "faces_lt_tol": true,
+      "low_plateau_lt_10pct": true
+    },
+    "verdict": "PASS",
+    "tolerance_percent": 10.0,
+    "position_tolerance": 0.02
+  },
+  "bias_density": 0.022017
+}

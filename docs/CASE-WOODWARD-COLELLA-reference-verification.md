@@ -82,3 +82,9 @@ W&C 1984 原文闭源（OpenAlex `oa_status=closed`，见 `provenance.md`），*
 | 低密度平台 ρ_min | 14.217 %（绝对 0.022 = 峰值 0.35 %） | **否** |
 
 **结论**：不声称"全指标通过"。稳定量（峰值、阵面位置、L1）已在 <10 % 内且随加密收敛；浅槽极小值 14 % 未达标、且不收敛，记为 honest-FAIL 并留作后续（建议：与第二种独立方案/更高网格的参考对比，或改用窗口平均而非极小值作为收敛量）。
+---
+
+## 后续（2026-11-13，m18040）
+
+上面 ⑥ 的「低密度平台 14 % 未达标」已定位根因：**参考曲线数字化的 y 轴标定常量偏差 +0.02202 密度单位**（文字框中心高于刻度线 0.337 pt）。更正后浅槽误差 0.04–1.37 %（全网格），详见
+`docs/CASE-WOODWARD-COLELLA-calibration-bias.md` 与 `docs/woodward-colella-double-blast/reference/axis_calibration.json`。本文件原始数字一律保留（honest 审计链）。
