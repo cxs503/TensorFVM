@@ -65,7 +65,7 @@ class Phase0TwoPhaseSolver:
         surface_model: str = "void",
         liquid_cut: float = 1.0e-6,
         bed: str = "free_slip",
-        well_balanced_surface: bool = False,
+        well_balanced_surface: bool = True,
         cg_rtol: float = 1.0e-9,
         cg_max_iter: int = 3000,
     ) -> None:
