@@ -1,0 +1,303 @@
+{
+  "panels": [
+    {
+      "frame": [
+        96.623,
+        328.044,
+        274.567,
+        465.807
+      ],
+      "y_tick_marks": [
+        328.0435,
+        343.3506,
+        358.6576,
+        373.9646,
+        389.2716,
+        404.5786,
+        419.8856,
+        435.1926,
+        450.4996,
+        465.8066
+      ],
+      "y_tick_scale_pt_per_unit": 15.30701,
+      "y_tick_spacing_max_deviation_pt": 0.0001,
+      "frame_vs_extreme_tick_pt": {
+        "top": 0.0,
+        "bottom": 0.0
+      },
+      "y_labels": [
+        {
+          "value": 0.0,
+          "text_y": 465.4696,
+          "tick_y": 465.8066,
+          "residual_pt": 0.337
+        },
+        {
+          "value": 1.0,
+          "text_y": 450.1626,
+          "tick_y": 450.4996,
+          "residual_pt": 0.337
+        },
+        {
+          "value": 2.0,
+          "text_y": 434.8556,
+          "tick_y": 435.1926,
+          "residual_pt": 0.337
+        },
+        {
+          "value": 3.0,
+          "text_y": 419.5486,
+          "tick_y": 419.8856,
+          "residual_pt": 0.337
+        },
+        {
+          "value": 4.0,
+          "text_y": 404.2416,
+          "tick_y": 404.5786,
+          "residual_pt": 0.337
+        },
+        {
+          "value": 5.0,
+          "text_y": 388.9346,
+          "tick_y": 389.2716,
+          "residual_pt": 0.337
+        },
+        {
+          "value": 6.0,
+          "text_y": 373.6275,
+          "tick_y": 373.9646,
+          "residual_pt": 0.3371
+        },
+        {
+          "value": 7.0,
+          "text_y": 358.3205,
+          "tick_y": 358.6576,
+          "residual_pt": 0.3371
+        },
+        {
+          "value": 8.0,
+          "text_y": 343.0135,
+          "tick_y": 343.3506,
+          "residual_pt": 0.3371
+        }
+      ],
+      "y_label_residual_pt": {
+        "mean": 0.337,
+        "std": 2e-05,
+        "max_abs": 0.3371
+      },
+      "y_fit_from_labels": {
+        "a": -15.307007,
+        "b": 465.469589,
+        "n": 9,
+        "max_abs_residual": 0.0
+      },
+      "x_fit_from_labels": {
+        "a": 296.573277,
+        "b": -22.009411,
+        "n": 7,
+        "max_abs_residual": 7e-06
+      },
+      "x_fit_lands_on_frame": {
+        "left_pt": -0.0027,
+        "right_pt": -0.0028,
+        "right_value": 1.0
+      },
+      "y_zero_pt_geometry": 465.8066,
+      "y_zero_pt_from_labels": 465.4696,
+      "bias_pt": 0.337,
+      "bias_density": 0.022017
+    },
+    {
+      "frame": [
+        328.718,
+        328.044,
+        506.662,
+        465.807
+      ],
+      "y_tick_marks": [
+        328.0435,
+        343.3506,
+        358.6576,
+        373.9646,
+        389.2716,
+        404.5786,
+        419.8856,
+        435.1926,
+        450.4996,
+        465.8066
+      ],
+      "y_tick_scale_pt_per_unit": 15.30701,
+      "y_tick_spacing_max_deviation_pt": 0.0001,
+      "frame_vs_extreme_tick_pt": {
+        "top": 0.0,
+        "bottom": 0.0
+      },
+      "y_labels": [
+        {
+          "value": 0.0,
+          "text_y": 465.4696,
+          "tick_y": 465.8066,
+          "residual_pt": 0.337
+        },
+        {
+          "value": 1.0,
+          "text_y": 450.1626,
+          "tick_y": 450.4996,
+          "residual_pt": 0.337
+        },
+        {
+          "value": 2.0,
+          "text_y": 434.8556,
+          "tick_y": 435.1926,
+          "residual_pt": 0.337
+        },
+        {
+          "value": 3.0,
+          "text_y": 419.5486,
+          "tick_y": 419.8856,
+          "residual_pt": 0.337
+        },
+        {
+          "value": 4.0,
+          "text_y": 404.2416,
+          "tick_y": 404.5786,
+          "residual_pt": 0.337
+        },
+        {
+          "value": 5.0,
+          "text_y": 388.9346,
+          "tick_y": 389.2716,
+          "residual_pt": 0.337
+        },
+        {
+          "value": 6.0,
+          "text_y": 373.6275,
+          "tick_y": 373.9646,
+          "residual_pt": 0.3371
+        },
+        {
+          "value": 7.0,
+          "text_y": 358.3205,
+          "tick_y": 358.6576,
+          "residual_pt": 0.3371
+        },
+        {
+          "value": 8.0,
+          "text_y": 343.0135,
+          "tick_y": 343.3506,
+          "residual_pt": 0.3371
+        }
+      ],
+      "y_label_residual_pt": {
+        "mean": 0.337,
+        "std": 2e-05,
+        "max_abs": 0.3371
+      },
+      "y_fit_from_labels": {
+        "a": -15.307007,
+        "b": 465.469589,
+        "n": 9,
+        "max_abs_residual": 0.0
+      },
+      "x_fit_from_labels": {
+        "a": 296.57329,
+        "b": 210.08558,
+        "n": 7,
+        "max_abs_residual": 1.1e-05
+      },
+      "x_fit_lands_on_frame": {
+        "left_pt": -0.0028,
+        "right_pt": -0.0028,
+        "right_value": 1.0
+      },
+      "y_zero_pt_geometry": 465.8066,
+      "y_zero_pt_from_labels": 465.4696,
+      "bias_pt": 0.337,
+      "bias_density": 0.022017
+    }
+  ],
+  "committed": {
+    "x": {
+      "a": 296.5732901436941,
+      "b": 210.08558000837073,
+      "n_ticks": 7,
+      "max_abs_residual_pt": 1.0899135190811648e-05,
+      "ticks": [
+        [
+          328.7148895263672,
+          0.4
+        ],
+        [
+          358.3722229003906,
+          0.5
+        ],
+        [
+          388.02955627441406,
+          0.6
+        ],
+        [
+          417.6868896484375,
+          0.7
+        ],
+        [
+          447.34422302246094,
+          0.8
+        ],
+        [
+          477.0015411376953,
+          0.9
+        ],
+        [
+          506.6588592529297,
+          1.0
+        ]
+      ]
+    },
+    "y": {
+      "a": -15.30700683593752,
+      "b": 465.4695892333986,
+      "n_ticks": 7,
+      "max_abs_residual_pt": 1.7053025658242404e-13,
+      "ticks": [
+        [
+          358.32054138183594,
+          7.0
+        ],
+        [
+          373.62754821777344,
+          6.0
+        ],
+        [
+          388.93455505371094,
+          5.0
+        ],
+        [
+          404.24156188964844,
+          4.0
+        ],
+        [
+          419.54856872558594,
+          3.0
+        ],
+        [
+          434.85557556152344,
+          2.0
+        ],
+        [
+          450.16258239746094,
+          1.0
+        ]
+      ]
+    }
+  },
+  "bias_pt": 0.337,
+  "bias_pt_spread": 0.0,
+  "bias_density": 0.022017,
+  "bias_density_spread": 0.0,
+  "pdf": "/tmp/wc.pdf",
+  "pdf_sha256": "509e23504a54e149fad645a5f35065257cb82c268f9a9a2310e608d86a80e064",
+  "page": 21,
+  "figure": "Figure 21: Woodward-Colella. Comparison between the MOOD and non-MOOD schemes on B3 at T = 0.038.",
+  "corrected_reference_csv": "reference_density_calibrated.csv"
+}

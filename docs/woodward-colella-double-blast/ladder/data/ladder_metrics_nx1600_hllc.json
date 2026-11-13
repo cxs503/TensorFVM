@@ -1,0 +1,81 @@
+{
+  "window_x": [
+    0.4,
+    1.0
+  ],
+  "peak_density": {
+    "ref": 6.2960765,
+    "got": 6.466034495852625,
+    "rel_error_percent": 2.699427109130986
+  },
+  "peak_position": {
+    "ref": 0.777951,
+    "got": 0.7759375,
+    "abs_error": 0.0020135000000000014
+  },
+  "l1_relative": {
+    "value": 0.028015095888408732,
+    "percent": 2.801509588840873
+  },
+  "low_plateau": {
+    "ref": 0.157112,
+    "got": 0.1796747164780565,
+    "abs_error": 0.022562716478056494,
+    "rel_error_percent": 14.360912265171658,
+    "percent_of_peak_density": 0.3583615363958252
+  },
+  "faces_ref": [
+    0.646917,
+    0.761947,
+    0.798957,
+    0.865974
+  ],
+  "faces": [
+    0.6471875,
+    0.7653125,
+    0.7990625,
+    0.8659375
+  ],
+  "faces_abs_error": [
+    0.00027050000000006236,
+    0.0033654999999999102,
+    0.00010549999999998061,
+    3.649999999999487e-05
+  ],
+  "checks": {
+    "peak_density_lt_10pct": true,
+    "peak_position_lt_tol": true,
+    "l1_lt_10pct": true,
+    "faces_lt_tol": true,
+    "low_plateau_lt_10pct": false
+  },
+  "verdict": "FAIL",
+  "tolerance_percent": 10.0,
+  "position_tolerance": 0.02,
+  "nx": 1600,
+  "dx": 0.000625,
+  "config": {
+    "flux_mode": "hllc",
+    "limiter": "mc",
+    "cfl": 0.4,
+    "order": 2,
+    "nx": 1600
+  },
+  "flux_mode": "hllc",
+  "order": 2,
+  "limiter": "mc",
+  "cfl": 0.4,
+  "t_end": 0.038,
+  "steps": 6383,
+  "seconds_solver": 328.76,
+  "seconds_total": 328.78,
+  "mass_energy_drift": {
+    "mass": 6.661338147750939e-16,
+    "momentum_x": NaN,
+    "momentum_y": NaN,
+    "energy": -4.133766188699583e-16,
+    "mass_mat1": 6.661338147750939e-16
+  },
+  "positivity_fixes": 0,
+  "reference": "/root/tp-agent/work/m18040/docs/woodward-colella-double-blast/reference/reference_density.csv"
+}

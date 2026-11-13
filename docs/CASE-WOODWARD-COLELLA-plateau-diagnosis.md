@@ -156,3 +156,11 @@ PYTHONPATH=src python docs/woodward-colella-double-blast/ladder/wc_ladder.py \
 PYTHONPATH=src python docs/woodward-colella-double-blast/ladder/wc_ladder_weno5.py \
     --sizes 1600,3200 --shard 1 --shards 2
 ```
+---
+
+## 后续（2026-11-13，m18040）
+
+⑤ 第 4 条遗留的「1600/3200 阶梯未返回」与"整段密度平移"的成因已由本单收口：
+- nx=1600 已在本地单核算出（329 s，`ladder/data/ladder_profile_nx1600_hllc.npz`）；nx=3200 仍在算（集群 cj1573/cj1575 排队）。
+- **整段平移不是物理/方案分歧，而是参考曲线 y 轴标定的常量偏差**（+0.3370 pt = +0.022017 密度，来自 PDF 绘制几何：绘图框四角与刻度线重合 0.0 pt、刻度线等距 1e-4 pt、同一套文字拟合在 x 轴上仅偏 −0.003 pt）。
+  详见 `docs/CASE-WOODWARD-COLELLA-calibration-bias.md`。
