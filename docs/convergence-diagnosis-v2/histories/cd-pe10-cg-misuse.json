@@ -1,0 +1,8012 @@
+{
+ "key": "cd-pe10-cg-misuse",
+ "solver": "cg",
+ "tolerance": 1e-10,
+ "rel_tol": 0.0,
+ "history": [
+  {
+   "iteration": 0,
+   "residual": 1.0
+  },
+  {
+   "iteration": 1,
+   "residual": 0.5694444444444445
+  },
+  {
+   "iteration": 2,
+   "residual": 0.5940383905500176
+  },
+  {
+   "iteration": 3,
+   "residual": 0.6736019975078881
+  },
+  {
+   "iteration": 4,
+   "residual": 0.7393338386139274
+  },
+  {
+   "iteration": 5,
+   "residual": 0.7289327463601976
+  },
+  {
+   "iteration": 6,
+   "residual": 0.8656734826208284
+  },
+  {
+   "iteration": 7,
+   "residual": 0.9095266451379942
+  },
+  {
+   "iteration": 8,
+   "residual": 1.0749045423502244
+  },
+  {
+   "iteration": 9,
+   "residual": 0.9801206301320005
+  },
+  {
+   "iteration": 10,
+   "residual": 1.288085369824653
+  },
+  {
+   "iteration": 11,
+   "residual": 1.3637280867548458
+  },
+  {
+   "iteration": 12,
+   "residual": 1.2234825270153349
+  },
+  {
+   "iteration": 13,
+   "residual": 1.558024350372708
+  },
+  {
+   "iteration": 14,
+   "residual": 1.7171077788082985
+  },
+  {
+   "iteration": 15,
+   "residual": 1.7041162188002121
+  },
+  {
+   "iteration": 16,
+   "residual": 1.702416581599268
+  },
+  {
+   "iteration": 17,
+   "residual": 2.0092611397739106
+  },
+  {
+   "iteration": 18,
+   "residual": 2.160144852217757
+  },
+  {
+   "iteration": 19,
+   "residual": 2.1815661894470133
+  },
+  {
+   "iteration": 20,
+   "residual": 2.179926752544525
+  },
+  {
+   "iteration": 21,
+   "residual": 2.3381478181058446
+  },
+  {
+   "iteration": 22,
+   "residual": 2.5541432758040608
+  },
+  {
+   "iteration": 23,
+   "residual": 2.788551240567569
+  },
+  {
+   "iteration": 24,
+   "residual": 2.8727493237698445
+  },
+  {
+   "iteration": 25,
+   "residual": 2.817371064593341
+  },
+  {
+   "iteration": 26,
+   "residual": 2.9153733105073614
+  },
+  {
+   "iteration": 27,
+   "residual": 3.0795501388227535
+  },
+  {
+   "iteration": 28,
+   "residual": 3.179928958463487
+  },
+  {
+   "iteration": 29,
+   "residual": 3.4034779532425437
+  },
+  {
+   "iteration": 30,
+   "residual": 3.6141947313371015
+  },
+  {
+   "iteration": 31,
+   "residual": 3.75409476257269
+  },
+  {
+   "iteration": 32,
+   "residual": 3.7802295426645647
+  },
+  {
+   "iteration": 33,
+   "residual": 3.898949807037058
+  },
+  {
+   "iteration": 34,
+   "residual": 4.006629815234835
+  },
+  {
+   "iteration": 35,
+   "residual": 4.111923742867861
+  },
+  {
+   "iteration": 36,
+   "residual": 4.216820239014128
+  },
+  {
+   "iteration": 37,
+   "residual": 4.362182423544937
+  },
+  {
+   "iteration": 38,
+   "residual": 4.50675931677191
+  },
+  {
+   "iteration": 39,
+   "residual": 4.593410291431455
+  },
+  {
+   "iteration": 40,
+   "residual": 4.7720279823676925
+  },
+  {
+   "iteration": 41,
+   "residual": 4.86956012720333
+  },
+  {
+   "iteration": 42,
+   "residual": 5.152040167155863
+  },
+  {
+   "iteration": 43,
+   "residual": 5.36889662043981
+  },
+  {
+   "iteration": 44,
+   "residual": 5.514570578087461
+  },
+  {
+   "iteration": 45,
+   "residual": 5.591671446573275
+  },
+  {
+   "iteration": 46,
+   "residual": 5.623612161746695
+  },
+  {
+   "iteration": 47,
+   "residual": 5.672175924010277
+  },
+  {
+   "iteration": 48,
+   "residual": 5.786667518483249
+  },
+  {
+   "iteration": 49,
+   "residual": 5.97070593359736
+  },
+  {
+   "iteration": 50,
+   "residual": 6.0829241864363075
+  },
+  {
+   "iteration": 51,
+   "residual": 6.125050482622409
+  },
+  {
+   "iteration": 52,
+   "residual": 6.14999598415467
+  },
+  {
+   "iteration": 53,
+   "residual": 6.445587493004026
+  },
+  {
+   "iteration": 54,
+   "residual": 6.742504222269328
+  },
+  {
+   "iteration": 55,
+   "residual": 7.007345912090305
+  },
+  {
+   "iteration": 56,
+   "residual": 7.216751941234193
+  },
+  {
+   "iteration": 57,
+   "residual": 7.371036585224906
+  },
+  {
+   "iteration": 58,
+   "residual": 7.49666257009448
+  },
+  {
+   "iteration": 59,
+   "residual": 7.5729740792526
+  },
+  {
+   "iteration": 60,
+   "residual": 7.6011404649902925
+  },
+  {
+   "iteration": 61,
+   "residual": 7.581355548323557
+  },
+  {
+   "iteration": 62,
+   "residual": 7.667255295402154
+  },
+  {
+   "iteration": 63,
+   "residual": 7.844992469240766
+  },
+  {
+   "iteration": 64,
+   "residual": 7.96520384197361
+  },
+  {
+   "iteration": 65,
+   "residual": 8.047311212785345
+  },
+  {
+   "iteration": 66,
+   "residual": 8.127758919102913
+  },
+  {
+   "iteration": 67,
+   "residual": 8.35392226803555
+  },
+  {
+   "iteration": 68,
+   "residual": 8.564985773649356
+  },
+  {
+   "iteration": 69,
+   "residual": 8.848556527245147
+  },
+  {
+   "iteration": 70,
+   "residual": 9.113434333669613
+  },
+  {
+   "iteration": 71,
+   "residual": 9.33500337026281
+  },
+  {
+   "iteration": 72,
+   "residual": 9.537331732958714
+  },
+  {
+   "iteration": 73,
+   "residual": 9.722614206272693
+  },
+  {
+   "iteration": 74,
+   "residual": 9.864498913965106
+  },
+  {
+   "iteration": 75,
+   "residual": 9.989330230033087
+  },
+  {
+   "iteration": 76,
+   "residual": 10.08081697673812
+  },
+  {
+   "iteration": 77,
+   "residual": 10.131208573014518
+  },
+  {
+   "iteration": 78,
+   "residual": 10.141655860541517
+  },
+  {
+   "iteration": 79,
+   "residual": 10.113556498444346
+  },
+  {
+   "iteration": 80,
+   "residual": 10.071088401627147
+  },
+  {
+   "iteration": 81,
+   "residual": 10.1863021692816
+  },
+  {
+   "iteration": 82,
+   "residual": 10.33363752769791
+  },
+  {
+   "iteration": 83,
+   "residual": 10.481639019816285
+  },
+  {
+   "iteration": 84,
+   "residual": 10.599209086004077
+  },
+  {
+   "iteration": 85,
+   "residual": 10.893381515909377
+  },
+  {
+   "iteration": 86,
+   "residual": 11.150574552475183
+  },
+  {
+   "iteration": 87,
+   "residual": 11.370976061836831
+  },
+  {
+   "iteration": 88,
+   "residual": 11.595957801586296
+  },
+  {
+   "iteration": 89,
+   "residual": 11.817980641511957
+  },
+  {
+   "iteration": 90,
+   "residual": 12.033193506213857
+  },
+  {
+   "iteration": 91,
+   "residual": 12.325135205499922
+  },
+  {
+   "iteration": 92,
+   "residual": 12.582451106775778
+  },
+  {
+   "iteration": 93,
+   "residual": 12.804956680974128
+  },
+  {
+   "iteration": 94,
+   "residual": 12.992662478383796
+  },
+  {
+   "iteration": 95,
+   "residual": 13.14576122278223
+  },
+  {
+   "iteration": 96,
+   "residual": 13.264614696733705
+  },
+  {
+   "iteration": 97,
+   "residual": 13.349740554019167
+  },
+  {
+   "iteration": 98,
+   "residual": 13.447061684513924
+  },
+  {
+   "iteration": 99,
+   "residual": 13.519085023459553
+  },
+  {
+   "iteration": 100,
+   "residual": 13.558441007598306
+  },
+  {
+   "iteration": 101,
+   "residual": 13.565830832049645
+  },
+  {
+   "iteration": 102,
+   "residual": 13.542072898122603
+  },
+  {
+   "iteration": 103,
+   "residual": 13.520162681004754
+  },
+  {
+   "iteration": 104,
+   "residual": 13.515131921004471
+  },
+  {
+   "iteration": 105,
+   "residual": 13.631346807696103
+  },
+  {
+   "iteration": 106,
+   "residual": 13.714673108482945
+  },
+  {
+   "iteration": 107,
+   "residual": 13.841977602853214
+  },
+  {
+   "iteration": 108,
+   "residual": 14.074822675484661
+  },
+  {
+   "iteration": 109,
+   "residual": 14.366618047872594
+  },
+  {
+   "iteration": 110,
+   "residual": 14.669726212308149
+  },
+  {
+   "iteration": 111,
+   "residual": 14.947925570318148
+  },
+  {
+   "iteration": 112,
+   "residual": 15.197352938589436
+  },
+  {
+   "iteration": 113,
+   "residual": 15.422990841112671
+  },
+  {
+   "iteration": 114,
+   "residual": 15.632419201238505
+  },
+  {
+   "iteration": 115,
+   "residual": 15.813507635937896
+  },
+  {
+   "iteration": 116,
+   "residual": 15.966534255806218
+  },
+  {
+   "iteration": 117,
+   "residual": 16.091860408464715
+  },
+  {
+   "iteration": 118,
+   "residual": 16.21693792927746
+  },
+  {
+   "iteration": 119,
+   "residual": 16.498888187249023
+  },
+  {
+   "iteration": 120,
+   "residual": 16.774875171654532
+  },
+  {
+   "iteration": 121,
+   "residual": 17.025306865050148
+  },
+  {
+   "iteration": 122,
+   "residual": 17.250552022421058
+  },
+  {
+   "iteration": 123,
+   "residual": 17.450238198507417
+  },
+  {
+   "iteration": 124,
+   "residual": 17.623146292058724
+  },
+  {
+   "iteration": 125,
+   "residual": 17.76932922849692
+  },
+  {
+   "iteration": 126,
+   "residual": 17.88891665227965
+  },
+  {
+   "iteration": 127,
+   "residual": 17.982110954408146
+  },
+  {
+   "iteration": 128,
+   "residual": 18.04918324979718
+  },
+  {
+   "iteration": 129,
+   "residual": 18.090469327481017
+  },
+  {
+   "iteration": 130,
+   "residual": 18.106365594731855
+  },
+  {
+   "iteration": 131,
+   "residual": 18.097325034301463
+  },
+  {
+   "iteration": 132,
+   "residual": 18.08364330939635
+  },
+  {
+   "iteration": 133,
+   "residual": 18.081367467738556
+  },
+  {
+   "iteration": 134,
+   "residual": 18.055114326042116
+  },
+  {
+   "iteration": 135,
+   "residual": 18.091362516643322
+  },
+  {
+   "iteration": 136,
+   "residual": 18.305814377772894
+  },
+  {
+   "iteration": 137,
+   "residual": 18.602045549052416
+  },
+  {
+   "iteration": 138,
+   "residual": 18.87562596300776
+  },
+  {
+   "iteration": 139,
+   "residual": 19.12665964788397
+  },
+  {
+   "iteration": 140,
+   "residual": 19.355298743148282
+  },
+  {
+   "iteration": 141,
+   "residual": 19.5992442275958
+  },
+  {
+   "iteration": 142,
+   "residual": 19.8233013367667
+  },
+  {
+   "iteration": 143,
+   "residual": 20.025396574401476
+  },
+  {
+   "iteration": 144,
+   "residual": 20.259781006781598
+  },
+  {
+   "iteration": 145,
+   "residual": 20.521737638086154
+  },
+  {
+   "iteration": 146,
+   "residual": 20.76100164628046
+  },
+  {
+   "iteration": 147,
+   "residual": 20.977634191820652
+  },
+  {
+   "iteration": 148,
+   "residual": 21.17174053416458
+  },
+  {
+   "iteration": 149,
+   "residual": 21.34346791177218
+  },
+  {
+   "iteration": 150,
+   "residual": 21.493003421271915
+  },
+  {
+   "iteration": 151,
+   "residual": 21.636994309366408
+  },
+  {
+   "iteration": 152,
+   "residual": 21.771178211092202
+  },
+  {
+   "iteration": 153,
+   "residual": 21.88368016244081
+  },
+  {
+   "iteration": 154,
+   "residual": 21.974746973598513
+  },
+  {
+   "iteration": 155,
+   "residual": 22.044658237149523
+  },
+  {
+   "iteration": 156,
+   "residual": 22.204742958362957
+  },
+  {
+   "iteration": 157,
+   "residual": 22.37189649802893
+  },
+  {
+   "iteration": 158,
+   "residual": 22.537695240657193
+  },
+  {
+   "iteration": 159,
+   "residual": 22.74860990398025
+  },
+  {
+   "iteration": 160,
+   "residual": 22.95154175551463
+  },
+  {
+   "iteration": 161,
+   "residual": 23.13447777626568
+  },
+  {
+   "iteration": 162,
+   "residual": 23.29739926610681
+  },
+  {
+   "iteration": 163,
+   "residual": 23.440321617113792
+  },
+  {
+   "iteration": 164,
+   "residual": 23.563293119596704
+  },
+  {
+   "iteration": 165,
+   "residual": 23.6773177614147
+  },
+  {
+   "iteration": 166,
+   "residual": 23.77382969805842
+  },
+  {
+   "iteration": 167,
+   "residual": 23.85061428140862
+  },
+  {
+   "iteration": 168,
+   "residual": 23.907807116901736
+  },
+  {
+   "iteration": 169,
+   "residual": 23.94907473717028
+  },
+  {
+   "iteration": 170,
+   "residual": 23.975895642186465
+  },
+  {
+   "iteration": 171,
+   "residual": 23.983650721508337
+  },
+  {
+   "iteration": 172,
+   "residual": 23.972559916157707
+  },
+  {
+   "iteration": 173,
+   "residual": 24.07302530027215
+  },
+  {
+   "iteration": 174,
+   "residual": 24.23012554869352
+  },
+  {
+   "iteration": 175,
+   "residual": 24.481364472536534
+  },
+  {
+   "iteration": 176,
+   "residual": 24.796978377272197
+  },
+  {
+   "iteration": 177,
+   "residual": 25.09483340659049
+  },
+  {
+   "iteration": 178,
+   "residual": 25.374951421138118
+  },
+  {
+   "iteration": 179,
+   "residual": 25.69258949658051
+  },
+  {
+   "iteration": 180,
+   "residual": 25.993721196008245
+  },
+  {
+   "iteration": 181,
+   "residual": 26.276825786865984
+  },
+  {
+   "iteration": 182,
+   "residual": 26.54191237284134
+  },
+  {
+   "iteration": 183,
+   "residual": 26.789013378607713
+  },
+  {
+   "iteration": 184,
+   "residual": 27.018183689740567
+  },
+  {
+   "iteration": 185,
+   "residual": 27.229499789053225
+  },
+  {
+   "iteration": 186,
+   "residual": 27.423058891437563
+  },
+  {
+   "iteration": 187,
+   "residual": 27.598978079167956
+  },
+  {
+   "iteration": 188,
+   "residual": 27.757393439501975
+  },
+  {
+   "iteration": 189,
+   "residual": 27.89845920628954
+  },
+  {
+   "iteration": 190,
+   "residual": 28.02234690718303
+  },
+  {
+   "iteration": 191,
+   "residual": 28.219548194933882
+  },
+  {
+   "iteration": 192,
+   "residual": 28.432346624070775
+  },
+  {
+   "iteration": 193,
+   "residual": 28.649522428551865
+  },
+  {
+   "iteration": 194,
+   "residual": 28.849126940706316
+  },
+  {
+   "iteration": 195,
+   "residual": 29.031204827044743
+  },
+  {
+   "iteration": 196,
+   "residual": 29.19581972371366
+  },
+  {
+   "iteration": 197,
+   "residual": 29.34305357596185
+  },
+  {
+   "iteration": 198,
+   "residual": 29.473005975073047
+  },
+  {
+   "iteration": 199,
+   "residual": 29.58579349412613
+  },
+  {
+   "iteration": 200,
+   "residual": 29.681549023861034
+  },
+  {
+   "iteration": 201,
+   "residual": 29.760421109848842
+  },
+  {
+   "iteration": 202,
+   "residual": 29.82257329208702
+  },
+  {
+   "iteration": 203,
+   "residual": 29.86818344806605
+  },
+  {
+   "iteration": 204,
+   "residual": 29.92360364908225
+  },
+  {
+   "iteration": 205,
+   "residual": 30.07373729188307
+  },
+  {
+   "iteration": 206,
+   "residual": 30.208218153872593
+  },
+  {
+   "iteration": 207,
+   "residual": 30.33107736594337
+  },
+  {
+   "iteration": 208,
+   "residual": 30.46483182697538
+  },
+  {
+   "iteration": 209,
+   "residual": 30.583058004008155
+  },
+  {
+   "iteration": 210,
+   "residual": 30.685826354344876
+  },
+  {
+   "iteration": 211,
+   "residual": 30.77322101280979
+  },
+  {
+   "iteration": 212,
+   "residual": 30.845339314120974
+  },
+  {
+   "iteration": 213,
+   "residual": 30.97343315834061
+  },
+  {
+   "iteration": 214,
+   "residual": 31.091730898049306
+  },
+  {
+   "iteration": 215,
+   "residual": 31.19496414511399
+  },
+  {
+   "iteration": 216,
+   "residual": 31.283182926171875
+  },
+  {
+   "iteration": 217,
+   "residual": 31.356450323816
+  },
+  {
+   "iteration": 218,
+   "residual": 31.41484207296288
+  },
+  {
+   "iteration": 219,
+   "residual": 31.47612055605389
+  },
+  {
+   "iteration": 220,
+   "residual": 31.644515770144373
+  },
+  {
+   "iteration": 221,
+   "residual": 31.874794280045233
+  },
+  {
+   "iteration": 222,
+   "residual": 32.09253222136198
+  },
+  {
+   "iteration": 223,
+   "residual": 32.2977632345121
+  },
+  {
+   "iteration": 224,
+   "residual": 32.49053144606757
+  },
+  {
+   "iteration": 225,
+   "residual": 32.670891128143865
+  },
+  {
+   "iteration": 226,
+   "residual": 32.838906357287726
+  },
+  {
+   "iteration": 227,
+   "residual": 33.1534104608236
+  },
+  {
+   "iteration": 228,
+   "residual": 33.482596003638015
+  },
+  {
+   "iteration": 229,
+   "residual": 33.79783158816356
+  },
+  {
+   "iteration": 230,
+   "residual": 34.110799802496636
+  },
+  {
+   "iteration": 231,
+   "residual": 34.413245632082635
+  },
+  {
+   "iteration": 232,
+   "residual": 34.70169842734026
+  },
+  {
+   "iteration": 233,
+   "residual": 34.97616754314193
+  },
+  {
+   "iteration": 234,
+   "residual": 35.23667287372787
+  },
+  {
+   "iteration": 235,
+   "residual": 35.48324454496028
+  },
+  {
+   "iteration": 236,
+   "residual": 35.71592260618341
+  },
+  {
+   "iteration": 237,
+   "residual": 35.93475672208294
+  },
+  {
+   "iteration": 238,
+   "residual": 36.143267588524665
+  },
+  {
+   "iteration": 239,
+   "residual": 36.3447058215818
+  },
+  {
+   "iteration": 240,
+   "residual": 36.53247226700134
+  },
+  {
+   "iteration": 241,
+   "residual": 36.7445494578901
+  },
+  {
+   "iteration": 242,
+   "residual": 36.96264304921016
+  },
+  {
+   "iteration": 243,
+   "residual": 37.16702766314464
+  },
+  {
+   "iteration": 244,
+   "residual": 37.357744078668105
+  },
+  {
+   "iteration": 245,
+   "residual": 37.53778650198653
+  },
+  {
+   "iteration": 246,
+   "residual": 37.70777995153149
+  },
+  {
+   "iteration": 247,
+   "residual": 37.86425933601142
+  },
+  {
+   "iteration": 248,
+   "residual": 38.007291972282886
+  },
+  {
+   "iteration": 249,
+   "residual": 38.13695315729931
+  },
+  {
+   "iteration": 250,
+   "residual": 38.25478169344251
+  },
+  {
+   "iteration": 251,
+   "residual": 38.361593043910275
+  },
+  {
+   "iteration": 252,
+   "residual": 38.477938441449034
+  },
+  {
+   "iteration": 253,
+   "residual": 38.66332990400855
+  },
+  {
+   "iteration": 254,
+   "residual": 38.83579438914941
+  },
+  {
+   "iteration": 255,
+   "residual": 38.99481720059361
+  },
+  {
+   "iteration": 256,
+   "residual": 39.14044226637958
+  },
+  {
+   "iteration": 257,
+   "residual": 39.272721426887244
+  },
+  {
+   "iteration": 258,
+   "residual": 39.391714216086676
+  },
+  {
+   "iteration": 259,
+   "residual": 39.49748764235505
+  },
+  {
+   "iteration": 260,
+   "residual": 39.590115969111196
+  },
+  {
+   "iteration": 261,
+   "residual": 39.66968049550658
+  },
+  {
+   "iteration": 262,
+   "residual": 39.764771521593055
+  },
+  {
+   "iteration": 263,
+   "residual": 39.860964784076984
+  },
+  {
+   "iteration": 264,
+   "residual": 39.94428278155898
+  },
+  {
+   "iteration": 265,
+   "residual": 40.014794495540514
+  },
+  {
+   "iteration": 266,
+   "residual": 40.072575615490344
+  },
+  {
+   "iteration": 267,
+   "residual": 40.11770834357988
+  },
+  {
+   "iteration": 268,
+   "residual": 40.20840502866875
+  },
+  {
+   "iteration": 269,
+   "residual": 40.364311977717
+  },
+  {
+   "iteration": 270,
+   "residual": 40.508057307389514
+  },
+  {
+   "iteration": 271,
+   "residual": 40.639662401360944
+  },
+  {
+   "iteration": 272,
+   "residual": 40.75915535687093
+  },
+  {
+   "iteration": 273,
+   "residual": 40.86657082290595
+  },
+  {
+   "iteration": 274,
+   "residual": 40.96194983770771
+  },
+  {
+   "iteration": 275,
+   "residual": 41.045339665788326
+  },
+  {
+   "iteration": 276,
+   "residual": 41.11679363462517
+  },
+  {
+   "iteration": 277,
+   "residual": 41.176370971200704
+  },
+  {
+   "iteration": 278,
+   "residual": 41.224136638546135
+  },
+  {
+   "iteration": 279,
+   "residual": 41.26016117244048
+  },
+  {
+   "iteration": 280,
+   "residual": 41.37699163546326
+  },
+  {
+   "iteration": 281,
+   "residual": 41.579096210038934
+  },
+  {
+   "iteration": 282,
+   "residual": 41.771285557835284
+  },
+  {
+   "iteration": 283,
+   "residual": 41.953610767450016
+  },
+  {
+   "iteration": 284,
+   "residual": 42.1277167734054
+  },
+  {
+   "iteration": 285,
+   "residual": 42.398751374608146
+  },
+  {
+   "iteration": 286,
+   "residual": 42.660037513566024
+  },
+  {
+   "iteration": 287,
+   "residual": 42.91150831013414
+  },
+  {
+   "iteration": 288,
+   "residual": 43.153160018011704
+  },
+  {
+   "iteration": 289,
+   "residual": 43.38499405194951
+  },
+  {
+   "iteration": 290,
+   "residual": 43.607016877626116
+  },
+  {
+   "iteration": 291,
+   "residual": 43.819239900835676
+  },
+  {
+   "iteration": 292,
+   "residual": 44.0216793561067
+  },
+  {
+   "iteration": 293,
+   "residual": 44.21435619486509
+  },
+  {
+   "iteration": 294,
+   "residual": 44.52823029133617
+  },
+  {
+   "iteration": 295,
+   "residual": 44.88615222054896
+  },
+  {
+   "iteration": 296,
+   "residual": 45.2331073967831
+  },
+  {
+   "iteration": 297,
+   "residual": 45.56907473112019
+  },
+  {
+   "iteration": 298,
+   "residual": 45.89403851787782
+  },
+  {
+   "iteration": 299,
+   "residual": 46.20798832725142
+  },
+  {
+   "iteration": 300,
+   "residual": 46.510918897472834
+  },
+  {
+   "iteration": 301,
+   "residual": 46.8028300265853
+  },
+  {
+   "iteration": 302,
+   "residual": 47.083726463929956
+  },
+  {
+   "iteration": 303,
+   "residual": 47.368553019561084
+  },
+  {
+   "iteration": 304,
+   "residual": 47.65044495786465
+  },
+  {
+   "iteration": 305,
+   "residual": 47.921312918031035
+  },
+  {
+   "iteration": 306,
+   "residual": 48.18116411214965
+  },
+  {
+   "iteration": 307,
+   "residual": 48.43001044468228
+  },
+  {
+   "iteration": 308,
+   "residual": 48.66786841061426
+  },
+  {
+   "iteration": 309,
+   "residual": 48.894758993461345
+  },
+  {
+   "iteration": 310,
+   "residual": 49.11070756320958
+  },
+  {
+   "iteration": 311,
+   "residual": 49.315743774261755
+  },
+  {
+   "iteration": 312,
+   "residual": 49.50990146346184
+  },
+  {
+   "iteration": 313,
+   "residual": 49.69321854826524
+  },
+  {
+   "iteration": 314,
+   "residual": 49.86573692512087
+  },
+  {
+   "iteration": 315,
+   "residual": 50.027502368127266
+  },
+  {
+   "iteration": 316,
+   "residual": 50.17856442802347
+  },
+  {
+   "iteration": 317,
+   "residual": 50.318976331572024
+  },
+  {
+   "iteration": 318,
+   "residual": 50.44879488138947
+  },
+  {
+   "iteration": 319,
+   "residual": 50.568080356276795
+  },
+  {
+   "iteration": 320,
+   "residual": 50.68722631202639
+  },
+  {
+   "iteration": 321,
+   "residual": 50.80228920863912
+  },
+  {
+   "iteration": 322,
+   "residual": 50.90698333235042
+  },
+  {
+   "iteration": 323,
+   "residual": 51.001371230317964
+  },
+  {
+   "iteration": 324,
+   "residual": 51.08551861355713
+  },
+  {
+   "iteration": 325,
+   "residual": 51.2161589968771
+  },
+  {
+   "iteration": 326,
+   "residual": 51.33800216756012
+  },
+  {
+   "iteration": 327,
+   "residual": 51.44963800473967
+  },
+  {
+   "iteration": 328,
+   "residual": 51.55111339158503
+  },
+  {
+   "iteration": 329,
+   "residual": 51.64247844455712
+  },
+  {
+   "iteration": 330,
+   "residual": 51.723786433292595
+  },
+  {
+   "iteration": 331,
+   "residual": 51.79509370067946
+  },
+  {
+   "iteration": 332,
+   "residual": 51.85645958316739
+  },
+  {
+   "iteration": 333,
+   "residual": 51.90794633135389
+  },
+  {
+   "iteration": 334,
+   "residual": 52.02615198086023
+  },
+  {
+   "iteration": 335,
+   "residual": 52.17189090076263
+  },
+  {
+   "iteration": 336,
+   "residual": 52.30842556119415
+  },
+  {
+   "iteration": 337,
+   "residual": 52.43488973058814
+  },
+  {
+   "iteration": 338,
+   "residual": 52.551310857765
+  },
+  {
+   "iteration": 339,
+   "residual": 52.65771966731203
+  },
+  {
+   "iteration": 340,
+   "residual": 52.75415009255005
+  },
+  {
+   "iteration": 341,
+   "residual": 52.84063920836723
+  },
+  {
+   "iteration": 342,
+   "residual": 52.91722716396258
+  },
+  {
+   "iteration": 343,
+   "residual": 52.98395711553991
+  },
+  {
+   "iteration": 344,
+   "residual": 53.040875158992485
+  },
+  {
+   "iteration": 345,
+   "residual": 53.08803026261603
+  },
+  {
+   "iteration": 346,
+   "residual": 53.12926484227758
+  },
+  {
+   "iteration": 347,
+   "residual": 53.16492852555314
+  },
+  {
+   "iteration": 348,
+   "residual": 53.19097990039295
+  },
+  {
+   "iteration": 349,
+   "residual": 53.207474311207044
+  },
+  {
+   "iteration": 350,
+   "residual": 53.21446970623955
+  },
+  {
+   "iteration": 351,
+   "residual": 53.212026572730515
+  },
+  {
+   "iteration": 352,
+   "residual": 53.30096489178182
+  },
+  {
+   "iteration": 353,
+   "residual": 53.414398762797774
+  },
+  {
+   "iteration": 354,
+   "residual": 53.51873797861475
+  },
+  {
+   "iteration": 355,
+   "residual": 53.614005628223566
+  },
+  {
+   "iteration": 356,
+   "residual": 53.70629241026838
+  },
+  {
+   "iteration": 357,
+   "residual": 53.93460462307122
+  },
+  {
+   "iteration": 358,
+   "residual": 54.23607340468087
+  },
+  {
+   "iteration": 359,
+   "residual": 54.52973265592629
+  },
+  {
+   "iteration": 360,
+   "residual": 54.81557243250853
+  },
+  {
+   "iteration": 361,
+   "residual": 55.09358544294716
+  },
+  {
+   "iteration": 362,
+   "residual": 55.36495510948909
+  },
+  {
+   "iteration": 363,
+   "residual": 55.63015155849055
+  },
+  {
+   "iteration": 364,
+   "residual": 55.88751100969198
+  },
+  {
+   "iteration": 365,
+   "residual": 56.13703486648981
+  },
+  {
+   "iteration": 366,
+   "residual": 56.378726992322434
+  },
+  {
+   "iteration": 367,
+   "residual": 56.61277432540245
+  },
+  {
+   "iteration": 368,
+   "residual": 56.84003896644459
+  },
+  {
+   "iteration": 369,
+   "residual": 57.05949564854421
+  },
+  {
+   "iteration": 370,
+   "residual": 57.27115702410891
+  },
+  {
+   "iteration": 371,
+   "residual": 57.47503799870803
+  },
+  {
+   "iteration": 372,
+   "residual": 57.67115568782574
+  },
+  {
+   "iteration": 373,
+   "residual": 57.85952937356408
+  },
+  {
+   "iteration": 374,
+   "residual": 58.04018046131985
+  },
+  {
+   "iteration": 375,
+   "residual": 58.21313243645772
+  },
+  {
+   "iteration": 376,
+   "residual": 58.37841082100213
+  },
+  {
+   "iteration": 377,
+   "residual": 58.53604313036915
+  },
+  {
+   "iteration": 378,
+   "residual": 58.68605883015924
+  },
+  {
+   "iteration": 379,
+   "residual": 58.82848929303084
+  },
+  {
+   "iteration": 380,
+   "residual": 58.965177903098215
+  },
+  {
+   "iteration": 381,
+   "residual": 59.25671544298029
+  },
+  {
+   "iteration": 382,
+   "residual": 59.63674425540079
+  },
+  {
+   "iteration": 383,
+   "residual": 60.008368006560936
+  },
+  {
+   "iteration": 384,
+   "residual": 60.37156446676548
+  },
+  {
+   "iteration": 385,
+   "residual": 60.726313917368564
+  },
+  {
+   "iteration": 386,
+   "residual": 61.07259911646381
+  },
+  {
+   "iteration": 387,
+   "residual": 61.41040526433558
+  },
+  {
+   "iteration": 388,
+   "residual": 61.73971996869247
+  },
+  {
+   "iteration": 389,
+   "residual": 62.0605332097061
+  },
+  {
+   "iteration": 390,
+   "residual": 62.4036465842091
+  },
+  {
+   "iteration": 391,
+   "residual": 62.74009349837277
+  },
+  {
+   "iteration": 392,
+   "residual": 63.06796109666279
+  },
+  {
+   "iteration": 393,
+   "residual": 63.387235373514656
+  },
+  {
+   "iteration": 394,
+   "residual": 63.697904696319256
+  },
+  {
+   "iteration": 395,
+   "residual": 63.999959772735664
+  },
+  {
+   "iteration": 396,
+   "residual": 64.29339361779184
+  },
+  {
+   "iteration": 397,
+   "residual": 64.57820152079226
+  },
+  {
+   "iteration": 398,
+   "residual": 64.8543810120529
+  },
+  {
+   "iteration": 399,
+   "residual": 65.12193182948117
+  },
+  {
+   "iteration": 400,
+   "residual": 65.38085588502008
+  },
+  {
+   "iteration": 401,
+   "residual": 65.6311572309741
+  },
+  {
+   "iteration": 402,
+   "residual": 65.87284202623417
+  },
+  {
+   "iteration": 403,
+   "residual": 66.10591850241865
+  },
+  {
+   "iteration": 404,
+   "residual": 66.33039692994717
+  },
+  {
+   "iteration": 405,
+   "residual": 66.5462895840626
+  },
+  {
+   "iteration": 406,
+   "residual": 66.7536107108176
+  },
+  {
+   "iteration": 407,
+   "residual": 66.95237649303999
+  },
+  {
+   "iteration": 408,
+   "residual": 67.14260501629238
+  },
+  {
+   "iteration": 409,
+   "residual": 67.32431623483974
+  },
+  {
+   "iteration": 410,
+   "residual": 67.49753193763911
+  },
+  {
+   "iteration": 411,
+   "residual": 67.66227571436441
+  },
+  {
+   "iteration": 412,
+   "residual": 67.8185729214801
+  },
+  {
+   "iteration": 413,
+   "residual": 67.96645064837534
+  },
+  {
+   "iteration": 414,
+   "residual": 68.10593768357148
+  },
+  {
+   "iteration": 415,
+   "residual": 68.23706448101447
+  },
+  {
+   "iteration": 416,
+   "residual": 68.35986312646352
+  },
+  {
+   "iteration": 417,
+   "residual": 68.47436730398701
+  },
+  {
+   "iteration": 418,
+   "residual": 68.58061226257662
+  },
+  {
+   "iteration": 419,
+   "residual": 68.70101152411937
+  },
+  {
+   "iteration": 420,
+   "residual": 68.81492338839637
+  },
+  {
+   "iteration": 421,
+   "residual": 68.92065332172336
+  },
+  {
+   "iteration": 422,
+   "residual": 69.0182337971975
+  },
+  {
+   "iteration": 423,
+   "residual": 69.10769879590386
+  },
+  {
+   "iteration": 424,
+   "residual": 69.18908377627889
+  },
+  {
+   "iteration": 425,
+   "residual": 69.26242564357166
+  },
+  {
+   "iteration": 426,
+   "residual": 69.32776271941256
+  },
+  {
+   "iteration": 427,
+   "residual": 69.3851347114987
+  },
+  {
+   "iteration": 428,
+   "residual": 69.43458268340329
+  },
+  {
+   "iteration": 429,
+   "residual": 69.47614902451872
+  },
+  {
+   "iteration": 430,
+   "residual": 69.50987742014001
+  },
+  {
+   "iteration": 431,
+   "residual": 69.53581282169701
+  },
+  {
+   "iteration": 432,
+   "residual": 69.55400141714249
+  },
+  {
+   "iteration": 433,
+   "residual": 69.56449060150342
+  },
+  {
+   "iteration": 434,
+   "residual": 69.56732894760175
+  },
+  {
+   "iteration": 435,
+   "residual": 69.56256617695189
+  },
+  {
+   "iteration": 436,
+   "residual": 69.55025313084097
+  },
+  {
+   "iteration": 437,
+   "residual": 69.56676673817803
+  },
+  {
+   "iteration": 438,
+   "residual": 69.597824765534
+  },
+  {
+   "iteration": 439,
+   "residual": 69.6213856804398
+  },
+  {
+   "iteration": 440,
+   "residual": 69.63748784996086
+  },
+  {
+   "iteration": 441,
+   "residual": 69.65008115078395
+  },
+  {
+   "iteration": 442,
+   "residual": 69.75421344994635
+  },
+  {
+   "iteration": 443,
+   "residual": 69.8507626447127
+  },
+  {
+   "iteration": 444,
+   "residual": 69.93974818438907
+  },
+  {
+   "iteration": 445,
+   "residual": 70.03703971652654
+  },
+  {
+   "iteration": 446,
+   "residual": 70.1287814212408
+  },
+  {
+   "iteration": 447,
+   "residual": 70.21300316167499
+  },
+  {
+   "iteration": 448,
+   "residual": 70.28972389478749
+  },
+  {
+   "iteration": 449,
+   "residual": 70.3589639153191
+  },
+  {
+   "iteration": 450,
+   "residual": 70.42074483480017
+  },
+  {
+   "iteration": 451,
+   "residual": 70.47508956053463
+  },
+  {
+   "iteration": 452,
+   "residual": 70.52202227456793
+  },
+  {
+   "iteration": 453,
+   "residual": 70.56156841264686
+  },
+  {
+   "iteration": 454,
+   "residual": 70.59375464317712
+  },
+  {
+   "iteration": 455,
+   "residual": 70.62264788854257
+  },
+  {
+   "iteration": 456,
+   "residual": 70.82088960450035
+  },
+  {
+   "iteration": 457,
+   "residual": 71.01281268208464
+  },
+  {
+   "iteration": 458,
+   "residual": 71.19843539161151
+  },
+  {
+   "iteration": 459,
+   "residual": 71.37777707846622
+  },
+  {
+   "iteration": 460,
+   "residual": 71.55085814392794
+  },
+  {
+   "iteration": 461,
+   "residual": 71.71770002602632
+  },
+  {
+   "iteration": 462,
+   "residual": 71.99766463319405
+  },
+  {
+   "iteration": 463,
+   "residual": 72.28537768383092
+  },
+  {
+   "iteration": 464,
+   "residual": 72.56703545954942
+  },
+  {
+   "iteration": 465,
+   "residual": 72.84263738250563
+  },
+  {
+   "iteration": 466,
+   "residual": 73.11218401616185
+  },
+  {
+   "iteration": 467,
+   "residual": 73.37567704941073
+  },
+  {
+   "iteration": 468,
+   "residual": 73.63311928067368
+  },
+  {
+   "iteration": 469,
+   "residual": 73.89145080043781
+  },
+  {
+   "iteration": 470,
+   "residual": 74.14955535945657
+  },
+  {
+   "iteration": 471,
+   "residual": 74.40160664779933
+  },
+  {
+   "iteration": 472,
+   "residual": 74.64760793232772
+  },
+  {
+   "iteration": 473,
+   "residual": 74.8875635517445
+  },
+  {
+   "iteration": 474,
+   "residual": 75.12147890134119
+  },
+  {
+   "iteration": 475,
+   "residual": 75.34936041772937
+  },
+  {
+   "iteration": 476,
+   "residual": 75.5712155635605
+  },
+  {
+   "iteration": 477,
+   "residual": 75.78705281223866
+  },
+  {
+   "iteration": 478,
+   "residual": 75.9968816326319
+  },
+  {
+   "iteration": 479,
+   "residual": 76.20071247378559
+  },
+  {
+   "iteration": 480,
+   "residual": 76.39855674964306
+  },
+  {
+   "iteration": 481,
+   "residual": 76.59042682377778
+  },
+  {
+   "iteration": 482,
+   "residual": 76.7763359941408
+  },
+  {
+   "iteration": 483,
+   "residual": 76.95629847782864
+  },
+  {
+   "iteration": 484,
+   "residual": 77.13541420960544
+  },
+  {
+   "iteration": 485,
+   "residual": 77.34721474851956
+  },
+  {
+   "iteration": 486,
+   "residual": 77.55308240685375
+  },
+  {
+   "iteration": 487,
+   "residual": 77.75302393371062
+  },
+  {
+   "iteration": 488,
+   "residual": 77.95546890622025
+  },
+  {
+   "iteration": 489,
+   "residual": 78.15261240451979
+  },
+  {
+   "iteration": 490,
+   "residual": 78.3438469399901
+  },
+  {
+   "iteration": 491,
+   "residual": 78.52918046954787
+  },
+  {
+   "iteration": 492,
+   "residual": 78.70862187468703
+  },
+  {
+   "iteration": 493,
+   "residual": 78.8821809484881
+  },
+  {
+   "iteration": 494,
+   "residual": 79.06425979815427
+  },
+  {
+   "iteration": 495,
+   "residual": 79.40867680176399
+  },
+  {
+   "iteration": 496,
+   "residual": 79.74660478895728
+  },
+  {
+   "iteration": 497,
+   "residual": 80.0780373833565
+  },
+  {
+   "iteration": 498,
+   "residual": 80.40296927343205
+  },
+  {
+   "iteration": 499,
+   "residual": 80.72139620015807
+  },
+  {
+   "iteration": 500,
+   "residual": 81.03331494463
+  },
+  {
+   "iteration": 501,
+   "residual": 81.33872331564822
+  },
+  {
+   "iteration": 502,
+   "residual": 81.63762013727138
+  },
+  {
+   "iteration": 503,
+   "residual": 81.93000523634376
+  },
+  {
+   "iteration": 504,
+   "residual": 82.21587942999982
+  },
+  {
+   "iteration": 505,
+   "residual": 82.49524451314997
+  },
+  {
+   "iteration": 506,
+   "residual": 82.770543268516
+  },
+  {
+   "iteration": 507,
+   "residual": 83.04296743580774
+  },
+  {
+   "iteration": 508,
+   "residual": 83.30888597633124
+  },
+  {
+   "iteration": 509,
+   "residual": 83.64340342391885
+  },
+  {
+   "iteration": 510,
+   "residual": 83.97254861060843
+  },
+  {
+   "iteration": 511,
+   "residual": 84.29517063139619
+  },
+  {
+   "iteration": 512,
+   "residual": 84.61126099650298
+  },
+  {
+   "iteration": 513,
+   "residual": 84.9208122450414
+  },
+  {
+   "iteration": 514,
+   "residual": 85.22381793445875
+  },
+  {
+   "iteration": 515,
+   "residual": 85.52027262992408
+  },
+  {
+   "iteration": 516,
+   "residual": 85.81017189366419
+  },
+  {
+   "iteration": 517,
+   "residual": 86.09529720367827
+  },
+  {
+   "iteration": 518,
+   "residual": 86.3759732848471
+  },
+  {
+   "iteration": 519,
+   "residual": 86.65008389991097
+  },
+  {
+   "iteration": 520,
+   "residual": 86.91762750178002
+  },
+  {
+   "iteration": 521,
+   "residual": 87.1786034957138
+  },
+  {
+   "iteration": 522,
+   "residual": 87.43301222858268
+  },
+  {
+   "iteration": 523,
+   "residual": 87.68085497809531
+  },
+  {
+   "iteration": 524,
+   "residual": 87.92213394199625
+  },
+  {
+   "iteration": 525,
+   "residual": 88.15685222723675
+  },
+  {
+   "iteration": 526,
+   "residual": 88.38501383912156
+  },
+  {
+   "iteration": 527,
+   "residual": 88.60662367043473
+  },
+  {
+   "iteration": 528,
+   "residual": 88.82168749054807
+  },
+  {
+   "iteration": 529,
+   "residual": 89.03150424003307
+  },
+  {
+   "iteration": 530,
+   "residual": 89.23569968436078
+  },
+  {
+   "iteration": 531,
+   "residual": 89.43336879762471
+  },
+  {
+   "iteration": 532,
+   "residual": 89.6249256579942
+  },
+  {
+   "iteration": 533,
+   "residual": 89.8366408620739
+  },
+  {
+   "iteration": 534,
+   "residual": 90.04905363408731
+  },
+  {
+   "iteration": 535,
+   "residual": 90.25494398311547
+  },
+  {
+   "iteration": 536,
+   "residual": 90.4543165224223
+  },
+  {
+   "iteration": 537,
+   "residual": 90.64717671718805
+  },
+  {
+   "iteration": 538,
+   "residual": 90.83353087457762
+  },
+  {
+   "iteration": 539,
+   "residual": 91.01338613378547
+  },
+  {
+   "iteration": 540,
+   "residual": 91.18675045605916
+  },
+  {
+   "iteration": 541,
+   "residual": 91.35363261470455
+  },
+  {
+   "iteration": 542,
+   "residual": 91.51404218507534
+  },
+  {
+   "iteration": 543,
+   "residual": 91.66798953454922
+  },
+  {
+   "iteration": 544,
+   "residual": 91.81548581249318
+  },
+  {
+   "iteration": 545,
+   "residual": 91.9565429402207
+  },
+  {
+   "iteration": 546,
+   "residual": 92.09117360094281
+  },
+  {
+   "iteration": 547,
+   "residual": 92.21939122971567
+  },
+  {
+   "iteration": 548,
+   "residual": 92.34121000338654
+  },
+  {
+   "iteration": 549,
+   "residual": 92.45664483054166
+  },
+  {
+   "iteration": 550,
+   "residual": 92.56571134145588
+  },
+  {
+   "iteration": 551,
+   "residual": 92.66842587804902
+  },
+  {
+   "iteration": 552,
+   "residual": 92.76480548384869
+  },
+  {
+   "iteration": 553,
+   "residual": 92.85486789396332
+  },
+  {
+   "iteration": 554,
+   "residual": 92.93863152506633
+  },
+  {
+   "iteration": 555,
+   "residual": 93.01611546539375
+  },
+  {
+   "iteration": 556,
+   "residual": 93.08733946475796
+  },
+  {
+   "iteration": 557,
+   "residual": 93.15232392457803
+  },
+  {
+   "iteration": 558,
+   "residual": 93.21108988792977
+  },
+  {
+   "iteration": 559,
+   "residual": 93.26365902961649
+  },
+  {
+   "iteration": 560,
+   "residual": 93.31005364626297
+  },
+  {
+   "iteration": 561,
+   "residual": 93.35029664643342
+  },
+  {
+   "iteration": 562,
+   "residual": 93.384411540776
+  },
+  {
+   "iteration": 563,
+   "residual": 93.41242243219511
+  },
+  {
+   "iteration": 564,
+   "residual": 93.43435400605303
+  },
+  {
+   "iteration": 565,
+   "residual": 93.45023152040261
+  },
+  {
+   "iteration": 566,
+   "residual": 93.46008079625247
+  },
+  {
+   "iteration": 567,
+   "residual": 93.46392820786622
+  },
+  {
+   "iteration": 568,
+   "residual": 93.46180067309709
+  },
+  {
+   "iteration": 569,
+   "residual": 93.4537256437594
+  },
+  {
+   "iteration": 570,
+   "residual": 93.43973109603824
+  },
+  {
+   "iteration": 571,
+   "residual": 93.41984552093884
+  },
+  {
+   "iteration": 572,
+   "residual": 93.39409791477644
+  },
+  {
+   "iteration": 573,
+   "residual": 93.36251776970852
+  },
+  {
+   "iteration": 574,
+   "residual": 93.32513506431056
+  },
+  {
+   "iteration": 575,
+   "residual": 93.28198025419555
+  },
+  {
+   "iteration": 576,
+   "residual": 93.23308426267995
+  },
+  {
+   "iteration": 577,
+   "residual": 93.18021989870866
+  },
+  {
+   "iteration": 578,
+   "residual": 93.1447972214834
+  },
+  {
+   "iteration": 579,
+   "residual": 93.10370766092173
+  },
+  {
+   "iteration": 580,
+   "residual": 93.0569792641581
+  },
+  {
+   "iteration": 581,
+   "residual": 93.00464054003203
+  },
+  {
+   "iteration": 582,
+   "residual": 93.07196008518483
+  },
+  {
+   "iteration": 583,
+   "residual": 93.18633928264238
+  },
+  {
+   "iteration": 584,
+   "residual": 93.36029958320769
+  },
+  {
+   "iteration": 585,
+   "residual": 93.56721304141708
+  },
+  {
+   "iteration": 586,
+   "residual": 93.76920570234452
+  },
+  {
+   "iteration": 587,
+   "residual": 93.96628818018942
+  },
+  {
+   "iteration": 588,
+   "residual": 94.2055473048403
+  },
+  {
+   "iteration": 589,
+   "residual": 94.45122174890322
+  },
+  {
+   "iteration": 590,
+   "residual": 94.69195340140203
+  },
+  {
+   "iteration": 591,
+   "residual": 94.92774583005357
+  },
+  {
+   "iteration": 592,
+   "residual": 95.15860314714625
+  },
+  {
+   "iteration": 593,
+   "residual": 95.38453000347793
+  },
+  {
+   "iteration": 594,
+   "residual": 95.60553158228278
+  },
+  {
+   "iteration": 595,
+   "residual": 95.82161359315
+  },
+  {
+   "iteration": 596,
+   "residual": 96.03278226593486
+  },
+  {
+   "iteration": 597,
+   "residual": 96.2390443446631
+  },
+  {
+   "iteration": 598,
+   "residual": 96.44040708143129
+  },
+  {
+   "iteration": 599,
+   "residual": 96.63687823030271
+  },
+  {
+   "iteration": 600,
+   "residual": 96.82846604120117
+  },
+  {
+   "iteration": 601,
+   "residual": 97.0151792538037
+  },
+  {
+   "iteration": 602,
+   "residual": 97.19702709143307
+  },
+  {
+   "iteration": 603,
+   "residual": 97.37401925495126
+  },
+  {
+   "iteration": 604,
+   "residual": 97.54616591665555
+  },
+  {
+   "iteration": 605,
+   "residual": 97.71347771417761
+  },
+  {
+   "iteration": 606,
+   "residual": 97.95780538953773
+  },
+  {
+   "iteration": 607,
+   "residual": 98.24747844856718
+  },
+  {
+   "iteration": 608,
+   "residual": 98.53244303895893
+  },
+  {
+   "iteration": 609,
+   "residual": 98.81269716725492
+  },
+  {
+   "iteration": 610,
+   "residual": 99.0882393576637
+  },
+  {
+   "iteration": 611,
+   "residual": 99.35906864692615
+  },
+  {
+   "iteration": 612,
+   "residual": 99.62518457917042
+  },
+  {
+   "iteration": 613,
+   "residual": 99.8865872007567
+  },
+  {
+   "iteration": 614,
+   "residual": 100.14327705511222
+  },
+  {
+   "iteration": 615,
+   "residual": 100.39525517755938
+  },
+  {
+   "iteration": 616,
+   "residual": 100.64252309013594
+  },
+  {
+   "iteration": 617,
+   "residual": 100.89643792366141
+  },
+  {
+   "iteration": 618,
+   "residual": 101.15298656535374
+  },
+  {
+   "iteration": 619,
+   "residual": 101.4048204363654
+  },
+  {
+   "iteration": 620,
+   "residual": 101.65193983896037
+  },
+  {
+   "iteration": 621,
+   "residual": 101.89434556063404
+  },
+  {
+   "iteration": 622,
+   "residual": 102.1320388692376
+  },
+  {
+   "iteration": 623,
+   "residual": 102.3650215080929
+  },
+  {
+   "iteration": 624,
+   "residual": 102.5932956910993
+  },
+  {
+   "iteration": 625,
+   "residual": 102.81686409783319
+  },
+  {
+   "iteration": 626,
+   "residual": 103.03572986864084
+  },
+  {
+   "iteration": 627,
+   "residual": 103.24989659972613
+  },
+  {
+   "iteration": 628,
+   "residual": 103.45936833823392
+  },
+  {
+   "iteration": 629,
+   "residual": 103.66414957732943
+  },
+  {
+   "iteration": 630,
+   "residual": 103.86424525127528
+  },
+  {
+   "iteration": 631,
+   "residual": 104.05966073050689
+  },
+  {
+   "iteration": 632,
+   "residual": 104.25040181670667
+  },
+  {
+   "iteration": 633,
+   "residual": 104.43647473787819
+  },
+  {
+   "iteration": 634,
+   "residual": 104.6178861434215
+  },
+  {
+   "iteration": 635,
+   "residual": 104.79464309920965
+  },
+  {
+   "iteration": 636,
+   "residual": 104.96675308266764
+  },
+  {
+   "iteration": 637,
+   "residual": 105.13422397785489
+  },
+  {
+   "iteration": 638,
+   "residual": 105.29706407055149
+  },
+  {
+   "iteration": 639,
+   "residual": 105.45528204334903
+  },
+  {
+   "iteration": 640,
+   "residual": 105.60888697074724
+  },
+  {
+   "iteration": 641,
+   "residual": 105.75788831425606
+  },
+  {
+   "iteration": 642,
+   "residual": 106.00803029811706
+  },
+  {
+   "iteration": 643,
+   "residual": 106.32883033222362
+  },
+  {
+   "iteration": 644,
+   "residual": 106.64459006718768
+  },
+  {
+   "iteration": 645,
+   "residual": 106.95530931490029
+  },
+  {
+   "iteration": 646,
+   "residual": 107.26098834265414
+  },
+  {
+   "iteration": 647,
+   "residual": 107.56162786851401
+  },
+  {
+   "iteration": 648,
+   "residual": 107.85722905668719
+  },
+  {
+   "iteration": 649,
+   "residual": 108.1477935128954
+  },
+  {
+   "iteration": 650,
+   "residual": 108.43332327974741
+  },
+  {
+   "iteration": 651,
+   "residual": 108.71382083211438
+  },
+  {
+   "iteration": 652,
+   "residual": 108.98928907250792
+  },
+  {
+   "iteration": 653,
+   "residual": 109.25973132646182
+  },
+  {
+   "iteration": 654,
+   "residual": 109.52515133791793
+  },
+  {
+   "iteration": 655,
+   "residual": 109.78555326461694
+  },
+  {
+   "iteration": 656,
+   "residual": 110.0487760471921
+  },
+  {
+   "iteration": 657,
+   "residual": 110.31281475761963
+  },
+  {
+   "iteration": 658,
+   "residual": 110.61268624573404
+  },
+  {
+   "iteration": 659,
+   "residual": 110.91058606028243
+  },
+  {
+   "iteration": 660,
+   "residual": 111.20344920337408
+  },
+  {
+   "iteration": 661,
+   "residual": 111.4912744137446
+  },
+  {
+   "iteration": 662,
+   "residual": 111.77406087025732
+  },
+  {
+   "iteration": 663,
+   "residual": 112.05180818797908
+  },
+  {
+   "iteration": 664,
+   "residual": 112.32451641424953
+  },
+  {
+   "iteration": 665,
+   "residual": 112.59218602474235
+  },
+  {
+   "iteration": 666,
+   "residual": 112.85481791952121
+  },
+  {
+   "iteration": 667,
+   "residual": 113.11241341909013
+  },
+  {
+   "iteration": 668,
+   "residual": 113.36497426043891
+  },
+  {
+   "iteration": 669,
+   "residual": 113.61250259308481
+  },
+  {
+   "iteration": 670,
+   "residual": 113.85500097511002
+  },
+  {
+   "iteration": 671,
+   "residual": 114.09247236919681
+  },
+  {
+   "iteration": 672,
+   "residual": 114.3249201386605
+  },
+  {
+   "iteration": 673,
+   "residual": 114.55234804347978
+  },
+  {
+   "iteration": 674,
+   "residual": 114.77476023632708
+  },
+  {
+   "iteration": 675,
+   "residual": 114.99216125859779
+  },
+  {
+   "iteration": 676,
+   "residual": 115.20455603643944
+  },
+  {
+   "iteration": 677,
+   "residual": 115.41194987678182
+  },
+  {
+   "iteration": 678,
+   "residual": 115.61434846336792
+  },
+  {
+   "iteration": 679,
+   "residual": 115.82650924351618
+  },
+  {
+   "iteration": 680,
+   "residual": 116.09478515467727
+  },
+  {
+   "iteration": 681,
+   "residual": 116.3580708460874
+  },
+  {
+   "iteration": 682,
+   "residual": 116.61636519234088
+  },
+  {
+   "iteration": 683,
+   "residual": 116.86966747797261
+  },
+  {
+   "iteration": 684,
+   "residual": 117.11797739403069
+  },
+  {
+   "iteration": 685,
+   "residual": 117.36129503464053
+  },
+  {
+   "iteration": 686,
+   "residual": 117.60798212523459
+  },
+  {
+   "iteration": 687,
+   "residual": 117.85127150241155
+  },
+  {
+   "iteration": 688,
+   "residual": 118.08956647104009
+  },
+  {
+   "iteration": 689,
+   "residual": 118.3228673166695
+  },
+  {
+   "iteration": 690,
+   "residual": 118.55117472029721
+  },
+  {
+   "iteration": 691,
+   "residual": 118.77448975501798
+  },
+  {
+   "iteration": 692,
+   "residual": 118.99281388266579
+  },
+  {
+   "iteration": 693,
+   "residual": 119.20614895044864
+  },
+  {
+   "iteration": 694,
+   "residual": 119.4144971875768
+  },
+  {
+   "iteration": 695,
+   "residual": 119.61786120188489
+  },
+  {
+   "iteration": 696,
+   "residual": 119.81624397644866
+  },
+  {
+   "iteration": 697,
+   "residual": 120.00964886619656
+  },
+  {
+   "iteration": 698,
+   "residual": 120.19807959451707
+  },
+  {
+   "iteration": 699,
+   "residual": 120.38154024986194
+  },
+  {
+   "iteration": 700,
+   "residual": 120.56003528234592
+  },
+  {
+   "iteration": 701,
+   "residual": 120.73356950034379
+  },
+  {
+   "iteration": 702,
+   "residual": 120.9021480670845
+  },
+  {
+   "iteration": 703,
+   "residual": 121.06577649724345
+  },
+  {
+   "iteration": 704,
+   "residual": 121.22446065353351
+  },
+  {
+   "iteration": 705,
+   "residual": 121.37820674329451
+  },
+  {
+   "iteration": 706,
+   "residual": 121.5270213150823
+  },
+  {
+   "iteration": 707,
+   "residual": 121.67091125525748
+  },
+  {
+   "iteration": 708,
+   "residual": 121.80988378457492
+  },
+  {
+   "iteration": 709,
+   "residual": 121.94394645477291
+  },
+  {
+   "iteration": 710,
+   "residual": 122.07310714516446
+  },
+  {
+   "iteration": 711,
+   "residual": 122.19737405922963
+  },
+  {
+   "iteration": 712,
+   "residual": 122.31675572120959
+  },
+  {
+   "iteration": 713,
+   "residual": 122.43126097270351
+  },
+  {
+   "iteration": 714,
+   "residual": 122.54089896926803
+  },
+  {
+   "iteration": 715,
+   "residual": 122.64567917701939
+  },
+  {
+   "iteration": 716,
+   "residual": 122.74561136923978
+  },
+  {
+   "iteration": 717,
+   "residual": 122.84332743092442
+  },
+  {
+   "iteration": 718,
+   "residual": 122.94055710589176
+  },
+  {
+   "iteration": 719,
+   "residual": 123.03296410009068
+  },
+  {
+   "iteration": 720,
+   "residual": 123.12055848825185
+  },
+  {
+   "iteration": 721,
+   "residual": 123.20335064167176
+  },
+  {
+   "iteration": 722,
+   "residual": 123.28135122491874
+  },
+  {
+   "iteration": 723,
+   "residual": 123.35457119254303
+  },
+  {
+   "iteration": 724,
+   "residual": 123.42302178579116
+  },
+  {
+   "iteration": 725,
+   "residual": 123.48671452932581
+  },
+  {
+   "iteration": 726,
+   "residual": 123.5456612279501
+  },
+  {
+   "iteration": 727,
+   "residual": 123.5998739633383
+  },
+  {
+   "iteration": 728,
+   "residual": 123.68230143030524
+  },
+  {
+   "iteration": 729,
+   "residual": 123.76079181655541
+  },
+  {
+   "iteration": 730,
+   "residual": 123.83456521731874
+  },
+  {
+   "iteration": 731,
+   "residual": 123.9036310586165
+  },
+  {
+   "iteration": 732,
+   "residual": 123.96799905183929
+  },
+  {
+   "iteration": 733,
+   "residual": 124.02767919076695
+  },
+  {
+   "iteration": 734,
+   "residual": 124.08268174859039
+  },
+  {
+   "iteration": 735,
+   "residual": 124.133017274935
+  },
+  {
+   "iteration": 736,
+   "residual": 124.17869659288618
+  },
+  {
+   "iteration": 737,
+   "residual": 124.22447484904747
+  },
+  {
+   "iteration": 738,
+   "residual": 124.26563452302365
+  },
+  {
+   "iteration": 739,
+   "residual": 124.30217022807405
+  },
+  {
+   "iteration": 740,
+   "residual": 124.33409326542635
+  },
+  {
+   "iteration": 741,
+   "residual": 124.36141519869416
+  },
+  {
+   "iteration": 742,
+   "residual": 124.38414785096957
+  },
+  {
+   "iteration": 743,
+   "residual": 124.40230330191834
+  },
+  {
+   "iteration": 744,
+   "residual": 124.52633226670673
+  },
+  {
+   "iteration": 745,
+   "residual": 124.71004143430189
+  },
+  {
+   "iteration": 746,
+   "residual": 124.88977276071415
+  },
+  {
+   "iteration": 747,
+   "residual": 125.0655349712762
+  },
+  {
+   "iteration": 748,
+   "residual": 125.23733702276873
+  },
+  {
+   "iteration": 749,
+   "residual": 125.40518810074597
+  },
+  {
+   "iteration": 750,
+   "residual": 125.5690976168663
+  },
+  {
+   "iteration": 751,
+   "residual": 125.72907520622725
+  },
+  {
+   "iteration": 752,
+   "residual": 125.88513072470535
+  },
+  {
+   "iteration": 753,
+   "residual": 126.03727424630145
+  },
+  {
+   "iteration": 754,
+   "residual": 126.18551606049117
+  },
+  {
+   "iteration": 755,
+   "residual": 126.32986666958159
+  },
+  {
+   "iteration": 756,
+   "residual": 126.470336786073
+  },
+  {
+   "iteration": 757,
+   "residual": 126.60693733002762
+  },
+  {
+   "iteration": 758,
+   "residual": 126.73967942644423
+  },
+  {
+   "iteration": 759,
+   "residual": 126.86981516730445
+  },
+  {
+   "iteration": 760,
+   "residual": 126.99789203304213
+  },
+  {
+   "iteration": 761,
+   "residual": 127.12214261937349
+  },
+  {
+   "iteration": 762,
+   "residual": 127.24257849471994
+  },
+  {
+   "iteration": 763,
+   "residual": 127.35921142175253
+  },
+  {
+   "iteration": 764,
+   "residual": 127.47205335483439
+  },
+  {
+   "iteration": 765,
+   "residual": 127.58111643747112
+  },
+  {
+   "iteration": 766,
+   "residual": 127.68641299976882
+  },
+  {
+   "iteration": 767,
+   "residual": 127.78795555589898
+  },
+  {
+   "iteration": 768,
+   "residual": 127.88704341818509
+  },
+  {
+   "iteration": 769,
+   "residual": 127.98285031646034
+  },
+  {
+   "iteration": 770,
+   "residual": 128.07494132111157
+  },
+  {
+   "iteration": 771,
+   "residual": 128.16332945831735
+  },
+  {
+   "iteration": 772,
+   "residual": 128.27765243246157
+  },
+  {
+   "iteration": 773,
+   "residual": 128.4601269102923
+  },
+  {
+   "iteration": 774,
+   "residual": 128.63882506608448
+  },
+  {
+   "iteration": 775,
+   "residual": 128.8137534756315
+  },
+  {
+   "iteration": 776,
+   "residual": 128.98491892363288
+  },
+  {
+   "iteration": 777,
+   "residual": 129.15232840150372
+  },
+  {
+   "iteration": 778,
+   "residual": 129.3159891051861
+  },
+  {
+   "iteration": 779,
+   "residual": 129.4759084329633
+  },
+  {
+   "iteration": 780,
+   "residual": 129.6321119736875
+  },
+  {
+   "iteration": 781,
+   "residual": 129.78531274905507
+  },
+  {
+   "iteration": 782,
+   "residual": 129.93479499050537
+  },
+  {
+   "iteration": 783,
+   "residual": 130.08056680179894
+  },
+  {
+   "iteration": 784,
+   "residual": 130.22263647868618
+  },
+  {
+   "iteration": 785,
+   "residual": 130.36101250674812
+  },
+  {
+   "iteration": 786,
+   "residual": 130.4957035592415
+  },
+  {
+   "iteration": 787,
+   "residual": 130.62671849494714
+  },
+  {
+   "iteration": 788,
+   "residual": 130.7540663560241
+  },
+  {
+   "iteration": 789,
+   "residual": 130.8777563658669
+  },
+  {
+   "iteration": 790,
+   "residual": 131.0219853036678
+  },
+  {
+   "iteration": 791,
+   "residual": 131.1966886506803
+  },
+  {
+   "iteration": 792,
+   "residual": 131.36772293591324
+  },
+  {
+   "iteration": 793,
+   "residual": 131.53509323348183
+  },
+  {
+   "iteration": 794,
+   "residual": 131.69880481774413
+  },
+  {
+   "iteration": 795,
+   "residual": 131.8725888156781
+  },
+  {
+   "iteration": 796,
+   "residual": 132.18511481029012
+  },
+  {
+   "iteration": 797,
+   "residual": 132.49405657808586
+  },
+  {
+   "iteration": 798,
+   "residual": 132.79940970734012
+  },
+  {
+   "iteration": 799,
+   "residual": 133.1011700265763
+  },
+  {
+   "iteration": 800,
+   "residual": 133.39933360311994
+  },
+  {
+   "iteration": 801,
+   "residual": 133.69389674164563
+  },
+  {
+   "iteration": 802,
+   "residual": 133.9848559827165
+  },
+  {
+   "iteration": 803,
+   "residual": 134.27220810131686
+  },
+  {
+   "iteration": 804,
+   "residual": 134.55595010537888
+  },
+  {
+   "iteration": 805,
+   "residual": 134.8360792343024
+  },
+  {
+   "iteration": 806,
+   "residual": 135.112592957469
+  },
+  {
+   "iteration": 807,
+   "residual": 135.3854889727501
+  },
+  {
+   "iteration": 808,
+   "residual": 135.65476520500974
+  },
+  {
+   "iteration": 809,
+   "residual": 135.92041980460147
+  },
+  {
+   "iteration": 810,
+   "residual": 136.18245114586063
+  },
+  {
+   "iteration": 811,
+   "residual": 136.44085782559114
+  },
+  {
+   "iteration": 812,
+   "residual": 136.69563866154843
+  },
+  {
+   "iteration": 813,
+   "residual": 136.94679269091654
+  },
+  {
+   "iteration": 814,
+   "residual": 137.1943191687821
+  },
+  {
+   "iteration": 815,
+   "residual": 137.4382175666038
+  },
+  {
+   "iteration": 816,
+   "residual": 137.6784875706776
+  },
+  {
+   "iteration": 817,
+   "residual": 137.91512908059886
+  },
+  {
+   "iteration": 818,
+   "residual": 138.14814220772067
+  },
+  {
+   "iteration": 819,
+   "residual": 138.37752727360865
+  },
+  {
+   "iteration": 820,
+   "residual": 138.60328480849327
+  },
+  {
+   "iteration": 821,
+   "residual": 138.8254155497183
+  },
+  {
+   "iteration": 822,
+   "residual": 139.043920440188
+  },
+  {
+   "iteration": 823,
+   "residual": 139.2588006268099
+  },
+  {
+   "iteration": 824,
+   "residual": 139.47005745893705
+  },
+  {
+   "iteration": 825,
+   "residual": 139.6776924868068
+  },
+  {
+   "iteration": 826,
+   "residual": 139.88170745997832
+  },
+  {
+   "iteration": 827,
+   "residual": 140.08210432576792
+  },
+  {
+   "iteration": 828,
+   "residual": 140.27888522768296
+  },
+  {
+   "iteration": 829,
+   "residual": 140.47205250385423
+  },
+  {
+   "iteration": 830,
+   "residual": 140.66160868546703
+  },
+  {
+   "iteration": 831,
+   "residual": 140.84755649519127
+  },
+  {
+   "iteration": 832,
+   "residual": 141.02989884561035
+  },
+  {
+   "iteration": 833,
+   "residual": 141.20863883764923
+  },
+  {
+   "iteration": 834,
+   "residual": 141.4951105504722
+  },
+  {
+   "iteration": 835,
+   "residual": 141.84637193172992
+  },
+  {
+   "iteration": 836,
+   "residual": 142.1937043450211
+  },
+  {
+   "iteration": 837,
+   "residual": 142.53710528093194
+  },
+  {
+   "iteration": 838,
+   "residual": 142.8765724500424
+  },
+  {
+   "iteration": 839,
+   "residual": 143.2121037814244
+  },
+  {
+   "iteration": 840,
+   "residual": 143.54369742113752
+  },
+  {
+   "iteration": 841,
+   "residual": 143.87135173072315
+  },
+  {
+   "iteration": 842,
+   "residual": 144.19506528569573
+  },
+  {
+   "iteration": 843,
+   "residual": 144.5148368740328
+  },
+  {
+   "iteration": 844,
+   "residual": 144.830665494663
+  },
+  {
+   "iteration": 845,
+   "residual": 145.14255035595232
+  },
+  {
+   "iteration": 846,
+   "residual": 145.45049087418946
+  },
+  {
+   "iteration": 847,
+   "residual": 145.75448667206945
+  },
+  {
+   "iteration": 848,
+   "residual": 146.05453757717635
+  },
+  {
+   "iteration": 849,
+   "residual": 146.3506436204651
+  },
+  {
+   "iteration": 850,
+   "residual": 146.64280503474234
+  },
+  {
+   "iteration": 851,
+   "residual": 146.93102225314684
+  },
+  {
+   "iteration": 852,
+   "residual": 147.21529590762933
+  },
+  {
+   "iteration": 853,
+   "residual": 147.49562682743172
+  },
+  {
+   "iteration": 854,
+   "residual": 147.7726039529423
+  },
+  {
+   "iteration": 855,
+   "residual": 148.06436848216893
+  },
+  {
+   "iteration": 856,
+   "residual": 148.3521882322924
+  },
+  {
+   "iteration": 857,
+   "residual": 148.63606315607663
+  },
+  {
+   "iteration": 858,
+   "residual": 148.91599340494975
+  },
+  {
+   "iteration": 859,
+   "residual": 149.19197932757453
+  },
+  {
+   "iteration": 860,
+   "residual": 149.46402146841695
+  },
+  {
+   "iteration": 861,
+   "residual": 149.73212056631408
+  },
+  {
+   "iteration": 862,
+   "residual": 149.996277553041
+  },
+  {
+   "iteration": 863,
+   "residual": 150.25649355187687
+  },
+  {
+   "iteration": 864,
+   "residual": 150.51276987617024
+  },
+  {
+   "iteration": 865,
+   "residual": 150.765108027904
+  },
+  {
+   "iteration": 866,
+   "residual": 151.01350969625963
+  },
+  {
+   "iteration": 867,
+   "residual": 151.25797675618153
+  },
+  {
+   "iteration": 868,
+   "residual": 151.4985112669409
+  },
+  {
+   "iteration": 869,
+   "residual": 151.73511547069978
+  },
+  {
+   "iteration": 870,
+   "residual": 151.9677917910749
+  },
+  {
+   "iteration": 871,
+   "residual": 152.19654283170232
+  },
+  {
+   "iteration": 872,
+   "residual": 152.4213713748017
+  },
+  {
+   "iteration": 873,
+   "residual": 152.64228037974158
+  },
+  {
+   "iteration": 874,
+   "residual": 152.85927298160462
+  },
+  {
+   "iteration": 875,
+   "residual": 153.07235248975462
+  },
+  {
+   "iteration": 876,
+   "residual": 153.28152238640294
+  },
+  {
+   "iteration": 877,
+   "residual": 153.4867863251771
+  },
+  {
+   "iteration": 878,
+   "residual": 153.68814812968932
+  },
+  {
+   "iteration": 879,
+   "residual": 153.8856117921074
+  },
+  {
+   "iteration": 880,
+   "residual": 154.07918147172526
+  },
+  {
+   "iteration": 881,
+   "residual": 154.26886149353658
+  },
+  {
+   "iteration": 882,
+   "residual": 154.45465634680852
+  },
+  {
+   "iteration": 883,
+   "residual": 154.63657068365777
+  },
+  {
+   "iteration": 884,
+   "residual": 154.81460931762794
+  },
+  {
+   "iteration": 885,
+   "residual": 154.98877722226848
+  },
+  {
+   "iteration": 886,
+   "residual": 155.15907952971625
+  },
+  {
+   "iteration": 887,
+   "residual": 155.3255215292782
+  },
+  {
+   "iteration": 888,
+   "residual": 155.48810866601647
+  },
+  {
+   "iteration": 889,
+   "residual": 155.6468465393356
+  },
+  {
+   "iteration": 890,
+   "residual": 155.8017409015718
+  },
+  {
+   "iteration": 891,
+   "residual": 155.952797656585
+  },
+  {
+   "iteration": 892,
+   "residual": 156.13131734121217
+  },
+  {
+   "iteration": 893,
+   "residual": 156.31867450821304
+  },
+  {
+   "iteration": 894,
+   "residual": 156.50219340368116
+  },
+  {
+   "iteration": 895,
+   "residual": 156.6818774505136
+  },
+  {
+   "iteration": 896,
+   "residual": 156.85773023233833
+  },
+  {
+   "iteration": 897,
+   "residual": 157.02975549224766
+  },
+  {
+   "iteration": 898,
+   "residual": 157.1979571315334
+  },
+  {
+   "iteration": 899,
+   "residual": 157.3623392084211
+  },
+  {
+   "iteration": 900,
+   "residual": 157.52290593680596
+  },
+  {
+   "iteration": 901,
+   "residual": 157.67966168498882
+  },
+  {
+   "iteration": 902,
+   "residual": 157.83261097441294
+  },
+  {
+   "iteration": 903,
+   "residual": 157.98175847840176
+  },
+  {
+   "iteration": 904,
+   "residual": 158.1271090208976
+  },
+  {
+   "iteration": 905,
+   "residual": 158.26866757520094
+  },
+  {
+   "iteration": 906,
+   "residual": 158.40643926271153
+  },
+  {
+   "iteration": 907,
+   "residual": 158.56960499053469
+  },
+  {
+   "iteration": 908,
+   "residual": 158.77519247885348
+  },
+  {
+   "iteration": 909,
+   "residual": 158.9769978928448
+  },
+  {
+   "iteration": 910,
+   "residual": 159.1750224716206
+  },
+  {
+   "iteration": 911,
+   "residual": 159.3692676173096
+  },
+  {
+   "iteration": 912,
+   "residual": 159.55973489395865
+  },
+  {
+   "iteration": 913,
+   "residual": 159.7464260264326
+  },
+  {
+   "iteration": 914,
+   "residual": 159.9293428993133
+  },
+  {
+   "iteration": 915,
+   "residual": 160.10848755579707
+  },
+  {
+   "iteration": 916,
+   "residual": 160.29657977030791
+  },
+  {
+   "iteration": 917,
+   "residual": 160.48252006242816
+  },
+  {
+   "iteration": 918,
+   "residual": 160.66468608416778
+  },
+  {
+   "iteration": 919,
+   "residual": 160.84307942478912
+  },
+  {
+   "iteration": 920,
+   "residual": 161.01770183253257
+  },
+  {
+   "iteration": 921,
+   "residual": 161.1885552135595
+  },
+  {
+   "iteration": 922,
+   "residual": 161.3556416308946
+  },
+  {
+   "iteration": 923,
+   "residual": 161.5189633033665
+  },
+  {
+   "iteration": 924,
+   "residual": 161.67852260454745
+  },
+  {
+   "iteration": 925,
+   "residual": 161.83432206169167
+  },
+  {
+   "iteration": 926,
+   "residual": 161.98636435467304
+  },
+  {
+   "iteration": 927,
+   "residual": 162.1346523149218
+  },
+  {
+   "iteration": 928,
+   "residual": 162.2791889243599
+  },
+  {
+   "iteration": 929,
+   "residual": 162.41997731433685
+  },
+  {
+   "iteration": 930,
+   "residual": 162.55702076456336
+  },
+  {
+   "iteration": 931,
+   "residual": 162.69032270204593
+  },
+  {
+   "iteration": 932,
+   "residual": 162.8198867000198
+  },
+  {
+   "iteration": 933,
+   "residual": 162.9457164768824
+  },
+  {
+   "iteration": 934,
+   "residual": 163.0678158951255
+  },
+  {
+   "iteration": 935,
+   "residual": 163.1861889602686
+  },
+  {
+   "iteration": 936,
+   "residual": 163.30083981979044
+  },
+  {
+   "iteration": 937,
+   "residual": 163.41177276206167
+  },
+  {
+   "iteration": 938,
+   "residual": 163.51899221527734
+  },
+  {
+   "iteration": 939,
+   "residual": 163.62250274638896
+  },
+  {
+   "iteration": 940,
+   "residual": 163.72230906003716
+  },
+  {
+   "iteration": 941,
+   "residual": 163.81841599748464
+  },
+  {
+   "iteration": 942,
+   "residual": 163.91082853554914
+  },
+  {
+   "iteration": 943,
+   "residual": 163.99955178553688
+  },
+  {
+   "iteration": 944,
+   "residual": 164.08459099217652
+  },
+  {
+   "iteration": 945,
+   "residual": 164.16595153255395
+  },
+  {
+   "iteration": 946,
+   "residual": 164.2436389150468
+  },
+  {
+   "iteration": 947,
+   "residual": 164.31765877826064
+  },
+  {
+   "iteration": 948,
+   "residual": 164.38801688996514
+  },
+  {
+   "iteration": 949,
+   "residual": 164.45471914603172
+  },
+  {
+   "iteration": 950,
+   "residual": 164.51777156937115
+  },
+  {
+   "iteration": 951,
+   "residual": 164.57718030887312
+  },
+  {
+   "iteration": 952,
+   "residual": 164.72299917418053
+  },
+  {
+   "iteration": 953,
+   "residual": 164.94691791999273
+  },
+  {
+   "iteration": 954,
+   "residual": 165.16764434196037
+  },
+  {
+   "iteration": 955,
+   "residual": 165.3851825774685
+  },
+  {
+   "iteration": 956,
+   "residual": 165.59953687978313
+  },
+  {
+   "iteration": 957,
+   "residual": 165.8107116170673
+  },
+  {
+   "iteration": 958,
+   "residual": 166.01871127139768
+  },
+  {
+   "iteration": 959,
+   "residual": 166.22354043778304
+  },
+  {
+   "iteration": 960,
+   "residual": 166.42520382318338
+  },
+  {
+   "iteration": 961,
+   "residual": 166.62370624553074
+  },
+  {
+   "iteration": 962,
+   "residual": 166.82043068174195
+  },
+  {
+   "iteration": 963,
+   "residual": 167.02329764195574
+  },
+  {
+   "iteration": 964,
+   "residual": 167.2230166976983
+  },
+  {
+   "iteration": 965,
+   "residual": 167.41959235657598
+  },
+  {
+   "iteration": 966,
+   "residual": 167.6130292358365
+  },
+  {
+   "iteration": 967,
+   "residual": 167.80333206143348
+  },
+  {
+   "iteration": 968,
+   "residual": 167.99050566709136
+  },
+  {
+   "iteration": 969,
+   "residual": 168.17455499337157
+  },
+  {
+   "iteration": 970,
+   "residual": 168.35548508674015
+  },
+  {
+   "iteration": 971,
+   "residual": 168.53330109863666
+  },
+  {
+   "iteration": 972,
+   "residual": 168.70800828454384
+  },
+  {
+   "iteration": 973,
+   "residual": 168.87961200305998
+  },
+  {
+   "iteration": 974,
+   "residual": 169.04811771497103
+  },
+  {
+   "iteration": 975,
+   "residual": 169.21353098232558
+  },
+  {
+   "iteration": 976,
+   "residual": 169.37585746751066
+  },
+  {
+   "iteration": 977,
+   "residual": 169.53510293232927
+  },
+  {
+   "iteration": 978,
+   "residual": 169.69127323707963
+  },
+  {
+   "iteration": 979,
+   "residual": 169.84437433963592
+  },
+  {
+   "iteration": 980,
+   "residual": 169.9944122945313
+  },
+  {
+   "iteration": 981,
+   "residual": 170.14139325204152
+  },
+  {
+   "iteration": 982,
+   "residual": 170.28532345727183
+  },
+  {
+   "iteration": 983,
+   "residual": 170.4262092492444
+  },
+  {
+   "iteration": 984,
+   "residual": 170.56405705998856
+  },
+  {
+   "iteration": 985,
+   "residual": 170.69887341363247
+  },
+  {
+   "iteration": 986,
+   "residual": 170.83066492549713
+  },
+  {
+   "iteration": 987,
+   "residual": 170.95943830119225
+  },
+  {
+   "iteration": 988,
+   "residual": 171.08520033571375
+  },
+  {
+   "iteration": 989,
+   "residual": 171.2079579125441
+  },
+  {
+   "iteration": 990,
+   "residual": 171.32771800275458
+  },
+  {
+   "iteration": 991,
+   "residual": 171.4444876641091
+  },
+  {
+   "iteration": 992,
+   "residual": 171.56104017986203
+  },
+  {
+   "iteration": 993,
+   "residual": 171.70578552369022
+  },
+  {
+   "iteration": 994,
+   "residual": 171.847551918224
+  },
+  {
+   "iteration": 995,
+   "residual": 171.98634477789784
+  },
+  {
+   "iteration": 996,
+   "residual": 172.1221696086195
+  },
+  {
+   "iteration": 997,
+   "residual": 172.25503200696002
+  },
+  {
+   "iteration": 998,
+   "residual": 172.3849376593449
+  },
+  {
+   "iteration": 999,
+   "residual": 172.51189234124521
+  },
+  {
+   "iteration": 1000,
+   "residual": 172.6359019163717
+  },
+  {
+   "iteration": 1001,
+   "residual": 172.75697233586894
+  },
+  {
+   "iteration": 1002,
+   "residual": 172.8751096375111
+  },
+  {
+   "iteration": 1003,
+   "residual": 172.99031994489977
+  },
+  {
+   "iteration": 1004,
+   "residual": 173.1026094666623
+  },
+  {
+   "iteration": 1005,
+   "residual": 173.2119844956518
+  },
+  {
+   "iteration": 1006,
+   "residual": 173.3184514081491
+  },
+  {
+   "iteration": 1007,
+   "residual": 173.42201666306582
+  },
+  {
+   "iteration": 1008,
+   "residual": 173.52268680114895
+  },
+  {
+   "iteration": 1009,
+   "residual": 173.62046844418737
+  },
+  {
+   "iteration": 1010,
+   "residual": 173.71536829421967
+  },
+  {
+   "iteration": 1011,
+   "residual": 173.8073931327438
+  },
+  {
+   "iteration": 1012,
+   "residual": 173.89654981992854
+  },
+  {
+   "iteration": 1013,
+   "residual": 173.98284529382624
+  },
+  {
+   "iteration": 1014,
+   "residual": 174.07131710690544
+  },
+  {
+   "iteration": 1015,
+   "residual": 174.1595882008114
+  },
+  {
+   "iteration": 1016,
+   "residual": 174.245014909825
+  },
+  {
+   "iteration": 1017,
+   "residual": 174.32760399261107
+  },
+  {
+   "iteration": 1018,
+   "residual": 174.40736228419624
+  },
+  {
+   "iteration": 1019,
+   "residual": 174.48429669521195
+  },
+  {
+   "iteration": 1020,
+   "residual": 174.5584142111392
+  },
+  {
+   "iteration": 1021,
+   "residual": 174.64850286370933
+  },
+  {
+   "iteration": 1022,
+   "residual": 174.81771019483833
+  },
+  {
+   "iteration": 1023,
+   "residual": 174.9840458799541
+  },
+  {
+   "iteration": 1024,
+   "residual": 175.1475132681188
+  },
+  {
+   "iteration": 1025,
+   "residual": 175.30811579810555
+  },
+  {
+   "iteration": 1026,
+   "residual": 175.46585699772905
+  },
+  {
+   "iteration": 1027,
+   "residual": 175.62074048317606
+  },
+  {
+   "iteration": 1028,
+   "residual": 175.77276995833634
+  },
+  {
+   "iteration": 1029,
+   "residual": 175.92194921413375
+  },
+  {
+   "iteration": 1030,
+   "residual": 176.06828212785848
+  },
+  {
+   "iteration": 1031,
+   "residual": 176.21177266249865
+  },
+  {
+   "iteration": 1032,
+   "residual": 176.3524248660735
+  },
+  {
+   "iteration": 1033,
+   "residual": 176.49024287096645
+  },
+  {
+   "iteration": 1034,
+   "residual": 176.6252308932588
+  },
+  {
+   "iteration": 1035,
+   "residual": 176.75739323206432
+  },
+  {
+   "iteration": 1036,
+   "residual": 176.8867342688644
+  },
+  {
+   "iteration": 1037,
+   "residual": 177.01325846684355
+  },
+  {
+   "iteration": 1038,
+   "residual": 177.1369703702257
+  },
+  {
+   "iteration": 1039,
+   "residual": 177.25787460361187
+  },
+  {
+   "iteration": 1040,
+   "residual": 177.37597587131788
+  },
+  {
+   "iteration": 1041,
+   "residual": 177.49127895671302
+  },
+  {
+   "iteration": 1042,
+   "residual": 177.60378872155988
+  },
+  {
+   "iteration": 1043,
+   "residual": 177.71351010535466
+  },
+  {
+   "iteration": 1044,
+   "residual": 177.82044812466847
+  },
+  {
+   "iteration": 1045,
+   "residual": 178.04027902791017
+  },
+  {
+   "iteration": 1046,
+   "residual": 178.27129596450305
+  },
+  {
+   "iteration": 1047,
+   "residual": 178.50365444886344
+  },
+  {
+   "iteration": 1048,
+   "residual": 178.73469889156254
+  },
+  {
+   "iteration": 1049,
+   "residual": 178.96302590661182
+  },
+  {
+   "iteration": 1050,
+   "residual": 179.18863622032524
+  },
+  {
+   "iteration": 1051,
+   "residual": 179.41153064761008
+  },
+  {
+   "iteration": 1052,
+   "residual": 179.63171009141578
+  },
+  {
+   "iteration": 1053,
+   "residual": 179.8491755421819
+  },
+  {
+   "iteration": 1054,
+   "residual": 180.06392807728608
+  },
+  {
+   "iteration": 1055,
+   "residual": 180.2759688604921
+  },
+  {
+   "iteration": 1056,
+   "residual": 180.4852991413978
+  },
+  {
+   "iteration": 1057,
+   "residual": 180.6919202548824
+  },
+  {
+   "iteration": 1058,
+   "residual": 180.89583362055438
+  },
+  {
+   "iteration": 1059,
+   "residual": 181.09704074219871
+  },
+  {
+   "iteration": 1060,
+   "residual": 181.29554320722497
+  },
+  {
+   "iteration": 1061,
+   "residual": 181.49134268611454
+  },
+  {
+   "iteration": 1062,
+   "residual": 181.73696568758007
+  },
+  {
+   "iteration": 1063,
+   "residual": 181.9854297038435
+  },
+  {
+   "iteration": 1064,
+   "residual": 182.23117005123842
+  },
+  {
+   "iteration": 1065,
+   "residual": 182.47418612504285
+  },
+  {
+   "iteration": 1066,
+   "residual": 182.71447741239314
+  },
+  {
+   "iteration": 1067,
+   "residual": 182.95204349179906
+  },
+  {
+   "iteration": 1068,
+   "residual": 183.18688403265847
+  },
+  {
+   "iteration": 1069,
+   "residual": 183.41899879477012
+  },
+  {
+   "iteration": 1070,
+   "residual": 183.64838762784646
+  },
+  {
+   "iteration": 1071,
+   "residual": 183.8750504710252
+  },
+  {
+   "iteration": 1072,
+   "residual": 184.09898735238045
+  },
+  {
+   "iteration": 1073,
+   "residual": 184.3201983884327
+  },
+  {
+   "iteration": 1074,
+   "residual": 184.53868378365846
+  },
+  {
+   "iteration": 1075,
+   "residual": 184.7544438299991
+  },
+  {
+   "iteration": 1076,
+   "residual": 184.96747890636902
+  },
+  {
+   "iteration": 1077,
+   "residual": 185.17778947816336
+  },
+  {
+   "iteration": 1078,
+   "residual": 185.38537609676519
+  },
+  {
+   "iteration": 1079,
+   "residual": 185.59023939905143
+  },
+  {
+   "iteration": 1080,
+   "residual": 185.79238010689969
+  },
+  {
+   "iteration": 1081,
+   "residual": 185.99179902669323
+  },
+  {
+   "iteration": 1082,
+   "residual": 186.18849704882663
+  },
+  {
+   "iteration": 1083,
+   "residual": 186.38247514720973
+  },
+  {
+   "iteration": 1084,
+   "residual": 186.69117987057575
+  },
+  {
+   "iteration": 1085,
+   "residual": 187.05824979898622
+  },
+  {
+   "iteration": 1086,
+   "residual": 187.4226376880982
+  },
+  {
+   "iteration": 1087,
+   "residual": 187.78747458617636
+  },
+  {
+   "iteration": 1088,
+   "residual": 188.14934528624048
+  },
+  {
+   "iteration": 1089,
+   "residual": 188.50824746982514
+  },
+  {
+   "iteration": 1090,
+   "residual": 188.86417891632314
+  },
+  {
+   "iteration": 1091,
+   "residual": 189.2171375025175
+  },
+  {
+   "iteration": 1092,
+   "residual": 189.56712120211222
+  },
+  {
+   "iteration": 1093,
+   "residual": 189.91428925183627
+  },
+  {
+   "iteration": 1094,
+   "residual": 190.28401307722535
+  },
+  {
+   "iteration": 1095,
+   "residual": 190.65074584785415
+  },
+  {
+   "iteration": 1096,
+   "residual": 191.014484644116
+  },
+  {
+   "iteration": 1097,
+   "residual": 191.3752266465827
+  },
+  {
+   "iteration": 1098,
+   "residual": 191.73296913556902
+  },
+  {
+   "iteration": 1099,
+   "residual": 192.08770949069617
+  },
+  {
+   "iteration": 1100,
+   "residual": 192.43944519045468
+  },
+  {
+   "iteration": 1101,
+   "residual": 192.78817381176455
+  },
+  {
+   "iteration": 1102,
+   "residual": 193.13389302953573
+  },
+  {
+   "iteration": 1103,
+   "residual": 193.47660061622634
+  },
+  {
+   "iteration": 1104,
+   "residual": 193.81629444140026
+  },
+  {
+   "iteration": 1105,
+   "residual": 194.15496329903453
+  },
+  {
+   "iteration": 1106,
+   "residual": 194.49100014687141
+  },
+  {
+   "iteration": 1107,
+   "residual": 194.82401711800813
+  },
+  {
+   "iteration": 1108,
+   "residual": 195.15401233591464
+  },
+  {
+   "iteration": 1109,
+   "residual": 195.48098401947075
+  },
+  {
+   "iteration": 1110,
+   "residual": 195.8049304825213
+  },
+  {
+   "iteration": 1111,
+   "residual": 196.12585013343164
+  },
+  {
+   "iteration": 1112,
+   "residual": 196.44374147464157
+  },
+  {
+   "iteration": 1113,
+   "residual": 196.75860310221842
+  },
+  {
+   "iteration": 1114,
+   "residual": 197.07043370540922
+  },
+  {
+   "iteration": 1115,
+   "residual": 197.37923206619232
+  },
+  {
+   "iteration": 1116,
+   "residual": 197.68499705882735
+  },
+  {
+   "iteration": 1117,
+   "residual": 197.98772764940583
+  },
+  {
+   "iteration": 1118,
+   "residual": 198.287422895399
+  },
+  {
+   "iteration": 1119,
+   "residual": 198.5840819452067
+  },
+  {
+   "iteration": 1120,
+   "residual": 198.87770403770463
+  },
+  {
+   "iteration": 1121,
+   "residual": 199.16828850179093
+  },
+  {
+   "iteration": 1122,
+   "residual": 199.4558347559326
+  },
+  {
+   "iteration": 1123,
+   "residual": 199.74034230771062
+  },
+  {
+   "iteration": 1124,
+   "residual": 200.02181075336486
+  },
+  {
+   "iteration": 1125,
+   "residual": 200.3002397773383
+  },
+  {
+   "iteration": 1126,
+   "residual": 200.575629151821
+  },
+  {
+   "iteration": 1127,
+   "residual": 200.84797873629296
+  },
+  {
+   "iteration": 1128,
+   "residual": 201.11728847706684
+  },
+  {
+   "iteration": 1129,
+   "residual": 201.38355840683047
+  },
+  {
+   "iteration": 1130,
+   "residual": 201.64678864418804
+  },
+  {
+   "iteration": 1131,
+   "residual": 201.90762422302677
+  },
+  {
+   "iteration": 1132,
+   "residual": 202.16612383224697
+  },
+  {
+   "iteration": 1133,
+   "residual": 202.42158392336768
+  },
+  {
+   "iteration": 1134,
+   "residual": 202.67421418801646
+  },
+  {
+   "iteration": 1135,
+   "residual": 202.9241813980613
+  },
+  {
+   "iteration": 1136,
+   "residual": 203.17111045760691
+  },
+  {
+   "iteration": 1137,
+   "residual": 203.41500197419114
+  },
+  {
+   "iteration": 1138,
+   "residual": 203.65585663802557
+  },
+  {
+   "iteration": 1139,
+   "residual": 203.89367522153807
+  },
+  {
+   "iteration": 1140,
+   "residual": 204.12845857891412
+  },
+  {
+   "iteration": 1141,
+   "residual": 204.36020764563924
+  },
+  {
+   "iteration": 1142,
+   "residual": 204.58892343803998
+  },
+  {
+   "iteration": 1143,
+   "residual": 204.81460705282586
+  },
+  {
+   "iteration": 1144,
+   "residual": 205.0372596666301
+  },
+  {
+   "iteration": 1145,
+   "residual": 205.25688253555114
+  },
+  {
+   "iteration": 1146,
+   "residual": 205.47347699469347
+  },
+  {
+   "iteration": 1147,
+   "residual": 205.68704445770862
+  },
+  {
+   "iteration": 1148,
+   "residual": 205.89758641633617
+  },
+  {
+   "iteration": 1149,
+   "residual": 206.1051044399443
+  },
+  {
+   "iteration": 1150,
+   "residual": 206.3096001750713
+  },
+  {
+   "iteration": 1151,
+   "residual": 206.51107534496552
+  },
+  {
+   "iteration": 1152,
+   "residual": 206.70953174912728
+  },
+  {
+   "iteration": 1153,
+   "residual": 206.90497126284916
+  },
+  {
+   "iteration": 1154,
+   "residual": 207.0973958367572
+  },
+  {
+   "iteration": 1155,
+   "residual": 207.28680749635228
+  },
+  {
+   "iteration": 1156,
+   "residual": 207.47320834155119
+  },
+  {
+   "iteration": 1157,
+   "residual": 207.65660054622842
+  },
+  {
+   "iteration": 1158,
+   "residual": 207.83698635775679
+  },
+  {
+   "iteration": 1159,
+   "residual": 208.01436809655053
+  },
+  {
+   "iteration": 1160,
+   "residual": 208.18874815560613
+  },
+  {
+   "iteration": 1161,
+   "residual": 208.3601290000455
+  },
+  {
+   "iteration": 1162,
+   "residual": 208.52851316665752
+  },
+  {
+   "iteration": 1163,
+   "residual": 208.69390326344126
+  },
+  {
+   "iteration": 1164,
+   "residual": 208.8563019691491
+  },
+  {
+   "iteration": 1165,
+   "residual": 209.0157120328295
+  },
+  {
+   "iteration": 1166,
+   "residual": 209.1721362733711
+  },
+  {
+   "iteration": 1167,
+   "residual": 209.3255775790465
+  },
+  {
+   "iteration": 1168,
+   "residual": 209.47603890705642
+  },
+  {
+   "iteration": 1169,
+   "residual": 209.6235232830745
+  },
+  {
+   "iteration": 1170,
+   "residual": 209.76803380079275
+  },
+  {
+   "iteration": 1171,
+   "residual": 209.90957362146645
+  },
+  {
+   "iteration": 1172,
+   "residual": 210.04814597346012
+  },
+  {
+   "iteration": 1173,
+   "residual": 210.18375415179477
+  },
+  {
+   "iteration": 1174,
+   "residual": 210.3164015176934
+  },
+  {
+   "iteration": 1175,
+   "residual": 210.44609149812942
+  },
+  {
+   "iteration": 1176,
+   "residual": 210.5728275853739
+  },
+  {
+   "iteration": 1177,
+   "residual": 210.696613336544
+  },
+  {
+   "iteration": 1178,
+   "residual": 210.81745237315207
+  },
+  {
+   "iteration": 1179,
+   "residual": 210.9353483806548
+  },
+  {
+   "iteration": 1180,
+   "residual": 211.0503051080033
+  },
+  {
+   "iteration": 1181,
+   "residual": 211.1623263671938
+  },
+  {
+   "iteration": 1182,
+   "residual": 211.2890282992827
+  },
+  {
+   "iteration": 1183,
+   "residual": 211.41492918984423
+  },
+  {
+   "iteration": 1184,
+   "residual": 211.53790270538158
+  },
+  {
+   "iteration": 1185,
+   "residual": 211.65795204541317
+  },
+  {
+   "iteration": 1186,
+   "residual": 211.77508047359117
+  },
+  {
+   "iteration": 1187,
+   "residual": 211.88929131727983
+  },
+  {
+   "iteration": 1188,
+   "residual": 212.00058796713384
+  },
+  {
+   "iteration": 1189,
+   "residual": 212.10897387667765
+  },
+  {
+   "iteration": 1190,
+   "residual": 212.2144525618848
+  },
+  {
+   "iteration": 1191,
+   "residual": 212.31702760075777
+  },
+  {
+   "iteration": 1192,
+   "residual": 212.41670263290797
+  },
+  {
+   "iteration": 1193,
+   "residual": 212.51348135913676
+  },
+  {
+   "iteration": 1194,
+   "residual": 212.60736754101598
+  },
+  {
+   "iteration": 1195,
+   "residual": 212.69836500046983
+  },
+  {
+   "iteration": 1196,
+   "residual": 212.78647761935684
+  },
+  {
+   "iteration": 1197,
+   "residual": 212.8717093390523
+  },
+  {
+   "iteration": 1198,
+   "residual": 212.95406416003087
+  },
+  {
+   "iteration": 1199,
+   "residual": 213.03354614145064
+  },
+  {
+   "iteration": 1200,
+   "residual": 213.11015940073642
+  },
+  {
+   "iteration": 1201,
+   "residual": 213.18390811316476
+  },
+  {
+   "iteration": 1202,
+   "residual": 213.25479651144917
+  },
+  {
+   "iteration": 1203,
+   "residual": 213.3228288853247
+  },
+  {
+   "iteration": 1204,
+   "residual": 213.38800958113575
+  },
+  {
+   "iteration": 1205,
+   "residual": 213.45034300142146
+  },
+  {
+   "iteration": 1206,
+   "residual": 213.50983360450388
+  },
+  {
+   "iteration": 1207,
+   "residual": 213.56648590407573
+  },
+  {
+   "iteration": 1208,
+   "residual": 213.62592805394866
+  },
+  {
+   "iteration": 1209,
+   "residual": 213.72083479523974
+  },
+  {
+   "iteration": 1210,
+   "residual": 213.81290464006943
+  },
+  {
+   "iteration": 1211,
+   "residual": 213.94415335453456
+  },
+  {
+   "iteration": 1212,
+   "residual": 214.10542920483314
+  },
+  {
+   "iteration": 1213,
+   "residual": 214.26386908795146
+  },
+  {
+   "iteration": 1214,
+   "residual": 214.41947387685755
+  },
+  {
+   "iteration": 1215,
+   "residual": 214.57224451144137
+  },
+  {
+   "iteration": 1216,
+   "residual": 214.7221819981869
+  },
+  {
+   "iteration": 1217,
+   "residual": 214.8692874098443
+  },
+  {
+   "iteration": 1218,
+   "residual": 215.01356188510178
+  },
+  {
+   "iteration": 1219,
+   "residual": 215.17958595441644
+  },
+  {
+   "iteration": 1220,
+   "residual": 215.48735310963477
+  },
+  {
+   "iteration": 1221,
+   "residual": 215.79262666780633
+  },
+  {
+   "iteration": 1222,
+   "residual": 216.09540659133626
+  },
+  {
+   "iteration": 1223,
+   "residual": 216.395692904803
+  },
+  {
+   "iteration": 1224,
+   "residual": 216.69348569465274
+  },
+  {
+   "iteration": 1225,
+   "residual": 216.9887851088919
+  },
+  {
+   "iteration": 1226,
+   "residual": 217.28159135678035
+  },
+  {
+   "iteration": 1227,
+   "residual": 217.57190470852441
+  },
+  {
+   "iteration": 1228,
+   "residual": 217.85972549496847
+  },
+  {
+   "iteration": 1229,
+   "residual": 218.1450541072878
+  },
+  {
+   "iteration": 1230,
+   "residual": 218.42789099668005
+  },
+  {
+   "iteration": 1231,
+   "residual": 218.70823667405705
+  },
+  {
+   "iteration": 1232,
+   "residual": 218.98609170973592
+  },
+  {
+   "iteration": 1233,
+   "residual": 219.2614567331306
+  },
+  {
+   "iteration": 1234,
+   "residual": 219.53433243244262
+  },
+  {
+   "iteration": 1235,
+   "residual": 219.80471955435226
+  },
+  {
+   "iteration": 1236,
+   "residual": 220.07261890370887
+  },
+  {
+   "iteration": 1237,
+   "residual": 220.33803134322147
+  },
+  {
+   "iteration": 1238,
+   "residual": 220.60095779314938
+  },
+  {
+   "iteration": 1239,
+   "residual": 220.86139923099225
+  },
+  {
+   "iteration": 1240,
+   "residual": 221.11935669118023
+  },
+  {
+   "iteration": 1241,
+   "residual": 221.37483126476448
+  },
+  {
+   "iteration": 1242,
+   "residual": 221.6278240991066
+  },
+  {
+   "iteration": 1243,
+   "residual": 221.87833639756906
+  },
+  {
+   "iteration": 1244,
+   "residual": 222.1263694192047
+  },
+  {
+   "iteration": 1245,
+   "residual": 222.371924478447
+  },
+  {
+   "iteration": 1246,
+   "residual": 222.61500294479956
+  },
+  {
+   "iteration": 1247,
+   "residual": 222.85560624252628
+  },
+  {
+   "iteration": 1248,
+   "residual": 223.09373585034118
+  },
+  {
+   "iteration": 1249,
+   "residual": 223.3293933010976
+  },
+  {
+   "iteration": 1250,
+   "residual": 223.5625801814794
+  },
+  {
+   "iteration": 1251,
+   "residual": 223.7932981316895
+  },
+  {
+   "iteration": 1252,
+   "residual": 224.0215488451409
+  },
+  {
+   "iteration": 1253,
+   "residual": 224.24733406814624
+  },
+  {
+   "iteration": 1254,
+   "residual": 224.47065559960788
+  },
+  {
+   "iteration": 1255,
+   "residual": 224.69151529070876
+  },
+  {
+   "iteration": 1256,
+   "residual": 224.90991504460192
+  },
+  {
+   "iteration": 1257,
+   "residual": 225.12585681610162
+  },
+  {
+   "iteration": 1258,
+   "residual": 225.33934261137344
+  },
+  {
+   "iteration": 1259,
+   "residual": 225.5503744876253
+  },
+  {
+   "iteration": 1260,
+   "residual": 225.7589545527984
+  },
+  {
+   "iteration": 1261,
+   "residual": 225.96508496525814
+  },
+  {
+   "iteration": 1262,
+   "residual": 226.16876793348496
+  },
+  {
+   "iteration": 1263,
+   "residual": 226.3700057157666
+  },
+  {
+   "iteration": 1264,
+   "residual": 226.56880061988915
+  },
+  {
+   "iteration": 1265,
+   "residual": 226.76515500282878
+  },
+  {
+   "iteration": 1266,
+   "residual": 226.95907127044387
+  },
+  {
+   "iteration": 1267,
+   "residual": 227.1505518771678
+  },
+  {
+   "iteration": 1268,
+   "residual": 227.33959932570056
+  },
+  {
+   "iteration": 1269,
+   "residual": 227.52621616670214
+  },
+  {
+   "iteration": 1270,
+   "residual": 227.71040499848536
+  },
+  {
+   "iteration": 1271,
+   "residual": 227.89216846670922
+  },
+  {
+   "iteration": 1272,
+   "residual": 228.07150926407223
+  },
+  {
+   "iteration": 1273,
+   "residual": 228.2484301300067
+  },
+  {
+   "iteration": 1274,
+   "residual": 228.42293385037274
+  },
+  {
+   "iteration": 1275,
+   "residual": 228.59502325715232
+  },
+  {
+   "iteration": 1276,
+   "residual": 228.77728588950893
+  },
+  {
+   "iteration": 1277,
+   "residual": 228.95938715459616
+  },
+  {
+   "iteration": 1278,
+   "residual": 229.13907661852673
+  },
+  {
+   "iteration": 1279,
+   "residual": 229.31635673283043
+  },
+  {
+   "iteration": 1280,
+   "residual": 229.49122999580217
+  },
+  {
+   "iteration": 1281,
+   "residual": 229.66369895221115
+  },
+  {
+   "iteration": 1282,
+   "residual": 229.83376619301114
+  },
+  {
+   "iteration": 1283,
+   "residual": 230.00143435505035
+  },
+  {
+   "iteration": 1284,
+   "residual": 230.16670612078138
+  },
+  {
+   "iteration": 1285,
+   "residual": 230.32958421797218
+  },
+  {
+   "iteration": 1286,
+   "residual": 230.49007141941618
+  },
+  {
+   "iteration": 1287,
+   "residual": 230.64817054264336
+  },
+  {
+   "iteration": 1288,
+   "residual": 230.8038844496317
+  },
+  {
+   "iteration": 1289,
+   "residual": 230.95721604651834
+  },
+  {
+   "iteration": 1290,
+   "residual": 231.10816828331133
+  },
+  {
+   "iteration": 1291,
+   "residual": 231.25674415360152
+  },
+  {
+   "iteration": 1292,
+   "residual": 231.4029466942748
+  },
+  {
+   "iteration": 1293,
+   "residual": 231.54677898522522
+  },
+  {
+   "iteration": 1294,
+   "residual": 231.688244149067
+  },
+  {
+   "iteration": 1295,
+   "residual": 231.82734535084836
+  },
+  {
+   "iteration": 1296,
+   "residual": 231.96408579776465
+  },
+  {
+   "iteration": 1297,
+   "residual": 232.09846873887264
+  },
+  {
+   "iteration": 1298,
+   "residual": 232.23049746480416
+  },
+  {
+   "iteration": 1299,
+   "residual": 232.3601753074811
+  },
+  {
+   "iteration": 1300,
+   "residual": 232.48750563982986
+  },
+  {
+   "iteration": 1301,
+   "residual": 232.6124918754973
+  },
+  {
+   "iteration": 1302,
+   "residual": 232.73513746856568
+  },
+  {
+   "iteration": 1303,
+   "residual": 232.855445913269
+  },
+  {
+   "iteration": 1304,
+   "residual": 232.9734207437093
+  },
+  {
+   "iteration": 1305,
+   "residual": 233.0890655335739
+  },
+  {
+   "iteration": 1306,
+   "residual": 233.20238389585182
+  },
+  {
+   "iteration": 1307,
+   "residual": 233.31337948255245
+  },
+  {
+   "iteration": 1308,
+   "residual": 233.4220559844225
+  },
+  {
+   "iteration": 1309,
+   "residual": 233.52841713066545
+  },
+  {
+   "iteration": 1310,
+   "residual": 233.63246668865972
+  },
+  {
+   "iteration": 1311,
+   "residual": 233.73420846367873
+  },
+  {
+   "iteration": 1312,
+   "residual": 233.83364629861026
+  },
+  {
+   "iteration": 1313,
+   "residual": 233.93078407367676
+  },
+  {
+   "iteration": 1314,
+   "residual": 234.0256257061563
+  },
+  {
+   "iteration": 1315,
+   "residual": 234.1181751501041
+  },
+  {
+   "iteration": 1316,
+   "residual": 234.2084363960732
+  },
+  {
+   "iteration": 1317,
+   "residual": 234.29641347083782
+  },
+  {
+   "iteration": 1318,
+   "residual": 234.38211043711536
+  },
+  {
+   "iteration": 1319,
+   "residual": 234.46553139328984
+  },
+  {
+   "iteration": 1320,
+   "residual": 234.54668047313535
+  },
+  {
+   "iteration": 1321,
+   "residual": 234.62556184554097
+  },
+  {
+   "iteration": 1322,
+   "residual": 234.70217971423446
+  },
+  {
+   "iteration": 1323,
+   "residual": 234.7765383175085
+  },
+  {
+   "iteration": 1324,
+   "residual": 234.84864192794598
+  },
+  {
+   "iteration": 1325,
+   "residual": 234.91849485214632
+  },
+  {
+   "iteration": 1326,
+   "residual": 234.98610143045258
+  },
+  {
+   "iteration": 1327,
+   "residual": 235.0514660366787
+  },
+  {
+   "iteration": 1328,
+   "residual": 235.1145930778378
+  },
+  {
+   "iteration": 1329,
+   "residual": 235.1754869938704
+  },
+  {
+   "iteration": 1330,
+   "residual": 235.23415225737375
+  },
+  {
+   "iteration": 1331,
+   "residual": 235.29059337333157
+  },
+  {
+   "iteration": 1332,
+   "residual": 235.3448148788441
+  },
+  {
+   "iteration": 1333,
+   "residual": 235.39682134285923
+  },
+  {
+   "iteration": 1334,
+   "residual": 235.4466173659042
+  },
+  {
+   "iteration": 1335,
+   "residual": 235.4942075798172
+  },
+  {
+   "iteration": 1336,
+   "residual": 235.53959664748
+  },
+  {
+   "iteration": 1337,
+   "residual": 235.58278926255178
+  },
+  {
+   "iteration": 1338,
+   "residual": 235.62379014920265
+  },
+  {
+   "iteration": 1339,
+   "residual": 235.6626040618483
+  },
+  {
+   "iteration": 1340,
+   "residual": 235.69923578488513
+  },
+  {
+   "iteration": 1341,
+   "residual": 235.73369013242586
+  },
+  {
+   "iteration": 1342,
+   "residual": 235.76597194803628
+  },
+  {
+   "iteration": 1343,
+   "residual": 235.79608610447212
+  },
+  {
+   "iteration": 1344,
+   "residual": 235.82403750341672
+  },
+  {
+   "iteration": 1345,
+   "residual": 235.8498310752195
+  },
+  {
+   "iteration": 1346,
+   "residual": 235.8734717786349
+  },
+  {
+   "iteration": 1347,
+   "residual": 235.8949646005621
+  },
+  {
+   "iteration": 1348,
+   "residual": 235.91858434842504
+  },
+  {
+   "iteration": 1349,
+   "residual": 235.9470179342559
+  },
+  {
+   "iteration": 1350,
+   "residual": 235.97331779865675
+  },
+  {
+   "iteration": 1351,
+   "residual": 236.07361520428282
+  },
+  {
+   "iteration": 1352,
+   "residual": 236.20183365286263
+  },
+  {
+   "iteration": 1353,
+   "residual": 236.3557834208027
+  },
+  {
+   "iteration": 1354,
+   "residual": 236.50755928031728
+  },
+  {
+   "iteration": 1355,
+   "residual": 236.6571628570576
+  },
+  {
+   "iteration": 1356,
+   "residual": 236.8045958148787
+  },
+  {
+   "iteration": 1357,
+   "residual": 236.9498598556364
+  },
+  {
+   "iteration": 1358,
+   "residual": 237.09295671898408
+  },
+  {
+   "iteration": 1359,
+   "residual": 237.2338881821693
+  },
+  {
+   "iteration": 1360,
+   "residual": 237.3726560598312
+  },
+  {
+   "iteration": 1361,
+   "residual": 237.5092622037971
+  },
+  {
+   "iteration": 1362,
+   "residual": 237.6437085028796
+  },
+  {
+   "iteration": 1363,
+   "residual": 237.77599688267338
+  },
+  {
+   "iteration": 1364,
+   "residual": 237.90612930535266
+  },
+  {
+   "iteration": 1365,
+   "residual": 238.03410776946757
+  },
+  {
+   "iteration": 1366,
+   "residual": 238.1599343097421
+  },
+  {
+   "iteration": 1367,
+   "residual": 238.28361099687072
+  },
+  {
+   "iteration": 1368,
+   "residual": 238.40513993731605
+  },
+  {
+   "iteration": 1369,
+   "residual": 238.52452327310584
+  },
+  {
+   "iteration": 1370,
+   "residual": 238.6417631816306
+  },
+  {
+   "iteration": 1371,
+   "residual": 238.75686187544142
+  },
+  {
+   "iteration": 1372,
+   "residual": 238.92159790644993
+  },
+  {
+   "iteration": 1373,
+   "residual": 239.1610682760409
+  },
+  {
+   "iteration": 1374,
+   "residual": 239.39844374524708
+  },
+  {
+   "iteration": 1375,
+   "residual": 239.63372420340974
+  },
+  {
+   "iteration": 1376,
+   "residual": 239.866909580078
+  },
+  {
+   "iteration": 1377,
+   "residual": 240.09799984483286
+  },
+  {
+   "iteration": 1378,
+   "residual": 240.32699500711234
+  },
+  {
+   "iteration": 1379,
+   "residual": 240.55389511603659
+  },
+  {
+   "iteration": 1380,
+   "residual": 240.77870026023146
+  },
+  {
+   "iteration": 1381,
+   "residual": 241.0014105676538
+  },
+  {
+   "iteration": 1382,
+   "residual": 241.22202620541532
+  },
+  {
+   "iteration": 1383,
+   "residual": 241.44054737960664
+  },
+  {
+   "iteration": 1384,
+   "residual": 241.65697433512176
+  },
+  {
+   "iteration": 1385,
+   "residual": 241.87130735548158
+  },
+  {
+   "iteration": 1386,
+   "residual": 242.08354676265802
+  },
+  {
+   "iteration": 1387,
+   "residual": 242.29369291689738
+  },
+  {
+   "iteration": 1388,
+   "residual": 242.50174621654503
+  },
+  {
+   "iteration": 1389,
+   "residual": 242.70770709786729
+  },
+  {
+   "iteration": 1390,
+   "residual": 242.91157603487702
+  },
+  {
+   "iteration": 1391,
+   "residual": 243.11335353915513
+  },
+  {
+   "iteration": 1392,
+   "residual": 243.3130401596754
+  },
+  {
+   "iteration": 1393,
+   "residual": 243.51063648262712
+  },
+  {
+   "iteration": 1394,
+   "residual": 243.70614313123886
+  },
+  {
+   "iteration": 1395,
+   "residual": 243.89956076560088
+  },
+  {
+   "iteration": 1396,
+   "residual": 244.09089008248958
+  },
+  {
+   "iteration": 1397,
+   "residual": 244.28013181518986
+  },
+  {
+   "iteration": 1398,
+   "residual": 244.46728673331856
+  },
+  {
+   "iteration": 1399,
+   "residual": 244.65235564264756
+  },
+  {
+   "iteration": 1400,
+   "residual": 244.83533938492707
+  },
+  {
+   "iteration": 1401,
+   "residual": 245.01623883770898
+  },
+  {
+   "iteration": 1402,
+   "residual": 245.19505491416956
+  },
+  {
+   "iteration": 1403,
+   "residual": 245.37178856293272
+  },
+  {
+   "iteration": 1404,
+   "residual": 245.5464407678938
+  },
+  {
+   "iteration": 1405,
+   "residual": 245.7190125480421
+  },
+  {
+   "iteration": 1406,
+   "residual": 245.8895049572845
+  },
+  {
+   "iteration": 1407,
+   "residual": 246.05791908426855
+  },
+  {
+   "iteration": 1408,
+   "residual": 246.22425605220582
+  },
+  {
+   "iteration": 1409,
+   "residual": 246.43611229037924
+  },
+  {
+   "iteration": 1410,
+   "residual": 246.77620388362806
+  },
+  {
+   "iteration": 1411,
+   "residual": 247.1140496845381
+  },
+  {
+   "iteration": 1412,
+   "residual": 247.44964890226464
+  },
+  {
+   "iteration": 1413,
+   "residual": 247.7830007867857
+  },
+  {
+   "iteration": 1414,
+   "residual": 248.1141046287319
+  },
+  {
+   "iteration": 1415,
+   "residual": 248.4429597592184
+  },
+  {
+   "iteration": 1416,
+   "residual": 248.76956554967492
+  },
+  {
+   "iteration": 1417,
+   "residual": 249.09392141167606
+  },
+  {
+   "iteration": 1418,
+   "residual": 249.4160267967724
+  },
+  {
+   "iteration": 1419,
+   "residual": 249.7358811963204
+  },
+  {
+   "iteration": 1420,
+   "residual": 250.053484141313
+  },
+  {
+   "iteration": 1421,
+   "residual": 250.3688352022098
+  },
+  {
+   "iteration": 1422,
+   "residual": 250.6819339887675
+  },
+  {
+   "iteration": 1423,
+   "residual": 250.99278014986982
+  },
+  {
+   "iteration": 1424,
+   "residual": 251.3013733733581
+  },
+  {
+   "iteration": 1425,
+   "residual": 251.607713385861
+  },
+  {
+   "iteration": 1426,
+   "residual": 251.96356703971662
+  },
+  {
+   "iteration": 1427,
+   "residual": 252.32327551659452
+  },
+  {
+   "iteration": 1428,
+   "residual": 252.68071510790892
+  },
+  {
+   "iteration": 1429,
+   "residual": 253.03588429726514
+  },
+  {
+   "iteration": 1430,
+   "residual": 253.39161661466622
+  },
+  {
+   "iteration": 1431,
+   "residual": 253.75049261124633
+  },
+  {
+   "iteration": 1432,
+   "residual": 254.1070909284371
+  },
+  {
+   "iteration": 1433,
+   "residual": 254.46140996293585
+  },
+  {
+   "iteration": 1434,
+   "residual": 254.81344815411933
+  },
+  {
+   "iteration": 1435,
+   "residual": 255.16320398389703
+  },
+  {
+   "iteration": 1436,
+   "residual": 255.51067597656396
+  },
+  {
+   "iteration": 1437,
+   "residual": 255.85586269865362
+  },
+  {
+   "iteration": 1438,
+   "residual": 256.1987627587907
+  },
+  {
+   "iteration": 1439,
+   "residual": 256.5393748075423
+  },
+  {
+   "iteration": 1440,
+   "residual": 256.8776975372717
+  },
+  {
+   "iteration": 1441,
+   "residual": 257.21372968198847
+  },
+  {
+   "iteration": 1442,
+   "residual": 257.5474700172005
+  },
+  {
+   "iteration": 1443,
+   "residual": 257.878917359766
+  },
+  {
+   "iteration": 1444,
+   "residual": 258.2080705677429
+  },
+  {
+   "iteration": 1445,
+   "residual": 258.53492854024165
+  },
+  {
+   "iteration": 1446,
+   "residual": 258.8594902172742
+  },
+  {
+   "iteration": 1447,
+   "residual": 259.18175457960547
+  },
+  {
+   "iteration": 1448,
+   "residual": 259.50172064860294
+  },
+  {
+   "iteration": 1449,
+   "residual": 259.8193874860867
+  },
+  {
+   "iteration": 1450,
+   "residual": 260.13475419417995
+  },
+  {
+   "iteration": 1451,
+   "residual": 260.44781991515765
+  },
+  {
+   "iteration": 1452,
+   "residual": 260.75858383129656
+  },
+  {
+   "iteration": 1453,
+   "residual": 261.0670451647242
+  },
+  {
+   "iteration": 1454,
+   "residual": 261.3732031772687
+  },
+  {
+   "iteration": 1455,
+   "residual": 261.67705717030645
+  },
+  {
+   "iteration": 1456,
+   "residual": 261.97860648461244
+  },
+  {
+   "iteration": 1457,
+   "residual": 262.27785050020736
+  },
+  {
+   "iteration": 1458,
+   "residual": 262.57478863620736
+  },
+  {
+   "iteration": 1459,
+   "residual": 262.86942035067153
+  },
+  {
+   "iteration": 1460,
+   "residual": 263.16174514045105
+  },
+  {
+   "iteration": 1461,
+   "residual": 263.45176254103586
+  },
+  {
+   "iteration": 1462,
+   "residual": 263.7394721264041
+  },
+  {
+   "iteration": 1463,
+   "residual": 264.02487350886935
+  },
+  {
+   "iteration": 1464,
+   "residual": 264.30796633892805
+  },
+  {
+   "iteration": 1465,
+   "residual": 264.58875030510774
+  },
+  {
+   "iteration": 1466,
+   "residual": 264.8672251338141
+  },
+  {
+   "iteration": 1467,
+   "residual": 265.1433905891785
+  },
+  {
+   "iteration": 1468,
+   "residual": 265.4172464729059
+  },
+  {
+   "iteration": 1469,
+   "residual": 265.6887926241211
+  },
+  {
+   "iteration": 1470,
+   "residual": 265.9580289192168
+  },
+  {
+   "iteration": 1471,
+   "residual": 266.2249552717001
+  },
+  {
+   "iteration": 1472,
+   "residual": 266.4895716320399
+  },
+  {
+   "iteration": 1473,
+   "residual": 266.75187798751347
+  },
+  {
+   "iteration": 1474,
+   "residual": 267.01187436205385
+  },
+  {
+   "iteration": 1475,
+   "residual": 267.2695608160964
+  },
+  {
+   "iteration": 1476,
+   "residual": 267.5249374464254
+  },
+  {
+   "iteration": 1477,
+   "residual": 267.77800438602105
+  },
+  {
+   "iteration": 1478,
+   "residual": 268.0287618039063
+  },
+  {
+   "iteration": 1479,
+   "residual": 268.27720990499313
+  },
+  {
+   "iteration": 1480,
+   "residual": 268.5233489299292
+  },
+  {
+   "iteration": 1481,
+   "residual": 268.7671791549449
+  },
+  {
+   "iteration": 1482,
+   "residual": 269.00870089169933
+  },
+  {
+   "iteration": 1483,
+   "residual": 269.2479144871274
+  },
+  {
+   "iteration": 1484,
+   "residual": 269.4855830068467
+  },
+  {
+   "iteration": 1485,
+   "residual": 269.72622481789455
+  },
+  {
+   "iteration": 1486,
+   "residual": 269.96455958164125
+  },
+  {
+   "iteration": 1487,
+   "residual": 270.2005876070533
+  },
+  {
+   "iteration": 1488,
+   "residual": 270.43430923812997
+  },
+  {
+   "iteration": 1489,
+   "residual": 270.6657248537533
+  },
+  {
+   "iteration": 1490,
+   "residual": 270.89483486753835
+  },
+  {
+   "iteration": 1491,
+   "residual": 271.121639727683
+  },
+  {
+   "iteration": 1492,
+   "residual": 271.34613991681755
+  },
+  {
+   "iteration": 1493,
+   "residual": 271.56833595185515
+  },
+  {
+   "iteration": 1494,
+   "residual": 271.78822838384156
+  },
+  {
+   "iteration": 1495,
+   "residual": 272.0058177978051
+  },
+  {
+   "iteration": 1496,
+   "residual": 272.221104812606
+  },
+  {
+   "iteration": 1497,
+   "residual": 272.4340900807873
+  },
+  {
+   "iteration": 1498,
+   "residual": 272.64477428842395
+  },
+  {
+   "iteration": 1499,
+   "residual": 272.8531581549732
+  },
+  {
+   "iteration": 1500,
+   "residual": 273.0592424331242
+  },
+  {
+   "iteration": 1501,
+   "residual": 273.2651566880578
+  },
+  {
+   "iteration": 1502,
+   "residual": 273.49259918441226
+  },
+  {
+   "iteration": 1503,
+   "residual": 273.7177375355981
+  },
+  {
+   "iteration": 1504,
+   "residual": 273.94057196190465
+  },
+  {
+   "iteration": 1505,
+   "residual": 274.16110271818826
+  },
+  {
+   "iteration": 1506,
+   "residual": 274.3793300937327
+  },
+  {
+   "iteration": 1507,
+   "residual": 274.59525441210843
+  },
+  {
+   "iteration": 1508,
+   "residual": 274.80887603103406
+  },
+  {
+   "iteration": 1509,
+   "residual": 275.02019534223547
+  },
+  {
+   "iteration": 1510,
+   "residual": 275.22921277130615
+  },
+  {
+   "iteration": 1511,
+   "residual": 275.4359287775673
+  },
+  {
+   "iteration": 1512,
+   "residual": 275.64034385392756
+  },
+  {
+   "iteration": 1513,
+   "residual": 275.842458526743
+  },
+  {
+   "iteration": 1514,
+   "residual": 276.0422733556765
+  },
+  {
+   "iteration": 1515,
+   "residual": 276.2397889335584
+  },
+  {
+   "iteration": 1516,
+   "residual": 276.4350058862452
+  },
+  {
+   "iteration": 1517,
+   "residual": 276.6279248724798
+  },
+  {
+   "iteration": 1518,
+   "residual": 276.81854658375136
+  },
+  {
+   "iteration": 1519,
+   "residual": 277.00687174415424
+  },
+  {
+   "iteration": 1520,
+   "residual": 277.192901110248
+  },
+  {
+   "iteration": 1521,
+   "residual": 277.37663547091717
+  },
+  {
+   "iteration": 1522,
+   "residual": 277.5580756472304
+  },
+  {
+   "iteration": 1523,
+   "residual": 277.7372224923002
+  },
+  {
+   "iteration": 1524,
+   "residual": 277.91407689114243
+  },
+  {
+   "iteration": 1525,
+   "residual": 278.0886397605359
+  },
+  {
+   "iteration": 1526,
+   "residual": 278.26091204888206
+  },
+  {
+   "iteration": 1527,
+   "residual": 278.430894736064
+  },
+  {
+   "iteration": 1528,
+   "residual": 278.59858883330645
+  },
+  {
+   "iteration": 1529,
+   "residual": 278.76399538303525
+  },
+  {
+   "iteration": 1530,
+   "residual": 278.92711545873675
+  },
+  {
+   "iteration": 1531,
+   "residual": 279.08795016481776
+  },
+  {
+   "iteration": 1532,
+   "residual": 279.24650063646436
+  },
+  {
+   "iteration": 1533,
+   "residual": 279.40276803950275
+  },
+  {
+   "iteration": 1534,
+   "residual": 279.5567535702576
+  },
+  {
+   "iteration": 1535,
+   "residual": 279.7084584554129
+  },
+  {
+   "iteration": 1536,
+   "residual": 279.8578839518708
+  },
+  {
+   "iteration": 1537,
+   "residual": 280.00503134661164
+  },
+  {
+   "iteration": 1538,
+   "residual": 280.1499019565542
+  },
+  {
+   "iteration": 1539,
+   "residual": 280.2924971284149
+  },
+  {
+   "iteration": 1540,
+   "residual": 280.4328182385681
+  },
+  {
+   "iteration": 1541,
+   "residual": 280.5708666929058
+  },
+  {
+   "iteration": 1542,
+   "residual": 280.7066439266981
+  },
+  {
+   "iteration": 1543,
+   "residual": 280.8401514044526
+  },
+  {
+   "iteration": 1544,
+   "residual": 280.97139061977515
+  },
+  {
+   "iteration": 1545,
+   "residual": 281.10036309522985
+  },
+  {
+   "iteration": 1546,
+   "residual": 281.2270703821991
+  },
+  {
+   "iteration": 1547,
+   "residual": 281.35151406074414
+  },
+  {
+   "iteration": 1548,
+   "residual": 281.4736957394654
+  },
+  {
+   "iteration": 1549,
+   "residual": 281.5936170553635
+  },
+  {
+   "iteration": 1550,
+   "residual": 281.7112796736988
+  },
+  {
+   "iteration": 1551,
+   "residual": 281.82951836612506
+  },
+  {
+   "iteration": 1552,
+   "residual": 281.9469210318245
+  },
+  {
+   "iteration": 1553,
+   "residual": 282.0620687637632
+  },
+  {
+   "iteration": 1554,
+   "residual": 282.1749632251145
+  },
+  {
+   "iteration": 1555,
+   "residual": 282.2856061069734
+  },
+  {
+   "iteration": 1556,
+   "residual": 282.39399912822046
+  },
+  {
+   "iteration": 1557,
+   "residual": 282.50014403538427
+  },
+  {
+   "iteration": 1558,
+   "residual": 282.60404260250505
+  },
+  {
+   "iteration": 1559,
+   "residual": 282.7056966309976
+  },
+  {
+   "iteration": 1560,
+   "residual": 282.8051079495153
+  },
+  {
+   "iteration": 1561,
+   "residual": 282.9022784138127
+  },
+  {
+   "iteration": 1562,
+   "residual": 282.99720990660995
+  },
+  {
+   "iteration": 1563,
+   "residual": 283.22043197554024
+  },
+  {
+   "iteration": 1564,
+   "residual": 283.47854802857944
+  },
+  {
+   "iteration": 1565,
+   "residual": 283.73469263442
+  },
+  {
+   "iteration": 1566,
+   "residual": 283.98886698129303
+  },
+  {
+   "iteration": 1567,
+   "residual": 284.2410722828335
+  },
+  {
+   "iteration": 1568,
+   "residual": 284.4913097779536
+  },
+  {
+   "iteration": 1569,
+   "residual": 284.7395807307142
+  },
+  {
+   "iteration": 1570,
+   "residual": 284.9858864301981
+  },
+  {
+   "iteration": 1571,
+   "residual": 285.23022819038175
+  },
+  {
+   "iteration": 1572,
+   "residual": 285.4726073500087
+  },
+  {
+   "iteration": 1573,
+   "residual": 285.7130252724616
+  },
+  {
+   "iteration": 1574,
+   "residual": 285.95148334563544
+  },
+  {
+   "iteration": 1575,
+   "residual": 286.1879829818108
+  },
+  {
+   "iteration": 1576,
+   "residual": 286.42252561752616
+  },
+  {
+   "iteration": 1577,
+   "residual": 286.6551127134522
+  },
+  {
+   "iteration": 1578,
+   "residual": 286.88574575426424
+  },
+  {
+   "iteration": 1579,
+   "residual": 287.11442624851634
+  },
+  {
+   "iteration": 1580,
+   "residual": 287.34115572851437
+  },
+  {
+   "iteration": 1581,
+   "residual": 287.56593575019036
+  },
+  {
+   "iteration": 1582,
+   "residual": 287.7887678929758
+  },
+  {
+   "iteration": 1583,
+   "residual": 288.00965375967587
+  },
+  {
+   "iteration": 1584,
+   "residual": 288.228594976344
+  },
+  {
+   "iteration": 1585,
+   "residual": 288.44678733725397
+  },
+  {
+   "iteration": 1586,
+   "residual": 288.6647634643742
+  },
+  {
+   "iteration": 1587,
+   "residual": 288.8807999722546
+  },
+  {
+   "iteration": 1588,
+   "residual": 289.0948985025131
+  },
+  {
+   "iteration": 1589,
+   "residual": 289.30706071959673
+  },
+  {
+   "iteration": 1590,
+   "residual": 289.51728831065714
+  },
+  {
+   "iteration": 1591,
+   "residual": 289.7255829854274
+  },
+  {
+   "iteration": 1592,
+   "residual": 289.93194647609954
+  },
+  {
+   "iteration": 1593,
+   "residual": 290.1363805371998
+  },
+  {
+   "iteration": 1594,
+   "residual": 290.3388869454668
+  },
+  {
+   "iteration": 1595,
+   "residual": 290.53946749972835
+  },
+  {
+   "iteration": 1596,
+   "residual": 290.73812402077834
+  },
+  {
+   "iteration": 1597,
+   "residual": 290.93485835125466
+  },
+  {
+   "iteration": 1598,
+   "residual": 291.1296723555167
+  },
+  {
+   "iteration": 1599,
+   "residual": 291.3225679195228
+  },
+  {
+   "iteration": 1600,
+   "residual": 291.5135469507081
+  },
+  {
+   "iteration": 1601,
+   "residual": 291.7026113778634
+  },
+  {
+   "iteration": 1602,
+   "residual": 291.88976315101223
+  },
+  {
+   "iteration": 1603,
+   "residual": 292.07500424129034
+  },
+  {
+   "iteration": 1604,
+   "residual": 292.25833664082336
+  },
+  {
+   "iteration": 1605,
+   "residual": 292.439762362606
+  },
+  {
+   "iteration": 1606,
+   "residual": 292.61928344038137
+  },
+  {
+   "iteration": 1607,
+   "residual": 292.79690192851893
+  },
+  {
+   "iteration": 1608,
+   "residual": 292.97261990189503
+  },
+  {
+   "iteration": 1609,
+   "residual": 293.14643945577154
+  },
+  {
+   "iteration": 1610,
+   "residual": 293.3183627056759
+  },
+  {
+   "iteration": 1611,
+   "residual": 293.4883917872802
+  },
+  {
+   "iteration": 1612,
+   "residual": 293.6565288562825
+  },
+  {
+   "iteration": 1613,
+   "residual": 293.82277608828576
+  },
+  {
+   "iteration": 1614,
+   "residual": 293.987135678679
+  },
+  {
+   "iteration": 1615,
+   "residual": 294.14960984251746
+  },
+  {
+   "iteration": 1616,
+   "residual": 294.36311076914484
+  },
+  {
+   "iteration": 1617,
+   "residual": 294.59652368476645
+  },
+  {
+   "iteration": 1618,
+   "residual": 294.8280545033379
+  },
+  {
+   "iteration": 1619,
+   "residual": 295.057704220887
+  },
+  {
+   "iteration": 1620,
+   "residual": 295.2854738558591
+  },
+  {
+   "iteration": 1621,
+   "residual": 295.5113644490116
+  },
+  {
+   "iteration": 1622,
+   "residual": 295.735377063308
+  },
+  {
+   "iteration": 1623,
+   "residual": 295.9575127838126
+  },
+  {
+   "iteration": 1624,
+   "residual": 296.1777727175847
+  },
+  {
+   "iteration": 1625,
+   "residual": 296.39615799357256
+  },
+  {
+   "iteration": 1626,
+   "residual": 296.6126697625101
+  },
+  {
+   "iteration": 1627,
+   "residual": 296.8273091968088
+  },
+  {
+   "iteration": 1628,
+   "residual": 297.04007749045473
+  },
+  {
+   "iteration": 1629,
+   "residual": 297.250975858902
+  },
+  {
+   "iteration": 1630,
+   "residual": 297.46000553896863
+  },
+  {
+   "iteration": 1631,
+   "residual": 297.6727985551988
+  },
+  {
+   "iteration": 1632,
+   "residual": 297.89822311500086
+  },
+  {
+   "iteration": 1633,
+   "residual": 298.12178217423724
+  },
+  {
+   "iteration": 1634,
+   "residual": 298.34518257733623
+  },
+  {
+   "iteration": 1635,
+   "residual": 298.56687327209454
+  },
+  {
+   "iteration": 1636,
+   "residual": 298.82093164766286
+  },
+  {
+   "iteration": 1637,
+   "residual": 299.0829113353838
+  },
+  {
+   "iteration": 1638,
+   "residual": 299.34302181177816
+  },
+  {
+   "iteration": 1639,
+   "residual": 299.60126315575707
+  },
+  {
+   "iteration": 1640,
+   "residual": 299.857635470271
+  },
+  {
+   "iteration": 1641,
+   "residual": 300.1121388822225
+  },
+  {
+   "iteration": 1642,
+   "residual": 300.3647735423776
+  },
+  {
+   "iteration": 1643,
+   "residual": 300.6155396252787
+  },
+  {
+   "iteration": 1644,
+   "residual": 300.86443732915683
+  },
+  {
+   "iteration": 1645,
+   "residual": 301.1114668758429
+  },
+  {
+   "iteration": 1646,
+   "residual": 301.3566285106814
+  },
+  {
+   "iteration": 1647,
+   "residual": 301.60057312587116
+  },
+  {
+   "iteration": 1648,
+   "residual": 301.8430713184408
+  },
+  {
+   "iteration": 1649,
+   "residual": 302.08370250302096
+  },
+  {
+   "iteration": 1650,
+   "residual": 302.3224669920464
+  },
+  {
+   "iteration": 1651,
+   "residual": 302.5593651210923
+  },
+  {
+   "iteration": 1652,
+   "residual": 302.7943972487855
+  },
+  {
+   "iteration": 1653,
+   "residual": 303.0275637567168
+  },
+  {
+   "iteration": 1654,
+   "residual": 303.2588650493532
+  },
+  {
+   "iteration": 1655,
+   "residual": 303.4883015539497
+  },
+  {
+   "iteration": 1656,
+   "residual": 303.71587372046207
+  },
+  {
+   "iteration": 1657,
+   "residual": 303.94158202145763
+  },
+  {
+   "iteration": 1658,
+   "residual": 304.1654269520284
+  },
+  {
+   "iteration": 1659,
+   "residual": 304.3874090297016
+  },
+  {
+   "iteration": 1660,
+   "residual": 304.60752879435296
+  },
+  {
+   "iteration": 1661,
+   "residual": 304.82578680811764
+  },
+  {
+   "iteration": 1662,
+   "residual": 305.0421836553022
+  },
+  {
+   "iteration": 1663,
+   "residual": 305.2567199422968
+  },
+  {
+   "iteration": 1664,
+   "residual": 305.46939629748624
+  },
+  {
+   "iteration": 1665,
+   "residual": 305.6802133711623
+  },
+  {
+   "iteration": 1666,
+   "residual": 305.8891718354352
+  },
+  {
+   "iteration": 1667,
+   "residual": 306.09627238414555
+  },
+  {
+   "iteration": 1668,
+   "residual": 306.3015157327754
+  },
+  {
+   "iteration": 1669,
+   "residual": 306.50490261836114
+  },
+  {
+   "iteration": 1670,
+   "residual": 306.7064337994033
+  },
+  {
+   "iteration": 1671,
+   "residual": 306.90611005578063
+  },
+  {
+   "iteration": 1672,
+   "residual": 307.10393218865937
+  },
+  {
+   "iteration": 1673,
+   "residual": 307.29990102040637
+  },
+  {
+   "iteration": 1674,
+   "residual": 307.49401739450053
+  },
+  {
+   "iteration": 1675,
+   "residual": 307.68628217544415
+  },
+  {
+   "iteration": 1676,
+   "residual": 307.8770680332944
+  },
+  {
+   "iteration": 1677,
+   "residual": 308.06609159484907
+  },
+  {
+   "iteration": 1678,
+   "residual": 308.2532661522987
+  },
+  {
+   "iteration": 1679,
+   "residual": 308.4385926426904
+  },
+  {
+   "iteration": 1680,
+   "residual": 308.62207202368404
+  },
+  {
+   "iteration": 1681,
+   "residual": 308.80370527346355
+  },
+  {
+   "iteration": 1682,
+   "residual": 308.9834933906493
+  },
+  {
+   "iteration": 1683,
+   "residual": 309.16143739420954
+  },
+  {
+   "iteration": 1684,
+   "residual": 309.3375383233727
+  },
+  {
+   "iteration": 1685,
+   "residual": 309.5117972375392
+  },
+  {
+   "iteration": 1686,
+   "residual": 309.6842152161932
+  },
+  {
+   "iteration": 1687,
+   "residual": 309.8547933588146
+  },
+  {
+   "iteration": 1688,
+   "residual": 310.0235327847914
+  },
+  {
+   "iteration": 1689,
+   "residual": 310.1904346333318
+  },
+  {
+   "iteration": 1690,
+   "residual": 310.35550006337496
+  },
+  {
+   "iteration": 1691,
+   "residual": 310.51873025350517
+  },
+  {
+   "iteration": 1692,
+   "residual": 310.6801264018622
+  },
+  {
+   "iteration": 1693,
+   "residual": 310.8396897260542
+  },
+  {
+   "iteration": 1694,
+   "residual": 310.99742146307005
+  },
+  {
+   "iteration": 1695,
+   "residual": 311.1533228691911
+  },
+  {
+   "iteration": 1696,
+   "residual": 311.3073952199038
+  },
+  {
+   "iteration": 1697,
+   "residual": 311.45963980981196
+  },
+  {
+   "iteration": 1698,
+   "residual": 311.61005795254914
+  },
+  {
+   "iteration": 1699,
+   "residual": 311.7586509806904
+  },
+  {
+   "iteration": 1700,
+   "residual": 311.9054202456658
+  },
+  {
+   "iteration": 1701,
+   "residual": 312.05036711767247
+  },
+  {
+   "iteration": 1702,
+   "residual": 312.1934929855867
+  },
+  {
+   "iteration": 1703,
+   "residual": 312.33479925687703
+  },
+  {
+   "iteration": 1704,
+   "residual": 312.47428735751686
+  },
+  {
+   "iteration": 1705,
+   "residual": 312.61195873189706
+  },
+  {
+   "iteration": 1706,
+   "residual": 312.747814842739
+  },
+  {
+   "iteration": 1707,
+   "residual": 312.88185717100646
+  },
+  {
+   "iteration": 1708,
+   "residual": 313.0140872158198
+  },
+  {
+   "iteration": 1709,
+   "residual": 313.14450649436804
+  },
+  {
+   "iteration": 1710,
+   "residual": 313.2731165418222
+  },
+  {
+   "iteration": 1711,
+   "residual": 313.39991891124816
+  },
+  {
+   "iteration": 1712,
+   "residual": 313.5249151735201
+  },
+  {
+   "iteration": 1713,
+   "residual": 313.64810691723346
+  },
+  {
+   "iteration": 1714,
+   "residual": 313.76949574861834
+  },
+  {
+   "iteration": 1715,
+   "residual": 313.8890832914526
+  },
+  {
+   "iteration": 1716,
+   "residual": 314.00687118697584
+  },
+  {
+   "iteration": 1717,
+   "residual": 314.12286109380267
+  },
+  {
+   "iteration": 1718,
+   "residual": 314.2370546878354
+  },
+  {
+   "iteration": 1719,
+   "residual": 314.34945366217937
+  },
+  {
+   "iteration": 1720,
+   "residual": 314.4600597270553
+  },
+  {
+   "iteration": 1721,
+   "residual": 314.56887460971376
+  },
+  {
+   "iteration": 1722,
+   "residual": 314.675900054349
+  },
+  {
+   "iteration": 1723,
+   "residual": 314.7811378220124
+  },
+  {
+   "iteration": 1724,
+   "residual": 314.88458969052766
+  },
+  {
+   "iteration": 1725,
+   "residual": 314.98625745440364
+  },
+  {
+   "iteration": 1726,
+   "residual": 315.0861429247495
+  },
+  {
+   "iteration": 1727,
+   "residual": 315.18424792918876
+  },
+  {
+   "iteration": 1728,
+   "residual": 315.2805743117739
+  },
+  {
+   "iteration": 1729,
+   "residual": 315.3751239329
+  },
+  {
+   "iteration": 1730,
+   "residual": 315.467898669221
+  },
+  {
+   "iteration": 1731,
+   "residual": 315.55890041356275
+  },
+  {
+   "iteration": 1732,
+   "residual": 315.64813107483866
+  },
+  {
+   "iteration": 1733,
+   "residual": 315.7355925779646
+  },
+  {
+   "iteration": 1734,
+   "residual": 315.8212868637736
+  },
+  {
+   "iteration": 1735,
+   "residual": 315.9052158889311
+  },
+  {
+   "iteration": 1736,
+   "residual": 315.98738162585016
+  },
+  {
+   "iteration": 1737,
+   "residual": 316.0677860626066
+  },
+  {
+   "iteration": 1738,
+   "residual": 316.14643120285467
+  },
+  {
+   "iteration": 1739,
+   "residual": 316.22331906574243
+  },
+  {
+   "iteration": 1740,
+   "residual": 316.2984516858273
+  },
+  {
+   "iteration": 1741,
+   "residual": 316.3718311129918
+  },
+  {
+   "iteration": 1742,
+   "residual": 316.44345941235946
+  },
+  {
+   "iteration": 1743,
+   "residual": 316.51333866421083
+  },
+  {
+   "iteration": 1744,
+   "residual": 316.58147096389933
+  },
+  {
+   "iteration": 1745,
+   "residual": 316.64785842176747
+  },
+  {
+   "iteration": 1746,
+   "residual": 316.7125031630632
+  },
+  {
+   "iteration": 1747,
+   "residual": 316.7754073278566
+  },
+  {
+   "iteration": 1748,
+   "residual": 316.83657307095575
+  },
+  {
+   "iteration": 1749,
+   "residual": 316.89600256182376
+  },
+  {
+   "iteration": 1750,
+   "residual": 316.9536979844955
+  },
+  {
+   "iteration": 1751,
+   "residual": 317.00966153749454
+  },
+  {
+   "iteration": 1752,
+   "residual": 317.0638954337499
+  },
+  {
+   "iteration": 1753,
+   "residual": 317.11640190051344
+  },
+  {
+   "iteration": 1754,
+   "residual": 317.16718317927683
+  },
+  {
+   "iteration": 1755,
+   "residual": 317.21624152568904
+  },
+  {
+   "iteration": 1756,
+   "residual": 317.26357920947373
+  },
+  {
+   "iteration": 1757,
+   "residual": 317.3091985143475
+  },
+  {
+   "iteration": 1758,
+   "residual": 317.35310173793664
+  },
+  {
+   "iteration": 1759,
+   "residual": 317.3952911916954
+  },
+  {
+   "iteration": 1760,
+   "residual": 317.4357692008242
+  },
+  {
+   "iteration": 1761,
+   "residual": 317.4745381041876
+  },
+  {
+   "iteration": 1762,
+   "residual": 317.51160025423275
+  },
+  {
+   "iteration": 1763,
+   "residual": 317.5469580169073
+  },
+  {
+   "iteration": 1764,
+   "residual": 317.5806137715782
+  },
+  {
+   "iteration": 1765,
+   "residual": 317.6125699109508
+  },
+  {
+   "iteration": 1766,
+   "residual": 317.64282884098685
+  },
+  {
+   "iteration": 1767,
+   "residual": 317.671392980824
+  },
+  {
+   "iteration": 1768,
+   "residual": 317.69826476269486
+  },
+  {
+   "iteration": 1769,
+   "residual": 317.7234466318458
+  },
+  {
+   "iteration": 1770,
+   "residual": 317.7469410464566
+  },
+  {
+   "iteration": 1771,
+   "residual": 317.7687504775603
+  },
+  {
+   "iteration": 1772,
+   "residual": 317.7888774089617
+  },
+  {
+   "iteration": 1773,
+   "residual": 317.8077265261346
+  },
+  {
+   "iteration": 1774,
+   "residual": 317.83983380516855
+  },
+  {
+   "iteration": 1775,
+   "residual": 317.87026304959926
+  },
+  {
+   "iteration": 1776,
+   "residual": 317.8990165016006
+  },
+  {
+   "iteration": 1777,
+   "residual": 317.92609641648215
+  },
+  {
+   "iteration": 1778,
+   "residual": 317.9515050626128
+  },
+  {
+   "iteration": 1779,
+   "residual": 317.9752447213448
+  },
+  {
+   "iteration": 1780,
+   "residual": 317.9973176869378
+  },
+  {
+   "iteration": 1781,
+   "residual": 318.01772626648324
+  },
+  {
+   "iteration": 1782,
+   "residual": 318.03647277982884
+  },
+  {
+   "iteration": 1783,
+   "residual": 318.0535595595022
+  },
+  {
+   "iteration": 1784,
+   "residual": 318.06898895063676
+  },
+  {
+   "iteration": 1785,
+   "residual": 318.0827633108952
+  },
+  {
+   "iteration": 1786,
+   "residual": 318.19369968399917
+  },
+  {
+   "iteration": 1787,
+   "residual": 318.3046189622156
+  },
+  {
+   "iteration": 1788,
+   "residual": 318.41386261515845
+  },
+  {
+   "iteration": 1789,
+   "residual": 318.5214318627994
+  },
+  {
+   "iteration": 1790,
+   "residual": 318.6273279402204
+  },
+  {
+   "iteration": 1791,
+   "residual": 318.73155209754583
+  },
+  {
+   "iteration": 1792,
+   "residual": 318.83410559987465
+  },
+  {
+   "iteration": 1793,
+   "residual": 318.9349897272119
+  },
+  {
+   "iteration": 1794,
+   "residual": 319.0342057744014
+  },
+  {
+   "iteration": 1795,
+   "residual": 319.13175505105767
+  },
+  {
+   "iteration": 1796,
+   "residual": 319.22763888149814
+  },
+  {
+   "iteration": 1797,
+   "residual": 319.32185860467536
+  },
+  {
+   "iteration": 1798,
+   "residual": 319.41441557410957
+  },
+  {
+   "iteration": 1799,
+   "residual": 319.5053111578206
+  },
+  {
+   "iteration": 1800,
+   "residual": 319.594546738261
+  },
+  {
+   "iteration": 1801,
+   "residual": 319.68212371224797
+  },
+  {
+   "iteration": 1802,
+   "residual": 319.82869212789177
+  },
+  {
+   "iteration": 1803,
+   "residual": 320.0419583402739
+  },
+  {
+   "iteration": 1804,
+   "residual": 320.2536081360434
+  },
+  {
+   "iteration": 1805,
+   "residual": 320.4636416130331
+  },
+  {
+   "iteration": 1806,
+   "residual": 320.67205888553866
+  },
+  {
+   "iteration": 1807,
+   "residual": 320.8788600842593
+  },
+  {
+   "iteration": 1808,
+   "residual": 321.0840453562383
+  },
+  {
+   "iteration": 1809,
+   "residual": 321.2876148648035
+  },
+  {
+   "iteration": 1810,
+   "residual": 321.4895687895079
+  },
+  {
+   "iteration": 1811,
+   "residual": 321.68990732607
+  },
+  {
+   "iteration": 1812,
+   "residual": 321.88863068631457
+  },
+  {
+   "iteration": 1813,
+   "residual": 322.0857390981127
+  },
+  {
+   "iteration": 1814,
+   "residual": 322.281232805323
+  },
+  {
+   "iteration": 1815,
+   "residual": 322.47511206773186
+  },
+  {
+   "iteration": 1816,
+   "residual": 322.667377160994
+  },
+  {
+   "iteration": 1817,
+   "residual": 322.8580283765728
+  },
+  {
+   "iteration": 1818,
+   "residual": 323.04706602168113
+  },
+  {
+   "iteration": 1819,
+   "residual": 323.23449041922237
+  },
+  {
+   "iteration": 1820,
+   "residual": 323.42030190773016
+  },
+  {
+   "iteration": 1821,
+   "residual": 323.60450084130906
+  },
+  {
+   "iteration": 1822,
+   "residual": 323.7870875895766
+  },
+  {
+   "iteration": 1823,
+   "residual": 323.9680625376021
+  },
+  {
+   "iteration": 1824,
+   "residual": 324.1474260858485
+  },
+  {
+   "iteration": 1825,
+   "residual": 324.3251786501124
+  },
+  {
+   "iteration": 1826,
+   "residual": 324.5013206614657
+  },
+  {
+   "iteration": 1827,
+   "residual": 324.6758525661951
+  },
+  {
+   "iteration": 1828,
+   "residual": 324.84877482574404
+  },
+  {
+   "iteration": 1829,
+   "residual": 325.02008791665236
+  },
+  {
+   "iteration": 1830,
+   "residual": 325.1897923304983
+  },
+  {
+   "iteration": 1831,
+   "residual": 325.4591296318145
+  },
+  {
+   "iteration": 1832,
+   "residual": 325.80567240101135
+  },
+  {
+   "iteration": 1833,
+   "residual": 326.15049727756355
+  },
+  {
+   "iteration": 1834,
+   "residual": 326.49360364959625
+  },
+  {
+   "iteration": 1835,
+   "residual": 326.8349909228795
+  },
+  {
+   "iteration": 1836,
+   "residual": 327.1746585207696
+  },
+  {
+   "iteration": 1837,
+   "residual": 327.5126058841534
+  },
+  {
+   "iteration": 1838,
+   "residual": 327.84883247139004
+  },
+  {
+   "iteration": 1839,
+   "residual": 328.18333775825414
+  },
+  {
+   "iteration": 1840,
+   "residual": 328.523877357831
+  },
+  {
+   "iteration": 1841,
+   "residual": 328.8894250993841
+  },
+  {
+   "iteration": 1842,
+   "residual": 329.2532500153024
+  },
+  {
+   "iteration": 1843,
+   "residual": 329.6153511014273
+  },
+  {
+   "iteration": 1844,
+   "residual": 329.9757273719761
+  },
+  {
+   "iteration": 1845,
+   "residual": 330.3343778594904
+  },
+  {
+   "iteration": 1846,
+   "residual": 330.6913016147834
+  },
+  {
+   "iteration": 1847,
+   "residual": 331.0464977068892
+  },
+  {
+   "iteration": 1848,
+   "residual": 331.39996522300953
+  },
+  {
+   "iteration": 1849,
+   "residual": 331.7517032684624
+  },
+  {
+   "iteration": 1850,
+   "residual": 332.10171096663
+  },
+  {
+   "iteration": 1851,
+   "residual": 332.4499874589067
+  },
+  {
+   "iteration": 1852,
+   "residual": 332.7965319046465
+  },
+  {
+   "iteration": 1853,
+   "residual": 333.14134348111054
+  },
+  {
+   "iteration": 1854,
+   "residual": 333.4844213834164
+  },
+  {
+   "iteration": 1855,
+   "residual": 333.8257648244841
+  },
+  {
+   "iteration": 1856,
+   "residual": 334.16537303498495
+  },
+  {
+   "iteration": 1857,
+   "residual": 334.5032452632887
+  },
+  {
+   "iteration": 1858,
+   "residual": 334.83938077541114
+  },
+  {
+   "iteration": 1859,
+   "residual": 335.17377885496245
+  },
+  {
+   "iteration": 1860,
+   "residual": 335.5064388030939
+  },
+  {
+   "iteration": 1861,
+   "residual": 335.83735993844584
+  },
+  {
+   "iteration": 1862,
+   "residual": 336.1665415970954
+  },
+  {
+   "iteration": 1863,
+   "residual": 336.49398313250344
+  },
+  {
+   "iteration": 1864,
+   "residual": 336.81968391546275
+  },
+  {
+   "iteration": 1865,
+   "residual": 337.1436433340455
+  },
+  {
+   "iteration": 1866,
+   "residual": 337.4658607935497
+  },
+  {
+   "iteration": 1867,
+   "residual": 337.786335716448
+  },
+  {
+   "iteration": 1868,
+   "residual": 338.105067542334
+  },
+  {
+   "iteration": 1869,
+   "residual": 338.4220557278704
+  },
+  {
+   "iteration": 1870,
+   "residual": 338.73729974673597
+  },
+  {
+   "iteration": 1871,
+   "residual": 339.05079908957316
+  },
+  {
+   "iteration": 1872,
+   "residual": 339.3625532639353
+  },
+  {
+   "iteration": 1873,
+   "residual": 339.67256179423396
+  },
+  {
+   "iteration": 1874,
+   "residual": 339.98082422168625
+  },
+  {
+   "iteration": 1875,
+   "residual": 340.2873401042623
+  },
+  {
+   "iteration": 1876,
+   "residual": 340.5921090166325
+  },
+  {
+   "iteration": 1877,
+   "residual": 340.895130550115
+  },
+  {
+   "iteration": 1878,
+   "residual": 341.1964043126225
+  },
+  {
+   "iteration": 1879,
+   "residual": 341.4959299286098
+  },
+  {
+   "iteration": 1880,
+   "residual": 341.7937070390211
+  },
+  {
+   "iteration": 1881,
+   "residual": 342.0897353012377
+  },
+  {
+   "iteration": 1882,
+   "residual": 342.3840143890243
+  },
+  {
+   "iteration": 1883,
+   "residual": 342.6765439924771
+  },
+  {
+   "iteration": 1884,
+   "residual": 342.9709326304464
+  },
+  {
+   "iteration": 1885,
+   "residual": 343.27175676437844
+  },
+  {
+   "iteration": 1886,
+   "residual": 343.57083136174185
+  },
+  {
+   "iteration": 1887,
+   "residual": 343.86815597416336
+  },
+  {
+   "iteration": 1888,
+   "residual": 344.1637301697799
+  },
+  {
+   "iteration": 1889,
+   "residual": 344.45755353318793
+  },
+  {
+   "iteration": 1890,
+   "residual": 344.7496256653932
+  },
+  {
+   "iteration": 1891,
+   "residual": 345.0399461837604
+  },
+  {
+   "iteration": 1892,
+   "residual": 345.32851472196256
+  },
+  {
+   "iteration": 1893,
+   "residual": 345.61533092993034
+  },
+  {
+   "iteration": 1894,
+   "residual": 345.9003944738018
+  },
+  {
+   "iteration": 1895,
+   "residual": 346.18370503587226
+  },
+  {
+   "iteration": 1896,
+   "residual": 346.4652623145428
+  },
+  {
+   "iteration": 1897,
+   "residual": 346.7450660242712
+  },
+  {
+   "iteration": 1898,
+   "residual": 347.02311589551914
+  },
+  {
+   "iteration": 1899,
+   "residual": 347.29941167470423
+  },
+  {
+   "iteration": 1900,
+   "residual": 347.5739531241479
+  },
+  {
+   "iteration": 1901,
+   "residual": 347.84674002202513
+  },
+  {
+   "iteration": 1902,
+   "residual": 348.1177721623141
+  },
+  {
+   "iteration": 1903,
+   "residual": 348.3870493547457
+  },
+  {
+   "iteration": 1904,
+   "residual": 348.6545714247529
+  },
+  {
+   "iteration": 1905,
+   "residual": 348.9203382134197
+  },
+  {
+   "iteration": 1906,
+   "residual": 349.1843495774312
+  },
+  {
+   "iteration": 1907,
+   "residual": 349.44660538902286
+  },
+  {
+   "iteration": 1908,
+   "residual": 349.7071055359302
+  },
+  {
+   "iteration": 1909,
+   "residual": 349.96584992133774
+  },
+  {
+   "iteration": 1910,
+   "residual": 350.2228384638287
+  },
+  {
+   "iteration": 1911,
+   "residual": 350.47807109733446
+  },
+  {
+   "iteration": 1912,
+   "residual": 350.7327715128181
+  },
+  {
+   "iteration": 1913,
+   "residual": 351.0430155672066
+  },
+  {
+   "iteration": 1914,
+   "residual": 351.3515008728585
+  },
+  {
+   "iteration": 1915,
+   "residual": 351.6582266714079
+  },
+  {
+   "iteration": 1916,
+   "residual": 351.9631922212194
+  },
+  {
+   "iteration": 1917,
+   "residual": 352.26639679734336
+  },
+  {
+   "iteration": 1918,
+   "residual": 352.5678396914706
+  },
+  {
+   "iteration": 1919,
+   "residual": 352.8675202118873
+  },
+  {
+   "iteration": 1920,
+   "residual": 353.1654376834299
+  },
+  {
+   "iteration": 1921,
+   "residual": 353.4615914474401
+  },
+  {
+   "iteration": 1922,
+   "residual": 353.75598086171954
+  },
+  {
+   "iteration": 1923,
+   "residual": 354.04860530048364
+  },
+  {
+   "iteration": 1924,
+   "residual": 354.3394641543186
+  },
+  {
+   "iteration": 1925,
+   "residual": 354.6285568301335
+  },
+  {
+   "iteration": 1926,
+   "residual": 354.91588275111667
+  },
+  {
+   "iteration": 1927,
+   "residual": 355.20144135668926
+  },
+  {
+   "iteration": 1928,
+   "residual": 355.4852321024607
+  },
+  {
+   "iteration": 1929,
+   "residual": 355.76725446018236
+  },
+  {
+   "iteration": 1930,
+   "residual": 356.0475079177037
+  },
+  {
+   "iteration": 1931,
+   "residual": 356.3259919789244
+  },
+  {
+   "iteration": 1932,
+   "residual": 356.60270616375067
+  },
+  {
+   "iteration": 1933,
+   "residual": 356.87765000804865
+  },
+  {
+   "iteration": 1934,
+   "residual": 357.1508230636002
+  },
+  {
+   "iteration": 1935,
+   "residual": 357.4222248980559
+  },
+  {
+   "iteration": 1936,
+   "residual": 357.6918550948898
+  },
+  {
+   "iteration": 1937,
+   "residual": 357.9597132533544
+  },
+  {
+   "iteration": 1938,
+   "residual": 358.2257989884343
+  },
+  {
+   "iteration": 1939,
+   "residual": 358.49011193080065
+  },
+  {
+   "iteration": 1940,
+   "residual": 358.75265172676603
+  },
+  {
+   "iteration": 1941,
+   "residual": 359.01341803823806
+  },
+  {
+   "iteration": 1942,
+   "residual": 359.2724105426737
+  },
+  {
+   "iteration": 1943,
+   "residual": 359.5296289330341
+  },
+  {
+   "iteration": 1944,
+   "residual": 359.78507291773815
+  },
+  {
+   "iteration": 1945,
+   "residual": 360.0387422206174
+  },
+  {
+   "iteration": 1946,
+   "residual": 360.29063658086955
+  },
+  {
+   "iteration": 1947,
+   "residual": 360.54075575301334
+  },
+  {
+   "iteration": 1948,
+   "residual": 360.78909950684215
+  },
+  {
+   "iteration": 1949,
+   "residual": 361.03566762737864
+  },
+  {
+   "iteration": 1950,
+   "residual": 361.28045991482907
+  },
+  {
+   "iteration": 1951,
+   "residual": 361.5234761845365
+  },
+  {
+   "iteration": 1952,
+   "residual": 361.764716266936
+  },
+  {
+   "iteration": 1953,
+   "residual": 362.00418000750864
+  },
+  {
+   "iteration": 1954,
+   "residual": 362.2418672667348
+  },
+  {
+   "iteration": 1955,
+   "residual": 362.47777792004933
+  },
+  {
+   "iteration": 1956,
+   "residual": 362.71191185779537
+  },
+  {
+   "iteration": 1957,
+   "residual": 362.94426898517787
+  },
+  {
+   "iteration": 1958,
+   "residual": 363.17484922221905
+  },
+  {
+   "iteration": 1959,
+   "residual": 363.40365250371093
+  },
+  {
+   "iteration": 1960,
+   "residual": 363.6306787791711
+  },
+  {
+   "iteration": 1961,
+   "residual": 363.85592801279523
+  },
+  {
+   "iteration": 1962,
+   "residual": 364.0794001834123
+  },
+  {
+   "iteration": 1963,
+   "residual": 364.3010952844387
+  },
+  {
+   "iteration": 1964,
+   "residual": 364.5210133238316
+  },
+  {
+   "iteration": 1965,
+   "residual": 364.739154324044
+  },
+  {
+   "iteration": 1966,
+   "residual": 364.95551832197833
+  },
+  {
+   "iteration": 1967,
+   "residual": 365.1701053689403
+  },
+  {
+   "iteration": 1968,
+   "residual": 365.3829155305943
+  },
+  {
+   "iteration": 1969,
+   "residual": 365.59394888691565
+  },
+  {
+   "iteration": 1970,
+   "residual": 365.8032055321469
+  },
+  {
+   "iteration": 1971,
+   "residual": 366.0106855747502
+  },
+  {
+   "iteration": 1972,
+   "residual": 366.2163891373626
+  },
+  {
+   "iteration": 1973,
+   "residual": 366.42031635674965
+  },
+  {
+   "iteration": 1974,
+   "residual": 366.62246738376
+  },
+  {
+   "iteration": 1975,
+   "residual": 366.8228423832794
+  },
+  {
+   "iteration": 1976,
+   "residual": 367.0214415341848
+  },
+  {
+   "iteration": 1977,
+   "residual": 367.21826502929895
+  },
+  {
+   "iteration": 1978,
+   "residual": 367.41331307534415
+  },
+  {
+   "iteration": 1979,
+   "residual": 367.60658589289693
+  },
+  {
+   "iteration": 1980,
+   "residual": 367.7980837163421
+  },
+  {
+   "iteration": 1981,
+   "residual": 367.9878067938273
+  },
+  {
+   "iteration": 1982,
+   "residual": 368.17575538721724
+  },
+  {
+   "iteration": 1983,
+   "residual": 368.36192977204723
+  },
+  {
+   "iteration": 1984,
+   "residual": 368.54633023747886
+  },
+  {
+   "iteration": 1985,
+   "residual": 368.72895708625356
+  },
+  {
+   "iteration": 1986,
+   "residual": 368.9098106346471
+  },
+  {
+   "iteration": 1987,
+   "residual": 369.08889121242385
+  },
+  {
+   "iteration": 1988,
+   "residual": 369.26619916279157
+  },
+  {
+   "iteration": 1989,
+   "residual": 369.4417348423551
+  },
+  {
+   "iteration": 1990,
+   "residual": 369.61549862107194
+  },
+  {
+   "iteration": 1991,
+   "residual": 369.78749088220593
+  },
+  {
+   "iteration": 1992,
+   "residual": 369.95771202228156
+  },
+  {
+   "iteration": 1993,
+   "residual": 370.1261624510396
+  },
+  {
+   "iteration": 1994,
+   "residual": 370.2928425913899
+  },
+  {
+   "iteration": 1995,
+   "residual": 370.45775287936794
+  },
+  {
+   "iteration": 1996,
+   "residual": 370.6208937640878
+  },
+  {
+   "iteration": 1997,
+   "residual": 370.78226570769806
+  },
+  {
+   "iteration": 1998,
+   "residual": 370.941869185335
+  },
+  {
+   "iteration": 1999,
+   "residual": 371.0997046850788
+  },
+  {
+   "iteration": 2000,
+   "residual": 371.25577270790734
+  }
+ ]
+}

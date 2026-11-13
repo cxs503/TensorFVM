@@ -19,6 +19,7 @@ tensorfvm-benchmark-cylinder-3d = "tensorfvm.benchmark_cylinder3d:main"
 tensorfvm-mesh-cylinder-3d = "tensorfvm.mesh_cylinder3d:main"
 tensorfvm-thermal = "tensorfvm.thermal.study:main"
 tensorfvm-twophase-gap = "tensorfvm.twophase_gap.__main__:main"
+tensorfvm-convergence-diagnosis = "tensorfvm.convergence_diagnosis:main"
 
 [tool.setuptools.package-data]
 tensorfvm = ["cavitation/artifacts/*", "data/30p30n/*.dat", "data/30p30n/README.rst", "data/30p30n-nominal/*", "data/30p30n-hlpw4/*.dat", "data/30p30n-hlpw4/*.json", "data/30p30n-hlpw4/original/*.txt", "data/30p30n-hlpw4/original/Geometry/*", "data/30p30n-hlpw4/original/Exp_Data_LTPT_Re9million/*"]
