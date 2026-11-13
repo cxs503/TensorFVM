@@ -258,11 +258,22 @@ def test_well_balanced_surface_holds_the_rest_state():
         assert r["mass_drift_relative"] < 1e-12
 
 
-def test_well_balanced_surface_is_opt_in():
-    """Default must stay the historical behaviour (no silent change of the solver)."""
+def test_well_balanced_surface_is_the_default():
+    """The consistent free-surface datum is shipped; the old treatment is a control.
+
+    Round-1 fix of ``GAP-FVM-TWOPHASE`` (docs/GAP-FVM-TWOPHASE/
+    ROUND1-FREE-SURFACE-DATUM.md): dropping the free-surface face from the
+    pressure operator (homogeneous Neumann = rigid lid) leaves the dam break
+    releasing late and the rest-state pressure O(h) out of balance, so the
+    ghost-fluid datum (``p = 0`` half a cell away from the cell centre) is the
+    default.  The historical treatment stays reachable, explicitly, as the
+    negative control.
+    """
     from tensorfvm.vof_phase0.solver import Phase0TwoPhaseSolver
     solver = Phase0TwoPhaseSolver(8, 8, 1.0, 1.0)
-    assert solver.well_balanced_surface is False
+    assert solver.well_balanced_surface is True
+    control = Phase0TwoPhaseSolver(8, 8, 1.0, 1.0, well_balanced_surface=False)
+    assert control.well_balanced_surface is False
 
 
 # --------------------------------------------------------------------------- #
