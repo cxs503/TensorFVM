@@ -1,0 +1,985 @@
+{
+ "abscissa": {
+  "count_ladder": {
+   "asymptotic": false,
+   "errors": [
+    0.0001220703125,
+    0.00048828125,
+    0.001953125
+   ],
+   "intercept": NaN,
+   "monotone": false,
+   "order": NaN,
+   "order_stderr": NaN,
+   "pairwise": [
+    -1.0,
+    -1.0
+   ],
+   "r2": NaN,
+   "relative_deviation": NaN,
+   "spacings": [
+    4096.0,
+    1024.0,
+    256.0
+   ],
+   "spread": NaN,
+   "theory_order": null,
+   "tolerance": 0.15,
+   "verdict": "WITHHELD",
+   "withheld_reason": "non-monotone"
+  },
+  "vs_count": {
+   "expected": 1.0,
+   "order": 1.0
+  },
+  "vs_h": {
+   "asymptotic": true,
+   "errors": [
+    0.001953125,
+    0.00048828125,
+    0.0001220703125
+   ],
+   "intercept": -0.6931471805599425,
+   "monotone": true,
+   "order": 2.0000000000000013,
+   "order_stderr": 2.718197524656291e-15,
+   "pairwise": [
+    2.0,
+    2.0
+   ],
+   "r2": 1.0,
+   "relative_deviation": 6.661338147750939e-16,
+   "spacings": [
+    0.0625,
+    0.03125,
+    0.015625
+   ],
+   "spread": 0.0,
+   "theory_order": 2.0,
+   "tolerance": 0.15,
+   "verdict": "PASS",
+   "withheld_reason": ""
+  }
+ },
+ "all_pass": true,
+ "constant_ratio": 1.9969430094219003,
+ "criteria": [
+  {
+   "claim": "loglog_order recovers a synthetic order p=1,2,3 from three grids",
+   "id": "C1",
+   "measured": 4.440892098500626e-16,
+   "threshold": "<= 1e-9 relative",
+   "verdict": "PASS"
+  },
+  {
+   "claim": "non-monotone / stagnant / tiny-ratio ladders are WITHHELD, not fitted",
+   "id": "C2",
+   "measured": {
+    "non_monotone": "non-monotone",
+    "stagnant": "stagnant",
+    "tiny_ratio": "refinement-ratio-too-small"
+   },
+   "threshold": "each ladder withheld by its own named guard",
+   "verdict": "PASS"
+  },
+  {
+   "claim": "2nd-order FV Laplacian: truncation-error order = 2 (three grids)",
+   "id": "C3",
+   "measured": 1.940537285651428,
+   "threshold": "within 15 % of 2",
+   "verdict": "PASS"
+  },
+  {
+   "claim": "2nd-order FV Helmholtz solution error vs exact cell averages: order = 2",
+   "id": "C4",
+   "measured": 2.0037721913901385,
+   "threshold": "within 15 % of 2",
+   "verdict": "PASS"
+  },
+  {
+   "claim": "path A: 4th-order cell-average stencil + cell-average reference -> order 4",
+   "id": "C5",
+   "measured": {
+    "solution": 3.9074663269663525,
+    "truncation": 3.881797903802498
+   },
+   "threshold": "both within 15 % of 4",
+   "verdict": "PASS"
+  },
+  {
+   "claim": "path B: same 4th-order solution measured at cell-centre POINT values reads 2",
+   "id": "C6",
+   "measured": 1.8836621214754816,
+   "threshold": "within 15 % of 2 and >15 % away from 4",
+   "verdict": "PASS"
+  },
+  {
+   "claim": "path C: textbook POINT-VALUE 4-point stencil fed cell averages reads 2, not 4",
+   "id": "C7",
+   "measured": {
+    "solution": 2.041819763944548,
+    "truncation": 2.030896295770944
+   },
+   "threshold": "within 15 % of 2 and >15 % away from 4",
+   "verdict": "PASS"
+  },
+  {
+   "claim": "2nd-order truncation constant: cell-average / point-value = 2 (analytic)",
+   "id": "C8",
+   "measured": 1.9969430094219003,
+   "threshold": "2.00 +/- 2 %",
+   "verdict": "PASS"
+  },
+  {
+   "claim": "displaced-flux negative control: truncation order = 1",
+   "id": "C9",
+   "measured": 0.9206157632126787,
+   "threshold": "within 15 % of 1",
+   "verdict": "PASS"
+  },
+  {
+   "claim": "log-log slope and Richardson/GCI observed order agree on the same data",
+   "id": "C10",
+   "measured": {
+    "loglog": 1.940537285651428,
+    "richardson": 1.8798051731235508
+   },
+   "threshold": "|dp|/p <= 15 %",
+   "verdict": "PASS"
+  },
+  {
+   "claim": "abscissa: p=2 reads 2 vs h, p/d=1 vs cell count (estimator refuses a count)",
+   "id": "C11",
+   "measured": {
+    "count_ladder": "non-monotone",
+    "vs_count": 1.0,
+    "vs_h": 2.0000000000000013
+   },
+   "threshold": "2 vs h (within 15 %), 1 vs count (within 15 %), count ladder WITHHELD",
+   "verdict": "PASS"
+  },
+  {
+   "claim": "volume weighting is order-neutral on a self-similar stretched mesh family",
+   "id": "C12",
+   "measured": {
+    "magnitude_ratio": 1.2193074591089583,
+    "order_difference": 0.0007956409099936224
+   },
+   "threshold": "|dp| <= 0.05 (magnitude ratio reported, not asserted)",
+   "verdict": "PASS"
+  }
+ ],
+ "guards": {
+  "non_monotone": {
+   "asymptotic": false,
+   "errors": [
+    0.01,
+    0.03,
+    0.002
+   ],
+   "intercept": NaN,
+   "monotone": false,
+   "order": NaN,
+   "order_stderr": NaN,
+   "pairwise": [
+    -1.584962500721156,
+    3.9068905956085187
+   ],
+   "r2": NaN,
+   "relative_deviation": NaN,
+   "spacings": [
+    0.5,
+    0.25,
+    0.125
+   ],
+   "spread": NaN,
+   "theory_order": null,
+   "tolerance": 0.15,
+   "verdict": "WITHHELD",
+   "withheld_reason": "non-monotone"
+  },
+  "stagnant": {
+   "asymptotic": false,
+   "errors": [
+    0.01,
+    0.001,
+    0.000999999999999999
+   ],
+   "intercept": NaN,
+   "monotone": true,
+   "order": NaN,
+   "order_stderr": NaN,
+   "pairwise": [
+    3.3219280948873626,
+    1.6017132519074581e-15
+   ],
+   "r2": NaN,
+   "relative_deviation": NaN,
+   "spacings": [
+    0.5,
+    0.25,
+    0.125
+   ],
+   "spread": NaN,
+   "theory_order": null,
+   "tolerance": 0.15,
+   "verdict": "WITHHELD",
+   "withheld_reason": "stagnant"
+  },
+  "tiny_ratio": {
+   "asymptotic": false,
+   "errors": [
+    0.01,
+    0.004,
+    0.001
+   ],
+   "intercept": NaN,
+   "monotone": true,
+   "order": NaN,
+   "order_stderr": NaN,
+   "pairwise": [
+    915.832510112373,
+    1.000722229674082
+   ],
+   "r2": NaN,
+   "relative_deviation": NaN,
+   "spacings": [
+    0.5,
+    0.4995,
+    0.125
+   ],
+   "spread": NaN,
+   "theory_order": null,
+   "tolerance": 0.15,
+   "verdict": "WITHHELD",
+   "withheld_reason": "refinement-ratio-too-small"
+  }
+ },
+ "richardson": {
+  "convergence": "monotone",
+  "fallback_reason": "none",
+  "gci": 1.3685508099183856,
+  "observed_order": 1.8798051731235508
+ },
+ "sol_fourth": {
+  "levels": [
+   {
+    "h": 0.0625,
+    "l1": 0.0013284098834587532,
+    "l2": 0.001535240391084933,
+    "l2_unweighted": 0.001535240391084933,
+    "linf": 0.002997055927585479,
+    "n": 16
+   },
+   {
+    "h": 0.03125,
+    "l1": 8.887434059680083e-05,
+    "l2": 0.00010608838319812001,
+    "l2_unweighted": 0.00010608838319812001,
+    "linf": 0.00019877684678148988,
+    "n": 32
+   },
+   {
+    "h": 0.015625,
+    "l1": 5.7148989848316515e-06,
+    "l2": 6.817846905402092e-06,
+    "l2_unweighted": 6.817846905402092e-06,
+    "linf": 1.3070854725127923e-05,
+    "n": 64
+   }
+  ],
+  "reference": "cell_average",
+  "study": {
+   "asymptotic": true,
+   "errors": [
+    0.001535240391084933,
+    0.00010608838319812001,
+    6.817846905402092e-06
+   ],
+   "intercept": 4.366821954972948,
+   "monotone": true,
+   "order": 3.9074663269663525,
+   "order_stderr": 0.030218713291648453,
+   "pairwise": [
+    3.855125980205858,
+    3.959806673726836
+   ],
+   "r2": 0.9999401952781936,
+   "relative_deviation": 0.023133418258411864,
+   "spacings": [
+    0.0625,
+    0.03125,
+    0.015625
+   ],
+   "spread": 0.10468069352097809,
+   "theory_order": 4.0,
+   "tolerance": 0.15,
+   "verdict": "PASS",
+   "withheld_reason": ""
+  },
+  "theory_order": 4.0,
+  "variant": "fourth_order_cellavg"
+ },
+ "sol_fourth_native": {
+  "levels": [
+   {
+    "h": 0.0625,
+    "l1": 0.006342099480029725,
+    "l2": 0.008619938631010567,
+    "l2_unweighted": 0.008619938631010567,
+    "linf": 0.01740921968798581,
+    "n": 16
+   },
+   {
+    "h": 0.03125,
+    "l1": 0.0014659433131229515,
+    "l2": 0.0020587348142374283,
+    "l2_unweighted": 0.0020587348142374283,
+    "linf": 0.004219544810210252,
+    "n": 32
+   },
+   {
+    "h": 0.015625,
+    "l1": 0.00036035239475894177,
+    "l2": 0.0005084007523132371,
+    "l2_unweighted": 0.0005084007523132371,
+    "linf": 0.0010358371486520745,
+    "n": 64
+   }
+  ],
+  "reference": "cell_average",
+  "study": {
+   "asymptotic": true,
+   "errors": [
+    0.008619938631010567,
+    0.0020587348142374283,
+    0.0005084007523132371
+   ],
+   "intercept": 0.90188089451776,
+   "monotone": true,
+   "order": 2.041819763944548,
+   "order_stderr": 0.013914041001087719,
+   "pairwise": [
+    2.065919589897027,
+    2.0177199379920636
+   ],
+   "r2": 0.9999535643441573,
+   "relative_deviation": 0.489545059013863,
+   "spacings": [
+    0.0625,
+    0.03125,
+    0.015625
+   ],
+   "spread": 0.048199651904963225,
+   "theory_order": 4.0,
+   "tolerance": 0.15,
+   "verdict": "FAIL",
+   "withheld_reason": ""
+  },
+  "theory_order": 4.0,
+  "variant": "fourth_order"
+ },
+ "sol_fourth_point": {
+  "levels": [
+   {
+    "h": 0.0625,
+    "l1": 0.004846337750139604,
+    "l2": 0.006891163532351144,
+    "l2_unweighted": 0.006891163532351144,
+    "linf": 0.013209125265915667,
+    "n": 16
+   },
+   {
+    "h": 0.03125,
+    "l1": 0.0013751601193705948,
+    "l2": 0.001956799052860905,
+    "l2_unweighted": 0.001956799052860905,
+    "linf": 0.0039766127692251185,
+    "n": 32
+   },
+   {
+    "h": 0.015625,
+    "l1": 0.00035729293168022325,
+    "l2": 0.0005060750837382152,
+    "l2_unweighted": 0.0005060750837382152,
+    "linf": 0.0010270326223347226,
+    "n": 64
+   }
+  ],
+  "reference": "point_value",
+  "study": {
+   "asymptotic": true,
+   "errors": [
+    0.006891163532351144,
+    0.001956799052860905,
+    0.0005060750837382152
+   ],
+   "intercept": 0.2606800679745975,
+   "monotone": true,
+   "order": 1.8836621214754816,
+   "order_stderr": 0.03891926137914799,
+   "pairwise": [
+    1.8162519833737434,
+    1.9510722595772159
+   ],
+   "r2": 0.9995732850975819,
+   "relative_deviation": 0.5290844696311297,
+   "spacings": [
+    0.0625,
+    0.03125,
+    0.015625
+   ],
+   "spread": 0.13482027620347248,
+   "theory_order": 4.0,
+   "tolerance": 0.15,
+   "verdict": "FAIL",
+   "withheld_reason": ""
+  },
+  "theory_order": 4.0,
+  "variant": "fourth_order_cellavg"
+ },
+ "sol_second": {
+  "levels": [
+   {
+    "h": 0.0625,
+    "l1": 0.011868059336016817,
+    "l2": 0.01629132178769668,
+    "l2_unweighted": 0.01629132178769668,
+    "linf": 0.032646332466107486,
+    "n": 16
+   },
+   {
+    "h": 0.03125,
+    "l1": 0.002879954306186734,
+    "l2": 0.00405567314885473,
+    "l2_unweighted": 0.00405567314885473,
+    "linf": 0.008300463812373149,
+    "n": 32
+   },
+   {
+    "h": 0.015625,
+    "l1": 0.0007173883678153475,
+    "l2": 0.001012896927644077,
+    "l2_unweighted": 0.001012896927644077,
+    "linf": 0.00206265106971959,
+    "n": 64
+   }
+  ],
+  "reference": "cell_average",
+  "study": {
+   "asymptotic": true,
+   "errors": [
+    0.01629132178769668,
+    0.00405567314885473,
+    0.001012896927644077
+   ],
+   "intercept": 1.4379778488471229,
+   "monotone": true,
+   "order": 2.0037721913901385,
+   "order_stderr": 0.0013383993934469236,
+   "pairwise": [
+    2.006090367140408,
+    2.001454015639867
+   ],
+   "r2": 0.9999995538564915,
+   "relative_deviation": 0.0018860956950692565,
+   "spacings": [
+    0.0625,
+    0.03125,
+    0.015625
+   ],
+   "spread": 0.0046363515005407585,
+   "theory_order": 2.0,
+   "tolerance": 0.15,
+   "verdict": "PASS",
+   "withheld_reason": ""
+  },
+  "theory_order": 2.0,
+  "variant": "second_order"
+ },
+ "stretched": {
+  "levels": [
+   {
+    "h": 0.03125,
+    "l2": 2.082703556426096,
+    "l2_unweighted": 1.7099887437197043,
+    "n": 32,
+    "ratio": 1.2179633135453467
+   },
+   {
+    "h": 0.015625,
+    "l2": 0.543050398890896,
+    "l2_unweighted": 0.44547437007855056,
+    "n": 64,
+    "ratio": 1.2190384798010712
+   },
+   {
+    "h": 0.0078125,
+    "l2": 0.13720960544582117,
+    "l2_unweighted": 0.11253076852830111,
+    "n": 128,
+    "ratio": 1.2193074591089583
+   }
+  ],
+  "magnitude_ratio": 1.2193074591089583,
+  "order_difference": 0.0007956409099936224,
+  "unweighted": {
+   "asymptotic": true,
+   "errors": [
+    1.7099887437197043,
+    0.44547437007855056,
+    0.11253076852830111
+   ],
+   "intercept": 7.34416036264368,
+   "monotone": true,
+   "order": 1.9627977007544155,
+   "order_stderr": 0.012831729603329383,
+   "pairwise": [
+    1.9405724931324637,
+    1.9850229083763695
+   ],
+   "r2": 0.9999572633223691,
+   "relative_deviation": NaN,
+   "spacings": [
+    0.03125,
+    0.015625,
+    0.0078125
+   ],
+   "spread": 0.044450415243905805,
+   "theory_order": null,
+   "tolerance": 0.15,
+   "verdict": "INFO",
+   "withheld_reason": ""
+  },
+  "weighted": {
+   "asymptotic": true,
+   "errors": [
+    2.082703556426096,
+    0.543050398890896,
+    0.13720960544582117
+   ],
+   "intercept": 7.538693220585058,
+   "monotone": true,
+   "order": 1.9620020598444219,
+   "order_stderr": 0.013107326124679412,
+   "pairwise": [
+    1.9392995050451023,
+    1.9847046146437433
+   ],
+   "r2": 0.9999553717445449,
+   "relative_deviation": NaN,
+   "spacings": [
+    0.03125,
+    0.015625,
+    0.0078125
+   ],
+   "spread": 0.04540510959864097,
+   "theory_order": null,
+   "tolerance": 0.15,
+   "verdict": "INFO",
+   "withheld_reason": ""
+  }
+ },
+ "synthetic": {
+  "1": {
+   "asymptotic": true,
+   "errors": [
+    0.0875,
+    0.04375,
+    0.021875
+   ],
+   "intercept": -0.3566749439387328,
+   "monotone": true,
+   "order": 1.0000000000000002,
+   "order_stderr": 1.8679025842417246e-15,
+   "pairwise": [
+    1.0,
+    1.0
+   ],
+   "r2": 1.0,
+   "relative_deviation": 2.220446049250313e-16,
+   "spacings": [
+    0.125,
+    0.0625,
+    0.03125
+   ],
+   "spread": 0.0,
+   "theory_order": 1.0,
+   "tolerance": 0.15,
+   "verdict": "PASS",
+   "withheld_reason": ""
+  },
+  "2": {
+   "asymptotic": true,
+   "errors": [
+    0.0109375,
+    0.002734375,
+    0.00068359375
+   ],
+   "intercept": -0.3566749439387319,
+   "monotone": true,
+   "order": 2.000000000000001,
+   "order_stderr": 2.71819752465629e-15,
+   "pairwise": [
+    2.0,
+    2.0
+   ],
+   "r2": 1.0,
+   "relative_deviation": 4.440892098500626e-16,
+   "spacings": [
+    0.125,
+    0.0625,
+    0.03125
+   ],
+   "spread": 0.0,
+   "theory_order": 2.0,
+   "tolerance": 0.15,
+   "verdict": "PASS",
+   "withheld_reason": ""
+  },
+  "3": {
+   "asymptotic": true,
+   "errors": [
+    0.0013671875,
+    0.0001708984375,
+    2.13623046875e-05
+   ],
+   "intercept": -0.35667494393873045,
+   "monotone": true,
+   "order": 3.0000000000000013,
+   "order_stderr": 2.0260248138010415e-15,
+   "pairwise": [
+    3.0,
+    3.0
+   ],
+   "r2": 1.0,
+   "relative_deviation": 4.440892098500626e-16,
+   "spacings": [
+    0.125,
+    0.0625,
+    0.03125
+   ],
+   "spread": 0.0,
+   "theory_order": 3.0,
+   "tolerance": 0.15,
+   "verdict": "PASS",
+   "withheld_reason": ""
+  }
+ },
+ "tau_fourth": {
+  "cell_average": true,
+  "errors": [
+   0.4669299197039676,
+   0.03326905427679373,
+   0.0021487034989123074
+  ],
+  "levels": [
+   {
+    "h": 0.0625,
+    "l2": 0.4669299197039676,
+    "linf": 0.7980617970797823,
+    "n": 16
+   },
+   {
+    "h": 0.03125,
+    "l2": 0.03326905427679373,
+    "linf": 0.05570478892889241,
+    "n": 32
+   },
+   {
+    "h": 0.015625,
+    "l2": 0.0021487034989123074,
+    "linf": 0.0036409521303539805,
+    "n": 64
+   }
+  ],
+  "spacings": [
+   0.0625,
+   0.03125,
+   0.015625
+  ],
+  "study": {
+   "asymptotic": true,
+   "errors": [
+    0.4669299197039676,
+    0.03326905427679373,
+    0.0021487034989123074
+   ],
+   "intercept": 10.017421577619412,
+   "monotone": true,
+   "order": 3.881797903802498,
+   "order_stderr": 0.040902165675492166,
+   "pairwise": [
+    3.810953274712942,
+    3.9526425328920443
+   ],
+   "r2": 0.999888985796035,
+   "relative_deviation": 0.029550524049375526,
+   "spacings": [
+    0.0625,
+    0.03125,
+    0.015625
+   ],
+   "spread": 0.14168925817910205,
+   "theory_order": 4.0,
+   "tolerance": 0.15,
+   "verdict": "PASS",
+   "withheld_reason": ""
+  },
+  "theory_order": 4.0
+ },
+ "tau_fourth_native": {
+  "cell_average": true,
+  "errors": [
+   1.7801243798288202,
+   0.4312903001924301,
+   0.10659306297221383
+  ],
+  "levels": [
+   {
+    "h": 0.0625,
+    "l2": 1.7801243798288202,
+    "linf": 3.4272027440071042,
+    "n": 16
+   },
+   {
+    "h": 0.03125,
+    "l2": 0.4312903001924301,
+    "linf": 0.8059076324377088,
+    "n": 32
+   },
+   {
+    "h": 0.015625,
+    "l2": 0.10659306297221383,
+    "linf": 0.20431993436903895,
+    "n": 64
+   }
+  ],
+  "spacings": [
+   0.0625,
+   0.03125,
+   0.015625
+  ],
+  "study": {
+   "asymptotic": true,
+   "errors": [
+    1.7801243798288202,
+    0.4312903001924301,
+    0.10659306297221383
+   ],
+   "intercept": 6.204207716521163,
+   "monotone": true,
+   "order": 2.030896295770944,
+   "order_stderr": 0.008285309528963693,
+   "pairwise": [
+    2.045246872831542,
+    2.0165457187103413
+   ],
+   "r2": 0.9999833568796942,
+   "relative_deviation": 0.492275926057264,
+   "spacings": [
+    0.0625,
+    0.03125,
+    0.015625
+   ],
+   "spread": 0.028701154121200556,
+   "theory_order": 4.0,
+   "tolerance": 0.15,
+   "verdict": "FAIL",
+   "withheld_reason": ""
+  },
+  "theory_order": 4.0
+ },
+ "tau_second": {
+  "cell_average": true,
+  "errors": [
+   3.110746851932742,
+   0.8306707176631235,
+   0.21112750182275863
+  ],
+  "levels": [
+   {
+    "h": 0.0625,
+    "l2": 3.110746851932742,
+    "linf": 6.056343690934426,
+    "n": 16
+   },
+   {
+    "h": 0.03125,
+    "l2": 0.8306707176631235,
+    "linf": 1.5561104759464115,
+    "n": 32
+   },
+   {
+    "h": 0.015625,
+    "l2": 0.21112750182275863,
+    "linf": 0.40499891660687126,
+    "n": 64
+   }
+  ],
+  "spacings": [
+   0.0625,
+   0.03125,
+   0.015625
+  ],
+  "study": {
+   "asymptotic": true,
+   "errors": [
+    3.110746851932742,
+    0.8306707176631235,
+    0.21112750182275863
+   ],
+   "intercept": 6.523405734190008,
+   "monotone": true,
+   "order": 1.940537285651428,
+   "order_stderr": 0.020568042021424815,
+   "pairwise": [
+    1.9049123918581057,
+    1.9761621794447441
+   ],
+   "r2": 0.9998876706795337,
+   "relative_deviation": 0.02973135717428599,
+   "spacings": [
+    0.0625,
+    0.03125,
+    0.015625
+   ],
+   "spread": 0.07124978758663847,
+   "theory_order": 2.0,
+   "tolerance": 0.15,
+   "verdict": "PASS",
+   "withheld_reason": ""
+  },
+  "theory_order": 2.0
+ },
+ "tau_second_point": {
+  "cell_average": false,
+  "errors": [
+   1.593290599161555,
+   0.41787650468783505,
+   0.10572535161325332
+  ],
+  "levels": [
+   {
+    "h": 0.0625,
+    "l2": 1.593290599161555,
+    "linf": 3.095575821773494,
+    "n": 16
+   },
+   {
+    "h": 0.03125,
+    "l2": 0.41787650468783505,
+    "linf": 0.7824947368246171,
+    "n": 32
+   },
+   {
+    "h": 0.015625,
+    "l2": 0.10572535161325332,
+    "linf": 0.20278532301421137,
+    "n": 64
+   }
+  ],
+  "spacings": [
+   0.0625,
+   0.03125,
+   0.015625
+  ],
+  "study": {
+   "asymptotic": true,
+   "errors": [
+    1.593290599161555,
+    0.41787650468783505,
+    0.10572535161325332
+   ],
+   "intercept": 5.8972205280783285,
+   "monotone": true,
+   "order": 1.956808079756693,
+   "order_stderr": 0.014980626695657627,
+   "pairwise": [
+    1.9308608731905892,
+    1.9827552863227913
+   ],
+   "r2": 0.9999413945445761,
+   "relative_deviation": 0.021595960121653546,
+   "spacings": [
+    0.0625,
+    0.03125,
+    0.015625
+   ],
+   "spread": 0.05189441313220211,
+   "theory_order": 2.0,
+   "tolerance": 0.15,
+   "verdict": "PASS",
+   "withheld_reason": ""
+  },
+  "theory_order": 2.0
+ },
+ "tau_shifted": {
+  "cell_average": true,
+  "errors": [
+   36.534753522178825,
+   19.942675900292844,
+   10.196245023619788
+  ],
+  "levels": [
+   {
+    "h": 0.0625,
+    "l2": 36.534753522178825,
+    "linf": 84.83073195956425,
+    "n": 16
+   },
+   {
+    "h": 0.03125,
+    "l2": 19.942675900292844,
+    "linf": 46.003280451804585,
+    "n": 32
+   },
+   {
+    "h": 0.015625,
+    "l2": 10.196245023619788,
+    "linf": 23.48002839365381,
+    "n": 64
+   }
+  ],
+  "spacings": [
+   0.0625,
+   0.03125,
+   0.015625
+  ],
+  "study": {
+   "asymptotic": true,
+   "errors": [
+    36.534753522178825,
+    19.942675900292844,
+    10.196245023619788
+   ],
+   "intercept": 6.161659579777103,
+   "monotone": true,
+   "order": 0.9206157632126787,
+   "order_stderr": 0.02725398792472896,
+   "pairwise": [
+    0.8734104714181786,
+    0.9678210550071766
+   ],
+   "r2": 0.999124365519264,
+   "relative_deviation": 0.07938423678732132,
+   "spacings": [
+    0.0625,
+    0.03125,
+    0.015625
+   ],
+   "spread": 0.09441058358899801,
+   "theory_order": 1.0,
+   "tolerance": 0.15,
+   "verdict": "PASS",
+   "withheld_reason": ""
+  },
+  "theory_order": 1.0
+ },
+ "theory": {
+  "asymptotic_tolerance": 0.25,
+  "min_ratio": 1.01,
+  "module": "tensorfvm.verification.loglog_order",
+  "order_tolerance": 0.15
+ }
+}
