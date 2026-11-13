@@ -1,0 +1,43 @@
+[
+  {
+    "n": 4,
+    "h": 0.25,
+    "reynolds": 40.0,
+    "cells": 16,
+    "faces": 144,
+    "total_volume": 1.0,
+    "convection_order": 2,
+    "coupled_linear_method": "reused_lu",
+    "algorithm": "coupled",
+    "outer_relaxation": 0.7,
+    "tolerance": 1e-08,
+    "outer_iterations": 33,
+    "inner_iterations": 33,
+    "numerically_converged": true,
+    "final_residuals": {
+      "iteration": 33,
+      "inner_iterations": 1,
+      "frozen_inner_converged": true,
+      "current_momentum_residual": 2.4212671064707516e-09,
+      "divergence_max": 2.3172574969976267e-12,
+      "boundary_velocity_error": 0.0,
+      "velocity_change": 3.7030019019644724e-09,
+      "pressure_change": 5.261922571965465e-09
+    },
+    "energy_balance_error": 7.26996962630011e-10,
+    "convection_energy_identity_error": 5.551115123125783e-17,
+    "interface_traction_defect_max": 7.672646754053325e-10,
+    "global_momentum_imbalance": 4.2027286512036355e-10,
+    "divergence_max": 2.3172574969976267e-12,
+    "max_abs_z_velocity": 0.03137440232984367,
+    "velocity_l2": 0.10294228118246124,
+    "pressure_l2": 0.3133083243127793,
+    "pressure_mean_free_l2": 0.4177775314177509,
+    "build_seconds": 0.15841059014201164,
+    "solve_seconds": 1.127821570262313,
+    "sampling_bias": {
+      "velocity": 0.0406842484075351,
+      "pressure": 0.0077040312582104436
+    }
+  }
+]
