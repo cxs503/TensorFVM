@@ -681,6 +681,12 @@ def leg_lax(cfg: RunConfig) -> Dict:
     numerical and the fine-grid exact field, so the estimator bias cancels),
     relative L1 of ``rho``/``u``/``p``, the mass ledger drift and the positivity
     repair count.
+
+    The percentage criteria are grid-bound: they are graded on the finest grid of
+    the sweep (``lax.THRESHOLDS["grading_nx"]``) and are not a convergence-order
+    test.  ``docs/audit-CASE-LAX`` re-derives the reference by a third exact path,
+    anchors it to the published values and shows, with negative controls, which
+    criteria actually discriminate a degraded scheme.
     """
     from . import lax as L
 
