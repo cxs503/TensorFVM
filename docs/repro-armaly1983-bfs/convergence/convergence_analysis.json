@@ -1,21 +1,52 @@
 {
   "Re100_Ld12S": {
     "downstream_step_heights": 12.0,
-    "experimental_value": 3.0,
+    "errors_vs_experiment_pct": [
+      11.836604705353809
+    ],
+    "experimental_band_over_step": 0.2,
+    "experimental_over_step": 3.0,
     "levels": [
       "coarse"
     ],
     "n_levels": 1,
+    "outlet_development_pct": [
+      0.09848491143222271
+    ],
     "reynolds_dh": 100.0,
     "status": "insufficient_data"
   },
   "Re389_Ld12S": {
     "downstream_step_heights": 12.0,
-    "experimental_value": 7.9,
+    "errors_vs_experiment_pct": [
+      10.30901354047971
+    ],
+    "experimental_band_over_step": 0.2,
+    "experimental_over_step": 7.9,
     "levels": [
       "coarse"
     ],
     "n_levels": 1,
+    "outlet_development_pct": [
+      10.908074060716958
+    ],
+    "reynolds_dh": 389.0,
+    "status": "insufficient_data"
+  },
+  "Re389_Ld40S": {
+    "downstream_step_heights": 40.0,
+    "errors_vs_experiment_pct": [
+      318.8475711069978
+    ],
+    "experimental_band_over_step": 0.2,
+    "experimental_over_step": 7.9,
+    "levels": [
+      "coarse"
+    ],
+    "n_levels": 1,
+    "outlet_development_pct": [
+      50.84423915256021
+    ],
     "reynolds_dh": 389.0,
     "status": "insufficient_data"
   }
