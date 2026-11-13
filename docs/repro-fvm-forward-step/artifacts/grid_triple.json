@@ -1,0 +1,736 @@
+{
+ "case": "CASE-FORWARD-STEP",
+ "convergence": {
+  "per_quantity": {
+   "M2": {
+    "errors": [
+     0.2594146308763712,
+     -0.12664535992542347,
+     0.2594146308763712,
+     -0.2576437694636553
+    ],
+    "extrapolated": null,
+    "extrapolated_error": null,
+    "order": null,
+    "refinement_ratio": 0.5,
+    "values": [
+     0.5984624516547292,
+     0.4150102327295989,
+     0.5984624516547292,
+     0.3527609723088533
+    ]
+   },
+   "p2/p1": {
+    "errors": [
+     0.004405874637871676,
+     0.01301666121977818,
+     0.004405874637871676,
+     -0.05355764509304084
+    ],
+    "extrapolated": null,
+    "extrapolated_error": null,
+    "order": null,
+    "refinement_ratio": 0.5,
+    "values": [
+     10.378860704591341,
+     10.467838832604375,
+     10.378860704591341,
+     9.779904334038578
+    ]
+   },
+   "p_stag/p1": {
+    "errors": [
+     -0.0010606337186745973,
+     -0.027932628839711815,
+     -0.0010606337186745973,
+     -0.016634703631267622
+    ],
+    "extrapolated": null,
+    "extrapolated_error": null,
+    "order": null,
+    "refinement_ratio": 0.5,
+    "values": [
+     12.048172435424718,
+     11.72407025081728,
+     12.048172435424718,
+     11.860334127953875
+    ]
+   },
+   "rho2/rho1": {
+    "errors": [
+     0.02580257564611843,
+     -0.012867334349945359,
+     0.02580257564611843,
+     -0.09066956958638506
+    ],
+    "extrapolated": null,
+    "extrapolated_error": null,
+    "order": null,
+    "refinement_ratio": 0.5,
+    "values": [
+     3.956667077492171,
+     3.8075117103644964,
+     3.956667077492171,
+     3.507417374452515
+    ]
+   },
+   "rho_stag/rho1": {
+    "errors": [
+     -0.0020613500904932414,
+     -0.02515923060898062,
+     -0.0020613500904932414,
+     -0.021905177340029502
+    ],
+    "extrapolated": null,
+    "extrapolated_error": null,
+    "order": null,
+    "refinement_ratio": 0.5,
+    "values": [
+     4.298608153781511,
+     4.199114324635957,
+     4.298608153781511,
+     4.213131118069121
+    ]
+   },
+   "u2/u1": {
+    "errors": [
+     0.24621066551295723,
+     -0.11526916379223606,
+     0.24621066551295723,
+     -0.24264660042442832
+    ],
+    "extrapolated": null,
+    "extrapolated_error": null,
+    "order": null,
+    "refinement_ratio": 0.5,
+    "values": [
+     0.3230916540218778,
+     0.2293746612390499,
+     0.3230916540218778,
+     0.1963508813714445
+    ]
+   }
+  }
+ },
+ "grid_of_record": [
+  480,
+  160
+ ],
+ "grids": [
+  [
+   480,
+   160
+  ],
+  [
+   120,
+   40
+  ],
+  [
+   480,
+   160
+  ],
+  [
+   240,
+   80
+  ]
+ ],
+ "record": {
+  "all_graded_pass": true,
+  "all_pass": false,
+  "dx": 0.00625,
+  "grid": [
+   480,
+   160
+  ],
+  "items": [
+   {
+    "got": 10.378860704591341,
+    "pass": true,
+    "quantity": "p2/p1",
+    "reference": 10.333333333333334,
+    "rel_error": 0.004405874637871676,
+    "status": "graded",
+    "tolerance": 0.08
+   },
+   {
+    "got": 3.956667077492171,
+    "pass": true,
+    "quantity": "rho2/rho1",
+    "reference": 3.857142857142857,
+    "rel_error": 0.02580257564611843,
+    "status": "graded",
+    "tolerance": 0.08
+   },
+   {
+    "got": 0.3230916540218778,
+    "pass": false,
+    "quantity": "u2/u1",
+    "reference": 0.25925925925925924,
+    "rel_error": 0.24621066551295723,
+    "status": "withdrawn",
+    "tolerance": 0.08
+   },
+   {
+    "got": 0.5984624516547292,
+    "pass": false,
+    "quantity": "M2",
+    "reference": 0.47519096331149147,
+    "rel_error": 0.2594146308763712,
+    "status": "withdrawn",
+    "tolerance": 0.08
+   },
+   {
+    "got": 12.048172435424718,
+    "pass": true,
+    "quantity": "p_stag/p1",
+    "reference": 12.060964701266625,
+    "rel_error": -0.0010606337186745973,
+    "status": "graded",
+    "tolerance": 0.08
+   },
+   {
+    "got": 4.298608153781511,
+    "pass": true,
+    "quantity": "rho_stag/rho1",
+    "reference": 4.307487393309508,
+    "rel_error": -0.0020613500904932414,
+    "status": "graded",
+    "tolerance": 0.08
+   },
+   {
+    "got": NaN,
+    "pass": false,
+    "quantity": "mass_budget_drift",
+    "reference": 0.0,
+    "rel_error": NaN,
+    "status": "not_available",
+    "tolerance": 1e-06
+   },
+   {
+    "got": NaN,
+    "pass": false,
+    "quantity": "energy_budget_drift",
+    "reference": 0.0,
+    "rel_error": NaN,
+    "status": "not_available",
+    "tolerance": 0.01
+   }
+  ],
+  "nsteps": null,
+  "positivity_fixes": null,
+  "run_dir": "/tmp/fs_extra",
+  "shock_sampling": {
+   "n_cells_behind": 2,
+   "sensitivity": {
+    "0.5x": {
+     "err_mach2": 0.31152218147841926,
+     "err_p_ratio": -0.047646986404023095,
+     "err_rho_ratio": 0.00941968578739294,
+     "err_u_ratio": 0.27390996620113217,
+     "mach2": 0.6232234888211188,
+     "n_cells_behind": 1,
+     "p_ratio": 9.840981140491762,
+     "rho_ratio": 3.89347593089423,
+     "u_ratio": 0.3302729542002935,
+     "window": 0.009375000000000001
+    },
+    "1x": {
+     "err_mach2": 0.2594146308763712,
+     "err_p_ratio": 0.004405874637871676,
+     "err_rho_ratio": 0.02580257564611843,
+     "err_u_ratio": 0.24621066551295723,
+     "mach2": 0.5984624516547292,
+     "n_cells_behind": 2,
+     "p_ratio": 10.378860704591341,
+     "rho_ratio": 3.956667077492171,
+     "u_ratio": 0.3230916540218778,
+     "window": 0.018750000000000003
+    },
+    "2x": {
+     "err_mach2": 0.26109261004997797,
+     "err_p_ratio": -0.002438827300410118,
+     "err_rho_ratio": 0.02689413760339443,
+     "err_u_ratio": 0.24295072507545679,
+     "mach2": 0.5992598121946521,
+     "n_cells_behind": 5,
+     "p_ratio": 10.308132117895763,
+     "rho_ratio": 3.960877387898807,
+     "u_ratio": 0.32224648427882213,
+     "window": 0.037500000000000006
+    }
+   },
+   "standoff": 0.28891842492022995,
+   "window": 0.018750000000000003,
+   "x_shock": 0.31108157507977,
+   "y": 0.1
+  },
+  "t_end": 4.0,
+  "troubled_repairs": null,
+  "verdict": {
+   "n_graded": 4,
+   "n_graded_pass": 4,
+   "withdrawn": [
+    "M2",
+    "u2/u1"
+   ]
+  },
+  "wall_seconds": null,
+  "withdrawn": {
+   "M2": "derived from the same u2 sample; same window-dominated uncertainty",
+   "u2/u1": "post-shock velocity is not a plateau on the stagnation streamline: u/u1 falls ~30 % over the four cells behind the shock at 480 x 160, so the sampled value is window-dominated (> 8 % tolerance)"
+  }
+ },
+ "runs": {
+  "120x40": {
+   "all_graded_pass": true,
+   "all_pass": false,
+   "dx": 0.025,
+   "grid": [
+    120,
+    40
+   ],
+   "items": [
+    {
+     "got": 10.467838832604375,
+     "pass": true,
+     "quantity": "p2/p1",
+     "reference": 10.333333333333334,
+     "rel_error": 0.01301666121977818,
+     "status": "graded",
+     "tolerance": 0.08
+    },
+    {
+     "got": 3.8075117103644964,
+     "pass": true,
+     "quantity": "rho2/rho1",
+     "reference": 3.857142857142857,
+     "rel_error": -0.012867334349945359,
+     "status": "graded",
+     "tolerance": 0.08
+    },
+    {
+     "got": 0.2293746612390499,
+     "pass": false,
+     "quantity": "u2/u1",
+     "reference": 0.25925925925925924,
+     "rel_error": -0.11526916379223606,
+     "status": "withdrawn",
+     "tolerance": 0.08
+    },
+    {
+     "got": 0.4150102327295989,
+     "pass": false,
+     "quantity": "M2",
+     "reference": 0.47519096331149147,
+     "rel_error": -0.12664535992542347,
+     "status": "withdrawn",
+     "tolerance": 0.08
+    },
+    {
+     "got": 11.72407025081728,
+     "pass": true,
+     "quantity": "p_stag/p1",
+     "reference": 12.060964701266625,
+     "rel_error": -0.027932628839711815,
+     "status": "graded",
+     "tolerance": 0.08
+    },
+    {
+     "got": 4.199114324635957,
+     "pass": true,
+     "quantity": "rho_stag/rho1",
+     "reference": 4.307487393309508,
+     "rel_error": -0.02515923060898062,
+     "status": "graded",
+     "tolerance": 0.08
+    },
+    {
+     "got": -5.035025054989373e-16,
+     "pass": true,
+     "quantity": "mass_budget_drift",
+     "reference": 0.0,
+     "rel_error": -5.035025054989373e-16,
+     "status": "graded",
+     "tolerance": 1e-06
+    },
+    {
+     "got": 0.002858265095226436,
+     "pass": true,
+     "quantity": "energy_budget_drift",
+     "reference": 0.0,
+     "rel_error": 0.002858265095226436,
+     "status": "graded",
+     "tolerance": 0.01
+    }
+   ],
+   "nsteps": 2834,
+   "positivity_fixes": 147,
+   "run_dir": "docs/repro-fvm-forward-step/run",
+   "shock_sampling": {
+    "n_cells_behind": 1,
+    "sensitivity": {
+     "0.5x": {
+      "err_mach2": -0.12664535992542347,
+      "err_p_ratio": 0.01301666121977818,
+      "err_rho_ratio": -0.012867334349945359,
+      "err_u_ratio": -0.11526916379223606,
+      "mach2": 0.4150102327295989,
+      "n_cells_behind": 1,
+      "p_ratio": 10.467838832604375,
+      "rho_ratio": 3.8075117103644964,
+      "u_ratio": 0.2293746612390499,
+      "window": 0.01
+     },
+     "1x": {
+      "err_mach2": -0.12664535992542347,
+      "err_p_ratio": 0.01301666121977818,
+      "err_rho_ratio": -0.012867334349945359,
+      "err_u_ratio": -0.11526916379223606,
+      "mach2": 0.4150102327295989,
+      "n_cells_behind": 1,
+      "p_ratio": 10.467838832604375,
+      "rho_ratio": 3.8075117103644964,
+      "u_ratio": 0.2293746612390499,
+      "window": 0.02
+     },
+     "2x": {
+      "err_mach2": -0.12664535992542347,
+      "err_p_ratio": 0.01301666121977818,
+      "err_rho_ratio": -0.012867334349945359,
+      "err_u_ratio": -0.11526916379223606,
+      "mach2": 0.4150102327295989,
+      "n_cells_behind": 1,
+      "p_ratio": 10.467838832604375,
+      "rho_ratio": 3.8075117103644964,
+      "u_ratio": 0.2293746612390499,
+      "window": 0.04
+     }
+    },
+    "standoff": 0.2903037396769595,
+    "window": 0.02,
+    "x_shock": 0.3096962603230405,
+    "y": 0.1
+   },
+   "t_end": 4.0,
+   "troubled_repairs": null,
+   "verdict": {
+    "n_graded": 4,
+    "n_graded_pass": 4,
+    "withdrawn": [
+     "M2",
+     "u2/u1"
+    ]
+   },
+   "wall_seconds": 133.47114896774292,
+   "withdrawn": {
+    "M2": "derived from the same u2 sample; same window-dominated uncertainty",
+    "u2/u1": "post-shock velocity is not a plateau on the stagnation streamline: u/u1 falls ~30 % over the four cells behind the shock at 480 x 160, so the sampled value is window-dominated (> 8 % tolerance)"
+   }
+  },
+  "240x80": {
+   "all_graded_pass": false,
+   "all_pass": false,
+   "dx": 0.0125,
+   "grid": [
+    240,
+    80
+   ],
+   "items": [
+    {
+     "got": 9.779904334038578,
+     "pass": true,
+     "quantity": "p2/p1",
+     "reference": 10.333333333333334,
+     "rel_error": -0.05355764509304084,
+     "status": "graded",
+     "tolerance": 0.08
+    },
+    {
+     "got": 3.507417374452515,
+     "pass": false,
+     "quantity": "rho2/rho1",
+     "reference": 3.857142857142857,
+     "rel_error": -0.09066956958638506,
+     "status": "graded",
+     "tolerance": 0.08
+    },
+    {
+     "got": 0.1963508813714445,
+     "pass": false,
+     "quantity": "u2/u1",
+     "reference": 0.25925925925925924,
+     "rel_error": -0.24264660042442832,
+     "status": "withdrawn",
+     "tolerance": 0.08
+    },
+    {
+     "got": 0.3527609723088533,
+     "pass": false,
+     "quantity": "M2",
+     "reference": 0.47519096331149147,
+     "rel_error": -0.2576437694636553,
+     "status": "withdrawn",
+     "tolerance": 0.08
+    },
+    {
+     "got": 11.860334127953875,
+     "pass": true,
+     "quantity": "p_stag/p1",
+     "reference": 12.060964701266625,
+     "rel_error": -0.016634703631267622,
+     "status": "graded",
+     "tolerance": 0.08
+    },
+    {
+     "got": 4.213131118069121,
+     "pass": true,
+     "quantity": "rho_stag/rho1",
+     "reference": 4.307487393309508,
+     "rel_error": -0.021905177340029502,
+     "status": "graded",
+     "tolerance": 0.08
+    },
+    {
+     "got": 0.03409305177026013,
+     "pass": false,
+     "quantity": "mass_budget_drift",
+     "reference": 0.0,
+     "rel_error": 0.03409305177026013,
+     "status": "graded",
+     "tolerance": 1e-06
+    },
+    {
+     "got": -0.011942115142271373,
+     "pass": false,
+     "quantity": "energy_budget_drift",
+     "reference": 0.0,
+     "rel_error": -0.011942115142271373,
+     "status": "graded",
+     "tolerance": 0.01
+    }
+   ],
+   "nsteps": 5876,
+   "positivity_fixes": 10,
+   "run_dir": "/tmp/fs_run",
+   "shock_sampling": {
+    "n_cells_behind": 1,
+    "sensitivity": {
+     "0.5x": {
+      "err_mach2": -0.2576437694636553,
+      "err_p_ratio": -0.05355764509304084,
+      "err_rho_ratio": -0.09066956958638506,
+      "err_u_ratio": -0.24264660042442832,
+      "mach2": 0.3527609723088533,
+      "n_cells_behind": 1,
+      "p_ratio": 9.779904334038578,
+      "rho_ratio": 3.507417374452515,
+      "u_ratio": 0.1963508813714445,
+      "window": 0.01
+     },
+     "1x": {
+      "err_mach2": -0.2576437694636553,
+      "err_p_ratio": -0.05355764509304084,
+      "err_rho_ratio": -0.09066956958638506,
+      "err_u_ratio": -0.24264660042442832,
+      "mach2": 0.3527609723088533,
+      "n_cells_behind": 1,
+      "p_ratio": 9.779904334038578,
+      "rho_ratio": 3.507417374452515,
+      "u_ratio": 0.1963508813714445,
+      "window": 0.02
+     },
+     "2x": {
+      "err_mach2": -0.26322425374867164,
+      "err_p_ratio": -0.033402364941573004,
+      "err_rho_ratio": -0.04512972153585859,
+      "err_u_ratio": -0.2587136599314913,
+      "mach2": 0.3501091766057117,
+      "n_cells_behind": 2,
+      "p_ratio": 9.988175562270413,
+      "rho_ratio": 3.6830710740759742,
+      "u_ratio": 0.1921853474251689,
+      "window": 0.04
+     }
+    },
+    "standoff": 0.2903415499474278,
+    "window": 0.02,
+    "x_shock": 0.3096584500525722,
+    "y": 0.1
+   },
+   "t_end": 4.0,
+   "troubled_repairs": null,
+   "verdict": {
+    "n_graded": 4,
+    "n_graded_pass": 3,
+    "withdrawn": [
+     "M2",
+     "u2/u1"
+    ]
+   },
+   "wall_seconds": 775.9045941829681,
+   "withdrawn": {
+    "M2": "derived from the same u2 sample; same window-dominated uncertainty",
+    "u2/u1": "post-shock velocity is not a plateau on the stagnation streamline: u/u1 falls ~30 % over the four cells behind the shock at 480 x 160, so the sampled value is window-dominated (> 8 % tolerance)"
+   }
+  },
+  "480x160": {
+   "all_graded_pass": true,
+   "all_pass": false,
+   "dx": 0.00625,
+   "grid": [
+    480,
+    160
+   ],
+   "items": [
+    {
+     "got": 10.378860704591341,
+     "pass": true,
+     "quantity": "p2/p1",
+     "reference": 10.333333333333334,
+     "rel_error": 0.004405874637871676,
+     "status": "graded",
+     "tolerance": 0.08
+    },
+    {
+     "got": 3.956667077492171,
+     "pass": true,
+     "quantity": "rho2/rho1",
+     "reference": 3.857142857142857,
+     "rel_error": 0.02580257564611843,
+     "status": "graded",
+     "tolerance": 0.08
+    },
+    {
+     "got": 0.3230916540218778,
+     "pass": false,
+     "quantity": "u2/u1",
+     "reference": 0.25925925925925924,
+     "rel_error": 0.24621066551295723,
+     "status": "withdrawn",
+     "tolerance": 0.08
+    },
+    {
+     "got": 0.5984624516547292,
+     "pass": false,
+     "quantity": "M2",
+     "reference": 0.47519096331149147,
+     "rel_error": 0.2594146308763712,
+     "status": "withdrawn",
+     "tolerance": 0.08
+    },
+    {
+     "got": 12.048172435424718,
+     "pass": true,
+     "quantity": "p_stag/p1",
+     "reference": 12.060964701266625,
+     "rel_error": -0.0010606337186745973,
+     "status": "graded",
+     "tolerance": 0.08
+    },
+    {
+     "got": 4.298608153781511,
+     "pass": true,
+     "quantity": "rho_stag/rho1",
+     "reference": 4.307487393309508,
+     "rel_error": -0.0020613500904932414,
+     "status": "graded",
+     "tolerance": 0.08
+    },
+    {
+     "got": NaN,
+     "pass": false,
+     "quantity": "mass_budget_drift",
+     "reference": 0.0,
+     "rel_error": NaN,
+     "status": "not_available",
+     "tolerance": 1e-06
+    },
+    {
+     "got": NaN,
+     "pass": false,
+     "quantity": "energy_budget_drift",
+     "reference": 0.0,
+     "rel_error": NaN,
+     "status": "not_available",
+     "tolerance": 0.01
+    }
+   ],
+   "nsteps": null,
+   "positivity_fixes": null,
+   "run_dir": "docs/repro-fvm-forward-step/run",
+   "shock_sampling": {
+    "n_cells_behind": 2,
+    "sensitivity": {
+     "0.5x": {
+      "err_mach2": 0.31152218147841926,
+      "err_p_ratio": -0.047646986404023095,
+      "err_rho_ratio": 0.00941968578739294,
+      "err_u_ratio": 0.27390996620113217,
+      "mach2": 0.6232234888211188,
+      "n_cells_behind": 1,
+      "p_ratio": 9.840981140491762,
+      "rho_ratio": 3.89347593089423,
+      "u_ratio": 0.3302729542002935,
+      "window": 0.009375000000000001
+     },
+     "1x": {
+      "err_mach2": 0.2594146308763712,
+      "err_p_ratio": 0.004405874637871676,
+      "err_rho_ratio": 0.02580257564611843,
+      "err_u_ratio": 0.24621066551295723,
+      "mach2": 0.5984624516547292,
+      "n_cells_behind": 2,
+      "p_ratio": 10.378860704591341,
+      "rho_ratio": 3.956667077492171,
+      "u_ratio": 0.3230916540218778,
+      "window": 0.018750000000000003
+     },
+     "2x": {
+      "err_mach2": 0.26109261004997797,
+      "err_p_ratio": -0.002438827300410118,
+      "err_rho_ratio": 0.02689413760339443,
+      "err_u_ratio": 0.24295072507545679,
+      "mach2": 0.5992598121946521,
+      "n_cells_behind": 5,
+      "p_ratio": 10.308132117895763,
+      "rho_ratio": 3.960877387898807,
+      "u_ratio": 0.32224648427882213,
+      "window": 0.037500000000000006
+     }
+    },
+    "standoff": 0.28891842492022995,
+    "window": 0.018750000000000003,
+    "x_shock": 0.31108157507977,
+    "y": 0.1
+   },
+   "t_end": 4.0,
+   "troubled_repairs": null,
+   "verdict": {
+    "n_graded": 4,
+    "n_graded_pass": 4,
+    "withdrawn": [
+     "M2",
+     "u2/u1"
+    ]
+   },
+   "wall_seconds": null,
+   "withdrawn": {
+    "M2": "derived from the same u2 sample; same window-dominated uncertainty",
+    "u2/u1": "post-shock velocity is not a plateau on the stagnation streamline: u/u1 falls ~30 % over the four cells behind the shock at 480 x 160, so the sampled value is window-dominated (> 8 % tolerance)"
+   }
+  }
+ },
+ "tolerance": 0.08,
+ "verdict": {
+  "n_graded": 4,
+  "n_graded_pass": 4,
+  "withdrawn": [
+   "M2",
+   "u2/u1"
+  ]
+ },
+ "withdrawn": {
+  "M2": "derived from the same u2 sample; same window-dominated uncertainty",
+  "u2/u1": "post-shock velocity is not a plateau on the stagnation streamline: u/u1 falls ~30 % over the four cells behind the shock at 480 x 160, so the sampled value is window-dominated (> 8 % tolerance)"
+ }
+}
