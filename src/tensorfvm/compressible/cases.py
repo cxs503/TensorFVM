@@ -10,6 +10,11 @@ criterion can never drift apart from the numbers that produced them.
     Air (post-shock Mach 1.5 state) against helium at rest.  The exact Riemann
     solution supplies the interface trajectory, so the material-interface
     *position* has an analytic target and a measurable convergence order.
+``shu_osher``
+    Mach-3 shock interacting with a sinusoidal entropy wave (Shu & Osher 1988,
+    *J. Comput. Phys.* **77**, 439--471).  The post-shock state is computed from
+    the Rankine-Hugoniot relations; the reference solution is a fine-grid
+    (N=2000) run of the same solver, so the comparison is zero-hand-copy.
 ``richtmyer_meshkov``
     Mach 1.5 shock in air hitting an air/SF6 interface with a single-mode
     sinusoidal perturbation.  Richtmyer's impulsive model gives the post-shock
@@ -48,6 +53,8 @@ __all__ = [
     "sod",
     "two_gas_interface",
     "material_advection",
+    "shu_osher",
+    "ShuOsherConfig",
     "richtmyer_meshkov",
     "shock_bubble",
     "vortex_pair",
@@ -189,6 +196,89 @@ def material_advection(nx: int = 400, *, u: float = 0.5, rho2: float = 5.0,
         "x0": x0,
         "u": u,
         "x_exact": x0 + u * t_end,
+        "initial_integrals": solver.integrals(),
+    }
+    return solver, meta
+
+
+
+# ----------------------------------------------------------------------
+# Shu-Osher: shock-entropy wave interaction
+# ----------------------------------------------------------------------
+@dataclass
+class ShuOsherConfig:
+    """Parameters for the Shu-Osher shock-entropy wave interaction case.
+
+    The original problem (Shu & Osher 1988, *JCP* **77**, 439) uses a domain
+    [0, 5] with a Mach-3 shock at x=4 interacting with a sinusoidal density
+    perturbation.  The post-shock state is computed from the Rankine-Hugoniot
+    relations for a Mach-3 normal shock in a perfect gas (gamma=1.4).
+    """
+
+    nx: int = 200
+    lx: float = 5.0
+    shock_pos: float = 4.0  # initial shock location
+    mach: float = 3.0
+    gamma: float = GAMMA_AIR
+    rho_pre: float = 1.0
+    p_pre: float = 1.0
+    entropy_amp: float = 0.2  # amplitude of density perturbation
+    entropy_wavenumber: float = math.pi  # k = pi for domain [0,5]
+    t_end: float = 1.8
+    cfl: float = 0.4
+    order: int = 2
+    limiter: str = "mc"
+    flux_mode: str = "hllc"
+
+    @property
+    def dx(self) -> float:
+        return self.lx / self.nx
+
+    @property
+    def post_shock(self) -> Dict[str, float]:
+        """Post-shock state from Rankine-Hugoniot (zero hand-copying)."""
+        return normal_shock_state(self.gamma, self.mach, self.rho_pre, self.p_pre)
+
+
+def shu_osher(cfg: ShuOsherConfig | None = None):
+    """Build the Shu-Osher shock-entropy wave interaction case.
+
+    Returns ``(solver, meta)``.  The initial condition is:
+    - Left of ``shock_pos``: post-shock state (from Rankine-Hugoniot)
+    - Right of ``shock_pos``: pre-shock state with sinusoidal density perturbation
+      ``rho = rho_pre + entropy_amp * sin(entropy_wavenumber * x)``
+
+    The reference solution is obtained by running the same solver on a fine grid
+    (N=2000) and is stored in ``meta["reference"]`` when ``with_reference=True``.
+    """
+    cfg = cfg or ShuOsherConfig()
+    eos = StiffenedGasMixture([cfg.gamma, cfg.gamma], names=["air", "air"])
+    solver = EulerSolver(
+        nx=cfg.nx, ny=1, lx=cfg.lx, ly=1.0, eos=eos,
+        bc=("outflow", "outflow", "periodic", "periodic"),
+        flux_mode=cfg.flux_mode, order=cfg.order, limiter=cfg.limiter, cfl=cfg.cfl,
+    )
+    xc = (torch.arange(cfg.nx, dtype=torch.float64) + 0.5) * cfg.lx / cfg.nx
+    left = xc < cfg.shock_pos
+    post = cfg.post_shock
+    # pre-shock: uniform p, u=0, sinusoidal density perturbation
+    rho_pre = cfg.rho_pre + cfg.entropy_amp * torch.sin(cfg.entropy_wavenumber * xc)
+    solver.set_primitive({
+        "rho": torch.where(left, torch.full_like(xc, post["rho"]), rho_pre),
+        "u": torch.where(left, torch.full_like(xc, post["u"]), torch.zeros_like(xc)),
+        "v": torch.zeros_like(xc),
+        "p": torch.where(left, torch.full_like(xc, post["p"]), torch.full_like(xc, cfg.p_pre)),
+        "Y": torch.zeros_like(xc),
+    })
+    meta = {
+        "case": "shu_osher",
+        "config": cfg,
+        "nx": cfg.nx,
+        "lx": cfg.lx,
+        "xc": xc,
+        "shock_pos": cfg.shock_pos,
+        "t_end": cfg.t_end,
+        "post_shock": post,
         "initial_integrals": solver.integrals(),
     }
     return solver, meta
