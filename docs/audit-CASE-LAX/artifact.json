@@ -1,0 +1,345 @@
+{
+ "artifact_path": "docs/CASE-LAX/compressible_multimaterial.json",
+ "case": "CASE-LAX",
+ "config": {
+  "gamma": 1.4,
+  "p_l": 3.528,
+  "p_r": 0.571,
+  "rho_l": 0.445,
+  "rho_r": 0.5,
+  "t_end": 0.16,
+  "u_l": 0.698,
+  "u_r": 0.0,
+  "x0": 0.5
+ },
+ "figures": [
+  {
+   "caption": "Exact (black) vs numerical rho/u/p at t=0.16, nx=400: production MUSCL-Hancock (top) and first-order HLLC (bottom). The contact smearing of the first-order run is what the L1 criterion sees.",
+   "name": "fig_lax_negative_control_profiles.png"
+  },
+  {
+   "caption": "Relative error per graded criterion, production vs first-order scheme at nx=800, against the 2 % acceptance line (log scale). Only the L1 norms of rho/u cross the line; the plateau and wave-position criteria are insensitive to the loss of reconstruction.",
+   "name": "fig_lax_criterion_margins.png"
+  }
+ ],
+ "literature": {
+  "checks": {
+   "p_star": {
+    "literature": 2.4661,
+    "ok": true,
+    "recomputed": 2.4660979192073564,
+    "rel_diff": 8.437584216056889e-07
+   },
+   "rho_star_l": {
+    "literature": 0.3446,
+    "ok": true,
+    "recomputed": 0.34456847418960945,
+    "rel_diff": 9.148523038469146e-05
+   },
+   "rho_star_r": {
+    "literature": 1.3041,
+    "ok": true,
+    "recomputed": 1.3040845320261998,
+    "rel_diff": 1.186103350989486e-05
+   },
+   "speed_shock": {
+    "literature": 2.4793,
+    "ok": true,
+    "recomputed": 2.4793214809898405,
+    "rel_diff": 8.664134973852313e-06
+   },
+   "u_star": {
+    "literature": 1.5287,
+    "ok": true,
+    "recomputed": 1.528723026632884,
+    "rel_diff": 1.506288538235398e-05
+   },
+   "x_shock": {
+    "literature": 0.8966879999999999,
+    "ok": true,
+    "recomputed": 0.8966914369583745,
+    "rel_diff": 3.832947886633588e-06
+   }
+  },
+  "max_rel_diff": 9.148523038469146e-05,
+  "ok": true,
+  "tolerance": 0.0001
+ },
+ "locator_bias": {
+  "analytic_positions": {
+   "x_contact": 0.7445956842612614,
+   "x_fan": 0.15430950524036313,
+   "x_shock": 0.8966914369583745
+  },
+  "fine_20001": {
+   "x_contact": 2.7779184997521855e-05,
+   "x_fan": 1.5976565974135131e-09,
+   "x_shock": 1.8330673961118107e-05
+  },
+  "graded_grids": {
+   "200": {
+    "x_contact": 0.0005430003789770741,
+    "x_fan": 2.3973276124003686e-05,
+    "x_shock": 0.0018863088111023313
+   },
+   "400": {
+    "x_contact": 0.0005430003789770741,
+    "x_fan": 4.508441646108593e-06,
+    "x_shock": 0.0009017182592577827
+   },
+   "800": {
+    "x_contact": 0.0005430003789770741,
+    "x_fan": 3.218886952605966e-07,
+    "x_shock": 0.0004922952759222124
+   }
+  }
+ },
+ "negative_controls": {
+  "first_order": {
+   "200": {
+    "all_ok": false,
+    "failed": [
+     "l1[rho]",
+     "l1[u]",
+     "plateau[rho_star_r]",
+     "position[x_fan]"
+    ],
+    "l1_rel": {
+     "p": 0.016000806883916606,
+     "rho": 0.06672934624725772,
+     "u": 0.02693135828211252
+    },
+    "plateau_rel_error": {
+     "p_star": 0.001391417413124835,
+     "rho_star_l": 0.001360249991215382,
+     "rho_star_r": 0.04196708028360457,
+     "u_star": 0.0014150790774477044
+    },
+    "position_rel_error": {
+     "x_contact": 0.0027811240443651663,
+     "x_fan": 0.028044304580538505,
+     "x_shock": 0.0040662330675562425
+    },
+    "seconds": 4.2
+   },
+   "400": {
+    "all_ok": false,
+    "failed": [
+     "l1[rho]"
+    ],
+    "l1_rel": {
+     "p": 0.008629919508690059,
+     "rho": 0.04274169049188383,
+     "u": 0.013868735533647272
+    },
+    "plateau_rel_error": {
+     "p_star": 0.0003352247617010156,
+     "rho_star_l": 0.0006998662982420499,
+     "rho_star_r": 0.015555078286542486,
+     "u_star": 0.0003939061945238816
+    },
+    "position_rel_error": {
+     "x_contact": 0.001414766964927787,
+     "x_fan": 0.01840492365489438,
+     "x_shock": 0.002105240758321422
+    },
+    "seconds": 9.7
+   },
+   "800": {
+    "all_ok": false,
+    "failed": [
+     "l1[rho]"
+    ],
+    "l1_rel": {
+     "p": 0.005071660407827111,
+     "rho": 0.02916409832307678,
+     "u": 0.00833994590629131
+    },
+    "plateau_rel_error": {
+     "p_star": 7.758947167606911e-05,
+     "rho_star_l": 0.00028057680932869374,
+     "rho_star_r": 0.004791709115571772,
+     "u_star": 5.96256343233995e-05
+    },
+    "position_rel_error": {
+     "x_contact": 0.0007265563880597097,
+     "x_fan": 0.011933931815450341,
+     "x_shock": 0.00104307890463481
+    },
+    "seconds": 24.3
+   }
+  },
+  "first_order_extrapolation": {
+   "p": {
+    "nx_to_pass_2pct_extrapolated": 133.6843948602106,
+    "observed_rate_400_800": 0.7668889558245334
+   },
+   "rho": {
+    "nx_to_pass_2pct_extrapolated": 1585.4715765010542,
+    "observed_rate_400_800": 0.5514504991541711
+   },
+   "u": {
+    "nx_to_pass_2pct_extrapolated": 242.86632677987896,
+    "observed_rate_400_800": 0.7337263262097908
+   }
+  },
+  "first_order_rate": {
+   "p": 0.7668889558245334,
+   "rho": 0.5514504991541711,
+   "u": 0.7337263262097908
+  },
+  "wrong_reference": {
+   "all_ok": false,
+   "control": "Lax field graded against the sod initial data (u_L = 0, p_L = 1)",
+   "failed": [
+    "l1[p]",
+    "l1[rho]",
+    "l1[u]",
+    "plateau[p_star]",
+    "plateau[rho_star_l]",
+    "plateau[rho_star_r]",
+    "plateau[u_star]",
+    "position[x_contact]",
+    "position[x_fan]",
+    "position[x_shock]"
+   ],
+   "l1_rel": {
+    "p": 3.623315997083007,
+    "rho": 0.8562288205559526,
+    "u": 2.5237768457568017
+   },
+   "passed": [
+    "mass_drift",
+    "no_positivity_fix"
+   ],
+   "seconds": 6.7
+  }
+ },
+ "positive_control": {
+  "all_criteria_met_in_artifact": true,
+  "all_ok": true,
+  "checks": {
+   "l1[p]": {
+    "ok": true,
+    "value": 0.000886789326465111
+   },
+   "l1[rho]": {
+    "ok": true,
+    "value": 0.006308300143208848
+   },
+   "l1[u]": {
+    "ok": true,
+    "value": 0.001662887223026175
+   },
+   "mass_drift": {
+    "ok": true,
+    "value": 2.34967835899504e-16
+   },
+   "no_positivity_fix": {
+    "ok": true,
+    "value": 0
+   },
+   "plateau[p_star]": {
+    "ok": true,
+    "value": 9.533526875968296e-09
+   },
+   "plateau[rho_star_l]": {
+    "ok": true,
+    "value": 3.797324982856028e-07
+   },
+   "plateau[rho_star_r]": {
+    "ok": true,
+    "value": 6.8199648534686415e-06
+   },
+   "plateau[u_star]": {
+    "ok": true,
+    "value": 4.599216096563341e-07
+   },
+   "position[x_contact]": {
+    "ok": true,
+    "value": 0.000816932342795103
+   },
+   "position[x_fan]": {
+    "ok": true,
+    "value": 0.0008066463233053912
+   },
+   "position[x_shock]": {
+    "ok": true,
+    "value": 0.00031275791894795006
+   }
+  },
+  "nx_graded": 800,
+  "path": "docs/CASE-LAX/compressible_multimaterial.json",
+  "regrade_matches_artifact": true
+ },
+ "reviewed": {
+  "artifact": "docs/CASE-LAX/compressible_multimaterial.json",
+  "leg": "src/tensorfvm/compressible/verification.py::leg_lax",
+  "module": "src/tensorfvm/compressible/lax.py",
+  "report": "docs/CASE-LAX/report.md"
+ },
+ "runtime": {
+  "host": "36cb7828dbd5",
+  "mpmath": "1.3.0",
+  "python": "3.11.6",
+  "seconds": 74.6,
+  "threads": 1,
+  "torch": "2.7.1"
+ },
+ "third_path": {
+  "max_rel_diff": 3.4967153690009937e-16,
+  "ok": true,
+  "reference": {
+   "p_star": 2.4660979192073564,
+   "rho_star_l": 0.34456847418960945,
+   "rho_star_r": 1.3040845320261998,
+   "speed_contact": 1.528723026632884,
+   "speed_head": -2.6335650740600323,
+   "speed_shock": 2.4793214809898405,
+   "speed_tail": -1.6366974421005718,
+   "u_star": 1.528723026632884,
+   "x_contact": 0.7445956842612614,
+   "x_head": 0.07862958815039484,
+   "x_shock": 0.8966914369583745,
+   "x_tail": 0.2381284092639085
+  },
+  "rel_diff": {
+   "p_star": 1.8007768726101519e-16,
+   "rho_star_l": 1.6110339566559158e-16,
+   "rho_star_r": 0.0,
+   "speed_contact": 1.4524842045069446e-16,
+   "speed_head": 0.0,
+   "speed_shock": 0.0,
+   "speed_tail": 2.713325006973245e-16,
+   "u_star": 1.4524842045069446e-16,
+   "x_contact": 0.0,
+   "x_head": 1.7649574586694271e-16,
+   "x_shock": 0.0,
+   "x_tail": 3.4967153690009937e-16
+  },
+  "residual_at_root": 1.0520287362911764e-55,
+  "shock_mach": 1.9608111750393393,
+  "third_path": {
+   "p_star": 2.466097919207357,
+   "rho_star_l": 0.3445684741896095,
+   "rho_star_r": 1.3040845320261998,
+   "speed_contact": 1.5287230266328842,
+   "speed_head": -2.6335650740600323,
+   "speed_shock": 2.4793214809898405,
+   "speed_tail": -1.6366974421005713,
+   "u_star": 1.5287230266328842,
+   "x_contact": 0.7445956842612614,
+   "x_head": 0.07862958815039482,
+   "x_shock": 0.8966914369583745,
+   "x_tail": 0.23812840926390857
+  },
+  "third_path_dps": 60
+ },
+ "thresholds": {
+  "conservation_drift": 0.005,
+  "independent_exact_rel_error": 1e-09,
+  "l1_rel_error": 0.02,
+  "plateau_rel_error": 0.02,
+  "wave_position_rel_error": 0.02
+ }
+}
