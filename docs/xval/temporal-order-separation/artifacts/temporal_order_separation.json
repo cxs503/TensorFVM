@@ -1,0 +1,116 @@
+{
+  "grids": [
+    40,
+    80,
+    160
+  ],
+  "t_end": 0.2,
+  "order": 2,
+  "scans": [
+    {
+      "nx": 40,
+      "h": 0.025,
+      "cfls": [
+        0.1,
+        0.2,
+        0.4
+      ],
+      "dt": [
+        0.0025000000000000005,
+        0.005000000000000001,
+        0.010000000000000002
+      ],
+      "errors": [
+        0.00039633812223814906,
+        0.0003855799451184833,
+        0.00036351683004789417
+      ],
+      "steps": [
+        146,
+        73,
+        37
+      ],
+      "t": [
+        0.2,
+        0.2,
+        0.2
+      ],
+      "temporal_slope": -0.062354790945667246,
+      "temporal_budget_4x": 0.08281134301416872,
+      "temporal_budget_pass_15": true,
+      "spatial_dominated": true,
+      "temporal_order_resolved": false,
+      "note": "spatial-dominated: temporal error is a minor contributor; scheme is not temporally zeroth-order, but the exact temporal order q is not resolvable at affordable grid cost (WITHHELD)"
+    },
+    {
+      "nx": 80,
+      "h": 0.0125,
+      "cfls": [
+        0.1,
+        0.2,
+        0.4
+      ],
+      "dt": [
+        0.0012500000000000002,
+        0.0025000000000000005,
+        0.005000000000000001
+      ],
+      "errors": [
+        9.820953743387013e-05,
+        9.506105980198189e-05,
+        8.883514018313555e-05
+      ],
+      "steps": [
+        292,
+        146,
+        73
+      ],
+      "t": [
+        0.2,
+        0.2,
+        0.2
+      ],
+      "temporal_slope": -0.07236633250402882,
+      "temporal_budget_4x": 0.09545302315517856,
+      "temporal_budget_pass_15": true,
+      "spatial_dominated": true,
+      "temporal_order_resolved": false,
+      "note": "spatial-dominated: temporal error is a minor contributor; scheme is not temporally zeroth-order, but the exact temporal order q is not resolvable at affordable grid cost (WITHHELD)"
+    },
+    {
+      "nx": 160,
+      "h": 0.00625,
+      "cfls": [
+        0.1,
+        0.2,
+        0.4
+      ],
+      "dt": [
+        0.0006250000000000001,
+        0.0012500000000000002,
+        0.0025000000000000005
+      ],
+      "errors": [
+        2.362468143463637e-05,
+        2.2995226098691818e-05,
+        2.158751658022235e-05
+      ],
+      "steps": [
+        584,
+        292,
+        146
+      ],
+      "t": [
+        0.2,
+        0.2,
+        0.2
+      ],
+      "temporal_slope": -0.06504879486632918,
+      "temporal_budget_4x": 0.08623036293845268,
+      "temporal_budget_pass_15": true,
+      "spatial_dominated": true,
+      "temporal_order_resolved": false,
+      "note": "spatial-dominated: temporal error is a minor contributor; scheme is not temporally zeroth-order, but the exact temporal order q is not resolvable at affordable grid cost (WITHHELD)"
+    }
+  ]
+}
