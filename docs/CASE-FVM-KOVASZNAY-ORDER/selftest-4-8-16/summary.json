@@ -1,0 +1,186 @@
+{
+  "title": "selftest 4/8/16",
+  "levels": [
+    {
+      "n": 4,
+      "h": 0.25,
+      "cells": 16,
+      "converged": true,
+      "outer_iterations": 33,
+      "divergence_max": 2.3172574969976267e-12,
+      "global_momentum_imbalance": 4.2027286512036355e-10,
+      "max_abs_z_velocity": 0.03137440232984367,
+      "velocity_full": 0.10294228118246124,
+      "velocity_inplane": 0.10162115620575253,
+      "velocity_spanwise": 0.01643939982039971,
+      "pressure_fixed": 0.3133083243127793,
+      "pressure_meanfree": 0.4177775314177509,
+      "sampling_bias": {
+        "velocity": 0.0406842484075351,
+        "pressure": 0.0077040312582104436
+      },
+      "solve_seconds": 1.127821570262313,
+      "directory": "runs/selftest/n4"
+    },
+    {
+      "n": 8,
+      "h": 0.125,
+      "cells": 64,
+      "converged": true,
+      "outer_iterations": 29,
+      "divergence_max": 4.247269203005999e-12,
+      "global_momentum_imbalance": 1.1105733327323314e-09,
+      "max_abs_z_velocity": 0.018954599689623625,
+      "velocity_full": 0.03710529218060863,
+      "velocity_inplane": 0.03620365503456861,
+      "velocity_spanwise": 0.008130071952098014,
+      "pressure_fixed": 0.28208734497313076,
+      "pressure_meanfree": 0.2678225797550202,
+      "sampling_bias": {
+        "velocity": 0.010411417015193406,
+        "pressure": 0.001947933835674318
+      },
+      "solve_seconds": 3.2215590700507164,
+      "directory": "runs/selftest/n8"
+    },
+    {
+      "n": 16,
+      "h": 0.0625,
+      "cells": 256,
+      "converged": true,
+      "outer_iterations": 24,
+      "divergence_max": 2.7338131758369855e-12,
+      "global_momentum_imbalance": 2.557052736868945e-10,
+      "max_abs_z_velocity": 0.009413573327409101,
+      "velocity_full": 0.012574784561427162,
+      "velocity_inplane": 0.012015736967494663,
+      "velocity_spanwise": 0.003707731367600549,
+      "pressure_fixed": 0.1564750494571082,
+      "pressure_meanfree": 0.09732921617131668,
+      "sampling_bias": {
+        "velocity": 0.0026180777483934964,
+        "pressure": 0.0004883528971904604
+      },
+      "solve_seconds": 17.951740259304643,
+      "directory": "runs/selftest/n16"
+    }
+  ],
+  "observed_orders": {
+    "velocity_full": [
+      {
+        "coarse": 4,
+        "fine": 8,
+        "ratio": 2.0,
+        "order": 1.4721387853706012
+      },
+      {
+        "coarse": 8,
+        "fine": 16,
+        "ratio": 2.0,
+        "order": 1.5610912842447962
+      }
+    ],
+    "velocity_inplane": [
+      {
+        "coarse": 4,
+        "fine": 8,
+        "ratio": 2.0,
+        "order": 1.4889935229408124
+      },
+      {
+        "coarse": 8,
+        "fine": 16,
+        "ratio": 2.0,
+        "order": 1.5912102189551334
+      }
+    ],
+    "velocity_spanwise": [
+      {
+        "coarse": 4,
+        "fine": 8,
+        "ratio": 2.0,
+        "order": 1.015817603702512
+      },
+      {
+        "coarse": 8,
+        "fine": 16,
+        "ratio": 2.0,
+        "order": 1.1327313987100056
+      }
+    ],
+    "pressure_fixed": [
+      {
+        "coarse": 4,
+        "fine": 8,
+        "ratio": 2.0,
+        "order": 0.1514411562273092
+      },
+      {
+        "coarse": 8,
+        "fine": 16,
+        "ratio": 2.0,
+        "order": 0.850209312790672
+      }
+    ],
+    "pressure_meanfree": [
+      {
+        "coarse": 4,
+        "fine": 8,
+        "ratio": 2.0,
+        "order": 0.6414573071691341
+      },
+      {
+        "coarse": 8,
+        "fine": 16,
+        "ratio": 2.0,
+        "order": 1.4603327557773063
+      }
+    ]
+  },
+  "fits": {
+    "velocity_full": {
+      "slope": 1.5166150348076977,
+      "intercept": -0.16083575831498362,
+      "r_squared": 0.9997134107712207
+    },
+    "velocity_inplane": {
+      "slope": 1.540101870947972,
+      "intercept": -0.13966046012299785,
+      "r_squared": 0.9996330523232168
+    },
+    "velocity_spanwise": {
+      "slope": 1.0742745012062578,
+      "intercept": -2.6053073027486806,
+      "r_squared": 0.9990139673519466
+    },
+    "pressure_fixed": {
+      "slope": 0.5008252345089902,
+      "intercept": -0.38555145015718995,
+      "r_squared": 0.8604200382050545
+    },
+    "pressure_meanfree": {
+      "slope": 1.0508950314732197,
+      "intercept": 0.6786438480395093,
+      "r_squared": 0.9518386013625261
+    }
+  },
+  "verdict": {
+    "threshold": 1.8,
+    "quantity": "L2 relative error log-log least-squares slope over 4/8/16",
+    "velocity_full_slope": 1.5166150348076977,
+    "velocity_full_pass": false,
+    "velocity_inplane_slope": 1.540101870947972,
+    "velocity_inplane_pass": false,
+    "pressure_meanfree_slope": 1.0508950314732197,
+    "pressure_meanfree_pass": false,
+    "all_levels_converged": true,
+    "pass": false,
+    "pass_inplane": false
+  },
+  "provenance": {
+    "runner": "scripts/verify_kovasznay_order.py",
+    "summarizer": "scripts/summarize_kovasznay_32_64_128.py",
+    "errors_recomputed_from": "n<N>-fields.npz",
+    "recompute_rtol": 1e-10
+  }
+}
