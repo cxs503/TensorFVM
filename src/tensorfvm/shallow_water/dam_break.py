@@ -83,6 +83,7 @@ __all__ = [
     "write_artifacts",
     "figure_profiles_and_convergence",
     "TOLERANCE",
+    "BORE_SUBCELL_MAX_CELLS",
 ]
 
 #: acceptance threshold on every headline metric (task criterion: < 5 %)
@@ -113,6 +114,16 @@ FAN_WINDOW = (1e-2, 2e-1)
 #: (as ``unresolved_max_error``); they are simply not admitted to the pass/fail
 #: series metric.
 SERIES_MIN_CELLS = 4.0
+
+#: predeclared resolution criterion for the data-driven wet-bed bore position
+#: (:func:`data_driven_plateau`), in units of ``dx``.
+#:
+#: Half a cell: a reading that cannot resolve below this is a cell-centre
+#: detector quantised to ``dx`` (the same defect class as the dry-bed wetted
+#: edge) and must not be used as a *position* metric.  Declared before any run;
+#: the measured sub-cell error is 0.063 ... 0.12 ``dx`` on n = 200 ... 1600
+#: (``scripts/verify_dambreak_bore_subcell.py``).
+BORE_SUBCELL_MAX_CELLS = 0.5
 
 
 @dataclass(frozen=True)
@@ -249,15 +260,32 @@ def data_driven_plateau(x, h, thresh_frac: float = 1e-2) -> dict:
 
     ``thresh_frac`` is a fraction of the max gradient; the plateau is ~1e-4 of
     the bore gradient while the fan is ~5e-2, so ``1e-2`` separates them cleanly
-    and is grid-independent (both scale with ``1/dx``).  Returns a dict with
-    ``bore_x`` (cell centre of the max-gradient jump), ``h2`` (mean depth over
-    the plateau), ``h1`` (mean depth in the flat downstream region),
-    ``n_plateau`` (plateau width in cells) and ``thresh`` (the gradient cut).
+    and is grid-independent (both scale with ``1/dx``).
+
+    The bore **position** is reported twice:
+
+    ``bore_x``
+        Sub-cell crossing of the level ``(h2 + h1) / 2`` (both measured from the
+        profile), linearly interpolated between cell centres.  The level is a
+        mean of two *measured* quantities, so no analytic value enters.
+    ``bore_x_cell``
+        Legacy cell centre of the max-gradient cell.  Kept for continuity and
+        as the documented negative control: it snaps the reading to a cell
+        centre, so it cannot resolve a fractional-cell displacement and its
+        error floor under refinement is ``O(dx/2)`` and non-monotone
+        (measured 0.73 % -> 0.068 % -> 0.399 % -> 0.233 % for n = 200 ... 1600
+        -- the same pathology class as the dry-bed wetted edge, F1).
+
+    Returns a dict with ``bore_x`` / ``bore_x_cell``, ``bore_level``,
+    ``bore_method``, ``h2`` (mean depth over the plateau), ``h1`` (mean depth in
+    the flat downstream region), ``n_plateau`` (plateau width in cells) and
+    ``thresh`` (the gradient cut).
     """
     x = np.asarray(x, dtype=float)
     h = np.asarray(h, dtype=float)
     nan = float("nan")
-    out = {"bore_x": nan, "h2": nan, "h1": nan, "n_plateau": 0,
+    out = {"bore_x": nan, "bore_x_cell": nan, "bore_level": nan,
+           "bore_method": "undefined", "h2": nan, "h1": nan, "n_plateau": 0,
            "thresh": nan, "max_grad": nan}
     if h.size < 4:
         return out
@@ -286,7 +314,24 @@ def data_driven_plateau(x, h, thresh_frac: float = 1e-2) -> dict:
     while k3 < len(grad) and grad[k3] < thresh:
         k3 += 1
     h1 = float(h[k2:k3 + 1].mean()) if k3 > k2 else float(h[k2])
-    out.update({"bore_x": float(x[j]), "h2": h2, "h1": h1,
+    # sub-cell bore position: interpolate the crossing of the mid level between
+    # the two *measured* states.  Anchored to the max-gradient cell (so a
+    # smeared, slightly non-monotone jump still lands on the right crossing) but
+    # not quantised to a cell centre.
+    level = 0.5 * (h2 + h1)
+    x_bore, method = float(x[j]), "cell_centre"
+    i = r
+    stop = min(k2 + 1, h.size - 1)
+    if h2 > h1:
+        while i < stop and not (h[i] >= level > h[i + 1]):
+            i += 1
+        if i < stop:
+            dz = h[i] - h[i + 1]
+            x_bore = float(x[i] + dx * (h[i] - level) / dz)
+            method = "mid_level_crossing"
+    out.update({"bore_x": x_bore, "bore_x_cell": float(x[j]),
+                "bore_level": float(level), "bore_method": method,
+                "h2": h2, "h1": h1,
                 "n_plateau": int(r - l + 1), "thresh": float(thresh),
                 "max_grad": float(max_grad)})
     return out
@@ -506,6 +551,12 @@ def _data_driven_crosscheck(case: DamBreakCase, solver: ShallowWater1D) -> dict:
     amplitude and level step sit from the closed form -- a genuine
     position-and-amplitude check.  All relative errors are ``< 5 %`` on the
     accepted grid (n >= 800).
+
+    ``bore_x`` is the **sub-cell** crossing of the measured mid level
+    (:func:`data_driven_plateau`); ``bore_x_cell`` keeps the legacy
+    max-gradient **cell centre**, whose error is quantised to ``dx`` and
+    non-monotone under refinement (0.051 -> 0.602 -> 0.705 cells for
+    n = 400 ... 1600).  It is reported as the negative control, not graded.
     """
     dd = data_driven_plateau(solver.x, solver.h)
     sol = stoker_constant_state(case.h0, case.h1, case.gravity)
@@ -514,6 +565,10 @@ def _data_driven_crosscheck(case: DamBreakCase, solver: ShallowWater1D) -> dict:
     return {
         "bore_x": dd["bore_x"],
         "bore_x_error": _relative(dd["bore_x"], x_shock),
+        "bore_x_cell": dd["bore_x_cell"],
+        "bore_x_cell_error": _relative(dd["bore_x_cell"], x_shock),
+        "bore_level": dd["bore_level"],
+        "bore_method": dd["bore_method"],
         "h2": dd["h2"],
         "h2_error": _relative(dd["h2"], sol["h2"]),
         "h1": dd["h1"],
