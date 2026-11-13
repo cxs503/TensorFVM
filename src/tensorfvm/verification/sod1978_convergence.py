@@ -54,6 +54,11 @@ from typing import Dict, Iterable, List, Sequence, Tuple
 
 import numpy as np
 
+from .convergence_crosscheck import (
+    crosscheck_series,
+    effective_exponent,
+    guarded_loglog_exponent,
+)
 from .sod1978 import (
     GAMMA,
     LEFT,
@@ -251,10 +256,38 @@ def fitted_exponent(rows: Sequence[Dict], key: str, finest: int = 3) -> float:
     return float(np.polyfit(lx, ly, 1)[0])
 
 
+def _series(rows: Sequence[Dict], key: str) -> Tuple[List[float], List[float]]:
+    """``(errors, h)`` of ``key`` on the grids where it is finite, coarse->fine."""
+    pairs = [(1.0 / float(r["nx"]), _value(r, key)) for r in rows]
+    pairs = [(h, e) for h, e in pairs if math.isfinite(e)]
+    pairs.sort(key=lambda p: -p[0])
+    return [e for _, e in pairs], [h for h, _ in pairs]
+
+
 def _rate_table(rows: Sequence[Dict], keys: Iterable[str]) -> Dict[str, Dict]:
-    return {k: {"successive": successive_orders(rows, k),
-                "fitted_exponent_finest3": fitted_exponent(rows, k)}
-            for k in keys}
+    """Successive rates + least-squares exponent + the three-grid GCI cross-check.
+
+    The cross-check (``crosscheck_series`` / ``effective_exponent``, ported from
+    Roache 1994 / Celik et al. 2008) is what turns the least-squares slope from
+    "a number" into a defensible order: it records the convergence class, the
+    asymptotic-range ratio and whether the slope is admissible at all.  See
+    ``docs/xval/convergence-diagnosis-v2/`` for the cross-validation evidence.
+    """
+    out: Dict[str, Dict] = {}
+    for k in keys:
+        errs, hs = _series(rows, k)
+        entry: Dict = {"successive": successive_orders(rows, k),
+                       "fitted_exponent_finest3": fitted_exponent(rows, k)}
+        if len(errs) >= 3:
+            entry["crosscheck"] = crosscheck_series(errs[-3:], hs[-3:])
+            entry["effective_exponent"] = effective_exponent(errs[-3:], hs[-3:])
+            entry["loglog_guard"] = guarded_loglog_exponent(errs[-3:], hs[-3:])
+        else:
+            entry["crosscheck"] = None
+            entry["effective_exponent"] = None
+            entry["loglog_guard"] = None
+        out[k] = entry
+    return out
 
 
 # ----------------------------------------------------------------------
@@ -367,6 +400,21 @@ def run_study(cfg: StudyConfig, outdir: Path | str,
     verdicts["shock_position_exponent_order2"] = _num(
         wave_rates, "order2", "wave_error.shock_x", "fitted_exponent_finest3")
 
+    def _eff(table: Dict, key: str) -> Dict:
+        entry = (table or {}).get(key) or {}
+        got = entry.get("effective_exponent")
+        if not got:
+            return {"value": float("nan"), "source": "unavailable", "valid": False}
+        return got
+
+    contact_eff = _eff(wave_rates.get("order2", {}), "wave_error.contact_x")
+    shock_eff = _eff(wave_rates.get("order2", {}), "wave_error.shock_x")
+    verdicts["contact_position_exponent_effective_order2"] = contact_eff["value"]
+    verdicts["contact_position_exponent_source_order2"] = contact_eff["source"]
+    verdicts["shock_position_exponent_effective_order2"] = shock_eff["value"]
+    verdicts["shock_position_exponent_source_order2"] = shock_eff["source"]
+    verdicts["shock_position_loglog_valid_order2"] = bool(shock_eff["valid"])
+
     design = {f"order{o}": o for o in cfg.orders}
     restricted_ok = {}   # graded on the analytic-region (plateau) aggregate
     for o in cfg.orders:
@@ -388,12 +436,16 @@ def run_study(cfg: StudyConfig, outdir: Path | str,
         and verdicts["c3_full_exponent_finest3_order2"] >= THRESHOLDS["c3_full_l1_rate"])
     verdicts["restricted_design_order_met"] = restricted_ok
     verdicts["smooth_design_order_met"] = smooth_ok
+    # the mechanism verdict reads the *guarded* exponents (effective_exponent):
+    # a log-log slope on a non-monotone error sequence is not an order of
+    # accuracy, so a non-admissible slope is replaced by the finest-pair rate
+    # before the two position rates are compared.
     verdicts["sublinear_convergence_observed"] = bool(
         math.isfinite(verdicts["c3_full_exponent_finest3_order2"])
         and verdicts["c3_full_exponent_finest3_order2"] < THRESHOLDS["sublinear_exponent"]
-        and math.isfinite(verdicts["contact_position_exponent_order2"])
-        and verdicts["contact_position_exponent_order2"]
-        < verdicts["shock_position_exponent_order2"])
+        and math.isfinite(contact_eff["value"])
+        and math.isfinite(shock_eff["value"])
+        and contact_eff["value"] < shock_eff["value"])
     verdicts["mechanism"] = (
         "contact (linearly degenerate) vs shock (genuinely nonlinear) position "
         "rates: sub-linear contact + linear shock reproduces the Banks, Aslam & "
