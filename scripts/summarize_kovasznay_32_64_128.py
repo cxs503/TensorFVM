@@ -39,6 +39,10 @@ from tensorfvm.verification.native_run import write_json
 
 THRESHOLD = 1.8
 RECOMPUTE_RTOL = 1e-10
+#: Settings that must be identical on every level of a refinement sequence.  A
+#: log-log slope is only a property of the *scheme* if the scheme is the same on
+#: every level, so a mixed sequence is refused instead of silently fitted.
+CONFIG_KEYS = ('reynolds', 'symmetry_closure', 'convection_order', 'algorithm')
 
 
 def load_level(directory):
@@ -67,6 +71,7 @@ def load_level(directory):
                                f"but the saved fields give {recomputed!r}")
     return dict(n=int(row['n']), h=float(row['h']), cells=int(row['cells']),
                 converged=bool(row['numerically_converged']),
+                configuration={key: row.get(key) for key in CONFIG_KEYS},
                 outer_iterations=int(row['outer_iterations']),
                 divergence_max=float(row['divergence_max']),
                 global_momentum_imbalance=float(row['global_momentum_imbalance']),
@@ -77,6 +82,30 @@ def load_level(directory):
                 sampling_bias=row.get('sampling_bias'),
                 solve_seconds=row.get('solve_seconds'),
                 directory=str(directory))
+
+
+def validate_levels(levels):
+    """Refuse to fit a slope across levels that used different discretisations.
+
+    ``free`` (traction-free) and ``zero_gradient`` (symmetry) closures of the
+    extrusion planes give different spurious-spanwise budgets, so a sequence that
+    mixes them -- e.g. a historical ``free`` level left in the same directory as
+    a ``zero_gradient`` rerun -- produces a number that is not the order of any
+    scheme.  The guard is also applied to Reynolds number, convection order and
+    the linear-solve algorithm, which are equally able to change the observed
+    order.  Returns the (single) configuration shared by all levels.
+    """
+    if not levels:
+        raise SystemExit('no levels loaded')
+    reference = dict(levels[0]['configuration'])
+    for level in levels[1:]:
+        other = level['configuration']
+        diff = {key: (reference.get(key), other.get(key))
+                for key in CONFIG_KEYS if other.get(key) != reference.get(key)}
+        if diff:
+            raise SystemExit(f"n={level['n']} was solved with a different configuration "
+                             f"(reference n={levels[0]['n']}): {diff}")
+    return reference
 
 
 QUANTITIES = {
@@ -191,6 +220,7 @@ def main():
     levels = sorted({level['n']: level for level in levels}.values(), key=lambda level: level['n'])
     if [level['n'] for level in levels] != required:
         raise SystemExit(f'need levels {required}, got {[level["n"] for level in levels]}')
+    configuration = validate_levels(levels)
 
     orders = {key: observed_orders(levels, key) for key in QUANTITIES}
     fits = {key: fit_slope(levels, key) for key in QUANTITIES}
@@ -216,7 +246,8 @@ def main():
                    provenance=dict(runner='scripts/verify_kovasznay_order.py',
                                    summarizer='scripts/summarize_kovasznay_32_64_128.py',
                                    errors_recomputed_from='n<N>-fields.npz',
-                                   recompute_rtol=RECOMPUTE_RTOL))
+                                   recompute_rtol=RECOMPUTE_RTOL,
+                                   configuration=configuration))
     write_json(args.output / 'summary.json', summary)
 
     if args.figure:
