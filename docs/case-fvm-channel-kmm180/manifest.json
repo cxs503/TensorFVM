@@ -4,11 +4,33 @@
   "entry": "src/tensorfvm/benchmark_channel_kmm1987.py",
   "impl_files": [
     "src/tensorfvm/benchmark_channel_kmm1987.py",
-    "src/tensorfvm/verification/kmm1987.py"
+    "src/tensorfvm/verification/kmm1987.py",
+    "src/tensorfvm/verification/kmm180_artifacts.py"
   ],
   "repro_cmd": "PYTHONPATH=src python -m tensorfvm.benchmark_channel_kmm1987 --out docs/case-fvm-channel-kmm180",
   "tolerance": 0.05,
   "verdict": "FAIL",
+  "verdict_legacy": "FAIL",
+  "verdict_log_layer": "FAIL",
+  "verdict_qualified": true,
   "reference": "Kim, Moin & Moser 1987 JFM 177:133, DOI:10.1017/S0022112087000892",
-  "dns_proxy": "Lee & Moser 2015 JFM 774:395 (Re_tau=182.088)"
+  "dns_proxy": "Lee & Moser 2015 JFM 774:395 (Re_tau=182.088)",
+  "artifacts": [
+    "benchmark.json",
+    "metrics.csv",
+    "profiles.csv",
+    "stations.csv",
+    "results.csv",
+    "REPORT.md",
+    "fig_velocity_profiles.png",
+    "fig_log_region_error.png"
+  ],
+  "sha256": {
+    "benchmark.json": "ddf7009998188932e4abb262134082a17e9fd06ed9ef801002ddfdf7826bcc14",
+    "metrics.csv": "30fede4f38b90a860c5fd39f5885944ddda8b44e9af7d9c95f5e3b11382b5b65",
+    "profiles.csv": "3d1b1c16f7874ac51c1647631b2e6bc2820bc991d65df48d25d422673681ff6d",
+    "stations.csv": "876725bbd08f084fdc18c128ee59b1a0afeb2e4e1aacaea6d2a7e91cec54ebf3",
+    "results.csv": "934623c24e56e7e84a6e793f322e42d67d68365371ad038642cd9ab43fdfcff4",
+    "REPORT.md": "d1a502110d27f832f4986851bd6cfa525b2ffe641efb8dd24f3294f3449e1815"
+  }
 }
