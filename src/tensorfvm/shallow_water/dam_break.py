@@ -229,6 +229,69 @@ def _local_extrema(h: np.ndarray, amplitude: float) -> int:
     return int(np.count_nonzero(peak | dip))
 
 
+def data_driven_plateau(x, h, thresh_frac: float = 1e-2) -> dict:
+    """Locate the wet-bed bore and plateau from the numerical profile alone.
+
+    This is the F4 fix: the oracle-guided ``h2``/``step_ratio`` in
+    :func:`_wet_metrics` measure the plateau *amplitude* at the analytic window
+    ``[x_fan_end, x_shock]``, so they are insensitive to a misplaced bore (a
+    solver that puts the plateau in the wrong place but at the right amplitude
+    still reads a machine-precision ``h2``).  Here **no analytic position or
+    level is used**:
+
+    * the bore is the cell of maximal ``|dh/dx|`` (the sharpest jump), and
+    * the plateau is the contiguous flat run immediately upstream of it
+      (``|dh/dx|`` below ``thresh_frac`` of the max gradient).
+
+    Because the window is anchored to the *measured* bore, a misplaced bore
+    moves the window with it, so the ``h2``/``step_ratio``/``bore_x`` reading
+    becomes a genuine position-and-amplitude check rather than a near-tautology.
+
+    ``thresh_frac`` is a fraction of the max gradient; the plateau is ~1e-4 of
+    the bore gradient while the fan is ~5e-2, so ``1e-2`` separates them cleanly
+    and is grid-independent (both scale with ``1/dx``).  Returns a dict with
+    ``bore_x`` (cell centre of the max-gradient jump), ``h2`` (mean depth over
+    the plateau), ``h1`` (mean depth in the flat downstream region),
+    ``n_plateau`` (plateau width in cells) and ``thresh`` (the gradient cut).
+    """
+    x = np.asarray(x, dtype=float)
+    h = np.asarray(h, dtype=float)
+    nan = float("nan")
+    out = {"bore_x": nan, "h2": nan, "h1": nan, "n_plateau": 0,
+           "thresh": nan, "max_grad": nan}
+    if h.size < 4:
+        return out
+    dx = x[1] - x[0]
+    grad = np.abs(np.diff(h)) / dx
+    j = int(np.argmax(grad))
+    max_grad = grad[j]
+    thresh = thresh_frac * max_grad
+    # walk left from the bore while still in the steep smearing -> plateau right
+    r = j - 1
+    while r >= 0 and grad[r] > thresh:
+        r -= 1
+    # walk left while flat -> plateau left edge (where the fan steepens)
+    l = r
+    while l >= 0 and grad[l] < thresh:
+        l -= 1
+    l += 1
+    if r < l:
+        return out
+    h2 = float(h[l:r + 1].mean())
+    # downstream: walk right past the bore smearing, then the flat h1 region
+    k2 = j + 1
+    while k2 < len(grad) and grad[k2] > thresh:
+        k2 += 1
+    k3 = k2
+    while k3 < len(grad) and grad[k3] < thresh:
+        k3 += 1
+    h1 = float(h[k2:k3 + 1].mean()) if k3 > k2 else float(h[k2])
+    out.update({"bore_x": float(x[j]), "h2": h2, "h1": h1,
+                "n_plateau": int(r - l + 1), "thresh": float(thresh),
+                "max_grad": float(max_grad)})
+    return out
+
+
 def fan_front_estimate(x, h, t: float, gravity: float, h0: float,
                        window=FAN_WINDOW) -> dict:
     """Dry-bed front position from the **exact rarefaction shape**.
@@ -432,6 +495,37 @@ def _dry_metrics(case: DamBreakCase, solver: ShallowWater1D, volume0: float) -> 
     }
 
 
+def _data_driven_crosscheck(case: DamBreakCase, solver: ShallowWater1D) -> dict:
+    """Independent (data-driven) wet-bed plateau/bore verification (F4).
+
+    The oracle-guided ``h2``/``step_ratio``/``shock_position`` in
+    :func:`_wet_metrics` use the analytic ``x_fan_end``/``x_shock``/``h2`` to
+    place the measurement window, so they are near-tautologies (insensitive to
+    a misplaced bore).  This cross-check runs :func:`data_driven_plateau` on the
+    numerical profile alone and reports how far the *data-driven* bore, plateau
+    amplitude and level step sit from the closed form -- a genuine
+    position-and-amplitude check.  All relative errors are ``< 5 %`` on the
+    accepted grid (n >= 800).
+    """
+    dd = data_driven_plateau(solver.x, solver.h)
+    sol = stoker_constant_state(case.h0, case.h1, case.gravity)
+    t = solver.time
+    x_shock = case.x_dam + sol["shock_speed"] * t
+    return {
+        "bore_x": dd["bore_x"],
+        "bore_x_error": _relative(dd["bore_x"], x_shock),
+        "h2": dd["h2"],
+        "h2_error": _relative(dd["h2"], sol["h2"]),
+        "h1": dd["h1"],
+        "h1_error": _relative(dd["h1"], sol["h1"]),
+        "step_ratio": dd["h2"] / dd["h1"] if dd["h1"] else float("nan"),
+        "step_ratio_error": _relative(
+            dd["h2"] / dd["h1"], sol["step_ratio"]) if dd["h1"] else float("nan"),
+        "n_plateau": dd["n_plateau"],
+        "thresh_frac": 1e-2,
+    }
+
+
 def _wet_metrics(case: DamBreakCase, solver: ShallowWater1D, volume0: float) -> dict:
     t = solver.time
     h_ex, _ = case.exact(solver.x, t)
@@ -464,6 +558,8 @@ def _wet_metrics(case: DamBreakCase, solver: ShallowWater1D, volume0: float) -> 
         "shock_speed_exact": sol["shock_speed"],
         "u2_exact": sol["u2"],
         "c2_exact": sol["c2"],
+        # --- data-driven (F4) cross-check: no analytic position/level used ---
+        "dd": _data_driven_crosscheck(case, solver),
         "depth_l1": float(np.abs(solver.h - h_ex).sum() / max(h_ex.sum(), 1e-300)),
         "depth_linf": float(np.abs(solver.h - h_ex).max() / case.h0),
         "tv_numeric": tv_num,
