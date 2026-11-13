@@ -1,0 +1,12 @@
+{
+  "python": "3.11.6 (main, May  9 2024, 00:00:00) [GCC 12.3.0 20230508 (Anolis OS 12.3.0-2)]",
+  "executable": "/usr/local/bin/python",
+  "numpy": "2.4.6",
+  "scipy": "1.16.0",
+  "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+  "device": "CPU; GPU untested",
+  "threads": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1"
+  }
+}
