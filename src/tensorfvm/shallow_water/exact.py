@@ -51,6 +51,7 @@ __all__ = [
     "ritter_head_position",
     "ritter_state",
     "stoker_constant_state",
+    "stoker_region_bounds",
     "stoker_state",
     "t_star_to_time",
     "time_to_t_star",
@@ -245,3 +246,21 @@ def check_stoker_solution(h0: float, h1: float, gravity: float = 9.81) -> dict:
         "momentum_jump_residual": mom_jump,
         "momentum_jump_relative": abs(mom_jump) / scale_mom,
     }
+
+
+def stoker_region_bounds(h0: float, h1: float, gravity: float = 9.81) -> dict:
+    """Similarity-coordinate boundaries of the Stoker regions.
+
+    ``xi = (x - x_dam) / t`` splits the wet-bed solution into four regions:
+    undisturbed upstream (``xi <= head``), the left rarefaction fan
+    (``head < xi < tail``), the constant post-bore state
+    (``tail <= xi <= shock``) and the undisturbed downstream depth ``h1``
+    (``xi > shock``).  Returned together with the states that meet at those
+    boundaries, so a profile classifier can be written without re-deriving
+    them (used by :mod:`tensorfvm.shallow_water.crosscheck`).
+    """
+    sol = stoker_constant_state(h0, h1, gravity)
+    return {"head": sol["head_speed"], "tail": sol["tail_speed"],
+            "shock": sol["shock_speed"], "h2": sol["h2"], "u2": sol["u2"],
+            "c0": sol["c0"], "c2": sol["c2"]}
+
