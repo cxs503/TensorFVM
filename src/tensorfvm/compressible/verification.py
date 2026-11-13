@@ -8,6 +8,14 @@ artifact and as figures in the same directory:
     and observed order (first and second order runs must both decrease), plus
     machine-precision conservation on an open boundary with the boundary-flux
     ledger included.
+``lax``
+    Lax (1954) 1-D Euler shock tube (Toro 2009 ch. 4 test 2) against its exact
+    Riemann solution: strong right shock, strong left rarefaction and a contact
+    whose two star densities differ by a factor 3.785.  Criterion: star-region
+    plateaus, the three wave positions and the relative L1 of rho/u/p all within
+    2 %, no positivity repairs, mass ledger drift within 0.5 %, plus the
+    two-implementation cross-check of the reference and the Rankine-Hugoniot
+    residual.  This is the case-pool registration of CASE-LAX.
 ``interface``
     Two-gas air/He contact.  Criterion: the material-interface trajectory
     matches the exact Riemann solution and converges with order >= 1 at three
@@ -650,7 +658,76 @@ def leg_vortex(cfg: RunConfig) -> Dict:
 # driver
 # ----------------------------------------------------------------------
 # ----------------------------------------------------------------------
-# leg 6: Mach-3 forward-facing step (Woodward & Colella problem 2)
+# leg 6: Lax (1954) shock tube -- case-pool membership (CASE-LAX)
+# ----------------------------------------------------------------------
+def leg_lax(cfg: RunConfig) -> Dict:
+    """Lax shock tube graded against its exact Riemann solution (2 % acceptance).
+
+    Lax (1954) *Comm. Pure Appl. Math.* **7**, 159--193; the same initial data
+    set is Toro (2009) ch. 4 test problem 2.  Unlike Sod the right wave is a
+    *strong* shock (``p*/p_R = 4.32``), so the HLLC wave-speed estimate and the
+    contact/shear resolution are exercised harder than in the Sod leg.
+
+    The reference is the exact solution of the stated initial-value problem,
+    recomputed at run time by two implementations that share no code
+    (``riemann.ExactRiemann`` Toro pressure iteration vs the from-scratch
+    bisection in ``lax.independent_star_state``/``independent_sample``); their
+    agreement, the Rankine--Hugoniot residual of the right shock and the
+    ``x_head < x_tail < x_contact < x_shock`` ordering are reported alongside the
+    comparison so the reference itself is auditable, not asserted.
+
+    Graded on the finest grid: star-region plateaus (``p*``, ``u*``, ``rho*_L``,
+    ``rho*_R``), the three wave positions (one estimator applied to *both* the
+    numerical and the fine-grid exact field, so the estimator bias cancels),
+    relative L1 of ``rho``/``u``/``p``, the mass ledger drift and the positivity
+    repair count.
+    """
+    from . import lax as L
+
+    lcfg = L.LaxConfig()
+    sizes = (200, 400) if cfg.quick else (200, 400, 800)
+    rows = [L.run_case(nx, keep_profile=(nx == max(sizes)), cfg=lcfg) for nx in sizes]
+    orders: Dict[str, List[float]] = {}
+    for key in ("rho", "u", "p"):
+        obs = []
+        for a, b in zip(rows[:-1], rows[1:]):
+            ea, eb = a["l1_rel"][key], b["l1_rel"][key]
+            obs.append(math.log(ea / eb) / math.log(b["nx"] / a["nx"])
+                       if (ea > 0.0 and eb > 0.0) else float("nan"))
+        orders[key] = obs
+    graded = L.verdicts(rows, cfg=lcfg)
+    check = L.independent_check(lcfg)
+    rh = L.rankine_hugoniot_residual(lcfg)
+    verdicts = {f"lax_{k}": bool(v["ok"]) for k, v in graded["checks"].items()}
+    verdicts["lax_exact_solution_independently_reproduced"] = bool(
+        max(check["rel_dp_star"], check["rel_du_star"], check["rel_d_rho_star_l"],
+            check["rel_d_rho_star_r"], check["max_abs_profile_diff_scaled"])
+        <= L.THRESHOLDS["independent_exact_rel_error"])
+    verdicts["lax_rankine_hugoniot_satisfied"] = bool(
+        max(abs(rh["rel_residual_mass"]), abs(rh["rel_residual_momentum"]),
+            abs(rh["rel_residual_energy"])) <= 1e-12)
+    profile = next((r.pop("profile") for r in rows if "profile" in r), None)
+    if profile is not None:
+        profile["t"] = lcfg.t_end
+        profile["nx"] = graded["nx"]
+    return {
+        "reference": ("Lax (1954) Comm. Pure Appl. Math. 7:159-193 = Toro (2009) ch. 4 "
+                      "test problem 2; exact solution recomputed at run time"),
+        "config": lcfg.as_dict(),
+        "thresholds": dict(L.THRESHOLDS),
+        "rows": rows,
+        "profile": profile,
+        "observed_order": orders,
+        "graded": graded,
+        "exact_waves": L.exact_waves(lcfg),
+        "independent_exact_check": check,
+        "rankine_hugoniot": rh,
+        "verdicts": verdicts,
+    }
+
+
+# ----------------------------------------------------------------------
+# leg 7: Mach-3 forward-facing step (Woodward & Colella problem 2)
 # ----------------------------------------------------------------------
 def leg_forward_step(cfg: RunConfig) -> Dict:
     """Supersonic forward-facing step graded against the exact shock state.
@@ -757,6 +834,8 @@ def run_all(outdir: Path | str = DEFAULT_OUT, cfg: RunConfig | None = None,
         result["legs"]["bubble"] = leg_bubble(cfg)
     if "vortex" in legs:
         result["legs"]["vortex"] = leg_vortex(cfg)
+    if "lax" in legs:
+        result["legs"]["lax"] = leg_lax(cfg)
     if "forward_step" in legs:
         result["legs"]["forward_step"] = leg_forward_step(cfg)
     result["seconds"] = round(time.time() - t_start, 1)

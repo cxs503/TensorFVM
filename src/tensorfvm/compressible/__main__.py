@@ -8,6 +8,11 @@ default leg list because its production grid is expensive, so select it
 explicitly::
 
     python -m tensorfvm.compressible --legs forward_step --output runs/forward_step
+
+Leg ``lax`` (Lax 1954 shock tube, the case-pool registration of CASE-LAX) is a
+first-class leg of the same harness::
+
+    python -m tensorfvm.compressible --legs lax --output runs/lax
 """
 
 from __future__ import annotations
