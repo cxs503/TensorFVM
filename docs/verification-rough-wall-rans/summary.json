@@ -1,0 +1,355 @@
+{
+  "cells": 512,
+  "coarse_control": {
+    "message": "k_s^+ = 100 is past the transitional range but the smooth wall value (1.6e+04) is still below the rough one (2e+04): the first cell is too far from the wall for the sand-grain condition to act. Refine the near-wall mesh (y_1^+ <= 1) or drop k_s",
+    "raised": true,
+    "requested_first_cell_y_plus": 10.0
+  },
+  "criteria": {
+    "R1": {
+      "detail": "k_s^+=1.12 branch=smooth max|du+|=0.000e+00",
+      "passed": true
+    },
+    "R10": {
+      "detail": "SST slope -0.7571 vs -2.4495 (69.1 % off) -> extrapolation not certified",
+      "passed": true
+    },
+    "R2": {
+      "detail": "max |error| = 0.978 w.u. (tol 0.30); 30: -0.130, 70: -0.166, 100: -0.236, 300: -0.609, 1000: -0.978",
+      "passed": false
+    },
+    "R3": {
+      "detail": "dD/dln k_s^+ = -2.6076 vs -2.3063 (13.06 %)",
+      "passed": false
+    },
+    "R4": {
+      "detail": "spread of du^+(y^+) = 0.018 w.u. over band",
+      "passed": true
+    },
+    "R5": {
+      "detail": "B_rough - B_smooth = 2.322 vs Nikuradse 3.30",
+      "passed": false
+    },
+    "R6": {
+      "detail": "dU_b^+(Re_tau=2000) - dU_b^+(Re_tau=20000) = +0.086 w.u. at k_s^+=100",
+      "passed": true
+    },
+    "R7": {
+      "detail": "y1+=3: shift error +1.725 w.u. (>= 1.0 registered); y1+=10: raised",
+      "passed": true
+    },
+    "R8": {
+      "detail": "bulk shifts 30: -4.697, 70: -6.684, 100: -7.575, 300: -10.475, 1000: -13.600",
+      "passed": true
+    },
+    "R9": {
+      "detail": "equivalent sand-grain roughness is not implemented for the 'wall_function' wall treatment; only the low-Re treatments sst, komega carry it here",
+      "passed": true
+    }
+  },
+  "crossovers": {
+    "komega": 2.2360679774997827,
+    "sst": 0.7071067811865451
+  },
+  "first_cell_y_plus_requested": 0.4,
+  "komega": {
+    "cells": 512,
+    "first_cell_y_plus": 0.3999999999999987,
+    "kappa_model": 0.433589667773576,
+    "model": "komega",
+    "re_tau": 20000.0,
+    "rows": [
+      {
+        "analytic": -4.544276823123673,
+        "b_rough": 7.590863779666583,
+        "b_smooth": 4.420705912543286,
+        "band": [
+          90.0,
+          4000.0
+        ],
+        "branch": "rough",
+        "bulk_shift": -4.697497560593803,
+        "converged": true,
+        "error": -0.12984213287669988,
+        "intercept_jump": 3.1701578671232973,
+        "k_s_plus": 30.0,
+        "kappa_fit": 0.4168301778975736,
+        "kappa_model": 0.433589667773576,
+        "points": 293,
+        "shift_mean": -4.674118956000373,
+        "shift_spread": 0.13413940008432768
+      },
+      {
+        "analytic": -6.4984236198819145,
+        "b_rough": 7.592020010824863,
+        "b_smooth": 4.458096736369305,
+        "band": [
+          210.0,
+          4000.0
+        ],
+        "branch": "rough",
+        "bulk_shift": -6.684262508708102,
+        "converged": true,
+        "error": -0.16607672554444086,
+        "intercept_jump": 3.133923274455558,
+        "k_s_plus": 70.0,
+        "kappa_fit": 0.416037313788879,
+        "kappa_model": 0.433589667773576,
+        "points": 243,
+        "shift_mean": -6.664500345426355,
+        "shift_spread": 0.09510461511039381
+      },
+      {
+        "analytic": -7.3210330371455,
+        "b_rough": 7.539268316882534,
+        "b_smooth": 4.475129125371213,
+        "band": [
+          300.0,
+          4000.0
+        ],
+        "branch": "rough",
+        "bulk_shift": -7.574953667237935,
+        "converged": true,
+        "error": -0.23586080848867574,
+        "intercept_jump": 3.0641391915113214,
+        "k_s_plus": 100.0,
+        "kappa_fit": 0.41509544336540377,
+        "kappa_model": 0.433589667773576,
+        "points": 218,
+        "shift_mean": -7.556893845634176,
+        "shift_spread": 0.08391571566110656
+      },
+      {
+        "analytic": -9.854793341696421,
+        "b_rough": 7.2307229580562655,
+        "b_smooth": 4.539615586859088,
+        "band": [
+          900.0,
+          4000.0
+        ],
+        "branch": "rough",
+        "bulk_shift": -10.475145481700498,
+        "converged": true,
+        "error": -0.608892628802824,
+        "intercept_jump": 2.6911073711971776,
+        "k_s_plus": 300.0,
+        "kappa_fit": 0.4104801142080022,
+        "kappa_model": 0.433589667773576,
+        "points": 131,
+        "shift_mean": -10.463685970499245,
+        "shift_spread": 0.06006684207348556
+      },
+      {
+        "analytic": -12.631549555718248,
+        "b_rough": 6.971786624932152,
+        "b_smooth": 4.649923681111424,
+        "band": [
+          3000.0,
+          4000.0
+        ],
+        "branch": "rough",
+        "bulk_shift": -13.599929059084776,
+        "converged": true,
+        "error": -0.9781370561792713,
+        "intercept_jump": 2.3218629438207277,
+        "k_s_plus": 1000.0,
+        "kappa_fit": 0.40337214418902384,
+        "kappa_model": 0.433589667773576,
+        "points": 26,
+        "shift_mean": -13.60968661189752,
+        "shift_spread": 0.01842311400574914
+      }
+    ],
+    "slope": {
+      "k_s_plus": [
+        70.00000000000003,
+        100.00000000000004,
+        299.99999999999994,
+        999.9999999999998
+      ],
+      "relative": 0.13062269862417664,
+      "slope": -2.607586809966599,
+      "target": -2.3063280200722125
+    },
+    "smooth_bulk_u_plus": 25.344445758066854
+  },
+  "ladder": [
+    30.0,
+    70.0,
+    100.0,
+    300.0,
+    1000.0
+  ],
+  "mesh_control": {
+    "analytic": -7.3210330371455,
+    "b_rough": 6.987207027265419,
+    "b_smooth": 1.96235000777965,
+    "band": [
+      300.0,
+      4000.0
+    ],
+    "branch": "rough",
+    "bulk_shift": -5.607738615943987,
+    "error": 1.7248570194857686,
+    "intercept_jump": 5.0248570194857685,
+    "k_s_plus": 100.0,
+    "kappa_fit": 0.4140843320319338,
+    "kappa_model": 0.433589667773576,
+    "points": 226,
+    "raised": false,
+    "requested_first_cell_y_plus": 3.0,
+    "shift_mean": -5.596176017659731,
+    "shift_spread": 0.07485774926275468
+  },
+  "re_tau": 20000.0,
+  "reynolds": {
+    "difference": 0.08621553607207577,
+    "high_re_tau": 20000.0,
+    "high_shift": -7.556893845634176,
+    "k_s_plus": 100.0,
+    "low_re_tau": 2000.0,
+    "low_shift": -7.4706783095621,
+    "model": "komega"
+  },
+  "smooth_limit": {
+    "komega": {
+      "branch": "smooth",
+      "bulk_difference": 0.0,
+      "cross_value": true,
+      "k_s_plus": 1.1180339887498947,
+      "max_profile_difference": 0.0
+    },
+    "sst": {
+      "branch": "smooth",
+      "bulk_difference": 0.0,
+      "cross_value": true,
+      "k_s_plus": 0.3535533905932738,
+      "max_profile_difference": 0.0
+    }
+  },
+  "sst": {
+    "cells": 512,
+    "first_cell_y_plus": 0.3999999999999987,
+    "kappa_model": 0.408248290463863,
+    "model": "sst",
+    "re_tau": 20000.0,
+    "rows": [
+      {
+        "analytic": -5.0311980995624515,
+        "b_rough": 8.431378397977989,
+        "b_smooth": 5.075315801495062,
+        "band": [
+          90.0,
+          4000.0
+        ],
+        "branch": "rough",
+        "bulk_shift": -5.0115099697898025,
+        "converged": true,
+        "error": 0.05606259648292511,
+        "intercept_jump": 3.3560625964829267,
+        "k_s_plus": 30.0,
+        "kappa_fit": 0.39735322194463585,
+        "kappa_model": 0.408248290463863,
+        "points": 293,
+        "shift_mean": -4.975135503079526,
+        "shift_spread": 0.16996826761981154
+      },
+      {
+        "analytic": -7.106645517663041,
+        "b_rough": 9.35192976120975,
+        "b_smooth": 5.10010280820681,
+        "band": [
+          210.0,
+          4000.0
+        ],
+        "branch": "rough",
+        "bulk_shift": -6.183498794579716,
+        "converged": true,
+        "error": 0.9518269530029402,
+        "intercept_jump": 4.25182695300294,
+        "k_s_plus": 70.0,
+        "kappa_fit": 0.3926849779651464,
+        "kappa_model": 0.408248290463863,
+        "points": 243,
+        "shift_mean": -6.154818564660101,
+        "shift_spread": 0.11199016933373329
+      },
+      {
+        "analytic": -7.980317134348732,
+        "b_rough": 9.796090401510826,
+        "b_smooth": 5.1147222208601235,
+        "band": [
+          300.0,
+          4000.0
+        ],
+        "branch": "rough",
+        "bulk_shift": -6.623505660594823,
+        "converged": true,
+        "error": 1.3813681806507025,
+        "intercept_jump": 4.681368180650702,
+        "k_s_plus": 100.0,
+        "kappa_fit": 0.3899980757847736,
+        "kappa_model": 0.408248290463863,
+        "points": 218,
+        "shift_mean": -6.598948953698029,
+        "shift_spread": 0.09154840530698571
+      },
+      {
+        "analytic": -10.671356666736816,
+        "b_rough": 11.520546483841068,
+        "b_smooth": 5.184670567393006,
+        "band": [
+          900.0,
+          4000.0
+        ],
+        "branch": "rough",
+        "bulk_shift": -7.6456973327051045,
+        "converged": true,
+        "error": 3.035875916448062,
+        "intercept_jump": 6.335875916448062,
+        "k_s_plus": 300.0,
+        "kappa_fit": 0.3786721337582166,
+        "kappa_model": 0.408248290463863,
+        "points": 131,
+        "shift_mean": -7.635480750288754,
+        "shift_spread": 0.03988031595657304
+      },
+      {
+        "analytic": -13.620475701523095,
+        "b_rough": 14.046359123329928,
+        "b_smooth": 5.331183683811393,
+        "band": [
+          3000.0,
+          4000.0
+        ],
+        "branch": "rough",
+        "bulk_shift": -8.20171390433292,
+        "converged": true,
+        "error": 5.415175439518537,
+        "intercept_jump": 8.715175439518536,
+        "k_s_plus": 1000.0,
+        "kappa_fit": 0.36086050382478885,
+        "kappa_model": 0.408248290463863,
+        "points": 26,
+        "shift_mean": -8.205300262004558,
+        "shift_spread": 0.004965316505089135
+      }
+    ],
+    "slope": {
+      "k_s_plus": [
+        70.00000000000003,
+        100.00000000000004,
+        299.99999999999994,
+        999.9999999999998
+      ],
+      "relative": 0.6909343868596824,
+      "slope": -0.7570530492342015,
+      "target": -2.449489742783178
+    },
+    "smooth_bulk_u_plus": 27.43863940070662
+  },
+  "wall_function_scope": {
+    "message": "equivalent sand-grain roughness is not implemented for the 'wall_function' wall treatment; only the low-Re treatments sst, komega carry it here",
+    "raised": true
+  }
+}
