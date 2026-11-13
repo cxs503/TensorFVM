@@ -79,14 +79,17 @@
     "src/tensorfvm/verification/kmm180_windows.py",
     "src/tensorfvm/verification/kmm180_loglaw.py",
     "src/tensorfvm/verification/kmm180_artifacts.py",
+    "src/tensorfvm/verification/kmm180_grid.py",
     "src/tensorfvm/benchmark_channel_kmm1987.py",
     "src/tensorfvm/rans_validation/channel.py",
     "src/tensorfvm/rans_validation/models.py",
     "scripts/run_case_fvm_channel_kmm180.py",
+    "scripts/audit_case_fvm_channel_kmm180_grid.py",
     "tests/test_channel_kmm1987.py",
     "tests/test_channel_kmm180_windows.py",
     "tests/test_channel_kmm180_loglaw.py",
-    "tests/test_channel_kmm180_artifacts.py"
+    "tests/test_channel_kmm180_artifacts.py",
+    "tests/test_channel_kmm180_grid.py"
   ],
   "artifacts": [
     "docs/case-fvm-channel-kmm180/REPORT.md",
@@ -99,6 +102,9 @@
     "docs/case-fvm-channel-kmm180/manifest.json",
     "docs/case-fvm-channel-kmm180/fig_velocity_profiles.png",
     "docs/case-fvm-channel-kmm180/fig_log_region_error.png",
+    "docs/case-fvm-channel-kmm180/grid_convergence.json",
+    "docs/case-fvm-channel-kmm180/grid_convergence.md",
+    "docs/case-fvm-channel-kmm180/fig_grid_convergence.png",
     "docs/verification-channel-kmm180-loglaw/REPORT.md",
     "docs/verification-channel-kmm180-loglaw/fig_loglaw_asymptote.png",
     "docs/verification-channel-kmm180-loglaw/fig_loglaw_consistency.png",
@@ -107,6 +113,14 @@
     "docs/verification-channel-kmm180/fig_windows.png",
     "docs/verification-channel-kmm180/summary.json"
   ],
+  "grid_robustness": {
+    "artifact": "docs/case-fvm-channel-kmm180/grid_convergence.json",
+    "report": "docs/case-fvm-channel-kmm180/grid_convergence.md",
+    "gate_cmd": "PYTHONPATH=src python scripts/audit_case_fvm_channel_kmm180_grid.py --check",
+    "method": "three-grid Richardson extrapolation with the Roache GCI (safety factor 1.25) applied to the published RMS series of each (model, window); pre-declared validity window |p| in [0.2, 3.0] and plateau threshold = 5 % of the tolerance. No threshold is re-tuned after seeing the numbers, and a flat series is refused rather than extrapolated.",
+    "finding": "grid-decided: sst/log_layer, i.e. not one of the six graded verdicts but exactly the one the case headline quotes as a PASS -- it passes at n=64 and fails at n=128 and n=256, and the extrapolated h->0 limit plus its GCI band lies entirely above the 5 % tolerance, so the coarse-grid PASS is a discretisation artefact. Grid-robust: sst/legacy_full (limit plus band below the tolerance). Grid-independent plateau (verdict set by the closure, not the grid): komega/legacy_full, komega/log_layer, kepsilon/legacy_full, kepsilon/log_layer.",
+    "numbers_live_in": "docs/case-fvm-channel-kmm180/grid_convergence.json (regenerated from benchmark.json; quoted here by classification only, never by hand-typed decimal)"
+  },
   "repro_cmd": "PYTHONPATH=src python -m tensorfvm.benchmark_channel_kmm1987 --out docs/case-fvm-channel-kmm180   # or: PYTHONPATH=src python scripts/run_case_fvm_channel_kmm180.py --run",
   "test_cmd": "PYTHONPATH=src python -m pytest tests/test_channel_kmm180_artifacts.py tests/test_channel_kmm180_loglaw.py tests/test_channel_kmm180_windows.py tests/test_channel_kmm1987.py -q",
   "notes": "k-omega and k-epsilon have known biases in the log region; SST is the best of the three models at this Re_tau but still misses the physical log layer. The reference is a documented proxy (KMM1987 -> Lee & Moser 2015) whose cost is re-measured on every driver run (max 0.097 pp at n=64, no verdict flips) and gated against a pre-declared 0.15 pp band, rather than asserted. Artifacts: docs/case-fvm-channel-kmm180/{benchmark.json, metrics.csv, profiles.csv, stations.csv} are machine-written and cross-checked by the gate; manifest.json pins their sha256.",

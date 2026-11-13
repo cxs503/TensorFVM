@@ -1,0 +1,256 @@
+{
+  "anchor": "CASE-FVM-CHANNEL-KMM180",
+  "grid_decided": [
+    "sst/log_layer"
+  ],
+  "headline": "1 of 6 graded verdicts are grid-decided (sst/log_layer); classification counts: grid_robust=1, grid_decided=1, plateau_robust=4, inconclusive=0; sst/log_layer: published verdicts PASS/FAIL/FAIL, Richardson limit 0.0636 +- 0.0036 vs tolerance 0.0500.",
+  "rule": {
+    "classifications": [
+      "grid_robust",
+      "grid_decided",
+      "plateau_robust",
+      "inconclusive"
+    ],
+    "decision": "a verdict counts as grid-robust only when every grid agrees and the Richardson limit with its GCI band stays on that side of the tolerance; a flat series (spread <= plateau_fraction * tolerance) is graded as a plateau and is never extrapolated",
+    "order_bounds": [
+      0.2,
+      3.0
+    ],
+    "plateau_fraction": 0.05,
+    "refinement": 2.0,
+    "safety_factor": 1.25
+  },
+  "schema": "tensorfvm.case-fvm-channel-kmm180-grid/1",
+  "source": {
+    "file": "docs/case-fvm-channel-kmm180/benchmark.json",
+    "schema": "tensorfvm.case-fvm-channel-kmm180/1",
+    "sha256": "ddf7009998188932e4abb262134082a17e9fd06ed9ef801002ddfdf7826bcc14"
+  },
+  "studies": {
+    "kepsilon/legacy_full": {
+      "cells": [
+        64,
+        128,
+        256
+      ],
+      "classification": "plateau_robust",
+      "gci": null,
+      "grid_differences": [
+        -2.0005496305361414e-05,
+        -4.97870294306757e-06
+      ],
+      "limit": null,
+      "limit_band": null,
+      "observed_order": null,
+      "order_reason": "series is flat (spread 2.49842e-05 <= 0.0025): the fitted order 2.007 is noise and is not extrapolated",
+      "order_valid": false,
+      "reason": "no asymptotic range, but the series is flat (spread 2.49842e-05 <= 0.0025) and stays on one side of the tolerance",
+      "refinement": 2.0,
+      "rejected_order": 2.006554576230475,
+      "spread": 2.4984199248428984e-05,
+      "tolerance": 0.05,
+      "trend": "decreasing",
+      "values": [
+        0.06878214576563776,
+        0.0687621402693324,
+        0.06875716156638934
+      ],
+      "verdict_consistent": true,
+      "verdicts": [
+        "FAIL",
+        "FAIL",
+        "FAIL"
+      ]
+    },
+    "kepsilon/log_layer": {
+      "cells": [
+        64,
+        128,
+        256
+      ],
+      "classification": "plateau_robust",
+      "gci": null,
+      "grid_differences": [
+        -0.00024052661080628535,
+        0.00011604569710878254
+      ],
+      "limit": null,
+      "limit_band": null,
+      "observed_order": null,
+      "order_reason": "series is flat (spread 0.000240527 <= 0.0025): the fitted order undefined is noise and is not extrapolated",
+      "order_valid": false,
+      "reason": "no asymptotic range, but the series is flat (spread 0.000240527 <= 0.0025) and stays on one side of the tolerance",
+      "refinement": 2.0,
+      "rejected_order": null,
+      "spread": 0.00024052661080628535,
+      "tolerance": 0.05,
+      "trend": "decreasing",
+      "values": [
+        0.06358200947563061,
+        0.06334148286482433,
+        0.06345752856193311
+      ],
+      "verdict_consistent": true,
+      "verdicts": [
+        "FAIL",
+        "FAIL",
+        "FAIL"
+      ]
+    },
+    "komega/legacy_full": {
+      "cells": [
+        64,
+        128,
+        256
+      ],
+      "classification": "plateau_robust",
+      "gci": null,
+      "grid_differences": [
+        -8.944882716334368e-05,
+        -0.000212594312177794
+      ],
+      "limit": null,
+      "limit_band": null,
+      "observed_order": null,
+      "order_reason": "series is flat (spread 0.000302043 <= 0.0025): the fitted order undefined is noise and is not extrapolated",
+      "order_valid": false,
+      "reason": "no asymptotic range, but the series is flat (spread 0.000302043 <= 0.0025) and stays on one side of the tolerance",
+      "refinement": 2.0,
+      "rejected_order": null,
+      "spread": 0.0003020431393411377,
+      "tolerance": 0.05,
+      "trend": "decreasing",
+      "values": [
+        0.10621247320603976,
+        0.10612302437887641,
+        0.10591043006669862
+      ],
+      "verdict_consistent": true,
+      "verdicts": [
+        "FAIL",
+        "FAIL",
+        "FAIL"
+      ]
+    },
+    "komega/log_layer": {
+      "cells": [
+        64,
+        128,
+        256
+      ],
+      "classification": "plateau_robust",
+      "gci": null,
+      "grid_differences": [
+        0.00020554551038456936,
+        -0.000493695907188757
+      ],
+      "limit": null,
+      "limit_band": null,
+      "observed_order": null,
+      "order_reason": "series is flat (spread 0.000493696 <= 0.0025): the fitted order undefined is noise and is not extrapolated",
+      "order_valid": false,
+      "reason": "no asymptotic range, but the series is flat (spread 0.000493696 <= 0.0025) and stays on one side of the tolerance",
+      "refinement": 2.0,
+      "rejected_order": null,
+      "spread": 0.000493695907188757,
+      "tolerance": 0.05,
+      "trend": "decreasing",
+      "values": [
+        0.13457471548336483,
+        0.1347802609937494,
+        0.13428656508656064
+      ],
+      "verdict_consistent": true,
+      "verdicts": [
+        "FAIL",
+        "FAIL",
+        "FAIL"
+      ]
+    },
+    "sst/legacy_full": {
+      "cells": [
+        64,
+        128,
+        256
+      ],
+      "classification": "grid_robust",
+      "gci": {
+        "absolute": 0.0043347761228442585,
+        "relative": 0.12605400492557087,
+        "safety": 1.25
+      },
+      "grid_differences": [
+        0.008075770033620241,
+        0.0038349107490947797
+      ],
+      "limit": 0.037856066836226734,
+      "limit_band": [
+        0.03352129071338247,
+        0.042190842959070995
+      ],
+      "observed_order": 1.0744068270451932,
+      "order_reason": "",
+      "order_valid": true,
+      "reason": "Richardson limit 0.0378561 +- 0.00433478 stays below the tolerance 0.05",
+      "refinement": 2.0,
+      "rejected_order": null,
+      "spread": 0.011910680782715021,
+      "tolerance": 0.05,
+      "trend": "increasing",
+      "values": [
+        0.022477565155236304,
+        0.030553335188856546,
+        0.034388245937951326
+      ],
+      "verdict_consistent": true,
+      "verdicts": [
+        "PASS",
+        "PASS",
+        "PASS"
+      ]
+    },
+    "sst/log_layer": {
+      "cells": [
+        64,
+        128,
+        256
+      ],
+      "classification": "grid_decided",
+      "gci": {
+        "absolute": 0.0035555325151742706,
+        "relative": 0.05848422735721222,
+        "safety": 1.25
+      },
+      "grid_differences": [
+        0.01047965298750092,
+        0.004219709307333411
+      ],
+      "limit": 0.06363915094639651,
+      "limit_band": [
+        0.06008361843122224,
+        0.06719468346157077
+      ],
+      "observed_order": 1.3123754244704857,
+      "order_reason": "",
+      "order_valid": true,
+      "reason": "the published verdict changes with the grid: PASS/FAIL/FAIL",
+      "refinement": 2.0,
+      "rejected_order": null,
+      "spread": 0.014699362294834331,
+      "tolerance": 0.05,
+      "trend": "increasing",
+      "values": [
+        0.046095362639422766,
+        0.056575015626923686,
+        0.0607947249342571
+      ],
+      "verdict_consistent": false,
+      "verdicts": [
+        "PASS",
+        "FAIL",
+        "FAIL"
+      ]
+    }
+  },
+  "tolerance": 0.05
+}
