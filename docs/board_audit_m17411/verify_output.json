@@ -1,0 +1,19 @@
+{
+ "V1_pytest": {
+  "exit": 0,
+  "tail": [
+   "17 passed, 1 warning in 5.82s"
+  ]
+ },
+ "V2_xval": {
+  "exit": 0,
+  "summary_line": [
+   "  Overall: PASS"
+  ],
+  "json_sha256_committed": "a11bc23b614b1c836e9aac88a0eac88c895cf825cfbdb5743e5d6f314fc29845",
+  "json_sha256_regenerated": "a11bc23b614b1c836e9aac88a0eac88c895cf825cfbdb5743e5d6f314fc29845",
+  "byte_identical": true
+ },
+ "V3_benchmark_anchor_rows": 0,
+ "overall": "PASS"
+}

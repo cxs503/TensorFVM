@@ -1,0 +1,53 @@
+{
+ "audit_mission": 17446,
+ "audited_mission": 17411,
+ "audited_anchor": "XVAL-FVM-THREE-GRID-LOGLOG-SLOPE-CELLCENTRE-FV-OR",
+ "audited_repo": "TensorFVM",
+ "level": 4,
+ "impl_files": [
+  "docs/xval-three-grid-loglog-slope/reference_impl.py (independent Roache/Celik re-impl: observed_order_two_grid/three_grid, gci_fine/medium, loglog_slope_least_squares, three_grid_full_analysis)",
+  "docs/xval-three-grid-loglog-slope/run_xval.py (17-check TF-vs-REF harness)",
+  "src/tensorfvm/verification/ladder.py:417 observed_order / :468 gci_three_grid / :506 gci_study (audited target, pre-existing)"
+ ],
+ "entry": "docs/xval-three-grid-loglog-slope/run_xval.py",
+ "run_artifacts": [
+  "docs/xval-three-grid-loglog-slope/xval_results.json (17/17 PASS, max err 2.96e-14%)",
+  "docs/xval-three-grid-loglog-slope/figures/fig1_convergence_curves.png",
+  "docs/xval-three-grid-loglog-slope/figures/fig2_order_comparison.png",
+  "docs/xval-three-grid-loglog-slope/figures/fig3_gci_comparison.png",
+  "docs/xval-three-grid-loglog-slope/REPORT.md (six sections + error verdict + friction log)"
+ ],
+ "tests": "tests/test_xval_three_grid_loglog_slope.py (17 tests; audit rerun 2026-11-13: 17 passed in 5.54s)",
+ "integration_callers": "src/tensorfvm/verification/ladder.py:541 level3_verdict() consumes gci_study (C5 criterion); tensorfvm.verification.ladder is package-level importable",
+ "benchmark": {
+  "ref": "SELECT case_name,metric,tolerance FROM tensor_benchmark_cases WHERE anchor_slug='XVAL-FVM-THREE-GRID-LOGLOG-SLOPE-CELLCENTRE-FV-OR'",
+  "status": "NO_BENCHMARK_CASE",
+  "ref_rows": 0,
+  "table_rows_total": 53,
+  "note": "基准裁判无正式参考行；参考退化为独立重实现+1D对流扩散精确解+Kovasznay 数值溯源 m17018 (docs/CASE-FVM-KOVASZNAY-ORDER/VERIFICATION_REPORT.md:86-88)；建议补注册（不阻塞消账）"
+ },
+ "repro_cmd": "cd /root/tp-agent/work/m17411 && PYTHONPATH=src python3 docs/xval-three-grid-loglog-slope/run_xval.py",
+ "external_anchor": "Roache (1994) ASME JFE 116:405; Celik et al. (2008) ASME JFE 130:078001 (ASME V&V 20)",
+ "audit_recompute": {
+  "pytest_rerun": "17 passed in 5.54s (loongarch64, python 3.11.6)",
+  "run_xval_rerun": "17/17 PASS; regenerated xval_results.json byte-identical to committed (json equality)",
+  "headline_claimed": "17/17 checks pass, max error 2.96e-14%",
+  "headline_rerun": "17/17 PASS, max error 2.96e-14%",
+  "upwind_observed_order": 0.9389422009854221,
+  "central_observed_order": 2.000765880702518,
+  "gci_fine_upwind": 0.0015907423751099607,
+  "gci_fine_central": 7.91082908833076e-06,
+  "kovasznay_l2_16_32_64": [
+   0.0125748,
+   0.00383969,
+   0.00121724
+  ],
+  "kovasznay_source": "docs/CASE-FVM-KOVASZNAY-ORDER/VERIFICATION_REPORT.md:86-88 (m17018, traceable, zero hand-copy)"
+ },
+ "gaps": [
+  "deliverables untracked in m17411 worktree (git status '??', mission head_commit=null, branch=null) — never committed; auto-push cannot carry them",
+  "tensor_report id=16403 markdown empty (markdown_len=0); six-section body exists only in worktree REPORT.md",
+  "mission server_quality_audit: gate_valid=false, key_present=false (quality gate missing at auto-approve)",
+  "reference is formula-level re-implementation, not external OSS CFD code (no OpenFOAM/SU2 prebuilt on loong64; disclosed in REPORT.md §8)"
+ ]
+}
