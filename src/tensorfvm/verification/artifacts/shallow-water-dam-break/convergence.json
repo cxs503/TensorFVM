@@ -9,7 +9,8 @@
         "dx": 0.1,
         "depth_l1": 0.012619660650790319,
         "headline": {
-          "front": 0.08749999999999991
+          "front_fan": 0.0031207325875728387,
+          "front_wetted_diagnostic": 0.08749999999999991
         },
         "tv_ratio": 0.9999999996368889,
         "local_extrema": 0
@@ -19,7 +20,8 @@
         "dx": 0.05,
         "depth_l1": 0.006226707907984355,
         "headline": {
-          "front": 0.018750000000000266
+          "front_fan": 0.0033225297692960343,
+          "front_wetted_diagnostic": 0.018750000000000266
         },
         "tv_ratio": 1.0,
         "local_extrema": 0
@@ -29,7 +31,8 @@
         "dx": 0.025,
         "depth_l1": 0.0030833597748260435,
         "headline": {
-          "front": 0.015625
+          "front_fan": 0.0010590824433118762,
+          "front_wetted_diagnostic": 0.015625
         },
         "tv_ratio": 1.0,
         "local_extrema": 0
@@ -39,7 +42,8 @@
         "dx": 0.0125,
         "depth_l1": 0.0015419003450595436,
         "headline": {
-          "front": 0.026562499999999822
+          "front_fan": 0.0003911308005408731,
+          "front_wetted_diagnostic": 0.026562499999999822
         },
         "tv_ratio": 1.0,
         "local_extrema": 0
@@ -49,15 +53,17 @@
         "dx": 0.00625,
         "depth_l1": 0.0007715065657630972,
         "headline": {
-          "front": 0.02890624999999991
+          "front_fan": 0.00017261518056277403,
+          "front_wetted_diagnostic": 0.02890624999999991
         },
         "tv_ratio": 1.0,
         "local_extrema": 0
       }
     ],
     "observed_order_l1": 1.0077461821879115,
-    "headline_error_at_finest": 0.02890624999999991,
-    "headline_error_at_coarsest": 0.08749999999999991
+    "observed_order_headline": 1.1439066045910111,
+    "headline_error_at_finest": 0.00017261518056277403,
+    "headline_error_at_coarsest": 0.0031207325875728387
   },
   "stoker-wet": {
     "case": "stoker-wet",
@@ -121,6 +127,7 @@
       }
     ],
     "observed_order_l1": 0.992863932529899,
+    "observed_order_headline": 1.1827841593876285,
     "headline_error_at_finest": 0.00021023436657714858,
     "headline_error_at_coarsest": 0.004909400455726206
   }
