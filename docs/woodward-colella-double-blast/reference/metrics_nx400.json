@@ -1,0 +1,63 @@
+[
+  {
+    "window_x": [
+      0.4,
+      1.0
+    ],
+    "peak_density": {
+      "ref": 6.2960765,
+      "got": 5.649813015225584,
+      "rel_error_percent": 10.264543081304929
+    },
+    "peak_position": {
+      "ref": 0.777951,
+      "got": 0.78125,
+      "abs_error": 0.003299000000000052
+    },
+    "l1_relative": {
+      "value": 0.07711573517196672,
+      "percent": 7.711573517196673
+    },
+    "low_plateau": {
+      "ref": 0.157112,
+      "got": 0.17905806309496508,
+      "abs_error": 0.02194606309496508,
+      "rel_error_percent": 13.968419404606319,
+      "percent_of_peak_density": 0.34856728781750157
+    },
+    "faces_ref": [
+      0.646917,
+      0.761947,
+      0.798957,
+      0.865974
+    ],
+    "faces": [
+      0.64625,
+      0.75375,
+      0.80125,
+      0.86625
+    ],
+    "faces_abs_error": [
+      0.0006669999999999732,
+      0.00819700000000001,
+      0.0022929999999999895,
+      0.00027599999999994296
+    ],
+    "checks": {
+      "peak_density_lt_10pct": false,
+      "peak_position_lt_tol": true,
+      "l1_lt_10pct": true,
+      "faces_lt_tol": true,
+      "low_plateau_lt_10pct": false
+    },
+    "verdict": "FAIL",
+    "tolerance_percent": 10.0,
+    "position_tolerance": 0.02,
+    "nx": 400,
+    "dx": 0.0025,
+    "reference": "/root/tp-agent/work/m17116/docs/woodward-colella-double-blast/reference/reference_density.csv",
+    "reference_source": "Dumbser et al. 2019 (arXiv:1902.07773) Fig. 21 'Reference', pure RPJ on 3200 cells, digitised from the PDF vector paths",
+    "reference_panel_spread": 3.0999999999892225e-05,
+    "profile_artifact": "docs/woodward-colella-double-blast/artifacts/wc_blast_profile_nx400.npz"
+  }
+]
