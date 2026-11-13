@@ -268,6 +268,7 @@ def run_dambreak_leg(
     scheme: str = "plic",
     control_steps: int = 20,
     max_steps: int = 6000,
+    well_balanced_surface: bool | None = None,
 ) -> dict:
     """Run the Martin & Moyce dam break and grade it against the experiment.
 
@@ -275,13 +276,32 @@ def run_dambreak_leg(
     the node ships); ``scheme="algebraic"`` runs the FCT algebraic transport of
     :class:`tensorfvm.vof_phase0.AlgebraicVOF` as the comparison leg (expected
     to be more diffusive but still volume conserving).
+
+    ``well_balanced_surface`` selects the free-surface pressure treatment:
+    ``None`` (default) grades whatever the solver ships, ``True`` forces the
+    ghost-fluid datum, ``False`` forces the historical centred gradient
+    (interface face dropped from the operator = homogeneous Neumann), which is
+    the negative control of ``ROUND1-FREE-SURFACE-DATUM.md``.  The resolved
+    choice is written into the leg record.
     """
     if scheme not in ("plic", "algebraic"):
         raise ValueError(f"unknown scheme {scheme!r}")
     cfg = DamBreakConfig(nx=nx, ny=ny, t_star_end=t_star_end,
                          max_steps=max_steps)
+    # ``None`` grades the solver default (the shipped free-surface treatment);
+    # ``False`` reproduces the pre-round-1 homogeneous-Neumann surface as the
+    # negative control.  The choice is written into the record so a leg artefact
+    # can never be mistaken for the other treatment.
+    solver_kwargs = ({}
+                     if well_balanced_surface is None
+                     else {"well_balanced_surface": bool(well_balanced_surface)})
+    effective_wb = (True if well_balanced_surface is None
+                    else bool(well_balanced_surface))
+    surface_treatment = ("shipped-default" if well_balanced_surface is None
+                         else ("well-balanced" if well_balanced_surface
+                               else "centred-control"))
     if scheme == "plic":
-        out = dam_break_history(cfg, solver=plic_solver(cfg))
+        out = dam_break_history(cfg, solver=plic_solver(cfg, **solver_kwargs))
     else:
         from ..vof_phase0.dam_break import run_dam_break
         out = run_dam_break(cfg)
@@ -364,6 +384,8 @@ def run_dambreak_leg(
         "case": "dambreak",
         "scheme": scheme,
         "grid": [int(nx), int(ny)],
+        "surface_treatment": surface_treatment,
+        "well_balanced_surface": effective_wb,
         "dx_m": float(cfg.dx),
         "dy_m": float(cfg.dy),
         "cell_size_ratio_dy_over_a": float(cfg.dy / cfg.a),
