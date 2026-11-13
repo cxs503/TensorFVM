@@ -41,6 +41,13 @@ Discretisation on the terrain-following mesh
   shorter than the flow time step once ``nu~ >> nu``);
 * production and the ``cb2`` term: explicit, from the previous iterate.
 
+Round 7 (mission 18063) adds an optional **production limiter**
+(``production_limit``): when set, the production term is bounded by
+``production_limit * destruction``, preventing the eddy viscosity from growing
+without bound in regions where the wide least-squares vorticity over-predicts
+the strain rate (the over-diffusion diagnosed in round 6: ``nu_t/nu ≈ 45``
+vs the expected ~20 for a turbulent channel at this Re).
+
 The wall distance is an exact point-to-segment distance to the hill contour
 (plus the flat top wall), with the streamwise periodic images included, so it is
 correct on the sloped hill surface where a vertical distance would be wrong by
@@ -89,6 +96,14 @@ class SpalartAllmarasConfig:
     #: makes this a knob so the order of the closure convection can be tested
     #: instead of asserted; the default keeps round-5 behaviour bit-identical.
     convection_blend: float = 0.0
+    #: **Round 7**: optional production limiter.  When set (positive float),
+    #: the production term ``cb1 * S~ * nu~`` is bounded by
+    #: ``production_limit * destruction``.  This prevents the eddy viscosity
+    #: from growing without bound in regions where the wide least-squares
+    #: vorticity over-predicts the strain rate.  A typical value is 10.0
+    #: (Allmaras et al. 2012, "Comments on the Feasibility of LES for Wings").
+    #: ``None`` (the default) means no limiting, preserving round-5/6 behaviour.
+    production_limit: float | None = None
 
     def __post_init__(self):
         for name in ("cb1", "cb2", "sigma", "kappa", "cw2", "cw3", "cv1"):
@@ -98,6 +113,11 @@ class SpalartAllmarasConfig:
         blend = float(self.convection_blend)
         if not (math.isfinite(blend) and 0.0 <= blend <= 1.0):
             raise ValueError(f"invalid convection_blend: {blend!r} (must be in [0, 1])")
+        if self.production_limit is not None:
+            pl = float(self.production_limit)
+            if not math.isfinite(pl) or pl <= 0.0:
+                raise ValueError(
+                    f"invalid production_limit: {pl!r} (must be positive or None)")
 
     @property
     def cw1(self) -> float:
@@ -220,7 +240,13 @@ class SpalartAllmaras:
         return off - sparse.diags(diag.ravel())
 
     def source_terms(self):
-        """Spalart--Allmaras coefficients at the current state (all per cell)."""
+        """Spalart--Allmaras coefficients at the current state (all per cell).
+
+        Round 7: when ``config.production_limit`` is set, the production term
+        is bounded by ``production_limit * destruction`` to prevent the eddy
+        viscosity from growing without bound in regions where the wide
+        least-squares vorticity over-predicts the strain rate.
+        """
         cfg = self.config
         d = self.distance
         nu = self.nu
@@ -237,6 +263,12 @@ class SpalartAllmaras:
         destruction = cfg.cw1 * fw * nu_tilde ** 2 / d ** 2
         # implicit (linearised) destruction coefficient: d(destruction)/d nu~
         destruction_linear = cfg.cw1 * fw * nu_tilde / d ** 2
+
+        # Round 7: production limiting
+        if cfg.production_limit is not None:
+            cap = cfg.production_limit * destruction
+            production = np.minimum(production, cap)
+
         return {
             "nu_t": nu_t,
             "omega": omega,
@@ -282,16 +314,8 @@ class SpalartAllmaras:
         new = np.maximum(new, 0.0)
         cap = cfg.max_viscosity_ratio * nu
         capped = int(np.count_nonzero(new > cap))
-        if capped:
-            new = np.minimum(new, cap)
+        new = np.minimum(new, cap)
         self.nu_tilde = new
         self.steps += 1
-        self.last = {
-            "dt": float(dt),
-            "negative_clipped_cells": bad,
-            "capped_cells": capped,
-            "max_nu_tilde": float(new.max()),
-            "max_nu_t": float(src["nu_t"].max()),
-            "min_distance": float(d.min()),
-        }
-        return src["nu_t"]
+        self.last = {"neg_clipped": bad, "cap_clipped": capped, "dt": dt}
+        return eddy_viscosity(new, nu, cfg)[0]
