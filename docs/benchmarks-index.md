@@ -1,3 +1,14 @@
+## 最新：CASE-LAX 算例池注册（Lax 1954 激波管进标准验证腿）
+
+[CASE-LAX/report.md](CASE-LAX/report.md)：Lax 激波管此前只有独立脚本（`docs/lax-shock-tube`），
+`python -m tensorfvm.compressible --legs` 不认识它 = 算例存在但不在池里。本单把它注册为
+`verification.leg_lax` + `figures.fig_lax`，与 sod/interface/rm/bubble/vortex/forward_step
+同驱动、同工件格式、同 verdict 契约，CLI 可直接 `--legs lax`；`tests/test_compressible_lax_leg.py`
+（quick 200/400，~35 s）把「<2% 验收 + 参考自证 + 波面序」钉进 CI。判定网格 nx=200/400/800 全绿：
+L1ρ 1.943%→1.015%→0.631%，平台 p*/u*/ρ*_L/ρ*_R 误差 ≤0.001%，三波面位置误差 ≤0.082%；
+参考由两套互不共享代码的精确解互证（9.0e-16）+ 右激波 Rankine–Hugoniot 残差 1.4e-16 审计。
+跨入口复现：与独立脚本的 L1 逐位一致（Δ=0），即注册未改变数值、只改变了可达性。
+
 # TensorFVM benchmark 总览
 
 ## 最新：开源 FVM 技术盘点波（30 仓注册表 + 8 条 GAP-FVM 锚点 + Sod 外部锚实测）

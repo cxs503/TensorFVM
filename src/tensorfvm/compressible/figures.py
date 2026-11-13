@@ -41,6 +41,39 @@ def fig_sod(leg: Dict, outdir: Path) -> str:
     return _save(fig, outdir, "fig_sod_profiles.png")
 
 
+def fig_lax(leg: Dict, outdir: Path) -> str:
+    """Lax shock tube: numerical vs exact profiles + the L1 grid-convergence ladder."""
+    data = leg.get("profile")
+    if data is None:
+        raise KeyError("leg_lax must store a 'profile' for plotting")
+    rows = leg["rows"]
+    fig, axes = plt.subplots(1, 4, figsize=(17.0, 3.5))
+    for ax, key, label in zip(axes[:3], ("rho", "u", "p"), (r"$\rho$", r"$u$", r"$p$")):
+        ax.plot(data["x"], data[f"{key}_exact"], "-", color="k", lw=1.3, label="exact")
+        ax.plot(data["x"], data[key], "o", ms=2.4, color="#1f77b4",
+                label="MUSCL-Hancock + HLLC (MC)")
+        ax.set_xlabel("x")
+        ax.set_ylabel(label)
+        ax.set_title(f"Lax, t = {data['t']:.2f}, nx = {data['nx']}")
+        ax.legend(frameon=False, fontsize=8)
+    ax = axes[3]
+    for key, color in (("rho", "#1f77b4"), ("u", "#2ca02c"), ("p", "#d62728")):
+        ax.loglog([r["nx"] for r in rows], [max(r["l1_rel"][key], 1e-16) for r in rows],
+                  "o-", color=color, label=r"$\rho$" if key == "rho" else
+                  (r"$u$" if key == "u" else r"$p$"))
+    tol = leg["thresholds"]["l1_rel_error"]
+    ax.axhline(tol, ls="--", color="k", lw=1.0, label=f"{100 * tol:g} % acceptance")
+    ax.set_xlabel("cells")
+    ax.set_ylabel("relative L1 error")
+    orders = leg.get("observed_order", {}).get("rho") or []
+    ax.set_title("grid convergence, order "
+                 + ", ".join(f"{o:.2f}" for o in orders if o == o))
+    ax.legend(frameon=False, fontsize=8)
+    ax.grid(alpha=0.3, which="both")
+    fig.tight_layout()
+    return _save(fig, outdir, "fig_lax_profiles_vs_exact.png")
+
+
 def fig_interface(leg: Dict, outdir: Path) -> str:
     rows = leg["rows"]
     fig, axes = plt.subplots(1, 2, figsize=(9.6, 3.6))
@@ -206,6 +239,8 @@ def make_all(result: Dict, outdir: Path) -> Dict[str, List[str]]:
     legs = result.get("legs", {})
     if "sod" in legs:
         produced.setdefault("sod", []).append(fig_sod(legs["sod"], outdir))
+    if "lax" in legs:
+        produced.setdefault("lax", []).append(fig_lax(legs["lax"], outdir))
     if "interface" in legs:
         produced.setdefault("interface", []).append(fig_interface(legs["interface"], outdir))
     if "rm" in legs:

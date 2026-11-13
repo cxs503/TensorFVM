@@ -1,0 +1,366 @@
+{
+ "all_criteria_met": true,
+ "config": {
+  "quick": false
+ },
+ "figures": {
+  "lax": [
+   "docs/CASE-LAX/fig_lax_profiles_vs_exact.png"
+  ]
+ },
+ "legs": {
+  "lax": {
+   "config": {
+    "gamma": 1.4,
+    "p_l": 3.528,
+    "p_r": 0.571,
+    "rho_l": 0.445,
+    "rho_r": 0.5,
+    "t_end": 0.16,
+    "u_l": 0.698,
+    "u_r": 0.0,
+    "x0": 0.5
+   },
+   "exact_waves": {
+    "c_star_l": 3.1654204687334557,
+    "left_wave": "rarefaction",
+    "p_star": 2.4660979192073564,
+    "rho_star_l": 0.34456847418960945,
+    "rho_star_r": 1.3040845320261998,
+    "right_wave": "shock",
+    "speed_contact": 1.528723026632884,
+    "speed_head": -2.6335650740600323,
+    "speed_shock": 2.4793214809898405,
+    "speed_tail": -1.6366974421005718,
+    "u_star": 1.528723026632884,
+    "x_contact": 0.7445956842612614,
+    "x_head": 0.07862958815039484,
+    "x_shock": 0.8966914369583745,
+    "x_tail": 0.2381284092639085
+   },
+   "graded": {
+    "all_ok": true,
+    "checks": {
+     "l1[p]": {
+      "ok": true,
+      "value": 0.000886789326465111
+     },
+     "l1[rho]": {
+      "ok": true,
+      "value": 0.006308300143208848
+     },
+     "l1[u]": {
+      "ok": true,
+      "value": 0.001662887223026175
+     },
+     "mass_drift": {
+      "ok": true,
+      "value": 2.34967835899504e-16
+     },
+     "no_positivity_fix": {
+      "ok": true,
+      "value": 0
+     },
+     "plateau[p_star]": {
+      "ok": true,
+      "value": 9.533526875968296e-09
+     },
+     "plateau[rho_star_l]": {
+      "ok": true,
+      "value": 3.797324982856028e-07
+     },
+     "plateau[rho_star_r]": {
+      "ok": true,
+      "value": 6.8199648534686415e-06
+     },
+     "plateau[u_star]": {
+      "ok": true,
+      "value": 4.599216096563341e-07
+     },
+     "position[x_contact]": {
+      "ok": true,
+      "value": 0.000816932342795103
+     },
+     "position[x_fan]": {
+      "ok": true,
+      "value": 0.0008066463233053912
+     },
+     "position[x_shock]": {
+      "ok": true,
+      "value": 0.00031275791894795006
+     }
+    },
+    "nx": 800
+   },
+   "independent_exact_check": {
+    "max_abs_profile_diff": 5.773159728050814e-15,
+    "max_abs_profile_diff_scaled": 1.636383142871546e-15,
+    "n_xi": 4001,
+    "p_star": 2.4660979192073587,
+    "rel_d_rho_star_l": 8.055169783279578e-16,
+    "rel_d_rho_star_r": 3.4053713462889274e-16,
+    "rel_dp_star": 9.003884363050758e-16,
+    "rel_du_star": 2.904968409013889e-16,
+    "rho_star_l": 0.34456847418960973,
+    "rho_star_r": 1.3040845320262002,
+    "u_star": 1.5287230266328835
+   },
+   "observed_order": {
+    "p": [
+     1.3255037381673034,
+     0.6971595087138458
+    ],
+    "rho": [
+     0.9371082817354055,
+     0.6858186692681563
+    ],
+    "u": [
+     1.5667512972499216,
+     0.4572771531538826
+    ]
+   },
+   "rankine_hugoniot": {
+    "rel_residual_energy": 0.0,
+    "rel_residual_mass": 1.3735093945660377e-16,
+    "rel_residual_momentum": 0.0
+   },
+   "reference": "Lax (1954) Comm. Pure Appl. Math. 7:159-193 = Toro (2009) ch. 4 test problem 2; exact solution recomputed at run time",
+   "rows": [
+    {
+     "cfl": 0.4,
+     "drift": {
+      "energy": -3.430617027348834e-16,
+      "mass": 0.0,
+      "mass_mat1": 0.0,
+      "momentum_x": -2.144598740462618e-15,
+      "momentum_y": null
+     },
+     "flux_mode": "hllc",
+     "l1_rel": {
+      "p": 0.003603319447883,
+      "rho": 0.019429518652597635,
+      "u": 0.006763259823969071
+     },
+     "limiter": "mc",
+     "linf_rel": {
+      "p": 0.2797518714625556,
+      "rho": 0.3389120779610975,
+      "u": 0.6621426315775677
+     },
+     "nx": 200,
+     "order": 2,
+     "plateau": {
+      "p_star": 2.4660668603275906,
+      "rho_star_l": 0.34455912628936763,
+      "rho_star_r": 1.3046109892704576,
+      "u_star": 1.528766451415207
+     },
+     "plateau_exact": {
+      "p_star": 2.4660979192073564,
+      "rho_star_l": 0.34456847418960945,
+      "rho_star_r": 1.3040845320261998,
+      "u_star": 1.528723026632884
+     },
+     "plateau_rel_error": {
+      "p_star": 1.2594341661756402e-05,
+      "rho_star_l": 2.7129296328701412e-05,
+      "rho_star_r": 0.00040369871072685917,
+      "u_star": 2.8405918905241676e-05
+     },
+     "position": {
+      "x_contact": 0.7461947000723699,
+      "x_fan": 0.15481668286278344,
+      "x_shock": 0.8977237510110343
+     },
+     "position_exact": {
+      "x_contact": 0.744575,
+      "x_fan": 0.15430950548689673,
+      "x_shock": 0.8966749999999999
+     },
+     "position_rel_error": {
+      "x_contact": 0.002175335019803095,
+      "x_fan": 0.0032867539448486888,
+      "x_shock": 0.0011695999230874176
+     },
+     "positivity_fixes": 0,
+     "seconds": 6.4,
+     "steps": 378
+    },
+    {
+     "cfl": 0.4,
+     "drift": {
+      "energy": 0.0,
+      "mass": -2.34967835899504e-16,
+      "mass_mat1": -2.34967835899504e-16,
+      "momentum_x": -7.148662468208727e-16,
+      "momentum_y": null
+     },
+     "flux_mode": "hllc",
+     "l1_rel": {
+      "p": 0.001437759947726081,
+      "rho": 0.010147623359593865,
+      "u": 0.002283057953385889
+     },
+     "limiter": "mc",
+     "linf_rel": {
+      "p": 0.15389003130148043,
+      "rho": 0.3340638477200922,
+      "u": 0.27046250697538704
+     },
+     "nx": 400,
+     "order": 2,
+     "plateau": {
+      "p_star": 2.4661107494171355,
+      "rho_star_l": 0.3445694747298136,
+      "rho_star_r": 1.304142435859911,
+      "u_star": 1.5287151416403724
+     },
+     "plateau_exact": {
+      "p_star": 2.4660979192073564,
+      "rho_star_l": 0.34456847418960945,
+      "rho_star_r": 1.3040845320261998,
+      "u_star": 1.528723026632884
+     },
+     "plateau_rel_error": {
+      "p_star": 5.202635985829197e-06,
+      "rho_star_l": 2.90374854079613e-06,
+      "rho_star_r": 4.4401902092354657e-05,
+      "u_star": 5.157894775061841e-06
+     },
+     "position": {
+      "x_contact": 0.7455523013462608,
+      "x_fan": 0.15456027424568536,
+      "x_shock": 0.8972114217934682
+     },
+     "position_exact": {
+      "x_contact": 0.744575,
+      "x_fan": 0.15430950548689673,
+      "x_shock": 0.8966749999999999
+     },
+     "position_rel_error": {
+      "x_contact": 0.001312562664957646,
+      "x_fan": 0.0016251024717976413,
+      "x_shock": 0.0005982343585673246
+     },
+     "positivity_fixes": 0,
+     "seconds": 15.61,
+     "steps": 754
+    },
+    {
+     "cfl": 0.4,
+     "drift": {
+      "energy": -1.715308513674417e-16,
+      "mass": -2.34967835899504e-16,
+      "mass_mat1": -2.34967835899504e-16,
+      "momentum_x": -4.110480919220019e-15,
+      "momentum_y": null
+     },
+     "flux_mode": "hllc",
+     "l1_rel": {
+      "p": 0.000886789326465111,
+      "rho": 0.006308300143208848,
+      "u": 0.001662887223026175
+     },
+     "limiter": "mc",
+     "linf_rel": {
+      "p": 0.2848621154252308,
+      "rho": 0.34437905836569027,
+      "u": 0.6702537747130157
+     },
+     "nx": 800,
+     "order": 2,
+     "plateau": {
+      "p_star": 2.4660978956967456,
+      "rho_star_l": 0.3445683433457619,
+      "rho_star_r": 1.3040756382155254,
+      "u_star": 1.528723729725639
+     },
+     "plateau_exact": {
+      "p_star": 2.4660979192073564,
+      "rho_star_l": 0.34456847418960945,
+      "rho_star_r": 1.3040845320261998,
+      "u_star": 1.528723026632884
+     },
+     "plateau_rel_error": {
+      "p_star": 9.533526875968296e-09,
+      "rho_star_l": 3.797324982856028e-07,
+      "rho_star_r": 6.8199648534686415e-06,
+      "u_star": 4.599216096563341e-07
+     },
+     "position": {
+      "x_contact": 0.7451832673991367,
+      "x_fan": 0.1544339786821488,
+      "x_shock": 0.8969554422069725
+     },
+     "position_exact": {
+      "x_contact": 0.744575,
+      "x_fan": 0.15430950548689673,
+      "x_shock": 0.8966749999999999
+     },
+     "position_rel_error": {
+      "x_contact": 0.000816932342795103,
+      "x_fan": 0.0008066463233053912,
+      "x_shock": 0.00031275791894795006
+     },
+     "positivity_fixes": 0,
+     "seconds": 47.03,
+     "steps": 1507
+    }
+   ],
+   "thresholds": {
+    "conservation_drift": 0.005,
+    "independent_exact_rel_error": 1e-09,
+    "l1_rel_error": 0.02,
+    "plateau_rel_error": 0.02,
+    "wave_position_rel_error": 0.02
+   },
+   "verdicts": {
+    "lax_exact_solution_independently_reproduced": true,
+    "lax_l1[p]": true,
+    "lax_l1[rho]": true,
+    "lax_l1[u]": true,
+    "lax_mass_drift": true,
+    "lax_no_positivity_fix": true,
+    "lax_plateau[p_star]": true,
+    "lax_plateau[rho_star_l]": true,
+    "lax_plateau[rho_star_r]": true,
+    "lax_plateau[u_star]": true,
+    "lax_position[x_contact]": true,
+    "lax_position[x_fan]": true,
+    "lax_position[x_shock]": true,
+    "lax_rankine_hugoniot_satisfied": true
+   }
+  }
+ },
+ "seconds": 69.1,
+ "thresholds": {
+  "bubble_formation_time_error": 0.1,
+  "bubble_shock_speed_error": 0.1,
+  "conservation_drift": 0.005,
+  "interface_order": 1.0,
+  "rm_alpha_model_error": 0.15,
+  "rm_linear_growth_error": 0.15,
+  "sod_order_first": 0.6,
+  "sod_order_second": 0.8,
+  "vortex_circulation_error": 0.01,
+  "vortex_rotation_error": 0.05
+ },
+ "verdicts": {
+  "lax": {
+   "lax_exact_solution_independently_reproduced": true,
+   "lax_l1[p]": true,
+   "lax_l1[rho]": true,
+   "lax_l1[u]": true,
+   "lax_mass_drift": true,
+   "lax_no_positivity_fix": true,
+   "lax_plateau[p_star]": true,
+   "lax_plateau[rho_star_l]": true,
+   "lax_plateau[rho_star_r]": true,
+   "lax_plateau[u_star]": true,
+   "lax_position[x_contact]": true,
+   "lax_position[x_fan]": true,
+   "lax_position[x_shock]": true,
+   "lax_rankine_hugoniot_satisfied": true
+  }
+ }
+}
