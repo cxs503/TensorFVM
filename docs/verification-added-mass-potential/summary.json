@@ -11,142 +11,292 @@
         {
           "M_matrix": [
             [
-              1.95554230397468,
-              -3.848917712323541e-18,
-              4.8043708768263915e-17
+              1.972775623832586,
+              -7.54198136235229e-18,
+              4.238976384534146e-17
             ],
             [
-              -3.848917712323541e-18,
-              1.976617473656932,
-              -1.5842565432265532e-16
+              -7.54198136235229e-18,
+              2.020578789477316,
+              -1.4593964752629808e-16
             ],
             [
-              4.8043708768263915e-17,
-              -1.5842565432265532e-16,
-              1.976617473656932
+              4.238976384534146e-17,
+              -1.4593964752629808e-16,
+              2.020578789477315
             ]
           ],
-          "M_offdiag_rel": 8.014988050750793e-17,
-          "M_transverse_split": 0.0,
+          "M_matrix_centroid": [
+            [
+              1.9555423039746798,
+              1.2576745200831851e-17,
+              2.9341221292888964e-17
+            ],
+            [
+              1.2576745200831851e-17,
+              1.9766174736569317,
+              -1.699029507579511e-16
+            ],
+            [
+              2.9341221292888964e-17,
+              -1.699029507579511e-16,
+              1.9766174736569313
+            ]
+          ],
+          "M_offdiag_rel": 7.22266551971724e-17,
+          "M_transverse_split": 4.3956633828165617e-16,
           "h_rel": 0.07216878364870323,
-          "k_axial_panel": 0.46685133615432617,
-          "k_axial_rel_error": -0.06629732769134755,
-          "k_transverse_panel": 0.47188266230147247,
-          "k_transverse_rel_error": -0.056234675397054956,
+          "k_axial_centroid": 0.4668513361543261,
+          "k_axial_panel": 0.47096548821623035,
+          "k_axial_rel_error": -0.05806902356753918,
+          "k_axial_rel_error_centroid": -0.06629732769134766,
+          "k_transverse_centroid": 0.47188266230147236,
+          "k_transverse_panel": 0.4823776533779294,
+          "k_transverse_rel_error": -0.035244693244141034,
+          "k_transverse_rel_error_centroid": -0.05623467539705518,
           "n_panels": 192,
           "n_phi": 12,
           "n_theta": 16,
           "neumann_residual": 2.4424906541753444e-15,
-          "solve_seconds": 0.18873381614685059,
+          "solve_seconds": 0.47411227226257324,
+          "solve_seconds_centroid": 0.2765614986419678,
           "volume_panel": 4.012411962557205,
           "volume_rel_error": -0.042107203656951864
         },
         {
           "M_matrix": [
             [
+              2.044090506848974,
+              5.605325231750058e-17,
+              -5.350145968477859e-17
+            ],
+            [
+              5.605325231750058e-17,
+              2.065793647272094,
+              1.5873233318912058e-16
+            ],
+            [
+              -5.350145968477859e-17,
+              1.5873233318912058e-16,
+              2.065793647272095
+            ]
+          ],
+          "M_matrix_centroid": [
+            [
               2.026156012524073,
-              2.0816681711721685e-17,
-              -9.225035828546585e-17
+              6.178597130451768e-17,
+              -1.2064290267743e-16
             ],
             [
-              2.0816681711721685e-17,
-              2.0333619313633515,
-              9.618927324843516e-17
+              6.178597130451768e-17,
+              2.0333619313633506,
+              1.6273514620004838e-16
             ],
             [
-              -9.225035828546585e-17,
-              9.618927324843516e-17,
+              -1.2064290267743e-16,
+              1.6273514620004838e-16,
               2.033361931363354
             ]
           ],
-          "M_offdiag_rel": 4.730553462459138e-17,
-          "M_transverse_split": 1.3104087462254336e-15,
+          "M_offdiag_rel": 7.683842643176317e-17,
+          "M_transverse_split": 4.2994537274958505e-16,
           "h_rel": 0.048112522432468816,
-          "k_axial_panel": 0.4837091173028557,
-          "k_axial_rel_error": -0.032581765394288476,
-          "k_transverse_panel": 0.4854294037070413,
-          "k_transverse_rel_error": -0.029141192585917297,
+          "k_axial_centroid": 0.4837091173028557,
+          "k_axial_panel": 0.487990662438348,
+          "k_axial_rel_error": -0.024018675123303912,
+          "k_axial_rel_error_centroid": -0.032581765394288476,
+          "k_transverse_centroid": 0.4854294037070412,
+          "k_transverse_panel": 0.4931719055567837,
+          "k_transverse_rel_error": -0.013656188886432497,
+          "k_transverse_rel_error_centroid": -0.02914119258591752,
           "n_panels": 432,
           "n_phi": 18,
           "n_theta": 24,
           "neumann_residual": 2.1538326677728037e-14,
-          "solve_seconds": 0.6139645576477051,
+          "solve_seconds": 2.338653326034546,
+          "solve_seconds_centroid": 0.9858279228210449,
           "volume_panel": 4.109648378773596,
           "volume_rel_error": -0.018893719222882632
         },
         {
           "M_matrix": [
             [
-              2.052698632274871,
-              1.4907779871675686e-17,
-              1.1436638853827563e-17
+              2.0685514187865763,
+              7.29380070880678e-18,
+              4.4988778564872874e-17
             ],
             [
-              1.4907779871675686e-17,
-              2.055227239866251,
-              1.6286246583993255e-16
+              7.29380070880678e-18,
+              2.0807204871043146,
+              -3.9426109713823196e-17
             ],
             [
-              1.1436638853827563e-17,
-              1.6286246583993255e-16,
-              2.0552272398662534
+              4.4988778564872874e-17,
+              -3.9426109713823196e-17,
+              2.080720487104313
             ]
           ],
-          "M_offdiag_rel": 7.924304557705795e-17,
-          "M_transverse_split": 1.0803895579910735e-15,
+          "M_matrix_centroid": [
+            [
+              2.052698632274871,
+              3.5853210591380025e-17,
+              5.0992230457656135e-17
+            ],
+            [
+              3.5853210591380025e-17,
+              2.0552272398662517,
+              -5.563815323378677e-18
+            ],
+            [
+              5.0992230457656135e-17,
+              -5.563815323378677e-18,
+              2.055227239866253
+            ]
+          ],
+          "M_offdiag_rel": 2.162173095507057e-17,
+          "M_transverse_split": 8.537219921702991e-16,
           "h_rel": 0.036084391824351615,
-          "k_axial_panel": 0.4900457010067778,
-          "k_axial_rel_error": -0.019908597986444287,
-          "k_transverse_panel": 0.49064936160273986,
-          "k_transverse_rel_error": -0.01870127679452016,
+          "k_axial_centroid": 0.4900457010067778,
+          "k_axial_panel": 0.4938302750094554,
+          "k_axial_rel_error": -0.012339449981089046,
+          "k_axial_rel_error_centroid": -0.019908597986444287,
+          "k_transverse_centroid": 0.49064936160273986,
+          "k_transverse_panel": 0.4967354260728417,
+          "k_transverse_rel_error": -0.006529147854316464,
+          "k_transverse_rel_error_centroid": -0.01870127679452016,
           "n_panels": 768,
           "n_phi": 24,
           "n_theta": 32,
           "neumann_residual": 2.3314683517128287e-14,
-          "solve_seconds": 1.7912607192993164,
+          "solve_seconds": 5.116593360900879,
+          "solve_seconds_centroid": 2.5838756561279297,
           "volume_panel": 4.144123939016326,
           "volume_rel_error": -0.01066328548014328
         },
         {
           "M_matrix": [
             [
-              2.0656666659876812,
-              1.4505947441498246e-16,
-              3.396284481134524e-18
+              2.079485898268908,
+              1.4404727004301357e-16,
+              4.556902260352167e-17
             ],
             [
-              1.4505947441498246e-16,
-              2.0662395348287834,
-              -2.7196844890351395e-17
+              1.4404727004301357e-16,
+              2.0871921912794944,
+              -1.263967668824458e-16
             ],
             [
-              3.396284481134524e-18,
-              -2.7196844890351395e-17,
-              2.066239534828784
+              4.556902260352167e-17,
+              -1.263967668824458e-16,
+              2.087192191279493
             ]
           ],
-          "M_offdiag_rel": 7.020457791550417e-17,
-          "M_transverse_split": 2.1492629599058637e-16,
+          "M_matrix_centroid": [
+            [
+              2.0656666659876812,
+              2.1282041612943198e-16,
+              7.560827845428698e-17
+            ],
+            [
+              2.1282041612943198e-16,
+              2.0662395348287825,
+              -1.588417195533246e-16
+            ],
+            [
+              7.560827845428698e-17,
+              -1.588417195533246e-16,
+              2.0662395348287834
+            ]
+          ],
+          "M_offdiag_rel": 6.901485672706999e-17,
+          "M_transverse_split": 6.383061584441242e-16,
           "h_rel": 0.028867513459481284,
-          "k_axial_panel": 0.4931415910081419,
-          "k_axial_rel_error": -0.013716817983716045,
-          "k_transverse_panel": 0.49327835336984904,
-          "k_transverse_rel_error": -0.013443293260301803,
+          "k_axial_centroid": 0.4931415910081419,
+          "k_axial_panel": 0.49644068969908045,
+          "k_axial_rel_error": -0.0071186206018389875,
+          "k_axial_rel_error_centroid": -0.013716817983716045,
+          "k_transverse_centroid": 0.49327835336984893,
+          "k_transverse_panel": 0.4982804316374042,
+          "k_transverse_rel_error": -0.0034391367251914717,
+          "k_transverse_rel_error_centroid": -0.013443293260302025,
           "n_panels": 1200,
           "n_phi": 30,
           "n_theta": 40,
           "neumann_residual": 8.992806499463768e-14,
-          "solve_seconds": 5.266071796417236,
+          "solve_seconds": 11.744515419006348,
+          "solve_seconds_centroid": 5.60176157951355,
           "volume_panel": 4.160159542839509,
           "volume_rel_error": -0.006835067059258959
         }
       ],
-      "order_axial": 1.7211977669468184,
-      "order_transverse": 1.564159736693859,
-      "richardson_axial_rel_error": -0.0004937055384101052,
-      "richardson_k_axial": 0.4997531472307949,
-      "richardson_k_transverse": 0.4995724032115775,
-      "richardson_transverse_rel_error": -0.000855193576844937,
+      "order_axial": 2.284582294500944,
+      "order_axial_centroid": 1.721197766946821,
+      "order_transverse": 2.52678165487131,
+      "order_transverse_centroid": 1.5641597366938502,
+      "quadrature_comparison": [
+        {
+          "ladder": "axial",
+          "levels": [
+            {
+              "err_centroid_pct": 6.629732769134766,
+              "err_gauss_pct": 5.806902356753918,
+              "n_panels": 192,
+              "reduction": 1.1416986823316957
+            },
+            {
+              "err_centroid_pct": 3.2581765394288476,
+              "err_gauss_pct": 2.401867512330391,
+              "n_panels": 432,
+              "reduction": 1.3565180105490622
+            },
+            {
+              "err_centroid_pct": 1.9908597986444287,
+              "err_gauss_pct": 1.2339449981089046,
+              "n_panels": 768,
+              "reduction": 1.6134104856339155
+            },
+            {
+              "err_centroid_pct": 1.3716817983716045,
+              "err_gauss_pct": 0.7118620601838987,
+              "n_panels": 1200,
+              "reduction": 1.9268926876328418
+            }
+          ]
+        },
+        {
+          "ladder": "transverse",
+          "levels": [
+            {
+              "err_centroid_pct": 5.623467539705517,
+              "err_gauss_pct": 3.5244693244141034,
+              "n_panels": 192,
+              "reduction": 1.595550144457661
+            },
+            {
+              "err_centroid_pct": 2.914119258591752,
+              "err_gauss_pct": 1.3656188886432497,
+              "n_panels": 432,
+              "reduction": 2.1339183888170634
+            },
+            {
+              "err_centroid_pct": 1.870127679452016,
+              "err_gauss_pct": 0.6529147854316464,
+              "n_panels": 768,
+              "reduction": 2.8642752793776327
+            },
+            {
+              "err_centroid_pct": 1.3443293260302025,
+              "err_gauss_pct": 0.3439136725191472,
+              "n_panels": 1200,
+              "reduction": 3.908915037262317
+            }
+          ]
+        }
+      ],
+      "richardson_axial_rel_error": 0.0007329449090685003,
+      "richardson_k_axial": 0.5003664724545341,
+      "richardson_k_transverse": 0.5003203141860062,
+      "richardson_transverse_rel_error": 0.0006406283720126194,
       "semi_axis_a": 1.0,
       "semi_axis_b": 1.0,
       "volume_exact": 4.1887902047863905
@@ -161,142 +311,292 @@
         {
           "M_matrix": [
             [
-              1.6705586178279708,
-              3.122502256758253e-17,
-              3.3285006695304986e-17
+              1.6774501319501158,
+              1.5355013267825957e-17,
+              3.0326320610545715e-17
             ],
             [
-              3.122502256758253e-17,
-              5.4085432442856165,
-              -3.6385147282255725e-16
+              1.5355013267825957e-17,
+              5.567712857212308,
+              -2.0273267724410689e-16
             ],
             [
-              3.3285006695304986e-17,
-              -3.6385147282255725e-16,
-              5.408543244285617
+              3.0326320610545715e-17,
+              -2.0273267724410689e-16,
+              5.567712857212313
             ]
           ],
-          "M_offdiag_rel": 6.727347020974337e-17,
-          "M_transverse_split": 1.6421767925005092e-16,
+          "M_matrix_centroid": [
+            [
+              1.67055861782797,
+              3.848917712323541e-17,
+              -1.248187751073937e-17
+            ],
+            [
+              3.848917712323541e-17,
+              5.408543244285615,
+              -4.037501127700238e-16
+            ],
+            [
+              -1.248187751073937e-17,
+              -4.037501127700238e-16,
+              5.4085432442856165
+            ]
+          ],
+          "M_offdiag_rel": 3.6412200564813735e-17,
+          "M_transverse_split": 9.571381741243312e-16,
           "h_rel": 0.07216878364870323,
-          "k_axial_panel": 0.19940824631406454,
-          "k_axial_rel_error": -0.050504964831147414,
-          "k_transverse_panel": 0.6455972941907494,
-          "k_transverse_rel_error": -0.08323241109193558,
+          "k_axial_centroid": 0.19940824631406445,
+          "k_axial_panel": 0.20023086021750977,
+          "k_axial_rel_error": -0.04658803646123466,
+          "k_axial_rel_error_centroid": -0.05050496483114786,
+          "k_transverse_centroid": 0.6455972941907492,
+          "k_transverse_panel": 0.6645967672062295,
+          "k_transverse_rel_error": -0.05625258756470253,
+          "k_transverse_rel_error_centroid": -0.08323241109193591,
           "n_panels": 192,
           "n_phi": 12,
           "n_theta": 16,
           "neumann_residual": 1.6653345369377348e-15,
-          "solve_seconds": 0.21556520462036133,
+          "solve_seconds": 0.4581184387207031,
+          "solve_seconds_centroid": 0.3396298885345459,
           "volume_panel": 8.02482392511441,
           "volume_rel_error": -0.042107203656951864
         },
         {
           "M_matrix": [
             [
-              1.7213378019020649,
-              -8.68445940160889e-17,
-              -6.776263578034403e-19
+              1.7309655374890194,
+              -6.938555090728327e-17,
+              -9.169449291383022e-18
             ],
             [
-              -8.68445940160889e-17,
-              5.627034367054027,
-              -3.810174425316129e-16
+              -6.938555090728327e-17,
+              5.741226860082405,
+              -7.052092710467273e-16
             ],
             [
-              -6.776263578034403e-19,
-              -3.810174425316129e-16,
-              5.627034367054029
+              -9.169449291383022e-18,
+              -7.052092710467273e-16,
+              5.741226860082415
             ]
           ],
-          "M_offdiag_rel": 6.77119451699902e-17,
-          "M_transverse_split": 3.156826000211978e-16,
+          "M_matrix_centroid": [
+            [
+              1.7213378019020653,
+              -4.60514872763218e-17,
+              -8.384609738280868e-17
+            ],
+            [
+              -4.60514872763218e-17,
+              5.62703436705403,
+              9.993167656764147e-17
+            ],
+            [
+              -8.384609738280868e-17,
+              9.993167656764147e-17,
+              5.62703436705403
+            ]
+          ],
+          "M_offdiag_rel": 1.228325039635525e-16,
+          "M_transverse_split": 1.8564222066376463e-15,
           "h_rel": 0.048112522432468816,
-          "k_axial_panel": 0.20546956492773852,
-          "k_axial_rel_error": -0.021643611117642236,
-          "k_transverse_panel": 0.6716777508484675,
-          "k_transverse_rel_error": -0.04619737766960985,
+          "k_axial_centroid": 0.20546956492773857,
+          "k_axial_panel": 0.2066187912098227,
+          "k_axial_rel_error": -0.016171497153980363,
+          "k_axial_rel_error_centroid": -0.021643611117641903,
+          "k_transverse_centroid": 0.6716777508484676,
+          "k_transverse_panel": 0.6853084756455577,
+          "k_transverse_rel_error": -0.02684133820082346,
+          "k_transverse_rel_error_centroid": -0.04619737766960963,
           "n_panels": 432,
           "n_phi": 18,
           "n_theta": 24,
           "neumann_residual": 3.186340080674199e-14,
-          "solve_seconds": 0.8255105018615723,
+          "solve_seconds": 1.7327301502227783,
+          "solve_seconds_centroid": 0.9848105907440186,
           "volume_panel": 8.219296757547191,
           "volume_rel_error": -0.018893719222882632
         },
         {
           "M_matrix": [
             [
-              1.739029574757445,
-              -2.4245471082207093e-17,
-              1.1056659873689284e-16
+              1.7481558689386285,
+              -4.4955426642574736e-17,
+              7.519561459029653e-18
             ],
             [
-              -2.4245471082207093e-17,
-              5.716092882512448,
-              -8.237494938419373e-16
+              -4.4955426642574736e-17,
+              5.804684398857733,
+              8.13225480049217e-17
             ],
             [
-              1.1056659873689284e-16,
-              -8.237494938419373e-16,
-              5.716092882512445
+              7.519561459029653e-18,
+              8.13225480049217e-17,
+              5.8046843988577335
             ]
           ],
-          "M_offdiag_rel": 1.4411058580977204e-16,
-          "M_transverse_split": 4.661462495216151e-16,
+          "M_matrix_centroid": [
+            [
+              1.7390295747574445,
+              1.0055975149803054e-17,
+              8.08747058038406e-18
+            ],
+            [
+              1.0055975149803054e-17,
+              5.716092882512447,
+              -4.381173099345646e-16
+            ],
+            [
+              8.08747058038406e-18,
+              -4.381173099345646e-16,
+              5.716092882512447
+            ]
+          ],
+          "M_offdiag_rel": 1.4009813870487886e-17,
+          "M_transverse_split": 1.530106304961049e-16,
           "h_rel": 0.036084391824351615,
-          "k_axial_panel": 0.20758136475423308,
-          "k_axial_rel_error": -0.011588142060615536,
-          "k_transverse_panel": 0.6823083280681924,
-          "k_transverse_rel_error": -0.031101638058983805,
+          "k_axial_centroid": 0.20758136475423303,
+          "k_axial_panel": 0.20867073587751772,
+          "k_axial_rel_error": -0.0064010322387578755,
+          "k_axial_rel_error_centroid": -0.011588142060615758,
+          "k_transverse_centroid": 0.6823083280681924,
+          "k_transverse_panel": 0.6928831613749614,
+          "k_transverse_rel_error": -0.016085056482533,
+          "k_transverse_rel_error_centroid": -0.031101638058983805,
           "n_panels": 768,
           "n_phi": 24,
           "n_theta": 32,
           "neumann_residual": 4.030109579389318e-14,
-          "solve_seconds": 2.2721269130706787,
+          "solve_seconds": 5.496793270111084,
+          "solve_seconds_centroid": 2.564650535583496,
           "volume_panel": 8.288247878032651,
           "volume_rel_error": -0.01066328548014328
         },
         {
           "M_matrix": [
             [
-              1.7470760642849594,
-              5.685285141970864e-17,
-              -7.969923583128844e-17
+              1.7552860155472827,
+              1.6425662913155392e-17,
+              -1.4658799830786205e-16
             ],
             [
-              5.685285141970864e-17,
-              5.762907618071656,
-              9.696968176043199e-17
+              1.6425662913155392e-17,
+              5.835167054832737,
+              7.938996706232528e-17
             ],
             [
-              -7.969923583128844e-17,
-              9.696968176043199e-17,
-              5.76290761807166
+              -1.4658799830786205e-16,
+              7.938996706232528e-17,
+              5.835167054832739
             ]
           ],
-          "M_offdiag_rel": 1.6826520254523748e-17,
-          "M_transverse_split": 6.164793736515396e-16,
+          "M_matrix_centroid": [
+            [
+              1.7470760642849579,
+              9.010397679712345e-17,
+              -1.0946693821311995e-16
+            ],
+            [
+              9.010397679712345e-17,
+              5.762907618071657,
+              3.774065675472474e-16
+            ],
+            [
+              -1.0946693821311995e-16,
+              3.774065675472474e-16,
+              5.762907618071657
+            ]
+          ],
+          "M_offdiag_rel": 2.5121474146392524e-17,
+          "M_transverse_split": 3.0442261938825833e-16,
           "h_rel": 0.028867513459481284,
-          "k_axial_panel": 0.20854184369136392,
-          "k_axial_rel_error": -0.007014760572902845,
-          "k_transverse_panel": 0.6878964254985337,
-          "k_transverse_rel_error": -0.023166371517603812,
+          "k_axial_centroid": 0.20854184369136372,
+          "k_axial_panel": 0.20952183443582065,
+          "k_axial_rel_error": -0.002348472374833155,
+          "k_axial_rel_error_centroid": -0.007014760572903844,
+          "k_transverse_centroid": 0.6878964254985336,
+          "k_transverse_panel": 0.6965217604077052,
+          "k_transverse_rel_error": -0.010918136341653173,
+          "k_transverse_rel_error_centroid": -0.023166371517604034,
           "n_panels": 1200,
           "n_phi": 30,
           "n_theta": 40,
           "neumann_residual": 1.4377388168895777e-13,
-          "solve_seconds": 5.156440496444702,
+          "solve_seconds": 11.609829902648926,
+          "solve_seconds_centroid": 6.2288219928741455,
           "volume_panel": 8.320319085679017,
           "volume_rel_error": -0.006835067059258959
         }
       ],
-      "order_axial": 2.1513119448189686,
-      "order_transverse": 1.3978257552974993,
-      "richardson_axial_rel_error": 0.0004076628464599885,
-      "richardson_k_axial": 0.21010066430930677,
-      "richardson_k_transverse": 0.7031627964917548,
-      "richardson_transverse_rel_error": -0.001487665220708867,
+      "order_axial": 3.2047469776776882,
+      "order_axial_centroid": 2.151311944818841,
+      "order_transverse": 1.7909288116377096,
+      "order_transverse_centroid": 1.3978257552974938,
+      "quadrature_comparison": [
+        {
+          "ladder": "axial",
+          "levels": [
+            {
+              "err_centroid_pct": 5.050496483114786,
+              "err_gauss_pct": 4.6588036461234665,
+              "n_panels": 192,
+              "reduction": 1.0840758415129264
+            },
+            {
+              "err_centroid_pct": 2.1643611117641903,
+              "err_gauss_pct": 1.6171497153980363,
+              "n_panels": 432,
+              "reduction": 1.338380170466447
+            },
+            {
+              "err_centroid_pct": 1.1588142060615758,
+              "err_gauss_pct": 0.6401032238757876,
+              "n_panels": 768,
+              "reduction": 1.810355209656692
+            },
+            {
+              "err_centroid_pct": 0.7014760572903844,
+              "err_gauss_pct": 0.23484723748331549,
+              "n_panels": 1200,
+              "reduction": 2.9869461732127895
+            }
+          ]
+        },
+        {
+          "ladder": "transverse",
+          "levels": [
+            {
+              "err_centroid_pct": 8.32324110919359,
+              "err_gauss_pct": 5.625258756470252,
+              "n_panels": 192,
+              "reduction": 1.4796192441138962
+            },
+            {
+              "err_centroid_pct": 4.619737766960963,
+              "err_gauss_pct": 2.684133820082346,
+              "n_panels": 432,
+              "reduction": 1.7211279603113212
+            },
+            {
+              "err_centroid_pct": 3.1101638058983805,
+              "err_gauss_pct": 1.6085056482533,
+              "n_panels": 768,
+              "reduction": 1.933573443945163
+            },
+            {
+              "err_centroid_pct": 2.3166371517604034,
+              "err_gauss_pct": 1.0918136341653173,
+              "n_panels": 1200,
+              "reduction": 2.1218247137309785
+            }
+          ]
+        }
+      ],
+      "richardson_axial_rel_error": 0.0015316948359729299,
+      "richardson_k_axial": 0.21033672794263564,
+      "richardson_k_transverse": 0.7039281388883275,
+      "richardson_transverse_rel_error": -0.0004008559823359681,
       "semi_axis_a": 2.0,
       "semi_axis_b": 1.0,
       "volume_exact": 8.377580409572781
@@ -306,55 +606,70 @@
     {
       "id": "C1",
       "limit_pct": 3.0,
-      "measured_pct": 1.3716817983716045,
+      "measured_pct": 0.7118620601838987,
       "pass": true,
       "statement": "sphere Cm = M/(rho V) within 3 % of 0.5 (finest panelisation)"
     },
     {
       "id": "C2",
       "limit_pct": 3.0,
-      "measured_pct": 0.7014760572902845,
+      "measured_pct": 0.23484723748331549,
       "pass": true,
       "statement": "spheroid axial k within 3 % of Lamb value (finest panelisation)"
     },
     {
       "id": "C3",
       "limit_pct": 3.0,
-      "measured_pct": 2.316637151760381,
+      "measured_pct": 1.0918136341653173,
       "pass": true,
       "statement": "spheroid transverse k within 3 % of Lamb value (finest panelisation)"
     },
     {
       "id": "C6a",
       "limit_pct": 1.0,
-      "measured_pct": 0.04937055384101052,
+      "measured_pct": 0.07329449090685003,
       "pass": true,
       "statement": "Richardson-extrapolated sphere Cm within 1 % of 0.5"
     },
     {
       "id": "C6b",
       "limit_pct": 1.0,
-      "measured_pct": 0.1487665220708867,
+      "measured_pct": 0.04008559823359681,
       "pass": true,
       "statement": "Richardson-extrapolated spheroid transverse k within 1 % of Lamb"
     },
     {
       "id": "C4",
       "limit": 1.0,
-      "measured": 1.3978257552974993,
+      "measured": 1.7909288116377096,
       "pass": true,
       "statement": "observed convergence order p >= 1 on every ladder"
     },
     {
       "id": "C5",
       "limit": 1e-10,
-      "measured_max_offdiag_rel": 7.020457791550417e-17,
-      "measured_transverse_split": 6.164793736515396e-16,
+      "measured_max_offdiag_rel": 6.901485672706999e-17,
+      "measured_transverse_split": 6.383061584441242e-16,
       "pass": true,
       "statement": "added-mass matrix symmetric, off-diagonals and transverse split < 1e-10"
+    },
+    {
+      "id": "C7",
+      "limit": 1.0,
+      "measured_ratio": 0.9224446867152848,
+      "measured_worst_case": "spheroid_ar2/axial at 192 panels",
+      "pass": true,
+      "statement": "Gauss-rule surface integral more accurate than the midpoint rule at every level of every ladder"
+    },
+    {
+      "id": "C8",
+      "limit": 1.5,
+      "measured_reduction": 1.9268926876328418,
+      "pass": true,
+      "statement": "consistent quadrature reduces the finest-level error by at least a factor 1.5 on every ladder"
     }
   ],
-  "generated": "2026-11-11T19:22:09",
+  "generated": "2026-11-13T07:11:25",
   "levels": [
     {
       "n_phi": 12,
@@ -373,6 +688,10 @@
       "n_theta": 40
     }
   ],
+  "quadrature": {
+    "baseline": "centroid",
+    "primary": "gauss"
+  },
   "schema": "tensorfvm.potential-added-mass-verification/1",
   "tolerances": {
     "min_observed_order": 1.0,
