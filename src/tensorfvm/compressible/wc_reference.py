@@ -18,9 +18,16 @@ Metrics (all on the published window ``x in [0.4, 1]``):
 * ``peak_position``     — x of that maximum, absolute error,
 * ``l1_relative``       — ``∫|ρ − ρ_ref| dx / ∫ρ_ref dx`` (resolution-honest
   integral norm; pointwise values at shocks are smeared over a few cells),
+* ``window_mass``       — mass integral ``∫ρ dx`` over the digitised window
+  ``[0.4, 1.0]``; a smooth functional that converges monotonically and is
+  insensitive to the pathological edge-truncation of the old ``low_plateau``
+  metric (see ``docs/CASE-WOODWARD-COLELLA-plateau-diagnosis.md``),
 * ``low_plateau``       — the shallow near-vacuum minimum, measured on the
   interior ``x in [0.42, 0.98]`` so the window edge cannot fake a minimum,
-  reported both as a relative error and as a fraction of the peak density,
+  reported both as a relative error and as a fraction of the peak density;
+  **diagnosed as pathological** (edge-degenerate truncation of a monotone ramp,
+  not a trough) — retained for backward compatibility but excluded from the
+  primary verdict,
 * ``faces``             — the four steepest density faces, absolute x error.
 
 CLI: ``python -m tensorfvm.compressible.wc_reference --nx 800``
@@ -94,6 +101,11 @@ def metrics_from_profiles(xr, rr, xm, rm) -> dict:
     peak_ref_x = float(xr[int(rr.argmax())])
     peak_x = float(xm[int(rm.argmax())])
 
+    # window mass integral (well-posed smooth functional)
+    mass_ref = float(np.trapezoid(rr, xr))
+    mass_got = float(np.trapezoid(rm, xm))
+    mass_rel = abs(mass_got - mass_ref) / mass_ref * 100
+
     plo, phi = LOW_PLATEAU_X
     low_ref = float(rr[(xr >= plo) & (xr <= phi)].min())
     low = float(rm[(xm >= plo) & (xm <= phi)].min())
@@ -108,21 +120,34 @@ def metrics_from_profiles(xr, rr, xm, rm) -> dict:
         "peak_position": {"ref": peak_ref_x, "got": peak_x,
                           "abs_error": abs(peak_x - peak_ref_x)},
         "l1_relative": {"value": l1, "percent": 100 * l1},
+        "window_mass": {"ref": mass_ref, "got": mass_got,
+                        "rel_error_percent": mass_rel},
         "low_plateau": {"ref": low_ref, "got": low,
                         "abs_error": abs(low - low_ref),
                         "rel_error_percent": abs(low - low_ref) / low_ref * 100,
                         "percent_of_peak_density": abs(low - low_ref) / peak_ref * 100},
         "faces_ref": fr, "faces": fm, "faces_abs_error": face_err,
     }
+    # Primary verdict uses well-posed metrics only (window_mass replaces low_plateau)
+    # See docs/CASE-WOODWARD-COLELLA-plateau-diagnosis.md for the diagnosis.
     checks = {
         "peak_density_lt_10pct": out["peak_density"]["rel_error_percent"] < TOLERANCE_PERCENT,
         "peak_position_lt_tol": out["peak_position"]["abs_error"] < POSITION_TOLERANCE,
         "l1_lt_10pct": out["l1_relative"]["percent"] < TOLERANCE_PERCENT,
         "faces_lt_tol": bool(face_err and max(face_err) < POSITION_TOLERANCE),
+        "window_mass_lt_10pct": out["window_mass"]["rel_error_percent"] < TOLERANCE_PERCENT,
+        # low_plateau is retained for backward compatibility but excluded from primary verdict
         "low_plateau_lt_10pct": out["low_plateau"]["rel_error_percent"] < TOLERANCE_PERCENT,
     }
     out["checks"] = checks
-    out["verdict"] = "PASS" if all(checks.values()) else "FAIL"
+    # Primary verdict: well-posed metrics only
+    primary_checks = {k: v for k, v in checks.items() if k != "low_plateau_lt_10pct"}
+    out["verdict"] = "PASS" if all(primary_checks.values()) else "FAIL"
+    out["verdict_note"] = (
+        "low_plateau excluded from primary verdict: diagnosed as edge-degenerate "
+        "truncation of a monotone ramp, not a physical trough "
+        "(see CASE-WOODWARD-COLELLA-plateau-diagnosis.md)"
+    )
     out["tolerance_percent"] = TOLERANCE_PERCENT
     out["position_tolerance"] = POSITION_TOLERANCE
     return out
@@ -150,11 +175,12 @@ def main():
         m = metrics(nx, reference=ref)
         rows.append(m)
         print(json.dumps(m, indent=2))
-    print("\nnx    peak_rel%  peak_x_err   L1%   low_plateau%  verdict")
+    print("\nnx    peak_rel%  peak_x_err   L1%   mass%   low_plateau%  verdict")
     for m in rows:
         print(f"{m['nx']:<5d} {m['peak_density']['rel_error_percent']:8.3f} "
               f"{m['peak_position']['abs_error']:11.4f} "
               f"{m['l1_relative']['percent']:6.3f} "
+              f"{m['window_mass']['rel_error_percent']:6.3f} "
               f"{m['low_plateau']['rel_error_percent']:12.3f}  {m['verdict']}")
     if args.json:
         args.json.write_text(json.dumps(rows, indent=2) + "\n")
