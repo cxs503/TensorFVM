@@ -1,0 +1,68 @@
+{
+  "sweep": [
+    {
+      "production_limit": null,
+      "steps": 500,
+      "elapsed_s": 13.0,
+      "x_s/H": null,
+      "x_r/H": 2.621201142993602,
+      "bulk_velocity": 1.0,
+      "body_force": 0.003549,
+      "max_nu_t/nu": 4.03,
+      "mean_nu_t/nu": 0.18,
+      "x_r/H_error_pct": 50.9
+    },
+    {
+      "production_limit": 10.0,
+      "steps": 500,
+      "elapsed_s": 14.7,
+      "x_s/H": null,
+      "x_r/H": 2.6207949150172523,
+      "bulk_velocity": 1.0,
+      "body_force": 0.003537,
+      "max_nu_t/nu": 0.2,
+      "mean_nu_t/nu": 0.12,
+      "x_r/H_error_pct": 50.9
+    },
+    {
+      "production_limit": 50.0,
+      "steps": 500,
+      "elapsed_s": 13.4,
+      "x_s/H": null,
+      "x_r/H": 2.620572297909307,
+      "bulk_velocity": 1.0,
+      "body_force": 0.00355,
+      "max_nu_t/nu": 0.52,
+      "mean_nu_t/nu": 0.14,
+      "x_r/H_error_pct": 50.9
+    },
+    {
+      "production_limit": 100.0,
+      "steps": 500,
+      "elapsed_s": 14.4,
+      "x_s/H": null,
+      "x_r/H": 2.6209194935889584,
+      "bulk_velocity": 1.0,
+      "body_force": 0.00355,
+      "max_nu_t/nu": 0.71,
+      "mean_nu_t/nu": 0.14,
+      "x_r/H_error_pct": 50.9
+    },
+    {
+      "production_limit": 200.0,
+      "steps": 500,
+      "elapsed_s": 14.3,
+      "x_s/H": null,
+      "x_r/H": 2.6208554222004246,
+      "bulk_velocity": 1.0,
+      "body_force": 0.00355,
+      "max_nu_t/nu": 1.91,
+      "mean_nu_t/nu": 0.15,
+      "x_r/H_error_pct": 50.9
+    }
+  ],
+  "reference": {
+    "x_r/H": 5.34,
+    "x_s/H": 0.227
+  }
+}
