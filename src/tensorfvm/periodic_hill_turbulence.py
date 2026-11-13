@@ -83,12 +83,21 @@ class SpalartAllmarasConfig:
     max_viscosity_ratio: float = 1.0e4
     #: r is clipped to this value (standard SA practice, keeps ``fw`` bounded)
     r_clip: float = 10.0
+    #: convection blend of the ``nu~`` transport: 0 = first-order upwind
+    #: (round 5 default, unconditionally bounded), 1 = second-order
+    #: (``beta`` blend in :meth:`PeriodicHillSolver._convection`).  Round 6
+    #: makes this a knob so the order of the closure convection can be tested
+    #: instead of asserted; the default keeps round-5 behaviour bit-identical.
+    convection_blend: float = 0.0
 
     def __post_init__(self):
         for name in ("cb1", "cb2", "sigma", "kappa", "cw2", "cw3", "cv1"):
             value = float(getattr(self, name))
             if not math.isfinite(value) or value <= 0.0:
                 raise ValueError(f"invalid SA constant {name}: {value!r}")
+        blend = float(self.convection_blend)
+        if not (math.isfinite(blend) and 0.0 <= blend <= 1.0):
+            raise ValueError(f"invalid convection_blend: {blend!r} (must be in [0, 1])")
 
     @property
     def cw1(self) -> float:
@@ -259,7 +268,7 @@ class SpalartAllmaras:
         laplacian = self._diffusion_operator(mu)
 
         grad_x, grad_y = s.gradient(phi)
-        conv = s._convection(phi, flux_e, flux_n, blend=0.0)
+        conv = s._convection(phi, flux_e, flux_n, blend=cfg.convection_blend)
         n = s.n
         lhs = (diags(np.full(n, 1.0 / dt))
                - (1.0 / cfg.sigma) * laplacian
