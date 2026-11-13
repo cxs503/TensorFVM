@@ -45,6 +45,7 @@ from scipy.linalg import solve_banded
 from ..wall_functions import u_plus_at_y_plus
 from .models import (VARIABLE, WALL_LAW_KAPPA, WALL_TREATMENT, constants_for,
                      equilibrium_closure, implied_kappa, wall_values)
+from .roughness import rough_wall_value
 
 
 def _stretched(n, stretch):
@@ -148,7 +149,8 @@ def _sublayer_mass_flux(y_inner, re_tau, samples=401):
 
 
 def solve_channel(model, n=256, *, re_tau=180., stretch=3., first_cell_y_plus=None, constants=None,
-                  dt=.02, relaxation=.5, max_iterations=40000, tolerance=1e-10, history=None):
+                  dt=.02, relaxation=.5, max_iterations=40000, tolerance=1e-10, history=None,
+                  k_s=None):
     """Converge the 1-D equilibrium channel for ``model``.
 
     For the wall-function model ``first_cell_y_plus`` sets the wall-normal location
@@ -180,6 +182,18 @@ def solve_channel(model, n=256, *, re_tau=180., stretch=3., first_cell_y_plus=No
     y = .5 * (faces[:-1] + faces[1:])
     volume = np.diff(faces)
     k_wall, variable_wall = wall_values(model, y[0] if not wall_function else offset, nu, c)
+    roughness = None
+    if k_s is not None:
+        # Equivalent sand-grain roughness, in units of the half height.  The
+        # wall value of the transported variable is capped below (see
+        # .roughness); the momentum equation (1) then integrates the reduced
+        # shear on its own, so no velocity boundary condition changes.
+        k_s = float(k_s)
+        if not np.isfinite(k_s) or k_s <= 0 or k_s >= 1:
+            raise ValueError('k_s must be positive, finite and below the half height')
+        variable_wall, roughness = rough_wall_value(
+            model, k_s_plus=k_s * re_tau, smooth_value=variable_wall,
+            u_tau_over_nu=re_tau)
     if not np.isfinite([stretch]).all() or stretch < 0:
         raise ValueError('stretch must be finite and non-negative')
     beta_star = c.get('beta_star', .09)
@@ -236,5 +250,7 @@ def solve_channel(model, n=256, *, re_tau=180., stretch=3., first_cell_y_plus=No
                   first_cell_y_plus=float(y[0] * re_tau),
                   inner_boundary_y_plus=float(offset * re_tau),
                   residuals=residuals, constants=c, implied_kappa=implied_kappa(model, c),
-                  closure=dict(state))
+                  k_s=None if k_s is None else float(k_s),
+                  k_s_plus=None if k_s is None else float(k_s) * float(re_tau),
+                  roughness=roughness, closure=dict(state))
     return result
