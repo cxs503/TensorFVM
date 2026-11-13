@@ -75,6 +75,7 @@ __all__ = [
     "STOKER_WET",
     "CASES",
     "run_case",
+    "series_metrics",
     "convergence_study",
     "sensitivity_study",
     "front_definition_study",
@@ -101,6 +102,17 @@ EXTREMUM_FRACTION = 1e-4
 #: declared here (not inferred from a run) and the sensitivity to them is
 #: measured in ``docs/verification-dam-break-front-metric/REPORT.md``.
 FAN_WINDOW = (1e-2, 2e-1)
+
+#: cell count the exact front must have travelled before a sample of the
+#: ``x_f(t)`` series is *graded*.
+#:
+#: This is an a-priori resolution criterion, declared before any run: while the
+#: front/bore still sits inside the smearing region of the initial discontinuity
+#: (a few cells), its measured position is a statement about the smearing, not
+#: about the wave.  Samples below the threshold are still recorded and reported
+#: (as ``unresolved_max_error``); they are simply not admitted to the pass/fail
+#: series metric.
+SERIES_MIN_CELLS = 4.0
 
 
 @dataclass(frozen=True)
@@ -278,19 +290,100 @@ def fan_front_estimate(x, h, t: float, gravity: float, h0: float,
 
 
 def front_sample(case: DamBreakCase, solver: ShallowWater1D) -> dict:
-    """Wave position of the current state vs the exact position at that time."""
+    """Wave position of the current state vs the exact position at that time.
+
+    The sample carries **two** definitions on purpose:
+
+    ``position`` / ``error``
+        Legacy definition (dry: outermost wet cell, wet: mid-level crossing).
+        Kept because downstream artefacts quote it; for the dry bed it is a
+        depth-floor detector that does not converge (see
+        :func:`fan_front_estimate`), so it must not be graded.
+    ``headline`` / ``headline_error``
+        The graded definition: the shape-consistent fan estimator for the dry
+        bed (consistent with the headline metric of :func:`_dry_metrics`) and
+        the mid-level crossing for the wet bed.  Grading a *series* with the
+        legacy estimator was a defect: at ``t* = 0.005`` it reads a 212 %
+        error on the dry bed because the numerical wetting front runs several
+        cells ahead of the exact zero-depth tip (see
+        ``docs/case-fvm-dambreak-stoker/AUDIT.md``).
+
+    ``resolved`` is the a-priori resolution flag (``SERIES_MIN_CELLS``).
+    """
+    t = solver.time
+    exact = case.exact_front(t)
+    dx = float(solver.dx)
+    travelled = (exact - case.x_dam) / dx
+    resolved = bool(travelled >= SERIES_MIN_CELLS)
     if case.kind == "dry":
         pos = _wetted_edge(solver.x, solver.h)
+        fan = fan_front_estimate(solver.x, solver.h, t, case.gravity, case.h0)
+        headline = fan["front"]
+        cells = fan["cells"]
+        spread = fan["spread"]
     else:
         sol = stoker_constant_state(case.h0, case.h1, case.gravity)
         pos = _level_crossing(solver.x, solver.h, 0.5 * (case.h1 + sol["h2"]))
-    exact = case.exact_front(solver.time)
+        headline = pos
+        cells = None
+        spread = None
     return {
-        "t": solver.time,
-        "t_star": solver.time * math.sqrt(case.gravity / case.h0),
+        "t": t,
+        "t_star": t * math.sqrt(case.gravity / case.h0),
         "position": pos,
         "exact": exact,
         "error": _relative(pos, exact),
+        "headline": headline,
+        "headline_error": (_relative(headline, exact)
+                           if headline == headline else float("nan")),
+        "headline_cells": cells,
+        "headline_spread": spread,
+        "resolved": resolved,
+        "travelled_cells": travelled,
+    }
+
+
+def series_metrics(case: DamBreakCase, samples,) -> dict:
+    """Grade the *whole* ``x_f(t)`` series, not just its final state.
+
+    The acceptance criterion is a statement about the wave position *as a
+    function of time* (``x_f(t)`` vs analytic); grading only ``t* = 2`` would
+    leave the early transient unverified.  Graded samples are those with
+    ``resolved`` true (see :data:`SERIES_MIN_CELLS`); the rest are reported
+    under ``unresolved_*`` so a regression in the first few steps is still
+    visible instead of silently dropped.
+    """
+    graded = [s for s in samples
+              if s["resolved"] and s["headline_error"] == s["headline_error"]]
+    # every sample that is not graded stays visible -- including the ones whose
+    # headline estimator is undefined (too few fan cells): dropping them
+    # silently would hide the first steps of the transient.
+    unresolved = [s for s in samples if s not in graded]
+    named = [s for s in unresolved if s["headline_error"] == s["headline_error"]]
+    best = max(graded, key=lambda s: s["headline_error"]) if graded else None
+    worst_unres = max(named, key=lambda s: s["headline_error"]) if named else None
+    legacy = [s for s in samples if s["error"] == s["error"]]
+    worst_legacy = max(legacy, key=lambda s: s["error"]) if legacy else None
+    return {
+        "min_cells": SERIES_MIN_CELLS,
+        "samples": len(samples),
+        "samples_graded": len(graded),
+        "max_error": None if best is None else float(best["headline_error"]),
+        "max_error_t_star": None if best is None else float(best["t_star"]),
+        "unresolved_samples": len(unresolved),
+        "unresolved_undefined": len(unresolved) - len(named),
+        "unresolved_max_error": (None if worst_unres is None
+                                 else float(worst_unres["headline_error"])),
+        "unresolved_max_error_t_star": (None if worst_unres is None
+                                        else float(worst_unres["t_star"])),
+        "legacy_max_error": (None if worst_legacy is None
+                             else float(worst_legacy["error"])),
+        "legacy_max_error_t_star": (None if worst_legacy is None
+                                    else float(worst_legacy["t_star"])),
+        "legacy_definition": ("wetted_edge (dry) / mid_level_crossing (wet)"),
+        "headline_definition": ("fan_front_estimate (dry) / mid_level_crossing (wet)"),
+        "tolerance": TOLERANCE,
+        "pass": (best is not None and float(best["headline_error"]) <= TOLERANCE),
     }
 
 
@@ -455,6 +548,8 @@ def run_case(case: DamBreakCase, n: int = 1600, cfl: float = 0.4, order: int = 2
     metrics = (_dry_metrics if case.kind == "dry" else _wet_metrics)(
         case, solver, volume0)
     metrics["time_to_front_series"] = samples
+    metrics["front_series"] = series_metrics(case, samples)
+    metrics["front_series_max_error"] = metrics["front_series"]["max_error"]
     run = {
         "case": case.summary(),
         "discretisation": {
@@ -628,7 +723,11 @@ def sensitivity_study(n: int = 800) -> dict:
             "order": kwargs.get("order", 2),
             "h1": case_wet.h1,
             "depth_ratio": case_wet.h0 / case_wet.h1,
+            # headline (fan) first; the wetted edge stays as a diagnostic because
+            # it is a depth-floor detector, not a solution error
+            "dry_front_fan_error": dry["front_fan_error"],
             "dry_front_error": dry["front_wetted_error"],
+            "dry_series_max_error": dry.get("front_series_max_error"),
             "dry_depth_l1": dry["depth_l1"],
             "wet_shock_error": wet["shock_error"],
             "wet_step_ratio_error": wet["step_ratio_error"],
@@ -645,7 +744,7 @@ def sensitivity_study(n: int = 800) -> dict:
     for h1 in (0.8, 0.5, 0.25):
         row(f"h1={h1}", h1=h1)
     worst = max(
-        max(entry["dry_front_error"], entry["wet_shock_error"],
+        max(entry["dry_front_fan_error"], entry["wet_shock_error"],
             entry["wet_step_ratio_error"])
         for entry in rows)
     return {"reference_point": {"n": n, "cfl": 0.4, "order": 2, "h0/h1": 2.0},
@@ -767,7 +866,11 @@ def write_artifacts(outdir, payload: dict) -> dict:
             "metrics": {k: v for k, v in run["metrics"].items()
                         if k != "time_to_front_series"},
             "verdict": run["verdict"],
-            "front_series": run["metrics"]["time_to_front_series"],
+            # raw x_f(t) samples plus the *graded* summary of the series; the
+            # two are separate keys because "front_series" used to be the raw
+            # list while the pass/fail statement lived nowhere
+            "front_series_samples": run["metrics"]["time_to_front_series"],
+            "front_series_summary": run["metrics"]["front_series"],
         }
         metrics[key] = row
         # profiles as csv (x, h, exact h, u, exact u)
