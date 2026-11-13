@@ -5,11 +5,18 @@ ref: Breuer et al. 2009 Computers & Fluids 38:433, doi:10.1016/j.compfluid.2008.
 acceptance: reattachment x_r/H <10% and u/U_b at y/H=0.5 vs Breuer2009 (Re=2800)
 
 Breuer et al. 2009 (ERCOFTAC UFR 3-30) reference values for Re_b = 2800:
-  - Reattachment length x_r/H ≈ 4.36 (LES reference, mean of DNS/LES range 4.20–4.50)
+  - Reattachment length x_r/H = 5.34 (as tabulated by Volpiani et al. 2021 §III)
   - Velocity profile at y/H = 0.5: u/U_b at several x/H stations
 
-The reference data below is digitised from Breuer et al. 2009 Fig. 8 (u/U_b at y/H=0.5)
-and Table 2 (reattachment length).  Values are the LES mean from the paper.
+ROUND-6 RECONCILIATION (m17065).  This file used to carry its own copy of the
+reference values with ``BREUER_XR_H = 4.36`` and no page/figure citation, while
+the feature-ledger acceptance line and rounds 3--5 of
+``docs/case-periodic-hills/`` used ``5.34`` (Breuer et al. 2009 as tabulated by
+Volpiani et al. 2021).  The two 10 % bands are *disjoint* (``[4.80, 5.87]`` vs
+``[3.92, 4.80]``), so which one the gate uses decides the verdict.  The data now
+lives in exactly one place -- :mod:`tensorfvm.verification.periodic_hill_round6`
+(:data:`REFERENCE`, :data:`BREUER_PROFILE_Y05`) -- and this file imports it.
+The retired 4.36 is recorded there as :data:`COMPETING_X_R` rather than deleted.
 
 NOTE (m16819, 2026-11-12): this file was merged (m16691) with a *dead* API --
 it called ``solver.run(...)`` (no such method), indexed the velocity field
@@ -31,33 +38,27 @@ import numpy as np
 import pytest
 
 from tensorfvm.periodic_hill import PeriodicHillConfig, PeriodicHillSolver
+from tensorfvm.verification.periodic_hill_round6 import (
+    BREUER_PROFILE_Y05 as _BREUER_PROFILE_Y05,
+    REFERENCE,
+    REFERENCE_TOLERANCE,
+)
+
+BREUER_PROFILE_Y05 = _BREUER_PROFILE_Y05
 
 # --------------------------------------------------------------------------- #
 # Breuer et al. 2009 reference data (ERCOFTAC UFR 3-30, Re_b = 2800)
 # --------------------------------------------------------------------------- #
 
-#: Reattachment length x_r/H from Breuer et al. 2009 (LES mean, Table 2)
-BREUER_XR_H = 4.36
+#: Reattachment length x_r/H -- single-sourced (see the round-6 note above).
+BREUER_XR_H = REFERENCE["x_r_over_H"]
 #: Tolerance for reattachment length (10% per acceptance criteria)
-XR_TOLERANCE = 0.10
+XR_TOLERANCE = REFERENCE_TOLERANCE
 
-#: Mean streamwise velocity u/U_b at y/H = 0.5 from Breuer et al. 2009 Fig. 8.
-#: Dict of x/H -> u/U_b (LES reference).
-BREUER_PROFILE_Y05 = {
-    0.05: -0.15,   # separation bubble, reverse flow
-    0.50: -0.10,
-    1.00: -0.02,
-    1.50:  0.05,
-    2.00:  0.25,
-    3.00:  0.65,
-    4.00:  0.85,
-    5.00:  0.95,
-    6.00:  1.00,
-    7.00:  1.02,
-    8.00:  1.03,
-}
+#: Mean streamwise velocity u/U_b at y/H = 0.5 (dict of x/H -> u/U_b).
+BREUER_PROFILE_Y05 = dict(BREUER_PROFILE_Y05)
 #: Tolerance for velocity profile (10% relative)
-PROFILE_TOLERANCE = 0.10
+PROFILE_TOLERANCE = REFERENCE_TOLERANCE
 
 
 def _run_periodic_hill(nx, ny, reynolds=2800.0, max_steps=5000):
@@ -110,7 +111,7 @@ def _interpolate_profile(solver, x_over_h_values, y_over_h=0.5):
 
 @pytest.mark.slow
 def test_reattachment_length_vs_breuer2009():
-    """Reattachment length x_r/H within 10% of Breuer et al. 2009 (4.36).
+    """Reattachment length x_r/H within 10% of the ledger reference (5.34).
 
     Uses a moderately resolved mesh (96x48) to get a converged reattachment point.
     NOTE: Re=2800 is honest-FAIL on this collocated scheme (ROUND3.md); this
