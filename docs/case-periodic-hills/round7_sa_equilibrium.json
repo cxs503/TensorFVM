@@ -1,0 +1,183 @@
+{
+ "case": "CASE-FVM-PERIODIC-HILLS round 7",
+ "question": "is max nu_t/nu = 44 (round 6) a defect of the merged SA closure or a property of the 2D environment?",
+ "column_reference_case": {
+  "input": {
+   "ny": 192,
+   "reynolds": 2800.0,
+   "u_tau": 0.06,
+   "growth": 1.05,
+   "height": 3.036,
+   "half_height": 1.518,
+   "first_cell_height": 0.0007081121553557301,
+   "first_cell_y_plus": 0.11896284209976267
+  },
+  "peak_nu_t_over_nu": 24.452091162187756,
+  "y_over_half_height_at_peak": 1.3424411489018648,
+  "reference_peak_nu_t_over_nu": 26.125678214222376,
+  "over_diffusion_ratio": 0.9359409145932316,
+  "log_layer_max_relative_deviation": 0.31200401835476177,
+  "log_layer_points": 18,
+  "u_tau_numerical": 0.06000000000000295,
+  "u_tau_relative_error": 4.907185768843192e-14,
+  "log_law_fit": {
+   "kappa": 0.3494329765834634,
+   "B": 4.6316540320542865,
+   "points": 23
+  },
+  "log_law_kappa_error": 0.1477244473574063,
+  "log_law_B_error": 0.5683459679457137
+ },
+ "sweep": [
+  {
+   "ny": 48,
+   "growth": 1.0,
+   "first_cell_y_plus": 10.626,
+   "peak_nu_t_over_nu": 24.523975051553755,
+   "reference_peak_nu_t_over_nu": 26.094578125,
+   "over_diffusion_ratio": 0.9398111337181756,
+   "u_tau_numerical": 0.060000000000000595,
+   "u_tau_relative_error": 9.992007221626409e-15,
+   "log_law_kappa": 0.3552065101521512,
+   "log_law_B": 2.8533469932810047,
+   "log_law_kappa_error": 0.13364265816548482,
+   "log_layer_max_relative_deviation": 0.24526476194004798,
+   "log_layer_points": 4
+  },
+  {
+   "ny": 64,
+   "growth": 1.0,
+   "first_cell_y_plus": 7.969499999999999,
+   "peak_nu_t_over_nu": 24.467569305017026,
+   "reference_peak_nu_t_over_nu": 26.114432695312498,
+   "over_diffusion_ratio": 0.9369366583792923,
+   "u_tau_numerical": 0.060000000000000414,
+   "u_tau_relative_error": 6.8833827526759706e-15,
+   "log_law_kappa": 0.3543643581287163,
+   "log_law_B": 3.7009677435537487,
+   "log_law_kappa_error": 0.13569668749093577,
+   "log_layer_max_relative_deviation": 0.26155797677839776,
+   "log_layer_points": 6
+  },
+  {
+   "ny": 96,
+   "growth": 1.0,
+   "first_cell_y_plus": 5.313,
+   "peak_nu_t_over_nu": 24.4677524809933,
+   "reference_peak_nu_t_over_nu": 26.12861453125,
+   "over_diffusion_ratio": 0.9364351275391851,
+   "u_tau_numerical": 0.06000000000000244,
+   "u_tau_relative_error": 4.063416270128073e-14,
+   "log_law_kappa": 0.3528239958090527,
+   "log_law_B": 4.215209061782179,
+   "log_law_kappa_error": 0.13945366875840792,
+   "log_layer_max_relative_deviation": 0.2779750107369875,
+   "log_layer_points": 8
+  },
+  {
+   "ny": 64,
+   "growth": 1.06,
+   "first_cell_y_plus": 2.805860081557616,
+   "peak_nu_t_over_nu": 24.266495439453163,
+   "reference_peak_nu_t_over_nu": 26.13916366851234,
+   "over_diffusion_ratio": 0.9283577603014506,
+   "u_tau_numerical": 0.060000000000000143,
+   "u_tau_relative_error": 2.4424906541753444e-15,
+   "log_law_kappa": 0.3485899909998633,
+   "log_law_B": 4.423061046927232,
+   "log_law_kappa_error": 0.14978050975643087,
+   "log_layer_max_relative_deviation": 0.3280621577279429,
+   "log_layer_points": 9
+  },
+  {
+   "ny": 96,
+   "growth": 1.04,
+   "first_cell_y_plus": 1.8312374621033742,
+   "peak_nu_t_over_nu": 24.47641793072733,
+   "reference_peak_nu_t_over_nu": 26.126194778573097,
+   "over_diffusion_ratio": 0.9368535348592439,
+   "u_tau_numerical": 0.06000000000000009,
+   "u_tau_relative_error": 1.5543122344752192e-15,
+   "log_law_kappa": 0.35057676501169827,
+   "log_law_B": 4.5901670938898045,
+   "log_law_kappa_error": 0.14493471948366277,
+   "log_layer_max_relative_deviation": 0.30688771431612216,
+   "log_layer_points": 12
+  },
+  {
+   "ny": 192,
+   "growth": 1.05,
+   "first_cell_y_plus": 0.11896284209976267,
+   "peak_nu_t_over_nu": 24.452091162187756,
+   "reference_peak_nu_t_over_nu": 26.125678214222376,
+   "over_diffusion_ratio": 0.9359409145932316,
+   "u_tau_numerical": 0.06000000000000295,
+   "u_tau_relative_error": 4.907185768843192e-14,
+   "log_law_kappa": 0.3494329765834634,
+   "log_law_B": 4.6316540320542865,
+   "log_law_kappa_error": 0.1477244473574063,
+   "log_layer_max_relative_deviation": 0.31200401835476177,
+   "log_layer_points": 18
+  }
+ ],
+ "two_d_channel_cross_check": {
+  "case": "2D PeriodicHillSolver plane channel (hill_amplitude=0), ny=64, nx=8, SA",
+  "provenance": "run in this mission (m18386); 2000 spin steps then 1000-step blocks, max nu_t/nu over the field; trace ends at step 8000 because the control node was at load15 ~ 125/128 and the run was stopped",
+  "records": [
+   {
+    "steps": 3000,
+    "max_nu_t_over_nu": 11.12
+   },
+   {
+    "steps": 4000,
+    "max_nu_t_over_nu": 15.7
+   },
+   {
+    "steps": 5000,
+    "max_nu_t_over_nu": 20.36
+   },
+   {
+    "steps": 6000,
+    "max_nu_t_over_nu": 25.21
+   },
+   {
+    "steps": 7000,
+    "max_nu_t_over_nu": 30.4
+   },
+   {
+    "steps": 8000,
+    "max_nu_t_over_nu": 36.51
+   }
+  ]
+ },
+ "wall_resolution_plan": {
+  "y_plus_1_growth_1.10": {
+   "nu": 0.00035714285714285714,
+   "u_tau": 0.06,
+   "half_height": 1.518,
+   "first_cell_for_y_plus_target": 0.005952380952380953,
+   "growth": 1.1,
+   "ny": 70,
+   "ny_uniform": 512,
+   "first_cell_height": 0.00560097237200432,
+   "first_cell_y_plus": 0.9409633584967257,
+   "first_cell_y_plus_at_uniform_reference": 3.9847499999999996,
+   "y_plus_target": 1.0,
+   "saving_factor_vs_uniform": 7.314285714285714
+  },
+  "uniform": {
+   "nu": 0.00035714285714285714,
+   "u_tau": 0.06,
+   "half_height": 1.518,
+   "first_cell_for_y_plus_target": 0.005952380952380953,
+   "growth": 1.0,
+   "ny": 512,
+   "ny_uniform": 512,
+   "first_cell_height": 0.0059296875,
+   "first_cell_y_plus": 0.9961874999999999,
+   "first_cell_y_plus_at_uniform_reference": 7.969499999999999,
+   "y_plus_target": 1.0,
+   "saving_factor_vs_uniform": 1.0
+  }
+ }
+}

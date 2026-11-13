@@ -1,0 +1,29 @@
+{
+ "case": "2D solver plane channel ny=64 nx=8 SA (round-7 cross-check)",
+ "records": [
+  {
+   "steps": 3000,
+   "max_nu_t_over_nu": 11.11563270609501
+  },
+  {
+   "steps": 4000,
+   "max_nu_t_over_nu": 15.704821916085042
+  },
+  {
+   "steps": 5000,
+   "max_nu_t_over_nu": 20.356445273631774
+  },
+  {
+   "steps": 6000,
+   "max_nu_t_over_nu": 25.214378616795333
+  },
+  {
+   "steps": 7000,
+   "max_nu_t_over_nu": 30.3951036343073
+  },
+  {
+   "steps": 8000,
+   "max_nu_t_over_nu": 36.507260612364185
+  }
+ ]
+}
