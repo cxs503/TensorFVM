@@ -57,16 +57,18 @@ THRESHOLD_TIGHT = 0.03
 # ----------------------------------------------------------------------
 def exact_point(nx: int, t: float, *, amplitude: float = AMPLITUDE,
                 velocity: float = VELOCITY,
-                wavenumber: float = WAVENUMBER) -> np.ndarray:
+                wavenumber: float = WAVENUMBER,
+                phase: float = 0.0) -> np.ndarray:
     """Exact ``rho`` at the centroids of ``nx`` uniform cells of ``[0, 1)``."""
     h = 1.0 / nx
     x = (np.arange(nx) + 0.5) * h
-    return 1.0 + amplitude * np.sin(wavenumber * (x - velocity * t))
+    return 1.0 + amplitude * np.sin(wavenumber * (x - phase - velocity * t))
 
 
 def exact_cell_average(nx: int, t: float, *, amplitude: float = AMPLITUDE,
                        velocity: float = VELOCITY,
-                       wavenumber: float = WAVENUMBER) -> np.ndarray:
+                       wavenumber: float = WAVENUMBER,
+                       phase: float = 0.0) -> np.ndarray:
     """Exact volume average of ``rho`` over ``nx`` uniform cells of ``[0, 1)``.
 
     Closed form: ``(1/h)∫ 1 + A sin(k(x-ut)) dx
@@ -75,8 +77,9 @@ def exact_cell_average(nx: int, t: float, *, amplitude: float = AMPLITUDE,
     h = 1.0 / nx
     a = np.arange(nx) * h
     b = a + h
-    return 1.0 + amplitude * (np.cos(wavenumber * (a - velocity * t))
-                             - np.cos(wavenumber * (b - velocity * t))) / (wavenumber * h)
+    return 1.0 + amplitude * (
+        np.cos(wavenumber * (a - phase - velocity * t))
+        - np.cos(wavenumber * (b - phase - velocity * t))) / (wavenumber * h)
 
 
 def cell_average_quadrature(nx: int, t: float, subcell: int = 16, **kw) -> np.ndarray:
@@ -264,7 +267,8 @@ def uniform_ratio_bias(nx: Sequence[int], e: Sequence[float], *,
 # driving the cell-centred solver
 # ----------------------------------------------------------------------
 def run_case(nx: int, *, order: int, cfl: float = 0.4, t_end: float = 0.2,
-             amplitude: float = AMPLITUDE, velocity: float = VELOCITY) -> Dict:
+             amplitude: float = AMPLITUDE, velocity: float = VELOCITY,
+             limiter: str = "mc", phase: float = 0.0) -> Dict:
     """One cell-centred FV run of the periodic entropy wave.
 
     The solver is :class:`tensorfvm.compressible.solver.EulerSolver` (collocated
@@ -275,17 +279,21 @@ def run_case(nx: int, *, order: int, cfl: float = 0.4, t_end: float = 0.2,
     from .sod1978 import run_smooth_wave
 
     run = run_smooth_wave(nx, order=order, cfl=cfl, t_end=t_end,
-                          amplitude=amplitude, velocity=velocity)
+                          amplitude=amplitude, velocity=velocity,
+                          limiter=limiter, phase=phase)
     t = float(run["time"])
     h = 1.0 / nx
     widths = np.full(nx, h)
-    point = exact_point(nx, t, amplitude=amplitude, velocity=velocity)
-    average = exact_cell_average(nx, t, amplitude=amplitude, velocity=velocity)
+    point = exact_point(nx, t, amplitude=amplitude, velocity=velocity, phase=phase)
+    average = exact_cell_average(nx, t, amplitude=amplitude, velocity=velocity,
+                                 phase=phase)
     rho = np.asarray(run["rho"], dtype=float)
     return {
         "nx": int(nx),
         "order": int(order),
         "cfl": float(cfl),
+        "limiter": str(limiter),
+        "phase": float(phase),
         "t": t,
         "h": h,
         "steps": int(run["steps"]),
