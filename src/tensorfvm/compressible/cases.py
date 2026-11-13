@@ -209,21 +209,43 @@ def material_advection(nx: int = 400, *, u: float = 0.5, rho2: float = 5.0,
 class ShuOsherConfig:
     """Parameters for the Shu-Osher shock-entropy wave interaction case.
 
-    The original problem (Shu & Osher 1988, *JCP* **77**, 439) uses a domain
-    [0, 5] with a Mach-3 shock at x=4 interacting with a sinusoidal density
-    perturbation.  The post-shock state is computed from the Rankine-Hugoniot
-    relations for a Mach-3 normal shock in a perfect gas (gamma=1.4).
+    Canonical setup (Shu & Osher 1988, *J. Comput. Phys.* **77**, 439--471;
+    reused as Test 3 by Jiang & Shu 1996, *J. Comput. Phys.* **126**, 202)::
+
+        domain          x in [-5, 5]
+        initial jump    x = -4
+        x <  -4         post-shock state of a Mach-3 normal shock in air
+                        (rho = 3.857143, u = 2.629369, p = 10.333333, all
+                        from Rankine-Hugoniot, see :func:`normal_shock_state`)
+        x >= -4         rho = 1 + 0.2 sin(5x), u = 0, p = 1
+        output time     t = 1.8
+
+    A Mach-3 shock runs into a sinusoidal entropy wave.  The entropy wave is
+    compressed by the shock and steepens into a high-frequency density
+    oscillation train behind it: the standard resolution test for shock
+    capturing schemes.  At ``t = 1.8`` the shock is near ``x = 2.4`` (inside
+    the domain) and everything to its right must still be the *undisturbed*
+    analytic profile ``1 + 0.2 sin(5x)`` -- an exact, grid-independent check.
+
+    .. note::
+       An earlier revision of this case used ``lx = 5``, a jump at ``x = 4``
+       and wavenumber ``pi``.  With those numbers the shock (speed ~3.55)
+       leaves the domain at ``t ~ 0.28``: none of the shock/entropy-wave
+       interaction is computed and the ``t = 1.8`` field is a uniform
+       post-shock state.  The canonical parameters above are the ones the
+       published reference solution belongs to.
     """
 
     nx: int = 200
-    lx: float = 5.0
-    shock_pos: float = 4.0  # initial shock location
+    x_min: float = -5.0  # left edge of the physical domain
+    lx: float = 10.0  # domain length; [x_min, x_min + lx] = [-5, 5]
+    shock_pos: float = -4.0  # initial shock location
     mach: float = 3.0
     gamma: float = GAMMA_AIR
     rho_pre: float = 1.0
     p_pre: float = 1.0
-    entropy_amp: float = 0.2  # amplitude of density perturbation
-    entropy_wavenumber: float = math.pi  # k = pi for domain [0,5]
+    entropy_amp: float = 0.2  # amplitude of the density perturbation
+    entropy_wavenumber: float = 5.0  # rho = 1 + 0.2 sin(5x) for x >= -4
     t_end: float = 1.8
     cfl: float = 0.4
     order: int = 2
@@ -235,21 +257,39 @@ class ShuOsherConfig:
         return self.lx / self.nx
 
     @property
+    def x_max(self) -> float:
+        return self.x_min + self.lx
+
+    @property
     def post_shock(self) -> Dict[str, float]:
         """Post-shock state from Rankine-Hugoniot (zero hand-copying)."""
         return normal_shock_state(self.gamma, self.mach, self.rho_pre, self.p_pre)
+
+    @property
+    def pre_shock_profile(self):
+        """Analytic upstream profile at ``t = 0`` (density callable of x)."""
+        return lambda x: self.rho_pre + self.entropy_amp * torch.sin(
+            self.entropy_wavenumber * x
+        )
+
+    def shock_position(self, t: float) -> float:
+        """Linear (Rankine-Hugoniot) shock trajectory ``x_s(t) = x0 + D t``."""
+        return self.shock_pos + self.post_shock["shock_speed"] * t
 
 
 def shu_osher(cfg: ShuOsherConfig | None = None):
     """Build the Shu-Osher shock-entropy wave interaction case.
 
-    Returns ``(solver, meta)``.  The initial condition is:
-    - Left of ``shock_pos``: post-shock state (from Rankine-Hugoniot)
-    - Right of ``shock_pos``: pre-shock state with sinusoidal density perturbation
-      ``rho = rho_pre + entropy_amp * sin(entropy_wavenumber * x)``
+    Returns ``(solver, meta)``.  The initial condition on
+    ``[x_min, x_min + lx] = [-5, 5]`` is:
 
-    The reference solution is obtained by running the same solver on a fine grid
-    (N=2000) and is stored in ``meta["reference"]`` when ``with_reference=True``.
+    - left of ``shock_pos = -4``: the Mach-3 post-shock state from the
+      Rankine-Hugoniot relations;
+    - right of it: ``rho = 1 + 0.2 sin(5x)``, ``u = 0``, ``p = 1``.
+
+    Both boundaries are supersonic inflow/undisturbed-gas outflow, so
+    zero-gradient (``outflow``) boundary data is exact for the whole run:
+    at ``t = 1.8`` the shock has only travelled to ``x ~ 2.4``.
     """
     cfg = cfg or ShuOsherConfig()
     eos = StiffenedGasMixture([cfg.gamma, cfg.gamma], names=["air", "air"])
@@ -258,11 +298,10 @@ def shu_osher(cfg: ShuOsherConfig | None = None):
         bc=("outflow", "outflow", "periodic", "periodic"),
         flux_mode=cfg.flux_mode, order=cfg.order, limiter=cfg.limiter, cfl=cfg.cfl,
     )
-    xc = (torch.arange(cfg.nx, dtype=torch.float64) + 0.5) * cfg.lx / cfg.nx
+    xc = cfg.x_min + (torch.arange(cfg.nx, dtype=torch.float64) + 0.5) * cfg.dx
     left = xc < cfg.shock_pos
     post = cfg.post_shock
-    # pre-shock: uniform p, u=0, sinusoidal density perturbation
-    rho_pre = cfg.rho_pre + cfg.entropy_amp * torch.sin(cfg.entropy_wavenumber * xc)
+    rho_pre = cfg.pre_shock_profile(xc)
     solver.set_primitive({
         "rho": torch.where(left, torch.full_like(xc, post["rho"]), rho_pre),
         "u": torch.where(left, torch.full_like(xc, post["u"]), torch.zeros_like(xc)),
@@ -275,6 +314,7 @@ def shu_osher(cfg: ShuOsherConfig | None = None):
         "config": cfg,
         "nx": cfg.nx,
         "lx": cfg.lx,
+        "x_min": cfg.x_min,
         "xc": xc,
         "shock_pos": cfg.shock_pos,
         "t_end": cfg.t_end,
