@@ -5,6 +5,7 @@ SciPy constructs CSR on the host; all iterative solves run on the requested Torc
 CPU/CUDA device. Host assembly and transfer are included in reported timings.
 """
 import time
+from .convergence_diagnosis import ConvergenceMonitor, DiagnosisConfig
 import math
 import numpy as np
 import torch
@@ -95,7 +96,7 @@ class SparseBodyFittedSolver(BodyFittedSolver):
         else:
             dd=torch.as_tensor(A.diagonal(),**opts)
             pre=lambda q:q/dd
-        x=initial.clone();bn=float(torch.linalg.vector_norm(rhs));force_scale=max(self.config.density*self.config.inlet_velocity**2*self.config.residual_length,self.config.viscosity*self.config.inlet_velocity);floor=1e-12*min(1.,512/self.count) if pressure else 1e-12;target=max(floor,min(bn*1e-11,self.config.tolerance*force_scale/(10*math.sqrt(self.count))));iterations=0;restart=32
+        x=initial.clone();bn=float(torch.linalg.vector_norm(rhs));force_scale=max(self.config.density*self.config.inlet_velocity**2*self.config.residual_length,self.config.viscosity*self.config.inlet_velocity);floor=1e-12*min(1.,512/self.count) if pressure else 1e-12;target=max(floor,min(bn*1e-11,self.config.tolerance*force_scale/(10*math.sqrt(self.count))));iterations=0;restart=32;diag=ConvergenceMonitor(DiagnosisConfig(tolerance=target,max_iter=None))
         # Restarted left-preconditioned GMRES; identical operations on CPU/CUDA.
         for cycle in range(80):
             true=rhs-mv(x)
@@ -109,14 +110,14 @@ class SparseBodyFittedSolver(BodyFittedSolver):
                     values=basis.T@w;H[:j+1,j]+=values;w-=basis@values
                 H[j+1,j]=torch.linalg.vector_norm(w)
                 y=torch.linalg.lstsq(H[:j+2,:j+1],e[:j+2],driver='gels').solution
-                x=base+torch.stack(V,1)@y;iterations+=1
+                x=base+torch.stack(V,1)@y;iterations+=1;diag.record(iterations,float(torch.linalg.vector_norm(rhs-mv(x))))
                 if float(torch.linalg.vector_norm(rhs-mv(x)))<=target:break
                 if float(H[j+1,j])<1e-25:break
                 V.append(w/H[j+1,j])
             else:continue
             if float(torch.linalg.vector_norm(rhs-mv(x)))<=target:break
         residual=float(torch.linalg.vector_norm(rhs-mv(x)))
-        self.linear_history.append(dict(pressure=pressure,iterations=iterations,true_residual=residual,target=target,relative_residual=residual/max(bn,1e-30),actual_device=str(device),host_csr_assembly=True,role=getattr(self,'linear_role','physical SIMPLE'),matrix_nnz=int(A.nnz),assembled_operator_relative_defect=defect if pressure else None,elapsed_s=time.perf_counter()-started))
+        self.linear_history.append(dict(pressure=pressure,iterations=iterations,true_residual=residual,target=target,relative_residual=residual/max(bn,1e-30),actual_device=str(device),host_csr_assembly=True,role=getattr(self,'linear_role','physical SIMPLE'),convergence_diagnosis=diag.diagnosis().as_dict(),matrix_nnz=int(A.nnz),assembled_operator_relative_defect=defect if pressure else None,elapsed_s=time.perf_counter()-started))
         if not torch.isfinite(x).all() or residual>target*1.05:raise RuntimeError(f'sparse SIMPLE GMRES failed: {residual} > {target}')
         return x
 
