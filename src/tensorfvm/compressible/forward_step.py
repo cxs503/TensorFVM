@@ -221,6 +221,7 @@ def run_case(cfg: ForwardStepConfig | None = None, *, callback=None) -> Dict:
         "initial": initial,
         "budget": budget(prim, cfg, initial, solver),
         "positivity_fixes": solver.positivity_fixes,
+        "troubled_repairs": solver.troubled_repairs,
     }
     return out
 
