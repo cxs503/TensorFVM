@@ -481,7 +481,11 @@ def run_smooth_wave(nx: int, order: int = 2, t_end: float = 0.2, *,
     rho = solver.primitive()["rho"][:, 0].numpy()
     exact = 1.0 + amplitude * np.sin(2.0 * np.pi * (xc - velocity * solver.time))
     return {"nx": nx, "order": order, "x": xc, "rho": rho, "rho_exact": exact,
-            "l1_rho": float(np.abs(rho - exact).mean()), "steps": int(solver.nsteps)}
+            "l1_rho": float(np.abs(rho - exact).mean()), "steps": int(solver.nsteps),
+            # additive (m17904): the actual final time, needed to evaluate the
+            # analytic solution at the time the solver really reached (dt is
+            # adaptive, so it is not necessarily t_end).
+            "time": float(solver.time)}
 
 
 def l1_errors(run: Dict, star: Dict[str, float], subcell: int = 16) -> Dict[str, float]:

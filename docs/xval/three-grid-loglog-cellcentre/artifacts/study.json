@@ -1,0 +1,4156 @@
+{
+  "anchor": "XVAL-FVM-THREE-GRID-LOGLOG-SLOPE-CELLCENTRE-FV-OR",
+  "artifact_sha256": "aaae4036317a386388e8f77b166975f749e39260b023ec5bd5278a034d846de1",
+  "consistency_gates": [
+    {
+      "first": "order2_uniform",
+      "first_rel_dev": 0.018438242111520342,
+      "metric": "cell_average",
+      "norm": "l1",
+      "note": "non-vacuous asymptotic-range gate (replaces eq. 17)",
+      "p_first": 2.030205552622176,
+      "p_second": 2.028339667050841,
+      "pass_15": true,
+      "rel_diff": 0.0009190623919459742,
+      "second": "order2_fine",
+      "second_rel_dev": 0.030454107364538352
+    },
+    {
+      "first": "order2_uniform",
+      "first_rel_dev": 0.10496508848092057,
+      "metric": "cell_average",
+      "norm": "l2",
+      "note": "non-vacuous asymptotic-range gate (replaces eq. 17)",
+      "p_first": 1.764873189587766,
+      "p_second": 1.8117050968696904,
+      "pass_15": true,
+      "rel_diff": 0.02584963047398921,
+      "second": "order2_fine",
+      "second_rel_dev": 0.10279668811271403
+    },
+    {
+      "first": "order2_uniform",
+      "first_rel_dev": 0.30133505071940303,
+      "metric": "cell_average",
+      "norm": "linf",
+      "note": "non-vacuous asymptotic-range gate (replaces eq. 17)",
+      "p_first": 1.6759577931331697,
+      "p_second": 1.2489073023465762,
+      "pass_15": false,
+      "rel_diff": 0.25480981235704697,
+      "second": "order2_fine",
+      "second_rel_dev": 0.35536164897003786
+    },
+    {
+      "first": "order2_uniform",
+      "first_rel_dev": 0.0386492644520986,
+      "metric": "point",
+      "norm": "l1",
+      "note": "non-vacuous asymptotic-range gate (replaces eq. 17)",
+      "p_first": 2.021784582653469,
+      "p_second": 2.1100036577002896,
+      "pass_15": true,
+      "rel_diff": 0.041809915696056896,
+      "second": "order2_fine",
+      "second_rel_dev": 0.05704977232042374
+    },
+    {
+      "first": "order2_uniform",
+      "first_rel_dev": 0.1041275236004785,
+      "metric": "point",
+      "norm": "l2",
+      "note": "non-vacuous asymptotic-range gate (replaces eq. 17)",
+      "p_first": 1.7746384770054378,
+      "p_second": 1.810053961382211,
+      "pass_15": true,
+      "rel_diff": 0.019565982634975707,
+      "second": "order2_fine",
+      "second_rel_dev": 0.10485994503046403
+    },
+    {
+      "first": "order2_uniform",
+      "first_rel_dev": 0.3176049794199326,
+      "metric": "point",
+      "norm": "linf",
+      "note": "non-vacuous asymptotic-range gate (replaces eq. 17)",
+      "p_first": 1.3037759306775776,
+      "p_second": 1.3992506554680744,
+      "pass_15": true,
+      "rel_diff": 0.0682327533079188,
+      "second": "order2_fine",
+      "second_rel_dev": 0.30722057762482213
+    },
+    {
+      "first": "order2_coarse",
+      "first_rel_dev": 0.0920462527583128,
+      "metric": "cell_average",
+      "norm": "l1",
+      "note": "non-vacuous asymptotic-range gate (replaces eq. 17)",
+      "p_first": 1.737827016912128,
+      "p_second": 1.798590448324128,
+      "pass_15": true,
+      "rel_diff": 0.033783917549777685,
+      "second": "order2_mid",
+      "second_rel_dev": 0.02693556449687251
+    },
+    {
+      "first": "order2_coarse",
+      "first_rel_dev": 0.1787419685394992,
+      "metric": "cell_average",
+      "norm": "l2",
+      "note": "non-vacuous asymptotic-range gate (replaces eq. 17)",
+      "p_first": 1.6830870253240553,
+      "p_second": 1.5527479511233384,
+      "pass_15": true,
+      "rel_diff": 0.07744048420527862,
+      "second": "order2_mid",
+      "second_rel_dev": 0.1505481577619887
+    },
+    {
+      "first": "order2_coarse",
+      "first_rel_dev": 0.37510718651974106,
+      "metric": "cell_average",
+      "norm": "linf",
+      "note": "non-vacuous asymptotic-range gate (replaces eq. 17)",
+      "p_first": 1.4303298473936077,
+      "p_second": 0.9505682662222998,
+      "pass_15": false,
+      "rel_diff": 0.3354202403351539,
+      "second": "order2_mid",
+      "second_rel_dev": 0.32536942502931665
+    },
+    {
+      "first": "order2_coarse",
+      "first_rel_dev": 0.057092676454929214,
+      "metric": "point",
+      "norm": "l1",
+      "note": "non-vacuous asymptotic-range gate (replaces eq. 17)",
+      "p_first": 1.7792733874913167,
+      "p_second": 1.9147640650208602,
+      "pass_15": true,
+      "rel_diff": 0.07076103004265823,
+      "second": "order2_mid",
+      "second_rel_dev": 0.002496378538233923
+    },
+    {
+      "first": "order2_coarse",
+      "first_rel_dev": 0.12676532125117157,
+      "metric": "point",
+      "norm": "l2",
+      "note": "non-vacuous asymptotic-range gate (replaces eq. 17)",
+      "p_first": 1.893994276403184,
+      "p_second": 1.616557303338412,
+      "pass_15": true,
+      "rel_diff": 0.14648247701764053,
+      "second": "order2_mid",
+      "second_rel_dev": 0.13773919641398324
+    },
+    {
+      "first": "order2_coarse",
+      "first_rel_dev": 0.2439275298108805,
+      "metric": "point",
+      "norm": "linf",
+      "note": "non-vacuous asymptotic-range gate (replaces eq. 17)",
+      "p_first": 1.9452167083032301,
+      "p_second": 1.2832215125329443,
+      "pass_15": false,
+      "rel_diff": 0.3403195093608515,
+      "second": "order2_mid",
+      "second_rel_dev": 0.3392466735451769
+    }
+  ],
+  "floor_control": [
+    {
+      "coefficient": 1.0,
+      "grids": [
+        40,
+        80,
+        160
+      ],
+      "l1": {
+        "cell_average": [
+          0.00039829671384944974,
+          9.949741037940109e-05,
+          2.486955782663031e-05
+        ],
+        "point": [
+          0.00026730275554205375,
+          6.676659825316096e-05,
+          1.6687958961693343e-05
+        ]
+      },
+      "slope": {
+        "cell_average": 2.0006954072889678,
+        "point": 2.0007976448419376
+      },
+      "slope_dev": {
+        "cell_average": 0.0003477036444838877,
+        "point": 0.00039882242096878073
+      },
+      "true_order": 2
+    },
+    {
+      "coefficient": 10.0,
+      "grids": [
+        40,
+        80,
+        160
+      ],
+      "l1": {
+        "cell_average": [
+          0.003982967138494498,
+          0.0009949741037940832,
+          0.00024869557826636557
+        ],
+        "point": [
+          0.0038519731801871016,
+          0.000962243291667843,
+          0.00024051397940142862
+        ]
+      },
+      "slope": {
+        "cell_average": 2.000695407288788,
+        "point": 2.000702501465238
+      },
+      "slope_dev": {
+        "cell_average": 0.0003477036443939596,
+        "point": 0.00035125073261910167
+      },
+      "true_order": 2
+    },
+    {
+      "coefficient": 1.0,
+      "grids": [
+        40,
+        80,
+        160
+      ],
+      "l1": {
+        "cell_average": [
+          9.957417846240269e-06,
+          1.2437176297425137e-06,
+          1.5543473641660425e-07
+        ],
+        "point": [
+          0.00012103654046115577,
+          3.148709449649763e-05,
+          8.026164128520366e-06
+        ]
+      },
+      "slope": {
+        "cell_average": 3.0006954072884957,
+        "point": 1.9572940943499288
+      },
+      "slope_dev": {
+        "cell_average": 0.00023180242949856952,
+        "point": 0.3475686352166904
+      },
+      "true_order": 3
+    },
+    {
+      "coefficient": 10.0,
+      "grids": [
+        40,
+        80,
+        160
+      ],
+      "l1": {
+        "cell_average": [
+          9.957417846235827e-05,
+          1.2437176297425138e-05,
+          1.5543473641660426e-06
+        ],
+        "point": [
+          3.141977984503775e-05,
+          2.0293635828814997e-05,
+          6.627251500770927e-06
+        ]
+      },
+      "slope": {
+        "cell_average": 3.000695407288173,
+        "point": 1.1225952483818542
+      },
+      "slope_dev": {
+        "cell_average": 0.0002318024293909519,
+        "point": 0.6258015838727152
+      },
+      "true_order": 3
+    },
+    {
+      "coefficient": 1.0,
+      "grids": [
+        40,
+        80,
+        160
+      ],
+      "l1": {
+        "cell_average": [
+          2.4893544616211295e-07,
+          1.5546470377714176e-08,
+          9.71467102595103e-10
+        ],
+        "point": [
+          0.00013074502286123394,
+          3.271526565586242e-05,
+          8.180627397834375e-06
+        ]
+      },
+      "slope": {
+        "cell_average": 4.000695407312631,
+        "point": 1.9992003626383885
+      },
+      "slope_dev": {
+        "cell_average": 0.00017385182815776723,
+        "point": 0.5001999093404028
+      },
+      "true_order": 4
+    },
+    {
+      "coefficient": 10.0,
+      "grids": [
+        40,
+        80,
+        160
+      ],
+      "l1": {
+        "cell_average": [
+          2.489354461554516e-06,
+          1.5546470372995727e-07,
+          9.714671027338808e-09
+        ],
+        "point": [
+          0.00012850460384584154,
+          3.257534742251017e-05,
+          8.171884193909631e-06
+        ]
+      },
+      "slope": {
+        "cell_average": 4.00069540719028,
+        "point": 1.9875037385926024
+      },
+      "slope_dev": {
+        "cell_average": 0.00017385179757001268,
+        "point": 0.5031240653518494
+      },
+      "true_order": 4
+    },
+    {
+      "coefficient": 1.0,
+      "grids": [
+        80,
+        160,
+        320
+      ],
+      "l1": {
+        "cell_average": [
+          9.949741037940109e-05,
+          2.486955782663031e-05,
+          6.217089834198442e-06
+        ],
+        "point": [
+          6.676659825316096e-05,
+          1.6687958961693343e-05,
+          4.171759118512184e-06
+        ]
+      },
+      "slope": {
+        "cell_average": 2.000173823327738,
+        "point": 2.000199387148038
+      },
+      "slope_dev": {
+        "cell_average": 8.691166386909366e-05,
+        "point": 9.969357401895529e-05
+      },
+      "true_order": 2
+    },
+    {
+      "coefficient": 10.0,
+      "grids": [
+        80,
+        160,
+        320
+      ],
+      "l1": {
+        "cell_average": [
+          0.0009949741037940832,
+          0.00024869557826636557,
+          6.217089834191711e-05
+        ],
+        "point": [
+          0.000962243291667843,
+          0.00024051397940142862,
+          6.012556762623086e-05
+        ]
+      },
+      "slope": {
+        "cell_average": 2.0001738233285726,
+        "point": 2.00017559708082
+      },
+      "slope_dev": {
+        "cell_average": 8.691166428631547e-05,
+        "point": 8.779854040996682e-05
+      },
+      "true_order": 2
+    },
+    {
+      "coefficient": 1.0,
+      "grids": [
+        80,
+        160,
+        320
+      ],
+      "l1": {
+        "cell_average": [
+          1.2437176297425137e-06,
+          1.5543473641660425e-07,
+          1.942840573213034e-08
+        ],
+        "point": [
+          3.148709449649763e-05,
+          8.026164128520366e-06,
+          2.0259023099541277e-06
+        ]
+      },
+      "slope": {
+        "cell_average": 3.0001738233180766,
+        "point": 1.9790620620172987
+      },
+      "slope_dev": {
+        "cell_average": 5.794110602552749e-05,
+        "point": 0.3403126459942338
+      },
+      "true_order": 3
+    },
+    {
+      "coefficient": 10.0,
+      "grids": [
+        80,
+        160,
+        320
+      ],
+      "l1": {
+        "cell_average": [
+          1.2437176297425138e-05,
+          1.5543473641660426e-06,
+          1.9428405731228285e-07
+        ],
+        "point": [
+          2.0293635828814997e-05,
+          6.627251500770927e-06,
+          1.8510466583739758e-06
+        ]
+      },
+      "slope": {
+        "cell_average": 3.0001738233515707,
+        "point": 1.727307098471845
+      },
+      "slope_dev": {
+        "cell_average": 5.7941117190226286e-05,
+        "point": 0.42423096717605163
+      },
+      "true_order": 3
+    },
+    {
+      "coefficient": 1.0,
+      "grids": [
+        80,
+        160,
+        320
+      ],
+      "l1": {
+        "cell_average": [
+          1.5546470377714176e-08,
+          9.71467102595103e-10,
+          6.071376734695377e-11
+        ],
+        "point": [
+          3.271526565586242e-05,
+          8.180627397834375e-06,
+          2.045270001918912e-06
+        ]
+      },
+      "slope": {
+        "cell_average": 4.000173830317515,
+        "point": 1.9998003853229411
+      },
+      "slope_dev": {
+        "cell_average": 4.34575793788472e-05,
+        "point": 0.5000499036692647
+      },
+      "true_order": 4
+    },
+    {
+      "coefficient": 10.0,
+      "grids": [
+        80,
+        160,
+        320
+      ],
+      "l1": {
+        "cell_average": [
+          1.5546470372995727e-07,
+          9.714671027338808e-09,
+          6.071376783267636e-10
+        ],
+        "point": [
+          3.257534742251017e-05,
+          8.171884193909631e-06,
+          2.044723578007932e-06
+        ]
+      },
+      "slope": {
+        "cell_average": 4.000173824327653,
+        "point": 1.9969014195142576
+      },
+      "slope_dev": {
+        "cell_average": 4.345608191314021e-05,
+        "point": 0.5007746451214357
+      },
+      "true_order": 4
+    }
+  ],
+  "gci_reference": {
+    "asymptotic": true,
+    "band": [
+      -5.795395937744184e-07,
+      7.808226701289622e-08
+    ],
+    "convergence": "monotone",
+    "errors": [
+      8.883514018313555e-05,
+      2.158751658022235e-05,
+      5.1026339012411055e-06
+    ],
+    "extrapolated": -2.507286633807611e-07,
+    "gci": 1.3114213826215755,
+    "grids": [
+      80,
+      160,
+      320
+    ],
+    "ladder": "order2_fine",
+    "metric": "cell_average/l1",
+    "order": 2.028339667050841,
+    "order_used": 2.028339667050841
+  },
+  "ladders": {
+    "order1_nonuniform": {
+      "cfl": 0.4,
+      "grids": [
+        50,
+        100,
+        175
+      ],
+      "order": 1,
+      "readouts": [
+        {
+          "errors": [
+            0.004316203182198937,
+            0.0021970851280397417,
+            0.001265534444378476
+          ],
+          "h": [
+            0.02,
+            0.01,
+            0.005714285714285714
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": true,
+          "loglog_rel_dev": 0.020861871805027188,
+          "metric": "cell_average",
+          "norm": "l1",
+          "nx": [
+            50,
+            100,
+            175
+          ],
+          "p_adjacent": [
+            0.9741720109074429,
+            0.98574242062686
+          ],
+          "p_loglog": 0.9791381281949728,
+          "p_richardson": 0.9603153148268333,
+          "p_theory": 1.0,
+          "refinement_ratios": [
+            2.0,
+            1.75
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.0396846851731667
+        },
+        {
+          "errors": [
+            0.0047935205965767315,
+            0.0024402731988543355,
+            0.0014056365701025472
+          ],
+          "h": [
+            0.02,
+            0.01,
+            0.005714285714285714
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": true,
+          "loglog_rel_dev": 0.020948799748337188,
+          "metric": "cell_average",
+          "norm": "l2",
+          "nx": [
+            50,
+            100,
+            175
+          ],
+          "p_adjacent": [
+            0.9740429586273739,
+            0.9857115125925349
+          ],
+          "p_loglog": 0.9790512002516628,
+          "p_richardson": 0.9600671843384545,
+          "p_theory": 1.0,
+          "refinement_ratios": [
+            2.0,
+            1.75
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.039932815661545495
+        },
+        {
+          "errors": [
+            0.006775416005108559,
+            0.003450676356066218,
+            0.001987870163226102
+          ],
+          "h": [
+            0.02,
+            0.01,
+            0.005714285714285714
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": true,
+          "loglog_rel_dev": 0.021385334584772653,
+          "metric": "cell_average",
+          "norm": "linf",
+          "nx": [
+            50,
+            100,
+            175
+          ],
+          "p_adjacent": [
+            0.9734303618434509,
+            0.9855091173303409
+          ],
+          "p_loglog": 0.9786146654152273,
+          "p_richardson": 0.9589551791319895,
+          "p_theory": 1.0,
+          "refinement_ratios": [
+            2.0,
+            1.75
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.041044820868010534
+        },
+        {
+          "errors": [
+            0.004400017587951862,
+            0.002218031490913887,
+            0.0012723729916692462
+          ],
+          "h": [
+            0.02,
+            0.01,
+            0.005714285714285714
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": true,
+          "loglog_rel_dev": 0.009693884061535707,
+          "metric": "point",
+          "norm": "l1",
+          "nx": [
+            50,
+            100,
+            175
+          ],
+          "p_adjacent": [
+            0.9882294419924463,
+            0.9930678231699119
+          ],
+          "p_loglog": 0.9903061159384643,
+          "p_richardson": 0.9825184740962147,
+          "p_theory": 1.0,
+          "refinement_ratios": [
+            2.0,
+            1.75
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.017481525903785267
+        },
+        {
+          "errors": [
+            0.004886504671679803,
+            0.002463531847739752,
+            0.001413232160230979
+          ],
+          "h": [
+            0.02,
+            0.01,
+            0.005714285714285714
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": true,
+          "loglog_rel_dev": 0.009797363880700738,
+          "metric": "point",
+          "norm": "l2",
+          "nx": [
+            50,
+            100,
+            175
+          ],
+          "p_adjacent": [
+            0.9880747484543407,
+            0.993032450960138
+          ],
+          "p_loglog": 0.9902026361192993,
+          "p_richardson": 0.9822221802156814,
+          "p_theory": 1.0,
+          "refinement_ratios": [
+            2.0,
+            1.75
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.017777819784318583
+        },
+        {
+          "errors": [
+            0.006906984757140355,
+            0.003483557181244268,
+            0.0019986119839465744
+          ],
+          "h": [
+            0.02,
+            0.01,
+            0.005714285714285714
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": true,
+          "loglog_rel_dev": 0.010217072577821784,
+          "metric": "point",
+          "norm": "linf",
+          "nx": [
+            50,
+            100,
+            175
+          ],
+          "p_adjacent": [
+            0.9874947950363088,
+            0.9928258469756684
+          ],
+          "p_loglog": 0.9897829274221782,
+          "p_richardson": 0.9811981229884157,
+          "p_theory": 1.0,
+          "refinement_ratios": [
+            2.0,
+            1.75
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.01880187701158431
+        },
+        {
+          "errors": [
+            8.381440575292442e-05,
+            2.0946362874144645e-05,
+            6.838547290770286e-06
+          ],
+          "h": [
+            0.02,
+            0.01,
+            0.005714285714285714
+          ],
+          "loglog_pass_15": false,
+          "loglog_pass_3": false,
+          "loglog_rel_dev": 1.000405799252503,
+          "metric": "sampling_bias",
+          "norm": "l1",
+          "nx": [
+            50,
+            100,
+            175
+          ],
+          "p_adjacent": [
+            2.0004984749169106,
+            2.0002825526287094
+          ],
+          "p_loglog": 2.000405799252503,
+          "p_richardson": 2.000588181286508,
+          "p_theory": 1.0,
+          "refinement_ratios": [
+            2.0,
+            1.75
+          ],
+          "richardson_pass_15": false,
+          "richardson_rel_dev": 1.000588181286508
+        },
+        {
+          "errors": [
+            9.303315675385254e-05,
+            2.326173271521827e-05,
+            7.595920267617032e-06
+          ],
+          "h": [
+            0.02,
+            0.01,
+            0.005714285714285714
+          ],
+          "loglog_pass_15": false,
+          "loglog_pass_3": false,
+          "loglog_rel_dev": 0.9998525983874256,
+          "metric": "sampling_bias",
+          "norm": "l2",
+          "nx": [
+            50,
+            100,
+            175
+          ],
+          "p_adjacent": [
+            1.9997864163094263,
+            1.9999406119746121
+          ],
+          "p_loglog": 1.9998525983874256,
+          "p_richardson": 1.9997223256995746,
+          "p_theory": 1.0,
+          "refinement_ratios": [
+            2.0,
+            1.75
+          ],
+          "richardson_pass_15": false,
+          "richardson_rel_dev": 0.9997223256995746
+        },
+        {
+          "errors": [
+            0.00013156875203279572,
+            3.2880825179271156e-05,
+            1.0741820725579387e-05
+          ],
+          "h": [
+            0.02,
+            0.01,
+            0.005714285714285714
+          ],
+          "loglog_pass_15": false,
+          "loglog_pass_3": false,
+          "loglog_rel_dev": 0.9999113855902249,
+          "metric": "sampling_bias",
+          "norm": "linf",
+          "nx": [
+            50,
+            100,
+            175
+          ],
+          "p_adjacent": [
+            2.0004984748702612,
+            1.999130632928841
+          ],
+          "p_loglog": 1.9999113855902249,
+          "p_richardson": 2.0010670236061516,
+          "p_theory": 1.0,
+          "refinement_ratios": [
+            2.0,
+            1.75
+          ],
+          "richardson_pass_15": false,
+          "richardson_rel_dev": 1.0010670236061516
+        }
+      ],
+      "rows": [
+        {
+          "cell_average": {
+            "l1": 0.004316203182198937,
+            "l2": 0.0047935205965767315,
+            "l2_unnormalised": 0.004793520596576732,
+            "linf": 0.006775416005108559
+          },
+          "cfl": 0.4,
+          "h": 0.02,
+          "nx": 50,
+          "order": 1,
+          "point": {
+            "l1": 0.004400017587951862,
+            "l2": 0.004886504671679803,
+            "l2_unnormalised": 0.004886504671679803,
+            "linf": 0.006906984757140355
+          },
+          "sampling_bias": {
+            "l1": 8.381440575292442e-05,
+            "l2": 9.303315675385254e-05,
+            "l2_unnormalised": 9.303315675385254e-05,
+            "linf": 0.00013156875203279572
+          },
+          "steps": 46,
+          "t": 0.2
+        },
+        {
+          "cell_average": {
+            "l1": 0.0021970851280397417,
+            "l2": 0.0024402731988543355,
+            "l2_unnormalised": 0.0024402731988543355,
+            "linf": 0.003450676356066218
+          },
+          "cfl": 0.4,
+          "h": 0.01,
+          "nx": 100,
+          "order": 1,
+          "point": {
+            "l1": 0.002218031490913887,
+            "l2": 0.002463531847739752,
+            "l2_unnormalised": 0.0024635318477397514,
+            "linf": 0.003483557181244268
+          },
+          "sampling_bias": {
+            "l1": 2.0946362874144645e-05,
+            "l2": 2.326173271521827e-05,
+            "l2_unnormalised": 2.3261732715218265e-05,
+            "linf": 3.2880825179271156e-05
+          },
+          "steps": 92,
+          "t": 0.2
+        },
+        {
+          "cell_average": {
+            "l1": 0.001265534444378476,
+            "l2": 0.0014056365701025472,
+            "l2_unnormalised": 0.0014056365701025472,
+            "linf": 0.001987870163226102
+          },
+          "cfl": 0.4,
+          "h": 0.005714285714285714,
+          "nx": 175,
+          "order": 1,
+          "point": {
+            "l1": 0.0012723729916692462,
+            "l2": 0.001413232160230979,
+            "l2_unnormalised": 0.001413232160230979,
+            "linf": 0.0019986119839465744
+          },
+          "sampling_bias": {
+            "l1": 6.838547290770286e-06,
+            "l2": 7.595920267617032e-06,
+            "l2_unnormalised": 7.595920267617031e-06,
+            "linf": 1.0741820725579387e-05
+          },
+          "steps": 160,
+          "t": 0.2
+        }
+      ],
+      "seconds": 3.46,
+      "theory_order": 1.0
+    },
+    "order1_uniform": {
+      "cfl": 0.4,
+      "grids": [
+        40,
+        80,
+        160
+      ],
+      "order": 1,
+      "readouts": [
+        {
+          "errors": [
+            0.0053459538098754675,
+            0.0027341012247301573,
+            0.0013827669271585263
+          ],
+          "h": [
+            0.025,
+            0.0125,
+            0.00625
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": true,
+          "loglog_rel_dev": 0.024555315236977626,
+          "metric": "cell_average",
+          "norm": "l1",
+          "nx": [
+            40,
+            80,
+            160
+          ],
+          "p_adjacent": [
+            0.9673807155729677,
+            0.9835086539530773
+          ],
+          "p_loglog": 0.9754446847630224,
+          "p_richardson": 0.9506888549150765,
+          "p_theory": 1.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.04931114508492351
+        },
+        {
+          "errors": [
+            0.005936756937875461,
+            0.0030366780884444984,
+            0.001535849487083203
+          ],
+          "h": [
+            0.025,
+            0.0125,
+            0.00625
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": true,
+          "loglog_rel_dev": 0.024680895774672362,
+          "metric": "cell_average",
+          "norm": "l2",
+          "nx": [
+            40,
+            80,
+            160
+          ],
+          "p_adjacent": [
+            0.9671810679483178,
+            0.9834571405023368
+          ],
+          "p_loglog": 0.9753191042253276,
+          "p_richardson": 0.9503328990693463,
+          "p_theory": 1.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.04966710093065374
+        },
+        {
+          "errors": [
+            0.008389938371602623,
+            0.004293751714775418,
+            0.00217192299815383
+          ],
+          "h": [
+            0.025,
+            0.0125,
+            0.00625
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": true,
+          "loglog_rel_dev": 0.025156371186822568,
+          "metric": "cell_average",
+          "norm": "linf",
+          "nx": [
+            40,
+            80,
+            160
+          ],
+          "p_adjacent": [
+            0.9664214432763473,
+            0.9832658143500068
+          ],
+          "p_loglog": 0.9748436288131774,
+          "p_richardson": 0.9489732579529764,
+          "p_theory": 1.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.05102674204702362
+        },
+        {
+          "errors": [
+            0.005476947768182864,
+            0.0027668320368563976,
+            0.0013909485260234634
+          ],
+          "h": [
+            0.025,
+            0.0125,
+            0.00625
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": true,
+          "loglog_rel_dev": 0.011348455003766356,
+          "metric": "point",
+          "norm": "l1",
+          "nx": [
+            40,
+            80,
+            160
+          ],
+          "p_adjacent": [
+            0.985137055487066,
+            0.9921660345054006
+          ],
+          "p_loglog": 0.9886515449962336,
+          "p_richardson": 0.9779961315230132,
+          "p_theory": 1.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.022003868476986765
+        },
+        {
+          "errors": [
+            0.006081985665632459,
+            0.0030730160190824162,
+            0.001544935902518299
+          ],
+          "h": [
+            0.025,
+            0.0125,
+            0.00625
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": true,
+          "loglog_rel_dev": 0.011502283794546764,
+          "metric": "point",
+          "norm": "l2",
+          "nx": [
+            40,
+            80,
+            160
+          ],
+          "p_adjacent": [
+            0.9848871286860386,
+            0.992108303724868
+          ],
+          "p_loglog": 0.9884977162054532,
+          "p_richardson": 0.9775493681147209,
+          "p_theory": 1.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.02245063188527907
+        },
+        {
+          "errors": [
+            0.008594858069515654,
+            0.004345112313211219,
+            0.002184771320716372
+          ],
+          "h": [
+            0.025,
+            0.0125,
+            0.00625
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": true,
+          "loglog_rel_dev": 0.012004232573477935,
+          "metric": "point",
+          "norm": "linf",
+          "nx": [
+            40,
+            80,
+            160
+          ],
+          "p_adjacent": [
+            0.9840803475222596,
+            0.9919111873307838
+          ],
+          "p_loglog": 0.9879957674265221,
+          "p_richardson": 0.9761174854987633,
+          "p_theory": 1.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.023882514501236685
+        },
+        {
+          "errors": [
+            0.00013099395830739604,
+            3.273081212624013e-05,
+            8.181598864936968e-06
+          ],
+          "h": [
+            0.025,
+            0.0125,
+            0.00625
+          ],
+          "loglog_pass_15": false,
+          "loglog_pass_3": false,
+          "loglog_rel_dev": 1.0004868290240854,
+          "metric": "sampling_bias",
+          "norm": "l1",
+          "nx": [
+            40,
+            80,
+            160
+          ],
+          "p_adjacent": [
+            2.0007789689347706,
+            2.000194689113401
+          ],
+          "p_loglog": 2.0004868290240854,
+          "p_richardson": 2.000973641275343,
+          "p_theory": 1.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": false,
+          "richardson_rel_dev": 1.0009736412753432
+        },
+        {
+          "errors": [
+            0.00014534816788720517,
+            3.6345448464365096e-05,
+            9.086887594623482e-06
+          ],
+          "h": [
+            0.025,
+            0.0125,
+            0.00625
+          ],
+          "loglog_pass_15": false,
+          "loglog_pass_3": false,
+          "loglog_rel_dev": 0.9997914217327428,
+          "metric": "sampling_bias",
+          "norm": "l2",
+          "nx": [
+            40,
+            80,
+            160
+          ],
+          "p_adjacent": [
+            1.9996662743636227,
+            1.9999165691018623
+          ],
+          "p_loglog": 1.9997914217327428,
+          "p_richardson": 1.9995828266991627,
+          "p_theory": 1.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": false,
+          "richardson_rel_dev": 0.9995828266991627
+        },
+        {
+          "errors": [
+            0.00020491969791336384,
+            5.1360598438021654e-05,
+            1.2848322564762427e-05
+          ],
+          "h": [
+            0.025,
+            0.0125,
+            0.00625
+          ],
+          "loglog_pass_15": false,
+          "loglog_pass_3": false,
+          "loglog_rel_dev": 0.9977033734387395,
+          "metric": "sampling_bias",
+          "norm": "linf",
+          "nx": [
+            40,
+            80,
+            160
+          ],
+          "p_adjacent": [
+            1.9963247526145698,
+            1.9990819942629088
+          ],
+          "p_loglog": 1.9977033734387395,
+          "p_richardson": 1.9954037183829216,
+          "p_theory": 1.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": false,
+          "richardson_rel_dev": 0.9954037183829216
+        }
+      ],
+      "rows": [
+        {
+          "cell_average": {
+            "l1": 0.0053459538098754675,
+            "l2": 0.005936756937875461,
+            "l2_unnormalised": 0.005936756937875461,
+            "linf": 0.008389938371602623
+          },
+          "cfl": 0.4,
+          "h": 0.025,
+          "nx": 40,
+          "order": 1,
+          "point": {
+            "l1": 0.005476947768182864,
+            "l2": 0.006081985665632459,
+            "l2_unnormalised": 0.006081985665632459,
+            "linf": 0.008594858069515654
+          },
+          "sampling_bias": {
+            "l1": 0.00013099395830739604,
+            "l2": 0.00014534816788720517,
+            "l2_unnormalised": 0.00014534816788720517,
+            "linf": 0.00020491969791336384
+          },
+          "steps": 37,
+          "t": 0.2
+        },
+        {
+          "cell_average": {
+            "l1": 0.0027341012247301573,
+            "l2": 0.0030366780884444984,
+            "l2_unnormalised": 0.003036678088444498,
+            "linf": 0.004293751714775418
+          },
+          "cfl": 0.4,
+          "h": 0.0125,
+          "nx": 80,
+          "order": 1,
+          "point": {
+            "l1": 0.0027668320368563976,
+            "l2": 0.0030730160190824162,
+            "l2_unnormalised": 0.003073016019082416,
+            "linf": 0.004345112313211219
+          },
+          "sampling_bias": {
+            "l1": 3.273081212624013e-05,
+            "l2": 3.6345448464365096e-05,
+            "l2_unnormalised": 3.634544846436509e-05,
+            "linf": 5.1360598438021654e-05
+          },
+          "steps": 73,
+          "t": 0.2
+        },
+        {
+          "cell_average": {
+            "l1": 0.0013827669271585263,
+            "l2": 0.001535849487083203,
+            "l2_unnormalised": 0.0015358494870832027,
+            "linf": 0.00217192299815383
+          },
+          "cfl": 0.4,
+          "h": 0.00625,
+          "nx": 160,
+          "order": 1,
+          "point": {
+            "l1": 0.0013909485260234634,
+            "l2": 0.001544935902518299,
+            "l2_unnormalised": 0.0015449359025182987,
+            "linf": 0.002184771320716372
+          },
+          "sampling_bias": {
+            "l1": 8.181598864936968e-06,
+            "l2": 9.086887594623482e-06,
+            "l2_unnormalised": 9.08688759462348e-06,
+            "linf": 1.2848322564762427e-05
+          },
+          "steps": 146,
+          "t": 0.2
+        }
+      ],
+      "seconds": 3.11,
+      "theory_order": 1.0
+    },
+    "order2_cfl010": {
+      "cfl": 0.1,
+      "grids": [
+        40,
+        80,
+        160
+      ],
+      "order": 2,
+      "readouts": [
+        {
+          "errors": [
+            0.00039633812223814906,
+            9.820953743387013e-05,
+            2.362468143463637e-05
+          ],
+          "h": [
+            0.025,
+            0.0125,
+            0.00625
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": true,
+          "loglog_rel_dev": 0.017091240151189346,
+          "metric": "cell_average",
+          "norm": "l1",
+          "nx": [
+            40,
+            80,
+            160
+          ],
+          "p_adjacent": [
+            2.0127967001999023,
+            2.0555682604048546
+          ],
+          "p_loglog": 2.0341824803023787,
+          "p_richardson": 1.998980073815023,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.000509963092488519
+        },
+        {
+          "errors": [
+            0.000560054978320762,
+            0.00016246860283445703,
+            4.674420192024772e-05
+          ],
+          "h": [
+            0.025,
+            0.0125,
+            0.00625
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": false,
+          "loglog_rel_dev": 0.10432271847009933,
+          "metric": "cell_average",
+          "norm": "l2",
+          "nx": [
+            40,
+            80,
+            160
+          ],
+          "p_adjacent": [
+            1.785407514329169,
+            1.797301611790433
+          ],
+          "p_loglog": 1.7913545630598013,
+          "p_richardson": 1.7805752253281368,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.10971238733593158
+        },
+        {
+          "errors": [
+            0.0016054145914210505,
+            0.0005222590346380951,
+            0.00023079441650342147
+          ],
+          "h": [
+            0.025,
+            0.0125,
+            0.00625
+          ],
+          "loglog_pass_15": false,
+          "loglog_pass_3": false,
+          "loglog_rel_dev": 0.3004335779606221,
+          "metric": "cell_average",
+          "norm": "linf",
+          "nx": [
+            40,
+            80,
+            160
+          ],
+          "p_adjacent": [
+            1.6201084652385496,
+            1.1781572229189616
+          ],
+          "p_loglog": 1.3991328440787558,
+          "p_richardson": 1.8938477840827082,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.053076107958645924
+        },
+        {
+          "errors": [
+            0.00038711887926267676,
+            9.477644775226224e-05,
+            2.2112617880676312e-05
+          ],
+          "h": [
+            0.025,
+            0.0125,
+            0.00625
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": false,
+          "loglog_rel_dev": 0.03245873217009487,
+          "metric": "point",
+          "norm": "l1",
+          "nx": [
+            40,
+            80,
+            160
+          ],
+          "p_adjacent": [
+            2.030176173142976,
+            2.0996587555374036
+          ],
+          "p_loglog": 2.0649174643401897,
+          "p_richardson": 2.008349929106335,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.0041749645531674595
+        },
+        {
+          "errors": [
+            0.0005536061903887958,
+            0.00015964619308741454,
+            4.59875802140101e-05
+          ],
+          "h": [
+            0.025,
+            0.0125,
+            0.00625
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": false,
+          "loglog_rel_dev": 0.10261402938785058,
+          "metric": "point",
+          "norm": "l2",
+          "nx": [
+            40,
+            80,
+            160
+          ],
+          "p_adjacent": [
+            1.7939819242805046,
+            1.7955619581680917
+          ],
+          "p_loglog": 1.7947719412242988,
+          "p_richardson": 1.793342132371389,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.10332893381430552
+        },
+        {
+          "errors": [
+            0.0014759452950436902,
+            0.0005736196330741183,
+            0.00021800549693995475
+          ],
+          "h": [
+            0.025,
+            0.0125,
+            0.00625
+          ],
+          "loglog_pass_15": false,
+          "loglog_pass_3": false,
+          "loglog_rel_dev": 0.31019929196063567,
+          "metric": "point",
+          "norm": "linf",
+          "nx": [
+            40,
+            80,
+            160
+          ],
+          "p_adjacent": [
+            1.3634729412271467,
+            1.3957298909303106
+          ],
+          "p_loglog": 1.3796014160787287,
+          "p_richardson": 1.3433355419608484,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": false,
+          "richardson_rel_dev": 0.3283322290195758
+        },
+        {
+          "errors": [
+            0.00013099395830739604,
+            3.273081212624013e-05,
+            8.181598864936968e-06
+          ],
+          "h": [
+            0.025,
+            0.0125,
+            0.00625
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": true,
+          "loglog_rel_dev": 0.00024341451204268338,
+          "metric": "sampling_bias",
+          "norm": "l1",
+          "nx": [
+            40,
+            80,
+            160
+          ],
+          "p_adjacent": [
+            2.0007789689347706,
+            2.000194689113401
+          ],
+          "p_loglog": 2.0004868290240854,
+          "p_richardson": 2.000973641275343,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.0004868206376715811
+        },
+        {
+          "errors": [
+            0.00014534816788720517,
+            3.6345448464365096e-05,
+            9.086887594623482e-06
+          ],
+          "h": [
+            0.025,
+            0.0125,
+            0.00625
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": true,
+          "loglog_rel_dev": 0.00010428913362858783,
+          "metric": "sampling_bias",
+          "norm": "l2",
+          "nx": [
+            40,
+            80,
+            160
+          ],
+          "p_adjacent": [
+            1.9996662743636227,
+            1.9999165691018623
+          ],
+          "p_loglog": 1.9997914217327428,
+          "p_richardson": 1.9995828266991627,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.00020858665041867397
+        },
+        {
+          "errors": [
+            0.00020491969791336384,
+            5.1360598438021654e-05,
+            1.2848322564762427e-05
+          ],
+          "h": [
+            0.025,
+            0.0125,
+            0.00625
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": true,
+          "loglog_rel_dev": 0.0011483132806302532,
+          "metric": "sampling_bias",
+          "norm": "linf",
+          "nx": [
+            40,
+            80,
+            160
+          ],
+          "p_adjacent": [
+            1.9963247526145698,
+            1.9990819942629088
+          ],
+          "p_loglog": 1.9977033734387395,
+          "p_richardson": 1.9954037183829216,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.002298140808539184
+        }
+      ],
+      "rows": [
+        {
+          "cell_average": {
+            "l1": 0.00039633812223814906,
+            "l2": 0.000560054978320762,
+            "l2_unnormalised": 0.000560054978320762,
+            "linf": 0.0016054145914210505
+          },
+          "cfl": 0.1,
+          "h": 0.025,
+          "nx": 40,
+          "order": 2,
+          "point": {
+            "l1": 0.00038711887926267676,
+            "l2": 0.0005536061903887958,
+            "l2_unnormalised": 0.0005536061903887958,
+            "linf": 0.0014759452950436902
+          },
+          "sampling_bias": {
+            "l1": 0.00013099395830739604,
+            "l2": 0.00014534816788720517,
+            "l2_unnormalised": 0.00014534816788720517,
+            "linf": 0.00020491969791336384
+          },
+          "steps": 146,
+          "t": 0.2
+        },
+        {
+          "cell_average": {
+            "l1": 9.820953743387013e-05,
+            "l2": 0.00016246860283445703,
+            "l2_unnormalised": 0.000162468602834457,
+            "linf": 0.0005222590346380951
+          },
+          "cfl": 0.1,
+          "h": 0.0125,
+          "nx": 80,
+          "order": 2,
+          "point": {
+            "l1": 9.477644775226224e-05,
+            "l2": 0.00015964619308741454,
+            "l2_unnormalised": 0.00015964619308741454,
+            "linf": 0.0005736196330741183
+          },
+          "sampling_bias": {
+            "l1": 3.273081212624013e-05,
+            "l2": 3.6345448464365096e-05,
+            "l2_unnormalised": 3.634544846436509e-05,
+            "linf": 5.1360598438021654e-05
+          },
+          "steps": 292,
+          "t": 0.2
+        },
+        {
+          "cell_average": {
+            "l1": 2.362468143463637e-05,
+            "l2": 4.674420192024772e-05,
+            "l2_unnormalised": 4.674420192024772e-05,
+            "linf": 0.00023079441650342147
+          },
+          "cfl": 0.1,
+          "h": 0.00625,
+          "nx": 160,
+          "order": 2,
+          "point": {
+            "l1": 2.2112617880676312e-05,
+            "l2": 4.59875802140101e-05,
+            "l2_unnormalised": 4.59875802140101e-05,
+            "linf": 0.00021800549693995475
+          },
+          "sampling_bias": {
+            "l1": 8.181598864936968e-06,
+            "l2": 9.086887594623482e-06,
+            "l2_unnormalised": 9.08688759462348e-06,
+            "linf": 1.2848322564762427e-05
+          },
+          "steps": 584,
+          "t": 0.2
+        }
+      ],
+      "seconds": 19.47,
+      "theory_order": 2.0
+    },
+    "order2_coarse": {
+      "cfl": 0.4,
+      "grids": [
+        10,
+        20,
+        40
+      ],
+      "order": 2,
+      "readouts": [
+        {
+          "errors": [
+            0.00450619283759156,
+            0.0013190799624128275,
+            0.00036351683004789417
+          ],
+          "h": [
+            0.1,
+            0.05,
+            0.025
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": false,
+          "loglog_rel_dev": 0.0920462527583128,
+          "metric": "cell_average",
+          "norm": "l1",
+          "nx": [
+            10,
+            20,
+            40
+          ],
+          "p_adjacent": [
+            1.7723770302708632,
+            1.8594379586958858
+          ],
+          "p_loglog": 1.8159074944833744,
+          "p_richardson": 1.737827016912128,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.13108649154393603
+        },
+        {
+          "errors": [
+            0.005182880446543479,
+            0.0016362040956417851,
+            0.0005317138641935146
+          ],
+          "h": [
+            0.1,
+            0.05,
+            0.025
+          ],
+          "loglog_pass_15": false,
+          "loglog_pass_3": false,
+          "loglog_rel_dev": 0.1787419685394992,
+          "metric": "cell_average",
+          "norm": "l2",
+          "nx": [
+            10,
+            20,
+            40
+          ],
+          "p_adjacent": [
+            1.6634013981191822,
+            1.6216307277228208
+          ],
+          "p_loglog": 1.6425160629210016,
+          "p_richardson": 1.6830870253240553,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": false,
+          "richardson_rel_dev": 0.15845648733797235
+        },
+        {
+          "errors": [
+            0.0083348736447868,
+            0.003330647646503593,
+            0.0014738493582107104
+          ],
+          "h": [
+            0.1,
+            0.05,
+            0.025
+          ],
+          "loglog_pass_15": false,
+          "loglog_pass_3": false,
+          "loglog_rel_dev": 0.37510718651974106,
+          "metric": "cell_average",
+          "norm": "linf",
+          "nx": [
+            10,
+            20,
+            40
+          ],
+          "p_adjacent": [
+            1.323357590853549,
+            1.1762136630674864
+          ],
+          "p_loglog": 1.2497856269605179,
+          "p_richardson": 1.4303298473936077,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": false,
+          "richardson_rel_dev": 0.28483507630319616
+        },
+        {
+          "errors": [
+            0.004712282963779258,
+            0.001330303214633499,
+            0.0003450307570357303
+          ],
+          "h": [
+            0.1,
+            0.05,
+            0.025
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": false,
+          "loglog_rel_dev": 0.057092676454929214,
+          "metric": "point",
+          "norm": "l1",
+          "nx": [
+            10,
+            20,
+            40
+          ],
+          "p_adjacent": [
+            1.824671057715288,
+            1.946958236464996
+          ],
+          "p_loglog": 1.8858146470901416,
+          "p_richardson": 1.7792733874913167,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.11036330625434165
+        },
+        {
+          "errors": [
+            0.00588997181367164,
+            0.0016610086917162388,
+            0.000523159228020871
+          ],
+          "h": [
+            0.1,
+            0.05,
+            0.025
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": false,
+          "loglog_rel_dev": 0.12676532125117157,
+          "metric": "point",
+          "norm": "l2",
+          "nx": [
+            10,
+            20,
+            40
+          ],
+          "p_adjacent": [
+            1.8262011074414815,
+            1.6667376075538327
+          ],
+          "p_loglog": 1.7464693574976569,
+          "p_richardson": 1.893994276403184,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.05300286179840796
+        },
+        {
+          "errors": [
+            0.011608545028093609,
+            0.003525748242889648,
+            0.0014268417897775887
+          ],
+          "h": [
+            0.1,
+            0.05,
+            0.025
+          ],
+          "loglog_pass_15": false,
+          "loglog_pass_3": false,
+          "loglog_rel_dev": 0.2439275298108805,
+          "metric": "point",
+          "norm": "linf",
+          "nx": [
+            10,
+            20,
+            40
+          ],
+          "p_adjacent": [
+            1.719185794121141,
+            1.3051040866353383
+          ],
+          "p_loglog": 1.512144940378239,
+          "p_richardson": 1.9452167083032301,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.027391645848384938
+        },
+        {
+          "errors": [
+            0.002118764626475278,
+            0.0005251099564768989,
+            0.00013099395830739604
+          ],
+          "h": [
+            0.1,
+            0.05,
+            0.025
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": true,
+          "loglog_rel_dev": 0.003912787274421126,
+          "metric": "sampling_bias",
+          "norm": "l1",
+          "nx": [
+            10,
+            20,
+            40
+          ],
+          "p_adjacent": [
+            2.012531872031667,
+            2.0031192770660176
+          ],
+          "p_loglog": 2.0078255745488423,
+          "p_richardson": 2.015646826293165,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.007823413146582414
+        },
+        {
+          "errors": [
+            0.0023148352345125525,
+            0.0005808549522811862,
+            0.00014534816788720517
+          ],
+          "h": [
+            0.1,
+            0.05,
+            0.025
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": true,
+          "loglog_rel_dev": 0.001668820659278425,
+          "metric": "sampling_bias",
+          "norm": "l2",
+          "nx": [
+            10,
+            20,
+            40
+          ],
+          "p_adjacent": [
+            1.9946596565965777,
+            1.998665060766309
+          ],
+          "p_loglog": 1.9966623586814432,
+          "p_richardson": 1.9933203945581757,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.003339802720912166
+        },
+        {
+          "errors": [
+            0.0032736713833068087,
+            0.0008113395023343628,
+            0.00020491969791336384
+          ],
+          "h": [
+            0.1,
+            0.05,
+            0.025
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": true,
+          "loglog_rel_dev": 0.0005552665846352278,
+          "metric": "sampling_bias",
+          "norm": "linf",
+          "nx": [
+            10,
+            20,
+            40
+          ],
+          "p_adjacent": [
+            2.012531872031502,
+            1.9852470616299576
+          ],
+          "p_loglog": 1.9988894668307295,
+          "p_richardson": 2.021636451145673,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.010818225572836404
+        }
+      ],
+      "rows": [
+        {
+          "cell_average": {
+            "l1": 0.00450619283759156,
+            "l2": 0.005182880446543479,
+            "l2_unnormalised": 0.005182880446543479,
+            "linf": 0.0083348736447868
+          },
+          "cfl": 0.4,
+          "h": 0.1,
+          "nx": 10,
+          "order": 2,
+          "point": {
+            "l1": 0.004712282963779258,
+            "l2": 0.00588997181367164,
+            "l2_unnormalised": 0.00588997181367164,
+            "linf": 0.011608545028093609
+          },
+          "sampling_bias": {
+            "l1": 0.002118764626475278,
+            "l2": 0.0023148352345125525,
+            "l2_unnormalised": 0.002314835234512552,
+            "linf": 0.0032736713833068087
+          },
+          "steps": 10,
+          "t": 0.2
+        },
+        {
+          "cell_average": {
+            "l1": 0.0013190799624128275,
+            "l2": 0.0016362040956417851,
+            "l2_unnormalised": 0.0016362040956417853,
+            "linf": 0.003330647646503593
+          },
+          "cfl": 0.4,
+          "h": 0.05,
+          "nx": 20,
+          "order": 2,
+          "point": {
+            "l1": 0.001330303214633499,
+            "l2": 0.0016610086917162388,
+            "l2_unnormalised": 0.001661008691716239,
+            "linf": 0.003525748242889648
+          },
+          "sampling_bias": {
+            "l1": 0.0005251099564768989,
+            "l2": 0.0005808549522811862,
+            "l2_unnormalised": 0.0005808549522811863,
+            "linf": 0.0008113395023343628
+          },
+          "steps": 19,
+          "t": 0.2
+        },
+        {
+          "cell_average": {
+            "l1": 0.00036351683004789417,
+            "l2": 0.0005317138641935146,
+            "l2_unnormalised": 0.0005317138641935146,
+            "linf": 0.0014738493582107104
+          },
+          "cfl": 0.4,
+          "h": 0.025,
+          "nx": 40,
+          "order": 2,
+          "point": {
+            "l1": 0.0003450307570357303,
+            "l2": 0.000523159228020871,
+            "l2_unnormalised": 0.000523159228020871,
+            "linf": 0.0014268417897775887
+          },
+          "sampling_bias": {
+            "l1": 0.00013099395830739604,
+            "l2": 0.00014534816788720517,
+            "l2_unnormalised": 0.00014534816788720517,
+            "linf": 0.00020491969791336384
+          },
+          "steps": 37,
+          "t": 0.2
+        }
+      ],
+      "seconds": 1.16,
+      "theory_order": 2.0
+    },
+    "order2_fine": {
+      "cfl": 0.4,
+      "grids": [
+        80,
+        160,
+        320
+      ],
+      "order": 2,
+      "readouts": [
+        {
+          "errors": [
+            8.883514018313555e-05,
+            2.158751658022235e-05,
+            5.1026339012411055e-06
+          ],
+          "h": [
+            0.0125,
+            0.00625,
+            0.003125
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": false,
+          "loglog_rel_dev": 0.030454107364538352,
+          "metric": "cell_average",
+          "norm": "l1",
+          "nx": [
+            80,
+            160,
+            320
+          ],
+          "p_adjacent": [
+            2.0409331851294565,
+            2.080883244328698
+          ],
+          "p_loglog": 2.0609082147290767,
+          "p_richardson": 2.028339667050841,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.014169833525420561
+        },
+        {
+          "errors": [
+            0.00015523710601857835,
+            4.4457860865845214e-05,
+            1.2901942484807458e-05
+          ],
+          "h": [
+            0.0125,
+            0.00625,
+            0.003125
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": false,
+          "loglog_rel_dev": 0.10279668811271403,
+          "metric": "cell_average",
+          "norm": "l2",
+          "nx": [
+            80,
+            160,
+            320
+          ],
+          "p_adjacent": [
+            1.8039630048470945,
+            1.784850242702049
+          ],
+          "p_loglog": 1.794406623774572,
+          "p_richardson": 1.8117050968696904,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.0941474515651548
+        },
+        {
+          "errors": [
+            0.0005130887995155042,
+            0.00021241083689149676,
+            8.58955399887229e-05
+          ],
+          "h": [
+            0.0125,
+            0.00625,
+            0.003125
+          ],
+          "loglog_pass_15": false,
+          "loglog_pass_3": false,
+          "loglog_rel_dev": 0.35536164897003786,
+          "metric": "cell_average",
+          "norm": "linf",
+          "nx": [
+            80,
+            160,
+            320
+          ],
+          "p_adjacent": [
+            1.2723511603071418,
+            1.306202243812707
+          ],
+          "p_loglog": 1.2892767020599243,
+          "p_richardson": 1.2489073023465762,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": false,
+          "richardson_rel_dev": 0.3755463488267119
+        },
+        {
+          "errors": [
+            8.372142219080365e-05,
+            1.937311590510249e-05,
+            4.467060595040804e-06
+          ],
+          "h": [
+            0.0125,
+            0.00625,
+            0.003125
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": false,
+          "loglog_rel_dev": 0.05704977232042374,
+          "metric": "point",
+          "norm": "l1",
+          "nx": [
+            80,
+            160,
+            320
+          ],
+          "p_adjacent": [
+            2.111540808426326,
+            2.116658280855368
+          ],
+          "p_loglog": 2.1140995446408475,
+          "p_richardson": 2.1100036577002896,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.05500182885014482
+        },
+        {
+          "errors": [
+            0.0001520920246180138,
+            4.364112520280456e-05,
+            1.2713069280538105e-05
+          ],
+          "h": [
+            0.0125,
+            0.00625,
+            0.003125
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": false,
+          "loglog_rel_dev": 0.10485994503046403,
+          "metric": "point",
+          "norm": "l2",
+          "nx": [
+            80,
+            160,
+            320
+          ],
+          "p_adjacent": [
+            1.8011842988078521,
+            1.7793759210702926
+          ],
+          "p_loglog": 1.790280109939072,
+          "p_richardson": 1.810053961382211,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.09497301930889446
+        },
+        {
+          "errors": [
+            0.0005644493979515275,
+            0.0002151247309893911,
+            8.268666351629594e-05
+          ],
+          "h": [
+            0.0125,
+            0.00625,
+            0.003125
+          ],
+          "loglog_pass_15": false,
+          "loglog_pass_3": false,
+          "loglog_rel_dev": 0.30722057762482213,
+          "metric": "point",
+          "norm": "linf",
+          "nx": [
+            80,
+            160,
+            320
+          ],
+          "p_adjacent": [
+            1.3916708631363148,
+            1.3794468263643966
+          ],
+          "p_loglog": 1.3855588447503557,
+          "p_richardson": 1.3992506554680744,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": false,
+          "richardson_rel_dev": 0.3003746722659628
+        },
+        {
+          "errors": [
+            3.273081212624013e-05,
+            8.181598864936968e-06,
+            2.0453307156862587e-06
+          ],
+          "h": [
+            0.0125,
+            0.00625,
+            0.003125
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": true,
+          "loglog_rel_dev": 6.083963453007435e-05,
+          "metric": "sampling_bias",
+          "norm": "l1",
+          "nx": [
+            80,
+            160,
+            320
+          ],
+          "p_adjacent": [
+            2.000194689113401,
+            2.00004866942472
+          ],
+          "p_loglog": 2.00012167926906,
+          "p_richardson": 2.0002433568698192,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.00012167843490962227
+        },
+        {
+          "errors": [
+            3.6345448464365096e-05,
+            9.086887594623482e-06,
+            2.2717547414845444e-06
+          ],
+          "h": [
+            0.0125,
+            0.00625,
+            0.003125
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": true,
+          "loglog_rel_dev": 2.6072033951329843e-05,
+          "metric": "sampling_bias",
+          "norm": "l2",
+          "nx": [
+            80,
+            160,
+            320
+          ],
+          "p_adjacent": [
+            1.9999165691018623,
+            1.999979142762334
+          ],
+          "p_loglog": 1.9999478559320973,
+          "p_richardson": 1.9998957102098354,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 5.214489508231779e-05
+        },
+        {
+          "errors": [
+            5.1360598438021654e-05,
+            1.2848322564762427e-05,
+            3.2125915445657682e-06
+          ],
+          "h": [
+            0.0125,
+            0.00625,
+            0.003125
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": true,
+          "loglog_rel_dev": 0.0002868644985629665,
+          "metric": "sampling_bias",
+          "norm": "linf",
+          "nx": [
+            80,
+            160,
+            320
+          ],
+          "p_adjacent": [
+            1.9990819942629088,
+            1.9997705477428385
+          ],
+          "p_loglog": 1.999426271002874,
+          "p_richardson": 1.9988523546919619,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.0005738226540190627
+        }
+      ],
+      "rows": [
+        {
+          "cell_average": {
+            "l1": 8.883514018313555e-05,
+            "l2": 0.00015523710601857835,
+            "l2_unnormalised": 0.00015523710601857832,
+            "linf": 0.0005130887995155042
+          },
+          "cfl": 0.4,
+          "h": 0.0125,
+          "nx": 80,
+          "order": 2,
+          "point": {
+            "l1": 8.372142219080365e-05,
+            "l2": 0.0001520920246180138,
+            "l2_unnormalised": 0.0001520920246180138,
+            "linf": 0.0005644493979515275
+          },
+          "sampling_bias": {
+            "l1": 3.273081212624013e-05,
+            "l2": 3.6345448464365096e-05,
+            "l2_unnormalised": 3.634544846436509e-05,
+            "linf": 5.1360598438021654e-05
+          },
+          "steps": 73,
+          "t": 0.2
+        },
+        {
+          "cell_average": {
+            "l1": 2.158751658022235e-05,
+            "l2": 4.4457860865845214e-05,
+            "l2_unnormalised": 4.445786086584521e-05,
+            "linf": 0.00021241083689149676
+          },
+          "cfl": 0.4,
+          "h": 0.00625,
+          "nx": 160,
+          "order": 2,
+          "point": {
+            "l1": 1.937311590510249e-05,
+            "l2": 4.364112520280456e-05,
+            "l2_unnormalised": 4.3641125202804556e-05,
+            "linf": 0.0002151247309893911
+          },
+          "sampling_bias": {
+            "l1": 8.181598864936968e-06,
+            "l2": 9.086887594623482e-06,
+            "l2_unnormalised": 9.08688759462348e-06,
+            "linf": 1.2848322564762427e-05
+          },
+          "steps": 146,
+          "t": 0.2
+        },
+        {
+          "cell_average": {
+            "l1": 5.1026339012411055e-06,
+            "l2": 1.2901942484807458e-05,
+            "l2_unnormalised": 1.2901942484807458e-05,
+            "linf": 8.58955399887229e-05
+          },
+          "cfl": 0.4,
+          "h": 0.003125,
+          "nx": 320,
+          "order": 2,
+          "point": {
+            "l1": 4.467060595040804e-06,
+            "l2": 1.2713069280538105e-05,
+            "l2_unnormalised": 1.2713069280538104e-05,
+            "linf": 8.268666351629594e-05
+          },
+          "sampling_bias": {
+            "l1": 2.0453307156862587e-06,
+            "l2": 2.2717547414845444e-06,
+            "l2_unnormalised": 2.271754741484544e-06,
+            "linf": 3.2125915445657682e-06
+          },
+          "steps": 292,
+          "t": 0.2
+        }
+      ],
+      "seconds": 9.47,
+      "theory_order": 2.0
+    },
+    "order2_mid": {
+      "cfl": 0.4,
+      "grids": [
+        20,
+        40,
+        80
+      ],
+      "order": 2,
+      "readouts": [
+        {
+          "errors": [
+            0.0013190799624128275,
+            0.00036351683004789417,
+            8.883514018313555e-05
+          ],
+          "h": [
+            0.05,
+            0.025,
+            0.0125
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": true,
+          "loglog_rel_dev": 0.02693556449687251,
+          "metric": "cell_average",
+          "norm": "l1",
+          "nx": [
+            20,
+            40,
+            80
+          ],
+          "p_adjacent": [
+            1.8594379586958858,
+            2.0328197833166244
+          ],
+          "p_loglog": 1.946128871006255,
+          "p_richardson": 1.798590448324128,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.10070477583793602
+        },
+        {
+          "errors": [
+            0.0016362040956417851,
+            0.0005317138641935146,
+            0.00015523710601857835
+          ],
+          "h": [
+            0.05,
+            0.025,
+            0.0125
+          ],
+          "loglog_pass_15": false,
+          "loglog_pass_3": false,
+          "loglog_rel_dev": 0.1505481577619887,
+          "metric": "cell_average",
+          "norm": "l2",
+          "nx": [
+            20,
+            40,
+            80
+          ],
+          "p_adjacent": [
+            1.6216307277228208,
+            1.776176641229224
+          ],
+          "p_loglog": 1.6989036844760226,
+          "p_richardson": 1.5527479511233384,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": false,
+          "richardson_rel_dev": 0.2236260244383308
+        },
+        {
+          "errors": [
+            0.003330647646503593,
+            0.0014738493582107104,
+            0.0005130887995155042
+          ],
+          "h": [
+            0.05,
+            0.025,
+            0.0125
+          ],
+          "loglog_pass_15": false,
+          "loglog_pass_3": false,
+          "loglog_rel_dev": 0.32536942502931665,
+          "metric": "cell_average",
+          "norm": "linf",
+          "nx": [
+            20,
+            40,
+            80
+          ],
+          "p_adjacent": [
+            1.1762136630674864,
+            1.5223086368152468
+          ],
+          "p_loglog": 1.3492611499413667,
+          "p_richardson": 0.9505682662222998,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": false,
+          "richardson_rel_dev": 0.5247158668888501
+        },
+        {
+          "errors": [
+            0.001330303214633499,
+            0.0003450307570357303,
+            8.372142219080365e-05
+          ],
+          "h": [
+            0.05,
+            0.025,
+            0.0125
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": true,
+          "loglog_rel_dev": 0.002496378538233923,
+          "metric": "point",
+          "norm": "l1",
+          "nx": [
+            20,
+            40,
+            80
+          ],
+          "p_adjacent": [
+            1.946958236464996,
+            2.043056249382069
+          ],
+          "p_loglog": 1.9950072429235322,
+          "p_richardson": 1.9147640650208602,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.04261796748956992
+        },
+        {
+          "errors": [
+            0.0016610086917162388,
+            0.000523159228020871,
+            0.0001520920246180138
+          ],
+          "h": [
+            0.05,
+            0.025,
+            0.0125
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": false,
+          "loglog_rel_dev": 0.13773919641398324,
+          "metric": "point",
+          "norm": "l2",
+          "nx": [
+            20,
+            40,
+            80
+          ],
+          "p_adjacent": [
+            1.6667376075538327,
+            1.782305606790234
+          ],
+          "p_loglog": 1.7245216071720335,
+          "p_richardson": 1.616557303338412,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": false,
+          "richardson_rel_dev": 0.19172134833079402
+        },
+        {
+          "errors": [
+            0.003525748242889648,
+            0.0014268417897775887,
+            0.0005644493979515275
+          ],
+          "h": [
+            0.05,
+            0.025,
+            0.0125
+          ],
+          "loglog_pass_15": false,
+          "loglog_pass_3": false,
+          "loglog_rel_dev": 0.3392466735451769,
+          "metric": "point",
+          "norm": "linf",
+          "nx": [
+            20,
+            40,
+            80
+          ],
+          "p_adjacent": [
+            1.3051040866353383,
+            1.3379092191839541
+          ],
+          "p_loglog": 1.3215066529096462,
+          "p_richardson": 1.2832215125329443,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": false,
+          "richardson_rel_dev": 0.3583892437335279
+        },
+        {
+          "errors": [
+            0.0005251099564768989,
+            0.00013099395830739604,
+            3.273081212624013e-05
+          ],
+          "h": [
+            0.05,
+            0.025,
+            0.0125
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": true,
+          "loglog_rel_dev": 0.0009745615001970354,
+          "metric": "sampling_bias",
+          "norm": "l1",
+          "nx": [
+            20,
+            40,
+            80
+          ],
+          "p_adjacent": [
+            2.0031192770660176,
+            2.0007789689347706
+          ],
+          "p_loglog": 2.001949123000394,
+          "p_richardson": 2.0038979762912,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.0019489881456000724
+        },
+        {
+          "errors": [
+            0.0005808549522811862,
+            0.00014534816788720517,
+            3.6345448464365096e-05
+          ],
+          "h": [
+            0.05,
+            0.025,
+            0.0125
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": true,
+          "loglog_rel_dev": 0.0004171662175168622,
+          "metric": "sampling_bias",
+          "norm": "l2",
+          "nx": [
+            20,
+            40,
+            80
+          ],
+          "p_adjacent": [
+            1.998665060766309,
+            1.9996662743636227
+          ],
+          "p_loglog": 1.9991656675649663,
+          "p_richardson": 1.998331065420667,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.0008344672896665184
+        },
+        {
+          "errors": [
+            0.0008113395023343628,
+            0.00020491969791336384,
+            5.1360598438021654e-05
+          ],
+          "h": [
+            0.05,
+            0.025,
+            0.0125
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": true,
+          "loglog_rel_dev": 0.004607046438868334,
+          "metric": "sampling_bias",
+          "norm": "linf",
+          "nx": [
+            20,
+            40,
+            80
+          ],
+          "p_adjacent": [
+            1.9852470616299576,
+            1.9963247526145698
+          ],
+          "p_loglog": 1.9907859071222633,
+          "p_richardson": 1.9815228648747216,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.009238567562639188
+        }
+      ],
+      "rows": [
+        {
+          "cell_average": {
+            "l1": 0.0013190799624128275,
+            "l2": 0.0016362040956417851,
+            "l2_unnormalised": 0.0016362040956417853,
+            "linf": 0.003330647646503593
+          },
+          "cfl": 0.4,
+          "h": 0.05,
+          "nx": 20,
+          "order": 2,
+          "point": {
+            "l1": 0.001330303214633499,
+            "l2": 0.0016610086917162388,
+            "l2_unnormalised": 0.001661008691716239,
+            "linf": 0.003525748242889648
+          },
+          "sampling_bias": {
+            "l1": 0.0005251099564768989,
+            "l2": 0.0005808549522811862,
+            "l2_unnormalised": 0.0005808549522811863,
+            "linf": 0.0008113395023343628
+          },
+          "steps": 19,
+          "t": 0.2
+        },
+        {
+          "cell_average": {
+            "l1": 0.00036351683004789417,
+            "l2": 0.0005317138641935146,
+            "l2_unnormalised": 0.0005317138641935146,
+            "linf": 0.0014738493582107104
+          },
+          "cfl": 0.4,
+          "h": 0.025,
+          "nx": 40,
+          "order": 2,
+          "point": {
+            "l1": 0.0003450307570357303,
+            "l2": 0.000523159228020871,
+            "l2_unnormalised": 0.000523159228020871,
+            "linf": 0.0014268417897775887
+          },
+          "sampling_bias": {
+            "l1": 0.00013099395830739604,
+            "l2": 0.00014534816788720517,
+            "l2_unnormalised": 0.00014534816788720517,
+            "linf": 0.00020491969791336384
+          },
+          "steps": 37,
+          "t": 0.2
+        },
+        {
+          "cell_average": {
+            "l1": 8.883514018313555e-05,
+            "l2": 0.00015523710601857835,
+            "l2_unnormalised": 0.00015523710601857832,
+            "linf": 0.0005130887995155042
+          },
+          "cfl": 0.4,
+          "h": 0.0125,
+          "nx": 80,
+          "order": 2,
+          "point": {
+            "l1": 8.372142219080365e-05,
+            "l2": 0.0001520920246180138,
+            "l2_unnormalised": 0.0001520920246180138,
+            "linf": 0.0005644493979515275
+          },
+          "sampling_bias": {
+            "l1": 3.273081212624013e-05,
+            "l2": 3.6345448464365096e-05,
+            "l2_unnormalised": 3.634544846436509e-05,
+            "linf": 5.1360598438021654e-05
+          },
+          "steps": 73,
+          "t": 0.2
+        }
+      ],
+      "seconds": 2.35,
+      "theory_order": 2.0
+    },
+    "order2_nonuniform": {
+      "cfl": 0.4,
+      "grids": [
+        50,
+        100,
+        175
+      ],
+      "order": 2,
+      "readouts": [
+        {
+          "errors": [
+            0.0002181270130342905,
+            5.6515278315776306e-05,
+            1.7573081136412126e-05
+          ],
+          "h": [
+            0.02,
+            0.01,
+            0.005714285714285714
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": true,
+          "loglog_rel_dev": 0.004046148646733805,
+          "metric": "cell_average",
+          "norm": "l1",
+          "nx": [
+            50,
+            100,
+            175
+          ],
+          "p_adjacent": [
+            1.948455602701135,
+            2.0874013727653407
+          ],
+          "p_loglog": 2.0080922972934676,
+          "p_richardson": 1.8914368356402247,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            1.75
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.054281582179887655
+        },
+        {
+          "errors": [
+            0.0003354332008988819,
+            0.00010379192965867346,
+            3.775121908366514e-05
+          ],
+          "h": [
+            0.02,
+            0.01,
+            0.005714285714285714
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": false,
+          "loglog_rel_dev": 0.12917048819965016,
+          "metric": "cell_average",
+          "norm": "l2",
+          "nx": [
+            50,
+            100,
+            175
+          ],
+          "p_adjacent": [
+            1.6923312214172774,
+            1.8072586081009745
+          ],
+          "p_loglog": 1.7416590236006997,
+          "p_richardson": 1.6326578448541675,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            1.75
+          ],
+          "richardson_pass_15": false,
+          "richardson_rel_dev": 0.18367107757291623
+        },
+        {
+          "errors": [
+            0.001085107812284214,
+            0.0003827609449855718,
+            0.00019601867126917139
+          ],
+          "h": [
+            0.02,
+            0.01,
+            0.005714285714285714
+          ],
+          "loglog_pass_15": false,
+          "loglog_pass_3": false,
+          "loglog_rel_dev": 0.31432961144935534,
+          "metric": "cell_average",
+          "norm": "linf",
+          "nx": [
+            50,
+            100,
+            175
+          ],
+          "p_adjacent": [
+            1.5033228535626677,
+            1.1958217190018552
+          ],
+          "p_loglog": 1.3713407771012893,
+          "p_richardson": 1.740169506561028,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            1.75
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.12991524671948596
+        },
+        {
+          "errors": [
+            0.00020221030295951796,
+            5.276369942403548e-05,
+            1.5748588163919667e-05
+          ],
+          "h": [
+            0.02,
+            0.01,
+            0.005714285714285714
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": true,
+          "loglog_rel_dev": 0.016826361044539384,
+          "metric": "point",
+          "norm": "l1",
+          "nx": [
+            50,
+            100,
+            175
+          ],
+          "p_adjacent": [
+            1.9382388818828196,
+            2.1605407648571675
+          ],
+          "p_loglog": 2.0336527220890788,
+          "p_richardson": 1.8492056426831356,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            1.75
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.0753971786584322
+        },
+        {
+          "errors": [
+            0.0003281768804837097,
+            0.00010171527279543423,
+            3.707030701321769e-05
+          ],
+          "h": [
+            0.02,
+            0.01,
+            0.005714285714285714
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": false,
+          "loglog_rel_dev": 0.13062423636268095,
+          "metric": "point",
+          "norm": "l2",
+          "nx": [
+            50,
+            100,
+            175
+          ],
+          "p_adjacent": [
+            1.6899372873341614,
+            1.8036681405444712
+          ],
+          "p_loglog": 1.738751527274638,
+          "p_richardson": 1.6307247149279758,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            1.75
+          ],
+          "richardson_pass_15": false,
+          "richardson_rel_dev": 0.18463764253601211
+        },
+        {
+          "errors": [
+            0.0012166765643160105,
+            0.0004156417701632886,
+            0.00020171040271521612
+          ],
+          "h": [
+            0.02,
+            0.01,
+            0.005714285714285714
+          ],
+          "loglog_pass_15": false,
+          "loglog_pass_3": false,
+          "loglog_rel_dev": 0.2805137239295853,
+          "metric": "point",
+          "norm": "linf",
+          "nx": [
+            50,
+            100,
+            175
+          ],
+          "p_adjacent": [
+            1.5495331485021338,
+            1.2919412865588977
+          ],
+          "p_loglog": 1.4389725521408294,
+          "p_richardson": 1.7333216694789364,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            1.75
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.1333391652605318
+        },
+        {
+          "errors": [
+            8.381440575292442e-05,
+            2.0946362874144645e-05,
+            6.838547290770286e-06
+          ],
+          "h": [
+            0.02,
+            0.01,
+            0.005714285714285714
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": true,
+          "loglog_rel_dev": 0.00020289962625152924,
+          "metric": "sampling_bias",
+          "norm": "l1",
+          "nx": [
+            50,
+            100,
+            175
+          ],
+          "p_adjacent": [
+            2.0004984749169106,
+            2.0002825526287094
+          ],
+          "p_loglog": 2.000405799252503,
+          "p_richardson": 2.000588181286508,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            1.75
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.0002940906432540302
+        },
+        {
+          "errors": [
+            9.303315675385254e-05,
+            2.326173271521827e-05,
+            7.595920267617032e-06
+          ],
+          "h": [
+            0.02,
+            0.01,
+            0.005714285714285714
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": true,
+          "loglog_rel_dev": 7.370080628721354e-05,
+          "metric": "sampling_bias",
+          "norm": "l2",
+          "nx": [
+            50,
+            100,
+            175
+          ],
+          "p_adjacent": [
+            1.9997864163094263,
+            1.9999406119746121
+          ],
+          "p_loglog": 1.9998525983874256,
+          "p_richardson": 1.9997223256995746,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            1.75
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.0001388371502126784
+        },
+        {
+          "errors": [
+            0.00013156875203279572,
+            3.2880825179271156e-05,
+            1.0741820725579387e-05
+          ],
+          "h": [
+            0.02,
+            0.01,
+            0.005714285714285714
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": true,
+          "loglog_rel_dev": 4.430720488757256e-05,
+          "metric": "sampling_bias",
+          "norm": "linf",
+          "nx": [
+            50,
+            100,
+            175
+          ],
+          "p_adjacent": [
+            2.0004984748702612,
+            1.999130632928841
+          ],
+          "p_loglog": 1.9999113855902249,
+          "p_richardson": 2.0010670236061516,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            1.75
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.0005335118030758146
+        }
+      ],
+      "rows": [
+        {
+          "cell_average": {
+            "l1": 0.0002181270130342905,
+            "l2": 0.0003354332008988819,
+            "l2_unnormalised": 0.0003354332008988819,
+            "linf": 0.001085107812284214
+          },
+          "cfl": 0.4,
+          "h": 0.02,
+          "nx": 50,
+          "order": 2,
+          "point": {
+            "l1": 0.00020221030295951796,
+            "l2": 0.0003281768804837097,
+            "l2_unnormalised": 0.0003281768804837097,
+            "linf": 0.0012166765643160105
+          },
+          "sampling_bias": {
+            "l1": 8.381440575292442e-05,
+            "l2": 9.303315675385254e-05,
+            "l2_unnormalised": 9.303315675385254e-05,
+            "linf": 0.00013156875203279572
+          },
+          "steps": 46,
+          "t": 0.2
+        },
+        {
+          "cell_average": {
+            "l1": 5.6515278315776306e-05,
+            "l2": 0.00010379192965867346,
+            "l2_unnormalised": 0.00010379192965867346,
+            "linf": 0.0003827609449855718
+          },
+          "cfl": 0.4,
+          "h": 0.01,
+          "nx": 100,
+          "order": 2,
+          "point": {
+            "l1": 5.276369942403548e-05,
+            "l2": 0.00010171527279543423,
+            "l2_unnormalised": 0.00010171527279543422,
+            "linf": 0.0004156417701632886
+          },
+          "sampling_bias": {
+            "l1": 2.0946362874144645e-05,
+            "l2": 2.326173271521827e-05,
+            "l2_unnormalised": 2.3261732715218265e-05,
+            "linf": 3.2880825179271156e-05
+          },
+          "steps": 92,
+          "t": 0.2
+        },
+        {
+          "cell_average": {
+            "l1": 1.7573081136412126e-05,
+            "l2": 3.775121908366514e-05,
+            "l2_unnormalised": 3.775121908366514e-05,
+            "linf": 0.00019601867126917139
+          },
+          "cfl": 0.4,
+          "h": 0.005714285714285714,
+          "nx": 175,
+          "order": 2,
+          "point": {
+            "l1": 1.5748588163919667e-05,
+            "l2": 3.707030701321769e-05,
+            "l2_unnormalised": 3.707030701321769e-05,
+            "linf": 0.00020171040271521612
+          },
+          "sampling_bias": {
+            "l1": 6.838547290770286e-06,
+            "l2": 7.595920267617032e-06,
+            "l2_unnormalised": 7.595920267617031e-06,
+            "linf": 1.0741820725579387e-05
+          },
+          "steps": 160,
+          "t": 0.2
+        }
+      ],
+      "seconds": 4.91,
+      "theory_order": 2.0
+    },
+    "order2_uniform": {
+      "cfl": 0.4,
+      "grids": [
+        40,
+        80,
+        160
+      ],
+      "order": 2,
+      "readouts": [
+        {
+          "errors": [
+            0.00036351683004789417,
+            8.883514018313555e-05,
+            2.158751658022235e-05
+          ],
+          "h": [
+            0.025,
+            0.0125,
+            0.00625
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": true,
+          "loglog_rel_dev": 0.018438242111520342,
+          "metric": "cell_average",
+          "norm": "l1",
+          "nx": [
+            40,
+            80,
+            160
+          ],
+          "p_adjacent": [
+            2.0328197833166244,
+            2.0409331851294565
+          ],
+          "p_loglog": 2.0368764842230407,
+          "p_richardson": 2.030205552622176,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.015102776311088029
+        },
+        {
+          "errors": [
+            0.0005317138641935146,
+            0.00015523710601857835,
+            4.4457860865845214e-05
+          ],
+          "h": [
+            0.025,
+            0.0125,
+            0.00625
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": false,
+          "loglog_rel_dev": 0.10496508848092057,
+          "metric": "cell_average",
+          "norm": "l2",
+          "nx": [
+            40,
+            80,
+            160
+          ],
+          "p_adjacent": [
+            1.776176641229224,
+            1.8039630048470945
+          ],
+          "p_loglog": 1.7900698230381589,
+          "p_richardson": 1.764873189587766,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.11756340520611697
+        },
+        {
+          "errors": [
+            0.0014738493582107104,
+            0.0005130887995155042,
+            0.00021241083689149676
+          ],
+          "h": [
+            0.025,
+            0.0125,
+            0.00625
+          ],
+          "loglog_pass_15": false,
+          "loglog_pass_3": false,
+          "loglog_rel_dev": 0.30133505071940303,
+          "metric": "cell_average",
+          "norm": "linf",
+          "nx": [
+            40,
+            80,
+            160
+          ],
+          "p_adjacent": [
+            1.5223086368152468,
+            1.2723511603071418
+          ],
+          "p_loglog": 1.397329898561194,
+          "p_richardson": 1.6759577931331697,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": false,
+          "richardson_rel_dev": 0.16202110343341514
+        },
+        {
+          "errors": [
+            0.0003450307570357303,
+            8.372142219080365e-05,
+            1.937311590510249e-05
+          ],
+          "h": [
+            0.025,
+            0.0125,
+            0.00625
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": false,
+          "loglog_rel_dev": 0.0386492644520986,
+          "metric": "point",
+          "norm": "l1",
+          "nx": [
+            40,
+            80,
+            160
+          ],
+          "p_adjacent": [
+            2.043056249382069,
+            2.111540808426326
+          ],
+          "p_loglog": 2.077298528904197,
+          "p_richardson": 2.021784582653469,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.010892291326734416
+        },
+        {
+          "errors": [
+            0.000523159228020871,
+            0.0001520920246180138,
+            4.364112520280456e-05
+          ],
+          "h": [
+            0.025,
+            0.0125,
+            0.00625
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": false,
+          "loglog_rel_dev": 0.1041275236004785,
+          "metric": "point",
+          "norm": "l2",
+          "nx": [
+            40,
+            80,
+            160
+          ],
+          "p_adjacent": [
+            1.782305606790234,
+            1.8011842988078521
+          ],
+          "p_loglog": 1.791744952799043,
+          "p_richardson": 1.7746384770054378,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.11268076149728112
+        },
+        {
+          "errors": [
+            0.0014268417897775887,
+            0.0005644493979515275,
+            0.0002151247309893911
+          ],
+          "h": [
+            0.025,
+            0.0125,
+            0.00625
+          ],
+          "loglog_pass_15": false,
+          "loglog_pass_3": false,
+          "loglog_rel_dev": 0.3176049794199326,
+          "metric": "point",
+          "norm": "linf",
+          "nx": [
+            40,
+            80,
+            160
+          ],
+          "p_adjacent": [
+            1.3379092191839541,
+            1.3916708631363148
+          ],
+          "p_loglog": 1.3647900411601348,
+          "p_richardson": 1.3037759306775776,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": false,
+          "richardson_rel_dev": 0.3481120346612112
+        },
+        {
+          "errors": [
+            0.00013099395830739604,
+            3.273081212624013e-05,
+            8.181598864936968e-06
+          ],
+          "h": [
+            0.025,
+            0.0125,
+            0.00625
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": true,
+          "loglog_rel_dev": 0.00024341451204268338,
+          "metric": "sampling_bias",
+          "norm": "l1",
+          "nx": [
+            40,
+            80,
+            160
+          ],
+          "p_adjacent": [
+            2.0007789689347706,
+            2.000194689113401
+          ],
+          "p_loglog": 2.0004868290240854,
+          "p_richardson": 2.000973641275343,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.0004868206376715811
+        },
+        {
+          "errors": [
+            0.00014534816788720517,
+            3.6345448464365096e-05,
+            9.086887594623482e-06
+          ],
+          "h": [
+            0.025,
+            0.0125,
+            0.00625
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": true,
+          "loglog_rel_dev": 0.00010428913362858783,
+          "metric": "sampling_bias",
+          "norm": "l2",
+          "nx": [
+            40,
+            80,
+            160
+          ],
+          "p_adjacent": [
+            1.9996662743636227,
+            1.9999165691018623
+          ],
+          "p_loglog": 1.9997914217327428,
+          "p_richardson": 1.9995828266991627,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.00020858665041867397
+        },
+        {
+          "errors": [
+            0.00020491969791336384,
+            5.1360598438021654e-05,
+            1.2848322564762427e-05
+          ],
+          "h": [
+            0.025,
+            0.0125,
+            0.00625
+          ],
+          "loglog_pass_15": true,
+          "loglog_pass_3": true,
+          "loglog_rel_dev": 0.0011483132806302532,
+          "metric": "sampling_bias",
+          "norm": "linf",
+          "nx": [
+            40,
+            80,
+            160
+          ],
+          "p_adjacent": [
+            1.9963247526145698,
+            1.9990819942629088
+          ],
+          "p_loglog": 1.9977033734387395,
+          "p_richardson": 1.9954037183829216,
+          "p_theory": 2.0,
+          "refinement_ratios": [
+            2.0,
+            2.0
+          ],
+          "richardson_pass_15": true,
+          "richardson_rel_dev": 0.002298140808539184
+        }
+      ],
+      "rows": [
+        {
+          "cell_average": {
+            "l1": 0.00036351683004789417,
+            "l2": 0.0005317138641935146,
+            "l2_unnormalised": 0.0005317138641935146,
+            "linf": 0.0014738493582107104
+          },
+          "cfl": 0.4,
+          "h": 0.025,
+          "nx": 40,
+          "order": 2,
+          "point": {
+            "l1": 0.0003450307570357303,
+            "l2": 0.000523159228020871,
+            "l2_unnormalised": 0.000523159228020871,
+            "linf": 0.0014268417897775887
+          },
+          "sampling_bias": {
+            "l1": 0.00013099395830739604,
+            "l2": 0.00014534816788720517,
+            "l2_unnormalised": 0.00014534816788720517,
+            "linf": 0.00020491969791336384
+          },
+          "steps": 37,
+          "t": 0.2
+        },
+        {
+          "cell_average": {
+            "l1": 8.883514018313555e-05,
+            "l2": 0.00015523710601857835,
+            "l2_unnormalised": 0.00015523710601857832,
+            "linf": 0.0005130887995155042
+          },
+          "cfl": 0.4,
+          "h": 0.0125,
+          "nx": 80,
+          "order": 2,
+          "point": {
+            "l1": 8.372142219080365e-05,
+            "l2": 0.0001520920246180138,
+            "l2_unnormalised": 0.0001520920246180138,
+            "linf": 0.0005644493979515275
+          },
+          "sampling_bias": {
+            "l1": 3.273081212624013e-05,
+            "l2": 3.6345448464365096e-05,
+            "l2_unnormalised": 3.634544846436509e-05,
+            "linf": 5.1360598438021654e-05
+          },
+          "steps": 73,
+          "t": 0.2
+        },
+        {
+          "cell_average": {
+            "l1": 2.158751658022235e-05,
+            "l2": 4.4457860865845214e-05,
+            "l2_unnormalised": 4.445786086584521e-05,
+            "linf": 0.00021241083689149676
+          },
+          "cfl": 0.4,
+          "h": 0.00625,
+          "nx": 160,
+          "order": 2,
+          "point": {
+            "l1": 1.937311590510249e-05,
+            "l2": 4.364112520280456e-05,
+            "l2_unnormalised": 4.3641125202804556e-05,
+            "linf": 0.0002151247309893911
+          },
+          "sampling_bias": {
+            "l1": 8.181598864936968e-06,
+            "l2": 9.086887594623482e-06,
+            "l2_unnormalised": 9.08688759462348e-06,
+            "linf": 1.2848322564762427e-05
+          },
+          "steps": 146,
+          "t": 0.2
+        }
+      ],
+      "seconds": 4.65,
+      "theory_order": 2.0
+    }
+  },
+  "provenance": {
+    "case": "periodic entropy wave rho=1+A sin(k(x-ut)), A=0.2, u=0.5, t=0.2",
+    "generated_utc": "2026-11-13T10:23:21+00:00",
+    "git_dirty": true,
+    "git_head": "b09952a2cdb41f0e2b818ceea0bf753f0f461602",
+    "numpy": "2.4.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "python": "3.11.6",
+    "solver": "tensorfvm.compressible.solver.EulerSolver (cell-centred FV, MUSCL-Hancock + HLLC, MC limiter)",
+    "thresholds": {
+      "acceptable": 0.15,
+      "tight": 0.03
+    }
+  },
+  "ratio_traps": [
+    {
+      "cell_average": {
+        "limit_abs_diff": 1.1514354126738145e-20,
+        "limit_abs_diff_over_scale": 3.167488593367494e-17,
+        "limit_rel_dev": 5.396873635592782e-14,
+        "limit_relative_meaningful": true,
+        "limit_scale": 0.00036351683004789417,
+        "limit_true": -2.1335230179932553e-07,
+        "limit_uniform_form": -2.1335230179933705e-07,
+        "nx": [
+          40,
+          80,
+          160
+        ],
+        "order_rel_dev": 2.1874100840502834e-16,
+        "order_rel_dev_vs_theory": 0.015102776311087807,
+        "p_true": 2.030205552622176,
+        "p_uniform_form": 2.0302055526221756,
+        "r21": 2.0,
+        "r32": 2.0,
+        "ratio_mismatch": 0.0,
+        "uniform_ladder": true
+      },
+      "grids": [
+        40,
+        80,
+        160
+      ],
+      "ladder": "order2_uniform",
+      "point": {
+        "limit_abs_diff": 3.1763735522036263e-21,
+        "limit_abs_diff_over_scale": 9.206059133663528e-18,
+        "limit_rel_dev": 1.92525266489234e-15,
+        "limit_relative_meaningful": true,
+        "limit_scale": 0.0003450307570357303,
+        "limit_true": -1.6498476330540485e-06,
+        "limit_uniform_form": -1.6498476330540453e-06,
+        "nx": [
+          40,
+          80,
+          160
+        ],
+        "order_rel_dev": 0.0,
+        "order_rel_dev_vs_theory": 0.010892291326734416,
+        "p_true": 2.021784582653469,
+        "p_uniform_form": 2.021784582653469,
+        "r21": 2.0,
+        "r32": 2.0,
+        "ratio_mismatch": 0.0,
+        "uniform_ladder": true
+      },
+      "theory_order": 2.0
+    },
+    {
+      "cell_average": {
+        "limit_abs_diff": 6.88214269644119e-22,
+        "limit_abs_diff_over_scale": 7.747094992199602e-18,
+        "limit_rel_dev": 2.744856772115378e-15,
+        "limit_relative_meaningful": true,
+        "limit_scale": 8.883514018313555e-05,
+        "limit_true": -2.507286633807611e-07,
+        "limit_uniform_form": -2.507286633807618e-07,
+        "nx": [
+          80,
+          160,
+          320
+        ],
+        "order_rel_dev": 0.0,
+        "order_rel_dev_vs_theory": 0.014169833525420561,
+        "p_true": 2.028339667050841,
+        "p_uniform_form": 2.028339667050841,
+        "r21": 2.0,
+        "r32": 2.0,
+        "ratio_mismatch": 0.0,
+        "uniform_ladder": true
+      },
+      "grids": [
+        80,
+        160,
+        320
+      ],
+      "ladder": "order2_fine",
+      "point": {
+        "limit_abs_diff": 1.4558378780933287e-22,
+        "limit_abs_diff_over_scale": 1.7389072473893603e-18,
+        "limit_rel_dev": 5.416283049684869e-15,
+        "limit_relative_meaningful": true,
+        "limit_scale": 8.372142219080365e-05,
+        "limit_true": -2.687891058754827e-08,
+        "limit_uniform_form": -2.6878910587548417e-08,
+        "nx": [
+          80,
+          160,
+          320
+        ],
+        "order_rel_dev": 0.0,
+        "order_rel_dev_vs_theory": 0.05500182885014482,
+        "p_true": 2.1100036577002896,
+        "p_uniform_form": 2.1100036577002896,
+        "r21": 2.0,
+        "r32": 2.0,
+        "ratio_mismatch": 0.0,
+        "uniform_ladder": true
+      },
+      "theory_order": 2.0
+    },
+    {
+      "cell_average": {
+        "limit_abs_diff": 8.329691187835388e-06,
+        "limit_abs_diff_over_scale": 0.038187343566318976,
+        "limit_rel_dev": 2.670586465729188,
+        "limit_relative_meaningful": true,
+        "limit_scale": 0.0002181270130342905,
+        "limit_true": -3.119049427804621e-06,
+        "limit_uniform_form": 5.210641760030766e-06,
+        "nx": [
+          50,
+          100,
+          175
+        ],
+        "order_rel_dev": 0.34449506775710986,
+        "order_rel_dev_vs_theory": 0.27151374824619867,
+        "p_true": 1.8914368356402247,
+        "p_uniform_form": 2.5430274964923973,
+        "r21": 1.75,
+        "r32": 2.0,
+        "ratio_mismatch": 0.125,
+        "uniform_ladder": false
+      },
+      "grids": [
+        50,
+        100,
+        175
+      ],
+      "ladder": "order2_nonuniform",
+      "point": {
+        "limit_abs_diff": 8.211468851065051e-06,
+        "limit_abs_diff_over_scale": 0.04060855817375917,
+        "limit_rel_dev": 1.7662368379777151,
+        "limit_relative_meaningful": true,
+        "limit_scale": 0.00020221030295951796,
+        "limit_true": -4.64913236690665e-06,
+        "limit_uniform_form": 3.5623364841584015e-06,
+        "nx": [
+          50,
+          100,
+          175
+        ],
+        "order_rel_dev": 0.348620674237978,
+        "order_rel_dev_vs_theory": 0.24693848032000187,
+        "p_true": 1.8492056426831356,
+        "p_uniform_form": 2.4938769606400037,
+        "r21": 1.75,
+        "r32": 2.0,
+        "ratio_mismatch": 0.125,
+        "uniform_ladder": false
+      },
+      "theory_order": 2.0
+    },
+    {
+      "cell_average": {
+        "limit_abs_diff": 5.55653613398821e-19,
+        "limit_abs_diff_over_scale": 1.0393909733607758e-16,
+        "limit_rel_dev": 8.428397963859098e-15,
+        "limit_relative_meaningful": true,
+        "limit_scale": 0.0053459538098754675,
+        "limit_true": -6.592636178090537e-05,
+        "limit_uniform_form": -6.592636178090481e-05,
+        "nx": [
+          40,
+          80,
+          160
+        ],
+        "order_rel_dev": 1.1678090248826267e-16,
+        "order_rel_dev_vs_theory": 0.0493111450849234,
+        "p_true": 0.9506888549150765,
+        "p_uniform_form": 0.9506888549150766,
+        "r21": 2.0,
+        "r32": 2.0,
+        "ratio_mismatch": 0.0,
+        "uniform_ladder": true
+      },
+      "grids": [
+        40,
+        80,
+        160
+      ],
+      "ladder": "order1_uniform",
+      "point": {
+        "limit_abs_diff": 3.3203691532368573e-19,
+        "limit_abs_diff_over_scale": 6.062444437622392e-17,
+        "limit_rel_dev": 1.1906717034706212e-14,
+        "limit_relative_meaningful": true,
+        "limit_scale": 0.005476947768182864,
+        "limit_true": -2.788652105831105e-05,
+        "limit_uniform_form": -2.788652105831072e-05,
+        "nx": [
+          40,
+          80,
+          160
+        ],
+        "order_rel_dev": 2.270403713961995e-16,
+        "order_rel_dev_vs_theory": 0.022003868476986543,
+        "p_true": 0.9779961315230132,
+        "p_uniform_form": 0.9779961315230135,
+        "r21": 2.0,
+        "r32": 2.0,
+        "ratio_mismatch": 0.0,
+        "uniform_ladder": true
+      },
+      "theory_order": 1.0
+    },
+    {
+      "cell_average": {
+        "limit_abs_diff": 0.0005784329836040442,
+        "limit_abs_diff_over_scale": 0.13401430822108684,
+        "limit_rel_dev": 13.25926646647046,
+        "limit_relative_meaningful": true,
+        "limit_scale": 0.004316203182198937,
+        "limit_true": -4.362481024623526e-05,
+        "limit_uniform_form": 0.0005348081733578089,
+        "nx": [
+          50,
+          100,
+          175
+        ],
+        "order_rel_dev": 0.5293878461289484,
+        "order_rel_dev_vs_theory": 0.46869457094765354,
+        "p_true": 0.9603153148268333,
+        "p_uniform_form": 1.4686945709476535,
+        "r21": 1.75,
+        "r32": 2.0,
+        "ratio_mismatch": 0.125,
+        "uniform_ladder": false
+      },
+      "grids": [
+        50,
+        100,
+        175
+      ],
+      "ladder": "order1_nonuniform",
+      "point": {
+        "limit_abs_diff": 0.0005668575825094801,
+        "limit_abs_diff_over_scale": 0.12883075378190553,
+        "limit_rel_dev": 31.823958082145033,
+        "limit_relative_meaningful": true,
+        "limit_scale": 0.004400017587951862,
+        "limit_true": -1.781229038343656e-05,
+        "limit_uniform_form": 0.0005490452921260436,
+        "nx": [
+          50,
+          100,
+          175
+        ],
+        "order_rel_dev": 0.5206608430661752,
+        "order_rel_dev_vs_theory": 0.49407737114724193,
+        "p_true": 0.9825184740962147,
+        "p_uniform_form": 1.494077371147242,
+        "r21": 1.75,
+        "r32": 2.0,
+        "ratio_mismatch": 0.125,
+        "uniform_ladder": false
+      },
+      "theory_order": 1.0
+    }
+  ],
+  "summary": {
+    "all_design_readouts_within_15pct": true,
+    "all_design_readouts_within_3pct": false,
+    "design_order_readouts": {
+      "order1_nonuniform": {
+        "p_loglog": 0.9791381281949728,
+        "p_richardson": 0.9603153148268333,
+        "pass_15": true,
+        "pass_3": true,
+        "rel_dev": 0.020861871805027188,
+        "theory_order": 1.0
+      },
+      "order1_uniform": {
+        "p_loglog": 0.9754446847630224,
+        "p_richardson": 0.9506888549150765,
+        "pass_15": true,
+        "pass_3": true,
+        "rel_dev": 0.024555315236977626,
+        "theory_order": 1.0
+      },
+      "order2_cfl010": {
+        "p_loglog": 2.0341824803023787,
+        "p_richardson": 1.998980073815023,
+        "pass_15": true,
+        "pass_3": true,
+        "rel_dev": 0.017091240151189346,
+        "theory_order": 2.0
+      },
+      "order2_fine": {
+        "p_loglog": 2.0609082147290767,
+        "p_richardson": 2.028339667050841,
+        "pass_15": true,
+        "pass_3": false,
+        "rel_dev": 0.030454107364538352,
+        "theory_order": 2.0
+      },
+      "order2_nonuniform": {
+        "p_loglog": 2.0080922972934676,
+        "p_richardson": 1.8914368356402247,
+        "pass_15": true,
+        "pass_3": true,
+        "rel_dev": 0.004046148646733805,
+        "theory_order": 2.0
+      },
+      "order2_uniform": {
+        "p_loglog": 2.0368764842230407,
+        "p_richardson": 2.030205552622176,
+        "pass_15": true,
+        "pass_3": true,
+        "rel_dev": 0.018438242111520342,
+        "theory_order": 2.0
+      }
+    },
+    "l1_within_3pct": false,
+    "norm_sensitivity_order2_uniform": {
+      "l1": {
+        "p_loglog": 2.0368764842230407,
+        "p_richardson": 2.030205552622176,
+        "rel_dev": 0.018438242111520342
+      },
+      "l2": {
+        "p_loglog": 1.7900698230381589,
+        "p_richardson": 1.764873189587766,
+        "rel_dev": 0.10496508848092057
+      },
+      "linf": {
+        "p_loglog": 1.397329898561194,
+        "p_richardson": 1.6759577931331697,
+        "rel_dev": 0.30133505071940303
+      }
+    }
+  },
+  "wall_seconds": 48.7
+}
