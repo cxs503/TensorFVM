@@ -42,6 +42,7 @@ Usage
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import pathlib
@@ -334,6 +335,22 @@ def _criteria(cases: list[dict]) -> list[dict]:
 # ---------------------------------------------------------------------------
 # figures
 # ---------------------------------------------------------------------------
+def _figure_record(path: pathlib.Path, caption: str) -> dict:
+    """Provenance record of a written figure (hash of the exact bytes on disk).
+
+    Recording the sha256 lets a stale figure be detected mechanically: the
+    numbers in the report come from ``summary.json``, so a figure that does not
+    match its recorded hash cannot have been produced by the same run.
+    """
+    data = path.read_bytes()
+    return {
+        "name": path.name,
+        "caption": caption,
+        "bytes": len(data),
+        "sha256": hashlib.sha256(data).hexdigest(),
+    }
+
+
 def make_figures(summary: dict, out_dir: pathlib.Path) -> list[dict]:
     import matplotlib
 
@@ -346,13 +363,14 @@ def make_figures(summary: dict, out_dir: pathlib.Path) -> list[dict]:
 
     fig, ax = plt.subplots(figsize=(6.4, 4.2))
     for case, key, key_c, style, label in (
-        (sphere, "k_axial_panel", "k_axial_centroid", "o-", "sphere $k = M/(\\rho V)$"),
-        (spheroid, "k_axial_panel", "k_axial_centroid", "s-", "spheroid a/b=2 axial $k_1$"),
-        (spheroid, "k_transverse_panel", "k_transverse_centroid", "^-",
+        (sphere, "k_axial_panel", "k_axial_centroid", "o", "sphere $k = M/(\\rho V)$"),
+        (spheroid, "k_axial_panel", "k_axial_centroid", "s", "spheroid a/b=2 axial $k_1$"),
+        (spheroid, "k_transverse_panel", "k_transverse_centroid", "^",
          "spheroid a/b=2 transverse $k_2$"),
     ):
         n = [row["n_panels"] for row in case["levels"]]
-        ax.plot(n, [row[key] for row in case["levels"]], style, label=label + " (Gauss rule)")
+        ax.plot(n, [row[key] for row in case["levels"]], style, ls="-",
+                label=label + " (Gauss rule)")
         ax.plot(n, [row[key_c] for row in case["levels"]], style, mfc="none", ls=":",
                 label=label + " (midpoint)")
     ax.axhline(sphere["k_axial_exact"], color="k", lw=0.8, ls="--")
@@ -369,26 +387,26 @@ def make_figures(summary: dict, out_dir: pathlib.Path) -> list[dict]:
     fig.savefig(path, dpi=140)
     plt.close(fig)
     figures.append(
-        {
-            "name": path.name,
-            "caption": "Added-mass coefficients versus panel count. Solid filled markers: "
+        _figure_record(
+            path,
+            "Added-mass coefficients versus panel count. Solid filled markers: "
             "consistent Gauss surface quadrature; dotted open markers: the historical midpoint "
             "rule; dashed/dotted/dash-dot horizontal lines are the exact Lamb values "
             "(sphere Cm=0.5, spheroid a/b=2: k1, k2).",
-        }
+        )
     )
 
     fig, ax = plt.subplots(figsize=(6.4, 4.2))
     for case, key, key_c, style, label in (
-        (sphere, "k_axial_rel_error", "k_axial_rel_error_centroid", "o-", "sphere Cm"),
-        (spheroid, "k_axial_rel_error", "k_axial_rel_error_centroid", "s-", "spheroid k1"),
-        (spheroid, "k_transverse_rel_error", "k_transverse_rel_error_centroid", "^-",
+        (sphere, "k_axial_rel_error", "k_axial_rel_error_centroid", "o", "sphere Cm"),
+        (spheroid, "k_axial_rel_error", "k_axial_rel_error_centroid", "s", "spheroid k1"),
+        (spheroid, "k_transverse_rel_error", "k_transverse_rel_error_centroid", "^",
          "spheroid k2"),
     ):
         h = [row["h_rel"] for row in case["levels"]]
         e = [abs(row[key]) * 100.0 for row in case["levels"]]
         ec = [abs(row[key_c]) * 100.0 for row in case["levels"]]
-        ax.loglog(h, e, style, label=label + " (Gauss)")
+        ax.loglog(h, e, style, ls="-", label=label + " (Gauss)")
         ax.loglog(h, ec, style, mfc="none", ls=":", label=label + " (midpoint)")
     h = [row["h_rel"] for row in sphere["levels"]]
     anchor = abs(sphere["levels"][0]["k_axial_rel_error"]) * 100.0
@@ -403,12 +421,12 @@ def make_figures(summary: dict, out_dir: pathlib.Path) -> list[dict]:
     fig.savefig(path, dpi=140)
     plt.close(fig)
     figures.append(
-        {
-            "name": path.name,
-            "caption": "Relative added-mass error versus mesh spacing on log-log axes, for the "
+        _figure_record(
+            path,
+            "Relative added-mass error versus mesh spacing on log-log axes, for the "
             "consistent Gauss rule (solid) and the midpoint rule (dotted); the dashed guide "
             "has slope one.",
-        }
+        )
     )
     return figures
 
@@ -544,6 +562,11 @@ def render_report(summary: dict, figures: list[dict], *, generated: str) -> str:
         add("")
         add("*%s*" % fig["caption"])
         add("")
+        if "sha256" in fig:
+            add("`sha256 %s` (%d bytes) -- the hash is stored in `summary.json` together with "
+                "the numbers plotted, so a figure left over from an older run is detected "
+                "mechanically instead of by eye." % (fig["sha256"], fig["bytes"]))
+            add("")
     add("## 5. Criteria and verdicts")
     add("")
     add("| id | criterion | measured | limit | verdict |")
@@ -609,9 +632,12 @@ def main(argv=None) -> dict:
 
     summary = run_study()
     summary["generated"] = time.strftime("%Y-%m-%dT%H:%M:%S")
-    (out_dir / "summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n")
+    # The figures are made first so their provenance (sha256/bytes) lands in the
+    # summary that the report is rendered from -- writing the summary before the
+    # figures left summary["figures"] empty on disk.
     figures = make_figures(summary, out_dir)
     summary["figures"] = figures
+    (out_dir / "summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n")
     (out_dir / "REPORT.md").write_text(
         render_report(summary, figures, generated=summary["generated"]) + "\n"
     )

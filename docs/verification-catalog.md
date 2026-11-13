@@ -685,11 +685,14 @@ body; sphere (`Cm = 0.5`) and prolate spheroid (`a/b = 2`: `k1 = 0.210015`,
 
 **Implementation**: `src/tensorfvm/panel_added_mass.py`
 **Driver**: `python -m tensorfvm.verification.added_mass_potential`
-**Tests**: `tests/test_added_mass_potential.py`
+**Tests**: `tests/test_added_mass_potential.py`, `tests/test_added_mass_potential_artifacts.py`
 **Report**: `docs/verification-added-mass-potential/REPORT.md`
 **Artifact**: `docs/verification-added-mass-potential/summary.json`
+**Figures**: `docs/verification-added-mass-potential/fig1_added_mass_convergence.png`
+`sha256 76f21a019df6af93`, `docs/verification-added-mass-potential/fig2_error_ladder.png`
+`sha256 ee2e0a2ac24717f9`
 
-**Verification Status**: PASS (8/8 criteria)
+**Verification Status**: PASS (9/9 criteria)
 
 **Key Metrics** (finest latitude/longitude panelisation, 1200 panels, consistent Gauss
 surface quadrature):
@@ -699,7 +702,16 @@ surface quadrature):
 - added-mass matrix symmetric, off-diagonals < 1e-10 of the diagonal
 - surface-integral quadrature consistency: the solver's Gauss rule beats the one-node
   midpoint rule at every level of every ladder (worst error ratio 0.922, finest-level
-  reduction up to x3.91), i.e. the residual is the flat-panel geometry, not the quadrature
+  reduction x1.93 to x3.91, C8 requires >= x1.5), i.e. the residual is the flat-panel
+  geometry, not the quadrature
+- criterion set (9): C1-C3 accuracy against the Lamb anchors (< 3 %), C4 observed order,
+  C5 symmetry/decoupling, C6a/C6b Richardson extrapolation (< 1 %), C7/C8 consistent
+  quadrature vs the midpoint baseline
+- artifact freshness: the committed `summary.json` criteria are recomputed from its own
+  `cases` by the driver's `_criteria`, and every figure carries a `sha256` in the summary
+  that `REPORT.md` quotes; `tests/test_added_mass_potential_artifacts.py` fails if the
+  catalog quotes a different criterion count or a different finest-level error than the
+  artifact, or if a figure does not match its recorded hash
 
 ---
 5. **Radiation**: No heat transfer verification  [[gap-status: closed-by src/tensorfvm/radiation.py, tests/test_radiation.py, docs/verification-radiation/REPORT.md]]
