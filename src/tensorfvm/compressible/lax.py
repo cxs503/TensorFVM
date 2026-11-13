@@ -88,6 +88,11 @@ THRESHOLDS = {
     "l1_rel_error": 0.02,
     "independent_exact_rel_error": 1.0e-9,
     "conservation_drift": 5.0e-3,
+    #: the grid the percentage criteria are graded on (``leg_lax``: full vs
+    #: quick sweep).  They are *not* a convergence-order test: a first-order
+    #: scheme brings ``l1[rho]`` under 2 % at nx ~ 1.6e3, so "< 2 %" is only
+    #: meaningful together with this grid -- see ``docs/audit-CASE-LAX`` (F1).
+    "grading_nx": {"full": 800, "quick": 400},
 }
 
 
