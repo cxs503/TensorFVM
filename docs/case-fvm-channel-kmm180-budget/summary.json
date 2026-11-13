@@ -1,0 +1,567 @@
+{
+  "case": "0180",
+  "cells": 512,
+  "global_balance": {
+    "dissipation": 0.03448327367356075,
+    "gap_relative": 0.002808595855210028,
+    "pointwise_balance_max": 0.0002264111312038006,
+    "pointwise_balance_relative": 0.006554412683077328,
+    "production": 0.03454331336022917,
+    "re_tau": 182.088,
+    "transport": -3.6978520060339476e-05
+  },
+  "grid_identity": {
+    "max_abs_y_plus_gap": 0.0,
+    "rows_budget": 96,
+    "rows_dns": 96
+  },
+  "models": {
+    "kepsilon": {
+      "closure_identity": {
+        "cells": 512,
+        "max_relative": 4.4032276372084313e-16,
+        "median_relative": 1.1365585643464398e-16,
+        "re_tau": 182.088
+      },
+      "comparison": {
+        "dissipation_plus": {
+          "buffer": {
+            "cells": 0,
+            "high": 30.0,
+            "low": 5.0,
+            "max_relative": null,
+            "rms_relative": null
+          },
+          "log": {
+            "cells": 101,
+            "high": 36.4176,
+            "low": 30.0,
+            "max_relative": 0.09528149720784992,
+            "rms_relative": 0.07576960182439416
+          },
+          "outer": {
+            "cells": 409,
+            "high": 182.088,
+            "low": 36.4176,
+            "max_relative": 0.27455250585251606,
+            "rms_relative": 0.10596515700698089
+          },
+          "viscous": {
+            "cells": 0,
+            "high": 5.0,
+            "low": 0.0,
+            "max_relative": null,
+            "rms_relative": null
+          }
+        },
+        "nut_plus": {
+          "buffer": {
+            "cells": 0,
+            "high": 30.0,
+            "low": 5.0,
+            "max_relative": null,
+            "rms_relative": null
+          },
+          "log": {
+            "cells": 101,
+            "high": 36.4176,
+            "low": 30.0,
+            "max_relative": 0.8627038182542611,
+            "rms_relative": 0.647585283716016
+          },
+          "outer": {
+            "cells": 409,
+            "high": 182.088,
+            "low": 36.4176,
+            "max_relative": 0.546025705702987,
+            "rms_relative": 0.21123278023576933
+          },
+          "viscous": {
+            "cells": 0,
+            "high": 5.0,
+            "low": 0.0,
+            "max_relative": null,
+            "rms_relative": null
+          }
+        },
+        "production_plus": {
+          "buffer": {
+            "cells": 0,
+            "high": 30.0,
+            "low": 5.0,
+            "max_relative": null,
+            "rms_relative": null
+          },
+          "log": {
+            "cells": 101,
+            "high": 36.4176,
+            "low": 30.0,
+            "max_relative": 0.39427870016134453,
+            "rms_relative": 0.3315881922656722
+          },
+          "outer": {
+            "cells": 409,
+            "high": 182.088,
+            "low": 36.4176,
+            "max_relative": 0.3450341580864807,
+            "rms_relative": 0.13906363218519485
+          },
+          "viscous": {
+            "cells": 0,
+            "high": 5.0,
+            "low": 0.0,
+            "max_relative": null,
+            "rms_relative": null
+          }
+        },
+        "shear_plus": {
+          "buffer": {
+            "cells": 0,
+            "high": 30.0,
+            "low": 5.0,
+            "max_relative": null,
+            "rms_relative": null
+          },
+          "log": {
+            "cells": 101,
+            "high": 36.4176,
+            "low": 30.0,
+            "max_relative": 0.0621532140226691,
+            "rms_relative": 0.04566388487502036
+          },
+          "outer": {
+            "cells": 409,
+            "high": 182.088,
+            "low": 36.4176,
+            "max_relative": 0.0273173179170614,
+            "rms_relative": 0.011245027843496605
+          },
+          "viscous": {
+            "cells": 0,
+            "high": 5.0,
+            "low": 0.0,
+            "max_relative": null,
+            "rms_relative": null
+          }
+        },
+        "slope_plus": {
+          "buffer": {
+            "cells": 0,
+            "high": 30.0,
+            "low": 5.0,
+            "max_relative": null,
+            "rms_relative": null
+          },
+          "log": {
+            "cells": 101,
+            "high": 36.4176,
+            "low": 30.0,
+            "max_relative": 0.4297787959558024,
+            "rms_relative": 0.3600537101391209
+          },
+          "outer": {
+            "cells": 409,
+            "high": 182.088,
+            "low": 36.4176,
+            "max_relative": 0.3364002882625046,
+            "rms_relative": 0.14712022710993825
+          },
+          "viscous": {
+            "cells": 0,
+            "high": 5.0,
+            "low": 0.0,
+            "max_relative": null,
+            "rms_relative": null
+          }
+        }
+      },
+      "converged": true,
+      "first_cell_y_plus": 30.023414497029147,
+      "iterations": 1944,
+      "window_high": 36.4176
+    },
+    "komega": {
+      "closure_identity": {
+        "cells": 512,
+        "max_relative": 2.946238119145396e-16,
+        "median_relative": 0.0,
+        "re_tau": 182.088
+      },
+      "comparison": {
+        "dissipation_plus": {
+          "buffer": {
+            "cells": 171,
+            "high": 30.0,
+            "low": 5.0,
+            "max_relative": 0.7315902451440014,
+            "rms_relative": 0.4140035855869782
+          },
+          "log": {
+            "cells": 25,
+            "high": 36.4176,
+            "low": 30.0,
+            "max_relative": 0.06154825166976349,
+            "rms_relative": 0.053878539081736024
+          },
+          "outer": {
+            "cells": 243,
+            "high": 182.088,
+            "low": 36.4176,
+            "max_relative": 0.5220577514202238,
+            "rms_relative": 0.23737851036527763
+          },
+          "viscous": {
+            "cells": 38,
+            "high": 5.0,
+            "low": 0.0,
+            "max_relative": 0.6464511495532372,
+            "rms_relative": 0.36750617581235406
+          }
+        },
+        "nut_plus": {
+          "buffer": {
+            "cells": 171,
+            "high": 30.0,
+            "low": 5.0,
+            "max_relative": 1.0036768977673776,
+            "rms_relative": 0.6763723803931819
+          },
+          "log": {
+            "cells": 25,
+            "high": 36.4176,
+            "low": 30.0,
+            "max_relative": 0.06250806043057833,
+            "rms_relative": 0.03534483797083206
+          },
+          "outer": {
+            "cells": 243,
+            "high": 182.088,
+            "low": 36.4176,
+            "max_relative": 0.2051322909608045,
+            "rms_relative": 0.12717770221362265
+          },
+          "viscous": {
+            "cells": 38,
+            "high": 5.0,
+            "low": 0.0,
+            "max_relative": 0.7630288981062051,
+            "rms_relative": 0.4387427094036468
+          }
+        },
+        "production_plus": {
+          "buffer": {
+            "cells": 171,
+            "high": 30.0,
+            "low": 5.0,
+            "max_relative": 0.35945962010314064,
+            "rms_relative": 0.189272364399157
+          },
+          "log": {
+            "cells": 25,
+            "high": 36.4176,
+            "low": 30.0,
+            "max_relative": 0.04737077513666458,
+            "rms_relative": 0.026694330830224416
+          },
+          "outer": {
+            "cells": 243,
+            "high": 182.088,
+            "low": 36.4176,
+            "max_relative": 0.18338278707668754,
+            "rms_relative": 0.11569748117023163
+          },
+          "viscous": {
+            "cells": 38,
+            "high": 5.0,
+            "low": 0.0,
+            "max_relative": 0.7600930942301973,
+            "rms_relative": 0.43029062993553757
+          }
+        },
+        "shear_plus": {
+          "buffer": {
+            "cells": 171,
+            "high": 30.0,
+            "low": 5.0,
+            "max_relative": 0.5661606039191789,
+            "rms_relative": 0.3160632277337715
+          },
+          "log": {
+            "cells": 25,
+            "high": 36.4176,
+            "low": 30.0,
+            "max_relative": 0.009100538187505008,
+            "rms_relative": 0.00516379814976999
+          },
+          "outer": {
+            "cells": 243,
+            "high": 182.088,
+            "low": 36.4176,
+            "max_relative": 0.01466203921080728,
+            "rms_relative": 0.009018834325200165
+          },
+          "viscous": {
+            "cells": 38,
+            "high": 5.0,
+            "low": 0.0,
+            "max_relative": 0.7615653546846337,
+            "rms_relative": 0.4344841082674786
+          }
+        },
+        "slope_plus": {
+          "buffer": {
+            "cells": 171,
+            "high": 30.0,
+            "low": 5.0,
+            "max_relative": 0.315850908475108,
+            "rms_relative": 0.22884185329315118
+          },
+          "log": {
+            "cells": 25,
+            "high": 36.4176,
+            "low": 30.0,
+            "max_relative": 0.056968513529409785,
+            "rms_relative": 0.031364190444177695
+          },
+          "outer": {
+            "cells": 243,
+            "high": 182.088,
+            "low": 36.4176,
+            "max_relative": 0.18447137045061773,
+            "rms_relative": 0.12478087303345142
+          },
+          "viscous": {
+            "cells": 38,
+            "high": 5.0,
+            "low": 0.0,
+            "max_relative": 0.018907775074494988,
+            "rms_relative": 0.009829055437231737
+          }
+        }
+      },
+      "converged": true,
+      "first_cell_y_plus": 0.028033105406374083,
+      "iterations": 2777,
+      "window_high": 36.4176
+    },
+    "sst": {
+      "closure_identity": {
+        "cells": 512,
+        "max_relative": 0.04637302717495662,
+        "median_relative": 1.2203561823149968e-16,
+        "re_tau": 182.088
+      },
+      "comparison": {
+        "dissipation_plus": {
+          "buffer": {
+            "cells": 171,
+            "high": 30.0,
+            "low": 5.0,
+            "max_relative": 0.7583958540791907,
+            "rms_relative": 0.471975923857115
+          },
+          "log": {
+            "cells": 25,
+            "high": 36.4176,
+            "low": 30.0,
+            "max_relative": 0.04595160077090478,
+            "rms_relative": 0.02488959784740354
+          },
+          "outer": {
+            "cells": 243,
+            "high": 182.088,
+            "low": 36.4176,
+            "max_relative": 0.3151276126447109,
+            "rms_relative": 0.1460686204634036
+          },
+          "viscous": {
+            "cells": 38,
+            "high": 5.0,
+            "low": 0.0,
+            "max_relative": 0.6844380347284122,
+            "rms_relative": 0.4075546918516186
+          }
+        },
+        "nut_plus": {
+          "buffer": {
+            "cells": 171,
+            "high": 30.0,
+            "low": 5.0,
+            "max_relative": 0.5985068757716402,
+            "rms_relative": 0.3498302283852251
+          },
+          "log": {
+            "cells": 25,
+            "high": 36.4176,
+            "low": 30.0,
+            "max_relative": 0.1656262815922023,
+            "rms_relative": 0.13433421745351468
+          },
+          "outer": {
+            "cells": 243,
+            "high": 182.088,
+            "low": 36.4176,
+            "max_relative": 0.23129419097437695,
+            "rms_relative": 0.15801562497136373
+          },
+          "viscous": {
+            "cells": 38,
+            "high": 5.0,
+            "low": 0.0,
+            "max_relative": 0.8039875058343412,
+            "rms_relative": 0.4943703275609323
+          }
+        },
+        "production_plus": {
+          "buffer": {
+            "cells": 171,
+            "high": 30.0,
+            "low": 5.0,
+            "max_relative": 0.23905133025695963,
+            "rms_relative": 0.1071056200654607
+          },
+          "log": {
+            "cells": 25,
+            "high": 36.4176,
+            "low": 30.0,
+            "max_relative": 0.14661771624421255,
+            "rms_relative": 0.11185766008960535
+          },
+          "outer": {
+            "cells": 243,
+            "high": 182.088,
+            "low": 36.4176,
+            "max_relative": 0.22049613459991424,
+            "rms_relative": 0.15318638896199774
+          },
+          "viscous": {
+            "cells": 38,
+            "high": 5.0,
+            "low": 0.0,
+            "max_relative": 0.801426881790094,
+            "rms_relative": 0.48557856531778626
+          }
+        },
+        "shear_plus": {
+          "buffer": {
+            "cells": 171,
+            "high": 30.0,
+            "low": 5.0,
+            "max_relative": 0.37233394579330004,
+            "rms_relative": 0.19449695518556698
+          },
+          "log": {
+            "cells": 25,
+            "high": 36.4176,
+            "low": 30.0,
+            "max_relative": 0.02189556667198387,
+            "rms_relative": 0.01936446705017029
+          },
+          "outer": {
+            "cells": 243,
+            "high": 182.088,
+            "low": 36.4176,
+            "max_relative": 0.022508726254180416,
+            "rms_relative": 0.012789116102269002
+          },
+          "viscous": {
+            "cells": 38,
+            "high": 5.0,
+            "low": 0.0,
+            "max_relative": 0.8027112157379898,
+            "rms_relative": 0.4899773093938301
+          }
+        },
+        "slope_plus": {
+          "buffer": {
+            "cells": 171,
+            "high": 30.0,
+            "low": 5.0,
+            "max_relative": 0.18251521415981914,
+            "rms_relative": 0.1204351674424988
+          },
+          "log": {
+            "cells": 25,
+            "high": 36.4176,
+            "low": 30.0,
+            "max_relative": 0.17226179558303203,
+            "rms_relative": 0.1338136690309072
+          },
+          "outer": {
+            "cells": 243,
+            "high": 182.088,
+            "low": 36.4176,
+            "max_relative": 0.24327045854466448,
+            "rms_relative": 0.16738457379460733
+          },
+          "viscous": {
+            "cells": 38,
+            "high": 5.0,
+            "low": 0.0,
+            "max_relative": 0.015243077515822875,
+            "rms_relative": 0.011365775641446524
+          }
+        }
+      },
+      "converged": true,
+      "first_cell_y_plus": 0.028033105406374083,
+      "iterations": 2226,
+      "window_high": 36.4176
+    }
+  },
+  "production_identity": {
+    "bands": {
+      "buffer": {
+        "cells": 21,
+        "high": 30.0,
+        "low": 5.0,
+        "max_relative": 0.0023784422276267787,
+        "rms_relative": 0.0012288579444870986
+      },
+      "log": {
+        "cells": 4,
+        "high": 36.4176,
+        "low": 30.0,
+        "max_relative": 0.0027930911571085533,
+        "rms_relative": 0.0027002530531088312
+      },
+      "outer": {
+        "cells": 55,
+        "high": 182.088,
+        "low": 36.4176,
+        "max_relative": 0.003957227797645687,
+        "rms_relative": 0.0016483854766631855
+      },
+      "viscous": {
+        "cells": 5,
+        "high": 5.0,
+        "low": 0.0,
+        "max_relative": 0.00127418101702035,
+        "rms_relative": 0.0009969224045666629
+      }
+    },
+    "comparable": 85,
+    "floor_fraction": 0.01,
+    "max_relative": 0.003957227797645687,
+    "rms_relative": 0.0015914894015330266,
+    "stress_scale": 0.7256286780857216
+  },
+  "re_tau": 182.088,
+  "reference": {
+    "columns": [
+      "y/delta",
+      "y^+",
+      "Production",
+      "Turbulent_Transport",
+      "Viscous_Transport",
+      "Pressure_Strain",
+      "Pressure_Transport",
+      "Viscous_Dissipation",
+      "Balance"
+    ],
+    "dns_re_tau": 182.088,
+    "path": "/root/tp-agent/work/m18410/docs/rans-turbulence-validation-matrix/dns/cache/LM_Channel_0180_RSTE_k_prof.dat",
+    "rows": 96,
+    "sha256": "51fed05b3d0c3d2e42d91144dcc68836f5dc0f6fa1a6a5993f41db96429122e1"
+  }
+}
