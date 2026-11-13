@@ -1,0 +1,211 @@
+{
+  "case": {
+    "key": "stoker-wet",
+    "kind": "wet",
+    "h0": 1.0,
+    "h1": 0.5,
+    "gravity": 9.81,
+    "x_dam": 0.0,
+    "x_min": -4.0,
+    "x_max": 6.0,
+    "t_star_end": 2.0,
+    "t_end": 0.638550856814101,
+    "reference": "Stoker (1957) Water Waves, ch. 10 (bore on a wet bed)"
+  },
+  "criterion": {
+    "subcell_max_cells": 0.5,
+    "declared": "bore position must resolve below half a cell at every rung",
+    "translation_tolerance_cells": 0.1,
+    "amplitude_scale": 0.015
+  },
+  "refinement": {
+    "x_shock_exact": 1.8887811500316989,
+    "stoker": {
+      "h0": 1.0,
+      "h1": 0.5,
+      "g": 9.81,
+      "c0": 3.132091952673165,
+      "c1": 2.2147234590350102,
+      "c2": 2.6704100016846253,
+      "h2": 0.7269204461872865,
+      "u2": 0.9233639019770798,
+      "shock_speed": 2.957918120187525,
+      "tail_speed": -1.7470460997075454,
+      "head_speed": -3.132091952673165,
+      "step_ratio": 1.453840892374573
+    },
+    "rows": [
+      {
+        "n": 200,
+        "dx": 0.05,
+        "bore_x_exact": 1.8887811500316989,
+        "bore_x": 1.8942956500471895,
+        "bore_x_cell": 1.875,
+        "bore_method": "mid_level_crossing",
+        "level": 0.6133547741145036,
+        "error": 0.0029196077138942426,
+        "error_cells": 0.11029000030981173,
+        "error_cell_reading": 0.007296319127002935,
+        "error_cell_reading_cells": 0.2756230006339777,
+        "h2_error": 0.0002979823267446875,
+        "step_ratio_error": 0.00030940176772360946,
+        "n_plateau": 48,
+        "shock_error": 0.0028840309871771812,
+        "verdict_all_pass": false,
+        "verdict_failing": [
+          "monotone(no_extrema)"
+        ]
+      },
+      {
+        "n": 400,
+        "dx": 0.025,
+        "bore_x_exact": 1.8887811500316989,
+        "bore_x": 1.8918056012888549,
+        "bore_x_cell": 1.8875000000000002,
+        "bore_method": "mid_level_crossing",
+        "level": 0.6134358643474264,
+        "error": 0.0016012714109865209,
+        "error_cells": 0.12097805028624009,
+        "error_cell_reading": 0.0006782945878495276,
+        "error_cell_reading_cells": 0.051246001267948316,
+        "h2_error": 7.790494036496684e-05,
+        "step_ratio_error": 9.372986011153035e-05,
+        "n_plateau": 109,
+        "shock_error": 0.0015971060530938627,
+        "verdict_all_pass": true,
+        "verdict_failing": []
+      },
+      {
+        "n": 800,
+        "dx": 0.0125,
+        "bore_x_exact": 1.8887811500316989,
+        "bore_x": 1.8895982241095641,
+        "bore_x_cell": 1.8812500000000005,
+        "bore_method": "mid_level_crossing",
+        "level": 0.6134606022529244,
+        "error": 0.00043259330380945947,
+        "error_cells": 0.06536592622921944,
+        "error_cell_reading": 0.003987306857425996,
+        "error_cell_reading_cells": 0.6024920025358681,
+        "h2_error": 1.836065500717496e-06,
+        "step_ratio_error": 6.022024523409795e-06,
+        "n_plateau": 229,
+        "shock_error": 0.0004326276916445582,
+        "verdict_all_pass": true,
+        "verdict_failing": []
+      },
+      {
+        "n": 1600,
+        "dx": 0.00625,
+        "bore_x_exact": 1.8887811500316989,
+        "bore_x": 1.8891769798183664,
+        "bore_x_cell": 1.8843750000000004,
+        "bore_method": "mid_level_crossing",
+        "level": 0.613474319852074,
+        "error": 0.00020956889931947914,
+        "error_cells": 0.0633327658668037,
+        "error_cell_reading": 0.002332800722637762,
+        "error_cell_reading_cells": 0.7049840050717648,
+        "h2_error": 3.715690961994352e-05,
+        "step_ratio_error": 3.479002819539679e-05,
+        "n_plateau": 472,
+        "shock_error": 0.00021023436657714858,
+        "verdict_all_pass": true,
+        "verdict_failing": []
+      }
+    ],
+    "subcell_worst_cells": 0.12097805028624009,
+    "cell_reading_worst_cells": 0.7049840050717648,
+    "limit_cells": 0.5,
+    "pass": true,
+    "improvement_factor": 5.827371191747078
+  },
+  "translation": {
+    "n": 800,
+    "dx": 0.012499999999999734,
+    "base": {
+      "bore_x": 1.8895982241095641,
+      "bore_x_cell": 1.8812500000000005,
+      "bore_level": 0.6134606022529244,
+      "bore_method": "mid_level_crossing",
+      "h2": 0.7269191115137335,
+      "h1": 0.5000020929921154
+    },
+    "rows": [
+      {
+        "translation_cells": 0.1,
+        "translation_m": 0.0012499999999999734,
+        "residual_subcell_cells": -0.01126611416280478,
+        "residual_cell_reading_cells": -0.1,
+        "h2_change": 1.0563899477673491e-05
+      },
+      {
+        "translation_cells": 0.2,
+        "translation_m": 0.0024999999999999467,
+        "residual_subcell_cells": -0.013502491719013254,
+        "residual_cell_reading_cells": -0.2,
+        "h2_change": 9.2520640065492e-06
+      },
+      {
+        "translation_cells": 0.3,
+        "translation_m": 0.00374999999999992,
+        "residual_subcell_cells": -0.00514026638287046,
+        "residual_cell_reading_cells": 0.7000000000000355,
+        "h2_change": 1.031679616611608e-05
+      },
+      {
+        "translation_cells": 0.4,
+        "translation_m": 0.004999999999999893,
+        "residual_subcell_cells": 0.007237307066567821,
+        "residual_cell_reading_cells": 0.6000000000000355,
+        "h2_change": 8.842968142297938e-06
+      },
+      {
+        "translation_cells": 0.5,
+        "translation_m": 0.006249999999999867,
+        "residual_subcell_cells": 0.014593025973273254,
+        "residual_cell_reading_cells": 0.5000000000000355,
+        "h2_change": 7.369140118785254e-06
+      },
+      {
+        "translation_cells": 0.6,
+        "translation_m": 0.00749999999999984,
+        "residual_subcell_cells": 0.01829056657852529,
+        "residual_cell_reading_cells": 0.40000000000003555,
+        "h2_change": 5.895312095119841e-06
+      },
+      {
+        "translation_cells": 0.7,
+        "translation_m": 0.008749999999999813,
+        "residual_subcell_cells": 0.01851377682863071,
+        "residual_cell_reading_cells": 0.3000000000000355,
+        "h2_change": 4.421484071301698e-06
+      },
+      {
+        "translation_cells": 0.8,
+        "translation_m": 0.009999999999999787,
+        "residual_subcell_cells": 0.015434388194659806,
+        "residual_cell_reading_cells": 0.20000000000003554,
+        "h2_change": 2.9476560476362857e-06
+      },
+      {
+        "translation_cells": 0.9,
+        "translation_m": 0.01124999999999976,
+        "residual_subcell_cells": 0.009212997661389917,
+        "residual_cell_reading_cells": 0.10000000000003553,
+        "h2_change": 1.4738280236654129e-06
+      }
+    ],
+    "worst_subcell_residual_cells": 0.01851377682863071,
+    "worst_cell_residual_cells": 0.7000000000000355,
+    "pass": true
+  },
+  "amplitude_mutation": {
+    "n": 800,
+    "amplitude_scale": 0.015,
+    "cells_mutated": 377,
+    "h2_change": 0.014997054740934126,
+    "bore_shift_cells": -0.02595421693172339,
+    "pass": true
+  }
+}
