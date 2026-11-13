@@ -34,6 +34,14 @@ from .exact import (
     t_star_to_time,
     time_to_t_star,
 )
+from .crosscheck import (
+    jump_trajectory_speed,
+    level_trajectory_speed,
+    pressure_function,
+    riemann_sample,
+    riemann_solution,
+    riemann_star_state,
+)
 from .bed import ShallowWaterBed1D
 from .swe2d import ShallowWater2D
 from .thacker import ThackerBasin, check_thacker_solution
@@ -49,6 +57,12 @@ __all__ = [
     "ShallowWater1D",
     "ShallowWaterBed1D",
     "check_stoker_solution",
+    "pressure_function",
+    "riemann_sample",
+    "riemann_solution",
+    "riemann_star_state",
+    "jump_trajectory_speed",
+    "level_trajectory_speed",
     "check_thacker_solution",
     "ShallowWater2D",
     "ThackerBasin",
