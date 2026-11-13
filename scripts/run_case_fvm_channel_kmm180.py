@@ -16,7 +16,11 @@ The gate is the part that keeps the case honest over time.  It cross-checks
    deviation above the tolerance is a hard failure, not a warning);
 3. every recorded ``sha256`` in ``manifest.json`` against the file it names, so
    a hand edit of an artifact cannot survive;
-4. ``docs/oss_solutions/CASE-FVM-CHANNEL-KMM180.json`` against the artifacts:
+4. ``grid_convergence.json`` (the grid-refinement audit written by
+   ``scripts/audit_case_fvm_channel_kmm180_grid.py``) against this very
+   ``benchmark.json`` by sha256, so a regenerated benchmark cannot leave a stale
+   grid audit behind -- the coupling is enforced, not remembered;
+5. ``docs/oss_solutions/CASE-FVM-CHANNEL-KMM180.json`` against the artifacts:
    the catalog is computed at the *reference* Re_tau = 182.088 while this
    benchmark solves at the nominal KMM1987 Re_tau = 180, so the catalog numbers
    are compared with an explicit substitution band (``CATALOG_RMS_BAND``),
@@ -324,6 +328,23 @@ def check_artifacts(case_dir=CASE_DIR, catalog_path=CATALOG):
                         f"with the artifact ({expected.upper()})")
     else:
         problems.append(f"catalog not found: {catalog_path}")
+
+    # -- 5. the grid-refinement audit must belong to this benchmark --------- #
+    grid_audit = case_dir / "grid_convergence.json"
+    if not grid_audit.is_file():
+        problems.append("grid_convergence.json is missing: run "
+                        "scripts/audit_case_fvm_channel_kmm180_grid.py")
+    else:
+        audit = _load_json(grid_audit)
+        expected = hashlib.sha256((case_dir / "benchmark.json").read_bytes()).hexdigest()
+        recorded = (audit.get("source") or {}).get("sha256")
+        if recorded != expected:
+            problems.append("grid_convergence.json was generated from a different "
+                            "benchmark.json (source sha256 mismatch): re-run "
+                            "scripts/audit_case_fvm_channel_kmm180_grid.py")
+        for name in ("grid_convergence.md", "fig_grid_convergence.png"):
+            if not (case_dir / name).is_file():
+                problems.append(f"grid audit companion is missing: {name}")
 
     return problems
 
