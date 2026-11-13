@@ -35,6 +35,8 @@ from .exact import (
     time_to_t_star,
 )
 from .bed import ShallowWaterBed1D
+from .swe2d import ShallowWater2D
+from .thacker import ThackerBasin, check_thacker_solution
 from .swe1d import ShallowWater1D
 
 __all__ = [
@@ -47,6 +49,9 @@ __all__ = [
     "ShallowWater1D",
     "ShallowWaterBed1D",
     "check_stoker_solution",
+    "check_thacker_solution",
+    "ShallowWater2D",
+    "ThackerBasin",
     "convergence_study",
     "exactness_checks",
     "fan_front_estimate",
