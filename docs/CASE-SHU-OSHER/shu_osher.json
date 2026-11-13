@@ -1,0 +1,23 @@
+{
+  "case": "shu_osher",
+  "reference": "Shu & Osher (1988) JCP 77, 439",
+  "post_shock": {
+    "rho": 3.857142857142857,
+    "u": 2.629368792488718,
+    "p": 10.333333333333332,
+    "shock_speed": 3.5496478698597693,
+    "c_pre": 1.1832159566199232
+  },
+  "nx": 200,
+  "nsteps": 824,
+  "drift_mass": 8.583544587456696e-16,
+  "drift_energy": 1.7856571369887325e-16,
+  "positivity_fixes": 0,
+  "rho_min": 3.857142857142857,
+  "rho_max": 3.857176238289715,
+  "verdicts": {
+    "mass_drift_lt_0_5pct": true,
+    "energy_drift_lt_1pct": true,
+    "no_positivity_fixes": true
+  }
+}
