@@ -390,3 +390,28 @@
 - 下一回合首项：**长时程动量注入**——满 2 周期时 n=40 第 200 步出现 `18.2 m/s` 非物理速度
   （同刻物理上界 ≈9），CFL 步长塌缩；需正性保持（positivity-preserving）通量限制或干湿翻转时的
   动量重投影，再谈 2 周期精度；次项：岸线一阶饱和（干湿重构加二阶/界面追踪），转置对照口径未定位。
+
+### D9 三网格 log--log 斜率 / 单元中心 FV 观测阶验证面 —— 已交付（m17696, 2026-11-13）
+- 缺口来源: 仓内观测阶全部由"两点、比率 2 硬编码"的散装估计器给出
+  （`case_cavity_re100.observed_order`、`benchmark_poiseuille_channel.observed_order`、
+  `verification.core.observed_orders` …），两点零自由度、无不确定度、无法识别非单调/前渐近；
+  Richardson/GCI 家族（`verification.richardson`/`multi_grid`）只覆盖"功能量差"路线；
+  **log--log 斜率路线**与**单元中心 FV 的单元平均口径**从未被验证过。
+- 交付: `src/tensorfvm/verification/loglog_order.py`（`loglog_order` 三网格 LSQ + 标准误 +
+  命名守卫；`cell_error_norms` 三种范数口径；闭式制造解/单元平均；2 阶与两种 4 阶面导数模板；
+  `truncation_ladder` / `solution_error_ladder` / `stretched_weights` / `run` / `figure` / `main`）
+  + `tests/test_loglog_order.py`（29 测全绿）+ `python -m tensorfvm.verification.loglog_order`
+  + `docs/verification-three-grid-loglog-cellcentre/{REPORT.md,summary.json,make_report.py,fig_loglog_order.png}`。
+- 12 条预声明判据全 PASS。关键数字: 2 阶解误差阶 2.004（标准误 1.3e-3）；单元平均专用 4 阶
+  模板 3.908 / 截断 3.882；**路径 B**（4 阶解对格心点值参考）读成 1.884；**路径 C**（点值 4 阶
+  模板喂单元平均）读成 2.042 —— 即 4 阶能力被两种不同机制各自掩蔽到 2 阶；2 阶截断常数比
+  单元平均/点值 = 1.9970（解析 2）；1 阶负对照 0.921；与 `richardson_gci` 互校差 3.0%；
+  对单元数拟合得 p/d = 1.000（2 维）；拉伸网格加权 vs 非加权 |Δp| = 7.96e-4（量级比 1.219）。
+- 反例/踩坑: ①点值 4 阶中点模板 `(1,-27,27,-1)/24` 对**点值**是 4 阶，对**单元平均**只有 2 阶
+  （带 h²/12·u''' 不消），单元平均专用模板是 `(1,-15,15,-1)/12`（Laplacian 即经典
+  `(-1,16,-30,16,-1)/(12h²)`）——模板必须与数据种类配对；②纯 Laplacian 有常数零空间，
+  误差只定义到差一个常数，本单用 κ>0 消除而不是平移场去凑；③三网格 log--log 的
+  `asymptotic` 标志必须报（相邻两点斜率离散度 > 25% 时是"限定阶"而非 FAIL/合格）。
+- 建议总账条目: `XVAL-FVM-THREE-GRID-LOGLOG-SLOPE-CELLCENTRE-FV-OR`（本单锚点，本次交付即其证据）。
+- 下一步线索: 非线性（限制器退化到 1 阶）、边界掉阶（近壁一阶 BC 压整体阶到 1）、
+  非结构网格重建误差三项各自需要独立阶梯，均未覆盖。
