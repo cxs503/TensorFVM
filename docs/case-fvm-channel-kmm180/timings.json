@@ -1,0 +1,9 @@
+{
+  "schema": "tensorfvm.case-fvm-channel-kmm180/1",
+  "note": "volatile diagnostics (wall clock, invocation); deliberately not listed in manifest.json -> sha256, because these bytes change on every re-run",
+  "results_elapsed_s": 38.41,
+  "invocation": "PYTHONPATH=src python -m tensorfvm.benchmark_channel_kmm1987 --out /root/tp-agent/work/m18277/docs/case-fvm-channel-kmm180",
+  "elapsed_s": 60.11,
+  "matrix_elapsed_s": 38.41,
+  "repro_cmd": "PYTHONPATH=src python -m tensorfvm.benchmark_channel_kmm1987 --out docs/case-fvm-channel-kmm180"
+}

@@ -64,6 +64,9 @@ sys.path.insert(0, str(REPO / "src"))
 CASE_DIR = REPO / "docs" / "case-fvm-channel-kmm180"
 CATALOG = REPO / "docs" / "oss_solutions" / "CASE-FVM-CHANNEL-KMM180.json"
 
+from tensorfvm.verification.kmm180_artifacts import (  # noqa: E402  (needs sys.path)
+    TIMINGS_FILE, VOLATILE_BENCHMARK_KEYS)
+
 REQUIRED = (
     "benchmark.json",
     "metrics.csv",
@@ -75,6 +78,7 @@ REQUIRED = (
     "manifest.json",
     "fig_velocity_profiles.png",
     "fig_log_region_error.png",
+    "timings.json",
 )
 
 #: Numbers quoted by the catalog were produced at the *reference* Re_tau =
@@ -270,6 +274,26 @@ def check_artifacts(case_dir=CASE_DIR, catalog_path=CATALOG):
     for name in (manifest.get("artifacts") or []):
         if not (case_dir / name).is_file():
             problems.append(f"manifest lists a missing artifact: {name}")
+
+    # -- 3b. hash contract: hashed artifacts must be byte-reproducible ------ #
+    # Every file in ``manifest["sha256"]`` is pinned, so it may not carry a wall
+    # clock or the invocation path: such bytes change on every re-run and the
+    # gate would either fail permanently or have to exempt the richest artifact.
+    # The volatile numbers are published in ``timings.json`` instead.
+    if not (case_dir / TIMINGS_FILE).is_file():
+        problems.append(f"volatile diagnostics are missing: {TIMINGS_FILE} "
+                        "(wall clock must be published, not dropped)")
+    if TIMINGS_FILE in (manifest.get("sha256") or {}):
+        problems.append(f"{TIMINGS_FILE} is volatile and must not be hashed")
+    for name in ('benchmark.json', 'results.json'):
+        path = case_dir / name
+        if not path.is_file():
+            continue
+        leaked = [key for key in VOLATILE_BENCHMARK_KEYS if key in _load_json(path)]
+        if leaked:
+            problems.append(
+                f"{name} carries volatile key(s) {leaked}; hashed artifacts must "
+                f"be byte-reproducible (move them to {TIMINGS_FILE})")
 
     # -- 4. catalog cross-check --------------------------------------------- #
     catalog_path = pathlib.Path(catalog_path)

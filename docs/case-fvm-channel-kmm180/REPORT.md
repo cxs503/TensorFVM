@@ -91,9 +91,3 @@ Maximum delta 0.097 pp against the pre-declared band 0.15 pp; verdict flips: non
 ## Verdict
 
 Legacy full-range window: FAIL; physical log layer: FAIL (all models and grids). Neither number may be quoted alone.
-
-## Verification (2026-11-13 re-open)
-
-All 53 unit tests pass; artifact gate clean (sha256 consistent across
-benchmark.json / metrics.csv / profiles.csv / stations.csv / manifest.json /
-oss_solutions catalog).  The case is ready for PR re-submission.
