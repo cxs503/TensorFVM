@@ -42,7 +42,8 @@ from pathlib import Path
 import numpy as np
 
 from tensorfvm.rans_validation.channel import solve_channel
-from tensorfvm.verification.kmm180_artifacts import write_artifacts
+from tensorfvm.verification.kmm180_artifacts import (
+    TIMINGS_FILE, merge_timings, write_artifacts)
 from tensorfvm.verification.kmm1987 import (
     load_kmm1987_reference,
     validate_kmm1987,
@@ -483,7 +484,13 @@ def main(argv=None):
     )
 
     # Write JSON
-    (out / "results.json").write_text(json.dumps(summary, indent=2))
+    (out / "results.json").write_text(json.dumps(
+        {k: v for k, v in summary.items() if k != 'elapsed_s'}, indent=2))
+
+    # ``results.json`` is hashed by ``manifest.json``, so the wall clock lives in
+    # ``timings.json`` instead: a hashed file whose bytes change on every re-run
+    # can only be pinned by exempting it from the gate.
+    merge_timings(out, results_elapsed_s=round(elapsed, 2))
 
     # Write CSV
     csv_lines = ["model,n,converged,iterations,Cf,cf_rel_err,bulk_u_plus,bulk_rel_err,log_rms,log_max,verdict"]
@@ -496,7 +503,14 @@ def main(argv=None):
         )
     (out / "results.csv").write_text("\n".join(csv_lines) + "\n")
 
-    repro_cmd = f"PYTHONPATH=src python -m tensorfvm.benchmark_channel_kmm1987 --out {out.as_posix()}"
+    invocation = (f"PYTHONPATH=src python -m tensorfvm.benchmark_channel_kmm1987 "
+                  f"--out {out.as_posix()}")
+    # The manifest quotes the documented (path-independent) reproducer so that
+    # ``--out`` does not leak into a pinned file; the actual invocation is
+    # recorded in the volatile ``timings.json``.
+    repro_cmd = ("PYTHONPATH=src python -m tensorfvm.benchmark_channel_kmm1987 "
+                 "--out docs/case-fvm-channel-kmm180")
+    merge_timings(out, invocation=invocation)
 
     # Reference substitution: re-solve the quoted cases at the DNS Re_tau so the
     # catalog's "KMM1987 -> Lee & Moser" bound is measured on every run.
@@ -543,6 +557,10 @@ def main(argv=None):
         dns_proxy="Lee & Moser 2015 JFM 774:395 (Re_tau=182.088)",
         artifacts=[str(path.relative_to(out)) for path in hashed]
                   + [Path(f).name for f in figures],
+        volatile_artifacts=[TIMINGS_FILE],
+        hash_contract=("every entry of sha256 is byte-reproducible: two runs "
+                       "differ only in the volatile values published in "
+                       + TIMINGS_FILE),
         sha256={path.name: hashlib.sha256(path.read_bytes()).hexdigest()
                 for path in hashed},
     )

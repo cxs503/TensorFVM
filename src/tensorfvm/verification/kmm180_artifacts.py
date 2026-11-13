@@ -63,6 +63,19 @@ STATIONS = (LEGACY_STATION, LOG_LAYER_STATION)
 #: by the benchmark driver, which needs the artifact numbers first).
 OWNED_FILES = ('benchmark.json', 'metrics.csv', 'profiles.csv', 'stations.csv')
 
+#: Payload keys that carry a wall clock or the invocation path.  They are
+#: stripped from ``benchmark.json`` *before* the file is written and hashed,
+#: because ``manifest.json`` pins the sha256 of every artifact: a file whose
+#: bytes change on a re-run cannot be pinned, and a "reproduce and compare the
+#: hash" check would either be impossible or silently exempt the richest
+#: artifact.  The stripped values are still published, in ``timings.json``,
+#: which ``manifest.json`` deliberately does *not* hash (it is declared
+#: volatile diagnostics).  See ``docs/case-fvm-channel-kmm180/reproducibility.md``.
+VOLATILE_BENCHMARK_KEYS = ('elapsed_s', 'matrix_elapsed_s', 'repro_cmd')
+
+#: Volatile companion file (never hashed).
+TIMINGS_FILE = 'timings.json'
+
 #: A window needs at least this many model cells to be graded at all (matches
 #: the guard in :func:`tensorfvm.verification.kmm1987.log_region_deviation`).
 MIN_WINDOW_CELLS = 3
@@ -371,6 +384,34 @@ def write_csv(path, rows, fields):
     return path
 
 
+def canonical_benchmark(payload):
+    """``benchmark.json`` as written: the payload minus the volatile keys.
+
+    Determinism is a property of the *file*, so the filtering has to happen
+    here and not at hashing time -- otherwise ``--check`` would verify a
+    projection that no consumer sees.
+    """
+    return {k: v for k, v in payload.items() if k not in VOLATILE_BENCHMARK_KEYS}
+
+
+def volatile_values(payload):
+    """The stripped volatile values, for :func:`merge_timings`."""
+    return {k: payload[k] for k in VOLATILE_BENCHMARK_KEYS if k in payload}
+
+
+def merge_timings(out, **values):
+    """Merge wall-clock/diagnostic values into ``timings.json`` (unhashed)."""
+    path = Path(out) / TIMINGS_FILE
+    payload = json.loads(path.read_text()) if path.is_file() else dict(
+        schema=SCHEMA,
+        note='volatile diagnostics (wall clock, invocation); deliberately not '
+             'listed in manifest.json -> sha256, because these bytes change on '
+             'every re-run')
+    payload.update({k: v for k, v in values.items() if v is not None})
+    path.write_text(json.dumps(payload, indent=2) + '\n')
+    return path
+
+
 def write_artifacts(out, cases, dns=None, *, elapsed_s=None, matrix_elapsed_s=None,
                     repro_cmd=None, substitution=None):
     """Write ``benchmark.json`` / ``metrics.csv`` / ``profiles.csv`` / ``stations.csv``.
@@ -395,5 +436,10 @@ def write_artifacts(out, cases, dns=None, *, elapsed_s=None, matrix_elapsed_s=No
         'stations.csv': write_csv(out / 'stations.csv', station_rows(cases, dns),
                                   _FIELDS['stations']),
     }
-    paths['benchmark.json'].write_text(json.dumps(benchmark, indent=2) + '\n')
+    # Byte-reproducible artifacts only: volatile keys go to ``timings.json``.
+    paths['benchmark.json'].write_text(
+        json.dumps(canonical_benchmark(benchmark), indent=2) + '\n')
+    timings = volatile_values(benchmark)
+    if timings:
+        paths[TIMINGS_FILE] = merge_timings(out, **timings)
     return dict(paths=paths, benchmark=benchmark)
