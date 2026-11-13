@@ -99,10 +99,10 @@ class StudyConfig:
 # helpers
 # ----------------------------------------------------------------------
 def _run(nx: int, t_end: float, *, ny: int = 1, order: int = 2, limiter: str = "mc",
-         cfl: float = 0.4, sample_every: int = 0) -> Dict:
+         cfl: float = 0.4, sample_every: int = 0, flux_mode: str = "hllc") -> Dict:
     """One blast run; optionally records an x-t strip for the field figure."""
     cfg = DoubleBlastConfig(nx=nx, ny=ny, t_end=t_end, order=order,
-                            limiter=limiter, cfl=cfl)
+                            limiter=limiter, cfl=cfl, flux_mode=flux_mode)
     solver, meta = double_blast(cfg)
     initial = meta["initial_integrals"]
     strip: List[Dict] = []
@@ -126,6 +126,7 @@ def _run(nx: int, t_end: float, *, ny: int = 1, order: int = 2, limiter: str = "
         "order": order,
         "limiter": limiter,
         "cfl": cfl,
+        "flux_mode": flux_mode,
         "t_end": t_end,
         "x": meta["x"].tolist(),
         "rho": prim["rho"][:, 0].tolist(),
