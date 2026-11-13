@@ -3,7 +3,7 @@
   "title": "Turbulent channel flow validation vs KMM1987 DNS (Re_tau=180)",
   "summary": "SST reproduces the mean velocity u+(y+) of the imported low-Re channel DNS over the literal anchor window y+ in [30, centreline] with 3.46 % RMS relative error at 256 cells, but 6.12 % over the physical log layer y+ in [30, 0.2 Re_tau] = [30, 36.4]; the 5 % criterion therefore holds only under the legacy (diluted) window. k-omega and k-epsilon fail both windows (10.6 % / 6.8 % legacy). See grading_windows for both numbers.",
   "reference": "Kim, J., Moin, P. & Moser, R. D. 1987 J. Fluid Mech. 177, 133-166. DOI: 10.1017/S0022112087000892",
-  "dns_proxy": "Lee & Moser 2015 JFM 774:395 (Re_tau=182.088). Substitution cost measured, not assumed: re-solving at the nominal Re_tau=180 changes the graded RMS by <0.02 percentage points and flips no verdict (see docs/verification-channel-kmm180-loglaw/REPORT.md section 3.3).",
+  "dns_proxy": "Lee & Moser 2015 JFM 774:395 (Re_tau=182.088). Substitution cost measured, not assumed, and now measured on every driver run across the five quoted cases: they are re-solved at the reference Re_tau and the delta on both grading windows is recorded in docs/case-fvm-channel-kmm180/benchmark.json -> reference_substitution. Measured maximum 0.097 pp (sst n=64, legacy window) / 0.078 pp (sst n=64, log layer); every delta is below 0.04 pp for n>=128; no verdict flips. The 0.02 pp figure quoted by docs/verification-channel-kmm180-loglaw/REPORT.md section 3.3 is that same quantity at n=256 only, so this entry no longer states it as a grid-independent bound.",
   "method": "1-D equilibrium channel solver with SST/k-omega/k-epsilon turbulence models",
   "tolerance": 0.05,
   "verdict": "QUALIFIED: PASS under the legacy window y+ in [30, centreline]; FAIL under the physical log layer y+ in [30, 0.2 Re_tau]. Both numbers are published below and neither may be quoted alone.",
@@ -72,26 +72,33 @@
   "critique": {
     "is_the_failure_a_solver_defect": "No. Three independent checks. (a) Momentum identity: with unit friction velocity the equilibrium shear balance implies dU+/dln y+ = y+(1 - y/h)/(1 + nu_t+/nu), so the profile's log slope is predicted by the turbulence state alone; measured vs predicted kappa agrees to 0.029 % (SST) and 0.001 % (k-omega), i.e. no momentum-flux bookkeeping error -- the u+ deficit is carried entirely by nu_t. (b) At Re_tau=182 the state sits at kappa_eddy = nu_t+/y+ = 0.204 (SST) against the model's own closed-form kappa = 0.408; both k+ and kappa_eddy rise monotonically towards the closed-form values as Re_tau grows (k+ 2.67 -> 2.97 against 1/sqrt(beta*) = 3.333 from Re_tau 550 to 5200, kappa_eddy 0.285 -> 0.342 against 0.408). (c) Predicting k+ with the window-mean total-stress factor (1 - y/h) leaves a residual falling from 9.4 % to 3.3 %: the shortfall is the finite-domain (1 - y/h) factor plus a non-asymptotic y+=30, not bookkeeping.",
     "evidence": "docs/verification-channel-kmm180-loglaw/",
-    "reference_substitution_bound": "Measured, not assumed: re-solving at the nominal Re_tau=180 instead of the reference 182.088 changes the graded RMS by 0.02 pp (log layer) and 0.00 pp (legacy) and flips no verdict for sst or k-omega; Cf and U_bulk+ move by 0.43 % and 0.22 %."
+    "reference_substitution_bound": "Measured, not assumed, and measured on every driver run: the quoted cases (sst 64/128/256, k-omega 128, k-epsilon 128) are re-solved at Re_tau=182.088 and the RMS delta on both windows is recorded in benchmark.json -> reference_substitution. Max delta 0.097 pp (legacy) / 0.078 pp (log layer), both at n=64 (the coarse grid); <=0.04 pp for n>=128; verdict flips: none. Cf and U_bulk+ move by <=0.50 % / <=0.26 %. The n=256-only measurement in docs/verification-channel-kmm180-loglaw/REPORT.md section 3.3 (0.02 pp) is consistent with this but is not a grid-independent bound. The artifact gate (scripts/run_case_fvm_channel_kmm180.py --check) fails if the measured delta exceeds the pre-declared 0.15 pp band or if a verdict flips."
   },
   "impl_files": [
     "src/tensorfvm/verification/kmm1987.py",
     "src/tensorfvm/verification/kmm180_windows.py",
     "src/tensorfvm/verification/kmm180_loglaw.py",
+    "src/tensorfvm/verification/kmm180_artifacts.py",
     "src/tensorfvm/benchmark_channel_kmm1987.py",
     "src/tensorfvm/rans_validation/channel.py",
     "src/tensorfvm/rans_validation/models.py",
+    "scripts/run_case_fvm_channel_kmm180.py",
     "tests/test_channel_kmm1987.py",
     "tests/test_channel_kmm180_windows.py",
-    "tests/test_channel_kmm180_loglaw.py"
+    "tests/test_channel_kmm180_loglaw.py",
+    "tests/test_channel_kmm180_artifacts.py"
   ],
   "artifacts": [
     "docs/case-fvm-channel-kmm180/REPORT.md",
-    "docs/case-fvm-channel-kmm180/fig_log_region_error.png",
-    "docs/case-fvm-channel-kmm180/fig_velocity_profiles.png",
-    "docs/case-fvm-channel-kmm180/manifest.json",
+    "docs/case-fvm-channel-kmm180/benchmark.json",
+    "docs/case-fvm-channel-kmm180/metrics.csv",
+    "docs/case-fvm-channel-kmm180/profiles.csv",
+    "docs/case-fvm-channel-kmm180/stations.csv",
     "docs/case-fvm-channel-kmm180/results.csv",
     "docs/case-fvm-channel-kmm180/results.json",
+    "docs/case-fvm-channel-kmm180/manifest.json",
+    "docs/case-fvm-channel-kmm180/fig_velocity_profiles.png",
+    "docs/case-fvm-channel-kmm180/fig_log_region_error.png",
     "docs/verification-channel-kmm180-loglaw/REPORT.md",
     "docs/verification-channel-kmm180-loglaw/fig_loglaw_asymptote.png",
     "docs/verification-channel-kmm180-loglaw/fig_loglaw_consistency.png",
@@ -100,7 +107,8 @@
     "docs/verification-channel-kmm180/fig_windows.png",
     "docs/verification-channel-kmm180/summary.json"
   ],
-  "repro_cmd": "PYTHONPATH=src python -m tensorfvm.verification.kmm180_loglaw --out docs/verification-channel-kmm180-loglaw",
-  "test_cmd": "PYTHONPATH=src python -m pytest tests/test_channel_kmm180_loglaw.py tests/test_channel_kmm180_windows.py tests/test_channel_kmm1987.py -q  # 41 passed",
-  "notes": "k-omega and k-epsilon have known biases in the log region; SST is the best of the three models at this Re_tau but still misses the physical log layer. The reference is a documented proxy (KMM1987 -> Lee & Moser 2015); the substitution cost is bounded at <0.02 pp and is recorded rather than asserted."
+  "repro_cmd": "PYTHONPATH=src python -m tensorfvm.benchmark_channel_kmm1987 --out docs/case-fvm-channel-kmm180   # or: PYTHONPATH=src python scripts/run_case_fvm_channel_kmm180.py --run",
+  "test_cmd": "PYTHONPATH=src python -m pytest tests/test_channel_kmm180_artifacts.py tests/test_channel_kmm180_loglaw.py tests/test_channel_kmm180_windows.py tests/test_channel_kmm1987.py -q",
+  "notes": "k-omega and k-epsilon have known biases in the log region; SST is the best of the three models at this Re_tau but still misses the physical log layer. The reference is a documented proxy (KMM1987 -> Lee & Moser 2015) whose cost is re-measured on every driver run (max 0.097 pp at n=64, no verdict flips) and gated against a pre-declared 0.15 pp band, rather than asserted. Artifacts: docs/case-fvm-channel-kmm180/{benchmark.json, metrics.csv, profiles.csv, stations.csv} are machine-written and cross-checked by the gate; manifest.json pins their sha256.",
+  "artifact_gate_cmd": "PYTHONPATH=src python scripts/run_case_fvm_channel_kmm180.py --check   # offline cross-check of artifacts, manifest sha256 and this entry"
 }
