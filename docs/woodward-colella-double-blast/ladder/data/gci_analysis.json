@@ -1,0 +1,47 @@
+{
+  "peak_density": {
+    "metric": "peak_density",
+    "fine_value": 6.189783163404389,
+    "medium_value": 5.649813015225584,
+    "coarse_value": 5.00678626370563,
+    "observed_order": 0.25199910729101294,
+    "asymptotic": false,
+    "extrapolated": 9.018983345357393,
+    "gci_percent": 57.13447683191822,
+    "gci_band_low": 3.86603439542961,
+    "gci_band_high": 14.171932295285176,
+    "convergence": "monotone",
+    "ref_value": 6.2960765,
+    "ref_rel_error_percent": 1.6882472218311024
+  },
+  "l1_error": {
+    "metric": "l1_error",
+    "fine_value": 0.029569679382539165,
+    "medium_value": 0.07711573517196672,
+    "coarse_value": 0.14825794539824458,
+    "observed_order": 0.5813801298941912,
+    "asymptotic": false,
+    "extrapolated": -0.06623522930211152,
+    "gci_percent": 404.9963961615665,
+    "gci_band_low": -0.3344855209650131,
+    "gci_band_high": 0.2020150623607901,
+    "convergence": "monotone",
+    "ref_value": null,
+    "ref_rel_error_percent": null
+  },
+  "window_mass": {
+    "metric": "window_mass",
+    "fine_value": 0.9351565123446093,
+    "medium_value": 0.9347607573176968,
+    "coarse_value": 0.9338469667575857,
+    "observed_order": 1.207255863192529,
+    "asymptotic": false,
+    "extrapolated": 0.9354588507582687,
+    "gci_percent": 0.04041280920204114,
+    "gci_band_low": 0.9350808055577482,
+    "gci_band_high": 0.9358368959587893,
+    "convergence": "monotone",
+    "ref_value": 0.92215100156725,
+    "ref_rel_error_percent": 1.4103450254085932
+  }
+}
