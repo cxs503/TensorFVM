@@ -801,13 +801,23 @@ class EulerSolver:
             "energy": float(U[3].sum() * cell),
         }
 
-    def budget_drift(self, initial: Dict[str, float]) -> Dict[str, float]:
-        """Relative drift of the *accounted* budget ``U(t) + outflow(t) - U(0)``.
+    def budget_drift(self, initial: Dict[str, float], *,
+                     absolute: bool = False) -> Dict[str, float]:
+        """Accounted budget residual ``U(t) + outflow(t) - U(0)``.
 
         ``outflow`` is the time integral of the outward boundary flux, so this
         is the honest measure for open-boundary runs; for closed or periodic
         boundaries ``outflow`` is zero and the number is the interior
         conservation error.
+
+        Normalisation.  By default the residual is divided by the initial
+        integral (relative drift).  That relative number is *undefined* when the
+        initial integral is exactly zero -- e.g. the Sod (1978) shock tube starts
+        at rest, so its ``momentum_x`` integral is 0 and there is no scale to
+        normalise by; the entry is then NaN.  A NaN there is **not** a
+        conservation failure and must not be read as one: pass ``absolute=True``
+        to get the raw residual, which for that case closes at round-off.  Every
+        other entry of the returned dict follows the same flag.
         """
         now = self.integrals()
         out = {
@@ -817,16 +827,20 @@ class EulerSolver:
             "momentum_y": float(self.boundary_outflow[2]),
             "energy": float(self.boundary_outflow[3]),
         }
+
+        def _entry(residual: float, ref: float) -> float:
+            if absolute:
+                return float(residual)
+            if abs(ref) < 1e-300:
+                return float("nan")  # no scale: use absolute=True
+            return float(residual / abs(ref))
+
         drift = {}
         for key in ("mass", "momentum_x", "momentum_y", "energy"):
             ref = initial[key]
-            if abs(ref) < 1e-300:
-                drift[key] = float("nan")
-            else:
-                drift[key] = (now[key] + out[key] - ref) / abs(ref)
-        m1_now = (self.U[0] - self.U[4]).sum() * self.dx * self.dy
+            drift[key] = _entry(float(now[key]) + out[key] - ref, ref)
+        m1_now = float((self.U[0] - self.U[4]).sum() * self.dx * self.dy)
         m1_0 = initial["mass"] - initial["mass_mat2"]
-        drift["mass_mat1"] = float(
-            (m1_now + out["mass"] - out["mass_mat2"] - m1_0) / abs(m1_0)
-            if abs(m1_0) > 1e-300 else float("nan"))
+        drift["mass_mat1"] = _entry(m1_now + out["mass"] - out["mass_mat2"] - m1_0,
+                                    m1_0)
         return drift
