@@ -1,6 +1,7 @@
 {
   "case": "ritter-dry",
   "max_wetted_edge_error_at_accepted_grid": 0.02890624999999991,
+  "max_fan_shape_error_at_accepted_grid": 0.0003911308005408731,
   "rows": [
     {
       "n": 400,
@@ -8,6 +9,9 @@
       "front_exact": 4.0,
       "wetted_edge": 3.9375,
       "wetted_edge_error": 0.015625,
+      "fan_shape": 4.0042363297732475,
+      "fan_shape_error": 0.0010590824433118762,
+      "fan_shape_spread": 0.018152589459767596,
       "level_raw_error": {
         "0.01": 0.171593859954002,
         "0.001": 0.13580222363132277
@@ -23,6 +27,9 @@
       "front_exact": 4.0,
       "wetted_edge": 3.8937500000000007,
       "wetted_edge_error": 0.026562499999999822,
+      "fan_shape": 4.0015645232021635,
+      "fan_shape_error": 0.0003911308005408731,
+      "fan_shape_spread": 0.009505254945786778,
       "level_raw_error": {
         "0.01": 0.1585530928279728,
         "0.001": 0.10585544927777335
@@ -38,6 +45,9 @@
       "front_exact": 4.0,
       "wetted_edge": 3.8843750000000004,
       "wetted_edge_error": 0.02890624999999991,
+      "fan_shape": 4.000690460722251,
+      "fan_shape_error": 0.00017261518056277403,
+      "fan_shape_spread": 0.004884612203509444,
       "level_raw_error": {
         "0.01": 0.15440645635868855,
         "0.001": 0.07971094530332345
@@ -53,6 +63,9 @@
       "front_exact": 4.0,
       "wetted_edge": 3.9015625000000007,
       "wetted_edge_error": 0.024609374999999822,
+      "fan_shape": 4.000328581111628,
+      "fan_shape_error": 8.214527790695314e-05,
+      "fan_shape_spread": 0.002459440684720256,
       "level_raw_error": {
         "0.01": 0.15219854636015773,
         "0.001": 0.060407037748625436

@@ -70,7 +70,17 @@ def _summary_markdown(payload: dict) -> str:
         lines.append("|---|---|---|---|---|")
         rows = []
         if case["kind"] == "dry":
-            rows.append(("front position x_f [m]", m["front_exact"], m["front_wetted"],
+            # The published wave position is the *headline* estimator; the
+            # wetted edge is quoted next to it, flagged, because it is a
+            # depth-floor detector that does not converge under refinement
+            # (see docs/verification-dam-break-front-metric/REPORT.md and
+            # docs/case-fvm-dambreak-stoker/AUDIT.md).  Publishing only the
+            # wetted edge -- which is what this summary used to do -- states a
+            # grid-dependent floor as if it were a solution error.
+            rows.append(("front position x_f (fan, headline) [m]", m["front_exact"],
+                         m["front_fan"], m["front_fan_error"], "front_fan<5%"))
+            rows.append(("front position x_f (wetted edge, diagnostic) [m]",
+                         m["front_exact"], m["front_wetted"],
                          m["front_wetted_error"], "front_wetted<5%"))
         else:
             rows.append(("bore position x_s [m]", m["shock_exact"], m["shock_position"],
@@ -86,6 +96,22 @@ def _summary_markdown(payload: dict) -> str:
             ref_s = "—" if label.startswith("depth L1") else f"{ref:.6f}"
             got_s = f"{got:.6f}" if not label.startswith("depth L1") else f"{got:.2e}"
             lines.append(f"| {label} | {ref_s} | {got_s} | {_fmt_error(err)} | {mark} |")
+        lines.append("")
+        series = m.get("front_series") or {}
+        if series:
+            lines.append(f"* wave position **series** x_f(t): graded samples "
+                         f"{series['samples_graded']}/{series['samples']} "
+                         f"(exact front must travel >= {series['min_cells']:g} cells); "
+                         f"max relative error {_fmt_error(series['max_error'])} "
+                         f"at t* = {series['max_error_t_star']:.3f}; "
+                         f"pass {'yes' if series['pass'] else 'no'}")
+            lines.append(f"* series samples not graded: {series['unresolved_samples']} "
+                         f"({series['unresolved_undefined']} with an undefined headline "
+                         f"estimator); their max error is "
+                         f"{_fmt_error(series['unresolved_max_error']) if series['unresolved_max_error'] is not None else 'n/a'}")
+            lines.append(f"* legacy estimator on the same series (NOT graded): max error "
+                         f"{_fmt_error(series['legacy_max_error'])} at "
+                         f"t* = {series['legacy_max_error_t_star']:.3f}")
         lines.append("")
         lines.append(f"* total variation TV(h) = {m['tv_numeric']:.6f} "
                      f"vs exact {m['tv_exact']:.6f} (ratio {m['tv_ratio']:.6f})")
@@ -123,7 +149,7 @@ def _summary_markdown(payload: dict) -> str:
         lines.append("| variant | dry front err | wet bore err | wet step err | wet depth L1 | TV ratio | extrema |")
         lines.append("|---|---|---|---|---|---|---|")
         for row in payload["sensitivity"]["rows"]:
-            lines.append(f"| {row['variant']} | {_fmt_error(row['dry_front_error'])} | "
+            lines.append(f"| {row['variant']} | {_fmt_error(row['dry_front_fan_error'])} | "
                          f"{_fmt_error(row['wet_shock_error'])} | "
                          f"{_fmt_error(row['wet_step_ratio_error'])} | "
                          f"{row['wet_depth_l1']:.3e} | {row['wet_tv_ratio']:.6f} | "
@@ -188,9 +214,12 @@ def main(argv=None) -> int:
               f"({disc['wall_time_s']:.2f} s)")
         if case.kind == "dry":
             print(f"     front   exact {m['front_exact']:.6f} m  "
-                  f"FVM {m['front_wetted']:.6f} m  "
+                  f"FVM {m['front_fan']:.6f} m (fan)  "
+                  f"error {_fmt_error(m['front_fan_error'])}  "
+                  f"[{'PASS' if run['verdict']['front_fan<5%']['pass'] else 'FAIL'}]")
+            print(f"     front   wetted edge {m['front_wetted']:.6f} m  "
                   f"error {_fmt_error(m['front_wetted_error'])}  "
-                  f"[{'PASS' if run['verdict']['front_wetted<5%']['pass'] else 'FAIL'}]")
+                  f"(diagnostic only: depth-floor detector, non-convergent)")
         else:
             print(f"     bore    exact {m['shock_exact']:.6f} m  "
                   f"FVM {m['shock_position']:.6f} m  "
@@ -204,6 +233,14 @@ def main(argv=None) -> int:
                   f"[{'PASS' if run['verdict']['step_ratio<5%']['pass'] else 'FAIL'}]")
         print(f"     depth L1 {m['depth_l1']:.3e}  TV ratio {m['tv_ratio']:.6f}  "
               f"extrema {m['local_extrema']}  mass drift {m['mass_drift']:.1e}")
+        series = m.get("front_series") or {}
+        if series:
+            print(f"     series  x_f(t) max error {_fmt_error(series['max_error'])} at "
+                  f"t*={series['max_error_t_star']:.3f} over "
+                  f"{series['samples_graded']}/{series['samples']} graded samples "
+                  f"[{'PASS' if series['pass'] else 'FAIL'}]"
+                  f"  (legacy estimator on the same series: "
+                  f"{_fmt_error(series['legacy_max_error'])})")
         print(f"     verdict: {'ALL PASS' if run['verdict']['all_pass'] else 'FAILED'}")
 
     studies = {}
@@ -227,7 +264,7 @@ def main(argv=None) -> int:
         print("\n== parameter sensitivity (n = 800) ==")
         sensitivity = sensitivity_study(n=800)
         for row in sensitivity["rows"]:
-            print(f"   {row['variant']:10s} dry_front={_fmt_error(row['dry_front_error'])} "
+            print(f"   {row['variant']:10s} dry_front={_fmt_error(row['dry_front_fan_error'])} "
                   f"wet_bore={_fmt_error(row['wet_shock_error'])} "
                   f"wet_step={_fmt_error(row['wet_step_ratio_error'])} "
                   f"wet_L1={row['wet_depth_l1']:.3e} extrema={row['wet_local_extrema']}")
