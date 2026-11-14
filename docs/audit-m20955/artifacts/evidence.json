@@ -1,0 +1,103 @@
+{
+  "audited_mission": 20955,
+  "audit_mission": 20980,
+  "audited_anchor": "GAP-DIFFLBM-EXT-LIT-CYL",
+  "audited_commit": "bc6db1b93f6a3c8570752a17b4d9fbaa669a0d8b (branch agent/m20955; not an ancestor of main)",
+  "audit_worktree": "/srv/tensor/agent/work/m20980",
+  "impl_files": [
+    "docs/audit-m20955/artifacts/branch-snapshot/cylinder_re100.py"
+  ],
+  "entry": "docs/audit-m20955/artifacts/branch-snapshot/cylinder_re100.py",
+  "run_artifacts": [],
+  "tests": [
+    "tests/test_case_cylinder_re100.py::test_reference_file_exists_and_complete (FAILED)",
+    "tests/test_case_cylinder_re100.py::test_reference_values_reasonable (FAILED)",
+    "tests/test_case_cylinder_re100.py::test_config_builds (passed)",
+    "tests/test_case_cylinder_re100.py::test_short_transient_run (passed)",
+    "tests/test_case_cylinder_re100.py::test_module_imports (passed)",
+    "tests/test_case_cylinder_re100.py::test_cli_help (passed)"
+  ],
+  "integration_callers": [],
+  "benchmark": {
+    "arbiter_query": "SELECT case_name,metric,tolerance FROM tensor_benchmark_cases WHERE anchor_slug='GAP-DIFFLBM-EXT-LIT-CYL'",
+    "arbiter_rows": 0,
+    "tensorbench_results_rows_for_mission": 0,
+    "ref_vs_got": null,
+    "note": "no referee row exists, therefore no got value can be judged in tolerance"
+  },
+  "repro_cmd": "cp -a <TensorFVM worktree> /tmp/a20955 && PYTHONPATH=src python -m pytest tests/test_case_cylinder_re100.py -q ; PYTHONPATH=src python -m tensorfvm.verification.cylinder_re100 --output results/cylinder-re100 --grid 128x48 --steps 3000 --dt 0.005 --warmup 500",
+  "external_anchor": "Braza et al. JFM 165 (1986) 79-130 doi:10.1017/S0022112086003014 (Cd 1.34-1.38, St 0.16-0.165); Schaefer & Turek NNMFM 52 (1996) doi:10.1007/978-3-322-89849-4_39 (DFG 2D-2: Cd 1.34, St 0.16). Reference constants are hand-written into docs/case-cylinder-re100/reference/reference.json -- no computed value is compared against them anywhere in the delivery.",
+  "three_piece_check": {
+    "run_artifacts": {
+      "exists": false,
+      "detail": "cluster job cj3080 (cluster_jobs.id=3080, mid=20955) raw receipt artifacts/cj3080_job_receipt.log: rc=1, output_tail='bash: line 1: cd: /srv/tensor/agent/work/m20955: Permission denied' -- the production run never started; subject worktree artifacts/ is empty, no results/cylinder-re100 directory",
+      "db_row": "3080|mid=20955|state=running|rc=NULL|started=2026-11-14 21:46:33.386807+00|finished=NULL|cmd=cd /srv/tensor/agent/work/m20955 && PYTHONPATH=src python -m tensorfvm.verification.cylinder_re100 --output results/cylinder-re100 --grid 128x48 --steps 3000 --dt 0.005 --warmup 500"
+    },
+    "benchmark_ref_vs_got": {
+      "exists": false,
+      "detail": "tensor_benchmark_cases WHERE anchor_slug='GAP-DIFFLBM-EXT-LIT-CYL' -> 0 rows; tensorbench_results WHERE mission_id=20955 -> 0 rows. No got value exists at all: reference.json holds only literature constants 1.34 / 0.164."
+    },
+    "repro_cmd": {
+      "executable": true,
+      "detail": "auditor replayed the published command in an isolated snapshot: module imports, CLI exists, production config 128x48/dt=0.005/3000 steps passes SolverConfig validation, but a 150-step probe at 32x16 yields Cd=0.9572 (err 28.56%) and St=0.2667 (err 62.60%), lift amplitude 1.17e-07 (no shedding established) -> in-band: False"
+    }
+  },
+  "tests_state": {
+    "summary": "4 passed / 2 failed at bc6db1b93f6a3c8570752a17b4d9fbaa669a0d8b",
+    "failed": [
+      "tests/test_case_cylinder_re100.py::test_reference_file_exists_and_complete",
+      "tests/test_case_cylinder_re100.py::test_reference_values_reasonable"
+    ],
+    "cause": "tests read artifacts/case-cylinder-re100/reference/reference.json while the delivery committed docs/case-cylinder-re100/reference/reference.json -> FileNotFoundError; the mission result 'pytest 6/6 passed' does not hold at the committed tree"
+  },
+  "report_state": {
+    "tensor_reports_rows_for_mission": 0,
+    "mission_row": "succeeded|report_owed=true|report_id=NULL|fail_stage=",
+    "detail": "report_owed=true, report_id NULL -> case report never published"
+  },
+  "platform_defect_found": {
+    "what": "cluster job ledger marks cj3080 as succeeded/rc=0/note='run rc=0' while the raw node receipt says rc=1 (Permission denied)",
+    "scope": "cluster_jobs row 3080 (repo TensorFVM) -- any mission reading this row would believe the run passed"
+  },
+  "probe": {
+    "grid": "32x16",
+    "dt": 0.05,
+    "steps": 150,
+    "warmup": 75,
+    "elapsed_s": 102.27,
+    "cd_mean": 0.9572342793845647,
+    "st": 0.26666666666666666,
+    "cd_min": 0.9491440221251142,
+    "cd_max": 0.9700108683688994,
+    "cl_min": -9.283325308855062e-07,
+    "cl_max": -6.933604095940571e-07,
+    "cl_amplitude": 1.1748606064572453e-07,
+    "n_samples": 75,
+    "errors": {
+      "cd_mean": {
+        "computed": 0.9572342793845647,
+        "reference": 1.34,
+        "tolerance_band": 0.07,
+        "relative_error": 0.28564606016077265,
+        "passed": false
+      },
+      "st": {
+        "computed": 0.26666666666666666,
+        "reference": 0.164,
+        "tolerance_band": 0.005,
+        "relative_error": 0.6260162601626016,
+        "passed": false
+      }
+    }
+  },
+  "production_config_accepted": {
+    "accepted": true,
+    "mesh_type": "body-fitted",
+    "nx": 128,
+    "ny": 48,
+    "dt": 0.005,
+    "steps": 3000,
+    "inner_iterations": 3
+  },
+  "disposition": "request changes (reopen): L1. Real harness exists and the auditor executed it, but the delivery has no run artifact, no referee row, no published report, 2/6 committed tests red, no integration caller, nothing merged into main. Cannot stand at L2/L3/L4. Remediation: (1) fix the reference path so the committed tests are green; (2) re-run the production case from a checkout that nodes can read (cj3080 died on a permission error) and commit results/cylinder-re100 + figures; (3) register the referee row in tensor_benchmark_cases for GAP-DIFFLBM-EXT-LIT-CYL and write got numbers into tensorbench_results; (4) add a shedding-detection guard (Cl amplitude ~1e-7 currently yields a meaningless St=0.267 from round-off); (5) publish the six-section report; (6) merge to main."
+}
