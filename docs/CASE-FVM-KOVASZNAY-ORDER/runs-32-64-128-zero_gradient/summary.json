@@ -193,7 +193,109 @@
     "pressure_meanfree_pass": true,
     "all_levels_converged": true,
     "pass": true,
-    "pass_inplane": true
+    "pass_inplane": true,
+    "pair_orders_consistent": true,
+    "three_level_order": 1.9194464850015491,
+    "corroborated": true
+  },
+  "pair_consistency": {
+    "velocity_full": {
+      "pairs": [
+        1.9369682973617028,
+        1.9877221503935876
+      ],
+      "spread": 0.05075385303188473,
+      "band": 0.2,
+      "both_above": true,
+      "consistent": true
+    },
+    "velocity_inplane": {
+      "pairs": [
+        1.9369682973617026,
+        1.9877221503935878
+      ],
+      "spread": 0.05075385303188518,
+      "band": 0.2,
+      "both_above": true,
+      "consistent": true
+    },
+    "velocity_spanwise": {
+      "pairs": [
+        2.598731359138755,
+        0.31386480506567366
+      ],
+      "spread": 2.2848665540730813,
+      "band": 0.2,
+      "both_above": false,
+      "consistent": false
+    },
+    "pressure_fixed": {
+      "pairs": [
+        0.9856664355587453,
+        0.9687870483208889
+      ],
+      "spread": 0.016879387237856425,
+      "band": 0.2,
+      "both_above": false,
+      "consistent": true
+    },
+    "pressure_meanfree": {
+      "pairs": [
+        1.8581031702825543,
+        1.8973453438512433
+      ],
+      "spread": 0.039242173568688976,
+      "band": 0.2,
+      "both_above": true,
+      "consistent": true
+    }
+  },
+  "three_level_estimates": {
+    "velocity_full": {
+      "quantity": "velocity_full",
+      "levels": [
+        32,
+        64,
+        128
+      ],
+      "order": 1.9194464850015491,
+      "order_stderr": null,
+      "convergence": "monotone",
+      "monotone": true,
+      "asymptotic": true,
+      "extrapolated": -1.4903754494390487e-05,
+      "gci": 1.3323475546695176
+    },
+    "velocity_inplane": {
+      "quantity": "velocity_inplane",
+      "levels": [
+        32,
+        64,
+        128
+      ],
+      "order": 1.9194464850015491,
+      "order_stderr": null,
+      "convergence": "monotone",
+      "monotone": true,
+      "asymptotic": true,
+      "extrapolated": -1.4903754494390487e-05,
+      "gci": 1.3323475546695178
+    },
+    "pressure_meanfree": {
+      "quantity": "pressure_meanfree",
+      "levels": [
+        32,
+        64,
+        128
+      ],
+      "order": 1.8434318336076803,
+      "order_stderr": null,
+      "convergence": "monotone",
+      "monotone": true,
+      "asymptotic": true,
+      "extrapolated": -0.0001127681781195812,
+      "gci": 1.3159829921994703
+    }
   },
   "provenance": {
     "runner": "scripts/verify_kovasznay_order.py",

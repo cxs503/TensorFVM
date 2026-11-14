@@ -6,6 +6,12 @@
       "h": 0.03125,
       "cells": 1024,
       "converged": true,
+      "configuration": {
+        "reynolds": 40.0,
+        "symmetry_closure": "zero_gradient",
+        "convection_order": 2,
+        "algorithm": "coupled"
+      },
       "outer_iterations": 22,
       "divergence_max": 2.0616042206711427e-10,
       "global_momentum_imbalance": 2.4780969571020547e-10,
@@ -27,6 +33,12 @@
       "h": 0.015625,
       "cells": 4096,
       "converged": true,
+      "configuration": {
+        "reynolds": 40.0,
+        "symmetry_closure": "zero_gradient",
+        "convection_order": 2,
+        "algorithm": "coupled"
+      },
       "outer_iterations": 21,
       "divergence_max": 1.3467911230691243e-09,
       "global_momentum_imbalance": 4.406676650168498e-10,
@@ -124,12 +136,68 @@
     "pressure_meanfree_pass": true,
     "all_levels_converged": true,
     "pass": true,
-    "pass_inplane": true
+    "pass_inplane": true,
+    "pair_orders_consistent": null,
+    "three_level_order": null,
+    "corroborated": false
+  },
+  "pair_consistency": {
+    "velocity_full": {
+      "pairs": [
+        1.9369682973617028
+      ],
+      "spread": null,
+      "both_above": true,
+      "consistent": null
+    },
+    "velocity_inplane": {
+      "pairs": [
+        1.9369682973617026
+      ],
+      "spread": null,
+      "both_above": true,
+      "consistent": null
+    },
+    "velocity_spanwise": {
+      "pairs": [
+        2.598731359138755
+      ],
+      "spread": null,
+      "both_above": true,
+      "consistent": null
+    },
+    "pressure_fixed": {
+      "pairs": [
+        0.9856664355587453
+      ],
+      "spread": null,
+      "both_above": false,
+      "consistent": null
+    },
+    "pressure_meanfree": {
+      "pairs": [
+        1.8581031702825543
+      ],
+      "spread": null,
+      "both_above": true,
+      "consistent": null
+    }
+  },
+  "three_level_estimates": {
+    "velocity_full": null,
+    "velocity_inplane": null,
+    "pressure_meanfree": null
   },
   "provenance": {
     "runner": "scripts/verify_kovasznay_order.py",
     "summarizer": "scripts/summarize_kovasznay_32_64_128.py",
     "errors_recomputed_from": "n<N>-fields.npz",
-    "recompute_rtol": 1e-10
+    "recompute_rtol": 1e-10,
+    "configuration": {
+      "reynolds": 40.0,
+      "symmetry_closure": "zero_gradient",
+      "convection_order": 2,
+      "algorithm": "coupled"
+    }
   }
 }
