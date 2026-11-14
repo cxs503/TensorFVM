@@ -231,3 +231,72 @@ F4 只论证了"格心位置 ≠ 幅值"，没有证明读出的位置**真的�
   的过冲，已写进工件 `verdict_failing` 照实登记，不改阈值救它。
 * 亚格读数误差在 n=400→800 **轻微反向**（0.110→0.121 cell），
   仍在半格判据内；不宣称严格单调收敛（样本量 4，不构成收敛阶结论）。
+
+---
+
+## 8. 追加复核（m20028）：验收量「被测了但没被判」——判据未进 verdict（F8）
+
+**范围**: 只审锚点验收语句本身的机器判据落点，不重开 F1–F7。
+**判定: request changes → 已在本席修复（见 §8.3）。**
+
+### 8.1 F8（高，已修）干床在 n = 400 报 `all_pass`，而它自己的验收量是 6.61 % > 5 %
+
+§4 把 `x_f(t)` 全序列的判据写进了 `metrics["front_series"]`（`pass` 字段），但
+`_verdict()` 只读 t\*=2 的瞬时量：`front_fan` / `shock_position` / `step_ratio` /
+`plateau_h2` / `depth_l1` / `monotone` / `tv`。**锚点验收句（`x_f(t)` 序列 vs 解析）
+因此只 "记录" 而未 "分级"** —— 与 F1 同型：不是算错，是发表/门禁的不是被定义的那个量。
+
+实测（`run_case`，判据含 `pass` 字段）：
+
+| case | n | 瞬时 headline | `x_f(t)` 序列最大误差 | 修前 verdict | 修后 verdict |
+|---|---|---|---|---|---|
+| ritter-dry | 200 | 0.332 % | **6.613 %** | `all_pass=True`（错） | FAIL `front_series<5%` |
+| ritter-dry | 400 | 0.106 % | **6.613 %** | `all_pass=True`（错） | FAIL `front_series<5%` |
+| ritter-dry | 800 | 0.039 % | 1.398 % | `all_pass=True` | PASS |
+| ritter-dry | 1600 | 0.017 % | 0.425 % | `all_pass=True` | PASS |
+| stoker-wet | 400/800/1600 | 0.160/0.043/0.021 % | 0.795/0.795/0.844 % | PASS | PASS |
+
+即：**有一个网格（n = 400）在验收量超出容差 32 % 的情况下对外报 "全部通过"**。
+这正是 §6 第 2 条记录的那笔技术债（"把序列判据升为 headline 需同批更新键锁与其文档"）的兑现。
+
+### 8.2 为什么不只是加一个键——非空判据
+
+只把 `max_error <= 5 %` 搬进 verdict 会留下一个空洞：**一个只分级了 1–2 个样本的
+序列也能"通过"**（"measuring nothing"）。故同批加入先验下限常量
+
+```python
+SERIES_MIN_GRADED_FRACTION = 0.5   # 声明于任何运行之前，非拟合
+```
+
+判据为 `max_error <= 5 %` **且** `samples_graded >= ceil(0.5 * samples)`；
+不满足即"证据不足 → FAIL"（而非 PASS）。两算例在 n = 800/1600 实测 24/25 分级
+（0.96），余量极大；n = 100 干床为 18/21（0.86）。
+
+### 8.3 本次修复（最小、可验证）
+
+1. `dam_break.py`：新增 `SERIES_MIN_GRADED_FRACTION`（先验）与
+   `_series_verdict_entry()`；`_verdict()` 两分支均加 `front_series<5%`，
+   条目内附 `samples` / `samples_graded` / `graded_required` /
+   `unresolved_max_error`，供审计复算。
+2. `convergence_study()` 每行新增 `front_series` / `front_series_graded` /
+   `front_series_samples` / `verdict_failing` / `verdict_all_pass`。
+3. `scripts/run_shallow_water_dam_break.py` 的收敛表新增
+   ``x_f(t) series error`` / ``series graded`` / ``verdict failing`` 三列 ——
+   粗网格失效**照实发表**（修前该表完全不体现序列判据）。
+4. `tests/test_dam_break_front_metric.py::test_wet_branch_verdict_keys_unchanged`
+   键锁同批更新（+`front_series<5%`），避免静默改契约。
+5. `tests/test_dambreak_stoker_series.py` 新增 3 项：判据在 verdict 且计数可审计、
+   **证伪**（n = 400 干床必须 FAIL，且失败键只有该一条）、非空守卫
+   （25 样本只分级 2 → FAIL；无序列 → FAIL 且 `value=None`；恰在下限 + 通过误差 → PASS）。
+6. 工件重生成（`--n 1600 --resolutions 100,200,400,800,1600`）+ 图
+   `docs/case-fvm-dambreak-stoker/series_verdict_gate.png`（数字程序化读自
+   `convergence.json`）。
+
+### 8.4 照实记录（未修）
+
+* 序列判据的收敛**非单调**：干床 4.695 %（n=100）→ 6.613 %（200/400）→
+  1.398 %（800）→ 0.425 %（1600）。n=100 的 4.70 % 之所以"通过"，是粗网格下
+  早期样本分辨率不足被移出分级集合（18/21）所致，不是精度更好。故接受网格
+  n ≥ 800 由 **5 % 余量 + 分级覆盖率**共同支撑，**不宣称序列误差的收敛阶**。
+* 湿床 n = 100/200 的失败键仍是 `monotone(no_extrema)`（§7.5 同一过冲），
+  与本次判据无关，照实留在 `verdict_failing`。

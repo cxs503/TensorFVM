@@ -154,3 +154,71 @@ def test_committed_artifact_publishes_the_headline_metric():
         assert series["pass"] is True, key
         assert series["max_error"] < TOLERANCE, key
         assert series["tolerance"] == TOLERANCE
+
+# --------------------------------------------------------------------------- #
+# the series gate is *in the verdict*, and it is not vacuous
+# --------------------------------------------------------------------------- #
+def test_series_gate_is_a_verdict_entry_for_both_cases(runs):
+    """The acceptance quantity must be graded by the machine verdict.
+
+    ``metrics["front_series"]`` existed but nothing gated it: the dry branch
+    reported ``all_pass`` at n = 400 while its own graded series error was
+    6.61 % > 5 %.  The gate now lives in the verdict for both cases.
+    """
+    for kind in ("dry", "wet"):
+        verdict = runs[(kind, 800)]["verdict"]
+        entry = verdict["front_series<5%"]
+        assert entry["limit"] == TOLERANCE
+        assert entry["pass"] is True
+        # the entry carries the counts, so the gate can be audited
+        assert entry["samples"] == runs[(kind, 800)]["metrics"]["front_series"]["samples"]
+        assert entry["samples_graded"] >= entry["graded_required"]
+        assert entry["value"] == pytest.approx(
+            runs[(kind, 800)]["metrics"]["front_series"]["max_error"], rel=1e-12)
+        # every other entry keeps its numeric schema
+        assert all(isinstance(item["pass"], bool)
+                   for key, item in verdict.items() if key != "all_pass")
+
+
+def test_series_gate_fails_where_it_should(runs):
+    """Falsification: the gate must be able to fail, and it does at n = 400 dry.
+
+    This is the honesty check on the new entry -- before it, that same run
+    reported ``all_pass`` although its acceptance quantity was 32 % over
+    tolerance.
+    """
+    dry400 = runs[("dry", 400)]
+    assert dry400["metrics"]["front_series"]["max_error"] > TOLERANCE
+    assert dry400["verdict"]["front_series<5%"]["pass"] is False
+    assert dry400["verdict"]["all_pass"] is False
+    assert [key for key, item in dry400["verdict"].items()
+            if key != "all_pass" and not item["pass"]] == ["front_series<5%"]
+    # the accepted grid is therefore n >= 800 for the series (the graded value
+    # halves from 1.40 % to 0.42 % in between)
+    assert runs[("dry", 800)]["verdict"]["all_pass"] is True
+
+
+def test_series_gate_rejects_a_vacuous_series():
+    """A gate that grades almost nothing measures nothing -> insufficient evidence."""
+    from tensorfvm.shallow_water.dam_break import (
+        SERIES_MIN_GRADED_FRACTION,
+        _series_verdict_entry,
+    )
+
+    # tiny error, but only 2 of 25 samples resolvable: not evidence
+    vacuous = _series_verdict_entry({
+        "front_series": {"samples": 25, "samples_graded": 2,
+                         "max_error": 1e-4, "unresolved_max_error": 4.5e-2}})
+    assert vacuous["pass"] is False
+    assert vacuous["graded_required"] == int(np.ceil(SERIES_MIN_GRADED_FRACTION * 25))
+    # no series at all, and a series with no gradable sample
+    assert _series_verdict_entry({})["pass"] is False
+    assert _series_verdict_entry({})["value"] is None
+    assert _series_verdict_entry(
+        {"front_series": {"samples": 25, "samples_graded": 25,
+                          "max_error": None}})["pass"] is False
+    # exactly at the floor with a passing error -> passes
+    ok = _series_verdict_entry(
+        {"front_series": {"samples": 25, "samples_graded": 13,
+                          "max_error": TOLERANCE / 2}})
+    assert ok["pass"] is True and ok["graded_required"] == 13
