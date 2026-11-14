@@ -86,14 +86,22 @@ def test_calibrated_table_is_committed_table_plus_bias(calib):
 
 
 def _profile(tag: str):
+    """Resolve a stored profile by tag.
+
+    ``ladder/data`` names its files ``ladder_profile_<nx>_<family>.npz``, so the
+    bare ``nx1600`` tag used by the callers below must also try the ``hllc``
+    member.  Without that fallback the two finest-grid assertions silently
+    skipped while the data was in fact committed (found by the m20339 audit).
+    """
     p = PROFILE_DIR / f"wc_blast_profile_{tag}.npz"
     if p.exists():
         d = np.load(p)
         return d["x_got"], d["rho_got"]
-    q = LADDER / f"ladder_profile_{tag}.npz"
-    if q.exists():
-        d = np.load(q)
-        return d["x"], d["rho"]
+    for name in (f"ladder_profile_{tag}.npz", f"ladder_profile_{tag}_hllc.npz"):
+        q = LADDER / name
+        if q.exists():
+            d = np.load(q)
+            return d["x"], d["rho"]
     pytest.skip(f"profile {tag} not stored")
 
 
