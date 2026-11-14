@@ -1,0 +1,98 @@
+{
+ "comparison": {
+  "reference": {
+   "x_r_over_H": 5.34,
+   "tolerance": 0.1,
+   "profile_y_H_0.5": {
+    "0.05": -0.15,
+    "0.5": -0.1,
+    "1.0": -0.02,
+    "1.5": 0.05,
+    "2.0": 0.25,
+    "3.0": 0.65,
+    "4.0": 0.85,
+    "5.0": 0.95,
+    "6.0": 1.0,
+    "7.0": 1.02,
+    "8.0": 1.03
+   }
+  },
+  "rows": [
+   {
+    "closure": "sst:96x48",
+    "mesh": [
+     96,
+     48
+    ],
+    "end_time": 400.0,
+    "samples": 601,
+    "x_r_over_H": 2.0456256874257104,
+    "x_r_over_H_error": 0.6169240285719644,
+    "profile_stations_pass": "1/7",
+    "max_nu_t_ratio": 342.47508583207997,
+    "reattachment_coverage": 1.0,
+    "stationary": true,
+    "gate_pass": false,
+    "reasons": [
+     "x_r/H = 2.046 vs 5.34 = 61.7% error > 10%",
+     "y/H=0.5 profile: 1/7 stations inside 10%"
+    ]
+   },
+   {
+    "closure": "sa:96x48",
+    "mesh": [
+     96,
+     48
+    ],
+    "end_time": 400.0,
+    "samples": 601,
+    "x_r_over_H": null,
+    "x_r_over_H_error": null,
+    "profile_stations_pass": "0/7",
+    "max_nu_t_ratio": 65.51575615694819,
+    "reattachment_coverage": 0.0,
+    "stationary": false,
+    "gate_pass": false,
+    "reasons": [
+     "x_r/H undefined (reattachment crossing found in 0.0% of samples)",
+     "y/H=0.5 profile: 0/7 stations inside 10%",
+     "averaging window not stationary (block spread None)"
+    ]
+   }
+  ],
+  "n_pass": 0
+ },
+ "gate_by_run": {
+  "sst:96x48": {
+   "closure": "sst",
+   "x_r_over_H": 2.0456256874257104,
+   "x_r_over_H_error": 0.6169240285719644,
+   "profile_stations": 7,
+   "profile_stations_pass": 1,
+   "stationary": true,
+   "reattachment_coverage": 1.0,
+   "max_nu_t_ratio": 342.47508583207997,
+   "pass": false,
+   "reasons": [
+    "x_r/H = 2.046 vs 5.34 = 61.7% error > 10%",
+    "y/H=0.5 profile: 1/7 stations inside 10%"
+   ]
+  },
+  "sa:96x48": {
+   "closure": "sa",
+   "x_r_over_H": null,
+   "x_r_over_H_error": null,
+   "profile_stations": 7,
+   "profile_stations_pass": 0,
+   "stationary": false,
+   "reattachment_coverage": 0.0,
+   "max_nu_t_ratio": 65.51575615694819,
+   "pass": false,
+   "reasons": [
+    "x_r/H undefined (reattachment crossing found in 0.0% of samples)",
+    "y/H=0.5 profile: 0/7 stations inside 10%",
+    "averaging window not stationary (block spread None)"
+   ]
+  }
+ }
+}
