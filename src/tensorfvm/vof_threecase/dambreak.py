@@ -53,6 +53,7 @@ from dataclasses import dataclass
 import torch
 
 from ..two_phase_solver import GridConfig, TwoPhaseConfig, TwoPhaseSolver
+from ..vof_phase0 import anchors_mm
 from ..vof_phase0.anchors import martin_moyce_front, to_dimensionless_front, to_dimensionless_time
 
 __all__ = [
@@ -60,6 +61,7 @@ __all__ = [
     "front_position",
     "initial_alpha",
     "martin_moyce_error",
+    "mm_checkpoint_error",
     "reduced_hydrostatic_pressure",
     "run_dam_break",
 ]
@@ -89,11 +91,26 @@ class DamBreakMMConfig:
     #: Transport / momentum discretisation.
     vof_scheme: str = "plic"
     momentum_advection: bool = True
+    #: Momentum advection accuracy: ``"upwind"`` (first order, the historical
+    #: default) or ``"limited2"`` (limitied second-order, see
+    #: :class:`~tensorfvm.two_phase_solver.TwoPhaseConfig`).
+    momentum_scheme: str = "upwind"
     #: Time integration.
     cfl: float = 0.35
     t_end: float = 0.30
     #: Times [s] at which the front is compared with the experiment.
     t_samples: tuple = (0.10, 0.20, 0.30)
+    #: Reference convention used for grading.
+    #:
+    #: * ``"martin_moyce"`` (primary): ``T = t sqrt(2 g / a)``,
+    #:   ``X = x_f / a`` with ``X(0) = 1`` -- the axes of Martin & Moyce (1952)
+    #:   Fig. 3, as reproduced by the reference implementations; the comparison
+    #:   times are then :data:`tensorfvm.vof_phase0.anchors_mm.MM_CHECKPOINTS_T`.
+    #: * ``"legacy"``: the historical ``t sqrt(g/a)`` / displacement axes of
+    #:   :mod:`tensorfvm.vof_phase0.anchors`, kept so that published numbers can
+    #:   be reproduced bit-for-bit (:class:`tensorfvm.vof_phase0.anchors_mm`
+    #:   documents why they are not the paper's axes).
+    convention: str = "martin_moyce"
     track_every: int = 1
     max_steps: int = 20000
 
@@ -224,6 +241,32 @@ def martin_moyce_error(t: float, x_front: float, cfg: DamBreakMMConfig) -> dict:
     }
 
 
+def mm_checkpoint_error(t: float, x_front: float, cfg: DamBreakMMConfig) -> dict:
+    """Front error on the *paper's* axes ``T = t sqrt(2g/a)``, ``X = x_f/a``.
+
+    The reference is :func:`tensorfvm.vof_phase0.anchors_mm.mm_front`, which
+    interpolates the digitised curve and refuses to extrapolate; a sample
+    outside the digitised support is reported as ``nan`` (never graded).
+    """
+    T = anchors_mm.mm_time(t, cfg.column_width, cfg.gravity)
+    X = anchors_mm.mm_x(x_front, cfg.column_width)
+    try:
+        X_ref = anchors_mm.mm_front(T)
+        rel = (X - X_ref) / X_ref
+    except ValueError:
+        X_ref = float("nan")
+        rel = float("nan")
+    return {
+        "t": t,
+        "T": T,
+        "x_front": x_front,
+        "X": X,
+        "X_reference": X_ref,
+        "relative_error": rel,
+        "abs_relative_error": abs(rel) if rel == rel else float("nan"),
+    }
+
+
 def _time_step(solver: TwoPhaseSolver, cfg: DamBreakMMConfig) -> float:
     """Combined gravity-wave / CFL / viscous / capillary step."""
     h = min(solver.dx, solver.dy)
@@ -260,6 +303,7 @@ def run_dam_break(cfg: DamBreakMMConfig | None = None, **overrides) -> dict:
         pressure_form="reduced",
         warm_start_pressure=True,
         momentum_advection=cfg.momentum_advection,
+        momentum_advection_scheme=cfg.momentum_scheme,
         vof_scheme=cfg.vof_scheme,
     )
     solver = TwoPhaseSolver(
@@ -269,7 +313,13 @@ def run_dam_break(cfg: DamBreakMMConfig | None = None, **overrides) -> dict:
     solver.p = reduced_hydrostatic_pressure(solver)
     m0 = float(solver.alpha.sum())
 
-    samples = sorted(cfg.t_samples)
+    if cfg.convention == "martin_moyce":
+        samples = [
+            anchors_mm.physical_time(T, cfg.column_width, cfg.gravity)
+            for T in anchors_mm.MM_CHECKPOINTS_T
+        ]
+    else:
+        samples = sorted(cfg.t_samples)
     out_samples = []
     hist = {"t": [], "x_front": [], "mass_drift": [], "max_u": [], "column_height": []}
     pending = list(samples)
@@ -291,15 +341,21 @@ def run_dam_break(cfg: DamBreakMMConfig | None = None, **overrides) -> dict:
         while pending and solver.time >= pending[0] - 1e-9:
             t = pending.pop(0)
             rec = martin_moyce_error(t, front["x_front"], cfg)
+            rec["mm"] = mm_checkpoint_error(t, front["x_front"], cfg)
             rec["mass_drift"] = drift
             rec["max_u"] = hist["max_u"][-1]
             out_samples.append(rec)
         if not torch.isfinite(solver.u).all():
             raise RuntimeError("non-finite velocity")
 
-    worst = max((s["abs_relative_error"] for s in out_samples), default=float("nan"))
+    if cfg.convention == "martin_moyce":
+        key = lambda s: s["mm"]["abs_relative_error"]  # noqa: E731
+    else:
+        key = lambda s: s["abs_relative_error"]  # noqa: E731
+    worst = max((key(s) for s in out_samples), default=float("nan"))
     return {
         "case": "dam_break_martin_moyce",
+        "convention": cfg.convention,
         "nx": cfg.nx,
         "ny": cfg.ny,
         "dx": solver.dx,
@@ -310,6 +366,7 @@ def run_dam_break(cfg: DamBreakMMConfig | None = None, **overrides) -> dict:
         "cfl": cfg.cfl,
         "vof_scheme": cfg.vof_scheme,
         "momentum_advection": cfg.momentum_advection,
+        "momentum_scheme": cfg.momentum_scheme,
         "t_end": solver.time,
         "steps": step,
         "samples": out_samples,
