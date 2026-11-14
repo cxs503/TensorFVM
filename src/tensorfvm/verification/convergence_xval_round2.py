@@ -94,6 +94,23 @@ class SuperlinearFit:
         """Rate is improving if slope is significantly negative."""
         return self.slope < -1e-6 and self.r_squared > 0.7
 
+    def as_dict(self) -> dict:
+        """Serialise for the diagnosis payload.
+
+        ``_diagnose_v2`` reports ``superlinear_fit.as_dict()`` on both gated
+        return paths, so this method is on the hot path as soon as the
+        detection actually fires (it did not in the round-2 suite, which is
+        why its absence went unnoticed).
+        """
+        return {
+            "slope": self.slope,
+            "intercept": self.intercept,
+            "r_squared": self.r_squared,
+            "n_points": self.n_points,
+            "extrapolated_rate": self.extrapolated_rate,
+            "is_superlinear": self.is_superlinear,
+        }
+
 
 def _fit_superlinear_rate(iterations: List[int], rates: List[float],
                           max_iter: int) -> Optional[SuperlinearFit]:
@@ -143,6 +160,70 @@ def _fit_superlinear_rate(iterations: List[int], rates: List[float],
         n_points=len(ks),
         extrapolated_rate=extrapolated_rate,
     )
+
+
+def _walk_forward_accepts(residuals: Sequence[float],
+                          rate_history: Sequence[Tuple[int, float]],
+                          holdout: int = 5,
+                          margin: float = 0.9) -> Tuple[bool, dict]:
+    """Hold-out test: does the superlinear model beat constant-rate extrapolation?
+
+    The round-2 mechanism extrapolates ``log(rate)`` linearly to the iteration
+    budget and blends the result into the forecast.  Measured causally
+    (``docs/xval-round2/causal_forecast_audit.py``) that extrapolation made the
+    forecast *worse* on the cases where it fired, because "rate keeps improving
+    linearly forever" over-predicts the acceleration of GMRES.
+
+    This gate fits both models on data up to ``k0 = n - 1 - holdout`` and scores
+    them on the held-out iterations ``k0+1 .. n-1``:
+
+    * superlinear: ``log rate(j) = slope * j + intercept`` from the sub-fit;
+    * constant:    ``rate(j) = rate(k0)`` (the v1 assumption).
+
+    The extrapolation is accepted only if its hold-out RMSE on ``log residual``
+    is at most ``margin`` times the constant-rate RMSE.  Everything is
+    prefix-only, so the decision itself is causal.
+    """
+    n = len(residuals)
+    info: dict = {"holdout": holdout, "accepted": False, "reason": ""}
+    k0 = n - 1 - holdout
+    sub = [(k, r) for (k, r) in rate_history if k <= k0]
+    if n < holdout + 5 or k0 < 4 or len(sub) < 3:
+        info["reason"] = "history too short for a hold-out test"
+        return False, info
+    fit_sub = _fit_superlinear_rate([s[0] for s in sub], [s[1] for s in sub], k0)
+    if fit_sub is None:
+        info["reason"] = "sub-fit unavailable"
+        return False, info
+    rate_const = sub[-1][1]
+    if not (0.0 < rate_const < 1.0) or residuals[k0] <= 0.0:
+        info["reason"] = "non-decaying hold-out window"
+        return False, info
+
+    log_r0 = math.log(residuals[k0])
+    err_sup: List[float] = []
+    err_con: List[float] = []
+    log_sup = log_con = log_r0
+    for j in range(k0 + 1, n):
+        log_sup += fit_sub.slope * (j - 1) + fit_sub.intercept
+        log_con += math.log(rate_const)
+        actual = math.log(residuals[j]) if residuals[j] > 0 else log_con
+        err_sup.append((log_sup - actual) ** 2)
+        err_con.append((log_con - actual) ** 2)
+
+    rmse_sup = math.sqrt(float(np.mean(err_sup)))
+    rmse_con = math.sqrt(float(np.mean(err_con)))
+    info.update({
+        "rmse_superlinear": rmse_sup,
+        "rmse_constant": rmse_con,
+        "ratio": rmse_sup / rmse_con if rmse_con > 0 else float("inf"),
+        "k0": k0,
+    })
+    accepted = rmse_sup <= margin * rmse_con
+    info["accepted"] = bool(accepted)
+    info["reason"] = ("superlinear model wins the hold-out" if accepted
+                      else "constant-rate model wins or ties the hold-out")
+    return accepted, info
 
 
 # ---------------------------------------------------------------------------
@@ -269,7 +350,7 @@ def _solve_richardson_monitored(A, b, ref, cfg, *, max_iter=2000, alpha=1.0):
 
 def _diagnose_v2(residuals: List[float], cfg: DiagnosisConfig,
                  rate_history: List[Tuple[int, float]],
-                 max_iter: int) -> dict:
+                 max_iter: int, backtest: bool = True) -> dict:
     """Round-2 diagnosis with superlinear-aware forecast.
 
     Returns a dict with the same fields as v1 Diagnosis.as_dict(),
@@ -327,6 +408,7 @@ def _diagnose_v2(residuals: List[float], cfg: DiagnosisConfig,
     optimistic: Optional[int] = None
     pessimistic: Optional[int] = None
     superlinear_fit = None
+    superlinear_gate: Optional[dict] = None
 
     if ready and r > thr:
         # Try superlinear extrapolation
@@ -334,7 +416,16 @@ def _diagnose_v2(residuals: List[float], cfg: DiagnosisConfig,
             iters = [h[0] for h in rate_history]
             rates = [h[1] for h in rate_history]
             fit = _fit_superlinear_rate(iters, rates, max_iter)
-            if fit is not None and fit.is_superlinear:
+            accept = True
+            gate_info = None
+            if fit is not None and fit.is_superlinear and backtest:
+                # Hold-out model selection: the extrapolation must beat the
+                # constant-rate model on data the fit did not see.
+                accept, gate_info = _walk_forward_accepts(residuals, rate_history)
+                # record the verdict even when it rejects, so the audit can count
+                # how often the mechanism is suppressed (and why)
+                superlinear_gate = gate_info
+            if fit is not None and fit.is_superlinear and accept:
                 superlinear_fit = fit
                 # Blend extrapolated rate with current rate (70/30)
                 effective_rate = 0.7 * fit.extrapolated_rate + 0.3 * rate
@@ -370,6 +461,7 @@ def _diagnose_v2(residuals: List[float], cfg: DiagnosisConfig,
             "reason": f"forecast {forecast} exceeds budget {cfg.max_iter}",
             "forecast_optimistic": optimistic, "forecast_pessimistic": pessimistic,
             "superlinear_fit": superlinear_fit.as_dict() if superlinear_fit else None,
+            "superlinear_gate": superlinear_gate,
         }
 
     if ready:
@@ -381,6 +473,7 @@ def _diagnose_v2(residuals: List[float], cfg: DiagnosisConfig,
             "reason": f"tail rate {rate:.4f} standing to {cfg.rate_stability_tol:.2f} (spread {spread:.3f})",
             "forecast_optimistic": optimistic, "forecast_pessimistic": pessimistic,
             "superlinear_fit": superlinear_fit.as_dict() if superlinear_fit else None,
+            "superlinear_gate": superlinear_gate,
         }
 
     return {
