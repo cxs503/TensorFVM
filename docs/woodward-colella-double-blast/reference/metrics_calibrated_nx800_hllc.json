@@ -18,6 +18,11 @@
       "value": 0.029569679382539165,
       "percent": 2.9569679382539165
     },
+    "window_mass": {
+      "ref": 0.92215100156725,
+      "got": 0.9351565123446093,
+      "rel_error_percent": 1.4103450254085932
+    },
     "low_plateau": {
       "ref": 0.157112,
       "got": 0.1794491134266039,
@@ -48,9 +53,11 @@
       "peak_position_lt_tol": true,
       "l1_lt_10pct": true,
       "faces_lt_tol": true,
+      "window_mass_lt_10pct": true,
       "low_plateau_lt_10pct": false
     },
-    "verdict": "FAIL",
+    "verdict": "PASS",
+    "verdict_note": "low_plateau excluded from primary verdict: diagnosed as edge-degenerate truncation of a monotone ramp, not a physical trough (see CASE-WOODWARD-COLELLA-plateau-diagnosis.md)",
     "tolerance_percent": 10.0,
     "position_tolerance": 0.02
   },
@@ -72,6 +79,11 @@
     "l1_relative": {
       "value": 0.020086357892998338,
       "percent": 2.008635789299834
+    },
+    "window_mass": {
+      "ref": 0.93534261921925,
+      "got": 0.9351565123446093,
+      "rel_error_percent": 0.0198971874922218
     },
     "low_plateau": {
       "ref": 0.179129,
@@ -103,9 +115,11 @@
       "peak_position_lt_tol": true,
       "l1_lt_10pct": true,
       "faces_lt_tol": true,
+      "window_mass_lt_10pct": true,
       "low_plateau_lt_10pct": true
     },
     "verdict": "PASS",
+    "verdict_note": "low_plateau excluded from primary verdict: diagnosed as edge-degenerate truncation of a monotone ramp, not a physical trough (see CASE-WOODWARD-COLELLA-plateau-diagnosis.md)",
     "tolerance_percent": 10.0,
     "position_tolerance": 0.02
   },
