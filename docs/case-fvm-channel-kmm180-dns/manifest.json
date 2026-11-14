@@ -1,0 +1,20 @@
+{
+  "case": "CASE-FVM-CHANNEL-KMM180",
+  "route": "closure-free (spectral x,z + finite-volume y, no turbulence model)",
+  "job": "cj2408",
+  "node": "n315",
+  "repro_cmd": "PYTHONPATH=src python scripts/run_case_fvm_channel_kmm180_dns.py --out docs/case-fvm-channel-kmm180-dns --nx 64 --ny 128 --nz 64 --fft-workers 8 --steps-transient 326 --steps-average 1220",
+  "artifacts": {
+    "profiles.csv": "2482be3ce81c9a9408aa9e59ea4ec8b76e4d82bac4d7384891f4929d14bb61da",
+    "metrics.json": "7bbc4040b8e3a4966d2bdb2ab8b6b1d13d943fa9187d649934c9127f9be08227",
+    "REPORT.md": "bc778e2440d309a0f3627ac0590a808241eb4b2e1a9cfc7fd6fe24a40e36eeea",
+    "fig_velocity_profile.png": "a57a8c5df9251a4439c6e0128df88d45e9de83881bbc5590b5ba8ab2ed81099f",
+    "fig_deviation.png": "f73d4e05296ada0fd9c38193603efd2c4062e89d3d90e15b5494a024704dbd6e",
+    "fig_stress_balance.png": "405a2889cc2f6d5b5d14b6614631d689da4d068753fca752297067a7ff56c727",
+    "fig_stresses.png": "8e2874072e7168269a6736df424d797b03b32a9626842d1c7736d26c62ab205a"
+  },
+  "verdict": {
+    "legacy": "PASS",
+    "log_layer": "PASS"
+  }
+}
