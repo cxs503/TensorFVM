@@ -1,0 +1,110 @@
+{
+  "anchor_slug": "GAP-DIFFLBM-EXT-LIT-CYL",
+  "reference": {
+    "cd_mean": 1.34,
+    "st": 0.164,
+    "cl_amplitude": 0.32
+  },
+  "tolerance_band": {
+    "cd_mean": 0.07,
+    "st": 0.005
+  },
+  "citation": "Braza et al. JFM 165 (1986) 79-130, doi:10.1017/S0022112086003014; Schafer & Turek, NNFM 52 (1996), doi:10.1007/978-3-322-89849-4_39",
+  "source_url": "https://wwwold.mathematik.tu-dortmund.de/~featflow/en/benchmarks/cfdbenchmarking/flow/dfg_benchmark2_re100.html",
+  "ladder": [
+    {
+      "cells_per_diameter": 12,
+      "grid": {
+        "nx": 360,
+        "ny": 240,
+        "dx": 0.08333333333333333,
+        "dy": 0.08333333333333333,
+        "cells_per_diameter": 12
+      },
+      "steps": 6001,
+      "elapsed_s": 220.42101484537125,
+      "s_per_step": 0.03673071402189156,
+      "cd_mean": 1.5193082056248197,
+      "cd_error": 0.13381209374986539,
+      "st": 0.14414651810059914,
+      "st_fft": 0.14411451838747688,
+      "st_error": 0.12105781645976137,
+      "cl_amplitude": 0.11283723,
+      "periods": 10.0,
+      "shedding_detected": true,
+      "gates": [],
+      "verdict": "FAIL: cd_mean = 1.5193 vs 1.3400 (13.38 %), st = 0.1441 vs 0.1640 (12.11 %)",
+      "passed": false
+    },
+    {
+      "cells_per_diameter": 20,
+      "grid": {
+        "nx": 600,
+        "ny": 400,
+        "dx": 0.05,
+        "dy": 0.05,
+        "cells_per_diameter": 20
+      },
+      "steps": 6001,
+      "elapsed_s": 1292.7050291523337,
+      "s_per_step": 0.21541493570277181,
+      "cd_mean": 1.5092636299131243,
+      "cd_error": 0.12631614172621214,
+      "st": 0.1550825196959207,
+      "st_fft": 0.15512209462196072,
+      "st_error": 0.05437487990292253,
+      "cl_amplitude": 0.20053728999999998,
+      "periods": 10.0,
+      "shedding_detected": true,
+      "gates": [],
+      "verdict": "FAIL: cd_mean = 1.5093 vs 1.3400 (12.63 %), st = 0.1551 vs 0.1640 (5.44 %)",
+      "passed": false
+    },
+    {
+      "cells_per_diameter": 32,
+      "grid": {
+        "nx": 960,
+        "ny": 640,
+        "dx": 0.03125,
+        "dy": 0.03125,
+        "cells_per_diameter": 32
+      },
+      "steps": 6001,
+      "elapsed_s": 2638.525724229985,
+      "s_per_step": 0.4396810072037969,
+      "cd_mean": NaN,
+      "cd_error": NaN,
+      "st": null,
+      "st_fft": null,
+      "st_error": null,
+      "cl_amplitude": NaN,
+      "periods": 0.0,
+      "shedding_detected": false,
+      "gates": [
+        "no vortex shedding: lift half-amplitude nan < gate 0.05"
+      ],
+      "verdict": "GATED: no vortex shedding: lift half-amplitude nan < gate 0.05",
+      "passed": false
+    }
+  ],
+  "successive_differences": [
+    {
+      "between": [
+        12,
+        20
+      ],
+      "cd_mean_delta_pct": -0.665528242555845,
+      "st_delta_pct": 7.051730663626322
+    },
+    {
+      "between": [
+        20,
+        32
+      ],
+      "cd_mean_delta_pct": NaN
+    }
+  ],
+  "finest": 32,
+  "verdict": "GATED: no vortex shedding: lift half-amplitude nan < gate 0.05",
+  "passed": false
+}
