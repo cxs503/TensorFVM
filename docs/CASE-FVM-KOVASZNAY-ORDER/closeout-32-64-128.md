@@ -130,3 +130,7 @@ PYTHONPATH=src python scripts/summarize_kovasznay_32_64_128.py \
   --require-grids 32,64,128
 PYTHONPATH=src python -m pytest tests/test_kovasznay_32_64_128_acceptance.py -q
 ```
+
+## 八、判据可信度补充（2026-11-14）
+
+判据已登记 `tensor_benchmark_cases` id=137（斜率 ≥ 1.8，32/64/128）。同一算例只把对流格式降为一阶 upwind 的负向对照给出斜率 1.2456（被 1.8 门槛拒绝，判别裕度 0.7167），说明该斜率不是「对任何格式都报二阶」：见 `NEGATIVE_CONTROL.md`、`order-sensitivity.json`、`order-sensitivity.png`，闸门 `scripts/kovasznay_order_sensitivity.py` + `tests/test_kovasznay_order_sensitivity.py`。
