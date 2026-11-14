@@ -1,3 +1,8 @@
+> **已结案（2026-11-14，m20033）**：n=128 层级已补齐，三网格 32/64/128 速度 L2 斜率
+> **1.9623**（R²=0.999944）≥ 1.8，判据达成。下方 m18510 的"n=128 未落盘"状态已被
+> `closeout-32-64-128.md` 取代；当时阻塞它的证据目录语义缺陷亦已修复
+> （`NativeRunEvidence`，回归测试 `tests/test_native_run_evidence_resume.py`）。
+
 # CASE-FVM-KOVASZNAY-ORDER — 32/64/128 收敛阶：混合配置门 + 既有 PASS 声明的诚实降级
 
 **日期**: 2026-11-13 · **席**: m18510（selfstart, tp-infra-2）· **仓**: TensorFVM
