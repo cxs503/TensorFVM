@@ -1,0 +1,16 @@
+{
+  "dataset": "hj2006_0180",
+  "citation": "Hoyas, S. & Jimenez, J. 2006 Scaling of the velocity fluctuations in turbulent channels up to Re_tau = 2000. Phys. Fluids 18, 011702. DOI:10.1063/1.2162185",
+  "source_type": "original authors DNS statistical data; not experiment",
+  "upstream_url": "https://turbulence.oden.utexas.edu/data/channels/profiles/Re180/profiles/Re180.prof",
+  "raw_file": "hj2006_Re180.prof",
+  "raw_sha256": "6a5026e6b56044ed53e7b1f22043f73eab74dd2db1ab7f2c0a0260dca6531ec5",
+  "csv": "mean.csv",
+  "csv_sha256": "ff9ac727b6ca263842da9021828df8c4c9af207612f5632f938857ec7fe991d0",
+  "rows": 49,
+  "Re_tau_reported": 180.0,
+  "normalization": "wall units except y_over_delta",
+  "note": "Re180 case, Re_tau = 180 exactly; independent group and code",
+  "imported_utc": "2026-11-14T16:11:03.466395+00:00",
+  "importer": "scripts/import_channel_reference_band.py"
+}
