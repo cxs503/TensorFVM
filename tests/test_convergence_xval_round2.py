@@ -17,15 +17,20 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
-ARTIFACT_DIR = ROOT / "artifacts" / "xval-round2"
+#: the driver (``tensorfvm.verification.convergence_xval_round2.run_xval_round2``)
+#: and the committed artifact both live under ``docs/xval-round2``; this fixture
+#: used to point at ``artifacts/xval-round2``, which does not exist, so every
+#: assertion in this file silently *skipped* and the claim was gated by nothing.
+ARTIFACT_DIR = ROOT / "docs" / "xval-round2"
 
 
 @pytest.fixture(scope="module")
 def round2_results():
-    """Load the round-2 XVAL results."""
+    """Load the round-2 XVAL results (fail loudly if absent, never skip)."""
     artifact = ARTIFACT_DIR / "xval_round2.json"
     if not artifact.exists():
-        pytest.skip("Round-2 artifact not generated; run the driver first")
+        pytest.fail(f"round-2 artifact missing: {artifact}; run "
+                    "`python -m tensorfvm.verification.convergence_xval_round2`")
     return json.loads(artifact.read_text(encoding="utf-8"))
 
 
@@ -142,3 +147,24 @@ def test_artifact_numbers_recompute(round2_results):
     assert summary["rate_pass"] == f"{n_rate_pass}/{n_decaying}"
     assert summary["forecast_pass"] == f"{n_fc_pass}/{n_decaying}"
     assert summary["verdict_agree"] == f"{n_verdict_agree}/{len(results)}"
+
+
+# ---------------------------------------------------------------------------
+# Adversarial note on what the numbers above actually measure
+# ---------------------------------------------------------------------------
+
+def test_forecast_metric_is_ex_post_identity(round2_results):
+    """The 0.00 % forecast error is an identity, not a forecast.
+
+    ``run_case_v2`` solves to the reference stopping iteration and only then
+    asks for a forecast; the diagnosis answers ``converged`` and returns the
+    iteration count it has already recorded.  So ``forecast_v2 == fc_ref`` by
+    construction on every converging case.  This test documents that fact
+    instead of reading it as skill -- the causal metric lives in
+    ``tests/test_convergence_causal_audit.py``.
+    """
+    converging = [r for r in round2_results["results"] if r["ref_converged"]]
+    assert converging, "fixture should contain converging cases"
+    for r in converging:
+        assert r["forecast_v2"] == r["fc_ref"], r["case"]
+        assert r["fc_err"] == 0.0, r["case"]
