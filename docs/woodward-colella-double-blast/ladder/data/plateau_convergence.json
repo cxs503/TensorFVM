@@ -3,7 +3,7 @@
   "t_end": 0.038,
   "tolerance_percent": 10.0,
   "reference": {
-    "path": "/root/tp-agent/work/m18283/docs/woodward-colella-double-blast/reference/reference_density.csv",
+    "path": "/root/tp-agent/work/m19924/docs/woodward-colella-double-blast/reference/reference_density.csv",
     "panel_spread": 3.0999999999892225e-05,
     "domain": [
       0.399853,
@@ -114,7 +114,7 @@
       "family": "fvm",
       "baseline": true,
       "source": "docs/woodward-colella-double-blast/artifacts/wc_blast_profile_nx400.npz",
-      "path": "/root/tp-agent/work/m18283/docs/woodward-colella-double-blast/artifacts/wc_blast_profile_nx400.npz"
+      "path": "/root/tp-agent/work/m19924/docs/woodward-colella-double-blast/artifacts/wc_blast_profile_nx400.npz"
     },
     "nx800_hllc": {
       "window_min": {
@@ -190,7 +190,83 @@
       "family": "fvm",
       "baseline": true,
       "source": "docs/woodward-colella-double-blast/artifacts/wc_blast_profile_nx800.npz",
-      "path": "/root/tp-agent/work/m18283/docs/woodward-colella-double-blast/artifacts/wc_blast_profile_nx800.npz"
+      "path": "/root/tp-agent/work/m19924/docs/woodward-colella-double-blast/artifacts/wc_blast_profile_nx800.npz"
+    },
+    "nx1600_hllc": {
+      "window_min": {
+        "ref": 0.157112,
+        "got": 0.1796747164780565,
+        "x_ref": 0.420358,
+        "x_got": 0.4203125,
+        "rel_error_percent": 14.360912265171658
+      },
+      "min_edge": {
+        "x_min": 0.4203125,
+        "distance_to_low_edge": 0.0005580357142857023,
+        "distance_to_high_edge": 0.9994419642857142,
+        "edge_degenerate": true,
+        "nearest_edge": "low"
+      },
+      "min_edge_ref": {
+        "x_min": 0.420358,
+        "distance_to_low_edge": 0.0006392857142857588,
+        "distance_to_high_edge": 0.9993607142857142,
+        "edge_degenerate": true,
+        "nearest_edge": "low"
+      },
+      "plateau_mean": {
+        "ref": 0.15982841054499988,
+        "got": 0.18183357955962487,
+        "window": [
+          0.44,
+          0.54
+        ],
+        "rel_error_percent": 13.767995902348918
+      },
+      "plateau_mean_windows": {
+        "0.42-0.56": {
+          "ref": 0.16015274447499994,
+          "got": 0.18213911212802594,
+          "rel_error_percent": 13.728373950193593
+        },
+        "0.44-0.54": {
+          "ref": 0.15982841054499988,
+          "got": 0.18183357955962487,
+          "rel_error_percent": 13.767995902348918
+        },
+        "0.46-0.52": {
+          "ref": 0.15929308114166674,
+          "got": 0.18107852512769831,
+          "rel_error_percent": 13.676327829114419
+        }
+      },
+      "window_mass": {
+        "ref": 0.92215100156725,
+        "got": 0.9353390682866847,
+        "window": [
+          0.4,
+          1.0
+        ],
+        "rel_error_percent": 1.4301417768912816
+      },
+      "probe": {
+        "x": 0.5,
+        "ref": 0.16108305,
+        "got": 0.18341256616845303,
+        "rel_error_percent": 13.862114088635039
+      },
+      "published": {
+        "peak_density_rel_percent": 2.699427109130986,
+        "l1_percent": 2.801509588840873,
+        "low_plateau_rel_percent": 14.360912265171658,
+        "verdict": "PASS"
+      },
+      "tag": "nx1600_hllc",
+      "nx": 1600,
+      "family": "fvm",
+      "baseline": true,
+      "source": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx1600_hllc.npz",
+      "path": "/root/tp-agent/work/m19924/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx1600_hllc.npz"
     },
     "nx200_hllc": {
       "window_min": {
@@ -266,7 +342,7 @@
       "family": "fvm",
       "baseline": true,
       "source": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx200_hllc.npz",
-      "path": "/root/tp-agent/work/m18283/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx200_hllc.npz"
+      "path": "/root/tp-agent/work/m19924/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx200_hllc.npz"
     },
     "nx200_hllc_limiterminmod_cfl0.2": {
       "window_min": {
@@ -342,7 +418,7 @@
       "family": "fvm",
       "baseline": false,
       "source": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx200_hllc_limiterminmod_cfl0.2.npz",
-      "path": "/root/tp-agent/work/m18283/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx200_hllc_limiterminmod_cfl0.2.npz"
+      "path": "/root/tp-agent/work/m19924/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx200_hllc_limiterminmod_cfl0.2.npz"
     },
     "nx200_weno5": {
       "window_min": {
@@ -418,7 +494,83 @@
       "family": "weno5",
       "baseline": true,
       "source": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx200_weno5.npz",
-      "path": "/root/tp-agent/work/m18283/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx200_weno5.npz"
+      "path": "/root/tp-agent/work/m19924/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx200_weno5.npz"
+    },
+    "nx3200_hllc": {
+      "window_min": {
+        "ref": 0.157112,
+        "got": 0.17981193316110206,
+        "x_ref": 0.420358,
+        "x_got": 0.42015625,
+        "rel_error_percent": 14.448249122347148
+      },
+      "min_edge": {
+        "x_min": 0.42015625,
+        "distance_to_low_edge": 0.0002790178571429007,
+        "distance_to_high_edge": 0.999720982142857,
+        "edge_degenerate": true,
+        "nearest_edge": "low"
+      },
+      "min_edge_ref": {
+        "x_min": 0.420358,
+        "distance_to_low_edge": 0.0006392857142857588,
+        "distance_to_high_edge": 0.9993607142857142,
+        "edge_degenerate": true,
+        "nearest_edge": "low"
+      },
+      "plateau_mean": {
+        "ref": 0.15982841054499988,
+        "got": 0.18234905540885415,
+        "window": [
+          0.44,
+          0.54
+        ],
+        "rel_error_percent": 14.090514187722311
+      },
+      "plateau_mean_windows": {
+        "0.42-0.56": {
+          "ref": 0.16015274447499994,
+          "got": 0.18251342072533808,
+          "rel_error_percent": 13.962093702258512
+        },
+        "0.44-0.54": {
+          "ref": 0.15982841054499988,
+          "got": 0.18234905540885415,
+          "rel_error_percent": 14.090514187722311
+        },
+        "0.46-0.52": {
+          "ref": 0.15929308114166674,
+          "got": 0.18196092523504373,
+          "rel_error_percent": 14.2302753709795
+        }
+      },
+      "window_mass": {
+        "ref": 0.92215100156725,
+        "got": 0.9354290587011441,
+        "window": [
+          0.4,
+          1.0
+        ],
+        "rel_error_percent": 1.4399005272810235
+      },
+      "probe": {
+        "x": 0.5,
+        "ref": 0.16108305,
+        "got": 0.18333978605413542,
+        "rel_error_percent": 13.816932355164258
+      },
+      "published": {
+        "peak_density_rel_percent": 3.3582115380735376,
+        "l1_percent": 3.9808458328240146,
+        "low_plateau_rel_percent": 14.448249122347148,
+        "verdict": "PASS"
+      },
+      "tag": "nx3200_hllc",
+      "nx": 3200,
+      "family": "fvm",
+      "baseline": true,
+      "source": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx3200_hllc.npz",
+      "path": "/root/tp-agent/work/m19924/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx3200_hllc.npz"
     }
   },
   "diagnosis": {
@@ -443,9 +595,11 @@
       "edge_degenerate_solutions": {
         "nx400_hllc": true,
         "nx800_hllc": true,
+        "nx1600_hllc": true,
         "nx200_hllc": true,
         "nx200_hllc_limiterminmod_cfl0.2": true,
-        "nx200_weno5": true
+        "nx200_weno5": true,
+        "nx3200_hllc": true
       }
     },
     "window_min_is_edge_degenerate": {
@@ -458,74 +612,88 @@
       "levels": [
         200,
         400,
-        800
+        800,
+        1600,
+        3200
       ],
       "values": {
         "window_min_rel_percent": [
           13.33702369523978,
           13.968419404606319,
-          14.21731849037878
+          14.21731849037878,
+          14.360912265171658,
+          14.448249122347148
         ],
         "plateau_mean_rel_percent": [
           9.553832203400725,
           11.504250368249302,
-          13.08196095813189
+          13.08196095813189,
+          13.767995902348918,
+          14.090514187722311
         ],
         "window_mass_rel_percent": [
           1.2683351393055673,
           1.3674285153966907,
-          1.4103450254085932
+          1.4103450254085932,
+          1.4301417768912816,
+          1.4399005272810235
         ],
         "probe_rel_percent": [
           12.684688292460603,
           13.854104224477275,
-          13.931361671314523
+          13.931361671314523,
+          13.862114088635039,
+          13.816932355164258
         ],
         "peak_density_rel_percent": [
           20.477677428067626,
           10.264543081304929,
-          1.6882472218311024
+          1.6882472218311024,
+          2.699427109130986,
+          3.3582115380735376
         ],
         "l1_percent": [
           14.825794539824457,
           7.711573517196673,
-          2.9569679382539165
+          2.9569679382539165,
+          2.801509588840873,
+          3.9808458328240146
         ]
       },
       "observed_order": {
-        "window_min_rel_percent": -0.04610631838568769,
-        "plateau_mean_rel_percent": -0.22671368513644974,
-        "window_mass_rel_percent": -0.07655606901788542,
-        "probe_rel_percent": -0.06762410409354065,
-        "peak_density_rel_percent": 1.8002270030234047,
-        "l1_percent": 1.162959458758622
+        "window_min_rel_percent": -0.028864481153777054,
+        "plateau_mean_rel_percent": -0.14014320385087398,
+        "window_mass_rel_percent": -0.045758285521628125,
+        "probe_rel_percent": -0.030837318850290858,
+        "peak_density_rel_percent": 0.6520717697786578,
+        "l1_percent": 0.4742406293315196
       },
       "monotone_decreasing": {
         "window_min_rel_percent": false,
         "plateau_mean_rel_percent": false,
         "window_mass_rel_percent": false,
         "probe_rel_percent": false,
-        "peak_density_rel_percent": true,
-        "l1_percent": true
+        "peak_density_rel_percent": false,
+        "l1_percent": false
       },
       "richardson": {
         "plateau_mean": {
-          "order": -0.22671368513644974,
-          "value_finest": 0.18073710081249952,
+          "order": -0.14014320385087398,
+          "value_finest": 0.18234905540885415,
           "value_limit": null,
           "ref": 0.15982841054499988,
           "limit_rel_error_percent": null
         },
         "window_mass": {
-          "order": -0.07655606901788542,
-          "value_finest": 0.9351565123446093,
+          "order": -0.045758285521628125,
+          "value_finest": 0.9354290587011441,
           "value_limit": null,
           "ref": 0.92215100156725,
           "limit_rel_error_percent": null
         },
         "probe": {
-          "order": -0.06762410409354065,
-          "value_finest": 0.18352411228668442,
+          "order": -0.030837318850290858,
+          "value_finest": 0.18333978605413542,
           "value_limit": null,
           "ref": 0.16108305,
           "limit_rel_error_percent": null
@@ -575,14 +743,14 @@
   "verdict": {
     "tolerance_percent": 10.0,
     "finest_fvm": {
-      "tag": "nx800_hllc",
-      "nx": 800,
-      "peak_density_rel_percent": 1.6882472218311024,
-      "l1_percent": 2.9569679382539165,
-      "plateau_mean_rel_percent": 13.08196095813189,
-      "window_mass_rel_percent": 1.4103450254085932,
-      "probe_rel_percent": 13.931361671314523,
-      "window_min_rel_percent": 14.21731849037878
+      "tag": "nx3200_hllc",
+      "nx": 3200,
+      "peak_density_rel_percent": 3.3582115380735376,
+      "l1_percent": 3.9808458328240146,
+      "plateau_mean_rel_percent": 14.090514187722311,
+      "window_mass_rel_percent": 1.4399005272810235,
+      "probe_rel_percent": 13.816932355164258,
+      "window_min_rel_percent": 14.448249122347148
     },
     "pass_fail": {
       "peak_density": true,
