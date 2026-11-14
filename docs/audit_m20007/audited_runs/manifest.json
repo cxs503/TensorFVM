@@ -1,0 +1,16 @@
+{
+  "repro_cmd": "PYTHONPATH=src python -m tensorfvm.benchmark_entrance_length all --out runs/entrance-length",
+  "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+  "python": "3.11.6 (main, May  9 2024, 00:00:00) [GCC 12.3.0 20230508 (Anolis OS 12.3.0-2)]",
+  "torch": "2.7.1",
+  "cwd": "/root/tp-agent/work/m20007",
+  "artifact_hashes": {
+    "benchmark.json": "cc445557b3026e01b826cd3edfbd96ae1d49eedd11d8c5fce789cd6afb45754d",
+    "metrics.csv": "cf763a2e38dcfb8042ff4b7517810de3fa34e3101e19d236982f1febe68c2cad",
+    "centerline_profiles.csv": "6d8bb794e4f9b329672174c46ceeda690a9405903c4b33e1ce8a69b7f9d79b6c",
+    "fig_centerline_profiles.png": "8007904df17bfc2068c1aaae9523d1d420ec92df3c7ad6ae391f476adfcac84e",
+    "fig_entrance_length_vs_re.png": "437cf37ab43766f9185a63a74fbd8fb41e274703fafc21b24f5ab2a9cf7e02df",
+    "fig_error_bars.png": "e13e9c1c04d5e44609dfbcdcf548d2ab0c1d11bbb76c2fe871b23cd12b426abb",
+    "manifest.json": "f1c21f33fe23d3490a40bf65c9809150de578354db1989bc38926f03e7524e55"
+  }
+}
