@@ -1,0 +1,150 @@
+{
+ "case": "CASE-FVM-CAVITY-RE1000",
+ "reference": "U. Ghia, K.N. Ghia, C.T. Shin, J. Comput. Phys. 48 (1982) 387-411, Table I (u at x = L/2), Table II (v at y = L/2), primary-vortex centre",
+ "tolerance": 0.05,
+ "rows": [
+  {
+   "n": 32,
+   "u_min": {
+    "ref": -0.38289,
+    "got": -0.316430836724452,
+    "rel_err": 0.17357247061962447,
+    "pass": false
+   },
+   "v_max": {
+    "ref": 0.37095,
+    "got": 0.3154449049885548,
+    "rel_err": 0.14962958622845446,
+    "pass": false
+   },
+   "u_profile_max_abs": {
+    "ref": 0.0,
+    "got": 0.20329603195274926,
+    "err": 0.20329603195274926,
+    "tolerance": 0.05,
+    "pass": false
+   },
+   "v_profile_max_abs": {
+    "ref": 0.0,
+    "got": 0.07538595212630528,
+    "err": 0.07538595212630528,
+    "tolerance": 0.05,
+    "pass": false
+   },
+   "vortex_centre": {
+    "ref": [
+     0.5313,
+     0.5625
+    ],
+    "got": [
+     0.546875,
+     0.609375
+    ],
+    "abs_err_L": 0.046875,
+    "pass": true
+   },
+   "max_divergence": 3.552713678800501e-15,
+   "residual": 9.758993021099135e-08,
+   "steps": 30500,
+   "wall_seconds": 125.47,
+   "converged": true,
+   "verdict": "FAIL"
+  },
+  {
+   "n": 64,
+   "u_min": {
+    "ref": -0.38289,
+    "got": -0.37218421198606744,
+    "rel_err": 0.027960479547474656,
+    "pass": true
+   },
+   "v_max": {
+    "ref": 0.37095,
+    "got": 0.36228285758895074,
+    "rel_err": 0.02336471872502835,
+    "pass": true
+   },
+   "u_profile_max_abs": {
+    "ref": 0.0,
+    "got": 0.029310303373660473,
+    "err": 0.029310303373660473,
+    "tolerance": 0.05,
+    "pass": true
+   },
+   "v_profile_max_abs": {
+    "ref": 0.0,
+    "got": 0.01973391982409828,
+    "err": 0.01973391982409828,
+    "tolerance": 0.05,
+    "pass": true
+   },
+   "vortex_centre": {
+    "ref": [
+     0.5313,
+     0.5625
+    ],
+    "got": [
+     0.5234375,
+     0.5703125
+    ],
+    "abs_err_L": 0.007862499999999994,
+    "pass": true
+   },
+   "max_divergence": 2.4868995751603507e-14,
+   "residual": 9.732030292752825e-08,
+   "steps": 59750,
+   "wall_seconds": 331.36,
+   "converged": true,
+   "verdict": "PASS"
+  },
+  {
+   "n": 128,
+   "u_min": {
+    "ref": -0.38289,
+    "got": -0.3853676434683154,
+    "rel_err": 0.006470901481666839,
+    "pass": true
+   },
+   "v_max": {
+    "ref": 0.37095,
+    "got": 0.3738401868300326,
+    "rel_err": 0.007791311039311538,
+    "pass": true
+   },
+   "u_profile_max_abs": {
+    "ref": 0.0,
+    "got": 0.00430729832562185,
+    "err": 0.00430729832562185,
+    "tolerance": 0.05,
+    "pass": true
+   },
+   "v_profile_max_abs": {
+    "ref": 0.0,
+    "got": 0.011184127636449603,
+    "err": 0.011184127636449603,
+    "tolerance": 0.05,
+    "pass": true
+   },
+   "vortex_centre": {
+    "ref": [
+     0.5313,
+     0.5625
+    ],
+    "got": [
+     0.52734375,
+     0.56640625
+    ],
+    "abs_err_L": 0.0039562499999999945,
+    "pass": true
+   },
+   "max_divergence": 1.2079226507921703e-13,
+   "residual": 9.88833903647901e-08,
+   "steps": 104250,
+   "wall_seconds": 1288.51,
+   "converged": true,
+   "verdict": "PASS"
+  }
+ ],
+ "verdict": "PASS",
+ "finest_verdict": "PASS"
+}
