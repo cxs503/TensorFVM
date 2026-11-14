@@ -1,0 +1,84 @@
+{
+  "quantity": "velocity L2 (full 3D u,v,w), volume-weighted relative L2 vs Kovasznay exact",
+  "grids": [
+    32,
+    64,
+    128
+  ],
+  "established": {
+    "directory": "docs/CASE-FVM-KOVASZNAY-ORDER/runs-32-64-128-zero_gradient",
+    "grids": [
+      32,
+      64,
+      128
+    ],
+    "configuration": {
+      "reynolds": 40.0,
+      "symmetry_closure": "zero_gradient",
+      "convection_order": 2,
+      "algorithm": "coupled"
+    },
+    "errors": {
+      "32": 0.0034356154111469706,
+      "64": 0.0008972613982215257,
+      "128": 0.00022623249946830722
+    },
+    "spacing": {
+      "32": 0.03125,
+      "64": 0.015625,
+      "128": 0.0078125
+    },
+    "least_squares": {
+      "slope": 1.9623452238776438,
+      "intercept": 1.1332744007421178,
+      "r_squared": 0.9999442581016357
+    },
+    "pair_orders": [
+      1.9369682973617028,
+      1.9877221503935876
+    ],
+    "reidentified_order": 1.9194464850015491,
+    "convergence": "monotone"
+  },
+  "control": {
+    "directory": "docs/CASE-FVM-KOVASZNAY-ORDER/runs-32-64-128-first-order",
+    "grids": [
+      32,
+      64,
+      128
+    ],
+    "configuration": {
+      "reynolds": 40.0,
+      "symmetry_closure": "zero_gradient",
+      "convection_order": 1,
+      "algorithm": "coupled"
+    },
+    "errors": {
+      "32": 0.004997776050068459,
+      "64": 0.0019396926604811236,
+      "128": 0.0008888359160444226
+    },
+    "spacing": {
+      "32": 0.03125,
+      "64": 0.015625,
+      "128": 0.0078125
+    },
+    "least_squares": {
+      "slope": 1.245648618224647,
+      "intercept": -1.0093550029340286,
+      "r_squared": 0.9969257908450415
+    },
+    "pair_orders": [
+      1.3654581767787544,
+      1.1258390596705403
+    ],
+    "reidentified_order": 1.5410617367673993,
+    "convergence": "monotone"
+  },
+  "differing_settings": [
+    "convection_order"
+  ],
+  "margin": 0.7166966056529969,
+  "margin_required": 0.6,
+  "discriminates": true
+}
