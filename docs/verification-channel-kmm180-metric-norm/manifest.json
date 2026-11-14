@@ -1,0 +1,10 @@
+{
+  "artifacts": {
+    "REPORT.md": "50e463c71fb18fc98b2211b982412f82461874b73bbfc0766f2898e6ff5cb56a",
+    "fig_norms.png": "9d6618407b5491399e40d9da419045f0c36ad1ef51e7a736216a4e2e34814819",
+    "fig_phase.png": "1a7faa04b770289229825d05aa8bdc3abab61c56eecb523b2de448e7004a440a"
+  },
+  "driver": "scripts/run_case_fvm_channel_kmm180_metric_norm.py",
+  "implementation": "src/tensorfvm/verification/kmm180_metric_norm.py",
+  "summary_json": "c2d1746386023e96b68d3d003b0ef351f3eab4d3938bec983761ef48345a6cc8"
+}
