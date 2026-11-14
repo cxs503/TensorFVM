@@ -1,5 +1,5 @@
 {
-  "accepted_grid_min": 800,
+  "accepted_grid_min": 400,
   "artifact": {
     "bore_subcell": "src/tensorfvm/verification/artifacts/shallow-water-dam-break/bore_subcell.json",
     "convergence": "src/tensorfvm/verification/artifacts/shallow-water-dam-break/convergence.json",
@@ -220,6 +220,7 @@
   "grid_study": {
     "gate_percent": 5.0,
     "passing_grids": [
+      400,
       800,
       1600
     ],
@@ -228,7 +229,7 @@
         "cases": {
           "ritter-dry": {
             "depth_l1_percent": 1.2619660650790319,
-            "front_series_error_percent": 4.6954352055595105,
+            "front_series_error_percent": 0.9581422054983841,
             "local_extrema": 0,
             "pass": false,
             "verdict_failing": [
@@ -252,12 +253,10 @@
         "cases": {
           "ritter-dry": {
             "depth_l1_percent": 0.6226707907984355,
-            "front_series_error_percent": 6.613261995794985,
+            "front_series_error_percent": 0.6392902275839915,
             "local_extrema": 0,
-            "pass": false,
-            "verdict_failing": [
-              "front_series<5%"
-            ]
+            "pass": true,
+            "verdict_failing": []
           },
           "stoker-wet": {
             "depth_l1_percent": 0.34168313031305353,
@@ -276,12 +275,10 @@
         "cases": {
           "ritter-dry": {
             "depth_l1_percent": 0.30833597748260433,
-            "front_series_error_percent": 6.613261995794985,
+            "front_series_error_percent": 0.6796620151103695,
             "local_extrema": 0,
-            "pass": false,
-            "verdict_failing": [
-              "front_series<5%"
-            ]
+            "pass": true,
+            "verdict_failing": []
           },
           "stoker-wet": {
             "depth_l1_percent": 0.17303304323634983,
@@ -298,7 +295,7 @@
         "cases": {
           "ritter-dry": {
             "depth_l1_percent": 0.15419003450595437,
-            "front_series_error_percent": 1.397618184122598,
+            "front_series_error_percent": 0.5316627610259416,
             "local_extrema": 0,
             "pass": true,
             "verdict_failing": []
@@ -339,7 +336,7 @@
   "honest_fail": [
     {
       "case": "ritter-dry",
-      "detail": "front series error 4.695 % / local extrema 0 at n = 100",
+      "detail": "front series error 0.958 % / local extrema 0 at n = 100",
       "failing_criteria": [
         "front_wetted<5%"
       ],
@@ -354,28 +351,12 @@
       "n": 100
     },
     {
-      "case": "ritter-dry",
-      "detail": "front series error 6.613 % / local extrema 0 at n = 200",
-      "failing_criteria": [
-        "front_series<5%"
-      ],
-      "n": 200
-    },
-    {
       "case": "stoker-wet",
       "detail": "front series error 0.877 % / local extrema 1 at n = 200",
       "failing_criteria": [
         "monotone(no_extrema)"
       ],
       "n": 200
-    },
-    {
-      "case": "ritter-dry",
-      "detail": "front series error 6.613 % / local extrema 0 at n = 400",
-      "failing_criteria": [
-        "front_series<5%"
-      ],
-      "n": 400
     }
   ],
   "ledger_contract": {
@@ -437,10 +418,10 @@
   ],
   "title": "算例池·浅水溃坝 Ritter/Stoker 精确解",
   "verdict": {
-    "accepted_grid_min": 800,
+    "accepted_grid_min": 400,
     "all_criteria_pass_at_pool_grid": true,
     "all_primary_pass_at_pool_grid": true,
-    "honest_fail_count": 5,
+    "honest_fail_count": 3,
     "pool_grid": 1600,
     "tolerance_percent": 5.0
   }

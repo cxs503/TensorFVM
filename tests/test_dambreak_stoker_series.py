@@ -103,10 +103,55 @@ def test_dry_wetted_series_defect_is_locked(runs):
     assert fine["legacy_max_error"] > 50.0 * fine["max_error"]
 
 
-def test_dry_series_converges(runs):
-    coarse = runs[("dry", 400)]["metrics"]["front_series"]["max_error"]
-    fine = runs[("dry", 800)]["metrics"]["front_series"]["max_error"]
-    assert fine < 0.5 * coarse, (coarse, fine)
+def test_dry_series_is_a_discretisation_error(runs):
+    """The graded dry series error must be a *discretisation* error.
+
+    This test used to assert ``err(800) < 0.5 * err(400)``.  That "convergence"
+    was an artefact: the n = 400 maximum came from a sample whose fan window
+    held only three cells, where the fan estimator degenerates to a cell-centre
+    locator and reads ``0.493 dx`` -- a half cell, i.e. a resolution
+    *invariant* relative error (6.613 % at both n = 200 and n = 400).  Once such
+    samples are excluded by ``SERIES_MIN_FAN_CELLS`` the remaining error no
+    longer obeys a factor-2 law (the sample instants differ per grid), so the
+    honest invariants are:
+
+    1. every grid clears the acceptance with a wide margin (``< 1 %``, i.e. 5x
+       inside the 5 % tolerance) -- previously n = 200/400 *failed* at 6.6 %;
+    2. the finest grid is at least as good as every coarser one;
+    3. the coarse-grid samples that used to produce that spurious failure are
+       still visible in the reason inventory as ``fan_cells``.
+    """
+    err400 = runs[("dry", 400)]["metrics"]["front_series"]["max_error"]
+    err800 = runs[("dry", 800)]["metrics"]["front_series"]["max_error"]
+    assert err400 < 0.01 and err800 < 0.01, (err400, err800)
+    assert err800 <= err400, (err400, err800)
+    reasons = runs[("dry", 400)]["metrics"]["front_series"]["unresolved_reasons"]
+    assert reasons.get("fan_cells", 0) >= 1, reasons
+
+
+def test_dry_three_cell_fan_artefact_is_locked(runs):
+    """Lock the defect the fan-cell floor removes: the ungated metric is broken.
+
+    Re-grading the *same* samples with only the travel criterion (the pre-fix
+    gate) must reproduce the spurious ``> 5 %`` failure, and the offending
+    sample must be the 3-cell one.  If someone deletes ``SERIES_MIN_FAN_CELLS``
+    this test still documents why that is not allowed; if the solver's tip
+    resolution changes, the numbers move and the test tells us to re-measure.
+    """
+    from tensorfvm.shallow_water.dam_break import SERIES_MIN_FAN_CELLS
+
+    ungated = {}
+    for n in (400, 800):
+        samples = runs[("dry", n)]["metrics"]["time_to_front_series"]
+        graded = [s for s in samples
+                  if s["travelled_resolved"] and s["headline_error"] == s["headline_error"]]
+        worst = max(graded, key=lambda s: s["headline_error"])
+        ungated[n] = (worst["headline_error"], worst["headline_cells"])
+    # the defect: > 5 % on a well-resolved front, from a 3-cell fan window
+    assert ungated[400][0] > TOLERANCE, ungated
+    assert ungated[400][1] < SERIES_MIN_FAN_CELLS, ungated
+    # and after the floor the same run is comfortably inside tolerance
+    assert runs[("dry", 400)]["metrics"]["front_series"]["max_error"] < 0.01
 
 
 def test_wet_early_transient_bias_is_reported_not_hidden(runs):
@@ -181,20 +226,27 @@ def test_series_gate_is_a_verdict_entry_for_both_cases(runs):
 
 
 def test_series_gate_fails_where_it_should(runs):
-    """Falsification: the gate must be able to fail, and it does at n = 400 dry.
+    """Falsification: the gate must be able to fail.
 
-    This is the honesty check on the new entry -- before it, that same run
-    reported ``all_pass`` although its acceptance quantity was 32 % over
-    tolerance.
+    This test used to point at the n = 400 dry run, whose 6.6 % "failure" was
+    a three-cell-fan artefact (that run now passes legitimately at 0.68 %).
+    The gate is therefore falsified directly: the same graded samples are
+    perturbed by a known >5 % front offset and the gate must reject them, so a
+    regression that makes the entry unconditional is caught.
     """
-    dry400 = runs[("dry", 400)]
-    assert dry400["metrics"]["front_series"]["max_error"] > TOLERANCE
-    assert dry400["verdict"]["front_series<5%"]["pass"] is False
-    assert dry400["verdict"]["all_pass"] is False
-    assert [key for key, item in dry400["verdict"].items()
-            if key != "all_pass" and not item["pass"]] == ["front_series<5%"]
-    # the accepted grid is therefore n >= 800 for the series (the graded value
-    # halves from 1.40 % to 0.42 % in between)
+    from tensorfvm.shallow_water.dam_break import series_metrics
+
+    run = runs[("dry", 400)]
+    samples = [dict(s) for s in run["metrics"]["time_to_front_series"]]
+    gate = series_metrics(RITTER_DRY, samples)
+    assert gate["pass"] is True
+    for shift in (+0.06, -0.06):
+        biased = [dict(s, headline=s["headline"] * (1.0 + shift),
+                       headline_error=abs(s["headline"] * (1.0 + shift) - s["exact"])
+                       / s["exact"]) for s in samples]
+        failed = series_metrics(RITTER_DRY, biased)
+        assert failed["pass"] is False, (shift, failed["max_error"])
+        assert failed["max_error"] > TOLERANCE
     assert runs[("dry", 800)]["verdict"]["all_pass"] is True
 
 
