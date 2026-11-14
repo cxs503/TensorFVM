@@ -64,13 +64,20 @@ def test_short_transient_run(tmp_path):
     config = _build_config("32x16", 0.05, 10, device="cpu")
     result, solver = run_transient(config, warmup_steps=2)
     assert result["cd_mean"] > 0
-    assert result["st"] >= 0
+    # Ten steps cannot establish a periodic regime, so the honest gate must
+    # withhold the Strouhal number instead of reporting a spectral peak of the
+    # rounding noise (the defect this test now pins down).
+    assert result["shedding_detected"] is False
+    assert result["st"] is None
+    assert result["gate_reasons"], "gate_reasons must explain the withheld St"
     assert len(result["force_history"]) == 10
     errors = compute_errors(result)
     assert "cd_mean" in errors
     assert "st" in errors
     assert "computed" in errors["cd_mean"]
     assert "relative_error" in errors["cd_mean"]
+    assert errors["st"]["computed"] is None
+    assert errors["gates"]["passed"] is False
     passed = publish(tmp_path, result, errors)
     assert (tmp_path / "result.json").exists()
     assert (tmp_path / "errors.json").exists()
