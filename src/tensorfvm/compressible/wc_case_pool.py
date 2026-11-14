@@ -313,7 +313,7 @@ def case_pool_entry(nx: int = POOL_GRID, reference_kind: str = "calibrated") -> 
                                         "(via Dumbser et al. JCP 2019 Fig. 21 'Reference')",
                             "tolerance_percent": POOL_TOLERANCE,
                             "comparison_window_x": [0.4, 1.0]},
-        "solver": {"scheme": "MUSCL-Hancock + MC limiter + HLLC + SSP-RK",
+        "solver": {"scheme": "MUSCL-Hancock (2nd order in space and time, van Leer predictor-corrector) + MC limiter + HLLC",
                    "cfl": 0.4, "case": "tensorfvm.compressible.cases.double_blast"},
         "pool_grid": nx,
         "reference": {"kind": primary["reference_kind"], "path": primary["reference"],
