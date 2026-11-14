@@ -1,0 +1,46 @@
+{
+  "Cf": 0.008135948270167365,
+  "Cf_definition": "2*tau_wall/(rho*U_bulk^2)",
+  "Cf_provenance": "computed by scripts/import_mkm1999_channel.py from the imported profile (half-channel symmetry), not tabulated by the database",
+  "Re_tau_reported": 178.12,
+  "U_bulk_plus": 15.67873098359455,
+  "authors": [
+    "Robert D. Moser",
+    "John Kim",
+    "Nagi N. Mansour"
+  ],
+  "centerline_included": true,
+  "doi": "10.1063/1.869966",
+  "family": "Kim, Moin & Moser (1987) spectral method; Re_tau ~ 180 statistics",
+  "files": {
+    "mean": {
+      "csv": "mean.csv",
+      "csv_sha256": "f87097f2a7cfe72f3b512b3fcbf335a83f3808c91e267d3f33691d701f437d07",
+      "rows": 65
+    }
+  },
+  "half_width": 1.0,
+  "header_facts": {
+    "file_created": "Mar 01, 2000",
+    "normalization": "U_tau, h",
+    "numerical_method": ": Kim, Moin & Moser, 1987, J. Fluid Mech. vol 177, 133-166",
+    "re_tau": 178.12,
+    "rows": 65
+  },
+  "header_text": "# The data in this file was extracted from a direct numerical\n# simulation of fully developed plane turbulent channel\n# flow. Particulars are listed below. Note that some of the statistical\n# quantities provided in this data set should be zero due to\n# (statistical) symmetries in the flow. These quantities are reported\n# here none-the-less as an indicator of the quality of the statistics.\n# more statistics from this data set are available at \n# http://www.tam.uiuc.edu/Faculty/Moser/channel \n#\n# Authors: Moser, Kim & Mansour\n# Reference: DNS of Turbulent Channel Flow up to Re_tau=590, 1999,\n#            Physics of Fluids, vol 11, 943-945.\n# Numerical Method: Kim, Moin & Moser, 1987, J. Fluid Mech. vol 177, 133-166 \n# Re_tau = 178.12\n# Normalization: U_tau, h \n# Description: Mean velocities and their derivatives and mean pressure \n# Filename: chan180/profiles/chan180.means \n# Date File Created: Mar 01, 2000 \n#\n#---End of Header---\n# \n# ny = 129,  Re = 178.12\n#\n#       y           y+         Umean      dUmean/dy      Wmean      dWmean/dy      Pmean\n#",
+  "interpolation": "PCHIP, no extrapolation beyond the tabulated y+ range",
+  "journal": "Physics of Fluids 11 (1999), 943-945",
+  "license": "no explicit licence statement on the database page; numerical values redistributed with author attribution, raw archive pinned by sha256",
+  "normalization_csv": "wall units except y_over_delta",
+  "retrieved_utc": "2026-11-14T18:08:33.562+00:00",
+  "source": {
+    "database": "MKM_1999 statistical database, University of Texas turbulence server",
+    "member": "chan180/profiles/chan180.means",
+    "member_sha256": "f54c86e30a869798f140aa004c1e167cd13a6280e988d2794d72ca2be8b5fc82",
+    "tarball_sha256": "1d8be14cb38660ca5f6be4522f5c01d1fabcb434350c693c2f498c404bf02ed2",
+    "url": "https://turbulence.oden.utexas.edu/data/MKM/chandata.tar.gz"
+  },
+  "source_type": "original authors DNS statistical database (not experiment)",
+  "source_values_changed": false,
+  "title": "Direct numerical simulation of turbulent channel flow up to Re_tau = 590"
+}
