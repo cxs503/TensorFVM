@@ -1,0 +1,77 @@
+{
+ "audit": "CASE-FVM-CHANNEL-KMM180 closure-free PASS audit",
+ "audited_route": "docs/case-fvm-channel-kmm180-dns",
+ "audited_files": {
+  "profiles.csv": "2482be3ce81c9a9408aa9e59ea4ec8b76e4d82bac4d7384891f4929d14bb61da",
+  "metrics.json": "7bbc4040b8e3a4966d2bdb2ab8b6b1d13d943fa9187d649934c9127f9be08227"
+ },
+ "criteria": {
+  "uv_share_min": 0.5,
+  "balance_residual_max": 0.05,
+  "flow_throughs_min": 1.0,
+  "log_layer_fraction": 0.2,
+  "low_y_plus": 30.0
+ },
+ "verdict": {
+  "admitted": false,
+  "verdict": "VACUOUS_PASS",
+  "indicators": {
+   "graded_rms_relative": 0.025930513738610366,
+   "graded_criterion": 0.05,
+   "graded_verdict": "PASS",
+   "uv_share_max": 1.2422759851509095e-06,
+   "uv_plus_max_abs": 4e-06,
+   "balance_residual_max": 0.7081801055555554,
+   "balance_residual_fraction": 0.8670396417938396,
+   "initial_condition_drift_max": 0.13525056824141757,
+   "initial_condition_drift_relative": 0.009651023884875619,
+   "uu_plus_max": 0.42557617904399997,
+   "vv_plus_max": 5.5980324e-05,
+   "averaging_time_h_over_u_tau": 1.505037566366232,
+   "flow_through_times": 3.6074300541728297,
+   "averaging_time_plus": 270.9067619459218,
+   "dt_plus_correct": 0.22205472290649328,
+   "dt_plus_shipped": 39.96985012316879
+  },
+  "failed": [
+   "C1 uv_share",
+   "C2 balance_residual"
+  ],
+  "notes": [
+   "C1: resolved Reynolds-shear share is 1.24e-06 (limit 0.50); v_rms^2 max is 5.60e-05 u_tau^2, so the perturbation field left after the transient is numerical noise.",
+   "C2: momentum-balance residual is 0.708 u_tau^2 (limit 0.05); it is 86.7% of the mean imposed shear in the window.",
+   "C3: the averaging window spans 3.61 flow-through times (limit 1.0), i.e. 1.51 h/u_tau = 271 wall-time units, against a viscous relaxation time h^2/nu = 180 h/u_tau; the criterion passes and is not what condemns the run.",
+   "The graded profile sits 0.14 u+ (1.0%) away from the run's own initial condition inside the window, i.e. it never evolved by more than the deviation it is graded on.",
+   "Bookkeeping: dt+ is 0.222, not the 40.0 printed in the shipped report (that value used Re_tau**2 instead of Re_tau); the flow-through count (3.61) is unchanged."
+  ]
+ },
+ "negative_control": {
+  "fixed_point_drift": 2.842170943040401e-14,
+  "balance_residual_max": 8.215650382226158e-15,
+  "uv_plus_max_abs": 0.0,
+  "wall_shear": 0.9952203414241688,
+  "wall_shear_error": -0.0047796585758311805,
+  "dt_plus": 0.6037383539249432,
+  "legacy_dt_plus": 108.67290370648978
+ },
+ "dns_reference": {
+  "re_tau": 182.088,
+  "cf": 0.008123255229619998,
+  "u_bulk_plus": 15.690975649174892,
+  "uv_log_layer": -0.7242390073309377,
+  "uv_at_100": -0.42433736410401507
+ },
+ "transient_probe": {
+  "available": false,
+  "steps": null,
+  "noise": null,
+  "seed": null,
+  "rows": null
+ },
+ "figures": [
+  {
+   "name": "fig_evidence.png",
+   "caption": "(a) graded u+ vs DNS and vs the run's own initial condition; (b) resolved Reynolds shear; (c) momentum balance; (d) drift."
+  }
+ ]
+}
