@@ -241,3 +241,28 @@ tests/test_shallow_water_dam_break.py: 14 passed, 0 failed
 
 **照实记录**: n=200 的格式本身在 t\*=2 仍有 1 个振幅 >1e-4·h₀ 的内部极值
 （`monotone(no_extrema)` FAIL，工件 `verdict_failing` 内登记），本次未改阈值救它。
+
+## 9. 追加（m20028）：验收量进入机器判据
+
+锚点验收句是**随时间的波前位置** `x_f(t)` vs 解析，而不只是 `t* = 2` 的瞬时读数。
+在此之前 `metrics["front_series"]` 有 `pass` 字段但 `_verdict()` 不读它，导致干床
+n = 400 在序列误差 **6.613 % > 5 %** 时仍对外 `all_pass = True`。
+
+现在 `verdict["front_series<5%"]` 对干/湿两算例都分级，并附
+`samples_graded / graded_required`（非空阈 `SERIES_MIN_GRADED_FRACTION = 0.5`，先验声明），
+序列不可分级即判 **FAIL**（证据不足不等于通过）。逐格结果：
+
+| case | n | `x_f(t)` 序列误差 | 分级样本 | verdict failing |
+|---|---|---|---|---|
+| ritter-dry | 100 | 4.695 % | 18/21 | `front_wetted<5%`（legacy 诊断量） |
+| ritter-dry | 200 | 6.613 % | 22/23 | **`front_series<5%`** |
+| ritter-dry | 400 | 6.613 % | 24/25 | **`front_series<5%`** |
+| ritter-dry | 800 | 1.398 % | 24/25 | 无 |
+| ritter-dry | 1600 | 0.425 % | 24/25 | 无 |
+| stoker-wet | 400 | 0.795 % | 22/24 | 无 |
+| stoker-wet | 800 | 0.795 % | 24/25 | 无 |
+| stoker-wet | 1600 | 0.844 % | 24/25 | 无 |
+
+结论：**接受网格 n ≥ 800**（报告 §3 的 0.425 % / 0.844 % 仍是 n = 1600 的发表值，
+均 < 5 %，且远小于 3 %）；序列误差**非单调**（见 AUDIT §8.4），故不宣称其收敛阶。
+图：`series_verdict_gate.png`（数字程序化读自 `convergence.json`）。

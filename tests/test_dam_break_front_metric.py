@@ -117,9 +117,14 @@ def test_wet_branch_verdict_keys_unchanged():
     # extremum above 1e-4 h0 (recorded in the benchmark's own grid table), so
     # ``all_pass`` is grid-dependent there and is not asserted at n=200.
     run = run_case(STOKER_WET, n=1600)
+    # ``front_series<5%`` is the anchor acceptance itself (the whole x_f(t)
+    # series, not only the t* = 2 snapshot); it was promoted from ``metrics``
+    # into the verdict when it was found that the dry branch reported
+    # ``all_pass`` at n = 400 while its graded series error was 6.61 %.
     keys = set(run["verdict"]) - {"all_pass"}
     assert keys == {"shock_position<5%", "step_ratio<5%", "plateau_h2<5%",
-                    "depth_l1<5%", "monotone(no_extrema)", "tv_no_growth<0.5%"}
+                    "depth_l1<5%", "monotone(no_extrema)", "tv_no_growth<0.5%",
+                    "front_series<5%"}
     assert run["verdict"]["all_pass"]
 
 

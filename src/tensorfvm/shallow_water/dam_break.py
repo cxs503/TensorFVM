@@ -84,6 +84,7 @@ __all__ = [
     "figure_profiles_and_convergence",
     "TOLERANCE",
     "BORE_SUBCELL_MAX_CELLS",
+    "SERIES_MIN_GRADED_FRACTION",
 ]
 
 #: acceptance threshold on every headline metric (task criterion: < 5 %)
@@ -114,6 +115,16 @@ FAN_WINDOW = (1e-2, 2e-1)
 #: (as ``unresolved_max_error``); they are simply not admitted to the pass/fail
 #: series metric.
 SERIES_MIN_CELLS = 4.0
+
+#: fraction of the ``x_f(t)`` series samples that must be *graded* before the
+#: series verdict is admitted as evidence at all.
+#:
+#: The series gate is ``max graded error <= TOLERANCE``; without a floor on the
+#: number of graded samples that gate could be satisfied by a run in which the
+#: front was only resolvable for one or two samples ("passing by measuring
+#: nothing").  The floor is declared before any run and both cases clear it by
+#: a wide margin (24 of 25 samples graded, i.e. 0.96, on n = 800 and 1600).
+SERIES_MIN_GRADED_FRACTION = 0.5
 
 #: predeclared resolution criterion for the data-driven wet-bed bore position
 #: (:func:`data_driven_plateau`), in units of ``dx``.
@@ -627,6 +638,41 @@ def _wet_metrics(case: DamBreakCase, solver: ShallowWater1D, volume0: float) -> 
     }
 
 
+def _series_verdict_entry(metrics: dict) -> dict:
+    """Verdict entry for the anchor's own ``x_f(t)`` acceptance quantity.
+
+    ``pass`` requires *both*
+
+    * the worst graded sample error to be ``<= TOLERANCE``, and
+    * at least ``SERIES_MIN_GRADED_FRACTION`` of the scheduled samples to be
+      gradable at all -- an unresolvable series is *insufficient evidence* and
+      fails rather than passes.
+
+    ``value`` is ``None`` when the run produced no gradable sample; the
+    supporting counts are kept in the entry so a reader can audit the gate.
+    """
+    series = metrics.get("front_series") or {}
+    total = int(series.get("samples") or 0)
+    graded = int(series.get("samples_graded") or 0)
+    required = int(math.ceil(SERIES_MIN_GRADED_FRACTION * total)) if total else 0
+    error = series.get("max_error")
+    error = None if error is None else float(error)
+    sufficient = total > 0 and graded >= required
+    passed = bool(error is not None and sufficient and error <= TOLERANCE)
+    return {
+        "value": error,
+        "limit": TOLERANCE,
+        "pass": passed,
+        "samples": total,
+        "samples_graded": graded,
+        "graded_required": required,
+        "unresolved_max_error": series.get("unresolved_max_error"),
+        "note": ("anchor acceptance x_f(t) series (graded max error); fails when "
+                 "undefined or when fewer than SERIES_MIN_GRADED_FRACTION of the "
+                 "samples are resolvable"),
+    }
+
+
 def _verdict(case: DamBreakCase, metrics: dict) -> dict:
     """Headline checks against the predeclared 5 % tolerance."""
     if case.kind == "dry":
@@ -660,6 +706,12 @@ def _verdict(case: DamBreakCase, metrics: dict) -> dict:
         }
         for key, value in checks.items()
     }
+    # The anchor acceptance is the *whole* ``x_f(t)`` series, not only the
+    # end-of-run snapshot already covered above.  Before this entry the dry-bed
+    # run reported ``all_pass`` at n = 400 while the same run's graded series
+    # error was 6.61 % > 5 %: the acceptance quantity was measured but never
+    # graded.  It is graded here (see :func:`_series_verdict_entry`).
+    verdict["front_series<5%"] = _series_verdict_entry(metrics)
     verdict["all_pass"] = bool(all(item["pass"] for item in verdict.values()))
     return verdict
 
@@ -741,11 +793,21 @@ def convergence_study(case: DamBreakCase, resolutions=(100, 200, 400, 800, 1600,
                      "front_wetted_diagnostic": m["front_wetted_error"]}
                     if case.kind == "dry"
                     else {"shock": m["shock_error"], "step": m["step_ratio_error"]})
+        series = m["front_series"]
+        failing = [key for key, item in run["verdict"].items()
+                   if key != "all_pass" and not item["pass"]]
         rows.append({
             "n": n,
             "dx": run["discretisation"]["dx"],
             "depth_l1": m["depth_l1"],
             "headline": headline,
+            # the anchor acceptance itself (x_f(t) series) per grid, so the
+            # refinement table cannot hide a grid on which it fails
+            "front_series": series["max_error"],
+            "front_series_graded": series["samples_graded"],
+            "front_series_samples": series["samples"],
+            "verdict_failing": failing,
+            "verdict_all_pass": run["verdict"]["all_pass"],
             "tv_ratio": m["tv_ratio"],
             "local_extrema": m["local_extrema"],
         })
