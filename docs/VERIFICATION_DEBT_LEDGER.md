@@ -482,3 +482,28 @@
   对 `y+` 而非 `y/δ` 求导会留下 `Re_tau` 因子（报 103 % 缺口）；两者都不抛错。
 - 未做: k-ε 壁函数分支没有解析底层（C1–C4 不适用）；`y+≳5` 之上同一比较会变成判模型
   而非判求解器，未越界使用。
+
+### D14 CASE-FVM-PERIODIC-HILLS 第十二回合（m20920, 2026-11-14）—— SST 输运方程三处离散缺陷已修，锚点仍 OPEN
+- 起因: round 11 以 `x_r/H = 2.05` vs 5.34 收束，并把结论记成「SST 在 Re=2800 过扩散」。
+  rounds 10-11 只对**代数闭包**做过验证，从未检查 `k`/`omega` 的**输运离散**。
+- 交付: `src/tensorfvm/periodic_hill_sst.py` 三处修复
+  （① 扩散系数多除一次 `sigma`，omega 的有效涡扩散因此是应有值的 2 倍；
+   ② 文档写明但从未实施的 `omega` 壁面 Dirichlet `60 nu/(beta1 d^2)`，实际传的是 0；
+   ③ 内部面系数南北不对称，SST 算子改为双面平均，体积加权对称性入测；
+   附: 改用闭包的 F1 混合 `gamma`/`sigma_k`/`sigma_omega`，omega 产生项改写成
+   `gamma*(P_k/nu_t)` 消除 `nu_t->0` 的 1/1e-12 假值）
+  + `tests/test_periodic_hill_sst_transport_coefficients.py`（5 测全绿，
+  独立参考算子/闭式/精确再现，非自证）+ `docs/case-periodic-hills/ROUND12.md`
+  + `scripts/round12_analysis.py`。
+- 撤回: `ROUND11.md` §6 的「SST 过扩散」**模型类结论**不成立——它测的是一个解了
+  错误方程的求解器；改为 WITHHELD 直至修复后重跑出数。
+- 待办（本单未完成的部分，交下一单）: cj3059 的 96x48 时间平均重跑（提交时仍在跑）
+  → 读 `docs/case-periodic-hills/round11_sst_r12-96x48.json`，用
+  `scripts/round12_analysis.py` 打分，判 `x_r/H` 是否进 5.34±10%。
+  若仍不达标，按「先分离两个修复的贡献」做消融（需要给 `SSTKOmegaConfig` 加
+  `omega_wall` 开关）。
+- 已知未修（明示）: 父求解器 `periodic_hill.py` 的动量扩散算子仍是「南面用 P 元胞系数」，
+  同样的不对称在这里改造会牵动 rounds 4-11 全部已发布的动量数字，故只记录不改。
+- 环境坑（重要）: site-packages 的 editable `.pth` 指向 `/srv/tensor/agent/work/m20057/src`，
+  裸 `python -m pytest` 会导到别人的工作树（本单实测新测试曾因此报 AttributeError）。
+  必须 `PYTHONPATH=<本工作树>/src`，集群用 `stage_dir` 而不是 `ref=main`。
