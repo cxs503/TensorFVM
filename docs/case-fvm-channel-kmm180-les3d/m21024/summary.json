@@ -1,0 +1,96 @@
+{
+ "anchor": "CASE-FVM-CHANNEL-KMM180",
+ "diffusion_truncation": {
+  "finding": "wall cell inconsistent at O(1) (half-cell conductance u(yc0)/yc0 approximates u'(0) with O(h) error divided by O(h)); interior second order",
+  "interior_max_residual": {
+   "24": 0.003432483381948903,
+   "48": 0.0008655508941308732,
+   "96": 0.00021685701627871534
+  },
+  "interior_order_fit": 1.9875621784837223,
+  "wall_residual_order_fit": -0.102590916544883,
+  "wall_row_residual": {
+   "24": 0.21796036613416359,
+   "48": 0.23402403975821007,
+   "96": 0.24203558298339023
+  }
+ },
+ "laminar_steady_state": {
+  "diffusion_number": 1.422464479949307,
+  "dt": 0.0015,
+  "final_deviation": 0.009659809727410647,
+  "history_steps_time_deviation": [
+   [
+    500,
+    0.7499999999999913,
+    0.3053519114580025
+   ],
+   [
+    1000,
+    1.5000000000000013,
+    0.1191991894074201
+   ],
+   [
+    1500,
+    2.2500000000000298,
+    0.04521287022951694
+   ],
+   [
+    2000,
+    3.000000000000058,
+    0.015808204192742314
+   ],
+   [
+    2500,
+    3.7500000000000866,
+    0.004121795518917501
+   ],
+   [
+    3000,
+    4.500000000000115,
+    0.00761865782258686
+   ],
+   [
+    3500,
+    5.250000000000143,
+    0.009079300809286183
+   ],
+   [
+    4000,
+    6.000000000000171,
+    0.009659809727410647
+   ]
+  ],
+  "note": "deviation stalls at the O(h) half-cell wall-flux truncation; dt=5e-3 used by the parked xfail test violated the explicit limit (3 nu dt/dy0^2 = 4.7 > 2) and diverged to 1e129",
+  "wall_shear_vs_body_force_relative": 0.000379078564838764
+ },
+ "module": "src/tensorfvm/channel_les3d.py",
+ "production_grid": {
+  "convective_cfl_ic": 0.20372946886716056,
+  "diffusion_number_molecular": 0.5260598304959655,
+  "diffusion_number_with_sgs": 0.6004985257614929,
+  "dt": 0.001,
+  "dx_plus": 17.671458676442587,
+  "dz_plus": 17.671458676442587,
+  "nx": 64,
+  "ny": 64,
+  "nz": 32,
+  "status": "NOT_RUN: diverges in ~10-250 steps (nut runaway at the wall rows)",
+  "y1_plus": 0.5065814863394669
+ },
+ "reichardt_vs_dns": {
+  "dns_u_plus_at_30": 13.8529857527932,
+  "log_region_rms_vs_dns": {
+   "cells": 4,
+   "high": 36.4176,
+   "low": 30.0,
+   "max_relative": 0.02180955554275007,
+   "mean_relative": -0.01946806780664779,
+   "rms_relative": 0.019542854537033635
+  },
+  "max_relative_all": 0.03446404440110007,
+  "max_relative_log_region_30_150": 0.02180955554275007,
+  "u_plus_at_30": 13.544908517072166
+ },
+ "unit": "m21024"
+}
