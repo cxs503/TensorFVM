@@ -124,15 +124,27 @@ def _summary_markdown(payload: dict) -> str:
         lines.append("")
     lines.append("## Grid convergence")
     lines.append("")
-    lines.append("| case | n | dx [m] | depth L1 | headline error | TV ratio | extrema |")
-    lines.append("|---|---|---|---|---|---|---|")
+    lines.append("| case | n | dx [m] | depth L1 | headline error | "
+                 "x_f(t) series error | series graded | verdict failing |")
+    lines.append("|---|---|---|---|---|---|---|---|")
     for key, study in payload["studies"].items():
         for row in study["rows"]:
             headline = next(iter(row["headline"].values()))
+            series = row.get("front_series")
+            graded = row.get("front_series_graded")
+            samples = row.get("front_series_samples")
+            graded_cell = ("n/a" if graded is None else f"{graded}/{samples}")
+            failing = row.get("verdict_failing")
+            failing_cell = ("none" if failing == [] else
+                            (", ".join(failing) if failing else "n/a"))
             lines.append(f"| {key} | {row['n']} | {row['dx']:.6f} | "
                          f"{row['depth_l1']:.3e} | {_fmt_error(headline)} | "
-                         f"{row['tv_ratio']:.6f} | {row['local_extrema']} |")
+                         f"{_fmt_error(series)} | {graded_cell} | {failing_cell} |")
         lines.append("")
+    lines.append("The ``x_f(t) series error`` column *is* the case acceptance "
+                 "(whole transient vs the closed form, < 5 %); a grid that fails "
+                 "it is listed under ``verdict failing`` rather than dropped.")
+    lines.append("")
     if payload.get("front_definitions"):
         lines.append("## Dry-bed front definition study")
         lines.append("")
