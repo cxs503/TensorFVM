@@ -173,6 +173,13 @@ def main() -> None:
         "finest_verdict": summary["finest_verdict"],
     })
     save_fields(out / "fields.npz", solvers)
+    if len(rows) >= 3:
+        # discretisation uncertainty of this very sequence (Roache GCI); a separate
+        # artefact so the case gate above is untouched
+        from tensorfvm.cavity_uncertainty import study as uq_study
+        write_json(out / "uncertainty_spatial.json",
+                   uq_study({n: (solvers[n].u.detach(), solvers[n].v.detach())
+                             for n in sorted(solvers)}))
     print(json.dumps({"resolutions": summary["resolutions"],
                       "benchmark": summary["benchmark"],
                       "continuation_check": continuation_check}, indent=1))
