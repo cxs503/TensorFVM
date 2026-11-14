@@ -1,0 +1,81 @@
+{
+ "reference": {
+  "case": "ERCOFTAC UFR 3-30 periodic hills, Re_b = 2800",
+  "x_r_over_H": 5.34,
+  "x_s_over_H": 0.227,
+  "source": "Breuer et al. 2009, Computers & Fluids 38:433, doi:10.1016/j.compfluid.2008.05.002 (values as tabulated by Volpiani et al. 2021, section III)",
+  "authority": "feature_ledger CASE-FVM-PERIODIC-HILLS acceptance line"
+ },
+ "tolerance": 0.1,
+ "runs": {
+  "96x48": {
+   "config": {
+    "nx": 96,
+    "ny": 48,
+    "steps": 20000,
+    "sample_every": 20,
+    "burn_in_steps": 8000,
+    "time_step_s": 0.02,
+    "end_time": 400.0,
+    "averaging_window": [
+     160.0,
+     400.0
+    ],
+    "reynolds": 2800.0,
+    "hill_amplitude": 1.0,
+    "production_limit": null,
+    "convection_blend": 0.75,
+    "bulk_velocity": 1.0,
+    "nu": 0.00035714285714285714
+   },
+   "samples": 601,
+   "wall_clock_s": 1082.7884466648102,
+   "x_r_over_H": null,
+   "x_s_over_H": null,
+   "x_r_rel_error": null,
+   "x_r_pass": false,
+   "profile_stations": 7,
+   "profile_stations_pass": 0,
+   "profile_worst": {
+    "x_over_H": 2.0,
+    "reference": 0.25,
+    "computed": -0.029602699650337835,
+    "delta": -0.27960269965033785,
+    "error": 1.1184107986013514,
+    "band": "relative",
+    "pass": false
+   },
+   "profile_ok": false,
+   "stationary": false,
+   "reattachment_coverage": 0.0,
+   "x_r_stationarity": {
+    "samples": 0,
+    "finite_samples": 0,
+    "t_start": null,
+    "t_end": null,
+    "mean": null,
+    "blocks": [],
+    "spread_rel": null,
+    "drift_rel": null,
+    "ok": false,
+    "reason": "fewer samples than blocks"
+   },
+   "block_window": {
+    "samples": 0,
+    "ok": false,
+    "blocks_used": 0,
+    "blocks_dropped": 8,
+    "t_start": null,
+    "t_end": null,
+    "mean": null,
+    "spread_rel": null,
+    "drift_rel": null,
+    "reason": "only 0 samples for 8 blocks"
+   },
+   "max_nu_t_ratio_last": 65.51575615694819,
+   "gate_pass": false
+  }
+ },
+ "finest": "96x48",
+ "all_pass": false
+}
