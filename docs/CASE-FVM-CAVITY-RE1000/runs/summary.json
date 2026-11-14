@@ -1,0 +1,1232 @@
+{
+ "case": "CASE-FVM-CAVITY-RE1000",
+ "anchor": "CASE-FVM-CAVITY-RE1000",
+ "reference": "U. Ghia, K.N. Ghia, C.T. Shin, J. Comput. Phys. 48 (1982) 387-411, Table I (u at x = L/2), Table II (v at y = L/2), primary-vortex centre",
+ "reynolds": 1000.0,
+ "lid_velocity": 1.0,
+ "pool_tolerance": 0.05,
+ "solver": "tensorfvm.lid_cavity.LidCavitySolver",
+ "resolutions": [
+  32,
+  64,
+  128
+ ],
+ "cases": [
+  {
+   "case": "CASE-FVM-CAVITY-RE1000",
+   "reference": "U. Ghia, K.N. Ghia, C.T. Shin, J. Comput. Phys. 48 (1982) 387-411, Table I (u at x = L/2), Table II (v at y = L/2), primary-vortex centre",
+   "reynolds": 1000.0,
+   "lid_velocity": 1.0,
+   "n": 32,
+   "h": 0.03125,
+   "viscosity": 0.001,
+   "initial_condition": "rest",
+   "solver": {
+    "class": "tensorfvm.lid_cavity.LidCavitySolver",
+    "discretisation": "staggered MAC FVM, conservative van Leer flux, explicit projection, DCT-II Neumann Poisson",
+    "cfl": 0.15,
+    "tolerance": 1e-07,
+    "max_steps": 250000
+   },
+   "steps": 30500,
+   "converged": true,
+   "residual": 9.758993021099135e-08,
+   "max_divergence": 3.552713678800501e-15,
+   "dt_final": 0.0046875,
+   "wall_seconds": 125.47,
+   "u": {
+    "profiles": {
+     "coord": [
+      1.0,
+      0.9766,
+      0.9688,
+      0.9609,
+      0.9531,
+      0.8516,
+      0.7344,
+      0.6172,
+      0.5,
+      0.4531,
+      0.2813,
+      0.1719,
+      0.1016,
+      0.0703,
+      0.0625,
+      0.0547,
+      0.0
+     ],
+     "reference": [
+      1.0,
+      0.65928,
+      0.57492,
+      0.51117,
+      0.46604,
+      0.33304,
+      0.18719,
+      0.05702,
+      -0.0608,
+      -0.10648,
+      -0.27805,
+      -0.38289,
+      -0.2973,
+      -0.2222,
+      -0.20196,
+      -0.18109,
+      0.0
+     ],
+     "computed": [
+      0.7967039680472507,
+      0.6294536206901988,
+      0.555712549795986,
+      0.4870966606040247,
+      0.4343865691698013,
+      0.3027869905511876,
+      0.16972233253215416,
+      0.044233873349450385,
+      -0.06853706437801914,
+      -0.11175975546599433,
+      -0.28367079819982965,
+      -0.316430836724452,
+      -0.21804092997128985,
+      -0.15554040332018715,
+      -0.1398840475062898,
+      -0.12405476536874185,
+      -0.008158890304786705
+     ],
+     "delta": [
+      -0.20329603195274926,
+      -0.029826379309801143,
+      -0.01920745020401393,
+      -0.024073339395975335,
+      -0.031653430830198725,
+      -0.03025300944881243,
+      -0.017467667467845838,
+      -0.012786126650549616,
+      -0.007737064378019139,
+      -0.0052797554659943235,
+      -0.005620798199829635,
+      0.06645916327554802,
+      0.07925907002871016,
+      0.06665959667981286,
+      0.0620759524937102,
+      0.05703523463125815,
+      -0.008158890304786705
+     ]
+    },
+    "max_abs_error": 0.20329603195274926,
+    "rms_error": 0.0632398762590608,
+    "max_abs_error_consistent": 0.20329603195274926,
+    "rms_error_consistent": 0.0632398762590608,
+    "consistent_point_count": 17,
+    "suspect_points": [],
+    "extremum": {
+     "min_reference": [
+      0.1719,
+      -0.38289
+     ],
+     "min_computed": [
+      0.1719,
+      -0.316430836724452
+     ],
+     "max_reference": [
+      1.0,
+      1.0
+     ],
+     "max_computed": [
+      1.0,
+      0.7967039680472507
+     ]
+    }
+   },
+   "v": {
+    "profiles": {
+     "coord": [
+      1.0,
+      0.9688,
+      0.9609,
+      0.9531,
+      0.9453,
+      0.9063,
+      0.8594,
+      0.8047,
+      0.5,
+      0.2344,
+      0.2266,
+      0.1563,
+      0.0938,
+      0.0781,
+      0.0703,
+      0.0625,
+      0.0
+     ],
+     "reference": [
+      0.0,
+      -0.21388,
+      -0.27669,
+      -0.33714,
+      -0.39188,
+      -0.5155,
+      -0.42665,
+      -0.31966,
+      0.02526,
+      0.32235,
+      0.33075,
+      0.37095,
+      0.32627,
+      0.30353,
+      0.29012,
+      0.27485,
+      0.0
+     ],
+     "computed": [
+      0.03747043935950789,
+      -0.18441396183875858,
+      -0.2447417542379829,
+      -0.29609894228759187,
+      -0.33895999123772136,
+      -0.4401140478736947,
+      -0.39992167786876004,
+      -0.3021591590709935,
+      0.02546553979320903,
+      0.2978746948847033,
+      0.3034099933758669,
+      0.3154449049885548,
+      0.2738257011778831,
+      0.25425302997063537,
+      0.24306423372161653,
+      0.23104337025977412,
+      0.05127902174529951
+     ],
+     "delta": [
+      0.03747043935950789,
+      0.02946603816124141,
+      0.0319482457620171,
+      0.041041057712408124,
+      0.05292000876227865,
+      0.07538595212630528,
+      0.026728322131239934,
+      0.0175008409290065,
+      0.00020553979320902735,
+      -0.02447530511529672,
+      -0.027340006624133106,
+      -0.05550509501144518,
+      -0.05244429882211693,
+      -0.04927697002936465,
+      -0.047055766278383454,
+      -0.043806629740225866,
+      0.05127902174529951
+     ]
+    },
+    "max_abs_error": 0.07538595212630528,
+    "rms_error": 0.042599637125524184,
+    "max_abs_error_consistent": 0.07538595212630528,
+    "rms_error_consistent": 0.042599637125524184,
+    "consistent_point_count": 17,
+    "suspect_points": [],
+    "extremum": {
+     "min_reference": [
+      0.9063,
+      -0.5155
+     ],
+     "min_computed": [
+      0.9063,
+      -0.4401140478736947
+     ],
+     "max_reference": [
+      0.1563,
+      0.37095
+     ],
+     "max_computed": [
+      0.1563,
+      0.3154449049885548
+     ]
+    }
+   },
+   "vortex_centre": {
+    "computed": [
+     0.546875,
+     0.609375
+    ],
+    "reference": [
+     0.5313,
+     0.5625
+    ],
+    "displacement": 0.046875
+   },
+   "streamfunction": {
+    "psi_min": -0.11086017364234126,
+    "psi_max_interior": 0.0019286662673007053
+   },
+   "criteria": {
+    "C1_u_profile_max_abs": {
+     "statement": "max |u_computed - u_Ghia| over all Table I points, units of U",
+     "value": 0.20329603195274926,
+     "threshold": 0.05,
+     "comparator": "le",
+     "unit": "U",
+     "pass": false,
+     "margin": -0.15329603195274927
+    },
+    "C2_v_profile_max_abs": {
+     "statement": "max |v_computed - v_Ghia| over all Table II points, units of U",
+     "value": 0.07538595212630528,
+     "threshold": 0.05,
+     "comparator": "le",
+     "unit": "U",
+     "pass": false,
+     "margin": -0.025385952126305275
+    },
+    "C3_u_min_relative": {
+     "statement": "relative error of the deepest reverse-flow u on x = L/2 (Ghia u_min)",
+     "value": 0.17357247061962447,
+     "threshold": 0.05,
+     "comparator": "le",
+     "unit": "1",
+     "pass": false,
+     "margin": -0.12357247061962447
+    },
+    "C4_v_max_relative": {
+     "statement": "relative error of the strongest v on y = L/2 (Ghia v_max)",
+     "value": 0.14962958622845446,
+     "threshold": 0.05,
+     "comparator": "le",
+     "unit": "1",
+     "pass": false,
+     "margin": -0.09962958622845446
+    },
+    "C5_vortex_centre": {
+     "statement": "primary-vortex centre displacement from the Ghia value, in L",
+     "value": 0.046875,
+     "threshold": 0.05,
+     "comparator": "le",
+     "unit": "L",
+     "pass": true,
+     "margin": 0.0031250000000000028
+    },
+    "C6_divergence_free": {
+     "statement": "max |div u| of the converged discrete field (closed-box compatibility)",
+     "value": 3.552713678800501e-15,
+     "threshold": 1e-10,
+     "comparator": "le",
+     "unit": "U/L",
+     "pass": true,
+     "margin": 9.99964472863212e-11
+    },
+    "C7_steady_state": {
+     "statement": "steady-state residual max|du/dt|, |dv/dt| of the marching scheme",
+     "value": 9.758993021099135e-08,
+     "threshold": 1e-06,
+     "comparator": "le",
+     "unit": "U^2/L",
+     "pass": true,
+     "margin": 9.024100697890086e-07
+    },
+    "_extremum_basis": {
+     "u": {
+      "reference": -0.38289,
+      "computed": -0.316430836724452
+     },
+     "v": {
+      "reference": 0.37095,
+      "computed": 0.3154449049885548
+     }
+    }
+   },
+   "verdict": "FAIL",
+   "generated": "2026-11-14T11:43:23Z"
+  },
+  {
+   "case": "CASE-FVM-CAVITY-RE1000",
+   "reference": "U. Ghia, K.N. Ghia, C.T. Shin, J. Comput. Phys. 48 (1982) 387-411, Table I (u at x = L/2), Table II (v at y = L/2), primary-vortex centre",
+   "reynolds": 1000.0,
+   "lid_velocity": 1.0,
+   "n": 64,
+   "h": 0.015625,
+   "viscosity": 0.001,
+   "initial_condition": "n=32 bilinear prolongation",
+   "solver": {
+    "class": "tensorfvm.lid_cavity.LidCavitySolver",
+    "discretisation": "staggered MAC FVM, conservative van Leer flux, explicit projection, DCT-II Neumann Poisson",
+    "cfl": 0.15,
+    "tolerance": 1e-07,
+    "max_steps": 250000
+   },
+   "steps": 59750,
+   "converged": true,
+   "residual": 9.732030292752825e-08,
+   "max_divergence": 2.4868995751603507e-14,
+   "dt_final": 0.00234375,
+   "wall_seconds": 331.36,
+   "u": {
+    "profiles": {
+     "coord": [
+      1.0,
+      0.9766,
+      0.9688,
+      0.9609,
+      0.9531,
+      0.8516,
+      0.7344,
+      0.6172,
+      0.5,
+      0.4531,
+      0.2813,
+      0.1719,
+      0.1016,
+      0.0703,
+      0.0625,
+      0.0547,
+      0.0
+     ],
+     "reference": [
+      1.0,
+      0.65928,
+      0.57492,
+      0.51117,
+      0.46604,
+      0.33304,
+      0.18719,
+      0.05702,
+      -0.0608,
+      -0.10648,
+      -0.27805,
+      -0.38289,
+      -0.2973,
+      -0.2222,
+      -0.20196,
+      -0.18109,
+      0.0
+     ],
+     "computed": [
+      0.9706896966263395,
+      0.6456788488805569,
+      0.5648409597920684,
+      0.5028761546151226,
+      0.46064536311140925,
+      0.32780310759436415,
+      0.18322284925986645,
+      0.05371504450824094,
+      -0.06336245498761278,
+      -0.10866681865970473,
+      -0.27984036712501603,
+      -0.37218421198606744,
+      -0.27844615962611186,
+      -0.20353926112401985,
+      -0.1841116149853665,
+      -0.1643622929559954,
+      -0.0048228967794127775
+     ],
+     "delta": [
+      -0.029310303373660473,
+      -0.013601151119443045,
+      -0.0100790402079316,
+      -0.00829384538487743,
+      -0.005394636888590765,
+      -0.005236892405635851,
+      -0.00396715074013354,
+      -0.0033049554917590623,
+      -0.002562454987612782,
+      -0.0021868186597047284,
+      -0.0017903671250160125,
+      0.010705788013932571,
+      0.018853840373888153,
+      0.01866073887598016,
+      0.01784838501463351,
+      0.016727707044004614,
+      -0.0048228967794127775
+     ]
+    },
+    "max_abs_error": 0.029310303373660473,
+    "rms_error": 0.012723641225176874,
+    "max_abs_error_consistent": 0.029310303373660473,
+    "rms_error_consistent": 0.012723641225176874,
+    "consistent_point_count": 17,
+    "suspect_points": [],
+    "extremum": {
+     "min_reference": [
+      0.1719,
+      -0.38289
+     ],
+     "min_computed": [
+      0.1719,
+      -0.37218421198606744
+     ],
+     "max_reference": [
+      1.0,
+      1.0
+     ],
+     "max_computed": [
+      1.0,
+      0.9706896966263395
+     ]
+    }
+   },
+   "v": {
+    "profiles": {
+     "coord": [
+      1.0,
+      0.9688,
+      0.9609,
+      0.9531,
+      0.9453,
+      0.9063,
+      0.8594,
+      0.8047,
+      0.5,
+      0.2344,
+      0.2266,
+      0.1563,
+      0.0938,
+      0.0781,
+      0.0703,
+      0.0625,
+      0.0
+     ],
+     "reference": [
+      0.0,
+      -0.21388,
+      -0.27669,
+      -0.33714,
+      -0.39188,
+      -0.5155,
+      -0.42665,
+      -0.31966,
+      0.02526,
+      0.32235,
+      0.33075,
+      0.37095,
+      0.32627,
+      0.30353,
+      0.29012,
+      0.27485,
+      0.0
+     ],
+     "computed": [
+      0.01973391982409828,
+      -0.20356187582854424,
+      -0.2662208715110416,
+      -0.32616432416237867,
+      -0.3811172945955277,
+      -0.502620323194027,
+      -0.42500769722322657,
+      -0.31554232806933286,
+      0.024638327909945613,
+      0.3180443816110964,
+      0.32613347244803204,
+      0.36228285758895074,
+      0.31895703165369693,
+      0.2967168634142066,
+      0.2835775361910377,
+      0.2687636075251604,
+      0.017573124630623674
+     ],
+     "delta": [
+      0.01973391982409828,
+      0.01031812417145575,
+      0.010469128488958368,
+      0.010975675837621324,
+      0.010762705404472328,
+      0.012879676805972906,
+      0.0016423027767734077,
+      0.004117671930667144,
+      -0.0006216720900543878,
+      -0.004305618388903643,
+      -0.004616527551967953,
+      -0.008667142411049267,
+      -0.007312968346303073,
+      -0.006813136585793411,
+      -0.006542463808962284,
+      -0.006086392474839608,
+      0.017573124630623674
+     ]
+    },
+    "max_abs_error": 0.01973391982409828,
+    "rms_error": 0.009795711047832797,
+    "max_abs_error_consistent": 0.01973391982409828,
+    "rms_error_consistent": 0.009795711047832797,
+    "consistent_point_count": 17,
+    "suspect_points": [],
+    "extremum": {
+     "min_reference": [
+      0.9063,
+      -0.5155
+     ],
+     "min_computed": [
+      0.9063,
+      -0.502620323194027
+     ],
+     "max_reference": [
+      0.1563,
+      0.37095
+     ],
+     "max_computed": [
+      0.1563,
+      0.36228285758895074
+     ]
+    }
+   },
+   "vortex_centre": {
+    "computed": [
+     0.5234375,
+     0.5703125
+    ],
+    "reference": [
+     0.5313,
+     0.5625
+    ],
+    "displacement": 0.007862499999999994
+   },
+   "streamfunction": {
+    "psi_min": -0.11795804425297632,
+    "psi_max_interior": 0.0016907921607260622
+   },
+   "criteria": {
+    "C1_u_profile_max_abs": {
+     "statement": "max |u_computed - u_Ghia| over all Table I points, units of U",
+     "value": 0.029310303373660473,
+     "threshold": 0.05,
+     "comparator": "le",
+     "unit": "U",
+     "pass": true,
+     "margin": 0.02068969662633953
+    },
+    "C2_v_profile_max_abs": {
+     "statement": "max |v_computed - v_Ghia| over all Table II points, units of U",
+     "value": 0.01973391982409828,
+     "threshold": 0.05,
+     "comparator": "le",
+     "unit": "U",
+     "pass": true,
+     "margin": 0.030266080175901725
+    },
+    "C3_u_min_relative": {
+     "statement": "relative error of the deepest reverse-flow u on x = L/2 (Ghia u_min)",
+     "value": 0.027960479547474656,
+     "threshold": 0.05,
+     "comparator": "le",
+     "unit": "1",
+     "pass": true,
+     "margin": 0.022039520452525347
+    },
+    "C4_v_max_relative": {
+     "statement": "relative error of the strongest v on y = L/2 (Ghia v_max)",
+     "value": 0.02336471872502835,
+     "threshold": 0.05,
+     "comparator": "le",
+     "unit": "1",
+     "pass": true,
+     "margin": 0.026635281274971653
+    },
+    "C5_vortex_centre": {
+     "statement": "primary-vortex centre displacement from the Ghia value, in L",
+     "value": 0.007862499999999994,
+     "threshold": 0.05,
+     "comparator": "le",
+     "unit": "L",
+     "pass": true,
+     "margin": 0.04213750000000001
+    },
+    "C6_divergence_free": {
+     "statement": "max |div u| of the converged discrete field (closed-box compatibility)",
+     "value": 2.4868995751603507e-14,
+     "threshold": 1e-10,
+     "comparator": "le",
+     "unit": "U/L",
+     "pass": true,
+     "margin": 9.99751310042484e-11
+    },
+    "C7_steady_state": {
+     "statement": "steady-state residual max|du/dt|, |dv/dt| of the marching scheme",
+     "value": 9.732030292752825e-08,
+     "threshold": 1e-06,
+     "comparator": "le",
+     "unit": "U^2/L",
+     "pass": true,
+     "margin": 9.026796970724717e-07
+    },
+    "_extremum_basis": {
+     "u": {
+      "reference": -0.38289,
+      "computed": -0.37218421198606744
+     },
+     "v": {
+      "reference": 0.37095,
+      "computed": 0.36228285758895074
+     }
+    }
+   },
+   "verdict": "PASS",
+   "generated": "2026-11-14T11:43:23Z"
+  },
+  {
+   "case": "CASE-FVM-CAVITY-RE1000",
+   "reference": "U. Ghia, K.N. Ghia, C.T. Shin, J. Comput. Phys. 48 (1982) 387-411, Table I (u at x = L/2), Table II (v at y = L/2), primary-vortex centre",
+   "reynolds": 1000.0,
+   "lid_velocity": 1.0,
+   "n": 128,
+   "h": 0.0078125,
+   "viscosity": 0.001,
+   "initial_condition": "n=64 bilinear prolongation",
+   "solver": {
+    "class": "tensorfvm.lid_cavity.LidCavitySolver",
+    "discretisation": "staggered MAC FVM, conservative van Leer flux, explicit projection, DCT-II Neumann Poisson",
+    "cfl": 0.15,
+    "tolerance": 1e-07,
+    "max_steps": 250000
+   },
+   "steps": 104250,
+   "converged": true,
+   "residual": 9.88833903647901e-08,
+   "max_divergence": 1.2079226507921703e-13,
+   "dt_final": 0.001171875,
+   "wall_seconds": 1288.51,
+   "u": {
+    "profiles": {
+     "coord": [
+      1.0,
+      0.9766,
+      0.9688,
+      0.9609,
+      0.9531,
+      0.8516,
+      0.7344,
+      0.6172,
+      0.5,
+      0.4531,
+      0.2813,
+      0.1719,
+      0.1016,
+      0.0703,
+      0.0625,
+      0.0547,
+      0.0
+     ],
+     "reference": [
+      1.0,
+      0.65928,
+      0.57492,
+      0.51117,
+      0.46604,
+      0.33304,
+      0.18719,
+      0.05702,
+      -0.0608,
+      -0.10648,
+      -0.27805,
+      -0.38289,
+      -0.2973,
+      -0.2222,
+      -0.20196,
+      -0.18109,
+      0.0
+     ],
+     "computed": [
+      0.9999450769398999,
+      0.6601102004929125,
+      0.5767279085139185,
+      0.5134955999570536,
+      0.469572754096968,
+      0.33501780920257085,
+      0.1873632234176171,
+      0.056238489685025365,
+      -0.06236209238514353,
+      -0.1083098281555958,
+      -0.28011261330405895,
+      -0.3853676434683154,
+      -0.2953035536751806,
+      -0.21800802321676868,
+      -0.19765270167437815,
+      -0.17689432097598992,
+      -0.0014946874308396103
+     ],
+     "delta": [
+      -5.492306010013159e-05,
+      0.0008302004929124918,
+      0.0018079085139185436,
+      0.0023255999570536146,
+      0.003532754096968016,
+      0.001977809202570846,
+      0.0001732234176171077,
+      -0.0007815103149746358,
+      -0.0015620923851435292,
+      -0.0018298281555957918,
+      -0.0020626133040589356,
+      -0.002477643468315416,
+      0.001996446324819434,
+      0.004191976783231327,
+      0.00430729832562185,
+      0.004195679024010079,
+      -0.0014946874308396103
+     ]
+    },
+    "max_abs_error": 0.00430729832562185,
+    "rms_error": 0.002455876947272071,
+    "max_abs_error_consistent": 0.00430729832562185,
+    "rms_error_consistent": 0.0024558769472720716,
+    "consistent_point_count": 17,
+    "suspect_points": [],
+    "extremum": {
+     "min_reference": [
+      0.1719,
+      -0.38289
+     ],
+     "min_computed": [
+      0.1719,
+      -0.3853676434683154
+     ],
+     "max_reference": [
+      1.0,
+      1.0
+     ],
+     "max_computed": [
+      1.0,
+      0.9999450769398999
+     ]
+    }
+   },
+   "v": {
+    "profiles": {
+     "coord": [
+      1.0,
+      0.9688,
+      0.9609,
+      0.9531,
+      0.9453,
+      0.9063,
+      0.8594,
+      0.8047,
+      0.5,
+      0.2344,
+      0.2266,
+      0.1563,
+      0.0938,
+      0.0781,
+      0.0703,
+      0.0625,
+      0.0
+     ],
+     "reference": [
+      0.0,
+      -0.21388,
+      -0.27669,
+      -0.33714,
+      -0.39188,
+      -0.5155,
+      -0.42665,
+      -0.31966,
+      0.02526,
+      0.32235,
+      0.33075,
+      0.37095,
+      0.32627,
+      0.30353,
+      0.29012,
+      0.27485,
+      0.0
+     ],
+     "computed": [
+      0.005704578498384252,
+      -0.22159696917357885,
+      -0.28666549694130894,
+      -0.34797680774272405,
+      -0.4030641276364496,
+      -0.5210775250677928,
+      -0.425819632243955,
+      -0.3190886658925718,
+      0.02539383191360611,
+      0.3234912189849733,
+      0.33202918478208787,
+      0.3738401868300326,
+      0.3301112530225536,
+      0.3071397432014662,
+      0.2936121910074336,
+      0.27819397965284454,
+      0.004699718276469766
+     ],
+     "delta": [
+      0.005704578498384252,
+      -0.007716969173578864,
+      -0.009975496941308948,
+      -0.010836807742724053,
+      -0.011184127636449603,
+      -0.0055775250677928545,
+      0.0008303677560449474,
+      0.0005713341074282119,
+      0.00013383191360610835,
+      0.001141218984973269,
+      0.0012791847820878832,
+      0.002890186830032615,
+      0.0038412530225536146,
+      0.0036097432014661757,
+      0.003492191007433587,
+      0.003343979652844553,
+      0.004699718276469766
+     ]
+    },
+    "max_abs_error": 0.011184127636449603,
+    "rms_error": 0.005692153559464316,
+    "max_abs_error_consistent": 0.011184127636449603,
+    "rms_error_consistent": 0.005692153559464317,
+    "consistent_point_count": 17,
+    "suspect_points": [],
+    "extremum": {
+     "min_reference": [
+      0.9063,
+      -0.5155
+     ],
+     "min_computed": [
+      0.9063,
+      -0.5210775250677928
+     ],
+     "max_reference": [
+      0.1563,
+      0.37095
+     ],
+     "max_computed": [
+      0.1563,
+      0.3738401868300326
+     ]
+    }
+   },
+   "vortex_centre": {
+    "computed": [
+     0.52734375,
+     0.56640625
+    ],
+    "reference": [
+     0.5313,
+     0.5625
+    ],
+    "displacement": 0.0039562499999999945
+   },
+   "streamfunction": {
+    "psi_min": -0.11936906793199455,
+    "psi_max_interior": 0.0016882653211179742
+   },
+   "criteria": {
+    "C1_u_profile_max_abs": {
+     "statement": "max |u_computed - u_Ghia| over all Table I points, units of U",
+     "value": 0.00430729832562185,
+     "threshold": 0.05,
+     "comparator": "le",
+     "unit": "U",
+     "pass": true,
+     "margin": 0.04569270167437815
+    },
+    "C2_v_profile_max_abs": {
+     "statement": "max |v_computed - v_Ghia| over all Table II points, units of U",
+     "value": 0.011184127636449603,
+     "threshold": 0.05,
+     "comparator": "le",
+     "unit": "U",
+     "pass": true,
+     "margin": 0.0388158723635504
+    },
+    "C3_u_min_relative": {
+     "statement": "relative error of the deepest reverse-flow u on x = L/2 (Ghia u_min)",
+     "value": 0.006470901481666839,
+     "threshold": 0.05,
+     "comparator": "le",
+     "unit": "1",
+     "pass": true,
+     "margin": 0.04352909851833316
+    },
+    "C4_v_max_relative": {
+     "statement": "relative error of the strongest v on y = L/2 (Ghia v_max)",
+     "value": 0.007791311039311538,
+     "threshold": 0.05,
+     "comparator": "le",
+     "unit": "1",
+     "pass": true,
+     "margin": 0.04220868896068847
+    },
+    "C5_vortex_centre": {
+     "statement": "primary-vortex centre displacement from the Ghia value, in L",
+     "value": 0.0039562499999999945,
+     "threshold": 0.05,
+     "comparator": "le",
+     "unit": "L",
+     "pass": true,
+     "margin": 0.04604375000000001
+    },
+    "C6_divergence_free": {
+     "statement": "max |div u| of the converged discrete field (closed-box compatibility)",
+     "value": 1.2079226507921703e-13,
+     "threshold": 1e-10,
+     "comparator": "le",
+     "unit": "U/L",
+     "pass": true,
+     "margin": 9.987920773492079e-11
+    },
+    "C7_steady_state": {
+     "statement": "steady-state residual max|du/dt|, |dv/dt| of the marching scheme",
+     "value": 9.88833903647901e-08,
+     "threshold": 1e-06,
+     "comparator": "le",
+     "unit": "U^2/L",
+     "pass": true,
+     "margin": 9.011166096352099e-07
+    },
+    "_extremum_basis": {
+     "u": {
+      "reference": -0.38289,
+      "computed": -0.3853676434683154
+     },
+     "v": {
+      "reference": 0.37095,
+      "computed": 0.3738401868300326
+     }
+    }
+   },
+   "verdict": "PASS",
+   "generated": "2026-11-14T11:43:23Z"
+  }
+ ],
+ "benchmark": [
+  {
+   "n": 32,
+   "u_min": {
+    "ref": -0.38289,
+    "got": -0.316430836724452,
+    "rel_err": 0.17357247061962447,
+    "pass": false
+   },
+   "v_max": {
+    "ref": 0.37095,
+    "got": 0.3154449049885548,
+    "rel_err": 0.14962958622845446,
+    "pass": false
+   },
+   "u_profile_max_abs": {
+    "ref": 0.0,
+    "got": 0.20329603195274926,
+    "err": 0.20329603195274926,
+    "tolerance": 0.05,
+    "pass": false
+   },
+   "v_profile_max_abs": {
+    "ref": 0.0,
+    "got": 0.07538595212630528,
+    "err": 0.07538595212630528,
+    "tolerance": 0.05,
+    "pass": false
+   },
+   "vortex_centre": {
+    "ref": [
+     0.5313,
+     0.5625
+    ],
+    "got": [
+     0.546875,
+     0.609375
+    ],
+    "abs_err_L": 0.046875,
+    "pass": true
+   },
+   "max_divergence": 3.552713678800501e-15,
+   "residual": 9.758993021099135e-08,
+   "steps": 30500,
+   "wall_seconds": 125.47,
+   "converged": true,
+   "verdict": "FAIL"
+  },
+  {
+   "n": 64,
+   "u_min": {
+    "ref": -0.38289,
+    "got": -0.37218421198606744,
+    "rel_err": 0.027960479547474656,
+    "pass": true
+   },
+   "v_max": {
+    "ref": 0.37095,
+    "got": 0.36228285758895074,
+    "rel_err": 0.02336471872502835,
+    "pass": true
+   },
+   "u_profile_max_abs": {
+    "ref": 0.0,
+    "got": 0.029310303373660473,
+    "err": 0.029310303373660473,
+    "tolerance": 0.05,
+    "pass": true
+   },
+   "v_profile_max_abs": {
+    "ref": 0.0,
+    "got": 0.01973391982409828,
+    "err": 0.01973391982409828,
+    "tolerance": 0.05,
+    "pass": true
+   },
+   "vortex_centre": {
+    "ref": [
+     0.5313,
+     0.5625
+    ],
+    "got": [
+     0.5234375,
+     0.5703125
+    ],
+    "abs_err_L": 0.007862499999999994,
+    "pass": true
+   },
+   "max_divergence": 2.4868995751603507e-14,
+   "residual": 9.732030292752825e-08,
+   "steps": 59750,
+   "wall_seconds": 331.36,
+   "converged": true,
+   "verdict": "PASS"
+  },
+  {
+   "n": 128,
+   "u_min": {
+    "ref": -0.38289,
+    "got": -0.3853676434683154,
+    "rel_err": 0.006470901481666839,
+    "pass": true
+   },
+   "v_max": {
+    "ref": 0.37095,
+    "got": 0.3738401868300326,
+    "rel_err": 0.007791311039311538,
+    "pass": true
+   },
+   "u_profile_max_abs": {
+    "ref": 0.0,
+    "got": 0.00430729832562185,
+    "err": 0.00430729832562185,
+    "tolerance": 0.05,
+    "pass": true
+   },
+   "v_profile_max_abs": {
+    "ref": 0.0,
+    "got": 0.011184127636449603,
+    "err": 0.011184127636449603,
+    "tolerance": 0.05,
+    "pass": true
+   },
+   "vortex_centre": {
+    "ref": [
+     0.5313,
+     0.5625
+    ],
+    "got": [
+     0.52734375,
+     0.56640625
+    ],
+    "abs_err_L": 0.0039562499999999945,
+    "pass": true
+   },
+   "max_divergence": 1.2079226507921703e-13,
+   "residual": 9.88833903647901e-08,
+   "steps": 104250,
+   "wall_seconds": 1288.51,
+   "converged": true,
+   "verdict": "PASS"
+  }
+ ],
+ "convergence": {
+  "profile_differences": [
+   {
+    "coarse_n": 32,
+    "fine_n": 64,
+    "ratio": 2.0,
+    "linf_u": 0.17398572857908878,
+    "linf_v": 0.06250627532033237,
+    "l2_u": 0.05153989795632529,
+    "l2_v": 0.034038985544064024
+   },
+   {
+    "coarse_n": 64,
+    "fine_n": 128,
+    "ratio": 2.0,
+    "linf_u": 0.029255380313560342,
+    "linf_v": 0.02194683304092193,
+    "l2_u": 0.0121109715767453,
+    "l2_v": 0.013368962478989208
+   }
+  ],
+  "observed_orders": [
+   {
+    "between": [
+     32,
+     64,
+     128
+    ],
+    "p_linf_u": 2.5721950937512936,
+    "p_linf_v": 1.509988264636644,
+    "p_l2_u": 2.089375074019835,
+    "p_l2_v": 1.3483005343815238
+   }
+  ]
+ },
+ "finest": 128,
+ "finest_verdict": "PASS",
+ "verdict": "PASS",
+ "verdict_all_resolutions": "FAIL",
+ "all_converged": true,
+ "gate_criteria": [
+  {
+   "id": "C1_u_profile_max_abs",
+   "statement": "max |u_computed - u_Ghia| over all Table I points, units of U",
+   "comparator": "le",
+   "threshold": 0.05,
+   "unit": "U"
+  },
+  {
+   "id": "C2_v_profile_max_abs",
+   "statement": "max |v_computed - v_Ghia| over all Table II points, units of U",
+   "comparator": "le",
+   "threshold": 0.05,
+   "unit": "U"
+  },
+  {
+   "id": "C3_u_min_relative",
+   "statement": "relative error of the deepest reverse-flow u on x = L/2 (Ghia u_min)",
+   "comparator": "le",
+   "threshold": 0.05,
+   "unit": "1"
+  },
+  {
+   "id": "C4_v_max_relative",
+   "statement": "relative error of the strongest v on y = L/2 (Ghia v_max)",
+   "comparator": "le",
+   "threshold": 0.05,
+   "unit": "1"
+  },
+  {
+   "id": "C5_vortex_centre",
+   "statement": "primary-vortex centre displacement from the Ghia value, in L",
+   "comparator": "le",
+   "threshold": 0.05,
+   "unit": "L"
+  },
+  {
+   "id": "C6_divergence_free",
+   "statement": "max |div u| of the converged discrete field (closed-box compatibility)",
+   "comparator": "le",
+   "threshold": 1e-10,
+   "unit": "U/L"
+  },
+  {
+   "id": "C7_steady_state",
+   "statement": "steady-state residual max|du/dt|, |dv/dt| of the marching scheme",
+   "comparator": "le",
+   "threshold": 1e-06,
+   "unit": "U^2/L"
+  }
+ ],
+ "continuation_check": {
+  "grid": 64,
+  "same_steady_state": true,
+  "max_abs_du_centreline": 3.339638149357782e-08,
+  "max_abs_dv_centreline": 2.8807286001075738e-08,
+  "steps_continued": 59750,
+  "steps_cold": 58750,
+  "wall_seconds_continued": 331.36,
+  "wall_seconds_cold": 383.6,
+  "speedup": 1.1576533075808788
+ },
+ "generated": "2026-11-14T12:36:21Z",
+ "command": "PYTHONPATH=src python docs/CASE-FVM-CAVITY-RE1000/run_case.py --grids 32,64,128 --cold-control 64 --tolerance 1e-07 --max-steps 250000"
+}
