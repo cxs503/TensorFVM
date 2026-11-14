@@ -1,0 +1,296 @@
+{
+  "title": "Kovasznay 32/64/128 order estimator: negative control",
+  "reference": {
+    "label": "second order (convection_order=2)",
+    "directory": "docs/CASE-FVM-KOVASZNAY-ORDER/runs-32-64-128-zero_gradient",
+    "configuration": {
+      "reynolds": 40.0,
+      "symmetry_closure": "zero_gradient",
+      "convection_order": 2,
+      "algorithm": "coupled"
+    },
+    "levels": [
+      {
+        "n": 32,
+        "h": 0.03125,
+        "cells": 1024,
+        "converged": true,
+        "configuration": {
+          "reynolds": 40.0,
+          "symmetry_closure": "zero_gradient",
+          "convection_order": 2,
+          "algorithm": "coupled"
+        },
+        "outer_iterations": 22,
+        "divergence_max": 2.0616042206711427e-10,
+        "global_momentum_imbalance": 2.4780969571020547e-10,
+        "max_abs_z_velocity": 1.6022438471154331e-16,
+        "velocity_full": 0.0034356154111469706,
+        "velocity_inplane": 0.0034356154111469706,
+        "velocity_spanwise": 6.779240884088528e-18,
+        "pressure_fixed": 0.07843493416161752,
+        "pressure_meanfree": 0.028851421855200135,
+        "sampling_bias": {
+          "velocity": 0.0006554740767602085,
+          "pressure": 0.00012217379103360713
+        },
+        "solve_seconds": 40.360562490299344,
+        "directory": "docs/CASE-FVM-KOVASZNAY-ORDER/runs-32-64-128-zero_gradient/n32"
+      },
+      {
+        "n": 64,
+        "h": 0.015625,
+        "cells": 4096,
+        "converged": true,
+        "configuration": {
+          "reynolds": 40.0,
+          "symmetry_closure": "zero_gradient",
+          "convection_order": 2,
+          "algorithm": "coupled"
+        },
+        "outer_iterations": 21,
+        "divergence_max": 1.3467911230691243e-09,
+        "global_momentum_imbalance": 4.406676650168498e-10,
+        "max_abs_z_velocity": 2.4881882844769875e-17,
+        "velocity_full": 0.0008972613982215257,
+        "velocity_inplane": 0.0008972613982215259,
+        "velocity_spanwise": 1.1191414368138815e-18,
+        "pressure_fixed": 0.039609045192389954,
+        "pressure_meanfree": 0.00795833894220276,
+        "sampling_bias": {
+          "velocity": 0.00016392823382080723,
+          "pressure": 3.0548795283637914e-05
+        },
+        "solve_seconds": 230.98993537947536,
+        "directory": "docs/CASE-FVM-KOVASZNAY-ORDER/runs-32-64-128-zero_gradient/n64"
+      },
+      {
+        "n": 128,
+        "h": 0.0078125,
+        "cells": 16384,
+        "converged": true,
+        "configuration": {
+          "reynolds": 40.0,
+          "symmetry_closure": "zero_gradient",
+          "convection_order": 2,
+          "algorithm": "coupled"
+        },
+        "outer_iterations": 21,
+        "divergence_max": 2.71688804787118e-09,
+        "global_momentum_imbalance": 6.501400175181509e-10,
+        "max_abs_z_velocity": 4.823263693524907e-17,
+        "velocity_full": 0.00022623249946830722,
+        "velocity_inplane": 0.00022623249946830722,
+        "velocity_spanwise": 9.00331106104764e-19,
+        "pressure_fixed": 0.020237665462816655,
+        "pressure_meanfree": 0.0021363114637685337,
+        "sampling_bias": {
+          "velocity": 4.098579139583426e-05,
+          "pressure": 7.637533034936187e-06
+        },
+        "solve_seconds": 719.74166658998,
+        "directory": "docs/CASE-FVM-KOVASZNAY-ORDER/runs-32-64-128-zero_gradient/n128"
+      }
+    ]
+  },
+  "control": {
+    "label": "first order (convection_order=1)",
+    "directory": "docs/CASE-FVM-KOVASZNAY-ORDER/runs-32-64-128-firstorder",
+    "configuration": {
+      "reynolds": 40.0,
+      "symmetry_closure": "zero_gradient",
+      "convection_order": 1,
+      "algorithm": "coupled"
+    },
+    "levels": [
+      {
+        "n": 32,
+        "h": 0.03125,
+        "cells": 1024,
+        "converged": true,
+        "configuration": {
+          "reynolds": 40.0,
+          "symmetry_closure": "zero_gradient",
+          "convection_order": 1,
+          "algorithm": "coupled"
+        },
+        "outer_iterations": 21,
+        "divergence_max": 6.673630537079589e-10,
+        "global_momentum_imbalance": 2.097370466593116e-11,
+        "max_abs_z_velocity": 0.0,
+        "velocity_full": 0.004997776050067906,
+        "velocity_inplane": 0.004997776050067906,
+        "velocity_spanwise": 0.0,
+        "pressure_fixed": 0.04014346646962271,
+        "pressure_meanfree": 0.02046735689687277,
+        "sampling_bias": {
+          "velocity": 0.0006554740767602093,
+          "pressure": 0.00012217379103360716
+        },
+        "solve_seconds": 27.333628610009328,
+        "directory": "docs/CASE-FVM-KOVASZNAY-ORDER/runs-32-64-128-firstorder/n32"
+      },
+      {
+        "n": 64,
+        "h": 0.015625,
+        "cells": 4096,
+        "converged": true,
+        "configuration": {
+          "reynolds": 40.0,
+          "symmetry_closure": "zero_gradient",
+          "convection_order": 1,
+          "algorithm": "coupled"
+        },
+        "outer_iterations": 21,
+        "divergence_max": 1.3380727637013479e-09,
+        "global_momentum_imbalance": 1.8679155365679593e-10,
+        "max_abs_z_velocity": 0.0,
+        "velocity_full": 0.0019396926604811236,
+        "velocity_inplane": 0.0019396926604811236,
+        "velocity_spanwise": 0.0,
+        "pressure_fixed": 0.021166170893535306,
+        "pressure_meanfree": 0.008948565106180218,
+        "sampling_bias": {
+          "velocity": 0.0001639282338208073,
+          "pressure": 3.0548795283637914e-05
+        },
+        "solve_seconds": 133.00407407002058,
+        "directory": "docs/CASE-FVM-KOVASZNAY-ORDER/runs-32-64-128-firstorder/n64"
+      },
+      {
+        "n": 128,
+        "h": 0.0078125,
+        "cells": 16384,
+        "converged": true,
+        "configuration": {
+          "reynolds": 40.0,
+          "symmetry_closure": "zero_gradient",
+          "convection_order": 1,
+          "algorithm": "coupled"
+        },
+        "outer_iterations": 21,
+        "divergence_max": 2.6773818717629183e-09,
+        "global_momentum_imbalance": 3.144761252908023e-10,
+        "max_abs_z_velocity": 0.0,
+        "velocity_full": 0.0008888359160444226,
+        "velocity_inplane": 0.0008888359160444226,
+        "velocity_spanwise": 0.0,
+        "pressure_fixed": 0.011392060994356664,
+        "pressure_meanfree": 0.005019534555422616,
+        "sampling_bias": {
+          "velocity": 4.098579139583426e-05,
+          "pressure": 7.637533034936187e-06
+        },
+        "solve_seconds": 790.2953738700016,
+        "directory": "docs/CASE-FVM-KOVASZNAY-ORDER/runs-32-64-128-firstorder/n128"
+      }
+    ]
+  },
+  "slopes": {
+    "second order (convection_order=2)": {
+      "velocity_full": 1.9623452238776438,
+      "velocity_inplane": 1.9623452238776438,
+      "velocity_spanwise": 1.4562980821022153,
+      "pressure_fixed": 0.9772267419398165,
+      "pressure_meanfree": 1.8777242570668982
+    },
+    "first order (convection_order=1)": {
+      "velocity_full": 1.2456486182245672,
+      "velocity_inplane": 1.2456486182245672,
+      "velocity_spanwise": null,
+      "pressure_fixed": 0.9085682129656558,
+      "pressure_meanfree": 1.0138496545726965
+    }
+  },
+  "observed_orders": {
+    "second order (convection_order=2)": {
+      "velocity_full": [
+        {
+          "coarse": 32,
+          "fine": 64,
+          "ratio": 2.0,
+          "order": 1.9369682973617028
+        },
+        {
+          "coarse": 64,
+          "fine": 128,
+          "ratio": 2.0,
+          "order": 1.9877221503935876
+        }
+      ],
+      "pressure_meanfree": [
+        {
+          "coarse": 32,
+          "fine": 64,
+          "ratio": 2.0,
+          "order": 1.8581031702825543
+        },
+        {
+          "coarse": 64,
+          "fine": 128,
+          "ratio": 2.0,
+          "order": 1.8973453438512433
+        }
+      ]
+    },
+    "first order (convection_order=1)": {
+      "velocity_full": [
+        {
+          "coarse": 32,
+          "fine": 64,
+          "ratio": 2.0,
+          "order": 1.3654581767785952
+        },
+        {
+          "coarse": 64,
+          "fine": 128,
+          "ratio": 2.0,
+          "order": 1.1258390596705403
+        }
+      ],
+      "pressure_meanfree": [
+        {
+          "coarse": 32,
+          "fine": 64,
+          "ratio": 2.0,
+          "order": 1.1935965371006705
+        },
+        {
+          "coarse": 64,
+          "fine": 128,
+          "ratio": 2.0,
+          "order": 0.8341027720447235
+        }
+      ]
+    }
+  },
+  "verdict": {
+    "threshold": 1.8,
+    "min_margin": 0.5,
+    "control_ceiling": 1.5,
+    "quantity": "full-3D velocity relative L2 error, log-log least-squares slope",
+    "configurations_differ_only_in": {
+      "convection_order": [
+        2,
+        1
+      ]
+    },
+    "control_premise_ok": true,
+    "all_levels_converged": true,
+    "reference_slope": 1.9623452238776438,
+    "control_slope": 1.2456486182245672,
+    "margin": 0.7166966056530766,
+    "reference_passes_threshold": true,
+    "control_rejected_by_threshold": true,
+    "control_below_ceiling": true,
+    "margin_reached": true,
+    "pass": true
+  },
+  "provenance": {
+    "runner": "scripts/verify_kovasznay_order.py",
+    "summarizer": "scripts/kovasznay_order_sensitivity.py",
+    "errors_recomputed_from": "n<N>-fields.npz",
+    "reference": "\"Kovasznay (1948) exact solution; second order is the nominal scheme order under test\"",
+    "control": "\"same case, upwind convection (order 1); a first-order defect the gate must reject\""
+  }
+}
