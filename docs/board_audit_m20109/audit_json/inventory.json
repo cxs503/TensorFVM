@@ -1,0 +1,130 @@
+{
+ "all_copies_match": true,
+ "all_present": true,
+ "audited_commit": "f2ba8c48",
+ "audited_tree": "/tmp/a59",
+ "files": [
+  {
+   "audit_copy": "docs/board_audit_m20109/audited/REPORT.md",
+   "copy_matches_tree": true,
+   "exists_in_audit_copy": true,
+   "exists_in_audited_tree": true,
+   "git_blob": "67713ecb2fe0d6b49886f1dbb0906d40a7a23b39",
+   "path": "docs/CASE-FVM-CONVDIFF-PHASE/REPORT.md",
+   "sha256_copy": "e34fa678b6753e575ca3672f095c2a8a832e31b11c3541089301fb73710df334",
+   "sha256_tree": "e34fa678b6753e575ca3672f095c2a8a832e31b11c3541089301fb73710df334",
+   "size_tree": 13379
+  },
+  {
+   "audit_copy": "docs/board_audit_m20109/audited/run_case.py",
+   "copy_matches_tree": true,
+   "exists_in_audit_copy": true,
+   "exists_in_audited_tree": true,
+   "git_blob": "6f19a53d0dce0f13d2c5e28c086b99ae0e32a937",
+   "path": "docs/CASE-FVM-CONVDIFF-PHASE/run_case.py",
+   "sha256_copy": "90001eda2c2aa8b002e0af62c0affc1cbf928156d6c749cd8cb2cfe9b5985d89",
+   "sha256_tree": "90001eda2c2aa8b002e0af62c0affc1cbf928156d6c749cd8cb2cfe9b5985d89",
+   "size_tree": 27689
+  },
+  {
+   "audit_copy": "docs/board_audit_m20109/audited/runs/summary.json",
+   "copy_matches_tree": true,
+   "exists_in_audit_copy": true,
+   "exists_in_audited_tree": true,
+   "git_blob": "65993c494d3c77b64a5117667fec56c4f0e49318",
+   "path": "docs/CASE-FVM-CONVDIFF-PHASE/runs/summary.json",
+   "sha256_copy": "56fb0d24061355465001dbe39b2ecaee0bd648270b0f3d0fd0cead3ec69db428",
+   "sha256_tree": "56fb0d24061355465001dbe39b2ecaee0bd648270b0f3d0fd0cead3ec69db428",
+   "size_tree": 13866
+  },
+  {
+   "audit_copy": "docs/board_audit_m20109/audited/runs/fields.npz",
+   "copy_matches_tree": true,
+   "exists_in_audit_copy": true,
+   "exists_in_audited_tree": true,
+   "git_blob": "366188cc0d25549bf055b750f4df118a79b36dfb",
+   "path": "docs/CASE-FVM-CONVDIFF-PHASE/runs/fields.npz",
+   "sha256_copy": "bd0c80dcce2abcacedff5b14b3dc46a16d9bf225ea759b67985bf92c32c93c00",
+   "sha256_tree": "bd0c80dcce2abcacedff5b14b3dc46a16d9bf225ea759b67985bf92c32c93c00",
+   "size_tree": 3070
+  },
+  {
+   "audit_copy": "docs/board_audit_m20109/audited/figures/fig1_profiles.png",
+   "copy_matches_tree": true,
+   "exists_in_audit_copy": true,
+   "exists_in_audited_tree": true,
+   "git_blob": "e4d1b1e16a32ac2e49b949887a2528d67a9212a6",
+   "path": "docs/CASE-FVM-CONVDIFF-PHASE/figures/fig1_profiles.png",
+   "sha256_copy": "f648ff575d300c13fdb4c38d9e04bab9c9aa2fc97636871a301dde7e873e4a46",
+   "sha256_tree": "f648ff575d300c13fdb4c38d9e04bab9c9aa2fc97636871a301dde7e873e4a46",
+   "size_tree": 161919
+  },
+  {
+   "audit_copy": "docs/board_audit_m20109/audited/figures/fig2_courant_sweep.png",
+   "copy_matches_tree": true,
+   "exists_in_audit_copy": true,
+   "exists_in_audited_tree": true,
+   "git_blob": "5e34a1553073d0d4306211b3c3dcab2b9eac1845",
+   "path": "docs/CASE-FVM-CONVDIFF-PHASE/figures/fig2_courant_sweep.png",
+   "sha256_copy": "ebedd19b047e67c96a6590703edcc216dac0586660f26ea57ad77ebc52385b13",
+   "sha256_tree": "ebedd19b047e67c96a6590703edcc216dac0586660f26ea57ad77ebc52385b13",
+   "size_tree": 80458
+  },
+  {
+   "audit_copy": "docs/board_audit_m20109/audited/figures/fig3_grid_order.png",
+   "copy_matches_tree": true,
+   "exists_in_audit_copy": true,
+   "exists_in_audited_tree": true,
+   "git_blob": "6a716dde96a5fbfd1130b7d60c697c2ea409b9c5",
+   "path": "docs/CASE-FVM-CONVDIFF-PHASE/figures/fig3_grid_order.png",
+   "sha256_copy": "4bbfdab504c31a985a351d0924d5a5b53862798a5d1a6b5dd8ef95319333f379",
+   "sha256_tree": "4bbfdab504c31a985a351d0924d5a5b53862798a5d1a6b5dd8ef95319333f379",
+   "size_tree": 45538
+  },
+  {
+   "audit_copy": "docs/board_audit_m20109/audited/figures/fig4_diffusivity_sweep.png",
+   "copy_matches_tree": true,
+   "exists_in_audit_copy": true,
+   "exists_in_audited_tree": true,
+   "git_blob": "c1c4d43e43260e5fbf47fec37b943777b22aa281",
+   "path": "docs/CASE-FVM-CONVDIFF-PHASE/figures/fig4_diffusivity_sweep.png",
+   "sha256_copy": "4e71087f96f2e8822e1434b31a25123f01f8ffab4dc5be3f210e4ed77349f03f",
+   "sha256_tree": "4e71087f96f2e8822e1434b31a25123f01f8ffab4dc5be3f210e4ed77349f03f",
+   "size_tree": 69377
+  },
+  {
+   "audit_copy": "docs/board_audit_m20109/audited/figures/fig5_ring_field.png",
+   "copy_matches_tree": true,
+   "exists_in_audit_copy": true,
+   "exists_in_audited_tree": true,
+   "git_blob": "b052ec26d14732aeb9935bd76859e381fc4a07a8",
+   "path": "docs/CASE-FVM-CONVDIFF-PHASE/figures/fig5_ring_field.png",
+   "sha256_copy": "3bfb4f2fb23fd11e3887673b62729964efcbd0b925ab7e4ca11b1f9b034930f0",
+   "sha256_tree": "3bfb4f2fb23fd11e3887673b62729964efcbd0b925ab7e4ca11b1f9b034930f0",
+   "size_tree": 75140
+  },
+  {
+   "audit_copy": "docs/board_audit_m20109/audited/src_convdiff_phase.py",
+   "copy_matches_tree": true,
+   "exists_in_audit_copy": true,
+   "exists_in_audited_tree": true,
+   "git_blob": "4ad386ff18cf095a639736ddc7c970c4787cab0b",
+   "path": "src/tensorfvm/verification/convdiff_phase.py",
+   "sha256_copy": "a20a97b200fb788382b7722ac9b0d6e4e0046c25b1aa43e2ef78a4c98d42a918",
+   "sha256_tree": "a20a97b200fb788382b7722ac9b0d6e4e0046c25b1aa43e2ef78a4c98d42a918",
+   "size_tree": 18361
+  },
+  {
+   "audit_copy": "docs/board_audit_m20109/audited/test_convdiff_phase.py",
+   "copy_matches_tree": true,
+   "exists_in_audit_copy": true,
+   "exists_in_audited_tree": true,
+   "git_blob": "8a5b23b21f6ffa7a52021aad8beda992310e2324",
+   "path": "tests/test_convdiff_phase.py",
+   "sha256_copy": "41f7b9010a334f160150665cc5f53ed330f745280c80003472575ed549d650fa",
+   "sha256_tree": "41f7b9010a334f160150665cc5f53ed330f745280c80003472575ed549d650fa",
+   "size_tree": 2696
+  }
+ ],
+ "n_files": 11
+}
