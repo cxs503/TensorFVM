@@ -101,16 +101,24 @@ def test_coarse_grid_failures_stay_on_the_record(entry):
             assert cell["pass"] is (not cell["verdict_failing"]), (row["n"], case_key)
 
     fails = {(f["case"], f["n"]) for f in entry["honest_fail"]}
-    # the dry-bed front *series* misses 5 % at n = 200/400 (6.61 %) -- the defect
-    # that the m17055 audit found ungraded; it must not silently disappear.
-    assert ("ritter-dry", 200) in fails
-    assert ("ritter-dry", 400) in fails
-    dry_coarse = [
-        row for row in entry["grid_study"]["rows"] if row["n"] in (200, 400)
-    ]
-    for row in dry_coarse:
-        assert row["cases"]["ritter-dry"]["front_series_error_percent"] > 5.0
-    assert entry["accepted_grid_min"] >= 800
+    # coarse grids still miss, but on *different* criteria than they used to:
+    # the dry-bed front *series* no longer fails anywhere (its n = 200/400
+    # 6.61 % reading was a three-cell-fan, half-cell artefact -- the samples are
+    # now excluded by SERIES_MIN_FAN_CELLS and the defect itself is locked in
+    # tests/test_dambreak_stoker_series.py::test_dry_three_cell_fan_artefact_is_locked
+    # and docs/case-fvm-dambreak-stoker/ANALYSIS-series-fan-cell-floor.md), while
+    # the n = 100 dry bed still fails the *legacy* wetted-edge diagnostic and the
+    # wet bed still shows interior extrema at n = 100/200 (real coarse-grid
+    # behaviour, unchanged).
+    assert fails, "no honest coarse-grid miss recorded"
+    for record in entry["honest_fail"]:
+        assert record["n"] < entry["accepted_grid_min"]
+        assert record["failing_criteria"]
+    assert ("stoker-wet", 100) in fails
+    assert ("stoker-wet", 200) in fails
+    for row in entry["grid_study"]["rows"]:
+        assert row["cases"]["ritter-dry"]["front_series_error_percent"] < 5.0, row["n"]
+    assert entry["accepted_grid_min"] >= 400
     assert entry["verdict"]["accepted_grid_min"] == entry["accepted_grid_min"]
     assert entry["verdict"]["honest_fail_count"] == len(entry["honest_fail"])
     assert entry["verdict"]["all_primary_pass_at_pool_grid"] is True

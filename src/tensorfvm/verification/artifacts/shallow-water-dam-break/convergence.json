@@ -12,8 +12,8 @@
           "front_fan": 0.0031207325875728387,
           "front_wetted_diagnostic": 0.08749999999999991
         },
-        "front_series": 0.04695435205559511,
-        "front_series_graded": 18,
+        "front_series": 0.009581422054983841,
+        "front_series_graded": 11,
         "front_series_samples": 21,
         "verdict_failing": [
           "front_wetted<5%"
@@ -30,13 +30,11 @@
           "front_fan": 0.0033225297692960343,
           "front_wetted_diagnostic": 0.018750000000000266
         },
-        "front_series": 0.06613261995794985,
-        "front_series_graded": 22,
+        "front_series": 0.006392902275839915,
+        "front_series_graded": 17,
         "front_series_samples": 23,
-        "verdict_failing": [
-          "front_series<5%"
-        ],
-        "verdict_all_pass": false,
+        "verdict_failing": [],
+        "verdict_all_pass": true,
         "tv_ratio": 1.0,
         "local_extrema": 0
       },
@@ -48,13 +46,11 @@
           "front_fan": 0.0010590824433118762,
           "front_wetted_diagnostic": 0.015625
         },
-        "front_series": 0.06613261995794985,
-        "front_series_graded": 24,
+        "front_series": 0.006796620151103695,
+        "front_series_graded": 22,
         "front_series_samples": 25,
-        "verdict_failing": [
-          "front_series<5%"
-        ],
-        "verdict_all_pass": false,
+        "verdict_failing": [],
+        "verdict_all_pass": true,
         "tv_ratio": 1.0,
         "local_extrema": 0
       },
@@ -66,8 +62,8 @@
           "front_fan": 0.0003911308005408731,
           "front_wetted_diagnostic": 0.026562499999999822
         },
-        "front_series": 0.01397618184122598,
-        "front_series_graded": 24,
+        "front_series": 0.005316627610259416,
+        "front_series_graded": 23,
         "front_series_samples": 25,
         "verdict_failing": [],
         "verdict_all_pass": true,
