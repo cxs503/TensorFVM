@@ -240,3 +240,63 @@ def test_pair_orders_and_three_level_order_reproduce(name):
         verdict['pass'] and verdict['pair_orders_consistent']
         and verdict['three_level_order'] is not None
         and verdict['three_level_order'] >= THRESHOLD)
+
+
+#: Keys written by the *current* ``scripts/summarize_kovasznay_32_64_128.py``.
+#: A summary.json produced by an older revision of that script lacks the
+#: corroboration blocks, and every test above that reads them then fails with a
+#: bare ``KeyError`` -- which is a schema-drift symptom reported as a numerical
+#: failure.  This happened for real: the regenerated summary of m20239 was
+#: dropped by the matured-deliverable filter, so the tree kept a pre-upgrade
+#: summary while the gate had already moved on.  The guard below makes that
+#: specific drift a named failure instead of an obscure one.
+SUMMARY_SCHEMA_KEYS = ('title', 'levels', 'observed_orders', 'fits', 'verdict',
+                       'pair_consistency', 'three_level_estimates', 'provenance')
+SUMMARIZER = 'scripts/summarize_kovasznay_32_64_128.py'
+
+SUMMARY_DIRS = [ROOT / 'runs-32-64-128-zero_gradient',
+                ROOT / 'runs-32-64-128-zero_gradient' / 'summary-32-64',
+                ROOT / 'selftest-4-8-16']
+
+
+def _schema_gaps(summary):
+    """What a committed summary is missing relative to the current summarizer."""
+    gaps = [key for key in SUMMARY_SCHEMA_KEYS if key not in summary]
+    if summary.get('provenance', {}).get('summarizer') != SUMMARIZER:
+        gaps.append('provenance.summarizer')
+    return gaps
+
+
+@pytest.mark.parametrize('directory', SUMMARY_DIRS, ids=lambda path: path.name)
+def test_committed_summary_carries_current_summarizer_schema(directory):
+    """Committed artifacts must be the ones the current gate reads.
+
+    Regenerating evidence is not enough: it has to survive the commit.  This
+    test binds the committed file to the summarizer revision that produces it,
+    so a filtered-out regeneration turns red here (named, actionable) instead of
+    resurfacing as ``KeyError: 'pair_consistency'`` inside a numerical test.
+    """
+    path = directory / 'summary.json'
+    if not path.is_file():
+        pytest.skip(f'artifacts absent: {directory}')
+    gaps = _schema_gaps(json.loads(path.read_text()))
+    assert gaps == [], (f'{path} was not written by {SUMMARIZER}: missing {gaps}; '
+                        'regenerate it from the committed fields with '
+                        'scripts/summarize_kovasznay_32_64_128.py')
+
+
+def test_schema_guard_rejects_pre_upgrade_summary():
+    """Negative control: the guard must fail on the state it was written for."""
+    directory = ROOT / 'runs-32-64-128-zero_gradient'
+    path = directory / 'summary.json'
+    if not path.is_file():
+        pytest.skip(f'artifacts absent: {directory}')
+    current = json.loads(path.read_text())
+    assert _schema_gaps(current) == []
+
+    stale = {key: value for key, value in current.items()
+             if key not in ('pair_consistency', 'three_level_estimates')}
+    assert set(_schema_gaps(stale)) == {'pair_consistency', 'three_level_estimates'}
+
+    foreign = dict(current, provenance=dict(current['provenance'], summarizer='./other.py'))
+    assert _schema_gaps(foreign) == ['provenance.summarizer']
