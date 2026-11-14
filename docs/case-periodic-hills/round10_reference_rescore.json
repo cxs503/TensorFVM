@@ -1,0 +1,130 @@
+{
+ "case": "CASE-FVM-PERIODIC-HILLS round 10: primary-reference re-score",
+ "run": {
+  "grid": "96x48",
+  "steps": 20000,
+  "npz": "docs/case-periodic-hills/round9_96x48.npz"
+ },
+ "reference": {
+  "x_r_over_H": 5.41,
+  "band": [
+   4.869000000000001,
+   5.9510000000000005
+  ],
+  "profiles": "ERCOFTAC UFR 3-30 case 4 DNS (Re=2800, LESOCC), Breuer/HSU"
+ },
+ "x_r_over_H": 7.734375,
+ "x_r_pass": false,
+ "x_r_status": "crossing found",
+ "stations": [
+  {
+   "x_over_h": 0.05,
+   "admissible": false,
+   "reason": "y/H=0.5 line inside the hill body"
+  },
+  {
+   "x_over_h": 0.5,
+   "admissible": false,
+   "reason": "y/H=0.5 line inside the hill body"
+  },
+  {
+   "x_over_h": 1.0,
+   "admissible": true,
+   "computed": -0.08455451402821275,
+   "reference_dns": -0.046128718374354914,
+   "reference_legacy": null,
+   "error_primary": 0.038425795653857835,
+   "band": "absolute",
+   "pass_primary": true,
+   "reference_file": "UFR3-30_C_2800_data_MB-003.dat"
+  },
+  {
+   "x_over_h": 2.0,
+   "admissible": true,
+   "computed": -0.007450872232590028,
+   "reference_dns": -0.09122729012512827,
+   "reference_legacy": 0.25,
+   "error_primary": 0.08377641789253824,
+   "band": "absolute",
+   "pass_primary": true,
+   "reference_file": "UFR3-30_C_2800_data_MB-004.dat",
+   "error_legacy": 1.02980348893036
+  },
+  {
+   "x_over_h": 3.0,
+   "admissible": true,
+   "computed": 0.08054539776300967,
+   "reference_dns": 0.0041277188021116165,
+   "reference_legacy": 0.65,
+   "error_primary": 0.07641767896089806,
+   "band": "absolute",
+   "pass_primary": true,
+   "reference_file": "UFR3-30_C_2800_data_MB-005.dat",
+   "error_legacy": 0.8760840034415237
+  },
+  {
+   "x_over_h": 4.0,
+   "admissible": true,
+   "computed": 0.16904165099795176,
+   "reference_dns": 0.11981606788535129,
+   "reference_legacy": 0.85,
+   "error_primary": 0.41084291932951,
+   "band": "relative",
+   "pass_primary": false,
+   "reference_file": "UFR3-30_C_2800_data_MB-006.dat",
+   "error_legacy": 0.8011274694141743
+  },
+  {
+   "x_over_h": 5.0,
+   "admissible": true,
+   "computed": 0.2437012909807378,
+   "reference_dns": 0.2182851836848996,
+   "reference_legacy": 0.95,
+   "error_primary": 0.11643532953902647,
+   "band": "relative",
+   "pass_primary": false,
+   "reference_file": "UFR3-30_C_2800_data_MB-007.dat",
+   "error_legacy": 0.7434723252834339
+  },
+  {
+   "x_over_h": 6.0,
+   "admissible": true,
+   "computed": 0.28887731536081557,
+   "reference_dns": 0.2876299221105056,
+   "reference_legacy": 1.0,
+   "error_primary": 0.004336799318920443,
+   "band": "relative",
+   "pass_primary": true,
+   "reference_file": "UFR3-30_C_2800_data_MB-008.dat",
+   "error_legacy": 0.7111226846391845
+  },
+  {
+   "x_over_h": 7.0,
+   "admissible": true,
+   "computed": 0.29083279607435225,
+   "reference_dns": 0.31413237261839405,
+   "reference_legacy": 1.02,
+   "error_primary": 0.07417120480080534,
+   "band": "relative",
+   "pass_primary": true,
+   "reference_file": "UFR3-30_C_2800_data_MB-009.dat",
+   "error_legacy": 0.714869807770243
+  },
+  {
+   "x_over_h": 8.0,
+   "admissible": true,
+   "computed": 0.1589906629543703,
+   "reference_dns": 0.22375151815927136,
+   "reference_legacy": null,
+   "error_primary": 0.28943202592620093,
+   "band": "relative",
+   "pass_primary": false,
+   "reference_file": "UFR3-30_C_2800_data_MB-010.dat"
+  }
+ ],
+ "profile_pass_primary": 5,
+ "profile_usable": 8,
+ "worst_error_primary": 0.41084291932951,
+ "worst_error_legacy": 1.02980348893036,
+ "gate_pass": false
+}
