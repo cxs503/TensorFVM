@@ -1,0 +1,11 @@
+{
+ "anchor_slug": "CASE-FVM-CONVDIFF-PHASE",
+ "criterion_in_mission_goal": {
+  "reference": "\u89e3\u6790\u6b63\u5f26\u2014\u2014**\u76ee\u6807\u6570\u503c\u4ece ref \u539f\u6587/\u624b\u518c\u67e5\u5f97\uff08\u96f6\u624b\u6284\uff0c\u62a5\u544a\u5f15\u7528\u539f\u8868\u539f\u9875\uff09**\u3002",
+  "tolerance_pct": 3.0
+ },
+ "note": "tensor_benchmark_cases has no row for this anchor: the bench-side judge is EMPTY, so the tolerance actually in force is the mission-goal text (ref = analytic sine, tolerance <3% of the phase error); every number below is recomputed independently instead of trusted",
+ "referee_empty": true,
+ "registered_rows": 0,
+ "registered_table_dump": []
+}
