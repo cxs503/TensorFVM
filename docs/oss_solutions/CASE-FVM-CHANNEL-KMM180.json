@@ -1,7 +1,7 @@
 {
   "feature_slug": "CASE-FVM-CHANNEL-KMM180",
   "title": "Turbulent channel flow validation vs KMM1987 DNS (Re_tau=180)",
-  "summary": "SST reproduces the mean velocity u+(y+) of the imported low-Re channel DNS over the literal anchor window y+ in [30, centreline] with 3.46 % RMS relative error at 256 cells, but 6.12 % over the physical log layer y+ in [30, 0.2 Re_tau] = [30, 36.4]; the 5 % criterion therefore holds only under the legacy (diluted) window. k-omega and k-epsilon fail both windows (10.6 % / 6.8 % legacy). See grading_windows for both numbers.",
+  "summary": "SST reproduces the mean velocity u+(y+) of the imported low-Re channel DNS over the literal anchor window y+ in [30, centreline] with 3.44 % RMS relative error at 256 cells, but 6.08 % over the physical log layer y+ in [30, 0.2 Re_tau] = [30, 36.4]; the 5 % criterion therefore holds only under the legacy (diluted) window. k-omega and k-epsilon fail both windows (10.6 % / 6.8 % legacy). See grading_windows for both numbers.",
   "reference": "Kim, J., Moin, P. & Moser, R. D. 1987 J. Fluid Mech. 177, 133-166. DOI: 10.1017/S0022112087000892",
   "dns_proxy": "Lee & Moser 2015 JFM 774:395 (Re_tau=182.088). Substitution cost measured, not assumed, and now measured on every driver run across the five quoted cases: they are re-solved at the reference Re_tau and the delta on both grading windows is recorded in docs/case-fvm-channel-kmm180/benchmark.json -> reference_substitution. Measured maximum 0.097 pp (sst n=64, legacy window) / 0.078 pp (sst n=64, log layer); every delta is below 0.04 pp for n>=128; no verdict flips. The 0.02 pp figure quoted by docs/verification-channel-kmm180-loglaw/REPORT.md section 3.3 is that same quantity at n=256 only, so this entry no longer states it as a grid-independent bound.",
   "method": "1-D equilibrium channel solver with SST/k-omega/k-epsilon turbulence models",
@@ -11,8 +11,8 @@
   "grading_windows": {
     "legacy_full": {
       "definition": "y+ in [30, centreline (180.56 at Re_tau=182.088)]; the literal reading of the anchor text",
-      "cells_n256": 96,
-      "sst_rms_relative": 0.03456,
+      "cells_n256": 134,
+      "sst_rms_relative": 0.03439,
       "sst_verdict": "PASS",
       "criterion": "RMS relative deviation of u+(y+) < 5 %",
       "caveat": "an outer-layer denominator (mean u+ 18.4 vs 16.3 in the log layer) dilutes a near-constant u+ offset; this window can pass without the log layer being reproduced"
@@ -20,7 +20,7 @@
     "log_layer": {
       "definition": "y+ in [30, 0.2*Re_tau] = [30, 36.42]; 13 cells at n=256",
       "cells_n256": 13,
-      "sst_rms_relative": 0.06116,
+      "sst_rms_relative": 0.06079,
       "sst_verdict": "FAIL",
       "criterion": "RMS relative deviation of u+(y+) < 5 %",
       "caveat": "at Re_tau=182 the physical log layer is only ~6 wall units wide, so this window is itself a compromise; the DNS deviates 3.04 % from the classic log law (kappa=0.41, B=5.2) over the same interval"
@@ -29,7 +29,7 @@
   "key_results": {
     "sst_n64": {
       "log_rms_legacy": 0.022,
-      "log_rms_log_layer": 0.0469,
+      "log_rms_log_layer": 0.0461,
       "cf_error": 0.036,
       "bulk_u_plus_error": 0.017,
       "verdict_legacy": "PASS",
@@ -37,15 +37,15 @@
     },
     "sst_n128": {
       "log_rms_legacy": 0.031,
-      "log_rms_log_layer": 0.0563,
+      "log_rms_log_layer": 0.0566,
       "cf_error": 0.054,
       "bulk_u_plus_error": 0.026,
       "verdict_legacy": "PASS",
       "verdict_log_layer": "FAIL"
     },
     "sst_n256": {
-      "log_rms_legacy": 0.03456,
-      "log_rms_log_layer": 0.06116,
+      "log_rms_legacy": 0.03439,
+      "log_rms_log_layer": 0.06079,
       "cf_error": 0.063,
       "bulk_u_plus_error": 0.03,
       "verdict_legacy": "PASS",
@@ -53,7 +53,7 @@
     },
     "komega_n128": {
       "log_rms_legacy": 0.106,
-      "log_rms_log_layer": 0.1346,
+      "log_rms_log_layer": 0.1348,
       "cf_error": 0.237,
       "bulk_u_plus_error": 0.101,
       "verdict_legacy": "FAIL",
@@ -61,7 +61,7 @@
     },
     "kepsilon_n128": {
       "log_rms_legacy": 0.069,
-      "log_rms_log_layer": 0.0634,
+      "log_rms_log_layer": 0.0633,
       "cf_error": 0.15,
       "bulk_u_plus_error": 0.067,
       "verdict_legacy": "FAIL",
