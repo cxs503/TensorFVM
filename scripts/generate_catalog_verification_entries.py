@@ -21,6 +21,10 @@ Sections produced
 * `## 18. Buoyant Cavity Grid Convergence (de Vahl Davis 1983)` from
   ``docs/natural-convection-gci/summary.json`` and
   ``docs/verification-natural-convection-highra/summary.json``.
+* `### 19.1 Shallow-Water Dam Break (Ritter 1892 / Stoker 1957)` from
+  ``src/tensorfvm/verification/artifacts/shallow-water-dam-break/`` (rendered by
+  ``tensorfvm.verification.case_pool_dambreak``), which also owns
+  ``docs/case-fvm-dambreak-stoker/case_pool_entry.json``.
 """
 
 from __future__ import annotations
@@ -177,8 +181,27 @@ def render_convection_section() -> str:
     return "\n".join(lines)
 
 
+def render_dam_break_section() -> str:
+    """Section 19.1: shallow-water dam break, rendered by the case-pool module."""
+
+    sys.path.insert(0, str(ROOT / "src")) if str(ROOT / "src") not in sys.path else None
+    from tensorfvm.verification.case_pool_dambreak import render_catalog_section
+
+    return render_catalog_section()
+
+
 def render_sections() -> str:
-    return BEGIN + "\n\n" + render_rotating_section() + "\n" + render_convection_section() + END + "\n"
+    return (
+        BEGIN
+        + "\n\n"
+        + render_rotating_section()
+        + "\n"
+        + render_convection_section()
+        + "\n"
+        + render_dam_break_section()
+        + END
+        + "\n"
+    )
 
 
 def splice(text: str, generated: str) -> str:
