@@ -447,3 +447,18 @@
 - 给下次: 建议总账新条目 `FEAT-FVM-ROUGH-WALL-KS`（验收=本账 R1–R10，工程可用域 k_s⁺≤100）；
   后续首项=k-ε 粗糙壁面函数（工业船体常用模型），次项=Eça/Hoekstra `k_s` 型 ω 壁条件替代 `S_R`
   以修高 k_s⁺ 段。
+
+## 4f. 追加欠账（append-only，2026-11-14）
+
+### D10 续（m20758）—— 四层阶估计器已落地自测；n=256 实算 not measured（交付通道丢工件）
+- 起因: `CLOSURE-32-64-128.md` §4.5 自记欠账——三层插值掉 `f(h)=L+C h^p`，`order_stderr`
+  不可识别（dof=0）。交付: `scripts/summarize_kovasznay_32_64_128.py` 新增 `order_uncertainty()`
+  （整梯阶 + stderr + dof + 线性化/t95 区间 + GCI + 滑窗斜率，散度 > `PAIR_ORDER_BAND=0.20` 即拒绝）；
+  `tests/test_kovasznay_256_ladder.py`（4 条合成阶梯单测常跑 + n=256 工件门，缺失即 skip）；
+  `docs/CASE-FVM-KOVASZNAY-ORDER/ORDER-32-64-128-256-ATTEMPT.md`、`make_order_uncertainty_report.py`。
+- 关键结论: 三层向后兼容**逐叶值零差异**（判据 1.9623 一位未动）；纯 `h^2` 合成阶梯阶误差 <1e-3；
+  纯 `h^1` 阶梯过不了 1.8 门（旗标非硬编码）；三层时 `order_stderr` 如实 None。
+- **未完成（honest）**: `cj2912`（n=256, 8 核, n330）rc=0 但取回目录为空、无作业日志；同次 fetch 里
+  既有 n32/n64/n128 也缺失 → "节点早退"与"交付过滤器丢工件"不可判别。四层阶/不确定度 not measured。
+- 给下次: ①同一作业内把 `cases.json` + ≤4096 单元降采样 CSV 写进 `docs/**.md` 纯文本；
+  ②若仍 rc=0 且空，先跑 n=256 `--max-outer-iterations 1` 内存探针；③n=512 待 n=256 落地后再议。
