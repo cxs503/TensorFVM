@@ -1,0 +1,29 @@
+{
+ "artifact_lag_per_step": 1.4793855138563454e-05,
+ "audit_recomputed_lag_per_step": 1.4793855138563454e-05,
+ "claims_phase_independent_of_diffusion": false,
+ "diffusive_sweep_lag_deg_spread": null,
+ "headings": [
+  "1. Problem and reference",
+  "2. Method and implementation",
+  "3. Parameter table (complete dimensionless set)",
+  "4. Reference vs computed, item by item",
+  "5. Convergence and sensitivity (>= 2 points)",
+  "6. Failure modes, limitations, artifacts"
+ ],
+ "headline_lag_per_step_matches_artifact": true,
+ "headline_total_lag_quoted_pct": [
+  "4.908739e+00",
+  "4.905780e+00",
+  "0.06028"
+ ],
+ "n_sections": 6,
+ "six_section_check": {
+  "convergence_and_sensitivity": true,
+  "failure_modes_and_artifacts": true,
+  "method": true,
+  "parameter_table": true,
+  "problem_and_reference": true,
+  "ref_vs_computed_table": true
+ }
+}
