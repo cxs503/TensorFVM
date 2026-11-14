@@ -1,0 +1,182 @@
+{
+  "reference": "Kovasznay 1948 doi:10.1017/s0305004100023999",
+  "reynolds": 40.0,
+  "runs": "docs/CASE-FVM-KOVASZNAY-ORDER/runs-32-64-128-zero_gradient",
+  "grids": [
+    32,
+    64,
+    128
+  ],
+  "residual_check": {
+    "lam": -0.9637405441957689,
+    "quadratic_identity": 8.526512829121202e-14,
+    "max_abs_divergence": 3.874178755580715e-12,
+    "max_abs_momentum_residual": 9.320989313721384e-08
+  },
+  "exact_field_check": [
+    {
+      "n": 32,
+      "max_abs_velocity_diff": 8.881784197001252e-16,
+      "pressure_gauge_offset": -3.3133218391157016e-16,
+      "max_abs_pressure_diff_after_gauge": 3.3133218391157016e-16
+    },
+    {
+      "n": 64,
+      "max_abs_velocity_diff": 8.881784197001252e-16,
+      "pressure_gauge_offset": -3.2699537522162814e-16,
+      "max_abs_pressure_diff_after_gauge": 3.2699537522162814e-16
+    },
+    {
+      "n": 128,
+      "max_abs_velocity_diff": 8.881784197001252e-16,
+      "pressure_gauge_offset": -3.2612801348363973e-16,
+      "max_abs_pressure_diff_after_gauge": 3.2612801348363973e-16
+    }
+  ],
+  "levels": [
+    {
+      "n": 32,
+      "h": 0.03125,
+      "cells": 1024,
+      "total_volume": 1.0,
+      "velocity_full": 0.0034356154111468036,
+      "velocity_inplane": 0.0034356154111468036,
+      "velocity_spanwise": 6.77924088408853e-18,
+      "pressure_fixed": 0.07843493416161856,
+      "pressure_meanfree": 0.028851421855200725
+    },
+    {
+      "n": 64,
+      "h": 0.015625,
+      "cells": 4096,
+      "total_volume": 1.0,
+      "velocity_full": 0.0008972613982213577,
+      "velocity_inplane": 0.0008972613982213577,
+      "velocity_spanwise": 1.1191414368138817e-18,
+      "pressure_fixed": 0.03960904519239101,
+      "pressure_meanfree": 0.007958338942203309
+    },
+    {
+      "n": 128,
+      "h": 0.0078125,
+      "cells": 16384,
+      "total_volume": 1.0,
+      "velocity_full": 0.0002262324994681434,
+      "velocity_inplane": 0.0002262324994681434,
+      "velocity_spanwise": 9.00331106104764e-19,
+      "pressure_fixed": 0.020237665462817717,
+      "pressure_meanfree": 0.0021363114637691256
+    }
+  ],
+  "independent_estimates": {
+    "velocity_full": {
+      "slope": 1.962345223878132,
+      "per_level": [
+        0.0034356154111468036,
+        0.0008972613982213577,
+        0.0002262324994681434
+      ],
+      "pairwise": [
+        1.9369682973619027,
+        1.987722150394362
+      ]
+    },
+    "velocity_inplane": {
+      "slope": 1.962345223878132,
+      "per_level": [
+        0.0034356154111468036,
+        0.0008972613982213577,
+        0.0002262324994681434
+      ],
+      "pairwise": [
+        1.9369682973619027,
+        1.987722150394362
+      ]
+    },
+    "velocity_spanwise": {
+      "slope": 1.4562980821022153,
+      "per_level": [
+        6.77924088408853e-18,
+        1.1191414368138817e-18,
+        9.00331106104764e-19
+      ],
+      "pairwise": [
+        2.598731359138755,
+        0.31386480506567394
+      ]
+    },
+    "pressure_fixed": {
+      "slope": 0.977226741939789,
+      "per_level": [
+        0.07843493416161856,
+        0.03960904519239101,
+        0.020237665462817717
+      ],
+      "pairwise": [
+        0.9856664355587261,
+        0.9687870483208517
+      ]
+    },
+    "pressure_meanfree": {
+      "slope": 1.877724257066713,
+      "per_level": [
+        0.028851421855200725,
+        0.007958338942203309,
+        0.0021363114637691256
+      ],
+      "pairwise": [
+        1.8581031702824844,
+        1.8973453438509431
+      ]
+    }
+  },
+  "richardson": {
+    "velocity_full": {
+      "observed_order": 1.962345223878132,
+      "pairwise_spread": 0.050753853032459384,
+      "refinement_ratio": 2.0,
+      "order_gain_factor": 2.896949467382389,
+      "remaining_error_estimate_finest": 7.809335372099584e-05,
+      "gci_finest": 9.76166921512448e-05
+    },
+    "velocity_inplane": {
+      "observed_order": 1.962345223878132,
+      "pairwise_spread": 0.050753853032459384,
+      "refinement_ratio": 2.0,
+      "order_gain_factor": 2.896949467382389,
+      "remaining_error_estimate_finest": 7.809335372099584e-05,
+      "gci_finest": 9.76166921512448e-05
+    },
+    "pressure_meanfree": {
+      "observed_order": 1.877724257066713,
+      "pairwise_spread": 0.039242173568458716,
+      "refinement_ratio": 2.0,
+      "order_gain_factor": 2.674949072166167,
+      "remaining_error_estimate_finest": 0.0007986363127426369,
+      "gci_finest": 0.0009982953909282962
+    }
+  },
+  "sampling_bias": {
+    "per_level": [
+      0.0006554740767602085,
+      0.00016392823382080723,
+      4.098579139583426e-05
+    ],
+    "order": 1.9996714821701727
+  },
+  "cross_check_vs_summary": {
+    "velocity_full": {
+      "slope": 1.9623452238776438,
+      "slope_diff": 4.882760862301438e-13
+    },
+    "velocity_inplane": {
+      "slope": 1.9623452238776438,
+      "slope_diff": 4.882760862301438e-13
+    },
+    "pressure_meanfree": {
+      "slope": 1.8777242570668982,
+      "slope_diff": 1.851852005074761e-13
+    },
+    "verdict_slope_diff": 4.882760862301438e-13
+  }
+}
