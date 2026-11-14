@@ -1,5 +1,11 @@
 # XVAL-FVM-M18737-ROUND2: Superlinear-Aware Convergence Diagnosis
 
+> **更正（v2，见 `docs/xval-round2/CAUSAL-AUDIT.md`）**：本文 §3/§6 的「预测误差 0.00%，6/6 PASS」是
+> **事后恒等式**——harness 在求解已停止后才索取预测，诊断返回的正是已记录的迭代数。按因果（前缀）
+> 度量，最早可得预测只有 **1/6** 通过 15%，最差 **307%**，与 v1 完全相同；本单未改动本文原始结论，
+> 仅在此并列指向审计。
+
+
 ## 1. Case Introduction
 
 **Physical background:** Iterative linear solvers (GMRES, CG, Richardson) for
