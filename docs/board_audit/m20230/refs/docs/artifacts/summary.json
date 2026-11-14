@@ -1,0 +1,1421 @@
+{
+ "case": "CASE-CAVITY-RE1000-FVM",
+ "anchor": "CASE-CAVITY-RE1000-FVM",
+ "description": "2-D lid-driven square cavity, Re = U L / nu = 1000",
+ "reference": "U. Ghia, K.N. Ghia, C.T. Shin, J. Comput. Phys. 48 (1982) 387-411, Table I (u at x = 0.5) and Table II (v at y = 0.5)",
+ "reynolds": 1000.0,
+ "lid_velocity": 1.0,
+ "tolerance_fraction": 0.05,
+ "criteria": [
+  {
+   "id": "C1_u_extremum_rel",
+   "metric": "u_min_rel",
+   "threshold": 0.05,
+   "comparator": "le",
+   "statement": "relative error of the reverse-flow minimum u (Table I) < 5 %"
+  },
+  {
+   "id": "C2_v_extremum_rel",
+   "metric": "v_max_rel",
+   "threshold": 0.05,
+   "comparator": "le",
+   "statement": "relative error of the maximum v (Table II) < 5 %"
+  },
+  {
+   "id": "C3_vortex_centre_abs",
+   "metric": "vortex_centre_abs",
+   "threshold": 0.05,
+   "comparator": "le",
+   "statement": "primary-vortex centre within 0.05 L of (0.5313, 0.5625)"
+  },
+  {
+   "id": "C4_u_profile_max_abs",
+   "metric": "u_max_abs",
+   "threshold": 0.05,
+   "comparator": "le",
+   "statement": "max |u - u_Ghia| on x = 0.5 below 5 % of the lid speed"
+  },
+  {
+   "id": "C5_v_profile_max_abs",
+   "metric": "v_max_abs",
+   "threshold": 0.05,
+   "comparator": "le",
+   "statement": "max |v - v_Ghia| on y = 0.5 below 5 % of the lid speed"
+  },
+  {
+   "id": "C6_converged",
+   "metric": "converged",
+   "threshold": true,
+   "comparator": "is",
+   "statement": "steady state reached: max|du|/dt <= tolerance"
+  },
+  {
+   "id": "C7_divergence",
+   "metric": "max_divergence",
+   "threshold": 1e-10,
+   "comparator": "le",
+   "statement": "discrete divergence of the converged field below 1e-10"
+  }
+ ],
+ "reference_table": {
+  "u": [
+   [
+    1.0,
+    1.0
+   ],
+   [
+    0.9766,
+    0.65928
+   ],
+   [
+    0.9688,
+    0.57492
+   ],
+   [
+    0.9609,
+    0.51117
+   ],
+   [
+    0.9531,
+    0.46604
+   ],
+   [
+    0.8516,
+    0.33304
+   ],
+   [
+    0.7344,
+    0.18719
+   ],
+   [
+    0.6172,
+    0.05702
+   ],
+   [
+    0.5,
+    -0.0608
+   ],
+   [
+    0.4531,
+    -0.10648
+   ],
+   [
+    0.2813,
+    -0.27805
+   ],
+   [
+    0.1719,
+    -0.38289
+   ],
+   [
+    0.1016,
+    -0.2973
+   ],
+   [
+    0.0703,
+    -0.2222
+   ],
+   [
+    0.0625,
+    -0.20196
+   ],
+   [
+    0.0547,
+    -0.18109
+   ],
+   [
+    0.0,
+    0.0
+   ]
+  ],
+  "v": [
+   [
+    1.0,
+    0.0
+   ],
+   [
+    0.9688,
+    -0.21388
+   ],
+   [
+    0.9609,
+    -0.27669
+   ],
+   [
+    0.9531,
+    -0.33714
+   ],
+   [
+    0.9453,
+    -0.39188
+   ],
+   [
+    0.9063,
+    -0.5155
+   ],
+   [
+    0.8594,
+    -0.42665
+   ],
+   [
+    0.8047,
+    -0.31966
+   ],
+   [
+    0.5,
+    0.02526
+   ],
+   [
+    0.2344,
+    0.32235
+   ],
+   [
+    0.2266,
+    0.33075
+   ],
+   [
+    0.1563,
+    0.37095
+   ],
+   [
+    0.0938,
+    0.32627
+   ],
+   [
+    0.0781,
+    0.30353
+   ],
+   [
+    0.0703,
+    0.29012
+   ],
+   [
+    0.0625,
+    0.27485
+   ],
+   [
+    0.0,
+    0.0
+   ]
+  ],
+  "vortex_centre": [
+   0.5313,
+   0.5625
+  ]
+ },
+ "cases": [
+  {
+   "case": "CASE-CAVITY-RE1000-FVM",
+   "reynolds": 1000.0,
+   "n": 32,
+   "config": {
+    "n": 32,
+    "reynolds": 1000.0,
+    "cfl": 0.15,
+    "tolerance": 1e-07,
+    "max_steps": 250000,
+    "check_every": 250
+   },
+   "solver": {
+    "steps": 30500,
+    "converged": true,
+    "residual_rate": 9.758993021099135e-08,
+    "wall_seconds": 122.88584232330322,
+    "resumed_from_checkpoint": false,
+    "fields_file": "Re1000_n32.pt",
+    "init": "rest",
+    "threads": 1,
+    "dtype": "float64"
+   },
+   "u": {
+    "profiles": {
+     "coord": [
+      1.0,
+      0.9766,
+      0.9688,
+      0.9609,
+      0.9531,
+      0.8516,
+      0.7344,
+      0.6172,
+      0.5,
+      0.4531,
+      0.2813,
+      0.1719,
+      0.1016,
+      0.0703,
+      0.0625,
+      0.0547,
+      0.0
+     ],
+     "reference": [
+      1.0,
+      0.65928,
+      0.57492,
+      0.51117,
+      0.46604,
+      0.33304,
+      0.18719,
+      0.05702,
+      -0.0608,
+      -0.10648,
+      -0.27805,
+      -0.38289,
+      -0.2973,
+      -0.2222,
+      -0.20196,
+      -0.18109,
+      0.0
+     ],
+     "computed": [
+      0.7967039680472507,
+      0.6294536206901988,
+      0.555712549795986,
+      0.4870966606040247,
+      0.4343865691698013,
+      0.3027869905511876,
+      0.16972233253215416,
+      0.044233873349450385,
+      -0.06853706437801914,
+      -0.11175975546599433,
+      -0.28367079819982965,
+      -0.316430836724452,
+      -0.21804092997128985,
+      -0.15554040332018715,
+      -0.1398840475062898,
+      -0.12405476536874185,
+      -0.008158890304786705
+     ],
+     "delta": [
+      -0.20329603195274926,
+      -0.029826379309801143,
+      -0.01920745020401393,
+      -0.024073339395975335,
+      -0.031653430830198725,
+      -0.03025300944881243,
+      -0.017467667467845838,
+      -0.012786126650549616,
+      -0.007737064378019139,
+      -0.0052797554659943235,
+      -0.005620798199829635,
+      0.06645916327554802,
+      0.07925907002871016,
+      0.06665959667981286,
+      0.0620759524937102,
+      0.05703523463125815,
+      -0.008158890304786705
+     ]
+    },
+    "max_abs_error": 0.20329603195274926,
+    "rms_error": 0.0632398762590608,
+    "max_abs_error_consistent": 0.20329603195274926,
+    "rms_error_consistent": 0.0632398762590608,
+    "consistent_point_count": 17,
+    "suspect_points": [],
+    "extremum": {
+     "min_reference": [
+      0.1719,
+      -0.38289
+     ],
+     "min_computed": [
+      0.1719,
+      -0.316430836724452
+     ],
+     "max_reference": [
+      1.0,
+      1.0
+     ],
+     "max_computed": [
+      1.0,
+      0.7967039680472507
+     ]
+    }
+   },
+   "v": {
+    "profiles": {
+     "coord": [
+      1.0,
+      0.9688,
+      0.9609,
+      0.9531,
+      0.9453,
+      0.9063,
+      0.8594,
+      0.8047,
+      0.5,
+      0.2344,
+      0.2266,
+      0.1563,
+      0.0938,
+      0.0781,
+      0.0703,
+      0.0625,
+      0.0
+     ],
+     "reference": [
+      0.0,
+      -0.21388,
+      -0.27669,
+      -0.33714,
+      -0.39188,
+      -0.5155,
+      -0.42665,
+      -0.31966,
+      0.02526,
+      0.32235,
+      0.33075,
+      0.37095,
+      0.32627,
+      0.30353,
+      0.29012,
+      0.27485,
+      0.0
+     ],
+     "computed": [
+      0.03747043935950789,
+      -0.18441396183875858,
+      -0.2447417542379829,
+      -0.29609894228759187,
+      -0.33895999123772136,
+      -0.4401140478736947,
+      -0.39992167786876004,
+      -0.3021591590709935,
+      0.02546553979320903,
+      0.2978746948847033,
+      0.3034099933758669,
+      0.3154449049885548,
+      0.2738257011778831,
+      0.25425302997063537,
+      0.24306423372161653,
+      0.23104337025977412,
+      0.05127902174529951
+     ],
+     "delta": [
+      0.03747043935950789,
+      0.02946603816124141,
+      0.0319482457620171,
+      0.041041057712408124,
+      0.05292000876227865,
+      0.07538595212630528,
+      0.026728322131239934,
+      0.0175008409290065,
+      0.00020553979320902735,
+      -0.02447530511529672,
+      -0.027340006624133106,
+      -0.05550509501144518,
+      -0.05244429882211693,
+      -0.04927697002936465,
+      -0.047055766278383454,
+      -0.043806629740225866,
+      0.05127902174529951
+     ]
+    },
+    "max_abs_error": 0.07538595212630528,
+    "rms_error": 0.042599637125524184,
+    "max_abs_error_consistent": 0.07538595212630528,
+    "rms_error_consistent": 0.042599637125524184,
+    "consistent_point_count": 17,
+    "suspect_points": [],
+    "extremum": {
+     "min_reference": [
+      0.9063,
+      -0.5155
+     ],
+     "min_computed": [
+      0.9063,
+      -0.4401140478736947
+     ],
+     "max_reference": [
+      0.1563,
+      0.37095
+     ],
+     "max_computed": [
+      0.1563,
+      0.3154449049885548
+     ]
+    }
+   },
+   "vortex_centre": {
+    "computed": [
+     0.546875,
+     0.609375
+    ],
+    "reference": [
+     0.5313,
+     0.5625
+    ],
+    "abs_error": 0.046875
+   },
+   "max_divergence": 3.552713678800501e-15,
+   "acceptance": {
+    "reynolds": 1000.0,
+    "criteria": {
+     "u_max_abs_error": {
+      "value": 0.20329603195274926,
+      "limit": 0.03,
+      "points": 17,
+      "ignored": 0,
+      "pass": false
+     },
+     "u_max_abs_error_consistent": {
+      "value": 0.20329603195274926,
+      "limit": 0.03,
+      "pass": false
+     },
+     "v_max_abs_error": {
+      "value": 0.07538595212630528,
+      "limit": 0.03,
+      "points": 17,
+      "ignored": 0,
+      "pass": false
+     },
+     "v_max_abs_error_consistent": {
+      "value": 0.07538595212630528,
+      "limit": 0.03,
+      "pass": false
+     },
+     "u_min_relative": {
+      "reference": -0.38289,
+      "computed": -0.316430836724452,
+      "value": 0.17357247061962447,
+      "limit": 0.15,
+      "pass": false
+     },
+     "v_max_relative": {
+      "reference": 0.37095,
+      "computed": 0.3154449049885548,
+      "value": 0.14962958622845446,
+      "limit": 0.15,
+      "pass": true
+     },
+     "vortex_centre_distance": {
+      "reference": [
+       0.5313,
+       0.5625
+      ],
+      "computed": [
+       0.546875,
+       0.609375
+      ],
+      "value": 0.04939479982751221,
+      "limit": 0.05,
+      "pass": true
+     }
+    },
+    "registered_disputes": [],
+    "disputes_declared": false,
+    "max_abs_error": 0.20329603195274926,
+    "pass": false
+   },
+   "verdict": {
+    "case": "CASE-CAVITY-RE1000-FVM",
+    "tolerance": 0.05,
+    "checks": [
+     {
+      "id": "C1_u_extremum_rel",
+      "metric": "u_min_rel",
+      "value": 0.17357247061962447,
+      "threshold": 0.05,
+      "comparator": "le",
+      "pass": false,
+      "statement": "relative error of the reverse-flow minimum u (Table I) < 5 %"
+     },
+     {
+      "id": "C2_v_extremum_rel",
+      "metric": "v_max_rel",
+      "value": 0.14962958622845446,
+      "threshold": 0.05,
+      "comparator": "le",
+      "pass": false,
+      "statement": "relative error of the maximum v (Table II) < 5 %"
+     },
+     {
+      "id": "C3_vortex_centre_abs",
+      "metric": "vortex_centre_abs",
+      "value": 0.046875,
+      "threshold": 0.05,
+      "comparator": "le",
+      "pass": true,
+      "statement": "primary-vortex centre within 0.05 L of (0.5313, 0.5625)"
+     },
+     {
+      "id": "C4_u_profile_max_abs",
+      "metric": "u_max_abs",
+      "value": 0.20329603195274926,
+      "threshold": 0.05,
+      "comparator": "le",
+      "pass": false,
+      "statement": "max |u - u_Ghia| on x = 0.5 below 5 % of the lid speed"
+     },
+     {
+      "id": "C5_v_profile_max_abs",
+      "metric": "v_max_abs",
+      "value": 0.07538595212630528,
+      "threshold": 0.05,
+      "comparator": "le",
+      "pass": false,
+      "statement": "max |v - v_Ghia| on y = 0.5 below 5 % of the lid speed"
+     },
+     {
+      "id": "C6_converged",
+      "metric": "converged",
+      "value": true,
+      "threshold": true,
+      "comparator": "is",
+      "pass": true,
+      "statement": "steady state reached: max|du|/dt <= tolerance"
+     },
+     {
+      "id": "C7_divergence",
+      "metric": "max_divergence",
+      "value": 3.552713678800501e-15,
+      "threshold": 1e-10,
+      "comparator": "le",
+      "pass": true,
+      "statement": "discrete divergence of the converged field below 1e-10"
+     }
+    ],
+    "metrics": {
+     "u_min_rel": 0.17357247061962447,
+     "v_max_rel": 0.14962958622845446,
+     "vortex_centre_abs": 0.046875,
+     "u_max_abs": 0.20329603195274926,
+     "v_max_abs": 0.07538595212630528,
+     "converged": true,
+     "max_divergence": 3.552713678800501e-15
+    },
+    "pass": false
+   },
+   "role": "control (under-resolved)"
+  },
+  {
+   "case": "CASE-CAVITY-RE1000-FVM",
+   "reynolds": 1000.0,
+   "n": 64,
+   "config": {
+    "n": 64,
+    "reynolds": 1000.0,
+    "cfl": 0.15,
+    "tolerance": 1e-07,
+    "max_steps": 250000,
+    "check_every": 250
+   },
+   "solver": {
+    "steps": 58750,
+    "converged": true,
+    "residual_rate": 9.974947090540809e-08,
+    "wall_seconds": 313.05858087539673,
+    "resumed_from_checkpoint": false,
+    "fields_file": "Re1000_n64.pt",
+    "init": "rest",
+    "threads": 1,
+    "dtype": "float64"
+   },
+   "u": {
+    "profiles": {
+     "coord": [
+      1.0,
+      0.9766,
+      0.9688,
+      0.9609,
+      0.9531,
+      0.8516,
+      0.7344,
+      0.6172,
+      0.5,
+      0.4531,
+      0.2813,
+      0.1719,
+      0.1016,
+      0.0703,
+      0.0625,
+      0.0547,
+      0.0
+     ],
+     "reference": [
+      1.0,
+      0.65928,
+      0.57492,
+      0.51117,
+      0.46604,
+      0.33304,
+      0.18719,
+      0.05702,
+      -0.0608,
+      -0.10648,
+      -0.27805,
+      -0.38289,
+      -0.2973,
+      -0.2222,
+      -0.20196,
+      -0.18109,
+      0.0
+     ],
+     "computed": [
+      0.970689694963738,
+      0.6456788379404194,
+      0.5648409458368175,
+      0.5028761377152857,
+      0.4606453434143254,
+      0.32780307419798266,
+      0.18322281869338902,
+      0.05371503303414444,
+      -0.06336243976109443,
+      -0.10866679457104039,
+      -0.2798403377661811,
+      -0.3721841952508898,
+      -0.27844615278390283,
+      -0.2035392589716081,
+      -0.18411161376634114,
+      -0.16436229252716597,
+      -0.004822897211099578
+     ],
+     "delta": [
+      -0.029310305036261974,
+      -0.013601162059580618,
+      -0.010079054163182444,
+      -0.008293862284714293,
+      -0.005394656585674618,
+      -0.005236925802017345,
+      -0.003967181306610973,
+      -0.0033049669658555617,
+      -0.0025624397610944302,
+      -0.0021867945710403874,
+      -0.0017903377661810937,
+      0.010705804749110204,
+      0.018853847216097175,
+      0.01866074102839191,
+      0.017848386233658864,
+      0.01672770747283403,
+      -0.004822897211099578
+     ]
+    },
+    "max_abs_error": 0.029310305036261974,
+    "rms_error": 0.012723646559264206,
+    "max_abs_error_consistent": 0.029310305036261974,
+    "rms_error_consistent": 0.012723646559264206,
+    "consistent_point_count": 17,
+    "suspect_points": [],
+    "extremum": {
+     "min_reference": [
+      0.1719,
+      -0.38289
+     ],
+     "min_computed": [
+      0.1719,
+      -0.3721841952508898
+     ],
+     "max_reference": [
+      1.0,
+      1.0
+     ],
+     "max_computed": [
+      1.0,
+      0.970689694963738
+     ]
+    }
+   },
+   "v": {
+    "profiles": {
+     "coord": [
+      1.0,
+      0.9688,
+      0.9609,
+      0.9531,
+      0.9453,
+      0.9063,
+      0.8594,
+      0.8047,
+      0.5,
+      0.2344,
+      0.2266,
+      0.1563,
+      0.0938,
+      0.0781,
+      0.0703,
+      0.0625,
+      0.0
+     ],
+     "reference": [
+      0.0,
+      -0.21388,
+      -0.27669,
+      -0.33714,
+      -0.39188,
+      -0.5155,
+      -0.42665,
+      -0.31966,
+      0.02526,
+      0.32235,
+      0.33075,
+      0.37095,
+      0.32627,
+      0.30353,
+      0.29012,
+      0.27485,
+      0.0
+     ],
+     "computed": [
+      0.019733918942391973,
+      -0.20356186408171215,
+      -0.266220856833772,
+      -0.3261643072391342,
+      -0.38111727617206465,
+      -0.5026203073955013,
+      -0.4250076802939074,
+      -0.31554229926204685,
+      0.02463832325274536,
+      0.3180443570735694,
+      0.3261334483834292,
+      0.36228283753525553,
+      0.3189570165055042,
+      0.2967168497020984,
+      0.2835775231646714,
+      0.2687635951478938,
+      0.01757312325206045
+     ],
+     "delta": [
+      0.019733918942391973,
+      0.01031813591828784,
+      0.01046914316622799,
+      0.010975692760865796,
+      0.010762723827935361,
+      0.012879692604498616,
+      0.0016423197060925765,
+      0.004117700737953145,
+      -0.0006216767472546417,
+      -0.004305642926430653,
+      -0.004616551616570763,
+      -0.008667162464744471,
+      -0.007312983494495828,
+      -0.006813150297901638,
+      -0.006542476835328603,
+      -0.006086404852106209,
+      0.01757312325206045
+     ]
+    },
+    "max_abs_error": 0.019733918942391973,
+    "rms_error": 0.009795721408776523,
+    "max_abs_error_consistent": 0.019733918942391973,
+    "rms_error_consistent": 0.009795721408776523,
+    "consistent_point_count": 17,
+    "suspect_points": [],
+    "extremum": {
+     "min_reference": [
+      0.9063,
+      -0.5155
+     ],
+     "min_computed": [
+      0.9063,
+      -0.5026203073955013
+     ],
+     "max_reference": [
+      0.1563,
+      0.37095
+     ],
+     "max_computed": [
+      0.1563,
+      0.36228283753525553
+     ]
+    }
+   },
+   "vortex_centre": {
+    "computed": [
+     0.5234375,
+     0.5703125
+    ],
+    "reference": [
+     0.5313,
+     0.5625
+    ],
+    "abs_error": 0.007862499999999994
+   },
+   "max_divergence": 2.1316282072803006e-14,
+   "acceptance": {
+    "reynolds": 1000.0,
+    "criteria": {
+     "u_max_abs_error": {
+      "value": 0.029310305036261974,
+      "limit": 0.03,
+      "points": 17,
+      "ignored": 0,
+      "pass": true
+     },
+     "u_max_abs_error_consistent": {
+      "value": 0.029310305036261974,
+      "limit": 0.03,
+      "pass": true
+     },
+     "v_max_abs_error": {
+      "value": 0.019733918942391973,
+      "limit": 0.03,
+      "points": 17,
+      "ignored": 0,
+      "pass": true
+     },
+     "v_max_abs_error_consistent": {
+      "value": 0.019733918942391973,
+      "limit": 0.03,
+      "pass": true
+     },
+     "u_min_relative": {
+      "reference": -0.38289,
+      "computed": -0.3721841952508898,
+      "value": 0.027960523255008498,
+      "limit": 0.15,
+      "pass": true
+     },
+     "v_max_relative": {
+      "reference": 0.37095,
+      "computed": 0.36228283753525553,
+      "value": 0.02336477278540092,
+      "limit": 0.15,
+      "pass": true
+     },
+     "vortex_centre_distance": {
+      "reference": [
+       0.5313,
+       0.5625
+      ],
+      "computed": [
+       0.5234375,
+       0.5703125
+      ],
+      "value": 0.011083955183056268,
+      "limit": 0.05,
+      "pass": true
+     }
+    },
+    "registered_disputes": [],
+    "disputes_declared": false,
+    "max_abs_error": 0.029310305036261974,
+    "pass": true
+   },
+   "verdict": {
+    "case": "CASE-CAVITY-RE1000-FVM",
+    "tolerance": 0.05,
+    "checks": [
+     {
+      "id": "C1_u_extremum_rel",
+      "metric": "u_min_rel",
+      "value": 0.027960523255008498,
+      "threshold": 0.05,
+      "comparator": "le",
+      "pass": true,
+      "statement": "relative error of the reverse-flow minimum u (Table I) < 5 %"
+     },
+     {
+      "id": "C2_v_extremum_rel",
+      "metric": "v_max_rel",
+      "value": 0.02336477278540092,
+      "threshold": 0.05,
+      "comparator": "le",
+      "pass": true,
+      "statement": "relative error of the maximum v (Table II) < 5 %"
+     },
+     {
+      "id": "C3_vortex_centre_abs",
+      "metric": "vortex_centre_abs",
+      "value": 0.007862499999999994,
+      "threshold": 0.05,
+      "comparator": "le",
+      "pass": true,
+      "statement": "primary-vortex centre within 0.05 L of (0.5313, 0.5625)"
+     },
+     {
+      "id": "C4_u_profile_max_abs",
+      "metric": "u_max_abs",
+      "value": 0.029310305036261974,
+      "threshold": 0.05,
+      "comparator": "le",
+      "pass": true,
+      "statement": "max |u - u_Ghia| on x = 0.5 below 5 % of the lid speed"
+     },
+     {
+      "id": "C5_v_profile_max_abs",
+      "metric": "v_max_abs",
+      "value": 0.019733918942391973,
+      "threshold": 0.05,
+      "comparator": "le",
+      "pass": true,
+      "statement": "max |v - v_Ghia| on y = 0.5 below 5 % of the lid speed"
+     },
+     {
+      "id": "C6_converged",
+      "metric": "converged",
+      "value": true,
+      "threshold": true,
+      "comparator": "is",
+      "pass": true,
+      "statement": "steady state reached: max|du|/dt <= tolerance"
+     },
+     {
+      "id": "C7_divergence",
+      "metric": "max_divergence",
+      "value": 2.1316282072803006e-14,
+      "threshold": 1e-10,
+      "comparator": "le",
+      "pass": true,
+      "statement": "discrete divergence of the converged field below 1e-10"
+     }
+    ],
+    "metrics": {
+     "u_min_rel": 0.027960523255008498,
+     "v_max_rel": 0.02336477278540092,
+     "vortex_centre_abs": 0.007862499999999994,
+     "u_max_abs": 0.029310305036261974,
+     "v_max_abs": 0.019733918942391973,
+     "converged": true,
+     "max_divergence": 2.1316282072803006e-14
+    },
+    "pass": true
+   },
+   "role": "production (cold start)"
+  },
+  {
+   "case": "CASE-CAVITY-RE1000-FVM",
+   "reynolds": 1000.0,
+   "n": 128,
+   "config": {
+    "n": 128,
+    "reynolds": 1000.0,
+    "cfl": 0.15,
+    "tolerance": 1e-07,
+    "max_steps": 250000,
+    "check_every": 250
+   },
+   "solver": {
+    "steps": 104250,
+    "converged": true,
+    "residual_rate": 9.888395879897871e-08,
+    "wall_seconds": 1111.4043719768524,
+    "resumed_from_checkpoint": false,
+    "fields_file": "Re1000_n128.pt",
+    "init": "n=64 prolongation",
+    "threads": 1,
+    "dtype": "float64"
+   },
+   "u": {
+    "profiles": {
+     "coord": [
+      1.0,
+      0.9766,
+      0.9688,
+      0.9609,
+      0.9531,
+      0.8516,
+      0.7344,
+      0.6172,
+      0.5,
+      0.4531,
+      0.2813,
+      0.1719,
+      0.1016,
+      0.0703,
+      0.0625,
+      0.0547,
+      0.0
+     ],
+     "reference": [
+      1.0,
+      0.65928,
+      0.57492,
+      0.51117,
+      0.46604,
+      0.33304,
+      0.18719,
+      0.05702,
+      -0.0608,
+      -0.10648,
+      -0.27805,
+      -0.38289,
+      -0.2973,
+      -0.2222,
+      -0.20196,
+      -0.18109,
+      0.0
+     ],
+     "computed": [
+      0.9999450769397391,
+      0.6601102004903749,
+      0.5767279085107101,
+      0.513495599953165,
+      0.46957275409242355,
+      0.3350178091947648,
+      0.18736322341036854,
+      0.05623848968225502,
+      -0.06236209238163991,
+      -0.10830982814999422,
+      -0.2801126132969562,
+      -0.3853676434643488,
+      -0.2953035536736913,
+      -0.21800802321638357,
+      -0.1976527016742065,
+      -0.17689432097599433,
+      -0.0014946874308630256
+     ],
+     "delta": [
+      -5.492306026089189e-05,
+      0.000830200490374966,
+      0.00180790851071011,
+      0.0023255999531649474,
+      0.00353275409242354,
+      0.0019778091947648124,
+      0.00017322341036854483,
+      -0.0007815103177449823,
+      -0.0015620923816399082,
+      -0.001829828149994217,
+      -0.002062613296956173,
+      -0.002477643464348811,
+      0.0019964463263086873,
+      0.004191976783616436,
+      0.0043072983257934905,
+      0.004195679024005666,
+      -0.0014946874308630256
+     ]
+    },
+    "max_abs_error": 0.0043072983257934905,
+    "rms_error": 0.0024558769452988115,
+    "max_abs_error_consistent": 0.0043072983257934905,
+    "rms_error_consistent": 0.0024558769452988115,
+    "consistent_point_count": 17,
+    "suspect_points": [],
+    "extremum": {
+     "min_reference": [
+      0.1719,
+      -0.38289
+     ],
+     "min_computed": [
+      0.1719,
+      -0.3853676434643488
+     ],
+     "max_reference": [
+      1.0,
+      1.0
+     ],
+     "max_computed": [
+      1.0,
+      0.9999450769397391
+     ]
+    }
+   },
+   "v": {
+    "profiles": {
+     "coord": [
+      1.0,
+      0.9688,
+      0.9609,
+      0.9531,
+      0.9453,
+      0.9063,
+      0.8594,
+      0.8047,
+      0.5,
+      0.2344,
+      0.2266,
+      0.1563,
+      0.0938,
+      0.0781,
+      0.0703,
+      0.0625,
+      0.0
+     ],
+     "reference": [
+      0.0,
+      -0.21388,
+      -0.27669,
+      -0.33714,
+      -0.39188,
+      -0.5155,
+      -0.42665,
+      -0.31966,
+      0.02526,
+      0.32235,
+      0.33075,
+      0.37095,
+      0.32627,
+      0.30353,
+      0.29012,
+      0.27485,
+      0.0
+     ],
+     "computed": [
+      0.005704578498318527,
+      -0.22159696917089552,
+      -0.2866654969379996,
+      -0.3479768077389424,
+      -0.40306412763237226,
+      -0.5210775250642732,
+      -0.42581963223978825,
+      -0.31908866588560286,
+      0.025393831912500706,
+      0.3234912189791542,
+      0.3320291847763916,
+      0.373840186825335,
+      0.3301112530190603,
+      0.3071397431983099,
+      0.29361219100443403,
+      0.27819397964999526,
+      0.004699718276384841
+     ],
+     "delta": [
+      0.005704578498318527,
+      -0.007716969170895538,
+      -0.009975496937999595,
+      -0.010836807738942411,
+      -0.011184127632372254,
+      -0.0055775250642732255,
+      0.0008303677602117254,
+      0.0005713341143971373,
+      0.0001338319125007044,
+      0.0011412189791542016,
+      0.0012791847763916064,
+      0.002890186825334984,
+      0.003841253019060298,
+      0.003609743198309867,
+      0.003492191004434042,
+      0.0033439796499952767,
+      0.004699718276384841
+     ]
+    },
+    "max_abs_error": 0.011184127632372254,
+    "rms_error": 0.00569215355713156,
+    "max_abs_error_consistent": 0.011184127632372254,
+    "rms_error_consistent": 0.005692153557131561,
+    "consistent_point_count": 17,
+    "suspect_points": [],
+    "extremum": {
+     "min_reference": [
+      0.9063,
+      -0.5155
+     ],
+     "min_computed": [
+      0.9063,
+      -0.5210775250642732
+     ],
+     "max_reference": [
+      0.1563,
+      0.37095
+     ],
+     "max_computed": [
+      0.1563,
+      0.373840186825335
+     ]
+    }
+   },
+   "vortex_centre": {
+    "computed": [
+     0.52734375,
+     0.56640625
+    ],
+    "reference": [
+     0.5313,
+     0.5625
+    ],
+    "abs_error": 0.0039562499999999945
+   },
+   "max_divergence": 1.3500311979441904e-13,
+   "acceptance": {
+    "reynolds": 1000.0,
+    "criteria": {
+     "u_max_abs_error": {
+      "value": 0.0043072983257934905,
+      "limit": 0.03,
+      "points": 17,
+      "ignored": 0,
+      "pass": true
+     },
+     "u_max_abs_error_consistent": {
+      "value": 0.0043072983257934905,
+      "limit": 0.03,
+      "pass": true
+     },
+     "v_max_abs_error": {
+      "value": 0.011184127632372254,
+      "limit": 0.03,
+      "points": 17,
+      "ignored": 0,
+      "pass": true
+     },
+     "v_max_abs_error_consistent": {
+      "value": 0.011184127632372254,
+      "limit": 0.03,
+      "pass": true
+     },
+     "u_min_relative": {
+      "reference": -0.38289,
+      "computed": -0.3853676434643488,
+      "value": 0.006470901471307192,
+      "limit": 0.15,
+      "pass": true
+     },
+     "v_max_relative": {
+      "reference": 0.37095,
+      "computed": 0.373840186825335,
+      "value": 0.007791311026647753,
+      "limit": 0.15,
+      "pass": true
+     },
+     "vortex_centre_distance": {
+      "reference": [
+       0.5313,
+       0.5625
+      ],
+      "computed": [
+       0.52734375,
+       0.56640625
+      ],
+      "value": 0.005559739483554958,
+      "limit": 0.05,
+      "pass": true
+     }
+    },
+    "registered_disputes": [],
+    "disputes_declared": false,
+    "max_abs_error": 0.011184127632372254,
+    "pass": true
+   },
+   "verdict": {
+    "case": "CASE-CAVITY-RE1000-FVM",
+    "tolerance": 0.05,
+    "checks": [
+     {
+      "id": "C1_u_extremum_rel",
+      "metric": "u_min_rel",
+      "value": 0.006470901471307192,
+      "threshold": 0.05,
+      "comparator": "le",
+      "pass": true,
+      "statement": "relative error of the reverse-flow minimum u (Table I) < 5 %"
+     },
+     {
+      "id": "C2_v_extremum_rel",
+      "metric": "v_max_rel",
+      "value": 0.007791311026647753,
+      "threshold": 0.05,
+      "comparator": "le",
+      "pass": true,
+      "statement": "relative error of the maximum v (Table II) < 5 %"
+     },
+     {
+      "id": "C3_vortex_centre_abs",
+      "metric": "vortex_centre_abs",
+      "value": 0.0039562499999999945,
+      "threshold": 0.05,
+      "comparator": "le",
+      "pass": true,
+      "statement": "primary-vortex centre within 0.05 L of (0.5313, 0.5625)"
+     },
+     {
+      "id": "C4_u_profile_max_abs",
+      "metric": "u_max_abs",
+      "value": 0.0043072983257934905,
+      "threshold": 0.05,
+      "comparator": "le",
+      "pass": true,
+      "statement": "max |u - u_Ghia| on x = 0.5 below 5 % of the lid speed"
+     },
+     {
+      "id": "C5_v_profile_max_abs",
+      "metric": "v_max_abs",
+      "value": 0.011184127632372254,
+      "threshold": 0.05,
+      "comparator": "le",
+      "pass": true,
+      "statement": "max |v - v_Ghia| on y = 0.5 below 5 % of the lid speed"
+     },
+     {
+      "id": "C6_converged",
+      "metric": "converged",
+      "value": true,
+      "threshold": true,
+      "comparator": "is",
+      "pass": true,
+      "statement": "steady state reached: max|du|/dt <= tolerance"
+     },
+     {
+      "id": "C7_divergence",
+      "metric": "max_divergence",
+      "value": 1.3500311979441904e-13,
+      "threshold": 1e-10,
+      "comparator": "le",
+      "pass": true,
+      "statement": "discrete divergence of the converged field below 1e-10"
+     }
+    ],
+    "metrics": {
+     "u_min_rel": 0.006470901471307192,
+     "v_max_rel": 0.007791311026647753,
+     "vortex_centre_abs": 0.0039562499999999945,
+     "u_max_abs": 0.0043072983257934905,
+     "v_max_abs": 0.011184127632372254,
+     "converged": true,
+     "max_divergence": 1.3500311979441904e-13
+    },
+    "pass": true
+   },
+   "role": "production (continued from n=64)"
+  }
+ ],
+ "started": "2026-11-14T09:28:36Z",
+ "updated": "2026-11-14T09:59:48Z",
+ "continuation_check": {
+  "from_n": 32,
+  "to_n": 64,
+  "max_abs_du": 3.451156899147989e-08,
+  "max_abs_dv": 3.498170714211213e-08,
+  "same_steady_state": true,
+  "continued_steps": 59750,
+  "cold_steps": 58750,
+  "continued_wall_seconds": 324.4902377128601,
+  "cold_wall_seconds": 313.05858087539673,
+  "speedup": 0.9647704136862841,
+  "continued_verdict_pass": true,
+  "continued_fields_file": "Re1000_n64_from32.pt",
+  "cold_fields_file": "Re1000_n64.pt",
+  "independent_of_cold_run": true
+ },
+ "grid_sequence": [
+  {
+   "n": 32,
+   "role": "control (under-resolved)",
+   "u_min": -0.316430836724452,
+   "v_max": 0.3154449049885548,
+   "u_max_abs": 0.20329603195274926,
+   "v_max_abs": 0.07538595212630528,
+   "steps": 30500,
+   "converged": true
+  },
+  {
+   "n": 64,
+   "role": "production (cold start)",
+   "u_min": -0.3721841952508898,
+   "v_max": 0.36228283753525553,
+   "u_max_abs": 0.029310305036261974,
+   "v_max_abs": 0.019733918942391973,
+   "steps": 58750,
+   "converged": true
+  },
+  {
+   "n": 128,
+   "role": "production (continued from n=64)",
+   "u_min": -0.3853676434643488,
+   "v_max": 0.373840186825335,
+   "u_max_abs": 0.0043072983257934905,
+   "v_max_abs": 0.011184127632372254,
+   "steps": 104250,
+   "converged": true
+  }
+ ],
+ "verdict_5pct": {
+  "32": false,
+  "64": true,
+  "128": true
+ },
+ "all_converged": true,
+ "production_rows": [
+  64,
+  128
+ ],
+ "production_all_pass": true
+}
