@@ -1,54 +1,48 @@
-# CASE-CYLINDER-RE100: Unbounded Cylinder Vortex Shedding at Re=100
+# CASE-CYLINDER-RE100: unbounded cylinder at Re = 100 (Cd_mean, St)
 
-## Anchor
+Anchor: `GAP-DIFFLBM-EXT-LIT-CYL` (JOUR-DIFFLBM literature anchor 3, FVM side).
+Reference: Cd_mean = 1.34 +/- 0.07, St = 0.164 +/- 0.005 (Braza et al. JFM 165 (1986) 79-130, doi:10.1017/S0022112086003014; Schafer & Turek, NNFM 52 (1996), doi:10.1007/978-3-322-89849-4_39).
 
-`GAP-DIFFLBM-EXT-LIT-CYL` — JOUR-DIFFLBM 第3个文献锚：圆柱绕流 Re=100 的 Cd/St
+## Method
 
-## Acceptance Criteria
+`tensorfvm.immersed` masked MAC fractional step (geometric-multigrid
+preconditioned Poisson, `projection='masked'`, staircase cylinder mask from
+`tensorfvm.immersed.geometry.circular_cylinder`) with uniform freestream
+inlet, freestream top/bottom, zero-gradient outlet. The hydrodynamic force
+is read from a control-volume momentum budget
+(`tensorfvm.immersed.forces`); no surface interpolation of the staircase
+body is involved. Statistics: `tensorfvm.verification.cylinder_re100.
+shedding_statistics` - shedding gate, then the last 10 shedding periods,
+St from band-passed zero crossings and an independent zero-padded FFT
+cross-check.
 
-| Quantity | Reference | Tolerance | Source |
-|----------|-----------|-----------|--------|
-| Cd_mean  | 1.34      | <5%       | Braza 1986; Schafer-Turek 1996 |
-| St       | 0.164     | <3%       | Braza 1986; Schafer-Turek 1996 |
+## Grid ladder (numbers injected from the run artifacts)
 
-## Physical Problem
+| cells/D | grid | steps | Cd_mean | err | St | err | St (FFT) | Cl amp | periods | verdict |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 12 | 360x240 | 6001 | 1.5193 | 13.38 % | 0.1441 | 12.11 % | 0.1441 | 0.1128 | 10 | FAIL: cd_mean = 1.5193 vs 1.3400 (13.38 %), st = 0.1441 vs 0.1640 (12.11 %) |
+| 20 | 600x400 | 6001 | 1.5093 | 12.63 % | 0.1551 | 5.44 % | 0.1551 | 0.2005 | 10 | FAIL: cd_mean = 1.5093 vs 1.3400 (12.63 %), st = 0.1551 vs 0.1640 (5.44 %) |
+| 32 | 960x640 | 6001 | nan | nan % | - | - | - | nan | 0 | GATED: no vortex shedding: lift half-amplitude nan < gate 0.05 |
 
-2D incompressible flow past a circular cylinder at Re=100 (based on diameter D and free-stream velocity U_inf). The flow is unsteady with periodic von Karman vortex shedding.
+## Successive grid differences
 
-- Domain: 20D x 20D, cylinder centered at (10D, 10D), D=1.0 m
-- Boundary conditions: uniform inlet U=1.0 m/s, far-field outer boundary, no-slip cylinder
-- Fluid: rho=1.0 kg/m3, nu=0.01 m2/s (Re=UD/nu=100)
-- Solver: body-fitted O-grid SIMPLE/URANS, implicit Euler time stepping
+- 12 -> 20 cells/D: cd_mean_delta_pct -0.67 %, st_delta_pct +7.05 %
+- 20 -> 32 cells/D: cd_mean_delta_pct +nan %
 
-## Literature References
+Finest grid verdict: **GATED: no vortex shedding: lift half-amplitude nan < gate 0.05**
 
-1. **Braza, P., Chassaing, P. & Ha Minh, H. (1986).** "Numerical study and physical analysis of the pressure and velocity fields in the near wake of a circular cylinder." *J. Fluid Mech.* 165, 79-130. doi:10.1017/S0022112086003014
-
-2. **Schafer, M. & Turek, S. (1996).** "Benchmark Computations of Laminar Flow Around a Cylinder." In: Hirschel, E.H. et al. (eds) *Flow Simulation with High-Performance Computers II*. Notes on Numerical Fluid Mechanics, vol 52. Vieweg+Teubner. doi:10.1007/978-3-322-89849-4_39 (DFG 2D-2 benchmark)
+![grid ladder](grid_ladder.png)
 
 ## Reproduction
 
-```bash
-# Short test (verifies code path)
-PYTHONPATH=src python -m pytest tests/test_case_cylinder_re100.py -v
-
-# Production run (cluster)
-PYTHONPATH=src python -m tensorfvm.verification.cylinder_re100 \
-    --output results/cylinder-re100 \
-    --grid 128x48 --steps 3000 --dt 0.005 --warmup 500
 ```
-
-## Files
-
-- `src/tensorfvm/verification/cylinder_re100.py` — verification module
-- `artifacts/case-cylinder-re100/reference/reference.json` — literature reference with provenance
-- `tests/test_case_cylinder_re100.py` — contract tests
-- `docs/case-cylinder-re100/README.md` — this file
-
-## Status
-
-- [x] Verification module created
-- [x] Reference file with DOI provenance
-- [x] Contract tests (6/6 passing)
-- [ ] Production run (cluster submission pending)
-- [ ] Final report with figures
+# one grid
+OMP_NUM_THREADS=4 PYTHONPATH=src python -m tensorfvm.verification.cylinder_re100 \
+    --backend immersed --cells-per-diameter 20 --dt 0.02 --t-end 120 \
+    --output runs/case-cylinder-re100/cpd20
+# the whole ladder + this document
+OMP_NUM_THREADS=4 PYTHONPATH=src python scripts/case_cylinder_re100.py ladder \
+    --grids 12 20 32 --dt 0.02 --t-end 120 --root runs/case-cylinder-re100
+PYTHONPATH=src python scripts/case_cylinder_re100.py aggregate \
+    --root runs/case-cylinder-re100 --out docs/case-cylinder-re100
+```
