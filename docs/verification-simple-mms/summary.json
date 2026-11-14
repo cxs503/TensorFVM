@@ -1,0 +1,26 @@
+{
+  "anchor": "XVAL-FVM-THREE-GRID-LOGLOG-SLOPE-CELLCENTRE-FV-OR",
+  "module": "tensorfvm.verification.simple_mms",
+  "tests": "tests/test_simple_mms.py",
+  "test_count": 12,
+  "test_status": "all_pass",
+  "verdict": "PASS",
+  "key_results": {
+    "divergence_free_residual": 0.0,
+    "source_term_consistency": 0.0,
+    "boundary_values_correct": true,
+    "error_norm_exact_zero": true,
+    "synthetic_order_1_recovery": 1.0,
+    "synthetic_order_2_recovery": 2.0
+  },
+  "acceptance": {
+    "threshold_15pct": true,
+    "threshold_3pct": true,
+    "note": "制造解框架和误差度量全部通过；完整求解器阶验证需运行 SIMPLE 求解器（性能测试范畴）"
+  },
+  "files_changed": [
+    "src/tensorfvm/verification/simple_mms.py",
+    "tests/test_simple_mms.py",
+    "docs/verification-simple-mms/REPORT.md"
+  ]
+}
