@@ -8,6 +8,8 @@ abscissa, volume weighting, non-monotone ladders).
 from __future__ import annotations
 
 import math
+import tempfile
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -17,11 +19,13 @@ from tensorfvm.verification.loglog_order import (
     ORDER_TOLERANCE,
     POINT_VALUE_CONSTANT_FACTOR,
     cell_error_norms,
+    figure,
     loglog_order,
     mm_cell_average,
     mm_cell_average_second_derivative,
     mm_derivative,
     mm_value,
+    run,
     solution_error_ladder,
     stretched_faces,
     stretched_weights,
@@ -264,3 +268,36 @@ def test_loglog_matches_richardson_on_the_same_ladder():
                           tuple(reversed(block["spacings"])), theory_order=2.0)
     assert abs(block["study"]["order"] - rich.order) / 2.0 < ORDER_TOLERANCE
     assert rich.convergence == "monotone"
+
+
+# --------------------------------------------------------------------------- #
+# integration: full run() + figure() pipeline
+# --------------------------------------------------------------------------- #
+def test_run_produces_all_pass_criteria():
+    """The full cross-validation run() must return all_pass=True with 12 criteria."""
+    payload = run()
+    assert payload["all_pass"] is True
+    assert len(payload["criteria"]) == 12
+    assert all(c["verdict"] == "PASS" for c in payload["criteria"])
+    # key studies must be present
+    assert "synthetic" in payload
+    assert "guards" in payload
+    assert "tau_second" in payload
+    assert "sol_second" in payload
+    assert "sol_fourth" in payload
+    assert "richardson" in payload
+    assert "abscissa" in payload
+    assert "stretched" in payload
+
+
+def test_figure_produces_a_valid_png():
+    """figure() must write a non-empty PNG file."""
+    payload = run()
+    with tempfile.TemporaryDirectory() as td:
+        out = figure(payload, Path(td) / "test_fig.png")
+        assert out.exists()
+        assert out.stat().st_size > 10_000  # at least 10 KB for a multi-panel figure
+        # verify PNG magic bytes
+        with open(out, "rb") as f:
+            header = f.read(8)
+        assert header[:4] == b"\x89PNG"
