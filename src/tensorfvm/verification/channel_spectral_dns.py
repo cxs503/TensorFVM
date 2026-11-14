@@ -650,7 +650,11 @@ class SpectralChannel:
                     kmax_eta_wall=float(kmax_plus),
                     cells=int(self.config.nx * self.config.ny * self.config.nz),
                     time_step=float(self._dt),
-                    dt_plus=float(self._dt * re_tau ** 2 / h ** 2),
+                    # t+ = t u_tau^2 / nu with nu = u_tau h / Re_tau, i.e.
+                    # dt+ = dt u_tau Re_tau / h.  The previous form used
+                    # Re_tau**2/h**2 and overstated every wall-unit time by
+                    # a factor Re_tau (see kmm180_closurefree_audit).
+                    dt_plus=float(self._dt * self.u_tau * re_tau / h),
                     divergence_max=float(self.divergence_max))
 
 
