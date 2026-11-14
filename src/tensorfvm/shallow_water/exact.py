@@ -49,6 +49,7 @@ __all__ = [
     "gravity_wave_speed",
     "ritter_front_position",
     "ritter_head_position",
+    "ritter_level_position",
     "ritter_state",
     "stoker_constant_state",
     "stoker_region_bounds",
@@ -90,6 +91,35 @@ def ritter_front_position(t: float, h0: float, gravity: float = 9.81,
                           x_dam: float = 0.0) -> float:
     """Front (dry-bed tip) position, ``x_dam + 2 t sqrt(g h0)`` (Ritter 1892)."""
     return x_dam + 2.0 * t * math.sqrt(gravity * h0)
+
+
+def ritter_level_position(level: float, t: float, h0: float,
+                          gravity: float = 9.81, x_dam: float = 0.0) -> float:
+    """Abscissa where the Ritter fan crosses ``h = level * h0`` (``0 < level < 1``).
+
+    The fan is linear in the wave speed, ``c(x, t) = (2 c0 - (x - x_dam) / t) / 3``
+    with ``c0 = sqrt(g h0)``, and ``h = c^2 / g``.  Setting ``h = level * h0``
+    (i.e. ``c = c0 sqrt(level)``) and solving for ``x`` gives the closed form::
+
+        x_level = x_dam + c0 t (2 - 3 sqrt(level)).
+
+    This is *not* the front: the tip is the zero-depth cusp at
+    ``x_dam + 2 c0 t``.  The point of the formula is that it locates a **depth
+    contour** by algebra alone, so a measurement of that contour in a numerical
+    profile can be graded against it without the measurement itself importing
+    either the front position or the fan similarity identity ``x_f = x_i +
+    3 t sqrt(g h_i)``.  See :func:`tensorfvm.shallow_water.dam_break.
+    level_position_study`.
+
+    ``level = 1`` is degenerate: it is the undisturbed tail, where ``h`` equals
+    ``h0`` over an interval, so a strict-crossing detector has no crossing.
+    ``level -> 0`` approaches the tip, whose contour position any finite-volume
+    scheme smears.
+    """
+    if not 0.0 < level < 1.0:
+        raise ValueError(f"level must lie strictly inside (0, 1), got {level!r}")
+    c0 = math.sqrt(gravity * h0)
+    return x_dam + c0 * t * (2.0 - 3.0 * math.sqrt(level))
 
 
 def ritter_state(x, t: float, h0: float, gravity: float = 9.81,
