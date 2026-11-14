@@ -10,7 +10,12 @@ references are solutions of the hydrostatic shallow-water system.
 """
 
 from .dam_break import (
+    ACCEPTED_MIN_N,
     CASES,
+    LEVEL_POSITION_LEVELS,
+    LEVEL_POSITION_SERIES_LEVEL,
+    level_position_metrics,
+    level_position_study,
     RITTER_DRY,
     STOKER_WET,
     TOLERANCE,
@@ -37,6 +42,7 @@ from .crosscheck import (
 )
 from .exact import (
     check_stoker_solution,
+    ritter_level_position,
     ritter_front_position,
     ritter_state,
     stoker_constant_state,
