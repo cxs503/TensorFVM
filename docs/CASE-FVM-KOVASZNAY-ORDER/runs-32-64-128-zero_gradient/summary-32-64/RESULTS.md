@@ -14,3 +14,17 @@ Verdict: PASS (full-3D velocity slope 1.9370 vs threshold 1.8); in-plane velocit
 | spanwise w RMS / |u_exact| | 2.5987 | 1.000000 | PASS |
 | pressure L2 (fixed gauge) | 0.9857 | 1.000000 | FAIL |
 | pressure L2 (mean-free gauge) | 1.8581 | 1.000000 | PASS |
+
+| quantity | pair orders | spread | band | both >= thr | consistent |
+|---|---|---:|---:|:--|:--|
+| velocity L2 (full 3D u,v,w) | 1.9370 | n/a | 0.20 | yes | n/a |
+| velocity L2 (in-plane u,v) | 1.9370 | n/a | 0.20 | yes | n/a |
+| spanwise w RMS / |u_exact| | 2.5987 | n/a | 0.20 | yes | n/a |
+| pressure L2 (fixed gauge) | 0.9857 | n/a | 0.20 | NO | n/a |
+| pressure L2 (mean-free gauge) | 1.8581 | n/a | 0.20 | yes | n/a |
+
+| quantity | three-level order f(h)=L+C h^p | stderr | convergence | extrapolated L | GCI |
+|---|---:|---:|:--|---:|---:|
+| velocity L2 (full 3D u,v,w) | n/a (fewer than 3 usable levels) | | | | |
+| velocity L2 (in-plane u,v) | n/a (fewer than 3 usable levels) | | | | |
+| pressure L2 (mean-free gauge) | n/a (fewer than 3 usable levels) | | | | |
