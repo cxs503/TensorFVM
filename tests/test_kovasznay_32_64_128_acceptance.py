@@ -198,3 +198,45 @@ def test_anchor_zg_full_3d_velocity_order_meets_acceptance():
     assert inplane_order >= THRESHOLD, f'in-plane velocity slope {inplane_order:.4f} < 1.8'
     assert pressure_order >= THRESHOLD, f'mean-free pressure slope {pressure_order:.4f} < 1.8'
     assert _summary(directory)['verdict']['pass'] is True
+
+
+def _pair_orders(levels, key):
+    return [float(np.log(coarse['recomputed'][key] / fine['recomputed'][key])
+                  / np.log(coarse['row']['h'] / fine['row']['h']))
+            for coarse, fine in zip(levels, levels[1:])]
+
+
+@pytest.mark.parametrize('name', list(SETS))
+def test_pair_orders_and_three_level_order_reproduce(name):
+    """The corroboration flags must be recomputed quantities, not assertions.
+
+    A three-grid log-log slope has no residual degrees of freedom, so the
+    summary carries two further statements: the two per-pair orders (do both
+    clear the threshold and agree inside the pre-declared 0.20 band?) and the
+    order re-identified by fitting ``f(h) = L + C h^p`` to the whole ladder.
+    Both are recomputed here from the raw fields so neither can be hand-set.
+    """
+    from tensorfvm.verification.multi_grid import multi_grid_order
+
+    directory, levels = _load(name)
+    summary = _summary(directory)
+    for key in ('velocity_full', 'velocity_inplane'):
+        pairs = _pair_orders(levels, key)
+        block = summary['pair_consistency'][key]
+        assert block['pairs'] == pytest.approx(pairs, abs=1e-9)
+        assert block['spread'] == pytest.approx(max(pairs) - min(pairs), abs=1e-9)
+        assert block['both_above'] is all(order >= THRESHOLD for order in pairs)
+        assert block['consistent'] is bool(max(pairs) - min(pairs) <= block['band'])
+        estimate = summary['three_level_estimates'][key]
+        study = multi_grid_order([level['row']['h'] for level in reversed(levels)],
+                                 [level['recomputed'][key] for level in reversed(levels)],
+                                 theory_order=2.)
+        assert estimate['order'] == pytest.approx(float(study.order), abs=1e-9)
+        assert estimate['levels'] == [level['row']['n'] for level in levels]
+        # Three levels cannot identify an uncertainty; withholding it is honest.
+        assert estimate['order_stderr'] is None
+    verdict = summary['verdict']
+    assert verdict['corroborated'] is bool(
+        verdict['pass'] and verdict['pair_orders_consistent']
+        and verdict['three_level_order'] is not None
+        and verdict['three_level_order'] >= THRESHOLD)
