@@ -1,0 +1,1219 @@
+{
+ "amplification": {
+  "mc": [
+   6.230688048178933,
+   8.06475156898637,
+   12.88416957062141,
+   20.480732684265035
+  ],
+  "minmod": [
+   14.710301388447375,
+   23.831080978021998,
+   39.00507370969818,
+   63.86301449267978
+  ],
+  "superbee": [
+   14.950649716323053,
+   22.910762953541454,
+   39.218516682746795,
+   57.59446433669638
+  ],
+  "vanleer": [
+   8.859734758732523,
+   13.505885067485933,
+   20.67382400163432,
+   31.468812985117342
+  ]
+ },
+ "clip": {
+  "mc": [
+   {
+    "extremum_cells": 2,
+    "extremum_slope_max_ratio": 0.7095468460664007,
+    "extremum_slope_zero": false,
+    "heavy_clip_cells": 2,
+    "limiter": "mc",
+    "min_clip_factor": 0.4087934735125312,
+    "never_amplifies": true,
+    "slope_scale": 0.031185367877226644
+   },
+   {
+    "extremum_cells": 2,
+    "extremum_slope_max_ratio": 1.0,
+    "extremum_slope_zero": false,
+    "heavy_clip_cells": 0,
+    "limiter": "mc",
+    "min_clip_factor": 0.5013501917745596,
+    "never_amplifies": true,
+    "slope_scale": 0.015679379755049794
+   },
+   {
+    "extremum_cells": 2,
+    "extremum_slope_max_ratio": 1.0,
+    "extremum_slope_zero": false,
+    "heavy_clip_cells": 2,
+    "limiter": "mc",
+    "min_clip_factor": 0.22330675062515906,
+    "never_amplifies": true,
+    "slope_scale": 0.007850428249179864
+   },
+   {
+    "extremum_cells": 2,
+    "extremum_slope_max_ratio": 0.798288142938238,
+    "extremum_slope_zero": false,
+    "heavy_clip_cells": 2,
+    "limiter": "mc",
+    "min_clip_factor": 0.06603054294606937,
+    "never_amplifies": true,
+    "slope_scale": 0.003926547923386758
+   }
+  ],
+  "minmod": [
+   {
+    "extremum_cells": 2,
+    "extremum_slope_max_ratio": 0.0,
+    "extremum_slope_zero": true,
+    "heavy_clip_cells": 6,
+    "limiter": "minmod",
+    "min_clip_factor": 0.0,
+    "never_amplifies": true,
+    "slope_scale": 0.03170439860610774
+   },
+   {
+    "extremum_cells": 2,
+    "extremum_slope_max_ratio": 0.0,
+    "extremum_slope_zero": true,
+    "heavy_clip_cells": 6,
+    "limiter": "minmod",
+    "min_clip_factor": 0.0,
+    "never_amplifies": true,
+    "slope_scale": 0.01579094837584538
+   },
+   {
+    "extremum_cells": 2,
+    "extremum_slope_max_ratio": 0.0,
+    "extremum_slope_zero": true,
+    "heavy_clip_cells": 6,
+    "limiter": "minmod",
+    "min_clip_factor": 0.0,
+    "never_amplifies": true,
+    "slope_scale": 0.007874349961487781
+   },
+   {
+    "extremum_cells": 2,
+    "extremum_slope_max_ratio": 0.0,
+    "extremum_slope_zero": true,
+    "heavy_clip_cells": 6,
+    "limiter": "minmod",
+    "min_clip_factor": 0.0,
+    "never_amplifies": true,
+    "slope_scale": 0.0039315903023239285
+   }
+  ],
+  "none": [
+   {
+    "extremum_cells": 2,
+    "extremum_slope_max_ratio": 1.0,
+    "extremum_slope_zero": false,
+    "heavy_clip_cells": 0,
+    "limiter": "none",
+    "min_clip_factor": 1.0,
+    "never_amplifies": true,
+    "slope_scale": 0.031184997721276086
+   },
+   {
+    "extremum_cells": 2,
+    "extremum_slope_max_ratio": 1.0,
+    "extremum_slope_zero": false,
+    "heavy_clip_cells": 0,
+    "limiter": "none",
+    "min_clip_factor": 1.0,
+    "never_amplifies": true,
+    "slope_scale": 0.015679379759103995
+   },
+   {
+    "extremum_cells": 2,
+    "extremum_slope_max_ratio": 1.0,
+    "extremum_slope_zero": false,
+    "heavy_clip_cells": 0,
+    "limiter": "none",
+    "min_clip_factor": 1.0,
+    "never_amplifies": true,
+    "slope_scale": 0.007850428249123742
+   },
+   {
+    "extremum_cells": 2,
+    "extremum_slope_max_ratio": 1.0,
+    "extremum_slope_zero": false,
+    "heavy_clip_cells": 0,
+    "limiter": "none",
+    "min_clip_factor": 1.0,
+    "never_amplifies": true,
+    "slope_scale": 0.00392654792338426
+   }
+  ],
+  "superbee": [
+   {
+    "extremum_cells": 2,
+    "extremum_slope_max_ratio": 0.0,
+    "extremum_slope_zero": true,
+    "heavy_clip_cells": 4,
+    "limiter": "superbee",
+    "min_clip_factor": 0.0,
+    "never_amplifies": false,
+    "slope_scale": 0.030737836288919518
+   },
+   {
+    "extremum_cells": 2,
+    "extremum_slope_max_ratio": 0.0,
+    "extremum_slope_zero": true,
+    "heavy_clip_cells": 4,
+    "limiter": "superbee",
+    "min_clip_factor": 0.0,
+    "never_amplifies": false,
+    "slope_scale": 0.015574010724605347
+   },
+   {
+    "extremum_cells": 2,
+    "extremum_slope_max_ratio": 0.0,
+    "extremum_slope_zero": true,
+    "heavy_clip_cells": 4,
+    "limiter": "superbee",
+    "min_clip_factor": 0.0,
+    "never_amplifies": false,
+    "slope_scale": 0.007827050579545025
+   },
+   {
+    "extremum_cells": 2,
+    "extremum_slope_max_ratio": 0.0,
+    "extremum_slope_zero": true,
+    "heavy_clip_cells": 6,
+    "limiter": "superbee",
+    "min_clip_factor": 0.0,
+    "never_amplifies": false,
+    "slope_scale": 0.003921541078767354
+   }
+  ],
+  "vanleer": [
+   {
+    "extremum_cells": 2,
+    "extremum_slope_max_ratio": 0.0,
+    "extremum_slope_zero": true,
+    "heavy_clip_cells": 4,
+    "limiter": "vanleer",
+    "min_clip_factor": 0.0,
+    "never_amplifies": true,
+    "slope_scale": 0.031203356761483392
+   },
+   {
+    "extremum_cells": 2,
+    "extremum_slope_max_ratio": 0.0,
+    "extremum_slope_zero": true,
+    "heavy_clip_cells": 4,
+    "limiter": "vanleer",
+    "min_clip_factor": 0.0,
+    "never_amplifies": true,
+    "slope_scale": 0.01568044620081216
+   },
+   {
+    "extremum_cells": 2,
+    "extremum_slope_max_ratio": 0.0,
+    "extremum_slope_zero": true,
+    "heavy_clip_cells": 4,
+    "limiter": "vanleer",
+    "min_clip_factor": 0.0,
+    "never_amplifies": true,
+    "slope_scale": 0.007850494810376363
+   },
+   {
+    "extremum_cells": 2,
+    "extremum_slope_max_ratio": 0.0,
+    "extremum_slope_zero": true,
+    "heavy_clip_cells": 4,
+    "limiter": "vanleer",
+    "min_clip_factor": 0.0,
+    "never_amplifies": true,
+    "slope_scale": 0.003926552081584489
+   }
+  ]
+ },
+ "criteria": [
+  {
+   "claim": "the NumPy limiter mirror reproduces the solver's torch path",
+   "name": "B1",
+   "observed": 0.0,
+   "passed": true,
+   "threshold": "<= 1e-12 relative, all five probes"
+  },
+  {
+   "claim": "unlimited centred slope recovers order 2 in L1 and in L-inf",
+   "name": "B2",
+   "observed": {
+    "l1": 1.9207,
+    "linf": 1.9214
+   },
+   "passed": true,
+   "threshold": "each |p-2|/2 <= 15 %"
+  },
+  {
+   "claim": "every TVD limiter stays inside the 15 % order band on the L1 norm",
+   "name": "B3",
+   "observed": {
+    "mc": 2.0369,
+    "minmod": 1.8423,
+    "superbee": 1.9831,
+    "vanleer": 2.0342
+   },
+   "passed": true,
+   "threshold": "each |p-2|/2 <= 15 %"
+  },
+  {
+   "claim": "every TVD limiter's L-inf observed order is below 2 by > 15 %",
+   "name": "B4",
+   "observed": {
+    "mc": 1.3973,
+    "minmod": 1.218,
+    "superbee": 1.2257,
+    "vanleer": 1.3102
+   },
+   "passed": true,
+   "threshold": "each (2-p)/2 >= 15 %"
+  },
+  {
+   "claim": "the L1-L-inf order gap of every TVD limiter exceeds 0.3",
+   "name": "B5",
+   "observed": {
+    "mc": 0.6395,
+    "minmod": 0.6244,
+    "superbee": 0.7573,
+    "vanleer": 0.724
+   },
+   "passed": true,
+   "threshold": "each gap >= 0.3"
+  },
+  {
+   "claim": "the cell set where the TVD constraint bites has a grid-independent count (2, or 4 when an extremum falls on a cell boundary)",
+   "name": "B6",
+   "observed": {
+    "mc": [
+     2,
+     2,
+     2,
+     2
+    ],
+    "minmod": [
+     2,
+     2,
+     2,
+     2
+    ],
+    "superbee": [
+     2,
+     2,
+     2,
+     2
+    ],
+    "vanleer": [
+     2,
+     2,
+     2,
+     2
+    ]
+   },
+   "passed": true,
+   "threshold": "constant over the ladder and <= 4 for every probe"
+  },
+  {
+   "claim": "minmod/vanleer/superbee return an exactly zero slope at every extremum cell; minmod/vanleer/mc never amplify the centred slope (superbee is compressive and may, so it is exempt)",
+   "name": "B7",
+   "observed": {
+    "extrema_zero": {
+     "mc": false,
+     "minmod": true,
+     "superbee": true,
+     "vanleer": true
+    },
+    "never_amplifies": {
+     "mc": true,
+     "minmod": true,
+     "superbee": false,
+     "vanleer": true
+    }
+   },
+   "passed": true,
+   "threshold": "all true (mc is checked by no-amplification instead of exact zero; superbee is exempt from no-amplification)"
+  },
+  {
+   "claim": "the L-inf error of every TVD limiter is amplified > 5x at the finest grid",
+   "name": "B8",
+   "observed": {
+    "mc": 20.481,
+    "minmod": 63.863,
+    "superbee": 57.594,
+    "vanleer": 31.469
+   },
+   "passed": true,
+   "threshold": "each amplification >= 5.0"
+  },
+  {
+   "claim": "the amplification grows under refinement (the error rates diverge)",
+   "name": "B9",
+   "observed": {
+    "mc": 3.287,
+    "minmod": 4.341,
+    "superbee": 3.852,
+    "vanleer": 3.552
+   },
+   "passed": true,
+   "threshold": "finest/coarsest >= 1.5"
+  },
+  {
+   "claim": "the deficit survives a longer ladder (not a three-grid artifact)",
+   "name": "B10",
+   "observed": {
+    "mc": {
+     "adjacent": [
+      1.5223,
+      1.2724,
+      1.3062
+     ],
+     "p_long_ladder": 1.3575,
+     "p_three_grid": 1.3973,
+     "rel_diff": 0.0285
+    },
+    "minmod": {
+     "adjacent": [
+      1.1985,
+      1.2374,
+      1.2636
+     ],
+     "p_long_ladder": 1.2336,
+     "p_three_grid": 1.218,
+     "rel_diff": 0.0128
+    },
+    "superbee": {
+     "adjacent": [
+      1.2787,
+      1.1727,
+      1.4205
+     ],
+     "p_long_ladder": 1.2789,
+     "p_three_grid": 1.2257,
+     "rel_diff": 0.0433
+    },
+    "vanleer": {
+     "adjacent": [
+      1.2863,
+      1.334,
+      1.3688
+     ],
+     "p_long_ladder": 1.3301,
+     "p_three_grid": 1.3102,
+     "rel_diff": 0.0152
+    }
+   },
+   "passed": true,
+   "threshold": "long-ladder L-inf order within 15 % of the three-grid value"
+  },
+  {
+   "claim": "the idealisation 'a TVD limiter is exactly first order in L-inf at a smooth extremum on accessible grids' is not confirmed",
+   "name": "B11",
+   "observed": {
+    "mc": 0.3973,
+    "minmod": 0.218,
+    "superbee": 0.2257,
+    "vanleer": 0.3102
+   },
+   "passed": true,
+   "threshold": "declared NOT_CONFIRMED when every |p-1|/1 > 15 %"
+  },
+  {
+   "claim": "no TVD probe is reported as uniformly second order",
+   "name": "B12",
+   "observed": {
+    "mc": "second-order-in-L1-only",
+    "minmod": "second-order-in-L1-only",
+    "none": "second-order-in-both-norms",
+    "superbee": "second-order-in-L1-only",
+    "vanleer": "second-order-in-L1-only"
+   },
+   "passed": true,
+   "threshold": "no TVD probe labelled 'second order in both norms'"
+  },
+  {
+   "claim": "the module docstring of the reconstruction states the norm dependence of its order claim",
+   "name": "B13",
+   "observed": true,
+   "passed": true,
+   "threshold": "the words 'L1' and 'L-inf' both appear in the reconstruct docstring next to the order claim"
+  }
+ ],
+ "declared_claim_audit": {
+  "documented": true,
+  "mentions_L1": true,
+  "mentions_Linf": true,
+  "module": "tensorfvm.compressible.reconstruct"
+ },
+ "errors": {
+  "mc": [
+   {
+    "l1": 0.00036351683004789417,
+    "linf": 0.0014738493582107104
+   },
+   {
+    "l1": 8.883514018313555e-05,
+    "linf": 0.0005130887995155042
+   },
+   {
+    "l1": 2.158751658022235e-05,
+    "linf": 0.00021241083689149676
+   },
+   {
+    "l1": 5.1026339012411055e-06,
+    "linf": 8.58955399887229e-05
+   }
+  ],
+  "minmod": [
+   {
+    "l1": 0.0009468433788694526,
+    "linf": 0.0034796748116423526
+   },
+   {
+    "l1": 0.00027071718641259875,
+    "linf": 0.001516160866900318
+   },
+   {
+    "l1": 7.363390739121638e-05,
+    "linf": 0.000643044963377637
+   },
+   {
+    "l1": 1.9473136455011246e-05,
+    "linf": 0.0002678394469437517
+   }
+  ],
+  "none": [
+   {
+    "l1": 0.00015048059468123208,
+    "linf": 0.00023654680619766832
+   },
+   {
+    "l1": 4.053442597603957e-05,
+    "linf": 6.362115374869415e-05
+   },
+   {
+    "l1": 1.0497730776178744e-05,
+    "linf": 1.6486187621733706e-05
+   },
+   {
+    "l1": 2.669967236438795e-06,
+    "linf": 4.1939681217906255e-06
+   }
+  ],
+  "superbee": [
+   {
+    "l1": 0.0008468473653779119,
+    "linf": 0.0035365284409762943
+   },
+   {
+    "l1": 0.00022100074440232353,
+    "linf": 0.001457609172367147
+   },
+   {
+    "l1": 5.418502544478275e-05,
+    "linf": 0.0006465638242778571
+   },
+   {
+    "l1": 1.3148312851249401e-05,
+    "linf": 0.00024154934741971168
+   }
+  ],
+  "vanleer": [
+   {
+    "l1": 0.0005502868757027435,
+    "linf": 0.002095741960936648
+   },
+   {
+    "l1": 0.0001364232086290357,
+    "linf": 0.000859259990390715
+   },
+   {
+    "l1": 3.28025886889169e-05,
+    "linf": 0.0003408325413496449
+   },
+   {
+    "l1": 8.071432562150108e-06,
+    "linf": 0.00013197919849017303
+   }
+  ]
+ },
+ "figure": "outputs/limiter-barrier/fig_limiter_barrier.png",
+ "grids": [
+  40,
+  80,
+  160,
+  320
+ ],
+ "mirror_max_rel_error": {
+  "mc": 0.0,
+  "minmod": 0.0,
+  "none": 0.0,
+  "superbee": 0.0,
+  "vanleer": 0.0
+ },
+ "orders": {
+  "mc": {
+   "l1": 2.0368764842230407,
+   "linf": 1.397329898561194
+  },
+  "minmod": {
+   "l1": 1.8423418190400054,
+   "linf": 1.2179804820259563
+  },
+  "none": {
+   "l1": 1.9207140231580637,
+   "linf": 1.9213979791004434
+  },
+  "superbee": {
+   "l1": 1.9830679272625875,
+   "linf": 1.2257345843030907
+  },
+  "vanleer": {
+   "l1": 2.034151171497934,
+   "linf": 1.3101630526558827
+  }
+ },
+ "probes": [
+  "none",
+  "mc",
+  "vanleer",
+  "superbee",
+  "minmod"
+ ],
+ "readouts": {
+  "mc": {
+   "l1": {
+    "errors": [
+     0.00036351683004789417,
+     8.883514018313555e-05,
+     2.158751658022235e-05
+    ],
+    "h": [
+     0.025,
+     0.0125,
+     0.00625
+    ],
+    "loglog_pass_15": true,
+    "loglog_pass_3": true,
+    "loglog_rel_dev": 0.018438242111520342,
+    "loglog_rel_dev_from_theory": 0.018438242111520342,
+    "loglog_within_15": true,
+    "long_ladder": {
+     "errors": [
+      0.00036351683004789417,
+      8.883514018313555e-05,
+      2.158751658022235e-05,
+      5.1026339012411055e-06
+     ],
+     "grids": [
+      40,
+      80,
+      160,
+      320
+     ],
+     "p_adjacent": [
+      2.0328197833166244,
+      2.0409331851294565,
+      2.080883244328698
+     ],
+     "p_loglog": 2.0504841823453797
+    },
+    "metric": "cell_average",
+    "norm": "l1",
+    "nx": [
+     40,
+     80,
+     160
+    ],
+    "p_adjacent": [
+     2.0328197833166244,
+     2.0409331851294565
+    ],
+    "p_loglog": 2.0368764842230407,
+    "p_richardson": 2.030205552622176,
+    "p_theory": 2.0,
+    "refinement_ratios": [
+     2.0,
+     2.0
+    ],
+    "richardson_pass_15": true,
+    "richardson_rel_dev": 0.015102776311088029
+   },
+   "linf": {
+    "errors": [
+     0.0014738493582107104,
+     0.0005130887995155042,
+     0.00021241083689149676
+    ],
+    "h": [
+     0.025,
+     0.0125,
+     0.00625
+    ],
+    "loglog_pass_15": false,
+    "loglog_pass_3": false,
+    "loglog_rel_dev": 0.30133505071940303,
+    "loglog_rel_dev_from_theory": 0.30133505071940303,
+    "loglog_within_15": false,
+    "long_ladder": {
+     "errors": [
+      0.0014738493582107104,
+      0.0005130887995155042,
+      0.00021241083689149676,
+      8.58955399887229e-05
+     ],
+     "grids": [
+      40,
+      80,
+      160,
+      320
+     ],
+     "p_adjacent": [
+      1.5223086368152468,
+      1.2723511603071418,
+      1.306202243812707
+     ],
+     "p_loglog": 1.3574937283112427
+    },
+    "metric": "cell_average",
+    "norm": "linf",
+    "nx": [
+     40,
+     80,
+     160
+    ],
+    "p_adjacent": [
+     1.5223086368152468,
+     1.2723511603071418
+    ],
+    "p_loglog": 1.397329898561194,
+    "p_richardson": 1.6759577931331697,
+    "p_theory": 2.0,
+    "refinement_ratios": [
+     2.0,
+     2.0
+    ],
+    "richardson_pass_15": false,
+    "richardson_rel_dev": 0.16202110343341514
+   }
+  },
+  "minmod": {
+   "l1": {
+    "errors": [
+     0.0009468433788694526,
+     0.00027071718641259875,
+     7.363390739121638e-05
+    ],
+    "h": [
+     0.025,
+     0.0125,
+     0.00625
+    ],
+    "loglog_pass_15": true,
+    "loglog_pass_3": false,
+    "loglog_rel_dev": 0.07882909047999731,
+    "loglog_rel_dev_from_theory": 0.07882909047999731,
+    "loglog_within_15": true,
+    "long_ladder": {
+     "errors": [
+      0.0009468433788694526,
+      0.00027071718641259875,
+      7.363390739121638e-05,
+      1.9473136455011246e-05
+     ],
+     "grids": [
+      40,
+      80,
+      160,
+      320
+     ],
+     "p_adjacent": [
+      1.8063393239093624,
+      1.8783443141706468,
+      1.9188849888005088
+     ],
+     "p_loglog": 1.868905019481221
+    },
+    "metric": "cell_average",
+    "norm": "l1",
+    "nx": [
+     40,
+     80,
+     160
+    ],
+    "p_adjacent": [
+     1.8063393239093624,
+     1.8783443141706468
+    ],
+    "p_loglog": 1.8423418190400054,
+    "p_richardson": 1.7784871566499083,
+    "p_theory": 2.0,
+    "refinement_ratios": [
+     2.0,
+     2.0
+    ],
+    "richardson_pass_15": true,
+    "richardson_rel_dev": 0.11075642167504585
+   },
+   "linf": {
+    "errors": [
+     0.0034796748116423526,
+     0.001516160866900318,
+     0.000643044963377637
+    ],
+    "h": [
+     0.025,
+     0.0125,
+     0.00625
+    ],
+    "loglog_pass_15": false,
+    "loglog_pass_3": false,
+    "loglog_rel_dev": 0.39100975898702184,
+    "loglog_rel_dev_from_theory": 0.39100975898702184,
+    "loglog_within_15": false,
+    "long_ladder": {
+     "errors": [
+      0.0034796748116423526,
+      0.001516160866900318,
+      0.000643044963377637,
+      0.0002678394469437517
+     ],
+     "grids": [
+      40,
+      80,
+      160,
+      320
+     ],
+     "p_adjacent": [
+      1.1985296535390382,
+      1.2374313105128738,
+      1.2635511640604582
+     ],
+     "p_loglog": 1.233596769484999
+    },
+    "metric": "cell_average",
+    "norm": "linf",
+    "nx": [
+     40,
+     80,
+     160
+    ],
+    "p_adjacent": [
+     1.1985296535390382,
+     1.2374313105128738
+    ],
+    "p_loglog": 1.2179804820259563,
+    "p_richardson": 1.1691927588342832,
+    "p_theory": 2.0,
+    "refinement_ratios": [
+     2.0,
+     2.0
+    ],
+    "richardson_pass_15": false,
+    "richardson_rel_dev": 0.4154036205828584
+   }
+  },
+  "none": {
+   "l1": {
+    "errors": [
+     0.00015048059468123208,
+     4.053442597603957e-05,
+     1.0497730776178744e-05
+    ],
+    "h": [
+     0.025,
+     0.0125,
+     0.00625
+    ],
+    "loglog_pass_15": true,
+    "loglog_pass_3": false,
+    "loglog_rel_dev": 0.03964298842096814,
+    "loglog_rel_dev_from_theory": 0.03964298842096814,
+    "loglog_within_15": true,
+    "long_ladder": {
+     "errors": [
+      0.00015048059468123208,
+      4.053442597603957e-05,
+      1.0497730776178744e-05,
+      2.669967236438795e-06
+     ],
+     "grids": [
+      40,
+      80,
+      160,
+      320
+     ],
+     "p_adjacent": [
+      1.8923578375872276,
+      1.9490702087289007,
+      1.9751835603029753
+     ],
+     "p_loglog": 1.939890502858621
+    },
+    "metric": "cell_average",
+    "norm": "l1",
+    "nx": [
+     40,
+     80,
+     160
+    ],
+    "p_adjacent": [
+     1.8923578375872276,
+     1.9490702087289007
+    ],
+    "p_loglog": 1.9207140231580637,
+    "p_richardson": 1.8719993379037048,
+    "p_theory": 2.0,
+    "refinement_ratios": [
+     2.0,
+     2.0
+    ],
+    "richardson_pass_15": true,
+    "richardson_rel_dev": 0.06400033104814762
+   },
+   "linf": {
+    "errors": [
+     0.00023654680619766832,
+     6.362115374869415e-05,
+     1.6486187621733706e-05
+    ],
+    "h": [
+     0.025,
+     0.0125,
+     0.00625
+    ],
+    "loglog_pass_15": true,
+    "loglog_pass_3": false,
+    "loglog_rel_dev": 0.039301010449778295,
+    "loglog_rel_dev_from_theory": 0.039301010449778295,
+    "loglog_within_15": true,
+    "long_ladder": {
+     "errors": [
+      0.00023654680619766832,
+      6.362115374869415e-05,
+      1.6486187621733706e-05,
+      4.1939681217906255e-06
+     ],
+     "grids": [
+      40,
+      80,
+      160,
+      320
+     ],
+     "p_adjacent": [
+      1.8945472420064557,
+      1.94824871619443,
+      1.9748700180074281
+     ],
+     "p_loglog": 1.9401246644819379
+    },
+    "metric": "cell_average",
+    "norm": "linf",
+    "nx": [
+     40,
+     80,
+     160
+    ],
+    "p_adjacent": [
+     1.8945472420064557,
+     1.94824871619443
+    ],
+    "p_loglog": 1.9213979791004434,
+    "p_richardson": 1.8752823033016859,
+    "p_theory": 2.0,
+    "refinement_ratios": [
+     2.0,
+     2.0
+    ],
+    "richardson_pass_15": true,
+    "richardson_rel_dev": 0.06235884834915706
+   }
+  },
+  "superbee": {
+   "l1": {
+    "errors": [
+     0.0008468473653779119,
+     0.00022100074440232353,
+     5.418502544478275e-05
+    ],
+    "h": [
+     0.025,
+     0.0125,
+     0.00625
+    ],
+    "loglog_pass_15": true,
+    "loglog_pass_3": true,
+    "loglog_rel_dev": 0.008466036368706242,
+    "loglog_rel_dev_from_theory": 0.008466036368706242,
+    "loglog_within_15": true,
+    "long_ladder": {
+     "errors": [
+      0.0008468473653779119,
+      0.00022100074440232353,
+      5.418502544478275e-05,
+      1.3148312851249401e-05
+     ],
+     "grids": [
+      40,
+      80,
+      160,
+      320
+     ],
+     "p_adjacent": [
+      1.9380507344976734,
+      2.0280851200275007,
+      2.043016514493208
+     ],
+     "p_loglog": 2.005554222708265
+    },
+    "metric": "cell_average",
+    "norm": "l1",
+    "nx": [
+     40,
+     80,
+     160
+    ],
+    "p_adjacent": [
+     1.9380507344976734,
+     2.0280851200275007
+    ],
+    "p_loglog": 1.9830679272625875,
+    "p_richardson": 1.9075538931803653,
+    "p_theory": 2.0,
+    "refinement_ratios": [
+     2.0,
+     2.0
+    ],
+    "richardson_pass_15": true,
+    "richardson_rel_dev": 0.04622305340981736
+   },
+   "linf": {
+    "errors": [
+     0.0035365284409762943,
+     0.001457609172367147,
+     0.0006465638242778571
+    ],
+    "h": [
+     0.025,
+     0.0125,
+     0.00625
+    ],
+    "loglog_pass_15": false,
+    "loglog_pass_3": false,
+    "loglog_rel_dev": 0.38713270784845466,
+    "loglog_rel_dev_from_theory": 0.38713270784845466,
+    "loglog_within_15": false,
+    "long_ladder": {
+     "errors": [
+      0.0035365284409762943,
+      0.001457609172367147,
+      0.0006465638242778571,
+      0.00024154934741971168
+     ],
+     "grids": [
+      40,
+      80,
+      160,
+      320
+     ],
+     "p_adjacent": [
+      1.27872992079342,
+      1.1727392478127618,
+      1.4204748347448497
+     ],
+     "p_loglog": 1.2788571257865855
+    },
+    "metric": "cell_average",
+    "norm": "linf",
+    "nx": [
+     40,
+     80,
+     160
+    ],
+    "p_adjacent": [
+     1.27872992079342,
+     1.1727392478127618
+    ],
+    "p_loglog": 1.2257345843030907,
+    "p_richardson": 1.3579792471934438,
+    "p_theory": 2.0,
+    "refinement_ratios": [
+     2.0,
+     2.0
+    ],
+    "richardson_pass_15": false,
+    "richardson_rel_dev": 0.3210103764032781
+   }
+  },
+  "vanleer": {
+   "l1": {
+    "errors": [
+     0.0005502868757027435,
+     0.0001364232086290357,
+     3.28025886889169e-05
+    ],
+    "h": [
+     0.025,
+     0.0125,
+     0.00625
+    ],
+    "loglog_pass_15": true,
+    "loglog_pass_3": true,
+    "loglog_rel_dev": 0.01707558574896706,
+    "loglog_rel_dev_from_theory": 0.01707558574896706,
+    "loglog_within_15": true,
+    "long_ladder": {
+     "errors": [
+      0.0005502868757027435,
+      0.0001364232086290357,
+      3.28025886889169e-05,
+      8.071432562150108e-06
+     ],
+     "grids": [
+      40,
+      80,
+      160,
+      320
+     ],
+     "p_adjacent": [
+      2.012094821088635,
+      2.0562075219072335,
+      2.0229130140341014
+     ],
+     "p_loglog": 2.0329853592997145
+    },
+    "metric": "cell_average",
+    "norm": "l1",
+    "nx": [
+     40,
+     80,
+     160
+    ],
+    "p_adjacent": [
+     2.012094821088635,
+     2.0562075219072335
+    ],
+    "p_loglog": 2.034151171497934,
+    "p_richardson": 1.9978444804411137,
+    "p_theory": 2.0,
+    "refinement_ratios": [
+     2.0,
+     2.0
+    ],
+    "richardson_pass_15": true,
+    "richardson_rel_dev": 0.0010777597794431326
+   },
+   "linf": {
+    "errors": [
+     0.002095741960936648,
+     0.000859259990390715,
+     0.0003408325413496449
+    ],
+    "h": [
+     0.025,
+     0.0125,
+     0.00625
+    ],
+    "loglog_pass_15": false,
+    "loglog_pass_3": false,
+    "loglog_rel_dev": 0.34491847367205863,
+    "loglog_rel_dev_from_theory": 0.34491847367205863,
+    "loglog_within_15": false,
+    "long_ladder": {
+     "errors": [
+      0.002095741960936648,
+      0.000859259990390715,
+      0.0003408325413496449,
+      0.00013197919849017303
+     ],
+     "grids": [
+      40,
+      80,
+      160,
+      320
+     ],
+     "p_adjacent": [
+      1.2862944697638177,
+      1.3340316355479473,
+      1.3687525235818634
+     ],
+     "p_loglog": 1.3301267522228835
+    },
+    "metric": "cell_average",
+    "norm": "linf",
+    "nx": [
+     40,
+     80,
+     160
+    ],
+    "p_adjacent": [
+     1.2862944697638177,
+     1.3340316355479473
+    ],
+    "p_loglog": 1.3101630526558827,
+    "p_richardson": 1.2540271922322788,
+    "p_theory": 2.0,
+    "refinement_ratios": [
+     2.0,
+     2.0
+    ],
+    "richardson_pass_15": false,
+    "richardson_rel_dev": 0.3729864038838606
+   }
+  }
+ },
+ "theory_order": 2.0,
+ "threshold": 0.15,
+ "verdict": {
+  "all_passed": true,
+  "criteria_passed": 13,
+  "criteria_total": 13,
+  "headline": "the declared second order of the MUSCL/TVD reconstruction is a norm-dependent claim: it holds in L1 and fails in L-inf for every TVD limiter",
+  "per_probe": {
+   "mc": {
+    "amplification_finest": 20.480732684265035,
+    "label": "second-order-in-L1-only",
+    "note": "the documented order holds in the volume-averaged norm and fails pointwise: the TVD constraint bites at smooth extrema",
+    "p_l1": 2.0368764842230407,
+    "p_linf": 1.397329898561194
+   },
+   "minmod": {
+    "amplification_finest": 63.86301449267978,
+    "label": "second-order-in-L1-only",
+    "note": "the documented order holds in the volume-averaged norm and fails pointwise: the TVD constraint bites at smooth extrema",
+    "p_l1": 1.8423418190400054,
+    "p_linf": 1.2179804820259563
+   },
+   "none": {
+    "amplification_finest": 1.0,
+    "label": "second-order-in-both-norms",
+    "note": "declared order recovered under both norms",
+    "p_l1": 1.9207140231580637,
+    "p_linf": 1.9213979791004434
+   },
+   "superbee": {
+    "amplification_finest": 57.59446433669638,
+    "label": "second-order-in-L1-only",
+    "note": "the documented order holds in the volume-averaged norm and fails pointwise: the TVD constraint bites at smooth extrema",
+    "p_l1": 1.9830679272625875,
+    "p_linf": 1.2257345843030907
+   },
+   "vanleer": {
+    "amplification_finest": 31.468812985117342,
+    "label": "second-order-in-L1-only",
+    "note": "the documented order holds in the volume-averaged norm and fails pointwise: the TVD constraint bites at smooth extrema",
+    "p_l1": 2.034151171497934,
+    "p_linf": 1.3101630526558827
+   }
+  }
+ }
+}
