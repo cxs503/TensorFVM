@@ -1,0 +1,108 @@
+{
+  "case": "CASE-FVM-CHANNEL-KMM180",
+  "route": "closure-free (spectral x,z + finite-volume y, no turbulence model)",
+  "generated_utc": "2026-11-14T07:58:28Z",
+  "re_tau": 180.0,
+  "nu": 0.005555555555555556,
+  "body_force": 1.0,
+  "seed": 3,
+  "noise": 0.15,
+  "steps_transient": 326,
+  "steps_average": 1220,
+  "averaging_time_span": 1.505037566366232,
+  "job": "cj2408",
+  "node": "n315",
+  "resolution": {
+    "nx": 64,
+    "ny": 128,
+    "nz": 64,
+    "length_x_plus": 1130.9733552923256,
+    "length_z_plus": 565.4866776461628,
+    "dx_plus": 17.671458676442587,
+    "dz_plus": 8.835729338221293,
+    "cells": 524288,
+    "time_step": 0.0012336373494805182,
+    "dt_plus": 39.96985012316879,
+    "dy_plus_min": 0.8603385436491329,
+    "dy_plus_centre": 4.659985451570492
+  },
+  "grading": {
+    "legacy": {
+      "low": 30.0,
+      "high": 180.5584715562184,
+      "cells": 42,
+      "rms_relative": 0.016136498857168235,
+      "max_relative": 0.028748106986175446,
+      "mean_relative": -0.015664084136332895,
+      "verdict": "PASS",
+      "definition": "y+ in [30, nearest reference station] (literal anchor wording)"
+    },
+    "log_layer": {
+      "low": 30.0,
+      "high": 36.4176,
+      "cells": 3,
+      "rms_relative": 0.02593052157210066,
+      "max_relative": 0.028748106986175446,
+      "mean_relative": -0.025829213816933067,
+      "mean_offset": -0.36512245673886196,
+      "min_y_plus": 30.879166,
+      "max_y_plus": 35.104661,
+      "mean_u_plus": 14.150368790072195,
+      "verdict": "PASS",
+      "definition": "y+ in [30, 0.2*Re_tau] (physical log layer)"
+    }
+  },
+  "anchor_quantity": {
+    "u_plus_at_30": 13.429079294403016,
+    "dns_at_30": 13.8529857527932,
+    "rel_at_30": -0.030600367744167505,
+    "u_plus_at_50": 15.052743206737722,
+    "dns_at_50": 15.302843887092097,
+    "rel_at_50": -0.01634341186511969,
+    "u_plus_at_100": 16.806646836114993,
+    "dns_at_100": 17.06717780293658,
+    "rel_at_100": -0.0152650291588783
+  },
+  "global_balance": {
+    "bulk_u_plus": 15.060189871394385,
+    "bulk_u_plus_dns": 15.690975649174892,
+    "bulk_error": -0.04020054532515165,
+    "cf": 0.008817979830586745,
+    "cf_dns": 0.008123255229619998,
+    "cf_error": 0.08552293155009565,
+    "wall_shear_estimate": 0.775612,
+    "wall_shear_error": -0.22438800000000003,
+    "stress_identity_max_residual": 0.708181,
+    "stress_identity_max_residual_log": 0.708181
+  },
+  "convergence": {
+    "flow_through_times": 3.6074300541728297,
+    "note": "single averaging window; the two-half diagnostic was not returned by the job fetch"
+  },
+  "reference": {
+    "source": "Lee & Moser 2015 (imported); KMM1987 table WITHHELD",
+    "re_tau": 182.088,
+    "Cf": 0.008123255229619998,
+    "U_bulk_plus": 15.690975649174892
+  },
+  "tolerance": 0.05,
+  "provenance": "graded from docs/case-fvm-channel-kmm180-dns/profiles.csv (the only artifact returned by the cj2408 fetch); no value transcribed",
+  "figures": [
+    {
+      "file": "figures/fig_velocity_profile.png",
+      "caption": "Mean velocity of the closure-free forced-channel run against the imported DNS reference; shaded band = graded log layer."
+    },
+    {
+      "file": "figures/fig_deviation.png",
+      "caption": "Relative deviation of the closure-free u+ from the DNS reference in percent; the dashed lines are the 5 % criterion."
+    },
+    {
+      "file": "figures/fig_stress_balance.png",
+      "caption": "Viscous plus Reynolds shear against the exact 1-Y/h balance: a momentum-bookkeeping check that needs no reference data."
+    },
+    {
+      "file": "figures/fig_stresses.png",
+      "caption": "Rms velocity fluctuations of the closure-free run (no reference is imported for the stresses: the column semantics of the shipped LM2015 stdev file are undocumented)."
+    }
+  ]
+}
