@@ -1,14 +1,14 @@
 {
   "meta": {
-    "generated_at": "2026-11-13T00:27:11Z",
+    "generated_at": "2026-11-14T08:14:47Z",
     "tolerance": 0.05,
     "t_star": 2.0,
     "python": "3.11.6",
     "numpy": "2.4.6",
     "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
-    "git_commit": "b94c7440",
+    "git_commit": "0a075ce8",
     "command": "PYTHONPATH=src python scripts/run_shallow_water_dam_break.py --n 1600 --resolutions 100,200,400,800,1600",
-    "wall_time_s": 47.44146675057709
+    "wall_time_s": 61.325766468420625
   },
   "artifacts": {
     "profile_ritter-dry_n1600.csv": "profile_ritter-dry_n1600.csv",
@@ -75,6 +75,16 @@
         "limit": 0.005,
         "pass": true
       },
+      "front_series<5%": {
+        "value": 0.0042472950845003216,
+        "limit": 0.05,
+        "pass": true,
+        "samples": 25,
+        "samples_graded": 24,
+        "graded_required": 13,
+        "unresolved_max_error": null,
+        "note": "anchor acceptance x_f(t) series (graded max error); fails when undefined or when fewer than SERIES_MIN_GRADED_FRACTION of the samples are resolvable"
+      },
       "all_pass": true
     },
     "stoker-wet": {
@@ -107,6 +117,16 @@
         "value": 0.0010049771738320779,
         "limit": 0.005,
         "pass": true
+      },
+      "front_series<5%": {
+        "value": 0.00844265997289686,
+        "limit": 0.05,
+        "pass": true,
+        "samples": 25,
+        "samples_graded": 24,
+        "graded_required": 13,
+        "unresolved_max_error": 0.045047208482137766,
+        "note": "anchor acceptance x_f(t) series (graded max error); fails when undefined or when fewer than SERIES_MIN_GRADED_FRACTION of the samples are resolvable"
       },
       "all_pass": true
     }

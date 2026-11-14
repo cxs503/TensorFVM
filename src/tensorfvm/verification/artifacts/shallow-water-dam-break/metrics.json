@@ -1,13 +1,13 @@
 {
   "meta": {
     "meta": {
-      "generated_at": "2026-11-13T00:27:11Z",
+      "generated_at": "2026-11-14T08:14:47Z",
       "tolerance": 0.05,
       "t_star": 2.0,
       "python": "3.11.6",
       "numpy": "2.4.6",
       "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
-      "git_commit": "b94c7440",
+      "git_commit": "0a075ce8",
       "command": "PYTHONPATH=src python scripts/run_shallow_water_dam_break.py --n 1600 --resolutions 100,200,400,800,1600",
       "wall_time_s": null
     },
@@ -287,7 +287,7 @@
         "steps": 1513,
         "t_end": 0.638550856814101,
         "t_star_end": 2.0,
-        "wall_time_s": 2.5186529103666544,
+        "wall_time_s": 3.1389282904565334,
         "volume_initial": 4.0,
         "volume_final": 3.9999999999998708,
         "clipped_cells": 0,
@@ -367,6 +367,16 @@
           "value": 0.0,
           "limit": 0.005,
           "pass": true
+        },
+        "front_series<5%": {
+          "value": 0.0042472950845003216,
+          "limit": 0.05,
+          "pass": true,
+          "samples": 25,
+          "samples_graded": 24,
+          "graded_required": 13,
+          "unresolved_max_error": null,
+          "note": "anchor acceptance x_f(t) series (graded max error); fails when undefined or when fewer than SERIES_MIN_GRADED_FRACTION of the samples are resolvable"
         },
         "all_pass": true
       },
@@ -737,7 +747,7 @@
         "steps": 918,
         "t_end": 0.638550856814101,
         "t_star_end": 2.0,
-        "wall_time_s": 1.5654660295695066,
+        "wall_time_s": 1.860227020457387,
         "volume_initial": 7.0,
         "volume_final": 6.999999999999908,
         "clipped_cells": 0,
@@ -759,6 +769,22 @@
         "shock_speed_exact": 2.957918120187525,
         "u2_exact": 0.9233639019770798,
         "c2_exact": 2.6704100016846253,
+        "dd": {
+          "bore_x": 1.8891769798183664,
+          "bore_x_error": 0.00020956889931947914,
+          "bore_x_cell": 1.8843750000000004,
+          "bore_x_cell_error": 0.002332800722637762,
+          "bore_level": 0.613474319852074,
+          "bore_method": "mid_level_crossing",
+          "h2": 0.7269474563046063,
+          "h2_error": 3.715690961994352e-05,
+          "h1": 0.5000011833995418,
+          "h1_error": 2.366799083608484e-06,
+          "step_ratio": 1.4538914715402103,
+          "step_ratio_error": 3.479002819539679e-05,
+          "n_plateau": 472,
+          "thresh_frac": 0.01
+        },
         "depth_l1": 0.0004271934800380538,
         "depth_linf": 0.09723433797587067,
         "tv_numeric": 0.500502488586916,
@@ -817,6 +843,16 @@
           "value": 0.0010049771738320779,
           "limit": 0.005,
           "pass": true
+        },
+        "front_series<5%": {
+          "value": 0.00844265997289686,
+          "limit": 0.05,
+          "pass": true,
+          "samples": 25,
+          "samples_graded": 24,
+          "graded_required": 13,
+          "unresolved_max_error": 0.045047208482137766,
+          "note": "anchor acceptance x_f(t) series (graded max error); fails when undefined or when fewer than SERIES_MIN_GRADED_FRACTION of the samples are resolvable"
         },
         "all_pass": true
       },
