@@ -1,0 +1,66 @@
+{
+ "entry": "python -m tensorfvm.case_cavity_re1000 --out docs/CASE-CAVITY-RE1000-FVM/artifacts --grids 64,128 --cold-grids 32",
+ "cold32": {
+  "wall_seconds": 127.59006643295288,
+  "steps": 30500,
+  "shipped_steps": 30500,
+  "converged": true,
+  "residual": 9.758993021099135e-08,
+  "u_min": -0.316430836724452,
+  "v_max": 0.3154449049885548,
+  "u_max_abs": 0.20329603195274926,
+  "v_max_abs": 0.07538595212630528,
+  "max_abs_du_vs_shipped": 0.0,
+  "max_abs_dv_vs_shipped": 0.0,
+  "shipped_u_min": -0.316430836724452,
+  "shipped_u_max_abs": 0.20329603195274926
+ },
+ "restart128": {
+  "steps_run": 1000,
+  "max_abs_du": 1.0925834209585261e-07,
+  "max_abs_dv": 1.1135003091800044e-07,
+  "residual_after": 9.126637223744183e-08,
+  "converged_flag_when_tolerance_0": false
+ },
+ "audited_scorer_on_shipped_fields": {
+  "n32": {
+   "u_min": -0.316430836724452,
+   "v_max": 0.3154449049885548,
+   "u_max_abs": 0.20329603195274926,
+   "v_max_abs": 0.07538595212630528,
+   "u_rms": 0.0632398762590608,
+   "v_rms": 0.042599637125524184,
+   "vortex_centre": [
+    0.546875,
+    0.609375
+   ],
+   "max_divergence": 3.552713678800501e-15
+  },
+  "n64": {
+   "u_min": -0.3721841952508898,
+   "v_max": 0.36228283753525553,
+   "u_max_abs": 0.029310305036261974,
+   "v_max_abs": 0.019733918942391973,
+   "u_rms": 0.012723646559264206,
+   "v_rms": 0.009795721408776523,
+   "vortex_centre": [
+    0.5234375,
+    0.5703125
+   ],
+   "max_divergence": 2.1316282072803006e-14
+  },
+  "n128": {
+   "u_min": -0.3853676434643488,
+   "v_max": 0.373840186825335,
+   "u_max_abs": 0.0043072983257934905,
+   "v_max_abs": 0.011184127632372254,
+   "u_rms": 0.0024558769452988115,
+   "v_rms": 0.00569215355713156,
+   "vortex_centre": [
+    0.52734375,
+    0.56640625
+   ],
+   "max_divergence": 1.3500311979441904e-13
+  }
+ }
+}
