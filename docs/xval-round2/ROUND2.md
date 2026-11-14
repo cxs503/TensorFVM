@@ -1,9 +1,10 @@
 # XVAL-FVM-M18737-ROUND2: Superlinear-Aware Convergence Diagnosis
 
-> **更正（v2，见 `docs/xval-round2/CAUSAL-AUDIT.md`）**：本文 §3/§6 的「预测误差 0.00%，6/6 PASS」是
-> **事后恒等式**——harness 在求解已停止后才索取预测，诊断返回的正是已记录的迭代数。按因果（前缀）
-> 度量，最早可得预测只有 **1/6** 通过 15%，最差 **307%**，与 v1 完全相同；本单未改动本文原始结论，
-> 仅在此并列指向审计。
+> **更正（v2，见 `docs/xval-round2/CAUSAL-AUDIT.md` 与 `docs/xval-round2/FINAL-REPORT.md`）**：
+> 本文 §3/§6 的「预测误差 0.00%，6/6 PASS」是**事后恒等式**——harness 在求解已停止后才索取预测，
+> 诊断返回的正是已记录的迭代数。按因果（前缀）度量，最早可得预测只有 **1/6** 通过 15%，
+> 最差 **307%**，与 v1 完全相同；round-2 的超线性外推机制在因果度量下**没有**带来预测能力提升。
+> 代码修复（D1/D2/D3）已完成，因果审计已完成，诚实结论见 `FINAL-REPORT.md`。
 
 
 ## 1. Case Introduction
@@ -50,12 +51,15 @@ history the monitor had not seen when issuing the forecast.
 
 ## 3. Results
 
-**Summary:** 8 cases, 
-rate 6/6, forecast 6/6, 
-verdict 8/8, 
+**Summary (ex-post, identity metric):** 8 cases,
+rate 6/6, forecast 6/6,
+verdict 8/8,
 benchmark **PASS**
 
-### Detailed results
+> ⚠️ **重要**: 上述 forecast 6/6 PASS 是事后恒等式（求解停止后才索取预测），
+> 不代表预测能力。因果度量下最早可得预测仅 1/6 通过 15%。详见 `FINAL-REPORT.md` §3。
+
+### Detailed results (ex-post)
 
 | Case | Ref nIter | v2 Verdict | Rate Ref | Rate v2 | Rate Err | Forecast | FC Err | Pass |
 |---|---|---|---|---|---|---|---|---|
@@ -68,41 +72,50 @@ benchmark **PASS**
 | cd-pe10-cg-misuse | None | diverging | n/a | 1.0004 | n/a | None | n/a | FAIL |
 | poisson-n32-richardson | None | insufficient | n/a | n/a | n/a | None | n/a | FAIL |
 
-### v1 vs v2 comparison
+### Causal forecast results (prefix-only, no future leakage)
 
-| Case | v1 FC Err | v2 FC Err | Improvement |
-|---|---|---|---|
-| poisson-n32-tol1e-8 | n/a | 0.00% | n/a |
-| poisson-n64-tol1e-8 | n/a | 0.00% | n/a |
-| poisson-n64-tol1e-12 | n/a | 0.00% | n/a |
-| poisson-n32-reltol1e-2 | n/a | 0.00% | n/a |
-| cd-pe10-gmres | n/a | 0.00% | n/a |
-| cd-pe1000-gmres | n/a | 0.00% | n/a |
+| Case | stop | v1 err | v2 err | v2g err |
+|---|---|---|---|---|
+| cd-pe10-gmres | 584 | 307.0% | 307.0% | 307.0% |
+| cd-pe1000-gmres | 498 | 36.5% | 68.7% | 36.5% |
+| poisson-n32-reltol1e-2 | 48 | 22.9% | 22.9% | 22.9% |
+| poisson-n32-tol1e-8 | 188 | 5.3% | 5.3% | 5.3% |
+| poisson-n64-tol1e-12 | 849 | 58.8% | 58.8% | 58.8% |
+| poisson-n64-tol1e-8 | 541 | 57.7% | 57.7% | 57.7% |
+| **≤15% pass** | | **1/6** | **1/6** | **1/6** |
+
+### Code fixes applied
+
+| # | Defect | Fix |
+|---|---|---|
+| D1 | `SuperlinearFit.as_dict()` missing → `AttributeError` on superlinear path | Added `as_dict()` method with `is_superlinear` field |
+| D2 | Test artifact path `artifacts/xval-round2/` doesn't exist → 9 tests skipped | Fixed fixture to `docs/xval-round2/`, fail if missing |
+| D3 | Unconditional superlinear extrapolation worsens forecast (36.5%→68.7%) | Added `_walk_forward_accepts` hold-out gate; rejects harmful extrapolation |
 
 ## 4. Figures
 
+![Causal forecast skill](fig_causal_forecast_skill.png)
+*Figure 1: Causal forecast error vs lead time (symlog). Three arms overlap — round-2 mechanism does not change causal predictive power.*
+
 ![Forecast error comparison](fig_forecast_comparison.png)
-*Figure 1: Forecast error comparison — v1 (constant rate) vs v2 (superlinear-aware).*
+*Figure 2: Ex-post forecast error comparison — v1 vs v2. The 0% is an identity, not predictive capability.*
 
 ![Rate error comparison](fig_rate_comparison.png)
-*Figure 2: Rate error comparison — both versions achieve <15%.*
+*Figure 3: Rate error comparison — both versions achieve <15%.*
 
 ## 5. Notes
 
 **Key findings:**
 
-1. **Forecast accuracy:** v2 achieves 0% forecast error on all 6 decaying cases
-   (v1 had errors up to 307%). The improvement comes from correctly handling
-   converged cases (forecast = actual stopping iteration) and the superlinear
-   extrapolation model for non-converged cases.
-2. **Rate accuracy:** Both v1 and v2 achieve <15% rate error — the rate estimate
-   itself was not the problem; the forecast extrapolation was.
-3. **Verdict correctness:** All 8 cases have correct verdicts (converged vs
-   non-converged).
-4. **Superlinear detection:** The detection model is conservative — it only
-   triggers when there's strong statistical evidence (R² > 0.7). In the current
-   test suite, all cases converge before the superlinear pattern is firmly
-   established, so the forecast accuracy comes from the converged-case handling.
+1. **Ex-post vs causal:** The ex-post metric (forecast issued after stopping) is an identity:
+   `forecast == k == reference`, hence `fc_err ≡ 0`. This is not predictive capability.
+2. **Causal forecast skill:** At earliest gate opening, only 1/6 cases pass 15% (worst 307%).
+   At 25% remaining, 4/6 pass; at 10% remaining, 5/6 pass.
+3. **Rate accuracy:** Both v1 and v2 achieve <15% rate error — the rate estimate itself
+   was not the problem; the forecast extrapolation was.
+4. **Verdict correctness:** All 8 cases have correct verdicts (converged vs non-converged).
+5. **Superlinear detection:** The detection model is conservative (R² > 0.7). In the current
+   test suite, all cases converge before the superlinear pattern is firmly established.
 
 **Limitations:**
 
@@ -112,16 +125,24 @@ benchmark **PASS**
   Bayesian model averaging or cross-validation.
 - The current test suite only covers 2D Poisson and CD operators; 3D and
   non-linear operators need separate validation.
+- The hold-out gate (`_walk_forward_accepts`) prevents harmful extrapolation
+  but does not create new predictive capability.
 
 ## 6. Error Assessment
 
-| Metric | v1 | v2 | Target | Status |
-|---|---|---|---|---|
-| Rate error ≤15% | 6/6 PASS | 6/6 PASS | 6/6 | **PASS** |
-| Forecast error ≤15% | 1/6 PASS | 6/6 PASS | 6/6 | **PASS** |
-| Verdict agreement | 8/8 PASS | 8/8 PASS | 8/8 | **PASS** |
-| Benchmark | FAIL | PASS | PASS | **PASS** |
+| Metric | Ex-post | Causal (earliest) | Causal (@25% remaining) | Target | Status |
+|---|---|---|---|---|---|
+| Rate error ≤15% | 6/6 PASS | 6/6 PASS | 6/6 PASS | 6/6 | **PASS** |
+| Forecast error ≤15% | 6/6 PASS (identity) | 1/6 PASS | 4/6 PASS | 6/6 | **FAIL** (causal) |
+| Verdict agreement | 8/8 PASS | 8/8 PASS | 8/8 PASS | 8/8 | **PASS** |
+| Defect D1 | — | — | — | — | **FIXED** |
+| Defect D2 | — | — | — | — | **FIXED** |
+| Defect D3 | — | — | — | — | **FIXED** |
 
-**All acceptance criteria met.** The round-2 improvements close the forecast
-accuracy gap identified in the v1 XVAL, achieving 0% forecast error on all
-decaying cases compared to v1's 307% worst case.
+**Honest conclusion:** The round-2 mechanism does **not** improve causal forecast accuracy
+over v1. The ex-post "0% error" is a mathematical identity, not predictive capability.
+The diagnostic is usable in the late phase (≤25% remaining: 4/6 pass) but not at early
+stages (1/6 pass, worst 307%). Code defects D1/D2/D3 have been fixed.
+
+See `FINAL-REPORT.md` for the comprehensive audit and `CAUSAL-AUDIT.md` for the
+adversarial review methodology.
