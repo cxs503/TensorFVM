@@ -90,6 +90,11 @@ __all__ = [
 #: acceptance threshold on every headline metric (task criterion: < 5 %)
 TOLERANCE = 0.05
 
+#: coarsest grid whose errors are admitted as evidence (declared, not fitted).
+#: A single constant so that every "at accepted grid" statement in the module
+#: and in the reports refers to the same resolution floor.
+ACCEPTED_MIN_N = 800
+
 #: depth level (fraction of h0) of the secondary dry-bed front metric
 FRONT_LEVEL_FRACTION = 1e-2
 
@@ -105,6 +110,20 @@ EXTREMUM_FRACTION = 1e-4
 #: measured in ``docs/verification-dam-break-front-metric/REPORT.md``.
 FAN_WINDOW = (1e-2, 2e-1)
 
+#: depth contours (fractions of ``h0``) at which the **dry-bed position** of the
+#: Ritter profile is graded against :func:`~tensorfvm.shallow_water.exact.
+#: ritter_level_position`, with no analytic quantity inside the measurement.
+#:
+#: ``level = 1`` is deliberately absent: the undisturbed tail carries ``h = h0``
+#: over an interval, so a strict-crossing detector has no crossing there (it
+#: returns ``nan``); levels approaching 0 approach the zero-depth tip, which any
+#: finite-volume scheme smears over ``O(dx)``.  The five levels below span the
+#: resolved fan.  Declared before any run, not chosen from the results.
+LEVEL_POSITION_LEVELS = (0.5, 0.25, 0.1, 0.04, 0.01)
+
+#: contour used by the oracle-free ``x(t)`` series (well inside the fan).
+LEVEL_POSITION_SERIES_LEVEL = 0.04
+
 #: cell count the exact front must have travelled before a sample of the
 #: ``x_f(t)`` series is *graded*.
 #:
@@ -115,6 +134,19 @@ FAN_WINDOW = (1e-2, 2e-1)
 #: (as ``unresolved_max_error``); they are simply not admitted to the pass/fail
 #: series metric.
 SERIES_MIN_CELLS = 4.0
+
+#: contour travel (in cells) a level-position series sample must reach before it
+#: is graded.
+#:
+#: Declared from the error budget, not from the data: a contour located to
+#: within one cell has relative error ``~dx / x_contour``, so a sample can only
+#: be *informative* at the 5 % gate when the contour sits at least
+#: ``1 / TOLERANCE = 20`` cells downstream of the dam.  Near ``t = 0`` the
+#: contour is a fraction of a cell from the dam and the relative error is large
+#: at every resolution (measured: 10.9 % at n = 800 and 5.75 % at n = 1600 at
+#: ``t* ~ 0.085`` -- i.e. one cell, halving with ``dx``, exactly the predicted
+#: first-order behaviour).  Such samples are recorded and excluded, not hidden.
+LEVEL_SERIES_MIN_CELLS = 1.0 / TOLERANCE
 
 #: fan-window cell count below which a **dry-bed** series sample is not graded.
 #:
@@ -948,7 +980,7 @@ def convergence_study(case: DamBreakCase, resolutions=(100, 200, 400, 800, 1600,
     }
 
 
-def _max_over_accepted(rows, key: str, accepted_n: int = 800) -> float:
+def _max_over_accepted(rows, key: str, accepted_n: int = ACCEPTED_MIN_N) -> float:
     """Max of ``row[key]`` over the grids the benchmark accepts (``n >= 800``).
 
     A coarse-only study has no accepted grid; that returns NaN instead of raising
@@ -1016,6 +1048,179 @@ def front_definition_study(resolutions=(400, 800, 1600, 3200)) -> dict:
         "max_wetted_edge_error_at_accepted_grid": _max_over_accepted(rows, "wetted_edge_error"),
         "max_fan_shape_error_at_accepted_grid": _max_over_accepted(rows, "fan_shape_error"),
         "rows": rows,
+    }
+
+
+def level_position_metrics(solver, case: DamBreakCase,
+                           levels=LEVEL_POSITION_LEVELS) -> dict:
+    """Dry-bed depth-contour positions: measured from the profile, graded by algebra.
+
+    The dry-bed headline (:func:`fan_front_estimate`) locates the front through
+    the **exact similarity identity** ``x_f = x_i + 3 t sqrt(g h_i)``, so its
+    residual measures the *shape* error of the numerical fan rather than the
+    absolute position of the profile.  This function supplies the missing
+    position-only evidence:
+
+    * the *measurement* is the sub-cell abscissa where the numerical depth falls
+      through ``level * h0`` -- it uses the profile and ``level`` only, never the
+      exact solution, the tip position or the fan identity;
+    * the *reference* is :func:`~tensorfvm.shallow_water.exact.
+      ritter_level_position`, an algebraic statement about where that same
+      contour sits.  The reference is a different closed-form point than the
+      tip, so agreeing with it is not a restatement of ``x_f``.
+
+    Returns one entry per level plus the fan/tip diagnostics for context.
+    """
+    from .exact import ritter_level_position
+
+    t = float(solver.time)
+    x = np.asarray(solver.x, dtype=float)
+    h = np.asarray(solver.h, dtype=float)
+    rows = {}
+    for level in levels:
+        measured = _level_crossing(x, h, level * case.h0)
+        exact = ritter_level_position(level, t, case.h0, case.gravity,
+                                      case.x_dam)
+        rows[f"{level:g}"] = {
+            "level": float(level),
+            "measured": measured,
+            "exact": exact,
+            "error": (_relative(measured, exact)
+                      if measured == measured else float("nan")),
+            "measured_cells_from_dam": (measured - case.x_dam) / float(solver.dx),
+        }
+    fan = fan_front_estimate(x, h, t, case.gravity, case.h0)
+    return {
+        "t": t,
+        "t_star": t * math.sqrt(case.gravity / case.h0),
+        "levels": rows,
+        "max_error": max((r["error"] for r in rows.values()
+                          if r["error"] == r["error"]), default=float("nan")),
+        # context: the headline (shape) metric and the non-convergent legacy one
+        "front_fan": fan["front"],
+        "front_fan_error": (_relative(fan["front"], case.exact_front(t))
+                            if fan["front"] == fan["front"] else float("nan")),
+        "front_wetted_error": _relative(_wetted_edge(x, h), case.exact_front(t)),
+    }
+
+
+def _level_series(case: DamBreakCase, n: int, cfl: float, order: int,
+                  level: float, samples_per_unit: int = 25) -> tuple[object, list]:
+    """Integrate the dry case recording one depth-contour position over time."""
+    from .exact import ritter_level_position
+
+    solver = ShallowWater1D(n, case.x_min, case.x_max, gravity=case.gravity,
+                            cfl=cfl, order=order)
+    solver.set_state(np.where(solver.x < case.x_dam, case.h0, case.h1))
+    t_end = case.t_end
+    gate = {"next": 0.0}
+    samples: list[dict] = []
+
+    def callback(sol) -> None:
+        if sol.time < gate["next"]:
+            return
+        measured = _level_crossing(sol.x, sol.h, level * case.h0)
+        exact = ritter_level_position(level, sol.time, case.h0, case.gravity,
+                                      case.x_dam)
+        travelled = (exact - case.x_dam) / float(sol.dx)
+        samples.append({
+            "t": float(sol.time),
+            "t_star": sol.time * math.sqrt(case.gravity / case.h0),
+            "measured": measured,
+            "exact": exact,
+            "error": (_relative(measured, exact)
+                      if measured == measured else float("nan")),
+            "travelled_cells": travelled,
+            "resolved": bool(travelled >= LEVEL_SERIES_MIN_CELLS),
+        })
+        gate["next"] = sol.time + t_end / float(samples_per_unit)
+
+    steps = solver.advance(t_end, callback=callback)
+    return solver, samples
+
+
+def level_position_study(resolutions=(100, 200, 400, 800, 1600, 3200),
+                         cfl: float = 0.4, order: int = 2,
+                         level: float = LEVEL_POSITION_SERIES_LEVEL) -> dict:
+    """Oracle-free dry-bed **position** study: contour locations and their ``x(t)``.
+
+    Motivation (verification debt): the accepted dry-bed number is
+    ``front_fan``, a *shape* metric built on the exact fan identity, while the
+    ledger acceptance is the wave **position** ``x_f(t)``.  The only
+    position-only definitions in the module were the wetted edge (a depth-floor
+    detector that does not converge) and ``level_scaled`` (which adds the exact
+    fan offset, i.e. imports the answer).  This study closes that gap by grading
+    contour positions against their own closed-form locations
+    (:func:`~tensorfvm.shallow_water.exact.ritter_level_position`).
+
+    Reported per resolution:
+
+    ``levels[level].error``
+        ``|x_measured - x_exact| / x_exact`` for every declared contour.
+    ``levels[level].observed_order``
+        ``log2(e(n) / e(n/2))``; a contour of a profile smeared over ``O(dx)``
+        should converge at **first** order, and that is what is measured -- the
+        honest statement is that this metric is a *weaker* (first-order) test of
+        position than the shape metric is of shape, not that either is exact.
+    ``series_max_error``
+        max over the graded samples of the same construction at
+        ``level = 0.04``: the oracle-free analogue of the graded ``x_f(t)``
+        series.
+    """
+    rows = []
+    for n in resolutions:
+        solver, samples = _level_series(case=RITTER_DRY, n=n, cfl=cfl,
+                                        order=order, level=level)
+        metrics = level_position_metrics(solver, RITTER_DRY)
+        graded = [s for s in samples if s["resolved"]]
+        rows.append({
+            "n": n,
+            "dx": float(solver.dx),
+            "levels": metrics["levels"],
+            "max_error": metrics["max_error"],
+            "front_fan_error": metrics["front_fan_error"],
+            "front_wetted_error": metrics["front_wetted_error"],
+            "series_level": float(level),
+            "series_samples": len(samples),
+            "series_graded": len(graded),
+            "series_max_error": (max((s["error"] for s in graded
+                                      if s["error"] == s["error"]),
+                                     default=float("nan")) if graded
+                                 else float("nan")),
+            "series": samples,
+        })
+    # observed order per level between consecutive resolutions
+    for coarse, fine in zip(rows, rows[1:]):
+        for key, entry in fine["levels"].items():
+            e_c = coarse["levels"][key]["error"]
+            e_f = entry["error"]
+            entry["observed_order"] = (
+                math.log2(e_c / e_f)
+                if (e_c == e_c and e_f == e_f and e_c > 0.0 and e_f > 0.0)
+                else float("nan"))
+    accepted = [r for r in rows if r["n"] >= ACCEPTED_MIN_N]
+    return {
+        "case": RITTER_DRY.key,
+        "reference": ("Ritter (1892) rarefaction; contour abscissa "
+                      "x = x_dam + c0 t (2 - 3 sqrt(level))"),
+        "levels": list(LEVEL_POSITION_LEVELS),
+        "cfl": cfl,
+        "order": order,
+        "accepted_min_n": ACCEPTED_MIN_N,
+        "tolerance": TOLERANCE,
+        "rows": rows,
+        "max_error_at_accepted_grid": (
+            max((r["max_error"] for r in accepted
+                 if r["max_error"] == r["max_error"]), default=float("nan"))),
+        "max_series_error_at_accepted_grid": (
+            max((r["series_max_error"] for r in accepted
+                 if r["series_max_error"] == r["series_max_error"]),
+                default=float("nan"))),
+        "min_observed_order_at_accepted_grid": (
+            min((e.get("observed_order", float("nan"))
+                 for r in accepted for e in r["levels"].values()
+                 if e.get("observed_order", float("nan")) == e.get("observed_order", float("nan"))),
+                default=float("nan"))),
     }
 
 
