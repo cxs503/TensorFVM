@@ -1,14 +1,14 @@
 {
   "meta": {
-    "generated_at": "2026-11-14T19:16:05Z",
+    "generated_at": "2026-11-14T20:47:54Z",
     "tolerance": 0.05,
     "t_star": 2.0,
     "python": "3.11.6",
     "numpy": "2.4.6",
     "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
-    "git_commit": "0f38319c",
-    "command": "PYTHONPATH=src python scripts/run_shallow_water_dam_break.py --n 1600 --resolutions 100,200,400,800,1600",
-    "wall_time_s": 46.58378602005541
+    "git_commit": "73b7f656",
+    "command": "PYTHONPATH=src python scripts/run_shallow_water_dam_break.py --n 1600 --resolutions 100,200,400,800,1600 --out src/tensorfvm/verification/artifacts/shallow-water-dam-break",
+    "wall_time_s": 46.60477598011494
   },
   "artifacts": {
     "profile_ritter-dry_n1600.csv": "profile_ritter-dry_n1600.csv",
