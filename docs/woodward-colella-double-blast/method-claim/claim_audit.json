@@ -1,0 +1,413 @@
+{
+  "audit": "wc-method-claim-conformance",
+  "registry": {
+    "source": "oss_solutions",
+    "id": 438,
+    "repo": "TensorFVM",
+    "feature_slug": "CASE-WOODWARD-COLELLA",
+    "tag": "m18737-round2",
+    "xval_anchor": "XVAL-FVM-M18737-ROUND2"
+  },
+  "claim_text": "1D Woodward-Colella 1984 double blast (closed tube [0,1], p=1e3|1e-2|1e2 plateaus, rho=1 u=0, gamma=1.4, reflective walls, t=0.038). Primary scheme: MUSCL-Hancock 2nd + MC limiter + HLLC flux + SSP-RK (CFL 0.4).",
+  "claim_text_sha256": "10e7671e3adffc9cb4bf6deb33bf4167e3ffdac808f98712679fbb0959027e92",
+  "claims": [
+    {
+      "id": "scheme.reconstruction",
+      "area": "scheme",
+      "claim": "MUSCL-Hancock, 2nd order",
+      "expectation": "",
+      "found": {
+        "order_default": 2,
+        "half_time_predictor_in_step": true
+      },
+      "status": "CONFORMANT",
+      "evidence": {
+        "code": "compressible/solver.py::EulerSolver.step (order==2 branch)"
+      },
+      "severity": "none",
+      "note": "order==2 branch carries the half-time predictor, i.e. MUSCL-Hancock"
+    },
+    {
+      "id": "scheme.limiter",
+      "area": "scheme",
+      "claim": "MC limiter",
+      "expectation": "",
+      "found": {
+        "config_limiter": "mc",
+        "case_checks": {
+          "a=1.0,b=2.0": {
+            "got": 1.5,
+            "mc_formula": 1.5,
+            "match": true
+          },
+          "a=-1.0,b=2.0": {
+            "got": 0.5,
+            "mc_formula": 0.5,
+            "match": true
+          },
+          "a=1.0,b=3.0": {
+            "got": 2.0,
+            "mc_formula": 2.0,
+            "match": true
+          }
+        },
+        "convention": "Clawpack-style MC (sign of the centred slope)",
+        "slope_stencil_row": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "status": "CONFORMANT",
+      "evidence": {
+        "code": "compressible/reconstruct.py::mc, limited_slope"
+      },
+      "severity": "none",
+      "note": ""
+    },
+    {
+      "id": "scheme.flux",
+      "area": "scheme",
+      "claim": "HLLC flux",
+      "expectation": "",
+      "found": {
+        "config_flux_mode": "hllc",
+        "runtime_flux_mode": "hllc",
+        "hllc_evaluations_in_3_steps": 6
+      },
+      "status": "CONFORMANT",
+      "evidence": {
+        "code": "compressible/solver.py::EulerSolver._hllc_face_flux -> riemann.hllc_flux"
+      },
+      "severity": "none",
+      "note": ""
+    },
+    {
+      "id": "scheme.time_integrator",
+      "area": "scheme",
+      "claim": "SSP-RK time integration",
+      "expectation": "an SSP-RK stage loop (Shu-Osher) selecting the order",
+      "found": {
+        "ssp_rk_implementation": [],
+        "mentions_of_ssp_rk": [
+          {
+            "file": "wc_method_claim.py",
+            "line": 8,
+            "text": "\"Primary scheme: MUSCL-Hancock 2nd + MC limiter + HLLC flux + SSP-RK (CFL 0.4)\""
+          },
+          {
+            "file": "wc_method_claim.py",
+            "line": 27,
+            "text": "``scheme.time_integrator``  SSP-RK"
+          },
+          {
+            "file": "wc_method_claim.py",
+            "line": 37,
+            "text": "``numbers.cross_code``      independent WENO5 / Rusanov / SSP-RK3 arm with no"
+          },
+          {
+            "file": "wc_method_claim.py",
+            "line": 88,
+            "text": "\"MUSCL-Hancock 2nd + MC limiter + HLLC flux + SSP-RK (CFL 0.4).\""
+          },
+          {
+            "file": "wc_method_claim.py",
+            "line": 195,
+            "text": "\"\"\"The decisive probe: is there an SSP-RK stage loop anywhere in the package?\"\"\""
+          },
+          {
+            "file": "wc_method_claim.py",
+            "line": 200,
+            "text": "if re.search(r\"ssp|runge|rk3\", line, re.I):"
+          },
+          {
+            "file": "wc_method_claim.py",
+            "line": 203,
+            "text": "if re.search(r\"rk\\d|ssp|runge\", name, re.I):"
+          },
+          {
+            "file": "wc_method_claim.py",
+            "line": 218,
+            "text": "return ({\"ssp_rk_implementation\": impl,"
+          },
+          {
+            "file": "wc_method_claim.py",
+            "line": 219,
+            "text": "\"mentions_of_ssp_rk\": mentions,"
+          },
+          {
+            "file": "wc_method_claim.py",
+            "line": 335,
+            "text": "\"ssp_rk3_time_integration\": bool(re.search(r\"ssp_rk|ssp-rk|rk3\", text, re.I)),"
+          },
+          {
+            "file": "wc_method_claim.py",
+            "line": 381,
+            "text": "\"scheme.time_integrator\", \"scheme\", \"SSP-RK time integration\","
+          },
+          {
+            "file": "wc_method_claim.py",
+            "line": 383,
+            "text": "decide=lambda f: (\"CONFORMANT\" if f[\"ssp_rk_implementation\"] else \"NONCONFORMANT\"),"
+          },
+          {
+            "file": "wc_method_claim.py",
+            "line": 385,
+            "text": "expectation=\"an SSP-RK stage loop (Shu-Osher) selecting the order\","
+          },
+          {
+            "file": "wc_method_claim.py",
+            "line": 386,
+            "text": "note=(\"no SSP-RK anywhere in compressible/; EulerSolver accepts order in \""
+          },
+          {
+            "file": "wc_method_claim.py",
+            "line": 389,
+            "text": "\"have. MUSCL-Hancock and SSP-RK are alternative second-order-in-time \""
+          },
+          {
+            "file": "wc_method_claim.py",
+            "line": 457,
+            "text": "\"independent WENO5/Rusanov/SSP-RK3 arm, zero shared discretisation\","
+          }
+        ],
+        "accepted_order_values": [
+          1,
+          2
+        ],
+        "step_stages": 1,
+        "step_docstring": "Advance one time step of size ``dt`` (MUSCL-Hancock + HLLC/GFM)."
+      },
+      "status": "NONCONFORMANT",
+      "evidence": {
+        "code": "compressible/solver.py::EulerSolver.__init__ order check, EulerSolver.step"
+      },
+      "severity": "medium",
+      "note": "no SSP-RK anywhere in compressible/; EulerSolver accepts order in {1,2} and step() is a single MUSCL-Hancock predictor+corrector, so the registered description names a time integrator this solver does not have. MUSCL-Hancock and SSP-RK are alternative second-order-in-time integrations, not composable stages: the claim is self-contradictory as written. Accuracy content ('2nd order in time') is delivered by the Hancock predictor -- see probes; the defect is provenance only."
+    },
+    {
+      "id": "scheme.cfl",
+      "area": "scheme",
+      "claim": "CFL 0.4",
+      "expectation": "",
+      "found": {
+        "config_cfl": 0.4,
+        "pool_entry_cfl": 0.4
+      },
+      "status": "CONFORMANT",
+      "evidence": {
+        "code": "compressible/cases.py::DoubleBlastConfig.cfl"
+      },
+      "severity": "none",
+      "note": ""
+    },
+    {
+      "id": "case.definition",
+      "area": "case",
+      "claim": "W&C 1984 datum via compressible.cases.double_blast",
+      "expectation": "",
+      "found": {
+        "plateau_pressure": {
+          "left": 1000.0,
+          "middle": 0.01,
+          "right": 100.0
+        },
+        "rho_uniform_1": true,
+        "u_zero": true,
+        "gamma": 1.4,
+        "total_energy_from_datum": 275.0200000000001,
+        "t_end_default": 0.038,
+        "bc": [
+          "reflective",
+          "reflective",
+          "periodic",
+          "periodic"
+        ]
+      },
+      "status": "CONFORMANT",
+      "evidence": {
+        "code": "compressible/cases.py::double_blast, blast_pressure"
+      },
+      "severity": "none",
+      "note": ""
+    },
+    {
+      "id": "criteria.tolerance",
+      "area": "criteria",
+      "claim": "tolerance < 10 %",
+      "expectation": "",
+      "found": {
+        "wc_reference_tolerance_percent": 10.0,
+        "position_tolerance": 0.02,
+        "pool_tolerance": 10.0,
+        "ledger_tolerance_percent": 15.0,
+        "entry_contract_tolerance": 10.0
+      },
+      "status": "CONFORMANT",
+      "evidence": {
+        "code": "compressible/wc_reference.py, compressible/wc_case_pool.py"
+      },
+      "severity": "none",
+      "note": "the case tolerance is stricter than the ledger tolerance it must satisfy"
+    },
+    {
+      "id": "criteria.metrics",
+      "area": "criteria",
+      "claim": "peak density, peak position, L1, 4 steepest faces, window mass",
+      "expectation": "",
+      "found": {
+        "pool_criteria": [
+          "peak_density",
+          "peak_position",
+          "l1_profile",
+          "window_mass",
+          "faces",
+          "low_plateau"
+        ],
+        "stored_metric_blocks": [
+          "checks",
+          "faces",
+          "faces_abs_error",
+          "faces_ref",
+          "l1_relative",
+          "low_plateau",
+          "peak_density",
+          "peak_position",
+          "position_tolerance",
+          "tolerance_percent",
+          "verdict",
+          "verdict_note",
+          "window_mass",
+          "window_x"
+        ],
+        "n_steepest_faces": 4
+      },
+      "status": "CONFORMANT",
+      "evidence": {
+        "artifact": "reference/metrics_calibrated_nx800_hllc.json"
+      },
+      "severity": "none",
+      "note": ""
+    },
+    {
+      "id": "numbers.nx800",
+      "area": "numbers",
+      "claim": "nx=800: 2.03 / 2.01 / 0.18 % , faces<=0.0012, PASS",
+      "expectation": "",
+      "found": {
+        "peak_percent": {
+          "claimed": 2.03,
+          "found": 2.030839470729752,
+          "match": true
+        },
+        "l1_percent": {
+          "claimed": 2.01,
+          "found": 2.008635789299834,
+          "match": true
+        },
+        "low_plateau_percent": {
+          "claimed": 0.18,
+          "found": 0.1787055287551998,
+          "match": true
+        },
+        "faces_abs_max": {
+          "claimed": 0.0012,
+          "found": 0.0011780000000000124,
+          "match": true
+        },
+        "verdict": {
+          "claimed": "PASS",
+          "found": "PASS",
+          "match": true
+        }
+      },
+      "status": "CONFORMANT",
+      "evidence": {
+        "artifact": "reference/metrics_calibrated_nx800_hllc.json"
+      },
+      "severity": "none",
+      "note": ""
+    },
+    {
+      "id": "numbers.convergence",
+      "area": "numbers",
+      "claim": "peak err 20.76/10.58/2.03 %, obs order ~1.8",
+      "expectation": "the quoted errors and an order estimator that yields 1.8; any estimator named explicitly",
+      "found": {
+        "nx200": {
+          "claimed": 20.76,
+          "found": 20.754793139645216,
+          "match": true
+        },
+        "nx400": {
+          "claimed": 10.58,
+          "found": 10.577249051069211,
+          "match": true
+        },
+        "nx800": {
+          "claimed": 2.03,
+          "found": 2.030839470729752,
+          "match": true
+        },
+        "observed_order": {
+          "claimed": 1.8,
+          "found": {
+            "local_orders": [
+              0.9724800952010029,
+              2.3808163473433397
+            ],
+            "lsq_order": 1.6766482212721703,
+            "mean_local_order": 1.6766482212721714
+          },
+          "match": false
+        }
+      },
+      "status": "NONCONFORMANT",
+      "evidence": {
+        "artifacts": "reference/metrics_calibrated_nx{200,400,800}_hllc.json"
+      },
+      "severity": "low",
+      "note": "the three quoted errors reproduce exactly, but 'observed order ~1.8' is not reproduced by any standard estimator on the same numbers: local pair orders 0.97 (200->400) and 2.38 (400->800), 3-point least-squares 1.18, mean of the two local orders 1.68. The claim is directionally true (between first and second order, as shocks demand) but not reproducible without naming the estimator."
+    },
+    {
+      "id": "numbers.cross_code",
+      "area": "numbers",
+      "claim": "independent WENO5/Rusanov/SSP-RK3 arm, zero shared discretisation",
+      "expectation": "",
+      "found": {
+        "weno5_reconstruction": true,
+        "rusanov_or_llf_flux": true,
+        "ssp_rk3_time_integration": true,
+        "no_shared_discretisation": true
+      },
+      "status": "CONFORMANT",
+      "evidence": {
+        "artifact": "docs/woodward-colella-double-blast/xcode/wc_crosscode.py",
+        "sha256": "351cf5475bdb48dffa55cdc16971441df85d6814d67b860ea706c37ed483adbe"
+      },
+      "severity": "none",
+      "note": ""
+    }
+  ],
+  "summary": {
+    "n_claims": 11,
+    "n_conformant": 9,
+    "n_nonconformant": 2,
+    "nonconformant": [
+      {
+        "id": "scheme.time_integrator",
+        "severity": "medium",
+        "claim": "SSP-RK time integration"
+      },
+      {
+        "id": "numbers.convergence",
+        "severity": "low",
+        "claim": "peak err 20.76/10.58/2.03 %, obs order ~1.8"
+      }
+    ],
+    "verdict": "NONCONFORMANT",
+    "accuracy_impact": "none: the case verdict is recomputed from committed profiles and is untouched by the two provenance defects"
+  }
+}

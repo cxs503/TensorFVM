@@ -10,14 +10,14 @@
   ]
  },
  "solver": {
-  "scheme": "MUSCL-Hancock + MC limiter + HLLC + SSP-RK",
+  "scheme": "MUSCL-Hancock (2nd order in space and time, van Leer predictor-corrector) + MC limiter + HLLC",
   "cfl": 0.4,
   "case": "tensorfvm.compressible.cases.double_blast"
  },
  "pool_grid": 800,
  "reference": {
   "kind": "calibrated",
-  "path": "/root/tp-agent/work/m20318/docs/woodward-colella-double-blast/reference/reference_density_calibrated.csv",
+  "path": "/root/tp-agent/work/m20949/docs/woodward-colella-double-blast/reference/reference_density_calibrated.csv",
   "provenance": "Dumbser et al. JCP 2019 (arXiv:1902.07773) Fig. 21 'Reference' (pure RPJ, 3200 cells), digitised from the PDF vector paths, y-axis anchored on tick marks",
   "panel_spread": 3.0999999999892225e-05
  },
