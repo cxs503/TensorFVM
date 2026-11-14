@@ -1,0 +1,447 @@
+{
+  "accepted_grid_min": 800,
+  "artifact": {
+    "bore_subcell": "src/tensorfvm/verification/artifacts/shallow-water-dam-break/bore_subcell.json",
+    "convergence": "src/tensorfvm/verification/artifacts/shallow-water-dam-break/convergence.json",
+    "exactness": "src/tensorfvm/verification/artifacts/shallow-water-dam-break/exactness.json",
+    "front_definitions": "src/tensorfvm/verification/artifacts/shallow-water-dam-break/front_definitions.json",
+    "metrics": "src/tensorfvm/verification/artifacts/shallow-water-dam-break/metrics.json",
+    "sensitivity": "src/tensorfvm/verification/artifacts/shallow-water-dam-break/sensitivity.json"
+  },
+  "cases": [
+    {
+      "cfl": 0.4,
+      "criteria": [
+        {
+          "comparator": "lt",
+          "criterion": "front_fan<5%",
+          "graded_by": "tensorfvm.shallow_water.dam_break._verdict",
+          "pass": true,
+          "primary": true,
+          "quantity": "wave-front position x_f(t*) on the dry bed vs 2 t sqrt(g h0)",
+          "threshold": 5.0,
+          "unit": "%",
+          "value": 0.017261518056277403
+        },
+        {
+          "comparator": "lt",
+          "criterion": "front_wetted<5%",
+          "graded_by": "tensorfvm.shallow_water.dam_break._verdict",
+          "pass": true,
+          "primary": false,
+          "quantity": "legacy wetted-edge front (diagnostic only; see docs/case-fvm-dambreak-stoker/AUDIT.md F1)",
+          "threshold": 5.0,
+          "unit": "%",
+          "value": 2.890624999999991
+        },
+        {
+          "comparator": "lt",
+          "criterion": "depth_l1<5%",
+          "graded_by": "tensorfvm.shallow_water.dam_break._verdict",
+          "pass": true,
+          "primary": false,
+          "quantity": "depth profile L1 error vs the exact solution",
+          "threshold": 5.0,
+          "unit": "%",
+          "value": 0.07715065657630972
+        },
+        {
+          "comparator": "eq",
+          "criterion": "monotone(no_extrema)",
+          "graded_by": "tensorfvm.shallow_water.dam_break._verdict",
+          "pass": true,
+          "primary": true,
+          "quantity": "waveform monotone: interior local extrema of h(x) above 1e-4 h0",
+          "threshold": 0.0,
+          "unit": "flag",
+          "value": 0.0
+        },
+        {
+          "comparator": "lt",
+          "criterion": "tv_no_growth<0.5%",
+          "graded_by": "tensorfvm.shallow_water.dam_break._verdict",
+          "pass": true,
+          "primary": false,
+          "quantity": "total-variation growth vs the exact solution",
+          "threshold": 0.5,
+          "unit": "%",
+          "value": 0.0
+        },
+        {
+          "comparator": "lt",
+          "criterion": "front_series<5%",
+          "graded_by": "tensorfvm.shallow_water.dam_break._verdict",
+          "pass": true,
+          "primary": true,
+          "quantity": "wave-front series x_f(t) over the run (max graded error)",
+          "series_samples": 25,
+          "series_samples_graded": 24,
+          "threshold": 5.0,
+          "unit": "%",
+          "value": 0.42472950845003216
+        }
+      ],
+      "dx": 0.00625,
+      "gravity": 9.81,
+      "grid": 1600,
+      "h0": 1.0,
+      "h1": 0.0,
+      "key": "ritter-dry",
+      "kind": "dry",
+      "order": 2,
+      "pass": true,
+      "reference": "Ritter (1892) Z. Ver. Deutsch. Ing. 36:947-954",
+      "series": {
+        "legacy_max_error": 2.1249999999999996,
+        "legacy_max_error_t_star": 0.0025000000000000005,
+        "max_error": 0.0042472950845003216,
+        "max_error_t_star": 0.08266074711400481,
+        "min_cells": 4.0,
+        "samples": 25,
+        "samples_graded": 24,
+        "unresolved_max_error": null,
+        "unresolved_samples": 1
+      },
+      "steps": 1513,
+      "t_end": 0.638550856814101,
+      "t_star": 2.0,
+      "volume_drift": -3.2307490016592055e-14
+    },
+    {
+      "cfl": 0.4,
+      "criteria": [
+        {
+          "comparator": "lt",
+          "criterion": "shock_position<5%",
+          "graded_by": "tensorfvm.shallow_water.dam_break._verdict",
+          "pass": true,
+          "primary": true,
+          "quantity": "bore position x_s(t*) on the wet bed vs the Stoker solution",
+          "threshold": 5.0,
+          "unit": "%",
+          "value": 0.021023436657714858
+        },
+        {
+          "comparator": "lt",
+          "criterion": "step_ratio<5%",
+          "graded_by": "tensorfvm.shallow_water.dam_break._verdict",
+          "pass": true,
+          "primary": true,
+          "quantity": "still-water level step h2/h1 across the bore",
+          "threshold": 5.0,
+          "unit": "%",
+          "value": 5.7625186195917935e-05
+        },
+        {
+          "comparator": "lt",
+          "criterion": "plateau_h2<5%",
+          "graded_by": "tensorfvm.shallow_water.dam_break._verdict",
+          "pass": true,
+          "primary": true,
+          "quantity": "still-water plateau depth h2 behind the bore",
+          "threshold": 5.0,
+          "unit": "%",
+          "value": 5.7625186195917935e-05
+        },
+        {
+          "comparator": "lt",
+          "criterion": "depth_l1<5%",
+          "graded_by": "tensorfvm.shallow_water.dam_break._verdict",
+          "pass": true,
+          "primary": false,
+          "quantity": "depth profile L1 error vs the exact solution",
+          "threshold": 5.0,
+          "unit": "%",
+          "value": 0.042719348003805384
+        },
+        {
+          "comparator": "eq",
+          "criterion": "monotone(no_extrema)",
+          "graded_by": "tensorfvm.shallow_water.dam_break._verdict",
+          "pass": true,
+          "primary": true,
+          "quantity": "waveform monotone: interior local extrema of h(x) above 1e-4 h0",
+          "threshold": 0.0,
+          "unit": "flag",
+          "value": 0.0
+        },
+        {
+          "comparator": "lt",
+          "criterion": "tv_no_growth<0.5%",
+          "graded_by": "tensorfvm.shallow_water.dam_break._verdict",
+          "pass": true,
+          "primary": false,
+          "quantity": "total-variation growth vs the exact solution",
+          "threshold": 0.5,
+          "unit": "%",
+          "value": 0.10049771738320779
+        },
+        {
+          "comparator": "lt",
+          "criterion": "front_series<5%",
+          "graded_by": "tensorfvm.shallow_water.dam_break._verdict",
+          "pass": true,
+          "primary": true,
+          "quantity": "bore series x_s(t) over the run (max graded error)",
+          "series_samples": 25,
+          "series_samples_graded": 24,
+          "threshold": 5.0,
+          "unit": "%",
+          "value": 0.844265997289686
+        }
+      ],
+      "dx": 0.00625,
+      "gravity": 9.81,
+      "grid": 1600,
+      "h0": 1.0,
+      "h1": 0.5,
+      "key": "stoker-wet",
+      "kind": "wet",
+      "order": 2,
+      "pass": true,
+      "reference": "Stoker (1957) Water Waves, ch. 10 (bore on a wet bed)",
+      "series": {
+        "legacy_max_error": 0.045047208482137766,
+        "legacy_max_error_t_star": 0.0025000000000000005,
+        "max_error": 0.00844265997289686,
+        "max_error_t_star": 0.08354900763554914,
+        "min_cells": 4.0,
+        "samples": 25,
+        "samples_graded": 24,
+        "unresolved_max_error": 0.045047208482137766,
+        "unresolved_samples": 1
+      },
+      "steps": 918,
+      "t_end": 0.638550856814101,
+      "t_star": 2.0,
+      "volume_drift": -1.3211653993039363e-14
+    }
+  ],
+  "grid_study": {
+    "gate_percent": 5.0,
+    "passing_grids": [
+      800,
+      1600
+    ],
+    "rows": [
+      {
+        "cases": {
+          "ritter-dry": {
+            "depth_l1_percent": 1.2619660650790319,
+            "front_series_error_percent": 4.6954352055595105,
+            "local_extrema": 0,
+            "pass": false,
+            "verdict_failing": [
+              "front_wetted<5%"
+            ]
+          },
+          "stoker-wet": {
+            "depth_l1_percent": 0.6655921487484466,
+            "front_series_error_percent": 0.6757066878372741,
+            "local_extrema": 1,
+            "pass": false,
+            "verdict_failing": [
+              "monotone(no_extrema)"
+            ]
+          }
+        },
+        "gate_percent": 5.0,
+        "n": 100
+      },
+      {
+        "cases": {
+          "ritter-dry": {
+            "depth_l1_percent": 0.6226707907984355,
+            "front_series_error_percent": 6.613261995794985,
+            "local_extrema": 0,
+            "pass": false,
+            "verdict_failing": [
+              "front_series<5%"
+            ]
+          },
+          "stoker-wet": {
+            "depth_l1_percent": 0.34168313031305353,
+            "front_series_error_percent": 0.8766887685564823,
+            "local_extrema": 1,
+            "pass": false,
+            "verdict_failing": [
+              "monotone(no_extrema)"
+            ]
+          }
+        },
+        "gate_percent": 5.0,
+        "n": 200
+      },
+      {
+        "cases": {
+          "ritter-dry": {
+            "depth_l1_percent": 0.30833597748260433,
+            "front_series_error_percent": 6.613261995794985,
+            "local_extrema": 0,
+            "pass": false,
+            "verdict_failing": [
+              "front_series<5%"
+            ]
+          },
+          "stoker-wet": {
+            "depth_l1_percent": 0.17303304323634983,
+            "front_series_error_percent": 0.7952172493583546,
+            "local_extrema": 0,
+            "pass": true,
+            "verdict_failing": []
+          }
+        },
+        "gate_percent": 5.0,
+        "n": 400
+      },
+      {
+        "cases": {
+          "ritter-dry": {
+            "depth_l1_percent": 0.15419003450595437,
+            "front_series_error_percent": 1.397618184122598,
+            "local_extrema": 0,
+            "pass": true,
+            "verdict_failing": []
+          },
+          "stoker-wet": {
+            "depth_l1_percent": 0.08510840146864194,
+            "front_series_error_percent": 0.7952172493579573,
+            "local_extrema": 0,
+            "pass": true,
+            "verdict_failing": []
+          }
+        },
+        "gate_percent": 5.0,
+        "n": 800
+      },
+      {
+        "cases": {
+          "ritter-dry": {
+            "depth_l1_percent": 0.07715065657630972,
+            "front_series_error_percent": 0.42472950845003216,
+            "local_extrema": 0,
+            "pass": true,
+            "verdict_failing": []
+          },
+          "stoker-wet": {
+            "depth_l1_percent": 0.042719348003805384,
+            "front_series_error_percent": 0.844265997289686,
+            "local_extrema": 0,
+            "pass": true,
+            "verdict_failing": []
+          }
+        },
+        "gate_percent": 5.0,
+        "n": 1600
+      }
+    ]
+  },
+  "honest_fail": [
+    {
+      "case": "ritter-dry",
+      "detail": "front series error 4.695 % / local extrema 0 at n = 100",
+      "failing_criteria": [
+        "front_wetted<5%"
+      ],
+      "n": 100
+    },
+    {
+      "case": "stoker-wet",
+      "detail": "front series error 0.676 % / local extrema 1 at n = 100",
+      "failing_criteria": [
+        "monotone(no_extrema)"
+      ],
+      "n": 100
+    },
+    {
+      "case": "ritter-dry",
+      "detail": "front series error 6.613 % / local extrema 0 at n = 200",
+      "failing_criteria": [
+        "front_series<5%"
+      ],
+      "n": 200
+    },
+    {
+      "case": "stoker-wet",
+      "detail": "front series error 0.877 % / local extrema 1 at n = 200",
+      "failing_criteria": [
+        "monotone(no_extrema)"
+      ],
+      "n": 200
+    },
+    {
+      "case": "ritter-dry",
+      "detail": "front series error 6.613 % / local extrema 0 at n = 400",
+      "failing_criteria": [
+        "front_series<5%"
+      ],
+      "n": 400
+    }
+  ],
+  "ledger_contract": {
+    "graded_quantities": [
+      "wave-front position x_f(t) and x_f(t*)",
+      "still-water level step h2/h1",
+      "waveform monotonicity (no spurious oscillation)"
+    ],
+    "reference": "Ritter, A. (1892) Z. Ver. Deutsch. Ing. 36:947-954 (dry bed); Stoker, J.J. (1957) Water Waves, ch. 10 (wet bed / bore)",
+    "t_star": 2.0,
+    "tolerance_percent": 5.0
+  },
+  "pool_grid": 1600,
+  "reference_check": {
+    "ritter": {
+      "fan_mass_relative_residual": 1.2523315717771766e-13,
+      "front_over_c0t": 2.0,
+      "h_at_dam_over_h0": 0.4444444444444445,
+      "u_at_dam_over_c0": 0.6666666666666666
+    },
+    "stoker": {
+      "h2": 0.7269204461872865,
+      "mass_jump_relative_residual": 0.0,
+      "momentum_jump_relative_residual": 1.1183926413249513e-16,
+      "riemann_invariant_relative_residual": 0.0,
+      "shock_speed": 2.957918120187525,
+      "step_ratio": 1.453840892374573,
+      "u2": 0.9233639019770798
+    }
+  },
+  "reports": [
+    "docs/case-fvm-dambreak-stoker/REPORT.md",
+    "docs/case-fvm-dambreak-stoker/AUDIT.md",
+    "docs/case-fvm-dambreak-stoker-2d/REPORT.md",
+    "docs/case-fvm-dambreak-stoker-robustness/REPORT.md"
+  ],
+  "sensitivity": {
+    "reference_point": {
+      "cfl": 0.4,
+      "h0/h1": 2.0,
+      "n": 800,
+      "order": 2
+    },
+    "variants": 7,
+    "worst_headline_error_percent": 0.3948223781027327
+  },
+  "slug": "CASE-FVM-DAMBREAK-STOKER",
+  "solver": {
+    "cfl": 0.4,
+    "discretisation": "1-D finite volume, MUSCL (minmod) reconstruction, HLL Riemann solver, SSP-RK3, CFL 0.4, reflective walls",
+    "driver": "scripts/run_shallow_water_dam_break.py",
+    "module": "tensorfvm.shallow_water.dam_break",
+    "order": 2
+  },
+  "tests": [
+    "tests/test_case_pool_dambreak_stoker.py",
+    "tests/test_dambreak_stoker_series.py",
+    "tests/test_shallow_water_dam_break.py"
+  ],
+  "title": "算例池·浅水溃坝 Ritter/Stoker 精确解",
+  "verdict": {
+    "accepted_grid_min": 800,
+    "all_criteria_pass_at_pool_grid": true,
+    "all_primary_pass_at_pool_grid": true,
+    "honest_fail_count": 5,
+    "pool_grid": 1600,
+    "tolerance_percent": 5.0
+  }
+}

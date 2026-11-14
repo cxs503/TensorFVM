@@ -266,3 +266,33 @@ n = 400 在序列误差 **6.613 % > 5 %** 时仍对外 `all_pass = True`。
 结论：**接受网格 n ≥ 800**（报告 §3 的 0.425 % / 0.844 % 仍是 n = 1600 的发表值，
 均 < 5 %，且远小于 3 %）；序列误差**非单调**（见 AUDIT §8.4），故不宣称其收敛阶。
 图：`series_verdict_gate.png`（数字程序化读自 `convergence.json`）。
+
+---
+
+## 7. 算例池登记（m20502，2026-11-14）
+
+本算例此前只有证据包与分级驱动，**不在算例池里**：`docs/verification-catalog.md`
+（catalog gate 审计的索引）没有任何浅水溃坝条目，也没有 `CASE-WOODWARD-COLELLA`
+那样的 `case_pool_entry.json`。本次把登记做成机器生成，而不是手抄：
+
+- `docs/case-fvm-dambreak-stoker/case_pool_entry.json`：由
+  `src/tensorfvm/verification/case_pool_dambreak.py` 从
+  `src/tensorfvm/verification/artifacts/shallow-water-dam-break/` 派生（台账三条
+  验收项 → primary 判据：`front_fan<5%`、`front_series<5%`、`step_ratio<5%` /
+  `plateau_h2<5%`、`monotone(no_extrema)`），粗网格 honest FAIL 原样入账
+  （`honest_fail`），并对账 `accepted_grid_min = 800`；
+- `docs/verification-catalog.md` §19.1：同一份数据渲染的池条目，数字零手抄；
+- `tests/test_case_pool_dambreak_stoker.py`：登记与工件漂移即测试失败；同时断言
+  台账三类量（波前 `x_f(t)`、静水区水位阶跃 `h2/h1`、波形单调）在池网格全部
+  ≤5 %，且粗网格失败仍在案。
+
+复现：`PYTHONPATH=src python -m tensorfvm.verification.case_pool_dambreak`
+（写登记）；`PYTHONPATH=src python scripts/generate_catalog_verification_entries.py --write`
+（写 §19.1）。两者都有 `--check` 形态，被 pytest 直接调用。
+
+顺带修掉的两处 catalog 漂移（**先于本单存在**，与本算例无关）：§14.1 散文里的
+裸文件名 `summary.json` / `REPORT.md` 被闸门当作不可解指针（改为带路径），
+§10.2 中 Rotating Machinery / Heat Transfer / Multiphase 三条未标注状态
+（分别标为 closed-by / partially-closed-by / partially-closed-by，指向 §17、§18
+与 `docs/bubble-rise-2d/summary.json`）。修前 `tests/test_verification_catalog_gate.py`
+三项红；修后整闸 PASS（33 条目，0 悬空指针，0 未标注）。
