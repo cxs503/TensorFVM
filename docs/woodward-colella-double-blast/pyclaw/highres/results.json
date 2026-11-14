@@ -1,0 +1,127 @@
+{
+  "case": "CASE-WOODWARD-COLELLA (two interacting blast waves)",
+  "t_end": 0.038,
+  "third_code": "Clawpack 5.14.0 Classic (wave propagation, Fortran)",
+  "defect": {
+    "symptom": "nx>=3200 rung silently truncated at t~0.0285",
+    "root_cause": "pyclaw.ClawSolver.max_steps default 10000 < 12799 steps required at nx=3200, CFL 0.4",
+    "fix": "solver.max_steps raised; truncated rung now raises",
+    "previous_attribution": "CFL rejection / Roe positivity failure at the collision \u2014 REFUTED"
+  },
+  "rows": [
+    {
+      "nx": 3200,
+      "flux": "roe",
+      "limiter": 4,
+      "cfl": 0.4,
+      "t": 0.038,
+      "steps": 12799,
+      "seconds": 9.02,
+      "mass": 0.9999289075073459,
+      "energy_integral": 274.9859822191577,
+      "rho_min": 0.14626061387133638,
+      "p_min": 19.274932254796603,
+      "finite": true,
+      "truncated": false
+    },
+    {
+      "nx": 6400,
+      "flux": "roe",
+      "limiter": 4,
+      "cfl": 0.4,
+      "t": 0.038,
+      "steps": 25647,
+      "seconds": 32.68,
+      "mass": 0.999964479415132,
+      "energy_integral": 275.0030330090839,
+      "rho_min": 0.14592936238046963,
+      "p_min": 19.28912194933652,
+      "finite": true,
+      "truncated": false
+    }
+  ],
+  "analysis": {
+    "self_convergence": {
+      "roe": [
+        {
+          "coarser": 3200,
+          "finer": 6400,
+          "coarse_vs_fine_l1_percent": 0.8963091948747332,
+          "fine_vs_coarse_l1_percent": 0.9326984521697869,
+          "peak_coarse": 6.444452450715886,
+          "peak_fine": 6.446282159731744,
+          "peak_rel_percent": 0.028383942410837144
+        }
+      ]
+    },
+    "truth": {
+      "roe": {
+        "code": "Clawpack 5.14.0 Classic (wave propagation, Fortran)",
+        "flux": "roe",
+        "nx": 6400,
+        "peak": 6.446282159731744,
+        "error_bar_l1_percent": 0.8963091948747332,
+        "error_bar_note": "L1 percent between truth and the next coarser stored rung; a numerical solution has a non-zero floor, this is its measured size"
+      }
+    },
+    "tfvm_vs_truth": {
+      "roe": [
+        {
+          "nx": 400,
+          "peak_percent": 12.355480644044665,
+          "l1_percent": 10.562553212652322,
+          "window_mass_percent": 0.0758108804348785,
+          "peak_position_abs": 0.0049218749999999645,
+          "low_plateau_percent": 0.44728714807871156
+        },
+        {
+          "nx": 800,
+          "peak_percent": 3.9790221707892064,
+          "l1_percent": 5.39397680432907,
+          "window_mass_percent": 0.033505402969504,
+          "peak_position_abs": 0.004296874999999978,
+          "low_plateau_percent": 0.2298709608185923
+        },
+        {
+          "nx": 1600,
+          "peak_percent": 0.3064143894331624,
+          "l1_percent": 2.5422358146428827,
+          "window_mass_percent": 0.013990511765484494,
+          "peak_position_abs": 0.0003906250000000888,
+          "low_plateau_percent": 0.10444016249780022
+        },
+        {
+          "nx": 3200,
+          "peak_percent": 0.9498483966413918,
+          "l1_percent": 1.007939666243878,
+          "window_mass_percent": 0.004370703570714455,
+          "peak_position_abs": 0.004609375000000027,
+          "low_plateau_percent": 0.028150422680370827
+        }
+      ]
+    },
+    "cross_code": [
+      {
+        "nx": 3200,
+        "l1_percent": 0.32736317535742127,
+        "peak_rel_percent": 0.9785100787894768
+      }
+    ],
+    "vs_digitised": {
+      "committed": {
+        "reference": "/root/tp-agent/work/m20864/docs/woodward-colella-double-blast/reference/reference_density.csv",
+        "peak_percent": 2.330113017237135,
+        "l1_percent": 4.65150987992621,
+        "reference_peak": 6.446282159731744,
+        "truth_peak": 6.2960765
+      },
+      "calibrated": {
+        "reference": "/root/tp-agent/work/m20864/docs/woodward-colella-double-blast/reference/reference_density_calibrated.csv",
+        "peak_percent": 1.9885673098907444,
+        "l1_percent": 3.7888678303125465,
+        "reference_peak": 6.446282159731744,
+        "truth_peak": 6.3180935
+      }
+    }
+  }
+}
