@@ -1,0 +1,47 @@
+{
+  "ritter-dry": {
+    "case": "ritter-dry",
+    "limit": 0.005,
+    "max_difference": 0.0003075632294962105,
+    "nx": 400,
+    "ny": 8,
+    "pass": true,
+    "rows": {
+      "depth_l1": {
+        "difference": 1.4864523322530993e-05,
+        "one_d": 0.0030833597748260435,
+        "two_d": 0.0030982242981485745
+      },
+      "front_fan_error": {
+        "difference": 0.0003075632294962105,
+        "one_d": 0.0010590824433118762,
+        "two_d": 0.0013666456728080867
+      }
+    }
+  },
+  "stoker-wet": {
+    "case": "stoker-wet",
+    "limit": 0.005,
+    "max_difference": 0.0,
+    "nx": 400,
+    "ny": 8,
+    "pass": true,
+    "rows": {
+      "bore_error": {
+        "difference": 0.0,
+        "one_d": 0.0016012714109865209,
+        "two_d": 0.0016012714109865209
+      },
+      "depth_l1": {
+        "difference": 0.0,
+        "one_d": 0.0017303304323634983,
+        "two_d": 0.0017303304323634983
+      },
+      "step_ratio_error": {
+        "difference": 0.0,
+        "one_d": 9.372986011153035e-05,
+        "two_d": 9.372986011153035e-05
+      }
+    }
+  }
+}
