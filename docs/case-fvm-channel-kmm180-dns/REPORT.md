@@ -1,5 +1,9 @@
 # CASE-FVM-CHANNEL-KMM180 —— 无湍流模型（closure-free）路线复核 u+ 对数律
 
+> **更正 (m20573, 2026-11-14)**：本报告的 PASS 被判为 **vacuous**。同一批工件里 `uv_plus` 为 $O(10^{-6})$、动量平衡残差 0.708 $u_\tau^2$（占施加剪切 87 %），即该状态不是动量方程的解，而是几乎未演化的初始条件；
+> 判据 C1/C2 未过，故 1.61 %/2.59 % 的 PASS 不作为离散验证证据。审计与负对照见 `docs/audit-m20573-closurefree-pass/`；另：本报告印出的 $\Delta t^+$ 用错公式，正确值为 0.222（印出 40.0）。
+
+
 > 每个数字都由 `scripts/reanalyze_case_fvm_channel_kmm180_dns.py` 从 `docs/case-fvm-channel-kmm180-dns/profiles.csv` 与仓内 DNS 参考程序化注入，零手抄。
 
 ## 1. 案例介绍
