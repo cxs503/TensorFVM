@@ -126,6 +126,22 @@ SERIES_MIN_CELLS = 4.0
 #: a wide margin (24 of 25 samples graded, i.e. 0.96, on n = 800 and 1600).
 SERIES_MIN_GRADED_FRACTION = 0.5
 
+#: Gradient cut of the data-driven plateau window, as a fraction of the measured
+#: ``max|dh/dx|`` (the jump).  Kept at the historical 1e-2 so the window is
+#: unchanged on the range where it was validated (n <= 3200).
+PLATEAU_THRESH_FRACTION = 1e-2
+#: Declared validity gate for the plateau window: ``max|h - mean(h)| / jump``
+#: must stay below this, otherwise the profile has no *flat* plateau
+#: (``bore_valid = False``; the amplitude is still reported but must not be
+#: graded).  Measured: 11 % of the jump at n = 800, 1.4 % at 1600, 0.2 % at
+#: 6400 -- so the gate admits n >= 1600 and rejects n <= 800 honestly.
+PLATEAU_FLAT_FRACTION = 5e-2
+#: How many decades the plateau cut may be tightened before the detector gives
+#: up (``plateau_unbounded``).  Three decades cover n <= 12800 for the Stoker
+#: case (measured); beyond the declared count the honest answer is "no fan
+#: found", not a wider window.
+PLATEAU_THRESH_MAX_DECADES = 3
+
 #: predeclared resolution criterion for the data-driven wet-bed bore position
 #: (:func:`data_driven_plateau`), in units of ``dx``.
 #:
@@ -251,7 +267,7 @@ def _local_extrema(h: np.ndarray, amplitude: float) -> int:
     return int(np.count_nonzero(peak | dip))
 
 
-def data_driven_plateau(x, h, thresh_frac: float = 1e-2) -> dict:
+def data_driven_plateau(x, h, thresh_frac: float = PLATEAU_THRESH_FRACTION) -> dict:
     """Locate the wet-bed bore and plateau from the numerical profile alone.
 
     This is the F4 fix: the oracle-guided ``h2``/``step_ratio`` in
@@ -261,60 +277,104 @@ def data_driven_plateau(x, h, thresh_frac: float = 1e-2) -> dict:
     still reads a machine-precision ``h2``).  Here **no analytic position or
     level is used**:
 
-    * the bore is the cell of maximal ``|dh/dx|`` (the sharpest jump), and
-    * the plateau is the contiguous flat run immediately upstream of it
-      (``|dh/dx|`` below ``thresh_frac`` of the max gradient).
+    * the bore is the cell of maximal ``|dh/dx|``,
+    * the plateau is the contiguous run of cells upstream of it whose
+      ``|dh/dx|`` stays below ``thresh_frac * max|dh/dx|``.
 
-    Because the window is anchored to the *measured* bore, a misplaced bore
-    moves the window with it, so the ``h2``/``step_ratio``/``bore_x`` reading
-    becomes a genuine position-and-amplitude check rather than a near-tautology.
+    Known limit of that rule (F9, ``docs/case-fvm-dambreak-stoker-hires/``)
+    -----------------------------------------------------------------------
+    The earlier docstring claimed this cut was grid-independent "because both
+    ``|dh/dx|`` scales with 1/dx".  That is only true for the *jump*: the fan is
+    a smooth feature whose physical slope is a constant (measured 0.298 ->
+    0.308 m/m for n = 800 ... 12800) while ``max|dh/dx|`` doubles per
+    refinement (5.8 -> 100).  The ratio fan/jump therefore falls like ``dx``
+    (5.1e-2 -> 3.1e-3) and **crosses** the 1e-2 cut between n = 3200 and
+    n = 6400; there the walk ran straight through the whole rarefaction fan and
+    reported ``h2`` 15.5 % high, ``bore_x`` 0.85 cell off -- with
+    ``bore_method == "mid_level_crossing"``, i.e. silently.
 
-    ``thresh_frac`` is a fraction of the max gradient; the plateau is ~1e-4 of
-    the bore gradient while the fan is ~5e-2, so ``1e-2`` separates them cleanly
-    and is grid-independent (both scale with ``1/dx``).
+    Two declared guards now make that impossible:
+
+    ``bore_method = "plateau_unbounded"`` (all outputs NaN)
+        The walk did not find a cell steep enough to stop it before the domain
+        edge, i.e. the profile does not contain a *detectable* fan -- so no
+        plateau was delimited and no amplitude may be quoted.  This is the
+        exact n >= 6400 failure mode above.
+    ``bore_valid`` / ``flatness`` (value still reported, flagged)
+        ``flatness = max|h - mean(h)| / jump`` over the window and
+        ``bore_valid = flatness <= PLATEAU_FLAT_FRACTION``.  On coarse grids the
+        numerical plateau is a *ramp* (measured 11 % of the jump at n = 800,
+        1.4 % at n = 1600, 0.2 % at n = 6400), so the window mean stays a good
+        amplitude estimate while the "flat plateau" premise does not hold;
+        callers that grade must consult ``bore_valid``.
 
     The bore **position** is reported twice:
 
     ``bore_x``
         Sub-cell crossing of the level ``(h2 + h1) / 2`` (both measured from the
-        profile), linearly interpolated between cell centres.  The level is a
-        mean of two *measured* quantities, so no analytic value enters.
+        profile), linearly interpolated between cell centres.
     ``bore_x_cell``
-        Legacy cell centre of the max-gradient cell.  Kept for continuity and
-        as the documented negative control: it snaps the reading to a cell
-        centre, so it cannot resolve a fractional-cell displacement and its
-        error floor under refinement is ``O(dx/2)`` and non-monotone
-        (measured 0.73 % -> 0.068 % -> 0.399 % -> 0.233 % for n = 200 ... 1600
-        -- the same pathology class as the dry-bed wetted edge, F1).
+        Legacy cell centre of the max-gradient cell.  Kept as the documented
+        negative control: quantised to ``dx``, non-monotone under refinement
+        (0.73 % -> 0.068 % -> 0.399 % -> 0.233 % for n = 200 ... 1600).
 
-    Returns a dict with ``bore_x`` / ``bore_x_cell``, ``bore_level``,
-    ``bore_method``, ``h2`` (mean depth over the plateau), ``h1`` (mean depth in
-    the flat downstream region), ``n_plateau`` (plateau width in cells) and
-    ``thresh`` (the gradient cut).
+    Returns ``bore_x`` / ``bore_x_cell``, ``bore_level``, ``bore_method``,
+    ``h2``, ``h1``, ``jump``, ``flatness``, ``bore_valid``, ``n_plateau``,
+    ``plateau_width`` (metres -- the grid-independent way to read the width),
+    ``thresh`` and ``max_grad``.
     """
     x = np.asarray(x, dtype=float)
     h = np.asarray(h, dtype=float)
     nan = float("nan")
     out = {"bore_x": nan, "bore_x_cell": nan, "bore_level": nan,
-           "bore_method": "undefined", "h2": nan, "h1": nan, "n_plateau": 0,
+           "bore_method": "undefined", "h2": nan, "h1": nan,
+           "n_plateau": 0, "plateau_width": nan, "jump": nan,
+           "flatness": nan, "bore_valid": False,
            "thresh": nan, "max_grad": nan}
     if h.size < 4:
         return out
     dx = x[1] - x[0]
     grad = np.abs(np.diff(h)) / dx
     j = int(np.argmax(grad))
-    max_grad = grad[j]
-    thresh = thresh_frac * max_grad
-    # walk left from the bore while still in the steep smearing -> plateau right
-    r = j - 1
-    while r >= 0 and grad[r] > thresh:
-        r -= 1
-    # walk left while flat -> plateau left edge (where the fan steepens)
-    l = r
-    while l >= 0 and grad[l] < thresh:
-        l -= 1
-    l += 1
-    if r < l:
+    max_grad = float(grad[j])
+    if not np.isfinite(max_grad) or max_grad <= 0.0:
+        return out
+    # The cut is tried at ``thresh_frac`` and, if that cut cannot find a fan
+    # (see the F9 note above: the fan slope is a physical constant while
+    # ``max|dh/dx|`` grows like 1/dx), tightened by one decade at a time.  The
+    # retry rule is declared a priori -- it is a resolution loop, not a fit to
+    # the answer -- and every attempt is bounded by ``PLATEAU_THRESH_MAX_DECADES``
+    # so a profile without any fan still returns "plateau_unbounded".
+    attempts = []
+    r = l = -1
+    thresh = float("nan")
+    for decade in range(PLATEAU_THRESH_MAX_DECADES + 1):
+        frac = thresh_frac * (0.1 ** decade)
+        thresh = frac * max_grad
+        # walk left out of the bore smearing -> plateau right edge
+        r = j - 1
+        while r >= 0 and grad[r] > thresh:
+            r -= 1
+        # walk left while flat -> plateau left edge (where the fan steepens)
+        l = r
+        while l >= 0 and grad[l] < thresh:
+            l -= 1
+        l += 1
+        bounded = bool(r > 0 and l > 0 and r >= l)
+        attempts.append({"decade": decade, "thresh_frac": frac,
+                         "thresh": float(thresh), "bounded": bounded,
+                         "n_plateau": int(r - l + 1)})
+        if bounded:
+            break
+    out["thresh"] = float(thresh)
+    out["thresh_frac_used"] = attempts[-1]["thresh_frac"]
+    out["attempts"] = attempts
+    out["max_grad"] = max_grad
+    out["bore_x_cell"] = float(x[j])
+    if not bounded:
+        # no fan detected upstream at any declared cut: the plateau is not
+        # delimited, so nothing may be quoted (F9).
+        out["bore_method"] = "plateau_unbounded"
         return out
     h2 = float(h[l:r + 1].mean())
     # downstream: walk right past the bore smearing, then the flat h1 region
@@ -325,6 +385,11 @@ def data_driven_plateau(x, h, thresh_frac: float = 1e-2) -> dict:
     while k3 < len(grad) and grad[k3] < thresh:
         k3 += 1
     h1 = float(h[k2:k3 + 1].mean()) if k3 > k2 else float(h[k2])
+    jump = abs(h2 - h1)
+    if not np.isfinite(jump) or jump <= 0.0:
+        out["bore_method"] = "plateau_unbounded"
+        return out
+    flatness = float(np.abs(h[l:r + 1] - h2).max()) / jump
     # sub-cell bore position: interpolate the crossing of the mid level between
     # the two *measured* states.  Anchored to the max-gradient cell (so a
     # smeared, slightly non-monotone jump still lands on the right crossing) but
@@ -340,11 +405,12 @@ def data_driven_plateau(x, h, thresh_frac: float = 1e-2) -> dict:
             dz = h[i] - h[i + 1]
             x_bore = float(x[i] + dx * (h[i] - level) / dz)
             method = "mid_level_crossing"
-    out.update({"bore_x": x_bore, "bore_x_cell": float(x[j]),
-                "bore_level": float(level), "bore_method": method,
-                "h2": h2, "h1": h1,
-                "n_plateau": int(r - l + 1), "thresh": float(thresh),
-                "max_grad": float(max_grad)})
+    out.update({"bore_x": x_bore, "bore_method": method,
+                "bore_level": float(level), "h2": h2, "h1": h1,
+                "jump": float(jump), "flatness": flatness,
+                "bore_valid": bool(flatness <= PLATEAU_FLAT_FRACTION),
+                "n_plateau": int(r - l + 1),
+                "plateau_width": float((r - l + 1) * dx)})
     return out
 
 
@@ -588,7 +654,12 @@ def _data_driven_crosscheck(case: DamBreakCase, solver: ShallowWater1D) -> dict:
         "step_ratio_error": _relative(
             dd["h2"] / dd["h1"], sol["step_ratio"]) if dd["h1"] else float("nan"),
         "n_plateau": dd["n_plateau"],
-        "thresh_frac": 1e-2,
+        "plateau_width": dd["plateau_width"],
+        "flatness": dd["flatness"],
+        "bore_valid": dd["bore_valid"],
+        "thresh_frac_used": dd.get("thresh_frac_used"),
+        "bore_attempts": dd.get("attempts"),
+        "thresh_frac": PLATEAU_THRESH_FRACTION,
     }
 
 
