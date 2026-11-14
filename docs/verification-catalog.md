@@ -584,10 +584,10 @@ Every item carries a `[[gap-status: open]]` or `[[gap-status: closed-by <paths>]
 ### 10.2 Planned Additions
 
 1. **3D Lid-Driven Cavity**: Extend Ghia comparison to 3D  [[gap-status: closed-by src/tensorfvm/lid_cavity_3d.py, scripts/verify_lid_cavity_3d.py, tests/test_native_lid_cavity_3d.py, src/tensorfvm/verification/artifacts/lid-cavity-3d/verification.json, docs/verification-lid-cavity-3d/REPORT.md]]
-2. **Rotating Machinery**: MRF verification against literature
-3. **Heat Transfer**: Natural convection (de Vahl Davis 1983)
+2. **Rotating Machinery**: MRF verification against literature  [[gap-status: closed-by src/tensorfvm/rotating_frame.py, tests/test_rotating_frame.py, docs/verification-rotating-frame/summary.json]]
+3. **Heat Transfer**: Natural convection (de Vahl Davis 1983)  [[gap-status: partially-closed-by docs/natural-convection-gci/summary.json, docs/verification-natural-convection-highra/summary.json, tests/test_natural_convection_gci.py]]
 4. **Compressible**: Isentropic vortex (exact solution)  [[gap-status: closed-by src/tensorfvm/compressible/isentropic_vortex.py, tests/test_compressible_isentropic_vortex.py, docs/verification-compressible-isentropic-vortex/envelope.json]]
-5. **Multiphase**: Rising bubble (benchmark)
+5. **Multiphase**: Rising bubble (benchmark)  [[gap-status: partially-closed-by docs/bubble-rise-2d/summary.json, tests/test_bubble_rise.py]]
 
 ---
 
@@ -707,9 +707,10 @@ surface quadrature):
 - criterion set (9): C1-C3 accuracy against the Lamb anchors (< 3 %), C4 observed order,
   C5 symmetry/decoupling, C6a/C6b Richardson extrapolation (< 1 %), C7/C8 consistent
   quadrature vs the midpoint baseline
-- artifact freshness: the committed `summary.json` criteria are recomputed from its own
-  `cases` by the driver's `_criteria`, and every figure carries a `sha256` in the summary
-  that `REPORT.md` quotes; `tests/test_added_mass_potential_artifacts.py` fails if the
+- artifact freshness: the committed `docs/verification-added-mass-potential/summary.json`
+  criteria are recomputed from its own `cases` by the driver's `_criteria`, and every figure
+  carries a `sha256` in that summary which
+  `docs/verification-added-mass-potential/REPORT.md` quotes; `tests/test_added_mass_potential_artifacts.py` fails if the
   catalog quotes a different criterion count or a different finest-level error than the
   artifact, or if a figure does not match its recorded hash
 
@@ -816,3 +817,144 @@ are homogeneous no-slip; second-order time integration; turbulent/compressible c
 [[gap-status: closed-by src/tensorfvm/verification/pulsatile_channel.py, src/tensorfvm/channel_periodic.py, tests/test_pulsatile_channel.py, docs/verification-pulsatile-channel/summary.json]]
 
 ## 18. Buoyant-cavity anchor recheck (de Vahl Davis velocity/streamfunction)  [[gap-status: closed-by src/tensorfvm/verification/cavity_anchor.py, src/tensorfvm/verification/reference_families.py, src/tensorfvm/internal_flow/natural_convection.py, tests/test_cavity_anchor.py, docs/verification-cavity-anchor/summary.json]]
+
+<!-- BEGIN generated: verification-debt entries (m16836) -->
+
+## 17. Rotating Frame (MRF / Coriolis)
+
+**Reference**: Johnston, Halleen & Lezius (1972) rotating-channel experiment / theory (rotation axis along the span); Taylor (1923) torque for circular Couette flow; Greenspan (1968) rotating-frame momentum balance.
+**Physics**: absolute-frame Navier-Stokes rewritten in a frame rotating at `Omega` -- Coriolis `2 Omega x u`, centrifugal `Omega x (Omega x r)` absorbed into the modified pressure, and the *frozen-rotor* (MRF) assumption for a rotor zone.
+**Implementation**: `src/tensorfvm/rotating_frame.py`
+**Driver**: `python -m tensorfvm.verification.rotating_frame`
+**Tests**: `tests/test_rotating_frame.py`
+**Report**: `docs/verification-rotating-frame/REPORT.md`
+**Artifact**: `docs/verification-rotating-frame/summary.json`
+
+**Verification Status**: PASS (18/18 criteria, re-run reproduced at m16836)
+
+| criterion | value | gate | direction | verdict |
+|---|---:|---:|:--:|:--:|
+| `C10a_frame_radial_balance_exact` | 1.981e-16 | 1.000e-14 | max | PASS |
+| `C10b_controls_reject_missing_frame_terms` | 1.000e+00 | 5.000e-02 | min | PASS |
+| `C1_inert_limit_is_exact` | 0.000e+00 | 0.000e+00 | max | PASS |
+| `C2_frame_kinematics` | 1.777e-10 | 1.000e-06 | max | PASS |
+| `C3_solid_body_rotation_exact` | 0.000e+00 | 1.000e-14 | max | PASS |
+| `C3b_solid_body_full_momentum_residual` | 3.628e-10 | 1.000e-06 | max | PASS |
+| `C4_closed_form_satisfies_odes` | 2.220e-16 | 1.000e-13 | max | PASS |
+| `C4b_closed_form_vs_independent_bvp` | 9.121e-15 | 1.000e-08 | max | PASS |
+| `C5_rotating_channel_vs_closed_form` | 1.270e-05 | 3.000e-02 | max | PASS |
+| `C5b_rotating_channel_second_order` | 1.974e+00 | 1.800e+00 | min | PASS |
+| `C6_anchor_rejects_no_coriolis_solver` | 1.000e+00 | 5.000e-01 | min | PASS |
+| `C7a_spanwise_axis_leaves_mean_flow_inert` | 1.329e-14 | 1.000e-12 | max | PASS |
+| `C7b_spanwise_axis_pressure_correction` | 0.000e+00 | 1.000e-12 | max | PASS |
+| `C7c_controls_reject_wrong_coriolis` | 1.000e+00 | 5.000e-01 | min | PASS |
+| `C8a_couette_absolute_profile_vs_exact` | 8.229e-07 | 3.000e-02 | max | PASS |
+| `C8b_mrf_frame_invariance` | 4.146e-13 | 1.000e-12 | max | PASS |
+| `C8c_frozen_rotor_statement` | 0.000e+00 | 1.000e-15 | max | PASS |
+| `C9_couette_torque_vs_taylor_closed_form` | 3.052e-06 | 3.000e-02 | max | PASS |
+
+Discriminating power is measured, not assumed: the control criteria (`C6`, `C7c`, `C10b`) require that a solver which **drops** the Coriolis term, **flips** its sign or **omits** the centrifugal term violates the anchor by >= 5 %, i.e. the anchors can fail a wrong implementation.
+
+## 18. Buoyant Cavity Grid Convergence (de Vahl Davis 1983)
+
+**Reference**: de Vahl Davis, G. (1983) *Natural convection of air in a square cavity: a bench mark numerical solution*, Int. J. Numer. Methods Fluids 3:249.
+**Physics**: differentially heated square cavity, `H = 1`, `Pr = 0.71`, Boussinesq coupling, adiabatic top/bottom walls; metric = mean Nusselt number on the hot wall (`Nu = 4.519` at `Ra = 1e5`, `8.8` at `Ra = 1e6`).
+**Implementation**: `src/tensorfvm/incompressible_benchmarks.py` (`StaggeredFlow`, explicit MAC projection, DCT-II pressure solve, van Leer limited advection)
+**Driver**: `scripts/run_incompressible_benchmarks.py convection`, `src/tensorfvm/verification/natural_convection_gci.py`
+**Tests**: `tests/test_natural_convection_gci.py`, `tests/test_natural_convection_highra_gate.py`
+**Report**: `docs/verification-natural-convection-highra/REPORT.md`, `docs/natural-convection-gci/`
+**Artifact**: `docs/natural-convection-gci/summary.json`, `docs/verification-natural-convection-highra/summary.json`
+
+### Ra = 1e+05
+
+| N | Nu (half-cell) | error vs de Vahl Davis |
+|---:|---:|---:|
+| 16 | 5.1151 | +13.19 % |
+| 32 | 4.6721 | +3.39 % |
+| 64 | 4.5591 | +0.89 % |
+
+- reference `Nu = 4.519`, gate `3 %`, finest grid `N = 64` -> error `+0.89 %` (Ra1e+05: PASS)
+- observed order of `Nu` on the three finest levels: `p = 1.97`
+- Richardson limit: `Nu_inf = 4.5205`, error `+0.03 %`
+
+### Ra = 1e+06
+
+| N | Nu (half-cell) | error vs de Vahl Davis |
+|---:|---:|---:|
+| 32 | 9.7781 | +11.11 % |
+| 64 | 9.0701 | +3.07 % |
+
+- reference `Nu = 8.800`, gate `3 %`, finest grid `N = 64` -> error `+3.07 %` (Ra1e+06: honest FAIL)
+- observed order of `Nu` on the three finest levels: `p = -0.18`
+- Richardson limit: `Nu_inf = withheld`, error `n/a` (withheld: `observed order p = -0.18 < 0.5: three finest levels not in the asymptotic range`)
+
+**Verification Status**: PARTIAL -- Ra1e+05: PASS; Ra1e+06: honest FAIL. The `Ra = 1e6` level needs `N >= 128` to enter the 3 % band (thermal boundary layer `~H/(2 Nu)`; the observed order is negative on `N = 16/32/64`, so the Richardson limit is withheld rather than quoted). `Ra = 1e4` is covered by `docs/verification-natural-convection-ra1e4/REPORT.md`.
+
+### 19.1 Shallow-Water Dam Break (Ritter 1892 / Stoker 1957)
+
+**Ledger slug**: `CASE-FVM-DAMBREAK-STOKER` -- 算例池·浅水溃坝 Ritter/Stoker 精确解
+
+**Reference**: Ritter, A. (1892) *Die Fortpflanzung der Wasserwellen*, Z. Ver. Deutsch. Ing. 36:947-954 (dry bed); Stoker, J.J. (1957) *Water Waves*, ch. 10 (wet bed: rarefaction + constant state + bore).
+
+**Physics**: inviscid depth-averaged shallow-water equations (hydrostatic, no friction), initial depth jump `h0/h1` at `x = 0`, dam removed at `t = 0`. Dry bed -> Ritter rarefaction `h = (2c0 - x/t)^2 / 9g`, front `x_f = 2 t sqrt(g h0)`; wet bed -> Stoker solution with the bore state from the Rankine-Hugoniot jumps.
+
+**Implementation**: `src/tensorfvm/shallow_water/swe1d.py`, `src/tensorfvm/shallow_water/dam_break.py`, `src/tensorfvm/shallow_water/exact.py`
+**Driver**: `scripts/run_shallow_water_dam_break.py`
+**Tests**: `tests/test_case_pool_dambreak_stoker.py`, `tests/test_dambreak_stoker_series.py`, `tests/test_shallow_water_dam_break.py`
+**Report**: `docs/case-fvm-dambreak-stoker/REPORT.md`, `docs/case-fvm-dambreak-stoker/AUDIT.md`, `docs/case-fvm-dambreak-stoker-2d/REPORT.md`, `docs/case-fvm-dambreak-stoker-robustness/REPORT.md`
+**Artifact**: `src/tensorfvm/verification/artifacts/shallow-water-dam-break/metrics.json`, `src/tensorfvm/verification/artifacts/shallow-water-dam-break/convergence.json`, `src/tensorfvm/verification/artifacts/shallow-water-dam-break/sensitivity.json`, `src/tensorfvm/verification/artifacts/shallow-water-dam-break/exactness.json`, `src/tensorfvm/verification/artifacts/shallow-water-dam-break/front_definitions.json`, `src/tensorfvm/verification/artifacts/shallow-water-dam-break/bore_subcell.json`
+**Case-pool entry**: `docs/case-fvm-dambreak-stoker/case_pool_entry.json`
+
+**Parameters**:
+
+| case | h0 [m] | h1 [m] | g [m/s^2] | t* | grid (pool) | dx [m] |
+|---|---:|---:|---:|---:|---:|---:|
+| `ritter-dry` | 1.000 | 0.000 | 9.81 | 2.0 | 1600 | 0.00625 |
+| `stoker-wet` | 1.000 | 0.500 | 9.81 | 2.0 | 1600 | 0.00625 |
+
+**ritter-dry** (reference: Ritter (1892) Z. Ver. Deutsch. Ing. 36:947-954)
+
+| criterion | quantity | value | unit | gate | class | verdict |
+|---|---|---:|---|---:|---|---|
+| `front_fan<5%` | wave-front position x_f(t*) on the dry bed vs 2 t sqrt(g h0) | 0.0173 | % | 5.00 | primary | PASS |
+| `front_wetted<5%` | legacy wetted-edge front (diagnostic only; see docs/case-fvm-dambreak-stoker/AUDIT.md F1) | 2.8906 | % | 5.00 | diagnostic | PASS |
+| `depth_l1<5%` | depth profile L1 error vs the exact solution | 0.0772 | % | 5.00 | diagnostic | PASS |
+| `monotone(no_extrema)` | waveform monotone: interior local extrema of h(x) above 1e-4 h0 | 0.0000 | flag | 0.00 | primary | PASS |
+| `tv_no_growth<0.5%` | total-variation growth vs the exact solution | 0.0000 | % | 0.50 | diagnostic | PASS |
+| `front_series<5%` | wave-front series x_f(t) over the run (max graded error) | 0.4247 | % | 5.00 | primary | PASS |
+
+front series: `24` graded samples of `25` (resolution floor `4` cells), max error `0.4247 %` at `t* = 0.0827`; legacy estimator would have quoted `212.500 %`.
+
+**stoker-wet** (reference: Stoker (1957) Water Waves, ch. 10 (bore on a wet bed))
+
+| criterion | quantity | value | unit | gate | class | verdict |
+|---|---|---:|---|---:|---|---|
+| `shock_position<5%` | bore position x_s(t*) on the wet bed vs the Stoker solution | 0.0210 | % | 5.00 | primary | PASS |
+| `step_ratio<5%` | still-water level step h2/h1 across the bore | 0.0001 | % | 5.00 | primary | PASS |
+| `plateau_h2<5%` | still-water plateau depth h2 behind the bore | 0.0001 | % | 5.00 | primary | PASS |
+| `depth_l1<5%` | depth profile L1 error vs the exact solution | 0.0427 | % | 5.00 | diagnostic | PASS |
+| `monotone(no_extrema)` | waveform monotone: interior local extrema of h(x) above 1e-4 h0 | 0.0000 | flag | 0.00 | primary | PASS |
+| `tv_no_growth<0.5%` | total-variation growth vs the exact solution | 0.1005 | % | 0.50 | diagnostic | PASS |
+| `front_series<5%` | bore series x_s(t) over the run (max graded error) | 0.8443 | % | 5.00 | primary | PASS |
+
+front series: `24` graded samples of `25` (resolution floor `4` cells), max error `0.8443 %` at `t* = 0.0835`; legacy estimator would have quoted `4.505 %`.
+
+**Grid study** (same graded quantities, `n` = 100 ... 1600):
+
+| n | case | x_f/x_s series error | local extrema | depth L1 | verdict |
+|---:|---|---:|---:|---:|---|
+| 100 | `ritter-dry` | 4.695 % | 0 | 1.262 % | **honest FAIL** (front_wetted<5%) |
+| 100 | `stoker-wet` | 0.676 % | 1 | 0.666 % | **honest FAIL** (monotone(no_extrema)) |
+| 200 | `ritter-dry` | 6.613 % | 0 | 0.623 % | **honest FAIL** (front_series<5%) |
+| 200 | `stoker-wet` | 0.877 % | 1 | 0.342 % | **honest FAIL** (monotone(no_extrema)) |
+| 400 | `ritter-dry` | 6.613 % | 0 | 0.308 % | **honest FAIL** (front_series<5%) |
+| 400 | `stoker-wet` | 0.795 % | 0 | 0.173 % | PASS |
+| 800 | `ritter-dry` | 1.398 % | 0 | 0.154 % | PASS |
+| 800 | `stoker-wet` | 0.795 % | 0 | 0.085 % | PASS |
+| 1600 | `ritter-dry` | 0.425 % | 0 | 0.077 % | PASS |
+| 1600 | `stoker-wet` | 0.844 % | 0 | 0.043 % | PASS |
+
+**Reference self-consistency** (the analytic solution is itself audited, so a wrong closed form cannot pass): Ritter `h/h0 = 0.4444` and `u/c0 = 0.6667` at the dam, `x_f/(c0 t) = 2.0000`, fan-mass residual `1.3e-13`; Stoker `h2 = 0.7269`, `u2 = 0.9234`, bore speed `2.9579`, step `h2/h1 = 1.4538`, Rankine-Hugoniot residuals mass `0.0e+00` / momentum `1.1e-16`.
+
+**Verification Status**: ✅ PASS at `n >= 800` (5 % gate, `t* = 2`, pool grid `n = 1600`). Honest FAIL kept on the record: `ritter-dry` n = 100 (front_wetted<5%); `stoker-wet` n = 100 (monotone(no_extrema)); `ritter-dry` n = 200 (front_series<5%); `stoker-wet` n = 200 (monotone(no_extrema)); `ritter-dry` n = 400 (front_series<5%). The dry-bed 100-cell row fails the *legacy* wetted-edge front only (diagnostic), while the coarse dry-bed rows at n = 200/400 miss the front *series* (6.61 %) -- recorded, not averaged away. Sensitivity sweep (7 variants, worst headline error 0.395 %) and the sub-cell bore position are in the artifact bundle.
+<!-- END generated: verification-debt entries (m16836) -->
