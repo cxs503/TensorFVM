@@ -129,5 +129,7 @@ def test_verdict_qualified_records_coarse_grid_honesty(pool, metrics):
     for kind in ("ritter-dry", "stoker-wet"):
         verdict = metrics["cases"][kind]["verdict"]
         assert isinstance(verdict, dict) and verdict, "verdict must be a check dict"
-        assert all(chk["pass"] for chk in verdict.values()), (
+        # skip the summary key "all_pass" which is a bool, not a check dict
+        checks = {k: v for k, v in verdict.items() if k != "all_pass"}
+        assert all(chk["pass"] for chk in checks.values()), (
             f"{kind} n=1600 has a failing check: {verdict}")
