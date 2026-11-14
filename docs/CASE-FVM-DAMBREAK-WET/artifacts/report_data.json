@@ -1,0 +1,259 @@
+{
+ "reference": {
+  "primary": "Martin & Moyce (1952) Fig. 3, h0/a = 2, 14-point digitisation (anchors_mm; axes T=t sqrt(2g/a), X=x_f/a, X(0)=1)",
+  "secondary": "legacy TensorFVM digitisation re-read on the paper's axes (T = t_old, X = x_old): an independent reading of the same figure, 1 <= T <= 2.5",
+  "digitisation_spread_max": 0.11619919862621642,
+  "digitisation_pairs": [
+   [
+    1.0,
+    1.326,
+    1.4
+   ],
+   [
+    1.5,
+    1.7469999999999999,
+    1.95
+   ],
+   [
+    2.0,
+    2.36,
+    2.45
+   ],
+   [
+    2.5,
+    3.0,
+    2.9
+   ],
+   [
+    2.96,
+    3.67,
+    3.268
+   ]
+  ]
+ },
+ "gate": {
+  "tolerance": 0.08,
+  "checkpoints_T": [
+   1.0,
+   1.5,
+   2.0,
+   2.5,
+   2.96
+  ],
+  "production_nx": 100
+ },
+ "legs": [
+  {
+   "key": "l2_g50",
+   "scheme": "limited2",
+   "nx": 50,
+   "ny": 25,
+   "dx": 0.008,
+   "cells_across_column": 7.14375,
+   "steps": 75,
+   "wall_clock_s": 10.639012813568115,
+   "mass_drift_max": 1.4500872158369392e-15,
+   "samples": [
+    {
+     "T": 1.0,
+     "t": 0.05397077020663358,
+     "X_sim": 1.3131799618862425,
+     "X_primary": 1.326,
+     "err_primary": -0.009668203705699499,
+     "X_secondary": 1.4,
+     "err_secondary": -0.06201431293839813,
+     "x_front": 0.07504823482179876
+    },
+    {
+     "T": 1.5,
+     "t": 0.08095615530995037,
+     "X_sim": 1.6081174447079758,
+     "X_primary": 1.7469999999999999,
+     "err_primary": -0.07949774201031717,
+     "X_secondary": 1.95,
+     "err_secondary": -0.17532438732924316,
+     "x_front": 0.09190391196506081
+    },
+    {
+     "T": 2.0,
+     "t": 0.10794154041326716,
+     "X_sim": 2.0933002772505374,
+     "X_primary": 2.36,
+     "err_primary": -0.11300835709722988,
+     "X_secondary": 2.45,
+     "err_secondary": -0.1455917235712093,
+     "x_front": 0.11963211084486822
+    },
+    {
+     "T": 2.5,
+     "t": 0.13492692551658395,
+     "X_sim": 2.5311514599664915,
+     "X_primary": 3.0,
+     "err_primary": -0.15628284667783618,
+     "X_secondary": 2.9,
+     "err_secondary": -0.12718915173569256,
+     "x_front": 0.14465530593708498
+    },
+    {
+     "T": 2.96,
+     "t": 0.1597534798116354,
+     "X_sim": 2.933762518670866,
+     "X_primary": 3.67,
+     "err_primary": -0.2006096679370937,
+     "X_secondary": 3.268,
+     "err_secondary": -0.1022758510799063,
+     "x_front": 0.16766452794203998
+    }
+   ],
+   "max_abs_err_primary": 0.2006096679370937,
+   "max_abs_err_secondary": 0.17532438732924316,
+   "finite": true
+  },
+  {
+   "key": "up_g100",
+   "scheme": "upwind",
+   "nx": 100,
+   "ny": 50,
+   "dx": 0.004,
+   "cells_across_column": 14.2875,
+   "steps": 150,
+   "wall_clock_s": 43.18340802192688,
+   "mass_drift_max": 1.6801010500731432e-15,
+   "samples": [
+    {
+     "T": 1.0,
+     "t": 0.05397077020663358,
+     "X_sim": 1.3738161031553113,
+     "X_primary": 1.326,
+     "err_primary": 0.03606040961939009,
+     "X_secondary": 1.4,
+     "err_secondary": -0.018702783460491843,
+     "x_front": 0.07851359029532604
+    },
+    {
+     "T": 1.5,
+     "t": 0.08095615530995037,
+     "X_sim": 1.7481383300764533,
+     "X_primary": 1.7469999999999999,
+     "err_primary": 0.0006515913431330077,
+     "X_secondary": 1.95,
+     "err_secondary": -0.10351880508899831,
+     "x_front": 0.09990610556386931
+    },
+    {
+     "T": 2.0,
+     "t": 0.10794154041326716,
+     "X_sim": 2.173505841026515,
+     "X_primary": 2.36,
+     "err_primary": -0.0790229487175783,
+     "X_secondary": 2.45,
+     "err_secondary": -0.11285475876468777,
+     "x_front": 0.12421585881466533
+    },
+    {
+     "T": 2.5,
+     "t": 0.13492692551658395,
+     "X_sim": 2.657317086373508,
+     "X_primary": 3.0,
+     "err_primary": -0.11422763787549739,
+     "X_secondary": 2.9,
+     "err_secondary": -0.08368376331948003,
+     "x_front": 0.15186567148624597
+    },
+    {
+     "T": 2.96,
+     "t": 0.1597534798116354,
+     "X_sim": 3.1389755357470968,
+     "X_primary": 3.67,
+     "err_primary": -0.14469331451032785,
+     "X_secondary": 3.268,
+     "err_secondary": -0.039481170212026635,
+     "x_front": 0.17939245186794658
+    }
+   ],
+   "max_abs_err_primary": 0.14469331451032785,
+   "max_abs_err_secondary": 0.11285475876468777,
+   "finite": true
+  },
+  {
+   "key": "up_g50",
+   "scheme": "upwind",
+   "nx": 50,
+   "ny": 25,
+   "dx": 0.008,
+   "cells_across_column": 7.14375,
+   "steps": 74,
+   "wall_clock_s": 12.084334373474121,
+   "mass_drift_max": 5.800348863347756e-16,
+   "samples": [
+    {
+     "T": 1.0,
+     "t": 0.05397077020663358,
+     "X_sim": 1.3176390584678155,
+     "X_primary": 1.326,
+     "err_primary": -0.0063053857708782685,
+     "X_secondary": 1.4,
+     "err_secondary": -0.05882924395156031,
+     "x_front": 0.07530307219143566
+    },
+    {
+     "T": 1.5,
+     "t": 0.08095615530995037,
+     "X_sim": 1.6011858314954022,
+     "X_primary": 1.7469999999999999,
+     "err_primary": -0.08346546565804105,
+     "X_secondary": 1.95,
+     "err_secondary": -0.1788790607715886,
+     "x_front": 0.09150777026996224
+    },
+    {
+     "T": 2.0,
+     "t": 0.10794154041326716,
+     "X_sim": 2.052508399178153,
+     "X_primary": 2.36,
+     "err_primary": -0.13029305119569776,
+     "X_secondary": 2.45,
+     "err_secondary": -0.16224146972320283,
+     "x_front": 0.11730085501303145
+    },
+    {
+     "T": 2.5,
+     "t": 0.13492692551658395,
+     "X_sim": 2.4968860390369008,
+     "X_primary": 3.0,
+     "err_primary": -0.1677046536543664,
+     "X_secondary": 2.9,
+     "err_secondary": -0.1390048141252066,
+     "x_front": 0.14269703713095888
+    },
+    {
+     "T": 2.96,
+     "t": 0.1597534798116354,
+     "X_sim": 2.844078949461448,
+     "X_primary": 3.67,
+     "err_primary": -0.22504660777617225,
+     "X_secondary": 3.268,
+     "err_secondary": -0.1297188037143672,
+     "x_front": 0.16253911196172174
+    }
+   ],
+   "max_abs_err_primary": 0.22504660777617225,
+   "max_abs_err_secondary": 0.1788790607715886,
+   "finite": true
+  }
+ ],
+ "criteria": {
+  "C1_primary_le_8pct": false,
+  "C2_secondary_le_8pct": false,
+  "C3_converges_upwind": true,
+  "C3_converges_limited2": null,
+  "C4_mass_drift_le_1e-6": true,
+  "C5_all_finite": true
+ },
+ "verdict": "FAIL",
+ "figures": [
+  "artifacts/figures/fig1_front_and_error.png",
+  "artifacts/figures/fig2_alpha_field.png",
+  "artifacts/figures/fig3_surface_profile.png"
+ ]
+}

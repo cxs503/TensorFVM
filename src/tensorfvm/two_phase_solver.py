@@ -115,6 +115,19 @@ class TwoPhaseConfig:
     #: bubble (it would return the creeping-flow value instead).  ``False``
     #: (default) keeps every existing caller bit-for-bit unchanged.
     momentum_advection: bool = False
+    #: Accuracy of the advective acceleration when ``momentum_advection`` is on.
+    #:
+    #: * ``"upwind"`` (default, historical): first-order upwind on the MAC
+    #:   faces.  Bounded for CFL <= 1 but carries a numerical viscosity of
+    #:   ``|u| dx / 2`` on the *advected* velocity, which for a dam-break surge
+    #:   at 8 mm resolution is an effective Reynolds number of a few tens --
+    #:   enough to hold the front back.
+    #: * ``"limited2"``: second-order one-sided (upwind-biased) difference with
+    #:   a minmod-class limiter on the reconstruction slope.  Exact for a
+    #:   linearly varying face velocity, degrades to ``"upwind"`` at extrema and
+    #:   across a sign change, so it cannot create a new extremum next to the
+    #:   density jump.  See :meth:`TwoPhaseSolver._advective_accel`.
+    momentum_advection_scheme: str = "upwind"
     #: How the body force and the pressure are split.
     #:
     #: * ``"total"`` (historical default): the momentum equation carries the
@@ -167,6 +180,10 @@ class TwoPhaseConfig:
     domain_type: str = "closed"
 
     def __post_init__(self):
+        if self.momentum_advection_scheme not in ("upwind", "limited2"):
+            raise ValueError(
+                "momentum_advection_scheme must be 'upwind' or 'limited2', got "
+                f"{self.momentum_advection_scheme!r}")
         if self.vof_scheme not in ("upwind", "plic"):
             raise ValueError(
                 f"vof_scheme must be 'upwind' or 'plic', got {self.vof_scheme!r}")
@@ -177,6 +194,86 @@ class TwoPhaseConfig:
         if self.pressure_form not in ("total", "reduced"):
             raise ValueError(
                 f"pressure_form must be 'total' or 'reduced', got {self.pressure_form!r}")
+
+
+
+def _interior_mask(length: int, lo: int, hi: int):
+    """Boolean vector of ``length`` entries, ``True`` on ``[lo, hi)``."""
+    mask = torch.zeros(max(length, 0), dtype=torch.bool)
+    lo = max(lo, 0)
+    hi = min(hi, length)
+    if hi > lo:
+        mask[lo:hi] = True
+    return mask
+
+
+def _replicate_pad(a, pad: int = 2):
+    """Edge-replicated padding by ``pad`` rows and columns.
+
+    Written with ``torch.cat`` rather than ``F.pad(mode="replicate")`` because
+    the replicate mode is not available for 2-D input in every torch build the
+    package supports.
+    """
+    a = torch.cat([a[:, :1]] * pad + [a] + [a[:, -1:]] * pad, dim=1)
+    return torch.cat([a[:1, :]] * pad + [a] + [a[-1:, :]] * pad, dim=0)
+
+
+def _limited_upwind_difference(c, b1, b2, f1, f2, u_face, h):
+    """Limited second-order one-sided difference along one MAC direction.
+
+    Parameters
+    ----------
+    c
+        Value on the face where the derivative is wanted.
+    b1, b2
+        Values one and two faces in the ``-`` direction.
+    f1, f2
+        Values one and two faces in the ``+`` direction.
+    u_face
+        Advecting velocity on the same face; its sign selects the stencil.
+    h
+        Face spacing along the direction.
+
+    Returns
+    -------
+    torch.Tensor
+        ``∂c/∂x`` (or ``∂/∂y``) with the shape of ``c``.  Exact for a field
+        varying linearly along the direction; identical to the first-order
+        upwind stencil wherever the limiter switches off.
+    """
+    dm = c - b1                     # Δ⁻
+    dmm = b1 - b2                   # Δ⁻⁻
+    dp = f1 - c                     # Δ⁺
+    dpp = f2 - f1                   # Δ⁺⁺
+    tiny = 1e-30
+
+    def psi(upwind_slope, far_slope):
+        """van Leer limiter on the ratio of consecutive slopes, ψ ∈ [0, 1].
+
+        ``ψ = 1`` on data with equal consecutive slopes (smooth region → full
+        second order), ``ψ = 0`` where the slope changes sign (extremum, sign
+        change, shock) so the stencil falls back to bounded first-order upwind.
+        """
+        ratio = torch.where(
+            upwind_slope.abs() > tiny, far_slope / upwind_slope,
+            torch.zeros_like(upwind_slope))
+        # van Leer, clipped to [0, 1]: the anti-diffusive correction can never
+        # exceed the amount that removes the first-order error term, so the
+        # limited derivative stays within 1.5x of the upwind one.
+        return ((ratio + ratio.abs()) / (1.0 + ratio.abs())).clamp(0.0, 1.0)
+
+    def correction(upwind_slope, far_slope, half):
+        # The anti-diffusive part is capped at the upwind difference itself, so
+        # the limited derivative keeps the upwind sign and never doubles: a
+        # hard bound that a pure slope-ratio limiter does not give when the
+        # far slope is much larger than the near one.
+        raw = 0.5 * psi(upwind_slope, far_slope) * (upwind_slope - far_slope)
+        cap = upwind_slope.abs()
+        return raw.clamp(min=-cap, max=cap)
+
+    pos = (dm + correction(dm, dmm, True)) / h
+    neg = (dp + correction(dp, dpp, True)) / h
+    return torch.where(u_face >= 0.0, pos, neg)
 
 
 class TwoPhaseSolver:
@@ -713,15 +810,38 @@ class TwoPhaseSolver:
         self.u.masked_fill_(~self._u_active, 0)
         self.v.masked_fill_(~self._v_active, 0)
 
-    def _advective_accel(self):
-        """Advective acceleration ``u·∇u`` on the interior MAC faces (upwind).
+    def _advective_accel(self, order: int = 1):
+        """Advective acceleration ``u·∇u`` on the interior MAC faces.
 
         Written in *advective* (non-conservative) form because that is the form
         of the single-fluid variable-density momentum balance the predictor
-        already integrates: ``∂u/∂t = (∇·τ - ∇p)/ρ + g - u·∇u``.  First-order
-        upwind is used deliberately: the predictor is explicit, so upwind keeps
-        the convection bounded for CFL ≤ 1 and cannot create a new extremum
-        next to a large density jump.
+        already integrates: ``∂u/∂t = (∇·τ - ∇p)/ρ + g - u·∇u``.
+
+        Two discretisations are available:
+
+        ``order=1`` (``momentum_advection_scheme="upwind"``, default)
+            First-order upwind.  The predictor is explicit, so upwind keeps the
+            convection bounded for CFL ≤ 1 and cannot create a new extremum
+            next to a large density jump.  Its leading error is a numerical
+            viscosity ``|u|·Δ/2`` on the advected velocity, which at dam-break
+            resolution is an *effective* Reynolds number of a few tens and
+            measurably holds a surge front back.
+
+        ``order=2`` (``momentum_advection_scheme="limited2"``)
+            Second-order one-sided difference,
+
+            .. math::
+
+                \\partial_x u \\approx \\frac{\\Delta^- + \\tfrac12 \\psi (\\Delta^- - \\Delta^{--})}{\\Delta x},
+                \\qquad \\Delta^- = u_i - u_{i-1},\\; \\Delta^{--} = u_{i-1} - u_{i-2},
+
+            with a minmod-class limiter ``ψ ∈ [0, 1]`` on the ratio
+            ``(Δ⁻ - Δ⁻⁻)/Δ⁻`` (and the mirror stencil for ``u < 0``).  The form
+            is *exact for a linearly varying face velocity* for any ``ψ``, so
+            the scheme is second-order in smooth regions, and ``ψ → 0`` at a
+            sign change of ``Δ⁻`` or at a local extremum, where it falls back to
+            the bounded first-order upwind stencil exactly.  The limiter is what
+            makes the sharper stencil safe across the gas/liquid density jump.
 
         Index conventions (staggered MAC, ``dx``/``dy`` may differ):
 
@@ -739,6 +859,17 @@ class TwoPhaseSolver:
         u, v = self.u, self.v
         dx, dy = self.dx, self.dy
 
+        # --- advecting velocities (same in both orders: they only select the
+        # upwind direction, so their own order does not set the scheme order) ---
+        v_at_u = 0.25 * (
+            v[slice(1, ny - 1), slice(0, nx - 1)] + v[slice(1, ny - 1), slice(1, nx)]
+            + v[slice(2, ny), slice(0, nx - 1)] + v[slice(2, ny), slice(1, nx)]
+        )
+        u_at_v = 0.25 * (
+            u[slice(0, ny - 1), slice(1, nx - 1)] + u[slice(0, ny - 1), slice(2, nx)]
+            + u[slice(1, ny), slice(1, nx - 1)] + u[slice(1, ny), slice(2, nx)]
+        )
+
         # --- u-momentum: interior faces rows 1..ny-2, cols 1..nx-1 ---
         ri, ci = slice(1, ny - 1), slice(1, nx)
         u_c = u[ri, ci]
@@ -746,15 +877,6 @@ class TwoPhaseSolver:
         u_e = u[ri, slice(2, nx + 1)]
         u_s = u[slice(0, ny - 2), ci]
         u_n = u[slice(2, ny), ci]
-        # v interpolated to the u-face: it lies between v rows j, j+1 and
-        # between v cols i-1, i.
-        v_at_u = 0.25 * (
-            v[slice(1, ny - 1), slice(0, nx - 1)] + v[slice(1, ny - 1), slice(1, nx)]
-            + v[slice(2, ny), slice(0, nx - 1)] + v[slice(2, ny), slice(1, nx)]
-        )
-        dudx = torch.where(u_c >= 0.0, (u_c - u_w) / dx, (u_e - u_c) / dx)
-        dudy = torch.where(v_at_u >= 0.0, (u_c - u_s) / dy, (u_n - u_c) / dy)
-        adv_u = u_c * dudx + v_at_u * dudy
 
         # --- v-momentum: interior faces rows 1..ny-1, cols 1..nx-2 ---
         rj, cj = slice(1, ny), slice(1, nx - 1)
@@ -763,14 +885,54 @@ class TwoPhaseSolver:
         v_n = v[slice(2, ny + 1), cj]
         v_w = v[rj, slice(0, nx - 2)]
         v_e = v[rj, slice(2, nx)]
-        # u interpolated to the v-face: between u rows j-1, j and between
-        # u cols i, i+1.
-        u_at_v = 0.25 * (
-            u[slice(0, ny - 1), slice(1, nx - 1)] + u[slice(0, ny - 1), slice(2, nx)]
-            + u[slice(1, ny), slice(1, nx - 1)] + u[slice(1, ny), slice(2, nx)]
-        )
-        dvdy = torch.where(v_c >= 0.0, (v_c - v_s) / dy, (v_n - v_c) / dy)
-        dvdx = torch.where(u_at_v >= 0.0, (v_c - v_w) / dx, (v_e - v_c) / dx)
+
+        if order <= 1:
+            dudx = torch.where(u_c >= 0.0, (u_c - u_w) / dx, (u_e - u_c) / dx)
+            dudy = torch.where(v_at_u >= 0.0, (u_c - u_s) / dy, (u_n - u_c) / dy)
+            adv_u = u_c * dudx + v_at_u * dudy
+
+            dvdy = torch.where(v_c >= 0.0, (v_c - v_s) / dy, (v_n - v_c) / dy)
+            dvdx = torch.where(u_at_v >= 0.0, (v_c - v_w) / dx, (v_e - v_c) / dx)
+            adv_v = u_at_v * dvdx + v_c * dvdy
+            return adv_u, adv_v
+
+        # --- second order: extend both arrays by two ghost rows/cols
+        # (replicate), then index in the *original* index space ---
+        up = _replicate_pad(u, 2)
+        vp = _replicate_pad(v, 2)
+
+        def sl(arr, r0, r1, c0, c1):
+            return arr[2 + r0:2 + r1, 2 + c0:2 + c1]
+
+        dudx = _limited_upwind_difference(
+            u_c, sl(up, 1, ny - 1, 0, nx - 1), sl(up, 1, ny - 1, -1, nx - 2),
+            sl(up, 1, ny - 1, 2, nx + 1), sl(up, 1, ny - 1, 3, nx + 2), u_c, dx)
+        dudy = _limited_upwind_difference(
+            u_c, sl(up, 0, ny - 2, 1, nx), sl(up, -1, ny - 3, 1, nx),
+            sl(up, 2, ny, 1, nx), sl(up, 3, ny + 1, 1, nx), v_at_u, dy)
+        # The two outermost interior faces on each side have no genuine second
+        # neighbour (only the replicated ghost), so the limiter there would be
+        # fed by phantom curvature.  Those layers are kept first order.
+        dudx = torch.where(
+            _interior_mask(nx - 1, 1, nx - 2), dudx,
+            torch.where(u_c >= 0.0, (u_c - u_w) / dx, (u_e - u_c) / dx))
+        dudy = torch.where(
+            _interior_mask(ny - 2, 1, ny - 3)[:, None], dudy,
+            torch.where(v_at_u >= 0.0, (u_c - u_s) / dy, (u_n - u_c) / dy))
+        adv_u = u_c * dudx + v_at_u * dudy
+
+        dvdy = _limited_upwind_difference(
+            v_c, sl(vp, 0, ny - 1, 1, nx - 1), sl(vp, -1, ny - 2, 1, nx - 1),
+            sl(vp, 2, ny + 1, 1, nx - 1), sl(vp, 3, ny + 2, 1, nx - 1), v_c, dy)
+        dvdx = _limited_upwind_difference(
+            v_c, sl(vp, 1, ny, 0, nx - 2), sl(vp, 1, ny, -1, nx - 3),
+            sl(vp, 1, ny, 2, nx), sl(vp, 1, ny, 3, nx + 1), u_at_v, dx)
+        dvdy = torch.where(
+            _interior_mask(ny - 1, 1, ny - 2)[:, None], dvdy,
+            torch.where(v_c >= 0.0, (v_c - v_s) / dy, (v_n - v_c) / dy))
+        dvdx = torch.where(
+            _interior_mask(nx - 2, 1, nx - 3), dvdx,
+            torch.where(u_at_v >= 0.0, (v_c - v_w) / dx, (v_e - v_c) / dx))
         adv_v = u_at_v * dvdx + v_c * dvdy
         return adv_u, adv_v
 
@@ -1033,8 +1195,10 @@ class TwoPhaseSolver:
         # Advective acceleration is evaluated once, from the step-start velocity
         # field, so the u- and v-predictors see the same convection operator.
         adv_u, adv_v = (
-            self._advective_accel() if getattr(self.tp, "momentum_advection", False)
-            else (None, None))
+            self._advective_accel(
+                order=2 if getattr(self.tp, "momentum_advection_scheme", "upwind")
+                == "limited2" else 1)
+            if getattr(self.tp, "momentum_advection", False) else (None, None))
 
         # --- Step 1: Predict velocity (explicit Euler, diffusion + gravity) ---
         # We update interior faces only; boundaries handled by _boundaries().
