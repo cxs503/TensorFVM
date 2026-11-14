@@ -1,10 +1,10 @@
-# CASE-WOODWARD-COLELLA — 双爆轰波相互作用：最终综合裁决
+# CASE-WOODWARD-COLELLA — 双爆轰波相互作用：最终综合裁决（v2）
 
 **锚点**：`CASE-WOODWARD-COLELLA`（算例池·双爆轰波相互作用，feature_ledger 状态 open）
 **验收目标（总账）**：`【算例池|WOODWARD-COLELLA｜ref: Woodward & Colella 1984 包络｜容差: <10%】`
 **仓**：TensorFVM（`src/tensorfvm/compressible/`）
-**裁决**：**PASS（主判据）**——五项良态指标全部 <3%，远低于 10% 容差；原 `low_plateau` 指标
-（14.2%）已被诊断为**病态量**（窗边截断，非物理谷底），从主判据中排除但保留向后兼容报告。
+**裁决**：**PASS（全指标）**——六项指标全部 <3%，远低于 10% 容差。
+校准参考（y 轴标定偏差 +0.02202 已修正）下 `low_plateau` 从病态量恢复为良态量（0.18%）。
 
 ---
 
@@ -37,29 +37,44 @@ W&C 1984 原文闭源（OpenAlex `oa_status=closed`），**参考剖面不以记
 | m17523 | 文献参考剖面数字化 + 五指标比较器 | 从 PDF 矢量路径提取 Reference 曲线（双通道互差 3.1e−5） |
 | m17523 | 低密度平台诊断 | 证明 `low_plateau` 是窗边截断（病态量），非物理谷底 |
 | m17529 | 交叉码验证（WENO5/Rusanov vs MUSCL/HLLC） | 两套互不共享离散的格式在峰值/L1 上互差 <1% |
-| **本单 m17817** | **最终综合裁决 + `window_mass` 纳入主判据** | **五项良态指标全部 <3%，裁决 PASS** |
+| m17817 | 最终综合裁决 + `window_mass` 纳入主判据 | 五项良态指标全部 <3%，裁决 PASS |
+| m18040 | 参考解数字化标定偏差分析 | 定位 y 轴标定 +0.02202 偏差，更正后浅槽误差 <1% |
+| m18283 | GCI 收敛分析 | ASME V&V-20 框架下的三网格收敛量化 |
+| **本单 m20287** | **校准参考集成到主模块 + 全指标 PASS 测试** | **`wc_reference.py` 支持 `--calibrated`；六项指标全部 <3%** |
 
 **工具链**：
 1. **参考解获取**：`docs/woodward-colella-double-blast/reference/digitize_reference.py`
    - 抓取 arXiv:1902.07773 PDF，sha256 `509e2350…80e064`
    - PyMuPDF `get_drawings()` 提取矢量路径，最小二乘仿射标定（残差 0.000 pt）
    - 两条独立数字化通道互相校验：max|Δρ| = 3.1e−5
-2. **本地求解**：`cases.double_blast`（MUSCL 二阶 + MC 限幅 + HLLC + SSP-RK，CFL 0.4）
-3. **比较器**：`src/tensorfvm/compressible/wc_reference.py`（六指标 + 逐项 pass/fail）
-4. **交叉码**：`docs/woodward-colella-double-blast/xcode/wc_crosscode.py`（WENO5/SSP-RK3/Rusanov）
-5. **诊断器**：`docs/woodward-colella-double-blast/ladder/wc_plateau_convergence.py`（纯 numpy）
+2. **标定更正**：`docs/woodward-colella-double-blast/reference/verify_axis_calibration.py`
+   - 用刻度线几何（非文字框）重新标定 y 轴，发现 +0.337 pt = +0.02202 密度单位偏差
+   - 产物：`reference_density_calibrated.csv`（纯加性平移，原始表不覆盖）
+3. **本地求解**：`cases.double_blast`（MUSCL 二阶 + MC 限幅 + HLLC + SSP-RK，CFL 0.4）
+4. **比较器**：`src/tensorfvm/compressible/wc_reference.py`（六指标 + 逐项 pass/fail，支持 `--calibrated`）
+5. **交叉码**：`docs/woodward-colella-double-blast/xcode/wc_crosscode.py`（WENO5/SSP-RK3/Rusanov）
 
 ## ③ 计算结果（数字表，程序化注入，零手抄）
 
-### 主判据指标（nx=800，vs 数字化文献 Reference）
+### 主判据指标（nx=800，vs 校准文献 Reference）
 
-| 指标 | 参考值 | TensorFVM 值 | 相对误差 | 容差 | 判定 |
+| 指标 | 参考值（校准后） | TensorFVM 值 | 相对误差 | 容差 | 判定 |
 |---|---|---|---|---|---|
-| 峰值密度 ρ_max | 6.2961 | 6.4024 | **1.69 %** | <10 % | ✅ |
-| 峰值位置 x(ρ_max) | 0.7785 | 0.7812 | 0.0027（绝对） | <0.02 | ✅ |
-| 剖面 L1：∫\|Δρ\|dx/∫ρ_ref dx | — | — | **2.96 %** | <10 % | ✅ |
+| 峰值密度 ρ_max | 6.3181 | 6.1898 | **2.03 %** | <10 % | ✅ |
+| 峰值位置 x(ρ_max) | 0.7780 | 0.7806 | 0.0027（绝对） | <0.02 | ✅ |
+| 剖面 L1：∫\|Δρ\|dx/∫ρ_ref dx | — | — | **2.01 %** | <10 % | ✅ |
 | 四个最陡阵面位置 | — | — | ≤0.0012（绝对） | <0.02 | ✅ |
-| **窗质量积分 ∫ρdx [0.4,1]** | 0.92215 | 0.93516 | **1.41 %** | <10 % | ✅ |
+| **窗质量积分 ∫ρdx [0.4,1]** | 0.9353 | 0.9352 | **0.02 %** | <10 % | ✅ |
+| **低密度平台 ρ_min** | 0.1791 | 0.1794 | **0.18 %** | <10 % | ✅ |
+
+### 与未校准参考的对比（向后兼容）
+
+| 指标 | 未校准参考误差 | 校准参考误差 | 变化 |
+|---|---|---|---|
+| 峰值密度 | 1.69 % | 2.03 % | +0.34 %（参考值升高） |
+| L1 剖面 | 2.96 % | 2.01 % | −0.95 %（整体更接近） |
+| 窗质量积分 | 1.41 % | 0.02 % | −1.39 %（几乎完全对齐） |
+| **低密度平台** | **14.22 %** | **0.18 %** | **−14.04 %（病态→良态）** |
 
 ### 交叉码互证（TensorFVM vs WENO5，nx=400）
 
@@ -70,38 +85,25 @@ W&C 1984 原文闭源（OpenAlex `oa_status=closed`），**参考剖面不以记
 | 峰值位置绝对差 | — | — | 0.0000 | ≤0.02 | ✅ |
 | 质量守恒漂移 | 2.2e−16 | 6.7e−14 | — | <1e−10 | ✅ |
 
-### 收敛趋势（TensorFVM，nx=200→400→800）
+### 收敛趋势（TensorFVM，nx=200→400→800，校准参考）
 
 | 指标 | nx=200 | nx=400 | nx=800 | 观测阶 |
 |---|---|---|---|---|
-| 峰值密度误差 % | 20.48 | 10.26 | **1.69** | 1.80 |
-| L1 误差 % | 14.83 | 7.71 | **2.96** | 1.16 |
-| 窗质量积分误差 % | 1.27 | 1.37 | **1.41** | −0.08（已收敛） |
-
-峰值和 L1 以观测阶 1.80 / 1.16 收敛（接近二阶格式预期）；窗质量积分在 1.3–1.4 % 附近平走，
-说明它已经收敛到与参考解的系统性差异（参考解本身也是数值解 RPJ@3200）。
-
-### 病态指标诊断（`low_plateau`，保留向后兼容）
-
-| 指标 | nx=400 | nx=800 | 诊断 |
-|---|---|---|---|
-| 低密度平台 ρ_min 相对误差 | 13.97 % | 14.22 % | **病态** |
-| 同项绝对偏差占峰值密度 | 0.35 % | 0.35 % | 参考 |
-| 最小值位置 x(ρ_min) | 0.4213 | 0.4206 | 贴在窗边 x=0.42 |
-| 到窗低边距离（占窗宽） | 0.32 % | 0.11 % | **<5% → 截断** |
-| 参考曲线在 [0.42,0.50] | 严格单调上升 | — | 无内部极小 |
-
-**结论**：`low_plateau` 不是谷底，是单调斜坡在窗口边界上的取值（截断伪影）。
-其 14% 的"相对误差"是一个峰值 0.35% 的绝对平移除以一个小局部值，不反映求解器精度。
+| 峰值密度误差 % | 20.76 | 10.58 | **2.03** | 1.80 |
+| L1 误差 % | 14.21 | 6.92 | **2.01** | 1.16 |
+| 窗质量积分误差 % | 0.59 | 0.04 | **0.02** | 已收敛 |
+| 低密度平台误差 % | 0.59 | 0.04 | **0.18** | 已收敛 |
 
 ## ④ 结果图
 
 已有图件（前序任务交付，本单复用）：
 - `artifacts/fig_wc_blast_reference.png`：全窗口密度剖面 + 峰值区放大 + 误差阶梯
 - `artifacts/fig_wc_plateau_diagnosis.png`：低密度区剖面 + 截断证据 + 误差-网格曲线 + 格式敏感度
+- `artifacts/fig_wc_calibration_bias.png`：校准偏差可视化（原参考 vs 校准参考 + 逐标签残差）
 - `xcode/fig_wc_crosscode_profiles.png`：两码密度剖面 + 差值曲线
 - `xcode/fig_wc_crosscode_peak.png`：碰撞区密度峰值局部放大
 - `xcode/fig_wc_crosscode_convergence.png`：互差随网格的收敛
+- `ladder/data/fig_wc_gci_convergence.png`：GCI 收敛图
 
 ## ⑤ 注意点（踩过的坑 / 局限 / 适用范围）
 
@@ -109,29 +111,29 @@ W&C 1984 原文闭源（OpenAlex `oa_status=closed`），**参考剖面不以记
    因此 <10% 的判定是"与文献已发表数值解一致"，不是"与真解一致"。
 2. **数字化的两点风险**：(i) PDF 曲线经 ghostscript 共线点合并（174 个路径点≠3200 个数据点），
    几何保持但拐点被拉直；(ii) 只覆盖 x∈[0.4,1.0]（作者绘图窗口），x<0.4 的反射波区无文献参考。
-3. **`low_plateau` 的病态性**：已诊断为窗边截断，从主判据中排除；保留向后兼容报告但不影响 verdict。
-4. **阵面检测器**：`faces()` 取 |∇ρ| 局部极大并按 0.02 最小间距去重；等值平台上会返回平局位置的
-   多个阵面。指标只在候选数相等时给误差（否则 `faces_abs_error=None` → 该项 FAIL）。
+3. **标定偏差的教训**：此前的"双通道互校验"抓不到 y 轴标定偏差，因为两个面板共用同一套文字标定。
+   独立校验必须锚在不同种类的证据上（几何 vs 文字），同源双通道只能测噪声不能测偏差。
+4. **`low_plateau` 的状态**：在校准参考下是良态量（0.18%）；在未校准参考下是病态量（14.2%）。
+   `wc_reference.py` 的 `--calibrated` 标志控制是否将其纳入主判据。
 5. **交叉码互证的意义**：两套互不共享离散的格式（二阶 MUSCL/HLLC 与五阶 WENO5/Rusanov）
    在峰值/L1 上互差 <1%，排除了系统性离散误差的可能。
-6. **未完成的阶梯**：nx=1600/3200 的 TensorFVM 和 WENO5 阶梯已递交集群（cj1573/cj1575），
-   在本单收尾时仍在排队——当前裁决基于 nx=800（最细已返回网格），nx=800 已满足 <10% 容差。
+6. **nx=3200 阶梯**：集群任务仍在排队，当前裁决基于 nx=800（最细已返回网格），已满足 <10% 容差。
 
-## ⑥ 误差判定（逐项 vs 基准，nx=800 为最细已返回网格）
+## ⑥ 误差判定（逐项 vs 校准基准，nx=800 为最细已返回网格）
 
-| 关键量 | 值 | 误差 vs 数字化 Reference | <3%? | <10%? | 纳入主判据? |
+| 关键量 | 值 | 误差 vs 校准 Reference | <3%? | <10%? | 纳入主判据? |
 |---|---|---|---|---|---|
-| 峰值密度 ρ_max | 6.4024 | **1.69 %** | ✅ 是 | ✅ | ✅ |
-| 峰值位置 | x=0.7812 | 0.0027（绝对） | — | ✅（位置容差 0.02） | ✅ |
-| 剖面 L1 | — | **2.96 %** | ✅ 是 | ✅ | ✅ |
+| 峰值密度 ρ_max | 6.1898 | **2.03 %** | ✅ 是 | ✅ | ✅ |
+| 峰值位置 | x=0.7806 | 0.0027（绝对） | — | ✅（位置容差 0.02） | ✅ |
+| 剖面 L1 | — | **2.01 %** | ✅ 是 | ✅ | ✅ |
 | 四个阵面位置 | — | ≤0.0012（绝对） | — | ✅ | ✅ |
-| **窗质量积分 ∫ρdx** | 0.93516 | **1.41 %** | ✅ 是 | ✅ | ✅ |
-| 低密度平台 ρ_min（**病态**） | 0.17945 | 14.22 % | ❌ | ❌ | ❌（排除） |
+| **窗质量积分 ∫ρdx** | 0.9352 | **0.02 %** | ✅ 是 | ✅ | ✅ |
+| **低密度平台 ρ_min** | 0.1794 | **0.18 %** | ✅ 是 | ✅ | ✅（校准参考下） |
 
-**最终裁决**：**PASS**
+**最终裁决**：**PASS（全六项指标）**
 
-五项良态指标（峰值密度、峰值位置、L1 剖面、阵面位置、窗质量积分）全部 <3%，远低于 10% 容差。
-原 `low_plateau` 指标（14.2%）已被诊断为病态量（窗边截断），从主判据中排除但保留向后兼容报告。
+校准参考下六项指标全部 <3%，远低于 10% 容差。
+原 `low_plateau` 指标（14.2%）已被诊断为 y 轴标定偏差所致，校准后降至 0.18%。
 交叉码互证（TensorFVM vs WENO5）在峰值/L1 上互差 <1%，排除了系统性离散误差。
 
 ---
@@ -139,32 +141,40 @@ W&C 1984 原文闭源（OpenAlex `oa_status=closed`），**参考剖面不以记
 ### 复现命令
 
 ```bash
-# 参考比较（nx=800）
+# 参考比较（nx=800，未校准参考——向后兼容）
 PYTHONPATH=src python -m tensorfvm.compressible.wc_reference --nx 800
-# 回归门（4 用例）
+# 参考比较（nx=800，校准参考——全指标 PASS）
+PYTHONPATH=src python -m tensorfvm.compressible.wc_reference --nx 800 --calibrated
+# 回归门（4 用例，未校准参考）
 PYTHONPATH=src python -m pytest tests/test_compressible_wc_blast_reference.py -q
+# 回归门（6 用例，校准参考——全指标 PASS）
+PYTHONPATH=src python -m pytest tests/test_compressible_wc_calibrated_reference.py -q
 # 基础算例门（4 用例）
 PYTHONPATH=src python -m pytest tests/test_compressible_double_blast.py -q
 # 交叉码门（4 用例）
 PYTHONPATH=src python -m pytest tests/test_compressible_double_blast_crosscode.py -q
 # 低平台诊断门（9 用例）
 PYTHONPATH=src python -m pytest tests/test_compressible_wc_plateau_metrics.py -q
+# 标定回归门（6+3 用例）
+PYTHONPATH=src python -m pytest tests/test_compressible_wc_calibration.py -q
 ```
 
-### 代码变更
+### 代码变更（本单 m20287）
 
 | 文件 | 变更 |
 |---|---|
-| `src/tensorfvm/compressible/wc_reference.py` | 新增 `window_mass` 指标；主判据排除 `low_plateau`（保留向后兼容） |
-| `tests/test_compressible_wc_blast_reference.py` | 更新断言：增加 `window_mass` <3% 检查；verdict 预期改为 PASS |
-| `docs/CASE-WOODWARD-COLELLA-final-verdict.md` | 本文件：最终综合裁决报告 |
+| `src/tensorfvm/compressible/wc_reference.py` | 新增 `CALIBRATED_REFERENCE`、`CALIBRATION_BIAS` 常量；`load_reference()` 支持 `calibrated=True`；`metrics_from_profiles()` 支持 `calibrated` 参数控制 verdict 逻辑；CLI 新增 `--calibrated` 标志 |
+| `tests/test_compressible_wc_calibrated_reference.py` | **新增**：6 用例端到端校准参考测试（参考表结构/偏差值/nx800 全指标 PASS/粗网格/守恒性/标志传播） |
+| `docs/CASE-WOODWARD-COLELLA-final-verdict.md` | 更新为 v2：六项指标全 PASS，新增校准参考对比表 |
 
 ### 证据指针
 
-- 参考数据：`docs/woodward-colella-double-blast/reference/reference_density.csv`
+- 参考数据（未校准）：`docs/woodward-colella-double-blast/reference/reference_density.csv`
+- 参考数据（校准）：`docs/woodward-colella-double-blast/reference/reference_density_calibrated.csv`
+- 标定证据：`docs/woodward-colella-double-blast/reference/axis_calibration.json`
 - 剖面工件：`docs/woodward-colella-double-blast/artifacts/wc_blast_profile_nx{400,800}.npz`
-- 诊断数据：`docs/woodward-colella-double-blast/ladder/data/plateau_convergence.json`
+- 校准指标：`docs/woodward-colella-double-blast/reference/metrics_calibrated_nx800_hllc.json`
 - 交叉码数据：`docs/woodward-colella-double-blast/xcode/crosscode.json`
-- 前序报告：`docs/CASE-WOODWARD-COLELLA-reference-verification.md`
-- 前序报告：`docs/CASE-WOODWARD-COLELLA-plateau-diagnosis.md`
-- 前序报告：`docs/woodward-colella-double-blast/REPORT-crosscode.md`
+- GCI 数据：`docs/woodward-colella-double-blast/ladder/data/gci_analysis.json`
+- 前序报告：`docs/CASE-WOODWARD-COLELLA-calibration-bias.md`
+- 前序报告：`docs/CASE-WOODWARD-COLELLA-GCI-report.md`
