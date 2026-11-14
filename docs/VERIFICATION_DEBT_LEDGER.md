@@ -532,3 +532,22 @@
 - **数字时效性**: 本修复改变 rounds 7–12 全部含 ν_t 的动量结果（rounds 4–6 常黏度门是
   逐位不变的）。旧数字保留原样记录，不回溯改写。
 - 产物: `docs/case-periodic-hills/{ROUND13.md,round13_operator_defect.json,fig_round13_eta_face_operator.png}`。
+
+### D16 CASE-FVM-CHANNEL-KMM180 第三条路线（三维 LES）两条 xfail 的根因是 6 处装配缺陷（m21024, 2026-11-15，selfstart）
+- 缺口: `channel_les3d` 留下两条 xfail（层流抛物不复现、60 步冒烟不绿），并写明「Re_tau=180 无任何 u+ 读数」。
+- 交付: `src/tensorfvm/channel_les3d.py` 六处修复（① `dy_center` 行数/中心距；② `v` 梯度改在插值后的
+  单元中心求；③ v 向 y 扩散的通量间距 `dy` 与控制体 `dy_cc` 分离（旧代码用 `dy_cc` 当相邻 v 面间距且
+  行数崩）；④ v 的横向扩散系数插值到 y 面；⑤ `smagorinsky_viscosity` 的 `delta`/`y_plus` 列广播；
+  ⑥ `wall_normal` 通量分母 `dy`→`dy_cc`（层流稳态从 3.9 % 停滞转为收敛））+ 新增
+  `reichardt_profile()` 初值律、`diffusion_number()`、`convective_cfl()`、`initialise(profile=...)`
+  + `tests/test_channel_les3d.py` 15 测全绿（原 2 条 xfail 已删除，断言改为可复现的真值）
+  + `docs/case-fvm-channel-kmm180-les3d/{REPORT-M21024.md,m21024/*}`。
+- 关键数字: 层流稳态 0.97 %（`dt=1.5e-3`，旧测试 `dt=5e-3` 越界 4.7/2 倍 → 发散 1e129，被误记为"未收敛"）；
+  壁剪 3.8e-4；内部截断阶 1.99，墙单元残差 O(1) 不随 h 降（半单元导纳 u(yc0)/yc0 的固有缺陷）；
+  Reichardt 初值 vs LM2015：对数窗 2.18 %。
+- **honest BLOCKED（锚点仍 not_run）**: 产线 64x64x32（y1+=0.51）在 Re_tau=180 仍发散；功率迭代
+  `Cs=0` 0.9996/步 vs `Cs=0.1` **1617/步** ⇒ 失稳来自 `nu_t` 反馈（首超限在壁面行，nut≈3nu），
+  `dt` 降到 2.5e-4（超保守 4 倍）仍 ~250 步发散 ⇒ 不是步长问题。
+- 给下次: ① y 向扩散隐式化（Thomas/(x,z)，系数随 nu_eff 逐步入），同时换二阶单侧壁梯度消 O(h) 地板；
+  ② 壁面 nu_t 硬约束并复测放大率 <1；③ 通过后 T=80 自旋 + T=40 统计窗，块平均 ≥20 样本，
+  用 `kmm1987.log_region_deviation(high_fraction=0.2)` 出锚点读数。
