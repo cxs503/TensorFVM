@@ -1,0 +1,323 @@
+{
+  "case": "CASE-WOODWARD-COLELLA (two interacting blast waves)",
+  "t_end": 0.038,
+  "third_code": "Clawpack 5.14.0 Classic (wave propagation)",
+  "third_code_version": "5.14.0",
+  "metric_suite": "tensorfvm.compressible.wc_reference (unchanged)",
+  "grids": [
+    200,
+    400,
+    800,
+    1600
+  ],
+  "rows": [
+    {
+      "nx": 200,
+      "flux": "roe",
+      "limiter": 4,
+      "cfl": 0.4,
+      "t": 0.038,
+      "steps": 0,
+      "seconds": 0.1,
+      "mass": 0.9988426499684788,
+      "energy_integral": 274.4533696955085,
+      "rho_min": 0.15137998650833823,
+      "committed": {
+        "peak_rel_percent": 20.371287403037936,
+        "peak_x_abs": 0.12045099999999997,
+        "l1_percent": 14.882578261601495,
+        "window_mass_percent": 1.2710812284976507,
+        "low_plateau_percent": 13.335725017086705,
+        "faces_abs_max": 0.014446999999999988,
+        "verdict": "FAIL"
+      },
+      "calibrated": {
+        "peak_rel_percent": 20.64877385765392,
+        "peak_x_abs": 0.12045099999999997,
+        "l1_percent": 13.885206633907082,
+        "window_mass_percent": 0.15719687550460004,
+        "low_plateau_percent": 0.594530037657075,
+        "faces_abs_max": 0.014446999999999988,
+        "verdict": "FAIL"
+      }
+    },
+    {
+      "nx": 200,
+      "flux": "hlle",
+      "limiter": 4,
+      "cfl": 0.4,
+      "t": 0.038,
+      "steps": 0,
+      "seconds": 0.09,
+      "mass": 0.9988463494286762,
+      "energy_integral": 274.4464780443916,
+      "rho_min": 0.1536597530217713,
+      "committed": {
+        "peak_rel_percent": 22.476430447528685,
+        "peak_x_abs": 0.010450999999999877,
+        "l1_percent": 18.698353008342924,
+        "window_mass_percent": 1.2521581178208272,
+        "low_plateau_percent": 14.65667016457133,
+        "faces_abs_max": 0.015552999999999928,
+        "verdict": "FAIL"
+      },
+      "calibrated": {
+        "peak_rel_percent": 22.74658099703175,
+        "peak_x_abs": 0.010450999999999877,
+        "l1_percent": 17.740068439015573,
+        "window_mass_percent": 0.1758531038265455,
+        "low_plateau_percent": 0.564055864187988,
+        "faces_abs_max": 0.015552999999999928,
+        "verdict": "FAIL"
+      }
+    },
+    {
+      "nx": 400,
+      "flux": "roe",
+      "limiter": 4,
+      "cfl": 0.4,
+      "t": 0.038,
+      "steps": 0,
+      "seconds": 0.25,
+      "mass": 0.9994277171176047,
+      "energy_integral": 274.74242144638634,
+      "rho_min": 0.1489154353495163,
+      "committed": {
+        "peak_rel_percent": 10.254321381605745,
+        "peak_x_abs": 0.0017009999999999525,
+        "l1_percent": 7.270992594984219,
+        "window_mass_percent": 1.3627908131409034,
+        "low_plateau_percent": 13.846304531864831,
+        "faces_abs_max": 0.004302999999999946,
+        "verdict": "FAIL"
+      },
+      "calibrated": {
+        "peak_rel_percent": 10.567062971476357,
+        "peak_x_abs": 0.0017009999999999525,
+        "l1_percent": 6.279708584178924,
+        "window_mass_percent": 0.06678071826514452,
+        "low_plateau_percent": 0.14670657676676266,
+        "faces_abs_max": 0.004302999999999946,
+        "verdict": "FAIL"
+      },
+      "vs_tensorfvm": {
+        "l1_percent": 2.0608089686779443,
+        "peak_rel_percent": 0.011390926229356241,
+        "peak_x_abs": 0.0050000000000000044,
+        "gl1_percent": 2.060903257897158
+      }
+    },
+    {
+      "nx": 400,
+      "flux": "hlle",
+      "limiter": 4,
+      "cfl": 0.4,
+      "t": 0.038,
+      "steps": 0,
+      "seconds": 0.24,
+      "mass": 0.9994239648320089,
+      "energy_integral": 274.7374239172045,
+      "rho_min": 0.151309815555044,
+      "committed": {
+        "peak_rel_percent": 12.471542810481186,
+        "peak_x_abs": 0.006700999999999957,
+        "l1_percent": 11.326202636245117,
+        "window_mass_percent": 1.350200961649407,
+        "low_plateau_percent": 13.20775480378671,
+        "faces_abs_max": 0.004792999999999936,
+        "verdict": "FAIL"
+      },
+      "calibrated": {
+        "peak_rel_percent": 12.7765579296689,
+        "peak_x_abs": 0.006700999999999957,
+        "l1_percent": 10.399754010189454,
+        "window_mass_percent": 0.07919300861085463,
+        "low_plateau_percent": 0.7067712501463377,
+        "faces_abs_max": 0.004792999999999936,
+        "verdict": "FAIL"
+      },
+      "vs_tensorfvm": {
+        "l1_percent": 5.259683131747015,
+        "peak_rel_percent": 2.4594511522640494,
+        "peak_x_abs": 0.010000000000000009,
+        "gl1_percent": 5.260577175103476
+      }
+    },
+    {
+      "nx": 800,
+      "flux": "roe",
+      "limiter": 4,
+      "cfl": 0.4,
+      "t": 0.038,
+      "steps": 0,
+      "seconds": 0.7,
+      "mass": 0.999714809190312,
+      "energy_integral": 274.88261245594845,
+      "rho_min": 0.14755634640221804,
+      "committed": {
+        "peak_rel_percent": 0.05240490605951391,
+        "peak_x_abs": 0.0010759999999999659,
+        "l1_percent": 2.7922047381580977,
+        "window_mass_percent": 1.4068568084057544,
+        "low_plateau_percent": 14.150153137601295,
+        "faces_abs_max": 0.0024279999999999857,
+        "verdict": "PASS"
+      },
+      "calibrated": {
+        "peak_rel_percent": 0.40069766259806194,
+        "peak_x_abs": 0.0010759999999999659,
+        "l1_percent": 1.7652407993465582,
+        "window_mass_percent": 0.023336208377998224,
+        "low_plateau_percent": 0.11979556495494176,
+        "faces_abs_max": 0.0024279999999999857,
+        "verdict": "PASS"
+      },
+      "vs_tensorfvm": {
+        "l1_percent": 1.1835019462731364,
+        "peak_rel_percent": 1.6639336290369178,
+        "peak_x_abs": 0.003750000000000031,
+        "gl1_percent": 1.1835426566525256
+      }
+    },
+    {
+      "nx": 800,
+      "flux": "hlle",
+      "limiter": 4,
+      "cfl": 0.4,
+      "t": 0.038,
+      "steps": 0,
+      "seconds": 0.7,
+      "mass": 0.9997138025087697,
+      "energy_integral": 274.88064772163744,
+      "rho_min": 0.14954351180235811,
+      "committed": {
+        "peak_rel_percent": 0.6926157295709374,
+        "peak_x_abs": 0.00767400000000007,
+        "l1_percent": 5.754082177961392,
+        "window_mass_percent": 1.4007950457577218,
+        "low_plateau_percent": 13.605531282796344,
+        "faces_abs_max": 0.014927999999999941,
+        "verdict": "PASS"
+      },
+      "calibrated": {
+        "peak_rel_percent": 0.3417267595805505,
+        "peak_x_abs": 0.00767400000000007,
+        "l1_percent": 4.827850409568638,
+        "window_mass_percent": 0.029312478872132255,
+        "low_plateau_percent": 0.357886043562471,
+        "faces_abs_max": 0.014927999999999941,
+        "verdict": "PASS"
+      },
+      "vs_tensorfvm": {
+        "l1_percent": 4.256409274115891,
+        "peak_rel_percent": 2.4217480454999416,
+        "peak_x_abs": 0.0050000000000000044,
+        "gl1_percent": 4.256810144956566
+      }
+    },
+    {
+      "nx": 1600,
+      "flux": "roe",
+      "limiter": 4,
+      "cfl": 0.4,
+      "t": 0.038,
+      "steps": 0,
+      "seconds": 2.22,
+      "mass": 0.9998576517480073,
+      "energy_integral": 274.951703064957,
+      "rho_min": 0.14677522011299032,
+      "committed": {
+        "peak_rel_percent": 2.673001621960092,
+        "peak_x_abs": 0.005138499999999935,
+        "l1_percent": 2.614085975199389,
+        "window_mass_percent": 1.4284057850402647,
+        "low_plateau_percent": 14.320245047900457,
+        "faces_abs_max": 0.004615499999999995,
+        "verdict": "PASS"
+      },
+      "calibrated": {
+        "peak_rel_percent": 2.3152114948100757,
+        "peak_x_abs": 0.005138499999999935,
+        "l1_percent": 1.6250536873419177,
+        "window_mass_percent": 0.0020911480354576188,
+        "low_plateau_percent": 0.26898123679435215,
+        "faces_abs_max": 0.004615499999999995,
+        "verdict": "PASS"
+      },
+      "vs_tensorfvm": {
+        "l1_percent": 0.7300829425497481,
+        "peak_rel_percent": 0.02573090027348836,
+        "peak_x_abs": 0.0031249999999999334,
+        "gl1_percent": 0.6862392700384133
+      }
+    },
+    {
+      "nx": 1600,
+      "flux": "hlle",
+      "limiter": 4,
+      "cfl": 0.4,
+      "t": 0.038,
+      "steps": 0,
+      "seconds": 2.18,
+      "mass": 0.999857295393001,
+      "energy_integral": 274.9509583102997,
+      "rho_min": 0.14829285493492977,
+      "committed": {
+        "peak_rel_percent": 43.54287418236208,
+        "peak_x_abs": 0.00013849999999993035,
+        "l1_percent": 5.570996233192535,
+        "window_mass_percent": 1.42517301842789,
+        "low_plateau_percent": 13.932266861630179,
+        "faces_abs_max": 0.014615500000000003,
+        "verdict": "FAIL"
+      },
+      "calibrated": {
+        "peak_rel_percent": 43.04266261365499,
+        "peak_x_abs": 0.00013849999999993035,
+        "l1_percent": 4.5389086593703825,
+        "window_mass_percent": 0.005278321278908167,
+        "low_plateau_percent": 0.07130999913782844,
+        "faces_abs_max": 0.014615500000000003,
+        "verdict": "FAIL"
+      },
+      "vs_tensorfvm": {
+        "l1_percent": 5.38337094993154,
+        "peak_rel_percent": 39.769887936988994,
+        "peak_x_abs": 0.001875000000000071,
+        "gl1_percent": 5.049343295080934
+      }
+    }
+  ],
+  "flux_pair": [
+    {
+      "nx": 200,
+      "roe_vs_hlle_l1_percent": 4.931133564434638
+    },
+    {
+      "nx": 400,
+      "roe_vs_hlle_l1_percent": 4.770085114963337
+    },
+    {
+      "nx": 800,
+      "roe_vs_hlle_l1_percent": 3.9659406143458753
+    },
+    {
+      "nx": 1600,
+      "roe_vs_hlle_l1_percent": 4.889481749989345
+    }
+  ],
+  "conservation": {
+    "initial": 1.0,
+    "max_rel_drift": 0.001157350031521176
+  },
+  "reference": {
+    "committed": {
+      "path": "woodward-colella-double-blast/reference/reference_density.csv",
+      "panel_spread": 3.0999999999892225e-05
+    },
+    "calibrated": {
+      "path": "woodward-colella-double-blast/reference/reference_density_calibrated.csv",
+      "panel_spread": 3.0999999999892225e-05
+    }
+  }
+}
