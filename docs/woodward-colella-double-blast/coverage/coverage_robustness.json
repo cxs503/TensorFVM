@@ -1,0 +1,781 @@
+{
+  "profiles": {
+    "nx400_hllc": {
+      "nx": 400,
+      "family": "hllc",
+      "source": "artifacts/wc_blast_profile_nx400.npz"
+    },
+    "nx800_hllc": {
+      "nx": 800,
+      "family": "hllc",
+      "source": "artifacts/wc_blast_profile_nx800.npz"
+    },
+    "nx1600_hllc": {
+      "nx": 1600,
+      "family": "hllc",
+      "source": "ladder/data/ladder_profile_nx1600_hllc.npz"
+    },
+    "nx1600_weno5": {
+      "nx": 1600,
+      "family": "weno5",
+      "source": "ladder/data/ladder_profile_nx1600_weno5.npz"
+    },
+    "nx200_hllc": {
+      "nx": 200,
+      "family": "hllc",
+      "source": "ladder/data/ladder_profile_nx200_hllc.npz"
+    },
+    "nx200_hllc_limiterminmod_cfl0.2": {
+      "nx": 200,
+      "family": "hllc",
+      "source": "ladder/data/ladder_profile_nx200_hllc_limiterminmod_cfl0.2.npz"
+    },
+    "nx200_weno5": {
+      "nx": 200,
+      "family": "weno5",
+      "source": "ladder/data/ladder_profile_nx200_weno5.npz"
+    },
+    "nx3200_hllc": {
+      "nx": 3200,
+      "family": "hllc",
+      "source": "ladder/data/ladder_profile_nx3200_hllc.npz"
+    },
+    "nx3200_weno5": {
+      "nx": 3200,
+      "family": "weno5",
+      "source": "ladder/data/ladder_profile_nx3200_weno5.npz"
+    }
+  },
+  "coverage": {
+    "window": [
+      0.4,
+      1.0
+    ],
+    "length_share_percent": 60.0,
+    "window_mass_share_percent": 93.5495500862919,
+    "left_mass_share_percent": 6.444871244565246,
+    "blind_strip": [
+      0.0,
+      0.4
+    ],
+    "blind_strip_has_external_reference": false,
+    "note": "The digitised figure covers x in [0.4,1] only; the left strip carries the remaining mass and is verified only by reference-free evidence (cross-scheme / cross-grid / invariants).",
+    "per_grid": {
+      "nx200_hllc": {
+        "total": 0.9988520446433317,
+        "window": 0.9338469667575857,
+        "left": 0.06412183376763063,
+        "window_mass_share_percent": 93.49202134246441,
+        "left_mass_share_percent": 6.419552736714589
+      },
+      "nx1600_hllc": {
+        "total": 0.9998577909199117,
+        "window": 0.9353390682866847,
+        "left": 0.0644072456709581,
+        "window_mass_share_percent": 93.54721009136038,
+        "left_mass_share_percent": 6.441640626883618
+      },
+      "nx3200_hllc": {
+        "total": 0.9999289765031327,
+        "window": 0.9354290587011441,
+        "left": 0.06444413507272598,
+        "window_mass_share_percent": 93.5495500862919,
+        "left_mass_share_percent": 6.444871244565246
+      }
+    }
+  },
+  "evidence": {
+    "cross_scheme": {
+      "nx1600": {
+        "blind_left_(0,0.4)": {
+          "percent": 0.05242486413334039,
+          "abs": 3.377636363124978e-05,
+          "denominator": 0.06442813765876637,
+          "coarse_grid": 1600,
+          "fine_grid": 1600,
+          "region": [
+            0.0,
+            0.4
+          ]
+        },
+        "window_(0.4,1.0)": {
+          "percent": 1.4750546473043848,
+          "abs": 0.013796453506828952,
+          "denominator": 0.9353181275040575,
+          "coarse_grid": 1600,
+          "fine_grid": 1600,
+          "region": [
+            0.4,
+            1.0
+          ]
+        },
+        "full_(0,1)": {
+          "percent": 1.3832231828889328,
+          "abs": 0.013830264564885458,
+          "denominator": 0.9998577768195179,
+          "coarse_grid": 1600,
+          "fine_grid": 1600,
+          "region": [
+            0.0,
+            1.0
+          ]
+        }
+      },
+      "nx3200": {
+        "blind_left_(0,0.4)": {
+          "percent": 0.022102238220175072,
+          "abs": 1.4245301313491385e-05,
+          "denominator": 0.06445184949860949,
+          "coarse_grid": 3200,
+          "fine_grid": 3200,
+          "region": [
+            0.0,
+            0.4
+          ]
+        },
+        "window_(0.4,1.0)": {
+          "percent": 0.9715772686444626,
+          "abs": 0.009088341031770327,
+          "denominator": 0.9354213324124301,
+          "coarse_grid": 3200,
+          "fine_grid": 3200,
+          "region": [
+            0.4,
+            1.0
+          ]
+        },
+        "full_(0,1)": {
+          "percent": 0.9103244635072801,
+          "abs": 0.00910259808984036,
+          "denominator": 0.9999289763970586,
+          "coarse_grid": 3200,
+          "fine_grid": 3200,
+          "region": [
+            0.0,
+            1.0
+          ]
+        }
+      }
+    },
+    "cross_grid": {
+      "blind_left_(0,0.4)": {
+        "d_200_1600": {
+          "percent": 0.9117010990842882,
+          "abs": 0.0005845994632124886,
+          "denominator": 0.06412183376763063,
+          "coarse_grid": 200,
+          "fine_grid": 1600,
+          "region": [
+            0.0,
+            0.4
+          ]
+        },
+        "d_1600_3200": {
+          "percent": 0.043645381060411846,
+          "abs": 2.8110787803605273e-05,
+          "denominator": 0.0644072456709581,
+          "coarse_grid": 1600,
+          "fine_grid": 3200,
+          "region": [
+            0.0,
+            0.4
+          ]
+        }
+      },
+      "window_(0.4,1.0)": {
+        "d_200_1600": {
+          "percent": 15.681622829068795,
+          "abs": 0.14644235912762404,
+          "denominator": 0.9338469667575857,
+          "coarse_grid": 200,
+          "fine_grid": 1600,
+          "region": [
+            0.4,
+            1.0
+          ]
+        },
+        "d_1600_3200": {
+          "percent": 1.765352690207065,
+          "abs": 0.016512033404556686,
+          "denominator": 0.9353390682866847,
+          "coarse_grid": 1600,
+          "fine_grid": 3200,
+          "region": [
+            0.4,
+            1.0
+          ]
+        }
+      },
+      "full_(0,1)": {
+        "d_200_1600": {
+          "percent": 14.720450252660708,
+          "abs": 0.14703551832940595,
+          "denominator": 0.9988520446433317,
+          "coarse_grid": 200,
+          "fine_grid": 1600,
+          "region": [
+            0.0,
+            1.0
+          ]
+        },
+        "d_1600_3200": {
+          "percent": 1.6542585155347815,
+          "abs": 0.01654023264953059,
+          "denominator": 0.9998577909199117,
+          "coarse_grid": 1600,
+          "fine_grid": 3200,
+          "region": [
+            0.0,
+            1.0
+          ]
+        }
+      }
+    },
+    "observed_order": {
+      "blind_left_(0,0.4)": {
+        "p_obs": 1.4615533421594307,
+        "ratio": 20.88883352449954,
+        "note": "p_obs mixes a factor-8 and a factor-2 stage; indicative only"
+      },
+      "window_(0.4,1.0)": {
+        "p_obs": 1.0503488401272072,
+        "ratio": 8.882997100839626,
+        "note": "p_obs mixes a factor-8 and a factor-2 stage; indicative only"
+      },
+      "full_(0,1)": {
+        "p_obs": 1.0511883961479063,
+        "ratio": 8.898518650153022,
+        "note": "p_obs mixes a factor-8 and a factor-2 stage; indicative only"
+      }
+    },
+    "full_domain_tags": [
+      "nx200_hllc",
+      "nx1600_hllc",
+      "nx3200_hllc"
+    ]
+  },
+  "invariants": {
+    "mass_exact": 1.0,
+    "energy_exact": 275.02000000000004,
+    "gamma": 1.4,
+    "rows": {
+      "nx1600_hllc": {
+        "nx": 1600,
+        "mass": 1.0000000000000004,
+        "mass_drift": 4.440892098500626e-16,
+        "momentum": 6.832881027176761,
+        "energy": 275.0200000000001,
+        "energy_drift": 5.684341886080802e-14,
+        "energy_relative_drift": 2.066883094349793e-16,
+        "wall_work": 0.0
+      },
+      "nx1600_weno5": {
+        "nx": 1600,
+        "mass": 0.9999999999997483,
+        "mass_drift": -2.51687559682523e-13,
+        "momentum": 6.832336348923068,
+        "energy": 275.0199999998986,
+        "energy_drift": -1.0146550266654231e-10,
+        "energy_relative_drift": -3.6893863234143807e-13,
+        "wall_work": 0.0
+      },
+      "nx200_hllc": {
+        "nx": 200,
+        "mass": 1.0000000000000002,
+        "mass_drift": 2.220446049250313e-16,
+        "momentum": 6.816540222675793,
+        "energy": 275.02,
+        "energy_drift": -5.684341886080802e-14,
+        "energy_relative_drift": -2.066883094349793e-16,
+        "wall_work": 0.0
+      },
+      "nx200_hllc_limiterminmod_cfl0.2": {
+        "nx": 200,
+        "mass": 1.0,
+        "mass_drift": 0.0,
+        "momentum": 6.791895129479342,
+        "energy": 275.02000000000004,
+        "energy_drift": 0.0,
+        "energy_relative_drift": 0.0,
+        "wall_work": 0.0
+      },
+      "nx200_weno5": {
+        "nx": 200,
+        "mass": 0.999999999999965,
+        "mass_drift": -3.497202527569243e-14,
+        "momentum": 6.812837951479685,
+        "energy": 275.0199999999876,
+        "energy_drift": -1.2448708730516955e-11,
+        "energy_relative_drift": -4.526473976626047e-14,
+        "wall_work": 0.0
+      },
+      "nx3200_hllc": {
+        "nx": 3200,
+        "mass": 1.0,
+        "mass_drift": 0.0,
+        "momentum": 6.833093386730098,
+        "energy": 275.02000000000015,
+        "energy_drift": 1.1368683772161603e-13,
+        "energy_relative_drift": 4.133766188699586e-16,
+        "wall_work": 0.0
+      },
+      "nx3200_weno5": {
+        "nx": 3200,
+        "mass": 0.9999999999995071,
+        "mass_drift": -4.929390229335695e-13,
+        "momentum": 6.833034641308545,
+        "energy": 275.01999999979813,
+        "energy_drift": -2.0190782379359007e-10,
+        "energy_relative_drift": -7.341568751130465e-13,
+        "wall_work": 0.0
+      }
+    }
+  },
+  "offset_sweep": {
+    "offsets": [
+      -0.022017,
+      -0.0110085,
+      0.0,
+      0.0110085,
+      0.022017,
+      0.0330255,
+      0.044034
+    ],
+    "bias_reference": 0.022017,
+    "tolerance_percent": 10.0,
+    "sweep": {
+      "-0.022017": {
+        "nx800_hllc": {
+          "peak_percent": 1.3432505158041768,
+          "l1_percent": 4.078280678973264,
+          "window_mass_percent": 2.88210110296874,
+          "trough_percent": 32.8317949787956,
+          "verdict": "PASS",
+          "checks": {
+            "peak_density_lt_10pct": true,
+            "peak_position_lt_tol": true,
+            "l1_lt_10pct": true,
+            "faces_lt_tol": true,
+            "window_mass_lt_10pct": true,
+            "low_plateau_lt_10pct": false
+          }
+        },
+        "nx1600_hllc": {
+          "peak_percent": 3.0598210911551815,
+          "l1_percent": 4.0146923346419765,
+          "window_mass_percent": 2.9021851623124095,
+          "trough_percent": 32.9987908346397,
+          "verdict": "PASS",
+          "checks": {
+            "peak_density_lt_10pct": true,
+            "peak_position_lt_tol": true,
+            "l1_lt_10pct": true,
+            "faces_lt_tol": true,
+            "window_mass_lt_10pct": true,
+            "low_plateau_lt_10pct": false
+          }
+        },
+        "nx3200_hllc": {
+          "peak_percent": 3.720917333808143,
+          "l1_percent": 5.109834149529279,
+          "window_mass_percent": 2.9120855402667933,
+          "trough_percent": 33.10036134653545,
+          "verdict": "PASS",
+          "checks": {
+            "peak_density_lt_10pct": true,
+            "peak_position_lt_tol": true,
+            "l1_lt_10pct": true,
+            "faces_lt_tol": true,
+            "window_mass_lt_10pct": true,
+            "low_plateau_lt_10pct": false
+          }
+        }
+      },
+      "-0.011008": {
+        "nx800_hllc": {
+          "peak_percent": 1.5160510052653517,
+          "l1_percent": 3.498325269706015,
+          "window_mass_percent": 2.140921678863652,
+          "trough_percent": 22.823281732883824,
+          "verdict": "PASS",
+          "checks": {
+            "peak_density_lt_10pct": true,
+            "peak_position_lt_tol": true,
+            "l1_lt_10pct": true,
+            "faces_lt_tol": true,
+            "window_mass_lt_10pct": true,
+            "low_plateau_lt_10pct": false
+          }
+        },
+        "nx1600_hllc": {
+          "peak_percent": 2.8793084792817734,
+          "l1_percent": 3.392537076603977,
+          "window_mass_percent": 2.160861049370503,
+          "trough_percent": 22.97769490673153,
+          "verdict": "PASS",
+          "checks": {
+            "peak_density_lt_10pct": true,
+            "peak_position_lt_tol": true,
+            "l1_lt_10pct": true,
+            "faces_lt_tol": true,
+            "window_mass_lt_10pct": true,
+            "low_plateau_lt_10pct": false
+          }
+        },
+        "nx3200_hllc": {
+          "peak_percent": 3.539246790471265,
+          "l1_percent": 4.51914751652153,
+          "window_mass_percent": 2.170690103388537,
+          "trough_percent": 23.0716123577478,
+          "verdict": "PASS",
+          "checks": {
+            "peak_density_lt_10pct": true,
+            "peak_position_lt_tol": true,
+            "l1_lt_10pct": true,
+            "faces_lt_tol": true,
+            "window_mass_lt_10pct": true,
+            "low_plateau_lt_10pct": false
+          }
+        }
+      },
+      "+0.000000": {
+        "nx800_hllc": {
+          "peak_percent": 1.6882472218311024,
+          "l1_percent": 2.9569679382539165,
+          "window_mass_percent": 1.4103450254085932,
+          "trough_percent": 14.21731849037878,
+          "verdict": "PASS",
+          "checks": {
+            "peak_density_lt_10pct": true,
+            "peak_position_lt_tol": true,
+            "l1_lt_10pct": true,
+            "faces_lt_tol": true,
+            "window_mass_lt_10pct": true,
+            "low_plateau_lt_10pct": false
+          }
+        },
+        "nx1600_hllc": {
+          "peak_percent": 2.699427109130986,
+          "l1_percent": 2.801509588840873,
+          "window_mass_percent": 1.4301417768912816,
+          "trough_percent": 14.360912265171658,
+          "verdict": "PASS",
+          "checks": {
+            "peak_density_lt_10pct": true,
+            "peak_position_lt_tol": true,
+            "l1_lt_10pct": true,
+            "faces_lt_tol": true,
+            "window_mass_lt_10pct": true,
+            "low_plateau_lt_10pct": false
+          }
+        },
+        "nx3200_hllc": {
+          "peak_percent": 3.3582115380735376,
+          "l1_percent": 3.9808458328240146,
+          "window_mass_percent": 1.4399005272810235,
+          "trough_percent": 14.448249122347148,
+          "verdict": "PASS",
+          "checks": {
+            "peak_density_lt_10pct": true,
+            "peak_position_lt_tol": true,
+            "l1_lt_10pct": true,
+            "faces_lt_tol": true,
+            "window_mass_lt_10pct": true,
+            "low_plateau_lt_10pct": false
+          }
+        }
+      },
+      "+0.011008": {
+        "nx800_hllc": {
+          "peak_percent": 1.8598423296278852,
+          "l1_percent": 2.456853619342388,
+          "window_mass_percent": 0.6901452451443966,
+          "trough_percent": 6.738389087948171,
+          "verdict": "PASS",
+          "checks": {
+            "peak_density_lt_10pct": true,
+            "peak_position_lt_tol": true,
+            "l1_lt_10pct": true,
+            "faces_lt_tol": true,
+            "window_mass_lt_10pct": true,
+            "low_plateau_lt_10pct": true
+          }
+        },
+        "nx1600_hllc": {
+          "peak_percent": 2.5201736753607316,
+          "l1_percent": 2.2785857417819297,
+          "window_mass_percent": 0.7098014033171598,
+          "trough_percent": 6.872580368281375,
+          "verdict": "PASS",
+          "checks": {
+            "peak_density_lt_10pct": true,
+            "peak_position_lt_tol": true,
+            "l1_lt_10pct": true,
+            "faces_lt_tol": true,
+            "window_mass_lt_10pct": true,
+            "low_plateau_lt_10pct": true
+          }
+        },
+        "nx3200_hllc": {
+          "peak_percent": 3.1778082500701443,
+          "l1_percent": 3.488881651126717,
+          "window_mass_percent": 0.7194908486484819,
+          "trough_percent": 6.954198423810332,
+          "verdict": "PASS",
+          "checks": {
+            "peak_density_lt_10pct": true,
+            "peak_position_lt_tol": true,
+            "l1_lt_10pct": true,
+            "faces_lt_tol": true,
+            "window_mass_lt_10pct": true,
+            "low_plateau_lt_10pct": true
+          }
+        }
+      },
+      "+0.022017": {
+        "nx800_hllc": {
+          "peak_percent": 2.030839470729752,
+          "l1_percent": 2.0086357892998334,
+          "window_mass_percent": 0.0198971874922218,
+          "trough_percent": 0.1787055287551998,
+          "verdict": "PASS",
+          "checks": {
+            "peak_density_lt_10pct": true,
+            "peak_position_lt_tol": true,
+            "l1_lt_10pct": true,
+            "faces_lt_tol": true,
+            "window_mass_lt_10pct": true,
+            "low_plateau_lt_10pct": true
+          }
+        },
+        "nx1600_hllc": {
+          "peak_percent": 2.341544895665527,
+          "l1_percent": 1.8607429991440887,
+          "window_mass_percent": 0.00037963976967986463,
+          "trough_percent": 0.30464998858726666,
+          "verdict": "PASS",
+          "checks": {
+            "peak_density_lt_10pct": true,
+            "peak_position_lt_tol": true,
+            "l1_lt_10pct": true,
+            "faces_lt_tol": true,
+            "window_mass_lt_10pct": true,
+            "low_plateau_lt_10pct": true
+          }
+        },
+        "nx3200_hllc": {
+          "peak_percent": 2.998033623100649,
+          "l1_percent": 3.0790406807656816,
+          "window_mass_percent": 0.009241477948078777,
+          "trough_percent": 0.3812521485086418,
+          "verdict": "PASS",
+          "checks": {
+            "peak_density_lt_10pct": true,
+            "peak_position_lt_tol": true,
+            "l1_lt_10pct": true,
+            "faces_lt_tol": true,
+            "window_mass_lt_10pct": true,
+            "low_plateau_lt_10pct": true
+          }
+        }
+      },
+      "+0.033025": {
+        "nx800_hllc": {
+          "peak_percent": 2.2012417653501375,
+          "l1_percent": 2.3957375806502186,
+          "window_mass_percent": 0.719995649260727,
+          "trough_percent": 5.621398500241194,
+          "verdict": "PASS",
+          "checks": {
+            "peak_density_lt_10pct": true,
+            "peak_position_lt_tol": true,
+            "l1_lt_10pct": true,
+            "faces_lt_tol": true,
+            "window_mass_lt_10pct": true,
+            "low_plateau_lt_10pct": true
+          }
+        },
+        "nx1600_hllc": {
+          "peak_percent": 2.1635375105761523,
+          "l1_percent": 2.2922165377656354,
+          "window_mass_percent": 0.7006147707829014,
+          "trough_percent": 5.502745919107761,
+          "verdict": "PASS",
+          "checks": {
+            "peak_density_lt_10pct": true,
+            "peak_position_lt_tol": true,
+            "l1_lt_10pct": true,
+            "faces_lt_tol": true,
+            "window_mass_lt_10pct": true,
+            "low_plateau_lt_10pct": true
+          }
+        },
+        "nx3200_hllc": {
+          "peak_percent": 2.8188843767873646,
+          "l1_percent": 3.50766473730814,
+          "window_mass_percent": 0.6910610237671646,
+          "trough_percent": 5.430578838418492,
+          "verdict": "PASS",
+          "checks": {
+            "peak_density_lt_10pct": true,
+            "peak_position_lt_tol": true,
+            "l1_lt_10pct": true,
+            "faces_lt_tol": true,
+            "window_mass_lt_10pct": true,
+            "low_plateau_lt_10pct": true
+          }
+        }
+      },
+      "+0.044034": {
+        "nx800_hllc": {
+          "peak_percent": 2.3710523120316407,
+          "l1_percent": 2.84609137866164,
+          "window_mass_percent": 1.4103575819010201,
+          "trough_percent": 10.786635863201893,
+          "verdict": "PASS",
+          "checks": {
+            "peak_density_lt_10pct": true,
+            "peak_position_lt_tol": true,
+            "l1_lt_10pct": true,
+            "faces_lt_tol": true,
+            "window_mass_lt_10pct": true,
+            "low_plateau_lt_10pct": false
+          }
+        },
+        "nx1600_hllc": {
+          "peak_percent": 1.9861482832613957,
+          "l1_percent": 2.7856403694772878,
+          "window_mass_percent": 1.3911114719580038,
+          "trough_percent": 10.674477007717527,
+          "verdict": "PASS",
+          "checks": {
+            "peak_density_lt_10pct": true,
+            "peak_position_lt_tol": true,
+            "l1_lt_10pct": true,
+            "faces_lt_tol": true,
+            "window_mass_lt_10pct": true,
+            "low_plateau_lt_10pct": false
+          }
+        },
+        "nx3200_hllc": {
+          "peak_percent": 2.6403572535358277,
+          "l1_percent": 3.9794396053280714,
+          "window_mass_percent": 1.3816241586949334,
+          "trough_percent": 10.606259552214778,
+          "verdict": "PASS",
+          "checks": {
+            "peak_density_lt_10pct": true,
+            "peak_position_lt_tol": true,
+            "l1_lt_10pct": true,
+            "faces_lt_tol": true,
+            "window_mass_lt_10pct": true,
+            "low_plateau_lt_10pct": false
+          }
+        }
+      }
+    },
+    "sensitivity": {
+      "peak_percent": {
+        "d_error_percent_per_unit_density": -16.41628902760539,
+        "grid": "nx3200_hllc"
+      },
+      "l1_percent": {
+        "d_error_percent_per_unit_density": -46.94610511181807,
+        "grid": "nx3200_hllc"
+      },
+      "window_mass_percent": {
+        "d_error_percent_per_unit_density": -65.90929814472402,
+        "grid": "nx3200_hllc"
+      },
+      "trough_percent": {
+        "d_error_percent_per_unit_density": -728.4503760844085,
+        "grid": "nx3200_hllc"
+      }
+    }
+  },
+  "trough_conditioning": {
+    "grid": "nx3200_hllc",
+    "edge": {
+      "window": [
+        0.42,
+        0.98
+      ],
+      "argmin_x": 0.420358,
+      "edge_distance_abs": 0.00035800000000002496,
+      "edge_distance_percent_of_window": 0.06392857142857589,
+      "local_slope_drho_dx": 0.04995004995004574,
+      "reference_has_interior_min": false
+    },
+    "monotone_rise": {
+      "segment": [
+        0.42,
+        0.5
+      ],
+      "n_increments": 159,
+      "negative_increments": 0,
+      "strictly_increasing": true
+    },
+    "x_shift_sweep": {
+      "-0.0020": {
+        "trough_percent": 0.4380576193887039,
+        "peak_percent": 2.998033623100649,
+        "l1_percent": 4.434550679349228,
+        "window_mass_percent": 0.02655840927337212
+      },
+      "-0.0010": {
+        "trough_percent": 0.40983995795095834,
+        "peak_percent": 2.998033623100649,
+        "l1_percent": 3.4618308393705144,
+        "window_mass_percent": 0.008654934497680162
+      },
+      "-0.0005": {
+        "trough_percent": 0.40035241886075146,
+        "peak_percent": 2.998033623100649,
+        "l1_percent": 3.1710469122380665,
+        "window_mass_percent": 0.0026886734106192074
+      },
+      "+0.0000": {
+        "trough_percent": 0.3812521485086418,
+        "peak_percent": 2.998033623100649,
+        "l1_percent": 3.079040680765682,
+        "window_mass_percent": 0.009241477948078777
+      },
+      "+0.0005": {
+        "trough_percent": 0.3619818706418003,
+        "peak_percent": 2.998033623100649,
+        "l1_percent": 3.325113340226483,
+        "window_mass_percent": 0.000539042473496846
+      },
+      "+0.0010": {
+        "trough_percent": 0.352281801783283,
+        "peak_percent": 2.998033623100649,
+        "l1_percent": 3.7708654294788153,
+        "window_mass_percent": 0.00381338662270373
+      },
+      "+0.0020": {
+        "trough_percent": 0.32291610042603636,
+        "peak_percent": 2.998033623100649,
+        "l1_percent": 4.866733637813541,
+        "window_mass_percent": 0.016875571312224835
+      }
+    },
+    "d_error_percent_per_unit_x": {
+      "trough_percent": -38.370548218951136,
+      "peak_percent": 0.0,
+      "l1_percent": 154.0664279884165,
+      "window_mass_percent": -2.1496309371223616
+    },
+    "relative_x_sensitivity_per_unit_x": {
+      "trough_percent": 100.64349373255111,
+      "peak_percent": 0.0,
+      "l1_percent": 50.03715246467739,
+      "window_mass_percent": 232.6068350971125
+    },
+    "peak_is_flat_topped": true,
+    "note": "peak is a flat-topped maximum, so it is insensitive to a sub-cell horizontal shift (sensitivity ~0); ratios against it are undefined."
+  },
+  "figures": [
+    "fig_wc_domain_coverage.png",
+    "fig_wc_offset_robustness.png"
+  ]
+}
