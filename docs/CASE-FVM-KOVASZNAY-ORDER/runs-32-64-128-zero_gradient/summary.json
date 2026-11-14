@@ -196,7 +196,12 @@
     "pass_inplane": true,
     "pair_orders_consistent": true,
     "three_level_order": 1.9194464850015491,
-    "corroborated": true
+    "corroborated": true,
+    "ladder_order": null,
+    "ladder_order_stderr": null,
+    "ladder_order_above_threshold": null,
+    "ladder_all_windows_above_threshold": null,
+    "ladder_windows_consistent": null
   },
   "pair_consistency": {
     "velocity_full": {
@@ -296,6 +301,11 @@
       "extrapolated": -0.0001127681781195812,
       "gci": 1.3159829921994703
     }
+  },
+  "order_uncertainty": {
+    "velocity_full": null,
+    "velocity_inplane": null,
+    "pressure_meanfree": null
   },
   "provenance": {
     "runner": "scripts/verify_kovasznay_order.py",

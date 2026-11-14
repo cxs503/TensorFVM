@@ -1,0 +1,174 @@
+{
+  "levels": [
+    {
+      "n": 16,
+      "h": 0.0625,
+      "cells": 256,
+      "fields": "docs/CASE-FVM-KOVASZNAY-ORDER/runs-32-64-128/n16/n16-fields.npz",
+      "velocity_l2": 0.012574784561427162,
+      "velocity_l2_inplane": 0.012015736967494663,
+      "pressure_l2": 0.1564750494571082,
+      "pressure_mean_free_l2": 0.09732921617131668,
+      "max_abs_w": 0.009413573327409101,
+      "spanwise_share": 0.003707731367600549,
+      "cross_checked_against_cases": [
+        "velocity_l2",
+        "pressure_l2",
+        "pressure_mean_free_l2",
+        "max_abs_z_velocity"
+      ],
+      "reynolds": 40.0,
+      "symmetry_closure": "free",
+      "convection_order": 2,
+      "algorithm": "coupled"
+    },
+    {
+      "n": 32,
+      "h": 0.03125,
+      "cells": 1024,
+      "fields": "docs/CASE-FVM-KOVASZNAY-ORDER/runs-32-64-128/n32/n32-fields.npz",
+      "velocity_l2": 0.0038396931227579947,
+      "velocity_l2_inplane": 0.00343161371450676,
+      "pressure_l2": 0.07812177057893648,
+      "pressure_mean_free_l2": 0.028953373591217295,
+      "max_abs_w": 0.004526069239740493,
+      "spanwise_share": 0.0017225767301818976,
+      "cross_checked_against_cases": [
+        "velocity_l2",
+        "pressure_l2",
+        "pressure_mean_free_l2",
+        "max_abs_z_velocity"
+      ],
+      "reynolds": 40.0,
+      "convection_order": 2,
+      "algorithm": "coupled"
+    },
+    {
+      "n": 64,
+      "h": 0.015625,
+      "cells": 4096,
+      "fields": "docs/CASE-FVM-KOVASZNAY-ORDER/runs-32-64-128/n64/n64-fields.npz",
+      "velocity_l2": 0.0012172362791541577,
+      "velocity_l2_inplane": 0.0008964913448298384,
+      "pressure_l2": 0.039495431502722354,
+      "pressure_mean_free_l2": 0.007986706215791336,
+      "max_abs_w": 0.0021956872406042618,
+      "spanwise_share": 0.00082338777494826,
+      "cross_checked_against_cases": [
+        "velocity_l2",
+        "pressure_l2",
+        "pressure_mean_free_l2",
+        "max_abs_z_velocity"
+      ],
+      "reynolds": 40.0,
+      "symmetry_closure": "free",
+      "convection_order": 2,
+      "algorithm": "coupled"
+    }
+  ],
+  "orders": {
+    "velocity_l2": {
+      "least_squares": {
+        "slope": 1.684426269790646,
+        "r2": 0.9999140798137466,
+        "residual_degrees_of_freedom": 1
+      },
+      "pair_orders": [
+        {
+          "from": 16,
+          "to": 32,
+          "order": 1.7114707660368638
+        },
+        {
+          "from": 32,
+          "to": 64,
+          "order": 1.6573817735444252
+        }
+      ]
+    },
+    "velocity_l2_inplane": {
+      "least_squares": {
+        "slope": 1.8722458359284748,
+        "r2": 0.9996072366320665,
+        "residual_degrees_of_freedom": 1
+      },
+      "pair_orders": [
+        {
+          "from": 16,
+          "to": 32,
+          "order": 1.8079660691087422
+        },
+        {
+          "from": 32,
+          "to": 64,
+          "order": 1.9365256027482047
+        }
+      ]
+    },
+    "pressure_l2": {
+      "least_squares": {
+        "slope": 0.9930874714874341,
+        "r2": 0.9999723270599664,
+        "residual_degrees_of_freedom": 1
+      },
+      "pair_orders": [
+        {
+          "from": 16,
+          "to": 32,
+          "order": 1.002136079825576
+        },
+        {
+          "from": 32,
+          "to": 64,
+          "order": 0.98403886314929
+        }
+      ]
+    },
+    "pressure_mean_free_l2": {
+      "least_squares": {
+        "slope": 1.8036001925415817,
+        "r2": 0.9996961907444346,
+        "residual_degrees_of_freedom": 1
+      },
+      "pair_orders": [
+        {
+          "from": 16,
+          "to": 32,
+          "order": 1.74914147849285
+        },
+        {
+          "from": 32,
+          "to": 64,
+          "order": 1.8580589065903081
+        }
+      ]
+    }
+  },
+  "spanwise_order_for_reference_only": [
+    {
+      "from": 16,
+      "to": 32,
+      "order": 1.1059684741308395
+    },
+    {
+      "from": 32,
+      "to": 64,
+      "order": 1.064924313674069
+    }
+  ],
+  "scheme_configs": {
+    "reynolds": [
+      40.0
+    ],
+    "symmetry_closure": [
+      "free"
+    ],
+    "convection_order": [
+      2
+    ],
+    "algorithm": [
+      "coupled"
+    ]
+  },
+  "generated_by": "scripts/kovasznay_inplane_decomposition.py"
+}
