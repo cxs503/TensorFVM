@@ -49,8 +49,8 @@ def test_ambiguous_quantity_refuses_to_guess() -> None:
         rf.cavity_reference("psi_abs_max", 1.0e6)
     assert rf.cavity_reference("psi_abs_max", 1.0e6, variant="acceptance").value == pytest.approx(16.750)
     assert rf.cavity_reference("psi_abs_max", 1.0e6, variant="finite_grid").value == pytest.approx(16.320)
-    # the spread is what makes the guess dangerous: larger than a 3 % gate
-    assert rf.AMBIGUITIES["psi_abs_max"]["spread_percent"] > 3.0
+    # the spread is what makes the guess dangerous: 2.63 % (close to a 3 % gate)
+    assert rf.AMBIGUITIES["psi_abs_max"]["spread_percent"] == pytest.approx(2.6348, abs=0.01)
 
 
 def test_unregistered_combinations_raise() -> None:
