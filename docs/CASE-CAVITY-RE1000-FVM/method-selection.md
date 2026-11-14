@@ -119,3 +119,49 @@ two rows share one code path, one timestamp and one tolerance.
   the documented fallback, and it is stated in the report rather than hidden.
 * Steady state only. Ghia's Re = 1000 solution is steady, so this is not a restriction
   for the anchor, but nothing here says anything about unsteady cavity flow.
+---
+
+## Round 3 (mission m20000): re-survey, re-selection, and the bookkeeping defect
+
+Round 2 (m15458) selected the explicit projection scheme + grid continuation and published a
+5 %-band PASS, but the **fields those numbers came from were never committed**, and a later edit
+appended a second, contradictory ending to `docs/CASE-CAVITY-RE1000-FVM/report.md`
+(`all_converged = True` in one paragraph, `None` in another, plus a duplicated "failure modes"
+block). A verdict whose evidence cannot be re-read by anyone else is not evidence. Round 3 keeps
+the method and rebuilds the evidence chain:
+
+1. **Re-run** (`scripts/run_cavity_re1000_m15458.py`, n = 32/64/128) so that the run that produces
+   the numbers is the run whose fields are committed under
+   `artifacts/CASE-CAVITY-RE1000-FVM/fields/`.
+2. **Second scorer** (`scripts/audit_cavity_re1000_m20000.py`): the same comparison with
+   piecewise-linear and local-quadratic interpolation and with extrema taken from a dense
+   resampling of the profile, so the 5 % verdict cannot be an artefact of the shipped
+   Catmull-Rom rule.
+3. **Machine gate** (`tests/test_case_cavity_re1000_m20000.py`): every stored number is
+   re-derived from the committed fields; the report is checked for single-rendering of each
+   section, so the stale-append defect cannot come back.
+4. **Idempotent renderer** (`scripts/render_cavity_re1000_m20000.py`): the report is rewritten
+   from scratch, never appended to.
+
+### Horizontal survey, round 3
+
+`oss_solutions` / `negative_knowledge_ledger` are not readable by this agent role
+(`permission denied`, unchanged from round 2), and `oss_inventory` has no `feature_slug` column in
+the catalogue this role can describe; the tables therefore stay "read: not permitted" rather than
+"read: empty". The container-side cache `/root/oss-cache` that *is* reachable holds exactly three
+repositories — `Maarten-vd-Sande_lbm` (LBM D2Q9), `pylbm` (LBM), `hschwane/GraSPH` (SPH) — none of
+which is an incompressible FVM, so there is no implementation to borrow structure from. The
+cluster-side cache needs a job on the compute nodes; it was not part of this round's budget and is
+recorded as `not_run`.
+
+### Accelerators considered and still not adopted
+
+| option | why not this round | status |
+|---|---|---|
+| SIMPLE/SIMPLEC steady outer loop | the repo's SIMPLE kernels (`staggered_simple.py`, `inc_bench/solver.py`) are inlet/outlet channel solvers; a closed moving-lid cavity is a new BC set, i.e. a new solver under test, and the anchor's evidence must keep coming from the projection scheme | not adopted |
+| FAS multigrid on the staggered projection operator | needs a coarse-grid operator for the projection + Neumann Poisson pair; the 5 % band is already met at n = 64, so it is a cost lever for n >= 256, not a correctness lever | not adopted (next lever) |
+| vorticity-streamfunction (Ghia's own method) | different discrete system; useful only as a third independent discretisation, which is a separate anchor | not adopted |
+
+The remaining cost lever actually used is grid continuation, and it is *checked*, not assumed: the
+cold-start run on the same grid differs from the continued one by `O(1e-8)` in velocity
+(`summary.json -> continuation_check`).

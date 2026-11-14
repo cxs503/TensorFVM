@@ -170,17 +170,20 @@ def main() -> None:
     ap.add_argument("--grids", default="64,128")
     ap.add_argument("--cold-grids", default="32")
     ap.add_argument("--max-steps", type=int, default=250_000)
+    ap.add_argument("--mission", type=int, default=20000)
     args = ap.parse_args()
 
     os.makedirs(args.out, exist_ok=True)
     grids = [int(g) for g in args.grids.split(",") if g]
     summary_path = os.path.join(args.out, "summary.json")
     summary = {"case": "lid-driven cavity, Ghia et al. (1982) Tables I/II",
-               "anchor": "CASE-CAVITY-RE1000-FVM", "mission": 15458,
+               "anchor": "CASE-CAVITY-RE1000-FVM", "mission": 20000,
+               "mission_origin": 15458,  # round-2 lineage; round 3 (m20000) re-runs and commits
                "reynolds": args.reynolds, "tolerance_fraction": TOLERANCE_FRACTION,
                "cases": [], "started": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}
     if os.path.exists(summary_path):
         summary = json.load(open(summary_path))
+    summary["mission"] = args.mission
 
     def flush() -> None:
         summary["updated"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
