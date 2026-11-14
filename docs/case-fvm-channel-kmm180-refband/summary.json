@@ -1,0 +1,421 @@
+{
+  "all_pass": false,
+  "anchor": "CASE-FVM-CHANNEL-KMM180",
+  "cases": {
+    "kepsilon_n128": {
+      "cells": 24,
+      "high": 36.0,
+      "inside_band_fraction": 0.0,
+      "low": 30.0,
+      "model": "kepsilon",
+      "n": 128,
+      "per_reference": {
+        "hj": {
+          "cells": 24,
+          "max": 0.06558491293171208,
+          "mean": -0.060332825378129416,
+          "rms": 0.060425975432820474
+        },
+        "lm": {
+          "cells": 24,
+          "max": 0.0684002786518223,
+          "mean": -0.06301062840117301,
+          "rms": 0.06310403242253658
+        },
+        "mkm": {
+          "cells": 24,
+          "max": 0.06880145979666642,
+          "mean": -0.06365152963495485,
+          "rms": 0.06373668987301497
+        }
+      },
+      "per_reference_verdict": {
+        "hj": false,
+        "lm": false,
+        "mkm": false
+      },
+      "sparse_window": false,
+      "tolerance": 0.05,
+      "verdict": false,
+      "verdict_robust": true,
+      "worst_max": 0.06880145979666642,
+      "worst_rms": 0.06373668987301497
+    },
+    "kepsilon_n256": {
+      "cells": 48,
+      "high": 36.0,
+      "inside_band_fraction": 0.0,
+      "low": 30.0,
+      "model": "kepsilon",
+      "n": 256,
+      "per_reference": {
+        "hj": {
+          "cells": 48,
+          "max": 0.06567968147994865,
+          "mean": -0.060331205974749634,
+          "rms": 0.06042447311712879
+        },
+        "lm": {
+          "cells": 48,
+          "max": 0.06849854489084799,
+          "mean": -0.06300899283384832,
+          "rms": 0.06310251411304753
+        },
+        "mkm": {
+          "cells": 48,
+          "max": 0.06889292928689322,
+          "mean": -0.06364992323020237,
+          "rms": 0.06373518976515989
+        }
+      },
+      "per_reference_verdict": {
+        "hj": false,
+        "lm": false,
+        "mkm": false
+      },
+      "sparse_window": false,
+      "tolerance": 0.05,
+      "verdict": false,
+      "verdict_robust": true,
+      "worst_max": 0.06889292928689322,
+      "worst_rms": 0.06373518976515989
+    },
+    "kepsilon_n64": {
+      "cells": 12,
+      "high": 36.0,
+      "inside_band_fraction": 0.0,
+      "low": 30.0,
+      "model": "kepsilon",
+      "n": 64,
+      "per_reference": {
+        "hj": {
+          "cells": 12,
+          "max": 0.06539602031706646,
+          "mean": -0.06033930846118939,
+          "rms": 0.06043199043330636
+        },
+        "lm": {
+          "cells": 12,
+          "max": 0.06820462913710314,
+          "mean": -0.06301717075545549,
+          "rms": 0.0631101056437018
+        },
+        "mkm": {
+          "cells": 12,
+          "max": 0.06861895813019639,
+          "mean": -0.06365795126700162,
+          "rms": 0.06374268594800918
+        }
+      },
+      "per_reference_verdict": {
+        "hj": false,
+        "lm": false,
+        "mkm": false
+      },
+      "sparse_window": false,
+      "tolerance": 0.05,
+      "verdict": false,
+      "verdict_robust": true,
+      "worst_max": 0.06861895813019639,
+      "worst_rms": 0.06374268594800918
+    },
+    "komega_n128": {
+      "cells": 6,
+      "high": 36.0,
+      "inside_band_fraction": 0.0,
+      "low": 30.0,
+      "model": "komega",
+      "n": 128,
+      "per_reference": {
+        "hj": {
+          "cells": 6,
+          "max": 0.13456828624608916,
+          "mean": -0.13228926026886556,
+          "rms": 0.1322995263323756
+        },
+        "lm": {
+          "cells": 6,
+          "max": 0.13692587524937497,
+          "mean": -0.1347711982953171,
+          "rms": 0.13478026099414314
+        },
+        "mkm": {
+          "cells": 6,
+          "max": 0.1376913527401172,
+          "mean": -0.13534893898264586,
+          "rms": 0.1353594307362963
+        }
+      },
+      "per_reference_verdict": {
+        "hj": false,
+        "lm": false,
+        "mkm": false
+      },
+      "sparse_window": false,
+      "tolerance": 0.05,
+      "verdict": false,
+      "verdict_robust": true,
+      "worst_max": 0.1376913527401172,
+      "worst_rms": 0.1353594307362963
+    },
+    "komega_n256": {
+      "cells": 12,
+      "high": 36.0,
+      "inside_band_fraction": 0.0,
+      "low": 30.0,
+      "model": "komega",
+      "n": 256,
+      "per_reference": {
+        "hj": {
+          "cells": 12,
+          "max": 0.13450260609195372,
+          "mean": -0.13204079524091855,
+          "rms": 0.13205125521433508
+        },
+        "lm": {
+          "cells": 12,
+          "max": 0.136848716674408,
+          "mean": -0.13452334281904166,
+          "rms": 0.1345325742491362
+        },
+        "mkm": {
+          "cells": 12,
+          "max": 0.13763360497883317,
+          "mean": -0.13510134903761767,
+          "rms": 0.13511204208764463
+        }
+      },
+      "per_reference_verdict": {
+        "hj": false,
+        "lm": false,
+        "mkm": false
+      },
+      "sparse_window": false,
+      "tolerance": 0.05,
+      "verdict": false,
+      "verdict_robust": true,
+      "worst_max": 0.13763360497883317,
+      "worst_rms": 0.13511204208764463
+    },
+    "komega_n64": {
+      "cells": 3,
+      "high": 36.0,
+      "inside_band_fraction": 0.0,
+      "low": 30.0,
+      "model": "komega",
+      "n": 64,
+      "per_reference": {
+        "hj": {
+          "cells": 3,
+          "max": 0.13407653430727579,
+          "mean": -0.13203522452296554,
+          "rms": 0.1320462139671834
+        },
+        "lm": {
+          "cells": 3,
+          "max": 0.13650569384845535,
+          "mean": -0.13456493635884215,
+          "rms": 0.13457471548434866
+        },
+        "mkm": {
+          "cells": 3,
+          "max": 0.13714791108167337,
+          "mean": -0.13506737950668682,
+          "rms": 0.13507854735180908
+        }
+      },
+      "per_reference_verdict": {
+        "hj": false,
+        "lm": false,
+        "mkm": false
+      },
+      "sparse_window": true,
+      "tolerance": 0.05,
+      "verdict": false,
+      "verdict_robust": true,
+      "worst_max": 0.13714791108167337,
+      "worst_rms": 0.13507854735180908
+    },
+    "sst_n128": {
+      "cells": 6,
+      "high": 36.0,
+      "inside_band_fraction": 0.0,
+      "low": 30.0,
+      "model": "sst",
+      "n": 128,
+      "per_reference": {
+        "hj": {
+          "cells": 6,
+          "max": 0.057017306558424304,
+          "mean": -0.05382816726663029,
+          "rms": 0.053874467818080925
+        },
+        "lm": {
+          "cells": 6,
+          "max": 0.05958615814199229,
+          "mean": -0.05653457054200025,
+          "rms": 0.056575015627236235
+        },
+        "mkm": {
+          "cells": 6,
+          "max": 0.0604202297556358,
+          "mean": -0.05716448946518085,
+          "rms": 0.057209634217418356
+        }
+      },
+      "per_reference_verdict": {
+        "hj": false,
+        "lm": false,
+        "mkm": false
+      },
+      "sparse_window": false,
+      "tolerance": 0.05,
+      "verdict": false,
+      "verdict_robust": true,
+      "worst_max": 0.0604202297556358,
+      "worst_rms": 0.057209634217418356
+    },
+    "sst_n256": {
+      "cells": 12,
+      "high": 36.0,
+      "inside_band_fraction": 0.0,
+      "low": 30.0,
+      "model": "sst",
+      "n": 256,
+      "per_reference": {
+        "hj": {
+          "cells": 12,
+          "max": 0.06188992221746704,
+          "mean": -0.05838161790527779,
+          "rms": 0.058425846323871475
+        },
+        "lm": {
+          "cells": 12,
+          "max": 0.0644328645723304,
+          "mean": -0.061074890721373475,
+          "rms": 0.061113716586545935
+        },
+        "mkm": {
+          "cells": 12,
+          "max": 0.06528360269528437,
+          "mean": -0.0617018807709972,
+          "rms": 0.061745199558458363
+        }
+      },
+      "per_reference_verdict": {
+        "hj": false,
+        "lm": false,
+        "mkm": false
+      },
+      "sparse_window": false,
+      "tolerance": 0.05,
+      "verdict": false,
+      "verdict_robust": true,
+      "worst_max": 0.06528360269528437,
+      "worst_rms": 0.061745199558458363
+    },
+    "sst_n64": {
+      "cells": 3,
+      "high": 36.0,
+      "inside_band_fraction": 0.0,
+      "low": 30.0,
+      "model": "sst",
+      "n": 64,
+      "per_reference": {
+        "hj": {
+          "cells": 3,
+          "max": 0.04590042292196919,
+          "mean": -0.043259720624602434,
+          "rms": 0.0433143719492158
+        },
+        "lm": {
+          "cells": 3,
+          "max": 0.048576941324251305,
+          "mean": -0.04604819790146545,
+          "rms": 0.046095362640519603
+        },
+        "mkm": {
+          "cells": 3,
+          "max": 0.04928455488928546,
+          "mean": -0.04660199125509299,
+          "rms": 0.04665440652636245
+        }
+      },
+      "per_reference_verdict": {
+        "hj": true,
+        "lm": true,
+        "mkm": true
+      },
+      "sparse_window": true,
+      "tolerance": 0.05,
+      "verdict": true,
+      "verdict_robust": true,
+      "worst_max": 0.04928455488928546,
+      "worst_rms": 0.04665440652636245
+    }
+  },
+  "profiles_csv": "docs/case-fvm-channel-kmm180/profiles.csv",
+  "references": {
+    "hj": {
+      "citation": "Hoyas & Jimenez 2006, Phys. Fluids 18, 011702",
+      "label": "HJ2006 Re180",
+      "re_tau": 180.0,
+      "rows": 49,
+      "sha256": "ff9ac727b6ca263842da9021828df8c4c9af207612f5632f938857ec7fe991d0"
+    },
+    "lm": {
+      "citation": "Lee & Moser 2015, J. Fluid Mech. 774, 395",
+      "label": "LM2015 Re182",
+      "re_tau": 182.088,
+      "rows": 96,
+      "sha256": "d1e6640cd91a2874ec2a63ce7000eb9a5e67b6f766f460c14048a19172dc624f"
+    },
+    "mkm": {
+      "citation": "Moser, Kim & Mansour 1999, Phys. Fluids 11, 943",
+      "label": "MKM1999 chan180",
+      "re_tau": 178.12,
+      "rows": 65,
+      "sha256": "a62a0f9ff406591729a552e98ded724a4483c42b47c95df1cb99e8d4f36da99d"
+    }
+  },
+  "schema": "tensorfvm.case-fvm-channel-kmm180-refband/1",
+  "single_proxy_verdicts": {
+    "kepsilon_n128": false,
+    "kepsilon_n256": false,
+    "kepsilon_n64": false,
+    "komega_n128": false,
+    "komega_n256": false,
+    "komega_n64": false,
+    "sst_n128": false,
+    "sst_n256": false,
+    "sst_n64": true
+  },
+  "tolerance": 0.05,
+  "verdict_flips": [],
+  "window": {
+    "cells": 6,
+    "high": 36.0,
+    "low": 30.0,
+    "max_relative_half_width": 0.0018016750972912558,
+    "pairwise_rms": {
+      "hj_vs_lm": {
+        "max": 0.003015508918277022,
+        "rms": 0.0028816918432071244
+      },
+      "mkm_vs_hj": {
+        "max": 0.0036033501945825115,
+        "rms": 0.003522811145114098
+      },
+      "mkm_vs_lm": {
+        "max": 0.0008601058792453607,
+        "rms": 0.00065813421013248
+      }
+    },
+    "re_tau": {
+      "hj": 180.0,
+      "lm": 182.088,
+      "mkm": 178.12
+    },
+    "rms_relative_half_width": 0.001761405572557049
+  }
+}

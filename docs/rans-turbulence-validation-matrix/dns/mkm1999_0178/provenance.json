@@ -1,0 +1,16 @@
+{
+  "dataset": "mkm1999_0178",
+  "citation": "Moser, R. D., Kim, J. & Mansour, N. N. 1999 DNS of turbulent channel flow up to Re_tau = 590. Phys. Fluids 11, 943-945. DOI:10.1063/1.869966",
+  "source_type": "original authors DNS statistical data; not experiment",
+  "upstream_url": "https://turbulence.oden.utexas.edu/data/MKM/chandata.tar.gz (member chan180/profiles/chan180.means)",
+  "raw_file": "mkm1999_chan180.means",
+  "raw_sha256": "f54c86e30a869798f140aa004c1e167cd13a6280e988d2794d72ca2be8b5fc82",
+  "csv": "mean.csv",
+  "csv_sha256": "a62a0f9ff406591729a552e98ded724a4483c42b47c95df1cb99e8d4f36da99d",
+  "rows": 65,
+  "Re_tau_reported": 178.12,
+  "normalization": "wall units except y_over_delta",
+  "note": "chan180 case; header states the numerical method is Kim, Moin & Moser (1987), i.e. the anchor reference code; two of the three KMM1987 authors are authors here",
+  "imported_utc": "2026-11-14T16:11:03.464009+00:00",
+  "importer": "scripts/import_channel_reference_band.py"
+}
