@@ -1,0 +1,25 @@
+{
+ "angles_deg": [
+  0.0,
+  26.56505117707799,
+  45.0
+ ],
+ "artifacts": {
+  "figure": "src/tensorfvm/verification/artifacts/shallow-water-dam-break-oblique/oblique_profiles.png",
+  "metrics": "src/tensorfvm/verification/artifacts/shallow-water-dam-break-oblique/metrics.json",
+  "summary": "src/tensorfvm/verification/artifacts/shallow-water-dam-break-oblique/SUMMARY.md"
+ },
+ "git_rev": "0b161e34",
+ "grids": [
+  240
+ ],
+ "slug": "CASE-FVM-DAMBREAK-STOKER",
+ "variant": "oblique dam line (rotated exact solution)",
+ "verdict": {
+  "all_direction_consistent": true,
+  "all_endstate_pass": false,
+  "all_series_pass": true,
+  "honest_fail_count": 1,
+  "tolerance_percent": 5.0
+ }
+}
