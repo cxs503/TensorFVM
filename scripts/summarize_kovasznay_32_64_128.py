@@ -19,6 +19,11 @@ so this script does three things, all from raw run output:
 3. writes ``summary.json``, ``RESULTS.md`` and the convergence/field figure
    straight from those numbers (no hand transcription).
 
+The script is N-level: with four or more levels it additionally reports the
+order with an identifiable standard error and the per-subset (sliding window)
+slopes -- see :func:`order_uncertainty`.  With three levels those quantities are
+absent-by-design, and the existing outputs are unchanged.
+
 Spanwise budget convention: the exact spanwise velocity is identically zero,
 so a plain relative L2 error is undefined.  It is reported as the RMS of w
 normalised by the exact *full* velocity norm,
@@ -214,8 +219,8 @@ def figure(levels, orders, fits, threshold, png_path):
     ax.loglog(h, reference, 'k:', label='nominal second order (h^2)')
     ax.invert_xaxis()
     ax.set(xlabel='cell size h', ylabel='relative L2 error',
-           title=f'Kovasznay Re=40 grid refinement {levels[0]["n"]}/'
-                 f'{levels[1]["n"]}/{levels[-1]["n"]}')
+           title='Kovasznay Re=40 grid refinement '
+                 + '/'.join(str(level['n']) for level in levels))
     ax.legend(fontsize=7)
 
     ax = axes[0, 1]
@@ -249,6 +254,76 @@ def figure(levels, orders, fits, threshold, png_path):
 
     fig.savefig(png_path, dpi=170)
     plt.close(fig)
+
+
+#: Two-sided 95% Student-t quantiles for the small residual degrees of freedom a
+#: grid ladder can produce.  ``dof == 1`` (four levels) is the case this module
+#: exists for; the table is hard-coded rather than imported so the evidence
+#: pipeline keeps its only third-party dependency (numpy/matplotlib) unchanged.
+T975 = {1: 12.7062, 2: 4.3027, 3: 3.1824}
+
+
+def t975(dof):
+    return T975.get(int(dof), 1.959964)
+
+
+def order_uncertainty(levels, key, theory_order=2., threshold=THRESHOLD, band=PAIR_ORDER_BAND):
+    """Order of the whole ladder *with* a standard error, plus subset stability.
+
+    Three levels interpolate ``f(h) = L + C h^p`` exactly, so ``order_stderr`` is
+    unidentifiable there (``three_level_estimate`` reports ``None``).  A fourth
+    level leaves one residual degree of freedom, which is enough to *estimate*
+    the uncertainty of the fitted order -- reportable as a linearised standard
+    error and as a Student-t interval that is honestly very wide for ``dof = 1``.
+
+    A second, assumption-free check comes for free with four levels: every
+    contiguous triple is a complete three-grid ladder on its own, so the slope
+    the ledger criterion would have been graded on *without* the extra level can
+    be recomputed and compared.  If dropping either end of the ladder moves the
+    slope outside ``band``, the reported order is an average of two regimes and
+    the asymptotic-range claim is not supported.
+    """
+    usable = [level for level in levels if level.get(key) and level[key] > 0.]
+    if len(usable) < 4:
+        return None
+    spacings = [float(level['h']) for level in reversed(usable)]
+    values = [float(level[key]) for level in reversed(usable)]
+    study = multi_grid_order(spacings, values, theory_order=theory_order)
+    stderr = float(study.order_stderr)
+    windows = []
+    for start in range(len(usable) - 2):
+        window = usable[start:start + 3]
+        windows.append(dict(levels=[int(level['n']) for level in window],
+                            slope=float(np.polyfit(np.log([level['h'] for level in window]),
+                                                   np.log([level[key] for level in window]), 1)[0])))
+    slopes = [row['slope'] for row in windows]
+    spread = float(max(slopes) - min(slopes))
+    identifiable = bool(np.isfinite(stderr))
+    dof = int(study.order_dof)
+    return dict(
+        quantity=key,
+        levels=[int(level['n']) for level in usable],
+        order=float(study.order),
+        order_stderr=None if not identifiable else stderr,
+        order_dof=dof,
+        order_ci_linearised=None if not identifiable
+        else [float(study.order - stderr), float(study.order + stderr)],
+        order_ci95_t=None if not identifiable
+        else [float(study.order - t975(dof) * stderr), float(study.order + t975(dof) * stderr)],
+        t975=float(t975(dof)),
+        convergence=str(study.convergence), monotone=bool(study.monotone),
+        asymptotic=bool(study.asymptotic), fallback_reason=str(study.fallback_reason),
+        extrapolated=float(study.extrapolated), gci=float(study.gci),
+        band=[float(x) for x in study.band],
+        rms_residual=None if not np.isfinite(study.rms_residual) else float(study.rms_residual),
+        window_slopes=windows,
+        window_slope_min=float(min(slopes)),
+        window_spread=spread,
+        window_band=float(band),
+        all_windows_above_threshold=bool(all(slope >= threshold for slope in slopes)),
+        windows_consistent=bool(spread <= band),
+        order_above_threshold=bool(np.isfinite(study.order) and study.order >= threshold),
+    )
 
 
 def main():
@@ -294,6 +369,8 @@ def main():
     consistency = {key: pair_order_spread(levels, key) for key in QUANTITIES}
     identifiability = {key: three_level_estimate(levels, key)
                        for key in ('velocity_full', 'velocity_inplane', 'pressure_meanfree')}
+    uncertainty = {key: order_uncertainty(levels, key, threshold=args.threshold)
+                   for key in ('velocity_full', 'velocity_inplane', 'pressure_meanfree')}
     # A three-grid slope corroborated by two independently passing pairs that
     # agree within the pre-declared band, and by an order re-identified from the
     # whole ladder, is a stronger statement than the slope alone; it is reported
@@ -305,10 +382,20 @@ def main():
                                    and verdict['three_level_order'] is not None
                                    and verdict['three_level_order'] >= args.threshold)
 
+    ladder = uncertainty['velocity_full']
+    verdict['ladder_order'] = None if ladder is None else ladder['order']
+    verdict['ladder_order_stderr'] = None if ladder is None else ladder['order_stderr']
+    verdict['ladder_order_above_threshold'] = (None if ladder is None
+                                              else bool(ladder['order_above_threshold']))
+    verdict['ladder_all_windows_above_threshold'] = (None if ladder is None
+                                                    else bool(ladder['all_windows_above_threshold']))
+    verdict['ladder_windows_consistent'] = (None if ladder is None
+                                           else bool(ladder['windows_consistent']))
+
     args.output.mkdir(parents=True, exist_ok=True)
     summary = dict(title=args.title, levels=levels, observed_orders=orders, fits=fits,
                    verdict=verdict, pair_consistency=consistency,
-                   three_level_estimates=identifiability,
+                   three_level_estimates=identifiability, order_uncertainty=uncertainty,
                    provenance=dict(runner='scripts/verify_kovasznay_order.py',
                                    summarizer='scripts/summarize_kovasznay_32_64_128.py',
                                    errors_recomputed_from='n<N>-fields.npz',
@@ -359,6 +446,24 @@ def main():
         lines.append(f"| {QUANTITIES[key]} | {estimate['order']:.4f} | {stderr} | "
                      f"{estimate['convergence']} | {estimate['extrapolated']:.6e} | "
                      f"{estimate['gci']:.3e} |")
+    if ladder is not None:
+        lines += ['', '| quantity | all-level order f(h)=L+C h^p | stderr (dof) | '
+                  't95 interval | windows 32/64/128 ... | window spread | '
+                  'all windows >= thr | windows consistent |',
+                  '|---|---:|---:|---|---|---:|:--|:--|']
+        for key, estimate in uncertainty.items():
+            if estimate is None:
+                continue
+            stderr = ('not identifiable'
+                      if estimate['order_stderr'] is None
+                      else f"{estimate['order_stderr']:.4f} ({estimate['order_dof']})")
+            ci = ('n/a' if estimate['order_ci95_t'] is None
+                  else f"[{estimate['order_ci95_t'][0]:.3f}, {estimate['order_ci95_t'][1]:.3f}]")
+            windows = '/'.join(f"{row['slope']:.4f}" for row in estimate['window_slopes'])
+            lines.append(f"| {QUANTITIES[key]} | {estimate['order']:.4f} | {stderr} | {ci} | "
+                         f"{windows} | {estimate['window_spread']:.4f} | "
+                         f"{'yes' if estimate['all_windows_above_threshold'] else 'NO'} | "
+                         f"{'yes' if estimate['windows_consistent'] else 'NO'} |")
     markdown = '\n'.join(lines) + '\n'
     if args.markdown:
         args.markdown.parent.mkdir(parents=True, exist_ok=True)

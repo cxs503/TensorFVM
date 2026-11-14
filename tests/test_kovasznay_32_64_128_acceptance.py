@@ -256,6 +256,7 @@ SUMMARIZER = 'scripts/summarize_kovasznay_32_64_128.py'
 
 SUMMARY_DIRS = [ROOT / 'runs-32-64-128-zero_gradient',
                 ROOT / 'runs-32-64-128-zero_gradient' / 'summary-32-64',
+                ROOT / 'runs-32-64-128-zero_gradient' / 'summary-32-64-128-256',
                 ROOT / 'selftest-4-8-16']
 
 
