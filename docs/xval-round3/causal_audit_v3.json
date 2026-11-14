@@ -1,0 +1,342 @@
+{
+  "cases": [
+    {
+      "case": "cd-pe10-cg-misuse",
+      "solver": "cg",
+      "n_samples": 2001,
+      "stopping_iteration": null,
+      "decaying": false,
+      "arm_v3": {
+        "verdict_at_end": "diverging"
+      }
+    },
+    {
+      "case": "cd-pe10-gmres",
+      "solver": "gmres",
+      "n_samples": 585,
+      "stopping_iteration": 584,
+      "decaying": true,
+      "arm_v3": {
+        "verdict_at_end": "converged",
+        "first": {
+          "k": 108,
+          "verdict": "stagnating",
+          "ready": true,
+          "forecast": 2377,
+          "rate": 0.9909085449672178,
+          "spread": 0.005378586126384682,
+          "phase": {
+            "phase": "building",
+            "confidence": 0.6,
+            "n_improving": 6,
+            "rate_trend": 0.00035324624150219735
+          },
+          "quadratic": false,
+          "gate": null
+        },
+        "quadratic_triggers": 0,
+        "gate_accepts": 0,
+        "gate_tests": 0,
+        "first_error": 3.0702054794520546,
+        "first_lead": 476,
+        "at_lead_0.5": {
+          "k": 295,
+          "forecast": 3876,
+          "error": 5.636986301369863,
+          "lead": 289
+        },
+        "at_lead_0.25": {
+          "k": 438,
+          "forecast": 606,
+          "error": 0.03767123287671233,
+          "lead": 146
+        },
+        "at_lead_0.1": {
+          "k": 526,
+          "forecast": 565,
+          "error": 0.032534246575342464,
+          "lead": 58
+        }
+      }
+    },
+    {
+      "case": "cd-pe1000-gmres",
+      "solver": "gmres",
+      "n_samples": 499,
+      "stopping_iteration": 498,
+      "decaying": true,
+      "arm_v3": {
+        "verdict_at_end": "converged",
+        "first": {
+          "k": 123,
+          "verdict": "converging",
+          "ready": true,
+          "forecast": 316,
+          "rate": 0.8980132575202285,
+          "spread": 0.041813156973409496,
+          "phase": {
+            "phase": "superlinear",
+            "confidence": 1.0,
+            "n_improving": 21,
+            "rate_trend": -0.0005156812283894505
+          },
+          "quadratic": false,
+          "gate": {
+            "holdout": 5,
+            "accepted": false,
+            "reason": "constant-rate model wins or ties the hold-out",
+            "rmse_quadratic": 0.1525694823957675,
+            "rmse_constant": 0.1079016205218028,
+            "ratio": 1.413968406201453,
+            "k0": 118,
+            "r_squared": 0.9429519617829697
+          }
+        },
+        "quadratic_triggers": 0,
+        "gate_accepts": 0,
+        "gate_tests": 14,
+        "first_error": 0.3654618473895582,
+        "first_lead": 375,
+        "at_lead_0.5": {
+          "k": 249,
+          "forecast": 691,
+          "error": 0.38755020080321284,
+          "lead": 249
+        },
+        "at_lead_0.25": {
+          "k": 376,
+          "forecast": 680,
+          "error": 0.3654618473895582,
+          "lead": 122
+        },
+        "at_lead_0.1": {
+          "k": 448,
+          "forecast": 476,
+          "error": 0.04417670682730924,
+          "lead": 50
+        }
+      }
+    },
+    {
+      "case": "poisson-n32-reltol1e-2",
+      "solver": "gmres",
+      "n_samples": 49,
+      "stopping_iteration": 48,
+      "decaying": true,
+      "arm_v3": {
+        "verdict_at_end": "converged",
+        "first": {
+          "k": 14,
+          "verdict": "converging",
+          "ready": true,
+          "forecast": 37,
+          "rate": 0.9066563601169181,
+          "spread": 0.0313565357920903,
+          "phase": {
+            "phase": "building",
+            "confidence": 0.6,
+            "n_improving": 0,
+            "rate_trend": 0.011572508329154903
+          },
+          "quadratic": false,
+          "gate": null
+        },
+        "quadratic_triggers": 0,
+        "gate_accepts": 0,
+        "gate_tests": 0,
+        "first_error": 0.22916666666666666,
+        "first_lead": 34,
+        "at_lead_0.5": {
+          "k": 24,
+          "forecast": 46,
+          "error": 0.041666666666666664,
+          "lead": 24
+        },
+        "at_lead_0.25": {
+          "k": 36,
+          "forecast": 82,
+          "error": 0.7083333333333334,
+          "lead": 12
+        },
+        "at_lead_0.1": {
+          "k": 43,
+          "forecast": 58,
+          "error": 0.20833333333333334,
+          "lead": 5
+        }
+      }
+    },
+    {
+      "case": "poisson-n32-richardson",
+      "solver": "richardson",
+      "n_samples": 301,
+      "stopping_iteration": null,
+      "decaying": false,
+      "arm_v3": {
+        "verdict_at_end": "diverging"
+      }
+    },
+    {
+      "case": "poisson-n32-tol1e-8",
+      "solver": "gmres",
+      "n_samples": 189,
+      "stopping_iteration": 188,
+      "decaying": true,
+      "arm_v3": {
+        "verdict_at_end": "converged",
+        "first": {
+          "k": 14,
+          "verdict": "converging",
+          "ready": true,
+          "forecast": 178,
+          "rate": 0.9066563601169181,
+          "spread": 0.0313565357920903,
+          "phase": {
+            "phase": "building",
+            "confidence": 0.6,
+            "n_improving": 0,
+            "rate_trend": 0.011572508329154903
+          },
+          "quadratic": false,
+          "gate": null
+        },
+        "quadratic_triggers": 0,
+        "gate_accepts": 0,
+        "gate_tests": 0,
+        "first_error": 0.05319148936170213,
+        "first_lead": 174,
+        "at_lead_0.5": {
+          "k": 94,
+          "forecast": 246,
+          "error": 0.30851063829787234,
+          "lead": 94
+        },
+        "at_lead_0.25": {
+          "k": 141,
+          "forecast": 170,
+          "error": 0.09574468085106383,
+          "lead": 47
+        },
+        "at_lead_0.1": {
+          "k": 169,
+          "forecast": 207,
+          "error": 0.10106382978723404,
+          "lead": 19
+        }
+      }
+    },
+    {
+      "case": "poisson-n64-tol1e-12",
+      "solver": "gmres",
+      "n_samples": 850,
+      "stopping_iteration": 849,
+      "decaying": true,
+      "arm_v3": {
+        "verdict_at_end": "converged",
+        "first": {
+          "k": 16,
+          "verdict": "converging",
+          "ready": true,
+          "forecast": 350,
+          "rate": 0.9269785062120315,
+          "spread": 0.0307591867911214,
+          "phase": {
+            "phase": "building",
+            "confidence": 0.6,
+            "n_improving": 0,
+            "rate_trend": 0.009972908650280318
+          },
+          "quadratic": false,
+          "gate": null
+        },
+        "quadratic_triggers": 0,
+        "gate_accepts": 0,
+        "gate_tests": 0,
+        "first_error": 0.5877502944640753,
+        "first_lead": 833,
+        "at_lead_0.5": {
+          "k": 424,
+          "forecast": 909,
+          "error": 0.0706713780918728,
+          "lead": 425
+        },
+        "at_lead_0.25": {
+          "k": 637,
+          "forecast": 832,
+          "error": 0.020023557126030624,
+          "lead": 212
+        },
+        "at_lead_0.1": {
+          "k": 764,
+          "forecast": 826,
+          "error": 0.027090694935217905,
+          "lead": 85
+        }
+      }
+    },
+    {
+      "case": "poisson-n64-tol1e-8",
+      "solver": "gmres",
+      "n_samples": 542,
+      "stopping_iteration": 541,
+      "decaying": true,
+      "arm_v3": {
+        "verdict_at_end": "converged",
+        "first": {
+          "k": 16,
+          "verdict": "converging",
+          "ready": true,
+          "forecast": 229,
+          "rate": 0.9269785062120315,
+          "spread": 0.0307591867911214,
+          "phase": {
+            "phase": "building",
+            "confidence": 0.6,
+            "n_improving": 0,
+            "rate_trend": 0.009972908650280318
+          },
+          "quadratic": false,
+          "gate": null
+        },
+        "quadratic_triggers": 0,
+        "gate_accepts": 0,
+        "gate_tests": 0,
+        "first_error": 0.5767097966728281,
+        "first_lead": 525,
+        "at_lead_0.5": {
+          "k": 270,
+          "forecast": 748,
+          "error": 0.3826247689463956,
+          "lead": 271
+        },
+        "at_lead_0.25": {
+          "k": 406,
+          "forecast": 537,
+          "error": 0.0073937153419593345,
+          "lead": 135
+        },
+        "at_lead_0.1": {
+          "k": 487,
+          "forecast": 545,
+          "error": 0.0073937153419593345,
+          "lead": 54
+        }
+      }
+    }
+  ],
+  "meta": {
+    "n_cases": 8,
+    "n_decaying": 6,
+    "criterion": "|forecast - true stopping iteration| / stopping iteration <= 15%",
+    "first_causal_forecast_within_15pct": {
+      "v3": 1
+    },
+    "within_15pct_at_lead_25pct": {
+      "v3": 4
+    },
+    "within_15pct_at_lead_10pct": {
+      "v3": 5
+    },
+    "note": "Round-3: phase-aware forecast with quadratic rate extrapolation"
+  }
+}
