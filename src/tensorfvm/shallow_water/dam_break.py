@@ -116,6 +116,27 @@ FAN_WINDOW = (1e-2, 2e-1)
 #: series metric.
 SERIES_MIN_CELLS = 4.0
 
+#: fan-window cell count below which a **dry-bed** series sample is not graded.
+#:
+#: ``SERIES_MIN_CELLS`` bounds how far the front has travelled; it does *not*
+#: bound how many cells the estimator actually sees.  The fan window
+#: (``h/h0 in FAN_WINDOW``) can hold as few as three cells while the front has
+#: already travelled 7.46 cells, and there the estimator degenerates to a
+#: cell-centre locator: measured on the committed artefacts the front error is
+#: ``0.493 dx`` (half a cell) -- *identically* at ``n = 200`` and ``n = 400``
+#: (6.613 % both, because both samples carry 3 fan cells / 7.46 travelled
+#: cells), i.e. a resolution-**invariant** relative error rather than a
+#: discretisation error.  That is what made the graded series error
+#: non-monotone (4.70 % -> 6.61 % -> 6.61 % -> 1.40 % -> 0.43 % for
+#: n = 100 ... 1600) and produced a spurious ``front_series<5%`` failure on the
+#: coarse grids.  The identity itself is exact at *any* cell count when applied
+#: to the exact profile (fixed-point check, error < 1e-15), so the floor is a
+#: statement about the *numerical tip* being resolved, not about estimator bias.
+#:
+#: Evidence and the derivation of the threshold:
+#: ``docs/case-fvm-dambreak-stoker/ANALYSIS-series-fan-cell-floor.md``.
+SERIES_MIN_FAN_CELLS = 8
+
 #: fraction of the ``x_f(t)`` series samples that must be *graded* before the
 #: series verdict is admitted as evidence at all.
 #:
@@ -493,19 +514,31 @@ def front_sample(case: DamBreakCase, solver: ShallowWater1D) -> dict:
         cells ahead of the exact zero-depth tip (see
         ``docs/case-fvm-dambreak-stoker/AUDIT.md``).
 
-    ``resolved`` is the a-priori resolution flag (``SERIES_MIN_CELLS``).
+    ``resolved`` is the a-priori resolution flag: the front must have travelled
+    ``SERIES_MIN_CELLS`` cells *and*, on the dry bed, the fan window must hold
+    ``SERIES_MIN_FAN_CELLS`` cells.  The second condition is what makes the
+    series error a discretisation error; without it a 3-cell fan reads a
+    half-cell quantisation that does not converge with ``dx``
+    (``docs/case-fvm-dambreak-stoker/ANALYSIS-series-fan-cell-floor.md``).
     """
     t = solver.time
     exact = case.exact_front(t)
     dx = float(solver.dx)
     travelled = (exact - case.x_dam) / dx
     resolved = bool(travelled >= SERIES_MIN_CELLS)
+    fan_cells_resolved = True
     if case.kind == "dry":
         pos = _wetted_edge(solver.x, solver.h)
         fan = fan_front_estimate(solver.x, solver.h, t, case.gravity, case.h0)
         headline = fan["front"]
         cells = fan["cells"]
         spread = fan["spread"]
+        # the estimator needs a resolved fan, not just a front that moved:
+        # below SERIES_MIN_FAN_CELLS its reading is a half-cell quantisation
+        # (resolution invariant), so such a sample is not admissible.
+        fan_cells_resolved = bool(cells is not None
+                                  and cells == cells
+                                  and int(cells) >= SERIES_MIN_FAN_CELLS)
     else:
         sol = stoker_constant_state(case.h0, case.h1, case.gravity)
         pos = _level_crossing(solver.x, solver.h, 0.5 * (case.h1 + sol["h2"]))
@@ -523,8 +556,13 @@ def front_sample(case: DamBreakCase, solver: ShallowWater1D) -> dict:
                            if headline == headline else float("nan")),
         "headline_cells": cells,
         "headline_spread": spread,
-        "resolved": resolved,
+        "resolved": bool(resolved and fan_cells_resolved),
         "travelled_cells": travelled,
+        "travelled_resolved": resolved,
+        "fan_cells_resolved": fan_cells_resolved,
+        "unresolved_reason": (None if (resolved and fan_cells_resolved) else
+                              ("front_travel" if not resolved
+                               else "fan_cells")),
     }
 
 
@@ -540,6 +578,11 @@ def series_metrics(case: DamBreakCase, samples,) -> dict:
     """
     graded = [s for s in samples
               if s["resolved"] and s["headline_error"] == s["headline_error"]]
+    reasons = {}
+    for s in samples:
+        if s not in graded:
+            key = s.get("unresolved_reason") or "undefined_estimator"
+            reasons[key] = reasons.get(key, 0) + 1
     # every sample that is not graded stays visible -- including the ones whose
     # headline estimator is undefined (too few fan cells): dropping them
     # silently would hide the first steps of the transient.
@@ -551,11 +594,13 @@ def series_metrics(case: DamBreakCase, samples,) -> dict:
     worst_legacy = max(legacy, key=lambda s: s["error"]) if legacy else None
     return {
         "min_cells": SERIES_MIN_CELLS,
+        "min_fan_cells": SERIES_MIN_FAN_CELLS,
         "samples": len(samples),
         "samples_graded": len(graded),
         "max_error": None if best is None else float(best["headline_error"]),
         "max_error_t_star": None if best is None else float(best["t_star"]),
         "unresolved_samples": len(unresolved),
+        "unresolved_reasons": reasons,
         "unresolved_undefined": len(unresolved) - len(named),
         "unresolved_max_error": (None if worst_unres is None
                                  else float(worst_unres["headline_error"])),
