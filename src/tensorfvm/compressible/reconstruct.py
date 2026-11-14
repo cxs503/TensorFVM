@@ -3,8 +3,19 @@
 The compressible surface uses a single reconstruction path: primitive-variable
 slopes with a TVD limiter, a half-time Hancock predictor that advances each cell
 by ``dt/2`` using the flux difference of its own two reconstructed face values,
-and then a second pass of the limited slopes on the predicted cell average.  The
-result is second order in space and time for smooth flow and TVD across shocks.
+and then a second pass of the limited slopes on the predicted cell average.
+
+The result is TVD across shocks and second order in space and time for smooth
+flow **in the volume-averaged (L1) sense only**.  Every TVD limiter suppresses
+the slope of a cell whose data carries a local extremum, so the reconstruction
+degenerates there and the *pointwise* (L-inf) order of this formally second-order
+scheme falls below two at smooth extrema (van Leer 1979; LeVeque 2002 §6.13).
+Both numbers are measured, not asserted, in
+:mod:`tensorfvm.verification.limiter_barrier`: on the periodic entropy wave the
+unlimited centred slope (``limiter="none"``) recovers order 2 under either norm,
+while every TVD limiter keeps L1 order near 2 and is read at L-inf order ~1.2-1.4,
+with a pointwise error one to two orders of magnitude above the unlimited scheme
+and the gap still widening under refinement.
 """
 
 from __future__ import annotations
