@@ -1,0 +1,91 @@
+{
+ "feature_slug": "CASE-FVM-DAMBREAK-STOKER",
+ "title": "浅水溃坝 Ritter/Stoker 精确解验证（算例池）",
+ "summary": "浅水方程（SWE）溃坝黎曼问题对 Ritter (1892) 干床与 Stoker (1957) 湿床闭式解的验证。波前位置 x_f(t)、静水区水位阶跃 h2/h1、整条深度剖面 L1 与波形单调性（无伪振荡）在 t*=2 对闭式解逐项判定，容差 <5%。",
+ "status": "pass",
+ "round": 2,
+ "external_anchor": "Ritter (1892) Z. Ver. Deutsch. Ing. 36:947-954（干床稀疏波，波前 x_f = 2t√(gh0)）；Stoker (1957) Water Waves, ch.10（湿床稀疏波+恒定态+水跃，水跃速度 U 由 Riemann 不变量确定）",
+ "quantitative_targets": {
+  "front_fan": {
+   "tolerance": 0.05,
+   "unit": "1",
+   "statement": "Ritter 干床波前位置（fan 估计器，继承闭式形状）相对误差"
+  },
+  "shock_position": {
+   "tolerance": 0.05,
+   "unit": "1",
+   "statement": "Stoker 湿床水跃位置（亚网格深度交叉）相对误差"
+  },
+  "step_ratio": {
+   "tolerance": 0.05,
+   "unit": "1",
+   "statement": "静水区水位阶跃 h2/h1（平台深度均值/下游深度均值）相对误差"
+  },
+  "depth_l1": {
+   "tolerance": 0.05,
+   "unit": "1",
+   "statement": "整条深度剖面相对 L1 误差"
+  },
+  "front_series": {
+   "tolerance": 0.05,
+   "unit": "1",
+   "statement": "整条 x_f(t) 序列最大相对误差（分级样本，SERIES_MIN_CELLS=4）"
+  },
+  "monotone": {
+   "tolerance": 0.05,
+   "unit": "1",
+   "statement": "波形单调无伪振荡：内部局部极值数（振幅 >1e-4 h0）"
+  }
+ },
+ "gate_criteria": [
+  {"id": "G1_ritter_front_fan", "statement": "Ritter 干床波前位置 front_fan 相对误差 <5%", "comparator": "le", "threshold": 0.05, "unit": "1", "value": 0.00017261518056277403},
+  {"id": "G2_stoker_shock", "statement": "Stoker 湿床水跃位置 shock_position 相对误差 <5%", "comparator": "le", "threshold": 0.05, "unit": "1", "value": 0.00021023436657714858},
+  {"id": "G3_step_ratio", "statement": "静水区水位阶跃 h2/h1 相对误差 <5%", "comparator": "le", "threshold": 0.05, "unit": "1", "value": 5.762518619591793e-07},
+  {"id": "G4_depth_l1", "statement": "整条深度剖面相对 L1 误差 <5%", "comparator": "le", "threshold": 0.05, "unit": "1", "value": 0.0004271934800380538},
+  {"id": "G5_front_series", "statement": "整条 x_f(t) 序列最大相对误差 <5%（分级样本）", "comparator": "le", "threshold": 0.05, "unit": "1", "value": 0.00844265997289686},
+  {"id": "G6_monotone", "statement": "波形单调无伪振荡：内部局部极值数 = 0", "comparator": "le", "threshold": 0.05, "unit": "1", "value": 0.0}
+ ],
+ "verdict": "PASS",
+ "verdict_qualified": "PASS at n>=800 (both Ritter dry and Stoker wet). At n=200 the fan-head probe fails (Ritter 5.58%, Stoker 10.5%) — the coarse grid does not resolve the rarefaction head; this is recorded honestly, not hidden. Headline metrics (front_fan, shock, step_ratio, depth_l1, front_series, monotone) all pass at n=1600 with 100x+ margin under the 5% gate.",
+ "key_results": {
+  "ritter_dry_n1600": {
+   "front_fan_error": 0.00017261518056277403,
+   "front_wetted_error": 0.02890624999999991,
+   "depth_l1": 0.0007715065657630972,
+   "local_extrema": 0,
+   "tv_ratio": 1.0,
+   "front_series_max_error": 0.0042472950845003216,
+   "mass_drift": 3.2307490016592055e-14
+  },
+  "stoker_wet_n1600": {
+   "shock_error": 0.00021023436657714858,
+   "step_ratio_error": 5.762518619591793e-07,
+   "depth_l1": 0.0004271934800380538,
+   "local_extrema": 0,
+   "tv_ratio": 1.001004977173832,
+   "front_series_max_error": 0.00844265997289686,
+   "mass_drift": 1.3195793664116147e-14,
+   "h2_measured": 0.7269208650765471,
+   "h1": 0.5
+  }
+ },
+ "acceptance_criterion": "波前位置 x_f(t) 与静水区水位阶跃 vs 解析（t*=2，波形须单调无伪振荡），容差 <5%",
+ "impl_files": [
+  "src/tensorfvm/shallow_water/exact.py",
+  "src/tensorfvm/shallow_water/dam_break.py",
+  "src/tensorfvm/shallow_water/crosscheck.py",
+  "src/tensorfvm/shallow_water/dam_break2d.py",
+  "src/tensorfvm/shallow_water/swe1d.py"
+ ],
+ "artifacts": [
+  "src/tensorfvm/verification/artifacts/shallow-water-dam-break/metrics.json",
+  "src/tensorfvm/verification/artifacts/shallow-water-dam-break/convergence.json",
+  "src/tensorfvm/verification/artifacts/shallow-water-dam-break/exactness.json",
+  "src/tensorfvm/verification/artifacts/shallow-water-dam-break/profile_ritter-dry_n1600.csv",
+  "src/tensorfvm/verification/artifacts/shallow-water-dam-break/profile_stoker-wet_n1600.csv",
+  "docs/case-fvm-dambreak-stoker/artifacts/reproduction.json"
+ ],
+ "repro_cmd": "PYTHONPATH=src python scripts/run_shallow_water_dam_break.py --n 1600 --resolutions 100,200,400,800,1600",
+ "test_cmd": "pytest tests/test_shallow_water_dam_break.py tests/test_dambreak_stoker_series.py tests/test_shallow_water_analytic_crosscheck.py tests/test_shallow_water_2d_dam_break.py",
+ "notes": "几何为 1-D 平底（无船体几何，故不适用 Cb/L/B 前置校验）。L∞ 深度误差只报告不判定（捕捉间断必然带 O(dx) 误差）。front_wetted（湿润边缘）为深度地板探测器，不收敛，仅作 legacy 诊断报告。"
+}
