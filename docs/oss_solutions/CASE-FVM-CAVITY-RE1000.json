@@ -1,0 +1,123 @@
+{
+ "feature_slug": "CASE-FVM-CAVITY-RE1000",
+ "aliases": [
+  "CASE-CAVITY-RE1000-FVM"
+ ],
+ "title": "2-D lid-driven cavity at Re = 1000 vs Ghia, Ghia & Shin (1982)",
+ "repo": "TensorFVM",
+ "mission": 20000,
+ "reference": "U. Ghia, K. N. Ghia, C. T. Shin, J. Comput. Phys. 48 (1982) 387-411, Table I (u at x = L/2) and Table II (v at y = L/2); primary-vortex centre (0.5313, 0.5625) L",
+ "tolerance": 0.05,
+ "method": "staggered MAC finite volume, conservative van Leer (harmonic TVD) face reconstruction, explicit pressure projection, pressure Poisson with pure-Neumann walls solved by orthonormal DCT-II (compatibility enforced by removing the mean divergence), moving lid through the mirror ghost, grid continuation (bilinear prolongation) as the cost optimisation, cold-start control run to prove continuation does not select the steady state",
+ "method_selection": {
+  "adopted": "explicit projection + van Leer + DCT-II Neumann Poisson + grid continuation",
+  "rejected": {
+   "SIMPLE/SIMPLEC implicit outer loop": "O(1e3) grid-independent outer iterations would be cheaper, but it replaces the time loop under test; the repo's SIMPLE kernels (staggered_simple.py, inc_bench/solver.py) are inlet/outlet channels, not a closed moving-lid cavity, so adopting it is a new solver, not a re-parameterisation",
+   "vorticity-streamfunction + multigrid (Ghia et al. own method)": "removes the pressure problem but needs a new discrete system; kept as a cross-check option only",
+   "FAS multigrid acceleration of the projection scheme": "the remaining cost lever; needs a coarse-grid operator for the staggered projection scheme and is not required for the 5 % band at n = 64"
+  },
+  "source": "docs/CASE-CAVITY-RE1000-FVM/method-selection.md"
+ },
+ "verdict": "PASS at the production resolutions: n=32 (FAIL), n=64 (PASS), n=128 (PASS)",
+ "key_results": {
+  "n32": {
+   "u_min": -0.316430836724452,
+   "v_max": 0.3154449049885548,
+   "max_abs_du": 0.20329603195274926,
+   "max_abs_dv": 0.07538595212630528,
+   "u_min_rel": 0.17357247061962447,
+   "v_max_rel": 0.14962958622845446,
+   "vortex_centre": [
+    0.546875,
+    0.609375
+   ],
+   "steps": 30500,
+   "converged": true,
+   "max_abs_divergence": 3.552713678800501e-15,
+   "verdict_5pct": false
+  },
+  "n64": {
+   "u_min": -0.3721841952508898,
+   "v_max": 0.36228283753525553,
+   "max_abs_du": 0.029310305036261974,
+   "max_abs_dv": 0.019733918942391973,
+   "u_min_rel": 0.027960523255008498,
+   "v_max_rel": 0.02336477278540092,
+   "vortex_centre": [
+    0.5234375,
+    0.5703125
+   ],
+   "steps": 58750,
+   "converged": true,
+   "max_abs_divergence": 2.1316282072803006e-14,
+   "verdict_5pct": true
+  },
+  "n128": {
+   "u_min": -0.3853676434643488,
+   "v_max": 0.373840186825335,
+   "max_abs_du": 0.0043072983257934905,
+   "max_abs_dv": 0.011184127632372254,
+   "u_min_rel": 0.006470901471307192,
+   "v_max_rel": 0.007791311026647753,
+   "vortex_centre": [
+    0.52734375,
+    0.56640625
+   ],
+   "steps": 104250,
+   "converged": true,
+   "max_abs_divergence": 1.3500311979441904e-13,
+   "verdict_5pct": true
+  }
+ },
+ "independent_cross_check": {
+  "script": "scripts/audit_cavity_re1000_m20000.py",
+  "interpolators": [
+   "shipped Catmull-Rom/Hermite",
+   "piecewise linear",
+   "local least-squares quadratic"
+  ],
+  "field_derived_extrema": "dense resampling (4001 samples) of the centreline profile",
+  "finest_row": {
+   "n": 128,
+   "linear_max_abs_du": 0.05871751346640819,
+   "linear_max_abs_dv": 0.02957973538554855,
+   "quadratic_max_abs_du": 0.00516600594854566,
+   "all_criteria_pass": false
+  },
+  "conclusion": "the 5 % band is met under the shipped Catmull-Rom rule, under an independent local-quadratic rule (they agree to <0.01 U) and for field-derived extrema, so the verdict is a property of the solution, not of the scorer. Piecewise-linear interpolation is reported as a comparator limit: at the fixed Ghia abscissae it is first order and is limited by the table spacing in the lid shear layer."
+ },
+ "convergence": {
+  "observed_order_p": 2.766552828440076,
+  "richardson_u_min": -0.3876387720960202,
+  "richardson_v_max": 0.375831185420993,
+  "resolutions": [
+   32,
+   64,
+   128
+  ]
+ },
+ "transfer": {
+  "reusable_for": [
+   "any closed-box steady incompressible benchmark in TensorFVM (the DCT-II Neumann pressure solver and the mirror-ghost wall treatment are domain independent)",
+   "cross-solver comparison with TensorLBM D2Q9 on the same anchor (same reference tables, same scoring code, so only the discretisation differs)"
+  ],
+  "cost": "explicit projection needs ~104250 steps at n = 128; grid continuation cut the n=64 cost by the measured factor in summary.json -> continuation_check",
+  "caveats": [
+   "cfl = 0.15: the van Leer reconstruction destabilises the lid shear layer at cfl = 0.4",
+   "second-order pointwise accuracy only in smooth regions; TVD limiting is active in the lid corner, which is where the residual error lives",
+   "time-step (cfl) sensitivity at Re = 1000 was NOT probed this round (steady state should be cfl-independent; marked not_run rather than asserted)"
+  ]
+ },
+ "evidence": {
+  "bundle": "artifacts/CASE-CAVITY-RE1000-FVM/summary.json",
+  "independent_audit": "artifacts/CASE-CAVITY-RE1000-FVM/m20000_independent_audit.json",
+  "figures": [
+   "fig1_centrelines.png",
+   "fig2_vorticity.png",
+   "fig3_convergence.png"
+  ],
+  "gate": "tests/test_case_cavity_re1000_m20000.py",
+  "report": "docs/CASE-CAVITY-RE1000-FVM/report.md",
+  "repro_cmd": "PYTHONPATH=src python3 scripts/run_cavity_re1000_m15458.py --out artifacts/CASE-CAVITY-RE1000-FVM --reynolds 1000 --grids 64,128 --cold-grids 32"
+ }
+}
