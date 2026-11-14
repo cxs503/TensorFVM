@@ -35,10 +35,19 @@ from pathlib import Path
 import numpy as np
 
 from tensorfvm.native_manufactured3d import volume_weighted_error
+from tensorfvm.verification.multi_grid import multi_grid_order
 from tensorfvm.verification.native_run import write_json
 
 THRESHOLD = 1.8
 RECOMPUTE_RTOL = 1e-10
+#: Pre-declared band for the two per-pair orders of a three-level ladder.  A
+#: log-log least-squares slope over three grids has no residual degrees of
+#: freedom, so the slope alone cannot distinguish "the scheme is second order"
+#: from "the three error values happened to line up".  Two *independent* pairs
+#: give such a check: they must both clear the threshold and agree to within
+#: PAIR_ORDER_BAND; a wider spread means the coarse pair is still
+#: pre-asymptotic and the fitted slope is an average of two regimes.
+PAIR_ORDER_BAND = 0.20
 #: Settings that must be identical on every level of a refinement sequence.  A
 #: log-log slope is only a property of the *scheme* if the scheme is the same on
 #: every level, so a mixed sequence is refused instead of silently fitted.
@@ -124,6 +133,49 @@ def observed_orders(levels, key):
         out.append(dict(coarse=coarse['n'], fine=fine['n'], ratio=float(ratio),
                         order=float(np.log(coarse[key] / fine[key]) / np.log(ratio))))
     return out
+
+
+def pair_order_spread(levels, key, threshold=THRESHOLD, band=PAIR_ORDER_BAND):
+    """Do the two round-off-independent pairs both pass *and* agree?
+
+    ``anchor_zg`` is graded on exactly three grids, so this is the only internal
+    consistency check the evidence can carry: no fourth level exists to give the
+    least-squares slope a residual.
+    """
+    orders = [pair['order'] for pair in observed_orders(levels, key)]
+    if len(orders) < 2:
+        return dict(pairs=[float(order) for order in orders], spread=None,
+                    both_above=bool(all(order >= threshold for order in orders)),
+                    consistent=None)
+    spread = float(max(orders) - min(orders))
+    return dict(pairs=[float(order) for order in orders], spread=spread, band=float(band),
+                both_above=bool(all(order >= threshold for order in orders)),
+                consistent=bool(spread <= band))
+
+
+def three_level_estimate(levels, key, theory_order=2.):
+    """Identify the order from *all* levels by fitting ``f(h) = L + C h^p``.
+
+    The ledger criterion is the log-log least-squares slope; this is the
+    independent estimator for the same three numbers.  With three levels the
+    fit is an interpolation, so ``order_stderr`` is ``nan`` -- that is an honest
+    withholding of an unidentifiable uncertainty, not a zero, and the record
+    carries it as ``None`` in JSON.
+    """
+    usable = [level for level in levels if level.get(key) and level[key] > 0.]
+    if len(usable) < 3:
+        return None
+    # ``multi_grid_order`` expects spacings strictly increasing, i.e. fine first.
+    spacings = [float(level['h']) for level in reversed(usable)]
+    values = [float(level[key]) for level in reversed(usable)]
+    study = multi_grid_order(spacings, values, theory_order=theory_order)
+    stderr = float(study.order_stderr)
+    return dict(quantity=key, levels=[int(level['n']) for level in usable],
+                order=float(study.order),
+                order_stderr=None if not np.isfinite(stderr) else stderr,
+                convergence=str(study.convergence), monotone=bool(study.monotone),
+                asymptotic=bool(study.asymptotic),
+                extrapolated=float(study.extrapolated), gci=float(study.gci))
 
 
 def fit_slope(levels, key):
@@ -239,10 +291,24 @@ def main():
     verdict['pass'] = bool(verdict['velocity_full_pass'] and verdict['all_levels_converged'])
     verdict['pass_inplane'] = bool(verdict['velocity_inplane_pass']
                                    and verdict['all_levels_converged'])
+    consistency = {key: pair_order_spread(levels, key) for key in QUANTITIES}
+    identifiability = {key: three_level_estimate(levels, key)
+                       for key in ('velocity_full', 'velocity_inplane', 'pressure_meanfree')}
+    # A three-grid slope corroborated by two independently passing pairs that
+    # agree within the pre-declared band, and by an order re-identified from the
+    # whole ladder, is a stronger statement than the slope alone; it is reported
+    # as a separate flag so the ledger criterion (the slope) stays untouched.
+    verdict['pair_orders_consistent'] = consistency['velocity_full']['consistent']
+    verdict['three_level_order'] = (identifiability['velocity_full'] or {}).get('order')
+    verdict['corroborated'] = bool(verdict['pass']
+                                   and verdict['pair_orders_consistent']
+                                   and verdict['three_level_order'] is not None
+                                   and verdict['three_level_order'] >= args.threshold)
 
     args.output.mkdir(parents=True, exist_ok=True)
     summary = dict(title=args.title, levels=levels, observed_orders=orders, fits=fits,
-                   verdict=verdict,
+                   verdict=verdict, pair_consistency=consistency,
+                   three_level_estimates=identifiability,
                    provenance=dict(runner='scripts/verify_kovasznay_order.py',
                                    summarizer='scripts/summarize_kovasznay_32_64_128.py',
                                    errors_recomputed_from='n<N>-fields.npz',
@@ -272,6 +338,27 @@ def main():
         fit = fits[key]
         passed = 'PASS' if fit['slope'] >= args.threshold else 'FAIL'
         lines.append(f"| {label} | {fit['slope']:.4f} | {fit['r_squared']:.6f} | {passed} |")
+    lines += ['', '| quantity | pair orders | spread | band | both >= thr | consistent |',
+              '|---|---|---:|---:|:--|:--|']
+    for key, label in QUANTITIES.items():
+        row = consistency[key]
+        pairs = '/'.join(f'{order:.4f}' for order in row['pairs'])
+        spread = 'n/a' if row['spread'] is None else f"{row['spread']:.4f}"
+        steady = 'n/a' if row['consistent'] is None else ('yes' if row['consistent'] else 'NO')
+        lines.append(f"| {label} | {pairs} | {spread} | "
+                     f"{row.get('band', PAIR_ORDER_BAND):.2f} | "
+                     f"{'yes' if row['both_above'] else 'NO'} | {steady} |")
+    lines += ['', '| quantity | three-level order f(h)=L+C h^p | stderr | '
+              'convergence | extrapolated L | GCI |', '|---|---:|---:|:--|---:|---:|']
+    for key, estimate in identifiability.items():
+        if estimate is None:
+            lines.append(f'| {QUANTITIES[key]} | n/a (fewer than 3 usable levels) | | | | |')
+            continue
+        stderr = 'nan (3 levels: not identifiable)' if estimate['order_stderr'] is None \
+            else f"{estimate['order_stderr']:.4f}"
+        lines.append(f"| {QUANTITIES[key]} | {estimate['order']:.4f} | {stderr} | "
+                     f"{estimate['convergence']} | {estimate['extrapolated']:.6e} | "
+                     f"{estimate['gci']:.3e} |")
     markdown = '\n'.join(lines) + '\n'
     if args.markdown:
         args.markdown.parent.mkdir(parents=True, exist_ok=True)
