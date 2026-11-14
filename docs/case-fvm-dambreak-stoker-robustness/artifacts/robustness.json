@@ -1,0 +1,2293 @@
+{
+ "meta": {
+  "generated_at": "2026-11-14T10:50:37Z",
+  "git_commit": "4505ccb5",
+  "python": "3.11.6",
+  "numpy": "2.4.6",
+  "matplotlib": "3.10.8",
+  "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+  "command": "python docs/case-fvm-dambreak-stoker-robustness/run_robustness_sweep.py",
+  "tolerance": 0.05
+ },
+ "sweep": {
+  "ns": [
+   400,
+   800,
+   1600
+  ],
+  "tolerance": 0.05,
+  "runs": [
+   {
+    "variant": "baseline",
+    "base": "ritter-dry",
+    "case": {
+     "key": "ritter-dry",
+     "kind": "dry",
+     "h0": 1.0,
+     "h1": 0.0,
+     "gravity": 9.81,
+     "x_dam": 0.0,
+     "x_min": -4.0,
+     "x_max": 6.0,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Ritter (1892) Z. Ver. Deutsch. Ing. 36:947-954"
+    },
+    "n": 400,
+    "sweep_n": 400,
+    "ref_n": null,
+    "graded": {
+     "headline": 0.0010590824433118762,
+     "headline_metric": "front_fan_error",
+     "headline_position": 4.0042363297732475,
+     "exact_position": 4.0,
+     "position_ratio": 1.0010590824433119,
+     "depth_l1": 0.0030833597748260435,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.0,
+     "mass_drift": 1.021405182655144e-14,
+     "h_min": 0.0,
+     "series_max_error": 0.06613261995794985,
+     "all_pass": true,
+     "dx": 0.025,
+     "wall_time_s": 0.39832562021911144
+    }
+   },
+   {
+    "variant": "translated_quarter",
+    "base": "ritter-dry",
+    "case": {
+     "key": "ritter-dry-translated0.25dx",
+     "kind": "dry",
+     "h0": 1.0,
+     "h1": 0.0,
+     "gravity": 9.81,
+     "x_dam": 0.00625,
+     "x_min": -3.99375,
+     "x_max": 6.00625,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Ritter (1892) Z. Ver. Deutsch. Ing. 36:947-954"
+    },
+    "n": 400,
+    "sweep_n": 400,
+    "ref_n": 400,
+    "graded": {
+     "headline": 0.0010574302086111434,
+     "headline_metric": "front_fan_error",
+     "headline_position": 4.010486329773248,
+     "exact_position": 4.00625,
+     "position_ratio": 1.001057430208611,
+     "depth_l1": 0.00308335977482606,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.0,
+     "mass_drift": 1.021405182655144e-14,
+     "h_min": 0.0,
+     "series_max_error": 0.06398811808019639,
+     "all_pass": true,
+     "dx": 0.025,
+     "wall_time_s": 0.394761448726058
+    }
+   },
+   {
+    "variant": "translated_half",
+    "base": "ritter-dry",
+    "case": {
+     "key": "ritter-dry-translated0.5dx",
+     "kind": "dry",
+     "h0": 1.0,
+     "h1": 0.0,
+     "gravity": 9.81,
+     "x_dam": 0.0125,
+     "x_min": -3.9875,
+     "x_max": 6.0125,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Ritter (1892) Z. Ver. Deutsch. Ing. 36:947-954"
+    },
+    "n": 400,
+    "sweep_n": 400,
+    "ref_n": 400,
+    "graded": {
+     "headline": 0.0010557831210585681,
+     "headline_metric": "front_fan_error",
+     "headline_position": 4.016736329773248,
+     "exact_position": 4.0125,
+     "position_ratio": 1.0010557831210585,
+     "depth_l1": 0.003083359774826082,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.0,
+     "mass_drift": 1.021405182655144e-14,
+     "h_min": 0.0,
+     "series_max_error": 0.06197832862675259,
+     "all_pass": true,
+     "dx": 0.025,
+     "wall_time_s": 0.39439610950648785
+    }
+   },
+   {
+    "variant": "tight_downstream",
+    "base": "ritter-dry",
+    "case": {
+     "key": "ritter-dry-tight-downstream",
+     "kind": "dry",
+     "h0": 1.0,
+     "h1": 0.0,
+     "gravity": 9.81,
+     "x_dam": 0.0,
+     "x_min": -4.0,
+     "x_max": 4.200000000000001,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Ritter (1892) Z. Ver. Deutsch. Ing. 36:947-954"
+    },
+    "n": 328,
+    "sweep_n": 400,
+    "ref_n": 400,
+    "graded": {
+     "headline": 0.0010590824433118762,
+     "headline_metric": "front_fan_error",
+     "headline_position": 4.0042363297732475,
+     "exact_position": 4.0,
+     "position_ratio": 1.0010590824433119,
+     "depth_l1": 0.003083359774826084,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.0,
+     "mass_drift": 1.0325074129013954e-14,
+     "h_min": 0.0,
+     "series_max_error": 0.06613261995794686,
+     "all_pass": true,
+     "dx": 0.025000000000000005,
+     "wall_time_s": 0.43716233037412167
+    }
+   },
+   {
+    "variant": "tight_dx_rounding",
+    "base": "ritter-dry",
+    "case": {
+     "key": "ritter-dry-tight-dx-rounding",
+     "kind": "dry",
+     "h0": 1.0,
+     "h1": 0.0,
+     "gravity": 9.81,
+     "x_dam": 0.0,
+     "x_min": -4.0,
+     "x_max": 4.2,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Ritter (1892) Z. Ver. Deutsch. Ing. 36:947-954"
+    },
+    "n": 328,
+    "sweep_n": 400,
+    "ref_n": 400,
+    "graded": {
+     "headline": 0.0010590824433116541,
+     "headline_metric": "front_fan_error",
+     "headline_position": 4.004236329773247,
+     "exact_position": 4.0,
+     "position_ratio": 1.0010590824433117,
+     "depth_l1": 0.0030833597748259837,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.0,
+     "mass_drift": 1.0103029524088926e-14,
+     "h_min": 0.0,
+     "series_max_error": 0.06613261995795297,
+     "all_pass": true,
+     "dx": 0.024999999999999998,
+     "wall_time_s": 0.39199245907366276
+    }
+   },
+   {
+    "variant": "wide_domain",
+    "base": "ritter-dry",
+    "case": {
+     "key": "ritter-dry-wide-domain",
+     "kind": "dry",
+     "h0": 1.0,
+     "h1": 0.0,
+     "gravity": 9.81,
+     "x_dam": 0.0,
+     "x_min": -9.0,
+     "x_max": 11.0,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Ritter (1892) Z. Ver. Deutsch. Ing. 36:947-954"
+    },
+    "n": 800,
+    "sweep_n": 400,
+    "ref_n": 400,
+    "graded": {
+     "headline": 0.0010590824433120982,
+     "headline_metric": "front_fan_error",
+     "headline_position": 4.004236329773248,
+     "exact_position": 4.0,
+     "position_ratio": 1.001059082443312,
+     "depth_l1": 0.0013703804699658176,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.0,
+     "mass_drift": 4.5395785895784175e-15,
+     "h_min": 0.0,
+     "series_max_error": 0.06613261995794657,
+     "all_pass": true,
+     "dx": 0.025,
+     "wall_time_s": 0.5205923300236464
+    }
+   },
+   {
+    "variant": "similarity_x2",
+    "base": "ritter-dry",
+    "case": {
+     "key": "ritter-dry-similarity-x2",
+     "kind": "dry",
+     "h0": 2.0,
+     "h1": 0.0,
+     "gravity": 9.81,
+     "x_dam": 0.0,
+     "x_min": -8.0,
+     "x_max": 12.0,
+     "t_star_end": 2.0,
+     "t_end": 0.9030472819714618,
+     "reference": "Ritter (1892) Z. Ver. Deutsch. Ing. 36:947-954"
+    },
+    "n": 400,
+    "sweep_n": 400,
+    "ref_n": null,
+    "graded": {
+     "headline": 0.0010590824332212811,
+     "headline_metric": "front_fan_error",
+     "headline_position": 8.00847265946577,
+     "exact_position": 8.0,
+     "position_ratio": 1.0010590824332213,
+     "depth_l1": 0.0030833597748104913,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.0,
+     "mass_drift": 1.021405182655144e-14,
+     "h_min": 0.0,
+     "series_max_error": 0.06613261995951719,
+     "all_pass": true,
+     "dx": 0.05,
+     "wall_time_s": 0.45061575062572956
+    }
+   },
+   {
+    "variant": "baseline",
+    "base": "stoker-wet",
+    "case": {
+     "key": "stoker-wet",
+     "kind": "wet",
+     "h0": 1.0,
+     "h1": 0.5,
+     "gravity": 9.81,
+     "x_dam": 0.0,
+     "x_min": -4.0,
+     "x_max": 6.0,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Stoker (1957) Water Waves, ch. 10 (bore on a wet bed)"
+    },
+    "n": 400,
+    "sweep_n": 400,
+    "ref_n": null,
+    "graded": {
+     "headline": 0.0015971060530938627,
+     "headline_metric": "shock_error",
+     "headline_position": 1.891797733839384,
+     "exact_position": 1.8887811500316989,
+     "position_ratio": 1.001597106053094,
+     "depth_l1": 0.0017303304323634983,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.0013133751353185,
+     "mass_drift": 4.821539992657823e-15,
+     "h_min": 0.5,
+     "series_max_error": 0.007952172493583546,
+     "all_pass": true,
+     "dx": 0.025,
+     "wall_time_s": 0.2753307595849037
+    }
+   },
+   {
+    "variant": "translated_quarter",
+    "base": "stoker-wet",
+    "case": {
+     "key": "stoker-wet-translated0.25dx",
+     "kind": "wet",
+     "h0": 1.0,
+     "h1": 0.5,
+     "gravity": 9.81,
+     "x_dam": 0.00625,
+     "x_min": -3.99375,
+     "x_max": 6.00625,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Stoker (1957) Water Waves, ch. 10 (bore on a wet bed)"
+    },
+    "n": 400,
+    "sweep_n": 400,
+    "ref_n": 400,
+    "graded": {
+     "headline": 0.0015918386395045558,
+     "headline_metric": "shock_error",
+     "headline_position": 1.8980477338393842,
+     "exact_position": 1.895031150031699,
+     "position_ratio": 1.0015918386395046,
+     "depth_l1": 0.0017303304323634983,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.0013133751353185,
+     "mass_drift": 4.821539992657823e-15,
+     "h_min": 0.5,
+     "series_max_error": 0.007666450612683872,
+     "all_pass": true,
+     "dx": 0.025,
+     "wall_time_s": 0.24846835061907768
+    }
+   },
+   {
+    "variant": "translated_half",
+    "base": "stoker-wet",
+    "case": {
+     "key": "stoker-wet-translated0.5dx",
+     "kind": "wet",
+     "h0": 1.0,
+     "h1": 0.5,
+     "gravity": 9.81,
+     "x_dam": 0.0125,
+     "x_min": -3.9875,
+     "x_max": 6.0125,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Stoker (1957) Water Waves, ch. 10 (bore on a wet bed)"
+    },
+    "n": 400,
+    "sweep_n": 400,
+    "ref_n": 400,
+    "graded": {
+     "headline": 0.0015866058566010304,
+     "headline_metric": "shock_error",
+     "headline_position": 1.9042977338393843,
+     "exact_position": 1.9012811500316988,
+     "position_ratio": 1.001586605856601,
+     "depth_l1": 0.001730330432363505,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.0013133751353185,
+     "mass_drift": 4.821539992657823e-15,
+     "h_min": 0.5,
+     "series_max_error": 0.007400548600676388,
+     "all_pass": true,
+     "dx": 0.025,
+     "wall_time_s": 0.24901006929576397
+    }
+   },
+   {
+    "variant": "tight_downstream",
+    "base": "stoker-wet",
+    "case": {
+     "key": "stoker-wet-tight-downstream",
+     "kind": "wet",
+     "h0": 1.0,
+     "h1": 0.5,
+     "gravity": 9.81,
+     "x_dam": 0.0,
+     "x_min": -4.0,
+     "x_max": 2.1000000000000005,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Stoker (1957) Water Waves, ch. 10 (bore on a wet bed)"
+    },
+    "n": 244,
+    "sweep_n": 400,
+    "ref_n": 400,
+    "graded": {
+     "headline": 0.0015971060537752389,
+     "headline_metric": "shock_error",
+     "headline_position": 1.891797733840671,
+     "exact_position": 1.8887811500316989,
+     "position_ratio": 1.0015971060537752,
+     "depth_l1": 0.002398133566837179,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.0013064209716411,
+     "mass_drift": 9.446572633042606e-09,
+     "h_min": 0.5000034770818387,
+     "series_max_error": 0.007952172493583546,
+     "all_pass": true,
+     "dx": 0.025,
+     "wall_time_s": 0.23883454874157906
+    }
+   },
+   {
+    "variant": "tight_dx_rounding",
+    "base": "stoker-wet",
+    "case": {
+     "key": "stoker-wet-tight-dx-rounding",
+     "kind": "wet",
+     "h0": 1.0,
+     "h1": 0.5,
+     "gravity": 9.81,
+     "x_dam": 0.0,
+     "x_min": -4.0,
+     "x_max": 2.088781150031699,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Stoker (1957) Water Waves, ch. 10 (bore on a wet bed)"
+    },
+    "n": 244,
+    "sweep_n": 400,
+    "ref_n": 400,
+    "graded": {
+     "headline": 0.0024638098460525617,
+     "headline_metric": "shock_error",
+     "headline_position": 1.8841275524372123,
+     "exact_position": 1.8887811500316989,
+     "position_ratio": 0.9975361901539475,
+     "depth_l1": 0.0024172406910225614,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.0012989880369314,
+     "mass_drift": 1.1420043718278517e-08,
+     "h_min": 0.5000042034624318,
+     "series_max_error": 0.03599663625621798,
+     "all_pass": true,
+     "dx": 0.02495402110668729,
+     "wall_time_s": 0.23800686933100224
+    }
+   },
+   {
+    "variant": "wide_domain",
+    "base": "stoker-wet",
+    "case": {
+     "key": "stoker-wet-wide-domain",
+     "kind": "wet",
+     "h0": 1.0,
+     "h1": 0.5,
+     "gravity": 9.81,
+     "x_dam": 0.0,
+     "x_min": -9.0,
+     "x_max": 11.0,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Stoker (1957) Water Waves, ch. 10 (bore on a wet bed)"
+    },
+    "n": 800,
+    "sweep_n": 400,
+    "ref_n": 400,
+    "graded": {
+     "headline": 0.001597106053094333,
+     "headline_metric": "shock_error",
+     "headline_position": 1.891797733839385,
+     "exact_position": 1.8887811500316989,
+     "position_ratio": 1.0015971060530944,
+     "depth_l1": 0.0008354881845074893,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.0013133751353185,
+     "mass_drift": 2.3276399964555005e-15,
+     "h_min": 0.5,
+     "series_max_error": 0.007952172493579573,
+     "all_pass": true,
+     "dx": 0.025,
+     "wall_time_s": 0.3002890292555094
+    }
+   },
+   {
+    "variant": "similarity_x2",
+    "base": "stoker-wet",
+    "case": {
+     "key": "stoker-wet-similarity-x2",
+     "kind": "wet",
+     "h0": 2.0,
+     "h1": 1.0,
+     "gravity": 9.81,
+     "x_dam": 0.0,
+     "x_min": -8.0,
+     "x_max": 12.0,
+     "t_star_end": 2.0,
+     "t_end": 0.9030472819714618,
+     "reference": "Stoker (1957) Water Waves, ch. 10 (bore on a wet bed)"
+    },
+    "n": 400,
+    "sweep_n": 400,
+    "ref_n": null,
+    "graded": {
+     "headline": 0.0015971060530920974,
+     "headline_metric": "shock_error",
+     "headline_position": 3.783595467678766,
+     "exact_position": 3.777562300063402,
+     "position_ratio": 1.0015971060530922,
+     "depth_l1": 0.001730330432363392,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.0013133751353154,
+     "mass_drift": 4.821539992657823e-15,
+     "h_min": 1.0,
+     "series_max_error": 0.007952172493582875,
+     "all_pass": true,
+     "dx": 0.05,
+     "wall_time_s": 0.252324840053916
+    }
+   },
+   {
+    "variant": "depth_ratio_0.2",
+    "base": "stoker-wet",
+    "case": {
+     "key": "stoker-wet-ratio-0.2",
+     "kind": "wet",
+     "h0": 1.0,
+     "h1": 0.2,
+     "gravity": 9.81,
+     "x_dam": 0.0,
+     "x_min": -4.0,
+     "x_max": 6.0,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Stoker (1957) Water Waves, ch. 10 (bore on a wet bed)"
+    },
+    "n": 400,
+    "sweep_n": 400,
+    "ref_n": null,
+    "graded": {
+     "headline": 0.0006774256094719111,
+     "headline_metric": "shock_error",
+     "headline_position": 1.8973532228555476,
+     "exact_position": 1.8960687773084788,
+     "position_ratio": 1.000677425609472,
+     "depth_l1": 0.0024087725701096574,
+     "local_extrema": 2,
+     "extrema_amplitude_over_h0": 0.0001233974356026346,
+     "tv_ratio": 1.0039724454323364,
+     "mass_drift": 6.148927521000868e-15,
+     "h_min": 0.2,
+     "series_max_error": 0.009479073357152987,
+     "all_pass": false,
+     "dx": 0.025,
+     "wall_time_s": 0.33065090887248516
+    }
+   },
+   {
+    "variant": "depth_ratio_0.8",
+    "base": "stoker-wet",
+    "case": {
+     "key": "stoker-wet-ratio-0.8",
+     "kind": "wet",
+     "h0": 1.0,
+     "h1": 0.8,
+     "gravity": 9.81,
+     "x_dam": 0.0,
+     "x_min": -4.0,
+     "x_max": 6.0,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Stoker (1957) Water Waves, ch. 10 (bore on a wet bed)"
+    },
+    "n": 400,
+    "sweep_n": 400,
+    "ref_n": null,
+    "graded": {
+     "headline": 0.0022969656402099933,
+     "headline_metric": "shock_error",
+     "headline_position": 1.9555090117313736,
+     "exact_position": 1.9510275684435563,
+     "position_ratio": 1.00229696564021,
+     "depth_l1": 0.0009983274339866685,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.0004906528663928,
+     "mass_drift": 5.0464682937507114e-15,
+     "h_min": 0.8,
+     "series_max_error": 0.006413210919103353,
+     "all_pass": true,
+     "dx": 0.025,
+     "wall_time_s": 0.22882208041846752
+    }
+   },
+   {
+    "variant": "baseline",
+    "base": "ritter-dry",
+    "case": {
+     "key": "ritter-dry",
+     "kind": "dry",
+     "h0": 1.0,
+     "h1": 0.0,
+     "gravity": 9.81,
+     "x_dam": 0.0,
+     "x_min": -4.0,
+     "x_max": 6.0,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Ritter (1892) Z. Ver. Deutsch. Ing. 36:947-954"
+    },
+    "n": 800,
+    "sweep_n": 800,
+    "ref_n": null,
+    "graded": {
+     "headline": 0.0003911308005408731,
+     "headline_metric": "front_fan_error",
+     "headline_position": 4.0015645232021635,
+     "exact_position": 4.0,
+     "position_ratio": 1.0003911308005409,
+     "depth_l1": 0.0015419003450595436,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.0,
+     "mass_drift": 1.7541523789077473e-14,
+     "h_min": 0.0,
+     "series_max_error": 0.01397618184122598,
+     "all_pass": true,
+     "dx": 0.0125,
+     "wall_time_s": 0.990732928737998
+    }
+   },
+   {
+    "variant": "translated_quarter",
+    "base": "ritter-dry",
+    "case": {
+     "key": "ritter-dry-translated0.25dx",
+     "kind": "dry",
+     "h0": 1.0,
+     "h1": 0.0,
+     "gravity": 9.81,
+     "x_dam": 0.003125,
+     "x_min": -3.996875,
+     "x_max": 6.003125,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Ritter (1892) Z. Ver. Deutsch. Ing. 36:947-954"
+    },
+    "n": 800,
+    "sweep_n": 800,
+    "ref_n": 800,
+    "graded": {
+     "headline": 0.00039082546814366383,
+     "headline_metric": "front_fan_error",
+     "headline_position": 4.004689523202162,
+     "exact_position": 4.003125,
+     "position_ratio": 1.0003908254681437,
+     "depth_l1": 0.0015419003450595076,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.0,
+     "mass_drift": 1.7541523789077473e-14,
+     "h_min": 0.0,
+     "series_max_error": 0.013731878989187601,
+     "all_pass": true,
+     "dx": 0.0125,
+     "wall_time_s": 0.9819404911249876
+    }
+   },
+   {
+    "variant": "translated_half",
+    "base": "ritter-dry",
+    "case": {
+     "key": "ritter-dry-translated0.5dx",
+     "kind": "dry",
+     "h0": 1.0,
+     "h1": 0.0,
+     "gravity": 9.81,
+     "x_dam": 0.00625,
+     "x_min": -3.99375,
+     "x_max": 6.00625,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Ritter (1892) Z. Ver. Deutsch. Ing. 36:947-954"
+    },
+    "n": 800,
+    "sweep_n": 800,
+    "ref_n": 800,
+    "graded": {
+     "headline": 0.00039052061208449116,
+     "headline_metric": "front_fan_error",
+     "headline_position": 4.007814523202163,
+     "exact_position": 4.00625,
+     "position_ratio": 1.0003905206120844,
+     "depth_l1": 0.0015419003450595564,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.0,
+     "mass_drift": 1.7541523789077473e-14,
+     "h_min": 0.0,
+     "series_max_error": 0.013495970208769902,
+     "all_pass": true,
+     "dx": 0.0125,
+     "wall_time_s": 0.9897167198359966
+    }
+   },
+   {
+    "variant": "tight_downstream",
+    "base": "ritter-dry",
+    "case": {
+     "key": "ritter-dry-tight-downstream",
+     "kind": "dry",
+     "h0": 1.0,
+     "h1": 0.0,
+     "gravity": 9.81,
+     "x_dam": 0.0,
+     "x_min": -4.0,
+     "x_max": 4.1,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Ritter (1892) Z. Ver. Deutsch. Ing. 36:947-954"
+    },
+    "n": 648,
+    "sweep_n": 800,
+    "ref_n": 800,
+    "graded": {
+     "headline": 0.0003911308005406511,
+     "headline_metric": "front_fan_error",
+     "headline_position": 4.001564523202163,
+     "exact_position": 4.0,
+     "position_ratio": 1.0003911308005407,
+     "depth_l1": 0.00154190034505946,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.0,
+     "mass_drift": 1.7541523789077476e-14,
+     "h_min": 0.0,
+     "series_max_error": 0.013976181841228825,
+     "all_pass": true,
+     "dx": 0.012499999999999999,
+     "wall_time_s": 0.9651522804051638
+    }
+   },
+   {
+    "variant": "tight_dx_rounding",
+    "base": "ritter-dry",
+    "case": {
+     "key": "ritter-dry-tight-dx-rounding",
+     "kind": "dry",
+     "h0": 1.0,
+     "h1": 0.0,
+     "gravity": 9.81,
+     "x_dam": 0.0,
+     "x_min": -4.0,
+     "x_max": 4.1,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Ritter (1892) Z. Ver. Deutsch. Ing. 36:947-954"
+    },
+    "n": 648,
+    "sweep_n": 800,
+    "ref_n": 800,
+    "graded": {
+     "headline": 0.0003911308005406511,
+     "headline_metric": "front_fan_error",
+     "headline_position": 4.001564523202163,
+     "exact_position": 4.0,
+     "position_ratio": 1.0003911308005407,
+     "depth_l1": 0.00154190034505946,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.0,
+     "mass_drift": 1.7541523789077476e-14,
+     "h_min": 0.0,
+     "series_max_error": 0.013976181841228825,
+     "all_pass": true,
+     "dx": 0.012499999999999999,
+     "wall_time_s": 0.9524516798555851
+    }
+   },
+   {
+    "variant": "wide_domain",
+    "base": "ritter-dry",
+    "case": {
+     "key": "ritter-dry-wide-domain",
+     "kind": "dry",
+     "h0": 1.0,
+     "h1": 0.0,
+     "gravity": 9.81,
+     "x_dam": 0.0,
+     "x_min": -9.0,
+     "x_max": 11.0,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Ritter (1892) Z. Ver. Deutsch. Ing. 36:947-954"
+    },
+    "n": 1600,
+    "sweep_n": 800,
+    "ref_n": 800,
+    "graded": {
+     "headline": 0.0003911308005408731,
+     "headline_metric": "front_fan_error",
+     "headline_position": 4.0015645232021635,
+     "exact_position": 4.0,
+     "position_ratio": 1.0003911308005409,
+     "depth_l1": 0.000685288835696933,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.0,
+     "mass_drift": 7.894919286223336e-15,
+     "h_min": 0.0,
+     "series_max_error": 0.013976181841225031,
+     "all_pass": true,
+     "dx": 0.0125,
+     "wall_time_s": 1.1833463907241821
+    }
+   },
+   {
+    "variant": "similarity_x2",
+    "base": "ritter-dry",
+    "case": {
+     "key": "ritter-dry-similarity-x2",
+     "kind": "dry",
+     "h0": 2.0,
+     "h1": 0.0,
+     "gravity": 9.81,
+     "x_dam": 0.0,
+     "x_min": -8.0,
+     "x_max": 12.0,
+     "t_star_end": 2.0,
+     "t_end": 0.9030472819714618,
+     "reference": "Ritter (1892) Z. Ver. Deutsch. Ing. 36:947-954"
+    },
+    "n": 800,
+    "sweep_n": 800,
+    "ref_n": null,
+    "graded": {
+     "headline": 0.00039113079779062865,
+     "headline_metric": "front_fan_error",
+     "headline_position": 8.003129046382325,
+     "exact_position": 8.0,
+     "position_ratio": 1.0003911307977906,
+     "depth_l1": 0.001541900345173459,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.0,
+     "mass_drift": 1.8096635301390052e-14,
+     "h_min": 0.0,
+     "series_max_error": 0.013976182229293381,
+     "all_pass": true,
+     "dx": 0.025,
+     "wall_time_s": 1.005317760631442
+    }
+   },
+   {
+    "variant": "baseline",
+    "base": "stoker-wet",
+    "case": {
+     "key": "stoker-wet",
+     "kind": "wet",
+     "h0": 1.0,
+     "h1": 0.5,
+     "gravity": 9.81,
+     "x_dam": 0.0,
+     "x_min": -4.0,
+     "x_max": 6.0,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Stoker (1957) Water Waves, ch. 10 (bore on a wet bed)"
+    },
+    "n": 800,
+    "sweep_n": 800,
+    "ref_n": null,
+    "graded": {
+     "headline": 0.0004326276916445582,
+     "headline_metric": "shock_error",
+     "headline_position": 1.8895982890606589,
+     "exact_position": 1.8887811500316989,
+     "position_ratio": 1.0004326276916446,
+     "depth_l1": 0.0008510840146864194,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.001099331022318,
+     "mass_drift": 7.866723145915395e-15,
+     "h_min": 0.5,
+     "series_max_error": 0.007952172493579573,
+     "all_pass": true,
+     "dx": 0.0125,
+     "wall_time_s": 0.5987537689507008
+    }
+   },
+   {
+    "variant": "translated_quarter",
+    "base": "stoker-wet",
+    "case": {
+     "key": "stoker-wet-translated0.25dx",
+     "kind": "wet",
+     "h0": 1.0,
+     "h1": 0.5,
+     "gravity": 9.81,
+     "x_dam": 0.003125,
+     "x_min": -3.996875,
+     "x_max": 6.003125,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Stoker (1957) Water Waves, ch. 10 (bore on a wet bed)"
+    },
+    "n": 800,
+    "sweep_n": 800,
+    "ref_n": 800,
+    "graded": {
+     "headline": 0.00043191308878934325,
+     "headline_metric": "shock_error",
+     "headline_position": 1.8927232890606587,
+     "exact_position": 1.891906150031699,
+     "position_ratio": 1.0004319130887893,
+     "depth_l1": 0.0008510840146864144,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.001099331022318,
+     "mass_drift": 7.866723145915395e-15,
+     "h_min": 0.5,
+     "series_max_error": 0.0076664506126774895,
+     "all_pass": true,
+     "dx": 0.0125,
+     "wall_time_s": 0.5985154695808887
+    }
+   },
+   {
+    "variant": "translated_half",
+    "base": "stoker-wet",
+    "case": {
+     "key": "stoker-wet-translated0.5dx",
+     "kind": "wet",
+     "h0": 1.0,
+     "h1": 0.5,
+     "gravity": 9.81,
+     "x_dam": 0.00625,
+     "x_min": -3.99375,
+     "x_max": 6.00625,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Stoker (1957) Water Waves, ch. 10 (bore on a wet bed)"
+    },
+    "n": 800,
+    "sweep_n": 800,
+    "ref_n": 800,
+    "graded": {
+     "headline": 0.00043120084276519635,
+     "headline_metric": "shock_error",
+     "headline_position": 1.895848289060659,
+     "exact_position": 1.895031150031699,
+     "position_ratio": 1.0004312008427652,
+     "depth_l1": 0.0008510840146864194,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.001099331022318,
+     "mass_drift": 7.866723145915395e-15,
+     "h_min": 0.5,
+     "series_max_error": 0.007400548600672691,
+     "all_pass": true,
+     "dx": 0.0125,
+     "wall_time_s": 0.5962206590920687
+    }
+   },
+   {
+    "variant": "tight_downstream",
+    "base": "stoker-wet",
+    "case": {
+     "key": "stoker-wet-tight-downstream",
+     "kind": "wet",
+     "h0": 1.0,
+     "h1": 0.5,
+     "gravity": 9.81,
+     "x_dam": 0.0,
+     "x_min": -4.0,
+     "x_max": 2.0,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Stoker (1957) Water Waves, ch. 10 (bore on a wet bed)"
+    },
+    "n": 480,
+    "sweep_n": 800,
+    "ref_n": 800,
+    "graded": {
+     "headline": 0.0004326276912970516,
+     "headline_metric": "shock_error",
+     "headline_position": 1.8895982890600025,
+     "exact_position": 1.8887811500316989,
+     "position_ratio": 1.0004326276912971,
+     "depth_l1": 0.001191534987995975,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.0010956251377126,
+     "mass_drift": 2.541191079785676e-09,
+     "h_min": 0.5000018529423027,
+     "series_max_error": 0.007952172493579573,
+     "all_pass": true,
+     "dx": 0.0125,
+     "wall_time_s": 0.5114203803241253
+    }
+   },
+   {
+    "variant": "tight_dx_rounding",
+    "base": "stoker-wet",
+    "case": {
+     "key": "stoker-wet-tight-dx-rounding",
+     "kind": "wet",
+     "h0": 1.0,
+     "h1": 0.5,
+     "gravity": 9.81,
+     "x_dam": 0.0,
+     "x_min": -4.0,
+     "x_max": 1.988781150031699,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Stoker (1957) Water Waves, ch. 10 (bore on a wet bed)"
+    },
+    "n": 479,
+    "sweep_n": 800,
+    "ref_n": 800,
+    "graded": {
+     "headline": 0.0008853080752012957,
+     "headline_metric": "shock_error",
+     "headline_position": 1.89045330323611,
+     "exact_position": 1.8887811500316989,
+     "position_ratio": 1.0008853080752014,
+     "depth_l1": 0.001207425601139912,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.0010865734300631,
+     "mass_drift": 9.501285073935646e-09,
+     "h_min": 0.5000069191197724,
+     "series_max_error": 0.018157352666880597,
+     "all_pass": true,
+     "dx": 0.01250267463472171,
+     "wall_time_s": 0.5291884411126375
+    }
+   },
+   {
+    "variant": "wide_domain",
+    "base": "stoker-wet",
+    "case": {
+     "key": "stoker-wet-wide-domain",
+     "kind": "wet",
+     "h0": 1.0,
+     "h1": 0.5,
+     "gravity": 9.81,
+     "x_dam": 0.0,
+     "x_min": -9.0,
+     "x_max": 11.0,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Stoker (1957) Water Waves, ch. 10 (bore on a wet bed)"
+    },
+    "n": 1600,
+    "sweep_n": 800,
+    "ref_n": 800,
+    "graded": {
+     "headline": 0.00043262769164467577,
+     "headline_metric": "shock_error",
+     "headline_position": 1.889598289060659,
+     "exact_position": 1.8887811500316989,
+     "position_ratio": 1.0004326276916446,
+     "depth_l1": 0.00041085926808821,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.001099331022318,
+     "mass_drift": 3.920235783504001e-15,
+     "h_min": 0.5,
+     "series_max_error": 0.007952172493587517,
+     "all_pass": true,
+     "dx": 0.0125,
+     "wall_time_s": 0.7629826795309782
+    }
+   },
+   {
+    "variant": "similarity_x2",
+    "base": "stoker-wet",
+    "case": {
+     "key": "stoker-wet-similarity-x2",
+     "kind": "wet",
+     "h0": 2.0,
+     "h1": 1.0,
+     "gravity": 9.81,
+     "x_dam": 0.0,
+     "x_min": -8.0,
+     "x_max": 12.0,
+     "t_star_end": 2.0,
+     "t_end": 0.9030472819714618,
+     "reference": "Stoker (1957) Water Waves, ch. 10 (bore on a wet bed)"
+    },
+    "n": 800,
+    "sweep_n": 800,
+    "ref_n": null,
+    "graded": {
+     "headline": 0.0004326276916427943,
+     "headline_metric": "shock_error",
+     "headline_position": 3.7791965781213155,
+     "exact_position": 3.777562300063402,
+     "position_ratio": 1.0004326276916429,
+     "depth_l1": 0.0008510840146864073,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.0010993310223162,
+     "mass_drift": 7.866723145915395e-15,
+     "h_min": 1.0,
+     "series_max_error": 0.007952172493578902,
+     "all_pass": true,
+     "dx": 0.025,
+     "wall_time_s": 0.6027497109025717
+    }
+   },
+   {
+    "variant": "depth_ratio_0.2",
+    "base": "stoker-wet",
+    "case": {
+     "key": "stoker-wet-ratio-0.2",
+     "kind": "wet",
+     "h0": 1.0,
+     "h1": 0.2,
+     "gravity": 9.81,
+     "x_dam": 0.0,
+     "x_min": -4.0,
+     "x_max": 6.0,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Stoker (1957) Water Waves, ch. 10 (bore on a wet bed)"
+    },
+    "n": 800,
+    "sweep_n": 800,
+    "ref_n": null,
+    "graded": {
+     "headline": 0.0004679270517925508,
+     "headline_metric": "shock_error",
+     "headline_position": 1.8969559991814406,
+     "exact_position": 1.8960687773084788,
+     "position_ratio": 1.0004679270517927,
+     "depth_l1": 0.0012158603278636397,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.0030064102799057,
+     "mass_drift": 1.1102230246251565e-14,
+     "h_min": 0.2,
+     "series_max_error": 0.00947907335714936,
+     "all_pass": true,
+     "dx": 0.0125,
+     "wall_time_s": 0.6740783508867025
+    }
+   },
+   {
+    "variant": "depth_ratio_0.8",
+    "base": "stoker-wet",
+    "case": {
+     "key": "stoker-wet-ratio-0.8",
+     "kind": "wet",
+     "h0": 1.0,
+     "h1": 0.8,
+     "gravity": 9.81,
+     "x_dam": 0.0,
+     "x_min": -4.0,
+     "x_max": 6.0,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Stoker (1957) Water Waves, ch. 10 (bore on a wet bed)"
+    },
+    "n": 800,
+    "sweep_n": 800,
+    "ref_n": null,
+    "graded": {
+     "headline": 0.0012442303045924654,
+     "headline_metric": "shock_error",
+     "headline_position": 1.9534550960693091,
+     "exact_position": 1.9510275684435563,
+     "position_ratio": 1.0012442303045925,
+     "depth_l1": 0.0005176305884105641,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.0004360206694942,
+     "mass_drift": 8.478066733501195e-15,
+     "h_min": 0.8,
+     "series_max_error": 0.005841125574631298,
+     "all_pass": true,
+     "dx": 0.0125,
+     "wall_time_s": 0.5639713499695063
+    }
+   },
+   {
+    "variant": "baseline",
+    "base": "ritter-dry",
+    "case": {
+     "key": "ritter-dry",
+     "kind": "dry",
+     "h0": 1.0,
+     "h1": 0.0,
+     "gravity": 9.81,
+     "x_dam": 0.0,
+     "x_min": -4.0,
+     "x_max": 6.0,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Ritter (1892) Z. Ver. Deutsch. Ing. 36:947-954"
+    },
+    "n": 1600,
+    "sweep_n": 1600,
+    "ref_n": null,
+    "graded": {
+     "headline": 0.00017261518056277403,
+     "headline_metric": "front_fan_error",
+     "headline_position": 4.000690460722251,
+     "exact_position": 4.0,
+     "position_ratio": 1.0001726151805628,
+     "depth_l1": 0.0007715065657630972,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.0,
+     "mass_drift": 3.2307490016592055e-14,
+     "h_min": 0.0,
+     "series_max_error": 0.0042472950845003216,
+     "all_pass": true,
+     "dx": 0.00625,
+     "wall_time_s": 2.4614017605781555
+    }
+   },
+   {
+    "variant": "translated_quarter",
+    "base": "ritter-dry",
+    "case": {
+     "key": "ritter-dry-translated0.25dx",
+     "kind": "dry",
+     "h0": 1.0,
+     "h1": 0.0,
+     "gravity": 9.81,
+     "x_dam": 0.0015625,
+     "x_min": -3.9984375,
+     "x_max": 6.0015625,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Ritter (1892) Z. Ver. Deutsch. Ing. 36:947-954"
+    },
+    "n": 1600,
+    "sweep_n": 1600,
+    "ref_n": 1600,
+    "graded": {
+     "headline": 0.00017254777908634635,
+     "headline_metric": "front_fan_error",
+     "headline_position": 4.002252960722251,
+     "exact_position": 4.0015625,
+     "position_ratio": 1.0001725477790864,
+     "depth_l1": 0.0007715065657630864,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.0,
+     "mass_drift": 3.2307490016592055e-14,
+     "h_min": 0.0,
+     "series_max_error": 0.0042075285472699874,
+     "all_pass": true,
+     "dx": 0.00625,
+     "wall_time_s": 2.526026090607047
+    }
+   },
+   {
+    "variant": "translated_half",
+    "base": "ritter-dry",
+    "case": {
+     "key": "ritter-dry-translated0.5dx",
+     "kind": "dry",
+     "h0": 1.0,
+     "h1": 0.0,
+     "gravity": 9.81,
+     "x_dam": 0.003125,
+     "x_min": -3.996875,
+     "x_max": 6.003125,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Ritter (1892) Z. Ver. Deutsch. Ing. 36:947-954"
+    },
+    "n": 1600,
+    "sweep_n": 1600,
+    "ref_n": 1600,
+    "graded": {
+     "headline": 0.00017248043022665945,
+     "headline_metric": "front_fan_error",
+     "headline_position": 4.003815460722251,
+     "exact_position": 4.003125,
+     "position_ratio": 1.0001724804302266,
+     "depth_l1": 0.000771506565763063,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.0,
+     "mass_drift": 3.2307490016592055e-14,
+     "h_min": 0.0,
+     "series_max_error": 0.0041684997542676605,
+     "all_pass": true,
+     "dx": 0.00625,
+     "wall_time_s": 2.441519159823656
+    }
+   },
+   {
+    "variant": "tight_downstream",
+    "base": "ritter-dry",
+    "case": {
+     "key": "ritter-dry-tight-downstream",
+     "kind": "dry",
+     "h0": 1.0,
+     "h1": 0.0,
+     "gravity": 9.81,
+     "x_dam": 0.0,
+     "x_min": -4.0,
+     "x_max": 4.050000000000001,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Ritter (1892) Z. Ver. Deutsch. Ing. 36:947-954"
+    },
+    "n": 1288,
+    "sweep_n": 1600,
+    "ref_n": 1600,
+    "graded": {
+     "headline": 0.00017261518056277403,
+     "headline_metric": "front_fan_error",
+     "headline_position": 4.000690460722251,
+     "exact_position": 4.0,
+     "position_ratio": 1.0001726151805628,
+     "depth_l1": 0.0007715065657630972,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.0,
+     "mass_drift": 3.241851231905457e-14,
+     "h_min": 0.0,
+     "series_max_error": 0.0042472950845003216,
+     "all_pass": true,
+     "dx": 0.00625,
+     "wall_time_s": 2.330101389437914
+    }
+   },
+   {
+    "variant": "tight_dx_rounding",
+    "base": "ritter-dry",
+    "case": {
+     "key": "ritter-dry-tight-dx-rounding",
+     "kind": "dry",
+     "h0": 1.0,
+     "h1": 0.0,
+     "gravity": 9.81,
+     "x_dam": 0.0,
+     "x_min": -4.0,
+     "x_max": 4.05,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Ritter (1892) Z. Ver. Deutsch. Ing. 36:947-954"
+    },
+    "n": 1288,
+    "sweep_n": 1600,
+    "ref_n": 1600,
+    "graded": {
+     "headline": 0.00017261518056277403,
+     "headline_metric": "front_fan_error",
+     "headline_position": 4.000690460722251,
+     "exact_position": 4.0,
+     "position_ratio": 1.0001726151805628,
+     "depth_l1": 0.0007715065657630972,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.0,
+     "mass_drift": 3.241851231905457e-14,
+     "h_min": 0.0,
+     "series_max_error": 0.0042472950845003216,
+     "all_pass": true,
+     "dx": 0.00625,
+     "wall_time_s": 2.3206541799008846
+    }
+   },
+   {
+    "variant": "wide_domain",
+    "base": "ritter-dry",
+    "case": {
+     "key": "ritter-dry-wide-domain",
+     "kind": "dry",
+     "h0": 1.0,
+     "h1": 0.0,
+     "gravity": 9.81,
+     "x_dam": 0.0,
+     "x_min": -9.0,
+     "x_max": 11.0,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Ritter (1892) Z. Ver. Deutsch. Ing. 36:947-954"
+    },
+    "n": 3200,
+    "sweep_n": 1600,
+    "ref_n": 1600,
+    "graded": {
+     "headline": 0.00017261518056277403,
+     "headline_metric": "front_fan_error",
+     "headline_position": 4.000690460722251,
+     "exact_position": 4.0,
+     "position_ratio": 1.0001726151805628,
+     "depth_l1": 0.000342891781168237,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.0,
+     "mass_drift": 1.4408227697357586e-14,
+     "h_min": 0.0,
+     "series_max_error": 0.004247295084501329,
+     "all_pass": true,
+     "dx": 0.00625,
+     "wall_time_s": 3.6085670087486506
+    }
+   },
+   {
+    "variant": "similarity_x2",
+    "base": "ritter-dry",
+    "case": {
+     "key": "ritter-dry-similarity-x2",
+     "kind": "dry",
+     "h0": 2.0,
+     "h1": 0.0,
+     "gravity": 9.81,
+     "x_dam": 0.0,
+     "x_min": -8.0,
+     "x_max": 12.0,
+     "t_star_end": 2.0,
+     "t_end": 0.9030472819714618,
+     "reference": "Ritter (1892) Z. Ver. Deutsch. Ing. 36:947-954"
+    },
+    "n": 1600,
+    "sweep_n": 1600,
+    "ref_n": null,
+    "graded": {
+     "headline": 0.00017261517926159264,
+     "headline_metric": "front_fan_error",
+     "headline_position": 8.001380921434093,
+     "exact_position": 8.0,
+     "position_ratio": 1.0001726151792616,
+     "depth_l1": 0.0007715065658243153,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.0,
+     "mass_drift": 3.297362383136715e-14,
+     "h_min": 0.0,
+     "series_max_error": 0.004247295224393604,
+     "all_pass": true,
+     "dx": 0.0125,
+     "wall_time_s": 2.5048605892807245
+    }
+   },
+   {
+    "variant": "baseline",
+    "base": "stoker-wet",
+    "case": {
+     "key": "stoker-wet",
+     "kind": "wet",
+     "h0": 1.0,
+     "h1": 0.5,
+     "gravity": 9.81,
+     "x_dam": 0.0,
+     "x_min": -4.0,
+     "x_max": 6.0,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Stoker (1957) Water Waves, ch. 10 (bore on a wet bed)"
+    },
+    "n": 1600,
+    "sweep_n": 1600,
+    "ref_n": null,
+    "graded": {
+     "headline": 0.00021023436657714858,
+     "headline_metric": "shock_error",
+     "headline_position": 1.8891782367403787,
+     "exact_position": 1.8887811500316989,
+     "position_ratio": 1.000210234366577,
+     "depth_l1": 0.0004271934800380538,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.001004977173832,
+     "mass_drift": 1.3195793664116147e-14,
+     "h_min": 0.5,
+     "series_max_error": 0.00844265997289686,
+     "all_pass": true,
+     "dx": 0.00625,
+     "wall_time_s": 1.50671705044806
+    }
+   },
+   {
+    "variant": "translated_quarter",
+    "base": "stoker-wet",
+    "case": {
+     "key": "stoker-wet-translated0.25dx",
+     "kind": "wet",
+     "h0": 1.0,
+     "h1": 0.5,
+     "gravity": 9.81,
+     "x_dam": 0.0015625,
+     "x_min": -3.9984375,
+     "x_max": 6.0015625,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Stoker (1957) Water Waves, ch. 10 (bore on a wet bed)"
+    },
+    "n": 1600,
+    "sweep_n": 1600,
+    "ref_n": 1600,
+    "graded": {
+     "headline": 0.00021006059330699674,
+     "headline_metric": "shock_error",
+     "headline_position": 1.8907407367403786,
+     "exact_position": 1.8903436500316988,
+     "position_ratio": 1.000210060593307,
+     "depth_l1": 0.0004271934800380538,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.001004977173832,
+     "mass_drift": 1.3195793664116147e-14,
+     "h_min": 0.5,
+     "series_max_error": 0.008278717993264082,
+     "all_pass": true,
+     "dx": 0.00625,
+     "wall_time_s": 1.5224720891565084
+    }
+   },
+   {
+    "variant": "translated_half",
+    "base": "stoker-wet",
+    "case": {
+     "key": "stoker-wet-translated0.5dx",
+     "kind": "wet",
+     "h0": 1.0,
+     "h1": 0.5,
+     "gravity": 9.81,
+     "x_dam": 0.003125,
+     "x_min": -3.996875,
+     "x_max": 6.003125,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Stoker (1957) Water Waves, ch. 10 (bore on a wet bed)"
+    },
+    "n": 1600,
+    "sweep_n": 1600,
+    "ref_n": 1600,
+    "graded": {
+     "headline": 0.00020988710707076945,
+     "headline_metric": "shock_error",
+     "headline_position": 1.8923032367403785,
+     "exact_position": 1.891906150031699,
+     "position_ratio": 1.0002098871070708,
+     "depth_l1": 0.00042719348003805046,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.001004977173832,
+     "mass_drift": 1.3195793664116147e-14,
+     "h_min": 0.5,
+     "series_max_error": 0.008121021677793131,
+     "all_pass": true,
+     "dx": 0.00625,
+     "wall_time_s": 1.486754760146141
+    }
+   },
+   {
+    "variant": "tight_downstream",
+    "base": "stoker-wet",
+    "case": {
+     "key": "stoker-wet-tight-downstream",
+     "kind": "wet",
+     "h0": 1.0,
+     "h1": 0.5,
+     "gravity": 9.81,
+     "x_dam": 0.0,
+     "x_min": -4.0,
+     "x_max": 1.9437500000000005,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Stoker (1957) Water Waves, ch. 10 (bore on a wet bed)"
+    },
+    "n": 951,
+    "sweep_n": 1600,
+    "ref_n": 1600,
+    "graded": {
+     "headline": 0.00021023436633779696,
+     "headline_metric": "shock_error",
+     "headline_position": 1.8891782367399266,
+     "exact_position": 1.8887811500316989,
+     "position_ratio": 1.0002102343663377,
+     "depth_l1": 0.0006014628388051826,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.0010007635341989,
+     "mass_drift": 1.4522950451704085e-09,
+     "h_min": 0.5000021068198166,
+     "series_max_error": 0.00844265997289686,
+     "all_pass": true,
+     "dx": 0.00625,
+     "wall_time_s": 1.405608620494604
+    }
+   },
+   {
+    "variant": "tight_dx_rounding",
+    "base": "stoker-wet",
+    "case": {
+     "key": "stoker-wet-tight-dx-rounding",
+     "kind": "wet",
+     "h0": 1.0,
+     "h1": 0.5,
+     "gravity": 9.81,
+     "x_dam": 0.0,
+     "x_min": -4.0,
+     "x_max": 1.938781150031699,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Stoker (1957) Water Waves, ch. 10 (bore on a wet bed)"
+    },
+    "n": 950,
+    "sweep_n": 1600,
+    "ref_n": 1600,
+    "graded": {
+     "headline": 0.0006514372048809127,
+     "headline_metric": "shock_error",
+     "headline_position": 1.8900115723447073,
+     "exact_position": 1.8887811500316989,
+     "position_ratio": 1.000651437204881,
+     "depth_l1": 0.0006172355433983154,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.0009893551081663,
+     "mass_drift": 5.190679732596846e-09,
+     "h_min": 0.5000075249050034,
+     "series_max_error": 0.019378942507941893,
+     "all_pass": true,
+     "dx": 0.006251348578980735,
+     "wall_time_s": 1.3767915200442076
+    }
+   },
+   {
+    "variant": "wide_domain",
+    "base": "stoker-wet",
+    "case": {
+     "key": "stoker-wet-wide-domain",
+     "kind": "wet",
+     "h0": 1.0,
+     "h1": 0.5,
+     "gravity": 9.81,
+     "x_dam": 0.0,
+     "x_min": -9.0,
+     "x_max": 11.0,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Stoker (1957) Water Waves, ch. 10 (bore on a wet bed)"
+    },
+    "n": 3200,
+    "sweep_n": 1600,
+    "ref_n": 1600,
+    "graded": {
+     "headline": 0.00021023436657714858,
+     "headline_metric": "shock_error",
+     "headline_position": 1.8891782367403787,
+     "exact_position": 1.8887811500316989,
+     "position_ratio": 1.000210234366577,
+     "depth_l1": 0.00020622688316814617,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.001004977173832,
+     "mass_drift": 6.2478757799595015e-15,
+     "h_min": 0.5,
+     "series_max_error": 0.008442659972894223,
+     "all_pass": true,
+     "dx": 0.00625,
+     "wall_time_s": 2.161780320107937
+    }
+   },
+   {
+    "variant": "similarity_x2",
+    "base": "stoker-wet",
+    "case": {
+     "key": "stoker-wet-similarity-x2",
+     "kind": "wet",
+     "h0": 2.0,
+     "h1": 1.0,
+     "gravity": 9.81,
+     "x_dam": 0.0,
+     "x_min": -8.0,
+     "x_max": 12.0,
+     "t_star_end": 2.0,
+     "t_end": 0.9030472819714618,
+     "reference": "Stoker (1957) Water Waves, ch. 10 (bore on a wet bed)"
+    },
+    "n": 1600,
+    "sweep_n": 1600,
+    "ref_n": null,
+    "graded": {
+     "headline": 0.00021023436657750103,
+     "headline_metric": "shock_error",
+     "headline_position": 3.778356473480763,
+     "exact_position": 3.777562300063402,
+     "position_ratio": 1.0002102343665775,
+     "depth_l1": 0.0004271934800382501,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.0010049771738485,
+     "mass_drift": 1.3322676295501878e-14,
+     "h_min": 1.0,
+     "series_max_error": 0.008442659972895795,
+     "all_pass": true,
+     "dx": 0.0125,
+     "wall_time_s": 1.6071783397346735
+    }
+   },
+   {
+    "variant": "depth_ratio_0.2",
+    "base": "stoker-wet",
+    "case": {
+     "key": "stoker-wet-ratio-0.2",
+     "kind": "wet",
+     "h0": 1.0,
+     "h1": 0.2,
+     "gravity": 9.81,
+     "x_dam": 0.0,
+     "x_min": -4.0,
+     "x_max": 6.0,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Stoker (1957) Water Waves, ch. 10 (bore on a wet bed)"
+    },
+    "n": 1600,
+    "sweep_n": 1600,
+    "ref_n": null,
+    "graded": {
+     "headline": 0.00015405882322379517,
+     "headline_metric": "shock_error",
+     "headline_position": 1.8963608834330623,
+     "exact_position": 1.8960687773084788,
+     "position_ratio": 1.0001540588232238,
+     "depth_l1": 0.0006310420162494005,
+     "local_extrema": 1,
+     "extrema_amplitude_over_h0": 0.00012721118068703685,
+     "tv_ratio": 1.0025146337464177,
+     "mass_drift": 1.9642407358752768e-14,
+     "h_min": 0.2,
+     "series_max_error": 0.008098256831569348,
+     "all_pass": false,
+     "dx": 0.00625,
+     "wall_time_s": 1.704814000055194
+    }
+   },
+   {
+    "variant": "depth_ratio_0.8",
+    "base": "stoker-wet",
+    "case": {
+     "key": "stoker-wet-ratio-0.8",
+     "kind": "wet",
+     "h0": 1.0,
+     "h1": 0.8,
+     "gravity": 9.81,
+     "x_dam": 0.0,
+     "x_min": -4.0,
+     "x_max": 6.0,
+     "t_star_end": 2.0,
+     "t_end": 0.638550856814101,
+     "reference": "Stoker (1957) Water Waves, ch. 10 (bore on a wet bed)"
+    },
+    "n": 1600,
+    "sweep_n": 1600,
+    "ref_n": null,
+    "graded": {
+     "headline": 0.0006335565428514814,
+     "headline_metric": "shock_error",
+     "headline_position": 1.9522636547248273,
+     "exact_position": 1.9510275684435563,
+     "position_ratio": 1.0006335565428515,
+     "depth_l1": 0.0002615432466499694,
+     "local_extrema": 0,
+     "extrema_amplitude_over_h0": 0.0,
+     "tv_ratio": 1.0003712261925626,
+     "mass_drift": 1.4937546149502105e-14,
+     "h_min": 0.8,
+     "series_max_error": 0.005372352662975801,
+     "all_pass": true,
+     "dx": 0.00625,
+     "wall_time_s": 1.40028109960258
+    }
+   }
+  ]
+ },
+ "verdict": {
+  "checks": {
+   "ritter-dry/translated_quarter": {
+    "limit_pp": 0.5,
+    "worst_delta_pp": -0.0001652234700732797,
+    "worst_n": 400,
+    "reference_n": 400,
+    "max_dx_rel": 0.0,
+    "pass": true,
+    "rows": [
+     {
+      "n": 400,
+      "reference_n": 400,
+      "dx_rel": 0.0,
+      "delta_pp": -0.0001652234700732797,
+      "variant_error": 0.0010574302086111434,
+      "baseline_error": 0.0010590824433118762
+     },
+     {
+      "n": 800,
+      "reference_n": 800,
+      "dx_rel": 0.0,
+      "delta_pp": -3.0533239720928994e-05,
+      "variant_error": 0.00039082546814366383,
+      "baseline_error": 0.0003911308005408731
+     },
+     {
+      "n": 1600,
+      "reference_n": 1600,
+      "dx_rel": 0.0,
+      "delta_pp": -6.740147642767566e-06,
+      "variant_error": 0.00017254777908634635,
+      "baseline_error": 0.00017261518056277403
+     }
+    ]
+   },
+   "ritter-dry/translated_half": {
+    "limit_pp": 0.5,
+    "worst_delta_pp": -0.0003299322253308033,
+    "worst_n": 400,
+    "reference_n": 400,
+    "max_dx_rel": 0.0,
+    "pass": true,
+    "rows": [
+     {
+      "n": 400,
+      "reference_n": 400,
+      "dx_rel": 0.0,
+      "delta_pp": -0.0003299322253308033,
+      "variant_error": 0.0010557831210585681,
+      "baseline_error": 0.0010590824433118762
+     },
+     {
+      "n": 800,
+      "reference_n": 800,
+      "dx_rel": 0.0,
+      "delta_pp": -6.101884563819654e-05,
+      "variant_error": 0.00039052061208449116,
+      "baseline_error": 0.0003911308005408731
+     },
+     {
+      "n": 1600,
+      "reference_n": 1600,
+      "dx_rel": 0.0,
+      "delta_pp": -1.3475033611458007e-05,
+      "variant_error": 0.00017248043022665945,
+      "baseline_error": 0.00017261518056277403
+     }
+    ]
+   },
+   "ritter-dry/tight_downstream": {
+    "limit_pp": 0.5,
+    "worst_delta_pp": -2.220446049250313e-14,
+    "worst_n": 648,
+    "reference_n": 800,
+    "max_dx_rel": 2.220446049250313e-16,
+    "pass": true,
+    "rows": [
+     {
+      "n": 328,
+      "reference_n": 400,
+      "dx_rel": 2.220446049250313e-16,
+      "delta_pp": 0.0,
+      "variant_error": 0.0010590824433118762,
+      "baseline_error": 0.0010590824433118762
+     },
+     {
+      "n": 648,
+      "reference_n": 800,
+      "dx_rel": 1.1102230246251565e-16,
+      "delta_pp": -2.220446049250313e-14,
+      "variant_error": 0.0003911308005406511,
+      "baseline_error": 0.0003911308005408731
+     },
+     {
+      "n": 1288,
+      "reference_n": 1600,
+      "dx_rel": 0.0,
+      "delta_pp": 0.0,
+      "variant_error": 0.00017261518056277403,
+      "baseline_error": 0.00017261518056277403
+     }
+    ]
+   },
+   "ritter-dry/wide_domain": {
+    "limit_pp": 0.1,
+    "worst_delta_pp": 2.220446049250313e-14,
+    "worst_n": 800,
+    "reference_n": 400,
+    "max_dx_rel": 0.0,
+    "pass": true,
+    "rows": [
+     {
+      "n": 800,
+      "reference_n": 400,
+      "dx_rel": 0.0,
+      "delta_pp": 2.220446049250313e-14,
+      "variant_error": 0.0010590824433120982,
+      "baseline_error": 0.0010590824433118762
+     },
+     {
+      "n": 1600,
+      "reference_n": 800,
+      "dx_rel": 0.0,
+      "delta_pp": 0.0,
+      "variant_error": 0.0003911308005408731,
+      "baseline_error": 0.0003911308005408731
+     },
+     {
+      "n": 3200,
+      "reference_n": 1600,
+      "dx_rel": 0.0,
+      "delta_pp": 0.0,
+      "variant_error": 0.00017261518056277403,
+      "baseline_error": 0.00017261518056277403
+     }
+    ]
+   },
+   "ritter-dry/control_tight_dx_rounding": {
+    "gated": false,
+    "max_dx_rel": 1.1102230246251565e-16,
+    "max_abs_delta_pp": 2.220446049250313e-14,
+    "active": false,
+    "pass": true,
+    "rows": [
+     {
+      "n": 328,
+      "reference_n": 400,
+      "dx_rel": 1.1102230246251565e-16,
+      "delta_pp": -2.220446049250313e-14
+     },
+     {
+      "n": 648,
+      "reference_n": 800,
+      "dx_rel": 1.1102230246251565e-16,
+      "delta_pp": -2.220446049250313e-14
+     },
+     {
+      "n": 1288,
+      "reference_n": 1600,
+      "dx_rel": 0.0,
+      "delta_pp": 0.0
+     }
+    ]
+   },
+   "ritter-dry/similarity_x2": {
+    "limit_rel": 1e-09,
+    "worst_rel": 7.934873003448646e-11,
+    "worst_n": 1600,
+    "pass": true,
+    "rows": [
+     {
+      "n": 400,
+      "position_ratio": {
+       "baseline": 1.0010590824433119,
+       "scaled": 1.0010590824332213,
+       "rel": 1.0079919560376731e-11
+      },
+      "depth_l1": {
+       "baseline": 0.0030833597748260435,
+       "scaled": 0.0030833597748104913,
+       "rel": 5.043923115938844e-12
+      },
+      "headline_rel_diagnostic": 9.527676612841053e-09,
+      "rel_max": 1.0079919560376731e-11
+     },
+     {
+      "n": 800,
+      "position_ratio": {
+       "baseline": 1.0003911308005409,
+       "scaled": 1.0003911307977906,
+       "rel": 2.7491691918546055e-12
+      },
+      "depth_l1": {
+       "baseline": 0.0015419003450595436,
+       "scaled": 0.001541900345173459,
+       "rel": 7.387986383463511e-11
+      },
+      "headline_rel_diagnostic": 7.0315210993311625e-09,
+      "rel_max": 7.387986383463511e-11
+     },
+     {
+      "n": 1600,
+      "position_ratio": {
+       "baseline": 1.0001726151805628,
+       "scaled": 1.0001726151792616,
+       "rel": 1.3009568199643009e-12
+      },
+      "depth_l1": {
+       "baseline": 0.0007715065657630972,
+       "scaled": 0.0007715065658243153,
+       "rel": 7.934873003448646e-11
+      },
+      "headline_rel_diagnostic": 7.538047236740514e-09,
+      "rel_max": 7.934873003448646e-11
+     }
+    ]
+   },
+   "stoker-wet/translated_quarter": {
+    "limit_pp": 0.5,
+    "worst_delta_pp": -0.0005267413589306888,
+    "worst_n": 400,
+    "reference_n": 400,
+    "max_dx_rel": 0.0,
+    "pass": true,
+    "rows": [
+     {
+      "n": 400,
+      "reference_n": 400,
+      "dx_rel": 0.0,
+      "delta_pp": -0.0005267413589306888,
+      "variant_error": 0.0015918386395045558,
+      "baseline_error": 0.0015971060530938627
+     },
+     {
+      "n": 800,
+      "reference_n": 800,
+      "dx_rel": 0.0,
+      "delta_pp": -7.146028552149335e-05,
+      "variant_error": 0.00043191308878934325,
+      "baseline_error": 0.0004326276916445582
+     },
+     {
+      "n": 1600,
+      "reference_n": 1600,
+      "dx_rel": 0.0,
+      "delta_pp": -1.7377327015183548e-05,
+      "variant_error": 0.00021006059330699674,
+      "baseline_error": 0.00021023436657714858
+     }
+    ]
+   },
+   "stoker-wet/translated_half": {
+    "limit_pp": 0.5,
+    "worst_delta_pp": -0.0010500196492832297,
+    "worst_n": 400,
+    "reference_n": 400,
+    "max_dx_rel": 0.0,
+    "pass": true,
+    "rows": [
+     {
+      "n": 400,
+      "reference_n": 400,
+      "dx_rel": 0.0,
+      "delta_pp": -0.0010500196492832297,
+      "variant_error": 0.0015866058566010304,
+      "baseline_error": 0.0015971060530938627
+     },
+     {
+      "n": 800,
+      "reference_n": 800,
+      "dx_rel": 0.0,
+      "delta_pp": -0.00014268488793618326,
+      "variant_error": 0.00043120084276519635,
+      "baseline_error": 0.0004326276916445582
+     },
+     {
+      "n": 1600,
+      "reference_n": 1600,
+      "dx_rel": 0.0,
+      "delta_pp": -3.472595063791289e-05,
+      "variant_error": 0.00020988710707076945,
+      "baseline_error": 0.00021023436657714858
+     }
+    ]
+   },
+   "stoker-wet/tight_downstream": {
+    "limit_pp": 0.5,
+    "worst_delta_pp": 6.813761794371986e-11,
+    "worst_n": 244,
+    "reference_n": 400,
+    "max_dx_rel": 0.0,
+    "pass": true,
+    "rows": [
+     {
+      "n": 244,
+      "reference_n": 400,
+      "dx_rel": 0.0,
+      "delta_pp": 6.813761794371986e-11,
+      "variant_error": 0.0015971060537752389,
+      "baseline_error": 0.0015971060530938627
+     },
+     {
+      "n": 480,
+      "reference_n": 800,
+      "dx_rel": 0.0,
+      "delta_pp": -3.47506582971252e-11,
+      "variant_error": 0.0004326276912970516,
+      "baseline_error": 0.0004326276916445582
+     },
+     {
+      "n": 951,
+      "reference_n": 1600,
+      "dx_rel": 0.0,
+      "delta_pp": -2.3935161578420017e-11,
+      "variant_error": 0.00021023436633779696,
+      "baseline_error": 0.00021023436657714858
+     }
+    ]
+   },
+   "stoker-wet/wide_domain": {
+    "limit_pp": 0.1,
+    "worst_delta_pp": 4.703269024242118e-14,
+    "worst_n": 800,
+    "reference_n": 400,
+    "max_dx_rel": 0.0,
+    "pass": true,
+    "rows": [
+     {
+      "n": 800,
+      "reference_n": 400,
+      "dx_rel": 0.0,
+      "delta_pp": 4.703269024242118e-14,
+      "variant_error": 0.001597106053094333,
+      "baseline_error": 0.0015971060530938627
+     },
+     {
+      "n": 1600,
+      "reference_n": 800,
+      "dx_rel": 0.0,
+      "delta_pp": 1.1758172560605296e-14,
+      "variant_error": 0.00043262769164467577,
+      "baseline_error": 0.0004326276916445582
+     },
+     {
+      "n": 3200,
+      "reference_n": 1600,
+      "dx_rel": 0.0,
+      "delta_pp": 0.0,
+      "variant_error": 0.00021023436657714858,
+      "baseline_error": 0.00021023436657714858
+     }
+    ]
+   },
+   "stoker-wet/control_tight_dx_rounding": {
+    "gated": false,
+    "max_dx_rel": 0.0018391557325083685,
+    "max_abs_delta_pp": 0.0866703792958699,
+    "active": true,
+    "pass": true,
+    "rows": [
+     {
+      "n": 244,
+      "reference_n": 400,
+      "dx_rel": 0.0018391557325083685,
+      "delta_pp": 0.0866703792958699
+     },
+     {
+      "n": 479,
+      "reference_n": 800,
+      "dx_rel": 0.00021397077773666062,
+      "delta_pp": 0.04526803835567375
+     },
+     {
+      "n": 950,
+      "reference_n": 1600,
+      "dx_rel": 0.0002157726369176327,
+      "delta_pp": 0.04412028383037642
+     }
+    ]
+   },
+   "stoker-wet/similarity_x2": {
+    "limit_rel": 1e-09,
+    "worst_rel": 4.59498593730913e-13,
+    "worst_n": 1600,
+    "pass": true,
+    "rows": [
+     {
+      "n": 400,
+      "position_ratio": {
+       "baseline": 1.001597106053094,
+       "scaled": 1.0015971060530922,
+       "rel": 1.7735243329527822e-15
+      },
+      "depth_l1": {
+       "baseline": 0.0017303304323634983,
+       "scaled": 0.001730330432363392,
+       "rel": 6.140550435701904e-14
+      },
+      "headline_rel_diagnostic": 1.1053104293363735e-12,
+      "rel_max": 6.140550435701904e-14
+     },
+     {
+      "n": 800,
+      "position_ratio": {
+       "baseline": 1.0004326276916446,
+       "scaled": 1.0004326276916429,
+       "rel": 1.7755886705723903e-15
+      },
+      "depth_l1": {
+       "baseline": 0.0008510840146864194,
+       "scaled": 0.0008510840146864073,
+       "rel": 1.4267762197732903e-14
+      },
+      "headline_rel_diagnostic": 4.077151205258162e-12,
+      "rel_max": 1.4267762197732903e-14
+     },
+     {
+      "n": 1600,
+      "position_ratio": {
+       "baseline": 1.000210234366577,
+       "scaled": 1.0002102343665775,
+       "rel": 4.439958666602725e-16
+      },
+      "depth_l1": {
+       "baseline": 0.0004271934800380538,
+       "scaled": 0.0004271934800382501,
+       "rel": 4.59498593730913e-13
+      },
+      "headline_rel_diagnostic": 1.6764481799952994e-12,
+      "rel_max": 4.59498593730913e-13
+     }
+    ]
+   },
+   "stoker-wet/depth_ratio": {
+    "limit": 0.05,
+    "worst_error": 0.0022969656402099933,
+    "worst_variant": "depth_ratio_0.8",
+    "worst_n": 400,
+    "max_extrema_amplitude": 0.00012721118068703685,
+    "pass": true,
+    "rows": [
+     {
+      "ratio": "depth_ratio_0.2",
+      "n": 400,
+      "headline": 0.0006774256094719111,
+      "local_extrema": 2,
+      "extrema_amplitude_over_h0": 0.0001233974356026346,
+      "all_pass": false
+     },
+     {
+      "ratio": "depth_ratio_0.2",
+      "n": 800,
+      "headline": 0.0004679270517925508,
+      "local_extrema": 0,
+      "extrema_amplitude_over_h0": 0.0,
+      "all_pass": true
+     },
+     {
+      "ratio": "depth_ratio_0.2",
+      "n": 1600,
+      "headline": 0.00015405882322379517,
+      "local_extrema": 1,
+      "extrema_amplitude_over_h0": 0.00012721118068703685,
+      "all_pass": false
+     },
+     {
+      "ratio": "depth_ratio_0.8",
+      "n": 400,
+      "headline": 0.0022969656402099933,
+      "local_extrema": 0,
+      "extrema_amplitude_over_h0": 0.0,
+      "all_pass": true
+     },
+     {
+      "ratio": "depth_ratio_0.8",
+      "n": 800,
+      "headline": 0.0012442303045924654,
+      "local_extrema": 0,
+      "extrema_amplitude_over_h0": 0.0,
+      "all_pass": true
+     },
+     {
+      "ratio": "depth_ratio_0.8",
+      "n": 1600,
+      "headline": 0.0006335565428514814,
+      "local_extrema": 0,
+      "extrema_amplitude_over_h0": 0.0,
+      "all_pass": true
+     }
+    ]
+   }
+  },
+  "all_pass": true
+ }
+}
