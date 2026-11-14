@@ -61,7 +61,7 @@ from dataclasses import dataclass
 import numpy as np
 
 __all__ = ['ChannelLESConfig', 'ChannelLES3D', 'van_driest_damping',
-           'smagorinsky_viscosity']
+           'smagorinsky_viscosity', 'reichardt_profile']
 
 
 # --------------------------------------------------------------------------- #
@@ -127,7 +127,37 @@ def smagorinsky_viscosity(du_dy, du_dx, du_dz, dv_dy, dv_dx, dv_dz,
     s23 = 0.5 * (dv_dz + dw_dy)
     magnitude = np.sqrt(2.0 * (s11 ** 2 + s22 ** 2 + s33 ** 2
                                + 2.0 * (s12 ** 2 + s13 ** 2 + s23 ** 2)))
-    return (cs * delta) ** 2 * magnitude * van_driest_damping(y_plus, a_plus)
+    # ``delta`` and ``y_plus`` are wall-normal columns on a stretched grid;
+    # they must be broadcast against the ``(ny, nx, nz)`` strain magnitude
+    # (``delta`` is the cell volume^(1/3), so it varies in ``y``).
+    delta = np.asarray(delta, dtype=float)
+    if delta.ndim == 1:
+        delta = delta[:, None, None]
+    y_plus = np.asarray(y_plus, dtype=float)
+    if y_plus.ndim == 1:
+        y_plus = y_plus[:, None, None]
+    damping = van_driest_damping(y_plus, a_plus)
+    return (cs * delta) ** 2 * magnitude * damping
+
+
+def reichardt_profile(y_plus, *, kappa=0.41, b=7.8, eta=11.0):
+    """Composite mean-velocity law ``u+(y+)`` (Reichardt 1951).
+
+    ``u+ = (1/kappa) ln(1 + 0.4 y+) + b (1 - exp(-y+/eta) - (y+/eta) exp(-y+/3))``
+
+    The law is smooth for every ``y+ >= 0``, reproduces ``u+ = y+`` in the
+    sublayer and the log law with ``kappa = 0.41`` in the overlap layer; it is
+    used as the *initial condition* of the turbulent channel, because the
+    laminar parabola ``G y (2-y) / (2 nu)`` peaks at ``Re_tau/2 = 90 u_tau`` at
+    ``Re_tau = 180`` and that mean shear violates the convective CFL of an
+    explicit scheme.
+    """
+    y_plus = np.asarray(y_plus, dtype=float)
+    if np.any(y_plus < 0.0):
+        raise ValueError('y+ must be non-negative')
+    return (1.0 / kappa) * np.log1p(0.4 * y_plus) \
+        + b * (1.0 - np.exp(-y_plus / eta)
+               - (y_plus / eta) * np.exp(-y_plus / 3.0))
 
 
 # --------------------------------------------------------------------------- #
@@ -178,6 +208,28 @@ class ChannelLES3D:
         if cfg.stretch <= 0:
             return 2.0 * xi
         return 1.0 - np.tanh(cfg.stretch * (1.0 - 2.0 * xi)) / np.tanh(cfg.stretch)
+
+    # -- explicit-scheme diagnostics ------------------------------------ #
+    def diffusion_number(self, nut=None):
+        """Wall-cell explicit diffusion number ``3 nu_eff dt / dy_wall^2``.
+
+        The wall row of the explicit scheme is
+        ``u0 <- u0 (1 - 3 nu dt/dy0^2) + ...`` (the wall flux uses the half-cell
+        conductance ``2 nu/dy0``), so the run is stable only while this number
+        stays below ``2``.  ``nut`` may be the SGS field from
+        :meth:`eddy_viscosity` to include the sub-grid contribution.
+        """
+        nu_eff = self.nu if nut is None else self.nu + np.asarray(nut)
+        nu_max = float(np.max(nu_eff)) if np.size(nu_eff) else float(nu_eff)
+        dy_wall = min(float(self.dy[0]), float(self.dy[-1]))
+        return 3.0 * nu_max * self.config.dt / dy_wall ** 2
+
+    def convective_cfl(self):
+        """Worst explicit convective CFL number over the three directions."""
+        cfg = self.config
+        return max(float(np.abs(self.u).max()) * cfg.dt / self.dx,
+                   float(np.abs(self.v).max()) * cfg.dt / float(self.dy.min()),
+                   float(np.abs(self.w).max()) * cfg.dt / self.dz)
 
     # -- interpolation helpers ----------------------------------------- #
     @staticmethod
@@ -269,26 +321,34 @@ class ChannelLES3D:
 
     # -- sub-grid and diffusion ----------------------------------------- #
     def velocity_gradients(self):
-        """Cell-centred velocity and its gradient tensor (input of the SGS model)."""
+        """Cell-centred velocity and its gradient tensor (input of the SGS model).
+
+        Every entry has shape ``(ny, nx, nz)``.  ``v`` lives on the y-faces, so
+        it is interpolated to the cell centres **once** (``vc``) before it is
+        differenced: differencing the face array directly left it with ``ny-1``
+        rows against ``ny`` rows for ``u``/``w``, which numpy reports as a
+        broadcast error inside :func:`smagorinsky_viscosity`.
+        """
         def dy_center(a):
+            """``d/dy`` of a cell-centred array; the stencil spans two cells."""
             out = np.empty_like(a)
-            out[1:-1] = (a[2:] - a[:-2]) / self.dy_cc[:, None, None]
             out[0] = (a[1] - a[0]) / self.dy_cc[0]
             out[-1] = (a[-1] - a[-2]) / self.dy_cc[-1]
+            out[1:-1] = (a[2:] - a[:-2]) / (self.dy_cc[1:] + self.dy_cc[:-1])[:, None, None]
             return out
 
+        vc = self._center_y(self.v)
         return dict(
             du_dx=(np.roll(self.u, -1, axis=1) - self.u) / self.dx,
             du_dy=dy_center(self.u),
             du_dz=(np.roll(self.u, -1, axis=2) - self.u) / self.dz,
-            dv_dx=(self.v[1:-1] - np.roll(self.v[1:-1], 1, axis=1)) / self.dx,
-            dv_dy=dy_center(self.v),
-            dv_dz=(self.v[1:-1] - np.roll(self.v[1:-1], 1, axis=2)) / self.dz,
+            dv_dx=0.5 * (np.roll(vc, -1, axis=1) - np.roll(vc, 1, axis=1)) / self.dx,
+            dv_dy=dy_center(vc),
+            dv_dz=0.5 * (np.roll(vc, -1, axis=2) - np.roll(vc, 1, axis=2)) / self.dz,
             dw_dx=(self.w - np.roll(self.w, 1, axis=1)) / self.dx,
             dw_dy=dy_center(self.w),
             dw_dz=(np.roll(self.w, -1, axis=2) - self.w) / self.dz,
-            uc=self._center_x(self.u), vc=self._center_y(self.v),
-            wc=self._center_z(self.w))
+            uc=self._center_x(self.u), vc=vc, wc=self._center_z(self.w))
 
     def eddy_viscosity(self):
         """Cell-centred SGS viscosity (Smagorinsky + van Driest)."""
@@ -312,13 +372,22 @@ class ChannelLES3D:
             """y-diffusion with a half-cell conductance at both walls."""
             flux = np.zeros((ny + 1, nx, nz))
             face = 0.5 * (nu_eff[1:] + nu_eff[:-1])
-            flux[1:-1] = face * (component[1:] - component[:-1]) / self.dy[:-1, None, None]
+            # the flux spans one cell *centre-to-centre* distance ``dy_cc``,
+            # not the cell thickness ``dy``; on the stretched grid the two
+            # differ by up to 1.5x and the steady solution then misses the
+            # analytic parabola by ~4 %
+            flux[1:-1] = face * (component[1:] - component[:-1]) / self.dy_cc[:, None, None]
             flux[0] = 2.0 * nu_eff[0] * component[0] / self.dy[0]
             flux[-1] = -2.0 * nu_eff[-1] * component[-1] / self.dy[-1]
             return (flux[1:] - flux[:-1]) / dy
 
         nu_x = 0.5 * (nu_eff + np.roll(nu_eff, 1, axis=1))
         nu_z = 0.5 * (nu_eff + np.roll(nu_eff, 1, axis=2))
+        # ``v`` lives on the y-faces: its transverse conductivities must be
+        # interpolated to the same faces (cell-centred arrays are ``ny`` rows,
+        # the interior ``v`` array is ``ny-1``).
+        nu_x_f = 0.5 * (nu_x[1:] + nu_x[:-1])
+        nu_z_f = 0.5 * (nu_z[1:] + nu_z[:-1])
 
         # u: x- and z-faces at cell centres
         lap_u = wall_normal(self.u)
@@ -328,14 +397,19 @@ class ChannelLES3D:
         lap_u += (np.roll(q, -1, axis=2) - q) / self.dz
 
         # v: y-faces at cell centres, x- and z-faces at x_j / z_k
+        # Adjacent ``v`` samples sit one *cell* apart, so the flux spacing is
+        # ``dy[i]`` (``ny`` entries) and the control volume of an interior face
+        # is ``0.5 (dy[i-1] + dy[i]) = dy_cc[i-1]`` (``ny-1`` entries).  Using
+        # ``dy_cc`` for both (the previous code) made the row count ``ny-1``
+        # collide with ``dy`` (``ny`` rows) and mis-scaled the flux.
         v = self.v[1:-1]
-        face = 0.5 * (nu_eff[1:] + nu_eff[:-1])
-        q = face * (self.v[2:] - v) / self.dy_cc[:, None, None]
-        qm = face * (v - self.v[:-2]) / self.dy_cc[:, None, None]
-        lap_v = (q - qm) / dy
-        q = nu_x * (v - np.roll(v, 1, axis=1)) / self.dx
+        nu_face = 0.5 * (nu_eff[1:] + nu_eff[:-1])
+        q = nu_face * (self.v[2:] - v) / self.dy[1:, None, None]
+        qm = nu_face * (v - self.v[:-2]) / self.dy[:-1, None, None]
+        lap_v = (q - qm) / self.dy_cc[:, None, None]
+        q = nu_x_f * (v - np.roll(v, 1, axis=1)) / self.dx
         lap_v += (np.roll(q, -1, axis=1) - q) / self.dx
-        q = nu_z * (v - np.roll(v, 1, axis=2)) / self.dz
+        q = nu_z_f * (v - np.roll(v, 1, axis=2)) / self.dz
         lap_v += (np.roll(q, -1, axis=2) - q) / self.dz
 
         # w: x-faces at x_j, z-faces at cell centres
@@ -433,16 +507,38 @@ class ChannelLES3D:
             raise FloatingPointError('non-finite velocity at step %d' % self.steps)
 
     # -- initial condition and statistics -------------------------------- #
-    def initialise(self, noise=0.1):
-        """Parabolic laminar profile plus random noise, projected once."""
+    def initialise(self, noise=0.1, profile='parabolic'):
+        """Mean profile plus random noise, projected once.
+
+        ``profile='parabolic'`` is the laminar solution (only appropriate when
+        the channel really is laminar, i.e. small ``Re_tau``);
+        ``profile='reichardt'`` is the turbulent composite law, whose peak is
+        ``~O(20) u_tau`` at ``Re_tau = 180`` and therefore respects the
+        convective CFL of the explicit scheme.
+        """
         cfg = self.config
         y = self.yc[:, None, None]
-        profile = self.body_force * y * (2.0 - y) / (2.0 * self.nu)
+        if profile == 'parabolic':
+            mean = self.body_force * y * (2.0 - y) / (2.0 * self.nu)
+        elif profile == 'reichardt':
+            mean = reichardt_profile(self.y_plus)[:, None, None] \
+                * math.sqrt(self.body_force * 1.0)
+        else:
+            raise ValueError("profile must be 'parabolic' or 'reichardt', "
+                             "got %r" % (profile,))
+        profile = mean
         self.u = profile * np.ones((cfg.ny, cfg.nx, cfg.nz))
         self.v = np.zeros((cfg.ny + 1, cfg.nx, cfg.nz))
         self.w = np.zeros((cfg.ny, cfg.nx, cfg.nz))
         if noise:
-            amplitude = noise * float(profile.max())
+            # The perturbation must be *friction-velocity* scaled, not scaled
+            # with the laminar profile: at Re_tau = 180 the parabola peaks at
+            # ``G delta / (2 nu) = Re_tau / 2 = 90 u_tau``, so ``0.1 * max``
+            # injected O(10 u_tau) cell-to-cell noise into cells that are
+            # ``y+ ~ 0.5`` thick and blew the explicit scheme up within ten
+            # steps (y-CFL > 4).  ``u_tau = sqrt(G delta)`` is the only
+            # amplitude in the problem that is independent of Re_tau.
+            amplitude = noise * math.sqrt(self.body_force * 1.0)
             self.u += amplitude * (self.rng.random(self.u.shape) - 0.5)
             self.v[1:-1] += amplitude * (self.rng.random(self.v[1:-1].shape) - 0.5)
             self.w += amplitude * (self.rng.random(self.w.shape) - 0.5)
