@@ -1,0 +1,130 @@
+{
+  "impl_files": [
+    "docs/audit_m20007/audited_src/benchmark_entrance_length.py",
+    "docs/audit_m20007/artifacts/recheck_entrance.py"
+  ],
+  "entry": [
+    "docs/audit_m20007/audited_src/benchmark_entrance_length.py"
+  ],
+  "entry_cmd": "PYTHONPATH=src python3 -m tensorfvm.benchmark_entrance_length case --re-h 200 --nx-per-h 8 --aspect 16",
+  "run_artifacts": [
+    "docs/audit_m20007/audited_runs/benchmark.json",
+    "docs/audit_m20007/audited_runs/metrics.csv",
+    "docs/audit_m20007/audited_runs/centerline_profiles.csv",
+    "docs/audit_m20007/audited_runs/fig_centerline_profiles.png",
+    "docs/audit_m20007/audited_runs/manifest.json",
+    "docs/audit_m20007/artifacts/repro/benchmark.json",
+    "docs/audit_m20007/artifacts/repro50/benchmark.json",
+    "docs/audit_m20007/artifacts/recheck_ny8_nx128_Re200.json"
+  ],
+  "tests": [
+    "docs/audit_m20007/test_audit_claims.py::test_ny8_ceiling_below_threshold",
+    "docs/audit_m20007/test_audit_claims.py::test_all_delivered_rows_are_domain_end_sentinels",
+    "docs/audit_m20007/test_audit_claims.py::test_delivered_dpdx_ref_disagrees_with_module_formula"
+  ],
+  "integration_callers": [],
+  "integration_callers_note": "none: module calls the repo kernel inc_bench/solver.py SteadyFlow, but grep -rn benchmark_entrance_length /root/tensor-ecosystem/TensorFVM -> 0 hits; tensorbench_results mission_id=20007 -> 0 rows; never committed (result.head_commit=null, git status all '??')",
+  "benchmark": {
+    "referee": "White 2006 §3-3.1 Eq(3-39) L_e/H = 0.06 Re_H (self-declared; 8% gate self-declared)",
+    "referee_rows_in_tensor_benchmark_cases": 0,
+    "delivered_verdict": "FAIL",
+    "tolerance": 0.08,
+    "rows": [
+      {
+        "re_h": 50.0,
+        "got_L_e/H": 7.9375,
+        "ref_L_e/H": 3.0,
+        "err_pct": 164.58,
+        "u_max_ubar": 1.4545,
+        "criterion_crossed": false
+      },
+      {
+        "re_h": 100.0,
+        "got_L_e/H": 15.9375,
+        "ref_L_e/H": 6.0,
+        "err_pct": 165.62,
+        "u_max_ubar": 1.4545,
+        "criterion_crossed": false
+      },
+      {
+        "re_h": 200.0,
+        "got_L_e/H": 15.9375,
+        "ref_L_e/H": 12.0,
+        "err_pct": 32.81,
+        "u_max_ubar": 1.4518,
+        "criterion_crossed": false
+      }
+    ],
+    "note": "3/3 got values equal the no-crossing fallback L/H-dx/2 (7.9375 / 15.9375); the 99% threshold 1.485 u_bar is structurally unattainable at n_y=8 (cell-centre parabola ceiling 1.47656, solver peak 1.4518) -> no entrance length was measured; and the delivered dp/dx ref for Re50 (-0.03) contradicts the module formula -12 nu u/H^2 (-0.24, auditor re-run gives -0.232838) so the artifact is not reproducible",
+    "auditor_reproduction_Re50": {
+      "name": "Re50-nx8-repro",
+      "re_h": 50.0,
+      "nx_per_H": 8,
+      "L/H": 8.0,
+      "ny": 8,
+      "nx": 64,
+      "L_e/H (computed)": 7.9375,
+      "L_e/H (White 2006)": 3.0,
+      "L_e/H error %": 164.58,
+      "passed_8pct": false,
+      "u_max/u_bar": 1.4545,
+      "u_max error %": 3.03,
+      "dp/dx": -0.232838,
+      "dp/dx ref": -0.24,
+      "dp/dx error %": 2.98,
+      "iterations": 702,
+      "converged": true,
+      "elapsed_s": 51.5
+    },
+    "auditor_reproduction_Re200": {
+      "name": "Re200-nx8-repro",
+      "re_h": 200.0,
+      "nx_per_H": 8,
+      "L/H": 16.0,
+      "ny": 8,
+      "nx": 128,
+      "L_e/H (computed)": 15.9375,
+      "L_e/H (White 2006)": 12.0,
+      "L_e/H error %": 32.81,
+      "passed_8pct": false,
+      "u_max/u_bar": 1.4518,
+      "u_max error %": 3.21,
+      "dp/dx": -0.059156,
+      "dp/dx ref": -0.06,
+      "dp/dx error %": 1.41,
+      "iterations": 758,
+      "converged": true,
+      "elapsed_s": 93.7
+    }
+  },
+  "repro_cmd": "PYTHONPATH=src python3 -m tensorfvm.benchmark_entrance_length case --re-h 200 --nx-per-h 8 --aspect 16 --name Re200-nx8-repro --out /tmp/repro200 -> reproduces L_e/H=15.9375, u_max/ubar=1.4518132018201726, iters=758 (94 s); Re50 path reproduces L_e/H=7.9375, u_max=1.4545, iters=702 but dp/dx=-0.232838 vs delivered -0.0296 -> partial reproduction only",
+  "external_anchor": "White, Viscous Fluid Flow 3rd ed (2006) §3-3.1 Eq (3-39) as cited by the delivery; auditor did NOT verify the 0.06 coefficient against a paper copy -> WITHHELD; independent of the coefficient, the delivered numbers are refuted as measurements (fallback sentinels, auditor harness Le_crossed=False)",
+  "level_rationale": "L2: real input->solve->output module, auditor reproduced L_e/H/u_max/iterations bit-identically, non-placeholder body, CLI entry, non-empty run artifacts. L3 refused: no mainline caller, module not in ecosystem repo, 0 platform ingestion. L4 refused: 0 referee rows for the anchor, delivered verdict FAIL, 3/3 rows are sentinel values, and the dp/dx fields are not reproducible from the delivered source. L5 refused: single textbook anchor.",
+  "findings": [
+    "F1 blocking: all 3 delivered L_e/H rows are the no-crossing fallback centerline_x_vals[-1] (benchmark_entrance_length.py:182-184) presented as measured entrance lengths (164.6/165.6/32.8%)",
+    "F2 blocking: 99%x1.5u=1.485u is unattainable at n_y=8 - closed-form cell-centre ceiling 1.5-1.5/ny^2=1.47656 < 1.485 and solver peak 1.4518 (3.2% low); even n_y never samples y=H/2; module hard-wires ny=nx_per_H so the whole PLAN sits in the unattainable regime",
+    "F7 major: delivered dp/dx and its reference are not reproducible from the delivered source - Re50 delivered -0.0296/-0.03 (err 1.33%) vs auditor re-run -0.232838/-0.24 (err 2.98%), 7.9x apart; recorded refs -0.03/-0.06/-0.06 contradict dpdx_ref=-12 nu u/H^2 (-0.24/-0.12/-0.06), so the report's '1.4% pressure-gradient accuracy' is false precision",
+    "F3 major: metrics.csv (1 row) and centerline_profiles.csv (1 case) truncated vs benchmark.json (3 cases) because write_artifacts opens with 'w'; manifest.json self-hash mismatch",
+    "F4 major: never committed (head_commit=null, git status '??'), module absent from /root/tensor-ecosystem/TensorFVM, 0 tensorbench_results rows -> not reusable, not integrated",
+    "F5 major: PLAN declares 6 cases, only the 3 n_y=8 ones ran; the discriminating n_y>=16 cases were never executed, so the report's 'needs n_y>=16 but no compute' conclusion is untested",
+    "F6 minor: 'zero hand-transcription' claim vs hard-coded WHITE_COEFF=0.06; unsourced 'n_y=16 verified <0.4% Poiseuille' claim; anchor has no referee row in tensor_benchmark_cases"
+  ],
+  "disposition": "accept as L2 (real reproducible module) / refuse L3+L4; approve with notes + request changes next round: (1) no-crossing must fail explicitly, never become a length; (2) criterion referenced to the discretely attainable peak, odd n_y allowed, PLAN with n_y>=16; (3) commit module + pytest gate incl. sentinel-must-fail regression; (4) register the referee row; (5) regenerate all artifacts from one multi-case run",
+  "checks_not_run": [
+    "delivered 'all' subcommand in one invocation (6 cases > 10 min local budget)",
+    "independent verification of the 0.06 Re_H coefficient against White 2006 (no copy in estate) -> WITHHELD",
+    "quantitative/pixel inspection of the 3 delivered PNGs beyond non-blank checks",
+    "n_y>=16 discriminating re-measurement submitted as cluster job cj2502 (queue position 26); not returned inside the audit window -> recorded as not_run"
+  ],
+  "audit_artifacts": [
+    "docs/audit_m20007/AUDIT-m20007-CASE-FVM-CHANNEL-DEVELOP.md",
+    "docs/audit_m20007/audited_src/benchmark_entrance_length.py",
+    "docs/audit_m20007/audited_runs/",
+    "docs/audit_m20007/audited_docs/REPORT.md",
+    "docs/audit_m20007/test_audit_claims.py",
+    "docs/audit_m20007/make_figures.py",
+    "docs/audit_m20007/figs/",
+    "docs/audit_m20007/artifacts/recheck_entrance.py"
+  ],
+  "origin": "read-only snapshot of /root/tp-agent/work/m20007 (agent/m20007, main 0a075ce8)"
+}

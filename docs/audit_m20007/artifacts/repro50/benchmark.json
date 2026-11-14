@@ -1,0 +1,29 @@
+{
+  "schema": "tensorfvm.entrance-length/1",
+  "reference": "White 2006, Viscous Fluid Flow 3rd ed., \u00a73-3.1, Eq. (3-39)",
+  "reference_formula": "L_e/H = 0.06 Re_H (parallel plates, 99% centreline)",
+  "tolerance": 0.08,
+  "verdict": "FAIL",
+  "cases": [
+    {
+      "name": "Re50-nx8-repro",
+      "re_h": 50.0,
+      "nx_per_H": 8,
+      "L/H": 8.0,
+      "ny": 8,
+      "nx": 64,
+      "L_e/H (computed)": 7.9375,
+      "L_e/H (White 2006)": 3.0,
+      "L_e/H error %": 164.58,
+      "passed_8pct": false,
+      "u_max/u_bar": 1.4545,
+      "u_max error %": 3.03,
+      "dp/dx": -0.232838,
+      "dp/dx ref": -0.24,
+      "dp/dx error %": 2.98,
+      "iterations": 702,
+      "converged": true,
+      "elapsed_s": 51.5
+    }
+  ]
+}
