@@ -1,0 +1,27 @@
+{
+  "artifacts": {
+    "SUMMARY_2D.md": "SUMMARY_2D.md",
+    "consistency_2d.json": "consistency_2d.json",
+    "convergence_2d.json": "convergence_2d.json",
+    "exactness_2d.json": "exactness_2d.json",
+    "manifest_2d.json": "manifest_2d.json",
+    "metrics_2d.json": "metrics_2d.json",
+    "modulation_2d.json": "modulation_2d.json",
+    "profile_2d_ritter-dry_nx800.csv": "profile_2d_ritter-dry_nx800.csv",
+    "profile_2d_stoker-wet_nx800.csv": "profile_2d_stoker-wet_nx800.csv"
+  },
+  "meta": {
+    "command": "PYTHONPATH=src python scripts/run_shallow_water_dam_break_2d.py --nx 800 --resolutions 200,400,800 --mod-nx 400 --consistency-nx 400 --out src/tensorfvm/verification/artifacts/shallow-water-dam-break-2d",
+    "generated_at": "2026-11-14T07:21:23Z",
+    "git_commit": "0a075ce83977b2bedd7992b38c7ba0a7e9a8f385",
+    "graded_nx": 800,
+    "numpy": "2.4.6",
+    "ny": 8,
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "python": "3.11.6",
+    "t_star": 2.0,
+    "tolerance": 0.05,
+    "transverse_roundoff_limit": 1e-12,
+    "wall_time_s": 56.14388397149742
+  }
+}
