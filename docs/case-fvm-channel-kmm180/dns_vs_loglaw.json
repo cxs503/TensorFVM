@@ -1,0 +1,35 @@
+{
+  "schema": "tensorfvm.dns-vs-loglaw/1",
+  "dns": {
+    "re_tau": 182.088,
+    "Cf": 0.008123255229619998
+  },
+  "classic_log_law": {
+    "kappa": 0.41,
+    "B": 5.2,
+    "rms_relative_log_region": 0.03139340471867089,
+    "rms_relative_full_range": 0.03650653573699653,
+    "mean_relative_log_region": 3.1296467964031254
+  },
+  "reichardt": {
+    "rms_relative_log_region": 0.01585380102648229,
+    "mean_relative_log_region": 1.5759497728901686
+  },
+  "fitted_log_law": {
+    "kappa": 0.3243779313437577,
+    "intercept": 3.376581864166732,
+    "rms_residual": 0.00298549106342478,
+    "cells": 4
+  },
+  "log_law_indicator": {
+    "kappa_local": 0.3241954464523367,
+    "xi_spread": 0.11298994386243777,
+    "cells": 4
+  },
+  "interpretation": {
+    "dns_vs_classic_log_law": "DNS deviates ~3.1% from classic log law in log region (y+ 30-36.4)",
+    "dns_vs_reichardt": "Reichardt fits better (~1.5% RMS), as expected for a composite law",
+    "effective_kappa": "DNS implies kappa=0.324 (below classic 0.41) at Re_tau=182",
+    "finite_re_effect": "Lower kappa and higher wake deviation are finite-Reynolds-number effects"
+  }
+}
