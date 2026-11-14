@@ -901,19 +901,38 @@ class PeriodicHillSolver:
 
 
 class Statistics:
-    """Reynolds-averaged fields accumulated over a stationary window."""
+    """Reynolds-averaged fields accumulated over a stationary window.
+
+    Besides the velocity sums, the *kinematic wall shear* on both walls is
+    accumulated (round 9).  The acceptance metrics of
+    ``CASE-FVM-PERIODIC-HILLS`` are means, and the separation/reattachment
+    lengths follow from the zero crossings of the **mean** wall shear, not from
+    the crossings of an individual snapshot -- so the mean shear must be part of
+    the accumulator rather than being re-derived afterwards (the instantaneous
+    crossing count changes from sample to sample, the mean's does not).
+    """
 
     def __init__(self, solver):
         self.samples = 0
         self.u = np.zeros_like(solver.u)
         self.v = np.zeros_like(solver.u)
         self.body_force = 0.0
+        self.tau_b = np.zeros(solver.mesh.tau_bottom.shape[0])
+        self.tau_t = np.zeros(solver.mesh.tau_top.shape[0])
 
     def accumulate(self, solver):
         self.samples += 1
         self.u += solver.u
         self.v += solver.v
         self.body_force += solver.body_force
+        tau_b, tau_t = solver.wall_shear()
+        self.tau_b += tau_b
+        self.tau_t += tau_t
+
+    def mean_wall_shear(self):
+        """Time-averaged ``(tau_b, tau_t)`` on the wall face centres."""
+        n = max(self.samples, 1)
+        return self.tau_b / n, self.tau_t / n
 
     def mean(self):
         n = max(self.samples, 1)
