@@ -1,13 +1,13 @@
 {
   "meta": {
     "meta": {
-      "generated_at": "2026-11-14T08:14:47Z",
+      "generated_at": "2026-11-14T13:55:18Z",
       "tolerance": 0.05,
       "t_star": 2.0,
       "python": "3.11.6",
       "numpy": "2.4.6",
       "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
-      "git_commit": "0a075ce8",
+      "git_commit": "c6d11630",
       "command": "PYTHONPATH=src python scripts/run_shallow_water_dam_break.py --n 1600 --resolutions 100,200,400,800,1600",
       "wall_time_s": null
     },
@@ -287,7 +287,7 @@
         "steps": 1513,
         "t_end": 0.638550856814101,
         "t_star_end": 2.0,
-        "wall_time_s": 3.1389282904565334,
+        "wall_time_s": 2.5313420593738556,
         "volume_initial": 4.0,
         "volume_final": 3.9999999999998708,
         "clipped_cells": 0,
@@ -747,7 +747,7 @@
         "steps": 918,
         "t_end": 0.638550856814101,
         "t_star_end": 2.0,
-        "wall_time_s": 1.860227020457387,
+        "wall_time_s": 1.5125237200409174,
         "volume_initial": 7.0,
         "volume_final": 6.999999999999908,
         "clipped_cells": 0,
