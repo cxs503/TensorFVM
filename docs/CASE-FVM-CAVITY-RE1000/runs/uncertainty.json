@@ -1,0 +1,192 @@
+{
+ "case": "CASE-FVM-CAVITY-RE1000",
+ "reynolds": 1000.0,
+ "grids": [
+  32,
+  64,
+  128
+ ],
+ "safety_factor": 1.25,
+ "functionals": {
+  "32": {
+   "u_min": -0.3276159087380135,
+   "u_min_y": 0.203125,
+   "v_max": 0.31790081010992954,
+   "v_max_x": 0.171875,
+   "psi_min": -0.11086017364234126,
+   "vortex_x": 0.546875,
+   "vortex_y": 0.609375,
+   "kinetic": 0.034464309179516164
+  },
+  "64": {
+   "u_min": -0.3730957888873246,
+   "u_min_y": 0.1796875,
+   "v_max": 0.3625262034735016,
+   "v_max_x": 0.1640625,
+   "psi_min": -0.11795804425297632,
+   "vortex_x": 0.5234375,
+   "vortex_y": 0.5703125,
+   "kinetic": 0.041609680383707284
+  },
+  "128": {
+   "u_min": -0.38530400738358145,
+   "u_min_y": 0.17578125,
+   "v_max": 0.3738665719785615,
+   "v_max_x": 0.16015625,
+   "psi_min": -0.11936906793199455,
+   "vortex_x": 0.52734375,
+   "vortex_y": 0.56640625,
+   "kinetic": 0.04379895328343299
+  }
+ },
+ "reference": {
+  "u_min": -0.38289,
+  "v_max": 0.37095,
+  "vortex_x": 0.5313,
+  "vortex_y": 0.5625
+ },
+ "quantities": {
+  "u_min": {
+   "quantity": "u_min",
+   "grids": [
+    32.0,
+    64.0,
+    128.0
+   ],
+   "values": [
+    -0.3276159087380135,
+    -0.3730957888873246,
+    -0.38530400738358145
+   ],
+   "refinement_ratios": [
+    2.0,
+    2.0
+   ],
+   "difference_coarse": -0.04547988014931109,
+   "difference_fine": -0.012208218496256862,
+   "observed_order": 1.897375764267098,
+   "safety_factor": 1.25,
+   "data_quality": {
+    "monotonic": true,
+    "order_admissible": true,
+    "note": "monotonic, observed order p=1.90",
+    "usable": true
+   },
+   "extrapolated": -0.3897835131084982,
+   "fine_minus_extrapolated": 0.0044795057249167325,
+   "gci_fine_absolute": 0.005599382156145884,
+   "gci_fine_relative": 0.014532374563578145,
+   "gci_coarse_relative": 0.06367106944476228,
+   "fine_grid_relative_error_estimate": 0.011492291424008587,
+   "reference": -0.38289,
+   "fine_minus_reference_relative": -0.006304702090891483,
+   "extrapolated_minus_reference_relative": -0.018003899575591353,
+   "reference_within_gci_band": true
+  },
+  "v_max": {
+   "quantity": "v_max",
+   "grids": [
+    32.0,
+    64.0,
+    128.0
+   ],
+   "values": [
+    0.31790081010992954,
+    0.3625262034735016,
+    0.3738665719785615
+   ],
+   "refinement_ratios": [
+    2.0,
+    2.0
+   ],
+   "difference_coarse": 0.044625393363572075,
+   "difference_fine": 0.011340368505059872,
+   "observed_order": 1.976397364864982,
+   "safety_factor": 1.25,
+   "data_quality": {
+    "monotonic": true,
+    "order_admissible": true,
+    "note": "monotonic, observed order p=1.98",
+    "usable": true
+   },
+   "extrapolated": 0.3777302902235447,
+   "fine_minus_extrapolated": -0.0038637182449832164,
+   "gci_fine_absolute": 0.004829647806229036,
+   "gci_fine_relative": 0.012918105463855113,
+   "gci_coarse_relative": 0.05978313937288157,
+   "fine_grid_relative_error_estimate": 0.01022877525309561,
+   "reference": 0.37095,
+   "fine_minus_reference_relative": 0.007862439624104297,
+   "extrapolated_minus_reference_relative": 0.01827817825460225,
+   "reference_within_gci_band": true
+  },
+  "psi_min": {
+   "quantity": "psi_min",
+   "grids": [
+    32.0,
+    64.0,
+    128.0
+   ],
+   "values": [
+    -0.11086017364234126,
+    -0.11795804425297632,
+    -0.11936906793199455
+   ],
+   "refinement_ratios": [
+    2.0,
+    2.0
+   ],
+   "difference_coarse": -0.0070978706106350625,
+   "difference_fine": -0.001411023679018228,
+   "observed_order": 2.3306440766391043,
+   "safety_factor": 1.25,
+   "data_quality": {
+    "monotonic": true,
+    "order_admissible": true,
+    "note": "monotonic, observed order p=2.33",
+    "usable": true
+   },
+   "extrapolated": -0.11971917192577025,
+   "fine_minus_extrapolated": 0.000350103993775705,
+   "gci_fine_absolute": 0.0004376299922196241,
+   "gci_fine_relative": 0.003666192589096408,
+   "gci_coarse_relative": 0.019857533311237893,
+   "fine_grid_relative_error_estimate": 0.0029243770078261214
+  },
+  "kinetic": {
+   "quantity": "kinetic",
+   "grids": [
+    32.0,
+    64.0,
+    128.0
+   ],
+   "values": [
+    0.034464309179516164,
+    0.041609680383707284,
+    0.04379895328343299
+   ],
+   "refinement_ratios": [
+    2.0,
+    2.0
+   ],
+   "difference_coarse": 0.00714537120419112,
+   "difference_fine": 0.0021892728997257027,
+   "observed_order": 1.706557159525823,
+   "safety_factor": 1.25,
+   "data_quality": {
+    "monotonic": true,
+    "order_admissible": true,
+    "note": "monotonic, observed order p=1.71",
+    "usable": true
+   },
+   "extrapolated": 0.04476602769056389,
+   "fine_minus_extrapolated": -0.0009670744071309037,
+   "gci_fine_absolute": 0.0012088430089136337,
+   "gci_fine_relative": 0.02759981502505176,
+   "gci_coarse_relative": 0.11447883992161165,
+   "fine_grid_relative_error_estimate": 0.021602863980150527
+  }
+ },
+ "time_step_status": "not_run: no same-grid/different-Courant artefacts under runs/dt at generation time",
+ "refined_grid_from_stored": false
+}
