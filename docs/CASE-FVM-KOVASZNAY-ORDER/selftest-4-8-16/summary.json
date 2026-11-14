@@ -1,11 +1,17 @@
 {
-  "title": "selftest 4/8/16",
+  "title": "CASE-FVM-KOVASZNAY-ORDER pipeline selftest 4/8/16 (pre-asymptotic, expected FAIL)",
   "levels": [
     {
       "n": 4,
       "h": 0.25,
       "cells": 16,
       "converged": true,
+      "configuration": {
+        "reynolds": 40.0,
+        "symmetry_closure": null,
+        "convection_order": 2,
+        "algorithm": "coupled"
+      },
       "outer_iterations": 33,
       "divergence_max": 2.3172574969976267e-12,
       "global_momentum_imbalance": 4.2027286512036355e-10,
@@ -20,13 +26,19 @@
         "pressure": 0.0077040312582104436
       },
       "solve_seconds": 1.127821570262313,
-      "directory": "runs/selftest/n4"
+      "directory": "docs/CASE-FVM-KOVASZNAY-ORDER/selftest-4-8-16/n4"
     },
     {
       "n": 8,
       "h": 0.125,
       "cells": 64,
       "converged": true,
+      "configuration": {
+        "reynolds": 40.0,
+        "symmetry_closure": null,
+        "convection_order": 2,
+        "algorithm": "coupled"
+      },
       "outer_iterations": 29,
       "divergence_max": 4.247269203005999e-12,
       "global_momentum_imbalance": 1.1105733327323314e-09,
@@ -41,13 +53,19 @@
         "pressure": 0.001947933835674318
       },
       "solve_seconds": 3.2215590700507164,
-      "directory": "runs/selftest/n8"
+      "directory": "docs/CASE-FVM-KOVASZNAY-ORDER/selftest-4-8-16/n8"
     },
     {
       "n": 16,
       "h": 0.0625,
       "cells": 256,
       "converged": true,
+      "configuration": {
+        "reynolds": 40.0,
+        "symmetry_closure": null,
+        "convection_order": 2,
+        "algorithm": "coupled"
+      },
       "outer_iterations": 24,
       "divergence_max": 2.7338131758369855e-12,
       "global_momentum_imbalance": 2.557052736868945e-10,
@@ -62,7 +80,7 @@
         "pressure": 0.0004883528971904604
       },
       "solve_seconds": 17.951740259304643,
-      "directory": "runs/selftest/n16"
+      "directory": "docs/CASE-FVM-KOVASZNAY-ORDER/selftest-4-8-16/n16"
     }
   ],
   "observed_orders": {
@@ -175,12 +193,120 @@
     "pressure_meanfree_pass": false,
     "all_levels_converged": true,
     "pass": false,
-    "pass_inplane": false
+    "pass_inplane": false,
+    "pair_orders_consistent": true,
+    "three_level_order": 1.4243212684046636,
+    "corroborated": false
+  },
+  "pair_consistency": {
+    "velocity_full": {
+      "pairs": [
+        1.4721387853706012,
+        1.5610912842447962
+      ],
+      "spread": 0.08895249887419499,
+      "band": 0.2,
+      "both_above": false,
+      "consistent": true
+    },
+    "velocity_inplane": {
+      "pairs": [
+        1.4889935229408124,
+        1.5912102189551334
+      ],
+      "spread": 0.10221669601432093,
+      "band": 0.2,
+      "both_above": false,
+      "consistent": true
+    },
+    "velocity_spanwise": {
+      "pairs": [
+        1.015817603702512,
+        1.1327313987100056
+      ],
+      "spread": 0.11691379500749366,
+      "band": 0.2,
+      "both_above": false,
+      "consistent": true
+    },
+    "pressure_fixed": {
+      "pairs": [
+        0.1514411562273092,
+        0.850209312790672
+      ],
+      "spread": 0.6987681565633628,
+      "band": 0.2,
+      "both_above": false,
+      "consistent": false
+    },
+    "pressure_meanfree": {
+      "pairs": [
+        0.6414573071691341,
+        1.4603327557773063
+      ],
+      "spread": 0.8188754486081722,
+      "band": 0.2,
+      "both_above": false,
+      "consistent": false
+    }
+  },
+  "three_level_estimates": {
+    "velocity_full": {
+      "quantity": "velocity_full",
+      "levels": [
+        4,
+        8,
+        16
+      ],
+      "order": 1.4243212684046636,
+      "order_stderr": null,
+      "convergence": "monotone",
+      "monotone": true,
+      "asymptotic": false,
+      "extrapolated": -0.0019930455686687234,
+      "gci": 1.448119255933649
+    },
+    "velocity_inplane": {
+      "quantity": "velocity_inplane",
+      "levels": [
+        4,
+        8,
+        16
+      ],
+      "order": 1.4353900549646557,
+      "order_stderr": null,
+      "convergence": "monotone",
+      "monotone": true,
+      "asymptotic": false,
+      "extrapolated": -0.0021744472733244563,
+      "gci": 1.476208271619837
+    },
+    "pressure_meanfree": {
+      "quantity": "pressure_meanfree",
+      "levels": [
+        4,
+        8,
+        16
+      ],
+      "order": 2.2616332742081413e-06,
+      "order_stderr": null,
+      "convergence": "monotone",
+      "monotone": true,
+      "asymptotic": false,
+      "extrapolated": -102202.39329598844,
+      "gci": 1396774.4411018428
+    }
   },
   "provenance": {
     "runner": "scripts/verify_kovasznay_order.py",
     "summarizer": "scripts/summarize_kovasznay_32_64_128.py",
     "errors_recomputed_from": "n<N>-fields.npz",
-    "recompute_rtol": 1e-10
+    "recompute_rtol": 1e-10,
+    "configuration": {
+      "reynolds": 40.0,
+      "symmetry_closure": null,
+      "convection_order": 2,
+      "algorithm": "coupled"
+    }
   }
 }
