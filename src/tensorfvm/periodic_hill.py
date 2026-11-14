@@ -60,6 +60,7 @@ __all__ = [
     "PeriodicHillConfig",
     "PeriodicHillMesh",
     "PeriodicHillSolver",
+    "eta_face_viscosity",
     "hill_profile",
     "analytic_flat_channel",
 ]
@@ -348,6 +349,57 @@ class PeriodicHillMesh:
         self.lsq_i11 = a22 / det
         self.lsq_i12 = -a12 / det
         self.lsq_i22 = a11 / det
+
+
+def eta_face_viscosity(mu_cell):
+    """Viscosity on the ``ny + 1`` eta levels of the terrain-following mesh.
+
+    A face belongs to exactly *one* level ``L`` but to *two* cells (``L-1`` as
+    its north face, ``L`` as its south face).  Both must read the same
+    coefficient, otherwise the discrete diffusion operator
+
+        ``L_h phi = (1/Vol_P) sum_f c_f mu_f (phi_N - phi_P)``
+
+    is neither conservative nor symmetric as soon as ``mu`` varies.  Rounds 4-12
+    wrote the south coefficient as the cell's *own* ``mu[j]`` while the north
+    coefficient was the face mean ``0.5*(mu[j] + mu[j+1])``, so the two sides of
+    one eta face disagreed by ``0.5*(mu[j] - mu[j+1])``.  With an eddy viscosity
+    that spans ~300 nu across the shear layer that is a first-order error, and it
+    breaks the discrete energy identity
+
+        ``sum_P Vol_P phi_P (L_h phi)_P = -sum_f c_f mu_f (phi_N - phi_P)^2``
+
+    which is the stability property the implicit solve relies on (measured: the
+    defective operator *produces* energy for a field that climbs the mu
+    gradient; see ``tests/test_periodic_hill_eta_face_viscosity.py``).
+
+    Round 13 rule: interior eta faces get the arithmetic mean of the two cells
+    they separate; the two wall levels (``0`` and ``ny``) keep the adjacent
+    cell's value, which is what makes a uniform ``mu`` reproduce the round-4
+    operator bit-for-bit.
+
+    Parameters
+    ----------
+    mu_cell : (ny, nx) array
+        Per-cell viscosity (``mu = nu + nu_t``), finite and positive.
+
+    Returns
+    -------
+    (ny + 1, nx) array
+        ``face[0] = mu_cell[0]`` (bottom wall level),
+        ``face[L] = 0.5*(mu_cell[L-1] + mu_cell[L])`` for ``0 < L < ny``,
+        ``face[ny] = mu_cell[ny-1]`` (top wall level).
+    """
+    mu = np.asarray(mu_cell, dtype=float)
+    if mu.ndim != 2:
+        raise ValueError(f"mu_cell must be 2-D, got shape {mu.shape}")
+    if not np.all(np.isfinite(mu)) or np.any(mu <= 0.0):
+        raise ValueError("mu_cell must be finite and positive")
+    face = np.empty((mu.shape[0] + 1, mu.shape[1]))
+    face[0] = mu[0]
+    face[-1] = mu[-1]
+    face[1:-1] = 0.5 * (mu[1:] + mu[:-1])
+    return face
 
 
 class PeriodicHillSolver:
@@ -696,7 +748,9 @@ class PeriodicHillSolver:
         """Assemble ``M = I/dt - (1/Vol) sum_f c_f mu_f (phi_N - phi_P)``.
 
         ``mu_cell`` is the *total* kinematic viscosity (``nu + nu_t``) per cell.
-        Faces use the arithmetic mean of the two neighbouring cells; the two
+        Faces use the arithmetic mean of the two neighbouring cells (both sides
+        of an eta face read the same number, see :func:`eta_face_viscosity`);
+        the two
         walls are Dirichlet with the adjacent cell's value (the wall-normal
         distance is already inside ``c_f``), so a uniform ``mu_cell`` reproduces
         the round-4 operator bit-for-bit (``0.5*(a+a) == a``).
@@ -716,14 +770,17 @@ class PeriodicHillSolver:
             raise ValueError("mu_cell must be finite and positive")
         mue = 0.5 * (mu + mu[:, m.ip])
         muw = 0.5 * (mu + mu[:, m.im])
+        mu_eta = eta_face_viscosity(mu)
         rows, cols, vals = [], [], []
         diag = np.zeros((ny, nx))
         for j in range(ny):
             p = np.arange(j * nx, (j + 1) * nx)
             ce_e = c_e[j] * mue[j]
             ce_w = c_e[j, m.im] * muw[j]
-            cn_s = c_n[j] * mu[j]                       # wall when j == 0
-            cn_n = c_n[j + 1] * (mu[j] if j == ny - 1 else 0.5 * (mu[j] + mu[j + 1]))
+            # Round 13: one coefficient per eta face, shared by the two cells it
+            # separates (the north face of row j-1 and the south face of row j).
+            cn_s = c_n[j] * mu_eta[j]                   # wall level when j == 0
+            cn_n = c_n[j + 1] * mu_eta[j + 1]           # wall level when j == ny - 1
             rows.append(p); cols.append(self._cell(j, np.arange(nx) + 1))
             vals.append(ce_e / vols[j])
             rows.append(p); cols.append(self._cell(j, np.arange(nx) - 1))

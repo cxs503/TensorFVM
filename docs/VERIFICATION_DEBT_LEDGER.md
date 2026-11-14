@@ -507,3 +507,28 @@
 - 环境坑（重要）: site-packages 的 editable `.pth` 指向 `/root/tp-agent/work/m20057/src`，
   裸 `python -m pytest` 会导到别人的工作树（本单实测新测试曾因此报 AttributeError）。
   必须 `PYTHONPATH=<本工作树>/src`，集群用 `stage_dir` 而不是 `ref=main`。
+
+### D15 CASE-FVM-PERIODIC-HILLS 第十三回合（m20987, 2026-11-15）—— 动量/SA 输运的 eta 面配对缺陷已修，round-12 待办已闭环，锚点仍 OPEN
+- 起因: round 12 收尾时 (a) 修好闭包的 96x48 重跑 cj3059 仍在跑（判据 WITHHELD），
+  (b) 明示未修「父求解器动量扩散算子南面用 P 元胞系数」。
+- 交付 A（闭环 round-12 待办）: cj3059 succeeded，取回 `round11_sst_r12-96x48.{json,npz}`
+  并用 `scripts/round12_analysis.py` 打分：`x_r/H = 3.144`（vs 5.41 → 41.9%）、
+  `y/H=0.5` 0/7 站点进 10%、`max nu_t/nu = 297`、`x_r/H` 平稳性 spread_rel 2.5e-5。
+  即：round 12 的两处输运修复把 2.046→3.144（+54%），缺陷真实且实质；但均值仍过扩散，
+  锚点验收仍 FAIL，SST 模型类结论继续 WITHHELD（求解器仍有实测离散缺陷）。
+- 交付 B（修缺陷）: 新增 `periodic_hill.eta_face_viscosity`（一个 eta 面一个 μ，两侧共享；
+  壁面层用相邻元胞值），`_assemble_momentum` 与 `SpalartAllmaras._diffusion_operator`
+  改用它（SST 输运已在 round 12 修过）。
+  实测（32x16，`nu_t/nu` 至 300）: 旧算子与面循环定义矩阵有 960 项不同（最大 0.944）；
+  离散耗散恒等式 `Σ_P Vol_P φ_P(Lφ)_P = -Σ_f c_f μ_f (φ_N-φ_P)²` 被破坏
+  **3.65%（ν_t/ν=100 时 3.53%，=0 时 0）**，符号随 `dμ/dη` 翻转
+  （增厚处欠耗散 +3.5%，变薄处过耗散 -3.2%）。不是「产生能量」，是耗散量错。
+- 测试: `tests/test_periodic_hill_eta_face_viscosity.py` 8 测全绿（独立面循环 1e-14、
+  耗散恒等式 1e-10、旧规则负对照用解析 `max c_n*0.5|Δμ|/Vol` 1e-12、均匀 μ 逐位兼容、
+  SA 算子同规则）；回归 `test_periodic_hill{,_round2,_round3}` 22 passed、
+  round-12 SST 系数测试 5 passed（须 `PYTHONPATH=<worktree>/src`）。
+- 待办（交下一单）: cj3108（96x48 固定算子 + 固定闭包，stag_dir 本工作树）提交时排队位次 26，
+  出数后读 `round11_sst_r13-96x48.json` 打分，判 41.9% 缺口是否由该缺陷解释。
+- **数字时效性**: 本修复改变 rounds 7–12 全部含 ν_t 的动量结果（rounds 4–6 常黏度门是
+  逐位不变的）。旧数字保留原样记录，不回溯改写。
+- 产物: `docs/case-periodic-hills/{ROUND13.md,round13_operator_defect.json,fig_round13_eta_face_operator.png}`。
