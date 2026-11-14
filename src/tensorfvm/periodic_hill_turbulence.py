@@ -65,6 +65,8 @@ import math
 
 import numpy as np
 
+from tensorfvm.periodic_hill import eta_face_viscosity
+
 __all__ = [
     "SpalartAllmarasConfig",
     "SpalartAllmaras",
@@ -216,14 +218,21 @@ class SpalartAllmaras:
         mu = np.asarray(mu_cell, dtype=float)
         mue = 0.5 * (mu + mu[:, m.ip])
         muw = 0.5 * (mu + mu[:, m.im])
+        # Round 13: same eta-face pairing rule as the momentum operator
+        # (:func:`tensorfvm.periodic_hill.eta_face_viscosity`).  The round-12
+        # finding for the SST transport applies verbatim here: the south
+        # coefficient was the cell's own ``mu[j]`` while the north coefficient of
+        # the row below was ``0.5*(mu[j-1] + mu[j])``, so one face carried two
+        # different conductances and the operator stopped being conservative.
+        mu_eta = eta_face_viscosity(mu)
         rows, cols, vals = [], [], []
         diag = np.zeros((ny, nx))
         for j in range(ny):
             p = np.arange(j * nx, (j + 1) * nx)
             ce_e = c_e[j] * mue[j]
             ce_w = c_e[j, m.im] * muw[j]
-            cn_s = c_n[j] * mu[j]
-            cn_n = c_n[j + 1] * (mu[j] if j == ny - 1 else 0.5 * (mu[j] + mu[j + 1]))
+            cn_s = c_n[j] * mu_eta[j]
+            cn_n = c_n[j + 1] * mu_eta[j + 1]
             rows.append(p); cols.append(self.solver._cell(j, np.arange(nx) + 1))
             vals.append(ce_e / vols[j])
             rows.append(p); cols.append(self.solver._cell(j, np.arange(nx) - 1))
