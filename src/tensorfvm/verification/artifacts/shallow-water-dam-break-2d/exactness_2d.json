@@ -1,0 +1,42 @@
+{
+  "ritter": {
+    "fan_mass": 2.0000000000002505,
+    "fan_mass_expected": 2.0,
+    "fan_mass_relative": 1.2523315717771766e-13,
+    "front_expected": 2.0,
+    "front_over_c0t": 2.0,
+    "h_at_dam_expected": 0.4444444444444444,
+    "h_at_dam_over_h0": 0.4444444444444445,
+    "h_at_dam_residual": 5.551115123125783e-17,
+    "u_at_dam_expected": 0.6666666666666666,
+    "u_at_dam_over_c0": 0.6666666666666666,
+    "u_at_dam_residual": 0.0
+  },
+  "stoker": {
+    "mass_jump_relative": 0.0,
+    "mass_jump_residual": 0.0,
+    "momentum_jump_relative": 1.1183926413249513e-16,
+    "momentum_jump_residual": -2.220446049250313e-16,
+    "riemann_invariant_relative": 0.0,
+    "riemann_invariant_residual": 0.0
+  },
+  "stoker_gravity": 9.81,
+  "stoker_h0_h1": [
+    1.0,
+    0.5
+  ],
+  "stoker_state": {
+    "c0": 3.132091952673165,
+    "c1": 2.2147234590350102,
+    "c2": 2.6704100016846253,
+    "g": 9.81,
+    "h0": 1.0,
+    "h1": 0.5,
+    "h2": 0.7269204461872865,
+    "head_speed": -3.132091952673165,
+    "shock_speed": 2.957918120187525,
+    "step_ratio": 1.453840892374573,
+    "tail_speed": -1.7470460997075454,
+    "u2": 0.9233639019770798
+  }
+}
