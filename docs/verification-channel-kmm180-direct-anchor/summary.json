@@ -1,0 +1,827 @@
+{
+  "anchor": "CASE-FVM-CHANNEL-KMM180",
+  "cases": [
+    {
+      "Cf": 0.008412357906898654,
+      "Cf_deviation": {
+        "anchor_relative": 0.03397386850956505,
+        "proxy_relative": 0.035589510498758546
+      },
+      "anchor": {
+        "full": {
+          "cells": 33,
+          "high": 178.12,
+          "low": 30.0,
+          "max_offset": 0.6929864620325006,
+          "max_relative": 0.04928455488744403,
+          "mean_relative": -0.020194332893395603,
+          "offset": -0.3165899296605338,
+          "rms_relative": 0.023676701027109198,
+          "verdict": "PASS"
+        },
+        "log_layer": {
+          "cells": 2,
+          "high": 35.624,
+          "low": 30.0,
+          "reason": "window [30, 35.624] holds fewer than three model cells (found 2)",
+          "verdict": "NOT_GRADED"
+        },
+        "overall_verdict": "NOT_GRADED",
+        "re_tau": 178.12,
+        "reference": "MKM1999 chan180 (KMM1987 method)",
+        "tolerance": 0.05
+      },
+      "bulk_deviation": {
+        "anchor_relative": 0.016566001073360998,
+        "proxy_relative": 0.017333437127461826
+      },
+      "bulk_u_plus": 15.418997109291384,
+      "delta_rms_pp": {
+        "full": 0.11991358718728938,
+        "log_layer": null
+      },
+      "first_cell_y_plus": 0.22630697783772655,
+      "gradability_change": {
+        "full": false,
+        "log_layer": true
+      },
+      "iterations": 2223,
+      "model": "sst",
+      "n": 64,
+      "proxy": {
+        "full": {
+          "cells": 33,
+          "high": 180.5584715562184,
+          "low": 30.0,
+          "max_offset": 0.6825287569798988,
+          "max_relative": 0.048576941322405705,
+          "mean_relative": -0.017680915501013878,
+          "offset": -0.27306537769303424,
+          "rms_relative": 0.022477565155236304,
+          "verdict": "PASS"
+        },
+        "log_layer": {
+          "cells": 3,
+          "high": 36.4176,
+          "low": 30.0,
+          "max_offset": 0.6825287569798988,
+          "max_relative": 0.048576941322405705,
+          "mean_relative": -0.046048197900400656,
+          "offset": -0.6551440339913134,
+          "rms_relative": 0.046095362639422766,
+          "verdict": "PASS"
+        },
+        "overall_verdict": "PASS",
+        "re_tau": 182.088,
+        "reference": "reference",
+        "tolerance": 0.05
+      },
+      "verdict_change": {
+        "full": false,
+        "log_layer": false
+      }
+    },
+    {
+      "Cf": 0.008558453913395834,
+      "Cf_deviation": {
+        "anchor_relative": 0.051930718976876865,
+        "proxy_relative": 0.05357441954906964
+      },
+      "anchor": {
+        "full": {
+          "cells": 67,
+          "high": 178.12,
+          "low": 30.0,
+          "max_offset": 0.840725054471223,
+          "max_relative": 0.06042022975731807,
+          "mean_relative": -0.02924509566822238,
+          "offset": -0.462549224738392,
+          "rms_relative": 0.03209465910201183,
+          "verdict": "PASS"
+        },
+        "log_layer": {
+          "cells": 6,
+          "high": 35.624,
+          "low": 30.0,
+          "max_offset": 0.840725054471223,
+          "max_relative": 0.06042022975731807,
+          "mean_relative": -0.057164489464887704,
+          "offset": -0.8085198966126507,
+          "rms_relative": 0.0572096342171043,
+          "verdict": "FAIL"
+        },
+        "overall_verdict": "FAIL",
+        "re_tau": 178.12,
+        "reference": "MKM1999 chan180 (KMM1987 method)",
+        "tolerance": 0.05
+      },
+      "bulk_deviation": {
+        "anchor_relative": 0.02499592434154918,
+        "proxy_relative": 0.025756781990737863
+      },
+      "bulk_u_plus": 15.286826610157117,
+      "delta_rms_pp": {
+        "full": 0.15413239131552814,
+        "log_layer": 0.06346185901806162
+      },
+      "first_cell_y_plus": 0.11182753216752277,
+      "gradability_change": {
+        "full": false,
+        "log_layer": false
+      },
+      "iterations": 2229,
+      "model": "sst",
+      "n": 128,
+      "proxy": {
+        "full": {
+          "cells": 67,
+          "high": 180.5584715562184,
+          "low": 30.0,
+          "max_offset": 0.82838389552807,
+          "max_relative": 0.05958615814367866,
+          "mean_relative": -0.026777731008576746,
+          "offset": -0.4194928202650582,
+          "rms_relative": 0.030553335188856546,
+          "verdict": "PASS"
+        },
+        "log_layer": {
+          "cells": 6,
+          "high": 36.4176,
+          "low": 30.0,
+          "max_offset": 0.82838389552807,
+          "max_relative": 0.05958615814367866,
+          "mean_relative": -0.0565345705417078,
+          "offset": -0.7990904590926821,
+          "rms_relative": 0.056575015626923686,
+          "verdict": "FAIL"
+        },
+        "overall_verdict": "FAIL",
+        "re_tau": 182.088,
+        "reference": "reference",
+        "tolerance": 0.05
+      },
+      "verdict_change": {
+        "full": false,
+        "log_layer": false
+      }
+    },
+    {
+      "Cf": 0.008631264863832628,
+      "Cf_deviation": {
+        "anchor_relative": 0.06088000774064342,
+        "proxy_relative": 0.06253769207697232
+      },
+      "anchor": {
+        "full": {
+          "cells": 133,
+          "high": 178.12,
+          "low": 30.0,
+          "max_offset": 0.9067561356816523,
+          "max_relative": 0.06528360269810034,
+          "mean_relative": -0.03352537207623774,
+          "offset": -0.5318917865262267,
+          "rms_relative": 0.03611941481721462,
+          "verdict": "PASS"
+        },
+        "log_layer": {
+          "cells": 11,
+          "high": 35.624,
+          "low": 30.0,
+          "max_offset": 0.9067561356816523,
+          "max_relative": 0.06528360269810034,
+          "mean_relative": -0.06204500883941617,
+          "offset": -0.8762092966421743,
+          "rms_relative": 0.06208062500253923,
+          "verdict": "FAIL"
+        },
+        "overall_verdict": "FAIL",
+        "re_tau": 178.12,
+        "reference": "MKM1999 chan180 (KMM1987 method)",
+        "tolerance": 0.05
+      },
+      "bulk_deviation": {
+        "anchor_relative": 0.02911706558823892,
+        "proxy_relative": 0.029874707248982824
+      },
+      "bulk_u_plus": 15.222212345204873,
+      "delta_rms_pp": {
+        "full": 0.17311688792632923,
+        "log_layer": 0.12859000682821364
+      },
+      "first_cell_y_plus": 0.05558615010987304,
+      "gradability_change": {
+        "full": false,
+        "log_layer": false
+      },
+      "iterations": 2231,
+      "model": "sst",
+      "n": 256,
+      "proxy": {
+        "full": {
+          "cells": 134,
+          "high": 180.5584715562184,
+          "low": 30.0,
+          "max_offset": 0.8941260200386747,
+          "max_relative": 0.06443286457515271,
+          "mean_relative": -0.03098839131443698,
+          "offset": -0.48798309421399666,
+          "rms_relative": 0.034388245937951326,
+          "verdict": "PASS"
+        },
+        "log_layer": {
+          "cells": 13,
+          "high": 36.4176,
+          "low": 30.0,
+          "max_offset": 0.8941260200386747,
+          "max_relative": 0.06443286457515271,
+          "mean_relative": -0.06074815517473539,
+          "offset": -0.8599610430652282,
+          "rms_relative": 0.0607947249342571,
+          "verdict": "FAIL"
+        },
+        "overall_verdict": "FAIL",
+        "re_tau": 182.088,
+        "reference": "reference",
+        "tolerance": 0.05
+      },
+      "verdict_change": {
+        "full": false,
+        "log_layer": false
+      }
+    },
+    {
+      "Cf": 0.010063897603415861,
+      "Cf_deviation": {
+        "anchor_relative": 0.2369667639502871,
+        "proxy_relative": 0.23889959368993577
+      },
+      "anchor": {
+        "full": {
+          "cells": 33,
+          "high": 178.12,
+          "low": 30.0,
+          "max_offset": 1.9284265809643006,
+          "max_relative": 0.1371479110821125,
+          "mean_relative": -0.1073962837809993,
+          "offset": -1.7455893915774947,
+          "rms_relative": 0.10829341834032391,
+          "verdict": "FAIL"
+        },
+        "log_layer": {
+          "cells": 2,
+          "high": 35.624,
+          "low": 30.0,
+          "reason": "window [30, 35.624] holds fewer than three model cells (found 2)",
+          "verdict": "NOT_GRADED"
+        },
+        "overall_verdict": "NOT_GRADED",
+        "re_tau": 178.12,
+        "reference": "MKM1999 chan180 (KMM1987 method)",
+        "tolerance": 0.05
+      },
+      "bulk_deviation": {
+        "anchor_relative": 0.10087311326979692,
+        "proxy_relative": 0.10157475912589027
+      },
+      "bulk_u_plus": 14.097168577159742,
+      "delta_rms_pp": {
+        "full": 0.2080945134284154,
+        "log_layer": null
+      },
+      "first_cell_y_plus": 0.22630697783772655,
+      "gradability_change": {
+        "full": false,
+        "log_layer": true
+      },
+      "iterations": 2773,
+      "model": "komega",
+      "n": 64,
+      "proxy": {
+        "full": {
+          "cells": 33,
+          "high": 180.5584715562184,
+          "low": 30.0,
+          "max_offset": 1.9179688759116988,
+          "max_relative": 0.13650569384889222,
+          "mean_relative": -0.10510220105491104,
+          "offset": -1.7020648396099956,
+          "rms_relative": 0.10621247320603976,
+          "verdict": "FAIL"
+        },
+        "log_layer": {
+          "cells": 3,
+          "high": 36.4176,
+          "low": 30.0,
+          "max_offset": 1.9179688759116988,
+          "max_relative": 0.13650569384889222,
+          "mean_relative": -0.13456493635784508,
+          "offset": -1.915167215658574,
+          "rms_relative": 0.13457471548336483,
+          "verdict": "FAIL"
+        },
+        "overall_verdict": "FAIL",
+        "re_tau": 182.088,
+        "reference": "reference",
+        "tolerance": 0.05
+      },
+      "verdict_change": {
+        "full": false,
+        "log_layer": false
+      }
+    },
+    {
+      "Cf": 0.010050189754030997,
+      "Cf_deviation": {
+        "anchor_relative": 0.23528191432616546,
+        "proxy_relative": 0.23721211139405995
+      },
+      "anchor": {
+        "full": {
+          "cells": 67,
+          "high": 178.12,
+          "low": 30.0,
+          "max_offset": 1.9176784886577138,
+          "max_relative": 0.13769135273741295,
+          "mean_relative": -0.10723405908656695,
+          "offset": -1.738015715717862,
+          "rms_relative": 0.10817829396872018,
+          "verdict": "FAIL"
+        },
+        "log_layer": {
+          "cells": 6,
+          "high": 35.624,
+          "low": 30.0,
+          "max_offset": 1.9176784886577138,
+          "max_relative": 0.13769135273741295,
+          "mean_relative": -0.13534893898225345,
+          "offset": -1.9149240667613217,
+          "rms_relative": 0.1353594307359017,
+          "verdict": "FAIL"
+        },
+        "overall_verdict": "FAIL",
+        "re_tau": 178.12,
+        "reference": "MKM1999 chan180 (KMM1987 method)",
+        "tolerance": 0.05
+      },
+      "bulk_deviation": {
+        "anchor_relative": 0.10026014493608851,
+        "proxy_relative": 0.10096226913033148
+      },
+      "bulk_u_plus": 14.106779142765419,
+      "delta_rms_pp": {
+        "full": 0.20552695898437695,
+        "log_layer": 0.05791697421523023
+      },
+      "first_cell_y_plus": 0.11182753216752277,
+      "gradability_change": {
+        "full": false,
+        "log_layer": false
+      },
+      "iterations": 2776,
+      "model": "komega",
+      "n": 128,
+      "proxy": {
+        "full": {
+          "cells": 67,
+          "high": 180.5584715562184,
+          "low": 30.0,
+          "max_offset": 1.9078085426973548,
+          "max_relative": 0.13692587524667071,
+          "mean_relative": -0.10496136768779708,
+          "offset": -1.6949593112445285,
+          "rms_relative": 0.10612302437887641,
+          "verdict": "FAIL"
+        },
+        "log_layer": {
+          "cells": 6,
+          "high": 36.4176,
+          "low": 30.0,
+          "max_offset": 1.9078085426973548,
+          "max_relative": 0.13692587524667071,
+          "mean_relative": -0.13477119829492526,
+          "offset": -1.905494629241353,
+          "rms_relative": 0.1347802609937494,
+          "verdict": "FAIL"
+        },
+        "overall_verdict": "FAIL",
+        "re_tau": 182.088,
+        "reference": "reference",
+        "tolerance": 0.05
+      },
+      "verdict_change": {
+        "full": false,
+        "log_layer": false
+      }
+    },
+    {
+      "Cf": 0.010045543621644764,
+      "Cf_deviation": {
+        "anchor_relative": 0.23471085214239162,
+        "proxy_relative": 0.23664015689369028
+      },
+      "anchor": {
+        "full": {
+          "cells": 133,
+          "high": 178.12,
+          "low": 30.0,
+          "max_offset": 1.9143259460504023,
+          "max_relative": 0.13763360497895671,
+          "mean_relative": -0.1071223777381769,
+          "offset": -1.734692547994784,
+          "rms_relative": 0.10806634886075829,
+          "verdict": "FAIL"
+        },
+        "log_layer": {
+          "cells": 11,
+          "high": 35.624,
+          "low": 30.0,
+          "max_offset": 1.9143259460504023,
+          "max_relative": 0.13763360497895671,
+          "mean_relative": -0.13536179980428176,
+          "offset": -1.9120505764029014,
+          "rms_relative": 0.13537043587708944,
+          "verdict": "FAIL"
+        },
+        "overall_verdict": "FAIL",
+        "re_tau": 178.12,
+        "reference": "MKM1999 chan180 (KMM1987 method)",
+        "tolerance": 0.05
+      },
+      "bulk_deviation": {
+        "anchor_relative": 0.10005210108134802,
+        "proxy_relative": 0.10075438762543361
+      },
+      "bulk_u_plus": 14.110041006396685,
+      "delta_rms_pp": {
+        "full": 0.2155918794059672,
+        "log_layer": 0.10838707905287959
+      },
+      "first_cell_y_plus": 0.05558615010987304,
+      "gradability_change": {
+        "full": false,
+        "log_layer": false
+      },
+      "iterations": 2776,
+      "model": "komega",
+      "n": 256,
+      "proxy": {
+        "full": {
+          "cells": 134,
+          "high": 180.5584715562184,
+          "low": 30.0,
+          "max_offset": 1.9043567176740517,
+          "max_relative": 0.13684871667453513,
+          "mean_relative": -0.104748697613296,
+          "offset": -1.6914826787069244,
+          "rms_relative": 0.10591043006669862,
+          "verdict": "FAIL"
+        },
+        "log_layer": {
+          "cells": 13,
+          "high": 36.4176,
+          "low": 30.0,
+          "max_offset": 1.9043567176740517,
+          "max_relative": 0.13684871667453513,
+          "mean_relative": -0.1342752785153296,
+          "offset": -1.9014351779162033,
+          "rms_relative": 0.13428656508656064,
+          "verdict": "FAIL"
+        },
+        "overall_verdict": "FAIL",
+        "re_tau": 182.088,
+        "reference": "reference",
+        "tolerance": 0.05
+      },
+      "verdict_change": {
+        "full": false,
+        "log_layer": false
+      }
+    },
+    {
+      "Cf": 0.009341368662279494,
+      "Cf_deviation": {
+        "anchor_relative": 0.14815979060881282,
+        "proxy_relative": 0.14995385448654425
+      },
+      "anchor": {
+        "full": {
+          "cells": 64,
+          "high": 178.12,
+          "low": 30.0,
+          "max_offset": 1.3700129420007379,
+          "max_relative": 0.07486335936515028,
+          "mean_relative": -0.07049368359341124,
+          "offset": -1.1211405116126547,
+          "rms_relative": 0.07060313442977384,
+          "verdict": "FAIL"
+        },
+        "log_layer": {
+          "cells": 12,
+          "high": 35.624,
+          "low": 30.0,
+          "max_offset": 0.9878064770807029,
+          "max_relative": 0.06861895812926869,
+          "mean_relative": -0.06365795126628267,
+          "offset": -0.9001967181252929,
+          "rms_relative": 0.0637426859472782,
+          "verdict": "FAIL"
+        },
+        "overall_verdict": "FAIL",
+        "re_tau": 178.12,
+        "reference": "MKM1999 chan180 (KMM1987 method)",
+        "tolerance": 0.05
+      },
+      "bulk_deviation": {
+        "anchor_relative": 0.06674820641412262,
+        "proxy_relative": 0.0674764821039338
+      },
+      "bulk_u_plus": 14.632203811590081,
+      "delta_rms_pp": {
+        "full": 0.1820988664136075,
+        "log_layer": 0.01606764716475806
+      },
+      "first_cell_y_plus": 30.1885891481981,
+      "gradability_change": {
+        "full": false,
+        "log_layer": false
+      },
+      "iterations": 1940,
+      "model": "kepsilon",
+      "n": 64,
+      "proxy": {
+        "full": {
+          "cells": 64,
+          "high": 180.5584715562184,
+          "low": 30.0,
+          "max_offset": 1.3318990579072576,
+          "max_relative": 0.07406342916518424,
+          "mean_relative": -0.06865603747079918,
+          "offset": -1.0878401357365126,
+          "rms_relative": 0.06878214576563776,
+          "verdict": "FAIL"
+        },
+        "log_layer": {
+          "cells": 13,
+          "high": 36.4176,
+          "low": 30.0,
+          "max_offset": 0.9963807382417631,
+          "max_relative": 0.06899354944680326,
+          "mean_relative": -0.06347689219258687,
+          "offset": -0.8987019975427999,
+          "rms_relative": 0.06358200947563061,
+          "verdict": "FAIL"
+        },
+        "overall_verdict": "FAIL",
+        "re_tau": 182.088,
+        "reference": "reference",
+        "tolerance": 0.05
+      },
+      "verdict_change": {
+        "full": false,
+        "log_layer": false
+      }
+    },
+    {
+      "Cf": 0.00934093307512604,
+      "Cf_deviation": {
+        "anchor_relative": 0.14810625202437375,
+        "proxy_relative": 0.1499002322450731
+      },
+      "anchor": {
+        "full": {
+          "cells": 127,
+          "high": 178.12,
+          "low": 30.0,
+          "max_offset": 1.3689261770981993,
+          "max_relative": 0.07482462611804903,
+          "mean_relative": -0.07043964260469582,
+          "offset": -1.1188246658122076,
+          "rms_relative": 0.07054880275030788,
+          "verdict": "FAIL"
+        },
+        "log_layer": {
+          "cells": 23,
+          "high": 35.624,
+          "low": 30.0,
+          "max_offset": 0.9840821195975078,
+          "max_relative": 0.068422101890747,
+          "mean_relative": -0.06342761962785985,
+          "offset": -0.8961321543456914,
+          "rms_relative": 0.06350732049306063,
+          "verdict": "FAIL"
+        },
+        "overall_verdict": "FAIL",
+        "re_tau": 178.12,
+        "reference": "MKM1999 chan180 (KMM1987 method)",
+        "tolerance": 0.05
+      },
+      "bulk_deviation": {
+        "anchor_relative": 0.06672644693089246,
+        "proxy_relative": 0.06745473960101138
+      },
+      "bulk_u_plus": 14.632544972673989,
+      "delta_rms_pp": {
+        "full": 0.1786662480975476,
+        "log_layer": 0.016583762823629833
+      },
+      "first_cell_y_plus": 30.093189610139603,
+      "gradability_change": {
+        "full": false,
+        "log_layer": false
+      },
+      "iterations": 1940,
+      "model": "kepsilon",
+      "n": 128,
+      "proxy": {
+        "full": {
+          "cells": 128,
+          "high": 180.5584715562184,
+          "low": 30.0,
+          "max_offset": 1.3326250929796188,
+          "max_relative": 0.0740610404108865,
+          "mean_relative": -0.06863586912653179,
+          "offset": -1.0874764929124845,
+          "rms_relative": 0.0687621402693324,
+          "verdict": "FAIL"
+        },
+        "log_layer": {
+          "cells": 25,
+          "high": 36.4176,
+          "low": 30.0,
+          "max_offset": 0.9925861731606282,
+          "max_relative": 0.06879485806843877,
+          "mean_relative": -0.06324199758777498,
+          "offset": -0.8945464520974395,
+          "rms_relative": 0.06334148286482433,
+          "verdict": "FAIL"
+        },
+        "overall_verdict": "FAIL",
+        "re_tau": 182.088,
+        "reference": "reference",
+        "tolerance": 0.05
+      },
+      "verdict_change": {
+        "full": false,
+        "log_layer": false
+      }
+    },
+    {
+      "Cf": 0.009340824158101217,
+      "Cf_deviation": {
+        "anchor_relative": 0.14809286489097442,
+        "proxy_relative": 0.14988682419352922
+      },
+      "anchor": {
+        "full": {
+          "cells": 255,
+          "high": 178.12,
+          "low": 30.0,
+          "max_offset": 1.3688755342318508,
+          "max_relative": 0.07482140427576073,
+          "mean_relative": -0.07045165240368605,
+          "offset": -1.1197132326676584,
+          "rms_relative": 0.07056084280045742,
+          "verdict": "FAIL"
+        },
+        "log_layer": {
+          "cells": 46,
+          "high": 35.624,
+          "low": 30.0,
+          "max_offset": 0.9858770548859681,
+          "max_relative": 0.06851673559736828,
+          "mean_relative": -0.06342602116015938,
+          "offset": -0.8961075128673587,
+          "rms_relative": 0.06350583079721388,
+          "verdict": "FAIL"
+        },
+        "overall_verdict": "FAIL",
+        "re_tau": 178.12,
+        "reference": "MKM1999 chan180 (KMM1987 method)",
+        "tolerance": 0.05
+      },
+      "bulk_deviation": {
+        "anchor_relative": 0.06672100581131292,
+        "proxy_relative": 0.06744930272748328
+      },
+      "bulk_u_plus": 14.632630282524126,
+      "delta_rms_pp": {
+        "full": 0.18036812340680858,
+        "log_layer": 0.004830223528076716
+      },
+      "first_cell_y_plus": 30.046321791758224,
+      "gradability_change": {
+        "full": false,
+        "log_layer": false
+      },
+      "iterations": 1940,
+      "model": "kepsilon",
+      "n": 256,
+      "proxy": {
+        "full": {
+          "cells": 256,
+          "high": 180.5584715562184,
+          "low": 30.0,
+          "max_offset": 1.3332521906629076,
+          "max_relative": 0.07405995591660737,
+          "mean_relative": -0.06863084693563802,
+          "offset": -1.0873859804143815,
+          "rms_relative": 0.06875716156638934,
+          "verdict": "FAIL"
+        },
+        "log_layer": {
+          "cells": 51,
+          "high": 36.4176,
+          "low": 30.0,
+          "max_offset": 0.9980897731819738,
+          "max_relative": 0.06908157368557322,
+          "mean_relative": -0.06335488803821684,
+          "offset": -0.8965518877068311,
+          "rms_relative": 0.06345752856193311,
+          "verdict": "FAIL"
+        },
+        "overall_verdict": "FAIL",
+        "re_tau": 182.088,
+        "reference": "reference",
+        "tolerance": 0.05
+      },
+      "verdict_change": {
+        "full": false,
+        "log_layer": false
+      }
+    }
+  ],
+  "gradability_changes": 2,
+  "log_layer_fraction": 0.2,
+  "low_y_plus": 30.0,
+  "nominal_re_tau": 180.0,
+  "proxy": {
+    "Cf": 0.008123255229619998,
+    "U_bulk_plus": 15.690975649174892,
+    "name": "reference",
+    "re_tau": 182.088
+  },
+  "reference": {
+    "Cf": 0.008135948270167365,
+    "U_bulk_plus": 15.67873098359455,
+    "csv_sha256": "f87097f2a7cfe72f3b512b3fcbf335a83f3808c91e267d3f33691d701f437d07",
+    "name": "MKM1999 chan180 (KMM1987 method)",
+    "points": 65,
+    "provenance": {
+      "database": "MKM_1999 statistical database, University of Texas turbulence server",
+      "member": "chan180/profiles/chan180.means",
+      "member_sha256": "f54c86e30a869798f140aa004c1e167cd13a6280e988d2794d72ca2be8b5fc82",
+      "tarball_sha256": "1d8be14cb38660ca5f6be4522f5c01d1fabcb434350c693c2f498c404bf02ed2",
+      "url": "https://turbulence.oden.utexas.edu/data/MKM/chandata.tar.gz"
+    },
+    "re_tau": 178.12
+  },
+  "substitution": {
+    "anchor": {
+      "Cf": 0.008135948270167365,
+      "U_bulk_plus": 15.67873098359455,
+      "csv_sha256": "f87097f2a7cfe72f3b512b3fcbf335a83f3808c91e267d3f33691d701f437d07",
+      "name": "MKM1999 chan180 (KMM1987 method)",
+      "points": 65,
+      "re_tau": 178.12
+    },
+    "budget_fraction": 0.06909205497701697,
+    "delta_Cf_relative": 0.001560118147986433,
+    "delta_Re_tau": 3.9679999999999893,
+    "delta_U_bulk_plus_relative": 0.0007809730005032988,
+    "overlap": {
+      "high": 178.12,
+      "low": 30.0,
+      "samples": 400
+    },
+    "proxy": {
+      "Cf": 0.008123255229619998,
+      "U_bulk_plus": 15.690975649174892,
+      "csv_sha256": "d1e6640cd91a2874ec2a63ce7000eb9a5e67b6f766f460c14048a19172dc624f",
+      "name": "reference",
+      "points": 96,
+      "re_tau": 182.088
+    },
+    "windows": {
+      "full": {
+        "high": 178.12,
+        "low": 30.0,
+        "max_offset": 0.08199732585948993,
+        "max_relative": 0.0047586516627845885,
+        "mean_offset": 0.05354980878408876,
+        "mean_relative": 0.0030913372143656402,
+        "rms_relative": 0.0034546027488508483
+      },
+      "log_layer": {
+        "high": 35.624,
+        "low": 30.0,
+        "max_offset": 0.012864900086912101,
+        "max_relative": 0.0009285341488271754,
+        "mean_offset": 0.009532711086359447,
+        "mean_relative": 0.0006762316750443753,
+        "rms_relative": 0.0006918376383092936
+      }
+    }
+  },
+  "tolerance": 0.05,
+  "verdict_changes": 0
+}
