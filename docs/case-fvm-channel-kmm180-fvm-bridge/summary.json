@@ -1,0 +1,16 @@
+{
+ "anchor": "CASE-FVM-CHANNEL-KMM180",
+ "tolerance": 0.05,
+ "metric": "kmm1987.log_region_deviation (unweighted cell-centre RMS relative deviation)",
+ "re_tau_driven": 182.088,
+ "reference": {"dataset": "Lee & Moser 2015 (docs/rans-turbulence-validation-matrix/dns/0180)", "re_tau": 182.088, "Cf": 0.0081232552, "U_bulk_plus": 15.6909756},
+ "job": {"id": "cj3061", "node": "n330", "state": "rc=1 at plotting step", "note": "matplotlib missing on node; four solves completed and printed before the crash"},
+ "cases": [
+  {"n": 16, "stretch": 3.0, "converged": true, "Cf": 0.007580964806812082, "verdict": "PASS", "log_layer_verdict": "WITHHELD"},
+  {"n": 32, "stretch": 3.0, "converged": true, "Cf": 0.00806066133246028, "verdict": "PASS", "log_layer_verdict": "WITHHELD"},
+  {"n": 64, "stretch": 3.0, "converged": true, "Cf": 0.008351131820906233, "verdict": "PASS", "log_layer_verdict": "PASS"},
+  {"n": 64, "stretch": 1.2, "converged": true, "Cf": 0.007934520638459874, "verdict": "PASS", "log_layer_verdict": "PASS"}
+ ],
+ "not_run": ["u+ RMS table per window", "FVM vs 1-D ODE profile difference", "figure (matplotlib missing on node)"],
+ "repro": "PYTHONPATH=src python -m tensorfvm.verification.kmm180_fvm_bridge --cases 16:3 32:3 64:3 64:1.2 --out docs/case-fvm-channel-kmm180-fvm-bridge"
+}
