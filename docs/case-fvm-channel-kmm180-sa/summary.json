@@ -1,0 +1,166 @@
+{
+  "case": "CASE-FVM-CHANNEL-KMM180",
+  "cases": {
+    "sa_n128": {
+      "Cf": 0.007938538788036728,
+      "bulk_relative_error": 0.011567258056875057,
+      "bulk_u_plus": 15.87247721367304,
+      "cf_relative_error": 0.022739214312722095,
+      "converged": true,
+      "first_cell_y_plus": 0.30000000000000043,
+      "iterations": 1536,
+      "log_layer_max": 0.0031180103392297242,
+      "log_layer_rms": 0.0026551945662013124,
+      "log_region_max": 0.019639710107086653,
+      "log_region_rms": 0.014087156503609335,
+      "model": "sa",
+      "n": 128,
+      "overall_verdict": "PASS",
+      "relative_local_residual": 9.812749878312261e-11,
+      "self_check": {
+        "kappa_relative_error": 0.1674355444142311,
+        "log_layer": {
+          "implied_kappa": 0.3413514267901652,
+          "model_kappa": 0.41,
+          "samples": 64,
+          "slope": 2.9295322108459145,
+          "window": [
+            30.0,
+            120.06
+          ]
+        },
+        "mixing_length": {
+          "ratio_to_mixing_length": 0.7835377097700991,
+          "samples": 64,
+          "spread": 0.32143003689799676,
+          "window": [
+            30.0,
+            120.06
+          ]
+        },
+        "mixing_offset_from_baseline": -0.21646229022990093,
+        "model_kappa": 0.41
+      },
+      "verdict": "PASS",
+      "verdict_log_layer": "PASS"
+    },
+    "sa_n256": {
+      "Cf": 0.00793773688713305,
+      "bulk_relative_error": 0.011618352986316667,
+      "bulk_u_plus": 15.873278942966705,
+      "cf_relative_error": 0.02283793100707807,
+      "converged": true,
+      "first_cell_y_plus": 0.29999999999999966,
+      "iterations": 1521,
+      "log_layer_max": 0.0030555139343140165,
+      "log_layer_rms": 0.002514960895977189,
+      "log_region_max": 0.019691174227441627,
+      "log_region_rms": 0.014719606202138323,
+      "model": "sa",
+      "n": 256,
+      "overall_verdict": "PASS",
+      "relative_local_residual": 9.689756622027195e-11,
+      "self_check": {
+        "kappa_relative_error": 0.16378653030467813,
+        "log_layer": {
+          "implied_kappa": 0.34284752257508194,
+          "model_kappa": 0.41,
+          "samples": 130,
+          "slope": 2.9167485081681024,
+          "window": [
+            30.0,
+            120.06
+          ]
+        },
+        "mixing_length": {
+          "ratio_to_mixing_length": 0.7952936654789917,
+          "samples": 130,
+          "spread": 0.3143911594959432,
+          "window": [
+            30.0,
+            120.06
+          ]
+        },
+        "mixing_offset_from_baseline": -0.20470633452100828,
+        "model_kappa": 0.41
+      },
+      "verdict": "PASS",
+      "verdict_log_layer": "PASS"
+    },
+    "sa_n64": {
+      "Cf": 0.007945127330045071,
+      "bulk_relative_error": 0.01114774711850986,
+      "bulk_u_plus": 15.86589467775459,
+      "cf_relative_error": 0.021928142664459846,
+      "converged": true,
+      "first_cell_y_plus": 0.30000000000000215,
+      "iterations": 1553,
+      "log_layer_max": 0.0033548811795122845,
+      "log_layer_rms": 0.002895880581695125,
+      "log_region_max": 0.019205456136757202,
+      "log_region_rms": 0.013396933442390417,
+      "model": "sa",
+      "n": 64,
+      "overall_verdict": "PASS",
+      "relative_local_residual": 9.840522528058628e-11,
+      "self_check": {
+        "kappa_relative_error": 0.1668296112741261,
+        "log_layer": {
+          "implied_kappa": 0.3415998593776083,
+          "model_kappa": 0.41,
+          "samples": 27,
+          "slope": 2.927401673472555,
+          "window": [
+            30.0,
+            120.06
+          ]
+        },
+        "mixing_length": {
+          "ratio_to_mixing_length": 0.7798099681770236,
+          "samples": 27,
+          "spread": 0.2931475346286726,
+          "window": [
+            30.0,
+            120.06
+          ]
+        },
+        "mixing_offset_from_baseline": -0.22019003182297636,
+        "model_kappa": 0.41
+      },
+      "verdict": "PASS",
+      "verdict_log_layer": "PASS"
+    }
+  },
+  "closure": "Spalart-Allmaras (1994)",
+  "environment": {
+    "machine": "loongarch64",
+    "numpy": "2.4.6",
+    "python": "3.11.6"
+  },
+  "first_cell_y_plus": 0.3,
+  "grids": [
+    64,
+    128,
+    256
+  ],
+  "published_matrix_rows": {},
+  "re_tau": 180.0,
+  "reference": {
+    "provenance": {
+      "citation": "Kim, J., Moin, P. & Moser, R. D. 1987, J. Fluid Mech. 177, 133-166",
+      "dns_proxy": "Lee & Moser 2015, J. Fluid Mech. 774, 395-415 (Re_tau=182.088)",
+      "doi": "10.1017/S0022112087000892"
+    },
+    "re_tau": 182.088,
+    "source": "docs/rans-turbulence-validation-matrix/dns/0180"
+  },
+  "repro_cmd": "PYTHONPATH=src python scripts/run_case_fvm_channel_kmm180_sa.py --out docs/case-fvm-channel-kmm180-sa",
+  "sa_verdict": {
+    "legacy": "PASS",
+    "log_layer": "PASS",
+    "log_layer_rms": 0.002514960895977189,
+    "log_region_rms": 0.014719606202138323
+  },
+  "schema": "tensorfvm.case-fvm-channel-kmm180-sa/1",
+  "tolerance": 0.05
+}
