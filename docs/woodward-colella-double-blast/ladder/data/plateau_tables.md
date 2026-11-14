@@ -11,6 +11,8 @@
 | nx1600_hllc | 1600 | fvm | 2.70 | 2.80 | 13.77 | 1.430 | 13.86 | 14.36 | 0.4203 |
 | nx3200_hllc | 3200 | fvm | 3.36 | 3.98 | 14.09 | 1.440 | 13.82 | 14.45 | 0.4202 |
 | nx200_weno5 | 200 | weno5 | 19.67 | 16.26 | 13.29 | 1.288 | 16.46 | 13.48 | 0.4225 |
+| nx1600_weno5 | 1600 | weno5 | 2.79 | 3.09 | 13.70 | 1.428 | 13.78 | 14.34 | 0.4203 |
+| nx3200_weno5 | 3200 | weno5 | 2.29 | 4.25 | 14.07 | 1.439 | 13.81 | 14.44 | 0.4202 |
 
 ### T2 — 收敛性：误差随网格（各自 family 的基线格式）
 
@@ -22,7 +24,12 @@
 | fvm | probe_rel_percent | 12.68, 13.85, 13.93, 13.86, 13.82 | -0.03 | **no** |
 | fvm | peak_density_rel_percent | 20.48, 10.26, 1.69, 2.70, 3.36 | 0.65 | **no** |
 | fvm | l1_percent | 14.83, 7.71, 2.96, 2.80, 3.98 | 0.47 | **no** |
-| weno5 | — | insufficient levels | — | — |
+| weno5 | window_min_rel_percent | 13.48, 14.34, 14.44 | -0.02 | **no** |
+| weno5 | plateau_mean_rel_percent | 13.29, 13.70, 14.07 | -0.03 | **no** |
+| weno5 | window_mass_rel_percent | 1.29, 1.43, 1.44 | -0.03 | **no** |
+| weno5 | probe_rel_percent | 16.46, 13.78, 13.81 | 0.04 | **no** |
+| weno5 | peak_density_rel_percent | 19.67, 2.79, 2.29 | 0.61 | yes |
+| weno5 | l1_percent | 16.26, 3.09, 4.25 | 0.17 | **no** |
 
 ### T3 — Richardson 外推（continuum limit vs Reference）
 
@@ -31,6 +38,9 @@
 | fvm | plateau_mean | 0.18235 | -0.14 | n/a | 0.15983 | n/a |
 | fvm | window_mass | 0.93543 | -0.05 | n/a | 0.92215 | n/a |
 | fvm | probe | 0.18334 | -0.03 | n/a | 0.16108 | n/a |
+| weno5 | plateau_mean | 0.18232 | -0.03 | n/a | 0.15983 | n/a |
+| weno5 | window_mass | 0.93542 | -0.03 | n/a | 0.92215 | n/a |
+| weno5 | probe | 0.18333 | 0.04 | 0.18497 | 0.16108 | 14.83 |
 
 ### T4 — 同网格格式敏感度（limiter / CFL 变化）
 
@@ -43,6 +53,8 @@
 | nx | FVM plateau_mean % | WENO5 plateau_mean % | 互差 % | FVM window_min % | WENO5 window_min % |
 |---|---|---|---|---|---|
 | 200 | 9.55 | 13.29 | 3.408 | 13.34 | 13.48 |
+| 1600 | 13.77 | 13.70 | 0.056 | 14.36 | 14.34 |
+| 3200 | 14.09 | 14.07 | 0.014 | 14.45 | 14.44 |
 
 ### T6 — 判定（最细 FVM 网格 nx3200_hllc）
 
