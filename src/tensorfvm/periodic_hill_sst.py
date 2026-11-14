@@ -1,6 +1,8 @@
 """SST k-omega two-equation closure on the periodic-hill finite-volume mesh.
 
-Round 10 of ``CASE-FVM-PERIODIC-HILLS`` (mission 20351, selfstart, TensorFVM).
+Round 10 of ``CASE-FVM-PERIODIC-HILLS`` (mission 20351, selfstart, TensorFVM);
+round 12 (mission 20920) fixed three discretisation defects in the *transport*
+of ``k``/``omega`` -- see the "Discretisation" list and ``ROUND12.md``.
 
 Rounds 5--9 attached a Spalart--Allmaras one-equation closure to the Re = 2800
 periodic-hill run and found it *saturated*: ``nu_t/nu`` plateaus at ~65 (vs the
@@ -40,9 +42,16 @@ Discretisation on the terrain-following mesh
   ``blend``), first-order upwind by default (a bounded choice for ``k`` and
   ``omega`` that must stay non-negative);
 * diffusion: the same face-coefficient operator as momentum, with the
-  *variable* coefficient ``nu + sigma nu_t`` face-averaged; both walls are
-  Dirichlet ``k = 0`` and ``omega = wall_omega`` (the low-Re ``60 nu/(beta1 d^2)``
-  wall condition from :func:`tensorfvm.native_sst3d.wall_omega`);
+  *variable* coefficient ``nu + sigma nu_t`` face-averaged (``sigma_k`` /
+  ``sigma_omega`` are the **F1-blended** closure fields, and the coefficient is
+  applied exactly once -- round 12 removed a second, spurious ``1/sigma`` that
+  rounds 10--11 carried); both walls are Dirichlet ``k = 0`` and
+  ``omega = wall_omega`` (the low-Re ``60 nu/(beta1 d^2)`` wall condition from
+  :func:`tensorfvm.native_sst3d.wall_omega`, imposed through the inhomogeneous
+  Dirichlet source :meth:`SSTKOmega.wall_source` -- round 12; before it the
+  operator silently used ``omega = 0`` at the wall);
+* production of ``omega``: ``gamma P_k / nu_t`` with the F1-blended ``gamma``,
+  written as ``gamma * (P_k / nu_t)`` so it stays finite where ``nu_t -> 0``;
 * destruction: implicit.  ``beta* k omega`` and ``beta omega^2`` are linearised
   on the diagonal (``beta* omega`` for ``k``, ``2 beta omega`` for ``omega``),
   which keeps the near-wall cell stable;
@@ -206,8 +215,16 @@ class SSTKOmega:
         return self.nu + self.viscosity()
 
     # ------------------------------------------------------------ operators
-    def _diffusion_operator(self, mu_cell):
-        """``(1/Vol) sum_f c_f mu_f (phi_N - phi_P)`` with Dirichlet 0 at walls."""
+    def _diffusion_operator(self, mu_cell, wall_value=None):
+        """``(1/Vol) sum_f c_f mu_f (phi_N - phi_P)``, Dirichlet at both walls.
+
+        ``wall_value`` is ``None`` for a homogeneous condition (``k = 0``, the
+        correct wall data for the ``k`` equation).  For the ``omega`` equation
+        pass a ``(2, nx)`` array of wall values -- row 0 is the hill/bottom wall,
+        row 1 the top wall -- and the corresponding inhomogeneous Dirichlet
+        contribution is *not* in the returned matrix but in
+        :meth:`transport_matrix`'s ``rhs`` companion (:meth:`wall_source`).
+        """
         from scipy import sparse
 
         m = self.solver.mesh
@@ -225,8 +242,14 @@ class SSTKOmega:
             p = np.arange(j * nx, (j + 1) * nx)
             ce_e = c_e[j] * mue[j]
             ce_w = c_e[j, m.im] * muw[j]
-            cn_s = c_n[j] * mu[j]
-            cn_n = c_n[j + 1] * (mu[j] if j == ny - 1 else 0.5 * (mu[j] + mu[j + 1]))
+            # face-averaged coefficients: the south face coefficient must be the
+            # same one row ``j - 1`` uses for its north face, or the discrete
+            # diffusion operator is neither conservative nor symmetric when
+            # ``mu = nu + sigma nu_t`` varies by orders of magnitude (round 12)
+            mu_s = mu[j] if j == 0 else 0.5 * (mu[j] + mu[j - 1])
+            mu_n = mu[j] if j == ny - 1 else 0.5 * (mu[j] + mu[j + 1])
+            cn_s = c_n[j] * mu_s
+            cn_n = c_n[j + 1] * mu_n
             rows.append(p); cols.append(self.solver._cell(j, np.arange(nx) + 1))
             vals.append(ce_e / vols[j])
             rows.append(p); cols.append(self.solver._cell(j, np.arange(nx) - 1))
@@ -276,26 +299,68 @@ class SSTKOmega:
             "cross_diffusion_source": cl["cross_diffusion_source"],
         }
 
-    # ---------------------------------------------------------------- update
+    def omega_wall_values(self, mu=None):
+        """Low-Re ``omega`` wall data ``60 nu / (beta1 d^2)`` at both walls.
+
+        ``d`` is the first-cell wall distance of the terrain-following mesh, so
+        the value follows the sloped hill surface.  Row 0 is the bottom
+        (hill) wall, row 1 the flat top wall; shape ``(2, nx)``.
+        """
+        d = self.distance
+        return np.stack([wall_omega(self.nu, d[0]), wall_omega(self.nu, d[-1])])
+
+    # ------------------------------------------------------------- operators
+    def wall_source(self, mu_cell, wall_value):
+        """Inhomogeneous-Dirichlet contribution ``c_f mu_f phi_wall / Vol`` per cell.
+
+        Returns a ``(ny, nx)`` array to be added to the right-hand side of
+        ``I/dt - D`` (the operator itself keeps the same diagonal, because the
+        face conductance is unchanged -- only the boundary *value* moves).
+        """
+        if wall_value is None:
+            return np.zeros((self.solver.ny, self.solver.nx))
+        wall = np.asarray(wall_value, dtype=float)
+        if wall.shape != (2, self.solver.nx):
+            raise ValueError(
+                f"wall_value must have shape (2, nx), got {wall.shape}")
+        m = self.solver.mesh
+        mu = np.asarray(mu_cell, dtype=float)
+        vols = m.volume
+        out = np.zeros((self.solver.ny, self.solver.nx))
+        out[0] += self.solver.c_n[0] * mu[0] * wall[0] / vols[0]
+        out[-1] += self.solver.c_n[self.solver.ny] * mu[-1] * wall[1] / vols[-1]
+        return out
+
+    def transport_matrix(self, mu, src_dest_lin, dt):
+        """Implicit SST scalar operator ``A = I/dt - D(mu) + diag(dest_lin)``.
+
+        ``mu`` is the **full** diffusion coefficient of the transported scalar,
+        ``nu + sigma nu_t`` with the F1-blended ``sigma`` of
+        :func:`native_sst3d.sst2003_closure`.  It is applied once: there is no
+        further ``1/sigma`` scaling (round 12 fix; rounds 10--11 solved
+        ``D((nu + sigma nu_t)/sigma)`` instead).
+        """
+        from scipy.sparse import diags
+
+        laplacian = self._diffusion_operator(mu)
+        n = self.solver.n
+        return (diags(np.full(n, 1.0 / dt))
+                - laplacian
+                + diags(np.asarray(src_dest_lin).ravel()))
+
     def _transport_step(self, phi, mu, src_prod, src_dest_lin, src_extra,
-                        sigma, dt):
+                        dt, wall_value=None):
         """One backward-Euler step of a transported scalar; returns new ``phi``."""
-        from scipy.sparse import diags, identity
         from scipy.sparse.linalg import spsolve
 
         s = self.solver
         if s._flux_e is None or s._flux_steps != s.steps:
             s.refresh_fluxes()
         flux_e, flux_n = s._flux_e, s._flux_n
-        laplacian = self._diffusion_operator(mu)
-        grad_x, grad_y = s.gradient(phi)
         conv = s._convection(phi, flux_e, flux_n, blend=self.config.convection_blend)
-        n = s.n
-        lhs = (diags(np.full(n, 1.0 / dt))
-               - (1.0 / sigma) * laplacian
-               + diags(src_dest_lin.ravel()))
+        lhs = self.transport_matrix(mu, src_dest_lin, dt)
         rhs = (phi.ravel() / dt - conv.ravel() + src_prod.ravel()
-               + src_extra.ravel())
+               + src_extra.ravel() + self.wall_source(mu, wall_value).ravel())
         new = spsolve(lhs.tocsc(), rhs).reshape(phi.shape)
         if not np.all(np.isfinite(new)):
             raise FloatingPointError("SST transport produced a non-finite field")
@@ -307,19 +372,25 @@ class SSTKOmega:
         cfg = self.config
         nu = self.nu
         src = self.source_terms()
-        nu_t = src["nu_t"]
-        mu_k = nu + cfg.sigma_k1 * np.maximum(nu_t, 0.0)
-        mu_w = nu + cfg.sigma_w1 * np.maximum(nu_t, 0.0)
+        nu_t = np.maximum(src["nu_t"], 0.0)
+        # full diffusion coefficients nu + sigma nu_t, sigmas F1-blended by the
+        # closure (round 12: applied once, no further 1/sigma)
+        mu_k = nu + np.asarray(src["sigma_k"]) * nu_t
+        mu_w = nu + np.asarray(src["sigma_omega"]) * nu_t
 
-        # k transport: production - beta* k omega
+        # k transport: production - beta* k omega  (k = 0 at both walls)
         new_k = self._transport_step(
             self.k, mu_k, src["production"], src["k_destruction_linear"],
-            np.zeros_like(self.k), cfg.sigma_k1, dt)
-        # omega transport: gamma P_k/nu_t - beta omega^2 + cross-diffusion
-        omega_prod = cfg.gamma1 * src["production"] / np.maximum(nu_t, 1e-12)
+            np.zeros_like(self.k), dt)
+        # omega transport: gamma P_k/nu_t - beta omega^2 + cross-diffusion.
+        # P_k = nu_t * (P_k/nu_t), so the ratio form stays finite as nu_t -> 0.
+        ratio = np.divide(src["production"], nu_t, out=np.zeros_like(nu_t),
+                          where=nu_t > 0.0)
+        omega_prod = np.asarray(src["gamma"]) * ratio
         new_omega = self._transport_step(
             self.omega, mu_w, omega_prod, src["omega_destruction_linear"],
-            src["cross_diffusion_source"], cfg.sigma_w1, dt)
+            src["cross_diffusion_source"], dt,
+            wall_value=self.omega_wall_values(mu_w))
 
         # positivity + cap
         bad_k = int(np.count_nonzero(new_k < 0.0))
