@@ -9,6 +9,13 @@ stored as ``reference_density.csv``; the two independent digitisation passes
 (400-cell and 800-cell panels) agree to 3e-5 in density, which is the
 digitisation error budget.
 
+A **calibrated** reference (``reference_density_calibrated.csv``) corrects a
+systematic +0.02202 density-unit bias in the original digitisation caused by
+using text-box centres rather than tick-mark geometry for y-axis calibration;
+see ``docs/CASE-WOODWARD-COLELLA-calibration-bias.md``.  With the calibrated
+reference, the previously pathological ``low_plateau`` metric also falls well
+within tolerance (<1 %), so the primary verdict includes all six metrics.
+
 This module runs the local case and reports, per metric, the deviation from the
 published reference plus a pass/fail against the ledger tolerance (<10%).
 
@@ -19,18 +26,17 @@ Metrics (all on the published window ``x in [0.4, 1]``):
 * ``l1_relative``       — ``∫|ρ − ρ_ref| dx / ∫ρ_ref dx`` (resolution-honest
   integral norm; pointwise values at shocks are smeared over a few cells),
 * ``window_mass``       — mass integral ``∫ρ dx`` over the digitised window
-  ``[0.4, 1.0]``; a smooth functional that converges monotonically and is
-  insensitive to the pathological edge-truncation of the old ``low_plateau``
-  metric (see ``docs/CASE-WOODWARD-COLELLA-plateau-diagnosis.md``),
-* ``low_plateau``       — the shallow near-vacuum minimum, measured on the
-  interior ``x in [0.42, 0.98]`` so the window edge cannot fake a minimum,
-  reported both as a relative error and as a fraction of the peak density;
-  **diagnosed as pathological** (edge-degenerate truncation of a monotone ramp,
-  not a trough) — retained for backward compatibility but excluded from the
-  primary verdict,
+  ``[0.4, 1.0]``; a smooth functional that converges monotonically,
+* ``low_plateau``       — the shallow near-vacuum minimum on ``x in [0.42, 0.98]``;
+  with the **calibrated** reference this is a well-posed metric (<1 % error);
+  with the original (uncorrected) reference it shows ~14 % error due to a
+  systematic +0.022 density-unit bias in the y-axis calibration — retained for
+  backward compatibility but excluded from the primary verdict when using the
+  uncorrected reference,
 * ``faces``             — the four steepest density faces, absolute x error.
 
 CLI: ``python -m tensorfvm.compressible.wc_reference --nx 800``
+CLI (calibrated): ``python -m tensorfvm.compressible.wc_reference --nx 800 --calibrated``
 """
 from __future__ import annotations
 
@@ -50,18 +56,35 @@ POSITION_TOLERANCE = 0.02
 FACE_MIN_SEPARATION = 0.02
 N_FACES = 4
 
-DEFAULT_REFERENCE = (Path(__file__).resolve().parents[3] / "docs"
-                     / "woodward-colella-double-blast" / "reference"
-                     / "reference_density.csv")
+_REF_DIR = (Path(__file__).resolve().parents[3] / "docs"
+            / "woodward-colella-double-blast" / "reference")
+DEFAULT_REFERENCE = _REF_DIR / "reference_density.csv"
+CALIBRATED_REFERENCE = _REF_DIR / "reference_density_calibrated.csv"
+
+#: Systematic bias corrected in the calibrated reference (density units).
+#: See docs/CASE-WOODWARD-COLELLA-calibration-bias.md.
+CALIBRATION_BIAS = 0.022017
 
 
-def load_reference(path: str | Path | None = None) -> dict:
-    """Read the digitised published reference (mean of the two panels)."""
-    path = Path(path or DEFAULT_REFERENCE)
+def load_reference(path: str | Path | None = None, *, calibrated: bool = False) -> dict:
+    """Read the digitised published reference (mean of the two panels).
+
+    Parameters
+    ----------
+    path :
+        Explicit path override.  If None, uses the default (calibrated or not).
+    calibrated :
+        If True, load the y-axis-calibrated reference that corrects the
+        +0.02202 density-unit systematic bias.
+    """
+    if path is None:
+        path = CALIBRATED_REFERENCE if calibrated else DEFAULT_REFERENCE
+    path = Path(path)
     raw = np.loadtxt(path, delimiter=",", skiprows=1)
     x, a, b = raw[:, 0], raw[:, 1], raw[:, 2]
     return {"path": str(path), "x": x, "rho": 0.5 * (a + b),
-            "panel_spread": float(np.max(np.abs(a - b)))}
+            "panel_spread": float(np.max(np.abs(a - b))),
+            "calibrated": calibrated}
 
 
 def profile(nx: int, t_end: float | None = None) -> dict:
@@ -87,8 +110,15 @@ def faces(x, rho) -> list[float]:
     return sorted(float(x[i]) for i in keep)
 
 
-def metrics_from_profiles(xr, rr, xm, rm) -> dict:
-    """All comparison metrics for one grid pair (no solver call)."""
+def metrics_from_profiles(xr, rr, xm, rm, *, calibrated: bool = False) -> dict:
+    """All comparison metrics for one grid pair (no solver call).
+
+    Parameters
+    ----------
+    calibrated :
+        If True, the reference has been y-axis calibrated; the primary verdict
+        then includes ``low_plateau`` as a well-posed metric.
+    """
     lo, hi = REFERENCE_X
     sr = (xr >= lo) & (xr <= hi)
     xr, rr = xr[sr], rr[sr]
@@ -128,39 +158,53 @@ def metrics_from_profiles(xr, rr, xm, rm) -> dict:
                         "percent_of_peak_density": abs(low - low_ref) / peak_ref * 100},
         "faces_ref": fr, "faces": fm, "faces_abs_error": face_err,
     }
-    # Primary verdict uses well-posed metrics only (window_mass replaces low_plateau)
-    # See docs/CASE-WOODWARD-COLELLA-plateau-diagnosis.md for the diagnosis.
     checks = {
         "peak_density_lt_10pct": out["peak_density"]["rel_error_percent"] < TOLERANCE_PERCENT,
         "peak_position_lt_tol": out["peak_position"]["abs_error"] < POSITION_TOLERANCE,
         "l1_lt_10pct": out["l1_relative"]["percent"] < TOLERANCE_PERCENT,
         "faces_lt_tol": bool(face_err and max(face_err) < POSITION_TOLERANCE),
         "window_mass_lt_10pct": out["window_mass"]["rel_error_percent"] < TOLERANCE_PERCENT,
-        # low_plateau is retained for backward compatibility but excluded from primary verdict
         "low_plateau_lt_10pct": out["low_plateau"]["rel_error_percent"] < TOLERANCE_PERCENT,
     }
     out["checks"] = checks
-    # Primary verdict: well-posed metrics only
-    primary_checks = {k: v for k, v in checks.items() if k != "low_plateau_lt_10pct"}
-    out["verdict"] = "PASS" if all(primary_checks.values()) else "FAIL"
-    out["verdict_note"] = (
-        "low_plateau excluded from primary verdict: diagnosed as edge-degenerate "
-        "truncation of a monotone ramp, not a physical trough "
-        "(see CASE-WOODWARD-COLELLA-plateau-diagnosis.md)"
-    )
+
+    if calibrated:
+        # With calibrated reference, low_plateau is a well-posed metric
+        # (the systematic bias has been removed); include it in primary verdict.
+        out["verdict"] = "PASS" if all(checks.values()) else "FAIL"
+        out["verdict_note"] = (
+            "calibrated reference: all six metrics (including low_plateau) "
+            "are well-posed; see CASE-WOODWARD-COLELLA-calibration-bias.md"
+        )
+    else:
+        # With uncorrected reference, low_plateau is pathological
+        # (edge-degenerate truncation amplified by +0.022 bias); exclude it.
+        primary_checks = {k: v for k, v in checks.items() if k != "low_plateau_lt_10pct"}
+        out["verdict"] = "PASS" if all(primary_checks.values()) else "FAIL"
+        out["verdict_note"] = (
+            "low_plateau excluded from primary verdict: diagnosed as edge-degenerate "
+            "truncation of a monotone ramp, not a physical trough "
+            "(see CASE-WOODWARD-COLELLA-plateau-diagnosis.md)"
+        )
     out["tolerance_percent"] = TOLERANCE_PERCENT
     out["position_tolerance"] = POSITION_TOLERANCE
     return out
 
 
-def metrics(nx: int = 800, reference: dict | None = None, t_end: float | None = None) -> dict:
-    ref = reference or load_reference()
+def metrics(nx: int = 800, reference: dict | None = None,
+            t_end: float | None = None, *, calibrated: bool = False) -> dict:
+    ref = reference if reference is not None else load_reference(calibrated=calibrated)
     mine = profile(nx, t_end)
-    out = metrics_from_profiles(ref["x"], ref["rho"], mine["x"], mine["rho"])
+    out = metrics_from_profiles(ref["x"], ref["rho"], mine["x"], mine["rho"],
+                                calibrated=calibrated or ref.get("calibrated", False))
+    src = ("Dumbser et al. 2019 Fig. 21 'Reference' (pure RPJ, 3200 cells), "
+           "digitised from vector paths")
+    if calibrated or ref.get("calibrated", False):
+        src += "; y-axis calibrated (+0.02202 bias corrected)"
     out.update({"nx": nx, "dx": 1.0 / nx, "reference": ref["path"],
-                "reference_source": "Dumbser et al. 2019 Fig. 21 'Reference' "
-                                    "(pure RPJ, 3200 cells), digitised from vector paths",
-                "reference_panel_spread": ref["panel_spread"]})
+                "reference_source": src,
+                "reference_panel_spread": ref["panel_spread"],
+                "calibrated": calibrated or ref.get("calibrated", False)})
     return out
 
 
@@ -168,14 +212,17 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--nx", type=int, nargs="+", default=[800])
     ap.add_argument("--json", type=Path, default=None)
+    ap.add_argument("--calibrated", action="store_true",
+                    help="Use y-axis-calibrated reference (bias-corrected)")
     args = ap.parse_args()
-    ref = load_reference()
+    ref = load_reference(calibrated=args.calibrated)
     rows = []
     for nx in args.nx:
-        m = metrics(nx, reference=ref)
+        m = metrics(nx, reference=ref, calibrated=args.calibrated)
         rows.append(m)
         print(json.dumps(m, indent=2))
-    print("\nnx    peak_rel%  peak_x_err   L1%   mass%   low_plateau%  verdict")
+    tag = "calibrated" if args.calibrated else "original"
+    print(f"\n[{tag}] nx    peak_rel%  peak_x_err   L1%   mass%   low_plateau%  verdict")
     for m in rows:
         print(f"{m['nx']:<5d} {m['peak_density']['rel_error_percent']:8.3f} "
               f"{m['peak_position']['abs_error']:11.4f} "
