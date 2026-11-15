@@ -109,3 +109,24 @@ PYTHONPATH=src python -m pytest tests/test_compressible_wc_xval.py \
 
 - `docs/woodward-colella-double-blast/xval/wc_certified_ref.py` — 扩展 HLLC_RUNGS 至 nx=6400，动态最细档 verdict
 - `tests/test_compressible_wc_certified_ref.py` — 更新 7 项回归门（新增 nx6400 certified 验证 + 历史绑定门记录 + 单调收敛检查）
+
+---
+
+## 勘误（round-12 self-audit，2026-11-16）—— `certified <1 %` 是点估计，不是证明
+
+上文「certified <1 % 达成」的依据是**两级**门（WENO5@6400 vs WENO5@12800），两级既无观测阶
+也无误差棒 ⇒ `L1(MUSCL@6400, WENO5@12800)=0.893 %` 只是点估计。补上参考侧误差棒后：
+
+| 量 | 值 |
+|---|---|
+| 参考阶梯观测阶 `p_ref` | 0.8327 |
+| `eps_ref`（参考侧误差，docs 实现 / 包实现） | 0.7076 % / 0.7181 % |
+| 诚实上界 `L1 + eps_ref` | **1.601–1.611 % > 1 %** |
+| 族内 Richardson（不依赖参考）自身误差 | **1.523 % > 1 %** |
+| `certified` / `certified_point_estimate` | **False** / True |
+
+判据未改（`<1 %`），改的是「两级门能支撑什么」：**诚实状态是「点估计 <1 %，可证明上界 1.61 %」**，
+总账 `<15 %` 与 `<3 %` 仍 PASS。`wc_certified_ref.py` 的 `certified` 布尔已改为要求诚实上界
+`<1 %`（新增 `certified_point_estimate` / `certified_provable` 两个显式字段），
+回归门同步更新为 9 项。详见 `CERTIFIED-NX6400-ERRATA.md`（数字全部由
+`certified_nx6400_errata.py` 程序写入）。

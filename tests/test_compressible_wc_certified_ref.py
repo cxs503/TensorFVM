@@ -18,6 +18,19 @@ Guarded claims:
    own discretisation error, which the finer independent reference removes.
    (nx=3200 was the binding gate at L1=1.776% > 1%; nx=6400 achieves L1=0.893%.)
 4. The window-mass integral stays <0.1 % for the certified rung (nx=6400).
+5. **The two-level agreement above is a point estimate, not a certificate.** The
+   reference has its own Richardson error bar (three-level WENO5 ladder:
+   ``eps_ref`` = 0.708 %), so the honest bound is ``L1 + eps_ref`` = 1.601 %,
+   which is *not* <1 %. The gate therefore pins ``certified == False`` while
+   ``certified_point_estimate == True`` -- the earlier round-2 claim of an
+   achieved "certified <1 %" is downgraded here (see
+   ``R11-ERROR-BAR-ROBUSTNESS.md``, and ``docs/XVAL-FVM-M18737-ROUND2/
+   CERTIFIED-NX6400-ERRATA.md``). A future solver change that really reaches
+   <1 % must flip *both* flags; dropping ``eps_ref`` would silently re-inflate
+   the claim, so the bar is asserted independently of the module.
+6. The reference-side bar computed here must agree with the independent
+   implementation in ``tensorfvm.verification.wc_ref_uncertainty`` (different
+   code path, same stored profiles) to <0.1 %.
 """
 from __future__ import annotations
 
@@ -55,12 +68,14 @@ def test_reference_is_self_certified(analysis):
     assert r["self_peak_percent"] < 1.0, r["self_peak_percent"]
 
 
-def test_muscl_hllc_nx6400_is_certified_under_1_percent(analysis):
+def test_muscl_hllc_nx6400_agrees_under_1_percent_as_point_estimate(analysis):
     """The graded MUSCL/HLLC nx=6400 solution vs the certified WENO5 reference.
 
     The nx=3200 rung was the binding gate at L1=1.776% > 1% (honest-FAIL in
-    the original round-2 closure).  With nx=6400, both L1 (0.893%) and peak
-    (0.044%) are <1%, so the certified claim is now **achieved**.
+    the original round-2 closure).  With nx=6400 both L1 (0.893%) and peak
+    (0.044%) are <1% *against the raw WENO5@12800 reference*.
+
+    This is the **point estimate**; it is not a certificate (see the next test).
 
     Guard: if L1 ever drops below 1% at nx=3200 (e.g. due to a solver change),
     this test should be updated to check nx=3200 instead.
@@ -68,10 +83,57 @@ def test_muscl_hllc_nx6400_is_certified_under_1_percent(analysis):
     g = analysis["vs_certified_reference"]["nx6400_hllc"]
     assert g["peak_percent"] < 1.0, g["peak_percent"]
     assert g["l1_percent"] < 1.0, (
-        f"nx6400 L1={g['l1_percent']:.4f}% >= 1% -- certified claim not met")
-    # the honest verdict: CERTIFIED (both L1 and peak <1%)
-    assert analysis["certified"] is True, analysis["note"]
+        f"nx6400 L1={g['l1_percent']:.4f}% >= 1% -- point estimate not met")
     assert analysis["graded_under_1"] is True
+    assert analysis["certified_point_estimate"] is True
+
+
+def test_certified_requires_the_reference_error_bar(analysis):
+    """<1 % must survive adding the reference's own error bar -- it does not.
+
+    ``L1(MUSCL@6400, WENO5@12800) = 0.893 %`` compares two numerical solutions
+    that each carry a discretisation error of the same order, so the difference
+    is not the graded solution's error.  Adding the reference bar
+    (``eps_ref`` = 0.708 %) gives the honest bound 1.601 % > 1 %: the claim has
+    to be downgraded to "point estimate only".
+    """
+    bar = analysis["reference_error_bar"]
+    assert 0.5 < bar["eps_ref_percent"] < 1.0, bar["eps_ref_percent"]
+    assert bar["order_fallback"] is False
+    g = analysis["vs_certified_reference"]["nx6400_hllc"]
+    bound = g["l1_percent"] + bar["eps_ref_percent"]
+    assert bound == pytest.approx(analysis["honest_upper_bound_percent"], rel=1e-12)
+    assert bound > 1.0, f"honest bound {bound:.4f}% -- if this drops below 1% " \
+                        "the certified flag may be reclaimed (update this test)"
+    assert analysis["certified"] is False
+    assert analysis["certified_provable"] is False
+
+
+def test_reference_bar_matches_the_independent_implementation(analysis):
+    """Same stored profiles, two code paths -> the reference bar must agree.
+
+    ``wc_certified_ref.reference_error_bar`` (linear interpolation on the fine
+    grid) and ``tensorfvm.verification.wc_ref_uncertainty.u_ref_of_reference``
+    (conservative restriction: coarse cell mean = mean of the fine cells)
+    measure the same ladder distance two ways.  They are **not** bit-identical:
+    the restriction variant lands 1.7 % lower (0.5437 % vs 0.5527 %), shifting
+    ``eps_ref`` by 1.5 % (0.7181 % vs 0.7076 %).  That spread is a systematic of
+    the metric implementation, so it is pinned as a band; the honest bound is
+    quoted with its upper end in the errata document, so the verdict does not
+    depend on which implementation is used.
+    """
+    from tensorfvm.verification import wc_ref_uncertainty as U
+
+    data = REPO / "docs" / "woodward-colella-double-blast" / "ladder" / "data"
+    mine = analysis["reference_error_bar"]["eps_ref_percent"]
+    theirs = U.u_ref_of_reference(str(data), FINE[-1])
+    assert theirs["measurable"] is True, theirs
+    assert mine == pytest.approx(theirs["u_ref_percent"], rel=0.05), (mine, theirs)
+    assert analysis["reference_error_bar"]["l1_percent_6400_vs_12800"] == pytest.approx(
+        theirs["l1_percent"], rel=0.05)
+    l1 = analysis["vs_certified_reference"]["nx6400_hllc"]["l1_percent"]
+    for eps in (mine, theirs["u_ref_percent"]):
+        assert l1 + eps > 1.0, (l1, eps)
 
 
 def test_nx3200_was_the_binding_gate(analysis):
