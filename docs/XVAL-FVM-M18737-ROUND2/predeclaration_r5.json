@@ -1,0 +1,80 @@
+{
+  "round": 5,
+  "anchor": "XVAL-FVM-M18737-ROUND2",
+  "written_utc": "2026-11-15T11:10:52+00:00",
+  "written_before_extended_reference_existed": true,
+  "cluster_job": "cj3710",
+  "reference_rungs_present_at_freeze": [
+    1600,
+    3200,
+    6400,
+    12800
+  ],
+  "inputs_from_round4_predeclaration": {
+    "order_finest_pair": 0.8132575966174322,
+    "predicted_l1_12800_vs_25600_percent": 0.3094302050345385,
+    "u_ref_percent_at_25600": 0.4086642395050191,
+    "nx_ref_needed_for_bar": 133120.56838885284,
+    "graded": {
+      "nx": 6400,
+      "l1_percent": 0.8930772870380906,
+      "ref_nx": 12800
+    },
+    "allowance_percent": 0.10692271296190936
+  },
+  "predictions": {
+    "Q1_order": {
+      "quantity": "order of the (12800, 25600) reference pair",
+      "band": [
+        0.5,
+        1.1
+      ],
+      "point_prediction": 0.8132575966174322,
+      "rationale": "two measured pairs gave 0.9193, 0.8133; band widened to [0.5, 1.1]"
+    },
+    "Q2_u_ref": {
+      "quantity": "U_ref(WENO5@25600) [%]",
+      "point_prediction": 0.4086642395050191,
+      "band": [
+        0.27058811339543193,
+        0.7470305976022702
+      ],
+      "tolerance_vs_extrapolated_percent": 20.0,
+      "note": "the extrapolated value is replaced, not adjusted"
+    },
+    "Q3_regrade_drift": {
+      "quantity": "L1(graded nx=6400 vs ref@25600) [%]",
+      "point_prediction": 1.2559419807190157,
+      "band": [
+        0.9419564855392618,
+        1.5699274758987696
+      ],
+      "drift_used_percent": 0.362864693680925,
+      "note": "empirical per-doubling drift, not a convergence-law extrapolation"
+    },
+    "Q4_gate": {
+      "quantity": "verdict of the honest gate: measured L1 + U_ref(25600) < 1 %",
+      "predicted_verdict": "not certified (upper_bound_only or fail)",
+      "predicted_worst_case_percent": 1.6646062202240348,
+      "falsifier": "certified at ref@25600"
+    },
+    "Q5_nx_needed": {
+      "quantity": "nx_ref needed for U_ref <= 1 % - L1_graded",
+      "point_prediction": 133120.56838885284,
+      "band": [
+        59541.61944016448,
+        1249616.660866841
+      ],
+      "frozen_in_round4": 133120.56838885284,
+      "note": "monotone in the order; band from the order band"
+    }
+  },
+  "measured_pair_orders": [
+    0.9192696448202137,
+    0.8132575966174322
+  ],
+  "round4_criteria_still_open": [
+    "P1",
+    "P2"
+  ]
+}

@@ -60,9 +60,12 @@ def selfcert_ladder(data_dir: Path | str, family: str = "weno5") -> List[Dict]:
 
     Each row is one pair ``coarse -> fine`` and carries the fine member's uncertainty
     ``U_ref``.  ``order`` is the *observed* log--log order of the pair measured against the
-    next finer pair; the finest row therefore has no measured order, and its ``U_ref`` is
-    flagged ``order_source="extrapolated"`` (constant-order assumption) instead of being
-    presented as measured.  A row whose order cannot even be extrapolated is left ``None``.
+    next finer pair; the finest row has no next pair and therefore gets ``order_source
+    ="measured_triple"``: its order is measured across the two finest differences (= the
+    three-grid Roache estimate), which is a measurement, not an assumption.  Only a ladder
+    with a single pair leaves the order (and hence ``U_ref``) ``None`` -- no claim is made
+    there.  The constant-order assumption needed to reach *finer* grids than the measured
+    one lives in :func:`nx_ref_for_bar`, where it is labelled as extrapolation.
     """
     dirs = Path(data_dir)
     nx = [n for n in wcr.WENO5_RUNGS if wcr.try_load_profile(dirs, n, family) is not None]
@@ -81,12 +84,23 @@ def selfcert_ladder(data_dir: Path | str, family: str = "weno5") -> List[Dict]:
         lo["order_source"] = "measured_pair"
         lo["u_ref_percent"] = u_ref_from_pair(lo["l1_percent"], p)
     if len(rows) >= 2 and rows[-1]["u_ref_percent"] is None:
-        # the finest pair has no successor to measure its order against: extrapolate the
-        # coarser pair's order, and say so -- this is an assumption, not a measurement
+        # The finest pair has no successor, so its order cannot come from the loop above.
+        # It does *not* need one: with two consecutive differences e_(m-1) = |q_(m-1) - q_m|
+        # and e_m = |q_m - q_(m+1)|, the three grids (m-1, m, m+1) give the finest-scale
+        # order p = log2(e_(m-1)/e_m) directly -- Roache's three-grid estimate.  Round-4
+        # labelled this row "extrapolated", which understated the evidence: what is
+        # *assumed* is only that p stays constant at scales finer than the measured one,
+        # and that assumption lives in :func:`nx_ref_for_bar`, not here.
         p = rows[-2]["order"]
+        if p is None and len(rows) == 2:
+            p = math.log(rows[-2]["l1_percent"] / rows[-1]["l1_percent"], 2)
         if p is not None and p > 0:
             rows[-1]["order"] = p
-            rows[-1]["order_source"] = "extrapolated"
+            rows[-1]["order_source"] = "measured_triple"
+            rows[-1]["order_scale"] = {"coarse_nx": rows[-2]["coarse_nx"],
+                                       "fine_nx": rows[-2]["fine_nx"],
+                                       "note": "order measured across the two finest "
+                                               "consecutive differences"}
             rows[-1]["u_ref_percent"] = u_ref_from_pair(rows[-1]["l1_percent"], p)
     return rows
 
@@ -235,3 +249,49 @@ def budget_report(data_dir: Path | str, graded_nx: int = 6400,
                               finest["ref_nx"], ur["order"])
         out["reference_resolution_needed"] = need
     return out
+
+def u_ref_order_band(e_selfcert_percent: float, order_band: Sequence[float]) -> Dict:
+    """Reference uncertainty implied by an *order band* instead of a point order.
+
+    ``U_ref = e/(2**p - 1)`` decreases with the order, so a band ``[p_lo, p_hi]`` maps to
+    ``[U(p_hi), U(p_lo)]``.  This is how an order uncertainty (the usual case: p is fitted
+    over two or three grids) is propagated into the uncertainty of the budget itself,
+    instead of quoting a single number as if the order were exact.
+    """
+    lo, hi = sorted(float(x) for x in order_band)
+    if lo <= 0.0:
+        raise ValueError(f"order band must be positive, got {order_band!r}")
+    u_lo = u_ref_from_pair(e_selfcert_percent, hi)
+    u_hi = u_ref_from_pair(e_selfcert_percent, lo)
+    return {"e_selfcert_percent": float(e_selfcert_percent),
+            "order_band": [lo, hi],
+            "u_ref_percent": [u_lo, u_hi],
+            "min_percent": u_lo, "max_percent": u_hi,
+            "spread_percent": u_hi - u_lo}
+
+
+def adjudicate_prediction(measured: float, point: Optional[float] = None,
+                          band: Optional[Sequence[float]] = None,
+                          tolerance_percent: Optional[float] = None) -> Dict:
+    """Machine verdict for a prediction frozen before the measurement existed.
+
+    A prediction counts as hit when the measurement is inside ``band``; when only a point
+    prediction and a relative ``tolerance_percent`` are frozen, the band is
+    ``point * (1 -+ tol/100)``.  ``missing`` inputs give ``"unadjudicable"`` -- an unmeasured
+    criterion is not a passed one.
+    """
+    m = float(measured)
+    if band is not None:
+        lo, hi = sorted(float(x) for x in band)
+    elif point is not None and tolerance_percent is not None:
+        half = abs(float(point)) * float(tolerance_percent) / 100.0
+        lo, hi = float(point) - half, float(point) + half
+    else:
+        return {"measured": m, "verdict": "unadjudicable",
+                "reason": "no frozen band or tolerance to test against",
+                "deviation_percent": None}
+    dev = None if point is None else 100.0 * (m - float(point)) / float(point)
+    return {"measured": m, "point": None if point is None else float(point),
+            "band": [lo, hi], "inside_band": bool(lo <= m <= hi),
+            "deviation_percent": dev,
+            "verdict": "hit" if lo <= m <= hi else "miss"}
