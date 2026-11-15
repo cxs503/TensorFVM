@@ -707,3 +707,22 @@
 - 验收判定：**FAIL（honest）**，锚点保持 OPEN。三项可测量：+54.2 %、+52.8 %、发散；无一项进 10 %，更无 <3 %。
 - 给下次：① 写出端按块存时均剪切剖面，补发布值 8.078 的块间稳定性（同时可解两口径差 50 % 的瞬时零点结构）；
   ② `dt=0.01` 复跑 Re=1400 补阶梯的洞（约 2× 成本）；③ `gate` 段仍按旧值 5.34 打分，与 `lower_re` 的 5.41/5.24 并存，引用时勿混。
+
+## 4l. 追加欠账（append-only, m22013 selfstart）
+### D24 CASE-FVM-CAVITY-RE1000 归因审计——「1.5 % 属于 Ghia」被证伪为不可裁决，锚点门仍绿
+- 缺口来源：`COMPREHENSIVE_REPORT.md` §3.2 / `SPECTRAL.md` §1 把「三码互吻合」当作「残差属于参考表」的证据；
+  该推理在 GCI 口径下不成立（残差落在求解器自身不确定度带内）。
+- 交付：`src/tensorfvm/cavity_attribution.py`（`gci` / `extremum_floor` / `contraction_ratios` /
+  `is_asymptotic` / `attribution_verdict`；裁决可为 `within_own_uncertainty` / `reference_attributable` /
+  `unresolved`）+ `tests/test_cavity_attribution.py`（17 passed, 13.7 s）+
+  `docs/CASE-FVM-CAVITY-RE1000/ATTRIBUTION_AUDIT.md` + `audit_attribution.py`
+  + `runs/attribution_audit.json` + `figures/fig_attribution_audit.png`；§3.2 就地加更正块（原句保留，不覆盖）。
+- 关键数（程序注入）：u_min 残差 0.630 %、v_max 0.786 %，表值在 GCI 带内位置 0.43 / 0.60；
+  跨码**原始**最细网格差 0.855 %（引用值 0.259 % 为两外推之差）；谱阶梯自身增量比 0.042/0.023
+  vs 外推假定 0.312；表极值地板 u_min ≤0.724 %、v_max ≤0.083 %；Re=1000 谱解 `lid_velocity_max`=1.074、
+  `wall_slip_defect`=3.1e-4（未收敛），Re=100 谱阶梯已收敛（N48−N64 = 1.3e-8）。
+- **未收口（明示）**：第四级网格 n=192（cj3849 递交于本单，交付时未取回 ⇒ 记 not_run）；
+  异族第三方代码对照未做；Ghia 原文网格收敛数据无法取得 ⇒ **不得**把「不可裁决」读成「Ghia 有错」或「求解器有错」。
+- 给下次：① 取回 cj3849 后把 `informative` 变为 True，重算 GCI 带（预期 p 仍 ≈2，带收窄）；
+  ② 若要真正裁决，需异族代码（CLAWPACK/FEniCS）而不是同族换阶；③ `extremum_floor` 可直接复用于
+  Re=400 锚点与任何「表 + 极值判据」的算例（地板 > 容差即该判据不可判级）。
