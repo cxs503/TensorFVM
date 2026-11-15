@@ -35,6 +35,23 @@ Three gates keep the "certified" word honest:
    converges monotonically, so it is a clean check that the finer reference is
    not drifting).
 
+Gate 1 as originally written is a **two-level** check: with only two grids it
+yields neither an observed order nor an error bar, so ``l1(MUSCL, WENO5@12800)
+< 1 %`` is a *point estimate* of the graded solution's error, not a certificate
+-- the reference's own error is inside the same 1 % budget.  ``certified`` is
+therefore split in two here:
+
+* ``certified_point_estimate`` -- the original two-level verdict (gates 1-3);
+* ``certified`` -- the same verdict **and** the honest upper bound
+  ``l1(MUSCL, ref) + eps_ref < 1 %``, where ``eps_ref`` is the Richardson error
+  bar of the reference itself, measured on the three-level WENO5 ladder
+  (3200 / 6400 / 12800, grid doubling -> observed order without assumptions).
+
+The distinction is not cosmetic: at nx=6400 the point estimate is 0.893 % while
+the honest bound is 1.61 %, i.e. ``certified`` is **False** even though the
+two-level gate passes (see ``R11-ERROR-BAR-ROBUSTNESS.md`` and
+``R4-REFERENCE-UNCERTAINTY-CLOSURE.md``).
+
 Everything is computed from stored profiles (``ladder/data/ladder_profile_*.npz``)
 plus the new WENO5@6400/12800 rungs; no solver is called here, so the script is
 a few seconds of numpy and can be re-run inside a unit test.
@@ -48,6 +65,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 from pathlib import Path
 
 import numpy as np
@@ -66,6 +84,10 @@ CERTIFIED_PERCENT = 1.0                 # the <1 % bar this round targets
 
 #: the finer independent rungs this round adds as the new reference
 FINE_WENO5 = (6400, 12800)
+
+#: full WENO5 ladder (grid doubling between levels) -- gives the reference its
+#: own observed order, hence an error bar; the two-level gate cannot
+REFERENCE_LADDER = (3200, 6400, 12800)
 
 #: MUSCL/HLLC rungs to grade against the certified reference (includes nx=6400)
 HLLC_RUNGS = ("nx800_hllc", "nx1600_hllc", "nx3200_hllc", "nx6400_hllc")
@@ -114,6 +136,39 @@ def mass_percent(xa, ra, xb, rb) -> float:
     return 100.0 * abs(float(np.trapezoid(a, x)) - float(np.trapezoid(b, x))) / float(np.trapezoid(b, x))
 
 
+def reference_error_bar() -> dict:
+    """Observed order + Richardson error bar of the finest WENO5 reference.
+
+    Two grids give a distance but no order, and with no order there is no error
+    bar (that is exactly the gap behind the two-level ``certified`` flag).  The
+    three-level ladder closes it: ``p = log2(d(3200,6400) / d(6400,12800))`` and
+    ``eps_ref = d(6400,12800) / (2**p - 1)`` is the discretisation error of the
+    finest rung.  A non-physical order (<=0 or absurd) falls back to p=1, which
+    only makes the bar more conservative.
+    """
+    coarse, mid, fine = (_load(f"nx{nx}_weno5") for nx in REFERENCE_LADDER)
+    d_coarse = l1_percent(mid["x"], mid["rho"], coarse["x"], coarse["rho"])
+    d_fine = l1_percent(fine["x"], fine["rho"], mid["x"], mid["rho"])
+    out = {
+        "ladder": list(REFERENCE_LADDER),
+        "l1_percent_3200_vs_6400": d_coarse,
+        "l1_percent_6400_vs_12800": d_fine,
+        "order_fallback": False,
+    }
+    p = math.log2(d_coarse / d_fine) if (d_coarse > 0.0 and d_fine > 0.0) else 1.0
+    if not (0.2 <= p <= 6.0):
+        p = 1.0
+        out["order_fallback"] = True
+    out.update({
+        "observed_order": p,
+        "eps_ref_percent": d_fine / (2.0 ** p - 1.0),
+        "note": ("reference-side error bar from the three-level WENO5 ladder; "
+                 "``eps_ref`` is the discretisation error of the finest rung, so "
+                 "the honest upper bound of any graded error is measured + eps_ref"),
+    })
+    return out
+
+
 def run() -> dict:
     # --- the new high-resolution reference: finest WENO5 rung -----------------
     ref = _load(f"nx{FINE_WENO5[-1]}_weno5")
@@ -157,8 +212,17 @@ def run() -> dict:
     # AND the graded solution itself is <1% (L1 and peak) against it.
     graded_under_1 = (finest["l1_percent"] < CERTIFIED_PERCENT
                       and finest["peak_percent"] < CERTIFIED_PERCENT)
+    # ... and the two-level number above is a point estimate: the reference's
+    # own error sits in the same budget, so the honest bound adds eps_ref.
+    bar = reference_error_bar()
+    honest_upper = finest["l1_percent"] + bar["eps_ref_percent"]
+    point_estimate = bool(certified and floor_removed and graded_under_1)
     verdict = {
-        "certified": bool(certified and floor_removed and graded_under_1),
+        "certified": bool(point_estimate and honest_upper < CERTIFIED_PERCENT),
+        "certified_point_estimate": point_estimate,
+        "certified_provable": bool(point_estimate and honest_upper < CERTIFIED_PERCENT),
+        "honest_upper_bound_percent": honest_upper,
+        "reference_error_bar": bar,
         "graded_under_1": bool(graded_under_1),
         "finest_tag": finest_tag,
         "reference": {
@@ -183,8 +247,11 @@ def run() -> dict:
         "note": (
             "certified=True means the TensorFVM MUSCL/HLLC %s solution "
             "agrees with an independent WENO5@%d reference to <1%% (L1 and "
-            "peak), and that reference is itself self-converged to <1%% "
-            "(WENO5@%d vs WENO5@%d)." % (finest_tag, FINE_WENO5[-1], FINE_WENO5[0], FINE_WENO5[-1])
+            "peak), that reference is itself self-converged to <1%% "
+            "(WENO5@%d vs WENO5@%d), AND the reference-side error bar is small "
+            "enough that the honest bound (%.4f%% + %.4f%% = %.4f%%) stays <1%%."
+            % (finest_tag, FINE_WENO5[-1], FINE_WENO5[0], FINE_WENO5[-1],
+               finest["l1_percent"], bar["eps_ref_percent"], honest_upper)
         ),
     }
     return verdict

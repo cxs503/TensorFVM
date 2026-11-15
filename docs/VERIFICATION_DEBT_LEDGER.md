@@ -767,3 +767,29 @@
   收敛比不支持 Richardson 外推，未外推真值。
 - 给下次：① 用 `mesh.beta_n` 做斜交一阶修正，把「下界」变真值估计；
   ② SST 的 `u_tau`/壁面律诊断（round 15）改用 `wall_shear(order=2)`；③ 求解器默认路径本轮**未改**（保持 round 17–23 可比性）。
+
+## 4n. 追加欠账（append-only, m22529 selfstart）
+### D26 XVAL-FVM-M18737-ROUND2 第 12 轮：nx=6400 的「certified <1 %」被自己的误差棒否证（点估计 0.893 %，诚实上界 1.601–1.611 %）
+- 缺口来源：`CERTIFIED-NX6400-CLOSURE.md`（11-16 合并）用**两级** WENO5 自认证（6400 vs 12800 <1 %）
+  作 gate 1，随即把 `L1(MUSCL@6400, WENO5@12800)=0.893 %` 判为 `certified=True`。两级门只有距离、
+  没有观测阶 ⇒ 没有误差棒，`0.893 %` 是 `|num−ref|` 的点估计，而 `R4/R11` 早已把参考侧误差定价
+  （B0 上界 1.6112 %、B3 3.0474 %）。文档链因此自相矛盾：一处说「certified 达成」，一处说「<1 % 不可证明」。
+- 交付：`docs/woodward-colella-double-blast/xval/wc_certified_ref.py` 新增 `reference_error_bar()`
+  （三级 WENO5 阶梯 → `p_ref`、`eps_ref`），并把 `certified` 拆为
+  `certified_point_estimate` / `certified_provable` / `certified`（后者要求 `L1+eps_ref<1 %`）；
+  `tests/test_compressible_wc_certified_ref.py` 9 项全绿（新增「certified 必须过误差棒」与
+  「docs 线性插值 vs 包守恒限制两实现口径对账」）；`docs/XVAL-FVM-M18737-ROUND2/
+  {certified_nx6400_errata.py, CERTIFIED-NX6400-ERRATA.md, certified_nx6400_errata.json,
+  figures/fig_errata_{ladder,budget,selfconv}.png}`；`CERTIFIED-NX6400-CLOSURE.md` 末尾追加勘误块。
+- 关键数字（程序注入，零手抄）：`p_ref`=0.8327；`eps_ref`=0.7076 %（docs）/ 0.7181 %（包，差 1.5 %）；
+  诚实上界 **1.601–1.611 %**；族内 Richardson（无参考）**1.523 %**；峰值差 0.0411 %；窗质量 0.008 %；
+  族内观测阶 0.8053→0.7657（一阶渐近，与 R6 一致）。按实测阶外推，<1 % 需 `nx≈12800`（预测 0.895 %，**未测量**）。
+- 归因：不是求解器退步，而是**两级自认证不足以支撑 <1 %**：比较两个各自带 ~1.5 % 误差的数值解，
+  差值 0.893 % 小于任一方的自身误差（误差部分抵消）。族内路线（完全不碰参考）独立给 1.523 %，
+  两路同量级 ⇒ 结论不是度量伪影。
+- 验收判定：锚点总账 `<15 %` **PASS**（最保守上界 1.611 %），`<3 %` PASS；`<1 %` **honest FAIL**
+  （点估计进线、可证明上界越线）。锚点保持 OPEN。
+- 给下次：① 真正收口 `<1 %` 只能加细被定级解（`MUSCL/HLLC@12800`，单核 ~180 min 量级，
+  需分段重启或超单作业墙钟），或按 R4 的 `nx_ref≈1.33e5` 路线；② 度量实现口径差（1.5 %）应统一为
+  单一实现，否则所有上界都要带这个系统项；③ 任何「certified」判据今后必须显式包含 `eps_ref` 项
+  （已由本单的布尔语义强制）。
