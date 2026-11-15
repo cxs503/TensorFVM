@@ -331,6 +331,29 @@ def render(summary: dict, bench: dict, fields) -> str:
     a(f"* `runs/lid_cavity_Re1000_n{{{','.join(str(n) for n in grids)}}}.json` —— 每分辨率工件")
     a("* `runs/fields.npz` —— 收敛速度场（可离线重算剖面）")
     a("* `runs/control/` —— 冷启动对照")
+    unc = HERE / "runs" / "uncertainty.json"
+    if unc.is_file():
+        u = json.loads(unc.read_text())
+        a("## 离散不确定度（补充研究，见 `UNCERTAINTY.md`）")
+        a("")
+        q = u["quantities"]
+        a("本报告的判据是「最细网格 vs Ghia 表」的**参考值一致性**。独立的网格收敛指数研究"
+          "（`runs/uncertainty.json`，Roache GCI + Celik 2008 数据质量门，泛函取自存储面场、"
+          "不做插值）给出：")
+        a("")
+        a("| 量 | 观测阶 p | 最细网格 GCI | 最细网格 vs Ghia | Richardson 外推 vs Ghia | ref 在 GCI 带内 |")
+        a("|---|---|---|---|---|---|")
+        for name, label in (("u_min", "u_min"), ("v_max", "v_max")):
+            e = q[name]
+            a(f"| {label} | {e['observed_order']:.2f} | {pct(e['gci_fine_relative'])} | "
+              f"{pct(abs(e['fine_minus_reference_relative']))} | "
+              f"{pct(abs(e['extrapolated_minus_reference_relative']))} | "
+              f"{'✓' if e['reference_within_gci_band'] else '✗'} |")
+        a("")
+        a("即最细网格与 Ghia 的差**小于自身离散带**，故本报告不应被读作「求解器精度 0.6%」；"
+          "时间步（Courant）轴在本包内为 not_run。机器门已按平台登记裁判行收紧到 3% / 0.01 L，"
+          "由 `tests/test_case_cavity_re1000_gate_registered.py` 断言（负对照：3%~5% 窗口内必然 FAIL）。")
+        a("")
     a("* `figures/` —— 本报告的三张图")
     return "\n".join(L) + "\n"
 
