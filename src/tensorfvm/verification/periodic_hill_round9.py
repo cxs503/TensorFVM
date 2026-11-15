@@ -294,8 +294,13 @@ def averaging_window(times, values, n_blocks=4, tolerance=0.05,
         attempts.append(rep)
         if rep["ok"]:
             return rep
-    worst = attempts[0] if attempts else {}
-    worst["attempts"] = attempts
+    # ``attempts[0]`` IS the object being returned, so attaching the list to it
+    # makes ``worst["attempts"][0]["attempts"]`` -> ``worst`` a reference cycle:
+    # the record then cannot be serialised (round 15's ``_clean`` and
+    # ``json.dumps`` both hit RecursionError), i.e. exactly the honest-FAIL
+    # (non-stationary) case would lose its artefact.  Copy instead of aliasing.
+    worst = dict(attempts[0]) if attempts else {}
+    worst["attempts"] = [dict(a) for a in attempts]
     return worst
 
 
