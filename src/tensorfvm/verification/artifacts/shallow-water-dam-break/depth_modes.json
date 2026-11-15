@@ -1,0 +1,375 @@
+{
+  "case": {
+    "key": "stoker-wet",
+    "kind": "wet",
+    "h0": 1.0,
+    "h1": 0.5,
+    "gravity": 9.81,
+    "x_dam": 0.0,
+    "x_min": -4.0,
+    "x_max": 6.0,
+    "t_star_end": 2.0,
+    "t_end": 0.638550856814101,
+    "reference": "Stoker (1957) Water Waves, ch. 10 (bore on a wet bed)"
+  },
+  "t_star": 2.0,
+  "tolerance": 0.05,
+  "cfl": 0.4,
+  "order": 2,
+  "bins": 80,
+  "bin_width": null,
+  "mode_min_fraction": 0.02,
+  "mode_tolerance": 0.05,
+  "accepted_min_n": 800,
+  "max_error_by_mechanism": {
+    "depth_mode": {
+      "h2_error": 0.00023729992730773362,
+      "h1_error": 0.0,
+      "step_ratio_error": 0.00023729992730773362,
+      "bore_x_error": 0.0029131299896954506
+    },
+    "oracle_window": {
+      "h2_error": 0.00020780383491727014,
+      "h1_error": null,
+      "step_ratio_error": null,
+      "bore_x_error": null
+    },
+    "gradient_walk": {
+      "h2_error": 0.0002979823267446875,
+      "h1_error": null,
+      "step_ratio_error": null,
+      "bore_x_error": 0.0029196077138942426
+    }
+  },
+  "max_error_depth_mode_accepted": {
+    "h2_error": 8.33017375294083e-06,
+    "h1_error": 0.0,
+    "step_ratio_error": 8.33017375294083e-06,
+    "bore_x_error": 0.0004329022875710759
+  },
+  "rows": [
+    {
+      "n": 200,
+      "dx": 0.05,
+      "depth_mode": {
+        "h2": 0.7267479480182477,
+        "h1": 0.5,
+        "jump": 0.2267479480182477,
+        "step_ratio": 1.4534958960364954,
+        "h2_error": 0.00023729992730773362,
+        "h1_error": 0.0,
+        "step_ratio_error": 0.00023729992730773362,
+        "bore_x": 1.8942834150438277,
+        "bore_x_error": 0.0029131299896954506,
+        "bore_x_cells": 0.11004530024257608,
+        "plateau_cells": 55,
+        "plateau_width": 2.7500000000000147,
+        "method": "depth_mode",
+        "valid": true,
+        "n_modes": 3,
+        "modes": [
+          {
+            "value": 0.5,
+            "centre": 0.503125,
+            "count": 80,
+            "bin": 0
+          },
+          {
+            "value": 0.7267479480182477,
+            "centre": 0.7281249999999999,
+            "count": 52,
+            "bin": 36
+          },
+          {
+            "value": 0.9999999903857862,
+            "centre": 0.996875,
+            "count": 36,
+            "bin": 79
+          }
+        ]
+      },
+      "oracle_window": {
+        "h2": 0.726769389330889,
+        "h2_error": 0.00020780383491727014,
+        "cells": 30
+      },
+      "gradient_walk": {
+        "h2": 0.7267038367413733,
+        "h1": 0.5000057114876338,
+        "h2_error": 0.0002979823267446875,
+        "bore_x": 1.8942956500471895,
+        "bore_x_error": 0.0029196077138942426,
+        "method": "mid_level_crossing",
+        "flatness": 0.0013686197714561526,
+        "bore_valid": true
+      },
+      "exact": {
+        "h2": 0.7269204461872865,
+        "h1": 0.5,
+        "step_ratio": 1.453840892374573,
+        "x_shock": 1.8887811500316989
+      }
+    },
+    {
+      "n": 400,
+      "dx": 0.025,
+      "depth_mode": {
+        "h2": 0.7268846402531036,
+        "h1": 0.5,
+        "jump": 0.22688464025310362,
+        "step_ratio": 1.4537692805062072,
+        "h2_error": 4.925701893604034e-05,
+        "h1_error": 0.0,
+        "step_ratio_error": 4.925701893604034e-05,
+        "bore_x": 1.8918035161849824,
+        "bore_x_error": 0.0016001674694989558,
+        "bore_x_cells": 0.12089464613134204,
+        "plateau_cells": 117,
+        "plateau_width": 2.9249999999999896,
+        "method": "depth_mode",
+        "valid": true,
+        "n_modes": 3,
+        "modes": [
+          {
+            "value": 0.5,
+            "centre": 0.503125,
+            "count": 162,
+            "bin": 0
+          },
+          {
+            "value": 0.7268846402531036,
+            "centre": 0.7281249999999999,
+            "count": 112,
+            "bin": 36
+          },
+          {
+            "value": 0.9999999999999762,
+            "centre": 0.996875,
+            "count": 76,
+            "bin": 79
+          }
+        ]
+      },
+      "oracle_window": {
+        "h2": 0.7268942173616771,
+        "h2_error": 3.608211290092461e-05,
+        "cells": 61
+      },
+      "gradient_walk": {
+        "h2": 0.7268638154932762,
+        "h1": 0.5000079132015766,
+        "h2_error": 7.790494036496684e-05,
+        "bore_x": 1.8918056012888549,
+        "bore_x_error": 0.0016012714109865209,
+        "method": "mid_level_crossing",
+        "flatness": 0.005288133678650552,
+        "bore_valid": true
+      },
+      "exact": {
+        "h2": 0.7269204461872865,
+        "h1": 0.5,
+        "step_ratio": 1.453840892374573,
+        "x_shock": 1.8887811500316989
+      }
+    },
+    {
+      "n": 800,
+      "dx": 0.0125,
+      "depth_mode": {
+        "h2": 0.7269143908136652,
+        "h1": 0.5,
+        "jump": 0.22691439081366516,
+        "step_ratio": 1.4538287816273303,
+        "h2_error": 8.33017375294083e-06,
+        "h1_error": 0.0,
+        "step_ratio_error": 8.33017375294083e-06,
+        "bore_x": 1.8895988077122687,
+        "bore_x_error": 0.0004329022875710759,
+        "bore_x_cells": 0.06541261444558799,
+        "plateau_cells": 239,
+        "plateau_width": 2.9874999999999363,
+        "method": "depth_mode",
+        "valid": true,
+        "n_modes": 3,
+        "modes": [
+          {
+            "value": 0.5,
+            "centre": 0.503125,
+            "count": 326,
+            "bin": 0
+          },
+          {
+            "value": 0.7269143908136652,
+            "centre": 0.7281249999999999,
+            "count": 233,
+            "bin": 36
+          },
+          {
+            "value": 0.9999999999999984,
+            "centre": 0.996875,
+            "count": 157,
+            "bin": 79
+          }
+        ]
+      },
+      "oracle_window": {
+        "h2": 0.7269189002549344,
+        "h2_error": 2.1266871225442284e-06,
+        "cells": 120
+      },
+      "gradient_walk": {
+        "h2": 0.7269191115137335,
+        "h1": 0.5000020929921154,
+        "h2_error": 1.836065500717496e-06,
+        "bore_x": 1.8895982241095641,
+        "bore_x_error": 0.00043259330380945947,
+        "method": "mid_level_crossing",
+        "flatness": 0.008673899013152844,
+        "bore_valid": true
+      },
+      "exact": {
+        "h2": 0.7269204461872865,
+        "h1": 0.5,
+        "step_ratio": 1.453840892374573,
+        "x_shock": 1.8887811500316989
+      }
+    },
+    {
+      "n": 1600,
+      "dx": 0.00625,
+      "depth_mode": {
+        "h2": 0.726920410942486,
+        "h1": 0.5,
+        "jump": 0.22692041094248605,
+        "step_ratio": 1.453840821884972,
+        "h2_error": 4.8485086086606076e-08,
+        "h1_error": 0.0,
+        "step_ratio_error": 4.8485086086606076e-08,
+        "bore_x": 1.889178238311661,
+        "bore_x_error": 0.00021023519848000692,
+        "bore_x_cells": 0.0635341247939536,
+        "plateau_cells": 482,
+        "plateau_width": 3.012500000000043,
+        "method": "depth_mode",
+        "valid": true,
+        "n_modes": 3,
+        "modes": [
+          {
+            "value": 0.5,
+            "centre": 0.503125,
+            "count": 655,
+            "bin": 0
+          },
+          {
+            "value": 0.726920410942486,
+            "centre": 0.7281249999999999,
+            "count": 474,
+            "bin": 36
+          },
+          {
+            "value": 0.9999999999999998,
+            "centre": 0.996875,
+            "count": 319,
+            "bin": 79
+          }
+        ]
+      },
+      "oracle_window": {
+        "h2": 0.7269208650765471,
+        "h2_error": 5.762518619591793e-07,
+        "cells": 240
+      },
+      "gradient_walk": {
+        "h2": 0.7269474563046063,
+        "h1": 0.5000011833995418,
+        "h2_error": 3.715690961994352e-05,
+        "bore_x": 1.8891769798183664,
+        "bore_x_error": 0.00020956889931947914,
+        "method": "mid_level_crossing",
+        "flatness": 0.01668552736650771,
+        "bore_valid": true
+      },
+      "exact": {
+        "h2": 0.7269204461872865,
+        "h1": 0.5,
+        "step_ratio": 1.453840892374573,
+        "x_shock": 1.8887811500316989
+      }
+    },
+    {
+      "n": 3200,
+      "dx": 0.003125,
+      "depth_mode": {
+        "h2": 0.7269212654002464,
+        "h1": 0.5,
+        "jump": 0.22692126540024637,
+        "step_ratio": 1.4538425308004927,
+        "h2_error": 1.126963705876631e-06,
+        "h1_error": 0.0,
+        "step_ratio_error": 1.126963705876631e-06,
+        "bore_x": 1.8890853568087191,
+        "bore_x_error": 0.00016105983322374303,
+        "bore_x_cells": 0.0973461686464816,
+        "plateau_cells": 970,
+        "plateau_width": 3.0312500000002585,
+        "method": "depth_mode",
+        "valid": true,
+        "n_modes": 3,
+        "modes": [
+          {
+            "value": 0.5,
+            "centre": 0.503125,
+            "count": 1313,
+            "bin": 0
+          },
+          {
+            "value": 0.7269212654002464,
+            "centre": 0.7281249999999999,
+            "count": 957,
+            "bin": 36
+          },
+          {
+            "value": 1.0,
+            "centre": 0.996875,
+            "count": 642,
+            "bin": 79
+          }
+        ]
+      },
+      "oracle_window": {
+        "h2": 0.7269206983595117,
+        "h2_error": 3.4690484568855305e-07,
+        "cells": 481
+      },
+      "gradient_walk": {
+        "h2": 0.7269992200014908,
+        "h1": 0.5000007747968935,
+        "h2_error": 0.00010836648579285656,
+        "bore_x": 1.889083691217756,
+        "bore_x_error": 0.00016017799947443684,
+        "method": "mid_level_crossing",
+        "flatness": 0.0396090653602225,
+        "bore_valid": true
+      },
+      "exact": {
+        "h2": 0.7269204461872865,
+        "h1": 0.5,
+        "step_ratio": 1.453840892374573,
+        "x_shock": 1.8887811500316989
+      }
+    }
+  ],
+  "meta": {
+    "generated_at": "2026-11-15T20:31:56Z",
+    "command": "PYTHONPATH=src python scripts/verify_dambreak_depth_modes.py --resolutions 200,400,800,1600,3200",
+    "python": "3.11.6",
+    "numpy": "2.4.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "wall_time_s": 6.938890649005771,
+    "bins": 80,
+    "mode_min_fraction": 0.02,
+    "mode_tolerance": 0.05,
+    "tolerance": 0.05,
+    "accepted_min_n": 800
+  }
+}
