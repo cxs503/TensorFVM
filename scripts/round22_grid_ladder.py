@@ -60,6 +60,29 @@ LEVELS = [
 ]
 
 
+#: The producer (``scripts/round20_lower_re_sister.py``) names its artefacts
+#: ``round20_laminar_<Re>_<mesh>``; round 22 pre-registered the ladder with a
+#: ``round22_laminar_`` tag that the producer never writes.  Resolve through the
+#: prefixes actually seen in the case directory instead of trusting one spelling
+#: (round 23 defect: every rung except the pre-existing level A was silently
+#: skipped, so the ladder read as ``n_levels = 1``).
+_ARTEFACT_PREFIXES = ("round20_laminar_", "round22_laminar_")
+
+
+def resolve_stem(stem: str):
+    """Return the artefact stem that exists on disk, or ``None``.
+
+    The suffix after ``laminar_`` is what identifies a rung; the producer prefix
+    is allowed to vary so that a renamed tag cannot silently drop levels.
+    """
+    suffix = stem.split("laminar_", 1)[-1] if "laminar_" in stem else stem
+    candidates = [stem] + [f"{pre}{suffix}" for pre in _ARTEFACT_PREFIXES]
+    for cand in candidates:
+        if (CASEDIR / f"{cand}.json").exists() and (CASEDIR / f"{cand}.npz").exists():
+            return cand
+    return None
+
+
 def _load(stem: str):
     js = CASEDIR / f"{stem}.json"
     npz = CASEDIR / f"{stem}.npz"
@@ -124,6 +147,8 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--out-dir", default=str(CASEDIR))
+    ap.add_argument("--out-name", default="round22_table.json")
+    ap.add_argument("--fig-prefix", default="round22")
     ap.add_argument("--no-figures", action="store_true")
     args = ap.parse_args(argv)
     out = Path(args.out_dir)
@@ -131,10 +156,10 @@ def main(argv=None) -> int:
 
     runs = {}
     for level, stem, nx, ny, dt, steps in LEVELS:
-        got = _load(stem)
+        resolved = resolve_stem(stem)
+        got = _load(resolved) if resolved else None
         if got is None:
-            print(f"[skip] {level}: {stem} not present")
-            continue
+            raise SystemExit(f"[missing] {level}: no artefact for {stem} in {CASEDIR}")
         got.update(level=level, nx=nx, ny=ny, dt=dt, steps=steps,
                    h_over_H=9.0 / nx)
         runs[level] = got
@@ -233,7 +258,7 @@ def main(argv=None) -> int:
         "accounting": accounting,
         "profile_crosscheck": profile_crosscheck,
     }
-    (out / "round22_table.json").write_text(json.dumps(table, indent=1, default=float))
+    (out / args.out_name).write_text(json.dumps(table, indent=1, default=float))
     print(json.dumps({"x_r_largest_verdict": spatial["verdict"],
                       "x_r_largest_rule": spatial["rule"],
                       "x_r_crest_verdict": spatial_crest["verdict"],
@@ -242,11 +267,11 @@ def main(argv=None) -> int:
                       "accounting": accounting}, indent=1, default=float))
 
     if not args.no_figures:
-        _figures(out, runs, spatial_levels, spatial, table)
+        _figures(out, runs, spatial_levels, spatial, table, args.fig_prefix)
     return 0
 
 
-def _figures(out, runs, spatial_levels, spatial, table):
+def _figures(out, runs, spatial_levels, spatial, table, prefix="round22"):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
@@ -282,7 +307,7 @@ def _figures(out, runs, spatial_levels, spatial, table):
     ax[1].grid(alpha=0.3)
     fig.suptitle("CASE-FVM-PERIODIC-HILLS round 22: closure-free Re=2800, CFL fixed")
     fig.tight_layout()
-    fig.savefig(out / "fig_round22_ladder.png", dpi=140)
+    fig.savefig(out / f"fig_{prefix}_ladder.png", dpi=140)
     plt.close(fig)
 
     # fig 2: mean near-wall shear profiles collapsing onto x/H
@@ -298,7 +323,7 @@ def _figures(out, runs, spatial_levels, spatial, table):
     ax.legend(fontsize=7)
     ax.grid(alpha=0.3)
     fig.tight_layout()
-    fig.savefig(out / "fig_round22_tau.png", dpi=140)
+    fig.savefig(out / f"fig_{prefix}_tau.png", dpi=140)
     plt.close(fig)
 
 
