@@ -1,5 +1,5 @@
 {
-  "status": "PURE_POWER_LAW_NO_FLOOR_DETECTED_GATE_NOT_YET_REACHED",
+  "status": "CERTIFIED_UNDER_1PCT_AT_NX6400",
   "certified_bar_percent": 1.0,
   "reference": {
     "family": "weno5",
@@ -33,10 +33,17 @@
       "peak_density": 6.507512067468936,
       "tag": "nx3200_hllc",
       "source": "ladder/data/ladder_profile_nx3200_hllc.npz"
+    },
+    "6400": {
+      "l1_percent": 0.8931133000818933,
+      "peak_percent": 0.04441609824140254,
+      "mass_percent": 0.00022110307590208827,
+      "peak_density": 6.46215579111805,
+      "tag": "nx6400_hllc",
+      "source": "ladder/data/ladder_profile_nx6400_hllc.npz"
     }
   },
   "missing_rungs": [
-    6400,
     12800
   ],
   "cfl_sensitivity": {},
@@ -53,47 +60,54 @@
       "fine_l1": 1.7755695233074968,
       "p": 0.8938288019172993,
       "monotone": true
+    },
+    "3200->6400": {
+      "coarse_l1": 1.7755695233074968,
+      "fine_l1": 0.8931133000818933,
+      "p": 0.9913667389828908,
+      "monotone": true
     }
   },
   "self_convergence_l1_percent": {
     "800->1600": 3.054458634107364,
-    "1600->3200": 1.765326541559378
+    "1600->3200": 1.765326541559378,
+    "3200->6400": 1.0362660126755199
   },
   "asymptote": {
     "free_fit": {
       "ok": true,
       "e_inf_percent": 0.0,
-      "order": 0.8838942673167021,
-      "C": 2231.087064345745,
-      "sse": 3.16121996727905e-05,
+      "order": 0.9425977704500952,
+      "C": 3495.400588780916,
+      "sse": 0.0007618102359418831,
       "rungs": [
-        800,
         1600,
-        3200
+        3200,
+        6400
       ],
       "model": "e(n) = e_inf + C * n**(-p)"
     },
     "floor_detected": false,
     "floor_class": "NO_FLOOR_DETECTED",
     "predicted_l1_percent": {
-      "6400": 0.9555829706363819,
-      "12800": 0.5142793913635523
+      "12800": 0.44923691036176394,
+      "25600": 0.22596662888446334
     },
     "free_fit_note": "with exactly three rungs and three free parameters the fit is degenerate (e_inf -> 0 is one exact solution), so the free fit is reported for inspection only and never binds the verdict",
     "fixed_order": {
       "ok": true,
-      "e_inf_percent_raw": -1.52361770477681,
+      "e_inf_percent_raw": -0.8824562232256034,
       "e_inf_percent": 0.0,
-      "order_used": 0.8938288019172993,
-      "order_source": "observed p of the finest pair 1600->3200",
+      "order_used": 0.9913667389828908,
+      "order_source": "observed p of the finest pair 3200->6400",
       "rungs": [
-        1600,
-        3200
+        3200,
+        6400
       ],
       "model": "e(n) = e_inf + C n^-p, p fixed by observation"
     }
   },
-  "smallest_grid_under_1pct_l1": null,
+  "smallest_grid_under_1pct_l1": 6400,
   "smallest_grid_under_1pct_peak": 1600,
   "ledger_tolerance_percent": 10.0,
   "interp_note": "L1/peak are measured on the ladder's own grid inside [0.4,1]; the reference profile is linearly interpolated onto it, as in wc_certified_ref.py (same convention => numbers comparable)."

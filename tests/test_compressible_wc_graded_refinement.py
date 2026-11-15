@@ -127,3 +127,84 @@ def test_pending_rungs_are_declared_not_silently_missing(analysis):
     """A rung that is absent must be *listed* as missing (no silent drop)."""
     assert sorted(analysis["missing_rungs"]) == sorted(
         n for n in g.GRADED if str(n) not in analysis["ladder"])
+
+# ---------------------------------------------------------------------------
+# Pre-registered forecast vs measurement (the nx=6400 gate)
+# ---------------------------------------------------------------------------
+#: from ``xval/PREDECLARATION-graded-refinement.md``, written *before* the nx=6400
+#: run landed: ``L1(6400) = 0.956 % +/- 15 %`` i.e. admissible in [0.81, 1.10] %.
+#: A registered forecast that is never compared against the measurement is
+#: decoration; these tests bind the prediction to the data.
+PREREGISTERED_NX6400_L1_PERCENT = 0.956
+PREREGISTERED_BAND = 0.15
+
+
+def test_nx6400_lands_inside_preregistered_band(analysis):
+    rung = analysis["ladder"].get("6400")
+    if rung is None:
+        pytest.skip("nx=6400 graded rung not backfilled yet")
+    lo = PREREGISTERED_NX6400_L1_PERCENT * (1.0 - PREREGISTERED_BAND)
+    hi = PREREGISTERED_NX6400_L1_PERCENT * (1.0 + PREREGISTERED_BAND)
+    assert lo <= rung["l1_percent"] <= hi, (rung["l1_percent"], lo, hi)
+
+
+def test_certified_bar_is_met_at_6400(analysis):
+    """nx=6400 is the rung that has to carry the certified-<1 % claim."""
+    rung = analysis["ladder"].get("6400")
+    if rung is None:
+        pytest.skip("nx=6400 graded rung not backfilled yet")
+    assert rung["l1_percent"] < 1.0
+    assert rung["peak_percent"] < 1.0
+    assert analysis["status"] == "CERTIFIED_UNDER_1PCT_AT_NX6400"
+
+
+def test_cfl08_variant_is_admitted_before_it_is_used(analysis):
+    """A CFL 0.8 rung may only enter the study if the same-grid control is tiny.
+
+    The predeclaration fixes the admission threshold at 0.2 % mutual L1, which is
+    far below the ~0.9 % decrement per refinement step, so admitting a CFL-0.8
+    rung cannot manufacture a convergence trend.
+    """
+    ctrl = analysis.get("cfl_sensitivity") or {}
+    if not ctrl:
+        pytest.skip("no same-grid CFL 0.4/0.8 pair available")
+    for nx, r in ctrl.items():
+        assert r["l1_percent"] < 0.2, (nx, r)
+    # a non-canonical rung in the ladder must have a control on the same grid
+    tags = {
+        int(n): analysis["ladder"][n]["tag"] for n in analysis["ladder"]
+    }
+    for nx, tag in tags.items():
+        if tag.endswith("cfl0.8"):
+            assert str(nx) in ctrl, (nx, tag, ctrl)
+
+
+def test_rung_artifacts_are_genuine_solver_output(analysis):
+    """Cross-check the stored profiles: spacing, cell count, positivity.
+
+    Cheap tamper/copy guard: a rung silently copied from another grid would fail
+    the spacing (``dx == 1/nx``) or the cell-count check even if its metrics
+    looked plausible.  Some rungs are stored windowed to [0.4, 1] (480 cells of a
+    800-cell grid), so the count check accepts either the full domain or the
+    window, but the spacing must always be the rung's own ``1/nx``.
+    """
+    import numpy as np
+
+    for nx_s, rung in analysis["ladder"].items():
+        nx = int(nx_s)
+        src = REPO / "docs" / "woodward-colella-double-blast" / rung["source"]
+        with np.load(src) as d:
+            # the 400/800 rungs are stored by the older writer under *_got keys
+            x = d["x"] if "x" in d else d["x_got"]
+            rho = d["rho"] if "rho" in d else d["rho_got"]
+        assert rho.size == x.size
+        assert np.all(np.isfinite(rho)) and np.all(rho > 0.0)
+        dx = np.diff(x)
+        assert dx.min() > 0.0
+        assert np.allclose(dx, dx.mean(), rtol=1e-9, atol=0.0), (nx, dx.std())
+        assert abs(dx.mean() - 1.0 / nx) < 1e-9, (nx, dx.mean(), 1.0 / nx)
+        full = abs(x[0] - 0.5 / nx) < 1e-9 and abs(x[-1] - 1.0 + 0.5 / nx) < 1e-6
+        windowed = (abs(x[0] - 0.4 - 0.5 / nx) < 1e-6
+                    and abs(x[-1] - 1.0 + 0.5 / nx) < 1e-6
+                    and x.size == round(0.6 * nx))
+        assert full or windowed, (nx, x[0], x[-1], x.size)
