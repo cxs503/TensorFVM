@@ -1,0 +1,104 @@
+{
+  "source_worktree": "/root/tp-agent/work/m21018",
+  "head_rows_kept": 40,
+  "files": {
+    "cpd12/result.json": {
+      "sha256": "56f955914253727333bdb52c2acd085387f7cd60ef0a29610c8891f971071909",
+      "bytes": 1611,
+      "copy": "verbatim"
+    },
+    "cpd12/benchmark.json": {
+      "sha256": "635152f89f09cc178be1cd2ae2b3a11eeca15b8e511d15901ef50f19267c5c47",
+      "bytes": 2484,
+      "copy": "verbatim"
+    },
+    "cpd12/errors.json": {
+      "sha256": "2a706628409f6a113cd0a7b71a3df50cfe669715f399c380e50ec390363649e4",
+      "bytes": 859,
+      "copy": "verbatim"
+    },
+    "cpd12/report.md": {
+      "sha256": "fc72351f4ced946a12b83fc221fe05f9f407306311ff28270a46d17a2ff7e26c",
+      "bytes": 1378,
+      "copy": "verbatim"
+    },
+    "cpd12/force_history_head.csv": {
+      "sha256_original_full": "a5074e0e313cc52a56b4490a085e0be8624ee796b81a5884e34520fc45ced77c",
+      "original_rows": 6001,
+      "copy": "first 40 data rows only (header + 40)",
+      "original_bytes": 196588
+    },
+    "cpd20/result.json": {
+      "sha256": "15c83d037ae015f6ed41f63c818501d47317b73d26bd7f76263389ab2325f9b8",
+      "bytes": 1598,
+      "copy": "verbatim"
+    },
+    "cpd20/benchmark.json": {
+      "sha256": "f5504725101a5e922b207a8978c11c79bafc38972f70f0d87c300f6adc51ee56",
+      "bytes": 2461,
+      "copy": "verbatim"
+    },
+    "cpd20/errors.json": {
+      "sha256": "8947b154b5eb6368e28da304b8ebb71ef300afb0554be9cfd06df4139c6beb4d",
+      "bytes": 868,
+      "copy": "verbatim"
+    },
+    "cpd20/report.md": {
+      "sha256": "2687da900d525182e3ee42edc5aa532b632b836c80750083d209954f92e041d6",
+      "bytes": 1375,
+      "copy": "verbatim"
+    },
+    "cpd20/force_history.csv": {
+      "sha256": "356ea9a9d8a3b288c20f26f516de27f4b11e750dbc2174ed2a213af8e49cce77",
+      "bytes": 195848,
+      "copy": "verbatim"
+    },
+    "cpd20/force_history_head.csv": {
+      "sha256_original_full": "356ea9a9d8a3b288c20f26f516de27f4b11e750dbc2174ed2a213af8e49cce77",
+      "original_rows": 6001,
+      "copy": "first 40 data rows only (header + 40)",
+      "original_bytes": 195848
+    },
+    "cpd32/result.json": {
+      "sha256": "ba9a027370c66142944ec74c8fa6dba81a248dc8de7987e8e423a8a9c8fde74b",
+      "bytes": 1403,
+      "copy": "verbatim"
+    },
+    "cpd32/benchmark.json": {
+      "sha256": "20191c994a1a782599f2693fb350eb2ba53eec04948b25c66ae07d5194911743",
+      "bytes": 2243,
+      "copy": "verbatim"
+    },
+    "cpd32/errors.json": {
+      "sha256": "e980e8cb2427d755d1567b13c98995e698bd2d6c5a34866c518fa8c4cc56725e",
+      "bytes": 747,
+      "copy": "verbatim"
+    },
+    "cpd32/report.md": {
+      "sha256": "19d204c411b8a3322a8d938c290ba7f709b691830d7b960cb62b2acf9bf03c53",
+      "bytes": 1326,
+      "copy": "verbatim"
+    },
+    "cpd32/force_history_head.csv": {
+      "sha256_original_full": "072ab50d4a59d3845be3533ed1c6d85baf8b27fcf7c43398af2c0ad52a99c6b2",
+      "original_rows": 6001,
+      "copy": "first 40 data rows only (header + 40)",
+      "original_bytes": 109779
+    },
+    "docs/case-cylinder-re100/README.md": {
+      "sha256": "44693d53dbb5a5360f4c96f430736e4e1ebe3107f24cb58b443f50ea48121344",
+      "bytes": 2465,
+      "copy": "verbatim (in repo docs/)"
+    },
+    "docs/case-cylinder-re100/ladder.json": {
+      "sha256": "9a853be2369be9e23c8ad37faed13cd6dfe7b44cd5936041a6ce3dc3d3f8e226",
+      "bytes": 2988,
+      "copy": "verbatim (in repo docs/)"
+    },
+    "artifacts/case-cylinder-re100/reference/reference.json": {
+      "sha256": "8549edea00f4be3362546af87b84fe1960a86451d93c5ec71181b56cafa06eb3",
+      "bytes": 1893,
+      "copy": "verbatim (in repo docs/)"
+    }
+  }
+}
