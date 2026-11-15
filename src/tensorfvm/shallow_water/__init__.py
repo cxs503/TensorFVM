@@ -10,6 +10,7 @@ references are solutions of the hydrostatic shallow-water system.
 """
 
 from .dam_break import (
+    local_extrema_details,
     ACCEPTED_MIN_N,
     CASES,
     LEVEL_POSITION_LEVELS,
@@ -90,6 +91,7 @@ __all__ = [
     "profile_metrics",
     "run_galilean_case",
     "check_stoker_solution",
+    "local_extrema_details",
     "check_thacker_solution",
     "ShallowWater2D",
     "ThackerBasin",
