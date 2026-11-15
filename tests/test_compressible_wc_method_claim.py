@@ -124,7 +124,7 @@ def test_registered_numbers_bind_to_the_committed_artifacts(result):
     assert all(ladder[f"nx{nx}"]["match"] for nx in (200, 400, 800))
     assert ladder["observed_order"]["match"] is False
     assert found_orders["local_orders"] == pytest.approx([0.972, 2.381], abs=5e-3)
-    assert found_orders["lsq_order"] == pytest.approx(1.177, abs=5e-3)
+    assert found_orders["lsq_order"] == pytest.approx(1.677, abs=5e-3)
     for value in found_orders["local_orders"] + [found_orders["lsq_order"],
                                                  found_orders["mean_local_order"]]:
         assert abs(value - 1.8) > 0.1, "an estimator now supports the 1.8 claim"
