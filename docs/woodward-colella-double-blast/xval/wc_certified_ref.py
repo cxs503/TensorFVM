@@ -78,8 +78,9 @@ def _load(tag: str) -> dict:
     if not p.exists():
         raise FileNotFoundError(f"profile {tag} not found: {p}")
     d = np.load(p)
-    x = np.asarray(d["x"], float)
-    rho = np.asarray(d["rho"], float)
+    # older artifact rungs (400/800) store the got-profile under x_got/rho_got
+    x = np.asarray(d["x_got"] if "x_got" in d else d["x"], float)
+    rho = np.asarray(d["rho_got"] if "rho_got" in d else d["rho"], float)
     order = np.argsort(x)
     return {"x": x[order], "rho": rho[order], "source": str(p.relative_to(ROOT))}
 
@@ -143,8 +144,13 @@ def run() -> dict:
 
     # --- verdict --------------------------------------------------------------
     finest = graded["nx3200_hllc"]
+    # "certified" is honest only if BOTH the reference is self-certified <1%
+    # AND the graded solution itself is <1% (L1 and peak) against it.
+    graded_under_1 = (finest["l1_percent"] < CERTIFIED_PERCENT
+                      and finest["peak_percent"] < CERTIFIED_PERCENT)
     verdict = {
-        "certified": bool(certified and floor_removed),
+        "certified": bool(certified and floor_removed and graded_under_1),
+        "graded_under_1": bool(graded_under_1),
         "reference": {
             "family": "weno5", "grid": FINE_WENO5[-1],
             "self_l1_percent": ref_l1, "self_peak_percent": ref_peak,
