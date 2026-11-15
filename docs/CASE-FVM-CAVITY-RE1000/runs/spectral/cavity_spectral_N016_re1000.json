@@ -1,0 +1,146 @@
+{
+ "case": "CASE-FVM-CAVITY-RE1000",
+ "error": "Reynolds march stalled at Re=639.1820526123047 towards 1000.0",
+ "march": [
+  {
+   "iterations": 4,
+   "mode": "cold start",
+   "reynolds": 10.0
+  },
+  {
+   "iterations": 5,
+   "mode": "march step",
+   "reynolds": 210.0
+  },
+  {
+   "iterations": 7,
+   "mode": "march step",
+   "reynolds": 510.0
+  },
+  {
+   "error": "Newton line search failed at Re=960.0 (|R|=2.673e+02)",
+   "mode": "march step failed",
+   "new_delta": 225.0,
+   "reynolds": 960.0
+  },
+  {
+   "error": "Newton line search failed at Re=735.0 (|R|=9.670e+01)",
+   "mode": "march step failed",
+   "new_delta": 112.5,
+   "reynolds": 735.0
+  },
+  {
+   "error": "Newton line search failed at Re=622.5 (|R|=1.136e+01)",
+   "mode": "march step failed",
+   "new_delta": 56.25,
+   "reynolds": 622.5
+  },
+  {
+   "iterations": 6,
+   "mode": "march step",
+   "reynolds": 566.25
+  },
+  {
+   "error": "Newton line search failed at Re=650.625 (|R|=5.062e+01)",
+   "mode": "march step failed",
+   "new_delta": 42.1875,
+   "reynolds": 650.625
+  },
+  {
+   "iterations": 16,
+   "mode": "march step",
+   "reynolds": 608.4375
+  },
+  {
+   "error": "Newton line search failed at Re=671.71875 (|R|=1.223e+01)",
+   "mode": "march step failed",
+   "new_delta": 31.640625,
+   "reynolds": 671.71875
+  },
+  {
+   "error": "Newton line search failed at Re=640.078125 (|R|=4.905e-01)",
+   "mode": "march step failed",
+   "new_delta": 15.8203125,
+   "reynolds": 640.078125
+  },
+  {
+   "iterations": 4,
+   "mode": "march step",
+   "reynolds": 624.2578125
+  },
+  {
+   "error": "Newton line search failed at Re=647.98828125 (|R|=5.476e+00)",
+   "mode": "march step failed",
+   "new_delta": 11.865234375,
+   "reynolds": 647.98828125
+  },
+  {
+   "iterations": 4,
+   "mode": "march step",
+   "reynolds": 636.123046875
+  },
+  {
+   "error": "Newton line search failed at Re=653.9208984375 (|R|=7.747e+00)",
+   "mode": "march step failed",
+   "new_delta": 8.89892578125,
+   "reynolds": 653.9208984375
+  },
+  {
+   "error": "Newton line search failed at Re=645.02197265625 (|R|=3.833e+00)",
+   "mode": "march step failed",
+   "new_delta": 4.449462890625,
+   "reynolds": 645.02197265625
+  },
+  {
+   "error": "Newton line search failed at Re=640.572509765625 (|R|=8.529e-01)",
+   "mode": "march step failed",
+   "new_delta": 2.2247314453125,
+   "reynolds": 640.572509765625
+  },
+  {
+   "iterations": 4,
+   "mode": "march step",
+   "reynolds": 638.3477783203125
+  },
+  {
+   "error": "Newton line search failed at Re=641.6848754882812 (|R|=1.666e+00)",
+   "mode": "march step failed",
+   "new_delta": 1.668548583984375,
+   "reynolds": 641.6848754882812
+  },
+  {
+   "error": "Newton line search failed at Re=640.0163269042969 (|R|=4.370e-01)",
+   "mode": "march step failed",
+   "new_delta": 0.8342742919921875,
+   "reynolds": 640.0163269042969
+  },
+  {
+   "iterations": 4,
+   "mode": "march step",
+   "reynolds": 639.1820526123047
+  },
+  {
+   "error": "Newton line search failed at Re=640.433464050293 (|R|=7.502e-01)",
+   "mode": "march step failed",
+   "new_delta": 0.6257057189941406,
+   "reynolds": 640.433464050293
+  },
+  {
+   "error": "Newton line search failed at Re=639.8077583312988 (|R|=2.702e-01)",
+   "mode": "march step failed",
+   "new_delta": 0.3128528594970703,
+   "reynolds": 639.8077583312988
+  },
+  {
+   "error": "Newton line search failed at Re=639.4949054718018 (|R|=3.810e-02)",
+   "mode": "march step failed",
+   "new_delta": 0.15642642974853516,
+   "reynolds": 639.4949054718018
+  }
+ ],
+ "nodes_per_side": 17,
+ "order": 16,
+ "reynolds": 1000.0,
+ "status": "newton_diverged",
+ "wall_seconds": 12.393070936203003
+}
