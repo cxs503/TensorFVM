@@ -182,7 +182,7 @@ def render(runs, dns, out: Path, figs, notes: str) -> str:
     add('')
     add('> 本文件所有数字由 `scripts/report_case_fvm_channel_kmm180_seeded.py` 从各 run 的 '
         '`summary.json` / `profiles.csv` 程序化注入，零手抄。')
-    add(f"> 主运行：`{primary['_dir']}`；判决：锚点 **{primary['verdict']['anchor']}**，'
+    add(f"> 主运行：`{primary['_dir']}`；判决：锚点 **{primary['verdict']['anchor']}**，"
         f"准入 **{primary['verdict']['admissible']}**，发布判定 "
         f"**{primary['verdict']['published']}**。")
     add('')
