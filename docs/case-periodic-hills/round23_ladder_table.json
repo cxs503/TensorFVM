@@ -1,0 +1,330 @@
+{
+ "case": "CASE-FVM-PERIODIC-HILLS round 22 (discretisation attribution)",
+ "reference_x_r_over_H": 5.41,
+ "protocol": {
+  "closure": "laminar (nu_t == 0)",
+  "reynolds": 2800.0,
+  "convection_blend": 0.75,
+  "constant_cfl": true,
+  "averaging_window_t": [
+   160.0,
+   400.0
+  ],
+  "operator": "certified round-17 separation_reattachment on stored mean wall shear"
+ },
+ "levels": {
+  "A": {
+   "stem": "round20_laminar_Re2800_96x48",
+   "nx": 96,
+   "ny": 48,
+   "dt": 0.02,
+   "steps": 20000,
+   "h_over_H": 0.09375,
+   "x_s_over_H": 3.922900531823629,
+   "x_r_over_H": 8.264277859446059,
+   "x_s_first_over_H": 0.40074469529249757,
+   "x_r_first_over_H": 1.2540965527208672,
+   "bubble_table": [
+    [
+     0.40074469529249757,
+     1.2540965527208672,
+     0.8533518574283696,
+     1.69231769516092
+    ],
+    [
+     3.922900531823629,
+     8.264277859446059,
+     4.34137732762243,
+     22.4721007015432
+    ]
+   ],
+   "bubbles": 2,
+   "status": "out_of_window",
+   "wall_clock_s": 194.91389298439026,
+   "block_spread_rel": 0.007555548875741755,
+   "coverage": 0.7221297836938436,
+   "profile_stations": 7,
+   "profile_pass": 0
+  },
+  "Ap": {
+   "stem": "round20_laminar_Re2800_96x48dt01",
+   "nx": 96,
+   "ny": 48,
+   "dt": 0.01,
+   "steps": 20000,
+   "h_over_H": 0.09375,
+   "x_s_over_H": 3.684136357648673,
+   "x_r_over_H": 8.22962080445255,
+   "x_s_first_over_H": 0.40230633821677486,
+   "x_r_first_over_H": 1.2870199739172996,
+   "bubble_table": [
+    [
+     0.40230633821677486,
+     1.2870199739172996,
+     0.8847136357005247,
+     1.740438098419581
+    ],
+    [
+     3.684136357648673,
+     8.22962080445255,
+     4.545484446803877,
+     24.979172739976182
+    ]
+   ],
+   "bubbles": 2,
+   "status": "out_of_window",
+   "wall_clock_s": 266.2709650993347,
+   "block_spread_rel": 0.0045194435091469864,
+   "coverage": 0.6419650291423813,
+   "profile_stations": 7,
+   "profile_pass": 0
+  },
+  "B": {
+   "stem": "round20_laminar_Re2800_144x72",
+   "nx": 144,
+   "ny": 72,
+   "dt": 0.0133,
+   "steps": 20000,
+   "h_over_H": 0.0625,
+   "x_s_over_H": NaN,
+   "x_r_over_H": NaN,
+   "x_s_first_over_H": NaN,
+   "x_r_first_over_H": NaN,
+   "bubble_table": [],
+   "bubbles": 0,
+   "status": "no_recirculation",
+   "wall_clock_s": 9.017756223678589,
+   "block_spread_rel": null,
+   "coverage": 0.0,
+   "profile_stations": 7,
+   "profile_pass": 0
+  },
+  "C": {
+   "stem": "round20_laminar_Re2800_192x96",
+   "nx": 192,
+   "ny": 96,
+   "dt": 0.01,
+   "steps": 20000,
+   "h_over_H": 0.046875,
+   "x_s_over_H": NaN,
+   "x_r_over_H": NaN,
+   "x_s_first_over_H": NaN,
+   "x_r_first_over_H": NaN,
+   "bubble_table": [],
+   "bubbles": 0,
+   "status": "no_recirculation",
+   "wall_clock_s": 17.168610095977783,
+   "block_spread_rel": null,
+   "coverage": 0.0,
+   "profile_stations": 7,
+   "profile_pass": 0
+  },
+  "D": {
+   "stem": "round20_laminar_Re2800_240x120",
+   "nx": 240,
+   "ny": 120,
+   "dt": 0.008,
+   "steps": 20000,
+   "h_over_H": 0.0375,
+   "x_s_over_H": NaN,
+   "x_r_over_H": NaN,
+   "x_s_first_over_H": NaN,
+   "x_r_first_over_H": NaN,
+   "bubble_table": [],
+   "bubbles": 0,
+   "status": "no_recirculation",
+   "wall_clock_s": 30.87695837020874,
+   "block_spread_rel": null,
+   "coverage": 0.0,
+   "profile_stations": 7,
+   "profile_pass": 0
+  }
+ },
+ "block_x_r_over_H": {
+  "A": [
+   8.300422427200237,
+   8.23798954934437,
+   8.254709369601452,
+   8.259607916882164
+  ],
+  "Ap": [
+   8.238663549684395,
+   8.211148286128449,
+   8.24834614320186,
+   8.224352943515225
+  ],
+  "B": [
+   null,
+   null,
+   null,
+   null
+  ],
+  "C": [
+   null,
+   null,
+   null,
+   null
+  ],
+  "D": [
+   null,
+   null,
+   null,
+   null
+  ]
+ },
+ "attribute_x_r_over_H": {
+  "reference": 5.41,
+  "tolerance": 0.1,
+  "n_levels": 4,
+  "verdict": "inconclusive",
+  "rule": "non-finite level",
+  "x_finest": null,
+  "x_coarse": null,
+  "x_extrapolated": null,
+  "order": null,
+  "gci_fine": null,
+  "movement_rel": null,
+  "error_finest_rel": null,
+  "error_extrapolated_rel": null,
+  "ladder": [
+   [
+    0.09375,
+    8.264277859446059
+   ],
+   [
+    0.0625,
+    NaN
+   ],
+   [
+    0.046875,
+    NaN
+   ],
+   [
+    0.0375,
+    NaN
+   ]
+  ],
+  "levels": [
+   "A",
+   "B",
+   "C",
+   "D"
+  ]
+ },
+ "attribute_x_r_over_H_crest_bubble": {
+  "reference": 5.41,
+  "tolerance": 0.1,
+  "n_levels": 4,
+  "verdict": "inconclusive",
+  "rule": "non-finite level",
+  "x_finest": null,
+  "x_coarse": null,
+  "x_extrapolated": null,
+  "order": null,
+  "gci_fine": null,
+  "movement_rel": null,
+  "error_finest_rel": null,
+  "error_extrapolated_rel": null,
+  "ladder": [
+   [
+    0.09375,
+    1.2540965527208672
+   ],
+   [
+    0.0625,
+    NaN
+   ],
+   [
+    0.046875,
+    NaN
+   ],
+   [
+    0.0375,
+    NaN
+   ]
+  ],
+  "levels": [
+   "A",
+   "B",
+   "C",
+   "D"
+  ],
+  "definition": "reattachment of the bubble that separates first downstream of the crest (primary='first'); this is the object the DNS reference x_r/H=5.41 names"
+ },
+ "attribute_x_s_over_H": {
+  "reference": 0.22,
+  "tolerance": 0.1,
+  "n_levels": 4,
+  "verdict": "inconclusive",
+  "rule": "non-finite level",
+  "x_finest": null,
+  "x_coarse": null,
+  "x_extrapolated": null,
+  "order": null,
+  "gci_fine": null,
+  "movement_rel": null,
+  "error_finest_rel": null,
+  "error_extrapolated_rel": null,
+  "ladder": [
+   [
+    0.09375,
+    3.922900531823629
+   ],
+   [
+    0.0625,
+    NaN
+   ],
+   [
+    0.046875,
+    NaN
+   ],
+   [
+    0.0375,
+    NaN
+   ]
+  ],
+  "levels": [
+   "A",
+   "B",
+   "C",
+   "D"
+  ]
+ },
+ "temporal": {
+  "dt_half": {
+   "coarse_dt": 8.264277859446059,
+   "fine_dt": 8.22962080445255,
+   "absolute": 0.03465705499350946,
+   "relative": 0.004193597502762627,
+   "fine_minus_coarse": -0.03465705499350946,
+   "resolved": true,
+   "mesh": [
+    96,
+    48
+   ],
+   "dt_coarse": 0.02,
+   "dt_fine": 0.01
+  }
+ },
+ "accounting": {
+  "reference": 5.41,
+  "x_r_finest": NaN,
+  "mismatch_to_close": NaN,
+  "span_spatial": 0.0,
+  "span_temporal_dt": 0.03465705499350946,
+  "fraction_explained_spatial": NaN,
+  "fraction_explained_temporal": NaN,
+  "grid_refinement_products": [
+   "B",
+   "C",
+   "D"
+  ]
+ },
+ "profile_crosscheck": {
+  "n_published": 190,
+  "n_independent": 240,
+  "max_abs_difference": 0.0,
+  "mean_abs_difference": 0.0,
+  "agrees_within_1e_3": true
+ }
+}
