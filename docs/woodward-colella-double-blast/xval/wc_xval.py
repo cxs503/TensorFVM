@@ -92,7 +92,8 @@ def stored_profiles() -> dict[str, dict]:
         d = np.load(p)
         tag = p.stem.replace("ladder_profile_", "")
         nx = int(tag.split("_")[0].lstrip("nx"))
-        family = ("weno5" if "weno5" in tag
+        family = ("weno7" if "weno7" in tag
+                  else "weno5" if "weno5" in tag
                   else "fvm_minmod" if "limiterminmod" in tag
                   else "fvm")
         out[tag] = {"nx": nx, "family": family,
