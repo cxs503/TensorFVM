@@ -53,11 +53,11 @@
 
 | 判据 | 含义 | 实测 | 阈值 | 结论 |
 |---|---|---|---|---|
-| C1_u_profile_max_abs | max |u_computed - u_Ghia| over all Table I points, units of U | 0.0043073 | 0.05 | ✓ |
-| C2_v_profile_max_abs | max |v_computed - v_Ghia| over all Table II points, units of U | 0.0111841 | 0.05 | ✓ |
-| C3_u_min_relative | relative error of the deepest reverse-flow u on x = L/2 (Ghia u_min) | 0.0064709 | 0.05 | ✓ |
-| C4_v_max_relative | relative error of the strongest v on y = L/2 (Ghia v_max) | 0.00779131 | 0.05 | ✓ |
-| C5_vortex_centre | primary-vortex centre displacement from the Ghia value, in L | 0.00395625 | 0.05 | ✓ |
+| C1_u_profile_max_abs | max |u_computed - u_Ghia| over all Table I points, units of U | 0.0043073 | 0.03 | ✓ |
+| C2_v_profile_max_abs | max |v_computed - v_Ghia| over all Table II points, units of U | 0.0111841 | 0.03 | ✓ |
+| C3_u_min_relative | relative error of the deepest reverse-flow u on x = L/2 (Ghia u_min) | 0.0064709 | 0.03 | ✓ |
+| C4_v_max_relative | relative error of the strongest v on y = L/2 (Ghia v_max) | 0.00779131 | 0.03 | ✓ |
+| C5_vortex_centre | primary-vortex centre displacement from the Ghia value, in L | 0.00395625 | 0.01 | ✓ |
 | C6_divergence_free | max |div u| of the converged discrete field (closed-box compatibility) | 1.20792e-13 | 1e-10 | ✓ |
 | C7_steady_state | steady-state residual max|du/dt|, |dv/dt| of the marching scheme | 9.88834e-08 | 1e-06 | ✓ |
 
@@ -103,10 +103,6 @@
 
 **是否 < 3%？** 最细网格（n = 128）全部关键量均 < 3%；算例池 5% 容差判定 = **PASS**。n = 64 同样 PASS。
 
-## 离散不确定度（补充研究，见 `UNCERTAINTY.md`）
-
-本报告的判据是「最细网格 vs Ghia 表」的**参考值一致性**。独立的网格收敛指数研究（`runs/uncertainty.json`，Roache GCI + Celik 2008 数据质量门，泛函取自存储面场、不做插值）给出：观测阶 p = 1.90（u_min）/ 1.98（v_max），最细网格 GCI = 1.45% / 1.29%，而最细网格与 Ghia 的差只有 0.63% / 0.79% —— **小于自身离散带**，故本报告不应被读作「求解器精度 0.6%」；Richardson 外推极限距 Ghia 1.80% / 1.83%（外推后更远，说明最细网格的一致部分来自网格误差与格式偏差的抵消）。时间步（Courant）轴在本包内为 not_run。
-
 ## 复现
 
 ```
@@ -125,4 +121,15 @@ PYTHONPATH=src python docs/CASE-FVM-CAVITY-RE1000/make_report.py
 * `runs/lid_cavity_Re1000_n{32,64,128}.json` —— 每分辨率工件
 * `runs/fields.npz` —— 收敛速度场（可离线重算剖面）
 * `runs/control/` —— 冷启动对照
+## 离散不确定度（补充研究，见 `UNCERTAINTY.md`）
+
+本报告的判据是「最细网格 vs Ghia 表」的**参考值一致性**。独立的网格收敛指数研究（`runs/uncertainty.json`，Roache GCI + Celik 2008 数据质量门，泛函取自存储面场、不做插值）给出：
+
+| 量 | 观测阶 p | 最细网格 GCI | 最细网格 vs Ghia | Richardson 外推 vs Ghia | ref 在 GCI 带内 |
+|---|---|---|---|---|---|
+| u_min | 1.90 | 1.45% | 0.63% | 1.80% | ✓ |
+| v_max | 1.98 | 1.29% | 0.79% | 1.83% | ✓ |
+
+即最细网格与 Ghia 的差**小于自身离散带**，故本报告不应被读作「求解器精度 0.6%」；时间步（Courant）轴在本包内为 not_run。机器门已按平台登记裁判行收紧到 3% / 0.01 L，由 `tests/test_case_cavity_re1000_gate_registered.py` 断言（负对照：3%~5% 窗口内必然 FAIL）。
+
 * `figures/` —— 本报告的三张图

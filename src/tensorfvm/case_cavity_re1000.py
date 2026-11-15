@@ -50,26 +50,61 @@ REYNOLDS = 1000.0
 LID_VELOCITY = 1.0
 REFERENCE = ("U. Ghia, K.N. Ghia, C.T. Shin, J. Comput. Phys. 48 (1982) 387-411, "
              "Table I (u at x = L/2), Table II (v at y = L/2), primary-vortex centre")
-CASE_POOL_TOLERANCE = 0.05  # case-pool entry: "tolerance: < 5 %"
+CASE_POOL_TOLERANCE = 0.05  # case-pool entry: "tolerance: < 5 %" (development band)
+
+#: Tolerance of the *registered* judge row (``tensor_benchmark_cases``, repo
+#: TensorFVM): u_min / v_max relative error and the per-point centreline
+#: ``max|du|/U``, ``max|dv|/U`` must be < 3 % at the graded grid.
+REGISTERED_TOLERANCE = 0.03
+#: Registered primary-vortex-centre tolerance, in units of ``L``, only claimed
+#: from :data:`JUDGE_GRID` upwards.
+VORTEX_TOLERANCE_L = 0.01
+#: The grid the registered judge row grades (``<= 0.01 L @ n >= 128``).
+JUDGE_GRID = 128
+
+#: One case, several spellings.  The pool/ledger anchor ``CASE-FVM-CAVITY-RE1000``
+#: (case-pool code ``FVM-CAVITY-RE1000``) and the first-round anchor
+#: ``CASE-CAVITY-RE1000-FVM`` are the *same* calculation; resolving them to one
+#: slug is what lets an anchor-driven judge find this bundle instead of nothing.
+ANCHOR_ALIASES = {
+    "CASE-CAVITY-RE1000-FVM": CASE_SLUG,
+    "FVM-CAVITY-RE1000": CASE_SLUG,
+}
+
+
+def resolve_anchor(slug: str) -> str:
+    """Canonical case slug for any known spelling of this cavity anchor."""
+    key = str(slug).strip()
+    if key == CASE_SLUG:
+        return CASE_SLUG
+    if key in ANCHOR_ALIASES:
+        return ANCHOR_ALIASES[key]
+    raise KeyError(f"unknown cavity anchor {slug!r}; known: "
+                   f"{[CASE_SLUG, *ANCHOR_ALIASES]}")
 
 #: The case-pool tolerance turned into named, individually reported checks.
 #: ``value`` is filled in by :func:`evaluate` from the stored artefact.
 CRITERIA: tuple[dict[str, object], ...] = (
     {"id": "C1_u_profile_max_abs",
      "statement": "max |u_computed - u_Ghia| over all Table I points, units of U",
-     "comparator": "le", "threshold": CASE_POOL_TOLERANCE, "unit": "U"},
+     "comparator": "le", "threshold": REGISTERED_TOLERANCE, "unit": "U",
+     "graded_from_n": JUDGE_GRID},
     {"id": "C2_v_profile_max_abs",
      "statement": "max |v_computed - v_Ghia| over all Table II points, units of U",
-     "comparator": "le", "threshold": CASE_POOL_TOLERANCE, "unit": "U"},
+     "comparator": "le", "threshold": REGISTERED_TOLERANCE, "unit": "U",
+     "graded_from_n": JUDGE_GRID},
     {"id": "C3_u_min_relative",
      "statement": "relative error of the deepest reverse-flow u on x = L/2 (Ghia u_min)",
-     "comparator": "le", "threshold": CASE_POOL_TOLERANCE, "unit": "1"},
+     "comparator": "le", "threshold": REGISTERED_TOLERANCE, "unit": "1",
+     "graded_from_n": JUDGE_GRID},
     {"id": "C4_v_max_relative",
      "statement": "relative error of the strongest v on y = L/2 (Ghia v_max)",
-     "comparator": "le", "threshold": CASE_POOL_TOLERANCE, "unit": "1"},
+     "comparator": "le", "threshold": REGISTERED_TOLERANCE, "unit": "1",
+     "graded_from_n": JUDGE_GRID},
     {"id": "C5_vortex_centre",
      "statement": "primary-vortex centre displacement from the Ghia value, in L",
-     "comparator": "le", "threshold": CASE_POOL_TOLERANCE, "unit": "L"},
+     "comparator": "le", "threshold": VORTEX_TOLERANCE_L, "unit": "L",
+     "graded_from_n": JUDGE_GRID},
     {"id": "C6_divergence_free",
      "statement": "max |div u| of the converged discrete field (closed-box compatibility)",
      "comparator": "le", "threshold": 1e-10, "unit": "U/L"},
@@ -198,7 +233,13 @@ def _profile_error(block: dict, which: str) -> tuple[float, float, float, float]
 
 
 def evaluate(artifact: dict) -> dict:
-    """Evaluate :data:`CRITERIA` on an artefact (recomputed from the stored profiles)."""
+    """Evaluate :data:`CRITERIA` on an artefact, recomputed from the stored profiles.
+
+    Criteria carrying ``graded_from_n`` are binding (registered tolerance) only
+    from that grid upwards; coarser grids are reported against the wider
+    development band so a coarse run stays visible as a diagnostic instead of
+    silently inheriting the acceptance claim.
+    """
     u_max, u_rel, u_ref, u_got = _profile_error(artifact["u"], "u")
     v_max, v_rel, v_ref, v_got = _profile_error(artifact["v"], "v")
     values = {
@@ -210,14 +251,20 @@ def evaluate(artifact: dict) -> dict:
         "C6_divergence_free": float(artifact["max_divergence"]),
         "C7_steady_state": float(artifact["residual"]),
     }
+    n = int(artifact.get("n", JUDGE_GRID))
     out: dict = {}
     for spec in CRITERIA:
         cid = str(spec["id"])
         value = float(values[cid])
-        thr = float(spec["threshold"])
+        graded = n >= int(spec.get("graded_from_n", 0))
+        thr = float(spec["threshold"]) if graded else CASE_POOL_TOLERANCE
+        if spec["comparator"] != "le" and not graded:
+            thr = float(spec["threshold"])
         ok = value <= thr if spec["comparator"] == "le" else value >= thr
         out[cid] = {"statement": spec["statement"], "value": value, "threshold": thr,
                     "comparator": spec["comparator"], "unit": spec["unit"],
+                    "band": "registered" if graded else "diagnostic",
+                    "graded": bool(graded),
                     "pass": bool(ok), "margin": thr - value}
     out["_extremum_basis"] = {"u": {"reference": u_ref, "computed": u_got},
                               "v": {"reference": v_ref, "computed": v_got}}
@@ -303,6 +350,10 @@ def summarise(artifacts: list[dict]) -> dict:
         "reynolds": REYNOLDS,
         "lid_velocity": LID_VELOCITY,
         "pool_tolerance": CASE_POOL_TOLERANCE,
+        "registered_tolerance": REGISTERED_TOLERANCE,
+        "vortex_tolerance_L": VORTEX_TOLERANCE_L,
+        "judge_grid": JUDGE_GRID,
+        "anchor_aliases": dict(ANCHOR_ALIASES),
         "solver": rows[-1]["solver"]["class"],
         "resolutions": [a["n"] for a in rows],
         "cases": [{k: v for k, v in a.items() if k != "convergence_history"} for a in rows],

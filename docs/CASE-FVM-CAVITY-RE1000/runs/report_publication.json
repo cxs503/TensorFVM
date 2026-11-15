@@ -1,0 +1,83 @@
+{
+ "id": 19185,
+ "title": "CASE-FVM-CAVITY-RE1000 \u673a\u5668\u95e8\u6536\u7d27\uff1a5%\u2192\u767b\u8bb0 3%/0.01L\uff0c\u8d1f\u5bf9\u7167\u8bc1\u660e\u95e8\u4f1a\u62d2\uff08Ghia 1982 Re=1000\uff09",
+ "summary": "\u65b9\u8154 Re=1000 \u9a8c\u6536\u95e8\u4ece\u7edf\u4e00 5% \u6536\u7d27\u5230\u5e73\u53f0\u767b\u8bb0\u88c1\u5224\u884c\uff083%\uff0c\u6da1\u5fc3 0.01L @ n\u2265128\uff09\uff0c\u5e76\u4ece\u5b58\u6863\u573a\u91cd\u7b97\u5168\u90e8\u8ba1\u5206\u91cf\uff08\u4e0d\u91cd\u8dd1\u6c42\u89e3\u5668\uff09\uff1an=128 u_min 0.65%\u3001v_max 0.78%\u3001max|\u0394u| 0.43%\u3001\u6da1\u5fc3 0.0040L \u5168\u90e8 PASS\uff1b\u8d1f\u5bf9\u7167\u8bc1\u660e 3%~5% \u7a97\u53e3\u5185\u5fc5\u7136 FAIL\uff1b\u5728\u603b\u8d26\u951a\u70b9\u4e0b\u8865\u767b\u8bb0\u88c1\u5224\u884c id=146\u3002",
+ "scenario_key": "case-pool/verification-gate",
+ "mission_id": 21190,
+ "stage": null,
+ "tags": [
+  "CASE-FVM-CAVITY-RE1000",
+  "TensorFVM",
+  "Ghia1982",
+  "verification",
+  "acceptance-gate",
+  "negative-control"
+ ],
+ "figures": [
+  {
+   "name": "fig1_centreline_profiles.png",
+   "caption": "\u56fe 1 \u4e2d\u5fc3\u7ebf\u5256\u9762 vs Ghia (1982)\uff0cn=32/64/128"
+  },
+  {
+   "name": "fig2_grid_convergence.png",
+   "caption": "\u56fe 2 \u8bef\u5dee\u968f\u7f51\u683c\u6536\u655b\uff1a3% \u767b\u8bb0\u5e26 / 5% \u7b97\u4f8b\u6c60\u5e26"
+  },
+  {
+   "name": "fig3_fields.png",
+   "caption": "\u56fe 3 n=128 \u6536\u655b\u573a\uff08\u901f\u5ea6 / \u6d41\u51fd\u6570\uff09"
+  }
+ ],
+ "status": "published",
+ "created_by": 1,
+ "created_at": "2026-11-15T01:24:47.078281+00:00",
+ "markdown": "# CASE-FVM-CAVITY-RE1000 \u9a8c\u6536\u95e8\u6536\u7d27\uff1a\u673a\u68c0\u95e8\u4e0e\u5e73\u53f0\u767b\u8bb0\u88c1\u5224\u884c\u5bf9\u9f50\uff08Ghia 1982, Re=1000\uff09\n\n## \u2460 \u6848\u4f8b\u4ecb\u7ecd\n\n\u4e8c\u7ef4\u9876\u76d6\u9a71\u52a8\u65b9\u8154\uff0c\u5355\u4f4d\u65b9\u8154 `[0,1]^2`\uff0c\u4e09\u58c1\u65e0\u6ed1\u79fb\u3001\u9876\u76d6\u5207\u5411\u901f\u5ea6 U=1\uff0cRe=UL/\u03bd=1000\uff08\u5b9a\u5e38\u5c42\u6d41\uff0c\u5355\u4e00\u4e3b\u6da1 + \u89d2\u6da1\uff09\u3002\n\u5916\u90e8\u951a\uff1aGhia, Ghia & Shin, *J. Comput. Phys.* **48** (1982) 387\u2013411\uff0cTable I\uff08x=L/2 \u7684 u\uff09\u3001Table II\uff08y=L/2 \u7684 v\uff09\u3001\n\u4e3b\u6da1\u5fc3 (0.5313, 0.5625)L\u3002\u7b97\u4f8b\u6c60\u5bb9\u5dee <5%\uff1b\u5e73\u53f0\u767b\u8bb0\u88c1\u5224\u884c\uff08`tensor_benchmark_cases`\uff09\u4e3a **3% + \u6da1\u5fc3 0.01L @ n\u2265128**\u3002\n\n\u53c2\u6570\uff1a\u03c1=1, \u03bd=1e-3, U=1, L=1\uff1bn\u2208{32,64,128}\uff08\u4ea4\u9519 MAC\uff0c\u0394=1/n\uff09\uff1bCFL=0.15\uff1b\u5b9a\u5e38\u5224\u636e max|\u0394u|/\u0394t \u2264 1e-7\uff1b\nn=64 \u7531 n=32\u3001n=128 \u7531 n=64 \u53cc\u7ebf\u6027\u5ef6\u62d3\uff08\u53ea\u964d\u6210\u672c\u4e0d\u6539\u89e3\uff0c`runs/control/` \u6709\u51b7\u542f\u52a8\u5bf9\u7167\uff09\u3002\n\n## \u2461 \u600e\u4e48\u505a\u7684\n\n\u672c\u5355\u4e0d\u91cd\u8dd1\u6c42\u89e3\u5668\uff0c\u800c\u662f**\u4fee\u9a8c\u6536\u95e8**\uff08board audit m20230 \u8fd4\u4fee\u9879 F1/F2/F3/F5\uff09\uff1a\n\n1. `src/tensorfvm/case_cavity_re1000.py`\uff1a\u5224\u636e C1\u2013C5 \u9608\u503c\u7531\u7edf\u4e00 5% \u6539\u4e3a\u767b\u8bb0\u503c\uff083%\uff0c\u6da1\u5fc3 0.01L\uff09\uff0c\u5e26 `graded_from_n=128`\uff1b\n   `evaluate()` \u53d8\u4e3a\u5206\u8fa8\u7387\u611f\u77e5\uff08n\u2265128 \u2192 registered \u5e26\uff0cn<128 \u2192 diagnostic 5% \u5e26\uff09\uff1a\u7c97\u7f51\u683c\u4e0d\u518d\u7ee7\u627f\u9a8c\u6536\u58f0\u660e\uff0c\u4e5f\u4e0d\u88ab\u85cf\u8d77\u6765\u3002\n2. `docs/CASE-FVM-CAVITY-RE1000/rescore_registered_gate.py`\uff1a\u4ece `runs/fields.npz` \u7684\u6536\u655b MAC \u573a\u91cd\u7b97\u5168\u90e8\u8ba1\u5206\u91cf\n   \uff08Hermite / PCHIP \u53cc\u63d2\u503c\uff09\u3001\u7528\u72ec\u7acb\u79ef\u5206\u6d41\u51fd\u6570 \u03c8=\u222bu dy \u7684\u6781\u503c\u91cd\u5b9a\u4f4d\u4e3b\u6da1\u5fc3\uff0c\u5199\u56de `summary.json` / `benchmark.json`\n   \u4e0e `runs/gate_registered.json`\uff1b\u5b58\u6863\u5256\u9762\u4e0e\u573a\u91cd\u7b97\u5dee \u22641e-12\uff08\u811a\u672c\u5185\u65ad\u8a00\uff09\u3002\n3. `register_benchmark_case.sql`\uff1a\u5728\u603b\u8d26\u951a\u70b9 `CASE-FVM-CAVITY-RE1000` \u4e0b\u5e42\u7b49\u767b\u8bb0\u88c1\u5224\u884c\uff08\u5df2\u6267\u884c\uff0cid=146\uff0cstatus=passed\uff09\uff1b\n   `ANCHOR_ALIASES` \u628a `CASE-CAVITY-RE1000-FVM` / `FVM-CAVITY-RE1000` \u5f52\u4e00\u5230\u540c\u4e00\u7b97\u4f8b\u3002\n4. `tests/test_case_cavity_re1000_gate_registered.py`\uff1a11 \u6761\u65ad\u8a00\u578b\u6d4b\u8bd5\uff0c\u542b\u8d1f\u5bf9\u7167\u3002\n5. `make_report.py`\uff1a\u79bb\u6563\u4e0d\u786e\u5b9a\u5ea6\u5c0f\u8282\u6539\u4e3a\u4ece `runs/uncertainty.json` \u7a0b\u5e8f\u5316\u6ce8\u5165\uff08\u539f\u4e3a\u4eba\u5de5\u6bb5\u843d\uff0c\u91cd\u751f\u6210\u4f1a\u4e22\uff09\u3002\n\n## \u2462 \u8ba1\u7b97\u7ed3\u679c\uff08\u5224\u7ea7\u7f51\u683c n=128\uff0c\u7a0b\u5e8f\u5316\u6ce8\u5165\u81ea `runs/gate_registered.json`\uff09\n\n| \u5224\u636e | \u5b9e\u6d4b | \u767b\u8bb0\u5bb9\u5dee | \u7ed3\u8bba |\n|---|---|---|---|\n| C1 \u4e2d\u5fc3\u7ebf max\\|\u0394u\\|/U | 4.307e-03 | 0.03 | \u2713 |\n| C2 \u4e2d\u5fc3\u7ebf max\\|\u0394v\\|/U | 1.118e-02 | 0.03 | \u2713 |\n| C3 u_min \u76f8\u5bf9\u8bef\u5dee | 0.65% | 0.03 | \u2713 |\n| C4 v_max \u76f8\u5bf9\u8bef\u5dee | 0.78% | 0.03 | \u2713 |\n| C5 \u4e3b\u6da1\u5fc3\u4f4d\u79fb | 0.00396 L | 0.01 | \u2713 |\n| C6 max\\|div u\\| | 1.208e-13 | 1e-10 | \u2713 |\n| C7 \u5b9a\u5e38\u6b8b\u5dee | 9.888e-08 | 1e-06 | \u2713 |\n\n\u5206\u5e26\uff1an=32 \u8bca\u65ad\u5e26 FAIL\uff08u_min 17.36%\u3001v_max 14.96%\uff09\uff1bn=64 \u8bca\u65ad\u5e26 PASS\uff082.80% / 2.34%\uff09\uff1bn=128 \u767b\u8bb0\u5e26 PASS\u3002\n\n**\u8d1f\u5bf9\u7167**\uff08\u8bc1\u660e\u95e8\u4f1a\u62d2\uff09\uff1a\u6ce8\u5165 0.04U \u4e2d\u5fc3\u7ebf\u8bef\u5dee\uff08\u843d\u5728 3%~5% \u7a97\u53e3\uff09\u2192 n=128 FAIL\uff0c\u540c\u4e00\u6570\u5b57\u5728 n=64 \u8bca\u65ad\u5e26 PASS\uff1b\n\u6ce8\u5165 0.02L \u6da1\u5fc3\u4f4d\u79fb \u2192 n=128 FAIL\u3002\u8fd4\u4fee\u524d\u8fd9\u4e24\u79cd\u7f3a\u9677\u90fd\u4f1a\u88ab\u5224 PASS\u3002\n\n**\u63d2\u503c\u654f\u611f\u6027**\uff08audit F5 \u91cf\u5316\uff09\uff1an=128 \u65f6 Hermite vs PCHIP \u6307\u6807\u5dee max|\u0394u|=1.4e-07 U\u3001max|\u0394v|=3.6e-05 U\uff0c\u5224\u5b9a\u4e0d\u7ffb\u8f6c\uff1b\nn=32 \u65f6\u540c\u4e00\u5dee 0.124 U \u2014\u2014 \u6545\u7c97\u7f51\u683c\u53ea\u4f5c\u8bca\u65ad\u3002\n\n## \u2463 \u7ed3\u679c\u56fe\n\n\u56fe 1 \u4e2d\u5fc3\u7ebf\u5256\u9762 vs Ghia \u91c7\u6837\u70b9\uff1b\u56fe 2 \u8bef\u5dee\u968f\u5206\u8fa8\u7387\u6536\u655b\uff083% \u767b\u8bb0\u5e26 / 5% \u7b97\u4f8b\u6c60\u5e26\uff09\uff1b\u56fe 3 n=128 \u6536\u655b\u573a\u4e91\u56fe\u3002\n\n## \u2464 \u6ce8\u610f\u70b9\n\n* \u672c\u5355\u53ea\u91cd\u7b97**\u5ea6\u91cf**\uff0c\u4e0d\u91cd\u7b97**\u89e3**\uff1an=128 \u4e00\u6b21\u51b7\u542f\u52a8\u7ea6 1300 s\uff0c\u672a\u5728\u672c\u5355\u91cd\u8dd1\uff1b\u5b58\u6863\u573a\u4e0e summary \u7684\u9010\u70b9\u4e00\u81f4\u6027\u7531\u811a\u672c\u65ad\u8a00\uff0c\n  \u4f46\u4e0d\u7b49\u4e8e\u72ec\u7acb\u51b7\u542f\u52a8\u590d\u73b0\uff08\u5ba1\u8ba1\u5355 `cj2580` \u5df2\u505a\u9010\u6bd4\u7279\u590d\u73b0\uff09\u3002\n* \u65f6\u95f4\u6b65\uff08Courant\uff09\u65b9\u5411\u4e0d\u786e\u5b9a\u5ea6\u4ecd\u672a\u505a\uff08\u4e0e `UNCERTAINTY.md` \u539f\u8bb0\u4e00\u81f4\uff09\u3002\n* \u5e73\u53f0 `tensorbench_results` \u672a\u5199\u5165\uff0c\u6545\u4e0d\u4e3b\u5f20\u5e73\u53f0\u7ea7\u96c6\u6210\uff1b\u672c\u5355\u53ea\u767b\u8bb0\u5224\u636e\u884c `tensor_benchmark_cases` id=146\u3002\n* \u6700\u7ec6\u7f51\u683c\u4e0e Ghia \u7684\u5dee\uff080.6~0.8%\uff09**\u5c0f\u4e8e**\u81ea\u8eab GCI \u5e26\uff081.45% / 1.29%\uff09\uff0c\u4e0d\u53ef\u8bfb\u4f5c\u201c\u6c42\u89e3\u5668\u7cbe\u5ea6 0.6%\u201d\u3002\n\n## \u2465 \u8bef\u5dee\u5224\u5b9a\uff08\u9010\u9879\uff0c\u662f\u5426 <3%\uff09\n\n| \u91cf | \u5b9e\u6d4b\u8bef\u5dee | \u57fa\u51c6 | \u662f\u5426 <3% |\n|---|---|---|---|\n| u_min (x=L/2) | 0.65% | Ghia \u22120.38289 | \u662f\uff08\u5bb9\u5dee 3%\uff09 |\n| v_max (y=L/2) | 0.78% | Ghia 0.37095 | \u662f\uff08\u5bb9\u5dee 3%\uff09 |\n| \u4e2d\u5fc3\u7ebf max\\|\u0394u\\|/U | 0.43% | Ghia \u8868 I\uff0817 \u70b9\uff09 | \u662f |\n| \u4e2d\u5fc3\u7ebf max\\|\u0394v\\|/U | 1.12% | Ghia \u8868 II\uff0817 \u70b9\uff09 | \u662f |\n| \u4e3b\u6da1\u5fc3\u4f4d\u79fb | 0.0040 L | Ghia (0.5313, 0.5625) | \u662f\uff08\u5224\u636e 0.01 L\uff09 |\n\n**\u7ed3\u8bba\uff1a\u5168\u90e8\u5173\u952e\u91cf <3%\uff08\u6700\u4e25 C2 = 1.12%\uff09\uff0chonest PASS\u3002** \u6d4b\u8bd5\u9762\uff1a`tests/test_case_cavity_re1000_gate_registered.py`\n11 passed\u3001`tests/test_case_cavity_re1000.py` 7 passed\uff08\u5de5\u4f5c\u6811 HEAD \u4e0a\u53e6\u6709\u4e00\u6761\u4e0e\u672c\u5355\u65e0\u5173\u7684\u65e2\u5b58\u5931\u8d25\uff0c\u5982\u5b9e\u8bb0\u5f55\u4e8e `GATE.md` \u00a76\uff09\u3002\n",
+ "ownership": {
+  "mission_id": 21190,
+  "owner": "1",
+  "bypass": null,
+  "figures_checked": 3
+ },
+ "readback": {
+  "submission_id": "c54f6779c924499983e05f52cead0e4f",
+  "report_id": 19185,
+  "ok": true,
+  "readback": {
+   "ok": true,
+   "record_missing": false,
+   "codes": [],
+   "checks": [
+    {
+     "field": "markdown",
+     "ok": true,
+     "expected_digest": "a00d9db520edf15da8db261d89c114f04bc13e2802bd061ef6045b918e0c7f60",
+     "observed_digest": "a00d9db520edf15da8db261d89c114f04bc13e2802bd061ef6045b918e0c7f60",
+     "code": "",
+     "detail": ""
+    },
+    {
+     "field": "figures",
+     "ok": true,
+     "expected_digest": "661b416563b8a866e422e93c2cf2484fe317f9b6da7de5c13512c4d814f65d1d",
+     "observed_digest": "661b416563b8a866e422e93c2cf2484fe317f9b6da7de5c13512c4d814f65d1d",
+     "code": "",
+     "detail": ""
+    },
+    {
+     "field": "mission_id",
+     "ok": true,
+     "expected_digest": "71b52d4f597d032762b61bc74113c81f87da48ecc5059b0f4021b71c0706412b",
+     "observed_digest": "71b52d4f597d032762b61bc74113c81f87da48ecc5059b0f4021b71c0706412b",
+     "code": "",
+     "detail": ""
+    }
+   ],
+   "checked_fields": [
+    "markdown",
+    "figures",
+    "mission_id"
+   ]
+  },
+  "ledger_ok": true,
+  "ledger_error": null
+ }
+}

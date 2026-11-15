@@ -264,6 +264,8 @@
      "threshold": 0.05,
      "comparator": "le",
      "unit": "U",
+     "band": "diagnostic",
+     "graded": false,
      "pass": false,
      "margin": -0.15329603195274927
     },
@@ -273,6 +275,8 @@
      "threshold": 0.05,
      "comparator": "le",
      "unit": "U",
+     "band": "diagnostic",
+     "graded": false,
      "pass": false,
      "margin": -0.025385952126305275
     },
@@ -282,6 +286,8 @@
      "threshold": 0.05,
      "comparator": "le",
      "unit": "1",
+     "band": "diagnostic",
+     "graded": false,
      "pass": false,
      "margin": -0.12357247061962447
     },
@@ -291,6 +297,8 @@
      "threshold": 0.05,
      "comparator": "le",
      "unit": "1",
+     "band": "diagnostic",
+     "graded": false,
      "pass": false,
      "margin": -0.09962958622845446
     },
@@ -300,6 +308,8 @@
      "threshold": 0.05,
      "comparator": "le",
      "unit": "L",
+     "band": "diagnostic",
+     "graded": false,
      "pass": true,
      "margin": 0.0031250000000000028
     },
@@ -309,6 +319,8 @@
      "threshold": 1e-10,
      "comparator": "le",
      "unit": "U/L",
+     "band": "registered",
+     "graded": true,
      "pass": true,
      "margin": 9.99964472863212e-11
     },
@@ -318,6 +330,8 @@
      "threshold": 1e-06,
      "comparator": "le",
      "unit": "U^2/L",
+     "band": "registered",
+     "graded": true,
      "pass": true,
      "margin": 9.024100697890086e-07
     },
@@ -333,7 +347,14 @@
     }
    },
    "verdict": "FAIL",
-   "generated": "2026-11-14T11:43:23Z"
+   "generated": "2026-11-14T11:43:23Z",
+   "gate": {
+    "judge_grid": 128,
+    "graded": false,
+    "band": "diagnostic",
+    "registered_tolerance": 0.03,
+    "vortex_tolerance_L": 0.01
+   }
   },
   {
    "case": "CASE-FVM-CAVITY-RE1000",
@@ -587,6 +608,8 @@
      "threshold": 0.05,
      "comparator": "le",
      "unit": "U",
+     "band": "diagnostic",
+     "graded": false,
      "pass": true,
      "margin": 0.02068969662633953
     },
@@ -596,6 +619,8 @@
      "threshold": 0.05,
      "comparator": "le",
      "unit": "U",
+     "band": "diagnostic",
+     "graded": false,
      "pass": true,
      "margin": 0.030266080175901725
     },
@@ -605,6 +630,8 @@
      "threshold": 0.05,
      "comparator": "le",
      "unit": "1",
+     "band": "diagnostic",
+     "graded": false,
      "pass": true,
      "margin": 0.022039520452525347
     },
@@ -614,6 +641,8 @@
      "threshold": 0.05,
      "comparator": "le",
      "unit": "1",
+     "band": "diagnostic",
+     "graded": false,
      "pass": true,
      "margin": 0.026635281274971653
     },
@@ -623,6 +652,8 @@
      "threshold": 0.05,
      "comparator": "le",
      "unit": "L",
+     "band": "diagnostic",
+     "graded": false,
      "pass": true,
      "margin": 0.04213750000000001
     },
@@ -632,6 +663,8 @@
      "threshold": 1e-10,
      "comparator": "le",
      "unit": "U/L",
+     "band": "registered",
+     "graded": true,
      "pass": true,
      "margin": 9.99751310042484e-11
     },
@@ -641,6 +674,8 @@
      "threshold": 1e-06,
      "comparator": "le",
      "unit": "U^2/L",
+     "band": "registered",
+     "graded": true,
      "pass": true,
      "margin": 9.026796970724717e-07
     },
@@ -656,7 +691,14 @@
     }
    },
    "verdict": "PASS",
-   "generated": "2026-11-14T11:43:23Z"
+   "generated": "2026-11-14T11:43:23Z",
+   "gate": {
+    "judge_grid": 128,
+    "graded": false,
+    "band": "diagnostic",
+    "registered_tolerance": 0.03,
+    "vortex_tolerance_L": 0.01
+   }
   },
   {
    "case": "CASE-FVM-CAVITY-RE1000",
@@ -907,47 +949,57 @@
     "C1_u_profile_max_abs": {
      "statement": "max |u_computed - u_Ghia| over all Table I points, units of U",
      "value": 0.00430729832562185,
-     "threshold": 0.05,
+     "threshold": 0.03,
      "comparator": "le",
      "unit": "U",
+     "band": "registered",
+     "graded": true,
      "pass": true,
-     "margin": 0.04569270167437815
+     "margin": 0.02569270167437815
     },
     "C2_v_profile_max_abs": {
      "statement": "max |v_computed - v_Ghia| over all Table II points, units of U",
      "value": 0.011184127636449603,
-     "threshold": 0.05,
+     "threshold": 0.03,
      "comparator": "le",
      "unit": "U",
+     "band": "registered",
+     "graded": true,
      "pass": true,
-     "margin": 0.0388158723635504
+     "margin": 0.018815872363550395
     },
     "C3_u_min_relative": {
      "statement": "relative error of the deepest reverse-flow u on x = L/2 (Ghia u_min)",
      "value": 0.006470901481666839,
-     "threshold": 0.05,
+     "threshold": 0.03,
      "comparator": "le",
      "unit": "1",
+     "band": "registered",
+     "graded": true,
      "pass": true,
-     "margin": 0.04352909851833316
+     "margin": 0.02352909851833316
     },
     "C4_v_max_relative": {
      "statement": "relative error of the strongest v on y = L/2 (Ghia v_max)",
      "value": 0.007791311039311538,
-     "threshold": 0.05,
+     "threshold": 0.03,
      "comparator": "le",
      "unit": "1",
+     "band": "registered",
+     "graded": true,
      "pass": true,
-     "margin": 0.04220868896068847
+     "margin": 0.02220868896068846
     },
     "C5_vortex_centre": {
      "statement": "primary-vortex centre displacement from the Ghia value, in L",
      "value": 0.0039562499999999945,
-     "threshold": 0.05,
+     "threshold": 0.01,
      "comparator": "le",
      "unit": "L",
+     "band": "registered",
+     "graded": true,
      "pass": true,
-     "margin": 0.04604375000000001
+     "margin": 0.006043750000000006
     },
     "C6_divergence_free": {
      "statement": "max |div u| of the converged discrete field (closed-box compatibility)",
@@ -955,6 +1007,8 @@
      "threshold": 1e-10,
      "comparator": "le",
      "unit": "U/L",
+     "band": "registered",
+     "graded": true,
      "pass": true,
      "margin": 9.987920773492079e-11
     },
@@ -964,6 +1018,8 @@
      "threshold": 1e-06,
      "comparator": "le",
      "unit": "U^2/L",
+     "band": "registered",
+     "graded": true,
      "pass": true,
      "margin": 9.011166096352099e-07
     },
@@ -979,7 +1035,14 @@
     }
    },
    "verdict": "PASS",
-   "generated": "2026-11-14T11:43:23Z"
+   "generated": "2026-11-14T11:43:23Z",
+   "gate": {
+    "judge_grid": 128,
+    "graded": true,
+    "band": "registered",
+    "registered_tolerance": 0.03,
+    "vortex_tolerance_L": 0.01
+   }
   }
  ],
  "benchmark": [
@@ -1095,14 +1158,14 @@
     "ref": 0.0,
     "got": 0.00430729832562185,
     "err": 0.00430729832562185,
-    "tolerance": 0.05,
+    "tolerance": 0.03,
     "pass": true
    },
    "v_profile_max_abs": {
     "ref": 0.0,
     "got": 0.011184127636449603,
     "err": 0.011184127636449603,
-    "tolerance": 0.05,
+    "tolerance": 0.03,
     "pass": true
    },
    "vortex_centre": {
@@ -1170,36 +1233,41 @@
    "id": "C1_u_profile_max_abs",
    "statement": "max |u_computed - u_Ghia| over all Table I points, units of U",
    "comparator": "le",
-   "threshold": 0.05,
-   "unit": "U"
+   "threshold": 0.03,
+   "unit": "U",
+   "graded_from_n": 128
   },
   {
    "id": "C2_v_profile_max_abs",
    "statement": "max |v_computed - v_Ghia| over all Table II points, units of U",
    "comparator": "le",
-   "threshold": 0.05,
-   "unit": "U"
+   "threshold": 0.03,
+   "unit": "U",
+   "graded_from_n": 128
   },
   {
    "id": "C3_u_min_relative",
    "statement": "relative error of the deepest reverse-flow u on x = L/2 (Ghia u_min)",
    "comparator": "le",
-   "threshold": 0.05,
-   "unit": "1"
+   "threshold": 0.03,
+   "unit": "1",
+   "graded_from_n": 128
   },
   {
    "id": "C4_v_max_relative",
    "statement": "relative error of the strongest v on y = L/2 (Ghia v_max)",
    "comparator": "le",
-   "threshold": 0.05,
-   "unit": "1"
+   "threshold": 0.03,
+   "unit": "1",
+   "graded_from_n": 128
   },
   {
    "id": "C5_vortex_centre",
    "statement": "primary-vortex centre displacement from the Ghia value, in L",
    "comparator": "le",
-   "threshold": 0.05,
-   "unit": "L"
+   "threshold": 0.01,
+   "unit": "L",
+   "graded_from_n": 128
   },
   {
    "id": "C6_divergence_free",
@@ -1228,5 +1296,18 @@
   "speedup": 1.1576533075808788
  },
  "generated": "2026-11-14T12:36:21Z",
- "command": "PYTHONPATH=src python docs/CASE-FVM-CAVITY-RE1000/run_case.py --grids 32,64,128 --cold-control 64 --tolerance 1e-07 --max-steps 250000"
+ "command": "PYTHONPATH=src python docs/CASE-FVM-CAVITY-RE1000/run_case.py --grids 32,64,128 --cold-control 64 --tolerance 1e-07 --max-steps 250000",
+ "rescore": {
+  "script": "docs/CASE-FVM-CAVITY-RE1000/rescore_registered_gate.py",
+  "judge_grid": 128,
+  "registered_tolerance": 0.03,
+  "vortex_tolerance_L": 0.01
+ },
+ "registered_tolerance": 0.03,
+ "vortex_tolerance_L": 0.01,
+ "judge_grid": 128,
+ "anchor_aliases": {
+  "CASE-CAVITY-RE1000-FVM": "CASE-FVM-CAVITY-RE1000",
+  "FVM-CAVITY-RE1000": "CASE-FVM-CAVITY-RE1000"
+ }
 }
