@@ -21,6 +21,10 @@ post-processing.
 
 from __future__ import annotations
 
+import json
+import sys
+from pathlib import Path
+
 import numpy as np
 import pytest
 
@@ -284,3 +288,109 @@ def test_statistics_mean_is_time_average_of_samples():
         stats.accumulate(solver)
     mean_u, _, _ = stats.mean()
     assert mean_u == pytest.approx(0.5 * (us[0] + us[1]))
+
+# --------------------------------------------------------------------------- #
+# the committed ladder: coverage, traceability, mesh-independence of the verdict
+# --------------------------------------------------------------------------- #
+DOCS = Path(__file__).resolve().parents[1] / "docs" / "case-periodic-hills"
+REPORT = DOCS / "ROUND9.md"
+
+
+def _declared_tags():
+    """Mesh tags round 9 can produce, single-sourced from the driver itself."""
+    scripts = Path(__file__).resolve().parents[1] / "scripts"
+    if str(scripts) not in sys.path:
+        sys.path.insert(0, str(scripts))
+    from round9_long_time_average import CASES
+
+    return [case[0] for case in CASES]
+
+
+def _ladder():
+    summary = json.loads((DOCS / "round9_summary.json").read_text())
+    runs = {}
+    for tag in _declared_tags():
+        payload = json.loads((DOCS / f"round9_{tag}.json").read_text())
+        runs[tag] = (payload, np.load(DOCS / f"round9_{tag}.npz"))
+    return summary, runs
+
+
+def test_committed_ladder_covers_every_declared_mesh():
+    """The original round-9 shipment had one mesh and left two as ``not_run``.
+
+    Coverage is closed only when every declared mesh owns a ``.json``/``.npz``
+    pair *and* a row in the machine summary; an absent mesh is reported as
+    missing, never as a pass.
+    """
+    declared = _declared_tags()
+    assert declared == ["48x24", "96x48", "144x72"]  # the ladder the report claims
+    summary, runs = _ladder()
+    assert set(summary["runs"]) == set(declared)
+    assert set(runs) == set(declared)
+    for tag in declared:
+        row = summary["runs"][tag]
+        assert row["samples"] > 0, tag
+        assert row["wall_clock_s"] > 0, tag
+        assert row["config"]["nx"] * row["config"]["ny"] > 0, tag
+    # the finest mesh is the field used for the field figures
+    assert summary["finest"] == max(declared, key=lambda t: summary["runs"][t]["config"]["nx"]
+                                    * summary["runs"][t]["config"]["ny"])
+
+
+def test_summary_is_a_projection_of_the_committed_artefacts():
+    """No hand-copied numbers: every summary field must come from the artefacts."""
+    summary, runs = _ladder()
+    for tag, (payload, npz) in runs.items():
+        row = summary["runs"][tag]
+        assert row["config"] == payload["config"]
+        assert row["samples"] == payload["samples"]
+        assert row["x_r_over_H"] == payload["time_averaged"]["x_r_over_H"]
+        assert row["x_s_over_H"] == payload["time_averaged"]["x_s_over_H"]
+        gate = payload["gate"]
+        assert row["profile_stations"] == gate["y_H_0.5_profile"]["stations"]
+        assert row["profile_stations_pass"] == gate["y_H_0.5_profile"]["stations_pass"]
+        assert row["profile_worst"] == gate["y_H_0.5_profile"]["worst"]
+        assert row["gate_pass"] == gate["pass"]
+        # the field artefact is the mesh it claims to be, and it is finite
+        ny, nx = payload["config"]["ny"], payload["config"]["nx"]
+        assert npz["mean_u"].shape == (ny, nx), tag
+        assert npz["mean_v"].shape == (ny, nx), tag
+        assert np.isfinite(npz["mean_u"]).all(), tag
+        # the compared profile is the solver's own line, with the round-6 table
+        profile = payload["horizontal_profile_y_H_0.5"]
+        assert len(profile["x_over_H"]) == len(profile["u_over_Ub"])
+        assert profile["reference"] == {str(k): v for k, v in BREUER_PROFILE_Y05.items()}
+
+
+def test_the_round9_fail_is_not_a_single_mesh_artefact():
+    """Round 9 §3.3 left this open: is the over-diffusive answer a mesh artefact?
+
+    Every mesh in the ladder must fail the same way: no profile station inside
+    tolerance, no admissible reattachment crossing in the time mean, and a
+    closure level far above the turbulent-channel level measured in rounds 6/7
+    (``nu_t/nu`` ~20-26).  This pins a *negative* result on purpose: if a future
+    closure or a 3-D solver flips it, this test must be revised deliberately.
+    """
+    summary, runs = _ladder()
+    assert summary["all_pass"] is False
+    assert summary["all_pass"] == all(r["gate_pass"] for r in summary["runs"].values())
+    for tag, (payload, _) in runs.items():
+        gate = payload["gate"]
+        assert gate["pass"] is False, tag
+        assert gate["y_H_0.5_profile"]["ok"] is False, tag
+        assert gate["y_H_0.5_profile"]["stations_pass"] == 0, tag
+        assert gate["x_r_over_H"]["pass"] is False, tag
+        # the over-diffusive regime is present on every mesh (not a laminarised
+        # solve that would fail for the opposite reason)
+        window = payload["stationarity"]["max_nu_t_ratio"]
+        assert window["finite_samples"] > 0, tag
+        assert window["mean"] is not None and window["mean"] > 10.0, tag
+
+
+def test_report_ladder_matches_the_committed_artefacts():
+    """A mesh that lands in ``docs/`` without appearing in the report is a
+    silent coverage claim; the report must name every committed mesh."""
+    text = REPORT.read_text()
+    for tag in _declared_tags():
+        human = tag.replace("x", "×")
+        assert tag in text or human in text, f"{tag} missing from ROUND9.md"
