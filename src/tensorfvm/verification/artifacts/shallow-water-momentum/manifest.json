@@ -1,0 +1,30 @@
+{
+  "artifacts": [
+    "SUMMARY.md",
+    "control.json",
+    "fig_momentum.png",
+    "fig_velocity_budget.png",
+    "manifest.json",
+    "momentum.json",
+    "velocity.json"
+  ],
+  "meta": {
+    "cases": [
+      "ritter-dry",
+      "stoker-wet"
+    ],
+    "command": "PYTHONPATH=src python scripts/run_shallow_water_momentum.py",
+    "git_commit": "a2c8c151",
+    "numpy": "2.4.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "python": "3.11.6",
+    "resolutions": [
+      800,
+      1600,
+      3200,
+      6400
+    ],
+    "tip_fraction": 0.05,
+    "tolerance": 0.05
+  }
+}

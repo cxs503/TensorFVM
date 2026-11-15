@@ -77,6 +77,16 @@ from .exact import (
 )
 from .bed import ShallowWaterBed1D
 from .swe2d import ShallowWater2D
+from .momentum import (
+    exact_momentum,
+    exact_momentum_rate,
+    momentum_closure,
+    momentum_quadrature,
+    similarity_velocity,
+    undisturbed_guard,
+    velocity_budget,
+    velocity_resolution_study,
+)
 from .thacker import ThackerBasin, check_thacker_solution
 from .swe1d import ShallowWater1D
 

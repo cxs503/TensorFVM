@@ -1,0 +1,295 @@
+{
+  "control": {
+    "baseline_momentum_closure": 2.5721538440192324e-12,
+    "baseline_u_l1": 0.050703176831123166,
+    "case": "ritter-dry",
+    "n": 800,
+    "rows": [
+      {
+        "epsilon": 0.001,
+        "momentum_gain": 0.9999999906559626,
+        "momentum_measured": 0.00027524364792360696,
+        "momentum_predicted": 0.00027524365049549394,
+        "velocity_delta_minus": 0.0001666666666666622,
+        "velocity_delta_plus": -0.0001666666666666622,
+        "velocity_max_abs_delta": 0.0001666666666666622,
+        "velocity_predicted": 0.0001666666666666667
+      },
+      {
+        "epsilon": 0.01,
+        "momentum_gain": 0.9999999990655932,
+        "momentum_measured": 0.002752436502383044,
+        "momentum_predicted": 0.0027524365049549394,
+        "velocity_delta_minus": 0.0016666666666666635,
+        "velocity_delta_plus": 0.0012932842987843224,
+        "velocity_max_abs_delta": 0.0016666666666666635,
+        "velocity_predicted": 0.0016666666666666666
+      },
+      {
+        "epsilon": 0.1,
+        "momentum_gain": 0.9999999999065614,
+        "momentum_measured": 0.027524365046977556,
+        "momentum_predicted": 0.027524365049549394,
+        "velocity_delta_minus": 0.01666666666666667,
+        "velocity_delta_plus": 0.01629328429878433,
+        "velocity_max_abs_delta": 0.01666666666666667,
+        "velocity_predicted": 0.01666666666666667
+      }
+    ],
+    "window": [
+      -1.0,
+      0.0
+    ],
+    "window_cells": 80
+  },
+  "exact": {
+    "ritter-dry": {
+      "guard": {
+        "case": "ritter-dry",
+        "clearance_left": 2.0,
+        "clearance_right": 2.0,
+        "left_front": -2.0,
+        "margin": 0.5,
+        "right_front": 4.0,
+        "t": 0.638550856814101,
+        "undisturbed": true
+      },
+      "momentum_closed_form": 3.132091952673165,
+      "momentum_quadrature": 3.132091952781919,
+      "momentum_rate": 4.905,
+      "quadrature_relative": 3.4722446346373294e-11
+    },
+    "similarity_identity_residual": 1.5543122344752192e-15,
+    "stoker-wet": {
+      "guard": {
+        "case": "stoker-wet",
+        "clearance_left": 2.0,
+        "clearance_right": 4.111218849968301,
+        "left_front": -2.0,
+        "margin": 0.5,
+        "right_front": 1.8887811500316989,
+        "t": 0.638550856814101,
+        "undisturbed": true
+      },
+      "momentum_closed_form": 2.3490689645048737,
+      "momentum_quadrature": 2.3490816170112367,
+      "momentum_rate": 3.67875,
+      "quadrature_relative": 5.386179185987123e-06
+    }
+  },
+  "meta": {
+    "cases": [
+      "ritter-dry",
+      "stoker-wet"
+    ],
+    "command": "PYTHONPATH=src python scripts/run_shallow_water_momentum.py",
+    "git_commit": "a2c8c151",
+    "numpy": "2.4.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "python": "3.11.6",
+    "resolutions": [
+      800,
+      1600,
+      3200,
+      6400
+    ],
+    "tip_fraction": 0.05,
+    "tolerance": 0.05
+  },
+  "momentum": {
+    "ritter-dry": {
+      "rows": [
+        {
+          "case": "ritter-dry",
+          "cfl": 0.4,
+          "closure_error": 2.5721538440192324e-12,
+          "dx": 0.0125,
+          "guard": {
+            "case": "ritter-dry",
+            "clearance_left": 2.0,
+            "clearance_right": 2.0,
+            "left_front": -2.0,
+            "margin": 0.5,
+            "right_front": 4.0,
+            "t": 0.638550856814101,
+            "undisturbed": true
+          },
+          "identity_applies": true,
+          "momentum_exact_closed_form": 3.132091952673165,
+          "momentum_exact_quadrature": 3.132091952781919,
+          "momentum_initial": 0.0,
+          "momentum_numeric": 3.132091952665109,
+          "n": 800,
+          "order": 2,
+          "quadrature_vs_closed_form": 3.4722446346373294e-11,
+          "rate_closed_form": 4.905,
+          "sources": {
+            "manning_n": 0.0,
+            "slope": 0.0
+          },
+          "steps": 739,
+          "t": 0.638550856814101
+        },
+        {
+          "case": "ritter-dry",
+          "cfl": 0.4,
+          "closure_error": 2.9578138658334826e-12,
+          "dx": 0.00625,
+          "guard": {
+            "case": "ritter-dry",
+            "clearance_left": 2.0,
+            "clearance_right": 2.0,
+            "left_front": -2.0,
+            "margin": 0.5,
+            "right_front": 4.0,
+            "t": 0.638550856814101,
+            "undisturbed": true
+          },
+          "identity_applies": true,
+          "momentum_exact_closed_form": 3.132091952673165,
+          "momentum_exact_quadrature": 3.132091952781919,
+          "momentum_initial": 0.0,
+          "momentum_numeric": 3.132091952663901,
+          "n": 1600,
+          "order": 2,
+          "quadrature_vs_closed_form": 3.4722446346373294e-11,
+          "rate_closed_form": 4.905,
+          "sources": {
+            "manning_n": 0.0,
+            "slope": 0.0
+          },
+          "steps": 1513,
+          "t": 0.638550856814101
+        },
+        {
+          "case": "ritter-dry",
+          "cfl": 0.4,
+          "closure_error": 3.242238131921492e-12,
+          "dx": 0.003125,
+          "guard": {
+            "case": "ritter-dry",
+            "clearance_left": 2.0,
+            "clearance_right": 2.0,
+            "left_front": -2.0,
+            "margin": 0.5,
+            "right_front": 4.0,
+            "t": 0.638550856814101,
+            "undisturbed": true
+          },
+          "identity_applies": true,
+          "momentum_exact_closed_form": 3.132091952673165,
+          "momentum_exact_quadrature": 3.132091952781919,
+          "momentum_initial": 0.0,
+          "momentum_numeric": 3.13209195266301,
+          "n": 3200,
+          "order": 2,
+          "quadrature_vs_closed_form": 3.4722446346373294e-11,
+          "rate_closed_form": 4.905,
+          "sources": {
+            "manning_n": 0.0,
+            "slope": 0.0
+          },
+          "steps": 3081,
+          "t": 0.638550856814101
+        }
+      ]
+    },
+    "stoker-wet": {
+      "rows": [
+        {
+          "case": "stoker-wet",
+          "cfl": 0.4,
+          "closure_error": 1.1721039878668389e-14,
+          "dx": 0.0125,
+          "guard": {
+            "case": "stoker-wet",
+            "clearance_left": 2.0,
+            "clearance_right": 4.111218849968301,
+            "left_front": -2.0,
+            "margin": 0.5,
+            "right_front": 1.8887811500316989,
+            "t": 0.638550856814101,
+            "undisturbed": true
+          },
+          "identity_applies": true,
+          "momentum_exact_closed_form": 2.3490689645048737,
+          "momentum_exact_quadrature": 2.3490816170112367,
+          "momentum_initial": 0.0,
+          "momentum_numeric": 2.349068964504846,
+          "n": 800,
+          "order": 2,
+          "quadrature_vs_closed_form": 5.386179185987123e-06,
+          "rate_closed_form": 3.67875,
+          "sources": {
+            "manning_n": 0.0,
+            "slope": 0.0
+          },
+          "steps": 459,
+          "t": 0.638550856814101
+        },
+        {
+          "case": "stoker-wet",
+          "cfl": 0.4,
+          "closure_error": 2.5332570060347808e-14,
+          "dx": 0.00625,
+          "guard": {
+            "case": "stoker-wet",
+            "clearance_left": 2.0,
+            "clearance_right": 4.111218849968301,
+            "left_front": -2.0,
+            "margin": 0.5,
+            "right_front": 1.8887811500316989,
+            "t": 0.638550856814101,
+            "undisturbed": true
+          },
+          "identity_applies": true,
+          "momentum_exact_closed_form": 2.3490689645048737,
+          "momentum_exact_quadrature": 2.3490816170112367,
+          "momentum_initial": 0.0,
+          "momentum_numeric": 2.349068964504814,
+          "n": 1600,
+          "order": 2,
+          "quadrature_vs_closed_form": 5.386179185987123e-06,
+          "rate_closed_form": 3.67875,
+          "sources": {
+            "manning_n": 0.0,
+            "slope": 0.0
+          },
+          "steps": 918,
+          "t": 0.638550856814101
+        },
+        {
+          "case": "stoker-wet",
+          "cfl": 0.4,
+          "closure_error": 4.650606145407135e-14,
+          "dx": 0.003125,
+          "guard": {
+            "case": "stoker-wet",
+            "clearance_left": 2.0,
+            "clearance_right": 4.111218849968301,
+            "left_front": -2.0,
+            "margin": 0.5,
+            "right_front": 1.8887811500316989,
+            "t": 0.638550856814101,
+            "undisturbed": true
+          },
+          "identity_applies": true,
+          "momentum_exact_closed_form": 2.3490689645048737,
+          "momentum_exact_quadrature": 2.3490816170112367,
+          "momentum_initial": 0.0,
+          "momentum_numeric": 2.3490689645047644,
+          "n": 3200,
+          "order": 2,
+          "quadrature_vs_closed_form": 5.386179185987123e-06,
+          "rate_closed_form": 3.67875,
+          "sources": {
+            "manning_n": 0.0,
+            "slope": 0.0
+          },
+          "steps": 1836,
+          "t": 0.638550856814101
+        }
+      ]
+    }
+  }
+}
