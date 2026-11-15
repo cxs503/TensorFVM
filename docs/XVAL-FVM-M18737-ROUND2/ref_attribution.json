@@ -1,0 +1,56 @@
+{
+  "reference_rung": 12800,
+  "reference_is_tightened": false,
+  "graded_solution": "TensorFVM MUSCL-Hancock/MC + HLLC, nx=3200",
+  "l1_percent": 1.7871716564715983,
+  "l1_band_percent": [
+    1.7755695233074968,
+    1.7987737896356997
+  ],
+  "l1_within_metric_band_under_1": false,
+  "peak_percent": 0.7431904079881705,
+  "mass_percent": 0.0009323312943992975,
+  "certified_under_1_percent": false,
+  "ledger_under_10_percent": true,
+  "reference_floor": {
+    "pair_12800_vs_6400_l1_percent": 0.5482277660245841,
+    "tight_pair_l1_percent": null,
+    "observed_order": NaN,
+    "implied_self_error_of_finest_rung_percent": NaN
+  },
+  "attribution": {
+    "graded_side_bracket_percent": [
+      1.7871716564715983,
+      1.7871716564715983
+    ],
+    "reference_side_upper_bound_percent": 0.5482277660245841,
+    "graded_side_dominates": true,
+    "own_discretisation_error_percent": 2.421317067733492,
+    "own_order": 0.7982504840885025,
+    "own_ladder_self_l1_percent": {
+      "800->1600": 3.1116315413499747,
+      "1600->3200": 1.7893315736491013
+    },
+    "consistent_with_own_error": true
+  },
+  "regions": {
+    "shock": {
+      "l1_percent_of_ref": 0.07375152748767898,
+      "share_of_residual": 4.100100185616761,
+      "window_fraction": 0.0016929287667665392
+    },
+    "plateau": {
+      "l1_percent_of_ref": 0.0,
+      "share_of_residual": 0.0,
+      "window_fraction": 0.0
+    },
+    "smooth": {
+      "l1_percent_of_ref": 1.7250222621480207,
+      "share_of_residual": 95.89989981438325,
+      "window_fraction": 0.9983070712332334
+    },
+    "total_l1_percent_of_ref": 1.7987737896356997
+  },
+  "reference_side_regions": null,
+  "predicted_nx_for_under_1_percent": 6623
+}
