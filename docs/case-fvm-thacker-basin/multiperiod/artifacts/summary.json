@@ -1,0 +1,77 @@
+{
+ "analytic_velocity_envelope_max": 2.460632684551091,
+ "numeric_velocity_max_order1_period2": null,
+ "numeric_velocity_max_order2_period2": 71.15604145728237,
+ "period_s": 0.7092516767214436,
+ "rows_2T": {
+  "order1": {
+   "centre_depth_l2_relative": 0.4928499279035305,
+   "centre_depth_max_relative": 1.2349643086499429,
+   "shoreline_max_relative": 0.5299360400572726,
+   "shoreline_mean_relative": 0.1742775049416545,
+   "window": "0 <= t <= 2T"
+  },
+  "order2": {
+   "centre_depth_l2_relative": 0.34869977485040987,
+   "centre_depth_max_relative": 1.0484328001192145,
+   "shoreline_max_relative": 0.6286415910287092,
+   "shoreline_mean_relative": 0.19502344136959093,
+   "window": "0 <= t <= 2T"
+  },
+  "order2_cut1e-2": {
+   "centre_depth_l2_relative": 0.3394595637779208,
+   "centre_depth_max_relative": 1.0008092315508292,
+   "shoreline_max_relative": 0.6286415910287092,
+   "shoreline_mean_relative": 0.1956601834823486,
+   "window": "0 <= t <= 2T"
+  },
+  "order2_cut3e-2": {
+   "centre_depth_l2_relative": 0.3094154828246744,
+   "centre_depth_max_relative": 0.9248485125980764,
+   "shoreline_max_relative": 0.6286415910287092,
+   "shoreline_mean_relative": 0.1956601834823486,
+   "window": "0 <= t <= 2T"
+  },
+  "order2_fr1": {
+   "centre_depth_l2_relative": 0.3519654997532544,
+   "centre_depth_max_relative": 1.0102090959958665,
+   "shoreline_max_relative": 0.5299360400572726,
+   "shoreline_mean_relative": 0.17211592863403385,
+   "window": "0 <= t <= 2T"
+  },
+  "order2_fr2": {
+   "centre_depth_l2_relative": 0.29162639038946103,
+   "centre_depth_max_relative": 0.9367017947091492,
+   "shoreline_max_relative": 0.6286415910287092,
+   "shoreline_mean_relative": 0.1956601834823486,
+   "window": "0 <= t <= 2T"
+  }
+ },
+ "rows_half_period_control": {
+  "order1": {
+   "centre_depth_l2_relative": 0.11081210577217028,
+   "shoreline_mean_relative": 0.07843587229618179
+  },
+  "order2": {
+   "centre_depth_l2_relative": 0.028698399033252865,
+   "shoreline_mean_relative": 0.05694179393717926
+  },
+  "order2_cut1e-2": {
+   "centre_depth_l2_relative": 0.027957122762008145,
+   "shoreline_mean_relative": 0.05937299109498128
+  },
+  "order2_cut3e-2": {
+   "centre_depth_l2_relative": 0.027890703558421326,
+   "shoreline_mean_relative": 0.05937299109498128
+  },
+  "order2_fr1": {
+   "centre_depth_l2_relative": 0.02773012636986957,
+   "shoreline_mean_relative": 0.07018258093981214
+  },
+  "order2_fr2": {
+   "centre_depth_l2_relative": 0.028426895042814624,
+   "shoreline_mean_relative": 0.05937299109498128
+  }
+ },
+ "window": "CASE-FVM-THACKER-BASIN, n = 40, 2 periods (2T = 1.418503 s)"
+}
