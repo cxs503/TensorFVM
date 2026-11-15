@@ -1,0 +1,242 @@
+[
+  {
+    "param": "ice_thickness",
+    "injected": 19.990000000000002,
+    "guarded_resistance_kN": null,
+    "unguarded_resistance_kN": 639492.5642959964,
+    "blocked": true,
+    "errors": [
+      "ice_thickness (h) = 19.990000000000002 m is outside physical bounds [0.01, 10.0] m"
+    ]
+  },
+  {
+    "param": "ice_thickness",
+    "injected": -9.98,
+    "guarded_resistance_kN": null,
+    "unguarded_resistance_kN": null,
+    "blocked": true,
+    "errors": [
+      "ice_thickness (h) = -9.98 m is outside physical bounds [0.01, 10.0] m"
+    ]
+  },
+  {
+    "param": "ice_strength",
+    "injected": 59.9,
+    "guarded_resistance_kN": null,
+    "unguarded_resistance_kN": 142274.4716132263,
+    "blocked": true,
+    "errors": [
+      "ice_strength (\u03c3_c) = 59.9 MPa is outside physical bounds [0.1, 30.0] MPa"
+    ]
+  },
+  {
+    "param": "ice_strength",
+    "injected": -29.799999999999997,
+    "guarded_resistance_kN": null,
+    "unguarded_resistance_kN": -66462.66039941162,
+    "blocked": true,
+    "errors": [
+      "ice_strength (\u03c3_c) = -29.799999999999997 MPa is outside physical bounds [0.1, 30.0] MPa"
+    ]
+  },
+  {
+    "param": "ice_friction",
+    "injected": 2.0,
+    "guarded_resistance_kN": null,
+    "unguarded_resistance_kN": 27012.4922857561,
+    "blocked": true,
+    "errors": [
+      "ice_friction (\u03bc) = 2.0  is outside physical bounds [0.0, 1.0] "
+    ]
+  },
+  {
+    "param": "ice_friction",
+    "injected": -1.0,
+    "guarded_resistance_kN": null,
+    "unguarded_resistance_kN": -6454.902884884379,
+    "blocked": true,
+    "errors": [
+      "ice_friction (\u03bc) = -1.0  is outside physical bounds [0.0, 1.0] "
+    ]
+  },
+  {
+    "param": "ice_speed",
+    "injected": 30.0,
+    "guarded_resistance_kN": null,
+    "unguarded_resistance_kN": 25840.07615669979,
+    "blocked": true,
+    "errors": [
+      "ice_speed (v) = 30.0 m/s is outside physical bounds [0.0, 15.0] m/s"
+    ]
+  },
+  {
+    "param": "ice_speed",
+    "injected": -15.0,
+    "guarded_resistance_kN": null,
+    "unguarded_resistance_kN": -5266.239498031298,
+    "blocked": true,
+    "errors": [
+      "ice_speed (v) = -15.0 m/s is outside physical bounds [0.0, 15.0] m/s"
+    ]
+  },
+  {
+    "param": "ice_density",
+    "injected": 1040.0,
+    "guarded_resistance_kN": null,
+    "unguarded_resistance_kN": 6374.265263861138,
+    "blocked": true,
+    "errors": [
+      "ice_density (\u03c1_ice) = 1040.0 kg/m\u00b3 is outside physical bounds [800.0, 920.0] kg/m\u00b3"
+    ]
+  },
+  {
+    "param": "ice_density",
+    "injected": 680.0,
+    "guarded_resistance_kN": null,
+    "unguarded_resistance_kN": 6374.265263861138,
+    "blocked": true,
+    "errors": [
+      "ice_density (\u03c1_ice) = 680.0 kg/m\u00b3 is outside physical bounds [800.0, 920.0] kg/m\u00b3"
+    ]
+  },
+  {
+    "param": "ice_elastic_modulus",
+    "injected": 39.9,
+    "guarded_resistance_kN": null,
+    "unguarded_resistance_kN": 6374.265263861138,
+    "blocked": true,
+    "errors": [
+      "ice_elastic_modulus (E) = 39.9 GPa is outside physical bounds [0.1, 20.0] GPa"
+    ]
+  },
+  {
+    "param": "ice_elastic_modulus",
+    "injected": -19.799999999999997,
+    "guarded_resistance_kN": null,
+    "unguarded_resistance_kN": 6374.265263861138,
+    "blocked": true,
+    "errors": [
+      "ice_elastic_modulus (E) = -19.799999999999997 GPa is outside physical bounds [0.1, 20.0] GPa"
+    ]
+  },
+  {
+    "param": "ice_poisson_ratio",
+    "injected": 1.0,
+    "guarded_resistance_kN": null,
+    "unguarded_resistance_kN": 6374.265263861138,
+    "blocked": true,
+    "errors": [
+      "ice_poisson_ratio (\u03bd) = 1.0  is outside physical bounds [0.0, 0.5] "
+    ]
+  },
+  {
+    "param": "ice_poisson_ratio",
+    "injected": -0.5,
+    "guarded_resistance_kN": null,
+    "unguarded_resistance_kN": 6374.265263861138,
+    "blocked": true,
+    "errors": [
+      "ice_poisson_ratio (\u03bd) = -0.5  is outside physical bounds [0.0, 0.5] "
+    ]
+  },
+  {
+    "param": "ice_temperature",
+    "injected": 60.0,
+    "guarded_resistance_kN": null,
+    "unguarded_resistance_kN": 6374.265263861138,
+    "blocked": true,
+    "errors": [
+      "ice_temperature (T) = 60.0 \u00b0C is outside physical bounds [-60.0, 0.0] \u00b0C"
+    ]
+  },
+  {
+    "param": "ice_temperature",
+    "injected": -120.0,
+    "guarded_resistance_kN": null,
+    "unguarded_resistance_kN": 6374.265263861138,
+    "blocked": true,
+    "errors": [
+      "ice_temperature (T) = -120.0 \u00b0C is outside physical bounds [-60.0, 0.0] \u00b0C"
+    ]
+  },
+  {
+    "param": "ship_length",
+    "injected": 990.0,
+    "guarded_resistance_kN": null,
+    "unguarded_resistance_kN": 16270.10161506764,
+    "blocked": true,
+    "errors": [
+      "ship_length (L) = 990.0 m is outside physical bounds [10.0, 500.0] m"
+    ]
+  },
+  {
+    "param": "ship_length",
+    "injected": -480.0,
+    "guarded_resistance_kN": null,
+    "unguarded_resistance_kN": null,
+    "blocked": true,
+    "errors": [
+      "ship_length (L) = -480.0 m is outside physical bounds [10.0, 500.0] m"
+    ]
+  },
+  {
+    "param": "ship_beam",
+    "injected": 158.0,
+    "guarded_resistance_kN": null,
+    "unguarded_resistance_kN": 21299.2316729567,
+    "blocked": true,
+    "errors": [
+      "ship_beam (B) = 158.0 m is outside physical bounds [2.0, 80.0] m"
+    ]
+  },
+  {
+    "param": "ship_beam",
+    "injected": -76.0,
+    "guarded_resistance_kN": null,
+    "unguarded_resistance_kN": null,
+    "blocked": true,
+    "errors": [
+      "ship_beam (B) = -76.0 m is outside physical bounds [2.0, 80.0] m"
+    ]
+  },
+  {
+    "param": "ship_draft",
+    "injected": 39.7,
+    "guarded_resistance_kN": null,
+    "unguarded_resistance_kN": 6374.265263861138,
+    "blocked": true,
+    "errors": [
+      "ship_draft (T) = 39.7 m is outside physical bounds [0.3, 20.0] m"
+    ]
+  },
+  {
+    "param": "ship_draft",
+    "injected": -19.4,
+    "guarded_resistance_kN": null,
+    "unguarded_resistance_kN": null,
+    "blocked": true,
+    "errors": [
+      "ship_draft (T) = -19.4 m is outside physical bounds [0.3, 20.0] m"
+    ]
+  },
+  {
+    "param": "ship_block_coefficient",
+    "injected": 1.5,
+    "guarded_resistance_kN": null,
+    "unguarded_resistance_kN": 6374.265263861138,
+    "blocked": true,
+    "errors": [
+      "ship_block_coefficient (C_B) = 1.5  is outside physical bounds [0.3, 0.9] "
+    ]
+  },
+  {
+    "param": "ship_block_coefficient",
+    "injected": -0.3000000000000001,
+    "guarded_resistance_kN": null,
+    "unguarded_resistance_kN": 6374.265263861138,
+    "blocked": true,
+    "errors": [
+      "ship_block_coefficient (C_B) = -0.3000000000000001  is outside physical bounds [0.3, 0.9] "
+    ]
+  }
+]

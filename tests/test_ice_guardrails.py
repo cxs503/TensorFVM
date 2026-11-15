@@ -16,7 +16,6 @@ References for test values:
 
 from __future__ import annotations
 
-import pytest
 
 from tensorfvm.ice import (
     ICE_THICKNESS,
@@ -28,14 +27,12 @@ from tensorfvm.ice import (
     ICE_POISSON_RATIO,
     ICE_TEMPERATURE,
     ALL_ICE_PARAMETERS,
-    IceGuardrailResult,
     GuardrailStatus,
     validate_ice_parameters,
     clamp_ice_parameters,
     check_extrapolation_risk,
     get_parameter_report,
 )
-from tensorfvm.ice.parameters import IceParameterBounds
 
 
 # =========================================================================== #
@@ -387,11 +384,17 @@ class TestRegistryCompleteness:
     """Test that the parameter registry is complete and consistent."""
 
     def test_all_parameters_registered(self):
-        """All defined parameters should be in the registry."""
+        """All defined parameters should be in the registry.
+
+        m22342 widened the registry from the 8 ice properties to the full
+        12-parameter level-ice resistance input set (8 ice + 4 hull) that the
+        anchor audit found partially extrapolating.
+        """
         expected = {
             "ice_thickness", "ice_strength", "ice_friction", "ice_speed",
             "ice_density", "ice_elastic_modulus", "ice_poisson_ratio",
             "ice_temperature",
+            "ship_length", "ship_beam", "ship_draft", "ship_block_coefficient",
         }
         assert set(ALL_ICE_PARAMETERS.keys()) == expected
 

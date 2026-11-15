@@ -1,0 +1,12 @@
+{
+  "summary_metrics": {
+    "slip_u_l2": 0.00022818158377560876,
+    "noslip_u_l2": 0.006345989278534764,
+    "noslip_dpdx_err": 0.013689914205848308,
+    "all_passed": true
+  },
+  "grid": {
+    "ny_slip": 32,
+    "noslip_grid": "72x12"
+  }
+}
