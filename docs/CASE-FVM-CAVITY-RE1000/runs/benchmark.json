@@ -1,7 +1,9 @@
 {
  "case": "CASE-FVM-CAVITY-RE1000",
- "reference": "U. Ghia, K.N. Ghia, C.T. Shin, J. Comput. Phys. 48 (1982) 387-411, Table I (u at x = L/2), Table II (v at y = L/2), primary-vortex centre",
- "tolerance": 0.05,
+ "reynolds": 1000.0,
+ "judge_grid": 128,
+ "registered_tolerance": 0.03,
+ "vortex_tolerance_L": 0.01,
  "rows": [
   {
    "n": 32,
@@ -115,14 +117,14 @@
     "ref": 0.0,
     "got": 0.00430729832562185,
     "err": 0.00430729832562185,
-    "tolerance": 0.05,
+    "tolerance": 0.03,
     "pass": true
    },
    "v_profile_max_abs": {
     "ref": 0.0,
     "got": 0.011184127636449603,
     "err": 0.011184127636449603,
-    "tolerance": 0.05,
+    "tolerance": 0.03,
     "pass": true
    },
    "vortex_centre": {
@@ -144,7 +146,5 @@
    "converged": true,
    "verdict": "PASS"
   }
- ],
- "verdict": "PASS",
- "finest_verdict": "PASS"
+ ]
 }
