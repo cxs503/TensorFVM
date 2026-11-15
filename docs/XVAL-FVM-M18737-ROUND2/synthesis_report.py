@@ -176,11 +176,17 @@ def main():
     print(f"  Reference-side: {eb['reference_side_percent']:.3f}%")
     print()
     print(f"Peak extrapolation:")
-    print(f"  Order p = {pe['order']:.3f}")
-    print(f"  Continuum limit ρ_max = {pe['peak_infinity']:.4f}")
-    print(f"  Reference peak = {analysis['reference']['calibrated']['peak']:.4f}")
-    gap = 100 * (pe["peak_infinity"] - analysis["reference"]["calibrated"]["peak"]) / analysis["reference"]["calibrated"]["peak"]
-    print(f"  Gap vs reference = {gap:.2f}%")
+    if pe.get("asymptotic"):
+        print(f"  Order p = {pe['order']:.3f}")
+        print(f"  Continuum limit ρ_max = {pe['peak_infinity']:.4f}")
+        gap = 100 * (pe["peak_infinity"] - analysis["reference"]["calibrated"]["peak"]) / analysis["reference"]["calibrated"]["peak"]
+        print(f"  Gap vs reference = {gap:.2f}%")
+    else:
+        print(f"  NOT asymptotic (peak sequence not monotone)")
+        print(f"  Peaks: {[round(p,4) for p in pe['peak']]}")
+        finest_peak = pe["peak"][-1]
+        gap = 100 * (finest_peak - analysis["reference"]["calibrated"]["peak"]) / analysis["reference"]["calibrated"]["peak"]
+        print(f"  Finest peak = {finest_peak:.4f}, gap vs reference = {gap:.2f}%")
 
 
 if __name__ == "__main__":
