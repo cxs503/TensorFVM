@@ -48,6 +48,9 @@ def main(argv=None) -> int:
     ap.add_argument("--momentum-blend", type=float, default=0.75)
     ap.add_argument("--transport-blend", type=float, default=0.0)
     ap.add_argument("--tag", default=None)
+    ap.add_argument("--measure-json", default=None,
+                    help="output name for the measurement record "
+                         "(default round17_measure_<nx>x<ny>.json)")
     args = ap.parse_args(argv)
 
     tag = args.tag or f"r17_patankar_{args.nx}x{args.ny}"
@@ -107,7 +110,9 @@ def main(argv=None) -> int:
             "mean_nu_t_ratio_window"),
         "body_force": payload.get("time_averaged", {}).get("body_force"),
     }
-    write_json(OUTDIR / f"round17_measure_{args.nx}x{args.ny}.json", out)
+    measure_name = (args.measure_json
+                    or f"round17_measure_{args.nx}x{args.ny}.json")
+    write_json(OUTDIR / measure_name, out)
     print(json.dumps({k: out[k] for k in ("sink_coefficient_ratio",
                                           "certified", "x_r_error_vs_ref",
                                           "wall_clock_s")}, indent=1))
