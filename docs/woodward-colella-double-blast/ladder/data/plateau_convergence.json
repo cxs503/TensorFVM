@@ -3,7 +3,7 @@
   "t_end": 0.038,
   "tolerance_percent": 10.0,
   "reference": {
-    "path": "/srv/tensor/agent/work/m20591/docs/woodward-colella-double-blast/reference/reference_density.csv",
+    "path": "/srv/tensor/agent/work/m22098/docs/woodward-colella-double-blast/reference/reference_density.csv",
     "panel_spread": 3.0999999999892225e-05,
     "domain": [
       0.399853,
@@ -114,7 +114,7 @@
       "family": "fvm",
       "baseline": true,
       "source": "docs/woodward-colella-double-blast/artifacts/wc_blast_profile_nx400.npz",
-      "path": "/srv/tensor/agent/work/m20591/docs/woodward-colella-double-blast/artifacts/wc_blast_profile_nx400.npz"
+      "path": "/srv/tensor/agent/work/m22098/docs/woodward-colella-double-blast/artifacts/wc_blast_profile_nx400.npz"
     },
     "nx800_hllc": {
       "window_min": {
@@ -190,7 +190,83 @@
       "family": "fvm",
       "baseline": true,
       "source": "docs/woodward-colella-double-blast/artifacts/wc_blast_profile_nx800.npz",
-      "path": "/srv/tensor/agent/work/m20591/docs/woodward-colella-double-blast/artifacts/wc_blast_profile_nx800.npz"
+      "path": "/srv/tensor/agent/work/m22098/docs/woodward-colella-double-blast/artifacts/wc_blast_profile_nx800.npz"
+    },
+    "nx12800_weno5": {
+      "window_min": {
+        "ref": 0.157112,
+        "got": 0.1798876854467823,
+        "x_ref": 0.420358,
+        "x_got": 0.4200390625,
+        "rel_error_percent": 14.49646459009006
+      },
+      "min_edge": {
+        "x_min": 0.4200390625,
+        "distance_to_low_edge": 6.975446428574997e-05,
+        "distance_to_high_edge": 0.9999302455357142,
+        "edge_degenerate": true,
+        "nearest_edge": "low"
+      },
+      "min_edge_ref": {
+        "x_min": 0.420358,
+        "distance_to_low_edge": 0.0006392857142857588,
+        "distance_to_high_edge": 0.9993607142857142,
+        "edge_degenerate": true,
+        "nearest_edge": "low"
+      },
+      "plateau_mean": {
+        "ref": 0.15982841054499988,
+        "got": 0.1827337328558271,
+        "window": [
+          0.44,
+          0.54
+        ],
+        "rel_error_percent": 14.331195707147579
+      },
+      "plateau_mean_windows": {
+        "0.42-0.56": {
+          "ref": 0.16015274447499994,
+          "got": 0.1827831635167196,
+          "rel_error_percent": 14.130522156148443
+        },
+        "0.44-0.54": {
+          "ref": 0.15982841054499988,
+          "got": 0.1827337328558271,
+          "rel_error_percent": 14.331195707147579
+        },
+        "0.46-0.52": {
+          "ref": 0.15929308114166674,
+          "got": 0.18263253801975324,
+          "rel_error_percent": 14.651896184574168
+        }
+      },
+      "window_mass": {
+        "ref": 0.92215100156725,
+        "got": 0.9354948791119442,
+        "window": [
+          0.4,
+          1.0
+        ],
+        "rel_error_percent": 1.4470382314843686
+      },
+      "probe": {
+        "x": 0.5,
+        "ref": 0.16108305,
+        "got": 0.18329968209176786,
+        "rel_error_percent": 13.79203590431635
+      },
+      "published": {
+        "peak_density_rel_percent": 2.59569895438836,
+        "l1_percent": 5.4821196686891565,
+        "low_plateau_rel_percent": 14.49646459009006,
+        "verdict": "PASS"
+      },
+      "tag": "nx12800_weno5",
+      "nx": 12800,
+      "family": "weno5",
+      "baseline": true,
+      "source": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx12800_weno5.npz",
+      "path": "/srv/tensor/agent/work/m22098/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx12800_weno5.npz"
     },
     "nx1600_hllc": {
       "window_min": {
@@ -266,7 +342,7 @@
       "family": "fvm",
       "baseline": true,
       "source": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx1600_hllc.npz",
-      "path": "/srv/tensor/agent/work/m20591/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx1600_hllc.npz"
+      "path": "/srv/tensor/agent/work/m22098/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx1600_hllc.npz"
     },
     "nx1600_weno5": {
       "window_min": {
@@ -342,7 +418,83 @@
       "family": "weno5",
       "baseline": true,
       "source": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx1600_weno5.npz",
-      "path": "/srv/tensor/agent/work/m20591/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx1600_weno5.npz"
+      "path": "/srv/tensor/agent/work/m22098/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx1600_weno5.npz"
+    },
+    "nx1600_weno7": {
+      "window_min": {
+        "ref": 0.157112,
+        "got": 0.17985863922887182,
+        "x_ref": 0.420358,
+        "x_got": 0.4203125,
+        "rel_error_percent": 14.477977002948103
+      },
+      "min_edge": {
+        "x_min": 0.4203125,
+        "distance_to_low_edge": 0.0005580357142857023,
+        "distance_to_high_edge": 0.9994419642857142,
+        "edge_degenerate": true,
+        "nearest_edge": "low"
+      },
+      "min_edge_ref": {
+        "x_min": 0.420358,
+        "distance_to_low_edge": 0.0006392857142857588,
+        "distance_to_high_edge": 0.9993607142857142,
+        "edge_degenerate": true,
+        "nearest_edge": "low"
+      },
+      "plateau_mean": {
+        "ref": 0.15982841054499988,
+        "got": 0.18168651425561802,
+        "window": [
+          0.44,
+          0.54
+        ],
+        "rel_error_percent": 13.67598140786363
+      },
+      "plateau_mean_windows": {
+        "0.42-0.56": {
+          "ref": 0.16015274447499994,
+          "got": 0.1820373886564505,
+          "rel_error_percent": 13.6648574167062
+        },
+        "0.44-0.54": {
+          "ref": 0.15982841054499988,
+          "got": 0.18168651425561802,
+          "rel_error_percent": 13.67598140786363
+        },
+        "0.46-0.52": {
+          "ref": 0.15929308114166674,
+          "got": 0.1808923858127762,
+          "rel_error_percent": 13.55947447077139
+        }
+      },
+      "window_mass": {
+        "ref": 0.92215100156725,
+        "got": 0.9353268875587106,
+        "window": [
+          0.4,
+          1.0
+        ],
+        "rel_error_percent": 1.4288208730530447
+      },
+      "probe": {
+        "x": 0.5,
+        "ref": 0.16108305,
+        "got": 0.1832964602651277,
+        "rel_error_percent": 13.7900358014873
+      },
+      "published": {
+        "peak_density_rel_percent": 6.597201367644622,
+        "l1_percent": 4.531820260089659,
+        "low_plateau_rel_percent": 14.477977002948103,
+        "verdict": "PASS"
+      },
+      "tag": "nx1600_weno7",
+      "nx": 1600,
+      "family": "weno7",
+      "baseline": false,
+      "source": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx1600_weno7.npz",
+      "path": "/srv/tensor/agent/work/m22098/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx1600_weno7.npz"
     },
     "nx200_hllc": {
       "window_min": {
@@ -418,7 +570,7 @@
       "family": "fvm",
       "baseline": true,
       "source": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx200_hllc.npz",
-      "path": "/srv/tensor/agent/work/m20591/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx200_hllc.npz"
+      "path": "/srv/tensor/agent/work/m22098/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx200_hllc.npz"
     },
     "nx200_hllc_limiterminmod_cfl0.2": {
       "window_min": {
@@ -494,7 +646,7 @@
       "family": "fvm",
       "baseline": false,
       "source": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx200_hllc_limiterminmod_cfl0.2.npz",
-      "path": "/srv/tensor/agent/work/m20591/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx200_hllc_limiterminmod_cfl0.2.npz"
+      "path": "/srv/tensor/agent/work/m22098/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx200_hllc_limiterminmod_cfl0.2.npz"
     },
     "nx200_weno5": {
       "window_min": {
@@ -570,7 +722,7 @@
       "family": "weno5",
       "baseline": true,
       "source": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx200_weno5.npz",
-      "path": "/srv/tensor/agent/work/m20591/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx200_weno5.npz"
+      "path": "/srv/tensor/agent/work/m22098/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx200_weno5.npz"
     },
     "nx3200_hllc": {
       "window_min": {
@@ -646,7 +798,7 @@
       "family": "fvm",
       "baseline": true,
       "source": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx3200_hllc.npz",
-      "path": "/srv/tensor/agent/work/m20591/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx3200_hllc.npz"
+      "path": "/srv/tensor/agent/work/m22098/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx3200_hllc.npz"
     },
     "nx3200_weno5": {
       "window_min": {
@@ -722,7 +874,159 @@
       "family": "weno5",
       "baseline": true,
       "source": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx3200_weno5.npz",
-      "path": "/srv/tensor/agent/work/m20591/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx3200_weno5.npz"
+      "path": "/srv/tensor/agent/work/m22098/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx3200_weno5.npz"
+    },
+    "nx6400_hllc": {
+      "window_min": {
+        "ref": 0.157112,
+        "got": 0.17988215040887998,
+        "x_ref": 0.420358,
+        "x_got": 0.420078125,
+        "rel_error_percent": 14.49294160145627
+      },
+      "min_edge": {
+        "x_min": 0.420078125,
+        "distance_to_low_edge": 0.00013950892857149993,
+        "distance_to_high_edge": 0.9998604910714283,
+        "edge_degenerate": true,
+        "nearest_edge": "low"
+      },
+      "min_edge_ref": {
+        "x_min": 0.420358,
+        "distance_to_low_edge": 0.0006392857142857588,
+        "distance_to_high_edge": 0.9993607142857142,
+        "edge_degenerate": true,
+        "nearest_edge": "low"
+      },
+      "plateau_mean": {
+        "ref": 0.15982841054499988,
+        "got": 0.1826050864042931,
+        "window": [
+          0.44,
+          0.54
+        ],
+        "rel_error_percent": 14.250705354340251
+      },
+      "plateau_mean_windows": {
+        "0.42-0.56": {
+          "ref": 0.16015274447499994,
+          "got": 0.18269543433612165,
+          "rel_error_percent": 14.075743712678399
+        },
+        "0.44-0.54": {
+          "ref": 0.15982841054499988,
+          "got": 0.1826050864042931,
+          "rel_error_percent": 14.250705354340251
+        },
+        "0.46-0.52": {
+          "ref": 0.15929308114166674,
+          "got": 0.18240802209019505,
+          "rel_error_percent": 14.510950998537798
+        }
+      },
+      "window_mass": {
+        "ref": 0.92215100156725,
+        "got": 0.9354737734545067,
+        "window": [
+          0.4,
+          1.0
+        ],
+        "rel_error_percent": 1.444749489466885
+      },
+      "probe": {
+        "x": 0.5,
+        "ref": 0.16108305,
+        "got": 0.1833115368281745,
+        "rel_error_percent": 13.799395298372168
+      },
+      "published": {
+        "peak_density_rel_percent": 2.637822001020007,
+        "l1_percent": 4.801133693260421,
+        "low_plateau_rel_percent": 14.49294160145627,
+        "verdict": "PASS"
+      },
+      "tag": "nx6400_hllc",
+      "nx": 6400,
+      "family": "fvm",
+      "baseline": true,
+      "source": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx6400_hllc.npz",
+      "path": "/srv/tensor/agent/work/m22098/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx6400_hllc.npz"
+    },
+    "nx6400_weno5": {
+      "window_min": {
+        "ref": 0.157112,
+        "got": 0.1798670208760544,
+        "x_ref": 0.420358,
+        "x_got": 0.420078125,
+        "rel_error_percent": 14.483311825993184
+      },
+      "min_edge": {
+        "x_min": 0.420078125,
+        "distance_to_low_edge": 0.00013950892857149993,
+        "distance_to_high_edge": 0.9998604910714283,
+        "edge_degenerate": true,
+        "nearest_edge": "low"
+      },
+      "min_edge_ref": {
+        "x_min": 0.420358,
+        "distance_to_low_edge": 0.0006392857142857588,
+        "distance_to_high_edge": 0.9993607142857142,
+        "edge_degenerate": true,
+        "nearest_edge": "low"
+      },
+      "plateau_mean": {
+        "ref": 0.15982841054499988,
+        "got": 0.18260147308375713,
+        "window": [
+          0.44,
+          0.54
+        ],
+        "rel_error_percent": 14.248444604500063
+      },
+      "plateau_mean_windows": {
+        "0.42-0.56": {
+          "ref": 0.16015274447499994,
+          "got": 0.18268871931738231,
+          "rel_error_percent": 14.071550828715438
+        },
+        "0.44-0.54": {
+          "ref": 0.15982841054499988,
+          "got": 0.18260147308375713,
+          "rel_error_percent": 14.248444604500063
+        },
+        "0.46-0.52": {
+          "ref": 0.15929308114166674,
+          "got": 0.18240662752727593,
+          "rel_error_percent": 14.510075528674873
+        }
+      },
+      "window_mass": {
+        "ref": 0.92215100156725,
+        "got": 0.9354710775983832,
+        "window": [
+          0.4,
+          1.0
+        ],
+        "rel_error_percent": 1.444457145141621
+      },
+      "probe": {
+        "x": 0.5,
+        "ref": 0.16108305,
+        "got": 0.1833118245132816,
+        "rel_error_percent": 13.79957389264829
+      },
+      "published": {
+        "peak_density_rel_percent": 2.5686361757095724,
+        "l1_percent": 5.020647637430138,
+        "low_plateau_rel_percent": 14.483311825993184,
+        "verdict": "PASS"
+      },
+      "tag": "nx6400_weno5",
+      "nx": 6400,
+      "family": "weno5",
+      "baseline": true,
+      "source": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx6400_weno5.npz",
+      "path": "/srv/tensor/agent/work/m22098/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx6400_weno5.npz"
     }
   },
   "diagnosis": {
@@ -747,13 +1051,17 @@
       "edge_degenerate_solutions": {
         "nx400_hllc": true,
         "nx800_hllc": true,
+        "nx12800_weno5": true,
         "nx1600_hllc": true,
         "nx1600_weno5": true,
+        "nx1600_weno7": true,
         "nx200_hllc": true,
         "nx200_hllc_limiterminmod_cfl0.2": true,
         "nx200_weno5": true,
         "nx3200_hllc": true,
-        "nx3200_weno5": true
+        "nx3200_weno5": true,
+        "nx6400_hllc": true,
+        "nx6400_weno5": true
       }
     },
     "window_min_is_edge_degenerate": {
@@ -768,7 +1076,8 @@
         400,
         800,
         1600,
-        3200
+        3200,
+        6400
       ],
       "values": {
         "window_min_rel_percent": [
@@ -776,51 +1085,57 @@
           13.968419404606319,
           14.21731849037878,
           14.360912265171658,
-          14.448249122347148
+          14.448249122347148,
+          14.49294160145627
         ],
         "plateau_mean_rel_percent": [
           9.553832203400725,
           11.504250368249302,
           13.08196095813189,
           13.767995902348918,
-          14.090514187722311
+          14.090514187722311,
+          14.250705354340251
         ],
         "window_mass_rel_percent": [
           1.2683351393055673,
           1.3674285153966907,
           1.4103450254085932,
           1.4301417768912816,
-          1.4399005272810235
+          1.4399005272810235,
+          1.444749489466885
         ],
         "probe_rel_percent": [
           12.684688292460603,
           13.854104224477275,
           13.931361671314523,
           13.862114088635039,
-          13.816932355164258
+          13.816932355164258,
+          13.799395298372168
         ],
         "peak_density_rel_percent": [
           20.477677428067626,
           10.264543081304929,
           1.6882472218311024,
           2.699427109130986,
-          3.3582115380735376
+          3.3582115380735376,
+          2.637822001020007
         ],
         "l1_percent": [
           14.825794539824457,
           7.711573517196673,
           2.9569679382539165,
           2.801509588840873,
-          3.9808458328240146
+          3.9808458328240146,
+          4.801133693260421
         ]
       },
       "observed_order": {
-        "window_min_rel_percent": -0.028864481153777054,
-        "plateau_mean_rel_percent": -0.14014320385087398,
-        "window_mass_rel_percent": -0.045758285521628125,
-        "probe_rel_percent": -0.030837318850290858,
-        "peak_density_rel_percent": 0.6520717697786578,
-        "l1_percent": 0.4742406293315196
+        "window_min_rel_percent": -0.023982739262104723,
+        "plateau_mean_rel_percent": -0.1153763770261873,
+        "window_mass_rel_percent": -0.03757667057108949,
+        "probe_rel_percent": -0.024303396098661598,
+        "peak_density_rel_percent": 0.5913265947953381,
+        "l1_percent": 0.32533248162575107
       },
       "monotone_decreasing": {
         "window_min_rel_percent": false,
@@ -832,22 +1147,22 @@
       },
       "richardson": {
         "plateau_mean": {
-          "order": -0.14014320385087398,
-          "value_finest": 0.18234905540885415,
+          "order": -0.1153763770261873,
+          "value_finest": 0.1826050864042931,
           "value_limit": null,
           "ref": 0.15982841054499988,
           "limit_rel_error_percent": null
         },
         "window_mass": {
-          "order": -0.045758285521628125,
-          "value_finest": 0.9354290587011441,
+          "order": -0.03757667057108949,
+          "value_finest": 0.9354737734545067,
           "value_limit": null,
           "ref": 0.92215100156725,
           "limit_rel_error_percent": null
         },
         "probe": {
-          "order": -0.030837318850290858,
-          "value_finest": 0.18333978605413542,
+          "order": -0.024303396098661598,
+          "value_finest": 0.1833115368281745,
           "value_limit": null,
           "ref": 0.16108305,
           "limit_rel_error_percent": null
@@ -858,77 +1173,91 @@
       "levels": [
         200,
         1600,
-        3200
+        3200,
+        6400,
+        12800
       ],
       "values": {
         "window_min_rel_percent": [
           13.482480518604959,
           14.34216360593734,
-          14.442270488472708
+          14.442270488472708,
+          14.483311825993184,
+          14.49646459009006
         ],
         "plateau_mean_rel_percent": [
           13.28776693750969,
           13.703809695945953,
-          14.074145552378925
+          14.074145552378925,
+          14.248444604500063,
+          14.331195707147579
         ],
         "window_mass_rel_percent": [
           1.2877755266989246,
           1.427870914246057,
-          1.4390626722333244
+          1.4390626722333244,
+          1.444457145141621,
+          1.4470382314843686
         ],
         "probe_rel_percent": [
           16.462231615224912,
           13.78303145712497,
-          13.812423524615594
+          13.812423524615594,
+          13.79957389264829,
+          13.79203590431635
         ],
         "peak_density_rel_percent": [
           19.668151949527292,
           2.794354911044882,
-          2.287859926629593
+          2.287859926629593,
+          2.5686361757095724,
+          2.59569895438836
         ],
         "l1_percent": [
           16.260871437101894,
           3.090661952880233,
-          4.245685047746108
+          4.245685047746108,
+          5.020647637430138,
+          5.4821196686891565
         ]
       },
       "observed_order": {
-        "window_min_rel_percent": -0.019880232448851155,
-        "plateau_mean_rel_percent": -0.026648216088401663,
-        "window_mass_rel_percent": -0.030462669170526886,
-        "probe_rel_percent": 0.04117449204627225,
-        "peak_density_rel_percent": 0.6134706433511897,
-        "l1_percent": 0.17019538994028569
+        "window_min_rel_percent": -0.011290998577050319,
+        "plateau_mean_rel_percent": -0.019852019530959882,
+        "window_mass_rel_percent": -0.017224738394313835,
+        "probe_rel_percent": 0.021120006393340145,
+        "peak_density_rel_percent": 0.2612042354534376,
+        "l1_percent": -0.007086421870921886
       },
       "monotone_decreasing": {
         "window_min_rel_percent": false,
         "plateau_mean_rel_percent": false,
         "window_mass_rel_percent": false,
         "probe_rel_percent": false,
-        "peak_density_rel_percent": true,
+        "peak_density_rel_percent": false,
         "l1_percent": false
       },
       "richardson": {
         "plateau_mean": {
-          "order": -0.026648216088401663,
-          "value_finest": 0.1823228936791569,
+          "order": -0.019852019530959882,
+          "value_finest": 0.1827337328558271,
           "value_limit": null,
           "ref": 0.15982841054499988,
           "limit_rel_error_percent": null
         },
         "window_mass": {
-          "order": -0.030462669170526886,
-          "value_finest": 0.9354213324124301,
+          "order": -0.017224738394313835,
+          "value_finest": 0.9354948791119442,
           "value_limit": null,
           "ref": 0.92215100156725,
           "limit_rel_error_percent": null
         },
         "probe": {
-          "order": 0.04117449204627225,
-          "value_finest": 0.1833325230923683,
-          "value_limit": 0.1849678860304159,
+          "order": 0.021120006393340145,
+          "value_finest": 0.18329968209176786,
+          "value_limit": 0.1824762969176205,
           "ref": 0.16108305,
-          "limit_rel_error_percent": 14.827653207718555
+          "limit_rel_error_percent": 13.280880215280554
         }
       }
     }
@@ -944,6 +1273,18 @@
             "delta_percent": 22.428186271919927,
             "window_min": 0.17666869047381814,
             "window_min_delta_percent": -0.7847504221828268
+          }
+        }
+      },
+      "1600": {
+        "baseline_tag": "nx1600_hllc",
+        "baseline_plateau_mean": 0.18183357955962487,
+        "variants": {
+          "nx1600_weno7": {
+            "plateau_mean": 0.18168651425561802,
+            "delta_percent": -0.08087906775141344,
+            "window_min": 0.17985863922887182,
+            "window_min_delta_percent": 0.10236429166025256
           }
         }
       }
@@ -993,20 +1334,35 @@
           "window_min_rel_percent": 14.442270488472708
         },
         "plateau_mean_diff_percent": 0.014347060717471383
+      },
+      "6400": {
+        "fvm": {
+          "plateau_mean": 0.1826050864042931,
+          "plateau_mean_rel_percent": 14.250705354340251,
+          "window_min": 0.17988215040887998,
+          "window_min_rel_percent": 14.49294160145627
+        },
+        "weno5": {
+          "plateau_mean": 0.18260147308375713,
+          "plateau_mean_rel_percent": 14.248444604500063,
+          "window_min": 0.1798670208760544,
+          "window_min_rel_percent": 14.483311825993184
+        },
+        "plateau_mean_diff_percent": 0.0019787622607468328
       }
     }
   },
   "verdict": {
     "tolerance_percent": 10.0,
     "finest_fvm": {
-      "tag": "nx3200_hllc",
-      "nx": 3200,
-      "peak_density_rel_percent": 3.3582115380735376,
-      "l1_percent": 3.9808458328240146,
-      "plateau_mean_rel_percent": 14.090514187722311,
-      "window_mass_rel_percent": 1.4399005272810235,
-      "probe_rel_percent": 13.816932355164258,
-      "window_min_rel_percent": 14.448249122347148
+      "tag": "nx6400_hllc",
+      "nx": 6400,
+      "peak_density_rel_percent": 2.637822001020007,
+      "l1_percent": 4.801133693260421,
+      "plateau_mean_rel_percent": 14.250705354340251,
+      "window_mass_rel_percent": 1.444749489466885,
+      "probe_rel_percent": 13.799395298372168,
+      "window_min_rel_percent": 14.49294160145627
     },
     "pass_fail": {
       "peak_density": true,
