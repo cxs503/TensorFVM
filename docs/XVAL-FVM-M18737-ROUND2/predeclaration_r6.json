@@ -1,0 +1,134 @@
+{
+ "round": 6,
+ "anchor": "XVAL-FVM-M18737-ROUND2",
+ "frozen_at_utc": "2026-11-15T12:20:00Z",
+ "frozen_while": "no ladder_profile_nx*_weno7.npz exists in the worktree (WENO7 never run on the blast datum)",
+ "reference_family": "weno7",
+ "reference_rungs_to_compute": [
+  1600,
+  3200,
+  6400
+ ],
+ "graded_profile": {
+  "family": "hllc",
+  "nx": 3200
+ },
+ "window": [
+  0.4,
+  1.0
+ ],
+ "known_before_freeze": {
+  "weno5_selfcert_12800_vs_6400_l1_percent": 0.5437,
+  "weno5_order_12800_vs_6400": 0.8133,
+  "u_ref_weno5_12800_percent": 0.7181,
+  "muscl3200_vs_weno5_12800_l1_percent": 1.7685,
+  "muscl3200_vs_weno5_12800_peak_percent": 0.758,
+  "weno5_selfcert_3200_vs_6400_l1_percent": 0.9554
+ },
+ "predictions": {
+  "Q1_weno7_observed_order": {
+   "quantity": "observed order p of WENO7 on the 3200->6400 pair",
+   "point_prediction": 0.85,
+   "band": [
+    0.6,
+    1.2
+   ],
+   "mechanism": "L1 of a shock/contact-dominated solution is O(h) with a constant set by the number of cells in the smearing bands; raising the reconstruction order changes the constant, not the exponent"
+  },
+  "Q2_cross_order_gap_3200": {
+   "quantity": "L1(WENO7@3200 vs WENO5@3200) [%]",
+   "point_prediction": 1.2,
+   "band": [
+    0.6,
+    3.0
+   ],
+   "mechanism": "same-resolution reference truncation shrinks, so the gap should be the same order as the WENO5 3200->6400 self-certification (0.9554%)"
+  },
+  "Q3_weno7_u_ref_6400": {
+   "quantity": "U_ref^WENO7(6400) = 0.5 * L1(WENO7@3200 vs WENO7@6400) [%]",
+   "point_prediction": 0.4,
+   "band": [
+    0.15,
+    0.6
+   ],
+   "mechanism": "must undercut U_ref^WENO5(12800) = 0.7181%, otherwise the order-upgrade route is not cheaper than refinement"
+  },
+  "Q4_reference_side_share_pp": {
+   "quantity": "L1(MUSCL@3200 vs WENO7@6400) - L1(MUSCL@3200 vs WENO5@12800) [percentage points]",
+   "point_prediction": -0.45,
+   "band": [
+    -0.8,
+    -0.1
+   ],
+   "mechanism": "the reference floor drops 0.72% -> 0.40%; the graded-side error is unchanged"
+  },
+  "Q5_certified_still_false": {
+   "quantity": "honest bound = L1(MUSCL@3200 vs WENO7@6400) + U_ref^WENO7(6400) < 1 % ?",
+   "point_prediction": "False (expect 1.6-1.9 %)",
+   "band": "verdict",
+   "mechanism": "at most ~0.5 pp of the 1.78% can be reference-side; the remainder keeps the graded solution above the 1% bar"
+  },
+  "Q6_peak_ratio": {
+   "quantity": "peak(MUSCL@3200 vs WENO7@6400) / peak(MUSCL@3200 vs WENO5@12800), denominator 0.758 %",
+   "point_prediction": 0.85,
+   "band": [
+    0.5,
+    1.1
+   ],
+   "mechanism": "the peak is already converged to 0.023% inside the WENO5 family, so a change of reconstruction order should barely move it"
+  }
+ },
+ "fallback_discipline": {
+  "missing_rung": "Q1/Q3/Q4/Q5/Q6 recorded as not_measured, never PASS, never substituted by WENO5 numbers",
+  "positivity_threshold": "a rung whose positivity-fallback share exceeds 1% of its steps is demoted to diagnostic-only",
+  "trust_condition": "WENO7 counts as a credible reference only if its own self-certification is <1% (same rule as WENO5@12800)",
+  "certified_definition": "selfcert<1% AND floor_removed AND graded<1%"
+ },
+ "code_sha256": {
+  "wc_weno7_ladder.py": "52f485e3234299ce1f84f3ca2c94a0adf30476a66b2fd257ad8e2d6ab2b64f43",
+  "wc_weno7.py": "e51eeb6e0354a784a9e69cd58177886d89feba60c86594349e88ab5587186a3c",
+  "wc_crosscode.py": "351cf5475bdb48dffa55cdc16971441df85d6814d67b860ea706c37ed483adbe"
+ },
+ "amendments": [
+  {
+   "id": "AMENDMENT-1",
+   "frozen_job_state_at_amendment": "cj3733 queued, not started; no WENO7 profile >= nx=1600 existed",
+   "reason": "definition error: Q3 originally used 0.5*L1(pair); the code convention is U_ref = e/(2**p-1) (u_ref_from_pair). Inputs of Q3 did not exist at amendment time.",
+   "superseded": {
+    "quantity": "U_ref^WENO7(6400) = 0.5 * L1(WENO7@3200 vs WENO7@6400)",
+    "point": 0.4,
+    "band": [
+     0.15,
+     0.6
+    ]
+   },
+   "revised": {
+    "quantity": "U_ref^WENO7(6400) = u_ref_of_reference(DATA, 6400, 'weno7')",
+    "point": 0.69,
+    "band": [
+     0.3,
+     0.95
+    ],
+    "mechanism": "peak deficit at nx=400: WENO5 12.0% vs WENO7 4.9% (1/2.4); L1 constant assumed to improve 1.5-2.0x -> e_W7(3200->6400)=0.48-0.64% -> U_ref=e/(2^0.85-1)"
+   },
+   "unchanged": [
+    "Q1",
+    "Q2",
+    "Q4",
+    "Q5",
+    "Q6"
+   ]
+  },
+  {
+   "id": "AMENDMENT-2",
+   "frozen_job_state_at_amendment": "cj3733 queued, no WENO7 rung >= nx=1600 produced yet",
+   "reason": "producer only: added a divergence guard (a NaN rung is recorded as status=diverged and stores no profile) after WENO7 was found to diverge at nx=200 and nx=800 in local smoke runs; and renamed the metrics file to weno7_metrics_nx<N>_weno7.json for consistency with ladder_metrics_nx<N>_weno5.json",
+   "instrument_unchanged": "wc_weno7.py hash still matches the frozen value",
+   "supersedes_hash": {
+    "file": "wc_weno7_ladder.py",
+    "old": "5221be46721da3575686f7ce65095174f90bcb3202d1b39703d23709cf31a41e",
+    "new": "52f485e3234299ce1f84f3ca2c94a0adf30476a66b2fd257ad8e2d6ab2b64f43"
+   }
+  }
+ ]
+}
