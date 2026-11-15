@@ -1,0 +1,103 @@
+{
+ "case": "CASE-FVM-CAVITY-RE1000",
+ "reynolds": 1000.0,
+ "nu": 0.001,
+ "lid_velocity": 1.0,
+ "identity_power": "P_in = U * mu * int (du/dy)|lid dx = mu * int |grad u|^2 dA",
+ "identity_stokes": "int omega dA = -U L",
+ "fvm": [
+  {
+   "n": 32,
+   "h": 0.03125,
+   "drag_1": 0.028229520626885902,
+   "drag_2": 0.03480089781978584,
+   "centre_1": 0.019584085345132177,
+   "centre_2": 0.023655091813377476,
+   "corner_share_1": 0.30625512193500654,
+   "corner_share_2": 0.3202735189225918,
+   "dissipation": 0.019177123776333307,
+   "power_in": 0.028229520626885902,
+   "power_residual_rel": 0.3206712919499971,
+   "total_vorticity": -0.9999999999999999,
+   "kinetic_energy": 0.034464309179516164
+  },
+  {
+   "n": 64,
+   "h": 0.015625,
+   "drag_1": 0.033024988260141955,
+   "drag_2": 0.03832847173861775,
+   "centre_1": 0.019914599122323132,
+   "centre_2": 0.02191000839793568,
+   "corner_share_1": 0.3969839151658935,
+   "corner_share_2": 0.4283620660027437,
+   "dissipation": 0.02631967513081118,
+   "power_in": 0.033024988260141955,
+   "power_residual_rel": 0.2030375628452064,
+   "total_vorticity": -1.0,
+   "kinetic_energy": 0.041609680383707284
+  },
+  {
+   "n": 128,
+   "h": 0.0078125,
+   "drag_1": 0.036489687505514845,
+   "drag_2": 0.04057972995104297,
+   "centre_1": 0.01850220689840174,
+   "centre_2": 0.019081651897183843,
+   "corner_share_1": 0.49294696219019624,
+   "corner_share_2": 0.5297738077556278,
+   "dissipation": 0.031750955894520316,
+   "power_in": 0.036489687505514845,
+   "power_residual_rel": 0.12986495459239938,
+   "total_vorticity": -1.0,
+   "kinetic_energy": 0.04379895328343297
+  }
+ ],
+ "spectral": {
+  "order": 48,
+  "psi_min": -0.11911948330587496,
+  "newton_iterations": 3,
+  "drag_total": 0.04736281484644854,
+  "drag_centre": 0.01893894947135581,
+  "corner_share": 0.6001304075199845,
+  "power_in": 0.04736281484644853,
+  "dissipation": 0.04101806491228597,
+  "power_residual_rel": 0.13396057550068352,
+  "total_vorticity": -0.9997639552848694,
+  "kinetic_energy": 0.04462169754013828,
+  "npz": {
+   "u_at_y_32": 0.7659128642657542,
+   "u_at_y_64": 0.8804123323806383,
+   "u_at_y_128": 0.9420422571107551
+  },
+  "ys": [
+   0.984375,
+   0.9921875,
+   0.99609375
+  ]
+ },
+ "orders": {
+  "drag_order1": 0.46894138341406955,
+  "drag_order2": 0.6479447752216759,
+  "centre_order1": NaN,
+  "dissipation": 0.39514706045885695
+ },
+ "richardson": {
+  "drag_order1": 0.04551014588894723,
+  "drag_order2": 0.04455066246685502,
+  "centre_order1": 0.017089814674480345
+ },
+ "cross_check": {
+  "centre_fvm_n128_vs_spectral": -2.306054903491985,
+  "total_fvm_rich_vs_spectral": -3.911652978201801,
+  "near_wall_u_rel": {
+   "n32": -8.612051811936663,
+   "n64": -0.8532788481138189,
+   "n128": -0.08065143265624478
+  }
+ },
+ "figures": [
+  "figures/fig_ws_drag_convergence.png",
+  "figures/fig_ws_power_residual.png",
+  "figures/fig_ws_fields_shear.png"
+ ]
+}
