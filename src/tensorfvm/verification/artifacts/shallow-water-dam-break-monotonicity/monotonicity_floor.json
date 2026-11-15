@@ -1,6 +1,12 @@
 {
  "angle_deg": 0.0,
  "case": "stoker-wet",
+ "case_params": {
+  "gravity": 9.81,
+  "h0": 1.0,
+  "h1": 0.5,
+  "t_star_end": 2.0
+ },
  "decay_1d": {
   "assessed": false,
   "reason": "only 0 grid(s) carry a beyond-gate extremum; DECAY_MIN_GRIDS = 2"
@@ -1291,7 +1297,7 @@
     ]
    },
    "steps": 230,
-   "wall_time_s": 0.28102228976786137
+   "wall_time_s": 0.29437057860195637
   },
   {
    "bins": 800,
@@ -3729,7 +3735,7 @@
     ]
    },
    "steps": 459,
-   "wall_time_s": 0.6864180006086826
+   "wall_time_s": 0.720873149111867
   },
   {
    "bins": 1600,
@@ -8567,7 +8573,7 @@
     ]
    },
    "steps": 918,
-   "wall_time_s": 1.6750846598297358
+   "wall_time_s": 1.754989329725504
   }
  ],
  "runs_2d": [
@@ -8978,7 +8984,7 @@
    },
    "steps": 58,
    "t_end": 0.638550856814101,
-   "wall_time_s": 1.4281341787427664
+   "wall_time_s": 1.194933459162712
   },
   {
    "angle_deg": 0.0,
@@ -9747,7 +9753,7 @@
    },
    "steps": 115,
    "t_end": 0.638550856814101,
-   "wall_time_s": 10.760487530380487
+   "wall_time_s": 8.369043849408627
   },
   {
    "angle_deg": 0.0,
@@ -11220,7 +11226,7 @@
    },
    "steps": 230,
    "t_end": 0.638550856814101,
-   "wall_time_s": 97.10925085097551
+   "wall_time_s": 90.63359545171261
   }
  ],
  "stoker_regions": {
