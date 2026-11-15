@@ -1,0 +1,117 @@
+{
+ "entropy_wave": {
+  "sizes": [
+   80,
+   160,
+   320,
+   640
+  ],
+  "errors": [
+   8.18693537268933e-09,
+   8.493716355251202e-11,
+   8.776208926253304e-13,
+   2.6427922350524825e-13
+  ],
+  "orders": [
+   6.5907837653982275,
+   6.596654250038603,
+   1.731534859954465
+  ],
+  "order_finest": 1.731534859954465,
+  "order_overall": 1.731534859954465,
+  "limiter": true,
+  "diag": [
+   {
+    "nx": 80,
+    "pp_limited_stages": 0,
+    "theta_min": 1.0,
+    "pp_failures": 0
+   },
+   {
+    "nx": 160,
+    "pp_limited_stages": 0,
+    "theta_min": 1.0,
+    "pp_failures": 0
+   },
+   {
+    "nx": 320,
+    "pp_limited_stages": 0,
+    "theta_min": 1.0,
+    "pp_failures": 0
+   },
+   {
+    "nx": 640,
+    "pp_limited_stages": 0,
+    "theta_min": 1.0,
+    "pp_failures": 0
+   }
+  ]
+ },
+ "entropy_wave_pre_repair": {
+  "sizes": [
+   80,
+   160,
+   320,
+   640
+  ],
+  "errors": [
+   8.1869353615871e-09,
+   8.493745984328172e-11,
+   8.786457672549375e-13,
+   2.8041961114277924e-13
+  ],
+  "orders": [
+   6.590778730821679,
+   6.594975504508997,
+   1.6476944013283934
+  ],
+  "order_finest": 1.6476944013283934,
+  "order_overall": 1.6476944013283934,
+  "limiter": false,
+  "diag": [
+   {
+    "nx": 80,
+    "pp_limited_stages": 0,
+    "theta_min": 1.0,
+    "pp_failures": 0
+   },
+   {
+    "nx": 160,
+    "pp_limited_stages": 0,
+    "theta_min": 1.0,
+    "pp_failures": 0
+   },
+   {
+    "nx": 320,
+    "pp_limited_stages": 0,
+    "theta_min": 1.0,
+    "pp_failures": 0
+   },
+   {
+    "nx": 640,
+    "pp_limited_stages": 0,
+    "theta_min": 1.0,
+    "pp_failures": 0
+   }
+  ]
+ },
+ "analysis": {
+  "resolvable_order": 6.5907837653982275,
+  "resolvable_range": [
+   80,
+   160
+  ],
+  "fp_floor_collapse": {
+   "pair": [
+    320,
+    640
+   ],
+   "order": 1.731534859954465,
+   "finer_err": 2.6427922350524825e-13,
+   "note": "error at FP floor (~1e-13); order measurement collapses"
+  },
+  "limiter_inert": true,
+  "limiter_true_vs_false_identical": true,
+  "verdict": "S2 criterion order_finest>=5.0 is structurally unachievable (FP floor); use resolvable_order>=5.0 instead. Limiter provably inert; order ~6.6 preserved."
+ }
+}

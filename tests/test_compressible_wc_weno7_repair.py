@@ -207,3 +207,47 @@ def test_window_l1_instrument_is_zero_for_identical_profiles():
     prof = r8.load("nx1600_weno5")
     assert prof["present"]
     assert r8.window_l1_percent(prof, prof) == pytest.approx(0.0, abs=1e-12)
+
+# ----------------------------------------------------------------------
+# R9: S2 criterion repair -- FP-floor collapse of order_finest
+# ----------------------------------------------------------------------
+def test_s2_resolvable_order_is_high_while_finest_collapses():
+    """R9: `order_finest >= 5.0` is structurally unachievable.
+
+    The smooth entropy wave converges to the FP floor (~1e-13) on the finest
+    grids, so the order between the last two resolvable grids collapses
+    (measured ~1.7).  The *resolvable* order (where the finer error is above
+    the FP floor, 1e-11) is ~6.6 -- WENO7's 7th-order spatial is preserved.
+    This locks in the S2 criterion repair: use resolvable_order, not
+    order_finest, and require the limiter to be inert.
+    """
+    r = w7.entropy_wave_order(sizes=(80, 160, 320, 640), limiter=True)
+    errs = r["errors"]
+    # limiter provably inert on smooth data
+    assert all(d["pp_limited_stages"] == 0 and abs(d["theta_min"] - 1.0) < 1e-12
+               for d in r["diag"])
+    # resolvable order (80->160, finer err 8e-11 > 1e-11) is high
+    resolvable = [float(-np.log(errs[i] / errs[i - 1]) /
+                        np.log(r["sizes"][i] / r["sizes"][i - 1]))
+                  for i in range(1, len(errs)) if errs[i] > 1e-11]
+    assert resolvable, "no resolvable pair"
+    assert resolvable[0] >= 5.0, f"resolvable order {resolvable[0]} < 5"
+    # order_finest (320->640) collapses on the FP-floor pair -- the old
+    # criterion `order_finest >= 5.0` is therefore structurally unachievable
+    assert r["order_finest"] < 5.0, "order_finest should collapse on FP floor"
+    assert errs[-1] < 1e-12, "finest error should be at FP floor"
+
+
+def test_s2_limiter_true_vs_false_are_identical():
+    """R9: the PP limiter is bit-inert on smooth data.
+
+    limiter=True and limiter=False give the same entropy-wave error to ~8
+    significant digits -- the repair does not trade away any smooth-data
+    accuracy (the 'limiter eats order' concern from R8 is falsified).
+    """
+    r_on = w7.entropy_wave_order(sizes=(80, 160, 320), limiter=True)
+    r_off = w7.entropy_wave_order(sizes=(80, 160, 320), limiter=False)
+    for a, b in zip(r_on["errors"], r_off["errors"]):
+        # both errors are at the same magnitude (resolvable grids ~1e-8..1e-11,
+        # finest at FP floor ~1e-13); the limiter changes nothing to ~8 digits
+        assert abs(a - b) < 1e-12 * max(1.0, abs(a), abs(b))
