@@ -1,0 +1,16 @@
+{
+  "advertised_order": 2,
+  "dam_break_order_withheld": [],
+  "graded_quantities_unaffected": "the pool grades x_f(t), the still-water step and monotonicity at a fixed grid with 5 %; convergence order is not a gate, so this finding does not change the acceptance verdict",
+  "measured_dam_break_order": {
+    "ritter-dry/smooth": 1.9776535919837759,
+    "ritter-dry/step": 1.0000985881321867,
+    "stoker-wet/smooth": 2.703463156672388,
+    "stoker-wet/step": 1.0393496043231847
+  },
+  "measured_order_tolerance": 0.3,
+  "measured_smooth_order": 2.0352570438915394,
+  "reason": "smooth-regime order 2.04 matches the advertised 2 within 0.3",
+  "required_scope_note": "the advertised order describes the *smooth-regime* operator (measured 2.04); the anchored dam-break itself converges at ritter-dry/smooth: 1.98, ritter-dry/step: 1.00, stoker-wet/smooth: 2.70, stoker-wet/step: 1.04, because the dry bed starts from a discontinuous dam and the wet bed carries a bore, so no order should be quoted for the graded case",
+  "status": "SUPPORTED"
+}
