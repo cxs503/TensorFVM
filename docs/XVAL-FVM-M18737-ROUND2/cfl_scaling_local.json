@@ -1,0 +1,36 @@
+{
+ "probe": "CFL 0.8 vs frozen CFL 0.4 at two coarse rungs (WENO5/SWENO5, same reconstruction)",
+ "rows": [
+  {
+   "nx": 1600,
+   "d_l1_percent": 0.05636788857502805,
+   "d_peak_percent": 0.023595677302300812,
+   "steps_cfl08": 3188,
+   "seconds": 16.8,
+   "fallbacks": 23,
+   "mass_drift": 1.2589929099249275e-13,
+   "rho_max": 6.473538698182155
+  },
+  {
+   "nx": 3200,
+   "d_l1_percent": 0.04773254013343427,
+   "d_peak_percent": 0.1736799856527134,
+   "steps_cfl08": 6403,
+   "seconds": 48.3,
+   "fallbacks": 23,
+   "mass_drift": 2.468025783741723e-13,
+   "rho_max": 6.42895610115933
+  }
+ ],
+ "order_l1": 0.23990041525802092,
+ "order_peak": -2.879837022855458,
+ "prediction_at_nx6400": {
+  "d_l1_percent_at_6400": 0.04042009458199365,
+  "d_peak_percent_at_6400": 1.278400998194079
+ },
+ "note": "dx^3 prediction for SSP-RK3 temporal error; measured orders are the actual shrink rates",
+ "bars_from_stored_ladder": {
+  "pair_l1_percent": 0.5437229141389293,
+  "pair_peak_percent": 0.023021571035996842
+ }
+}
