@@ -4,13 +4,15 @@
   "cavity_spectral_N016_re100.json",
   "cavity_spectral_N024_re100.json",
   "cavity_spectral_N032_re100.json",
-  "cavity_spectral_N048_re100.json"
+  "cavity_spectral_N048_re100.json",
+  "cavity_spectral_N064_re100.json"
  ],
  "orders": [
   16,
   24,
   32,
-  48
+  48,
+  64
  ],
  "records": [
   {
@@ -148,6 +150,40 @@
    "order": 48,
    "reynolds": 100.0,
    "wall_seconds": 4.989094257354736
+  },
+  {
+   "ghia": {
+    "ghia_grid": "129x129 vorticity-streamfunction (Ghia et al. 1982)",
+    "u_min_ref": -0.2109,
+    "u_min_rel_err": 0.014899691878799094,
+    "u_profile_max_abs": 0.005041554252278563,
+    "u_profile_rms": 0.0023892703354565408,
+    "v_max_ref": 0.17527,
+    "v_max_rel_err": 0.024551046201776665,
+    "v_profile_max_abs": 0.009241393919194735,
+    "v_profile_rms": 0.004778859286937768,
+    "within_5pct": true
+   },
+   "metrics": {
+    "kinetic_energy": 0.03444364494886799,
+    "lid_slip_defect": 8.17459406232679e-05,
+    "lid_velocity_max": 1.0565552046161182,
+    "poisson_residual_max": 2.0463630789890885e-12,
+    "psi_min": -0.10350019561781602,
+    "u_min": -0.21404234501723873,
+    "v_max": 0.1795730618677854,
+    "vortex_centre": [
+     0.6153941026152517,
+     0.7386599963094861
+    ],
+    "wall_slip_defect": 6.7666325103522456e-06,
+    "x_at_v_max": 0.23700000000000002,
+    "y_at_u_min": 0.458
+   },
+   "nodes_per_side": 65,
+   "order": 64,
+   "reynolds": 100.0,
+   "wall_seconds": 73.37384295463562
   }
  ],
  "reynolds": 100.0,
