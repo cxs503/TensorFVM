@@ -1,0 +1,144 @@
+{
+  "reference": {
+    "ladder_requested": [
+      3200,
+      6400,
+      12800
+    ],
+    "ladder_available": [
+      3200,
+      6400,
+      12800
+    ],
+    "successive": [
+      {
+        "coarse_nx": 3200,
+        "fine_nx": 6400,
+        "l1_percent": 0.9843989883727804,
+        "peak_percent": 0.2785054948615679,
+        "interp_sensitivity_percent": 0.028907923994312856
+      },
+      {
+        "coarse_nx": 6400,
+        "fine_nx": 12800,
+        "l1_percent": 0.5527051633228957,
+        "peak_percent": 0.02805707139555614,
+        "interp_sensitivity_percent": 0.00896037809347483
+      }
+    ],
+    "missing": [],
+    "status": "OK",
+    "observed_order": 0.8327330850523319,
+    "order_reason": "none",
+    "reference_nx": 12800,
+    "l1_percent_two_level": 0.5527051633228957,
+    "eps_ref_percent": 0.7076380986651555,
+    "peak": {
+      "observed_order": 3.3112694589068976,
+      "order_reason": "none",
+      "l1_percent_two_level": 0.02805707139555614,
+      "eps_ref_percent": 0.003143159155889696
+    },
+    "published_reference_diagnostic": {
+      "finest_weno5_vs_published_percent": 4.53705194697129,
+      "extrapolated_vs_published_percent": 5.165356394107828,
+      "note": "published curve is a digitisation of a 3200-cell reference with a known additive y-calibration; its residual does not vanish with our refinement, so it bounds nothing"
+    },
+    "eps_ref_gci_percent": 0.8845476233314443,
+    "two_level_triangle_bound_percent": 0.5527051633228957,
+    "eps_ref_source": "Richardson on WENO5 successive-grid L1 distances (three levels)",
+    "mass_extrapolated_vs_fine_percent": 0.0006519127718540971,
+    "cases_available": [
+      3200,
+      6400,
+      12800
+    ]
+  },
+  "grading": {
+    "status": "OK",
+    "graded": {
+      "800": {
+        "l1_vs_reference_percent": 6.038178751813909,
+        "peak_vs_reference_percent": 4.1755611783725985,
+        "l1_vs_extrapolated_percent": 6.621586437985098,
+        "own_error_interval_percent": [
+          5.330540653148754,
+          6.7458168504790645
+        ],
+        "band_contains_extrapolated": true
+      },
+      "1600": {
+        "l1_vs_reference_percent": 3.300786226326215,
+        "peak_vs_reference_percent": 0.10110380435025969,
+        "l1_vs_extrapolated_percent": 3.907512258242685,
+        "own_error_interval_percent": [
+          2.5931481276610597,
+          4.0084243249913705
+        ],
+        "band_contains_extrapolated": true
+      },
+      "3200": {
+        "l1_vs_reference_percent": 1.7757160195524633,
+        "peak_vs_reference_percent": 0.7432208089192633,
+        "l1_vs_extrapolated_percent": 2.340275582979156,
+        "own_error_interval_percent": [
+          1.068077920887308,
+          2.4833541182176186
+        ],
+        "band_contains_extrapolated": true
+      }
+    },
+    "intra_family_successive": {
+      "800->1600": {
+        "l1_percent": 3.168804448592586
+      },
+      "1600->3200": {
+        "l1_percent": 1.8133366057388245
+      }
+    },
+    "intra_family_order": {
+      "1600->3200": {
+        "observed_order": 0.8052918774236589,
+        "reason": "none",
+        "own_error_estimate_percent": 2.4258706416742024
+      }
+    },
+    "cross_family_extrapolated": {
+      "graded_nx": 3200,
+      "muscl_observed_order": 0.8052918774236589,
+      "order_reason": "none",
+      "muscl_own_error_estimate_percent": 2.4258706416742024,
+      "continuum_vs_continuum_l1_percent": 2.6245806063088817,
+      "note": "both families Richardson-extrapolated to h->0; the residual is the part neither extrapolation removes"
+    },
+    "verdict": {
+      "graded_nx": 3200,
+      "route_1_cross_family_percent": 2.340275582979156,
+      "route_2_intra_family_percent": 2.4258706416742024,
+      "routes_agree_percent": 0.08559505869504624,
+      "route_2_order_band_percent": [
+        1.8133366057388245,
+        2.4258706416742024
+      ],
+      "reference_uncertainty_percent": 0.7076380986651555,
+      "cross_family_interval_percent": [
+        1.6326374843140008,
+        3.0479136816443115
+      ],
+      "honest_upper_bound_percent": 3.0479136816443115,
+      "two_level_only_bound_percent": 2.328421182875359,
+      "certified_under_1pct_point_estimate": false,
+      "certified_under_1pct_provable": false,
+      "margin_percent": -134.02755829791562,
+      "statement": "MUSCL/HLLC @ nx=3200: cross-family (vs Richardson-extrapolated WENO5) 2.340 %; intra-family Richardson 2.426 %; agreement 0.086 %; reference side +/-0.708 % -> honest upper bound 3.048 % -- <1 %% holds as a point estimate only, NOT provable from these grids."
+    },
+    "certified_bar_percent": 1.0,
+    "safety_factor": 1.25
+  },
+  "window": [
+    0.4,
+    1.0
+  ],
+  "certified_bar_percent": 1.0,
+  "reference_xval_module": "docs/woodward-colella-double-blast/xval/wc_certified_ref.py"
+}
