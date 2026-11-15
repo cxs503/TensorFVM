@@ -1,0 +1,326 @@
+{
+ "rows": [
+  {
+   "reynolds": 700.0,
+   "closure": "laminar",
+   "x_r_over_H": null,
+   "x_r_provenance": "payload.time_averaged.x_r_over_H",
+   "reference_x_r_over_H": 5.24,
+   "reference_source": "ERCOFTAC Knowledge Base Wiki, UFR 3-30 Evaluation (\u00a7 'Evaluation'), authored by the case's own authors (Rapp, Breuer, Manhart, Peller); case geometry/BC = Breuer et al. 2009, Computers & Fluids 38:433, doi:10.1016/j.compfluid.2008.05.002",
+   "diverged_at_step": null,
+   "samples": null,
+   "verdict": "UNDEFINED",
+   "error": null,
+   "below_10_percent": false,
+   "below_3_percent": false,
+   "reason": "no certified reattachment crossing in the mean wall shear"
+  },
+  {
+   "reynolds": 1400.0,
+   "closure": "laminar",
+   "x_r_over_H": null,
+   "x_r_provenance": "payload.time_averaged.x_r_over_H",
+   "reference_x_r_over_H": 5.19,
+   "reference_source": "ERCOFTAC Knowledge Base Wiki, UFR 3-30 Evaluation (\u00a7 'Evaluation'), authored by the case's own authors (Rapp, Breuer, Manhart, Peller); case geometry/BC = Breuer et al. 2009, Computers & Fluids 38:433, doi:10.1016/j.compfluid.2008.05.002",
+   "diverged_at_step": 3013,
+   "samples": null,
+   "verdict": "DIVERGED",
+   "error": null,
+   "below_10_percent": false,
+   "below_3_percent": false,
+   "reason": "run recorded divergence at step 3013; no verdict on the physics"
+  },
+  {
+   "reynolds": 2800.0,
+   "closure": "laminar",
+   "x_r_over_H": null,
+   "x_r_provenance": "payload.time_averaged.x_r_over_H",
+   "reference_x_r_over_H": 5.41,
+   "reference_source": "ERCOFTAC Knowledge Base Wiki, UFR 3-30 Evaluation (\u00a7 'Evaluation'), authored by the case's own authors (Rapp, Breuer, Manhart, Peller); case geometry/BC = Breuer et al. 2009, Computers & Fluids 38:433, doi:10.1016/j.compfluid.2008.05.002",
+   "diverged_at_step": null,
+   "samples": null,
+   "verdict": "UNDEFINED",
+   "error": null,
+   "below_10_percent": false,
+   "below_3_percent": false,
+   "reason": "no certified reattachment crossing in the mean wall shear"
+  }
+ ],
+ "source": "ERCOFTAC Knowledge Base Wiki, UFR 3-30 Evaluation (\u00a7 'Evaluation'), authored by the case's own authors (Rapp, Breuer, Manhart, Peller); case geometry/BC = Breuer et al. 2009, Computers & Fluids 38:433, doi:10.1016/j.compfluid.2008.05.002",
+ "tolerance": 0.1,
+ "n_pass": 0,
+ "n_fail": 0,
+ "n_withheld": 0,
+ "n_undefined": 2,
+ "n_diverged": 1,
+ "cases": [
+  {
+   "artefact": "round20_laminar_Re1400_96x48.json",
+   "reynolds": 1400.0,
+   "closure": {
+    "name": "laminar",
+    "class": "NoneType",
+    "closure_free": true,
+    "momentum_convection_blend": 0.75,
+    "nu_t_ratio": "identically zero by construction (no closure provider)"
+   },
+   "diverged_at_step": 3013,
+   "reference_x_r_over_H": 5.19,
+   "x_r_over_H_reported": null,
+   "x_r_over_H_recertified": NaN,
+   "x_s_over_H_recertified": NaN,
+   "x_r_status": "no_recirculation",
+   "backflow_extent_row0": null,
+   "backflow_extent_rows": {
+    "0": null,
+    "1": null,
+    "2": null,
+    "3": null
+   },
+   "ensemble_n": 0,
+   "x_r_over_H_ensemble": null,
+   "fluctuation_max_abs_u_minus_mean_u": 1.6391837112721315e+171,
+   "rms_u": Infinity,
+   "lower_re": {
+    "reynolds": 1400.0,
+    "closure": "laminar",
+    "x_r_over_H": null,
+    "x_r_provenance": "certified round-17 operator on stored mean wall shear",
+    "reference_x_r_over_H": 5.19,
+    "reference_source": "ERCOFTAC Knowledge Base Wiki, UFR 3-30 Evaluation (\u00a7 'Evaluation'), authored by the case's own authors (Rapp, Breuer, Manhart, Peller); case geometry/BC = Breuer et al. 2009, Computers & Fluids 38:433, doi:10.1016/j.compfluid.2008.05.002",
+    "diverged_at_step": null,
+    "samples": 0,
+    "verdict": "UNDEFINED",
+    "error": null,
+    "below_10_percent": false,
+    "below_3_percent": false,
+    "reason": "no certified reattachment crossing in the mean wall shear"
+   },
+   "definitions": {
+    "x_r": {
+     "mean_field": null,
+     "ensemble": null
+    },
+    "delta_abs": null,
+    "delta_rel": null,
+    "flag": "not_measured"
+   },
+   "error_mean_field_rel": null,
+   "error_ensemble_rel": null
+  },
+  {
+   "artefact": "round20_laminar_Re2800_96x48.json",
+   "reynolds": 2800.0,
+   "closure": {
+    "name": "laminar",
+    "class": "NoneType",
+    "closure_free": true,
+    "momentum_convection_blend": 0.75,
+    "nu_t_ratio": "identically zero by construction (no closure provider)"
+   },
+   "diverged_at_step": null,
+   "reference_x_r_over_H": 5.41,
+   "x_r_over_H_reported": 8.264277859446059,
+   "x_r_over_H_recertified": 8.264277859446059,
+   "x_s_over_H_recertified": 3.922900531823629,
+   "x_r_status": "out_of_window",
+   "backflow_extent_row0": 8.203125,
+   "backflow_extent_rows": {
+    "0": 8.203125,
+    "1": 8.109375,
+    "2": 8.015625,
+    "3": 7.921875
+   },
+   "ensemble_n": 434,
+   "x_r_over_H_ensemble": 3.5016467646193545,
+   "fluctuation_max_abs_u_minus_mean_u": 0.8442549004054535,
+   "rms_u": 0.9510661405757811,
+   "lower_re": {
+    "reynolds": 2800.0,
+    "closure": "laminar",
+    "x_r_over_H": 8.264277859446059,
+    "x_r_provenance": "certified round-17 operator on stored mean wall shear",
+    "reference_x_r_over_H": 5.41,
+    "reference_source": "ERCOFTAC Knowledge Base Wiki, UFR 3-30 Evaluation (\u00a7 'Evaluation'), authored by the case's own authors (Rapp, Breuer, Manhart, Peller); case geometry/BC = Breuer et al. 2009, Computers & Fluids 38:433, doi:10.1016/j.compfluid.2008.05.002",
+    "diverged_at_step": null,
+    "samples": 601,
+    "error": 0.5275929499900294,
+    "below_10_percent": false,
+    "below_3_percent": false,
+    "verdict": "FAIL",
+    "reason": "x_r/H = 8.264 vs 5.41 = 52.8% (outside the 10% band 4.87-5.95)"
+   },
+   "definitions": {
+    "x_r": {
+     "mean_field": 8.264277859446059,
+     "ensemble": 3.5016467646193545
+    },
+    "delta_abs": -4.7626310948267045,
+    "delta_rel": 0.5762912593001727,
+    "flag": "definition_sensitive"
+   },
+   "error_mean_field_rel": 0.5275929499900294,
+   "error_ensemble_rel": -0.3527455148577903,
+   "shear_vs_field_rel": -0.007399661590051869
+  },
+  {
+   "artefact": "round20_laminar_Re700_96x48.json",
+   "reynolds": 700.0,
+   "closure": {
+    "name": "laminar",
+    "class": "NoneType",
+    "closure_free": true,
+    "momentum_convection_blend": 0.75,
+    "nu_t_ratio": "identically zero by construction (no closure provider)"
+   },
+   "diverged_at_step": null,
+   "reference_x_r_over_H": 5.24,
+   "x_r_over_H_reported": 8.078373744983194,
+   "x_r_over_H_recertified": 8.078373744983194,
+   "x_s_over_H_recertified": 2.569649929176422,
+   "x_r_status": "out_of_window",
+   "backflow_extent_row0": 8.015625,
+   "backflow_extent_rows": {
+    "0": 8.015625,
+    "1": 7.921875,
+    "2": 7.828125,
+    "3": 7.734375
+   },
+   "ensemble_n": 336,
+   "x_r_over_H_ensemble": 3.992816435369639,
+   "fluctuation_max_abs_u_minus_mean_u": 0.7768504192518804,
+   "rms_u": 0.957591441057355,
+   "lower_re": {
+    "reynolds": 700.0,
+    "closure": "laminar",
+    "x_r_over_H": 8.078373744983194,
+    "x_r_provenance": "certified round-17 operator on stored mean wall shear",
+    "reference_x_r_over_H": 5.24,
+    "reference_source": "ERCOFTAC Knowledge Base Wiki, UFR 3-30 Evaluation (\u00a7 'Evaluation'), authored by the case's own authors (Rapp, Breuer, Manhart, Peller); case geometry/BC = Breuer et al. 2009, Computers & Fluids 38:433, doi:10.1016/j.compfluid.2008.05.002",
+    "diverged_at_step": null,
+    "samples": 601,
+    "error": 0.5416743788135866,
+    "below_10_percent": false,
+    "below_3_percent": false,
+    "verdict": "FAIL",
+    "reason": "x_r/H = 8.078 vs 5.24 = 54.2% (outside the 10% band 4.72-5.76)",
+    "x_s_over_H": 2.569649929176422,
+    "x_s_reference": 0.3,
+    "x_s_error": 7.565499763921408,
+    "x_s_approximate_reference": true
+   },
+   "definitions": {
+    "x_r": {
+     "mean_field": 8.078373744983194,
+     "ensemble": 3.992816435369639
+    },
+    "delta_abs": -4.085557309613556,
+    "delta_rel": 0.505740070784761,
+    "flag": "definition_sensitive"
+   },
+   "error_mean_field_rel": 0.5416743788135866,
+   "error_ensemble_rel": -0.2380121306546491,
+   "shear_vs_field_rel": -0.007767497142870159
+  }
+ ],
+ "closure_rows_2800": [
+  {
+   "reynolds": 2800.0,
+   "closure": "sst",
+   "x_r_over_H": 7.600045056495248,
+   "tag": null,
+   "error": 0.40481424334477784,
+   "verdict": "FAIL"
+  },
+  {
+   "reynolds": 2800.0,
+   "closure": "sst",
+   "x_r_over_H": 7.681601876754162,
+   "tag": null,
+   "error": 0.41988944117452165,
+   "verdict": "FAIL"
+  }
+ ],
+ "definitions": {
+  "mean_field": "crossing_of_time_mean_wall_shear",
+  "ensemble": "ensemble_mean_of_instantaneous_reattachment"
+ },
+ "attribution": {
+  "laminar_2800_error": 0.5275929499900294,
+  "sister_max_error": 0.5416743788135866,
+  "sister_rows": [
+   [
+    700.0,
+    "FAIL",
+    0.5416743788135866
+   ]
+  ],
+  "closure_rows": [
+   [
+    2800.0,
+    "sst",
+    "FAIL",
+    0.40481424334477784
+   ],
+   [
+    2800.0,
+    "sst",
+    "FAIL",
+    0.41988944117452165
+   ]
+  ],
+  "closure_2800_error": 0.40481424334477784,
+  "status": "inconclusive",
+  "reason": "closure-free Re=2800 error 52.8% sits inside the band of the sister-case errors (54.2%); the two effects are not separable from these rows"
+ },
+ "attribution_rows_used": [
+  {
+   "reynolds": 1400.0,
+   "verdict": "UNDEFINED",
+   "error": null
+  },
+  {
+   "reynolds": 2800.0,
+   "verdict": "FAIL",
+   "error": 0.5275929499900294
+  },
+  {
+   "reynolds": 700.0,
+   "verdict": "FAIL",
+   "error": 0.5416743788135866
+  }
+ ],
+ "attribution_limits": {
+  "agreement_proves": "the 2-D discretisation (terrain-following mesh, momentum assembly, pressure projection, bulk-velocity controller, wall-shear metric) is not the source of the Re=2800 miss, because the same code path with the same mesh family reproduces a published reattachment length at a lower Reynolds number",
+  "agreement_does_not_prove": "that the Re=2800 flow is two-dimensional: 2-D-vs-3-D physics at Re=2800 remains an open explanation for the residual, and only a 3-D (or LES/DNS) run can separate it",
+  "disagreement_proves": "at least one of {discretisation, 2-D-vs-3-D modelling, reference interpretation} is responsible; a single mismatched Re does not say which",
+  "reference_caveat": "the KB numbers are from a 3-D DNS (LESOCC); a 2-D closure-free run cannot reproduce 3-D turbulence, so the comparison is a framework test only where the flow is genuinely two-dimensional (Re=700 is the strongest such candidate; Re=1400 is marginal)"
+ },
+ "round21_re1400_probe.json": {
+  "reynolds": 1400.0,
+  "dt": 0.02,
+  "diverged_at_step": 3013,
+  "diagnosis": {
+   "diverged": true,
+   "max_cfl_observed": 3.49692525071388e+170,
+   "max_abs_u_observed": 1.6391837112721315e+171,
+   "growth_rate_per_sample": 0.00901686538535283,
+   "sample_interval_steps": 1,
+   "growth_rate_per_step": 0.00901686538535283,
+   "class": "cfl_violation_before_divergence"
+  },
+  "wall_clock_s": 25.014610052108765
+ },
+ "round21_re1400_probe_dt001.json": {
+  "reynolds": 1400.0,
+  "dt": 0.01,
+  "diverged_at_step": null,
+  "diagnosis": {
+   "diverged": false,
+   "max_cfl_observed": 0.19051757978216755,
+   "max_abs_u_observed": 1.7861023104578209,
+   "class": "no_divergence_in_probe_budget"
+  },
+  "wall_clock_s": 48.07607865333557
+ }
+}
