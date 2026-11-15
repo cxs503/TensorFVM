@@ -174,6 +174,19 @@ WENO5 6.4432（互差 **2.68 %**）；外推窗质量 0.935434 / 0.935422（互�
    ——测试把结果**原地写回**被检验的工件，陈旧工件永远抓不住（本轮漂移就是这么漏进来的），现改为写 `tmp_path`
    并与入仓 JSON/markdown 逐项比对。
 
+8. **工件可复现性是本文件结论的一部分（v3 补强）**：两份证据 JSON 原先各自内嵌了**生成它们的那棵工作树的绝对路径**
+   （`/root/.../reference_density.csv`、`/root/.../ladder_profile_nx3200_hllc.npz`），后果有二：(a) 任何**诚实的重跑**
+   ——CI、审稿人 clone、别的工作树——都会用不同的前缀重写同一批数字，因此**逐字节比对的"零漂移"闸门无法建立**，
+   只能靠人去挑字段断言；未被断言的字段（描述性字段、诊断细节、预算子项）漂移了也没人知道；(b) 已发布证据里泄漏了
+   本地目录布局。现改由 `wc_asymptotic_analysis._case_relative` / `wc_plateau_convergence._repo_relative` 输出
+   仓库相对路径（`reference/reference_density.csv`、`docs/woodward-colella-double-blast/ladder/data/...`，
+   仓外路径仍保留绝对形式以免丢失信息），重算后两份 JSON 只有 1 + 14 行 provenance 变化、**所有数字逐位不变**
+   （markdown 表格逐字节不变即为旁证）。据此新增最严格的门禁
+   `tests/test_compressible_wc_artifact_reproducibility.py`（5 用例，9 s）：两个生成器重跑进 `tmp_path` 后
+   **与入仓 JSON/markdown 逐字节相同**、入仓证据内**不得出现任何绝对路径**、图产物存在且是真实多面板图。
+   负向对照已验证该门禁**确实咬人**：篡改 JSON 中一个前序测试从未断言过的描述字段（`case` 尾部加一个空格），
+   字节门禁立即转红；恢复后转绿。
+
 ## ⑥ 误差判定（逐项 vs 标定更正参考；nx=3200 为最细网格）
 
 | 关键量 | nx=3200 误差 | <3 %? | <10 %（验收）? | 归因（依据 `residual/U_num`） |
@@ -209,6 +222,8 @@ PYTHONPATH=src python docs/woodward-colella-double-blast/ladder/wc_asymptotic_fi
 PYTHONPATH=src python docs/woodward-colella-double-blast/ladder/wc_plateau_convergence.py
 # 回归门（9 用例）
 PYTHONPATH=src python -m pytest tests/test_compressible_wc_asymptotic.py -q
+# 工件可复现门（5 用例；重跑两个生成器并与入仓 JSON/markdown 逐字节比对）
+PYTHONPATH=src python -m pytest tests/test_compressible_wc_artifact_reproducibility.py -q
 ```
 
 ### 产物指针
@@ -221,5 +236,6 @@ PYTHONPATH=src python -m pytest tests/test_compressible_wc_asymptotic.py -q
 | 图 | `artifacts/fig_wc_asymptotic_nx3200.png` |
 | 分析 / 绘图脚本 | `ladder/wc_asymptotic_analysis.py`、`ladder/wc_asymptotic_figure.py` |
 | 回归门（12 用例） | `tests/test_compressible_wc_asymptotic.py` |
+| 工件可复现门（5 用例，逐字节） | `tests/test_compressible_wc_artifact_reproducibility.py` |
 | 低密度区诊断 JSON/表（本轮重算） | `ladder/data/plateau_convergence.json`、`ladder/data/plateau_tables.md` |
 | 细网格剖面 | `ladder/data/ladder_profile_nx{1600,3200}_hllc.npz` |
