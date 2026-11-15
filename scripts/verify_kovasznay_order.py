@@ -29,10 +29,12 @@ grid", Proc. Cambridge Philos. Soc. 44:58-62, doi:10.1017/S0305004100023999.
 """
 import argparse
 from pathlib import Path
+import sys
 import time
 import numpy as np
 
 from tensorfvm.verification.native_hybrid_ns import kovasznay_fields, kovasznay_solver
+from tensorfvm.verification.evidence_pack import write_text_evidence
 from tensorfvm.verification.native_run import NativeRunEvidence, write_json
 from tensorfvm.native_manufactured3d import volume_weighted_error
 
@@ -74,6 +76,11 @@ def main():
     p.add_argument('--max-outer-iterations', type=int, default=120)
     p.add_argument('--max-iterations', type=int, default=6000)
     p.add_argument('--skip-sampling-check', action='store_true')
+    p.add_argument('--evidence-markdown', type=Path, default=None,
+                   help='also write a self-contained text evidence pack (cases.json row + '
+                        'downsampled field CSV + sha256 of the npz). Use this on cluster '
+                        'jobs: binary dumps have been lost in delivery twice, and the pack '
+                        'keeps the scalars measurable from text alone.')
     args = p.parse_args()
     if args.n < 4:
         p.error('n must be at least 4')
@@ -133,12 +140,20 @@ def main():
     for kind, data in [('outer', result['outer_history']), ('inner', result['history']),
                        ('linear', solver.coupled_linear_history)]:
         write_json(out / f'n{args.n}-{kind}.json', data)
-    np.savez_compressed(out / f'n{args.n}-fields.npz',
+    npz_path = out / f'n{args.n}-fields.npz'
+    np.savez_compressed(npz_path,
                         cell_centers=np.asarray(mesh.cell_centers), cell_volumes=volumes,
                         velocity=velocity, pressure=pressure,
                         exact_velocity=exact['velocity'], exact_pressure=exact['pressure'],
                         flux=flux,
                         total_traction_integrated=result['total_traction_integrated'])
+    if args.evidence_markdown is not None:
+        pack = write_text_evidence(args.evidence_markdown, row=row,
+                                   cell_centres=np.asarray(mesh.cell_centers),
+                                   cell_volumes=volumes, velocity=velocity,
+                                   pressure=pressure, exact=exact, npz_path=npz_path,
+                                   argv=sys.argv)
+        print('EVIDENCE_PACK', pack, flush=True)
     evidence.verify_sources()
     write_json(out / 'summary.json', dict(n=args.n, reynolds=args.reynolds,
                                           numerically_converged=row['numerically_converged'],
