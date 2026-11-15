@@ -40,7 +40,8 @@ from __future__ import annotations
 import numpy as np
 
 __all__ = ["backflow_extent", "backflow_extent_rows", "definition_spread",
-           "DEFINITION_MEAN_FIELD", "DEFINITION_ENSEMBLE"]
+           "bubble_object_report", "BUBBLE_SINGLE", "BUBBLE_OBJECT_CONSISTENT",
+           "BUBBLE_OBJECT_MISMATCH", "DEFINITION_MEAN_FIELD", "DEFINITION_ENSEMBLE"]
 
 DEFINITION_MEAN_FIELD = "crossing_of_time_mean_wall_shear"
 DEFINITION_ENSEMBLE = "ensemble_mean_of_instantaneous_reattachment"
@@ -107,3 +108,75 @@ def definition_spread(x_r_mean_field, x_r_ensemble):
     return {"x_r": {"mean_field": a, "ensemble": b}, "delta_abs": d,
             "delta_rel": rel,
             "flag": "definition_sensitive" if rel > 0.10 else "definition_insensitive"}
+
+# ---------------------------------------------------------------------------
+# round 22: which *bubble* does a published x_r/H refer to?
+# ---------------------------------------------------------------------------
+BUBBLE_SINGLE = "single_bubble"
+BUBBLE_OBJECT_CONSISTENT = "object_consistent"
+BUBBLE_OBJECT_MISMATCH = "object_mismatch"
+
+
+def bubble_object_report(tau, x_over_h, *, window=None, primary="largest_area"):
+    """Report which reversed-shear bubble the selected ``x_r/H`` belongs to.
+
+    ``x_r/H`` is only meaningful together with *which* bubble it is measured on.
+    The reference of the periodic-hill case (``x_r/H = 5.41``, Breuer et al.
+    2009) is the reattachment of the **crest bubble** -- the one that separates
+    just downstream of the hill crest.  :func:`wall_shear_bubbles.
+    separation_reattachment` defaults to ``primary="largest_area"``, which is the
+    right rule when a solution has one bubble but silently switches to a
+    *different* bubble when it has two.
+
+    This function runs the certified operator under both rules and reports
+    whether they agree, so that a cross-object comparison cannot be published as
+    an error of the quantity.
+
+    Returns ``{"n_bubbles", "n_crossings", "selected", "crest",
+    "selected_is_crest", "x_r_over_H": {"largest_area", "first"}, "flag",
+    "reason"}`` where ``flag`` is :data:`BUBBLE_SINGLE` (nothing to disambiguate),
+    :data:`BUBBLE_OBJECT_CONSISTENT` (both rules pick the crest bubble) or
+    :data:`BUBBLE_OBJECT_MISMATCH` (the default rule picks another bubble, so the
+    number is *not* the same object as the reference).
+    """
+    from .wall_shear_bubbles import separation_reattachment
+
+    largest = separation_reattachment(tau, x_over_h, window=window, primary=primary)
+    first = separation_reattachment(tau, x_over_h, window=window, primary="first")
+
+    def _entry(res):
+        idx = res.get("primary_index")
+        bubbles = res.get("bubbles") or []
+        b = bubbles[idx] if idx is not None and 0 <= idx < len(bubbles) else None
+        return {"index": idx,
+                "separation": res.get("x_s_over_H"),
+                "reattachment": res.get("x_r_over_H"),
+                "length": None if b is None else float(b.get("length", float("nan"))),
+                "reversed_area": None if b is None else float(b.get("reversed_area",
+                                                                    float("nan")))}
+
+    n = len(largest.get("bubbles") or [])
+    out = {
+        "n_bubbles": int(n),
+        "n_crossings": int(largest.get("n_crossings") or 0),
+        "selected": _entry(largest),
+        "crest": _entry(first),
+        "x_r_over_H": {"largest_area": largest.get("x_r_over_H"),
+                       "first": first.get("x_r_over_H")},
+        "selected_is_crest": bool(largest.get("primary_index") is not None
+                                  and largest.get("primary_index") ==
+                                  first.get("primary_index")),
+    }
+    if n <= 1:
+        out["flag"] = BUBBLE_SINGLE
+        out["reason"] = "one reversed-shear bubble: the two rules cannot disagree"
+    elif out["selected_is_crest"]:
+        out["flag"] = BUBBLE_OBJECT_CONSISTENT
+        out["reason"] = "the largest bubble is also the crest bubble"
+    else:
+        out["flag"] = BUBBLE_OBJECT_MISMATCH
+        out["reason"] = (
+            "the largest-area bubble is NOT the crest bubble: its reattachment "
+            f"{out['x_r_over_H']['largest_area']} is a different physical object "
+            f"from the crest bubble's {out['x_r_over_H']['first']}")
+    return out
