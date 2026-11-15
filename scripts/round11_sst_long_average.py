@@ -59,7 +59,7 @@ def main(argv=None):
     ap.add_argument("--list", action="store_true")
     ap.add_argument("--case-index", type=int, default=0)
     ap.add_argument("--case-count", type=int, default=1)
-    ap.add_argument("--closure", default="sst", choices=("sa", "sst"))
+    ap.add_argument("--closure", default="sst", choices=("sa", "sst", "laminar"))
     ap.add_argument("--tag")
     ap.add_argument("--nx", type=int)
     ap.add_argument("--ny", type=int)
