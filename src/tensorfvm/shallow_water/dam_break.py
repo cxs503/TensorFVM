@@ -84,6 +84,7 @@ __all__ = [
     "figure_profiles_and_convergence",
     "TOLERANCE",
     "BORE_SUBCELL_MAX_CELLS",
+    "PLATEAU_MIN_JUMP_FRACTION",
     "SERIES_MIN_GRADED_FRACTION",
 ]
 
@@ -194,6 +195,20 @@ PLATEAU_FLAT_FRACTION = 5e-2
 #: case (measured); beyond the declared count the honest answer is "no fan
 #: found", not a wider window.
 PLATEAU_THRESH_MAX_DECADES = 3
+
+#: Minimum fraction of the exact level step ``h2 - h1`` that must be *present*
+#: inside the oracle plateau window, otherwise the window reading is not a
+#: measurement of ``h2`` and must not be graded.
+#:
+#: The window is placed from the closed form (the middle half of the exact
+#: constant state), so it can be narrower than the numerically smeared bore once
+#: the depth ratio ``h2/h1 = sqrt(8 h0/h1)`` grows: measured for ``h1/h0 =
+#: 1e-6`` at ``n = 800`` the window contains only the undisturbed depth, so the
+#: reported ``h2_error`` was ``99.96 %`` *without the bore being read at all*
+#: (``docs/case-fvm-dambreak-stoker-degenerate/REPORT.md``).  Declared before
+#: any run; the reading sees the full step (fraction 1.00) for every depth ratio
+#: on ``n >= 800`` once ``h1/h0 >= 1e-3``.
+PLATEAU_MIN_JUMP_FRACTION = 0.5
 
 #: predeclared resolution criterion for the data-driven wet-bed bore position
 #: (:func:`data_driven_plateau`), in units of ``dx``.
@@ -822,6 +837,17 @@ def _wet_metrics(case: DamBreakCase, solver: ShallowWater1D, volume0: float) -> 
     still = solver.x >= x_shock + 0.5 * (case.x_max - x_shock)
     h1_meas = float(solver.h[still].mean()) if np.any(still) else float("nan")
     tv_num = float(np.abs(np.diff(solver.h)).sum())
+    # window coverage: how much of the exact level step the oracle window
+    # actually sees.  Reported beside the reading so an under-resolved strong
+    # bore cannot masquerade as a 100 % amplitude error (see
+    # PLATEAU_MIN_JUMP_FRACTION).
+    step_exact = sol["h2"] - sol["h1"]
+    if np.any(plateau):
+        jump = float((solver.h[plateau] - sol["h1"]).max())
+        coverage = jump / step_exact
+    else:
+        jump = float("nan")
+        coverage = float("nan")
     return {
         "shock_exact": x_shock,
         "shock_position": x_meas,
@@ -832,6 +858,9 @@ def _wet_metrics(case: DamBreakCase, solver: ShallowWater1D, volume0: float) -> 
         "h2_measured": h2_meas,
         "h2_error": _relative(h2_meas, sol["h2"]),
         "h1_measured": h1_meas,
+        "plateau_window_cells": int(np.count_nonzero(plateau)),
+        "plateau_jump_fraction": coverage,
+        "step_insufficient_evidence": bool(not (coverage >= PLATEAU_MIN_JUMP_FRACTION)),
         "step_ratio_exact": sol["step_ratio"],
         "step_ratio_measured": h2_meas / h1_meas,
         "step_ratio_error": _relative(h2_meas / h1_meas, sol["step_ratio"]),
@@ -1201,7 +1230,7 @@ def _level_series(case: DamBreakCase, n: int, cfl: float, order: int,
         })
         gate["next"] = sol.time + t_end / float(samples_per_unit)
 
-    steps = solver.advance(t_end, callback=callback)
+    solver.advance(t_end, callback=callback)
     return solver, samples
 
 
