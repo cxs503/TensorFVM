@@ -61,3 +61,25 @@ PYTHONPATH=src python3 -m pytest tests/test_channel_les3d_implicit.py tests/test
 
 Figure: `fig_divergence_evidence.png` (left: steps-to-divergence per configuration; right: amplitude
 trace before divergence).
+
+## 5. Update: the "next concrete step" below has been done
+
+Section 2 lists "locating the amplified mode (per-row / per-mode growth, wall-row vs
+interior)" as the next step. That measurement now exists in
+`docs/case-fvm-channel-kmm180-les-gridscale/REPORT.md`
+(`src/tensorfvm/verification/kmm180_les_gridscale_stability.py`), and it changes the
+attribution above:
+
+* the amplification is **broadband** (largest single-mode share 16.6 %), so odd-even /
+  Nyquist decoupling of the central convection is not the cause;
+* the wall-normal operator and the channel mirror symmetry are exact, so the divergence
+  is not a boundary/operator defect;
+* the lifetime is set by the **SGS constant**: `Cs = 0.1` (the shipping default) diverges,
+  `Cs >= 0.2` survives the 500-step cap, and refining at fixed `Cs` makes it *worse*
+  (63 steps at `32x32x16` vs 121 at `16x16x8`);
+* the step counts in the table above were taken with the default **laminar**
+  `profile='parabolic'` initial field (peak `Re_tau/2 = 90 u_tau` at `Re_tau = 180`);
+  under identical numerics the physical Reichardt state survives 3.3x longer.
+
+Read "what is still broken" above as "the default configuration is under-dissipative on
+this grid", not as "the scheme is unstable".

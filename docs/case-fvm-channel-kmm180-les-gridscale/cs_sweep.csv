@@ -1,0 +1,5 @@
+nx,ny,nz,cs,dt,profile,steps,time,capped,diverged
+16,16,8,0.0,0.0025,reichardt,110,0.2750000000000002,False,True
+16,16,8,0.1,0.0025,reichardt,121,0.3025000000000002,False,True
+16,16,8,0.2,0.0025,reichardt,500,1.2499999999999845,True,False
+16,16,8,0.3,0.0025,reichardt,500,1.2499999999999845,True,False
