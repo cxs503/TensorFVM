@@ -309,15 +309,81 @@ def _level_crossing(x: np.ndarray, h: np.ndarray, level: float) -> float:
     return float(x[j] + (h0 - level) / (h0 - h1) * (x[j + 1] - x[j]))
 
 
-def _local_extrema(h: np.ndarray, amplitude: float) -> int:
-    """Interior local maxima/minima whose prominence exceeds ``amplitude``."""
+def _extrema_mask(h: np.ndarray, amplitude: float) -> np.ndarray:
+    """Boolean mask of the interior cells counted by :func:`_local_extrema`.
+
+    One predicate, one place: the count (:func:`_local_extrema`) and the
+    per-extremum report (:func:`local_extrema_details`) both read this mask, so
+    the two can never disagree about *which* cell failed a monotonicity gate.
+    """
+    h = np.asarray(h, dtype=float)
+    mask = np.zeros(h.shape, dtype=bool)
     if h.size < 3:
-        return 0
+        return mask
     left = h[1:-1] - h[:-2]
     right = h[2:] - h[1:-1]
     peak = (left > 0) & (right < 0) & (np.abs(left) > amplitude) & (np.abs(right) > amplitude)
     dip = (left < 0) & (right > 0) & (np.abs(left) > amplitude) & (np.abs(right) > amplitude)
-    return int(np.count_nonzero(peak | dip))
+    mask[1:-1] = peak | dip
+    return mask
+
+
+def _local_extrema(h: np.ndarray, amplitude: float) -> int:
+    """Interior local maxima/minima whose prominence exceeds ``amplitude``."""
+    return int(np.count_nonzero(_extrema_mask(h, amplitude)))
+
+
+def local_extrema_details(h, amplitude, x=None) -> list:
+    """Locate and size every extrema counted by :func:`_local_extrema`.
+
+    ``_local_extrema`` answers *how many* cells break monotonicity; a gate that
+    fails needs *which* cell, *how large* and *where relative to the analytic
+    structure*.  This returns one dict per offending cell, so a report can say
+    "one dip of ``1.23e-4 h0`` at ``s = -0.725``, inside Stoker's plateau"
+    instead of "local_extrema = 1".
+
+    Parameters
+    ----------
+    h : array_like
+        Depth profile (cell centred).
+    amplitude : float
+        Same prominence gate as :func:`_local_extrema`; a cell is reported iff
+        **both** adjacent slopes exceed it, so ``amplitude`` is a lower bound on
+        the reported ``amplitude`` field.
+    x : array_like, optional
+        Cell abscissae of the same length; when given, each record carries the
+        coordinate ``x`` of the offending cell.
+
+    Returns
+    -------
+    list of dict
+        Ordered by cell index, each with ``index``, ``kind`` (``"peak"`` /
+        ``"dip"``), ``amplitude`` (the *smaller* of the two adjacent depth
+        jumps -- the conservative prominence), ``value`` (the cell depth),
+        ``left_slope`` / ``right_slope`` (``h[i] - h[i-1]``, ``h[i+1] - h[i]``)
+        and, if ``x`` is given, ``x``.  ``amplitude / h_mean`` style
+        normalisation is left to the caller: the routine does not know ``h0``.
+    """
+    h = np.asarray(h, dtype=float)
+    xs = None if x is None else np.asarray(x, dtype=float)
+    if xs is not None and xs.shape != h.shape:
+        raise ValueError(f"x and h must have the same shape, got {xs.shape} vs {h.shape}")
+    out = []
+    for j in np.nonzero(_extrema_mask(h, amplitude))[0]:
+        left = float(h[j] - h[j - 1])
+        right = float(h[j + 1] - h[j])
+        rec = {
+            "index": int(j),
+            "kind": "peak" if left > 0 else "dip",
+            "amplitude": float(min(abs(left), abs(right))),
+            "value": float(h[j]),
+            "left_slope": left,
+            "right_slope": right,
+        }
+        if xs is not None:
+            rec["x"] = float(xs[j])
+        out.append(rec)
+    return out
 
 
 def data_driven_plateau(x, h, thresh_frac: float = PLATEAU_THRESH_FRACTION) -> dict:
