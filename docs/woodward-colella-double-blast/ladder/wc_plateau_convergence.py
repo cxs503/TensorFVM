@@ -195,6 +195,27 @@ def monotone_decreasing(series) -> bool:
     return bool(np.all(np.diff(s) < 0))
 
 
+def _repo_relative(path) -> str:
+    """Provenance path relative to the checkout root — never the local work tree.
+
+    The committed evidence JSON used to store ``str(path)``, i.e. the absolute
+    path of whichever work tree happened to run the script.  Two consequences,
+    both bad for an evidence artefact: (a) every honest re-run outside that tree
+    (CI, a reviewer's clone, a different agent) rewrote the same numbers with a
+    different prefix, so the JSON could not be gated byte-for-byte and drift in
+    any field the selective number checks do not cover stayed invisible; (b) the
+    committed file leaked the local directory layout.  Storing repo-relative
+    paths makes regeneration byte-identical and the provenance portable.
+    Paths outside the checkout keep an absolute form, so an out-of-tree
+    ``--data`` still records where it came from.
+    """
+    p = Path(path).resolve()
+    try:
+        return p.relative_to(ROOT.resolve()).as_posix()
+    except ValueError:
+        return p.as_posix()
+
+
 # ----------------------------------------------------------------------
 # profile discovery
 # ----------------------------------------------------------------------
@@ -206,12 +227,12 @@ def load_profiles(data_dir: Path, artifacts: Path) -> dict:
         if p.exists():
             d = np.load(p)
             out[f"nx{nx}_hllc"] = {"x": d["x_got"], "rho": d["rho_got"],
-                                   "path": str(p), "source": str(p.relative_to(ROOT))}
+                                   "path": _repo_relative(p), "source": str(p.relative_to(ROOT))}
     for p in sorted(data_dir.glob("ladder_profile_*.npz")):
         tag = p.stem.replace("ladder_profile_", "")
         d = np.load(p)
         out[tag] = {"x": d["x"], "rho": d["rho"],
-                    "path": str(p), "source": str(p.relative_to(ROOT))}
+                    "path": _repo_relative(p), "source": str(p.relative_to(ROOT))}
     return out
 
 
@@ -278,7 +299,7 @@ def analyse(data_dir: Path = DATA, artifacts: Path = ARTIFACTS,
         "case": "CASE-WOODWARD-COLELLA",
         "t_end": 0.038,
         "tolerance_percent": TOLERANCE_PERCENT,
-        "reference": {"path": reference["path"],
+        "reference": {"path": _repo_relative(reference["path"]),
                       "panel_spread": reference["panel_spread"],
                       "domain": [float(reference["x"].min()), float(reference["x"].max())]},
         "windows": {"original_min": list(ORIGINAL_WINDOW),

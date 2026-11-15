@@ -119,6 +119,23 @@ def load_profiles() -> dict[str, dict]:
     return out
 
 
+def _case_relative(path) -> str:
+    """Provenance path relative to the case directory — never the local work tree.
+
+    The committed evidence JSON used to store ``str(wcr.DEFAULT_REFERENCE)``, i.e.
+    the absolute path of whichever work tree ran the script, so an honest re-run
+    elsewhere rewrote the same numbers with a different prefix and the artefact
+    could not be gated byte-for-byte.  Repo-relative paths (this file's existing
+    convention, see the ``source`` fields) make regeneration byte-identical.
+    Paths outside the case directory keep an absolute form.
+    """
+    p = Path(path).resolve()
+    try:
+        return p.relative_to(HERE.parent.resolve()).as_posix()
+    except ValueError:
+        return p.as_posix()
+
+
 def ladder_tags(profiles: dict, family: str) -> dict[int, str]:
     """``{nx: tag}`` for the *canonical* profiles of one family (one per grid).
 
@@ -410,7 +427,7 @@ def main() -> None:
 
     result = {
         "reference": {"calibrated": str(CALIBRATED.relative_to(HERE.parent)),
-                      "committed_raw": str(wcr.DEFAULT_REFERENCE),
+                      "committed_raw": _case_relative(wcr.DEFAULT_REFERENCE),
                       "window": list(wcr.REFERENCE_X),
                       "tolerance_percent": wcr.TOLERANCE_PERCENT},
         "ladder_rule": {"fine_triplet": list(FINE_TRIPLET),
