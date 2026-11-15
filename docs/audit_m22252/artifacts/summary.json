@@ -1,0 +1,129 @@
+{
+ "spec_params_parsed": 8,
+ "spec_impl_bound_mismatches": {},
+ "nesting_ok": {
+  "ice_thickness": true,
+  "ice_strength": true,
+  "ice_friction": true,
+  "ice_speed": true,
+  "ice_density": true,
+  "ice_elastic_modulus": true,
+  "ice_poisson_ratio": true,
+  "ice_temperature": true
+ },
+ "grid_cases": 304,
+ "grid_agree": 304,
+ "grid_agreement_pct": 100.0,
+ "grid_mismatches": [],
+ "nan_battery": {
+  "nan": {
+   "ice_thickness": {
+    "status": "pass",
+    "is_valid": true,
+    "errors": 0
+   },
+   "ice_strength": {
+    "status": "pass",
+    "is_valid": true,
+    "errors": 0
+   }
+  },
+  "inf": {
+   "ice_thickness": {
+    "status": "fail",
+    "is_valid": false,
+    "errors": 1
+   },
+   "ice_strength": {
+    "status": "fail",
+    "is_valid": false,
+    "errors": 1
+   }
+  },
+  "neg_inf": {
+   "ice_thickness": {
+    "status": "fail",
+    "is_valid": false,
+    "errors": 1
+   },
+   "ice_strength": {
+    "status": "fail",
+    "is_valid": false,
+    "errors": 1
+   }
+  },
+  "bool_true": {
+   "ice_thickness": {
+    "status": "pass",
+    "is_valid": true,
+    "errors": 0
+   },
+   "ice_strength": {
+    "status": "pass",
+    "is_valid": true,
+    "errors": 0
+   }
+  },
+  "numeric_str": {
+   "ice_thickness": {
+    "status": "fail",
+    "is_valid": false,
+    "errors": 1
+   },
+   "ice_strength": {
+    "status": "fail",
+    "is_valid": false,
+    "errors": 1
+   }
+  },
+  "none": {
+   "ice_thickness": {
+    "status": "fail",
+    "is_valid": false,
+    "errors": 1
+   },
+   "ice_strength": {
+    "status": "fail",
+    "is_valid": false,
+    "errors": 1
+   }
+  },
+  "neg_zero": {
+   "ice_thickness": {
+    "status": "fail",
+    "is_valid": false,
+    "errors": 1
+   },
+   "ice_strength": {
+    "status": "fail",
+    "is_valid": false,
+    "errors": 1
+   }
+  }
+ },
+ "nan_case": {
+  "validate": {
+   "is_valid": true,
+   "status": "pass",
+   "errors": [],
+   "warnings": [],
+   "extrapolation_risk": false,
+   "validated_params": {
+    "ice_thickness": NaN
+   },
+   "clamped_params": {}
+  },
+  "clamp": {
+   "is_valid": true,
+   "status": "pass",
+   "errors": [],
+   "warnings": [],
+   "extrapolation_risk": false,
+   "validated_params": {},
+   "clamped_params": {
+    "ice_thickness": NaN
+   }
+  },
+  "report": "Ice Parameter Status Report\n========================================\n  h (ice_thickness) = nan m  [WITHIN CALIBRATION]\n    physical: [0.01, 10.0]  calibration: [0.05, 5.0]  typical: [0.3, 2.5]"
+ }
+}
