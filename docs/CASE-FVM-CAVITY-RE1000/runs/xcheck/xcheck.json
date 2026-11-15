@@ -1,0 +1,1178 @@
+{
+  "case": "CASE-FVM-CAVITY-RE1000",
+  "question": "is the Richardson limit of the production solver a property of the PDE (reproduced by an independent discretisation) or an artefact of that one code?",
+  "psiomega_method": {
+    "formulation": "streamfunction-vorticity, u=dpsi/dy, v=-dpsi/dx",
+    "convection": "flux form, QUICK face values (Leonard 1979)",
+    "wall_vorticity": "second-order Thom balance, omega=-2 psi_adj/h^2+2 psi_s/h",
+    "poisson": "direct DST-I diagonalisation (Dirichlet psi on all walls)",
+    "time_integration": "explicit Euler, CFL from the per-grid artifact",
+    "grid": "node-centred, walls are nodes, h=1/n"
+  },
+  "grids": [
+    32,
+    64,
+    128
+  ],
+  "per_grid": {
+    "32": {
+      "case": "CASE-FVM-CAVITY-RE1000",
+      "solver": "psiomega",
+      "reynolds": 1000.0,
+      "cfl": 0.4,
+      "tolerance": 1e-07,
+      "ledger": {
+        "steps": 16500,
+        "dt": 0.0125,
+        "residual": 8.095980774669442e-08,
+        "converged": true,
+        "max_divergence": 3.552713678800501e-15,
+        "vorticity_defect": 1.6231460620019789e-13
+      },
+      "diagnostics": {
+        "n": 32,
+        "reynolds": 1000.0,
+        "steps": 16500,
+        "dt": 0.0125,
+        "residual": 8.095980774669442e-08,
+        "max_divergence": 3.552713678800501e-15,
+        "vorticity_defect": 1.6231460620019789e-13,
+        "lid_velocity_error": 1.0,
+        "psi_min": -0.09801025596875607,
+        "omega_wall_lid": -30.290796423212786
+      },
+      "functionals": {
+        "u_min": -0.3126078164812245,
+        "u_min_y": 0.234375,
+        "v_max": 0.2949818224566374,
+        "v_max_x": 0.171875,
+        "psi_min": -0.102645078023612,
+        "vortex_x": 0.546875,
+        "vortex_y": 0.609375,
+        "kinetic": 0.03000280695792828
+      }
+    },
+    "64": {
+      "case": "CASE-FVM-CAVITY-RE1000",
+      "solver": "psiomega",
+      "reynolds": 1000.0,
+      "cfl": 0.4,
+      "tolerance": 1e-07,
+      "ledger": {
+        "steps": 21000,
+        "dt": 0.00625,
+        "residual": 9.820155355555471e-08,
+        "converged": true,
+        "max_divergence": 5.329070518200751e-15,
+        "vorticity_defect": 1.0342837697407958e-12
+      },
+      "diagnostics": {
+        "n": 64,
+        "reynolds": 1000.0,
+        "steps": 21000,
+        "dt": 0.00625,
+        "residual": 9.820155355555471e-08,
+        "max_divergence": 5.329070518200751e-15,
+        "vorticity_defect": 1.0342837697407958e-12,
+        "lid_velocity_error": 1.0,
+        "psi_min": -0.1125859211612297,
+        "omega_wall_lid": -34.79155107165779
+      },
+      "functionals": {
+        "u_min": -0.3650904517976774,
+        "u_min_y": 0.1796875,
+        "v_max": 0.3527598149295619,
+        "v_max_x": 0.1640625,
+        "psi_min": -0.11501448537080684,
+        "vortex_x": 0.5390625,
+        "vortex_y": 0.5859375,
+        "kinetic": 0.039746689237500306
+      }
+    },
+    "128": {
+      "case": "CASE-FVM-CAVITY-RE1000",
+      "solver": "psiomega",
+      "reynolds": 1000.0,
+      "cfl": 0.4,
+      "tolerance": 1e-07,
+      "ledger": {
+        "steps": 60750,
+        "dt": 0.003125,
+        "residual": 9.902123565552756e-08,
+        "converged": true,
+        "max_divergence": 7.105427357601002e-15,
+        "vorticity_defect": 3.454569963423637e-12
+      },
+      "diagnostics": {
+        "n": 128,
+        "reynolds": 1000.0,
+        "steps": 60750,
+        "dt": 0.003125,
+        "residual": 9.902123565552756e-08,
+        "max_divergence": 7.105427357601002e-15,
+        "vorticity_defect": 3.454569963423637e-12,
+        "lid_velocity_error": 1.0,
+        "psi_min": -0.11733640798818312,
+        "omega_wall_lid": -38.18681569320258
+      },
+      "functionals": {
+        "u_min": -0.3825936752108934,
+        "u_min_y": 0.17578125,
+        "v_max": 0.37086672914798946,
+        "v_max_x": 0.16015625,
+        "psi_min": -0.118556942452633,
+        "vortex_x": 0.52734375,
+        "vortex_y": 0.56640625,
+        "kinetic": 0.043256663721705745
+      }
+    }
+  },
+  "psiomega": {
+    "u_min": {
+      "quantity": "u_min",
+      "grids": [
+        32.0,
+        64.0,
+        128.0
+      ],
+      "values": [
+        -0.3126078164812245,
+        -0.3650904517976774,
+        -0.3825936752108934
+      ],
+      "refinement_ratios": [
+        2.0,
+        2.0
+      ],
+      "difference_coarse": -0.05248263531645292,
+      "difference_fine": -0.017503223413215974,
+      "observed_order": 1.584219529123768,
+      "safety_factor": 1.25,
+      "data_quality": {
+        "monotonic": true,
+        "order_admissible": true,
+        "note": "monotonic, observed order p=1.58",
+        "usable": true
+      },
+      "extrapolated": -0.3913520508719948,
+      "fine_minus_extrapolated": 0.008758375661101436,
+      "gci_fine_absolute": 0.010947969576376775,
+      "gci_fine_relative": 0.028615134764948823,
+      "gci_coarse_relative": 0.10501016645202266,
+      "fine_grid_relative_error_estimate": 0.022379787308093514
+    },
+    "v_max": {
+      "quantity": "v_max",
+      "grids": [
+        32.0,
+        64.0,
+        128.0
+      ],
+      "values": [
+        0.2949818224566374,
+        0.3527598149295619,
+        0.37086672914798946
+      ],
+      "refinement_ratios": [
+        2.0,
+        2.0
+      ],
+      "difference_coarse": 0.05777799247292448,
+      "difference_fine": 0.018106914218427583,
+      "observed_order": 1.6739793745196896,
+      "safety_factor": 1.25,
+      "data_quality": {
+        "monotonic": true,
+        "order_admissible": true,
+        "note": "monotonic, observed order p=1.67",
+        "usable": true
+      },
+      "extrapolated": 0.37913119678887924,
+      "fine_minus_extrapolated": -0.008264467640889783,
+      "gci_fine_absolute": 0.010330584551112196,
+      "gci_fine_relative": 0.027855247557108075,
+      "gci_coarse_relative": 0.11175002937339451,
+      "fine_grid_relative_error_estimate": 0.021798437350677543
+    },
+    "psi_min": {
+      "quantity": "psi_min",
+      "grids": [
+        32.0,
+        64.0,
+        128.0
+      ],
+      "values": [
+        -0.102645078023612,
+        -0.11501448537080684,
+        -0.118556942452633
+      ],
+      "refinement_ratios": [
+        2.0,
+        2.0
+      ],
+      "difference_coarse": -0.012369407347194841,
+      "difference_fine": -0.003542457081826156,
+      "observed_order": 1.8039540988476024,
+      "safety_factor": 1.25,
+      "data_quality": {
+        "monotonic": true,
+        "order_admissible": true,
+        "note": "monotonic, observed order p=1.80",
+        "usable": true
+      },
+      "extrapolated": -0.11997861152284568,
+      "fine_minus_extrapolated": 0.0014216690702126833,
+      "gci_fine_absolute": 0.0017770863377658522,
+      "gci_fine_relative": 0.014989306412619832,
+      "gci_coarse_relative": 0.060452559533552504,
+      "fine_grid_relative_error_estimate": 0.011849354248794393
+    },
+    "kinetic": {
+      "quantity": "kinetic",
+      "grids": [
+        32.0,
+        64.0,
+        128.0
+      ],
+      "values": [
+        0.03000280695792828,
+        0.039746689237500306,
+        0.043256663721705745
+      ],
+      "refinement_ratios": [
+        2.0,
+        2.0
+      ],
+      "difference_coarse": 0.009743882279572028,
+      "difference_fine": 0.0035099744842054387,
+      "observed_order": 1.4730361605897613,
+      "safety_factor": 1.25,
+      "data_quality": {
+        "monotonic": true,
+        "order_admissible": true,
+        "note": "monotonic, observed order p=1.47",
+        "usable": true
+      },
+      "extrapolated": 0.04523293948390584,
+      "fine_minus_extrapolated": -0.0019762757622000943,
+      "gci_fine_absolute": 0.0024703447027501217,
+      "gci_fine_relative": 0.05710899755568824,
+      "gci_coarse_relative": 0.22857237383233353,
+      "fine_grid_relative_error_estimate": 0.04369107523740007
+    }
+  },
+  "production": {
+    "u_min": {
+      "quantity": "u_min",
+      "grids": [
+        32.0,
+        64.0,
+        128.0
+      ],
+      "values": [
+        -0.3276159087380135,
+        -0.3730957888873246,
+        -0.38530400738358145
+      ],
+      "refinement_ratios": [
+        2.0,
+        2.0
+      ],
+      "difference_coarse": -0.04547988014931109,
+      "difference_fine": -0.012208218496256862,
+      "observed_order": 1.897375764267098,
+      "safety_factor": 1.25,
+      "data_quality": {
+        "monotonic": true,
+        "order_admissible": true,
+        "note": "monotonic, observed order p=1.90",
+        "usable": true
+      },
+      "extrapolated": -0.3897835131084982,
+      "fine_minus_extrapolated": 0.0044795057249167325,
+      "gci_fine_absolute": 0.005599382156145884,
+      "gci_fine_relative": 0.014532374563578145,
+      "gci_coarse_relative": 0.06367106944476228,
+      "fine_grid_relative_error_estimate": 0.011492291424008587,
+      "reference": -0.38289,
+      "fine_minus_reference_relative": -0.006304702090891483,
+      "extrapolated_minus_reference_relative": -0.018003899575591353,
+      "reference_within_gci_band": true
+    },
+    "v_max": {
+      "quantity": "v_max",
+      "grids": [
+        32.0,
+        64.0,
+        128.0
+      ],
+      "values": [
+        0.31790081010992954,
+        0.3625262034735016,
+        0.3738665719785615
+      ],
+      "refinement_ratios": [
+        2.0,
+        2.0
+      ],
+      "difference_coarse": 0.044625393363572075,
+      "difference_fine": 0.011340368505059872,
+      "observed_order": 1.976397364864982,
+      "safety_factor": 1.25,
+      "data_quality": {
+        "monotonic": true,
+        "order_admissible": true,
+        "note": "monotonic, observed order p=1.98",
+        "usable": true
+      },
+      "extrapolated": 0.3777302902235447,
+      "fine_minus_extrapolated": -0.0038637182449832164,
+      "gci_fine_absolute": 0.004829647806229036,
+      "gci_fine_relative": 0.012918105463855113,
+      "gci_coarse_relative": 0.05978313937288157,
+      "fine_grid_relative_error_estimate": 0.01022877525309561,
+      "reference": 0.37095,
+      "fine_minus_reference_relative": 0.007862439624104297,
+      "extrapolated_minus_reference_relative": 0.01827817825460225,
+      "reference_within_gci_band": true
+    },
+    "psi_min": {
+      "quantity": "psi_min",
+      "grids": [
+        32.0,
+        64.0,
+        128.0
+      ],
+      "values": [
+        -0.11086017364234126,
+        -0.11795804425297632,
+        -0.11936906793199455
+      ],
+      "refinement_ratios": [
+        2.0,
+        2.0
+      ],
+      "difference_coarse": -0.0070978706106350625,
+      "difference_fine": -0.001411023679018228,
+      "observed_order": 2.3306440766391043,
+      "safety_factor": 1.25,
+      "data_quality": {
+        "monotonic": true,
+        "order_admissible": true,
+        "note": "monotonic, observed order p=2.33",
+        "usable": true
+      },
+      "extrapolated": -0.11971917192577025,
+      "fine_minus_extrapolated": 0.000350103993775705,
+      "gci_fine_absolute": 0.0004376299922196241,
+      "gci_fine_relative": 0.003666192589096408,
+      "gci_coarse_relative": 0.019857533311237893,
+      "fine_grid_relative_error_estimate": 0.0029243770078261214
+    },
+    "kinetic": {
+      "quantity": "kinetic",
+      "grids": [
+        32.0,
+        64.0,
+        128.0
+      ],
+      "values": [
+        0.034464309179516164,
+        0.041609680383707284,
+        0.04379895328343299
+      ],
+      "refinement_ratios": [
+        2.0,
+        2.0
+      ],
+      "difference_coarse": 0.00714537120419112,
+      "difference_fine": 0.0021892728997257027,
+      "observed_order": 1.706557159525823,
+      "safety_factor": 1.25,
+      "data_quality": {
+        "monotonic": true,
+        "order_admissible": true,
+        "note": "monotonic, observed order p=1.71",
+        "usable": true
+      },
+      "extrapolated": 0.04476602769056389,
+      "fine_minus_extrapolated": -0.0009670744071309037,
+      "gci_fine_absolute": 0.0012088430089136337,
+      "gci_fine_relative": 0.02759981502505176,
+      "gci_coarse_relative": 0.11447883992161165,
+      "fine_grid_relative_error_estimate": 0.021602863980150527
+    }
+  },
+  "reference": {
+    "u_min": -0.38289,
+    "v_max": 0.37095,
+    "vortex_x": 0.5313,
+    "vortex_y": 0.5625
+  },
+  "comparison": {
+    "u_min": {
+      "psiomega_observed_order": 1.584219529123768,
+      "production_observed_order": 1.897375764267098,
+      "psiomega_extrapolated": -0.3913520508719948,
+      "production_extrapolated": -0.3897835131084982,
+      "psiomega_finest": -0.3825936752108934,
+      "production_finest": -0.38530400738358145,
+      "cross_code_relative_difference": 0.004024125471566637,
+      "reference": -0.38289,
+      "psiomega_finest_vs_reference": 0.0007739162399295564,
+      "psiomega_extrapolated_vs_reference": -0.022100474998027652,
+      "production_finest_vs_reference": -0.006304702090891483,
+      "production_extrapolated_vs_reference": -0.018003899575591353
+    },
+    "v_max": {
+      "psiomega_observed_order": 1.6739793745196896,
+      "production_observed_order": 1.976397364864982,
+      "psiomega_extrapolated": 0.37913119678887924,
+      "production_extrapolated": 0.3777302902235447,
+      "psiomega_finest": 0.37086672914798946,
+      "production_finest": 0.3738665719785615,
+      "cross_code_relative_difference": 0.003708748283081734,
+      "reference": 0.37095,
+      "psiomega_finest_vs_reference": -0.0002244799892452941,
+      "psiomega_extrapolated_vs_reference": 0.022054715699903603,
+      "production_finest_vs_reference": 0.007862439624104297,
+      "production_extrapolated_vs_reference": 0.01827817825460225
+    },
+    "psi_min": {
+      "psiomega_observed_order": 1.8039540988476024,
+      "production_observed_order": 2.3306440766391043,
+      "psiomega_extrapolated": -0.11997861152284568,
+      "production_extrapolated": -0.11971917192577025,
+      "psiomega_finest": -0.118556942452633,
+      "production_finest": -0.11936906793199455,
+      "cross_code_relative_difference": 0.002167068088612339
+    },
+    "kinetic": {
+      "psiomega_observed_order": 1.4730361605897613,
+      "production_observed_order": 1.706557159525823,
+      "psiomega_extrapolated": 0.04523293948390584,
+      "production_extrapolated": 0.04476602769056389,
+      "psiomega_finest": 0.043256663721705745,
+      "production_finest": 0.04379895328343299,
+      "cross_code_relative_difference": 0.010430047458518799
+    }
+  },
+  "agreement_tolerance": 0.005,
+  "governed_quantities": [
+    "u_min",
+    "v_max"
+  ],
+  "worst_cross_code_difference": 0.004024125471566637,
+  "worst_cross_code_difference_all_quantities": 0.010430047458518799,
+  "cross_code_difference_per_quantity": {
+    "u_min": 0.004024125471566637,
+    "v_max": 0.003708748283081734,
+    "psi_min": 0.002167068088612339,
+    "kinetic": 0.010430047458518799
+  },
+  "limit_is_code_independent": true,
+  "ghia_tables": {
+    "u": [
+      [
+        1.0,
+        1.0
+      ],
+      [
+        0.9766,
+        0.65928
+      ],
+      [
+        0.9688,
+        0.57492
+      ],
+      [
+        0.9609,
+        0.51117
+      ],
+      [
+        0.9531,
+        0.46604
+      ],
+      [
+        0.8516,
+        0.33304
+      ],
+      [
+        0.7344,
+        0.18719
+      ],
+      [
+        0.6172,
+        0.05702
+      ],
+      [
+        0.5,
+        -0.0608
+      ],
+      [
+        0.4531,
+        -0.10648
+      ],
+      [
+        0.2813,
+        -0.27805
+      ],
+      [
+        0.1719,
+        -0.38289
+      ],
+      [
+        0.1016,
+        -0.2973
+      ],
+      [
+        0.0703,
+        -0.2222
+      ],
+      [
+        0.0625,
+        -0.20196
+      ],
+      [
+        0.0547,
+        -0.18109
+      ],
+      [
+        0.0,
+        0.0
+      ]
+    ],
+    "v": [
+      [
+        1.0,
+        0.0
+      ],
+      [
+        0.9688,
+        -0.21388
+      ],
+      [
+        0.9609,
+        -0.27669
+      ],
+      [
+        0.9531,
+        -0.33714
+      ],
+      [
+        0.9453,
+        -0.39188
+      ],
+      [
+        0.9063,
+        -0.5155
+      ],
+      [
+        0.8594,
+        -0.42665
+      ],
+      [
+        0.8047,
+        -0.31966
+      ],
+      [
+        0.5,
+        0.02526
+      ],
+      [
+        0.2344,
+        0.32235
+      ],
+      [
+        0.2266,
+        0.33075
+      ],
+      [
+        0.1563,
+        0.37095
+      ],
+      [
+        0.0938,
+        0.32627
+      ],
+      [
+        0.0781,
+        0.30353
+      ],
+      [
+        0.0703,
+        0.29012
+      ],
+      [
+        0.0625,
+        0.27485
+      ],
+      [
+        0.0,
+        0.0
+      ]
+    ],
+    "u_corrected": [
+      [
+        1.0,
+        1.0
+      ],
+      [
+        0.9766,
+        0.65928
+      ],
+      [
+        0.9688,
+        0.57492
+      ],
+      [
+        0.9609,
+        0.51117
+      ],
+      [
+        0.9531,
+        0.46604
+      ],
+      [
+        0.8516,
+        0.33304
+      ],
+      [
+        0.7344,
+        0.18719
+      ],
+      [
+        0.6172,
+        0.05702
+      ],
+      [
+        0.5,
+        -0.0608
+      ],
+      [
+        0.4531,
+        -0.10648
+      ],
+      [
+        0.2813,
+        -0.27805
+      ],
+      [
+        0.1719,
+        -0.38289
+      ],
+      [
+        0.1016,
+        -0.2973
+      ],
+      [
+        0.0703,
+        -0.2222
+      ],
+      [
+        0.0625,
+        -0.20196
+      ],
+      [
+        0.0547,
+        -0.18109
+      ],
+      [
+        0.0,
+        0.0
+      ]
+    ],
+    "v_corrected": [
+      [
+        1.0,
+        0.0
+      ],
+      [
+        0.9688,
+        -0.21388
+      ],
+      [
+        0.9609,
+        -0.27669
+      ],
+      [
+        0.9531,
+        -0.33714
+      ],
+      [
+        0.9453,
+        -0.39188
+      ],
+      [
+        0.9063,
+        -0.5155
+      ],
+      [
+        0.8594,
+        -0.42665
+      ],
+      [
+        0.8047,
+        -0.31966
+      ],
+      [
+        0.5,
+        0.02526
+      ],
+      [
+        0.2344,
+        0.32235
+      ],
+      [
+        0.2266,
+        0.33075
+      ],
+      [
+        0.1563,
+        0.37095
+      ],
+      [
+        0.0938,
+        0.32627
+      ],
+      [
+        0.0781,
+        0.30353
+      ],
+      [
+        0.0703,
+        0.29012
+      ],
+      [
+        0.0625,
+        0.27485
+      ],
+      [
+        0.0,
+        0.0
+      ]
+    ]
+  },
+  "profile_scores": {
+    "psiomega": {
+      "u": {
+        "profiles": {
+          "coord": [
+            1.0,
+            0.9766,
+            0.9688,
+            0.9609,
+            0.9531,
+            0.8516,
+            0.7344,
+            0.6172,
+            0.5,
+            0.4531,
+            0.2813,
+            0.1719,
+            0.1016,
+            0.0703,
+            0.0625,
+            0.0547,
+            0.0
+          ],
+          "reference": [
+            1.0,
+            0.65928,
+            0.57492,
+            0.51117,
+            0.46604,
+            0.33304,
+            0.18719,
+            0.05702,
+            -0.0608,
+            -0.10648,
+            -0.27805,
+            -0.38289,
+            -0.2973,
+            -0.2222,
+            -0.20196,
+            -0.18109,
+            0.0
+          ],
+          "computed": [
+            1.0,
+            0.6592941976483547,
+            0.5753505035738918,
+            0.5113606506931503,
+            0.4667534462762227,
+            0.33248192388333986,
+            0.18609493512146663,
+            0.05575348321127333,
+            -0.062139383978136564,
+            -0.10780451634988684,
+            -0.278790154077818,
+            -0.38232451995998623,
+            -0.2918024583439773,
+            -0.21551745923678087,
+            -0.1954129468608441,
+            -0.17488977413359563,
+            0.0
+          ],
+          "delta": [
+            0.0,
+            1.4197648354752346e-05,
+            0.00043050357389184946,
+            0.00019065069315027383,
+            0.0007134462762227178,
+            -0.0005580761166601445,
+            -0.0010950648785333639,
+            -0.0012665167887266696,
+            -0.0013393839781365643,
+            -0.0013245163498868395,
+            -0.0007401540778179672,
+            0.0005654800400137772,
+            0.005497541656022731,
+            0.006682540763219141,
+            0.006547053139155906,
+            0.006200225866404369,
+            0.0
+          ]
+        },
+        "max_abs_error": 0.006682540763219141,
+        "rms_error": 0.0031102059572643034,
+        "max_abs_error_consistent": 0.006682540763219141,
+        "rms_error_consistent": 0.003110205957264303,
+        "consistent_point_count": 17,
+        "suspect_points": [],
+        "extremum": {
+          "min_reference": [
+            0.1719,
+            -0.38289
+          ],
+          "min_computed": [
+            0.1719,
+            -0.38232451995998623
+          ],
+          "max_reference": [
+            1.0,
+            1.0
+          ],
+          "max_computed": [
+            1.0,
+            1.0
+          ]
+        }
+      },
+      "v": {
+        "profiles": {
+          "coord": [
+            1.0,
+            0.9688,
+            0.9609,
+            0.9531,
+            0.9453,
+            0.9063,
+            0.8594,
+            0.8047,
+            0.5,
+            0.2344,
+            0.2266,
+            0.1563,
+            0.0938,
+            0.0781,
+            0.0703,
+            0.0625,
+            0.0
+          ],
+          "reference": [
+            0.0,
+            -0.21388,
+            -0.27669,
+            -0.33714,
+            -0.39188,
+            -0.5155,
+            -0.42665,
+            -0.31966,
+            0.02526,
+            0.32235,
+            0.33075,
+            0.37095,
+            0.32627,
+            0.30353,
+            0.29012,
+            0.27485,
+            0.0
+          ],
+          "computed": [
+            0.0,
+            -0.21996536321681492,
+            -0.2841004531803205,
+            -0.34454140634246205,
+            -0.3988710117422807,
+            -0.5177691055128595,
+            -0.42338311435360476,
+            -0.3171151557183188,
+            0.025590583708827275,
+            0.3216609587986241,
+            0.33006029149624905,
+            0.3706356782670082,
+            0.32648115532526467,
+            0.3036223050662689,
+            0.29015006594316733,
+            0.2747818609734132,
+            0.0
+          ],
+          "delta": [
+            0.0,
+            -0.006085363216814937,
+            -0.00741045318032052,
+            -0.007401406342462058,
+            -0.006991011742280673,
+            -0.002269105512859526,
+            0.0032668856463952123,
+            0.0025448442816812245,
+            0.00033058370882727353,
+            -0.0006890412013759173,
+            -0.000689708503750941,
+            -0.0003143217329917847,
+            0.00021115532526466696,
+            9.230506626889401e-05,
+            3.0065943167345566e-05,
+            -6.813902658681092e-05,
+            0.0
+          ]
+        },
+        "max_abs_error": 0.00741045318032052,
+        "rms_error": 0.0035901527899699307,
+        "max_abs_error_consistent": 0.00741045318032052,
+        "rms_error_consistent": 0.0035901527899699307,
+        "consistent_point_count": 17,
+        "suspect_points": [],
+        "extremum": {
+          "min_reference": [
+            0.9063,
+            -0.5155
+          ],
+          "min_computed": [
+            0.9063,
+            -0.5177691055128595
+          ],
+          "max_reference": [
+            0.1563,
+            0.37095
+          ],
+          "max_computed": [
+            0.1563,
+            0.3706356782670082
+          ]
+        }
+      }
+    },
+    "production": {
+      "u": {
+        "profiles": {
+          "coord": [
+            1.0,
+            0.9766,
+            0.9688,
+            0.9609,
+            0.9531,
+            0.8516,
+            0.7344,
+            0.6172,
+            0.5,
+            0.4531,
+            0.2813,
+            0.1719,
+            0.1016,
+            0.0703,
+            0.0625,
+            0.0547,
+            0.0
+          ],
+          "reference": [
+            1.0,
+            0.65928,
+            0.57492,
+            0.51117,
+            0.46604,
+            0.33304,
+            0.18719,
+            0.05702,
+            -0.0608,
+            -0.10648,
+            -0.27805,
+            -0.38289,
+            -0.2973,
+            -0.2222,
+            -0.20196,
+            -0.18109,
+            0.0
+          ],
+          "computed": [
+            0.9999450769398999,
+            0.6601102004929125,
+            0.5767279085139185,
+            0.5134955999570536,
+            0.469572754096968,
+            0.33501780920257085,
+            0.1873632234176171,
+            0.056238489685025365,
+            -0.06236209238514353,
+            -0.1083098281555958,
+            -0.28011261330405895,
+            -0.3853676434683154,
+            -0.2953035536751806,
+            -0.21800802321676868,
+            -0.19765270167437815,
+            -0.17689432097598992,
+            -0.0014946874308396103
+          ],
+          "delta": [
+            -5.492306010013159e-05,
+            0.0008302004929124918,
+            0.0018079085139185436,
+            0.0023255999570536146,
+            0.003532754096968016,
+            0.001977809202570846,
+            0.0001732234176171077,
+            -0.0007815103149746358,
+            -0.0015620923851435292,
+            -0.0018298281555957918,
+            -0.0020626133040589356,
+            -0.002477643468315416,
+            0.001996446324819434,
+            0.004191976783231327,
+            0.00430729832562185,
+            0.004195679024010079,
+            -0.0014946874308396103
+          ]
+        },
+        "max_abs_error": 0.00430729832562185,
+        "rms_error": 0.002455876947272071,
+        "max_abs_error_consistent": 0.00430729832562185,
+        "rms_error_consistent": 0.0024558769472720716,
+        "consistent_point_count": 17,
+        "suspect_points": [],
+        "extremum": {
+          "min_reference": [
+            0.1719,
+            -0.38289
+          ],
+          "min_computed": [
+            0.1719,
+            -0.3853676434683154
+          ],
+          "max_reference": [
+            1.0,
+            1.0
+          ],
+          "max_computed": [
+            1.0,
+            0.9999450769398999
+          ]
+        }
+      },
+      "v": {
+        "profiles": {
+          "coord": [
+            1.0,
+            0.9688,
+            0.9609,
+            0.9531,
+            0.9453,
+            0.9063,
+            0.8594,
+            0.8047,
+            0.5,
+            0.2344,
+            0.2266,
+            0.1563,
+            0.0938,
+            0.0781,
+            0.0703,
+            0.0625,
+            0.0
+          ],
+          "reference": [
+            0.0,
+            -0.21388,
+            -0.27669,
+            -0.33714,
+            -0.39188,
+            -0.5155,
+            -0.42665,
+            -0.31966,
+            0.02526,
+            0.32235,
+            0.33075,
+            0.37095,
+            0.32627,
+            0.30353,
+            0.29012,
+            0.27485,
+            0.0
+          ],
+          "computed": [
+            0.005704578498384252,
+            -0.22159696917357885,
+            -0.28666549694130894,
+            -0.34797680774272405,
+            -0.4030641276364496,
+            -0.5210775250677928,
+            -0.425819632243955,
+            -0.3190886658925718,
+            0.02539383191360611,
+            0.3234912189849733,
+            0.33202918478208787,
+            0.3738401868300326,
+            0.3301112530225536,
+            0.3071397432014662,
+            0.2936121910074336,
+            0.27819397965284454,
+            0.004699718276469766
+          ],
+          "delta": [
+            0.005704578498384252,
+            -0.007716969173578864,
+            -0.009975496941308948,
+            -0.010836807742724053,
+            -0.011184127636449603,
+            -0.0055775250677928545,
+            0.0008303677560449474,
+            0.0005713341074282119,
+            0.00013383191360610835,
+            0.001141218984973269,
+            0.0012791847820878832,
+            0.002890186830032615,
+            0.0038412530225536146,
+            0.0036097432014661757,
+            0.003492191007433587,
+            0.003343979652844553,
+            0.004699718276469766
+          ]
+        },
+        "max_abs_error": 0.011184127636449603,
+        "rms_error": 0.005692153559464316,
+        "max_abs_error_consistent": 0.011184127636449603,
+        "rms_error_consistent": 0.005692153559464317,
+        "consistent_point_count": 17,
+        "suspect_points": [],
+        "extremum": {
+          "min_reference": [
+            0.9063,
+            -0.5155
+          ],
+          "min_computed": [
+            0.9063,
+            -0.5210775250677928
+          ],
+          "max_reference": [
+            0.1563,
+            0.37095
+          ],
+          "max_computed": [
+            0.1563,
+            0.3738401868300326
+          ]
+        }
+      }
+    }
+  }
+}
