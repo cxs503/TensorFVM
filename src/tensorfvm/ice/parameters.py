@@ -5,8 +5,10 @@ Values are in SI units unless otherwise noted.
 
 Bound types
 -----------
-- **hard_min / hard_max**: Physically impossible outside this range.
-  Inputs beyond these are rejected outright.
+- **hard_min / hard_max**: Outside the validity domain of ship–ice models.
+  Inputs beyond these are rejected outright: either physically impossible
+  (e.g. negative thickness, ``nan``) or three orders of magnitude past the
+  largest hull/ice case the empirical formulas were fitted on.
 - **soft_min / soft_max**: Outside the calibration domain of empirical models.
   Inputs beyond these trigger a warning but are accepted (extrapolation risk).
 - **typical_min / typical_max**: Common operating range for Arctic shipping.
@@ -16,6 +18,7 @@ References for each parameter are documented inline.
 
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass
 from typing import Optional
 
@@ -36,7 +39,14 @@ class IceParameterBounds:
     description: str
 
     def is_hard_violation(self, value: float) -> bool:
-        """Return True if value is physically impossible."""
+        """Return True if value is physically impossible.
+
+        Non-finite values are always violations: ``nan < lo`` and ``nan > hi``
+        are both False, so a bare comparison would report NaN as admissible
+        (the m22209 defect this module repairs).
+        """
+        if not math.isfinite(value):
+            return True
         return value < self.hard_min or value > self.hard_max
 
     def is_soft_violation(self, value: float) -> bool:
@@ -93,7 +103,8 @@ ICE_THICKNESS = IceParameter(IceParameterBounds(
     symbol="h",
     unit="m",
     hard_min=0.01,       # 1 cm — thin ice still has mechanical effect
-    hard_max=10.0,       # 10 m — absolute upper bound for any natural ice
+    hard_max=10.0,       # 10 m — ship-level-ice models' applicability limit, NOT a
+                         # physical impossibility: ridge keels and glacier tongues far exceed it
     soft_min=0.05,       # 5 cm — below this, ice effects are negligible
     soft_max=5.0,        # 5 m — beyond this is extremely rare ridged ice
     typical_min=0.3,     # 30 cm — typical first-year ice
@@ -257,7 +268,73 @@ ICE_TEMPERATURE = IceParameter(IceParameterBounds(
     description="Ice temperature. Controls strength, modulus, and creep behavior.",
 ))
 
-# Registry of all ice parameters
+# =========================================================================== #
+# Ship geometry parameters (the remaining entries of the 12-parameter
+# level-ice resistance input set).  The ice parameters above are only half of
+# what an ice-resistance formula consumes; h=50 m and sigma_c=100 MPa were two
+# of seven silently extrapolated inputs recorded by the JOUR-ICE-STRUCT-GUARD
+# audit, so the hull variables are guarded by the same three-tier mechanism.
+# Bounds are the ordinary displacement/icebreaker envelope of naval
+# architecture (L/B in 4-9, T/L in 0.02-0.08, Cb in 0.50-0.90); they are
+# deliberately wide — the guard is not a hull-design checker.
+# =========================================================================== #
+SHIP_LENGTH = IceParameter(IceParameterBounds(
+    name="ship_length",
+    symbol="L",
+    unit="m",
+    hard_min=10.0,       # 10 m — smallest autonomous craft in ice trials
+    hard_max=500.0,      # 500 m — beyond any built hull
+    soft_min=30.0,       # below this, model-scale / small craft
+    soft_max=400.0,      # largest ice-capable hulls
+    typical_min=50.0,    # small icebreaker / research vessel
+    typical_max=350.0,   # Arctic tanker / heavy icebreaker
+    reference="Lewis (1988) Principles of Naval Architecture; Riska et al. (1997)",
+    description="Length between perpendiculars. Scales crushing/submersion terms linearly.",
+))
+
+SHIP_BEAM = IceParameter(IceParameterBounds(
+    name="ship_beam",
+    symbol="B",
+    unit="m",
+    hard_min=2.0,
+    hard_max=80.0,       # wider than any built ice-going hull
+    soft_min=8.0,
+    soft_max=60.0,
+    typical_min=15.0,
+    typical_max=50.0,
+    reference="Lewis (1988) Principles of Naval Architecture",
+    description="Beam at waterline. Enters the bending and submersion terms directly.",
+))
+
+SHIP_DRAFT = IceParameter(IceParameterBounds(
+    name="ship_draft",
+    symbol="T",
+    unit="m",
+    hard_min=0.3,
+    hard_max=20.0,       # deeper than any ice-going hull
+    soft_min=2.0,
+    soft_max=16.0,
+    typical_min=5.0,
+    typical_max=14.0,
+    reference="Lewis (1988); Riska et al. (1997)",
+    description="Draft at the ice belt. Governs the displaced volume and submersion term.",
+))
+
+SHIP_BLOCK_COEFFICIENT = IceParameter(IceParameterBounds(
+    name="ship_block_coefficient",
+    symbol="C_B",
+    unit="",
+    hard_min=0.30,       # finer than a fast craft
+    hard_max=0.90,       # fuller than any practical hull
+    soft_min=0.45,       # icebreakers run fine (0.50-0.70)
+    soft_max=0.88,
+    typical_min=0.55,
+    typical_max=0.85,
+    reference="Lewis (1988) Principles of Naval Architecture",
+    description="Block coefficient; consistency check with L, B, T and displacement.",
+))
+
+# Registry of all guarded ice-domain parameters
 ALL_ICE_PARAMETERS: dict[str, IceParameter] = {
     "ice_thickness": ICE_THICKNESS,
     "ice_strength": ICE_STRENGTH,
@@ -267,4 +344,31 @@ ALL_ICE_PARAMETERS: dict[str, IceParameter] = {
     "ice_elastic_modulus": ICE_ELASTIC_MODULUS,
     "ice_poisson_ratio": ICE_POISSON_RATIO,
     "ice_temperature": ICE_TEMPERATURE,
+    "ship_length": SHIP_LENGTH,
+    "ship_beam": SHIP_BEAM,
+    "ship_draft": SHIP_DRAFT,
+    "ship_block_coefficient": SHIP_BLOCK_COEFFICIENT,
 }
+
+#: The eight ice-property parameters (the m22209 delivery).
+ICE_ONLY_PARAMETERS: tuple[str, ...] = (
+    "ice_thickness",
+    "ice_strength",
+    "ice_friction",
+    "ice_speed",
+    "ice_density",
+    "ice_elastic_modulus",
+    "ice_poisson_ratio",
+    "ice_temperature",
+)
+
+#: The four hull parameters needed by a level-ice resistance calculation.
+SHIP_PARAMETERS: tuple[str, ...] = (
+    "ship_length",
+    "ship_beam",
+    "ship_draft",
+    "ship_block_coefficient",
+)
+
+#: The full 12-parameter level-ice resistance input set.
+ICE_RESISTANCE_INPUTS: tuple[str, ...] = ICE_ONLY_PARAMETERS + SHIP_PARAMETERS
