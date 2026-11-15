@@ -62,14 +62,17 @@
 
 | 量 | 三元组 | p_obs（理论 2） | 渐近区？ | 外推值 | GCI % |
 |---|---|---|---|---|---|
-| 窗质量 | 800/400/200 | 1.852 | 是 | 0.935308 | 0.020 |
+| 窗质量 | 800/400/200 | 1.207 | 否 | 0.935459 | 0.040 |
 | 窗质量 | **3200/1600/800** | 1.020 | 否（偏离>20%） | **0.935517** | **0.012** |
-| 峰值密度 | 800/400/200 | 0.913 | 否 | 6.801（比参考高 7.7% → 旧外推不可用） | 12.35 |
+| 峰值密度 | 800/400/200 | 0.252 | 否 | 9.019（比参考高 42.8% → 外推不可用） | 57.13 |
 | 峰值密度 | **3200/1600/800** | 2.736 | 否（高于理论阶） | **6.5148** | **0.141** |
+| ρ(0.5) | 800/400/200 | 3.920 | 否（高于理论阶） | 0.183533 | 0.006 |
 | ρ(0.5) | **3200/1600/800** | 0.616 | 否 | 0.183203 | 0.093 |
 
-旧三元组的峰值外推 6.801（+7.7%）说明 200/400/800 确实不在渐近区；细三元组把它拉到 6.5148（+3.1%），
-**但两者都高于数字化参考**——参考的峰值比本方案的收敛极限低约 0.20 密度单位。
+旧三元组的峰值外推 **9.019（+42.8 %，GCI 57 %）** 说明 200/400/800 确实不在渐近区——这个数与
+`wc_gci_analysis.py` 当年报出的 9.02（本脚本 docstring 引用的那一个）在修复梯子混样后**逐位复现**
+（见 ⑤.7），即两个独立的脚本事后互相校验；细三元组把它拉到 6.5148（+3.1 %），**但两者都高于数字化参考**
+——参考的峰值比本方案的收敛极限低约 0.20 密度单位。
 
 ### 场级收敛与距离阶梯
 
@@ -109,6 +112,22 @@
 削峰最多 0.054%，比需要解释的 3.1% 峰值残余小 **57 倍** → **假设被否定**（负面结果同样入账）：
 参考峰值偏低不是折线表示造成的，是参考解（RPJ@3200，另一套离散）自身在碰撞峰值处更耗散。
 
+### 跨族（WENO5/Rusanov）细网格：不依赖文献曲线的基（basis）误差界
+
+WENO5 族细网格剖面已入仓（v2 新增），两族（同一套参考表、同一窗、同一 L1 度量）逐级对比：
+
+| 网格 nx | 族间 L1 差 % | 到下一级观测阶 | 说明 |
+|---|---|---|---|
+| 200 | 4.601 | 0.547 | 粗网格，格式差被离散误差掩盖 |
+| 1600 | 1.475 | 0.602 | |
+| 3200 | 0.972 | 0.659 | |
+| 6400 | 0.615 | — | 族间差随加密单调下降 → 两族趋于同一极限 |
+
+两族各自按本族形式阶 Richardson 外推后互比：**外推场 L1 互差 0.978 %**；外推峰值 HLLC 6.6160 /
+WENO5 6.4432（互差 **2.68 %**）；外推窗质量 0.935434 / 0.935422（互差 **0.0012 %**）。
+这条链不引用任何已发表曲线，因此它给出的「格式族差 <1 %（积分量）/ ≈2.7 %（峰值）」是**独立于参考解**的
+不确定度成分——正是下面 ⑥ 判定所需的那一块拼图。
+
 ## ④ 结果图
 
 `artifacts/fig_wc_asymptotic_nx3200.png`（140 dpi，三栏，`ladder/wc_asymptotic_figure.py` 生成）：
@@ -130,10 +149,30 @@
    距离量，报告里两者并列不混用（`tests/test_compressible_wc_asymptotic.py::test_extrapolated_field_sweep_is_stable` 锁死）。
 4. **参考解仍是数值解**（RPJ@3200），其自身误差未给出；本单只能把「与参考的差」拆成
    `U_num`（已知很小）+ 参考/格式差（≈3%），不能把后者归给任何一方。
-5. **交叉码细网格欠账仍在**：WENO5/Rusanov 的 nx=1600/3200 阶梯本单已递交（cj2378/cj2379，排队中，
-   收尾时未返回），因此「两族外推极限互差」这一独立基（basis）误差界**未报**；已有 nx=200 单点
-   （WENO5 vs HLLC 差 7.386%）只作趋势参考，不作为结论。回归门在有数据后自动启用断言（`test_cross_code_agreement_when_available`）。
+5. **交叉码细网格欠账已清（v2）**：WENO5/Rusanov 的 nx=1600/3200/6400/12800 剖面已入仓，两族逐级 L1 差
+   4.60 → 1.48 → 0.97 → 0.62 %，外推场互差 0.98 %（③ 末节）。这给出不依赖任何已发表曲线的基（basis）误差界：
+   **积分量**族间差 0.0012 % ≪ 族→参考差 0.0097 %，故窗质量那 0.01 % 不可能是格式族差异；
+   但**峰值**族间外推差 2.68 %，与族→参考差 2.0–4.7 % 同量级 → 峰值残余不能全部归给参考（见 ⑥ 末段）。
+   回归门 `test_cross_code_agreement_when_available` 已从 skip 转为实际断言（4 级单调下降 + 外推互差 <2 %）。
 6. **x<0.4 区仍无文献参考**（文献绘图窗只到 0.4），该区只有仓内早时精确黎曼锚，不在本单判据内。
+7. **梯子混样缺陷（v2 修复；旧表两行因此变更，诚实追溯）**：分析脚本原先用**子串**判族
+   （`"weno5" in tag` 之外一律记作 `hllc`），于是
+   (a) `ladder_profile_nx1600_weno7.npz`（WENO7，另一族）被当成 **HLLC** 并覆盖了 nx=1600 的真剖面
+   （峰值 6.711 vs 6.466），(b) `nx200_hllc_limiterminmod_cfl0.2` 换了 limiter+CFL 的**变体**（不是加密级别）
+   按字典序覆盖了 nx=200 标准 HLLC。后果是本文件第一版 JSON 的细三元组被 (a) 污染：峰值 GCI 假升到 8.02 %
+   （真值 0.141 %）、`residual/U_num` 由 22.1 掉到 2.4、`fallback_reason=non-monotone`，
+   并让 `tests/test_compressible_wc_asymptotic.py` 3 个用例在 main 上变红；粗三元组则被 (b) 污染
+   （峰值外推 6.801 而非 9.019）。现改为**显式解析** `nx<N>_<scheme>[_<variant>]`（未知 scheme 直接抛错）、
+   只有 `variant is None` 的规范剖面进梯子、同族同网格两份规范剖面直接抛错，变体与被排除族逐条列进 JSON
+   的 `ladder_rule`。修复后细三元组所有数字与入仓 JSON 逐位一致，粗三元组峰值外推回到 9.019。
+   同类缺陷在 `wc_plateau_convergence.py` 的 `family()` 里也存在（`"weno5" in tag else "fvm"`，会把
+   `nx1600_weno7` 记成 `fvm`）；该脚本的梯子选择靠 `is_baseline`（`tag.endswith("_hllc"/"_weno5")`）兜住了，
+   所以结论未被污染，但**行表标签是错的**，本轮一并用显式解析修掉，`plateau_convergence.json` /
+   `plateau_tables.md` 按当前梯子（含 nx=6400/12800）重算。其诊断结论（window-min 边界退化）不变；
+   旧 `-plateau-diagnosis.md` 引用的 nx=3200 数字在刷新后的 JSON 里仍逐项可取（`rows.nx3200_hllc`）。
+   顺带修掉一个**门禁失效**：`test_analysis_runs_and_reports_well_posed_metrics` 原先 `outdir=DATA`
+   ——测试把结果**原地写回**被检验的工件，陈旧工件永远抓不住（本轮漂移就是这么漏进来的），现改为写 `tmp_path`
+   并与入仓 JSON/markdown 逐项比对。
 
 ## ⑥ 误差判定（逐项 vs 标定更正参考；nx=3200 为最细网格）
 
@@ -144,6 +183,13 @@
 | 近真空浅槽 ρ_min | **0.381 %** | ✅ 是 | ✅ | 参考标定偏差已更正（原始参考下 14.45%） |
 | 峰值密度 ρ_max | **3.00 %** | ❌ 否 | ✅ 是 | 参考/格式差主导（残余 = 22×U_num） |
 | 剖面 L1 | **3.08 %**（nx=1600: 1.86%） | ❌ 否 | ✅ 是 | 地板：加密后距离不降（1.84→3.03%） |
+
+**v2 收窄（诚实申报，不改上表数字但改归因）**：引入 WENO5 族独立外推后，积分量（窗质量）残余
+0.0097 % 是族间差 0.0012 % 的 **8 倍** → 归参考解，原结论成立；但**峰值**的族间外推差 2.68 %
+（6.616 vs 6.443）与「峰值→标定参考」的 2.0–4.7 % **同量级**，故峰值那 3 % 残余**不能整体记在参考解头上**
+——其中相当一部分是 HLLC 与 WENO5 在碰撞峰值处耗散不同的**格式族差**。原归因「残余 = 22×U_num ⇒ 不可加密
+消除」只对**本族**成立，不等于「全部属于参考」。仍支持「参考峰值偏低」的事实是：参考 6.318 **低于两族**
+各自的外推极限 6.443 / 6.616。
 
 **结论（不含糊）**：验收 `<10%` 在 nx=800–3200 的六个良态量上**全部成立**，最差 3.08%，余量 >3 倍；
 但「<3%」只有 3/5 项成立，**峰值与剖面 L1 不达标**，且原因已定量归因于**参考解自身误差地板**
@@ -159,6 +205,8 @@ PYTHONPATH=src python docs/woodward-colella-double-blast/reference/wc_calibrated
 PYTHONPATH=src python docs/woodward-colella-double-blast/ladder/wc_asymptotic_analysis.py
 # 图
 PYTHONPATH=src python docs/woodward-colella-double-blast/ladder/wc_asymptotic_figure.py
+# 低密度区诊断（plateau_convergence.json / plateau_tables.md，本轮同步重算）
+PYTHONPATH=src python docs/woodward-colella-double-blast/ladder/wc_plateau_convergence.py
 # 回归门（9 用例）
 PYTHONPATH=src python -m pytest tests/test_compressible_wc_asymptotic.py -q
 ```
@@ -172,5 +220,6 @@ PYTHONPATH=src python -m pytest tests/test_compressible_wc_asymptotic.py -q
 | 表格（本文件 ③ 的来源） | `ladder/data/asymptotic_tables.md` |
 | 图 | `artifacts/fig_wc_asymptotic_nx3200.png` |
 | 分析 / 绘图脚本 | `ladder/wc_asymptotic_analysis.py`、`ladder/wc_asymptotic_figure.py` |
-| 回归门 | `tests/test_compressible_wc_asymptotic.py` |
+| 回归门（12 用例） | `tests/test_compressible_wc_asymptotic.py` |
+| 低密度区诊断 JSON/表（本轮重算） | `ladder/data/plateau_convergence.json`、`ladder/data/plateau_tables.md` |
 | 细网格剖面 | `ladder/data/ladder_profile_nx{1600,3200}_hllc.npz` |

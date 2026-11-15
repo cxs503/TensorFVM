@@ -175,8 +175,98 @@ def test_cross_code_agreement_when_available(result):
         assert per[3200] < 5.0
         agree = cc["extrapolated_field_agreement"]
         assert agree["distance_percent"] < 5.0
+        # the family difference must *vanish* with refinement (a basis error bound
+        # that holds without any published curve): 4.60 -> 1.48 -> 0.97 -> 0.62 %
+        ladder = [per[n] for n in sorted(per)]
+        assert all(b < a for a, b in zip(ladder, ladder[1:])), ladder
+        assert per[max(per)] < 1.0
+        assert agree["distance_percent"] < 2.0
+        # integral quantities: family difference tiny against the gap to the reference
+        ref_mass = 0.93534261921925
+        fam_mass = abs(agree["mass_hllc"] - agree["mass_weno5"]) / agree["mass_weno5"]
+        gap_mass = abs(agree["mass_hllc"] - ref_mass) / ref_mass
+        assert gap_mass > 5.0 * fam_mass
+        # peak: the family difference is the SAME order as the gap to the reference,
+        # so the peak residual may not be booked to the reference alone (report ⑤.5 / ⑥)
+        fam_peak = abs(agree["peak_hllc"] - agree["peak_weno5"]) / agree["peak_weno5"]
+        assert fam_peak > 0.02
+        assert agree["peak_hllc"] > 6.318 and agree["peak_weno5"] > 6.318
     else:
         assert min(per.values()) < 10.0
+
+
+def test_ladder_classification_is_explicit():
+    """Family and variant must be *parsed*; no substitution may happen by ordering.
+
+    Regression for a real defect: the loader used to fall back to ``hllc`` for
+    every tag that did not contain the substring ``weno5``, so the committed
+    ``nx1600_weno7`` profile silently replaced the nx = 1600 HLLC profile and
+    ``nx200_hllc_limiterminmod_cfl0.2`` (a different limiter *and* CFL, i.e. not
+    a refinement level) replaced the canonical nx = 200 one.  That inflated the
+    peak GCI from 0.14 % to 8.0 % and turned this gate red on main.
+    """
+    profiles = ana.load_profiles()
+    # the WENO7 profile is its own family, never a member of the HLLC ladder
+    assert profiles["nx1600_weno7"]["family"] == "weno7"
+    hllc = ana.ladder_tags(profiles, "hllc")
+    assert hllc[1600] == "nx1600_hllc"
+    assert hllc[200] == "nx200_hllc"          # canonical, not the cfl0.2 variant
+    # the variant is still loaded (nothing is hidden) but flagged non-canonical
+    var = profiles["nx200_hllc_limiterminmod_cfl0.2"]
+    assert var["variant"] == "limiterminmod_cfl0.2"
+    assert all(profiles[t]["variant"] is None for t in hllc.values())
+    # the nx = 1600 ladder point really is the HLLC profile, not the WENO7 one
+    peak = ana.peak_density(profiles[hllc[1600]]["x"], profiles[hllc[1600]]["rho"])
+    assert peak == pytest.approx(6.466034495852625, rel=1e-12)
+    assert peak < profiles["nx1600_weno7"]["rho"].max()
+    # parsing is strict: an unknown scheme must raise instead of defaulting
+    with pytest.raises(ValueError):
+        ana.parse_profile_tag("nx800_rusanov")
+    assert ana.parse_profile_tag("nx200_hllc_limiterminmod_cfl0.2") == (
+        200, "hllc", "limiterminmod_cfl0.2")
+    assert ana.parse_profile_tag("nx3200_weno5") == (3200, "weno5", None)
+
+
+def test_duplicate_canonical_profile_is_rejected():
+    """Two canonical profiles on one grid is an error, not a dict-order accident."""
+    fake = {
+        "nx800_hllc": {"nx": 800, "family": "hllc", "variant": None},
+        "nx800_hllc_copy": {"nx": 800, "family": "hllc", "variant": None},
+    }
+    with pytest.raises(ValueError, match="two canonical profiles"):
+        ana.ladder_tags(fake, "hllc")
+    ok = {
+        "nx800_hllc": {"nx": 800, "family": "hllc", "variant": None},
+        "nx800_hllc_v2": {"nx": 800, "family": "hllc", "variant": "v2"},
+        "nx1600_weno5": {"nx": 1600, "family": "weno5", "variant": None},
+    }
+    assert ana.ladder_tags(ok, "hllc") == {800: "nx800_hllc"}
+    assert ana.ladder_tags(ok, "weno5") == {1600: "nx1600_weno5"}
+
+
+def test_coarse_triplet_artefact_is_reproduced_by_the_canonical_ladder():
+    """200/400/800 must reproduce the historical 9.02 peak artefact.
+
+    ``wc_gci_analysis.py`` reported an extrapolated peak of 9.02 on that triplet,
+    which is why the fine triplet exists at all.  With the canonical nx = 200
+    HLLC profile the number comes back (9.019, +42.8 %, GCI 57 %); with the
+    limiter/CFL variant wrongly substituted it read 6.80 - i.e. the contamination
+    had hidden the artefact it was supposed to expose.  This is a two-script,
+    independent cross-check of the ladder hygiene fix.
+    """
+    profiles = ana.load_profiles()
+    import tensorfvm.compressible.wc_reference as wcr
+
+    ref_cal = wcr.load_reference(ana.CALIBRATED)
+    res = ana.family_analysis(profiles, "hllc", ref_cal, wcr.load_reference(),
+                              ana.THEORY_ORDER)
+    coarse = res["studies"]["peak_density"]["coarse"]
+    assert coarse["triplet"] == [800, 400, 200]
+    assert coarse["extrapolated"] == pytest.approx(9.02, abs=0.01)
+    assert coarse["gci_percent"] > 50.0
+    assert coarse["asymptotic"] is False
+    # the fine triplet must not be the one that produces this artefact
+    assert res["studies"]["peak_density"]["fine"]["extrapolated"] < 7.0
 
 
 def test_json_artifact_matches_recomputation():
@@ -195,3 +285,20 @@ def test_json_artifact_matches_recomputation():
             b[key]["residual_to_reference_percent"], rel=1e-9, abs=1e-12)
     assert (committed["families"]["hllc"]["field_order"]["observed_order"]
             == pytest.approx(fresh["field_order"]["observed_order"], rel=1e-9))
+    # every ladder value and both triplets, not just the budget: a re-classification
+    # of the input profiles (the weno7 / variant defect) changes exactly these
+    for key in ("window_mass", "peak_density", "probe_x0.5"):
+        a_vals = committed["families"]["hllc"]["studies"][key]["values"]
+        b_vals = fresh["studies"][key]["values"]
+        assert sorted(a_vals) == sorted(b_vals)
+        for n in a_vals:
+            assert a_vals[n] == pytest.approx(b_vals[n], rel=1e-12, abs=1e-15)
+        for label in ("fine", "coarse"):
+            assert (committed["families"]["hllc"]["studies"][key][label]["extrapolated"]
+                    == pytest.approx(fresh["studies"][key][label]["extrapolated"], rel=1e-9))
+    # the ladder rule itself is recorded, so a reader can see what entered the study
+    rule = committed["ladder_rule"]
+    assert rule["fine_triplet"] == [3200, 1600, 800]
+    assert rule["canonical_only"] is True
+    assert "nx200_hllc_limiterminmod_cfl0.2" in rule["variants_excluded"]
+    assert committed["profiles"]["nx1600_weno7"]["family"] == "weno7"
