@@ -1,0 +1,201 @@
+{
+  "anchor": "XVAL-FVM-M18737-ROUND2",
+  "round": 4,
+  "bar_percent": 1.0,
+  "ledger_tolerance_percent": 15.0,
+  "predeclaration": 0.3094302050345385,
+  "selfcert_ladder": [
+    {
+      "coarse_nx": 1600,
+      "fine_nx": 3200,
+      "l1_percent": 1.8068425270612034,
+      "peak_percent": 0.5032029082828643,
+      "mass_percent": 0.0028898233479867502,
+      "order": 0.9192696448202137,
+      "order_source": "measured_pair",
+      "u_ref_percent": 2.027522849146825
+    },
+    {
+      "coarse_nx": 3200,
+      "fine_nx": 6400,
+      "l1_percent": 0.9554161247016296,
+      "peak_percent": 0.26205794098918506,
+      "mass_percent": 0.001246180067909149,
+      "order": 0.8132575966174322,
+      "order_source": "measured_pair",
+      "u_ref_percent": 1.2618173586784869
+    },
+    {
+      "coarse_nx": 6400,
+      "fine_nx": 12800,
+      "l1_percent": 0.5437229141389293,
+      "peak_percent": 0.023021571035996842,
+      "mass_percent": 0.0005090225294983794,
+      "order": 0.8132575966174322,
+      "order_source": "extrapolated",
+      "u_ref_percent": 0.7180944445395576
+    }
+  ],
+  "reference_rungs_available": [
+    1600,
+    3200,
+    6400,
+    12800
+  ],
+  "regrades": [
+    {
+      "graded_nx": 1600,
+      "ref_nx": 3200,
+      "measured": true,
+      "l1_percent": 2.314642192099129,
+      "peak_percent": 0.41039092317292647,
+      "mass_percent": 0.0006622168507904334,
+      "measured_percent": 2.314642192099129,
+      "u_ref_percent": 2.027522849146825,
+      "worst_case_percent": 4.342165041245954,
+      "bar_percent": 1.0,
+      "verdict": "fail",
+      "margin_percent": -3.342165041245954,
+      "reference_u_ref_percent": 2.027522849146825,
+      "reference_self_certified": false,
+      "delta_l1_to_next_percent": 0.5178817239190656,
+      "within_claimed_u_ref": true
+    },
+    {
+      "graded_nx": 1600,
+      "ref_nx": 6400,
+      "measured": true,
+      "l1_percent": 2.8325239160181948,
+      "peak_percent": 0.14815116662825803,
+      "mass_percent": 0.0019083886663003719,
+      "measured_percent": 2.8325239160181948,
+      "u_ref_percent": 1.2618173586784869,
+      "worst_case_percent": 4.094341274696681,
+      "bar_percent": 1.0,
+      "verdict": "fail",
+      "margin_percent": -3.0943412746966814,
+      "reference_u_ref_percent": 1.2618173586784869,
+      "reference_self_certified": true,
+      "delta_l1_to_next_percent": 0.41875323708875856,
+      "within_claimed_u_ref": true
+    },
+    {
+      "graded_nx": 1600,
+      "ref_nx": 12800,
+      "measured": true,
+      "l1_percent": 3.2512771531069533,
+      "peak_percent": 0.12473095002508143,
+      "mass_percent": 0.002417401481655299,
+      "measured_percent": 3.2512771531069533,
+      "u_ref_percent": 0.7180944445395576,
+      "worst_case_percent": 3.9693715976465107,
+      "bar_percent": 1.0,
+      "verdict": "fail",
+      "margin_percent": -2.9693715976465107,
+      "reference_u_ref_percent": 0.7180944445395576,
+      "reference_self_certified": true
+    },
+    {
+      "graded_nx": 3200,
+      "ref_nx": 6400,
+      "measured": true,
+      "l1_percent": 1.4056605907549822,
+      "peak_percent": 0.7816110445731231,
+      "mass_percent": 0.0004236578621783554,
+      "measured_percent": 1.4056605907549822,
+      "u_ref_percent": 1.2618173586784869,
+      "worst_case_percent": 2.667477949433469,
+      "bar_percent": 1.0,
+      "verdict": "fail",
+      "margin_percent": -1.667477949433469,
+      "reference_u_ref_percent": 1.2618173586784869,
+      "reference_self_certified": true,
+      "delta_l1_to_next_percent": 0.362864693680925,
+      "within_claimed_u_ref": true
+    },
+    {
+      "graded_nx": 3200,
+      "ref_nx": 12800,
+      "measured": true,
+      "l1_percent": 1.7685252844359072,
+      "peak_percent": 0.7604024784683446,
+      "mass_percent": 0.0009326782351779585,
+      "measured_percent": 1.7685252844359072,
+      "u_ref_percent": 0.7180944445395576,
+      "worst_case_percent": 2.486619728975465,
+      "bar_percent": 1.0,
+      "verdict": "fail",
+      "margin_percent": -1.486619728975465,
+      "reference_u_ref_percent": 0.7180944445395576,
+      "reference_self_certified": true
+    },
+    {
+      "graded_nx": 6400,
+      "ref_nx": 12800,
+      "measured": true,
+      "l1_percent": 0.8930772870380906,
+      "peak_percent": 0.04441609824140254,
+      "mass_percent": 0.00022142970442169175,
+      "measured_percent": 0.8930772870380906,
+      "u_ref_percent": 0.7180944445395576,
+      "worst_case_percent": 1.6111717315776484,
+      "bar_percent": 1.0,
+      "verdict": "upper_bound_only",
+      "margin_percent": -0.6111717315776484,
+      "reference_u_ref_percent": 0.7180944445395576,
+      "reference_self_certified": true
+    }
+  ],
+  "checks": {
+    "P1": null,
+    "P2": null,
+    "P3": {
+      "criterion": "|dL1| <= U_ref(coarser reference)",
+      "graded_nx": 3200,
+      "ref_from": 6400,
+      "ref_to": 12800,
+      "l1_from_percent": 1.4056605907549822,
+      "l1_to_percent": 1.7685252844359072,
+      "delta_percent": 0.362864693680925,
+      "claimed_u_ref_percent": 1.2618173586784869,
+      "passed": true
+    },
+    "P4": {
+      "criterion": "measured L1 + U_ref(finest reference) < 1 %",
+      "graded_nx": 6400,
+      "ref_nx": 12800,
+      "u_ref_percent": 0.7180944445395576,
+      "u_ref_order_source": "extrapolated",
+      "measured_percent": 0.8930772870380906,
+      "worst_case_percent": 1.6111717315776484,
+      "bar_percent": 1.0,
+      "verdict": "upper_bound_only",
+      "margin_percent": -0.6111717315776484,
+      "passed": false
+    },
+    "P5": {
+      "satisfiable": true,
+      "nx_ref_needed": 133120.56838885284,
+      "allowance_percent": 0.10692271296190936,
+      "note": "extrapolated from the observed self-certification order",
+      "predicted_in_predeclaration": 133120.56838885284
+    }
+  },
+  "round3_claim": {
+    "graded_nx": 6400,
+    "l1_percent": 0.8930772870380906,
+    "ref_nx": 12800
+  },
+  "next_rung_prediction": null,
+  "finest_reference": 12800,
+  "figures": [
+    {
+      "path": "figures/fig_r4_u_ref.png",
+      "caption": "\u53c2\u8003\u65cf\u81ea\u8ba4\u8bc1\u9636\u68af\u4e0e\u5176 Richardson \u4e0d\u786e\u5b9a\u5ea6 U_ref\uff08\u5de6\uff09\uff0c\u4ee5\u53ca\u4e3a\u8ba9 <1 % \u8ba4\u8bc1\u6210\u7acb\u6240\u9700\u7684\u53c2\u8003\u5206\u8fa8\u7387\uff08\u53f3\uff09\u3002"
+    },
+    {
+      "path": "figures/fig_r4_regrade.png",
+      "caption": "\u540c\u4e00\u6279\u88ab\u5b9a\u7ea7\u89e3\u5bf9\u4e0d\u540c\u53c2\u8003\u6863\u4f4d\u7684\u91cd\u65b0\u5b9a\u7ea7\uff1a\u8bef\u5dee\u968f\u53c2\u8003\u52a0\u5bc6\u800c\u79fb\u52a8\uff08\u65b9\u5411\u7531\u53c2\u8003\u662f\u5426\u66f4\u63a5\u8fd1\u771f\u89e3\u51b3\u5b9a\uff09\uff0c\u8bef\u5dee\u68d2\u4e3a\u53c2\u8003\u4fa7\u4e0d\u786e\u5b9a\u5ea6 U_ref\u3002"
+    }
+  ]
+}
