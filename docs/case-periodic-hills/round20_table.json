@@ -1,0 +1,28 @@
+{
+ "rows": [],
+ "n_pass": 0,
+ "n_fail": 0,
+ "n_withheld": 0,
+ "n_undefined": 0,
+ "n_diverged": 0,
+ "pending": {
+  "laminar:700:96x48": "cj3663",
+  "laminar:1400:96x48": "cj3664",
+  "laminar:2800:96x48": "cj3665"
+ },
+ "re2800_closure_runs": [
+  {
+   "reynolds": 2800.0,
+   "closure": "sst",
+   "x_r_over_H": 7.600045056495248,
+   "tag": null
+  },
+  {
+   "reynolds": 2800.0,
+   "closure": "sst",
+   "x_r_over_H": 7.681601876754162,
+   "tag": null
+  }
+ ],
+ "source": "ERCOFTAC Knowledge Base Wiki, UFR 3-30 Evaluation (\u00a7 'Evaluation'), authored by the case's own authors (Rapp, Breuer, Manhart, Peller); case geometry/BC = Breuer et al. 2009, Computers & Fluids 38:433, doi:10.1016/j.compfluid.2008.05.002"
+}
