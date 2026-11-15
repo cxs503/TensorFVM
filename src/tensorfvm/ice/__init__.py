@@ -19,6 +19,16 @@ and a **soft bound** (outside the calibration domain of empirical models).
 Inputs beyond hard bounds are rejected; inputs beyond soft bounds trigger
 a warning but are accepted (with a flag indicating extrapolation risk).
 
+Repair round m22342
+-------------------
+The m22209 delivery let ``nan`` through as "TYPICAL" (bound comparisons are
+False for NaN) and stopped at the schema layer, so nothing between a JSON
+payload and the resistance arithmetic asked whether the numbers were inside the
+formula's domain.  This package now (a) treats every non-finite value as a
+domain violation, (b) guards the full 12-parameter input set (8 ice + 4 hull),
+and (c) exposes guarded physics entry points (``guarded_level_ice_resistance``)
+plus a benchmark of the guard itself (``python -m tensorfvm.ice``).
+
 References
 ----------
 - ISO 19906:2019 — Petroleum and natural gas industries — Arctic offshore structures
@@ -31,6 +41,13 @@ References
 from .parameters import (
     IceParameter,
     IceParameterBounds,
+    ICE_RESISTANCE_INPUTS,
+    ICE_ONLY_PARAMETERS,
+    SHIP_PARAMETERS,
+    SHIP_LENGTH,
+    SHIP_BEAM,
+    SHIP_DRAFT,
+    SHIP_BLOCK_COEFFICIENT,
     ICE_THICKNESS,
     ICE_STRENGTH,
     ICE_FRICTION,
@@ -43,14 +60,33 @@ from .parameters import (
 )
 from .guardrails import (
     IceGuardrailResult,
+    IceParameterDomainError,
     GuardrailStatus,
     validate_ice_parameters,
+    require_ice_parameters,
     clamp_ice_parameters,
     check_extrapolation_risk,
     get_parameter_report,
 )
+from .load import (
+    GuardedResistance,
+    IceCondition,
+    IceShipGeometry,
+    guarded_level_ice_resistance,
+    level_ice_resistance_kN,
+    lindqvist_terms,
+    require_guarded_level_ice_resistance,
+)
+from .benchmark import run_benchmark, write_artifacts
 
 __all__ = [
+    "ICE_RESISTANCE_INPUTS",
+    "ICE_ONLY_PARAMETERS",
+    "SHIP_PARAMETERS",
+    "SHIP_LENGTH",
+    "SHIP_BEAM",
+    "SHIP_DRAFT",
+    "SHIP_BLOCK_COEFFICIENT",
     "IceParameter",
     "IceParameterBounds",
     "ICE_THICKNESS",
@@ -65,7 +101,18 @@ __all__ = [
     "IceGuardrailResult",
     "GuardrailStatus",
     "validate_ice_parameters",
+    "require_ice_parameters",
     "clamp_ice_parameters",
     "check_extrapolation_risk",
     "get_parameter_report",
+    "IceParameterDomainError",
+    "GuardedResistance",
+    "IceCondition",
+    "IceShipGeometry",
+    "guarded_level_ice_resistance",
+    "level_ice_resistance_kN",
+    "lindqvist_terms",
+    "require_guarded_level_ice_resistance",
+    "run_benchmark",
+    "write_artifacts",
 ]

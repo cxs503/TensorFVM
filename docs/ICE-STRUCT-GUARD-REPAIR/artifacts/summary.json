@@ -1,0 +1,65 @@
+{
+  "schema": "tensorfvm.ice-guard-summary/2",
+  "all_graded_rows_pass": true,
+  "rows": [
+    {
+      "metric": "G1 decision conformance vs independent spec oracle",
+      "ref": "oracle over 180 boundary probes",
+      "got": "180/180 agree",
+      "error": 0.0,
+      "tolerance": 0.03,
+      "passed": true
+    },
+    {
+      "metric": "G2 nan containment (rejected and never echoed back)",
+      "ref": 1.0,
+      "got": 1.0,
+      "error": 0.0,
+      "tolerance": 0.0,
+      "passed": true
+    },
+    {
+      "metric": "G3 +-inf containment (rejected; clamp returns a finite bound)",
+      "ref": 1.0,
+      "got": 1.0,
+      "error": 0.0,
+      "tolerance": 0.0,
+      "passed": true
+    },
+    {
+      "metric": "G4 out-of-domain inputs blocked before the load arithmetic",
+      "ref": 1.0,
+      "got": 1.0,
+      "error": 0.0,
+      "tolerance": 0.0,
+      "passed": true
+    },
+    {
+      "metric": "G5 in-domain pass-through (guard must not perturb the load)",
+      "ref": "guarded == unguarded",
+      "got": "max rel diff 0.000e+00",
+      "error": 0.0,
+      "tolerance": 1e-12,
+      "passed": true
+    },
+    {
+      "metric": "G6 legacy anchor magnitudes (out-of-domain load reproduction)",
+      "ref": "2450 MN (h=50 m) / 143.9 MN (sigma_c=100 MPa) as recorded 2026-11-09",
+      "got": "max rel deviation 0.637",
+      "error": 0.6371751950105616,
+      "tolerance": 0.03,
+      "passed": null
+    }
+  ],
+  "repro_cmd": "PYTHONPATH=src python -m tensorfvm.ice --out docs/ICE-STRUCT-GUARD-REPAIR/artifacts",
+  "artifacts": [
+    "benchmark.json",
+    "decision_grid.json",
+    "fig_ice_guard_benchmark.png",
+    "legacy_anchor.json",
+    "load_path_closure.json",
+    "parameter_report.txt",
+    "summary.json"
+  ],
+  "figure_written": true
+}

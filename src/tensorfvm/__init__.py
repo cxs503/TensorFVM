@@ -1,5 +1,6 @@
 """PyTorch finite-volume flow solvers."""
 
+from . import ice
 from .solver import SimpleSolver, SolverConfig, SolverResult
 from .body_fitted import BodyFittedMesh, BodyFittedSolver, CGridMesh, FlatPlateMesh
 from .solver3d import Cylinder3DConfig, Cylinder3DResult, Cylinder3DSolver, PressureSolveInfo
@@ -11,7 +12,8 @@ from .backend_registry import (
 )
 from .mesh_api import Mesh2D, validate_mesh2d
 
-__all__ = ["SimpleSolver", "SolverConfig", "SolverResult", "ThreeElementMesh",
+__all__ = [
+    "ice","SimpleSolver", "SolverConfig", "SolverResult", "ThreeElementMesh",
            "SolverBackend", "build_mesh", "get_backend", "register_backend",
            "registered_backends",
            "Mesh2D", "validate_mesh2d",

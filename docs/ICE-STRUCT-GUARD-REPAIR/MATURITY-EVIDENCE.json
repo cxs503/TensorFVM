@@ -1,0 +1,127 @@
+{
+  "anchor": "JOUR-ICE-STRUCT-GUARD",
+  "mission": 22342,
+  "repo": "TensorFVM",
+  "level_claim": 4,
+  "impl_files": [
+    "src/tensorfvm/ice/parameters.py",
+    "src/tensorfvm/ice/guardrails.py",
+    "src/tensorfvm/ice/load.py",
+    "src/tensorfvm/ice/benchmark.py"
+  ],
+  "entry": {
+    "module": "src/tensorfvm/ice/__main__.py",
+    "console_script": "tensorfvm-ice = tensorfvm.ice.__main__:main",
+    "commands": [
+      "PYTHONPATH=src python -m tensorfvm.ice --out docs/ICE-STRUCT-GUARD-REPAIR/artifacts",
+      "PYTHONPATH=src python -m tensorfvm.ice --case <case.json>"
+    ],
+    "package_export": "tensorfvm.ice (src/tensorfvm/__init__.py)"
+  },
+  "run_artifacts": [
+    "docs/ICE-STRUCT-GUARD-REPAIR/artifacts/benchmark.json",
+    "docs/ICE-STRUCT-GUARD-REPAIR/artifacts/channel_run/noslip_fvm_72x12/metrics.json",
+    "docs/ICE-STRUCT-GUARD-REPAIR/artifacts/channel_run/slip_1d_16/fields.json",
+    "docs/ICE-STRUCT-GUARD-REPAIR/artifacts/channel_run/slip_1d_16/metrics.json",
+    "docs/ICE-STRUCT-GUARD-REPAIR/artifacts/channel_run/slip_1d_32/fields.json",
+    "docs/ICE-STRUCT-GUARD-REPAIR/artifacts/channel_run/slip_1d_32/metrics.json",
+    "docs/ICE-STRUCT-GUARD-REPAIR/artifacts/channel_run/summary.json",
+    "docs/ICE-STRUCT-GUARD-REPAIR/artifacts/decision_grid.json",
+    "docs/ICE-STRUCT-GUARD-REPAIR/artifacts/fig_ice_guard_benchmark.png",
+    "docs/ICE-STRUCT-GUARD-REPAIR/artifacts/legacy_anchor.json",
+    "docs/ICE-STRUCT-GUARD-REPAIR/artifacts/load_path_closure.json",
+    "docs/ICE-STRUCT-GUARD-REPAIR/artifacts/parameter_report.txt",
+    "docs/ICE-STRUCT-GUARD-REPAIR/artifacts/summary.json"
+  ],
+  "integration_callers": [
+    {
+      "file": "src/tensorfvm/ice/load.py",
+      "how": "guarded_level_ice_resistance gates every Lindqvist evaluation"
+    },
+    {
+      "file": "src/tensorfvm/ice_channel.py",
+      "how": "ice_lid_guard() called in run_all() before any flow solve; impossible lid raises IceParameterDomainError"
+    },
+    {
+      "file": "src/tensorfvm/__init__.py",
+      "how": "package root exports the ice subpackage"
+    },
+    {
+      "file": "pyproject.toml",
+      "how": "console script tensorfvm-ice"
+    }
+  ],
+  "tests": [
+    "tests/test_ice_guard_pipeline.py",
+    "tests/test_ice_guardrails.py",
+    "tests/test_ice_channel.py"
+  ],
+  "test_result": "181 passed, 0 failed (pytest, 2026-11-15)",
+  "benchmark": {
+    "file": "docs/ICE-STRUCT-GUARD-REPAIR/artifacts/benchmark.json",
+    "rows_file": "docs/ICE-STRUCT-GUARD-REPAIR/REPORT.md \u00a73A",
+    "tolerance": 0.03,
+    "all_graded_rows_pass": true,
+    "rows": [
+      {
+        "metric": "G1 decision conformance vs independent spec oracle",
+        "ref": "oracle over 180 boundary probes",
+        "got": "180/180 agree",
+        "error": 0.0,
+        "tolerance": 0.03,
+        "passed": true
+      },
+      {
+        "metric": "G2 nan containment (rejected and never echoed back)",
+        "ref": 1.0,
+        "got": 1.0,
+        "error": 0.0,
+        "tolerance": 0.0,
+        "passed": true
+      },
+      {
+        "metric": "G3 +-inf containment (rejected; clamp returns a finite bound)",
+        "ref": 1.0,
+        "got": 1.0,
+        "error": 0.0,
+        "tolerance": 0.0,
+        "passed": true
+      },
+      {
+        "metric": "G4 out-of-domain inputs blocked before the load arithmetic",
+        "ref": 1.0,
+        "got": 1.0,
+        "error": 0.0,
+        "tolerance": 0.0,
+        "passed": true
+      },
+      {
+        "metric": "G5 in-domain pass-through (guard must not perturb the load)",
+        "ref": "guarded == unguarded",
+        "got": "max rel diff 0.000e+00",
+        "error": 0.0,
+        "tolerance": 1e-12,
+        "passed": true
+      },
+      {
+        "metric": "G6 legacy anchor magnitudes (out-of-domain load reproduction)",
+        "ref": "2450 MN (h=50 m) / 143.9 MN (sigma_c=100 MPa) as recorded 2026-11-09",
+        "got": "max rel deviation 0.637",
+        "error": 0.6371751950105616,
+        "tolerance": 0.03,
+        "passed": null
+      }
+    ]
+  },
+  "repro_cmd": "PYTHONPATH=src python -m tensorfvm.ice --out docs/ICE-STRUCT-GUARD-REPAIR/artifacts",
+  "figures": [
+    "docs/ICE-STRUCT-GUARD-REPAIR/fig_guard_gate.png",
+    "docs/ICE-STRUCT-GUARD-REPAIR/fig_ice_channel_physics.png",
+    "docs/ICE-STRUCT-GUARD-REPAIR/artifacts/fig_ice_guard_benchmark.png"
+  ],
+  "report": "docs/ICE-STRUCT-GUARD-REPAIR/REPORT.md",
+  "withheld": [
+    "G6 legacy anchor magnitudes (platform build of 2026-11-09 not in tree)",
+    "level-ice resistance accuracy vs full-scale trials"
+  ]
+}

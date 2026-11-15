@@ -24,13 +24,13 @@ Method
 from __future__ import annotations
 
 import json
-import math
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal
 
 import torch
 
+from .ice.guardrails import IceParameterDomainError, validate_ice_parameters
 from .solver import SimpleSolver, SolverConfig
 
 
@@ -43,6 +43,14 @@ class IceChannelConfig:
     kinematic_viscosity_m2_s: float = 1e-5
     bulk_velocity_m_s: float = 0.0005
     top_bc: Literal["no_slip", "slip"] = "no_slip"
+    # Scale-model ice lid sitting on top of the channel.  These are guarded
+    # before the flow solve (see ``ice_lid_guard``): the m22209 anchor failed
+    # because an ice-domain input three orders of magnitude out of range could
+    # reach a solver at all.
+    ice_lid_thickness_m: float = 0.02
+    ice_temperature_c: float = -10.0
+    ice_strength_mpa: float = 1.5
+    ice_friction_coeff: float = 0.10
 
     @property
     def reynolds(self) -> float:
@@ -65,6 +73,32 @@ class IceChannelConfig:
     @property
     def ref_tau_top(self) -> float:
         return 0.0 if self.top_bc == "slip" else self.ref_tau_bottom
+
+
+def ice_lid_guard(cfg: IceChannelConfig):
+    """Validate the scale-model ice lid before it is used by the solver.
+
+    The channel is a 2 cm lab-scale model, i.e. below the field-scale
+    calibration band of the ice parameters; extrapolation is therefore allowed
+    *with warnings*, but hard (validity) bounds are enforced: an impossible lid
+    (``ice_lid_thickness_m = 50``, a non-finite temperature, a negative
+    strength) raises :class:`IceParameterDomainError` instead of being solved.
+
+    Returns
+    -------
+    IceGuardrailResult
+        The guard verdict, also recorded in ``run_all``'s ``summary.json``.
+    """
+    ice_state = {
+        "ice_thickness": cfg.ice_lid_thickness_m,
+        "ice_temperature": cfg.ice_temperature_c,
+        "ice_strength": cfg.ice_strength_mpa,
+        "ice_friction": cfg.ice_friction_coeff,
+    }
+    result = validate_ice_parameters(ice_state, allow_extrapolation=True)
+    if not result.is_valid:
+        raise IceParameterDomainError(result)
+    return result
 
 
 def analytic_u(y, cfg: IceChannelConfig):
@@ -299,6 +333,14 @@ def run_all(output_dir: Path = Path("artifacts/ice_channel")) -> dict:
     output_dir.mkdir(parents=True, exist_ok=True)
     results = {}
 
+    # Guardrail gate on the ice lid: refuses impossible ice states before any
+    # fluid solve, so the flow solution can never be built on silent
+    # extrapolation.
+    lid_guards = {
+        bc: ice_lid_guard(IceChannelConfig(top_bc=bc)).summary
+        for bc in ("no_slip", "slip")
+    }
+
     # No-slip case (FVM)
     cfg_noslip = IceChannelConfig(top_bc="no_slip")
     noslip_cases = []
@@ -332,6 +374,7 @@ def run_all(output_dir: Path = Path("artifacts/ice_channel")) -> dict:
 
     summary = {
         "schema": "tensorfvm.ice-channel-comparison/1",
+        "ice_lid_guard": lid_guards,
         "solver": {
             "no_slip": "TensorFVM SimpleSolver (verified MAC-SIMPLE)",
             "slip": "1-D tridiagonal FV (fully-developed analytic)",
