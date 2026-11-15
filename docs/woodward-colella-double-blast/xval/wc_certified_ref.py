@@ -67,6 +67,9 @@ CERTIFIED_PERCENT = 1.0                 # the <1 % bar this round targets
 #: the finer independent rungs this round adds as the new reference
 FINE_WENO5 = (6400, 12800)
 
+#: MUSCL/HLLC rungs to grade against the certified reference (includes nx=6400)
+HLLC_RUNGS = ("nx800_hllc", "nx1600_hllc", "nx3200_hllc", "nx6400_hllc")
+
 
 def _load(tag: str) -> dict:
     """Load a stored profile by ``nxNNN_<family>`` tag."""
@@ -124,17 +127,20 @@ def run() -> dict:
 
     # --- grade the TensorFVM MUSCL/HLLC ladder against the new reference ------
     graded = {}
-    for tag in ("nx800_hllc", "nx1600_hllc", "nx3200_hllc"):
-        p = _load(tag)
-        graded[tag] = {
-            "l1_percent": l1_percent(p["x"], p["rho"], ref["x"], ref["rho"]),
-            "peak_percent": peak_percent(p["x"], p["rho"], ref["x"], ref["rho"]),
-            "mass_percent": mass_percent(p["x"], p["rho"], ref["x"], ref["rho"]),
-            "source": p["source"],
-        }
+    for tag in HLLC_RUNGS:
+        try:
+            p = _load(tag)
+            graded[tag] = {
+                "l1_percent": l1_percent(p["x"], p["rho"], ref["x"], ref["rho"]),
+                "peak_percent": peak_percent(p["x"], p["rho"], ref["x"], ref["rho"]),
+                "mass_percent": mass_percent(p["x"], p["rho"], ref["x"], ref["rho"]),
+                "source": p["source"],
+            }
+        except FileNotFoundError:
+            graded[tag] = {"measured": False}
 
     # --- cross-family floor: MUSCL/HLLC vs published reference (round-2 number)
-    pub = _load("nx3200_hllc")  # our finest MUSCL rung
+    pub = _load("nx3200_hllc")  # our finest MUSCL rung at round-2 time
     pub_ref = wcr.load_reference(calibrated=True)   # (x, rho) table
     pub_l1 = l1_percent(pub["x"], pub["rho"], pub_ref["x"], pub_ref["rho"])
     pub_peak = peak_percent(pub["x"], pub["rho"], pub_ref["x"], pub_ref["rho"])
@@ -142,8 +148,11 @@ def run() -> dict:
     # gate 2: the finer independent reference must remove the reference-side error
     floor_removed = (graded["nx3200_hllc"]["l1_percent"] < pub_l1)
 
-    # --- verdict --------------------------------------------------------------
-    finest = graded["nx3200_hllc"]
+    # --- verdict: check the finest *measured* rung ---------------------------
+    measured_tags = [t for t in HLLC_RUNGS if graded[t].get("measured", True)]
+    finest_tag = measured_tags[-1] if measured_tags else "nx3200_hllc"
+    finest = graded[finest_tag]
+
     # "certified" is honest only if BOTH the reference is self-certified <1%
     # AND the graded solution itself is <1% (L1 and peak) against it.
     graded_under_1 = (finest["l1_percent"] < CERTIFIED_PERCENT
@@ -151,6 +160,7 @@ def run() -> dict:
     verdict = {
         "certified": bool(certified and floor_removed and graded_under_1),
         "graded_under_1": bool(graded_under_1),
+        "finest_tag": finest_tag,
         "reference": {
             "family": "weno5", "grid": FINE_WENO5[-1],
             "self_l1_percent": ref_l1, "self_peak_percent": ref_peak,
@@ -160,20 +170,21 @@ def run() -> dict:
             "l1_percent": pub_l1, "peak_percent": pub_peak,
         },
         "vs_certified_reference": {
-            "nx3200_hllc": {
-                "l1_percent": finest["l1_percent"],
-                "peak_percent": finest["peak_percent"],
-                "mass_percent": finest["mass_percent"],
-            },
+            tag: {
+                "l1_percent": graded[tag]["l1_percent"],
+                "peak_percent": graded[tag]["peak_percent"],
+                "mass_percent": graded[tag]["mass_percent"],
+            }
+            for tag in measured_tags
         },
         "ledger_tolerance_percent": TOLERANCE_PERCENT,
         "certified_bar_percent": CERTIFIED_PERCENT,
         "floor_removed": bool(floor_removed),
         "note": (
-            "certified=True means the TensorFVM MUSCL/HLLC nx=3200 solution "
+            "certified=True means the TensorFVM MUSCL/HLLC %s solution "
             "agrees with an independent WENO5@%d reference to <1%% (L1 and "
             "peak), and that reference is itself self-converged to <1%% "
-            "(WENO5@%d vs WENO5@%d)." % (FINE_WENO5[-1], FINE_WENO5[0], FINE_WENO5[-1])
+            "(WENO5@%d vs WENO5@%d)." % (finest_tag, FINE_WENO5[-1], FINE_WENO5[0], FINE_WENO5[-1])
         ),
     }
     return verdict
