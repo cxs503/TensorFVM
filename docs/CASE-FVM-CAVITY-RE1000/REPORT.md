@@ -130,6 +130,19 @@ PYTHONPATH=src python docs/CASE-FVM-CAVITY-RE1000/make_report.py
 | u_min | 1.90 | 1.45% | 0.63% | 1.80% | ✓ |
 | v_max | 1.98 | 1.29% | 0.79% | 1.83% | ✓ |
 
-即最细网格与 Ghia 的差**小于自身离散带**，故本报告不应被读作「求解器精度 0.6%」；时间步（Courant）轴在本包内为 not_run。机器门已按平台登记裁判行收紧到 3% / 0.01 L，由 `tests/test_case_cavity_re1000_gate_registered.py` 断言（负对照：3%~5% 窗口内必然 FAIL）。
+即最细网格与 Ghia 的差**小于自身离散带**，故本报告不应被读作「求解器精度 0.6%」。
+
+同网格（n = 128）、同初值、同收敛判据下只改 Courant 数（0.075/0.15/0.3，共 3 个）的对照给出：
+
+| 量 | 相对基线的最大偏差 |
+|---|---|
+| u_min | -3.626e-06% |
+| v_max | +4.424e-06% |
+| psi_min | -7.178e-06% |
+| 中心线 max\|Δu\| / max\|Δv\| | 0.00e+00 / 0.00e+00 U |
+
+最坏相对偏差 **5.999e-06%**（判据 0.1%）→ `time_step_independent = True`；即判据 C1/C2 的偏差是空间离散的，时间步方向的贡献比判据小若干数量级（详见 `UNCERTAINTY.md` §4 与图 UQ-2）。
+
+机器门已按平台登记裁判行收紧到 3% / 0.01 L，由 `tests/test_case_cavity_re1000_gate_registered.py` 断言（负对照：3%~5% 窗口内必然 FAIL）。
 
 * `figures/` —— 本报告的三张图

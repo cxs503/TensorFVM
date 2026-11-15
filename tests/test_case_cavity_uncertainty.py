@@ -13,6 +13,7 @@ Two layers:
 
 from __future__ import annotations
 
+import importlib.util
 import json
 import pathlib
 
@@ -148,11 +149,83 @@ def test_claimed_numbers_are_the_ones_in_the_report() -> None:
     assert abs(v["fine_minus_reference_relative"]) <= v["gci_fine_relative"]
 
 
-def test_time_step_independence_is_recorded() -> None:
+DT_RUNS = RUNS / "dt"
+
+
+def _dt_rows() -> dict[float, dict]:
+    rows = {}
+    for path in sorted(DT_RUNS.glob("*/lid_cavity_Re1000_n128.json")):
+        rec = json.loads(path.read_text(encoding="utf-8"))
+        rows[float(rec["solver"]["cfl"])] = rec
+    return rows
+
+
+def test_time_step_band_is_published() -> None:
+    """The Courant axis is no longer not_run: the bundle must carry a band."""
     payload = _payload()
-    if "time_step" not in payload:
-        pytest.skip("this bundle carries no same-grid/different-Courant runs")
+    assert "time_step" in payload, payload.get("time_step_status")
+    assert "time_step_status" not in payload
     ts = payload["time_step"]
-    assert len(ts["runs"]) >= 2
+    assert len(ts["runs"]) >= 2                      # baseline + at least one dt
     assert ts["max_relative_spread"] <= ts["tolerance"]
     assert ts["time_step_independent"] is True
+
+
+def test_time_step_band_is_recomputed_from_the_dt_artefacts() -> None:
+    """Recompute the band from runs/dt/*.json instead of trusting the payload."""
+    payload = _payload()
+    ts = payload["time_step"]
+    baseline = json.loads((RUNS / "lid_cavity_Re1000_n128.json").read_text(encoding="utf-8"))
+    rows = {float(baseline["solver"]["cfl"]): baseline, **_dt_rows()}
+    assert len(rows) == len(ts["runs"])
+    for cfl, rec in rows.items():
+        label = next(lab for lab, c in ts["courant_numbers"].items() if c == cfl)
+        basis = rec["criteria"]["_extremum_basis"]
+        assert ts["quantities"]["u_min"]["values"][label] == pytest.approx(
+            float(basis["u"]["computed"]), abs=1e-12)
+        assert ts["quantities"]["v_max"]["values"][label] == pytest.approx(
+            float(basis["v"]["computed"]), abs=1e-12)
+        assert ts["steps"][label] == rec["steps"]
+        # a row may only enter the band after reaching the *same* steady gate
+        assert rec["converged"] is True
+        assert rec["residual"] <= float(rec["solver"]["tolerance"])
+    # the smallest Courant number must cost the most steps: the band is real work
+    ordered = sorted(ts["courant_numbers"], key=lambda lab: ts["courant_numbers"][lab])
+    steps = [ts["steps"][lab] for lab in ordered]
+    for lo, hi in zip(steps, steps[1:]):
+        assert lo > hi
+
+
+def test_time_step_band_is_smaller_than_the_spatial_band() -> None:
+    """Temporal error must be far below the spatial GCI, else the split is wrong."""
+    payload = _payload()
+    ts = payload["time_step"]
+    spatial = min(payload["quantities"][q]["gci_fine_relative"]
+                  for q in ("u_min", "v_max"))
+    assert ts["max_relative_spread"] < 0.01 * spatial
+    assert ts["max_relative_spread"] < 1e-4
+
+
+def test_dt_study_guard_rejects_a_blow_up() -> None:
+    """The in-loop guard is what makes a divergent Courant number a *recorded* result."""
+    spec = importlib.util.spec_from_file_location(
+        "dt_study", ROOT / "docs" / "CASE-FVM-CAVITY-RE1000" / "dt_study.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    guard = module.make_guard()
+
+    class FakeSolver:
+        def __init__(self, u, v):
+            self.u, self.v = u, v
+
+    good = FakeSolver(torch.zeros(3, 2), torch.zeros(2, 3))
+    guard(good, 250, 1e-4)                                   # nothing to report
+
+    with pytest.raises(module.Diverged):
+        guard(FakeSolver(torch.full((3, 2), float("nan")), torch.zeros(2, 3)), 250, 1e-4)
+    with pytest.raises(module.Diverged):
+        guard(FakeSolver(torch.full((3, 2), float("inf")), torch.zeros(2, 3)), 250, 1e-4)
+    with pytest.raises(module.Diverged):
+        guard(good, 250, float("nan"))
+    with pytest.raises(module.Diverged):
+        guard(good, 250, 1e3)

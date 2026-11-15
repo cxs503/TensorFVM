@@ -350,8 +350,33 @@ def render(summary: dict, bench: dict, fields) -> str:
               f"{pct(abs(e['extrapolated_minus_reference_relative']))} | "
               f"{'✓' if e['reference_within_gci_band'] else '✗'} |")
         a("")
-        a("即最细网格与 Ghia 的差**小于自身离散带**，故本报告不应被读作「求解器精度 0.6%」；"
-          "时间步（Courant）轴在本包内为 not_run。机器门已按平台登记裁判行收紧到 3% / 0.01 L，"
+        a("即最细网格与 Ghia 的差**小于自身离散带**，故本报告不应被读作「求解器精度 0.6%」。")
+        ts = u.get("time_step")
+        if ts:
+            courants = "/".join(f"{c:g}" for c in sorted(ts["courant_numbers"].values()))
+            a("")
+            a(f"同网格（n = {int(ts['grid_n'])}）、"
+              f"同初值、同收敛判据下只改 Courant 数（{courants}，共 {len(ts['runs'])} 个）的对照给出：")
+            a("")
+            a("| 量 | 相对基线的最大偏差 |")
+            a("|---|---|")
+            for name in ("u_min", "v_max", "psi_min"):
+                vals = ts["quantities"][name]["deviation_from_baseline"]
+                worst = max(vals, key=lambda lab: abs(vals[lab]))
+                a(f"| {name} | {100 * vals[worst]:+.3e}% |")
+            d = ts["profile_delta_vs_baseline"]
+            a(f"| 中心线 max\\|Δu\\| / max\\|Δv\\| | {d[ts['baseline']]['max_abs_u']:.2e} / "
+              f"{d[ts['baseline']]['max_abs_v']:.2e} U |")
+            a("")
+            a(f"最坏相对偏差 **{100 * ts['max_relative_spread']:.3e}%**（判据 "
+              f"{100 * ts['tolerance']:.3g}%）→ `time_step_independent = {ts['time_step_independent']}`；"
+              "即判据 C1/C2 的偏差是空间离散的，时间步方向的贡献比判据小若干数量级"
+              "（详见 `UNCERTAINTY.md` §4 与图 UQ-2）。")
+        else:
+            a("")
+            a(f"时间步（Courant）轴：**{u.get('time_step_status', 'not_run')}**（不记 pass）。")
+        a("")
+        a("机器门已按平台登记裁判行收紧到 3% / 0.01 L，"
           "由 `tests/test_case_cavity_re1000_gate_registered.py` 断言（负对照：3%~5% 窗口内必然 FAIL）。")
         a("")
     a("* `figures/` —— 本报告的三张图")
