@@ -1,0 +1,72 @@
+{
+  "backend": "immersed",
+  "anchor_slug": "GAP-DIFFLBM-EXT-LIT-CYL",
+  "spec": {
+    "cells_per_diameter": 32,
+    "diameter": 1.0,
+    "velocity": 1.0,
+    "reynolds": 100.0,
+    "dt": 0.02,
+    "t_end": 120.0,
+    "perturbation": 0.1,
+    "upstream_lengths": 10.0,
+    "downstream_lengths": 20.0,
+    "half_height": 10.0,
+    "box": [
+      -2.0,
+      3.0,
+      -1.5,
+      1.5
+    ],
+    "poisson_tol": 1e-10,
+    "max_steps": 10000000
+  },
+  "grid": {
+    "nx": 960,
+    "ny": 640,
+    "dx": 0.03125,
+    "dy": 0.03125,
+    "cells_per_diameter": 32
+  },
+  "control_box": {
+    "i0": 256,
+    "i1": 416,
+    "j0": 272,
+    "j1": 368,
+    "x": [
+      -2.0,
+      3.0
+    ],
+    "y": [
+      -1.5,
+      1.5
+    ]
+  },
+  "elapsed_s": 2638.525724229985,
+  "steps": 6001,
+  "s_per_step": 0.4396810072037969,
+  "n_samples": 6001,
+  "t_start": 0.02,
+  "t_end": 120.02,
+  "shedding_detected": false,
+  "st": null,
+  "st_fft": null,
+  "st_zerocross": null,
+  "cl_amplitude": NaN,
+  "cd_mean": NaN,
+  "freq_cross_check": null,
+  "cl_amplitude_second_half": NaN,
+  "cd_min": NaN,
+  "cd_max": NaN,
+  "statistics_window": [
+    90.02,
+    120.02
+  ],
+  "statistics_periods": 0.0,
+  "window_ok": false,
+  "gate_reasons": [
+    "no vortex shedding: lift half-amplitude nan < gate 0.05"
+  ],
+  "force_history_rows": 6001,
+  "postprocessed": "statistics+publish re-run locally from the node force_history.csv"
+}

@@ -1,0 +1,92 @@
+{
+  "anchor_slug": "GAP-DIFFLBM-EXT-LIT-CYL",
+  "case": "cylinder-re100-unbounded",
+  "backend": "immersed",
+  "repo": "TensorFVM",
+  "reference": {
+    "values": {
+      "cd_mean": 1.34,
+      "st": 0.164,
+      "cl_amplitude": 0.32
+    },
+    "tolerance_band": {
+      "cd_mean": 0.07,
+      "st": 0.005
+    },
+    "citation": "Braza et al. JFM 165 (1986) 79-130, doi:10.1017/S0022112086003014; Schafer & Turek, NNFM 52 (1996), doi:10.1007/978-3-322-89849-4_39",
+    "source_url": "https://wwwold.mathematik.tu-dortmund.de/~featflow/en/benchmarks/cfdbenchmarking/flow/dfg_benchmark2_re100.html",
+    "file": "/srv/tensor/agent/work/m21018/artifacts/case-cylinder-re100/reference/reference.json"
+  },
+  "got": {
+    "cd_mean": NaN,
+    "st": null
+  },
+  "errors": {
+    "cd_mean": {
+      "reference": 1.34,
+      "computed": NaN,
+      "relative_error": NaN,
+      "tolerance_relative": 0.05223880597014926,
+      "passed": false
+    },
+    "st": {
+      "reference": 0.164,
+      "computed": null,
+      "relative_error": null,
+      "tolerance_relative": 0.03048780487804878,
+      "passed": false
+    }
+  },
+  "cross_check": {
+    "cl_amplitude": {
+      "reference": 0.32,
+      "computed": NaN,
+      "relative_error": NaN,
+      "role": "informational (Braza 1986 reports Cl' ~ 0.3 at Re = 100)"
+    }
+  },
+  "gates": {
+    "reasons": [
+      "no vortex shedding: lift half-amplitude nan < gate 0.05"
+    ],
+    "shedding_detected": false,
+    "passed": false
+  },
+  "passed": false,
+  "verdict": "GATED: no vortex shedding: lift half-amplitude nan < gate 0.05",
+  "run": {
+    "steps": 6001,
+    "elapsed_s": 2638.525724229985,
+    "grid": {
+      "nx": 960,
+      "ny": 640,
+      "dx": 0.03125,
+      "dy": 0.03125,
+      "cells_per_diameter": 32
+    },
+    "spec": {
+      "cells_per_diameter": 32,
+      "diameter": 1.0,
+      "velocity": 1.0,
+      "reynolds": 100.0,
+      "dt": 0.02,
+      "t_end": 120.0,
+      "perturbation": 0.1,
+      "upstream_lengths": 10.0,
+      "downstream_lengths": 20.0,
+      "half_height": 10.0,
+      "box": [
+        -2.0,
+        3.0,
+        -1.5,
+        1.5
+      ],
+      "poisson_tol": 1e-10,
+      "max_steps": 10000000
+    },
+    "statistics_window": [
+      90.02,
+      120.02
+    ]
+  }
+}
