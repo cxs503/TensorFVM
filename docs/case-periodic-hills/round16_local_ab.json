@@ -1,0 +1,31 @@
+{
+ "round": 16,
+ "kind": "coarse-grid A/B of the omega sink linearisation (trend probe)",
+ "mesh": "32x16",
+ "steps": 2000,
+ "note": "trend only: 2000 steps = 40 time units, non-stationary; the acceptance numbers come from the 96x48 runs",
+ "rows": [
+  {
+   "variant": "patankar",
+   "mesh": "32x16",
+   "steps": 2000,
+   "x_r_over_H": 4.5704617468678395,
+   "x_r_over_H_error": 0.14410828710340082,
+   "max_nu_t_ratio": 10.372690995453652,
+   "mean_nu_t_ratio": 3.4929716262356556,
+   "stationary": false,
+   "profile_pass": "1/7"
+  },
+  {
+   "variant": "newton2",
+   "mesh": "32x16",
+   "steps": 2000,
+   "x_r_over_H": 4.618260327762968,
+   "x_r_over_H_error": 0.1351572419919535,
+   "max_nu_t_ratio": 61.000798797015115,
+   "mean_nu_t_ratio": 18.338648979762056,
+   "stationary": false,
+   "profile_pass": "0/7"
+  }
+ ]
+}

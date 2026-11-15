@@ -278,11 +278,19 @@ class SSTKOmega:
         k = self.k
         omega = self.omega
         nu_t = cl["nu_t"]
-        # implicit (linearised) destruction coefficients:
-        #   d(beta* k omega)/d k   = beta* omega
-        #   d(beta omega^2)/d omega = 2 beta omega
+        # implicit (linearised) destruction coefficients (round 16):
+        # Patankar's sink linearisation S(phi) ~ S_C + S_P phi uses
+        #   S_P = S/phi  ->  beta* k omega / k   = beta* omega      (k)
+        #                    beta* omega^2 / omega = beta* omega     (omega)
+        # Rounds 10--15 used the *Newton* coefficient 2 beta omega for omega
+        # without its compensating constant +beta omega^2, so the implicit step
+        # removed twice the model destruction.  The fixed point of that step is
+        # 2 beta omega^2 = gamma P_k / nu_t, i.e. omega low by sqrt(2), and with
+        # k = P_k / (beta* omega) it inflates nu_t = a1 k / max(a1 omega,
+        # sqrt(S2) F2) by up to 2x wherever the a1-omega branch dominates -- the
+        # over-diffusive, too-short separation bubble of rounds 11--15.
         k_destruction_linear = cfg.beta_star * omega
-        omega_destruction_linear = 2.0 * cl["beta"] * omega
+        omega_destruction_linear = cl["beta"] * omega
         # production (per unit mass, already limited by the closure)
         production = cl["production_limited"]
         if cfg.production_limit is not None:
