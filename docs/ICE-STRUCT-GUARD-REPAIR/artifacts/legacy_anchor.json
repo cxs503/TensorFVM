@@ -1,0 +1,24 @@
+{
+  "h_50m": {
+    "ref_MN": 2450.0,
+    "ref_source": "JOUR-ICE-STRUCT-GUARD anchor record (platform build of 2026-11-09)",
+    "got_MN_in_repo_reproduction": 3428.8833462681296,
+    "rel_error": 0.3995442229665835,
+    "guarded_resistance_kN": null,
+    "blocked": true,
+    "guard_errors": [
+      "ice_thickness (h) = 50.0 m is outside physical bounds [0.01, 10.0] m"
+    ]
+  },
+  "sigma_c_100MPa": {
+    "ref_MN": 143.9,
+    "ref_source": "JOUR-ICE-STRUCT-GUARD anchor record (platform build of 2026-11-09)",
+    "got_MN_in_repo_reproduction": 235.58951056201983,
+    "rel_error": 0.6371751950105616,
+    "guarded_resistance_kN": null,
+    "blocked": true,
+    "guard_errors": [
+      "ice_strength (\u03c3_c) = 100.0 MPa is outside physical bounds [0.1, 30.0] MPa"
+    ]
+  }
+}

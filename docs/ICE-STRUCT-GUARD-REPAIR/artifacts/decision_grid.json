@@ -1,0 +1,1262 @@
+[
+  {
+    "param": "ice_thickness",
+    "value": 0.00999001,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_thickness",
+    "value": 0.01,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_thickness",
+    "value": 0.01000999,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_thickness",
+    "value": 0.04999001,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_thickness",
+    "value": 0.05,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_thickness",
+    "value": 0.050009990000000004,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_thickness",
+    "value": 0.3,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_thickness",
+    "value": 1.4,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_thickness",
+    "value": 2.5,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_thickness",
+    "value": 4.99999001,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_thickness",
+    "value": 5.0,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_thickness",
+    "value": 5.00000999,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_thickness",
+    "value": 9.99999001,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_thickness",
+    "value": 10.0,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_thickness",
+    "value": 10.00000999,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_strength",
+    "value": 0.0999701,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_strength",
+    "value": 0.1,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_strength",
+    "value": 0.1000299,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_strength",
+    "value": 0.29997009999999996,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_strength",
+    "value": 0.3,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_strength",
+    "value": 0.3000299,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_strength",
+    "value": 1.0,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_strength",
+    "value": 3.0,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_strength",
+    "value": 5.0,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_strength",
+    "value": 14.9999701,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_strength",
+    "value": 15.0,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_strength",
+    "value": 15.0000299,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_strength",
+    "value": 29.9999701,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_strength",
+    "value": 30.0,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_strength",
+    "value": 30.0000299,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_friction",
+    "value": -1e-06,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_friction",
+    "value": 0.0,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_friction",
+    "value": 1e-06,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_friction",
+    "value": 0.009999000000000001,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_friction",
+    "value": 0.01,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_friction",
+    "value": 0.010001,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_friction",
+    "value": 0.05,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_friction",
+    "value": 0.125,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_friction",
+    "value": 0.2,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_friction",
+    "value": 0.39999900000000005,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_friction",
+    "value": 0.4,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_friction",
+    "value": 0.400001,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_friction",
+    "value": 0.999999,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_friction",
+    "value": 1.0,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_friction",
+    "value": 1.000001,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_speed",
+    "value": -1.4999999999999999e-05,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_speed",
+    "value": 0.0,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_speed",
+    "value": 1.4999999999999999e-05,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_speed",
+    "value": 0.099985,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_speed",
+    "value": 0.1,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_speed",
+    "value": 0.100015,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_speed",
+    "value": 0.5,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_speed",
+    "value": 2.75,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_speed",
+    "value": 5.0,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_speed",
+    "value": 7.999985,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_speed",
+    "value": 8.0,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_speed",
+    "value": 8.000015,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_speed",
+    "value": 14.999985,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_speed",
+    "value": 15.0,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_speed",
+    "value": 15.000015,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_density",
+    "value": 799.99988,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_density",
+    "value": 800.0,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_density",
+    "value": 800.00012,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_density",
+    "value": 849.99988,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_density",
+    "value": 850.0,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_density",
+    "value": 850.00012,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_density",
+    "value": 880.0,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_density",
+    "value": 895.0,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_density",
+    "value": 910.0,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_density",
+    "value": 917.99988,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_density",
+    "value": 918.0,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_density",
+    "value": 918.00012,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_density",
+    "value": 919.99988,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_density",
+    "value": 920.0,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_density",
+    "value": 920.00012,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_elastic_modulus",
+    "value": 0.0999801,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_elastic_modulus",
+    "value": 0.1,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_elastic_modulus",
+    "value": 0.10001990000000001,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_elastic_modulus",
+    "value": 0.9999801,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_elastic_modulus",
+    "value": 1.0,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_elastic_modulus",
+    "value": 1.0000199,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_elastic_modulus",
+    "value": 3.0,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_elastic_modulus",
+    "value": 5.5,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_elastic_modulus",
+    "value": 8.0,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_elastic_modulus",
+    "value": 11.9999801,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_elastic_modulus",
+    "value": 12.0,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_elastic_modulus",
+    "value": 12.0000199,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_elastic_modulus",
+    "value": 19.9999801,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_elastic_modulus",
+    "value": 20.0,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_elastic_modulus",
+    "value": 20.0000199,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_poisson_ratio",
+    "value": -5e-07,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_poisson_ratio",
+    "value": 0.0,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_poisson_ratio",
+    "value": 5e-07,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_poisson_ratio",
+    "value": 0.2499995,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_poisson_ratio",
+    "value": 0.25,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_poisson_ratio",
+    "value": 0.2500005,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_poisson_ratio",
+    "value": 0.3,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_poisson_ratio",
+    "value": 0.32499999999999996,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_poisson_ratio",
+    "value": 0.35,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_poisson_ratio",
+    "value": 0.3999995,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_poisson_ratio",
+    "value": 0.4,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_poisson_ratio",
+    "value": 0.40000050000000004,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_poisson_ratio",
+    "value": 0.4999995,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_poisson_ratio",
+    "value": 0.5,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_poisson_ratio",
+    "value": 0.5000005,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_temperature",
+    "value": -60.00006,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_temperature",
+    "value": -60.0,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_temperature",
+    "value": -59.99994,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_temperature",
+    "value": -45.00006,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_temperature",
+    "value": -45.0,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_temperature",
+    "value": -44.99994,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_temperature",
+    "value": -30.0,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_temperature",
+    "value": -17.5,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_temperature",
+    "value": -5.0,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_temperature",
+    "value": -1.00006,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_temperature",
+    "value": -1.0,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ice_temperature",
+    "value": -0.99994,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_temperature",
+    "value": -5.9999999999999995e-05,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_temperature",
+    "value": 0.0,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ice_temperature",
+    "value": 5.9999999999999995e-05,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ship_length",
+    "value": 9.99951,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ship_length",
+    "value": 10.0,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ship_length",
+    "value": 10.00049,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ship_length",
+    "value": 29.99951,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ship_length",
+    "value": 30.0,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ship_length",
+    "value": 30.00049,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ship_length",
+    "value": 50.0,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ship_length",
+    "value": 200.0,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ship_length",
+    "value": 350.0,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ship_length",
+    "value": 399.99951,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ship_length",
+    "value": 400.0,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ship_length",
+    "value": 400.00049,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ship_length",
+    "value": 499.99951,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ship_length",
+    "value": 500.0,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ship_length",
+    "value": 500.00049,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ship_beam",
+    "value": 1.999922,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ship_beam",
+    "value": 2.0,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ship_beam",
+    "value": 2.000078,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ship_beam",
+    "value": 7.999922,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ship_beam",
+    "value": 8.0,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ship_beam",
+    "value": 8.000078,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ship_beam",
+    "value": 15.0,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ship_beam",
+    "value": 32.5,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ship_beam",
+    "value": 50.0,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ship_beam",
+    "value": 59.999922,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ship_beam",
+    "value": 60.0,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ship_beam",
+    "value": 60.000078,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ship_beam",
+    "value": 79.999922,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ship_beam",
+    "value": 80.0,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ship_beam",
+    "value": 80.000078,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ship_draft",
+    "value": 0.2999803,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ship_draft",
+    "value": 0.3,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ship_draft",
+    "value": 0.3000197,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ship_draft",
+    "value": 1.9999803,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ship_draft",
+    "value": 2.0,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ship_draft",
+    "value": 2.0000197,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ship_draft",
+    "value": 5.0,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ship_draft",
+    "value": 9.5,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ship_draft",
+    "value": 14.0,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ship_draft",
+    "value": 15.9999803,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ship_draft",
+    "value": 16.0,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ship_draft",
+    "value": 16.0000197,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ship_draft",
+    "value": 19.9999803,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ship_draft",
+    "value": 20.0,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ship_draft",
+    "value": 20.0000197,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ship_block_coefficient",
+    "value": 0.29999939999999997,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ship_block_coefficient",
+    "value": 0.3,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ship_block_coefficient",
+    "value": 0.3000006,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ship_block_coefficient",
+    "value": 0.4499994,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ship_block_coefficient",
+    "value": 0.45,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ship_block_coefficient",
+    "value": 0.45000060000000003,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ship_block_coefficient",
+    "value": 0.55,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ship_block_coefficient",
+    "value": 0.7,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ship_block_coefficient",
+    "value": 0.85,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ship_block_coefficient",
+    "value": 0.8799994,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ship_block_coefficient",
+    "value": 0.88,
+    "ref": "pass",
+    "got": "pass",
+    "agree": true
+  },
+  {
+    "param": "ship_block_coefficient",
+    "value": 0.8800006,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ship_block_coefficient",
+    "value": 0.8999994,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ship_block_coefficient",
+    "value": 0.9,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  },
+  {
+    "param": "ship_block_coefficient",
+    "value": 0.9000006,
+    "ref": "fail",
+    "got": "fail",
+    "agree": true
+  }
+]

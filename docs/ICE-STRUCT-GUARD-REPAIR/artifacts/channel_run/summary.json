@@ -1,0 +1,85 @@
+{
+  "schema": "tensorfvm.ice-channel-comparison/1",
+  "ice_lid_guard": {
+    "no_slip": "WARN: 1 extrapolation warning(s)",
+    "slip": "WARN: 1 extrapolation warning(s)"
+  },
+  "solver": {
+    "no_slip": "TensorFVM SimpleSolver (verified MAC-SIMPLE)",
+    "slip": "1-D tridiagonal FV (fully-developed analytic)"
+  },
+  "physical_setup": {
+    "description": "Ice-under channel: bottom no-slip, top configurable",
+    "height_m": 0.02,
+    "length_m": 0.12,
+    "density_kg_m3": 1000.0,
+    "kinematic_viscosity_m2_s": 1e-05,
+    "bulk_velocity_m_s": 0.0005,
+    "reynolds_number": 1.0,
+    "flow_regime": "laminar"
+  },
+  "analytic_reference": {
+    "no_slip": "u(y) = 6U(y/H)(1-y/H), dp/dx = -12muU/H^2",
+    "slip": "u(y) = 1.5U/H^2 * y(2H-y), dp/dx = -3muU/H^2"
+  },
+  "turbulence_model": "laminar (Re=1)",
+  "results": {
+    "no_slip": [
+      {
+        "grid": "72x12",
+        "method": "FVM_SIMPLE",
+        "velocity_l2": 0.006345989278534764,
+        "dpdx_pa_m": -0.14794651286912275,
+        "ref_dpdx_pa_m": -0.15,
+        "dpdx_error": 0.013689914205848308,
+        "tau_bottom_pa": -0.001479464920463804,
+        "ref_tau_bottom_pa": 0.0015,
+        "tau_bottom_error": 0.013690053024130745,
+        "tau_top_pa": 0.0014794649204638035,
+        "ref_tau_top_pa": 0.0015,
+        "tau_top_error": 0.013690053024131033,
+        "mass_imbalance": 1.6940658945086004e-16,
+        "converged": true,
+        "iterations": 43,
+        "passed": true
+      }
+    ],
+    "slip": [
+      {
+        "ny": 16,
+        "method": "1D_tridiagonal",
+        "velocity_l2": 0.0009104384459213363,
+        "bulk_velocity_m_s": 0.0005,
+        "bulk_velocity_error": 0.0,
+        "dpdx_pa_m": -0.037426900584795315,
+        "ref_dpdx_pa_m": -0.0375,
+        "dpdx_error": 0.0019493177387915526,
+        "tau_bottom_pa": -0.0007485380116959069,
+        "ref_tau_bottom_pa": 0.00075,
+        "tau_bottom_error": 0.001949317738790795,
+        "tau_top_pa": 4.678362573099469e-05,
+        "ref_tau_top_pa": 0.0,
+        "tau_top_error": 0.062378167641326254,
+        "passed": true
+      },
+      {
+        "ny": 32,
+        "method": "1D_tridiagonal",
+        "velocity_l2": 0.00022818158377560876,
+        "bulk_velocity_m_s": 0.0005000000000000001,
+        "bulk_velocity_error": 2.1684043449710089e-16,
+        "dpdx_pa_m": -0.0374816983894583,
+        "ref_dpdx_pa_m": -0.0375,
+        "dpdx_error": 0.0004880429477786367,
+        "tau_bottom_pa": -0.0007496339677891666,
+        "ref_tau_bottom_pa": 0.00075,
+        "tau_bottom_error": 0.0004880429477778792,
+        "tau_top_pa": 2.342606149341106e-05,
+        "ref_tau_top_pa": 0.0,
+        "tau_top_error": 0.031234748657881412,
+        "passed": true
+      }
+    ]
+  },
+  "all_passed": true
+}

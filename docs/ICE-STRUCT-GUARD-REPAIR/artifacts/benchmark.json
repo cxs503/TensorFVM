@@ -1,0 +1,1867 @@
+{
+  "schema": "tensorfvm.ice-guard-benchmark/2",
+  "subject": "ice-domain guardrail (JOUR-ICE-STRUCT-GUARD repair, m22342)",
+  "tolerance": 0.03,
+  "repro_cmd": "PYTHONPATH=src python -m tensorfvm.ice --out docs/ICE-STRUCT-GUARD-REPAIR/artifacts",
+  "rows": [
+    {
+      "metric": "G1 decision conformance vs independent spec oracle",
+      "ref": "oracle over 180 boundary probes",
+      "got": "180/180 agree",
+      "unit": "fraction",
+      "error": 0.0,
+      "tolerance": 0.03,
+      "passed": true,
+      "note": "2 x 15 probes per parameter (both sides of hard/soft bounds, typical band, interior)"
+    },
+    {
+      "metric": "G2 nan containment (rejected and never echoed back)",
+      "ref": 1.0,
+      "got": 1.0,
+      "unit": "fraction",
+      "error": 0.0,
+      "tolerance": 0.0,
+      "passed": true,
+      "note": "no NaN leaked"
+    },
+    {
+      "metric": "G3 +-inf containment (rejected; clamp returns a finite bound)",
+      "ref": 1.0,
+      "got": 1.0,
+      "unit": "fraction",
+      "error": 0.0,
+      "tolerance": 0.0,
+      "passed": true,
+      "note": "all contained"
+    },
+    {
+      "metric": "G4 out-of-domain inputs blocked before the load arithmetic",
+      "ref": 1.0,
+      "got": 1.0,
+      "unit": "fraction",
+      "error": 0.0,
+      "tolerance": 0.0,
+      "passed": true,
+      "note": "24 injections over the 12-parameter set, mode=reject"
+    },
+    {
+      "metric": "G5 in-domain pass-through (guard must not perturb the load)",
+      "ref": "guarded == unguarded",
+      "got": "max rel diff 0.000e+00",
+      "unit": "relative",
+      "error": 0.0,
+      "tolerance": 1e-12,
+      "passed": true,
+      "note": "{\n \"MV_Arctic\": {\n  \"raw_kN\": 6374.265263861138,\n  \"guarded_kN\": 6374.265263861138,\n  \"rel_diff\": 0.0\n },\n \"Polarstern\": {\n  \"raw_kN\": 2501.3782675451,\n  \"guarded_kN\": 2501.3782675451,\n  \"rel_diff\": 0.0\n },\n \"Terry_Fox\": {\n  \"raw_kN\": 974.7532538116781,\n  \"guarded_kN\": 974.7532538116781,\n  \"rel_diff\": 0.0\n }\n}"
+    },
+    {
+      "metric": "G6 legacy anchor magnitudes (out-of-domain load reproduction)",
+      "ref": "2450 MN (h=50 m) / 143.9 MN (sigma_c=100 MPa) as recorded 2026-11-09",
+      "got": "max rel deviation 0.637",
+      "unit": "relative",
+      "error": 0.6371751950105616,
+      "tolerance": 0.03,
+      "passed": null,
+      "note": "WITHHELD (not a pass): the quoted magnitudes come from a platform build that is not part of this repository; the in-repo reproduction of the same Lindqvist formula differs, so provenance cannot be closed here. What *is* measured is that both inputs are rejected and that the unguarded magnitudes are 10^3 MN-class \u2014 i.e. the failure mode is real."
+    }
+  ],
+  "all_graded_rows_pass": true,
+  "detail": {
+    "g1_decision_grid": [
+      {
+        "param": "ice_thickness",
+        "value": 0.00999001,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_thickness",
+        "value": 0.01,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_thickness",
+        "value": 0.01000999,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_thickness",
+        "value": 0.04999001,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_thickness",
+        "value": 0.05,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_thickness",
+        "value": 0.050009990000000004,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_thickness",
+        "value": 0.3,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_thickness",
+        "value": 1.4,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_thickness",
+        "value": 2.5,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_thickness",
+        "value": 4.99999001,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_thickness",
+        "value": 5.0,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_thickness",
+        "value": 5.00000999,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_thickness",
+        "value": 9.99999001,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_thickness",
+        "value": 10.0,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_thickness",
+        "value": 10.00000999,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_strength",
+        "value": 0.0999701,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_strength",
+        "value": 0.1,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_strength",
+        "value": 0.1000299,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_strength",
+        "value": 0.29997009999999996,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_strength",
+        "value": 0.3,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_strength",
+        "value": 0.3000299,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_strength",
+        "value": 1.0,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_strength",
+        "value": 3.0,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_strength",
+        "value": 5.0,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_strength",
+        "value": 14.9999701,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_strength",
+        "value": 15.0,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_strength",
+        "value": 15.0000299,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_strength",
+        "value": 29.9999701,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_strength",
+        "value": 30.0,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_strength",
+        "value": 30.0000299,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_friction",
+        "value": -1e-06,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_friction",
+        "value": 0.0,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_friction",
+        "value": 1e-06,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_friction",
+        "value": 0.009999000000000001,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_friction",
+        "value": 0.01,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_friction",
+        "value": 0.010001,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_friction",
+        "value": 0.05,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_friction",
+        "value": 0.125,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_friction",
+        "value": 0.2,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_friction",
+        "value": 0.39999900000000005,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_friction",
+        "value": 0.4,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_friction",
+        "value": 0.400001,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_friction",
+        "value": 0.999999,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_friction",
+        "value": 1.0,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_friction",
+        "value": 1.000001,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_speed",
+        "value": -1.4999999999999999e-05,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_speed",
+        "value": 0.0,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_speed",
+        "value": 1.4999999999999999e-05,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_speed",
+        "value": 0.099985,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_speed",
+        "value": 0.1,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_speed",
+        "value": 0.100015,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_speed",
+        "value": 0.5,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_speed",
+        "value": 2.75,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_speed",
+        "value": 5.0,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_speed",
+        "value": 7.999985,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_speed",
+        "value": 8.0,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_speed",
+        "value": 8.000015,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_speed",
+        "value": 14.999985,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_speed",
+        "value": 15.0,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_speed",
+        "value": 15.000015,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_density",
+        "value": 799.99988,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_density",
+        "value": 800.0,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_density",
+        "value": 800.00012,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_density",
+        "value": 849.99988,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_density",
+        "value": 850.0,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_density",
+        "value": 850.00012,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_density",
+        "value": 880.0,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_density",
+        "value": 895.0,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_density",
+        "value": 910.0,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_density",
+        "value": 917.99988,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_density",
+        "value": 918.0,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_density",
+        "value": 918.00012,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_density",
+        "value": 919.99988,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_density",
+        "value": 920.0,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_density",
+        "value": 920.00012,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_elastic_modulus",
+        "value": 0.0999801,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_elastic_modulus",
+        "value": 0.1,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_elastic_modulus",
+        "value": 0.10001990000000001,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_elastic_modulus",
+        "value": 0.9999801,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_elastic_modulus",
+        "value": 1.0,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_elastic_modulus",
+        "value": 1.0000199,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_elastic_modulus",
+        "value": 3.0,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_elastic_modulus",
+        "value": 5.5,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_elastic_modulus",
+        "value": 8.0,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_elastic_modulus",
+        "value": 11.9999801,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_elastic_modulus",
+        "value": 12.0,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_elastic_modulus",
+        "value": 12.0000199,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_elastic_modulus",
+        "value": 19.9999801,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_elastic_modulus",
+        "value": 20.0,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_elastic_modulus",
+        "value": 20.0000199,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_poisson_ratio",
+        "value": -5e-07,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_poisson_ratio",
+        "value": 0.0,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_poisson_ratio",
+        "value": 5e-07,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_poisson_ratio",
+        "value": 0.2499995,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_poisson_ratio",
+        "value": 0.25,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_poisson_ratio",
+        "value": 0.2500005,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_poisson_ratio",
+        "value": 0.3,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_poisson_ratio",
+        "value": 0.32499999999999996,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_poisson_ratio",
+        "value": 0.35,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_poisson_ratio",
+        "value": 0.3999995,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_poisson_ratio",
+        "value": 0.4,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_poisson_ratio",
+        "value": 0.40000050000000004,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_poisson_ratio",
+        "value": 0.4999995,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_poisson_ratio",
+        "value": 0.5,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_poisson_ratio",
+        "value": 0.5000005,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_temperature",
+        "value": -60.00006,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_temperature",
+        "value": -60.0,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_temperature",
+        "value": -59.99994,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_temperature",
+        "value": -45.00006,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_temperature",
+        "value": -45.0,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_temperature",
+        "value": -44.99994,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_temperature",
+        "value": -30.0,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_temperature",
+        "value": -17.5,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_temperature",
+        "value": -5.0,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_temperature",
+        "value": -1.00006,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_temperature",
+        "value": -1.0,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ice_temperature",
+        "value": -0.99994,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_temperature",
+        "value": -5.9999999999999995e-05,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_temperature",
+        "value": 0.0,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ice_temperature",
+        "value": 5.9999999999999995e-05,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ship_length",
+        "value": 9.99951,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ship_length",
+        "value": 10.0,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ship_length",
+        "value": 10.00049,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ship_length",
+        "value": 29.99951,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ship_length",
+        "value": 30.0,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ship_length",
+        "value": 30.00049,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ship_length",
+        "value": 50.0,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ship_length",
+        "value": 200.0,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ship_length",
+        "value": 350.0,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ship_length",
+        "value": 399.99951,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ship_length",
+        "value": 400.0,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ship_length",
+        "value": 400.00049,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ship_length",
+        "value": 499.99951,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ship_length",
+        "value": 500.0,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ship_length",
+        "value": 500.00049,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ship_beam",
+        "value": 1.999922,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ship_beam",
+        "value": 2.0,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ship_beam",
+        "value": 2.000078,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ship_beam",
+        "value": 7.999922,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ship_beam",
+        "value": 8.0,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ship_beam",
+        "value": 8.000078,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ship_beam",
+        "value": 15.0,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ship_beam",
+        "value": 32.5,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ship_beam",
+        "value": 50.0,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ship_beam",
+        "value": 59.999922,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ship_beam",
+        "value": 60.0,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ship_beam",
+        "value": 60.000078,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ship_beam",
+        "value": 79.999922,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ship_beam",
+        "value": 80.0,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ship_beam",
+        "value": 80.000078,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ship_draft",
+        "value": 0.2999803,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ship_draft",
+        "value": 0.3,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ship_draft",
+        "value": 0.3000197,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ship_draft",
+        "value": 1.9999803,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ship_draft",
+        "value": 2.0,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ship_draft",
+        "value": 2.0000197,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ship_draft",
+        "value": 5.0,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ship_draft",
+        "value": 9.5,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ship_draft",
+        "value": 14.0,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ship_draft",
+        "value": 15.9999803,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ship_draft",
+        "value": 16.0,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ship_draft",
+        "value": 16.0000197,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ship_draft",
+        "value": 19.9999803,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ship_draft",
+        "value": 20.0,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ship_draft",
+        "value": 20.0000197,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ship_block_coefficient",
+        "value": 0.29999939999999997,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ship_block_coefficient",
+        "value": 0.3,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ship_block_coefficient",
+        "value": 0.3000006,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ship_block_coefficient",
+        "value": 0.4499994,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ship_block_coefficient",
+        "value": 0.45,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ship_block_coefficient",
+        "value": 0.45000060000000003,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ship_block_coefficient",
+        "value": 0.55,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ship_block_coefficient",
+        "value": 0.7,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ship_block_coefficient",
+        "value": 0.85,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ship_block_coefficient",
+        "value": 0.8799994,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ship_block_coefficient",
+        "value": 0.88,
+        "ref": "pass",
+        "got": "pass",
+        "agree": true
+      },
+      {
+        "param": "ship_block_coefficient",
+        "value": 0.8800006,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ship_block_coefficient",
+        "value": 0.8999994,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ship_block_coefficient",
+        "value": 0.9,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      },
+      {
+        "param": "ship_block_coefficient",
+        "value": 0.9000006,
+        "ref": "fail",
+        "got": "fail",
+        "agree": true
+      }
+    ],
+    "g4_load_path": [
+      {
+        "param": "ice_thickness",
+        "injected": 19.990000000000002,
+        "guarded_resistance_kN": null,
+        "unguarded_resistance_kN": 639492.5642959964,
+        "blocked": true,
+        "errors": [
+          "ice_thickness (h) = 19.990000000000002 m is outside physical bounds [0.01, 10.0] m"
+        ]
+      },
+      {
+        "param": "ice_thickness",
+        "injected": -9.98,
+        "guarded_resistance_kN": null,
+        "unguarded_resistance_kN": null,
+        "blocked": true,
+        "errors": [
+          "ice_thickness (h) = -9.98 m is outside physical bounds [0.01, 10.0] m"
+        ]
+      },
+      {
+        "param": "ice_strength",
+        "injected": 59.9,
+        "guarded_resistance_kN": null,
+        "unguarded_resistance_kN": 142274.4716132263,
+        "blocked": true,
+        "errors": [
+          "ice_strength (\u03c3_c) = 59.9 MPa is outside physical bounds [0.1, 30.0] MPa"
+        ]
+      },
+      {
+        "param": "ice_strength",
+        "injected": -29.799999999999997,
+        "guarded_resistance_kN": null,
+        "unguarded_resistance_kN": -66462.66039941162,
+        "blocked": true,
+        "errors": [
+          "ice_strength (\u03c3_c) = -29.799999999999997 MPa is outside physical bounds [0.1, 30.0] MPa"
+        ]
+      },
+      {
+        "param": "ice_friction",
+        "injected": 2.0,
+        "guarded_resistance_kN": null,
+        "unguarded_resistance_kN": 27012.4922857561,
+        "blocked": true,
+        "errors": [
+          "ice_friction (\u03bc) = 2.0  is outside physical bounds [0.0, 1.0] "
+        ]
+      },
+      {
+        "param": "ice_friction",
+        "injected": -1.0,
+        "guarded_resistance_kN": null,
+        "unguarded_resistance_kN": -6454.902884884379,
+        "blocked": true,
+        "errors": [
+          "ice_friction (\u03bc) = -1.0  is outside physical bounds [0.0, 1.0] "
+        ]
+      },
+      {
+        "param": "ice_speed",
+        "injected": 30.0,
+        "guarded_resistance_kN": null,
+        "unguarded_resistance_kN": 25840.07615669979,
+        "blocked": true,
+        "errors": [
+          "ice_speed (v) = 30.0 m/s is outside physical bounds [0.0, 15.0] m/s"
+        ]
+      },
+      {
+        "param": "ice_speed",
+        "injected": -15.0,
+        "guarded_resistance_kN": null,
+        "unguarded_resistance_kN": -5266.239498031298,
+        "blocked": true,
+        "errors": [
+          "ice_speed (v) = -15.0 m/s is outside physical bounds [0.0, 15.0] m/s"
+        ]
+      },
+      {
+        "param": "ice_density",
+        "injected": 1040.0,
+        "guarded_resistance_kN": null,
+        "unguarded_resistance_kN": 6374.265263861138,
+        "blocked": true,
+        "errors": [
+          "ice_density (\u03c1_ice) = 1040.0 kg/m\u00b3 is outside physical bounds [800.0, 920.0] kg/m\u00b3"
+        ]
+      },
+      {
+        "param": "ice_density",
+        "injected": 680.0,
+        "guarded_resistance_kN": null,
+        "unguarded_resistance_kN": 6374.265263861138,
+        "blocked": true,
+        "errors": [
+          "ice_density (\u03c1_ice) = 680.0 kg/m\u00b3 is outside physical bounds [800.0, 920.0] kg/m\u00b3"
+        ]
+      },
+      {
+        "param": "ice_elastic_modulus",
+        "injected": 39.9,
+        "guarded_resistance_kN": null,
+        "unguarded_resistance_kN": 6374.265263861138,
+        "blocked": true,
+        "errors": [
+          "ice_elastic_modulus (E) = 39.9 GPa is outside physical bounds [0.1, 20.0] GPa"
+        ]
+      },
+      {
+        "param": "ice_elastic_modulus",
+        "injected": -19.799999999999997,
+        "guarded_resistance_kN": null,
+        "unguarded_resistance_kN": 6374.265263861138,
+        "blocked": true,
+        "errors": [
+          "ice_elastic_modulus (E) = -19.799999999999997 GPa is outside physical bounds [0.1, 20.0] GPa"
+        ]
+      },
+      {
+        "param": "ice_poisson_ratio",
+        "injected": 1.0,
+        "guarded_resistance_kN": null,
+        "unguarded_resistance_kN": 6374.265263861138,
+        "blocked": true,
+        "errors": [
+          "ice_poisson_ratio (\u03bd) = 1.0  is outside physical bounds [0.0, 0.5] "
+        ]
+      },
+      {
+        "param": "ice_poisson_ratio",
+        "injected": -0.5,
+        "guarded_resistance_kN": null,
+        "unguarded_resistance_kN": 6374.265263861138,
+        "blocked": true,
+        "errors": [
+          "ice_poisson_ratio (\u03bd) = -0.5  is outside physical bounds [0.0, 0.5] "
+        ]
+      },
+      {
+        "param": "ice_temperature",
+        "injected": 60.0,
+        "guarded_resistance_kN": null,
+        "unguarded_resistance_kN": 6374.265263861138,
+        "blocked": true,
+        "errors": [
+          "ice_temperature (T) = 60.0 \u00b0C is outside physical bounds [-60.0, 0.0] \u00b0C"
+        ]
+      },
+      {
+        "param": "ice_temperature",
+        "injected": -120.0,
+        "guarded_resistance_kN": null,
+        "unguarded_resistance_kN": 6374.265263861138,
+        "blocked": true,
+        "errors": [
+          "ice_temperature (T) = -120.0 \u00b0C is outside physical bounds [-60.0, 0.0] \u00b0C"
+        ]
+      },
+      {
+        "param": "ship_length",
+        "injected": 990.0,
+        "guarded_resistance_kN": null,
+        "unguarded_resistance_kN": 16270.10161506764,
+        "blocked": true,
+        "errors": [
+          "ship_length (L) = 990.0 m is outside physical bounds [10.0, 500.0] m"
+        ]
+      },
+      {
+        "param": "ship_length",
+        "injected": -480.0,
+        "guarded_resistance_kN": null,
+        "unguarded_resistance_kN": null,
+        "blocked": true,
+        "errors": [
+          "ship_length (L) = -480.0 m is outside physical bounds [10.0, 500.0] m"
+        ]
+      },
+      {
+        "param": "ship_beam",
+        "injected": 158.0,
+        "guarded_resistance_kN": null,
+        "unguarded_resistance_kN": 21299.2316729567,
+        "blocked": true,
+        "errors": [
+          "ship_beam (B) = 158.0 m is outside physical bounds [2.0, 80.0] m"
+        ]
+      },
+      {
+        "param": "ship_beam",
+        "injected": -76.0,
+        "guarded_resistance_kN": null,
+        "unguarded_resistance_kN": null,
+        "blocked": true,
+        "errors": [
+          "ship_beam (B) = -76.0 m is outside physical bounds [2.0, 80.0] m"
+        ]
+      },
+      {
+        "param": "ship_draft",
+        "injected": 39.7,
+        "guarded_resistance_kN": null,
+        "unguarded_resistance_kN": 6374.265263861138,
+        "blocked": true,
+        "errors": [
+          "ship_draft (T) = 39.7 m is outside physical bounds [0.3, 20.0] m"
+        ]
+      },
+      {
+        "param": "ship_draft",
+        "injected": -19.4,
+        "guarded_resistance_kN": null,
+        "unguarded_resistance_kN": null,
+        "blocked": true,
+        "errors": [
+          "ship_draft (T) = -19.4 m is outside physical bounds [0.3, 20.0] m"
+        ]
+      },
+      {
+        "param": "ship_block_coefficient",
+        "injected": 1.5,
+        "guarded_resistance_kN": null,
+        "unguarded_resistance_kN": 6374.265263861138,
+        "blocked": true,
+        "errors": [
+          "ship_block_coefficient (C_B) = 1.5  is outside physical bounds [0.3, 0.9] "
+        ]
+      },
+      {
+        "param": "ship_block_coefficient",
+        "injected": -0.3000000000000001,
+        "guarded_resistance_kN": null,
+        "unguarded_resistance_kN": 6374.265263861138,
+        "blocked": true,
+        "errors": [
+          "ship_block_coefficient (C_B) = -0.3000000000000001  is outside physical bounds [0.3, 0.9] "
+        ]
+      }
+    ],
+    "g6_legacy": {
+      "h_50m": {
+        "ref_MN": 2450.0,
+        "ref_source": "JOUR-ICE-STRUCT-GUARD anchor record (platform build of 2026-11-09)",
+        "got_MN_in_repo_reproduction": 3428.8833462681296,
+        "rel_error": 0.3995442229665835,
+        "guarded_resistance_kN": null,
+        "blocked": true,
+        "guard_errors": [
+          "ice_thickness (h) = 50.0 m is outside physical bounds [0.01, 10.0] m"
+        ]
+      },
+      "sigma_c_100MPa": {
+        "ref_MN": 143.9,
+        "ref_source": "JOUR-ICE-STRUCT-GUARD anchor record (platform build of 2026-11-09)",
+        "got_MN_in_repo_reproduction": 235.58951056201983,
+        "rel_error": 0.6371751950105616,
+        "guarded_resistance_kN": null,
+        "blocked": true,
+        "guard_errors": [
+          "ice_strength (\u03c3_c) = 100.0 MPa is outside physical bounds [0.1, 30.0] MPa"
+        ]
+      }
+    },
+    "thickness_sweep": [
+      {
+        "ice_thickness_m": 0.05,
+        "unguarded_kN": 273.1761204289075,
+        "guarded_kN": 273.1761204289075,
+        "in_domain": true
+      },
+      {
+        "ice_thickness_m": 0.1,
+        "unguarded_kN": 517.8185580797274,
+        "guarded_kN": 517.8185580797274,
+        "in_domain": true
+      },
+      {
+        "ice_thickness_m": 0.3,
+        "unguarded_kN": 1573.7334890477402,
+        "guarded_kN": 1573.7334890477402,
+        "in_domain": true
+      },
+      {
+        "ice_thickness_m": 0.5,
+        "unguarded_kN": 2773.6777983180154,
+        "guarded_kN": 2773.6777983180154,
+        "in_domain": true
+      },
+      {
+        "ice_thickness_m": 1.0,
+        "unguarded_kN": 6374.265263861138,
+        "guarded_kN": 6374.265263861138,
+        "in_domain": true
+      },
+      {
+        "ice_thickness_m": 2.0,
+        "unguarded_kN": 15948.476060332523,
+        "guarded_kN": 15948.476060332523,
+        "in_domain": true
+      },
+      {
+        "ice_thickness_m": 3.0,
+        "unguarded_kN": 28475.917393517306,
+        "guarded_kN": 28475.917393517306,
+        "in_domain": true
+      },
+      {
+        "ice_thickness_m": 5.0,
+        "unguarded_kN": 61896.721278495395,
+        "guarded_kN": 61896.721278495395,
+        "in_domain": true
+      },
+      {
+        "ice_thickness_m": 8.0,
+        "unguarded_kN": 132027.6717660822,
+        "guarded_kN": null,
+        "in_domain": false
+      },
+      {
+        "ice_thickness_m": 10.0,
+        "unguarded_kN": 191707.46488681593,
+        "guarded_kN": null,
+        "in_domain": false
+      },
+      {
+        "ice_thickness_m": 20.0,
+        "unguarded_kN": 640063.6415450677,
+        "guarded_kN": null,
+        "in_domain": false
+      },
+      {
+        "ice_thickness_m": 50.0,
+        "unguarded_kN": 3428883.3462681295,
+        "guarded_kN": null,
+        "in_domain": false
+      }
+    ]
+  },
+  "parameter_table": {
+    "ice_thickness": {
+      "hard": [
+        0.01,
+        10.0
+      ],
+      "soft": [
+        0.05,
+        5.0
+      ],
+      "typical": [
+        0.3,
+        2.5
+      ],
+      "unit": "m",
+      "reference": "ISO 19906:2019 Annex C; Timco & Frederking (2012)"
+    },
+    "ice_strength": {
+      "hard": [
+        0.1,
+        30.0
+      ],
+      "soft": [
+        0.3,
+        15.0
+      ],
+      "typical": [
+        1.0,
+        5.0
+      ],
+      "unit": "MPa",
+      "reference": "Timco & Weeks (2010); ISO 19906:2019"
+    },
+    "ice_friction": {
+      "hard": [
+        0.0,
+        1.0
+      ],
+      "soft": [
+        0.01,
+        0.4
+      ],
+      "typical": [
+        0.05,
+        0.2
+      ],
+      "unit": "",
+      "reference": "Riska et al. (1997) VTT Publ. 319; ITTC Ice Committee (2017)"
+    },
+    "ice_speed": {
+      "hard": [
+        0.0,
+        15.0
+      ],
+      "soft": [
+        0.1,
+        8.0
+      ],
+      "typical": [
+        0.5,
+        5.0
+      ],
+      "unit": "m/s",
+      "reference": "ITTC Ice Committee (2017); Riska et al. (1997)"
+    },
+    "ice_density": {
+      "hard": [
+        800.0,
+        920.0
+      ],
+      "soft": [
+        850.0,
+        918.0
+      ],
+      "typical": [
+        880.0,
+        910.0
+      ],
+      "unit": "kg/m\u00b3",
+      "reference": "Timco & Frederking (2012); ISO 19906:2019"
+    },
+    "ice_elastic_modulus": {
+      "hard": [
+        0.1,
+        20.0
+      ],
+      "soft": [
+        1.0,
+        12.0
+      ],
+      "typical": [
+        3.0,
+        8.0
+      ],
+      "unit": "GPa",
+      "reference": "Timco & Weeks (2010); Schulson & Duval (2009)"
+    },
+    "ice_poisson_ratio": {
+      "hard": [
+        0.0,
+        0.5
+      ],
+      "soft": [
+        0.25,
+        0.4
+      ],
+      "typical": [
+        0.3,
+        0.35
+      ],
+      "unit": "",
+      "reference": "Schulson & Duval (2009)"
+    },
+    "ice_temperature": {
+      "hard": [
+        -60.0,
+        0.0
+      ],
+      "soft": [
+        -45.0,
+        -1.0
+      ],
+      "typical": [
+        -30.0,
+        -5.0
+      ],
+      "unit": "\u00b0C",
+      "reference": "Timco & Frederking (2012); WMO Sea Ice Nomenclature"
+    },
+    "ship_length": {
+      "hard": [
+        10.0,
+        500.0
+      ],
+      "soft": [
+        30.0,
+        400.0
+      ],
+      "typical": [
+        50.0,
+        350.0
+      ],
+      "unit": "m",
+      "reference": "Lewis (1988) Principles of Naval Architecture; Riska et al. (1997)"
+    },
+    "ship_beam": {
+      "hard": [
+        2.0,
+        80.0
+      ],
+      "soft": [
+        8.0,
+        60.0
+      ],
+      "typical": [
+        15.0,
+        50.0
+      ],
+      "unit": "m",
+      "reference": "Lewis (1988) Principles of Naval Architecture"
+    },
+    "ship_draft": {
+      "hard": [
+        0.3,
+        20.0
+      ],
+      "soft": [
+        2.0,
+        16.0
+      ],
+      "typical": [
+        5.0,
+        14.0
+      ],
+      "unit": "m",
+      "reference": "Lewis (1988); Riska et al. (1997)"
+    },
+    "ship_block_coefficient": {
+      "hard": [
+        0.3,
+        0.9
+      ],
+      "soft": [
+        0.45,
+        0.88
+      ],
+      "typical": [
+        0.55,
+        0.85
+      ],
+      "unit": "",
+      "reference": "Lewis (1988) Principles of Naval Architecture"
+    }
+  }
+}

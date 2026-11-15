@@ -1,0 +1,17 @@
+{
+  "slug": "CASE-FVM-ICE-GUARD",
+  "anchor": "JOUR-ICE-STRUCT-GUARD",
+  "title": "\u51b0\u57df 12 \u53c2\u6570\u8d8a\u57df\u62a4\u680f\uff1aschema \u5c42 \u2192 \u7269\u7406\u8ba1\u7b97\u5165\u53e3 + \u5224\u636e\u673a\u68c0",
+  "repo": "TensorFVM",
+  "tolerance": {
+    "decision_conformance": 0.03,
+    "nonfinite_containment": 0.0,
+    "load_path_closure": 0.0,
+    "passthrough_relative": 1e-12
+  },
+  "reference": "docs/ICE-STRUCT-GUARD-REPAIR/SPEC.md; ISO 19906:2019; Lindqvist (1989) POAC-89",
+  "artifacts": "artifacts/ice_guard",
+  "report": "docs/ICE-STRUCT-GUARD-REPAIR/REPORT.md",
+  "repro_cmd": "PYTHONPATH=src python -m tensorfvm.ice --out docs/ICE-STRUCT-GUARD-REPAIR/artifacts",
+  "all_pass": true
+}
