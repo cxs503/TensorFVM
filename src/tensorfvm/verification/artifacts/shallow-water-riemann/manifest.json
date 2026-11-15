@@ -1,0 +1,24 @@
+{
+  "command": "run_shallow_water_riemann.py",
+  "argv": [],
+  "commit": "149e0ef9",
+  "python": "3.11.6",
+  "elapsed_s": 51.26,
+  "tolerance": 0.05,
+  "accepted_n": 3200,
+  "resolutions": [
+    400,
+    800,
+    1600,
+    3200
+  ],
+  "files": [
+    "SUMMARY.md",
+    "certification.json",
+    "convergence.json",
+    "metrics.json",
+    "riemann_convergence.png",
+    "riemann_profiles.png"
+  ],
+  "all_pass": true
+}

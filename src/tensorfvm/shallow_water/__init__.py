@@ -53,6 +53,17 @@ from .galilean import (
     run_case as run_galilean_case,
     verdict as galilean_verdict,
 )
+from .riemann import (
+    DEFAULT_CASES as RIEMANN_CASES,
+    RiemannCase,
+    RiemannSolution,
+    convergence_series as riemann_convergence_series,
+    certification as riemann_certification,
+    degenerate_limits as riemann_degenerate_limits,
+    run_case as run_riemann_case,
+    solve_riemann,
+    wave_pattern,
+)
 from .exact import (
     check_stoker_solution,
     ritter_level_position,

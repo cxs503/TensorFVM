@@ -1,0 +1,248 @@
+"""Tests for the general shallow-water Riemann solver and its verification.
+
+Four independent lines of defence, each of which can fail on its own:
+
+1. **the reference** -- jump/invariant residuals, weak-form conservation across
+   the discontinuities, smooth-region ODE residuals, and the two degenerate
+   limits (Stoker dam break, Ritter dry bed) which must be reproduced to machine
+   precision from :mod:`tensorfvm.shallow_water.exact`;
+2. **the metric** -- a deliberately corrupted profile must be caught, and the
+   oscillation count must agree cell-by-cell with ``dam_break``'s predicate, so
+   a metric that cannot fail is excluded;
+3. **the solver** -- every one of the four wave patterns is graded at the
+   accepted grid with the anchor tolerance (5 %), and the coarse grid must
+   *fail* at least one case, which keeps the gate from being vacuous;
+4. **the limits** -- a dry-middle Riemann problem raises ``ValueError`` instead
+   of returning a plausible-looking number.
+"""
+
+from __future__ import annotations
+
+import math
+
+import numpy as np
+import pytest
+
+from tensorfvm.shallow_water import dam_break, exact
+from tensorfvm.shallow_water.riemann import (
+    DEFAULT_CASES,
+    EXTREMUM_FRACTION,
+    TOLERANCE,
+    RiemannCase,
+    certification,
+    convergence_series,
+    degenerate_limits,
+    profile_metrics,
+    riemann_residuals,
+    run_case,
+    sample_exact,
+    smooth_region_ode_residuals,
+    solve_riemann,
+    verdict,
+    weak_form_residuals,
+)
+
+PATTERNS = {case.name: case.solution().pattern for case in DEFAULT_CASES}
+
+
+def test_the_four_cases_cover_the_four_wave_patterns():
+    assert set(PATTERNS.values()) == {
+        "1-rarefaction+2-shock", "1-rarefaction+2-rarefaction",
+        "1-shock+2-shock", "1-shock+2-rarefaction"}
+
+
+def test_jump_and_invariant_residuals_are_machine_precision():
+    worst = 0.0
+    for case in DEFAULT_CASES:
+        res = riemann_residuals(case.solution())
+        worst = max(worst, res["matching_relative"],
+                    res["left_riemann_invariant_relative"]
+                    if res["left_kind"] == "rarefaction"
+                    else res["left_mass_jump_relative"],
+                    res["right_riemann_invariant_relative"]
+                    if res["right_kind"] == "rarefaction"
+                    else res["right_momentum_jump_relative"])
+        if res["left_kind"] == "shock":
+            worst = max(worst, res["left_momentum_jump_relative"])
+        if res["right_kind"] == "shock":
+            worst = max(worst, res["right_mass_jump_relative"])
+    assert worst < 1e-12, worst
+
+
+def test_weak_form_conservation_holds_across_discontinuities():
+    for case in DEFAULT_CASES:
+        res = weak_form_residuals(case.solution(), n=200_001)
+        assert res["mass_relative"] < 1e-4, (case.name, res)
+        assert res["momentum_relative"] < 1e-4, (case.name, res)
+
+
+def test_weak_form_residual_refines_with_the_sample_count():
+    """A single small number is not evidence; the identity must converge."""
+    sol = DEFAULT_CASES[2].solution()          # two shocks: worst-case jumps
+    coarse = weak_form_residuals(sol, n=50_001)
+    fine = weak_form_residuals(sol, n=400_001)
+    assert fine["mass_relative"] < coarse["mass_relative"]
+    assert fine["momentum_relative"] < coarse["momentum_relative"]
+
+
+def test_smooth_region_ode_residuals_are_small():
+    for case in DEFAULT_CASES:
+        res = smooth_region_ode_residuals(case.solution())
+        assert res["masked_samples"] > 0.5 * res["samples"]
+    # the two-shock case has no smooth region but the two constant states, so
+    # its residual is exactly zero; the rarefaction cases carry discretisation
+    # noise from the finite differences and are only bounded.
+    for name in ("rarefaction-shock", "rarefaction-rarefaction",
+                 "shock-rarefaction"):
+        res = smooth_region_ode_residuals(
+            next(c for c in DEFAULT_CASES if c.name == name).solution())
+        assert res["mass_ode_relative"] < 1e-6, (name, res)
+        assert res["momentum_ode_relative"] < 1e-5, (name, res)
+
+
+def test_stoker_dam_break_is_reproduced_to_machine_precision():
+    limits = degenerate_limits()
+    for key, entry in limits.items():
+        if not key.startswith("stoker"):
+            continue
+        assert entry["pattern"] == "1-rarefaction+2-shock"
+        assert entry["h_star_relative_error"] < 1e-12
+        assert entry["u_star_absolute_error"] < 1e-12
+        assert entry["shock_speed_absolute_error"] < 1e-11
+        assert entry["left_fan_head_absolute_error"] == 0.0
+
+
+def test_ritter_dry_limit_converges_to_the_closed_form():
+    """``h1 -> 0`` must approach Ritter; the shock branch is *singular* there."""
+    limits = degenerate_limits()["ritter_limit"]
+    assert limits["dam_depth_relative_error"] < 1e-12
+    assert limits["ritter_state_dam_depth"] == pytest.approx(4.0 / 9.0 * 1.0)
+    error = [abs(solve_riemann(1.0, 0.0, h1, 0.0).right_shock_speed
+                 - 2.0 * math.sqrt(9.81)) / (2.0 * math.sqrt(9.81))
+             for h1 in (1e-2, 1e-4, 1e-6, 1e-8)]
+    assert error == sorted(error, reverse=True), error     # monotone decrease
+    assert error[-1] < 2e-2
+
+
+def test_dry_middle_raises_instead_of_returning_a_number():
+    with pytest.raises(ValueError):
+        solve_riemann(1.0, -8.0, 1.0, 8.0)   # diverging faster than 2(cL+cR)
+    with pytest.raises(ValueError):
+        solve_riemann(1.0, 0.0, 0.0, 0.0)
+
+
+def test_sampling_reproduces_the_initial_data_at_zero_time():
+    case = DEFAULT_CASES[2]
+    sol = case.solution()
+    x = np.linspace(case.x_min, case.x_max, 101)
+    h, u = sample_exact(sol, x, 0.0)
+    h0, u0 = case.initial_state(x)
+    assert np.array_equal(h, h0) and np.array_equal(u, u0)
+
+
+def test_oscillation_predicate_matches_the_dam_break_benchmark():
+    rng = np.random.default_rng(20261101)
+    for _ in range(20):
+        h = np.cumsum(rng.normal(0.0, 1e-3, 200)) + 1.0
+        floor = EXTREMUM_FRACTION
+        counted, _ = __import__(
+            "tensorfvm.shallow_water.riemann", fromlist=["_local_extrema"]
+        )._local_extrema(h, floor)
+        reference = dam_break._local_extrema(h, floor)
+        assert counted == reference
+
+
+def test_corrupted_profile_is_caught():
+    """The metric must fail on a profile that is *not* a Riemann solution."""
+    case = DEFAULT_CASES[0]
+    from tensorfvm.shallow_water.swe1d import ShallowWater1D
+
+    n = 1600
+    solver = ShallowWater1D(n, case.x_min, case.x_max, gravity=case.gravity)
+    h0, u0 = case.initial_state(solver.x)
+    solver.set_state(h0, u0)
+    solver.advance(case.t_end)
+    h, u = solver.primitive()
+    good = profile_metrics(case, solver.x, h, u, solver.time)
+    assert verdict(good)["pass"]
+    corrupted = h.copy()
+    corrupted[n // 2] += 0.02 * case.h_ref          # a 2 % mid-domain spike
+    bad = profile_metrics(case, solver.x, corrupted, u, solver.time)
+    assert not verdict(bad)["monotone"]
+    shifted = profile_metrics(case, solver.x, np.full_like(h, case.hR), u,
+                             solver.time)
+    assert not verdict(shifted)["pass"]
+
+
+@pytest.mark.parametrize("case", DEFAULT_CASES, ids=lambda c: c.name)
+def test_solver_matches_the_exact_solution_at_the_accepted_grid(case):
+    """Accepted grid: n = 3200.  Tolerance checks also hold at n = 1600."""
+    record = run_case(case, n=3200)
+    assert record["verdict"]["pass"], record["verdict"]
+    assert record["metrics"]["depth_l1"] < TOLERANCE
+    assert record["discretisation"]["clipped_cells"] == 0
+    assert record["discretisation"]["dry_momentum_flips"] == 0
+    # transmissive ends carry a flux, so mass is *not* conserved here: the
+    # analytic budget t*(hL uL - hR uR) must be reproduced instead.
+    assert record["metrics"]["volume_budget_relative"] < 1e-10
+    coarse = run_case(case, n=1600)
+    assert coarse["verdict"]["failed"] == [], coarse["verdict"]
+
+
+def test_no_wave_reaches_the_far_boundaries():
+    """The budget identity above is only valid if the ends stay undisturbed."""
+    for case in DEFAULT_CASES:
+        sol = case.solution()
+        reach = sol.max_wave_speed * case.t_end
+        assert reach < min(abs(case.x_min), abs(case.x_max)) - 0.5, (case.name, reach)
+
+
+def test_monotonicity_clause_needs_the_accepted_grid():
+    """Honest record: at n = 1600 one case still shows a 2e-4 extremum."""
+    case = next(c for c in DEFAULT_CASES if c.name == "shock-rarefaction")
+    coarse = run_case(case, n=1600)
+    assert coarse["verdict"]["failed"] == []                 # tolerances met
+    assert coarse["verdict"]["monotone"] is False            # 1 extremum
+    assert coarse["metrics"]["extremum_count"] == 1
+    assert coarse["metrics"]["extremum_amplitude"] < 5e-4
+    assert run_case(case, n=3200)["verdict"]["monotone"] is True
+
+
+def test_coarse_grid_fails_so_the_gate_is_not_vacuous():
+    series = convergence_series(
+        next(c for c in DEFAULT_CASES if c.name == "rarefaction-rarefaction"),
+        resolutions=(400, 1600))
+    assert series["rows"][0]["pass"] is False
+    assert series["rows"][1]["pass"] is True
+    assert series["rows"][1]["depth_l1"] < series["rows"][0]["depth_l1"]
+
+
+def test_depth_l1_converges_at_first_order_in_the_shock_cases():
+    series = convergence_series(
+        next(c for c in DEFAULT_CASES if c.name == "shock-shock"),
+        resolutions=(400, 800, 1600))
+    orders = series["observed_order_depth_l1"]
+    assert all(0.5 < order < 2.0 for order in orders), orders
+
+
+def test_certification_bundle_is_json_safe_and_complete():
+    import json
+
+    bundle = certification(resolutions=(20_001, 40_001))
+    text = json.dumps(bundle, allow_nan=False)          # strict JSON
+    assert len(text) > 1000
+    for case in DEFAULT_CASES:
+        entry = bundle["cases"][case.name]
+        assert entry["pattern"] == PATTERNS[case.name]
+        assert len(entry["weak_form_refinement"]) == 2
+    assert "stoker_h1_0.5" in bundle["degenerate_limits"]
+
+
+def test_metrics_are_finite_for_every_case():
+    for case in DEFAULT_CASES:
+        record = run_case(case, n=800)
+        metrics = record["metrics"]
+        for key in ("depth_l1", "velocity_l1", "depth_linf"):
+            assert math.isfinite(metrics[key])
+        assert metrics["h_min"] > 0.0
+        assert metrics["h_max_over_href"] < 1.5
