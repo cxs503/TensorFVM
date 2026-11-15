@@ -1,0 +1,28 @@
+{
+  "meta": {
+    "generated_at": "2026-11-15T05:59:07Z",
+    "git_commit": "b97e90ab",
+    "n": 1600,
+    "n_probe": 800,
+    "resolutions": [
+      400,
+      800,
+      1600
+    ],
+    "tolerance": 0.05,
+    "drift_tolerance": 1e-06,
+    "volume_tolerance": 0.005,
+    "numpy": "2.4.6",
+    "python": "3.11.6",
+    "wall_time_s": 30.338067039847374,
+    "command": "PYTHONPATH=src python scripts/run_shallow_water_galilean.py --n 1600 --resolutions 400,800,1600",
+    "reference": "Ritter 1892; Stoker 1957 ch.10; Galilean boost (Whitham 1974 §3.1)",
+    "git_commit_note": "base commit the numbers were generated on; these files are committed by the follow-up commit whose message starts with 'TensorFVM shallow_water: Galilean-boosted Ritter/Stoker'"
+  },
+  "artifacts": {
+    "metrics": "metrics.json",
+    "convergence": "convergence.json",
+    "boundary_blindness": "boundary_blindness.json",
+    "selfcheck": "selfcheck.json"
+  }
+}

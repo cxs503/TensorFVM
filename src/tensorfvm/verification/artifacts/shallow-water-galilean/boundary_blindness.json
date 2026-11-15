@@ -1,0 +1,31 @@
+{
+  "rows": [
+    {
+      "key": "ritter-dry-u0-0.0",
+      "u0": 0.0,
+      "n": 800,
+      "open_front_error": 0.0003911308005408731,
+      "wall_front_error": 0.0003911308005408731,
+      "open_quiet_drift_u": 0.0,
+      "wall_quiet_drift_u": 0.0,
+      "open_volume_error": 1.7541523789077473e-14,
+      "wall_volume_error": 1.7541523789077473e-14,
+      "open_all_pass": true,
+      "wall_all_pass": true
+    },
+    {
+      "key": "ritter-dry-u0-1.5",
+      "u0": 1.5,
+      "n": 800,
+      "open_front_error": 0.000720937379271352,
+      "wall_front_error": 0.000720937379271352,
+      "open_quiet_drift_u": 0.0,
+      "wall_quiet_drift_u": 1.5014673973672734,
+      "open_volume_error": 1.5764913177090993e-14,
+      "wall_volume_error": 0.19319480556963212,
+      "open_all_pass": true,
+      "wall_all_pass": false
+    }
+  ],
+  "reading": "u0=0: the two end conditions are indistinguishable; u0!=0: the closed end is caught by the current drift and the volume budget"
+}
