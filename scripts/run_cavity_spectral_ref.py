@@ -31,7 +31,7 @@ DEFAULT_OUT = Path("docs/CASE-FVM-CAVITY-RE1000/runs/spectral")
 
 def march(solver: SpectralCavity, target: float, *, psi=None, omega=None,
           delta0: float | None = None, tol: float = 1e-9, max_iter: int = 60,
-          log: list | None = None):
+          log: list | None = None, solve_kwargs: dict | None = None):
     """Drive Newton to ``target`` with an adaptive Reynolds-number march.
 
     The returned solution is always a converged Newton solution *at* ``target``;
@@ -40,10 +40,12 @@ def march(solver: SpectralCavity, target: float, *, psi=None, omega=None,
     instead of aborting the whole ladder.
     """
     log = [] if log is None else log
+    solve_kwargs = {} if solve_kwargs is None else dict(solve_kwargs)
     delta = float(delta0 if delta0 is not None else max(target / 5.0, 5.0))
     if psi is not None:
         try:
-            sol = solver.solve(target, psi=psi, omega=omega, tol=tol, max_iter=max_iter)
+            sol = solver.solve(target, psi=psi, omega=omega, tol=tol, max_iter=max_iter,
+                               **solve_kwargs)
             log.append({"reynolds": target, "mode": "warm-start Newton",
                         "iterations": sol.newton["iterations"]})
             return sol
@@ -55,7 +57,7 @@ def march(solver: SpectralCavity, target: float, *, psi=None, omega=None,
     re_now, sol = None, None
     for re0 in (10.0, 2.0, 0.5):
         try:
-            sol = solver.solve(re0, tol=tol, max_iter=max_iter)
+            sol = solver.solve(re0, tol=tol, max_iter=max_iter, **solve_kwargs)
             re_now = re0
             log.append({"reynolds": re0, "mode": "cold start",
                         "iterations": sol.newton["iterations"]})
@@ -71,7 +73,7 @@ def march(solver: SpectralCavity, target: float, *, psi=None, omega=None,
         re_try = min(target, re_now + delta)
         try:
             sol = solver.solve(re_try, psi=sol.psi, omega=sol.omega, tol=tol,
-                               max_iter=max_iter)
+                               max_iter=max_iter, **solve_kwargs)
             log.append({"reynolds": re_try, "mode": "march step",
                         "iterations": sol.newton["iterations"]})
             re_now = re_try
@@ -126,6 +128,18 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--max-iter", type=int, default=60)
     ap.add_argument("--sample", type=int, default=201,
                     help="number of centreline samples stored per profile")
+    ap.add_argument("--linear-solver", default="direct",
+                    choices=("direct", "krylov"),
+                    help="direct dense LU (N <= ~80) or sparse-Jacobian GMRES")
+    ap.add_argument("--krylov-min-order", type=int, default=10 ** 9,
+                    help="use the krylov path for orders >= this value")
+    ap.add_argument("--gmres-restart", type=int, default=200)
+    ap.add_argument("--gmres-maxiter", type=int, default=30,
+                    help="restart cycles (each up to --gmres-restart iterations)")
+    ap.add_argument("--gmres-eta", type=float, default=0.1,
+                    help="Eisenstat-Walker eta cap")
+    ap.add_argument("--gmres-ilu", action="store_true",
+                    help="precondition with an incomplete LU of the Jacobian")
     args = ap.parse_args(argv)
 
     outdir = Path(args.outdir)
@@ -136,6 +150,16 @@ def main(argv: list[str] | None = None) -> int:
     records, prev = [], None
     for n in orders:
         solver = SpectralCavity(n)
+        linear_solver = args.linear_solver
+        if n >= args.krylov_min_order:
+            linear_solver = "krylov"
+        solve_kwargs = {
+            "linear_solver": linear_solver,
+            "gmres_options": {"restart": args.gmres_restart,
+                              "maxiter": args.gmres_maxiter,
+                              "eta_max": args.gmres_eta,
+                              "use_ilu": bool(args.gmres_ilu)},
+        }
         t0 = time.time()
         psi = omega = None
         if prev is not None:
@@ -143,7 +167,7 @@ def main(argv: list[str] | None = None) -> int:
         log: list = []
         try:
             sol = march(solver, args.reynolds, psi=psi, omega=omega, tol=args.tol,
-                        max_iter=args.max_iter, log=log)
+                        max_iter=args.max_iter, log=log, solve_kwargs=solve_kwargs)
         except RuntimeError as exc:
             # an under-resolved order must not abort the ladder: record it as a
             # control row (the same convention as the FVM n = 32 control run)
@@ -168,12 +192,19 @@ def main(argv: list[str] | None = None) -> int:
             "method": {
                 "formulation": "streamfunction-vorticity",
                 "discretisation": "Chebyshev collocation (Chebyshev-Gauss-Lobatto)",
-                "steady_solver": "Newton, dense Jacobian with row/column equilibration",
+                "steady_solver": (
+                    "Newton, dense Jacobian with row/column equilibration"
+                    if linear_solver == "direct" else
+                    "Newton, sparse Jacobian with row/column equilibration + "
+                    "restarted GMRES (Eisenstat-Walker forcing)"),
+                "linear_solver": linear_solver,
                 "wall_vorticity": "spectral ghost-slope closure (Hermite degree N)",
                 "lid_velocity": sol.lid_velocity,
             },
             "metrics": sol.metrics,
             "newton": {"iterations_at_target": sol.newton["iterations"],
+                       "linear_solver": sol.newton.get("linear_solver"),
+                       "history": sol.newton.get("history", []),
                        "march": log},
             "wall_seconds": dt,
             "ghia": score_against_ghia(sol),

@@ -60,9 +60,20 @@ Unknown vector, ``2*N**2 + 2`` entries::
     [ omega(all (N+1)^2 nodes) | psi(interior (N-1)^2 nodes) ]
 
 with the same number of equations ((N-1)^2 Poisson + (N-1)^2 transport rows and
-4*N wall rows).  The Newton Jacobian is dense (spectral matrices are dense), so
-it is LU-factorised directly; the cost therefore grows like ``N**3`` and the
-module stays at moderate ``N`` (<= 160).
+4*N wall rows).
+
+Two linear paths are available for the Newton step (``solve(..., linear_solver=)``):
+
+``"direct"``
+    Dense Jacobian (``(2m)**2`` doubles, i.e. ``O(N**4)`` memory) factorised by
+    LAPACK after row/column equilibration.  Simple and robust; practical up to
+    ``N ~ 80`` and that is where the original N <= 64 reference ladder stopped.
+``"krylov"``
+    The *same* operator assembled sparsely (:meth:`SpectralCavity.jacobian_sparse`,
+    ``O(N**3)`` non-zeros) with the same equilibration, solved by restarted GMRES
+    (Eisenstat-Walker forcing, optional ILU).  ``N = 128`` -- the order needed to
+    measure, rather than assume, the geometric decay of the spectral error --
+    only becomes affordable this way.
 
 Usage
 -----
@@ -254,8 +265,8 @@ class SpectralCavity:
     def __init__(self, n: int, *, corner_rule: str = "y") -> None:
         if n % 2:
             raise ValueError("n must be even so that the centreline is a grid line")
-        if n > 160:
-            raise ValueError("n > 160 exceeds the dense-LU cost/memory budget")
+        if n > 256:
+            raise ValueError("n > 256 is outside the supported order range")
         if n < 6:
             raise ValueError("n < 6 is not a usable cavity discretisation")
         self.n = int(n)
@@ -379,9 +390,17 @@ class SpectralCavity:
         r_transport = (psi_y * om_x - psi_x * om_y - (self._L @ omf) / reynolds)[inter]
         return np.concatenate([r_poisson, r_transport])
 
-    def jacobian(self, state: np.ndarray, reynolds: float,
-                 lid_velocity: float = 1.0) -> np.ndarray:
-        """Dense Newton Jacobian of :meth:`residual` (size ``2m x 2m``)."""
+    def jacobian_sparse(self, state: np.ndarray, reynolds: float,
+                        lid_velocity: float = 1.0) -> sp.csr_matrix:
+        """Sparse Newton Jacobian of :meth:`residual` (size ``2m x 2m``).
+
+        Same operator as :meth:`jacobian`, but assembled from the tensor-product
+        Kronecker factors instead of a dense ``(2m)**2`` array.  That matters for
+        large orders: at ``N = 128`` the dense Jacobian alone is 8.3 GB, whereas
+        this form has ``O(N**3)`` non-zeros (~20 M) and is what makes
+        ``linear_solver="krylov"`` affordable.  ``test_sparse_and_dense_jacobian_agree``
+        pins the two assemblies together.
+        """
         psi, omega = self._fields(state, lid_velocity)
         psif, omf = psi.ravel(), omega.ravel()
         inter, wall = self._interior, self._wall
@@ -390,19 +409,25 @@ class SpectralCavity:
         psi_x, psi_y = self._Ax @ psif, self._Ay @ psif
         om_x, om_y = self._Ax @ omf, self._Ay @ omf
 
-        J = np.zeros((2 * m, 2 * m))
         # Poisson rows: r = L psi + omega  ->  d/domega_int = I, d/dpsi_int = L_int
-        J[:m, :m] = np.eye(m)
-        J[:m, m:] = self._L[inter][:, inter].toarray()
+        L_int = sp.csr_matrix(self._L[inter][:, inter])
+        top = sp.hstack([sp.identity(m, format="csr"), L_int], format="csr")
 
         # transport rows
         A = (sp.diags(psi_y) @ self._Ax - sp.diags(psi_x) @ self._Ay
              - self._L / reynolds)[inter]          # d/domega (m x nw)
         B = (sp.diags(om_x) @ self._Ay - sp.diags(om_y) @ self._Ax)[inter]  # d/dpsi (m x nw)
-        J[m:, :m] = A[:, inter].toarray()
+        A_int = sp.csr_matrix(A[:, inter])
+        B_int = sp.csr_matrix(B[:, inter])
+        A_wall = sp.csr_matrix(A[:, wall])
         # d/dpsi_int goes through psi directly and through the slave omega_wall
-        J[m:, m:] = B[:, inter].toarray() - A[:, wall] @ self._K
-        return J
+        bot = sp.hstack([A_int, B_int - (A_wall @ self._K)], format="csr")
+        return sp.vstack([top, bot], format="csr")
+
+    def jacobian(self, state: np.ndarray, reynolds: float,
+                 lid_velocity: float = 1.0) -> np.ndarray:
+        """Dense Newton Jacobian of :meth:`residual` (size ``2m x 2m``)."""
+        return self.jacobian_sparse(state, reynolds, lid_velocity).toarray()
 
     # -- driver -----------------------------------------------------------
     def solve(
@@ -416,6 +441,8 @@ class SpectralCavity:
         max_iter: int = 60,
         continuation: Iterable[float] = (),
         verbose: bool = False,
+        linear_solver: str = "direct",
+        gmres_options: dict | None = None,
     ) -> SpectralSolution:
         """Newton solve at ``reynolds``, optionally through a continuation path.
 
@@ -423,18 +450,39 @@ class SpectralCavity:
         order, each warm-started from the previous one; that is what makes the
         Newton iteration robust up to Re = 1000.  The returned solution is always
         the one at ``reynolds``.
+
+        ``linear_solver`` selects how each Newton step is solved:
+
+        ``"direct"`` (default)
+            Dense Jacobian, row/column equilibration, LAPACK LU.  Robust, but the
+            dense matrix is ``(2m)**2`` doubles, so it is only practical up to
+            ``N`` around 80.
+        ``"krylov"``
+            Sparse Jacobian (:meth:`jacobian_sparse`) with the *same*
+            equilibration, solved by restarted GMRES with an Eisenstat-Walker
+            forcing term and an optional incomplete-LU preconditioner
+            (``gmres_options={"use_ilu": True}``).  This is what makes
+            ``N >= 96`` reachable; the two paths agree to Newton tolerance
+            (``test_krylov_matches_direct_newton``).
         """
         n1 = self.n1
         psi = np.zeros((n1, n1)) if psi is None else np.array(psi, dtype=float, copy=True)
         omega = np.zeros((n1, n1)) if omega is None else np.array(omega, dtype=float, copy=True)
 
+        if linear_solver not in ("direct", "krylov"):
+            raise ValueError("linear_solver must be 'direct' or 'krylov'")
         history: list[dict] = []
         for re_step in list(continuation) + [float(reynolds)]:
             psi, omega = self._newton(psi, omega, float(re_step), lid_velocity,
-                                      tol, max_iter, history, verbose)
-        return self._assemble(float(reynolds), lid_velocity, psi, omega, history)
+                                      tol, max_iter, history, verbose,
+                                      linear_solver=linear_solver,
+                                      gmres_options=gmres_options or {})
+        return self._assemble(float(reynolds), lid_velocity, psi, omega, history,
+                              linear_solver=linear_solver)
 
-    def _newton(self, psi, omega, re_val, lid_velocity, tol, max_iter, history, verbose):
+    def _newton(self, psi, omega, re_val, lid_velocity, tol, max_iter, history,
+                verbose, *, linear_solver="direct", gmres_options=None):
+        gmres_options = {} if gmres_options is None else dict(gmres_options)
         n1 = self.n1
         inter, wall = self._interior, self._wall
         state = np.concatenate([omega.ravel()[inter], psi.ravel()[inter]])
@@ -443,27 +491,37 @@ class SpectralCavity:
         scale = max(1.0, float(np.linalg.norm(state)),
                     lid_velocity * float(np.max(np.abs(self._wall_const_unit_lid))))
         converged = norm <= tol * scale
+        prev_norm = None
         for it in range(1, max_iter + 1):
             if converged:
                 break
-            J = self.jacobian(state, re_val, lid_velocity)
+            if linear_solver == "krylov":
+                step, lin_it = self._krylov_step(state, res, re_val, lid_velocity,
+                                                 norm, prev_norm, gmres_options)
+                prev_norm = norm
+                J = None
+            else:
+                lin_it = 0
+                J = self.jacobian(state, re_val, lid_velocity)
             # The spectral vorticity closure puts entries ~N**4 in the psi block
             # while the Poisson rows are O(1); without equilibration the dense LU
             # resolves only ~8 significant digits.  Row/column equilibration is
             # exact (a diagonal change of variables) and drops the condition
             # number by ~4 orders of magnitude.
-            try:
-                row_s = 1.0 / np.maximum(np.abs(J).max(axis=1), 1e-300)
-                Js = J * row_s[:, None]
-                col_s = 1.0 / np.maximum(np.abs(Js).max(axis=0), 1e-300)
-                Js *= col_s[None, :]
-                # NOTE: scipy.linalg.lu_factor returns a factorisation with a
-                # spurious exact-zero pivot on this matrix (NaN step) while
-                # LAPACK dgesv as reached through numpy solves it to 1e-15;
-                # numpy's wrapper is therefore used here.
-                step = np.linalg.solve(Js, -res * row_s) * col_s
-            except (np.linalg.LinAlgError, ValueError) as exc:  # pragma: no cover
-                raise RuntimeError(f"singular Newton Jacobian at Re={re_val}") from exc
+            if J is not None:
+                try:
+                    row_s = 1.0 / np.maximum(np.abs(J).max(axis=1), 1e-300)
+                    Js = J * row_s[:, None]
+                    col_s = 1.0 / np.maximum(np.abs(Js).max(axis=0), 1e-300)
+                    Js *= col_s[None, :]
+                    # NOTE: scipy.linalg.lu_factor returns a factorisation with a
+                    # spurious exact-zero pivot on this matrix (NaN step) while
+                    # LAPACK dgesv as reached through numpy solves it to 1e-15;
+                    # numpy's wrapper is therefore used here.
+                    step = np.linalg.solve(Js, -res * row_s) * col_s
+                except (np.linalg.LinAlgError, ValueError) as exc:  # pragma: no cover
+                    raise RuntimeError(
+                        f"singular Newton Jacobian at Re={re_val}") from exc
             alpha, accepted = 1.0, False
             for _ in range(30):
                 candidate = state + alpha * step
@@ -479,9 +537,12 @@ class SpectralCavity:
             state, res, norm = candidate, cand_res, cand_norm
             converged = norm <= tol * scale
             history.append({"reynolds": re_val, "iteration": it,
-                            "residual_norm": norm, "damping": alpha})
+                            "residual_norm": norm, "damping": alpha,
+                            "linear_solver": linear_solver,
+                            "gmres_iterations": lin_it})
             if verbose:
-                print(f"  Re={re_val:7.1f} it={it:3d} |R|={norm:.3e} alpha={alpha:.3f}")
+                print(f"  Re={re_val:7.1f} it={it:3d} |R|={norm:.3e} alpha={alpha:.3f}"
+                      f" gmres={lin_it}")
         if not converged:
             raise RuntimeError(
                 f"Newton did not converge at Re={re_val}: |R|={norm:.3e} "
@@ -494,7 +555,77 @@ class SpectralCavity:
                             + lid_velocity * self._wall_const_unit_lid)
         return psi_out.reshape(n1, n1), omega_out.reshape(n1, n1)
 
-    def _assemble(self, reynolds, lid_velocity, psi, omega, history) -> SpectralSolution:
+    # -- Krylov (sparse-Jacobian) Newton step ------------------------------
+    def _krylov_step(self, state, res, re_val, lid_velocity, res_norm, prev_norm,
+                     options):
+        """One Newton step via restarted GMRES on the sparse, equilibrated Jacobian.
+
+        The equilibration is the *same* diagonal change of variables as in the
+        dense path (``Js = diag(row) J diag(col)``), so the Krylov path targets
+        the same conditioned operator.  The linear tolerance follows
+        Eisenstat-Walker, ``eta = min(0.1, sqrt(|R_k| / |R_{k-1}|))`` floored at
+        ``eta_min``; a step whose GMRES does not converge is rejected (the outer
+        line search then damps), it is never silently accepted.
+        """
+        opts = {
+            "use_ilu": False,
+            "ilu_drop_tol": 1e-4,
+            "ilu_fill_factor": 10.0,
+            "ilu_max_size": 40000,
+            "restart": 200,
+            "maxiter": 30,
+            "eta_min": 1e-12,
+            "eta_max": 0.1,
+        }
+        opts.update(options or {})
+
+        J = self.jacobian_sparse(state, re_val, lid_velocity).tocsr()
+        row_max = np.asarray(np.abs(J).max(axis=1).todense()).ravel()
+        row_s = 1.0 / np.maximum(row_max, 1e-300)
+        Js = (sp.diags(row_s) @ J).tocsr()
+        col_max = np.asarray(np.abs(Js).max(axis=0).todense()).ravel()
+        col_s = 1.0 / np.maximum(col_max, 1e-300)
+        Js = (Js @ sp.diags(col_s)).tocsr()
+
+        eta = opts["eta_max"]
+        if prev_norm is not None and prev_norm > 0.0 and np.isfinite(prev_norm):
+            eta = min(opts["eta_max"],
+                      max(opts["eta_min"], float(np.sqrt(res_norm / prev_norm))))
+        else:
+            eta = max(opts["eta_min"], min(opts["eta_max"], 1e-2))
+
+        M = None
+        ilu_note = None
+        if opts["use_ilu"] and Js.shape[0] <= int(opts["ilu_max_size"]):
+            try:
+                ilu = sp.linalg.spilu(Js.tocsc(),
+                                      drop_tol=float(opts["ilu_drop_tol"]),
+                                      fill_factor=float(opts["ilu_fill_factor"]))
+                M = sp.linalg.LinearOperator(Js.shape, ilu.solve)
+                ilu_note = "applied"
+            except Exception as exc:  # pragma: no cover - depends on LAPACK/arch
+                ilu_note = f"failed: {exc}"
+
+        counter = {"n": 0}
+
+        def _count(pr_norm):
+            counter["n"] += 1
+
+        step_s, info = sp.linalg.gmres(
+            Js, -res * row_s, M=M, rtol=eta, atol=0.0,
+            restart=min(int(opts["restart"]), Js.shape[0]),
+            maxiter=int(opts["maxiter"]), callback=_count, callback_type="pr_norm",
+        )
+        if info != 0:
+            raise RuntimeError(
+                f"GMRES failed at Re={re_val} (info={info}, eta={eta:.1e}, "
+                f"|R|={res_norm:.3e}, ilu={ilu_note})")
+        if not np.all(np.isfinite(step_s)):
+            raise RuntimeError(f"non-finite Krylov step at Re={re_val}")
+        return step_s * col_s, counter["n"]
+
+    def _assemble(self, reynolds, lid_velocity, psi, omega, history,
+                  linear_solver="direct") -> SpectralSolution:
         n1 = self.n1
         u = (self._Ay @ psi.ravel()).reshape(n1, n1)
         v = -(self._Ax @ psi.ravel()).reshape(n1, n1)
@@ -502,6 +633,7 @@ class SpectralCavity:
                                psi=psi, omega=omega, u=u, v=v,
                                lid_velocity=lid_velocity,
                                newton={"iterations": len(history),
+                                       "linear_solver": linear_solver,
                                        "history": history})
         sol.metrics = self.metrics(sol)
         return sol
