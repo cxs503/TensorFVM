@@ -1,0 +1,301 @@
+{
+ "case": "CASE-FVM-PERIODIC-HILLS round 23 (ladder usability audit)",
+ "reference_x_r_over_H": 5.41,
+ "rungs": [
+  {
+   "level": "A",
+   "stem": "round20_laminar_Re2800_96x48",
+   "nx": 96,
+   "ny": 48,
+   "dt": 0.02,
+   "steps_requested": 20000,
+   "samples": 601,
+   "diverged_at_step": null,
+   "t_diverged": null,
+   "mean_tau_identically_zero": false,
+   "usable": true,
+   "reason": "ok",
+   "x_r_over_H": 8.264277859446059
+  },
+  {
+   "level": "Ap",
+   "stem": "round20_laminar_Re2800_96x48dt01",
+   "nx": 96,
+   "ny": 48,
+   "dt": 0.01,
+   "steps_requested": 40000,
+   "samples": 1201,
+   "diverged_at_step": null,
+   "t_diverged": null,
+   "mean_tau_identically_zero": false,
+   "usable": true,
+   "reason": "ok",
+   "x_r_over_H": 8.22962080445255
+  },
+  {
+   "level": "B",
+   "stem": "round20_laminar_Re2800_144x72",
+   "nx": 144,
+   "ny": 72,
+   "dt": 0.0133,
+   "steps_requested": 30000,
+   "samples": 0,
+   "diverged_at_step": 508,
+   "t_diverged": 6.756399999999999,
+   "mean_tau_identically_zero": true,
+   "usable": false,
+   "reason": "solver diverged inside startup transient; time mean is zero",
+   "x_r_over_H": null
+  },
+  {
+   "level": "C",
+   "stem": "round20_laminar_Re2800_192x96",
+   "nx": 192,
+   "ny": 96,
+   "dt": 0.01,
+   "steps_requested": 40000,
+   "samples": 0,
+   "diverged_at_step": 538,
+   "t_diverged": 5.38,
+   "mean_tau_identically_zero": true,
+   "usable": false,
+   "reason": "solver diverged inside startup transient; time mean is zero",
+   "x_r_over_H": null
+  },
+  {
+   "level": "D",
+   "stem": "round20_laminar_Re2800_240x120",
+   "nx": 240,
+   "ny": 120,
+   "dt": 0.008,
+   "steps_requested": 50000,
+   "samples": 0,
+   "diverged_at_step": 652,
+   "t_diverged": 5.216,
+   "mean_tau_identically_zero": true,
+   "usable": false,
+   "reason": "solver diverged inside startup transient; time mean is zero",
+   "x_r_over_H": null
+  }
+ ],
+ "verdict": {
+  "ladder_usable": false,
+  "distinct_meshes": [
+   [
+    96,
+    48
+   ]
+  ],
+  "usable_levels": [
+   "A",
+   "Ap"
+  ],
+  "n_usable": 2,
+  "attribution_status": "not_measurable_with_stored_artefacts",
+  "reason": "3 of 5 rungs diverged inside the startup transient (diverged_at_step = 508/538/652, samples = 0); the two surviving rungs are 96x48 at dt = 0.02 and dt = 0.01, i.e. a one-mesh ladder, which cannot support a spatial order/extrapolation verdict.  The pre-registered rule therefore returns non-finite/inconclusive and is NOT to be reported as 'discretisation ruled out'."
+ },
+ "pre_registered_attribution": {
+  "largest_area_bubble": {
+   "reference": 5.41,
+   "tolerance": 0.1,
+   "n_levels": 4,
+   "verdict": "inconclusive",
+   "rule": "non-finite level",
+   "x_finest": null,
+   "x_coarse": null,
+   "x_extrapolated": null,
+   "order": null,
+   "gci_fine": null,
+   "movement_rel": null,
+   "error_finest_rel": null,
+   "error_extrapolated_rel": null,
+   "ladder": [
+    [
+     0.09375,
+     8.264277859446059
+    ],
+    [
+     0.0625,
+     NaN
+    ],
+    [
+     0.046875,
+     NaN
+    ],
+    [
+     0.0375,
+     NaN
+    ]
+   ],
+   "levels": [
+    "A",
+    "B",
+    "C",
+    "D"
+   ]
+  },
+  "crest_bubble": {
+   "reference": 5.41,
+   "tolerance": 0.1,
+   "n_levels": 4,
+   "verdict": "inconclusive",
+   "rule": "non-finite level",
+   "x_finest": null,
+   "x_coarse": null,
+   "x_extrapolated": null,
+   "order": null,
+   "gci_fine": null,
+   "movement_rel": null,
+   "error_finest_rel": null,
+   "error_extrapolated_rel": null,
+   "ladder": [
+    [
+     0.09375,
+     1.2540965527208672
+    ],
+    [
+     0.0625,
+     NaN
+    ],
+    [
+     0.046875,
+     NaN
+    ],
+    [
+     0.0375,
+     NaN
+    ]
+   ],
+   "levels": [
+    "A",
+    "B",
+    "C",
+    "D"
+   ],
+   "definition": "reattachment of the bubble that separates first downstream of the crest (primary='first'); this is the object the DNS reference x_r/H=5.41 names"
+  },
+  "separation": {
+   "reference": 0.22,
+   "tolerance": 0.1,
+   "n_levels": 4,
+   "verdict": "inconclusive",
+   "rule": "non-finite level",
+   "x_finest": null,
+   "x_coarse": null,
+   "x_extrapolated": null,
+   "order": null,
+   "gci_fine": null,
+   "movement_rel": null,
+   "error_finest_rel": null,
+   "error_extrapolated_rel": null,
+   "ladder": [
+    [
+     0.09375,
+     3.922900531823629
+    ],
+    [
+     0.0625,
+     NaN
+    ],
+    [
+     0.046875,
+     NaN
+    ],
+    [
+     0.0375,
+     NaN
+    ]
+   ],
+   "levels": [
+    "A",
+    "B",
+    "C",
+    "D"
+   ]
+  }
+ },
+ "temporal_dt_half": {
+  "dt_half": {
+   "coarse_dt": 8.264277859446059,
+   "fine_dt": 8.22962080445255,
+   "absolute": 0.03465705499350946,
+   "relative": 0.004193597502762627,
+   "fine_minus_coarse": -0.03465705499350946,
+   "resolved": true,
+   "mesh": [
+    96,
+    48
+   ],
+   "dt_coarse": 0.02,
+   "dt_fine": 0.01
+  }
+ },
+ "dt_sweep": [
+  {
+   "label": "B_dt0133",
+   "nx": 144,
+   "ny": 72,
+   "dt": 0.0133,
+   "diverged_at_step": 500,
+   "t_diverged": 6.6499999999999995,
+   "max_abs_u_last": 1158.4584628479258,
+   "advective_cfl": 0.31541501976284586,
+   "explicit_viscous_number": 0.0026714993204080676
+  },
+  {
+   "label": "B_dt0067",
+   "nx": 144,
+   "ny": 72,
+   "dt": 0.00665,
+   "diverged_at_step": null,
+   "t_diverged": null,
+   "max_abs_u_last": 1.5972088898671366,
+   "advective_cfl": 0.15770750988142293,
+   "explicit_viscous_number": 0.0013357496602040338
+  },
+  {
+   "label": "B_dt0033",
+   "nx": 144,
+   "ny": 72,
+   "dt": 0.00333,
+   "diverged_at_step": null,
+   "t_diverged": null,
+   "max_abs_u_last": 1.6964294211484316,
+   "advective_cfl": 0.07897233201581028,
+   "explicit_viscous_number": 0.0006688791531548019
+  },
+  {
+   "label": "C_dt0100",
+   "nx": 192,
+   "ny": 96,
+   "dt": 0.01,
+   "diverged_at_step": 530,
+   "t_diverged": 5.3,
+   "max_abs_u_last": 345.06475928566596,
+   "advective_cfl": 0.31620553359683795,
+   "explicit_viscous_number": 0.003570926409902179
+  },
+  {
+   "label": "C_dt0025",
+   "nx": 192,
+   "ny": 96,
+   "dt": 0.0025,
+   "diverged_at_step": null,
+   "t_diverged": null,
+   "max_abs_u_last": 1.7430690659390153,
+   "advective_cfl": 0.07905138339920949,
+   "explicit_viscous_number": 0.0008927316024755447
+  },
+  {
+   "label": "A_dt0200",
+   "nx": 96,
+   "ny": 48,
+   "dt": 0.02,
+   "diverged_at_step": null,
+   "t_diverged": null,
+   "max_abs_u_last": 1.4140871714870251,
+   "advective_cfl": 0.31620553359683795,
+   "explicit_viscous_number": 0.0017854632049510895
+  }
+ ]
+}
