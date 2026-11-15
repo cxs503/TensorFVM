@@ -1,0 +1,121 @@
+{
+ "reference_x_r_over_H": 5.41,
+ "runs": [
+  {
+   "n_bubbles": 2,
+   "n_crossings": 4,
+   "selected": {
+    "index": 1,
+    "separation": 3.922900531823629,
+    "reattachment": 8.264277859446059,
+    "length": 4.34137732762243,
+    "reversed_area": 22.4721007015432
+   },
+   "crest": {
+    "index": 0,
+    "separation": 0.40074469529249757,
+    "reattachment": 1.2540965527208672,
+    "length": 0.8533518574283696,
+    "reversed_area": 1.69231769516092
+   },
+   "x_r_over_H": {
+    "largest_area": 8.264277859446059,
+    "first": 1.2540965527208672
+   },
+   "selected_is_crest": false,
+   "flag": "object_mismatch",
+   "reason": "the largest-area bubble is NOT the crest bubble: its reattachment 8.264277859446059 is a different physical object from the crest bubble's 1.2540965527208672",
+   "label": "Re=2800 closure-free (round 20, published +53 %)",
+   "stem": "round20_laminar_Re2800_96x48",
+   "error_largest_vs_ref": 2.854277859446059,
+   "error_crest_vs_ref": -4.155903447279133
+  },
+  {
+   "n_bubbles": 2,
+   "n_crossings": 4,
+   "selected": {
+    "index": 1,
+    "separation": 2.569649929176422,
+    "reattachment": 8.078373744983194,
+    "length": 5.508723815806772,
+    "reversed_area": 17.98891806752248
+   },
+   "crest": {
+    "index": 0,
+    "separation": 0.3468872701547025,
+    "reattachment": 1.2552394632440118,
+    "length": 0.9083521930893093,
+    "reversed_area": 1.5827524534757202
+   },
+   "x_r_over_H": {
+    "largest_area": 8.078373744983194,
+    "first": 1.2552394632440118
+   },
+   "selected_is_crest": false,
+   "flag": "object_mismatch",
+   "reason": "the largest-area bubble is NOT the crest bubble: its reattachment 8.078373744983194 is a different physical object from the crest bubble's 1.2552394632440118",
+   "label": "Re=700 closure-free (round 20, published +54 %)",
+   "stem": "round20_laminar_Re700_96x48",
+   "error_largest_vs_ref": 2.668373744983194,
+   "error_crest_vs_ref": -4.1547605367559886
+  },
+  {
+   "n_bubbles": 1,
+   "n_crossings": 2,
+   "selected": {
+    "index": 0,
+    "separation": 0.3932392615554318,
+    "reattachment": 7.681601876754162,
+    "length": 7.28836261519873,
+    "reversed_area": 24.870284496671516
+   },
+   "crest": {
+    "index": 0,
+    "separation": 0.3932392615554318,
+    "reattachment": 7.681601876754162,
+    "length": 7.28836261519873,
+    "reversed_area": 24.870284496671516
+   },
+   "x_r_over_H": {
+    "largest_area": 7.681601876754162,
+    "first": 7.681601876754162
+   },
+   "selected_is_crest": true,
+   "flag": "single_bubble",
+   "reason": "one reversed-shear bubble: the two rules cannot disagree",
+   "label": "Re=2800 SST r18 (round 18, published +42 %)",
+   "stem": "round11_sst_r18_96x48",
+   "error_largest_vs_ref": 2.271601876754162,
+   "error_crest_vs_ref": 2.271601876754162
+  },
+  {
+   "n_bubbles": 1,
+   "n_crossings": 2,
+   "selected": {
+    "index": 0,
+    "separation": 0.47991995729454334,
+    "reattachment": 3.1443072964934884,
+    "length": 2.664387339198945,
+    "reversed_area": 14.210299365174825
+   },
+   "crest": {
+    "index": 0,
+    "separation": 0.47991995729454334,
+    "reattachment": 3.1443072964934884,
+    "length": 2.664387339198945,
+    "reversed_area": 14.210299365174825
+   },
+   "x_r_over_H": {
+    "largest_area": 3.1443072964934884,
+    "first": 3.1443072964934884
+   },
+   "selected_is_crest": true,
+   "flag": "single_bubble",
+   "reason": "one reversed-shear bubble: the two rules cannot disagree",
+   "label": "Re=2800 SST r12 (round 11)",
+   "stem": "round11_sst_r12-96x48",
+   "error_largest_vs_ref": -2.2656927035065118,
+   "error_crest_vs_ref": -2.2656927035065118
+  }
+ ]
+}
