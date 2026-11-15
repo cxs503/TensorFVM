@@ -47,6 +47,14 @@
 
 **结论**：谱/FVM 极限差 0.26% << 1.5%（各自距 Ghia 的偏差），证明「二阶共同偏差」假设被否定，1.5% 残余来自 Ghia 129² 网格自身离散误差。
 
+> **更正（ATTRIBUTION_AUDIT，见 `ATTRIBUTION_AUDIT.md`）**：上一句的*归因*部分不成立，数字部分照旧有效。
+> ① 两项极值判据的表值都落在 FVM 自身 GCI 带内（u_min 位置 0.43、v_max 位置 0.60），残差**不显著**，
+> 依 GCI 口径**不得**归因给 Ghia；② 「0.26%」是两条*外推*之差，最细网格实测差 **0.855%**；
+> ③ 表自身极值地板（只用表算出）为 u_min ≤0.724%、v_max ≤0.083%，最多解释实测残差的 11%~全部量级。
+> 故本节的裁决应读作：**残差在求解器自身离散不确定度之内，归因问题在现有证据上不可裁决**
+> （`within_own_uncertainty` / `unresolved`），而非「残差属于 Ghia」。机检门
+> `tests/test_cavity_attribution.py`（17 passed）。
+
 ### 3.3 谱方法 Re=100 校验阶梯（m21870 补全 N=64）
 
 | N | u_min | v_max | ψ_min | 壁滑移缺陷 | vs Ghia u_min | vs Ghia v_max |
