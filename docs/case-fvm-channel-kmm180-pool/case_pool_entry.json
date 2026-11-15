@@ -1,0 +1,344 @@
+{
+ "admitted_models": [
+  "sst"
+ ],
+ "caveats": [
+  "The admitted configuration fails the physically meaningful narrow log-layer window (30 <= y+ <= 0.2 Re_tau): n=128: 5.72% / n=256: 6.21%. The ledger window is the literal full window, so this does not block admission, but no claim of \"u+ within 5 % in the log layer\" may be made from this entry.",
+  "Skin friction Cf errs by n=64: 3.40% / n=128: 5.19% / n=256: 6.09% against the anchor reference: the wall quantity a resistance consumer needs is worse than the graded profile metric suggests, and it crosses 5 % from n=128 upwards.",
+  "The full-window deviation of the admitted configuration grows with refinement 2.37% -> 3.21% -> 3.61%; the coarsest grid is therefore the most favourable one. The criterion is graded on the worst grid for this reason -- a single-grid quote would be grid-lucky.",
+  "The entry admits the case *with the designated closure only*; the other closures of the matrix are rejected controls (komega: 10.83%, kepsilon: 7.06% vs 5 %).",
+  "The narrow log-layer window is under-resolved by the coarsest mesh: cell centres inside [30, 0.2 Re_tau] = n=64: 2 / n=128: 6 / n=256: 11 (a verdict needs 3). The log-layer diagnostic is therefore \"NOT_GRADED\" exactly where the full-window number looks best, which is the concrete reason the two windows must be quoted together."
+ ],
+ "criteria": [
+  {
+   "comparator": "lt",
+   "indicator": "rms_full_worst",
+   "name": "u_plus_rms_full",
+   "pass": true,
+   "primary": true,
+   "quantity": "RMS relative deviation of u+ from the MKM1999 chan180 table, 30 <= y+ <= centreline, worst grid of the ladder (sst)",
+   "source": "feature_ledger acceptance: \u6307\u6807 \u5185\u5c3a\u5ea6\u5e73\u5747\u901f\u5ea6 u+(y+) \u5728 y+>30 \u533a\u95f4; \u5bb9\u5dee <5%",
+   "threshold": 0.05,
+   "unit": "-",
+   "value": 0.03611941481721226
+  },
+  {
+   "comparator": "is_true",
+   "indicator": "reference_is_anchor",
+   "name": "reference_is_kmm1987_lineage",
+   "pass": true,
+   "primary": true,
+   "quantity": "graded reference is the KMM1987-lineage dataset (MKM1999 chan180, digest verified), not the LM2015 proxy",
+   "source": "feature_ledger acceptance: ref KMM1987 J. Fluid Mech. 177:133",
+   "threshold": true,
+   "unit": "bool",
+   "value": true
+  },
+  {
+   "comparator": "ge",
+   "indicator": "admitted_model_count",
+   "name": "admitted_model_exists",
+   "pass": true,
+   "primary": true,
+   "quantity": "at least one closure of the matrix meets u_plus_rms_full",
+   "source": "a case-pool entry must name the configuration it admits",
+   "threshold": 1,
+   "unit": "models",
+   "value": 1
+  },
+  {
+   "comparator": "lt",
+   "excluded_reason": "not part of admission: the ledger window is the literal \"y+ > 30\" full window, and this window is only ~6.4 wall units wide here, so at n=64 it holds 2 cells and cannot be graded at all. It is published because it is the physically meaningful log-layer measure, because it is the criterion the admitted configuration FAILS, and because hiding it would let \"u+ within 5 % in the log layer\" be claimed from a full-window number (docs/verification-channel-kmm180-metric-norm).",
+   "indicator": "rms_log_worst_gradable",
+   "name": "u_plus_rms_log_layer",
+   "pass": false,
+   "primary": false,
+   "quantity": "RMS relative deviation of u+ in the physical log layer 30 <= y+ <= 0.2 Re_tau, worst *gradable* grid (SST)",
+   "threshold": 0.05,
+   "unit": "-",
+   "value": 0.06208062500213829
+  },
+  {
+   "comparator": "lt",
+   "excluded_reason": "not in the ledger string (which grades u+ only); kept as a diagnostic because it is the quantity a resistance consumer actually needs: it fails from n=128 upwards while the graded u+ criterion passes, the clearest evidence that the full-window profile metric is lenient.",
+   "indicator": "cf_rel_worst",
+   "name": "cf",
+   "pass": false,
+   "primary": false,
+   "quantity": "relative error of skin-friction coefficient Cf vs the anchor reference profile, worst grid of the ladder (SST)",
+   "threshold": 0.05,
+   "unit": "-",
+   "value": 0.06088000774064342
+  },
+  {
+   "comparator": "lt",
+   "excluded_reason": "not in the ledger string; integrated counterpart of the u+ profile, reported so a mass-flux user can see the error the pointwise metric understates.",
+   "indicator": "bulk_rel_worst",
+   "name": "bulk_velocity",
+   "pass": true,
+   "primary": false,
+   "quantity": "relative error of bulk velocity U_bulk+ vs the anchor reference, worst grid of the ladder (SST)",
+   "threshold": 0.05,
+   "unit": "-",
+   "value": 0.02911706558823892
+  },
+  {
+   "comparator": "is_true",
+   "excluded_reason": "meta-criterion: it gates the *record*, not the solver. Reported because the SST full-window deviation grows monotonically with refinement (2.37 % -> 3.21 % -> 3.61 %), so the coarsest grid is the most favourable one; an entry quoting a single grid would be grid-lucky by construction.",
+   "indicator": "ladder_published",
+   "name": "refinement_stability",
+   "pass": true,
+   "primary": false,
+   "quantity": "the full-window deviation used for admission is the worst over the ladder, and every grid of the ladder is separately published",
+   "threshold": true,
+   "unit": "bool",
+   "value": true
+  },
+  {
+   "comparator": "ge",
+   "excluded_reason": "documents why the log-layer criterion can be NOT_GRADED at all: at n=64 the window [30, 35.6] contains two cell centres. That is a property of the mesh resolution of the window, not a solver error, and it is the reason the log-layer criterion is a diagnostic rather than a gate.",
+   "indicator": "cells_log_coarsest",
+   "name": "log_layer_gradability",
+   "pass": false,
+   "primary": false,
+   "quantity": "model cells inside the log-layer window at the coarsest grid of the ladder (SST, n=64)",
+   "threshold": 3,
+   "unit": "cells",
+   "value": 2
+  }
+ ],
+ "designated_model": "sst",
+ "diagnostic_count": 5,
+ "failed_diagnostics": [
+  "u_plus_rms_log_layer",
+  "cf",
+  "log_layer_gradability"
+ ],
+ "failed_primary": [],
+ "ladder": [
+  64,
+  128,
+  256
+ ],
+ "ledger_contract": {
+  "metric": "wall-unit mean velocity u+(y+) RMS relative deviation in y+ > 30",
+  "reference": "Kim, Moin & Moser 1987 J. Fluid Mech. 177:133 (DOI 10.1017/S0022112087000892)",
+  "tolerance": 0.05,
+  "tolerance_percent": 5.0,
+  "window_low_y_plus": 30.0
+ },
+ "model_summaries": {
+  "kepsilon": {
+   "admitted": false,
+   "bulk_rel_by_grid": {
+    "64": 0.06674820641412262,
+    "128": 0.06672644693089246,
+    "256": 0.06672100581131292
+   },
+   "bulk_rel_worst": 0.06674820641412262,
+   "cells_log_by_grid": {
+    "64": 12,
+    "128": 23,
+    "256": 46
+   },
+   "cf_rel_by_grid": {
+    "64": 0.14815979060881282,
+    "128": 0.14810625202437375,
+    "256": 0.14809286489097442
+   },
+   "cf_rel_worst": 0.14815979060881282,
+   "deviation_grows_with_refinement": false,
+   "full_verdicts": {
+    "64": "FAIL",
+    "128": "FAIL",
+    "256": "FAIL"
+   },
+   "grids": [
+    64,
+    128,
+    256
+   ],
+   "log_layer_gradable_grids": [
+    64,
+    128,
+    256
+   ],
+   "log_verdicts": {
+    "64": "FAIL",
+    "128": "FAIL",
+    "256": "FAIL"
+   },
+   "model": "kepsilon",
+   "rms_full_best": 0.07054880275036135,
+   "rms_full_by_grid": {
+    "64": 0.07060313442970954,
+    "128": 0.07054880275036135,
+    "256": 0.07056084280042804
+   },
+   "rms_full_worst": 0.07060313442970954,
+   "rms_log_by_grid": {
+    "64": 0.06374268594800918,
+    "128": 0.06350732049316664,
+    "256": 0.06350583079730945
+   },
+   "rms_log_worst_gradable": 0.06374268594800918,
+   "verdict_margin_to_threshold": -0.02060313442970954
+  },
+  "komega": {
+   "admitted": false,
+   "bulk_rel_by_grid": {
+    "64": 0.10087311326979692,
+    "128": 0.10026014493608851,
+    "256": 0.10005210108134802
+   },
+   "bulk_rel_worst": 0.10087311326979692,
+   "cells_log_by_grid": {
+    "64": 2,
+    "128": 6,
+    "256": 11
+   },
+   "cf_rel_by_grid": {
+    "64": 0.2369667639502871,
+    "128": 0.23528191432616546,
+    "256": 0.23471085214239162
+   },
+   "cf_rel_worst": 0.2369667639502871,
+   "deviation_grows_with_refinement": false,
+   "full_verdicts": {
+    "64": "FAIL",
+    "128": "FAIL",
+    "256": "FAIL"
+   },
+   "grids": [
+    64,
+    128,
+    256
+   ],
+   "log_layer_gradable_grids": [
+    128,
+    256
+   ],
+   "log_verdicts": {
+    "64": "NOT_GRADED",
+    "128": "FAIL",
+    "256": "FAIL"
+   },
+   "model": "komega",
+   "rms_full_best": 0.10806634886085034,
+   "rms_full_by_grid": {
+    "64": 0.10829341834023166,
+    "128": 0.10817829396907212,
+    "256": 0.10806634886085034
+   },
+   "rms_full_worst": 0.10829341834023166,
+   "rms_log_by_grid": {
+    "64": null,
+    "128": 0.1353594307362963,
+    "256": 0.1353704358768955
+   },
+   "rms_log_worst_gradable": 0.1353704358768955,
+   "verdict_margin_to_threshold": -0.05829341834023166
+  },
+  "sst": {
+   "admitted": true,
+   "bulk_rel_by_grid": {
+    "64": 0.016566001073360998,
+    "128": 0.02499592434154918,
+    "256": 0.02911706558823892
+   },
+   "bulk_rel_worst": 0.02911706558823892,
+   "cells_log_by_grid": {
+    "64": 2,
+    "128": 6,
+    "256": 11
+   },
+   "cf_rel_by_grid": {
+    "64": 0.03397386850956505,
+    "128": 0.051930718976876865,
+    "256": 0.06088000774064342
+   },
+   "cf_rel_worst": 0.06088000774064342,
+   "deviation_grows_with_refinement": true,
+   "full_verdicts": {
+    "64": "PASS",
+    "128": "PASS",
+    "256": "PASS"
+   },
+   "grids": [
+    64,
+    128,
+    256
+   ],
+   "log_layer_gradable_grids": [
+    128,
+    256
+   ],
+   "log_verdicts": {
+    "64": "NOT_GRADED",
+    "128": "FAIL",
+    "256": "FAIL"
+   },
+   "model": "sst",
+   "rms_full_best": 0.023676701027485692,
+   "rms_full_by_grid": {
+    "64": 0.023676701027485692,
+    "128": 0.03209465910205777,
+    "256": 0.03611941481721226
+   },
+   "rms_full_worst": 0.03611941481721226,
+   "rms_log_by_grid": {
+    "64": null,
+    "128": 0.057209634217418356,
+    "256": 0.06208062500213829
+   },
+   "rms_log_worst_gradable": 0.06208062500213829,
+   "verdict_margin_to_threshold": 0.013880585182787744
+  }
+ },
+ "models": [
+  "sst",
+  "komega",
+  "kepsilon"
+ ],
+ "not_graded": [],
+ "pool_status": "ADMITTED_WITH_CAVEAT",
+ "primary_count": 3,
+ "reference": {
+  "Cf": 0.008135948270167365,
+  "U_bulk_plus": 15.67873098359455,
+  "citation": "Moser, Kim & Mansour 1999, Phys. Fluids 11:943 (chan180 statistics)",
+  "csv_sha256": "f87097f2a7cfe72f3b512b3fcbf335a83f3808c91e267d3f33691d701f437d07",
+  "csv_sha256_recorded": "f87097f2a7cfe72f3b512b3fcbf335a83f3808c91e267d3f33691d701f437d07",
+  "delta_Cf_relative": 0.001560118147986433,
+  "delta_re_tau": 3.9679999999999893,
+  "digest_matches": true,
+  "max_y_plus": 178.12,
+  "name": "MKM1999 chan180 (KMM1987 method)",
+  "nominal_re_tau": 180.0,
+  "points": 65,
+  "proxy_name": "Lee & Moser 2015 (Re_tau = 182.088)",
+  "proxy_re_tau": 182.088,
+  "re_tau": 178.12
+ },
+ "rejected_models": [
+  "komega",
+  "kepsilon"
+ ],
+ "reproduce": "python -m tensorfvm.verification.kmm180_case_pool --out docs/case-fvm-channel-kmm180-pool",
+ "schema": "tensorfvm.case-fvm-channel-kmm180.case-pool/1",
+ "slug": "CASE-FVM-CHANNEL-KMM180",
+ "title": "\u7b97\u4f8b\u6c60\u00b7\u6e4d\u6d41\u69fd\u9053 Re_tau=180 \u5e73\u5747\u901f\u5ea6\u5bf9\u6570\u5f8b",
+ "tolerance": 0.05,
+ "tolerance_source": "tensorfvm.verification.kmm1987.TOLERANCE_LOG_REGION",
+ "windows": {
+  "full": {
+   "high": 178.12,
+   "low": 30.0
+  },
+  "log_layer": {
+   "high": 35.624,
+   "low": 30.0
+  }
+ },
+ "withheld_primary": []
+}
