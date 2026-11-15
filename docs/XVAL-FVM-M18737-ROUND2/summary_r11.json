@@ -1,0 +1,180 @@
+{
+ "status": "measured",
+ "reference": {
+  "finest_pair": [
+   6400,
+   12800
+  ],
+  "order_source": "measured_triple",
+  "order_scale": {
+   "coarse_nx": 3200,
+   "fine_nx": 6400,
+   "note": "order measured across the two finest consecutive differences"
+  }
+ },
+ "bars": {
+  "e_percent": 0.543723,
+  "order": 0.813258,
+  "ratio": 0.569095,
+  "B0": {
+   "label": "point-order Richardson",
+   "eps_percent": 0.7181,
+   "assumption": "measured order p is exact"
+  },
+  "B1": {
+   "label": "order band p+-0.25",
+   "eps_percent": 1.1384,
+   "eps_lo_percent": 0.499,
+   "spread_percent": 0.6395,
+   "assumption": "order uncertain by +-0.25, propagated"
+  },
+  "B2": {
+   "label": "GCI Fs=1.25",
+   "eps_percent": 0.8976,
+   "assumption": "ASME V&V-20: asymptotic range reached (R<1, p stable)"
+  },
+  "B3": {
+   "label": "non-asymptotic Fs=3",
+   "eps_percent": 2.1543,
+   "assumption": "Roache: observed order not yet asymptotic"
+  },
+  "B4": {
+   "label": "order-free Cauchy (e/(1-r))",
+   "eps_percent": 1.2618,
+   "licensed": false,
+   "ratio_sequence": [
+    0.528777,
+    0.569095
+   ],
+   "assumption": "difference series geometric with non-increasing ratio"
+  }
+ },
+ "asymptotic": {
+  "R": 0.569095,
+  "monotone": true,
+  "formal_order_weno5": 5.0,
+  "order_ratio": 0.1627,
+  "asymptotic": false,
+  "order": 0.813258
+ },
+ "R1": {
+  "library_percent": 0.718094,
+  "B0_percent": 0.718094,
+  "rel_diff": 0.0,
+  "verdict": "pass"
+ },
+ "regrade": {
+  "rows": [
+   {
+    "nx": 1600,
+    "l1_percent": 3.2513,
+    "pointwise_l1_percent": 3.2987,
+    "upper_bound_percent": {
+     "B0": 3.9694,
+     "B1": 4.3897,
+     "B2": 4.1489,
+     "B3": 5.4056,
+     "B4": null
+    }
+   },
+   {
+    "nx": 3200,
+    "l1_percent": 1.7685,
+    "pointwise_l1_percent": 1.7754,
+    "upper_bound_percent": {
+     "B0": 2.4866,
+     "B1": 2.9069,
+     "B2": 2.6661,
+     "B3": 3.9228,
+     "B4": null
+    }
+   },
+   {
+    "nx": 6400,
+    "l1_percent": 0.8931,
+    "pointwise_l1_percent": 0.8931,
+    "upper_bound_percent": {
+     "B0": 1.6112,
+     "B1": 2.0315,
+     "B2": 1.7907,
+     "B3": 3.0474,
+     "B4": null
+    }
+   }
+  ],
+  "finest": {
+   "nx": 6400,
+   "l1_percent": 0.8931,
+   "pointwise_l1_percent": 0.8931,
+   "upper_bound_percent": {
+    "B0": 1.6112,
+    "B1": 2.0315,
+    "B2": 1.7907,
+    "B3": 3.0474,
+    "B4": null
+   }
+  },
+  "verdicts": {
+   "B0": {
+    "E4": "fail",
+    "E5": "fail",
+    "ledger": "pass"
+   },
+   "B1": {
+    "E4": "fail",
+    "E5": "fail",
+    "ledger": "pass"
+   },
+   "B2": {
+    "E4": "fail",
+    "E5": "fail",
+    "ledger": "pass"
+   },
+   "B3": {
+    "E4": "fail",
+    "E5": "fail",
+    "ledger": "pass"
+   },
+   "B4": {
+    "E4": "not_licensed",
+    "E5": "not_licensed",
+    "ledger": "not_licensed"
+   }
+  }
+ },
+ "critical_order": {
+  "e_percent": 0.543723,
+  "l1_graded_percent": 0.8931,
+  "bars": {
+   "E4": {
+    "bar": 1.5,
+    "p_star": 0.9229,
+    "headroom_percent": 0.6069
+   },
+   "E5": {
+    "bar": 1.0,
+    "p_star": 2.6056,
+    "headroom_percent": 0.1069
+   }
+  }
+ },
+ "worst_convention": {
+  "convention": "B3",
+  "upper_bound_percent": 3.0474
+ },
+ "verdicts": {
+  "R1": "pass",
+  "R2": "fail",
+  "R3": "fail",
+  "R4": "fail",
+  "R5": "not_licensed",
+  "R6": "pass"
+ },
+ "figures": [
+  {
+   "name": "fig_r11_error_bar_robustness.png",
+   "path": "/root/tp-agent/work/m22497/docs/XVAL-FVM-M18737-ROUND2/figures/fig_r11_error_bar_robustness.png",
+   "caption": "(a) 五种口径下的 eps_ref；(b) 各口径的 honest upper bound 与 冻结判据线 E4/E5/总账；(c) B4 合法性所需的差值比序列"
+  }
+ ]
+}
