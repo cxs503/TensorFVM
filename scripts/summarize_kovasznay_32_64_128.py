@@ -98,7 +98,28 @@ def load_level(directory):
                 directory=str(directory))
 
 
-def validate_levels(levels):
+#: Round-off band for the spurious spanwise velocity.  ``zero_gradient``
+#: imposes the physical symmetry (du/dz = dv/dz = 0) and leaves w at round-off;
+#: ``free`` is a traction-free condition and admits an O(h) spurious mode.  On
+#: the committed runs the two differ by twelve orders of magnitude (2.5e-17 vs
+#: 2.2e-03 at n=64), so which closure produced a level is *measurable* from that
+#: level's own fields.
+SPANWISE_ROUNDOFF = 1e-12
+#: Settings whose value can be reconstructed from the saved fields.  Everything
+#: else (Reynolds number, convection order, linear-solve algorithm) cannot be
+#: recovered from a dump, so an unrecorded value there stays a hard error.
+INFERRABLE_CONFIG_KEYS = ('symmetry_closure',)
+
+
+def closure_from_spanwise(level):
+    """Infer the extrusion-plane closure from the level's measured spanwise velocity."""
+    max_w = level.get('max_abs_z_velocity')
+    if max_w is None:
+        return None
+    return 'zero_gradient' if float(max_w) <= SPANWISE_ROUNDOFF else 'free'
+
+
+def validate_levels_with_metadata(levels):
     """Refuse to fit a slope across levels that used different discretisations.
 
     ``free`` (traction-free) and ``zero_gradient`` (symmetry) closures of the
@@ -107,19 +128,105 @@ def validate_levels(levels):
     a ``zero_gradient`` rerun -- produces a number that is not the order of any
     scheme.  The guard is also applied to Reynolds number, convection order and
     the linear-solve algorithm, which are equally able to change the observed
-    order.  Returns the (single) configuration shared by all levels.
+    order.
+
+    Metadata semantics -- "unrecorded" is not "different".  Levels written
+    before ``symmetry_closure`` existed carry the key as ``null``, and the first
+    version of this guard treated that as a conflict, which dropped a physically
+    uniform sequence (``docs/CASE-FVM-KOVASZNAY-ORDER/m20800-independent-reference-audit.md``
+    section 7).  Three cases are therefore distinguished:
+
+    * both recorded and different -> refuse (a genuinely mixed ladder has no order);
+    * both recorded and equal     -> accept, but every level's label is *verified*
+      against its own spanwise signature, so a mislabelled run is refused too;
+    * unrecorded on some level    -> accept only if the closure is reconstructable
+      from that level's fields and the reconstruction agrees with the label the
+      other levels declare.  The reconstruction is reported, never written back
+      into the artifacts.
+
+    A key that no dump can decide stays a hard error when unrecorded.  Returns
+    ``(configuration, metadata)``; ``metadata['metadata_complete']`` is ``False``
+    whenever a value had to be reconstructed.
     """
     if not levels:
         raise SystemExit('no levels loaded')
     reference = dict(levels[0]['configuration'])
+    declared = {level['n']: level['configuration'].get('symmetry_closure')
+                for level in levels}
+    by_grid = {level['n']: level for level in levels}
+    measured = {level['n']: closure_from_spanwise(level) for level in levels}
+
+    labels = {label for label in declared.values() if label is not None}
+    if len(labels) > 1:
+        reference_label = declared[levels[0]['n']]
+        for level in levels[1:]:
+            if declared[level['n']] != reference_label:
+                raise SystemExit(
+                    f"n={level['n']} was solved with a different configuration "
+                    f"(reference n={levels[0]['n']}): "
+                    f"{{'symmetry_closure': ({reference_label!r}, {declared[level['n']]!r})}}")
+    closure = labels.pop() if labels else None
+
+    # A label the level's own fields contradict is a defect, not a preference.
+    for level in levels:
+        n = level['n']
+        if declared[n] is not None and measured[n] is not None and declared[n] != measured[n]:
+            raise SystemExit(
+                f"n={n} declares symmetry_closure={declared[n]!r} but its spanwise "
+                f"velocity (max|w|={level['max_abs_z_velocity']!r}) shows {measured[n]!r}")
+
     for level in levels[1:]:
         other = level['configuration']
         diff = {key: (reference.get(key), other.get(key))
-                for key in CONFIG_KEYS if other.get(key) != reference.get(key)}
-        if diff:
-            raise SystemExit(f"n={level['n']} was solved with a different configuration "
-                             f"(reference n={levels[0]['n']}): {diff}")
-    return reference
+                for key in CONFIG_KEYS
+                if key not in INFERRABLE_CONFIG_KEYS and other.get(key) != reference.get(key)}
+        if not diff:
+            continue
+        unrecorded = sorted(key for key, pair in diff.items()
+                            if pair[0] is None or pair[1] is None)
+        if unrecorded:
+            raise SystemExit(
+                f"n={level['n']} does not record {unrecorded} and those settings cannot be "
+                f"reconstructed from the saved fields (reference n={levels[0]['n']}): {diff}")
+        raise SystemExit(f"n={level['n']} was solved with a different configuration "
+                         f"(reference n={levels[0]['n']}): {diff}")
+
+    unrecorded = sorted(n for n, label in declared.items() if label is None)
+    gaps = []
+    if unrecorded:
+        witness = [measured[n] for n in unrecorded]
+        if any(value is None for value in witness):
+            raise SystemExit(
+                f'symmetry_closure unrecorded at n={unrecorded} and not reconstructable '
+                '(cases.json carries no max_abs_z_velocity)')
+        if len(set(witness)) > 1 or (closure is not None and set(witness) != {closure}):
+            raise SystemExit(
+                f'symmetry_closure unrecorded at n={unrecorded} and the spanwise signature '
+                f'disagrees with the declared label {closure!r}: reconstructed {witness}')
+        closure = witness[0]
+        gaps.append(dict(key='symmetry_closure', levels=unrecorded,
+                         reconstructed=closure,
+                         evidence={str(n): dict(declared=None,
+                                                max_abs_z_velocity=by_grid[n].get(
+                                                    'max_abs_z_velocity'),
+                                                reconstructed=measured[n])
+                                   for n in unrecorded}))
+
+    configuration = dict(reference)
+    if closure is not None:
+        configuration['symmetry_closure'] = closure
+    metadata = dict(closure=closure,
+                    declared={str(n): declared[n] for n in sorted(declared)},
+                    from_fields={str(n): measured[n] for n in sorted(declared)},
+                    metadata_complete=not gaps,
+                    reconstructed=gaps)
+    return configuration, metadata
+
+
+def validate_levels(levels):
+    """Configuration shared by all levels; see :func:`validate_levels_with_metadata`."""
+    configuration, _ = validate_levels_with_metadata(levels)
+    return configuration
 
 
 QUANTITIES = {
@@ -347,7 +454,7 @@ def main():
     levels = sorted({level['n']: level for level in levels}.values(), key=lambda level: level['n'])
     if [level['n'] for level in levels] != required:
         raise SystemExit(f'need levels {required}, got {[level["n"] for level in levels]}')
-    configuration = validate_levels(levels)
+    configuration, metadata = validate_levels_with_metadata(levels)
 
     orders = {key: observed_orders(levels, key) for key in QUANTITIES}
     fits = {key: fit_slope(levels, key) for key in QUANTITIES}
@@ -400,7 +507,8 @@ def main():
                                    summarizer='scripts/summarize_kovasznay_32_64_128.py',
                                    errors_recomputed_from='n<N>-fields.npz',
                                    recompute_rtol=RECOMPUTE_RTOL,
-                                   configuration=configuration))
+                                   configuration=configuration,
+                                   metadata=metadata))
     write_json(args.output / 'summary.json', summary)
 
     if args.figure:
