@@ -1,0 +1,58 @@
+{
+  "anchor_slug": "FEAT-UNSTR3D-MESH",
+  "repo": "TensorFVM",
+  "case_name": "OpenFOAM polyMesh ASCII 读入通道（3-D 非结构连通重建 + 二阶 Poisson 交叉核对）",
+  "evidence_level": {
+    "roundtrip": "REAL",
+    "geometry": "REAL",
+    "poisson_vs_manufactured": "REAL",
+    "poisson_vs_openfoam_laplacianFoam": "WITHHELD"
+  },
+  "criteria": [
+    {
+      "name": "polyMesh round-trip connectivity",
+      "metric": "点/面/owner/neighbour/patch 一致性",
+      "tolerance": "逐位一致（0）",
+      "value": "bitwise=True (tet6 / hex)"
+    },
+    {
+      "name": "parsed+exported geometry closure",
+      "metric": "Σ_f Sf 相对闭合 / min Sf·d",
+      "tolerance": "<=1e-10 / >0",
+      "value": "1.2e-16"
+    },
+    {
+      "name": "FV Poisson manufactured solution (32³)",
+      "metric": "volume-weighted rel. L2",
+      "tolerance": "<=3% 且观测阶 >=1.8",
+      "value": "1.090e-03, order 1.90"
+    },
+    {
+      "name": "external cavity-shaped polyMesh",
+      "metric": "体积相对误差 / Poisson L2 (nx=40)",
+      "tolerance": "<=1e-12 / <=3%",
+      "value": "0.0e+00 / 5.142e-04"
+    }
+  ],
+  "gates": {
+    "roundtrip_atol": 1e-12,
+    "volume_rtol": 1e-12,
+    "closure": 1e-10,
+    "l2_max": 0.03,
+    "order_min": 1.8,
+    "budget_max": 1e-06,
+    "external_volume_rtol": 1e-12
+  },
+  "verdict": {
+    "status": "PARTIAL",
+    "status_sql": "partial",
+    "openfoam_binary_available": false,
+    "evidence_level": {
+      "roundtrip": "REAL",
+      "geometry": "REAL",
+      "poisson_vs_manufactured": "REAL",
+      "poisson_vs_openfoam_laplacianFoam": "WITHHELD"
+    },
+    "criteria_text": "round-trip 连通逐位一致（0）；几何闭合<=1e-10、体积相对误差<=1e-12；FV Poisson 相对 L2<=3%（32³）且观测阶>=1.8；守恒预算<=1e-6；外部 cavity 同构网格体积 0.1 相对误差<=1e-12；vs OpenFOAM laplacianFoam = WITHHELD（本机无二进制）"
+  }
+}
