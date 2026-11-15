@@ -1,0 +1,45 @@
+{
+  "anchor": "CASE-FVM-DAMBREAK-STOKER",
+  "t_star_end": 2.0,
+  "h0": 1.0,
+  "gravity": 9.81,
+  "eps_ladder": [
+    0.9999,
+    0.999,
+    0.99,
+    0.95,
+    0.9,
+    0.8,
+    0.5,
+    0.25,
+    0.1,
+    0.03,
+    0.01,
+    0.003,
+    0.001,
+    0.0003,
+    0.0001,
+    3e-05,
+    1e-05,
+    3e-06,
+    1e-06
+  ],
+  "grid_ladder": [
+    800,
+    1600,
+    3200
+  ],
+  "deep_grid": {
+    "0.0001": 6400,
+    "1e-05": 6400,
+    "1e-06": 6400
+  },
+  "dry_floor_eps": 1e-13,
+  "tolerance": 0.05,
+  "plateau_min_jump_fraction": 0.5,
+  "figures": {
+    "fig_laws": "src/tensorfvm/verification/artifacts/shallow-water-dam-break-degenerate/fig_laws.png",
+    "fig_validity": "src/tensorfvm/verification/artifacts/shallow-water-dam-break-degenerate/fig_validity.png",
+    "fig_profiles": "src/tensorfvm/verification/artifacts/shallow-water-dam-break-degenerate/fig_profiles.png"
+  }
+}
