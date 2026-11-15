@@ -404,10 +404,13 @@ def run_time_averaged_case(tag, closure="sst", *, nx=96, ny=48, steps=20000,
 
     coverage = float(finite.mean()) if finite.size else 0.0
     block_xr = []
+    block_tau_b_mean = []
     for k in range(n_blocks):
         if block_count[k] == 0:
             block_xr.append(None)
+            block_tau_b_mean.append(None)
             continue
+        block_tau_b_mean.append(block_tau[k] / block_count[k])
         block_xr.append(separation_reattachment(
             block_tau[k] / block_count[k], x_over_h,
             window=_REATTACHMENT_WINDOW)["x_r_over_H"])
@@ -419,6 +422,12 @@ def run_time_averaged_case(tag, closure="sst", *, nx=96, ny=48, steps=20000,
     stationarity["x_r_over_H_by_block"] = block_xr
     stationarity["x_r_over_H_block_spread_rel"] = block_spread
     stationarity["x_r_over_H_block_samples"] = [int(v) for v in block_count]
+    # round 22: persist the per-block mean wall-shear profiles so the block-level
+    # x_r/H can be re-scored with the certified operator by any reader instead of
+    # being trusted as a derived number (round-21 lead #1: "让写出端按块保存时均
+    # 剪切剖面").  None = block with no samples (e.g. a run that diverged early).
+    stationarity["x_r_over_H_block_tau_b"] = [
+        None if v is None else [float(x) for x in v] for v in block_tau_b_mean]
     stationarity["reattachment_coverage"] = coverage
 
     payload = {
@@ -471,11 +480,18 @@ def run_time_averaged_case(tag, closure="sst", *, nx=96, ny=48, steps=20000,
         (out / f"{stem}.json").write_text(
             json.dumps(strict_finite(payload), indent=1, allow_nan=False))
         if save_fields:
+            # round 22: persist the per-block mean wall-shear profiles (shape
+            # (n_blocks, nx)); empty blocks are NaN so the array is rectangular
+            # and the block index is preserved.
+            block_tau_b = np.stack([
+                v if v is not None else np.full_like(block_tau[0], np.nan)
+                for v in block_tau_b_mean])
             np.savez_compressed(
                 out / f"{stem}.npz",
                 mean_u=mean_u, mean_v=mean_v, mean_tau_b=mean_tau_b,
                 mean_tau_t=mean_tau_t, yc=solver.mesh.yc, xc=solver.mesh.xc,
-                x_over_h=x_over_h, u=solver.u, v=solver.v)
+                x_over_h=x_over_h, u=solver.u, v=solver.v,
+                block_tau_b=block_tau_b)
     return payload
 
 
