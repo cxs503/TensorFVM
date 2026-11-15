@@ -1,0 +1,255 @@
+{
+  "mids": {
+    "scale_dir": null
+  },
+  "verdict": {
+    "reference": {
+      "family": "weno5",
+      "nx": 12800,
+      "self_certification": {
+        "coarse_nx": 6400,
+        "fine_nx": 12800,
+        "l1_percent": 0.5437229141389293,
+        "peak_percent": 0.023021571035996842,
+        "mass_percent": 0.0005090225294983794,
+        "ratio": 2,
+        "window": [
+          0.4,
+          1.0
+        ],
+        "self_certified": true
+      }
+    },
+    "ladder": [
+      {
+        "nx": 1600,
+        "measured": true,
+        "l1_percent": 3.2512771531069533,
+        "peak_percent": 0.12473095002508143,
+        "mass_percent": 0.002417401481655299,
+        "ratio": 8,
+        "window": [
+          0.4,
+          1.0
+        ],
+        "pointwise_l1_percent": 3.298658850112687,
+        "metric_bias_pp": 0.04738169700573369,
+        "source": "/root/tp-agent/work/m21464/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx1600_hllc.npz"
+      },
+      {
+        "nx": 3200,
+        "measured": true,
+        "l1_percent": 1.7685252844359072,
+        "peak_percent": 0.7604024784683446,
+        "mass_percent": 0.0009326782351779585,
+        "ratio": 4,
+        "window": [
+          0.4,
+          1.0
+        ],
+        "pointwise_l1_percent": 1.7754268782298872,
+        "metric_bias_pp": 0.006901593793980032,
+        "source": "/root/tp-agent/work/m21464/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx3200_hllc.npz"
+      },
+      {
+        "nx": 6400,
+        "measured": true,
+        "l1_percent": 0.8930772870380906,
+        "peak_percent": 0.04441609824140254,
+        "mass_percent": 0.00022142970442169175,
+        "ratio": 2,
+        "window": [
+          0.4,
+          1.0
+        ],
+        "pointwise_l1_percent": 0.893077287038094,
+        "metric_bias_pp": 3.3306690738754696e-15,
+        "source": "/root/tp-agent/work/m21464/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx6400_hllc.npz"
+      },
+      {
+        "nx": 12800,
+        "measured": false
+      }
+    ],
+    "orders": [
+      {
+        "nx_pair": [
+          1600,
+          3200
+        ],
+        "l1_pair": [
+          3.2512771531069533,
+          1.7685252844359072
+        ],
+        "order": 0.8784596976568859
+      },
+      {
+        "nx_pair": [
+          3200,
+          6400
+        ],
+        "l1_pair": [
+          1.7685252844359072,
+          0.8930772870380906
+        ],
+        "order": 0.9856899083584574
+      }
+    ],
+    "forecast": [
+      {
+        "nx": 6400,
+        "predicted_l1_percent": 0.9619855627196415,
+        "measured_l1_percent": 0.8930772870380906,
+        "order_used": 0.8784596976568859,
+        "rel_error_percent": 7.715824451217052
+      }
+    ],
+    "finest_graded": {
+      "nx": 6400,
+      "l1_percent": 0.8930772870380906,
+      "peak_percent": 0.04441609824140254,
+      "metric_bias_pp": 3.3306690738754696e-15
+    },
+    "certified_lt_1pct": true,
+    "certified_lt_1pct_legacy_metric": true,
+    "metric_decision_invariant": true,
+    "order_used_for_forecast": 0.9856899083584574,
+    "nx_needed_for_1pct": 6400.0,
+    "nx_needed_for_3pct": 6400.0,
+    "ledger_tolerance_percent": 15.0,
+    "certified_bar_percent": 1.0,
+    "not_measured": [
+      12800
+    ]
+  },
+  "predeclaration_checks": {
+    "predeclaration": {
+      "source": "docs/XVAL-FVM-M18737-ROUND2/PREDECLARATION-refine.md",
+      "nx_ref": 3200,
+      "err_ref_percent": 1.7685,
+      "order": 0.8785,
+      "order_band": [
+        0.79,
+        1.05
+      ],
+      "targets": [
+        6400,
+        12800
+      ],
+      "f1_target": 6400,
+      "f1_band_percent": [
+        0.854,
+        1.023
+      ],
+      "f2_order_band": [
+        0.7,
+        1.2
+      ],
+      "f2_plateau_percent": 1.5
+    },
+    "forecast": [
+      {
+        "nx": 6400,
+        "predicted_percent": 0.9619449365592507,
+        "band_percent": [
+          0.8541291988517946,
+          1.0228015266182504
+        ],
+        "measured_percent": 0.8930772870380906,
+        "rel_error_percent": 7.711275442863526,
+        "in_band": true
+      },
+      {
+        "nx": 12800,
+        "predicted_percent": 0.5232332829923556,
+        "band_percent": [
+          0.41251721138321096,
+          0.5915312201598097
+        ],
+        "measured_percent": null,
+        "rel_error_percent": null,
+        "in_band": null
+      }
+    ],
+    "F1": {
+      "criterion": "e(nx=6400) in the predeclared band",
+      "target_nx": 6400,
+      "band_percent": [
+        0.854,
+        1.023
+      ],
+      "predicted_percent": 0.9619449365592507,
+      "measured_percent": 0.8930772870380906,
+      "passed": true,
+      "note": ""
+    },
+    "F2": {
+      "criterion": "sequence order in [0.70, 1.20] and no plateau above 1.5 %",
+      "sequence": [
+        1600,
+        3200,
+        6400
+      ],
+      "order_sequence_lsq": 0.9320748030076722,
+      "order_band": [
+        0.7,
+        1.2
+      ],
+      "order_in_band": true,
+      "finest_two_l1_percent": [
+        1.7685252844359072,
+        0.8930772870380906
+      ],
+      "plateau": false,
+      "plateau_bar_percent": 1.5,
+      "passed": true,
+      "consistent_two_point_order": 0.9320748030076716
+    },
+    "F3": {
+      "criterion": "first rung with L1 and peak both < 1 %; else honest FAIL + cost",
+      "certified_at_nx": 6400,
+      "finest_measured_nx": 6400,
+      "finest_l1_percent": 0.8930772870380906,
+      "finest_peak_percent": 0.04441609824140254,
+      "passed": true,
+      "path_exhausted": false,
+      "nx_needed_for_1pct": 6400.0,
+      "ruling": "certified-<1 % first achieved at nx=6400"
+    },
+    "overall": "pass",
+    "checks_passed": 3,
+    "checks_total": 3
+  },
+  "regions": [
+    {
+      "region": "left_plateau",
+      "range": [
+        0.4,
+        0.55
+      ],
+      "share_percent_of_l1": 0.037506165229995315
+    },
+    {
+      "region": "collision_fronts",
+      "range": [
+        0.55,
+        0.72
+      ],
+      "share_percent_of_l1": 36.63103222698784
+    },
+    {
+      "region": "right_contact_and_shock",
+      "range": [
+        0.72,
+        1.0
+      ],
+      "share_percent_of_l1": 63.33146160778216
+    }
+  ],
+  "cfl_control": null,
+  "figures": [
+    "fig_refine_r3_ladder.png",
+    "fig_refine_r3_profiles.png"
+  ],
+  "data_dir": "/root/tp-agent/work/m21464/docs/woodward-colella-double-blast/ladder/data"
+}
