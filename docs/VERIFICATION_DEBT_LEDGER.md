@@ -551,3 +551,24 @@
 - 给下次: ① y 向扩散隐式化（Thomas/(x,z)，系数随 nu_eff 逐步入），同时换二阶单侧壁梯度消 O(h) 地板；
   ② 壁面 nu_t 硬约束并复测放大率 <1；③ 通过后 T=80 自旋 + T=40 统计窗，块平均 ≥20 样本，
   用 `kmm1987.log_region_deviation(high_fraction=0.2)` 出锚点读数。
+
+## 4g. 追加欠账（append-only，2026-11-15）
+### D18 XVAL-FVM-M18737-ROUND2 补轮：加密**被定级解**（certified-<1% 的定量裁决）—— m21306 selfstart
+- 缺口来源：`docs/XVAL-FVM-M18737-ROUND2/CERTIFIED-REF-CLOSURE.md` 的唯一绑定门是**被定级解**自身
+  L1 = 1.7685 % > 1 %；上一轮只加密了参考解，被定级解停在 nx=3200，"加密被定级解是否/要多贵才能 <1%" 无账。
+- 交付：`src/tensorfvm/verification/wc_refine.py`（守恒限制度量 `restrict`/`cell_average_l1`、旧插值口径
+  `pointwise_l1`、误差模型 `observed_order`/`forecast_error`/`nx_for_error`、残差归属 `residual_density`/
+  `region_shares`、总审 `audit`）+ `tests/test_wc_refine.py`（20 测全绿，6 s）+ `docs/XVAL-FVM-M18737-ROUND2/`
+  `{PREDECLARATION-refine.md,REFINEMENT-CLOSURE.md,refinement_figures.py,refinement_report.py,summary.json,figures/}`。
+- 冻结预测（测量前写死，`PREDECLARATION-refine.md`）：用 e(1600)=3.2513 %、e(3200)=1.7685 %
+  定阶 p=0.8785，外推 e(6400)=0.962 %、e(12800)=0.523 %；判据 F1(区间)/F2(阶 0.70–1.20)/F3(裁决)。
+- 已实测结论：①**度量假设 M1 成立**——守恒限制 vs 旧插值口径差 0.0069 pp（≪0.05），
+  1.776 % 不是插值假象，裁决不随口径翻转；②参考自认证 L1 0.5437 %/峰值 0.0230 %（门 1 仍过）；
+  ③L1 残差**前沿局域化**：x∈[0.40,0.55] 平滑平台只占 0.05 %，
+  x∈[0.72,1.00] 占 62.31 % ⇒ 加密/高阶是对症手段；
+  ④峰值度量非单调（1600 档 0.1247 % < 3200 档 0.7604 %），判据以 L1 为主。
+- 未完成（明示）：nx=6400/12800 被定级解**作业 cj3325 仍在跑**（28 min 未出工件；nx=1600 单档已 >120 s），
+  故 F1/F2/F3 的数值裁决 **not measured**，冻结预测仍在账上待验；另：CFL/时间推进敏感性、高阶格式
+  （WENO5 本体）对照未做。重跑：`wc_ladder.py --plan 6400:hllc,12800:hllc --outdir runs/wc-refine`，
+  工件回填 `docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx<6400|12800>_hllc.npz` 后
+  重跑 `refinement_figures.py` + `refinement_report.py` 即自动改判，无需改代码。
