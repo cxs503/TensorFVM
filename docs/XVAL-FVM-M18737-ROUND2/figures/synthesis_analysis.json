@@ -23,7 +23,7 @@
       "max_gradient": 2696.3589999999617,
       "rise_width_peak": null
     },
-    "source": "/srv/tensor/agent/work/m21991/docs/woodward-colella-double-blast/reference/reference_density.csv"
+    "source": "/srv/tensor/agent/work/m22324/docs/woodward-colella-double-blast/reference/reference_density.csv"
   },
   "profiles": {
     "nx200_hllc": {
@@ -154,6 +154,38 @@
       "max_gradient": 226.74744511657474,
       "peak": 5.05775460712152
     },
+    "nx400_weno5": {
+      "nx": 400,
+      "family": "weno5",
+      "source": "ladder/data/ladder_profile_nx400_weno5.npz",
+      "peak_percent": 9.648067614222738,
+      "l1_percent": 7.78273132709328,
+      "mass_percent": 1.359123387193297,
+      "peak_percent_calibrated": 9.96292184918106,
+      "l1_percent_calibrated": 6.862349965019711,
+      "mass_percent_calibrated": 0.07039642061984076,
+      "peak_position_error": 0.003299000000000052,
+      "verdict_calibrated": "PASS",
+      "total_variation": 13.76619583965921,
+      "max_gradient": 456.5934171777987,
+      "peak": 5.6886267822368115
+    },
+    "nx800_weno5": {
+      "nx": 800,
+      "family": "weno5",
+      "source": "ladder/data/ladder_profile_nx800_weno5.npz",
+      "peak_percent": 0.01621187884321614,
+      "l1_percent": 2.855594369455334,
+      "mass_percent": 1.405102099659094,
+      "peak_percent_calibrated": 0.36463075916898285,
+      "l1_percent_calibrated": 1.943121982925618,
+      "mass_percent_calibrated": 0.02506616956542105,
+      "peak_position_error": 0.002674000000000065,
+      "verdict_calibrated": "PASS",
+      "total_variation": 16.621086670408268,
+      "max_gradient": 956.9148718320112,
+      "peak": 6.295055787705944
+    },
     "nx1600_weno5": {
       "nx": 1600,
       "family": "weno5",
@@ -217,6 +249,38 @@
       "total_variation": 18.449936827201235,
       "max_gradient": 15572.620702871433,
       "peak": 6.459503691877991
+    },
+    "nx400_weno7": {
+      "nx": 400,
+      "family": "weno7",
+      "source": "ladder/data/ladder_profile_nx400_weno7.npz",
+      "peak_percent": 2.3646301150668627,
+      "l1_percent": 6.027407271250274,
+      "mass_percent": 1.362321099811544,
+      "peak_percent_calibrated": 2.70486533614369,
+      "l1_percent_calibrated": 5.2038342832091296,
+      "mass_percent_calibrated": 0.06724380698602381,
+      "peak_position_error": 0.003299000000000052,
+      "verdict_calibrated": "FAIL",
+      "total_variation": 16.749097831791797,
+      "max_gradient": 457.8116680171389,
+      "peak": 6.147197579013352
+    },
+    "nx800_weno7": {
+      "nx": 800,
+      "family": "weno7",
+      "source": "ladder/data/ladder_profile_nx800_weno7.npz",
+      "peak_percent": 5.283751189398822,
+      "l1_percent": 3.463616663495466,
+      "mass_percent": 1.4078722291691101,
+      "peak_percent_calibrated": 4.916863242910377,
+      "l1_percent_calibrated": 2.6758239175670195,
+      "mass_percent_calibrated": 0.02233510861551508,
+      "peak_position_error": 0.00017400000000000748,
+      "verdict_calibrated": "PASS",
+      "total_variation": 18.644859345624862,
+      "max_gradient": 1051.2971272138434,
+      "peak": 6.6287455169542095
     },
     "nx1600_weno7": {
       "nx": 1600,
@@ -303,12 +367,35 @@
     "weno5": {
       "rungs": [
         200,
+        400,
+        800,
         1600,
         3200,
         6400,
         12800
       ],
       "differences": [
+        {
+          "coarse_nx": 200,
+          "fine_nx": 400,
+          "l1_window_percent": 9.863751526743455,
+          "l1_full_percent": 9.255919653490192,
+          "peak_delta_percent": 11.090060910398265
+        },
+        {
+          "coarse_nx": 400,
+          "fine_nx": 800,
+          "l1_window_percent": 6.604848696997459,
+          "l1_full_percent": 6.194535995851235,
+          "peak_delta_percent": 9.633417493352002
+        },
+        {
+          "coarse_nx": 800,
+          "fine_nx": 1600,
+          "l1_window_percent": 3.1832051742269787,
+          "l1_full_percent": 2.9849049390132785,
+          "peak_delta_percent": 2.7341645290933316
+        },
         {
           "coarse_nx": 1600,
           "fine_nx": 3200,
@@ -332,6 +419,9 @@
         }
       ],
       "observed_orders": [
+        0.5786109451441006,
+        1.0530453635691006,
+        0.8167814708652978,
         0.9193843918565033,
         0.8133127215945872
       ],
@@ -340,10 +430,46 @@
       "finest_error_estimate_percent": 0.7180596557550546,
       "peak_sequence": [
         5.0578,
+        5.6886,
+        6.2951,
         6.472,
         6.4401,
         6.4578,
         6.4595
+      ]
+    },
+    "weno7": {
+      "rungs": [
+        400,
+        800,
+        1600
+      ],
+      "differences": [
+        {
+          "coarse_nx": 400,
+          "fine_nx": 800,
+          "l1_window_percent": 5.620340855181281,
+          "l1_full_percent": 5.283609104076881,
+          "peak_delta_percent": 7.264541031319
+        },
+        {
+          "coarse_nx": 800,
+          "fine_nx": 1600,
+          "l1_window_percent": 4.434461312203519,
+          "l1_full_percent": 4.162398155543451,
+          "peak_delta_percent": 1.2321619717911958
+        }
+      ],
+      "observed_orders": [
+        0.3418987677935625
+      ],
+      "finest_nx": 1600,
+      "finest_self_l1_percent": 4.434461312203519,
+      "finest_error_estimate_percent": 16.58216236705798,
+      "peak_sequence": [
+        6.1472,
+        6.6287,
+        6.7114
       ]
     }
   },
@@ -1046,6 +1172,8 @@
   "peak_fit_weno5": {
     "nx": [
       200.0,
+      400.0,
+      800.0,
       1600.0,
       3200.0,
       6400.0,
@@ -1053,21 +1181,25 @@
     ],
     "peak": [
       5.05775460712152,
+      5.6886267822368115,
+      6.295055787705944,
       6.472011222880893,
       6.440121911193443,
       6.457799798629349,
       6.459503691877991
     ],
-    "order": 3.0,
-    "rho_inf": 6.45813337863685,
-    "C": -11202805.135429695,
-    "rms_fit": 0.010864443143742455,
+    "order": 1.1,
+    "rho_inf": 6.5242277320884074,
+    "C": -509.69118303678727,
+    "rms_fit": 0.07815551355779399,
     "fitted": [
-      5.057782736708138,
-      6.455398318789333,
-      6.45779149615591,
-      6.458090643326733,
-      6.458128036723085
+      5.0239414934609545,
+      5.824319453394369,
+      6.19770897455277,
+      6.371901345520229,
+      6.453164960013558,
+      6.49107577668046,
+      6.508761798023621
     ]
   },
   "finest_tag": "nx6400_hllc",
@@ -1294,6 +1426,18 @@
       "peak_fvm": 5.00678626370563,
       "peak_weno5": 5.05775460712152,
       "peak_delta_percent": 1.0077266964301719
+    },
+    "400": {
+      "l1_between_percent": 3.037151224694737,
+      "peak_fvm": 5.649813015225584,
+      "peak_weno5": 5.6886267822368115,
+      "peak_delta_percent": 0.6823046843647091
+    },
+    "800": {
+      "l1_between_percent": 1.899646005423078,
+      "peak_fvm": 6.189783163404389,
+      "peak_weno5": 6.295055787705944,
+      "peak_delta_percent": 1.6723064552843043
     },
     "1600": {
       "l1_between_percent": 1.4750546473043848,
