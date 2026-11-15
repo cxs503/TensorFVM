@@ -1,0 +1,338 @@
+{
+  "anchor": "CASE-FVM-KOVASZNAY-ORDER",
+  "title": "\u7b97\u4f8b\u6c60\u00b7\u5b9a\u5e38 Kovasznay \u6d41\u6536\u655b\u9636\u9a8c\u8bc1",
+  "reference": {
+    "ref": "Kovasznay 1948, Proc. Camb. Phil. Soc. 44:58-62",
+    "doi": "10.1017/s0305004100023999",
+    "solution": "u = 1 - exp(lam x) cos(2 pi y), v = lam/(2 pi) exp(lam x) sin(2 pi y), p = (1 - exp(2 lam x))/2",
+    "lambda_identity": "lam^2 - Re*lam = 4*pi^2"
+  },
+  "admitted_configuration": {
+    "reynolds": 40.0,
+    "symmetry_closure": "zero_gradient",
+    "convection_order": 2,
+    "algorithm": "coupled"
+  },
+  "grids": [
+    32,
+    64,
+    128
+  ],
+  "levels": [
+    {
+      "n": 32,
+      "h": 0.03125,
+      "cells": 1024,
+      "errors": {
+        "velocity_full": 0.0034356154111469706,
+        "velocity_inplane": 0.0034356154111469706,
+        "velocity_spanwise": 6.779240884088528e-18,
+        "pressure_fixed": 0.07843493416161752,
+        "pressure_mean_free": 0.028851421855200135
+      },
+      "max_abs_z_velocity": 1.6022438471154331e-16,
+      "discrete_conservation": {
+        "energy_balance_error": 1.9663920491908016e-10,
+        "global_momentum_imbalance": 2.4780969571020547e-10,
+        "interface_traction_defect_max": 1.1261772504128631e-10,
+        "divergence_max": 2.0616042206711427e-10,
+        "total_volume_error": 0.0
+      },
+      "outer_iterations": 22
+    },
+    {
+      "n": 64,
+      "h": 0.015625,
+      "cells": 4096,
+      "errors": {
+        "velocity_full": 0.0008972613982215257,
+        "velocity_inplane": 0.0008972613982215259,
+        "velocity_spanwise": 1.1191414368138815e-18,
+        "pressure_fixed": 0.039609045192389954,
+        "pressure_mean_free": 0.00795833894220276
+      },
+      "max_abs_z_velocity": 2.4881882844769875e-17,
+      "discrete_conservation": {
+        "energy_balance_error": 9.584030236098329e-10,
+        "global_momentum_imbalance": 4.406676650168498e-10,
+        "interface_traction_defect_max": 1.235180920218515e-10,
+        "divergence_max": 1.3467911230691243e-09,
+        "total_volume_error": 0.0
+      },
+      "outer_iterations": 21
+    },
+    {
+      "n": 128,
+      "h": 0.0078125,
+      "cells": 16384,
+      "errors": {
+        "velocity_full": 0.00022623249946830722,
+        "velocity_inplane": 0.00022623249946830722,
+        "velocity_spanwise": 9.00331106104764e-19,
+        "pressure_fixed": 0.020237665462816655,
+        "pressure_mean_free": 0.0021363114637685337
+      },
+      "max_abs_z_velocity": 4.823263693524907e-17,
+      "discrete_conservation": {
+        "energy_balance_error": 8.725078437521461e-10,
+        "global_momentum_imbalance": 6.501400175181509e-10,
+        "interface_traction_defect_max": 1.63160613492197e-11,
+        "divergence_max": 2.71688804787118e-09,
+        "total_volume_error": 0.0
+      },
+      "outer_iterations": 21
+    }
+  ],
+  "fits": {
+    "velocity_full": {
+      "slope": 1.9623452238776438,
+      "intercept": 1.1332744007421178,
+      "r_squared": 0.9999442581016357
+    },
+    "pressure_mean_free": {
+      "slope": 1.8777242570668982,
+      "intercept": 2.9666338041026052,
+      "r_squared": 0.9999636046900134
+    },
+    "pressure_fixed": {
+      "slope": 0.9772267419398165,
+      "intercept": 0.8393739593630672,
+      "r_squared": 0.9999751383113227
+    },
+    "velocity_inplane": {
+      "slope": 1.9623452238776438,
+      "intercept": 1.1332744007421178,
+      "r_squared": 0.9999442581016357
+    }
+  },
+  "pair_orders": [
+    1.9369682973617028,
+    1.9877221503935876
+  ],
+  "reference_audit": {
+    "reynolds": 40.0,
+    "lambda": -0.9637405441957689,
+    "lambda_form_gap": 2.188788008859883e-15,
+    "lambda_identity_residual": 2.220446049250313e-15,
+    "velocity_max_abs_gap": 8.881784197001252e-16,
+    "pressure_max_abs_gap": 4.996003610813204e-16,
+    "momentum_residual_max_scaled": 5.806671544416728e-16,
+    "points_checked": 16384,
+    "source_doi": "10.1017/s0305004100023999"
+  },
+  "controls": {
+    "runs-32-64-128-firstorder": {
+      "levels": [
+        32,
+        64,
+        128
+      ],
+      "velocity_full_slope": 1.2456486182245672,
+      "pair_orders": [
+        1.3654581767785952,
+        1.1258390596705403
+      ],
+      "configuration": {
+        "reynolds": 40.0,
+        "symmetry_closure": "zero_gradient",
+        "convection_order": 1,
+        "algorithm": "coupled"
+      },
+      "errors": {
+        "32": 0.004997776050067906,
+        "64": 0.0019396926604811236,
+        "128": 0.0008888359160444226
+      },
+      "label": "first_order_convection",
+      "expected": "velocity_full_slope < 1.8",
+      "passed": true
+    },
+    "selftest-4-8-16": {
+      "levels": [
+        4,
+        8,
+        16
+      ],
+      "velocity_full_slope": 1.5166150348076977,
+      "pair_orders": [
+        1.4721387853706012,
+        1.5610912842447962
+      ],
+      "configuration": {
+        "reynolds": 40.0,
+        "symmetry_closure": null,
+        "convection_order": 2,
+        "algorithm": "coupled"
+      },
+      "errors": {
+        "4": 0.10294228118246124,
+        "8": 0.03710529218060863,
+        "16": 0.012574784561427162
+      },
+      "label": "pre_asymptotic",
+      "expected": "velocity_full_slope < 1.8",
+      "passed": true
+    }
+  },
+  "criteria": [
+    {
+      "id": "order_velocity_full",
+      "quantity": "velocity_full",
+      "primary": true,
+      "comparator": ">=",
+      "threshold": 1.8,
+      "unit": "log-log LSQ slope",
+      "source": "ledger acceptance: L2 \u6536\u655b\u9636 >= 1.8 on 32/64/128",
+      "value": 1.9623452238776438,
+      "passed": true,
+      "note": "R^2=0.999944 on [32, 64, 128]"
+    },
+    {
+      "id": "pair_order_consistency",
+      "quantity": "velocity_full",
+      "primary": true,
+      "comparator": "both pairs >= threshold; spread <= band",
+      "threshold": 0.2,
+      "unit": "order",
+      "source": "a three-level slope has no residual dof; independent pairs must agree",
+      "value": {
+        "pair_orders": [
+          1.9369682973617028,
+          1.9877221503935876
+        ],
+        "spread": 0.05075385303188473
+      },
+      "passed": true,
+      "note": ""
+    },
+    {
+      "id": "reference_is_kovasznay1948",
+      "quantity": "exact fields vs closed form",
+      "primary": true,
+      "comparator": "<=",
+      "threshold": 1e-12,
+      "unit": "max abs",
+      "source": "Kovasznay 1948, Proc. Camb. Phil. Soc. 44:58-62 doi:10.1017/s0305004100023999",
+      "value": 8.881784197001252e-16,
+      "passed": true,
+      "note": "lambda identity residual 2.22e-15, scaled momentum residual 5.81e-16"
+    },
+    {
+      "id": "configuration_homogeneous",
+      "quantity": "reynolds/closure/order/algorithm",
+      "primary": true,
+      "comparator": "identical on all levels and == admitted",
+      "threshold": null,
+      "unit": "config",
+      "source": "a slope is only the order of one scheme",
+      "value": {
+        "reynolds": 40.0,
+        "symmetry_closure": "zero_gradient",
+        "convection_order": 2,
+        "algorithm": "coupled"
+      },
+      "passed": true,
+      "note": "all levels identical and equal to the admitted configuration"
+    },
+    {
+      "id": "closure_label_self_consistent",
+      "quantity": "max_abs_z_velocity",
+      "primary": true,
+      "comparator": "<=",
+      "threshold": 1e-12,
+      "unit": "abs",
+      "source": "zero_gradient closure keeps the spurious spanwise mode at round-off",
+      "value": 6.779240884088528e-18,
+      "passed": true,
+      "note": "max|w| over the ladder; free closure would be O(h)"
+    },
+    {
+      "id": "first_order_control_fails",
+      "quantity": "velocity_full",
+      "primary": true,
+      "comparator": "< threshold",
+      "threshold": 1.8,
+      "unit": "log-log LSQ slope",
+      "source": "convection_order=1 ladder must not appear to be second order",
+      "value": 1.2456486182245672,
+      "passed": true,
+      "note": "same format, convection_order=1"
+    },
+    {
+      "id": "pre_asymptotic_control_fails",
+      "quantity": "velocity_full",
+      "primary": true,
+      "comparator": "< threshold",
+      "threshold": 1.8,
+      "unit": "log-log LSQ slope",
+      "source": "4/8/16 ladder must fail: the gate has to be able to say no",
+      "value": 1.5166150348076977,
+      "passed": true,
+      "note": "same format on 4/8/16, outside the asymptotic range"
+    },
+    {
+      "id": "pressure_mean_free_order",
+      "quantity": "pressure_mean_free",
+      "primary": false,
+      "comparator": ">=",
+      "threshold": 1.8,
+      "unit": "log-log LSQ slope",
+      "source": "diagnostic: pressure is graded in its gauge-consistent norm",
+      "value": 1.8777242570668982,
+      "passed": true,
+      "note": "R^2=0.999964"
+    },
+    {
+      "id": "pressure_fixed_gauge",
+      "quantity": "pressure_fixed",
+      "primary": false,
+      "comparator": "published",
+      "threshold": null,
+      "unit": "log-log LSQ slope",
+      "source": "not an accuracy measure: the fixed gauge is O(1) by construction",
+      "value": 0.9772267419398165,
+      "passed": null,
+      "note": "published for completeness; fixed-gauge error is O(1) by construction"
+    },
+    {
+      "id": "spanwise_spurious_share",
+      "quantity": "velocity_spanwise",
+      "primary": false,
+      "comparator": "<=",
+      "threshold": 1e-12,
+      "unit": "fraction",
+      "source": "diagnostic: measured evidence for the declared closure",
+      "value": 6.779240884088528e-18,
+      "passed": true,
+      "note": ""
+    },
+    {
+      "id": "discrete_conservation",
+      "quantity": "energy/momentum/divergence defects",
+      "primary": false,
+      "comparator": "<=",
+      "threshold": 1e-08,
+      "unit": "relative",
+      "source": "diagnostic: the discrete solution is converged and conservative",
+      "value": 2.71688804787118e-09,
+      "passed": true,
+      "note": "worst of energy balance / momentum imbalance / traction defect / divergence / volume"
+    }
+  ],
+  "verdict": {
+    "status": "PASS",
+    "failures": [],
+    "graded_quantity": "velocity_full",
+    "threshold": 1.8,
+    "observed": 1.9623452238776438
+  },
+  "evidence": {
+    "admitted_runs": "/srv/tensor/agent/work/m21351/docs/CASE-FVM-KOVASZNAY-ORDER/runs-32-64-128-zero_gradient",
+    "digests": {
+      "runs-32-64-128-zero_gradient/summary.json": "4263eb1c809db00899e090ea0d324528203bc67cb9c51be54a3da52d43718c0a",
+      "runs-32-64-128-zero_gradient/n32/cases.json": "e03260ee9bb5af13c84671547221c78f44d746d410f2a4e17130d42b75812465",
+      "runs-32-64-128-zero_gradient/n64/cases.json": "27d90f30d360af8f43913bee2fbf190c485a0906e84fc6be82bcaeaf8a85f8c3",
+      "runs-32-64-128-zero_gradient/n128/cases.json": "3fa0332ba6163fb3d211b5da96fdbdca0bda4214946c08de2127471dc6aff7ec"
+    }
+  }
+}
