@@ -1,0 +1,311 @@
+{
+  "ritter-dry-u0-0.0": {
+    "key": "ritter-dry-u0-0.0",
+    "kind": "dry",
+    "n": 1600,
+    "dx": 0.00625,
+    "u0": 0.0,
+    "t": 0.638550856814101,
+    "t_star": 2.0,
+    "t_end": 0.638550856814101,
+    "head_exact": -2.0,
+    "front_exact": 4.0,
+    "front_speed_exact": 6.2641839053463295,
+    "depth_l1": 0.0007715065657630972,
+    "depth_linf": 0.0077310844360174436,
+    "velocity_l1": 0.04435117437109718,
+    "quiet_cells": 157,
+    "head_smear_cells": 33,
+    "quiet_drift_u": 0.0,
+    "quiet_drift_h": 0.0,
+    "volume_exact": 4.0,
+    "volume_num": 3.9999999999998708,
+    "volume_error": 3.2307490016592055e-14,
+    "volume_inlet_flux": 0.0,
+    "tv_numeric": 1.0,
+    "tv_exact": 1.0,
+    "tv_ratio": 1.0,
+    "local_extrema": 0,
+    "clipped_cells": 0,
+    "dry_flips": 2931,
+    "u_max": 5.953014751767239,
+    "front_estimator": "fan_front_estimate (boost-invariant shape identity)",
+    "front_measured": 4.000690460722251,
+    "front_error": 0.00017261518056277403,
+    "fan_cells": 330,
+    "fan_spread": 0.004884612203509444,
+    "fan_slope_error": 0.006115583281641764,
+    "verdict": {
+      "front<5%": {
+        "value": -0.04982738481943723,
+        "pass": true
+      },
+      "depth_l1<5%": {
+        "value": -0.04922849343423691,
+        "pass": true
+      },
+      "monotone(no_extrema)": {
+        "value": 0.0,
+        "pass": true
+      },
+      "tv_no_growth<0.5%": {
+        "value": -0.005,
+        "pass": true
+      },
+      "far_current<1e-6": {
+        "value": -1e-06,
+        "pass": true
+      },
+      "head_smear<=64cells": {
+        "value": -31.0,
+        "pass": true
+      },
+      "volume_budget<0.5%": {
+        "value": -0.004999999999967693,
+        "pass": true
+      },
+      "no_negative_depth": {
+        "value": 0.0,
+        "pass": true
+      },
+      "all_pass": true
+    },
+    "wall_time_s": null,
+    "all_pass": true
+  },
+  "ritter-dry-u0-1.5": {
+    "key": "ritter-dry-u0-1.5",
+    "kind": "dry",
+    "n": 1600,
+    "dx": 0.00625,
+    "u0": 1.5,
+    "t": 0.638550856814101,
+    "t_star": 2.0,
+    "t_end": 0.638550856814101,
+    "head_exact": -1.0421737147788488,
+    "front_exact": 4.957826285221151,
+    "front_speed_exact": 7.7641839053463295,
+    "depth_l1": 0.0005597265524776234,
+    "depth_linf": 0.006409743818950209,
+    "velocity_l1": 0.07904423356386005,
+    "quiet_cells": 234,
+    "head_smear_cells": 26,
+    "quiet_drift_u": 0.0,
+    "quiet_drift_h": 0.0,
+    "volume_exact": 4.957826285221151,
+    "volume_num": 4.957826285221008,
+    "volume_error": 2.8842625244450565e-14,
+    "volume_inlet_flux": 1.5,
+    "tv_numeric": 1.0,
+    "tv_exact": 1.0,
+    "tv_ratio": 1.0,
+    "local_extrema": 0,
+    "clipped_cells": 0,
+    "dry_flips": 3639,
+    "u_max": 7.425504523273693,
+    "front_estimator": "fan_front_estimate (boost-invariant shape identity)",
+    "front_measured": 4.959551213005587,
+    "front_error": 0.00034792017412493793,
+    "fan_cells": 329,
+    "fan_spread": 0.006013885218076452,
+    "fan_slope_error": 0.007571903619014454,
+    "verdict": {
+      "front<5%": {
+        "value": -0.049652079825875065,
+        "pass": true
+      },
+      "depth_l1<5%": {
+        "value": -0.04944027344752238,
+        "pass": true
+      },
+      "monotone(no_extrema)": {
+        "value": 0.0,
+        "pass": true
+      },
+      "tv_no_growth<0.5%": {
+        "value": -0.005,
+        "pass": true
+      },
+      "far_current<1e-6": {
+        "value": -1e-06,
+        "pass": true
+      },
+      "head_smear<=64cells": {
+        "value": -38.0,
+        "pass": true
+      },
+      "volume_budget<0.5%": {
+        "value": -0.004999999999971158,
+        "pass": true
+      },
+      "no_negative_depth": {
+        "value": 0.0,
+        "pass": true
+      },
+      "all_pass": true
+    },
+    "wall_time_s": null,
+    "all_pass": true
+  },
+  "ritter-dry-u0--1.5": {
+    "key": "ritter-dry-u0--1.5",
+    "kind": "dry",
+    "n": 1600,
+    "dx": 0.0075,
+    "u0": -1.5,
+    "t": 0.638550856814101,
+    "t_star": 2.0,
+    "t_end": 0.638550856814101,
+    "head_exact": -2.9578262852211514,
+    "front_exact": 3.042173714778849,
+    "front_speed_exact": 4.76418390534633,
+    "depth_l1": 0.0007882186484862572,
+    "depth_linf": 0.010126101299995804,
+    "velocity_l1": 0.24063896681652824,
+    "quiet_cells": 200,
+    "head_smear_cells": 36,
+    "quiet_drift_u": 1.7763568394002505e-15,
+    "quiet_drift_h": 1.2212453270876722e-15,
+    "volume_exact": 5.042173714778849,
+    "volume_num": 5.042173714778732,
+    "volume_error": 2.3075637525078728e-14,
+    "volume_inlet_flux": -1.5,
+    "tv_numeric": 1.0000000000000002,
+    "tv_exact": 1.0,
+    "tv_ratio": 1.0000000000000002,
+    "local_extrema": 0,
+    "clipped_cells": 0,
+    "dry_flips": 1829,
+    "u_max": 4.4485123786015395,
+    "front_estimator": "fan_front_estimate (boost-invariant shape identity)",
+    "front_measured": 3.041245758395309,
+    "front_error": 0.00030503070190627705,
+    "fan_cells": 275,
+    "fan_spread": 0.004448793083019276,
+    "fan_slope_error": 0.0057936655467045635,
+    "verdict": {
+      "front<5%": {
+        "value": -0.04969496929809373,
+        "pass": true
+      },
+      "depth_l1<5%": {
+        "value": -0.049211781351513745,
+        "pass": true
+      },
+      "monotone(no_extrema)": {
+        "value": 0.0,
+        "pass": true
+      },
+      "tv_no_growth<0.5%": {
+        "value": -0.004999999999999778,
+        "pass": true
+      },
+      "far_current<1e-6": {
+        "value": -9.999999982236431e-07,
+        "pass": true
+      },
+      "head_smear<=64cells": {
+        "value": -28.0,
+        "pass": true
+      },
+      "volume_budget<0.5%": {
+        "value": -0.004999999999976925,
+        "pass": true
+      },
+      "no_negative_depth": {
+        "value": 0.0,
+        "pass": true
+      },
+      "all_pass": true
+    },
+    "wall_time_s": null,
+    "all_pass": true
+  },
+  "stoker-wet-u0-1.0": {
+    "key": "stoker-wet-u0-1.0",
+    "kind": "wet",
+    "n": 1600,
+    "dx": 0.00625,
+    "u0": 1.0,
+    "t": 0.638550856814101,
+    "t_star": 2.0,
+    "t_end": 0.638550856814101,
+    "head_exact": -1.3614491431858993,
+    "front_exact": 2.5273320068458,
+    "front_speed_exact": 3.957918120187525,
+    "depth_l1": 0.00040555523694681264,
+    "depth_linf": 0.11659556848376451,
+    "velocity_l1": 0.0008632277153712586,
+    "quiet_cells": 208,
+    "head_smear_cells": 28,
+    "quiet_drift_u": 0.0,
+    "quiet_drift_h": 0.0,
+    "volume_exact": 7.319273838501979,
+    "volume_num": 7.319275428406932,
+    "volume_error": 2.1722167916523248e-07,
+    "volume_inlet_flux": 1.0,
+    "tv_numeric": 0.5009745097929734,
+    "tv_exact": 0.5,
+    "tv_ratio": 1.0019490195859468,
+    "local_extrema": 0,
+    "clipped_cells": 0,
+    "dry_flips": 0,
+    "u_max": 1.9246840525180866,
+    "front_estimator": "mid-level crossing (h1 + h2)/2",
+    "front_measured": 2.528417314759038,
+    "front_error": 0.00042942831028866107,
+    "h2_exact": 0.7269204461872865,
+    "h2_measured": 0.7269208739261462,
+    "h2_error": 5.884259577780555e-07,
+    "h1_measured": 0.5,
+    "stage_ratio_exact": 1.453840892374573,
+    "stage_ratio_measured": 1.4538417478522925,
+    "stage_ratio_error": 5.884259577780555e-07,
+    "still_cells": 278,
+    "verdict": {
+      "front<5%": {
+        "value": -0.049570571689711344,
+        "pass": true
+      },
+      "depth_l1<5%": {
+        "value": -0.04959444476305319,
+        "pass": true
+      },
+      "monotone(no_extrema)": {
+        "value": 0.0,
+        "pass": true
+      },
+      "tv_no_growth<0.5%": {
+        "value": -0.0030509804140531572,
+        "pass": true
+      },
+      "far_current<1e-6": {
+        "value": -1e-06,
+        "pass": true
+      },
+      "head_smear<=64cells": {
+        "value": -36.0,
+        "pass": true
+      },
+      "volume_budget<0.5%": {
+        "value": -0.004999782778320835,
+        "pass": true
+      },
+      "no_negative_depth": {
+        "value": 0.0,
+        "pass": true
+      },
+      "h2_plateau<5%": {
+        "value": -0.049999411574042224,
+        "pass": true
+      },
+      "stage_ratio<5%": {
+        "value": -0.049999411574042224,
+        "pass": true
+      },
+      "all_pass": true
+    },
+    "wall_time_s": null,
+    "all_pass": true
+  }
+}

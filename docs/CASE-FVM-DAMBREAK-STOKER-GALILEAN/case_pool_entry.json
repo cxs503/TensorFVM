@@ -1,0 +1,18 @@
+{
+  "slug": "CASE-FVM-DAMBREAK-STOKER-GALILEAN",
+  "anchor": "CASE-FVM-DAMBREAK-STOKER",
+  "title": "浅水溃坝 Ritter/Stoker 精确解 · 伽利略提升（u0 ≠ 0）验证",
+  "repo": "TensorFVM",
+  "tolerance": {
+    "front_position": 0.05,
+    "depth_l1": 0.05,
+    "quiet_current_drift": 1e-06,
+    "volume_budget": 0.005
+  },
+  "reference": "Ritter 1892; Stoker 1957 ch.10; Galilean boost (Whitham 1974 §3.1)",
+  "artifacts": "src/tensorfvm/verification/artifacts/shallow-water-galilean",
+  "report": "docs/CASE-FVM-DAMBREAK-STOKER-GALILEAN/REPORT.md",
+  "repro_cmd": "PYTHONPATH=src python scripts/run_shallow_water_galilean.py --n 1600 --resolutions 400,800,1600",
+  "all_pass": true,
+  "commit_base": "b97e90ab"
+}
