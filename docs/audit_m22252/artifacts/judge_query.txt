@@ -1,0 +1,18 @@
+# benchmark judge query (board-audit m22252), run 2026-11-15T18:23:57Z
+## SQL: SELECT case_name,metric,tolerance FROM tensor_benchmark_cases WHERE anchor_slug='JOUR-ICE-STRUCT-GUARD';
+Border style is 0.
+
+## rows returned: 0
+## whole-table size: 144
+## nearest ice-anchored rows in the table:
+9|H1-BROKEN-ICE-DEM|浮冰浮态+航道清空
+11|H3-ICE-PLATE-FEM|Hetényi 冰板弯曲
+48|CASE-BEM-ICE-SPHERE-HEAVE|Ice-covered submerged sphere heave, deep water, mass-loading ice sheet (R=5 m, d/R=3/2..12, h_i=0..2.5 m, omega=0.3..0.8 rad/s, 168-1472 panels)
+56|CASE-BEM-ICE-DISPERSION|Ice mass-loading dispersion (Weitz-Keller deep + shallow limits)
+
+## any JOUR-* anchor rows: 0
+## tensor_reports rows for mission_id=22209: 0
+## tensor_maturity_verdicts rows for mission 22209 before this audit: 0
+## tensor_dev_missions 22209: status/report_owed/report_id
+22209|succeeded|TensorFVM|main|jour-ice-struct-guard-r2|f||【锚点=JOUR-ICE-STRUCT-GUARD】【第2轮·调研结合】owner 2026-11-11 两轮法第 2 轮（任务榜接棒）：前轮 m22191 在本锚点 honest-FAIL（fail_stage=未标；failure_re
+22252|running|TensorFVM|main|jour-ice-struct-guard-audit|f||【锚点=JOUR-ICE-STRUCT-GUARD】【交差审计|任务榜】owner 2026-11-11 任务榜令：结榜要回来交差。对象=m22209（JOUR-ICE-STRUCT-GUARD·【论文牵引|JOUR-ICE-STRUCT 

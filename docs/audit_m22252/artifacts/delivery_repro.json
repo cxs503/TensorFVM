@@ -1,0 +1,34 @@
+{
+ "delivery_commit_pushed": "3db7b1f55321e39a85496ad12552a7e4a518447b",
+ "delivery_commit_local_worktree": "ff1e129a7f19dde60163f362d35dfb86255cb7e2",
+ "delivery_branch": "agent/m22209",
+ "merged_into_main": false,
+ "python": "3.11.6",
+ "machine": "loongarch64",
+ "delivered_artifacts_tracked_in_git": false,
+ "artifacts_present_only_in_worktree": true,
+ "repro_cmd": "PYTHONPATH=<tree>/src python docs/FVM_ICE_GUARDRAILS/demo_guardrails.py",
+ "artifacts": {
+  "validation_demo.json": {
+   "delivered_md5": "ac50e19103b262117fb84b59f39bf378",
+   "reproduced_md5": "ac50e19103b262117fb84b59f39bf378",
+   "identical": true
+  },
+  "failure_case_report.txt": {
+   "delivered_md5": "b39ddc276257fc7f0efb3a530a221393",
+   "reproduced_md5": "b39ddc276257fc7f0efb3a530a221393",
+   "identical": true
+  },
+  "fig_ice_guardrail_bounds.png": {
+   "delivered_md5": "992565c75a28b2bf09c09b6894744a07",
+   "reproduced_md5": "992565c75a28b2bf09c09b6894744a07",
+   "identical": true
+  }
+ },
+ "pytest": {
+  "cmd": "PYTHONPATH=<delivered pkg> python3 -m pytest -q tests/test_ice_guardrails.py",
+  "tail": "40 passed, 1 warning in 0.10s",
+  "rc": 0
+ },
+ "pytest_full_stdout_lines": 11
+}
