@@ -88,8 +88,22 @@ class ChannelLESConfig:
     #: Smagorinsky constant and van Driest damping constant A+ (wall units)
     smagorinsky: float = 0.1
     van_driest_a_plus: float = 25.0
-    #: time step in ``delta / u_tau`` units (explicit; wall-diffusion limited)
+    #: time step in ``delta / u_tau`` units
     dt: float = 2.5e-3
+    #: treat the wall-normal viscous/SGS diffusion implicitly (tridiagonal
+    #: solve of ``(I - dt M_y)``) instead of explicitly.  The explicit scheme is
+    #: limited by ``nu_eff dt / dy^2 < 1/2``, which fails by a factor ~2-7 on the
+    #: wall-adjacent row of the production grid (``y1+ ~ 0.5``, ``nu_t ~ 3 nu``);
+    #: that is the divergence reported for the Re_tau = 180 production run, not a
+    #: time-step error of the convection term.
+    implicit_wall_normal: bool = True
+    #: explicit time integrator for convection + transverse diffusion:
+    #: ``'rk3'`` (Shu-Osher SSP-RK3, default) or ``'euler'`` (kept for the
+    #: equivalence tests).  Forward Euler with central convection has the
+    #: amplification ``|G|^2 = 1 + (lambda sin theta)^2 > 1`` for every
+    #: wavenumber, i.e. it is unstable at any time step; ``'rk3'`` is the
+    #: cheapest classical scheme stable on the imaginary axis.
+    time_scheme: str = 'rk3'
 
     def __post_init__(self):
         if self.nx < 8 or self.ny < 8 or self.nz < 8:
@@ -98,6 +112,9 @@ class ChannelLESConfig:
             raise ValueError('re_tau and box lengths must be positive')
         if not (0 < self.dt <= 0.05):
             raise ValueError('dt outside the stable band of the explicit scheme')
+        if self.time_scheme not in ('euler', 'rk3'):
+            raise ValueError("time_scheme must be 'euler' or 'rk3', got %r"
+                             % (self.time_scheme,))
         if self.smagorinsky < 0:
             raise ValueError('smagorinsky constant must be non-negative')
 
@@ -180,7 +197,19 @@ class ChannelLES3D:
         self.dx = cfg.lx / cfg.nx
         self.dz = cfg.lz / cfg.nz
         self.delta = (self.dx * self.dy * self.dz) ** (1.0 / 3.0)
-        self.y_plus = self.yc * cfg.re_tau
+        #: distance to the *nearest* wall.  The grid spans the full channel
+        #: ``y in [0, 2]`` with walls at both ends (``yf[0] = 0``, ``yf[-1] = 2``),
+        #: so the wall-normal coordinate used by the SGS model and by the
+        #: initial profile is ``min(y, 2 - y)``, not ``y``.  Using ``y`` made the
+        #: upper half of the channel see a wall distance up to ``2 Re_tau``: van
+        #: Driest damping switched off there, and ``y1+`` at the top wall was
+        #: read as ``2 Re_tau``.
+        self.wall_distance = np.minimum(self.yc, self.yf[-1] - self.yc)
+        self.y_plus = self.wall_distance * cfg.re_tau
+        #: quadratic one-sided wall-gradient weights (wall value 0, nodes at the
+        #: first two cell centres): ``du/dy|_0 = w0 u_0 + w1 u_1``
+        h0, h1 = self.yc[0], self.yc[1]
+        self.wall_shear_weights = (-h1 / (h0 * (h0 - h1)), h0 / (h1 * (h0 - h1)))
         self.rng = np.random.default_rng(seed)
 
         shape_c = (cfg.ny, cfg.nx, cfg.nz)
@@ -493,18 +522,184 @@ class ChannelLES3D:
                 -conv_v + lap_v,
                 -conv_w + lap_w)
 
+    def _y_coefficients(self, nu_eff):
+        """Tridiagonal coefficients of the wall-normal operator of :meth:`diffusion`.
+
+        Two triples are returned, both as ``(lower, diag, upper)`` arrays whose
+        out-of-range couplings are zero:
+
+        * ``cell`` -- the cell-centred components ``u`` and ``w`` (``ny`` rows).
+          Row ``i`` reproduces ``D_i = (F_{i+1} - F_i)/dy_i`` with
+          ``F_{i+1} = 0.5(nu_i + nu_{i+1})(f_{i+1} - f_i)/dy_cc_i`` and the
+          half-cell wall conductance ``2 nu f/dy`` used by :meth:`diffusion`;
+        * ``face`` -- the interior ``v`` samples (``ny-1`` rows, Dirichlet zero
+          on both walls), reproducing the ``nu_face``/``dy``/``dy_cc`` assembly
+          of :meth:`diffusion` line by line.
+
+        Deriving the matrix from *those* expressions is the point: the implicit
+        and explicit paths then discretise one operator, and
+        ``tests/test_channel_les3d_implicit.py`` asserts the identity by
+        applying both to a field that varies only in ``y``.
+        """
+        ny, nx, nz = self.config.ny, self.config.nx, self.config.nz
+        dy = self.dy[:, None, None]
+        dc = self.dy_cc[:, None, None]
+        face = 0.5 * (nu_eff[1:] + nu_eff[:-1])
+
+        upper = np.zeros((ny, nx, nz))
+        lower = np.zeros((ny, nx, nz))
+        upper[:-1] = face / (dc * dy[:-1])
+        lower[1:] = face / (dc * dy[1:])
+        diag = -(upper + lower)
+        diag[0] = diag[0] - 2.0 * nu_eff[0] / self.dy[0] ** 2
+        diag[-1] = diag[-1] - 2.0 * nu_eff[-1] / self.dy[-1] ** 2
+        cell = (lower, diag, upper)
+
+        lower_f = 0.5 * (nu_eff[1:] + nu_eff[:-1]) / (self.dy[:-1, None, None] * dc)
+        upper_f = 0.5 * (nu_eff[1:] + nu_eff[:-1]) / (self.dy[1:, None, None] * dc)
+        diag_f = -(lower_f + upper_f)
+        # ``v = 0`` on both walls: the wall coupling enters the diagonal above
+        # but carries no unknown, so the outer off-diagonals are dropped.
+        lower_f[0] = 0.0
+        upper_f[-1] = 0.0
+        face_coefs = (lower_f, diag_f, upper_f)
+        return cell, face_coefs
+
+    @staticmethod
+    def _y_apply(coefs, f):
+        """Apply the wall-normal operator ``M`` of :meth:`_y_coefficients`."""
+        lower, diag, upper = coefs
+        out = diag * f
+        out[1:] += lower[1:] * f[:-1]
+        out[:-1] += upper[:-1] * f[1:]
+        return out
+
+    @staticmethod
+    def _thomas(coefs, rhs, dt):
+        """Solve ``(I - dt M) x = rhs`` for a tridiagonal ``M`` (vectorised in x,z).
+
+        ``M`` is an M-matrix (non-positive off-diagonals, diagonal dominance), so
+        no pivoting is needed and the sweep is stable for any ``dt > 0`` -- that
+        is exactly the property the explicit update lacks.
+        """
+        lower, diag, upper = coefs
+        n = diag.shape[0]
+        a = -dt * lower
+        b = 1.0 - dt * diag
+        c = -dt * upper
+        cp = np.empty_like(b)
+        dp = np.empty_like(rhs)
+        cp[0] = c[0] / b[0]
+        dp[0] = rhs[0] / b[0]
+        for i in range(1, n):
+            m = b[i] - a[i] * cp[i - 1]
+            cp[i] = c[i] / m
+            dp[i] = (rhs[i] - a[i] * dp[i - 1]) / m
+        x = np.empty_like(rhs)
+        x[-1] = dp[-1]
+        for i in range(n - 2, -1, -1):
+            x[i] = dp[i] - cp[i] * x[i + 1]
+        return x
+
+    def _set_state(self, u, v_interior, w):
+        self.u = u
+        self.v[1:-1] = v_interior
+        self.v[0] = 0.0
+        self.v[-1] = 0.0
+        self.w = w
+
+    def _explicit_rhs(self, nut):
+        """Convection + transverse diffusion + body force, wall-normal part removed.
+
+        The wall-normal viscous/SGS flux is excluded because it is integrated
+        implicitly (:meth:`_thomas`); everything else stays explicit.
+        """
+        conv_u, conv_v, conv_w = self.convection()
+        lap_u, lap_v, lap_w = self.diffusion(nut)
+        cell, face_coefs = self._y_coefficients(self.nu + nut)
+        horiz_u = lap_u - self._y_apply(cell, self.u)
+        horiz_w = lap_w - self._y_apply(cell, self.w)
+        horiz_v = lap_v - self._y_apply(face_coefs, self.v[1:-1])
+        return (-conv_u + horiz_u + self.body_force,
+                -conv_v + horiz_v,
+                -conv_w + horiz_w)
+
+    def _full_rhs(self, nut):
+        """Convection + all viscous/SGS diffusion + body force (explicit path)."""
+        conv_u, conv_v, conv_w = self.convection()
+        lap_u, lap_v, lap_w = self.diffusion(nut)
+        return (-conv_u + lap_u + self.body_force, -conv_v + lap_v, -conv_w + lap_w)
+
+    def _advance(self, dt):
+        """One time step of the momentum equation (no projection).
+
+        ``time_scheme`` controls the explicit integrator, ``implicit_wall_normal``
+        whether the stiff wall-normal diffusion is solved instead of integrated.
+        For ``'rk3'`` the three convection/diffusion right-hand sides are
+        evaluated at the SSP-RK3 stage states with the SGS viscosity frozen at
+        the beginning of the step; the implicit solve then advances the frozen
+        wall-normal operator over the whole ``dt`` (backward Euler), which is the
+        standard IMEX split for this stiffness.
+        """
+        nut = self.eddy_viscosity()
+        cell, face_coefs = self._y_coefficients(self.nu + nut)
+        rhs = self._explicit_rhs if self.config.implicit_wall_normal else self._full_rhs
+        u0, v0, w0 = self.u, self.v[1:-1].copy(), self.w
+
+        if self.config.time_scheme == 'euler':
+            ru, rv, rw = rhs(nut)
+            u1, v1, w1 = u0 + dt * ru, v0 + dt * rv, w0 + dt * rw
+        else:
+            ru, rv, rw = rhs(nut)
+            u1, v1, w1 = u0 + dt * ru, v0 + dt * rv, w0 + dt * rw
+            self._set_state(u1, v1, w1)
+            ru, rv, rw = rhs(nut)
+            u2 = 0.75 * u0 + 0.25 * (u1 + dt * ru)
+            v2 = 0.75 * v0 + 0.25 * (v1 + dt * rv)
+            w2 = 0.75 * w0 + 0.25 * (w1 + dt * rw)
+            self._set_state(u2, v2, w2)
+            ru, rv, rw = rhs(nut)
+            u1 = u0 / 3.0 + (2.0 / 3.0) * (u2 + dt * ru)
+            v1 = v0 / 3.0 + (2.0 / 3.0) * (v2 + dt * rv)
+            w1 = w0 / 3.0 + (2.0 / 3.0) * (w2 + dt * rw)
+
+        if self.config.implicit_wall_normal:
+            u1 = self._thomas(cell, u1, dt)
+            w1 = self._thomas(cell, w1, dt)
+            v1 = self._thomas(face_coefs, v1, dt)
+        self._set_state(u1, v1, w1)
+
     def step(self):
-        """One explicit Euler step followed by an exact projection."""
+        """One time step (see :meth:`_advance`) followed by an exact projection.
+
+        The projection is exact either way, so ``div(u) = 0`` does not depend on
+        the integrator, the implicitness of the wall-normal diffusion, or the
+        time step.
+        """
         dt = self.config.dt
-        rhs_u, rhs_v, rhs_w = self.momentum_rhs()
-        self.u += dt * rhs_u
-        self.v[1:-1] += dt * rhs_v
-        self.w += dt * rhs_w
+        self._advance(dt)
         self.project(dt)
         self.steps += 1
         self.time += dt
         if not np.isfinite(self.u).all():
             raise FloatingPointError('non-finite velocity at step %d' % self.steps)
+
+    def wall_shear(self, method='half_cell'):
+        """Plane-averaged wall shear ``nu du/dy|_wall`` on the upper wall.
+
+        ``half_cell`` is the conductance the momentum operator actually uses
+        (first order, ``O(dy)`` biased on the stretched grid); ``second_order``
+        is the quadratic one-sided fit through the wall and the first two cell
+        centres, which is the quantity wall-law readings should quote.
+        """
+        if method == 'half_cell':
+            return float(self.nu * self.u[0].mean() / (0.5 * self.dy[0]))
+        if method == 'second_order':
+            h0, h1 = self.yc[0], self.yc[1]
+            c0 = -h1 / (h0 * (h0 - h1))
+            c1 = h0 / (h1 * (h0 - h1))
+            return float(self.nu * (c0 * self.u[0] + c1 * self.u[1]).mean())
+        raise ValueError("method must be 'half_cell' or 'second_order', got %r" % (method,))
 
     # -- initial condition and statistics -------------------------------- #
     def initialise(self, noise=0.1, profile='parabolic'):
@@ -563,6 +758,9 @@ class ChannelLES3D:
             ww=(w * w).mean(axis=(1, 2)),
             uv=(u * v).mean(axis=(1, 2)),
             tau_wall=float(self.nu * u[0].mean() / (0.5 * self.dy[0])),
+            tau_wall_second_order=float(self.nu * (
+                self.wall_shear_weights[0] * u[0]
+                + self.wall_shear_weights[1] * u[1]).mean()),
         )
         if not self._accumulators:
             self._accumulators = {k: np.zeros_like(val) for k, val in fields.items()}
@@ -581,7 +779,7 @@ class ChannelLES3D:
         y = np.concatenate(([0.0], self.yc, [2.0]))
         u_padded = np.concatenate(([0.0], u_plus, [0.0]))
         return dict(
-            y_plus=self.yc * self.config.re_tau,
+            y_plus=self.y_plus,
             y_over_delta=self.yc,
             u_plus=u_plus,
             u_rms_plus=np.sqrt(np.maximum(mean['uu'] - mean['u'] ** 2, 0.0)) / u_tau,
@@ -589,6 +787,7 @@ class ChannelLES3D:
             w_rms_plus=np.sqrt(np.maximum(mean['ww'], 0.0)) / u_tau,
             uv_plus=mean['uv'] / u_tau ** 2,
             tau_wall_plus=float(mean['tau_wall']),
+            tau_wall_plus_second_order=float(mean['tau_wall_second_order']),
             u_tau=u_tau,
             u_bulk_plus=float(np.trapezoid(u_padded, y) / (y[-1] - y[0])),
             samples=self._samples,
