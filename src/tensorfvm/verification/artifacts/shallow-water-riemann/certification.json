@@ -1,0 +1,362 @@
+{
+  "cases": {
+    "rarefaction-shock": {
+      "pattern": "1-rarefaction+2-shock",
+      "h_star": 0.7269204461872862,
+      "u_star": 0.92336390197708,
+      "wave_speeds": [
+        -3.132091952673165,
+        -1.747046099707545,
+        2.957918120187527
+      ],
+      "jump_residuals": {
+        "matching_residual": -1.5543122344752192e-15,
+        "matching_relative": 1.4534934487093644e-16,
+        "left_kind": "rarefaction",
+        "left_riemann_invariant_residual": -8.881784197001252e-16,
+        "left_riemann_invariant_relative": 1.4178677272582728e-16,
+        "left_fan_edge_residual": 1.3850458529656202,
+        "right_kind": "shock",
+        "right_mass_jump_residual": 0.0,
+        "right_mass_jump_relative": 0.0,
+        "right_momentum_jump_residual": 1.9984014443252818e-15,
+        "right_momentum_jump_relative": 1.0065533771924556e-15,
+        "star_depth_positive": 1.0
+      },
+      "smooth_ode": {
+        "mass_ode_max_abs": 8.513341143157049e-10,
+        "mass_ode_relative": 1.4002342697647823e-10,
+        "momentum_ode_max_abs": 1.0409720196946637e-08,
+        "momentum_ode_relative": 1.2229657397770235e-08,
+        "masked_samples": 17816,
+        "samples": 20001
+      },
+      "weak_form_refinement": [
+        {
+          "n": 10001,
+          "mass_residual": 6.902178323109354e-06,
+          "mass_relative": 1.3619650566940632e-06,
+          "momentum_residual": 2.0457027368969705e-05,
+          "momentum_relative": 4.170647781645199e-06,
+          "interval": [
+            -3.4365924563162,
+            3.2624186238305617
+          ],
+          "samples": 10001
+        },
+        {
+          "n": 20001,
+          "mass_residual": -3.1093106397150905e-05,
+          "mass_relative": 6.135460420450745e-06,
+          "momentum_residual": -9.197563601048842e-05,
+          "momentum_relative": 1.8751403875736678e-05,
+          "interval": [
+            -3.4365924563162,
+            3.2624186238305617
+          ],
+          "samples": 20001
+        },
+        {
+          "n": 40001,
+          "mass_residual": -1.2091848756057288e-05,
+          "mass_relative": 2.3860202431858182e-06,
+          "momentum_residual": -3.576768778801309e-05,
+          "momentum_relative": 7.292087214681568e-06,
+          "interval": [
+            -3.4365924563162,
+            3.2624186238305617
+          ],
+          "samples": 40001
+        },
+        {
+          "n": 80001,
+          "mass_residual": -2.591164935950019e-06,
+          "mass_relative": 5.112998454390006e-07,
+          "momentum_residual": -7.664326555634204e-06,
+          "momentum_relative": 1.5625538339723148e-06,
+          "interval": [
+            -3.4365924563162,
+            3.2624186238305617
+          ],
+          "samples": 80001
+        }
+      ]
+    },
+    "rarefaction-rarefaction": {
+      "pattern": "1-rarefaction+2-rarefaction",
+      "h_star": 0.4815189659394422,
+      "u_star": 0.917368493638155,
+      "wave_speeds": [
+        -4.132091952673165,
+        -1.2560392122159327,
+        3.2147234590350102,
+        3.0907761994922427
+      ],
+      "jump_residuals": {
+        "matching_residual": 0.0,
+        "matching_relative": 0.0,
+        "left_kind": "rarefaction",
+        "left_riemann_invariant_residual": 0.0,
+        "left_riemann_invariant_relative": 0.0,
+        "left_fan_edge_residual": 2.8760527404572325,
+        "right_kind": "rarefaction",
+        "right_riemann_invariant_residual": 0.0,
+        "right_riemann_invariant_relative": 0.0,
+        "right_fan_edge_residual": 0.12394725954276753,
+        "star_depth_positive": 1.0
+      },
+      "smooth_ode": {
+        "mass_ode_max_abs": 1.2353597034220343e-09,
+        "mass_ode_relative": 3.768810723658316e-10,
+        "momentum_ode_max_abs": 1.6318362661138508e-08,
+        "momentum_ode_relative": 5.270840888893364e-08,
+        "masked_samples": 17509,
+        "samples": 20001
+      },
+      "weak_form_refinement": [
+        {
+          "n": 10001,
+          "mass_residual": -1.0977399433897972e-08,
+          "mass_relative": 2.2915102876484524e-09,
+          "momentum_residual": -6.827452825319824e-09,
+          "momentum_relative": 4.643422098347433e-09,
+          "interval": [
+            -4.499432723258574,
+            3.582064229620419
+          ],
+          "samples": 10001
+        },
+        {
+          "n": 20001,
+          "mass_residual": 2.5994379981852944e-09,
+          "mass_relative": 5.42627507902281e-10,
+          "momentum_residual": -4.335688252865566e-09,
+          "momentum_relative": 2.9487469376751545e-09,
+          "interval": [
+            -4.499432723258574,
+            3.582064229620419
+          ],
+          "samples": 20001
+        },
+        {
+          "n": 40001,
+          "mass_residual": 5.346274534190343e-10,
+          "mass_relative": 1.1160241676565504e-10,
+          "momentum_residual": 7.081046859980233e-11,
+          "momentum_relative": 4.8158940319393764e-11,
+          "interval": [
+            -4.499432723258574,
+            3.582064229620419
+          ],
+          "samples": 40001
+        },
+        {
+          "n": 80001,
+          "mass_residual": -1.1143974631977471e-10,
+          "mass_relative": 2.326282523499174e-11,
+          "momentum_residual": 3.057696318364833e-10,
+          "momentum_relative": 2.0795712470096822e-10,
+          "interval": [
+            -4.499432723258574,
+            3.582064229620419
+          ],
+          "samples": 80001
+        }
+      ]
+    },
+    "shock-shock": {
+      "pattern": "1-shock+2-shock",
+      "h_star": 1.1671875509556764,
+      "u_star": 0.9954533032836872,
+      "wave_speeds": [
+        -2.0223951778515783,
+        3.1063458642238597
+      ],
+      "jump_residuals": {
+        "matching_residual": 1.3322676295501878e-15,
+        "matching_relative": 1.198470406121335e-16,
+        "left_kind": "shock",
+        "left_mass_jump_residual": 0.0,
+        "left_mass_jump_relative": 0.0,
+        "left_momentum_jump_residual": -4.884981308350689e-15,
+        "left_momentum_jump_relative": 2.0789083630702865e-15,
+        "right_kind": "shock",
+        "right_mass_jump_residual": 0.0,
+        "right_mass_jump_relative": 0.0,
+        "right_momentum_jump_residual": -2.6645352591003757e-15,
+        "right_momentum_jump_relative": 7.382613350111796e-16,
+        "star_depth_positive": 1.0
+      },
+      "smooth_ode": {
+        "mass_ode_max_abs": 0.0,
+        "mass_ode_relative": 0.0,
+        "momentum_ode_max_abs": 0.0,
+        "momentum_ode_relative": 0.0,
+        "masked_samples": 18543,
+        "samples": 20001
+      },
+      "weak_form_refinement": [
+        {
+          "n": 10001,
+          "mass_residual": 1.8832098627186156e-05,
+          "mass_relative": 2.9441159000525325e-06,
+          "momentum_residual": 3.651051779307579e-05,
+          "momentum_relative": 3.4531032093436617e-06,
+          "interval": [
+            -2.2788322299553503,
+            3.3627829163276317
+          ],
+          "samples": 10001
+        },
+        {
+          "n": 20001,
+          "mass_residual": -8.474444382322588e-05,
+          "mass_relative": 1.3248736082355307e-05,
+          "momentum_residual": -0.00016429733006795288,
+          "momentum_relative": 1.5538964441962476e-05,
+          "interval": [
+            -2.2788322299553503,
+            3.3627829163276317
+          ],
+          "samples": 20001
+        },
+        {
+          "n": 40001,
+          "mass_residual": -3.295617259890804e-05,
+          "mass_relative": 5.152244539514154e-06,
+          "momentum_residual": -6.389340613743855e-05,
+          "momentum_relative": 6.042930616309407e-06,
+          "interval": [
+            -2.2788322299553503,
+            3.3627829163276317
+          ],
+          "samples": 40001
+        },
+        {
+          "n": 80001,
+          "mass_residual": -7.062036985416853e-06,
+          "mass_relative": 1.1040479319163853e-06,
+          "momentum_residual": -1.3691444172181377e-05,
+          "momentum_relative": 1.2949137034828727e-06,
+          "interval": [
+            -2.2788322299553503,
+            3.3627829163276317
+          ],
+          "samples": 80001
+        }
+      ]
+    },
+    "shock-rarefaction": {
+      "pattern": "1-shock+2-rarefaction",
+      "h_star": 0.794945812965292,
+      "u_star": 1.8209457888289147,
+      "wave_speeds": [
+        -0.17781832197036532,
+        5.632091952673165,
+        4.613510635916537
+      ],
+      "jump_residuals": {
+        "matching_residual": -6.661338147750939e-16,
+        "matching_relative": 6.229257637325847e-17,
+        "left_kind": "shock",
+        "left_mass_jump_residual": 0.0,
+        "left_mass_jump_relative": 0.0,
+        "left_momentum_jump_residual": 5.152128723651117e-16,
+        "left_momentum_jump_relative": 2.0015924521735688e-15,
+        "right_kind": "rarefaction",
+        "right_riemann_invariant_residual": 4.440892098500626e-16,
+        "right_riemann_invariant_relative": 7.089338636291364e-17,
+        "right_fan_edge_residual": 1.0185813167566282,
+        "star_depth_positive": 1.0
+      },
+      "smooth_ode": {
+        "mass_ode_max_abs": 7.74255104474264e-10,
+        "mass_ode_relative": 1.1135475853410892e-10,
+        "momentum_ode_max_abs": 1.1410235423170434e-08,
+        "momentum_ode_relative": 1.0693502387472967e-08,
+        "masked_samples": 17816,
+        "samples": 20001
+      },
+      "weak_form_refinement": [
+        {
+          "n": 10001,
+          "mass_residual": 8.566804971188446e-06,
+          "mass_relative": 1.6612789196009205e-06,
+          "momentum_residual": -1.5328678610870838e-06,
+          "momentum_relative": 1.520673898459458e-07,
+          "interval": [
+            -0.4683138357025418,
+            5.922587466405342
+          ],
+          "samples": 10001
+        },
+        {
+          "n": 20001,
+          "mass_residual": -3.855482245551656e-05,
+          "mass_relative": 7.4766379411150466e-06,
+          "momentum_residual": 6.863264848888662e-06,
+          "momentum_relative": 6.808661911254408e-07,
+          "interval": [
+            -0.4683138357025418,
+            5.922587466405342
+          ],
+          "samples": 20001
+        },
+        {
+          "n": 40001,
+          "mass_residual": -1.4993861472412107e-05,
+          "mass_relative": 2.9076300766023295e-06,
+          "momentum_residual": 2.667261700395329e-06,
+          "momentum_relative": 2.646042533138299e-07,
+          "interval": [
+            -0.4683138357025418,
+            5.922587466405342
+          ],
+          "samples": 40001
+        },
+        {
+          "n": 80001,
+          "mass_residual": -3.2130498226479176e-06,
+          "mass_relative": 6.230775825221403e-07,
+          "momentum_residual": 5.711338726399617e-07,
+          "momentum_relative": 5.665903848705549e-08,
+          "interval": [
+            -0.4683138357025418,
+            5.922587466405342
+          ],
+          "samples": 80001
+        }
+      ]
+    }
+  },
+  "degenerate_limits": {
+    "stoker_h1_0.5": {
+      "pattern": "1-rarefaction+2-shock",
+      "h_star_relative_error": 3.054592921270272e-16,
+      "u_star_absolute_error": 1.1102230246251565e-16,
+      "shock_speed_absolute_error": 1.7763568394002505e-15,
+      "left_fan_head_absolute_error": 0.0
+    },
+    "stoker_h1_0.25": {
+      "pattern": "1-rarefaction+2-shock",
+      "h_star_relative_error": 4.0243922365843744e-16,
+      "u_star_absolute_error": 8.881784197001252e-16,
+      "shock_speed_absolute_error": 2.220446049250313e-15,
+      "left_fan_head_absolute_error": 0.0
+    },
+    "stoker_h1_0.8": {
+      "pattern": "1-rarefaction+2-shock",
+      "h_star_relative_error": 0.0,
+      "u_star_absolute_error": 4.440892098500626e-16,
+      "shock_speed_absolute_error": 4.440892098500626e-15,
+      "left_fan_head_absolute_error": 0.0
+    },
+    "ritter_limit": {
+      "h1": 1e-10,
+      "front_speed_relative_error": 0.00530064172487024,
+      "dam_depth_relative_error": 1.249000902703301e-16,
+      "ritter_state_dam_depth": 0.4444444444444445,
+      "ritter_front_position": 6.26418390534633
+    }
+  }
+}

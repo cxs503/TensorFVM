@@ -1,0 +1,352 @@
+{
+  "cases": {
+    "rarefaction-shock": {
+      "case": {
+        "name": "rarefaction-shock",
+        "hL": 1.0,
+        "uL": 0.0,
+        "hR": 0.5,
+        "uR": 0.0,
+        "gravity": 9.81,
+        "x_min": -12.0,
+        "x_max": 12.0,
+        "t_end": 1.0,
+        "note": "dam-break control (Stoker sub-case): the only pattern the existing dam-break evidence graded",
+        "pattern": "1-rarefaction+2-shock",
+        "h_star": 0.7269204461872862,
+        "u_star": 0.92336390197708,
+        "wave_speeds": [
+          -3.132091952673165,
+          -1.747046099707545,
+          2.957918120187527
+        ],
+        "max_wave_speed": 3.132091952673165
+      },
+      "rows": [
+        {
+          "n": 400,
+          "dx": 0.06,
+          "steps": 150,
+          "depth_l1": 0.0012322433086083503,
+          "velocity_l1": 0.0014722026492159247,
+          "wave_left": 0.005051228744289076,
+          "wave_right": 0.002207756935215578,
+          "plateau_depth": 0.0001235732332292398,
+          "plateau_velocity": 9.641957574413775e-05,
+          "extremum_count": 0,
+          "volume_drift": 2.3684757858670005e-15,
+          "pass": true
+        },
+        {
+          "n": 800,
+          "dx": 0.03,
+          "steps": 300,
+          "depth_l1": 0.0006016670325303759,
+          "velocity_l1": 0.0007073267891983781,
+          "wave_left": 0.00195554828759795,
+          "wave_right": 0.0011503647839724057,
+          "plateau_depth": 3.7521076646364325e-06,
+          "plateau_velocity": 4.9031005936266126e-05,
+          "extremum_count": 0,
+          "volume_drift": 3.552713678800501e-15,
+          "pass": true
+        },
+        {
+          "n": 1600,
+          "dx": 0.015,
+          "steps": 599,
+          "depth_l1": 0.0002997447560138565,
+          "velocity_l1": 0.00035813276648864886,
+          "wave_left": 0.0008968459861980216,
+          "wave_right": 0.0003398694668732048,
+          "plateau_depth": 5.300401942409947e-06,
+          "plateau_velocity": 2.9638635285206883e-05,
+          "extremum_count": 0,
+          "volume_drift": 5.723816482511918e-15,
+          "pass": true
+        },
+        {
+          "n": 3200,
+          "dx": 0.0075,
+          "steps": 1198,
+          "depth_l1": 0.00015281498133102686,
+          "velocity_l1": 0.00018374024983147904,
+          "wave_left": 0.00044199023550680195,
+          "wave_right": 0.00024282789993439644,
+          "plateau_depth": 2.387233019948624e-06,
+          "plateau_velocity": 1.042852521090639e-05,
+          "extremum_count": 0,
+          "volume_drift": 9.868649107779169e-15,
+          "pass": true
+        }
+      ],
+      "observed_order_depth_l1": [
+        1.0342499331624306,
+        1.0052307944144505,
+        0.9719485281486023
+      ],
+      "all_pass": true
+    },
+    "rarefaction-rarefaction": {
+      "case": {
+        "name": "rarefaction-rarefaction",
+        "hL": 1.0,
+        "uL": -1.0,
+        "hR": 0.5,
+        "uR": 1.0,
+        "gravity": 9.81,
+        "x_min": -12.0,
+        "x_max": 12.0,
+        "t_end": 1.0,
+        "note": "diverging streams: both families expansive, the star depth is a smooth minimum (no wave to hide behind)",
+        "pattern": "1-rarefaction+2-rarefaction",
+        "h_star": 0.4815189659394422,
+        "u_star": 0.917368493638155,
+        "wave_speeds": [
+          -4.132091952673165,
+          -1.2560392122159327,
+          3.2147234590350102,
+          3.0907761994922427
+        ],
+        "max_wave_speed": 4.132091952673165
+      },
+      "rows": [
+        {
+          "n": 400,
+          "dx": 0.06,
+          "steps": 173,
+          "depth_l1": 0.0011277587282923487,
+          "velocity_l1": 0.0013938364712225962,
+          "wave_left": 0.0005460418221597607,
+          "wave_right": 0.05803146080943046,
+          "plateau_depth": 9.827571384422635e-05,
+          "plateau_velocity": 0.00010536003213457551,
+          "extremum_count": 0,
+          "volume_drift": 0.0833333333333363,
+          "pass": false
+        },
+        {
+          "n": 800,
+          "dx": 0.03,
+          "steps": 345,
+          "depth_l1": 0.0005656978820985057,
+          "velocity_l1": 0.0006983480224592923,
+          "wave_left": 0.0003207571888049103,
+          "wave_right": 0.033058402778289434,
+          "plateau_depth": 3.1087995571360644e-05,
+          "plateau_velocity": 1.4571765276381009e-05,
+          "extremum_count": 0,
+          "volume_drift": 0.08333333333333866,
+          "pass": true
+        },
+        {
+          "n": 1600,
+          "dx": 0.015,
+          "steps": 689,
+          "depth_l1": 0.00028538354544530833,
+          "velocity_l1": 0.00035263624577481123,
+          "wave_left": 0.00015789513529592005,
+          "wave_right": 0.01818000459493434,
+          "plateau_depth": 1.0659900024262987e-05,
+          "plateau_velocity": 3.260036431446961e-06,
+          "extremum_count": 0,
+          "volume_drift": 0.08333333333334242,
+          "pass": true
+        },
+        {
+          "n": 3200,
+          "dx": 0.0075,
+          "steps": 1378,
+          "depth_l1": 0.00014355503295690168,
+          "velocity_l1": 0.00017761814187818712,
+          "wave_left": 7.880940690076514e-05,
+          "wave_right": 0.009391017738971726,
+          "plateau_depth": 3.979539325120325e-06,
+          "plateau_velocity": 3.7131995741291634e-06,
+          "extremum_count": 0,
+          "volume_drift": 0.08333333333334597,
+          "pass": true
+        }
+      ],
+      "observed_order_depth_l1": [
+        0.995354777007207,
+        0.9871296149688039,
+        0.9912982432645355
+      ],
+      "all_pass": false
+    },
+    "shock-shock": {
+      "case": {
+        "name": "shock-shock",
+        "hL": 1.0,
+        "uL": 1.5,
+        "hR": 0.6,
+        "uR": -1.0,
+        "gravity": 9.81,
+        "x_min": -12.0,
+        "x_max": 12.0,
+        "t_end": 1.0,
+        "note": "colliding streams: both families compressive -- the pattern the HLL wave-speed estimates are least tested on",
+        "pattern": "1-shock+2-shock",
+        "h_star": 1.1671875509556764,
+        "u_star": 0.9954533032836872,
+        "wave_speeds": [
+          -2.0223951778515783,
+          3.1063458642238597
+        ],
+        "max_wave_speed": 3.1063458642238597
+      },
+      "rows": [
+        {
+          "n": 400,
+          "dx": 0.06,
+          "steps": 194,
+          "depth_l1": 0.001465923772293282,
+          "velocity_l1": 0.0015463859399325439,
+          "wave_left": 0.007695899805504848,
+          "wave_right": 0.0034020910803793086,
+          "plateau_depth": 4.187072857607173e-06,
+          "plateau_velocity": 2.4513456520230666e-05,
+          "extremum_count": 0,
+          "volume_drift": 0.10937499999999693,
+          "pass": true
+        },
+        {
+          "n": 800,
+          "dx": 0.03,
+          "steps": 387,
+          "depth_l1": 0.0007316727304687387,
+          "velocity_l1": 0.0007553240192462402,
+          "wave_left": 0.004634298484795875,
+          "wave_right": 0.0020368717274532678,
+          "plateau_depth": 6.207020421172206e-06,
+          "plateau_velocity": 1.7809839793200602e-05,
+          "extremum_count": 0,
+          "volume_drift": 0.10937499999999509,
+          "pass": true
+        },
+        {
+          "n": 1600,
+          "dx": 0.015,
+          "steps": 773,
+          "depth_l1": 0.000378837362917026,
+          "velocity_l1": 0.0004119571590836308,
+          "wave_left": 0.002109981514195684,
+          "wave_right": 0.0007272285533566466,
+          "plateau_depth": 4.34018886493886e-06,
+          "plateau_velocity": 9.05097834801589e-06,
+          "extremum_count": 0,
+          "volume_drift": 0.10937499999999398,
+          "pass": true
+        },
+        {
+          "n": 3200,
+          "dx": 0.0075,
+          "steps": 1545,
+          "depth_l1": 0.00019841422836690687,
+          "velocity_l1": 0.00021642360490540692,
+          "wave_left": 0.0011707733236149972,
+          "wave_right": 0.00040148005046425047,
+          "plateau_depth": 9.84972362026666e-07,
+          "plateau_velocity": 3.3019628962519715e-06,
+          "extremum_count": 0,
+          "volume_drift": 0.1093749999999886,
+          "pass": true
+        }
+      ],
+      "observed_order_depth_l1": [
+        1.0025396900532635,
+        0.9496198665040051,
+        0.9330631382380317
+      ],
+      "all_pass": true
+    },
+    "shock-rarefaction": {
+      "case": {
+        "name": "shock-rarefaction",
+        "hL": 0.5,
+        "uL": 3.0,
+        "hR": 1.0,
+        "uR": 2.5,
+        "gravity": 9.81,
+        "x_min": -12.0,
+        "x_max": 12.0,
+        "t_end": 1.0,
+        "note": "fast shallow stream overtaking deeper faster water: compressive 1-family, expansive 2-family",
+        "pattern": "1-shock+2-rarefaction",
+        "h_star": 0.794945812965292,
+        "u_star": 1.8209457888289147,
+        "wave_speeds": [
+          -0.17781832197036532,
+          5.632091952673165,
+          4.613510635916537
+        ],
+        "max_wave_speed": 5.632091952673165
+      },
+      "rows": [
+        {
+          "n": 400,
+          "dx": 0.06,
+          "steps": 235,
+          "depth_l1": 0.0009711534337381872,
+          "velocity_l1": 0.0010648877786930148,
+          "wave_left": 0.002653217581993445,
+          "wave_right": 0.008377762766384182,
+          "plateau_depth": 0.0008327039353786908,
+          "plateau_velocity": 0.0022366674087030457,
+          "extremum_count": 0,
+          "volume_drift": 0.0555555555555597,
+          "pass": true
+        },
+        {
+          "n": 800,
+          "dx": 0.03,
+          "steps": 470,
+          "depth_l1": 0.0005484377404555246,
+          "velocity_l1": 0.000597786127023741,
+          "wave_left": 0.0004941237318181192,
+          "wave_right": 0.0035328738156901835,
+          "plateau_depth": 0.0003075236675522807,
+          "plateau_velocity": 0.0009175521749291056,
+          "extremum_count": 1,
+          "volume_drift": 0.05555555555556266,
+          "pass": false
+        },
+        {
+          "n": 1600,
+          "dx": 0.015,
+          "steps": 939,
+          "depth_l1": 0.00031554986259767925,
+          "velocity_l1": 0.00034389129420246467,
+          "wave_left": 0.0018681960923783185,
+          "wave_right": 0.0015437425221965335,
+          "plateau_depth": 0.0004978188989484956,
+          "plateau_velocity": 0.0005856158042807392,
+          "extremum_count": 1,
+          "volume_drift": 0.055555555555568584,
+          "pass": false
+        },
+        {
+          "n": 3200,
+          "dx": 0.0075,
+          "steps": 1878,
+          "depth_l1": 0.00018143627076478471,
+          "velocity_l1": 0.00019795098202477466,
+          "wave_left": 0.001171906287037136,
+          "wave_right": 0.0007369143028052604,
+          "plateau_depth": 0.0008747351932173425,
+          "plateau_velocity": 0.0013979351438863856,
+          "extremum_count": 0,
+          "volume_drift": 0.055555555555582795,
+          "pass": true
+        }
+      ],
+      "observed_order_depth_l1": [
+        0.8243713939990187,
+        0.7974598576488203,
+        0.7984051025965831
+      ],
+      "all_pass": false
+    }
+  }
+}
