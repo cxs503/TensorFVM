@@ -1,0 +1,37 @@
+{
+  "case": "CASE-FVM-CAVITY-RE1000",
+  "solver": "psiomega",
+  "reynolds": 1000.0,
+  "cfl": 0.4,
+  "tolerance": 1e-07,
+  "ledger": {
+    "steps": 21000,
+    "dt": 0.00625,
+    "residual": 9.820155355555471e-08,
+    "converged": true,
+    "max_divergence": 5.329070518200751e-15,
+    "vorticity_defect": 1.0342837697407958e-12
+  },
+  "diagnostics": {
+    "n": 64,
+    "reynolds": 1000.0,
+    "steps": 21000,
+    "dt": 0.00625,
+    "residual": 9.820155355555471e-08,
+    "max_divergence": 5.329070518200751e-15,
+    "vorticity_defect": 1.0342837697407958e-12,
+    "lid_velocity_error": 1.0,
+    "psi_min": -0.1125859211612297,
+    "omega_wall_lid": -34.79155107165779
+  },
+  "functionals": {
+    "u_min": -0.3650904517976774,
+    "u_min_y": 0.1796875,
+    "v_max": 0.3527598149295619,
+    "v_max_x": 0.1640625,
+    "psi_min": -0.11501448537080684,
+    "vortex_x": 0.5390625,
+    "vortex_y": 0.5859375,
+    "kinetic": 0.039746689237500306
+  }
+}
