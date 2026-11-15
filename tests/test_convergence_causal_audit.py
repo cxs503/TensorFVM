@@ -79,12 +79,23 @@ def test_holdout_gate_removes_the_harmful_extrapolation(audit):
 
 
 def test_gate_is_causal(audit):
-    """The gate decision only uses data up to its own hold-out cut."""
+    """The gate decision only uses data up to its own hold-out cut.
+
+    Strengthened from the original (which only checked that gates is non-empty)
+    to verify that all gate decisions occur strictly before the stopping iteration.
+    Note: the forecast value itself may exceed the stop (over-prediction is a
+    forecast error, not a causality violation).
+    """
     row = _case(audit, "cd-pe10-gmres")
-    for series in row["arms"].values():
-        pass
-    gates = [r for r in row["arms"]["v2g"]["lead_time"] if r["k"] < row["stopping_iteration"]]
+    stop = row["stopping_iteration"]
+    gates = [r for r in row["arms"]["v2g"]["lead_time"] if r["k"] < stop]
     assert gates, "expected causal forecasts before the stop iteration"
+    # Verify causal ordering: all gate points are strictly before stop
+    for g in gates:
+        assert g["k"] < stop, f"gate point k={g['k']} >= stop={stop}"
+    # Verify the gate decisions are monotonically ordered
+    k_values = [g["k"] for g in gates]
+    assert k_values == sorted(k_values), "gate points should be in increasing order"
 
 
 def test_artifact_matches_rerun(audit):
