@@ -1,0 +1,107 @@
+{
+  "subject": {
+    "mission": 21018,
+    "repo": "TensorFVM",
+    "anchor": "GAP-DIFFLBM-EXT-LIT-CYL",
+    "pr": 719,
+    "merge_commit": "cda4e7f9",
+    "subject_commit": "69311e24"
+  },
+  "referee": {
+    "table": "tensor_benchmark_cases",
+    "rows": [
+      {
+        "case": "cylinder-re100-unbounded",
+        "metric": "cd_mean",
+        "tolerance": "5%",
+        "status": "pending",
+        "got": 1.5092636299131243,
+        "ref": 1.34,
+        "rel_err": 0.1263,
+        "passed": false
+      },
+      {
+        "case": "cylinder-re100-unbounded",
+        "metric": "st",
+        "tolerance": "3%",
+        "status": "pending",
+        "got": 0.1550825196959207,
+        "ref": 0.164,
+        "rel_err": -0.0544,
+        "passed": false
+      }
+    ]
+  },
+  "grade": {
+    "declared": 2,
+    "gate_replay": 2,
+    "not_L3": "new force/statistics modules have no main-solver/platform caller (backend_registry 0 immersed hits, no /calculations route)",
+    "not_L4": "both registered metrics outside tolerance and no grid convergence (finest diverged)"
+  },
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "blocking",
+      "kind": "correctness-of-conclusion",
+      "what": "non-finite force history is reported as 'no vortex shedding'",
+      "where": "src/tensorfvm/verification/cylinder_re100.py:200",
+      "evidence": "artifacts/cpd32/force_history_head.csv rows 11-16: 1.3e26, 1.8e171, 6.8e309, 6.3e315, nan (5986/6001 rows non-finite); docs/case-cylinder-re100/README.md and ladder.json label the grid 'GATED: no vortex shedding'; 2639 s of cluster time spent stepping the NaN field",
+      "remedy": "split 'diverged' from 'no shedding' (isfinite check on the whole record), fail fast"
+    },
+    {
+      "id": "F2",
+      "severity": "blocking",
+      "kind": "capability",
+      "what": "anchor not established: Cd +12.63 % (band 5 %), St -5.44 % (band 3 %), Cl amp -37.3 %",
+      "where": "artifacts/cpd20/result.json vs tensor_benchmark_cases",
+      "status": "pending",
+      "remedy": ">=40 cells/D or body-fitted backend; separate blockage from staircase error"
+    },
+    {
+      "id": "F3",
+      "severity": "major",
+      "kind": "reproducibility",
+      "what": "runs/ and artifacts/ untracked -> raw histories only on a prunable worktree",
+      "evidence": "git status in /root/tp-agent/work/m21018: '?? runs/' and '?? artifacts/'; git ls-tree -r HEAD | grep '^runs/' -> empty",
+      "remedy": "copied here with sha256 manifest (artifacts/manifest.json); project should commit raw histories or regenerate them from the ladder script"
+    },
+    {
+      "id": "F4",
+      "severity": "major",
+      "kind": "test-gap",
+      "what": "no test feeds a non-finite history (the only production failure)",
+      "evidence": "tests/test_cylinder_re100_case.py, tests/test_case_cylinder_re100.py: grep 'nan|diverg|isfinite' -> 0 assertions; 16 tests pass while the 32 cpd run fails",
+      "remedy": "regression test with a NaN tail + gate label assertion"
+    },
+    {
+      "id": "F5",
+      "severity": "minor",
+      "kind": "report-shape",
+      "what": "per-grid report has 5 of 6 required sections (no limitations, no explicit '<3 %?' sentence)",
+      "evidence": "runs/case-cylinder-re100/cpd20/report.md sections: 1 problem / 2 anchor / 3 results / 4 gates / 5 figures"
+    },
+    {
+      "id": "F6",
+      "severity": "informational",
+      "kind": "integration",
+      "what": "no platform route / registry entry for the immersed backend; new modules only used by the case harness + tests",
+      "evidence": "grep immersed src/tensorfvm/backend_registry.py -> 0",
+      "remedy": "wire ForceRecorder into the production solver diagnostics, expose the case via the platform benchmark route"
+    }
+  ],
+  "checks_performed": [
+    "R1 CLI --help",
+    "R2 8 cells/D end-to-end run (1200 steps, 24.4 s)",
+    "R3 step-1 bit-for-bit match 1552.09585999",
+    "R4 CSV divergence forensics",
+    "R5 16/16 tests re-run",
+    "R6 referee table query (postgres tensorplatform)",
+    "R7 maturity_gate.judge replay -> gate_level=2"
+  ],
+  "checks_not_run": [
+    "independent full 12/20 cells/D rerun (compute job cj3192 still queued at hand-off)",
+    "body-fitted cross-check at 20D x 20D",
+    ">=40 cells/D resolution study"
+  ],
+  "disposition": "request changes; GAP-DIFFLBM-EXT-LIT-CYL stays open"
+}
