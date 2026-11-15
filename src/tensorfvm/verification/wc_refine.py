@@ -63,7 +63,7 @@ TOLERANCE_PERCENT = 15.0
 #: graded-solution rungs, coarse to fine
 HLLC_RUNGS = (1600, 3200, 6400, 12800)
 #: reference rungs, coarse to fine
-WENO5_RUNGS = (1600, 3200, 6400, 12800)
+WENO5_RUNGS = (1600, 3200, 6400, 12800, 25600)
 
 
 class DataMissing(FileNotFoundError):
