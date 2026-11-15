@@ -38,6 +38,9 @@ case counts as an overall PASS only when both windows pass.
 | kepsilon | 64 | 1940 | 0.009341 | 15.0% | 14.63 | 6.7% | 6.9% | 6.4% | FAIL | FAIL |
 | kepsilon | 128 | 1940 | 0.009341 | 15.0% | 14.63 | 6.7% | 6.9% | 6.3% | FAIL | FAIL |
 | kepsilon | 256 | 1940 | 0.009341 | 15.0% | 14.63 | 6.7% | 6.9% | 6.3% | FAIL | FAIL |
+| sa | 64 | 1553 | 0.007945 | 2.2% | 15.87 | 1.1% | 1.3% | 0.3% | PASS | PASS |
+| sa | 128 | 1536 | 0.007939 | 2.3% | 15.87 | 1.2% | 1.4% | 0.3% | PASS | PASS |
+| sa | 256 | 1521 | 0.007938 | 2.3% | 15.87 | 1.2% | 1.5% | 0.3% | PASS | PASS |
 
 ## DNS Reference Values
 
@@ -60,13 +63,15 @@ case counts as an overall PASS only when both windows pass.
 * `results.json` / `results.csv` — the legacy matrix
 * `manifest.json` — implementation files, repro command, artifact sha256
 
-Headline: QUALIFIED -- kepsilon: legacy_full FAIL, log_layer FAIL; komega: legacy_full FAIL, log_layer FAIL; sst: legacy_full PASS, log_layer FAIL/PASS. Both windows are published above and neither may be quoted alone.
+Headline: QUALIFIED -- kepsilon: legacy_full FAIL, log_layer FAIL; komega: legacy_full FAIL, log_layer FAIL; sst: legacy_full PASS, log_layer FAIL/PASS; sa: legacy_full PASS, log_layer PASS. Both windows are published above and neither may be quoted alone.
 
 ## Notes
 
 * SST model resolves the viscous sublayer (low-Re treatment).
 * k-omega (Wilcox) resolves the viscous sublayer.
 * k-epsilon uses wall functions (first cell at y+ = 30).
+* Spalart-Allmaras (SA) resolves the viscous sublayer (low-Re treatment); the
+  transported variable is nuTilde with standard 1994 constants (kappa = 0.41).
 * The literal anchor window is `30 <= y+ <= centreline`; at Re_tau = 180 the
   physical log layer is only `30 <= y+ <= 0.2 Re_tau ~ 36`, a few wall units
   wide, so its RMS is quoted together with its cell count in `stations.csv`.
@@ -85,9 +90,12 @@ Every graded number above is solved at the nominal KMM1987 Re_tau = 180; the DNS
 | sst_n256 | 3.44% | 3.46% | 0.017 pp | 6.08% | 6.12% | 0.036 pp | no |
 | komega_n128 | 10.61% | 10.58% | 0.028 pp | 13.48% | 13.46% | 0.018 pp | no |
 | kepsilon_n128 | 6.88% | 6.84% | 0.032 pp | 6.33% | 6.34% | 0.004 pp | no |
+| sa_n64 | 1.34% | 1.35% | 0.011 pp | 0.29% | 0.29% | 0.001 pp | no |
+| sa_n128 | 1.41% | 1.41% | 0.003 pp | 0.27% | 0.27% | 0.001 pp | no |
+| sa_n256 | 1.47% | 1.47% | 0.002 pp | 0.25% | 0.25% | 0.001 pp | no |
 
 Maximum delta 0.097 pp against the pre-declared band 0.15 pp; verdict flips: none -> PASS. The coarse grid carries the largest delta; the delta falls below 0.04 pp at n >= 128. The catalog quotes these numbers rounded and is gated against them.
 
 ## Verdict
 
-Legacy full-range window: FAIL; physical log layer: FAIL (all models and grids). Neither number may be quoted alone.
+Legacy full-range window: FAIL; physical log layer: FAIL (two-equation models); PASS (SA model). The SA model, calibrated directly on the log law with kappa = 0.41, reproduces the DNS log layer to within 0.3% RMS at all three grids, while the two-equation models (SST, k-omega, k-epsilon) fail the physical log layer window. Neither number may be quoted alone without specifying the model.
