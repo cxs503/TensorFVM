@@ -1,0 +1,155 @@
+{
+ "case": "CASE-FVM-CAVITY-RE1000",
+ "files": [
+  "cavity_spectral_N016_re100.json",
+  "cavity_spectral_N024_re100.json",
+  "cavity_spectral_N032_re100.json",
+  "cavity_spectral_N048_re100.json"
+ ],
+ "orders": [
+  16,
+  24,
+  32,
+  48
+ ],
+ "records": [
+  {
+   "ghia": {
+    "ghia_grid": "129x129 vorticity-streamfunction (Ghia et al. 1982)",
+    "u_min_ref": -0.2109,
+    "u_min_rel_err": 0.01636900489444064,
+    "u_profile_max_abs": 0.004853358585186596,
+    "u_profile_rms": 0.0027331415562862676,
+    "v_max_ref": 0.17527,
+    "v_max_rel_err": 0.02579085815552833,
+    "v_profile_max_abs": 0.00975305500449955,
+    "v_profile_rms": 0.005036123125742297,
+    "within_5pct": true
+   },
+   "metrics": {
+    "kinetic_energy": 0.034435099243972936,
+    "lid_slip_defect": 0.011034688808222226,
+    "lid_velocity_max": 1.078962695091272,
+    "poisson_residual_max": 3.2862601528904634e-14,
+    "psi_min": -0.10338347471896128,
+    "u_min": -0.21435222313223753,
+    "v_max": 0.17979036370891946,
+    "vortex_centre": [
+     0.6052379439003996,
+     0.7327251276343667
+    ],
+    "wall_slip_defect": 0.004752785167238305,
+    "x_at_v_max": 0.23550000000000001,
+    "y_at_u_min": 0.4575
+   },
+   "nodes_per_side": 17,
+   "order": 16,
+   "reynolds": 100.0,
+   "wall_seconds": 0.6030087471008301
+  },
+  {
+   "ghia": {
+    "ghia_grid": "129x129 vorticity-streamfunction (Ghia et al. 1982)",
+    "u_min_ref": -0.2109,
+    "u_min_rel_err": 0.014965387933208944,
+    "u_profile_max_abs": 0.005010709849020911,
+    "u_profile_rms": 0.0023703931100020536,
+    "v_max_ref": 0.17527,
+    "v_max_rel_err": 0.024445003005650095,
+    "v_profile_max_abs": 0.009256589953579891,
+    "v_profile_rms": 0.004783165826180875,
+    "within_5pct": true
+   },
+   "metrics": {
+    "kinetic_energy": 0.03444049870364731,
+    "lid_slip_defect": 0.0035683889045169392,
+    "lid_velocity_max": 1.0681887782240809,
+    "poisson_residual_max": 9.414691248821327e-14,
+    "psi_min": -0.10340642602829797,
+    "u_min": -0.21405620031511377,
+    "v_max": 0.1795544756768003,
+    "vortex_centre": [
+     0.6188465096408464,
+     0.7393832904693164
+    ],
+    "wall_slip_defect": 0.00010454500420065418,
+    "x_at_v_max": 0.23725000000000002,
+    "y_at_u_min": 0.458
+   },
+   "nodes_per_side": 25,
+   "order": 24,
+   "reynolds": 100.0,
+   "wall_seconds": 0.3836066722869873
+  },
+  {
+   "ghia": {
+    "ghia_grid": "129x129 vorticity-streamfunction (Ghia et al. 1982)",
+    "u_min_ref": -0.2109,
+    "u_min_rel_err": 0.014907122977232599,
+    "u_profile_max_abs": 0.005037429651913061,
+    "u_profile_rms": 0.002387735333248741,
+    "v_max_ref": 0.17527,
+    "v_max_rel_err": 0.024586629655346543,
+    "v_profile_max_abs": 0.009239874192834313,
+    "v_profile_rms": 0.004780915572293709,
+    "within_5pct": true
+   },
+   "metrics": {
+    "kinetic_energy": 0.034442714735899,
+    "lid_slip_defect": 0.0011242461883455013,
+    "lid_velocity_max": 1.0626637777528856,
+    "poisson_residual_max": 2.9665159217984183e-13,
+    "psi_min": -0.1033202009616155,
+    "u_min": -0.21404391223589836,
+    "v_max": 0.1795792985796926,
+    "vortex_centre": [
+     0.6163022080884958,
+     0.734563416346173
+    ],
+    "wall_slip_defect": 8.790963465330331e-05,
+    "x_at_v_max": 0.23700000000000002,
+    "y_at_u_min": 0.458
+   },
+   "nodes_per_side": 33,
+   "order": 32,
+   "reynolds": 100.0,
+   "wall_seconds": 1.0751008987426758
+  },
+  {
+   "ghia": {
+    "ghia_grid": "129x129 vorticity-streamfunction (Ghia et al. 1982)",
+    "u_min_ref": -0.2109,
+    "u_min_rel_err": 0.014899628744114584,
+    "u_profile_max_abs": 0.005041300259152226,
+    "u_profile_rms": 0.002388748503311551,
+    "v_max_ref": 0.17527,
+    "v_max_rel_err": 0.024543886224215678,
+    "v_profile_max_abs": 0.009240759552641531,
+    "v_profile_rms": 0.004778465459200975,
+    "within_5pct": true
+   },
+   "metrics": {
+    "kinetic_energy": 0.03444351824848976,
+    "lid_slip_defect": 0.00027978961898345034,
+    "lid_velocity_max": 1.0582097594034383,
+    "poisson_residual_max": 9.237055564881302e-13,
+    "psi_min": -0.10340396971838482,
+    "u_min": -0.21404233170213377,
+    "v_max": 0.1795718069385183,
+    "vortex_centre": [
+     0.618076896792207,
+     0.7395525958145982
+    ],
+    "wall_slip_defect": 2.519610678508126e-05,
+    "x_at_v_max": 0.23700000000000002,
+    "y_at_u_min": 0.458
+   },
+   "nodes_per_side": 49,
+   "order": 48,
+   "reynolds": 100.0,
+   "wall_seconds": 4.989094257354736
+  }
+ ],
+ "reynolds": 100.0,
+ "tag": "re100"
+}

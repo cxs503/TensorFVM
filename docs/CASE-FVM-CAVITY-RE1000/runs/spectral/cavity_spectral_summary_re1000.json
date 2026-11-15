@@ -1,0 +1,165 @@
+{
+ "case": "CASE-FVM-CAVITY-RE1000",
+ "files": [
+  "cavity_spectral_N016_re1000.json",
+  "cavity_spectral_N024_re1000.json",
+  "cavity_spectral_N032_re1000.json",
+  "cavity_spectral_N048_re1000.json",
+  "cavity_spectral_N064_re1000.json"
+ ],
+ "orders": [
+  16,
+  24,
+  32,
+  48,
+  64
+ ],
+ "records": [
+  {
+   "ghia": null,
+   "metrics": null,
+   "nodes_per_side": 17,
+   "order": 16,
+   "status": "newton_diverged",
+   "wall_seconds": 12.393070936203003
+  },
+  {
+   "ghia": {
+    "ghia_grid": "129x129 vorticity-streamfunction (Ghia et al. 1982)",
+    "u_min_ref": -0.38289,
+    "u_min_rel_err": 1.0489613026130948,
+    "u_profile_max_abs": 0.5327817151391663,
+    "u_profile_rms": 0.2866469066496082,
+    "v_max_ref": 0.37095,
+    "v_max_rel_err": 1.1702540061446929,
+    "v_profile_max_abs": 0.48043418609232663,
+    "v_profile_rms": 0.29984674431927083,
+    "within_5pct": false
+   },
+   "metrics": {
+    "kinetic_energy": 0.16684485069030133,
+    "lid_slip_defect": 0.09534472462721333,
+    "lid_velocity_max": 1.1117320330377367,
+    "poisson_residual_max": 1.3500311979441904e-13,
+    "psi_min": -0.2641790087056504,
+    "u_min": -0.7845267931575279,
+    "v_max": 0.8050557235793738,
+    "vortex_centre": [
+     0.5261052384440102,
+     0.5647047612756302
+    ],
+    "wall_slip_defect": 0.04939277250963125,
+    "x_at_v_max": 0.17575000000000002,
+    "y_at_u_min": 0.263
+   },
+   "nodes_per_side": 25,
+   "order": 24,
+   "reynolds": 1000.0,
+   "wall_seconds": 3.2068686485290527
+  },
+  {
+   "ghia": {
+    "ghia_grid": "129x129 vorticity-streamfunction (Ghia et al. 1982)",
+    "u_min_ref": -0.38289,
+    "u_min_rel_err": 0.057365910904530956,
+    "u_profile_max_abs": 0.023967917092544866,
+    "u_profile_rms": 0.012776795213408293,
+    "v_max_ref": 0.37095,
+    "v_max_rel_err": 0.06843743615312428,
+    "v_profile_max_abs": 0.03705560528753954,
+    "v_profile_rms": 0.022568683509241513,
+    "within_5pct": false
+   },
+   "metrics": {
+    "kinetic_energy": 0.04790440852625009,
+    "lid_slip_defect": 0.0073624658539077625,
+    "lid_velocity_max": 1.0903147688815495,
+    "poisson_residual_max": 2.3447910280083306e-13,
+    "psi_min": -0.12484368746604253,
+    "u_min": -0.40485483362623587,
+    "v_max": 0.39633686694100145,
+    "vortex_centre": [
+     0.5292635483024192,
+     0.5658429836804433
+    ],
+    "wall_slip_defect": 0.0051813668841667266,
+    "x_at_v_max": 0.15925,
+    "y_at_u_min": 0.1685
+   },
+   "nodes_per_side": 33,
+   "order": 32,
+   "reynolds": 1000.0,
+   "wall_seconds": 2.647843599319458
+  },
+  {
+   "ghia": {
+    "ghia_grid": "129x129 vorticity-streamfunction (Ghia et al. 1982)",
+    "u_min_ref": -0.38289,
+    "u_min_rel_err": 0.01591298562617206,
+    "u_profile_max_abs": 0.007069668188510958,
+    "u_profile_rms": 0.00405147753275781,
+    "v_max_ref": 0.37095,
+    "v_max_rel_err": 0.018292225284091284,
+    "v_profile_max_abs": 0.019066579851885312,
+    "v_profile_rms": 0.00976693128579307,
+    "within_5pct": true
+   },
+   "metrics": {
+    "kinetic_energy": 0.04462169754012172,
+    "lid_slip_defect": 0.0018202599573695633,
+    "lid_velocity_max": 1.084527695061347,
+    "poisson_residual_max": 8.384404281969182e-13,
+    "psi_min": -0.119119448768299,
+    "u_min": -0.38898292306640503,
+    "v_max": 0.37773550096913366,
+    "vortex_centre": [
+     0.5309999706522622,
+     0.5651233628115678
+    ],
+    "wall_slip_defect": 0.001221204122975708,
+    "x_at_v_max": 0.158,
+    "y_at_u_min": 0.1715
+   },
+   "nodes_per_side": 49,
+   "order": 48,
+   "reynolds": 1000.0,
+   "wall_seconds": 9.091641664505005
+  },
+  {
+   "ghia": {
+    "ghia_grid": "129x129 vorticity-streamfunction (Ghia et al. 1982)",
+    "u_min_ref": -0.38289,
+    "u_min_rel_err": 0.01494274742829921,
+    "u_profile_max_abs": 0.006368542560031831,
+    "u_profile_rms": 0.0035160825588166403,
+    "v_max_ref": 0.37095,
+    "v_max_rel_err": 0.016516572611989407,
+    "v_profile_max_abs": 0.018552475058823625,
+    "v_profile_rms": 0.009418163600740522,
+    "within_5pct": true
+   },
+   "metrics": {
+    "kinetic_energy": 0.04452960923324674,
+    "lid_slip_defect": 0.0005675711569206321,
+    "lid_velocity_max": 1.0740449428513879,
+    "poisson_residual_max": 1.5063505998114124e-12,
+    "psi_min": -0.11893626039711698,
+    "u_min": -0.3886114285628215,
+    "v_max": 0.3770768226104175,
+    "vortex_centre": [
+     0.5318555706071072,
+     0.5647829621888476
+    ],
+    "wall_slip_defect": 0.00031127376991786274,
+    "x_at_v_max": 0.15775,
+    "y_at_u_min": 0.17175
+   },
+   "nodes_per_side": 65,
+   "order": 64,
+   "reynolds": 1000.0,
+   "wall_seconds": 20.73124408721924
+  }
+ ],
+ "reynolds": 1000.0,
+ "tag": "re1000"
+}
