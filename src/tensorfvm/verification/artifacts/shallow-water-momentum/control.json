@@ -1,0 +1,64 @@
+{
+  "control": {
+    "baseline_momentum_closure": 2.5721538440192324e-12,
+    "baseline_u_l1": 0.050703176831123166,
+    "case": "ritter-dry",
+    "n": 800,
+    "rows": [
+      {
+        "epsilon": 0.001,
+        "momentum_gain": 0.9999999906559626,
+        "momentum_measured": 0.00027524364792360696,
+        "momentum_predicted": 0.00027524365049549394,
+        "velocity_delta_minus": 0.0001666666666666622,
+        "velocity_delta_plus": -0.0001666666666666622,
+        "velocity_max_abs_delta": 0.0001666666666666622,
+        "velocity_predicted": 0.0001666666666666667
+      },
+      {
+        "epsilon": 0.01,
+        "momentum_gain": 0.9999999990655932,
+        "momentum_measured": 0.002752436502383044,
+        "momentum_predicted": 0.0027524365049549394,
+        "velocity_delta_minus": 0.0016666666666666635,
+        "velocity_delta_plus": 0.0012932842987843224,
+        "velocity_max_abs_delta": 0.0016666666666666635,
+        "velocity_predicted": 0.0016666666666666666
+      },
+      {
+        "epsilon": 0.1,
+        "momentum_gain": 0.9999999999065614,
+        "momentum_measured": 0.027524365046977556,
+        "momentum_predicted": 0.027524365049549394,
+        "velocity_delta_minus": 0.01666666666666667,
+        "velocity_delta_plus": 0.01629328429878433,
+        "velocity_max_abs_delta": 0.01666666666666667,
+        "velocity_predicted": 0.01666666666666667
+      }
+    ],
+    "window": [
+      -1.0,
+      0.0
+    ],
+    "window_cells": 80
+  },
+  "meta": {
+    "cases": [
+      "ritter-dry",
+      "stoker-wet"
+    ],
+    "command": "PYTHONPATH=src python scripts/run_shallow_water_momentum.py",
+    "git_commit": "a2c8c151",
+    "numpy": "2.4.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "python": "3.11.6",
+    "resolutions": [
+      800,
+      1600,
+      3200,
+      6400
+    ],
+    "tip_fraction": 0.05,
+    "tolerance": 0.05
+  }
+}

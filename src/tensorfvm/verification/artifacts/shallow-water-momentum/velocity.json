@@ -1,0 +1,347 @@
+{
+  "meta": {
+    "cases": [
+      "ritter-dry",
+      "stoker-wet"
+    ],
+    "command": "PYTHONPATH=src python scripts/run_shallow_water_momentum.py",
+    "git_commit": "a2c8c151",
+    "numpy": "2.4.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "python": "3.11.6",
+    "resolutions": [
+      800,
+      1600,
+      3200,
+      6400
+    ],
+    "tip_fraction": 0.05,
+    "tolerance": 0.05
+  },
+  "velocity": {
+    "ritter-dry": {
+      "case": "ritter-dry",
+      "cfl": 0.4,
+      "observed_order_depth_l1": [
+        0.9989591853393482,
+        0.9992174435069079,
+        0.9995004964978241
+      ],
+      "observed_order_u_l1": [
+        0.193103836753827,
+        0.3212723922404193,
+        0.4093885304283692
+      ],
+      "observed_order_u_l1_mass": [
+        1.001123112526176,
+        1.0013876125356942,
+        1.005261274209911
+      ],
+      "order": 2,
+      "rows": [
+        {
+          "budget": {
+            "cancellation": 0.009558776393756109,
+            "depth_inherited": 0.006829137886929462,
+            "measured": 0.050703176831123166,
+            "missing_tip": 0.033055555555555546,
+            "overshoot": 0.0,
+            "scheme": 0.020377259782394266,
+            "sum_bound": 0.060261953224879275
+          },
+          "case": "ritter-dry",
+          "cells": {
+            "band": 107,
+            "fan": 632,
+            "missing_tip": 8,
+            "overshoot": 0
+          },
+          "clipped_cells": 0,
+          "depth_l1": 0.0015419003450595438,
+          "dx": 0.012499999999999734,
+          "gap_length": 0.09999999999999787,
+          "hu_l1": 0.005890498327233741,
+          "n": 800,
+          "pass_3pct": false,
+          "pass_5pct": false,
+          "share_band": 0.9741806591405557,
+          "share_missing_tip": 0.5485311010780263,
+          "steps": 739,
+          "tip_fraction": 0.05,
+          "tolerance": 0.05,
+          "u_l1": 0.050703176831123166,
+          "u_l1_mass": 0.0036685645321794962,
+          "u_max_exact": 6.257658713778261,
+          "u_max_numeric": 5.791294556278881
+        },
+        {
+          "budget": {
+            "cancellation": 0.004400658230727182,
+            "depth_inherited": 0.0035927162670545223,
+            "measured": 0.044351174371097174,
+            "missing_tip": 0.03714843749999999,
+            "overshoot": 0.0,
+            "scheme": 0.008010678834769844,
+            "sum_bound": 0.048751832601824356
+          },
+          "case": "ritter-dry",
+          "cells": {
+            "band": 215,
+            "fan": 1262,
+            "missing_tip": 18,
+            "overshoot": 0
+          },
+          "clipped_cells": 0,
+          "depth_l1": 0.0007715065657630972,
+          "dx": 0.006250000000000089,
+          "gap_length": 0.1125000000000016,
+          "hu_l1": 0.002951082284224659,
+          "n": 1600,
+          "pass_3pct": false,
+          "pass_5pct": true,
+          "share_band": 0.9852892541509131,
+          "share_missing_tip": 0.7619905861469062,
+          "steps": 1513,
+          "tip_fraction": 0.05,
+          "tolerance": 0.05,
+          "u_l1": 0.044351174371097174,
+          "u_l1_mass": 0.0018328548655224114,
+          "u_max_exact": 6.2609213095622955,
+          "u_max_numeric": 5.953014751767239
+        },
+        {
+          "budget": {
+            "cancellation": 0.0019294820472376961,
+            "depth_inherited": 0.001880646656784169,
+            "measured": 0.035497069193748176,
+            "missing_tip": 0.03203097873263888,
+            "overshoot": 0.0,
+            "scheme": 0.003514925851562819,
+            "sum_bound": 0.03742655124098587
+          },
+          "case": "ritter-dry",
+          "cells": {
+            "band": 429,
+            "fan": 2529,
+            "missing_tip": 31,
+            "overshoot": 0
+          },
+          "clipped_cells": 0,
+          "depth_l1": 0.0003859625825704671,
+          "dx": 0.0031250000000002665,
+          "gap_length": 0.09687500000000826,
+          "hu_l1": 0.001477477901422648,
+          "n": 3200,
+          "pass_3pct": false,
+          "pass_5pct": true,
+          "share_band": 0.9908159930985095,
+          "share_missing_tip": 0.855835701408729,
+          "steps": 3081,
+          "tip_fraction": 0.05,
+          "tolerance": 0.05,
+          "u_l1": 0.035497069193748176,
+          "u_l1_mass": 0.0009155464185436771,
+          "u_max_exact": 6.262552607454312,
+          "u_max_numeric": 6.061899904912712
+        },
+        {
+          "budget": {
+            "cancellation": 0.0008104166080112989,
+            "depth_inherited": 0.0009803620347225662,
+            "measured": 0.026727249607934597,
+            "missing_tip": 0.02535800509982639,
+            "overshoot": 0.0,
+            "scheme": 0.0011992990813969396,
+            "sum_bound": 0.027537666215945895
+          },
+          "case": "ritter-dry",
+          "cells": {
+            "band": 859,
+            "fan": 5071,
+            "missing_tip": 49,
+            "overshoot": 0
+          },
+          "clipped_cells": 0,
+          "depth_l1": 0.00019304811865859334,
+          "dx": 0.0015624999999999112,
+          "gap_length": 0.07656249999999565,
+          "hu_l1": 0.0007393241874426679,
+          "n": 6400,
+          "pass_3pct": true,
+          "pass_5pct": true,
+          "share_band": 0.9939074364965975,
+          "share_missing_tip": 0.9208480087227814,
+          "steps": 6238,
+          "tip_fraction": 0.05,
+          "tolerance": 0.05,
+          "u_l1": 0.026727249607934597,
+          "u_l1_mass": 0.00045610682518125575,
+          "u_max_exact": 6.263368256400321,
+          "u_max_numeric": 6.133543079997808
+        }
+      ]
+    },
+    "stoker-wet": {
+      "case": "stoker-wet",
+      "cfl": 0.4,
+      "observed_order_depth_l1": [
+        0.9944119261340437,
+        0.9667863341163132,
+        1.0638443499023895
+      ],
+      "observed_order_u_l1": [
+        0.9910138583085241,
+        0.9567989012592512,
+        1.0914106300700601
+      ],
+      "observed_order_u_l1_mass": [
+        1.0048678717549961,
+        0.9868998333179959,
+        1.0089132292908256
+      ],
+      "order": 2,
+      "rows": [
+        {
+          "budget": {
+            "cancellation": 4.738150256873292,
+            "depth_inherited": 2.374466950796008,
+            "measured": 0.006990620516674109,
+            "missing_tip": 0.0,
+            "overshoot": 0.0,
+            "scheme": 2.370673926593958,
+            "sum_bound": 4.745140877389966
+          },
+          "case": "stoker-wet",
+          "cells": {
+            "band": 0,
+            "fan": 800,
+            "missing_tip": 0,
+            "overshoot": 0
+          },
+          "clipped_cells": 0,
+          "depth_l1": 0.0008510840146864194,
+          "dx": 0.012499999999999734,
+          "gap_length": 0.0,
+          "hu_l1": 0.006830553079701827,
+          "n": 800,
+          "pass_3pct": true,
+          "pass_5pct": true,
+          "share_band": 0.0,
+          "share_missing_tip": 0.0,
+          "steps": 459,
+          "tip_fraction": 0.05,
+          "tolerance": 0.05,
+          "u_l1": 0.006990620516674109,
+          "u_l1_mass": 0.006783361649870084,
+          "u_max_exact": 0.9233639019770798,
+          "u_max_numeric": 0.9241692447949663
+        },
+        {
+          "budget": {
+            "cancellation": 4.740314536413538,
+            "depth_inherited": 2.372954628753158,
+            "measured": 0.0035171495076397083,
+            "missing_tip": 0.0,
+            "overshoot": 0.0,
+            "scheme": 2.3708770571680193,
+            "sum_bound": 4.743831685921178
+          },
+          "case": "stoker-wet",
+          "cells": {
+            "band": 0,
+            "fan": 1600,
+            "missing_tip": 0,
+            "overshoot": 0
+          },
+          "clipped_cells": 0,
+          "depth_l1": 0.0004271934800380538,
+          "dx": 0.006250000000000089,
+          "gap_length": 0.0,
+          "hu_l1": 0.003408504027264355,
+          "n": 1600,
+          "pass_3pct": true,
+          "pass_5pct": true,
+          "share_band": 0.0,
+          "share_missing_tip": 0.0,
+          "steps": 918,
+          "tip_fraction": 0.05,
+          "tolerance": 0.05,
+          "u_l1": 0.0035171495076397083,
+          "u_l1_mass": 0.0033802560649879897,
+          "u_max_exact": 0.9233639019770798,
+          "u_max_numeric": 0.9238979162728562
+        },
+        {
+          "budget": {
+            "cancellation": 4.741370923038452,
+            "depth_inherited": 2.3722022344757727,
+            "measured": 0.0018120311561369013,
+            "missing_tip": 0.0,
+            "overshoot": 0.0,
+            "scheme": 2.3709807197188155,
+            "sum_bound": 4.743182954194588
+          },
+          "case": "stoker-wet",
+          "cells": {
+            "band": 0,
+            "fan": 3200,
+            "missing_tip": 0,
+            "overshoot": 0
+          },
+          "clipped_cells": 0,
+          "depth_l1": 0.00021857119654017447,
+          "dx": 0.0031250000000002665,
+          "gap_length": 0.0,
+          "hu_l1": 0.0017297196032826185,
+          "n": 3200,
+          "pass_3pct": true,
+          "pass_5pct": true,
+          "share_band": 0.0,
+          "share_missing_tip": 0.0,
+          "steps": 1836,
+          "tip_fraction": 0.05,
+          "tolerance": 0.05,
+          "u_l1": 0.0018120311561369013,
+          "u_l1_mass": 0.0017055448648958596,
+          "u_max_exact": 0.9233639019770798,
+          "u_max_numeric": 0.92368498921271
+        },
+        {
+          "budget": {
+            "cancellation": 4.739401861909523,
+            "depth_inherited": 2.370297673488623,
+            "measured": 0.0008503903503084379,
+            "missing_tip": 0.0,
+            "overshoot": 0.0,
+            "scheme": 2.3699545787712086,
+            "sum_bound": 4.740252252259832
+          },
+          "case": "stoker-wet",
+          "cells": {
+            "band": 0,
+            "fan": 6400,
+            "missing_tip": 0,
+            "overshoot": 0
+          },
+          "clipped_cells": 0,
+          "depth_l1": 0.00010455477450871956,
+          "dx": 0.0015624999999999112,
+          "gap_length": 0.0,
+          "hu_l1": 0.0008527744695671534,
+          "n": 6400,
+          "pass_3pct": true,
+          "pass_5pct": true,
+          "share_band": 0.0,
+          "share_missing_tip": 0.0,
+          "steps": 3672,
+          "tip_fraction": 0.05,
+          "tolerance": 0.05,
+          "u_l1": 0.0008503903503084379,
+          "u_l1_mass": 0.000847520092728407,
+          "u_max_exact": 0.9233639019770798,
+          "u_max_numeric": 0.9235271393600969
+        }
+      ]
+    }
+  }
+}
