@@ -84,6 +84,9 @@ __all__ = [
     "figure_profiles_and_convergence",
     "TOLERANCE",
     "BORE_SUBCELL_MAX_CELLS",
+    "plateau_from_depth_modes",
+    "depth_mode_study",
+    "PLATEAU_MODE_BINS",
     "PLATEAU_MIN_JUMP_FRACTION",
     "SERIES_MIN_GRADED_FRACTION",
 ]
@@ -546,6 +549,288 @@ def data_driven_plateau(x, h, thresh_frac: float = PLATEAU_THRESH_FRACTION) -> d
                 "n_plateau": int(r - l + 1),
                 "plateau_width": float((r - l + 1) * dx)})
     return out
+
+
+#: histogram resolution of the oracle-free depth-mode detector
+#: (:func:`plateau_from_depth_modes`): number of bins over ``[min h, max h]``.
+#: 80 bins put one bin at ``0.0063 m`` for the wet-bed profile (``h`` in
+#: ``[0.5, 1.0]`` m), i.e. ``2.8 %`` of the level step ``h2 - h1 = 0.227 m``;
+#: the refinement below removes that quantisation from the quoted value.
+PLATEAU_MODE_BINS = 80
+
+#: A depth mode is quoted only if its bin holds at least this fraction of the
+#: cells -- a *non-vacuity* floor, declared before any run.  Measured on the
+#: Stoker profile at ``t* = 2`` for n = 200 ... 3200: the plateau spike holds
+#: 26 % ... 30 % of the cells and the two outer states 18 % ... 41 %, while the
+#: bins inside the smooth rarefaction fan hold 0.1 % ... 0.4 % -- the floor
+#: separates a constant state from a ramp with roughly two orders of margin.
+PLATEAU_MODE_MIN_FRACTION = 0.02
+
+#: Bins merged on each side of a modal bin when refining it to the median of
+#: its cells.  One bin each side: the plateau spike can straddle two bins on a
+#: coarse grid (n = 200), and the median over the union is then insensitive to
+#: which of the two bins happens to be the larger one.
+PLATEAU_MODE_BAND = 1
+
+#: A cell is counted as plateau if ``|h - h2| <= PLATEAU_MODE_TOL_FRACTION *
+#: (h2 - h1)``.  The numerical plateau is a *ramp* on coarse grids (flatness
+#: 11 % of the jump at n = 800, 1.4 % at n = 1600), so the quoted
+#: ``plateau_width`` shrinks with resolution; it is a diagnostic of the run, not
+#: a graded quantity.
+PLATEAU_MODE_TOL_FRACTION = 5e-2
+
+
+def _depth_modes(h, bins: int = PLATEAU_MODE_BINS,
+                 min_fraction: float = PLATEAU_MODE_MIN_FRACTION,
+                 band: int = PLATEAU_MODE_BAND) -> list:
+    """Modal depths of a depth profile -- **no analytic input**.
+
+    A depth profile of a dam break holds one constant state per region, so its
+    *distribution* is multi-modal: one mode per level.  Each mode is detected
+    from the histogram alone (bin holding at least ``min_fraction`` of the cells
+    and strictly larger than its right neighbour, so a spike straddling two bins
+    yields **one** mode) and refined to the median of the cells in the modal bin
+    ``+/- band`` bins, which removes the bin quantisation from the value.
+
+    Returns a list of ``{value, centre, count, bin}`` sorted by ``value``.
+    """
+    h = np.asarray(h, dtype=float)
+    h = h[np.isfinite(h)]
+    if h.size < 4:
+        return []
+    lo, hi = float(h.min()), float(h.max())
+    if not hi > lo:
+        return []
+    counts, edges = np.histogram(h, bins=bins, range=(lo, hi))
+    floor = max(float(min_fraction) * h.size, 1.0)
+    modes = []
+    for i in range(bins):
+        count = int(counts[i])
+        if count < floor:
+            continue
+        left = int(counts[i - 1]) if i > 0 else -1
+        right = int(counts[i + 1]) if i < bins - 1 else -1
+        # a mode must beat its left neighbour (ties go to the lower depth, so
+        # only one of two equally tall adjacent bins is reported) and be
+        # strictly larger than its right neighbour
+        if count < left or count <= right:
+            continue
+        k0 = max(i - band, 0)
+        k1 = min(i + band + 1, bins)
+        cell = (h >= edges[k0]) & (h <= edges[k1])
+        if not np.any(cell):
+            continue
+        modes.append({"value": float(np.median(h[cell])),
+                      "centre": float(0.5 * (edges[i] + edges[i + 1])),
+                      "count": count,
+                      "bin": int(i)})
+    modes.sort(key=lambda mode: mode["value"])
+    return modes
+
+
+def plateau_from_depth_modes(x, h) -> dict:
+    """Wet-bed plateau depth, still-water depth and bore position from the
+    **depth distribution only** (no analytic position, level or amplitude).
+
+    This closes the residual oracle dependency recorded in
+    ``docs/case-fvm-dambreak-stoker/AUDIT.md`` §6 (F4 / §7.4): the published
+    ``h2`` / ``step_ratio`` are read inside a window placed from the closed form
+    ``x_fan_end``/``x_shock`` (near-tautological), while
+    :func:`data_driven_plateau` locates the plateau with a *gradient* walk whose
+    cut has to be retried per grid (F9).  Here neither is used:
+
+    * every level of the profile is a **mode of its depth distribution**
+      (:func:`_depth_modes`): upstream state, plateau, still water;
+    * the plateau depth ``h2`` is the *interior* mode (second largest, the
+      largest being the undisturbed upstream state), the still-water depth
+      ``h1`` the smallest;
+    * the bore is the sub-cell crossing of the *measured* mid level
+      ``(h2 + h1) / 2``, searched rightwards from the right edge of the cells
+      that sit on ``h2`` within ``PLATEAU_MODE_TOL_FRACTION * (h2 - h1)``.
+
+    Structural assumption (declared, not fitted): the profile contains three
+    constant states -- upstream, plateau, downstream -- which is the topology of
+    the wet-bed dam break for ``t* > 0``.  If fewer than three modes are found
+    the reading is *withheld* (``method = "no_plateau"``, values NaN) instead of
+    quoted: a profile without a constant intermediate state has no plateau, and
+    a two-level profile has no interior mode.
+
+    Returns ``h2``, ``h1``, ``h0``, ``jump``, ``step_ratio``, ``bore_x``,
+    ``bore_level``, ``method``, ``plateau_cells``, ``plateau_width``,
+    ``plateau_left``, ``plateau_right``, ``modes``, ``n_modes`` and
+    ``bins``/``bin_width`` (so a reader can see the quantisation scale).
+    """
+    x = np.asarray(x, dtype=float)
+    h = np.asarray(h, dtype=float)
+    nan = float("nan")
+    out = {"h2": nan, "h1": nan, "h0": nan, "jump": nan, "step_ratio": nan,
+           "bore_x": nan, "bore_level": nan, "method": "undefined",
+           "plateau_cells": 0, "plateau_width": nan,
+           "plateau_left": nan, "plateau_right": nan,
+           "modes": [], "n_modes": 0,
+           "bins": int(PLATEAU_MODE_BINS), "bin_width": nan,
+           "tolerance": PLATEAU_MODE_TOL_FRACTION, "valid": False}
+    if x.size != h.size or h.size < 4:
+        return out
+    if not np.all(np.isfinite(h)):
+        # a partially non-finite profile is not a state: withhold, never read
+        # a subset of the cells silently
+        return out
+    dx = float(x[1] - x[0])
+    hi, lo = float(h.max()), float(h.min())
+    if hi > lo:
+        out["bin_width"] = (hi - lo) / float(PLATEAU_MODE_BINS)
+    modes = _depth_modes(h)
+    out["modes"] = modes
+    out["n_modes"] = len(modes)
+    if len(modes) < 3:
+        # no interior constant state -> no plateau to read (never quoted)
+        out["method"] = "no_plateau"
+        return out
+    h1 = modes[0]["value"]
+    h0 = modes[-1]["value"]
+    h2 = modes[-2]["value"]
+    out.update({"h1": h1, "h0": h0, "h2": h2})
+    jump = h2 - h1
+    if not (jump > 0.0 and h0 > h2):
+        out["method"] = "no_plateau"
+        return out
+    out["jump"] = jump
+    out["step_ratio"] = h2 / h1 if h1 > 0.0 else nan
+    level = 0.5 * (h2 + h1)
+    out["bore_level"] = level
+    cells = np.where(np.abs(h - h2) <= PLATEAU_MODE_TOL_FRACTION * jump)[0]
+    method = "depth_mode"
+    if cells.size:
+        anchor = int(cells[-1])
+        out["plateau_cells"] = int(cells.size)
+        out["plateau_left"] = float(x[int(cells[0])])
+        out["plateau_right"] = float(x[anchor])
+        out["plateau_width"] = float(cells.size * dx)
+    else:
+        # the plateau structure is below the tolerance: keep the reading but
+        # record that the search started from the max-gradient cell instead
+        anchor = int(np.argmax(np.abs(np.diff(h))))
+        method = "depth_mode_gradient_anchor"
+    stop = h.size - 1
+    i = anchor
+    while i < stop and not (h[i] >= level > h[i + 1]):
+        i += 1
+    if i < stop and h[i] > h[i + 1]:
+        out["bore_x"] = float(x[i] + dx * (h[i] - level) / (h[i] - h[i + 1]))
+        out["method"] = method
+        out["valid"] = True
+    else:
+        # the profile never crosses the measured mid level to the right of the
+        # plateau -> the position is not measured, and nothing is quoted
+        out["method"] = method + "_unresolved"
+    return out
+
+
+def depth_mode_study(resolutions=(200, 400, 800, 1600, 3200), cfl: float = 0.4,
+                     order: int = 2, t_star: float | None = None) -> dict:
+    """Grid study of the oracle-free (:func:`plateau_from_depth_modes`) reading.
+
+    For every resolution the Stoker wet-bed case is integrated to ``t*``
+    (default: the case's own ``t* = 2``) and the *depth-distribution* reading of
+    ``h2`` / ``h1`` / ``step_ratio`` / bore position is compared with the closed
+    form.  The same profile is also read by the two existing mechanisms, so the
+    three readings can be compared row by row:
+
+    ``oracle_window``
+        the :func:`_wet_metrics` window, placed from the analytic
+        ``x_fan_end``/``x_shock`` -- near-tautological for ``h2`` (F4).
+    ``gradient_walk``
+        :func:`data_driven_plateau`, whose threshold cut is retried per grid
+        (F9) and which withholds the reading for ``n >= 6400``.
+    ``depth_mode``
+        this module: modes of the depth distribution, no analytic input.
+
+    Returns ``{"case", "t_star", "tolerance", "rows",
+    "max_error_by_mechanism"}``.
+    """
+    t_star_end = STOKER_WET.t_star_end if t_star is None else float(t_star)
+    t_end = t_star_to_time(t_star_end, STOKER_WET.h0, STOKER_WET.gravity)
+    sol = stoker_constant_state(STOKER_WET.h0, STOKER_WET.h1, STOKER_WET.gravity)
+    rows = []
+    for n in resolutions:
+        solver = ShallowWater1D(n, STOKER_WET.x_min, STOKER_WET.x_max,
+                                gravity=STOKER_WET.gravity, cfl=cfl, order=order)
+        solver.set_state(np.where(solver.x < STOKER_WET.x_dam,
+                                  STOKER_WET.h0, STOKER_WET.h1))
+        solver.advance(t_end)
+        t = solver.time
+        x_shock = STOKER_WET.x_dam + sol["shock_speed"] * t
+        x_fan_end = STOKER_WET.x_dam + (sol["u2"] - sol["c2"]) * t
+        mode = plateau_from_depth_modes(solver.x, solver.h)
+        walk = data_driven_plateau(solver.x, solver.h)
+        # oracle window (F4): middle half of the exact constant state
+        lo_w = x_fan_end + 0.25 * (x_shock - x_fan_end)
+        hi_w = x_fan_end + 0.75 * (x_shock - x_fan_end)
+        win = (solver.x >= lo_w) & (solver.x <= hi_w)
+        h2_window = float(solver.h[win].mean()) if np.any(win) else float("nan")
+        rows.append({
+            "n": int(n),
+            "dx": float(solver.dx),
+            "depth_mode": {
+                "h2": mode["h2"], "h1": mode["h1"], "jump": mode["jump"],
+                "step_ratio": mode["step_ratio"],
+                "h2_error": _relative(mode["h2"], sol["h2"]),
+                "h1_error": _relative(mode["h1"], sol["h1"]),
+                "step_ratio_error": _relative(mode["step_ratio"],
+                                              sol["step_ratio"]),
+                "bore_x": mode["bore_x"],
+                "bore_x_error": _relative(mode["bore_x"], x_shock),
+                "bore_x_cells": (None if not np.isfinite(mode["bore_x"])
+                                 else abs(mode["bore_x"] - x_shock) / solver.dx),
+                "plateau_cells": mode["plateau_cells"],
+                "plateau_width": mode["plateau_width"],
+                "method": mode["method"],
+                "valid": mode["valid"],
+                "n_modes": mode["n_modes"],
+                "modes": mode["modes"],
+            },
+            "oracle_window": {
+                "h2": h2_window,
+                "h2_error": _relative(h2_window, sol["h2"]),
+                "cells": int(np.count_nonzero(win)),
+            },
+            "gradient_walk": {
+                "h2": walk["h2"], "h1": walk["h1"],
+                "h2_error": _relative(walk["h2"], sol["h2"]),
+                "bore_x": walk["bore_x"],
+                "bore_x_error": _relative(walk["bore_x"], x_shock),
+                "method": walk["bore_method"],
+                "flatness": walk["flatness"],
+                "bore_valid": walk["bore_valid"],
+            },
+            "exact": {"h2": sol["h2"], "h1": sol["h1"],
+                      "step_ratio": sol["step_ratio"], "x_shock": x_shock},
+        })
+    keys = ("h2_error", "h1_error", "step_ratio_error", "bore_x_error")
+    worst = {}
+    for mechanism in ("depth_mode", "oracle_window", "gradient_walk"):
+        worst[mechanism] = {}
+        for key in keys:
+            values = [row[mechanism].get(key) for row in rows
+                      if row[mechanism].get(key) is not None]
+            values = [v for v in values if v is not None and np.isfinite(v)]
+            worst[mechanism][key] = max(values) if values else None
+    graded = [row for row in rows if row["n"] >= ACCEPTED_MIN_N]
+    worst_graded = {}
+    for key in keys:
+        values = [row["depth_mode"].get(key) for row in graded]
+        values = [v for v in values if v is not None and np.isfinite(v)]
+        worst_graded[key] = max(values) if values else None
+    return {"case": STOKER_WET.summary(), "t_star": t_star_end,
+            "tolerance": TOLERANCE, "cfl": cfl, "order": order,
+            "bins": int(PLATEAU_MODE_BINS),
+            "mode_min_fraction": PLATEAU_MODE_MIN_FRACTION,
+            "mode_tolerance": PLATEAU_MODE_TOL_FRACTION,
+            "accepted_min_n": ACCEPTED_MIN_N,
+            "max_error_by_mechanism": worst,
+            "max_error_depth_mode_accepted": worst_graded,
+            "rows": rows}
 
 
 def fan_front_estimate(x, h, t: float, gravity: float, h0: float,
