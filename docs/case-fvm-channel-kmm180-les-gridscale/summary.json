@@ -1,0 +1,537 @@
+{
+  "anchor": "CASE-FVM-CHANNEL-KMM180",
+  "route": "channel_les3d",
+  "cap": 500,
+  "criteria": [
+    {
+      "id": "S1",
+      "kind": "attribution",
+      "statement": "A grid-scale dissipation threshold exists: Cs = 0.1 diverges while some Cs <= 0.3 survives the cap under identical numerics.",
+      "metric": "cs_threshold",
+      "falsified_if": "no scanned Cs above 0.1 survives the cap, or Cs = 0.1 survives too",
+      "measured": {
+        "cs_threshold": 0.2,
+        "diverged_at_default": true,
+        "survivors": [
+          0.2,
+          0.3
+        ]
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "S2",
+      "kind": "attribution",
+      "statement": "Refinement at fixed Cs does not cure the divergence: the refined grid diverges earlier than the coarse one.",
+      "metric": "refinement_steps",
+      "falsified_if": "refined grid survives, or diverges later than the coarse grid",
+      "measured": {
+        "refined_steps": 63,
+        "refined_capped": false,
+        "coarse_steps": 121
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "S3",
+      "kind": "falsification",
+      "statement": "The amplified disturbance is broadband: no single streamwise mode carries more than half of the late-time u energy (this falsifies odd-even / Nyquist decoupling as the cause).",
+      "metric": "max_mode_share",
+      "falsified_if": "one kx mode holds > 50 % of the late-time u energy",
+      "measured": {
+        "max_mode_share": 0.1657299070111994
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "S4",
+      "kind": "invariant",
+      "statement": "The implicit wall-normal operator reproduces the explicit stencil on the stretched grid.",
+      "metric": "operator_identity_defect",
+      "falsified_if": "relative defect > 1e-10",
+      "measured": {
+        "max_relative_defect": 2.790487212030426e-16
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "S5",
+      "kind": "invariant",
+      "statement": "The discrete scheme commutes with the channel mirror symmetry (top and bottom wall-adjacent rows carry equal energy).",
+      "metric": "mirror_defect",
+      "falsified_if": "relative top/bottom asymmetry > 10 % at an early sample",
+      "measured": {
+        "mirror_defect": 0.006049277970269294,
+        "bottom_row_share": 0.0017601133516031288,
+        "top_row_share": 0.0017494659366800991
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "S6",
+      "kind": "confound",
+      "statement": "The default laminar initial condition diverges earlier than the physical turbulent one, so the historical step counts are confounded.",
+      "metric": "ic_steps",
+      "falsified_if": "the parabolic profile survives at least as long as Reichardt",
+      "measured": {
+        "parabolic_steps": 37,
+        "reichardt_steps": 121,
+        "ratio": 0.30578512396694213
+      },
+      "verdict": "PASS"
+    },
+    {
+      "id": "S7",
+      "kind": "scaling",
+      "statement": "The instability is per unit *time*, not per step: the blow-up time is dt-independent within 20 %.",
+      "metric": "dt_scaling_ratio",
+      "falsified_if": "blow-up time changes by more than 20 % when dt is halved",
+      "measured": {
+        "dt": 0.0025,
+        "time": 0.3025000000000002,
+        "fine_dt": 0.00125,
+        "fine_time": 0.29749999999999915,
+        "ratio": 1.0168067226890793
+      },
+      "verdict": "PASS"
+    }
+  ],
+  "passed": 7,
+  "graded": 7,
+  "cs_sweep": [
+    {
+      "nx": 16,
+      "ny": 16,
+      "nz": 8,
+      "cs": 0.0,
+      "dt": 0.0025,
+      "profile": "reichardt",
+      "steps": 110,
+      "time": 0.2750000000000002,
+      "capped": false,
+      "diverged": true,
+      "bottom_row_share": null,
+      "top_row_share": null
+    },
+    {
+      "nx": 16,
+      "ny": 16,
+      "nz": 8,
+      "cs": 0.1,
+      "dt": 0.0025,
+      "profile": "reichardt",
+      "steps": 121,
+      "time": 0.3025000000000002,
+      "capped": false,
+      "diverged": true,
+      "bottom_row_share": null,
+      "top_row_share": null
+    },
+    {
+      "nx": 16,
+      "ny": 16,
+      "nz": 8,
+      "cs": 0.2,
+      "dt": 0.0025,
+      "profile": "reichardt",
+      "steps": 500,
+      "time": 1.2499999999999845,
+      "capped": true,
+      "diverged": false,
+      "bottom_row_share": 0.006128845560486502,
+      "top_row_share": 0.007032619024169211
+    },
+    {
+      "nx": 16,
+      "ny": 16,
+      "nz": 8,
+      "cs": 0.3,
+      "dt": 0.0025,
+      "profile": "reichardt",
+      "steps": 500,
+      "time": 1.2499999999999845,
+      "capped": true,
+      "diverged": false,
+      "bottom_row_share": 0.003075806274437538,
+      "top_row_share": 0.002956018232081022
+    }
+  ],
+  "refined": {
+    "nx": 32,
+    "ny": 32,
+    "nz": 16,
+    "cs": 0.1,
+    "dt": 0.0025,
+    "profile": "reichardt",
+    "steps": 63,
+    "time": 0.15750000000000008,
+    "capped": false,
+    "diverged": true,
+    "bottom_row_share": null,
+    "top_row_share": null
+  },
+  "parabolic_ic": {
+    "nx": 16,
+    "ny": 16,
+    "nz": 8,
+    "cs": 0.1,
+    "dt": 0.0025,
+    "profile": "parabolic",
+    "steps": 37,
+    "time": 0.09250000000000004,
+    "capped": false,
+    "diverged": true,
+    "bottom_row_share": null,
+    "top_row_share": null
+  },
+  "fine_dt": {
+    "nx": 16,
+    "ny": 16,
+    "nz": 8,
+    "cs": 0.1,
+    "dt": 0.00125,
+    "profile": "reichardt",
+    "steps": 238,
+    "time": 0.29749999999999915,
+    "capped": false,
+    "diverged": true,
+    "bottom_row_share": null,
+    "top_row_share": null
+  },
+  "spectrum_diverging": {
+    "nx": 16,
+    "ny": 16,
+    "nz": 8,
+    "cs": 0.1,
+    "dt": 0.00125,
+    "profile": "reichardt",
+    "steps": 238,
+    "samples": 47,
+    "kx_index": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "kx_wavenumber": [
+      0.0,
+      0.15915494309189535,
+      0.3183098861837907,
+      0.477464829275686,
+      0.6366197723675814,
+      0.7957747154594768,
+      0.954929658551372,
+      1.1140846016432675,
+      -1.2732395447351628,
+      -1.1140846016432675,
+      -0.954929658551372,
+      -0.7957747154594768,
+      -0.6366197723675814,
+      -0.477464829275686,
+      -0.3183098861837907,
+      -0.15915494309189535
+    ],
+    "kx_rates": [
+      1.2987914208580782,
+      37.90694438315429,
+      39.11282337503734,
+      48.59341049532044,
+      54.24985612975921,
+      54.34598744169051,
+      62.97746904939074,
+      61.804737273455906,
+      50.95435663249026,
+      61.804737273455906,
+      62.97746904939074,
+      54.34598744169051,
+      54.24985612975921,
+      48.59341049532044,
+      39.11282337503734,
+      37.9069443831543
+    ],
+    "kz_index": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "kz_wavenumber": [
+      0.0,
+      0.3183098861837907,
+      0.6366197723675814,
+      0.954929658551372,
+      -1.2732395447351628,
+      -0.954929658551372,
+      -0.6366197723675814,
+      -0.3183098861837907
+    ],
+    "kz_rates": [
+      54.46631394367185,
+      46.46266087501063,
+      43.62670960391133,
+      53.98591307914191,
+      63.20965064269437,
+      53.98591307914191,
+      43.62670960391133,
+      46.46266087501063
+    ],
+    "kx_shares": [
+      0.031416254117643753,
+      0.04934841163151802,
+      0.050084324145448625,
+      0.06496571184168452,
+      0.06781128503168955,
+      0.07173768344062294,
+      0.07592432681127544,
+      0.07170747761520677,
+      0.06542530484746455,
+      0.07170747761520677,
+      0.07592432681127544,
+      0.07173768344062292,
+      0.06781128503168955,
+      0.06496571184168452,
+      0.050084324145448625,
+      0.04934841163151803
+    ],
+    "kz_shares": [
+      0.12156696157772548,
+      0.11533586170104664,
+      0.11342926163638416,
+      0.12758644236810673,
+      0.1657299070111994,
+      0.12758644236810673,
+      0.11342926163638416,
+      0.11533586170104664
+    ],
+    "max_mode_share": 0.1657299070111994,
+    "row_share": [
+      0.00903503067858649,
+      0.01545202422318693,
+      0.0069575821095548196,
+      0.004886948774085314,
+      0.003423746704163044,
+      0.002196693253352411,
+      0.0017446134236090093,
+      0.0014629344221670077,
+      0.0014217853064356092,
+      0.0017914747958094925,
+      0.001997757149360801,
+      0.0031257139472895532,
+      0.007869883839454531,
+      0.010158290652455517,
+      0.02862938117465052,
+      0.8998461395458388
+    ],
+    "centre_row": 15
+  },
+  "spectrum_stable": {
+    "nx": 16,
+    "ny": 16,
+    "nz": 8,
+    "cs": 0.2,
+    "dt": 0.0025,
+    "profile": "reichardt",
+    "steps": 300,
+    "samples": 60,
+    "kx_index": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "kx_wavenumber": [
+      0.0,
+      0.15915494309189535,
+      0.3183098861837907,
+      0.477464829275686,
+      0.6366197723675814,
+      0.7957747154594768,
+      0.954929658551372,
+      1.1140846016432675,
+      -1.2732395447351628,
+      -1.1140846016432675,
+      -0.954929658551372,
+      -0.7957747154594768,
+      -0.6366197723675814,
+      -0.477464829275686,
+      -0.3183098861837907,
+      -0.15915494309189535
+    ],
+    "kx_rates": [
+      -0.7688951386340823,
+      14.81106932783141,
+      14.61806426807633,
+      15.796386814346299,
+      15.528880699995355,
+      15.570894680376556,
+      13.861475874362641,
+      15.338712830357752,
+      13.92686166788686,
+      15.338712830357752,
+      13.861475874362641,
+      15.570894680376556,
+      15.528880699995355,
+      15.7963868143463,
+      14.61806426807633,
+      14.811069327831412
+    ],
+    "kz_index": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "kz_wavenumber": [
+      0.0,
+      0.3183098861837907,
+      0.6366197723675814,
+      0.954929658551372,
+      -1.2732395447351628,
+      -0.954929658551372,
+      -0.6366197723675814,
+      -0.3183098861837907
+    ],
+    "kz_rates": [
+      19.27971361962332,
+      17.97712598337984,
+      16.118152182705327,
+      16.351117442277236,
+      13.937963184477725,
+      16.351117442277236,
+      16.118152182705327,
+      17.97712598337984
+    ],
+    "kx_shares": [
+      0.5457421743576342,
+      0.039651618191425694,
+      0.021984047387874083,
+      0.03771747204435216,
+      0.03652136081831751,
+      0.027726125316525373,
+      0.02523006497750716,
+      0.033775111757053534,
+      0.009046224656254903,
+      0.033775111757053534,
+      0.02523006497750716,
+      0.027726125316525376,
+      0.03652136081831751,
+      0.037717472044352156,
+      0.021984047387874083,
+      0.03965161819142571
+    ],
+    "kz_shares": [
+      0.14242022502429233,
+      0.05362284086031253,
+      0.038816510718919936,
+      0.1850444223693315,
+      0.30261222707857977,
+      0.1850444223693315,
+      0.038816510718919936,
+      0.05362284086031253
+    ],
+    "max_mode_share": 0.5457421743576342,
+    "row_share": [
+      0.008560278823820261,
+      0.04349461296978675,
+      0.06627746748251533,
+      0.06622592929955289,
+      0.06621472375074396,
+      0.07632860959576543,
+      0.08535446264508752,
+      0.08944289355668665,
+      0.0867190539603896,
+      0.08196430885675214,
+      0.07763576514162729,
+      0.07088506522388605,
+      0.06581294253605703,
+      0.060598639803399926,
+      0.04386127774669586,
+      0.010623968607233272
+    ],
+    "centre_row": 7
+  },
+  "operator": {
+    "grid": [
+      16,
+      16,
+      8
+    ],
+    "max_relative_defect": 2.790487212030426e-16,
+    "per_component": [
+      2.790487212030426e-16,
+      2.790487212030426e-16,
+      2.790487212030426e-16,
+      2.790487212030426e-16
+    ]
+  },
+  "mirror": {
+    "grid": [
+      16,
+      16,
+      8
+    ],
+    "steps": 80,
+    "bottom_row_share": 0.0017601133516031288,
+    "top_row_share": 0.0017494659366800991,
+    "defect": 0.006049277970269294,
+    "centre_row": 7
+  },
+  "grid_metrics": {
+    "small": {
+      "nx": 16,
+      "ny": 16,
+      "nz": 8,
+      "first_cell_y_plus": 2.41737920623486,
+      "dy_plus_wall": 4.83475841246972,
+      "dy_plus_mid": 43.88443610004368,
+      "dx_plus": 70.68583470577035,
+      "dz_plus": 70.68583470577035
+    },
+    "refined": {
+      "nx": 32,
+      "ny": 32,
+      "nz": 16,
+      "first_cell_y_plus": 1.0737103253923808,
+      "dy_plus_wall": 2.1474206507847615,
+      "dy_plus_mid": 22.248751817897766,
+      "dx_plus": 35.34291735288517,
+      "dz_plus": 35.34291735288517
+    }
+  },
+  "claims": {
+    "u_plus_reading": "not_run - no production statistics are produced here",
+    "log_law_verdict": "unchanged: the anchor is still graded on the RANS route (docs/case-fvm-channel-kmm180-pool)"
+  }
+}
