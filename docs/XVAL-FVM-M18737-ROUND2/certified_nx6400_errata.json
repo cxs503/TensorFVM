@@ -1,0 +1,84 @@
+{
+ "anchor": "XVAL-FVM-M18737-ROUND2",
+ "round": 12,
+ "window": [
+  0.4,
+  1.0
+ ],
+ "bar_percent": 1.0,
+ "graded": {
+  "nx800_hllc": {
+   "l1_percent": 6.04637469380747,
+   "peak_percent": 4.137433449202928,
+   "mass_percent": 0.13573533229865206
+  },
+  "nx1600_hllc": {
+   "l1_percent": 3.2991872280843064,
+   "peak_percent": 0.12711644935098154,
+   "mass_percent": 0.04844295062660518
+  },
+  "nx3200_hllc": {
+   "l1_percent": 1.7755695233074968,
+   "peak_percent": 0.7581503704227888,
+   "mass_percent": 0.008249981604795112
+  },
+  "nx6400_hllc": {
+   "l1_percent": 0.8931133000818933,
+   "peak_percent": 0.04441609824140254,
+   "mass_percent": 0.00022110307590208827
+  }
+ },
+ "reference_error_bar": {
+  "ladder": [
+   3200,
+   6400,
+   12800
+  ],
+  "l1_percent_3200_vs_6400": 0.9844112624212589,
+  "l1_percent_6400_vs_12800": 0.5527079776044062,
+  "order_fallback": false,
+  "observed_order": 0.8327437273442228,
+  "eps_ref_percent": 0.7076297986408725,
+  "note": "reference-side error bar from the three-level WENO5 ladder; ``eps_ref`` is the discretisation error of the finest rung, so the honest upper bound of any graded error is measured + eps_ref"
+ },
+ "reference_error_bar_package": {
+  "u_ref_percent": 0.7180944445395576,
+  "l1_percent_6400_vs_12800": 0.5437229141389293,
+  "measurable": true
+ },
+ "intra_family": {
+  "successive_l1_percent": {
+   "800->1600": 3.1689073626382807,
+   "1600->3200": 1.8133635044757987,
+   "3200->6400": 1.0665835516958102
+  },
+  "observed_order": 0.7656711700303279,
+  "own_error_percent": 1.5233409366617017,
+  "observed_order_prev_pair": 0.8053173308841934
+ },
+ "flags": {
+  "certified": false,
+  "certified_point_estimate": true,
+  "certified_provable": false,
+  "graded_under_1": true,
+  "floor_removed": true,
+  "honest_upper_bound_percent": 1.6007430987227658
+ },
+ "honest_bounds_percent": {
+  "docs_xval_linear_interp": 1.6007430987227658,
+  "package_conservative_restriction": 1.611207744621451,
+  "reference_free_intra_family": 1.5233409366617017
+ },
+ "honest_upper_bound_percent": 1.611207744621451,
+ "predicted_nx_for_under_1_percent": {
+  "nx": 12800,
+  "predicted_own_error_percent": 0.8959981728197092
+ },
+ "ledger_tolerance_percent": 10.0,
+ "note": "point estimate = two-level gate; 'certified' additionally requires L1 + reference error bar < 1 %, which fails here",
+ "figures": [
+  "figures/fig_errata_ladder.png",
+  "figures/fig_errata_budget.png",
+  "figures/fig_errata_selfconv.png"
+ ]
+}
