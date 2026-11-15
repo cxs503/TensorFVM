@@ -1,47 +1,124 @@
 {
   "reference": {
     "calibrated": "reference/reference_density_calibrated.csv",
-    "committed_raw": "/root/tp-agent/work/m19924/docs/woodward-colella-double-blast/reference/reference_density.csv",
+    "committed_raw": "/root/tp-agent/work/m22098/docs/woodward-colella-double-blast/reference/reference_density.csv",
     "window": [
       0.4,
       1.0
     ],
     "tolerance_percent": 10.0
   },
+  "ladder_rule": {
+    "fine_triplet": [
+      3200,
+      1600,
+      800
+    ],
+    "coarse_triplet": [
+      800,
+      400,
+      200
+    ],
+    "canonical_only": true,
+    "variants_excluded": [
+      "nx200_hllc_limiterminmod_cfl0.2"
+    ],
+    "families_laddered": [
+      "hllc",
+      "weno5",
+      "weno7"
+    ]
+  },
   "profiles": {
+    "nx12800_weno5": {
+      "nx": 12800,
+      "family": "weno5",
+      "variant": null,
+      "canonical": true,
+      "source": "ladder/data/ladder_profile_nx12800_weno5.npz"
+    },
     "nx1600_hllc": {
       "nx": 1600,
       "family": "hllc",
+      "variant": null,
+      "canonical": true,
       "source": "ladder/data/ladder_profile_nx1600_hllc.npz"
+    },
+    "nx1600_weno5": {
+      "nx": 1600,
+      "family": "weno5",
+      "variant": null,
+      "canonical": true,
+      "source": "ladder/data/ladder_profile_nx1600_weno5.npz"
+    },
+    "nx1600_weno7": {
+      "nx": 1600,
+      "family": "weno7",
+      "variant": null,
+      "canonical": true,
+      "source": "ladder/data/ladder_profile_nx1600_weno7.npz"
     },
     "nx200_hllc": {
       "nx": 200,
       "family": "hllc",
+      "variant": null,
+      "canonical": true,
       "source": "ladder/data/ladder_profile_nx200_hllc.npz"
     },
     "nx200_hllc_limiterminmod_cfl0.2": {
       "nx": 200,
       "family": "hllc",
+      "variant": "limiterminmod_cfl0.2",
+      "canonical": false,
       "source": "ladder/data/ladder_profile_nx200_hllc_limiterminmod_cfl0.2.npz"
     },
     "nx200_weno5": {
       "nx": 200,
       "family": "weno5",
+      "variant": null,
+      "canonical": true,
       "source": "ladder/data/ladder_profile_nx200_weno5.npz"
     },
     "nx3200_hllc": {
       "nx": 3200,
       "family": "hllc",
+      "variant": null,
+      "canonical": true,
       "source": "ladder/data/ladder_profile_nx3200_hllc.npz"
+    },
+    "nx3200_weno5": {
+      "nx": 3200,
+      "family": "weno5",
+      "variant": null,
+      "canonical": true,
+      "source": "ladder/data/ladder_profile_nx3200_weno5.npz"
     },
     "nx400_hllc": {
       "nx": 400,
       "family": "hllc",
+      "variant": null,
+      "canonical": true,
       "source": "artifacts/wc_blast_profile_nx400.npz"
+    },
+    "nx6400_hllc": {
+      "nx": 6400,
+      "family": "hllc",
+      "variant": null,
+      "canonical": true,
+      "source": "ladder/data/ladder_profile_nx6400_hllc.npz"
+    },
+    "nx6400_weno5": {
+      "nx": 6400,
+      "family": "weno5",
+      "variant": null,
+      "canonical": true,
+      "source": "ladder/data/ladder_profile_nx6400_weno5.npz"
     },
     "nx800_hllc": {
       "nx": 800,
       "family": "hllc",
+      "variant": null,
+      "canonical": true,
       "source": "artifacts/wc_blast_profile_nx800.npz"
     }
   },
@@ -54,17 +131,19 @@
         400,
         800,
         1600,
-        3200
+        3200,
+        6400
       ],
       "missing_grids": [],
       "studies": {
         "window_mass": {
           "values": {
-            "200": 0.9333319451777137,
+            "200": 0.9338469667575857,
             "400": 0.9347607573176968,
             "800": 0.9351565123446093,
             "1600": 0.9353390682866847,
-            "3200": 0.9354290587011441
+            "3200": 0.9354290587011441,
+            "6400": 0.9354737734545067
           },
           "fine": {
             "triplet": [
@@ -106,29 +185,29 @@
               400,
               200
             ],
-            "observed_order": 1.8521366627428666,
-            "order_used": 1.8521366627428666,
+            "observed_order": 1.207255863192529,
+            "order_used": 1.207255863192529,
             "convergence": "monotone",
             "fallback_reason": "none",
-            "asymptotic": true,
-            "extrapolated": 0.935308122588946,
-            "gci_percent": 0.02026535696637862,
+            "asymptotic": false,
+            "extrapolated": 0.9354588507582687,
+            "gci_percent": 0.04041280920204114,
             "band": [
-              0.9351185790591678,
-              0.9354976661187242
+              0.9350808055577482,
+              0.9358368959587893
             ],
             "reference_agreement": {
               "reference": 0.93534261921925,
-              "extrapolated": 0.935308122588946,
-              "relative_error": 3.68812770797996e-05,
-              "gci": 0.0002026535696637862,
-              "efficiency_index": 0.1819917465109928,
+              "extrapolated": 0.9354588507582687,
+              "relative_error": 0.0001242662705947919,
+              "gci": 0.0004041280920204114,
+              "efficiency_index": 0.3074922853631159,
               "band_covered": true,
               "band": [
-                0.9351185790591678,
-                0.9354976661187242
+                0.9350808055577482,
+                0.9358368959587893
               ],
-              "asymptotic": true,
+              "asymptotic": false,
               "fallback_reason": "none",
               "safety_factor": 1.25,
               "reference_kind": "calibrated digitised reference"
@@ -137,11 +216,12 @@
         },
         "peak_density": {
           "values": {
-            "200": 4.633011771547444,
+            "200": 5.00678626370563,
             "400": 5.649813015225584,
             "800": 6.189783163404389,
             "1600": 6.466034495852625,
-            "3200": 6.507512067468936
+            "3200": 6.507512067468936,
+            "6400": 6.46215579111805
           },
           "fine": {
             "triplet": [
@@ -183,27 +263,27 @@
               400,
               200
             ],
-            "observed_order": 0.9130861437146467,
-            "order_used": 0.9130861437146467,
+            "observed_order": 0.25199910729101294,
+            "order_used": 0.25199910729101294,
             "convergence": "monotone",
             "fallback_reason": "none",
             "asymptotic": false,
-            "extrapolated": 6.801252850839332,
-            "gci_percent": 12.348366479340335,
+            "extrapolated": 9.018983345357393,
+            "gci_percent": 57.13447683191822,
             "band": [
-              5.961409223631109,
-              7.641096478047555
+              3.86603439542961,
+              14.171932295285176
             ],
             "reference_agreement": {
               "reference": 6.3180935,
-              "extrapolated": 6.801252850839332,
-              "relative_error": 0.07647233312380268,
-              "gci": 0.12348366479340335,
-              "efficiency_index": 0.6192910880297093,
+              "extrapolated": 9.018983345357393,
+              "relative_error": 0.42748494389286784,
+              "gci": 0.5713447683191822,
+              "efficiency_index": 0.7482083806428643,
               "band_covered": true,
               "band": [
-                5.961409223631109,
-                7.641096478047555
+                3.86603439542961,
+                14.171932295285176
               ],
               "asymptotic": false,
               "fallback_reason": "none",
@@ -214,11 +294,12 @@
         },
         "probe_x0.5": {
           "values": {
-            "200": 0.2213718121131729,
+            "200": 0.18151593278448847,
             "400": 0.18339966363496685,
             "800": 0.18352411228668442,
             "1600": 0.18341256616845303,
-            "3200": 0.18333978605413542
+            "3200": 0.18333978605413542,
+            "6400": 0.1833115368281745
           },
           "fine": {
             "triplet": [
@@ -260,42 +341,43 @@
               400,
               200
             ],
-            "observed_order": NaN,
-            "order_used": 2.0,
-            "convergence": "inconsistent",
-            "fallback_reason": "non-monotone",
+            "observed_order": 3.9199703405405835,
+            "order_used": 3.9199703405405835,
+            "convergence": "monotone",
+            "fallback_reason": "none",
             "asymptotic": false,
-            "extrapolated": 0.18356559517059026,
-            "gci_percent": 20.690550143563403,
+            "extrapolated": 0.18353291557414178,
+            "gci_percent": 0.005996001933805544,
             "band": [
-              0.14558486365548867,
-              0.22154632668569185
+              0.18352191093697479,
+              0.18354392021130878
             ],
             "reference_agreement": {
               "reference": 0.18310005000000001,
-              "extrapolated": 0.18356559517059026,
-              "relative_error": 0.0025425726021934348,
-              "gci": 0.20690550143563402,
-              "efficiency_index": 0.012288569344708317,
-              "band_covered": true,
+              "extrapolated": 0.18353291557414178,
+              "relative_error": 0.0023640931509399717,
+              "gci": 5.9960019338055444e-05,
+              "efficiency_index": 39.4278250247249,
+              "band_covered": false,
               "band": [
-                0.14558486365548867,
-                0.22154632668569185
+                0.18352191093697479,
+                0.18354392021130878
               ],
               "asymptotic": false,
-              "fallback_reason": "non-monotone",
-              "safety_factor": 3.0,
+              "fallback_reason": "none",
+              "safety_factor": 1.25,
               "reference_kind": "calibrated digitised reference"
             }
           }
         },
         "l1_vs_calibrated_reference": {
           "values": {
-            "200": 0.19679649405669605,
+            "200": 0.1421061077648546,
             "400": 0.06918742677385631,
             "800": 0.020086357892998338,
             "1600": 0.01860742999144089,
-            "3200": 0.03079040680765682
+            "3200": 0.03079040680765682,
+            "6400": 0.03867094764769783
           },
           "fine": {
             "triplet": [
@@ -321,16 +403,16 @@
               400,
               200
             ],
-            "observed_order": 1.3779045076598662,
-            "order_used": 1.3779045076598662,
+            "observed_order": 0.5705340341381586,
+            "order_used": 0.5705340341381586,
             "convergence": "monotone",
             "fallback_reason": "none",
             "asymptotic": false,
-            "extrapolated": -0.01062280568672045,
-            "gci_percent": 191.10709208277703,
+            "extrapolated": -0.08113768396702985,
+            "gci_percent": 629.9302890004805,
             "band": [
-              -0.030923740732215776,
-              0.009678129358774875
+              -0.5922485310688375,
+              0.4299731631347778
             ]
           }
         }
@@ -468,11 +550,13 @@
       "family": "weno5",
       "theory_order": 5.0,
       "grids_available": [
-        200
+        200,
+        1600,
+        3200,
+        6400,
+        12800
       ],
       "missing_grids": [
-        3200,
-        1600,
         800
       ]
     }
@@ -482,11 +566,44 @@
     "per_grid": [
       {
         "nx": 200,
-        "percent": 7.3863908633555155,
-        "abs": 0.06893954552338495,
-        "denominator": 0.9333319451777137,
-        "grid": 200
+        "percent": 4.600638847121236,
+        "abs": 0.042962926325312824,
+        "denominator": 0.9338469667575857,
+        "grid": 200,
+        "order_to_next": 0.5470327015336132
+      },
+      {
+        "nx": 1600,
+        "percent": 1.4750216231318898,
+        "abs": 0.013796453506828952,
+        "denominator": 0.9353390682866847,
+        "grid": 1600,
+        "order_to_next": 0.6023473783384783
+      },
+      {
+        "nx": 3200,
+        "percent": 0.9715692437852649,
+        "abs": 0.009088341031770327,
+        "denominator": 0.9354290587011441,
+        "grid": 3200,
+        "order_to_next": 0.6591843368744091
+      },
+      {
+        "nx": 6400,
+        "percent": 0.6152328271103266,
+        "abs": 0.005755341743299813,
+        "denominator": 0.9354737734545067,
+        "grid": 6400
       }
-    ]
+    ],
+    "extrapolated_field_agreement": {
+      "hllc_order_used": 2.0,
+      "weno5_order_used": 5.0,
+      "distance_percent": 0.978498866470877,
+      "peak_hllc": 6.616019683335529,
+      "peak_weno5": 6.4431760952389405,
+      "mass_hllc": 0.9354336839661367,
+      "mass_weno5": 0.9354222046537517
+    }
   }
 }
