@@ -743,3 +743,27 @@
 - 未做（not_run）：n=80/160 的 2 周期（本机门禁拦，需 `run_compute`）；逐项动量账分解未落代码。
 - 建议总账条目：`XVAL-FVM-THACKER-2PERIOD-MOMENTUM`，验收＝中心水深 L2 ≤3 % ∧ 全程
   `max|u|` ≤1.2×精确包络 ∧ 岸线外水量 ≤0.5 % ∧ 体积漂移 ≤1e-9。
+
+## 4m. 追加欠账（append-only, m22380 selfstart）
+### D25 CASE-FVM-PERIODIC-HILLS 第二十四回合（m22380）—— 壁面法向导数阶数审计：`x_r/H` 的后处理贡献 ≤3.64 %，honest FAIL 不是后处理造成的；量级结论必须升到 ≥2 阶
+- 缺口来源：round 17 认证了零点**算子**、round 21 用 `mean_u` 独立对账、round 22 钉死气泡对象，
+  但三者共用的输入 `tau_b = du_t/dn`（求解器两点单侧差分）**从未被审计**。round 23 的「给下次」第 3 条即此。
+- 交付：`src/tensorfvm/verification/periodic_hill_wall_shear_order.py`（1/2/3 阶单侧壁面导数，同一几何/切向投影/零点算子；
+  `wall_gradient`/`wall_shear_profile`/`crossing_scale_invariance`/`order_sensitivity`）
+  + `tests/test_periodic_hill_wall_shear_order.py`（10 passed；连同 field_metrics/bubble_object/reference/round23 共 50 passed, 1 skipped，5.5 s）
+  + `scripts/round24_wall_shear_order.py`（读盘审计 8 个可用 artefact + 3 图，零重跑）
+  + `docs/case-periodic-hills/{ROUND24.md, round24_wall_shear_order.json, fig_round24_tau_order_profiles.png,
+  fig_round24_xr_postproc_band.png, fig_round24_bias_field.png}`（正文数字全部由脚本注入）。
+- 关键数字（程序注入）：解析标定（平壁 Poiseuille，精确 `du/dn`=42.504）1 阶相对误差 **恰等于 `s_0/h`**
+  （ny=12/24/48 → 4.167/2.083/1.042 %，比值恒 1.000000），2/3 阶到机器精度 ⇒ 阶数是量出来的。
+  锚点 `round20_laminar_Re2800_96x48`（冠后气泡 vs Breuer 5.41）：`x_r/H` = **1.254 / 1.230 / 1.224**（1/2/3 阶），
+  后处理带 **2.37 %**，误差由 −76.82 % → **−77.37 %**（−0.55 pp）。全库 8 例后处理带 **0.52–3.64 %**，
+  收敛比 `(o1−o2)/(o2−o3)` = **1.76–6.91**（全部 >1 ⇒ 三条阶梯同向收敛）。1 阶偏差符号**不一致**（3/8 例 1 阶 > 3 阶）
+  ⇒ 不许乘性「修正」，只能报带。量级偏差局部最大 **33.5 %** of `max|tau_3|`（mean 2.6–5.9 %）。
+- 两条结论性改动：① 锚点 honest FAIL **不能**归因于后处理（后处理带比 FAIL 余量小两个量级）；
+  ② 任何摩擦速度/阻力/壁面切应力**量值**结论必须用 ≥2 阶壁面导数（零点位置类结论可沿用求解器两点差分）。
+- 明确未做：只审计**时均**场的阶数敏感性（逐样本零点需写出端按块存剪切剖面，仍欠账）；
+  eta 线斜交误差（`|beta/alpha|` 近壁 O(0.6)）未做显式修正 ⇒ 报出的是后处理不确定度**下界**；
+  收敛比不支持 Richardson 外推，未外推真值。
+- 给下次：① 用 `mesh.beta_n` 做斜交一阶修正，把「下界」变真值估计；
+  ② SST 的 `u_tau`/壁面律诊断（round 15）改用 `wall_shear(order=2)`；③ 求解器默认路径本轮**未改**（保持 round 17–23 可比性）。
