@@ -121,12 +121,31 @@ def test_benchmark_pass(round2_results):
 # Superlinear detection on GMRES
 # ---------------------------------------------------------------------------
 
-def test_superlinear_detected_on_gmres(round2_results):
-    """GMRES cases should show superlinear convergence pattern."""
+def test_superlinear_fit_structure_on_gmres(round2_results):
+    """GMRES cases that trigger superlinear detection must have valid fit structure.
+
+    Strengthened from the original ``n_superlinear >= 0`` (tautology) to actually
+    verify the structure of any superlinear fit that is produced.
+    """
     results = round2_results["results"]
     gmres_cases = [r for r in results if "gmres" in r["case"] and r["rate_err"] is not None]
-    n_superlinear = sum(1 for r in gmres_cases if r.get("superlinear_fit") is not None)
-    assert n_superlinear >= 0
+    for r in gmres_cases:
+        fit = r.get("superlinear_fit")
+        if fit is not None:
+            # Verify the fit has all required fields
+            assert "slope" in fit, f"{r['case']}: superlinear_fit missing 'slope'"
+            assert "intercept" in fit, f"{r['case']}: superlinear_fit missing 'intercept'"
+            assert "r_squared" in fit, f"{r['case']}: superlinear_fit missing 'r_squared'"
+            assert "n_points" in fit, f"{r['case']}: superlinear_fit missing 'n_points'"
+            assert "extrapolated_rate" in fit, f"{r['case']}: superlinear_fit missing 'extrapolated_rate'"
+            assert "is_superlinear" in fit, f"{r['case']}: superlinear_fit missing 'is_superlinear'"
+            # Verify physical constraints
+            assert 0.05 <= fit["extrapolated_rate"] <= 0.99, \
+                f"{r['case']}: extrapolated_rate {fit['extrapolated_rate']} out of [0.05, 0.99]"
+            assert fit["r_squared"] >= 0.0, \
+                f"{r['case']}: r_squared {fit['r_squared']} is negative"
+            assert fit["n_points"] >= 3, \
+                f"{r['case']}: n_points {fit['n_points']} < 3 (minimum for fit)"
 
 
 # ---------------------------------------------------------------------------
