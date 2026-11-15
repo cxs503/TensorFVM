@@ -35,14 +35,32 @@
 
 ## 4. 结果：时间步（Courant 数）敏感度
 
-**未执行（not_run，不记 pass）**：not_run: no same-grid/different-Courant artefacts under runs/dt at generation time。时间步无关性在本包内没有证据，不作任何结论。
+同网格（判级网格）、同初值（`summary.json` 的 n = 64 延拓初值，即基线行自己的初值）、同收敛判据，只改 Courant 数：
+
+| 运行 | CFL | 步数 | 定常残差 | u_min | Δu_min | v_max | Δv_max | psi_min | max\|Δu\| | max\|Δv\| |
+|---|---|---|---|---|---|---|---|---|---|---|
+| cfl=0.150 (baseline) | 0.15 | 104250 | 9.89e-08 | -0.385368 | +0.000% | 0.373840 | +0.000% | -0.119369 | 0.00e+00 | 0.00e+00 |
+| cfl=0.075 | 0.075 | 208250 | 9.99e-08 | -0.385368 | +0.000% | 0.373840 | -0.000% | -0.119369 | 1.39e-08 | 1.25e-08 |
+| cfl=0.300 | 0.3 | 52250 | 9.69e-08 | -0.385368 | -0.000% | 0.373840 | +0.000% | -0.119369 | 2.75e-08 | 2.45e-08 |
+
+（Δu_min / Δv_max = 相对基线 Courant 数的相对差；max|Δu| / max|Δv| = 中心线上对基线的逐点最大绝对差，单位 U；psi_min 无参考值，只给绝对值。）
+
+![time step](figures/fig_uq2_timestep.png)
+
+*图 UQ-2* 左：三个泛函相对基线 Courant 数的相对偏差；右：中心线逐点差与判据。全部由 `runs/dt/` 工件注入。
+
+* 最坏偏差 `max_relative_spread` = **5.999e-06%**，判据 0.1% → `time_step_independent` = **True**。
+
+* 含义：算例门 C1/C2 的参考偏差是**空间离散**的，时间步最多贡献 5.999e-06%——比 3% 判据小 5.0e+07 倍。它不改变任何判据的结论，但把「Courant 轴未验证」这条欠账关掉了。
+
+* 本次尝试的每个 Courant 数都收敛到判据，未观测到不稳定；验证过的 Courant 区间上界即表中最大值。
 
 ## 5. 注意点与局限
 
 * **只有 3–4 个网格、至多 2 个加密区间**：GCI 的数据质量门只能检查单调性与观测阶是否落在可信区间，无法证明「已进入渐近区」。观测阶在 u_min/v_max 上稳定在 ~1.9–2.0，但在逐点剖面差范数上给出 2.57/1.51（`summary.json` 的 convergence 段）——不同泛函收敛速率不同，这一点如实保留。
 * **外推极限不是真值**：它只是该格式族在 h→0 的极限；与 Ghia 的差可以是格式差异，也可以是 Ghia 129² 网格自身的不确定度。要判定需要第二个独立高精度参考（如谱方法文献），本仓库内**没有**已核对的第二来源，故不下结论（记入待办）。
 * **逐点判据的插值敏感性**（审计 m20230 F5）：粗网格上 max|Δu| 随插值方案变化可达 ×2.5；本节用面值泛函回避了这个问题，两者不能混引。
-* **时间步（Courant 数）轴**：只有存在同网格、不同 CFL 的工件时才给结论；缺失时记为 not_run，不记 pass。
+* **时间步（Courant 数）轴的覆盖范围**：只在判级网格 n = 128 上取 3 个 Courant 数（0.075, 0.15, 0.3），最坏偏差 5.999e-06%（判据 0.001）。这不等于「任意 dt 无关」——它只覆盖该区间；区间外（尤其更大 Courant 数）的稳定性与精度没有证据，不作结论。
 ## 6. 复算
 
 ```
@@ -50,9 +68,8 @@
 PYTHONPATH=src python docs/CASE-FVM-CAVITY-RE1000/uncertainty.py
 # n=192 加密（从存储 n=128 场延拓，可选）
 PYTHONPATH=src python docs/CASE-FVM-CAVITY-RE1000/refine_from_stored.py --from-n 128 --n 192
-# CFL 敏感度（同网格、不同 dt）
-PYTHONPATH=src python scripts/case_cavity_re1000.py --n 128 --cfl 0.075 --out-dir docs/CASE-FVM-CAVITY-RE1000/runs/dt/cfl0075
-PYTHONPATH=src python scripts/case_cavity_re1000.py --n 128 --cfl 0.300 --out-dir docs/CASE-FVM-CAVITY-RE1000/runs/dt/cfl0300
+# CFL 敏感度（同网格 n=128、同初值（n=64 收敛场延拓）、不同 dt；约 1 小时单核）
+PYTHONPATH=src python docs/CASE-FVM-CAVITY-RE1000/dt_study.py --n 128 --init-n 64     --cfls 0.075,0.300 --tolerance 1e-07 --max-steps 400000
 # 机检门
 PYTHONPATH=src python -m pytest tests/test_case_cavity_uncertainty.py -q
 ```

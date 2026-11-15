@@ -187,6 +187,98 @@
    "fine_grid_relative_error_estimate": 0.021602863980150527
   }
  },
- "time_step_status": "not_run: no same-grid/different-Courant artefacts under runs/dt at generation time",
+ "time_step_diverged": [],
+ "time_step": {
+  "runs": [
+   "cfl=0.150 (baseline)",
+   "cfl=0.075",
+   "cfl=0.300"
+  ],
+  "baseline": "cfl=0.150 (baseline)",
+  "grid_n": 128,
+  "courant_numbers": {
+   "cfl=0.150 (baseline)": 0.15,
+   "cfl=0.075": 0.075,
+   "cfl=0.300": 0.3
+  },
+  "steps": {
+   "cfl=0.150 (baseline)": 104250,
+   "cfl=0.075": 208250,
+   "cfl=0.300": 52250
+  },
+  "residuals": {
+   "cfl=0.150 (baseline)": 9.88833903647901e-08,
+   "cfl=0.075": 9.98889504444378e-08,
+   "cfl=0.300": 9.690218405467022e-08
+  },
+  "tolerances": {
+   "cfl=0.150 (baseline)": 1e-07,
+   "cfl=0.075": 1e-07,
+   "cfl=0.300": 1e-07
+  },
+  "initial_conditions": {
+   "cfl=0.150 (baseline)": "n=64 bilinear prolongation",
+   "cfl=0.075": "n=64 bilinear prolongation (baseline initial condition)",
+   "cfl=0.300": "n=64 bilinear prolongation (baseline initial condition)"
+  },
+  "quantities": {
+   "u_min": {
+    "values": {
+     "cfl=0.150 (baseline)": -0.3853676434683154,
+     "cfl=0.075": -0.38536763637639065,
+     "cfl=0.300": -0.38536765744106494
+    },
+    "deviation_from_baseline": {
+     "cfl=0.150 (baseline)": 0.0,
+     "cfl=0.075": 1.8403010449546087e-08,
+     "cfl=0.300": -3.625823223565283e-08
+    },
+    "max_relative_spread": 3.0306491459907545e-08
+   },
+   "v_max": {
+    "values": {
+     "cfl=0.150 (baseline)": 0.3738401868300326,
+     "cfl=0.075": 0.3738401784357148,
+     "cfl=0.300": 0.37384020336868584
+    },
+    "deviation_from_baseline": {
+     "cfl=0.150 (baseline)": 0.0,
+     "cfl=0.075": -2.245429488895335e-08,
+     "cfl=0.300": 4.423990198845657e-08
+    },
+    "max_relative_spread": 3.697803273625553e-08
+   },
+   "psi_min": {
+    "values": {
+     "cfl=0.150 (baseline)": -0.11936906793199455,
+     "cfl=0.075": -0.11936906358299487,
+     "cfl=0.300": -0.11936907649973728
+    },
+    "deviation_from_baseline": {
+     "cfl=0.150 (baseline)": 0.0,
+     "cfl=0.075": 3.643322134971192e-08,
+     "cfl=0.300": -7.177523361729358e-08
+    },
+    "max_relative_spread": 5.999456227091634e-08
+   }
+  },
+  "profile_delta_vs_baseline": {
+   "cfl=0.150 (baseline)": {
+    "max_abs_u": 0.0,
+    "max_abs_v": 0.0
+   },
+   "cfl=0.075": {
+    "max_abs_u": 1.3946169385992135e-08,
+    "max_abs_v": 1.2458218900945894e-08
+   },
+   "cfl=0.300": {
+    "max_abs_u": 2.7474106933933484e-08,
+    "max_abs_v": 2.454182418398787e-08
+   }
+  },
+  "max_relative_spread": 5.999456227091634e-08,
+  "tolerance": 0.001,
+  "time_step_independent": true
+ },
  "refined_grid_from_stored": false
 }

@@ -64,16 +64,31 @@ def storey(json_path: pathlib.Path) -> dict:
 
 
 def time_step_runs() -> dict[str, dict]:
-    """Runs on the finest grid that differ only in the Courant number."""
+    """Runs on the finest grid that differ only in the Courant number.
+
+    Only *converged* rows on the graded grid enter the band: an unconverged or
+    divergent row is not a different time step of the same fixed point, it is a
+    different (failed) calculation.
+    """
     runs = {}
     base = storey(RUNS / "lid_cavity_Re1000_n128.json")
     runs[f"cfl={BASELINE_CFL:.3f} (baseline)"] = base
     for path in sorted((RUNS / "dt").glob("*/lid_cavity_Re1000_n128.json")):
         rec = storey(path)
-        if int(rec["n"]) != 128:
+        if int(rec["n"]) != 128 or not rec.get("converged"):
             continue
         runs[f"cfl={float(rec['solver']['cfl']):.3f}"] = rec
     return runs
+
+
+def time_step_diverged() -> list[dict]:
+    """Rows that were attempted but broke (a stability edge is a result too)."""
+    rows = []
+    for path in sorted((RUNS / "dt").glob("*/diverged.json")):
+        rec = storey(path)
+        rec["path"] = str(path.relative_to(HERE))
+        rows.append(rec)
+    return rows
 
 
 def functionals_of_storey(rec: dict) -> dict[str, float]:
@@ -115,8 +130,13 @@ def time_step_block(runs: dict[str, dict], baseline: str) -> dict:
     return {
         "runs": labels,
         "baseline": baseline,
+        "grid_n": int(runs[baseline]["n"]),
         "courant_numbers": {lab: float(runs[lab]["solver"]["cfl"]) for lab in labels},
         "steps": {lab: int(runs[lab]["steps"]) for lab in labels},
+        "residuals": {lab: float(runs[lab]["residual"]) for lab in labels},
+        "tolerances": {lab: float(runs[lab]["solver"]["tolerance"]) for lab in labels},
+        "initial_conditions": {lab: str(runs[lab].get("initial_condition", "rest"))
+                               for lab in labels},
         "quantities": quantities,
         "profile_delta_vs_baseline": profile_delta,
         "max_relative_spread": float(worst),
@@ -198,6 +218,59 @@ def pct(x: float) -> str:
     return f"{100.0 * x:+.3f}%"
 
 
+def temporal_markdown(payload: dict) -> list[str]:
+    """Section 4 body: the same-grid / different-Courant band, or an honest not_run."""
+    ts = payload.get("time_step")
+    if ts is None:
+        return [f"**未执行（not_run，不记 pass）**：{payload.get('time_step_status')}。"
+                "时间步无关性在本包内没有证据，不作任何结论。\n"]
+    labels = ts["runs"]
+    base = ts["baseline"]
+    lines = []
+    lines.append("同网格（判级网格）、同初值（`summary.json` 的 n = 64 延拓初值，即基线行自己的初值）、"
+                 "同收敛判据，只改 Courant 数：\n")
+    lines.append("| 运行 | CFL | 步数 | 定常残差 | u_min | Δu_min | v_max | Δv_max | psi_min "
+                 "| max\\|Δu\\| | max\\|Δv\\| |")
+    lines.append("|---|---|---|---|---|---|---|---|---|---|---|")
+    for lab in labels:
+        row = [lab, f"{ts['courant_numbers'][lab]:g}", f"{ts['steps'][lab]}",
+               f"{ts['residuals'][lab]:.2e}"]
+        for q in ("u_min", "v_max", "psi_min"):
+            row.append(f"{ts['quantities'][q]['values'][lab]:.6f}")
+            if q != "psi_min":
+                row.append(pct(ts["quantities"][q]["deviation_from_baseline"][lab]))
+        row.append(f"{ts['profile_delta_vs_baseline'][lab]['max_abs_u']:.2e}")
+        row.append(f"{ts['profile_delta_vs_baseline'][lab]['max_abs_v']:.2e}")
+        lines.append("| " + " | ".join(row) + " |")
+    lines.append("")
+    lines.append("（Δu_min / Δv_max = 相对基线 Courant 数的相对差；max|Δu| / max|Δv| = 中心线上"
+                 "对基线的逐点最大绝对差，单位 U；psi_min 无参考值，只给绝对值。）\n")
+    lines.append("![time step](figures/fig_uq2_timestep.png)\n")
+    lines.append("*图 UQ-2* 左：三个泛函相对基线 Courant 数的相对偏差；右：中心线逐点差与判据。"
+                 "全部由 `runs/dt/` 工件注入。\n")
+    worst = ts["max_relative_spread"]
+    lines.append(f"* 最坏偏差 `max_relative_spread` = **{100.0 * worst:.3e}%**，判据 "
+                 f"{100.0 * ts['tolerance']:.3g}% → "
+                 f"`time_step_independent` = **{ts['time_step_independent']}**。\n")
+    if ts["time_step_independent"]:
+        lines.append("* 含义：算例门 C1/C2 的参考偏差是**空间离散**的，时间步最多贡献 "
+                     f"{100.0 * worst:.3e}%——比 3% 判据小 "
+                     f"{3.0 / max(worst, 1e-16):.1e} 倍。它不改变任何判据的结论，"
+                     "但把「Courant 轴未验证」这条欠账关掉了。\n")
+    else:
+        lines.append("* 含义：同网格不同 Courant 数尚未给出同一个定常解，"
+                     "时间步方向的误差不小于空间判据，**不能**把参考偏差单独归给空间离散。\n")
+    diverged = payload.get("time_step_diverged") or []
+    if diverged:
+        rows = "; ".join(f"CFL {d['cfl']:g} → {d['reason']}" for d in diverged)
+        lines.append(f"* 稳定性边界（实测，非推测）：{rows}。该行按发散记录在 "
+                     "`runs/dt/*/diverged.json`，不进入上面的统计，也不被当成「无关」的证据。\n")
+    else:
+        lines.append("* 本次尝试的每个 Courant 数都收敛到判据，未观测到不稳定；"
+                     "验证过的 Courant 区间上界即表中最大值。\n")
+    return lines
+
+
 def markdown(payload: dict) -> str:
     q = payload["quantities"]
     grids = payload["grids"]
@@ -263,11 +336,8 @@ def markdown(payload: dict) -> str:
         "* 外推极限仍在算例池 5% 与账本 3% 带内，故算例门的 PASS 判定不受影响；"
         "受影响的只是「精度」的叙述口径。\n")
     lines.append("## 4. 结果：时间步（Courant 数）敏感度\n")
-    ts = payload.get("time_step")
-    if ts is None:
-        lines.append(f"**未执行（not_run，不记 pass）**：{payload.get('time_step_status')}。"
-                     "时间步无关性在本包内没有证据，不作任何结论。\n")
-        lines.append("## 5. 注意点与局限\n")
+    lines.extend(temporal_markdown(payload))
+    lines.append("## 5. 注意点与局限\n")
     lines.extend(limitations(payload))
     lines.append("## 6. 复算\n")
     lines.append(recompute_block())
@@ -275,7 +345,17 @@ def markdown(payload: dict) -> str:
 
 
 def limitations(payload: dict) -> list[str]:
-    return LIMITATIONS_TEXT
+    ts = payload.get("time_step")
+    if ts is None:
+        return list(LIMITATIONS_TEXT)
+    courants = ", ".join(f"{c:g}" for c in sorted(ts["courant_numbers"].values()))
+    worst = f"{100.0 * ts['max_relative_spread']:.3e}%"
+    return list(LIMITATIONS_TEXT[:-1]) + [
+        "* **时间步（Courant 数）轴的覆盖范围**：只在判级网格 n = 128 上取 "
+        f"{len(ts['runs'])} 个 Courant 数（{courants}），最坏偏差 {worst}"
+        f"（判据 {ts['tolerance']:g}）。这不等于「任意 dt 无关」——它只覆盖该区间；"
+        "区间外（尤其更大 Courant 数）的稳定性与精度没有证据，不作结论。",
+    ]
 
 
 def recompute_block() -> str:
@@ -301,9 +381,9 @@ RECOMPUTE_TEXT = """```
 PYTHONPATH=src python docs/CASE-FVM-CAVITY-RE1000/uncertainty.py
 # n=192 加密（从存储 n=128 场延拓，可选）
 PYTHONPATH=src python docs/CASE-FVM-CAVITY-RE1000/refine_from_stored.py --from-n 128 --n 192
-# CFL 敏感度（同网格、不同 dt）
-PYTHONPATH=src python scripts/case_cavity_re1000.py --n 128 --cfl 0.075 --out-dir docs/CASE-FVM-CAVITY-RE1000/runs/dt/cfl0075
-PYTHONPATH=src python scripts/case_cavity_re1000.py --n 128 --cfl 0.300 --out-dir docs/CASE-FVM-CAVITY-RE1000/runs/dt/cfl0300
+# CFL 敏感度（同网格 n=128、同初值（n=64 收敛场延拓）、不同 dt；约 1 小时单核）
+PYTHONPATH=src python docs/CASE-FVM-CAVITY-RE1000/dt_study.py --n 128 --init-n 64 \
+    --cfls 0.075,0.300 --tolerance 1e-07 --max-steps 400000
 # 机检门
 PYTHONPATH=src python -m pytest tests/test_case_cavity_uncertainty.py -q
 ```"""
@@ -314,6 +394,7 @@ def main() -> None:
     payload = study(fields)
     runs = time_step_runs()
     baseline = f"cfl={BASELINE_CFL:.3f} (baseline)"
+    payload["time_step_diverged"] = time_step_diverged()
     if len(runs) >= 2:
         payload["time_step"] = time_step_block(runs, baseline)
     else:
