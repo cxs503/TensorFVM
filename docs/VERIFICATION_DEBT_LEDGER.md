@@ -678,3 +678,32 @@
   之外的**含激波收敛性**测试锁住（当前 6 阶熵波测试完全看不出 NaN/越限）；② 有了可信 WENO7 后再回填
   Q1–Q6；③ 若 WENO7 修不好，改用异族代码（CLAWPACK/pyclaw 已有 `xcode` 对照）做参考——那是**真正**
   的独立代码而非同族换阶。
+
+## 4k. 追加欠账（append-only，2026-11-15）
+### D23 CASE-FVM-PERIODIC-HILLS 第二十一回合（m21912, selfstart）—— 闭合无关姊妹算例落地：`x_r/H` 的两个口径差 50 %，`Re=1400` 发稳定位为步长相关数值失稳，锚点仍 OPEN(honest FAIL)
+- 缺口来源：round 20（m21737）递交的 `cj3663/cj3664/cj3665`（laminar Re=700/1400/2800）当时全部**排队未出数**，
+  故该轮裁决 WITHHELD、`attribution()` 无输入。本单三作业全部 succeeded 并已 fetch 入库。
+- 交付：`docs/case-periodic-hills/round20_laminar_Re{700,1400,2800}_96x48.{json,npz}`（0.6 MB，未重跑）
+  + `src/tensorfvm/verification/periodic_hill_field_metrics.py`（`backflow_extent` 独立速度场度量 / `definition_spread` 两口径对账）
+  + `scripts/round21_analysis.py`（表+两图，零手抄）+ `scripts/round21_re1400_probe.py`（发散定位探针）
+  + `tests/test_periodic_hill_field_metrics.py`（17 passed, 1 skipped，5 s）
+  + `docs/case-periodic-hills/{ROUND21.md, round21_table.json, round21_re1400_probe.json, round21_re1400_probe_dt001.json, fig_round21_ladder.png, fig_round21_re1400.png}`；
+  **试图**重跑 `round20_analysis.py` 以把 round-20 图上三颗「queued 空菱形」换成实测点：该脚本在 artefact 存在后
+  **崩溃**（`AttributeError: 'str' object has no attribute 'get'`，`sister_table`→`score_case` 路径把
+  `payload["closure"]`（round-20 里是字符串）当字典取 `.get("name")`）⇒ `round20_table.json`/`fig_round20_ladder.png`
+  **未刷新**，round-20 的图仍是 queued 版本。此缺陷为「有 artefact 才触发」，此前一直被 skip 掩盖，记为新欠账。
+- 关键数字（程序注入）：闭合无关 `x_r/H`（时均剪切零点）= **8.078 @Re700（+54.2 % vs 5.24）**、**8.264 @Re2800（+52.8 % vs 5.41）**、
+  Re=1400 **DIVERGED @step 3013**；逐样本集合平均 3.993 / 3.502（两档均 `definition_sensitive`，差 50.6 % / 57.6 %）。
+  第二条独立通路（`mean_u<0` 逆流端点）8.016 / 8.203，与剪切值差 −0.78 % / −0.74 % ⇒ 度量链路自洽（**非**精度证据）。
+  闭合的贡献：8.264 → SST 7.600/7.682，只占「需要修正量」的 **20–23 %**，其余 ~77–80 % 不能由这类闭合解释。
+- 两条结论性改动：
+  ① **`Re=1400` 发散是数值的**：本机探针 `dt=0.02` 在 step 2969 前 `max|u|≤2.85`、`u_b=1.000`、CFL 0.64（<1），
+     随后 <100 步 `max|u|` 冲到 12.63 并溢出；`dt=0.01` 同长度窗口（t=60）不发散（`max|u|=1.786`）⇒ 步长相关、且与 Re **非单调**（700/2800 收敛）。
+  ② **发布口径的定常性证据缺失**：artefact 的 `stationarity.ok` 由逐样本旧算子算得，而该序列与末帧快照逆流端点
+     （5.766 vs 集合平均 3.993）自相矛盾 ⇒ 它**不能**为发布值 8.078 提供定常性证明（新欠账）。
+- 归因：预声明规则 `attribution()` 输出 **`inconclusive`**（52.8 % 未超过姊妹最差 54.2 %；规则要求「超过」才判 framework_attributable）。
+  数字指向框架/二维/口径而非闭合，但**不篡改规则、不升级结论**；下一轮先预声明修正规则（合法判据：闭合无关误差随 Re 平坦，
+  实测 54.2 %@700 vs 52.8 %@2800）。
+- 验收判定：**FAIL（honest）**，锚点保持 OPEN。三项可测量：+54.2 %、+52.8 %、发散；无一项进 10 %，更无 <3 %。
+- 给下次：① 写出端按块存时均剪切剖面，补发布值 8.078 的块间稳定性（同时可解两口径差 50 % 的瞬时零点结构）；
+  ② `dt=0.01` 复跑 Re=1400 补阶梯的洞（约 2× 成本）；③ `gate` 段仍按旧值 5.34 打分，与 `lower_re` 的 5.41/5.24 并存，引用时勿混。
