@@ -1,0 +1,280 @@
+{
+ "window": [
+  0.4,
+  1.0
+ ],
+ "rungs7": [
+  {
+   "nx": 400,
+   "present": true,
+   "repaired": true,
+   "metrics": {
+    "family": "weno7",
+    "nx": 400,
+    "datum": "blast",
+    "method": "fd-weno7-ssprk3-rusanov",
+    "cfl": 0.4,
+    "t_end": 0.038,
+    "steps": 1574,
+    "seconds": 9.08,
+    "positivity_fallbacks": 65,
+    "positivity_limiter": true,
+    "pp_limited_stages": 0,
+    "theta_min": 1.0,
+    "pp_failures": 0,
+    "first_order_inadmissible": 0,
+    "admissible_final": true,
+    "step_status": "complete",
+    "mass": 0.9999999999999369,
+    "mass_drift": 6.306066779870889e-14,
+    "rho_max": 6.147197579013352,
+    "x_at_rho_max": 0.78125,
+    "p_max": 408.0138382415222,
+    "wall_seconds": 9.08,
+    "finite": true,
+    "status": "ok"
+   },
+   "peak": 6.147197579013352,
+   "x_peak": 0.78125
+  },
+  {
+   "nx": 800,
+   "present": true,
+   "repaired": true,
+   "metrics": {
+    "family": "weno7",
+    "nx": 800,
+    "datum": "blast",
+    "method": "fd-weno7-ssprk3-rusanov",
+    "cfl": 0.4,
+    "t_end": 0.038,
+    "steps": 3178,
+    "seconds": 22.63,
+    "positivity_fallbacks": 66,
+    "positivity_limiter": true,
+    "pp_limited_stages": 11,
+    "theta_min": 0.6193117539755283,
+    "pp_failures": 0,
+    "first_order_inadmissible": 0,
+    "admissible_final": true,
+    "step_status": "complete",
+    "mass": 0.9999999999998768,
+    "mass_drift": 1.2323475573339238e-13,
+    "rho_max": 6.6287455169542095,
+    "x_at_rho_max": 0.778125,
+    "p_max": 418.3313445185352,
+    "wall_seconds": 22.63,
+    "finite": true,
+    "status": "ok"
+   },
+   "peak": 6.6287455169542095,
+   "x_peak": 0.778125
+  },
+  {
+   "nx": 1600,
+   "present": false,
+   "repaired": false,
+   "metrics": {
+    "nx": 1600,
+    "finite": true,
+    "steps": 6395,
+    "seconds": 48.12,
+    "peak": 6.711441344965952,
+    "x_peak": 0.7721875,
+    "positivity_fallbacks": 55,
+    "mass": 0.9999999999997453,
+    "mass_drift": 2.546851618490109e-13,
+    "family": "weno7",
+    "method": "fd-weno7-ssprk3-rusanov",
+    "cfl": 0.4,
+    "t_end": 0.038,
+    "wall_seconds": 48.13,
+    "status": "ok"
+   },
+   "peak": 6.711441344965952,
+   "x_peak": 0.7721875
+  },
+  {
+   "nx": 3200,
+   "present": false,
+   "repaired": false,
+   "metrics": {
+    "present": false
+   }
+  },
+  {
+   "nx": 6400,
+   "present": false,
+   "repaired": false,
+   "metrics": {
+    "present": false
+   }
+  }
+ ],
+ "rungs5": [
+  {
+   "nx": 400,
+   "present": true,
+   "peak": 5.6886267822368115,
+   "x_peak": 0.78125
+  },
+  {
+   "nx": 800,
+   "present": true,
+   "peak": 6.295055787705944,
+   "x_peak": 0.780625
+  },
+  {
+   "nx": 1600,
+   "present": true,
+   "peak": 6.472011222880893,
+   "x_peak": 0.7746875
+  },
+  {
+   "nx": 3200,
+   "present": true,
+   "peak": 6.440121911193443,
+   "x_peak": 0.77140625
+  },
+  {
+   "nx": 6400,
+   "present": true,
+   "peak": 6.457799798629349,
+   "x_peak": 0.775390625
+  },
+  {
+   "nx": 12800,
+   "present": true,
+   "peak": 6.459503691877991,
+   "x_peak": 0.7787890625
+  }
+ ],
+ "graded": [
+  {
+   "nx": 1600,
+   "present": true,
+   "peak": 6.466034495852625,
+   "x_peak": 0.7759375
+  },
+  {
+   "nx": 3200,
+   "present": true,
+   "peak": 6.507512067468936,
+   "x_peak": 0.77171875
+  },
+  {
+   "nx": 6400,
+   "present": true,
+   "peak": 6.46215579111805,
+   "x_peak": 0.768984375
+  }
+ ],
+ "pre_repair_rungs": [
+  1600
+ ],
+ "S3": {
+  "rows": [
+   {
+    "nx": 800,
+    "peak_weno7": 6.6287455169542095,
+    "peak_weno5": 6.295055787705944,
+    "delta_percent": 5.3008224311522705
+   }
+  ],
+  "pass": false
+ },
+ "S4": {
+  "rows": [
+   {
+    "nx": 400,
+    "l1_percent": 5.763181462784932
+   },
+   {
+    "nx": 800,
+    "l1_percent": 3.3977868830679534
+   }
+  ],
+  "orders": [
+   {
+    "between": [
+     400,
+     800
+    ],
+    "order": 0.7622700797092017
+   }
+  ],
+  "order_800_on": null,
+  "l1_3200": null,
+  "pass": false
+ },
+ "S5": {
+  "reference": "weno5@12800",
+  "rows": [
+   {
+    "nx": 800,
+    "D7_percent": 5.019551880792498,
+    "D5_percent": 5.0680757133150856,
+    "ratio": 0.9904255904474546
+   }
+  ],
+  "pass": true
+ },
+ "grading": [],
+ "S1": {
+  "rows": [
+   {
+    "nx": 400,
+    "status": "ok",
+    "step_status": "complete",
+    "admissible_final": true,
+    "pp_failures": 0,
+    "first_order_inadmissible": 0,
+    "pp_limited_stages": 0,
+    "theta_min": 1.0,
+    "positivity_fallbacks": 65,
+    "mass_drift": 6.306066779870889e-14,
+    "steps": 1574,
+    "seconds": 9.08,
+    "pass": true
+   },
+   {
+    "nx": 800,
+    "status": "ok",
+    "step_status": "complete",
+    "admissible_final": true,
+    "pp_failures": 0,
+    "first_order_inadmissible": 0,
+    "pp_limited_stages": 11,
+    "theta_min": 0.6193117539755283,
+    "positivity_fallbacks": 66,
+    "mass_drift": 1.2323475573339238e-13,
+    "steps": 3178,
+    "seconds": 22.63,
+    "pass": true
+   },
+   {
+    "nx": 1600,
+    "status": "not_measured"
+   },
+   {
+    "nx": 3200,
+    "status": "not_measured"
+   },
+   {
+    "nx": 6400,
+    "status": "not_measured"
+   }
+  ],
+  "pass": false
+ },
+ "S2": {
+  "pass": null,
+  "note": "entropy_order_r8.json absent (job not back)"
+ },
+ "S6": {
+  "S1_S5_all_pass": false,
+  "certified_advanced": false,
+  "note": "certified-<1 % may not be advanced otherwise (frozen in PREDECLARATION-r8)"
+ },
+ "verdict": "PARTIAL/HONEST-FAIL"
+}

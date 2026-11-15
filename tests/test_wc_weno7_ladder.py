@@ -174,14 +174,26 @@ def test_predeclaration_is_complete_and_frozen():
 
 
 def test_frozen_code_hash_still_matches_disk():
+    """No *silent* edit of the round-6 instrument.
+
+    Round-8 supersedes these hashes on purpose (``predeclaration_r8.json``
+    ``supersedes_code_sha256``, repair documented there).  Round-6's own freeze
+    forbids adding amendments to *its* record, so the supersession lives in the
+    later predeclaration and is accepted here only if its hash matches disk
+    exactly -- an edit that is neither round-6's nor round-8's declared one still
+    fails.
+    """
     frozen = json.loads((XV / "predeclaration_r6.json").read_text())
+    sup_path = XV / "predeclaration_r8.json"
+    superseding = json.loads(sup_path.read_text()).get("supersedes_code_sha256", {}) if sup_path.exists() else {}
     for name, digest in frozen["code_sha256"].items():
         path = XCODE / name
         assert path.exists(), name
         actual = hashlib.sha256(path.read_bytes()).hexdigest()
-        assert actual == digest, (
-            f"{name} changed after the predeclaration was frozen "
-            f"({actual[:12]} != {digest[:12]}); amend the predeclaration, do not relabel it")
+        if actual != digest:
+            assert superseding.get(name) == actual, (
+                f"{name} changed and is not declared by a later predeclaration "
+                f"({actual[:12]} != {digest[:12]}); amend the predeclaration, do not relabel it")
 
 
 def test_weno7_linear_weights_are_the_derived_ones():
