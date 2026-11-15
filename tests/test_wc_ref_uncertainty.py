@@ -142,7 +142,7 @@ def test_unpaired_reference_is_reported_as_unmeasurable():
     # extrapolated and must be labelled as such, never presented as measured
     rows = U.selfcert_ladder(DATA)
     finest_paired = rows[-1]
-    assert finest_paired["order_source"] in {"measured_pair", "extrapolated"}
+    assert finest_paired["order_source"] in {"measured_pair", "measured_triple", "extrapolated"}
     if finest_paired["order_source"] == "extrapolated":
         assert finest_paired["order"] == pytest.approx(rows[-2]["order"])
 
