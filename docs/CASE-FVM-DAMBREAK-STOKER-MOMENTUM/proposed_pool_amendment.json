@@ -1,0 +1,46 @@
+{
+  "_comment": [
+    "Proposed additive amendment to docs/oss_solutions/CASE-FVM-DAMBREAK-STOKER.json.",
+    "NOT applied by this change: the existing pool-entry test (tests/test_case_fvm_dambreak_stoker_pool.py)",
+    "binds G1-G6 by id to artifacts/shallow-water-dam-break/metrics.json, so appending criteria must be",
+    "done together with a regeneration of that entry (scripts case_pool_dambreak.build_entry) and an",
+    "extension of the gate-id map in that test.  Values below are copied from",
+    "src/tensorfvm/verification/artifacts/shallow-water-momentum/{momentum,velocity}.json."
+  ],
+  "feature_slug": "CASE-FVM-DAMBREAK-STOKER",
+  "additive_criteria": [
+    {
+      "id": "G7_momentum_identity",
+      "statement": "全局动量 int h u dx 等于解析闭式 g/2 (h_L^2 - h_R^2) t（相对误差 < 1e-8；波未触边界）",
+      "comparator": "le",
+      "threshold": 1e-08,
+      "unit": "1",
+      "value": 3.24e-12,
+      "measured": {
+        "ritter-dry": {"n800": 2.57e-12, "n1600": 2.96e-12, "n3200": 3.24e-12},
+        "stoker-wet": {"n800": 1.17e-14, "n1600": 2.53e-14, "n3200": 4.65e-14}
+      },
+      "artifact": "src/tensorfvm/verification/artifacts/shallow-water-momentum/momentum.json"
+    },
+    {
+      "id": "G8_velocity_l1_mass",
+      "statement": "质量加权速度场误差 int|u-u_ex| h dx / int|u_ex| h dx < 5%（n >= 800，两算例）",
+      "comparator": "le",
+      "threshold": 0.05,
+      "unit": "1",
+      "value": 0.006783,
+      "measured": {
+        "ritter-dry": {"n800": 0.003669, "n6400": 0.000456},
+        "stoker-wet": {"n800": 0.006783, "n6400": 0.000848}
+      },
+      "artifact": "src/tensorfvm/verification/artifacts/shallow-water-momentum/velocity.json"
+    }
+  ],
+  "verdict_qualified_append": "G8 note: the UNWEIGHTED velocity norm int|u-u_ex| dx does NOT pass on the dry bed -- 5.0703% at n=800 (>5%), 4.4351% at n=1600, 3.5497% at n=3200, 2.6727% at n=6400, observed order 0.19/0.32/0.41 (approaching the sqrt-law limit 0.5). The error is carried by the wetting-tip sliver (92.1% of the bound at n=6400) where the exact velocity tends to 2 c0 while the solver keeps those cells dry; the depth field on the same grids is first order (0.1542% -> 0.0193%). Do not use this case to certify velocity output below ~3% without a front treatment change.",
+  "evidence": {
+    "report": "docs/CASE-FVM-DAMBREAK-STOKER-MOMENTUM/REPORT.md",
+    "driver": "scripts/run_shallow_water_momentum.py",
+    "tests": "tests/test_shallow_water_momentum.py",
+    "module": "src/tensorfvm/shallow_water/momentum.py"
+  }
+}
