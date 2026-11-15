@@ -1,0 +1,372 @@
+{
+ "round": 15,
+ "channel": {
+  "config": {
+   "nx": 8,
+   "ny": 64,
+   "dt": 0.01,
+   "reynolds": 2800.0,
+   "nu": 0.00035714285714285714,
+   "full_height": 3.036,
+   "half_height": 1.518,
+   "re_bulk_full_height": 8500.8,
+   "steps": 30000,
+   "burn_in": 10000,
+   "block_steps": 5000,
+   "chunk": 250,
+   "body_force_relaxation": 1.0,
+   "transport_convection_blend": null,
+   "production_limit": null,
+   "momentum_convection_blend": 0.75
+  },
+  "reference": {
+   "correlation": "Dean 1978 J.Fluids Eng. 100:215, Cf = 0.073 Re_b^-0.25",
+   "re_bulk_full_height": 8500.8,
+   "cf": 0.007602525937150156,
+   "u_tau_over_ub": 0.06165438320650915,
+   "re_tau": 262.05579038094646
+  },
+  "final": {
+   "gates": {
+    "C1_log_law": false,
+    "C2_linear_stress": false,
+    "C3_eddy_viscosity_identity": false,
+    "C4_friction": false
+   },
+   "kappa_eff": 24.51359354085399,
+   "kappa_relative_deviation": 58.78925253866827,
+   "B": -0.11141990189807743,
+   "re_tau": 17328.986134878116,
+   "re_tau_dean": 262.05579038094646,
+   "re_tau_relative_deviation": 65.12708732627978,
+   "nu_t_plus_over_log_law": 0.026079577319516697,
+   "all_gates_pass": false,
+   "interpretation": "gates disagree; see the per-gate table before drawing a conclusion"
+  },
+  "tolerances": {
+   "C1_kappa": 0.1,
+   "C1_B": 1.0,
+   "C2_stress": 0.05,
+   "C3_ratio_band": [
+    0.7,
+    1.4
+   ],
+   "C4_re_tau": 0.1
+  },
+  "equilibrated": true,
+  "max_nu_t_ratio": 0.04438640929683958,
+  "blocks": [
+   {
+    "t": 150.0,
+    "re_tau": 17336.054284380094,
+    "kappa_eff": 24.552941487010578,
+    "nu_t_plus_over_log_law": 0.026176787460330742,
+    "gates": {
+     "C1_log_law": false,
+     "C2_linear_stress": false,
+     "C3_eddy_viscosity_identity": false,
+     "C4_friction": false
+    }
+   },
+   {
+    "t": 200.0,
+    "re_tau": 17328.999525501888,
+    "kappa_eff": 24.51367299998221,
+    "nu_t_plus_over_log_law": 0.026078997262519405,
+    "gates": {
+     "C1_log_law": false,
+     "C2_linear_stress": false,
+     "C3_eddy_viscosity_identity": false,
+     "C4_friction": false
+    }
+   },
+   {
+    "t": 250.0,
+    "re_tau": 17328.98420372533,
+    "kappa_eff": 24.51358259161446,
+    "nu_t_plus_over_log_law": 0.026079561494355783,
+    "gates": {
+     "C1_log_law": false,
+     "C2_linear_stress": false,
+     "C3_eddy_viscosity_identity": false,
+     "C4_friction": false
+    }
+   },
+   {
+    "t": 300.0,
+    "re_tau": 17328.986134878116,
+    "kappa_eff": 24.51359354085399,
+    "nu_t_plus_over_log_law": 0.026079577319516697,
+    "gates": {
+     "C1_log_law": false,
+     "C2_linear_stress": false,
+     "C3_eddy_viscosity_identity": false,
+     "C4_friction": false
+    }
+   }
+  ]
+ },
+ "hill": {
+  "round11_defective_transport": {
+   "closure": {
+    "name": "sst",
+    "class": "SSTKOmega",
+    "freestream_intensity": 0.05,
+    "freestream_nut_ratio": 3.0,
+    "max_viscosity_ratio": 10000.0,
+    "transport_convection_blend": 0.0,
+    "production_limit": null,
+    "a1": 0.31
+   },
+   "config": {
+    "nx": 96,
+    "ny": 48,
+    "steps": 20000,
+    "sample_every": 20,
+    "burn_in_steps": 8000,
+    "time_step_s": 0.02,
+    "end_time": 400.0,
+    "averaging_window": [
+     160.0,
+     400.0
+    ],
+    "reynolds": 2800.0,
+    "hill_amplitude": 1.0,
+    "production_limit": null,
+    "convection_blend": 0.75,
+    "bulk_velocity": 1.0,
+    "nu": 0.00035714285714285714,
+    "diverged_at_step": null
+   },
+   "samples": 601,
+   "x_r_over_H": 2.0456256874257104,
+   "x_r_over_H_reference": 5.41,
+   "x_r_over_H_error": 0.6218806492743604,
+   "x_r_over_H_legacy_reference": 5.34,
+   "x_r_over_H_error_legacy": 0.6169240285719644,
+   "x_r_over_H_pass": false,
+   "profile_stations": [
+    {
+     "x_over_H": 1.0,
+     "u_over_Ub_computed": -0.003825517929160511,
+     "u_over_Ub_reference": -0.046128718374354914,
+     "delta": 0.0423032004451944,
+     "error_rel": 0.9170686274412667,
+     "band": "absolute",
+     "tolerance": 0.1,
+     "pass": true
+    },
+    {
+     "x_over_H": 2.0,
+     "u_over_Ub_computed": 0.21699835014552474,
+     "u_over_Ub_reference": -0.09122729012512827,
+     "delta": 0.308225640270653,
+     "error_rel": 3.378656100031993,
+     "band": "absolute",
+     "tolerance": 0.1,
+     "pass": false
+    },
+    {
+     "x_over_H": 3.0,
+     "u_over_Ub_computed": 0.40890251286564094,
+     "u_over_Ub_reference": 0.0041277188021116165,
+     "delta": 0.40477479406352934,
+     "error_rel": 98.06258940324587,
+     "band": "absolute",
+     "tolerance": 0.1,
+     "pass": false
+    },
+    {
+     "x_over_H": 4.0,
+     "u_over_Ub_computed": 0.534338512516992,
+     "u_over_Ub_reference": 0.11981606788535129,
+     "delta": 0.4145224446316408,
+     "error_rel": 3.459656554814384,
+     "band": "relative",
+     "tolerance": 0.01198160678853513,
+     "pass": false
+    },
+    {
+     "x_over_H": 5.0,
+     "u_over_Ub_computed": 0.6030426189862754,
+     "u_over_Ub_reference": 0.2182851836848996,
+     "delta": 0.38475743530137585,
+     "error_rel": 1.7626365143352254,
+     "band": "relative",
+     "tolerance": 0.021828518368489962,
+     "pass": false
+    },
+    {
+     "x_over_H": 6.0,
+     "u_over_Ub_computed": 0.6150590974459231,
+     "u_over_Ub_reference": 0.2876299221105056,
+     "delta": 0.32742917533541754,
+     "error_rel": 1.138369655468673,
+     "band": "relative",
+     "tolerance": 0.02876299221105056,
+     "pass": false
+    },
+    {
+     "x_over_H": 7.0,
+     "u_over_Ub_computed": 0.5473698757172922,
+     "u_over_Ub_reference": 0.31413237261839405,
+     "delta": 0.23323750309889818,
+     "error_rel": 0.7424815887480453,
+     "band": "relative",
+     "tolerance": 0.03141323726183941,
+     "pass": false
+    },
+    {
+     "x_over_H": 8.0,
+     "u_over_Ub_computed": 0.22079957264363598,
+     "u_over_Ub_reference": 0.22375151815927136,
+     "delta": 0.002951945515635379,
+     "error_rel": 0.013192963068675664,
+     "band": "relative",
+     "tolerance": 0.022375151815927138,
+     "pass": true
+    }
+   ],
+   "profile_stations_pass": 2,
+   "profile_stations_admissible": 8,
+   "profile_pass": false,
+   "stationary": true,
+   "max_nu_t_ratio": 342.47508583207997,
+   "acceptance_pass": false,
+   "reference_source": "tensorfvm.verification.periodic_hill_reference (ERCOFTAC UFR 3-30 distributed DNS profiles)"
+  },
+  "round15_healed_first_order": {
+   "closure": {
+    "name": "sst",
+    "class": "SSTKOmega",
+    "freestream_intensity": 0.05,
+    "freestream_nut_ratio": 3.0,
+    "max_viscosity_ratio": 10000.0,
+    "transport_convection_blend": 0.0,
+    "momentum_convection_blend": 0.75,
+    "production_limit": null,
+    "a1": 0.31
+   },
+   "config": {
+    "nx": 96,
+    "ny": 48,
+    "steps": 20000,
+    "sample_every": 20,
+    "burn_in_steps": 8000,
+    "time_step_s": 0.02,
+    "end_time": 400.0,
+    "averaging_window": [
+     160.0,
+     400.0
+    ],
+    "reynolds": 2800.0,
+    "hill_amplitude": 1.0,
+    "production_limit": null,
+    "convection_blend": 0.75,
+    "bulk_velocity": 1.0,
+    "nu": 0.00035714285714285714,
+    "diverged_at_step": null
+   },
+   "samples": 601,
+   "x_r_over_H": 3.7667069408020226,
+   "x_r_over_H_reference": 5.41,
+   "x_r_over_H_error": 0.3037510275781844,
+   "x_r_over_H_legacy_reference": 5.34,
+   "x_r_over_H_error_legacy": 0.2946241683891343,
+   "x_r_over_H_pass": false,
+   "profile_stations": [
+    {
+     "x_over_H": 1.0,
+     "u_over_Ub_computed": -0.1251936947528879,
+     "u_over_Ub_reference": -0.046128718374354914,
+     "delta": 0.07906497637853299,
+     "error_rel": 1.7140076543398801,
+     "band": "absolute",
+     "tolerance": 0.1,
+     "pass": true
+    },
+    {
+     "x_over_H": 2.0,
+     "u_over_Ub_computed": 0.04314232119002589,
+     "u_over_Ub_reference": -0.09122729012512827,
+     "delta": 0.13436961131515415,
+     "error_rel": 1.472910256688009,
+     "band": "absolute",
+     "tolerance": 0.1,
+     "pass": false
+    },
+    {
+     "x_over_H": 3.0,
+     "u_over_Ub_computed": 0.17980091976885634,
+     "u_over_Ub_reference": 0.0041277188021116165,
+     "delta": 0.1756732009667447,
+     "error_rel": 42.55939161283845,
+     "band": "absolute",
+     "tolerance": 0.1,
+     "pass": false
+    },
+    {
+     "x_over_H": 4.0,
+     "u_over_Ub_computed": 0.30648894244724767,
+     "u_over_Ub_reference": 0.11981606788535129,
+     "delta": 0.18667287456189638,
+     "error_rel": 1.5579953328172857,
+     "band": "relative",
+     "tolerance": 0.01198160678853513,
+     "pass": false
+    },
+    {
+     "x_over_H": 5.0,
+     "u_over_Ub_computed": 0.39542202996248293,
+     "u_over_Ub_reference": 0.2182851836848996,
+     "delta": 0.17713684627758333,
+     "error_rel": 0.8114927604673573,
+     "band": "relative",
+     "tolerance": 0.021828518368489962,
+     "pass": false
+    },
+    {
+     "x_over_H": 6.0,
+     "u_over_Ub_computed": 0.44382336656314963,
+     "u_over_Ub_reference": 0.2876299221105056,
+     "delta": 0.15619344445264405,
+     "error_rel": 0.5430361462624028,
+     "band": "relative",
+     "tolerance": 0.02876299221105056,
+     "pass": false
+    },
+    {
+     "x_over_H": 7.0,
+     "u_over_Ub_computed": 0.4319653262977582,
+     "u_over_Ub_reference": 0.31413237261839405,
+     "delta": 0.11783295367936414,
+     "error_rel": 0.3751060506664394,
+     "band": "relative",
+     "tolerance": 0.03141323726183941,
+     "pass": false
+    },
+    {
+     "x_over_H": 8.0,
+     "u_over_Ub_computed": 0.33002213227918475,
+     "u_over_Ub_reference": 0.22375151815927136,
+     "delta": 0.1062706141199134,
+     "error_rel": 0.474949242776836,
+     "band": "relative",
+     "tolerance": 0.022375151815927138,
+     "pass": false
+    }
+   ],
+   "profile_stations_pass": 1,
+   "profile_stations_admissible": 8,
+   "profile_pass": false,
+   "stationary": true,
+   "max_nu_t_ratio": 202.54210857099966,
+   "acceptance_pass": false,
+   "reference_source": "tensorfvm.verification.periodic_hill_reference (ERCOFTAC UFR 3-30 distributed DNS profiles)"
+  }
+ },
+ "figures": [
+  "/root/tp-agent/work/m21087/docs/case-periodic-hills/fig_round15_channel.png",
+  "/root/tp-agent/work/m21087/docs/case-periodic-hills/fig_round15_hill.png"
+ ]
+}
