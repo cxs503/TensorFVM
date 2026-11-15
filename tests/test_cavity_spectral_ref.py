@@ -172,3 +172,65 @@ def test_stored_re100_ladder_is_grid_converged() -> None:
     assert slip[-1] < slip[0]                      # discretisation error shrinks
     for r in recs:
         assert r["metrics"]["poisson_residual_max"] < 1e-8
+
+def test_sparse_and_dense_jacobian_agree() -> None:
+    """The two Jacobian assemblies are the *same* operator, entry by entry.
+
+    The sparse assembly exists only to make ``N >= 96`` affordable; if it drifted
+    from the dense path every Krylov result would silently be a different
+    discretisation, so equality (not closeness) is asserted.
+    """
+    rng = np.random.default_rng(7)
+    for n in (8, 16):
+        solver = SpectralCavity(n)
+        state = rng.standard_normal(2 * (n - 1) ** 2)
+        dense = solver.jacobian(state, 300.0)
+        sparse = solver.jacobian_sparse(state, 300.0).toarray()
+        assert np.array_equal(dense, sparse)
+
+
+def test_krylov_matches_direct_newton() -> None:
+    """Sparse-Jacobian GMRES reproduces the dense-LU Newton solution."""
+    direct = SpectralCavity(16).solve(100.0, tol=1e-9, continuation=(10.0, 50.0))
+    krylov = SpectralCavity(16).solve(100.0, tol=1e-9, continuation=(10.0, 50.0),
+                                      linear_solver="krylov",
+                                      gmres_options={"restart": 200, "maxiter": 40})
+    # Both paths stop on the same residual criterion (|R| <= tol * scale), so the
+    # agreement floor is set by that criterion, not by an arbitrarily tight
+    # number: 1e-8 on the functionals is ~5e-8 relative, i.e. still 8 digits.
+    for key in ("u_min", "v_max", "psi_min"):
+        assert abs(direct.metrics[key] - krylov.metrics[key]) <= 1e-8, (
+            key, direct.metrics[key], krylov.metrics[key])
+    assert np.max(np.abs(direct.psi - krylov.psi)) <= 1e-7
+    assert krylov.newton["linear_solver"] == "krylov"
+    assert all(h.get("gmres_iterations", 0) > 0 for h in krylov.newton["history"])
+
+
+def test_krylov_rejects_unknown_linear_solver() -> None:
+    solver = SpectralCavity(8)
+    with pytest.raises(ValueError):
+        solver.solve(10.0, linear_solver="multigrid")
+
+
+def test_wall_slip_ratio_is_not_an_error_decay_proxy() -> None:
+    """The old two-order extrapolation borrowed the wall-slip decay ratio (3.21).
+
+    Measured on the stored Re = 1000 ladder, the functionals themselves decay
+    much faster (u_min ~ 43x, v_max ~ 28x per order pair).  This pins the
+    negative result of SPECTRAL_HIORDER.md: the proxy is off by an order of
+    magnitude, so it must not be used again.
+    """
+    spec = (Path(__file__).resolve().parents[1]
+            / "docs" / "CASE-FVM-CAVITY-RE1000" / "runs" / "spectral")
+    vals = {}
+    for n in (32, 48, 64):
+        rec = json.loads((spec / f"cavity_spectral_N{n:03d}_re1000.json").read_text())
+        vals[n] = rec["metrics"]
+    for key in ("u_min", "v_max", "psi_min"):
+        d1 = abs(vals[48][key] - vals[32][key])
+        d2 = abs(vals[64][key] - vals[48][key])
+        ratio = d1 / d2
+        assert ratio > 5.0 * 3.21, (key, ratio)
+    # the slips do decay at ~3.2, which is exactly why the proxy looked plausible
+    slip_ratio = vals[48]["lid_slip_defect"] / vals[64]["lid_slip_defect"]
+    assert 2.5 < slip_ratio < 4.0, slip_ratio
