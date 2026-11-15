@@ -87,7 +87,7 @@ __all__ = [
 ]
 
 #: closures this driver can time-average (``sa`` = round 8/9 baseline)
-CLOSURES = ("sa", "sst")
+CLOSURES = ("sa", "sst", "laminar")
 
 
 # --------------------------------------------------------------------------- #
@@ -160,7 +160,14 @@ def build_solver(closure: str = "sst", *, nx: int = 96, ny: int = 48,
                                 bulk_velocity=float(bulk_velocity),
                                 time_step_s=float(dt), **kwargs)
     solver = PeriodicHillSolver(config, turbulence_momentum_interval=turbulence_momentum_interval)
-    if name == "sst":
+    if name == "laminar":
+        # Round 20: closure-free branch.  ``PeriodicHillSolver`` documents and
+        # supports ``turbulence=None`` (nu_t stays identically zero), but the
+        # production driver only ever offered sa/sst, so every published number
+        # of rounds 9--19 mixed the closure into the framework test.  The
+        # lower-Re sister case needs the two separated.
+        solver.turbulence = None
+    elif name == "sst":
         sst_cfg = SSTKOmegaConfig(production_limit=production_limit)
         if freestream_intensity is not None:
             sst_cfg.freestream_intensity = float(freestream_intensity)
@@ -180,6 +187,11 @@ def build_solver(closure: str = "sst", *, nx: int = 96, ny: int = 48,
 def _closure_block(closure, solver):
     """Machine-readable record of which closure produced an artefact."""
     turb = solver.turbulence
+    if turb is None:
+        return {"name": str(closure).lower(), "class": "NoneType",
+                "closure_free": True,
+                "momentum_convection_blend": float(solver.config.convection_blend),
+                "nu_t_ratio": "identically zero by construction (no closure provider)"}
     block = {"name": str(closure).lower(), "class": type(turb).__name__}
     if isinstance(turb, SSTKOmega):
         cfg = turb.config
@@ -339,7 +351,12 @@ def run_time_averaged_case(tag, closure="sst", *, nx=96, ny=48, steps=20000,
             break
         if step >= burn_in_steps and (step - burn_in_steps) % sample_every == 0:
             sep, rea = solver.reattachment()
-            nu_t_ratio = solver.turbulence.viscosity() / solver.nu
+            if solver.turbulence is None:
+                # closure-free run: nu_t == 0, so the ratio is a structural zero,
+                # not a measurement that happened to come out at 0.
+                nu_t_ratio = np.zeros_like(solver.nu_t)
+            else:
+                nu_t_ratio = solver.turbulence.viscosity() / solver.nu
             series["t"].append(step * dt)
             series["step"].append(step)
             series["x_s_over_H"].append(float(sep))
