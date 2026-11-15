@@ -941,6 +941,46 @@ class PeriodicHillSolver:
         rea = next((c for c in crossings if 1.9 <= c <= 7.1), float("nan"))
         return sep, rea
 
+
+    def reattachment_with_bubble_report(self, u=None, v=None, primary="first"):
+        """Reattachment using the certified bubble-object detector.
+
+        ROUND 22 showed that the default ``reattachment()`` heuristic (pick the
+        first crossing in a fixed x/H window) silently selects the *wrong*
+        bubble when the mean wall-shear has multiple recirculation zones.  This
+        method delegates to :func:`verification.periodic_hill_field_metrics.
+        bubble_object_report`, which runs the certified crossing operator under
+        both ``primary="largest_area"`` and ``primary="first"`` and reports
+        whether they agree.
+
+        Parameters
+        ----------
+        primary : str
+            ``"first"`` (default) selects the crest bubble -- the one the
+            Breuer et al. 2009 reference refers to.  ``"largest_area"``
+            reproduces the historical (round 17--21)口径.
+
+        Returns
+        -------
+        dict with ``x_s_over_H``, ``x_r_over_H``, ``n_bubbles``, ``flag``,
+        ``selected_is_crest`` and the full bubble-object report.
+        """
+        from .verification.periodic_hill_field_metrics import bubble_object_report
+
+        tau_b, _ = self.wall_shear(u, v)
+        x = self.mesh.x_n[0] / self.config.height_m
+        report = bubble_object_report(tau_b, x, primary=primary)
+
+        selected = report.get("selected", {})
+        return {
+            "x_s_over_H": selected.get("separation", float("nan")),
+            "x_r_over_H": selected.get("reattachment", float("nan")),
+            "n_bubbles": report.get("n_bubbles", 0),
+            "flag": report.get("flag", "unknown"),
+            "selected_is_crest": report.get("selected_is_crest", False),
+            "bubble_report": report,
+        }
+
     def profile_at(self, x_over_h):
         """Mean ``u`` vs ``y`` sampled on the vertical line ``x = x_over_h * H``.
 
