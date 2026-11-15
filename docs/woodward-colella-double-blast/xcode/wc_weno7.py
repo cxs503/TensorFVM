@@ -247,6 +247,82 @@ def reconstruction_order(sizes: Sequence[int] = (40, 80, 160, 320, 640),
 
 
 # ----------------------------------------------------------------------
+# positivity of the time update (round-8 repair)
+# ----------------------------------------------------------------------
+def admissible(U: np.ndarray) -> np.ndarray:
+    """Physical admissibility of *cell-average* conserved states.
+
+    ``rho > 0`` and ``p = (gamma-1)(E - m^2/2rho) > 0`` cell by cell, plus a
+    finiteness guard (NaN must read as inadmissible, not as "fine").
+    """
+    U = np.asarray(U, dtype=np.float64)
+    rho, m, e = U[0], U[1], U[2]
+    with np.errstate(divide="ignore", invalid="ignore"):
+        p = (GAMMA - 1.0) * (e - 0.5 * m * m / rho)
+    return (rho > 0.0) & (p > 0.0) & np.all(np.isfinite(U), axis=0)
+
+
+def positivity_fraction(U: np.ndarray, Un: np.ndarray, tol: float = 1e-10) -> np.ndarray:
+    """Per-cell largest ``theta in [0, 1]`` with ``(1-theta) U + theta Un`` admissible.
+
+    The admissible set ``A = {(rho, m, E) : rho > 0, E - m^2/(2 rho) > 0}`` is
+    convex, and ``U`` is admissible cell by cell, so for each cell the set of
+    admissible ``theta`` is an interval containing 0 and the predicate is
+    monotone in ``theta``: a *vectorised* bisection (all cells at once, no
+    Python loop over cells) returns the boundary to ``tol``.  Per-cell rather
+    than one global fraction matters: a single bad cell would otherwise freeze
+    the whole update, which is both needlessly dissipative and slow.
+
+    This is a convex limiter of the *stage increment*, not a reconstruction
+    change: away from the violation set ``theta = 1`` exactly, so the formal
+    order of the scheme on smooth data is untouched (tested against the
+    entropy-wave order).
+    """
+    theta = np.ones(U.shape[1])
+    bad = ~admissible(Un)
+    if not bad.any():
+        return theta
+    lo = np.zeros(int(bad.sum()))
+    hi = np.ones(int(bad.sum()))
+    Ub = U[:, bad]
+    Unb = Un[:, bad]
+    for _ in range(64):
+        mid = 0.5 * (lo + hi)
+        ok = admissible((1.0 - mid) * Ub + mid * Unb)
+        lo = np.where(ok, mid, lo)
+        hi = np.where(ok, hi, mid)
+        if np.all(hi - lo <= tol):
+            break
+    theta[bad] = lo * (1.0 - 1e-12)  # land strictly inside the admissible interval
+    return theta
+
+
+def rk3_stage(U: np.ndarray, dt: float, dx: float, counters: Dict) -> tuple:
+    """One SSP-RK3 step; ``(Un, 0)`` if every stage is admissible, else
+    ``(None, s)`` reporting the first offending stage ``s``.
+
+    The caller does **not** blend states (that would break conservation: mass is
+    only conserved by flux differencing).  It retries the whole step with
+    ``dt/2``, which is conservative by construction and must terminate because
+    the guarded first-order Rusanov update is positivity preserving as
+    ``dt -> 0`` (CFL 0.4 < 1/2).
+    """
+    k1 = _rhs7(U, dx, counters)
+    U1 = U + dt * k1
+    if not admissible(U1).all():
+        return None, 1
+    k2 = _rhs7(U1, dx, counters)
+    U2 = 0.75 * U + 0.25 * (U1 + dt * k2)
+    if not admissible(U2).all():
+        return None, 2
+    k3 = _rhs7(U2, dx, counters)
+    Un = (1.0 / 3.0) * U + (2.0 / 3.0) * (U2 + dt * k3)
+    if not admissible(Un).all():
+        return None, 3
+    return Un, 0
+
+
+# ----------------------------------------------------------------------
 # 1-D Euler with WENO7 + SSP-RK3 + Rusanov (same conventions as WENO5 file)
 # ----------------------------------------------------------------------
 def _pad7(U: np.ndarray) -> np.ndarray:
@@ -270,30 +346,146 @@ def _face_states7(g: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
     return left, right
 
 
-def _rhs7(U: np.ndarray, dx: float, counters: Dict[str, int]) -> np.ndarray:
-    nx = U.shape[1]
-    UL, UR = _face_states7(_pad7(U))
+def _rusanov(UL: np.ndarray, UR: np.ndarray) -> np.ndarray:
+    """Local Lax-Friedrichs (Rusanov) interface flux -- the audited reference flux."""
     rl, ul, pl = xc._prim(UL)  # noqa: SLF001
     rr, ur, pr = xc._prim(UR)  # noqa: SLF001
-    bad = (rl <= 0) | (pl <= 0) | (rr <= 0) | (pr <= 0)
-    if bad.any():  # same positivity guard as the WENO5 reference
-        counters["positivity_fallbacks"] += int(bad.sum())
-        g = _pad7(U)
-        for k in range(3):
-            UL[k, bad] = g[k, 3:-4][bad]
-            UR[k, bad] = g[k, 4:-3][bad]
-        rl, ul, pl = xc._prim(UL)  # noqa: SLF001
-        rr, ur, pr = xc._prim(UR)  # noqa: SLF001
     cl = np.sqrt(GAMMA * pl / rl)
     cr = np.sqrt(GAMMA * pr / rr)
     a = np.maximum(np.abs(ul) + cl, np.abs(ur) + cr)
-    Fhat = 0.5 * (xc._flux(UL) + xc._flux(UR)) - 0.5 * a * (UR - UL)  # noqa: SLF001
-    return -(Fhat[:, 1:] - Fhat[:, :-1]) / dx
+    return 0.5 * (xc._flux(UL) + xc._flux(UR)) - 0.5 * a * (UR - UL)  # noqa: SLF001
+
+
+def _pad_periodic(U: np.ndarray) -> np.ndarray:
+    """Four periodic ghost cells on each side (for the smooth entropy-wave probe)."""
+    return np.concatenate([U[:, -4:], U, U[:, :4]], axis=1)
+
+
+def tendencies(U: np.ndarray, dx: float, counters: Dict[str, int],
+               periodic: bool = False):
+    """Return ``(T_ho, T_lo)``: the WENO7 and the first-order LLF tendencies.
+
+    ``T_lo`` is built from the *cell averages* at the faces, so ``U + dt T_lo``
+    is the classical first-order Rusanov update: admissible for ``CFL <= 1/2``
+    (here 0.4), which is what makes the limiter below provably terminating.
+    Both are ``-dF/dx`` over the ``nx`` cells, so any convex combination
+    ``theta T_ho + (1-theta) T_lo`` is **conservative** (the fluxes telescope).
+    """
+    nx = U.shape[1]
+    g = _pad_periodic(U) if periodic else _pad7(U)
+    UL, UR = _face_states7(g)
+    bad = ~(admissible(UL) & admissible(UR))
+    if bad.any():   # keep the pre-repair first-order state fallback as a diagnostic
+        counters["positivity_fallbacks"] += int(bad.sum())
+    ULf, URf = UL.copy(), UR.copy()
+    ULf[:, bad] = g[:, 3:-4][:, bad]
+    URf[:, bad] = g[:, 4:-3][:, bad]
+    F_ho = _rusanov(ULf, URf)
+    F_lo = _rusanov(g[:, 3:-4], g[:, 4:-3])
+    T_ho = -(F_ho[:, 1:] - F_ho[:, :-1]) / dx
+    T_lo = -(F_lo[:, 1:] - F_lo[:, :-1]) / dx
+    return T_ho, T_lo
+
+
+def max_theta(P: np.ndarray, dU: np.ndarray) -> float:
+    """Largest ``theta in [0,1]`` with ``P + theta dU`` admissible in every cell.
+
+    ``P`` must be admissible.  ``rho(theta)`` and ``q(theta) = 2 rho E - m^2``
+    are (respectively) affine and quadratic in ``theta`` and ``q > 0`` is
+    equivalent to ``p > 0`` whenever ``rho > 0``, so each cell's boundary is a
+    root of a quadratic -- solved in closed form and then minimised over cells
+    (one *global* theta keeps the update exactly conservative, because it
+    rescales a flux difference).
+    """
+    rho, m, e = P[0], P[1], P[2]
+    dr, dm, de = dU[0], dU[1], dU[2]
+    big = np.inf
+    with np.errstate(divide="ignore", invalid="ignore"):
+        th_rho = np.where(dr < 0.0, -rho / np.where(dr < 0.0, dr, -1.0), big)
+        a = 2.0 * dr * de - dm * dm
+        b = 2.0 * (rho * de + e * dr) - 2.0 * m * dm
+        c = 2.0 * rho * e - m * m
+        disc = b * b - 4.0 * a * c
+        sq = np.sqrt(np.maximum(disc, 0.0))
+        denom = np.where(np.abs(a) > 1e-300, a, 1e-300)
+        r1 = (-b - sq) / (2.0 * denom)
+        r2 = (-b + sq) / (2.0 * denom)
+        quad_ok = (a != 0.0) & (disc >= 0.0)
+        root = np.where(quad_ok, np.minimum(np.where(r1 > 0, r1, big),
+                                            np.where(r2 > 0, r2, big)), big)
+        lin_ok = (a == 0.0) & (b < 0.0)          # q decreasing -> crosses at -c/b
+        root = np.where(lin_ok, np.minimum(root, -c / np.where(b < 0.0, b, -1.0)), root)
+    theta = float(np.min(np.minimum(th_rho, root)))
+    if not np.isfinite(theta):
+        return 1.0
+    return max(0.0, min(1.0, theta))
+
+
+def pp_stage(P: np.ndarray, scale: float, Uq: np.ndarray, dx: float,
+             counters: Dict, periodic: bool = False) -> np.ndarray:
+    """``P + scale * (theta T_ho + (1-theta) T_lo)(Uq)``, admissible by construction.
+
+    ``P`` is admissible (it is a convex combination of admissible stage states).
+    ``theta`` is released by halving if the closed-form root lands on the
+    boundary and rounding still produces an inadmissible state -- halving keeps
+    conservation (it rescales fluxes) and reaches ``theta = 0`` (the
+    first-order LLF step, admissible) in finitely many halvings.
+    """
+    T_ho, T_lo = tendencies(Uq, dx, counters, periodic=periodic)
+    dU_ho = scale * T_ho
+    dU_lo = scale * T_lo
+    P_lo = P + dU_lo
+    if not admissible(P_lo).all():       # would violate the CFL <= 1/2 premise
+        counters["first_order_inadmissible"] += 1
+    theta = max_theta(P_lo, dU_ho - dU_lo)
+    if theta >= 1.0:                     # inert on smooth data: keep exact 1.0
+        theta = 1.0
+    else:
+        theta = theta * (1.0 - 1e-12)
+    for _ in range(60):
+        out = P_lo + theta * (dU_ho - dU_lo)
+        if admissible(out).all():
+            counters["pp_limited_stages"] += int(theta < 1.0 - 1e-9)
+            counters["theta_min"] = min(counters["theta_min"], float(theta))
+            return out
+        theta *= 0.5
+    counters["pp_failures"] += 1
+    return P_lo
+
+
+def rk3_stage(U: np.ndarray, dt: float, dx: float, counters: Dict,
+              periodic: bool = False, limiter: bool = True) -> np.ndarray:
+    """One SSP-RK3 step with positivity-preserving (PP) flux limiting.
+
+    Written as three convex/affine combinations so that each stage keeps the
+    ``P + scale*(theta T_ho + (1-theta) T_lo)`` form the limiter solves for:
+
+    ``U1 = U + dt T(U)``,
+    ``U2 = 0.75 U + 0.25 (U1 + dt T(U1))``,
+    ``Un = 1/3 U + 2/3 (U2 + dt T(U2))``.
+    """
+    if not limiter:
+        T1 = tendencies(U, dx, counters, periodic=periodic)[0]
+        U1 = U + dt * T1
+        T2 = tendencies(U1, dx, counters, periodic=periodic)[0]
+        U2 = 0.75 * U + 0.25 * (U1 + dt * T2)
+        T3 = tendencies(U2, dx, counters, periodic=periodic)[0]
+        return (1.0 / 3.0) * U + (2.0 / 3.0) * (U2 + dt * T3)
+    U1 = pp_stage(U, dt, U, dx, counters, periodic=periodic)
+    P2 = 0.75 * U + 0.25 * U1
+    U2 = pp_stage(P2, 0.25 * dt, U1, dx, counters, periodic=periodic)
+    P3 = (1.0 / 3.0) * U + (2.0 / 3.0) * U2
+    return pp_stage(P3, (2.0 / 3.0) * dt, U2, dx, counters, periodic=periodic)
 
 
 def weno7_solve(nx: int, t_end: float = WC_T_END, cfl: float = 0.4,
-                datum: str = "blast") -> Dict:
-    """Run the WENO7 reference; ``datum='sod'`` for Sod's shock tube."""
+                datum: str = "blast", positivity_limiter: bool = True) -> Dict:
+    """Run the WENO7 reference; ``datum='sod'`` for Sod's shock tube.
+
+    ``positivity_limiter=False`` restores the pre-repair behaviour that round 6
+    falsified (it is kept only to reproduce / diagnose the divergence; never use
+    it to produce a reference).
+    """
     x = (np.arange(nx, dtype=np.float64) + 0.5) / nx
     if datum == "blast":
         rho = np.full(nx, xc.WC_RHO)
@@ -307,7 +499,9 @@ def weno7_solve(nx: int, t_end: float = WC_T_END, cfl: float = 0.4,
         raise ValueError(datum)
     U = xc._cons(rho, np.zeros(nx), p)  # noqa: SLF001
     dx = 1.0 / nx
-    counters = {"positivity_fallbacks": 0}
+    counters = {"positivity_fallbacks": 0, "pp_limited_stages": 0,
+                "theta_min": 1.0, "pp_failures": 0, "first_order_inadmissible": 0,
+                "diverged_steps": 0}
     mass0 = float(U[0].sum() * dx)
     t = 0.0
     steps = 0
@@ -318,16 +512,33 @@ def weno7_solve(nx: int, t_end: float = WC_T_END, cfl: float = 0.4,
         dt = cfl * dx / float(np.max(np.abs(uu) + c))
         if t + dt > t_end:
             dt = t_end - t
-        k1 = _rhs7(U, dx, counters)
-        U1 = U + dt * k1
-        k2 = _rhs7(U1, dx, counters)
-        U2 = 0.75 * U + 0.25 * (U1 + dt * k2)
-        k3 = _rhs7(U2, dx, counters)
-        U = (1.0 / 3.0) * U + (2.0 / 3.0) * (U2 + dt * k3)
+        if positivity_limiter:
+            Un = rk3_stage(U, dt, dx, counters)
+        else:
+            k1 = tendencies(U, dx, counters)[0]
+            Un = U + dt * k1
+            Un = 0.75 * U + 0.25 * (Un + dt * tendencies(Un, dx, counters)[0])
+            Un = (1.0 / 3.0) * U + (2.0 / 3.0) * (Un + dt * tendencies(Un, dx, counters)[0])
+        U = Un
         t += dt
         steps += 1
-    rho, uu, pp = xc._prim(U)  # noqa: SLF001
+        if not np.all(np.isfinite(U)):
+            counters["diverged_steps"] = steps
+            break
+    with np.errstate(invalid="ignore", divide="ignore"):
+        rho, uu, pp = xc._prim(U)  # noqa: SLF001
+    ok = bool(admissible(U).all())
     return {
+        "status": "ok" if ok else "diverged",
+        "admissible_final": ok,
+        "positivity_limiter": bool(positivity_limiter),
+        "pp_limited_stages": counters["pp_limited_stages"],
+        "theta_min": counters["theta_min"],
+        "pp_failures": counters["pp_failures"],
+        "first_order_inadmissible": counters["first_order_inadmissible"],
+        "diverged_steps": counters["diverged_steps"],
+        "step_status": ("truncated" if (t < t_end and counters["diverged_steps"] == 0)
+                        else ("diverged" if counters["diverged_steps"] else "complete")),
         "method": "fd-weno7-ssprk3-rusanov",
         "datum": datum, "nx": nx, "t_end": t_end, "cfl": cfl,
         "x": x.tolist(), "rho": rho.tolist(), "u": uu.tolist(), "p": pp.tolist(),
@@ -338,6 +549,50 @@ def weno7_solve(nx: int, t_end: float = WC_T_END, cfl: float = 0.4,
         "rho_max": float(rho.max()), "x_at_rho_max": float(x[int(np.argmax(rho))]),
         "p_max": float(pp.max()),
     }
+
+
+def entropy_wave_order(sizes: Sequence[int] = (80, 160, 320, 640, 1280),
+                       amp: float = 0.2, t_end: float = 0.1,
+                       cfl_base: float = 0.4, cfl_exp: float = 1.2,
+                       limiter: bool = True, nx_ref: int = 80) -> Dict:
+    """Observed order on a smooth entropy wave **including the PP limiter**.
+
+    ``rho = 1 + amp sin(2 pi x)``, ``u = p = 1`` is an exact travelling entropy
+    wave, so the spatial order is measurable; the time step is shrunk as
+    ``dx**cfl_exp`` so that SSP-RK3's error stays below the spatial one.
+    Run with ``limiter=False`` for the pre-repair path.  A limiter that fires on
+    smooth data would show up as ``pp_limited_stages > 0`` *and* as a lost order
+    -- criterion S2 of ``PREDECLARATION-r8.md`` is exactly this pair.
+    """
+    errs, diag = [], []
+    for nx in sizes:
+        x = (np.arange(nx) + 0.5) / nx
+        U = xc._cons(1.0 + amp * np.sin(2.0 * np.pi * x),
+                     np.ones(nx), np.ones(nx))  # noqa: SLF001
+        dx = 1.0 / nx
+        cfl = cfl_base * (dx * nx_ref) ** cfl_exp
+        counters = {"positivity_fallbacks": 0, "pp_limited_stages": 0,
+                    "theta_min": 1.0, "pp_failures": 0,
+                    "first_order_inadmissible": 0, "diverged_steps": 0}
+        t = 0.0
+        while t < t_end:
+            _, uu, pp = xc._prim(U)  # noqa: SLF001
+            dt = cfl * dx / float(np.max(np.abs(uu) + np.sqrt(GAMMA * pp / U[0])))
+            if t + dt > t_end:
+                dt = t_end - t
+            U = rk3_stage(U, dt, dx, counters, periodic=True, limiter=limiter)
+            t += dt
+        rho, _, _ = xc._prim(U)  # noqa: SLF001
+        exact = 1.0 + amp * np.sin(2.0 * np.pi * (x - t_end))
+        errs.append(float(np.mean(np.abs(rho - exact))))
+        diag.append({"nx": nx, "pp_limited_stages": counters["pp_limited_stages"],
+                     "theta_min": counters["theta_min"],
+                     "pp_failures": counters["pp_failures"]})
+    orders = [float(-math.log(errs[i] / errs[i - 1]) /
+                    math.log(sizes[i] / sizes[i - 1])) for i in range(1, len(sizes))]
+    return {"sizes": list(sizes), "errors": errs, "orders": orders,
+            "order_finest": orders[-1], "order_overall": orders[-2],
+            "limiter": limiter, "diag": diag}
 
 
 # ----------------------------------------------------------------------
@@ -442,14 +697,22 @@ if __name__ == "__main__":
     ap.add_argument("--datum", default="blast")
     ap.add_argument("--out", type=Path, default=None)
     ap.add_argument("--order-study", action="store_true")
+    ap.add_argument("--entropy-order", action="store_true",
+                    help="limiter-inclusive entropy-wave order (criteria S2)")
+    ap.add_argument("--no-limiter", action="store_true",
+                    help="reproduce the pre-repair (round-6) divergence; diagnostic only")
     ap.add_argument("--json", type=Path, default=None)
     args = ap.parse_args()
 
     report: Dict = {}
     if args.order_study:
         report["reconstruction_order"] = reconstruction_order()
+    if args.entropy_order:
+        report["entropy_wave"] = entropy_wave_order(limiter=not args.no_limiter)
+        report["entropy_wave_pre_repair"] = entropy_wave_order(limiter=False)
     if args.nx:
-        run = weno7_solve(args.nx, cfl=args.cfl, datum=args.datum)
+        run = weno7_solve(args.nx, cfl=args.cfl, datum=args.datum,
+                          positivity_limiter=not args.no_limiter)
         report["run"] = {k: v for k, v in run.items() if k not in ("x", "rho", "u", "p")}
         if args.out:
             report["stored"] = store(run, args.out)

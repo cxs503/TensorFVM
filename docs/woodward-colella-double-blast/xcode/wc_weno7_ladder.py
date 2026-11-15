@@ -57,16 +57,23 @@ def run_rung(nx: int, data_dir: Path, overwrite: bool = False) -> dict:
         "method": r["method"], "cfl": r["cfl"], "t_end": r["t_end"],
         "steps": int(r["steps"]), "seconds": float(r["seconds"]),
         "positivity_fallbacks": int(r["positivity_fallbacks"]),
+        "positivity_limiter": bool(r.get("positivity_limiter", True)),
+        "pp_limited_stages": int(r.get("pp_limited_stages", 0)),
+        "theta_min": float(r.get("theta_min", 1.0)),
+        "pp_failures": int(r.get("pp_failures", 0)),
+        "first_order_inadmissible": int(r.get("first_order_inadmissible", 0)),
+        "admissible_final": bool(r.get("admissible_final", True)),
+        "step_status": str(r.get("step_status", "complete")),
         "mass": float(r["mass"]), "mass_drift": float(r["mass_drift"]),
         "rho_max": float(r["rho_max"]), "x_at_rho_max": float(r["x_at_rho_max"]),
         "p_max": float(r["p_max"]),
         "wall_seconds": round(time.time() - t0, 2),
         "finite": bool(np.all(np.isfinite(r["rho"]))),
     }
-    if not out["finite"]:
+    if not out["finite"] or out["step_status"] != "complete" or not out["admissible_final"]:
         # A diverged rung must never become a reference: record it as such and store no
         # profile, so that downstream loaders report ``not measured`` instead of NaN.
-        out["status"] = "diverged"
+        out["status"] = ("diverged" if not out["finite"] else "truncated")
         metr.write_text(json.dumps(out, indent=1) + "\n")
         if prof.exists():
             prof.unlink()

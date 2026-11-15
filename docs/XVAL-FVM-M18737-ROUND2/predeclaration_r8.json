@@ -1,0 +1,46 @@
+{
+ "anchor": "XVAL-FVM-M18737-ROUND2",
+ "round": 8,
+ "frozen_utc": "2026-11-15T00:00:00Z",
+ "frozen_before_measurement": true,
+ "subject": "repaired WENO7 probe (positivity-preserving flux limiter) used as a same-family higher-order reference",
+ "repair": {
+  "diagnosis": "first inadmissible state occurs in SSP-RK stage 1 (p<0 one cell), i.e. the face-state positivity guard never sees a cell average",
+  "mechanism": "flux-level Zhang-Shu-style global-theta limiting of the WENO7 flux toward the first-order LLF flux; conservative (fluxes telescope) and terminating (theta=0 is the admissible CFL<=1/2 first-order step)",
+  "rejected_variants": [
+   "state (theta) blending: not conservative (measured relative mass drift 5.5e-5 at nx=200)",
+   "whole-step dt halving retry: conservative, but stalls (dt fell to 9.1e-13 of nominal and the step was truncated at t<t_end) because the violation is spatial"
+  ]
+ },
+ "rungs": [
+  400,
+  800,
+  1600,
+  3200
+ ],
+ "matched_weno5_rungs": [
+  400,
+  800,
+  1600,
+  3200
+ ],
+ "window": [
+  0.4,
+  1.0
+ ],
+ "criteria": {
+  "S1_robustness": "every rung step_status=='complete', admissible_final true, pp_failures==0, first_order_inadmissible==0, |mass_drift| <= 1e-12",
+  "S2_accuracy_preserved": "entropy-wave observed order (limiter on) >= 5.0 at sizes [80,160,320,640,1280]; and the limiter is inert there (pp_limited_stages==0, theta_min==1.0)",
+  "S3_peak_agreement": "|peak_weno7(nx) - peak_weno5(nx)| / peak_weno5(nx) <= 1.0 % for nx >= 800",
+  "S4_cross_order_shrinks": "L1_window(rho7(nx) - rho5(nx)) observed order over 800->1600->3200 >= 0.5 and value at 3200 <= 1.0 %",
+  "S5_attribution": "D7(nx)=L1_window(rho7(nx)-rho5@12800) <= D5(nx)=L1_window(rho5(nx)-rho5@12800) for every nx >= 800",
+  "S6_verdict_discipline": "certified-<1 % status is NOT advanced in this round unless S1-S5 all PASS and the WENO7 self-convergence point estimate eps_ref7(3200) < 0.5 %; otherwise it stays False and the round reports WHITHHELD"
+ },
+ "declared_limitation": "WENO7 shares the time integrator (SSP-RK3) and interface flux (Rusanov) with the WENO5 reference: it probes reconstruction order, not code independence",
+ "negative_control": "pre-repair code path (positivity_limiter=False) at the rungs that diverged in round 6",
+ "supersedes_code_sha256": {
+  "wc_weno7.py": "4e93f4fb43c973ac97990445235c229864566970aa3a39f8b1d2c6862ac832b7",
+  "wc_weno7_ladder.py": "3360f3bafc15a95d9c8c085a46661ee34b130c1e865000acc73737d8e3fc4ede"
+ },
+ "supersedes_note": "round-6 froze the hashes of wc_weno7.py / wc_weno7_ladder.py; this round-8 predeclaration supersedes them on purpose (see `repair`). The round-6 record itself is left byte-identical -- its own freeze forbids further amendments."
+}
