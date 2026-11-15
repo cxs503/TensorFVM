@@ -77,6 +77,7 @@ from .dam_break import (
     STOKER_WET,
     _level_crossing,
     _local_extrema,
+    local_extrema_details,
     _relative,
     data_driven_plateau,
     fan_front_estimate,
@@ -251,6 +252,8 @@ def grade_profile(case: DamBreakCase, profile: dict, t: float) -> dict:
                      if mass_ex > 0.0 else float("nan")),
         "depth_linf": float(np.abs(h - h_ex).max() / case.h0),
         "local_extrema": _local_extrema(h, EXTREMUM_FRACTION * case.h0),
+        "local_extrema_details": local_extrema_details(
+            h, EXTREMUM_FRACTION * case.h0, x=s),
         "h_max_over_h0": float(h.max() / case.h0),
         "h_min": float(h.min()),
         "velocity_linf": float(np.abs(profile["u_n"][keep] - u_ex).max()
