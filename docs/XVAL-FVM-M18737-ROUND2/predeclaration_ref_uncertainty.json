@@ -1,0 +1,62 @@
+{
+  "revision": 2,
+  "revision_log": [
+    {
+      "revision": 1,
+      "nx_ref_needed_for_bar": 66560.28419442642,
+      "defect": "anchored the U_ref(nx=25600) extrapolation at nx=12800 (off-by-one rung): the value was 2x too small"
+    },
+    {
+      "revision": 2,
+      "note": "anchor corrected to nx=25600 before any evidence for P5 existed (WENO5@25600 job cj3556 still queued); P1/P2 predictions untouched"
+    }
+  ],
+  "selfcert_ladder": [
+    {
+      "coarse_nx": 1600,
+      "fine_nx": 3200,
+      "l1_percent": 1.8068425270612034,
+      "peak_percent": 0.5032029082828643,
+      "mass_percent": 0.0028898233479867502,
+      "pair_order": 0.9192696448202137,
+      "u_ref_percent": 2.027522849146825
+    },
+    {
+      "coarse_nx": 3200,
+      "fine_nx": 6400,
+      "l1_percent": 0.9554161247016296,
+      "peak_percent": 0.26205794098918506,
+      "mass_percent": 0.001246180067909149,
+      "pair_order": 0.8132575966174322,
+      "u_ref_percent": 1.2618173586784869
+    },
+    {
+      "coarse_nx": 6400,
+      "fine_nx": 12800,
+      "l1_percent": 0.5437229141389293,
+      "peak_percent": 0.023021571035996842,
+      "mass_percent": 0.0005090225294983794
+    }
+  ],
+  "order_finest_pair": 0.8132575966174322,
+  "predicted_l1_12800_vs_25600_percent": 0.3094302050345385,
+  "predicted_band_percent": [
+    0.23207265377590386,
+    0.38678775629317314
+  ],
+  "u_ref_percent_at_12800": 0.7180944445395576,
+  "u_ref_percent_at_25600": 0.4086642395050191,
+  "graded": {
+    "nx": 6400,
+    "l1_percent": 0.8930772870380906,
+    "ref_nx": 12800
+  },
+  "bar_percent": 1.0,
+  "allowance_percent": 0.10692271296190936,
+  "nx_ref_needed_for_bar": 133120.56838885284,
+  "order_band": [
+    0.4,
+    1.4
+  ],
+  "pred_band": 0.25
+}
