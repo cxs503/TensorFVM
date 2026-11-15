@@ -67,8 +67,14 @@ from .periodic_hill_round9 import (
     compare_profile,
     horizontal_profile,
     stationarity_report,
-    time_averaged_reattachment,
+    time_averaged_reattachment,  # noqa: F401  (round-9 operator, superseded below)
 )
+from .wall_shear_bubbles import separation_reattachment
+
+#: Admissibility window of round 5, kept as a *reporting* filter: a measured
+#: reattachment outside it now reports the number with status ``out_of_window``
+#: instead of ``nan`` (round 17).
+_REATTACHMENT_WINDOW = (1.9, 7.1)
 
 __all__ = [
     "CLOSURES",
@@ -356,7 +362,10 @@ def run_time_averaged_case(tag, closure="sst", *, nx=96, ny=48, steps=20000,
     mean_tau_b, mean_tau_t = stats.mean_wall_shear()
     x_over_h = solver.mesh.xc[0] / config.height_m
 
-    rea = time_averaged_reattachment(mean_tau_b, x_over_h)
+    # round 17: certified operator -- detects the falling (separation) crossing
+    # and keeps a measured reattachment that falls outside the round-5 window
+    # instead of reporting NaN (see wall_shear_bubbles module docstring).
+    rea = separation_reattachment(mean_tau_b, x_over_h, window=_REATTACHMENT_WINDOW)
     hp = horizontal_profile(mean_u, solver.mesh.yc, x_over_h, 0.5, config.height_m)
     cmp = compare_profile(hp["x_over_h"], hp["u"], bulk_velocity=config.bulk_velocity)
 
@@ -382,8 +391,9 @@ def run_time_averaged_case(tag, closure="sst", *, nx=96, ny=48, steps=20000,
         if block_count[k] == 0:
             block_xr.append(None)
             continue
-        block_xr.append(time_averaged_reattachment(
-            block_tau[k] / block_count[k], x_over_h)["x_r_over_H"])
+        block_xr.append(separation_reattachment(
+            block_tau[k] / block_count[k], x_over_h,
+            window=_REATTACHMENT_WINDOW)["x_r_over_H"])
     finite_blocks = [v for v in block_xr if v is not None and np.isfinite(v)]
     block_spread = (float(max(finite_blocks) - min(finite_blocks))
                     / abs(float(np.mean(finite_blocks)))

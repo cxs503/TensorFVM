@@ -572,3 +572,50 @@
   （WENO5 本体）对照未做。重跑：`wc_ladder.py --plan 6400:hllc,12800:hllc --outdir runs/wc-refine`，
   工件回填 `docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx<6400|12800>_hllc.npz` 后
   重跑 `refinement_figures.py` + `refinement_report.py` 即自动改判，无需改代码。
+
+## 4h. 追加欠账（append-only，2026-11-15）
+### D19 CASE-FVM-PERIODIC-HILLS 第十七回合（m21402, selfstart）—— 再附长度的**度量算子**自身有缺陷：UNDEFINED 回到实测，锚点仍 OPEN(honest FAIL)
+- 起因: `ROUND16.md` 把 SA-96x48 与 SST-patankar 两档的 `x_r/H` 记为 UNDEFINED（是 WITHHELD），
+  并建议做网格收敛阶梯去「看 UNDEFINED 会不会随加密消失」。
+- 只读审计发现（无新算力）: `r16_patankar_96x48.json` 里 `time_averaged.crossings = [7.6816]`
+  而同一 artefact 的 `x_r_over_H = null` —— **交点被记录过，数值被丢掉**。
+  根因是 round-9 `zero_crossings_periodic` 的两个性质：
+  ① 只识别 `tau<0 -> tau>=0`（升交点=再附），**`+ -> -`（分离）从不识别**，
+     所以返回的 `separation` 只是「1.9 以下的升交点」，一条气泡/周期时必然 NaN；
+  ② 硬窗 `[1.9, 7.1]` 之外的实测交点直接返回 NaN，与「没有交点」不可区分。
+  该算子被 `periodic_hill_round11.py` 的时均与分块打分使用 ⇒ 缺陷进入已发布数字。
+- 交付: 新算子 `src/tensorfvm/verification/wall_shear_bubbles.py`
+  （`signed_crossings` 有向交点/亚网格插值、`bubble_intervals` 气泡配对+接缝展开+逆向面积、
+  `separation_reattachment` 主气泡按 `∫|tau|` 取最大、窗口只作**报告过滤**
+  `status="out_of_window"` 且保留数值、退化输入 `all_reversed`/`no_recirculation`/`not_finite`、
+  保留 legacy 的 `crossings`/`sign_changes` 键义以免下游静默重解释、`tanh_shear_profile` 认证剖面）
+  + 生产路径 `periodic_hill_round11.py` 改用它（`_REATTACHMENT_WINDOW=(1.9,7.1)` 保留为过滤器）
+  + `tests/test_wall_shear_bubbles.py` 21 测全绿（解析零点 1.4e-7=0.001·dx²、逆向面积 vs 独立求积 6.9e-11、
+  窗内与 legacy 1e-12 一致、**负对照**复现 legacy 对同一剖面返回 NaN、跨缝 8.2→9.3 长度 1.1、双气泡主选、
+  退化输入、3 档存盘 npz 集成）
+  + `scripts/round17_{rescore,report,measure}.py` + `docs/case-periodic-hills/{ROUND17.md,round17_rescore.json,fig_round17_shear_profiles.png,fig_round17_xr_comparison.png}`。
+- 关键数字（参考值取权威口径 `periodic_hill_reference.X_R_OVER_H=5.41`，非 5.34）:
+  重打分三档存盘剖面 —— SA 7.651（legacy NaN，+41.4%）、SST-r11 2.046（+62.2%）、SST-r12 3.144（+41.9%）；
+  从交点列表恢复 —— patankar 7.682（legacy NaN，+42.0%）、newton2 3.767（+30.4%）。
+  `x_s/H` 在**全部三档存盘剖面** legacy 都是 NaN（结构性不可测），新算子给 0.397/0.641/0.480；
+  Re=2800 的 `x_s/H` 基准在权威口径里是 **WITHHELD**，故只报观测不判误差。
+- 两条结论性改动:
+  ① **round-16 的「网格阶梯看 UNDEFINED 是否消失」前提被否证** —— null 是报告窗造的，
+     7.65/7.68 一直在账上；阶梯仍是真欠账，但问题改述为「+42% 是否随 h 下降」。
+  ② **模型类结论翻转**：rounds 11–15 的「SST 在 Re=2800 过扩散」是在错误 sink 线性化
+     （`S_P=2βω`，无补偿项 ⇒ ν_t 高 2 倍）下测的；模型一致 Patankar 系数下 ν_t 由 202→49、
+     气泡由 3.77→7.68，误差从 −30% 翻成 +42% ⇒ 正确表述是「2-D URANS+SST 在分离剪切层
+     **混合不足**（气泡过长）」，round-11 的模型类结论撤回。
+- artefact 契约缺陷（已记）: `r16_*.json` 只存升交点列表、未存 `mean_tau_b`，patankar 档 `x_s/H`
+  事后不可恢复；`round17_measure.py` 用 `save_fields=True` 保留剖面（作业 cj3409）。
+- 验收判定: **FAIL（honest）**，锚点保持 OPEN。本轮增量是把 WITHHELD 变成可测的 REJECTED，
+  不是把 FAIL 翻成 PASS；两个 <3% 项都是算子自身的离散恒等式，不代表物理精度。
+- 未完成（明示，交下一单）: ① `cj3409`（`scripts/round17_measure.py`，96x48/20000 步、`save_fields=True`
+  保留时均剪切剖面，用于补 patankar 档的 `x_s/H` 与表 3）本单收尾时仍在**排队**（递交 05:11，队列在飞 53 个作业），
+  未出数，故报告表 3 与 platform report `id 19343` 均未引用其数值；出数后只需重跑
+  `scripts/round17_report.py` 即自动把表 3 换成实测（脚本按 `round17_measure_96x48.json` 存在与否分支）。
+  ② `cj3413`（全 periodic_hill 相关测试，本地被 120 s 单命令闸门拦下、必须上队列）同样在排队；
+  本单本地已实测的关键测试为 `tests/test_wall_shear_bubbles.py` 21 passed、
+  连同 round9 的 20 + round11 的 13 共 **54 passed**（`PYTHONPATH=<本工作树>/src`）。
+- 给下次: ① 96x48→144x72→192x96 只跑 patankar 测「+42% 是否随 h 降」；② 单独追 `x_s/H` 偏后
+  （0.40–0.64，但无权威基准，先补基准再判）；③ 给 round-11 写出端加「必存时均剪切」断言。
