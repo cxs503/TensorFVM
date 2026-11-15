@@ -1,0 +1,194 @@
+{
+ "anchor": "XVAL-FVM-M18737-ROUND2",
+ "round": 10,
+ "jobs": {
+  "rung": "cj4143",
+  "control": "cj4141"
+ },
+ "provenance": {
+  "tag": "nx25600_weno5",
+  "profile_present": false,
+  "metrics_present": false,
+  "frozen_cfl": 0.4,
+  "E0a": "not_measured"
+ },
+ "reproducibility": {
+  "control_nx": 6400,
+  "rerun_present": false,
+  "E0b": "not_measured"
+ },
+ "control": {
+  "status": "not_measured",
+  "nx": 6400,
+  "cfl_baseline": 0.4,
+  "cfl_control": 0.8,
+  "eps_ref_percent": 0.7181,
+  "eps_peak_percent": 0.0022,
+  "bars": {
+   "l1_percent": 0.0718,
+   "peak_percent": 0.0022
+  },
+  "sources": {
+   "baseline": "/root/tp-agent/work/m22462/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx6400_weno5.npz",
+   "control": null
+  },
+  "E1": "not_measured"
+ },
+ "promotion": {
+  "tagged_present": false,
+  "already_present": false,
+  "status": "not_measured"
+ },
+ "reference": {
+  "reference_rungs_present": [
+   1600,
+   3200,
+   6400,
+   12800
+  ],
+  "extended_present": false,
+  "selfcert_pairs": [
+   {
+    "coarse_nx": 1600,
+    "fine_nx": 3200,
+    "l1_percent": 1.8068425270612034,
+    "peak_percent": 0.5032029082828643,
+    "mass_percent": 0.0028898233479867502,
+    "order": 0.9192696448202137,
+    "order_source": "measured_pair",
+    "u_ref_percent": 2.027522849146825
+   },
+   {
+    "coarse_nx": 3200,
+    "fine_nx": 6400,
+    "l1_percent": 0.9554161247016296,
+    "peak_percent": 0.26205794098918506,
+    "mass_percent": 0.001246180067909149,
+    "order": 0.8132575966174322,
+    "order_source": "measured_pair",
+    "u_ref_percent": 1.2618173586784869
+   },
+   {
+    "coarse_nx": 6400,
+    "fine_nx": 12800,
+    "l1_percent": 0.5437229141389293,
+    "peak_percent": 0.023021571035996842,
+    "mass_percent": 0.0005090225294983794,
+    "order": 0.8132575966174322,
+    "order_source": "measured_triple",
+    "u_ref_percent": 0.7180944445395576,
+    "order_scale": {
+     "coarse_nx": 3200,
+     "fine_nx": 6400,
+     "note": "order measured across the two finest consecutive differences"
+    }
+   }
+  ],
+  "defects": [
+   {
+    "coarse_nx": 1600,
+    "fine_nx": 3200,
+    "max_abs_D": 0.002086920898378841,
+    "w_eff_coarse_cells": 172.47312012452716,
+    "rel_net_mass": 2.890939475902432e-05
+   },
+   {
+    "coarse_nx": 3200,
+    "fine_nx": 6400,
+    "max_abs_D": 0.0011269515470658312,
+    "w_eff_coarse_cells": 302.87468262865775,
+    "rel_net_mass": 1.246907839654969e-05,
+    "order_vs_previous_pair": 0.88895042971705
+   },
+   {
+    "coarse_nx": 6400,
+    "fine_nx": 12800,
+    "max_abs_D": 0.0007197911559912067,
+    "w_eff_coarse_cells": 478.4361180164746,
+    "rel_net_mass": 5.091935034999136e-06,
+    "order_vs_previous_pair": 0.6467752073944675
+   }
+  ],
+  "extended_uncertainty": {
+   "ref_nx": 25600,
+   "family": "weno5",
+   "measurable": false,
+   "l1_percent": null,
+   "order": null,
+   "order_source": "none",
+   "u_ref_percent": null,
+   "self_certified": false,
+   "note": "no paired member of the same family present; uncertainty unknown (reference rungs available: [1600, 3200, 6400, 12800])"
+  },
+  "previous_uncertainty": {
+   "ref_nx": 12800,
+   "family": "weno5",
+   "measurable": true,
+   "l1_percent": 0.5437229141389293,
+   "order": 0.8132575966174322,
+   "order_source": "measured_triple",
+   "u_ref_percent": 0.7180944445395576,
+   "self_certified": true
+  },
+  "instrument": {
+   "status": "not_measured",
+   "nx": 6400,
+   "cfl_baseline": 0.4,
+   "cfl_control": 0.8,
+   "eps_ref_percent": 0.7181,
+   "eps_peak_percent": 0.0022,
+   "bars": {
+    "l1_percent": 0.0718,
+    "peak_percent": 0.0022
+   },
+   "sources": {
+    "baseline": "/root/tp-agent/work/m22462/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx6400_weno5.npz",
+    "control": null
+   },
+   "E1": "not_measured"
+  },
+  "E2": {
+   "verdict": "not_measured"
+  },
+  "E3": {
+   "quantity": "eps_ref(L1 field) at nx=25600",
+   "measured": null,
+   "bar": 0.5,
+   "previous": 0.7181,
+   "verdict": "not_measured"
+  }
+ },
+ "regrade": {
+  "E4": {
+   "verdict": "not_measured"
+  },
+  "E5": {
+   "verdict": "not_measured"
+  },
+  "rows": [],
+  "rows_prev": []
+ },
+ "cfl08_reference": {
+  "steps": null,
+  "seconds_solver": null,
+  "cfl": null
+ },
+ "predicted_seconds_cfl04": null,
+ "cfl08_seconds_per_step": null,
+ "verdicts": {
+  "E0a": "not_measured",
+  "E0b": "not_measured",
+  "E1": "not_measured",
+  "E2": "not_measured",
+  "E3": "not_measured",
+  "E4": "not_measured",
+  "E5": "not_measured"
+ },
+ "figures": [
+  {
+   "name": "fig_r10_reference_frozen.png",
+   "path": "/root/tp-agent/work/m22462/docs/XVAL-FVM-M18737-ROUND2/figures/fig_r10_reference_frozen.png",
+   "caption": "\u51bb\u7ed3\u4eea\u5668\uff08CFL 0.4\uff09\u4e94\u7ea7\u53c2\u8003\u81ea\u6536\u655b\u3001\u5dee\u5206\u5e45\u503c h^1 \u68c0\u9a8c\u3001\u88ab\u5b9a\u7ea7\u65cf\u5bf9 12800/25600 \u4e24\u53c2\u8003"
+  }
+ ]
+}
