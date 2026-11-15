@@ -1,0 +1,84 @@
+{
+ "instrument": "xcode/wc_weno7.py",
+ "datum": "blast",
+ "cfl": 0.4,
+ "converged_peak_reference": 6.4595,
+ "reference_converged_peak_source": "WENO5@12800 stored profile (peak_density.got)",
+ "weno7_rungs": [
+  {
+   "nx": 200,
+   "finite": false,
+   "steps": 575,
+   "seconds": 2.0,
+   "peak": null,
+   "x_peak": null,
+   "positivity_fallbacks": 39,
+   "mass": null,
+   "mass_drift": null
+  },
+  {
+   "nx": 400,
+   "finite": true,
+   "steps": 1574,
+   "seconds": 6.44,
+   "peak": 6.147197583625687,
+   "x_peak": 0.78125,
+   "positivity_fallbacks": 65,
+   "mass": 0.999999999999933,
+   "mass_drift": 6.694644838489694e-14,
+   "peak_deficit_percent": 4.83477693899394
+  },
+  {
+   "nx": 600,
+   "finite": true,
+   "steps": 2376,
+   "seconds": 11.4,
+   "peak": 6.643092821316764,
+   "x_peak": 0.7808333333333334,
+   "positivity_fallbacks": 68,
+   "mass": 0.999999999999902,
+   "mass_drift": 9.803269307440132e-14,
+   "peak_deficit_percent": -2.842214123643686
+  },
+  {
+   "nx": 800,
+   "finite": false,
+   "steps": 2415,
+   "seconds": 12.41,
+   "peak": null,
+   "x_peak": null,
+   "positivity_fallbacks": 30,
+   "mass": null,
+   "mass_drift": null
+  },
+  {
+   "nx": 1600,
+   "finite": true,
+   "steps": 6395,
+   "seconds": 48.12,
+   "peak": 6.711441344965952,
+   "x_peak": 0.7721875,
+   "positivity_fallbacks": 55,
+   "mass": 0.9999999999997453,
+   "mass_drift": 2.546851618490109e-13,
+   "peak_deficit_percent": -3.9003227024684777
+  }
+ ],
+ "weno5_same_resolution": {
+  "400": {
+   "peak": 5.6886267822368115,
+   "positivity_fallbacks": 43,
+   "steps": 1563,
+   "seconds": 5.15,
+   "peak_deficit_percent": 11.93394562680066
+  },
+  "1600": {
+   "peak": 6.472011222880893,
+   "positivity_fallbacks": 46,
+   "steps": 6375,
+   "seconds": 32.71,
+   "peak_deficit_percent": -0.1936871720859563
+  }
+ },
+ "note": "local single-core smoke sweep; not a ladder rung set (only nx=1600 is nested)"
+}

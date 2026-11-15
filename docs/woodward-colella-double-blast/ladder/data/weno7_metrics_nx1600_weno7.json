@@ -1,0 +1,17 @@
+{
+ "nx": 1600,
+ "finite": true,
+ "steps": 6395,
+ "seconds": 48.12,
+ "peak": 6.711441344965952,
+ "x_peak": 0.7721875,
+ "positivity_fallbacks": 55,
+ "mass": 0.9999999999997453,
+ "mass_drift": 2.546851618490109e-13,
+ "family": "weno7",
+ "method": "fd-weno7-ssprk3-rusanov",
+ "cfl": 0.4,
+ "t_end": 0.038,
+ "wall_seconds": 48.13,
+ "status": "ok"
+}
