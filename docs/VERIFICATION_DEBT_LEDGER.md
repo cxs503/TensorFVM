@@ -726,3 +726,20 @@
 - 给下次：① 取回 cj3849 后把 `informative` 变为 True，重算 GCI 带（预期 p 仍 ≈2，带收窄）；
   ② 若要真正裁决，需异族代码（CLAWPACK/FEniCS）而不是同族换阶；③ `extremum_floor` 可直接复用于
   Re=400 锚点与任何「表 + 极值判据」的算例（地板 > 容差即该判据不可判级）。
+
+## 4f. 追加欠账（append-only，D16 长时程窗口推进）
+
+### D16-b Thacker 盆 2 周期窗口：度量协议 + 动量注入归因（honest FAIL，未修）
+- 缺口来源：D16 首项"长时程动量注入"只有一句现象（18.2 m/s、步长塌缩），无度量协议：
+  不知差多少、非物理速度在哪里、压制速度能否救精度。
+- 交付：`src/tensorfvm/verification/thacker_longrun.py`（2 周期窗口度量 + 归因 + 候选疗法排除，
+  含精确速度包络 `|beta|s`、峰值单元状态、精确岸线外水量、薄水膜裁剪变体）、
+  `tests/test_thacker_longrun.py`（4 测全绿）、`docs/case-fvm-thacker-2period/{REPORT.md,metrics.json,fig_thacker_2period.png}`。
+- 关键数字（n=40，2 周期）：中心水深 L2 **34.22 %**（容差 3 %）、`max|u|` **71.16 m/s** 于
+  $h/H=1.2\times10^{-3}$、$r=1.062$ m 的薄膜（精确岸线 0.760 m，该点精确速度 1.6e-15）；
+  精确岸线外水量 **11.77 %** 而体积漂移仅 1.7e-14。
+- 已排除的疗法：薄水膜动量清零（thin=1e-2/3e-2）把 `max|u|` 压到 24.2/13.7，但中心 L2 仅降到
+  33.5/30.6 %、岸线外水量 11.4/10.3 % ⇒ **化妆非治疗**，不写入求解器默认路径。
+- 未做（not_run）：n=80/160 的 2 周期（本机门禁拦，需 `run_compute`）；逐项动量账分解未落代码。
+- 建议总账条目：`XVAL-FVM-THACKER-2PERIOD-MOMENTUM`，验收＝中心水深 L2 ≤3 % ∧ 全程
+  `max|u|` ≤1.2×精确包络 ∧ 岸线外水量 ≤0.5 % ∧ 体积漂移 ≤1e-9。
