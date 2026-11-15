@@ -216,7 +216,23 @@ def load_profiles(data_dir: Path, artifacts: Path) -> dict:
 
 
 def family(tag: str) -> str:
-    return "weno5" if "weno5" in tag else "fvm"
+    """Discretisation family of a stored profile tag — *parsed*, never guessed.
+
+    ``fvm`` is the production MUSCL-Hancock + HLLC scheme; the WENO families keep
+    their own name.  A substring default (``"weno5" in tag else "fvm"``) used to
+    fold the committed WENO7 profile into the finite-volume rows, which is the
+    same defect class that once let WENO7 replace the nx = 1600 HLLC point in
+    ``wc_asymptotic_analysis.py`` (see ⑤.7 of the asymptotic report).
+    """
+    parts = tag.split("_")
+    if len(parts) < 2 or not parts[0].startswith("nx"):
+        raise ValueError(f"unparsable profile tag {tag!r}")
+    scheme = parts[1]
+    if scheme == "hllc":
+        return "fvm"
+    if scheme in ("weno5", "weno7"):
+        return scheme
+    raise ValueError(f"unknown scheme {scheme!r} in profile tag {tag!r}")
 
 
 def size_of(tag: str) -> int:

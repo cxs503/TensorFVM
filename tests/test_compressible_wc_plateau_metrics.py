@@ -154,8 +154,17 @@ def test_stored_metrics_match_recomputation():
             stored["l1_relative"]["percent"], rel=1e-9), tag
 
 
-def test_analysis_runs_and_reports_well_posed_metrics():
-    res = wpc.analyse(DATA, DOCS / "artifacts", outdir=DATA)
+def test_analysis_runs_and_reports_well_posed_metrics(tmp_path):
+    """The analysis runs, and the committed artifact is what it produces.
+
+    ``outdir`` deliberately points at ``tmp_path``: this test used to re-run the
+    analysis *into the committed data directory*, so a stale artifact (e.g. one
+    written before the nx = 6400/12800 profiles landed) could never fail the
+    gate - the test simply overwrote it.  Writing elsewhere and comparing makes
+    the artifact drift visible.
+    """
+    committed = json.loads((DATA / "plateau_convergence.json").read_text())
+    res = wpc.analyse(DATA, DOCS / "artifacts", outdir=tmp_path)
     assert res["rows"], "no profiles analysed"
     for tag, row in res["rows"].items():
         assert 0.0 <= row["plateau_mean"]["rel_error_percent"] < 300.0, tag
@@ -164,5 +173,16 @@ def test_analysis_runs_and_reports_well_posed_metrics():
     diag = res["diagnosis"]["window_min_is_edge_degenerate"]
     assert diag["ref"] is True
     assert diag["all_solutions"] is True
+    # committed json == fresh run: same profiles, same verdict, same numbers
+    assert sorted(committed["rows"]) == sorted(res["rows"])
+    assert (committed["verdict"]["finest_fvm"]["tag"]
+            == res["verdict"]["finest_fvm"]["tag"])
+    for key, val in res["verdict"]["finest_fvm"].items():
+        if isinstance(val, float):
+            assert committed["verdict"]["finest_fvm"][key] == pytest.approx(val, rel=1e-9)
+    for fam, entry in res["families"].items():
+        assert committed["families"][fam]["levels"] == entry["levels"], fam
     tables = (DATA / "plateau_tables.md").read_text()
     assert "window_min" in tables and "plateau_mean" in tables
+    # the committed markdown must match the freshly rendered one, too
+    assert (DATA / "plateau_tables.md").read_text() == (tmp_path / "plateau_tables.md").read_text()

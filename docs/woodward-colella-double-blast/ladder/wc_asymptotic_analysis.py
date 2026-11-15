@@ -63,27 +63,78 @@ COARSE_TRIPLET = (800, 400, 200)
 
 
 # --------------------------------------------------------------------------- io
+SCHEMES = ("hllc", "weno5", "weno7")
+
+
+def parse_profile_tag(tag: str) -> tuple[int, str, str | None]:
+    """``nx<N>_<scheme>[_<variant>]`` -> ``(nx, scheme, variant)``.
+
+    The scheme must be *parsed*, never guessed by substring search: the ladder
+    directory also accumulates other families (``nx1600_weno7``) and other
+    *variants* of the same family (``nx200_hllc_limiterminmod_cfl0.2``, i.e. a
+    different limiter and CFL, not a refinement level).  Both must stay out of a
+    refinement ladder, but for different reasons, so both are reported.
+
+    A tag whose scheme token is unknown raises: silently defaulting to a family
+    would let a mis-named file enter a published GCI study (that is how
+    ``nx1600_weno7`` once replaced the nx = 1600 HLLC profile).
+    """
+    parts = tag.split("_")
+    if len(parts) < 2 or not parts[0].startswith("nx"):
+        raise ValueError(f"unparsable profile tag {tag!r}")
+    nx = int(parts[0][2:])
+    scheme = parts[1]
+    if scheme not in SCHEMES:
+        raise ValueError(f"unknown scheme {scheme!r} in profile tag {tag!r}")
+    variant = "_".join(parts[2:]) or None
+    return nx, scheme, variant
+
+
 def load_profiles() -> dict[str, dict]:
-    """Every stored density profile, keyed by tag, normalised to ``x, rho``."""
+    """Every stored density profile, keyed by tag, normalised to ``x, rho``.
+
+    Each entry carries ``family`` (parsed scheme) and ``variant``: the ladder used
+    by every study below is the set with ``variant is None`` (see
+    :func:`ladder_tags`), so a stray variant or a foreign family can never enter
+    a refinement study through dictionary ordering.
+    """
     out: dict[str, dict] = {}
     for nx in (400, 800):
         p = ARTIFACTS / f"wc_blast_profile_nx{nx}.npz"
         if p.exists():
             d = np.load(p)
             out[f"nx{nx}_hllc"] = {"x": d["x_got"], "rho": d["rho_got"], "nx": nx,
-                                   "family": "hllc", "source": str(p.relative_to(HERE.parent))}
+                                   "family": "hllc", "variant": None,
+                                   "source": str(p.relative_to(HERE.parent))}
     for p in sorted(DATA.glob("ladder_profile_*.npz")):
         tag = p.stem.replace("ladder_profile_", "")
+        nx, family, variant = parse_profile_tag(tag)
         d = np.load(p)
-        nx = int(tag.split("_")[0].replace("nx", ""))
-        family = "weno5" if "weno5" in tag else "hllc"
         out[tag] = {"x": d["x"], "rho": d["rho"], "nx": nx, "family": family,
-                    "source": str(p.relative_to(HERE.parent))}
+                    "variant": variant, "source": str(p.relative_to(HERE.parent))}
     for tag in out:
         order = np.argsort(out[tag]["x"])
         out[tag]["x"] = np.asarray(out[tag]["x"], float)[order]
         out[tag]["rho"] = np.asarray(out[tag]["rho"], float)[order]
     return out
+
+
+def ladder_tags(profiles: dict, family: str) -> dict[int, str]:
+    """``{nx: tag}`` for the *canonical* profiles of one family (one per grid).
+
+    Variants (``variant is not None``) are excluded: a ladder must vary the mesh
+    alone.  Two canonical profiles claiming the same grid is an error, not
+    something to resolve by iteration order.
+    """
+    tags: dict[int, str] = {}
+    for tag, p in sorted(profiles.items()):
+        if p["family"] != family or p.get("variant") is not None:
+            continue
+        if p["nx"] in tags:
+            raise ValueError(f"family {family!r}: two canonical profiles at nx={p['nx']}: "
+                             f"{tags[p['nx']]!r} and {tag!r}")
+        tags[p["nx"]] = tag
+    return tags
 
 
 def window_mask(x, rho, lo=None, hi=None):
@@ -181,8 +232,12 @@ def study_of(values: dict[int, float], triplet, theory_order: float, tol: float 
 
 def family_analysis(profiles: dict, family: str, ref_cal: dict, ref_raw: dict,
                     theory_order: float) -> dict:
-    """GCI + reference-agreement for one discretisation family."""
-    tags = {p["nx"]: t for t, p in profiles.items() if p["family"] == family}
+    """GCI + reference-agreement for one discretisation family.
+
+    Only the canonical ladder of ``family`` is used (:func:`ladder_tags`); a
+    variant or a foreign family passing through ``profiles`` cannot shift a grid.
+    """
+    tags = ladder_tags(profiles, family)
     missing = [n for n in FINE_TRIPLET if n not in tags]
     out: dict = {"family": family, "theory_order": theory_order,
                  "grids_available": sorted(tags), "missing_grids": missing}
@@ -303,9 +358,8 @@ def family_analysis(profiles: dict, family: str, ref_cal: dict, ref_raw: dict,
 
 def cross_code(profiles: dict) -> dict:
     """WENO5 vs MUSCL/HLLC: distances at each common grid, plus extrapolated-field agreement."""
-    fam = {}
-    for t, p in profiles.items():
-        fam.setdefault(p["family"], {})[p["nx"]] = t
+    fam = {f: ladder_tags(profiles, f) for f in ("hllc", "weno5")}
+    fam = {f: d for f, d in fam.items() if d}
     if "weno5" not in fam or "hllc" not in fam:
         return {"available": False, "reason": "WENO5 ladder profiles not present"}
     out = {"available": True, "per_grid": []}
@@ -359,7 +413,15 @@ def main() -> None:
                       "committed_raw": str(wcr.DEFAULT_REFERENCE),
                       "window": list(wcr.REFERENCE_X),
                       "tolerance_percent": wcr.TOLERANCE_PERCENT},
-        "profiles": {t: {"nx": p["nx"], "family": p["family"], "source": p["source"]}
+        "ladder_rule": {"fine_triplet": list(FINE_TRIPLET),
+                        "coarse_triplet": list(COARSE_TRIPLET),
+                        "canonical_only": True,
+                        "variants_excluded": sorted(
+                            t for t, p in profiles.items() if p.get("variant") is not None),
+                        "families_laddered": sorted(
+                            {p["family"] for p in profiles.values() if p.get("variant") is None})},
+        "profiles": {t: {"nx": p["nx"], "family": p["family"], "variant": p["variant"],
+                         "canonical": p["variant"] is None, "source": p["source"]}
                      for t, p in sorted(profiles.items())},
         "families": {
             "hllc": family_analysis(profiles, "hllc", ref_cal, ref_raw, THEORY_ORDER),
