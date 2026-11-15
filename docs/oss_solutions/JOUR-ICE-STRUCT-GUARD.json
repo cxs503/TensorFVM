@@ -6,12 +6,12 @@
  ],
  "title": "Ice domain physical parameter guardrails — prevent silent extrapolation",
  "repo": "TensorFVM",
- "mission": 22209,
+ "mission": 22280,
  "reference": "ISO 19906:2019 Annex C; Timco & Weeks (2010) Cold Regions Sci. Tech. 60(3):209-229; Riska et al. (1997) VTT Publ. 319; ITTC Ice Committee (2017); Schulson & Duval (2009) Creep and Fracture of Ice",
  "tolerance": null,
  "method": "Three-tier bound validation: hard bounds (physical impossibility → reject), soft bounds (calibration domain → warn), typical range (normal operation → pass). 8 ice parameters covered: thickness, strength, friction, speed, density, elastic modulus, Poisson's ratio, temperature.",
  "method_selection": {
-  "adopted": "Static bound validation with dataclass-based parameter registry, validate/clamp/extrapolation-risk API",
+  "adopted": "Static bound validation with dataclass-based parameter registry, validate/clamp/extrapolation-risk API, CLI entry point (tensorfvm-ice-guard)",
   "rejected": {
    "schema-only validation (Pydantic)": "Catches type errors but not physically impossible values — this was the root cause of the original failure",
    "dynamic bounds (temperature-dependent)": "More accurate but requires additional inputs; deferred to future work",
@@ -19,7 +19,7 @@
   },
   "source": "docs/FVM_ICE_GUARDRAILS/REPORT.md"
  },
- "verdict": "PASS — 40/40 tests pass; specific failure cases (h=50m, σ_c=100 MPa) correctly rejected",
+ "verdict": "PASS — 47/47 tests pass; specific failure cases (h=50m, σ_c=100 MPa) correctly rejected; CLI entry point functional",
  "key_results": {
   "h_50m": {
    "input": {"ice_thickness": 50.0},
@@ -46,20 +46,26 @@
    "is_valid": true,
    "status": "pass"
   },
-  "test_count": 40,
-  "test_pass": 40,
+  "test_count": 47,
+  "test_pass": 47,
   "test_fail": 0
  },
  "artifacts": [
   "src/tensorfvm/ice/__init__.py",
+  "src/tensorfvm/ice/__main__.py",
   "src/tensorfvm/ice/parameters.py",
   "src/tensorfvm/ice/guardrails.py",
   "tests/test_ice_guardrails.py",
   "docs/FVM_ICE_GUARDRAILS/REPORT.md",
   "docs/FVM_ICE_GUARDRAILS/demo_guardrails.py",
-  "artifacts/fvm_ice_guardrails/fig_ice_guardrail_bounds.png",
-  "artifacts/fvm_ice_guardrails/validation_demo.json",
-  "artifacts/fvm_ice_guardrails/failure_case_report.txt"
+  "scripts/generate_ice_guardrail_figures.py",
+  "artifacts/ice_guardrails/demo_results.json",
+  "artifacts/ice_guardrails/failure_case_report.txt",
+  "artifacts/ice_guardrails/parameter_bounds.json",
+  "artifacts/ice_guardrails/fig_ice_guardrail_bounds.png",
+  "artifacts/ice_guardrails/fig_validation_summary.png",
+  "artifacts/ice_guardrails/validation_demo.json"
  ],
+ "entry_point": "tensorfvm-ice-guard = tensorfvm.ice.__main__:main",
  "external_anchor": "ISO 19906:2019; Timco & Weeks (2010); Riska et al. (1997); ITTC Ice Committee (2017)"
 }

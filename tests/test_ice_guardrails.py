@@ -28,14 +28,12 @@ from tensorfvm.ice import (
     ICE_POISSON_RATIO,
     ICE_TEMPERATURE,
     ALL_ICE_PARAMETERS,
-    IceGuardrailResult,
     GuardrailStatus,
     validate_ice_parameters,
     clamp_ice_parameters,
     check_extrapolation_risk,
     get_parameter_report,
 )
-from tensorfvm.ice.parameters import IceParameterBounds
 
 
 # =========================================================================== #
@@ -403,3 +401,82 @@ class TestRegistryCompleteness:
             assert param.bounds.typical_min <= param.bounds.typical_max
             assert param.bounds.soft_min >= param.bounds.hard_min
             assert param.bounds.soft_max <= param.bounds.hard_max
+
+
+# =========================================================================== #
+# CLI entry point tests
+# =========================================================================== #
+
+class TestCLIEntryPoint:
+    """Test the CLI entry point (__main__.py)."""
+
+    def test_cli_demo_mode(self, tmp_path):
+        """Demo mode should generate artifacts."""
+        from tensorfvm.ice.__main__ import main
+        output_dir = tmp_path / "ice_demo"
+        exit_code = main(["--demo", "--output", str(output_dir)])
+        assert exit_code == 0
+        assert (output_dir / "demo_results.json").exists()
+        assert (output_dir / "failure_case_report.txt").exists()
+        assert (output_dir / "parameter_bounds.json").exists()
+
+    def test_cli_validate_impossible_thickness(self, capsys):
+        """CLI should reject impossible thickness."""
+        from tensorfvm.ice.__main__ import main
+        exit_code = main(["--thickness", "50.0", "--json"])
+        assert exit_code == 1
+        captured = capsys.readouterr()
+        import json
+        result = json.loads(captured.out)
+        assert result["is_valid"] is False
+        assert result["status"] == "fail"
+
+    def test_cli_validate_typical_params(self, capsys):
+        """CLI should accept typical parameters."""
+        from tensorfvm.ice.__main__ import main
+        exit_code = main(["--thickness", "1.5", "--strength", "3.0", "--json"])
+        assert exit_code == 0
+        captured = capsys.readouterr()
+        import json
+        result = json.loads(captured.out)
+        assert result["is_valid"] is True
+        assert result["status"] == "pass"
+
+    def test_cli_clamp_mode(self, capsys):
+        """CLI clamp mode should clamp extreme values."""
+        from tensorfvm.ice.__main__ import main
+        exit_code = main(["--thickness", "50.0", "--strength", "100.0", "--clamp", "--json"])
+        assert exit_code == 0
+        captured = capsys.readouterr()
+        import json
+        result = json.loads(captured.out)
+        assert result["clamped_params"]["ice_thickness"] == 10.0
+        assert result["clamped_params"]["ice_strength"] == 30.0
+
+    def test_cli_report_mode(self, capsys):
+        """CLI report mode should generate human-readable report."""
+        from tensorfvm.ice.__main__ import main
+        exit_code = main(["--thickness", "50.0", "--strength", "100.0", "--report"])
+        # Report mode still returns validation exit code (1 for invalid params)
+        assert exit_code == 1
+        captured = capsys.readouterr()
+        assert "OUT OF PHYSICAL BOUNDS" in captured.out
+
+    def test_cli_no_params_error(self, capsys):
+        """CLI should error when no parameters provided."""
+        from tensorfvm.ice.__main__ import main
+        with pytest.raises(SystemExit):
+            main([])
+
+    def test_cli_json_input(self, tmp_path, capsys):
+        """CLI should accept JSON input file."""
+        from tensorfvm.ice.__main__ import main
+        import json
+        input_file = tmp_path / "params.json"
+        with open(input_file, "w") as f:
+            json.dump({"ice_thickness": 1.5, "ice_strength": 3.0}, f)
+        exit_code = main(["--input", str(input_file), "--json"])
+        assert exit_code == 0
+        captured = capsys.readouterr()
+        result = json.loads(captured.out)
+        assert result["is_valid"] is True
