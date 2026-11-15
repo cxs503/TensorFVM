@@ -73,6 +73,7 @@ runuser -u postgres -- psql -d tensorplatform -f docs/CASE-FVM-CAVITY-RE1000/reg
 
 * 未重跑求解器（n = 128 约 1300 s）；本单只重算**度量**，不重算**解**。存档场与 `summary.json`
   的逐点一致性由脚本断言，但它不能替代一次冷启动复现（audit `cj2580` 已做过逐比特复现）。
+* 参考地板未在本单核算：本单只对齐「门口径」；把 `max|Δu|/U` 拆成离散误差 + 参考偏移（并给出无参考口径下的判词）见 `REFERENCE_FLOOR.md`（后续单补）。
 * 时间步（Courant）方向：`dt_study.py` + `runs/dt/` 已给出同网格（n = 128）、同初值、同收敛判据下 3 个 Courant 数的对照，结论与数字见 `UNCERTAINTY.md` §4（图 UQ-2）；区间外（更大 Courant 数）仍无证据，不记 pass。
 * 平台 `tensorbench_results` 未写：本单只在 `tensor_benchmark_cases` 登记判据行，
   不主张"平台级集成"。
