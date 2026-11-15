@@ -1,0 +1,35 @@
+{
+  "cd_mean": {
+    "reference": 1.34,
+    "tolerance_band": 0.07,
+    "tolerance_relative": 0.05223880597014926,
+    "computed": 1.5092636299131243,
+    "passed": false,
+    "relative_error": 0.12631614172621214
+  },
+  "st": {
+    "reference": 0.164,
+    "tolerance_band": 0.005,
+    "tolerance_relative": 0.03048780487804878,
+    "computed": 0.1550825196959207,
+    "passed": false,
+    "relative_error": 0.05437487990292253
+  },
+  "st_fft": {
+    "reference": 0.164,
+    "computed": 0.15512209462196072,
+    "relative_error": 0.054133569378288324,
+    "role": "cross-check"
+  },
+  "cl_amplitude": {
+    "reference": 0.32,
+    "computed": 0.20053728999999998,
+    "relative_error": 0.3733209687500001,
+    "role": "informational (Braza 1986 reports Cl' ~ 0.3 at Re = 100)"
+  },
+  "gates": {
+    "reasons": [],
+    "shedding_detected": true,
+    "passed": true
+  }
+}

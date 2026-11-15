@@ -1,0 +1,74 @@
+{
+  "backend": "immersed",
+  "anchor_slug": "GAP-DIFFLBM-EXT-LIT-CYL",
+  "spec": {
+    "cells_per_diameter": 20,
+    "diameter": 1.0,
+    "velocity": 1.0,
+    "reynolds": 100.0,
+    "dt": 0.02,
+    "t_end": 120.0,
+    "perturbation": 0.1,
+    "upstream_lengths": 10.0,
+    "downstream_lengths": 20.0,
+    "half_height": 10.0,
+    "box": [
+      -2.0,
+      3.0,
+      -1.5,
+      1.5
+    ],
+    "poisson_tol": 1e-10,
+    "max_steps": 10000000
+  },
+  "grid": {
+    "nx": 600,
+    "ny": 400,
+    "dx": 0.05,
+    "dy": 0.05,
+    "cells_per_diameter": 20
+  },
+  "control_box": {
+    "i0": 160,
+    "i1": 260,
+    "j0": 170,
+    "j1": 230,
+    "x": [
+      -2.0,
+      3.0
+    ],
+    "y": [
+      -1.5,
+      1.5
+    ]
+  },
+  "elapsed_s": 1292.7050291523337,
+  "steps": 6001,
+  "s_per_step": 0.21541493570277181,
+  "n_samples": 6001,
+  "t_start": 0.02,
+  "t_end": 120.02,
+  "shedding_detected": true,
+  "st": 0.1550825196959207,
+  "st_fft": 0.15512209462196072,
+  "st_zerocross": 0.1550825196959207,
+  "cl_amplitude": 0.20053728999999998,
+  "cd_mean": 1.5092636299131243,
+  "freq_cross_check": 0.0002551862461198462,
+  "cl_amplitude_second_half": 0.20053728999999998,
+  "statistics_window": [
+    55.58,
+    120.02
+  ],
+  "statistics_periods": 10.0,
+  "window_ok": true,
+  "available_periods": 18.618032274211703,
+  "cd_min": 1.48661358,
+  "cd_max": 1.52206796,
+  "cl_mean": -0.00534795090909091,
+  "periods": 19,
+  "period_std_over_mean": 0.0029458698938115797,
+  "gate_reasons": [],
+  "force_history_rows": 6001,
+  "postprocessed": "statistics+publish re-run locally from the node force_history.csv"
+}
