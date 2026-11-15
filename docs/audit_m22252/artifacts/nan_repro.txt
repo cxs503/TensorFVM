@@ -1,0 +1,12 @@
+# minimal NaN repro (board-audit m22252), delivery commit 3db7b1f5
+$ PYTHONPATH=src python3 -c "from tensorfvm.ice import validate_ice_parameters as v; r=v({\"ice_thickness\": float(\"nan\")}); print(r.is_valid, r.status, r.errors, r.validated_params)"
+True GuardrailStatus.PASS [] {'ice_thickness': nan}
+$ PYTHONPATH=src python3 -c "from tensorfvm.ice import clamp_ice_parameters as c; print(c({\"ice_thickness\": float(\"nan\")}).clamped_params)"
+{'ice_thickness': nan}
+$ PYTHONPATH=src python3 -c "from tensorfvm.ice import get_parameter_report as g; print(g({\"ice_thickness\": float(\"nan\")}))"
+Ice Parameter Status Report
+========================================
+  h (ice_thickness) = nan m  [WITHIN CALIBRATION]
+    physical: [0.01, 10.0]  calibration: [0.05, 5.0]  typical: [0.3, 2.5]
+$ PYTHONPATH=src python3 -c "from tensorfvm.ice import validate_ice_parameters as v; r=v({\"ice_thickness\": 50.0}); print(r.is_valid, r.errors)"
+False ['ice_thickness (h) = 50.0 m is outside physical bounds [0.01, 10.0] m']
