@@ -1,0 +1,98 @@
+{
+  "round": 23,
+  "case": "CASE-FVM-PERIODIC-HILLS",
+  "reference": "Breuer et al. 2009, Computers & Fluids 38:433, doi:10.1016/j.compfluid.2008.05.002 (ERCOFTAC UFR 3-30)",
+  "reference_x_r_over_H": 5.41,
+  "reference_source": "ERCOFTAC KB Wiki, UFR 3-30 Evaluation",
+  "artifact": "/root/tp-agent/work/m22263/docs/case-periodic-hills/round20_laminar_Re2800_96x48.npz",
+  "grid": {
+    "nx": 96,
+    "ny": 48
+  },
+  "reynolds": 2800,
+  "closure": "laminar",
+  "bubble_report": {
+    "n_bubbles": 2,
+    "flag": "object_consistent",
+    "selected_is_crest": true,
+    "x_r_over_H_crest": 1.2540965527208672,
+    "x_r_over_H_largest": 1.2540965527208672
+  },
+  "reattachment": {
+    "crest_x_r_over_H": 1.2540965527208672,
+    "error_vs_reference": 0.7681891769462353,
+    "within_10_percent": false
+  },
+  "profile_y05": {
+    "admissible_stations": [
+      1.0,
+      2.0,
+      3.0,
+      4.0,
+      5.0,
+      6.0,
+      7.0,
+      8.0
+    ],
+    "n_admissible": 8,
+    "n_pass": 2,
+    "errors": {
+      "1.0": {
+        "computed": -0.020724506098924702,
+        "reference": -0.046128718374354914,
+        "error": 0.025404212275430212,
+        "pass": true
+      },
+      "2.0": {
+        "computed": -0.14907523053577904,
+        "reference": -0.09122729012512827,
+        "error": 0.057847940410650764,
+        "pass": true
+      },
+      "3.0": {
+        "computed": -0.13227717840519906,
+        "reference": 0.0041277188021116165,
+        "error": 0.1364048972073107,
+        "pass": false
+      },
+      "4.0": {
+        "computed": -0.12281656704716107,
+        "reference": 0.11981606788535129,
+        "error": 2.025042544082492,
+        "pass": false
+      },
+      "5.0": {
+        "computed": -0.11190984394954931,
+        "reference": 0.2182851836848996,
+        "error": 1.512677232876667,
+        "pass": false
+      },
+      "6.0": {
+        "computed": -0.06009293398641909,
+        "reference": 0.2876299221105056,
+        "error": 1.2089244872212277,
+        "pass": false
+      },
+      "7.0": {
+        "computed": -0.014274566681454662,
+        "reference": 0.31413237261839405,
+        "error": 1.0454412468300276,
+        "pass": false
+      },
+      "8.0": {
+        "computed": -0.13032900580000878,
+        "reference": 0.22375151815927136,
+        "error": 1.5824720514621835,
+        "pass": false
+      }
+    }
+  },
+  "verdict": "FAIL",
+  "verdict_reason": "Crest bubble x_r/H = 1.254 vs DNS 5.41 = 76.8% error (outside 10% band); profile: 2/8 stations pass",
+  "figures": {
+    "field": "/root/tp-agent/work/m22263/docs/CASE-FVM-PERIODIC-HILLS/fig_round23_field.png",
+    "wall_shear": "/root/tp-agent/work/m22263/docs/CASE-FVM-PERIODIC-HILLS/fig_round23_wall_shear.png",
+    "profile": "/root/tp-agent/work/m22263/docs/CASE-FVM-PERIODIC-HILLS/fig_round23_profile.png",
+    "errors": "/root/tp-agent/work/m22263/docs/CASE-FVM-PERIODIC-HILLS/fig_round23_errors.png"
+  }
+}
