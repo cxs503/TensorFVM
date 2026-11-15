@@ -1,0 +1,136 @@
+{
+  "verdict": {
+    "reference": {
+      "family": "weno5",
+      "nx": 12800,
+      "self_certification": {
+        "coarse_nx": 6400,
+        "fine_nx": 12800,
+        "l1_percent": 0.5437229141389293,
+        "peak_percent": 0.023021571035996842,
+        "mass_percent": 0.0005090225294983794,
+        "ratio": 2,
+        "window": [
+          0.4,
+          1.0
+        ],
+        "self_certified": true
+      }
+    },
+    "ladder": [
+      {
+        "nx": 1600,
+        "measured": true,
+        "l1_percent": 3.2512771531069533,
+        "peak_percent": 0.12473095002508143,
+        "mass_percent": 0.002417401481655299,
+        "ratio": 8,
+        "window": [
+          0.4,
+          1.0
+        ],
+        "pointwise_l1_percent": 3.298658850112687,
+        "metric_bias_pp": 0.04738169700573369,
+        "source": "/root/tp-agent/work/m21306/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx1600_hllc.npz"
+      },
+      {
+        "nx": 3200,
+        "measured": true,
+        "l1_percent": 1.7685252844359072,
+        "peak_percent": 0.7604024784683446,
+        "mass_percent": 0.0009326782351779585,
+        "ratio": 4,
+        "window": [
+          0.4,
+          1.0
+        ],
+        "pointwise_l1_percent": 1.7754268782298872,
+        "metric_bias_pp": 0.006901593793980032,
+        "source": "/root/tp-agent/work/m21306/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx3200_hllc.npz"
+      },
+      {
+        "nx": 6400,
+        "measured": false
+      },
+      {
+        "nx": 12800,
+        "measured": false
+      }
+    ],
+    "orders": [
+      {
+        "nx_pair": [
+          1600,
+          3200
+        ],
+        "l1_pair": [
+          3.2512771531069533,
+          1.7685252844359072
+        ],
+        "order": 0.8784596976568859
+      }
+    ],
+    "forecast": [],
+    "finest_graded": {
+      "nx": 3200,
+      "l1_percent": 1.7685252844359072,
+      "peak_percent": 0.7604024784683446,
+      "metric_bias_pp": 0.006901593793980032
+    },
+    "certified_lt_1pct": false,
+    "certified_lt_1pct_legacy_metric": false,
+    "metric_decision_invariant": true,
+    "order_used_for_forecast": 0.8784596976568859,
+    "nx_needed_for_1pct": 6123.783020028493,
+    "nx_needed_for_3pct": 3200.0,
+    "ledger_tolerance_percent": 15.0,
+    "certified_bar_percent": 1.0,
+    "not_measured": [
+      6400,
+      12800
+    ]
+  },
+  "regions": [
+    {
+      "region": "left_plateau",
+      "range": [
+        0.4,
+        0.55
+      ],
+      "share_percent_of_l1": 0.05164388914214977
+    },
+    {
+      "region": "collision_fronts",
+      "range": [
+        0.55,
+        0.72
+      ],
+      "share_percent_of_l1": 37.641170752167014
+    },
+    {
+      "region": "right_contact_and_shock",
+      "range": [
+        0.72,
+        1.0
+      ],
+      "share_percent_of_l1": 62.30718535869082
+    }
+  ],
+  "figures": [
+    "fig_refine_l1_ladder.png",
+    "fig_refine_residual_attribution.png"
+  ],
+  "predeclared_forecast": {
+    "nx_ref": 3200,
+    "err_ref": 1.7685,
+    "order": 0.8785,
+    "band_order": [
+      0.79,
+      1.05
+    ],
+    "targets": [
+      6400,
+      12800
+    ]
+  }
+}
