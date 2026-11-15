@@ -148,7 +148,7 @@ def run_resolution(n: int, *, init: tuple[torch.Tensor, torch.Tensor] | None = N
                    init_from: str | None = None, cfl: float = 0.15,
                    tolerance: float = 1e-07, max_steps: int = 250_000,
                    check_every: int = 250, reynolds: float = REYNOLDS,
-                   lid_velocity: float = LID_VELOCITY,
+                   lid_velocity: float = LID_VELOCITY, on_check=None,
                    log=print) -> tuple[dict, LidCavitySolver]:
     """March one ``n x n`` resolution to a steady state and return its artefact."""
     cfg = LidCavityConfig(n=int(n), reynolds=float(reynolds),
@@ -159,7 +159,7 @@ def run_resolution(n: int, *, init: tuple[torch.Tensor, torch.Tensor] | None = N
     if init is not None:
         solver.u, solver.v = init[0].clone(), init[1].clone()
     t0 = time.time()
-    ledger = solver.run()
+    ledger = solver.run(on_check=on_check)
     wall = time.time() - t0
 
     scored = score_against_ghia(solver, reynolds)
