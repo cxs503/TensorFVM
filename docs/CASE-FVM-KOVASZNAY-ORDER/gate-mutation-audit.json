@@ -1,0 +1,94 @@
+{
+  "source": "docs/CASE-FVM-KOVASZNAY-ORDER/runs-32-64-128-zero_gradient",
+  "gate": "tests/test_kovasznay_32_64_128_acceptance.py",
+  "grids": [
+    32,
+    64,
+    128
+  ],
+  "mutations": [
+    {
+      "mutation": "none (control)",
+      "expected_failures": [],
+      "observed_failures": [],
+      "detected": true,
+      "notes": {}
+    },
+    {
+      "mutation": "hand_edited_error",
+      "expected_failures": [
+        "recorded_errors_match_fields"
+      ],
+      "observed_failures": [
+        "recorded_errors_match_fields"
+      ],
+      "extra_failures": [],
+      "detected": true,
+      "notes": {
+        "recorded_errors_match_fields": "AssertionError: AssertionError()"
+      }
+    },
+    {
+      "mutation": "fabricated_solution",
+      "expected_failures": [
+        "recorded_errors_match_fields",
+        "reported_slopes_match_fields"
+      ],
+      "observed_failures": [
+        "ledger_criterion_holds",
+        "recorded_errors_match_fields",
+        "reported_slopes_match_fields",
+        "verdict_flags_not_overstated"
+      ],
+      "extra_failures": [
+        "ledger_criterion_holds",
+        "verdict_flags_not_overstated"
+      ],
+      "detected": true,
+      "notes": {
+        "recorded_errors_match_fields": "AssertionError: AssertionError()",
+        "reported_slopes_match_fields": "AssertionError: AssertionError()",
+        "verdict_flags_not_overstated": "AssertionError: AssertionError()",
+        "ledger_criterion_holds": "AssertionError: full-3D velocity slope nan < 1.8"
+      }
+    },
+    {
+      "mutation": "hand_edited_slope",
+      "expected_failures": [
+        "reported_slopes_match_fields"
+      ],
+      "observed_failures": [
+        "reported_slopes_match_fields"
+      ],
+      "extra_failures": [],
+      "detected": true,
+      "notes": {
+        "reported_slopes_match_fields": "AssertionError: AssertionError()"
+      }
+    },
+    {
+      "mutation": "overstated_verdict",
+      "expected_failures": [
+        "verdict_flags_not_overstated"
+      ],
+      "observed_failures": [
+        "verdict_flags_not_overstated"
+      ],
+      "extra_failures": [],
+      "detected": true,
+      "notes": {
+        "verdict_flags_not_overstated": "AssertionError: AssertionError()"
+      }
+    },
+    {
+      "mutation": "relaxed_threshold_in_summary",
+      "expected_failures": [],
+      "observed_failures": [],
+      "extra_failures": [],
+      "detected": true,
+      "notes": {}
+    }
+  ],
+  "undetected": [],
+  "verdict": "PASS"
+}
