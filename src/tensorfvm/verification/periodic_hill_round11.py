@@ -114,8 +114,10 @@ def build_solver(closure: str = "sst", *, nx: int = 96, ny: int = 48,
                  hill_amplitude: float = 1.0, length_m: float = 9.0,
                  channel_top_m: float = 3.036, bulk_velocity: float = 1.0,
                  convection_blend: float | None = None,
+                 transport_convection_blend: float | None = None,
                  production_limit: float | None = None,
                  freestream_intensity: float | None = None,
+                 body_force_relaxation: float | None = None,
                  turbulence_momentum_interval: int = 1,
                  ) -> PeriodicHillSolver:
     """A :class:`PeriodicHillSolver` with the requested eddy-viscosity closure.
@@ -123,7 +125,17 @@ def build_solver(closure: str = "sst", *, nx: int = 96, ny: int = 48,
     ``closure="sst"`` wires :class:`SSTKOmega` (round 10), ``closure="sa"`` wires
     :class:`SpalartAllmaras` (rounds 5-9).  Everything else -- mesh, convection
     blend, pressure Poisson, bulk-velocity controller -- is the parent solver and
-    is therefore identical between the two branches.  An unknown closure name is
+    is therefore identical between the two branches.
+
+    ``convection_blend`` is the **momentum** convection blend of the parent
+    solver; the ``k``/``omega`` transport has its own blend.  Rounds 10--14
+    conflated the two: the driver's single ``--convection-blend`` flag set the
+    momentum blend only, while ``SSTKOmegaConfig.convection_blend`` stayed at its
+    first-order default, and every artefact recorded both numbers without anyone
+    comparing them (round 11: momentum 0.75, transport 0.0 -- so round 14's
+    "second-order transport" next step had in fact never been run).  Round 15
+    splits the knob: ``transport_convection_blend`` is passed to the closure and
+    recorded, so the artefact cannot disagree with itself.  An unknown closure name is
     an error, not a silent fallback to a default: a typo must not silently
     produce an SA artefact labelled SST.
     """
@@ -133,6 +145,8 @@ def build_solver(closure: str = "sst", *, nx: int = 96, ny: int = 48,
     kwargs = {}
     if convection_blend is not None:
         kwargs["convection_blend"] = float(convection_blend)
+    if body_force_relaxation is not None:
+        kwargs["body_force_relaxation"] = float(body_force_relaxation)
     config = PeriodicHillConfig(nx=int(nx), ny=int(ny), reynolds=float(reynolds),
                                 hill_amplitude=float(hill_amplitude),
                                 length_m=float(length_m),
@@ -144,6 +158,11 @@ def build_solver(closure: str = "sst", *, nx: int = 96, ny: int = 48,
         sst_cfg = SSTKOmegaConfig(production_limit=production_limit)
         if freestream_intensity is not None:
             sst_cfg.freestream_intensity = float(freestream_intensity)
+        if transport_convection_blend is not None:
+            # round 15: the transport blend is a closure knob, not a momentum knob
+            object.__setattr__(sst_cfg, "convection_blend",
+                               float(transport_convection_blend))
+            SSTKOmegaConfig.__post_init__(sst_cfg)
         solver.turbulence = SSTKOmega(solver, sst_cfg)
     else:
         solver.turbulence = SpalartAllmaras(
@@ -163,6 +182,7 @@ def _closure_block(closure, solver):
             "freestream_nut_ratio": float(cfg.freestream_nut_ratio),
             "max_viscosity_ratio": float(cfg.max_viscosity_ratio),
             "transport_convection_blend": float(cfg.convection_blend),
+            "momentum_convection_blend": float(solver.config.convection_blend),
             "production_limit": cfg.production_limit,
             "a1": float(cfg.a1),
         })
@@ -270,6 +290,7 @@ def run_time_averaged_case(tag, closure="sst", *, nx=96, ny=48, steps=20000,
                            sample_every=20, burn_in_steps=8000, dt=0.02,
                            reynolds=2800.0, hill_amplitude=1.0, n_blocks=4,
                            production_limit=None, convection_blend=None,
+                           transport_convection_blend=None,
                            freestream_intensity=None, solver=None,
                            verbose=False, progress_every=5000,
                            out_dir=None, save_fields=False):
@@ -291,6 +312,7 @@ def run_time_averaged_case(tag, closure="sst", *, nx=96, ny=48, steps=20000,
                               hill_amplitude=hill_amplitude,
                               production_limit=production_limit,
                               convection_blend=convection_blend,
+                              transport_convection_blend=transport_convection_blend,
                               freestream_intensity=freestream_intensity)
     config = solver.config
     stats = Statistics(solver)

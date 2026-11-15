@@ -69,7 +69,11 @@ def main(argv=None):
     ap.add_argument("--dt", type=float, default=0.02)
     ap.add_argument("--reynolds", type=float, default=2800.0)
     ap.add_argument("--production-limit", type=float, default=None)
-    ap.add_argument("--convection-blend", type=float, default=None)
+    ap.add_argument("--convection-blend", type=float, default=None,
+                    help="momentum convection blend (parent solver)")
+    ap.add_argument("--transport-blend", type=float, default=None,
+                    help="k/omega transport convection blend (round 15; "
+                         "previously unreachable from this driver)")
     ap.add_argument("--freestream-intensity", type=float, default=None)
     ap.add_argument("--compare", action="store_true",
                     help="build round11_comparison.json from the artefacts on disk")
@@ -113,6 +117,7 @@ def main(argv=None):
         burn_in_steps=burn_in, dt=args.dt, reynolds=args.reynolds,
         production_limit=args.production_limit,
         convection_blend=args.convection_blend,
+        transport_convection_blend=args.transport_blend,
         freestream_intensity=args.freestream_intensity,
         verbose=True, out_dir=OUTDIR, save_fields=True)
 
