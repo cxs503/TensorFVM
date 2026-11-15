@@ -1,144 +1,175 @@
-"""Round-18 grid ladder: artefact/score consistency for ``CASE-FVM-PERIODIC-HILLS``.
+"""Tests for the periodic-hill grid/time-step convergence attributor (round 22).
 
-The round-17 lesson was that a *derived* number in an artefact (the reattachment
-crossing) can silently outlive the operator that produced it, so these tests pin
-two different things:
-
-* the grid-law fit's *behaviour* on synthetic sequences where the answer is
-  known (order, extrapolant, and the refusal to fit a non-monotone sequence);
-* the *cross-consistency* of the round-18 artefacts: the ``x_r/H`` and the
-  ``y/H = 0.5`` verdict stored in ``round18_ladder.json`` must be reproducible
-  from the stored time means (``mean_tau_b`` / ``mean_u``) with the certified
-  operator, and the ``omega`` sink coefficient actually in force must be the
-  model-consistent one (``S_P/(beta omega) = 1``).
-
-No PASS/FAIL physics assertion is hard-coded: the acceptance verdict is
-recomputed from the numbers and compared with the recorded one, so a hand-edited
-verdict fails the test instead of the (honest) FAIL becoming a silent PASS.
+The point of these tests is that the module's *verdicts* are pinned by synthetic
+sequences whose answer is known analytically -- an attribution rule that only
+reproduces the run it was written for would be worthless.
 """
 
 from __future__ import annotations
 
-import json
 import math
-import sys
-from pathlib import Path
 
 import numpy as np
 import pytest
 
-REPO = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(REPO / "src"))
-sys.path.insert(0, str(REPO / "scripts"))
-
-import round18_ladder_analysis as r18  # noqa: E402
-
-OUTDIR = REPO / "docs" / "case-periodic-hills"
-LADDER = OUTDIR / "round18_ladder.json"
-
-
-# --------------------------------------------------------------------------- #
-# grid law fit
-# --------------------------------------------------------------------------- #
-def test_fit_recovers_known_order_and_extrapolant():
-    x0, C, p = 5.0, 2.0, 1.5
-    levels = [(0.1, x0 + C * 0.1 ** p), (0.0625, x0 + C * 0.0625 ** p),
-              (0.046875, x0 + C * 0.046875 ** p)]
-    law = r18.fit_grid_law(levels)
-    assert law["admissible"] is True
-    assert law["observed_order_p"] == pytest.approx(p, abs=2e-2)
-    assert law["extrapolated_x_r_over_H"] == pytest.approx(x0, abs=1e-2)
-    assert law["rms_residual"] < 1e-2
+from tensorfvm.verification.periodic_hill_grid_ladder import (
+    ASYMPTOTE_OUTSIDE_BAND,
+    DISCRETISATION_ATTRIBUTABLE,
+    INCONCLUSIVE,
+    ORDER_UNDEFINED,
+    attribute,
+    combined_span,
+    gci_fine,
+    observed_order,
+    refinement_ratio,
+    richardson_extrapolation,
+    temporal_sensitivity,
+)
 
 
-def test_fit_refuses_non_monotone_sequence():
-    law = r18.fit_grid_law([(0.1, 7.65), (0.0625, 7.68), (0.046875, 7.20)])
-    assert law["admissible"] is False
-    assert law["monotone_in_h"] is False
-    assert law["reason"]
+def synthetic(h, x_inf, coefficient, order):
+    """``x_inf + coefficient * h**order`` -- the exact asymptotic sequence."""
+    return x_inf + coefficient * h ** order
 
 
-def test_fit_refuses_two_levels():
-    law = r18.fit_grid_law([(0.1, 7.6), (0.05, 7.5)])
-    assert law["admissible"] is False
-    assert "3 required" in law["reason"]
+# --------------------------------------------------------------------------
+# elementary estimators
+# --------------------------------------------------------------------------
+def test_refinement_ratio_rejects_non_refinement():
+    assert refinement_ratio(0.094, 0.047) == pytest.approx(2.0)
+    with pytest.raises(ValueError):
+        refinement_ratio(0.05, 0.10)
+    with pytest.raises(ValueError):
+        refinement_ratio(0.0, 0.1)
 
 
-def test_fit_ignores_non_finite_levels():
-    law = r18.fit_grid_law([(0.1, 7.6), (0.05, float("nan")), (0.025, 7.4)])
-    assert law["admissible"] is False
+@pytest.mark.parametrize("order", [1.0, 1.5, 2.0, 3.0])
+def test_observed_order_recovers_exact_order(order):
+    r = 2.0
+    # observe_order() takes fine -> medium -> coarse
+    vals = [synthetic(1.0 / r ** i, 5.41, 3.0, order) for i in (2, 1, 0)]
+    got = observed_order(vals, r)
+    assert got["status"] == "order_estimated"
+    assert got["p"] == pytest.approx(order, rel=1e-10)
 
 
-# --------------------------------------------------------------------------- #
-# artefact consistency
-# --------------------------------------------------------------------------- #
-def _existing_levels():
-    return [lv for lv in r18.LEVELS
-            if r18.level_paths(lv[0], lv[1], OUTDIR)[0].exists()]
+def test_observed_order_undefined_for_non_monotone_and_flat():
+    non_monotone = observed_order([5.0, 6.0, 5.5], 2.0)
+    assert non_monotone["p"] is None
+    assert non_monotone["status"] == ORDER_UNDEFINED
+    assert "non-monotone" in non_monotone["reason"]
+
+    flat = observed_order([5.0, 5.0, 5.0], 2.0)
+    assert flat["p"] is None
+    assert "zero difference" in flat["reason"]
+
+    with pytest.raises(ValueError):
+        observed_order([1.0, 2.0], 2.0)
 
 
-def test_ladder_artefacts_exist():
-    missing = [f"{nx}x{ny}" for nx, ny in r18.LEVELS
-               if not r18.level_paths(nx, ny, OUTDIR)[0].exists()]
-    if missing:
-        pytest.skip(f"ladder artefacts not fetched into the tree: {missing}")
-    assert LADDER.exists()
+def test_richardson_recovers_limit_and_rejects_bad_order():
+    r = 2.0
+    coarse = synthetic(1.0 / r, 5.41, 2.0, 2.0)
+    fine = synthetic(1.0 / r ** 2, 5.41, 2.0, 2.0)
+    assert richardson_extrapolation(fine, coarse, r, 2.0) == pytest.approx(5.41)
+    with pytest.raises(ValueError):
+        richardson_extrapolation(fine, coarse, r, 0.0)
 
 
-def test_sink_coefficient_is_the_model_consistent_one():
-    """An artefact must not claim a variant it did not run (round-16 contract)."""
-    levels = _existing_levels()
-    if not levels:
-        pytest.skip("no ladder artefacts in the tree")
-    for nx, ny in levels:
-        _, js = r18.level_paths(nx, ny, OUTDIR)
-        if not js.exists():
-            continue
-        meta = json.loads(js.read_text())
-        ratio = (meta.get("sink_coefficient_ratio") or {}).get("ratio")
-        assert ratio == pytest.approx(1.0, abs=1e-9), f"{nx}x{ny} sink ratio {ratio}"
+def test_gci_shrinks_with_refinement():
+    r = 2.0
+    h = 1.0 / r
+    g_1 = gci_fine(synthetic(h, 5.41, 2.0, 2.0),
+                   synthetic(2 * h, 5.41, 2.0, 2.0), r, 2.0)
+    g_2 = gci_fine(synthetic(h / 2, 5.41, 2.0, 2.0),
+                   synthetic(h, 5.41, 2.0, 2.0), r, 2.0)
+    assert 0.0 < g_2 < g_1
+    # for a pure h**p sequence the fine-level GCI equals Fs * C h^p / |x_fine|
+    expected = 1.25 * 2.0 * (h / 2) ** 2 / synthetic(h / 2, 5.41, 2.0, 2.0)
+    assert g_2 == pytest.approx(expected, rel=1e-12)
 
 
-def test_recorded_verdict_is_reproducible_from_stored_means():
-    """Re-score every level from ``mean_tau_b`` / ``mean_u`` and compare."""
-    levels = _existing_levels()
-    if len(levels) < 3:
-        pytest.skip("ladder artefacts incomplete in the tree")
-    recorded = json.loads(LADDER.read_text())
-    ref = r18.X_R_OVER_H
-    for (nx, ny), row in zip(levels, recorded["levels"]):
-        npz, js = r18.level_paths(nx, ny, OUTDIR)
-        meta = json.loads(js.read_text()) if js.exists() else {}
-        scored = r18.score_from_npz(npz, meta.get("config") or {})
-        assert row["mesh"] == [nx, ny]
-        assert row["x_r_over_H"] == pytest.approx(scored["x_r_over_H"], abs=1e-9)
-        assert row["x_s_over_H"] == pytest.approx(scored["x_s_over_H"], abs=1e-9)
-        expected_pass = abs(scored["x_r_over_H"] - ref) / ref <= r18.X_R_TOLERANCE
-        assert row["x_r_pass"] is expected_pass
-        assert row["x_r_error_vs_reference"] == pytest.approx(
-            abs(scored["x_r_over_H"] - ref) / ref, rel=1e-12)
+# --------------------------------------------------------------------------
+# the pre-registered attribution rule
+# --------------------------------------------------------------------------
+def test_attribute_discretisation_attributable():
+    """Pure first-order discretisation of a 5.41 limit must be attributed to it."""
+    ladder = [(1.0, synthetic(1.0, 5.41, 8.0, 1.0)),
+              (0.5, synthetic(0.5, 5.41, 8.0, 1.0)),
+              (0.25, synthetic(0.25, 5.41, 8.0, 1.0))]
+    out = attribute(ladder, 5.41, tolerance=0.10)
+    assert out["order"] == pytest.approx(1.0)
+    assert out["x_extrapolated"] == pytest.approx(5.41)
+    assert out["verdict"] == DISCRETISATION_ATTRIBUTABLE
+    assert out["error_extrapolated_rel"] == pytest.approx(0.0, abs=1e-12)
 
 
-def test_ladder_spacing_decreases_monotonically():
-    hs = [r18.HILL_LENGTH / nx for nx, _ in r18.LEVELS]
-    assert all(a > b for a, b in zip(hs, hs[1:]))
+def test_attribute_asymptote_outside_band():
+    """A converged ladder that lands far from the reference is NOT discretisation."""
+    ladder = [(1.0, synthetic(1.0, 8.26, 0.6, 2.0)),
+              (0.5, synthetic(0.5, 8.26, 0.6, 2.0)),
+              (0.25, synthetic(0.25, 8.26, 0.6, 2.0))]
+    out = attribute(ladder, 5.41, tolerance=0.10)
+    assert out["verdict"] == ASYMPTOTE_OUTSIDE_BAND
+    assert out["x_extrapolated"] == pytest.approx(8.26)
+    assert out["movement_rel"] < 0.10
+    assert out["error_extrapolated_rel"] > 0.10
 
 
-def test_verdict_cannot_disagree_with_levels():
-    if not LADDER.exists():
-        pytest.skip("no round-18 artefact in the tree")
-    recorded = json.loads(LADDER.read_text())
-    verdict = recorded["verdict"]
-    ref = r18.X_R_OVER_H
-    any_pass = any(
-        math.isfinite(lv["x_r_over_H"])
-        and abs(lv["x_r_over_H"] - ref) / ref <= r18.X_R_TOLERANCE
-        for lv in recorded["levels"])
-    assert verdict["any_level_inside_band"] is any_pass
-    law = recorded["grid_law"]
-    if law["admissible"]:
-        extrap_pass = abs(law["extrapolated_x_r_over_H"] - ref) / ref <= r18.X_R_TOLERANCE
-        assert verdict["extrapolated_inside_band"] is extrap_pass
-    else:
-        assert verdict["extrapolated_inside_band"] is False
-    assert isinstance(verdict["honest_summary"], str) and verdict["honest_summary"]
+def test_attribute_inconclusive_while_still_moving():
+    ladder = [(1.0, synthetic(1.0, 9.0, 5.0, 1.0)),
+              (0.5, synthetic(0.5, 9.0, 5.0, 1.0)),
+              (0.25, synthetic(0.25, 9.0, 5.0, 1.0))]
+    out = attribute(ladder, 5.41, tolerance=0.10)
+    assert out["verdict"] == INCONCLUSIVE
+    assert "extend the ladder" in out["rule"]
+
+
+def test_attribute_order_undefined_blocks_a_verdict():
+    ladder = [(1.0, 8.0), (0.5, 9.0), (0.25, 8.5)]
+    out = attribute(ladder, 5.41, tolerance=0.10)
+    assert out["verdict"] == ORDER_UNDEFINED
+    assert out["x_extrapolated"] is None
+
+
+def test_attribute_two_levels_cannot_claim_discretisation():
+    ladder = [(1.0, synthetic(1.0, 5.41, 8.0, 1.0)),
+              (0.5, synthetic(0.5, 5.41, 8.0, 1.0))]
+    out = attribute(ladder, 5.41, tolerance=0.10)
+    assert out["verdict"] != DISCRETISATION_ATTRIBUTABLE
+    assert out["x_extrapolated"] is None
+    assert out["n_levels"] == 2
+
+
+def test_attribute_rejects_non_uniform_ladder():
+    # ratios 2.0 then 2.5: a single order p has no meaning on this ladder
+    out = attribute([(1.0, 9.0), (0.5, 8.0), (0.2, 7.5)], 5.41, tolerance=0.10)
+    assert out["rule"] == "non-uniform refinement ratios"
+    assert out["verdict"] == INCONCLUSIVE
+
+
+def test_attribute_single_level_and_non_finite():
+    assert attribute([(1.0, 8.0)], 5.41)["verdict"] == INCONCLUSIVE
+    assert attribute([(1.0, math.nan), (0.5, 8.0)], 5.41)["rule"] == "non-finite level"
+
+
+# --------------------------------------------------------------------------
+# time-step axis
+# --------------------------------------------------------------------------
+def test_temporal_sensitivity_flags_divergence():
+    ok = temporal_sensitivity(8.264, 8.31)
+    assert ok["resolved"] is True
+    assert ok["relative"] == pytest.approx(abs(8.31 - 8.264) / 8.264)
+
+    diverged = temporal_sensitivity(float("nan"), 8.31)
+    assert diverged["resolved"] is False
+    assert diverged["relative"] == math.inf
+
+
+def test_combined_span_ignores_nan():
+    assert combined_span([8.1, math.nan, 8.4, None]) == pytest.approx(0.3, abs=1e-12)
+
+
+def test_attribute_tolerance_must_be_positive():
+    with pytest.raises(ValueError):
+        attribute([(1.0, 9.0), (0.5, 8.0)], 5.41, tolerance=0.0)
