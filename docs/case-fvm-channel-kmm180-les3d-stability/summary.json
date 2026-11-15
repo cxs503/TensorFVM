@@ -1,0 +1,30 @@
+{
+ "anchor": "CASE-FVM-CHANNEL-KMM180",
+ "grid": "16x16x8 (evidence), 64x64x32 (production, not_run)",
+ "operator_identity_max_abs": {
+  "u": 2.1827872842550278e-11,
+  "v": 5.4569682106375694e-12,
+  "w": 2.1827872842550278e-11
+ },
+ "production_u_plus_reading": null,
+ "schema": "tensorfvm.les3d-stability-audit/1",
+ "status": "BLOCKED",
+ "steps_to_divergence": {
+  "Cs=0.0 dt=2e-3 rk3": 131,
+  "Cs=0.0 dt=4e-3 rk3": 70,
+  "Cs=0.1 dt=2e-3 euler": 187,
+  "Cs=0.1 dt=2e-3 rk3": 142,
+  "Cs=0.1 dt=4e-3 rk3": 74
+ },
+ "tests": "tests/test_channel_les3d_implicit.py (9) + tests/test_channel_les3d.py (15): 24 passed",
+ "wall_distance_top_wall": {
+  "corrected_y_plus": 0.5065814863394769,
+  "old_definition_y_plus": 359.4934185136605
+ },
+ "wall_row_diffusion_number": 0.350706553663977,
+ "wall_shear": {
+  "analytic": 1.0,
+  "half_cell": 0.9958645652227284,
+  "second_order": 0.9999999999999999
+ }
+}

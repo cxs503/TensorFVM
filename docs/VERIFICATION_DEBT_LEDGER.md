@@ -619,3 +619,15 @@
   连同 round9 的 20 + round11 的 13 共 **54 passed**（`PYTHONPATH=<本工作树>/src`）。
 - 给下次: ① 96x48→144x72→192x96 只跑 patankar 测「+42% 是否随 h 降」；② 单独追 `x_s/H` 偏后
   （0.40–0.64，但无权威基准，先补基准再判）；③ 给 round-11 写出端加「必存时均剪切」断言。
+
+## 4i. 追加欠账（append-only，2026-11-16）
+### D20 CASE-FVM-CHANNEL-KMM180 三维 LES 路线：隐式壁法向扩散 + SSP-RK3 已交付，两个失稳诊断被否证（m21536，selfstart）
+- 缺口: D16 记录产线 64x64x32 在 Re_tau=180 数步内发散，且归因为「nu_t 反馈」与「显式 y 扩散刚性」。
+- 交付: `src/tensorfvm/channel_les3d.py`（① `implicit_wall_normal` 三对角隐式壁法向扩散，矩阵由 `diffusion()`
+  同一表达式导出、算符恒等钉到 1e-11；② `time_scheme='rk3'` SSP-RK3；③ 壁面距离 `y+=min(y,2-y)Re_tau`
+  ——旧定义把上壁读成 y+=360，van Driest 阻尼与 Reichardt 初值在上半槽道此前是错的；④ `wall_shear('second_order')`
+  + 采样/统计双读数）+ `tests/test_channel_les3d_implicit.py` 9 测 + `docs/case-fvm-channel-kmm180-les3d-stability/`。
+- **否证**: Cs=0 同样发散（131 步）与 Cs=0.1（142 步）同量级 ⇒「nu_t 反馈」不是主因；隐式化扩散后仍发散 ⇒
+  「仅扩散刚性」不成立；euler(187) vs rk3(142) 同量级 ⇒ 也不是积分器阶数。发散步数随 dt 近似反比（142→74），
+  即每步放大 `|G|=1+O(dt)`，降 dt 只推迟不消除。
+- 未做/给下次: 逐行/逐模态增长率扫描定位被放大模态（下一步具体动作）；产线统计 T_spin/T_stat 与 u+ 读数仍 not_run。
