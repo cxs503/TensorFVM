@@ -1,0 +1,244 @@
+{
+ "case": "CASE-FVM-CAVITY-RE1000",
+ "reynolds": 1000.0,
+ "reference_table": "Ghia, Ghia & Shin (1982) Tables I/II",
+ "verdicts": {
+  "u_min": {
+   "label": "u_min",
+   "finest": -0.38530400738358145,
+   "reference": -0.38289,
+   "residual_relative": 0.006304702090891483,
+   "gci": {
+    "order": 1.897375764267098,
+    "epsilon": 0.031684639303798424,
+    "increment_ratio": 3.7253494572738513,
+    "gci_fine": 0.014532374563578145,
+    "band": 0.005599382156145884,
+    "interval": [
+     -0.3909033895397273,
+     -0.3797046252274356
+    ],
+    "refinement": 2.0,
+    "safety": 1.25
+   },
+   "reference_inside_gci_band": true,
+   "reference_position_in_band": 0.4311203122529911,
+   "asymptotic": {
+    "ratios": [
+     0.2684311932260399
+    ],
+    "n_ratios": 1,
+    "min_ratio": 0.2684311932260399,
+    "max_ratio": 0.2684311932260399,
+    "spread": 0.0,
+    "max_spread": 0.5,
+    "informative": false,
+    "asymptotic": false
+   },
+   "gci_assumption_tested": false,
+   "verdict": "within_own_uncertainty",
+   "reason": "reference -0.38289 lies inside the GCI band [-0.390903, -0.379705] of the finest solution -0.385304 (position 0.43 of the half-width, p=1.90); the residual is not significant and must not be attributed [caveat: only three refinement levels, so the asymptotic-range assumption behind the GCI band is untested - add a fourth level]"
+  },
+  "v_max": {
+   "label": "v_max",
+   "finest": 0.3738665719785615,
+   "reference": 0.37095,
+   "residual_relative": 0.007862439624104297,
+   "gci": {
+    "order": 1.976397364864982,
+    "epsilon": 0.030332662385526565,
+    "increment_ratio": 3.9350919984355897,
+    "gci_fine": 0.012918105463855113,
+    "band": 0.004829647806229036,
+    "interval": [
+     0.36903692417233247,
+     0.3786962197847905
+    ],
+    "refinement": 2.0,
+    "safety": 1.25
+   },
+   "reference_inside_gci_band": true,
+   "reference_position_in_band": 0.6038891645059172,
+   "asymptotic": {
+    "ratios": [
+     0.25412366480823156
+    ],
+    "n_ratios": 1,
+    "min_ratio": 0.25412366480823156,
+    "max_ratio": 0.25412366480823156,
+    "spread": 0.0,
+    "max_spread": 0.5,
+    "informative": false,
+    "asymptotic": false
+   },
+   "gci_assumption_tested": false,
+   "verdict": "within_own_uncertainty",
+   "reason": "reference +0.37095 lies inside the GCI band [+0.369037, +0.378696] of the finest solution +0.373867 (position 0.60 of the half-width, p=1.98); the residual is not significant and must not be attributed [caveat: only three refinement levels, so the asymptotic-range assumption behind the GCI band is untested - add a fourth level]"
+  }
+ },
+ "reference_floor_re1000": {
+  "u_min": {
+   "mode": "min",
+   "tabulated": -0.38289,
+   "x_tabulated": 0.1719,
+   "interpolants": {
+    "monotone": -0.38289,
+    "spline": -0.3832638231352293,
+    "local_parabola": -0.38566040458066253
+   },
+   "x_parabola_vertex": 0.18702636930360933,
+   "bracket_gap": 0.1797,
+   "floor_lower": 0.0,
+   "floor_mid": 0.0009763199227696403,
+   "floor_upper": 0.007235510409419212
+  },
+  "v_max": {
+   "mode": "max",
+   "tabulated": 0.37095,
+   "x_tabulated": 0.1563,
+   "interpolants": {
+    "monotone": 0.37095,
+    "spline": 0.371056340994195,
+    "local_parabola": 0.37125830178988817
+   },
+   "x_parabola_vertex": 0.16194086725683757,
+   "bracket_gap": 0.1328,
+   "floor_lower": 0.0,
+   "floor_mid": 0.00028667204257982657,
+   "floor_upper": 0.0008311141390704022
+  }
+ },
+ "reference_floor_re400": {
+  "u_min": {
+   "mode": "min",
+   "tabulated": -0.32726,
+   "x_tabulated": 0.2813,
+   "interpolants": {
+    "monotone": -0.32726,
+    "spline": -0.3272805692211184,
+    "local_parabola": -0.3278350833004898
+   },
+   "x_parabola_vertex": 0.2911148186763265,
+   "bracket_gap": 0.2812,
+   "floor_lower": 0.0,
+   "floor_mid": 6.285284213905513e-05,
+   "floor_upper": 0.0017572673118921697
+  },
+  "v_max": {
+   "mode": "max",
+   "tabulated": 0.30203,
+   "x_tabulated": 0.2266,
+   "interpolants": {
+    "monotone": 0.30203,
+    "spline": 0.302030495724826,
+    "local_parabola": 0.30203090624815193
+   },
+   "x_parabola_vertex": 0.2261389114703453,
+   "bracket_gap": 0.0781,
+   "floor_lower": 0.0,
+   "floor_mid": 1.6413098896343758e-06,
+   "floor_upper": 3.000523629807135e-06
+  }
+ },
+ "reference_floor_re100": {
+  "u_min": {
+   "mode": "min",
+   "tabulated": -0.2109,
+   "x_tabulated": 0.4531,
+   "interpolants": {
+    "monotone": -0.2109,
+    "spline": -0.2109333495306082,
+    "local_parabola": -0.21093944660126251
+   },
+   "x_parabola_vertex": 0.44859181409007864,
+   "bracket_gap": 0.2187,
+   "floor_lower": 0.0,
+   "floor_mid": 0.00015812959036597607,
+   "floor_upper": 0.0001870393611309177
+  },
+  "v_max": {
+   "mode": "max",
+   "tabulated": 0.17527,
+   "x_tabulated": 0.2344,
+   "interpolants": {
+    "monotone": 0.17527,
+    "spline": 0.17530742763996046,
+    "local_parabola": 0.17529029619534883
+   },
+   "x_parabola_vertex": 0.2377993584730379,
+   "bracket_gap": 0.2734,
+   "floor_lower": 0.0,
+   "floor_mid": 0.00021354276236921485,
+   "floor_upper": 0.00021354276236921485
+  }
+ },
+ "cross_code": {
+  "u_min": {
+   "spectral_fine": -0.3886114285628215,
+   "spectral_limit": -0.38844311096860895,
+   "fvm_fine": -0.38530400738358145,
+   "fvm_richardson": -0.3894504035148853,
+   "raw_disagreement_fine_grids": 0.008547241793143659,
+   "quoted_extrapolated_disagreement": 0.0025864462770747916,
+   "assumed_contraction_ratio": 0.3118077473619882
+  },
+  "v_max": {
+   "spectral_fine": 0.3770768226104175,
+   "spectral_limit": 0.3767783870867973,
+   "fvm_fine": 0.3738665719785615,
+   "fvm_richardson": 0.377626170366276,
+   "raw_disagreement_fine_grids": 0.008549913761777156,
+   "quoted_extrapolated_disagreement": 0.002245033173035669,
+   "assumed_contraction_ratio": 0.3118077473619882
+  }
+ },
+ "spectral_contraction_ratios": [
+  0.04180427382476397,
+  0.023405783581198266
+ ],
+ "spectral_ladder_orders": [
+  24,
+  32,
+  48,
+  64
+ ],
+ "re100_control": {
+  "N48_u_min": -0.21404233170213377,
+  "N64_u_min": -0.21404234501723873,
+  "N48_minus_N64": 1.3315104963051994e-08,
+  "ghia_re100_u_min": -0.2109,
+  "residual_re100": 0.014899691878799137,
+  "residual_re1000_fvm": 0.006304702090891512,
+  "residual_vs_re": {
+   "re100": 0.014899691878799137,
+   "re1000": 0.006304702090891512
+  }
+ },
+ "spectral_admissibility": {
+  "24": {
+   "lid_velocity_max": 1.1117320330377367,
+   "wall_slip_defect": 0.04939277250963125,
+   "u_min": -0.7845267931575279
+  },
+  "32": {
+   "lid_velocity_max": 1.0903147688815495,
+   "wall_slip_defect": 0.0051813668841667266,
+   "u_min": -0.40485483362623587
+  },
+  "48": {
+   "lid_velocity_max": 1.084527695061347,
+   "wall_slip_defect": 0.001221204122975708,
+   "u_min": -0.38898292306640503
+  },
+  "64": {
+   "lid_velocity_max": 1.0740449428513879,
+   "wall_slip_defect": 0.00031127376991786274,
+   "u_min": -0.3886114285628215
+  }
+ },
+ "registered_gate_status": {
+  "judge_grid": 128,
+  "registered_tolerance": 0.03,
+  "n_criteria": 7
+ }
+}
