@@ -32,6 +32,7 @@ import re
 import numpy as np
 import scipy.sparse as sp
 import scipy.sparse.linalg as spla
+from .registry import capability
 
 
 # --------------------------------------------------------------------------
@@ -277,6 +278,14 @@ def _infer_cell_type(n_faces, sizes):
 # the mesh object
 # --------------------------------------------------------------------------
 @dataclass(frozen=True)
+@capability('fvm.mesh.openfoam_polymesh',
+            kind='mesh',
+            maturity='developing',
+            test_path='tests/test_openfoam_polymesh.py',
+            wired=False,
+            tested=True,
+            verified=False,
+            evidence={'grade': 'MECHANICS', 'docs': 0})
 class PolyMesh:
     """3-D unstructured finite-volume mesh read from an OpenFOAM polyMesh."""
 

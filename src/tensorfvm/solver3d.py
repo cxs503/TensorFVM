@@ -12,6 +12,7 @@ import torch
 
 from .mesh3d import CartesianCylinderMesh3D
 from .runtime import DistributedRuntime, SlabPartition
+from .registry import capability
 
 
 @dataclass
@@ -111,6 +112,15 @@ class Cylinder3DResult:
     face_masks: tuple[torch.Tensor, torch.Tensor, torch.Tensor]
 
 
+@capability('fvm.core.ins3d_cylinder',
+            kind='solver',
+            maturity='developing',
+            test_path='tests/test_body_fitted3d.py',
+            wired=True,
+            tested=True,
+            verified=False,
+            endpoint='cli:tensorfvm-cylinder',
+            evidence={'grade': 'MECHANICS', 'docs': 1})
 class Cylinder3DSolver:
     """3-D incompressible projection solver with distributed periodic z slabs.
 

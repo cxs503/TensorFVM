@@ -55,6 +55,7 @@ from .rudder import (
     rudder_normal_force,
 )
 from .selfpropulsion import SelfPropulsionPoint
+from ..registry import capability
 
 __all__ = [
     "ManoeuvreModel", "operating_point_for_rudder", "Trajectory", "simulate_turning_circle", "simulate_zigzag",
@@ -94,6 +95,13 @@ def operating_point_for_rudder(delta_deg: float) -> Tuple[float, float]:
 
 
 @dataclass
+@capability('fvm.maneuvering.dynamics',
+            kind='maneuvering',
+            maturity='developing',
+            wired=True,
+            tested=False,
+            verified=False,
+            evidence={'grade': 'NONE', 'docs': 1})
 class ManoeuvreModel:
     """Everything needed to integrate a manoeuvre (model scale, SI units)."""
 

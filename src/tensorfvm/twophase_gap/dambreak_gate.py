@@ -30,6 +30,7 @@ import numpy as np
 from ..two_phase.vof import dam_break_history, plic_solver, static_interface_drift
 from ..vof_phase0.anchors import martin_moyce_front, martin_moyce_height
 from ..vof_phase0.dam_break import DamBreakConfig
+from ..registry import capability
 
 __all__ = ["run_dambreak_leg", "decompose_dambreak_error",
            "quantisation_floor", "resolvable_error_floor",
@@ -54,6 +55,14 @@ LATE_T_STAR = 2.0
 SHIFT_GRID = (-1.5, 2.0, 0.01)
 
 
+@capability('fvm.multiphase.dambreak_gate',
+            kind='verification',
+            maturity='developing',
+            test_path='tests/test_dambreak_error_decomposition.py',
+            wired=True,
+            tested=True,
+            verified=False,
+            evidence={'grade': 'MECHANICS', 'docs': 0})
 def decompose_dambreak_error(
     t_star,
     got,

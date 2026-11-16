@@ -21,10 +21,19 @@ and the gap still widening under refinement.
 from __future__ import annotations
 
 import torch
+from ..registry import capability
 
 __all__ = ["minmod", "vanleer", "mc", "superbee", "none", "LIMITERS", "limited_slope"]
 
 
+@capability('fvm.compressible.slope_limiter',
+            kind='compressible',
+            maturity='developing',
+            test_path='tests/test_sod1978_convergence.py',
+            wired=True,
+            tested=True,
+            verified=False,
+            evidence={'grade': 'MECHANICS', 'docs': 0})
 def minmod(a: torch.Tensor, b: torch.Tensor) -> torch.Tensor:
     """Minmod limiter: most diffusive of the TVD family, most robust."""
     return torch.where(

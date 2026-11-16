@@ -42,8 +42,17 @@ import torch
 from typing import Dict, List, Optional, Tuple
 
 from .solver import SimpleSolver, SolverConfig
+from .registry import capability
 
 
+@capability('fvm.pmm.section_ns2d',
+            kind='solver',
+            maturity='developing',
+            test_path='tests/test_pmm_solver.py',
+            wired=False,
+            tested=True,
+            verified=False,
+            evidence={'grade': 'MECHANICS', 'docs': 0})
 class SectionNS2D:
     """2D Navier-Stokes solver with Immersed Boundary Method (IBM).
     

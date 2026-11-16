@@ -29,6 +29,7 @@ from __future__ import annotations
 import math
 
 import numpy as np
+from ..registry import capability
 
 __all__ = [
     "GRAVITY",
@@ -47,6 +48,14 @@ __all__ = [
 GRAVITY = 9.80665
 
 
+@capability('fvm.seakeeping.wave_theory',
+            kind='seakeeping',
+            maturity='developing',
+            test_path='tests/test_p190_n04_wave_tank_metrology.py',
+            wired=True,
+            tested=True,
+            verified=False,
+            evidence={'grade': 'MECHANICS', 'docs': 0})
 def dispersion_k(omega: float, depth: float, g: float = GRAVITY,
                  tol: float = 1e-14, max_iter: int = 200) -> float:
     """Finite-depth wavenumber from ``w^2 = g k tanh(k h)``.

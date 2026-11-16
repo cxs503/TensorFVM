@@ -53,6 +53,7 @@ from typing import Optional
 import numpy as np
 
 from .section import naca4_contour, panel_solve
+from ..registry import capability
 
 __all__ = [
     "water_vapour_pressure", "water_density", "WaterState",
@@ -103,6 +104,14 @@ class WaterState:
 # --------------------------------------------------------------------------- #
 # operating point and inception
 # --------------------------------------------------------------------------- #
+@capability('fvm.cavitation.inception',
+            kind='cavitation',
+            maturity='developing',
+            test_path='tests/test_cavitation_propeller_oracle.py',
+            wired=True,
+            tested=True,
+            verified=False,
+            evidence={'grade': 'MECHANICS', 'docs': 0})
 def cavitation_number(p_inf: float, p_v: float, rho: float, v: float) -> float:
     """``sigma = (p_inf - p_v) / (1/2 rho V^2)``.
 

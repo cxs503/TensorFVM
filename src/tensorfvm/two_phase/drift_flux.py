@@ -78,6 +78,7 @@ from dataclasses import dataclass, asdict
 
 import numpy as np
 from scipy.integrate import solve_ivp
+from ..registry import capability
 
 __all__ = [
     "DriftFluxConfig",
@@ -93,6 +94,14 @@ __all__ = [
 GRAVITY = 9.80665
 
 
+@capability('fvm.multiphase.drift_flux',
+            kind='multiphase',
+            maturity='developing',
+            test_path='tests/test_two_phase_drift_flux.py',
+            wired=True,
+            tested=True,
+            verified=False,
+            evidence={'grade': 'MECHANICS', 'docs': 0})
 def wallis_drift_velocity(kind: str, diameter: float, rho_liquid: float,
                           rho_gas: float, sigma: float,
                           gravity: float = GRAVITY) -> float:

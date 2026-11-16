@@ -37,6 +37,7 @@ from dataclasses import dataclass, field
 import numpy as np
 import scipy.sparse as sp
 import scipy.sparse.linalg as spla
+from ..registry import capability
 
 __all__ = ["solve_steady_energy", "Grid2D", "EnergyLedger"]
 
@@ -177,6 +178,15 @@ def _bc_arrays(bc, side, count, default="adiabatic"):
 
 
 @dataclass
+@capability('fvm.thermal.conjugate_energy',
+            kind='thermal',
+            maturity='developing',
+            test_path='tests/test_cht_conjugate_anchors.py',
+            wired=True,
+            tested=True,
+            verified=False,
+            endpoint='cli:tensorfvm-thermal',
+            evidence={'grade': 'MECHANICS', 'docs': 0})
 class EnergyLedger:
     """Global energy bookkeeping for a solved field (all in the same units)."""
 

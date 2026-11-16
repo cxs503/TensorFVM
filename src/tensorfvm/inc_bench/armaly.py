@@ -31,6 +31,7 @@ import torch
 
 from .cases import CaseSetup, backward_step, backward_step_metrics
 from .solver import SolverOptions, SteadyFlow, cell_velocity
+from ..registry import capability
 
 
 # --------------------------------------------------------------------- anchors
@@ -70,6 +71,14 @@ TOLERANCE_REATTACHMENT = 0.15
 TOLERANCE_PROFILE = 0.05
 
 
+@capability('fvm.inc_bench.armaly_experiment',
+            kind='verification',
+            maturity='developing',
+            test_path='tests/test_armaly1983_reproduction.py',
+            wired=False,
+            tested=True,
+            verified=False,
+            evidence={'grade': 'MECHANICS', 'docs': 0})
 def experiment_point(reynolds_dh: float) -> ExperimentPoint:
     """Experimental anchor at ``Re_Dh``; never interpolated."""
     for key, point in ARMALY_1983_EXPERIMENT.items():

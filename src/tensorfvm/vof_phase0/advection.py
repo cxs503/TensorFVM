@@ -55,6 +55,7 @@ S.T. Zalesak, *J. Comput. Phys.* 31 (1979) 335-362.
 from __future__ import annotations
 
 import torch
+from ..registry import capability
 
 __all__ = ["AlgebraicVOF", "minmod"]
 
@@ -66,6 +67,14 @@ def minmod(a: torch.Tensor, b: torch.Tensor) -> torch.Tensor:
     return 0.5 * (torch.sign(a) + torch.sign(b)) * torch.minimum(a.abs(), b.abs())
 
 
+@capability('fvm.freesurface.algebraic_vof',
+            kind='free_surface',
+            maturity='developing',
+            test_path='tests/test_vof_phase0_advection.py',
+            wired=True,
+            tested=True,
+            verified=False,
+            evidence={'grade': 'MECHANICS', 'docs': 0})
 class AlgebraicVOF:
     """Conservative, bounded algebraic-VOF advection on a uniform Cartesian grid.
 

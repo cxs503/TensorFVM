@@ -9,8 +9,17 @@ import numpy as np
 import torch
 from scipy.sparse.linalg import splu
 from .sparse_simple import SparseBodyFittedSolver, host
+from .registry import capability
 
 
+@capability('fvm.linear.splu_direct',
+            kind='linear_solver',
+            maturity='developing',
+            test_path='tests/test_external_flow.py',
+            wired=True,
+            tested=True,
+            verified=False,
+            evidence={'grade': 'MECHANICS', 'docs': 0})
 class ExternalFlowSolver(SparseBodyFittedSolver):
     def _linear(self,diagonal,ao,an,rhs,initial,symmetric=False,operator=None,
                 threshold_floor=1e-10,relative_tolerance=1e-9,allow_inexact=False):

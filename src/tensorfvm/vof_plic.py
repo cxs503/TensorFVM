@@ -71,6 +71,7 @@ All tensors are ``float64``.
 from __future__ import annotations
 
 import torch
+from .registry import capability
 
 __all__ = [
     "validate_alpha",
@@ -358,6 +359,19 @@ def plane_constant(
     return out
 
 
+@capability('fvm.freesurface.plic_geometry',
+            kind='free_surface',
+            maturity='mature',
+            test_path='tests/test_vof_plic_interface.py',
+            wired=True,
+            tested=True,
+            verified=True,
+            evidence={
+             'grade': 'CONSERVATION',
+             'max_error_pct': 0.0,
+             'reference': 'algebraic identity A(n, c(alpha)) == alpha (exact cut area)',
+             'band_script': 'scripts/m23215_error_bands.py',
+         })
 def reconstruct(
     alpha: torch.Tensor, dx: float = 1.0, dy: float = 1.0
 ) -> tuple[torch.Tensor, torch.Tensor]:
