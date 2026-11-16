@@ -1,8 +1,22 @@
 """Original-system diagnostics; never relax acceptance tolerances or alter state."""
 import numpy as np
 from scipy.sparse.linalg import LinearOperator, onenormest, splu
+from .registry import capability
 
 
+@capability('fvm.linear.diagnostics',
+            kind='linear_solver',
+            maturity='mature',
+            test_path='tests/test_native_linear_diagnostics.py',
+            wired=True,
+            tested=True,
+            verified=True,
+            evidence={
+             'grade': 'CONSERVATION',
+             'max_error_pct': 0.0,
+             'reference': 'componentwise backward error of a direct solve (exact residual)',
+             'band_script': 'scripts/m23215_error_bands.py',
+         })
 def linear_system_diagnostics(matrix, rhs, solution, *, estimate_condition=False):
     matrix = matrix.tocsc()
     rhs, solution = np.asarray(rhs), np.asarray(solution)

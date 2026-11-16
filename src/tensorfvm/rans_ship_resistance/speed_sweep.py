@@ -42,6 +42,7 @@ from .kvlcc2 import (
     KVLCC2_MODEL, Kvlcc2Hull, build_kvlcc2_hull, equivalent_body_velocity,
 )
 from ..resistance_chain import NU_FRESHWATER_15C, holtrop_form_factor
+from ..registry import capability
 
 __all__ = [
     "ResistancePoint", "run_speed_point", "run_speed_sweep", "fit_ct_froude",
@@ -78,6 +79,14 @@ class ResistancePoint:
         }
 
 
+@capability('fvm.resistance.speed_sweep',
+            kind='module',
+            maturity='developing',
+            test_path='tests/test_gci_inventory.py',
+            wired=True,
+            tested=True,
+            verified=False,
+            evidence={'grade': 'MECHANICS', 'docs': 0})
 def speed_points_kn(speeds: Sequence[float] = (5.0, 7.0, 9.0, 11.0, 13.0, 15.0),
                     design_kn: float = 15.5) -> np.ndarray:
     """Ship speeds in knots, with the design point appended (sorted, unique)."""

@@ -36,6 +36,7 @@ from .models import MODELS, WALL_TREATMENT
 from .reference import (REFERENCE_LAWS, dns_deviation, load_dns_profile,
                         log_law_indicator, log_region_deviation, shear_stress_deviation)
 from .sensitivity import constant_sweep
+from ..registry import capability
 
 PRIMARY_REFERENCE = 'log_law'
 DNS_REFERENCE = 'dns'
@@ -70,6 +71,14 @@ def default_re_tau_values(dns_root=None):
     return tuple(available_dns(dns_root)) + (MANDATE_RE_TAU,)
 
 
+@capability('fvm.turbulence.validation_matrix',
+            kind='turbulence',
+            maturity='developing',
+            test_path='tests/test_rans_validation_sensitivity.py',
+            wired=False,
+            tested=True,
+            verified=False,
+            evidence={'grade': 'MECHANICS', 'docs': 0})
 def solve_case(model, re_tau, n):
     """Solve one matrix cell with the wall treatment the model requires."""
     options = {}

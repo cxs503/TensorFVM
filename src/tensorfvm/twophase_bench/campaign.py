@@ -34,6 +34,7 @@ from .cicsam import advect_cicsam
 from .ritter import DamBreakGeometry, run_transport
 from .zalesak import run_rotation
 from ..verification.vof_rotation import cosine_hill, rotation_velocity
+from ..registry import capability
 
 __all__ = ["run_campaign", "evaluate_gates", "hill_diagnostic", "limiter_audit",
            "DEFAULTS"]
@@ -52,6 +53,13 @@ DEFAULTS = {
 }
 
 
+@capability('fvm.multiphase.bench_campaign',
+            kind='multiphase',
+            maturity='developing',
+            wired=False,
+            tested=False,
+            verified=False,
+            evidence={'grade': 'NONE', 'docs': 0})
 def run_campaign(
     zalesak_resolutions=(64, 128),
     zalesak_schemes=("upwind", "cicsam", "plic"),

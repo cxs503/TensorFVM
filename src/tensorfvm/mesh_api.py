@@ -9,6 +9,7 @@ class.
 from typing import Mapping, Protocol, Sequence, runtime_checkable
 
 import torch
+from .registry import capability
 
 
 @runtime_checkable
@@ -37,6 +38,14 @@ class Mesh2D(Protocol):
     masks: Mapping[str, torch.Tensor]
 
 
+@capability('fvm.mesh.contract2d',
+            kind='mesh',
+            maturity='developing',
+            test_path='tests/test_backend_registry.py',
+            wired=True,
+            tested=True,
+            verified=False,
+            evidence={'grade': 'MECHANICS', 'docs': 0})
 def validate_mesh2d(
     mesh: Mesh2D,
     *,

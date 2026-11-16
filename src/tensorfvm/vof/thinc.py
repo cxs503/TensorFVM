@@ -47,6 +47,7 @@ from __future__ import annotations
 import math
 
 import torch
+from ..registry import capability
 
 __all__ = [
     "beta_from_sharpness",
@@ -112,6 +113,13 @@ def thinc_reconstruct(alpha, sharpness: float = 3.0) -> torch.Tensor:
     return 0.5 * (lo + hi)
 
 
+@capability('fvm.freesurface.thinc',
+            kind='free_surface',
+            maturity='developing',
+            wired=True,
+            tested=False,
+            verified=False,
+            evidence={'grade': 'NONE', 'docs': 0})
 def thinc_flux(alpha, courant, sharpness: float = 3.0) -> torch.Tensor:
     """Volume fraction (times ``dx``) leaving the donor across the downstream face.
 

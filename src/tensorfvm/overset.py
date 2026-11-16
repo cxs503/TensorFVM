@@ -8,6 +8,7 @@ solver. SciPy is imported only when connectivity is constructed.
 """
 from dataclasses import dataclass
 import numpy as np
+from .registry import capability
 
 ACTIVE, HOLE, FRINGE = 0, 1, 2
 
@@ -44,6 +45,14 @@ def points_in_polygon(points, polygon):
 
 
 @dataclass(frozen=True)
+@capability('fvm.mesh.overset',
+            kind='mesh',
+            maturity='developing',
+            test_path='tests/test_multi_solid_overset.py',
+            wired=True,
+            tested=True,
+            verified=False,
+            evidence={'grade': 'MECHANICS', 'docs': 4})
 class OversetGrid:
     name: str
     centers: np.ndarray

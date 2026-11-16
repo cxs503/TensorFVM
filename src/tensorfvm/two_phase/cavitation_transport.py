@@ -62,6 +62,7 @@ from dataclasses import dataclass, asdict, field
 
 import numpy as np
 from scipy.integrate import solve_ivp
+from ..registry import capability
 
 __all__ = [
     "BubbleConfig",
@@ -133,6 +134,14 @@ def linear_damping(cfg: BubbleConfig) -> float:
     return 2.0 * cfg.mu / (cfg.rho * cfg.r0 ** 2)
 
 
+@capability('fvm.multiphase.rayleigh_plesset',
+            kind='multiphase',
+            maturity='developing',
+            test_path='tests/test_two_phase_cavitation.py',
+            wired=True,
+            tested=True,
+            verified=False,
+            evidence={'grade': 'MECHANICS', 'docs': 0})
 def plesset_solution(cfg: BubbleConfig, t: np.ndarray, eps: float) -> np.ndarray:
     """Plesset (1949) linear solution ``R0 (1 + eps e^{-beta t} cos(w_d t))``."""
     omega = linear_frequency(cfg)

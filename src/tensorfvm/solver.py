@@ -11,6 +11,7 @@ import math
 import torch
 
 from .backend_registry import get_backend
+from .registry import capability
 
 
 @dataclass
@@ -239,6 +240,14 @@ def _neighbors(a):
     return east, west, north, south
 
 
+@capability('fvm.core.ins2d_collocated',
+            kind='solver',
+            maturity='developing',
+            test_path='tests/test_backend_registry.py',
+            wired=True,
+            tested=True,
+            verified=False,
+            evidence={'grade': 'MECHANICS', 'docs': 25})
 class SimpleSolver:
     """Conservative MAC finite-volume SIMPLE iteration in torch float64.
 

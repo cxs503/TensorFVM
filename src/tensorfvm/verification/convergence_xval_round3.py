@@ -65,6 +65,7 @@ from ..convergence_xval import (ReferenceStop, _mk_reference,
                                 convection_diffusion_operator, poisson_operator,
                                 RATE_TOL, FORECAST_TOL)
 from .convergence_xval_round2 import (SuperlinearFit, _tail_rate,
+from ..registry import capability
                                       _walk_forward_accepts)
 
 # ---------------------------------------------------------------------------

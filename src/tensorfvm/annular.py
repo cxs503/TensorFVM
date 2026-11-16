@@ -14,6 +14,7 @@ from .backend_registry import SolverBackend,register_backend
 from .mesh_api import validate_mesh2d
 from .solver import SolverConfig
 from .body_fitted import BodyFittedSolver
+from .registry import capability
 
 
 @dataclass(frozen=True)
@@ -94,6 +95,20 @@ def _torch_cg(A,b,diagonal,x0,tolerance,iterations):
     return x,count,true
 
 
+@capability('fvm.core.annular_axial',
+            kind='solver',
+            maturity='mature',
+            test_path='tests/test_annular_grid_convergence.py',
+            wired=True,
+            tested=True,
+            verified=True,
+            evidence={
+             'grade': 'ANALYTIC',
+             'max_error_pct': 0.2813,
+             'reference': 'closed-form annular axial Poiseuille profile',
+             'band_script': 'scripts/m23215_error_bands.py',
+             'coarse_max_error_pct': 3.0336,
+         })
 def solve(c,device='cpu',linear_backend='scipy'):
     from scipy.sparse import coo_matrix,diags
     from scipy.sparse.linalg import cg

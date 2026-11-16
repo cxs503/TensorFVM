@@ -9,6 +9,7 @@ from dataclasses import dataclass
 from importlib import import_module
 from threading import RLock
 from typing import Any, Callable
+from .registry import capability
 
 
 Factory = Callable[[Any], Any]
@@ -134,6 +135,14 @@ def registered_backends() -> tuple[str, ...]:
         return tuple(sorted(_BACKENDS))
 
 
+@capability('fvm.mesh.backend_registry',
+            kind='mesh',
+            maturity='developing',
+            test_path='tests/test_backend_registry.py',
+            wired=True,
+            tested=True,
+            verified=False,
+            evidence={'grade': 'MECHANICS', 'docs': 1})
 def build_mesh(config):
     """Build and validate the mesh for a collocated backend."""
     backend = get_backend(config.mesh_type)
