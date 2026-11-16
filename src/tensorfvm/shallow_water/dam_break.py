@@ -1333,17 +1333,23 @@ def _verdict(case: DamBreakCase, metrics: dict) -> dict:
 # runs
 # --------------------------------------------------------------------------- #
 def run_case(case: DamBreakCase, n: int = 1600, cfl: float = 0.4, order: int = 2,
-             t_star: float | None = None) -> dict:
+             t_star: float | None = None, dry_depth: float = 1e-12) -> dict:
     """Integrate one dam-break case and compare it with the exact solution.
 
     ``t_star`` overrides the case's own end time (used for the time series in
     the report).  The returned dict is JSON-serialisable except for the
     ``profile`` arrays, which are returned as plain lists.
+
+    ``dry_depth`` is passed through to :class:`ShallowWater1D`; the default
+    reproduces the shipped solver default bit-for-bit, so the published pool
+    numbers are unchanged.  It is exposed because the floor is an *absolute
+    length* that defines the measured velocity field at the dry front (see
+    :mod:`tensorfvm.verification.dambreak_config_envelope`).
     """
     t_star_end = case.t_star_end if t_star is None else float(t_star)
     t_end = t_star_to_time(t_star_end, case.h0, case.gravity)
     solver = ShallowWater1D(n, case.x_min, case.x_max, gravity=case.gravity,
-                            cfl=cfl, order=order)
+                            cfl=cfl, order=order, dry_depth=dry_depth)
     initial = np.where(solver.x < case.x_dam, case.h0, case.h1)
     solver.set_state(initial)
     volume0 = solver.total_volume()
@@ -1373,6 +1379,7 @@ def run_case(case: DamBreakCase, n: int = 1600, cfl: float = 0.4, order: int = 2
             "dx": solver.dx,
             "cfl": cfl,
             "order": order,
+            "dry_depth": float(dry_depth),
             "steps": steps,
             "t_end": solver.time,
             "t_star_end": t_star_end,

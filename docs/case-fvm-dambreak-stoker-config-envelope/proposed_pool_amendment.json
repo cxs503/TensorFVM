@@ -1,0 +1,114 @@
+{
+ "feature_slug": "CASE-FVM-DAMBREAK-STOKER",
+ "proposal": "declare the numerical configuration, not only the grid",
+ "current_entry_declares": {
+  "n": 1600
+ },
+ "measured": {
+  "certified_cfl": [
+   0.1,
+   0.2,
+   0.3,
+   0.4,
+   0.6,
+   0.8,
+   0.9,
+   0.95
+  ],
+  "certified_order": [
+   1.0,
+   2.0
+  ],
+  "certified_dry_depth": [
+   1e-15,
+   1e-12,
+   1e-09
+  ],
+  "first_break_gate": {
+   "gate": "front_wetted<5%",
+   "first_break": 1e-06
+  },
+  "confirmation_n1600": [
+   {
+    "case": "ritter-dry",
+    "n": 1600,
+    "dry_depth": 1e-12,
+    "ok": true,
+    "all_gates_pass": true,
+    "front_wetted_error": 0.02890624999999991,
+    "front_fan_error": 0.00017261518056277403,
+    "hidden_mass_fraction": 3.873613671008798e-06
+   },
+   {
+    "case": "ritter-dry",
+    "n": 1600,
+    "dry_depth": 1e-09,
+    "ok": true,
+    "all_gates_pass": true,
+    "front_wetted_error": 0.04296875,
+    "front_fan_error": 0.0001726177594121303,
+    "hidden_mass_fraction": 1.2402006347928372e-05
+   },
+   {
+    "case": "ritter-dry",
+    "n": 1600,
+    "dry_depth": 1e-06,
+    "ok": true,
+    "all_gates_pass": false,
+    "front_wetted_error": 0.06640625,
+    "front_fan_error": 0.00017575144256620767,
+    "hidden_mass_fraction": 4.492611964601232e-05
+   },
+   {
+    "case": "ritter-dry",
+    "n": 1600,
+    "dry_depth": 0.001,
+    "ok": true,
+    "all_gates_pass": false,
+    "front_wetted_error": 0.21484375,
+    "front_fan_error": 0.012131255935073249,
+    "hidden_mass_fraction": 0.001437901585951278
+   },
+   {
+    "case": "stoker-wet",
+    "n": 1600,
+    "dry_depth": 1e-12,
+    "ok": true,
+    "all_gates_pass": true,
+    "front_wetted_error": null,
+    "front_fan_error": null,
+    "hidden_mass_fraction": 0.0
+   },
+   {
+    "case": "stoker-wet",
+    "n": 1600,
+    "dry_depth": 0.001,
+    "ok": true,
+    "all_gates_pass": true,
+    "front_wetted_error": null,
+    "front_fan_error": null,
+    "hidden_mass_fraction": 0.0
+   }
+  ]
+ },
+ "requested_addition": {
+  "configuration": {
+   "n": 1600,
+   "cfl": 0.4,
+   "order": 2,
+   "dry_depth": 1e-12
+  },
+  "certified_band": {
+   "dry_depth_max": 1e-09,
+   "cfl": [
+    0.1,
+    0.95
+   ],
+   "order": [
+    1,
+    2
+   ]
+  },
+  "rationale": "the legacy diagnostic `front_wetted<5%` is a depth-floor reading: it passes at the shipped floor 1e-12 but breaks at dry_depth >= 1e-6; a consumer cannot reproduce the entry's PASS without the floor."
+ }
+}

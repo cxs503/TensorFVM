@@ -1,0 +1,3089 @@
+{
+ "baseline": {
+  "n": 1600,
+  "cfl": 0.4,
+  "order": 2,
+  "dry_depth": 1e-12
+ },
+ "accepted_min_n": 800,
+ "cfl_points": [
+  0.1,
+  0.2,
+  0.3,
+  0.4,
+  0.6,
+  0.8,
+  0.9,
+  0.95
+ ],
+ "floor_points": [
+  1e-15,
+  1e-12,
+  1e-09,
+  1e-06,
+  0.0001,
+  0.001,
+  0.01,
+  0.05
+ ],
+ "order_points": [
+  1,
+  2
+ ],
+ "axes": {
+  "ritter-dry": {
+   "cfl": {
+    "rows": [
+     {
+      "case": "ritter-dry",
+      "n": 800,
+      "cfl": 0.1,
+      "order": 2,
+      "dry_depth": 1e-12,
+      "ok": true,
+      "hard_any": false,
+      "steps": 2953,
+      "wall_time_s": 4.045258071273565,
+      "front_fan<5%": 0.0003958053274146778,
+      "front_wetted<5%": 0.026562499999999822,
+      "depth_l1<5%": 0.0015411144180092397,
+      "monotone(no_extrema)": 0.0,
+      "tv_no_growth<0.5%": 0.0,
+      "front_series<5%": 0.005797448109452393,
+      "local_extrema": 0,
+      "reading": {
+       "front_fan": 4.001583221309659,
+       "front_wetted": 3.8937500000000007,
+       "front_exact": 4.0,
+       "front_recession": 0.10624999999999929,
+       "h_min": 0.0
+      },
+      "hidden_mass_fraction": 3.2857276940796978e-06,
+      "unjustified_dry_cells": 9
+     },
+     {
+      "case": "ritter-dry",
+      "n": 800,
+      "cfl": 0.2,
+      "order": 2,
+      "dry_depth": 1e-12,
+      "ok": true,
+      "hard_any": false,
+      "steps": 1477,
+      "wall_time_s": 2.0286618806421757,
+      "front_fan<5%": 0.00039574752435878047,
+      "front_wetted<5%": 0.026562499999999822,
+      "depth_l1<5%": 0.0015411028785868165,
+      "monotone(no_extrema)": 0.0,
+      "tv_no_growth<0.5%": 0.0,
+      "front_series<5%": 0.006238013378105044,
+      "local_extrema": 0,
+      "reading": {
+       "front_fan": 4.001582990097435,
+       "front_wetted": 3.8937500000000007,
+       "front_exact": 4.0,
+       "front_recession": 0.10624999999999929,
+       "h_min": 0.0
+      },
+      "hidden_mass_fraction": 3.2857276940796978e-06,
+      "unjustified_dry_cells": 9
+     },
+     {
+      "case": "ritter-dry",
+      "n": 800,
+      "cfl": 0.3,
+      "order": 2,
+      "dry_depth": 1e-12,
+      "ok": true,
+      "hard_any": false,
+      "steps": 985,
+      "wall_time_s": 1.3418441284447908,
+      "front_fan<5%": 0.00039424039409108325,
+      "front_wetted<5%": 0.026562499999999822,
+      "depth_l1<5%": 0.0015413558671809463,
+      "monotone(no_extrema)": 0.0,
+      "tv_no_growth<0.5%": 0.0,
+      "front_series<5%": 0.007383943118800862,
+      "local_extrema": 0,
+      "reading": {
+       "front_fan": 4.001576961576364,
+       "front_wetted": 3.8937500000000007,
+       "front_exact": 4.0,
+       "front_recession": 0.10624999999999929,
+       "h_min": 0.0
+      },
+      "hidden_mass_fraction": 3.2857276940796978e-06,
+      "unjustified_dry_cells": 9
+     },
+     {
+      "case": "ritter-dry",
+      "n": 800,
+      "cfl": 0.4,
+      "order": 2,
+      "dry_depth": 1e-12,
+      "ok": true,
+      "hard_any": false,
+      "steps": 739,
+      "wall_time_s": 1.0069347210228443,
+      "front_fan<5%": 0.0003911308005408731,
+      "front_wetted<5%": 0.026562499999999822,
+      "depth_l1<5%": 0.0015419003450595436,
+      "monotone(no_extrema)": 0.0,
+      "tv_no_growth<0.5%": 0.0,
+      "front_series<5%": 0.005316627610259416,
+      "local_extrema": 0,
+      "reading": {
+       "front_fan": 4.0015645232021635,
+       "front_wetted": 3.8937500000000007,
+       "front_exact": 4.0,
+       "front_recession": 0.10624999999999929,
+       "h_min": 0.0
+      },
+      "hidden_mass_fraction": 3.2857276940796978e-06,
+      "unjustified_dry_cells": 9
+     },
+     {
+      "case": "ritter-dry",
+      "n": 800,
+      "cfl": 0.6,
+      "order": 2,
+      "dry_depth": 1e-12,
+      "ok": true,
+      "hard_any": false,
+      "steps": 492,
+      "wall_time_s": 0.666980680078268,
+      "front_fan<5%": 0.00036956014481104305,
+      "front_wetted<5%": 0.029687499999999867,
+      "depth_l1<5%": 0.0015493854697170048,
+      "monotone(no_extrema)": 0.0,
+      "tv_no_growth<0.5%": 0.0,
+      "front_series<5%": 0.004890602234497273,
+      "local_extrema": 0,
+      "reading": {
+       "front_fan": 4.001478240579244,
+       "front_wetted": 3.8812500000000005,
+       "front_exact": 4.0,
+       "front_recession": 0.11874999999999947,
+       "h_min": 0.0
+      },
+      "hidden_mass_fraction": 3.2857276940796978e-06,
+      "unjustified_dry_cells": 9
+     },
+     {
+      "case": "ritter-dry",
+      "n": 800,
+      "cfl": 0.8,
+      "order": 2,
+      "dry_depth": 1e-12,
+      "ok": true,
+      "hard_any": false,
+      "steps": 369,
+      "wall_time_s": 0.5024912301450968,
+      "front_fan<5%": 0.00027488040773193667,
+      "front_wetted<5%": 0.029687499999999867,
+      "depth_l1<5%": 0.0015892179634015245,
+      "monotone(no_extrema)": 0.0,
+      "tv_no_growth<0.5%": 2.220446049250313e-16,
+      "front_series<5%": 0.007101988284164347,
+      "local_extrema": 0,
+      "reading": {
+       "front_fan": 4.001099521630928,
+       "front_wetted": 3.8812500000000005,
+       "front_exact": 4.0,
+       "front_recession": 0.11874999999999947,
+       "h_min": 0.0
+      },
+      "hidden_mass_fraction": 4.509822325207426e-06,
+      "unjustified_dry_cells": 10
+     },
+     {
+      "case": "ritter-dry",
+      "n": 800,
+      "cfl": 0.9,
+      "order": 2,
+      "dry_depth": 1e-12,
+      "ok": true,
+      "hard_any": false,
+      "steps": 328,
+      "wall_time_s": 0.44388021901249886,
+      "front_fan<5%": 0.00021920629402960579,
+      "front_wetted<5%": 0.029687499999999867,
+      "depth_l1<5%": 0.0016695262873449147,
+      "monotone(no_extrema)": 0.0,
+      "tv_no_growth<0.5%": 4.440892098500626e-16,
+      "front_series<5%": 0.00635341100327902,
+      "local_extrema": 0,
+      "reading": {
+       "front_fan": 4.000876825176118,
+       "front_wetted": 3.8812500000000005,
+       "front_exact": 4.0,
+       "front_recession": 0.11874999999999947,
+       "h_min": 0.0
+      },
+      "hidden_mass_fraction": 4.509822325207426e-06,
+      "unjustified_dry_cells": 10
+     },
+     {
+      "case": "ritter-dry",
+      "n": 800,
+      "cfl": 0.95,
+      "order": 2,
+      "dry_depth": 1e-12,
+      "ok": true,
+      "hard_any": false,
+      "steps": 311,
+      "wall_time_s": 0.43413643911480904,
+      "front_fan<5%": 0.00017143039519540437,
+      "front_wetted<5%": 0.029687499999999867,
+      "depth_l1<5%": 0.001728736357326417,
+      "monotone(no_extrema)": 0.0,
+      "tv_no_growth<0.5%": 0.0,
+      "front_series<5%": 0.0052422582397431425,
+      "local_extrema": 0,
+      "reading": {
+       "front_fan": 4.000685721580782,
+       "front_wetted": 3.8812500000000005,
+       "front_exact": 4.0,
+       "front_recession": 0.11874999999999947,
+       "h_min": 0.0
+      },
+      "hidden_mass_fraction": 4.509822325207426e-06,
+      "unjustified_dry_cells": 10
+     }
+    ],
+    "envelope": {
+     "parameter": "cfl",
+     "points": [
+      0.1,
+      0.2,
+      0.3,
+      0.4,
+      0.6,
+      0.8,
+      0.9,
+      0.95
+     ],
+     "certified": [
+      0.1,
+      0.2,
+      0.3,
+      0.4,
+      0.6,
+      0.8,
+      0.9,
+      0.95
+     ],
+     "all_points_certified": true,
+     "failed_points": [],
+     "gates": {
+      "depth_l1<5%": {
+       "values": [
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.6,
+        0.8,
+        0.9,
+        0.95
+       ],
+       "pass": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "certified": [
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.6,
+        0.8,
+        0.9,
+        0.95
+       ],
+       "worst_value": 0.001728736357326417,
+       "worst_at": 0.95,
+       "first_break": null
+      },
+      "front_fan<5%": {
+       "values": [
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.6,
+        0.8,
+        0.9,
+        0.95
+       ],
+       "pass": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "certified": [
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.6,
+        0.8,
+        0.9,
+        0.95
+       ],
+       "worst_value": 0.0003958053274146778,
+       "worst_at": 0.1,
+       "first_break": null
+      },
+      "front_series<5%": {
+       "values": [
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.6,
+        0.8,
+        0.9,
+        0.95
+       ],
+       "pass": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "certified": [
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.6,
+        0.8,
+        0.9,
+        0.95
+       ],
+       "worst_value": 0.007383943118800862,
+       "worst_at": 0.3,
+       "first_break": null
+      },
+      "front_wetted<5%": {
+       "values": [
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.6,
+        0.8,
+        0.9,
+        0.95
+       ],
+       "pass": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "certified": [
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.6,
+        0.8,
+        0.9,
+        0.95
+       ],
+       "worst_value": 0.029687499999999867,
+       "worst_at": 0.6,
+       "first_break": null
+      },
+      "monotone(no_extrema)": {
+       "values": [
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.6,
+        0.8,
+        0.9,
+        0.95
+       ],
+       "pass": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "certified": [
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.6,
+        0.8,
+        0.9,
+        0.95
+       ],
+       "worst_value": 0.0,
+       "worst_at": 0.1,
+       "first_break": null
+      },
+      "tv_no_growth<0.5%": {
+       "values": [
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.6,
+        0.8,
+        0.9,
+        0.95
+       ],
+       "pass": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "certified": [
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.6,
+        0.8,
+        0.9,
+        0.95
+       ],
+       "worst_value": 4.440892098500626e-16,
+       "worst_at": 0.9,
+       "first_break": null
+      }
+     },
+     "hard_failures": [],
+     "binding": null
+    }
+   },
+   "order": {
+    "rows": [
+     {
+      "case": "ritter-dry",
+      "n": 800,
+      "cfl": 0.4,
+      "order": 1,
+      "dry_depth": 1e-12,
+      "ok": true,
+      "hard_any": false,
+      "steps": 675,
+      "wall_time_s": 0.7820574790239334,
+      "front_fan<5%": 0.003948223781027327,
+      "front_wetted<5%": 0.014062500000000089,
+      "depth_l1<5%": 0.0077794402282709224,
+      "monotone(no_extrema)": 0.0,
+      "tv_no_growth<0.5%": 0.0,
+      "front_series<5%": 0.005074652832181917,
+      "local_extrema": 0,
+      "reading": {
+       "front_fan": 4.015792895124109,
+       "front_wetted": 4.05625,
+       "front_exact": 4.0,
+       "front_recession": -0.056250000000000355,
+       "h_min": 0.0
+      },
+      "hidden_mass_fraction": 0.0,
+      "unjustified_dry_cells": 0
+     },
+     {
+      "case": "ritter-dry",
+      "n": 800,
+      "cfl": 0.4,
+      "order": 2,
+      "dry_depth": 1e-12,
+      "ok": true,
+      "hard_any": false,
+      "steps": 739,
+      "wall_time_s": 1.0144324097782373,
+      "front_fan<5%": 0.0003911308005408731,
+      "front_wetted<5%": 0.026562499999999822,
+      "depth_l1<5%": 0.0015419003450595436,
+      "monotone(no_extrema)": 0.0,
+      "tv_no_growth<0.5%": 0.0,
+      "front_series<5%": 0.005316627610259416,
+      "local_extrema": 0,
+      "reading": {
+       "front_fan": 4.0015645232021635,
+       "front_wetted": 3.8937500000000007,
+       "front_exact": 4.0,
+       "front_recession": 0.10624999999999929,
+       "h_min": 0.0
+      },
+      "hidden_mass_fraction": 3.2857276940796978e-06,
+      "unjustified_dry_cells": 9
+     }
+    ],
+    "envelope": {
+     "parameter": "order",
+     "points": [
+      1.0,
+      2.0
+     ],
+     "certified": [
+      1.0,
+      2.0
+     ],
+     "all_points_certified": true,
+     "failed_points": [],
+     "gates": {
+      "depth_l1<5%": {
+       "values": [
+        1.0,
+        2.0
+       ],
+       "pass": [
+        true,
+        true
+       ],
+       "certified": [
+        1.0,
+        2.0
+       ],
+       "worst_value": 0.0077794402282709224,
+       "worst_at": 1.0,
+       "first_break": null
+      },
+      "front_fan<5%": {
+       "values": [
+        1.0,
+        2.0
+       ],
+       "pass": [
+        true,
+        true
+       ],
+       "certified": [
+        1.0,
+        2.0
+       ],
+       "worst_value": 0.003948223781027327,
+       "worst_at": 1.0,
+       "first_break": null
+      },
+      "front_series<5%": {
+       "values": [
+        1.0,
+        2.0
+       ],
+       "pass": [
+        true,
+        true
+       ],
+       "certified": [
+        1.0,
+        2.0
+       ],
+       "worst_value": 0.005316627610259416,
+       "worst_at": 2.0,
+       "first_break": null
+      },
+      "front_wetted<5%": {
+       "values": [
+        1.0,
+        2.0
+       ],
+       "pass": [
+        true,
+        true
+       ],
+       "certified": [
+        1.0,
+        2.0
+       ],
+       "worst_value": 0.026562499999999822,
+       "worst_at": 2.0,
+       "first_break": null
+      },
+      "monotone(no_extrema)": {
+       "values": [
+        1.0,
+        2.0
+       ],
+       "pass": [
+        true,
+        true
+       ],
+       "certified": [
+        1.0,
+        2.0
+       ],
+       "worst_value": 0.0,
+       "worst_at": 1.0,
+       "first_break": null
+      },
+      "tv_no_growth<0.5%": {
+       "values": [
+        1.0,
+        2.0
+       ],
+       "pass": [
+        true,
+        true
+       ],
+       "certified": [
+        1.0,
+        2.0
+       ],
+       "worst_value": 0.0,
+       "worst_at": 1.0,
+       "first_break": null
+      }
+     },
+     "hard_failures": [],
+     "binding": null
+    }
+   },
+   "floor": {
+    "rows": [
+     {
+      "case": "ritter-dry",
+      "n": 800,
+      "cfl": 0.4,
+      "order": 2,
+      "dry_depth": 1e-15,
+      "ok": true,
+      "hard_any": false,
+      "steps": 739,
+      "wall_time_s": 1.014065569266677,
+      "front_fan<5%": 0.0003911307858306401,
+      "front_wetted<5%": 0.0078125,
+      "depth_l1<5%": 0.0015419003473654677,
+      "monotone(no_extrema)": 0.0,
+      "tv_no_growth<0.5%": 0.0,
+      "front_series<5%": 0.005316627573481437,
+      "local_extrema": 0,
+      "reading": {
+       "front_fan": 4.001564523143323,
+       "front_wetted": 3.96875,
+       "front_exact": 4.0,
+       "front_recession": 0.03125,
+       "h_min": 0.0
+      },
+      "hidden_mass_fraction": 1.1867953487388167e-07,
+      "unjustified_dry_cells": 3
+     },
+     {
+      "case": "ritter-dry",
+      "n": 800,
+      "cfl": 0.4,
+      "order": 2,
+      "dry_depth": 1e-12,
+      "ok": true,
+      "hard_any": false,
+      "steps": 739,
+      "wall_time_s": 1.0395994987338781,
+      "front_fan<5%": 0.0003911308005408731,
+      "front_wetted<5%": 0.026562499999999822,
+      "depth_l1<5%": 0.0015419003450595436,
+      "monotone(no_extrema)": 0.0,
+      "tv_no_growth<0.5%": 0.0,
+      "front_series<5%": 0.005316627610259416,
+      "local_extrema": 0,
+      "reading": {
+       "front_fan": 4.0015645232021635,
+       "front_wetted": 3.8937500000000007,
+       "front_exact": 4.0,
+       "front_recession": 0.10624999999999929,
+       "h_min": 0.0
+      },
+      "hidden_mass_fraction": 3.2857276940796978e-06,
+      "unjustified_dry_cells": 9
+     },
+     {
+      "case": "ritter-dry",
+      "n": 800,
+      "cfl": 0.4,
+      "order": 2,
+      "dry_depth": 1e-09,
+      "ok": true,
+      "hard_any": false,
+      "steps": 739,
+      "wall_time_s": 1.0008368697017431,
+      "front_fan<5%": 0.0003911354542720513,
+      "front_wetted<5%": 0.04843749999999991,
+      "depth_l1<5%": 0.0015419007553646692,
+      "monotone(no_extrema)": 0.0,
+      "tv_no_growth<0.5%": 0.0,
+      "front_series<5%": 0.005316648962326707,
+      "local_extrema": 0,
+      "reading": {
+       "front_fan": 4.001564541817088,
+       "front_wetted": 3.8062500000000004,
+       "front_exact": 4.0,
+       "front_recession": 0.19374999999999964,
+       "h_min": 0.0
+      },
+      "hidden_mass_fraction": 1.8500444064911062e-05,
+      "unjustified_dry_cells": 16
+     },
+     {
+      "case": "ritter-dry",
+      "n": 800,
+      "cfl": 0.4,
+      "order": 2,
+      "dry_depth": 1e-06,
+      "ok": true,
+      "hard_any": false,
+      "steps": 738,
+      "wall_time_s": 0.9985584691166878,
+      "front_fan<5%": 0.00039695674008499715,
+      "front_wetted<5%": 0.08281249999999996,
+      "depth_l1<5%": 0.0015420215873264366,
+      "monotone(no_extrema)": 0.0,
+      "tv_no_growth<0.5%": 0.0,
+      "front_series<5%": 0.005320086836100658,
+      "local_extrema": 0,
+      "reading": {
+       "front_fan": 4.00158782696034,
+       "front_wetted": 3.66875,
+       "front_exact": 4.0,
+       "front_recession": 0.3312499999999998,
+       "h_min": 0.0
+      },
+      "hidden_mass_fraction": 7.943390811301439e-05,
+      "unjustified_dry_cells": 26
+     },
+     {
+      "case": "ritter-dry",
+      "n": 800,
+      "cfl": 0.4,
+      "order": 2,
+      "dry_depth": 0.0001,
+      "ok": true,
+      "hard_any": false,
+      "steps": 730,
+      "wall_time_s": 0.9886424299329519,
+      "front_fan<5%": 0.0024393938870952425,
+      "front_wetted<5%": 0.13593749999999982,
+      "depth_l1<5%": 0.0017657604677101218,
+      "monotone(no_extrema)": 0.0,
+      "tv_no_growth<0.5%": 0.0,
+      "front_series<5%": 0.008989989093621512,
+      "local_extrema": 0,
+      "reading": {
+       "front_fan": 4.009757575548381,
+       "front_wetted": 3.4562500000000007,
+       "front_exact": 4.0,
+       "front_recession": 0.5437499999999993,
+       "h_min": 0.0
+      },
+      "hidden_mass_fraction": 0.00038451830214751624,
+      "unjustified_dry_cells": 39
+     },
+     {
+      "case": "ritter-dry",
+      "n": 800,
+      "cfl": 0.4,
+      "order": 2,
+      "dry_depth": 0.001,
+      "ok": true,
+      "hard_any": false,
+      "steps": 705,
+      "wall_time_s": 0.9554011803120375,
+      "front_fan<5%": 0.011476630663298959,
+      "front_wetted<5%": 0.21406249999999982,
+      "depth_l1<5%": 0.003991743410489468,
+      "monotone(no_extrema)": 0.0,
+      "tv_no_growth<0.5%": 0.0008103582378249374,
+      "front_series<5%": 0.01228055536049846,
+      "local_extrema": 0,
+      "reading": {
+       "front_fan": 4.045906522653196,
+       "front_wetted": 3.1437500000000007,
+       "front_exact": 4.0,
+       "front_recession": 0.8562499999999993,
+       "h_min": 0.0
+      },
+      "hidden_mass_fraction": 0.0014699104654462157,
+      "unjustified_dry_cells": 54
+     },
+     {
+      "case": "ritter-dry",
+      "n": 800,
+      "cfl": 0.4,
+      "order": 2,
+      "dry_depth": 0.01,
+      "ok": true,
+      "hard_any": false,
+      "steps": 656,
+      "wall_time_s": 0.8961992803961039,
+      "front_fan<5%": 0.045827661846287615,
+      "front_wetted<5%": 0.3515625,
+      "depth_l1<5%": 0.013818526713693569,
+      "monotone(no_extrema)": 0.0,
+      "tv_no_growth<0.5%": 0.0018630101168544133,
+      "front_series<5%": 0.04771021083362932,
+      "local_extrema": 0,
+      "reading": {
+       "front_fan": 4.1833106473851505,
+       "front_wetted": 2.59375,
+       "front_exact": 4.0,
+       "front_recession": 1.40625,
+       "h_min": 0.0
+      },
+      "hidden_mass_fraction": 0.005851782688684182,
+      "unjustified_dry_cells": 64
+     },
+     {
+      "case": "ritter-dry",
+      "n": 800,
+      "cfl": 0.4,
+      "order": 2,
+      "dry_depth": 0.05,
+      "ok": true,
+      "hard_any": true,
+      "steps": 600,
+      "wall_time_s": 0.8106386512517929,
+      "front_fan<5%": NaN,
+      "front_wetted<5%": 0.49843749999999987,
+      "depth_l1<5%": 0.03729119440549891,
+      "monotone(no_extrema)": 0.0,
+      "tv_no_growth<0.5%": 0.003709611627259246,
+      "front_series<5%": null,
+      "local_extrema": 0,
+      "reading": {
+       "front_fan": NaN,
+       "front_wetted": 2.0062500000000005,
+       "front_exact": 4.0,
+       "front_recession": 1.9937499999999995,
+       "h_min": 0.0
+      },
+      "hidden_mass_fraction": 0.012634840296679843,
+      "unjustified_dry_cells": 52
+     }
+    ],
+    "envelope": {
+     "parameter": "dry_depth",
+     "points": [
+      1e-15,
+      1e-12,
+      1e-09,
+      1e-06,
+      0.0001,
+      0.001,
+      0.01,
+      0.05
+     ],
+     "certified": [
+      1e-15,
+      1e-12,
+      1e-09
+     ],
+     "all_points_certified": false,
+     "failed_points": [
+      1e-06,
+      0.0001,
+      0.001,
+      0.01,
+      0.05
+     ],
+     "gates": {
+      "depth_l1<5%": {
+       "values": [
+        1e-15,
+        1e-12,
+        1e-09,
+        1e-06,
+        0.0001,
+        0.001,
+        0.01,
+        0.05
+       ],
+       "pass": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "certified": [
+        1e-15,
+        1e-12,
+        1e-09,
+        1e-06,
+        0.0001,
+        0.001,
+        0.01,
+        0.05
+       ],
+       "worst_value": 0.03729119440549891,
+       "worst_at": 0.05,
+       "first_break": null
+      },
+      "front_fan<5%": {
+       "values": [
+        1e-15,
+        1e-12,
+        1e-09,
+        1e-06,
+        0.0001,
+        0.001,
+        0.01,
+        0.05
+       ],
+       "pass": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false
+       ],
+       "certified": [
+        1e-15,
+        1e-12,
+        1e-09,
+        1e-06,
+        0.0001,
+        0.001,
+        0.01
+       ],
+       "worst_value": 0.045827661846287615,
+       "worst_at": 0.01,
+       "first_break": 0.05
+      },
+      "front_series<5%": {
+       "values": [
+        1e-15,
+        1e-12,
+        1e-09,
+        1e-06,
+        0.0001,
+        0.001,
+        0.01,
+        0.05
+       ],
+       "pass": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false
+       ],
+       "certified": [
+        1e-15,
+        1e-12,
+        1e-09,
+        1e-06,
+        0.0001,
+        0.001,
+        0.01
+       ],
+       "worst_value": 0.04771021083362932,
+       "worst_at": 0.01,
+       "first_break": 0.05
+      },
+      "front_wetted<5%": {
+       "values": [
+        1e-15,
+        1e-12,
+        1e-09,
+        1e-06,
+        0.0001,
+        0.001,
+        0.01,
+        0.05
+       ],
+       "pass": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false
+       ],
+       "certified": [
+        1e-15,
+        1e-12,
+        1e-09
+       ],
+       "worst_value": 0.49843749999999987,
+       "worst_at": 0.05,
+       "first_break": 1e-06
+      },
+      "monotone(no_extrema)": {
+       "values": [
+        1e-15,
+        1e-12,
+        1e-09,
+        1e-06,
+        0.0001,
+        0.001,
+        0.01,
+        0.05
+       ],
+       "pass": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "certified": [
+        1e-15,
+        1e-12,
+        1e-09,
+        1e-06,
+        0.0001,
+        0.001,
+        0.01,
+        0.05
+       ],
+       "worst_value": 0.0,
+       "worst_at": 1e-15,
+       "first_break": null
+      },
+      "tv_no_growth<0.5%": {
+       "values": [
+        1e-15,
+        1e-12,
+        1e-09,
+        1e-06,
+        0.0001,
+        0.001,
+        0.01,
+        0.05
+       ],
+       "pass": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "certified": [
+        1e-15,
+        1e-12,
+        1e-09,
+        1e-06,
+        0.0001,
+        0.001,
+        0.01,
+        0.05
+       ],
+       "worst_value": 0.003709611627259246,
+       "worst_at": 0.05,
+       "first_break": null
+      }
+     },
+     "hard_failures": [
+      {
+       "dry_depth": 0.05,
+       "exception": false,
+       "clipped_cells": 0,
+       "dry_momentum_flips": 1077,
+       "mass_drift": 1.432187701766452e-14,
+       "mass_leak": false,
+       "positivity_clipping": false,
+       "nan_in_gates": true,
+       "all_gates_defined": false,
+       "any": true
+      }
+     ],
+     "binding": {
+      "gate": "front_wetted<5%",
+      "first_break": 1e-06
+     }
+    }
+   }
+  },
+  "stoker-wet": {
+   "cfl": {
+    "rows": [
+     {
+      "case": "stoker-wet",
+      "n": 800,
+      "cfl": 0.1,
+      "order": 2,
+      "dry_depth": 1e-12,
+      "ok": true,
+      "hard_any": false,
+      "steps": 1836,
+      "wall_time_s": 2.444108409807086,
+      "shock_position<5%": 0.00043997518855341025,
+      "step_ratio<5%": 2.0275385300104493e-06,
+      "plateau_h2<5%": 2.0275385300104493e-06,
+      "depth_l1<5%": 0.0008511385614587363,
+      "monotone(no_extrema)": 0.0,
+      "tv_no_growth<0.5%": 0.0009047595358655514,
+      "bore_position_modes<5%": 0.0004402178560067567,
+      "step_ratio_modes<5%": 7.358080514962202e-06,
+      "front_series<5%": 0.006680622541150186,
+      "local_extrema": 0,
+      "reading": {
+       "shock_position": 1.8896121668743202,
+       "shock_exact": 1.8887811500316989,
+       "shock_offset": 0.0008310168426213238,
+       "h2_measured": 0.7269189723280736,
+       "h1_measured": 0.5
+      },
+      "hidden_mass_fraction": 0.0,
+      "unjustified_dry_cells": 0
+     },
+     {
+      "case": "stoker-wet",
+      "n": 800,
+      "cfl": 0.2,
+      "order": 2,
+      "dry_depth": 1e-12,
+      "ok": true,
+      "hard_any": false,
+      "steps": 918,
+      "wall_time_s": 1.2280922010540962,
+      "shock_position<5%": 0.0004392043637194503,
+      "step_ratio<5%": 1.9229961667731127e-06,
+      "plateau_h2<5%": 1.9229961667731127e-06,
+      "depth_l1<5%": 0.00085116298461265,
+      "monotone(no_extrema)": 0.0,
+      "tv_no_growth<0.5%": 0.0009933277286955366,
+      "bore_position_modes<5%": 0.000439445364198375,
+      "step_ratio_modes<5%": 7.307891719746329e-06,
+      "front_series<5%": 0.008957204345135533,
+      "local_extrema": 0,
+      "reading": {
+       "shock_position": 1.8896107109549038,
+       "shock_exact": 1.8887811500316989,
+       "shock_offset": 0.0008295609232049639,
+       "h2_measured": 0.7269190483220549,
+       "h1_measured": 0.5
+      },
+      "hidden_mass_fraction": 0.0,
+      "unjustified_dry_cells": 0
+     },
+     {
+      "case": "stoker-wet",
+      "n": 800,
+      "cfl": 0.3,
+      "order": 2,
+      "dry_depth": 1e-12,
+      "ok": true,
+      "hard_any": false,
+      "steps": 612,
+      "wall_time_s": 0.8227372393012047,
+      "shock_position<5%": 0.00043693920526727774,
+      "step_ratio<5%": 2.063052079391833e-06,
+      "plateau_h2<5%": 2.063052079391833e-06,
+      "depth_l1<5%": 0.0008512201857587379,
+      "monotone(no_extrema)": 0.0,
+      "tv_no_growth<0.5%": 0.0010982856520023176,
+      "bore_position_modes<5%": 0.00043720368635837367,
+      "step_ratio_modes<5%": 8.021633541425252e-06,
+      "front_series<5%": 0.008715537412240465,
+      "local_extrema": 0,
+      "reading": {
+       "shock_position": 1.8896064325663176,
+       "shock_exact": 1.8887811500316989,
+       "shock_offset": 0.0008252825346186654,
+       "h2_measured": 0.7269189465125484,
+       "h1_measured": 0.5
+      },
+      "hidden_mass_fraction": 0.0,
+      "unjustified_dry_cells": 0
+     },
+     {
+      "case": "stoker-wet",
+      "n": 800,
+      "cfl": 0.4,
+      "order": 2,
+      "dry_depth": 1e-12,
+      "ok": true,
+      "hard_any": false,
+      "steps": 459,
+      "wall_time_s": 0.6273488197475672,
+      "shock_position<5%": 0.0004326276916445582,
+      "step_ratio<5%": 2.1266871225442284e-06,
+      "plateau_h2<5%": 2.1266871225442284e-06,
+      "depth_l1<5%": 0.0008510840146864194,
+      "monotone(no_extrema)": 0.0,
+      "tv_no_growth<0.5%": 0.001099331022317962,
+      "bore_position_modes<5%": 0.0004329022875710759,
+      "step_ratio_modes<5%": 8.33017375294083e-06,
+      "front_series<5%": 0.007952172493579573,
+      "local_extrema": 0,
+      "reading": {
+       "shock_position": 1.8895982890606589,
+       "shock_exact": 1.8887811500316989,
+       "shock_offset": 0.0008171390289599678,
+       "h2_measured": 0.7269189002549344,
+       "h1_measured": 0.5
+      },
+      "hidden_mass_fraction": 0.0,
+      "unjustified_dry_cells": 0
+     },
+     {
+      "case": "stoker-wet",
+      "n": 800,
+      "cfl": 0.6,
+      "order": 2,
+      "dry_depth": 1e-12,
+      "ok": true,
+      "hard_any": false,
+      "steps": 306,
+      "wall_time_s": 0.4136445391923189,
+      "shock_position<5%": 0.0004155397723674518,
+      "step_ratio<5%": 2.12938720643662e-06,
+      "plateau_h2<5%": 2.12938720643662e-06,
+      "depth_l1<5%": 0.0008505971695643016,
+      "monotone(no_extrema)": 0.0,
+      "tv_no_growth<0.5%": 0.0011188328109077439,
+      "bore_position_modes<5%": 0.00041588644526396895,
+      "step_ratio_modes<5%": 1.0514800747737573e-05,
+      "front_series<5%": 0.008465552759179458,
+      "local_extrema": 0,
+      "reading": {
+       "shock_position": 1.889566013720835,
+       "shock_exact": 1.8887811500316989,
+       "shock_offset": 0.000784863689136106,
+       "h2_measured": 0.7269188982921883,
+       "h1_measured": 0.5
+      },
+      "hidden_mass_fraction": 0.0,
+      "unjustified_dry_cells": 0
+     },
+     {
+      "case": "stoker-wet",
+      "n": 800,
+      "cfl": 0.8,
+      "order": 2,
+      "dry_depth": 1e-12,
+      "ok": true,
+      "hard_any": false,
+      "steps": 230,
+      "wall_time_s": 0.3098286110907793,
+      "shock_position<5%": 0.0003889400780146689,
+      "step_ratio<5%": 3.0755831124646924e-06,
+      "plateau_h2<5%": 3.0755831124646924e-06,
+      "depth_l1<5%": 0.0008566148944412804,
+      "monotone(no_extrema)": 0.0,
+      "tv_no_growth<0.5%": 0.0010705518349185539,
+      "bore_position_modes<5%": 0.00038924594827768406,
+      "step_ratio_modes<5%": 9.238985463747784e-06,
+      "front_series<5%": 0.006451234121912176,
+      "local_extrema": 0,
+      "reading": {
+       "shock_position": 1.8895157727195449,
+       "shock_exact": 1.8887811500316989,
+       "shock_offset": 0.000734622687845965,
+       "h2_measured": 0.7269182104830381,
+       "h1_measured": 0.5
+      },
+      "hidden_mass_fraction": 0.0,
+      "unjustified_dry_cells": 0
+     },
+     {
+      "case": "stoker-wet",
+      "n": 800,
+      "cfl": 0.9,
+      "order": 2,
+      "dry_depth": 1e-12,
+      "ok": true,
+      "hard_any": false,
+      "steps": 204,
+      "wall_time_s": 0.2757431101053953,
+      "shock_position<5%": 0.00032591835273627516,
+      "step_ratio<5%": 2.3382314454215204e-06,
+      "plateau_h2<5%": 2.3382314454215204e-06,
+      "depth_l1<5%": 0.0008674147035530396,
+      "monotone(no_extrema)": 0.0,
+      "tv_no_growth<0.5%": 0.002371242685528241,
+      "bore_position_modes<5%": 0.0003262202229151568,
+      "step_ratio_modes<5%": 9.134628961034983e-06,
+      "front_series<5%": 0.009241094179161911,
+      "local_extrema": 0,
+      "reading": {
+       "shock_position": 1.8893967384727965,
+       "shock_exact": 1.8887811500316989,
+       "shock_offset": 0.0006155884410976586,
+       "h2_measured": 0.7269187464790409,
+       "h1_measured": 0.5
+      },
+      "hidden_mass_fraction": 0.0,
+      "unjustified_dry_cells": 0
+     },
+     {
+      "case": "stoker-wet",
+      "n": 800,
+      "cfl": 0.95,
+      "order": 2,
+      "dry_depth": 1e-12,
+      "ok": true,
+      "hard_any": false,
+      "steps": 194,
+      "wall_time_s": 0.2608164008706808,
+      "shock_position<5%": 0.00031559542225988147,
+      "step_ratio<5%": 2.619778214251755e-06,
+      "plateau_h2<5%": 2.619778214251755e-06,
+      "depth_l1<5%": 0.0008762973819104378,
+      "monotone(no_extrema)": 0.0,
+      "tv_no_growth<0.5%": 0.0016795571147105726,
+      "bore_position_modes<5%": 0.000315826805153775,
+      "step_ratio_modes<5%": 6.936973037702998e-06,
+      "front_series<5%": 0.008025657654259102,
+      "local_extrema": 0,
+      "reading": {
+       "shock_position": 1.8893772407162996,
+       "shock_exact": 1.8887811500316989,
+       "shock_offset": 0.0005960906846007585,
+       "h2_measured": 0.726918541816938,
+       "h1_measured": 0.5
+      },
+      "hidden_mass_fraction": 0.0,
+      "unjustified_dry_cells": 0
+     }
+    ],
+    "envelope": {
+     "parameter": "cfl",
+     "points": [
+      0.1,
+      0.2,
+      0.3,
+      0.4,
+      0.6,
+      0.8,
+      0.9,
+      0.95
+     ],
+     "certified": [
+      0.1,
+      0.2,
+      0.3,
+      0.4,
+      0.6,
+      0.8,
+      0.9,
+      0.95
+     ],
+     "all_points_certified": true,
+     "failed_points": [],
+     "gates": {
+      "bore_position_modes<5%": {
+       "values": [
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.6,
+        0.8,
+        0.9,
+        0.95
+       ],
+       "pass": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "certified": [
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.6,
+        0.8,
+        0.9,
+        0.95
+       ],
+       "worst_value": 0.0004402178560067567,
+       "worst_at": 0.1,
+       "first_break": null
+      },
+      "depth_l1<5%": {
+       "values": [
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.6,
+        0.8,
+        0.9,
+        0.95
+       ],
+       "pass": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "certified": [
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.6,
+        0.8,
+        0.9,
+        0.95
+       ],
+       "worst_value": 0.0008762973819104378,
+       "worst_at": 0.95,
+       "first_break": null
+      },
+      "front_series<5%": {
+       "values": [
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.6,
+        0.8,
+        0.9,
+        0.95
+       ],
+       "pass": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "certified": [
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.6,
+        0.8,
+        0.9,
+        0.95
+       ],
+       "worst_value": 0.009241094179161911,
+       "worst_at": 0.9,
+       "first_break": null
+      },
+      "monotone(no_extrema)": {
+       "values": [
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.6,
+        0.8,
+        0.9,
+        0.95
+       ],
+       "pass": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "certified": [
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.6,
+        0.8,
+        0.9,
+        0.95
+       ],
+       "worst_value": 0.0,
+       "worst_at": 0.1,
+       "first_break": null
+      },
+      "plateau_h2<5%": {
+       "values": [
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.6,
+        0.8,
+        0.9,
+        0.95
+       ],
+       "pass": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "certified": [
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.6,
+        0.8,
+        0.9,
+        0.95
+       ],
+       "worst_value": 3.0755831124646924e-06,
+       "worst_at": 0.8,
+       "first_break": null
+      },
+      "shock_position<5%": {
+       "values": [
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.6,
+        0.8,
+        0.9,
+        0.95
+       ],
+       "pass": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "certified": [
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.6,
+        0.8,
+        0.9,
+        0.95
+       ],
+       "worst_value": 0.00043997518855341025,
+       "worst_at": 0.1,
+       "first_break": null
+      },
+      "step_ratio<5%": {
+       "values": [
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.6,
+        0.8,
+        0.9,
+        0.95
+       ],
+       "pass": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "certified": [
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.6,
+        0.8,
+        0.9,
+        0.95
+       ],
+       "worst_value": 3.0755831124646924e-06,
+       "worst_at": 0.8,
+       "first_break": null
+      },
+      "step_ratio_modes<5%": {
+       "values": [
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.6,
+        0.8,
+        0.9,
+        0.95
+       ],
+       "pass": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "certified": [
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.6,
+        0.8,
+        0.9,
+        0.95
+       ],
+       "worst_value": 1.0514800747737573e-05,
+       "worst_at": 0.6,
+       "first_break": null
+      },
+      "tv_no_growth<0.5%": {
+       "values": [
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.6,
+        0.8,
+        0.9,
+        0.95
+       ],
+       "pass": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "certified": [
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.6,
+        0.8,
+        0.9,
+        0.95
+       ],
+       "worst_value": 0.002371242685528241,
+       "worst_at": 0.9,
+       "first_break": null
+      }
+     },
+     "hard_failures": [],
+     "binding": null
+    }
+   },
+   "order": {
+    "rows": [
+     {
+      "case": "stoker-wet",
+      "n": 800,
+      "cfl": 0.4,
+      "order": 1,
+      "dry_depth": 1e-12,
+      "ok": true,
+      "hard_any": false,
+      "steps": 459,
+      "wall_time_s": 0.5152274016290903,
+      "shock_position<5%": 0.0014806112884731925,
+      "step_ratio<5%": 0.0003826496792945286,
+      "plateau_h2<5%": 0.0003826496792945286,
+      "depth_l1<5%": 0.0039039442893187355,
+      "monotone(no_extrema)": 0.0,
+      "tv_no_growth<0.5%": 0.0015204174865384168,
+      "bore_position_modes<5%": 0.001520024584511557,
+      "step_ratio_modes<5%": 0.0004170147938252437,
+      "front_series<5%": 0.007513540956325927,
+      "local_extrema": 0,
+      "reading": {
+       "shock_position": 1.8915777007238912,
+       "shock_exact": 1.8887811500316989,
+       "shock_offset": 0.0027965506921923122,
+       "h2_measured": 0.7266422903116803,
+       "h1_measured": 0.5
+      },
+      "hidden_mass_fraction": 0.0,
+      "unjustified_dry_cells": 0
+     },
+     {
+      "case": "stoker-wet",
+      "n": 800,
+      "cfl": 0.4,
+      "order": 2,
+      "dry_depth": 1e-12,
+      "ok": true,
+      "hard_any": false,
+      "steps": 459,
+      "wall_time_s": 0.6215484011918306,
+      "shock_position<5%": 0.0004326276916445582,
+      "step_ratio<5%": 2.1266871225442284e-06,
+      "plateau_h2<5%": 2.1266871225442284e-06,
+      "depth_l1<5%": 0.0008510840146864194,
+      "monotone(no_extrema)": 0.0,
+      "tv_no_growth<0.5%": 0.001099331022317962,
+      "bore_position_modes<5%": 0.0004329022875710759,
+      "step_ratio_modes<5%": 8.33017375294083e-06,
+      "front_series<5%": 0.007952172493579573,
+      "local_extrema": 0,
+      "reading": {
+       "shock_position": 1.8895982890606589,
+       "shock_exact": 1.8887811500316989,
+       "shock_offset": 0.0008171390289599678,
+       "h2_measured": 0.7269189002549344,
+       "h1_measured": 0.5
+      },
+      "hidden_mass_fraction": 0.0,
+      "unjustified_dry_cells": 0
+     }
+    ],
+    "envelope": {
+     "parameter": "order",
+     "points": [
+      1.0,
+      2.0
+     ],
+     "certified": [
+      1.0,
+      2.0
+     ],
+     "all_points_certified": true,
+     "failed_points": [],
+     "gates": {
+      "bore_position_modes<5%": {
+       "values": [
+        1.0,
+        2.0
+       ],
+       "pass": [
+        true,
+        true
+       ],
+       "certified": [
+        1.0,
+        2.0
+       ],
+       "worst_value": 0.001520024584511557,
+       "worst_at": 1.0,
+       "first_break": null
+      },
+      "depth_l1<5%": {
+       "values": [
+        1.0,
+        2.0
+       ],
+       "pass": [
+        true,
+        true
+       ],
+       "certified": [
+        1.0,
+        2.0
+       ],
+       "worst_value": 0.0039039442893187355,
+       "worst_at": 1.0,
+       "first_break": null
+      },
+      "front_series<5%": {
+       "values": [
+        1.0,
+        2.0
+       ],
+       "pass": [
+        true,
+        true
+       ],
+       "certified": [
+        1.0,
+        2.0
+       ],
+       "worst_value": 0.007952172493579573,
+       "worst_at": 2.0,
+       "first_break": null
+      },
+      "monotone(no_extrema)": {
+       "values": [
+        1.0,
+        2.0
+       ],
+       "pass": [
+        true,
+        true
+       ],
+       "certified": [
+        1.0,
+        2.0
+       ],
+       "worst_value": 0.0,
+       "worst_at": 1.0,
+       "first_break": null
+      },
+      "plateau_h2<5%": {
+       "values": [
+        1.0,
+        2.0
+       ],
+       "pass": [
+        true,
+        true
+       ],
+       "certified": [
+        1.0,
+        2.0
+       ],
+       "worst_value": 0.0003826496792945286,
+       "worst_at": 1.0,
+       "first_break": null
+      },
+      "shock_position<5%": {
+       "values": [
+        1.0,
+        2.0
+       ],
+       "pass": [
+        true,
+        true
+       ],
+       "certified": [
+        1.0,
+        2.0
+       ],
+       "worst_value": 0.0014806112884731925,
+       "worst_at": 1.0,
+       "first_break": null
+      },
+      "step_ratio<5%": {
+       "values": [
+        1.0,
+        2.0
+       ],
+       "pass": [
+        true,
+        true
+       ],
+       "certified": [
+        1.0,
+        2.0
+       ],
+       "worst_value": 0.0003826496792945286,
+       "worst_at": 1.0,
+       "first_break": null
+      },
+      "step_ratio_modes<5%": {
+       "values": [
+        1.0,
+        2.0
+       ],
+       "pass": [
+        true,
+        true
+       ],
+       "certified": [
+        1.0,
+        2.0
+       ],
+       "worst_value": 0.0004170147938252437,
+       "worst_at": 1.0,
+       "first_break": null
+      },
+      "tv_no_growth<0.5%": {
+       "values": [
+        1.0,
+        2.0
+       ],
+       "pass": [
+        true,
+        true
+       ],
+       "certified": [
+        1.0,
+        2.0
+       ],
+       "worst_value": 0.0015204174865384168,
+       "worst_at": 1.0,
+       "first_break": null
+      }
+     },
+     "hard_failures": [],
+     "binding": null
+    }
+   },
+   "floor": {
+    "rows": [
+     {
+      "case": "stoker-wet",
+      "n": 800,
+      "cfl": 0.4,
+      "order": 2,
+      "dry_depth": 1e-15,
+      "ok": true,
+      "hard_any": false,
+      "steps": 459,
+      "wall_time_s": 0.6241317298263311,
+      "shock_position<5%": 0.0004326276916445582,
+      "step_ratio<5%": 2.1266871225442284e-06,
+      "plateau_h2<5%": 2.1266871225442284e-06,
+      "depth_l1<5%": 0.0008510840146864194,
+      "monotone(no_extrema)": 0.0,
+      "tv_no_growth<0.5%": 0.001099331022317962,
+      "bore_position_modes<5%": 0.0004329022875710759,
+      "step_ratio_modes<5%": 8.33017375294083e-06,
+      "front_series<5%": 0.007952172493579573,
+      "local_extrema": 0,
+      "reading": {
+       "shock_position": 1.8895982890606589,
+       "shock_exact": 1.8887811500316989,
+       "shock_offset": 0.0008171390289599678,
+       "h2_measured": 0.7269189002549344,
+       "h1_measured": 0.5
+      },
+      "hidden_mass_fraction": 0.0,
+      "unjustified_dry_cells": 0
+     },
+     {
+      "case": "stoker-wet",
+      "n": 800,
+      "cfl": 0.4,
+      "order": 2,
+      "dry_depth": 1e-12,
+      "ok": true,
+      "hard_any": false,
+      "steps": 459,
+      "wall_time_s": 0.6248175203800201,
+      "shock_position<5%": 0.0004326276916445582,
+      "step_ratio<5%": 2.1266871225442284e-06,
+      "plateau_h2<5%": 2.1266871225442284e-06,
+      "depth_l1<5%": 0.0008510840146864194,
+      "monotone(no_extrema)": 0.0,
+      "tv_no_growth<0.5%": 0.001099331022317962,
+      "bore_position_modes<5%": 0.0004329022875710759,
+      "step_ratio_modes<5%": 8.33017375294083e-06,
+      "front_series<5%": 0.007952172493579573,
+      "local_extrema": 0,
+      "reading": {
+       "shock_position": 1.8895982890606589,
+       "shock_exact": 1.8887811500316989,
+       "shock_offset": 0.0008171390289599678,
+       "h2_measured": 0.7269189002549344,
+       "h1_measured": 0.5
+      },
+      "hidden_mass_fraction": 0.0,
+      "unjustified_dry_cells": 0
+     },
+     {
+      "case": "stoker-wet",
+      "n": 800,
+      "cfl": 0.4,
+      "order": 2,
+      "dry_depth": 1e-09,
+      "ok": true,
+      "hard_any": false,
+      "steps": 459,
+      "wall_time_s": 0.6224329490214586,
+      "shock_position<5%": 0.0004326276916445582,
+      "step_ratio<5%": 2.1266871225442284e-06,
+      "plateau_h2<5%": 2.1266871225442284e-06,
+      "depth_l1<5%": 0.0008510840146864194,
+      "monotone(no_extrema)": 0.0,
+      "tv_no_growth<0.5%": 0.001099331022317962,
+      "bore_position_modes<5%": 0.0004329022875710759,
+      "step_ratio_modes<5%": 8.33017375294083e-06,
+      "front_series<5%": 0.007952172493579573,
+      "local_extrema": 0,
+      "reading": {
+       "shock_position": 1.8895982890606589,
+       "shock_exact": 1.8887811500316989,
+       "shock_offset": 0.0008171390289599678,
+       "h2_measured": 0.7269189002549344,
+       "h1_measured": 0.5
+      },
+      "hidden_mass_fraction": 0.0,
+      "unjustified_dry_cells": 0
+     },
+     {
+      "case": "stoker-wet",
+      "n": 800,
+      "cfl": 0.4,
+      "order": 2,
+      "dry_depth": 1e-06,
+      "ok": true,
+      "hard_any": false,
+      "steps": 459,
+      "wall_time_s": 0.6148984599858522,
+      "shock_position<5%": 0.0004326276916445582,
+      "step_ratio<5%": 2.1266871225442284e-06,
+      "plateau_h2<5%": 2.1266871225442284e-06,
+      "depth_l1<5%": 0.0008510840146864194,
+      "monotone(no_extrema)": 0.0,
+      "tv_no_growth<0.5%": 0.001099331022317962,
+      "bore_position_modes<5%": 0.0004329022875710759,
+      "step_ratio_modes<5%": 8.33017375294083e-06,
+      "front_series<5%": 0.007952172493579573,
+      "local_extrema": 0,
+      "reading": {
+       "shock_position": 1.8895982890606589,
+       "shock_exact": 1.8887811500316989,
+       "shock_offset": 0.0008171390289599678,
+       "h2_measured": 0.7269189002549344,
+       "h1_measured": 0.5
+      },
+      "hidden_mass_fraction": 0.0,
+      "unjustified_dry_cells": 0
+     },
+     {
+      "case": "stoker-wet",
+      "n": 800,
+      "cfl": 0.4,
+      "order": 2,
+      "dry_depth": 0.0001,
+      "ok": true,
+      "hard_any": false,
+      "steps": 459,
+      "wall_time_s": 0.6154940389096737,
+      "shock_position<5%": 0.0004326276916445582,
+      "step_ratio<5%": 2.1266871225442284e-06,
+      "plateau_h2<5%": 2.1266871225442284e-06,
+      "depth_l1<5%": 0.0008510840146864194,
+      "monotone(no_extrema)": 0.0,
+      "tv_no_growth<0.5%": 0.001099331022317962,
+      "bore_position_modes<5%": 0.0004329022875710759,
+      "step_ratio_modes<5%": 8.33017375294083e-06,
+      "front_series<5%": 0.007952172493579573,
+      "local_extrema": 0,
+      "reading": {
+       "shock_position": 1.8895982890606589,
+       "shock_exact": 1.8887811500316989,
+       "shock_offset": 0.0008171390289599678,
+       "h2_measured": 0.7269189002549344,
+       "h1_measured": 0.5
+      },
+      "hidden_mass_fraction": 0.0,
+      "unjustified_dry_cells": 0
+     },
+     {
+      "case": "stoker-wet",
+      "n": 800,
+      "cfl": 0.4,
+      "order": 2,
+      "dry_depth": 0.001,
+      "ok": true,
+      "hard_any": false,
+      "steps": 459,
+      "wall_time_s": 0.6180074494332075,
+      "shock_position<5%": 0.0004326276916445582,
+      "step_ratio<5%": 2.1266871225442284e-06,
+      "plateau_h2<5%": 2.1266871225442284e-06,
+      "depth_l1<5%": 0.0008510840146864194,
+      "monotone(no_extrema)": 0.0,
+      "tv_no_growth<0.5%": 0.001099331022317962,
+      "bore_position_modes<5%": 0.0004329022875710759,
+      "step_ratio_modes<5%": 8.33017375294083e-06,
+      "front_series<5%": 0.007952172493579573,
+      "local_extrema": 0,
+      "reading": {
+       "shock_position": 1.8895982890606589,
+       "shock_exact": 1.8887811500316989,
+       "shock_offset": 0.0008171390289599678,
+       "h2_measured": 0.7269189002549344,
+       "h1_measured": 0.5
+      },
+      "hidden_mass_fraction": 0.0,
+      "unjustified_dry_cells": 0
+     },
+     {
+      "case": "stoker-wet",
+      "n": 800,
+      "cfl": 0.4,
+      "order": 2,
+      "dry_depth": 0.01,
+      "ok": true,
+      "hard_any": false,
+      "steps": 459,
+      "wall_time_s": 0.6173051800578833,
+      "shock_position<5%": 0.0004326276916445582,
+      "step_ratio<5%": 2.1266871225442284e-06,
+      "plateau_h2<5%": 2.1266871225442284e-06,
+      "depth_l1<5%": 0.0008510840146864194,
+      "monotone(no_extrema)": 0.0,
+      "tv_no_growth<0.5%": 0.001099331022317962,
+      "bore_position_modes<5%": 0.0004329022875710759,
+      "step_ratio_modes<5%": 8.33017375294083e-06,
+      "front_series<5%": 0.007952172493579573,
+      "local_extrema": 0,
+      "reading": {
+       "shock_position": 1.8895982890606589,
+       "shock_exact": 1.8887811500316989,
+       "shock_offset": 0.0008171390289599678,
+       "h2_measured": 0.7269189002549344,
+       "h1_measured": 0.5
+      },
+      "hidden_mass_fraction": 0.0,
+      "unjustified_dry_cells": 0
+     },
+     {
+      "case": "stoker-wet",
+      "n": 800,
+      "cfl": 0.4,
+      "order": 2,
+      "dry_depth": 0.05,
+      "ok": true,
+      "hard_any": false,
+      "steps": 459,
+      "wall_time_s": 0.6168557200580835,
+      "shock_position<5%": 0.0004326276916445582,
+      "step_ratio<5%": 2.1266871225442284e-06,
+      "plateau_h2<5%": 2.1266871225442284e-06,
+      "depth_l1<5%": 0.0008510840146864194,
+      "monotone(no_extrema)": 0.0,
+      "tv_no_growth<0.5%": 0.001099331022317962,
+      "bore_position_modes<5%": 0.0004329022875710759,
+      "step_ratio_modes<5%": 8.33017375294083e-06,
+      "front_series<5%": 0.007952172493579573,
+      "local_extrema": 0,
+      "reading": {
+       "shock_position": 1.8895982890606589,
+       "shock_exact": 1.8887811500316989,
+       "shock_offset": 0.0008171390289599678,
+       "h2_measured": 0.7269189002549344,
+       "h1_measured": 0.5
+      },
+      "hidden_mass_fraction": 0.0,
+      "unjustified_dry_cells": 0
+     }
+    ],
+    "envelope": {
+     "parameter": "dry_depth",
+     "points": [
+      1e-15,
+      1e-12,
+      1e-09,
+      1e-06,
+      0.0001,
+      0.001,
+      0.01,
+      0.05
+     ],
+     "certified": [
+      1e-15,
+      1e-12,
+      1e-09,
+      1e-06,
+      0.0001,
+      0.001,
+      0.01,
+      0.05
+     ],
+     "all_points_certified": true,
+     "failed_points": [],
+     "gates": {
+      "bore_position_modes<5%": {
+       "values": [
+        1e-15,
+        1e-12,
+        1e-09,
+        1e-06,
+        0.0001,
+        0.001,
+        0.01,
+        0.05
+       ],
+       "pass": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "certified": [
+        1e-15,
+        1e-12,
+        1e-09,
+        1e-06,
+        0.0001,
+        0.001,
+        0.01,
+        0.05
+       ],
+       "worst_value": 0.0004329022875710759,
+       "worst_at": 1e-15,
+       "first_break": null
+      },
+      "depth_l1<5%": {
+       "values": [
+        1e-15,
+        1e-12,
+        1e-09,
+        1e-06,
+        0.0001,
+        0.001,
+        0.01,
+        0.05
+       ],
+       "pass": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "certified": [
+        1e-15,
+        1e-12,
+        1e-09,
+        1e-06,
+        0.0001,
+        0.001,
+        0.01,
+        0.05
+       ],
+       "worst_value": 0.0008510840146864194,
+       "worst_at": 1e-15,
+       "first_break": null
+      },
+      "front_series<5%": {
+       "values": [
+        1e-15,
+        1e-12,
+        1e-09,
+        1e-06,
+        0.0001,
+        0.001,
+        0.01,
+        0.05
+       ],
+       "pass": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "certified": [
+        1e-15,
+        1e-12,
+        1e-09,
+        1e-06,
+        0.0001,
+        0.001,
+        0.01,
+        0.05
+       ],
+       "worst_value": 0.007952172493579573,
+       "worst_at": 1e-15,
+       "first_break": null
+      },
+      "monotone(no_extrema)": {
+       "values": [
+        1e-15,
+        1e-12,
+        1e-09,
+        1e-06,
+        0.0001,
+        0.001,
+        0.01,
+        0.05
+       ],
+       "pass": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "certified": [
+        1e-15,
+        1e-12,
+        1e-09,
+        1e-06,
+        0.0001,
+        0.001,
+        0.01,
+        0.05
+       ],
+       "worst_value": 0.0,
+       "worst_at": 1e-15,
+       "first_break": null
+      },
+      "plateau_h2<5%": {
+       "values": [
+        1e-15,
+        1e-12,
+        1e-09,
+        1e-06,
+        0.0001,
+        0.001,
+        0.01,
+        0.05
+       ],
+       "pass": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "certified": [
+        1e-15,
+        1e-12,
+        1e-09,
+        1e-06,
+        0.0001,
+        0.001,
+        0.01,
+        0.05
+       ],
+       "worst_value": 2.1266871225442284e-06,
+       "worst_at": 1e-15,
+       "first_break": null
+      },
+      "shock_position<5%": {
+       "values": [
+        1e-15,
+        1e-12,
+        1e-09,
+        1e-06,
+        0.0001,
+        0.001,
+        0.01,
+        0.05
+       ],
+       "pass": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "certified": [
+        1e-15,
+        1e-12,
+        1e-09,
+        1e-06,
+        0.0001,
+        0.001,
+        0.01,
+        0.05
+       ],
+       "worst_value": 0.0004326276916445582,
+       "worst_at": 1e-15,
+       "first_break": null
+      },
+      "step_ratio<5%": {
+       "values": [
+        1e-15,
+        1e-12,
+        1e-09,
+        1e-06,
+        0.0001,
+        0.001,
+        0.01,
+        0.05
+       ],
+       "pass": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "certified": [
+        1e-15,
+        1e-12,
+        1e-09,
+        1e-06,
+        0.0001,
+        0.001,
+        0.01,
+        0.05
+       ],
+       "worst_value": 2.1266871225442284e-06,
+       "worst_at": 1e-15,
+       "first_break": null
+      },
+      "step_ratio_modes<5%": {
+       "values": [
+        1e-15,
+        1e-12,
+        1e-09,
+        1e-06,
+        0.0001,
+        0.001,
+        0.01,
+        0.05
+       ],
+       "pass": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "certified": [
+        1e-15,
+        1e-12,
+        1e-09,
+        1e-06,
+        0.0001,
+        0.001,
+        0.01,
+        0.05
+       ],
+       "worst_value": 8.33017375294083e-06,
+       "worst_at": 1e-15,
+       "first_break": null
+      },
+      "tv_no_growth<0.5%": {
+       "values": [
+        1e-15,
+        1e-12,
+        1e-09,
+        1e-06,
+        0.0001,
+        0.001,
+        0.01,
+        0.05
+       ],
+       "pass": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+       ],
+       "certified": [
+        1e-15,
+        1e-12,
+        1e-09,
+        1e-06,
+        0.0001,
+        0.001,
+        0.01,
+        0.05
+       ],
+       "worst_value": 0.001099331022317962,
+       "worst_at": 1e-15,
+       "first_break": null
+      }
+     },
+     "hard_failures": [],
+     "binding": null
+    }
+   }
+  }
+ },
+ "confirmation_n1600": {
+  "note": "the pool's own accepted grid; the sweeps run on n = 800 (ACCEPTED_MIN_N) for cost, these rows show the first break of the floor axis does not move under refinement",
+  "rows": [
+   {
+    "case": "ritter-dry",
+    "n": 1600,
+    "cfl": 0.4,
+    "order": 2,
+    "dry_depth": 1e-12,
+    "ok": true,
+    "hard_any": false,
+    "steps": 1513,
+    "wall_time_s": 2.507883369922638,
+    "front_fan<5%": 0.00017261518056277403,
+    "front_wetted<5%": 0.02890624999999991,
+    "depth_l1<5%": 0.0007715065657630972,
+    "monotone(no_extrema)": 0.0,
+    "tv_no_growth<0.5%": 0.0,
+    "front_series<5%": 0.0042472950845003216,
+    "shock_position<5%": null,
+    "step_ratio<5%": null,
+    "plateau_h2<5%": null,
+    "bore_position_modes<5%": null,
+    "step_ratio_modes<5%": null,
+    "local_extrema": 0,
+    "reading": {
+     "front_fan": 4.000690460722251,
+     "front_wetted": 3.8843750000000004,
+     "front_exact": 4.0,
+     "front_recession": 0.11562499999999964,
+     "h_min": 0.0
+    },
+    "hidden_mass_fraction": 3.873613671008798e-06,
+    "unjustified_dry_cells": 19
+   },
+   {
+    "case": "ritter-dry",
+    "n": 1600,
+    "cfl": 0.4,
+    "order": 2,
+    "dry_depth": 1e-09,
+    "ok": true,
+    "hard_any": false,
+    "steps": 1513,
+    "wall_time_s": 2.497378980740905,
+    "front_fan<5%": 0.0001726177594121303,
+    "front_wetted<5%": 0.04296875,
+    "depth_l1<5%": 0.000771506770869473,
+    "monotone(no_extrema)": 0.0,
+    "tv_no_growth<0.5%": 0.0,
+    "front_series<5%": 0.004247326829704116,
+    "shock_position<5%": null,
+    "step_ratio<5%": null,
+    "plateau_h2<5%": null,
+    "bore_position_modes<5%": null,
+    "step_ratio_modes<5%": null,
+    "local_extrema": 0,
+    "reading": {
+     "front_fan": 4.0006904710376485,
+     "front_wetted": 3.828125,
+     "front_exact": 4.0,
+     "front_recession": 0.171875,
+     "h_min": 0.0
+    },
+    "hidden_mass_fraction": 1.2402006347928372e-05,
+    "unjustified_dry_cells": 28
+   },
+   {
+    "case": "ritter-dry",
+    "n": 1600,
+    "cfl": 0.4,
+    "order": 2,
+    "dry_depth": 1e-06,
+    "ok": true,
+    "hard_any": false,
+    "steps": 1513,
+    "wall_time_s": 2.501534529030323,
+    "front_fan<5%": 0.00017575144256620767,
+    "front_wetted<5%": 0.06640625,
+    "depth_l1<5%": 0.0007715674233827395,
+    "monotone(no_extrema)": 0.0,
+    "tv_no_growth<0.5%": 0.0,
+    "front_series<5%": 0.004251359520782237,
+    "shock_position<5%": null,
+    "step_ratio<5%": null,
+    "plateau_h2<5%": null,
+    "bore_position_modes<5%": null,
+    "step_ratio_modes<5%": null,
+    "local_extrema": 0,
+    "reading": {
+     "front_fan": 4.000703005770265,
+     "front_wetted": 3.734375,
+     "front_exact": 4.0,
+     "front_recession": 0.265625,
+     "h_min": 0.0
+    },
+    "hidden_mass_fraction": 4.492611964601232e-05,
+    "unjustified_dry_cells": 42
+   },
+   {
+    "case": "ritter-dry",
+    "n": 1600,
+    "cfl": 0.4,
+    "order": 2,
+    "dry_depth": 0.001,
+    "ok": true,
+    "hard_any": false,
+    "steps": 1420,
+    "wall_time_s": 2.3314341008663177,
+    "front_fan<5%": 0.012131255935073249,
+    "front_wetted<5%": 0.21484375,
+    "depth_l1<5%": 0.003438267758148075,
+    "monotone(no_extrema)": 0.0,
+    "tv_no_growth<0.5%": 0.0008435265718276241,
+    "front_series<5%": 0.012105854986366234,
+    "shock_position<5%": null,
+    "step_ratio<5%": null,
+    "plateau_h2<5%": null,
+    "bore_position_modes<5%": null,
+    "step_ratio_modes<5%": null,
+    "local_extrema": 0,
+    "reading": {
+     "front_fan": 4.048525023740293,
+     "front_wetted": 3.140625,
+     "front_exact": 4.0,
+     "front_recession": 0.859375,
+     "h_min": 0.0
+    },
+    "hidden_mass_fraction": 0.001437901585951278,
+    "unjustified_dry_cells": 107
+   },
+   {
+    "case": "stoker-wet",
+    "n": 1600,
+    "cfl": 0.4,
+    "order": 2,
+    "dry_depth": 1e-12,
+    "ok": true,
+    "hard_any": false,
+    "steps": 918,
+    "wall_time_s": 1.6654302198439837,
+    "front_fan<5%": null,
+    "front_wetted<5%": null,
+    "depth_l1<5%": 0.0004271934800380538,
+    "monotone(no_extrema)": 0.0,
+    "tv_no_growth<0.5%": 0.0010049771738320779,
+    "front_series<5%": 0.00844265997289686,
+    "shock_position<5%": 0.00021023436657714858,
+    "step_ratio<5%": 5.762518619591793e-07,
+    "plateau_h2<5%": 5.762518619591793e-07,
+    "bore_position_modes<5%": 0.00021023519848000692,
+    "step_ratio_modes<5%": 4.8485086086606076e-08,
+    "local_extrema": 0,
+    "reading": {
+     "shock_position": 1.8891782367403787,
+     "shock_exact": 1.8887811500316989,
+     "shock_offset": 0.00039708670867977247,
+     "h2_measured": 0.7269208650765471,
+     "h1_measured": 0.5
+    },
+    "hidden_mass_fraction": 0.0,
+    "unjustified_dry_cells": 0
+   },
+   {
+    "case": "stoker-wet",
+    "n": 1600,
+    "cfl": 0.4,
+    "order": 2,
+    "dry_depth": 0.001,
+    "ok": true,
+    "hard_any": false,
+    "steps": 918,
+    "wall_time_s": 1.5177612900733948,
+    "front_fan<5%": null,
+    "front_wetted<5%": null,
+    "depth_l1<5%": 0.0004271934800380538,
+    "monotone(no_extrema)": 0.0,
+    "tv_no_growth<0.5%": 0.0010049771738320779,
+    "front_series<5%": 0.00844265997289686,
+    "shock_position<5%": 0.00021023436657714858,
+    "step_ratio<5%": 5.762518619591793e-07,
+    "plateau_h2<5%": 5.762518619591793e-07,
+    "bore_position_modes<5%": 0.00021023519848000692,
+    "step_ratio_modes<5%": 4.8485086086606076e-08,
+    "local_extrema": 0,
+    "reading": {
+     "shock_position": 1.8891782367403787,
+     "shock_exact": 1.8887811500316989,
+     "shock_offset": 0.00039708670867977247,
+     "h2_measured": 0.7269208650765471,
+     "h1_measured": 0.5
+    },
+    "hidden_mass_fraction": 0.0,
+    "unjustified_dry_cells": 0
+   }
+  ]
+ },
+ "confirmation_summary": [
+  {
+   "case": "ritter-dry",
+   "n": 1600,
+   "dry_depth": 1e-12,
+   "ok": true,
+   "all_gates_pass": true,
+   "front_wetted_error": 0.02890624999999991,
+   "front_fan_error": 0.00017261518056277403,
+   "hidden_mass_fraction": 3.873613671008798e-06
+  },
+  {
+   "case": "ritter-dry",
+   "n": 1600,
+   "dry_depth": 1e-09,
+   "ok": true,
+   "all_gates_pass": true,
+   "front_wetted_error": 0.04296875,
+   "front_fan_error": 0.0001726177594121303,
+   "hidden_mass_fraction": 1.2402006347928372e-05
+  },
+  {
+   "case": "ritter-dry",
+   "n": 1600,
+   "dry_depth": 1e-06,
+   "ok": true,
+   "all_gates_pass": false,
+   "front_wetted_error": 0.06640625,
+   "front_fan_error": 0.00017575144256620767,
+   "hidden_mass_fraction": 4.492611964601232e-05
+  },
+  {
+   "case": "ritter-dry",
+   "n": 1600,
+   "dry_depth": 0.001,
+   "ok": true,
+   "all_gates_pass": false,
+   "front_wetted_error": 0.21484375,
+   "front_fan_error": 0.012131255935073249,
+   "hidden_mass_fraction": 0.001437901585951278
+  },
+  {
+   "case": "stoker-wet",
+   "n": 1600,
+   "dry_depth": 1e-12,
+   "ok": true,
+   "all_gates_pass": true,
+   "front_wetted_error": null,
+   "front_fan_error": null,
+   "hidden_mass_fraction": 0.0
+  },
+  {
+   "case": "stoker-wet",
+   "n": 1600,
+   "dry_depth": 0.001,
+   "ok": true,
+   "all_gates_pass": true,
+   "front_wetted_error": null,
+   "front_fan_error": null,
+   "hidden_mass_fraction": 0.0
+  }
+ ],
+ "negative_control": {
+  "note": "deliberately misconfigured depth floors (0.5 h0 / 0.6 m above every exact depth): the sweep must be able to see a broken configuration, otherwise a green column means nothing",
+  "dry": [
+   {
+    "case": "ritter-dry",
+    "n": 400,
+    "cfl": 0.4,
+    "order": 2,
+    "dry_depth": 0.5,
+    "ok": true,
+    "hard_any": true,
+    "steps": 239,
+    "wall_time_s": 0.26583103835582733,
+    "front_fan<5%": NaN,
+    "front_wetted<5%": 0.815625,
+    "depth_l1<5%": 0.16068536596933097,
+    "monotone(no_extrema)": 1.0,
+    "tv_no_growth<0.5%": 0.039890537987793406,
+    "front_series<5%": null,
+    "local_extrema": 3,
+    "reading": {
+     "front_fan": NaN,
+     "front_wetted": 0.7374999999999998,
+     "front_exact": 4.0,
+     "front_recession": 3.2625,
+     "h_min": 0.0
+    },
+    "hidden_mass_fraction": 0.0,
+    "unjustified_dry_cells": 0
+   }
+  ],
+  "wet": [
+   {
+    "case": "stoker-wet",
+    "n": 400,
+    "cfl": 0.4,
+    "order": 2,
+    "dry_depth": 0.6,
+    "ok": true,
+    "hard_any": false,
+    "steps": 228,
+    "wall_time_s": 0.30111376009881496,
+    "shock_position<5%": 0.13006362059042187,
+    "step_ratio<5%": 0.029123514541828408,
+    "plateau_h2<5%": 0.029123514541828408,
+    "depth_l1<5%": 0.01725817129020021,
+    "monotone(no_extrema)": 1.0,
+    "tv_no_growth<0.5%": 0.030660510119950413,
+    "bore_position_modes<5%": 0.13102129558953918,
+    "step_ratio_modes<5%": 0.0291353408895632,
+    "front_series<5%": 0.13035851757446212,
+    "local_extrema": 3,
+    "reading": {
+     "shock_position": 1.6431194351556353,
+     "shock_exact": 1.8887811500316989,
+     "shock_offset": -0.24566171487606359,
+     "h2_measured": 0.7480909243725743,
+     "h1_measured": 0.5
+    },
+    "hidden_mass_fraction": 0.025952057656852705,
+    "unjustified_dry_cells": 10
+   }
+  ]
+ },
+ "instrument": {
+  "1e-06": {
+   "dry_depth": 1e-06,
+   "n": 800,
+   "discrete": 0.0,
+   "reference": 1.9966857334189466e-09,
+   "relative_difference": 1.0,
+   "analytic_tip_length": 0.006
+  },
+  "0.0001": {
+   "dry_depth": 0.0001,
+   "n": 800,
+   "discrete": 2.237955729166706e-06,
+   "reference": 2.0012818099780967e-06,
+   "relative_difference": 0.11826116542337418,
+   "analytic_tip_length": 0.06000000000000001
+  },
+  "0.001": {
+   "dry_depth": 0.001,
+   "n": 800,
+   "discrete": 6.0967339409722496e-05,
+   "reference": 6.325956537560538e-05,
+   "relative_difference": 0.03623524683220206,
+   "analytic_tip_length": 0.18973665961010278
+  },
+  "0.01": {
+   "dry_depth": 0.01,
+   "n": 800,
+   "discrete": 0.001999782986111113,
+   "reference": 0.0019998321559946686,
+   "relative_difference": 2.4587005168398004e-05,
+   "analytic_tip_length": 0.6
+  }
+ },
+ "verdict": {
+  "all_swept_configurations_certified": false,
+  "confirmation_n1600": [
+   {
+    "case": "ritter-dry",
+    "n": 1600,
+    "dry_depth": 1e-12,
+    "ok": true,
+    "all_gates_pass": true,
+    "front_wetted_error": 0.02890624999999991,
+    "front_fan_error": 0.00017261518056277403,
+    "hidden_mass_fraction": 3.873613671008798e-06
+   },
+   {
+    "case": "ritter-dry",
+    "n": 1600,
+    "dry_depth": 1e-09,
+    "ok": true,
+    "all_gates_pass": true,
+    "front_wetted_error": 0.04296875,
+    "front_fan_error": 0.0001726177594121303,
+    "hidden_mass_fraction": 1.2402006347928372e-05
+   },
+   {
+    "case": "ritter-dry",
+    "n": 1600,
+    "dry_depth": 1e-06,
+    "ok": true,
+    "all_gates_pass": false,
+    "front_wetted_error": 0.06640625,
+    "front_fan_error": 0.00017575144256620767,
+    "hidden_mass_fraction": 4.492611964601232e-05
+   },
+   {
+    "case": "ritter-dry",
+    "n": 1600,
+    "dry_depth": 0.001,
+    "ok": true,
+    "all_gates_pass": false,
+    "front_wetted_error": 0.21484375,
+    "front_fan_error": 0.012131255935073249,
+    "hidden_mass_fraction": 0.001437901585951278
+   },
+   {
+    "case": "stoker-wet",
+    "n": 1600,
+    "dry_depth": 1e-12,
+    "ok": true,
+    "all_gates_pass": true,
+    "front_wetted_error": null,
+    "front_fan_error": null,
+    "hidden_mass_fraction": 0.0
+   },
+   {
+    "case": "stoker-wet",
+    "n": 1600,
+    "dry_depth": 0.001,
+    "ok": true,
+    "all_gates_pass": true,
+    "front_wetted_error": null,
+    "front_fan_error": null,
+    "hidden_mass_fraction": 0.0
+   }
+  ],
+  "per_case": {
+   "ritter-dry": {
+    "cfl": {
+     "certified": [
+      0.1,
+      0.2,
+      0.3,
+      0.4,
+      0.6,
+      0.8,
+      0.9,
+      0.95
+     ],
+     "failed": [],
+     "all_certified": true,
+     "binding": null,
+     "hard_failures": []
+    },
+    "order": {
+     "certified": [
+      1.0,
+      2.0
+     ],
+     "failed": [],
+     "all_certified": true,
+     "binding": null,
+     "hard_failures": []
+    },
+    "floor": {
+     "certified": [
+      1e-15,
+      1e-12,
+      1e-09
+     ],
+     "failed": [
+      1e-06,
+      0.0001,
+      0.001,
+      0.01,
+      0.05
+     ],
+     "all_certified": false,
+     "binding": {
+      "gate": "front_wetted<5%",
+      "first_break": 1e-06
+     },
+     "hard_failures": [
+      {
+       "dry_depth": 0.05,
+       "exception": false,
+       "clipped_cells": 0,
+       "dry_momentum_flips": 1077,
+       "mass_drift": 1.432187701766452e-14,
+       "mass_leak": false,
+       "positivity_clipping": false,
+       "nan_in_gates": true,
+       "all_gates_defined": false,
+       "any": true
+      }
+     ]
+    }
+   },
+   "stoker-wet": {
+    "cfl": {
+     "certified": [
+      0.1,
+      0.2,
+      0.3,
+      0.4,
+      0.6,
+      0.8,
+      0.9,
+      0.95
+     ],
+     "failed": [],
+     "all_certified": true,
+     "binding": null,
+     "hard_failures": []
+    },
+    "order": {
+     "certified": [
+      1.0,
+      2.0
+     ],
+     "failed": [],
+     "all_certified": true,
+     "binding": null,
+     "hard_failures": []
+    },
+    "floor": {
+     "certified": [
+      1e-15,
+      1e-12,
+      1e-09,
+      1e-06,
+      0.0001,
+      0.001,
+      0.01,
+      0.05
+     ],
+     "failed": [],
+     "all_certified": true,
+     "binding": null,
+     "hard_failures": []
+    }
+   }
+  }
+ },
+ "provenance": {
+  "git_commit": "852bf46b",
+  "command": "PYTHONPATH=src python scripts/run_dambreak_config_envelope.py",
+  "python": "3.11.6",
+  "numpy": "2.4.6"
+ }
+}
