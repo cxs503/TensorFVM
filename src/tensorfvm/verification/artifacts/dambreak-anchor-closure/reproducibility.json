@@ -1,0 +1,27 @@
+{
+ "n": 800,
+ "rows": [
+  {
+   "case": "ritter-dry",
+   "quantity": "front_fan",
+   "n": 800,
+   "artifact": 0.0003911308005408731,
+   "rerun": 0.0003911308005408731,
+   "relative_difference": 0.0,
+   "bit_identical": true,
+   "all_pass": true
+  },
+  {
+   "case": "stoker-wet",
+   "quantity": "shock",
+   "n": 800,
+   "artifact": 0.0004326276916445582,
+   "rerun": 0.0004326276916445582,
+   "relative_difference": 0.0,
+   "bit_identical": true,
+   "all_pass": true
+  }
+ ],
+ "all_bit_identical": true,
+ "all_pass": true
+}
