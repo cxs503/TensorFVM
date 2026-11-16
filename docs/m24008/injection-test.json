@@ -1,0 +1,69 @@
+{
+  "generated_at": "2026-11-16T20:25:43.761917+00:00",
+  "blob_limit_bytes": 524288,
+  "cases": [
+    {
+      "case": "large-unlisted",
+      "blob_path": "big.bin",
+      "blob_bytes": 614400,
+      "blob_human": "600.0 KiB",
+      "commit_rc": 1,
+      "hook_fired": true,
+      "expect_block": true,
+      "pass": true,
+      "stderr_tail": [
+        "repo_guard: 1 staged blob(s) exceed 512.0 KiB (FVM-SLIM-GUARD):",
+        "   600.0 KiB  big.bin",
+        "repo_guard: commit blocked.  Options: keep the artifact out of git (outputs/ is gitignored), shrink it, whitelist the path via .gitattributes `guard-allow-large`, or bypass with FVM_GUARD_ALLOW_LARGE=1 and justify in the commit message."
+      ]
+    },
+    {
+      "case": "small",
+      "blob_path": "small.txt",
+      "blob_bytes": 100,
+      "blob_human": "0.1 KiB",
+      "commit_rc": 0,
+      "hook_fired": false,
+      "expect_block": false,
+      "pass": true,
+      "stderr_tail": [
+        "repo_guard: staged blobs OK (limit 512.0 KiB)"
+      ]
+    },
+    {
+      "case": "large-whitelisted-npz",
+      "blob_path": "docs/verification-x/f/fields.npz",
+      "blob_bytes": 614400,
+      "blob_human": "600.0 KiB",
+      "commit_rc": 0,
+      "hook_fired": false,
+      "expect_block": false,
+      "pass": true,
+      "stderr_tail": [
+        "repo_guard: staged blobs OK (limit 512.0 KiB)"
+      ]
+    },
+    {
+      "case": "large-unlisted-docs",
+      "blob_path": "docs/verification-x/f/fields.bin",
+      "blob_bytes": 614400,
+      "blob_human": "600.0 KiB",
+      "commit_rc": 1,
+      "hook_fired": true,
+      "expect_block": true,
+      "pass": true,
+      "stderr_tail": [
+        "repo_guard: 1 staged blob(s) exceed 512.0 KiB (FVM-SLIM-GUARD):",
+        "   600.0 KiB  docs/verification-x/f/fields.bin",
+        "repo_guard: commit blocked.  Options: keep the artifact out of git (outputs/ is gitignored), shrink it, whitelist the path via .gitattributes `guard-allow-large`, or bypass with FVM_GUARD_ALLOW_LARGE=1 and justify in the commit message."
+      ]
+    }
+  ],
+  "all_pass": true,
+  "live_gate": {
+    "rc": 0,
+    "live_bytes": 197122081,
+    "live_human": "188.0 MiB",
+    "live_status": "OK"
+  }
+}
