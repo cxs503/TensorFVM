@@ -1,0 +1,131 @@
+{
+ "case": "CASE-FVM-PERIODIC-HILLS round 25 (stable-dt grid ladder)",
+ "reference_x_r_over_H": 5.41,
+ "protocol": {
+  "closure": "laminar (nu_t == 0)",
+  "reynolds": 2800.0,
+  "convection_blend": 0.75,
+  "averaging_window_t": [
+   160.0,
+   400.0
+  ],
+  "operator": "certified round-17 separation_reattachment on stored mean wall shear",
+  "stable_dt_source": "round 23 divergence probe (bounded max|u| at fixed mesh)"
+ },
+ "levels": {
+  "A": {
+   "stem": "round20_laminar_Re2800_96x48",
+   "nx": 96,
+   "ny": 48,
+   "dt": 0.02,
+   "steps": 20000,
+   "h_over_H": 0.09375,
+   "x_s_over_H": 3.922900531823629,
+   "x_r_over_H": 8.264277859446059,
+   "x_s_first_over_H": 0.40074469529249757,
+   "x_r_first_over_H": 1.2540965527208672,
+   "bubble_table": [
+    [
+     0.40074469529249757,
+     1.2540965527208672,
+     0.8533518574283696,
+     1.69231769516092
+    ],
+    [
+     3.922900531823629,
+     8.264277859446059,
+     4.34137732762243,
+     22.4721007015432
+    ]
+   ],
+   "bubbles": 2,
+   "status": "out_of_window",
+   "wall_clock_s": 194.91389298439026,
+   "block_spread_rel": 0.007555548875741755,
+   "coverage": 0.7221297836938436,
+   "profile_stations": 7,
+   "profile_pass": 0
+  }
+ },
+ "attribute_x_r_over_H": {
+  "reference": 5.41,
+  "tolerance": 0.1,
+  "n_levels": 1,
+  "verdict": "inconclusive",
+  "rule": "fewer than two levels",
+  "x_finest": null,
+  "x_coarse": null,
+  "x_extrapolated": null,
+  "order": null,
+  "gci_fine": null,
+  "movement_rel": null,
+  "error_finest_rel": null,
+  "error_extrapolated_rel": null,
+  "ladder": [
+   [
+    0.09375,
+    8.264277859446059
+   ]
+  ]
+ },
+ "attribute_x_r_over_H_crest_bubble": {
+  "reference": 5.41,
+  "tolerance": 0.1,
+  "n_levels": 1,
+  "verdict": "inconclusive",
+  "rule": "fewer than two levels",
+  "x_finest": null,
+  "x_coarse": null,
+  "x_extrapolated": null,
+  "order": null,
+  "gci_fine": null,
+  "movement_rel": null,
+  "error_finest_rel": null,
+  "error_extrapolated_rel": null,
+  "ladder": [
+   [
+    0.09375,
+    1.2540965527208672
+   ]
+  ]
+ },
+ "attribute_x_s_over_H": {
+  "reference": 0.22,
+  "tolerance": 0.1,
+  "n_levels": 1,
+  "verdict": "inconclusive",
+  "rule": "fewer than two levels",
+  "x_finest": null,
+  "x_coarse": null,
+  "x_extrapolated": null,
+  "order": null,
+  "gci_fine": null,
+  "movement_rel": null,
+  "error_finest_rel": null,
+  "error_extrapolated_rel": null,
+  "ladder": [
+   [
+    0.09375,
+    3.922900531823629
+   ]
+  ]
+ },
+ "temporal": {
+  "dt_half": {
+   "coarse_dt": 8.264277859446059,
+   "fine_dt": 8.264277859446059,
+   "absolute": 0.0,
+   "relative": 0.0,
+   "fine_minus_coarse": 0.0,
+   "resolved": true
+  }
+ },
+ "accounting": {
+  "reference": 5.41,
+  "x_r_finest": 8.264277859446059,
+  "mismatch_to_close": 2.854277859446059,
+  "span_spatial": 0.0,
+  "fraction_explained_spatial": 0.0,
+  "grid_refinement_products": []
+ }
+}
