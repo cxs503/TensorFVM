@@ -83,7 +83,9 @@ class ShallowWater2D:
     def __init__(self, nx: int, ny: int, x_min: float, x_max: float,
                  y_min: float, y_max: float, bed=None, gravity: float = 9.81,
                  cfl: float = 0.4, order: int = 2, dry_depth: float = 1e-8,
-                 well_balanced: bool = True):
+                 well_balanced: bool = True, gate_dry_face_correction: bool = False,
+                 desingularize: float = 0.0,
+                 correction_depth: str = "reconstructed"):
         if nx < 3 or ny < 3:
             raise ValueError("need at least 3 cells in each direction")
         if not (x_max > x_min and y_max > y_min):
@@ -99,6 +101,14 @@ class ShallowWater2D:
         self.order = int(order)
         self.dry_depth = float(dry_depth)
         self.well_balanced = bool(well_balanced)
+        self.gate_dry_face_correction = bool(gate_dry_face_correction)
+        self.dry_face_faces = 0
+        self.desingularize = float(desingularize)
+        if correction_depth not in ("reconstructed", "cell"):
+            raise ValueError("correction_depth must be 'reconstructed' or 'cell'")
+        self.correction_depth = correction_depth
+        if not self.desingularize >= 0.0:
+            raise ValueError("desingularize must be non-negative")
 
         self.h = np.zeros((self.nx, self.ny))
         self.hu = np.zeros((self.nx, self.ny))
@@ -162,11 +172,29 @@ class ShallowWater2D:
         self.set_state(np.maximum(surface - self.bed, 0.0))
 
     def primitive(self):
-        """Return ``(h, u, v)``; dry cells carry exactly zero velocity."""
+        """Return ``(h, u, v)``; dry cells carry exactly zero velocity.
+
+        ``desingularize = eps > 0`` replaces the naive recovery ``u = hu/h`` by
+        the Kurganov-Petrova (2007) form
+
+            u = sqrt(2) h hu / sqrt(h^4 + max(h^4, eps^4)),
+
+        which is algebraically identical to ``hu/h`` for ``h >> eps`` (relative
+        difference ``O((eps/h)^4)``) and tends to zero as ``h -> 0`` instead of
+        growing without bound.  ``eps = 0`` (default) keeps the naive recovery.
+        """
         wet = self.h > self.dry_depth
         safe = np.where(wet, self.h, 1.0)
-        u = np.where(wet, self.hu / safe, 0.0)
-        v = np.where(wet, self.hv / safe, 0.0)
+        if self.desingularize > 0.0:
+            eps = self.desingularize
+            h2 = safe * safe
+            h4 = h2 * h2
+            denom = np.sqrt(h4 + np.maximum(h4, eps ** 4))
+            u = np.where(wet, math.sqrt(2.0) * safe * self.hu / denom, 0.0)
+            v = np.where(wet, math.sqrt(2.0) * safe * self.hv / denom, 0.0)
+        else:
+            u = np.where(wet, self.hu / safe, 0.0)
+            v = np.where(wet, self.hv / safe, 0.0)
         return self.h, u, v
 
     # ------------------------------------------------------ reconstruction
@@ -352,6 +380,26 @@ class ShallowWater2D:
                 np.where(dry_pair, 0.0, Fn),
                 np.where(dry_pair, 0.0, Ft))
 
+    def _cell_depth_on_faces(self, h: np.ndarray, axis: int):
+        """Own-side *cell* depths glued onto the ``n+1`` face array.
+
+        Face ``k`` separates cells ``k-1`` and ``k``; the returned pair is
+        ``(depth of the left cell, depth of the right cell)`` in face indexing,
+        with the boundary lines using the edge cell (zero-gradient ghost),
+        exactly like :meth:`_glue_face`.
+        """
+        if axis == 0:
+            head, tail, inner = h[0, :], h[-1, :], h[:-1, :]
+        else:
+            head, tail, inner = h[:, 0], h[:, -1], h[:, :-1]
+        left, _ = self._glue_face(head, tail, inner, inner, axis)
+        if axis == 0:
+            head, tail, inner = h[0, :], h[-1, :], h[1:, :]
+        else:
+            head, tail, inner = h[:, 0], h[:, -1], h[:, 1:]
+        _, right = self._glue_face(head, tail, inner, inner, axis)
+        return left, right
+
     # ------------------------------------------------------------- residual
     def rhs(self, h: np.ndarray, hu: np.ndarray, hv: np.ndarray):
         """Semi-discrete right-hand side ``d/dt (h, hu, hv)``."""
@@ -381,10 +429,34 @@ class ShallowWater2D:
         if self.well_balanced:
             g = self.gravity
             # x-faces: cell i-1 sees the left-side correction, cell i the right
-            corr_lx = 0.5 * g * (fx[0] * fx[0] - hsLx * hsLx)
-            corr_rx = 0.5 * g * (fx[3] * fx[3] - hsRx * hsRx)
-            corr_ly = 0.5 * g * (fy[0] * fy[0] - hsLy * hsLy)
-            corr_ry = 0.5 * g * (fy[3] * fy[3] - hsRy * hsRy)
+            if self.correction_depth == "cell":
+                # Audusse et al. (2004) eq. (3.9) with the *cell* depth in the
+                # first term: the hydrostatic force the cell can exert is the
+                # one carried by its own water column g/2 h_i^2, and the star
+                # depth is the only reconstructed quantity.  Using the
+                # extrapolated face depth here lets a cell whose own depth is
+                # 1.2e-3 m exert the force of a 0.052 m column (measured ratio
+                # 42x, see docs/swe-dry-front-attribution/).
+                hLx = self._cell_depth_on_faces(h, 0)
+                hLy = self._cell_depth_on_faces(h, 1)
+                corr_lx = 0.5 * g * (hLx[0] * hLx[0] - hsLx * hsLx)
+                corr_rx = 0.5 * g * (hLx[1] * hLx[1] - hsRx * hsRx)
+                corr_ly = 0.5 * g * (hLy[0] * hLy[0] - hsLy * hsLy)
+                corr_ry = 0.5 * g * (hLy[1] * hLy[1] - hsRy * hsRy)
+            else:
+                corr_lx = 0.5 * g * (fx[0] * fx[0] - hsLx * hsLx)
+                corr_rx = 0.5 * g * (fx[3] * fx[3] - hsRx * hsRx)
+                corr_ly = 0.5 * g * (fy[0] * fy[0] - hsLy * hsLy)
+                corr_ry = 0.5 * g * (fy[3] * fy[3] - hsRy * hsRy)
+            if self.gate_dry_face_correction:
+                dry_x = (hsLx <= self.dry_depth) & (hsRx <= self.dry_depth)
+                dry_y = (hsLy <= self.dry_depth) & (hsRy <= self.dry_depth)
+                self.dry_face_faces = int(np.count_nonzero(dry_x)) + int(
+                    np.count_nonzero(dry_y))
+                corr_lx = np.where(dry_x, 0.0, corr_lx)
+                corr_rx = np.where(dry_x, 0.0, corr_rx)
+                corr_ly = np.where(dry_y, 0.0, corr_ly)
+                corr_ry = np.where(dry_y, 0.0, corr_ry)
             dhu = -(((Fxu + corr_lx)[1:, :] - (Fxu + corr_rx)[:-1, :]) / self.dx
                     + (Fyu[:, 1:] - Fyu[:, :-1]) / self.dy)
             dhv = -((Fxv[1:, :] - Fxv[:-1, :]) / self.dx
