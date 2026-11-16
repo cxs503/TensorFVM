@@ -62,9 +62,12 @@ sys.path.insert(0, str(ROOT / "src"))
 
 import numpy as np
 
+from tensorfvm.shallow_water.exact import stoker_constant_state
 from tensorfvm.shallow_water.dam_break import (
     CASES,
     RITTER_DRY,
+    PLATEAU_FLAT_FRACTION,
+    PLATEAU_THRESH_FRACTION,
     STOKER_WET,
     TOLERANCE,
     run_case,
@@ -126,6 +129,63 @@ def _decay_verdict(series: list[float]) -> dict:
     }
 
 
+F9_EXCLUDE_FRAC = 0.01   # physical half-window around the bore, fraction of L
+
+
+def _fan_jump_diagnostic(x, h, dx: float, domain_length: float,
+                         exclude_frac: float = F9_EXCLUDE_FRAC,
+                         exclude_cells: int = 3) -> dict:
+    """Fan-vs-jump gradient ratio: the quantity behind the F9 debt.
+
+    ``data_driven_plateau`` separates the plateau from the rarefaction fan with
+    an *absolute* cut ``thresh = PLATEAU_THRESH_FRACTION * max|dh/dx|``.  The
+    jump's ``max|dh/dx|`` grows like ``1/dx`` while the fan is a smooth feature
+    of bounded slope, so the ratio measured here shrinks with refinement and
+    eventually falls below the cut -- at which point the walk runs straight
+    through the fan and no plateau is delimited (the F9 failure recorded in
+    ``docs/case-fvm-dambreak-stoker-hires/``).
+
+    Declared *before* any run (no answer-dependent threshold):
+
+    ``jump_grad``
+        ``max |dh/dx|`` over the whole profile (the bore cell).
+    ``fan_grad``
+        ``max |dh/dx|`` over the upstream region at least
+        ``max(exclude_cells * dx, exclude_frac * L)`` away from the
+        max-gradient cell.  The exclusion is a *physical* half-window on
+        purpose: the numerical jump is smeared over a fixed length, so a
+        cell-count window stops excluding it once ``dx`` drops below that
+        length (measured: a 3-cell window leaked up to 1.89 m/m at
+        ``n = 6400`` while the declared window returns 0.32 m/m).
+    ``fan_over_jump``  ``fan_grad / jump_grad``
+        A grid-independent plateau cut would need ``thresh_frac`` below this
+        value; the shipped cut is ``PLATEAU_THRESH_FRACTION``.
+    """
+    x = np.asarray(x, dtype=float)
+    h = np.asarray(h, dtype=float)
+    out = {"fan_grad": None, "jump_grad": None, "fan_over_jump": None,
+           "cut_frac": float(PLATEAU_THRESH_FRACTION),
+           "fan_over_jump_below_cut": None, "exclude_cells": int(exclude_cells),
+           "exclude_frac": float(exclude_frac), "exclude_width": None}
+    if x.size < 6:
+        return out
+    grad = np.abs(np.diff(h)) / dx
+    if not np.isfinite(grad).any():
+        return out
+    j = int(np.argmax(grad))
+    jump = float(grad[j])
+    width = max(exclude_cells * dx, exclude_frac * domain_length)
+    upstream = np.arange(grad.size) < j - width / dx
+    out["exclude_width"] = float(width)
+    if jump <= 0.0 or not upstream.any():
+        return out
+    fan = float(np.max(grad[upstream]))
+    out.update({"fan_grad": fan, "jump_grad": jump,
+                "fan_over_jump": fan / jump,
+                "fan_over_jump_below_cut": bool(fan / jump < PLATEAU_THRESH_FRACTION)})
+    return out
+
+
 def _row(case_key: str, n: int) -> dict:
     case = CASES[case_key]
     t0 = time.perf_counter()
@@ -183,7 +243,15 @@ def _row(case_key: str, n: int) -> dict:
             "bore_step_ratio_error": dd["step_ratio_error"],
             "bore_cells_off": (None if dd["bore_x_error"] is None else
                                dd["bore_x_error"] * m["shock_exact"] / row["dx"]),
+            "bore_plateau_width": dd.get("plateau_width"),
+            "bore_n_plateau": dd.get("n_plateau"),
+            # every cut the detector tried, so the ladder is auditable
+            "bore_attempts": dd.get("bore_attempts"),
         })
+        prof = run["profile"]
+        row.update(_fan_jump_diagnostic(
+            prof["x"], prof["h_numeric"], row["dx"],
+            domain_length=case.x_max - case.x_min))
     return row
 
 
@@ -226,6 +294,27 @@ def study(resolutions=(800, 1600, 3200, 6400)) -> dict:
                 [r["bore_x_cell_error"] for r in case_rows])
             summary["bore_max_cell_error_over_range"] = max(
                 r["bore_x_cell_error"] for r in case_rows)
+            summary["plateau_cut_frac"] = float(PLATEAU_THRESH_FRACTION)
+            summary["plateau_flat_fraction"] = float(PLATEAU_FLAT_FRACTION)
+            summary["fan_over_jump_by_grid"] = [
+                {"n": r["n"], "fan_over_jump": r.get("fan_over_jump"),
+                 "thresh_frac_used": r.get("bore_thresh_frac_used")}
+                for r in case_rows]
+            summary["fan_over_jump_first_below_cut"] = next(
+                (r["n"] for r in case_rows
+                 if r.get("fan_over_jump_below_cut")), None)
+            summary["cut_bounded_untightened"] = {
+                str(r["n"]): (None if not r.get("bore_attempts") else
+                              bool(r["bore_attempts"][0]["bounded"]))
+                for r in case_rows}
+            summary["thresh_frac_ladder_used"] = {
+                str(r["n"]): r.get("bore_thresh_frac_used") for r in case_rows}
+            summary["fan_over_jump_rule"] = (
+                "fan_grad = max|dh/dx| over the region at least "
+                f"max(3 dx, {F9_EXCLUDE_FRAC} L) upstream of the max-gradient "
+                "cell; jump_grad = max|dh/dx| over the profile; "
+                "the plateau walk is undefined without the decade ladder once "
+                "fan_over_jump < PLATEAU_THRESH_FRACTION")
         per_case[key] = summary
 
     return {
@@ -236,6 +325,8 @@ def study(resolutions=(800, 1600, 3200, 6400)) -> dict:
             "tolerance": TOLERANCE,
             "floor_ratio_rule": FLOOR_RATIO,
             "min_grids_for_order": MIN_GRIDS_FOR_ORDER,
+            "plateau_cut_frac": float(PLATEAU_THRESH_FRACTION),
+            "plateau_flat_fraction": float(PLATEAU_FLAT_FRACTION),
             "numpy": np.__version__,
             "python": sys.version.split()[0],
             "command": "PYTHONPATH=src python scripts/run_shallow_water_dam_break_hires.py "
@@ -309,6 +400,72 @@ def figure(payload: dict, path: Path) -> None:
     plt.close(fig)
 
 
+def profile_figure(resolutions, path: Path) -> dict:
+    """Numeric vs closed-form depth profiles at the finest grid (field plot).
+
+    A 1D depth profile *is* the field for this case, so this is the "场量云图"
+    of the package: ``h(x)`` at ``t* = 2`` on the finest grid against the
+    analytic solution, plus a zoom on the feature that the coarse indicators
+    grade (dry tip / wet bore).  The errors in the panel titles are read from
+    the same run, not annotated by hand.
+    """
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    n = max(resolutions)
+    fig, axes = plt.subplots(2, 2, figsize=(11.5, 6.6))
+    out = {"n": n, "panels": {}}
+    for col, key in enumerate((RITTER_DRY.key, STOKER_WET.key)):
+        case = CASES[key]
+        run = run_case(case, n=n)
+        x = np.asarray(run["profile"]["x"], dtype=float)
+        h = np.asarray(run["profile"]["h_numeric"], dtype=float)
+        h_ex = np.asarray(run["profile"]["h_exact"], dtype=float)
+        m = run["metrics"]
+        l1 = m["depth_l1"]
+        linf = m["depth_linf"]
+        ax = axes[0, col]
+        ax.plot(x, h_ex, "k-", lw=2.0, label="analytic (closed form)")
+        ax.plot(x, h, "C0--", lw=1.0, label=f"TensorFVM n = {n}")
+        ax.set_title(f"{key}: h(x) at t* = {case.t_star_end:g}\n"
+                     f"depth L1 = {l1:.3e}, Linf/h0 = {linf:.3e}")
+        ax.set_xlabel("x [m]")
+        ax.set_ylabel("h [m]")
+        ax.grid(True, alpha=0.3)
+        ax.legend(fontsize=8)
+        ax = axes[1, col]
+        if case.kind == "dry":
+            xt = case.x_dam + 2.0 * np.sqrt(case.gravity * case.h0) * run["discretisation"]["t_end"]
+            half = 0.06 * (case.x_max - case.x_min)
+            lo, hi = xt - 2 * half, xt + half
+            what = "dry tip (fan-shape estimator)"
+        else:
+            sol = stoker_constant_state(case.h0, case.h1, case.gravity)
+            xs = case.x_dam + sol["shock_speed"] * run["discretisation"]["t_end"]
+            half = 0.06 * (case.x_max - case.x_min)
+            lo, hi = xs - 2 * half, xs + half
+            what = "wet bore (sub-cell mid-level crossing)"
+        sel = (x >= lo) & (x <= hi)
+        ax.plot(x[sel], h_ex[sel], "k-", lw=2.0, label="analytic")
+        ax.plot(x[sel], h[sel], "C1o-", ms=3.0, lw=0.8, label=f"n = {n}")
+        ax.axvline(lo + half, color="0.6", ls=":", lw=0.8)
+        ax.set_title(f"{key}: zoom on the {what}")
+        ax.set_xlabel("x [m]")
+        ax.set_ylabel("h [m]")
+        ax.grid(True, alpha=0.3)
+        ax.legend(fontsize=8)
+        out["panels"][key] = {"depth_l1": l1, "depth_linf_over_h0": linf,
+                              "zoom": [float(lo), float(hi)]}
+    fig.suptitle(f"CASE-FVM-DAMBREAK-STOKER: numeric vs closed-form depth "
+                 f"profiles at n = {n}")
+    fig.tight_layout()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(path, dpi=140)
+    plt.close(fig)
+    return out
+
+
 def _markdown(payload: dict) -> str:
     lines = ["# High-resolution dam-break extension (auto-generated)", "",
              f"generated: {payload['meta']['generated_at']}  commit: "
@@ -345,6 +502,29 @@ def _markdown(payload: dict) -> str:
                     f"| {r['n']} | {r['bore_x_error']:.4%} | {r['bore_x_cell_error']:.4%} | "
                     f"{r['bore_h2_error']:.3e} | {r['bore_step_ratio_error']:.4%} |")
             lines += ["",
+                      "| n | fan max\\|dh/dx\\| [m/m] | jump max\\|dh/dx\\| [m/m] "
+                      "| fan/jump | below cut "
+                      f"{case['plateau_cut_frac']:g} | cut used | plateau flatness "
+                      f"(flag > {case['plateau_flat_fraction']:g}) |",
+                      "|---|---|---|---|---|---|---|"]
+            for r in case["rows"]:
+                f_ = r.get("fan_over_jump")
+                lines.append(
+                    f"| {r['n']} | {r['fan_grad']:.4g} | {r['jump_grad']:.4g} | "
+                    f"{f_:.3e} | {'yes' if r.get('fan_over_jump_below_cut') else 'no'} | "
+                    f"{r['bore_thresh_frac_used']:g} | {r['bore_flatness']:.3%} |")
+            for r in case['rows']:
+                att = r.get('bore_attempts') or []
+                lines.append(
+                    f"| ↳ {r['n']} ladder | "
+                    + ', '.join(
+                        f"{a['thresh_frac']:g}: "
+                        + ('bounded n=%d' % a['n_plateau']
+                           if a['bounded'] else 'unbounded')
+                        for a in att) + ' | | | | | |')
+            lines += ["",
+                      f"* F9: fan/jump first below the cut at n = "
+                      f"{case['fan_over_jump_first_below_cut']}",
                       f"* observed order (bore sub-cell): "
                       f"{case['observed_order_bore_subcell']}",
                       f"* bore sub-cell decay: finest ratio "
@@ -360,6 +540,11 @@ def main() -> int:
     ap.add_argument("--resolutions", default="800,1600,3200,6400")
     ap.add_argument("--outdir", default=str(ARTIFACT_DIR))
     ap.add_argument("--figure", default=str(DOCS_DIR / "hires_convergence.png"))
+    ap.add_argument("--profiles-figure",
+                    default=str(DOCS_DIR / "profiles.png"),
+                    help="numeric-vs-analytic depth profiles at the finest grid")
+    ap.add_argument("--skip-profiles", action="store_true",
+                    help="skip the profile figure (fast smoke runs)")
     args = ap.parse_args()
     resolutions = tuple(int(x) for x in args.resolutions.split(",") if x.strip())
 
@@ -370,6 +555,15 @@ def main() -> int:
     figure(payload, Path(args.figure))
     docs = Path(args.figure).parent
     (docs / "SUMMARY.md").write_text(_markdown(payload))
+    if not args.skip_profiles:
+        info = profile_figure(resolutions, Path(args.profiles_figure))
+        payload["meta"]["profile_figure"] = {
+            "path": str(Path(args.profiles_figure).relative_to(ROOT)),
+            "n": info["n"],
+            "panels": info["panels"],
+        }
+        (outdir / "hires.json").write_text(json.dumps(payload, indent=1))
+        print(f"wrote {args.profiles_figure}")
     print(_markdown(payload))
     print(f"\nwrote {outdir / 'hires.json'} and {args.figure}")
     return 0
