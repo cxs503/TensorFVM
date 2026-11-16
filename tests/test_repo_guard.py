@@ -1,8 +1,16 @@
-"""Tests for the FVM-SLIM-GUARD anti-rot trio (D6).
+"""Tests for the FVM-SLIM-GUARD anti-rot trio (D6, R4).
 
-Covers: pre-commit blob gate (block / pass / escape hatch), CI blob gate
-over a diff range, pack threshold logic (pure), hook wiring, CI workflow
-wiring, and the MIGRATION skeleton.  Stdlib + git only (no torch).
+Covers: pre-commit blob gate (block / pass / escape hatch / .gitattributes
+whitelist), CI blob gate over a diff range, pack threshold logic (pure),
+LIVE artifact volume gate (pure + standalone), hook wiring, CI workflow
+wiring, and the MIGRATION-m23216 skeleton.  Stdlib + git only (no torch).
+
+NOTE: this worktree is a sparse-checkout (blob:none partial clone); the
+guard *wiring* files (.githooks/, .github/) are tracked in git but may not
+be materialized in the working directory.  The wiring tests therefore read
+the tracked content from the index/HEAD (git show / git ls-files) rather
+than the working tree — this is the correct, robust check for a sparse
+worktree.
 """
 
 from __future__ import annotations
@@ -25,6 +33,21 @@ import repo_guard  # noqa: E402
 def _git(tmp_path: Path, *args: str) -> str:
     return subprocess.run(
         ["git", *args], cwd=tmp_path, capture_output=True, text=True, check=True
+    ).stdout
+
+
+def _git_show(path: str) -> str:
+    """Read a tracked file's content from HEAD (robust in sparse worktrees)."""
+    return subprocess.run(
+        ["git", "show", f"HEAD:{path}"], cwd=REPO_ROOT,
+        capture_output=True, text=True, check=True,
+    ).stdout
+
+
+def _git_ls_files(path: str) -> str:
+    return subprocess.run(
+        ["git", "ls-files", path], cwd=REPO_ROOT,
+        capture_output=True, text=True, check=True,
     ).stdout
 
 
@@ -80,6 +103,36 @@ def test_staged_escape_hatch(bare_repo: Path) -> None:
     assert proc.returncode == 0, proc.stderr
 
 
+def test_staged_whitelist_bypasses_large_blob(bare_repo: Path) -> None:
+    """A large blob matching `guard-allow-large` is whitelisted (passes)."""
+    # Set up the whitelist attribute in the throwaway repo.
+    (bare_repo / ".gitattributes").write_text(
+        "docs/verification-*/**/*.npz  guard-allow-large\n")
+    _git(bare_repo, "add", ".gitattributes")
+    _git(bare_repo, "commit", "-qm", "add gitattributes")
+    # A large npz under the whitelisted path.
+    big = bare_repo / "docs" / "verification-x" / "f" / "fields.npz"
+    big.parent.mkdir(parents=True)
+    big.write_bytes(b"\0" * (600 * 1024))
+    _git(bare_repo, "add", str(big))
+    proc = _run_guard(bare_repo, "staged")
+    assert proc.returncode == 0, proc.stderr
+
+
+def test_staged_whitelist_does_not_bypass_unlisted(bare_repo: Path) -> None:
+    """A large blob NOT matching the whitelist is still blocked."""
+    (bare_repo / ".gitattributes").write_text(
+        "docs/verification-*/**/*.npz  guard-allow-large\n")
+    _git(bare_repo, "add", ".gitattributes")
+    _git(bare_repo, "commit", "-qm", "add gitattributes")
+    big = bare_repo / "docs" / "verification-x" / "f" / "fields.bin"
+    big.parent.mkdir(parents=True)
+    big.write_bytes(b"\0" * (600 * 1024))
+    _git(bare_repo, "add", str(big))
+    proc = _run_guard(bare_repo, "staged")
+    assert proc.returncode == 1, proc.stderr
+
+
 def test_ci_blob_gate_flags_large_changed_file(bare_repo: Path) -> None:
     big = bare_repo / "big2.bin"
     big.write_bytes(b"\1" * (600 * 1024))
@@ -124,31 +177,88 @@ def test_evaluate_pack_thresholds() -> None:
     assert nobase["pack_status"] == "OK"
 
 
+def test_evaluate_live_thresholds() -> None:
+    """Live volume gate: OK / WARN / RED and the no-baseline fallback."""
+    base = 183 * 1024 * 1024
+    baseline = {"live_bytes": base}
+    warn_delta, red_delta = 50 * 1024 * 1024, 100 * 1024 * 1024
+    ok = repo_guard.evaluate_live(base + 10_000_000, baseline,
+                                  warn_delta, red_delta)
+    assert ok["live_status"] == "OK"
+    warn = repo_guard.evaluate_live(base + 60_000_000, baseline,
+                                    warn_delta, red_delta)
+    assert warn["live_status"] == "WARN"
+    red = repo_guard.evaluate_live(base + 110_000_000, baseline,
+                                   warn_delta, red_delta)
+    assert red["live_status"] == "RED"
+    # no recorded baseline -> falls back to the frozen 183 MiB reference
+    nobase = repo_guard.evaluate_live(base + 10_000_000, None,
+                                      warn_delta, red_delta)
+    assert nobase["live_status"] == "OK"
+    assert nobase["baseline_bytes"] == repo_guard.DEFAULT_LIVE_BASELINE
+
+
+def test_live_artifact_bytes_dedup(bare_repo: Path) -> None:
+    """live_artifact_bytes() dedups by blob sha (same blob, 2 paths = 1)."""
+    data = b"\xab" * 1000
+    (bare_repo / "a" / "f1.bin").parent.mkdir(parents=True)
+    (bare_repo / "a" / "f1.bin").write_bytes(data)
+    (bare_repo / "b" / "f2.bin").parent.mkdir(parents=True)
+    (bare_repo / "b" / "f2.bin").write_bytes(data)  # same content -> same blob
+    _git(bare_repo, "add", "a/f1.bin", "b/f2.bin")
+    _git(bare_repo, "commit", "-qm", "two paths one blob")
+    # Run the `live` subcommand in the throwaway repo (env points REPO_ROOT
+    # at it); seed.txt (5 B) + one 1000 B blob (deduped) = 1005 B.
+    proc = _run_guard(bare_repo, "live")
+    assert proc.returncode == 0, proc.stderr
+    out = json.loads(proc.stdout)
+    assert out["live_bytes"] == 1005
+
+
+def test_cmd_live_ok(bare_repo: Path) -> None:
+    """Standalone `live` subcommand returns 0 on a small repo."""
+    proc = _run_guard(bare_repo, "live")
+    assert proc.returncode == 0, proc.stderr
+    assert "live" in proc.stdout
+
+
 def test_hook_wiring() -> None:
-    hook = REPO_ROOT / ".githooks" / "pre-commit"
-    assert hook.exists(), ".githooks/pre-commit missing"
-    assert os.access(hook, os.X_OK), "pre-commit hook not executable"
-    text = hook.read_text()
+    """The pre-commit hook is tracked and calls the staged gate."""
+    # Robust for sparse worktrees: read the tracked content from HEAD.
+    assert ".githooks/pre-commit" in _git_ls_files(".githooks/pre-commit")
+    text = _git_show(".githooks/pre-commit")
     assert "repo_guard.py" in text and "staged" in text
 
 
 def test_ci_workflow_wiring() -> None:
-    wf = REPO_ROOT / ".github" / "workflows" / "repo-guard.yml"
-    assert wf.exists(), ".github/workflows/repo-guard.yml missing"
-    text = wf.read_text()
+    """The CI workflow is tracked and calls the ci gate."""
+    assert ".github/workflows/repo-guard.yml" in _git_ls_files(
+        ".github/workflows/repo-guard.yml")
+    text = _git_show(".github/workflows/repo-guard.yml")
     assert "repo_guard.py" in text and "ci" in text
 
 
+def test_gitattributes_whitelist_present() -> None:
+    """The .gitattributes whitelist attribute is declared (working tree)."""
+    ga = REPO_ROOT / ".gitattributes"
+    assert ga.exists(), ".gitattributes missing in working tree"
+    text = ga.read_text()
+    assert "guard-allow-large" in text
+
+
 def test_migration_skeleton() -> None:
-    doc = REPO_ROOT / "docs" / "MIGRATION.md"
-    assert doc.exists(), "docs/MIGRATION.md missing"
+    doc = REPO_ROOT / "docs" / "MIGRATION-m23216.md"
+    assert doc.exists(), "docs/MIGRATION-m23216.md missing"
     text = doc.read_text()
-    for section in ("触发条件", "当前基线", "D1", "runbook", "回滚", "状态"):
-        assert section in text, f"MIGRATION.md missing section: {section}"
+    for section in ("触发条件", "当前基线", "D1", "runbook", "回滚",
+                    "commit-map", "旧 SHA 对照表", "状态"):
+        assert section in text, f"MIGRATION-m23216.md missing section: {section}"
 
 
-def test_baseline_file_present() -> None:
-    bl = REPO_ROOT / "scripts" / "guard" / "pack_baseline.json"
-    assert bl.exists(), "pack_baseline.json missing (run repo_guard.py reanchor)"
-    data = json.loads(bl.read_text())
-    assert data["pack_bytes"] > 0
+def test_baseline_files_present() -> None:
+    for bl, key in (("pack_baseline.json", "pack_bytes"),
+                    ("live_baseline.json", "live_bytes")):
+        p = REPO_ROOT / "scripts" / "guard" / bl
+        assert p.exists(), f"{bl} missing (run repo_guard.py reanchor)"
+        data = json.loads(p.read_text())
+        assert data[key] > 0
