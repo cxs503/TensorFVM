@@ -20,6 +20,7 @@ import torch
 from .dambreak import DamBreakMMConfig, run_dam_break
 from .statics import StaticBubbleConfig, run_static_bubble
 from .zalesak import NotchConfig, run_long_rotation
+from ..registry import capability
 
 __all__ = [
     "CRITERIA",
@@ -84,6 +85,14 @@ def static_bubble_sweep(configs) -> list:
     return out
 
 
+@capability('fvm.freesurface.threecase_campaign',
+            kind='free_surface',
+            maturity='developing',
+            test_path='tests/test_vof_threecase.py',
+            wired=False,
+            tested=True,
+            verified=False,
+            evidence={'grade': 'MECHANICS', 'docs': 0})
 def zalesak_sweep(configs) -> list:
     out = []
     for cfg in configs:

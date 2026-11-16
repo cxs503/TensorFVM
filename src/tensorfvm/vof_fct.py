@@ -32,10 +32,19 @@ baseline and is a property of the boundary treatment, not of this limiter.
 import torch
 
 from .two_phase_vof import VOFTransport
+from .registry import capability
 
 INF = float("inf")
 
 
+@capability('fvm.freesurface.fct',
+            kind='free_surface',
+            maturity='developing',
+            test_path='tests/test_vof_rotation_verification.py',
+            wired=True,
+            tested=True,
+            verified=False,
+            evidence={'grade': 'MECHANICS', 'docs': 0})
 class LimitedVOFTransport(VOFTransport):
     """Donor-cell VOF transport with a conservative, bounded FCT limiter."""
 

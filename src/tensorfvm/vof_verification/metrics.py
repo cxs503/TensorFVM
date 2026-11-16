@@ -41,6 +41,7 @@ from __future__ import annotations
 import math
 
 import torch
+from ..registry import capability
 
 __all__ = [
     "field_metrics",
@@ -77,6 +78,14 @@ def observed_order(e_coarse: float, e_fine: float, ratio: float = 2.0):
     return math.log(e_coarse / e_fine) / math.log(ratio)
 
 
+@capability('fvm.verification.gci',
+            kind='verification',
+            maturity='developing',
+            test_path='tests/test_vof_cicsam.py',
+            wired=True,
+            tested=True,
+            verified=False,
+            evidence={'grade': 'MECHANICS', 'docs': 0})
 def gci(errors, refinement_ratio: float = 2.0, safety: float = 1.25) -> dict:
     """Grid Convergence Index of an exact-reference error triple.
 

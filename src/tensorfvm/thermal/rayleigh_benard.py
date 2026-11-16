@@ -49,6 +49,7 @@ from dataclasses import dataclass
 import torch
 
 from ..internal_flow.mac import MACConfig, StaggeredMAC
+from ..registry import capability
 
 __all__ = ["RayleighBenardConfig", "RayleighBenardCase"]
 
@@ -93,6 +94,13 @@ class RayleighBenardConfig:
         return 1.0 / math.sqrt(self.prandtl * self.rayleigh)
 
 
+@capability('fvm.thermal.rayleigh_benard',
+            kind='thermal',
+            maturity='developing',
+            wired=False,
+            tested=False,
+            verified=False,
+            evidence={'grade': 'NONE', 'docs': 0})
 class RayleighBenardCase:
     """Buoyant layer between a hot lower and a cold upper plate."""
 

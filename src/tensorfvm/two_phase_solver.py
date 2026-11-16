@@ -44,6 +44,7 @@ from .two_phase_vof import (
 )
 from .free_surface_bc import FreeSurfaceBC
 from .vof_plic import advect_plic
+from .registry import capability
 
 
 @dataclass
@@ -276,6 +277,15 @@ def _limited_upwind_difference(c, b1, b2, f1, f2, u_face, h):
     return torch.where(u_face >= 0.0, pos, neg)
 
 
+@capability('fvm.multiphase.solver',
+            kind='multiphase',
+            maturity='developing',
+            test_path='tests/test_two_phase_solver_verification.py',
+            wired=True,
+            tested=True,
+            verified=False,
+            endpoint='cli:tensorfvm-twophase-gap',
+            evidence={'grade': 'MECHANICS', 'docs': 0})
 class TwoPhaseSolver:
     """Variable-property SIMPLE + VOF on a staggered MAC grid.
 

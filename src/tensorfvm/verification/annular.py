@@ -31,6 +31,7 @@ from pathlib import Path
 import numpy as np
 
 from ..annular import AnnularConfig, analytic_flow, analytic_velocity, solve
+from ..registry import capability
 
 CASES = ((16, 8), (32, 16), (64, 32))
 FIGURE_CASE = (64, 32)
@@ -97,6 +98,18 @@ def flow_rate_audit(c, a=None, b=None):
                 relative_difference=abs(q - closed) / abs(closed))
 
 
+@capability('fvm.verification.annular_band',
+            kind='verification',
+            maturity='mature',
+            test_path='tests/test_annular_verification.py',
+            wired=True,
+            tested=True,
+            verified=True,
+            evidence={'grade': 'ANALYTIC', 'max_error_pct': 0.2813,
+                      'reference': 'closed-form annular axial Poiseuille profile',
+                      'band_script': 'scripts/m23215_error_bands.py',
+                      'coarse_max_error_pct': 3.0336,
+                      'note': 'faceted walls: error falls 2nd order in ntheta, flat in nr'})
 def run_case(ntheta, nr, c=None):
     c = AnnularConfig(ntheta=ntheta, nr=nr) if c is None else c
     out = solve(c)

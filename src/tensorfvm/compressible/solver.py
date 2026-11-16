@@ -47,6 +47,7 @@ import torch
 from .eos import StiffenedGasMixture
 from .reconstruct import limited_slope
 from .riemann import ExactRiemann, hllc_flux
+from ..registry import capability
 
 __all__ = ["EulerSolver", "PRIMITIVE_NAMES"]
 
@@ -58,6 +59,14 @@ def _as_tuple(bc: Sequence) -> Tuple:
     return tuple(bc)
 
 
+@capability('fvm.compressible.euler',
+            kind='compressible',
+            maturity='developing',
+            test_path='tests/test_compressible_isentropic_vortex.py',
+            wired=True,
+            tested=True,
+            verified=False,
+            evidence={'grade': 'MECHANICS', 'docs': 0})
 class EulerSolver:
     """Multi-material Euler solver on a uniform Cartesian grid.
 

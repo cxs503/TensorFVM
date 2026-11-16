@@ -52,6 +52,7 @@ from .experimental_data import (
 )
 from .resistance_post import ittc57_friction, total_resistance_decomposition
 from .mesh_convergence import richardson_extrapolation, generate_mesh_levels
+from ..registry import capability
 
 
 @dataclass
@@ -198,6 +199,14 @@ class CFDVerificationResult:
         }
 
 
+@capability('fvm.ship_freesurface.wave_elevation',
+            kind='seakeeping',
+            maturity='developing',
+            test_path='tests/test_ship_freesurface_cfd.py',
+            wired=False,
+            tested=True,
+            verified=False,
+            evidence={'grade': 'MECHANICS', 'docs': 0})
 def compute_wave_elevation_from_alpha(
     alpha: np.ndarray,
     dx: float,

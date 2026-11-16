@@ -1,0 +1,902 @@
+{
+  "capabilities": [
+    {
+      "endpoint": null,
+      "entry": "cavitation_number",
+      "evidence": {
+        "docs": 0,
+        "grade": "MECHANICS"
+      },
+      "id": "fvm.cavitation.inception",
+      "kind": "cavitation",
+      "maturity": "developing",
+      "module_path": "tensorfvm.cavitation.inception",
+      "params": {},
+      "source": "tensorfvm.cavitation.inception:cavitation_number",
+      "test_path": "tests/test_cavitation_propeller_oracle.py",
+      "tested": true,
+      "verified": false,
+      "wired": true
+    },
+    {
+      "endpoint": null,
+      "entry": "EulerSolver",
+      "evidence": {
+        "docs": 0,
+        "grade": "MECHANICS"
+      },
+      "id": "fvm.compressible.euler",
+      "kind": "compressible",
+      "maturity": "developing",
+      "module_path": "tensorfvm.compressible.solver",
+      "params": {},
+      "source": "tensorfvm.compressible.solver:EulerSolver",
+      "test_path": "tests/test_compressible_isentropic_vortex.py",
+      "tested": true,
+      "verified": false,
+      "wired": true
+    },
+    {
+      "endpoint": null,
+      "entry": "minmod",
+      "evidence": {
+        "docs": 0,
+        "grade": "MECHANICS"
+      },
+      "id": "fvm.compressible.slope_limiter",
+      "kind": "compressible",
+      "maturity": "developing",
+      "module_path": "tensorfvm.compressible.reconstruct",
+      "params": {},
+      "source": "tensorfvm.compressible.reconstruct:minmod",
+      "test_path": "tests/test_sod1978_convergence.py",
+      "tested": true,
+      "verified": false,
+      "wired": true
+    },
+    {
+      "endpoint": null,
+      "entry": "solve",
+      "evidence": {
+        "band_script": "scripts/m23215_error_bands.py",
+        "coarse_max_error_pct": 3.0336,
+        "grade": "ANALYTIC",
+        "max_error_pct": 0.2813,
+        "reference": "closed-form annular axial Poiseuille profile"
+      },
+      "id": "fvm.core.annular_axial",
+      "kind": "solver",
+      "maturity": "mature",
+      "module_path": "tensorfvm.annular",
+      "params": {},
+      "source": "tensorfvm.annular:solve",
+      "test_path": "tests/test_annular_grid_convergence.py",
+      "tested": true,
+      "verified": true,
+      "wired": true
+    },
+    {
+      "endpoint": null,
+      "entry": "SimpleSolver",
+      "evidence": {
+        "docs": 25,
+        "grade": "MECHANICS"
+      },
+      "id": "fvm.core.ins2d_collocated",
+      "kind": "solver",
+      "maturity": "developing",
+      "module_path": "tensorfvm.solver",
+      "params": {},
+      "source": "tensorfvm.solver:SimpleSolver",
+      "test_path": "tests/test_backend_registry.py",
+      "tested": true,
+      "verified": false,
+      "wired": true
+    },
+    {
+      "endpoint": "cli:tensorfvm-cylinder",
+      "entry": "Cylinder3DSolver",
+      "evidence": {
+        "docs": 1,
+        "grade": "MECHANICS"
+      },
+      "id": "fvm.core.ins3d_cylinder",
+      "kind": "solver",
+      "maturity": "developing",
+      "module_path": "tensorfvm.solver3d",
+      "params": {},
+      "source": "tensorfvm.solver3d:Cylinder3DSolver",
+      "test_path": "tests/test_body_fitted3d.py",
+      "tested": true,
+      "verified": false,
+      "wired": true
+    },
+    {
+      "endpoint": null,
+      "entry": "adjoint_gradient",
+      "evidence": {
+        "docs": 0,
+        "grade": "MECHANICS"
+      },
+      "id": "fvm.differentiable.shape_adjoint",
+      "kind": "differentiable",
+      "maturity": "developing",
+      "module_path": "tensorfvm.adjoint_shape.adjoint",
+      "params": {},
+      "source": "tensorfvm.adjoint_shape.adjoint:adjoint_gradient",
+      "test_path": "tests/test_adjoint_shape_sensitivity.py",
+      "tested": true,
+      "verified": false,
+      "wired": true
+    },
+    {
+      "endpoint": null,
+      "entry": "PlanarFluxTransfer",
+      "evidence": {
+        "band_script": "scripts/m23215_error_bands.py",
+        "grade": "CONSERVATION",
+        "max_error_pct": 0.0,
+        "reference": "exact conservation of the face-integrated flux across a non-matching interface"
+      },
+      "id": "fvm.flux.overset_transfer",
+      "kind": "flux",
+      "maturity": "developing",
+      "module_path": "tensorfvm.overset_flux",
+      "params": {},
+      "source": "tensorfvm.overset_flux:PlanarFluxTransfer",
+      "test_path": "tests/test_overset_flux.py",
+      "tested": true,
+      "verified": true,
+      "wired": false
+    },
+    {
+      "endpoint": null,
+      "entry": "AlgebraicVOF",
+      "evidence": {
+        "docs": 0,
+        "grade": "MECHANICS"
+      },
+      "id": "fvm.freesurface.algebraic_vof",
+      "kind": "free_surface",
+      "maturity": "developing",
+      "module_path": "tensorfvm.vof_phase0.advection",
+      "params": {},
+      "source": "tensorfvm.vof_phase0.advection:AlgebraicVOF",
+      "test_path": "tests/test_vof_phase0_advection.py",
+      "tested": true,
+      "verified": false,
+      "wired": true
+    },
+    {
+      "endpoint": null,
+      "entry": "CICSAMVOF",
+      "evidence": {
+        "docs": 0,
+        "grade": "MECHANICS"
+      },
+      "id": "fvm.freesurface.cicsam",
+      "kind": "free_surface",
+      "maturity": "developing",
+      "module_path": "tensorfvm.vof_cicsam",
+      "params": {},
+      "source": "tensorfvm.vof_cicsam:CICSAMVOF",
+      "test_path": "tests/test_vof_cicsam.py",
+      "tested": true,
+      "verified": false,
+      "wired": true
+    },
+    {
+      "endpoint": null,
+      "entry": "LimitedVOFTransport",
+      "evidence": {
+        "docs": 0,
+        "grade": "MECHANICS"
+      },
+      "id": "fvm.freesurface.fct",
+      "kind": "free_surface",
+      "maturity": "developing",
+      "module_path": "tensorfvm.vof_fct",
+      "params": {},
+      "source": "tensorfvm.vof_fct:LimitedVOFTransport",
+      "test_path": "tests/test_vof_rotation_verification.py",
+      "tested": true,
+      "verified": false,
+      "wired": true
+    },
+    {
+      "endpoint": null,
+      "entry": "reconstruct",
+      "evidence": {
+        "band_script": "scripts/m23215_error_bands.py",
+        "grade": "CONSERVATION",
+        "max_error_pct": 0.0,
+        "reference": "algebraic identity A(n, c(alpha)) == alpha (exact cut area)"
+      },
+      "id": "fvm.freesurface.plic_geometry",
+      "kind": "free_surface",
+      "maturity": "mature",
+      "module_path": "tensorfvm.vof_plic",
+      "params": {},
+      "source": "tensorfvm.vof_plic:reconstruct",
+      "test_path": "tests/test_vof_plic_interface.py",
+      "tested": true,
+      "verified": true,
+      "wired": true
+    },
+    {
+      "endpoint": null,
+      "entry": "thinc_flux",
+      "evidence": {
+        "docs": 0,
+        "grade": "NONE"
+      },
+      "id": "fvm.freesurface.thinc",
+      "kind": "free_surface",
+      "maturity": "developing",
+      "module_path": "tensorfvm.vof.thinc",
+      "params": {},
+      "source": "tensorfvm.vof.thinc:thinc_flux",
+      "test_path": null,
+      "tested": false,
+      "verified": false,
+      "wired": true
+    },
+    {
+      "endpoint": null,
+      "entry": "zalesak_sweep",
+      "evidence": {
+        "docs": 0,
+        "grade": "MECHANICS"
+      },
+      "id": "fvm.freesurface.threecase_campaign",
+      "kind": "free_surface",
+      "maturity": "developing",
+      "module_path": "tensorfvm.vof_threecase.campaign",
+      "params": {},
+      "source": "tensorfvm.vof_threecase.campaign:zalesak_sweep",
+      "test_path": "tests/test_vof_threecase.py",
+      "tested": true,
+      "verified": false,
+      "wired": false
+    },
+    {
+      "endpoint": null,
+      "entry": "row_g4_load_path_closure",
+      "evidence": {
+        "docs": 0,
+        "grade": "MECHANICS"
+      },
+      "id": "fvm.ice.load_path_closure",
+      "kind": "ice",
+      "maturity": "developing",
+      "module_path": "tensorfvm.ice.benchmark",
+      "params": {},
+      "source": "tensorfvm.ice.benchmark:row_g4_load_path_closure",
+      "test_path": "tests/test_ice_guard_pipeline.py",
+      "tested": true,
+      "verified": false,
+      "wired": true
+    },
+    {
+      "endpoint": null,
+      "entry": "ControlBox",
+      "evidence": {
+        "docs": 0,
+        "grade": "MECHANICS"
+      },
+      "id": "fvm.immersed.control_box",
+      "kind": "module",
+      "maturity": "developing",
+      "module_path": "tensorfvm.immersed.forces",
+      "params": {},
+      "source": "tensorfvm.immersed.forces:ControlBox",
+      "test_path": "tests/test_cylinder_re100_case.py",
+      "tested": true,
+      "verified": false,
+      "wired": true
+    },
+    {
+      "endpoint": null,
+      "entry": "experiment_point",
+      "evidence": {
+        "docs": 0,
+        "grade": "MECHANICS"
+      },
+      "id": "fvm.inc_bench.armaly_experiment",
+      "kind": "verification",
+      "maturity": "developing",
+      "module_path": "tensorfvm.inc_bench.armaly",
+      "params": {},
+      "source": "tensorfvm.inc_bench.armaly:experiment_point",
+      "test_path": "tests/test_armaly1983_reproduction.py",
+      "tested": true,
+      "verified": false,
+      "wired": false
+    },
+    {
+      "endpoint": null,
+      "entry": "BackwardStepCase",
+      "evidence": {
+        "docs": 0,
+        "grade": "MECHANICS"
+      },
+      "id": "fvm.internal_flow.backward_step",
+      "kind": "solver",
+      "maturity": "developing",
+      "module_path": "tensorfvm.internal_flow.backward_step",
+      "params": {},
+      "source": "tensorfvm.internal_flow.backward_step:BackwardStepCase",
+      "test_path": "tests/test_internal_flow_benchmarks.py",
+      "tested": true,
+      "verified": false,
+      "wired": true
+    },
+    {
+      "endpoint": null,
+      "entry": "NativeHybridBlockSolver3D",
+      "evidence": {
+        "docs": 0,
+        "grade": "MECHANICS",
+        "note": "needs the optional tensorfvm[amg] extra (pyamg); not importable in the default environment"
+      },
+      "id": "fvm.linear.block_amg3d",
+      "kind": "linear_solver",
+      "maturity": "developing",
+      "module_path": "tensorfvm.native_block_solver3d",
+      "params": {},
+      "source": "tensorfvm.native_block_solver3d:NativeHybridBlockSolver3D",
+      "test_path": "tests/test_native_block_solver3d.py",
+      "tested": true,
+      "verified": false,
+      "wired": true
+    },
+    {
+      "endpoint": null,
+      "entry": "linear_system_diagnostics",
+      "evidence": {
+        "band_script": "scripts/m23215_error_bands.py",
+        "grade": "CONSERVATION",
+        "max_error_pct": 0.0,
+        "reference": "componentwise backward error of a direct solve (exact residual)"
+      },
+      "id": "fvm.linear.diagnostics",
+      "kind": "linear_solver",
+      "maturity": "mature",
+      "module_path": "tensorfvm.native_linear_diagnostics",
+      "params": {},
+      "source": "tensorfvm.native_linear_diagnostics:linear_system_diagnostics",
+      "test_path": "tests/test_native_linear_diagnostics.py",
+      "tested": true,
+      "verified": true,
+      "wired": true
+    },
+    {
+      "endpoint": null,
+      "entry": "solve_overset_poisson",
+      "evidence": {
+        "docs": 1,
+        "grade": "MECHANICS"
+      },
+      "id": "fvm.linear.overset_poisson",
+      "kind": "linear_solver",
+      "maturity": "developing",
+      "module_path": "tensorfvm.overset_poisson",
+      "params": {},
+      "source": "tensorfvm.overset_poisson:solve_overset_poisson",
+      "test_path": "tests/test_overset_poisson.py",
+      "tested": true,
+      "verified": false,
+      "wired": true
+    },
+    {
+      "endpoint": null,
+      "entry": "SparseBodyFittedSolver",
+      "evidence": {
+        "docs": 2,
+        "grade": "MECHANICS"
+      },
+      "id": "fvm.linear.sparse_body_fitted",
+      "kind": "linear_solver",
+      "maturity": "developing",
+      "module_path": "tensorfvm.sparse_simple",
+      "params": {},
+      "source": "tensorfvm.sparse_simple:SparseBodyFittedSolver",
+      "test_path": "tests/test_sparse_simple.py",
+      "tested": true,
+      "verified": false,
+      "wired": true
+    },
+    {
+      "endpoint": null,
+      "entry": "ExternalFlowSolver",
+      "evidence": {
+        "docs": 0,
+        "grade": "MECHANICS"
+      },
+      "id": "fvm.linear.splu_direct",
+      "kind": "linear_solver",
+      "maturity": "developing",
+      "module_path": "tensorfvm.external_linear",
+      "params": {},
+      "source": "tensorfvm.external_linear:ExternalFlowSolver",
+      "test_path": "tests/test_external_flow.py",
+      "tested": true,
+      "verified": false,
+      "wired": true
+    },
+    {
+      "endpoint": null,
+      "entry": "ManoeuvreModel",
+      "evidence": {
+        "docs": 1,
+        "grade": "NONE"
+      },
+      "id": "fvm.maneuvering.dynamics",
+      "kind": "maneuvering",
+      "maturity": "developing",
+      "module_path": "tensorfvm.maneuvering.dynamics",
+      "params": {},
+      "source": "tensorfvm.maneuvering.dynamics:ManoeuvreModel",
+      "test_path": null,
+      "tested": false,
+      "verified": false,
+      "wired": true
+    },
+    {
+      "endpoint": null,
+      "entry": "build_mesh",
+      "evidence": {
+        "docs": 1,
+        "grade": "MECHANICS"
+      },
+      "id": "fvm.mesh.backend_registry",
+      "kind": "mesh",
+      "maturity": "developing",
+      "module_path": "tensorfvm.backend_registry",
+      "params": {},
+      "source": "tensorfvm.backend_registry:build_mesh",
+      "test_path": "tests/test_backend_registry.py",
+      "tested": true,
+      "verified": false,
+      "wired": true
+    },
+    {
+      "endpoint": null,
+      "entry": "validate_mesh2d",
+      "evidence": {
+        "docs": 0,
+        "grade": "MECHANICS"
+      },
+      "id": "fvm.mesh.contract2d",
+      "kind": "mesh",
+      "maturity": "developing",
+      "module_path": "tensorfvm.mesh_api",
+      "params": {},
+      "source": "tensorfvm.mesh_api:validate_mesh2d",
+      "test_path": "tests/test_backend_registry.py",
+      "tested": true,
+      "verified": false,
+      "wired": true
+    },
+    {
+      "endpoint": null,
+      "entry": "PolyMesh",
+      "evidence": {
+        "docs": 0,
+        "grade": "MECHANICS"
+      },
+      "id": "fvm.mesh.openfoam_polymesh",
+      "kind": "mesh",
+      "maturity": "developing",
+      "module_path": "tensorfvm.openfoam_polymesh",
+      "params": {},
+      "source": "tensorfvm.openfoam_polymesh:PolyMesh",
+      "test_path": "tests/test_openfoam_polymesh.py",
+      "tested": true,
+      "verified": false,
+      "wired": false
+    },
+    {
+      "endpoint": null,
+      "entry": "OversetGrid",
+      "evidence": {
+        "docs": 4,
+        "grade": "MECHANICS"
+      },
+      "id": "fvm.mesh.overset",
+      "kind": "mesh",
+      "maturity": "developing",
+      "module_path": "tensorfvm.overset",
+      "params": {},
+      "source": "tensorfvm.overset:OversetGrid",
+      "test_path": "tests/test_multi_solid_overset.py",
+      "tested": true,
+      "verified": false,
+      "wired": true
+    },
+    {
+      "endpoint": null,
+      "entry": "UnstructuredFVM3D",
+      "evidence": {
+        "docs": 0,
+        "grade": "MECHANICS"
+      },
+      "id": "fvm.mesh.unstructured3d",
+      "kind": "mesh",
+      "maturity": "developing",
+      "module_path": "tensorfvm.unstructured_fvm3d",
+      "params": {},
+      "source": "tensorfvm.unstructured_fvm3d:UnstructuredFVM3D",
+      "test_path": "tests/test_unstr3d_convection_45deg.py",
+      "tested": true,
+      "verified": false,
+      "wired": false
+    },
+    {
+      "endpoint": null,
+      "entry": "run_campaign",
+      "evidence": {
+        "docs": 0,
+        "grade": "NONE"
+      },
+      "id": "fvm.multiphase.bench_campaign",
+      "kind": "multiphase",
+      "maturity": "developing",
+      "module_path": "tensorfvm.twophase_bench.campaign",
+      "params": {},
+      "source": "tensorfvm.twophase_bench.campaign:run_campaign",
+      "test_path": null,
+      "tested": false,
+      "verified": false,
+      "wired": false
+    },
+    {
+      "endpoint": null,
+      "entry": "decompose_dambreak_error",
+      "evidence": {
+        "docs": 0,
+        "grade": "MECHANICS"
+      },
+      "id": "fvm.multiphase.dambreak_gate",
+      "kind": "verification",
+      "maturity": "developing",
+      "module_path": "tensorfvm.twophase_gap.dambreak_gate",
+      "params": {},
+      "source": "tensorfvm.twophase_gap.dambreak_gate:decompose_dambreak_error",
+      "test_path": "tests/test_dambreak_error_decomposition.py",
+      "tested": true,
+      "verified": false,
+      "wired": true
+    },
+    {
+      "endpoint": null,
+      "entry": "wallis_drift_velocity",
+      "evidence": {
+        "docs": 0,
+        "grade": "MECHANICS"
+      },
+      "id": "fvm.multiphase.drift_flux",
+      "kind": "multiphase",
+      "maturity": "developing",
+      "module_path": "tensorfvm.two_phase.drift_flux",
+      "params": {},
+      "source": "tensorfvm.two_phase.drift_flux:wallis_drift_velocity",
+      "test_path": "tests/test_two_phase_drift_flux.py",
+      "tested": true,
+      "verified": false,
+      "wired": true
+    },
+    {
+      "endpoint": null,
+      "entry": "plesset_solution",
+      "evidence": {
+        "docs": 0,
+        "grade": "MECHANICS"
+      },
+      "id": "fvm.multiphase.rayleigh_plesset",
+      "kind": "multiphase",
+      "maturity": "developing",
+      "module_path": "tensorfvm.two_phase.cavitation_transport",
+      "params": {},
+      "source": "tensorfvm.two_phase.cavitation_transport:plesset_solution",
+      "test_path": "tests/test_two_phase_cavitation.py",
+      "tested": true,
+      "verified": false,
+      "wired": true
+    },
+    {
+      "endpoint": "cli:tensorfvm-twophase-gap",
+      "entry": "TwoPhaseSolver",
+      "evidence": {
+        "docs": 0,
+        "grade": "MECHANICS"
+      },
+      "id": "fvm.multiphase.solver",
+      "kind": "multiphase",
+      "maturity": "developing",
+      "module_path": "tensorfvm.two_phase_solver",
+      "params": {},
+      "source": "tensorfvm.two_phase_solver:TwoPhaseSolver",
+      "test_path": "tests/test_two_phase_solver_verification.py",
+      "tested": true,
+      "verified": false,
+      "wired": true
+    },
+    {
+      "endpoint": null,
+      "entry": "stefan_lambda",
+      "evidence": {
+        "docs": 0,
+        "grade": "MECHANICS"
+      },
+      "id": "fvm.multiphase.stefan",
+      "kind": "multiphase",
+      "maturity": "developing",
+      "module_path": "tensorfvm.two_phase.stefan",
+      "params": {},
+      "source": "tensorfvm.two_phase.stefan:stefan_lambda",
+      "test_path": "tests/test_stefan_convergence_verification.py",
+      "tested": true,
+      "verified": false,
+      "wired": true
+    },
+    {
+      "endpoint": null,
+      "entry": "SectionNS2D",
+      "evidence": {
+        "docs": 0,
+        "grade": "MECHANICS"
+      },
+      "id": "fvm.pmm.section_ns2d",
+      "kind": "solver",
+      "maturity": "developing",
+      "module_path": "tensorfvm.pmm_solver",
+      "params": {},
+      "source": "tensorfvm.pmm_solver:SectionNS2D",
+      "test_path": "tests/test_pmm_solver.py",
+      "tested": true,
+      "verified": false,
+      "wired": false
+    },
+    {
+      "endpoint": null,
+      "entry": "speed_points_kn",
+      "evidence": {
+        "docs": 0,
+        "grade": "MECHANICS"
+      },
+      "id": "fvm.resistance.speed_sweep",
+      "kind": "module",
+      "maturity": "developing",
+      "module_path": "tensorfvm.rans_ship_resistance.speed_sweep",
+      "params": {},
+      "source": "tensorfvm.rans_ship_resistance.speed_sweep:speed_points_kn",
+      "test_path": "tests/test_gci_inventory.py",
+      "tested": true,
+      "verified": false,
+      "wired": true
+    },
+    {
+      "endpoint": null,
+      "entry": "hydrostatic_stiffness",
+      "evidence": {
+        "docs": 0,
+        "grade": "NONE"
+      },
+      "id": "fvm.seakeeping.strip_theory",
+      "kind": "seakeeping",
+      "maturity": "developing",
+      "module_path": "tensorfvm.wave_tank_td.seakeeping",
+      "params": {},
+      "source": "tensorfvm.wave_tank_td.seakeeping:hydrostatic_stiffness",
+      "test_path": null,
+      "tested": false,
+      "verified": false,
+      "wired": false
+    },
+    {
+      "endpoint": null,
+      "entry": "dispersion_k",
+      "evidence": {
+        "docs": 0,
+        "grade": "MECHANICS"
+      },
+      "id": "fvm.seakeeping.wave_theory",
+      "kind": "seakeeping",
+      "maturity": "developing",
+      "module_path": "tensorfvm.wave_tank.theory",
+      "params": {},
+      "source": "tensorfvm.wave_tank.theory:dispersion_k",
+      "test_path": "tests/test_p190_n04_wave_tank_metrology.py",
+      "tested": true,
+      "verified": false,
+      "wired": true
+    },
+    {
+      "endpoint": null,
+      "entry": "ritter_state",
+      "evidence": {
+        "docs": 1,
+        "grade": "MECHANICS"
+      },
+      "id": "fvm.shallow_water.ritter_exact",
+      "kind": "verification",
+      "maturity": "developing",
+      "module_path": "tensorfvm.shallow_water.exact",
+      "params": {},
+      "source": "tensorfvm.shallow_water.exact:ritter_state",
+      "test_path": "tests/test_dambreak_config_envelope.py",
+      "tested": true,
+      "verified": false,
+      "wired": true
+    },
+    {
+      "endpoint": null,
+      "entry": "compute_wave_elevation_from_alpha",
+      "evidence": {
+        "docs": 0,
+        "grade": "MECHANICS"
+      },
+      "id": "fvm.ship_freesurface.wave_elevation",
+      "kind": "seakeeping",
+      "maturity": "developing",
+      "module_path": "tensorfvm.ship_freesurface.cfd_verification",
+      "params": {},
+      "source": "tensorfvm.ship_freesurface.cfd_verification:compute_wave_elevation_from_alpha",
+      "test_path": "tests/test_ship_freesurface_cfd.py",
+      "tested": true,
+      "verified": false,
+      "wired": false
+    },
+    {
+      "endpoint": "cli:tensorfvm-thermal",
+      "entry": "EnergyLedger",
+      "evidence": {
+        "docs": 0,
+        "grade": "MECHANICS"
+      },
+      "id": "fvm.thermal.conjugate_energy",
+      "kind": "thermal",
+      "maturity": "developing",
+      "module_path": "tensorfvm.cht.energy",
+      "params": {},
+      "source": "tensorfvm.cht.energy:EnergyLedger",
+      "test_path": "tests/test_cht_conjugate_anchors.py",
+      "tested": true,
+      "verified": false,
+      "wired": true
+    },
+    {
+      "endpoint": null,
+      "entry": "RayleighBenardCase",
+      "evidence": {
+        "docs": 0,
+        "grade": "NONE"
+      },
+      "id": "fvm.thermal.rayleigh_benard",
+      "kind": "thermal",
+      "maturity": "developing",
+      "module_path": "tensorfvm.thermal.rayleigh_benard",
+      "params": {},
+      "source": "tensorfvm.thermal.rayleigh_benard:RayleighBenardCase",
+      "test_path": null,
+      "tested": false,
+      "verified": false,
+      "wired": false
+    },
+    {
+      "endpoint": null,
+      "entry": "NativeHybridRans3D",
+      "evidence": {
+        "docs": 0,
+        "grade": "MECHANICS"
+      },
+      "id": "fvm.turbulence.hybrid_rans3d",
+      "kind": "turbulence",
+      "maturity": "developing",
+      "module_path": "tensorfvm.native_hybrid_rans3d",
+      "params": {},
+      "source": "tensorfvm.native_hybrid_rans3d:NativeHybridRans3D",
+      "test_path": "tests/test_native_hybrid_rans3d.py",
+      "tested": true,
+      "verified": false,
+      "wired": true
+    },
+    {
+      "endpoint": null,
+      "entry": "solve_case",
+      "evidence": {
+        "docs": 0,
+        "grade": "MECHANICS"
+      },
+      "id": "fvm.turbulence.validation_matrix",
+      "kind": "turbulence",
+      "maturity": "developing",
+      "module_path": "tensorfvm.rans_validation.matrix",
+      "params": {},
+      "source": "tensorfvm.rans_validation.matrix:solve_case",
+      "test_path": "tests/test_rans_validation_sensitivity.py",
+      "tested": true,
+      "verified": false,
+      "wired": false
+    },
+    {
+      "endpoint": null,
+      "entry": "gci",
+      "evidence": {
+        "docs": 0,
+        "grade": "MECHANICS"
+      },
+      "id": "fvm.verification.gci",
+      "kind": "verification",
+      "maturity": "developing",
+      "module_path": "tensorfvm.vof_verification.metrics",
+      "params": {},
+      "source": "tensorfvm.vof_verification.metrics:gci",
+      "test_path": "tests/test_vof_cicsam.py",
+      "tested": true,
+      "verified": false,
+      "wired": true
+    }
+  ],
+  "count": 46,
+  "mode": "static",
+  "problems": [
+    {
+      "capability_id": "fvm.core.annular_axial",
+      "code": "WIRED_SOLVER_WITHOUT_ENDPOINT",
+      "detail": "wired solver capability without an endpoint a consumer could call",
+      "file": "src/tensorfvm/annular.py",
+      "line": 112,
+      "severity": "warning"
+    },
+    {
+      "capability_id": "fvm.internal_flow.backward_step",
+      "code": "WIRED_SOLVER_WITHOUT_ENDPOINT",
+      "detail": "wired solver capability without an endpoint a consumer could call",
+      "file": "src/tensorfvm/internal_flow/backward_step.py",
+      "line": 96,
+      "severity": "warning"
+    },
+    {
+      "capability_id": "fvm.core.ins2d_collocated",
+      "code": "WIRED_SOLVER_WITHOUT_ENDPOINT",
+      "detail": "wired solver capability without an endpoint a consumer could call",
+      "file": "src/tensorfvm/solver.py",
+      "line": 251,
+      "severity": "warning"
+    }
+  ],
+  "repo": "TensorFVM",
+  "source_commit": "2548a94e30afb65f571cbe6aa3739dc328c0b003",
+  "summary": {
+    "by_kind": {
+      "cavitation": 1,
+      "compressible": 2,
+      "differentiable": 1,
+      "flux": 1,
+      "free_surface": 6,
+      "ice": 1,
+      "linear_solver": 5,
+      "maneuvering": 1,
+      "mesh": 5,
+      "module": 2,
+      "multiphase": 5,
+      "seakeeping": 3,
+      "solver": 5,
+      "thermal": 2,
+      "turbulence": 2,
+      "verification": 4
+    },
+    "by_maturity": {
+      "developing": 43,
+      "mature": 3,
+      "planned": 0
+    },
+    "count": 46,
+    "tested": 41,
+    "verified": 4,
+    "wired": 35,
+    "with_endpoint": 3
+  }
+}

@@ -8,8 +8,17 @@ import numpy as np
 from .native_hybrid_ns3d import NativeHybridNavierStokes3D
 from .native_hybrid_sst3d import NativeHybridSSTTransport3D
 from .native_sst_wall3d import NativeSSTWall3D
+from .registry import capability
 
 
+@capability('fvm.turbulence.hybrid_rans3d',
+            kind='turbulence',
+            maturity='developing',
+            test_path='tests/test_native_hybrid_rans3d.py',
+            wired=True,
+            tested=True,
+            verified=False,
+            evidence={'grade': 'MECHANICS', 'docs': 0})
 class NativeHybridRans3D:
     def __init__(self,flow,wall_distance,nu,*,k_dirichlet_mask=None,omega_dirichlet_mask=None,
                  k_boundary,omega_boundary,k_inflow=None,omega_inflow=None,k_neumann=0.,omega_neumann=0.,

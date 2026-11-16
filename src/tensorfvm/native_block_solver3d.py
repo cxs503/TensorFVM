@@ -9,6 +9,7 @@ import time
 import numpy as np
 from scipy import sparse
 from scipy.sparse.linalg import LinearOperator,gmres
+from .registry import capability
 
 
 class NativeBlockSolveError(RuntimeError):
@@ -20,6 +21,18 @@ class NativeBlockSolveError(RuntimeError):
         self.record = record
 
 
+@capability('fvm.linear.block_amg3d',
+            kind='linear_solver',
+            maturity='developing',
+            test_path='tests/test_native_block_solver3d.py',
+            wired=True,
+            tested=True,
+            verified=False,
+            evidence={
+             'grade': 'MECHANICS',
+             'note': 'needs the optional tensorfvm[amg] extra (pyamg); not importable in the default environment',
+             'docs': 0,
+         })
 class NativeHybridBlockSolver3D:
     def __init__(self,solver):
         try:

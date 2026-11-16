@@ -11,11 +11,20 @@ import numpy as np
 import torch
 from scipy import sparse
 from .body_fitted import BodyFittedSolver
+from .registry import capability
 
 
 def host(x):return x.detach().cpu().numpy()
 
 
+@capability('fvm.linear.sparse_body_fitted',
+            kind='linear_solver',
+            maturity='developing',
+            test_path='tests/test_sparse_simple.py',
+            wired=True,
+            tested=True,
+            verified=False,
+            evidence={'grade': 'MECHANICS', 'docs': 2})
 class SparseBodyFittedSolver(BodyFittedSolver):
     def __init__(self,config):
         super().__init__(config);self.linear_history=[];self._pressure_csr=None;self._geometry_operators=None

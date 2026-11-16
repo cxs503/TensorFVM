@@ -25,6 +25,7 @@ import numpy as np
 import scipy.sparse.linalg as spla
 
 from .geometry import N_PARAMS
+from ..registry import capability
 
 
 def adjoint_state(solver, theta, U=None):
@@ -37,6 +38,14 @@ def adjoint_state(solver, theta, U=None):
     return lam, {"J": float(j), "dJ_dU": dJ_dU, "dJ_dtheta": dJ_dtheta, "U": U}
 
 
+@capability('fvm.differentiable.shape_adjoint',
+            kind='differentiable',
+            maturity='developing',
+            test_path='tests/test_adjoint_shape_sensitivity.py',
+            wired=True,
+            tested=True,
+            verified=False,
+            evidence={'grade': 'MECHANICS', 'docs': 0})
 def adjoint_gradient(solver, theta, U=None, jacobian=None):
     """Total derivative ``dJ/dtheta`` by the discrete adjoint.
 
