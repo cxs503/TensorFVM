@@ -160,22 +160,112 @@ def test_every_recorded_absolute_path_has_a_repo_relative_target(prov):
         assert h["target_exists_in_repo"], h
 
 
+def test_every_record_has_an_accounted_disposition(prov):
+    """reproduced / failed / unverifiable must partition the record set.
+
+    Guards the round-2 defect: a record with nothing to re-score used to be
+    reported as "not reproduced", which made the gate red for a reason that had
+    nothing to do with provenance.
+    """
+    r = prov["record_reproduction"]
+    assert r["n_reproduced"] + r["n_failed"] + r["n_unverifiable"] == r["n_records"]
+    assert r["n_reference_metrics"] + r["n_solver_observables"] <= r["n_records"]
+    for row in r["rows"]:
+        if row["check_kind"] == "none":
+            assert row["reproduced_from_committed_tree"] is None, row["record"]
+            assert row.get("reason"), row["record"]
+        else:
+            assert isinstance(row["reproduced_from_committed_tree"], bool), row["record"]
+
+
 def test_all_run_records_reproduce_from_the_committed_tree(prov):
     """Decisive check: dangling cross-worktree paths caused no silent contamination."""
     r = prov["record_reproduction"]
     assert r["n_records"] >= 15, r["n_records"]
-    bad = [row["record"] for row in r["rows"]
-           if "profile" in row and not row["reproduced_from_committed_tree"]]
-    assert bad == [], bad
+    assert r["n_solver_observables"] >= 1, r          # the two cfl0.8 weno5 records
+    assert r["n_failed"] == 0, r["failed_records"]
+    assert r["n_unverifiable"] == 0, r["unverifiable_records"]
     assert r["n_reproduced"] == r["n_records"]
 
 
+def test_metric_free_records_are_checked_via_solver_observables(prov, pm):
+    """A record without reference error blocks is still checkable, and is checked.
+
+    ``ladder_metrics_nx{12800,25600}_weno5_cfl0.8.json`` only report what the run
+    produced; they must be re-derived from the committed profile instead of being
+    skipped, otherwise the two coarsest-convergence records are unaudited.
+    """
+    rows = {r["record"].split("/")[-1]: r for r in prov["record_reproduction"]["rows"]}
+    for name in ("ladder_metrics_nx12800_weno5_cfl0.8.json",
+                 "ladder_metrics_nx25600_weno5_cfl0.8.json"):
+        row = rows[name]
+        assert row["check_kind"] == "solver_observables", row
+        assert row["profile_match"] == "exact", row
+        assert row["reproduced_from_committed_tree"] is True, row
+        obs = row["observables"]
+        assert {"rho_max", "x_at_rho_max", "mass"} <= set(obs), row
+        for key, v in obs.items():
+            assert v["within_tolerance"], (name, key, v)
+
+
+def test_observable_gate_is_not_vacuous(pm):
+    """An off-by-1e-6 profile must be rejected -- the gate has real teeth."""
+    prof = pm._profile_for("nx12800_weno5_cfl0.8")
+    recorded = {"rho_max": 6.463485157370068, "x_at_rho_max": 0.7784765625}
+    obs = pm.observe_profile(prof)
+    assert all(v["within_tolerance"] for v in pm._compare_observables(recorded, obs).values())
+    pert = {"rho_max": prof["rho"].max() * (1 + 1e-6),
+            "x_at_rho_max": prof["x"][int(prof["rho"].argmax())] + 1e-4}
+    bad = pm._compare_observables(recorded, pert)
+    assert bad["rho_max"]["within_tolerance"] is False, bad["rho_max"]
+    assert bad["x_at_rho_max"]["within_tolerance"] is False, bad["x_at_rho_max"]
+
+
+def test_no_record_silently_uses_a_different_limiter_family(prov):
+    """Reproduction must not compare a weno5 record against an HLLC profile.
+
+    That silent fallback is the same defect class as the F3 skip in
+    ``test_compressible_wc_calibration.py``; here it would launder a wrong-family
+    comparison as an ordinary mismatch.
+    """
+    r = prov["record_reproduction"]
+    assert r["n_family_fallback"] == 0, [row for row in r["rows"]
+                                         if row["profile_match"] == "hllc_family_fallback"]
+    for row in r["rows"]:
+        if row["profile_match"] == "artifact_window_only":
+            # documented contract: wc_blast_profile_nx{400,800}.npz are window-only
+            assert row["profile"].endswith(("wc_blast_profile_nx400.npz",
+                                            "wc_blast_profile_nx800.npz")), row
+            assert row["reproduced_from_committed_tree"] is True, row
+
+
 def test_manifest_matches_a_fresh_scan(prov):
-    """The committed manifest must not be stale w.r.t. the bundle."""
+    """The committed manifest must not be stale w.r.t. the bundle.
+
+    Round-2 defect: only the absolute-path field set was compared, so records
+    added *after* the audit (which carry no absolute path) left the manifest
+    silently stale.  Record identity and classification are compared too.
+    """
     committed = json.loads((COV / "provenance_manifest.json").read_text())
     assert ({h["recorded"] for h in committed["absolute_path_records"]["fields"]} ==
             {h["recorded"] for h in prov["absolute_path_records"]["fields"]})
     assert committed["absolute_path_records"]["count"] == prov["absolute_path_records"]["count"]
+
+    c, f = committed["record_reproduction"], prov["record_reproduction"]
+    assert c["n_records"] == f["n_records"]
+    assert [(r["record"], r["check_kind"], r["reproduced_from_committed_tree"]) for r in c["rows"]] == \
+           [(r["record"], r["check_kind"], r["reproduced_from_committed_tree"]) for r in f["rows"]]
+    for key in ("n_reproduced", "n_failed", "n_unverifiable", "n_solver_observables",
+                "n_family_fallback"):
+        assert c[key] == f[key], key
+    assert committed["verdict"] == prov["verdict"]
+
+
+def test_verdict_names_portability_defect_but_no_contamination(prov):
+    v = prov["verdict"]
+    assert v["portability"] in {"DEFECT", "clean"}
+    assert "none found" in v["numerical_contamination"]
+    assert prov["absolute_path_records"]["contradicted"] == []
 
 
 def test_committed_analysis_artifact_matches_recomputation(res):
