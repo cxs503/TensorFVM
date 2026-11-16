@@ -1,0 +1,84 @@
+{
+  "repo": "TensorFVM",
+  "scope": "m23215 CAP-REG-FVM",
+  "mission_id": 23308,
+  "level": 2,
+  "verdict_by": "board-audit",
+  "audited_commit": "300daa9bdd7699989e2493b2e8ec9e438bd226ab (branch agent/m23215, worktree /root/tp-agent/work/m23215; NOT merged into main at audit time)",
+  "impl_files": [
+    "/root/tp-agent/work/m23215/src/tensorfvm/registry.py",
+    "/root/tp-agent/work/m23215/src/tensorfvm/verification/annular.py",
+    "/root/tp-agent/work/m23215/scripts/m23215_error_bands.py",
+    "/root/tp-agent/work/m23215/scripts/m23215_fvm_audit.py",
+    "/root/tp-agent/work/m23215/scripts/m23215_apply_capability_decorators.py"
+  ],
+  "entry": "python src/tensorfvm/registry.py --static [--parity|--strict-exit]  -> stdout is one JSON object (source_commit + capabilities); decorator API tensorfvm.registry.capability",
+  "run_artifacts": [
+    "/root/tp-agent/work/m23215/docs/m23215/registry_dump.json",
+    "/root/tp-agent/work/m23215/docs/m23215/fvm_audit.json",
+    "/root/tp-agent/work/m23215/docs/m23215/error_bands.json",
+    "/root/tp-agent/work/m23215/docs/m23215/SOLVER_INVENTORY.md",
+    "/root/tp-agent/work/m23215/docs/m23215/KERNEL_ARCHITECTURE.md",
+    "/root/tp-agent/work/m23308/artifacts/m23308/repro_log.txt",
+    "/root/tp-agent/work/m23308/artifacts/m23308/fig_capreg_fvm_audit.png",
+    "/root/tp-agent/work/m23308/docs/m23308/CAP-REG-FVM-audit-m23308.md"
+  ],
+  "tests": [
+    "/root/tp-agent/work/m23215/tests/test_capability_registry_fvm.py — 17 tests, 16 passed / 1 FAILED (test_registry_error_bands_equal_the_measured_bands, line 206-215: \"fvm.verification.annular_band claims verified without a measured band\"); replay 71.78 s"
+  ],
+  "integration_callers": [
+    "46 src modules import 'from .registry import capability' (e.g. src/tensorfvm/solver.py:14, src/tensorfvm/solver3d.py:15, src/tensorfvm/vof_plic.py:74) -> import-time metadata only",
+    "0 production consumers of registry.dump() outside the registry CLI, scripts/m23215_fvm_audit.py and the test; no platform endpoint, no runtime decision path -> integration is passive, hence not L3",
+    "src/tensorfvm/registry.py absent from main at audit time (only on agent/m23215 @300daa9b)"
+  ],
+  "benchmark": "tensor_benchmark_cases WHERE anchor_slug='CAP-REG-FVM' -> 0 rows: referee band NOT registered, L4 unreachable by definition. Only self-measured bands for 4/47 capabilities (reproduced on audit host): annular_axial relative Linf 0.2813% (nt128x32, closed-form annular Poiseuille) and 3.0336% on coarse nt32x16 (honest FAIL vs 3% internal gate, order in ntheta 1.985/1.929, order in nr -0.083); plic geometry 1.36e-11%; overset flux conservation 1.17e-13% (20 trials); linear diagnostics componentwise backward error 1.54e-16.",
+  "repro_cmd": [
+    "cd /root/tp-agent/work/m23215 && python src/tensorfvm/registry.py --static --strict-exit  -> exit 0, count=47, problems=3 (all warnings)",
+    "cd /root/tp-agent/work/m23215 && python src/tensorfvm/registry.py --static --parity  -> exit 0, ok=true, static_count=47, import_count=47",
+    "cd /root/tp-agent/work/m23215 && PYTHONPATH=src python scripts/m23215_error_bands.py  -> exit 0, annular 2.813e-01 %, artifacts byte-identical (git status clean afterwards)",
+    "cd /root/tp-agent/work/m23215 && python scripts/m23215_fvm_audit.py --check  -> exit 0",
+    "cd /root/tp-agent/work/m23215 && python -m pytest tests/test_capability_registry_fvm.py -q  -> exit 1 (1 failed, 16 passed)"
+  ],
+  "external_anchor": "CAP-REG-FVM: tensor_benchmark_cases -> 0 rows; TensorFVM repo holds 13 registered rows for other anchors (CASE-FVM-CAVITY-RE1000, CASE-FVM-CHANNEL-KMM180, CASE-FVM-KOVASZNAY-ORDER, CASE-HEATED-CAVITY-FVM, CASE-WOODWARD-COLELLA, REPRO-FVM-SOD1978, GAP-FVM-TWOPHASE, JOUR-ICE-STRUCT-GUARD) that judge solver physics, not the registry deliverable. Published report tensor_reports.id=20873 (6/6 sections present, 1 figure).",
+  "level_rationale": "L2 = independent functional implementation: registry.py is 805 lines of real code (AST static scan + import registration + field-by-field parity + anti-inflation validation) with input(src tree)->compute->output(JSON) contract proven by exit-0 replay and 47==47 parity. L0 and L1 also hold (2 audit docs + 4 measured analytic/conservation bands with grid-convergence orders). Not L3: zero production consumers, registry not merged to main. Not L4: 0 registered benchmark rows for this anchor; verification covers 4/47 capabilities and 1 of the 4 'mature' claims is not bound to a measured band (F1).",
+  "findings": {
+    "F1_blocking_self_gate_red": "tests/test_capability_registry_fvm.py:206-215 fails: 'fvm.verification.annular_band claims verified without a measured band'. The declared 0.2813% is genuine (equals measured fvm.core.annular_axial Linf) but the id->band binding is missing from docs/m23215/error_bands.json, so the 'mature' claim is machine-unsupported. One-line remediation.",
+    "F2_medium_stale_inrepo_artifacts": "docs/m23215/README.md and registry_dump.json both report count=46 / mature=3 / tested=41 / verified=4 / wired=35, but live --static reports 47/4/42/5/36 and the mission's own published report (tensor_reports.id=20873) already uses 47/4. Delta = fvm.verification.annular_band added after the artifacts were generated. Self-reported low, not inflated, but breaks docs==code.",
+    "F3_low_stale_number": "README states linear diagnostics 1.5e-14; error_bands.json measures componentwise 1.54e-16 (2 orders). Both far below 3%.",
+    "F4_medium_scope": "verified=True only 5/47, mature 4/47 (~9% coverage); other 42 honestly flagged verified=False. No referee band registered for the anchor.",
+    "F5_info_integration": "46 import edges but 0 consumers; registry.py only on unmerged branch agent/m23215.",
+    "F6_low_consistent": "problems=3 are warning-level and --strict-exit returns 0, consistent with README's 'error-level 0'."
+  },
+  "checks_not_run": [
+    "torch-path numerical regression of the decorated solvers (only import-mode parity was exercised, no solver case rerun)",
+    "full 587-module repo test matrix",
+    "field-by-field source-line verification of all 46 capabilities in fvm_audit.json (only the --check reconciliation was executed)",
+    "fvm_audit.py audit statistics independently recomputed from scratch (accepted the script's own output)"
+  ],
+  "impl_pointers": {
+    "registry.py": [
+      "registry.py:170 class Capability",
+      "registry.py:203 def validate_capability",
+      "registry.py:292 class Registry",
+      "registry.py:377 def capability",
+      "registry.py:548 def scan_static",
+      "registry.py:647 def import_registry",
+      "registry.py:706 def dump",
+      "registry.py:757 def _parity",
+      "registry.py:776 def main"
+    ],
+    "annular.py": [
+      "verification/annular.py:101 @capability(\"fvm.verification.annular_band\", maturity=\"mature\", verified=True)",
+      "verification/annular.py:112 def run_case(ntheta, nr, c=None)  # decorated @101"
+    ],
+    "tests": [
+      "tests/test_capability_registry_fvm.py:206 def test_registry_error_bands_equal_the_measured_bands",
+      "tests/test_capability_registry_fvm.py:215 assert cap.id in measured -> FAILED"
+    ],
+    "integration": [
+      "src/tensorfvm/solver.py:14 from .registry import capability",
+      "src/tensorfvm/solver3d.py:15 from .registry import capability",
+      "src/tensorfvm/vof_plic.py:74 from .registry import capability"
+    ]
+  }
+}
