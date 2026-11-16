@@ -1,0 +1,503 @@
+{
+ "generated_at": "2026-11-16 15:07:22 +0000",
+ "repo": "/root/tensor-ecosystem/TensorFVM",
+ "head": "c656f8f9",
+ "head_date": "2026-11-16 22:39:35 +0800",
+ "count_objects": {
+  "count": "383",
+  "size": "4.36 MiB",
+  "in-pack": "39010",
+  "packs": "32",
+  "size-pack": "1.33 GiB",
+  "prune-packable": "45",
+  "garbage": "0",
+  "size-garbage": "0 bytes"
+ },
+ "packs_MiB": 1361.92,
+ "garbage_MiB": 0.0,
+ "garbage_tmp_packs": [],
+ "remote_branches": {
+  "total": 215,
+  "agent": 0,
+  "maintenance": 2,
+  "maintenance_list": [
+   "refs/remotes/origin/maintenance/artifact-hygiene",
+   "refs/remotes/origin/maintenance/remove-overset-embedded-svg"
+  ]
+ },
+ "commits_touching_verification_main": 167,
+ "commits_touching_verification_all": 403,
+ "main": {
+  "rev": "main",
+  "n_objects": 21615,
+  "total_MiB": 1995.52,
+  "by_type": {
+   "blob": {
+    "n": 13103,
+    "MiB": 1958.14
+   },
+   "commit": {
+    "n": 1152,
+    "MiB": 0.95
+   },
+   "tree": {
+    "n": 7360,
+    "MiB": 36.43
+   }
+  },
+  "blob_by_ext": {
+   ".npz": {
+    "n": 858,
+    "MiB": 693.86
+   },
+   ".png": {
+    "n": 1662,
+    "MiB": 325.87
+   },
+   ".svg": {
+    "n": 644,
+    "MiB": 321.96
+   },
+   ".pdf": {
+    "n": 848,
+    "MiB": 260.43
+   },
+   ".json": {
+    "n": 3221,
+    "MiB": 163.45
+   },
+   ".msh": {
+    "n": 39,
+    "MiB": 65.75
+   },
+   ".py": {
+    "n": 3140,
+    "MiB": 34.14
+   },
+   ".csv": {
+    "n": 309,
+    "MiB": 29.98
+   },
+   ".gz": {
+    "n": 115,
+    "MiB": 29.44
+   },
+   ".pyc": {
+    "n": 668,
+    "MiB": 12.81
+   },
+   ".md": {
+    "n": 1119,
+    "MiB": 11.35
+   },
+   ".pt": {
+    "n": 17,
+    "MiB": 2.08
+   },
+   ".dat": {
+    "n": 46,
+    "MiB": 1.69
+   },
+   ".geo": {
+    "n": 16,
+    "MiB": 1.55
+   },
+   ".npy": {
+    "n": 20,
+    "MiB": 1.17
+   },
+   ".html": {
+    "n": 7,
+    "MiB": 1.06
+   },
+   ".log": {
+    "n": 96,
+    "MiB": 0.34
+   },
+   ".jsonl": {
+    "n": 44,
+    "MiB": 0.31
+   },
+   ".rst": {
+    "n": 21,
+    "MiB": 0.21
+   },
+   ".txt": {
+    "n": 119,
+    "MiB": 0.21
+   },
+   ".step": {
+    "n": 1,
+    "MiB": 0.18
+   },
+   ".tex": {
+    "n": 15,
+    "MiB": 0.07
+   },
+   "(none)": {
+    "n": 28,
+    "MiB": 0.05
+   },
+   ".toml": {
+    "n": 15,
+    "MiB": 0.04
+   },
+   ".sql": {
+    "n": 11,
+    "MiB": 0.03
+   },
+   ".tpl": {
+    "n": 1,
+    "MiB": 0.02
+   },
+   ".prof": {
+    "n": 1,
+    "MiB": 0.01
+   },
+   ".sh": {
+    "n": 10,
+    "MiB": 0.01
+   },
+   ".patch": {
+    "n": 2,
+    "MiB": 0.01
+   },
+   ".sha256": {
+    "n": 1,
+    "MiB": 0.01
+   },
+   ".yml": {
+    "n": 3,
+    "MiB": 0.01
+   },
+   ".means": {
+    "n": 1,
+    "MiB": 0.01
+   },
+   ".gitignore": {
+    "n": 4,
+    "MiB": 0.0
+   },
+   ".gitattributes": {
+    "n": 1,
+    "MiB": 0.0
+   }
+  },
+  "top15_blobs": [
+   {
+    "MiB": 27.06,
+    "path": "docs/verification-gpu/annular-1024x256/cpu-fields.npz",
+    "oid": "0e0bd310642f"
+   },
+   {
+    "MiB": 27.06,
+    "path": "docs/verification-engineering/annular-1024x256/fields.npz",
+    "oid": "159e455b8fd5"
+   },
+   {
+    "MiB": 26.64,
+    "path": "docs/verification-gpu/annular-1024x256/cuda-fields.npz",
+    "oid": "8c45dbcea948"
+   },
+   {
+    "MiB": 23.0,
+    "path": "docs/verification-suboff-single-domain-mesh/extra-fine/native-geometry.npz",
+    "oid": "a10d140bd771"
+   },
+   {
+    "MiB": 22.89,
+    "path": "docs/verification-transient-pressure-compatibility/fine-hodge/fields.npz",
+    "oid": "9e13dd8ea0de"
+   },
+   {
+    "MiB": 21.67,
+    "path": "docs/verification-overset-30p30n/background-128/mesh.svg",
+    "oid": "0b184996dffd"
+   },
+   {
+    "MiB": 19.79,
+    "path": "docs/verification-benchmarks/lbm-tg-64-ma-0.05/fields.npz",
+    "oid": "c28d267caeb0"
+   },
+   {
+    "MiB": 17.82,
+    "path": "docs/verification-overset-30p30n/background-128/solution.svg",
+    "oid": "bd416379abdc"
+   },
+   {
+    "MiB": 17.82,
+    "path": "docs/verification-overset-30p30n/background-128/error.svg",
+    "oid": "d747dd21c801"
+   },
+   {
+    "MiB": 17.39,
+    "path": "docs/verification-engineering-export-failure/annular-1024x256/fields.npz",
+    "oid": "6638440a1180"
+   },
+   {
+    "MiB": 14.09,
+    "path": "docs/verification-overset-30p30n/report.pdf",
+    "oid": "53164341733a"
+   },
+   {
+    "MiB": 13.82,
+    "path": "docs/verification-suboff-wall-resolved-mesh/attempt-01/native-geometry.npz",
+    "oid": "f08e85507967"
+   },
+   {
+    "MiB": 13.04,
+    "path": "docs/verification-suboff-single-domain-mesh/extra-fine/suboff-hybrid.msh",
+    "oid": "896c656e8fd0"
+   },
+   {
+    "MiB": 10.53,
+    "path": "docs/verification-sa-refinement/figures/sa-256x224-eddy-viscosity.svg",
+    "oid": "419d0a011fdd"
+   },
+   {
+    "MiB": 10.53,
+    "path": "docs/verification-sa-refinement/figures/sa-256x224-speed.svg",
+    "oid": "65c162d5a1f6"
+   }
+  ]
+ },
+ "all": {
+  "rev": "--all",
+  "n_objects": 31754,
+  "total_MiB": 2131.78,
+  "by_type": {
+   "blob": {
+    "n": 16583,
+    "MiB": 2051.25
+   },
+   "commit": {
+    "n": 2240,
+    "MiB": 1.68
+   },
+   "tree": {
+    "n": 12931,
+    "MiB": 78.84
+   }
+  },
+  "blob_by_ext": {
+   ".npz": {
+    "n": 880,
+    "MiB": 701.87
+   },
+   ".png": {
+    "n": 1973,
+    "MiB": 352.92
+   },
+   ".svg": {
+    "n": 663,
+    "MiB": 324.46
+   },
+   ".pdf": {
+    "n": 863,
+    "MiB": 261.77
+   },
+   ".json": {
+    "n": 3602,
+    "MiB": 175.87
+   },
+   ".msh": {
+    "n": 39,
+    "MiB": 65.75
+   },
+   ".py": {
+    "n": 4004,
+    "MiB": 44.63
+   },
+   ".pyc": {
+    "n": 1936,
+    "MiB": 37.2
+   },
+   ".csv": {
+    "n": 316,
+    "MiB": 30.03
+   },
+   ".gz": {
+    "n": 115,
+    "MiB": 29.44
+   },
+   ".md": {
+    "n": 1583,
+    "MiB": 16.87
+   },
+   ".pt": {
+    "n": 18,
+    "MiB": 2.34
+   },
+   ".dat": {
+    "n": 46,
+    "MiB": 1.69
+   },
+   ".geo": {
+    "n": 16,
+    "MiB": 1.55
+   },
+   ".npy": {
+    "n": 20,
+    "MiB": 1.17
+   },
+   ".rst": {
+    "n": 72,
+    "MiB": 1.07
+   },
+   ".html": {
+    "n": 7,
+    "MiB": 1.06
+   },
+   ".log": {
+    "n": 97,
+    "MiB": 0.35
+   },
+   ".jsonl": {
+    "n": 45,
+    "MiB": 0.31
+   },
+   ".txt": {
+    "n": 142,
+    "MiB": 0.24
+   },
+   ".step": {
+    "n": 1,
+    "MiB": 0.18
+   },
+   ".sqlite": {
+    "n": 2,
+    "MiB": 0.1
+   },
+   ".toml": {
+    "n": 36,
+    "MiB": 0.08
+   },
+   ".tex": {
+    "n": 15,
+    "MiB": 0.07
+   },
+   ".yml": {
+    "n": 16,
+    "MiB": 0.06
+   },
+   "(none)": {
+    "n": 35,
+    "MiB": 0.05
+   },
+   ".sql": {
+    "n": 13,
+    "MiB": 0.04
+   },
+   ".sh": {
+    "n": 15,
+    "MiB": 0.02
+   },
+   ".tpl": {
+    "n": 1,
+    "MiB": 0.02
+   },
+   ".prof": {
+    "n": 1,
+    "MiB": 0.01
+   },
+   ".patch": {
+    "n": 2,
+    "MiB": 0.01
+   },
+   ".sha256": {
+    "n": 1,
+    "MiB": 0.01
+   },
+   ".means": {
+    "n": 1,
+    "MiB": 0.01
+   },
+   ".gitattributes": {
+    "n": 3,
+    "MiB": 0.0
+   },
+   ".gitignore": {
+    "n": 4,
+    "MiB": 0.0
+   }
+  },
+  "top15_blobs": [
+   {
+    "MiB": 27.06,
+    "path": "docs/verification-gpu/annular-1024x256/cpu-fields.npz",
+    "oid": "0e0bd310642f"
+   },
+   {
+    "MiB": 27.06,
+    "path": "docs/verification-engineering/annular-1024x256/fields.npz",
+    "oid": "159e455b8fd5"
+   },
+   {
+    "MiB": 26.64,
+    "path": "docs/verification-gpu/annular-1024x256/cuda-fields.npz",
+    "oid": "8c45dbcea948"
+   },
+   {
+    "MiB": 23.0,
+    "path": "docs/verification-suboff-single-domain-mesh/extra-fine/native-geometry.npz",
+    "oid": "a10d140bd771"
+   },
+   {
+    "MiB": 22.89,
+    "path": "docs/verification-transient-pressure-compatibility/fine-hodge/fields.npz",
+    "oid": "9e13dd8ea0de"
+   },
+   {
+    "MiB": 21.67,
+    "path": "docs/verification-overset-30p30n/background-128/mesh.svg",
+    "oid": "0b184996dffd"
+   },
+   {
+    "MiB": 19.79,
+    "path": "docs/verification-benchmarks/lbm-tg-64-ma-0.05/fields.npz",
+    "oid": "c28d267caeb0"
+   },
+   {
+    "MiB": 17.82,
+    "path": "docs/verification-overset-30p30n/background-128/solution.svg",
+    "oid": "bd416379abdc"
+   },
+   {
+    "MiB": 17.82,
+    "path": "docs/verification-overset-30p30n/background-128/error.svg",
+    "oid": "d747dd21c801"
+   },
+   {
+    "MiB": 17.39,
+    "path": "docs/verification-engineering-export-failure/annular-1024x256/fields.npz",
+    "oid": "6638440a1180"
+   },
+   {
+    "MiB": 14.09,
+    "path": "docs/verification-overset-30p30n/report.pdf",
+    "oid": "53164341733a"
+   },
+   {
+    "MiB": 13.82,
+    "path": "docs/verification-suboff-wall-resolved-mesh/attempt-01/native-geometry.npz",
+    "oid": "f08e85507967"
+   },
+   {
+    "MiB": 13.04,
+    "path": "docs/verification-suboff-single-domain-mesh/extra-fine/suboff-hybrid.msh",
+    "oid": "896c656e8fd0"
+   },
+   {
+    "MiB": 10.53,
+    "path": "docs/verification-sa-refinement/figures/sa-256x224-eddy-viscosity.svg",
+    "oid": "419d0a011fdd"
+   },
+   {
+    "MiB": 10.53,
+    "path": "docs/verification-sa-refinement/figures/sa-256x224-speed.svg",
+    "oid": "65c162d5a1f6"
+   }
+  ]
+ },
+ "elapsed_s": 1.3
+}
