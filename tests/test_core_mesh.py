@@ -81,8 +81,8 @@ class TestMeshAdapters:
         mesh = from_overset_grid(grid)
         validate_mesh_data(mesh, check_closure=True)
         assert mesh.n_cells == 16
-        # 4x4 grid: 4*5*2 - 4*4 = 24 faces
-        assert mesh.n_faces == 24
+        # 4x4 grid: 24 interior shared edges + 16 boundary edges = 40 faces
+        assert mesh.n_faces == 40
         assert "outer" in mesh.masks
 
     def test_mesh2d_seed(self):
