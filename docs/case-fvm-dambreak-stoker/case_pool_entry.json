@@ -90,6 +90,25 @@
       "key": "ritter-dry",
       "kind": "dry",
       "order": 2,
+      "order_claim": {
+        "evidence_report": "docs/case-fvm-dambreak-order-audit/REPORT.md",
+        "grids": [
+          100,
+          200,
+          400,
+          800,
+          1600
+        ],
+        "nominal": 2,
+        "nominal_kind": "scheme order on smooth data (MUSCL minmod + HLL + SSP-RK3)",
+        "observed_below_nominal": true,
+        "observed_depth_l1": 1.0077461821879112,
+        "observed_depth_l1_declared": 1.0077461821879115,
+        "observed_headline": 1.1439066045910111,
+        "observed_headline_declared": 1.1439066045910111,
+        "observed_headline_quantity": "front_fan",
+        "scope": "the anchored solution contains a jump (dry front / bore), so the observed order is owned by the data regularity, not by the operator; do not read 'order = 2' as the accuracy of this case under the 5 % gate"
+      },
       "pass": true,
       "reference": "Ritter (1892) Z. Ver. Deutsch. Ing. 36:947-954",
       "series": {
@@ -225,6 +244,25 @@
       "key": "stoker-wet",
       "kind": "wet",
       "order": 2,
+      "order_claim": {
+        "evidence_report": "docs/case-fvm-dambreak-order-audit/REPORT.md",
+        "grids": [
+          100,
+          200,
+          400,
+          800,
+          1600
+        ],
+        "nominal": 2,
+        "nominal_kind": "scheme order on smooth data (MUSCL minmod + HLL + SSP-RK3)",
+        "observed_below_nominal": true,
+        "observed_depth_l1": 0.9928639325298982,
+        "observed_depth_l1_declared": 0.992863932529899,
+        "observed_headline": 1.182784159387629,
+        "observed_headline_declared": 1.1827841593876285,
+        "observed_headline_quantity": "shock",
+        "scope": "the anchored solution contains a jump (dry front / bore), so the observed order is owned by the data regularity, not by the operator; do not read 'order = 2' as the accuracy of this case under the 5 % gate"
+      },
       "pass": true,
       "reference": "Stoker (1957) Water Waves, ch. 10 (bore on a wet bed)",
       "series": {
@@ -421,7 +459,8 @@
     "docs/case-fvm-dambreak-stoker/REPORT.md",
     "docs/case-fvm-dambreak-stoker/AUDIT.md",
     "docs/case-fvm-dambreak-stoker-2d/REPORT.md",
-    "docs/case-fvm-dambreak-stoker-robustness/REPORT.md"
+    "docs/case-fvm-dambreak-stoker-robustness/REPORT.md",
+    "docs/case-fvm-dambreak-order-audit/REPORT.md"
   ],
   "sensitivity": {
     "reference_point": {
@@ -439,7 +478,9 @@
     "discretisation": "1-D finite volume, MUSCL (minmod) reconstruction, HLL Riemann solver, SSP-RK3, CFL 0.4, reflective walls",
     "driver": "scripts/run_shallow_water_dam_break.py",
     "module": "tensorfvm.shallow_water.dam_break",
-    "order": 2
+    "order": 2,
+    "order_evidence": "docs/case-fvm-dambreak-order-audit/REPORT.md",
+    "order_scope": "nominal scheme order; the anchored case is discontinuous and measures ~1 (see each case's order_claim) -- operator order is substantiated on smooth data in the evidence report"
   },
   "tests": [
     "tests/test_case_pool_dambreak_stoker.py",
