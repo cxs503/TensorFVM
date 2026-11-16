@@ -133,6 +133,39 @@ worktree so the momentum fix is in the binary). At commit time it was **queued**
 (queue position 26; 41 jobs in flight on the cluster). This document therefore
 reports **no** post-fix `x_r/H`.
 
+## 3b. Part C — cj3108 scored (reopened mission m24004, 2026-11-16)
+
+Job **cj3108** finished `succeeded` (node n315; run wall clock 2028.7 s).
+The artefacts `round11_sst_r13-96x48.{json,npz}` were fetched from the job
+tarball and scored with `scripts/round13_analysis.py` (no re-run, no
+re-digitisation):
+
+| quantity | round 11 (both defects) | round 12 (transport fixed) | **round 13 (operator fixed)** | reference |
+|---|---|---|---|---|
+| `x_r/H` | 2.046 | 3.144 | **3.767** | 5.41 (KB) / 5.34 (ledger) |
+| error vs 5.41 | 62.2 % | 41.9 % | **30.4 %** | — |
+| `y/H = 0.5` stations inside 10 % | 1/7 | 0/7 | **0/7** | — |
+| `max nu_t/nu` | 342.5 | 297.0 | **202.5** | — |
+| stationarity (`spread_rel` of `x_r/H`, 601 samples) | ok | 2.5e-5 | **2.1e-6** | — |
+| gate `pass` | false | false | **false** | — |
+
+Reading of the numbers:
+
+* The momentum-operator fix moved `x_r/H` from 3.144 to 3.767 (**+19.8 %**)
+  and cut the peak eddy viscosity from 297.0 to 202.5 (−32 %): the §2 defect
+  was real and material, exactly as the unit-scale measurement predicted
+  (first order in the local `Δnu_t`, largest where the shear layer is
+  thickest).
+* The bubble is still **30 % short** of the DNS reattachment.  The
+  discretisation defect therefore explains part of the 42 % gap found in
+  part A, but **not all of it**: with the operator now the divergence of a
+  single face flux (verified to 1e-14 / 1e-10 in §2), the remaining gap is
+  a *model-class / resolution* question for SST at 96×48, not a pairing bug.
+  The anchor's acceptance (<10 % on `x_r/H` and on the `y/H = 0.5`
+  profile) is still **not met**; the SST model-class verdict stays
+  **WITHHELD** — closing it needs a grid ladder at the fixed operator,
+  which is the next measurement, not a claim.
+
 What *is* established: the operator was not the discrete divergence of a single
 flux (measured, §2.1), and the effect is first order in the local `Δnu_t`, so it
 must move the reattachment length. Whether it closes the 42 % gap is a
@@ -155,8 +188,13 @@ in the record as what the defective operator produced; nothing is re-labelled.
 PYTHONPATH=src python -m pytest tests/test_periodic_hill_eta_face_viscosity.py -q      # 8 passed
 PYTHONPATH=src python -m pytest tests/test_periodic_hill.py tests/test_periodic_hill_round2.py \
                           tests/test_periodic_hill_round3.py -q                          # 22 passed
-# defect metrics + figure
-PYTHONPATH=src python docs/case-periodic-hills/../..  # see round13_operator_defect.json / fig_round13_eta_face_operator.png
+# defect metrics + figure (the measurement lives in the test module; the
+# committed round13_operator_defect.json / fig_round13_eta_face_operator.png
+# are its frozen record)
+PYTHONPATH=src python -m pytest tests/test_periodic_hill_eta_face_viscosity.py -q
+# part-C scoring (writes round13_comparison.json / fig_round13_profile_y05.png /
+# fig_round13_series.png; exit code 1 = gate FAIL, expected at this round)
+PYTHONPATH=src python scripts/round13_analysis.py
 ```
 
 ## 5. Files
@@ -170,6 +208,9 @@ PYTHONPATH=src python docs/case-periodic-hills/../..  # see round13_operator_def
 | `docs/case-periodic-hills/round12_comparison.json`, `fig_round12_*.png` | round-12 scoring, now with the real fixed-SST row |
 | `docs/case-periodic-hills/round13_operator_defect.json` | defect metrics (§2.1) |
 | `docs/case-periodic-hills/fig_round13_eta_face_operator.png` | violation vs `nu_t/nu`; matrix-entry histogram |
+| `docs/case-periodic-hills/round11_sst_r13-96x48.{json,npz}` | cj3108 artefacts (fetched, scored in §3b) |
+| `docs/case-periodic-hills/round13_comparison.json`, `fig_round13_profile_y05.png`, `fig_round13_series.png` | part-C scoring (r13 vs r12 vs r11 vs reference) |
+| `scripts/round13_analysis.py` | part-C scoring script (fetched artefacts, no re-run; docstring job id corrected cj3138→cj3108) |
 
 ## 5b. Published report
 
@@ -183,8 +224,10 @@ Platform report id **19009** (mission 20987), scenario `case-fvm-periodic-hills`
 | `y/H = 0.5` mean profile, 7 stations | — | DNS files | 0/7 inside 10 % | **NO** |
 | eta-face operator vs face-loop definition | 0 | exact | **0 (1e-14)** | YES |
 | dissipation identity of the fixed momentum operator | exact | closed form | 1e-10 | YES |
-| `x_r/H` with the round-13 momentum fix | — | 5.41 | **WITHHELD** (job cj3108 queued) | n/a |
+| `x_r/H` with the round-13 momentum fix (cj3108) | 3.767 | 5.41 | **30.4 %** | **NO** |
 
 Honest summary: the *discretisation* claims of this round are verified to machine
-precision; the *case acceptance* is still a FAIL (42 %) and the round-13 physics
-number does not exist yet at commit time.
+precision; the *case acceptance* is still a FAIL — `x_r/H = 3.767` (30.4 % vs
+5.41, 0/7 profile stations) after the operator fix.  The fix closed 11.5 points
+of the 41.9 % gap (3.144 → 3.767); the remainder is model/resolution, not
+pairing, and the SST model-class verdict stays WITHHELD.

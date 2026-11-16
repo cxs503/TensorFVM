@@ -10,7 +10,7 @@ the time-averaged run of the fixed-momentum closure on the identical protocol
 and writes the machine-readable comparison plus the paper figures.
 
 Inputs (``docs/case-periodic-hills/``):
-    round11_sst_r13-96x48.json   -- fixed momentum (this round, job cj3138)
+    round11_sst_r13-96x48.json   -- fixed momentum (this round, job cj3108)
     round11_sst_r12-96x48.json   -- round 12, fixed transport (baseline)
     round11_sst_96x48.json       -- round 11, defective transport (baseline)
 Outputs:
@@ -43,25 +43,30 @@ def _load(path):
 
 
 def profile_errors(new, old):
-    """Per-station relative error of the y/H=0.5 profile vs Breuer 2009."""
+    """Per-station table of the y/H=0.5 profile vs Breuer 2009.
+
+    The stations are the gate's own scored stations (the solver's
+    ``profile_comparison`` block): the 96x48 mesh has no cell centre on an
+    integer x/H, so an exact string match of the column index against the
+    reference keys yields an empty table (the latent defect this round
+    corrects; the round-12 comparison JSON carries the same gap).
+    """
     rows = []
-    ref = new["horizontal_profile_y_H_0.5"]["reference"]
-    for i, x in enumerate(new["horizontal_profile_y_H_0.5"]["x_over_H"]):
-        r = ref.get(str(int(x)) if float(x).is_integer() else str(x))
-        if r is None:
-            continue
-        u_new = new["horizontal_profile_y_H_0.5"]["u_over_Ub"][i]
-        u_old = (old["horizontal_profile_y_H_0.5"]["u_over_Ub"][i]
-                 if old is not None else None)
+    old_pc = (old or {}).get("profile_comparison") or {}
+    old_by_x = {s["x_over_H"]: s for s in old_pc.get("stations", [])}
+    for s in (new.get("profile_comparison") or {}).get("stations", []):
+        x = s["x_over_H"]
+        o = old_by_x.get(x)
         rows.append({
             "x_over_H": float(x),
-            "reference": float(r),
-            "round13": float(u_new),
-            "round12": None if u_old is None else float(u_old),
-            "abs_error_round13": abs(float(u_new) - float(r)),
-            "rel_error_round13": abs(float(u_new) - float(r)) / max(abs(float(r)), 1e-12),
-            "rel_error_round12": (None if u_old is None
-                                  else abs(float(u_old) - float(r)) / max(abs(float(r)), 1e-12)),
+            "reference": float(s["reference"]),
+            "round13": float(s["computed"]),
+            "round12": None if o is None else float(o["computed"]),
+            "abs_error_round13": abs(float(s["computed"]) - float(s["reference"])),
+            "rel_error_round13": float(s["error"]),
+            "rel_error_round12": (None if o is None else float(o["error"])),
+            "pass_round13": bool(s["pass"]),
+            "pass_round12": (None if o is None else bool(o["pass"])),
         })
     return rows
 
