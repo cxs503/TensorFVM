@@ -50,12 +50,15 @@ def test_cfl_admission_threshold_is_frozen(r13):
 def test_independent_metric_agrees_with_shared_metric(r13, verdict):
     """Shared metric and the independent re-integration must agree on the stored rungs."""
     diff = verdict["independent_check_max_abs_diff_percent"]
-    finest = min(r["l1_percent"] for r in verdict["ladder"].values())
     # the two implementations differ only by where the metric is sampled (native
     # abscissae + trapezoid vs fixed stencil + rectangle): they must agree to well
-    # under the metric's own change between adjacent rungs (1.776 -> 0.893).
+    # under the metric's own change between the two finest rungs (0.893 -> 0.321
+    # once the nx=12800 rung landed in R14; 1.776 -> 0.893 before that).
+    ks = sorted(int(k) for k in verdict["ladder"])
+    delta = (verdict["ladder"][str(ks[-2])]["l1_percent"]
+             - verdict["ladder"][str(ks[-1])]["l1_percent"])
     assert diff < 0.15, diff
-    assert diff < 0.2 * finest, (diff, finest)
+    assert diff < 0.2 * delta, (diff, delta)
     for row in verdict["ladder"].values():
         assert row["l1_percent"] > 0.0
         assert row["l1_percent"] < r13.BAR_LEDGER

@@ -133,3 +133,8 @@ PYTHONPATH=src python docs/XVAL-FVM-M18737-ROUND2/r13_certified_rung.py \
     --markdown docs/XVAL-FVM-M18737-ROUND2/R13-CERTIFIED-RUNG.md
 PYTHONPATH=src python -m pytest tests/test_compressible_wc_r13.py -q
 ```
+
+---
+> **勘误指针（R14）**：本轮三个预注册作业（cj4221/4222/4223）已在 R14 窗口回件并回填，
+> 上表所有 `not_measured` 项已由 `R14-CLOSURE.md`（`r14_closure.py` 程序化渲染）给出实测值；
+> 本文件数字不改写。
