@@ -102,25 +102,37 @@ def from_overset_grid(grid) -> MeshData:
     recovered from the polygon edges (one face per unique edge).  The area
     vector follows the *owner's* edge direction: for a CCW polygon the
     outward normal of edge ``a -> b`` is ``(e_y, -e_x)``.
+
+    A shared edge (appearing in exactly two cells, traversed in opposite
+    directions) is emitted once, owned by the first cell to see it; a
+    boundary edge (one cell) is emitted once with ``neighbor == -1``.  This
+    keeps the face count equal to the number of unique polygon edges and
+    makes the discrete divergence (area-vector closure) identity hold.
     """
     polygons = [np.asarray(p, dtype=float) for p in grid.polygons]
-    owner_list, neighbor_list, centers_list, areas_list = [], [], [], []
-    seen: dict[tuple, tuple[int, tuple, tuple]] = {}
+    # Collect every polygon edge keyed by its (sorted) endpoint pair.
+    edges: dict[tuple, list[tuple[int, np.ndarray, np.ndarray]]] = {}
     for i, poly in enumerate(polygons):
         for a, b in zip(poly, np.roll(poly, -1, axis=0)):
             key = tuple(sorted((tuple(a), tuple(b))))
-            if key in seen:
-                j, aj, bj = seen[key]
-                owner_list.append(j)
-                neighbor_list.append(i)
-                edge = np.asarray(bj) - np.asarray(aj)
-            else:
-                seen[key] = (i, tuple(a), tuple(b))
-                owner_list.append(i)
-                neighbor_list.append(-1)
-                edge = b - a
-            centers_list.append((a + b) * 0.5)
-            areas_list.append(np.array([edge[1], -edge[0]]))
+            edges.setdefault(key, []).append((i, np.asarray(a), np.asarray(b)))
+
+    owner_list, neighbor_list, centers_list, areas_list = [], [], [], []
+    for occ in edges.values():
+        if len(occ) == 1:
+            # boundary edge: single owner, no neighbour
+            i, a, b = occ[0]
+            owner_list.append(i)
+            neighbor_list.append(-1)
+        else:
+            # shared edge: first cell is owner, second is neighbour
+            i, a, b = occ[0]
+            j, _, _ = occ[1]
+            owner_list.append(i)
+            neighbor_list.append(j)
+        edge = b - a
+        centers_list.append((a + b) * 0.5)
+        areas_list.append(np.array([edge[1], -edge[0]]))
     owner = np.asarray(owner_list, dtype=np.int64)
     neighbor = np.asarray(neighbor_list, dtype=np.int64)
     labels = np.full(len(owner), "boundary", dtype=object)
@@ -178,6 +190,11 @@ def from_body_fitted3d(mesh) -> MeshData:
     owner/neighbor/area-vector data) and spanwise faces (centres plus scalar
     areas; the normal is the slab direction, ``-z`` on the lower slab face and
     ``+z`` on the upper one, interior spanwise faces owned by the lower cell).
+
+    The 2-D seed labels its interior faces ``'interior'``; the ``MeshData``
+    contract requires the literal ``'internal'`` on every interior face, so
+    the lateral labels are remapped here (the spanwise labels already use
+    ``'internal'``).
     """
     local_nz = mesh.z_stop - mesh.z_start
     ny, nx = mesh.ny, mesh.nx
@@ -189,6 +206,9 @@ def from_body_fitted3d(mesh) -> MeshData:
     lat_centers = _torch_to_numpy(mesh.lateral_face_centers).reshape(-1, 3)
     lat_areas = _torch_to_numpy(mesh.lateral_face_area_vectors).reshape(-1, 3)
     lat_labels = np.repeat(np.asarray(mesh.lateral_labels, dtype=object), local_nz)
+    # The 2-D seed's interior faces are labelled 'interior'; the contract
+    # requires 'internal' on every interior face.
+    lat_labels = np.where(lat_labels == "interior", "internal", lat_labels)
 
     sw_centers = _torch_to_numpy(mesh.spanwise_face_centers)  # (local_nz+1, ny, nx, 3)
     sw_areas = _torch_to_numpy(mesh.spanwise_face_areas)      # (local_nz+1, ny, nx)
