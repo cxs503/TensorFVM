@@ -854,3 +854,32 @@
 - 建议总账条目：`CASE-FVM-PERIODIC-HILLS-LADDER-DATA`，验收＝「按 round-23 稳定 dt（144×72→0.00665、
   192×96→0.0025）重跑并把**非零**场入档后，`artifact_health` 全绿且可用档 ≥3，`ladder_summary` 由
   `insufficient_rungs` 变为 `measured`，并给出相邻档 `x_r/H` 相对变化与对 5.41 的误差」；所属域=TensorFVM/验证。
+
+## 4p. 追加欠账（append-only, m22755 selfstart / verifier 席）
+### D29 CASE-FVM-DAMBREAK-STOKER 的 oracle 独立性与仪器标定（锚点条目已 PASS，本单补欠账而非重做）
+- 缺口来源：池条目 `docs/oss_solutions/CASE-FVM-DAMBREAK-STOKER.json` 的每个数字都对着
+  `shallow_water.exact` 打分，而该模块**既是判据来源又是参考实现**，其自检
+  `check_stoker_solution` 用的还是自己那套公式 ⇒ 闭式的系统性错误会同时通过两边；
+  且 `front_fan` 类估计器继承精确稀疏波形状，误差量级是**仪器精度**不是求解器精度。
+- 交付：`src/tensorfvm/verification/dambreak_independent_oracle.py`（独立 oracle：
+  自相似解 + Rankine-Hugoniot，中间态用二分法解单标量方程，不 import `exact`；
+  独立仪器：整场 L1、半跃变水跃定位器、测量式平台水平、水位交点波前、prominence 极值计数；
+  仪器标定：注入位移/平台缩放/wiggle）+ `scripts/run_dambreak_independent_verifier.py`
+  + `tests/test_dambreak_independent_oracle.py`（13 测全绿，14.3 s）
+  + `docs/case-fvm-dambreak-stoker-verifier/{REPORT.md,metrics.json,fig_verifier_*.png}`。
+- 关键数字（程序注入）：independent vs 仓内 oracle `t*=2` 全剖面最大差 `2.2e-16`、中间态
+  `h2/u2/s/step_ratio` 相对差 `0`；跳跃残差 质量 `0`、动量 `2.24e-16`、稀疏波不变量 `0`。
+  `n=1600` 独立口径：干床深度 L1 `0.077 %`、水位波前（h=0.05h0）`0.081 %`、薄膜湿边
+  `2.89 %`；湿床 L1 `0.043 %`、水跃位置 `0.021 %`、水位阶跃 `1.3e-6`。
+  仪器标定：注入 ±0.05/±0.10 m 水跃位移复原相对误差 ≤`1.24e-5`；平台缩放 ±1 % 复原
+  ≤`4.2e-8`（=2 % 时 `3.3e-7`，含重新定位）；单调门盲区 k=4 `1.41e-4 h0`、k=8
+  `3.70e-4 h0`；负对照深度 L1 `12.0 %` 被正确判错。
+- 判定：锚点验收（`x_f`、水位阶跃、单调无伪振荡，<5 %）在独立 oracle + 独立仪器下
+  **复现 PASS**，四项判据最大误差 `0.081 %`（比 5 % 低两个量级）。
+- 三条非阻塞发现（引用必须带口径）：F1 `front_fan=1.7e-4` 是形状先验估计器口径，同解在
+  水位交接口径下为 `8.1e-4`、薄膜湿边口径下 `2.89 %`；F2 单调门是**阈值命题**（prominence
+  >1e-4 h0 时未见极值，>1e-6 h0 时 n=1600 湿床仍有 2 个、平台 overshoot `+5.5e-6 h0`）；
+  F3 阶跃误差与窗口定义有关（本单 `1.3e-6` vs 池内 `5.76e-7`），1e-6 级差别不是物理精度比较。
+- 明示未做（not_run）：异族代码（CLAWPACK/FEniCS）交叉；`t*>2` 长时程；二维/斜置溃坝。
+- 建议总账动作：`CASE-FVM-DAMBREAK-STOKER` 证据链已加一层独立复核 → 可升 `verified`；
+  若要求更强的独立性，另立 `XVAL-FVM-DAMBREAK-THIRD-CODE`（验收＝异族代码同解 L1 ≤5 %）。
