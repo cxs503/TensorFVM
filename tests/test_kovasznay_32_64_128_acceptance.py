@@ -254,10 +254,54 @@ SUMMARY_SCHEMA_KEYS = ('title', 'levels', 'observed_orders', 'fits', 'verdict',
                        'pair_consistency', 'three_level_estimates', 'provenance')
 SUMMARIZER = 'scripts/summarize_kovasznay_32_64_128.py'
 
-SUMMARY_DIRS = [ROOT / 'runs-32-64-128-zero_gradient',
-                ROOT / 'runs-32-64-128-zero_gradient' / 'summary-32-64',
-                ROOT / 'runs-32-64-128-zero_gradient' / 'summary-32-64-128-256',
-                ROOT / 'selftest-4-8-16']
+#: Fields only the current summariser writes.  A ``summary.json`` carrying any of
+#: them *claims* summariser lineage, so it is graded against the full key set --
+#: this is how the guard finds its subjects.  A hand-kept directory list was the
+#: first version of this guard, and it had the defect the guard exists to catch:
+#: it went stale the moment a new summary directory was committed (the n=256
+#: four-level summary below is exactly such a directory).  Discovery also grades
+#: a *forgotten* directory, i.e. the deliverable that was regenerated and then
+#: filtered out of the commit, which is the historical failure mode here.
+SUMMARY_CLAIM_KEYS = ('observed_orders', 'fits', 'verdict', 'pair_consistency',
+                      'three_level_estimates')
+#: Directories that must be discovered when their artifacts are committed.  Used
+#: as a non-vacuity control: a discovery bug may never turn this gate green.
+EXPECTED_SUMMARY_DIRS = ('runs-32-64-128-zero_gradient',
+                         'runs-32-64-128-zero_gradient/summary-32-64',
+                         'runs-32-64-128-zero_gradient/summary-32-64-128-256',
+                         'selftest-4-8-16')
+
+
+def _summariser_documents():
+    """Every committed ``summary.json`` under the case that claims summariser lineage.
+
+    The same directory can hold summaries of different provenances (per-level
+    ``<n>/summary.json`` rows come from the runner, the in-plane decomposition
+    comes from another script), so the criterion is the *content contract*, not
+    the path.
+    """
+    found = []
+    for path in sorted(ROOT.rglob('summary.json')):
+        try:
+            document = json.loads(path.read_text())
+        except json.JSONDecodeError:
+            continue
+        if not isinstance(document, dict):
+            continue
+        provenance = document.get('provenance')
+        named = isinstance(provenance, dict) and provenance.get('summarizer') == SUMMARIZER
+        if named or any(key in document for key in SUMMARY_CLAIM_KEYS):
+            found.append(path.parent)
+    return found
+
+
+def test_schema_guard_discovers_the_committed_summariser_outputs():
+    """Non-vacuity: the guard must actually find the summaries it claims to guard."""
+    discovered = {str(path.relative_to(ROOT)) for path in _summariser_documents()}
+    expected = {name for name in EXPECTED_SUMMARY_DIRS
+                if (ROOT / name / 'summary.json').is_file()}
+    assert len(expected) >= 3
+    assert expected <= discovered, f'guard missed {sorted(expected - discovered)}'
 
 
 def _schema_gaps(summary):
@@ -268,7 +312,8 @@ def _schema_gaps(summary):
     return gaps
 
 
-@pytest.mark.parametrize('directory', SUMMARY_DIRS, ids=lambda path: path.name)
+@pytest.mark.parametrize('directory', _summariser_documents(),
+                         ids=lambda path: str(path.relative_to(ROOT)))
 def test_committed_summary_carries_current_summarizer_schema(directory):
     """Committed artifacts must be the ones the current gate reads.
 
