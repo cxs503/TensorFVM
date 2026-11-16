@@ -6,3 +6,32 @@ docs/verification-simple-pressure-response/**/*.csv whitespace=cr-at-eol
 docs/verification-native-solver-audit/**/input.msh whitespace=-blank-at-eol
 # Preserve verbatim pytest failure logs used as before-fix evidence.
 docs/verification-native-solver-audit/before/*-regression-before.txt whitespace=-blank-at-eol
+
+# ---------------------------------------------------------------------------
+# FVM-SLIM-GUARD (D6): pre-commit large-blob whitelist.
+#
+# The pre-commit hook (scripts/guard/repo_guard.py staged) blocks any staged
+# blob > 512 KiB.  These are the *reproducible producer artifact* families
+# (m23216 SLIM_PLAN §2.2: npz/png/svg/pdf/msh/gz/csv) that are deliberately
+# large, re-generated from runs/, and are the legitimate "live 工件" the
+# repo tracks.  Marking them `guard-allow-large` lets them through the
+# pre-commit gate (they are not accidental blobs); the *live volume* CI gate
+# (repo_guard.py ci / live) still tracks the total and WARNs/REDs on growth.
+#
+# This is a narrow, deliberate whitelist — NOT a blanket "everything large
+# is OK".  Anything not matching these patterns (e.g. a stray .pyc, a huge
+# log, an oversized source file) is still blocked by the pre-commit gate.
+# ---------------------------------------------------------------------------
+docs/verification-*/**/*.npz        guard-allow-large
+docs/verification-*/**/*.npy        guard-allow-large
+docs/verification-*/**/*.png        guard-allow-large
+docs/verification-*/**/*.svg        guard-allow-large
+docs/verification-*/**/*.pdf        guard-allow-large
+docs/verification-*/**/*.msh        guard-allow-large
+docs/verification-*/**/*.gz         guard-allow-large
+docs/verification-*/**/*.csv        guard-allow-large
+docs/CASE-*/**/*.npz                guard-allow-large
+docs/CASE-*/**/*.png                guard-allow-large
+docs/CASE-*/**/*.svg                guard-allow-large
+docs/CASE-*/**/*.pdf                guard-allow-large
+docs/CASE-*/**/*.msh                guard-allow-large
