@@ -39,6 +39,7 @@ ledger wording           graded quantity                                 verdict
 from __future__ import annotations
 
 import json
+import math
 import pathlib
 from typing import Any, Dict, List, Optional
 
@@ -60,6 +61,9 @@ SLUG = "CASE-FVM-DAMBREAK-STOKER"
 TOLERANCE = 0.05
 T_STAR = 2.0
 CATALOG_SECTION_ID = "19.1"
+CATALOG_SECTION_ID = "19.1"
+#: report that substantiates the *scheme* order on smooth data (operator audit)
+ORDER_EVIDENCE_REPORT = "docs/case-fvm-dambreak-order-audit/REPORT.md"
 ENTRY_PATH = pathlib.Path("docs") / "case-fvm-dambreak-stoker" / "case_pool_entry.json"
 ARTIFACT_DIR = (
     pathlib.Path(__file__).resolve().parent
@@ -163,6 +167,79 @@ def _criteria(case_key: str, verdict: Dict[str, Any]) -> List[Dict[str, Any]]:
     return out
 
 
+def _loglog_slope(points: List[Any]) -> Optional[float]:
+    """Least-squares slope of ``log(y)`` against ``log(x)`` (``None`` if undefined).
+
+    Used to *recompute* the observed order of accuracy from the artifact's own
+    refinement rows, so the registration carries a number it can be caught on
+    rather than a copied digit.
+    """
+
+    pts = [(float(x), float(y)) for x, y in points if x and y and x > 0.0 and y > 0.0]
+    if len(pts) < 2:
+        return None
+    n = float(len(pts))
+    mx = sum(math.log(x) for x, _ in pts) / n
+    my = sum(math.log(y) for _, y in pts) / n
+    den = sum((math.log(x) - mx) ** 2 for x, _ in pts)
+    if den <= 0.0:  # pragma: no cover - degenerate ladder
+        return None
+    num = sum((math.log(x) - mx) * (math.log(y) - my) for x, y in pts)
+    return num / den
+
+
+def _order_claim(case_key: str, disc: Dict[str, Any], conv: Dict[str, Any]) -> Dict[str, Any]:
+    """``solver.order`` as claimed, next to the order the artifact actually measures.
+
+    The entry used to expose ``order = 2`` alone.  ``2`` is the order of the
+    *scheme* (MUSCL/minmod + HLL + SSP-RK3) on smooth data; at the anchored dam
+    break the solution is discontinuous, so every committed refinement ladder
+    observes ~1.  A reader re-using the pool entry sees only the nominal order
+    and cannot tell the two apart, which is precisely the "advertised order vs
+    measured accuracy" confusion the order audit
+    (``ORDER_EVIDENCE_REPORT``) exists to settle.  Both numbers are derived
+    here, from the artifact rows, so the caveat cannot drift away from them.
+    """
+
+    rows = conv.get("rows") or []
+    observed_l1 = _loglog_slope(
+        [(r.get("dx"), r.get("depth_l1")) for r in rows if r.get("depth_l1")]
+    )
+    # the graded headline quantity differs per case: fan front on the dry bed,
+    # bore position on the wet bed -- pick whichever the artifact records.
+    headline_key = None
+    for candidate in ("front_fan", "shock"):
+        if rows and all(candidate in (r.get("headline") or {}) for r in rows):
+            headline_key = candidate
+            break
+    observed_headline = (
+        _loglog_slope(
+            [(r.get("dx"), (r.get("headline") or {}).get(headline_key)) for r in rows]
+        )
+        if headline_key
+        else None
+    )
+    nominal = int(disc["order"])
+    below = observed_l1 is not None and observed_l1 < nominal - 0.1
+    return {
+        "nominal": nominal,
+        "nominal_kind": "scheme order on smooth data (MUSCL minmod + HLL + SSP-RK3)",
+        "grids": [int(r["n"]) for r in rows],
+        "observed_depth_l1": observed_l1,
+        "observed_depth_l1_declared": conv.get("observed_order_l1"),
+        "observed_headline_quantity": headline_key,
+        "observed_headline": observed_headline,
+        "observed_headline_declared": conv.get("observed_order_headline"),
+        "observed_below_nominal": below,
+        "evidence_report": ORDER_EVIDENCE_REPORT,
+        "scope": (
+            "the anchored solution contains a jump (dry front / bore), so the observed "
+            "order is owned by the data regularity, not by the operator; do not read "
+            "'order = 2' as the accuracy of this case under the 5 % gate"
+        ),
+    }
+
+
 def build_entry(artifacts: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     """Assemble the ``case_pool_entry.json`` payload from the artifact."""
 
@@ -193,6 +270,7 @@ def build_entry(artifacts: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
                 "dx": disc["dx"],
                 "cfl": disc["cfl"],
                 "order": disc["order"],
+                "order_claim": _order_claim(key, disc, convergence.get(key) or {}),
                 "steps": int(disc["steps"]),
                 "volume_drift": float(disc["volume_final"]) / float(disc["volume_initial"]) - 1.0,
                 "reference": case["reference"],
@@ -304,6 +382,12 @@ def build_entry(artifacts: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
                 "SSP-RK3, CFL 0.4, reflective walls"
             ),
             "order": 2,
+            "order_evidence": ORDER_EVIDENCE_REPORT,
+            "order_scope": (
+                "nominal scheme order; the anchored case is discontinuous and measures ~1 "
+                "(see each case's order_claim) -- operator order is substantiated on smooth "
+                "data in the evidence report"
+            ),
             "cfl": 0.4,
             "driver": "scripts/run_shallow_water_dam_break.py",
         },
@@ -319,6 +403,7 @@ def build_entry(artifacts: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
             "docs/case-fvm-dambreak-stoker/AUDIT.md",
             "docs/case-fvm-dambreak-stoker-2d/REPORT.md",
             "docs/case-fvm-dambreak-stoker-robustness/REPORT.md",
+            ORDER_EVIDENCE_REPORT,
         ],
         "tests": [
             "tests/test_case_pool_dambreak_stoker.py",
@@ -404,6 +489,32 @@ def render_catalog_section(entry: Optional[Dict[str, Any]] = None) -> str:
                 dx=case["dx"],
             )
         )
+
+    claims = [
+        (case["key"], case["order_claim"])
+        for case in data["cases"]
+        if (case.get("order_claim") or {}).get("observed_depth_l1") is not None
+    ]
+    if claims:
+        lines += [
+            "",
+            "**Order claim** -- `order = 2` is the *scheme* order, not this case's accuracy: "
+            + "; ".join(
+                "`{k}` observed depth-L1 order **{l1:.3f}** ({hq} {hh:.3f}) on `n = {g}`".format(
+                    k=key,
+                    l1=claim["observed_depth_l1"],
+                    hq=claim.get("observed_headline_quantity") or "headline",
+                    hh=claim["observed_headline"],
+                    g="/".join(str(n) for n in claim["grids"]),
+                )
+                for key, claim in claims
+            )
+            + ". The anchored ladder contains a jump (dry front / bore), so the observed order is "
+            "owned by the data regularity, not by the operator -- the operator itself is "
+            "substantiated second order on smooth data in the evidence report "
+            f"`{ORDER_EVIDENCE_REPORT}`. Both numbers are recomputed from the convergence "
+            "artifact, so the caveat cannot drift away from the ladder it describes.",
+        ]
 
     for case in data["cases"]:
         lines += [
