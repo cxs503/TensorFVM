@@ -793,3 +793,35 @@
   需分段重启或超单作业墙钟），或按 R4 的 `nx_ref≈1.33e5` 路线；② 度量实现口径差（1.5 %）应统一为
   单一实现，否则所有上界都要带这个系统项；③ 任何「certified」判据今后必须显式包含 `eps_ref` 项
   （已由本单的布尔语义强制）。
+
+## 4n. 追加欠账（append-only, m22630 selfstart）
+### D27 CASE-FVM-CAVITY-RE1000 第四级网格（cj3849 取回）—— 表值吻合度不是精度的证明；「加密会更准」被证伪，锚点门仍绿
+- 缺口来源：`ATTRIBUTION_AUDIT.md` 与 `SPECTRAL_HIORDER.md` 都留了一条 not_run：第四级 n=192 已递交
+  （`cj3849`）但交稿时未取回；三级阶梯（32/64/128，加密比 2）只给出**一个**收缩比，因此
+  「表值落在 GCI 带内」无法检验自己的前提。
+- 交付：取回 `cj3849`（node n315, rc=0）的 `field_n192.npz` + JSON 落库
+  `docs/CASE-FVM-CAVITY-RE1000/runs/refine/`；新模块 `src/tensorfvm/cavity_refinement.py`
+  （`field_functionals`/`profile_errors`/`pair_order`/`textbook_order`/`ladder_verdict`）；
+  驱动 `docs/CASE-FVM-CAVITY-RE1000/grid_ladder_4level.py`（零重跑，四级原始 MAC 面量全部独立重算，
+  与存档 JSON 对账 1e-12）；`tests/test_cavity_grid_ladder.py`（16 passed）；
+  `docs/CASE-FVM-CAVITY-RE1000/GRID-LADDER-4LEVEL.md` + `runs/grid_ladder_4level.json`
+  + `figures/fig_ladder4_two_references.png`（表内数字全部脚本注入）。
+- 关键数（程序注入）：n=192 判级网格上登记门 C1..C7 全 PASS（余量由 2.7× 降到
+  2.60×）；对 Ghia 的误差 u_min 0.647% →
+  1.155%（**变差 1.79×**），
+  v_max 0.779% → 1.276%（1.64×）；
+  对独立谱极限（SPECTRAL_HIORDER 四阶外推 −0.388603/0.377101）则单调下降
+  0.832% → 0.332%；
+  128→192 成对阶 p = 2.270（u_min）/
+  2.052（v_max），与均匀段教科书阶
+  2.080 一致（未见角点奇性降阶）；
+  离散带 GCI：u_min 1.324% → 0.416%，
+  v_max 1.266% → 0.472%。
+- **结论**：n=128 的「与 Ghia 最吻合」是误差抵消，不是更准；残差（≈1.2–1.3%）> 自身离散带
+  （≈0.42%），且加密使表值吻合度变差、使与独立极限的吻合度变好
+  ⇒ 判决 `reference_offset_dominates`（方向性证据从「两码一致」升级为「四网格 + 双参考」）。
+  仍不主张 Ghia 表值错在哪一条（仓内无第三方核对副本）。
+- 明示未做（not_run）：第五级 n≥320（成本 O(n³) 量级）；第三方发布高精度参考（Botella & Peyret 等）
+  无核对副本；本单未重跑求解器（只重算度量）。
+- 建议总账条目：`XVAL-FVM-CAVITY-THIRD-REFERENCE`，验收＝引入一份**异族第三方**存档参考（含其自身
+  不确定度）后，`u_min/v_max/vortex` 三方互证误差 ≤0.5%，并写明该参考的网格/阶数与其 GCI。
