@@ -1106,6 +1106,50 @@ def _data_driven_crosscheck(case: DamBreakCase, solver: ShallowWater1D) -> dict:
     }
 
 
+def _oracle_free_wet_readings(case: DamBreakCase, solver: ShallowWater1D) -> dict:
+    """Wet-bed readings whose *measurement* uses no analytic input.
+
+    The graded wet-bed quantities (:func:`_wet_metrics`) are read inside a
+    window placed from the closed-form ``x_fan_end``/``x_shock`` and at the
+    analytic mid level ``(h1 + h2) / 2``; ``AUDIT.md`` §6 recorded the residual
+    oracle dependency (F4) and §9.5 left "promote the distribution-only reading
+    to a graded criterion?" to the next independent review.  This function is
+    that reading, in the form the verdict consumes:
+
+    * ``h1`` / ``h2`` / ``step_ratio`` / ``bore_x`` come from
+      :func:`plateau_from_depth_modes` (histogram modes + sub-cell crossing of the
+      *measured* mid level) -- no analytic position, level or amplitude;
+    * the analytic solution enters only as the **reference** the reading is
+      compared with (``shock_exact`` / ``h2_exact`` / ``step_ratio_exact``),
+      never as a threshold or a window;
+    * ``no_plateau`` / ``unresolved`` readings are carried as ``valid = False``
+      and are never silently quoted as a number.
+
+    Returns the detector dict plus ``bore_position_error`` /
+    ``step_ratio_error`` (relative, vs the Stoker solution) and
+    ``agreement_bore_vs_oracle_window`` (relative distance between this
+    oracle-free position and the oracle-window level-crossing reading of
+    :func:`_wet_metrics`, reported by :func:`_wet_metrics` as ``shock_position``).
+    """
+    nan = float("nan")
+    sol = stoker_constant_state(case.h0, case.h1, case.gravity)
+    x_shock = case.x_dam + sol["shock_speed"] * solver.time
+    out = dict(plateau_from_depth_modes(solver.x, solver.h))
+    out["shock_exact"] = x_shock
+    out["h2_exact"] = sol["h2"]
+    out["step_ratio_exact"] = sol["step_ratio"]
+    bore_x = out.get("bore_x", nan)
+    step = out.get("step_ratio", nan)
+    out["bore_position_error"] = (_relative(bore_x, x_shock)
+                                  if np.isfinite(bore_x) else nan)
+    out["step_ratio_error"] = (_relative(step, sol["step_ratio"])
+                               if np.isfinite(step) else nan)
+    oracle = _level_crossing(solver.x, solver.h, 0.5 * (case.h1 + sol["h2"]))
+    out["agreement_bore_vs_oracle_window"] = (
+        _relative(bore_x, oracle) if np.isfinite(bore_x) else nan)
+    return out
+
+
 def _wet_metrics(case: DamBreakCase, solver: ShallowWater1D, volume0: float) -> dict:
     t = solver.time
     h_ex, _ = case.exact(solver.x, t)
@@ -1154,6 +1198,7 @@ def _wet_metrics(case: DamBreakCase, solver: ShallowWater1D, volume0: float) -> 
         "c2_exact": sol["c2"],
         # --- data-driven (F4) cross-check: no analytic position/level used ---
         "dd": _data_driven_crosscheck(case, solver),
+        "modes": _oracle_free_wet_readings(case, solver),
         "depth_l1": float(np.abs(solver.h - h_ex).sum() / max(h_ex.sum(), 1e-300)),
         "depth_linf": float(np.abs(solver.h - h_ex).max() / case.h0),
         "tv_numeric": tv_num,
@@ -1201,6 +1246,41 @@ def _series_verdict_entry(metrics: dict) -> dict:
     }
 
 
+def _oracle_free_verdict_entries(metrics: dict) -> dict:
+    """Verdict entries grading the **oracle-free** wet-bed reading.
+
+    ``pass`` requires the reading to be *measured* (``valid``) **and** inside the
+    predeclared ``TOLERANCE``.  A ``no_plateau`` / ``unresolved`` reading is
+    *insufficient evidence* and fails rather than passes -- a profile whose depth
+    distribution has lost its interior mode has lost the constant state the
+    ledger quantity is about, and an amplitude read off a window mean must not be
+    able to hide that (same discipline as :func:`_series_verdict_entry`).
+    """
+    modes = metrics.get("modes") or {}
+    valid = bool(modes.get("valid"))
+    notes = ("measured from the depth distribution only: histogram modes + the "
+             "sub-cell crossing of the *measured* mid level; the analytic "
+             "solution is the reference, never a threshold or a window")
+
+    def entry(value):
+        measured = value is not None and np.isfinite(float(value)) if value is not None else False
+        err = float(value) if measured else None
+        return {
+            "value": err,
+            "limit": TOLERANCE,
+            "pass": bool(measured and valid and err <= TOLERANCE),
+            "measured": bool(measured),
+            "method": modes.get("method"),
+            "n_modes": modes.get("n_modes"),
+            "note": notes,
+        }
+
+    return {
+        "bore_position_modes<5%": entry(modes.get("bore_position_error")),
+        "step_ratio_modes<5%": entry(modes.get("step_ratio_error")),
+    }
+
+
 def _verdict(case: DamBreakCase, metrics: dict) -> dict:
     """Headline checks against the predeclared 5 % tolerance."""
     if case.kind == "dry":
@@ -1239,6 +1319,11 @@ def _verdict(case: DamBreakCase, metrics: dict) -> dict:
     # run reported ``all_pass`` at n = 400 while the same run's graded series
     # error was 6.61 % > 5 %: the acceptance quantity was measured but never
     # graded.  It is graded here (see :func:`_series_verdict_entry`).
+    if case.kind == "wet":
+        # Oracle-free re-grade of the same two ledger quantities (AUDIT.md §6 F4
+        # residual / §9.5 open decision).  Added as *new* keys so every existing
+        # key keeps its meaning and history.
+        verdict.update(_oracle_free_verdict_entries(metrics))
     verdict["front_series<5%"] = _series_verdict_entry(metrics)
     verdict["all_pass"] = bool(all(item["pass"] for item in verdict.values()))
     return verdict

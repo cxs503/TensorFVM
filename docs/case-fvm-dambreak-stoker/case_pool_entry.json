@@ -178,6 +178,28 @@
         },
         {
           "comparator": "lt",
+          "criterion": "bore_position_modes<5%",
+          "graded_by": "tensorfvm.shallow_water.dam_break._verdict",
+          "pass": true,
+          "primary": true,
+          "quantity": "bore position x_s(t*) measured from the depth distribution only (no analytic window/level) vs the Stoker solution",
+          "threshold": 5.0,
+          "unit": "%",
+          "value": 0.02102351984800069
+        },
+        {
+          "comparator": "lt",
+          "criterion": "step_ratio_modes<5%",
+          "graded_by": "tensorfvm.shallow_water.dam_break._verdict",
+          "pass": true,
+          "primary": true,
+          "quantity": "still-water level step h2/h1 measured from the depth distribution only (no analytic window/level) vs the Stoker solution",
+          "threshold": 5.0,
+          "unit": "%",
+          "value": 4.848508608660608e-06
+        },
+        {
+          "comparator": "lt",
           "criterion": "front_series<5%",
           "graded_by": "tensorfvm.shallow_water.dam_break._verdict",
           "pass": true,

@@ -26,6 +26,8 @@ ledger wording           graded quantity                                 verdict
 波前位置 ``x_f(t)``      dry-bed front series (max over samples)         ``front_series<5%``
 静水区水位阶跃           wet-bed still-water step ``h2 / h1``            ``step_ratio<5%``
                         wet-bed plateau depth ``h2``                    ``plateau_h2<5%``
+波前位置 ``x_f(t)``      wet-bed bore, oracle-free measurement           ``bore_position_modes<5%``
+静水区水位阶跃           wet-bed step, oracle-free measurement           ``step_ratio_modes<5%``
 波形单调无伪振荡         interior local extrema of ``h(x)``              ``monotone(no_extrema)``
                         total-variation growth                          ``tv_no_growth<0.5%``
 ======================  ===============================================  =============
@@ -78,6 +80,12 @@ PRIMARY_CRITERIA: Dict[str, Dict[str, str]] = {
         "step_ratio<5%": "still-water level step h2/h1 across the bore",
         "plateau_h2<5%": "still-water plateau depth h2 behind the bore",
         "monotone(no_extrema)": "waveform monotone: interior local extrema of h(x) above 1e-4 h0",
+        "bore_position_modes<5%": (
+            "bore position x_s(t*) measured from the depth distribution only "
+            "(no analytic window/level) vs the Stoker solution"),
+        "step_ratio_modes<5%": (
+            "still-water level step h2/h1 measured from the depth distribution only "
+            "(no analytic window/level) vs the Stoker solution"),
     },
 }
 
