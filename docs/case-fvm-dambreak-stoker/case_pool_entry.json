@@ -15,6 +15,7 @@
         {
           "comparator": "lt",
           "criterion": "front_fan<5%",
+          "graded": true,
           "graded_by": "tensorfvm.shallow_water.dam_break._verdict",
           "pass": true,
           "primary": true,
@@ -25,18 +26,8 @@
         },
         {
           "comparator": "lt",
-          "criterion": "front_wetted<5%",
-          "graded_by": "tensorfvm.shallow_water.dam_break._verdict",
-          "pass": true,
-          "primary": false,
-          "quantity": "legacy wetted-edge front (diagnostic only; see docs/case-fvm-dambreak-stoker/AUDIT.md F1)",
-          "threshold": 5.0,
-          "unit": "%",
-          "value": 2.890624999999991
-        },
-        {
-          "comparator": "lt",
           "criterion": "depth_l1<5%",
+          "graded": true,
           "graded_by": "tensorfvm.shallow_water.dam_break._verdict",
           "pass": true,
           "primary": false,
@@ -48,6 +39,7 @@
         {
           "comparator": "eq",
           "criterion": "monotone(no_extrema)",
+          "graded": true,
           "graded_by": "tensorfvm.shallow_water.dam_break._verdict",
           "pass": true,
           "primary": true,
@@ -59,6 +51,7 @@
         {
           "comparator": "lt",
           "criterion": "tv_no_growth<0.5%",
+          "graded": true,
           "graded_by": "tensorfvm.shallow_water.dam_break._verdict",
           "pass": true,
           "primary": false,
@@ -70,6 +63,7 @@
         {
           "comparator": "lt",
           "criterion": "front_series<5%",
+          "graded": true,
           "graded_by": "tensorfvm.shallow_water.dam_break._verdict",
           "pass": true,
           "primary": true,
@@ -79,6 +73,18 @@
           "threshold": 5.0,
           "unit": "%",
           "value": 0.42472950845003216
+        },
+        {
+          "comparator": "lt",
+          "criterion": "front_wetted<5%",
+          "graded": false,
+          "graded_by": "tensorfvm.shallow_water.dam_break._verdict",
+          "pass": true,
+          "primary": false,
+          "quantity": "legacy wetted-edge front (diagnostic only; see docs/case-fvm-dambreak-stoker/AUDIT.md F1)",
+          "threshold": 5.0,
+          "unit": "%",
+          "value": 2.890624999999991
         }
       ],
       "dry_depth": 1e-12,
@@ -117,6 +123,7 @@
         {
           "comparator": "lt",
           "criterion": "shock_position<5%",
+          "graded": true,
           "graded_by": "tensorfvm.shallow_water.dam_break._verdict",
           "pass": true,
           "primary": true,
@@ -128,6 +135,7 @@
         {
           "comparator": "lt",
           "criterion": "step_ratio<5%",
+          "graded": true,
           "graded_by": "tensorfvm.shallow_water.dam_break._verdict",
           "pass": true,
           "primary": true,
@@ -139,6 +147,7 @@
         {
           "comparator": "lt",
           "criterion": "plateau_h2<5%",
+          "graded": true,
           "graded_by": "tensorfvm.shallow_water.dam_break._verdict",
           "pass": true,
           "primary": true,
@@ -150,6 +159,7 @@
         {
           "comparator": "lt",
           "criterion": "depth_l1<5%",
+          "graded": true,
           "graded_by": "tensorfvm.shallow_water.dam_break._verdict",
           "pass": true,
           "primary": false,
@@ -161,6 +171,7 @@
         {
           "comparator": "eq",
           "criterion": "monotone(no_extrema)",
+          "graded": true,
           "graded_by": "tensorfvm.shallow_water.dam_break._verdict",
           "pass": true,
           "primary": true,
@@ -172,6 +183,7 @@
         {
           "comparator": "lt",
           "criterion": "tv_no_growth<0.5%",
+          "graded": true,
           "graded_by": "tensorfvm.shallow_water.dam_break._verdict",
           "pass": true,
           "primary": false,
@@ -183,6 +195,7 @@
         {
           "comparator": "lt",
           "criterion": "bore_position_modes<5%",
+          "graded": true,
           "graded_by": "tensorfvm.shallow_water.dam_break._verdict",
           "pass": true,
           "primary": true,
@@ -194,6 +207,7 @@
         {
           "comparator": "lt",
           "criterion": "step_ratio_modes<5%",
+          "graded": true,
           "graded_by": "tensorfvm.shallow_water.dam_break._verdict",
           "pass": true,
           "primary": true,
@@ -205,6 +219,7 @@
         {
           "comparator": "lt",
           "criterion": "front_series<5%",
+          "graded": true,
           "graded_by": "tensorfvm.shallow_water.dam_break._verdict",
           "pass": true,
           "primary": true,
@@ -261,10 +276,8 @@
             "depth_l1_percent": 1.2619660650790319,
             "front_series_error_percent": 0.9581422054983841,
             "local_extrema": 0,
-            "pass": false,
-            "verdict_failing": [
-              "front_wetted<5%"
-            ]
+            "pass": true,
+            "verdict_failing": []
           },
           "stoker-wet": {
             "depth_l1_percent": 0.6655921487484466,
@@ -365,14 +378,6 @@
   },
   "honest_fail": [
     {
-      "case": "ritter-dry",
-      "detail": "front series error 0.958 % / local extrema 0 at n = 100",
-      "failing_criteria": [
-        "front_wetted<5%"
-      ],
-      "n": 100
-    },
-    {
       "case": "stoker-wet",
       "detail": "front series error 0.676 % / local extrema 1 at n = 100",
       "failing_criteria": [
@@ -451,7 +456,7 @@
     "accepted_grid_min": 400,
     "all_criteria_pass_at_pool_grid": true,
     "all_primary_pass_at_pool_grid": true,
-    "honest_fail_count": 3,
+    "honest_fail_count": 2,
     "pool_grid": 1600,
     "tolerance_percent": 5.0
   }

@@ -1,14 +1,14 @@
 {
   "meta": {
     "meta": {
-      "generated_at": "2026-11-16T08:28:31Z",
+      "generated_at": "2026-11-16T09:20:14Z",
       "tolerance": 0.05,
       "t_star": 2.0,
       "python": "3.11.6",
       "numpy": "2.4.6",
       "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
-      "git_commit": "a12d1e17",
-      "command": "PYTHONPATH=src python scripts/run_shallow_water_dam_break.py --out /tmp/dbfresh",
+      "git_commit": "30b1a677",
+      "command": "PYTHONPATH=src python scripts/run_shallow_water_dam_break.py --out /tmp/dbfresh2",
       "wall_time_s": null
     },
     "exactness": {
@@ -288,7 +288,7 @@
         "steps": 1513,
         "t_end": 0.638550856814101,
         "t_star_end": 2.0,
-        "wall_time_s": 2.459498269483447,
+        "wall_time_s": 2.906841790303588,
         "volume_initial": 4.0,
         "volume_final": 3.9999999999998708,
         "clipped_cells": 0,
@@ -351,27 +351,26 @@
         "front_fan<5%": {
           "value": 0.00017261518056277403,
           "limit": 0.05,
-          "pass": true
-        },
-        "front_wetted<5%": {
-          "value": 0.02890624999999991,
-          "limit": 0.05,
-          "pass": true
+          "pass": true,
+          "graded": true
         },
         "depth_l1<5%": {
           "value": 0.0007715065657630972,
           "limit": 0.05,
-          "pass": true
+          "pass": true,
+          "graded": true
         },
         "monotone(no_extrema)": {
           "value": 0.0,
           "limit": 0.05,
-          "pass": true
+          "pass": true,
+          "graded": true
         },
         "tv_no_growth<0.5%": {
           "value": 0.0,
           "limit": 0.005,
-          "pass": true
+          "pass": true,
+          "graded": true
         },
         "front_series<5%": {
           "value": 0.0042472950845003216,
@@ -382,6 +381,13 @@
           "graded_required": 13,
           "unresolved_max_error": null,
           "note": "anchor acceptance x_f(t) series (graded max error); fails when undefined or when fewer than SERIES_MIN_GRADED_FRACTION of the samples are resolvable"
+        },
+        "front_wetted<5%": {
+          "value": 0.02890624999999991,
+          "limit": 0.05,
+          "pass": true,
+          "graded": false,
+          "note": "dry-bed wetted edge: depth-floor detector, non-convergent ladder -- published for continuity, does not feed all_pass"
         },
         "all_pass": true
       },
@@ -832,7 +838,7 @@
         "steps": 918,
         "t_end": 0.638550856814101,
         "t_star_end": 2.0,
-        "wall_time_s": 1.5127809289842844,
+        "wall_time_s": 1.7614873200654984,
         "volume_initial": 7.0,
         "volume_final": 6.999999999999908,
         "clipped_cells": 0,
@@ -967,32 +973,38 @@
         "shock_position<5%": {
           "value": 0.00021023436657714858,
           "limit": 0.05,
-          "pass": true
+          "pass": true,
+          "graded": true
         },
         "step_ratio<5%": {
           "value": 5.762518619591793e-07,
           "limit": 0.05,
-          "pass": true
+          "pass": true,
+          "graded": true
         },
         "plateau_h2<5%": {
           "value": 5.762518619591793e-07,
           "limit": 0.05,
-          "pass": true
+          "pass": true,
+          "graded": true
         },
         "depth_l1<5%": {
           "value": 0.0004271934800380538,
           "limit": 0.05,
-          "pass": true
+          "pass": true,
+          "graded": true
         },
         "monotone(no_extrema)": {
           "value": 0.0,
           "limit": 0.05,
-          "pass": true
+          "pass": true,
+          "graded": true
         },
         "tv_no_growth<0.5%": {
           "value": 0.0010049771738320779,
           "limit": 0.005,
-          "pass": true
+          "pass": true,
+          "graded": true
         },
         "bore_position_modes<5%": {
           "value": 0.00021023519848000692,

@@ -21,13 +21,12 @@
    "verdict_all_pass": true,
    "graded_keys": [
     "front_fan<5%",
-    "front_wetted<5%",
     "depth_l1<5%",
     "monotone(no_extrema)",
     "tv_no_growth<0.5%",
     "front_series<5%"
    ],
-   "n_graded": 6,
+   "n_graded": 5,
    "acceptance_coverage": {
     "front_position": {
      "text": "\u6ce2\u524d\u4f4d\u7f6e x_f(t) vs \u89e3\u6790",
@@ -141,16 +140,17 @@
     }
    },
    "graded_but_undeclared": [
-    "front_wetted<5%",
     "depth_l1<5%"
    ],
-   "diagnostic_graded": [
+   "diagnostic_graded": [],
+   "demoted_diagnostics": [
     {
      "gate": "front_wetted<5%",
-     "diagnostic_name": "front_wetted_diagnostic",
      "value": 0.02890624999999991,
      "limit": 0.05,
-     "grid_n": 1600,
+     "graded": false,
+     "note": "dry-bed wetted edge: depth-floor detector, non-convergent ladder -- published for continuity, does not feed all_pass",
+     "diagnostic_name": "front_wetted_diagnostic",
      "ladder": [
       [
        100,
@@ -317,7 +317,8 @@
    "graded_but_undeclared": [
     "depth_l1<5%"
    ],
-   "diagnostic_graded": []
+   "diagnostic_graded": [],
+   "demoted_diagnostics": []
   }
  },
  "acceptance_fully_covered": true,
@@ -403,8 +404,6 @@
   "all_bit_identical": true,
   "all_pass": true
  },
- "findings": [
-  "the registered aggregate PASS is gated by a quantity the artifact bundle publishes as a non-convergent diagnostic: front_wetted<5%"
- ],
+ "findings": [],
  "disposition": "approve with notes"
 }

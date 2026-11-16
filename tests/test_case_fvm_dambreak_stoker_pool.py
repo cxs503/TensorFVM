@@ -18,6 +18,13 @@ Typed numbers go stale; this test makes the pool entry fail loudly instead:
    (the honest coarse-grid ``n = 200`` miss is recorded in ``verdict_qualified``,
    not in the gate).
 
+4. the aggregate ``all_pass`` must be the AND over *graded* entries only: the
+   dry-bed ``front_wetted<5%`` entry is a published but ungraded diagnostic
+   (``graded: false``), because the artifact bundle itself publishes that number
+   as ``front_wetted_diagnostic`` with a non-convergent ladder.  A live-solver
+   probe (``n = 100``, where the diagnostic exceeds 5 % and every graded check
+   passes) proves the aggregate no longer depends on it.
+
 The gate criteria are the case's own acceptance statement (波前位置 x_f(t) 与
 静水区水位阶跃 vs 解析，t*=2，波形单调无伪振荡，容差 <5 %), so this test is
 the machine-readable binding between the pool entry and the verified evidence.
@@ -29,6 +36,8 @@ import json
 import os
 
 import pytest
+
+from tensorfvm.shallow_water.dam_break import RITTER_DRY, graded_verdict, run_case
 
 REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 POOL_ENTRY = os.path.join(REPO_ROOT, "docs", "oss_solutions",
@@ -133,3 +142,58 @@ def test_verdict_qualified_records_coarse_grid_honesty(pool, metrics):
         checks = {k: v for k, v in verdict.items() if k != "all_pass"}
         assert all(chk["pass"] for chk in checks.values()), (
             f"{kind} n=1600 has a failing check: {verdict}")
+
+
+def test_aggregate_pass_is_graded_only(pool, metrics):
+    """``all_pass`` is the AND over graded entries; diagnostics never feed it."""
+    declared = {case["id"] for case in pool["gate_criteria"]}
+    assert declared, "the pool entry must register its gates"
+    ungraded_seen = []
+    for kind in ("ritter-dry", "stoker-wet"):
+        verdict = metrics["cases"][kind]["verdict"]
+        graded = graded_verdict(verdict)
+        assert set(graded) <= set(verdict) - {"all_pass"}
+        assert verdict["all_pass"] is bool(all(item["pass"] for item in graded.values())), (
+            f"{kind}: all_pass is not the AND over graded entries")
+        ungraded = {key: item for key, item in verdict.items()
+                    if key != "all_pass" and not item.get("graded", True)}
+        for key, item in ungraded.items():
+            ungraded_seen.append((kind, key))
+            assert item["graded"] is False
+            assert item["note"], f"{key}: an ungraded entry must say why"
+            # a published diagnostic must never be addressable as a pool gate
+            assert key not in declared
+        if kind == "stoker-wet":
+            assert ungraded == {}, "the wet bed has no diagnostic entry"
+    assert ungraded_seen == [("ritter-dry", "front_wetted<5%")], (
+        "exactly one published diagnostic is expected: the dry-bed wetted edge")
+
+
+def test_wetted_edge_diagnostic_is_published_not_graded(metrics):
+    """The wetted edge keeps its number but is excluded from the verdict."""
+    verdict = metrics["cases"]["ritter-dry"]["verdict"]
+    entry = verdict["front_wetted<5%"]
+    m = metrics["cases"]["ritter-dry"]["metrics"]
+    assert entry["value"] == pytest.approx(m["front_wetted_error"], rel=1e-12)
+    assert entry["limit"] == pytest.approx(0.05)
+    assert entry["graded"] is False
+    assert "front_wetted<5%" not in graded_verdict(verdict)
+
+
+def test_live_coarse_grid_probe_pass_does_not_ride_on_the_diagnostic():
+    """At ``n = 100`` the diagnostic fails and every graded check passes.
+
+    This is the behavioural statement the demotion buys: the aggregate PASS can
+    no longer be produced -- or destroyed -- by a non-convergent reading.  It is
+    a two-second re-run, not a number copied from the artifact.
+    """
+    run = run_case(RITTER_DRY, n=100)
+    verdict = run["verdict"]
+    assert verdict["front_wetted<5%"]["pass"] is False, (
+        "n=100 must keep failing the diagnostic honestly (8.75 %)")
+    assert verdict["front_wetted<5%"]["graded"] is False
+    graded = graded_verdict(verdict)
+    assert graded, "graded checks must exist"
+    assert all(item["pass"] for item in graded.values()), (
+        f"graded checks fail at n=100: {[k for k, v in graded.items() if not v['pass']]}")
+    assert verdict["all_pass"] is True

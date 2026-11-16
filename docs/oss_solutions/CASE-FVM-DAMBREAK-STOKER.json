@@ -3,7 +3,7 @@
  "title": "浅水溃坝 Ritter/Stoker 精确解验证（算例池）",
  "summary": "浅水方程（SWE）溃坝黎曼问题对 Ritter (1892) 干床与 Stoker (1957) 湿床闭式解的验证。波前位置 x_f(t)、静水区水位阶跃 h2/h1、整条深度剖面 L1 与波形单调性（无伪振荡）在 t*=2 对闭式解逐项判定，容差 <5%。",
  "status": "pass",
- "round": 2,
+ "round": 3,
  "external_anchor": "Ritter (1892) Z. Ver. Deutsch. Ing. 36:947-954（干床稀疏波，波前 x_f = 2t√(gh0)）；Stoker (1957) Water Waves, ch.10（湿床稀疏波+恒定态+水跃，水跃速度 U 由 Riemann 不变量确定）",
  "quantitative_targets": {
   "front_fan": {
@@ -129,6 +129,78 @@
  ],
  "repro_cmd": "PYTHONPATH=src python scripts/run_shallow_water_dam_break.py --n 1600 --resolutions 100,200,400,800,1600",
  "test_cmd": "pytest tests/test_shallow_water_dam_break.py tests/test_dambreak_stoker_series.py tests/test_shallow_water_analytic_crosscheck.py tests/test_shallow_water_2d_dam_break.py",
- "notes": "几何为 1-D 平底（无船体几何，故不适用 Cb/L/B 前置校验）。L∞ 深度误差只报告不判定（捕捉间断必然带 O(dx) 误差）。front_wetted（湿润边缘）为深度地板探测器，不收敛，仅作 legacy 诊断报告。",
- "graded_set_note": "Closure audit (docs/audit-dambreak-anchor-closure/AUDIT.md): the registered aggregate all_pass = all(_verdict[...]['pass']) is the intersection of MORE keys than the headline six listed in verdict_qualified. Per case the graded set is: ritter-dry = front_fan, front_wetted, depth_l1, monotone, tv_no_growth, front_series (6); stoker-wet = shock_position, step_ratio, plateau_h2, depth_l1, monotone, tv_no_growth, bore_position_modes, step_ratio_modes, front_series (9). Among these, front_wetted<5% is graded but the same artifact bundle publishes the quantity as 'front_wetted_diagnostic' with a NON-CONVERGENT ladder (8.75%, 1.88%, 1.56%, 2.66%, 2.89% at n=100..1600) and this entry's own notes call it a diagnostic; it is the only graded key with a margin under 12x (1.73x). The acceptance sentence's three elements do not depend on it (their weakest margin is 11.8x). No number is changed by this note; demoting the reading to diagnostic-only is a behaviour change left to a separate review."
+ "notes": "几何为 1-D 平底（无船体几何，故不适用 Cb/L/B 前置校验）。L∞ 深度误差只报告不判定（捕捉间断必然带 O(dx) 误差）。front_wetted（湿润边缘）为深度地板探测器，不收敛，仅作 legacy 诊断报告。 Round 3 (agent/m23258): front_wetted demoted from graded to published diagnostic (docs/audit-dambreak-anchor-closure/AUDIT.md sect. 5 recommendation 2); the ledger's acceptance sentence is untouched, and its three elements keep their 11.8x+ margins.",
+ "graded_set_note": {
+  "aggregate": "all_pass = AND over entries whose verdict entry does not declare graded:false (verdict.graded_verdict()).",
+  "graded_keys": {
+   "ritter-dry": [
+    "front_fan<5%",
+    "depth_l1<5%",
+    "monotone(no_extrema)",
+    "tv_no_growth<0.5%",
+    "front_series<5%"
+   ],
+   "stoker-wet": [
+    "shock_position<5%",
+    "step_ratio<5%",
+    "plateau_h2<5%",
+    "depth_l1<5%",
+    "monotone(no_extrema)",
+    "tv_no_growth<0.5%",
+    "bore_position_modes<5%",
+    "step_ratio_modes<5%",
+    "front_series<5%"
+   ]
+  },
+  "n_graded": {
+   "ritter-dry": 5,
+   "stoker-wet": 9
+  },
+  "headline_six": [
+   "front_fan",
+   "shock_position",
+   "step_ratio",
+   "depth_l1",
+   "front_series",
+   "monotone"
+  ],
+  "history": "Round 2 recorded that the registered aggregate intersected MORE keys than the six headline metrics and that ritter-dry's front_wetted<5% was graded with only a 1.73x margin while the same bundle published it as a non-convergent diagnostic (docs/audit-dambreak-anchor-closure/AUDIT.md sect. 3.2-3.3). Round 3 implements that audit's recommendation #2: the entry is published but demoted to graded:false and is out of all_pass. No reported number changed; the aggregate PASS is now the AND over graded gates only.",
+  "consequence_at_coarse_grids": "Because the only failing entry at ritter-dry n=100 was the demoted diagnostic, that grid now passes every graded gate (convergence.json: verdict_failing = [] at n=100..1600, its diagnostic reading still recorded under verdict_ungraded, 8.75 % at n=100). The wet bed is unchanged and still fails honestly: monotone(no_extrema) fails at n=100 and n=200, passes from n=400."
+ },
+ "diagnostics": {
+  "front_wetted<5%": {
+   "graded": false,
+   "published_as": "front_wetted_diagnostic (convergence.json)",
+   "value_n1600": 0.02890624999999991,
+   "limit": 0.05,
+   "ladder": [
+    [
+     100,
+     0.08749999999999991
+    ],
+    [
+     200,
+     0.018750000000000266
+    ],
+    [
+     400,
+     0.015625
+    ],
+    [
+     800,
+     0.026562499999999822
+    ],
+    [
+     1600,
+     0.02890624999999991
+    ]
+   ],
+   "ladder_monotone_decreasing": false,
+   "exceeds_tolerance_at": [
+    100
+   ],
+   "reason": "dry-bed wetted edge = outermost cell with h>0: a depth-floor detector whose error is quantised by dx and does not converge (8.75 % -> 1.56 % -> 2.89 % for n = 100 / 400 / 1600). Published for continuity only; it is not a gate and does not feed all_pass.",
+   "verdict_key_kept": true
+  }
+ }
 }

@@ -15,10 +15,14 @@
         "front_series": 0.009581422054983841,
         "front_series_graded": 11,
         "front_series_samples": 21,
-        "verdict_failing": [
-          "front_wetted<5%"
-        ],
-        "verdict_all_pass": false,
+        "verdict_failing": [],
+        "verdict_ungraded": {
+          "front_wetted<5%": {
+            "value": 0.08749999999999991,
+            "pass": false
+          }
+        },
+        "verdict_all_pass": true,
         "tv_ratio": 0.9999999996368889,
         "local_extrema": 0
       },
@@ -34,6 +38,12 @@
         "front_series_graded": 17,
         "front_series_samples": 23,
         "verdict_failing": [],
+        "verdict_ungraded": {
+          "front_wetted<5%": {
+            "value": 0.018750000000000266,
+            "pass": true
+          }
+        },
         "verdict_all_pass": true,
         "tv_ratio": 1.0,
         "local_extrema": 0
@@ -50,6 +60,12 @@
         "front_series_graded": 22,
         "front_series_samples": 25,
         "verdict_failing": [],
+        "verdict_ungraded": {
+          "front_wetted<5%": {
+            "value": 0.015625,
+            "pass": true
+          }
+        },
         "verdict_all_pass": true,
         "tv_ratio": 1.0,
         "local_extrema": 0
@@ -66,6 +82,12 @@
         "front_series_graded": 23,
         "front_series_samples": 25,
         "verdict_failing": [],
+        "verdict_ungraded": {
+          "front_wetted<5%": {
+            "value": 0.026562499999999822,
+            "pass": true
+          }
+        },
         "verdict_all_pass": true,
         "tv_ratio": 1.0,
         "local_extrema": 0
@@ -82,6 +104,12 @@
         "front_series_graded": 24,
         "front_series_samples": 25,
         "verdict_failing": [],
+        "verdict_ungraded": {
+          "front_wetted<5%": {
+            "value": 0.02890624999999991,
+            "pass": true
+          }
+        },
         "verdict_all_pass": true,
         "tv_ratio": 1.0,
         "local_extrema": 0
@@ -111,6 +139,7 @@
         "verdict_failing": [
           "monotone(no_extrema)"
         ],
+        "verdict_ungraded": {},
         "verdict_all_pass": false,
         "tv_ratio": 1.0031126222406193,
         "local_extrema": 1
@@ -129,6 +158,7 @@
         "verdict_failing": [
           "monotone(no_extrema)"
         ],
+        "verdict_ungraded": {},
         "verdict_all_pass": false,
         "tv_ratio": 1.001993480134213,
         "local_extrema": 1
@@ -145,6 +175,7 @@
         "front_series_graded": 22,
         "front_series_samples": 24,
         "verdict_failing": [],
+        "verdict_ungraded": {},
         "verdict_all_pass": true,
         "tv_ratio": 1.0013133751353185,
         "local_extrema": 0
@@ -161,6 +192,7 @@
         "front_series_graded": 24,
         "front_series_samples": 25,
         "verdict_failing": [],
+        "verdict_ungraded": {},
         "verdict_all_pass": true,
         "tv_ratio": 1.001099331022318,
         "local_extrema": 0
@@ -177,6 +209,7 @@
         "front_series_graded": 24,
         "front_series_samples": 25,
         "verdict_failing": [],
+        "verdict_ungraded": {},
         "verdict_all_pass": true,
         "tv_ratio": 1.001004977173832,
         "local_extrema": 0

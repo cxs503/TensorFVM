@@ -24,7 +24,9 @@ Metrics (predeclared, see ``docs/shallow-water-dam-break/REPORT.md``):
     by the numerical depth floor and does **not** converge under refinement
     (1.56 % -> 2.66 % -> 2.89 % -> 2.46 % for n = 400 ... 3200, while the fan
     estimator on the same states goes 0.106 % -> 0.039 % -> 0.017 % -> 0.008 %).
-    Reported in every run and in the verdict for continuity, not as a headline.
+    Reported in every run and *published in the verdict as an ungraded
+    diagnostic* (``graded: false``): it is kept for continuity with the older
+    reports, but it does not feed ``all_pass`` and is not a headline.
 
 ``step_ratio``
     The still-water level step across the bore, ``h2 / h1`` measured as the
@@ -75,6 +77,7 @@ __all__ = [
     "STOKER_WET",
     "CASES",
     "run_case",
+    "graded_verdict",
     "series_metrics",
     "convergence_study",
     "sensitivity_study",
@@ -1281,19 +1284,52 @@ def _oracle_free_verdict_entries(metrics: dict) -> dict:
     }
 
 
+def graded_verdict(verdict: dict) -> dict:
+    """The verdict entries that actually feed ``all_pass``.
+
+    An entry is graded unless it declares ``graded: false`` (the dry-bed
+    ``front_wetted`` depth-floor detector is the only such diagnostic), and
+    ``all_pass`` itself is the aggregate rather than a criterion.  Keeping this
+    filter in one place means a diagnostic can stay visible in the published
+    verdict without silently setting the strength of the aggregate PASS.
+    """
+    return {key: item for key, item in verdict.items()
+            if key != "all_pass" and item.get("graded", True)}
+
+
 def _verdict(case: DamBreakCase, metrics: dict) -> dict:
-    """Headline checks against the predeclared 5 % tolerance."""
+    """Headline checks against the predeclared 5 % tolerance.
+
+    Graded entries are the acceptance quantities; ``graded: false`` entries are
+    diagnostics published for continuity and excluded from ``all_pass``.
+    """
+    diagnostics: dict = {}
     if case.kind == "dry":
-        # ``front_wetted<5%`` is retained as a legacy diagnostic: the wetted edge
-        # is a depth-floor detector (it does not converge under refinement, see
-        # docs/verification-dam-break-front-metric/REPORT.md), so the headline is
-        # the shape-consistent fan estimator.
         checks = {
             "front_fan<5%": metrics["front_fan_error"],
-            "front_wetted<5%": metrics["front_wetted_error"],
             "depth_l1<5%": metrics["depth_l1"],
             "monotone(no_extrema)": 0.0 if metrics["local_extrema"] == 0 else 1.0,
             "tv_no_growth<0.5%": max(0.0, metrics["tv_ratio"] - 1.0),
+        }
+        # ``front_wetted`` is a *diagnostic*, not a criterion.  The wetted edge
+        # is a depth-floor detector whose error does not converge under
+        # refinement (8.75 % -> 1.56 % -> 2.89 % for n = 100 / 400 / 1600, i.e.
+        # it grows again once the cusp starts to be resolved; see
+        # docs/verification-dam-break-front-metric/REPORT.md).  Before this
+        # entry the key was graded *and* fed ``all_pass`` while the same
+        # artifact bundle published the number as
+        # ``front_wetted_diagnostic`` -- so the aggregate PASS rested on a
+        # quantity the tool itself declares unfit as a yardstick
+        # (docs/audit-dambreak-anchor-closure/AUDIT.md sect. 3.3).  It stays in
+        # the verdict (same key, same value, same 5 % reading) but with
+        # ``graded: false`` and out of the aggregate.
+        diagnostics["front_wetted<5%"] = {
+            "value": metrics["front_wetted_error"],
+            "limit": TOLERANCE,
+            "pass": bool(metrics["front_wetted_error"] <= TOLERANCE),
+            "graded": False,
+            "note": ("dry-bed wetted edge: depth-floor detector, non-convergent "
+                     "ladder -- published for continuity, does not feed all_pass"),
         }
     else:
         checks = {
@@ -1311,6 +1347,7 @@ def _verdict(case: DamBreakCase, metrics: dict) -> dict:
             "value": value,
             "limit": limits[key],
             "pass": bool(value <= limits[key]),
+            "graded": True,
         }
         for key, value in checks.items()
     }
@@ -1325,7 +1362,10 @@ def _verdict(case: DamBreakCase, metrics: dict) -> dict:
         # key keeps its meaning and history.
         verdict.update(_oracle_free_verdict_entries(metrics))
     verdict["front_series<5%"] = _series_verdict_entry(metrics)
-    verdict["all_pass"] = bool(all(item["pass"] for item in verdict.values()))
+    # diagnostics are published *after* the graded entries and never graded
+    verdict.update(diagnostics)
+    verdict["all_pass"] = bool(all(item["pass"]
+                                   for item in graded_verdict(verdict).values()))
     return verdict
 
 
@@ -1414,8 +1454,14 @@ def convergence_study(case: DamBreakCase, resolutions=(100, 200, 400, 800, 1600,
                     if case.kind == "dry"
                     else {"shock": m["shock_error"], "step": m["step_ratio_error"]})
         series = m["front_series"]
-        failing = [key for key, item in run["verdict"].items()
-                   if key != "all_pass" and not item["pass"]]
+        # only *graded* entries can fail a gate; the published diagnostics
+        # (``graded: false``) are listed separately so their reading stays
+        # visible without being mistaken for a verdict
+        failing = [key for key, item in graded_verdict(run["verdict"]).items()
+                   if not item["pass"]]
+        ungraded = {key: {"value": item["value"], "pass": item["pass"]}
+                    for key, item in run["verdict"].items()
+                    if key != "all_pass" and not item.get("graded", True)}
         rows.append({
             "n": n,
             "dx": run["discretisation"]["dx"],
@@ -1427,6 +1473,7 @@ def convergence_study(case: DamBreakCase, resolutions=(100, 200, 400, 800, 1600,
             "front_series_graded": series["samples_graded"],
             "front_series_samples": series["samples"],
             "verdict_failing": failing,
+            "verdict_ungraded": ungraded,
             "verdict_all_pass": run["verdict"]["all_pass"],
             "tv_ratio": m["tv_ratio"],
             "local_extrema": m["local_extrema"],

@@ -1,10 +1,10 @@
 {
   "acceptance": "wave-front position x_f(t) (dry bed, Ritter) and the still-water level step h2/h1 plus the bore position x_s(t) (wet bed, Stoker) within 5 % of the closed form at t* = 2, waveform monotone (no interior local extremum above 1e-4 h0)",
   "artifacts_sha256": {
-    "convergence.json": "119266c721d479d94adb82f1ced5c1dc4305d28d9a85263637b1d289e24f6dfd",
+    "convergence.json": "7b98e90177f9aae5e19ce9c84ecbabb602140a97372da84a84810b094f0b1cd3",
     "exactness.json": "13ab7d894219408a0cbd919c60a95155b015eac7a1135fe3d18b0a9a009e0980",
     "front_definitions.json": "50f7f5b626c863a26b8a3d6dd540c082701af8371b3dfdb506a22c4cc8b44515",
-    "metrics.json": "3c37c398e39b536f1c9375321c4cd10953a2ba933c11567c957b8585ea6302df",
+    "metrics.json": "3ebe49ddc3aa6d86be59858848ee77a2bcfb342156ccb8459ec9e9359798837d",
     "sensitivity.json": "b1a1d0cdf760cec0c1a0c4bacb2451dfeaad61deea33d37e05f9b0526dfff609"
   },
   "case": "CASE-FVM-DAMBREAK-STOKER",
@@ -28,7 +28,7 @@
     "pyproject.toml": "15504eea227f786cdfe875b660e31923bb0dc2d56ac6c7c31c2efe79f6c25cea",
     "scripts/run_shallow_water_dam_break.py": "e293d0af3cc90468e9deea6c8f7a153b97552e4df4715daa2d59b679e5b4ac24",
     "src/tensorfvm/shallow_water/__init__.py": "3ef6a07f73e69986dd78faf30a35fd9c223b284bd152d35eda50a2fe03b5c30e",
-    "src/tensorfvm/shallow_water/dam_break.py": "3650d97941a7ce5052cb306b5772cc873e5f10fc019c96bab0e7f0f0d03c1ce5",
+    "src/tensorfvm/shallow_water/dam_break.py": "9f6ac1846930f1f78aa79a57ce841304ca240c5d65674ac6778689aa05d1c704",
     "src/tensorfvm/shallow_water/exact.py": "d457a6c67c540cd69299b862e7cc1a8f63f1f24534df3b752b06b0f943dc3723",
     "src/tensorfvm/shallow_water/swe1d.py": "93fa18a38618aa7b3e674f527ae3e245af794b422fc122de360a2a1b681fe934"
   },

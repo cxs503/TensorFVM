@@ -67,6 +67,7 @@ __all__ = [
     "acceptance_coverage",
     "graded_but_undeclared",
     "diagnostic_graded",
+    "demoted_diagnostics",
     "orphaned_evidence",
     "reproducibility_check",
     "dossier",
@@ -130,9 +131,13 @@ def _convergence(root=None) -> dict:
 def graded_keys(verdict: dict) -> list[str]:
     """Keys whose ``pass`` feeds ``_verdict``'s aggregate ``all_pass``.
 
-    ``all_pass`` itself is excluded (it is the aggregate, not a criterion).
+    ``all_pass`` itself is excluded (it is the aggregate, not a criterion), and
+    so is every entry that declares ``graded: false``: those are diagnostics
+    published for continuity (the dry-bed wetted edge), and counting them as
+    graded is exactly the defect this dossier exists to detect.
     """
-    return [key for key in verdict if key != "all_pass"]
+    return [key for key, item in verdict.items()
+            if key != "all_pass" and item.get("graded", True)]
 
 
 def acceptance_coverage(verdict: dict) -> dict:
@@ -273,6 +278,54 @@ def diagnostic_graded(verdict: dict, convergence_case: dict,
     return findings
 
 
+def demoted_diagnostics(verdict: dict, convergence_case: dict,
+                        metrics_case: dict, tol: float) -> list[dict]:
+    """Entries published in the verdict but explicitly *not* graded.
+
+    This is the mirror image of :func:`diagnostic_graded`.  After a diagnostic is
+    demoted (``graded: false``, out of ``all_pass``) its number stays in the
+    published verdict for continuity, so the audit must keep showing *why* it is
+    not a yardstick instead of letting it vanish from the record.  Matching is by
+    value against the ``*_diagnostic`` ladder of the same artifact bundle, so a
+    rename cannot hide a re-promotion either.
+    """
+    per_quantity = _diagnostic_ladders(
+        {metrics_case["case_key"]: convergence_case}).get(metrics_case["case_key"], {})
+    n_headline = int(metrics_case.get("n") or 0)
+    rows: list[dict] = []
+    for key, entry in verdict.items():
+        if key == "all_pass" or entry.get("graded", True):
+            continue
+        value = entry.get("value")
+        if not isinstance(value, (int, float)):
+            continue
+        value = float(value)
+        row = {
+            "gate": key,
+            "value": value,
+            "limit": entry.get("limit"),
+            "graded": False,
+            "note": entry.get("note"),
+            "diagnostic_name": None,
+            "ladder": None,
+            "ladder_monotone_decreasing": None,
+            "exceeds_tolerance_at": [],
+        }
+        for quantity, ladder in per_quantity.items():
+            at_n = dict(ladder).get(n_headline)
+            if at_n is None:
+                continue
+            if value != at_n and abs(value - at_n) > 1e-12 * max(abs(at_n), 1e-300):
+                continue
+            row["diagnostic_name"] = quantity
+            row["ladder"] = ladder
+            row["ladder_monotone_decreasing"] = _is_monotone_decreasing(ladder)
+            row["exceeds_tolerance_at"] = [n for n, v in ladder if v > tol]
+            break
+        rows.append(row)
+    return rows
+
+
 # --------------------------------------------------------------------------- #
 # orphaned amendments
 # --------------------------------------------------------------------------- #
@@ -396,6 +449,8 @@ def dossier(root=None, reproduce: bool = True) -> dict:
             "acceptance_coverage": coverage,
             "graded_but_undeclared": graded_but_undeclared(verdict),
             "diagnostic_graded": diagnostic_graded(
+                verdict, convergence[case_key], metrics_case, tol),
+            "demoted_diagnostics": demoted_diagnostics(
                 verdict, convergence[case_key], metrics_case, tol),
         }
 

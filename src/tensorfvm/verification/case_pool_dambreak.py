@@ -153,6 +153,9 @@ def _criteria(case_key: str, verdict: Dict[str, Any]) -> List[Dict[str, Any]]:
             "threshold": threshold,
             "primary": is_primary,
             "pass": bool(verdict[key]["pass"]),
+            # ``graded: false`` entries are published diagnostics: they keep the
+            # number (and stay visible here) but they do not feed ``all_pass``
+            "graded": bool(verdict[key].get("graded", True)),
             "graded_by": "tensorfvm.shallow_water.dam_break._verdict",
         }
         if "samples" in verdict[key]:

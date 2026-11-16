@@ -12,12 +12,16 @@ These tests do two different jobs, and it is worth keeping them apart:
   re-derives typed numbers *from* the artifact; nothing re-runs the solver, so a
   drift between code and artifact was previously invisible.
 
-The pinned finding is deliberate, not cosmetic: ``front_wetted<5%`` feeds
-``_verdict``'s aggregate ``all_pass`` while the same artifact bundle publishes
+The pinned finding is deliberate, not cosmetic: ``front_wetted<5%`` used to feed
+``_verdict``'s aggregate ``all_pass`` while the same artifact bundle published
 the quantity as ``front_wetted_diagnostic`` with a ladder that grows under
-refinement (8.75 % -> 1.56 % -> 2.89 %).  If someone either promotes the reading
-properly or demotes it to diagnostic-only, this test fails and the audit report
-must be updated with it -- which is the point.
+refinement (8.75 % -> 1.56 % -> 2.89 %).  That promotion was the finding; the
+follow-up unit demoted the reading to an ungraded diagnostic (``graded: false``,
+out of ``all_pass``), and the tests below now pin the *demoted* state: the
+quantity must stay published, must stay visible in the dossier as demoted, must
+not be counted as a gate, and the aggregate must equal the AND over graded keys
+only.  Promoting it back (or letting any new diagnostic into the aggregate)
+fails these tests, which is the point.
 """
 
 from __future__ import annotations
@@ -53,9 +57,11 @@ def test_graded_set_is_pinned(static_dossier):
     not absorbed into the aggregate ``PASS``.
     """
     expected = {
+        # ``front_wetted<5%`` is *not* here: it is an ungraded diagnostic (see
+        # ``test_no_diagnostic_is_graded``), so it cannot set the aggregate PASS.
         "ritter-dry": {
-            "front_fan<5%", "front_wetted<5%", "depth_l1<5%",
-            "monotone(no_extrema)", "tv_no_growth<0.5%", "front_series<5%",
+            "front_fan<5%", "depth_l1<5%", "monotone(no_extrema)",
+            "tv_no_growth<0.5%", "front_series<5%",
         },
         "stoker-wet": {
             "shock_position<5%", "step_ratio<5%", "plateau_h2<5%",
@@ -67,22 +73,31 @@ def test_graded_set_is_pinned(static_dossier):
         assert set(static_dossier["cases"][case]["graded_keys"]) == keys
 
 
-def test_diagnostic_promoted_to_gate_is_front_wetted(static_dossier):
-    """The one graded-but-diagnostic quantity is ``front_wetted<5%``."""
+def test_no_diagnostic_is_graded(static_dossier):
+    """No graded-but-diagnostic quantity is left in the aggregate."""
     flagged = {
         case: {finding["gate"] for finding in case_dossier["diagnostic_graded"]}
         for case, case_dossier in static_dossier["cases"].items()
     }
-    assert flagged["ritter-dry"] == {"front_wetted<5%"}
+    assert flagged["ritter-dry"] == set()
     assert flagged["stoker-wet"] == set()
+    assert static_dossier["findings"] == []
 
-    finding = static_dossier["cases"]["ritter-dry"]["diagnostic_graded"][0]
+
+def test_wetted_edge_is_published_but_demoted(static_dossier):
+    """``front_wetted<5%`` stays visible as a demoted diagnostic, out of ``all_pass``."""
+    demoted = static_dossier["cases"]["ritter-dry"]["demoted_diagnostics"]
+    assert [row["gate"] for row in demoted] == ["front_wetted<5%"]
+    finding = demoted[0]
+    assert finding["graded"] is False
     assert finding["diagnostic_name"] == "front_wetted_diagnostic"
-    # the ladder is what disqualifies it as a yardstick: not monotone decreasing
+    # the ladder is what keeps it out of the gate set: not monotone decreasing
     assert finding["ladder_monotone_decreasing"] is False
     values = [value for _, value in finding["ladder"]]
-    assert values[-1] > values[2], "ladder must be non-convergent for the finding to hold"
+    assert values[-1] > values[2], "ladder must be non-convergent for the record to hold"
     assert finding["exceeds_tolerance_at"] == [100]
+    # the wet bed carries no demoted diagnostic
+    assert static_dossier["cases"]["stoker-wet"]["demoted_diagnostics"] == []
 
 
 def test_orphaned_amendments_are_recorded(static_dossier):

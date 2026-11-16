@@ -6,6 +6,9 @@
 **工件基线**: `metrics.json` 声明 `git_commit = be5ba335`、`generated_at = 2026-11-16T03:32:55Z`
 **可复现命令**: `PYTHONPATH=src python scripts/run_dambreak_anchor_closure.py`
 **判定**: **approve with notes**（验收句三条要素全部有活门且全绿；发现 1 条文档级缺陷 + 2 处证据孤儿，不阻塞闭合）
+**后续落地（round 3, `agent/m23258`）**: §5 建议 2 已执行 —— `front_wetted<5%` 在 `_verdict` 中降级为
+`graded: false` 的发布型诊断（移出 `all_pass`），`metrics.json` / `convergence.json` / 本审计的
+`dossier.json` 与图同批重生成。§3.3 的缺陷状态因此置为「已闭合」，见 §8。
 
 ---
 
@@ -98,9 +101,11 @@ Riemann 收敛、数值配置包络、深度比退化极限、门检出力）。
 （其余受评键余量 12×–10⁶×）。物理原因见既有 `front_definitions.json`：`wetted_edge` 是离散单元边界量
 （3.9375 / 3.89375 / 3.884375），精确前锋恰在 4.0 的网格线上，读数按 `dx` 量化而不随加密改善。
 
-**影响**：验收句三条要素**不受影响**（它们由 `front_fan` / `shock_position` / `step_ratio` / `*_modes` /
+**影响与现状（round 3 已处置）**：验收句三条要素**不受影响**（它们由 `front_fan` / `shock_position` / `step_ratio` / `*_modes` /
 `monotone` 承担，余量 12×–10⁶×）；但「注册条目 `status="pass"`」这个**聚合断言**的强度被一个工具自身
-宣布不适于评分的量拉低。属**语义/文档缺陷，非数值错误**。
+宣布不适于评分的量拉低。属**语义/文档缺陷，非数值错误**。**round 3 已落地**：该键保留原名与数值，但带 `graded: false`
+且不再进入 `all_pass`；审计侧的 `graded_keys()` 同步按 `graded` 标志过滤，dossier 新增
+`demoted_diagnostics` 记住它为何不能当标尺（阶梯、非单调、n=100 超门），证据不因降级而消失。
 
 ### 3.4 【低 · 台账】两处证据孤儿
 
@@ -132,9 +137,10 @@ Riemann 收敛、数值配置包络、深度比退化极限、门检出力）。
 1. **（已在本次改动中落地，仅文档）** 在池条目补 `graded_set_note`，显式声明聚合
    `all_pass` 依赖哪些键、其中 `front_wetted` 为不收敛诊断量。这修掉 §3.2 的 overstated claim，
    不改任何评分语义、不改任何数字。
-2. **（建议后续单）** 把 `front_wetted` 在 `_verdict` 中降级为诊断（移出 `all_pass`），并同批重生成
-   `metrics.json` / `convergence.json` 与扩充 `tests/test_case_fvm_dambreak_stoker_pool.py` 的门 id 映射——
-   这是**行为改动**，需独立评审，本次刻意不做（最小改动纪律）。
+2. **（已由 round 3 / `agent/m23258` 落地）** 把 `front_wetted` 在 `_verdict` 中降级为诊断（移出
+   `all_pass`），并同批重生成 `metrics.json` / `convergence.json` / `dossier.json` 与图；扩充
+   `tests/test_case_fvm_dambreak_stoker_pool.py`（聚合 = 仅受评键的 AND、n=100 活探针）与
+   `tests/test_dambreak_anchor_closure.py`（钉住「无受评诊断量」与「诊断仍被发布」两种状态）。
 3. **（建议后续单）** 把 §3.4 两处孤儿并入注册条目（G7/G8 + 伽利略四例），或在其来源目录写明「不拟并入」。
 
 ---
@@ -170,8 +176,35 @@ Riemann 收敛、数值配置包络、深度比退化极限、门检出力）。
 | 水位阶跃（oracle-free）`step_ratio_modes` | 4.85e-06 % | 5 % | **是** |
 | 深度 L1（两例最差） | 0.0772 % | 5 % | **是** |
 | 单调性（内部极值） | 0 | 0 | **是** |
-| **湿润边缘 `front_wetted`（诊断，受评）** | **2.891 %** | 5 % | **是（但阶梯非收敛，不可作标尺）** |
+| **湿润边缘 `front_wetted`（诊断，round 3 起不受评）** | **2.891 %** | 5 % | **是（但阶梯非收敛，不可作标尺；已移出 `all_pass`）** |
 
 **「是否 < 3 %」逐项回答：是**（最大 2.891 %，且该项为诊断量；若只计验收要素，最大 0.844 %）。
 **诚实记录**：粗网格 `n = 100` 上 `front_wetted<5%` 为 8.75 % 超门（既有 honest-FAIL，未被本审计
 修改或掩盖）；`n = 200` 湿床 1 个亚阈值内部极值亦照旧登记在 `convergence.json`。
+
+---
+
+## 8. Round 3 落地记录（`agent/m23258`，2026-11-16）
+
+§5 建议 2 已执行，证据全部由 `scripts/run_dambreak_anchor_closure.py` 与
+`scripts/run_shallow_water_dam_break.py` 重生成，无手抄数字：
+
+| 项 | 变更前 | 变更后 |
+|---|---|---|
+| `ritter-dry` 受评键数 | 6（含 `front_wetted<5%`） | **5**（`front_wetted<5%` 仅发布） |
+| `stoker-wet` 受评键数 | 9 | 9（未动） |
+| `verdict["front_wetted<5%"]` | `pass: ...`，喂 `all_pass` | `pass: ...` + **`graded: false`**，不喂 `all_pass` |
+| `all_pass` 定义 | `all(verdict.values())` | `all(graded_verdict(verdict).values())` |
+| dossier `diagnostic_graded` | 1 条（`front_wetted<5%`，余量 1.73×） | **0 条** |
+| dossier `demoted_diagnostics` | — | 1 条（同一量：阶梯 8.75 %→1.56 %→2.89 %，非单调，n=100 超门） |
+| `convergence.json` 每格登记 | `verdict_failing` + `verdict_all_pass` | 增加 `verdict_ungraded`（诊断读数仍在） |
+
+**行为后果（照实登记，不用降级救人）**：
+
+- `ritter-dry` 在 `n = 100` 的**唯一**失败项就是被降级的诊断量，因此该格现在**受评键全过**
+  （`convergence.json`：`verdict_failing = []`，同时 `verdict_ungraded.front_wetted<5%.pass = false`，
+  8.75 % 仍在案）。这是降级的真实代价面：干床粗网格不再有红灯，但红灯原本说的是「诊断量超门」而非
+  「解错」。
+- 湿床**未动**：`monotone(no_extrema)` 在 `n = 100/200` 仍如实失败，`n ≥ 400` 通过。
+- 验收句三条要素的数字与余量**一位未变**（最弱 0.844 %，余量 11.8×）。
+

@@ -47,6 +47,8 @@ def _graded_rows(dossier: dict) -> list[tuple[str, str, float, bool]]:
 def figure(dossier: dict, path: str) -> None:
     tol = float(dossier["tolerance"])
     rows = _graded_rows(dossier)
+    demoted_all = [finding for block in dossier["cases"].values()
+                   for finding in block.get("demoted_diagnostics", [])]
     floor = 1e-9
     fig, axes = plt.subplots(1, 2, figsize=(13.5, 5.4))
 
@@ -66,15 +68,15 @@ def figure(dossier: dict, path: str) -> None:
     ax.axhline(floor, color="0.7", lw=0.8)
     ax.set_ylabel("graded relative error (log)")
     ax.set_title("(a) what feeds `all_pass`: margins per graded key\n"
-                 "red = graded but published as a non-convergent diagnostic",
-                 fontsize=9)
+                 f"(0 graded diagnostics; {len(demoted_all)} demoted)", fontsize=9)
     ax.legend(fontsize=8)
     ax.grid(alpha=0.25, axis="y")
 
     ax = axes[1]
-    flagged = [finding for block in dossier["cases"].values()
-               for finding in block["diagnostic_graded"]]
-    for finding in flagged:
+    demoted = [finding for block in dossier["cases"].values()
+               for finding in block.get("demoted_diagnostics", [])
+               if finding.get("ladder")]
+    for finding in demoted:
         ns = [n for n, _ in finding["ladder"]]
         vs = [v for _, v in finding["ladder"]]
         ax.plot(ns, vs, "o-", color="#c0392b",
@@ -83,8 +85,8 @@ def figure(dossier: dict, path: str) -> None:
     ax.set_xscale("log", base=2)
     ax.set_xlabel("grid n")
     ax.set_ylabel("relative error")
-    ax.set_title("(b) the flagged quantity does not converge:\n"
-                 "8.75 % -> 1.56 % -> 2.89 % (non-monotone)", fontsize=9)
+    ax.set_title("(b) published diagnostic, ungraded: the ladder does not\n"
+                 "converge (8.75 % -> 1.56 % -> 2.89 %, non-monotone)", fontsize=9)
     ax.legend(fontsize=8)
     ax.grid(alpha=0.25, which="both")
 
