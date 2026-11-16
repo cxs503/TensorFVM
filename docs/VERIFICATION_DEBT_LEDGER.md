@@ -958,3 +958,27 @@
   `scripts/audit_dambreak_pool_provenance.py`、`tests/test_dambreak_pool_provenance.py`。
 - 教训：**锚点"物理论证厚"不等于"证据链可引用"**。下次自找活优先问「这条证据链谁能独立重跑」，
   而不是继续在同一锚点上加第 16 个物理判据。
+
+## 4t. 追加欠账（append-only，m23193 selfstart / verifier 席）
+
+### D32 CASE-FVM-DAMBREAK-STOKER 进入冻结网（D31 的 FAIL-1/FAIL-2 闭环），并查出目录 §19.1 与自身工件不一致
+- 缺口来源：D31 自己的建议——`docs/shallow-water-dam-break/` 无 `manifest.json`，溃坝算例是唯一不在
+  `tests/test_source_staleness.py` 冻结网里的验证算例；池条目缺 `dry_depth`，12 个输入只记 11 个。
+- 交付：`scripts/register_dam_break_staleness.py`（`--write/--check/--json`，digest 现算）+
+  `docs/shallow-water-dam-break/manifest.json` 与 `source-snapshot/`（6 个生产文件逐字节冻结，156 KB）+
+  重跑驱动后重生成的 `metrics.json`（新增 `dry_depth`）/`case_pool_entry.json`/目录 §19.1 +
+  `case_pool_dambreak._failing_cell_sentence`（结论句改为派生，删掉手抄的「n=200/400 (6.61 %)」）+
+  `tests/test_dambreak_staleness_registration.py`（13 测全绿，6.9 s：注册/棘轮/派生/快照完整性/漂移可见
+  + 三个负对照：篡改快照副本、缺文件、活树模式改源码，各自必须 stale）+
+  `docs/CASE-FVM-DAMBREAK-STOKER-STALENESS-NET/{REPORT.md,summary.json,fig_staleness_closure.png,make_report.py}`。
+- 关键数字：audit cases 53→54、entries 1378→1384、fresh 1253→1259、**stale 18→18（零增账）**、
+  该算例 `frozen=True / stale=False / 6-6 fresh`；`audit_dambreak_pool_provenance.py` 的 `P5_case_is_frozen`
+  由 false 翻 true（7 项检查 6 PASS + 唯一的 `P5_entry_is_generated` 因本单重生成条目而为 true）；
+  池条目 `dry_depth` 12/12 输入；重跑后判据**逐位不变**（除新增键与 wall_time/meta）。
+- 附带发现（同族欠账）：目录 §19.1 在 main 上就印着与 `convergence.json` 不符的序列误差（n=100/200/400/800
+  印 4.695/6.613/6.613/1.398 %，工件是 0.958/0.639/0.680/0.532 %），据此写下的「PASS at n≥800、
+  n=200/400 miss series」也是错的（`accepted_grid_min = 400`）。已重新生成并让结论句从 `honest_fail` 派生。
+- 明示未做（not_run）：二维/斜置溃坝的同一冻结；`hires.json`/`bore_subcell.json` 未重跑；
+- 建议：把 `scripts/audit_dambreak_pool_provenance.py` P1（当前源码 vs 存档，~5 s）接进 CI——冻结只保
+  「可重导出」，不保「源码漂移」，两条腿才闭环；另建议另立 `XVAL-FVM-DAMBREAK-THIRD-CODE`
+  （验收＝异族代码同解 L1 ≤5 %），这是 D29 以来唯一始终 not_run 的独立性轴。
