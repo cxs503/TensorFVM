@@ -57,8 +57,9 @@ def test_sparse_simple_backend_solves_assembled_system():
                        torch.as_tensor(an))
     b = torch.as_tensor(rng.random(n))
     backend = get_backend("sparse_simple", solver)
-    x = backend.solve(A, b)
-    assert np.linalg.norm(A @ x - b) / np.linalg.norm(b) < 1e-8
+    x = backend.solve(A, b)          # backend returns a numpy array
+    b_np = b.detach().cpu().numpy()
+    assert np.linalg.norm(A.toarray() @ x - b_np) / np.linalg.norm(b_np) < 1e-8
 
 
 def test_sparse_simple_backend_rejects_foreign_pattern():
