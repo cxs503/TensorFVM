@@ -128,7 +128,7 @@ def from_overset_grid(grid) -> MeshData:
     face_masks = {}
     for name, mask in grid.boundaries.items():
         cell_mask = np.asarray(mask, dtype=bool)
-        face_masks[name] = cell_mask[owner]
+        face_masks[name] = cell_mask[owner] & (neighbor < 0)
         labels[face_masks[name]] = name
     vertices = np.unique(np.vstack(polygons), axis=0)
     return MeshData(
@@ -157,7 +157,7 @@ def from_mesh2d(mesh) -> MeshData:
         labels[_torch_to_numpy(mask)] = name
     return MeshData(
         dim=2,
-        vertices=_torch_to_numpy(mesh.vertices).astype(float),
+        vertices=_torch_to_numpy(mesh.vertices).astype(float).reshape(-1, 2),
         cell_centers=_torch_to_numpy(mesh.centers).reshape(-1, 2),
         cell_volumes=_torch_to_numpy(mesh.volumes).reshape(-1),
         owner=owner,
@@ -207,7 +207,7 @@ def from_body_fitted3d(mesh) -> MeshData:
     face_centers = np.concatenate([lat_centers, sw_centers.reshape(-1, 3)])
     area_vectors = np.concatenate([lat_areas, sw_areas_vec.reshape(-1, 3)])
     sw_labels = (["spanwise_lower"] * (ny * nx)
-                 + ["spanwise_interior"] * ((local_nz - 1) * ny * nx)
+                 + ["internal"] * ((local_nz - 1) * ny * nx)
                  + ["spanwise_upper"] * (ny * nx))
     labels = np.concatenate([lat_labels, np.array(sw_labels, dtype=object)])
     return MeshData(
