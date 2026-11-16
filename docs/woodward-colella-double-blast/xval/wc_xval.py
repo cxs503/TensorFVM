@@ -431,9 +431,12 @@ def run() -> dict:
             "peak": float(p["rho"].max()),
         }
 
-    finest_fvm = max((v for v in profiles.values() if v["family"] == "fvm"),
-                     key=lambda v: v["nx"])
-    finest_tag = f"nx{finest_fvm['nx']}_hllc"
+    finest_tag = max((t for t, v in profiles.items() if v["family"] == "fvm"),
+                     key=lambda t: profiles[t]["nx"])
+    finest_fvm = profiles[finest_tag]
+    # the finest rung may only exist as a CFL-0.8 variant (CFL 0.4 at that
+    # resolution exceeded the job wall clock; see PREDECLARATION-r13.md), so
+    # the tag must be read from the stored profile, not reconstructed.
 
     budgets = {}
     for metric, key in (("l1", "l1_percent_calibrated"), ("peak", "peak_percent_calibrated")):
