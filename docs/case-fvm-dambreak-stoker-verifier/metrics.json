@@ -1,0 +1,701 @@
+{
+ "cases": {
+  "ritter-dry": {
+   "reference": "Ritter (1892) Z. Ver. Deutsch. Ing. 36:947-954",
+   "rows": [
+    {
+     "case": "ritter-dry",
+     "cfl": 0.4,
+     "clipped_cells": 0,
+     "depth_l1": 0.006226707907984375,
+     "dry_flips": 327,
+     "dt_final_steps": 171,
+     "dx": 0.05,
+     "extrema_1e-4": 0,
+     "extrema_1e-6": 0,
+     "extrema_1e-8": 0,
+     "front_exact": 4.0,
+     "front_level_05_error": 0.006062730677706281,
+     "front_level_positions": {
+      "level_0.02": {
+       "level": 0.02,
+       "relative_error": 0.025981699077396718,
+       "x_exact": 3.1514718625761433,
+       "x_measured": 3.069591268991807
+      },
+      "level_0.05": {
+       "level": 0.05,
+       "relative_error": 0.006062730677706281,
+       "x_exact": 2.6583592135001264,
+       "x_measured": 2.6744761294561767
+      },
+      "level_0.1": {
+       "level": 0.1,
+       "relative_error": 0.014944222824897161,
+       "x_exact": 2.1026334038989725,
+       "x_measured": 2.1340556260059107
+      },
+      "level_0.2": {
+       "level": 0.2,
+       "relative_error": 0.01538134853594964,
+       "x_exact": 1.3167184270002528,
+       "x_measured": 1.336971332049651
+      }
+     },
+     "front_wetted_edge": {
+      "relative_error": 0.018750000000000266,
+      "x_exact": 4.0,
+      "x_measured": 4.075000000000001
+     },
+     "graded": {
+      "depth_l1": 0.006226707907984375,
+      "front_level_05": 0.006062730677706281,
+      "monotone": 0.0
+     },
+     "initial_mass_analytic": 4.0,
+     "max_abs_velocity": 5.24334413744516,
+     "max_depth": 1.0,
+     "momentum_l1": 0.023881589191551988,
+     "monotone": true,
+     "n": 200,
+     "order": 2,
+     "pass": true,
+     "reference": "Ritter (1892) Z. Ver. Deutsch. Ing. 36:947-954",
+     "t_end": 0.638550856814101,
+     "t_star": 2.0,
+     "tolerance": 0.05,
+     "volume0": 4.0,
+     "volume_drift": 6.328271240363392e-15,
+     "worst_graded": 0.006226707907984375
+    },
+    {
+     "case": "ritter-dry",
+     "cfl": 0.4,
+     "clipped_cells": 0,
+     "depth_l1": 0.003083359774826046,
+     "dry_flips": 684,
+     "dt_final_steps": 357,
+     "dx": 0.025,
+     "extrema_1e-4": 0,
+     "extrema_1e-6": 0,
+     "extrema_1e-8": 0,
+     "front_exact": 4.0,
+     "front_level_05_error": 0.0032141323177837006,
+     "front_level_positions": {
+      "level_0.02": {
+       "level": 0.02,
+       "relative_error": 0.006838650670745849,
+       "x_exact": 3.1514718625761433,
+       "x_measured": 3.1299200474093003
+      },
+      "level_0.05": {
+       "level": 0.05,
+       "relative_error": 0.0032141323177837006,
+       "x_exact": 2.6583592135001264,
+       "x_measured": 2.666903531760515
+      },
+      "level_0.1": {
+       "level": 0.1,
+       "relative_error": 0.007492873268575042,
+       "x_exact": 2.1026334038989725,
+       "x_measured": 2.11838816952466
+      },
+      "level_0.2": {
+       "level": 0.2,
+       "relative_error": 0.007710889481160543,
+       "x_exact": 1.3167184270002528,
+       "x_measured": 1.3268714972686593
+      }
+     },
+     "front_wetted_edge": {
+      "relative_error": 0.015625,
+      "x_exact": 4.0,
+      "x_measured": 3.9375
+     },
+     "graded": {
+      "depth_l1": 0.003083359774826046,
+      "front_level_05": 0.0032141323177837006,
+      "monotone": 0.0
+     },
+     "initial_mass_analytic": 4.0,
+     "max_abs_velocity": 5.560635028749395,
+     "max_depth": 1.0,
+     "momentum_l1": 0.011760200465537825,
+     "monotone": true,
+     "n": 400,
+     "order": 2,
+     "pass": true,
+     "reference": "Ritter (1892) Z. Ver. Deutsch. Ing. 36:947-954",
+     "t_end": 0.638550856814101,
+     "t_star": 2.0,
+     "tolerance": 0.05,
+     "volume0": 4.0,
+     "volume_drift": 1.021405182655144e-14,
+     "worst_graded": 0.0032141323177837006
+    },
+    {
+     "case": "ritter-dry",
+     "cfl": 0.4,
+     "clipped_cells": 0,
+     "depth_l1": 0.001541900345059549,
+     "dry_flips": 1423,
+     "dt_final_steps": 739,
+     "dx": 0.0125,
+     "extrema_1e-4": 0,
+     "extrema_1e-6": 0,
+     "extrema_1e-8": 0,
+     "front_exact": 4.0,
+     "front_level_05_error": 0.0016101632746026652,
+     "front_level_positions": {
+      "level_0.02": {
+       "level": 0.02,
+       "relative_error": 0.00388039790043453,
+       "x_exact": 3.1514718625761433,
+       "x_measured": 3.1392428977773243
+      },
+      "level_0.05": {
+       "level": 0.05,
+       "relative_error": 0.0016101632746026652,
+       "x_exact": 2.6583592135001264,
+       "x_measured": 2.662639605876406
+      },
+      "level_0.1": {
+       "level": 0.1,
+       "relative_error": 0.0037484616619335733,
+       "x_exact": 2.1026334038989725,
+       "x_measured": 2.1105150446025887
+      },
+      "level_0.2": {
+       "level": 0.2,
+       "relative_error": 0.0038513460335136414,
+       "x_exact": 1.3167184270002528,
+       "x_measured": 1.3217895652913345
+      }
+     },
+     "front_wetted_edge": {
+      "relative_error": 0.026562499999999822,
+      "x_exact": 4.0,
+      "x_measured": 3.8937500000000007
+     },
+     "graded": {
+      "depth_l1": 0.001541900345059549,
+      "front_level_05": 0.0016101632746026652,
+      "monotone": 0.0
+     },
+     "initial_mass_analytic": 4.0,
+     "max_abs_velocity": 5.791294556278881,
+     "max_depth": 1.0,
+     "momentum_l1": 0.005890498327233734,
+     "monotone": true,
+     "n": 800,
+     "order": 2,
+     "pass": true,
+     "reference": "Ritter (1892) Z. Ver. Deutsch. Ing. 36:947-954",
+     "t_end": 0.638550856814101,
+     "t_star": 2.0,
+     "tolerance": 0.05,
+     "volume0": 4.0,
+     "volume_drift": 1.7541523789077473e-14,
+     "worst_graded": 0.0016101632746026652
+    },
+    {
+     "case": "ritter-dry",
+     "cfl": 0.4,
+     "clipped_cells": 0,
+     "depth_l1": 0.0007715065657631024,
+     "dry_flips": 2931,
+     "dt_final_steps": 1513,
+     "dx": 0.00625,
+     "extrema_1e-4": 0,
+     "extrema_1e-6": 0,
+     "extrema_1e-8": 0,
+     "front_exact": 4.0,
+     "front_level_05_error": 0.0008094769348070068,
+     "front_level_positions": {
+      "level_0.02": {
+       "level": 0.02,
+       "relative_error": 0.001937510477789074,
+       "x_exact": 3.1514718625761433,
+       "x_measured": 3.1453658528219446
+      },
+      "level_0.05": {
+       "level": 0.05,
+       "relative_error": 0.0008094769348070068,
+       "x_exact": 2.6583592135001264,
+       "x_measured": 2.6605110939678864
+      },
+      "level_0.1": {
+       "level": 0.1,
+       "relative_error": 0.0018754739843669294,
+       "x_exact": 2.1026334038989725,
+       "x_measured": 2.106576838146646
+      },
+      "level_0.2": {
+       "level": 0.2,
+       "relative_error": 0.0019253028223603684,
+       "x_exact": 1.3167184270002528,
+       "x_measured": 1.3192535087040103
+      }
+     },
+     "front_wetted_edge": {
+      "relative_error": 0.02890624999999991,
+      "x_exact": 4.0,
+      "x_measured": 3.8843750000000004
+     },
+     "graded": {
+      "depth_l1": 0.0007715065657631024,
+      "front_level_05": 0.0008094769348070068,
+      "monotone": 0.0
+     },
+     "initial_mass_analytic": 4.0,
+     "max_abs_velocity": 5.953014751767239,
+     "max_depth": 1.0,
+     "momentum_l1": 0.002951082284224663,
+     "monotone": true,
+     "n": 1600,
+     "order": 2,
+     "pass": true,
+     "reference": "Ritter (1892) Z. Ver. Deutsch. Ing. 36:947-954",
+     "t_end": 0.638550856814101,
+     "t_star": 2.0,
+     "tolerance": 0.05,
+     "volume0": 4.0,
+     "volume_drift": 3.2307490016592055e-14,
+     "worst_graded": 0.0008094769348070068
+    }
+   ]
+  },
+  "stoker-wet": {
+   "reference": "Stoker (1957) Water Waves, ch. 10 (bore on a wet bed)",
+   "rows": [
+    {
+     "case": "stoker-wet",
+     "cfl": 0.4,
+     "clipped_cells": 0,
+     "depth_l1": 0.003416831303130537,
+     "dry_flips": 0,
+     "dt_final_steps": 115,
+     "dx": 0.05,
+     "extrema_1e-4": 1,
+     "extrema_1e-6": 8,
+     "extrema_1e-8": 12,
+     "graded": {
+      "depth_l1": 0.003416831303130537,
+      "monotone": 1.0,
+      "shock_position": 0.0029093608362709003,
+      "step_ratio": 0.00018084800824295347
+     },
+     "initial_mass_analytic": 7.0,
+     "max_abs_velocity": 0.925208183135706,
+     "max_depth": 1.0,
+     "measured_h1": 0.5,
+     "measured_h2": 0.7267889840724424,
+     "measured_step_ratio": 1.4535779681448848,
+     "momentum_l1": 0.027652732514916553,
+     "monotone": false,
+     "n": 200,
+     "order": 2,
+     "pass": false,
+     "plateau_overshoot": {
+      "h_max": 0.7268084368220631,
+      "h_min": 0.7266877341790422,
+      "overshoot": -0.00011200936522337557,
+      "overshoot_fraction": -0.00011200936522337557
+     },
+     "plateau_window": [
+      -0.22018092601552786,
+      1.189457221953416
+     ],
+     "reference": "Stoker (1957) Water Waves, ch. 10 (bore on a wet bed)",
+     "shock_position": {
+      "relative_error": 0.0029093608362709003,
+      "x_exact": 1.8887811500316989,
+      "x_measured": 1.8942762959378878
+     },
+     "step_ratio_error": 0.00018084800824295347,
+     "stoker_independent": {
+      "h2": 0.7269204461872865,
+      "shock_speed": 2.957918120187525,
+      "step_ratio": 1.453840892374573,
+      "tail_speed": -1.7470460997075454,
+      "u2": 0.9233639019770798
+     },
+     "t_end": 0.638550856814101,
+     "t_star": 2.0,
+     "tolerance": 0.05,
+     "volume0": 7.0,
+     "volume_drift": 3.1720657846433046e-15,
+     "worst_graded": 1.0
+    },
+    {
+     "case": "stoker-wet",
+     "cfl": 0.4,
+     "clipped_cells": 0,
+     "depth_l1": 0.0017303304323634978,
+     "dry_flips": 0,
+     "dt_final_steps": 230,
+     "dx": 0.025,
+     "extrema_1e-4": 0,
+     "extrema_1e-6": 1,
+     "extrema_1e-8": 8,
+     "graded": {
+      "depth_l1": 0.0017303304323634978,
+      "monotone": 0.0,
+      "shock_position": 0.0015995809445916876,
+      "step_ratio": 3.091656275262055e-05
+     },
+     "initial_mass_analytic": 7.0,
+     "max_abs_velocity": 0.9245033080123932,
+     "max_depth": 1.0,
+     "measured_h1": 0.5,
+     "measured_h2": 0.7268979723056957,
+     "measured_step_ratio": 1.4537959446113915,
+     "momentum_l1": 0.014291134288400932,
+     "monotone": true,
+     "n": 400,
+     "order": 2,
+     "pass": true,
+     "plateau_overshoot": {
+      "h_max": 0.7269082984578381,
+      "h_min": 0.7268626353377554,
+      "overshoot": -1.2147729448352962e-05,
+      "overshoot_fraction": -1.2147729448352962e-05
+     },
+     "plateau_window": [
+      -0.2864243979080514,
+      1.165726806275845
+     ],
+     "reference": "Stoker (1957) Water Waves, ch. 10 (bore on a wet bed)",
+     "shock_position": {
+      "relative_error": 0.0015995809445916876,
+      "x_exact": 1.8887811500316989,
+      "x_measured": 1.8918024083677936
+     },
+     "step_ratio_error": 3.091656275262055e-05,
+     "stoker_independent": {
+      "h2": 0.7269204461872865,
+      "shock_speed": 2.957918120187525,
+      "step_ratio": 1.453840892374573,
+      "tail_speed": -1.7470460997075454,
+      "u2": 0.9233639019770798
+     },
+     "t_end": 0.638550856814101,
+     "t_star": 2.0,
+     "tolerance": 0.05,
+     "volume0": 7.0,
+     "volume_drift": 4.821539992657823e-15,
+     "worst_graded": 0.0017303304323634978
+    },
+    {
+     "case": "stoker-wet",
+     "cfl": 0.4,
+     "clipped_cells": 0,
+     "depth_l1": 0.0008510840146864187,
+     "dry_flips": 0,
+     "dt_final_steps": 459,
+     "dx": 0.0125,
+     "extrema_1e-4": 0,
+     "extrema_1e-6": 1,
+     "extrema_1e-8": 20,
+     "graded": {
+      "depth_l1": 0.0008510840146864187,
+      "monotone": 0.0,
+      "shock_position": 0.00043300042413196567,
+      "step_ratio": 5.549231678027875e-07
+     },
+     "initial_mass_analytic": 7.0,
+     "max_abs_velocity": 0.9241692447949663,
+     "max_depth": 1.0,
+     "measured_h1": 0.5,
+     "measured_h2": 0.7269200428022897,
+     "measured_step_ratio": 1.4538400856045794,
+     "momentum_l1": 0.006830553079701822,
+     "monotone": true,
+     "n": 800,
+     "order": 2,
+     "pass": true,
+     "plateau_overshoot": {
+      "h_max": 0.7269268914889369,
+      "h_min": 0.7269022314111353,
+      "overshoot": 6.445301650392921e-06,
+      "overshoot_fraction": 6.445301650392921e-06
+     },
+     "plateau_window": [
+      -0.3197877517323111,
+      1.1531367448030667
+     ],
+     "reference": "Stoker (1957) Water Waves, ch. 10 (bore on a wet bed)",
+     "shock_position": {
+      "relative_error": 0.00043300042413196567,
+      "x_exact": 1.8887811500316989,
+      "x_measured": 1.889598993070755
+     },
+     "step_ratio_error": 5.549231678027875e-07,
+     "stoker_independent": {
+      "h2": 0.7269204461872865,
+      "shock_speed": 2.957918120187525,
+      "step_ratio": 1.453840892374573,
+      "tail_speed": -1.7470460997075454,
+      "u2": 0.9233639019770798
+     },
+     "t_end": 0.638550856814101,
+     "t_star": 2.0,
+     "tolerance": 0.05,
+     "volume0": 7.0,
+     "volume_drift": 7.866723145915395e-15,
+     "worst_graded": 0.0008510840146864187
+    },
+    {
+     "case": "stoker-wet",
+     "cfl": 0.4,
+     "clipped_cells": 0,
+     "depth_l1": 0.00042719348003805377,
+     "dry_flips": 0,
+     "dt_final_steps": 918,
+     "dx": 0.00625,
+     "extrema_1e-4": 0,
+     "extrema_1e-6": 2,
+     "extrema_1e-8": 36,
+     "graded": {
+      "depth_l1": 0.00042719348003805377,
+      "monotone": 0.0,
+      "shock_position": 0.0002102734246723165,
+      "step_ratio": 1.33398972225097e-06
+     },
+     "initial_mass_analytic": 7.0,
+     "max_abs_velocity": 0.9238979162728562,
+     "max_depth": 1.0,
+     "measured_h1": 0.5,
+     "measured_h2": 0.7269214158916906,
+     "measured_step_ratio": 1.4538428317833811,
+     "momentum_l1": 0.0034085040272643532,
+     "monotone": true,
+     "n": 1600,
+     "order": 2,
+     "pass": true,
+     "plateau_overshoot": {
+      "h_max": 0.7269259191855209,
+      "h_min": 0.7269121666650884,
+      "overshoot": 5.472998234390403e-06,
+      "overshoot_fraction": 5.472998234390403e-06
+     },
+     "plateau_window": [
+      -0.3456741723718566,
+      1.1442274828844297
+     ],
+     "reference": "Stoker (1957) Water Waves, ch. 10 (bore on a wet bed)",
+     "shock_position": {
+      "relative_error": 0.0002102734246723165,
+      "x_exact": 1.8887811500316989,
+      "x_measured": 1.8891783105125726
+     },
+     "step_ratio_error": 1.33398972225097e-06,
+     "stoker_independent": {
+      "h2": 0.7269204461872865,
+      "shock_speed": 2.957918120187525,
+      "step_ratio": 1.453840892374573,
+      "tail_speed": -1.7470460997075454,
+      "u2": 0.9233639019770798
+     },
+     "t_end": 0.638550856814101,
+     "t_star": 2.0,
+     "tolerance": 0.05,
+     "volume0": 7.0,
+     "volume_drift": 1.3195793664116147e-14,
+     "worst_graded": 0.00042719348003805377
+    }
+   ]
+  }
+ },
+ "instruments": {
+  "negative_control": {
+   "ritter-dry": {
+    "case": "ritter-dry",
+    "depth_l1_vs_wrong_reference": 0.3333335009385457,
+    "rejected": true
+   },
+   "stoker-wet": {
+    "case": "stoker-wet",
+    "depth_l1_vs_wrong_reference": 0.12021996336687323,
+    "rejected": true
+   }
+  },
+  "shift": [
+   {
+    "injected_fraction_of_travel": -0.05294419631322651,
+    "injected_shift": -0.1,
+    "recovered_shift": -0.10000011700350897,
+    "recovery_relative_error": 1.1700350896481915e-06
+   },
+   {
+    "injected_fraction_of_travel": -0.026472098156613257,
+    "injected_shift": -0.05,
+    "recovered_shift": -0.050000117003508926,
+    "recovery_relative_error": 2.3400701784637157e-06
+   },
+   {
+    "injected_fraction_of_travel": 0.026472098156613257,
+    "injected_shift": 0.05,
+    "recovered_shift": 0.04999988299649116,
+    "recovery_relative_error": 2.340070176798381e-06
+   },
+   {
+    "injected_fraction_of_travel": 0.05294419631322651,
+    "injected_shift": 0.1,
+    "recovered_shift": 0.09999988299649099,
+    "recovery_relative_error": 1.170035090203303e-06
+   }
+  ],
+  "step": [
+   {
+    "applied_scale": 0.98,
+    "recovered_h2_scale": 0.9429500212872884,
+    "recovered_step_factor": 0.9429500212872884,
+    "recovery_relative_error": 0.037806100727256674,
+    "step_ratio_base": 1.4538428317833811,
+    "step_ratio_perturbed": 1.370901129178511
+   },
+   {
+    "applied_scale": 0.99,
+    "recovered_h2_scale": 0.9780516731574574,
+    "recovered_step_factor": 0.9780516731574574,
+    "recovery_relative_error": 0.012069017012669237,
+    "step_ratio_base": 1.4538428317833811,
+    "step_ratio_perturbed": 1.4219334141337119
+   },
+   {
+    "applied_scale": 1.01,
+    "recovered_h2_scale": 1.0099998484701627,
+    "recovered_step_factor": 1.0099998484701627,
+    "recovery_relative_error": 1.500295419252031e-07,
+    "step_ratio_base": 1.4538428317833811,
+    "step_ratio_perturbed": 1.4683810398006472
+   },
+   {
+    "applied_scale": 1.02,
+    "recovered_h2_scale": 1.0199997165083101,
+    "recovered_step_factor": 1.0199997165083101,
+    "recovery_relative_error": 2.77933029314537e-07,
+    "step_ratio_base": 1.4538428317833811,
+    "step_ratio_perturbed": 1.4829192762666876
+   }
+  ],
+  "wiggle": [
+   {
+    "amplitude_over_h0": 1.0,
+    "amplitude_threshold": 1.0,
+    "baseline_extrema": 0,
+    "cells": 2,
+    "per_cell_prominence_ratio": 9999.999999999998,
+    "prominence": 0.0001
+   },
+   {
+    "amplitude_over_h0": 0.01,
+    "amplitude_threshold": 0.01,
+    "baseline_extrema": 2,
+    "cells": 2,
+    "per_cell_prominence_ratio": 9999.999999999998,
+    "prominence": 1e-06
+   },
+   {
+    "amplitude_over_h0": 0.00014107384582026904,
+    "amplitude_threshold": 0.00014107384582026904,
+    "baseline_extrema": 0,
+    "cells": 4,
+    "per_cell_prominence_ratio": 0.4131957279269131,
+    "prominence": 0.0001
+   },
+   {
+    "amplitude_over_h0": 1.3120598667666366e-06,
+    "amplitude_threshold": 1.3120598667666366e-06,
+    "baseline_extrema": 2,
+    "cells": 4,
+    "per_cell_prominence_ratio": 0.38429343765322976,
+    "prominence": 1e-06
+   },
+   {
+    "amplitude_over_h0": 0.0003694309850650305,
+    "amplitude_threshold": 0.0003694309850650305,
+    "baseline_extrema": 0,
+    "cells": 8,
+    "per_cell_prominence_ratio": 0.28121259287965966,
+    "prominence": 0.0001
+   },
+   {
+    "amplitude_over_h0": 3.5746901903555553e-06,
+    "amplitude_threshold": 3.5746901903555553e-06,
+    "baseline_extrema": 2,
+    "cells": 8,
+    "per_cell_prominence_ratio": 0.2721070884171823,
+    "prominence": 1e-06
+   }
+  ]
+ },
+ "jump_conditions": {
+  "mass_relative": 0.0,
+  "mass_residual": 0.0,
+  "middle_state_scalar_residual": 2.7755575615628914e-17,
+  "momentum_relative": 2.2367852826499026e-16,
+  "momentum_residual": -8.881784197001252e-16,
+  "rarefaction_invariant_defect": 0.0
+ },
+ "meta": {
+  "generated_at": "2026-11-16T02:19:41Z",
+  "git_commit": "99ca1653",
+  "numpy": "2.4.6",
+  "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+  "python": "3.11.6",
+  "resolutions": [
+   200,
+   400,
+   800,
+   1600
+  ],
+  "script": "scripts/run_dambreak_independent_verifier.py",
+  "t_star": 2.0,
+  "tolerance": 0.05,
+  "wall_time_s": 16.76
+ },
+ "oracle_crosscheck": {
+  "cases": {
+   "ritter-dry": {
+    "constants": {},
+    "max_depth_diff_scaled": 2.220446049250313e-16,
+    "max_velocity_diff_scaled": 0.0
+   },
+   "stoker-wet": {
+    "constants": {
+     "h2": {
+      "mine": 0.7269204461872865,
+      "relative": 0.0,
+      "shipped": 0.7269204461872865
+     },
+     "shock_speed": {
+      "mine": 2.957918120187525,
+      "relative": 0.0,
+      "shipped": 2.957918120187525
+     },
+     "step_ratio": {
+      "mine": 1.453840892374573,
+      "relative": 0.0,
+      "shipped": 1.453840892374573
+     },
+     "tail_speed": {
+      "mine": -1.7470460997075454,
+      "relative": 0.0,
+      "shipped": -1.7470460997075454
+     },
+     "u2": {
+      "mine": 0.9233639019770798,
+      "relative": 0.0,
+      "shipped": 0.9233639019770798
+     }
+    },
+    "max_depth_diff_scaled": 2.220446049250313e-16,
+    "max_velocity_diff_scaled": 0.0
+   }
+  },
+  "oracle_agrees": true,
+  "t_star": 2.0
+ }
+}
