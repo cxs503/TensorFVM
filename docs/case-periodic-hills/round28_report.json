@@ -1,0 +1,13 @@
+{
+  "title": "CASE-FVM-PERIODIC-HILLS Round 28: Reference Data Correction & SST Production Limiter",
+  "summary": "修正周期山丘算例参考数据源（二次来源→ERCOFTAC KB一次DNS数据），启用SST-2003生产限制器解决nu_t/nu=342过度扩散问题。集群作业cj4417已递交。",
+  "scenario_key": "CASE-FVM-PERIODIC-HILLS",
+  "mission_id": 22825,
+  "tags": ["periodic-hills", "SST", "reference-data", "production-limiter", "ERCOFTAC", "TensorFVM"],
+  "markdown": "# CASE-FVM-PERIODIC-HILLS · Round 28\n\n## 核心成果\n\n### 1. 参考数据修正（实质增量）\n- **修正前**：`test_periodic_hill_breuer2009.py` 使用 `periodic_hill_round6` 二次来源\n  - x_r/H = 5.34（Volpiani et al. 2021 转引）\n  - 速度剖面：手工数字化，x/H=2.0 处 u/U_b = 0.25（**错误**）\n- **修正后**：使用 `periodic_hill_reference` 一次来源（ERCOFTAC KB DNS 数据文件）\n  - x_r/H = 5.41（作者 Rapp/Breuer/Manhart/Peller 直接发布）\n  - 速度剖面：DNS 数据文件，x/H=2.0 处 u/U_b = -0.0912（正确，分离泡内回流）\n\n### 2. SST 生产限制器\n- Round 11 诊断：SST 闭包因生产项无限制导致 nu_t/nu = 342（超扩散 13x）\n- 本单启用 SST-2003 标准生产限制器 `P_k ≤ 10 β* k ω`\n- 小网格验证（16×8，200 步）：nu_t/nu 从 3.0 仅增至 3.8（受控）\n- 集群作业 cj4417：96×48 Re=2800 完整计算已递交\n\n### 3. 测试验证\n- 14 tests passed（test_periodic_hill_breuer2009.py + test_periodic_hill_reference.py）\n- 新增测试：`test_reference_uses_primary_data_not_legacy`、`test_admissible_stations_exclude_hill_body`\n\n## 参考数据差异量化\n\n| 站 x/H | 旧值（round 6） | DNS 值 | 相对误差 |\n|--------|----------------|--------|----------|\n| 1.0 | -0.02 | -0.0461 | 130% |\n| 2.0 | 0.25 | -0.0912 | **374%** |\n| 3.0 | 0.65 | 0.0041 | **15750%** |\n| 4.0 | 0.85 | 0.1198 | **609%** |\n\n旧表在分离泡区域（x/H < 3）完全错误——把回流区（负速度）写成了正速度。\n\n## 产物清单\n- `tests/test_periodic_hill_breuer2009.py`（修改）\n- `scripts/round28_sst_production_limiter.py`（新增）\n- `docs/case-periodic-hills/ROUND28.md`（新增）\n- Commit: 839bed92\n\n## 待完成\n- cj4417 回执后更新 round28_sst_prodlim.json 和最终 verdict",
+  "figures": [],
+  "commit": "839bed92",
+  "cluster_job": "cj4417",
+  "tests_passed": 14,
+  "timestamp": "2026-11-13T00:00:00Z"
+}
