@@ -1,30 +1,30 @@
 # High-resolution dam-break extension (auto-generated)
 
-generated: 2026-11-14T14:01:59Z  commit: `c6d11630`  tolerance: 5%
+generated: 2026-11-16T07:26:18Z  commit: `91413c9d`  tolerance: 5%
 
 ## ritter-dry — headline = front_fan (fan-shape estimator at t*=2)
 
 | n | dx [m] | x_f(t) series | graded | headline | depth L1 | verdict failing | wall [s] |
 |---|---|---|---|---|---|---|---|
-| 800 | 0.0125 | 1.398% | 24/25 | 0.039% | 0.1542% | — | 1.2 |
-| 1600 | 0.00625 | 0.425% | 24/25 | 0.017% | 0.0772% | — | 3.0 |
-| 3200 | 0.003125 | 0.380% | 24/25 | 0.008% | 0.0386% | — | 7.7 |
-| 6400 | 0.0015625 | 0.267% | 24/25 | 0.004% | 0.0193% | — | 23.2 |
+| 800 | 0.0125 | 0.532% | 23/25 | 0.039% | 0.1542% | — | 1.0 |
+| 1600 | 0.00625 | 0.425% | 24/25 | 0.017% | 0.0772% | — | 2.9 |
+| 3200 | 0.003125 | 0.380% | 24/25 | 0.008% | 0.0386% | — | 8.2 |
+| 6400 | 0.0015625 | 0.267% | 24/25 | 0.004% | 0.0193% | — | 22.8 |
 
 * observed order (depth L1): 0.9992248819539148
-* observed order (x_f(t) series): 0.7316461613484639
+* observed order (x_f(t) series): 0.31333007366267634
 * observed order (headline): 1.090296434500497
 * series decay: finest ratio 0.7035582806276643 → at floor = False
-* series max over accepted grids (n>=800): 1.3976% (all pass: True)
+* series max over accepted grids (n>=800): 0.5317% (all pass: True)
 
 ## stoker-wet — headline = shock_position (oracle-windowed, AUDIT F4)
 
 | n | dx [m] | x_f(t) series | graded | headline | depth L1 | verdict failing | wall [s] |
 |---|---|---|---|---|---|---|---|
-| 800 | 0.0125 | 0.795% | 24/25 | 0.043% | 0.0851% | — | 0.7 |
-| 1600 | 0.00625 | 0.844% | 24/25 | 0.021% | 0.0427% | — | 1.7 |
-| 3200 | 0.003125 | 0.429% | 24/25 | 0.016% | 0.0219% | — | 4.6 |
-| 6400 | 0.0015625 | 0.205% | 24/25 | 0.006% | 0.0105% | — | 13.8 |
+| 800 | 0.0125 | 0.795% | 24/25 | 0.043% | 0.0851% | — | 0.6 |
+| 1600 | 0.00625 | 0.844% | 24/25 | 0.021% | 0.0427% | — | 1.5 |
+| 3200 | 0.003125 | 0.429% | 24/25 | 0.016% | 0.0219% | — | 4.2 |
+| 6400 | 0.0015625 | 0.205% | 24/25 | 0.006% | 0.0105% | — | 13.2 |
 
 * observed order (depth L1): 1.0041914164574552
 * observed order (x_f(t) series): 0.6840435098665504
