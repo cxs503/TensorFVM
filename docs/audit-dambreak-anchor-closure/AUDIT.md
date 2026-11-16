@@ -99,7 +99,10 @@ Riemann 收敛、数值配置包络、深度比退化极限、门检出力）。
 （3.9375 / 3.89375 / 3.884375），精确前锋恰在 4.0 的网格线上，读数按 `dx` 量化而不随加密改善。
 
 **影响**：验收句三条要素**不受影响**（它们由 `front_fan` / `shock_position` / `step_ratio` / `*_modes` /
-`monotone` 承担，余量 12×–10⁶×）；但「注册条目 `status="pass"`」这个**聚合断言**的强度被一个工具自身
+`monotone` 承担），但它们的**余量下限**并不是 12×：把验收集的 `front_series<5%` 与
+`tv_no_growth<0.5%` 计入后，验收要素的最弱余量为 **4.98×**（`stoker-wet tv_no_growth<0.5%`），
+仅计 5% 门时为 5.92×（`stoker-wet front_series<5%`），最强为 `step_ratio_modes<5%` 的
+1.03×10⁶×（见 §8 勘误）。「注册条目 `status="pass"`」这个**聚合断言**的强度被一个工具自身
 宣布不适于评分的量拉低。属**语义/文档缺陷，非数值错误**。
 
 ### 3.4 【低 · 台账】两处证据孤儿
@@ -152,7 +155,9 @@ Riemann 收敛、数值配置包络、深度比退化极限、门检出力）。
 ![closure](closure.png)
 
 (a) 喂进 `all_pass` 的每个受评键的对数余量（虚线=5 % 门）；红柱是「受评但被工件自身发布为非收敛诊断」
-的 `front_wetted<5%`，余量仅 1.73×，而其余键为 12×–10⁶×。
+的 `front_wetted<5%`，余量仅 1.73× —— 它是全表最小，但**并非唯一低于 12×**：`stoker-wet
+tv_no_growth<0.5%` 4.98×、`stoker-wet front_series<5%` 5.92×、`ritter-dry front_series<5%`
+11.77× 同样在内（本句 2026-11-16 勘误，原写「其余键为 12×–10⁶×」，见 §8）。
 (b) `front_wetted_diagnostic` 的加密阶梯：8.75 % → 1.56 % → 2.89 %，**非单调**、n≥400 后上升，
 故它不构成标尺——这正是把它留在聚合里的问题。
 
@@ -175,3 +180,38 @@ Riemann 收敛、数值配置包络、深度比退化极限、门检出力）。
 **「是否 < 3 %」逐项回答：是**（最大 2.891 %，且该项为诊断量；若只计验收要素，最大 0.844 %）。
 **诚实记录**：粗网格 `n = 100` 上 `front_wetted<5%` 为 8.75 % 超门（既有 honest-FAIL，未被本审计
 修改或掩盖）；`n = 200` 湿床 1 个亚阈值内部极值亦照旧登记在 `convergence.json`。
+
+---
+
+## 8. 勘误（2026-11-16 · 余量口径）
+
+本轮复核池条目里**余量**类的散文数字时发现三处 overstated claim。它们都是**叙述错误**，
+不是数值错误：每个被引用的数字本身都能从工件重算出来，被夸大的是「这个数字说明了什么」。
+
+| 位置 | 原文 | 重算结果 | 判定 |
+|---|---|---|---|
+| 条目 `verdict_qualified` | headline 六项「100x+ margin」 | 最弱 5.92×（`stoker-wet front_series<5%`），`ritter-dry depth_l1` 亦仅 64.81× | **不成立**，已撤回 |
+| 条目 `graded_set_note` | `front_wetted<5%` 是「唯一余量低于 12×」的受评键 | 低于 12× 的有 **4** 个：1.73× / 4.98× / 5.92× / 11.77× | **不成立**，已撤回 |
+| 条目 `graded_set_note` | 验收三要素「最弱余量 11.8×」 | 4.98×（`stoker-wet tv_no_growth<0.5%`）；11.8× 只是 `ritter-dry front_series` 一个键的余量 | **不成立**，已撤回 |
+| 本文件 §3.3 与 §6 图注 | 「其余键 12×–10⁶×」 | 同上，最强 1.03×10⁶×，但下限不是 12× | 已在本轮改写 |
+
+**根因**（两处，均属「散文数字无人看守」）：
+
+1. 余量表从未被注入：条目只把 `n = 1600` 的误差写进 `key_results`，而 `limit/value` 的余量全靠手抄；
+2. 条目引用的**第二份工件包** `docs/case-fvm-dambreak-stoker/artifacts/reproduction.json`
+   （`verdict_qualified` 的粗网格陈述就出自它）此前**没有任何门禁读取**——`tests/`、`scripts/`、
+   `src/` 里都没有它的出现，所以粗网格那句话也无人复核。
+
+**整改**（本轮落地，均为加性、不改任何工件数字）：
+
+| 手段 | 位置 | 作用 |
+|---|---|---|
+| 派生块 `probe_ladder` | 池条目 | 由 `reproduction.json` 注入：每格 probe 误差、失败网格、首个通过网格 |
+| 派生块 `gate_margins` | 池条目 | 由 `metrics.json` 注入：全部受评键的 value/limit/margin、`under_2x`/`under_12x`、最小余量、验收要素最弱余量 |
+| 绑定+重推导模块 | `src/tensorfvm/verification/dambreak_pool_claims.py` | 散文里的 `%` / `Nx` / `n>=K` / 集合枚举 / only/weakest 语义全部回推工件 |
+| 唯一写入器 + CLI 门 | `scripts/audit_dambreak_pool_claims.py` | `--write` 注入派生块；`--check` 有任一不可推导即 exit 1 |
+| 绑定测试 | `tests/test_case_fvm_dambreak_stoker_pool.py` | 16 项，含把**撤回的原文**作为负控（必须被拒） |
+| 粗网格漂移门 | `tests/test_dambreak_probe_ladder_reproduction.py` | 重跑 `verify_reference.py --quick`，n<=800 的 probe 逐位 1e-12 复现 |
+
+**误差判定不变**：本轮不改任何误差值；`n = 1600` 各判据仍全部通过（最差 `front_series` 0.844 %，
+远低于 5 %）。改变的只是余量叙述：最弱余量从「11.8×」修正为「4.98×」，即比原叙述**更保守**。
