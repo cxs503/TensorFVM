@@ -1,0 +1,396 @@
+{
+  "status": "not_measured",
+  "gates_all_pass": true,
+  "cfl_admission_pass": false,
+  "missing_rungs": [
+    12800
+  ],
+  "E0_genuineness": {
+    "800": {
+      "tag": "nx800_artifacts",
+      "source": "docs/woodward-colella-double-blast/artifacts/wc_blast_profile_nx800.npz",
+      "cells": 480,
+      "dx": 0.0012499999999999734,
+      "dx_expect": 0.00125,
+      "dx_rel_error": 2.1337098754514727e-14,
+      "rho_min": 0.17815881313768966,
+      "rho_max": 6.189783163404389,
+      "all_finite": true,
+      "positive": true,
+      "steps": null,
+      "seconds_solver": null,
+      "cfl": null,
+      "mass_drift": null,
+      "positivity_fixes": null,
+      "metrics_available": false,
+      "checks": {
+        "E0a_dx": true,
+        "E0b_positive_finite": true
+      },
+      "pass": true
+    },
+    "1600": {
+      "tag": "nx1600_hllc",
+      "source": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx1600_hllc.npz",
+      "cells": 1600,
+      "dx": 0.0006249999999999867,
+      "dx_expect": 0.000625,
+      "dx_rel_error": 2.1337098754514727e-14,
+      "rho_min": 0.14630981231119472,
+      "rho_max": 6.466034495852625,
+      "all_finite": true,
+      "positive": true,
+      "steps": 6383,
+      "seconds_solver": 328.76,
+      "cfl": 0.4,
+      "mass_drift": 6.661338147750939e-16,
+      "positivity_fixes": 0,
+      "metrics_available": true,
+      "checks": {
+        "E0a_dx": true,
+        "E0a_cells": true,
+        "E0b_positive_finite": true,
+        "E0b_steps_seconds": true,
+        "E0c_mass_drift": true,
+        "E0c_cfl_matches_tag": true
+      },
+      "pass": true
+    },
+    "3200": {
+      "tag": "nx3200_hllc",
+      "source": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx3200_hllc.npz",
+      "cells": 3200,
+      "dx": 0.00031249999999999334,
+      "dx_expect": 0.0003125,
+      "dx_rel_error": 2.1337098754514727e-14,
+      "rho_min": 0.14582156440826677,
+      "rho_max": 6.507512067468936,
+      "all_finite": true,
+      "positive": true,
+      "steps": 12803,
+      "seconds_solver": 1056.16,
+      "cfl": 0.4,
+      "mass_drift": 0.0,
+      "positivity_fixes": 0,
+      "metrics_available": true,
+      "checks": {
+        "E0a_dx": true,
+        "E0a_cells": true,
+        "E0b_positive_finite": true,
+        "E0b_steps_seconds": true,
+        "E0c_mass_drift": true,
+        "E0c_cfl_matches_tag": true
+      },
+      "pass": true
+    },
+    "6400": {
+      "tag": "nx6400_hllc",
+      "source": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx6400_hllc.npz",
+      "cells": 6400,
+      "dx": 0.00015624999999999667,
+      "dx_expect": 0.00015625,
+      "dx_rel_error": 2.1337098754514727e-14,
+      "rho_min": 0.14557976273857112,
+      "rho_max": 6.46215579111805,
+      "all_finite": true,
+      "positive": true,
+      "steps": 25655,
+      "seconds_solver": 2678.63,
+      "cfl": 0.4,
+      "mass_drift": 8.267532377399175e-16,
+      "positivity_fixes": 0,
+      "metrics_available": true,
+      "checks": {
+        "E0a_dx": true,
+        "E0a_cells": true,
+        "E0b_positive_finite": true,
+        "E0b_steps_seconds": true,
+        "E0c_mass_drift": true,
+        "E0c_cfl_matches_tag": true
+      },
+      "pass": true
+    }
+  },
+  "E1_cfl_graded": null,
+  "E1r_cfl_reference": null,
+  "ladder": {
+    "800": {
+      "tag": "nx800_artifacts",
+      "l1_percent": 6.04637469380747,
+      "l1_percent_independent": 6.118322633517803,
+      "peak_percent": 4.137433449202928,
+      "mass_percent": 0.13573533229865206,
+      "peak_density": 6.189783163404389
+    },
+    "1600": {
+      "tag": "nx1600_hllc",
+      "l1_percent": 3.2991872280843064,
+      "l1_percent_independent": 3.3213855326787125,
+      "peak_percent": 0.12711644935098154,
+      "mass_percent": 0.04844295062660518,
+      "peak_density": 6.466034495852625
+    },
+    "3200": {
+      "tag": "nx3200_hllc",
+      "l1_percent": 1.7755695233074968,
+      "l1_percent_independent": 1.7936367317901485,
+      "peak_percent": 0.7581503704227888,
+      "mass_percent": 0.008249981604795112,
+      "peak_density": 6.507512067468936
+    },
+    "6400": {
+      "tag": "nx6400_hllc",
+      "l1_percent": 0.8931133000818933,
+      "l1_percent_independent": 0.8956913930845282,
+      "peak_percent": 0.04441609824140254,
+      "mass_percent": 0.00022110307590208827,
+      "peak_density": 6.46215579111805
+    }
+  },
+  "orders": {
+    "800->1600": {
+      "coarse_l1": 6.04637469380747,
+      "fine_l1": 3.2991872280843064,
+      "p": 0.8739597327161053,
+      "monotone": true
+    },
+    "1600->3200": {
+      "coarse_l1": 3.2991872280843064,
+      "fine_l1": 1.7755695233074968,
+      "p": 0.8938288019172993,
+      "monotone": true
+    },
+    "3200->6400": {
+      "coarse_l1": 1.7755695233074968,
+      "fine_l1": 0.8931133000818933,
+      "p": 0.9913667389828908,
+      "monotone": true
+    }
+  },
+  "floor": {
+    "finest_pair": "3200->6400",
+    "order": 0.9913667389828908,
+    "e_inf_percent_raw": -0.8824562232256034,
+    "floor_detected": false,
+    "floor_class": "NO_FLOOR_DETECTED",
+    "predicted_l1_percent": {
+      "12800": 0.44923691036176394
+    }
+  },
+  "E2_prediction": {
+    "predicted_percent": 0.449,
+    "band_percent": [
+      0.38165,
+      0.51635
+    ],
+    "measured_percent": 0.8931133000818933,
+    "deviation_percent_of_prediction": 98.91164812514326,
+    "hit": false,
+    "order_within_band": true,
+    "monotone": true
+  },
+  "E3_certified": {
+    "nx": 6400,
+    "l1_below_1pct": true,
+    "peak_below_1pct": true,
+    "certified_under_1pct": true,
+    "scope": "vs self-certified WENO5@12800, NOT vs the exact solution"
+  },
+  "E4_honest_ceiling": {
+    "status": "measured",
+    "reference_pair": [
+      {
+        "nx": 6400,
+        "tag": "nx6400_weno5",
+        "cfl": 0.4
+      },
+      {
+        "nx": 12800,
+        "tag": "nx12800_weno5",
+        "cfl": 0.4,
+        "l1_vs_prev_percent": 0.5437447852294209,
+        "p_vs_prev": null
+      },
+      {
+        "nx": 25600,
+        "tag": "nx25600_weno5_cfl0.8",
+        "cfl": 0.8,
+        "l1_vs_prev_percent": 0.2989301622488238,
+        "p_vs_prev": 0.8631211865514393
+      }
+    ],
+    "e_percent": 0.2989301622488238,
+    "p_ref": 0.8631211865514393,
+    "ratio_sequence": [
+      0.5497618926546521
+    ],
+    "asymptotic": {
+      "R": 0.549762,
+      "monotone": true,
+      "formal_order_weno5": 5.0,
+      "order_ratio": 0.17262423731028786,
+      "asymptotic": false,
+      "order": 0.8631211865514393
+    },
+    "bars": {
+      "e_percent": 0.29893,
+      "order": 0.863121,
+      "ratio": 0.549762,
+      "B0": {
+        "label": "point-order Richardson",
+        "eps_percent": 0.365,
+        "assumption": "measured order p is exact"
+      },
+      "B1": {
+        "label": "order band p+-0.25",
+        "eps_percent": 0.5645,
+        "eps_lo_percent": 0.257,
+        "spread_percent": 0.3075,
+        "assumption": "order uncertain by +-0.25, propagated"
+      },
+      "B2": {
+        "label": "GCI Fs=1.25",
+        "eps_percent": 0.4563,
+        "assumption": "ASME V&V-20: asymptotic range reached (R<1, p stable)"
+      },
+      "B3": {
+        "label": "non-asymptotic Fs=3",
+        "eps_percent": 1.095,
+        "assumption": "Roache: observed order not yet asymptotic"
+      },
+      "B4": {
+        "label": "order-free Cauchy (e/(1-r))",
+        "eps_percent": 0.6639,
+        "licensed": true,
+        "ratio_sequence": [
+          0.549762
+        ],
+        "assumption": "difference series geometric with non-increasing ratio"
+      }
+    },
+    "rows": [
+      {
+        "nx": 800,
+        "l1_percent": 6.0464,
+        "pointwise_l1_percent": null,
+        "upper_bound_percent": {
+          "B0": 6.4114,
+          "B1": 6.6109,
+          "B2": 6.5027,
+          "B3": 7.1414,
+          "B4": 6.7103
+        }
+      },
+      {
+        "nx": 1600,
+        "l1_percent": 3.2992,
+        "pointwise_l1_percent": null,
+        "upper_bound_percent": {
+          "B0": 3.6642,
+          "B1": 3.8637,
+          "B2": 3.7555,
+          "B3": 4.3942,
+          "B4": 3.9631
+        }
+      },
+      {
+        "nx": 3200,
+        "l1_percent": 1.7756,
+        "pointwise_l1_percent": null,
+        "upper_bound_percent": {
+          "B0": 2.1406,
+          "B1": 2.3401,
+          "B2": 2.2319,
+          "B3": 2.8706,
+          "B4": 2.4395
+        }
+      },
+      {
+        "nx": 6400,
+        "l1_percent": 0.8931,
+        "pointwise_l1_percent": null,
+        "upper_bound_percent": {
+          "B0": 1.2581,
+          "B1": 1.4576,
+          "B2": 1.3494,
+          "B3": 1.9881,
+          "B4": 1.557
+        }
+      }
+    ],
+    "finest": {
+      "nx": 6400,
+      "l1_percent": 0.8931,
+      "pointwise_l1_percent": null,
+      "upper_bound_percent": {
+        "B0": 1.2581,
+        "B1": 1.4576,
+        "B2": 1.3494,
+        "B3": 1.9881,
+        "B4": 1.557
+      }
+    },
+    "verdicts": {
+      "B0": {
+        "E4": "pass",
+        "E5": "fail",
+        "ledger": "pass"
+      },
+      "B1": {
+        "E4": "pass",
+        "E5": "fail",
+        "ledger": "pass"
+      },
+      "B2": {
+        "E4": "pass",
+        "E5": "fail",
+        "ledger": "pass"
+      },
+      "B3": {
+        "E4": "fail",
+        "E5": "fail",
+        "ledger": "pass"
+      },
+      "B4": {
+        "E4": "fail",
+        "E5": "fail",
+        "ledger": "pass"
+      }
+    },
+    "critical_order": {
+      "e_percent": 0.29893,
+      "l1_graded_percent": 0.8931,
+      "bars": {
+        "E4": {
+          "bar": 1.5,
+          "p_star": 0.5778,
+          "headroom_percent": 0.6069
+        },
+        "E5": {
+          "bar": 1.0,
+          "p_star": 1.9247,
+          "headroom_percent": 0.1069
+        }
+      }
+    },
+    "b0_below_1pct": false,
+    "caveat": "reference-side 12800 rung is the CFL 0.8 variant (admitted=False)",
+    "licensed": false,
+    "license_note": "\u53c2\u8003\u6863\u8de8 CFL \u53e3\u5f84\uff08\u6df7\u5408\u4eea\u5668\uff09\u21d2 eps_ref \u8bb0\u4e3a\u63a2\u9488\uff1aCFL \u4fa7\u5f71\u54cd\u4ee5\u5df2\u6d4b CFL \u654f\u611f\u6027\u4e3a\u4e0a\u754c\uff08cfl_scaling_local.json\uff0c0.048\u20130.056 % \u91cf\u7ea7\uff09\uff0c\u8fdc\u5c0f\u4e8e\u8be5\u5bf9\u5dee\u5546\uff0c\u6545 eps_ref \u7684\u4e00\u9636\u503c\u662f\u53ef\u4fe1\u7684\uff0c\u4f46\u4e0d\u5f97\u5f53\u4f5c\u5df2\u8ba4\u8bc1\u7684\u8bef\u5dee\u68d2"
+  },
+  "independent_check_max_abs_diff_percent": 0.07194793971033242,
+  "improvement_3200_to_finest_percent": 49.69989694246278,
+  "bars": {
+    "ledger": 15.0,
+    "three": 3.0,
+    "certified": 1.0
+  },
+  "adjudication": "\u672c\u8f6e\u4e0d\u88c1\u51b3\uff1a\u5165\u573a\u95e8\u6216\u5de5\u4ef6\u95e8\u672a\u8fc7\uff08\u89c1 E0/E1\uff09",
+  "figures": [
+    {
+      "path": "/root/tp-agent/work/m22566/docs/XVAL-FVM-M18737-ROUND2/figures/fig_r13_certified_rung.png",
+      "name": "fig_r13_certified_rung.png",
+      "caption": "(a) \u88ab\u5b9a\u7ea7\u65cf L1 \u9636\u68af\uff08\u542b nx=12800 \u5b9e\u6d4b\uff09\u4e0e\u5e42\u5f8b\u9884\u6d4b\u30011 % / 15 % \u5224\u636e\u7ebf\uff1b(b) \u4e94\u79cd\u8bef\u5dee\u68d2\u53e3\u5f84\u4e0b\u7684\u8bda\u5b9e\u4e0a\u754c\uff08L1 + eps_ref\uff0c\u53c2\u8003\u4fa7\u53d6\u65b0\u6863\u4f4d\uff09\uff1b(c) CFL 0.4 vs 0.8 \u7684\u540c\u683c\u51c6\u5165\u63a7\u5236\u4e0e 0.2 % \u9608\u503c\u3002"
+    }
+  ]
+}
