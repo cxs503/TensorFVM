@@ -1,0 +1,176 @@
+{
+  "anchor": "XVAL-FVM-M18737-ROUND2",
+  "round": 16,
+  "instrument": {
+    "family": "WENO5 + SSP-RK3 + Rusanov",
+    "cfl": 0.8,
+    "rungs": [
+      6400,
+      12800,
+      25600
+    ],
+    "admission": "R15 E1r6400=0.0231% / E1r@12800=0.0255% (<0.2% gate)"
+  },
+  "e0_artifact_gate": {
+    "profile_present": true,
+    "metrics_present": true,
+    "nx": 25600,
+    "cfl": 0.8,
+    "status": "ok",
+    "profile_length": 25600,
+    "pass": true
+  },
+  "frozen": {
+    "E2_pD_band": [
+      1.85,
+      2.15
+    ],
+    "E2b_ratio_band": [
+      0.45,
+      0.55
+    ],
+    "E2c_xpeak_band": [
+      0.7,
+      0.85
+    ],
+    "E2d_rel_net_mass_max": 0.0001
+  },
+  "pairs_cfl08": [
+    {
+      "coarse_nx": 6400,
+      "fine_nx": 12800,
+      "max_abs_D": 0.000724203774549887,
+      "x_peak": 0.7648046875,
+      "w_eff_coarse_cells": 476.69240819614623,
+      "rel_net_mass": 5.616194569741951e-06,
+      "d_w1_percent": 0.005766793702726263,
+      "d_l1_percent": 0.5503410371461043
+    },
+    {
+      "coarse_nx": 12800,
+      "fine_nx": 25600,
+      "max_abs_D": 0.000473955145511488,
+      "x_peak": 0.76478515625,
+      "w_eff_coarse_cells": 739.5206854198742,
+      "rel_net_mass": 2.4578632476402248e-06,
+      "d_w1_percent": 0.002927245897267254,
+      "d_l1_percent": 0.2998659281932666
+    }
+  ],
+  "criteria": {
+    "E2": {
+      "quantity": "p_D = log2( max|D|(6400->12800) / max|D|(12800->25600) )",
+      "max_abs_D_6400_12800": 0.000724203774549887,
+      "max_abs_D_12800_25600": 0.000473955145511488,
+      "p_D": 0.611645165327768,
+      "band": [
+        1.85,
+        2.15
+      ],
+      "verdict": "FALSIFIED"
+    },
+    "E2b": {
+      "quantity": "max|D|(12800->25600) / max|D|(6400->12800)",
+      "ratio": 0.6544499796429043,
+      "band": [
+        0.45,
+        0.55
+      ],
+      "verdict": "FAIL"
+    },
+    "E2c": {
+      "quantity": "x_peak(12800->25600)",
+      "x_peak": 0.76478515625,
+      "band": [
+        0.7,
+        0.85
+      ],
+      "verdict": "PASS"
+    },
+    "E2d": {
+      "quantity": "rel_net_mass(12800->25600)",
+      "rel_net_mass": 2.4578632476402248e-06,
+      "max": 0.0001,
+      "verdict": "PASS"
+    },
+    "E2e": {
+      "quantity": "max|D| monotone decreasing on the CFL 0.8 ladder",
+      "sequence": [
+        0.000724203774549887,
+        0.000473955145511488
+      ],
+      "verdict": "PASS"
+    }
+  },
+  "crosscheck_cfl04_sequence": [
+    {
+      "coarse_nx": 1600,
+      "fine_nx": 3200,
+      "max_abs_D": 0.002086920898378841,
+      "x_peak": 0.79796875,
+      "w_eff_coarse_cells": 172.47312012452716,
+      "rel_net_mass": 2.890939475902432e-05,
+      "d_w1_percent": 0.024061705644762628,
+      "d_l1_percent": 1.8429598576828172
+    },
+    {
+      "coarse_nx": 3200,
+      "fine_nx": 6400,
+      "max_abs_D": 0.0011269515470658312,
+      "x_peak": 0.764765625,
+      "w_eff_coarse_cells": 302.87468262865775,
+      "rel_net_mass": 1.246907839654969e-05,
+      "d_w1_percent": 0.011405149576093511,
+      "d_l1_percent": 0.9843989883727804
+    },
+    {
+      "coarse_nx": 6400,
+      "fine_nx": 12800,
+      "max_abs_D": 0.0007197911559912067,
+      "x_peak": 0.7648046875,
+      "w_eff_coarse_cells": 478.4361180164746,
+      "rel_net_mass": 5.091935034999136e-06,
+      "d_w1_percent": 0.005752619221262608,
+      "d_l1_percent": 0.5527051633228957
+    }
+  ],
+  "crosscheck_graded_sequence": [
+    {
+      "nx": 1600,
+      "max_abs_D": 0.0045086517053647005,
+      "x_peak": 0.7647265625,
+      "rel_net_mass": 2.417295969155974e-05
+    },
+    {
+      "nx": 3200,
+      "max_abs_D": 0.002351750115192417,
+      "x_peak": 0.7646484375,
+      "rel_net_mass": 9.323968968447675e-06
+    },
+    {
+      "nx": 6400,
+      "max_abs_D": 0.0010784520482430362,
+      "x_peak": 0.7645703125,
+      "rel_net_mass": 2.212987253129458e-06
+    }
+  ],
+  "crosscheck_note": "R5 'next hand' numbers (0.004509/0.002352/0.001078) are the GRADED family (hllc vs weno5@12800); the frozen E2 criterion is on the REFERENCE family (weno5 self-pairs). Both are reported; E2 adjudicates the reference family.",
+  "crosscheck_mixed_pair": {
+    "coarse_nx": 12800,
+    "fine_nx": 25600,
+    "max_abs_D": 0.00046558294280790214,
+    "x_peak": 0.76478515625,
+    "w_eff_coarse_cells": 745.2393378500317,
+    "rel_net_mass": 1.9231334633869448e-06,
+    "d_w1_percent": 0.0028977737196247168,
+    "d_l1_percent": 0.3032385364892029,
+    "note": "mixed-instrument probe (12800 CFL 0.4 -> 25600 CFL 0.8), not a gate"
+  },
+  "cfl08_orders": {
+    "p_w1": 0.9782254718825456,
+    "p_w1_source": "none",
+    "p_l1": 0.8760083022633517
+  },
+  "verdict": "FALSIFIED",
+  "all_supporting_pass": false
+}

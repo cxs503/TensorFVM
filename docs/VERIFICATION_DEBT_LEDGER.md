@@ -982,3 +982,28 @@
 - 建议：把 `scripts/audit_dambreak_pool_provenance.py` P1（当前源码 vs 存档，~5 s）接进 CI——冻结只保
   「可重导出」，不保「源码漂移」，两条腿才闭环；另建议另立 `XVAL-FVM-DAMBREAK-THIRD-CODE`
   （验收＝异族代码同解 L1 ≤5 %），这是 D29 以来唯一始终 not_run 的独立性轴。
+
+## 4l. 追加欠账（append-only，2026-11-16）
+### D24 XVAL-FVM-M18737-ROUND2 第七轮：E2（max|D| 的 h^1 收缩）在 25600 档被**否证**——参考族自差比 h^1 收缩更慢且趋势变差；并发现 R5 预注册的类别误差（m23342，selfstart）
+- 缺口来源：`W1-NORM-CERTIFICATION.md`「给下一手」第 3 条（= D21 的可检验预测，判据 E2 在
+  `PREDECLARATION-r7.md`/`PREDECLARATION-r10.md` 冻结：`p_D = log2(max|D|(6400→12800)/max|D|(12800→25600)) ∈ [1.85,2.15]`）。
+  R7/R10 两轮 E2 均 `not_measured`（当时 25600 档不在库）；25600 档此后以 CFL 0.8 变体回填（R15 已用并过 E1r6400 门），
+  但 E2 本身从未被测量。
+- 本单做法（**零新算力**，全部由已存 npz 重新积分；判据先冻结于 `PREDECLARATION-r16.md`）：
+  在**同仪器**（CFL 0.8）参考阶梯 6400/12800/25600 上测 E2；度量一律调用 `wc_w1_norm` 同一实现。
+- 交付：`docs/XVAL-FVM-M18737-ROUND2/{PREDECLARATION-r16.md, wc_w1_r16_flux_defect.py, r16_flux_defect.json,
+  render_r16_doc.py, R16-FLUX-DEFECT-CLOSURE.md, figures/fig_r16_flux_defect.png}`
+  + `tests/test_wc_r16_flux_defect.py`（11 测全绿，4.4 s）。
+- **否定结论（可复用）**：E2 **FALSIFIED**——`max|D|(6400→12800)=0.000724`、`max|D|(12800→25600)=0.000474`
+  ⇒ `p_D = 0.6116`（带 [1.85,2.15] 之外）；参考族比值趋势 **1.852→1.565→1.528**（逐档变小，越细收缩越慢）。
+  即参考族（WENO5）自差**不是**纯 O(h) 量，与 R6（p≈0.8 非渐近）、R14 B3 honest FAIL 一致：
+  参考族误差棒不能用 h^1 外推低估。定位不变：x_peak=0.7648（对撞区，E2c PASS）、
+  rel_net_mass=2.46e-6（非守恒缺陷，E2d PASS）。
+- **预注册类别误差（本单发现）**：R5 引用的 0.004509→0.002352→0.001078（比值 1.917/2.181）是**被定级族**
+  （hllc vs weno5@12800）的 max|D|；而 E2 判据定义在**参考族**自差上，其先验 `≈0.000539(=0.001078/2)`
+  误用了被定级族的 0.001078（参考族 6400→12800 实测 0.000720/0.000724）。无论按哪个口径，
+  实测 0.000474 都不在 h^1 预测（0.000360 或 0.000539）附近。
+- **未收口（明示）**：certified 裁决不改变（仍 `CERTIFIED_UNDER_1PCT_AT_NX12800 | HONEST_UNDER_1PCT_B0_B1_B2_B4`，
+  总账 <15 % PASS）；「慢收缩成分」的阵面归属未分解。
+- 给下次：① 逐阵面分解 (12800→25600) 的 D(x)（接触间断最可疑——无耗散机制）；② 25600 CFL 0.4 档回填后
+  分离空间/时间误差；③ 可信参考走异族代码（CLAWPACK/pyclaw，D22 ③）。
