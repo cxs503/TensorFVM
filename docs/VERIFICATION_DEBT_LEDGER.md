@@ -903,3 +903,31 @@
 - **未完成（honest）**: n=256 仍未测（本轮 `cj4441` 递交后长时间排队，未在时限内落盘）→
   四层阶与 `order_stderr` 继续 `None`，不报任何四层数字；建议下次以"文本优先"方式重投，
   并先跑 `--max-outer-iterations 1` 内存探针。
+
+## 4r. 追加欠账（append-only，m22998 selfstart / verifier 席）
+
+### D30 CASE-FVM-DAMBREAK-STOKER 的数值配置包络——CFL/阶数稳健，**深度下限是隐藏的自变量**
+- 缺口来源：池条目只声明 `n = 1600`，把 `cfl = 0.4 / order = 2 / dry_depth = 1e-12` 当默认值；
+  `shallow_water.robustness` 扫的是物理不变性（平移/边界/域长/相似缩比），**`dry_depth` 这个绝对长度
+  从未被变化过**，而求解器在五处（`set_state`/`primitive`/`_face_states`/`_hll_flux.dry_pair`/`_sanitise`）
+  用它定义干床前沿的被测速度场与通量——即 D29 速度腿 open FAIL 的成因之一。
+- 交付：`src/tensorfvm/verification/dambreak_config_envelope.py`（三轴扫描 + 硬失效门 + 包络证书 +
+  `floor_diagnostics`/`analytic_tip_length`/`hidden_mass_instrument_error`）
+  + `scripts/run_dambreak_config_envelope.py`（artifacts 全部程序注入，~60 s 单核）
+  + `tests/test_dambreak_config_envelope.py`（14 测全绿，9.7 s）
+  + `docs/case-fvm-dambreak-stoker-config-envelope/{REPORT.md, SUMMARY.md, metrics.json,
+  proposed_pool_amendment.json, fig_*.png×4}`；
+  `dam_break.run_case` 仅新增 `dry_depth` 透传（默认 = 求解器默认，池数字逐位不变，测试钉住）。
+- 关键数字：CFL ∈ {0.1…0.95} **8/8 全绿**（干床 `front_fan` 3.958e-4→1.714e-4，0.1↔0.4 只差 1.2 % ⇒ 池点读数不受 Δt 污染；
+  0.6→0.95 改善 2.3×，故度量在池带外 CFL 依赖）；阶数 1 与 2 **都全绿**（一阶 `depth_l1` 差 5.0×，5 % 门是二阶误差的 13 倍
+  ⇒ 池门分辨不出格式阶）；深度下限轴 **首破 `front_wetted<5%` 于 `dry_depth = 1e-6`**（n=1600 上 6.64 %，n=800 上 8.28 %），
+  认证带 `[1e-15, 1e-9]` 对加密稳健；出厂 `1e-12` 只剩 1.7× 余量；`1e-2` 时 headline `front_fan` 吃掉 92 % 预算（4.58e-2）、
+  `5e-2` 时读数无定义（硬失效）。湿床对该轴免疫（h ≥ 0.5，`floored_cells = 0`）。
+  下限**改动力学而非只改读数**：湿边后退 0.194 m（floor 1e-9）远大于几何薄层 `3t√(g·floor) = 1.9e-4 m`（~1000×），
+  扣除本征后退 0.031 m 后，下限驱动部分对几何薄层长度的 log–log 斜率 ≈ 0.35（经验律，一条网格族）。
+  仪器有效域：藏水量读数在薄层 ≳ 若干格时才可信（`floor ≥ 1e-3` → 误差 3.6 %；`1e-2` → 2.5e-5；`1e-6`（薄层 < 1 格）→ 100 %）。
+  负对照（下限设到解析水深之上）被正确判错：干床 NaN 读数 + 3 伪极值 + L1 16.1 %，湿床水跃 13.0 % + 3 伪极值。
+- 明示未做（not_run）：二维/斜置溃坝的同一轴；`t* > 2` 与下限的耦合；异族代码交叉；
+  湿床 `h1 < floor` 退化区（本单湿床下限全部 ≪ h1，仅负对照越界）。
+- 建议总账动作：把 `proposed_pool_amendment.json` 的 `configuration` + `certified_band` 合入池条目；
+  `CASE-FVM-DAMBREAK-STOKER` 可升 `verified`（理由已从「数字都通过」变为「数字在其声明的配置带内通过」）。
