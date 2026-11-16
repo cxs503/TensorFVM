@@ -1,0 +1,47 @@
+{
+ "generated_at": "2026-11-16 09:43:25",
+ "repo": "/srv/tensor/agent/work/m23278",
+ "gitdir": "/srv/tensor/workspace/TensorFVM/.git",
+ "git_head": "cc0ba3b0",
+ "git_branch": "agent/m23278",
+ "pack_params": {
+  "window": 10,
+  "depth": 50,
+  "threads": 6
+ },
+ "reachable": {
+  "n_objects": 31360,
+  "n_blobs": 16411,
+  "blob_MiB": 2047.92,
+  "by_type": {
+   "blob": {
+    "n": 16411,
+    "MiB": 2047.92
+   },
+   "commit": {
+    "n": 2195,
+    "MiB": 1.65
+   },
+   "tree": {
+    "n": 12754,
+    "MiB": 77.04
+   }
+  },
+  "inpack_MiB": 1368.48
+ },
+ "baseline_keepall_pack_MiB": 1344.73,
+ "scenarios": [
+  {
+   "tag": "R5b",
+   "desc": "阈值：删 docs 下 >=512 KiB 的 blob",
+   "dropped_blobs": 843,
+   "dropped_MiB": 1467.71,
+   "kept_MiB": 580.21,
+   "measured_pack_MiB": 351.18,
+   "reduction_pct": 73.88,
+   "exclusive_inpack_MiB": 998.96,
+   "n_surviving_objects": 30517
+  }
+ ],
+ "elapsed_s": 10.2
+}
