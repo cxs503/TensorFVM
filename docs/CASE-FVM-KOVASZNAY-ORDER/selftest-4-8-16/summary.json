@@ -196,7 +196,12 @@
     "pass_inplane": false,
     "pair_orders_consistent": true,
     "three_level_order": 1.4243212684046636,
-    "corroborated": false
+    "corroborated": false,
+    "ladder_order": null,
+    "ladder_order_stderr": null,
+    "ladder_order_above_threshold": null,
+    "ladder_all_windows_above_threshold": null,
+    "ladder_windows_consistent": null
   },
   "pair_consistency": {
     "velocity_full": {
@@ -297,6 +302,11 @@
       "gci": 1396774.4411018428
     }
   },
+  "order_uncertainty": {
+    "velocity_full": null,
+    "velocity_inplane": null,
+    "pressure_meanfree": null
+  },
   "provenance": {
     "runner": "scripts/verify_kovasznay_order.py",
     "summarizer": "scripts/summarize_kovasznay_32_64_128.py",
@@ -304,9 +314,51 @@
     "recompute_rtol": 1e-10,
     "configuration": {
       "reynolds": 40.0,
-      "symmetry_closure": null,
+      "symmetry_closure": "free",
       "convection_order": 2,
       "algorithm": "coupled"
+    },
+    "metadata": {
+      "closure": "free",
+      "declared": {
+        "4": null,
+        "8": null,
+        "16": null
+      },
+      "from_fields": {
+        "4": "free",
+        "8": "free",
+        "16": "free"
+      },
+      "metadata_complete": false,
+      "reconstructed": [
+        {
+          "key": "symmetry_closure",
+          "levels": [
+            4,
+            8,
+            16
+          ],
+          "reconstructed": "free",
+          "evidence": {
+            "4": {
+              "declared": null,
+              "max_abs_z_velocity": 0.03137440232984367,
+              "reconstructed": "free"
+            },
+            "8": {
+              "declared": null,
+              "max_abs_z_velocity": 0.018954599689623625,
+              "reconstructed": "free"
+            },
+            "16": {
+              "declared": null,
+              "max_abs_z_velocity": 0.009413573327409101,
+              "reconstructed": "free"
+            }
+          }
+        }
+      ]
     }
   }
 }
