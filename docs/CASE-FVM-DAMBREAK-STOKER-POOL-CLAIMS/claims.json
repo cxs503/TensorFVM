@@ -1,0 +1,250 @@
+{
+ "pool_entry": "docs/oss_solutions/CASE-FVM-DAMBREAK-STOKER.json",
+ "probe_ladder": {
+  "artifact": "docs/case-fvm-dambreak-stoker/artifacts/reproduction.json",
+  "probe": "fan_head",
+  "tolerance": 0.05,
+  "accepted_n": 800,
+  "resolutions": [
+   200,
+   400,
+   800,
+   1600
+  ],
+  "relative_error": {
+   "stoker-wet": {
+    "200": 0.1054134754675036,
+    "400": 0.05779049412675354,
+    "800": 0.030467915935210504,
+    "1600": 0.015549371825645968
+   },
+   "ritter-dry": {
+    "200": 0.05584190840667885,
+    "400": 0.02695888320817005,
+    "800": 0.012560229948528333,
+    "1600": 0.005756051946822449
+   }
+  },
+  "failing_rungs": {
+   "stoker-wet": [
+    200,
+    400
+   ],
+   "ritter-dry": [
+    200
+   ]
+  },
+  "first_passing_rung_n": {
+   "stoker-wet": 800,
+   "ritter-dry": 400
+  }
+ },
+ "gate_margins": {
+  "source": "src/tensorfvm/verification/artifacts/shallow-water-dam-break/metrics.json",
+  "grid_n": 1600,
+  "definition": "margin = limit / value at the pool grid; a zero-valued error has an unbounded margin (null + margin_infinite)",
+  "graded_set_size": {
+   "ritter-dry": 6,
+   "stoker-wet": 9
+  },
+  "graded": {
+   "ritter-dry": {
+    "front_fan<5%": {
+     "value": 0.00017261518056277403,
+     "limit": 0.05,
+     "margin": 289.6616614887865,
+     "margin_infinite": false,
+     "pass": true
+    },
+    "front_wetted<5%": {
+     "value": 0.02890624999999991,
+     "limit": 0.05,
+     "margin": 1.7297297297297352,
+     "margin_infinite": false,
+     "pass": true
+    },
+    "depth_l1<5%": {
+     "value": 0.0007715065657630972,
+     "limit": 0.05,
+     "margin": 64.8082624553493,
+     "margin_infinite": false,
+     "pass": true
+    },
+    "monotone(no_extrema)": {
+     "value": 0.0,
+     "limit": 0.05,
+     "margin": null,
+     "margin_infinite": true,
+     "pass": true
+    },
+    "tv_no_growth<0.5%": {
+     "value": 0.0,
+     "limit": 0.005,
+     "margin": null,
+     "margin_infinite": true,
+     "pass": true
+    },
+    "front_series<5%": {
+     "value": 0.0042472950845003216,
+     "limit": 0.05,
+     "margin": 11.772198306273866,
+     "margin_infinite": false,
+     "pass": true
+    }
+   },
+   "stoker-wet": {
+    "shock_position<5%": {
+     "value": 0.00021023436657714858,
+     "limit": 0.05,
+     "margin": 237.82981257563222,
+     "margin_infinite": false,
+     "pass": true
+    },
+    "step_ratio<5%": {
+     "value": 5.762518619591793e-07,
+     "limit": 0.05,
+     "margin": 86767.61551799014,
+     "margin_infinite": false,
+     "pass": true
+    },
+    "plateau_h2<5%": {
+     "value": 5.762518619591793e-07,
+     "limit": 0.05,
+     "margin": 86767.61551799014,
+     "margin_infinite": false,
+     "pass": true
+    },
+    "depth_l1<5%": {
+     "value": 0.0004271934800380538,
+     "limit": 0.05,
+     "margin": 117.04298482164585,
+     "margin_infinite": false,
+     "pass": true
+    },
+    "monotone(no_extrema)": {
+     "value": 0.0,
+     "limit": 0.05,
+     "margin": null,
+     "margin_infinite": true,
+     "pass": true
+    },
+    "tv_no_growth<0.5%": {
+     "value": 0.0010049771738320779,
+     "limit": 0.005,
+     "margin": 4.9752373787103075,
+     "margin_infinite": false,
+     "pass": true
+    },
+    "bore_position_modes<5%": {
+     "value": 0.00021023519848000692,
+     "limit": 0.05,
+     "margin": 237.82887148060001,
+     "margin_infinite": false,
+     "pass": true
+    },
+    "step_ratio_modes<5%": {
+     "value": 4.8485086086606076e-08,
+     "limit": 0.05,
+     "margin": 1031244.9463467575,
+     "margin_infinite": false,
+     "pass": true
+    },
+    "front_series<5%": {
+     "value": 0.00844265997289686,
+     "limit": 0.05,
+     "margin": 5.922304126959162,
+     "margin_infinite": false,
+     "pass": true
+    }
+   }
+  },
+  "under_2x": [
+   {
+    "case": "ritter-dry",
+    "gate": "front_wetted<5%",
+    "margin": 1.7297297297297352
+   }
+  ],
+  "under_12x": [
+   {
+    "case": "ritter-dry",
+    "gate": "front_wetted<5%",
+    "margin": 1.7297297297297352
+   },
+   {
+    "case": "stoker-wet",
+    "gate": "tv_no_growth<0.5%",
+    "margin": 4.9752373787103075
+   },
+   {
+    "case": "stoker-wet",
+    "gate": "front_series<5%",
+    "margin": 5.922304126959162
+   },
+   {
+    "case": "ritter-dry",
+    "gate": "front_series<5%",
+    "margin": 11.772198306273866
+   }
+  ],
+  "smallest_finite": {
+   "case": "ritter-dry",
+   "gate": "front_wetted<5%",
+   "margin": 1.7297297297297352
+  },
+  "headline_weakest": {
+   "ritter-dry": {
+    "gates": [
+     "front_fan<5%",
+     "depth_l1<5%",
+     "front_series<5%",
+     "monotone(no_extrema)"
+    ],
+    "weakest_gate": "front_series<5%",
+    "weakest_margin": 11.772198306273866
+   },
+   "stoker-wet": {
+    "gates": [
+     "shock_position<5%",
+     "step_ratio<5%",
+     "depth_l1<5%",
+     "front_series<5%",
+     "monotone(no_extrema)"
+    ],
+    "weakest_gate": "front_series<5%",
+    "weakest_margin": 5.922304126959162
+   }
+  },
+  "acceptance_weakest": {
+   "per_case": {
+    "ritter-dry": {
+     "front_position": {
+      "gate": "front_series<5%",
+      "margin": 11.772198306273866
+     }
+    },
+    "stoker-wet": {
+     "front_position": {
+      "gate": "front_series<5%",
+      "margin": 5.922304126959162
+     },
+     "still_water_step": {
+      "gate": "step_ratio<5%",
+      "margin": 86767.61551799014
+     },
+     "monotone": {
+      "gate": "tv_no_growth<0.5%",
+      "margin": 4.9752373787103075
+     }
+    }
+   },
+   "overall": {
+    "case": "stoker-wet",
+    "element": "monotone",
+    "gate": "tv_no_growth<0.5%",
+    "margin": 4.9752373787103075
+   }
+  }
+ },
+ "prose_problems": []
+}
