@@ -1,0 +1,683 @@
+{
+ "round": 29,
+ "case": "CASE-FVM-PERIODIC-HILLS",
+ "purpose": "complete the dt=0.01 ladder: the 96x48 dt-control and the 120x60 third rung that round 19 submitted but never retrieved, to settle whether the +42 % is a step/grid artefact or a 2-D model limitation",
+ "protocol_dt": 0.02,
+ "stable_dt": 0.01,
+ "levels": [
+  {
+   "tag": "r18_72x36",
+   "mesh": [
+    72,
+    36
+   ],
+   "dt": 0.02,
+   "h_over_H": 0.125,
+   "source_round": 18,
+   "status": "MEASURED",
+   "reason": "converged run with a certified separation/reattachment pair",
+   "non_finite_crossing": false,
+   "diverged_at_step": null,
+   "samples": 601,
+   "stored_field_max": 1.232584957060303,
+   "x_s_over_H": 0.4943848830616272,
+   "x_r_over_H": 7.600045056495248,
+   "x_r_error_vs_reference": 0.40481424334477784,
+   "x_r_error_vs_legacy": 0.4232294113286982,
+   "x_r_pass": false,
+   "profile_pass": false,
+   "profile_stations": [
+    {
+     "x_over_H": 1.0,
+     "u_over_Ub_computed": -0.0945133957607385,
+     "u_over_Ub_reference": -0.046128718374354914,
+     "delta": 0.048384677386383586,
+     "error_rel": 1.048905737933592,
+     "band": "absolute",
+     "tolerance": 0.1,
+     "pass": true
+    },
+    {
+     "x_over_H": 2.0,
+     "u_over_Ub_computed": -0.020856933075340034,
+     "u_over_Ub_reference": -0.09122729012512827,
+     "delta": 0.07037035704978824,
+     "error_rel": 0.7713739710262965,
+     "band": "absolute",
+     "tolerance": 0.1,
+     "pass": true
+    },
+    {
+     "x_over_H": 3.0,
+     "u_over_Ub_computed": 0.02396417593782594,
+     "u_over_Ub_reference": 0.0041277188021116165,
+     "delta": 0.019836457135714324,
+     "error_rel": 4.805670658952492,
+     "band": "absolute",
+     "tolerance": 0.1,
+     "pass": true
+    },
+    {
+     "x_over_H": 4.0,
+     "u_over_Ub_computed": 0.07459368613746431,
+     "u_over_Ub_reference": 0.11981606788535129,
+     "delta": 0.04522238174788698,
+     "error_rel": 0.37743169631604867,
+     "band": "relative",
+     "tolerance": 0.01198160678853513,
+     "pass": false
+    },
+    {
+     "x_over_H": 5.0,
+     "u_over_Ub_computed": 0.12542939887727791,
+     "u_over_Ub_reference": 0.2182851836848996,
+     "delta": 0.09285578480762169,
+     "error_rel": 0.4253874827421244,
+     "band": "relative",
+     "tolerance": 0.021828518368489962,
+     "pass": false
+    },
+    {
+     "x_over_H": 6.0,
+     "u_over_Ub_computed": 0.1664197691152324,
+     "u_over_Ub_reference": 0.2876299221105056,
+     "delta": 0.12121015299527318,
+     "error_rel": 0.42141009567392995,
+     "band": "relative",
+     "tolerance": 0.02876299221105056,
+     "pass": false
+    },
+    {
+     "x_over_H": 7.0,
+     "u_over_Ub_computed": 0.1849225784534499,
+     "u_over_Ub_reference": 0.31413237261839405,
+     "delta": 0.12920979416494416,
+     "error_rel": 0.41132275889918346,
+     "band": "relative",
+     "tolerance": 0.03141323726183941,
+     "pass": false
+    },
+    {
+     "x_over_H": 8.0,
+     "u_over_Ub_computed": 0.150522539986075,
+     "u_over_Ub_reference": 0.22375151815927136,
+     "delta": 0.07322897817319635,
+     "error_rel": 0.3272781287726071,
+     "band": "relative",
+     "tolerance": 0.022375151815927138,
+     "pass": false
+    }
+   ],
+   "wall_clock_s": 1256.0427572727203
+  },
+  {
+   "tag": "r18_96x48",
+   "mesh": [
+    96,
+    48
+   ],
+   "dt": 0.02,
+   "h_over_H": 0.09375,
+   "source_round": 18,
+   "status": "MEASURED",
+   "reason": "converged run with a certified separation/reattachment pair",
+   "non_finite_crossing": false,
+   "diverged_at_step": null,
+   "samples": 601,
+   "stored_field_max": 1.2365830924645052,
+   "x_s_over_H": 0.3932392615554318,
+   "x_r_over_H": 7.681601876754162,
+   "x_r_error_vs_reference": 0.41988944117452165,
+   "x_r_error_vs_legacy": 0.4385022241112664,
+   "x_r_pass": false,
+   "profile_pass": false,
+   "profile_stations": [
+    {
+     "x_over_H": 1.0,
+     "u_over_Ub_computed": -0.059542638002006085,
+     "u_over_Ub_reference": -0.046128718374354914,
+     "delta": 0.01341391962765117,
+     "error_rel": 0.29079324334986484,
+     "band": "absolute",
+     "tolerance": 0.1,
+     "pass": true
+    },
+    {
+     "x_over_H": 2.0,
+     "u_over_Ub_computed": -0.04407600042427992,
+     "u_over_Ub_reference": -0.09122729012512827,
+     "delta": 0.04715128970084835,
+     "error_rel": 0.516855094963088,
+     "band": "absolute",
+     "tolerance": 0.1,
+     "pass": true
+    },
+    {
+     "x_over_H": 3.0,
+     "u_over_Ub_computed": -0.005286800982168454,
+     "u_over_Ub_reference": 0.0041277188021116165,
+     "delta": 0.009414519784280071,
+     "error_rel": 2.280804540140643,
+     "band": "absolute",
+     "tolerance": 0.1,
+     "pass": true
+    },
+    {
+     "x_over_H": 4.0,
+     "u_over_Ub_computed": 0.044244927994834746,
+     "u_over_Ub_reference": 0.11981606788535129,
+     "delta": 0.07557113989051654,
+     "error_rel": 0.630726255871028,
+     "band": "relative",
+     "tolerance": 0.01198160678853513,
+     "pass": false
+    },
+    {
+     "x_over_H": 5.0,
+     "u_over_Ub_computed": 0.09754268837787577,
+     "u_over_Ub_reference": 0.2182851836848996,
+     "delta": 0.12074249530702383,
+     "error_rel": 0.553141048186389,
+     "band": "relative",
+     "tolerance": 0.021828518368489962,
+     "pass": false
+    },
+    {
+     "x_over_H": 6.0,
+     "u_over_Ub_computed": 0.14320738543334488,
+     "u_over_Ub_reference": 0.2876299221105056,
+     "delta": 0.1444225366771607,
+     "error_rel": 0.5021123519328232,
+     "band": "relative",
+     "tolerance": 0.02876299221105056,
+     "pass": false
+    },
+    {
+     "x_over_H": 7.0,
+     "u_over_Ub_computed": 0.16844691324930072,
+     "u_over_Ub_reference": 0.31413237261839405,
+     "delta": 0.14568545936909333,
+     "error_rel": 0.4637709197392116,
+     "band": "relative",
+     "tolerance": 0.03141323726183941,
+     "pass": false
+    },
+    {
+     "x_over_H": 8.0,
+     "u_over_Ub_computed": 0.11418692893540273,
+     "u_over_Ub_reference": 0.22375151815927136,
+     "delta": 0.10956458922386862,
+     "error_rel": 0.4896708193321758,
+     "band": "relative",
+     "tolerance": 0.022375151815927138,
+     "pass": false
+    }
+   ],
+   "wall_clock_s": 2377.686499118805
+  },
+  {
+   "tag": "r18_120x60",
+   "mesh": [
+    120,
+    60
+   ],
+   "dt": 0.02,
+   "h_over_H": 0.075,
+   "source_round": 18,
+   "status": "DIVERGED",
+   "reason": "divergence recorded at step 281; stored field max|u| = 6.198e+281; 0 averaging samples",
+   "non_finite_crossing": true,
+   "diverged_at_step": 281,
+   "samples": 0,
+   "stored_field_max": 6.198176026722291e+281,
+   "x_s_over_H": null,
+   "x_r_over_H": null,
+   "x_r_error_vs_reference": null,
+   "x_r_error_vs_legacy": null,
+   "x_r_pass": false,
+   "profile_pass": false,
+   "profile_stations": [
+    {
+     "x_over_H": 1.0,
+     "u_over_Ub_computed": 0.0,
+     "u_over_Ub_reference": -0.046128718374354914,
+     "delta": 0.046128718374354914,
+     "error_rel": 1.0,
+     "band": "absolute",
+     "tolerance": 0.1,
+     "pass": true
+    },
+    {
+     "x_over_H": 2.0,
+     "u_over_Ub_computed": 0.0,
+     "u_over_Ub_reference": -0.09122729012512827,
+     "delta": 0.09122729012512827,
+     "error_rel": 1.0,
+     "band": "absolute",
+     "tolerance": 0.1,
+     "pass": true
+    },
+    {
+     "x_over_H": 3.0,
+     "u_over_Ub_computed": 0.0,
+     "u_over_Ub_reference": 0.0041277188021116165,
+     "delta": 0.0041277188021116165,
+     "error_rel": 1.0,
+     "band": "absolute",
+     "tolerance": 0.1,
+     "pass": true
+    },
+    {
+     "x_over_H": 4.0,
+     "u_over_Ub_computed": 0.0,
+     "u_over_Ub_reference": 0.11981606788535129,
+     "delta": 0.11981606788535129,
+     "error_rel": 1.0,
+     "band": "relative",
+     "tolerance": 0.01198160678853513,
+     "pass": false
+    },
+    {
+     "x_over_H": 5.0,
+     "u_over_Ub_computed": 0.0,
+     "u_over_Ub_reference": 0.2182851836848996,
+     "delta": 0.2182851836848996,
+     "error_rel": 1.0,
+     "band": "relative",
+     "tolerance": 0.021828518368489962,
+     "pass": false
+    },
+    {
+     "x_over_H": 6.0,
+     "u_over_Ub_computed": 0.0,
+     "u_over_Ub_reference": 0.2876299221105056,
+     "delta": 0.2876299221105056,
+     "error_rel": 1.0,
+     "band": "relative",
+     "tolerance": 0.02876299221105056,
+     "pass": false
+    },
+    {
+     "x_over_H": 7.0,
+     "u_over_Ub_computed": 0.0,
+     "u_over_Ub_reference": 0.31413237261839405,
+     "delta": 0.31413237261839405,
+     "error_rel": 1.0,
+     "band": "relative",
+     "tolerance": 0.03141323726183941,
+     "pass": false
+    },
+    {
+     "x_over_H": 8.0,
+     "u_over_Ub_computed": 0.0,
+     "u_over_Ub_reference": 0.22375151815927136,
+     "delta": 0.22375151815927136,
+     "error_rel": 1.0,
+     "band": "relative",
+     "tolerance": 0.022375151815927138,
+     "pass": false
+    }
+   ],
+   "wall_clock_s": 48.752928733825684
+  },
+  {
+   "tag": "r18_144x72",
+   "mesh": [
+    144,
+    72
+   ],
+   "dt": 0.02,
+   "h_over_H": 0.0625,
+   "source_round": 18,
+   "status": "DIVERGED",
+   "reason": "divergence recorded at step 159; stored field max|u| = 1.249e+169; 0 averaging samples",
+   "non_finite_crossing": true,
+   "diverged_at_step": 159,
+   "samples": 0,
+   "stored_field_max": 1.248568090459135e+169,
+   "x_s_over_H": null,
+   "x_r_over_H": null,
+   "x_r_error_vs_reference": null,
+   "x_r_error_vs_legacy": null,
+   "x_r_pass": false,
+   "profile_pass": false,
+   "profile_stations": [
+    {
+     "x_over_H": 1.0,
+     "u_over_Ub_computed": 0.0,
+     "u_over_Ub_reference": -0.046128718374354914,
+     "delta": 0.046128718374354914,
+     "error_rel": 1.0,
+     "band": "absolute",
+     "tolerance": 0.1,
+     "pass": true
+    },
+    {
+     "x_over_H": 2.0,
+     "u_over_Ub_computed": 0.0,
+     "u_over_Ub_reference": -0.09122729012512827,
+     "delta": 0.09122729012512827,
+     "error_rel": 1.0,
+     "band": "absolute",
+     "tolerance": 0.1,
+     "pass": true
+    },
+    {
+     "x_over_H": 3.0,
+     "u_over_Ub_computed": 0.0,
+     "u_over_Ub_reference": 0.0041277188021116165,
+     "delta": 0.0041277188021116165,
+     "error_rel": 1.0,
+     "band": "absolute",
+     "tolerance": 0.1,
+     "pass": true
+    },
+    {
+     "x_over_H": 4.0,
+     "u_over_Ub_computed": 0.0,
+     "u_over_Ub_reference": 0.11981606788535129,
+     "delta": 0.11981606788535129,
+     "error_rel": 1.0,
+     "band": "relative",
+     "tolerance": 0.01198160678853513,
+     "pass": false
+    },
+    {
+     "x_over_H": 5.0,
+     "u_over_Ub_computed": 0.0,
+     "u_over_Ub_reference": 0.2182851836848996,
+     "delta": 0.2182851836848996,
+     "error_rel": 1.0,
+     "band": "relative",
+     "tolerance": 0.021828518368489962,
+     "pass": false
+    },
+    {
+     "x_over_H": 6.0,
+     "u_over_Ub_computed": 0.0,
+     "u_over_Ub_reference": 0.2876299221105056,
+     "delta": 0.2876299221105056,
+     "error_rel": 1.0,
+     "band": "relative",
+     "tolerance": 0.02876299221105056,
+     "pass": false
+    },
+    {
+     "x_over_H": 7.0,
+     "u_over_Ub_computed": 0.0,
+     "u_over_Ub_reference": 0.31413237261839405,
+     "delta": 0.31413237261839405,
+     "error_rel": 1.0,
+     "band": "relative",
+     "tolerance": 0.03141323726183941,
+     "pass": false
+    },
+    {
+     "x_over_H": 8.0,
+     "u_over_Ub_computed": 0.0,
+     "u_over_Ub_reference": 0.22375151815927136,
+     "delta": 0.22375151815927136,
+     "error_rel": 1.0,
+     "band": "relative",
+     "tolerance": 0.022375151815927138,
+     "pass": false
+    }
+   ],
+   "wall_clock_s": 39.161657094955444
+  },
+  {
+   "tag": "r19_96x48_dt0.01",
+   "mesh": [
+    96,
+    48
+   ],
+   "dt": 0.01,
+   "source_round": 19,
+   "status": "NO_ARTEFACT"
+  },
+  {
+   "tag": "r19_120x60_dt0.01",
+   "mesh": [
+    120,
+    60
+   ],
+   "dt": 0.01,
+   "source_round": 19,
+   "status": "NO_ARTEFACT"
+  },
+  {
+   "tag": "r24_96x48_dt0.01",
+   "mesh": [
+    96,
+    48
+   ],
+   "dt": 0.01,
+   "source_round": 24,
+   "status": "NO_ARTEFACT",
+   "averaging_window": [
+    160.0,
+    400.0
+   ],
+   "window_shortened": false
+  },
+  {
+   "tag": "r24_120x60_dt0.01",
+   "mesh": [
+    120,
+    60
+   ],
+   "dt": 0.01,
+   "source_round": 24,
+   "status": "NO_ARTEFACT",
+   "averaging_window": [
+    160.0,
+    370.0
+   ],
+   "window_shortened": true
+  }
+ ],
+ "stability": {
+  "entries": [
+   {
+    "mesh": [
+     72,
+     36
+    ],
+    "h_over_H": 0.125,
+    "dt": 0.02,
+    "outcome": "MEASURED",
+    "source_round": 18
+   },
+   {
+    "mesh": [
+     96,
+     48
+    ],
+    "h_over_H": 0.09375,
+    "dt": 0.02,
+    "outcome": "MEASURED",
+    "source_round": 18
+   },
+   {
+    "mesh": [
+     120,
+     60
+    ],
+    "h_over_H": 0.075,
+    "dt": 0.02,
+    "outcome": "DIVERGED",
+    "source_round": 18
+   },
+   {
+    "mesh": [
+     144,
+     72
+    ],
+    "h_over_H": 0.0625,
+    "dt": 0.02,
+    "outcome": "DIVERGED",
+    "source_round": 18
+   },
+   {
+    "mesh": [
+     160,
+     80
+    ],
+    "dt": 0.02,
+    "outcome": "STABLE_SLOW",
+    "note": "stable, 0.33 s/step, 6600 s projected > job budget (round 18)"
+   },
+   {
+    "mesh": [
+     192,
+     96
+    ],
+    "dt": 0.02,
+    "outcome": "DIVERGED",
+    "note": "max|u| = 1.5e85 after 90 steps (round 18)"
+   },
+   {
+    "mesh": [
+     120,
+     60
+    ],
+    "dt": 0.02,
+    "outcome": "DIVERGED",
+    "note": "round-19 local probe: max|u| = 9.6e9 at step 276 of 400"
+   }
+  ],
+  "unstable": [
+   {
+    "mesh": [
+     120,
+     60
+    ],
+    "h_over_H": 0.075,
+    "dt": 0.02,
+    "outcome": "DIVERGED",
+    "source_round": 18
+   },
+   {
+    "mesh": [
+     144,
+     72
+    ],
+    "h_over_H": 0.0625,
+    "dt": 0.02,
+    "outcome": "DIVERGED",
+    "source_round": 18
+   },
+   {
+    "mesh": [
+     192,
+     96
+    ],
+    "dt": 0.02,
+    "outcome": "DIVERGED",
+    "note": "max|u| = 1.5e85 after 90 steps (round 18)"
+   },
+   {
+    "mesh": [
+     120,
+     60
+    ],
+    "dt": 0.02,
+    "outcome": "DIVERGED",
+    "note": "round-19 local probe: max|u| = 9.6e9 at step 276 of 400"
+   }
+  ],
+  "stable": [
+   {
+    "mesh": [
+     72,
+     36
+    ],
+    "h_over_H": 0.125,
+    "dt": 0.02,
+    "outcome": "MEASURED",
+    "source_round": 18
+   },
+   {
+    "mesh": [
+     96,
+     48
+    ],
+    "h_over_H": 0.09375,
+    "dt": 0.02,
+    "outcome": "MEASURED",
+    "source_round": 18
+   }
+  ],
+  "protocol_dt_unstable_at": [
+   120,
+   144,
+   192
+  ],
+  "max_stable_dt_per_mesh": {
+   "72x36": 0.02,
+   "96x48": 0.02
+  }
+ },
+ "dt_control": {
+  "available": false,
+  "reason": "need the same mesh measured at two time steps",
+  "levels_present": [
+   0.02
+  ]
+ },
+ "verdict": {
+  "reference_x_r_over_H": 5.41,
+  "reference_band": [
+   4.869000000000001,
+   5.9510000000000005
+  ],
+  "n_measured_levels": 2,
+  "n_diverged_levels": 2,
+  "diverged_tags": [
+   "r18_120x60",
+   "r18_144x72"
+  ],
+  "no_artefact_tags": [
+   "r19_96x48_dt0.01",
+   "r19_120x60_dt0.01",
+   "r24_96x48_dt0.01",
+   "r24_120x60_dt0.01"
+  ],
+  "any_level_inside_band": false,
+  "finest_measured": {
+   "tag": "r18_96x48",
+   "h_over_H": 0.09375,
+   "x_r_over_H": 7.681601876754162,
+   "error": 0.41988944117452165
+  },
+  "grid_law_admissible": false,
+  "grid_law": {
+   "admissible": false,
+   "reason": "2 admissible levels, 3 required",
+   "observed_order_p": null,
+   "extrapolated_x_r_over_H": null,
+   "monotone_in_h": null,
+   "levels_coarse_to_fine": null,
+   "note": "dt-control unavailable or >5 %: the mesh trend is confounded by the step and the fit is indicative only"
+  },
+  "dt_control": {
+   "available": false,
+   "reason": "need the same mesh measured at two time steps",
+   "levels_present": [
+    0.02
+   ]
+  },
+  "question_time_step": {
+   "answered": false,
+   "reason": "need the same mesh measured at two time steps",
+   "conclusion": "WITHHELD: the 96x48 dt=0.01 control has no measured x_r/H"
+  },
+  "question_grid": {
+   "answered": false,
+   "reason": "2 admissible levels, 3 required",
+   "conclusion": "WITHHELD: fewer than three admissible levels or a non-monotone sequence"
+  },
+  "acceptance_pass": false,
+  "honest_summary": "r18_72x36: x_r/H = 7.60 (err 40.5%); r18_96x48: x_r/H = 7.68 (err 42.0%); diverged (no data): r18_120x60@step 281, r18_144x72@step 159; grid law: 2 admissible levels, 3 required"
+ }
+}
