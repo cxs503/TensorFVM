@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# FVM-SLIM-GUARD (feature_ledger, D6): block large blobs at commit time.
+# Threshold: 512 KiB (acceptance: "512KiB 拦截").
+# Escape hatch: FVM_GUARD_ALLOW_LARGE=1 git commit ...
+#   -> the justification MUST appear in the commit message.
+set -euo pipefail
+cd "$(git rev-parse --show-toplevel)"
+exec python3 scripts/guard/repo_guard.py staged
