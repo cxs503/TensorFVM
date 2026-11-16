@@ -10,10 +10,17 @@ grid sequence and writes the evidence bundle into ``runs/``:
     runs/fields.npz                     converged velocity fields (re-score offline)
     runs/control/...                    cold-start control used for the continuation check
 
-Grid sequence (default): n = 32 (cold) -> 64 (cold) -> 64 (prolonged from 32,
-control) -> 128 (prolonged from 64).  Continuation changes only the cost: the
-cold n = 64 run is kept as the counter-check that the fixed point is not
-selected by the prolongation.
+Grid sequence (default): n = 32 (cold) -> 64 (prolonged from 32) -> 128
+(prolonged from 64), with the cold counter-check re-run at n = 64.  Continuation
+changes only the cost: the cold n = 64 run is kept as the counter-check that the
+fixed point is not selected by the prolongation.
+
+The counter-check is only a test when the grid it is run on was *also* reached by
+prolongation in this campaign — on a grid started from rest the two runs are the
+same computation and their agreement is a determinism check, not evidence about
+continuation.  ``select_control_grid`` therefore defaults to the coarsest
+warm-started grid, and ``build_continuation_check`` withholds the "same steady
+state" verdict when that condition does not hold instead of reporting agreement.
 
 Every step is resumable: an already converged artefact is reused instead of
 re-run (``--force`` re-runs).
@@ -71,12 +78,71 @@ def fields_of(path: pathlib.Path) -> dict | None:
     return {"u": blob["u"], "v": blob["v"]}
 
 
+def warm_started_grids(artifacts: dict[int, dict]) -> list[int]:
+    """Grids of this campaign whose steady state was reached from a coarser field."""
+    return sorted(int(n) for n, rec in artifacts.items()
+                  if str(rec.get("initial_condition", "rest")) != "rest")
+
+
+def select_control_grid(grids, artifacts: dict[int, dict],
+                        requested: int | None = None) -> tuple[int | None, bool]:
+    """Pick the grid the cold counter-check runs on -> ``(n, warm_started)``.
+
+    Default: the coarsest grid that was warm-started in this campaign, because that
+    is the only place where "cold" and "prolonged" can disagree.  An explicit
+    ``requested`` grid is honoured but reported as vacuous when this campaign
+    started it from rest.
+    """
+    warm = warm_started_grids(artifacts)
+    if requested is not None:
+        n = int(requested)
+        return n, n in warm
+    if warm:
+        return warm[0], True
+    return (int(min(grids)) if grids else None), False
+
+
+def build_continuation_check(continued: dict, control: dict, *, grid: int,
+                             warm_started: bool, tol_same: float = 1e-5) -> dict:
+    """Compare the prolonged fixed point with the cold one at the same grid.
+
+    ``warm_started=False`` means the main record at this grid was itself started
+    from rest, i.e. the two runs are the same computation: the agreement is a
+    determinism check and says nothing about whether prolongation preserves the
+    fixed point.  The verdict is then withheld (``None``) rather than claimed.
+    """
+    du = max(abs(a - b) for a, b in zip(continued["u"]["profiles"]["computed"],
+                                        control["u"]["profiles"]["computed"]))
+    dv = max(abs(a - b) for a, b in zip(continued["v"]["profiles"]["computed"],
+                                        control["v"]["profiles"]["computed"]))
+    check = {
+        "grid": int(grid),
+        "kind": "continuation" if warm_started else "repeat_run",
+        "warm_started": bool(warm_started),
+        "same_steady_state": bool(max(du, dv) < tol_same) if warm_started else None,
+        "max_abs_du_centreline": du,
+        "max_abs_dv_centreline": dv,
+        "steps_continued": continued["steps"],
+        "steps_cold": control["steps"],
+        "wall_seconds_continued": continued["wall_seconds"],
+        "wall_seconds_cold": control["wall_seconds"],
+        "speedup": control["wall_seconds"] / max(continued["wall_seconds"], 1e-9),
+    }
+    if not warm_started:
+        check["note"] = ("the main record at this grid also started from rest, so this "
+                         "cold repeat is a determinism check only; it is NOT evidence "
+                         "that prolongation preserves the fixed point")
+    return check
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--out-dir", default=str(DEFAULT_OUT))
     ap.add_argument("--grids", default="32,64,128")
-    ap.add_argument("--cold-control", type=int, default=32,
-                    help="coarsest grid that is also re-run cold as the continuation control")
+    ap.add_argument("--cold-control", type=int, default=None,
+                    help="grid re-run cold as the continuation control; default = the "
+                         "coarsest grid this campaign actually warm-started (a control "
+                         "on a from-rest grid cannot test the continuation)")
     ap.add_argument("--tolerance", type=float, default=1e-07)
     ap.add_argument("--max-steps", type=int, default=250_000)
     ap.add_argument("--cfl", type=float, default=0.15)
@@ -121,39 +187,34 @@ def main() -> None:
         torch.save({"u": solver.u, "v": solver.v}, fpath)
         artifacts[n], solvers[n] = rec, solver
 
-    # continuation control: the same grid run cold, so the fixed point cannot be
-    # an artefact of the prolongation
-    ctrl_n = int(args.cold_control)
-    ctrl_path = out / "control" / f"lid_cavity_Re1000_n{ctrl_n}.json"
-    ctrl_cached = load(ctrl_path)
-    if ctrl_cached and not args.force:
-        print(f"[cached] control n={ctrl_n}", flush=True)
-        control = ctrl_cached
-    else:
-        print(f"[control] cold restart at n={ctrl_n}", flush=True)
-        control, _ = run_resolution(ctrl_n, tolerance=args.tolerance,
-                                    max_steps=args.max_steps, cfl=args.cfl)
-        control["generated"] = stamp
-        write_json(ctrl_path, control)
+    # continuation control: the same grid reached cold, so the fixed point cannot
+    # be an artefact of the prolongation.  The grid must be one that this campaign
+    # warm-started, otherwise cold-vs-prolonged collapses into cold-vs-itself.
+    ctrl_n, ctrl_warm = select_control_grid(grids, artifacts, args.cold_control)
+    if ctrl_n is not None and not ctrl_warm:
+        print(f"[warn] control at n={ctrl_n} cannot test the continuation: this campaign "
+              f"started n={ctrl_n} from rest (warm-started grids: "
+              f"{warm_started_grids(artifacts) or 'none'}); it is recorded as a "
+              f"determinism check with the verdict withheld", flush=True)
 
-    continued = artifacts.get(ctrl_n)
     continuation_check = None
-    if continued is not None and control is not None:
-        du = max(abs(a - b) for a, b in zip(continued["u"]["profiles"]["computed"],
-                                            control["u"]["profiles"]["computed"]))
-        dv = max(abs(a - b) for a, b in zip(continued["v"]["profiles"]["computed"],
-                                            control["v"]["profiles"]["computed"]))
-        continuation_check = {
-            "grid": ctrl_n,
-            "same_steady_state": bool(max(du, dv) < 1e-5),
-            "max_abs_du_centreline": du,
-            "max_abs_dv_centreline": dv,
-            "steps_continued": continued["steps"],
-            "steps_cold": control["steps"],
-            "wall_seconds_continued": continued["wall_seconds"],
-            "wall_seconds_cold": control["wall_seconds"],
-            "speedup": control["wall_seconds"] / max(continued["wall_seconds"], 1e-9),
-        }
+    if ctrl_n is not None:
+        ctrl_path = out / "control" / f"lid_cavity_Re1000_n{ctrl_n}.json"
+        ctrl_cached = load(ctrl_path)
+        if ctrl_cached and not args.force:
+            print(f"[cached] control n={ctrl_n}", flush=True)
+            control = ctrl_cached
+        else:
+            print(f"[control] cold restart at n={ctrl_n}", flush=True)
+            control, _ = run_resolution(ctrl_n, tolerance=args.tolerance,
+                                        max_steps=args.max_steps, cfl=args.cfl)
+            control["generated"] = stamp
+            write_json(ctrl_path, control)
+
+        continued = artifacts.get(ctrl_n)
+        if continued is not None:
+            continuation_check = build_continuation_check(
+                continued, control, grid=ctrl_n, warm_started=ctrl_warm)
 
     rows = [artifacts[n] for n in sorted(artifacts)]
     summary = summarise(rows)

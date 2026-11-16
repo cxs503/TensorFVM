@@ -45,6 +45,39 @@ m20000 已产出 n = 32/64/128 的正确数字但**运行工件未入库**（evi
   `tests/test_case_cavity_re1000.py::test_ladder_consumes_the_bundle` 就是这条集成调用的机检门。
 * `scripts/case_cavity_re1000.py` 是本算例池条目的 CLI 入口（与 `scripts/case_cavity_re100.py` 同构）。
 
+## 3b. 续算对照（counter-check）的有效性前提
+
+「延拓只改成本不改解」这条结论的证据是 `runs/summary.json -> continuation_check`：
+n = 64 由 n = 32 双线性延拓（59750 步 / 331 s）与同一网格冷启动（58750 步 / 384 s）收敛到
+同一不动点（`max|Δu| = 3.34e-08`、`max|Δv| = 2.88e-08`）。
+
+这条对照**只在对照网格本轮确实被延拓过时**才构成检验。若把 `--cold-control` 指向本轮由静止
+启动的网格（例如最粗的 n = 32），两次运行就是同一次计算，比较结果恒为 `max|Δu| = 0`、
+`speedup` = 墙钟噪声，却照样会被打印成 `same_steady_state: true` —— 一个恒真的「检验」。
+本轮修复：
+
+* `run_case.py` 的 `--cold-control` 默认值改为「本轮实际被延拓过的最粗网格」
+  （`select_control_grid` / `warm_started_grids` 由工件里的 `initial_condition` 判定，
+  不再硬编码 32）；
+* 指向由静止启动的网格时，`build_continuation_check` 写 `kind = "repeat_run"`、
+  `same_steady_state = null` 并注明「只是确定性重复、不足以判定延拓是否保持不动点」，
+  同时 `make_report.py` 按这一事实措辞，不再把退化对照渲染成证据；
+* `repro.sh` 的全量复现命令此前写的是 `--cold-control 32`，与 `runs/summary.json` 记录的
+  出处（`--cold-control 64`）不一致，即唯一一条文档化的全量复现命令**无法**复现已公布的
+  出处，且会把 `runs/summary.json` 的对照覆盖成退化版本；现改为 64；
+* `tests/test_case_cavity_re1000_continuation_control.py` 把上述不变量机检化：抽取
+  `repro.sh` 的战役参数与 `summary.json` 的 `command` 逐项比对、从存档工件重算
+  `continuation_check` 的全部数字、并断言被引用的对照网格本轮是延拓启动的。
+
+同一轮还发现报告本身不可复现：`REPORT.md` ⑤ 里那条「「吻合」不等于「精度」」（3 % 带宽有 61 %
+被参考解吃掉）是 m21931 手工折进报告的，`make_report.py` 里并没有产出它的代码 —— 也就是说
+跑一次文档化的 `make_report.py` 会**无声删掉**这条最关键的诚实声明。现在该条由
+`runs/decomposition.json` 程序化注入（`_decomposition()`；数字零手抄，与 `REFERENCE_FLOOR.md`
+同源），并且 `make_report.py` 覆盖前会做一次 `dropped_lines()` 对账：若新渲染会丢掉旧文件里
+它不产出的整句，则拒绝写盘并报出被丢的句子。因此当前 `REPORT.md` 与
+`render(summary, bench, fields)` 的输出在除时间戳/复现块之外逐行一致
+（机检门：`test_rendering_reproduces_the_committed_report`）。
+
 ## 4. 检索 tk / 负知识台账的说明（诚实记录）
 
 任务要求先查 `knowledge_base`（ktype='capability', domain='TensorFVM'）与
