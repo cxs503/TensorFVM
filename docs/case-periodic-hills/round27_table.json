@@ -1,0 +1,42 @@
+{
+  "case": "CASE-FVM-PERIODIC-HILLS round 27 (comprehensive assessment)",
+  "reference_x_r_over_H": 5.41,
+  "reference_x_s_over_H": 0.22,
+  "reference": "Breuer et al. 2009, Comput. Fluids 38:433, doi:10.1016/j.compfluid.2008.05.002 (ERCOFTAC UFR 3-30)",
+  "protocol": {
+    "closure": "laminar (nu_t == 0)",
+    "reynolds": 2800.0,
+    "convection_blend": 0.75,
+    "averaging_window_t": [
+      160.0,
+      400.0
+    ],
+    "operator": "certified wall_shear_bubbles.separation_reattachment on stored mean wall shear"
+  },
+  "levels": {
+    "A": {
+      "stem": "round20_laminar_Re2800_96x48",
+      "nx": 96,
+      "ny": 48,
+      "dt": 0.02,
+      "x_r_over_H": 8.264277859446059,
+      "x_r_crest_over_H": 3.736567121234141,
+      "x_s_over_H": 0.656,
+      "error_x_r_pct": 52.8,
+      "error_x_r_crest_pct": -31.0,
+      "stationarity_spread": 0.164,
+      "stationarity_ok": false,
+      "reattachment_coverage": 0.722,
+      "bulk_velocity": 1.0,
+      "verdict": "FAIL"
+    }
+  },
+  "ladder_status": {
+    "A": "measured",
+    "B": "computing (cj4352)",
+    "C": "computing (cj4353)",
+    "D": "computing (cj4354)"
+  },
+  "verdict": "FAIL",
+  "verdict_reason": "x_r/H error +52.8% >> 10% tolerance; stationarity spread 0.164 > 0.05; 2D laminar vs 3D turbulent DNS gap"
+}
