@@ -5,6 +5,7 @@ Every number is read from the run's own ``summary.json`` (itself recomputed from
 the saved npz fields by ``scripts/summarize_kovasznay_32_64_128.py``), so no
 figure in the report is hand transcribed.
 """
+import argparse
 import base64
 import json
 from pathlib import Path
@@ -12,11 +13,38 @@ from pathlib import Path
 import numpy as np
 
 REPO = Path(__file__).resolve().parents[2]
-RUNS = REPO / 'docs/CASE-FVM-KOVASZNAY-ORDER/runs-32-64-128-zero_gradient'
-summary = json.loads((RUNS / 'summary.json').read_text())
-levels = summary['levels']
-fits = summary['fits']
-verdict = summary['verdict']
+CASE = REPO / 'docs/CASE-FVM-KOVASZNAY-ORDER'
+RUNS = CASE / 'runs-32-64-128-zero_gradient'
+SUMMARY_PATH = RUNS / 'summary.json'
+SENSITIVITY_PATH = CASE / 'order-sensitivity.json'
+DOC_PATH = CASE / 'closeout-32-64-128.md'
+PAYLOAD_PATH = Path('/tmp/report.json')
+
+# The platform-registered criterion id (tensor_benchmark_cases).  It is a
+# registry key, not a measurement, so it is the only literal threshold-related
+# value in this file that does not come from a committed artifact.
+CASE_POOL_ID = 137
+
+summary = levels = fits = verdict = None
+sensitivity = None
+
+
+def load_artifacts(summary_path=SUMMARY_PATH, sensitivity_path=SENSITIVITY_PATH):
+    """Read the only two inputs the close-out text is allowed to quote.
+
+    ``summary.json`` is recomputed from the saved npz fields by
+    ``scripts/summarize_kovasznay_32_64_128.py`` and ``order-sensitivity.json``
+    by ``scripts/kovasznay_order_sensitivity.py``; both recompute from npz, so
+    no number in the emitted doc is hand transcribed.
+    """
+    global summary, levels, fits, verdict, sensitivity
+    summary = json.loads(Path(summary_path).read_text())
+    levels, fits, verdict = summary['levels'], summary['fits'], summary['verdict']
+    sensitivity = json.loads(Path(sensitivity_path).read_text())
+    return summary, sensitivity
+
+
+load_artifacts()
 
 
 def sci(x, digits=7):
@@ -58,11 +86,48 @@ def build_fits():
     return '\n'.join(rows)
 
 
+def build_discrimination():
+    """Section 8: the negative control must be rejected by the same criterion.
+
+    Numbers come from ``order-sensitivity.json`` (reference series vs the same
+    case with first-order upwind convection), so the discrimination margin is
+    recomputed rather than quoted.
+    """
+    v = sensitivity['verdict']
+    ref, ctl = sensitivity['reference'], sensitivity['control']
+    slope = sensitivity['slopes']
+    rows = ['| 配置 | 对流阶 | 三网格速度 L2 斜率 | 过门槛（≥ {:.2f}） |'.format(v['threshold']),
+            '|---|---:|---:|:--|']
+    for cfg, tag in ((ref, '参考（判据）'), (ctl, '负向对照')):
+        s = slope[cfg['label']]['velocity_full']
+        cell = ('是' if s >= v['threshold'] else
+                f'**否**（裕度 {v["margin"]:.4f}）')
+        rows.append(f"| {tag} | {cfg['configuration']['convection_order']} | {s:.4f} | {cell} |")
+    differ = ', '.join(f'`{k}`' for k in v['configurations_differ_only_in'])
+    order = ctl['configuration']['convection_order']
+    rejected = ('拒绝' if v['control_rejected_by_threshold'] else '未拒绝')
+    return (
+        f"""判据已登记 `tensor_benchmark_cases` id={CASE_POOL_ID}（三网格速度 L2 斜率 ≥ {v['threshold']}）。
+同一算例只把对流格式降为 {order} 阶（`convection_order={order}`）的负向对照，三网格斜率
+{v['control_slope']:.4f}，被 {v['threshold']} 门槛{rejected}（判别裕度 {v['margin']:.4f}），
+说明该斜率不是「对任何格式都报二阶」。两项的离散配置只差 {differ}。
+
+{chr(10).join(rows)}
+
+见 `NEGATIVE_CONTROL.md`、`order-sensitivity.json`、`order-sensitivity.png`；
+闸门 `scripts/kovasznay_order_sensitivity.py` + `tests/test_kovasznay_order_sensitivity.py`。""")
+
+
 level_table, segment_table, fit_table = build_table(), build_segments(), build_fits()
+
+discrimination = build_discrimination()
 
 md = f"""# CASE-FVM-KOVASZNAY-ORDER — 结案：32/64/128 三网格收敛阶实测
 
 **日期**: 2026-11-14 · **席**: m20033（selfstart, tp-merge-1）· **仓**: TensorFVM
+**本文件是生成物**：由 `docs/CASE-FVM-KOVASZNAY-ORDER/report_payload.py` 从
+`runs-32-64-128-zero_gradient/summary.json` + `order-sensitivity.json` 生成，请勿手工编辑；
+`tests/test_kovasznay_closeout_regenerable.py` 逐字节校对本文件与生成器输出。
 **锚点**: `CASE-FVM-KOVASZNAY-ORDER`（feature_ledger，本单开工时为 `open`）
 **判据（原文）**: L2 收敛阶 ≥ 1.8（名义二阶），log-log 斜率 on 32/64/128 三套网格
 **外部基准**: Kovasznay 1948, *Proc. Camb. Phil. Soc.* 44:58–62, doi:10.1017/s0305004100023999
@@ -179,11 +244,11 @@ PYTHONPATH=src python scripts/summarize_kovasznay_32_64_128.py \\
   --require-grids 32,64,128
 PYTHONPATH=src python -m pytest tests/test_kovasznay_32_64_128_acceptance.py -q
 ```
-"""
 
-doc_path = REPO / 'docs/CASE-FVM-KOVASZNAY-ORDER/closeout-32-64-128.md'
-doc_path.write_text(md)
-print('wrote', doc_path)
+## 八、判据可信度补充（负向对照）
+
+{discrimination}
+"""
 
 png = (RUNS / 'order.png').read_bytes()
 payload = {
@@ -206,6 +271,23 @@ payload = {
          'png_base64': base64.b64encode(png).decode('ascii')},
     ],
 }
-out = Path('/tmp/report.json')
-out.write_text(json.dumps(payload))
-print('wrote', out, out.stat().st_size, 'bytes')
+
+
+def emit(doc_path=DOC_PATH, payload_path=PAYLOAD_PATH):
+    """Write the close-out doc and the platform report payload."""
+    doc_path, payload_path = Path(doc_path), Path(payload_path)
+    doc_path.write_text(md)
+    payload_path.write_text(json.dumps(payload))
+    print('wrote', doc_path)
+    print('wrote', payload_path)
+    return payload
+
+
+if __name__ == '__main__':
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument('--out-doc', default=str(DOC_PATH),
+                    help='close-out markdown path (default: the committed doc)')
+    ap.add_argument('--out-payload', default=str(PAYLOAD_PATH),
+                    help='report payload JSON path (default: /tmp/report.json)')
+    opts = ap.parse_args()
+    emit(opts.out_doc, opts.out_payload)

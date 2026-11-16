@@ -1,6 +1,9 @@
 # CASE-FVM-KOVASZNAY-ORDER — 结案：32/64/128 三网格收敛阶实测
 
 **日期**: 2026-11-14 · **席**: m20033（selfstart, tp-merge-1）· **仓**: TensorFVM
+**本文件是生成物**：由 `docs/CASE-FVM-KOVASZNAY-ORDER/report_payload.py` 从
+`runs-32-64-128-zero_gradient/summary.json` + `order-sensitivity.json` 生成，请勿手工编辑；
+`tests/test_kovasznay_closeout_regenerable.py` 逐字节校对本文件与生成器输出。
 **锚点**: `CASE-FVM-KOVASZNAY-ORDER`（feature_ledger，本单开工时为 `open`）
 **判据（原文）**: L2 收敛阶 ≥ 1.8（名义二阶），log-log 斜率 on 32/64/128 三套网格
 **外部基准**: Kovasznay 1948, *Proc. Camb. Phil. Soc.* 44:58–62, doi:10.1017/s0305004100023999
@@ -67,7 +70,7 @@ Kovasznay (1948) 二维定常不可压 N–S 精确解（Re=40，单位域 [0,1]
 | pressure L2 (fixed gauge, not a rate) | 0.9772 | 0.999975 |
 | pressure L2 (mean-free gauge) | 1.8777 | 0.999964 |
 
-判定：`{"threshold": 1.8, "quantity": "L2 relative error log-log least-squares slope over 32/64/128", "velocity_full_slope": 1.9623452238776438, "velocity_full_pass": true, "velocity_inplane_slope": 1.9623452238776438, "velocity_inplane_pass": true, "pressure_meanfree_slope": 1.8777242570668982, "pressure_meanfree_pass": true, "all_levels_converged": true, "pass": true, "pass_inplane": true}`
+判定：`{"threshold": 1.8, "quantity": "L2 relative error log-log least-squares slope over 32/64/128", "velocity_full_slope": 1.9623452238776438, "velocity_full_pass": true, "velocity_inplane_slope": 1.9623452238776438, "velocity_inplane_pass": true, "pressure_meanfree_slope": 1.8777242570668982, "pressure_meanfree_pass": true, "all_levels_converged": true, "pass": true, "pass_inplane": true, "pair_orders_consistent": true, "three_level_order": 1.9194464850015491, "corroborated": true, "ladder_order": null, "ladder_order_stderr": null, "ladder_order_above_threshold": null, "ladder_all_windows_above_threshold": null, "ladder_windows_consistent": null}`
 
 ## 四、结果图
 
@@ -131,6 +134,17 @@ PYTHONPATH=src python scripts/summarize_kovasznay_32_64_128.py \
 PYTHONPATH=src python -m pytest tests/test_kovasznay_32_64_128_acceptance.py -q
 ```
 
-## 八、判据可信度补充（2026-11-14）
+## 八、判据可信度补充（负向对照）
 
-判据已登记 `tensor_benchmark_cases` id=137（斜率 ≥ 1.8，32/64/128）。同一算例只把对流格式降为一阶 upwind 的负向对照给出斜率 1.2456（被 1.8 门槛拒绝，判别裕度 0.7167），说明该斜率不是「对任何格式都报二阶」：见 `NEGATIVE_CONTROL.md`、`order-sensitivity.json`、`order-sensitivity.png`，闸门 `scripts/kovasznay_order_sensitivity.py` + `tests/test_kovasznay_order_sensitivity.py`。
+判据已登记 `tensor_benchmark_cases` id=137（三网格速度 L2 斜率 ≥ 1.8）。
+同一算例只把对流格式降为 1 阶（`convection_order=1`）的负向对照，三网格斜率
+1.2456，被 1.8 门槛拒绝（判别裕度 0.7167），
+说明该斜率不是「对任何格式都报二阶」。两项的离散配置只差 `convection_order`。
+
+| 配置 | 对流阶 | 三网格速度 L2 斜率 | 过门槛（≥ 1.80） |
+|---|---:|---:|:--|
+| 参考（判据） | 2 | 1.9623 | 是 |
+| 负向对照 | 1 | 1.2456 | **否**（裕度 0.7167） |
+
+见 `NEGATIVE_CONTROL.md`、`order-sensitivity.json`、`order-sensitivity.png`；
+闸门 `scripts/kovasznay_order_sensitivity.py` + `tests/test_kovasznay_order_sensitivity.py`。
