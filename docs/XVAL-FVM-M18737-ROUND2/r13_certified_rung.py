@@ -54,6 +54,16 @@ GRADED_TAGS = ("hllc", "hllc_cfl0.8")
 REF_FINEST = 12800                              # the rung the graded family is scored on
 REF_EXTENDED = 25600
 
+#: reference-ladder rung selection, coarse -> fine.  Each entry lists the tag
+#: preferences for that rung (first available wins).  The default keeps the R14
+#: behaviour verbatim (6400 rung = frozen CFL 0.4 instrument); Round-15
+#: (``PREDECLARATION-r15.md``) may override the 6400 entry *only after* its
+#: E1r6400 same-grid CFL admission gate passes, so the ladder can run on one
+#: instrument and the E4 ``licensed`` check (all rungs same CFL) can hold.
+REF_LADDER_TAGS = ((6400, ("weno5",)),
+                   (REF_FINEST, ("weno5_cfl0.8", "weno5")),
+                   (REF_EXTENDED, ("weno5_cfl0.8", "weno5")))
+
 #: frozen bars (owner ledger / certified gate / the R11 sub-bars)
 BAR_LEDGER = 15.0
 BAR_THREE = 3.0
@@ -310,9 +320,7 @@ def compute() -> Dict:
 
     # ---- E4: honest ceiling with a reference bar taken at the *new* rung ----
     ref_ladder: List[Dict] = []
-    for nx, tags in ((6400, ("weno5",)),
-                     (REF_FINEST, ("weno5_cfl0.8", "weno5")),
-                     (REF_EXTENDED, ("weno5_cfl0.8", "weno5"))):
+    for nx, tags in REF_LADDER_TAGS:
         prof = next((p for p in (load_profile(nx, t) for t in tags) if p is not None), None)
         if prof is None:
             continue
