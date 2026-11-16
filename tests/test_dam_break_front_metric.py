@@ -122,9 +122,15 @@ def test_wet_branch_verdict_keys_unchanged():
     # into the verdict when it was found that the dry branch reported
     # ``all_pass`` at n = 400 while its graded series error was 6.61 %.
     keys = set(run["verdict"]) - {"all_pass"}
+    # ``bore_position_modes<5%`` / ``step_ratio_modes<5%`` were added (m22842) by
+    # the next independent review that AUDIT.md §9.5 asked for: the wet-bed
+    # ledger quantities are now also graded from an **oracle-free** measurement
+    # (depth-distribution modes), so every pre-existing key keeps its meaning and
+    # the contract change is confined to two new keys.
     assert keys == {"shock_position<5%", "step_ratio<5%", "plateau_h2<5%",
                     "depth_l1<5%", "monotone(no_extrema)", "tv_no_growth<0.5%",
-                    "front_series<5%"}
+                    "front_series<5%", "bore_position_modes<5%",
+                    "step_ratio_modes<5%"}
     assert run["verdict"]["all_pass"]
 
 
