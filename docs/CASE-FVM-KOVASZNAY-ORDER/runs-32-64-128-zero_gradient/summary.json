@@ -317,6 +317,21 @@
       "symmetry_closure": "zero_gradient",
       "convection_order": 2,
       "algorithm": "coupled"
+    },
+    "metadata": {
+      "closure": "zero_gradient",
+      "declared": {
+        "32": "zero_gradient",
+        "64": "zero_gradient",
+        "128": "zero_gradient"
+      },
+      "from_fields": {
+        "32": "zero_gradient",
+        "64": "zero_gradient",
+        "128": "zero_gradient"
+      },
+      "metadata_complete": true,
+      "reconstructed": []
     }
   }
 }
