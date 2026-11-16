@@ -1,0 +1,379 @@
+{
+  "P1_reproduction": {
+    "all_reproduced": true,
+    "rows": [
+      {
+        "case": "ritter-dry",
+        "criteria": {
+          "depth_l1<5%": {
+            "committed": 0.07715065657630972,
+            "reproduced": true,
+            "rerun": 0.07715065657630972
+          },
+          "front_fan<5%": {
+            "committed": 0.017261518056277403,
+            "reproduced": true,
+            "rerun": 0.017261518056277403
+          },
+          "front_series<5%": {
+            "committed": 0.42472950845003216,
+            "reproduced": true,
+            "rerun": 0.42472950845003216
+          },
+          "front_wetted<5%": {
+            "committed": 2.890624999999991,
+            "reproduced": true,
+            "rerun": 2.890624999999991
+          },
+          "monotone(no_extrema)": {
+            "committed": 0.0,
+            "reproduced": true,
+            "rerun": 0.0
+          },
+          "tv_no_growth<0.5%": {
+            "committed": 0.0,
+            "reproduced": true,
+            "rerun": 0.0
+          }
+        },
+        "n": 1600,
+        "recorded_keys_missing_in_artifact": [
+          "dry_depth"
+        ],
+        "steps_committed": 1513,
+        "steps_match": true,
+        "steps_rerun": 1513,
+        "worst_criterion": "tv_no_growth<0.5%",
+        "worst_relative_difference": 0.0
+      },
+      {
+        "case": "stoker-wet",
+        "criteria": {
+          "bore_position_modes<5%": {
+            "committed": 0.021023519848000695,
+            "reproduced": true,
+            "rerun": 0.021023519848000695
+          },
+          "depth_l1<5%": {
+            "committed": 0.042719348003805384,
+            "reproduced": true,
+            "rerun": 0.042719348003805384
+          },
+          "front_series<5%": {
+            "committed": 0.844265997289686,
+            "reproduced": true,
+            "rerun": 0.844265997289686
+          },
+          "monotone(no_extrema)": {
+            "committed": 0.0,
+            "reproduced": true,
+            "rerun": 0.0
+          },
+          "plateau_h2<5%": {
+            "committed": 5.7625186195917935e-05,
+            "reproduced": true,
+            "rerun": 5.7625186195917935e-05
+          },
+          "shock_position<5%": {
+            "committed": 0.021023436657714858,
+            "reproduced": true,
+            "rerun": 0.021023436657714858
+          },
+          "step_ratio<5%": {
+            "committed": 5.7625186195917935e-05,
+            "reproduced": true,
+            "rerun": 5.7625186195917935e-05
+          },
+          "step_ratio_modes<5%": {
+            "committed": 4.848508608660608e-06,
+            "reproduced": true,
+            "rerun": 4.848508608660608e-06
+          },
+          "tv_no_growth<0.5%": {
+            "committed": 0.10049771738320779,
+            "reproduced": true,
+            "rerun": 0.10049771738320779
+          }
+        },
+        "n": 1600,
+        "recorded_keys_missing_in_artifact": [
+          "dry_depth"
+        ],
+        "steps_committed": 918,
+        "steps_match": true,
+        "steps_rerun": 918,
+        "worst_criterion": "tv_no_growth<0.5%",
+        "worst_relative_difference": 0.0
+      }
+    ],
+    "tolerance": 1e-12
+  },
+  "P2_entry_derivation": {
+    "clean": true,
+    "drifted": [],
+    "rows": [
+      {
+        "artifact_value": 0.017261518056277403,
+        "case": "ritter-dry",
+        "criterion": "front_fan<5%",
+        "entry_value": 0.017261518056277403,
+        "relative_difference": 0.0,
+        "status": "derived"
+      },
+      {
+        "artifact_value": 2.890624999999991,
+        "case": "ritter-dry",
+        "criterion": "front_wetted<5%",
+        "entry_value": 2.890624999999991,
+        "relative_difference": 0.0,
+        "status": "derived"
+      },
+      {
+        "artifact_value": 0.07715065657630972,
+        "case": "ritter-dry",
+        "criterion": "depth_l1<5%",
+        "entry_value": 0.07715065657630972,
+        "relative_difference": 0.0,
+        "status": "derived"
+      },
+      {
+        "artifact_value": 0.0,
+        "case": "ritter-dry",
+        "criterion": "monotone(no_extrema)",
+        "entry_value": 0.0,
+        "relative_difference": 0.0,
+        "status": "derived"
+      },
+      {
+        "artifact_value": 0.0,
+        "case": "ritter-dry",
+        "criterion": "tv_no_growth<0.5%",
+        "entry_value": 0.0,
+        "relative_difference": 0.0,
+        "status": "derived"
+      },
+      {
+        "artifact_value": 0.42472950845003216,
+        "case": "ritter-dry",
+        "criterion": "front_series<5%",
+        "entry_value": 0.42472950845003216,
+        "relative_difference": 0.0,
+        "status": "derived"
+      },
+      {
+        "artifact_value": 0.021023436657714858,
+        "case": "stoker-wet",
+        "criterion": "shock_position<5%",
+        "entry_value": 0.021023436657714858,
+        "relative_difference": 0.0,
+        "status": "derived"
+      },
+      {
+        "artifact_value": 5.7625186195917935e-05,
+        "case": "stoker-wet",
+        "criterion": "step_ratio<5%",
+        "entry_value": 5.7625186195917935e-05,
+        "relative_difference": 0.0,
+        "status": "derived"
+      },
+      {
+        "artifact_value": 5.7625186195917935e-05,
+        "case": "stoker-wet",
+        "criterion": "plateau_h2<5%",
+        "entry_value": 5.7625186195917935e-05,
+        "relative_difference": 0.0,
+        "status": "derived"
+      },
+      {
+        "artifact_value": 0.042719348003805384,
+        "case": "stoker-wet",
+        "criterion": "depth_l1<5%",
+        "entry_value": 0.042719348003805384,
+        "relative_difference": 0.0,
+        "status": "derived"
+      },
+      {
+        "artifact_value": 0.0,
+        "case": "stoker-wet",
+        "criterion": "monotone(no_extrema)",
+        "entry_value": 0.0,
+        "relative_difference": 0.0,
+        "status": "derived"
+      },
+      {
+        "artifact_value": 0.10049771738320779,
+        "case": "stoker-wet",
+        "criterion": "tv_no_growth<0.5%",
+        "entry_value": 0.10049771738320779,
+        "relative_difference": 0.0,
+        "status": "derived"
+      },
+      {
+        "artifact_value": 0.021023519848000695,
+        "case": "stoker-wet",
+        "criterion": "bore_position_modes<5%",
+        "entry_value": 0.02102351984800069,
+        "relative_difference": 1.650269306489871e-16,
+        "status": "derived"
+      },
+      {
+        "artifact_value": 4.848508608660608e-06,
+        "case": "stoker-wet",
+        "criterion": "step_ratio_modes<5%",
+        "entry_value": 4.848508608660608e-06,
+        "relative_difference": 0.0,
+        "status": "derived"
+      },
+      {
+        "artifact_value": 0.844265997289686,
+        "case": "stoker-wet",
+        "criterion": "front_series<5%",
+        "entry_value": 0.844265997289686,
+        "relative_difference": 0.0,
+        "status": "derived"
+      }
+    ],
+    "unmapped": []
+  },
+  "P3_config_completeness": {
+    "complete": false,
+    "missing_anywhere": [
+      "dry_depth"
+    ],
+    "rows": [
+      {
+        "case": "ritter-dry",
+        "missing": [
+          "dry_depth"
+        ],
+        "present": [
+          "cfl",
+          "dx",
+          "gravity",
+          "grid",
+          "h0",
+          "h1",
+          "order",
+          "t_star",
+          "x_dam",
+          "x_max",
+          "x_min"
+        ]
+      },
+      {
+        "case": "stoker-wet",
+        "missing": [
+          "dry_depth"
+        ],
+        "present": [
+          "cfl",
+          "dx",
+          "gravity",
+          "grid",
+          "h0",
+          "h1",
+          "order",
+          "t_star",
+          "x_dam",
+          "x_max",
+          "x_min"
+        ]
+      }
+    ]
+  },
+  "P4_verdict_algebra": {
+    "accepted_grid_min": 400,
+    "accepted_grid_min_primary_only": 400,
+    "binding_failures": [
+      {
+        "case": "ritter-dry",
+        "criterion": "front_wetted<5%",
+        "n": 100,
+        "primary": false
+      },
+      {
+        "case": "stoker-wet",
+        "criterion": "monotone(no_extrema)",
+        "n": 100,
+        "primary": true
+      },
+      {
+        "case": "stoker-wet",
+        "criterion": "monotone(no_extrema)",
+        "n": 200,
+        "primary": true
+      }
+    ],
+    "consistent": true,
+    "passing_grids": [
+      400,
+      800,
+      1600
+    ],
+    "passing_grids_primary_only": [
+      400,
+      800,
+      1600
+    ],
+    "problems": []
+  },
+  "P5_provenance": {
+    "builder_identity": {
+      "committed_bytes": 14411,
+      "derived_bytes": 14411,
+      "identical": true
+    },
+    "staleness": {
+      "cases_audited": 53,
+      "covered": false,
+      "dam_break_cases_registered": [],
+      "unfrozen_contains_shallow_water": false,
+      "unfrozen_count": 18
+    }
+  },
+  "P6_negative_controls": {
+    "all_caught": true,
+    "controls": [
+      {
+        "caught": true,
+        "check": "P1 reproduction",
+        "name": "artifact front_fan_error +10%"
+      },
+      {
+        "caught": true,
+        "check": "P2 derivation",
+        "name": "entry front_fan value +10% (hand edit)"
+      },
+      {
+        "caught": true,
+        "check": "P4 verdict algebra",
+        "name": "one criteria pass flag flipped"
+      },
+      {
+        "caught": true,
+        "check": "P3 config completeness",
+        "name": "x_dam blanked in the entry"
+      },
+      {
+        "caught": true,
+        "check": "P4 verdict algebra",
+        "name": "accepted_grid_min doubled"
+      }
+    ]
+  },
+  "artifact": "src/tensorfvm/verification/artifacts/shallow-water-dam-break/metrics.json",
+  "command": "PYTHONPATH=src python scripts/audit_dambreak_pool_provenance.py",
+  "entry": "docs/case-fvm-dambreak-stoker/case_pool_entry.json",
+  "generated_at": "2026-11-16T06:48:40Z",
+  "slug": "CASE-FVM-DAMBREAK-STOKER",
+  "verdict": {
+    "P1_reproduces": true,
+    "P2_entry_is_derived": true,
+    "P3_entry_is_self_contained": false,
+    "P4_verdicts_follow_from_rows": true,
+    "P5_case_is_frozen": false,
+    "P5_entry_is_generated": true,
+    "P6_auditor_has_power": true
+  },
+  "wall_time_s": 6.827415943145752
+}
