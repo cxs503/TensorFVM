@@ -345,3 +345,50 @@ n = 400 在序列误差 **6.613 % > 5 %** 时仍对外 `all_pass = True`。
 工件：`depth_modes.json`；图 `depth_modes.png`；
 测试：`tests/test_dambreak_depth_modes.py`（8 项，含三向证伪与弃权守卫）。
 
+
+---
+
+## 增补（重开第 3 轮）：把 `solver.order = 2` 变成登记内部的可核数
+
+**缺口（为什么值得单独改）**：`docs/case-fvm-dambreak-stoker/case_pool_entry.json` 是本算例的
+**复用面**——别人不一定读本报告，只读这个 JSON。它此前只有一个阶数字段
+`solver.order = 2` / `cases[*].order = 2`，而同一份已提交工件
+`verification/artifacts/shallow-water-dam-break/convergence.json` 的每一级实测阶数都在 1.0
+附近（`observed_order_l1`：`ritter-dry` 1.0077、`stoker-wet` 0.9929）。两个数都是真的：
+2 是**格式**在光滑数据上的阶（MUSCL minmod + HLL + SSP-RK3），≈1 是**本算例**在间断下
+被数据正则性限制住的阶。但登记里只有前者，读者无从分辨——这正是
+`docs/case-fvm-dambreak-order-audit/REPORT.md` 已经查清、却没有回写进登记的那件事。
+
+**做法**（零手抄，全部由工件派生）：
+
+* `src/tensorfvm/verification/case_pool_dambreak.py` 新增 `_loglog_slope()`（log–log 最小二乘）
+  与 `_order_claim()`：读 `convergence.json` 的加密行，为每个算例写出
+  `order_claim = {nominal, nominal_kind, grids, observed_depth_l1, observed_headline,
+  observed_headline_quantity, observed_below_nominal, scope, evidence_report}`。
+  headline 量按算例自动选（干床 `front_fan`、湿床 `shock`），不写死键名。
+* `render_catalog_section()` 在参数表后增加一段 **Order claim**，把 nominal 与实测阶数
+  并排写进 `docs/verification-catalog.md` §19.1，并指明"不得把 order = 2 当成本算例在
+  5 % 闸门下的精度"。
+* `solver` 块加 `order_evidence` / `order_scope`，`reports` 列表补上阶数审计报告。
+* 登记与目录仍由 `--check` 把守：工件一动、数字一改，测试就红。
+
+重算值（测试内独立估计量 vs 工件内声明值）：
+
+| case | 重算 depth-L1 阶 | 工件声明 | 差 | headline 量 | 重算 headline 阶 | 声明 |
+|---|---:|---:|---:|---|---:|---:|
+| `ritter-dry` | 1.0077461822 | 1.0077461822 | 3e-16 | `front_fan` | 1.1439066046 | 1.1439066046 |
+| `stoker-wet` | 0.9928639325 | 0.9928639325 | 8e-16 | `shock` | 1.1827841594 | 1.1827841594 |
+
+**测试**：`tests/test_case_pool_dambreak_stoker.py` 新增 3 项——
+`test_order_claim_is_recomputed_from_the_ladder`（独立重算 + 声明值一致 + 方向为"低于
+nominal" + 证据报告在盘上）、`test_order_claim_follows_the_artifact_not_a_literal`
+（功效检验：把最细一行 `depth_l1` 乘 8，派生阶数必须跟着降 ~0.6，值被写死则本测试恒绿、
+故可证伪）、`test_catalog_section_states_the_order_claim`（目录文字必须带实测值）。
+
+图 `order_claim.png`（`make_order_claim_figure.py` 从 `convergence.json` 直接画，
+含拟合斜率与 nominal 斜率 2 的对照线）。
+
+**误差判定**：本条不引入新的物理基准，被核的量是阶数本身——重算斜率与工件声明值相差
+3e-16 / 8e-16（**< 3 % ✅**）。真值意义上的阶数：`ritter-dry` 1.0077、`stoker-wet` 0.9929，
+与"TVD 格式在间断处降为一阶"的既有判断一致；本增补**不改变**任何既有判据、阈值或
+verdict 键，也不改报告前文的任何结论。

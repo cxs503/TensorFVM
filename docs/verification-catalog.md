@@ -901,7 +901,7 @@ Discriminating power is measured, not assumed: the control criteria (`C6`, `C7c`
 **Implementation**: `src/tensorfvm/shallow_water/swe1d.py`, `src/tensorfvm/shallow_water/dam_break.py`, `src/tensorfvm/shallow_water/exact.py`
 **Driver**: `scripts/run_shallow_water_dam_break.py`
 **Tests**: `tests/test_case_pool_dambreak_stoker.py`, `tests/test_dambreak_stoker_series.py`, `tests/test_shallow_water_dam_break.py`
-**Report**: `docs/case-fvm-dambreak-stoker/REPORT.md`, `docs/case-fvm-dambreak-stoker/AUDIT.md`, `docs/case-fvm-dambreak-stoker-2d/REPORT.md`, `docs/case-fvm-dambreak-stoker-robustness/REPORT.md`
+**Report**: `docs/case-fvm-dambreak-stoker/REPORT.md`, `docs/case-fvm-dambreak-stoker/AUDIT.md`, `docs/case-fvm-dambreak-stoker-2d/REPORT.md`, `docs/case-fvm-dambreak-stoker-robustness/REPORT.md`, `docs/case-fvm-dambreak-order-audit/REPORT.md`
 **Artifact**: `src/tensorfvm/verification/artifacts/shallow-water-dam-break/metrics.json`, `src/tensorfvm/verification/artifacts/shallow-water-dam-break/convergence.json`, `src/tensorfvm/verification/artifacts/shallow-water-dam-break/sensitivity.json`, `src/tensorfvm/verification/artifacts/shallow-water-dam-break/exactness.json`, `src/tensorfvm/verification/artifacts/shallow-water-dam-break/front_definitions.json`, `src/tensorfvm/verification/artifacts/shallow-water-dam-break/bore_subcell.json`
 **Case-pool entry**: `docs/case-fvm-dambreak-stoker/case_pool_entry.json`
 
@@ -911,6 +911,8 @@ Discriminating power is measured, not assumed: the control criteria (`C6`, `C7c`
 |---|---:|---:|---:|---:|---:|---:|
 | `ritter-dry` | 1.000 | 0.000 | 9.81 | 2.0 | 1600 | 0.00625 |
 | `stoker-wet` | 1.000 | 0.500 | 9.81 | 2.0 | 1600 | 0.00625 |
+
+**Order claim** -- `order = 2` is the *scheme* order, not this case's accuracy: `ritter-dry` observed depth-L1 order **1.008** (front_fan 1.144) on `n = 100/200/400/800/1600`; `stoker-wet` observed depth-L1 order **0.993** (shock 1.183) on `n = 100/200/400/800/1600`. The anchored ladder contains a jump (dry front / bore), so the observed order is owned by the data regularity, not by the operator -- the operator itself is substantiated second order on smooth data in the evidence report `docs/case-fvm-dambreak-order-audit/REPORT.md`. Both numbers are recomputed from the convergence artifact, so the caveat cannot drift away from the ladder it describes.
 
 **ritter-dry** (reference: Ritter (1892) Z. Ver. Deutsch. Ing. 36:947-954)
 

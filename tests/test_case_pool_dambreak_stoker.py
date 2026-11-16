@@ -157,5 +157,115 @@ def test_markdown_section_numbers_come_from_the_entry(entry):
     assert "212.500 %" in section
 
 
+def _recompute_order(rows, field, sub=None):
+    """Least-squares slope of log(err) vs log(dx) -- the test's own estimator."""
+
+    import math
+
+    pts = []
+    for row in rows:
+        value = row.get(field) if sub is None else (row.get(field) or {}).get(sub)
+        if value:
+            pts.append((math.log(float(row["dx"])), math.log(float(value))))
+    assert len(pts) >= 2, "refinement ladder too short to fit an order"
+    n = float(len(pts))
+    mx = sum(x for x, _ in pts) / n
+    my = sum(y for _, y in pts) / n
+    den = sum((x - mx) ** 2 for x, _ in pts)
+    return sum((x - mx) * (y - my) for x, y in pts) / den
+
+
+def test_order_claim_is_recomputed_from_the_ladder(entry):
+    """``order = 2`` must travel with the order the committed ladder measures.
+
+    The entry used to expose the nominal scheme order alone; a re-user reading
+    only ``case_pool_entry.json`` could mistake it for the accuracy of the case.
+    The claim is now derived from the convergence artifact, so the test both
+    recomputes it (independent estimator) and requires the honest direction:
+    on this discontinuous case the observed order is *below* the nominal one.
+    """
+
+    import json
+
+    art = json.load(
+        open(
+            os.path.join(
+                REPO_ROOT,
+                "src/tensorfvm/verification/artifacts/shallow-water-dam-break/convergence.json",
+            ),
+            encoding="utf-8",
+        )
+    )
+    assert entry["solver"]["order"] == 2
+    assert entry["solver"]["order_evidence"] in entry["reports"]
+    assert os.path.exists(os.path.join(REPO_ROOT, entry["solver"]["order_evidence"]))
+
+    for case in entry["cases"]:
+        claim = case["order_claim"]
+        blob = art[case["key"]]
+        assert claim["nominal"] == case["order"] == blob["order"] == 2
+        assert claim["grids"] == [row["n"] for row in blob["rows"]]
+        # 1. the pool number is reproduced by the test's own fit, not copied
+        assert claim["observed_depth_l1"] == pytest.approx(
+            _recompute_order(blob["rows"], "depth_l1"), abs=1e-12
+        )
+        # 2. ... and it agrees with the artifact's own declared order
+        assert claim["observed_depth_l1_declared"] == pytest.approx(
+            blob["observed_order_l1"], abs=1e-12
+        )
+        assert claim["observed_headline"] == pytest.approx(
+            _recompute_order(blob["rows"], "headline", claim["observed_headline_quantity"]),
+            abs=1e-12,
+        )
+        # 3. the honest direction is recorded, with a scope note, and the report exists
+        assert claim["observed_below_nominal"] is True
+        assert claim["observed_depth_l1"] < claim["nominal"] - 0.1
+        assert claim["scope"] and "accuracy" in claim["scope"]
+        assert claim["evidence_report"] == entry["solver"]["order_evidence"]
+
+
+def test_order_claim_follows_the_artifact_not_a_literal():
+    """Power check: perturbing the ladder must move the claim (no hard-coded digit).
+
+    A green ``test_order_claim_is_recomputed_from_the_ladder`` would be vacuous
+    if the number were typed in.  Corrupt the finest row by a factor of 8 (one
+    half-refinement's worth of second order) and require the derived claim to
+    follow it.
+    """
+
+    import copy
+
+    from tensorfvm.verification.case_pool_dambreak import load_artifacts, render_entry_json
+
+    art = load_artifacts()
+    corrupted = copy.deepcopy(art)
+    finest = max(corrupted["convergence"]["ritter-dry"]["rows"], key=lambda r: r["n"])
+    finest["depth_l1"] *= 8.0
+    claim = [
+        case["order_claim"]
+        for case in build_entry(corrupted)["cases"]
+        if case["key"] == "ritter-dry"
+    ][0]
+    base = build_entry(art)["cases"][0]["order_claim"]["observed_depth_l1"]
+    moved = claim["observed_depth_l1"] - base
+    # one corner of a 5-point ladder: the fitted slope drops by (delta * lever arm),
+    # i.e. ~0.6 here -- far above the 1e-12 agreement the derived claim has
+    assert moved < -0.4, moved  # a coarser-looking ladder fits a lower order
+    assert render_entry_json(build_entry(corrupted)) != render_entry_json(build_entry(art))
+
+
+def test_catalog_section_states_the_order_claim(entry):
+    """Catalog readers see the measured order next to the nominal one."""
+
+    from tensorfvm.verification.case_pool_dambreak import render_catalog_section
+
+    section = render_catalog_section(entry)
+    assert "**Order claim**" in section
+    for case in entry["cases"]:
+        claim = case["order_claim"]
+        assert f"{claim['observed_depth_l1']:.3f}" in section
+    assert "scheme" in section and "docs/case-fvm-dambreak-order-audit/REPORT.md" in section
+
+
 if __name__ == "__main__":  # pragma: no cover
     raise SystemExit(pytest.main([__file__, "-q"]))
