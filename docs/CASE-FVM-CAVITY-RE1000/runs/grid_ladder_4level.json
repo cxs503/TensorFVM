@@ -1,0 +1,348 @@
+{
+  "case": "CASE-FVM-CAVITY-RE1000",
+  "audit_unit": "four-level grid ladder (n = 32/64/128/192), references = Ghia 1982 + spectral limit",
+  "cluster_job": "cj3849 (n=192, node n315, rc=0, succeeded)",
+  "references": {
+    "ghia_u_min": -0.38289,
+    "ghia_v_max": 0.37095,
+    "ghia_vortex": [
+      0.5313,
+      0.5625
+    ],
+    "spectral_limit_u_min": -0.38860252504915505,
+    "spectral_limit_v_max": 0.37710100277726843,
+    "spectral_limit_psi_min": -0.11893020414832685,
+    "spectral_limit_uncertainty_u_min": 8.903513666470577e-06,
+    "spectral_limit_uncertainty_v_max": 2.4180166850982126e-05
+  },
+  "levels": [
+    {
+      "n": 32,
+      "source": "docs/CASE-FVM-CAVITY-RE1000/runs/fields/Re1000_n32.pt",
+      "stored_json": "docs/CASE-FVM-CAVITY-RE1000/runs/lid_cavity_Re1000_n32.json",
+      "u_min_interior": -0.3276159087380135,
+      "v_max_interior": 0.31790081010992954,
+      "psi_min": -0.10548787437364927,
+      "vortex_centre": [
+        0.546875,
+        0.578125
+      ],
+      "vortex_displacement": 0.022061759902600703,
+      "vortex_displacement_stored": 0.046875,
+      "u_min_node": -0.316430836724452,
+      "v_max_node": 0.3154449049885548,
+      "max_abs_u": 0.20329603195274926,
+      "max_abs_v": 0.07538595212630528,
+      "max_abs_u_pchip": 0.07919764139618135,
+      "max_abs_v_pchip": 0.08410884881894826,
+      "err_u_min_vs_ghia": 0.17357247061962447,
+      "err_v_max_vs_ghia": 0.14962958622845446,
+      "err_u_min_vs_limit": 0.185721099767877,
+      "err_v_max_vs_limit": 0.16350022231346406,
+      "steady_residual": 9.758993021099135e-08,
+      "max_divergence": 3.552713678800501e-15,
+      "converged": true,
+      "wall_seconds": 125.47,
+      "gate_pass": false,
+      "gate_band": [
+        "diagnostic",
+        "registered"
+      ]
+    },
+    {
+      "n": 64,
+      "source": "docs/CASE-FVM-CAVITY-RE1000/runs/fields/Re1000_n64.pt",
+      "stored_json": "docs/CASE-FVM-CAVITY-RE1000/runs/lid_cavity_Re1000_n64.json",
+      "u_min_interior": -0.3730957888873246,
+      "v_max_interior": 0.3625262034735016,
+      "psi_min": -0.11524476143380591,
+      "vortex_centre": [
+        0.5390625,
+        0.5703125
+      ],
+      "vortex_displacement": 0.01101324486697722,
+      "vortex_displacement_stored": 0.007862499999999994,
+      "u_min_node": -0.37218421198606744,
+      "v_max_node": 0.36228285758895074,
+      "max_abs_u": 0.029310303373660473,
+      "max_abs_v": 0.01973391982409828,
+      "max_abs_u_pchip": 0.018854070691719294,
+      "max_abs_v_pchip": 0.016021666431797643,
+      "err_u_min_vs_ghia": 0.027960479547474656,
+      "err_v_max_vs_ghia": 0.02336471872502835,
+      "err_u_min_vs_limit": 0.042249630418667056,
+      "err_v_max_vs_limit": 0.03929489733303603,
+      "steady_residual": 9.732030292752825e-08,
+      "max_divergence": 2.4868995751603507e-14,
+      "converged": true,
+      "wall_seconds": 331.36,
+      "gate_pass": true,
+      "gate_band": [
+        "diagnostic",
+        "registered"
+      ]
+    },
+    {
+      "n": 128,
+      "source": "docs/CASE-FVM-CAVITY-RE1000/runs/fields/Re1000_n128.pt",
+      "stored_json": "docs/CASE-FVM-CAVITY-RE1000/runs/lid_cavity_Re1000_n128.json",
+      "u_min_interior": -0.38530400738358145,
+      "v_max_interior": 0.3738665719785615,
+      "psi_min": -0.11807108649429089,
+      "vortex_centre": [
+        0.52734375,
+        0.56640625
+      ],
+      "vortex_displacement": 0.005559739483554958,
+      "vortex_displacement_stored": 0.0039562499999999945,
+      "u_min_node": -0.3853676434683154,
+      "v_max_node": 0.3738401868300326,
+      "max_abs_u": 0.00430729832562185,
+      "max_abs_v": 0.011184127636449603,
+      "max_abs_u_pchip": 0.004307436132830078,
+      "max_abs_v_pchip": 0.011219958544598285,
+      "err_u_min_vs_ghia": 0.006470901481666839,
+      "err_v_max_vs_ghia": 0.007791311039311538,
+      "err_u_min_vs_limit": 0.008324396709543859,
+      "err_v_max_vs_limit": 0.00864706251964488,
+      "steady_residual": 9.88833903647901e-08,
+      "max_divergence": 1.2079226507921703e-13,
+      "converged": true,
+      "wall_seconds": 1288.51,
+      "gate_pass": true,
+      "gate_band": [
+        "registered"
+      ]
+    },
+    {
+      "n": 192,
+      "source": "docs/CASE-FVM-CAVITY-RE1000/runs/refine/field_n192.npz",
+      "stored_json": "docs/CASE-FVM-CAVITY-RE1000/runs/refine/lid_cavity_Re1000_n192.json",
+      "u_min_interior": -0.3872380577701296,
+      "v_max_interior": 0.3757090090135032,
+      "psi_min": -0.11857024397706617,
+      "vortex_centre": [
+        0.5286458333333333,
+        0.5651041666666666
+      ],
+      "vortex_displacement": 0.0037183712458847347,
+      "vortex_displacement_stored": 0.0078125,
+      "u_min_node": -0.38731399772619035,
+      "v_max_node": 0.37568214556287716,
+      "max_abs_u": 0.005151548646346205,
+      "max_abs_v": 0.015260224790577315,
+      "max_abs_u_pchip": 0.0051570738453163845,
+      "max_abs_v_pchip": 0.01525993085931937,
+      "err_u_min_vs_ghia": 0.01155422634748973,
+      "err_v_max_vs_ghia": 0.012756828583035866,
+      "err_u_min_vs_limit": 0.0033157976078557545,
+      "err_v_max_vs_limit": 0.0037625389589041065,
+      "steady_residual": 9.932350053531992e-08,
+      "max_divergence": 3.552713678800501e-13,
+      "converged": true,
+      "wall_seconds": 2539.16,
+      "gate_pass": true,
+      "gate_band": [
+        "registered"
+      ]
+    }
+  ],
+  "series": {
+    "u_min_node": [
+      -0.316430836724452,
+      -0.37218421198606744,
+      -0.3853676434683154,
+      -0.38731399772619035
+    ],
+    "v_max_node": [
+      0.3154449049885548,
+      0.36228285758895074,
+      0.3738401868300326,
+      0.37568214556287716
+    ],
+    "psi_min": [
+      -0.10548787437364927,
+      -0.11524476143380591,
+      -0.11807108649429089,
+      -0.11857024397706617
+    ],
+    "max_abs_u": [
+      0.20329603195274926,
+      0.029310303373660473,
+      0.00430729832562185,
+      0.005151548646346205
+    ],
+    "max_abs_v": [
+      0.07538595212630528,
+      0.01973391982409828,
+      0.011184127636449603,
+      0.015260224790577315
+    ]
+  },
+  "orders": {
+    "u_min_node": {
+      "pair_128_192": {
+        "order": 2.2702135082066768,
+        "oscillatory": false,
+        "error_ratio": 2.510526182243989,
+        "errors": [
+          0.0032348815808396214,
+          0.0012885273229646943
+        ],
+        "grids": [
+          128,
+          192
+        ]
+      },
+      "textbook_32_64_128": {
+        "order": 2.0803332125078047,
+        "oscillatory": false,
+        "increments": [
+          -0.055753375261615445,
+          -0.013183431482247987
+        ],
+        "ratios": [
+          2.0,
+          2.0
+        ],
+        "refinement": 2.0
+      }
+    },
+    "v_max_node": {
+      "pair_128_192": {
+        "order": 2.052274459569468,
+        "oscillatory": false,
+        "error_ratio": 2.2981987998241116,
+        "errors": [
+          0.003260815947235818,
+          0.001418857214391278
+        ],
+        "grids": [
+          128,
+          192
+        ]
+      },
+      "textbook_32_64_128": {
+        "order": 2.018869966556277,
+        "oscillatory": false,
+        "increments": [
+          0.046837952600395916,
+          0.011557329241081882
+        ],
+        "ratios": [
+          2.0,
+          2.0
+        ],
+        "refinement": 2.0
+      }
+    },
+    "psi_min": {
+      "pair_128_192": {
+        "order": 2.1454681834478193,
+        "oscillatory": false,
+        "error_ratio": 2.386701981575052,
+        "errors": [
+          0.0008591176540359569,
+          0.0003599601712606787
+        ],
+        "grids": [
+          128,
+          192
+        ]
+      },
+      "textbook_32_64_128": {
+        "order": 1.7874935265632987,
+        "oscillatory": false,
+        "increments": [
+          -0.009756887060156635,
+          -0.0028263250604849827
+        ],
+        "ratios": [
+          2.0,
+          2.0
+        ],
+        "refinement": 2.0
+      }
+    }
+  },
+  "bands": {
+    "n128_u_min": {
+      "order": 2.0803332125078047,
+      "epsilon": 0.03421001141558455,
+      "increment_ratio": 4.229048813026379,
+      "gci_fine": 0.013243068391215224,
+      "band": 0.005103450058212346,
+      "interval": [
+        -0.39047109352652776,
+        -0.3802641934101031
+      ],
+      "refinement": 2.0,
+      "safety": 1.25
+    },
+    "n128_v_max": {
+      "order": 2.018869966556277,
+      "epsilon": 0.030915160135891035,
+      "increment_ratio": 4.05266230833893,
+      "gci_fine": 0.012659097622524595,
+      "band": 0.004732479420304216,
+      "interval": [
+        0.3691077074097284,
+        0.3785726662503368
+      ],
+      "refinement": 2.0,
+      "safety": 1.25
+    },
+    "n192_u_min": {
+      "gci_fine": 0.0041585358731199675,
+      "band": 0.001610659153705868,
+      "order": 2.2702135082066768,
+      "refinement": 1.5,
+      "interval": [
+        -0.38892465687989625,
+        -0.38570333857248446
+      ]
+    },
+    "n192_v_max": {
+      "gci_fine": 0.004720936405779388,
+      "band": 0.001773571517989098,
+      "order": 2.052274459569468,
+      "refinement": 1.5,
+      "interval": [
+        0.37390857404488803,
+        0.3774557170808663
+      ]
+    }
+  },
+  "verdict": {
+    "u_min": {
+      "gate_pass": true,
+      "table_agreement_monotone": false,
+      "limit_convergence_monotone": true,
+      "residual_exceeds_discretisation": true,
+      "cancellation_finest": 1.78556672207494,
+      "finest_table_error": 0.01155422634748973,
+      "finest_limit_error": 0.0033157976078557545,
+      "finest_gci": 0.0041585358731199675,
+      "tolerance": 0.03,
+      "verdict": "reference_offset_dominates"
+    },
+    "v_max": {
+      "gate_pass": true,
+      "table_agreement_monotone": false,
+      "limit_convergence_monotone": true,
+      "residual_exceeds_discretisation": true,
+      "cancellation_finest": 1.6373147623898603,
+      "finest_table_error": 0.012756828583035866,
+      "finest_limit_error": 0.0037625389589041065,
+      "finest_gci": 0.004720936405779388,
+      "tolerance": 0.03,
+      "verdict": "reference_offset_dominates"
+    }
+  },
+  "reconciliation_atol": 1e-12,
+  "not_run": [
+    "no third independent published source (the spectral limit is one family, even if it is fourth-order extrapolated)",
+    "no re-march of the solver in this audit; the fields are the converged job artefacts",
+    "n = 320+ (fifth level) not attempted: cost is O(n^2) steps at n^2 cells"
+  ]
+}
