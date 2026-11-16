@@ -1,0 +1,28 @@
+name: repo-guard
+
+# FVM-SLIM-GUARD (D6): CI size gate.
+# (a) blob gate: no file changed in base..HEAD exceeds 512 KiB
+# (b) pack gate: reachable pack size vs. recorded baseline (drift budget)
+#     and an absolute hard cap (2 GiB backstop)
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: repo-guard-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  guard:
+    name: repo size gate
+    runs-on: ci-loong64
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Repo guard (blob gate + pack drift gate)
+        run: python3 scripts/guard/repo_guard.py ci
