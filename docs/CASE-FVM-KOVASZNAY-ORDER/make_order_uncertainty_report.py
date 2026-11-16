@@ -65,7 +65,21 @@ add('**锚点**: `CASE-FVM-KOVASZNAY-ORDER`（算例池·定常 Kovasznay 流收
     '判据: L2 收敛阶 ≥ 1.8（名义二阶），指标 = 32/64/128 三套网格 log-log 斜率')
 add('**外部基准**: Kovasznay, L. I. G. (1948), *Proc. Cambridge Philos. Soc.* 44:58–62, '
     'doi:10.1017/S0305004100023999')
-add(f'**仓 / 作业**: TensorFVM · n=256 由集群作业 `{cases[256].get("run_job", "cj2912")}` '
+def job_id(n):
+    """Scheduler job that produced a level: recorded next to the artifacts.
+
+    The runner does not know its own job id, so the id lives beside the artifacts
+    as ``run-job.txt`` (one line, written from the scheduler receipt).  A level
+    with no such file is reported as ``not recorded`` rather than silently
+    borrowing the id of an earlier failed attempt.
+    """
+    path = LADDER / f'n{n}' / 'run-job.txt'
+    if path.is_file():
+        return path.read_text().strip().split()[0]
+    return cases[n].get('run_job') or 'not recorded'
+
+
+add(f'**仓 / 作业**: TensorFVM · n=256 由集群作业 `{job_id(256)}` '
     f'（`--symmetry-closure zero_gradient`）产出')
 add('**本文件由** `make_order_uncertainty_report.py` **从工件生成**（零手抄，可重生成）')
 add('')

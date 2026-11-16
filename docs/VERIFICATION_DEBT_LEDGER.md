@@ -883,3 +883,23 @@
 - 明示未做（not_run）：异族代码（CLAWPACK/FEniCS）交叉；`t*>2` 长时程；二维/斜置溃坝。
 - 建议总账动作：`CASE-FVM-DAMBREAK-STOKER` 证据链已加一层独立复核 → 可升 `verified`；
   若要求更强的独立性，另立 `XVAL-FVM-DAMBREAK-THIRD-CODE`（验收＝异族代码同解 L1 ≤5 %）。
+
+## 4q. 追加欠账（append-only，m22872 重开 PR#806 第 3 轮）
+
+### D10 续（m22872）—— 三网格标量已搬上文本通道；n=256 仍 honest WITHHELD
+- 起因: `ORDER-32-64-128-256-ATTEMPT.md` §5.1 处方（同作业内把 cases.json + 降采样 CSV 写进
+  `docs/**.md`），以及 `cj2912`/`cj3258` 两次 `rc=0` 但取回目录为空的事实——证据只存 npz 是单点故障。
+- 交付: `scripts/write_kovasznay_evidence_packs.py`（从已提交 npz 渲染文本 pack，不重解，`--check`
+  复核 sha256/行）；`runs-32-64-128-zero_gradient/n{32,64,128}/n*-evidence.md`（三份，约 1.9 MB）；
+  `tests/test_kovasznay_ladder_text_channel.py`（16 测：行逐字一致 + sha256 绑定 + 文本重算 L2 +
+  纯文本斜率 ≥1.8 且与 summary 差 ≤1 % + 重渲染逐列不变）；
+  `docs/CASE-FVM-KOVASZNAY-ORDER/TEXT-CHANNEL-32-64-128.md`。
+- **顺带修的真缺陷**: `evidence_pack.lattice_indices` 把 `i%stride==0` 掩码套在单格展向轴上，
+  展向索引是浮点噪声（n=32/64/128 → 15/31/63），`stride>1` 时掩码整体为空 →
+  `ValueError: downsample selected no cells`，**最细层级根本写不出文本 pack**（n=128 需 stride 2、
+  n=256 需 stride 4）。修法：单格轴不抽稀 + 用轴内排序位置取代绝对索引；回归测已加。
+- 关键数字: 文本通道复现 vel L2 n=32/64/128 偏差 0/0/0.594 %，去均值压力 n=128 偏差 2.741 %；
+  纯文本重建的三网格斜率 **1.9581 vs 已提交 1.9623（0.22 %）**，仍过 1.8 门。
+- **未完成（honest）**: n=256 仍未测（本轮 `cj4441` 递交后长时间排队，未在时限内落盘）→
+  四层阶与 `order_stderr` 继续 `None`，不报任何四层数字；建议下次以"文本优先"方式重投，
+  并先跑 `--max-outer-iterations 1` 内存探针。
