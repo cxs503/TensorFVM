@@ -1,14 +1,14 @@
 {
   "meta": {
-    "generated_at": "2026-11-16T03:32:55Z",
+    "generated_at": "2026-11-16T08:28:31Z",
     "tolerance": 0.05,
     "t_star": 2.0,
     "python": "3.11.6",
     "numpy": "2.4.6",
     "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
-    "git_commit": "be5ba335",
-    "command": "PYTHONPATH=src python scripts/run_shallow_water_dam_break.py --n 1600 --resolutions 100,200,400,800,1600",
-    "wall_time_s": 49.52130063995719
+    "git_commit": "a12d1e17",
+    "command": "PYTHONPATH=src python scripts/run_shallow_water_dam_break.py --out /tmp/dbfresh",
+    "wall_time_s": 52.790044290944934
   },
   "artifacts": {
     "profile_ritter-dry_n1600.csv": "profile_ritter-dry_n1600.csv",
