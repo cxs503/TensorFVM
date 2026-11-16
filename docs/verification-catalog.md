@@ -945,18 +945,18 @@ front series: `24` graded samples of `25` (resolution floor `4` cells), max erro
 
 | n | case | x_f/x_s series error | local extrema | depth L1 | verdict |
 |---:|---|---:|---:|---:|---|
-| 100 | `ritter-dry` | 4.695 % | 0 | 1.262 % | **honest FAIL** (front_wetted<5%) |
+| 100 | `ritter-dry` | 0.958 % | 0 | 1.262 % | **honest FAIL** (front_wetted<5%) |
 | 100 | `stoker-wet` | 0.676 % | 1 | 0.666 % | **honest FAIL** (monotone(no_extrema)) |
-| 200 | `ritter-dry` | 6.613 % | 0 | 0.623 % | **honest FAIL** (front_series<5%) |
+| 200 | `ritter-dry` | 0.639 % | 0 | 0.623 % | PASS |
 | 200 | `stoker-wet` | 0.877 % | 1 | 0.342 % | **honest FAIL** (monotone(no_extrema)) |
-| 400 | `ritter-dry` | 6.613 % | 0 | 0.308 % | **honest FAIL** (front_series<5%) |
+| 400 | `ritter-dry` | 0.680 % | 0 | 0.308 % | PASS |
 | 400 | `stoker-wet` | 0.795 % | 0 | 0.173 % | PASS |
-| 800 | `ritter-dry` | 1.398 % | 0 | 0.154 % | PASS |
+| 800 | `ritter-dry` | 0.532 % | 0 | 0.154 % | PASS |
 | 800 | `stoker-wet` | 0.795 % | 0 | 0.085 % | PASS |
 | 1600 | `ritter-dry` | 0.425 % | 0 | 0.077 % | PASS |
 | 1600 | `stoker-wet` | 0.844 % | 0 | 0.043 % | PASS |
 
 **Reference self-consistency** (the analytic solution is itself audited, so a wrong closed form cannot pass): Ritter `h/h0 = 0.4444` and `u/c0 = 0.6667` at the dam, `x_f/(c0 t) = 2.0000`, fan-mass residual `1.3e-13`; Stoker `h2 = 0.7269`, `u2 = 0.9234`, bore speed `2.9579`, step `h2/h1 = 1.4538`, Rankine-Hugoniot residuals mass `0.0e+00` / momentum `1.1e-16`.
 
-**Verification Status**: ✅ PASS at `n >= 800` (5 % gate, `t* = 2`, pool grid `n = 1600`). Honest FAIL kept on the record: `ritter-dry` n = 100 (front_wetted<5%); `stoker-wet` n = 100 (monotone(no_extrema)); `ritter-dry` n = 200 (front_series<5%); `stoker-wet` n = 200 (monotone(no_extrema)); `ritter-dry` n = 400 (front_series<5%). The dry-bed 100-cell row fails the *legacy* wetted-edge front only (diagnostic), while the coarse dry-bed rows at n = 200/400 miss the front *series* (6.61 %) -- recorded, not averaged away. Sensitivity sweep (7 variants, worst headline error 0.395 %) and the sub-cell bore position are in the artifact bundle.
+**Verification Status**: ✅ PASS at `n >= 400` (5 % gate, `t* = 2`, pool grid `n = 1600`). Honest FAIL kept on the record: `ritter-dry` n = 100 (front_wetted<5%); `stoker-wet` n = 100 (monotone(no_extrema)); `stoker-wet` n = 200 (monotone(no_extrema)). Cells failing only a *diagnostic* criterion (legacy wetted-edge front, which the entry does not grade): `ritter-dry` n = 100 (front_wetted<5%). Cells failing the graded front/bore *series* criterion: none -- recorded, not averaged away. Sensitivity sweep (7 variants, worst headline error 0.395 %) and the sub-cell bore position are in the artifact bundle.
 <!-- END generated: verification-debt entries (m16836) -->

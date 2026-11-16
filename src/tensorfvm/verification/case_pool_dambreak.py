@@ -496,15 +496,48 @@ def render_catalog_section(entry: Optional[Dict[str, Any]] = None) -> str:
             if data["honest_fail"]
             else "none"
         )
-        + ". The dry-bed 100-cell row fails the *legacy* wetted-edge front only "
-        "(diagnostic), while the coarse dry-bed rows at n = 200/400 miss the front "
-        "*series* (6.61 %) -- recorded, not averaged away. Sensitivity sweep "
+        + ". "
+        + _failing_cell_sentence(data["honest_fail"])
+        + " Sensitivity sweep "
         f"({data['sensitivity']['variants']} variants, worst headline error "
         f"{data['sensitivity']['worst_headline_error_percent']:.3f} %) and the "
         "sub-cell bore position are in the artifact bundle.",
         "",
     ]
     return "\n".join(lines)
+
+
+def _failing_cell_sentence(honest_fail: List[Dict[str, Any]]) -> str:
+    """Which coarse-grid cells fail, split by criterion class -- derived, never typed.
+
+    The previous wording hard-coded both the cells and one error value ("n = 200/400
+    miss the front *series* (6.61 %)"), which survived a change of the series
+    instrument and then contradicted the table it sits under.  Every number and every
+    cell name here is read from the entry's own ``honest_fail`` list.
+    """
+
+    def _label(f):
+        return f"`{f['case']}` n = {f['n']} ({', '.join(f['failing_criteria'])})"
+
+    def _is_series(name):
+        return "series" in name
+
+    diagnostic = [
+        f for f in honest_fail
+        if f["failing_criteria"] and all("front_wetted" in c for c in f["failing_criteria"])
+    ]
+    graded = [f for f in honest_fail if any(_is_series(c) for c in f["failing_criteria"])]
+    parts = []
+    parts.append(
+        "Cells failing only a *diagnostic* criterion (legacy wetted-edge front, which "
+        "the entry does not grade): " + ("; ".join(_label(f) for f in diagnostic) if diagnostic else "none") + "."
+    )
+    parts.append(
+        "Cells failing the graded front/bore *series* criterion: "
+        + ("; ".join(_label(f) for f in graded) if graded else "none")
+        + " -- recorded, not averaged away."
+    )
+    return " ".join(parts)
 
 
 def write_entry(path: Optional[pathlib.Path] = None) -> pathlib.Path:

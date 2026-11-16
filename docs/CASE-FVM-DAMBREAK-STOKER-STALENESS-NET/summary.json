@@ -1,0 +1,106 @@
+{
+  "case": "CASE-FVM-DAMBREAK-STOKER",
+  "catalog_series_error_percent": {
+    "artifact_in_main": {
+      "100": 0.9581422054983841,
+      "200": 0.6392902275839915,
+      "400": 0.6796620151103695,
+      "800": 0.5316627610259416,
+      "1600": 0.42472950845003216
+    },
+    "artifact_now": {
+      "100": 0.958,
+      "200": 0.639,
+      "400": 0.68,
+      "800": 0.532,
+      "1600": 0.425
+    },
+    "published_disagrees_with_artifact": {
+      "100": {
+        "artifact": 0.9581422054983841,
+        "published": 4.695
+      },
+      "1600": {
+        "artifact": 0.42472950845003216,
+        "published": 0.425
+      },
+      "200": {
+        "artifact": 0.6392902275839915,
+        "published": 6.613
+      },
+      "400": {
+        "artifact": 0.6796620151103695,
+        "published": 6.613
+      },
+      "800": {
+        "artifact": 0.5316627610259416,
+        "published": 1.398
+      }
+    },
+    "published_in_main": {
+      "100": 4.695,
+      "200": 6.613,
+      "400": 6.613,
+      "800": 1.398,
+      "1600": 0.425
+    }
+  },
+  "frozen_producer_files": [
+    "pyproject.toml",
+    "scripts/run_shallow_water_dam_break.py",
+    "src/tensorfvm/shallow_water/__init__.py",
+    "src/tensorfvm/shallow_water/dam_break.py",
+    "src/tensorfvm/shallow_water/exact.py",
+    "src/tensorfvm/shallow_water/swe1d.py"
+  ],
+  "pool_entry_completeness": {
+    "ritter-dry": {
+      "missing": [],
+      "recorded": 12,
+      "required": 12
+    },
+    "stoker-wet": {
+      "missing": [],
+      "recorded": 12,
+      "required": 12
+    }
+  },
+  "primary_criteria_percent": {
+    "ritter-dry": {
+      "front_fan<5%": 1.7261518056277403,
+      "front_series<5%": 42.47295084500322,
+      "monotone(no_extrema)": 0.0
+    },
+    "stoker-wet": {
+      "bore_position_modes<5%": 2.102351984800069,
+      "front_series<5%": 84.4265997289686,
+      "monotone(no_extrema)": 0.0,
+      "plateau_h2<5%": 0.005762518619591793,
+      "shock_position<5%": 2.102343665771486,
+      "step_ratio<5%": 0.005762518619591793,
+      "step_ratio_modes<5%": 0.0004848508608660608
+    }
+  },
+  "staleness_net": {
+    "case_is_a_freeze_violation": false,
+    "case_state": {
+      "counts": {
+        "changed": 0,
+        "fresh": 6,
+        "missing": 0
+      },
+      "frozen": true,
+      "producer_bindings": 6,
+      "stale": false
+    },
+    "cases_after": 54,
+    "cases_before": 53,
+    "entries_after": 1384,
+    "entries_before": 1378,
+    "fresh_after": 1259,
+    "fresh_before": 1253,
+    "ledger_matches_tree": true,
+    "stale_cases_after": 18,
+    "stale_cases_before": 18
+  }
+}
