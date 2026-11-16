@@ -102,3 +102,53 @@ PYTHONPATH=src python -m pytest tests/test_kovasznay_32_64_128_acceptance.py -q
 | 门的单元测试 | `tests/test_summarize_kovasznay_mixed_config_guard.py`（6 passed） |
 | 验收门（现 7 passed / 17 skipped） | `tests/test_kovasznay_32_64_128_acceptance.py` |
 | 32/64 原始场与 summary | `docs/CASE-FVM-KOVASZNAY-ORDER/runs-32-64-128-zero_gradient/{n32,n64,summary-32-64}` |
+## 6. 2026-11-16 续（m22605）：结案工件与生成器重新对齐
+
+**现象**：当前 main 上 `tests/test_kovasznay_committed_artifacts_fresh.py::test_committed_summary_reproduces_byte_for_byte`
+为**红**——committed `summary.json` 缺 `provenance.metadata` 块；`closeout-32-64-128.md` 的
+"判定"行是 summarizer 加入 `pair_consistency` / `three_level_estimates` **之前**的旧 verdict。
+即：数据没变、结论没变，**证据文件落后于生成器**。
+
+**根因两类**：
+
+1. 工件没有随 summarizer 演进重生成（与本文档 §1.2 记的"高报"不同，这是**欠更新**）；
+2. `closeout-32-64-128.md` 的 §8（一阶负向对照）是**手工追加**的，`report_payload.py` 复现不出来——
+   于是"重生成结案文档"这个动作会**删掉**判据判别力的证据。生成器丢证据，就不能用来保鲜证据。
+
+**修复（最小，不改任何数值）**：
+
+| 项 | 改动 |
+|---|---|
+| §8 生成 | `report_payload.py::build_discrimination()` 从 `order-sensitivity.json` 取斜率/裕度/差异配置，程序化注入；`tensor_benchmark_cases` id=137 作为唯一的登记表常量声明在文件头 |
+| 输出路径 | `report_payload.py` 新增 `--out-doc` / `--out-payload`（默认仍是提交路径与 `/tmp/report.json`），使"生成到临时目录再逐字节比对"成为可测行为 |
+| 重生成工件 | `runs-32-64-128-zero_gradient/summary.json`（+`provenance.metadata`）、`closeout-32-64-128.md`（verdict 补全 + §8 程序化） |
+
+**结论未变**：同一批 committed npz 重算，速度全 3D L2 斜率 **1.9623**（R² 0.999944）、去均值压力 1.8777、
+三层 `f(p)=L+C h^p` 的 p=1.9194，与本文档 §3/§4 完全一致——这次修的是**可复现性**，不是精度。
+
+**新增门**：`tests/test_kovasznay_closeout_regenerable.py`（5 项 passed）
+
+1. `closeout-32-64-128.md` 与生成器输出**逐字节**相等（且生成过程不得改写提交副本）；
+2. `RESULTS.md` 与 summarizer 输出逐字节相等（此前 `RESULTS.md` 无门，只有 `summary.json` 有）；
+3. payload 契约：`mission_id=20033`、`scenario_key`、六要素小节齐全、`figures[].png_base64` 解码为真 PNG；
+4. payload 头号斜率 == `summary.json` 的 `fits.velocity_full.slope`（报告里不许出现另一个数）；
+5. `provenance.metadata` 的 closure 与**各层 `cases.json` 自述的 `symmetry_closure`** 互校，
+   且 `metadata_complete=true` / `reconstructed=[]`——"有块但块是错的"比"缺块"更危险，故单独校。
+
+**摘要链**：算例池登记 `docs/case-fvm-kovasznay-order-pool/case_pool_entry.json` 记录
+`summary.json` 与各层 `cases.json` 的 SHA-256。重生成 `summary.json` 后该摘要**按设计**失效，
+门 `tests/test_kovasznay_case_pool.py::test_committed_entry_is_fresh` 立刻变红——这正是"证据摘要"该有的行为。
+已用生成器重新登记：`PYTHONPATH=src python -m tensorfvm.verification.kovasznay_case_pool`
+（PASS，斜率 1.9623 vs 1.8；entry 仅 2 行变化 = 新摘要）。`tests/test_kovasznay_case_pool.py` 21 passed。
+
+**本轮新增工件（可复算）**：
+
+| 工件 | 路径 |
+|---|---|
+| 逐字节可复现门（5 项） | `tests/test_kovasznay_closeout_regenerable.py` |
+| 独立重算图（从 npz 重算 L2 + 中心线对比） | `docs/CASE-FVM-KOVASZNAY-ORDER/make_closeout_regen_figures.py` → `closeout-regen-m22605.png` |
+| 平台报告 payload（零手抄，六要素内嵌图） | `docs/CASE-FVM-KOVASZNAY-ORDER/post_report_m22605.py` → tensor_reports id=20320 |
+
+**仍未闭合（honest）**：`runs-32-64-128/`（`free` 闭合）序列仍缺 n=64/128，验收门对它有 9 项
+skip（"anchor artifacts absent"），是 not-measured 不是 pass；该序列不是判据所需，且不可与
+`zero_gradient` 混配汇总（`validate_levels()` 会硬报错）。
