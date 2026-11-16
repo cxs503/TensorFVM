@@ -43,11 +43,51 @@ Polyline-representation ceiling on the peak (our own nx=3200 solution sampled at
 | peak_density | 6.318093 | 6.514840 | 3.114 | 0.141 | 22.12 |
 | probe_x0.5 | 0.183100 | 0.183203 | 0.056 | 0.093 | 0.60 |
 
-## family: weno5  (formal order 5.0, grids [200, 1600, 3200, 6400, 12800])
-_not enough grids (missing [800])_
+## family: weno5  (formal order 5.0, grids [200, 400, 800, 1600, 3200, 6400, 12800])
+
+| quantity | triplet | p_obs | asymptotic? | extrapolated | GCI % | ref inside band |
+|---|---|---|---|---|---|---|
+| window_mass | [800, 400, 200] | 0.634 | False | 0.935877 | 0.103 | True |
+| window_mass | [3200, 1600, 800] | 1.025 | False | 0.935521 | 0.013 | False |
+| peak_density | [800, 400, 200] | 0.057 | False | 21.340410 | 298.753 | True |
+| peak_density | [3200, 1600, 800] | nan | False | 6.439093 | 0.266 | False |
+| probe_x0.5 | [800, 400, 200] | nan | False | 0.183289 | 0.236 | True |
+| probe_x0.5 | [3200, 1600, 800] | nan | False | 0.183334 | 0.002 | False |
+| l1_vs_calibrated_reference | [800, 400, 200] | 0.825 | False | -0.044324 | 410.132 | None |
+| l1_vs_calibrated_reference | [3200, 1600, 800] | nan | False | 0.033248 | 3.073 | None |
+
+Field-level observed order (window L1): p = 0.817
+- D[800, 1600] = 3.183 %
+- D[1600, 3200] = 1.807 %
+- nx3200 → calibrated reference: 3.269 %; nx1600 → calibrated reference: 2.260 %
+
+| extrapolation order p | → nx3200 % | → calibrated ref % | → raw ref % | peak | window mass |
+|---|---|---|---|---|---|
+| 1.000 | 1.843 | 4.852 | 5.777 | 6.7193 | 0.935448 |
+| 0.817 | 2.420 | 5.383 | 6.296 | 6.8755 | 0.935457 |
+| 2.000 | 0.614 | 3.757 | 4.713 | 6.4717 | 0.935430 |
+| _calibrated reference_ | — | — | — | 6.3181 | 0.935343 |
+
+Polyline-representation ceiling on the peak (our own nx=3200 solution sampled at the stated vertex count and interpolated back):
+
+| vertices | vertex spacing | peak after polyline | peak loss % |
+|---|---|---|---|
+| 174 | 0.00347 | 6.4270 | 0.204 |
+| 349 | 0.00172 | 6.4257 | 0.224 |
+| 698 | 0.00086 | 6.4348 | 0.082 |
+| 1398 | 0.00043 | 6.4379 | 0.035 |
+| 2796 | 0.00021 | 6.4384 | 0.026 |
+
+| quantity | reference (calibrated) | extrapolated | residual % | U_num (GCI %) | residual/U_num |
+|---|---|---|---|---|---|
+| window_mass | 0.935343 | 0.935521 | 0.019 | 0.013 | 1.43 |
+| peak_density | 6.318093 | 6.439093 | 1.915 | 0.266 | 7.20 |
+| probe_x0.5 | 0.183100 | 0.183334 | 0.128 | 0.002 | 51.14 |
 
 ## cross-code (WENO5 vs MUSCL/HLLC)
-- nx=200: D = 4.601 %, order to next = 0.547
+- nx=200: D = 4.601 %, order to next = 0.599
+- nx=400: D = 3.037 %, order to next = 0.677
+- nx=800: D = 1.900 %, order to next = 0.365
 - nx=1600: D = 1.475 %, order to next = 0.602
 - nx=3200: D = 0.972 %, order to next = 0.659
 - nx=6400: D = 0.615 %

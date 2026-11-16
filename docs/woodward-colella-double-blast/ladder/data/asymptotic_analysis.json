@@ -21,7 +21,11 @@
     ],
     "canonical_only": true,
     "variants_excluded": [
-      "nx200_hllc_limiterminmod_cfl0.2"
+      "nx12800_hllc_cfl0.8",
+      "nx12800_weno5_cfl0.8",
+      "nx200_hllc_limiterminmod_cfl0.2",
+      "nx25600_weno5_cfl0.8",
+      "nx6400_hllc_cfl0.8"
     ],
     "families_laddered": [
       "hllc",
@@ -30,12 +34,26 @@
     ]
   },
   "profiles": {
+    "nx12800_hllc_cfl0.8": {
+      "nx": 12800,
+      "family": "hllc",
+      "variant": "cfl0.8",
+      "canonical": false,
+      "source": "ladder/data/ladder_profile_nx12800_hllc_cfl0.8.npz"
+    },
     "nx12800_weno5": {
       "nx": 12800,
       "family": "weno5",
       "variant": null,
       "canonical": true,
       "source": "ladder/data/ladder_profile_nx12800_weno5.npz"
+    },
+    "nx12800_weno5_cfl0.8": {
+      "nx": 12800,
+      "family": "weno5",
+      "variant": "cfl0.8",
+      "canonical": false,
+      "source": "ladder/data/ladder_profile_nx12800_weno5_cfl0.8.npz"
     },
     "nx1600_hllc": {
       "nx": 1600,
@@ -79,6 +97,13 @@
       "canonical": true,
       "source": "ladder/data/ladder_profile_nx200_weno5.npz"
     },
+    "nx25600_weno5_cfl0.8": {
+      "nx": 25600,
+      "family": "weno5",
+      "variant": "cfl0.8",
+      "canonical": false,
+      "source": "ladder/data/ladder_profile_nx25600_weno5_cfl0.8.npz"
+    },
     "nx3200_hllc": {
       "nx": 3200,
       "family": "hllc",
@@ -100,12 +125,33 @@
       "canonical": true,
       "source": "artifacts/wc_blast_profile_nx400.npz"
     },
+    "nx400_weno5": {
+      "nx": 400,
+      "family": "weno5",
+      "variant": null,
+      "canonical": true,
+      "source": "ladder/data/ladder_profile_nx400_weno5.npz"
+    },
+    "nx400_weno7": {
+      "nx": 400,
+      "family": "weno7",
+      "variant": null,
+      "canonical": true,
+      "source": "ladder/data/ladder_profile_nx400_weno7.npz"
+    },
     "nx6400_hllc": {
       "nx": 6400,
       "family": "hllc",
       "variant": null,
       "canonical": true,
       "source": "ladder/data/ladder_profile_nx6400_hllc.npz"
+    },
+    "nx6400_hllc_cfl0.8": {
+      "nx": 6400,
+      "family": "hllc",
+      "variant": "cfl0.8",
+      "canonical": false,
+      "source": "ladder/data/ladder_profile_nx6400_hllc_cfl0.8.npz"
     },
     "nx6400_weno5": {
       "nx": 6400,
@@ -120,6 +166,20 @@
       "variant": null,
       "canonical": true,
       "source": "artifacts/wc_blast_profile_nx800.npz"
+    },
+    "nx800_weno5": {
+      "nx": 800,
+      "family": "weno5",
+      "variant": null,
+      "canonical": true,
+      "source": "ladder/data/ladder_profile_nx800_weno5.npz"
+    },
+    "nx800_weno7": {
+      "nx": 800,
+      "family": "weno7",
+      "variant": null,
+      "canonical": true,
+      "source": "ladder/data/ladder_profile_nx800_weno7.npz"
     }
   },
   "families": {
@@ -551,14 +611,428 @@
       "theory_order": 5.0,
       "grids_available": [
         200,
+        400,
+        800,
         1600,
         3200,
         6400,
         12800
       ],
-      "missing_grids": [
-        800
-      ]
+      "missing_grids": [],
+      "studies": {
+        "window_mass": {
+          "values": {
+            "200": 0.9340262364846421,
+            "400": 0.9346841714947878,
+            "800": 0.9351081646522988,
+            "1600": 0.9353181275040575,
+            "3200": 0.9354213324124301,
+            "6400": 0.9354710775983832,
+            "12800": 0.9354948791119442
+          },
+          "fine": {
+            "triplet": [
+              3200,
+              1600,
+              800
+            ],
+            "observed_order": 1.024622511545565,
+            "order_used": 1.024622511545565,
+            "convergence": "monotone",
+            "fallback_reason": "none",
+            "asymptotic": false,
+            "extrapolated": 0.9355211025351428,
+            "gci_percent": 0.01333224388514615,
+            "band": [
+              0.9353963765801557,
+              0.9356458284901298
+            ],
+            "reference_agreement": {
+              "reference": 0.93534261921925,
+              "extrapolated": 0.9355211025351428,
+              "relative_error": 0.0001908213228236592,
+              "gci": 0.0001333224388514615,
+              "efficiency_index": 1.4312768688267015,
+              "band_covered": false,
+              "band": [
+                0.9353963765801557,
+                0.9356458284901298
+              ],
+              "asymptotic": false,
+              "fallback_reason": "none",
+              "safety_factor": 1.25,
+              "reference_kind": "calibrated digitised reference"
+            }
+          },
+          "coarse": {
+            "triplet": [
+              800,
+              400,
+              200
+            ],
+            "observed_order": 0.6339041012338302,
+            "order_used": 0.6339041012338302,
+            "convergence": "monotone",
+            "fallback_reason": "none",
+            "asymptotic": false,
+            "extrapolated": 0.935876604311948,
+            "gci_percent": 0.10272069166656878,
+            "band": [
+              0.9349152653908531,
+              0.9368379432330428
+            ],
+            "reference_agreement": {
+              "reference": 0.93534261921925,
+              "extrapolated": 0.935876604311948,
+              "relative_error": 0.0005708978525363289,
+              "gci": 0.0010272069166656877,
+              "efficiency_index": 0.5557768773495632,
+              "band_covered": true,
+              "band": [
+                0.9349152653908531,
+                0.9368379432330428
+              ],
+              "asymptotic": false,
+              "fallback_reason": "none",
+              "safety_factor": 1.25,
+              "reference_kind": "calibrated digitised reference"
+            }
+          }
+        },
+        "peak_density": {
+          "values": {
+            "200": 5.05775460712152,
+            "400": 5.6886267822368115,
+            "800": 6.295055787705944,
+            "1600": 6.472011222880893,
+            "3200": 6.440121911193443,
+            "6400": 6.457799798629349,
+            "12800": 6.459503691877991
+          },
+          "fine": {
+            "triplet": [
+              3200,
+              1600,
+              800
+            ],
+            "observed_order": NaN,
+            "order_used": 5.0,
+            "convergence": "inconsistent",
+            "fallback_reason": "non-monotone",
+            "asymptotic": false,
+            "extrapolated": 6.439093223719654,
+            "gci_percent": 0.2659067602943269,
+            "band": [
+              6.42197123953613,
+              6.4562152079031785
+            ],
+            "reference_agreement": {
+              "reference": 6.3180935,
+              "extrapolated": 6.439093223719654,
+              "relative_error": 0.01915130311377226,
+              "gci": 0.0026590676029432693,
+              "efficiency_index": 7.202262587297165,
+              "band_covered": false,
+              "band": [
+                6.42197123953613,
+                6.4562152079031785
+              ],
+              "asymptotic": false,
+              "fallback_reason": "non-monotone",
+              "safety_factor": 3.0,
+              "reference_kind": "calibrated digitised reference"
+            }
+          },
+          "coarse": {
+            "triplet": [
+              800,
+              400,
+              200
+            ],
+            "observed_order": 0.057008962326454346,
+            "order_used": 0.057008962326454346,
+            "convergence": "monotone",
+            "fallback_reason": "none",
+            "asymptotic": false,
+            "extrapolated": 21.340409724938446,
+            "gci_percent": 298.75338767083747,
+            "band": [
+              -42.414787271152015,
+              85.0956067210289
+            ],
+            "reference_agreement": {
+              "reference": 6.3180935,
+              "extrapolated": 21.340409724938446,
+              "relative_error": 2.377666019810952,
+              "gci": 2.987533876708375,
+              "efficiency_index": 0.7958624463969703,
+              "band_covered": true,
+              "band": [
+                -42.414787271152015,
+                85.0956067210289
+              ],
+              "asymptotic": false,
+              "fallback_reason": "none",
+              "safety_factor": 1.25,
+              "reference_kind": "calibrated digitised reference"
+            }
+          }
+        },
+        "probe_x0.5": {
+          "values": {
+            "200": 0.18760091478386856,
+            "400": 0.18312719806645034,
+            "800": 0.18328422866949046,
+            "1600": 0.18328517745359635,
+            "3200": 0.1833325230923683,
+            "6400": 0.1833118245132816,
+            "12800": 0.18329968209176786
+          },
+          "fine": {
+            "triplet": [
+              3200,
+              1600,
+              800
+            ],
+            "observed_order": NaN,
+            "order_used": 5.0,
+            "convergence": "inconsistent",
+            "fallback_reason": "non-monotone",
+            "asymptotic": false,
+            "extrapolated": 0.18333405037103837,
+            "gci_percent": 0.0024991943234648254,
+            "band": [
+              0.18332946849685852,
+              0.1833386322452182
+            ],
+            "reference_agreement": {
+              "reference": 0.18310005000000001,
+              "extrapolated": 0.18333405037103837,
+              "relative_error": 0.0012779918467436294,
+              "gci": 2.4991943234648253e-05,
+              "efficiency_index": 51.136153549350695,
+              "band_covered": false,
+              "band": [
+                0.18332946849685852,
+                0.1833386322452182
+              ],
+              "asymptotic": false,
+              "fallback_reason": "non-monotone",
+              "safety_factor": 3.0,
+              "reference_kind": "calibrated digitised reference"
+            }
+          },
+          "coarse": {
+            "triplet": [
+              800,
+              400,
+              200
+            ],
+            "observed_order": NaN,
+            "order_used": 5.0,
+            "convergence": "inconsistent",
+            "fallback_reason": "non-monotone",
+            "asymptotic": false,
+            "extrapolated": 0.18328929417281434,
+            "gci_percent": 0.23621253756251512,
+            "band": [
+              0.1828563418799683,
+              0.18372224646566038
+            ],
+            "reference_agreement": {
+              "reference": 0.18310005000000001,
+              "extrapolated": 0.18328929417281434,
+              "relative_error": 0.0010335560957756345,
+              "gci": 0.0023621253756251513,
+              "efficiency_index": 0.4375534450630494,
+              "band_covered": true,
+              "band": [
+                0.1828563418799683,
+                0.18372224646566038
+              ],
+              "asymptotic": false,
+              "fallback_reason": "non-monotone",
+              "safety_factor": 3.0,
+              "reference_kind": "calibrated digitised reference"
+            }
+          }
+        },
+        "l1_vs_calibrated_reference": {
+          "values": {
+            "200": 0.15577177648689336,
+            "400": 0.06862349965019711,
+            "800": 0.01943121982925618,
+            "1600": 0.022460108306843876,
+            "3200": 0.032910973975463255,
+            "6400": 0.04075850709195126,
+            "12800": 0.04537790205759169
+          },
+          "fine": {
+            "triplet": [
+              3200,
+              1600,
+              800
+            ],
+            "observed_order": NaN,
+            "order_used": 5.0,
+            "convergence": "inconsistent",
+            "fallback_reason": "non-monotone",
+            "asymptotic": false,
+            "extrapolated": 0.03324809867445098,
+            "gci_percent": 3.073060364962747,
+            "band": [
+              0.03222636453198272,
+              0.034269832816919234
+            ]
+          },
+          "coarse": {
+            "triplet": [
+              800,
+              400,
+              200
+            ],
+            "observed_order": 0.8250402200968576,
+            "order_used": 0.8250402200968576,
+            "convergence": "monotone",
+            "fallback_reason": "none",
+            "asymptotic": false,
+            "extrapolated": -0.04432366962806131,
+            "gci_percent": 410.1318008952683,
+            "band": [
+              -0.22610913409649822,
+              0.1374617948403756
+            ]
+          }
+        }
+      },
+      "field_distance_successive": [
+        {
+          "grids": [
+            800,
+            1600
+          ],
+          "percent": 3.1834013032737105,
+          "abs": 0.029768245500560155,
+          "denominator": 0.9351081646522988,
+          "grid": 800
+        },
+        {
+          "grids": [
+            1600,
+            3200
+          ],
+          "percent": 1.8071802172244225,
+          "abs": 0.016902884168367226,
+          "denominator": 0.9353181275040575,
+          "grid": 1600
+        }
+      ],
+      "field_order": {
+        "observed_order": 0.8168286531664054,
+        "comment": "log2(D(800,1600)/D(1600,3200)) on the window L1 norm"
+      },
+      "extrapolated_field": {
+        "source_grids": [
+          1600,
+          3200
+        ],
+        "order_sweep": [
+          {
+            "order_used": 1.0,
+            "distance_to_nx3200_percent": 1.8429598576828172,
+            "peak_density": 6.7193299869427126,
+            "window_mass": 0.9354483718934032,
+            "distance_to_calibrated_reference_percent": 4.852401155051379,
+            "distance_to_committed_raw_reference_percent": 5.777222748126809
+          },
+          {
+            "order_used": 0.8168,
+            "distance_to_nx3200_percent": 2.4201878933480683,
+            "peak_density": 6.875501038929421,
+            "window_mass": 0.9354568408496979,
+            "distance_to_calibrated_reference_percent": 5.382653904949393,
+            "distance_to_committed_raw_reference_percent": 6.296484931939444
+          },
+          {
+            "order_used": 2.0,
+            "distance_to_nx3200_percent": 0.6143199525609393,
+            "peak_density": 6.471681812996919,
+            "window_mass": 0.9354303455727544,
+            "distance_to_calibrated_reference_percent": 3.757263792217669,
+            "distance_to_committed_raw_reference_percent": 4.712737893846742
+          }
+        ],
+        "reference_peak_calibrated": 6.3180935,
+        "reference_mass_calibrated": 0.93534261921925,
+        "distance_nx3200_to_calibrated_percent": 3.2688295277962287,
+        "distance_nx1600_to_calibrated_percent": 2.260347938155726
+      },
+      "digitisation_sampling": {
+        "native_peak": 6.440121911193443,
+        "window": [
+          0.40015625,
+          0.99984375
+        ],
+        "dx_finest": 0.00031249999999999334,
+        "cases": [
+          {
+            "vertices": 174,
+            "vertex_spacing": 0.003466401734104063,
+            "peak_after_polyline": 6.4270014530296145,
+            "peak_loss_percent": 0.20372996574838212
+          },
+          {
+            "vertices": 349,
+            "vertex_spacing": 0.0017232399425287093,
+            "peak_after_polyline": 6.425688284370045,
+            "peak_loss_percent": 0.2241203974463776
+          },
+          {
+            "vertices": 698,
+            "vertex_spacing": 0.0008603837876614007,
+            "peak_after_polyline": 6.43484721304602,
+            "peak_loss_percent": 0.08190370027397613
+          },
+          {
+            "vertices": 1398,
+            "vertex_spacing": 0.00042926807444526593,
+            "peak_after_polyline": 6.437860368622308,
+            "peak_loss_percent": 0.03511645590441065
+          },
+          {
+            "vertices": 2796,
+            "vertex_spacing": 0.00021455724508051555,
+            "peak_after_polyline": 6.438416545870849,
+            "peak_loss_percent": 0.026480326709805588
+          }
+        ]
+      },
+      "uncertainty_budget": {
+        "window_mass": {
+          "reference": 0.93534261921925,
+          "extrapolated": 0.9355211025351428,
+          "residual_to_reference_percent": 0.01908213228236592,
+          "numerical_uncertainty_percent": 0.01333224388514615,
+          "residual_over_unum": 1.4312768688267017,
+          "reference_inside_gci_band": false
+        },
+        "peak_density": {
+          "reference": 6.3180935,
+          "extrapolated": 6.439093223719654,
+          "residual_to_reference_percent": 1.915130311377226,
+          "numerical_uncertainty_percent": 0.2659067602943269,
+          "residual_over_unum": 7.202262587297165,
+          "reference_inside_gci_band": false
+        },
+        "probe_x0.5": {
+          "reference": 0.18310005000000001,
+          "extrapolated": 0.18333405037103837,
+          "residual_to_reference_percent": 0.12779918467436294,
+          "numerical_uncertainty_percent": 0.0024991943234648254,
+          "residual_over_unum": 51.136153549350695,
+          "reference_inside_gci_band": false
+        }
+      }
     }
   },
   "cross_code": {
@@ -570,7 +1044,23 @@
         "abs": 0.042962926325312824,
         "denominator": 0.9338469667575857,
         "grid": 200,
-        "order_to_next": 0.5470327015336132
+        "order_to_next": 0.599233670241486
+      },
+      {
+        "nx": 400,
+        "percent": 3.036902388054964,
+        "abs": 0.028387771761581804,
+        "denominator": 0.9347607573176968,
+        "grid": 400,
+        "order_to_next": 0.6769445268794345
+      },
+      {
+        "nx": 800,
+        "percent": 1.899547793520197,
+        "abs": 0.017763744896202454,
+        "denominator": 0.9351565123446093,
+        "grid": 800,
+        "order_to_next": 0.36491990747991887
       },
       {
         "nx": 1600,
