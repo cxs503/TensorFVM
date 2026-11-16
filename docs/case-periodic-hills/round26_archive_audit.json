@@ -1,0 +1,758 @@
+{
+ "round": 26,
+ "case": "CASE-FVM-PERIODIC-HILLS",
+ "reference_x_r_over_H": 5.41,
+ "reference": "Breuer et al. 2009, Comput. Fluids 38:433, doi:10.1016/j.compfluid.2008.05.002 (ERCOFTAC UFR 3-30); x_r/H from ERCOFTAC KB UFR 3-30 Evaluation",
+ "n_artefacts": 14,
+ "n_usable": 8,
+ "n_degenerate": 6,
+ "degenerate": [
+  {
+   "stem": "round11_sst_r18_120x60",
+   "status": "zero_field",
+   "reason": "max|u| = 0.000e+00 <= 1.0e-09: the artefact carries no velocity field (aborted/diverged run), so it is missing data, not a measurement"
+  },
+  {
+   "stem": "round11_sst_r18_144x72",
+   "status": "zero_field",
+   "reason": "max|u| = 0.000e+00 <= 1.0e-09: the artefact carries no velocity field (aborted/diverged run), so it is missing data, not a measurement"
+  },
+  {
+   "stem": "round20_laminar_Re1400_96x48",
+   "status": "zero_field",
+   "reason": "max|u| = 0.000e+00 <= 1.0e-09: the artefact carries no velocity field (aborted/diverged run), so it is missing data, not a measurement"
+  },
+  {
+   "stem": "round20_laminar_Re2800_144x72",
+   "status": "zero_field",
+   "reason": "max|u| = 0.000e+00 <= 1.0e-09: the artefact carries no velocity field (aborted/diverged run), so it is missing data, not a measurement"
+  },
+  {
+   "stem": "round20_laminar_Re2800_192x96",
+   "status": "zero_field",
+   "reason": "max|u| = 0.000e+00 <= 1.0e-09: the artefact carries no velocity field (aborted/diverged run), so it is missing data, not a measurement"
+  },
+  {
+   "stem": "round20_laminar_Re2800_240x120",
+   "status": "zero_field",
+   "reason": "max|u| = 0.000e+00 <= 1.0e-09: the artefact carries no velocity field (aborted/diverged run), so it is missing data, not a measurement"
+  }
+ ],
+ "artefacts": [
+  {
+   "stem": "round11_sst_96x48",
+   "file": "round11_sst_96x48.npz",
+   "status": "usable",
+   "usable": true,
+   "reason": "usable",
+   "max_abs_u": 1.3923067112690541,
+   "n_cells": 1,
+   "wall_attached_columns": 16,
+   "nx": 96,
+   "ny": 48,
+   "routes": {
+    "wall_shear_first": 2.0456256874257104,
+    "wall_shear_largest_area": 2.0456256874257104,
+    "field_cell_first_wall_span": 2.0456256874257104,
+    "field_cell_last_wall_span": 2.0456256874257104
+   },
+   "band": {
+    "values": [
+     2.0456256874257104,
+     2.0456256874257104,
+     2.0456256874257104,
+     2.0456256874257104
+    ],
+    "n": 4,
+    "min": 2.0456256874257104,
+    "max": 2.0456256874257104,
+    "spread": 0.0,
+    "spread_rel": 0.0,
+    "acceptance_width": 1.082,
+    "flag": "definition_insensitive"
+   },
+   "wall_spans": [
+    {
+     "separation": 0.5897372098070274,
+     "reattachment": 2.0456256874257104,
+     "length": 1.4558884776186831
+    }
+   ],
+   "meta": {
+    "n_cells": 1,
+    "object_verdict": "object_supported",
+    "continued_downstream": false,
+    "lift_off_shear_ratio": null,
+    "next_wall_touchdown": null
+   },
+   "wall_shear_first": 2.0456256874257104,
+   "wall_shear_largest_area": 2.0456256874257104,
+   "n_bubbles": 1,
+   "field_cells": [
+    {
+     "label": 1,
+     "area_cells": 30,
+     "x_min": 0.609375,
+     "x_max": 2.015625,
+     "row_min": 0,
+     "row_max": 2,
+     "wall_attached": true,
+     "wraps_seam": false
+    }
+   ]
+  },
+  {
+   "stem": "round11_sst_r12-96x48",
+   "file": "round11_sst_r12-96x48.npz",
+   "status": "usable",
+   "usable": true,
+   "reason": "usable",
+   "max_abs_u": 1.352862545490032,
+   "n_cells": 1,
+   "wall_attached_columns": 29,
+   "nx": 96,
+   "ny": 48,
+   "routes": {
+    "wall_shear_first": 3.1443072964934884,
+    "wall_shear_largest_area": 3.1443072964934884,
+    "field_cell_first_wall_span": 3.1443072964934884,
+    "field_cell_last_wall_span": 3.1443072964934884
+   },
+   "band": {
+    "values": [
+     3.1443072964934884,
+     3.1443072964934884,
+     3.1443072964934884,
+     3.1443072964934884
+    ],
+    "n": 4,
+    "min": 3.1443072964934884,
+    "max": 3.1443072964934884,
+    "spread": 0.0,
+    "spread_rel": 0.0,
+    "acceptance_width": 1.082,
+    "flag": "definition_insensitive"
+   },
+   "wall_spans": [
+    {
+     "separation": 0.4851412359521382,
+     "reattachment": 3.1443072964934884,
+     "length": 2.65916606054135
+    }
+   ],
+   "meta": {
+    "n_cells": 1,
+    "object_verdict": "object_supported",
+    "continued_downstream": false,
+    "lift_off_shear_ratio": null,
+    "next_wall_touchdown": null
+   },
+   "wall_shear_first": 3.1443072964934884,
+   "wall_shear_largest_area": 3.1443072964934884,
+   "n_bubbles": 1,
+   "field_cells": [
+    {
+     "label": 1,
+     "area_cells": 114,
+     "x_min": 0.515625,
+     "x_max": 3.140625,
+     "row_min": 0,
+     "row_max": 5,
+     "wall_attached": true,
+     "wraps_seam": false
+    }
+   ]
+  },
+  {
+   "stem": "round11_sst_r18_120x60",
+   "file": "round11_sst_r18_120x60.npz",
+   "status": "zero_field",
+   "usable": false,
+   "reason": "max|u| = 0.000e+00 <= 1.0e-09: the artefact carries no velocity field (aborted/diverged run), so it is missing data, not a measurement",
+   "max_abs_u": 0.0,
+   "n_cells": null,
+   "wall_attached_columns": null,
+   "nx": 120,
+   "ny": 60,
+   "routes": null,
+   "band": null,
+   "wall_spans": null
+  },
+  {
+   "stem": "round11_sst_r18_144x72",
+   "file": "round11_sst_r18_144x72.npz",
+   "status": "zero_field",
+   "usable": false,
+   "reason": "max|u| = 0.000e+00 <= 1.0e-09: the artefact carries no velocity field (aborted/diverged run), so it is missing data, not a measurement",
+   "max_abs_u": 0.0,
+   "n_cells": null,
+   "wall_attached_columns": null,
+   "nx": 144,
+   "ny": 72,
+   "routes": null,
+   "band": null,
+   "wall_spans": null
+  },
+  {
+   "stem": "round11_sst_r18_72x36",
+   "file": "round11_sst_r18_72x36.npz",
+   "status": "usable",
+   "usable": true,
+   "reason": "usable",
+   "max_abs_u": 1.2325847590141725,
+   "n_cells": 1,
+   "wall_attached_columns": 57,
+   "nx": 72,
+   "ny": 36,
+   "routes": {
+    "wall_shear_first": 7.600045056495248,
+    "wall_shear_largest_area": 7.600045056495248,
+    "field_cell_first_wall_span": 7.59112087198958,
+    "field_cell_last_wall_span": 7.59112087198958
+   },
+   "band": {
+    "values": [
+     7.600045056495248,
+     7.600045056495248,
+     7.59112087198958,
+     7.59112087198958
+    ],
+    "n": 4,
+    "min": 7.59112087198958,
+    "max": 7.600045056495248,
+    "spread": 0.00892418450566801,
+    "spread_rel": 0.0016495719973508335,
+    "acceptance_width": 1.082,
+    "flag": "definition_insensitive"
+   },
+   "wall_spans": [
+    {
+     "separation": 0.5015558181742217,
+     "reattachment": 7.59112087198958,
+     "length": 7.089565053815359
+    }
+   ],
+   "meta": {
+    "n_cells": 1,
+    "object_verdict": "object_supported",
+    "continued_downstream": false,
+    "lift_off_shear_ratio": null,
+    "next_wall_touchdown": null
+   },
+   "wall_shear_first": 7.600045056495248,
+   "wall_shear_largest_area": 7.600045056495248,
+   "n_bubbles": 1,
+   "field_cells": [
+    {
+     "label": 1,
+     "area_cells": 217,
+     "x_min": 0.5625,
+     "x_max": 7.5625,
+     "row_min": 0,
+     "row_max": 6,
+     "wall_attached": true,
+     "wraps_seam": false
+    }
+   ]
+  },
+  {
+   "stem": "round11_sst_r18_96x48",
+   "file": "round11_sst_r18_96x48.npz",
+   "status": "usable",
+   "usable": true,
+   "reason": "usable",
+   "max_abs_u": 1.236582973729892,
+   "n_cells": 1,
+   "wall_attached_columns": 78,
+   "nx": 96,
+   "ny": 48,
+   "routes": {
+    "wall_shear_first": 7.681601876754162,
+    "wall_shear_largest_area": 7.681601876754162,
+    "field_cell_first_wall_span": 7.675872381069923,
+    "field_cell_last_wall_span": 7.675872381069923
+   },
+   "band": {
+    "values": [
+     7.681601876754162,
+     7.681601876754162,
+     7.675872381069923,
+     7.675872381069923
+    ],
+    "n": 4,
+    "min": 7.675872381069923,
+    "max": 7.681601876754162,
+    "spread": 0.005729495684239083,
+    "spread_rel": 0.0010590565035562076,
+    "acceptance_width": 1.082,
+    "flag": "definition_insensitive"
+   },
+   "wall_spans": [
+    {
+     "separation": 0.39707502234316633,
+     "reattachment": 7.675872381069923,
+     "length": 7.278797358726757
+    }
+   ],
+   "meta": {
+    "n_cells": 1,
+    "object_verdict": "object_supported",
+    "continued_downstream": false,
+    "lift_off_shear_ratio": null,
+    "next_wall_touchdown": null
+   },
+   "wall_shear_first": 7.681601876754162,
+   "wall_shear_largest_area": 7.681601876754162,
+   "n_bubbles": 1,
+   "field_cells": [
+    {
+     "label": 1,
+     "area_cells": 433,
+     "x_min": 0.421875,
+     "x_max": 7.640625,
+     "row_min": 0,
+     "row_max": 8,
+     "wall_attached": true,
+     "wraps_seam": false
+    }
+   ]
+  },
+  {
+   "stem": "round20_laminar_Re1400_96x48",
+   "file": "round20_laminar_Re1400_96x48.npz",
+   "status": "zero_field",
+   "usable": false,
+   "reason": "max|u| = 0.000e+00 <= 1.0e-09: the artefact carries no velocity field (aborted/diverged run), so it is missing data, not a measurement",
+   "max_abs_u": 0.0,
+   "n_cells": null,
+   "wall_attached_columns": null,
+   "nx": 96,
+   "ny": 48,
+   "routes": null,
+   "band": null,
+   "wall_spans": null
+  },
+  {
+   "stem": "round20_laminar_Re2800_144x72",
+   "file": "round20_laminar_Re2800_144x72.npz",
+   "status": "zero_field",
+   "usable": false,
+   "reason": "max|u| = 0.000e+00 <= 1.0e-09: the artefact carries no velocity field (aborted/diverged run), so it is missing data, not a measurement",
+   "max_abs_u": 0.0,
+   "n_cells": null,
+   "wall_attached_columns": null,
+   "nx": 144,
+   "ny": 72,
+   "routes": null,
+   "band": null,
+   "wall_spans": null
+  },
+  {
+   "stem": "round20_laminar_Re2800_192x96",
+   "file": "round20_laminar_Re2800_192x96.npz",
+   "status": "zero_field",
+   "usable": false,
+   "reason": "max|u| = 0.000e+00 <= 1.0e-09: the artefact carries no velocity field (aborted/diverged run), so it is missing data, not a measurement",
+   "max_abs_u": 0.0,
+   "n_cells": null,
+   "wall_attached_columns": null,
+   "nx": 192,
+   "ny": 96,
+   "routes": null,
+   "band": null,
+   "wall_spans": null
+  },
+  {
+   "stem": "round20_laminar_Re2800_240x120",
+   "file": "round20_laminar_Re2800_240x120.npz",
+   "status": "zero_field",
+   "usable": false,
+   "reason": "max|u| = 0.000e+00 <= 1.0e-09: the artefact carries no velocity field (aborted/diverged run), so it is missing data, not a measurement",
+   "max_abs_u": 0.0,
+   "n_cells": null,
+   "wall_attached_columns": null,
+   "nx": 240,
+   "ny": 120,
+   "routes": null,
+   "band": null,
+   "wall_spans": null
+  },
+  {
+   "stem": "round20_laminar_Re2800_96x48",
+   "file": "round20_laminar_Re2800_96x48.npz",
+   "status": "usable",
+   "usable": true,
+   "reason": "usable",
+   "max_abs_u": 1.3672256848639261,
+   "n_cells": 1,
+   "wall_attached_columns": 55,
+   "nx": 96,
+   "ny": 48,
+   "routes": {
+    "wall_shear_first": 1.2540965527208672,
+    "wall_shear_largest_area": 8.264277859446059,
+    "field_cell_first_wall_span": 1.2562750481807334,
+    "field_cell_last_wall_span": 8.258325476027995
+   },
+   "band": {
+    "values": [
+     1.2540965527208672,
+     8.264277859446059,
+     1.2562750481807334,
+     8.258325476027995
+    ],
+    "n": 4,
+    "min": 1.2540965527208672,
+    "max": 8.264277859446059,
+    "spread": 7.010181306725192,
+    "spread_rel": 1.2957821269362646,
+    "acceptance_width": 1.082,
+    "flag": "definition_sensitive"
+   },
+   "wall_spans": [
+    {
+     "separation": 0.40356336400665893,
+     "reattachment": 1.2562750481807334,
+     "length": 0.8527116841740745
+    },
+    {
+     "separation": 3.922900531823629,
+     "reattachment": 8.258325476027995,
+     "length": 4.335424944204366
+    }
+   ],
+   "meta": {
+    "n_cells": 1,
+    "object_verdict": "object_incomplete",
+    "continued_downstream": true,
+    "lift_off_shear_ratio": 0.02147764963326557,
+    "next_wall_touchdown": 3.922900531823629
+   },
+   "wall_shear_first": 1.2540965527208672,
+   "wall_shear_largest_area": 8.264277859446059,
+   "n_bubbles": 2,
+   "field_cells": [
+    {
+     "label": 1,
+     "area_cells": 686,
+     "x_min": 0.421875,
+     "x_max": 8.203125,
+     "row_min": 0,
+     "row_max": 10,
+     "wall_attached": true,
+     "wraps_seam": false
+    }
+   ]
+  },
+  {
+   "stem": "round20_laminar_Re2800_96x48dt01",
+   "file": "round20_laminar_Re2800_96x48dt01.npz",
+   "status": "usable",
+   "usable": true,
+   "reason": "usable",
+   "max_abs_u": 1.3795536514335174,
+   "n_cells": 1,
+   "wall_attached_columns": 59,
+   "nx": 96,
+   "ny": 48,
+   "routes": {
+    "wall_shear_first": 1.2870199739172996,
+    "wall_shear_largest_area": 8.22962080445255,
+    "field_cell_first_wall_span": 1.2919488929133633,
+    "field_cell_last_wall_span": 8.223241366261282
+   },
+   "band": {
+    "values": [
+     1.2870199739172996,
+     8.22962080445255,
+     1.2919488929133633,
+     8.223241366261282
+    ],
+    "n": 4,
+    "min": 1.2870199739172996,
+    "max": 8.22962080445255,
+    "spread": 6.94260083053525,
+    "spread_rel": 1.2832903568457024,
+    "acceptance_width": 1.082,
+    "flag": "definition_sensitive"
+   },
+   "wall_spans": [
+    {
+     "separation": 0.40547080420068615,
+     "reattachment": 1.2919488929133633,
+     "length": 0.8864780887126772
+    },
+    {
+     "separation": 3.6841363576486725,
+     "reattachment": 8.223241366261282,
+     "length": 4.53910500861261
+    }
+   ],
+   "meta": {
+    "n_cells": 1,
+    "object_verdict": "object_incomplete",
+    "continued_downstream": true,
+    "lift_off_shear_ratio": 0.03812830289442515,
+    "next_wall_touchdown": 3.6841363576486725
+   },
+   "wall_shear_first": 1.2870199739172996,
+   "wall_shear_largest_area": 8.22962080445255,
+   "n_bubbles": 2,
+   "field_cells": [
+    {
+     "label": 1,
+     "area_cells": 672,
+     "x_min": 0.421875,
+     "x_max": 8.203125,
+     "row_min": 0,
+     "row_max": 10,
+     "wall_attached": true,
+     "wraps_seam": false
+    }
+   ]
+  },
+  {
+   "stem": "round20_laminar_Re700_96x48",
+   "file": "round20_laminar_Re700_96x48.npz",
+   "status": "usable",
+   "usable": true,
+   "reason": "usable",
+   "max_abs_u": 1.4624453602039253,
+   "n_cells": 1,
+   "wall_attached_columns": 68,
+   "nx": 96,
+   "ny": 48,
+   "routes": {
+    "wall_shear_first": 1.2552394632440118,
+    "wall_shear_largest_area": 8.078373744983194,
+    "field_cell_first_wall_span": 1.258499660179625,
+    "field_cell_last_wall_span": 8.077182264421882
+   },
+   "band": {
+    "values": [
+     1.2552394632440118,
+     8.078373744983194,
+     1.258499660179625,
+     8.077182264421882
+    ],
+    "n": 4,
+    "min": 1.2552394632440118,
+    "max": 8.078373744983194,
+    "spread": 6.823134281739183,
+    "spread_rel": 1.261207815478592,
+    "acceptance_width": 1.082,
+    "flag": "definition_sensitive"
+   },
+   "wall_spans": [
+    {
+     "separation": 0.3449255057409159,
+     "reattachment": 1.258499660179625,
+     "length": 0.913574154438709
+    },
+    {
+     "separation": 2.569649929176422,
+     "reattachment": 8.077182264421882,
+     "length": 5.50753233524546
+    }
+   ],
+   "meta": {
+    "n_cells": 1,
+    "object_verdict": "object_incomplete",
+    "continued_downstream": true,
+    "lift_off_shear_ratio": 0.030669991911168395,
+    "next_wall_touchdown": 2.569649929176422
+   },
+   "wall_shear_first": 1.2552394632440118,
+   "wall_shear_largest_area": 8.078373744983194,
+   "n_bubbles": 2,
+   "field_cells": [
+    {
+     "label": 1,
+     "area_cells": 659,
+     "x_min": 0.421875,
+     "x_max": 8.015625,
+     "row_min": 0,
+     "row_max": 11,
+     "wall_attached": true,
+     "wraps_seam": false
+    }
+   ]
+  },
+  {
+   "stem": "round9_96x48",
+   "file": "round9_96x48.npz",
+   "status": "usable",
+   "usable": true,
+   "reason": "usable",
+   "max_abs_u": 1.2683009306869162,
+   "n_cells": 1,
+   "wall_attached_columns": 78,
+   "nx": 96,
+   "ny": 48,
+   "routes": {
+    "wall_shear_first": 7.650819549524724,
+    "wall_shear_largest_area": 7.650819549524724,
+    "field_cell_first_wall_span": 7.6441880366835875,
+    "field_cell_last_wall_span": 7.6441880366835875
+   },
+   "band": {
+    "values": [
+     7.650819549524724,
+     7.650819549524724,
+     7.6441880366835875,
+     7.6441880366835875
+    ],
+    "n": 4,
+    "min": 7.6441880366835875,
+    "max": 7.650819549524724,
+    "spread": 0.006631512841136278,
+    "spread_rel": 0.0012257879558477407,
+    "acceptance_width": 1.082,
+    "flag": "definition_insensitive"
+   },
+   "wall_spans": [
+    {
+     "separation": 0.40013879231135685,
+     "reattachment": 7.6441880366835875,
+     "length": 7.24404924437223
+    }
+   ],
+   "meta": {
+    "n_cells": 1,
+    "object_verdict": "object_supported",
+    "continued_downstream": false,
+    "lift_off_shear_ratio": null,
+    "next_wall_touchdown": null
+   },
+   "wall_shear_first": 7.650819549524724,
+   "wall_shear_largest_area": 7.650819549524724,
+   "n_bubbles": 1,
+   "field_cells": [
+    {
+     "label": 1,
+     "area_cells": 337,
+     "x_min": 0.421875,
+     "x_max": 7.640625,
+     "row_min": 0,
+     "row_max": 7,
+     "wall_attached": true,
+     "wraps_seam": false
+    }
+   ]
+  }
+ ],
+ "ladders": {
+  "sst_r18": {
+   "rungs": [
+    {
+     "tag": "round11_sst_r18_72x36",
+     "nx": 72,
+     "x_r_over_H": 7.600045056495248,
+     "usable": true
+    },
+    {
+     "tag": "round11_sst_r18_96x48",
+     "nx": 96,
+     "x_r_over_H": 7.681601876754162,
+     "usable": true
+    },
+    {
+     "tag": "round11_sst_r18_120x60",
+     "nx": 120,
+     "x_r_over_H": null,
+     "usable": false
+    },
+    {
+     "tag": "round11_sst_r18_144x72",
+     "nx": 144,
+     "x_r_over_H": null,
+     "usable": false
+    }
+   ],
+   "n_usable": 2,
+   "n_excluded": 2,
+   "excluded": [
+    "round11_sst_r18_120x60",
+    "round11_sst_r18_144x72"
+   ],
+   "steps": [
+    {
+     "from_nx": 72,
+     "to_nx": 96,
+     "delta": 0.08155682025891409,
+     "delta_rel": 0.010731096941223124
+    }
+   ],
+   "reference": 5.41,
+   "verdict": "insufficient_rungs",
+   "reason": "2 usable rung(s) of 4; a convergence claim needs >= 3",
+   "x_r_over_H": null
+  },
+  "laminar_re2800": {
+   "rungs": [
+    {
+     "tag": "round20_laminar_Re2800_96x48",
+     "nx": 96,
+     "x_r_over_H": 1.2540965527208672,
+     "usable": true
+    },
+    {
+     "tag": "round20_laminar_Re2800_144x72",
+     "nx": 144,
+     "x_r_over_H": null,
+     "usable": false
+    },
+    {
+     "tag": "round20_laminar_Re2800_192x96",
+     "nx": 192,
+     "x_r_over_H": null,
+     "usable": false
+    },
+    {
+     "tag": "round20_laminar_Re2800_240x120",
+     "nx": 240,
+     "x_r_over_H": null,
+     "usable": false
+    }
+   ],
+   "n_usable": 1,
+   "n_excluded": 3,
+   "excluded": [
+    "round20_laminar_Re2800_144x72",
+    "round20_laminar_Re2800_192x96",
+    "round20_laminar_Re2800_240x120"
+   ],
+   "steps": [],
+   "reference": 5.41,
+   "verdict": "insufficient_rungs",
+   "reason": "1 usable rung(s) of 4; a convergence claim needs >= 3",
+   "x_r_over_H": null
+  }
+ },
+ "threshold_sweep_laminar_re2800": [
+  {
+   "threshold": 0.0,
+   "n_cells": 1
+  },
+  {
+   "threshold": -0.002,
+   "n_cells": 1
+  },
+  {
+   "threshold": -0.005,
+   "n_cells": 1
+  },
+  {
+   "threshold": -0.01,
+   "n_cells": 1
+  },
+  {
+   "threshold": -0.02,
+   "n_cells": 1
+  },
+  {
+   "threshold": -0.05,
+   "n_cells": 1
+  }
+ ]
+}
