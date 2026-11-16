@@ -1,0 +1,28 @@
+### replay start 2026-11-16T10:05:59Z worktree=/srv/tensor/agent/work/m23215 commit=300daa9bdd7699989e2493b2e8ec9e438bd226ab
+---- CMD: python src/tensorfvm/registry.py --static --strict-exit
+{"count": 47, "summary": {"by_kind": {"cavitation": 1, "compressible": 2, "differentiable": 1, "flux": 1, "free_surface": 6, "ice": 1, "linear_solver": 5, "maneuvering": 1, "mesh": 5, "module": 2, "multiphase": 5, "seakeeping": 3, "solver": 5, "thermal": 2, "turbulence": 2, "verification": 5}, "by_maturity": {"developing": 43, "mature": 4, "planned": 0}, "count": 47, "tested": 42, "verified": 5, "wired": 36, "with_endpoint": 3}, "problems": 3}
+EXIT=0
+---- CMD: python src/tensorfvm/registry.py --static --parity
+{"parity": {"import_count": 47, "import_failures": [], "mismatched": [], "ok": true, "static_count": 47}}
+EXIT=0
+---- CMD: PYTHONPATH=src python scripts/m23215_error_bands.py
+band                      max_error_pct  reference
+annular                       2.813e-01  closed-form annular axial Poiseuille profile
+plic                          0.000e+00  algebraic identity A(n, c(alpha)) == alpha (exact cut area)
+overset                       0.000e+00  exact conservation of the face-integrated flux across a non-
+linear_diagnostics            0.000e+00  componentwise backward error of a direct solve (exact residu
+EXIT=0
+---- CMD: python scripts/m23215_fvm_audit.py --check
+| wave_tank | 11 (wave_tank, wave_tank_td) | 3999 | 1 |
+
+## top-level vertical code
+
+- top-level modules 196 (58134 lines); imported by nobody: 74
+- shadowed: `wave_tank.py` loses to `wave_tank/__init__.py` (both named `tensorfvm.wave_tank`)
+EXIT=0
+---- git status after replays (must be clean => artifacts reproducible)
+STATUS_LINES=0
+---- CMD: python -m pytest tests/test_capability_registry_fvm.py -q
+FAILED tests/test_capability_registry_fvm.py::test_registry_error_bands_equal_the_measured_bands
+1 failed, 16 passed, 49 warnings in 71.78s (0:01:11)
+EXIT=1
