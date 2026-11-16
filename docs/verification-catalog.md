@@ -935,6 +935,8 @@ front series: `24` graded samples of `25` (resolution floor `4` cells), max erro
 | `depth_l1<5%` | depth profile L1 error vs the exact solution | 0.0427 | % | 5.00 | diagnostic | PASS |
 | `monotone(no_extrema)` | waveform monotone: interior local extrema of h(x) above 1e-4 h0 | 0.0000 | flag | 0.00 | primary | PASS |
 | `tv_no_growth<0.5%` | total-variation growth vs the exact solution | 0.1005 | % | 0.50 | diagnostic | PASS |
+| `bore_position_modes<5%` | bore position x_s(t*) measured from the depth distribution only (no analytic window/level) vs the Stoker solution | 0.0210 | % | 5.00 | primary | PASS |
+| `step_ratio_modes<5%` | still-water level step h2/h1 measured from the depth distribution only (no analytic window/level) vs the Stoker solution | 0.0000 | % | 5.00 | primary | PASS |
 | `front_series<5%` | bore series x_s(t) over the run (max graded error) | 0.8443 | % | 5.00 | primary | PASS |
 
 front series: `24` graded samples of `25` (resolution floor `4` cells), max error `0.8443 %` at `t* = 0.0835`; legacy estimator would have quoted `4.505 %`.

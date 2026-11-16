@@ -1,13 +1,13 @@
 {
   "meta": {
     "meta": {
-      "generated_at": "2026-11-15T21:09:16Z",
+      "generated_at": "2026-11-16T03:32:55Z",
       "tolerance": 0.05,
       "t_star": 2.0,
       "python": "3.11.6",
       "numpy": "2.4.6",
       "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
-      "git_commit": "01516d33",
+      "git_commit": "be5ba335",
       "command": "PYTHONPATH=src python scripts/run_shallow_water_dam_break.py --n 1600 --resolutions 100,200,400,800,1600",
       "wall_time_s": null
     },
@@ -287,7 +287,7 @@
         "steps": 1513,
         "t_end": 0.638550856814101,
         "t_star_end": 2.0,
-        "wall_time_s": 2.611140249297023,
+        "wall_time_s": 2.6570739783346653,
         "volume_initial": 4.0,
         "volume_final": 3.9999999999998708,
         "clipped_cells": 0,
@@ -830,7 +830,7 @@
         "steps": 918,
         "t_end": 0.638550856814101,
         "t_star_end": 2.0,
-        "wall_time_s": 1.5585021506994963,
+        "wall_time_s": 1.619979228824377,
         "volume_initial": 7.0,
         "volume_final": 6.999999999999908,
         "clipped_cells": 0,
@@ -883,6 +883,51 @@
             }
           ],
           "thresh_frac": 0.01
+        },
+        "modes": {
+          "h2": 0.726920410942486,
+          "h1": 0.5,
+          "h0": 0.9999999999999998,
+          "jump": 0.22692041094248605,
+          "step_ratio": 1.453840821884972,
+          "bore_x": 1.889178238311661,
+          "bore_level": 0.613460205471243,
+          "method": "depth_mode",
+          "plateau_cells": 482,
+          "plateau_width": 3.012500000000043,
+          "plateau_left": -1.134375,
+          "plateau_right": 1.8718750000000002,
+          "modes": [
+            {
+              "value": 0.5,
+              "centre": 0.503125,
+              "count": 655,
+              "bin": 0
+            },
+            {
+              "value": 0.726920410942486,
+              "centre": 0.7281249999999999,
+              "count": 474,
+              "bin": 36
+            },
+            {
+              "value": 0.9999999999999998,
+              "centre": 0.996875,
+              "count": 319,
+              "bin": 79
+            }
+          ],
+          "n_modes": 3,
+          "bins": 80,
+          "bin_width": 0.00625,
+          "tolerance": 0.05,
+          "valid": true,
+          "shock_exact": 1.8887811500316989,
+          "h2_exact": 0.7269204461872865,
+          "step_ratio_exact": 1.453840892374573,
+          "bore_position_error": 0.00021023519848000692,
+          "step_ratio_error": 4.8485086086606076e-08,
+          "agreement_bore_vs_oracle_window": 8.317280005336832e-10
         },
         "depth_l1": 0.0004271934800380538,
         "depth_linf": 0.09723433797587067,
@@ -946,6 +991,24 @@
           "value": 0.0010049771738320779,
           "limit": 0.005,
           "pass": true
+        },
+        "bore_position_modes<5%": {
+          "value": 0.00021023519848000692,
+          "limit": 0.05,
+          "pass": true,
+          "measured": true,
+          "method": "depth_mode",
+          "n_modes": 3,
+          "note": "measured from the depth distribution only: histogram modes + the sub-cell crossing of the *measured* mid level; the analytic solution is the reference, never a threshold or a window"
+        },
+        "step_ratio_modes<5%": {
+          "value": 4.8485086086606076e-08,
+          "limit": 0.05,
+          "pass": true,
+          "measured": true,
+          "method": "depth_mode",
+          "n_modes": 3,
+          "note": "measured from the depth distribution only: histogram modes + the sub-cell crossing of the *measured* mid level; the analytic solution is the reference, never a threshold or a window"
         },
         "front_series<5%": {
           "value": 0.00844265997289686,
