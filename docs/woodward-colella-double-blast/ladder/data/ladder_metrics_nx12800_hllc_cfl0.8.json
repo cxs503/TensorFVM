@@ -1,0 +1,88 @@
+{
+  "window_x": [
+    0.4,
+    1.0
+  ],
+  "peak_density": {
+    "ref": 6.2960765,
+    "got": 6.455384844477363,
+    "rel_error_percent": 2.5302796825509235
+  },
+  "peak_position": {
+    "ref": 0.777951,
+    "got": 0.7785546875,
+    "abs_error": 0.0006036875000000608
+  },
+  "l1_relative": {
+    "value": 0.05356403286332692,
+    "percent": 5.356403286332692
+  },
+  "window_mass": {
+    "ref": 0.92215100156725,
+    "got": 0.9354963766223039,
+    "rel_error_percent": 1.4472006246669569
+  },
+  "low_plateau": {
+    "ref": 0.157112,
+    "got": 0.17990130378482147,
+    "abs_error": 0.02278930378482147,
+    "rel_error_percent": 14.505132507269636,
+    "percent_of_peak_density": 0.3619604016060076
+  },
+  "faces_ref": [
+    0.646917,
+    0.761947,
+    0.798957,
+    0.865974
+  ],
+  "faces": [
+    0.6469921875,
+    0.7653515625,
+    0.7983203125,
+    0.8655859375
+  ],
+  "faces_abs_error": [
+    7.518750000001795e-05,
+    0.0034045624999999857,
+    0.0006366875000000105,
+    0.0003880625000000082
+  ],
+  "checks": {
+    "peak_density_lt_10pct": true,
+    "peak_position_lt_tol": true,
+    "l1_lt_10pct": true,
+    "faces_lt_tol": true,
+    "window_mass_lt_10pct": true,
+    "low_plateau_lt_10pct": false
+  },
+  "verdict": "PASS",
+  "verdict_note": "low_plateau excluded from primary verdict: diagnosed as edge-degenerate truncation of a monotone ramp, not a physical trough (see CASE-WOODWARD-COLELLA-plateau-diagnosis.md)",
+  "tolerance_percent": 10.0,
+  "position_tolerance": 0.02,
+  "nx": 12800,
+  "dx": 7.8125e-05,
+  "config": {
+    "flux_mode": "hllc",
+    "limiter": "mc",
+    "cfl": 0.8,
+    "order": 2,
+    "nx": 12800
+  },
+  "flux_mode": "hllc",
+  "order": 2,
+  "limiter": "mc",
+  "cfl": 0.8,
+  "t_end": 0.038,
+  "steps": 25717,
+  "seconds_solver": 4674.38,
+  "seconds_total": 4674.43,
+  "mass_energy_drift": {
+    "mass": 0.0,
+    "momentum_x": NaN,
+    "momentum_y": NaN,
+    "energy": 2.0668830943497933e-16,
+    "mass_mat1": 0.0
+  },
+  "positivity_fixes": 0,
+  "reference": "/data/test002/jobs/cj4221/repo/docs/woodward-colella-double-blast/reference/reference_density.csv"
+}
