@@ -1,0 +1,128 @@
+{
+  "annular": {
+    "capability": "fvm.core.annular_axial",
+    "cases": [
+      {
+        "cells": 512,
+        "nr": 16,
+        "ntheta": 32,
+        "relative_flow_rate_error": 0.007848098912440062,
+        "relative_l2": 0.025318613568102572,
+        "relative_linf": 0.03033584229087187,
+        "true_production_relative_residual": 5.389980245814437e-14
+      },
+      {
+        "cells": 2048,
+        "nr": 32,
+        "ntheta": 64,
+        "relative_flow_rate_error": 0.0019560219921087264,
+        "relative_l2": 0.006397292341419566,
+        "relative_linf": 0.007807442410725753,
+        "true_production_relative_residual": 4.517820510557753e-13
+      },
+      {
+        "cells": 4096,
+        "nr": 32,
+        "ntheta": 128,
+        "relative_flow_rate_error": 0.0010559758353210261,
+        "relative_l2": 0.0016797246550800606,
+        "relative_linf": 0.0028125073633978558,
+        "true_production_relative_residual": 3.1431840082377114e-12
+      },
+      {
+        "nr": 16,
+        "ntheta": 32,
+        "path": "radial-only",
+        "relative_l2": 0.025318613568102572
+      },
+      {
+        "nr": 32,
+        "ntheta": 32,
+        "path": "radial-only",
+        "relative_l2": 0.02682581740511777
+      }
+    ],
+    "coarse_max_error_pct": 3.0336,
+    "grade": "ANALYTIC",
+    "key_quantities": {
+      "flow_rate_error_nt128_nr32_pct": 0.1055975835321026,
+      "flow_rate_error_nt32_nr16_pct": 0.7848098912440062,
+      "order_in_nr_at_ntheta32": -0.083,
+      "order_in_ntheta_32_to_64": 1.985,
+      "order_in_ntheta_64_to_128": 1.929,
+      "relative_l2_nt128_nr32_pct": 0.16797246550800607,
+      "relative_l2_nt32_nr16_pct": 2.531861356810257,
+      "relative_linf_nt128_nr32_pct": 0.2812507363397856,
+      "relative_linf_nt32_nr16_pct": 3.033584229087187
+    },
+    "max_error_pct": 0.2813,
+    "note": "faceted polygonal walls: error falls ~2nd order in ntheta (32->64->128) but is flat in nr at fixed ntheta, i.e. geometry error, not stencil error, dominates; coarse Linf 3.03% is just over the internal 3% gate, refined Linf 0.28%",
+    "reference": "closed-form annular axial Poiseuille profile"
+  },
+  "linear_diagnostics": {
+    "capability": "fvm.linear.diagnostics",
+    "cases": [
+      {
+        "nonzeros": 1198,
+        "size": 400
+      }
+    ],
+    "grade": "CONSERVATION",
+    "key_quantities": {
+      "componentwise_backward_error": 1.5427713040667253e-16,
+      "normwise_backward_error": 5.375162500775963e-17,
+      "relative_rhs_residual": 1.094393465510627e-16
+    },
+    "max_error_pct": 0.0,
+    "note": "tridiagonal SPD system with a known exact solution; the diagnostic reports the residual it can actually bound, so this band measures the diagnostic, not the solver's forward error",
+    "reference": "componentwise backward error of a direct solve (exact residual)"
+  },
+  "overset": {
+    "capability": "fvm.flux.overset_transfer",
+    "cases": [
+      {
+        "donor_faces": 4,
+        "receiver_faces": 12,
+        "relative_imbalance": 2.325098932260374e-16
+      },
+      {
+        "donor_faces": 10,
+        "receiver_faces": 8,
+        "relative_imbalance": 1.1931243595183534e-16
+      },
+      {
+        "donor_faces": 12,
+        "receiver_faces": 6,
+        "relative_imbalance": 7.218232000733791e-17
+      }
+    ],
+    "grade": "CONSERVATION",
+    "key_quantities": {
+      "trials": 20,
+      "worst_relative_imbalance": 1.171496190856236e-15,
+      "worst_relative_imbalance_pct": 1.171496190856236e-13
+    },
+    "max_error_pct": 0.0,
+    "note": "20 random non-matching partitions of the unit square, machine-precision target",
+    "reference": "exact conservation of the face-integrated flux across a non-matching interface"
+  },
+  "plic": {
+    "capability": "fvm.freesurface.plic_geometry",
+    "cases": [
+      {
+        "c_bracket_floor": 0.005808,
+        "normal_scale_max": 4.6327,
+        "samples": 32000
+      }
+    ],
+    "grade": "CONSERVATION",
+    "key_quantities": {
+      "max_abs_volume_fraction_error": 1.3633538742396922e-13,
+      "max_abs_volume_fraction_error_pct": 1.3633538742396922e-11,
+      "median_abs_volume_fraction_error": 1.5792922525292852e-14
+    },
+    "max_error_pct": 0.0,
+    "note": "A(n,c) is the closed-form cut area of {n.x <= c}; c(alpha) is its exact bisection inverse, so the identity must hold to the bisection floor, not to a discretisation tolerance",
+    "reference": "algebraic identity A(n, c(alpha)) == alpha (exact cut area)"
+  }
+}

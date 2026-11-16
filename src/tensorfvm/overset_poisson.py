@@ -9,6 +9,7 @@ import numpy as np
 from scipy.sparse import coo_matrix
 from scipy.sparse.linalg import spsolve
 from .overset import ACTIVE, HOLE, FRINGE
+from .registry import capability
 
 
 @dataclass
@@ -43,6 +44,14 @@ def _faces(grid):
     return result
 
 
+@capability('fvm.linear.overset_poisson',
+            kind='linear_solver',
+            maturity='developing',
+            test_path='tests/test_overset_poisson.py',
+            wired=True,
+            tested=True,
+            verified=False,
+            evidence={'grade': 'MECHANICS', 'docs': 1})
 def solve_overset_poisson(connectivity, *, radius=.3):
     """Solve actual FV equations and simultaneous fringe interpolation rows.
 

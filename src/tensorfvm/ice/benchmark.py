@@ -49,6 +49,7 @@ from .load import (
     level_ice_resistance_kN,
 )
 from .parameters import ALL_ICE_PARAMETERS
+from ..registry import capability
 
 REPRO_CMD = "PYTHONPATH=src python -m tensorfvm.ice --out docs/ICE-STRUCT-GUARD-REPAIR/artifacts"
 
@@ -272,6 +273,14 @@ def _out_of_domain_probes() -> list[tuple[str, float]]:
     return probes
 
 
+@capability('fvm.ice.load_path_closure',
+            kind='ice',
+            maturity='developing',
+            test_path='tests/test_ice_guard_pipeline.py',
+            wired=True,
+            tested=True,
+            verified=False,
+            evidence={'grade': 'MECHANICS', 'docs': 0})
 def row_g4_load_path_closure() -> tuple[Row, list[dict[str, Any]]]:
     base = dict(NOMINAL_CASES["MV_Arctic"])
     detail = []

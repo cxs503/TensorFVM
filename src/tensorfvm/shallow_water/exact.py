@@ -44,6 +44,7 @@ import math
 from functools import lru_cache
 
 import numpy as np
+from ..registry import capability
 
 __all__ = [
     "gravity_wave_speed",
@@ -122,6 +123,14 @@ def ritter_level_position(level: float, t: float, h0: float,
     return x_dam + c0 * t * (2.0 - 3.0 * math.sqrt(level))
 
 
+@capability('fvm.shallow_water.ritter_exact',
+            kind='verification',
+            maturity='developing',
+            test_path='tests/test_dambreak_config_envelope.py',
+            wired=True,
+            tested=True,
+            verified=False,
+            evidence={'grade': 'MECHANICS', 'docs': 1})
 def ritter_state(x, t: float, h0: float, gravity: float = 9.81,
                  x_dam: float = 0.0):
     """Exact depth/velocity of the Ritter solution at ``(x, t)``.

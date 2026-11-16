@@ -31,6 +31,7 @@ from scipy import sparse
 from scipy.sparse.linalg import spsolve
 
 from .native_mesh3d import NativeMesh3D
+from .registry import capability
 
 
 #: Face-weighting schemes of :meth:`UnstructuredFVM3D.advection`.
@@ -61,6 +62,14 @@ def observed_order(coarse, fine, ratio):
     return float(np.log(coarse / fine) / np.log(ratio))
 
 
+@capability('fvm.mesh.unstructured3d',
+            kind='mesh',
+            maturity='developing',
+            test_path='tests/test_unstr3d_convection_45deg.py',
+            wired=False,
+            tested=True,
+            verified=False,
+            evidence={'grade': 'MECHANICS', 'docs': 0})
 class UnstructuredFVM3D:
     """Owner/neighbour face operators on a tetrahedral :class:`NativeMesh3D`."""
 

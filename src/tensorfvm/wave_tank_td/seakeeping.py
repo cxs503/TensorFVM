@@ -58,6 +58,7 @@ from ..wave_tank.theory import (GRAVITY, added_resistance_energy, goda_two_point
                                 harmonic_fit)
 from .potential2d import wetted_polygon
 from .sigma_tank import SigmaWaveTank, TankConfig, polygon_properties
+from ..registry import capability
 
 __all__ = [
     "SectionGeometry", "floating_strip", "submerged_strip",
@@ -199,6 +200,13 @@ def potential_energy(poly, mass: float, heave: float, pitch: float, ref,
     return float(mass * g * cg_moved[1] - rho * g * area * cy)
 
 
+@capability('fvm.seakeeping.strip_theory',
+            kind='seakeeping',
+            maturity='developing',
+            wired=False,
+            tested=False,
+            verified=False,
+            evidence={'grade': 'NONE', 'docs': 0})
 def hydrostatic_stiffness(section: SectionGeometry,
                           rho: float = SECTION_DENSITY,
                           g: float = GRAVITY) -> dict:

@@ -7,6 +7,7 @@ into a conservative Navier--Stokes coupling.
 from dataclasses import dataclass
 import numpy as np
 from scipy.sparse import csr_matrix
+from .registry import capability
 
 
 def _boxes(value):
@@ -19,6 +20,19 @@ def _boxes(value):
 
 
 @dataclass(frozen=True)
+@capability('fvm.flux.overset_transfer',
+            kind='flux',
+            maturity='developing',
+            test_path='tests/test_overset_flux.py',
+            wired=False,
+            tested=True,
+            verified=True,
+            evidence={
+             'grade': 'CONSERVATION',
+             'max_error_pct': 0.0,
+             'reference': 'exact conservation of the face-integrated flux across a non-matching interface',
+             'band_script': 'scripts/m23215_error_bands.py',
+         })
 class PlanarFluxTransfer:
     """Common-refinement mortar for line segments or planar rectangles.
 

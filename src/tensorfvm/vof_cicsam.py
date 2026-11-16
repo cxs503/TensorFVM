@@ -92,6 +92,7 @@ Scope and limits
 from __future__ import annotations
 
 import torch
+from .registry import capability
 
 __all__ = [
     "CICSAMVOF",
@@ -278,6 +279,14 @@ def _repair_bounds_local(alpha: torch.Tensor, target: float,
 # --------------------------------------------------------------------------- #
 # the transport operator
 # --------------------------------------------------------------------------- #
+@capability('fvm.freesurface.cicsam',
+            kind='free_surface',
+            maturity='developing',
+            test_path='tests/test_vof_cicsam.py',
+            wired=True,
+            tested=True,
+            verified=False,
+            evidence={'grade': 'MECHANICS', 'docs': 0})
 class CICSAMVOF:
     """Conservative CICSAM advection of ``alpha`` on a uniform MAC grid.
 

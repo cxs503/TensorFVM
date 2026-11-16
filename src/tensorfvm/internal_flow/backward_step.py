@@ -30,6 +30,7 @@ import torch
 
 from .mac import MACConfig, StaggeredMAC
 from .reference import BACKWARD_STEP_REFERENCE, channel_wall_friction
+from ..registry import capability
 
 
 @dataclass(frozen=True)
@@ -84,6 +85,14 @@ def inlet_profile(cells_per_step_height: int) -> tuple[float, ...]:
     return tuple(values)
 
 
+@capability('fvm.internal_flow.backward_step',
+            kind='solver',
+            maturity='developing',
+            test_path='tests/test_internal_flow_benchmarks.py',
+            wired=True,
+            tested=True,
+            verified=False,
+            evidence={'grade': 'MECHANICS', 'docs': 0})
 class BackwardStepCase:
     """Backward-facing step solver built on :class:`StaggeredMAC`."""
 

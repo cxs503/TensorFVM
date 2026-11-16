@@ -30,6 +30,7 @@ from dataclasses import dataclass, field
 import torch
 
 from .geometry import CartesianGrid
+from ..registry import capability
 
 
 def cell_velocity(flow) -> tuple[torch.Tensor, torch.Tensor]:
@@ -40,6 +41,14 @@ def cell_velocity(flow) -> tuple[torch.Tensor, torch.Tensor]:
 
 
 @dataclass(frozen=True)
+@capability('fvm.immersed.control_box',
+            kind='module',
+            maturity='developing',
+            test_path='tests/test_cylinder_re100_case.py',
+            wired=True,
+            tested=True,
+            verified=False,
+            evidence={'grade': 'MECHANICS', 'docs': 0})
 class ControlBox:
     """Index bounds of a rectangular control volume, on grid faces.
 

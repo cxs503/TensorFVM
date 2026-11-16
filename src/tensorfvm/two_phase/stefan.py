@@ -62,6 +62,7 @@ from dataclasses import dataclass, asdict
 
 import numpy as np
 from scipy.special import erf, erfc
+from ..registry import capability
 
 __all__ = [
     "StefanConfig",
@@ -74,6 +75,14 @@ __all__ = [
 ]
 
 
+@capability('fvm.multiphase.stefan',
+            kind='multiphase',
+            maturity='developing',
+            test_path='tests/test_stefan_convergence_verification.py',
+            wired=True,
+            tested=True,
+            verified=False,
+            evidence={'grade': 'MECHANICS', 'docs': 0})
 def stefan_lambda(stefan_number: float) -> float:
     """Root of ``sqrt(pi) lam exp(lam^2) erf(lam) = St`` by safeguarded Newton."""
     st = float(stefan_number)
