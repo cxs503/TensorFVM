@@ -185,6 +185,8 @@ PYTHONPATH=src python -m pytest tests/test_compressible_double_blast.py tests/te
 
 实测：`60 passed, 1 skipped`（40.2 s）；新增文件单独跑 `13 passed`（6.0 s）。
 
+> **注（round-2，2026-11-14 复核）**：以上计数是提交 `86350746` 当时的实测，**不是当前 main 的状态**。后续任务在证据包里新增了 9 份运行记录（其中 2 份不含参考指标），本锚点的门禁在 main 上曾退化为 `11 passed / 2 failed`；§3.5 的「16/16」也随之过期（现为 25 份记录）。数值结论未受影响，原因是审计工具把「无指标记录」误判为复现失败 + 见证文件 stale，详见 `AUDIT-CASE-WOODWARD-COLELLA-round2-gate-repair.md`（本目录）。历史数字保留不改。
+
 ## 7. 处置建议
 
 1. **锚点可置 verified**：`<10%` 验收在 δ 全带 + 双格式 + 双网格上成立；剩余 3% 级差异已被归因且量化。
