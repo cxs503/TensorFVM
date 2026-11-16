@@ -1,0 +1,47 @@
+{
+ "generated_at": "2026-11-16 09:42:43",
+ "repo": "/srv/tensor/agent/work/m23278",
+ "gitdir": "/srv/tensor/workspace/TensorFVM/.git",
+ "git_head": "cc0ba3b0",
+ "git_branch": "agent/m23278",
+ "pack_params": {
+  "window": 10,
+  "depth": 50,
+  "threads": 6
+ },
+ "reachable": {
+  "n_objects": 31360,
+  "n_blobs": 16411,
+  "blob_MiB": 2047.92,
+  "by_type": {
+   "blob": {
+    "n": 16411,
+    "MiB": 2047.92
+   },
+   "commit": {
+    "n": 2195,
+    "MiB": 1.65
+   },
+   "tree": {
+    "n": 12754,
+    "MiB": 77.04
+   }
+  },
+  "inpack_MiB": 1368.48
+ },
+ "baseline_keepall_pack_MiB": 1344.73,
+ "scenarios": [
+  {
+   "tag": "R2b",
+   "desc": "R2 + 全仓 *.pyc",
+   "dropped_blobs": 4024,
+   "dropped_MiB": 1118.36,
+   "kept_MiB": 929.57,
+   "measured_pack_MiB": 487.62,
+   "reduction_pct": 63.74,
+   "exclusive_inpack_MiB": 858.02,
+   "n_surviving_objects": 27336
+  }
+ ],
+ "elapsed_s": 11.1
+}
