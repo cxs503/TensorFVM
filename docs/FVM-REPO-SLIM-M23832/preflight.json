@@ -1,0 +1,112 @@
+{
+  "generated_at": "2026-11-16 15:47:26 +0000",
+  "repo": "/srv/tensor/workspace/TensorFVM",
+  "scenario": "R2c",
+  "owner_decisions": "",
+  "checks": {
+    "census": {
+      "head": "c656f8f91a571e42d63d1249d828cefbf95f01a8",
+      "packs_MiB": 1361.92,
+      "tmp_pack_files": 0,
+      "remote_branches_total": 215,
+      "remote_branches_agent": 0,
+      "remote_branches_maintenance": 0,
+      "maintenance_list": [],
+      "worktrees": 395,
+      "doc_exts_present": [
+        ".bak",
+        ".csv",
+        ".dat",
+        ".geo",
+        ".gitattributes",
+        ".gitignore",
+        ".gz",
+        ".html",
+        ".json",
+        ".jsonl",
+        ".log",
+        ".md",
+        ".md\"",
+        ".means",
+        ".msh",
+        ".npy",
+        ".npz",
+        ".patch",
+        ".pdf",
+        ".png",
+        ".prof",
+        ".pt",
+        ".py",
+        ".rst",
+        ".sh",
+        ".sha256",
+        ".sql",
+        ".sqlite",
+        ".step",
+        ".stp",
+        ".svg",
+        ".tex",
+        ".toml",
+        ".tpl",
+        ".txt",
+        ".yml"
+      ]
+    },
+    "fsck": "stale_commit_graph: 仅 commit-graph 过期（git commit-graph write 可修复，决策点 D7）",
+    "disk": {
+      "free_MiB": 2231035.3,
+      "need_MiB": 4085.8,
+      "ok": true
+    },
+    "filter_repo": "MISSING (pip install git-filter-repo)",
+    "scenario": {
+      "tag": "R2c",
+      "desc": "R2 + 删 docs *.svg（几乎全为 dead 图）",
+      "globs": [
+        "docs/*.csv",
+        "docs/**/*.csv",
+        "docs/*.dat",
+        "docs/**/*.dat",
+        "docs/*.gz",
+        "docs/**/*.gz",
+        "docs/*.msh",
+        "docs/**/*.msh",
+        "docs/*.npy",
+        "docs/**/*.npy",
+        "docs/*.npz",
+        "docs/**/*.npz",
+        "docs/*.pdf",
+        "docs/**/*.pdf",
+        "docs/*.pt",
+        "docs/**/*.pt",
+        "docs/*.svg",
+        "docs/**/*.svg",
+        "**/*.pyc"
+      ],
+      "noext_paths": []
+    },
+    "decisions": "",
+    "preflight_ok": false
+  },
+  "steps": [
+    {
+      "step": "fsck",
+      "cmd": "git -C /srv/tensor/workspace/TensorFVM fsck --full",
+      "rc": 16,
+      "ok": false,
+      "elapsed_s": 40.4,
+      "note": "源仓库完整性",
+      "stderr_tail": "notice: worktrees/m3277/HEAD points to an unborn branch (agent/m3277)\nnotice: worktrees/m3399/HEAD points to an unborn branch (agent/m3399)\nnotice: worktrees/m3411/HEAD points to an unborn branch (agent/m3411)\ncommit-graph parent list for commit 9b668ded3e00d2e2271906ae6c1f07ff97bff6f4 is too long\n"
+    },
+    {
+      "step": "fsck-no-graph",
+      "cmd": "git -C /srv/tensor/workspace/TensorFVM -c core.commitGraph=false fsck --full",
+      "rc": 0,
+      "ok": true,
+      "elapsed_s": 40.0,
+      "note": "排除 commit-graph 后复测",
+      "stderr_tail": "notice: worktrees/m3277/HEAD points to an unborn branch (agent/m3277)\nnotice: worktrees/m3399/HEAD points to an unborn branch (agent/m3399)\nnotice: worktrees/m3411/HEAD points to an unborn branch (agent/m3411)\n"
+    }
+  ],
+  "verdict": "FAIL"
+}
