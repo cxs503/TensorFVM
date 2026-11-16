@@ -235,3 +235,58 @@ R2c 为「保留 png 图」的推荐档（-72%）。
 
 **复核结论**：方案五节全部成立，数字已刷新；决策点由 5 个更新为 6 个（D2 收窄、D6 新增），
 正式提请 owner 裁决（见平台报告）。
+
+---
+
+## 9. 复核与执行 runbook（m23832，2026-11-16，HEAD c656f8f9）
+
+> 本节为**方案复核 + 执行桥**：对 §0–§8 全部关键数字按当前对象库重测（只读），
+> 并把 §2/§4/§5 的命令面收敛为**单一可审计脚本**
+> `scripts/audit/slim_execute_runbook.py`（本单交付，未执行任何改写）。
+> 数据：`docs/FVM-REPO-SLIM-M23832/census.json`（普查）、
+> `docs/FVM-REPO-SLIM-M23832/measure/measured_pack_R2-R2c-R3-R5b.json`（实测 pack）、
+> `docs/FVM-REPO-SLIM-M23832/preflight.json`（runbook preflight 审计）。
+
+### 9.1 数字复核（m23718 → m23832）
+
+| 维度 | 96c9928e（§8） | c656f8f9（本次） | 判定 |
+|---|---|---|---|
+| 全仓 pack | 1361.9 MiB / 1.33 GiB | 1361.9 MiB / 1.33 GiB（32 pack） | 持平 |
+| main 可达（解压） | 1995.0 MiB / 21574 对象 | 1995.5 MiB / 21615 对象 | +0.5 MiB（=复核产物自身） |
+| 对象库垃圾 tmp_pack | **1198 MiB / 5 个** | **0 MiB / 0 个** | **D6 已消解**（平台侧已回收） |
+| 远端分支 | 215 / agent 0 / maint 2 | 215 / agent 0 / maint 2 | 持平 |
+| 触及 verification 提交 | 167(main)/403(all) | 167/403 | 持平 |
+| R2 / R2c / R3 / R5b 实测 pack | 488.8 / 382.5 / 64.0 / 352.0 MiB | 488.9 / 382.6 / 63.9 / 352.1 MiB | 全部成立，推荐档不变 |
+
+**结论：方案五节与推荐档（R2c 保图 / R3 最大收益）在 c656f8f9 上全部成立。**
+
+### 9.2 执行 runbook（新交付）
+
+`scripts/audit/slim_execute_runbook.py` 把方案翻译成单入口脚本：
+
+- **preflight（缺省，只读）**：fsck、磁盘余量（≥3×pack）、git-filter-repo 可用性、
+  场景 glob 集生成、决策点门禁；输出 JSON 审计。
+- **execute（需 `--confirm FVM-REPO-SLIM` + D1–D6 裁决留痕）**：
+  回滚镜像 clone→fsck→tar+sha256（§5）→ 在 **scratch 克隆**上 filter-repo+gc
+  → 不变量校验（src/tests 树去 pyc 后逐字节不变）→ 体积对比 → **打印**
+  force-push 命令（**永不自动推送**，推送由 owner 在冻结窗口手工执行，§4）。
+- **规则单一事实源**：删除规则 import 自 `measure_rewrite_pack.py`（与实测 pack
+  同一套规则），glob 翻译正确性由 `tests/test_slim_runbook_globs.py` 对真实仓库
+  全量对账（R2c/R3 的被删 blob 集与场景规则**完全一致**，4/4 测试通过）。
+
+### 9.3 新发现与决策点更新
+
+| # | 决策点 | 状态 |
+|---|---|---|
+| D1–D5 | 同 §8.5 | 待决（建议不变） |
+| D6 | tmp_pack 垃圾 gc | **已消解**：本次普查 garbage=0（1198 MiB 已被平台侧回收） |
+| **D7** | **共享 .git 的 commit-graph 过期**：`git fsck --full` 在活仓上 rc=16
+  （`commit-graph parent list ... too long`，graph 文件 2026-11-03 写入，与当前
+  对象库不一致）；`-c core.commitGraph=false` 复测 rc=0，证明**仅此一项**。
+  修复 = `git commit-graph write`（本地元数据重建，零历史影响），但写共享 .git，
+  故列决策点。镜像克隆不继承该文件，§5.5 门禁（镜像 fsck）不受阻。 | **新增**：建议执行前顺手修复 |
+
+**当前 preflight 结论（诚实口径）**：`verdict=FAIL`，两个可修复阻塞项——
+① 本机未装 `git-filter-repo`（§2.1 已注明需 owner 批准安装）；
+② commit-graph 过期（D7）。两者修复后 preflight 即转 PASS，execute 即可在
+owner 批准 D1–D5 后运行。
