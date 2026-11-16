@@ -10,6 +10,21 @@
       "family": "hllc",
       "source": "artifacts/wc_blast_profile_nx800.npz"
     },
+    "nx12800_hllc_cfl0.8": {
+      "nx": 12800,
+      "family": "hllc",
+      "source": "ladder/data/ladder_profile_nx12800_hllc_cfl0.8.npz"
+    },
+    "nx12800_weno5": {
+      "nx": 12800,
+      "family": "weno5",
+      "source": "ladder/data/ladder_profile_nx12800_weno5.npz"
+    },
+    "nx12800_weno5_cfl0.8": {
+      "nx": 12800,
+      "family": "weno5",
+      "source": "ladder/data/ladder_profile_nx12800_weno5_cfl0.8.npz"
+    },
     "nx1600_hllc": {
       "nx": 1600,
       "family": "hllc",
@@ -19,6 +34,11 @@
       "nx": 1600,
       "family": "weno5",
       "source": "ladder/data/ladder_profile_nx1600_weno5.npz"
+    },
+    "nx1600_weno7": {
+      "nx": 1600,
+      "family": "weno7",
+      "source": "ladder/data/ladder_profile_nx1600_weno7.npz"
     },
     "nx200_hllc": {
       "nx": 200,
@@ -35,6 +55,11 @@
       "family": "weno5",
       "source": "ladder/data/ladder_profile_nx200_weno5.npz"
     },
+    "nx25600_weno5_cfl0.8": {
+      "nx": 25600,
+      "family": "weno5",
+      "source": "ladder/data/ladder_profile_nx25600_weno5_cfl0.8.npz"
+    },
     "nx3200_hllc": {
       "nx": 3200,
       "family": "hllc",
@@ -44,6 +69,41 @@
       "nx": 3200,
       "family": "weno5",
       "source": "ladder/data/ladder_profile_nx3200_weno5.npz"
+    },
+    "nx400_weno5": {
+      "nx": 400,
+      "family": "weno5",
+      "source": "ladder/data/ladder_profile_nx400_weno5.npz"
+    },
+    "nx400_weno7": {
+      "nx": 400,
+      "family": "weno7",
+      "source": "ladder/data/ladder_profile_nx400_weno7.npz"
+    },
+    "nx6400_hllc": {
+      "nx": 6400,
+      "family": "hllc",
+      "source": "ladder/data/ladder_profile_nx6400_hllc.npz"
+    },
+    "nx6400_hllc_cfl0.8": {
+      "nx": 6400,
+      "family": "hllc",
+      "source": "ladder/data/ladder_profile_nx6400_hllc_cfl0.8.npz"
+    },
+    "nx6400_weno5": {
+      "nx": 6400,
+      "family": "weno5",
+      "source": "ladder/data/ladder_profile_nx6400_weno5.npz"
+    },
+    "nx800_weno5": {
+      "nx": 800,
+      "family": "weno5",
+      "source": "ladder/data/ladder_profile_nx800_weno5.npz"
+    },
+    "nx800_weno7": {
+      "nx": 800,
+      "family": "weno7",
+      "source": "ladder/data/ladder_profile_nx800_weno7.npz"
     }
   },
   "coverage": {
@@ -259,6 +319,36 @@
     "energy_exact": 275.02000000000004,
     "gamma": 1.4,
     "rows": {
+      "nx12800_hllc_cfl0.8": {
+        "nx": 12800,
+        "mass": 1.0,
+        "mass_drift": 0.0,
+        "momentum": 6.833248794685146,
+        "energy": 275.0200000000001,
+        "energy_drift": 5.684341886080802e-14,
+        "energy_relative_drift": 2.066883094349793e-16,
+        "wall_work": 0.0
+      },
+      "nx12800_weno5": {
+        "nx": 12800,
+        "mass": 0.9999999999980743,
+        "mass_drift": -1.925681836212334e-12,
+        "momentum": 6.833236913856228,
+        "energy": 275.01999999919417,
+        "energy_drift": -8.058691491896752e-10,
+        "energy_relative_drift": -2.9302201628597017e-12,
+        "wall_work": 0.0
+      },
+      "nx12800_weno5_cfl0.8": {
+        "nx": 12800,
+        "mass": 0.9999999999990365,
+        "mass_drift": -9.634515407697108e-13,
+        "momentum": 6.833242422302531,
+        "energy": 275.01999999959776,
+        "energy_drift": -4.022808752779383e-10,
+        "energy_relative_drift": -1.4627331658713484e-12,
+        "wall_work": 0.0
+      },
       "nx1600_hllc": {
         "nx": 1600,
         "mass": 1.0000000000000004,
@@ -277,6 +367,16 @@
         "energy": 275.0199999998986,
         "energy_drift": -1.0146550266654231e-10,
         "energy_relative_drift": -3.6893863234143807e-13,
+        "wall_work": 0.0
+      },
+      "nx1600_weno7": {
+        "nx": 1600,
+        "mass": 0.9999999999997453,
+        "mass_drift": -2.546851618490109e-13,
+        "momentum": 6.832727988436654,
+        "energy": 275.01999999989823,
+        "energy_drift": -1.0180656317970715e-10,
+        "energy_relative_drift": -3.701787621980479e-13,
         "wall_work": 0.0
       },
       "nx200_hllc": {
@@ -309,6 +409,16 @@
         "energy_relative_drift": -4.526473976626047e-14,
         "wall_work": 0.0
       },
+      "nx25600_weno5_cfl0.8": {
+        "nx": 25600,
+        "mass": 0.9999999999980803,
+        "mass_drift": -1.919686631879358e-12,
+        "momentum": 6.833228988512432,
+        "energy": 275.0199999991965,
+        "energy_drift": -8.035385690163821e-10,
+        "energy_relative_drift": -2.9217459421728675e-12,
+        "wall_work": 0.0
+      },
       "nx3200_hllc": {
         "nx": 3200,
         "mass": 1.0,
@@ -327,6 +437,76 @@
         "energy": 275.01999999979813,
         "energy_drift": -2.0190782379359007e-10,
         "energy_relative_drift": -7.341568751130465e-13,
+        "wall_work": 0.0
+      },
+      "nx400_weno5": {
+        "nx": 400,
+        "mass": 0.9999999999999335,
+        "mass_drift": -6.650235917504688e-14,
+        "momentum": 6.823266034194382,
+        "energy": 275.0199999999747,
+        "energy_drift": -2.5352164811920375e-11,
+        "energy_relative_drift": -9.218298600800076e-14,
+        "wall_work": 0.0
+      },
+      "nx400_weno7": {
+        "nx": 400,
+        "mass": 0.9999999999999369,
+        "mass_drift": -6.306066779870889e-14,
+        "momentum": 6.824991739767795,
+        "energy": 275.01999999997577,
+        "energy_drift": -2.4272139853565022e-11,
+        "energy_relative_drift": -8.825590812873617e-14,
+        "wall_work": 0.0
+      },
+      "nx6400_hllc": {
+        "nx": 6400,
+        "mass": 0.9999999999999998,
+        "mass_drift": -2.220446049250313e-16,
+        "momentum": 6.833176148556283,
+        "energy": 275.02000000000015,
+        "energy_drift": 1.1368683772161603e-13,
+        "energy_relative_drift": 4.133766188699586e-16,
+        "wall_work": 0.0
+      },
+      "nx6400_hllc_cfl0.8": {
+        "nx": 6400,
+        "mass": 0.9999999999999999,
+        "mass_drift": -1.1102230246251565e-16,
+        "momentum": 6.833270696631878,
+        "energy": 275.02,
+        "energy_drift": -5.684341886080802e-14,
+        "energy_relative_drift": -2.066883094349793e-16,
+        "wall_work": 0.0
+      },
+      "nx6400_weno5": {
+        "nx": 6400,
+        "mass": 0.99999999999903,
+        "mass_drift": -9.700018566149993e-13,
+        "momentum": 6.833214400809467,
+        "energy": 275.0199999995974,
+        "energy_drift": -4.0262193579110317e-10,
+        "energy_relative_drift": -1.4639732957279584e-12,
+        "wall_work": 0.0
+      },
+      "nx800_weno5": {
+        "nx": 800,
+        "mass": 0.999999999999871,
+        "mass_drift": -1.290079154614432e-13,
+        "momentum": 6.8295894816894736,
+        "energy": 275.01999999994916,
+        "energy_drift": -5.0874859880423173e-11,
+        "energy_relative_drift": -1.8498603694430647e-13,
+        "wall_work": 0.0
+      },
+      "nx800_weno7": {
+        "nx": 800,
+        "mass": 0.9999999999998768,
+        "mass_drift": -1.2323475573339238e-13,
+        "momentum": 6.830548141566526,
+        "energy": 275.01999999995127,
+        "energy_drift": -4.8771653382573277e-11,
+        "energy_relative_drift": -1.7733856949521225e-13,
         "wall_work": 0.0
       }
     }
@@ -773,6 +953,659 @@
     },
     "peak_is_flat_topped": true,
     "note": "peak is a flat-topped maximum, so it is insensitive to a sub-cell horizontal shift (sensitivity ~0); ratios against it are undefined."
+  },
+  "third_code": {
+    "available": true,
+    "source": "docs/woodward-colella-double-blast/pyclaw/profiles.npz (Clawpack 5.14.0 Classic, Roe+entropy fix / HLLE; independent authors, Fortran, own limiter and wave decomposition)",
+    "matched_grids": {
+      "200": "nx200_hllc",
+      "1600": "nx1600_hllc"
+    },
+    "domain": {
+      "x_min": 0.0003125,
+      "x_max": 0.9996875000000001,
+      "covers_blind_strip": true
+    },
+    "distance": {
+      "200": {
+        "roe": {
+          "blind_left_(0,0.4)": {
+            "percent": 0.07708940776590645,
+            "abs": 4.9431141900105464e-05,
+            "denominator": 0.06412183376763063,
+            "coarse_grid": 200,
+            "fine_grid": 200,
+            "region": [
+              0.0,
+              0.4
+            ]
+          },
+          "window_(0.4,1.0)": {
+            "percent": 3.019714291721166,
+            "abs": 0.028199510317983425,
+            "denominator": 0.9338469667575857,
+            "coarse_grid": 200,
+            "fine_grid": 200,
+            "region": [
+              0.4,
+              1.0
+            ]
+          },
+          "full_(0,1)": {
+            "percent": 2.828147037353073,
+            "abs": 0.02824900450812098,
+            "denominator": 0.9988520446433317,
+            "coarse_grid": 200,
+            "fine_grid": 200,
+            "region": [
+              0.0,
+              1.0
+            ]
+          }
+        },
+        "hlle": {
+          "blind_left_(0,0.4)": {
+            "percent": 0.5794101543991179,
+            "abs": 0.00037152841603657437,
+            "denominator": 0.06412183376763063,
+            "coarse_grid": 200,
+            "fine_grid": 200,
+            "region": [
+              0.0,
+              0.4
+            ]
+          },
+          "window_(0.4,1.0)": {
+            "percent": 5.542041523997729,
+            "abs": 0.05175418666829867,
+            "denominator": 0.9338469667575857,
+            "coarse_grid": 200,
+            "fine_grid": 200,
+            "region": [
+              0.4,
+              1.0
+            ]
+          },
+          "full_(0,1)": {
+            "percent": 5.218638266355493,
+            "abs": 0.05212647502603115,
+            "denominator": 0.9988520446433317,
+            "coarse_grid": 200,
+            "fine_grid": 200,
+            "region": [
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "1600": {
+        "roe": {
+          "blind_left_(0,0.4)": {
+            "percent": 0.0506671544253839,
+            "abs": 3.2633318625240725e-05,
+            "denominator": 0.0644072456709581,
+            "coarse_grid": 1600,
+            "fine_grid": 1600,
+            "region": [
+              0.0,
+              0.4
+            ]
+          },
+          "window_(0.4,1.0)": {
+            "percent": 0.7300829425497523,
+            "abs": 0.006828750992564863,
+            "denominator": 0.9353390682866847,
+            "coarse_grid": 1600,
+            "fine_grid": 1600,
+            "region": [
+              0.4,
+              1.0
+            ]
+          },
+          "full_(0,1)": {
+            "percent": 0.6862391745196035,
+            "abs": 0.006861415850778745,
+            "denominator": 0.9998577909199117,
+            "coarse_grid": 1600,
+            "fine_grid": 1600,
+            "region": [
+              0.0,
+              1.0
+            ]
+          }
+        },
+        "hlle": {
+          "blind_left_(0,0.4)": {
+            "percent": 0.20651800862404476,
+            "abs": 0.00013301256116925894,
+            "denominator": 0.0644072456709581,
+            "coarse_grid": 1600,
+            "fine_grid": 1600,
+            "region": [
+              0.0,
+              0.4
+            ]
+          },
+          "window_(0.4,1.0)": {
+            "percent": 5.38337094993151,
+            "abs": 0.05035277168550543,
+            "denominator": 0.9353390682866847,
+            "coarse_grid": 1600,
+            "fine_grid": 1600,
+            "region": [
+              0.4,
+              1.0
+            ]
+          },
+          "full_(0,1)": {
+            "percent": 5.049340792639582,
+            "abs": 0.05048622730530408,
+            "denominator": 0.9998577909199117,
+            "coarse_grid": 1600,
+            "fine_grid": 1600,
+            "region": [
+              0.0,
+              1.0
+            ]
+          }
+        }
+      }
+    },
+    "distance_vs_finest": {
+      "200": {
+        "roe": {
+          "blind_left_(0,0.4)": {
+            "percent": 0.8823727465188407,
+            "abs": 0.0005654866893268848,
+            "denominator": 0.06408705295555163,
+            "coarse_grid": 200,
+            "fine_grid": 3200,
+            "region": [
+              0.0,
+              0.4
+            ]
+          },
+          "window_(0.4,1.0)": {
+            "percent": 16.857828769485323,
+            "abs": 0.1574305915480072,
+            "denominator": 0.9338722898465744,
+            "coarse_grid": 200,
+            "fine_grid": 3200,
+            "region": [
+              0.4,
+              1.0
+            ]
+          },
+          "full_(0,1)": {
+            "percent": 15.818835408853845,
+            "abs": 0.15800527479194781,
+            "denominator": 0.9988426499684788,
+            "coarse_grid": 200,
+            "fine_grid": 3200,
+            "region": [
+              0.0,
+              1.0
+            ]
+          }
+        },
+        "hlle": {
+          "blind_left_(0,0.4)": {
+            "percent": 1.4627892496402035,
+            "abs": 0.0009400591292883785,
+            "denominator": 0.06426483716089663,
+            "coarse_grid": 200,
+            "fine_grid": 3200,
+            "region": [
+              0.0,
+              0.4
+            ]
+          },
+          "window_(0.4,1.0)": {
+            "percent": 20.589013827745603,
+            "abs": 0.19223916713197375,
+            "denominator": 0.9336977901919404,
+            "coarse_grid": 200,
+            "fine_grid": 3200,
+            "region": [
+              0.4,
+              1.0
+            ]
+          },
+          "full_(0,1)": {
+            "percent": 19.341113677483005,
+            "abs": 0.1931880079063894,
+            "denominator": 0.9988463494286762,
+            "coarse_grid": 200,
+            "fine_grid": 3200,
+            "region": [
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "400": {
+        "roe": {
+          "blind_left_(0,0.4)": {
+            "percent": 0.3563848816013359,
+            "abs": 0.00022903401599962657,
+            "denominator": 0.06426591806322236,
+            "coarse_grid": 400,
+            "fine_grid": 3200,
+            "region": [
+              0.0,
+              0.4
+            ]
+          },
+          "window_(0.4,1.0)": {
+            "percent": 9.189022996278155,
+            "abs": 0.08589145111576249,
+            "denominator": 0.9347179906998954,
+            "coarse_grid": 400,
+            "fine_grid": 3200,
+            "region": [
+              0.4,
+              1.0
+            ]
+          },
+          "full_(0,1)": {
+            "percent": 8.617225101601752,
+            "abs": 0.08612293611182359,
+            "denominator": 0.9994277171176047,
+            "coarse_grid": 400,
+            "fine_grid": 3200,
+            "region": [
+              0.0,
+              1.0
+            ]
+          }
+        },
+        "hlle": {
+          "blind_left_(0,0.4)": {
+            "percent": 0.8458766673849826,
+            "abs": 0.0005445841696112312,
+            "denominator": 0.06438103692998254,
+            "coarse_grid": 400,
+            "fine_grid": 3200,
+            "region": [
+              0.0,
+              0.4
+            ]
+          },
+          "window_(0.4,1.0)": {
+            "percent": 13.283295300208867,
+            "abs": 0.12414592936283896,
+            "denominator": 0.9346018932582707,
+            "coarse_grid": 400,
+            "fine_grid": 3200,
+            "region": [
+              0.4,
+              1.0
+            ]
+          },
+          "full_(0,1)": {
+            "percent": 12.476760875371141,
+            "abs": 0.12469573822324312,
+            "denominator": 0.9994239648320089,
+            "coarse_grid": 400,
+            "fine_grid": 3200,
+            "region": [
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "800": {
+        "roe": {
+          "blind_left_(0,0.4)": {
+            "percent": 0.14464144856323694,
+            "abs": 9.31027234314611e-05,
+            "denominator": 0.06436794180110605,
+            "coarse_grid": 800,
+            "fine_grid": 3200,
+            "region": [
+              0.0,
+              0.4
+            ]
+          },
+          "window_(0.4,1.0)": {
+            "percent": 4.146182832134454,
+            "abs": 0.038771965081210516,
+            "denominator": 0.9351243457165808,
+            "coarse_grid": 800,
+            "fine_grid": 3200,
+            "region": [
+              0.4,
+              1.0
+            ]
+          },
+          "full_(0,1)": {
+            "percent": 3.887676403224012,
+            "abs": 0.03886567673642771,
+            "denominator": 0.999714809190312,
+            "coarse_grid": 800,
+            "fine_grid": 3200,
+            "region": [
+              0.0,
+              1.0
+            ]
+          }
+        },
+        "hlle": {
+          "blind_left_(0,0.4)": {
+            "percent": 0.4031154105440238,
+            "abs": 0.0002597028173918711,
+            "denominator": 0.0644239368178432,
+            "coarse_grid": 800,
+            "fine_grid": 3200,
+            "region": [
+              0.0,
+              0.4
+            ]
+          },
+          "window_(0.4,1.0)": {
+            "percent": 7.3887221217563885,
+            "abs": 0.06908960920529941,
+            "denominator": 0.9350684471116093,
+            "coarse_grid": 800,
+            "fine_grid": 3200,
+            "region": [
+              0.4,
+              1.0
+            ]
+          },
+          "full_(0,1)": {
+            "percent": 6.93708778189811,
+            "abs": 0.06935102404778487,
+            "denominator": 0.9997138025087697,
+            "coarse_grid": 800,
+            "fine_grid": 3200,
+            "region": [
+              0.0,
+              1.0
+            ]
+          }
+        }
+      },
+      "1600": {
+        "roe": {
+          "blind_left_(0,0.4)": {
+            "percent": 0.0536061667965615,
+            "abs": 3.453477937100117e-05,
+            "denominator": 0.06442314650488376,
+            "coarse_grid": 1600,
+            "fine_grid": 3200,
+            "region": [
+              0.0,
+              0.4
+            ]
+          },
+          "window_(0.4,1.0)": {
+            "percent": 1.6988641967460605,
+            "abs": 0.01588986858719925,
+            "denominator": 0.9353230598204434,
+            "coarse_grid": 1600,
+            "fine_grid": 3200,
+            "region": [
+              0.4,
+              1.0
+            ]
+          },
+          "full_(0,1)": {
+            "percent": 1.5926790514118738,
+            "abs": 0.0159245233633292,
+            "denominator": 0.9998576517480073,
+            "coarse_grid": 1600,
+            "fine_grid": 3200,
+            "region": [
+              0.0,
+              1.0
+            ]
+          }
+        },
+        "hlle": {
+          "blind_left_(0,0.4)": {
+            "percent": 0.20238491622265112,
+            "abs": 0.00013044317567210788,
+            "denominator": 0.06445301265861263,
+            "coarse_grid": 1600,
+            "fine_grid": 3200,
+            "region": [
+              0.0,
+              0.4
+            ]
+          },
+          "window_(0.4,1.0)": {
+            "percent": 6.445767522800408,
+            "abs": 0.060286828476077234,
+            "denominator": 0.935293248830749,
+            "coarse_grid": 1600,
+            "fine_grid": 3200,
+            "region": [
+              0.4,
+              1.0
+            ]
+          },
+          "full_(0,1)": {
+            "percent": 6.04264262969661,
+            "abs": 0.06041780316754904,
+            "denominator": 0.999857295393001,
+            "coarse_grid": 1600,
+            "fine_grid": 3200,
+            "region": [
+              0.0,
+              1.0
+            ]
+          }
+        }
+      }
+    },
+    "convergence": {
+      "roe": {
+        "blind_left_(0,0.4)": {
+          "sequence": {
+            "200": 0.8823727465188407,
+            "400": 0.3563848816013359,
+            "800": 0.14464144856323694,
+            "1600": 0.0536061667965615
+          },
+          "monotone_decreasing": true,
+          "ratio_finest": 0.37061414503965645
+        },
+        "window_(0.4,1.0)": {
+          "sequence": {
+            "200": 16.857828769485323,
+            "400": 9.189022996278155,
+            "800": 4.146182832134454,
+            "1600": 1.6988641967460605
+          },
+          "monotone_decreasing": true,
+          "ratio_finest": 0.40974174693388654
+        },
+        "full_(0,1)": {
+          "sequence": {
+            "200": 15.818835408853845,
+            "400": 8.617225101601752,
+            "800": 3.887676403224012,
+            "1600": 1.5926790514118738
+          },
+          "monotone_decreasing": true,
+          "ratio_finest": 0.40967377071072086
+        }
+      },
+      "hlle": {
+        "blind_left_(0,0.4)": {
+          "sequence": {
+            "200": 1.4627892496402035,
+            "400": 0.8458766673849826,
+            "800": 0.4031154105440238,
+            "1600": 0.20238491622265112
+          },
+          "monotone_decreasing": true,
+          "ratio_finest": 0.5020520449702552
+        },
+        "window_(0.4,1.0)": {
+          "sequence": {
+            "200": 20.589013827745603,
+            "400": 13.283295300208867,
+            "800": 7.3887221217563885,
+            "1600": 6.445767522800408
+          },
+          "monotone_decreasing": true,
+          "ratio_finest": 0.8723792039520051
+        },
+        "full_(0,1)": {
+          "sequence": {
+            "200": 19.341113677483005,
+            "400": 12.476760875371141,
+            "800": 6.93708778189811,
+            "1600": 6.04264262969661
+          },
+          "monotone_decreasing": true,
+          "ratio_finest": 0.8710633077852211
+        }
+      }
+    },
+    "quality": {
+      "criterion": {
+        "rho_max_growth_tolerance": 0.25,
+        "note": "a refinement step may not raise rho_max by more than 25%; a physically converging peak does not"
+      },
+      "families": {
+        "roe": {
+          "rho_max_by_grid": {
+            "200": 5.013484661069868,
+            "400": 5.650456581258245,
+            "800": 6.29277704702474,
+            "1600": 6.464370726964848
+          },
+          "refinement_steps": [
+            {
+              "grids": [
+                200,
+                400
+              ],
+              "rho_max_from": 5.013484661069868,
+              "rho_max_to": 5.650456581258245,
+              "growth_percent": 12.705173412307769,
+              "exceeds_tolerance": false
+            },
+            {
+              "grids": [
+                400,
+                800
+              ],
+              "rho_max_from": 5.650456581258245,
+              "rho_max_to": 6.29277704702474,
+              "growth_percent": 11.367585194743013,
+              "exceeds_tolerance": false
+            },
+            {
+              "grids": [
+                800,
+                1600
+              ],
+              "rho_max_from": 6.29277704702474,
+              "rho_max_to": 6.464370726964848,
+              "growth_percent": 2.726835523614146,
+              "exceeds_tolerance": false
+            }
+          ],
+          "inadmissible_grids": [],
+          "admissible": true,
+          "mass_by_grid": {
+            "200": 1.0000000000000004,
+            "400": 0.9999999999999998,
+            "800": 0.9999999999999998,
+            "1600": 1.0000000000000002
+          },
+          "mass_drift_max": 4.440892098500626e-16
+        },
+        "hlle": {
+          "rho_max_by_grid": {
+            "200": 4.8809432445543015,
+            "400": 5.510858623921854,
+            "800": 6.339684116184819,
+            "1600": 9.037569168820266
+          },
+          "refinement_steps": [
+            {
+              "grids": [
+                200,
+                400
+              ],
+              "rho_max_from": 4.8809432445543015,
+              "rho_max_to": 5.510858623921854,
+              "growth_percent": 12.90560753949257,
+              "exceeds_tolerance": false
+            },
+            {
+              "grids": [
+                400,
+                800
+              ],
+              "rho_max_from": 5.510858623921854,
+              "rho_max_to": 6.339684116184819,
+              "growth_percent": 15.039861277971301,
+              "exceeds_tolerance": false
+            },
+            {
+              "grids": [
+                800,
+                1600
+              ],
+              "rho_max_from": 6.339684116184819,
+              "rho_max_to": 9.037569168820266,
+              "growth_percent": 42.555512280933904,
+              "exceeds_tolerance": true
+            }
+          ],
+          "inadmissible_grids": [
+            1600
+          ],
+          "admissible": false,
+          "mass_by_grid": {
+            "200": 0.9999999463581332,
+            "400": 0.9999999926565549,
+            "800": 0.9999999990625048,
+            "1600": 0.9999999998639278
+          },
+          "mass_drift_max": 5.364186683731731e-08
+        }
+      },
+      "admissible_families": [
+        "roe"
+      ],
+      "rejected_witnesses": [
+        [
+          "hlle",
+          1600
+        ]
+      ],
+      "witnesses_used": {
+        "200": "nx200_hllc",
+        "1600": "nx1600_hllc"
+      }
+    },
+    "verdict": {
+      "blind_strip_max_percent_matched_nx1600": 0.20651800862404476,
+      "window_max_percent_matched_nx1600": 5.38337094993151,
+      "blind_strip_max_percent_clean_witnesses": 0.0506671544253839,
+      "window_max_percent_clean_witnesses": 0.7300829425497523,
+      "tolerance_percent": 10.0,
+      "bound_percent_claimed": 0.25,
+      "independently_corroborates_reference_free_bound": true,
+      "window_is_where_independent_codes_diverge": true,
+      "rejected_witnesses": [
+        [
+          "hlle",
+          1600
+        ]
+      ],
+      "note": "The blind strip cannot be scored against the paper, but a code that shares nothing with TensorFVM reproduces it to <0.25 % of L1 density distance, an order of magnitude tighter than the shock-bearing window. No acceptance-level (<10 %) error can hide in the un-referenced strip."
+    }
   },
   "figures": [
     "fig_wc_domain_coverage.png",
