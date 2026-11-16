@@ -825,3 +825,32 @@
   无核对副本；本单未重跑求解器（只重算度量）。
 - 建议总账条目：`XVAL-FVM-CAVITY-THIRD-REFERENCE`，验收＝引入一份**异族第三方**存档参考（含其自身
   不确定度）后，`u_min/v_max/vortex` 三方互证误差 ≤0.5%，并写明该参考的网格/阶数与其 GCI。
+
+## 4o. 追加欠账（append-only, m22685 selfstart）
+### D28 CASE-FVM-PERIODIC-HILLS 第二十六回合——归档里 6/14 是**全零 dump**；层流解只有一个再循环单元，`x_r/H` 口径带宽 129.6 %（判 `definition_sensitive`），锚点仍 OPEN(honest FAIL)
+- 缺口来源：round 23「给下次」第 1 条（SST 加密网格看收敛）与 round 25 遗留（闭式无关 `Re=2800` 网格阶梯）都指向
+  「加密档的场」，但**没有任何门检查过归档里到底有没有场**；另外 round 17/21/22/24 四轮审计的都是壁剪这条**一维**口径，
+  从没人问过「被配对成气泡的那段壁剪区间，是否对应场里一个闭合再循环单元」。
+- 交付：`src/tensorfvm/verification/periodic_hill_archive_audit.py`（`artifact_health` / `recirculation_cells` /
+  `wall_spans` / `bubble_object_audit` / `definition_routes` / `definition_band` / `ladder_summary`）
+  + `tests/test_periodic_hill_archive_audit.py`（19 passed，4.5 s；含合成夹具：两单元 / 抬离单元 / 跨接缝单元 / 非有限 / 缺键）
+  + `scripts/round26_archive_audit.py`（零重跑，读 14 个 `.npz`）+ `docs/case-periodic-hills/
+  {round26_archive_audit.json, ROUND26.md（脚本生成）, fig_round26_archive_health.png,
+  fig_round26_bubble_objects.png, fig_round26_definition_band.png, fig_round26_cells_laminar.png}`。
+- 关键数字（程序注入）：14 归档 **8 可用 / 6 全零**（`round11_sst_r18_120x60/144x72`、`round20_laminar_Re1400_96x48`、
+  `round20_laminar_Re2800_144x72/192x96/240x120`，速度/时均/壁剪三者全零）；零剪切的 `mean_tau_b` 让认证算子返回
+  `status="no_recirculation"`、`x_r/H=nan` —— 与「流动完全附着」不可区分，故必须先过完整性门。
+  **两条网格阶梯判决均为 `insufficient_rungs`**（SST r18 可用 2/4，唯一可用对 72→96 变化 1.07 %；层流可用 1/4）。
+  层流锚点：连通再循环单元 **1 个**，壁剪口径给出 **2 个气泡**（first 1.254 / largest 8.264），场侧单元末贴壁点 8.258
+  ⇒ `object_incomplete`（同一单元在 1.25 处只是**抬离壁面**，抬离带内 `max|τ|` 仅剖面的 2.15 %），
+  口径带宽 **129.6 %**（上限 8.264 / 下限 1.254 / 参考 5.41）⇒ `definition_sensitive`；阈值扫描
+  `u<0 … u<-0.05` 全部 1 单元（结论不依赖阈值）。SST r18(7.682)/SA round9(7.651) 为单单元、`object_supported`、
+  带宽 0.1 %。**无任何口径 <3 % 或 <10 %**，锚点继续 honest FAIL。
+- 归因结论：① round 23/25 的遗留**不是算力欠账而是数据欠账**（细档没有场，重跑并过门后才可能可答）；
+  ② 层流「−76.8 %」是 `wall_shear:first` 口径的产物，同解在 largest/场侧口径下是 **+52.8 %**，引用必须带口径；
+  ③ 排序口径不变：三种口径下 SST 都最接近参考 ⇒ 「最优闭包=SST」不是口径伪影。
+- 明确未做（not_run）：未重跑任何求解器（本项目定位为只读审计）；`144x72/192x96` 的稳定 `dt` 重跑未做；
+  完整性门只看 `mean_u`（归档无 `samples`/收敛记录，「发散/被杀/写盘失败」无法区分）。
+- 建议总账条目：`CASE-FVM-PERIODIC-HILLS-LADDER-DATA`，验收＝「按 round-23 稳定 dt（144×72→0.00665、
+  192×96→0.0025）重跑并把**非零**场入档后，`artifact_health` 全绿且可用档 ≥3，`ladder_summary` 由
+  `insufficient_rungs` 变为 `measured`，并给出相邻档 `x_r/H` 相对变化与对 5.41 的误差」；所属域=TensorFVM/验证。
