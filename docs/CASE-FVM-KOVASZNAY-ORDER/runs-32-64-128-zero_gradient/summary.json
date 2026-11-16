@@ -159,27 +159,52 @@
     "velocity_full": {
       "slope": 1.9623452238776438,
       "intercept": 1.1332744007421178,
-      "r_squared": 0.9999442581016357
+      "r_squared": 0.9999442581016357,
+      "machine_zero": false,
+      "graded": true,
+      "max_share": null,
+      "roundoff_limit": null,
+      "slope_note": null
     },
     "velocity_inplane": {
       "slope": 1.9623452238776438,
       "intercept": 1.1332744007421178,
-      "r_squared": 0.9999442581016357
+      "r_squared": 0.9999442581016357,
+      "machine_zero": false,
+      "graded": true,
+      "max_share": null,
+      "roundoff_limit": null,
+      "slope_note": null
     },
     "velocity_spanwise": {
       "slope": 1.4562980821022153,
       "intercept": -34.7494801288729,
-      "r_squared": 0.8297825183729146
+      "r_squared": 0.8297825183729146,
+      "machine_zero": true,
+      "graded": false,
+      "max_share": 6.779240884088528e-18,
+      "roundoff_limit": 1e-12,
+      "slope_note": "n/a (machine zero: every level <= 1e-12 x |u_exact|; a fitted exponent here is round-off noise, not a convergence order)"
     },
     "pressure_fixed": {
       "slope": 0.9772267419398165,
       "intercept": 0.8393739593630672,
-      "r_squared": 0.9999751383113227
+      "r_squared": 0.9999751383113227,
+      "machine_zero": false,
+      "graded": true,
+      "max_share": null,
+      "roundoff_limit": null,
+      "slope_note": null
     },
     "pressure_meanfree": {
       "slope": 1.8777242570668982,
       "intercept": 2.9666338041026052,
-      "r_squared": 0.9999636046900134
+      "r_squared": 0.9999636046900134,
+      "machine_zero": false,
+      "graded": true,
+      "max_share": null,
+      "roundoff_limit": null,
+      "slope_note": null
     }
   },
   "verdict": {
@@ -194,6 +219,12 @@
     "all_levels_converged": true,
     "pass": true,
     "pass_inplane": true,
+    "spanwise_machine_zero": true,
+    "spanwise_check": "absolute share <= 1e-12 on every level",
+    "spanwise_max_share": 6.779240884088528e-18,
+    "spanwise_share_limit": 1e-12,
+    "spanwise_criterion_pass": true,
+    "spanwise_order_graded": false,
     "pair_orders_consistent": true,
     "three_level_order": 1.9194464850015491,
     "corroborated": true,
@@ -232,7 +263,9 @@
       "spread": 2.2848665540730813,
       "band": 0.2,
       "both_above": false,
-      "consistent": false
+      "consistent": false,
+      "machine_zero": true,
+      "graded": false
     },
     "pressure_fixed": {
       "pairs": [
@@ -253,6 +286,26 @@
       "band": 0.2,
       "both_above": true,
       "consistent": true
+    }
+  },
+  "roundoff_grading": {
+    "velocity_spanwise": {
+      "quantity": "velocity_spanwise",
+      "levels": [
+        32,
+        64,
+        128
+      ],
+      "values": [
+        6.779240884088528e-18,
+        1.1191414368138815e-18,
+        9.00331106104764e-19
+      ],
+      "max_share": 6.779240884088528e-18,
+      "limit": 1e-12,
+      "machine_zero": true,
+      "graded": false,
+      "note": "n/a (machine zero: every level <= 1e-12 x |u_exact|; a fitted exponent here is round-off noise, not a convergence order)"
     }
   },
   "three_level_estimates": {
