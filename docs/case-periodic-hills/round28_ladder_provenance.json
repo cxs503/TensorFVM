@@ -1,0 +1,156 @@
+{
+ "case": "CASE-FVM-PERIODIC-HILLS round 28 (ladder provenance gate)",
+ "generated_utc": "2026-11-16T03:57:02Z",
+ "reference_x_r_over_H": 5.41,
+ "round27_grading": {
+  "table_case": "CASE-FVM-PERIODIC-HILLS round 27 (comprehensive assessment)",
+  "case_dir": "/root/tp-agent/work/m22860/docs/case-periodic-hills",
+  "rungs": {
+   "A": {
+    "declared": "measured",
+    "provenance": "measured",
+    "artefact": "usable",
+    "stem": "round20_laminar_Re2800_96x48",
+    "max_abs_u": 1.3672256848639261,
+    "declared_x_r_over_H": 8.264277859446059,
+    "round27_job": null,
+    "round28_job": null
+   },
+   "B": {
+    "declared": "computing (cj4352)",
+    "provenance": "unverified_claim",
+    "artefact": "missing",
+    "stem": "round25_laminar_Re2800_144x72",
+    "max_abs_u": null,
+    "declared_x_r_over_H": null,
+    "round27_job": "cj4352",
+    "round28_job": "cj4444"
+   },
+   "C": {
+    "declared": "computing (cj4353)",
+    "provenance": "unverified_claim",
+    "artefact": "missing",
+    "stem": "round25_laminar_Re2800_192x96",
+    "max_abs_u": null,
+    "declared_x_r_over_H": null,
+    "round27_job": "cj4353",
+    "round28_job": "cj4445"
+   },
+   "D": {
+    "declared": "computing (cj4354)",
+    "provenance": "unverified_claim",
+    "artefact": "missing",
+    "stem": "round25_laminar_Re2800_240x120",
+    "max_abs_u": null,
+    "declared_x_r_over_H": null,
+    "round27_job": "cj4354",
+    "round28_job": "cj4446"
+   }
+  },
+  "counts": {
+   "measured": 1,
+   "unverified_claim": 3
+  },
+  "claimed_but_unmeasured": [
+   "B",
+   "C",
+   "D"
+  ],
+  "any_unverified_claim": true
+ },
+ "round27_jobs": {
+  "B": {
+   "log": "/root/tp-agent/cluster/jobs/cj4352.log",
+   "present": true,
+   "parsed": true,
+   "job_id": "cj4352",
+   "node": "n330",
+   "remote_rc": 1,
+   "output_tail": "bash: line 1: cd: /root/tp-agent/work/m22766: Permission denied"
+  },
+  "C": {
+   "log": "/root/tp-agent/cluster/jobs/cj4353.log",
+   "present": true,
+   "parsed": true,
+   "job_id": "cj4353",
+   "node": "n315",
+   "remote_rc": 1,
+   "output_tail": "bash: line 1: cd: /root/tp-agent/work/m22766: Permission denied"
+  },
+  "D": {
+   "log": "/root/tp-agent/cluster/jobs/cj4354.log",
+   "present": true,
+   "parsed": true,
+   "job_id": "cj4354",
+   "node": "n330",
+   "remote_rc": 1,
+   "output_tail": "bash: line 1: cd: /root/tp-agent/work/m22766: Permission denied"
+  }
+ },
+ "round28_jobs": {
+  "B": {
+   "log": "/root/tp-agent/cluster/jobs/cj4444.log",
+   "present": false
+  },
+  "C": {
+   "log": "/root/tp-agent/cluster/jobs/cj4445.log",
+   "present": false
+  },
+  "D": {
+   "log": "/root/tp-agent/cluster/jobs/cj4446.log",
+   "present": false
+  }
+ },
+ "provenance_jobs": {
+  "cj4442": {
+   "log": "/root/tp-agent/cluster/jobs/cj4442.log",
+   "present": false
+  },
+  "cj4443": {
+   "log": "/root/tp-agent/cluster/jobs/cj4443.log",
+   "present": false
+  }
+ },
+ "round28_artefacts": {
+  "A": {
+   "stem": "round20_laminar_Re2800_96x48",
+   "json": "round20_laminar_Re2800_96x48.json",
+   "npz": "round20_laminar_Re2800_96x48.npz",
+   "artefact": "usable",
+   "max_abs_u": 1.3672256848639261,
+   "mean_tau_finite": true,
+   "wall_clock_s": 194.91389298439026
+  },
+  "B": {
+   "stem": "round25_laminar_Re2800_144x72",
+   "json": "round25_laminar_Re2800_144x72.json",
+   "npz": "round25_laminar_Re2800_144x72.npz",
+   "artefact": "missing",
+   "max_abs_u": null,
+   "mean_tau_finite": null,
+   "wall_clock_s": null
+  },
+  "C": {
+   "stem": "round25_laminar_Re2800_192x96",
+   "json": "round25_laminar_Re2800_192x96.json",
+   "npz": "round25_laminar_Re2800_192x96.npz",
+   "artefact": "missing",
+   "max_abs_u": null,
+   "mean_tau_finite": null,
+   "wall_clock_s": null
+  },
+  "D": {
+   "stem": "round25_laminar_Re2800_240x120",
+   "json": "round25_laminar_Re2800_240x120.json",
+   "npz": "round25_laminar_Re2800_240x120.npz",
+   "artefact": "missing",
+   "max_abs_u": null,
+   "mean_tau_finite": null,
+   "wall_clock_s": null
+  }
+ },
+ "round27_declared_verdict": {
+  "verdict": "FAIL",
+  "reason": "x_r/H error +52.8% >> 10% tolerance; stationarity spread 0.164 > 0.05; 2D laminar vs 3D turbulent DNS gap"
+ }
+}
