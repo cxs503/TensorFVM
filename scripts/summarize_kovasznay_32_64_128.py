@@ -110,6 +110,16 @@ SPANWISE_ROUNDOFF = 1e-12
 #: recovered from a dump, so an unrecorded value there stays a hard error.
 INFERRABLE_CONFIG_KEYS = ('symmetry_closure',)
 
+#: Quantities whose errors are *identically zero* in the exact solution, so a
+#: sequence of their measured values can sit entirely inside the round-off band.
+#: The spurious spanwise velocity is the only one: ``w_exact = 0``, so on a
+#: ``zero_gradient`` sequence the three values are 6.8e-18 / 1.1e-18 / 9.0e-19 --
+#: a fitted exponent of that sequence is a fit to floating-point noise, not the
+#: order of any scheme.  Grading it against ``>= 1.8`` manufactures a FAIL out of
+#: the strongest correctness evidence in the set, so such quantities are reported
+#: as ``machine zero`` (``n/a``) and graded on their absolute size instead.
+ROUNDOFF_QUANTITIES = ('velocity_spanwise',)
+
 
 def closure_from_spanwise(level):
     """Infer the extrusion-plane closure from the level's measured spanwise velocity."""
@@ -301,6 +311,33 @@ def fit_slope(levels, key):
                 r_squared=float(1 - ss_res / ss_tot) if ss_tot > 0 else None)
 
 
+def roundoff_audit(levels, key, limit=SPANWISE_ROUNDOFF):
+    """Is every level's ``key`` inside the round-off band (so no order exists)?
+
+    Returns the audit record written into ``summary.json`` under
+    ``roundoff_grading``.  ``machine_zero`` is true only when *all* levels are at
+    or below ``limit``: a sequence that leaves the band on any level still has a
+    measurable exponent and stays graded the ordinary way, which is the negative
+    control for this rule (a ``free``-closure sequence at ~1e-03 must NOT be
+    excused as machine zero).
+    """
+    values = [float(level[key]) for level in levels]
+    largest = max(values)
+    machine_zero = bool(largest <= limit)
+    return dict(
+        quantity=key,
+        levels=[int(level['n']) for level in levels],
+        values=values,
+        max_share=largest,
+        limit=float(limit),
+        machine_zero=machine_zero,
+        graded=not machine_zero,
+        note=('n/a (machine zero: every level <= {:.0e} x |u_exact|; a fitted '
+              'exponent here is round-off noise, not a convergence order)'.format(limit)
+              if machine_zero else None),
+    )
+
+
 def figure(levels, orders, fits, threshold, png_path):
     import matplotlib
     matplotlib.use('Agg')
@@ -458,6 +495,22 @@ def main():
 
     orders = {key: observed_orders(levels, key) for key in QUANTITIES}
     fits = {key: fit_slope(levels, key) for key in QUANTITIES}
+    roundoff = {key: roundoff_audit(levels, key) for key in ROUNDOFF_QUANTITIES}
+    for fit in fits.values():
+        # Every fit states its own grading status, so a reader of summary.json
+        # never has to guess whether a missing flag means "graded".
+        fit.setdefault('machine_zero', False)
+        fit.setdefault('graded', True)
+        fit.setdefault('max_share', None)
+        fit.setdefault('roundoff_limit', None)
+        fit.setdefault('slope_note', None)
+    for key, audit in roundoff.items():
+        # ``slope`` stays the raw least-squares number so the record is
+        # reproducible, but it is explicitly marked non-identifiable and the
+        # verdict/markdown must not read it as a grade.
+        fits[key].update(machine_zero=audit['machine_zero'], graded=audit['graded'],
+                         max_share=audit['max_share'], roundoff_limit=audit['limit'],
+                         slope_note=audit['note'])
     verdict = {
         'threshold': args.threshold,
         'quantity': 'L2 relative error log-log least-squares slope over '
@@ -473,7 +526,22 @@ def main():
     verdict['pass'] = bool(verdict['velocity_full_pass'] and verdict['all_levels_converged'])
     verdict['pass_inplane'] = bool(verdict['velocity_inplane_pass']
                                    and verdict['all_levels_converged'])
+    # The spanwise budget is graded on its *size*, not on an order: the exact
+    # spanwise velocity is identically zero, so "<= round-off on every level" is
+    # the physical statement the closure is supposed to make.
+    spanwise = roundoff['velocity_spanwise']
+    verdict['spanwise_machine_zero'] = spanwise['machine_zero']
+    verdict['spanwise_check'] = ('absolute share <= {:.0e} on every level'
+                                 .format(spanwise['limit']))
+    verdict['spanwise_max_share'] = spanwise['max_share']
+    verdict['spanwise_share_limit'] = spanwise['limit']
+    verdict['spanwise_criterion_pass'] = bool(spanwise['machine_zero'])
+    verdict['spanwise_order_graded'] = bool(spanwise['graded'])
     consistency = {key: pair_order_spread(levels, key) for key in QUANTITIES}
+    for key in ROUNDOFF_QUANTITIES:
+        # Same rule as the fits: a round-off series has no pair exponent either.
+        consistency[key].update(machine_zero=fits[key]['machine_zero'],
+                                graded=fits[key]['graded'])
     identifiability = {key: three_level_estimate(levels, key)
                        for key in ('velocity_full', 'velocity_inplane', 'pressure_meanfree')}
     uncertainty = {key: order_uncertainty(levels, key, threshold=args.threshold)
@@ -502,6 +570,7 @@ def main():
     args.output.mkdir(parents=True, exist_ok=True)
     summary = dict(title=args.title, levels=levels, observed_orders=orders, fits=fits,
                    verdict=verdict, pair_consistency=consistency,
+                   roundoff_grading=roundoff,
                    three_level_estimates=identifiability, order_uncertainty=uncertainty,
                    provenance=dict(runner='scripts/verify_kovasznay_order.py',
                                    summarizer='scripts/summarize_kovasznay_32_64_128.py',
@@ -531,12 +600,21 @@ def main():
               f'{args.threshold}) |', '|---|---:|---:|:--|']
     for key, label in QUANTITIES.items():
         fit = fits[key]
+        if fit.get('machine_zero'):
+            lines.append(f"| {label} | n/a (machine zero) | n/a | "
+                         f"n/a as an order; absolute check PASS "
+                         f"(max {fit['max_share']:.2e} <= {fit['roundoff_limit']:.0e}) |")
+            continue
         passed = 'PASS' if fit['slope'] >= args.threshold else 'FAIL'
         lines.append(f"| {label} | {fit['slope']:.4f} | {fit['r_squared']:.6f} | {passed} |")
     lines += ['', '| quantity | pair orders | spread | band | both >= thr | consistent |',
               '|---|---|---:|---:|:--|:--|']
     for key, label in QUANTITIES.items():
         row = consistency[key]
+        if fits[key].get('machine_zero'):
+            lines.append(f"| {label} | n/a (machine zero) | n/a | "
+                         f"{row.get('band', PAIR_ORDER_BAND):.2f} | n/a | n/a |")
+            continue
         pairs = '/'.join(f'{order:.4f}' for order in row['pairs'])
         spread = 'n/a' if row['spread'] is None else f"{row['spread']:.4f}"
         steady = 'n/a' if row['consistent'] is None else ('yes' if row['consistent'] else 'NO')
@@ -572,6 +650,15 @@ def main():
                          f"{windows} | {estimate['window_spread']:.4f} | "
                          f"{'yes' if estimate['all_windows_above_threshold'] else 'NO'} | "
                          f"{'yes' if estimate['windows_consistent'] else 'NO'} |")
+    machine_zero_notes = [f"- {QUANTITIES[key]}: {audit['note']} (max share "
+                          f"{audit['max_share']:.3e} <= limit {audit['limit']:.0e})"
+                          for key, audit in roundoff.items() if audit['machine_zero']]
+    if machine_zero_notes:
+        lines += ['', 'Round-off series are *not* graded on an order (their exact '
+                      'value is zero, so any fitted exponent is noise); they are '
+                      'graded on absolute size against the round-off band:', '']
+        lines += machine_zero_notes
+
     markdown = '\n'.join(lines) + '\n'
     if args.markdown:
         args.markdown.parent.mkdir(parents=True, exist_ok=True)

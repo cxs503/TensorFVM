@@ -70,7 +70,7 @@ Kovasznay (1948) 二维定常不可压 N–S 精确解（Re=40，单位域 [0,1]
 | pressure L2 (fixed gauge, not a rate) | 0.9772 | 0.999975 |
 | pressure L2 (mean-free gauge) | 1.8777 | 0.999964 |
 
-判定：`{"threshold": 1.8, "quantity": "L2 relative error log-log least-squares slope over 32/64/128", "velocity_full_slope": 1.9623452238776438, "velocity_full_pass": true, "velocity_inplane_slope": 1.9623452238776438, "velocity_inplane_pass": true, "pressure_meanfree_slope": 1.8777242570668982, "pressure_meanfree_pass": true, "all_levels_converged": true, "pass": true, "pass_inplane": true, "pair_orders_consistent": true, "three_level_order": 1.9194464850015491, "corroborated": true, "ladder_order": null, "ladder_order_stderr": null, "ladder_order_above_threshold": null, "ladder_all_windows_above_threshold": null, "ladder_windows_consistent": null}`
+判定：`{"threshold": 1.8, "quantity": "L2 relative error log-log least-squares slope over 32/64/128", "velocity_full_slope": 1.9623452238776438, "velocity_full_pass": true, "velocity_inplane_slope": 1.9623452238776438, "velocity_inplane_pass": true, "pressure_meanfree_slope": 1.8777242570668982, "pressure_meanfree_pass": true, "all_levels_converged": true, "pass": true, "pass_inplane": true, "spanwise_machine_zero": true, "spanwise_check": "absolute share <= 1e-12 on every level", "spanwise_max_share": 6.779240884088528e-18, "spanwise_share_limit": 1e-12, "spanwise_criterion_pass": true, "spanwise_order_graded": false, "pair_orders_consistent": true, "three_level_order": 1.9194464850015491, "corroborated": true, "ladder_order": null, "ladder_order_stderr": null, "ladder_order_above_threshold": null, "ladder_all_windows_above_threshold": null, "ladder_windows_consistent": null}`
 
 ## 四、结果图
 
