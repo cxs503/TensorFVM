@@ -1,0 +1,1850 @@
+{
+  "accepted_min_n": 800,
+  "available": true,
+  "calibration": {
+    "cell_width": 0.006250000000000001,
+    "detection": {
+      "depth_l1_per_cell_translation": 0.0004470074117495799,
+      "roundoff_false_alarm": false,
+      "statement": "depth_l1 grows linearly with the translation of the wave; dividing a measured distance by this slope converts it into 'equivalent cells of wave translation', a resolution-aware way to read a sub-percent agreement. The bore-position reading in the same ladder shows which instrument is sharper.",
+      "translation_cells_to_reach_tolerance": 128,
+      "translation_m_to_reach_tolerance": 0.8000000000000002
+    },
+    "probes": {
+      "plateau_amplitude_1pct": {
+        "depth_l1": 0.002892540425443955,
+        "momentum_l1": 2.940597679090072e-06,
+        "n": 1600,
+        "velocity_l1_wet": 0.0,
+        "velocity_max_abs_wet": 0.0,
+        "wet_cells_compared": 1600
+      },
+      "plateau_amplitude_2pct": {
+        "depth_l1": 0.005785080850887912,
+        "momentum_l1": 5.881195358180178e-06,
+        "n": 1600,
+        "velocity_l1_wet": 0.0,
+        "velocity_max_abs_wet": 0.0,
+        "wet_cells_compared": 1600
+      },
+      "plateau_amplitude_5pct": {
+        "depth_l1": 0.014462702127219782,
+        "momentum_l1": 1.470298839545041e-05,
+        "n": 1600,
+        "velocity_l1_wet": 0.0,
+        "velocity_max_abs_wet": 0.0,
+        "wet_cells_compared": 1600
+      },
+      "roundoff_1e-9": {
+        "depth_l1": 1.0000000802621945e-09,
+        "momentum_l1": 1.0000000813285464e-09,
+        "n": 1600,
+        "velocity_l1_wet": 0.0,
+        "velocity_max_abs_wet": 0.0,
+        "wet_cells_compared": 1600
+      },
+      "translate_128_cells": {
+        "depth_l1": 0.05714363496357974,
+        "momentum_l1": 0.4571800473257024,
+        "n": 1600,
+        "velocity_l1_wet": 0.46424010866495663,
+        "velocity_max_abs_wet": 0.9233986236074632,
+        "wet_cells_compared": 1600
+      },
+      "translate_16_cells": {
+        "depth_l1": 0.00714611466743748,
+        "momentum_l1": 0.05716362132115156,
+        "n": 1600,
+        "velocity_l1_wet": 0.058055322067977574,
+        "velocity_max_abs_wet": 0.9233543623906018,
+        "wet_cells_compared": 1600
+      },
+      "translate_1_cells": {
+        "depth_l1": 0.0004470074117495799,
+        "momentum_l1": 0.0035747040114839776,
+        "n": 1600,
+        "velocity_l1_wet": 0.003631527175297442,
+        "velocity_max_abs_wet": 0.4485494583837303,
+        "wet_cells_compared": 1600
+      },
+      "translate_2_cells": {
+        "depth_l1": 0.0008940125606056714,
+        "momentum_l1": 0.007149391704933622,
+        "n": 1600,
+        "velocity_l1_wet": 0.007263030117249983,
+        "velocity_max_abs_wet": 0.7717290443204519,
+        "wet_cells_compared": 1600
+      },
+      "translate_32_cells": {
+        "depth_l1": 0.014289298885173368,
+        "momentum_l1": 0.11431231378799521,
+        "n": 1600,
+        "velocity_l1_wet": 0.11608731477655887,
+        "velocity_max_abs_wet": 0.9233950420095963,
+        "wet_cells_compared": 1600
+      },
+      "translate_4_cells": {
+        "depth_l1": 0.0017879797872654445,
+        "momentum_l1": 0.01429851130514982,
+        "n": 1600,
+        "velocity_l1_wet": 0.014525656202513823,
+        "velocity_max_abs_wet": 0.9123828723925494,
+        "wet_cells_compared": 1600
+      },
+      "translate_64_cells": {
+        "depth_l1": 0.028573129643289535,
+        "momentum_l1": 0.22859670566196455,
+        "n": 1600,
+        "velocity_l1_wet": 0.23213095098062927,
+        "velocity_max_abs_wet": 0.9233950420099467,
+        "wet_cells_compared": 1600
+      },
+      "translate_8_cells": {
+        "depth_l1": 0.003575233246858829,
+        "momentum_l1": 0.028593033527476212,
+        "n": 1600,
+        "velocity_l1_wet": 0.029045091073165944,
+        "velocity_max_abs_wet": 0.9233334733453551,
+        "wet_cells_compared": 1600
+      }
+    },
+    "sensitivity_ladder": [
+      {
+        "bore_error": 0.0032170437865862277,
+        "depth_l1": 0.0004470074117495799,
+        "step_error": 1.4310793189272473e-06,
+        "translation_cells": 1,
+        "translation_m": 0.006250000000000001
+      },
+      {
+        "bore_error": 0.006526056056163167,
+        "depth_l1": 0.0008940125606056714,
+        "step_error": 1.4310793189272473e-06,
+        "translation_cells": 2,
+        "translation_m": 0.012500000000000002
+      },
+      {
+        "bore_error": 0.013144080595316575,
+        "depth_l1": 0.0017879797872654445,
+        "step_error": 1.4310793189272473e-06,
+        "translation_cells": 4,
+        "translation_m": 0.025000000000000005
+      },
+      {
+        "bore_error": 0.02638012967362292,
+        "depth_l1": 0.003575233246858829,
+        "step_error": 1.4310793189272473e-06,
+        "translation_cells": 8,
+        "translation_m": 0.05000000000000001
+      },
+      {
+        "bore_error": 0.05285222783023608,
+        "depth_l1": 0.00714611466743748,
+        "step_error": 1.4310793189272473e-06,
+        "translation_cells": 16,
+        "translation_m": 0.10000000000000002
+      },
+      {
+        "bore_error": 0.10579642414346299,
+        "depth_l1": 0.014289298885173368,
+        "step_error": 1.4310793189272473e-06,
+        "translation_cells": 32,
+        "translation_m": 0.20000000000000004
+      },
+      {
+        "bore_error": 0.2116848167699161,
+        "depth_l1": 0.028573129643289535,
+        "step_error": 1.4310793189272473e-06,
+        "translation_cells": 64,
+        "translation_m": 0.4000000000000001
+      },
+      {
+        "bore_error": 0.42346160202282185,
+        "depth_l1": 0.05714363496357974,
+        "step_error": 1.4310793189272473e-06,
+        "translation_cells": 128,
+        "translation_m": 0.8000000000000002
+      },
+      {
+        "bore_error": 9.19682220236253e-05,
+        "depth_l1": 0.002892540425443955,
+        "plateau_amplitude": 0.01,
+        "step_error": 1.4059787569217018e-06
+      },
+      {
+        "bore_error": 9.196819433231298e-05,
+        "depth_l1": 0.005785080850887912,
+        "plateau_amplitude": 0.02,
+        "step_error": 1.4033153191333166e-06
+      },
+      {
+        "bore_error": 9.196888667284288e-05,
+        "depth_l1": 0.014462702127219782,
+        "plateau_amplitude": 0.05,
+        "step_error": 1.4699067457681336e-06
+      }
+    ],
+    "tolerance": 0.05
+  },
+  "cases": {
+    "ritter-dry": {
+      "gravity": 9.81,
+      "h0": 1.0,
+      "h1": 0.0,
+      "key": "ritter-dry",
+      "kind": "dry",
+      "reference": "Ritter (1892) Z. Ver. Deutsch. Ing. 36:947-954",
+      "t_end": 0.638550856814101,
+      "t_star_end": 2.0,
+      "x_dam": 0.0,
+      "x_max": 6.0,
+      "x_min": -4.0
+    },
+    "stoker-wet": {
+      "gravity": 9.81,
+      "h0": 1.0,
+      "h1": 0.5,
+      "key": "stoker-wet",
+      "kind": "wet",
+      "reference": "Stoker (1957) Water Waves, ch. 10 (bore on a wet bed)",
+      "t_end": 0.638550856814101,
+      "t_star_end": 2.0,
+      "x_dam": 0.0,
+      "x_max": 6.0,
+      "x_min": -4.0
+    }
+  },
+  "cfl": 0.4,
+  "clawpack_version": "5.14.0",
+  "dry": {
+    "1600": {
+      "codes": {
+        "clawpack-classic-hlle": {
+          "h_min_finite": -0.0,
+          "non_finite_cells": 1282,
+          "ok": false,
+          "reason": "non-finite solution (negative/nan depth: the flux is not positivity preserving on a dry or near-dry bed)"
+        },
+        "clawpack-classic-roe": {
+          "h_min_finite": null,
+          "non_finite_cells": 1600,
+          "ok": false,
+          "reason": "non-finite solution (negative/nan depth: the flux is not positivity preserving on a dry or near-dry bed)"
+        },
+        "tensorfvm-hll-muscl-ssprk3": {
+          "clipped_cells": 0,
+          "depth_l1_vs_exact": 0.0007715065657630972,
+          "front": 4.000690460722251,
+          "front_error": 0.00017261518056277403,
+          "front_exact": 4.0,
+          "front_window_cells": 330,
+          "h_min": 0.0,
+          "monotone": true,
+          "n_extrema": 0,
+          "ok": true
+        }
+      },
+      "n": 1600
+    },
+    "200": {
+      "codes": {
+        "clawpack-classic-hlle": {
+          "h_min_finite": -0.0,
+          "non_finite_cells": 162,
+          "ok": false,
+          "reason": "non-finite solution (negative/nan depth: the flux is not positivity preserving on a dry or near-dry bed)"
+        },
+        "clawpack-classic-roe": {
+          "h_min_finite": null,
+          "non_finite_cells": 200,
+          "ok": false,
+          "reason": "non-finite solution (negative/nan depth: the flux is not positivity preserving on a dry or near-dry bed)"
+        },
+        "tensorfvm-hll-muscl-ssprk3": {
+          "clipped_cells": 0,
+          "depth_l1_vs_exact": 0.006226707907984355,
+          "front": 4.013290119077184,
+          "front_error": 0.0033225297692960343,
+          "front_exact": 4.0,
+          "front_window_cells": 36,
+          "h_min": 0.0,
+          "monotone": true,
+          "n_extrema": 0,
+          "ok": true
+        }
+      },
+      "n": 200
+    },
+    "400": {
+      "codes": {
+        "clawpack-classic-hlle": {
+          "h_min_finite": -0.0,
+          "non_finite_cells": 322,
+          "ok": false,
+          "reason": "non-finite solution (negative/nan depth: the flux is not positivity preserving on a dry or near-dry bed)"
+        },
+        "clawpack-classic-roe": {
+          "h_min_finite": null,
+          "non_finite_cells": 400,
+          "ok": false,
+          "reason": "non-finite solution (negative/nan depth: the flux is not positivity preserving on a dry or near-dry bed)"
+        },
+        "tensorfvm-hll-muscl-ssprk3": {
+          "clipped_cells": 0,
+          "depth_l1_vs_exact": 0.0030833597748260435,
+          "front": 4.0042363297732475,
+          "front_error": 0.0010590824433118762,
+          "front_exact": 4.0,
+          "front_window_cells": 80,
+          "h_min": 0.0,
+          "monotone": true,
+          "n_extrema": 0,
+          "ok": true
+        }
+      },
+      "n": 400
+    },
+    "800": {
+      "codes": {
+        "clawpack-classic-hlle": {
+          "h_min_finite": -0.0,
+          "non_finite_cells": 642,
+          "ok": false,
+          "reason": "non-finite solution (negative/nan depth: the flux is not positivity preserving on a dry or near-dry bed)"
+        },
+        "clawpack-classic-roe": {
+          "h_min_finite": null,
+          "non_finite_cells": 800,
+          "ok": false,
+          "reason": "non-finite solution (negative/nan depth: the flux is not positivity preserving on a dry or near-dry bed)"
+        },
+        "tensorfvm-hll-muscl-ssprk3": {
+          "clipped_cells": 0,
+          "depth_l1_vs_exact": 0.0015419003450595438,
+          "front": 4.0015645232021635,
+          "front_error": 0.0003911308005408731,
+          "front_exact": 4.0,
+          "front_window_cells": 163,
+          "h_min": 0.0,
+          "monotone": true,
+          "n_extrema": 0,
+          "ok": true
+        }
+      },
+      "n": 800
+    }
+  },
+  "dry_limit": {
+    "0.001": {
+      "1600": {
+        "codes": {
+          "clawpack-classic-hlle": {
+            "h_min_finite": 0.001,
+            "non_finite_cells": 1293,
+            "ok": false,
+            "reason": "non-finite solution (negative/nan depth: the flux is not positivity preserving on a dry or near-dry bed)"
+          },
+          "clawpack-classic-roe": {
+            "h_min_finite": 0.001,
+            "non_finite_cells": 1293,
+            "ok": false,
+            "reason": "non-finite solution (negative/nan depth: the flux is not positivity preserving on a dry or near-dry bed)"
+          },
+          "tensorfvm-hll-muscl-ssprk3": {
+            "bore": 2.998727337678308,
+            "bore_error": 0.004074759754468275,
+            "bore_exact": 3.0109964247306484,
+            "clipped_cells": 0,
+            "depth_l1_vs_exact": 0.0009173996169898714,
+            "h2": 0.06683768371533008,
+            "h2_exact": 0.0668297834161849,
+            "h_min": 0.001,
+            "method": "depth_mode",
+            "monotone": true,
+            "n_extrema": 0,
+            "ok": true,
+            "step_error": 0.0001182152438829874,
+            "step_ratio": 66.83768371533009,
+            "step_ratio_exact": 66.8297834161849
+          }
+        },
+        "n": 1600
+      },
+      "800": {
+        "codes": {
+          "clawpack-classic-hlle": {
+            "h_min_finite": 0.001,
+            "non_finite_cells": 651,
+            "ok": false,
+            "reason": "non-finite solution (negative/nan depth: the flux is not positivity preserving on a dry or near-dry bed)"
+          },
+          "clawpack-classic-roe": {
+            "h_min_finite": 0.001,
+            "non_finite_cells": 651,
+            "ok": false,
+            "reason": "non-finite solution (negative/nan depth: the flux is not positivity preserving on a dry or near-dry bed)"
+          },
+          "tensorfvm-hll-muscl-ssprk3": {
+            "bore": 2.986503334385863,
+            "bore_error": 0.00813454647226178,
+            "bore_exact": 3.0109964247306484,
+            "clipped_cells": 0,
+            "depth_l1_vs_exact": 0.0018211180784952147,
+            "h2": 0.06684535638319503,
+            "h2_exact": 0.0668297834161849,
+            "h_min": 0.001,
+            "method": "depth_mode",
+            "monotone": true,
+            "n_extrema": 0,
+            "ok": true,
+            "step_error": 0.00023302435252779783,
+            "step_ratio": 66.84535638319502,
+            "step_ratio_exact": 66.8297834161849
+          }
+        },
+        "n": 800
+      }
+    },
+    "0.005": {
+      "1600": {
+        "cell_width_m": 0.006250000000000001,
+        "codes": {
+          "clawpack-classic-hlle": {
+            "bore": 2.649585361347693,
+            "bore_error": 0.002969351782882654,
+            "bore_exact": 2.657476343466133,
+            "clipped_cells": null,
+            "depth_l1_vs_exact": 0.0009257060956820932,
+            "h2": 0.13040711485429196,
+            "h2_exact": 0.13039733364595876,
+            "h_min": 0.002771956174327807,
+            "method": "depth_mode",
+            "monotone": false,
+            "n_extrema": 1,
+            "ok": true,
+            "step_error": 7.501080014226775e-05,
+            "step_ratio": 26.08142297085839,
+            "step_ratio_exact": 26.07946672919175
+          },
+          "clawpack-classic-roe": {
+            "bore": 2.6520551484927104,
+            "bore_error": 0.002039978638662717,
+            "bore_exact": 2.657476343466133,
+            "clipped_cells": null,
+            "depth_l1_vs_exact": 0.0005963866376916541,
+            "h2": 0.13039390518459462,
+            "h2_exact": 0.13039733364595876,
+            "h_min": 0.004999999978129281,
+            "method": "depth_mode",
+            "monotone": true,
+            "n_extrema": 0,
+            "ok": true,
+            "step_error": 2.6292419241099676e-05,
+            "step_ratio": 26.078781036918922,
+            "step_ratio_exact": 26.07946672919175
+          },
+          "tensorfvm-hll-muscl-ssprk3": {
+            "bore": 2.652698255566703,
+            "bore_error": 0.0017979794669396266,
+            "bore_exact": 2.657476343466133,
+            "clipped_cells": 0,
+            "depth_l1_vs_exact": 0.0008246560894101054,
+            "h2": 0.13040152755594414,
+            "h2_exact": 0.13039733364595876,
+            "h_min": 0.004999999999999999,
+            "method": "depth_mode",
+            "monotone": true,
+            "n_extrema": 0,
+            "ok": true,
+            "step_error": 3.216254403481392e-05,
+            "step_ratio": 26.080305511188833,
+            "step_ratio_exact": 26.07946672919175
+          }
+        },
+        "cross_code": {
+          "clawpack-classic-hlle": {
+            "depth_l1": 0.0004777554309266494,
+            "momentum_l1": 0.001461180017348193,
+            "n": 1600,
+            "velocity_l1_wet": 0.0023479598410096393,
+            "velocity_max_abs_wet": 2.5749242348040546,
+            "wet_cells_compared": 1600
+          },
+          "clawpack-classic-roe": {
+            "depth_l1": 0.00035151532229949937,
+            "momentum_l1": 0.0011284692811705925,
+            "n": 1600,
+            "velocity_l1_wet": 0.0008036147633225004,
+            "velocity_max_abs_wet": 0.1847925667206773,
+            "wet_cells_compared": 1600
+          }
+        },
+        "cross_code_baseline": "tensorfvm-hll-muscl-ssprk3",
+        "n": 1600,
+        "one_cell_translation_l1": 0.0030883170142761668
+      },
+      "800": {
+        "cell_width_m": 0.0125,
+        "codes": {
+          "clawpack-classic-hlle": {
+            "bore": 2.641512548840844,
+            "bore_error": 0.006007125769732105,
+            "bore_exact": 2.657476343466133,
+            "clipped_cells": null,
+            "depth_l1_vs_exact": 0.002082860236824888,
+            "h2": 0.1304138854423847,
+            "h2_exact": 0.13039733364595876,
+            "h_min": 0.004920460637357715,
+            "method": "depth_mode",
+            "monotone": true,
+            "n_extrema": 0,
+            "ok": true,
+            "step_error": 0.00012693354966042655,
+            "step_ratio": 26.082777088476938,
+            "step_ratio_exact": 26.07946672919175
+          },
+          "clawpack-classic-roe": {
+            "bore": 2.647105069551458,
+            "bore_error": 0.0039026777943571185,
+            "bore_exact": 2.657476343466133,
+            "clipped_cells": null,
+            "depth_l1_vs_exact": 0.001425434661167025,
+            "h2": 0.13038736134377976,
+            "h2_exact": 0.13039733364595876,
+            "h_min": 0.0033101636429792598,
+            "method": "depth_mode",
+            "monotone": false,
+            "n_extrema": 1,
+            "ok": true,
+            "step_error": 7.647627371026964e-05,
+            "step_ratio": 26.07747226875595,
+            "step_ratio_exact": 26.07946672919175
+          },
+          "tensorfvm-hll-muscl-ssprk3": {
+            "bore": 2.6479389687311556,
+            "bore_error": 0.00358888415260082,
+            "bore_exact": 2.657476343466133,
+            "clipped_cells": 0,
+            "depth_l1_vs_exact": 0.0018149733355398258,
+            "h2": 0.13038990763322467,
+            "h2_exact": 0.13039733364595876,
+            "h_min": 0.004999999999999999,
+            "method": "depth_mode",
+            "monotone": true,
+            "n_extrema": 0,
+            "ok": true,
+            "step_error": 5.694911488168122e-05,
+            "step_ratio": 26.077981526644937,
+            "step_ratio_exact": 26.07946672919175
+          }
+        },
+        "cross_code": {
+          "clawpack-classic-hlle": {
+            "depth_l1": 0.0009488073727595654,
+            "momentum_l1": 0.00292417979287744,
+            "n": 800,
+            "velocity_l1_wet": 0.003275021993923306,
+            "velocity_max_abs_wet": 0.8105437553810739,
+            "wet_cells_compared": 800
+          },
+          "clawpack-classic-roe": {
+            "depth_l1": 0.000692425194846943,
+            "momentum_l1": 0.002259331425787576,
+            "n": 800,
+            "velocity_l1_wet": 0.0029507047751265473,
+            "velocity_max_abs_wet": 1.314747901931024,
+            "wet_cells_compared": 800
+          }
+        },
+        "cross_code_baseline": "tensorfvm-hll-muscl-ssprk3",
+        "n": 800,
+        "one_cell_translation_l1": 0.0061793236405855686
+      }
+    },
+    "0.01": {
+      "1600": {
+        "cell_width_m": 0.006250000000000001,
+        "codes": {
+          "clawpack-classic-hlle": {
+            "bore": 2.4851281648214774,
+            "bore_error": 0.0021739851010416996,
+            "bore_exact": 2.4905425672562025,
+            "clipped_cells": null,
+            "depth_l1_vs_exact": 0.0008124481650955254,
+            "h2": 0.1711849521086931,
+            "h2_exact": 0.17117891870645477,
+            "h_min": 0.00997319129541575,
+            "method": "depth_mode",
+            "monotone": true,
+            "n_extrema": 0,
+            "ok": true,
+            "step_error": 3.524617566203949e-05,
+            "step_ratio": 17.118495210869312,
+            "step_ratio_exact": 17.117891870645476
+          },
+          "clawpack-classic-roe": {
+            "bore": 2.4871125833209495,
+            "bore_error": 0.0013772034978834847,
+            "bore_exact": 2.4905425672562025,
+            "clipped_cells": null,
+            "depth_l1_vs_exact": 0.0005383828692973307,
+            "h2": 0.17117656912361368,
+            "h2_exact": 0.17117891870645477,
+            "h_min": 0.009023368645139715,
+            "method": "depth_mode",
+            "monotone": false,
+            "n_extrema": 1,
+            "ok": true,
+            "step_error": 1.3725889021996917e-05,
+            "step_ratio": 17.11765691236137,
+            "step_ratio_exact": 17.117891870645476
+          },
+          "tensorfvm-hll-muscl-ssprk3": {
+            "bore": 2.4875428387690457,
+            "bore_error": 0.0012044477884437666,
+            "bore_exact": 2.4905425672562025,
+            "clipped_cells": 0,
+            "depth_l1_vs_exact": 0.0007981458251877529,
+            "h2": 0.171182246940083,
+            "h2_exact": 0.17117891870645477,
+            "h_min": 0.009999999999999998,
+            "method": "depth_mode",
+            "monotone": true,
+            "n_extrema": 0,
+            "ok": true,
+            "step_error": 1.9443011168682065e-05,
+            "step_ratio": 17.1182246940083,
+            "step_ratio_exact": 17.117891870645476
+          }
+        },
+        "cross_code": {
+          "clawpack-classic-hlle": {
+            "depth_l1": 0.0004945979715504977,
+            "momentum_l1": 0.0014919888988897056,
+            "n": 1600,
+            "velocity_l1_wet": 0.0015237677464808562,
+            "velocity_max_abs_wet": 0.638746623651608,
+            "wet_cells_compared": 1600
+          },
+          "clawpack-classic-roe": {
+            "depth_l1": 0.00034405333221571645,
+            "momentum_l1": 0.0011226224155237987,
+            "n": 1600,
+            "velocity_l1_wet": 0.0010872575638107456,
+            "velocity_max_abs_wet": 0.6302683112730243,
+            "wet_cells_compared": 1600
+          }
+        },
+        "cross_code_baseline": "tensorfvm-hll-muscl-ssprk3",
+        "n": 1600,
+        "one_cell_translation_l1": 0.0030505325840103946
+      },
+      "800": {
+        "cell_width_m": 0.0125,
+        "codes": {
+          "clawpack-classic-hlle": {
+            "bore": 2.4791063931758655,
+            "bore_error": 0.0045918404409911835,
+            "bore_exact": 2.4905425672562025,
+            "clipped_cells": null,
+            "depth_l1_vs_exact": 0.0017014584266194048,
+            "h2": 0.1711966011512397,
+            "h2_exact": 0.17117891870645477,
+            "h_min": 0.009970201833289661,
+            "method": "depth_mode",
+            "monotone": true,
+            "n_extrema": 0,
+            "ok": true,
+            "step_error": 0.0001032980282768824,
+            "step_ratio": 17.11966011512397,
+            "step_ratio_exact": 17.117891870645476
+          },
+          "clawpack-classic-roe": {
+            "bore": 2.4840098117597815,
+            "bore_error": 0.002623025031697415,
+            "bore_exact": 2.4905425672562025,
+            "clipped_cells": null,
+            "depth_l1_vs_exact": 0.0010987241562313366,
+            "h2": 0.17116958735809407,
+            "h2_exact": 0.17117891870645477,
+            "h_min": 0.009732864952207371,
+            "method": "depth_mode",
+            "monotone": false,
+            "n_extrema": 1,
+            "ok": true,
+            "step_error": 5.451225204145781e-05,
+            "step_ratio": 17.116958735809405,
+            "step_ratio_exact": 17.117891870645476
+          },
+          "tensorfvm-hll-muscl-ssprk3": {
+            "bore": 2.4849518675156514,
+            "bore_error": 0.0022447718075785552,
+            "bore_exact": 2.4905425672562025,
+            "clipped_cells": 0,
+            "depth_l1_vs_exact": 0.0016181482437354002,
+            "h2": 0.1711792916485835,
+            "h2_exact": 0.17117891870645477,
+            "h_min": 0.009999999999999998,
+            "method": "depth_mode",
+            "monotone": true,
+            "n_extrema": 0,
+            "ok": true,
+            "step_error": 2.1786685626264894e-06,
+            "step_ratio": 17.117929164858353,
+            "step_ratio_exact": 17.117891870645476
+          }
+        },
+        "cross_code": {
+          "clawpack-classic-hlle": {
+            "depth_l1": 0.000976868155931118,
+            "momentum_l1": 0.0029380371013245036,
+            "n": 800,
+            "velocity_l1_wet": 0.0033058595795996053,
+            "velocity_max_abs_wet": 1.1210871638895032,
+            "wet_cells_compared": 800
+          },
+          "clawpack-classic-roe": {
+            "depth_l1": 0.000670564432069608,
+            "momentum_l1": 0.0021814223394861303,
+            "n": 800,
+            "velocity_l1_wet": 0.0016449617703045987,
+            "velocity_max_abs_wet": 0.2840878744255901,
+            "wet_cells_compared": 800
+          }
+        },
+        "cross_code_baseline": "tensorfvm-hll-muscl-ssprk3",
+        "n": 800,
+        "one_cell_translation_l1": 0.006104178333946484
+      }
+    },
+    "0.02": {
+      "1600": {
+        "cell_width_m": 0.006250000000000001,
+        "codes": {
+          "clawpack-classic-hlle": {
+            "bore": 2.318454626295991,
+            "bore_error": 0.0016358538837278988,
+            "bore_exact": 2.322253493692649,
+            "clipped_cells": null,
+            "depth_l1_vs_exact": 0.0009571325814788319,
+            "h2": 0.22244531435163722,
+            "h2_exact": 0.2224405577554767,
+            "h_min": 0.019950021060222062,
+            "method": "depth_mode",
+            "monotone": true,
+            "n_extrema": 0,
+            "ok": true,
+            "step_error": 2.1383673051965793e-05,
+            "step_ratio": 11.122265717581861,
+            "step_ratio_exact": 11.122027887773834
+          },
+          "clawpack-classic-roe": {
+            "bore": 2.3200471261063393,
+            "bore_error": 0.0009500976496761197,
+            "bore_exact": 2.322253493692649,
+            "clipped_cells": null,
+            "depth_l1_vs_exact": 0.0006141825233875355,
+            "h2": 0.22243783838397221,
+            "h2_exact": 0.2224405577554767,
+            "h_min": 0.02,
+            "method": "depth_mode",
+            "monotone": true,
+            "n_extrema": 0,
+            "ok": true,
+            "step_error": 1.2225160428995704e-05,
+            "step_ratio": 11.12189191919861,
+            "step_ratio_exact": 11.122027887773834
+          },
+          "tensorfvm-hll-muscl-ssprk3": {
+            "bore": 2.3206151981061476,
+            "bore_error": 0.0007054766376500208,
+            "bore_exact": 2.322253493692649,
+            "clipped_cells": 0,
+            "depth_l1_vs_exact": 0.000846718281710977,
+            "h2": 0.22244231182151336,
+            "h2_exact": 0.2224405577554767,
+            "h_min": 0.019999999999999997,
+            "method": "depth_mode",
+            "monotone": true,
+            "n_extrema": 0,
+            "ok": true,
+            "step_error": 7.885549534682658e-06,
+            "step_ratio": 11.12211559107567,
+            "step_ratio_exact": 11.122027887773834
+          }
+        },
+        "cross_code": {
+          "clawpack-classic-hlle": {
+            "depth_l1": 0.0004821576572616917,
+            "momentum_l1": 0.0013759846644067315,
+            "n": 1600,
+            "velocity_l1_wet": 0.0014699875233201837,
+            "velocity_max_abs_wet": 0.6593515588787551,
+            "wet_cells_compared": 1600
+          },
+          "clawpack-classic-roe": {
+            "depth_l1": 0.0003469054875329695,
+            "momentum_l1": 0.0011160164273484783,
+            "n": 1600,
+            "velocity_l1_wet": 0.0010275497891028122,
+            "velocity_max_abs_wet": 0.44658523512683346,
+            "wet_cells_compared": 1600
+          }
+        },
+        "cross_code_baseline": "tensorfvm-hll-muscl-ssprk3",
+        "n": 1600,
+        "one_cell_translation_l1": 0.0029762878050080908
+      },
+      "800": {
+        "cell_width_m": 0.0125,
+        "codes": {
+          "clawpack-classic-hlle": {
+            "bore": 2.314327340271564,
+            "bore_error": 0.003413130152506114,
+            "bore_exact": 2.322253493692649,
+            "clipped_cells": null,
+            "depth_l1_vs_exact": 0.0017754535001955466,
+            "h2": 0.22245651159115698,
+            "h2_exact": 0.2224405577554767,
+            "h_min": 0.019945528200717363,
+            "method": "depth_mode",
+            "monotone": true,
+            "n_extrema": 0,
+            "ok": true,
+            "step_error": 7.172179318955175e-05,
+            "step_ratio": 11.12282557955785,
+            "step_ratio_exact": 11.122027887773834
+          },
+          "clawpack-classic-roe": {
+            "bore": 2.3182155469021954,
+            "bore_error": 0.0017388053463675242,
+            "bore_exact": 2.322253493692649,
+            "clipped_cells": null,
+            "depth_l1_vs_exact": 0.0011232864181591464,
+            "h2": 0.22243370068429166,
+            "h2_exact": 0.2224405577554767,
+            "h_min": 0.02,
+            "method": "depth_mode",
+            "monotone": true,
+            "n_extrema": 0,
+            "ok": true,
+            "step_error": 3.082653295883713e-05,
+            "step_ratio": 11.121685034214583,
+            "step_ratio_exact": 11.122027887773834
+          },
+          "tensorfvm-hll-muscl-ssprk3": {
+            "bore": 2.3195934605316495,
+            "bore_error": 0.0011454534004251317,
+            "bore_exact": 2.322253493692649,
+            "clipped_cells": 0,
+            "depth_l1_vs_exact": 0.001637446438582304,
+            "h2": 0.22244163907528997,
+            "h2_exact": 0.2224405577554767,
+            "h_min": 0.019999999999999997,
+            "method": "depth_mode",
+            "monotone": true,
+            "n_extrema": 0,
+            "ok": true,
+            "step_error": 4.86116301913364e-06,
+            "step_ratio": 11.1220819537645,
+            "step_ratio_exact": 11.122027887773834
+          }
+        },
+        "cross_code": {
+          "clawpack-classic-hlle": {
+            "depth_l1": 0.0009576358766775829,
+            "momentum_l1": 0.0027874211712238034,
+            "n": 800,
+            "velocity_l1_wet": 0.0032369076812996207,
+            "velocity_max_abs_wet": 0.9834501008601984,
+            "wet_cells_compared": 800
+          },
+          "clawpack-classic-roe": {
+            "depth_l1": 0.0006952529097295039,
+            "momentum_l1": 0.0021783922241411526,
+            "n": 800,
+            "velocity_l1_wet": 0.0019878525641508953,
+            "velocity_max_abs_wet": 0.3636455181155066,
+            "wet_cells_compared": 800
+          }
+        },
+        "cross_code_baseline": "tensorfvm-hll-muscl-ssprk3",
+        "n": 800,
+        "one_cell_translation_l1": 0.005956245608204103
+      }
+    },
+    "0.05": {
+      "1600": {
+        "cell_width_m": 0.006250000000000001,
+        "codes": {
+          "clawpack-classic-hlle": {
+            "bore": 2.111442358562501,
+            "bore_error": 0.0009067581185320082,
+            "bore_exact": 2.11335866368817,
+            "clipped_cells": null,
+            "depth_l1_vs_exact": 0.0007090313817107522,
+            "h2": 0.3100896118475249,
+            "h2_exact": 0.31008524442990054,
+            "h_min": 0.05,
+            "method": "depth_mode",
+            "monotone": true,
+            "n_extrema": 0,
+            "ok": true,
+            "step_error": 1.4084570945726064e-05,
+            "step_ratio": 6.2017922369504985,
+            "step_ratio_exact": 6.201704888598011
+          },
+          "clawpack-classic-roe": {
+            "bore": 2.1125394986535646,
+            "bore_error": 0.0003876128783440185,
+            "bore_exact": 2.11335866368817,
+            "clipped_cells": null,
+            "depth_l1_vs_exact": 0.0004552126968407288,
+            "h2": 0.31008281006326077,
+            "h2_exact": 0.31008524442990054,
+            "h_min": 0.05,
+            "method": "depth_mode",
+            "monotone": true,
+            "n_extrema": 0,
+            "ok": true,
+            "step_error": 7.850636828129145e-06,
+            "step_ratio": 6.201656201265215,
+            "step_ratio_exact": 6.201704888598011
+          },
+          "tensorfvm-hll-muscl-ssprk3": {
+            "bore": 2.1128240180098268,
+            "bore_error": 0.00025298388178475256,
+            "bore_exact": 2.11335866368817,
+            "clipped_cells": 0,
+            "depth_l1_vs_exact": 0.0007491733716945146,
+            "h2": 0.31008617162758206,
+            "h2_exact": 0.31008524442990054,
+            "h_min": 0.05,
+            "method": "depth_mode",
+            "monotone": true,
+            "n_extrema": 0,
+            "ok": true,
+            "step_error": 2.9901380287423696e-06,
+            "step_ratio": 6.201723432551641,
+            "step_ratio_exact": 6.201704888598011
+          }
+        },
+        "cross_code": {
+          "clawpack-classic-hlle": {
+            "depth_l1": 0.0004509749355751157,
+            "momentum_l1": 0.0012714568110490816,
+            "n": 1600,
+            "velocity_l1_wet": 0.0013430298861012383,
+            "velocity_max_abs_wet": 0.5209591266394739,
+            "wet_cells_compared": 1600
+          },
+          "clawpack-classic-roe": {
+            "depth_l1": 0.00034632975091258465,
+            "momentum_l1": 0.0011291539153439525,
+            "n": 1600,
+            "velocity_l1_wet": 0.0009214895160672997,
+            "velocity_max_abs_wet": 0.16113113559184944,
+            "wet_cells_compared": 1600
+          }
+        },
+        "cross_code_baseline": "tensorfvm-hll-muscl-ssprk3",
+        "n": 1600,
+        "one_cell_translation_l1": 0.0027654593782356863
+      },
+      "800": {
+        "cell_width_m": 0.0125,
+        "codes": {
+          "clawpack-classic-hlle": {
+            "bore": 2.1096351207538495,
+            "bore_error": 0.0017619077150975966,
+            "bore_exact": 2.11335866368817,
+            "clipped_cells": null,
+            "depth_l1_vs_exact": 0.0014345337731038574,
+            "h2": 0.3100959712450666,
+            "h2_exact": 0.31008524442990054,
+            "h_min": 0.05,
+            "method": "depth_mode",
+            "monotone": true,
+            "n_extrema": 0,
+            "ok": true,
+            "step_error": 3.459311708235211e-05,
+            "step_ratio": 6.201919424901332,
+            "step_ratio_exact": 6.201704888598011
+          },
+          "clawpack-classic-roe": {
+            "bore": 2.1118796282646484,
+            "bore_error": 0.0006998506448216941,
+            "bore_exact": 2.11335866368817,
+            "clipped_cells": null,
+            "depth_l1_vs_exact": 0.0009097205036429558,
+            "h2": 0.31007972078418145,
+            "h2_exact": 0.31008524442990054,
+            "h_min": 0.05,
+            "method": "depth_mode",
+            "monotone": true,
+            "n_extrema": 0,
+            "ok": true,
+            "step_error": 1.781331365586531e-05,
+            "step_ratio": 6.201594415683629,
+            "step_ratio_exact": 6.201704888598011
+          },
+          "tensorfvm-hll-muscl-ssprk3": {
+            "bore": 2.1123928009697526,
+            "bore_error": 0.00045702735414152637,
+            "bore_exact": 2.11335866368817,
+            "clipped_cells": 0,
+            "depth_l1_vs_exact": 0.0015085878416277558,
+            "h2": 0.31008638682282774,
+            "h2_exact": 0.31008524442990054,
+            "h_min": 0.05,
+            "method": "depth_mode",
+            "monotone": true,
+            "n_extrema": 0,
+            "ok": true,
+            "step_error": 3.6841254065136967e-06,
+            "step_ratio": 6.201727736456554,
+            "step_ratio_exact": 6.201704888598011
+          }
+        },
+        "cross_code": {
+          "clawpack-classic-hlle": {
+            "depth_l1": 0.0009007459422333322,
+            "momentum_l1": 0.0025451827463755126,
+            "n": 800,
+            "velocity_l1_wet": 0.002634680044443463,
+            "velocity_max_abs_wet": 0.5371843770847616,
+            "wet_cells_compared": 800
+          },
+          "clawpack-classic-roe": {
+            "depth_l1": 0.0007016725033767315,
+            "momentum_l1": 0.002277966797017802,
+            "n": 800,
+            "velocity_l1_wet": 0.0019381342644130886,
+            "velocity_max_abs_wet": 0.15944319695303166,
+            "wet_cells_compared": 800
+          }
+        },
+        "cross_code_baseline": "tensorfvm-hll-muscl-ssprk3",
+        "n": 800,
+        "one_cell_translation_l1": 0.005535321031410826
+      }
+    },
+    "0.1": {
+      "1600": {
+        "cell_width_m": 0.006250000000000001,
+        "codes": {
+          "clawpack-classic-hlle": {
+            "bore": 1.9814064906950224,
+            "bore_error": 0.0006956185050590145,
+            "bore_exact": 1.9827857531564854,
+            "clipped_cells": null,
+            "depth_l1_vs_exact": 0.0006257358703912005,
+            "h2": 0.39618236750138786,
+            "h2_exact": 0.3961748167994428,
+            "h_min": 0.1,
+            "method": "depth_mode",
+            "monotone": false,
+            "n_extrema": 3,
+            "ok": true,
+            "step_error": 1.905901542674726e-05,
+            "step_ratio": 3.9618236750138784,
+            "step_ratio_exact": 3.9617481679944277
+          },
+          "clawpack-classic-roe": {
+            "bore": 1.982251904106837,
+            "bore_error": 0.000269241923288295,
+            "bore_exact": 1.9827857531564854,
+            "clipped_cells": null,
+            "depth_l1_vs_exact": 0.00042817774019149107,
+            "h2": 0.3961737712640643,
+            "h2_exact": 0.3961748167994428,
+            "h_min": 0.1,
+            "method": "depth_mode",
+            "monotone": false,
+            "n_extrema": 3,
+            "ok": true,
+            "step_error": 2.639075817446254e-06,
+            "step_ratio": 3.961737712640643,
+            "step_ratio_exact": 3.9617481679944277
+          },
+          "tensorfvm-hll-muscl-ssprk3": {
+            "bore": 1.982680354353802,
+            "bore_error": 5.3156929595420955e-05,
+            "bore_exact": 1.9827857531564854,
+            "clipped_cells": 0,
+            "depth_l1_vs_exact": 0.0007122032494640806,
+            "h2": 0.39617702081620554,
+            "h2_exact": 0.3961748167994428,
+            "h_min": 0.1,
+            "method": "depth_mode",
+            "monotone": true,
+            "n_extrema": 0,
+            "ok": true,
+            "step_error": 5.563242965685622e-06,
+            "step_ratio": 3.961770208162055,
+            "step_ratio_exact": 3.9617481679944277
+          }
+        },
+        "cross_code": {
+          "clawpack-classic-hlle": {
+            "depth_l1": 0.00040206951112813777,
+            "momentum_l1": 0.0012443565437494253,
+            "n": 1600,
+            "velocity_l1_wet": 0.0013262898823061644,
+            "velocity_max_abs_wet": 0.2943502258685714,
+            "wet_cells_compared": 1600
+          },
+          "clawpack-classic-roe": {
+            "depth_l1": 0.00033110887967974765,
+            "momentum_l1": 0.0010990629522391762,
+            "n": 1600,
+            "velocity_l1_wet": 0.0010036991718301474,
+            "velocity_max_abs_wet": 0.15759038600933062,
+            "wet_cells_compared": 1600
+          }
+        },
+        "cross_code_baseline": "tensorfvm-hll-muscl-ssprk3",
+        "n": 1600,
+        "one_cell_translation_l1": 0.002450922054020026
+      },
+      "800": {
+        "cell_width_m": 0.0125,
+        "codes": {
+          "clawpack-classic-hlle": {
+            "bore": 1.9799665628196768,
+            "bore_error": 0.0014218330610458888,
+            "bore_exact": 1.9827857531564854,
+            "clipped_cells": null,
+            "depth_l1_vs_exact": 0.0014282665071586886,
+            "h2": 0.3961884211160451,
+            "h2_exact": 0.3961748167994428,
+            "h_min": 0.1,
+            "method": "depth_mode",
+            "monotone": false,
+            "n_extrema": 5,
+            "ok": true,
+            "step_error": 3.433917559973023e-05,
+            "step_ratio": 3.9618842111604504,
+            "step_ratio_exact": 3.9617481679944277
+          },
+          "clawpack-classic-roe": {
+            "bore": 1.9826870986811014,
+            "bore_error": 4.9755489329590343e-05,
+            "bore_exact": 1.9827857531564854,
+            "clipped_cells": null,
+            "depth_l1_vs_exact": 0.0009231527713897343,
+            "h2": 0.39617270638778956,
+            "h2_exact": 0.3961748167994428,
+            "h_min": 0.1,
+            "method": "depth_mode",
+            "monotone": false,
+            "n_extrema": 5,
+            "ok": true,
+            "step_error": 5.3269707303972656e-06,
+            "step_ratio": 3.9617270638778956,
+            "step_ratio_exact": 3.9617481679944277
+          },
+          "tensorfvm-hll-muscl-ssprk3": {
+            "bore": 1.9833422531766074,
+            "bore_error": 0.00028066573467963325,
+            "bore_exact": 1.9827857531564854,
+            "clipped_cells": 0,
+            "depth_l1_vs_exact": 0.0014370770446077471,
+            "h2": 0.39617628999418836,
+            "h2_exact": 0.3961748167994428,
+            "h_min": 0.1,
+            "method": "depth_mode",
+            "monotone": true,
+            "n_extrema": 0,
+            "ok": true,
+            "step_error": 3.71854717438359e-06,
+            "step_ratio": 3.9617628999418835,
+            "step_ratio_exact": 3.9617481679944277
+          }
+        },
+        "cross_code": {
+          "clawpack-classic-hlle": {
+            "depth_l1": 0.0008283775798524882,
+            "momentum_l1": 0.002546045047318259,
+            "n": 800,
+            "velocity_l1_wet": 0.002690690651462535,
+            "velocity_max_abs_wet": 0.3638820295630776,
+            "wet_cells_compared": 800
+          },
+          "clawpack-classic-roe": {
+            "depth_l1": 0.000630539803365142,
+            "momentum_l1": 0.002078929930909335,
+            "n": 800,
+            "velocity_l1_wet": 0.0022040421332542126,
+            "velocity_max_abs_wet": 0.24179596572172135,
+            "wet_cells_compared": 800
+          }
+        },
+        "cross_code_baseline": "tensorfvm-hll-muscl-ssprk3",
+        "n": 800,
+        "one_cell_translation_l1": 0.0049031711125565895
+      }
+    },
+    "0.2": {
+      "1600": {
+        "cell_width_m": 0.006250000000000001,
+        "codes": {
+          "clawpack-classic-hlle": {
+            "bore": 1.895125586497675,
+            "bore_error": 0.0004974454629977215,
+            "bore_exact": 1.8960687773084788,
+            "clipped_cells": null,
+            "depth_l1_vs_exact": 0.000520935771761271,
+            "h2": 0.5078738439056893,
+            "h2_exact": 0.5078714344566667,
+            "h_min": 0.2,
+            "method": "depth_mode",
+            "monotone": false,
+            "n_extrema": 3,
+            "ok": true,
+            "step_error": 4.744210560449623e-06,
+            "step_ratio": 2.5393692195284467,
+            "step_ratio_exact": 2.5393571722833332
+          },
+          "clawpack-classic-roe": {
+            "bore": 1.895681535217577,
+            "bore_error": 0.0002042342005395952,
+            "bore_exact": 1.8960687773084788,
+            "clipped_cells": null,
+            "depth_l1_vs_exact": 0.0003900051484734577,
+            "h2": 0.5078727187312245,
+            "h2_exact": 0.5078714344566667,
+            "h_min": 0.2,
+            "method": "depth_mode",
+            "monotone": false,
+            "n_extrema": 4,
+            "ok": true,
+            "step_error": 2.5287395011400163e-06,
+            "step_ratio": 2.5393635936561223,
+            "step_ratio_exact": 2.5393571722833332
+          },
+          "tensorfvm-hll-muscl-ssprk3": {
+            "bore": 1.8963608576610533,
+            "bore_error": 0.00015404523088512063,
+            "bore_exact": 1.8960687773084788,
+            "clipped_cells": 0,
+            "depth_l1_vs_exact": 0.0006310420162494005,
+            "h2": 0.5078723360931894,
+            "h2_exact": 0.5078714344566667,
+            "h_min": 0.2,
+            "method": "depth_mode",
+            "monotone": false,
+            "n_extrema": 1,
+            "ok": true,
+            "step_error": 1.7753243469034695e-06,
+            "step_ratio": 2.5393616804659467,
+            "step_ratio_exact": 2.5393571722833332
+          }
+        },
+        "cross_code": {
+          "clawpack-classic-hlle": {
+            "depth_l1": 0.0003290432074636203,
+            "momentum_l1": 0.0013425063850489498,
+            "n": 1600,
+            "velocity_l1_wet": 0.0012896627431451069,
+            "velocity_max_abs_wet": 0.18785113049438232,
+            "wet_cells_compared": 1600
+          },
+          "clawpack-classic-roe": {
+            "depth_l1": 0.0002790427051900104,
+            "momentum_l1": 0.001185255838681808,
+            "n": 1600,
+            "velocity_l1_wet": 0.001069325841370818,
+            "velocity_max_abs_wet": 0.17647890762678545,
+            "wet_cells_compared": 1600
+          }
+        },
+        "cross_code_baseline": "tensorfvm-hll-muscl-ssprk3",
+        "n": 1600,
+        "one_cell_translation_l1": 0.001925494840140824
+      },
+      "800": {
+        "cell_width_m": 0.0125,
+        "codes": {
+          "clawpack-classic-hlle": {
+            "bore": 1.8951840612429185,
+            "bore_error": 0.0004666054713564587,
+            "bore_exact": 1.8960687773084788,
+            "clipped_cells": null,
+            "depth_l1_vs_exact": 0.0010884479488392049,
+            "h2": 0.5078777686695402,
+            "h2_exact": 0.5078714344566667,
+            "h_min": 0.2,
+            "method": "depth_mode",
+            "monotone": false,
+            "n_extrema": 3,
+            "ok": true,
+            "step_error": 1.2472079435381e-05,
+            "step_ratio": 2.5393888433477008,
+            "step_ratio_exact": 2.5393571722833332
+          },
+          "clawpack-classic-roe": {
+            "bore": 1.8962970451682326,
+            "bore_error": 0.00012039007365432194,
+            "bore_exact": 1.8960687773084788,
+            "clipped_cells": null,
+            "depth_l1_vs_exact": 0.0007704696532808404,
+            "h2": 0.5078743855455006,
+            "h2_exact": 0.5078714344566667,
+            "h_min": 0.2,
+            "method": "depth_mode",
+            "monotone": false,
+            "n_extrema": 3,
+            "ok": true,
+            "step_error": 5.810700570473576e-06,
+            "step_ratio": 2.539371927727503,
+            "step_ratio_exact": 2.5393571722833332
+          },
+          "tensorfvm-hll-muscl-ssprk3": {
+            "bore": 1.8969558565366893,
+            "bore_error": 0.00046785181994808857,
+            "bore_exact": 1.8960687773084788,
+            "clipped_cells": 0,
+            "depth_l1_vs_exact": 0.0012158603278636397,
+            "h2": 0.5078745314656523,
+            "h2_exact": 0.5078714344566667,
+            "h_min": 0.2,
+            "method": "depth_mode",
+            "monotone": true,
+            "n_extrema": 0,
+            "ok": true,
+            "step_error": 6.098017678298772e-06,
+            "step_ratio": 2.5393726573282613,
+            "step_ratio_exact": 2.5393571722833332
+          }
+        },
+        "cross_code": {
+          "clawpack-classic-hlle": {
+            "depth_l1": 0.0006304598860918572,
+            "momentum_l1": 0.0025047886208485258,
+            "n": 800,
+            "velocity_l1_wet": 0.002460069279913524,
+            "velocity_max_abs_wet": 0.2674647729116475,
+            "wet_cells_compared": 800
+          },
+          "clawpack-classic-roe": {
+            "depth_l1": 0.0005235125165452131,
+            "momentum_l1": 0.0022952369885909456,
+            "n": 800,
+            "velocity_l1_wet": 0.00225121916892176,
+            "velocity_max_abs_wet": 0.21411568998227612,
+            "wet_cells_compared": 800
+          }
+        },
+        "cross_code_baseline": "tensorfvm-hll-muscl-ssprk3",
+        "n": 800,
+        "one_cell_translation_l1": 0.0038519354043844776
+      }
+    }
+  },
+  "exact": {
+    "ritter_front_x": 4.0,
+    "stoker": {
+      "c0": 3.132091952673165,
+      "c1": 2.2147234590350102,
+      "c2": 2.6704100016846253,
+      "g": 9.81,
+      "h0": 1.0,
+      "h1": 0.5,
+      "h2": 0.7269204461872865,
+      "head_speed": -3.132091952673165,
+      "shock_speed": 2.957918120187525,
+      "step_ratio": 1.453840892374573,
+      "tail_speed": -1.7470460997075454,
+      "u2": 0.9233639019770798
+    }
+  },
+  "grids": [
+    200,
+    400,
+    800,
+    1600
+  ],
+  "third_code": "clawpack 5.14.0 (Classic wave propagation, MC limiter)",
+  "tolerance": 0.05,
+  "verdict": {
+    "criteria": {
+      "XV1_cross_code_depth_l1": {
+        "cell_width_m": 0.0125,
+        "equivalent_translation_cells": 0.244904659593147,
+        "equivalent_translation_m": 0.0030613082449143375,
+        "limit": 0.05,
+        "pass": true,
+        "statement": "TensorFVM vs an independent code family on the same grid: relative depth L1 over the wet-bed case (worst accepted grid)",
+        "value": 0.0004375701343536596,
+        "worst_at": "clawpack-classic-roe@800"
+      },
+      "XV2_gate_portability": {
+        "limit": 0.05,
+        "pass": true,
+        "statement": "the anchor's headline readings (bore position, level step) recomputed by the same instrument on the third-code profile",
+        "value": 0.0004329022875710759,
+        "worst_at": "tensorfvm-hll-muscl-ssprk3@800:bore_error"
+      },
+      "XV3_instrument_monotone": {
+        "failures": [],
+        "pass": true,
+        "statement": "the monotone/no-wiggle criterion also holds on the foreign code"
+      },
+      "XV4_dry_bed_third_code": {
+        "pass": false,
+        "runnable_grids": [],
+        "statement": "the anchor's exact dry-bed case is runnable by the third code (it is not: Classic Clawpack is not positivity preserving), so the dry-bed criteria stay single-code evidence"
+      }
+    },
+    "status": "pass"
+  },
+  "wet": {
+    "1600": {
+      "cell_width_m": 0.006250000000000001,
+      "codes": {
+        "clawpack-classic-hlle": {
+          "bore": 1.8885058130415984,
+          "bore_error": 0.0001457749565617465,
+          "bore_exact": 1.8887811500316989,
+          "clipped_cells": null,
+          "depth_l1_vs_exact": 0.000275601181425852,
+          "h2": 0.7269212273377837,
+          "h2_exact": 0.7269204461872865,
+          "h_min": 0.49999999999999994,
+          "method": "depth_mode",
+          "monotone": true,
+          "n_extrema": 0,
+          "ok": true,
+          "step_error": 1.0746024566838157e-06,
+          "step_ratio": 1.4538424546755675,
+          "step_ratio_exact": 1.453840892374573
+        },
+        "clawpack-classic-roe": {
+          "bore": 1.88860744169463,
+          "bore_error": 9.196848299024118e-05,
+          "bore_exact": 1.8887811500316989,
+          "clipped_cells": null,
+          "depth_l1_vs_exact": 0.00023014293637822707,
+          "h2": 0.7269214864681035,
+          "h2_exact": 0.7269204461872865,
+          "h_min": 0.5,
+          "method": "depth_mode",
+          "monotone": true,
+          "n_extrema": 0,
+          "ok": true,
+          "step_error": 1.4310793189272473e-06,
+          "step_ratio": 1.453842972936207,
+          "step_ratio_exact": 1.453840892374573
+        },
+        "tensorfvm-hll-muscl-ssprk3": {
+          "bore": 1.889178238311661,
+          "bore_error": 0.00021023519848000692,
+          "bore_exact": 1.8887811500316989,
+          "clipped_cells": 0,
+          "depth_l1_vs_exact": 0.0004271934800380538,
+          "h2": 0.726920410942486,
+          "h2_exact": 0.7269204461872865,
+          "h_min": 0.5,
+          "method": "depth_mode",
+          "monotone": true,
+          "n_extrema": 0,
+          "ok": true,
+          "step_error": 4.8485086086606076e-08,
+          "step_ratio": 1.453840821884972,
+          "step_ratio_exact": 1.453840892374573
+        }
+      },
+      "cross_code": {
+        "clawpack-classic-hlle": {
+          "depth_l1": 0.0002093762033140682,
+          "momentum_l1": 0.0016990492896728061,
+          "n": 1600,
+          "velocity_l1_wet": 0.0016782821823358657,
+          "velocity_max_abs_wet": 0.1181112105302356,
+          "wet_cells_compared": 1600
+        },
+        "clawpack-classic-roe": {
+          "depth_l1": 0.00021772012995858328,
+          "momentum_l1": 0.0017517349714884054,
+          "n": 1600,
+          "velocity_l1_wet": 0.0017412024804510143,
+          "velocity_max_abs_wet": 0.11617223822812833,
+          "wet_cells_compared": 1600
+        }
+      },
+      "cross_code_baseline": "tensorfvm-hll-muscl-ssprk3",
+      "n": 1600,
+      "one_cell_translation_l1": 0.0008933057933811868
+    },
+    "200": {
+      "cell_width_m": 0.05000000000000002,
+      "codes": {
+        "clawpack-classic-hlle": {
+          "bore": 1.8900028743428436,
+          "bore_error": 0.000646832117698894,
+          "bore_exact": 1.8887811500316989,
+          "clipped_cells": null,
+          "depth_l1_vs_exact": 0.00219122131588027,
+          "h2": 0.7268842873095918,
+          "h2_exact": 0.7269204461872865,
+          "h_min": 0.5,
+          "method": "depth_mode",
+          "monotone": true,
+          "n_extrema": 0,
+          "ok": true,
+          "step_error": 4.9742551450240736e-05,
+          "step_ratio": 1.4537685746191835,
+          "step_ratio_exact": 1.453840892374573
+        },
+        "clawpack-classic-roe": {
+          "bore": 1.8905255325408366,
+          "bore_error": 0.0009235493000914318,
+          "bore_exact": 1.8887811500316989,
+          "clipped_cells": null,
+          "depth_l1_vs_exact": 0.0018409342746515383,
+          "h2": 0.7268968014708878,
+          "h2_exact": 0.7269204461872865,
+          "h_min": 0.5,
+          "method": "depth_mode",
+          "monotone": true,
+          "n_extrema": 0,
+          "ok": true,
+          "step_error": 3.252724080430605e-05,
+          "step_ratio": 1.4537936029417755,
+          "step_ratio_exact": 1.453840892374573
+        },
+        "tensorfvm-hll-muscl-ssprk3": {
+          "bore": 1.8942834150438277,
+          "bore_error": 0.0029131299896954506,
+          "bore_exact": 1.8887811500316989,
+          "clipped_cells": 0,
+          "depth_l1_vs_exact": 0.0034168313031305354,
+          "h2": 0.7267479480182477,
+          "h2_exact": 0.7269204461872865,
+          "h_min": 0.5,
+          "method": "depth_mode",
+          "monotone": false,
+          "n_extrema": 1,
+          "ok": true,
+          "step_error": 0.00023729992730773362,
+          "step_ratio": 1.4534958960364954,
+          "step_ratio_exact": 1.453840892374573
+        }
+      },
+      "cross_code": {
+        "clawpack-classic-hlle": {
+          "depth_l1": 0.0014725310192934763,
+          "momentum_l1": 0.012000164869236095,
+          "n": 200,
+          "velocity_l1_wet": 0.011993680848815247,
+          "velocity_max_abs_wet": 0.14013663255343003,
+          "wet_cells_compared": 200
+        },
+        "clawpack-classic-roe": {
+          "depth_l1": 0.0016689673868397448,
+          "momentum_l1": 0.013366328669972487,
+          "n": 200,
+          "velocity_l1_wet": 0.013479951130095183,
+          "velocity_max_abs_wet": 0.13637867536647863,
+          "wet_cells_compared": 200
+        }
+      },
+      "cross_code_baseline": "tensorfvm-hll-muscl-ssprk3",
+      "n": 200,
+      "one_cell_translation_l1": 0.00714997671476507
+    },
+    "400": {
+      "cell_width_m": 0.025000000000000005,
+      "codes": {
+        "clawpack-classic-hlle": {
+          "bore": 1.8889412633806089,
+          "bore_error": 8.477072577057782e-05,
+          "bore_exact": 1.8887811500316989,
+          "clipped_cells": null,
+          "depth_l1_vs_exact": 0.001173442977406869,
+          "h2": 0.7269150350696837,
+          "h2_exact": 0.7269204461872865,
+          "h_min": 0.5,
+          "method": "depth_mode",
+          "monotone": true,
+          "n_extrema": 0,
+          "ok": true,
+          "step_error": 7.443892424752949e-06,
+          "step_ratio": 1.4538300701393674,
+          "step_ratio_exact": 1.453840892374573
+        },
+        "clawpack-classic-roe": {
+          "bore": 1.8894243219607136,
+          "bore_error": 0.00034052220872913614,
+          "bore_exact": 1.8887811500316989,
+          "clipped_cells": null,
+          "depth_l1_vs_exact": 0.0009869893194887126,
+          "h2": 0.7269186767076288,
+          "h2_exact": 0.7269204461872865,
+          "h_min": 0.5,
+          "method": "depth_mode",
+          "monotone": true,
+          "n_extrema": 0,
+          "ok": true,
+          "step_error": 2.4342136295219312e-06,
+          "step_ratio": 1.4538373534152575,
+          "step_ratio_exact": 1.453840892374573
+        },
+        "tensorfvm-hll-muscl-ssprk3": {
+          "bore": 1.8918035161849824,
+          "bore_error": 0.0016001674694989558,
+          "bore_exact": 1.8887811500316989,
+          "clipped_cells": 0,
+          "depth_l1_vs_exact": 0.0017303304323634983,
+          "h2": 0.7268846402531036,
+          "h2_exact": 0.7269204461872865,
+          "h_min": 0.5,
+          "method": "depth_mode",
+          "monotone": true,
+          "n_extrema": 0,
+          "ok": true,
+          "step_error": 4.925701893604034e-05,
+          "step_ratio": 1.4537692805062072,
+          "step_ratio_exact": 1.453840892374573
+        }
+      },
+      "cross_code": {
+        "clawpack-classic-hlle": {
+          "depth_l1": 0.0007847418468834576,
+          "momentum_l1": 0.0063247792981603705,
+          "n": 400,
+          "velocity_l1_wet": 0.006267000979267277,
+          "velocity_max_abs_wet": 0.14420028421994013,
+          "wet_cells_compared": 400
+        },
+        "clawpack-classic-roe": {
+          "depth_l1": 0.0008437676539510567,
+          "momentum_l1": 0.006714856141169804,
+          "n": 400,
+          "velocity_l1_wet": 0.0067087319850566655,
+          "velocity_max_abs_wet": 0.14093315468287146,
+          "wet_cells_compared": 400
+        }
+      },
+      "cross_code_baseline": "tensorfvm-hll-muscl-ssprk3",
+      "n": 400,
+      "one_cell_translation_l1": 0.003573773884170229
+    },
+    "800": {
+      "cell_width_m": 0.0125,
+      "codes": {
+        "clawpack-classic-hlle": {
+          "bore": 1.8884113390749306,
+          "bore_error": 0.00019579343893920146,
+          "bore_exact": 1.8887811500316989,
+          "clipped_cells": null,
+          "depth_l1_vs_exact": 0.0005415802402688523,
+          "h2": 0.726919838964183,
+          "h2_exact": 0.7269204461872865,
+          "h_min": 0.5,
+          "method": "depth_mode",
+          "monotone": true,
+          "n_extrema": 0,
+          "ok": true,
+          "step_error": 8.353363929310923e-07,
+          "step_ratio": 1.453839677928366,
+          "step_ratio_exact": 1.453840892374573
+        },
+        "clawpack-classic-roe": {
+          "bore": 1.888595909960361,
+          "bore_error": 9.807386701984564e-05,
+          "bore_exact": 1.8887811500316989,
+          "clipped_cells": null,
+          "depth_l1_vs_exact": 0.0004507483645550113,
+          "h2": 0.7269210909791763,
+          "h2_exact": 0.7269204461872865,
+          "h_min": 0.5,
+          "method": "depth_mode",
+          "monotone": true,
+          "n_extrema": 0,
+          "ok": true,
+          "step_error": 8.870185083705358e-07,
+          "step_ratio": 1.4538421819583527,
+          "step_ratio_exact": 1.453840892374573
+        },
+        "tensorfvm-hll-muscl-ssprk3": {
+          "bore": 1.8895988077122687,
+          "bore_error": 0.0004329022875710759,
+          "bore_exact": 1.8887811500316989,
+          "clipped_cells": 0,
+          "depth_l1_vs_exact": 0.0008510840146864194,
+          "h2": 0.7269143908136652,
+          "h2_exact": 0.7269204461872865,
+          "h_min": 0.5,
+          "method": "depth_mode",
+          "monotone": true,
+          "n_extrema": 0,
+          "ok": true,
+          "step_error": 8.33017375294083e-06,
+          "step_ratio": 1.4538287816273303,
+          "step_ratio_exact": 1.453840892374573
+        }
+      },
+      "cross_code": {
+        "clawpack-classic-hlle": {
+          "depth_l1": 0.00041476272387633225,
+          "momentum_l1": 0.0033761126896170754,
+          "n": 800,
+          "velocity_l1_wet": 0.0033423846407724766,
+          "velocity_max_abs_wet": 0.11097403964623649,
+          "wet_cells_compared": 800
+        },
+        "clawpack-classic-roe": {
+          "depth_l1": 0.0004375701343536596,
+          "momentum_l1": 0.0035294719235669327,
+          "n": 800,
+          "velocity_l1_wet": 0.003516346308258776,
+          "velocity_max_abs_wet": 0.11033220241249568,
+          "wet_cells_compared": 800
+        }
+      },
+      "cross_code_baseline": "tensorfvm-hll-muscl-ssprk3",
+      "n": 800,
+      "one_cell_translation_l1": 0.0017866958312699407
+    }
+  },
+  "wettability_floor": {
+    "codes": {
+      "0.0005": {
+        "hlle": {
+          "ok": false,
+          "reason": "non-finite solution (negative/nan depth: the flux is not positivity preserving on a dry or near-dry bed)"
+        },
+        "roe": {
+          "ok": false,
+          "reason": "non-finite solution (negative/nan depth: the flux is not positivity preserving on a dry or near-dry bed)"
+        },
+        "tensorfvm": {
+          "bore_error": 0.005471052852697666,
+          "finite": true,
+          "h_min": 0.0005,
+          "method": "depth_mode",
+          "ok": true
+        }
+      },
+      "0.001": {
+        "hlle": {
+          "ok": false,
+          "reason": "non-finite solution (negative/nan depth: the flux is not positivity preserving on a dry or near-dry bed)"
+        },
+        "roe": {
+          "ok": false,
+          "reason": "non-finite solution (negative/nan depth: the flux is not positivity preserving on a dry or near-dry bed)"
+        },
+        "tensorfvm": {
+          "bore_error": 0.004074759754468275,
+          "finite": true,
+          "h_min": 0.001,
+          "method": "depth_mode",
+          "ok": true
+        }
+      },
+      "0.002": {
+        "hlle": {
+          "ok": false,
+          "reason": "non-finite solution (negative/nan depth: the flux is not positivity preserving on a dry or near-dry bed)"
+        },
+        "roe": {
+          "ok": false,
+          "reason": "non-finite solution (negative/nan depth: the flux is not positivity preserving on a dry or near-dry bed)"
+        },
+        "tensorfvm": {
+          "bore_error": 0.0030057839561722895,
+          "finite": true,
+          "h_min": 0.002,
+          "method": "depth_mode",
+          "ok": true
+        }
+      },
+      "0.005": {
+        "hlle": {
+          "bore_error": 0.002969351782882654,
+          "finite": true,
+          "h_min": 0.002771956174327807,
+          "method": "depth_mode",
+          "ok": true
+        },
+        "roe": {
+          "bore_error": 0.002039978638662717,
+          "finite": true,
+          "h_min": 0.004999999978129281,
+          "method": "depth_mode",
+          "ok": true
+        },
+        "tensorfvm": {
+          "bore_error": 0.0017979794669396266,
+          "finite": true,
+          "h_min": 0.004999999999999999,
+          "method": "depth_mode",
+          "ok": true
+        }
+      },
+      "0.01": {
+        "hlle": {
+          "bore_error": 0.0021739851010416996,
+          "finite": true,
+          "h_min": 0.00997319129541575,
+          "method": "depth_mode",
+          "ok": true
+        },
+        "roe": {
+          "bore_error": 0.0013772034978834847,
+          "finite": true,
+          "h_min": 0.009023368645139715,
+          "method": "depth_mode",
+          "ok": true
+        },
+        "tensorfvm": {
+          "bore_error": 0.0012044477884437666,
+          "finite": true,
+          "h_min": 0.009999999999999998,
+          "method": "depth_mode",
+          "ok": true
+        }
+      },
+      "0.05": {
+        "hlle": {
+          "bore_error": 0.0009067581185320082,
+          "finite": true,
+          "h_min": 0.05,
+          "method": "depth_mode",
+          "ok": true
+        },
+        "roe": {
+          "bore_error": 0.0003876128783440185,
+          "finite": true,
+          "h_min": 0.05,
+          "method": "depth_mode",
+          "ok": true
+        },
+        "tensorfvm": {
+          "bore_error": 0.00025298388178475256,
+          "finite": true,
+          "h_min": 0.05,
+          "method": "depth_mode",
+          "ok": true
+        }
+      }
+    },
+    "depths": [
+      0.05,
+      0.01,
+      0.005,
+      0.002,
+      0.001,
+      0.0005
+    ],
+    "floor": {
+      "hlle": 0.005,
+      "roe": 0.005,
+      "tensorfvm": 0.0005
+    },
+    "n": 1600
+  }
+}
