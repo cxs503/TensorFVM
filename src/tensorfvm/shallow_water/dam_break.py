@@ -844,7 +844,7 @@ def fan_front_estimate(x, h, t: float, gravity: float, h0: float,
 
     so every cell inside the fan individually carries the front,
 
-    .. math:: x_f = 2 c0 t = x_i + 3 t \sqrt{g h_i},
+    .. math:: x_f = 2 c0 t = x_i + 3 t \\sqrt{g h_i},
 
     *exactly* -- no threshold, no extrapolation length.  Averaging that identity
     over a window of well-resolved fan cells is therefore a front estimator whose
