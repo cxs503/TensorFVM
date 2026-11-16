@@ -166,3 +166,72 @@ git filter-repo \
 | main 可达（解压） | 1672.6 MiB | ____ | 目标 ~250–300 MiB |
 | src+tests | ~20 MiB | ____ | 必须不变 |
 | `git fsck --full` | — | ____ | 必须通过 |
+
+---
+
+## 8. 复核（m23718，2026-11-16，HEAD 96c9928e）
+
+> 本节为**方案复核**：对 §0–§7 的全部关键数字按当前对象库重测（只读，未做任何改写）。
+> 数据文件：`docs/FVM-REPO-SLIM-M23718/census.json`（普查）与
+> `docs/FVM-REPO-SLIM-M23718/measure/measured_pack_R2-R2c-R3-R5b.json`（实测 pack）。
+> 复现命令：`python3 scripts/audit/m23718_git_census.py --out docs/FVM-REPO-SLIM-M23718/census.json`
+> 与 `python3 scripts/audit/measure_rewrite_pack.py --scenarios R2,R2c,R3,R5b --out docs/FVM-REPO-SLIM-M23718/measure`。
+
+### 8.1 普查复核（旧值 → 新值）
+
+| 维度 | 方案原值（§0/§1） | 复核值（96c9928e） | 判定 |
+|---|---|---|---|
+| 全仓 pack | 1.33 GiB | 1362 MiB（1.33 GiB） | 持平 |
+| main 可达（解压） | 1672.6 MiB | **1995.0 MiB**（21574 对象） | +322 MiB 增长 |
+| docs/verification-* 占比 | 1473.9 MiB / 88% | **1732.8 MiB / 88.5%** | 结论不变 |
+| 大对象主因 | npz/png/svg/pdf/msh | npz 694 · png 326 · svg 322 · pdf 260 MiB | 结论不变 |
+| 触及 verification 的提交 | 401（--all） | 403（--all）/ 167（main） | 持平 |
+| 分支 | 1076 总 / 841 agent/* | **215 总 / 0 agent/*** | **重大变化，见 §8.3** |
+| 对象库垃圾 | 未普查 | **1198 MiB**（5 个 tmp_pack，中断 fetch 残留） | **新发现，见 §8.4** |
+
+Top 大对象与方案 §1 完全一致（annular-1024x256 三个 27 MiB npz 仍居前三），无新的大对象来源。
+
+### 8.2 收益实测复核（git pack-objects 实测，非估算）
+
+基线 = 当前全 ref 可达集重新打包 = **1345.7 MiB**（与 1.33 GiB 在库 pack 一致）。
+
+| 场景 | 原实测 pack | 复核实测 pack | 削减 | 判定 |
+|---|---|---|---|---|
+| R2 场数据+PDF | 475.6 MiB | **488.8 MiB** | -64% | 仍成立 |
+| R2c R2+svg | 338.3 MiB | **382.5 MiB** | -72% | 仍成立 |
+| R3 全二进制+pyc | 56.9 MiB | **64.0 MiB** | -95% | 仍成立 |
+| R5b ≥512 KiB 阈值 | 351.8 MiB | **352.0 MiB** | -74% | 仍成立 |
+
+各场景 pack 较原实测增长 13–44 MiB（= 方案落地前新增的验证产物），**排序与推荐不变**：
+R3（删 docs 全部二进制 + 全仓 pyc）为最大收益档（-95%），
+R2c 为「保留 png 图」的推荐档（-72%）。
+
+### 8.3 协调面变化：D2 已部分消解
+
+远端分支已从方案的 1076 个（841 个 agent/*）清理为 **215 个，agent/* 为 0**
+（本地 remote-tracking refs，2026-11-16 fetch）。D2「692 个未并入 agent 分支的处置」
+**大部分已消解**；剩余协调面收窄为：
+- 2 个 `maintenance/*` 旧平行尝试分支（`artifact-hygiene`、`remove-overset-embedded-svg`）
+  仍未并入 main，重写前须明确处置（并入/删除/保留）；
+- 重写窗口内新产生的分支（执行时点重新清点）。
+
+### 8.4 新发现：对象库垃圾 1198 MiB（.git 目录 3.3 GB 的 47%）
+
+`git count-objects` 显示 5 个 `tmp_pack_*`（中断 fetch 残留）合计
+1201 MiB，与 1.33 GiB 有效 pack 并存。
+`git gc --prune=now`（或删 tmp_pack 后 gc）即可回收，**不涉及历史改写、无需 force-push 协调**，
+但作用于共享对象库（影响所有 worktree），故列为决策点 D6 而非本单直接执行。
+
+### 8.5 决策点状态更新（交 owner）
+
+| # | 决策点 | 复核后状态 |
+|---|---|---|
+| D1 | 删除范围（json/csv 是否同删） | 待决（建议不变：B 档保留清单） |
+| D2 | 未并入 agent 分支处置 | **大部分已消解**（远端已清至 215 个、agent/* 0 个）；余 2 个 maintenance/* 待处置 |
+| D3 | 重写窗口冻结合并 | 待决（建议不变：冻结） |
+| D4 | 下游 worktree 重 clone | 待决（建议不变：全量重 clone） |
+| D5 | 回滚镜像保留期 | 待决（建议不变：≥90 天） |
+| **D6** | **对象库垃圾 gc（1198 MiB tmp_pack）** | **新增**：建议先于任何重写执行（零风险、零协调、立得 47% 磁盘） |
+
+**复核结论**：方案五节全部成立，数字已刷新；决策点由 5 个更新为 6 个（D2 收窄、D6 新增），
+正式提请 owner 裁决（见平台报告）。
