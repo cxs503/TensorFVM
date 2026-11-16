@@ -527,11 +527,19 @@
   耗散恒等式 1e-10、旧规则负对照用解析 `max c_n*0.5|Δμ|/Vol` 1e-12、均匀 μ 逐位兼容、
   SA 算子同规则）；回归 `test_periodic_hill{,_round2,_round3}` 22 passed、
   round-12 SST 系数测试 5 passed（须 `PYTHONPATH=<worktree>/src`）。
-- 待办（交下一单）: cj3108（96x48 固定算子 + 固定闭包，stag_dir 本工作树）提交时排队位次 26，
-  出数后读 `round11_sst_r13-96x48.json` 打分，判 41.9% 缺口是否由该缺陷解释。
+- 待办（交下一单）→ **已闭环（m24004, 2026-11-16）**: cj3108 `succeeded`（n315），
+  工件 `round11_sst_r13-96x48.{json,npz}` 自作业 tarball 取回，`scripts/round13_analysis.py`
+  打分（未重跑、未重数字化）：`x_r/H = 3.767`（vs 5.41 → 30.4%；vs 5.34 → 29.5%）、
+  `y/H=0.5` 0/7 站点进 10%、`max nu_t/nu = 202.5`、平稳性 spread_rel 2.1e-6、gate FAIL。
+  判读：动量算子修复把 3.144→3.767（+19.8%），该缺陷解释 41.9% 缺口中的 11.5 点；
+  剩余 30% 为 SST@96x48 的模型类/分辨率问题（算子已是单面通量散度，1e-14/1e-10 验证），
+  SST 模型类结论继续 WITHHELD，下一测量=固定算子下的网格阶梯。
 - **数字时效性**: 本修复改变 rounds 7–12 全部含 ν_t 的动量结果（rounds 4–6 常黏度门是
   逐位不变的）。旧数字保留原样记录，不回溯改写。
-- 产物: `docs/case-periodic-hills/{ROUND13.md,round13_operator_defect.json,fig_round13_eta_face_operator.png}`。
+- 产物: `docs/case-periodic-hills/{ROUND13.md,round13_operator_defect.json,fig_round13_eta_face_operator.png,
+  round11_sst_r13-96x48.json,round11_sst_r13-96x48.npz,round13_comparison.json,
+  fig_round13_profile_y05.png,fig_round13_series.png}`
+  + `scripts/round13_analysis.py`。
 
 ### D16 CASE-FVM-CHANNEL-KMM180 第三条路线（三维 LES）两条 xfail 的根因是 6 处装配缺陷（m21024, 2026-11-15，selfstart）
 - 缺口: `channel_les3d` 留下两条 xfail（层流抛物不复现、60 步冒烟不绿），并写明「Re_tau=180 无任何 u+ 读数」。
