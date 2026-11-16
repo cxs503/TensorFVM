@@ -88,7 +88,7 @@
   }
  ],
  "verdict": "PASS",
- "verdict_qualified": "PASS at n>=800 (both Ritter dry and Stoker wet). At n=200 the fan-head probe fails (Ritter 5.58%, Stoker 10.5%) — the coarse grid does not resolve the rarefaction head; this is recorded honestly, not hidden. Headline metrics (front_fan, shock, step_ratio, depth_l1, front_series, monotone) all pass at n=1600 with 100x+ margin under the 5% gate.",
+ "verdict_qualified": "PASS at n>=800 in both the Ritter dry bed and the Stoker wet bed: accepted_n = 800 in docs/case-fvm-dambreak-stoker/artifacts/reproduction.json, the probe ladder this qualification rests on (re-derived into probe_ladder). At n=200 the fan_head probe misses the 5% gate on both beds (Ritter 5.584%, Stoker 10.541%) and for Stoker still at n=400 (5.779%) — the coarse grid does not resolve the rarefaction head; this is recorded honestly, not hidden. The n=1600 headline six (front_fan, shock_position, step_ratio, depth_l1, front_series, monotone) all pass the 5% gate, but their margins span gate_margins.headline_weakest: the weakest is 5.92x (stoker-wet front_series) and ritter-dry depth_l1 is 64.81x, so an earlier version of this sentence that claimed a three-digit margin for the same six keys was overstated and is retracted here; no artifact number changes with the retraction.",
  "key_results": {
   "ritter_dry_n1600": {
    "front_fan_error": 0.00017261518056277403,
@@ -130,5 +130,251 @@
  "repro_cmd": "PYTHONPATH=src python scripts/run_shallow_water_dam_break.py --n 1600 --resolutions 100,200,400,800,1600",
  "test_cmd": "pytest tests/test_shallow_water_dam_break.py tests/test_dambreak_stoker_series.py tests/test_shallow_water_analytic_crosscheck.py tests/test_shallow_water_2d_dam_break.py",
  "notes": "几何为 1-D 平底（无船体几何，故不适用 Cb/L/B 前置校验）。L∞ 深度误差只报告不判定（捕捉间断必然带 O(dx) 误差）。front_wetted（湿润边缘）为深度地板探测器，不收敛，仅作 legacy 诊断报告。",
- "graded_set_note": "Closure audit (docs/audit-dambreak-anchor-closure/AUDIT.md): the registered aggregate all_pass = all(_verdict[...]['pass']) is the intersection of MORE keys than the headline six listed in verdict_qualified. Per case the graded set is: ritter-dry = front_fan, front_wetted, depth_l1, monotone, tv_no_growth, front_series (6); stoker-wet = shock_position, step_ratio, plateau_h2, depth_l1, monotone, tv_no_growth, bore_position_modes, step_ratio_modes, front_series (9). Among these, front_wetted<5% is graded but the same artifact bundle publishes the quantity as 'front_wetted_diagnostic' with a NON-CONVERGENT ladder (8.75%, 1.88%, 1.56%, 2.66%, 2.89% at n=100..1600) and this entry's own notes call it a diagnostic; it is the only graded key with a margin under 12x (1.73x). The acceptance sentence's three elements do not depend on it (their weakest margin is 11.8x). No number is changed by this note; demoting the reading to diagnostic-only is a behaviour change left to a separate review."
+ "graded_set_note": "Closure audit (docs/audit-dambreak-anchor-closure/AUDIT.md): the registered aggregate all_pass = all(_verdict[...]['pass']) is the intersection of MORE keys than the headline six listed in verdict_qualified. Per case the graded set is: ritter-dry = front_fan, front_wetted, depth_l1, monotone, tv_no_growth, front_series (6); stoker-wet = shock_position, step_ratio, plateau_h2, depth_l1, monotone, tv_no_growth, bore_position_modes, step_ratio_modes, front_series (9); every value, limit and margin of these keys is re-derived into gate_margins. Among these, front_wetted<5% is graded but the same artifact bundle publishes the quantity as 'front_wetted_diagnostic' with a NON-CONVERGENT ladder (8.75%, 1.88%, 1.56%, 2.66%, 2.89% at n=100..1600) and this entry's own notes call it a diagnostic. Margin reading, corrected 2026-11-16 by re-derivation: front_wetted<5% is the only graded key with a margin below 2x, but it is not the only one below 12x — gate_margins.under_12x lists all 4 keys (front_wetted<5% 1.73x, stoker-wet tv_no_growth<0.5% 4.98x, stoker-wet front_series<5% 5.92x, ritter-dry front_series<5% 11.77x). Earlier wordings that called front_wetted<5% the sole graded key under a double-digit margin bound, and that put the acceptance elements' weakest margin at the front_series level of the dry bed only, were overstated and are retracted; the four margins above replace them. The acceptance sentence's three elements have a weakest finite margin of 4.98x (stoker-wet tv_no_growth<0.5%, whose own limit is 0.5%), or 5.92x counting only the 5% gates (stoker-wet front_series<5%). No artifact number is changed by this note; demoting the front_wetted reading to diagnostic-only is a behaviour change left to a separate review.",
+ "probe_ladder": {
+  "artifact": "docs/case-fvm-dambreak-stoker/artifacts/reproduction.json",
+  "probe": "fan_head",
+  "tolerance": 0.05,
+  "accepted_n": 800,
+  "resolutions": [
+   200,
+   400,
+   800,
+   1600
+  ],
+  "relative_error": {
+   "stoker-wet": {
+    "200": 0.1054134754675036,
+    "400": 0.05779049412675354,
+    "800": 0.030467915935210504,
+    "1600": 0.015549371825645968
+   },
+   "ritter-dry": {
+    "200": 0.05584190840667885,
+    "400": 0.02695888320817005,
+    "800": 0.012560229948528333,
+    "1600": 0.005756051946822449
+   }
+  },
+  "failing_rungs": {
+   "stoker-wet": [
+    200,
+    400
+   ],
+   "ritter-dry": [
+    200
+   ]
+  },
+  "first_passing_rung_n": {
+   "stoker-wet": 800,
+   "ritter-dry": 400
+  }
+ },
+ "gate_margins": {
+  "source": "src/tensorfvm/verification/artifacts/shallow-water-dam-break/metrics.json",
+  "grid_n": 1600,
+  "definition": "margin = limit / value at the pool grid; a zero-valued error has an unbounded margin (null + margin_infinite)",
+  "graded_set_size": {
+   "ritter-dry": 6,
+   "stoker-wet": 9
+  },
+  "graded": {
+   "ritter-dry": {
+    "front_fan<5%": {
+     "value": 0.00017261518056277403,
+     "limit": 0.05,
+     "margin": 289.6616614887865,
+     "margin_infinite": false,
+     "pass": true
+    },
+    "front_wetted<5%": {
+     "value": 0.02890624999999991,
+     "limit": 0.05,
+     "margin": 1.7297297297297352,
+     "margin_infinite": false,
+     "pass": true
+    },
+    "depth_l1<5%": {
+     "value": 0.0007715065657630972,
+     "limit": 0.05,
+     "margin": 64.8082624553493,
+     "margin_infinite": false,
+     "pass": true
+    },
+    "monotone(no_extrema)": {
+     "value": 0.0,
+     "limit": 0.05,
+     "margin": null,
+     "margin_infinite": true,
+     "pass": true
+    },
+    "tv_no_growth<0.5%": {
+     "value": 0.0,
+     "limit": 0.005,
+     "margin": null,
+     "margin_infinite": true,
+     "pass": true
+    },
+    "front_series<5%": {
+     "value": 0.0042472950845003216,
+     "limit": 0.05,
+     "margin": 11.772198306273866,
+     "margin_infinite": false,
+     "pass": true
+    }
+   },
+   "stoker-wet": {
+    "shock_position<5%": {
+     "value": 0.00021023436657714858,
+     "limit": 0.05,
+     "margin": 237.82981257563222,
+     "margin_infinite": false,
+     "pass": true
+    },
+    "step_ratio<5%": {
+     "value": 5.762518619591793e-07,
+     "limit": 0.05,
+     "margin": 86767.61551799014,
+     "margin_infinite": false,
+     "pass": true
+    },
+    "plateau_h2<5%": {
+     "value": 5.762518619591793e-07,
+     "limit": 0.05,
+     "margin": 86767.61551799014,
+     "margin_infinite": false,
+     "pass": true
+    },
+    "depth_l1<5%": {
+     "value": 0.0004271934800380538,
+     "limit": 0.05,
+     "margin": 117.04298482164585,
+     "margin_infinite": false,
+     "pass": true
+    },
+    "monotone(no_extrema)": {
+     "value": 0.0,
+     "limit": 0.05,
+     "margin": null,
+     "margin_infinite": true,
+     "pass": true
+    },
+    "tv_no_growth<0.5%": {
+     "value": 0.0010049771738320779,
+     "limit": 0.005,
+     "margin": 4.9752373787103075,
+     "margin_infinite": false,
+     "pass": true
+    },
+    "bore_position_modes<5%": {
+     "value": 0.00021023519848000692,
+     "limit": 0.05,
+     "margin": 237.82887148060001,
+     "margin_infinite": false,
+     "pass": true
+    },
+    "step_ratio_modes<5%": {
+     "value": 4.8485086086606076e-08,
+     "limit": 0.05,
+     "margin": 1031244.9463467575,
+     "margin_infinite": false,
+     "pass": true
+    },
+    "front_series<5%": {
+     "value": 0.00844265997289686,
+     "limit": 0.05,
+     "margin": 5.922304126959162,
+     "margin_infinite": false,
+     "pass": true
+    }
+   }
+  },
+  "under_2x": [
+   {
+    "case": "ritter-dry",
+    "gate": "front_wetted<5%",
+    "margin": 1.7297297297297352
+   }
+  ],
+  "under_12x": [
+   {
+    "case": "ritter-dry",
+    "gate": "front_wetted<5%",
+    "margin": 1.7297297297297352
+   },
+   {
+    "case": "stoker-wet",
+    "gate": "tv_no_growth<0.5%",
+    "margin": 4.9752373787103075
+   },
+   {
+    "case": "stoker-wet",
+    "gate": "front_series<5%",
+    "margin": 5.922304126959162
+   },
+   {
+    "case": "ritter-dry",
+    "gate": "front_series<5%",
+    "margin": 11.772198306273866
+   }
+  ],
+  "smallest_finite": {
+   "case": "ritter-dry",
+   "gate": "front_wetted<5%",
+   "margin": 1.7297297297297352
+  },
+  "headline_weakest": {
+   "ritter-dry": {
+    "gates": [
+     "front_fan<5%",
+     "depth_l1<5%",
+     "front_series<5%",
+     "monotone(no_extrema)"
+    ],
+    "weakest_gate": "front_series<5%",
+    "weakest_margin": 11.772198306273866
+   },
+   "stoker-wet": {
+    "gates": [
+     "shock_position<5%",
+     "step_ratio<5%",
+     "depth_l1<5%",
+     "front_series<5%",
+     "monotone(no_extrema)"
+    ],
+    "weakest_gate": "front_series<5%",
+    "weakest_margin": 5.922304126959162
+   }
+  },
+  "acceptance_weakest": {
+   "per_case": {
+    "ritter-dry": {
+     "front_position": {
+      "gate": "front_series<5%",
+      "margin": 11.772198306273866
+     }
+    },
+    "stoker-wet": {
+     "front_position": {
+      "gate": "front_series<5%",
+      "margin": 5.922304126959162
+     },
+     "still_water_step": {
+      "gate": "step_ratio<5%",
+      "margin": 86767.61551799014
+     },
+     "monotone": {
+      "gate": "tv_no_growth<0.5%",
+      "margin": 4.9752373787103075
+     }
+    }
+   },
+   "overall": {
+    "case": "stoker-wet",
+    "element": "monotone",
+    "gate": "tv_no_growth<0.5%",
+    "margin": 4.9752373787103075
+   }
+  }
+ }
 }
