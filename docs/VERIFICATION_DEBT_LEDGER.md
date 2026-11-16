@@ -931,3 +931,30 @@
   湿床 `h1 < floor` 退化区（本单湿床下限全部 ≪ h1，仅负对照越界）。
 - 建议总账动作：把 `proposed_pool_amendment.json` 的 `configuration` + `certified_band` 合入池条目；
   `CASE-FVM-DAMBREAK-STOKER` 可升 `verified`（理由已从「数字都通过」变为「数字在其声明的配置带内通过」）。
+
+## 4s. 追加欠账（append-only，m23069 selfstart / verifier 席）
+
+### D31 CASE-FVM-DAMBREAK-STOKER 的池条目溯源审计 —— 数字全部可复现，但证据链**未冻结**，且 main 的 staleness 普查已过期
+- 结论（好消息，先说）：**池条目的全部数字能用当前源码逐位复现**——最差判据相对差 `0.0`，
+  步数 1513 / 918 完全一致；条目与生成器**逐字节相同**（14411 B），无手改、无单位滑移；
+  六门判据值全部可由工件独立重派生（drift 0）；`accepted_grid_min = 400` 由 primary 判据唯一决定
+  （只用 primary 口径也是 400），故 `front_wetted<5%` 这个被条目自标为 diagnostic 的量**没有**
+  污染接受网格。7 项溯源检查 5 PASS / 2 FAIL，审计器 5/5 注入探针全部报警（非空转）。
+- **FAIL-1（可修，机制级）**：`docs/shallow-water-dam-break/` 没有 `manifest.json`，
+  该算例**完全不在** staleness 冻结网里（53 例中无 dam-break）。含义：「生产源码改过、
+  工件没重跑」这类漂移不会被 `tests/test_source_staleness.py` 抓到，本次只是运气好（P1 证明当前无漂移）。
+  建议：为 `docs/shallow-water-dam-break/` 补 `manifest.json`（impl_files 至少含
+  `shallow_water/dam_break.py`、`swe1d.py`、`exact.py`、`scripts/run_shallow_water_dam_break.py`），
+  量化验收：`audit()` 的 `cases` +1、该例 `stale=False`、篡改 `dam_break.py` 后该例 `stale=True`。
+- **FAIL-2（可修，下一轮自动闭环）**：池条目仍缺 `dry_depth`。存档 `metrics.json` 的
+  `discretisation` 是 `run_case` 加入该键**之前**生成的（源码现已记录）。已把
+  `x_min/x_max/x_dam/dry_depth` 全部接进 `case_pool_dambreak.build_entry` 并重生成条目，
+  其中前三项已落地，`dry_depth` 待工件重生成后自动补齐；
+  量化验收：条目每个 case 的 `REQUIRED_INPUTS` 12 项全非空。
+- **顺带修 main 红测**：`test_source_staleness.py::test_live_tree_ledger_reproduces_and_ratchet_is_respected`
+  开工时失败（冻结普查 fresh=1276/changed=101 vs 实测 1253/124，23 条绑定源码被近期合并改动），
+  但 `unregistered_stale == []`（无算例新变味，棘轮未破）→ 按 `--update-ledger` 复位，19/19 通过。
+- 证据：`docs/CASE-FVM-DAMBREAK-STOKER-PROVENANCE/{REPORT.md,summary.json,SUMMARY.md,fig_provenance.png}`、
+  `scripts/audit_dambreak_pool_provenance.py`、`tests/test_dambreak_pool_provenance.py`。
+- 教训：**锚点"物理论证厚"不等于"证据链可引用"**。下次自找活优先问「这条证据链谁能独立重跑」，
+  而不是继续在同一锚点上加第 16 个物理判据。
