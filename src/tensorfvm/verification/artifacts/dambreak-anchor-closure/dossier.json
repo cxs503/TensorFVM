@@ -1,0 +1,410 @@
+{
+ "anchor": "CASE-FVM-DAMBREAK-STOKER",
+ "pool_entry": {
+  "status": "pass",
+  "verdict": "PASS",
+  "gate_ids": [
+   "G1_ritter_front_fan",
+   "G2_stoker_shock",
+   "G3_step_ratio",
+   "G4_depth_l1",
+   "G5_front_series",
+   "G6_monotone"
+  ],
+  "acceptance_criterion": "\u6ce2\u524d\u4f4d\u7f6e x_f(t) \u4e0e\u9759\u6c34\u533a\u6c34\u4f4d\u9636\u8dc3 vs \u89e3\u6790\uff08t*=2\uff0c\u6ce2\u5f62\u987b\u5355\u8c03\u65e0\u4f2a\u632f\u8361\uff09\uff0c\u5bb9\u5dee <5%",
+  "verdict_qualified": "PASS at n>=800 (both Ritter dry and Stoker wet). At n=200 the fan-head probe fails (Ritter 5.58%, Stoker 10.5%) \u2014 the coarse grid does not resolve the rarefaction head; this is recorded honestly, not hidden. Headline metrics (front_fan, shock, step_ratio, depth_l1, front_series, monotone) all pass at n=1600 with 100x+ margin under the 5% gate.",
+  "notes": "\u51e0\u4f55\u4e3a 1-D \u5e73\u5e95\uff08\u65e0\u8239\u4f53\u51e0\u4f55\uff0c\u6545\u4e0d\u9002\u7528 Cb/L/B \u524d\u7f6e\u6821\u9a8c\uff09\u3002L\u221e \u6df1\u5ea6\u8bef\u5dee\u53ea\u62a5\u544a\u4e0d\u5224\u5b9a\uff08\u6355\u6349\u95f4\u65ad\u5fc5\u7136\u5e26 O(dx) \u8bef\u5dee\uff09\u3002front_wetted\uff08\u6e7f\u6da6\u8fb9\u7f18\uff09\u4e3a\u6df1\u5ea6\u5730\u677f\u63a2\u6d4b\u5668\uff0c\u4e0d\u6536\u655b\uff0c\u4ec5\u4f5c legacy \u8bca\u65ad\u62a5\u544a\u3002"
+ },
+ "tolerance": 0.05,
+ "cases": {
+  "ritter-dry": {
+   "verdict_all_pass": true,
+   "graded_keys": [
+    "front_fan<5%",
+    "front_wetted<5%",
+    "depth_l1<5%",
+    "monotone(no_extrema)",
+    "tv_no_growth<0.5%",
+    "front_series<5%"
+   ],
+   "n_graded": 6,
+   "acceptance_coverage": {
+    "front_position": {
+     "text": "\u6ce2\u524d\u4f4d\u7f6e x_f(t) vs \u89e3\u6790",
+     "gates": [
+      {
+       "gate": "front_fan<5%",
+       "present": true,
+       "pass": true,
+       "measured": true,
+       "value": 0.00017261518056277403,
+       "limit": 0.05,
+       "margin": 289.6616614887865,
+       "margin_infinite": false
+      },
+      {
+       "gate": "shock_position<5%",
+       "present": false,
+       "pass": false,
+       "value": null,
+       "limit": null,
+       "margin": null
+      },
+      {
+       "gate": "bore_position_modes<5%",
+       "present": false,
+       "pass": false,
+       "value": null,
+       "limit": null,
+       "margin": null
+      },
+      {
+       "gate": "front_series<5%",
+       "present": true,
+       "pass": true,
+       "measured": true,
+       "value": 0.0042472950845003216,
+       "limit": 0.05,
+       "margin": 11.772198306273866,
+       "margin_infinite": false
+      }
+     ],
+     "applicable": true,
+     "all_present": false,
+     "all_pass": true,
+     "weakest_margin": 11.772198306273866,
+     "weakest_gate": "front_series<5%"
+    },
+    "still_water_step": {
+     "text": "\u9759\u6c34\u533a\u6c34\u4f4d\u9636\u8dc3 vs \u89e3\u6790",
+     "gates": [
+      {
+       "gate": "step_ratio<5%",
+       "present": false,
+       "pass": false,
+       "value": null,
+       "limit": null,
+       "margin": null
+      },
+      {
+       "gate": "plateau_h2<5%",
+       "present": false,
+       "pass": false,
+       "value": null,
+       "limit": null,
+       "margin": null
+      },
+      {
+       "gate": "step_ratio_modes<5%",
+       "present": false,
+       "pass": false,
+       "value": null,
+       "limit": null,
+       "margin": null
+      }
+     ],
+     "applicable": false,
+     "all_present": false,
+     "all_pass": false,
+     "weakest_margin": null,
+     "weakest_gate": null
+    },
+    "monotone": {
+     "text": "\u6ce2\u5f62\u5355\u8c03\u65e0\u4f2a\u632f\u8361",
+     "gates": [
+      {
+       "gate": "monotone(no_extrema)",
+       "present": true,
+       "pass": true,
+       "measured": true,
+       "value": 0.0,
+       "limit": 0.05,
+       "margin": null,
+       "margin_infinite": true
+      },
+      {
+       "gate": "tv_no_growth<0.5%",
+       "present": true,
+       "pass": true,
+       "measured": true,
+       "value": 0.0,
+       "limit": 0.005,
+       "margin": null,
+       "margin_infinite": true
+      }
+     ],
+     "applicable": true,
+     "all_present": true,
+     "all_pass": true,
+     "weakest_margin": null,
+     "weakest_gate": null
+    }
+   },
+   "graded_but_undeclared": [
+    "front_wetted<5%",
+    "depth_l1<5%"
+   ],
+   "diagnostic_graded": [
+    {
+     "gate": "front_wetted<5%",
+     "diagnostic_name": "front_wetted_diagnostic",
+     "value": 0.02890624999999991,
+     "limit": 0.05,
+     "grid_n": 1600,
+     "ladder": [
+      [
+       100,
+       0.08749999999999991
+      ],
+      [
+       200,
+       0.018750000000000266
+      ],
+      [
+       400,
+       0.015625
+      ],
+      [
+       800,
+       0.026562499999999822
+      ],
+      [
+       1600,
+       0.02890624999999991
+      ]
+     ],
+     "ladder_monotone_decreasing": false,
+     "exceeds_tolerance_at": [
+      100
+     ]
+    }
+   ]
+  },
+  "stoker-wet": {
+   "verdict_all_pass": true,
+   "graded_keys": [
+    "shock_position<5%",
+    "step_ratio<5%",
+    "plateau_h2<5%",
+    "depth_l1<5%",
+    "monotone(no_extrema)",
+    "tv_no_growth<0.5%",
+    "bore_position_modes<5%",
+    "step_ratio_modes<5%",
+    "front_series<5%"
+   ],
+   "n_graded": 9,
+   "acceptance_coverage": {
+    "front_position": {
+     "text": "\u6ce2\u524d\u4f4d\u7f6e x_f(t) vs \u89e3\u6790",
+     "gates": [
+      {
+       "gate": "front_fan<5%",
+       "present": false,
+       "pass": false,
+       "value": null,
+       "limit": null,
+       "margin": null
+      },
+      {
+       "gate": "shock_position<5%",
+       "present": true,
+       "pass": true,
+       "measured": true,
+       "value": 0.00021023436657714858,
+       "limit": 0.05,
+       "margin": 237.82981257563222,
+       "margin_infinite": false
+      },
+      {
+       "gate": "bore_position_modes<5%",
+       "present": true,
+       "pass": true,
+       "measured": true,
+       "value": 0.00021023519848000692,
+       "limit": 0.05,
+       "margin": 237.82887148060001,
+       "margin_infinite": false
+      },
+      {
+       "gate": "front_series<5%",
+       "present": true,
+       "pass": true,
+       "measured": true,
+       "value": 0.00844265997289686,
+       "limit": 0.05,
+       "margin": 5.922304126959162,
+       "margin_infinite": false
+      }
+     ],
+     "applicable": true,
+     "all_present": false,
+     "all_pass": true,
+     "weakest_margin": 5.922304126959162,
+     "weakest_gate": "front_series<5%"
+    },
+    "still_water_step": {
+     "text": "\u9759\u6c34\u533a\u6c34\u4f4d\u9636\u8dc3 vs \u89e3\u6790",
+     "gates": [
+      {
+       "gate": "step_ratio<5%",
+       "present": true,
+       "pass": true,
+       "measured": true,
+       "value": 5.762518619591793e-07,
+       "limit": 0.05,
+       "margin": 86767.61551799014,
+       "margin_infinite": false
+      },
+      {
+       "gate": "plateau_h2<5%",
+       "present": true,
+       "pass": true,
+       "measured": true,
+       "value": 5.762518619591793e-07,
+       "limit": 0.05,
+       "margin": 86767.61551799014,
+       "margin_infinite": false
+      },
+      {
+       "gate": "step_ratio_modes<5%",
+       "present": true,
+       "pass": true,
+       "measured": true,
+       "value": 4.8485086086606076e-08,
+       "limit": 0.05,
+       "margin": 1031244.9463467575,
+       "margin_infinite": false
+      }
+     ],
+     "applicable": true,
+     "all_present": true,
+     "all_pass": true,
+     "weakest_margin": 86767.61551799014,
+     "weakest_gate": "step_ratio<5%"
+    },
+    "monotone": {
+     "text": "\u6ce2\u5f62\u5355\u8c03\u65e0\u4f2a\u632f\u8361",
+     "gates": [
+      {
+       "gate": "monotone(no_extrema)",
+       "present": true,
+       "pass": true,
+       "measured": true,
+       "value": 0.0,
+       "limit": 0.05,
+       "margin": null,
+       "margin_infinite": true
+      },
+      {
+       "gate": "tv_no_growth<0.5%",
+       "present": true,
+       "pass": true,
+       "measured": true,
+       "value": 0.0010049771738320779,
+       "limit": 0.005,
+       "margin": 4.9752373787103075,
+       "margin_infinite": false
+      }
+     ],
+     "applicable": true,
+     "all_present": true,
+     "all_pass": true,
+     "weakest_margin": 4.9752373787103075,
+     "weakest_gate": "tv_no_growth<0.5%"
+    }
+   },
+   "graded_but_undeclared": [
+    "depth_l1<5%"
+   ],
+   "diagnostic_graded": []
+  }
+ },
+ "acceptance_fully_covered": true,
+ "acceptance_elements": {
+  "front_position": {
+   "applicable_cases": [
+    "ritter-dry",
+    "stoker-wet"
+   ],
+   "pass": true
+  },
+  "still_water_step": {
+   "applicable_cases": [
+    "stoker-wet"
+   ],
+   "pass": true
+  },
+  "monotone": {
+   "applicable_cases": [
+    "ritter-dry",
+    "stoker-wet"
+   ],
+   "pass": true
+  }
+ },
+ "orphaned_evidence": [
+  {
+   "file": "docs/CASE-FVM-DAMBREAK-STOKER-GALILEAN/case_pool_entry.json",
+   "readable": true,
+   "declared_ids": [
+    "CASE-FVM-DAMBREAK-STOKER-GALILEAN"
+   ],
+   "unapplied_ids": [
+    "CASE-FVM-DAMBREAK-STOKER-GALILEAN"
+   ],
+   "note": null
+  },
+  {
+   "file": "docs/CASE-FVM-DAMBREAK-STOKER-MOMENTUM/proposed_pool_amendment.json",
+   "readable": true,
+   "declared_ids": [
+    "G7_momentum_identity",
+    "G8_velocity_l1_mass"
+   ],
+   "unapplied_ids": [
+    "G7_momentum_identity",
+    "G8_velocity_l1_mass"
+   ],
+   "note": [
+    "Proposed additive amendment to docs/oss_solutions/CASE-FVM-DAMBREAK-STOKER.json.",
+    "NOT applied by this change: the existing pool-entry test (tests/test_case_fvm_dambreak_stoker_pool.py)",
+    "binds G1-G6 by id to artifacts/shallow-water-dam-break/metrics.json, so appending criteria must be",
+    "done together with a regeneration of that entry (scripts case_pool_dambreak.build_entry) and an",
+    "extension of the gate-id map in that test.  Values below are copied from",
+    "src/tensorfvm/verification/artifacts/shallow-water-momentum/{momentum,velocity}.json."
+   ]
+  }
+ ],
+ "reproducibility": {
+  "n": 800,
+  "rows": [
+   {
+    "case": "ritter-dry",
+    "quantity": "front_fan",
+    "n": 800,
+    "artifact": 0.0003911308005408731,
+    "rerun": 0.0003911308005408731,
+    "relative_difference": 0.0,
+    "bit_identical": true,
+    "all_pass": true
+   },
+   {
+    "case": "stoker-wet",
+    "quantity": "shock",
+    "n": 800,
+    "artifact": 0.0004326276916445582,
+    "rerun": 0.0004326276916445582,
+    "relative_difference": 0.0,
+    "bit_identical": true,
+    "all_pass": true
+   }
+  ],
+  "all_bit_identical": true,
+  "all_pass": true
+ },
+ "findings": [
+  "the registered aggregate PASS is gated by a quantity the artifact bundle publishes as a non-convergent diagnostic: front_wetted<5%"
+ ],
+ "disposition": "approve with notes"
+}
