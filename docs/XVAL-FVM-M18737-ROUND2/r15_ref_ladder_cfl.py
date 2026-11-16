@@ -312,9 +312,9 @@ def main() -> None:
         raise FileNotFoundError(R13.profile_path(NEW_NX, NEW_TAG))
     prof["metrics"] = R13.load_metrics(NEW_NX, NEW_TAG)
     e0 = R13.genuineness(NEW_NX, prof)
-    e1r6400 = e1r6400()
+    e1r6400_res = e1r6400()
 
-    admitted = bool(e0["pass"] and e1r6400 and e1r6400["admitted"])
+    admitted = bool(e0["pass"] and e1r6400_res and e1r6400_res["admitted"])
     if admitted:
         R13.REF_LADDER_TAGS = (
             (NEW_NX, (NEW_TAG, CANON_TAG)),
@@ -328,17 +328,17 @@ def main() -> None:
     v["jobs"] = {"cj4398": ("nx6400_weno5_cfl0.8",
                             "the missing reference rung nx=6400 CFL 0.8 (E4 license)")}
     v["E0_new_rung"] = e0
-    v["E1r6400_cfl_reference"] = e1r6400
+    v["E1r6400_cfl_reference"] = e1r6400_res
     v["r15_admitted"] = admitted
     v["invariants_vs_r14"] = inv
     if not args.no_figures:
-        v["figures"] = figures(v, args.figures, e1r6400)
+        v["figures"] = figures(v, args.figures, e1r6400_res)
     args.json.write_text(json.dumps(v, indent=2) + "\n")
     if args.markdown:
-        args.markdown.write_text(render(v, e0, e1r6400, inv, r14))
+        args.markdown.write_text(render(v, e0, e1r6400_res, inv, r14))
     print(json.dumps({"status": v["status"], "adjudication": v["adjudication"],
                       "E0_pass": e0["pass"],
-                      "E1r6400": (e1r6400["l1_percent"] if e1r6400 else None),
+                      "E1r6400": (e1r6400_res["l1_percent"] if e1r6400_res else None),
                       "admitted": admitted,
                       "licensed": v["E4_honest_ceiling"].get("licensed"),
                       "invariants_ok": inv["ok"],
