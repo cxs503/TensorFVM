@@ -55,6 +55,30 @@ def test_lattice_stride_bounds_selected_cells():
             assert (n // (stride - 1)) ** 2 > 4096
 
 
+def test_single_cell_axis_is_not_thinned_and_strided_selection_is_not_empty():
+    """An ``n x n x 1`` mesh must thin only the two in-plane axes.
+
+    Regression for a real defect: the ``i % stride == 0`` mask was applied on
+    every axis, but the spanwise axis of the extruded meshes holds one cell whose
+    recovered lattice index is float noise (``round(0.5/h - 1/2)`` gives 15, 31,
+    63 for n = 32, 64, 128).  As soon as ``stride > 1`` the odd index made the
+    mask empty, so ``write_text_evidence`` raised "downsample selected no cells"
+    and no pack could be written for the *finest* levels -- exactly the ones the
+    text channel exists for.
+    """
+    for n, expected_stride in ((128, 2), (256, 4), (512, 8)):
+        centres, volumes = _lattice(n)
+        centres = centres.copy()
+        centres[:, 2] = 0.5                      # as produced by the extruded mesh
+        stride = lattice_stride(centres, n, max_cells=4096)
+        assert stride == expected_stride
+        index = lattice_indices(centres, n, stride)
+        assert index.size == (n // stride) ** 2
+        assert np.unique(index).size == index.size
+        # the spanwise coordinate must be kept: every selected cell is on the plane
+        assert np.allclose(centres[index, 2], 0.5)
+
+
 def test_lattice_indices_unique_and_complete_at_stride_one():
     centres, _ = _lattice(16)
     index = lattice_indices(centres, 16, 1)
