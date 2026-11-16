@@ -1,0 +1,291 @@
+{
+ "round": 30,
+ "case": "CASE-FVM-PERIODIC-HILLS",
+ "purpose": "complete the dt=0.01 ladder left open by round 29: grade the local 96x48 dt=0.01 control, fold in the 144x72 dt=0.01 rung measured by cluster job cj4442, and settle whether the +42-53 % x_r/H error is a step/grid artefact or a 2-D model limitation",
+ "reference": {
+  "x_r_over_H": 5.41,
+  "band_10pct": [
+   4.869000000000001,
+   5.9510000000000005
+  ],
+  "source": "ERCOFTAC Knowledge Base Wiki, UFR 3-30 Evaluation; Breuer et al. 2009, Comput. Fluids 38:433, doi:10.1016/j.compfluid.2008.05.002"
+ },
+ "protocol": {
+  "closure": "laminar (nu_t == 0)",
+  "reynolds": 2800.0,
+  "operator": "certified wall_shear_bubbles.separation_reattachment on stored mean wall shear; bubble_object_report for objects",
+  "averaging_window_t": [
+   160.0,
+   400.0
+  ]
+ },
+ "levels": [
+  {
+   "stem": "round20_laminar_Re2800_96x48",
+   "mesh": null,
+   "dt": null,
+   "samples": 601,
+   "max_abs_u": 1.3672256848639261,
+   "stationarity_ok": null,
+   "stationarity_spread": null,
+   "status": "ok",
+   "x_r_over_H_largest_area": 8.264277859446059,
+   "x_r_over_H_first": 1.2540965527208672,
+   "x_s_over_H_largest_area": 3.922900531823629,
+   "x_s_over_H_first": 0.40074469529249757,
+   "n_bubbles": 2,
+   "flag": "object_mismatch",
+   "profile_stations": [
+    {
+     "x_over_H": 1.0,
+     "u_over_Ub_computed": -0.015323218429275436,
+     "u_over_Ub_reference": -0.046128718374354914,
+     "delta": 0.03080549994507948,
+     "band": "absolute",
+     "error": 0.03080549994507948,
+     "pass": true
+    },
+    {
+     "x_over_H": 2.0,
+     "u_over_Ub_computed": 0.019925057922356725,
+     "u_over_Ub_reference": -0.09122729012512827,
+     "delta": 0.111152348047485,
+     "band": "absolute",
+     "error": 0.111152348047485,
+     "pass": false
+    },
+    {
+     "x_over_H": 3.0,
+     "u_over_Ub_computed": 0.005506398250685269,
+     "u_over_Ub_reference": 0.0041277188021116165,
+     "delta": 0.001378679448573652,
+     "band": "absolute",
+     "error": 0.001378679448573652,
+     "pass": true
+    },
+    {
+     "x_over_H": 4.0,
+     "u_over_Ub_computed": -0.0036443052250094607,
+     "u_over_Ub_reference": 0.11981606788535129,
+     "delta": -0.12346037311036075,
+     "band": "relative",
+     "error": 1.0304158306087676,
+     "pass": false
+    },
+    {
+     "x_over_H": 5.0,
+     "u_over_Ub_computed": -0.06885910292102816,
+     "u_over_Ub_reference": 0.2182851836848996,
+     "delta": -0.2871442866059278,
+     "band": "relative",
+     "error": 1.315454772324026,
+     "pass": false
+    },
+    {
+     "x_over_H": 6.0,
+     "u_over_Ub_computed": -0.19636649643104642,
+     "u_over_Ub_reference": 0.2876299221105056,
+     "delta": -0.483996418541552,
+     "band": "relative",
+     "error": 1.6827053840233064,
+     "pass": false
+    },
+    {
+     "x_over_H": 7.0,
+     "u_over_Ub_computed": -0.2582580180889824,
+     "u_over_Ub_reference": 0.31413237261839405,
+     "delta": -0.5723903907073764,
+     "band": "relative",
+     "error": 1.8221311797199344,
+     "pass": false
+    },
+    {
+     "x_over_H": 8.0,
+     "u_over_Ub_computed": -0.1345892229446242,
+     "u_over_Ub_reference": 0.22375151815927136,
+     "delta": -0.3583407411038956,
+     "band": "relative",
+     "error": 1.601511998898799,
+     "pass": false
+    }
+   ],
+   "profile_pass_count": 2,
+   "x_r_over_H": 8.264277859446059,
+   "x_r_error": 0.5275929499900294,
+   "x_r_in_band": false
+  },
+  {
+   "stem": "round20_laminar_Re2800_96x48dt01",
+   "mesh": null,
+   "dt": null,
+   "samples": 1201,
+   "max_abs_u": 1.3795536514335174,
+   "stationarity_ok": null,
+   "stationarity_spread": null,
+   "status": "ok",
+   "x_r_over_H_largest_area": 8.22962080445255,
+   "x_r_over_H_first": 1.2870199739172996,
+   "x_s_over_H_largest_area": 3.684136357648673,
+   "x_s_over_H_first": 0.40230633821677486,
+   "n_bubbles": 2,
+   "flag": "object_mismatch",
+   "profile_stations": [
+    {
+     "x_over_H": 1.0,
+     "u_over_Ub_computed": -0.01754738097820926,
+     "u_over_Ub_reference": -0.046128718374354914,
+     "delta": 0.028581337396145653,
+     "band": "absolute",
+     "error": 0.028581337396145653,
+     "pass": true
+    },
+    {
+     "x_over_H": 2.0,
+     "u_over_Ub_computed": 0.038280177899866916,
+     "u_over_Ub_reference": -0.09122729012512827,
+     "delta": 0.1295074680249952,
+     "band": "absolute",
+     "error": 0.1295074680249952,
+     "pass": false
+    },
+    {
+     "x_over_H": 3.0,
+     "u_over_Ub_computed": 0.02667112019008156,
+     "u_over_Ub_reference": 0.0041277188021116165,
+     "delta": 0.022543401387969945,
+     "band": "absolute",
+     "error": 0.022543401387969945,
+     "pass": true
+    },
+    {
+     "x_over_H": 4.0,
+     "u_over_Ub_computed": -0.030663795697239562,
+     "u_over_Ub_reference": 0.11981606788535129,
+     "delta": -0.15047986358259086,
+     "band": "relative",
+     "error": 1.2559239026820752,
+     "pass": false
+    },
+    {
+     "x_over_H": 5.0,
+     "u_over_Ub_computed": -0.1380622130073832,
+     "u_over_Ub_reference": 0.2182851836848996,
+     "delta": -0.35634739669228277,
+     "band": "relative",
+     "error": 1.6324854975346361,
+     "pass": false
+    },
+    {
+     "x_over_H": 6.0,
+     "u_over_Ub_computed": -0.21532302282118326,
+     "u_over_Ub_reference": 0.2876299221105056,
+     "delta": -0.5029529449316889,
+     "band": "relative",
+     "error": 1.7486113448880243,
+     "pass": false
+    },
+    {
+     "x_over_H": 7.0,
+     "u_over_Ub_computed": -0.2558399937994687,
+     "u_over_Ub_reference": 0.31413237261839405,
+     "delta": -0.5699723664178628,
+     "band": "relative",
+     "error": 1.814433710435382,
+     "pass": false
+    },
+    {
+     "x_over_H": 8.0,
+     "u_over_Ub_computed": -0.10680365712781743,
+     "u_over_Ub_reference": 0.22375151815927136,
+     "delta": -0.3305551752870888,
+     "band": "relative",
+     "error": 1.4773315417318964,
+     "pass": false
+    }
+   ],
+   "profile_pass_count": 2,
+   "x_r_over_H": 8.22962080445255,
+   "x_r_error": 0.5211868400097134,
+   "x_r_in_band": false
+  },
+  {
+   "stem": "round25_laminar_Re2800_144x72 (job cj4442)",
+   "mesh": [
+    144,
+    72
+   ],
+   "dt": 0.01,
+   "provenance": "cluster job cj4442, node n330, rc=0, wall_clock_s=1033.31; values from /srv/tensor/agent/cluster/jobs/cj4442.log final JSON",
+   "status": "ok",
+   "x_r_over_H": 7.840952488245807,
+   "x_r_over_H_first": 1.0038143737682064,
+   "x_s_over_H": 2.673237190661117,
+   "x_s_over_H_first": 0.36875122050675085,
+   "x_r_over_H_by_block": [
+    7.717661989904302,
+    7.923185711379816,
+    7.943962395622469,
+    7.764380808543456
+   ],
+   "x_r_error": 0.449344267697931,
+   "x_r_in_band": false,
+   "profile_stations": null,
+   "profile_pass_count": null,
+   "note": "npz not retrievable (fetch = submission snapshot); log-only rung"
+  },
+  {
+   "stem": "round25_laminar_Re2800_192x96",
+   "mesh": [
+    192,
+    96
+   ],
+   "dt": 0.01,
+   "status": "RUNNING",
+   "job": "cj4445",
+   "x_r_over_H": null
+  },
+  {
+   "stem": "round25_laminar_Re2800_240x120",
+   "mesh": [
+    240,
+    120
+   ],
+   "dt": 0.01,
+   "status": "RUNNING",
+   "job": "cj4446",
+   "x_r_over_H": null
+  }
+ ],
+ "dt_control": {
+  "mesh": [
+   96,
+   48
+  ],
+  "dt_coarse": null,
+  "dt_fine": null,
+  "x_r_coarse": 8.264277859446059,
+  "x_r_fine": 8.22962080445255,
+  "delta_rel": -0.004193597502762627,
+  "conclusion": "halving dt moves x_r/H by 0.42 % -> time discretisation is not the error source"
+ },
+ "grid_ladder": {
+  "rungs": [
+   [
+    96,
+    8.264277859446059
+   ],
+   [
+    144,
+    7.840952488245807
+   ]
+  ],
+  "richardson_p1_extrapolated": 6.994301745845303,
+  "extrapolated_error": 0.29284690311373435,
+  "note": "even the grid-extrapolated 2-D laminar solution misses the DNS band by a wide margin: model-form error, not discretisation"
+ },
+ "verdict": {
+  "x_r_pass": false,
+  "profile_pass": false,
+  "reason": "dt control: 0.4 % effect; grid 96->144: -5.1 %; p=1 extrapolation lands at 6.99 (+29 %). 2-D laminar (and 2-D SST, +40-42 %) cannot represent the 3-D turbulent reattachment of the Breuer DNS; the anchor's <10 % gate needs a 3-D unsteady model (LES/DES), out of single-ticket scope"
+ }
+}
