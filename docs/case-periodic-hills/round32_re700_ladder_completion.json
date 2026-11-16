@@ -1,0 +1,145 @@
+{
+ "round": 32,
+ "case": "CASE-FVM-PERIODIC-HILLS",
+ "purpose": "Re=700 grid ladder completed (144x72, 192x96) + first y/H=0.5 profile grading at Re=700 vs primary DNS; pre-registered discretisation attribution",
+ "reynolds": 700.0,
+ "reference": {
+  "x_r_over_H": 5.24,
+  "tolerance": 0.1,
+  "band": [
+   4.716,
+   5.764000000000001
+  ],
+  "source": "ERCOFTAC KB UFR 3-30 Evaluation (x_r) + case-1 DNS profile files (u/U_b at y/H=0.5), Breuer et al. 2009"
+ },
+ "protocol": {
+  "closure": "laminar (nu_t == 0)",
+  "dt": 0.02,
+  "steps": 20000,
+  "burn_in_steps": 8000,
+  "averaging_window_t": [
+   160.0,
+   400.0
+  ],
+  "operator": "certified wall_shear_bubbles.separation_reattachment on stored mean wall shear",
+  "jobs": {
+   "144x72": "cj4666",
+   "192x96": "cj4667"
+  }
+ },
+ "rows": [
+  {
+   "tag": "96x48",
+   "present": true,
+   "x_r_over_H": 8.078373744983194,
+   "x_s_over_H": 2.569649929176422,
+   "status": "out_of_window",
+   "n_bubbles": 2,
+   "all_crossings": [
+    0.3468872701547025,
+    1.2552394632440118,
+    2.569649929176422,
+    8.078373744983194
+   ],
+   "reference_x_r_over_H": 5.24,
+   "error": 0.5416743788135866,
+   "below_10": false,
+   "below_3": false,
+   "profile_stations": [
+    {
+     "x_over_H": 1.0,
+     "reference": -0.0034399374959899714,
+     "computed": -0.015037942766615327,
+     "band": "absolute",
+     "error": 0.011598005270625355,
+     "pass": true
+    },
+    {
+     "x_over_H": 2.0,
+     "reference": -0.11382630381587919,
+     "computed": 0.0282617284291803,
+     "band": "relative",
+     "error": 1.2482882030053029,
+     "pass": false
+    },
+    {
+     "x_over_H": 3.0,
+     "reference": -0.015151100478930313,
+     "computed": -0.021725754016300187,
+     "band": "absolute",
+     "error": 0.006574653537369874,
+     "pass": true
+    },
+    {
+     "x_over_H": 4.0,
+     "reference": 0.12983033389013754,
+     "computed": -0.06275241607951318,
+     "band": "relative",
+     "error": 1.48334171375246,
+     "pass": false
+    },
+    {
+     "x_over_H": 5.0,
+     "reference": 0.26103943375423794,
+     "computed": -0.1075936404655952,
+     "band": "relative",
+     "error": 1.4121738961742154,
+     "pass": false
+    },
+    {
+     "x_over_H": 6.0,
+     "reference": 0.3468078270150706,
+     "computed": -0.15114039133715584,
+     "band": "relative",
+     "error": 1.4358044414337512,
+     "pass": false
+    },
+    {
+     "x_over_H": 7.0,
+     "reference": 0.3757287237270334,
+     "computed": -0.1847439159622447,
+     "band": "relative",
+     "error": 1.4916949498289116,
+     "pass": false
+    },
+    {
+     "x_over_H": 8.0,
+     "reference": 0.197900292865223,
+     "computed": -0.022907385471499814,
+     "band": "relative",
+     "error": 1.115752155491253,
+     "pass": false
+    }
+   ],
+   "profile_pass_count": 2,
+   "payload_x_r_over_H": 8.078373744983194,
+   "stationarity_ok": true,
+   "wall_clock_s": 198.11810207366943,
+   "samples": 601
+  },
+  {
+   "tag": "144x72",
+   "present": false,
+   "x_r_over_H": null,
+   "x_s_over_H": null,
+   "status": "ABSENT",
+   "n_bubbles": null,
+   "error": null,
+   "below_10": null,
+   "below_3": null
+  },
+  {
+   "tag": "192x96",
+   "present": false,
+   "x_r_over_H": null,
+   "x_s_over_H": null,
+   "status": "ABSENT",
+   "n_bubbles": null,
+   "error": null,
+   "below_10": null,
+   "below_3": null
+  }
+ ],
+ "n_measured": 1,
+ "attribution": null
+}
