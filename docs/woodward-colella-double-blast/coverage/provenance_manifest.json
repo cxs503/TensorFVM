@@ -1,26 +1,19 @@
 {
   "bundle": "docs/woodward-colella-double-blast",
   "absolute_path_records": {
-    "count": 21,
+    "count": 14,
     "distinct_targets": [
       "/root/tp-agent/work/m17116/docs/woodward-colella-double-blast/reference/reference_density.csv",
       "/root/tp-agent/work/m17523/docs/woodward-colella-double-blast/reference/reference_density.csv",
       "/root/tp-agent/work/m18040/docs/woodward-colella-double-blast/reference/reference_density.csv",
-      "/root/tp-agent/work/m19924/docs/woodward-colella-double-blast/reference/reference_density.csv",
-      "/root/tp-agent/work/m20318/docs/woodward-colella-double-blast/reference/reference_density_calibrated.csv",
-      "/root/tp-agent/work/m20591/docs/woodward-colella-double-blast/artifacts/wc_blast_profile_nx400.npz",
-      "/root/tp-agent/work/m20591/docs/woodward-colella-double-blast/artifacts/wc_blast_profile_nx800.npz",
-      "/root/tp-agent/work/m20591/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx1600_hllc.npz",
-      "/root/tp-agent/work/m20591/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx1600_weno5.npz",
-      "/root/tp-agent/work/m20591/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx200_hllc.npz",
-      "/root/tp-agent/work/m20591/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx200_hllc_limiterminmod_cfl0.2.npz",
-      "/root/tp-agent/work/m20591/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx200_weno5.npz",
-      "/root/tp-agent/work/m20591/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx3200_hllc.npz",
-      "/root/tp-agent/work/m20591/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx3200_weno5.npz",
-      "/root/tp-agent/work/m20591/docs/woodward-colella-double-blast/reference/reference_density.csv",
+      "/root/tp-agent/work/m20864/docs/woodward-colella-double-blast/reference/reference_density.csv",
+      "/root/tp-agent/work/m20864/docs/woodward-colella-double-blast/reference/reference_density_calibrated.csv",
+      "/root/tp-agent/work/m20949/docs/woodward-colella-double-blast/reference/reference_density_calibrated.csv",
+      "/root/tp-agent/work/m22234/docs/woodward-colella-double-blast/reference/reference_density.csv",
+      "/root/tp-agent/work/m22453/docs/woodward-colella-double-blast/reference/reference_density.csv",
       "/tmp/wc.pdf"
     ],
-    "identical_verified": 13,
+    "identical_verified": 6,
     "contradicted": [],
     "unverifiable_source_gone": 8,
     "fields": [
@@ -28,24 +21,12 @@
         "artifact": "docs/woodward-colella-double-blast/case_pool_entry.json",
         "line": 20,
         "field": "path",
-        "recorded": "/root/tp-agent/work/m20318/docs/woodward-colella-double-blast/reference/reference_density_calibrated.csv",
+        "recorded": "/root/tp-agent/work/m20949/docs/woodward-colella-double-blast/reference/reference_density_calibrated.csv",
         "repo_relative": "docs/woodward-colella-double-blast/reference/reference_density_calibrated.csv",
         "target_exists_in_repo": true,
         "source_present": true,
         "sha256_recorded": "4938617c600aabc7fd1c31e05aac18ccdb785ae7a0506fd028fb65e728d210d0",
         "sha256_repo": "4938617c600aabc7fd1c31e05aac18ccdb785ae7a0506fd028fb65e728d210d0",
-        "identical": true
-      },
-      {
-        "artifact": "docs/woodward-colella-double-blast/ladder/data/asymptotic_analysis.json",
-        "line": 4,
-        "field": "committed_raw",
-        "recorded": "/root/tp-agent/work/m19924/docs/woodward-colella-double-blast/reference/reference_density.csv",
-        "repo_relative": "docs/woodward-colella-double-blast/reference/reference_density.csv",
-        "target_exists_in_repo": true,
-        "source_present": true,
-        "sha256_recorded": "25e53c149c0d6b7a1e676a844ba488e365a9f3409de703e047216a547254d093",
-        "sha256_repo": "25e53c149c0d6b7a1e676a844ba488e365a9f3409de703e047216a547254d093",
         "identical": true
       },
       {
@@ -109,10 +90,10 @@
         "identical": null
       },
       {
-        "artifact": "docs/woodward-colella-double-blast/ladder/data/plateau_convergence.json",
-        "line": 6,
-        "field": "path",
-        "recorded": "/root/tp-agent/work/m20591/docs/woodward-colella-double-blast/reference/reference_density.csv",
+        "artifact": "docs/woodward-colella-double-blast/ladder/data/ladder_metrics_nx400_weno5.json",
+        "line": 72,
+        "field": "reference",
+        "recorded": "/root/tp-agent/work/m22234/docs/woodward-colella-double-blast/reference/reference_density.csv",
         "repo_relative": "docs/woodward-colella-double-blast/reference/reference_density.csv",
         "target_exists_in_repo": true,
         "source_present": true,
@@ -121,111 +102,39 @@
         "identical": true
       },
       {
-        "artifact": "docs/woodward-colella-double-blast/ladder/data/plateau_convergence.json",
-        "line": 117,
-        "field": "path",
-        "recorded": "/root/tp-agent/work/m20591/docs/woodward-colella-double-blast/artifacts/wc_blast_profile_nx400.npz",
-        "repo_relative": "docs/woodward-colella-double-blast/artifacts/wc_blast_profile_nx400.npz",
+        "artifact": "docs/woodward-colella-double-blast/ladder/data/ladder_metrics_nx800_weno5.json",
+        "line": 72,
+        "field": "reference",
+        "recorded": "/root/tp-agent/work/m22234/docs/woodward-colella-double-blast/reference/reference_density.csv",
+        "repo_relative": "docs/woodward-colella-double-blast/reference/reference_density.csv",
         "target_exists_in_repo": true,
         "source_present": true,
-        "sha256_recorded": "c20847710244393dbea415db65db71d8d29f9eb1d82500a7382c5e5ae45f2dc7",
-        "sha256_repo": "c20847710244393dbea415db65db71d8d29f9eb1d82500a7382c5e5ae45f2dc7",
+        "sha256_recorded": "25e53c149c0d6b7a1e676a844ba488e365a9f3409de703e047216a547254d093",
+        "sha256_repo": "25e53c149c0d6b7a1e676a844ba488e365a9f3409de703e047216a547254d093",
         "identical": true
       },
       {
-        "artifact": "docs/woodward-colella-double-blast/ladder/data/plateau_convergence.json",
-        "line": 193,
-        "field": "path",
-        "recorded": "/root/tp-agent/work/m20591/docs/woodward-colella-double-blast/artifacts/wc_blast_profile_nx800.npz",
-        "repo_relative": "docs/woodward-colella-double-blast/artifacts/wc_blast_profile_nx800.npz",
+        "artifact": "docs/woodward-colella-double-blast/pyclaw/highres/results.json",
+        "line": 112,
+        "field": "reference",
+        "recorded": "/root/tp-agent/work/m20864/docs/woodward-colella-double-blast/reference/reference_density.csv",
+        "repo_relative": "docs/woodward-colella-double-blast/reference/reference_density.csv",
         "target_exists_in_repo": true,
         "source_present": true,
-        "sha256_recorded": "dc791caa9c4392906bc0f0bd86621aebba6b1bca06d8eba29898fdc6d224cf18",
-        "sha256_repo": "dc791caa9c4392906bc0f0bd86621aebba6b1bca06d8eba29898fdc6d224cf18",
+        "sha256_recorded": "25e53c149c0d6b7a1e676a844ba488e365a9f3409de703e047216a547254d093",
+        "sha256_repo": "25e53c149c0d6b7a1e676a844ba488e365a9f3409de703e047216a547254d093",
         "identical": true
       },
       {
-        "artifact": "docs/woodward-colella-double-blast/ladder/data/plateau_convergence.json",
-        "line": 269,
-        "field": "path",
-        "recorded": "/root/tp-agent/work/m20591/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx1600_hllc.npz",
-        "repo_relative": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx1600_hllc.npz",
+        "artifact": "docs/woodward-colella-double-blast/pyclaw/highres/results.json",
+        "line": 119,
+        "field": "reference",
+        "recorded": "/root/tp-agent/work/m20864/docs/woodward-colella-double-blast/reference/reference_density_calibrated.csv",
+        "repo_relative": "docs/woodward-colella-double-blast/reference/reference_density_calibrated.csv",
         "target_exists_in_repo": true,
         "source_present": true,
-        "sha256_recorded": "282aa2d0b03b12dcc7a4dd222aa11a7910b59b4bbf61933606548fef7709a830",
-        "sha256_repo": "282aa2d0b03b12dcc7a4dd222aa11a7910b59b4bbf61933606548fef7709a830",
-        "identical": true
-      },
-      {
-        "artifact": "docs/woodward-colella-double-blast/ladder/data/plateau_convergence.json",
-        "line": 345,
-        "field": "path",
-        "recorded": "/root/tp-agent/work/m20591/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx1600_weno5.npz",
-        "repo_relative": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx1600_weno5.npz",
-        "target_exists_in_repo": true,
-        "source_present": true,
-        "sha256_recorded": "1c664f5737be52ca1311dcf769d883e944e9928e66274382532bfa8eb3c6fe5b",
-        "sha256_repo": "1c664f5737be52ca1311dcf769d883e944e9928e66274382532bfa8eb3c6fe5b",
-        "identical": true
-      },
-      {
-        "artifact": "docs/woodward-colella-double-blast/ladder/data/plateau_convergence.json",
-        "line": 421,
-        "field": "path",
-        "recorded": "/root/tp-agent/work/m20591/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx200_hllc.npz",
-        "repo_relative": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx200_hllc.npz",
-        "target_exists_in_repo": true,
-        "source_present": true,
-        "sha256_recorded": "b78d1d0b04ac20d75302d1c6d5f25546f166d796e7756f5b3bfe97f11312e96e",
-        "sha256_repo": "b78d1d0b04ac20d75302d1c6d5f25546f166d796e7756f5b3bfe97f11312e96e",
-        "identical": true
-      },
-      {
-        "artifact": "docs/woodward-colella-double-blast/ladder/data/plateau_convergence.json",
-        "line": 497,
-        "field": "path",
-        "recorded": "/root/tp-agent/work/m20591/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx200_hllc_limiterminmod_cfl0.2.npz",
-        "repo_relative": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx200_hllc_limiterminmod_cfl0.2.npz",
-        "target_exists_in_repo": true,
-        "source_present": true,
-        "sha256_recorded": "2c0025b02717ec5d3b7db1589b3576b46778cc5414c7b1b176825ec06f2c90a2",
-        "sha256_repo": "2c0025b02717ec5d3b7db1589b3576b46778cc5414c7b1b176825ec06f2c90a2",
-        "identical": true
-      },
-      {
-        "artifact": "docs/woodward-colella-double-blast/ladder/data/plateau_convergence.json",
-        "line": 573,
-        "field": "path",
-        "recorded": "/root/tp-agent/work/m20591/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx200_weno5.npz",
-        "repo_relative": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx200_weno5.npz",
-        "target_exists_in_repo": true,
-        "source_present": true,
-        "sha256_recorded": "15767ccdcd689f51b8185789a00e6d99ec48a64aa4978cc3a92bbb84aba2c766",
-        "sha256_repo": "15767ccdcd689f51b8185789a00e6d99ec48a64aa4978cc3a92bbb84aba2c766",
-        "identical": true
-      },
-      {
-        "artifact": "docs/woodward-colella-double-blast/ladder/data/plateau_convergence.json",
-        "line": 649,
-        "field": "path",
-        "recorded": "/root/tp-agent/work/m20591/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx3200_hllc.npz",
-        "repo_relative": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx3200_hllc.npz",
-        "target_exists_in_repo": true,
-        "source_present": true,
-        "sha256_recorded": "e5cb89527d68735adec79afe516299da6ed4d6adc0c1e2ffbb3b34d81aa60ed7",
-        "sha256_repo": "e5cb89527d68735adec79afe516299da6ed4d6adc0c1e2ffbb3b34d81aa60ed7",
-        "identical": true
-      },
-      {
-        "artifact": "docs/woodward-colella-double-blast/ladder/data/plateau_convergence.json",
-        "line": 725,
-        "field": "path",
-        "recorded": "/root/tp-agent/work/m20591/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx3200_weno5.npz",
-        "repo_relative": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx3200_weno5.npz",
-        "target_exists_in_repo": true,
-        "source_present": true,
-        "sha256_recorded": "31b5be5ea65cc9ba555b7fb4b88b1a5946699708780eb524e134b643fb87c8fc",
-        "sha256_repo": "31b5be5ea65cc9ba555b7fb4b88b1a5946699708780eb524e134b643fb87c8fc",
+        "sha256_recorded": "4938617c600aabc7fd1c31e05aac18ccdb785ae7a0506fd028fb65e728d210d0",
+        "sha256_repo": "4938617c600aabc7fd1c31e05aac18ccdb785ae7a0506fd028fb65e728d210d0",
         "identical": true
       },
       {
@@ -268,7 +177,7 @@
         "artifact": "docs/woodward-colella-double-blast/xval/xval_round2.json",
         "line": 26,
         "field": "source",
-        "recorded": "/root/tp-agent/work/m20591/docs/woodward-colella-double-blast/reference/reference_density.csv",
+        "recorded": "/root/tp-agent/work/m22453/docs/woodward-colella-double-blast/reference/reference_density.csv",
         "repo_relative": "docs/woodward-colella-double-blast/reference/reference_density.csv",
         "target_exists_in_repo": true,
         "source_present": true,
@@ -279,13 +188,150 @@
     ]
   },
   "record_reproduction": {
-    "n_records": 16,
-    "n_reproduced": 16,
+    "n_records": 25,
+    "n_reference_metrics": 23,
+    "n_solver_observables": 2,
+    "n_reproduced": 25,
+    "n_failed": 0,
+    "n_unverifiable": 0,
+    "n_family_fallback": 0,
+    "failed_records": [],
+    "unverifiable_records": [],
     "rows": [
+      {
+        "record": "docs/woodward-colella-double-blast/ladder/data/ladder_metrics_nx12800_hllc_cfl0.8.json",
+        "tag": "nx12800_hllc_cfl0.8",
+        "profile": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx12800_hllc_cfl0.8.npz",
+        "profile_match": "exact",
+        "profile_is_exact": true,
+        "check_kind": "reference_metrics",
+        "variants": {
+          "raw": {
+            "n_compared": 7,
+            "max_abs_deviation": 0.0,
+            "deviation_detail": {
+              "peak_density": 0.0,
+              "peak_density.ref": 0.0,
+              "window_mass": 0.0,
+              "window_mass.ref": 0.0,
+              "l1_relative": 0.0,
+              "low_plateau": 0.0,
+              "low_plateau.ref": 0.0
+            },
+            "reproduced": true
+          },
+          "calibrated": {
+            "n_compared": 7,
+            "max_abs_deviation": 14.073988591532117,
+            "deviation_detail": {
+              "peak_density": 0.35729277633683587,
+              "peak_density.ref": 0.022016999999999953,
+              "window_mass": 1.430762006358059,
+              "window_mass.ref": 0.013191617651999943,
+              "l1_relative": 0.9364649337177182,
+              "low_plateau": 14.073988591532117,
+              "low_plateau.ref": 0.02201700000000001
+            },
+            "reproduced": false
+          }
+        },
+        "observables": {},
+        "reproduced_from_committed_tree": true,
+        "reproduces_with": [
+          "raw"
+        ]
+      },
+      {
+        "record": "docs/woodward-colella-double-blast/ladder/data/ladder_metrics_nx12800_weno5.json",
+        "tag": "nx12800_weno5",
+        "profile": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx12800_weno5.npz",
+        "profile_match": "exact",
+        "profile_is_exact": true,
+        "check_kind": "reference_metrics",
+        "variants": {
+          "raw": {
+            "n_compared": 7,
+            "max_abs_deviation": 0.0,
+            "deviation_detail": {
+              "peak_density": 0.0,
+              "peak_density.ref": 0.0,
+              "window_mass": 0.0,
+              "window_mass.ref": 0.0,
+              "l1_relative": 0.0,
+              "low_plateau": 0.0,
+              "low_plateau.ref": 0.0
+            },
+            "reproduced": true
+          },
+          "calibrated": {
+            "n_compared": 7,
+            "max_abs_deviation": 14.072923205511188,
+            "deviation_detail": {
+              "peak_density": 0.35752074638951825,
+              "peak_density.ref": 0.022016999999999953,
+              "window_mass": 1.4307597160435477,
+              "window_mass.ref": 0.013191617651999943,
+              "l1_relative": 0.9443294629299874,
+              "low_plateau": 14.072923205511188,
+              "low_plateau.ref": 0.02201700000000001
+            },
+            "reproduced": false
+          }
+        },
+        "observables": {},
+        "reproduced_from_committed_tree": true,
+        "reproduces_with": [
+          "raw"
+        ]
+      },
+      {
+        "record": "docs/woodward-colella-double-blast/ladder/data/ladder_metrics_nx12800_weno5_cfl0.8.json",
+        "tag": "nx12800_weno5_cfl0.8",
+        "profile": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx12800_weno5_cfl0.8.npz",
+        "profile_match": "exact",
+        "profile_is_exact": true,
+        "check_kind": "solver_observables",
+        "variants": {},
+        "observables": {
+          "rho_max": {
+            "recorded": 6.463485157370068,
+            "recomputed": 6.463485157370068,
+            "abs_deviation": 0.0,
+            "tolerance": 6.463485157370068e-09,
+            "within_tolerance": true
+          },
+          "x_at_rho_max": {
+            "recorded": 0.7784765625,
+            "recomputed": 0.7784765625,
+            "abs_deviation": 0.0,
+            "tolerance": 1e-09,
+            "within_tolerance": true
+          },
+          "p_max": {
+            "recorded": 430.3257235263827,
+            "recomputed": 430.3257235263827,
+            "abs_deviation": 0.0,
+            "tolerance": 4.3032572352638276e-07,
+            "within_tolerance": true
+          },
+          "mass": {
+            "recorded": 0.9999999999990367,
+            "recomputed": 0.9999999999990363,
+            "abs_deviation": 3.3306690738754696e-16,
+            "tolerance": 1e-09,
+            "within_tolerance": true
+          }
+        },
+        "reproduced_from_committed_tree": true,
+        "n_compared": 4
+      },
       {
         "record": "docs/woodward-colella-double-blast/ladder/data/ladder_metrics_nx1600_hllc.json",
         "tag": "nx1600_hllc",
         "profile": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx1600_hllc.npz",
+        "profile_match": "exact",
+        "profile_is_exact": true,
+        "check_kind": "reference_metrics",
         "variants": {
           "raw": {
             "n_compared": 5,
@@ -312,6 +358,7 @@
             "reproduced": false
           }
         },
+        "observables": {},
         "reproduced_from_committed_tree": true,
         "reproduces_with": [
           "raw"
@@ -321,6 +368,9 @@
         "record": "docs/woodward-colella-double-blast/ladder/data/ladder_metrics_nx1600_weno5.json",
         "tag": "nx1600_weno5",
         "profile": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx1600_weno5.npz",
+        "profile_match": "exact",
+        "profile_is_exact": true,
+        "check_kind": "reference_metrics",
         "variants": {
           "raw": {
             "n_compared": 7,
@@ -351,6 +401,7 @@
             "reproduced": false
           }
         },
+        "observables": {},
         "reproduced_from_committed_tree": true,
         "reproduces_with": [
           "raw"
@@ -360,6 +411,9 @@
         "record": "docs/woodward-colella-double-blast/ladder/data/ladder_metrics_nx200_hllc.json",
         "tag": "nx200_hllc",
         "profile": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx200_hllc.npz",
+        "profile_match": "exact",
+        "profile_is_exact": true,
+        "check_kind": "reference_metrics",
         "variants": {
           "raw": {
             "n_compared": 5,
@@ -386,6 +440,7 @@
             "reproduced": false
           }
         },
+        "observables": {},
         "reproduced_from_committed_tree": true,
         "reproduces_with": [
           "raw"
@@ -395,6 +450,9 @@
         "record": "docs/woodward-colella-double-blast/ladder/data/ladder_metrics_nx200_hllc_limiterminmod_cfl0.2.json",
         "tag": "nx200_hllc_limiterminmod_cfl0.2",
         "profile": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx200_hllc_limiterminmod_cfl0.2.npz",
+        "profile_match": "exact",
+        "profile_is_exact": true,
+        "check_kind": "reference_metrics",
         "variants": {
           "raw": {
             "n_compared": 5,
@@ -421,6 +479,7 @@
             "reproduced": false
           }
         },
+        "observables": {},
         "reproduced_from_committed_tree": true,
         "reproduces_with": [
           "raw"
@@ -430,6 +489,9 @@
         "record": "docs/woodward-colella-double-blast/ladder/data/ladder_metrics_nx200_weno5.json",
         "tag": "nx200_weno5",
         "profile": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx200_weno5.npz",
+        "profile_match": "exact",
+        "profile_is_exact": true,
+        "check_kind": "reference_metrics",
         "variants": {
           "raw": {
             "n_compared": 5,
@@ -456,15 +518,60 @@
             "reproduced": false
           }
         },
+        "observables": {},
         "reproduced_from_committed_tree": true,
         "reproduces_with": [
           "raw"
         ]
       },
       {
+        "record": "docs/woodward-colella-double-blast/ladder/data/ladder_metrics_nx25600_weno5_cfl0.8.json",
+        "tag": "nx25600_weno5_cfl0.8",
+        "profile": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx25600_weno5_cfl0.8.npz",
+        "profile_match": "exact",
+        "profile_is_exact": true,
+        "check_kind": "solver_observables",
+        "variants": {},
+        "observables": {
+          "rho_max": {
+            "recorded": 6.462254491917702,
+            "recomputed": 6.462254491917702,
+            "abs_deviation": 0.0,
+            "tolerance": 6.462254491917702e-09,
+            "within_tolerance": true
+          },
+          "x_at_rho_max": {
+            "recorded": 0.77818359375,
+            "recomputed": 0.77818359375,
+            "abs_deviation": 0.0,
+            "tolerance": 1e-09,
+            "within_tolerance": true
+          },
+          "p_max": {
+            "recorded": 430.41360305332057,
+            "recomputed": 430.41360305332057,
+            "abs_deviation": 0.0,
+            "tolerance": 4.304136030533206e-07,
+            "within_tolerance": true
+          },
+          "mass": {
+            "recorded": 0.9999999999980803,
+            "recomputed": 0.9999999999980801,
+            "abs_deviation": 2.220446049250313e-16,
+            "tolerance": 1e-09,
+            "within_tolerance": true
+          }
+        },
+        "reproduced_from_committed_tree": true,
+        "n_compared": 4
+      },
+      {
         "record": "docs/woodward-colella-double-blast/ladder/data/ladder_metrics_nx3200_hllc.json",
         "tag": "nx3200_hllc",
         "profile": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx3200_hllc.npz",
+        "profile_match": "exact",
+        "profile_is_exact": true,
+        "check_kind": "reference_metrics",
         "variants": {
           "raw": {
             "n_compared": 5,
@@ -491,6 +598,7 @@
             "reproduced": false
           }
         },
+        "observables": {},
         "reproduced_from_committed_tree": true,
         "reproduces_with": [
           "raw"
@@ -500,6 +608,9 @@
         "record": "docs/woodward-colella-double-blast/ladder/data/ladder_metrics_nx3200_weno5.json",
         "tag": "nx3200_weno5",
         "profile": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx3200_weno5.npz",
+        "profile_match": "exact",
+        "profile_is_exact": true,
+        "check_kind": "reference_metrics",
         "variants": {
           "raw": {
             "n_compared": 7,
@@ -530,6 +641,222 @@
             "reproduced": false
           }
         },
+        "observables": {},
+        "reproduced_from_committed_tree": true,
+        "reproduces_with": [
+          "raw"
+        ]
+      },
+      {
+        "record": "docs/woodward-colella-double-blast/ladder/data/ladder_metrics_nx400_weno5.json",
+        "tag": "nx400_weno5",
+        "profile": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx400_weno5.npz",
+        "profile_match": "exact",
+        "profile_is_exact": true,
+        "check_kind": "reference_metrics",
+        "variants": {
+          "raw": {
+            "n_compared": 7,
+            "max_abs_deviation": 0.0,
+            "deviation_detail": {
+              "peak_density": 0.0,
+              "peak_density.ref": 0.0,
+              "window_mass": 0.0,
+              "window_mass.ref": 0.0,
+              "l1_relative": 0.0,
+              "low_plateau": 0.0,
+              "low_plateau.ref": 0.0
+            },
+            "reproduced": true
+          },
+          "calibrated": {
+            "n_compared": 7,
+            "max_abs_deviation": 13.765352316524373,
+            "deviation_detail": {
+              "peak_density": 0.31485423495832165,
+              "peak_density.ref": 0.022016999999999953,
+              "window_mass": 1.2887269665734562,
+              "window_mass.ref": 0.013191617651999943,
+              "l1_relative": 0.9203813620735684,
+              "low_plateau": 13.765352316524373,
+              "low_plateau.ref": 0.02201700000000001
+            },
+            "reproduced": false
+          }
+        },
+        "observables": {},
+        "reproduced_from_committed_tree": true,
+        "reproduces_with": [
+          "raw"
+        ]
+      },
+      {
+        "record": "docs/woodward-colella-double-blast/ladder/data/ladder_metrics_nx6400_hllc.json",
+        "tag": "nx6400_hllc",
+        "profile": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx6400_hllc.npz",
+        "profile_match": "exact",
+        "profile_is_exact": true,
+        "check_kind": "reference_metrics",
+        "variants": {
+          "raw": {
+            "n_compared": 7,
+            "max_abs_deviation": 0.0,
+            "deviation_detail": {
+              "peak_density": 0.0,
+              "peak_density.ref": 0.0,
+              "window_mass": 0.0,
+              "window_mass.ref": 0.0,
+              "l1_relative": 0.0,
+              "low_plateau": 0.0,
+              "low_plateau.ref": 0.0
+            },
+            "reproduced": true
+          },
+          "calibrated": {
+            "n_compared": 7,
+            "max_abs_deviation": 14.072490189970711,
+            "deviation_detail": {
+              "peak_density": 0.3576675348341163,
+              "peak_density.ref": 0.022016999999999953,
+              "window_mass": 1.4307274367386402,
+              "window_mass.ref": 0.013191617651999943,
+              "l1_relative": 0.9340389284906379,
+              "low_plateau": 14.072490189970711,
+              "low_plateau.ref": 0.02201700000000001
+            },
+            "reproduced": false
+          }
+        },
+        "observables": {},
+        "reproduced_from_committed_tree": true,
+        "reproduces_with": [
+          "raw"
+        ]
+      },
+      {
+        "record": "docs/woodward-colella-double-blast/ladder/data/ladder_metrics_nx6400_hllc_cfl0.8.json",
+        "tag": "nx6400_hllc_cfl0.8",
+        "profile": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx6400_hllc_cfl0.8.npz",
+        "profile_match": "exact",
+        "profile_is_exact": true,
+        "check_kind": "reference_metrics",
+        "variants": {
+          "raw": {
+            "n_compared": 7,
+            "max_abs_deviation": 0.0,
+            "deviation_detail": {
+              "peak_density": 0.0,
+              "peak_density.ref": 0.0,
+              "window_mass": 0.0,
+              "window_mass.ref": 0.0,
+              "l1_relative": 0.0,
+              "low_plateau": 0.0,
+              "low_plateau.ref": 0.0
+            },
+            "reproduced": true
+          },
+          "calibrated": {
+            "n_compared": 7,
+            "max_abs_deviation": 14.073367451185531,
+            "deviation_detail": {
+              "peak_density": 0.3570225558989937,
+              "peak_density.ref": 0.022016999999999953,
+              "window_mass": 1.430728700600464,
+              "window_mass.ref": 0.013191617651999943,
+              "l1_relative": 0.9353475825840585,
+              "low_plateau": 14.073367451185531,
+              "low_plateau.ref": 0.02201700000000001
+            },
+            "reproduced": false
+          }
+        },
+        "observables": {},
+        "reproduced_from_committed_tree": true,
+        "reproduces_with": [
+          "raw"
+        ]
+      },
+      {
+        "record": "docs/woodward-colella-double-blast/ladder/data/ladder_metrics_nx6400_weno5.json",
+        "tag": "nx6400_weno5",
+        "profile": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx6400_weno5.npz",
+        "profile_match": "exact",
+        "profile_is_exact": true,
+        "check_kind": "reference_metrics",
+        "variants": {
+          "raw": {
+            "n_compared": 7,
+            "max_abs_deviation": 0.0,
+            "deviation_detail": {
+              "peak_density": 0.0,
+              "peak_density.ref": 0.0,
+              "window_mass": 0.0,
+              "window_mass.ref": 0.0,
+              "l1_relative": 0.0,
+              "low_plateau": 0.0,
+              "low_plateau.ref": 0.0
+            },
+            "reproduced": true
+          },
+          "calibrated": {
+            "n_compared": 7,
+            "max_abs_deviation": 14.071306580580995,
+            "deviation_detail": {
+              "peak_density": 0.35742643927010453,
+              "peak_density.ref": 0.022016999999999953,
+              "window_mass": 1.4307233136563788,
+              "window_mass.ref": 0.013191617651999943,
+              "l1_relative": 0.9447969282350126,
+              "low_plateau": 14.071306580580995,
+              "low_plateau.ref": 0.02201700000000001
+            },
+            "reproduced": false
+          }
+        },
+        "observables": {},
+        "reproduced_from_committed_tree": true,
+        "reproduces_with": [
+          "raw"
+        ]
+      },
+      {
+        "record": "docs/woodward-colella-double-blast/ladder/data/ladder_metrics_nx800_weno5.json",
+        "tag": "nx800_weno5",
+        "profile": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx800_weno5.npz",
+        "profile_match": "exact",
+        "profile_is_exact": true,
+        "check_kind": "reference_metrics",
+        "variants": {
+          "raw": {
+            "n_compared": 7,
+            "max_abs_deviation": 0.0,
+            "deviation_detail": {
+              "peak_density": 0.0,
+              "peak_density.ref": 0.0,
+              "window_mass": 0.0,
+              "window_mass.ref": 0.0,
+              "l1_relative": 0.0,
+              "low_plateau": 0.0,
+              "low_plateau.ref": 0.0
+            },
+            "reproduced": true
+          },
+          "calibrated": {
+            "n_compared": 7,
+            "max_abs_deviation": 14.037736821335322,
+            "deviation_detail": {
+              "peak_density": 0.34841888032576673,
+              "peak_density.ref": 0.022016999999999953,
+              "window_mass": 1.3800359300936729,
+              "window_mass.ref": 0.013191617651999943,
+              "l1_relative": 0.9124723865297157,
+              "low_plateau": 14.037736821335322,
+              "low_plateau.ref": 0.02201700000000001
+            },
+            "reproduced": false
+          }
+        },
+        "observables": {},
         "reproduced_from_committed_tree": true,
         "reproduces_with": [
           "raw"
@@ -539,6 +866,9 @@
         "record": "docs/woodward-colella-double-blast/reference/metrics_nx400.json",
         "tag": "nx400",
         "profile": "docs/woodward-colella-double-blast/artifacts/wc_blast_profile_nx400.npz",
+        "profile_match": "artifact_window_only",
+        "profile_is_exact": false,
+        "check_kind": "reference_metrics",
         "variants": {
           "raw": {
             "n_compared": 5,
@@ -565,15 +895,20 @@
             "reproduced": false
           }
         },
+        "observables": {},
         "reproduced_from_committed_tree": true,
         "reproduces_with": [
           "raw"
-        ]
+        ],
+        "attribution": "window-only artifact docs/woodward-colella-double-blast/artifacts/wc_blast_profile_nx400.npz (documented contract: x in [0.4,1])"
       },
       {
         "record": "docs/woodward-colella-double-blast/reference/metrics_nx800.json",
         "tag": "nx800",
         "profile": "docs/woodward-colella-double-blast/artifacts/wc_blast_profile_nx800.npz",
+        "profile_match": "artifact_window_only",
+        "profile_is_exact": false,
+        "check_kind": "reference_metrics",
         "variants": {
           "raw": {
             "n_compared": 5,
@@ -600,15 +935,20 @@
             "reproduced": false
           }
         },
+        "observables": {},
         "reproduced_from_committed_tree": true,
         "reproduces_with": [
           "raw"
-        ]
+        ],
+        "attribution": "window-only artifact docs/woodward-colella-double-blast/artifacts/wc_blast_profile_nx800.npz (documented contract: x in [0.4,1])"
       },
       {
         "record": "docs/woodward-colella-double-blast/reference/metrics_calibrated_nx1600_hllc.json",
         "tag": "nx1600_hllc",
         "profile": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx1600_hllc.npz",
+        "profile_match": "exact",
+        "profile_is_exact": true,
+        "check_kind": "reference_metrics",
         "variants": {
           "calibrated": {
             "n_compared": 7,
@@ -625,6 +965,7 @@
             "reproduced": true
           }
         },
+        "observables": {},
         "reproduced_from_committed_tree": true,
         "reproduces_with": [
           "calibrated"
@@ -634,6 +975,9 @@
         "record": "docs/woodward-colella-double-blast/reference/metrics_calibrated_nx200_hllc.json",
         "tag": "nx200_hllc",
         "profile": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx200_hllc.npz",
+        "profile_match": "exact",
+        "profile_is_exact": true,
+        "check_kind": "reference_metrics",
         "variants": {
           "calibrated": {
             "n_compared": 7,
@@ -650,6 +994,7 @@
             "reproduced": true
           }
         },
+        "observables": {},
         "reproduced_from_committed_tree": true,
         "reproduces_with": [
           "calibrated"
@@ -659,6 +1004,9 @@
         "record": "docs/woodward-colella-double-blast/reference/metrics_calibrated_nx200_hllc_limiterminmod_cfl0.2.json",
         "tag": "nx200_hllc_limiterminmod_cfl0.2",
         "profile": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx200_hllc_limiterminmod_cfl0.2.npz",
+        "profile_match": "exact",
+        "profile_is_exact": true,
+        "check_kind": "reference_metrics",
         "variants": {
           "calibrated": {
             "n_compared": 7,
@@ -675,6 +1023,7 @@
             "reproduced": true
           }
         },
+        "observables": {},
         "reproduced_from_committed_tree": true,
         "reproduces_with": [
           "calibrated"
@@ -684,6 +1033,9 @@
         "record": "docs/woodward-colella-double-blast/reference/metrics_calibrated_nx200_weno5.json",
         "tag": "nx200_weno5",
         "profile": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx200_weno5.npz",
+        "profile_match": "exact",
+        "profile_is_exact": true,
+        "check_kind": "reference_metrics",
         "variants": {
           "calibrated": {
             "n_compared": 7,
@@ -700,6 +1052,7 @@
             "reproduced": true
           }
         },
+        "observables": {},
         "reproduced_from_committed_tree": true,
         "reproduces_with": [
           "calibrated"
@@ -709,6 +1062,9 @@
         "record": "docs/woodward-colella-double-blast/reference/metrics_calibrated_nx3200_hllc.json",
         "tag": "nx3200_hllc",
         "profile": "docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx3200_hllc.npz",
+        "profile_match": "exact",
+        "profile_is_exact": true,
+        "check_kind": "reference_metrics",
         "variants": {
           "calibrated": {
             "n_compared": 7,
@@ -725,6 +1081,7 @@
             "reproduced": true
           }
         },
+        "observables": {},
         "reproduced_from_committed_tree": true,
         "reproduces_with": [
           "calibrated"
@@ -734,6 +1091,9 @@
         "record": "docs/woodward-colella-double-blast/reference/metrics_calibrated_nx400_hllc.json",
         "tag": "nx400_hllc",
         "profile": "docs/woodward-colella-double-blast/artifacts/wc_blast_profile_nx400.npz",
+        "profile_match": "artifact_window_only",
+        "profile_is_exact": false,
+        "check_kind": "reference_metrics",
         "variants": {
           "calibrated": {
             "n_compared": 7,
@@ -750,15 +1110,20 @@
             "reproduced": true
           }
         },
+        "observables": {},
         "reproduced_from_committed_tree": true,
         "reproduces_with": [
           "calibrated"
-        ]
+        ],
+        "attribution": "window-only artifact docs/woodward-colella-double-blast/artifacts/wc_blast_profile_nx400.npz (documented contract: x in [0.4,1])"
       },
       {
         "record": "docs/woodward-colella-double-blast/reference/metrics_calibrated_nx800_hllc.json",
         "tag": "nx800_hllc",
         "profile": "docs/woodward-colella-double-blast/artifacts/wc_blast_profile_nx800.npz",
+        "profile_match": "artifact_window_only",
+        "profile_is_exact": false,
+        "check_kind": "reference_metrics",
         "variants": {
           "calibrated": {
             "n_compared": 7,
@@ -775,10 +1140,12 @@
             "reproduced": true
           }
         },
+        "observables": {},
         "reproduced_from_committed_tree": true,
         "reproduces_with": [
           "calibrated"
-        ]
+        ],
+        "attribution": "window-only artifact docs/woodward-colella-double-blast/artifacts/wc_blast_profile_nx800.npz (documented contract: x in [0.4,1])"
       }
     ]
   },
