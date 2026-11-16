@@ -1,0 +1,19 @@
+{
+ "nx": 6400,
+ "dx": 0.00015625,
+ "method": "fd-weno5-ssprk3-rusanov",
+ "datum": "blast",
+ "cfl": 0.8,
+ "t_end": 0.038,
+ "steps": 12837,
+ "seconds_solver": 151.3,
+ "seconds_total": 151.31,
+ "positivity_fallbacks": 23,
+ "mass": 0.9999999999995144,
+ "mass_drift": 4.856115509710435e-13,
+ "rho_max": 6.45889271964643,
+ "x_at_rho_max": 0.775234375,
+ "p_max": 429.69755012400066,
+ "finite": true,
+ "status": "ok"
+}
