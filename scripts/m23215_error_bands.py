@@ -100,6 +100,59 @@ def band_annular() -> dict[str, Any]:
     }
 
 
+def band_annular_verification() -> dict[str, Any]:
+    """Verification-harness entry ``fvm.verification.annular_band`` (m24376).
+
+    The harness entry ``tensorfvm.verification.annular:run_case`` wraps the same
+    sparse body-fitted solve as ``fvm.core.annular_axial`` and scores it against
+    the *independent* closed-form black box.  The capability claimed
+    ``verified=True`` without a booked band, which tripped
+    ``test_registry_error_bands_equal_the_measured_bands`` on main; the band is
+    therefore measured here through the harness's own public entry point and
+    booked under its own capability id.
+    """
+    import math
+
+    from tensorfvm.verification.annular import run_case
+
+    radial = [run_case(32, nr) for nr in (16, 32)]
+    angular = [run_case(nt, nr) for nt, nr in ((32, 16), (64, 32), (128, 32))]
+    coarse, mid, refined = angular
+    order_1 = math.log(coarse["relative_l2"] / mid["relative_l2"]) / math.log(2.0)
+    order_2 = math.log(mid["relative_l2"] / refined["relative_l2"]) / math.log(2.0)
+    order_radial = math.log(radial[0]["relative_l2"] / radial[1]["relative_l2"]) / math.log(2.0)
+    return {
+        "capability": "fvm.verification.annular_band",
+        "reference": "closed-form annular axial Poiseuille profile (independent black box)",
+        "grade": "ANALYTIC",
+        "cases": [{"ntheta": c["ntheta"], "nr": c["nr"], "cells": c["cells"],
+                   "relative_l2": c["relative_l2"], "relative_linf": c["relative_linf"],
+                   "relative_flow_rate_error": c["relative_flow_rate_error"],
+                   "solved_consistency_max": c["solved_consistency_max"]}
+                  for c in angular] + [{"ntheta": c["ntheta"], "nr": c["nr"],
+                                        "path": "radial-only",
+                                        "relative_l2": c["relative_l2"]}
+                                       for c in radial],
+        "key_quantities": {
+            "relative_l2_nt32_nr16_pct": 100 * coarse["relative_l2"],
+            "relative_linf_nt32_nr16_pct": 100 * coarse["relative_linf"],
+            "relative_l2_nt128_nr32_pct": 100 * refined["relative_l2"],
+            "relative_linf_nt128_nr32_pct": 100 * refined["relative_linf"],
+            "flow_rate_error_nt32_nr16_pct": 100 * coarse["relative_flow_rate_error"],
+            "flow_rate_error_nt128_nr32_pct": 100 * refined["relative_flow_rate_error"],
+            "order_in_ntheta_32_to_64": round(order_1, 3),
+            "order_in_ntheta_64_to_128": round(order_2, 3),
+            "order_in_nr_at_ntheta32": round(order_radial, 3),
+        },
+        # same protocol as band_annular: the quoted band is the production
+        # resolution (ntheta=128, nr=32); the coarse case is disclosed next to it
+        "max_error_pct": round(100 * max(refined["relative_l2"], refined["relative_linf"]), 4),
+        "coarse_max_error_pct": round(100 * max(coarse["relative_l2"], coarse["relative_linf"]), 4),
+        "note": ("measured through the verification harness public entry run_case; "
+                 "same numerics and protocol as fvm.core.annular_axial"),
+    }
+
+
 def band_plic() -> dict[str, Any]:
     """PLIC: plane constant must invert the exact cut area to machine precision."""
     import torch
@@ -214,6 +267,7 @@ def band_linear_diagnostics() -> dict[str, Any]:
 
 BANDS = {
     "annular": band_annular,
+    "annular_band": band_annular_verification,
     "plic": band_plic,
     "overset": band_overset,
     "linear_diagnostics": band_linear_diagnostics,

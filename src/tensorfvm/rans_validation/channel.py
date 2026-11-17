@@ -46,6 +46,7 @@ from ..wall_functions import u_plus_at_y_plus
 from .models import (VARIABLE, WALL_LAW_KAPPA, WALL_TREATMENT, constants_for,
                      equilibrium_closure, implied_kappa, wall_values)
 from .roughness import rough_wall_value
+from ..registry import capability
 
 
 def _stretched(n, stretch):
@@ -148,6 +149,15 @@ def _sublayer_mass_flux(y_inner, re_tau, samples=401):
     return float(np.sum(weights * speed) * (y[1] - y[0]) / 3)
 
 
+@capability('fvm.rans.channel_validation',
+            kind='verification',
+            maturity='developing',
+            test_path='tests/test_channel_kmm180_loglaw.py',
+            wired=True,
+            tested=True,
+            evidence={'grade': 'MECHANICS',
+                      'note': 'periodic RANS channel harness scored against the '
+                              'KMM1987 log-law reference by fvm.verification.kmm1987'})
 def solve_channel(model, n=256, *, re_tau=180., stretch=3., first_cell_y_plus=None, constants=None,
                   dt=.02, relaxation=.5, max_iterations=40000, tolerance=1e-10, history=None,
                   k_s=None):

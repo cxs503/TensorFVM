@@ -243,6 +243,7 @@ def _neighbors(a):
 @capability('fvm.core.ins2d_collocated',
             kind='solver',
             maturity='developing',
+            endpoint='route:tensorfvm.solver:SimpleSolver',
             test_path='tests/test_backend_registry.py',
             wired=True,
             tested=True,

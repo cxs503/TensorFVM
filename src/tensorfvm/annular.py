@@ -98,6 +98,7 @@ def _torch_cg(A,b,diagonal,x0,tolerance,iterations):
 @capability('fvm.core.annular_axial',
             kind='solver',
             maturity='mature',
+            endpoint='route:tensorfvm.annular:solve',
             test_path='tests/test_annular_grid_convergence.py',
             wired=True,
             tested=True,
