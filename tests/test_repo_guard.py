@@ -288,3 +288,91 @@ def test_baseline_files_present() -> None:
         assert p.exists(), f"{bl} missing (run repo_guard.py reanchor)"
         data = json.loads(p.read_text())
         assert data[key] > 0
+
+
+# ---------------------------------------------------------------------------
+# m24451 (FVM-SLIM-GUARD, verification-debt round 2): coverage that the
+# earlier rounds (m23951 / m24008 / m24405) did not pin down.
+# ---------------------------------------------------------------------------
+
+def test_staged_boundary_exactly_limit_passes(bare_repo: Path) -> None:
+    """A blob of *exactly* 512 KiB (524288 B) is at the limit, not over it:
+    the gate is `size > limit`, so exactly 512 KiB must pass."""
+    exact = bare_repo / "exact.bin"
+    exact.write_bytes(b"\0" * (512 * 1024))  # 524288 B == DEFAULT_BLOB_LIMIT
+    _git(bare_repo, "add", "exact.bin")
+    proc = _run_guard(bare_repo, "staged")
+    assert proc.returncode == 0, proc.stderr
+
+
+def test_staged_boundary_one_byte_over_blocks(bare_repo: Path) -> None:
+    """512 KiB + 1 byte (524289 B) is the first blocked size."""
+    over = bare_repo / "over.bin"
+    over.write_bytes(b"\0" * (512 * 1024 + 1))
+    _git(bare_repo, "add", "over.bin")
+    proc = _run_guard(bare_repo, "staged")
+    assert proc.returncode == 1, proc.stderr
+    assert "over.bin" in proc.stderr
+
+
+def test_ci_blob_gate_uses_origin_main_base(tmp_path: Path) -> None:
+    """When `origin/main` is resolvable the ci blob gate diffs against it,
+    not the HEAD~1 fallback.  Proven by a scenario where the two bases give
+    opposite verdicts:
+
+      origin/main = seed
+      HEAD~1      = big commit (600 KiB, unpushed)
+      HEAD        = small commit (unpushed)
+
+    base=origin/main  -> changed = {big, small} -> big flagged -> rc=1
+    base=HEAD~1       -> changed = {small}       -> nothing  -> rc=0
+    """
+    repo = tmp_path / "work"
+    repo.mkdir()
+    _git(repo, "init", "-q", "-b", "main")
+    _git(repo, "config", "user.email", "guard@test")
+    _git(repo, "config", "user.name", "guard-test")
+    (repo / "seed.txt").write_text("seed\n")
+    _git(repo, "add", "seed.txt")
+    _git(repo, "commit", "-qm", "seed")
+    origin = tmp_path / "origin.git"
+    _git(tmp_path, "init", "-q", "--bare", str(origin))
+    _git(repo, "remote", "add", "origin", str(origin))
+    _git(repo, "push", "-q", "origin", "main")
+    (repo / "big.bin").write_bytes(b"\1" * (600 * 1024))
+    _git(repo, "add", "big.bin")
+    _git(repo, "commit", "-qm", "big (unpushed)")
+    (repo / "small.txt").write_text("y" * 50)
+    _git(repo, "add", "small.txt")
+    _git(repo, "commit", "-qm", "small (unpushed)")
+    proc = _run_guard(repo, "ci")
+    # rc=1 (big flagged) proves base=origin/main; the HEAD~1 fallback would
+    # only see the small file and return 0.
+    assert proc.returncode == 1, proc.stderr
+    assert "big.bin" in proc.stderr
+
+
+def test_cmd_reanchor(bare_repo: Path) -> None:
+    """`reanchor` re-records the pack AND live baselines (MIGRATION §4.7)."""
+    guard_dir = bare_repo / "scripts" / "guard"
+    guard_dir.mkdir(parents=True)
+    _git(bare_repo, "repack", "-q", "-d")  # loose -> packfile (size-pack > 0)
+    proc = _run_guard(bare_repo, "reanchor")
+    assert proc.returncode == 0, proc.stderr
+    pack_bl = json.loads((guard_dir / "pack_baseline.json").read_text())
+    live_bl = json.loads((guard_dir / "live_baseline.json").read_text())
+    assert pack_bl["pack_bytes"] > 0
+    assert live_bl["live_bytes"] > 0
+    assert "measured_at" in pack_bl and "measured_at" in live_bl
+
+
+def test_cmd_report(bare_repo: Path) -> None:
+    """`report` emits the JSON census with the documented keys."""
+    proc = _run_guard(bare_repo, "report")
+    assert proc.returncode == 0, proc.stderr
+    out = json.loads(proc.stdout)
+    for key in ("generated_at", "blob_limit_bytes", "staged", "pack_bytes",
+                "pack_human", "garbage_bytes", "live_bytes", "live_human",
+                "pack_baseline", "live_baseline"):
+        assert key in out, f"report missing key: {key}"
+    assert out["blob_limit_bytes"] == 512 * 1024

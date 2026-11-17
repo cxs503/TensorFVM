@@ -1,0 +1,143 @@
+{
+  "mission": "m24451",
+  "anchor": "FVM-SLIM-GUARD",
+  "collected_at": "2026-11-17T16:54:20.075219+00:00",
+  "head": "bb0397aff7fdc8db59a3ebaaccf3201c6ba155f0",
+  "guard_staged": {
+    "rc": 0,
+    "stdout": "repo_guard: staged blobs OK (limit 512.0 KiB)",
+    "stderr": ""
+  },
+  "guard_ci": {
+    "rc": 0,
+    "stdout": "repo_guard: blob gate OK vs origin/main (limit 512.0 KiB)\n{\n  \"pack_bytes\": 1438814044,\n  \"pack_human\": \"1.3 GiB\",\n  \"baseline_bytes\": 1428076625,\n  \"drift_bytes\": 10737419,\n  \"drift_human\": \"10.2 MiB+\",\n  \"warn_at\": 1480505425,\n  \"hard_at\": 1585363025,\n  \"pack_status\": \"OK\",\n  \"garbage_bytes\": 117\n}\n{\n  \"live_bytes\": 197562552,\n  \"live_human\": \"188.4 MiB\",\n  \"baseline_bytes\": 197122081,\n  \"drift_bytes\": 440471,\n  \"drift_human\": \"430.1 KiB+\",\n  \"warn_at\": 249550881,\n  \"red_at\": 301979681,\n  \"live_status\": \"OK\"\n}\nrepo_guard: CI size gate passed",
+    "stderr": ""
+  },
+  "guard_live": {
+    "rc": 0,
+    "stdout": "{\n  \"live_bytes\": 197562552,\n  \"live_human\": \"188.4 MiB\",\n  \"baseline_bytes\": 197122081,\n  \"drift_bytes\": 440471,\n  \"drift_human\": \"430.1 KiB+\",\n  \"warn_at\": 249550881,\n  \"red_at\": 301979681,\n  \"live_status\": \"OK\"\n}",
+    "stderr": "repo_guard: live volume gate passed",
+    "stdout_json": {
+      "live_bytes": 197562552,
+      "live_human": "188.4 MiB",
+      "baseline_bytes": 197122081,
+      "drift_bytes": 440471,
+      "drift_human": "430.1 KiB+",
+      "warn_at": 249550881,
+      "red_at": 301979681,
+      "live_status": "OK"
+    }
+  },
+  "guard_report": {
+    "rc": 0,
+    "stdout": "{\n  \"generated_at\": \"2026-11-17T16:54:20.689033+00:00\",\n  \"blob_limit_bytes\": 524288,\n  \"staged\": [],\n  \"pack_bytes\": 1438814044,\n  \"pack_human\": \"1.3 GiB\",\n  \"garbage_bytes\": 117,\n  \"live_bytes\": 197562552,\n  \"live_human\": \"188.4 MiB\",\n  \"pack_baseline\": {\n    \"pack_bytes\": 1428076625,\n    \"pack_human\": \"1.3 GiB\",\n    \"measured_at\": \"2026-11-16T20:08:31.097547+00:00\",\n    \"note\": \"FVM-SLIM-GUARD pack baseline; re-anchor after any history rewrite (docs/MIGRATION-m23216.md)\"\n  },\n  \"live_baseline\": {\n    \"live_bytes\": 197122081,\n    \"live_human\": \"188.0 MiB\",\n    \"measured_at\": \"2026-11-16T20:08:31.169329+00:00\",\n    \"note\": \"FVM-SLIM-GUARD live-artifact baseline (unique HEAD-referenced blobs); reference 183 MiB (m23216 census), re-anchor after any history rewrite (docs/MIGRATION-m23216.md)\"\n  }\n}",
+    "stderr": "",
+    "stdout_json": {
+      "generated_at": "2026-11-17T16:54:20.689033+00:00",
+      "blob_limit_bytes": 524288,
+      "staged": [],
+      "pack_bytes": 1438814044,
+      "pack_human": "1.3 GiB",
+      "garbage_bytes": 117,
+      "live_bytes": 197562552,
+      "live_human": "188.4 MiB",
+      "pack_baseline": {
+        "pack_bytes": 1428076625,
+        "pack_human": "1.3 GiB",
+        "measured_at": "2026-11-16T20:08:31.097547+00:00",
+        "note": "FVM-SLIM-GUARD pack baseline; re-anchor after any history rewrite (docs/MIGRATION-m23216.md)"
+      },
+      "live_baseline": {
+        "live_bytes": 197122081,
+        "live_human": "188.0 MiB",
+        "measured_at": "2026-11-16T20:08:31.169329+00:00",
+        "note": "FVM-SLIM-GUARD live-artifact baseline (unique HEAD-referenced blobs); reference 183 MiB (m23216 census), re-anchor after any history rewrite (docs/MIGRATION-m23216.md)"
+      }
+    }
+  },
+  "injection": {
+    "rc": 0,
+    "payload": {
+      "generated_at": "2026-11-17T16:54:21.246769+00:00",
+      "blob_limit_bytes": 524288,
+      "cases": [
+        {
+          "case": "large-unlisted",
+          "blob_path": "big.bin",
+          "blob_bytes": 614400,
+          "blob_human": "600.0 KiB",
+          "commit_rc": 1,
+          "hook_fired": true,
+          "expect_block": true,
+          "pass": true,
+          "stderr_tail": [
+            "repo_guard: 1 staged blob(s) exceed 512.0 KiB (FVM-SLIM-GUARD):",
+            "   600.0 KiB  big.bin",
+            "repo_guard: commit blocked.  Options: keep the artifact out of git (outputs/ is gitignored), shrink it, whitelist the path via .gitattributes `guard-allow-large`, or bypass with FVM_GUARD_ALLOW_LARGE=1 and justify in the commit message."
+          ]
+        },
+        {
+          "case": "small",
+          "blob_path": "small.txt",
+          "blob_bytes": 100,
+          "blob_human": "0.1 KiB",
+          "commit_rc": 0,
+          "hook_fired": false,
+          "expect_block": false,
+          "pass": true,
+          "stderr_tail": [
+            "repo_guard: staged blobs OK (limit 512.0 KiB)"
+          ]
+        },
+        {
+          "case": "large-whitelisted-npz",
+          "blob_path": "docs/verification-x/f/fields.npz",
+          "blob_bytes": 614400,
+          "blob_human": "600.0 KiB",
+          "commit_rc": 0,
+          "hook_fired": false,
+          "expect_block": false,
+          "pass": true,
+          "stderr_tail": [
+            "repo_guard: staged blobs OK (limit 512.0 KiB)"
+          ]
+        },
+        {
+          "case": "large-unlisted-docs",
+          "blob_path": "docs/verification-x/f/fields.bin",
+          "blob_bytes": 614400,
+          "blob_human": "600.0 KiB",
+          "commit_rc": 1,
+          "hook_fired": true,
+          "expect_block": true,
+          "pass": true,
+          "stderr_tail": [
+            "repo_guard: 1 staged blob(s) exceed 512.0 KiB (FVM-SLIM-GUARD):",
+            "   600.0 KiB  docs/verification-x/f/fields.bin",
+            "repo_guard: commit blocked.  Options: keep the artifact out of git (outputs/ is gitignored), shrink it, whitelist the path via .gitattributes `guard-allow-large`, or bypass with FVM_GUARD_ALLOW_LARGE=1 and justify in the commit message."
+          ]
+        }
+      ],
+      "all_pass": true,
+      "live_gate": {
+        "rc": 0,
+        "live_bytes": 197562552,
+        "live_human": "188.4 MiB",
+        "live_status": "OK"
+      }
+    },
+    "stderr_tail": []
+  },
+  "pytest": {
+    "rc": 0,
+    "tail": [
+      "    from _pytest.python import CallSpec2",
+      "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+      "22 passed, 1 warning in 1.64s"
+    ]
+  },
+  "hook_wiring": {
+    "core_hooksPath": ".githooks",
+    "hook_tracked": true
+  }
+}
