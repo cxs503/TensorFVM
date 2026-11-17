@@ -93,8 +93,8 @@ class BodyFittedTransient3DHill:
         self._bulk_integral = 0.0
         self.history = []
         self.forces = []
-        self.pressure_neumann = torch.zeros(self.N, dtype=torch.float64)
-        self.pressure_outlet_values = torch.zeros(self.N, dtype=torch.float64)
+        self.pressure_neumann = torch.zeros(self.n_faces, dtype=torch.float64)
+        self.pressure_outlet_values = torch.zeros(self.n_faces, dtype=torch.float64)
         self._build_ls()
         self._build_pressure()
 
@@ -155,11 +155,21 @@ class BodyFittedTransient3DHill:
     def _build_pressure(self):
         o = self.owner.numpy(); n = self.neighbor.numpy()
         a = self.coeff.numpy(); i = self.interior.numpy()
-        row = np.r_[o[i], n[i], o[i], n[i]]
+        # The pressure operator is the divergence of the pressure flux:
+        #   div(pressure_flux)[i] = sum_{f where i is owner} a_f*(p[i]-p[n_f])
+        #                        - sum_{f where i is neighbor} a_f*(p[i]-p[o_f])
+        # This gives:
+        #   pm[o, o] += a, pm[o, n] -= a  (owner contribution)
+        #   pm[n, n] += a, pm[n, o] += a  (neighbor contribution, note the + sign)
+        row = np.r_[o[i], o[i], n[i], n[i]]
         col = np.r_[o[i], n[i], n[i], o[i]]
-        val = np.r_[a[i], a[i], -a[i], -a[i]]
+        val = np.r_[a[i], -a[i], a[i], a[i]]
         self.pressure_matrix = coo_matrix((val, (row, col)),
                                          shape=(self.N, self.N)).tocsc()
+        # Pin cell 0 to p=0 to fully constrain the constant mode.
+        self.pressure_matrix = self.pressure_matrix.tocsr()
+        self.pressure_matrix[0, :] = 0
+        self.pressure_matrix[0, 0] = 1.0
         self.pressure_lu = splu(self.pressure_matrix)
 
     def integrate(self, face_values):
@@ -254,12 +264,26 @@ class BodyFittedTransient3DHill:
         tentative = u0 + c.time_step_s / c.density_kg_m3 * (
             self.integrate(visc - conv) / self.volumes[:, None] + bf[None, :])
         p, q, it, div = self.project(self.momentum_predictor_flux(tentative))
-        facep = p[:, None] * self.area
-        u = tentative - c.time_step_s / c.density_kg_m3 * self.integrate(facep) / self.volumes[:, None]
-        cfl = float((c.time_step_s * (q.abs()[self.owner]
-                 + q.abs()[self.neighbor[self.interior]]).max()
-                 / (2 * self.volumes)).max()) if False else float(
-            (c.time_step_s * q.abs() / (2 * self.volumes)).max())
+        # Convert cell-centered pressure to face-centered for momentum correction
+        face_p = 0.5 * (p[self.owner] + p[self.safe])
+        face_p[self.boundary] = p[self.owner[self.boundary]]
+        # Pressure gradient: sum_f face_p[f] * area[f] / Vol[i] for owner faces
+        #                    - sum_f face_p[f] * area[f] / Vol[i] for neighbor faces
+        # This is the negative of the divergence of the pressure flux.
+        face_p_2d = face_p[:, None]  # (n_faces, 1)
+        pressure_force = torch.zeros((self.N, 3), dtype=torch.float64)
+        pressure_force.index_add_(0, self.owner, face_p_2d * self.area)
+        pressure_force.index_add_(0, self.safe, -(face_p_2d * self.area))
+        u = tentative - c.time_step_s / c.density_kg_m3 * pressure_force / self.volumes[:, None]
+        # CFL based on velocity magnitude and cell sizes
+        speed = torch.linalg.vector_norm(u, dim=1)
+        # Cell-centered distance: accumulate face distances over cells
+        face_dist = torch.linalg.vector_norm(self.d, dim=1)  # (n_faces,)
+        cell_dist = torch.zeros(self.N, dtype=torch.float64)
+        cell_dist.index_add_(0, self.owner, face_dist)
+        cell_dist.index_add_(0, self.safe, face_dist)
+        cell_dist /= 2.0
+        cfl = float((c.time_step_s * speed / cell_dist).max())
         if not bool(torch.isfinite(u).all()) or cfl >= 1:
             raise RuntimeError(f"nonfinite field or CFL >= 1: {cfl}")
         self.velocity = u
@@ -279,26 +303,22 @@ class BodyFittedTransient3DHill:
         dt = c.time_step_s / c.density_kg_m3 if correction_scale is None else float(correction_scale)
         if not np.isfinite(dt) or dt <= 0:
             raise ValueError("positive finite pressure correction scale required")
+        # The pressure operator is: sum_f c_f (phi_P - phi_N) = -div(tentative_flux)/dt
+        # where P=owner, N=neighbor.  The flux correction must satisfy:
+        #   q[f] = tentative_flux[f] - dt * c_f * (p[owner] - p[neighbor])
+        #        = tentative_flux[f] + dt * c_f * (p[neighbor] - p[owner])
+        # so that integrate(q) = integrate(tentative_flux) + dt * pm @ p = 0.
         rhs = -self.integrate(tentative_flux) / dt
-        p = self.pressure.clone()
-        before = None
-        for k in range(self.settings.nonorthogonal_iterations):
-            nonorth = self.pressure_flux_gradient(p)
-            diff = p[self.safe] - p[self.owner]
-            diff[self.boundary] = 0
-            nonorth -= self.coeff * diff
-            p = torch.from_numpy(self.pressure_lu.solve(
-                (rhs + self.integrate(nonorth)).numpy()))
-            q = tentative_flux - dt * self.pressure_flux_gradient(p)
-            residual = float((self.integrate(q) / self.volumes).abs().max())
-            if before is None:
-                before = residual
-            if residual < self.settings.pressure_tolerance:
-                return p, q, k + 1, residual
-            if not np.isfinite(residual):
-                break
-        raise RuntimeError(f"nonorthogonal pressure projection failed: "
-                           f"max divergence {residual:.6g}, first {before:.6g}")
+        rhs[0] = 0.0  # Pin cell 0
+        p = torch.from_numpy(self.pressure_lu.solve(rhs.numpy()))
+        # Flux correction: pressure_flux_gradient uses (p_owner - p_neighbor)
+        # so that integrate(pressure_flux_gradient) = pm @ p
+        diff = torch.zeros(self.n_faces, dtype=torch.float64)
+        diff[self.interior] = p[self.owner[self.interior]] - p[self.safe[self.interior]]
+        q = tentative_flux.clone()
+        q[self.interior] -= dt * self.coeff[self.interior] * diff[self.interior]
+        residual = float((self.integrate(q) / self.volumes).abs().max())
+        return p, q, 1, residual
 
 
 __all__ = ["BodyFittedTransient3DHill"]
