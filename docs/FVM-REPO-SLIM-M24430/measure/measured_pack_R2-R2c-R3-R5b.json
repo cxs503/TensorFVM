@@ -1,0 +1,80 @@
+{
+ "generated_at": "2026-11-17 15:33:01",
+ "repo": "/root/tensor-ecosystem/TensorFVM",
+ "gitdir": "/root/tensor-ecosystem/TensorFVM/.git",
+ "git_head": "8210a126",
+ "git_branch": "agent/m23993",
+ "pack_params": {
+  "window": 10,
+  "depth": 50,
+  "threads": 8
+ },
+ "reachable": {
+  "n_objects": 37567,
+  "n_blobs": 17240,
+  "blob_MiB": 2063.84,
+  "by_type": {
+   "blob": {
+    "n": 17240,
+    "MiB": 2063.84
+   },
+   "commit": {
+    "n": 3699,
+    "MiB": 2.13
+   },
+   "tree": {
+    "n": 16628,
+    "MiB": 108.08
+   }
+  },
+  "inpack_MiB": 1368.48
+ },
+ "baseline_keepall_pack_MiB": 1345.73,
+ "scenarios": [
+  {
+   "tag": "R2",
+   "desc": "删场数据+网格+PDF，保留 png/svg 图",
+   "dropped_blobs": 2188,
+   "dropped_MiB": 1083.23,
+   "kept_MiB": 980.61,
+   "measured_pack_MiB": 491.33,
+   "reduction_pct": 63.49,
+   "exclusive_inpack_MiB": 857.32,
+   "n_surviving_objects": 35379
+  },
+  {
+   "tag": "R2c",
+   "desc": "R2 + 删 docs *.svg（几乎全为 dead 图）",
+   "dropped_blobs": 4887,
+   "dropped_MiB": 1446.83,
+   "kept_MiB": 617.02,
+   "measured_pack_MiB": 384.92,
+   "reduction_pct": 71.4,
+   "exclusive_inpack_MiB": 968.07,
+   "n_surviving_objects": 32680
+  },
+  {
+   "tag": "R3",
+   "desc": "删 docs 全部二进制 + 全仓 *.pyc",
+   "dropped_blobs": 6988,
+   "dropped_MiB": 1794.59,
+   "kept_MiB": 269.25,
+   "measured_pack_MiB": 65.68,
+   "reduction_pct": 95.12,
+   "exclusive_inpack_MiB": 1287.32,
+   "n_surviving_objects": 30579
+  },
+  {
+   "tag": "R5b",
+   "desc": "阈值：删 docs 下 >=512 KiB 的 blob",
+   "dropped_blobs": 843,
+   "dropped_MiB": 1467.71,
+   "kept_MiB": 596.13,
+   "measured_pack_MiB": 354.64,
+   "reduction_pct": 73.65,
+   "exclusive_inpack_MiB": 998.96,
+   "n_surviving_objects": 36724
+  }
+ ],
+ "elapsed_s": 29.1
+}

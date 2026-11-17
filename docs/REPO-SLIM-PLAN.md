@@ -290,3 +290,60 @@ R2c 为「保留 png 图」的推荐档（-72%）。
 ① 本机未装 `git-filter-repo`（§2.1 已注明需 owner 批准安装）；
 ② commit-graph 过期（D7）。两者修复后 preflight 即转 PASS，execute 即可在
 owner 批准 D1–D5 后运行。
+
+
+---
+
+## 10. 复核与 preflight 修复（m24430，2026-11-17，worktree HEAD 86db1ca7 / 主仓 8210a126）
+
+> 本节为**第三次数字复核 + preflight 缺陷修复**（只读复核，未做任何历史改写）。
+> 数据：`docs/FVM-REPO-SLIM-M24430/{census,preflight}.json`、
+> `measure/measured_pack_R2-R2c-R3-R5b.json`、`figures/`（场景对比 + 漂移曲线）。
+
+### 10.1 数字复核（m23832 → m24430）
+
+| 维度 | m23832（c656f8f9） | m24430（8210a126） | 判定 |
+|---|---|---|---|
+| 全仓 pack | 1361.9 MiB / 32 pack | **1372.2 MiB / 41 pack** | +14.5 MiB/日，守卫 WARN（+50 MiB）未触发 |
+| main 可达（解压） | 1995.5 MiB / 21615 对象 | **1998.6 MiB / 21896 对象** | +3.1 MiB，结论不变 |
+| 对象库垃圾 tmp_pack | 0 | 0 | D6 保持已消解 |
+| 远端分支 | 215 / agent 0 / maint 2 | 215 / agent 0 / **maint 2** | 持平（见 10.2 缺陷②） |
+| R2 / R2c / R3 / R5b 实测 pack | 488.9 / 382.6 / 63.9 / 352.1 MiB | **491.3 / 384.9 / 65.7 / 354.6 MiB** | +1.8~+2.6 MiB，排序与推荐档不变 |
+
+**推荐档不变**：R2c（保 png 图）= 384.9 MiB（-71.4%）；R3（最大收益）= 65.7 MiB（-95.1%）。
+
+### 10.2 preflight 阻塞项变化与缺陷修复（本单交付）
+
+**阻塞项变化**：
+- ① `git-filter-repo` **已安装**（`/usr/bin/git-filter-repo`）→ §9.3 阻塞①消除；
+- ② D7 commit-graph 过期**仍在**（`git fsck --full` rc=16，`core.commitGraph=false` 复测 rc=0）→ 仍待决；
+- **preflight 现 verdict=PASS（blockers=None）**——执行前仅剩 owner 对 D1–D5/D7 的裁决。
+
+**缺陷修复**（`scripts/audit/slim_execute_runbook.py`，均由本单实测发现）：
+1. `--repo` 缺省 `/srv/tensor/workspace/TensorFVM` 已失效，且从 worktree 调用时
+   `.git` 是文件而非目录，preflight 直接 `FileNotFoundError` →
+   新增 `detect_repo_root()`（`git rev-parse --path-format=absolute --git-common-dir` 自动探测）。
+2. 分支分类 `startswith("agent/")` / `startswith("maintenance/")` 对
+   `%(refname:short)` 的 `origin/` 前缀短名**恒匹配 0**——maintenance 实为 2 个、
+   preflight 报 0（m23832 起即如此），**D2 协调面被低估** →
+   新增 `classify_remote_branches()` 先剥远端前缀再分类。
+
+**回归测试**：`tests/test_slim_runbook_preflight.py`（8 项：origin 前缀分类、裸名防御、
+worktree/主仓探测、非仓回退、真实 checkout 探测）；全套 slim/guard
+`pytest tests/test_slim_runbook_preflight.py tests/test_slim_runbook_globs.py tests/test_repo_guard.py`
+→ **29 passed / 2 skipped**。修复后 preflight 从 worktree 直跑成功，maintenance=2 正确入账。
+
+### 10.3 决策点状态（交 owner，2026-11-17）
+
+| # | 决策点 | 状态 |
+|---|---|---|
+| D1 | 删除范围（json/csv 是否同删） | 待决（建议不变：B 档保留清单） |
+| D2 | maintenance/* 旧平行分支处置 | 待决（**实测仍 2 个**：artifact-hygiene、remove-overset-embedded-svg） |
+| D3 | 重写窗口冻结合并 | 待决（建议：冻结） |
+| D4 | 下游 worktree 重 clone | 待决（建议：全量重 clone；本机 worktree 数 436） |
+| D5 | 回滚镜像保留期 | 待决（建议：≥90 天） |
+| D6 | tmp_pack 垃圾 gc | 已消解（连续两次普查 garbage=0） |
+| D7 | 共享 .git commit-graph 过期 | **待决（2026-11-17 复核确认仍在**，fsck rc=16 / no-graph rc=0；修复=`git commit-graph write`，写共享 .git 需 owner 放行） |
+
+**结论**：方案五节与推荐档在 8210a126 上第三次复核全部成立；preflight 已 PASS，
+执行就绪，仅待 owner 裁决 D1–D5/D7。
