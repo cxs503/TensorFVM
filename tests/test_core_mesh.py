@@ -106,10 +106,13 @@ class TestMeshAdapters:
         validate_mesh_data(mesh)
         assert mesh.n_cells == 8 * 4 * 4
         assert "spanwise_lower" in mesh.masks and "spanwise_upper" in mesh.masks
-        # spanwise face areas equal the cross-section cell volumes
+        # spanwise face areas equal the cross-section cell areas (not volumes).
+        # The slab stores spanwise_face_areas as 2-D cell areas; 3-D cell volumes
+        # = cell_area * dz, so spanwise face area = cell_volume / dz.
         sw = mesh.masks["spanwise_lower"]
-        assert np.allclose(mesh.face_lengths[sw],
-                            _np(slab.cell_volumes).reshape(-1))
+        local_nz = slab.z_stop - slab.z_start
+        expected_areas = _np(slab.cell_volumes).reshape(local_nz, -1)[0] / slab.dz
+        assert np.allclose(mesh.face_lengths[sw], expected_areas)
 
     def test_adapt_mesh_dispatch(self):
         mesh = adapt_mesh(_two_tet_mesh())
