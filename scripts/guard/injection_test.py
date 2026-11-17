@@ -62,8 +62,20 @@ def _setup_guard(repo: Path) -> None:
     os.chmod(hooks / "pre-commit", 0o755)
     guard_dir = repo / "scripts" / "guard"
     guard_dir.mkdir(parents=True)
-    shutil.copy2(GUARD, guard_dir / "repo_guard.py")
-    shutil.copy2(GITATTR, repo / ".gitattributes")
+    def _materialize(src: Path, dst: Path) -> None:
+        """Copy src from the working tree; fall back to HEAD.
+
+        Sparse checkouts (blob:none partial clone) do not materialize
+        .gitattributes, so the tracked content is read via `git show`
+        -- same strategy the docstring promises for the hook.
+        """
+        if src.exists():
+            shutil.copy2(src, dst)
+        else:
+            dst.write_text(_tracked(str(src.relative_to(REPO_ROOT))))
+
+    _materialize(GUARD, guard_dir / "repo_guard.py")
+    _materialize(GITATTR, repo / ".gitattributes")
     _git(repo, "config", "core.hooksPath", ".githooks")
 
 

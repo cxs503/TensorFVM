@@ -127,6 +127,8 @@ def live_artifact_bytes() -> int:
         if len(fields) < 4:
             continue
         sha = fields[2]
+        if not fields[3].isdigit():
+            continue  # submodules print "-" as size; they add no blob bytes
         size = int(fields[3])
         if sha not in seen:
             seen.add(sha)

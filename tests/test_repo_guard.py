@@ -30,6 +30,20 @@ sys.path.insert(0, str(REPO_ROOT / "scripts" / "guard"))
 import repo_guard  # noqa: E402
 
 
+def test_live_artifact_bytes_tolerates_submodule(monkeypatch) -> None:
+    """`git ls-tree -r -l` prints "-" as the size of a submodule entry.
+
+    live_artifact_bytes must skip it instead of raising ValueError
+    (a submodule would otherwise crash the CI size gate).
+    """
+    fake = "\n".join([
+        "100644 blob e69de29bb2d1d6434b8b29ae775ad8c2e48c5391 5\tsmall.txt",
+        "160000 commit 1234567890123456789012345678901234567890 -\tsub",
+    ])
+    monkeypatch.setattr(repo_guard, "_git", lambda *a, **k: fake)
+    assert repo_guard.live_artifact_bytes() == 5
+
+
 def _git(tmp_path: Path, *args: str) -> str:
     return subprocess.run(
         ["git", *args], cwd=tmp_path, capture_output=True, text=True, check=True
@@ -239,10 +253,22 @@ def test_ci_workflow_wiring() -> None:
 
 
 def test_gitattributes_whitelist_present() -> None:
-    """The .gitattributes whitelist attribute is declared (working tree)."""
-    ga = REPO_ROOT / ".gitattributes"
-    assert ga.exists(), ".gitattributes missing in working tree"
-    text = ga.read_text()
+    """The .gitattributes whitelist attribute is declared.
+
+    Read from HEAD first: this worktree is a sparse checkout and
+    .gitattributes may not be materialized (same strategy as the other
+    wiring tests, per the module docstring).
+    """
+    proc = subprocess.run(
+        ["git", "show", "HEAD:.gitattributes"], cwd=REPO_ROOT,
+        capture_output=True, text=True,
+    )
+    if proc.returncode == 0:
+        text = proc.stdout
+    else:  # no HEAD (bare/empty repo) -> fall back to the working tree
+        ga = REPO_ROOT / ".gitattributes"
+        assert ga.exists(), ".gitattributes missing in HEAD and working tree"
+        text = ga.read_text()
     assert "guard-allow-large" in text
 
 

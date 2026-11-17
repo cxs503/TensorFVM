@@ -1,0 +1,97 @@
+{
+  "generated_at": "2026-11-17T13:54:46.516482+00:00",
+  "anchor": "FVM-SLIM-GUARD",
+  "mission": 24405,
+  "head_before_mission": "686b8fb1df10ba5ae099e3c5e65e8d28429d2164",
+  "acceptance": {
+    "gate": "512KiB 拦截+CI 阈值门",
+    "why": "再生 25-35MiB/日,6周长回1GiB"
+  },
+  "defects_fixed": [
+    {
+      "id": "A",
+      "file": "scripts/guard/injection_test.py",
+      "symptom": "FileNotFoundError on .gitattributes in sparse worktree (shutil.copy2 of unmaterialized wiring file)",
+      "fix": "_materialize(): working-tree copy with HEAD (git show) fallback",
+      "repro": "python3 scripts/guard/injection_test.py  # crashed before fix, passes after"
+    },
+    {
+      "id": "B",
+      "file": "tests/test_repo_guard.py::test_gitattributes_whitelist_present",
+      "symptom": "test asserted working-tree .gitattributes exists -> false FAIL under sparse checkout (17 passed, 1 failed before fix)",
+      "fix": "read HEAD:.gitattributes first, working-tree fallback",
+      "repro": "pytest tests/test_repo_guard.py -q  # 1 failed before, 19 passed after"
+    },
+    {
+      "id": "C",
+      "file": "scripts/guard/repo_guard.py::live_artifact_bytes",
+      "symptom": "latent ValueError: git ls-tree -r -l prints '-' as size for submodule entries -> CI gate crash if a submodule is ever added",
+      "fix": "skip non-digit size fields; regression test via monkeypatched _git",
+      "repro": "tests/test_repo_guard.py::test_live_artifact_bytes_tolerates_submodule"
+    }
+  ],
+  "verification": {
+    "pytest": "19 passed, 2 skipped (tests/test_repo_guard.py + tests/test_slim_runbook_globs.py)",
+    "ruff": "All checks passed (scripts/guard/repo_guard.py, scripts/guard/injection_test.py, tests/test_repo_guard.py)",
+    "injection_e2e": {
+      "all_pass": true,
+      "cases": [
+        {
+          "case": "large-unlisted",
+          "blob_human": "600.0 KiB",
+          "hook_fired": true,
+          "expect_block": true,
+          "pass": true
+        },
+        {
+          "case": "small",
+          "blob_human": "0.1 KiB",
+          "hook_fired": false,
+          "expect_block": false,
+          "pass": true
+        },
+        {
+          "case": "large-whitelisted-npz",
+          "blob_human": "600.0 KiB",
+          "hook_fired": false,
+          "expect_block": false,
+          "pass": true
+        },
+        {
+          "case": "large-unlisted-docs",
+          "blob_human": "600.0 KiB",
+          "hook_fired": true,
+          "expect_block": true,
+          "pass": true
+        }
+      ]
+    },
+    "live_ci_gate": {
+      "cmd": "/usr/bin/python3 scripts/guard/repo_guard.py ci",
+      "rc": 0,
+      "stdout": "repo_guard: blob gate OK vs origin/main (limit 512.0 KiB)\n{\n  \"pack_bytes\": 1438814044,\n  \"pack_human\": \"1.3 GiB\",\n  \"baseline_bytes\": 1428076625,\n  \"drift_bytes\": 10737419,\n  \"drift_human\": \"10.2 MiB+\",\n  \"warn_at\": 1480505425,\n  \"hard_at\": 1585363025,\n  \"pack_status\": \"OK\",\n  \"garbage_bytes\": 117\n}\n{\n  \"live_bytes\": 197422909,\n  \"live_human\": \"188.3 MiB\",\n  \"baseline_bytes\": 197122081,\n  \"drift_bytes\": 300828,\n  \"drift_human\": \"293.8 KiB+\",\n  \"warn_at\": 249550881,\n  \"red_at\": 301979681,\n  \"live_status\": \"OK\"\n}\nrepo_guard: CI size gate passed\n",
+      "stderr": ""
+    },
+    "live_staged_gate": {
+      "cmd": "/usr/bin/python3 scripts/guard/repo_guard.py staged",
+      "rc": 0,
+      "stdout": "repo_guard: staged blobs OK (limit 512.0 KiB)\n",
+      "stderr": ""
+    }
+  },
+  "trio_status": {
+    "pre_commit_512KiB": {
+      "wiring": ".githooks/pre-commit + core.hooksPath=.githooks (set in main repo config)",
+      "engine": "scripts/guard/repo_guard.py staged",
+      "whitelist": ".gitattributes guard-allow-large",
+      "escape": "FVM_GUARD_ALLOW_LARGE=1",
+      "e2e_proof": "injection-test.json all_pass=true"
+    },
+    "ci_threshold_gate": {
+      "wiring": ".github/workflows/repo-guard.yml (blob gate 512KiB + pack drift +50/+150MiB + live volume +50/+100MiB)",
+      "engine": "scripts/guard/repo_guard.py ci",
+      "live_run": "rc=0, pack 1.3GiB drift +10.2MiB OK, live 188.3MiB drift +0.3MiB OK"
+    },
+    "migration_skeleton": "docs/MIGRATION.md + docs/MIGRATION-m23216.md (触发条件/基线/D1-D7/runbook/回滚)"
+  }
+}
