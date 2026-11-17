@@ -1,0 +1,23 @@
+# ROUND33 Summary
+
+## 修复内容
+
+修复了 `src/tensorfvm/periodic_hill3d_solver.py` 中的 5 个关键 bug：
+
+1. **pressure_neumann/pressure_outlet_values 尺寸错误**：从 `self.N` 改为 `self.n_faces`
+2. **压力矩阵奇异**：将第 0 行替换为 `[1, 0, ...]` 约束常数模式
+3. **压力矩阵符号错误**：`pm[n, o]` 从 `-a[i]` 改为 `+a[i]`
+4. **压力梯度计算错误**：使用 `index_add_` 正确累积面压力到单元
+5. **CFL 计算重复**：删除重复的 `cell_dist.index_add_` 和 `cfl = float(...)` 行
+
+## 验证结果
+
+- 第 1 步通过：bulk velocity = 0.9995（期望 1.0），CFL = 0.007
+- 第 2 步失败：CFL = 5.1，速度爆炸
+- 压力投影残差 ~1e-12（正确）
+
+## 待办
+
+- 调试边界面上的压力梯度处理
+- 添加 WALE SGS 模型
+- 网格加密测试
