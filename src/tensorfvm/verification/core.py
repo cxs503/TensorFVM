@@ -9,6 +9,7 @@ import platform
 import subprocess
 import numpy as np
 import torch
+from ..registry import capability
 
 ERROR_LIMIT = 0.03
 
@@ -38,6 +39,16 @@ def relative_error(actual, reference, norm="l2"):
     return float(numerator/denominator)
 
 
+@capability('fvm.verification.core',
+            kind='verification',
+            maturity='developing',
+            test_path='tests/test_richardson_gci.py',
+            wired=True,
+            tested=True,
+            evidence={'grade': 'MECHANICS',
+                      'note': 'shared verification plumbing (metric aggregation, '
+                              'jsonable, sha); no numeric reference of its own, '
+                              'so no verified claim is made'})
 def evaluate(metrics):
     rows = [m.record() for m in metrics]
     if not rows or len({r["name"] for r in rows}) != len(rows):

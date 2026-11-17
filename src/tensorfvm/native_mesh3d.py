@@ -7,6 +7,7 @@ This is a geometry contract, not evidence of a validated flow discretization.
 """
 from dataclasses import dataclass
 import numpy as np
+from .registry import capability
 
 _FACES = {
  'tetra': ((0,2,1),(0,1,3),(1,2,3),(2,0,3)),
@@ -17,6 +18,16 @@ _FACES = {
 _COUNTS = {'tetra':4,'hexahedron':8,'wedge':6,'pyramid':5}
 
 @dataclass(frozen=True)
+@capability('fvm.mesh.native3d',
+            kind='mesh',
+            maturity='developing',
+            test_path='tests/test_core_mesh.py',
+            wired=True,
+            tested=True,
+            evidence={'grade': 'MECHANICS',
+                      'note': 'native 3-D FV mesh container exercised by the core '
+                              'mesh adapters; geometry correctness is owned by the '
+                              'solver-level verification cases'})
 class NativeMesh3D:
     vertices: np.ndarray
     cells: tuple

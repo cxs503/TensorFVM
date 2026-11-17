@@ -84,6 +84,7 @@ import numpy as np
 
 from .panel_potential import IMAGE_SPECS, image_points, panel_quadrature, solve_sources
 from .twin_hull_geometry import PanelSet, panelise_nodes
+from .registry import capability
 
 __all__ = [
     "added_mass_matrix",
@@ -520,6 +521,16 @@ def surface_generators(panels: PanelSet) -> np.ndarray:
     return np.concatenate([normals, rot], axis=1)
 
 
+@capability('fvm.seakeeping.panel_added_mass',
+            kind='maneuvering',
+            maturity='developing',
+            test_path='tests/test_added_mass_potential.py',
+            wired=True,
+            tested=True,
+            evidence={'grade': 'MECHANICS',
+                      'note': 'panel method added-mass matrix; spheroid checks '
+                              'against Lamb closed forms live in the triaxial/'
+                              'parallel-axis tests, not yet booked as a band'})
 def added_mass_matrix_6dof(panels: PanelSet, *, rho: float = 1.0, order: int = 3,
                            directions: tuple[int, ...] | None = None,
                            images=IMAGE_SPECS["body"],

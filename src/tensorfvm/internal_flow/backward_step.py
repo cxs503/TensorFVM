@@ -88,6 +88,7 @@ def inlet_profile(cells_per_step_height: int) -> tuple[float, ...]:
 @capability('fvm.internal_flow.backward_step',
             kind='solver',
             maturity='developing',
+            endpoint='route:tensorfvm.internal_flow.backward_step:BackwardStepCase',
             test_path='tests/test_internal_flow_benchmarks.py',
             wired=True,
             tested=True,

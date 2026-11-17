@@ -42,6 +42,7 @@ from pathlib import Path
 
 import numpy as np
 from scipy.interpolate import PchipInterpolator
+from ..registry import capability
 
 # --------------------------------------------------------------------------- #
 # Constants
@@ -174,6 +175,15 @@ def bulk_velocity_deviation(bulk_u_plus_model, dns):
 TOLERANCE_LOG_REGION = 0.05   # 5 % RMS relative error in log region
 
 
+@capability('fvm.verification.kmm1987',
+            kind='verification',
+            maturity='developing',
+            test_path='tests/test_channel_kmm180_direct_anchor.py',
+            wired=True,
+            tested=True,
+            evidence={'grade': 'XVALUE',
+                      'note': 'scores RANS channel predictions against the '
+                              'KMM1987 DNS/experiment reference data'})
 def validate_kmm1987(y_plus, u_plus, cf_model, bulk_u_plus_model, *,
                      dns=None, tolerance=TOLERANCE_LOG_REGION):
     """Run the full KMM1987 validation suite.

@@ -12,8 +12,19 @@ import numpy as np
 from .native_hybrid_stokes3d import NativeHybridStokes3D
 from .native_hybrid_convection3d import NativeHybridConvection3D
 from .native_hybrid_newton3d import solve_newton
+from .registry import capability
 
 
+@capability('fvm.core.hybrid_ns3d',
+            kind='solver',
+            maturity='developing',
+            endpoint='route:tensorfvm.native_hybrid_ns3d:NativeHybridNavierStokes3D',
+            test_path='tests/test_native_hybrid_ns3d.py',
+            wired=True,
+            tested=True,
+            evidence={'grade': 'MECHANICS',
+                      'note': 'native hybrid Stokes->Navier-Stokes 3-D solver; '
+                              'no booked analytic band yet'})
 class NativeHybridNavierStokes3D(NativeHybridStokes3D):
     def __init__(self, mesh, velocity_dirichlet, velocity_boundary=0., *,
                  density=1., backflow_velocity=None, convection_order=1, wall_model=None, **kwargs):

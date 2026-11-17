@@ -56,6 +56,7 @@ import json
 import math
 import time
 from dataclasses import dataclass
+from ..registry import capability
 
 import numpy as np
 
@@ -225,6 +226,16 @@ BORE_SUBCELL_MAX_CELLS = 0.5
 
 
 @dataclass(frozen=True)
+@capability('fvm.shallowwater.dambreak',
+            kind='solver',
+            maturity='developing',
+            endpoint='route:tensorfvm.shallow_water.dam_break:DamBreakCase',
+            test_path='tests/test_dam_break_front_metric.py',
+            wired=True,
+            tested=True,
+            evidence={'grade': 'MECHANICS',
+                      'note': 'Stoker dam-break solver; front/bore metrics are '
+                              'scored by the dambreak verification tests'})
 class DamBreakCase:
     """Geometry and reference solution of one dam-break case."""
 

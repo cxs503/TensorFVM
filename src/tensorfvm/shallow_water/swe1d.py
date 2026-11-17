@@ -46,10 +46,21 @@ from __future__ import annotations
 import math
 
 import numpy as np
+from ..registry import capability
 
 __all__ = ["ShallowWater1D"]
 
 
+@capability('fvm.shallowwater.swe1d',
+            kind='solver',
+            maturity='developing',
+            endpoint='route:tensorfvm.shallow_water.swe1d:ShallowWater1D',
+            test_path='tests/test_dambreak_depth_modes.py',
+            wired=True,
+            tested=True,
+            evidence={'grade': 'MECHANICS',
+                      'note': '1-D shallow-water solver; exact-solution scoring '
+                              'lives in the dambreak verification cases'})
 class ShallowWater1D:
     """Explicit FV solver for the 1-D shallow-water equations on a flat bed."""
 
