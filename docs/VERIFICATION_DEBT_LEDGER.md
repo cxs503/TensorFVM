@@ -1015,3 +1015,6 @@
   总账 <15 % PASS）；「慢收缩成分」的阵面归属未分解。
 - 给下次：① 逐阵面分解 (12800→25600) 的 D(x)（接触间断最可疑——无耗散机制）；② 25600 CFL 0.4 档回填后
   分离空间/时间误差；③ 可信参考走异族代码（CLAWPACK/pyclaw，D22 ③）。
+- 待办（交下一单）: cj3108（96x48 固定算子 + 固定闭包，stag_dir 本工作树）提交时排队位次 26，
+  出数后读 `round11_sst_r13-96x48.json` 打分，判 41.9% 缺口是否由该缺陷解释。
+- 产物: `docs/case-periodic-hills/{ROUND13.md,round13_operator_defect.json,fig_round13_eta_face_operator.png}`。
