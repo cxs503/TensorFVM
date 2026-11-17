@@ -191,10 +191,13 @@ def from_body_fitted3d(mesh) -> MeshData:
     areas; the normal is the slab direction, ``-z`` on the lower slab face and
     ``+z`` on the upper one, interior spanwise faces owned by the lower cell).
 
-    The 2-D seed labels its interior faces ``'interior'``; the ``MeshData``
-    contract requires the literal ``'internal'`` on every interior face, so
-    the lateral labels are remapped here (the spanwise labels already use
-    ``'internal'``).
+    The 2-D seed labels faces with physical patch names (``'cylinder'``,
+    ``'far-field'``, ``'inlet'``, ``'outlet'``) and ``'interior'`` for
+    internal faces.  The ``MeshData`` contract requires the literal
+    ``'internal'`` on every interior face (``neighbor >= 0``), so the
+    lateral labels are remapped based on the ``lateral_neighbor`` array:
+    faces with ``neighbor >= 0`` get ``'internal'``, and boundary faces
+    (``neighbor == -1``) keep their physical patch label.
     """
     local_nz = mesh.z_stop - mesh.z_start
     ny, nx = mesh.ny, mesh.nx
@@ -205,10 +208,11 @@ def from_body_fitted3d(mesh) -> MeshData:
     lat_neighbor = _torch_to_numpy(mesh.lateral_neighbor).reshape(-1)
     lat_centers = _torch_to_numpy(mesh.lateral_face_centers).reshape(-1, 3)
     lat_areas = _torch_to_numpy(mesh.lateral_face_area_vectors).reshape(-1, 3)
+    # Repeat the 2-D label tuple for each z-slice.
     lat_labels = np.repeat(np.asarray(mesh.lateral_labels, dtype=object), local_nz)
-    # The 2-D seed's interior faces are labelled 'interior'; the contract
-    # requires 'internal' on every interior face.
-    lat_labels = np.where(lat_labels == "interior", "internal", lat_labels)
+    # Remap: interior faces (neighbor >= 0) get 'internal'; boundary faces
+    # keep their physical patch label (cylinder, far-field, inlet, outlet).
+    lat_labels = np.where(lat_neighbor >= 0, "internal", lat_labels)
 
     sw_centers = _torch_to_numpy(mesh.spanwise_face_centers)  # (local_nz+1, ny, nx, 3)
     sw_areas = _torch_to_numpy(mesh.spanwise_face_areas)      # (local_nz+1, ny, nx)
