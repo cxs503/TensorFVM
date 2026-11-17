@@ -1,0 +1,113 @@
+{
+ "generated_at": "2026-11-17 19:50:15",
+ "repo": "/root/tp-agent/work/m24568",
+ "gitdir": "/root/tensor-ecosystem/TensorFVM/.git",
+ "git_head": "d8214b51",
+ "git_branch": "agent/m24568",
+ "pack_params": {
+  "window": 10,
+  "depth": 50,
+  "threads": 8
+ },
+ "reachable": {
+  "n_objects": 37687,
+  "n_blobs": 17282,
+  "blob_MiB": 2064.91,
+  "by_type": {
+   "blob": {
+    "n": 17282,
+    "MiB": 2064.91
+   },
+   "commit": {
+    "n": 3714,
+    "MiB": 2.14
+   },
+   "tree": {
+    "n": 16691,
+    "MiB": 108.76
+   }
+  },
+  "inpack_MiB": 1368.48
+ },
+ "baseline_keepall_pack_MiB": 1345.73,
+ "scenarios": [
+  {
+   "tag": "R1",
+   "desc": "只删 docs 场数据(npz/npy/vtk/vtu/msh/pt/dat/gz/csv)",
+   "dropped_blobs": 1325,
+   "dropped_MiB": 821.46,
+   "kept_MiB": 1243.46,
+   "measured_pack_MiB": 686.28,
+   "reduction_pct": 49.0,
+   "exclusive_inpack_MiB": 662.77,
+   "n_surviving_objects": 36362
+  },
+  {
+   "tag": "R2",
+   "desc": "删场数据+网格+PDF，保留 png/svg 图",
+   "dropped_blobs": 2188,
+   "dropped_MiB": 1083.23,
+   "kept_MiB": 981.69,
+   "measured_pack_MiB": 491.71,
+   "reduction_pct": 63.46,
+   "exclusive_inpack_MiB": 857.32,
+   "n_surviving_objects": 35499
+  },
+  {
+   "tag": "R2b",
+   "desc": "R2 + 全仓 *.pyc",
+   "dropped_blobs": 4224,
+   "dropped_MiB": 1122.36,
+   "kept_MiB": 942.55,
+   "measured_pack_MiB": 491.26,
+   "reduction_pct": 63.49,
+   "exclusive_inpack_MiB": 862.03,
+   "n_surviving_objects": 33463
+  },
+  {
+   "tag": "R2c",
+   "desc": "R2 + 删 docs *.svg（几乎全为 dead 图）",
+   "dropped_blobs": 4887,
+   "dropped_MiB": 1446.83,
+   "kept_MiB": 618.09,
+   "measured_pack_MiB": 385.3,
+   "reduction_pct": 71.37,
+   "exclusive_inpack_MiB": 968.07,
+   "n_surviving_objects": 32800
+  },
+  {
+   "tag": "R3",
+   "desc": "删 docs 全部二进制 + 全仓 *.pyc",
+   "dropped_blobs": 6991,
+   "dropped_MiB": 1794.8,
+   "kept_MiB": 270.11,
+   "measured_pack_MiB": 65.93,
+   "reduction_pct": 95.1,
+   "exclusive_inpack_MiB": 1287.53,
+   "n_surviving_objects": 30696
+  },
+  {
+   "tag": "R5",
+   "desc": "阈值：删 docs 下 >=1 MiB 的 blob",
+   "dropped_blobs": 341,
+   "dropped_MiB": 1112.17,
+   "kept_MiB": 952.74,
+   "measured_pack_MiB": 595.48,
+   "reduction_pct": 55.75,
+   "exclusive_inpack_MiB": 763.29,
+   "n_surviving_objects": 37346
+  },
+  {
+   "tag": "R5b",
+   "desc": "阈值：删 docs 下 >=512 KiB 的 blob",
+   "dropped_blobs": 844,
+   "dropped_MiB": 1468.22,
+   "kept_MiB": 596.7,
+   "measured_pack_MiB": 355.0,
+   "reduction_pct": 73.62,
+   "exclusive_inpack_MiB": 999.47,
+   "n_surviving_objects": 36843
+  }
+ ],
+ "elapsed_s": 55.1
+}
