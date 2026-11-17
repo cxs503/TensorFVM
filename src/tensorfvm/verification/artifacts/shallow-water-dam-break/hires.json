@@ -1,7 +1,7 @@
 {
  "meta": {
-  "generated_at": "2026-11-16T07:26:18Z",
-  "git_commit": "91413c9d",
+  "generated_at": "2026-11-17T16:05:06Z",
+  "git_commit": "86db1ca7",
   "resolutions": [
    800,
    1600,
@@ -11,9 +11,33 @@
   "tolerance": 0.05,
   "floor_ratio_rule": 0.9,
   "min_grids_for_order": 3,
+  "plateau_cut_frac": 0.01,
+  "plateau_flat_fraction": 0.05,
   "numpy": "2.4.6",
   "python": "3.11.6",
-  "command": "PYTHONPATH=src python scripts/run_shallow_water_dam_break_hires.py --resolutions 800,1600,3200,6400"
+  "command": "PYTHONPATH=src python scripts/run_shallow_water_dam_break_hires.py --resolutions 800,1600,3200,6400",
+  "profile_figure": {
+   "path": "docs/case-fvm-dambreak-stoker-hires/profiles.png",
+   "n": 6400,
+   "panels": {
+    "ritter-dry": {
+     "depth_l1": 0.0001930481186585933,
+     "depth_linf_over_h0": 0.0033577918727614176,
+     "zoom": [
+      2.8,
+      4.6
+     ]
+    },
+    "stoker-wet": {
+     "depth_l1": 0.00010455477450871954,
+     "depth_linf_over_h0": 0.08270811808711198,
+     "zoom": [
+      0.6887811500316989,
+      2.488781150031699
+     ]
+    }
+   }
+  }
  },
  "cases": {
   "ritter-dry": {
@@ -24,7 +48,7 @@
      "n": 800,
      "dx": 0.0125,
      "steps": 739,
-     "wall_time_s": 1.027225049212575,
+     "wall_time_s": 0.9876862000674009,
      "depth_l1": 0.0015419003450595436,
      "front_series": 0.005316627610259416,
      "front_series_graded": 23,
@@ -49,7 +73,7 @@
      "n": 1600,
      "dx": 0.00625,
      "steps": 1513,
-     "wall_time_s": 2.9015512205660343,
+     "wall_time_s": 2.456168469041586,
      "depth_l1": 0.0007715065657630972,
      "front_series": 0.0042472950845003216,
      "front_series_graded": 24,
@@ -74,7 +98,7 @@
      "n": 3200,
      "dx": 0.003125,
      "steps": 3081,
-     "wall_time_s": 8.21156581863761,
+     "wall_time_s": 6.919186290353537,
      "depth_l1": 0.0003859625825704671,
      "front_series": 0.0038016825952296818,
      "front_series_graded": 24,
@@ -99,7 +123,7 @@
      "n": 6400,
      "dx": 0.0015625,
      "steps": 6238,
-     "wall_time_s": 22.849775129929185,
+     "wall_time_s": 21.668830359354615,
      "depth_l1": 0.0001930481186585933,
      "front_series": 0.0026747052701919117,
      "front_series_graded": 24,
@@ -175,7 +199,7 @@
      "n": 800,
      "dx": 0.0125,
      "steps": 459,
-     "wall_time_s": 0.634564159438014,
+     "wall_time_s": 0.615574249997735,
      "depth_l1": 0.0008510840146864194,
      "front_series": 0.007952172493579573,
      "front_series_graded": 24,
@@ -201,14 +225,33 @@
      "bore_flatness": 0.008673899013152844,
      "bore_thresh_frac_used": 0.01,
      "bore_step_ratio_error": 6.022024523409795e-06,
-     "bore_cells_off": 0.06536592622921944
+     "bore_cells_off": 0.06536592622921944,
+     "bore_plateau_width": 2.862499999999939,
+     "bore_n_plateau": 229,
+     "bore_attempts": [
+      {
+       "decade": 0,
+       "thresh_frac": 0.01,
+       "thresh": 0.05837611897745543,
+       "bounded": true,
+       "n_plateau": 229
+      }
+     ],
+     "fan_grad": 0.31311749646954823,
+     "jump_grad": 5.837611897745418,
+     "fan_over_jump": 0.053637943384088164,
+     "cut_frac": 0.01,
+     "fan_over_jump_below_cut": false,
+     "exclude_cells": 3,
+     "exclude_frac": 0.01,
+     "exclude_width": 0.1
     },
     {
      "case": "stoker-wet",
      "n": 1600,
      "dx": 0.00625,
      "steps": 918,
-     "wall_time_s": 1.5490893889218569,
+     "wall_time_s": 1.5064103696495295,
      "depth_l1": 0.0004271934800380538,
      "front_series": 0.00844265997289686,
      "front_series_graded": 24,
@@ -234,14 +277,33 @@
      "bore_flatness": 0.01668552736650771,
      "bore_thresh_frac_used": 0.01,
      "bore_step_ratio_error": 3.479002819539679e-05,
-     "bore_cells_off": 0.0633327658668037
+     "bore_cells_off": 0.0633327658668037,
+     "bore_plateau_width": 2.950000000000042,
+     "bore_n_plateau": 472,
+     "bore_attempts": [
+      {
+       "decade": 0,
+       "thresh_frac": 0.01,
+       "thresh": 0.11215300782533202,
+       "bounded": true,
+       "n_plateau": 472
+      }
+     ],
+     "fan_grad": 0.3158007254676498,
+     "jump_grad": 11.215300782533362,
+     "fan_over_jump": 0.02815802550382562,
+     "cut_frac": 0.01,
+     "fan_over_jump_below_cut": false,
+     "exclude_cells": 3,
+     "exclude_frac": 0.01,
+     "exclude_width": 0.1
     },
     {
      "case": "stoker-wet",
      "n": 3200,
      "dx": 0.003125,
      "steps": 1836,
-     "wall_time_s": 4.24911680072546,
+     "wall_time_s": 4.193206328898668,
      "depth_l1": 0.00021857119654017447,
      "front_series": 0.004286792882395451,
      "front_series_graded": 24,
@@ -267,14 +329,33 @@
      "bore_flatness": 0.0396090653602225,
      "bore_thresh_frac_used": 0.01,
      "bore_step_ratio_error": 0.00010681672648329178,
-     "bore_cells_off": 0.09681317953827318
+     "bore_cells_off": 0.09681317953827318,
+     "bore_plateau_width": 3.012500000000257,
+     "bore_n_plateau": 964,
+     "bore_attempts": [
+      {
+       "decade": 0,
+       "thresh_frac": 0.01,
+       "thresh": 0.23634073392811825,
+       "bounded": true,
+       "n_plateau": 964
+      }
+     ],
+     "fan_grad": 0.31950105923833405,
+     "jump_grad": 23.63407339281384,
+     "fan_over_jump": 0.013518662395940656,
+     "cut_frac": 0.01,
+     "fan_over_jump_below_cut": false,
+     "exclude_cells": 3,
+     "exclude_frac": 0.01,
+     "exclude_width": 0.1
     },
     {
      "case": "stoker-wet",
      "n": 6400,
      "dx": 0.0015625,
      "steps": 3672,
-     "wall_time_s": 13.213362669572234,
+     "wall_time_s": 13.178223609924316,
      "depth_l1": 0.00010455477450871954,
      "front_series": 0.0020521511330754824,
      "front_series_graded": 24,
@@ -300,7 +381,33 @@
      "bore_flatness": 0.0017500808598809082,
      "bore_thresh_frac_used": 0.001,
      "bore_step_ratio_error": 8.803519928055741e-07,
-     "bore_cells_off": 0.07221395497211347
+     "bore_cells_off": 0.07221395497211347,
+     "bore_plateau_width": 2.971874999999831,
+     "bore_n_plateau": 1902,
+     "bore_attempts": [
+      {
+       "decade": 0,
+       "thresh_frac": 0.01,
+       "thresh": 0.5018770580832234,
+       "bounded": false,
+       "n_plateau": 3763
+      },
+      {
+       "decade": 1,
+       "thresh_frac": 0.001,
+       "thresh": 0.05018770580832234,
+       "bounded": true,
+       "n_plateau": 1902
+      }
+     ],
+     "fan_grad": 0.32262957456104857,
+     "jump_grad": 50.18770580831948,
+     "fan_over_jump": 0.006428458311947129,
+     "cut_frac": 0.01,
+     "fan_over_jump_below_cut": true,
+     "exclude_cells": 3,
+     "exclude_frac": 0.01,
+     "exclude_width": 0.1
     }
    ],
    "observed_order_depth_l1": 1.0041914164574552,
@@ -390,7 +497,45 @@
     ],
     "needs_at_least_grids": 2
    },
-   "bore_max_cell_error_over_range": 0.003987306857425996
+   "bore_max_cell_error_over_range": 0.003987306857425996,
+   "plateau_cut_frac": 0.01,
+   "plateau_flat_fraction": 0.05,
+   "fan_over_jump_by_grid": [
+    {
+     "n": 800,
+     "fan_over_jump": 0.053637943384088164,
+     "thresh_frac_used": 0.01
+    },
+    {
+     "n": 1600,
+     "fan_over_jump": 0.02815802550382562,
+     "thresh_frac_used": 0.01
+    },
+    {
+     "n": 3200,
+     "fan_over_jump": 0.013518662395940656,
+     "thresh_frac_used": 0.01
+    },
+    {
+     "n": 6400,
+     "fan_over_jump": 0.006428458311947129,
+     "thresh_frac_used": 0.001
+    }
+   ],
+   "fan_over_jump_first_below_cut": 6400,
+   "cut_bounded_untightened": {
+    "800": true,
+    "1600": true,
+    "3200": true,
+    "6400": false
+   },
+   "thresh_frac_ladder_used": {
+    "800": 0.01,
+    "1600": 0.01,
+    "3200": 0.01,
+    "6400": 0.001
+   },
+   "fan_over_jump_rule": "fan_grad = max|dh/dx| over the region at least max(3 dx, 0.01 L) upstream of the max-gradient cell; jump_grad = max|dh/dx| over the profile; the plateau walk is undefined without the decade ladder once fan_over_jump < PLATEAU_THRESH_FRACTION"
   }
  }
 }
