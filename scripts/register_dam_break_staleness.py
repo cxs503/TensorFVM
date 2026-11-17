@@ -22,6 +22,12 @@ Two different questions, deliberately answered by two different mechanisms:
   therefore is not a function of a digest; ``--check`` here reports drift as a
   readable diff so a stale archive is noticed immediately rather than silently.
 
+Extended by m24426: ``hires.json`` and ``bore_subcell.json`` are now bound too,
+closing the D32 "hires/bore_subcell 未重跑" debt.  These two artifacts are produced
+by ``scripts/run_shallow_water_dam_break_hires.py`` and
+``scripts/verify_dambreak_bore_subcell.py`` respectively, which share the same
+producer source tree (``swe1d.py``, ``exact.py``, ``dam_break.py``).
+
 Usage::
 
     PYTHONPATH=src python scripts/register_dam_break_staleness.py --write
@@ -58,16 +64,21 @@ PRODUCER_FILES = (
     "src/tensorfvm/shallow_water/exact.py",
     "src/tensorfvm/shallow_water/dam_break.py",
     "scripts/run_shallow_water_dam_break.py",
+    "scripts/run_shallow_water_dam_break_hires.py",
+    "scripts/verify_dambreak_bore_subcell.py",
 )
 
 #: Artefacts whose bytes the manifest records (informational: ``source_staleness``
 #: audits ``SOURCE_KEYS`` only, but a reader comparing digests sees an edited archive).
+#: Extended by m24426 to include hires.json and bore_subcell.json (D32 closure).
 ARTIFACT_FILES = (
     "metrics.json",
     "convergence.json",
     "exactness.json",
     "sensitivity.json",
     "front_definitions.json",
+    "hires.json",
+    "bore_subcell.json",
 )
 
 SCHEMA = "tensorfvm.case-shallow-water-dam-break/1"

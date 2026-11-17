@@ -1,9 +1,11 @@
 {
   "acceptance": "wave-front position x_f(t) (dry bed, Ritter) and the still-water level step h2/h1 plus the bore position x_s(t) (wet bed, Stoker) within 5 % of the closed form at t* = 2, waveform monotone (no interior local extremum above 1e-4 h0)",
   "artifacts_sha256": {
+    "bore_subcell.json": "99f41db495db7f3e26818921fb7ba797f23dcea741494e3b6112d20de20c20dc",
     "convergence.json": "119266c721d479d94adb82f1ced5c1dc4305d28d9a85263637b1d289e24f6dfd",
     "exactness.json": "13ab7d894219408a0cbd919c60a95155b015eac7a1135fe3d18b0a9a009e0980",
     "front_definitions.json": "50f7f5b626c863a26b8a3d6dd540c082701af8371b3dfdb506a22c4cc8b44515",
+    "hires.json": "c24569864a02a8a6a2a52373ec7b8186cef0a18fa5278480b3c81ac8a3e96f51",
     "metrics.json": "3c37c398e39b536f1c9375321c4cd10953a2ba933c11567c957b8585ea6302df",
     "sensitivity.json": "b1a1d0cdf760cec0c1a0c4bacb2451dfeaad61deea33d37e05f9b0526dfff609"
   },
@@ -15,7 +17,9 @@
     "src/tensorfvm/shallow_water/swe1d.py",
     "src/tensorfvm/shallow_water/exact.py",
     "src/tensorfvm/shallow_water/dam_break.py",
-    "scripts/run_shallow_water_dam_break.py"
+    "scripts/run_shallow_water_dam_break.py",
+    "scripts/run_shallow_water_dam_break_hires.py",
+    "scripts/verify_dambreak_bore_subcell.py"
   ],
   "pool_entry": "docs/case-fvm-dambreak-stoker/case_pool_entry.json",
   "reference": {
@@ -27,10 +31,12 @@
   "source_sha256": {
     "pyproject.toml": "15504eea227f786cdfe875b660e31923bb0dc2d56ac6c7c31c2efe79f6c25cea",
     "scripts/run_shallow_water_dam_break.py": "e293d0af3cc90468e9deea6c8f7a153b97552e4df4715daa2d59b679e5b4ac24",
+    "scripts/run_shallow_water_dam_break_hires.py": "1346893c9799b9640384c43cf67a92573a2db132954bc2bd90eef1a5b5107a4a",
+    "scripts/verify_dambreak_bore_subcell.py": "088d04d5ba30d4c624e43f5c5e1f902f6aad5df9d21cd06b0bce37711aa0bb64",
     "src/tensorfvm/shallow_water/__init__.py": "3ef6a07f73e69986dd78faf30a35fd9c223b284bd152d35eda50a2fe03b5c30e",
-    "src/tensorfvm/shallow_water/dam_break.py": "3650d97941a7ce5052cb306b5772cc873e5f10fc019c96bab0e7f0f0d03c1ce5",
-    "src/tensorfvm/shallow_water/exact.py": "d457a6c67c540cd69299b862e7cc1a8f63f1f24534df3b752b06b0f943dc3723",
-    "src/tensorfvm/shallow_water/swe1d.py": "93fa18a38618aa7b3e674f527ae3e245af794b422fc122de360a2a1b681fe934"
+    "src/tensorfvm/shallow_water/dam_break.py": "a1187c2b4b4b47b17f280956e6a13f9f14e6ac25943ce3abd804d5778188c72d",
+    "src/tensorfvm/shallow_water/exact.py": "c5065e7532e5646ff25d8a1137ffa8805727e528fe46ec3e2c624d353d675c83",
+    "src/tensorfvm/shallow_water/swe1d.py": "8eb2a7b3bc70a1dd965642785fd5d4af7647bae15d427a5fec76a5fd13a172be"
   },
   "source_snapshot_root": "source-snapshot",
   "t_star": 2.0,

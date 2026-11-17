@@ -56,6 +56,7 @@ import json
 import math
 import time
 from dataclasses import dataclass
+from ..registry import capability
 
 import numpy as np
 
@@ -225,6 +226,16 @@ BORE_SUBCELL_MAX_CELLS = 0.5
 
 
 @dataclass(frozen=True)
+@capability('fvm.shallowwater.dambreak',
+            kind='solver',
+            maturity='developing',
+            endpoint='route:tensorfvm.shallow_water.dam_break:DamBreakCase',
+            test_path='tests/test_dam_break_front_metric.py',
+            wired=True,
+            tested=True,
+            evidence={'grade': 'MECHANICS',
+                      'note': 'Stoker dam-break solver; front/bore metrics are '
+                              'scored by the dambreak verification tests'})
 class DamBreakCase:
     """Geometry and reference solution of one dam-break case."""
 
@@ -844,7 +855,7 @@ def fan_front_estimate(x, h, t: float, gravity: float, h0: float,
 
     so every cell inside the fan individually carries the front,
 
-    .. math:: x_f = 2 c0 t = x_i + 3 t \sqrt{g h_i},
+    .. math:: x_f = 2 c0 t = x_i + 3 t \\sqrt{g h_i},
 
     *exactly* -- no threshold, no extrapolation length.  Averaging that identity
     over a window of well-resolved fan cells is therefore a front estimator whose
