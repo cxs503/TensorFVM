@@ -73,6 +73,46 @@ def sha256_of(path: str) -> str:
     return h.hexdigest()
 
 
+def classify_remote_branches(branches: list[str]) -> tuple[list[str], list[str]]:
+    """把 ``git branch -r --format=%(refname:short)`` 的输出分成 (agent, maintenance)。
+
+    短名自带远端名前缀（如 ``origin/agent/m1``），必须先剥掉第一段再匹配；
+    直接 ``startswith("agent/")`` 永远匹配 0 个，导致 D2 协调面被低估
+    （m24430 实测缺陷：maintenance 实际 2 个、preflight 报 0）。
+    返回的两个列表保留原始短名以便追溯。
+    """
+    def _strip(b: str) -> str:
+        if b.startswith(("agent/", "maintenance/")):
+            return b  # 已是裸分类名（无远端前缀），原样保留
+        return b.split("/", 1)[1] if "/" in b else b
+
+    stripped = [_strip(b) for b in branches]
+    agent = [orig for orig, s in zip(branches, stripped) if s.startswith("agent/")]
+    maint = [orig for orig, s in zip(branches, stripped) if s.startswith("maintenance/")]
+    return agent, maint
+
+
+def detect_repo_root(cwd: str | None = None) -> str:
+    """自动探测当前 checkout 所属的共享仓库根（对 worktree 友好）。
+
+    worktree 的 ``.git`` 是**文件**而非目录，历史缺省
+    ``/srv/tensor/workspace/TensorFVM`` 在当前 harness 下已失效
+    （m24430 实测 FileNotFoundError）。这里用
+    ``git rev-parse --path-format=absolute --git-common-dir`` 取公共目录
+    再取其父目录；探测失败时回退到历史缺省值。
+    """
+    cp = subprocess.run(
+        ["git", "rev-parse", "--path-format=absolute", "--git-common-dir"],
+        cwd=cwd or os.getcwd(), stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+        check=False,
+    )
+    if cp.returncode != 0:
+        return "/srv/tensor/workspace/TensorFVM"
+    common = cp.stdout.decode().strip()
+    root = os.path.dirname(common)
+    return root if root else common
+
+
 class Runbook:
     def __init__(self, repo: str, scratch: str, out: str, scenario: str,
                  decisions: str, skip_fsck: bool):
@@ -128,8 +168,7 @@ class Runbook:
                      if f.startswith("tmp_pack")]
         br = git(self.repo, "branch", "-r", "--format=%(refname:short)")
         branches = [l.strip() for l in br.stdout.decode().splitlines() if l.strip()]
-        agent = [b for b in branches if b.startswith("agent/")]
-        maint = [b for b in branches if b.startswith("maintenance/")]
+        agent, maint = classify_remote_branches(branches)
         wt = git(self.repo, "worktree", "list", "--porcelain").stdout.decode().splitlines()
         n_worktrees = sum(1 for l in wt if l.startswith("worktree "))
         # 扩展名普查：必须覆盖**全部 refs**（filter-repo 默认重写所有 ref，
@@ -345,7 +384,8 @@ class Runbook:
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--repo", default="/srv/tensor/workspace/TensorFVM")
+    ap.add_argument("--repo", default=None,
+                    help="源仓库根目录；缺省=自动探测（对 worktree 友好，见 detect_repo_root）")
     ap.add_argument("--mode", choices=["preflight", "execute"], default="preflight")
     ap.add_argument("--scenario", default="R2c", choices=sorted(SCENARIOS))
     ap.add_argument("--scratch", default="/tmp/tfvm-slim-scratch")
@@ -356,6 +396,9 @@ def main() -> None:
                     help="owner 裁决留痕，如 'D1=B;D2=prune;D3=freeze;D4=reclone;D5=90d;D6=done'")
     ap.add_argument("--skip-fsck", action="store_true")
     args = ap.parse_args()
+
+    if args.repo is None:
+        args.repo = detect_repo_root()
 
     if args.mode == "execute" and args.confirm != CONFIRM_TOKEN:
         print(f"FATAL: execute 模式需要 --confirm {CONFIRM_TOKEN}")

@@ -39,7 +39,7 @@ R3 最大收益 ≈ 63.9 MiB），并靠防腐三件套阻止再生（25–35 Mi
 | D4 | 远端分支清理（215 个） | 待决 |
 | D5 | 验证提交保留策略 | 待决 |
 | D6 | 对象库垃圾 gc | **已消解**（平台侧已回收，garbage≈0） |
-| D7 | 共享 .git commit-graph 过期（fsck rc=16） | 待决（`git commit-graph write` 修复） |
+| D7 | 共享 .git commit-graph 过期（fsck rc=16） | 待决（2026-11-17 m24430 复核确认仍在；`git commit-graph write` 修复） |
 
 ## 4. 执行 runbook（骨架，细化在 m23832 runbook 上）
 
@@ -65,5 +65,5 @@ R3 最大收益 ≈ 63.9 MiB），并靠防腐三件套阻止再生（25–35 Mi
 |---|---|
 | 防腐三件套（pre-commit / CI 门 / 本骨架） | 本单（m23951）交付 |
 | 基线 reanchor | 本单执行（`scripts/guard/pack_baseline.json`） |
-| 历史重写执行 | **未执行**（等 owner 裁决 D1–D5/D7） |
+| 历史重写执行 | **未执行**（preflight 已 PASS——git-filter-repo 已装、D6 已消解；仅待 owner 裁决 D1–D5/D7，见 REPO-SLIM-PLAN.md §10） |
 | D7 commit-graph 修复 | 待决（写共享 .git，需 owner 放行） |
