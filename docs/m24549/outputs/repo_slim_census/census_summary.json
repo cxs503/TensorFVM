@@ -1,0 +1,21 @@
+{
+ "baseline_pack_MiB": 1341.4,
+ "planA_pack_MiB": 733.14,
+ "planB_pack_MiB": 88.89,
+ "planC_pack_MiB": 1310.0,
+ "blob_logical_MiB": 2125.23,
+ "docs_logical_MiB": 1966.42,
+ "main_reachable_MiB": 1956.17,
+ "other_refs_only_MiB": 108.56,
+ "refs_total": 1172,
+ "agent_branches": 937,
+ "bleed_7d_blobs": 3607,
+ "bleed_7d_MiB": 156.4,
+ "filter_repo_runtime_s": {
+  "A": 10.7,
+  "B": 6.7
+ },
+ "postB_git_MiB": 92.0,
+ "postB_checkout_MiB": 171.0,
+ "src_integrity": "src/tests/scripts/pyproject blob sha 逐字节一致，差异仅为 pyc/npz 删除"
+}
