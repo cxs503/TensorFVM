@@ -50,7 +50,8 @@ import numpy as np
 from scipy.interpolate import PchipInterpolator
 
 from .kmm180_windows import LOG_LAYER_FRACTION, LOW_Y_PLUS
-from .kmm1987 import TOLERANCE_LOG_REGION, load_kmm1987_reference
+from .kmm1987 import (TOLERANCE_LOG_REGION, RE_TAU_KMM,
+    load_kmm1987_reference)
 
 SCHEMA = 'tensorfvm.case-fvm-channel-kmm180/1'
 
@@ -322,6 +323,10 @@ def build_benchmark(cases, dns=None, *, elapsed_s=None, matrix_elapsed_s=None,
         headline=_headline(records),
         verdict_qualified=True,
         reference_substitution=substitution,
+        #: The Re_tau the solver ran at (nominal KMM1987); the DNS reference is
+        #: Lee & Moser at ``RE_TAU_REF`` and the substitution cost is measured
+        #: in ``reference_substitution``, not assumed.
+        nominal_re_tau=RE_TAU_KMM,
         elapsed_s=elapsed_s,
         matrix_elapsed_s=matrix_elapsed_s,
         repro_cmd=repro_cmd,
