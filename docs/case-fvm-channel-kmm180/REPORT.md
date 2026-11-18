@@ -90,4 +90,4 @@ Maximum delta 0.097 pp against the pre-declared band 0.15 pp; verdict flips: non
 
 ## Verdict
 
-Legacy full-range window: FAIL; physical log layer: FAIL (all models). The two-equation models (SST, k-omega, k-epsilon) fail the physical log layer window. Neither number may be quoted alone without specifying the model.
+Legacy full-range window: FAIL; physical log layer: FAIL (all models and grids). Neither number may be quoted alone.
