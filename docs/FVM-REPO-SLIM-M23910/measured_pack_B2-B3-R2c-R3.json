@@ -1,0 +1,72 @@
+{
+ "generated_at": "2026-11-18 16:36:13",
+ "repo": "/root/tensor-ecosystem/TensorFVM",
+ "git_head": "8210a12671447f954bd7e25adf7809b627852911",
+ "git_head_short": "8210a126",
+ "pack_params": {
+  "window": 10,
+  "depth": 50,
+  "threads": 6
+ },
+ "b3_threshold_bytes": 102400,
+ "reachable": {
+  "n_objects": 37822,
+  "n_blobs": 17327,
+  "blob_MiB": 2065.7
+ },
+ "head_tree": {
+  "n_files": 12790,
+  "n_blobs": 6227,
+  "files_over_100KiB": 438,
+  "files_over_1MiB": 9
+ },
+ "baseline_keepall_pack_MiB": 1349.39,
+ "scenarios": [
+  {
+   "tag": "B3",
+   "desc": "历史大 blob 打桩（>100 KiB 且 ∉ HEAD 树；HEAD 树零改动）",
+   "dropped_blobs": 1938,
+   "dropped_MiB": 1706.08,
+   "measured_pack_MiB": 184.51,
+   "reduction_pct": 86.33,
+   "n_surviving_objects": 35884
+  },
+  {
+   "tag": "B3p",
+   "desc": "B3 + 全仓 *.pyc",
+   "dropped_blobs": 3974,
+   "dropped_MiB": 1745.22,
+   "measured_pack_MiB": 184.07,
+   "reduction_pct": 86.36,
+   "n_surviving_objects": 33848
+  },
+  {
+   "tag": "B2",
+   "desc": "全历史删二进制（*.pyc/npz/msh/svg/pdf/png/gz，含 HEAD）",
+   "dropped_blobs": 6591,
+   "dropped_MiB": 1777.17,
+   "measured_pack_MiB": 65.19,
+   "reduction_pct": 95.17,
+   "n_surviving_objects": 31231
+  },
+  {
+   "tag": "R2c",
+   "desc": "R2 + 删 docs *.svg（几乎全为 dead 图）",
+   "dropped_blobs": 4887,
+   "dropped_MiB": 1446.83,
+   "measured_pack_MiB": 385.92,
+   "reduction_pct": 71.4,
+   "n_surviving_objects": 32935
+  },
+  {
+   "tag": "R3",
+   "desc": "删 docs 全部二进制 + 全仓 *.pyc",
+   "dropped_blobs": 6998,
+   "dropped_MiB": 1795.39,
+   "measured_pack_MiB": 66.18,
+   "reduction_pct": 95.1,
+   "n_surviving_objects": 30824
+  }
+ ],
+ "elapsed_s": 46.3
+}

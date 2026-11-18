@@ -2,10 +2,11 @@
 
 - 锚点: feature_ledger `FVM-REPO-SLIM`（status=in_progress）
 - 范围: **只出方案，禁执行历史改写**（owner 验收口径）。所有数字来自 2026-11-17 对
-  `/srv/tensor/workspace/TensorFVM` 的只读普查 + `/tmp/fvm-exp/mirror-{a,b,c}` 一次性
+  `/root/tensor-ecosystem/TensorFVM` 的只读普查 + `/tmp/fvm-exp/mirror-{a,b,c}` 一次性
   克隆上的无损实测（原仓零改动）。
 - 结论先行: **推荐 B3（历史大 blob 打桩，HEAD 树 100% 保留）+ 分支/工作树清理 + 回滚镜像**，
-  预期 pack 1.31 GiB → ~0.2 GiB（-85%）；激进版 B2 实测 -95.6% 但会删掉当前 HEAD 里
+  实测 pack 1349.4 MiB → **184.5 MiB（-86.3%，m23910 2026-11-18 回填）**；
+  激进版 B2 实测 65.2 MiB（-95.2%）但会删掉当前 HEAD 里
   1023 个验证图/场文件，需 owner 拍板。
 
 ## 1. 大对象普查（2026-11-17 实测）
@@ -49,15 +50,15 @@ Top 单文件: `docs/verification-gpu/annular-1024x256/cpu-fields.npz` 28.4 MiB�
 | 方案 | 规则 | pack 结果 | 收益 | HEAD 树代价 |
 |---|---|---|---|---|
 | A: 仅 gc | `git gc` | 1.31 GiB | -1.5% | 无 |
-| B2: 全历史删二进制 | `--invert-paths --path-glob '*.pyc' '*.npz' '*.msh' '*.svg' '*.pdf' '*.png' '*.gz'` | **58.9 MiB（实测）** | **-95.6%** | 丢 1023 文件 / 78 MiB（当前 docs 里的图与场） |
-| B3: 非 HEAD 大 blob 打桩 | `--blob-callback`：blob∉HEAD 树 且 >100 KiB → 替换为 1 行占位 | **~150-250 MiB（估算）** | -81~-89% | **零**（HEAD 树逐字节不变） |
+| B2: 全历史删二进制 | `--invert-paths --path-glob '*.pyc' '*.npz' '*.msh' '*.svg' '*.pdf' '*.png' '*.gz'` | **65.2 MiB（m23910 复测；11-17 为 58.9）** | **-95.2%** | 丢 1023 文件 / 78 MiB（当前 docs 里的图与场） |
+| B3: 非 HEAD 大 blob 打桩 | `--blob-callback`：blob∉HEAD 树 且 >100 KiB → 替换为 1 行占位 | **184.5 MiB（m23910 实测，原估 150-250 区间内）** | **-86.3%** | **零**（HEAD 树逐字节不变） |
 | B4: 仅删 pyc | `--invert-paths --path-glob '*.pyc'` | ~1.28 GiB（估） | -2.5% | 无 |
 
 B3 实现备注: 本环境 git-filter-repo（a40bce548d2c）`--blob-callback` 在 mirror 上
 fast-import "stream ends early"（回调模块可导入仍崩，疑版本 bug）。等价替代实现：
 生成「历史大 blob 且当前树无此路径」的路径清单，用 `--invert-paths --path <P>` 逐条传入
 （冲突路径=当前树里 >100 KiB 的同名文件，约 50 个，改写后补一个 re-add 提交即可）。
-B3 精确数字在实施单里用该路径法复测后回填。
+B3 精确数字已回填（m23910，2026-11-18，HEAD 8210a126）：blob 粒度剔除法实测 **184.5 MiB**（剔除 1938 个死 blob / 1706.1 MiB，存活 35884 对象；打桩后死 blob 收敛为 1 个 ~100 B 共享 stub，对 pack 影响 <1 KiB，故剔除法与打桩法等价）。原始数据 `docs/FVM-REPO-SLIM-M23910/measured_pack_B2-B3-R2c-R3.json`。
 
 ## 3. 替代案
 
@@ -74,7 +75,7 @@ B3 精确数字在实施单里用该路径法复测后回填。
 
 - **远端**: origin 574 heads + tags；filter-repo 会重写**所有** ref 的 SHA → 必须
   force-push 全部 574 分支（或先删旧分支只推 main+活跃分支）。
-- **本地生态**: 903 本地分支、395 个 worktree（`/srv/tensor/workspace/TensorFVM/.git/worktrees`）
+- **本地生态**: 903 本地分支、395 个 worktree（`/root/tensor-ecosystem/TensorFVM/.git/worktrees`）
   全部指向旧 SHA。执行窗口内必须冻结 tp_pusher/merge 流水线（`tp_pusher.py`、
   `ship_merge.py`、`wave_cycle.py` 对 TensorFVM 的推送/合并），否则旧 SHA 回流。
 - **跨仓引用**: 12 仓生态若有仓 pin 了 TensorFVM 的 commit SHA（CI/文档/ledger），
@@ -86,7 +87,7 @@ B3 精确数字在实施单里用该路径法复测后回填。
 
 ## 5. 回滚镜像保全
 
-1. 执行前: `git clone --mirror /srv/tensor/workspace/TensorFVM /srv/tensor/workspace/TensorFVM-pre-slim-<date>`
+1. 执行前: `git clone --mirror /root/tensor-ecosystem/TensorFVM /root/tensor-ecosystem/TensorFVM-pre-slim-<date>`
    （bare，含全部 903 分支 + 395 worktree 的 ref），打 tag `pre-slim-<date>`。
 2. 该镜像**不入 GitHub**（私有本地保全），保留 ≥90 天；期满由 owner 决定销毁。
 3. 重写后新历史打 tag `post-slim-<date>`；两镜像 SHA 清单写入本文件附录（实施单回填）。
@@ -94,7 +95,7 @@ B3 精确数字在实施单里用该路径法复测后回填。
 
 ## 6. 交 owner 决策点（≥3）
 
-1. **D1 内容口径**: B2（当前 docs 二进制也删，-95.6%）vs B3（当前树零损失，-85%）？
+1. **D1 内容口径**: B2（当前 docs 二进制也删，实测 65.2 MiB / -95.2%）vs B3（当前树零损失，实测 184.5 MiB / -86.3%）？
    若选 B2，平台报告里引用仓库内 png/npz 的链接将失效，需同步改报告引用。
 2. **D2 分支策略**: 重写前是否先清 903 本地/574 远端 agent/* 分支（只留 main+活跃）？
    建议清（重写面从 574 缩到个位数，force-push 面大幅缩小）。
@@ -104,6 +105,20 @@ B3 精确数字在实施单里用该路径法复测后回填。
    派 native 单）。
 5. **D5 二期**: 是否立项「HEAD 内 >1 MiB 工件外置」（D 案）+ `.gitignore` 补
    `*.pyc`/`*.npz` 防复发？
+
+## 7. m23910 复核（2026-11-18，HEAD 8210a126）
+
+- 工具: `scripts/audit/slim_b3_measure.py`（只读，源仓零写入；存活集喂真实 `git pack-objects --stdout`，
+  window=10 depth=50 threads=6，与 m23278 同口径）。
+- 基线 keep-all 重打包 **1349.4 MiB**（11-16 为 1344.7，两天 +4.7 MiB ≈ 2.4 MiB/d，
+  与 FVM-SLIM-GUARD 后 2.09 MiB/d 的出血率一致 → 守卫有效，漂移可忽略）。
+- **B3 估算转实测: 184.5 MiB（-86.3%）**，落在原估 150-250 MiB 区间内，
+  推荐案不变；B3p（B3+全仓 pyc）184.1 MiB（pyc 边际仅 0.4 MiB，与 m23278 结论一致）。
+- 漂移复核: R2c 385.9 MiB（11-16 381.8，+4.1）、
+  R3 66.2 MiB（11-16 63.7，+2.5）→ 各方案排序与降幅稳定。
+- 可达对象 31360 → 37822（两天 +6462，多为 <512 KiB 小文件；守卫限幅后体积出血受控，
+  但对象数仍在涨，二期建议把「对象数增速」纳入守卫监控）。
+- 现场 `.git` 2.3 GiB（11-17 为 2.1 GiB）：瘦身前现场还会继续缓慢变大，执行窗口越晚成本越高（增量小，不改变方案）。
 
 ## 附录: 复现命令
 
