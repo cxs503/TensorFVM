@@ -1,0 +1,36 @@
+{
+ "anchor": "XVAL-FVM-M18737-ROUND2",
+ "mission": 24511,
+ "round": 3,
+ "main_commit": "c0456dfd",
+ "verdict": {
+  "certified": false,
+  "certified_point_estimate": true,
+  "honest_upper_bound_percent": 1.6007430987227658,
+  "floor_removed": true,
+  "finest_tag": "nx6400_hllc"
+ },
+ "note": "certified=False: the TensorFVM MUSCL/HLLC nx6400_hllc solution vs the independent WENO5@12800 reference (itself self-converged to <1%, WENO5@6400 vs WENO5@12800) gives L1 0.8931% + reference error bar 0.7076% = honest upper bound 1.6007% vs certified bar 1.0000% -> bound >= 1%.",
+ "recomputed_from_stored_artifacts": {
+  "self_l1_percent": 0.5437447852294209,
+  "self_peak_percent": 0.023021571035996842,
+  "graded_nx3200_l1_percent": 1.7755695233074968,
+  "graded_nx3200_peak_percent": 0.7581503704227888,
+  "graded_nx6400_l1_percent": 0.8931133000818933,
+  "graded_nx6400_peak_percent": 0.04441609824140254
+ },
+ "fresh_solver_rerun": {
+  "job": "cj5237",
+  "state": "failed",
+  "reason": "cluster checkout excludes docs/ (slim); wc_ladder_weno5.py not present on node",
+  "remedy": "resubmit with stage_dir worktree or copy script into src-visible path"
+ },
+ "deliverable_files_verified": [
+  "CERTIFIED-REF-CLOSURE.md",
+  "fig_certified_ref_profiles.png",
+  "fig_certified_ref_selfconv.png",
+  "ladder_metrics_nx6400_weno5.json",
+  "ladder_metrics_nx12800_weno5.json",
+  "ladder_profile_nx12800_weno5.npz"
+ ]
+}

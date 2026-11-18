@@ -245,13 +245,18 @@ def run() -> dict:
         "certified_bar_percent": CERTIFIED_PERCENT,
         "floor_removed": bool(floor_removed),
         "note": (
-            "certified=True means the TensorFVM MUSCL/HLLC %s solution "
-            "agrees with an independent WENO5@%d reference to <1%% (L1 and "
-            "peak), that reference is itself self-converged to <1%% "
-            "(WENO5@%d vs WENO5@%d), AND the reference-side error bar is small "
-            "enough that the honest bound (%.4f%% + %.4f%% = %.4f%%) stays <1%%."
-            % (finest_tag, FINE_WENO5[-1], FINE_WENO5[0], FINE_WENO5[-1],
-               finest["l1_percent"], bar["eps_ref_percent"], honest_upper)
+            "certified=%s: the TensorFVM MUSCL/HLLC %s solution vs the "
+            "independent WENO5@%d reference (itself self-converged to <1%%, "
+            "WENO5@%d vs WENO5@%d) gives L1 %.4f%% + reference error bar "
+            "%.4f%% = honest upper bound %.4f%% vs certified bar %.4f%% -> "
+            "bound %s 1%%."
+            % (
+                "True" if (point_estimate and honest_upper < CERTIFIED_PERCENT) else "False",
+                finest_tag, FINE_WENO5[-1], FINE_WENO5[0], FINE_WENO5[-1],
+                finest["l1_percent"], bar["eps_ref_percent"], honest_upper,
+                CERTIFIED_PERCENT,
+                "<" if honest_upper < CERTIFIED_PERCENT else ">=",
+            )
         ),
     }
     return verdict
