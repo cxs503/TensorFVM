@@ -20,8 +20,10 @@ def main() -> dict:
         p = load_profile(DATA, nx, "hllc")
         e[nx] = cell_average_l1(p["rho"], ref["rho"])["l1_percent"]
     order = float(__import__("numpy").log(e[1600] / e[3200]) / __import__("numpy").log(2.0))
+    # error model e(nx) = e(3200) * (nx/3200)^(-p); the exponent is the
+    # log2 of the grid ratio (a float), not an integer bit_length.
     forecast = {
-        str(nx): {f"p={pp:.4f}": e[3200] * 2.0 ** (-pp * (nx / 3200).bit_length() + 0)
+        str(nx): {f"p={pp:.4f}": e[3200] * (nx / 3200) ** (-pp)
                   for pp in (0.79, order, 1.05)}
         for nx in (6400, 12800)
     }

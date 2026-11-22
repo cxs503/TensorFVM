@@ -173,8 +173,10 @@ Fig 2 说明残差的空间归属。
    `nx_needed_for_1pct` 给出了代价的定量估计。
 4. **本单不重新推导物理**：没有解析解可对，全部结论建立在「跨族自认证参考」这一条件上；
    若参考族（WENO5/Rusanov）本身在 12800 未自收敛，结论随之失效——故门 1 必须一直重测。
-5. **nx=6400/12800 本轮 not measured**：作业 cj3325（两分片）递交后 28 min 仍在跑（nx=1600 单档实测 >120 s），
-   故 F1/F2/F3 的数值裁决未落地；冻结预测留在 `PREDECLARATION-refine.md` 账上，工件回填后重跑
+5. **本轮已回填的 rung**：nx=6400 被定级解已落地（L1 = {_f(fin['l1_percent'])} %、峰值 {_f(fin['peak_percent'])} %），
+   F1/F2/F3 的数值裁决**已落地**（certified-<1 % 在 nx=6400 达成）；仍缺的只有
+   `not_measured = {v['not_measured']}`（nx=12800 基线 CFL 0.4 档未算，仅 cfl0.8 变体在库）。
+   冻结预测留在 `PREDECLARATION-refine.md` 账上，工件回填后重跑
    `refinement_figures.py`/`refinement_report.py` 会自动改判（代码零改动）。
 6. **时间推进/CFL 未做敏感性扫描**：本轮只加密空间网格（CFL 固定 0.4）；若时间误差在细网格上变主导，
    L1 会提前触底——这正是 §⑥ 里「是否 <3 %」需要标注口径的原因。

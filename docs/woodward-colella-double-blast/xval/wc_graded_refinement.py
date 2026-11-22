@@ -196,36 +196,11 @@ def run() -> dict:
     ref_self_peak = peak_percent(ref_coarse["x"], ref_coarse["rho"], ref["x"], ref["rho"])
     ref_ok = ref_self_l1 < CERTIFIED_PERCENT and ref_self_peak < CERTIFIED_PERCENT
 
-    # 1. per-rung grading of the graded (MUSCL/HLLC) family.  A rung may be
-    #    stored under a non-canonical tag (e.g. the CFL 0.8 variant used when the
-    #    CFL 0.4 run does not fit a job wall-clock); the tag is recorded so the
-    #    config caveat is visible instead of hidden.
-    ladders = {}
-    tags = {}
-    missing = []
-    for nx in GRADED:
-        for tag in GRADED_TAGS:
-            try:
-                p = _load(nx, tag)
-            except FileNotFoundError:
-                continue
-            tags[nx] = tag
-            ladders[nx] = {
-                "l1_percent": l1_percent(p["x"], p["rho"], ref["x"], ref["rho"]),
-                "peak_percent": peak_percent(p["x"], p["rho"], ref["x"], ref["rho"]),
-                "mass_percent": mass_percent(p["x"], p["rho"], ref["x"], ref["rho"]),
-                "peak_density": float(np.max(p["rho"])),
-                "tag": f"nx{nx}_{tag}",
-                "source": p["source"],
-            }
-            break
-        else:
-            missing.append(nx)
-
-    # 1b. CFL-sensitivity control: where both the CFL 0.4 and CFL 0.8 variants of
-    #     the same grid exist, their mutual L1 distance bounds how much a CFL
-    #     change alone moves the metric.  If it is far below the refinement
-    #     decrements, a CFL-0.8 rung is admissible in the refinement study.
+    # 1b. CFL-sensitivity control (built *first* so the ladder can use it for
+    #     admission): where both the CFL 0.4 and CFL 0.8 variants of the same
+    #     grid exist, their mutual L1 distance bounds how much a CFL change
+    #     alone moves the metric.  If it is far below the refinement decrements,
+    #     a CFL-0.8 rung is admissible in the refinement study.
     cfl_control = {}
     for nx in GRADED:
         pair = {}
@@ -240,6 +215,38 @@ def run() -> dict:
                 "l1_percent": l1_percent(a["x"], a["rho"], b["x"], b["rho"]),
                 "peak_percent": peak_percent(a["x"], a["rho"], b["x"], b["rho"]),
             }
+
+    # 1. per-rung grading of the graded (MUSCL/HLLC) family.  A rung may be
+    #    stored under a non-canonical tag (e.g. the CFL 0.8 variant used when the
+    #    CFL 0.4 run does not fit a job wall-clock); the tag is recorded so the
+    #    config caveat is visible instead of hidden.  A non-canonical (cfl0.8)
+    #    rung is only *admitted* when the same-grid CFL 0.4/0.8 control exists
+    #    (both variants present): without it the rung cannot be separated from a
+    #    CFL artefact, so it is left out of the ladder and reported as missing.
+    ladders = {}
+    tags = {}
+    missing = []
+    for nx in GRADED:
+        for tag in GRADED_TAGS:
+            try:
+                p = _load(nx, tag)
+            except FileNotFoundError:
+                continue
+            if tag != "hllc" and str(nx) not in cfl_control:
+                # non-canonical rung with no same-grid control: not admissible
+                continue
+            tags[nx] = tag
+            ladders[nx] = {
+                "l1_percent": l1_percent(p["x"], p["rho"], ref["x"], ref["rho"]),
+                "peak_percent": peak_percent(p["x"], p["rho"], ref["x"], ref["rho"]),
+                "mass_percent": mass_percent(p["x"], p["rho"], ref["x"], ref["rho"]),
+                "peak_density": float(np.max(p["rho"])),
+                "tag": f"nx{nx}_{tag}",
+                "source": p["source"],
+            }
+            break
+        else:
+            missing.append(nx)
 
     # 2. observed order of the L1 convergence *towards the reference*
     order_vs_ref = {}
