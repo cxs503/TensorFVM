@@ -31,7 +31,7 @@
         ],
         "pointwise_l1_percent": 3.298658850112687,
         "metric_bias_pp": 0.04738169700573369,
-        "source": "/srv/tensor/agent/work/m21306/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx1600_hllc.npz"
+        "source": "/root/tp-agent/work/m25386/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx1600_hllc.npz"
       },
       {
         "nx": 3200,
@@ -46,11 +46,22 @@
         ],
         "pointwise_l1_percent": 1.7754268782298872,
         "metric_bias_pp": 0.006901593793980032,
-        "source": "/srv/tensor/agent/work/m21306/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx3200_hllc.npz"
+        "source": "/root/tp-agent/work/m25386/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx3200_hllc.npz"
       },
       {
         "nx": 6400,
-        "measured": false
+        "measured": true,
+        "l1_percent": 0.8930772870380906,
+        "peak_percent": 0.04441609824140254,
+        "mass_percent": 0.00022142970442169175,
+        "ratio": 2,
+        "window": [
+          0.4,
+          1.0
+        ],
+        "pointwise_l1_percent": 0.893077287038094,
+        "metric_bias_pp": 3.3306690738754696e-15,
+        "source": "/root/tp-agent/work/m25386/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx6400_hllc.npz"
       },
       {
         "nx": 12800,
@@ -68,25 +79,43 @@
           1.7685252844359072
         ],
         "order": 0.8784596976568859
+      },
+      {
+        "nx_pair": [
+          3200,
+          6400
+        ],
+        "l1_pair": [
+          1.7685252844359072,
+          0.8930772870380906
+        ],
+        "order": 0.9856899083584574
       }
     ],
-    "forecast": [],
+    "forecast": [
+      {
+        "nx": 6400,
+        "predicted_l1_percent": 0.9619855627196415,
+        "measured_l1_percent": 0.8930772870380906,
+        "order_used": 0.8784596976568859,
+        "rel_error_percent": 7.715824451217052
+      }
+    ],
     "finest_graded": {
-      "nx": 3200,
-      "l1_percent": 1.7685252844359072,
-      "peak_percent": 0.7604024784683446,
-      "metric_bias_pp": 0.006901593793980032
+      "nx": 6400,
+      "l1_percent": 0.8930772870380906,
+      "peak_percent": 0.04441609824140254,
+      "metric_bias_pp": 3.3306690738754696e-15
     },
-    "certified_lt_1pct": false,
-    "certified_lt_1pct_legacy_metric": false,
+    "certified_lt_1pct": true,
+    "certified_lt_1pct_legacy_metric": true,
     "metric_decision_invariant": true,
-    "order_used_for_forecast": 0.8784596976568859,
-    "nx_needed_for_1pct": 6123.783020028493,
-    "nx_needed_for_3pct": 3200.0,
+    "order_used_for_forecast": 0.9856899083584574,
+    "nx_needed_for_1pct": 6400.0,
+    "nx_needed_for_3pct": 6400.0,
     "ledger_tolerance_percent": 15.0,
     "certified_bar_percent": 1.0,
     "not_measured": [
-      6400,
       12800
     ]
   },
@@ -97,7 +126,7 @@
         0.4,
         0.55
       ],
-      "share_percent_of_l1": 0.05164388914214977
+      "share_percent_of_l1": 0.037506165229995315
     },
     {
       "region": "collision_fronts",
@@ -105,7 +134,7 @@
         0.55,
         0.72
       ],
-      "share_percent_of_l1": 37.641170752167014
+      "share_percent_of_l1": 36.63103222698784
     },
     {
       "region": "right_contact_and_shock",
@@ -113,7 +142,7 @@
         0.72,
         1.0
       ],
-      "share_percent_of_l1": 62.30718535869082
+      "share_percent_of_l1": 63.33146160778216
     }
   ],
   "figures": [
