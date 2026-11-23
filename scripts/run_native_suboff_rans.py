@@ -40,8 +40,11 @@ def main():
     parser.add_argument('--initial-velocity', choices=['freestream', 'rest'], default='freestream')
     parser.add_argument('--momentum-cfl', type=float, help='Optional local implicit pseudo time; original steady equations remain the convergence gate')
     parser.add_argument('--maximum-speed', type=float, help='Stop and archive a diagnostic if max |u|/U exceeds this explicit divergence guard; no clipping')
-    parser.add_argument('--initial-run', type=Path, help='Frozen numerical state on identical mesh and Reynolds number')
-    parser.add_argument('--project-initial-flux', action='store_true', help='Numerical divergence-free flux seed; velocity potential is never used as physical pressure')
+    initialization = parser.add_mutually_exclusive_group()
+    initialization.add_argument('--initial-run', type=Path, help='Frozen numerical state on identical mesh and Reynolds number')
+    initialization.add_argument('--project-initial-flux', action='store_true', help='Project only the numerical face flux with the scalar potential operator')
+    initialization.add_argument('--project-initial-state', action='store_true',
+        help='Project the cell velocity and its reconstructed flux together at fixed pressure')
     args = parser.parse_args()
     if args.pressure_relaxation is None:args.pressure_relaxation=1.
     if args.inner_iterations is None:args.inner_iterations=1 if args.algorithm in ('simple','simplec') else 80
@@ -49,7 +52,6 @@ def main():
         parser.error('positive finite Reynolds number required')
     if args.maximum_speed is not None and (not np.isfinite(args.maximum_speed) or args.maximum_speed<=1):
         parser.error('maximum speed guard must be finite and greater than one')
-    if args.project_initial_flux and args.initial_run is not None:parser.error('Select a restart or initial projection, not both')
     if args.algorithm in ('simple','simplec') and (args.momentum_cfl is not None or args.linear_method not in ('direct','amg')):
         parser.error('SIMPLE/SIMPLEC requires direct or AMG segregated linear solves and uses equation relaxation, not momentum-cfl')
     out = args.output
@@ -96,6 +98,7 @@ def main():
         maximum_speed_guard=args.maximum_speed,
         initial_state=initial_binding,
         initial_flux_projection=args.project_initial_flux,
+        initial_state_projection=args.project_initial_state,
         inlet=dict(intensity=args.intensity, length_scale_L=args.length_scale,
             k=float(k0), omega=float(omega0), provenance='explicit modeling assumptions, not measured experimental inflow'),
         trip='fully turbulent SST; no explicit experimental trip geometry or transition model',
@@ -157,11 +160,15 @@ def main():
     failure = None
     try:
         result = solver.solve_rans(initial_k, initial_omega, inlet_k=k0, inlet_omega=omega0,
-            callback=checkpoint, momentum_callback=momentum_checkpoint)
+            callback=checkpoint, momentum_callback=momentum_checkpoint,
+            project_initial_state=args.project_initial_state)
         converged = result['numerically_converged']
     except Exception as error:
         failure = dict(type=type(error).__name__, message=str(error),
             rejected_linear_solve=getattr(solver,"last_rejected_linear_solve",None)); converged = False
+    if solver.initial_state_projection is not None:
+        write(out / 'initial-projection.json', dict(kind='conservative collocated velocity initialization',
+            **solver.initial_state_projection))
     forces = solver.forces()
     wall = mesh.patch_labels == 'wall'
     area = np.linalg.norm(mesh.area_vectors[wall], axis=1)

@@ -21,14 +21,20 @@ def test_simple_affine_skew_mesh_exact_solution(convection,algorithm):
     np.testing.assert_allclose(s.u,u,atol=1e-8);np.testing.assert_allclose(s.p,p,atol=1e-8)
 
 
-def test_simple_wall_function_coupling_and_force_ledger():
+@pytest.mark.parametrize('project_initial_state', [False, True])
+def test_simple_wall_function_coupling_and_force_ledger(project_initial_state):
     m=channel();fixed=(m.neighbor<0)&(m.patch_labels!='outlet')
     bd=np.tile([1.,0.,0.],(len(m.owner),1));bd[m.patch_labels=='wall']=0.
     s=NativeSimpleSSTRansSolver3D(m,fixed,bd,m.patch_labels=='outlet',
         settings=NativeSteadySettings(viscosity=.001,max_iterations=30,relaxation=.4,convection_order=1),
         rans_settings=NativeRansSettings(max_outer_iterations=3,pseudo_time_step=.001,wall_treatment='spalding'))
     s.u[:,0]=1.
-    r=s.solve_rans(.001,1.,inlet_k=.001,inlet_omega=1.)
+    r=s.solve_rans(.001,1.,inlet_k=.001,inlet_omega=1.,project_initial_state=project_initial_state)
+    if project_initial_state:
+        assert s.initial_state_projection['projected_divergence_max']<1e-8
+        assert s.initial_state_projection['fixed_boundary_flux_change']==0.
+    else:
+        assert s.initial_state_projection is None
     assert len(r['history'])==3 and np.all(s.k>=0) and np.all(s.omega>0)
     assert np.max(np.abs(s.flux[s.wall]))==0
     assert r['history'][-1]['stored_native_divergence_max']<1e-9
@@ -89,6 +95,52 @@ def test_one_full_pressure_correction_matches_reconstructed_flux(pressure_outlet
     assert row['current_reconstructed_divergence_max']<1e-11
     assert row['face_flux_consistency_max']<1e-11
     assert not r['converged']  # A projection is not a converged Stokes solution.
+
+
+@pytest.mark.parametrize('pressure_outlet', [False, True])
+def test_conservative_initialization_projects_the_reconstructed_flux(pressure_outlet):
+    mesh = skew_mesh(3)
+    boundary = mesh.neighbor < 0
+    outlet = boundary & (mesh.face_centers[:, 0] > 1.) & pressure_outlet
+    fixed = boundary & ~outlet
+    solver = NativeSimpleSolver3D(
+        mesh, fixed, np.zeros((len(mesh.owner), 3)), outlet,
+        settings=NativeSteadySettings(viscosity=.1, convection=False,
+                                      max_iterations=1, pressure_relaxation=.2),
+    )
+    solver.u[:, 0] = np.sin(3. * mesh.cell_centers[:, 0])
+    pressure = mesh.cell_centers[:, 1] - mesh.cell_centers[0, 1]
+    solver.p[:] = pressure
+
+    diagnostics = solver.initialize_conservative_velocity()
+    assert diagnostics['original_divergence_max'] > 1e-2
+    assert diagnostics['projected_divergence_max'] < 1e-9
+    assert diagnostics['fixed_boundary_flux_change'] == 0.
+    np.testing.assert_array_equal(solver.p, pressure)
+    _, _, _, correction, source = solver._system(solver.flux)
+    reconstructed = solver.velocity_flux_matrix @ solver.u.ravel() + correction @ pressure + source
+    np.testing.assert_allclose(solver.flux, reconstructed, atol=1e-14, rtol=0.)
+
+    row = solver.solve()['history'][-1]
+    assert row['input_ledger_defect_max'] < 1e-12
+    assert row['ledger_identity_defect_max'] < 1e-12
+    assert row['current_reconstructed_divergence_max'] < 1e-9
+
+
+def test_failed_conservative_initialization_preserves_state(monkeypatch):
+    mesh = skew_mesh(2)
+    solver = NativeSimpleSolver3D(mesh, mesh.neighbor < 0, np.zeros((len(mesh.owner), 3)))
+    velocity = np.ones((solver.N, 3))
+    pressure = np.zeros(solver.N)
+    flux = np.zeros(solver.F)
+    solver.initialize_state(velocity, pressure, flux)
+    monkeypatch.setattr('tensorfvm.native_collocated3d.lsmr',
+                        lambda *args, **kwargs: (np.zeros(3 * solver.N), 7, 0))
+    with pytest.raises(RuntimeError, match='reconstructed divergence'):
+        solver.initialize_conservative_velocity()
+    np.testing.assert_array_equal(solver.u, velocity)
+    np.testing.assert_array_equal(solver.p, pressure)
+    np.testing.assert_array_equal(solver.flux, flux)
 
 
 def test_interrupted_momentum_reports_current_wall_law_without_mutating_solver():
