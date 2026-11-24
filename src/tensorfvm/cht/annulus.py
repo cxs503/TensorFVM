@@ -4,14 +4,18 @@ from scipy.linalg import solve_banded
 
 
 def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall_temperatures,
-                             angular_frequency, *, contact_resistance=0., source=0., azimuthal_mode=0):
+                             angular_frequency, *, contact_resistance=0., source=0., azimuthal_mode=0,
+                             film_coefficients=(None, None)):
     """Return cell phasors and radial face heat rates per unit axial length.
 
     Boundary, temperature and volumetric source amplitudes multiply
     cos(m*angle)*exp(i*omega*time). Face rates are 2πr times the local
     radial flux amplitude, positive outward (W/m). For m=0 they are the
     circumferential integrals. Radii are cell faces in m, contact resistance
-    is areal (m² K/W) on internal faces and the two wall phasors are Dirichlet.
+    is areal (m² K/W) on internal faces. For each wall, a None film coefficient
+    prescribes surface temperature; a finite nonnegative film coefficient
+    (W/m²/K) uses the supplied temperature as ambient. Zero insulates.
+
     """
     r = np.asarray(radii, dtype=float)
     if r.ndim != 1 or len(r) < 2 or not np.isfinite(r).all() or r[0] <= 0 or np.any(np.diff(r) <= 0):
@@ -38,6 +42,17 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
     left = np.log1p(.5*width/r[:-1])/(2*np.pi*k)
     right = np.log1p(.5*width/center)/(2*np.pi*k)
     conductance = 1/np.r_[left[0], right[:-1]+contact/(2*np.pi*r[1:-1])+left[1:], right[-1]]
+    if len(film_coefficients) != 2:
+        raise ValueError("supply one film coefficient per wall")
+    for index, h in zip((0,-1), film_coefficients):
+        if h is None:
+            continue
+        if not np.isfinite(h) or h < 0:
+            raise ValueError("film coefficients must be finite and nonnegative")
+        conductance[index] = (0. if h == 0 else
+                              1/(1/conductance[index] + 1/(2*np.pi*r[index]*h)))
+    if angular_frequency == 0 and azimuthal_mode == 0 and not conductance[[0,-1]].any():
+        raise ValueError("a steady axisymmetric insulated annulus needs a temperature reference")
     volume = np.pi*width*(r[1:]+r[:-1])
     lateral = 2*np.pi*k*azimuthal_mode**2*np.log1p(width/r[:-1])
     bands = np.zeros((3,n), dtype=complex)
