@@ -440,12 +440,16 @@ def _validate_conduction_bc(bc, sides, dtype):
 
 def solve_harmonic_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc,
                               angular_frequency, *, source=0., conductivity_y=None,
-                              contact_resistance_x=0., contact_resistance_y=0.):
+                              contact_resistance_x=0., contact_resistance_y=0.,
+                              return_interior_power=False):
     """Return cell temperature and inward power per wall face for unit depth.
 
     Use Re(phasor * exp(iωt)), with positive angular frequency in rad/s.
     Wall values and volumetric sources may be complex amplitudes. Real
     materials, contact resistances and Robin films use the transient units.
+    With return_interior_power=True also return a third item, a dictionary
+    of interior face powers (W). Its x and y arrays have shapes (ny,nx-1)
+    and (ny-1,nx), positive toward increasing coordinates.
     """
     if not np.isfinite(angular_frequency) or angular_frequency <= 0:
         raise ValueError("angular_frequency must be finite and positive")
@@ -461,7 +465,13 @@ def solve_harmonic_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc
     _, _, side_specs, types, values, _ = faces
     powers = {side: _conductive_wall_power(types[side], values[side], conductance, area, state[cells])
               for side, cells, conductance, _, _, area in side_specs}
-    return state.reshape(ny, nx), powers
+    temperature = state.reshape(ny, nx)
+    if return_interior_power:
+        conductance_x, conductance_y = faces[:2]
+        interior = {"x": -conductance_x[:,1:-1] * np.diff(temperature, axis=1),
+                    "y": -conductance_y[1:-1,:] * np.diff(temperature, axis=0)}
+        return temperature, powers, interior
+    return temperature, powers
 
 
 def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc,

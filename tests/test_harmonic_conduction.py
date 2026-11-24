@@ -26,3 +26,18 @@ def test_insulated_pair_contact_with_opposing_heat_inputs():
         np.testing.assert_array_equal(power, 0.)
     with pytest.raises(ValueError, match="angular_frequency"):
         solve_harmonic_conduction([1.], [1.], 1., 1., {}, 0.)
+
+
+def test_harmonic_cell_storage_matches_every_oriented_face_and_source():
+    dx, dy = np.array([.2,.3,.5]), np.array([.3,.7])
+    volume = np.outer(dy, dx)
+    source = np.array([[1j,2.,.5],[-.6,1.2j,3.]])
+    bc = {"west": {"type":"robin", "values":2.-1j, "film_coefficient":3.},
+          "north": {"type":"neumann", "values":[1.,-1j,.4j]}}
+    t, walls, power = solve_harmonic_conduction(dx, dy, [1.,2.,.7], 3., bc, 2.,
+                      conductivity_y=4., contact_resistance_x=.2, contact_resistance_y=.3,
+                      source=source, return_interior_power=True)
+    x = np.column_stack((walls["west"],power["x"],-walls["east"]))
+    y = np.vstack((walls["south"],power["y"],-walls["north"]))
+    stored = 2j*3.*volume*t
+    np.testing.assert_allclose(stored, source*volume-np.diff(x,axis=1)-np.diff(y,axis=0), atol=1e-13)
