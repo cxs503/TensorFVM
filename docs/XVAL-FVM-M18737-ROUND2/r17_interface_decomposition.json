@@ -1,0 +1,104 @@
+{
+  "anchor": "XVAL-FVM-M18737-ROUND2",
+  "round": 17,
+  "instrument": {
+    "family": "WENO5 + SSP-RK3 + Rusanov",
+    "cfl": 0.8,
+    "rungs": [
+      12800,
+      25600
+    ]
+  },
+  "e0_artifact_gate": {
+    "profile_12800_present": true,
+    "profile_25600_present": true,
+    "metrics_12800_present": true,
+    "metrics_25600_present": true,
+    "nx_12800": 12800,
+    "nx_25600": 25600,
+    "cfl_12800": 0.8,
+    "cfl_25600": 0.8,
+    "status_12800": "ok",
+    "status_25600": "ok",
+    "pass": true
+  },
+  "frozen": {
+    "F1_CD_contribution_min": 0.3,
+    "F2_CC_contribution_min": 0.2,
+    "F3_LS_RS_contribution_max": 0.15,
+    "F4_total_conservation": 0.01
+  },
+  "interfaces": {
+    "positions": [
+      0.64701171875,
+      0.79814453125,
+      0.86556640625
+    ],
+    "n_detected": 3,
+    "x_peak": 0.76478515625
+  },
+  "segments": [
+    {
+      "segment": "region_1",
+      "x_lo": 0.40001953125,
+      "x_hi": 0.64701171875,
+      "contrib": 2.425479647614059e-06,
+      "pct_of_total": 14.76280166554627
+    },
+    {
+      "segment": "region_2",
+      "x_lo": 0.64701171875,
+      "x_hi": 0.79814453125,
+      "contrib": 1.3216623139599979e-05,
+      "pct_of_total": 80.44362948587002
+    },
+    {
+      "segment": "region_3",
+      "x_lo": 0.79814453125,
+      "x_hi": 0.86556640625,
+      "contrib": 4.787049614391856e-07,
+      "pct_of_total": 2.913661390229143
+    },
+    {
+      "segment": "region_4",
+      "x_lo": 0.86556640625,
+      "x_hi": 0.99998046875,
+      "contrib": 3.0886259823420797e-07,
+      "pct_of_total": 1.8799074583545823
+    }
+  ],
+  "total_contribution": {
+    "sum_of_segments": 1.6429670346887433e-05,
+    "total_integral": 1.642967034688743e-05,
+    "ratio": 1.0000000000000002
+  },
+  "criteria": {
+    "F1": {
+      "quantity": "CD (region_2) contribution % of max|D|",
+      "value": 80.44362948587002,
+      "threshold": 30.0,
+      "verdict": "PASS"
+    },
+    "F2": {
+      "quantity": "CC (region_3) contribution % of max|D|",
+      "value": 2.913661390229143,
+      "threshold": 20.0,
+      "verdict": "FAIL"
+    },
+    "F3": {
+      "quantity": "Pre-CD (region_1) and post-CC (region_4) contribution % of max|D|",
+      "pre_cd_value": 14.76280166554627,
+      "post_cc_value": 1.8799074583545823,
+      "threshold": 15.0,
+      "verdict": "PASS"
+    },
+    "F4": {
+      "quantity": "Sum of segments / total integral |D(x)|",
+      "value": 1.0000000000000002,
+      "threshold": 0.99,
+      "verdict": "PASS"
+    }
+  },
+  "verdict": "PASS",
+  "all_supporting_pass": false
+}
