@@ -25,7 +25,8 @@
       "nx12800_weno5_cfl0.8",
       "nx200_hllc_limiterminmod_cfl0.2",
       "nx25600_weno5_cfl0.8",
-      "nx6400_hllc_cfl0.8"
+      "nx6400_hllc_cfl0.8",
+      "nx6400_weno5_cfl0.8"
     ],
     "families_laddered": [
       "hllc",
@@ -159,6 +160,13 @@
       "variant": null,
       "canonical": true,
       "source": "ladder/data/ladder_profile_nx6400_weno5.npz"
+    },
+    "nx6400_weno5_cfl0.8": {
+      "nx": 6400,
+      "family": "weno5",
+      "variant": "cfl0.8",
+      "canonical": false,
+      "source": "ladder/data/ladder_profile_nx6400_weno5_cfl0.8.npz"
     },
     "nx800_hllc": {
       "nx": 800,

@@ -38,7 +38,7 @@
   }
  },
  "control": {
-  "status": "not_measured",
+  "status": "measured",
   "nx": 6400,
   "cfl_baseline": 0.4,
   "cfl_control": 0.8,
@@ -49,15 +49,21 @@
    "peak_percent": 0.0022
   },
   "sources": {
-   "baseline": "/srv/tensor/agent/work/m21913/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx6400_weno5.npz",
-   "control": null
+   "baseline": "/root/tp-agent/work/m25868/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx6400_weno5.npz",
+   "control": "/root/tp-agent/work/m25868/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx6400_weno5_cfl0.8.npz"
   },
-  "E1": "not_measured"
+  "d_l1_percent": 0.023077,
+  "d_peak_percent": 0.016921,
+  "identical_grid_ratio": 1,
+  "l1_within_bar": true,
+  "peak_within_bar": false,
+  "E1": "fail"
  },
  "promotion": {
-  "tagged_present": false,
+  "tagged_present": true,
   "already_present": false,
-  "status": "not_measured"
+  "status": "blocked_by_E1",
+  "E1": "fail"
  },
  "extended_metrics": null,
  "reference": {
@@ -152,7 +158,7 @@
    "self_certified": true
   },
   "instrument": {
-   "status": "not_measured",
+   "status": "measured",
    "nx": 6400,
    "cfl_baseline": 0.4,
    "cfl_control": 0.8,
@@ -163,10 +169,15 @@
     "peak_percent": 0.0022
    },
    "sources": {
-    "baseline": "/srv/tensor/agent/work/m21913/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx6400_weno5.npz",
-    "control": null
+    "baseline": "/root/tp-agent/work/m25868/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx6400_weno5.npz",
+    "control": "/root/tp-agent/work/m25868/docs/woodward-colella-double-blast/ladder/data/ladder_profile_nx6400_weno5_cfl0.8.npz"
    },
-   "E1": "not_measured"
+   "d_l1_percent": 0.023077,
+   "d_peak_percent": 0.016921,
+   "identical_grid_ratio": 1,
+   "l1_within_bar": true,
+   "peak_within_bar": false,
+   "E1": "fail"
   },
   "E2": {
    "verdict": "not_measured"
@@ -179,9 +190,10 @@
    "verdict": "not_measured"
   },
   "promotion": {
-   "tagged_present": false,
+   "tagged_present": true,
    "already_present": false,
-   "status": "not_measured"
+   "status": "blocked_by_E1",
+   "E1": "fail"
   }
  },
  "regrade": {
@@ -197,7 +209,7 @@
  "figures": [
   {
    "name": "fig_r7_reference_ladder.png",
-   "path": "/srv/tensor/agent/work/m21913/docs/XVAL-FVM-M18737-ROUND2/figures/fig_r7_reference_ladder.png",
+   "path": "/root/tp-agent/work/m25868/docs/XVAL-FVM-M18737-ROUND2/figures/fig_r7_reference_ladder.png",
    "caption": "\u4e94\u7ea7 WENO5 \u53c2\u8003\u81ea\u6536\u655b\u3001\u5dee\u5206\u5e45\u503c h^1 \u6536\u7f29\u68c0\u9a8c\u3001\u88ab\u5b9a\u7ea7\u65cf\u5bf9 12800/25600 \u4e24\u4e2a\u53c2\u8003\u7684\u5b9a\u7ea7"
   }
  ],
@@ -206,7 +218,7 @@
   "control": "cj3781"
  },
  "verdicts": {
-  "E1": "not_measured",
+  "E1": "fail",
   "E2": "not_measured",
   "E3": "not_measured",
   "E4": "not_measured",

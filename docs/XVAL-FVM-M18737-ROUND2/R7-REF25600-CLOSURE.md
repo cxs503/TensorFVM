@@ -65,10 +65,10 @@ CFL 0.8 vs 冻结 CFL 0.4 的逐档差（同一重建/通量/`t_end`，只改时
 
 | 量 | 实测 [%] | 门槛 [%] | 判定 |
 |---|---|---|---|
-| 窗口 L1 差（CFL0.8 vs CFL0.4） | — | 0.0718（=eps_ref/10） | — |
-| 峰值差 | — | 0.0022（=eps_peak） | — |
+| 窗口 L1 差（CFL0.8 vs CFL0.4） | 0.023077 | 0.0718（=eps_ref/10） | ✅ |
+| 峰值差 | 0.016921 | 0.0022（=eps_peak） | ❌ |
 
-**E1 判定：`not_measured`** —— CFL0.8 档不得作参考，扩展档撤回。
+**E1 判定：`fail`** —— CFL0.8 档不得作参考，扩展档撤回。
 
 ### B. 五级参考自收敛阶梯
 
@@ -150,7 +150,7 @@ CFL 0.8 vs 冻结 CFL 0.4 的逐档差（同一重建/通量/`t_end`，只改时
 **是否 <1 %？** 否——点估计与上界均未进 1 %。
 **总账 15 % 判据**：见上表，全部 FAIL。
 
-**判据对账（先冻结后测量）**：E1 `not_measured` · E2 `not_measured` · E3 `not_measured` · E4 `not_measured` · E5 `not_measured`。
+**判据对账（先冻结后测量）**：E1 `fail` · E2 `not_measured` · E3 `not_measured` · E4 `not_measured` · E5 `not_measured`。
 
 ## 复现
 
