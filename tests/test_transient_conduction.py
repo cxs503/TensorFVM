@@ -55,3 +55,21 @@ def test_vertical_layered_conduction_matches_rotated_horizontal_solution():
 def test_invalid_directional_conductivity(ky):
     with pytest.raises(ValueError, match="conductivity_y"):
         solve_transient_conduction([1.], [1.], 1., 1., {}, [0., 1.], 0., conductivity_y=ky)
+
+
+@pytest.mark.parametrize("theta", [.5, .75, 1.])
+def test_mixed_wall_power_history_closes_every_nonuniform_step(theta):
+    dx, dy = np.array([.2, .8]), np.array([.4, .6])
+    bc = {"west": {"types": ["dirichlet", "adiabatic"], "values": [2., 0.]},
+          "north": {"types": ["robin", "neumann"], "values": [3., -2.],
+                    "film_coefficient": 4.}}
+    times = np.array([0., .001, .05, .1])
+    temp, walls = solve_transient_conduction(dx, dy, 2., 3., bc, times, 1., source=.7,
+                                             conductivity_y=5., theta=theta, return_wall_power=True)
+    np.testing.assert_allclose(walls["west"][0], [8., 0.])
+    np.testing.assert_allclose(walls["north"][0], [2.*dx[0]/(.3/5.+1/4.), -2.*dx[1]])
+    for side in ("south", "east"):
+        np.testing.assert_array_equal(walls[side], np.zeros((len(times), 2)))
+    net = sum(power.sum(axis=1) for power in walls.values()) + .7
+    stored = (np.diff(temp, axis=0)*3.*np.outer(dy, dx)).sum(axis=(1, 2))
+    np.testing.assert_allclose(stored, np.diff(times)*((1-theta)*net[:-1]+theta*net[1:]), atol=1e-13)

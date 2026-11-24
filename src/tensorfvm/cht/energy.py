@@ -419,7 +419,7 @@ def solve_steady_energy(dx, dy, kappa, flux_e, flux_n, bc, *,
 def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc,
                                time, initial_temperature, *, source=0.0,
                                contact_resistance_x=0.0, contact_resistance_y=0.0,
-                               theta=0.5, conductivity_y=None):
+                               theta=0.5, conductivity_y=None, return_wall_power=False):
     """Advance cell-centred conduction with fixed material data and boundary loads.
 
     Return temperature at each requested time with shape (nt, ny, nx). Cell
@@ -428,6 +428,9 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
     wall temperatures and prescribed inward flux use the steady BC format.
     For grid-aligned anisotropy, conductivity supplies the x component and
     conductivity_y supplies the y component. Both broadcast to (ny, nx).
+    With return_wall_power=True return (temperature, wall_power). For each
+    side, wall_power[side] has shape (nt, number_of_faces) and gives inward
+    watts per face for unit depth. To integrate use the same theta as the solve.
     theta=0.5 selects Crank-Nicolson and theta=1 selects backward Euler.
     """
     dx, dy, time = (np.asarray(v, dtype=float) for v in (dx, dy, time))
@@ -454,7 +457,7 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
             raise ValueError(f"invalid conduction boundary type on {side}")
         if not np.isfinite(values).all():
             raise ValueError(f"nonfinite boundary value on {side}")
-    A, b, _ = _assemble_energy(dx, dy, k, np.zeros((ny, nx+1)), np.zeros((ny+1, nx)),
+    A, b, faces = _assemble_energy(dx, dy, k, np.zeros((ny, nx+1)), np.zeros((ny+1, nx)),
                                bc, source, contact_resistance_x, contact_resistance_y, conductivity_y)
     mass = (capacity * np.outer(dy, dx)).ravel()
     M = sp.diags(mass, format="csc")
@@ -468,7 +471,20 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
         state = history[step].ravel()
         rhs = mass * state + dt * ((1 - theta) * (A @ state) - b)
         history[step + 1] = lu.solve(rhs).reshape(shape)
+    if return_wall_power:
+        _, _, sides, types, values, _ = faces
+        state = history.reshape(len(time), ny*nx)
+        powers = {side: _conductive_wall_power(types[side], values[side], conductance,
+                                               area, state[:, cells])
+                  for side, cells, conductance, _, _, area in sides}
+        return history, powers
     return history
+
+
+def _conductive_wall_power(types, values, conductance, area, temperature):
+    prescribed = (types == "dirichlet") | (types == "robin")
+    power = np.where(prescribed, conductance * (values - temperature), 0.)
+    return np.where(types == "neumann", values * area, power)
 
 
 def _ledger(dx, dy, kappa, cond_e, cond_n, flux_e, flux_n, side_specs, btype, bval, T,
@@ -505,8 +521,7 @@ def _ledger(dx, dy, kappa, cond_e, cond_n, flux_e, flux_n, side_specs, btype, bv
         area = np.broadcast_to(np.asarray(area, dtype=float).ravel(), cells.shape)
         cells = cells.ravel()
         Tc = T.ravel()[cells]
-        q_cond = np.where((types == "dirichlet") | (types == "robin"), cf * (values - Tc), 0.0)
-        q_cond = np.where(types == "neumann", values * area, q_cond)
+        q_cond = _conductive_wall_power(types, values, cf, area, Tc)
         out = sign_out * ff
         q_conv = np.where(out < 0.0, -out * values, -out * Tc)
         boundary[side] = float(np.sum(q_cond + q_conv))
