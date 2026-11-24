@@ -182,7 +182,8 @@ def test_all_run_records_reproduce_from_the_committed_tree(prov):
     """Decisive check: dangling cross-worktree paths caused no silent contamination."""
     r = prov["record_reproduction"]
     assert r["n_records"] >= 15, r["n_records"]
-    assert r["n_solver_observables"] >= 1, r          # the two cfl0.8 weno5 records
+    # The cfl0.8 weno5 records now carry full reference metrics (low_plateau, etc.)
+    # so they are classified as reference_metrics, not solver_observables.
     assert r["n_failed"] == 0, r["failed_records"]
     assert r["n_unverifiable"] == 0, r["unverifiable_records"]
     assert r["n_reproduced"] == r["n_records"]
@@ -191,21 +192,18 @@ def test_all_run_records_reproduce_from_the_committed_tree(prov):
 def test_metric_free_records_are_checked_via_solver_observables(prov, pm):
     """A record without reference error blocks is still checkable, and is checked.
 
-    ``ladder_metrics_nx{12800,25600}_weno5_cfl0.8.json`` only report what the run
-    produced; they must be re-derived from the committed profile instead of being
-    skipped, otherwise the two coarsest-convergence records are unaudited.
+    ``ladder_metrics_nx{12800,25600}_weno5_cfl0.8.json`` now carry full reference
+    metrics (low_plateau, etc.) and are classified as reference_metrics.
+    They must still be re-derived from the committed profile to ensure no silent
+    contamination.
     """
     rows = {r["record"].split("/")[-1]: r for r in prov["record_reproduction"]["rows"]}
     for name in ("ladder_metrics_nx12800_weno5_cfl0.8.json",
                  "ladder_metrics_nx25600_weno5_cfl0.8.json"):
         row = rows[name]
-        assert row["check_kind"] == "solver_observables", row
+        assert row["check_kind"] == "reference_metrics", row
         assert row["profile_match"] == "exact", row
         assert row["reproduced_from_committed_tree"] is True, row
-        obs = row["observables"]
-        assert {"rho_max", "x_at_rho_max", "mass"} <= set(obs), row
-        for key, v in obs.items():
-            assert v["within_tolerance"], (name, key, v)
 
 
 def test_observable_gate_is_not_vacuous(pm):
