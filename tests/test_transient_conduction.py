@@ -34,3 +34,24 @@ def test_insulated_two_cell_contact_recovers_exact_relaxation_rate():
     assert errors[0] / errors[1] > 3.9
     assert errors[1] / errors[2] > 3.9
     assert errors[-1] < 1.1e-4
+
+
+def test_vertical_layered_conduction_matches_rotated_horizontal_solution():
+    widths = [.2, .3, .5]
+    k = np.array([1., 4., 2.])
+    initial = np.array([2., 0., 1.])
+    hot = {"type": "robin", "values": 3., "film_coefficient": 2.}
+    cold = {"type": "dirichlet", "values": -1.}
+    times = [0., .01, .1]
+    horizontal = solve_transient_conduction(widths, [1.], k, 1., {"west": hot, "east": cold},
+                                            times, initial, contact_resistance_x=.1)
+    vertical = solve_transient_conduction([1.], widths, 9., 1., {"south": hot, "north": cold},
+                                          times, initial[:, None], conductivity_y=k[:, None],
+                                          contact_resistance_y=.1)
+    np.testing.assert_allclose(vertical[:, :, 0], horizontal[:, 0, :], atol=1e-13, rtol=0)
+
+
+@pytest.mark.parametrize("ky", [0., -1., np.nan, np.inf])
+def test_invalid_directional_conductivity(ky):
+    with pytest.raises(ValueError, match="conductivity_y"):
+        solve_transient_conduction([1.], [1.], 1., 1., {}, [0., 1.], 0., conductivity_y=ky)

@@ -97,7 +97,7 @@ def _contact_resistance(value, shape, axis):
     return resistance
 
 
-def _face_conductance(dx, dy, kappa, contact_resistance_x=0.0, contact_resistance_y=0.0):
+def _face_conductance(dx, dy, kappa, contact_resistance_x=0.0, contact_resistance_y=0.0, conductivity_y=None):
     """Return ``(cond_e, cond_n)`` face conductances (per unit depth)."""
     ny, nx = kappa.shape
     cond_e = np.zeros((ny, nx + 1))
@@ -107,11 +107,12 @@ def _face_conductance(dx, dy, kappa, contact_resistance_x=0.0, contact_resistanc
     cond_e[:, 1:nx] = dy[:, None] / denom
     cond_e[:, 0] = dy / (0.5 * dx[0] / kappa[:, 0])
     cond_e[:, nx] = dy / (0.5 * dx[-1] / kappa[:, -1])
-    denom_n = 0.5 * dy[:-1][:, None] / kappa[:-1, :] + 0.5 * dy[1:][:, None] / kappa[1:, :]
+    ky = kappa if conductivity_y is None else conductivity_y
+    denom_n = 0.5 * dy[:-1][:, None] / ky[:-1, :] + 0.5 * dy[1:][:, None] / ky[1:, :]
     denom_n += _contact_resistance(contact_resistance_y, denom_n.shape, "y")
     cond_n[1:ny, :] = dx[None, :] / denom_n
-    cond_n[0, :] = dx / (0.5 * dy[0] / kappa[0, :])
-    cond_n[ny, :] = dx / (0.5 * dy[-1] / kappa[-1, :])
+    cond_n[0, :] = dx / (0.5 * dy[0] / ky[0, :])
+    cond_n[ny, :] = dx / (0.5 * dy[-1] / ky[-1, :])
     return cond_e, cond_n
 
 
@@ -253,10 +254,10 @@ def _conv_net_out(face_x, face_y, flux_e, flux_n):
             + face_y[1:, :] * flux_n[1:, :] - face_y[:-1, :] * flux_n[:-1, :])
 
 
-def _assemble_energy(dx, dy, kappa, flux_e, flux_n, bc, source, contact_resistance_x, contact_resistance_y):
+def _assemble_energy(dx, dy, kappa, flux_e, flux_n, bc, source, contact_resistance_x, contact_resistance_y, conductivity_y=None):
     """Assemble net entering heat as A @ T - b, plus the ledger inputs."""
     ny, nx = kappa.shape
-    cond_e, cond_n = _face_conductance(dx, dy, kappa, contact_resistance_x, contact_resistance_y)
+    cond_e, cond_n = _face_conductance(dx, dy, kappa, contact_resistance_x, contact_resistance_y, conductivity_y)
     idx = np.arange(ny * nx).reshape(ny, nx)
 
     rows, cols, vals = [], [], []
@@ -412,13 +413,15 @@ def solve_steady_energy(dx, dy, kappa, flux_e, flux_n, bc, *,
 def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc,
                                time, initial_temperature, *, source=0.0,
                                contact_resistance_x=0.0, contact_resistance_y=0.0,
-                               theta=0.5):
+                               theta=0.5, conductivity_y=None):
     """Advance cell-centred conduction with fixed material data and boundary loads.
 
     Return temperature at each requested time with shape (nt, ny, nx). Cell
     widths are in metres, conductivity in W/(m K), volumetric heat capacity
     in J/(m³ K), source in W/m³, and contact resistance in m² K/W. Fixed
     wall temperatures and prescribed inward flux use the steady BC format.
+    For grid-aligned anisotropy, conductivity supplies the x component and
+    conductivity_y supplies the y component. Both broadcast to (ny, nx).
     theta=0.5 selects Crank-Nicolson and theta=1 selects backward Euler.
     """
     dx, dy, time = (np.asarray(v, dtype=float) for v in (dx, dy, time))
@@ -436,6 +439,11 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
     if not all(np.isfinite(v).all() for v in (k, capacity, initial)) or np.any(k <= 0) or np.any(capacity <= 0):
         raise ValueError("temperature must be finite and material properties finite and positive")
 
+    if conductivity_y is not None:
+        conductivity_y = np.broadcast_to(np.asarray(conductivity_y, dtype=float), shape)
+        if not np.isfinite(conductivity_y).all() or np.any(conductivity_y <= 0):
+            raise ValueError("conductivity_y must be finite and positive")
+
     sides = {"west": ny, "east": ny, "south": nx, "north": nx}
     if not set(bc).issubset(sides):
         raise ValueError("unknown conduction boundary side")
@@ -446,7 +454,7 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
         if not np.isfinite(values).all():
             raise ValueError(f"nonfinite boundary value on {side}")
     A, b, _ = _assemble_energy(dx, dy, k, np.zeros((ny, nx+1)), np.zeros((ny+1, nx)),
-                               bc, source, contact_resistance_x, contact_resistance_y)
+                               bc, source, contact_resistance_x, contact_resistance_y, conductivity_y)
     mass = (capacity * np.outer(dy, dx)).ravel()
     M = sp.diags(mass, format="csc")
     history = np.empty((len(time), ny, nx))
