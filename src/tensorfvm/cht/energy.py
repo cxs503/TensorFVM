@@ -100,6 +100,10 @@ def _contact_resistance(value, shape, axis):
 def _face_conductance(dx, dy, kappa, contact_resistance_x=0.0, contact_resistance_y=0.0, conductivity_y=None):
     """Return ``(cond_e, cond_n)`` face conductances (per unit depth)."""
     ny, nx = kappa.shape
+    if conductivity_y is not None:
+        conductivity_y = np.broadcast_to(np.asarray(conductivity_y, dtype=float), (ny, nx))
+        if not np.isfinite(conductivity_y).all() or np.any(conductivity_y <= 0):
+            raise ValueError("conductivity_y must be finite and positive")
     cond_e = np.zeros((ny, nx + 1))
     cond_n = np.zeros((ny + 1, nx))
     denom = 0.5 * dx[:-1][None, :] / kappa[:, :-1] + 0.5 * dx[1:][None, :] / kappa[:, 1:]
@@ -355,7 +359,7 @@ def _assemble_energy(dx, dy, kappa, flux_e, flux_n, bc, source, contact_resistan
 def solve_steady_energy(dx, dy, kappa, flux_e, flux_n, bc, *,
                         t_init=None, tol=1e-13, max_picard=500, dc_relax=1.0,
                         high_order=True, source=0.0, contact_resistance_x=0.0,
-                        contact_resistance_y=0.0):
+                        contact_resistance_y=0.0, conductivity_y=None):
     """Solve ``div(u T) = div(kappa grad T) + source`` with the CHT face conductance.
 
     Parameters
@@ -363,6 +367,8 @@ def solve_steady_energy(dx, dy, kappa, flux_e, flux_n, bc, *,
     dx, dy : (nx,), (ny,) cell sizes.
     source : scalar or cell field of volumetric temperature production (K/s).
     kappa : (ny, nx) thermal diffusivity of each cell (fluid or solid).
+    conductivity_y : optional scalar or cell field for the y component.
+        With this option kappa supplies the x component.
     flux_e, flux_n : (ny, nx+1), (ny+1, nx) volume fluxes through the faces,
         positive in the +x / +y direction (per unit depth).
     contact_resistance_x, contact_resistance_y : additional diffusive resistance
@@ -381,7 +387,7 @@ def solve_steady_energy(dx, dy, kappa, flux_e, flux_n, bc, *,
     """
     ny, nx = kappa.shape
     A, b, faces = _assemble_energy(dx, dy, kappa, flux_e, flux_n, bc, source,
-                                    contact_resistance_x, contact_resistance_y)
+                                    contact_resistance_x, contact_resistance_y, conductivity_y)
     cond_e, cond_n, side_specs, btype, bval, rates = faces
     lu = spla.splu(A)
 
@@ -438,11 +444,6 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
                             for v in (conductivity, volumetric_heat_capacity, initial_temperature))
     if not all(np.isfinite(v).all() for v in (k, capacity, initial)) or np.any(k <= 0) or np.any(capacity <= 0):
         raise ValueError("temperature must be finite and material properties finite and positive")
-
-    if conductivity_y is not None:
-        conductivity_y = np.broadcast_to(np.asarray(conductivity_y, dtype=float), shape)
-        if not np.isfinite(conductivity_y).all() or np.any(conductivity_y <= 0):
-            raise ValueError("conductivity_y must be finite and positive")
 
     sides = {"west": ny, "east": ny, "south": nx, "north": nx}
     if not set(bc).issubset(sides):
