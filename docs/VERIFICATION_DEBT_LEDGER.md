@@ -1018,3 +1018,10 @@
 - 待办（交下一单）: cj3108（96x48 固定算子 + 固定闭包，stag_dir 本工作树）提交时排队位次 26，
   出数后读 `round11_sst_r13-96x48.json` 打分，判 41.9% 缺口是否由该缺陷解释。
 - 产物: `docs/case-periodic-hills/{ROUND13.md,round13_operator_defect.json,fig_round13_eta_face_operator.png}`。
+
+### D26 XVAL-FVM-M18737-ROUND2 第十二轮：nx=6400 的「certified <1 %」不成立（honest 更正）
+- 缺口来源：`CERTIFIED-NX6400-CLOSURE.md` 声称 `certified=True`，但仅基于两级门（WENO5@6400 vs WENO5@12800），无误差棒。
+- 交付：`docs/XVAL-FVM-M18737-ROUND2/{CERTIFIED-NX6400-ERRATA.md, certified_nx6400_errata.py, certified_nx6400_errata.json, figures/fig_errata_*.png}` + `docs/woodward-colella-double-blast/xval/wc_certified_ref.py`（新增 `reference_error_bar()`，`certified` 拆为 `certified_point_estimate`/`certified_provable`）+ `tests/test_compressible_wc_certified_ref.py`（9 项回归门）。
+- 关键数字：点估计 L1=0.893% < 1%，但参考侧误差棒 eps_ref=0.7076%（docs）/ 0.7181%（包），诚实上界 1.601–1.611% > 1%；族内 Richardson 自身误差 1.523% > 1%。
+- 结论：`certified=False`（诚实上界 > 1%），`certified_point_estimate=True`。总账 <15% 与 <3% 仍 PASS。
+- 追加欠账：需 nx=12800 实测才能真 <1%（预测 0.896%）。
