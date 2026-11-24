@@ -137,3 +137,19 @@ r 方向有限体积（壁面加密、迎风对流）；ψ 的 Poisson 方程与
 
 > 说明：A1/A2/A4/A3 的判定线按战役 metadata（5%/2%/1e-6/5%）；任务报告的通用纪律
 > "关键量 <3%" 另加一列给出。任何未达项直接标注"否"，不做粉饰。
+
+### Cartesian conduction with Robin walls
+
+The steady energy and transient conduction entry points accept a side with
+`type="robin"`, ambient temperature in `values`, and scalar or per-face
+`film_coefficient`. For conductivity in W/(m K), the film coefficient is
+in W/(m² K). The face conductance includes the half-cell and film in series.
+Zero film gives zero conductive exchange. The steady boundary ledger uses
+the same effective face conductance.
+
+Run `python -m pytest -q tests/test_robin_conduction.py` to reproduce the
+stretched two-material slab in both axes, a mixed-face affine solution, and
+symmetric Robin cooling. For the latter, k=C=1 and h=2 tan(1) give
+T=cos(2(x−1/2)) exp(−4t). At t=0.1 the maximum absolute temperature errors
+on 16, 32 and 64 cells were 4.842e-4, 1.211e-4 and 3.029e-5 K, respectively,
+with joint space and Crank–Nicolson time refinement.

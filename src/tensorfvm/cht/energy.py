@@ -316,13 +316,25 @@ def _assemble_energy(dx, dy, kappa, flux_e, flux_n, bc, source, contact_resistan
         types, values = _bc_arrays(bc, side, cells.size)
         btype[side] = types
         bval[side] = values
+        robin = types == "robin"
+        if np.any(robin):
+            spec = bc[side]
+            if "film_coefficient" not in spec:
+                raise ValueError(f"Robin boundary on {side} needs film_coefficient")
+            h = np.broadcast_to(np.asarray(spec["film_coefficient"], dtype=float), cells.shape)[robin]
+            if not np.isfinite(h).all() or np.any(h < 0):
+                raise ValueError("film coefficient must be finite and nonnegative")
+            film = h * area[robin]
+            # Replace the boundary face conductance in-place for the ledger too.
+            # The half-cell and ambient film are in series; zero film insulates.
+            cf[robin] *= film / (cf[robin] + film)
         cf = np.asarray(cf).ravel()
         ff = np.asarray(ff).ravel()
         area = np.broadcast_to(np.asarray(area, dtype=float).ravel(), cells.shape)
         cells = cells.ravel()
-        dirichlet = types == "dirichlet"
-        diag[cells[dirichlet]] -= cf[dirichlet]
-        b[cells[dirichlet]] -= cf[dirichlet] * values[dirichlet]
+        prescribed = (types == "dirichlet") | robin
+        diag[cells[prescribed]] -= cf[prescribed]
+        b[cells[prescribed]] -= cf[prescribed] * values[prescribed]
         # ``neumann`` = prescribed heat flux *into the domain* (per unit area):
         # no conduction unknown on that face, the flux lands on the right-hand
         # side as a heat rate.  Same sign convention as the Dirichlet branch.
@@ -357,7 +369,10 @@ def solve_steady_energy(dx, dy, kappa, flux_e, flux_n, bc, *,
         (ny-1, nx), respectively. Set zero for perfect contact. Units are
         length/kappa (s/m for diffusivity). In a static conductivity problem
         with kappa in W/(m K), supply the physical resistance in m² K/W.
-    bc : dict side -> {"type": str | array, "values": float | array}.
+    bc : dict side -> {"type": str, "values": float | array}.
+        For type "robin", values is the ambient temperature and film_coefficient
+        is the scalar or per-face film coefficient (W/(m² K) for conductivity).
+        Per-face types may be supplied using the "types" key.
 
     Returns
     -------
@@ -426,7 +441,7 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
         raise ValueError("unknown conduction boundary side")
     for side, count in sides.items():
         types, values = _bc_arrays(bc, side, count)
-        if types.shape != (count,) or not np.isin(types, ("adiabatic", "dirichlet", "neumann", "outflow")).all():
+        if types.shape != (count,) or not np.isin(types, ("adiabatic", "dirichlet", "neumann", "outflow", "robin")).all():
             raise ValueError(f"invalid conduction boundary type on {side}")
         if not np.isfinite(values).all():
             raise ValueError(f"nonfinite boundary value on {side}")
@@ -481,7 +496,7 @@ def _ledger(dx, dy, kappa, cond_e, cond_n, flux_e, flux_n, side_specs, btype, bv
         area = np.broadcast_to(np.asarray(area, dtype=float).ravel(), cells.shape)
         cells = cells.ravel()
         Tc = T.ravel()[cells]
-        q_cond = np.where(types == "dirichlet", cf * (values - Tc), 0.0)
+        q_cond = np.where((types == "dirichlet") | (types == "robin"), cf * (values - Tc), 0.0)
         q_cond = np.where(types == "neumann", values * area, q_cond)
         out = sign_out * ff
         q_conv = np.where(out < 0.0, -out * values, -out * Tc)
