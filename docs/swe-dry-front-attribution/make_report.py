@@ -21,8 +21,8 @@ l40 = lad[0]
 fig, ax = plt.subplots(1, 2, figsize=(11, 4))
 t = np.array(sh["t"]); phi = np.array(sh["phi"])
 ax[0].plot(t, 100 * (1 - phi), "o-", ms=3, label="1 - phi(t)  (water outside exact shoreline)")
-ax[0].axhline(100 * sh["delta_final"], ls="--", c="k", lw=1,
-              label="final stranded = %.2f %%" % (100 * sh["delta_final"]))
+ax[0].axhline(100 * sh["stranded_final"], ls="--", c="k", lw=1,
+              label="final stranded = %.2f %%" % (100 * sh["stranded_final"]))
 ax[0].set_xlabel("t [s]   (2 oscillation periods)"); ax[0].set_ylabel("% of water")
 ax[0].set_title("Exact property: every drop is inside s(t)  =>  phi == 1")
 ax[0].legend(fontsize=8); ax[0].grid(alpha=.3)
@@ -106,7 +106,7 @@ MUSCL+HLL+SSR-RK3、$H=1$ m、$a=1$ m、$A=0.5$、$g=9.81$、$T=0.70925$ s、$t_
 (iii) CFL 用 $|u|+\\sqrt{{gh}}$ ⇒ 步长塌缩：基线 **{base['steps']} 步**，而物理速度量级只需要约 140 步（见下表）。
 
 **岸线质量预算**（$n={l40['n']}$，2 周期，41 采样）：
-$\\delta_{{\\max}}={sh['delta_max']*100:.2f}\\%$、$\\delta_{{\\rm final}}={sh['delta_final']*100:.2f}\\%$、$\\delta_{{\\rm mean}}={l40['delta_mean']*100:.2f}\\%$；
+$\\delta_{{\\max}}={sh['delta_max']*100:.2f}\\%$、$\\delta_{{\\rm final}}={sh['stranded_final']*100:.2f}\\%$、$\\delta_{{\\rm mean}}={l40['delta_mean']*100:.2f}\\%$；
 一阶幅值模型预测 $L2_{{pred}}={l40['l2_predicted']*100:.2f}\\%$，实测 $L2={l40['l2']*100:.2f}\\%$
 ⇒ **质量预算只解释 {l40['fraction_explained']*100:.0f}% 的误差**，故候选解释 (3) 也**不成立为主导机制**（详见 §5）。
 
@@ -147,7 +147,7 @@ $\\delta_{{\\max}}={sh['delta_max']*100:.2f}\\%$、$\\delta_{{\\rm final}}={sh['
 | 关键量 | 本单测得 | 基准 | 误差 | < 3 % ? |
 |---|---:|---:|---:|:--:|
 | 中心水深史（2 周期，$n=40$） | L2 {l40['l2']*100:.2f}% | Thacker 闭式解 | {l40['l2']*100:.2f}% | **否**（超 11×） |
-| 岸线外水量（末态） | {sh['delta_final']*100:.2f}% | 精确 0 | {sh['delta_final']*100:.2f}% | **否** |
+| 岸线外水量（末态） | {sh['stranded_final']*100:.2f}% | 精确 0 | {sh['stranded_final']*100:.2f}% | **否** |
 | 峰值速度 | {spike['speed']:.2f} m/s | 精确包络同刻 ≈0（该点干燥） | 非物理（30× 全窗口包络） | **否** |
 | 孤岛不变量（$dh,dhu,dhv$） | 0 | 0 | **0（精确）** | 是 |
 | `face_budget` 与 `rhs` 一致性 | {max(b['consistency'].values()):.1e} | 0 | 舍入级 | 是 |
