@@ -88,16 +88,27 @@ class Grid2D:
         return cls(xf, yf)
 
 
-def _face_conductance(dx, dy, kappa):
+def _contact_resistance(value, shape, axis):
+    resistance = np.asarray(value, dtype=float)
+    if resistance.ndim and resistance.shape != shape:
+        raise ValueError(f"{axis} contact resistance needs shape {shape} or a scalar")
+    if not np.isfinite(resistance).all() or (resistance < 0).any():
+        raise ValueError(f"{axis} contact resistance must be finite and nonnegative")
+    return resistance
+
+
+def _face_conductance(dx, dy, kappa, contact_resistance_x=0.0, contact_resistance_y=0.0):
     """Return ``(cond_e, cond_n)`` face conductances (per unit depth)."""
     ny, nx = kappa.shape
     cond_e = np.zeros((ny, nx + 1))
     cond_n = np.zeros((ny + 1, nx))
     denom = 0.5 * dx[:-1][None, :] / kappa[:, :-1] + 0.5 * dx[1:][None, :] / kappa[:, 1:]
+    denom += _contact_resistance(contact_resistance_x, denom.shape, "x")
     cond_e[:, 1:nx] = dy[:, None] / denom
     cond_e[:, 0] = dy / (0.5 * dx[0] / kappa[:, 0])
     cond_e[:, nx] = dy / (0.5 * dx[-1] / kappa[:, -1])
     denom_n = 0.5 * dy[:-1][:, None] / kappa[:-1, :] + 0.5 * dy[1:][:, None] / kappa[1:, :]
+    denom_n += _contact_resistance(contact_resistance_y, denom_n.shape, "y")
     cond_n[1:ny, :] = dx[None, :] / denom_n
     cond_n[0, :] = dx / (0.5 * dy[0] / kappa[0, :])
     cond_n[ny, :] = dx / (0.5 * dy[-1] / kappa[-1, :])
@@ -198,6 +209,7 @@ class EnergyLedger:
     normalized_imbalance: float = 0.0
     residual_inf: float = 0.0
     residual_scaled: float = 0.0
+    generation: float = 0.0
 
     def as_dict(self) -> dict:
         return {
@@ -206,6 +218,7 @@ class EnergyLedger:
             "inflow": float(self.inflow),
             "outflow": float(self.outflow),
             "imbalance": float(self.imbalance),
+            "generation": float(self.generation),
             "normalized_imbalance": float(self.normalized_imbalance),
             "residual_inf": float(self.residual_inf),
             "residual_scaled": float(self.residual_scaled),
@@ -242,15 +255,22 @@ def _conv_net_out(face_x, face_y, flux_e, flux_n):
 
 def solve_steady_energy(dx, dy, kappa, flux_e, flux_n, bc, *,
                         t_init=None, tol=1e-13, max_picard=500, dc_relax=1.0,
-                        high_order=True):
-    """Solve ``div(u T) = div(kappa grad T)`` with the CHT face conductance.
+                        high_order=True, source=0.0, contact_resistance_x=0.0,
+                        contact_resistance_y=0.0):
+    """Solve ``div(u T) = div(kappa grad T) + source`` with the CHT face conductance.
 
     Parameters
     ----------
     dx, dy : (nx,), (ny,) cell sizes.
+    source : scalar or cell field of volumetric temperature production (K/s).
     kappa : (ny, nx) thermal diffusivity of each cell (fluid or solid).
     flux_e, flux_n : (ny, nx+1), (ny+1, nx) volume fluxes through the faces,
         positive in the +x / +y direction (per unit depth).
+    contact_resistance_x, contact_resistance_y : additional diffusive resistance
+        per unit area on interior faces, scalar or shapes (ny, nx-1) and
+        (ny-1, nx), respectively. Set zero for perfect contact. Units are
+        length/kappa (s/m for diffusivity). In a static conductivity problem
+        with kappa in W/(m K), supply the physical resistance in m² K/W.
     bc : dict side -> {"type": str | array, "values": float | array}.
 
     Returns
@@ -258,7 +278,7 @@ def solve_steady_energy(dx, dy, kappa, flux_e, flux_n, bc, *,
     ``(T, info)`` where ``info`` holds the Picard history and the ledger.
     """
     ny, nx = kappa.shape
-    cond_e, cond_n = _face_conductance(dx, dy, kappa)
+    cond_e, cond_n = _face_conductance(dx, dy, kappa, contact_resistance_x, contact_resistance_y)
     idx = np.arange(ny * nx).reshape(ny, nx)
 
     rows, cols, vals = [], [], []
@@ -269,7 +289,10 @@ def solve_steady_energy(dx, dy, kappa, flux_e, flux_n, bc, *,
         vals.append(np.asarray(v).ravel())
 
     diag = np.zeros(ny * nx)
-    b = np.zeros(ny * nx)
+    rates = np.broadcast_to(np.asarray(source, dtype=float), (ny, nx)) * np.outer(dy, dx)
+    if not np.isfinite(rates).all():
+        raise ValueError("source must be finite")
+    b = -rates.flatten()
 
     # --- interior x faces --------------------------------------------------
     P = idx[:, :-1]
@@ -358,12 +381,12 @@ def solve_steady_energy(dx, dy, kappa, flux_e, flux_n, bc, *,
     info = {"picard_iterations": it + 1, "picard_history": history[-8:],
             "high_order": high_order}
     info["ledger"] = _ledger(dx, dy, kappa, cond_e, cond_n, flux_e, flux_n,
-                            side_specs, btype, bval, T, high_order)
+                            side_specs, btype, bval, T, high_order, rates)
     return T, info
 
 
 def _ledger(dx, dy, kappa, cond_e, cond_n, flux_e, flux_n, side_specs, btype, bval, T,
-            high_order=True):
+            high_order=True, rates=0.0):
     """Recompute the discrete energy balance cell by cell and at the boundary.
 
     ``residual`` accumulates the *heat entering* each cell, so it vanishes where
@@ -374,7 +397,7 @@ def _ledger(dx, dy, kappa, cond_e, cond_n, flux_e, flux_n, side_specs, btype, bv
     ny, nx = T.shape
     _, ho_x, _, ho_y = _convective_faces(T, flux_e, flux_n, cond_e, cond_n, bval, dx, dy,
                                         first_order=not high_order)
-    residual = np.zeros((ny, nx))
+    residual = np.broadcast_to(rates, (ny, nx)).copy()
     residual[:, :-1] += cond_e[:, 1:nx] * (T[:, 1:] - T[:, :-1])
     residual[:, 1:] -= cond_e[:, 1:nx] * (T[:, 1:] - T[:, :-1])
     residual[:-1, :] += cond_n[1:ny, :] * (T[1:, :] - T[:-1, :])
@@ -404,12 +427,14 @@ def _ledger(dx, dy, kappa, cond_e, cond_n, flux_e, flux_n, side_specs, btype, bv
         residual.ravel()[cells] += q_cond + q_conv
         advective["inflow"] += float(np.sum(np.where(out < 0.0, -out * values, 0.0)))
         advective["outflow"] += float(np.sum(np.where(out > 0.0, out * Tc, 0.0)))
-    total = sum(boundary.values())
+    generation = float(np.sum(rates))
+    total = sum(boundary.values()) + generation
     # scale on the largest *throughput* of the problem, not just the boundary
     # fluxes: for a case whose boundary fluxes cancel the latter is degenerate.
     scale = max([abs(v) for v in boundary.values()]
-                + [abs(advective["inflow"]), abs(advective["outflow"])] + [1e-300])
+                + [abs(advective["inflow"]), abs(advective["outflow"])] + [float(np.sum(np.abs(rates))), 1e-300])
     return EnergyLedger(
+        generation=generation,
         boundary=boundary,
         advective=advective,
         inflow=advective["inflow"],

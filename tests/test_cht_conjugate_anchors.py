@@ -128,3 +128,40 @@ def test_cylinder_drag_and_nusselt_re40():
     assert abs(cd / 1.574 - 1.0) < 0.05
     res = FourierCylinderEnergy(flow, pr=0.7).solve(1.0, t_end=60.0)
     assert abs(res["nusselt_mean"] / churchill_bernstein(40.0, 0.7) - 1.0) < 0.05
+
+@pytest.mark.parametrize("axis", ["x", "y"])
+@pytest.mark.parametrize("left,right", [(310., 290.), (290., 310.)])
+def test_two_material_contact_temperature_jump(axis, left, right):
+    widths = np.array([0.15, 0.25, 0.4, 0.2])
+    cross = np.array([0.3, 0.9])
+    k = np.tile([4., 4., 1., 1.], (2, 1))
+    contact = np.zeros((2, 3))
+    contact[:, 1] = 0.3
+    if axis == "x":
+        dx, dy, sides = widths, cross, ("west", "east")
+    else:
+        dx, dy, sides = cross, widths, ("south", "north")
+        k, contact = k.T, contact.T
+    bc = {side: {"type": "dirichlet", "values": v} for side, v in zip(sides, [left, right])}
+    ny, nx = k.shape
+    t, info = solve_steady_energy(dx, dy, k, np.zeros((ny, nx+1)), np.zeros((ny+1, nx)),
+                                  bc, **{f"contact_resistance_{axis}": contact})
+    profile = t if axis == "x" else t.T
+    q = (left-right) / (0.4/4 + 0.3 + 0.6)
+    # Recover the two fluxes from cell-centre differences in each material.
+    q_left = 4 * (profile[:, 0]-profile[:, 1]) / (0.5*(widths[0]+widths[1]))
+    q_right = (profile[:, 2]-profile[:, 3]) / (0.5*(widths[2]+widths[3]))
+    jump = (profile[:, 1] - q_left*widths[1]/8) - (profile[:, 2] + q_right*widths[2]/2)
+    np.testing.assert_allclose(q_left, q, atol=1e-10, rtol=0)
+    np.testing.assert_allclose(q_right, q, atol=1e-10, rtol=0)
+    np.testing.assert_allclose(jump, q*0.3, atol=1e-10, rtol=0)
+    assert info["ledger"].boundary[sides[0]] == pytest.approx(q*cross.sum(), abs=1e-10)
+    assert abs(info["ledger"].imbalance) < 1e-10
+
+
+@pytest.mark.parametrize("bad", [-0.1, np.nan, np.zeros((2, 3))])
+def test_invalid_face_contact_resistance(bad):
+    with pytest.raises(ValueError, match="x contact resistance"):
+        solve_steady_energy(np.ones(2), np.ones(2), np.ones((2, 2)),
+                            np.zeros((2, 3)), np.zeros((3, 2)), {},
+                            contact_resistance_x=bad)

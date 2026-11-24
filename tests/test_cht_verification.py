@@ -139,3 +139,17 @@ def test_cylinder_conjugate_nusselt_against_churchill_bernstein():
     reference = churchill_bernstein(40.0, 0.7)
     assert abs(res.nusselt_mean - reference) / reference < 0.15
     assert res.metrics["interface_local_residual_rel"] < 1e-6
+
+def test_volumetric_heating_slab_converges_and_closes_budget():
+    errors = []
+    for n in (8, 16, 32):
+        dx, dy = np.full(n, 1/n), np.array([0.3, 0.7])
+        bc = {side: {"type": "dirichlet", "values": 0.} for side in ("east", "west")}
+        t, info = solve_steady_energy(dx, dy, np.ones((2, n)), np.zeros((2, n+1)),
+                                      np.zeros((3, n)), bc, source=2.)
+        x = (np.arange(n) + 0.5) / n
+        errors.append(np.max(np.abs(t - x * (1-x))))
+        assert info["ledger"].generation == pytest.approx(2.)
+        assert info["ledger"].residual_inf < 1e-11
+        assert abs(info["ledger"].imbalance) < 1e-11
+    np.testing.assert_allclose(np.array(errors[:-1]) / errors[1:], 4., rtol=1e-9)
