@@ -3,8 +3,8 @@
  "case": "CASE-FVM-PERIODIC-HILLS",
  "reference_x_r_over_H": 5.41,
  "reference": "Breuer et al. 2009, Comput. Fluids 38:433, doi:10.1016/j.compfluid.2008.05.002 (ERCOFTAC UFR 3-30); x_r/H from ERCOFTAC KB UFR 3-30 Evaluation",
- "n_artefacts": 14,
- "n_usable": 8,
+ "n_artefacts": 15,
+ "n_usable": 9,
  "n_degenerate": 6,
  "degenerate": [
   {
@@ -158,6 +158,68 @@
      "x_max": 3.140625,
      "row_min": 0,
      "row_max": 5,
+     "wall_attached": true,
+     "wraps_seam": false
+    }
+   ]
+  },
+  {
+   "stem": "round11_sst_r13-96x48",
+   "file": "round11_sst_r13-96x48.npz",
+   "status": "usable",
+   "usable": true,
+   "reason": "usable",
+   "max_abs_u": 1.1977117527483965,
+   "n_cells": 1,
+   "wall_attached_columns": 35,
+   "nx": 96,
+   "ny": 48,
+   "routes": {
+    "wall_shear_first": 3.7667069408020226,
+    "wall_shear_largest_area": 3.7667069408020226,
+    "field_cell_first_wall_span": 3.7667069408020226,
+    "field_cell_last_wall_span": 3.7667069408020226
+   },
+   "band": {
+    "values": [
+     3.7667069408020226,
+     3.7667069408020226,
+     3.7667069408020226,
+     3.7667069408020226
+    ],
+    "n": 4,
+    "min": 3.7667069408020226,
+    "max": 3.7667069408020226,
+    "spread": 0.0,
+    "spread_rel": 0.0,
+    "acceptance_width": 1.082,
+    "flag": "definition_insensitive"
+   },
+   "wall_spans": [
+    {
+     "separation": 0.43250683912230825,
+     "reattachment": 3.7667069408020226,
+     "length": 3.3342001016797145
+    }
+   ],
+   "meta": {
+    "n_cells": 1,
+    "object_verdict": "object_supported",
+    "continued_downstream": false,
+    "lift_off_shear_ratio": null,
+    "next_wall_touchdown": null
+   },
+   "wall_shear_first": 3.7667069408020226,
+   "wall_shear_largest_area": 3.7667069408020226,
+   "n_bubbles": 1,
+   "field_cells": [
+    {
+     "label": 1,
+     "area_cells": 158,
+     "x_min": 0.515625,
+     "x_max": 3.703125,
+     "row_min": 0,
+     "row_max": 6,
      "wall_attached": true,
      "wraps_seam": false
     }

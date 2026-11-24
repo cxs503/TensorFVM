@@ -294,9 +294,9 @@ def test_stored_archive_has_the_two_ladders_unanswered():
     """Pins the round-26 finding: both grid ladders are rung-starved."""
     payload = json.loads(
         (CASE_DIR / "round26_archive_audit.json").read_text())
-    assert payload["n_artefacts"] == 14
+    assert payload["n_artefacts"] == 15
     assert payload["n_degenerate"] == 6
-    assert payload["n_usable"] == 8
+    assert payload["n_usable"] == 9
     for name in ("sst_r18", "laminar_re2800"):
         assert payload["ladders"][name]["verdict"] == "insufficient_rungs"
     degenerate = {d["stem"] for d in payload["degenerate"]}

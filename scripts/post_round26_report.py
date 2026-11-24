@@ -2,6 +2,7 @@
 """Post the round-26 verification report to the platform (figures inlined)."""
 import base64
 import json
+from pathlib import Path
 import os
 import urllib.request
 
@@ -143,7 +144,7 @@ payload = {
                 "（带宽 129.6%，判 definition_sensitive，抬离带剪切仅峰值 2.15%）；SST/SA 为单单元 object_supported；"
                 "无任何口径 <10%，锚点保持 honest FAIL。零求解器运行。"),
     "scenario_key": "CASE-FVM-PERIODIC-HILLS",
-    "mission_id": 22685,
+    "mission_id": 25879,
     "tags": ["TensorFVM", "verification", "periodic-hill", "ERCOFTAC-UFR-3-30",
              "reattachment", "artifact-integrity", "definition-sensitivity"],
     "markdown": markdown,
