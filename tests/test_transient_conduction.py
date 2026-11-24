@@ -73,3 +73,23 @@ def test_mixed_wall_power_history_closes_every_nonuniform_step(theta):
     net = sum(power.sum(axis=1) for power in walls.values()) + .7
     stored = (np.diff(temp, axis=0)*3.*np.outer(dy, dx)).sum(axis=(1, 2))
     np.testing.assert_allclose(stored, np.diff(times)*((1-theta)*net[:-1]+theta*net[1:]), atol=1e-13)
+
+
+@pytest.mark.parametrize("theta", [.5, .75, 1.])
+def test_time_dependent_face_signals_match_each_step_storage(theta):
+    time = np.array([.1, .105, .13, .2])
+    calls = []
+    def north(t):
+        calls.append(t)
+        return [3.*t, 1.-t]
+    bc = {"north": {"types": ["neumann", "robin"], "values": north, "film_coefficient": 2.},
+          "south": {"type": "dirichlet", "values": lambda t: t*t}}
+    t, power = solve_transient_conduction([.4, .6], [1.], 1., 2., bc, time, 0.,
+                                          theta=theta, return_wall_power=True)
+    assert calls == time.tolist()
+    np.testing.assert_allclose(power["north"][:,0], .4*3.*time)
+    np.testing.assert_allclose(power["north"][:,1], .6*(1.-time-t[:,0,1]))
+    np.testing.assert_allclose(power["south"], 2*np.array([.4,.6])*(time[:,None]**2-t[:,0]))
+    net = sum(side.sum(axis=1) for side in power.values())
+    stored = 2*np.diff(t[:,0], axis=0) @ np.array([.4,.6])
+    np.testing.assert_allclose(stored, np.diff(time)*((1-theta)*net[:-1]+theta*net[1:]), atol=1e-14)

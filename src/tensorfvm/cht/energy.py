@@ -420,12 +420,15 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
                                time, initial_temperature, *, source=0.0,
                                contact_resistance_x=0.0, contact_resistance_y=0.0,
                                theta=0.5, conductivity_y=None, return_wall_power=False):
-    """Advance cell-centred conduction with fixed material data and boundary loads.
+    """Advance cell-centred conduction with fixed material data and boundary types.
 
     Return temperature at each requested time with shape (nt, ny, nx). Cell
     widths are in metres, conductivity in W/(m K), volumetric heat capacity
     in J/(m³ K), source in W/m³, and contact resistance in m² K/W. Fixed
     wall temperatures and prescribed inward flux use the steady BC format.
+    A side's values may also be a callable of time, returning a scalar or
+    one value per face (temperature, inward flux or Robin ambient temperature).
+    Callables are sampled at the supplied times and theta-weighted per step.
     For grid-aligned anisotropy, conductivity supplies the x component and
     conductivity_y supplies the y component. Both broadcast to (ny, nx).
     With return_wall_power=True return (temperature, wall_power). For each
@@ -451,14 +454,31 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
     sides = {"west": ny, "east": ny, "south": nx, "north": nx}
     if not set(bc).issubset(sides):
         raise ValueError("unknown conduction boundary side")
+    static_bc = dict(bc)
+    signals = {}
     for side, count in sides.items():
-        types, values = _bc_arrays(bc, side, count)
+        spec = bc.get(side)
+        if spec is not None and callable(spec.get("values")):
+            samples = np.empty((len(time), count))
+            for index, instant in enumerate(time):
+                samples[index] = np.broadcast_to(np.asarray(spec["values"](float(instant)), dtype=float), (count,))
+            if not np.isfinite(samples).all():
+                raise ValueError(f"nonfinite boundary value on {side}")
+            signals[side] = samples
+            static_bc[side] = dict(spec, values=0.)
+        types, values = _bc_arrays(static_bc, side, count)
         if types.shape != (count,) or not np.isin(types, ("adiabatic", "dirichlet", "neumann", "outflow", "robin")).all():
             raise ValueError(f"invalid conduction boundary type on {side}")
         if not np.isfinite(values).all():
             raise ValueError(f"nonfinite boundary value on {side}")
     A, b, faces = _assemble_energy(dx, dy, k, np.zeros((ny, nx+1)), np.zeros((ny+1, nx)),
-                               bc, source, contact_resistance_x, contact_resistance_y, conductivity_y)
+                               static_bc, source, contact_resistance_x, contact_resistance_y, conductivity_y)
+    _, _, side_specs, types, values, _ = faces
+    varying_loads = []
+    for side, cells, conductance, _, _, area in side_specs:
+        if side in signals:
+            weights = _conductive_wall_power(types[side], 1., conductance, area, 0.)
+            varying_loads.append((cells, signals[side], weights))
     mass = (capacity * np.outer(dy, dx)).ravel()
     M = sp.diags(mass, format="csc")
     history = np.empty((len(time), ny, nx))
@@ -470,13 +490,14 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
             previous_dt = dt
         state = history[step].ravel()
         rhs = mass * state + dt * ((1 - theta) * (A @ state) - b)
+        for cells, samples, weights in varying_loads:
+            rhs[cells] += dt * weights * ((1-theta)*samples[step] + theta*samples[step+1])
         history[step + 1] = lu.solve(rhs).reshape(shape)
     if return_wall_power:
-        _, _, sides, types, values, _ = faces
         state = history.reshape(len(time), ny*nx)
-        powers = {side: _conductive_wall_power(types[side], values[side], conductance,
+        powers = {side: _conductive_wall_power(types[side], signals.get(side, values[side]), conductance,
                                                area, state[:, cells])
-                  for side, cells, conductance, _, _, area in sides}
+                  for side, cells, conductance, _, _, area in side_specs}
         return history, powers
     return history
 
