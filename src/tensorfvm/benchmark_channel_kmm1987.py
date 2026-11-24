@@ -42,6 +42,7 @@ from pathlib import Path
 import numpy as np
 
 from tensorfvm.rans_validation.channel import solve_channel
+from tensorfvm.verification.kmm180_sa import solve_sa_channel
 from tensorfvm.verification.kmm180_artifacts import (
     TIMINGS_FILE, merge_timings, write_artifacts)
 from tensorfvm.verification.kmm1987 import (
@@ -53,7 +54,7 @@ from tensorfvm.verification.kmm1987 import (
 # --------------------------------------------------------------------------- #
 # Models to test
 # --------------------------------------------------------------------------- #
-MODELS = ['sst', 'komega', 'kepsilon']
+MODELS = ['sst', 'komega', 'kepsilon', 'sa']
 RESOLUTIONS = [64, 128, 256]
 
 #: Cases whose number the catalog quotes; the reference-substitution cost
@@ -73,11 +74,13 @@ SUBSTITUTION_BAND_PP = 0.15
 
 def run_case(model, n, re_tau=180.0):
     """Run one channel solve and return the validation result."""
-    options = {}
-    if model == 'kepsilon':
-        options['first_cell_y_plus'] = 30.0
-
-    result = solve_channel(model, n, re_tau=re_tau, **options)
+    if model == 'sa':
+        result = solve_sa_channel(n, re_tau=re_tau, first_cell_y_plus=0.3)
+    else:
+        options = {}
+        if model == 'kepsilon':
+            options['first_cell_y_plus'] = 30.0
+        result = solve_channel(model, n, re_tau=re_tau, **options)
 
     if not result['converged']:
         return dict(
