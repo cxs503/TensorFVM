@@ -38,6 +38,9 @@ case counts as an overall PASS only when both windows pass.
 | kepsilon | 64 | 1940 | 0.009341 | 15.0% | 14.63 | 6.7% | 6.9% | 6.4% | FAIL | FAIL |
 | kepsilon | 128 | 1940 | 0.009341 | 15.0% | 14.63 | 6.7% | 6.9% | 6.3% | FAIL | FAIL |
 | kepsilon | 256 | 1940 | 0.009341 | 15.0% | 14.63 | 6.7% | 6.9% | 6.3% | FAIL | FAIL |
+| sa | 64 | 1553 | 0.007945 | 2.2% | 15.87 | 1.1% | 1.3% | 0.3% | PASS | PASS |
+| sa | 128 | 1536 | 0.007939 | 2.3% | 15.87 | 1.2% | 1.4% | 0.3% | PASS | PASS |
+| sa | 256 | 1521 | 0.007938 | 2.3% | 15.87 | 1.2% | 1.5% | 0.3% | PASS | PASS |
 
 ## DNS Reference Values
 
@@ -60,7 +63,7 @@ case counts as an overall PASS only when both windows pass.
 * `results.json` / `results.csv` — the legacy matrix
 * `manifest.json` — implementation files, repro command, artifact sha256
 
-Headline: QUALIFIED -- kepsilon: legacy_full FAIL, log_layer FAIL; komega: legacy_full FAIL, log_layer FAIL; sst: legacy_full PASS, log_layer FAIL/PASS. Both windows are published above and neither may be quoted alone.
+Headline: QUALIFIED -- kepsilon: legacy_full FAIL, log_layer FAIL; komega: legacy_full FAIL, log_layer FAIL; sa: legacy_full PASS, log_layer PASS; sst: legacy_full PASS, log_layer FAIL/PASS. Both windows are published above and neither may be quoted alone.
 
 ## Notes
 
