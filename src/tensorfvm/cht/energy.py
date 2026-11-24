@@ -253,30 +253,8 @@ def _conv_net_out(face_x, face_y, flux_e, flux_n):
             + face_y[1:, :] * flux_n[1:, :] - face_y[:-1, :] * flux_n[:-1, :])
 
 
-def solve_steady_energy(dx, dy, kappa, flux_e, flux_n, bc, *,
-                        t_init=None, tol=1e-13, max_picard=500, dc_relax=1.0,
-                        high_order=True, source=0.0, contact_resistance_x=0.0,
-                        contact_resistance_y=0.0):
-    """Solve ``div(u T) = div(kappa grad T) + source`` with the CHT face conductance.
-
-    Parameters
-    ----------
-    dx, dy : (nx,), (ny,) cell sizes.
-    source : scalar or cell field of volumetric temperature production (K/s).
-    kappa : (ny, nx) thermal diffusivity of each cell (fluid or solid).
-    flux_e, flux_n : (ny, nx+1), (ny+1, nx) volume fluxes through the faces,
-        positive in the +x / +y direction (per unit depth).
-    contact_resistance_x, contact_resistance_y : additional diffusive resistance
-        per unit area on interior faces, scalar or shapes (ny, nx-1) and
-        (ny-1, nx), respectively. Set zero for perfect contact. Units are
-        length/kappa (s/m for diffusivity). In a static conductivity problem
-        with kappa in W/(m K), supply the physical resistance in m² K/W.
-    bc : dict side -> {"type": str | array, "values": float | array}.
-
-    Returns
-    -------
-    ``(T, info)`` where ``info`` holds the Picard history and the ledger.
-    """
+def _assemble_energy(dx, dy, kappa, flux_e, flux_n, bc, source, contact_resistance_x, contact_resistance_y):
+    """Assemble net entering heat as A @ T - b, plus the ledger inputs."""
     ny, nx = kappa.shape
     cond_e, cond_n = _face_conductance(dx, dy, kappa, contact_resistance_x, contact_resistance_y)
     idx = np.arange(ny * nx).reshape(ny, nx)
@@ -358,6 +336,37 @@ def solve_steady_energy(dx, dy, kappa, flux_e, flux_n, bc, *,
     A = sp.coo_matrix((np.concatenate(vals), (np.concatenate(rows), np.concatenate(cols))),
                       shape=(ny * nx, ny * nx)).tocsc()
     A = (A + sp.diags(diag)).tocsc()
+    return A, b, (cond_e, cond_n, side_specs, btype, bval, rates)
+
+
+def solve_steady_energy(dx, dy, kappa, flux_e, flux_n, bc, *,
+                        t_init=None, tol=1e-13, max_picard=500, dc_relax=1.0,
+                        high_order=True, source=0.0, contact_resistance_x=0.0,
+                        contact_resistance_y=0.0):
+    """Solve ``div(u T) = div(kappa grad T) + source`` with the CHT face conductance.
+
+    Parameters
+    ----------
+    dx, dy : (nx,), (ny,) cell sizes.
+    source : scalar or cell field of volumetric temperature production (K/s).
+    kappa : (ny, nx) thermal diffusivity of each cell (fluid or solid).
+    flux_e, flux_n : (ny, nx+1), (ny+1, nx) volume fluxes through the faces,
+        positive in the +x / +y direction (per unit depth).
+    contact_resistance_x, contact_resistance_y : additional diffusive resistance
+        per unit area on interior faces, scalar or shapes (ny, nx-1) and
+        (ny-1, nx), respectively. Set zero for perfect contact. Units are
+        length/kappa (s/m for diffusivity). In a static conductivity problem
+        with kappa in W/(m K), supply the physical resistance in m² K/W.
+    bc : dict side -> {"type": str | array, "values": float | array}.
+
+    Returns
+    -------
+    ``(T, info)`` where ``info`` holds the Picard history and the ledger.
+    """
+    ny, nx = kappa.shape
+    A, b, faces = _assemble_energy(dx, dy, kappa, flux_e, flux_n, bc, source,
+                                    contact_resistance_x, contact_resistance_y)
+    cond_e, cond_n, side_specs, btype, bval, rates = faces
     lu = spla.splu(A)
 
     T = np.zeros((ny, nx)) if t_init is None else np.array(t_init, dtype=float)
@@ -383,6 +392,59 @@ def solve_steady_energy(dx, dy, kappa, flux_e, flux_n, bc, *,
     info["ledger"] = _ledger(dx, dy, kappa, cond_e, cond_n, flux_e, flux_n,
                             side_specs, btype, bval, T, high_order, rates)
     return T, info
+
+
+def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc,
+                               time, initial_temperature, *, source=0.0,
+                               contact_resistance_x=0.0, contact_resistance_y=0.0,
+                               theta=0.5):
+    """Advance cell-centred conduction with fixed material data and boundary loads.
+
+    Return temperature at each requested time with shape (nt, ny, nx). Cell
+    widths are in metres, conductivity in W/(m K), volumetric heat capacity
+    in J/(m³ K), source in W/m³, and contact resistance in m² K/W. Fixed
+    wall temperatures and prescribed inward flux use the steady BC format.
+    theta=0.5 selects Crank-Nicolson and theta=1 selects backward Euler.
+    """
+    dx, dy, time = (np.asarray(v, dtype=float) for v in (dx, dy, time))
+    for widths in (dx, dy):
+        if widths.ndim != 1 or widths.size == 0 or not np.isfinite(widths).all() or np.any(widths <= 0):
+            raise ValueError("cell widths must be finite positive vectors")
+    if time.ndim != 1 or len(time) < 2 or not np.isfinite(time).all() or np.any(np.diff(time) <= 0):
+        raise ValueError("time must be a strictly increasing finite vector")
+    if not .5 <= theta <= 1:
+        raise ValueError("theta must lie in [0.5, 1]")
+    ny, nx = len(dy), len(dx)
+    shape = (ny, nx)
+    k, capacity, initial = (np.broadcast_to(np.asarray(v, dtype=float), shape)
+                            for v in (conductivity, volumetric_heat_capacity, initial_temperature))
+    if not all(np.isfinite(v).all() for v in (k, capacity, initial)) or np.any(k <= 0) or np.any(capacity <= 0):
+        raise ValueError("temperature must be finite and material properties finite and positive")
+
+    sides = {"west": ny, "east": ny, "south": nx, "north": nx}
+    if not set(bc).issubset(sides):
+        raise ValueError("unknown conduction boundary side")
+    for side, count in sides.items():
+        types, values = _bc_arrays(bc, side, count)
+        if types.shape != (count,) or not np.isin(types, ("adiabatic", "dirichlet", "neumann", "outflow")).all():
+            raise ValueError(f"invalid conduction boundary type on {side}")
+        if not np.isfinite(values).all():
+            raise ValueError(f"nonfinite boundary value on {side}")
+    A, b, _ = _assemble_energy(dx, dy, k, np.zeros((ny, nx+1)), np.zeros((ny+1, nx)),
+                               bc, source, contact_resistance_x, contact_resistance_y)
+    mass = (capacity * np.outer(dy, dx)).ravel()
+    M = sp.diags(mass, format="csc")
+    history = np.empty((len(time), ny, nx))
+    history[0] = initial
+    previous_dt = None
+    for step, dt in enumerate(np.diff(time)):
+        if dt != previous_dt:
+            lu = spla.splu(M - (theta * dt) * A)
+            previous_dt = dt
+        state = history[step].ravel()
+        rhs = mass * state + dt * ((1 - theta) * (A @ state) - b)
+        history[step + 1] = lu.solve(rhs).reshape(shape)
+    return history
 
 
 def _ledger(dx, dy, kappa, cond_e, cond_n, flux_e, flux_n, side_specs, btype, bval, T,
