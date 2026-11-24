@@ -39,7 +39,7 @@ import scipy.sparse as sp
 import scipy.sparse.linalg as spla
 from ..registry import capability
 
-__all__ = ["solve_steady_energy", "Grid2D", "EnergyLedger"]
+__all__ = ["solve_steady_energy", "solve_harmonic_conduction", "solve_transient_conduction", "Grid2D", "EnergyLedger"]
 
 
 @dataclass
@@ -180,7 +180,7 @@ def _face_values_n(T, flux_n, cond_n, dy, first_order=False):
     return up, ho
 
 
-def _bc_arrays(bc, side, count, default="adiabatic"):
+def _bc_arrays(bc, side, count, default="adiabatic", *, dtype=float):
     spec = bc.get(side)
     if spec is None:
         return np.array([default] * count), np.zeros(count)
@@ -189,7 +189,7 @@ def _bc_arrays(bc, side, count, default="adiabatic"):
     if types is None:
         types = [spec["type"]] * count
     types = np.asarray(types)
-    values = np.broadcast_to(np.asarray(values, dtype=float), (count,)).astype(float)
+    values = np.broadcast_to(np.asarray(values, dtype=dtype), (count,)).copy()
     return types, values
 
 
@@ -258,7 +258,7 @@ def _conv_net_out(face_x, face_y, flux_e, flux_n):
             + face_y[1:, :] * flux_n[1:, :] - face_y[:-1, :] * flux_n[:-1, :])
 
 
-def _assemble_energy(dx, dy, kappa, flux_e, flux_n, bc, source, contact_resistance_x, contact_resistance_y, conductivity_y=None):
+def _assemble_energy(dx, dy, kappa, flux_e, flux_n, bc, source, contact_resistance_x, contact_resistance_y, conductivity_y=None, *, load_dtype=float):
     """Assemble net entering heat as A @ T - b, plus the ledger inputs."""
     ny, nx = kappa.shape
     cond_e, cond_n = _face_conductance(dx, dy, kappa, contact_resistance_x, contact_resistance_y, conductivity_y)
@@ -272,7 +272,7 @@ def _assemble_energy(dx, dy, kappa, flux_e, flux_n, bc, source, contact_resistan
         vals.append(np.asarray(v).ravel())
 
     diag = np.zeros(ny * nx)
-    rates = np.broadcast_to(np.asarray(source, dtype=float), (ny, nx)) * np.outer(dy, dx)
+    rates = np.broadcast_to(np.asarray(source, dtype=load_dtype), (ny, nx)) * np.outer(dy, dx)
     if not np.isfinite(rates).all():
         raise ValueError("source must be finite")
     b = -rates.flatten()
@@ -318,7 +318,7 @@ def _assemble_energy(dx, dy, kappa, flux_e, flux_n, bc, source, contact_resistan
     ]
     btype, bval = {}, {}
     for side, cells, cf, ff, sign_out, area in side_specs:
-        types, values = _bc_arrays(bc, side, cells.size)
+        types, values = _bc_arrays(bc, side, cells.size, dtype=load_dtype)
         btype[side] = types
         bval[side] = values
         robin = types == "robin"
@@ -416,6 +416,54 @@ def solve_steady_energy(dx, dy, kappa, flux_e, flux_n, bc, *,
     return T, info
 
 
+def _conduction_materials(dx, dy, conductivity, capacity):
+    for widths in (dx, dy):
+        if widths.ndim != 1 or widths.size == 0 or not np.isfinite(widths).all() or np.any(widths <= 0):
+            raise ValueError("cell widths must be finite positive vectors")
+    properties = tuple(np.broadcast_to(np.asarray(v, dtype=float), (len(dy), len(dx)))
+                       for v in (conductivity, capacity))
+    if any(not np.isfinite(v).all() or np.any(v <= 0) for v in properties):
+        raise ValueError("material properties must be finite and positive")
+    return properties
+
+
+def _validate_conduction_bc(bc, sides, dtype):
+    if not set(bc).issubset(sides):
+        raise ValueError("unknown conduction boundary side")
+    for side, count in sides.items():
+        types, values = _bc_arrays(bc, side, count, dtype=dtype)
+        if types.shape != (count,) or not np.isin(types, ("adiabatic", "dirichlet", "neumann", "outflow", "robin")).all():
+            raise ValueError(f"invalid conduction boundary type on {side}")
+        if not np.isfinite(values).all():
+            raise ValueError(f"nonfinite boundary value on {side}")
+
+
+def solve_harmonic_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc,
+                              angular_frequency, *, source=0., conductivity_y=None,
+                              contact_resistance_x=0., contact_resistance_y=0.):
+    """Return cell temperature and inward power per wall face for unit depth.
+
+    Use Re(phasor * exp(iωt)), with positive angular frequency in rad/s.
+    Wall values and volumetric sources may be complex amplitudes. Real
+    materials, contact resistances and Robin films use the transient units.
+    """
+    if not np.isfinite(angular_frequency) or angular_frequency <= 0:
+        raise ValueError("angular_frequency must be finite and positive")
+    dx, dy = np.asarray(dx, dtype=float), np.asarray(dy, dtype=float)
+    k, capacity = _conduction_materials(dx, dy, conductivity, volumetric_heat_capacity)
+    ny, nx = k.shape
+    _validate_conduction_bc(bc, {"west": ny, "east": ny, "south": nx, "north": nx}, complex)
+    A, b, faces = _assemble_energy(dx, dy, k, np.zeros((ny, nx+1)), np.zeros((ny+1, nx)),
+                                  bc, source, contact_resistance_x, contact_resistance_y,
+                                  conductivity_y, load_dtype=complex)
+    mass = (capacity*np.outer(dy, dx)).ravel()
+    state = spla.spsolve(sp.diags(1j*angular_frequency*mass, format="csc") - A, -b)
+    _, _, side_specs, types, values, _ = faces
+    powers = {side: _conductive_wall_power(types[side], values[side], conductance, area, state[cells])
+              for side, cells, conductance, _, _, area in side_specs}
+    return state.reshape(ny, nx), powers
+
+
 def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc,
                                time, initial_temperature, *, source=0.0,
                                contact_resistance_x=0.0, contact_resistance_y=0.0,
@@ -437,23 +485,18 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
     theta=0.5 selects Crank-Nicolson and theta=1 selects backward Euler.
     """
     dx, dy, time = (np.asarray(v, dtype=float) for v in (dx, dy, time))
-    for widths in (dx, dy):
-        if widths.ndim != 1 or widths.size == 0 or not np.isfinite(widths).all() or np.any(widths <= 0):
-            raise ValueError("cell widths must be finite positive vectors")
     if time.ndim != 1 or len(time) < 2 or not np.isfinite(time).all() or np.any(np.diff(time) <= 0):
         raise ValueError("time must be a strictly increasing finite vector")
     if not .5 <= theta <= 1:
         raise ValueError("theta must lie in [0.5, 1]")
-    ny, nx = len(dy), len(dx)
-    shape = (ny, nx)
-    k, capacity, initial = (np.broadcast_to(np.asarray(v, dtype=float), shape)
-                            for v in (conductivity, volumetric_heat_capacity, initial_temperature))
-    if not all(np.isfinite(v).all() for v in (k, capacity, initial)) or np.any(k <= 0) or np.any(capacity <= 0):
-        raise ValueError("temperature must be finite and material properties finite and positive")
+    k, capacity = _conduction_materials(dx, dy, conductivity, volumetric_heat_capacity)
+    shape = k.shape
+    ny, nx = shape
+    initial = np.broadcast_to(np.asarray(initial_temperature, dtype=float), shape)
+    if not np.isfinite(initial).all():
+        raise ValueError("temperature must be finite")
 
     sides = {"west": ny, "east": ny, "south": nx, "north": nx}
-    if not set(bc).issubset(sides):
-        raise ValueError("unknown conduction boundary side")
     static_bc = dict(bc)
     signals = {}
     for side, count in sides.items():
@@ -466,11 +509,7 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
                 raise ValueError(f"nonfinite boundary value on {side}")
             signals[side] = samples
             static_bc[side] = dict(spec, values=0.)
-        types, values = _bc_arrays(static_bc, side, count)
-        if types.shape != (count,) or not np.isin(types, ("adiabatic", "dirichlet", "neumann", "outflow", "robin")).all():
-            raise ValueError(f"invalid conduction boundary type on {side}")
-        if not np.isfinite(values).all():
-            raise ValueError(f"nonfinite boundary value on {side}")
+    _validate_conduction_bc(static_bc, sides, float)
     A, b, faces = _assemble_energy(dx, dy, k, np.zeros((ny, nx+1)), np.zeros((ny+1, nx)),
                                static_bc, source, contact_resistance_x, contact_resistance_y, conductivity_y)
     _, _, side_specs, types, values, _ = faces
