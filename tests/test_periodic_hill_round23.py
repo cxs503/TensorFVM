@@ -139,3 +139,10 @@ def test_one_mesh_cannot_make_a_ladder():
     with pytest.raises(ValueError):
         attribute([(9.0 / 96, 8.264277859446059), (9.0 / 96, 8.22962080445255)],
                   5.41, tolerance=0.10)
+
+
+def test_fig_round23_stability_exists_and_not_empty():
+    """fig_round23_stability.png must be generated and non-empty."""
+    fig_path = CASEDIR / "fig_round23_stability.png"
+    assert fig_path.exists(), "fig_round23_stability.png is missing"
+    assert fig_path.stat().st_size > 0, "fig_round23_stability.png is empty"
