@@ -201,13 +201,18 @@ class NativeSSTRansSolver3D(NativeSteadySolver3D):
             result[name]=dict(wall_constraint_reaction=reaction,wall_constraint_relative_residual=constraint_residual,relative_residual=max(constraint_residual,float(np.linalg.norm(integrated)/max(scale,np.finfo(float).tiny))),maximum_specific_residual=float(np.max(np.abs(integrated/m.cell_volumes))),global_integrated_residual=float(integrated.sum()),boundary_advective_flux=float(af[b.boundary].sum()),boundary_diffusive_flux=float(df[b.boundary].sum()),integrated_current_source=float(np.sum(m.cell_volumes*source)))
         return result
 
-    def solve_rans(self,initial_k,initial_omega,*,inlet_k,inlet_omega,callback=None,momentum_callback=None):
+    def solve_rans(self,initial_k,initial_omega,*,inlet_k,inlet_omega,callback=None,
+                   momentum_callback=None,project_initial_state=False):
+        self.initial_state_projection = None
         self.k=np.broadcast_to(np.asarray(initial_k,dtype=float),(self.N,)).copy();self.omega=np.broadcast_to(np.asarray(initial_omega,dtype=float),(self.N,)).copy()
         self.k_boundary=np.broadcast_to(np.asarray(inlet_k,dtype=float),(self.F,)).copy();self.omega_boundary=np.broadcast_to(np.asarray(inlet_omega,dtype=float),(self.F,)).copy()
         if self.rans_settings.wall_treatment=='resolved':
             self.k_boundary[self.wall]=0.
             self.omega_boundary[self.wall]=wall_omega(self.nu,self.wall_distance[self.mesh.owner[self.wall]])
         if not np.isfinite(self.k_boundary).all() or not np.isfinite(self.omega_boundary).all() or np.any(self.k_boundary<0) or np.any(self.omega_boundary<=0):raise ValueError('nonnegative k and positive omega boundary values required')
+        if project_initial_state:
+            self._update_momentum_coefficients(self.current_closure())
+            self.initial_state_projection = self.initialize_conservative_velocity()
         r=self.rans_settings;converged=False
         for iteration in range(r.max_outer_iterations):
             old_u=self.u.copy();old_p=self.p.copy();old_flux=self.flux.copy();old_k=self.k.copy();old_w=self.omega.copy()

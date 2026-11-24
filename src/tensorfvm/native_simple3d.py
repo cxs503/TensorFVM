@@ -4,14 +4,13 @@ Momentum uses positive orthogonal diffusion implicitly and defers the remaining
 symmetric stress. A compact pressure correction enforces conservative face flux.
 Convergence includes the full current momentum and Rhie--Chow flux equations.
 
-Accepted states obey the face-flux ledger
+The full correction uses the frozen-coefficient face-flux relation
 
     flux == velocity_flux_matrix @ u + correction @ p + qsource
 
-exactly at every sweep. Momentum under-relaxation scales the predictor only,
-and ``pressure_relaxation`` is a uniform damping of the whole consistent step,
-so neither parameter enters the discrete continuity operator or the converged
-solution.
+Momentum under-relaxation scales the predictor only, and ``pressure_relaxation``
+damps the whole step. Damping carries forward any inherited flux discrepancy.
+Rebuilding mobility introduces a separate change in the reconstructed flux.
 """
 import numpy as np
 from scipy import sparse
@@ -143,6 +142,7 @@ class NativeSimpleMixin:
             predicted,linear_u=solve_equilibrated(A,target)
             correction=sparse.diags(alpha)@self.pressure.pressure_flux_defect
             qsource_step=self.velocity_flux_source+alpha*self.p_defect_source
+            input_flux = self.velocity_flux_matrix @ old_u.ravel() + correction @ old_p + qsource_step
             qstar=self.velocity_flux_matrix@predicted+correction@self.p+qsource_step
             # Differentiate the actual face-flux reconstruction with respect
             # to the full SIMPLE pressure increment. The compact-only shortcut
@@ -208,9 +208,8 @@ class NativeSimpleMixin:
             # took the full response left (1 - pressure_relaxation) * correction
             # @ dp off the manifold every sweep and drove thin-layer SUBOFF
             # iterations apart (docs/verification-suboff-simple-sst-wall).
-            # Any damping is now a convex mix of the whole consistent step:
-            # it preserves the ledger exactly and decays continuity by the
-            # same factor instead of tearing the state apart.
+            # A convex mix contracts the input discrepancy under the frozen
+            # coefficients. The iteration also checks the rebuilt coefficients.
             candidate_u=(predicted-inverse*(self.pressure.pressure_force_matrix@dp)).reshape(self.N,3)
             candidate_p=self.p+dp
             if self.gauge:candidate_p+=self.gauge_value-candidate_p[0]
@@ -236,7 +235,9 @@ class NativeSimpleMixin:
                 native_divergence_max=float(np.abs(self.viscous.op.integrate(self.flux)/self.mesh.cell_volumes).max()),
                 current_reconstructed_divergence_max=float(np.abs(self.viscous.op.integrate(consistent)/self.mesh.cell_volumes).max()),
                 face_flux_consistency_max=float(np.max(np.abs(consistent-self.flux)/norms)),
+                input_ledger_defect_max=float(np.max(np.abs(old_q - input_flux) / norms)),
                 ledger_identity_defect_max=float(np.max(np.abs(self.flux-step_identity)/norms)),
+                refreshed_mobility_flux_change_max=float(np.max(np.abs(consistent - step_identity) / norms)),
                 pressure_increment_flux_response_max=float(np.max(np.abs(correction@dp)/norms)),
                 # Admissibility of the pressure-correction operator.  A
                 # well-posed correction behaves like a scaled Laplacian; the

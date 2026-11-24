@@ -7,7 +7,7 @@ from pathlib import Path
 import sys
 import numpy as np
 from scipy import sparse
-from scipy.sparse.linalg import eigsh
+from scipy.sparse.linalg import LinearOperator,eigsh,splu
 repo=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(repo))
 from tests.test_native_collocated3d import skew_mesh
@@ -20,27 +20,74 @@ from tensorfvm.native_rans3d import NativeSimpleSSTRansSolver3D,NativeRansSettin
 from tensorfvm.wall_functions import wall_traction
 
 
+def restrict_to_conservative_velocity(matrix, mass_matrix):
+    """Restrict a symmetric energy form to the zero-divergence subspace."""
+    # Closed velocity boundaries on a connected mesh give one redundant
+    # integrated continuity row. The witness is checked against all rows.
+    constraint = mass_matrix[:-1].tocsr()
+    row_norm = np.sqrt(np.asarray(constraint.power(2).sum(axis=1)).ravel())
+    if np.any(row_norm == 0.):
+        raise ValueError('zero row in the independent continuity constraints')
+    constraint = sparse.diags(1. / row_norm) @ constraint
+    transpose = constraint.T.tocsr()
+    factor = splu((constraint @ transpose).tocsc())
+
+    def project(vector):
+        return vector - transpose @ factor.solve(constraint @ vector)
+
+    # Lift the excluded modes above the spectrum of the symmetric form.
+    lift = 1. + float(np.max(np.asarray(abs(matrix).sum(axis=1))))
+
+    def apply(vector):
+        free = project(vector)
+        return project(matrix @ free) + lift * (vector - free)
+
+    return LinearOperator(matrix.shape, matvec=apply, dtype=float), project
+
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--mesh',type=Path,required=True)
     parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--energy-witness',type=Path,help='Replay archived velocity; otherwise compute a smallest symmetric eigenmode')
+    parser.add_argument('--constrain-cell-divergence', action='store_true',
+                        help='Search or verify a witness in the collocated zero-divergence subspace')
+    parser.add_argument('--fail-on-energy-growth', action='store_true',
+                        help='Return 2 if the audited direction has a normalized dissipation below -1e-12')
     args=parser.parse_args();out=args.output
     if out.exists() and any(out.iterdir()):parser.error('output must be empty')
     out.mkdir(parents=True,exist_ok=True)
     write=lambda name,value:(out/name).write_text(json.dumps(value,indent=2,allow_nan=False)+'\n')
     sha=lambda path:hashlib.sha256(path.read_bytes()).hexdigest()
     m=NativeMesh3D.from_gmsh(args.mesh,triangulate_faces=True)
-    v=NativeViscous3D(m,m.neighbor<0,1.);A=-v.momentum_diffusion_matrix
+    fixed = m.neighbor < 0
+    if args.constrain_cell_divergence:
+        solver = NativeSimpleSolver3D(m, fixed, np.zeros((len(m.owner), 3)),
+                                     settings=NativeSteadySettings(convection=False))
+        v = solver.viscous
+    else:
+        v = NativeViscous3D(m, fixed, 1.)
+    A=-v.momentum_diffusion_matrix
     coefficient=np.sum(m.area_vectors**2,axis=1)/np.sum(m.area_vectors*v.op.d,axis=1)
     diagonal=(-v.divergence_matrix@sparse.diags(coefficient)@v.delta_matrix).diagonal()
     R=sparse.diags(np.repeat(1/np.sqrt(diagonal),3));H=R@((A+A.T)*.5)@R
+    operator = H
+    if args.constrain_cell_divergence:
+        operator, project = restrict_to_conservative_velocity(H, solver.mass_velocity_matrix @ R)
     if args.energy_witness is None:
-        values,vectors=eigsh(H,k=1,which='SA',tol=1e-8,maxiter=500,v0=np.random.default_rng(19).normal(size=A.shape[0]))
-        velocity=(R@vectors[:,0]).reshape(-1,3)
+        _,vectors=eigsh(operator,k=1,which='SA',tol=1e-8,maxiter=500,v0=np.random.default_rng(19).normal(size=A.shape[0]))
+        witness = project(vectors[:, 0]) if args.constrain_cell_divergence else vectors[:, 0]
+        if np.linalg.norm(witness) < 1e-8:
+            raise RuntimeError('no resolved eigenvector in the zero-divergence subspace')
+        velocity=(R @ (witness / np.linalg.norm(witness))).reshape(-1,3)
     else:velocity=np.load(args.energy_witness,allow_pickle=False)['velocity']
     if velocity.shape!=(len(m.cells),3):raise ValueError('witness shape differs from mesh')
     z=velocity.ravel()*np.repeat(np.sqrt(diagonal),3)
+    divergence = None
+    if args.constrain_cell_divergence:
+        divergence = float(np.max(np.abs(solver.mass_velocity_matrix @ velocity.ravel() / m.cell_volumes)))
+        if not np.isfinite(divergence) or divergence > 1e-8:
+            raise ValueError(f'energy witness violates the discrete continuity constraint: {divergence:g}')
     energy=float(velocity.ravel()@(A@velocity.ravel()))
     rayleigh=float(z@(H@z)/(z@z))
     # Independent face traction -> acceleration -> discrete kinetic-energy rate.
@@ -50,7 +97,8 @@ def main():
     write('viscous-energy.json',dict(cells=len(m.cells),mesh_sha256=sha(args.mesh),
         boundary='all zero Dirichlet; constant viscosity 1; no convection, pressure or external force',
         scaled_symmetric_rayleigh=rayleigh,diffusion_energy_form=energy,kinetic_energy_rate=rate,
-        symmetric_eigen_residual=float(np.linalg.norm(H@z-rayleigh*z)/np.linalg.norm(z)),
+        symmetric_eigen_residual=float(np.linalg.norm(operator@z-rayleigh*z)/np.linalg.norm(z)),
+        reconstructed_divergence_max=divergence,
         dissipative_for_this_witness=bool(energy>=0),
         qualification='Energy passivity diagnostic, not an eigenvalue or stability proof of the complete incompressible solver'))
     np.savez_compressed(out/'viscous-energy-witness.npz',velocity=velocity)
@@ -89,7 +137,9 @@ def main():
         relative=source.relative_to(repo);target=out/'source-snapshot'/relative
         target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(source.read_bytes());bindings[str(relative)]=sha(target)
     write('sources.json',bindings)
-    print('AUDIT_COMPLETE: diffusion passivity remains unqualified',flush=True)
+    energy_growth = rayleigh < -1e-12
+    print(f'AUDIT_COMPLETE: audited direction produces energy: {energy_growth}',flush=True)
+    return 2 if args.fail_on_energy_growth and energy_growth else 0
 
 
-if __name__=='__main__':main()
+if __name__=='__main__':raise SystemExit(main())

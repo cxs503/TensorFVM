@@ -8,7 +8,7 @@ Vectors use cell-major/component-minor ordering throughout.
 from dataclasses import dataclass
 import numpy as np
 from scipy import sparse
-from scipy.sparse.linalg import splu,spilu,gmres,LinearOperator
+from scipy.sparse.linalg import splu,spilu,gmres,lsmr,LinearOperator
 from .native_viscous3d import NativeViscous3D
 
 
@@ -189,6 +189,50 @@ class NativeSteadySolver3D:
             raise ValueError('finite native velocity, pressure and face flux shapes required')
         self.u,self.p,self.flux=[value.copy() for value in values]
         self._flux_initialized=True
+
+    def initialize_conservative_velocity(self):
+        """Project velocity and reconstruct its conservative flux at fixed pressure.
+
+        Freeze Rhie--Chow mobility during the projection. The minimum-norm
+        cell velocity correction uses the same signed face summation and
+        reconstruction as the momentum solver, including its boundary data.
+        """
+        reconstruct = self.velocity_flux_matrix
+        divergence = self.viscous.divergence_matrix
+        velocity = self.u.ravel()
+        tentative_flux = reconstruct @ velocity + self.velocity_flux_source
+        _, _, _, correction, source = self._system(tentative_flux)
+        pressure_flux = correction @ self.p + source
+        initial_flux = reconstruct @ velocity + pressure_flux
+        imbalance = divergence @ initial_flux
+        volumes = self.mesh.cell_volumes
+        before = float(np.max(np.abs(imbalance / volumes)))
+        tolerance = self.settings.nonlinear_tolerance
+        iterations = 0
+        if before > tolerance:
+            mass = self.mass_velocity_matrix
+            row_norm = np.sqrt(np.asarray(mass.power(2).sum(axis=1)).ravel())
+            weights = np.divide(1., row_norm, out=np.ones_like(row_norm), where=row_norm > 0.)
+            # Row scaling keeps thin cells in the solve without forming normal
+            # equations, which would square the condition number.
+            increment, _, iterations, *_ = lsmr(
+                sparse.diags(weights) @ mass, -weights * imbalance,
+                atol=1e-13, btol=1e-13, maxiter=min(10_000, 3 * self.N),
+            )
+            velocity = velocity + increment
+
+        flux = reconstruct @ velocity + pressure_flux
+        after = float(np.max(np.abs((divergence @ flux) / volumes)))
+        if not np.isfinite(after) or after > tolerance:
+            raise RuntimeError(
+                f'Conservative velocity initialization failed: reconstructed divergence {after:g} '
+                f'exceeds {tolerance:g}; initial state preserved'
+            )
+        self.initialize_state(velocity.reshape(self.N, 3), self.p, flux)
+        return dict(original_divergence_max=before, projected_divergence_max=after,
+                    iterations=int(iterations), pressure_updated=False,
+                    fixed_boundary_flux_change=float(np.max(
+                        np.abs((flux - initial_flux)[self.fixed]), initial=0.)))
 
     def _convection(self,flux):
         m=self.mesh;i=m.neighbor>=0;o=m.owner;n=m.neighbor;f=np.arange(self.F)
