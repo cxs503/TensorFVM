@@ -17,7 +17,7 @@ round 23/25 留下两条明写的欠账，本单都指向它们：
 
 本单先把「这些归档到底是不是数据」查清楚，再回答口径问题。之所以要先查归档：
 仓里 `docs/case-periodic-hills/*.npz` 是全仓共用的证据面，但**从来没有任何门检查过
-文件里有没有场**。实测：14 个归档里 **6 个是全零 dump**
+文件里有没有场**。实测：15 个归档里 **6 个是全零 dump**
 （速度、时均速度、壁剪三者全零）。而认证的零点算子在零剪切剖面上返回
 `status = "no_recirculation"`、`x_r/H = nan` —— 与「流动完全附着」**无法区分**。
 一条把 `nan` 读成「无再循环」的阶梯规则，会把一次根本没跑出场的算例记成一次*测量*。
@@ -50,7 +50,7 @@ round 23/25 留下两条明写的欠账，本单都指向它们：
 
 ## ③ 计算结果（程序注入）
 
-### 归档完整性（`8/14` 可用）
+### 归档完整性（`9/15` 可用）
 
 | artefact | 状态 |
 |---|---|
@@ -70,6 +70,7 @@ round 23/25 留下两条明写的欠账，本单都指向它们：
 |---|---|---|---|---|---|---|---|---|---|
 | `round11_sst_96x48` | 96 | usable | 1 | 2.046 | 2.046 | 2.046 | 0.0 % | definition_insensitive | object_supported |
 | `round11_sst_r12-96x48` | 96 | usable | 1 | 3.144 | 3.144 | 3.144 | 0.0 % | definition_insensitive | object_supported |
+| `round11_sst_r13-96x48` | 96 | usable | 1 | 3.767 | 3.767 | 3.767 | 0.0 % | definition_insensitive | object_supported |
 | `round11_sst_r18_120x60` | 120 | **zero_field** | – | – | – | – | – | – |
 | `round11_sst_r18_144x72` | 144 | **zero_field** | – | – | – | – | – | – |
 | `round11_sst_r18_72x36` | 72 | usable | 1 | 7.600 | 7.600 | 7.591 | 0.2 % | definition_insensitive | object_supported |
