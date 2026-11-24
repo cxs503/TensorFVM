@@ -6,7 +6,7 @@ import os
 import urllib.request
 
 BASE = os.environ.get("TENSOR_API_BASE", "http://127.0.0.1:8001/api/v1").rstrip("/")
-CASE = "/srv/tensor/agent/work/m22685/docs/case-periodic-hills"
+CASE = "docs/case-periodic-hills"
 
 
 def post(path, payload, token=None):
