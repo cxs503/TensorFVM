@@ -312,3 +312,29 @@ def test_steady_gauge_includes_end_storage():
     assert (cell[0]*2.4+wall@np.array([.6,1.6]))/4.6 == pytest.approx(5.)
     with pytest.raises(ValueError,match="fixed-temperature"):
         solve_steady_stepped_rod([.4],2.,1.5,3.,[2.,3.],end_areal_heat_capacity=1.)
+
+
+@pytest.mark.parametrize("method",["theta","sdirk2","rannacher","positive_cn"])
+def test_mixed_power_jump_matches_segment_restarts_and_aggregates_heat(method):
+    from tensorfvm.cht.rod import solve_transient_stepped_rod
+    times = [0.,.03,.1]
+    jumps = [.013,.03,.047]
+    levels = [.4,1.,-.2,.7]
+    def run(wall,grid,initial,**opts):
+        return solve_transient_stepped_rod([.4,.6],[1.,2.],2.,1.,wall,grid,initial,
+                 contact_resistance=.1,method=method,end_types=("power","temperature"),
+                 return_step_heat=True,**opts)
+    # Rannacher restarts in each segment, and the endpoint with no storage
+    # must immediately satisfy the new imposed power at the output-time jump.
+    obs = run(lambda t:[levels[np.searchsorted(jumps,t,side="right")],0.],times,0.,load_jump_times=jumps)
+    initial = 0.
+    integrated = {key:np.zeros_like(val) for key,val in obs[-1].items()}
+    for a,b,level in zip((0.,*jumps),(*jumps,.1),levels):
+        part = run([level,0.],[a,b],initial)
+        initial = part[0][-1]
+        for key,val in part[-1].items():
+            integrated[key][int(a>=.03)] += val[0]
+    np.testing.assert_allclose(obs[2][1,0],-.2,atol=1e-13)
+    np.testing.assert_allclose(obs[0][-1],initial,atol=1e-13)
+    for key,val in integrated.items():
+        np.testing.assert_allclose(obs[-1][key],val,atol=1e-13)

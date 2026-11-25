@@ -215,7 +215,7 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
                                 shoulder_areal_heat_capacity=0., initial_shoulder_temperature=None,
                                 theta=.5, flux_order=1, contact_resistance=0., return_traces=False,
                                 method="theta", return_step_heat=False, end_types=("temperature","temperature"), end_film_coefficient=0.,
-                               end_areal_heat_capacity=0., initial_end_temperature=None):
+                               end_areal_heat_capacity=0., initial_end_temperature=None, load_jump_times=()):
     """Advance the stepped rod with theta-weighted cell and shoulder storage.
 
     Uses the geometry, units, power signs and four outputs of the harmonic solve,
@@ -234,7 +234,11 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
     substeps with dt <= min(2*C_i/K_ii) over positive-capacity nodes. For
     flux_order=1 this preserves nonnegative temperatures with nonnegative
     initial and sampled boundary/source data. Returned times remain the
-    requested times. With return_step_heat=True,
+    requested times. load_jump_times declares distinct interior times at which
+    the end, source or ambient loads change discontinuously. Callables give
+    the new value at the jump. The previous step uses its left limit; massless
+    traces at the event are recomputed with the new forcing. Rannacher damping
+    also restarts immediately after each jump. With return_step_heat=True,
     append a dictionary of integrated joules per interval: left/right (positive
     toward increasing x), source, ambient (entering the shoulder), and contact
     (toward increasing x across the overlap, for each internal face).
@@ -243,6 +247,10 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
     time = np.asarray(time,dtype=float)
     if time.ndim != 1 or len(time)<2 or not np.isfinite(time).all() or np.any(np.diff(time)<=0):
         raise ValueError("time must be a finite strictly increasing vector")
+    jumps = np.asarray(load_jump_times,dtype=float)
+    if (jumps.ndim!=1 or not np.isfinite(jumps).all() or len(np.unique(jumps))!=len(jumps)
+            or np.any(jumps<=time[0]) or np.any(jumps>=time[-1])):
+        raise ValueError("load_jump_times must contain distinct finite interior times")
     if not .5 <= theta <= 1.:
         raise ValueError("theta must be in [0.5,1]")
     if method not in ("theta","sdirk2","rannacher","positive_cn") or (method != "theta" and theta != .5):
@@ -301,22 +309,34 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
     if method == "positive_cn":
         active = mass>0
         max_dt = np.min(2*mass[active]/operator.diagonal()[active])
-    for step, interval in enumerate(np.diff(time)):
+    events = set(jumps)
+    segments = np.union1d(time,jumps)
+    massless = mass==0
+    if events and np.any(massless):
+        trace_factor = splu(operator[massless][:,massless].tocsc())
+        coupling = operator[massless][:,~massless]
+    step = 0
+    u,boundary_start = states[0],ends[0]
+    for begin,end in zip(segments,segments[1:]):
+        interval = end-begin
         subdivisions = max(1,int(np.ceil(interval/max_dt)))
-        start = time[step]
-        u,boundary_start = states[step],ends[step]
+        start = begin
+        damp = method=="rannacher" and (begin==time[0] or begin in events)
         for part in range(1,subdivisions+1):
-            stop = time[step+1] if part == subdivisions else time[step]+part*interval/subdivisions
+            stop = end if part==subdivisions else begin+part*interval/subdivisions
             dt = stop-start
             if dt != previous_dt:
                 lu = splu(M+weight*dt*operator)
                 previous_dt = dt
             stage = u
             stage_ends = boundary_start
-            if method == "sdirk2" or (method == "rannacher" and step == 0):
-                rhs,stage_ends,src,air = forcing(start+weight*dt)
+            if method == "sdirk2" or damp:
+                stage_time = start+weight*dt
+                if not start<stage_time<stop:
+                    raise ValueError("internal stage has no representable time")
+                rhs,stage_ends,src,air = forcing(stage_time)
                 stage = lu.solve(mass*u+weight*dt*rhs)
-            next_rhs,next_ends,next_src,next_air = forcing(stop)
+            next_rhs,next_ends,next_src,next_air = forcing(np.nextafter(stop,start) if stop in events else stop)
             next_u = lu.solve(mass*u+dt*((1-weight)*(rhs-operator@stage)+weight*next_rhs))
             if return_step_heat:
                 # Flux, storage and film operators are linear, so their time
@@ -336,6 +356,12 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
                 step_heat["contact"][step] += dt*contact
             rhs,src,air = next_rhs,next_src,next_air
             u,boundary_start,start = next_u,next_ends,stop
-        states[step+1],ends[step+1] = u,boundary_start
+        if end in events:
+            rhs,boundary_start,src,air = forcing(end)
+            if np.any(massless):
+                u[massless] = trace_factor.solve(rhs[massless]-coupling @ u[~massless])
+        if end==time[step+1]:
+            step += 1
+            states[step],ends[step] = u,boundary_start
     output = layout.output(states,ends,g,flux_order,return_traces)
     return output+(step_heat,) if return_step_heat else output
