@@ -7,7 +7,8 @@ from .annulus import solve_annular_conduction
 def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, omega, *,
                         contact_resistances, sheet_capacities, sheet_generation=(0., 0.),
                         azimuthal_mode=0, volumetric_heat_capacity=None,
-                        inner_resistance_fractions=(.5, .5), sheet_conductivities=(0., 0.)):
+                        inner_resistance_fractions=(.5, .5), sheet_conductivities=(0., 0.),
+                        return_wall_rates=False):
     """Return two sheet temperatures and their incoming and outgoing radial fluxes.
 
     The cell faces include both sheets. Conductivity is scalar or per cell.
@@ -20,6 +21,9 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
     uniform around each sheet. They contribute Ks*(m/r)² to the modal admittance.
     Each output has one entry per sheet ordered from the bore outwards. Fluxes
     (W/m²) are positive towards increasing radius on both sides.
+    With return_wall_rates, append the bore and exterior radial heat rates per unit
+    axial length (W/m), both positive towards increasing radius. For angular modes
+    above zero these are 2πr times the flux amplitudes.
     """
     r = np.asarray(radii, dtype=float)
     faces = np.asarray(sheet_faces)
@@ -72,6 +76,10 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
     forcing = area*generation + [a[1, 0]*walls[0], -c[0, 1]*walls[1]]
     sheet = np.linalg.solve(matrix, forcing)
     middle = b @ sheet
-    incoming = np.array([a[1] @ [walls[0], sheet[0]], middle[1]]) / area
-    outgoing = np.array([middle[0], c[0] @ [sheet[1], walls[1]]]) / area
+    inner_rates = a @ [walls[0], sheet[0]]
+    outer_rates = c @ [sheet[1], walls[1]]
+    incoming = np.array([inner_rates[1], middle[1]]) / area
+    outgoing = np.array([middle[0], outer_rates[0]]) / area
+    if return_wall_rates:
+        return sheet, incoming, outgoing, np.array([inner_rates[0], outer_rates[1]])
     return sheet, incoming, outgoing
