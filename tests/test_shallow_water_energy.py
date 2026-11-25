@@ -171,3 +171,43 @@ def test_total_energy_helper_matches_manual_integral():
     manual = float(((0.5 * g * h ** 2 + 0.5 * hu ** 2 / h) * dx).sum())
     got = total_energy(h, hu, g, dx)["total"]
     assert abs(got - manual) < 1e-12
+
+def test_dry_front_energy_transport_and_first_arrival(record_property):
+    from scipy.integrate import quad
+    from tensorfvm.shallow_water import dry_riemann_energy_budget
+
+    # Independent Ritter power history at x=1. The front arrives at t=1/2.
+    def incoming(t):
+        h, u = (2-1/t)**2/9, 2*(1+1/t)/3
+        return h*u*(.5*u*u+h)
+    for sign in (-1, 1):
+        bounds, data = ((1., 3.), (1.,0.,0.,0.)) if sign == 1 else ((-3.,-1.), (0.,0.,1.,0.))
+        for t in (0., .25, .5):
+            assert dry_riemann_energy_budget(*bounds, t, *data, gravity=1.)["final"] == 0.
+        budget = dry_riemann_energy_budget(*bounds, 1.3, *data, gravity=1.)
+        reference = quad(incoming, .5, 1.3)[0]
+        transport = budget["left_transport"] if sign == 1 else -budget["right_transport"]
+        error = max(abs(transport-reference), abs(budget["final"]-reference))
+        record_property(f"wetting_energy_error_{sign}", error)
+        assert error < 5e-15
+
+
+def test_drying_subdomain_energy_refines_against_analytic_transport(record_property):
+    from tensorfvm.shallow_water import ShallowWater1D, dry_riemann_energy_budget
+
+    data, bounds, end = (1., -3., .25, 2.), (-.625, .375), .25
+    budget = dry_riemann_energy_budget(*bounds, end, *data, gravity=1.)
+    dry = dry_riemann_energy_budget(-.125, .125, end, *data, gravity=1.)
+    assert dry["final"] == 0 and abs(dry["residual"]) < 2e-15
+    record_property("interval_balance_error", abs(budget["residual"]))
+    assert abs(budget["residual"]) < 3e-15
+    errors = []
+    for n in (128, 256, 512):
+        solver = ShallowWater1D(n, -2., 2., gravity=1., cfl=.4, order=2)
+        solver.set_state(np.where(solver.x<0, data[0], data[2]), np.where(solver.x<0, data[1], data[3]))
+        solver.advance(end)
+        inside = (solver.x>bounds[0]) & (solver.x<bounds[1])
+        energy = total_energy(solver.h[inside], solver.hu[inside], 1., solver.dx)["total"]
+        errors.append(abs(energy-budget["final"]))
+        record_property(f"local_energy_error_{n}", errors[-1])
+    assert errors[-1] < errors[1] < errors[0]

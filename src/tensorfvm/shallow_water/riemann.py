@@ -87,7 +87,7 @@ import math
 
 import numpy as np
 
-from .energy import _hydraulic_jump_loss, cell_energy
+from .energy import _hydraulic_jump_loss, _integrate_fan_energy, cell_energy
 from .exact import (_riemann_cell_means, _similarity_flux_integral, ritter_front_position,
                     ritter_state, stoker_constant_state)
 
@@ -333,14 +333,9 @@ def riemann_energy(sol: RiemannSolution, x_min: float, x_max: float, t: float):
     """Integrate exact wet-solution mechanical energy per width on a finite interval."""
     if not all(map(math.isfinite, (x_min, x_max, t))) or x_min >= x_max or t < 0:
         raise ValueError("require a finite increasing interval and nonnegative finite time")
-    fronts = {sol.x0+t*speed for speed in sol.wave_speeds}
-    edges = np.array([x_min, *sorted(x for x in fronts if x_min < x < x_max), x_max])
-    half = np.diff(edges)/2
-    # Mechanical energy density is quartic inside each rarefaction.
-    nodes = np.array([-math.sqrt(.6), 0., math.sqrt(.6)])
-    weights = np.array([5/9, 8/9, 5/9])
-    h, u = sample_exact(sol, edges[:-1,None]+half[:,None]*(1+nodes), t)
-    return float(half @ (cell_energy(h,h*u,sol.gravity)["total"] @ weights))
+    fronts = [sol.x0+t*speed for speed in sol.wave_speeds]
+    return _integrate_fan_energy(x_min, x_max, fronts, sol.gravity,
+                                 lambda x: sample_exact(sol, x, t))
 
 
 def riemann_shock_losses(sol: RiemannSolution):

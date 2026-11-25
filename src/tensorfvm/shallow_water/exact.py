@@ -210,6 +210,17 @@ def _similarity_flux_integral(offset, t, gravity, h0, u0, h, u):
             t*(q*u+.5*gravity*h*h)-offset*(q-h0*u0))
 
 
+def _dry_wave_speeds(hL, uL, hR, uR, gravity):
+    speeds = []
+    if hL:
+        c = math.sqrt(gravity*hL)
+        speeds.extend((uL-c, uL+2*c))
+    if hR:
+        c = math.sqrt(gravity*hR)
+        speeds.extend((uR-2*c, uR+c))
+    return speeds
+
+
 def dry_riemann_cell_averages(edges, t: float, hL: float, uL: float,
                              hR: float, uR: float, gravity: float = 9.81,
                              x0: float = 0.0):
@@ -220,13 +231,7 @@ def dry_riemann_cell_averages(edges, t: float, hL: float, uL: float,
     quadratic depth and cubic discharge of a Ritter fan.
     """
     _validate_dry_riemann(t, hL, uL, hR, uR, gravity, x0)
-    speeds = []
-    if hL:
-        c = math.sqrt(gravity*hL)
-        speeds.extend((uL-c, uL+2*c))
-    if hR:
-        c = math.sqrt(gravity*hR)
-        speeds.extend((uR-2*c, uR+c))
+    speeds = _dry_wave_speeds(hL, uL, hR, uR, gravity)
     def sample(offset):
         return dry_riemann_state(offset, t, hL, uL, hR, uR, gravity)
     return _riemann_cell_means(edges, t, x0, speeds, sample, hL, uL, hR, uR)

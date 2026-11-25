@@ -84,6 +84,7 @@ from .riemann import (
     riemann_shock_losses,
     wave_pattern,
 )
+from .energy import dry_riemann_energy_budget
 from .exact import (
     check_stoker_solution,
     ritter_level_position,
@@ -188,7 +189,7 @@ __all__ = [
     "profile_metrics",
     "reference_selfcheck",
     "ritter_front_position",
-    "dry_riemann_integrated_flux",
+    "dry_riemann_integrated_flux", "dry_riemann_energy_budget",
     "ritter_state", "dry_riemann_state", "dry_riemann_cell_averages",
     "riemann_cell_averages", "riemann_integrated_flux", "riemann_energy", "riemann_energy_budget", "riemann_shock_losses",
     "run_case",
