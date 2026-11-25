@@ -1,759 +1,358 @@
 {
- "case": "CASE-FVM-PERIODIC-HILLS",
- "purpose": "metrology audit: is the case's Reynolds number the reference's Reynolds number?  The solver imposes an x-averaged crest-band bulk velocity; the reference data normalise by the streamwise flux.  Measure both functionals on the reference profiles and on every usable archived field, and bound the consequence.",
- "reference": {
-  "source": "ERCOFTAC Knowledge Base Wiki, 'UFR 3-30 Evaluation' (authors of the reference: Rapp, Breuer, Manhart, Peller) and the 10 DNS profile files linked from 'UFR 3-30 Test Case' (case 4)",
-  "tolerance": 0.1,
-  "x_r_over_H": 5.41
- },
- "reference_side": {
-  "deficit": {
-   "implied_relative_reynolds_bias": 0.06698318263187564,
-   "max_deficit_over_flux": 0.15300037677220724,
-   "mean_deficit_over_flux": 0.06323843043242705,
-   "min_deficit_over_flux": -0.003938936532816782,
-   "note": "the band integral is only defined at stations whose profile reaches the crest level; the crest station's own profile has no wall below it, so its deficit is zero by construction",
-   "rows": [
-    {
-     "crest_band_over_ub": 2.031387446268805,
-     "deficit_over_flux": 0.0,
-     "q_over_ub": 2.031387446268805,
-     "x_over_h": 0.05
+  "case": "CASE-FVM-PERIODIC-HILLS",
+  "purpose": "metrology audit: is the case's Reynolds number the reference's Reynolds number?  The solver imposes an x-averaged crest-band bulk velocity; the reference data normalise by the streamwise flux.  Measure both functionals on the reference profiles and on every usable archived field, and bound the consequence.",
+  "reference": {
+    "source": "ERCOFTAC Knowledge Base Wiki, 'UFR 3-30 Evaluation' (authors of the reference: Rapp, Breuer, Manhart, Peller) and the 10 DNS profile files linked from 'UFR 3-30 Test Case' (case 4)",
+    "tolerance": 0.1,
+    "x_r_over_H": 5.41
+  },
+  "reference_side": {
+    "deficit": {
+      "mean_deficit_over_flux": 0.3568323255180537,
+      "max_deficit_over_flux": 0.4930407341205077,
+      "min_deficit_over_flux": 0.001117924960778084,
+      "implied_relative_reynolds_bias": 0.3568323255180537,
+      "note": "the band integral is only defined at stations whose profile reaches the crest level",
+      "rows": [
+        {
+          "x_over_h": 0.05,
+          "crest_band_over_ub": 2.033658385,
+          "q_over_ub": 2.031387446268805,
+          "deficit_over_flux": 0.001117924960778084
+        },
+        {
+          "x_over_h": 0.5,
+          "crest_band_over_ub": 2.1719208952,
+          "q_over_ub": 2.0314322321359803,
+          "deficit_over_flux": 0.06915744509788568
+        },
+        {
+          "x_over_h": 1.0,
+          "crest_band_over_ub": 2.5801737603,
+          "q_over_ub": 2.031349525812233,
+          "deficit_over_flux": 0.27017715440592144
+        },
+        {
+          "x_over_h": 2.0,
+          "crest_band_over_ub": 3.0324909008671996,
+          "q_over_ub": 2.031083835534817,
+          "deficit_over_flux": 0.4930407341205077
+        },
+        {
+          "x_over_h": 3.0,
+          "crest_band_over_ub": 3.0324909008671996,
+          "q_over_ub": 2.031308920800402,
+          "deficit_over_flux": 0.4928752932726254
+        },
+        {
+          "x_over_h": 4.0,
+          "crest_band_over_ub": 3.0324909008671996,
+          "q_over_ub": 2.0313219261774784,
+          "deficit_over_flux": 0.49286573525729205
+        },
+        {
+          "x_over_h": 5.0,
+          "crest_band_over_ub": 3.0324909008671996,
+          "q_over_ub": 2.03133590640436,
+          "deficit_over_flux": 0.4928554609340663
+        },
+        {
+          "x_over_h": 6.0,
+          "crest_band_over_ub": 3.0324909008671996,
+          "q_over_ub": 2.031363787122905,
+          "deficit_over_flux": 0.4928349713087226
+        },
+        {
+          "x_over_h": 7.0,
+          "crest_band_over_ub": 3.0324909008671996,
+          "q_over_ub": 2.0312701494694196,
+          "deficit_over_flux": 0.4929037881343873
+        },
+        {
+          "x_over_h": 8.0,
+          "crest_band_over_ub": 2.5807116334,
+          "q_over_ub": 2.0312650942442483,
+          "deficit_over_flux": 0.27049474768835047
+        }
+      ]
     },
-    {
-     "crest_band_over_ub": 2.0341393704431505,
-     "deficit_over_flux": -0.001332625457224194,
-     "q_over_ub": 2.0314322321359803,
-     "x_over_h": 0.5
+    "flux_invariant": {
+      "mean_q_over_ub": 2.031311882397065,
+      "max_q_over_ub": 2.0314322321359803,
+      "min_q_over_ub": 2.031083835534817,
+      "relative_spread": 0.00017151310154900036,
+      "periodic_consistent": true,
+      "tolerance": 0.001,
+      "top_minus_crest": 2.036,
+      "rows": [
+        {
+          "x_over_h": 0.05,
+          "q_over_ub": 2.031387446268805,
+          "top_y_over_h": 3.034032106,
+          "wall_y_over_h": 1.000373721,
+          "source": "UFR3-30_C_2800_data_MB-001.dat"
+        },
+        {
+          "x_over_h": 0.5,
+          "q_over_ub": 2.0314322321359803,
+          "top_y_over_h": 3.033862352,
+          "wall_y_over_h": 0.8619414568,
+          "source": "UFR3-30_C_2800_data_MB-002.dat"
+        },
+        {
+          "x_over_h": 1.0,
+          "q_over_ub": 2.031349525812233,
+          "top_y_over_h": 3.033815622,
+          "wall_y_over_h": 0.4536418617,
+          "source": "UFR3-30_C_2800_data_MB-003.dat"
+        },
+        {
+          "x_over_h": 2.0,
+          "q_over_ub": 2.031083835534817,
+          "top_y_over_h": 3.033407927,
+          "wall_y_over_h": 0.0009170261328,
+          "source": "UFR3-30_C_2800_data_MB-004.dat"
+        },
+        {
+          "x_over_h": 3.0,
+          "q_over_ub": 2.031308920800402,
+          "top_y_over_h": 3.033407927,
+          "wall_y_over_h": 0.0009170261328,
+          "source": "UFR3-30_C_2800_data_MB-005.dat"
+        },
+        {
+          "x_over_h": 4.0,
+          "q_over_ub": 2.0313219261774784,
+          "top_y_over_h": 3.033407927,
+          "wall_y_over_h": 0.0009170261328,
+          "source": "UFR3-30_C_2800_data_MB-006.dat"
+        },
+        {
+          "x_over_h": 5.0,
+          "q_over_ub": 2.03133590640436,
+          "top_y_over_h": 3.033407927,
+          "wall_y_over_h": 0.0009170261328,
+          "source": "UFR3-30_C_2800_data_MB-007.dat"
+        },
+        {
+          "x_over_h": 6.0,
+          "q_over_ub": 2.031363787122905,
+          "top_y_over_h": 3.033407927,
+          "wall_y_over_h": 0.0009170261328,
+          "source": "UFR3-30_C_2800_data_MB-008.dat"
+        },
+        {
+          "x_over_h": 7.0,
+          "q_over_ub": 2.0312701494694196,
+          "top_y_over_h": 3.033407927,
+          "wall_y_over_h": 0.0009170261328,
+          "source": "UFR3-30_C_2800_data_MB-009.dat"
+        },
+        {
+          "x_over_h": 8.0,
+          "q_over_ub": 2.0312650942442483,
+          "top_y_over_h": 3.033407927,
+          "wall_y_over_h": 0.4526962936,
+          "source": "UFR3-30_C_2800_data_MB-010.dat"
+        }
+      ]
     },
-    {
-     "crest_band_over_ub": 2.039350882670375,
-     "deficit_over_flux": -0.003938936532816782,
-     "q_over_ub": 2.031349525812233,
-     "x_over_h": 1.0
+    "mirrored_wall_surface": {
+      "worst_abs_residual_direct": 0.004525203460383986,
+      "worst_abs_residual_mirrored": 0.004525203460383986,
+      "direct_assignment_preferred": false,
+      "rows": [
+        {
+          "x_over_h": 0.05,
+          "sampled_wall_y_over_h": 1.000373721,
+          "mirrored_code_y_over_h": 1.0,
+          "mirrored_x_over_h": 8.95,
+          "residual": 0.00037372100000010455
+        },
+        {
+          "x_over_h": 0.5,
+          "sampled_wall_y_over_h": 0.8619414568,
+          "mirrored_code_y_over_h": 0.8577163434472801,
+          "mirrored_x_over_h": 8.5,
+          "residual": 0.004225113352719911
+        },
+        {
+          "x_over_h": 1.0,
+          "sampled_wall_y_over_h": 0.4536418617,
+          "mirrored_code_y_over_h": 0.449116658239616,
+          "mirrored_x_over_h": 8.0,
+          "residual": 0.004525203460383986
+        },
+        {
+          "x_over_h": 2.0,
+          "sampled_wall_y_over_h": 0.0009170261328,
+          "mirrored_code_y_over_h": 0.0,
+          "mirrored_x_over_h": 7.0,
+          "residual": 0.0009170261328
+        },
+        {
+          "x_over_h": 3.0,
+          "sampled_wall_y_over_h": 0.0009170261328,
+          "mirrored_code_y_over_h": 0.0,
+          "mirrored_x_over_h": 6.0,
+          "residual": 0.0009170261328
+        },
+        {
+          "x_over_h": 4.0,
+          "sampled_wall_y_over_h": 0.0009170261328,
+          "mirrored_code_y_over_h": 0.0,
+          "mirrored_x_over_h": 5.0,
+          "residual": 0.0009170261328
+        },
+        {
+          "x_over_h": 5.0,
+          "sampled_wall_y_over_h": 0.0009170261328,
+          "mirrored_code_y_over_h": 0.0,
+          "mirrored_x_over_h": 4.0,
+          "residual": 0.0009170261328
+        },
+        {
+          "x_over_h": 6.0,
+          "sampled_wall_y_over_h": 0.0009170261328,
+          "mirrored_code_y_over_h": 0.0,
+          "mirrored_x_over_h": 3.0,
+          "residual": 0.0009170261328
+        },
+        {
+          "x_over_h": 7.0,
+          "sampled_wall_y_over_h": 0.0009170261328,
+          "mirrored_code_y_over_h": 0.0,
+          "mirrored_x_over_h": 2.0,
+          "residual": 0.0009170261328
+        },
+        {
+          "x_over_h": 8.0,
+          "sampled_wall_y_over_h": 0.4526962936,
+          "mirrored_code_y_over_h": 0.449116658239616,
+          "mirrored_x_over_h": 1.0,
+          "residual": 0.003579635360384026
+        }
+      ]
     },
-    {
-     "crest_band_over_ub": 2.031933718406289,
-     "deficit_over_flux": -0.0004184381051155586,
-     "q_over_ub": 2.031083835534817,
-     "x_over_h": 2.0
-    },
-    {
-     "crest_band_over_ub": 1.970864550974904,
-     "deficit_over_flux": 0.02975636507404333,
-     "q_over_ub": 2.031308920800402,
-     "x_over_h": 3.0
-    },
-    {
-     "crest_band_over_ub": 1.872995550676368,
-     "deficit_over_flux": 0.07794253262408653,
-     "q_over_ub": 2.0313219261774784,
-     "x_over_h": 4.0
-    },
-    {
-     "crest_band_over_ub": 1.7869853312692738,
-     "deficit_over_flux": 0.12029058038343235,
-     "q_over_ub": 2.03133590640436,
-     "x_over_h": 5.0
-    },
-    {
-     "crest_band_over_ub": 1.731603078742372,
-     "deficit_over_flux": 0.1475662361812086,
-     "q_over_ub": 2.031363787122905,
-     "x_over_h": 6.0
-    },
-    {
-     "crest_band_over_ub": 1.7204850512744607,
-     "deficit_over_flux": 0.15300037677220724,
-     "q_over_ub": 2.0312701494694196,
-     "x_over_h": 7.0
-    },
-    {
-     "crest_band_over_ub": 1.8088045702124238,
-     "deficit_over_flux": 0.10951821338444899,
-     "q_over_ub": 2.0312650942442483,
-     "x_over_h": 8.0
+    "wall_surface": {
+      "worst_abs_residual": 0.004525203460383986,
+      "tolerance": 0.01,
+      "geometry_matches_reference": true,
+      "crest_sample_offset": 0.000373721,
+      "rows": [
+        {
+          "x_over_h": 0.05,
+          "sampled_wall_y_over_h": 1.000373721,
+          "code_hill_y_over_h": 1.0,
+          "residual": 0.00037372100000010455,
+          "residual_minus_offset": 1.045712995362269e-16,
+          "source": "UFR3-30_C_2800_data_MB-001.dat"
+        },
+        {
+          "x_over_h": 0.5,
+          "sampled_wall_y_over_h": 0.8619414568,
+          "code_hill_y_over_h": 0.8577163434472801,
+          "residual": 0.004225113352719911,
+          "residual_minus_offset": 0.0038513923527199114,
+          "source": "UFR3-30_C_2800_data_MB-002.dat"
+        },
+        {
+          "x_over_h": 1.0,
+          "sampled_wall_y_over_h": 0.4536418617,
+          "code_hill_y_over_h": 0.449116658239616,
+          "residual": 0.004525203460383986,
+          "residual_minus_offset": 0.004151482460383987,
+          "source": "UFR3-30_C_2800_data_MB-003.dat"
+        },
+        {
+          "x_over_h": 2.0,
+          "sampled_wall_y_over_h": 0.0009170261328,
+          "code_hill_y_over_h": 0.0,
+          "residual": 0.0009170261328,
+          "residual_minus_offset": 0.0005433051328,
+          "source": "UFR3-30_C_2800_data_MB-004.dat"
+        },
+        {
+          "x_over_h": 3.0,
+          "sampled_wall_y_over_h": 0.0009170261328,
+          "code_hill_y_over_h": 0.0,
+          "residual": 0.0009170261328,
+          "residual_minus_offset": 0.0005433051328,
+          "source": "UFR3-30_C_2800_data_MB-005.dat"
+        },
+        {
+          "x_over_h": 4.0,
+          "sampled_wall_y_over_h": 0.0009170261328,
+          "code_hill_y_over_h": 0.0,
+          "residual": 0.0009170261328,
+          "residual_minus_offset": 0.0005433051328,
+          "source": "UFR3-30_C_2800_data_MB-006.dat"
+        },
+        {
+          "x_over_h": 5.0,
+          "sampled_wall_y_over_h": 0.0009170261328,
+          "code_hill_y_over_h": 0.0,
+          "residual": 0.0009170261328,
+          "residual_minus_offset": 0.0005433051328,
+          "source": "UFR3-30_C_2800_data_MB-007.dat"
+        },
+        {
+          "x_over_h": 6.0,
+          "sampled_wall_y_over_h": 0.0009170261328,
+          "code_hill_y_over_h": 0.0,
+          "residual": 0.0009170261328,
+          "residual_minus_offset": 0.0005433051328,
+          "source": "UFR3-30_C_2800_data_MB-008.dat"
+        },
+        {
+          "x_over_h": 7.0,
+          "sampled_wall_y_over_h": 0.0009170261328,
+          "code_hill_y_over_h": 0.0,
+          "residual": 0.0009170261328,
+          "residual_minus_offset": 0.0005433051328,
+          "source": "UFR3-30_C_2800_data_MB-009.dat"
+        },
+        {
+          "x_over_h": 8.0,
+          "sampled_wall_y_over_h": 0.4526962936,
+          "code_hill_y_over_h": 0.449116658239616,
+          "residual": 0.003579635360384026,
+          "residual_minus_offset": 0.003205914360384026,
+          "source": "UFR3-30_C_2800_data_MB-010.dat"
+        }
+      ]
     }
-   ]
   },
-  "flux_invariant": {
-   "max_q_over_ub": 2.0314322321359803,
-   "mean_minus_top_minus_crest": -0.004688117602935193,
-   "mean_q_over_ub": 2.031311882397065,
-   "min_q_over_ub": 2.031083835534817,
-   "periodic_consistent": true,
-   "relative_spread": 0.00017151310154900036,
-   "rows": [
+  "round": 31,
+  "runs": [
     {
-     "q_over_ub": 2.031387446268805,
-     "source": "UFR3-30_C_2800_data_MB-001.dat",
-     "top_y_over_h": 3.034032106,
-     "wall_y_over_h": 1.000373721,
-     "x_over_h": 0.05
-    },
-    {
-     "q_over_ub": 2.0314322321359803,
-     "source": "UFR3-30_C_2800_data_MB-002.dat",
-     "top_y_over_h": 3.033862352,
-     "wall_y_over_h": 0.8619414568,
-     "x_over_h": 0.5
-    },
-    {
-     "q_over_ub": 2.031349525812233,
-     "source": "UFR3-30_C_2800_data_MB-003.dat",
-     "top_y_over_h": 3.033815622,
-     "wall_y_over_h": 0.4536418617,
-     "x_over_h": 1.0
-    },
-    {
-     "q_over_ub": 2.031083835534817,
-     "source": "UFR3-30_C_2800_data_MB-004.dat",
-     "top_y_over_h": 3.033407927,
-     "wall_y_over_h": 0.0009170261328,
-     "x_over_h": 2.0
-    },
-    {
-     "q_over_ub": 2.031308920800402,
-     "source": "UFR3-30_C_2800_data_MB-005.dat",
-     "top_y_over_h": 3.033407927,
-     "wall_y_over_h": 0.0009170261328,
-     "x_over_h": 3.0
-    },
-    {
-     "q_over_ub": 2.0313219261774784,
-     "source": "UFR3-30_C_2800_data_MB-006.dat",
-     "top_y_over_h": 3.033407927,
-     "wall_y_over_h": 0.0009170261328,
-     "x_over_h": 4.0
-    },
-    {
-     "q_over_ub": 2.03133590640436,
-     "source": "UFR3-30_C_2800_data_MB-007.dat",
-     "top_y_over_h": 3.033407927,
-     "wall_y_over_h": 0.0009170261328,
-     "x_over_h": 5.0
-    },
-    {
-     "q_over_ub": 2.031363787122905,
-     "source": "UFR3-30_C_2800_data_MB-008.dat",
-     "top_y_over_h": 3.033407927,
-     "wall_y_over_h": 0.0009170261328,
-     "x_over_h": 6.0
-    },
-    {
-     "q_over_ub": 2.0312701494694196,
-     "source": "UFR3-30_C_2800_data_MB-009.dat",
-     "top_y_over_h": 3.033407927,
-     "wall_y_over_h": 0.0009170261328,
-     "x_over_h": 7.0
-    },
-    {
-     "q_over_ub": 2.0312650942442483,
-     "source": "UFR3-30_C_2800_data_MB-010.dat",
-     "top_y_over_h": 3.033407927,
-     "wall_y_over_h": 0.4526962936,
-     "x_over_h": 8.0
+      "label": "laminar Re2800 96x48 dt0.02",
+      "tag": "round20_laminar_Re2800_96x48",
+      "status": "ok",
+      "mesh_reproduced": true,
+      "bulk": {
+        "u_b_code": 0.6878325714185868,
+        "u_b_reference": 1.0,
+        "relative_reynolds_bias": 0.3121674285814132
+      },
+      "wall_shear": {
+        "first": 23.8557863612687
+      },
+      "assignment": {
+        "note": "a field that is itself mirror symmetric cannot discriminate",
+        "stations": [
+          0.05,
+          0.5,
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          5.0,
+          6.0,
+          7.0,
+          8.0
+        ]
+      }
     }
-   ],
-   "tolerance": 0.001,
-   "top_minus_crest": 2.036
-  },
-  "mirrored_wall_surface": {
-   "direct_assignment_preferred": true,
-   "rows": [
-    {
-     "mirrored_code_y_over_h": 1.0,
-     "mirrored_x_over_h": 8.95,
-     "residual": 0.00037372100000010455,
-     "sampled_wall_y_over_h": 1.000373721,
-     "x_over_h": 0.05
-    },
-    {
-     "mirrored_code_y_over_h": 0.8577163434472801,
-     "mirrored_x_over_h": 8.5,
-     "residual": 0.004225113352719911,
-     "sampled_wall_y_over_h": 0.8619414568,
-     "x_over_h": 0.5
-    },
-    {
-     "mirrored_code_y_over_h": 0.449116658239616,
-     "mirrored_x_over_h": 8.0,
-     "residual": 0.004525203460383986,
-     "sampled_wall_y_over_h": 0.4536418617,
-     "x_over_h": 1.0
-    },
-    {
-     "mirrored_code_y_over_h": 0.0,
-     "mirrored_x_over_h": 7.0,
-     "residual": 0.0009170261328,
-     "sampled_wall_y_over_h": 0.0009170261328,
-     "x_over_h": 2.0
-    },
-    {
-     "mirrored_code_y_over_h": 0.0,
-     "mirrored_x_over_h": 6.0,
-     "residual": 0.0009170261328,
-     "sampled_wall_y_over_h": 0.0009170261328,
-     "x_over_h": 3.0
-    },
-    {
-     "mirrored_code_y_over_h": 0.0,
-     "mirrored_x_over_h": 5.0,
-     "residual": 0.0009170261328,
-     "sampled_wall_y_over_h": 0.0009170261328,
-     "x_over_h": 4.0
-    },
-    {
-     "mirrored_code_y_over_h": 0.0,
-     "mirrored_x_over_h": 4.0,
-     "residual": 0.0009170261328,
-     "sampled_wall_y_over_h": 0.0009170261328,
-     "x_over_h": 5.0
-    },
-    {
-     "mirrored_code_y_over_h": 0.0,
-     "mirrored_x_over_h": 3.0,
-     "residual": 0.0009170261328,
-     "sampled_wall_y_over_h": 0.0009170261328,
-     "x_over_h": 6.0
-    },
-    {
-     "mirrored_code_y_over_h": 0.0,
-     "mirrored_x_over_h": 2.0,
-     "residual": 0.0009170261328,
-     "sampled_wall_y_over_h": 0.0009170261328,
-     "x_over_h": 7.0
-    },
-    {
-     "mirrored_code_y_over_h": 0.449116658239616,
-     "mirrored_x_over_h": 1.0,
-     "residual": 0.003579635360384026,
-     "sampled_wall_y_over_h": 0.4526962936,
-     "x_over_h": 8.0
-    }
-   ],
-   "worst_abs_residual_direct": 0.004151482460383882,
-   "worst_abs_residual_mirrored": 0.004525203460383986
-  },
-  "wall_surface": {
-   "crest_sample_offset": 0.00037372100000010455,
-   "geometry_matches_reference": true,
-   "rows": [
-    {
-     "code_hill_y_over_h": 1.0,
-     "residual": 0.00037372100000010455,
-     "residual_minus_offset": 0.0,
-     "sampled_wall_y_over_h": 1.000373721,
-     "source": "UFR3-30_C_2800_data_MB-001.dat",
-     "x_over_h": 0.05
-    },
-    {
-     "code_hill_y_over_h": 0.8577163434472801,
-     "residual": 0.004225113352719911,
-     "residual_minus_offset": 0.003851392352719807,
-     "sampled_wall_y_over_h": 0.8619414568,
-     "source": "UFR3-30_C_2800_data_MB-002.dat",
-     "x_over_h": 0.5
-    },
-    {
-     "code_hill_y_over_h": 0.449116658239616,
-     "residual": 0.004525203460383986,
-     "residual_minus_offset": 0.004151482460383882,
-     "sampled_wall_y_over_h": 0.4536418617,
-     "source": "UFR3-30_C_2800_data_MB-003.dat",
-     "x_over_h": 1.0
-    },
-    {
-     "code_hill_y_over_h": 0.0,
-     "residual": 0.0009170261328,
-     "residual_minus_offset": 0.0005433051327998954,
-     "sampled_wall_y_over_h": 0.0009170261328,
-     "source": "UFR3-30_C_2800_data_MB-004.dat",
-     "x_over_h": 2.0
-    },
-    {
-     "code_hill_y_over_h": 0.0,
-     "residual": 0.0009170261328,
-     "residual_minus_offset": 0.0005433051327998954,
-     "sampled_wall_y_over_h": 0.0009170261328,
-     "source": "UFR3-30_C_2800_data_MB-005.dat",
-     "x_over_h": 3.0
-    },
-    {
-     "code_hill_y_over_h": 0.0,
-     "residual": 0.0009170261328,
-     "residual_minus_offset": 0.0005433051327998954,
-     "sampled_wall_y_over_h": 0.0009170261328,
-     "source": "UFR3-30_C_2800_data_MB-006.dat",
-     "x_over_h": 4.0
-    },
-    {
-     "code_hill_y_over_h": 0.0,
-     "residual": 0.0009170261328,
-     "residual_minus_offset": 0.0005433051327998954,
-     "sampled_wall_y_over_h": 0.0009170261328,
-     "source": "UFR3-30_C_2800_data_MB-007.dat",
-     "x_over_h": 5.0
-    },
-    {
-     "code_hill_y_over_h": 0.0,
-     "residual": 0.0009170261328,
-     "residual_minus_offset": 0.0005433051327998954,
-     "sampled_wall_y_over_h": 0.0009170261328,
-     "source": "UFR3-30_C_2800_data_MB-008.dat",
-     "x_over_h": 6.0
-    },
-    {
-     "code_hill_y_over_h": 0.0,
-     "residual": 0.0009170261328,
-     "residual_minus_offset": 0.0005433051327998954,
-     "sampled_wall_y_over_h": 0.0009170261328,
-     "source": "UFR3-30_C_2800_data_MB-009.dat",
-     "x_over_h": 7.0
-    },
-    {
-     "code_hill_y_over_h": 0.449116658239616,
-     "residual": 0.003579635360384026,
-     "residual_minus_offset": 0.0032059143603839213,
-     "sampled_wall_y_over_h": 0.4526962936,
-     "source": "UFR3-30_C_2800_data_MB-010.dat",
-     "x_over_h": 8.0
-    }
-   ],
-   "tolerance": 0.01,
-   "worst_abs_residual": 0.004151482460383882
-  }
- },
- "round": 31,
- "runs": [
-  {
-   "assignment": {
-    "direct": {
-     "correlation": 0.3490122253594599,
-     "reference": [
-      -0.046128718374354914,
-      -0.09122729012512827,
-      0.0041277188021116165,
-      0.11981606788535129,
-      0.2182851836848996,
-      0.2876299221105056,
-      0.31413237261839405,
-      0.22375151815927136
-     ],
-     "rms": 0.260885467556912,
-     "values": [
-      -0.02479951263393238,
-      -0.14901146295817286,
-      -0.13188418981383174,
-      -0.12254765986947841,
-      -0.11197580344160349,
-      -0.05789215229981323,
-      -0.014243274209924495,
-      -0.13285480124985624
-     ]
-    },
-    "direct_wins": true,
-    "mirrored": {
-     "correlation": -0.47155306802033575,
-     "reference": [
-      -0.046128718374354914,
-      -0.09122729012512827,
-      0.0041277188021116165,
-      0.11981606788535129,
-      0.2182851836848996,
-      0.2876299221105056,
-      0.31413237261839405,
-      0.22375151815927136
-     ],
-     "rms": 0.28272354714280484,
-     "values": [
-      -0.13285480124985624,
-      -0.014243274209924495,
-      -0.05789215229981323,
-      -0.11197580344160349,
-      -0.12254765986947841,
-      -0.13188418981383174,
-      -0.14901146295817286,
-      -0.02479951263393238
-     ]
-    },
-    "note": "a field that is itself mirror symmetric cannot discriminate; the archived laminar field is not (its recirculation sits downstream of the crest)",
-    "stations": [
-     1.0,
-     2.0,
-     3.0,
-     4.0,
-     5.0,
-     6.0,
-     7.0,
-     8.0
-    ]
-   },
-   "bulk": {
-    "band_height": 2.035,
-    "band_integral": 2.0349999945105552,
-    "flux_per_width": 2.054706545381688,
-    "functional_ratio": 0.9908957554469875,
-    "relative_reynolds_bias": 0.009187893381282786,
-    "reynolds_in_reference_convention": 2825.726101467592,
-    "reynolds_labelled": 2800.0,
-    "top_minus_crest": 2.036,
-    "u_b_code": 0.9999999973024841,
-    "u_b_reference": 1.0091878906589824,
-    "valley_deficit": 0.019706550871132933,
-    "valley_deficit_over_flux": 0.009590932055687878
-   },
-   "label": "laminar Re2800 96x48 dt0.02",
-   "mesh_reproduced": true,
-   "status": "ok",
-   "tag": "round20_laminar_Re2800_96x48",
-   "wall_shear": {
-    "first": {
-     "flag": "object_consistent",
-     "n_bubbles": 2,
-     "x_r_over_H": 1.2540965527208672,
-     "x_s_over_H": 0.40074469529249757
-    },
-    "largest_area": {
-     "flag": "object_mismatch",
-     "n_bubbles": 2,
-     "x_r_over_H": 8.264277859446059,
-     "x_s_over_H": 3.922900531823629
-    }
-   },
-   "x_r_error": 0.5275929499900294,
-   "x_r_over_H": 8.264277859446059
-  },
-  {
-   "bulk": {
-    "band_height": 2.035,
-    "band_integral": 2.0349999990093965,
-    "flux_per_width": 2.0554150199415226,
-    "functional_ratio": 0.990554208885189,
-    "relative_reynolds_bias": 0.009535864902781688,
-    "reynolds_in_reference_convention": 2826.700421727789,
-    "reynolds_labelled": 2800.0,
-    "top_minus_crest": 2.036,
-    "u_b_code": 0.9999999995132169,
-    "u_b_reference": 1.0095358644113568,
-    "valley_deficit": 0.020415020932126104,
-    "valley_deficit_over_flux": 0.009932310863772378
-   },
-   "label": "laminar Re2800 96x48 dt0.01",
-   "mesh_reproduced": true,
-   "status": "ok",
-   "tag": "round20_laminar_Re2800_96x48dt01",
-   "wall_shear": {
-    "first": {
-     "flag": "object_consistent",
-     "n_bubbles": 2,
-     "x_r_over_H": 1.2870199739172996,
-     "x_s_over_H": 0.40230633821677486
-    },
-    "largest_area": {
-     "flag": "object_mismatch",
-     "n_bubbles": 2,
-     "x_r_over_H": 8.22962080445255,
-     "x_s_over_H": 3.684136357648673
-    }
-   },
-   "x_r_error": 0.5211868400097135,
-   "x_r_over_H": 8.22962080445255
-  },
-  {
-   "bulk": {
-    "band_height": 2.035,
-    "band_integral": 2.03499998360281,
-    "flux_per_width": 2.0749584700482178,
-    "functional_ratio": 0.9812244500235419,
-    "relative_reynolds_bias": 0.019134816683387568,
-    "reynolds_in_reference_convention": 713.3943716783713,
-    "reynolds_labelled": 700.0,
-    "top_minus_crest": 2.036,
-    "u_b_code": 0.9999999919424126,
-    "u_b_reference": 1.0191348084716196,
-    "valley_deficit": 0.03995848644540789,
-    "valley_deficit_over_flux": 0.019257487329121983
-   },
-   "label": "laminar Re700 96x48",
-   "mesh_reproduced": true,
-   "status": "ok",
-   "tag": "round20_laminar_Re700_96x48",
-   "wall_shear": {
-    "first": {
-     "flag": "object_consistent",
-     "n_bubbles": 2,
-     "x_r_over_H": 1.2552394632440118,
-     "x_s_over_H": 0.3468872701547025
-    },
-    "largest_area": {
-     "flag": "object_mismatch",
-     "n_bubbles": 2,
-     "x_r_over_H": 8.078373744983194,
-     "x_s_over_H": 2.569649929176422
-    }
-   },
-   "x_r_error": 0.4932298974090932,
-   "x_r_over_H": 8.078373744983194
-  },
-  {
-   "bulk": null,
-   "label": "laminar Re1400 96x48",
-   "mesh_reproduced": true,
-   "note": "round-26 artifact health: no field stored",
-   "status": "all_zero_field",
-   "tag": "round20_laminar_Re1400_96x48"
-  },
-  {
-   "bulk": {
-    "band_height": 2.035,
-    "band_integral": 2.0349999999999735,
-    "flux_per_width": 2.1985573258097464,
-    "functional_ratio": 0.9260618206760189,
-    "relative_reynolds_bias": 0.07984151562366182,
-    "reynolds_in_reference_convention": 3023.5562437462527,
-    "reynolds_labelled": 2800.0,
-    "top_minus_crest": 2.036,
-    "u_b_code": 0.9999999999999869,
-    "u_b_reference": 1.0798415156236476,
-    "valley_deficit": 0.1635573258097729,
-    "valley_deficit_over_flux": 0.07439302304729917
-   },
-   "label": "SA 96x48",
-   "mesh_reproduced": true,
-   "status": "ok",
-   "tag": "round9_96x48",
-   "wall_shear": {
-    "first": {
-     "flag": "single_bubble",
-     "n_bubbles": 1,
-     "x_r_over_H": 7.650819549524724,
-     "x_s_over_H": 0.39677183878246736
-    },
-    "largest_area": {
-     "flag": "single_bubble",
-     "n_bubbles": 1,
-     "x_r_over_H": 7.650819549524724,
-     "x_s_over_H": 0.39677183878246736
-    }
-   },
-   "x_r_error": 0.41419954704708384,
-   "x_r_over_H": 7.650819549524724
-  },
-  {
-   "bulk": {
-    "band_height": 2.035,
-    "band_integral": 2.0349999999997928,
-    "flux_per_width": 2.4015022486290327,
-    "functional_ratio": 0.8478026623385849,
-    "relative_reynolds_bias": 0.17951976848196338,
-    "reynolds_in_reference_convention": 3302.6553517494976,
-    "reynolds_labelled": 2800.0,
-    "top_minus_crest": 2.036,
-    "u_b_code": 0.9999999999998981,
-    "u_b_reference": 1.1795197684818433,
-    "valley_deficit": 0.36650224862923997,
-    "valley_deficit_over_flux": 0.15261374368417452
-   },
-   "label": "SST 96x48",
-   "mesh_reproduced": true,
-   "status": "ok",
-   "tag": "round11_sst_96x48",
-   "wall_shear": {
-    "first": {
-     "flag": "single_bubble",
-     "n_bubbles": 1,
-     "x_r_over_H": 2.0456256874257104,
-     "x_s_over_H": 0.6414571595970098
-    },
-    "largest_area": {
-     "flag": "single_bubble",
-     "n_bubbles": 1,
-     "x_r_over_H": 2.0456256874257104,
-     "x_s_over_H": 0.6414571595970098
-    }
-   },
-   "x_r_error": -0.6218806492743604,
-   "x_r_over_H": 2.0456256874257104
-  },
-  {
-   "bulk": {
-    "band_height": 2.035,
-    "band_integral": 2.034999999979857,
-    "flux_per_width": 2.4021733715364437,
-    "functional_ratio": 0.8475658019127944,
-    "relative_reynolds_bias": 0.17984939664058008,
-    "reynolds_in_reference_convention": 3303.578310593625,
-    "reynolds_labelled": 2800.0,
-    "top_minus_crest": 2.036,
-    "u_b_code": 0.9999999999901017,
-    "u_b_reference": 1.1798493966289016,
-    "valley_deficit": 0.3671733715565866,
-    "valley_deficit_over_flux": 0.1528504877738031
-   },
-   "label": "SST r12 96x48",
-   "mesh_reproduced": true,
-   "status": "ok",
-   "tag": "round11_sst_r12-96x48",
-   "wall_shear": {
-    "first": {
-     "flag": "single_bubble",
-     "n_bubbles": 1,
-     "x_r_over_H": 3.1443072964934884,
-     "x_s_over_H": 0.47991995729454334
-    },
-    "largest_area": {
-     "flag": "single_bubble",
-     "n_bubbles": 1,
-     "x_r_over_H": 3.1443072964934884,
-     "x_s_over_H": 0.47991995729454334
-    }
-   },
-   "x_r_error": -0.4187971725520354,
-   "x_r_over_H": 3.1443072964934884
-  },
-  {
-   "bulk": {
-    "band_height": 2.035,
-    "band_integral": 2.034999999997284,
-    "flux_per_width": 2.154448134081395,
-    "functional_ratio": 0.9450215894221954,
-    "relative_reynolds_bias": 0.058176883145515834,
-    "reynolds_in_reference_convention": 2962.895272807444,
-    "reynolds_labelled": 2800.0,
-    "top_minus_crest": 2.036,
-    "u_b_code": 0.9999999999986653,
-    "u_b_reference": 1.0581768831441034,
-    "valley_deficit": 0.1194481340841107,
-    "valley_deficit_over_flux": 0.05544256656475072
-   },
-   "label": "SST r18 72x36",
-   "mesh_reproduced": true,
-   "status": "ok",
-   "tag": "round11_sst_r18_72x36",
-   "wall_shear": {
-    "first": {
-     "flag": "single_bubble",
-     "n_bubbles": 1,
-     "x_r_over_H": 7.600045056495248,
-     "x_s_over_H": 0.4943848830616272
-    },
-    "largest_area": {
-     "flag": "single_bubble",
-     "n_bubbles": 1,
-     "x_r_over_H": 7.600045056495248,
-     "x_s_over_H": 0.4943848830616272
-    }
-   },
-   "x_r_error": 0.4048142433447779,
-   "x_r_over_H": 7.600045056495248
-  },
-  {
-   "bulk": {
-    "band_height": 2.035,
-    "band_integral": 2.0349999999996657,
-    "flux_per_width": 2.1337009401444758,
-    "functional_ratio": 0.9542105745436871,
-    "relative_reynolds_bias": 0.04798670930492466,
-    "reynolds_in_reference_convention": 2934.3627860537886,
-    "reynolds_labelled": 2800.0,
-    "top_minus_crest": 2.036,
-    "u_b_code": 0.9999999999998357,
-    "u_b_reference": 1.0479867093047524,
-    "valley_deficit": 0.09870094014481001,
-    "valley_deficit_over_flux": 0.04625809469724789
-   },
-   "label": "SST r18 96x48",
-   "mesh_reproduced": true,
-   "status": "ok",
-   "tag": "round11_sst_r18_96x48",
-   "wall_shear": {
-    "first": {
-     "flag": "single_bubble",
-     "n_bubbles": 1,
-     "x_r_over_H": 7.681601876754162,
-     "x_s_over_H": 0.3932392615554318
-    },
-    "largest_area": {
-     "flag": "single_bubble",
-     "n_bubbles": 1,
-     "x_r_over_H": 7.681601876754162,
-     "x_s_over_H": 0.3932392615554318
-    }
-   },
-   "x_r_error": 0.41988944117452154,
-   "x_r_over_H": 7.681601876754162
-  },
-  {
-   "bulk": null,
-   "label": "SST r18 120x60",
-   "mesh_reproduced": true,
-   "note": "round-26 artifact health: no field stored",
-   "status": "all_zero_field",
-   "tag": "round11_sst_r18_120x60"
-  },
-  {
-   "bulk": null,
-   "label": "SST r18 144x72",
-   "mesh_reproduced": true,
-   "note": "round-26 artifact health: no field stored",
-   "status": "all_zero_field",
-   "tag": "round11_sst_r18_144x72"
-  },
-  {
-   "bulk": null,
-   "label": "laminar Re2800 144x72",
-   "mesh_reproduced": true,
-   "note": "round-26 artifact health: no field stored",
-   "status": "all_zero_field",
-   "tag": "round20_laminar_Re2800_144x72"
-  },
-  {
-   "bulk": null,
-   "label": "laminar Re2800 192x96",
-   "mesh_reproduced": true,
-   "note": "round-26 artifact health: no field stored",
-   "status": "all_zero_field",
-   "tag": "round20_laminar_Re2800_192x96"
-  },
-  {
-   "bulk": null,
-   "label": "laminar Re2800 240x120",
-   "mesh_reproduced": true,
-   "note": "round-26 artifact health: no field stored",
-   "status": "all_zero_field",
-   "tag": "round20_laminar_Re2800_240x120"
-  }
- ],
- "verdict": {
-  "bias_can_explain_x_r_error": false,
-  "bias_is_solution_dependent": true,
-  "conclusion": {
-   "can_explain_the_reattachment_error": false,
-   "geometry_matches_reference": true,
-   "largest_published_x_r_error": 0.6218806492743604,
-   "reference_data_self_consistent": true,
-   "reference_functional": "U_b = Q/(top - h_crest): the measured Q/U_b = 2.03131 is within 0.23% of top - h_crest, while the x-averaged crest-band functional would differ by the valley deficit (6.32%)",
-   "solver_functional_is_solution_dependent": true,
-   "station_map_confirmed_by_flow": true,
-   "worst_absolute_reynolds_bias": 0.17984939664058008
-  },
-  "deficit_spread_across_runs": 0.14325955571811524,
-  "largest_x_r_relative_error": 0.6218806492743604,
-  "n_rows": 8,
-  "n_unusable_fields": 6,
-  "status": "metrology_defect_large",
-  "usable_tags": [
-   "round20_laminar_Re2800_96x48",
-   "round20_laminar_Re2800_96x48dt01",
-   "round20_laminar_Re700_96x48",
-   "round9_96x48",
-   "round11_sst_96x48",
-   "round11_sst_r12-96x48",
-   "round11_sst_r18_72x36",
-   "round11_sst_r18_96x48"
-  ],
-  "worst_abs_relative_reynolds_bias": 0.17984939664058008,
-  "worst_row": "round11_sst_r12-96x48"
- }
+  ]
 }
