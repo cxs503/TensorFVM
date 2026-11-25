@@ -277,14 +277,16 @@ def solve_steady_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
     operator,mass,volume,g,film,end_load,layout = _rod_operator(
         dx,area,conductivity,volumetric_heat_capacity,film_coefficient,
         shoulder_areal_heat_capacity,flux_order,contact_resistance,end_types,end_film_coefficient,end_areal_heat_capacity,interface_heat_capacity,interface_left_fraction,interface_capacity_left_fraction)
-    # With two prescribed temperatures, use a wall as the datum before
+    # With a prescribed temperature, use that wall as the datum before
     # assembling loads. This also keeps the predictor and end-current
     # differences well conditioned when the absolute temperature is large.
     datum = 0.
-    if tuple(end_types) == ("temperature", "temperature") and np.shape(end_temperatures) == (2,):
+    fixed_walls = np.flatnonzero(np.asarray(end_types) == "temperature")
+    if fixed_walls.size and np.shape(end_temperatures) == (2,):
         wall_values = _profile(end_temperatures, 2, "end boundary values")
-        datum = wall_values[0]
-        end_temperatures = wall_values - datum
+        datum = wall_values[fixed_walls[0]]
+        # Robin inputs are ambient temperatures; Neumann inputs are powers.
+        end_temperatures = np.where(np.asarray(end_types) == "power", wall_values, wall_values - datum)
         ambient_temperature = _profile(ambient_temperature, len(volume)-1, "ambient temperature") - datum
     rhs, ends, _ = _load(volume,end_load,layout,film,end_temperatures,source,ambient_temperature,interface_power,trace_power,float)
     operator,bulk_g = _bulk_exchange_operator(operator,mass,volume,layout.cells,heat_loss_coefficient)
@@ -329,7 +331,7 @@ def solve_steady_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
     if datum:
         cell, faces, left_power, right_power = result[:4]
         faces = faces + datum
-        faces[[0, -1]] = wall_values
+        faces[fixed_walls * (len(faces)-1)] = wall_values[fixed_walls]
         traces = (tuple(trace + datum for trace in result[4]),) if return_traces else ()
         result = (cell + datum, faces, left_power, right_power) + traces
     return result+((slope,curvature),) if return_source_derivatives else result
