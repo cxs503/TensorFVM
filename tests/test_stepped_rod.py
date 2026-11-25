@@ -338,3 +338,37 @@ def test_mixed_power_jump_matches_segment_restarts_and_aggregates_heat(method):
     np.testing.assert_allclose(obs[0][-1],initial,atol=1e-13)
     for key,val in integrated.items():
         np.testing.assert_allclose(obs[-1][key],val,atol=1e-13)
+
+
+@pytest.mark.parametrize("area", [[2.,1.],[1.,2.],[1.,1.]])
+def test_interface_heater_splits_power_through_two_series_resistances(area):
+    from tensorfvm.cht.rod import solve_steady_stepped_rod
+
+    dx,k = np.array([.4,.6]),np.array([1.5,2.])
+    resistance,power = .3,4.
+    paths = dx/(k*area)
+    other_side = int(area[0]>=area[1])
+    paths[other_side] += resistance/min(area)
+    sheet = power/(1/paths).sum()
+    cell,face,left,right = solve_steady_stepped_rod(dx,area,k,1.,[0.,0.],
+                                         contact_resistance=resistance,interface_power=power)
+    np.testing.assert_allclose(face[1],sheet,atol=1e-13)
+    np.testing.assert_allclose([left[0],right[-1]],[-sheet/paths[0],sheet/paths[1]],atol=1e-13)
+
+
+@pytest.mark.parametrize("method",["theta","sdirk2","positive_cn","rannacher"])
+def test_pulsed_interface_power_conserves_energy(method):
+    from tensorfvm.cht.rod import solve_transient_stepped_rod
+
+    time = [0.,.05,.12]
+    def pulse(t):
+        return 5.*(.021<=t<.083)
+    u,f,_,_,heat = solve_transient_stepped_rod([.4,.6],[2.,1.],1.,2.,[0.,0.],time,0.,
+                   end_types=("power","power"),interface_power=pulse,load_jump_times=(.021,.083),
+                   shoulder_areal_heat_capacity=.3,initial_shoulder_temperature=0.,
+                   contact_resistance=.2,method=method,return_step_heat=True)
+    supplied = 5*np.array([.05-.021,.083-.05])
+    np.testing.assert_allclose(heat["interface"][:,0],supplied,atol=1e-14)
+    energy = u @ np.array([1.6,1.2])+.3*f[:,1]
+    np.testing.assert_allclose(np.diff(energy),supplied,atol=1e-13)
+    np.testing.assert_allclose(.3*np.diff(f[:,1]),heat["right"][:,0]-heat["left"][:,1]+supplied,atol=1e-13)
