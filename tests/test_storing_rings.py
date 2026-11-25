@@ -110,3 +110,16 @@ def test_local_bulk_heater_with_transparent_sheets(heated_layer):
     np.testing.assert_allclose(incoming, expected, rtol=1e-11)
     np.testing.assert_allclose(outgoing, expected, rtol=1e-11)
     np.testing.assert_allclose(walls, rates[[0, -1]], rtol=1e-11)
+
+
+def test_uniform_sheet_temperature_under_balanced_reservoir_loading():
+    t = .7-.2j
+    h = np.array([1.3, 4.2])
+    ambient = np.array([-.2j, .5+.1j])
+    capacity = np.array([.25, .8])
+    generation = 8j*capacity*t + h*(t-ambient)
+    sheets, _, _, rates = solve_storing_rings([.4, .55, .9, 1.1], [1., 2.5, .8], [1, 2],
+        [t, t], 8., contact_resistances=[.5, .9], sheet_capacities=capacity, sheet_generation=generation,
+        sheet_film_coefficients=h, sheet_ambient_temperatures=ambient, return_wall_rates=True)
+    np.testing.assert_allclose(sheets, t, atol=1e-12)
+    np.testing.assert_allclose(rates, 0., atol=1e-12)

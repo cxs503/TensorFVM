@@ -6,6 +6,7 @@ from .annulus import solve_annular_conduction
 
 def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, omega, *,
                         contact_resistances, sheet_capacities, sheet_generation=(0., 0.), source=0.,
+                        sheet_film_coefficients=(0., 0.), sheet_ambient_temperatures=(0., 0.),
                         azimuthal_mode=0, volumetric_heat_capacity=None, film_coefficients=(None, None),
                         inner_resistance_fractions=(.5, .5), sheet_conductivities=(0., 0.),
                         return_wall_rates=False, return_bulk_storage=False, return_angular_conduction=False,
@@ -23,6 +24,9 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
     (m² K/W) on the smaller-radius side of its storing sheet (capacity in J/(m² K)).
     sheet_conductivities are circumferential conductivities times thickness (W/K),
     uniform around each sheet. They contribute Ks*(m/r)² to the modal admittance.
+    Each sheet also receives h*(ambient - sheet temperature) in W/m², with h
+    from sheet_film_coefficients and ambient from sheet_ambient_temperatures.
+    A zero sheet film coefficient disables this exchange.
     Each output has one entry per sheet ordered from the bore outwards. Fluxes
     (W/m²) are positive towards increasing radius on both sides.
     With return_wall_rates, append the bore and exterior radial heat rates per unit
@@ -55,6 +59,13 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
         raise ValueError("volumetric heat generation must be finite")
     walls = np.asarray(wall_temperatures, dtype=complex)
     generation = np.asarray(sheet_generation, dtype=complex)
+    sheet_h = np.asarray(sheet_film_coefficients)
+    if (sheet_h.shape != (2,) or not np.isrealobj(sheet_h) or
+            not np.isfinite(sheet_h).all() or np.any(sheet_h < 0)):
+        raise ValueError("two finite nonnegative sheet film coefficients required")
+    ambient = np.asarray(sheet_ambient_temperatures, dtype=complex)
+    if ambient.shape != (2,) or not np.isfinite(ambient).all():
+        raise ValueError("two finite sheet ambient phasors required")
     capacity = np.asarray(sheet_capacities, dtype=float)
     resistance = np.asarray(contact_resistances, dtype=float)
     if any(x.shape != (2,) or not np.isfinite(x).all() for x in (walls, generation, capacity, resistance)):
@@ -108,9 +119,9 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
     a, b, c = domains
     # Sheet generation supplies radial flux, storage, and circumferential conduction.
     matrix = np.array([[b[0, 0]-a[1, 1], b[0, 1]], [-b[1, 0], c[0, 0]-b[1, 1]]])
-    admittance = 1j*omega*capacity + sheet_k*(azimuthal_mode/r[faces])**2
+    admittance = sheet_h + 1j*omega*capacity + sheet_k*(azimuthal_mode/r[faces])**2
     matrix += np.diag(admittance*area)
-    forcing = area*generation + [a[1, 0]*walls[0], -c[0, 1]*walls[1]]
+    forcing = area*(generation + sheet_h*ambient) + [a[1, 0]*walls[0], -c[0, 1]*walls[1]]
     forcing += [a[1, 2]-b[0, 2], b[1, 2]-c[0, 2]]
     sheet = np.linalg.solve(matrix, forcing)
     middle = b @ [*sheet, 1.]
