@@ -204,3 +204,28 @@ def test_second_order_dynamic_wall_with_adjacent_material_contact(side):
     np.testing.assert_allclose(q[0],area*q0,atol=1e-13)
     net = (t*np.outer(dy,dx)).sum(axis=(1,2))
     np.testing.assert_allclose(np.diff(net),np.diff(times)*(q[:-1]+q[1:])/2,atol=1e-13)
+
+
+@pytest.mark.parametrize("theta",[.5,1.])
+def test_nonuniform_bulk_sink_balances_wall_storage(theta):
+    dx,dy = np.array([.2,.8]),np.array([.4,.6])
+    volume = np.outer(dy,dx)
+    c = np.array([[1.,1.5],[2.,1.2]])
+    loss = np.array([[0.,3.],[.4,1.7]])
+    bc = {"west":dict(type="robin",values=2.,film_coefficient=1.3,wall_areal_heat_capacity=.7)}
+    time = np.array([0.,.01,.05,.15])
+    fields,powers = solve_transient_conduction(dx,dy,1.,c,bc,time,0.,source=.8,theta=theta,
+                                                heat_loss_coefficient=loss,return_wall_power=True)
+    stage = (1-theta)*fields[:-1]+theta*fields[1:]
+    west = powers["west"].sum(axis=1)
+    expected = (1-theta)*west[:-1]+theta*west[1:]+((.8-loss*stage)*volume).sum(axis=(1,2))
+    np.testing.assert_allclose((np.diff(fields,axis=0)*volume*c).sum(axis=(1,2)),np.diff(time)*expected,atol=1e-13)
+
+
+@pytest.mark.parametrize("loss",[-1.,float("inf"),float("nan"),1j])
+def test_invalid_bulk_loss(loss):
+    from tensorfvm.cht.energy import solve_harmonic_conduction
+    with pytest.raises(ValueError,match="heat_loss_coefficient"):
+        solve_transient_conduction([1.],[1.],1.,1.,{},[0.,1.],0.,heat_loss_coefficient=loss)
+    with pytest.raises(ValueError,match="heat_loss_coefficient"):
+        solve_harmonic_conduction([1.],[1.],1.,1.,{},3.,heat_loss_coefficient=loss)

@@ -479,15 +479,29 @@ def _join_periodic_y(operator, conductance_y, bc):
     return operator - incidence.T @ sp.diags(seam) @ incidence, seam
 
 
+def _bulk_loss_operator(operator, coefficient, volume):
+    raw = np.asarray(coefficient)
+    if np.iscomplexobj(raw):
+        raise ValueError("heat_loss_coefficient must be real")
+    loss = np.broadcast_to(np.asarray(raw,dtype=float),volume.shape)
+    if not np.isfinite(loss).all() or np.any(loss<0):
+        raise ValueError("heat_loss_coefficient must be finite and nonnegative")
+    if np.any(loss):
+        return operator-sp.diags((volume*loss).ravel(),format="csc")
+    return operator
+
+
 def solve_harmonic_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc,
                               angular_frequency, *, source=0., conductivity_y=None,
                               contact_resistance_x=0., contact_resistance_y=0.,
-                              return_interior_power=False, periodic_y=False):
+                              return_interior_power=False, periodic_y=False, heat_loss_coefficient=0.):
     """Return cell temperature and inward power per wall face for unit depth.
 
     Use Re(phasor * exp(iωt)), with positive angular frequency in rad/s.
     Wall values and volumetric sources may be complex amplitudes. Real
     materials, contact resistances and Robin films use the transient units.
+    heat_loss_coefficient adds a nonnegative bulk sink H*T in W/m³, with H
+    broadcast to the cell grid. For an ambient phasor Ta include H*Ta in source.
     Robin specs may include wall_areal_heat_capacity (J/(m² K)), scalar or
     per face. The returned wall power enters the material after wall storage.
     With return_interior_power=True also return a third item, a dictionary
@@ -508,7 +522,9 @@ def solve_harmonic_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc
                                   conductivity_y, load_dtype=complex, angular_frequency=angular_frequency)
     if periodic_y:
         A, seam = _join_periodic_y(A, faces[1], bc)
-    mass = (capacity*np.outer(dy, dx)).ravel()
+    volume = np.outer(dy, dx)
+    A = _bulk_loss_operator(A,heat_loss_coefficient,volume)
+    mass = (capacity*volume).ravel()
     state = spla.spsolve(sp.diags(1j*angular_frequency*mass, format="csc") - A, -b)
     _, _, side_specs, types, values, _ = faces
     powers = {side: _conductive_wall_power(types[side], values[side], conductance, area, state[cells])
@@ -529,7 +545,7 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
                                time, initial_temperature, *, source=0.0,
                                contact_resistance_x=0.0, contact_resistance_y=0.0,
                                theta=0.5, conductivity_y=None, return_wall_power=False, periodic_y=False,
-                               wall_flux_order=1):
+                               wall_flux_order=1, heat_loss_coefficient=0.):
     """Advance cell-centred conduction with fixed material data and boundary types.
 
     Return temperature at each requested time with shape (nt, ny, nx). Cell
@@ -539,6 +555,9 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
     A side's values may also be a callable of time, returning a scalar or
     one value per face (temperature, inward flux or Robin ambient temperature).
     source may also be a function of time returning a scalar or a cell field.
+    heat_loss_coefficient is a nonnegative scalar or cell field H in W/(m³ K).
+    The bulk sink H*T is implicit with the same theta as conduction. Include
+    H*Ta in source to exchange with a prescribed ambient temperature Ta.
     Callables are sampled at the supplied times and theta-weighted per step.
     For grid-aligned anisotropy, conductivity supplies the x component and
     conductivity_y supplies the y component. Both broadcast to (ny, nx).
@@ -618,6 +637,7 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
     if periodic_y:
         A, seam = _join_periodic_y(A, faces[1], bc)
     _, _, side_specs, types, values, _ = faces
+    A = _bulk_loss_operator(A,heat_loss_coefficient,volume)
     varying_loads = []
     for side, cells, conductance, _, _, area in side_specs:
         if side in signals:
