@@ -32,7 +32,8 @@ def test_opposite_shoulders_close_independently():
 
 
 @pytest.mark.parametrize("theta", [.5,1.])
-def test_transient_mixed_shoulders_close_with_initial_storage_and_varying_load(theta):
+@pytest.mark.parametrize("order", [1,2])
+def test_transient_mixed_shoulders_close_with_initial_storage_and_varying_load(theta, order):
     from tensorfvm.cht.rod import solve_transient_stepped_rod
     dx = np.array([.2,.3,.1,.4])
     a = np.array([.3,.8,.8,.4])
@@ -42,9 +43,10 @@ def test_transient_mixed_shoulders_close_with_initial_storage_and_varying_load(t
     h,cw = np.array([3.,.2,1.]),np.array([.6,.5,0.])
     cells,face,left,right = solve_transient_stepped_rod(dx,a,1.2,c,lambda t:[t,2*t],times,1.,
                        film_coefficient=h,ambient_temperature=lambda t:t+.5,source=lambda t:1.-t,
-                       shoulder_areal_heat_capacity=cw,initial_shoulder_temperature=3.,theta=theta)
+                       shoulder_areal_heat_capacity=cw,initial_shoulder_temperature=3.,theta=theta,flux_order=order)
     assert face[0,1] == 3.
-    assert face[0,2] == pytest.approx(1.)
+    if order == 1:
+        assert face[0,2] == pytest.approx(1.)
     def integrate(v):
         return np.diff(times)[:,None]*((1-theta)*v[:-1]+theta*v[1:])
     np.testing.assert_allclose(np.diff(cells,axis=0)*(dx*a*c),integrate(left-right+(1-times[:,None])*dx*a),
@@ -72,3 +74,24 @@ def test_hot_shoulder_pulse_matches_matrix_exponential():
             assert previous/error > 3.9
         previous = error
     assert error < 2e-5
+
+
+@pytest.mark.parametrize("n", [1,4])
+def test_quadratic_rod_reproduces_exact_means_and_both_powers(n):
+    dx = np.array([.13,.4,.27,.2])[:n]
+    a = np.array([1.,2.,.8,1.2])[:n]
+    k = np.array([2.,.8,3.,1.5])[:n]
+    c = np.arange(n)+1.
+    slope = (.3-.6j)*(1+np.arange(n))
+    incoming = (.7+.1j)/(1+np.arange(n))
+    outgoing = incoming+slope*dx
+    drops = dx*(incoming+.5*slope*dx)/(k*a)
+    faces = 1.+.4j-np.r_[0.,np.cumsum(drops)]
+    means = faces[:-1]-dx*(incoming/2+slope*dx/6)/(k*a)
+    omega, h, cw = 2.,3.,.7
+    source = 1j*omega*c*means+slope/a
+    ambient = faces[1:-1]*(1+1j*omega*cw/h)+(incoming[1:]-outgoing[:-1])/(abs(np.diff(a))*h)
+    observed = solve_harmonic_stepped_rod(dx,a,k,c,faces[[0,-1]],omega,source=source,
+                 film_coefficient=h,ambient_temperature=ambient,shoulder_areal_heat_capacity=cw,flux_order=2)
+    for result, exact in zip(observed,(means,faces,incoming,outgoing)):
+        np.testing.assert_allclose(result,exact,atol=2e-13,rtol=0)
