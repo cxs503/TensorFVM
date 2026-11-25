@@ -198,17 +198,7 @@ def dry_riemann_cell_averages(edges, t: float, hL: float, uL: float,
     then integrate each piece with the two-point Gauss rule, exact for the
     quadratic depth and cubic discharge of a Ritter fan.
     """
-    edges = np.asarray(edges, dtype=float)
-    if (edges.ndim != 1 or edges.size < 2 or not np.isfinite(edges).all()
-            or not np.all(np.diff(edges) > 0)):
-        raise ValueError("provide at least two finite, strictly increasing edges")
     _validate_dry_riemann(t, hL, uL, hR, uR, gravity, x0)
-    lo, hi = edges[:-1]-x0, edges[1:]-x0
-    widths = np.diff(edges)
-    if t == 0:
-        fraction = np.clip(-lo/widths, 0., 1.)
-        return (fraction*hL + (1-fraction)*hR,
-                fraction*(hL*uL) + (1-fraction)*(hR*uR))
     speeds = []
     if hL:
         c = math.sqrt(gravity*hL)
@@ -216,16 +206,33 @@ def dry_riemann_cell_averages(edges, t: float, hL: float, uL: float,
     if hR:
         c = math.sqrt(gravity*hR)
         speeds.extend((uR-2*c, uR+c))
+    def sample(offset):
+        return dry_riemann_state(offset, t, hL, uL, hR, uR, gravity)
+    return _riemann_cell_means(edges, t, x0, speeds, sample, hL, uL, hR, uR)
+
+
+def _riemann_cell_means(edges, t, x0, speeds, sample, hL, uL, hR, uR):
+    """Integrate piecewise polynomial states sampled relative to the dam."""
+    edges = np.asarray(edges, dtype=float)
+    if (edges.ndim != 1 or edges.size < 2 or not np.isfinite(edges).all()
+            or not np.all(np.diff(edges) > 0)):
+        raise ValueError("provide at least two finite, strictly increasing edges")
+    lo, hi = edges[:-1]-x0, edges[1:]-x0
+    widths = np.diff(edges)
+    if t == 0:
+        fraction = np.clip(-lo/widths, 0., 1.)
+        return (fraction*hL + (1-fraction)*hR,
+                fraction*(hL*uL) + (1-fraction)*(hR*uR))
     mass = np.zeros_like(lo)
     momentum = np.zeros_like(lo)
     start = lo
-    segment_ends = [np.clip(t*speed, lo, hi) for speed in speeds]
+    segment_ends = [np.clip(t*speed, lo, hi) for speed in sorted(speeds)]
     segment_ends.append(hi)
     for end in segment_ends:
         half = .5*(end-start)
         mid = start+half
         nodes = mid + np.array([[-1.], [1.]])*half/math.sqrt(3)
-        h, u = dry_riemann_state(nodes, t, hL, uL, hR, uR, gravity)
+        h, u = sample(nodes)
         mass += half*h.sum(axis=0)
         momentum += half*(h*u).sum(axis=0)
         start = end

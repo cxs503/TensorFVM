@@ -339,3 +339,44 @@ def test_dry_cell_means_resolve_partial_fan_and_vacuum():
     h, q = exact.dry_riemann_cell_averages([0., 1., 3., 4.], 1., 1., 0., 0., 0., gravity=1.)
     np.testing.assert_allclose(h, [7/27, 1/54, 0.], atol=1e-15, rtol=0)
     np.testing.assert_allclose(q, [13/54, 1/36, 0.], atol=1e-15, rtol=0)
+
+
+@pytest.mark.parametrize("case", DEFAULT_CASES, ids=lambda case: case.name)
+def test_wet_control_volume_budgets_and_refinement(case, record_property):
+    from tensorfvm.shallow_water import riemann_cell_averages
+
+    x0, t = .23, .2
+    sol = solve_riemann(case.hL, case.uL, case.hR, case.uR, case.gravity, x0)
+    lo, hi = sol.span
+    edges = x0+t*np.array([lo-2, lo-.4, lo+.31*(hi-lo), hi+.2, hi+2])
+    h, q = riemann_cell_averages(sol, edges, t)
+    h0, q0 = riemann_cell_averages(sol, edges, 0.)
+    widths = np.diff(edges)
+    mass_flux = sol.hL*sol.uL - sol.hR*sol.uR
+    force = sol.hL*sol.uL**2-sol.hR*sol.uR**2 + .5*sol.gravity*(sol.hL**2-sol.hR**2)
+    balance = max(abs(widths@(h-h0)-t*mass_flux), abs(widths@(q-q0)-t*force))
+    record_property("integral_balance_error", float(balance))
+    assert balance < 2e-13
+    errors = []
+    for n in (200, 400, 800):
+        metrics = run_case(case, n=n)["metrics"]
+        row = [metrics["cell_mean_depth_l1"], metrics["cell_mean_discharge_l1"]]
+        for name, value in zip(("depth", "discharge"), row):
+            record_property(f"normalized_{name}_error_{n}", value)
+        errors.append(row)
+    for coarse, fine in zip(errors, errors[1:]):
+        assert all(f < c for c, f in zip(coarse, fine))
+
+
+def test_wet_cell_cut_by_moving_shock_has_volume_weighted_jump():
+    from tensorfvm.shallow_water import riemann_cell_averages
+
+    sol = solve_riemann(1., 1., .7, -1., gravity=1., x0=.25)
+    assert sol.right_kind == "shock"
+    t = .125
+    position = sol.x0+t*sol.right_shock_speed
+    width = .4*t*(sol.right_head-sol.left_tail)
+    edges = [position-.3*width, position+.7*width]
+    h, hu = riemann_cell_averages(sol, edges, t)
+    assert h[0] == pytest.approx(.3*sol.h_star+.7*sol.hR, abs=1e-14, rel=0.)
+    assert hu[0] == pytest.approx(.3*sol.h_star*sol.u_star+.7*sol.hR*sol.uR, abs=1e-14, rel=0.)

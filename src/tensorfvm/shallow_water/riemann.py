@@ -87,7 +87,7 @@ import math
 
 import numpy as np
 
-from .exact import ritter_front_position, ritter_state, stoker_constant_state
+from .exact import _riemann_cell_means, ritter_front_position, ritter_state, stoker_constant_state
 
 __all__ = [
     "DEFAULT_CASES",
@@ -101,6 +101,7 @@ __all__ = [
     "riemann_residuals",
     "run_case",
     "sample_exact",
+    "riemann_cell_averages",
     "smooth_region_ode_residuals",
     "solve_riemann",
     "verdict",
@@ -320,6 +321,20 @@ def sample_exact(sol: RiemannSolution, x, t: float):
 
     # The star-state velocity lies between the two waves in every inertial frame.
     return np.where(xi <= sol.u_star, h_l, h_r), np.where(xi <= sol.u_star, u_l, u_r)
+
+
+def riemann_cell_averages(sol: RiemannSolution, edges, t: float):
+    """Return control-volume means of h and hu for a wet Riemann solution.
+
+    Split nonuniform cells at every shock and rarefaction edge before exact
+    polynomial quadrature. At zero time split the initial jump at sol.x0.
+    """
+    if not math.isfinite(t) or t < 0:
+        raise ValueError("time must be finite and nonnegative")
+    relative = dataclasses.replace(sol, x0=0.)
+    return _riemann_cell_means(edges, t, sol.x0, sol.wave_speeds,
+                               lambda offset: sample_exact(relative, offset, t),
+                               sol.hL, sol.uL, sol.hR, sol.uR)
 
 
 # --------------------------------------------------------------------------- #
@@ -743,6 +758,10 @@ def run_case(case: RiemannCase, n: int = 1600, cfl: float = 0.4,
     steps = solver.advance(case.t_end)
     h, u = solver.primitive()
     metrics = profile_metrics(case, solver.x, h, u, solver.time)
+    edges = np.linspace(case.x_min, case.x_max, n+1)
+    h_mean, hu_mean = riemann_cell_averages(case.solution(), edges, solver.time)
+    metrics["cell_mean_depth_l1"] = float(np.mean(np.abs(h-h_mean)) / case.h_ref)
+    metrics["cell_mean_discharge_l1"] = float(np.mean(np.abs(h*u-hu_mean)) / (case.h_ref*case.c_ref))
     metrics["volume_initial"] = float(volume0)
     metrics["volume_drift"] = (float(abs(solver.total_volume() - volume0)
                                      / volume0) if volume0 > 0 else float("nan"))
@@ -783,6 +802,8 @@ def convergence_series(case: RiemannCase, resolutions=(200, 400, 800, 1600),
             "dx": record["discretisation"]["dx"],
             "steps": record["discretisation"]["steps"],
             "depth_l1": metrics["depth_l1"],
+            "cell_mean_depth_l1": metrics["cell_mean_depth_l1"],
+            "cell_mean_discharge_l1": metrics["cell_mean_discharge_l1"],
             "velocity_l1": metrics["velocity_l1"],
             "wave_left": metrics["wave_left"]["rel_error"],
             "wave_right": metrics["wave_right"]["rel_error"],
