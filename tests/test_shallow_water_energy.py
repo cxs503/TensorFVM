@@ -211,3 +211,48 @@ def test_drying_subdomain_energy_refines_against_analytic_transport(record_prope
         errors.append(abs(energy-budget["final"]))
         record_property(f"local_energy_error_{n}", errors[-1])
     assert errors[-1] < errors[1] < errors[0]
+
+
+def test_moving_dry_interval_first_wetting(record_property):
+    from scipy.integrate import quad
+    from tensorfvm.shallow_water import dry_riemann_energy_budget
+
+    # The unit Ritter fan extends from x=-t to x=2t. Both initially dry
+    # boundaries are overtaken at distinct times, x_initial/(2-w).
+    faces, speeds, end = (.25, 1.), (-.25, .5), .9
+    def budget(t):
+        return dry_riemann_energy_budget(*faces, t, 1., 0., 0., 0., gravity=1.,
+                                         face_speeds=speeds)
+    arrivals = [x/(2-w) for x,w in zip(faces,speeds)]
+    assert budget(arrivals[0]/2)["final"] == 0.
+    result = budget(end)
+    errors = []
+    for x, w, arrival, key in zip(faces, speeds, arrivals, ("left_transport","right_transport")):
+        def moving_power(t):
+            xi = x/t + w
+            h, u = (2-xi)**2/9, 2*(1+xi)/3
+            return .5*h*(u*u+h)*(u-w) + .5*h*h*u
+        expected = quad(moving_power, arrival, end, epsabs=1e-14)[0]
+        errors.append(abs(expected-result[key]))
+    record_property("maximum_moving_transport_error", max(errors))
+    record_property("wetting_balance_error", abs(result["residual"]))
+    assert max(errors) < 1e-13 and abs(result["residual"]) < 1e-13
+
+
+def test_moving_interval_becomes_vacuum(record_property):
+    from tensorfvm.shallow_water import dry_riemann_energy_budget
+
+    # Two initially wet streams recede at -3 and +3. Their dry tips are
+    # at -t and +t. At t=1 the expanding control volume lies between them.
+    opts = dict(hL=1., uL=-3., hR=1., uR=3., gravity=1.)
+    result = dry_riemann_energy_budget(-.25, .25, 1., **opts, face_speeds=(-.25, .25))
+    assert result["final"] == 0.
+    # Initial E=5 throughout; by reflection symmetry each side carries
+    # half of the initial interval energy out before its last wetting.
+    errors = [abs(result["left_transport"]+1.25), abs(result["right_transport"]-1.25)]
+    record_property("maximum_vacuum_transport_error", max(errors))
+    assert max(errors) < 1e-14
+    with pytest.raises(ValueError, match="interval"):
+        dry_riemann_energy_budget(-.25, .25, 1., **opts, face_speeds=(.5, 0.))
+    with pytest.raises(ValueError, match="speeds"):
+        dry_riemann_energy_budget(-.25, .25, 1., **opts, face_speeds=(float("nan"), 0.))

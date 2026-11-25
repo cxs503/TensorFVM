@@ -107,27 +107,34 @@ def _integrate_fan_energy(x_min, x_max, fronts, gravity, sample):
     return float(half @ (cell_energy(h,h*u,gravity)["total"] @ weights))
 
 
-def dry_riemann_energy_budget(x_min, x_max, t, hL, uL, hR, uR, gravity=9.81, x0=0.):
-    """Interval energy and cumulative rightward face transports for dry Riemann data.
+def dry_riemann_energy_budget(x_min, x_max, t, hL, uL, hR, uR, gravity=9.81, x0=0.,
+                              *, face_speeds=(0., 0.)):
+    """Energy per unit width and density in a moving interval with dry Riemann data.
 
-    The contact with vacuum has zero mechanical energy loss. At each face,
-    the cumulative transport is t*F - (x-x0)*(E-E_initial), including any
-    first wetting or drying. Energy and transport are per unit width and density.
+    The faces start at x_min and x_max and move at their respective constant
+    speeds. Rightward lab-frame energy transport through a moving face has
+    rate F-wE. A wetting or drying front contributes zero energy loss.
     """
-    if not (math.isfinite(x_min) and math.isfinite(x_max) and x_min < x_max):
-        raise ValueError("require a finite increasing interval")
+    speeds = np.asarray(face_speeds, dtype=float)
+    if speeds.shape != (2,) or not np.isfinite(speeds).all():
+        raise ValueError("provide two finite face speeds")
+    faces = np.array([x_min, x_max])
+    final_faces = faces + t*speeds
+    for endpoints in (faces, final_faces):
+        if not np.isfinite(endpoints).all() or endpoints[0] >= endpoints[1]:
+            raise ValueError("require a finite increasing interval")
+
     def state(x, time):
         return dry_riemann_state(x, time, hL, uL, hR, uR, gravity, x0)
 
-    faces = np.array([x_min, x_max])
-    h, u = state(faces, t)
+    h, u = state(final_faces, t)
     h0, u0 = state(faces, 0.)
     e = cell_energy(h, h*u, gravity)["total"]
     e0 = cell_energy(h0, h0*u0, gravity)["total"]
-    west, east = t*u*(e+.5*gravity*h*h) - (faces-x0)*(e-e0)
+    west, east = t*((u-speeds)*e+u*.5*gravity*h*h) - (faces-x0)*(e-e0)
     initial = _integrate_fan_energy(x_min, x_max, [x0], gravity, lambda x: state(x, 0.))
     fronts = [x0+t*s for s in _dry_wave_speeds(hL, uL, hR, uR, gravity)]
-    final = _integrate_fan_energy(x_min, x_max, fronts, gravity, lambda x: state(x, t))
+    final = _integrate_fan_energy(*final_faces, fronts, gravity, lambda x: state(x, t))
     return {"initial": initial, "final": final, "left_transport": float(west),
             "right_transport": float(east), "residual": float(final-initial-west+east)}
 
