@@ -6,15 +6,16 @@ from .annulus import solve_annular_conduction
 
 def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, omega, *,
                         contact_resistances, sheet_capacities, sheet_generation=(0., 0.),
-                        azimuthal_mode=0, volumetric_heat_capacity=None):
+                        azimuthal_mode=0, volumetric_heat_capacity=None,
+                        inner_resistance_fractions=(.5, .5)):
     """Return two sheet temperatures and their incoming and outgoing radial fluxes.
 
     The cell faces include both sheets. Conductivity is scalar or per cell.
     Wall temperatures and areal heat generation (W/m²) are complex amplitudes of
     cos(mθ) exp(iωt). Omitting volumetric_heat_capacity gives quasi-steady bulk conduction.
     A positive scalar or per-cell capacity (J/(m³ K)) enables harmonic bulk storage.
-    Each contact resistance (m² K/W)
-    is split equally about the storing sheet (capacity in J/(m² K)).
+    inner_resistance_fractions specifies the fraction of each contact resistance
+    (m² K/W) on the smaller-radius side of its storing sheet (capacity in J/(m² K)).
     Each output has one entry per sheet ordered from the bore outwards. Fluxes
     (W/m²) are positive towards increasing radius on both sides.
     """
@@ -38,12 +39,16 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
     if np.any(capacity < 0) or np.any(resistance < 0):
         raise ValueError("sheet capacities and contact resistances must be nonnegative")
 
-    films = [2/value if value else None for value in resistance]
-    boundary_films = [None, *films, None]
+    fractions = np.asarray(inner_resistance_fractions, dtype=float)
+    if fractions.shape != (2,) or not np.all((0 <= fractions) & (fractions <= 1)):
+        raise ValueError("two inner resistance fractions in [0, 1] required")
+    inner = resistance*fractions
+    outer = resistance*(1-fractions)
+    layer_resistances = [(0., inner[0]), (outer[0], inner[1]), (outer[1], 0.)]
     ends = [0, *faces, len(r)-1]
     domains = []
     for layer, (a, b) in enumerate(zip(ends, ends[1:])):
-        film = boundary_films[layer:layer+2]
+        film = tuple(1/value if value else None for value in layer_resistances[layer])
         # The two unit Dirichlet responses map end temperatures to radial rates.
         columns = []
         for boundary in np.eye(2):
