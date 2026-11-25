@@ -521,6 +521,7 @@ class RiemannCase:
     t_end: float = 1.0
     gravity: float = 9.81
     note: str = ""
+    x0: float = 0.0
 
     @property
     def h_ref(self) -> float:
@@ -532,12 +533,17 @@ class RiemannCase:
 
     def solution(self) -> RiemannSolution:
         return solve_riemann(self.hL, self.uL, self.hR, self.uR,
-                             self.gravity)
+                             self.gravity, x0=self.x0)
 
     def initial_state(self, x) -> tuple[np.ndarray, np.ndarray]:
         xs = np.asarray(x, dtype=float)
-        left = xs <= 0.0
+        left = xs <= self.x0
         return (np.where(left, self.hL, self.hR), np.where(left, self.uL, self.uR))
+
+    def initial_cell_state(self, edges):
+        """Primitive variables from cell-averaged initial mass and momentum."""
+        h, hu = riemann_cell_averages(self.solution(), edges, 0.)
+        return h, hu/h
 
     def exact(self, x, t: float):
         return sample_exact(self.solution(), x, t)
@@ -548,7 +554,7 @@ class RiemannCase:
             "name": self.name,
             "hL": self.hL, "uL": self.uL, "hR": self.hR, "uR": self.uR,
             "gravity": self.gravity, "x_min": self.x_min, "x_max": self.x_max,
-            "t_end": self.t_end, "note": self.note,
+            "x0": self.x0, "t_end": self.t_end, "note": self.note,
             "pattern": sol.pattern,
             "h_star": sol.h_star, "u_star": sol.u_star,
             "wave_speeds": list(sol.wave_speeds),
@@ -671,56 +677,49 @@ def profile_metrics(case: RiemannCase, x, h, u, t: float) -> dict:
     out["extremum_amplitude"] = amp
 
     g = case.gravity
-    waves = {}
     for side in ("left", "right"):
         kind = sol.left_kind if side == "left" else sol.right_kind
-        exact_speed = sol.left_head if side == "left" else sol.right_head
+        h_out = sol.hL if side == "left" else sol.hR
         if kind == "shock":
-            h_out = sol.hL if side == "left" else sol.hR
-            u_out = sol.uL if side == "left" else sol.uR
             level = 0.5 * (h_out + sol.h_star)
-            x_meas, n_cross = _wave_crossing(xs, h, level, side)
-            waves[side] = {"kind": "shock", "level": level,
-                           "x_exact": exact_speed * t, "x_measured": x_meas,
-                           "crossings": n_cross}
+            speed = sol.left_head if side == "left" else sol.right_head
         else:
-            # a fixed fraction of the fan's depth drop, measured from the outer
-            # state: the crossing sits at xi = u_K +- 2 c_K - 3 sqrt(g h_p)
-            frac = 0.25
-            h_out = sol.hL if side == "left" else sol.hR
-            u_out = sol.uL if side == "left" else sol.uR
+            # Track the level one quarter of the way from the outer depth to
+            # the star depth. Its similarity speed follows from the invariant.
+            level = h_out - 0.25 * (h_out - sol.h_star)
             c_out = math.sqrt(g * h_out)
-            level = h_out - frac * (h_out - sol.h_star)
             c_p = math.sqrt(g * level)
-            xi = (u_out + 2.0 * c_out - 3.0 * c_p) if side == "left" else (
-                u_out - 2.0 * c_out + 3.0 * c_p)
-            x_meas, n_cross = _wave_crossing(xs, h, level, side)
-            waves[side] = {"kind": "rarefaction", "level": level,
-                           "x_exact": xi * t, "x_measured": x_meas,
-                           "crossings": n_cross}
-        entry = waves[side]
-        entry["rel_error"] = (
-            abs(entry["x_measured"] - entry["x_exact"]) / abs(entry["x_exact"])
-            if entry["x_exact"] != 0.0 and np.isfinite(entry["x_measured"])
-            else float("nan"))
+            speed = (sol.uL + 2*c_out - 3*c_p if side == "left" else
+                     sol.uR - 2*c_out + 3*c_p)
+        x_meas, n_cross = _wave_crossing(xs, h, level, side)
+        displacement = speed * t
+        entry = {"kind": kind, "level": level, "x_exact": sol.x0 + displacement,
+                 "x_measured": x_meas, "crossings": n_cross}
+        scale = abs(displacement)
+        # A stationary wave has no travel distance. Use the acoustic travel
+        # distance for that limit and record the denominator with the error.
+        if scale <= 16*np.finfo(float).eps*case.c_ref*abs(t):
+            scale = case.c_ref*abs(t)
+        entry["position_error_scale"] = scale
+        entry["rel_error"] = (abs(entry["x_measured"]-entry["x_exact"])/scale
+                              if scale > 0 else float("nan"))
         out[f"wave_{side}"] = entry
 
     # star plateau: sample the exact star region between the two waves
-    lo, hi = sol.span
-    x_star = 0.5 * (lo + hi) * t
-    if lo <= 0.0 <= hi:
-        x_star = 0.0
+    left_edge = sol.x0 + sol.left_tail*t
+    right_edge = sol.x0 + sol.right_tail*t
+    x_star = .5*(left_edge + right_edge)
     idx = int(np.argmin(np.abs(xs - x_star)))
+    resolved = left_edge < xs[idx] < right_edge
     out["plateau"] = {
-        "x": float(xs[idx]),
+        "x": float(xs[idx]), "resolved": bool(resolved),
         "depth_measured": float(h[idx]),
         "depth_exact": float(sol.h_star),
-        "depth_rel_error": float(abs(h[idx] - sol.h_star) / sol.h_star),
+        "depth_rel_error": float(abs(h[idx] - sol.h_star) / sol.h_star) if resolved else float("nan"),
         "velocity_measured": float(u[idx]),
         "velocity_exact": float(sol.u_star),
-        "velocity_rel_error": (float(abs(u[idx] - sol.u_star) / sol.u_star)
-                               if sol.u_star != 0.0
-                               else float(abs(u[idx] - sol.u_star))),
+        "velocity_rel_error": (float(abs(u[idx]-sol.u_star) / (abs(sol.u_star) or 1.))
+                               if resolved else float("nan")),
     }
     return out
 
@@ -751,14 +750,14 @@ def run_case(case: RiemannCase, n: int = 1600, cfl: float = 0.4,
 
     solver = ShallowWater1D(n, case.x_min, case.x_max, gravity=case.gravity,
                             cfl=cfl, order=order)
-    h0, u0 = case.initial_state(solver.x)
+    edges = np.linspace(case.x_min, case.x_max, n+1)
+    h0, u0 = case.initial_cell_state(edges)
     solver.set_state(h0, u0)
     volume0 = solver.total_volume()
     momentum0 = solver.momentum()
     steps = solver.advance(case.t_end)
     h, u = solver.primitive()
     metrics = profile_metrics(case, solver.x, h, u, solver.time)
-    edges = np.linspace(case.x_min, case.x_max, n+1)
     h_mean, hu_mean = riemann_cell_averages(case.solution(), edges, solver.time)
     metrics["cell_mean_depth_l1"] = float(np.mean(np.abs(h-h_mean)) / case.h_ref)
     metrics["cell_mean_discharge_l1"] = float(np.mean(np.abs(h*u-hu_mean)) / (case.h_ref*case.c_ref))
@@ -904,7 +903,7 @@ def write_artifacts(out_dir, resolutions=(400, 800, 1600, 3200),
 
         solver = ShallowWater1D(n, case.x_min, case.x_max, gravity=case.gravity,
                                 cfl=cfl, order=order)
-        h0, u0 = case.initial_state(solver.x)
+        h0, u0 = case.initial_cell_state(np.linspace(case.x_min, case.x_max, n+1))
         solver.set_state(h0, u0)
         solver.advance(case.t_end)
         h, _ = solver.primitive()
@@ -914,7 +913,7 @@ def write_artifacts(out_dir, resolutions=(400, 800, 1600, 3200),
         ax.plot(solver.x, h, "--", color="tab:blue", lw=1.0,
                 label=f"FVM n={n}")
         for speed in case.solution().wave_speeds:
-            ax.axvline(speed * solver.time, color="tab:red", lw=0.6, alpha=0.5)
+            ax.axvline(case.x0 + speed * solver.time, color="tab:red", lw=0.6, alpha=0.5)
         ax.set_title(f"{case.name}: {case.solution().pattern}", fontsize=9)
         ax.set_xlabel("x [m]")
         ax.set_ylabel("h [m]")

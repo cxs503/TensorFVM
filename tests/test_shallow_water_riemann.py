@@ -380,3 +380,49 @@ def test_wet_cell_cut_by_moving_shock_has_volume_weighted_jump():
     h, hu = riemann_cell_averages(sol, edges, t)
     assert h[0] == pytest.approx(.3*sol.h_star+.7*sol.hR, abs=1e-14, rel=0.)
     assert hu[0] == pytest.approx(.3*sol.h_star*sol.u_star+.7*sol.hR*sol.uR, abs=1e-14, rel=0.)
+
+
+@pytest.mark.parametrize("boost", [-8., 8.])
+def test_shifted_moving_star_and_wave_metrics(boost, record_property):
+    from dataclasses import replace
+
+    case = replace(DEFAULT_CASES[1], x0=1.17, uL=-1.+boost, uR=1.+boost)
+    t = .2
+    xs = np.linspace(-3, 5, 4001)
+    h, u = case.exact(xs,t)
+    m = profile_metrics(case, xs, h, u, t)
+    assert m["plateau"]["resolved"] and m["plateau"]["depth_rel_error"] == 0
+    worst = max(m[f"wave_{side}"]["rel_error"] for side in ("left","right"))
+    assert worst < 1e-5
+    record_property("maximum_relative_wave_error", worst)
+    u += .2
+    m = profile_metrics(case, xs, h, u, t)
+    assert m["plateau"]["velocity_rel_error"] == pytest.approx(.2/abs(case.solution().u_star))
+
+
+def test_off_center_dam_initialization_and_stationary_shock(record_property):
+    from dataclasses import replace
+
+    base = DEFAULT_CASES[0]
+    speed = base.solution().right_shock_speed
+    case = replace(base, x0=.37, uL=-speed, uR=-speed, t_end=.25)
+    h0, u0 = case.initial_cell_state(np.array([0.,1.]))
+    assert h0[0] == pytest.approx(.37*base.hL + .63*base.hR)
+    assert h0[0]*u0[0] == pytest.approx(-speed*h0[0])
+    m = run_case(case, n=800)["metrics"]
+    shock = m["wave_right"]
+    assert shock["x_exact"] == pytest.approx(case.x0)
+    assert shock["position_error_scale"] == pytest.approx(case.c_ref*case.t_end)
+    assert shock["rel_error"] < .05
+    record_property("stationary_shock_position_error", abs(shock["x_measured"]-case.x0))
+    record_property("relative_volume_budget_error", m["volume_budget_relative"])
+    assert m["volume_budget_relative"] < 1e-12
+
+
+def test_unresolved_star_plateau_fails_grading():
+    case = DEFAULT_CASES[2]
+    x = np.array([-10., 10.])
+    h, u = case.exact(x, .2)
+    metrics = profile_metrics(case, x, h, u, .2)
+    assert not metrics["plateau"]["resolved"]
+    assert "plateau_velocity" in verdict(metrics)["failed"]
