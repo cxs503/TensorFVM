@@ -296,14 +296,14 @@ def main(argv: Iterable[str] | None = None) -> int:
             continue
         print(f"{name:22s} {rec['max_error_pct']:16.3e}  {rec['reference'][:60]}")
 
-    if args.json:
-        args.json.parent.mkdir(parents=True, exist_ok=True)
-        args.json.write_text(json.dumps(out, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-        print(f"\nwrote {args.json}")
     if isinstance(out.get("annular"), dict) and "max_error_pct" in out["annular"]:
         # the same measurement backs the backend entry and its verification harness
         out["annular_band"] = dict(out["annular"],
                                    capability="fvm.verification.annular_band")
+    if args.json:
+        args.json.parent.mkdir(parents=True, exist_ok=True)
+        args.json.write_text(json.dumps(out, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        print(f"\nwrote {args.json}")
     failed = [n for n, r in out.items() if "error" in r]
     return 1 if failed else 0
 
