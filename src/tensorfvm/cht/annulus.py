@@ -233,7 +233,8 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
                                   sheet_capacity, resistance=0., inner_resistance_fraction=.5,
                                   sheet_conductivity=0., azimuthal_mode=0, sheet_film=0., ambient=0.,
                                   sheet_source_intervals=0., theta=.5, wall_fluxes=(None,None), source_intervals=0.,
-                                  film_coefficients=(None,None), return_wall_temperatures=False):
+                                  film_coefficients=(None,None), return_wall_temperatures=False,
+                                  return_contact_temperatures=False):
     """Advance one real azimuthal mode with a storing sheet and Dirichlet walls.
 
     Walls and reservoir ambient accept constants or one sample per output time.
@@ -256,6 +257,9 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
     normalization of solve_annular_conduction. theta=.5 gives Crank–Nicolson.
     return_wall_temperatures appends instantaneous material surface temperatures
     at the bore and exterior (shape time × 2), using the radial half-cell resistances.
+    return_contact_temperatures appends the inner and outer material traces at
+    the sheet (shape time × 2), after optional wall temperatures. Massless
+    contact traces use the same one-sided convention as sheet temperatures.
     """
     r = np.asarray(radii,dtype=float)
     t = np.asarray(times,dtype=float)
@@ -365,5 +369,10 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
             else:
                 inward = g[index]*(data-state[:,index])
             surfaces[:,column] = state[:,index]+links[index]*inward
-        return (*result,surfaces)
+        result += (surfaces,)
+    if return_contact_temperatures:
+        inner_flux = g[j]*(state[:,j-1]-state[:,j])/circum
+        outer_flux = g[j+1]*(state[:,j]-state[:,j+1])/circum
+        result += (np.column_stack((state[:,j]+inner_resistance_fraction*resistance*inner_flux,
+                                    state[:,j]-(1-inner_resistance_fraction)*resistance*outer_flux)),)
     return result

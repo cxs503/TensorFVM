@@ -318,3 +318,24 @@ def test_annulus_surface_temperature_at_each_output(bc):
         np.testing.assert_allclose(inward,2*np.pi*edges[[0,-1]]*walls)
     else:
         np.testing.assert_allclose(inward,2*np.pi*edges[[0,-1]]*films*(walls-surface),atol=1e-14)
+
+
+@pytest.mark.parametrize("fraction",[0.,.4,1.])
+def test_contact_traces_recover_logarithmic_steady_state(fraction):
+    from tensorfvm.cht.annulus import solve_transient_annular_sheet
+    edges = np.array([.4,.49,.7,.85,1.2])
+    b = edges[2]
+    k = np.array([1.3,1.3,2.1,2.1])
+    rates = np.array([1.6,-.8])
+    s,res = .6,.25
+    traces = s + np.array([fraction,-(1-fraction)])*res*rates/(2*np.pi*b)
+    center = (2/3)*np.diff(edges**3)/np.diff(edges**2)
+    u0 = np.repeat(traces,2)-np.repeat(rates,2)*np.log(center/b)/(2*np.pi*k)
+    walls = traces-rates*np.log(edges[[0,-1]]/b)/(2*np.pi*k[[0,-1]])
+    times = np.array([0.,.02,.13])
+    u,sheet,hi,ho,_,observed = solve_transient_annular_sheet(edges,k,1.4,walls,times,u0,2,
+             initial_sheet_temperature=s,sheet_capacity=.4,resistance=res,inner_resistance_fraction=fraction,
+             sheet_source_intervals=np.diff(rates).item()/(2*np.pi*b),return_contact_temperatures=True)
+    np.testing.assert_allclose(observed,np.broadcast_to(traces,observed.shape),atol=1e-14,rtol=0.)
+    np.testing.assert_allclose(hi[:,-1],np.diff(times)*rates[0],atol=1e-14)
+    np.testing.assert_allclose(ho[:,0],np.diff(times)*rates[1],atol=1e-14)
