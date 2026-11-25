@@ -14,6 +14,19 @@ def _half_shell_source_drop(distance, face_radius, conductivity):
     return distance**2*(.5+ratio)/(2*conductivity)
 
 
+def _half_shell_resistances(r,k,cell_location):
+    width = np.diff(r)
+    midpoint = r[:-1]+.5*width
+    if cell_location not in ("midpoint", "volume_centroid"):
+        raise ValueError("cell_location must be midpoint or volume_centroid")
+    # r-weighted centroid minus midpoint, without subtracting powers of radii.
+    shift = width*(width/midpoint)/12 if cell_location == "volume_centroid" else 0.
+    center = midpoint + shift
+    left = np.log1p((.5*width+shift)/r[:-1])/(2*np.pi*k)
+    right = np.log1p((.5*width-shift)/center)/(2*np.pi*k)
+    return width,shift,left,right
+
+
 def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall_temperatures,
                              angular_frequency, *, contact_resistance=0., source=0., azimuthal_mode=0,
                              film_coefficients=(None, None), cell_location="midpoint",
@@ -61,15 +74,7 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
     if not np.isfinite(density).all():
         raise ValueError("heat generation must be finite")
 
-    width = np.diff(r)
-    midpoint = r[:-1]+.5*width
-    if cell_location not in ("midpoint", "volume_centroid"):
-        raise ValueError("cell_location must be midpoint or volume_centroid")
-    # r-weighted centroid minus midpoint, without subtracting powers of radii.
-    shift = width*(width/midpoint)/12 if cell_location == "volume_centroid" else 0.
-    center = midpoint + shift
-    left = np.log1p((.5*width+shift)/r[:-1])/(2*np.pi*k)
-    right = np.log1p((.5*width-shift)/center)/(2*np.pi*k)
+    width,shift,left,right = _half_shell_resistances(r,k,cell_location)
     conductance = 1/np.r_[left[0], right[:-1]+contact/(2*np.pi*r[1:-1])+left[1:], right[-1]]
     if len(film_coefficients) != 2:
         raise ValueError("supply one film coefficient per wall")
@@ -221,3 +226,81 @@ def solve_annular_sheet(radii, conductivity, volumetric_heat_capacity, wall_temp
     if wall_fluxes[1] is not None or film_coefficients[1]==0:
         outer_rates[:-1] = bo[-1]-np.cumsum(net[j:][::-1])[::-1]
     return field,inner_rates,outer_rates,sheet
+
+
+def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity, wall_temperatures,
+                                  times, initial_temperature, sheet_face, *, initial_sheet_temperature,
+                                  sheet_capacity, resistance=0., inner_resistance_fraction=.5,
+                                  sheet_conductivity=0., azimuthal_mode=0, sheet_film=0., ambient=0.,
+                                  sheet_source_intervals=0., theta=.5):
+    """Advance one real azimuthal mode with a storing sheet and Dirichlet walls.
+
+    Walls and reservoir ambient accept constants or one sample per output time.
+    Sheet generation in W/m² is constant or has shape (interval,2), giving its
+    one-sided start and end values. Times must include each source switch.
+    Cell temperatures refer to radial volume centroids. Returns cell and sheet
+    temperature histories (K), interval radial heats on each side (J/m, both
+    directed toward increasing radius, with all faces including the walls),
+    and interval sheet-to-reservoir heat (J/m). Rates use the 2πr modal
+    normalization of solve_annular_conduction. theta=.5 gives Crank–Nicolson.
+    """
+    r = np.asarray(radii,dtype=float)
+    t = np.asarray(times,dtype=float)
+    if r.ndim!=1 or len(r)<3 or not np.isfinite(r).all() or r[0]<=0 or np.any(np.diff(r)<=0):
+        raise ValueError("radii must be increasing positive finite faces")
+    if t.ndim!=1 or len(t)<2 or not np.isfinite(t).all() or np.any(np.diff(t)<=0):
+        raise ValueError("times must be a finite strictly increasing vector")
+    j = sheet_face
+    if not isinstance(j,(int,np.integer)) or not 0<j<len(r)-1:
+        raise ValueError("sheet_face must index an internal radius")
+    if not isinstance(azimuthal_mode,(int,np.integer)) or azimuthal_mode<0:
+        raise ValueError("azimuthal_mode must be a nonnegative integer")
+    if not np.isfinite([sheet_capacity,resistance,inner_resistance_fraction,sheet_conductivity,sheet_film,theta]).all():
+        raise ValueError("sheet properties and theta must be finite")
+    if sheet_capacity<=0 or min(resistance,sheet_conductivity,sheet_film)<0 or not 0<=inner_resistance_fraction<=1 or not .5<=theta<=1:
+        raise ValueError("require positive sheet capacity, nonnegative properties, fraction in [0,1] and theta in [.5,1]")
+    n = len(r)-1
+    k,c,u = (np.broadcast_to(np.asarray(v,dtype=float),(n,)) for v in (conductivity,volumetric_heat_capacity,initial_temperature))
+    if np.any(k<=0) or np.any(c<=0) or not all(np.isfinite(v).all() for v in (k,c,u)):
+        raise ValueError("material properties must be positive and initial temperatures finite")
+    if len(wall_temperatures)!=2 or np.ndim(initial_sheet_temperature)!=0 or not np.isfinite(initial_sheet_temperature):
+        raise ValueError("supply two wall histories and a finite initial sheet temperature")
+    west,east,fluid = (np.broadcast_to(np.asarray(v,dtype=float),t.shape) for v in (*wall_temperatures,ambient))
+    drive = np.asarray(sheet_source_intervals,dtype=float)
+    if drive.shape not in ((),(len(t)-1,2)):
+        raise ValueError("sheet source must be constant or shaped (interval,2)")
+    drive = np.broadcast_to(drive,(len(t)-1,2))
+    if not all(np.isfinite(v).all() for v in (west,east,fluid,drive)):
+        raise ValueError("wall, ambient and source histories must be finite")
+
+    width,_,left,right = _half_shell_resistances(r,k,"volume_centroid")
+    circum = 2*np.pi*r[j]
+    links = np.r_[left[0],right[:-1]+left[1:],right[-1]]
+    links = np.r_[links[:j],right[j-1]+inner_resistance_fraction*resistance/circum,
+                  left[j]+(1-inner_resistance_fraction)*resistance/circum,links[j+1:]]
+    g = 1/links
+    capacity = np.insert(c*np.pi*width*(r[:-1]+r[1:]),j,circum*sheet_capacity)
+    sink = np.insert(2*np.pi*k*azimuthal_mode**2*np.log1p(width/r[:-1]),j,
+                     circum*(sheet_film+sheet_conductivity*(azimuthal_mode/r[j])**2))
+    diagonal = g[:-1]+g[1:]+sink
+    state = np.empty((len(t),n+1))
+    state[0] = np.insert(u,j,initial_sheet_temperature)
+    heat = np.empty((len(t)-1,n+2))
+    reservoir = np.empty(len(t)-1)
+    bands = np.zeros((3,n+1))
+    bands[0,1:] = bands[2,:-1] = -theta*g[1:-1]
+    for i,dt in enumerate(np.diff(t)):
+        avg_w,avg_e,avg_a = ((1-theta)*v[i]+theta*v[i+1] for v in (west,east,fluid))
+        supply = (1-theta)*drive[i,0]+theta*drive[i,1]
+        old = state[i]
+        # Increment form avoids subtracting two large storage terms.
+        flux = -g*np.diff(np.r_[avg_w,old,avg_e])
+        rhs = -np.diff(flux)-sink*old
+        rhs[j] += circum*(supply+sheet_film*avg_a)
+        bands[1] = capacity/dt+theta*diagonal
+        delta = solve_banded((1,1),bands,rhs)
+        state[i+1] = old+delta
+        stage = old+theta*delta
+        heat[i] = -dt*g*np.diff(np.r_[avg_w,stage,avg_e])
+        reservoir[i] = dt*circum*sheet_film*(stage[j]-avg_a)
+    return np.delete(state,j,axis=1),state[:,j],heat[:,:j+1],heat[:,j+1:],reservoir

@@ -179,3 +179,36 @@ def test_low_frequency_insulated_sheet_total_capacity_and_radial_flux():
     np.testing.assert_allclose(1j*omega*np.r_[field,sheet],rise,rtol=1e-10,atol=1e-10)
     np.testing.assert_allclose(inner,-rise*np.r_[0.,np.cumsum(c[:j])],atol=1e-10,rtol=1e-10)
     np.testing.assert_allclose(outer,rise*np.r_[np.cumsum(c[j:][::-1])[::-1],0.],atol=1e-10,rtol=1e-10)
+
+
+def test_transient_annular_sheet_switched_pulse_matches_three_store_exponential():
+    from scipy.linalg import expm
+    from tensorfvm.cht.annulus import solve_transient_annular_sheet
+    edges = np.array([.4,.7,1.1])
+    centers = (2/3)*np.diff(edges**3)/np.diff(edges**2)
+    k = [1.2,2.3]
+    circum = 2*np.pi*.7
+    capacity = np.array([1.5*np.pi*(.7**2-.4**2),circum*.31,2.*np.pi*(1.1**2-.7**2)])
+    g = 2*np.pi/np.array([np.log(centers[0]/.4)/k[0],np.log(.7/centers[0])/k[0]+.09/.7,
+                          np.log(centers[1]/.7)/k[1]+.21/.7,np.log(1.1/centers[1])/k[1]])
+    operator = np.diag(g[:-1]+g[1:]+[0.,circum*.8,0.])-np.diag(g[1:-1],1)-np.diag(g[1:-1],-1)
+    previous = None
+    for n in (8,16,32):
+        times = np.r_[np.linspace(0,.07,n+1),np.linspace(.07,.21,n+1)[1:]]
+        drive = np.repeat([1.4,-.3],n)
+        u,s,qi,qo,ext = solve_transient_annular_sheet(edges,k,[1.5,2.],(.3,-.1),times,[.4,.7],1,
+                 initial_sheet_temperature=.1,sheet_capacity=.31,resistance=.3,inner_resistance_fraction=.3,
+                 sheet_film=.8,ambient=.23,sheet_source_intervals=np.repeat(drive[:,None],2,axis=1))
+        state = np.column_stack((u[:,0],s,u[:,1]))
+        heat = np.column_stack((qi,qo))
+        dt = np.diff(times)
+        np.testing.assert_allclose(np.diff(state,axis=0)*capacity+np.diff(heat,axis=1),
+                                   np.column_stack((np.zeros_like(dt),circum*drive*dt-ext,np.zeros_like(dt))),atol=2e-14)
+        ref = state[0]
+        for power,span in ((1.4,.07),(-.3,.14)):
+            steady = np.linalg.solve(operator,[g[0]*.3,circum*(power+.8*.23),-g[-1]*.1])
+            ref = steady+expm(-span*operator/capacity[:,None])@(ref-steady)
+        error = max(abs(state[-1]-ref))
+        if previous is not None:
+            assert error < previous/3.8
+        previous = error
