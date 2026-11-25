@@ -454,3 +454,44 @@ def test_wall_power_pulse_inside_output_interval_and_right_limit_surface():
     np.testing.assert_array_equal(external,0.)
     center = (2/3)*(.6**3-.4**3)/(.6**2-.4**2)
     np.testing.assert_allclose(surface[:,0]-u[:,0],.4*np.log(center/.4)/1.7*np.array([0.,-.7,0.]),atol=2e-14)
+
+
+@pytest.mark.parametrize("mode", [0, 2])
+@pytest.mark.parametrize("flux_side", [0, 1])
+def test_harmonic_flux_and_film_annulus_against_bessel_solution(mode, flux_side, record_property):
+    from scipy.special import iv, ivp, kv, kvp
+
+    k, capacity, omega, film = 1.6, 2.1, 3.2, 2.7
+    wave = np.sqrt(1j * omega * capacity / k)
+    # Both independent radial modes are regular on the hollow annulus.
+    def temperature(r):
+        return (1 + .3j)*iv(mode, wave*r) + (.2 - .1j)*kv(mode, wave*r)
+
+    def radial_flux(r):
+        return -k*wave*((1 + .3j)*ivp(mode, wave*r) + (.2 - .1j)*kvp(mode, wave*r))
+
+    ends = np.array([0.5, 1.2])
+    inward = radial_flux(ends) * [1, -1]
+    other = 1 - flux_side
+    fluxes, walls, films = [None, None], [None, None], [None, None]
+    fluxes[flux_side] = inward[flux_side]
+    films[other] = film
+    walls[other] = temperature(ends[other]) + inward[other]/film
+    errors = []
+    for n in (16, 32, 64):
+        r = np.geomspace(*ends, n + 1)
+        centers = (2/3)*np.diff(r**3)/np.diff(r**2)
+        field, rates = solve_annular_conduction(
+            r, k, capacity, walls, omega, wall_fluxes=fluxes, azimuthal_mode=mode,
+            film_coefficients=films, cell_location="volume_centroid", distributed_source=True)
+        field_error = np.max(np.abs(field-temperature(centers)))
+        rate_error = np.max(np.abs(rates-2*np.pi*r*radial_flux(r)))
+        sink = 1j*omega*capacity*np.pi*np.diff(r**2) + 2*np.pi*k*mode**2*np.diff(np.log(r))
+        residual = np.max(np.abs(np.diff(rates) + sink*field))
+        record_property(f"max_temperature_error_{n}_K", float(field_error))
+        record_property(f"max_radial_rate_error_{n}_W_per_m", float(rate_error))
+        record_property(f"max_shell_balance_error_{n}_W_per_m", float(residual))
+        assert residual < 1e-11
+        errors.append((field_error, rate_error))
+    for coarse, fine in zip(errors, errors[1:]):
+        assert all(a/b > 3.7 for a, b in zip(coarse, fine))
