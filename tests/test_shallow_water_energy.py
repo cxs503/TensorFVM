@@ -171,3 +171,88 @@ def test_total_energy_helper_matches_manual_integral():
     manual = float(((0.5 * g * h ** 2 + 0.5 * hu ** 2 / h) * dx).sum())
     got = total_energy(h, hu, g, dx)["total"]
     assert abs(got - manual) < 1e-12
+
+def test_dry_front_energy_transport_and_first_arrival(record_property):
+    from scipy.integrate import quad
+    from tensorfvm.shallow_water import dry_riemann_energy_budget
+
+    # Independent Ritter power history at x=1. The front arrives at t=1/2.
+    def incoming(t):
+        h, u = (2-1/t)**2/9, 2*(1+1/t)/3
+        return h*u*(.5*u*u+h)
+    for sign in (-1, 1):
+        bounds, data = ((1., 3.), (1.,0.,0.,0.)) if sign == 1 else ((-3.,-1.), (0.,0.,1.,0.))
+        for t in (0., .25, .5):
+            assert dry_riemann_energy_budget(*bounds, t, *data, gravity=1.)["final"] == 0.
+        budget = dry_riemann_energy_budget(*bounds, 1.3, *data, gravity=1.)
+        reference = quad(incoming, .5, 1.3)[0]
+        transport = budget["left_transport"] if sign == 1 else -budget["right_transport"]
+        error = max(abs(transport-reference), abs(budget["final"]-reference))
+        record_property(f"wetting_energy_error_{sign}", error)
+        assert error < 5e-15
+
+
+def test_drying_subdomain_energy_refines_against_analytic_transport(record_property):
+    from tensorfvm.shallow_water import ShallowWater1D, dry_riemann_energy_budget
+
+    data, bounds, end = (1., -3., .25, 2.), (-.625, .375), .25
+    budget = dry_riemann_energy_budget(*bounds, end, *data, gravity=1.)
+    dry = dry_riemann_energy_budget(-.125, .125, end, *data, gravity=1.)
+    assert dry["final"] == 0 and abs(dry["residual"]) < 2e-15
+    record_property("interval_balance_error", abs(budget["residual"]))
+    assert abs(budget["residual"]) < 3e-15
+    errors = []
+    for n in (128, 256, 512):
+        solver = ShallowWater1D(n, -2., 2., gravity=1., cfl=.4, order=2)
+        solver.set_state(np.where(solver.x<0, data[0], data[2]), np.where(solver.x<0, data[1], data[3]))
+        solver.advance(end)
+        inside = (solver.x>bounds[0]) & (solver.x<bounds[1])
+        energy = total_energy(solver.h[inside], solver.hu[inside], 1., solver.dx)["total"]
+        errors.append(abs(energy-budget["final"]))
+        record_property(f"local_energy_error_{n}", errors[-1])
+    assert errors[-1] < errors[1] < errors[0]
+
+
+def test_moving_dry_interval_first_wetting(record_property):
+    from scipy.integrate import quad
+    from tensorfvm.shallow_water import dry_riemann_energy_budget
+
+    # The unit Ritter fan extends from x=-t to x=2t. Both initially dry
+    # boundaries are overtaken at distinct times, x_initial/(2-w).
+    faces, speeds, end = (.25, 1.), (-.25, .5), .9
+    def budget(t):
+        return dry_riemann_energy_budget(*faces, t, 1., 0., 0., 0., gravity=1.,
+                                         face_speeds=speeds)
+    arrivals = [x/(2-w) for x,w in zip(faces,speeds)]
+    assert budget(arrivals[0]/2)["final"] == 0.
+    result = budget(end)
+    errors = []
+    for x, w, arrival, key in zip(faces, speeds, arrivals, ("left_transport","right_transport")):
+        def moving_power(t):
+            xi = x/t + w
+            h, u = (2-xi)**2/9, 2*(1+xi)/3
+            return .5*h*(u*u+h)*(u-w) + .5*h*h*u
+        expected = quad(moving_power, arrival, end, epsabs=1e-14)[0]
+        errors.append(abs(expected-result[key]))
+    record_property("maximum_moving_transport_error", max(errors))
+    record_property("wetting_balance_error", abs(result["residual"]))
+    assert max(errors) < 1e-13 and abs(result["residual"]) < 1e-13
+
+
+def test_moving_interval_becomes_vacuum(record_property):
+    from tensorfvm.shallow_water import dry_riemann_energy_budget
+
+    # Two initially wet streams recede at -3 and +3. Their dry tips are
+    # at -t and +t. At t=1 the expanding control volume lies between them.
+    opts = dict(hL=1., uL=-3., hR=1., uR=3., gravity=1.)
+    result = dry_riemann_energy_budget(-.25, .25, 1., **opts, face_speeds=(-.25, .25))
+    assert result["final"] == 0.
+    # Initial E=5 throughout; by reflection symmetry each side carries
+    # half of the initial interval energy out before its last wetting.
+    errors = [abs(result["left_transport"]+1.25), abs(result["right_transport"]-1.25)]
+    record_property("maximum_vacuum_transport_error", max(errors))
+    assert max(errors) < 1e-14
+    with pytest.raises(ValueError, match="interval"):
+        dry_riemann_energy_budget(-.25, .25, 1., **opts, face_speeds=(.5, 0.))
+    with pytest.raises(ValueError, match="speeds"):
+        dry_riemann_energy_budget(-.25, .25, 1., **opts, face_speeds=(float("nan"), 0.))

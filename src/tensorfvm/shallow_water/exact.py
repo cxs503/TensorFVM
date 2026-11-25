@@ -52,6 +52,9 @@ __all__ = [
     "ritter_head_position",
     "ritter_level_position",
     "ritter_state",
+    "dry_riemann_state",
+    "dry_riemann_integrated_flux",
+    "dry_riemann_cell_averages",
     "stoker_constant_state",
     "stoker_region_bounds",
     "stoker_state",
@@ -156,6 +159,114 @@ def ritter_state(x, t: float, h0: float, gravity: float = 9.81,
     depth = np.where(xi <= -c0, h0, depth)
     vel = np.where(fan, (2.0 / 3.0) * (c0 + xi), 0.0)
     return np.clip(depth, 0.0, h0), vel
+
+
+def _validate_dry_riemann(t, hL, uL, hR, uR, gravity, x0):
+    if not all(math.isfinite(v) for v in (t, hL, uL, hR, uR, gravity, x0)):
+        raise ValueError("Riemann data must be finite")
+    if t < 0 or min(hL, hR) < 0 or gravity <= 0:
+        raise ValueError("require nonnegative depths and time and positive gravity")
+    if hL and hR and uR-uL < 2*(math.sqrt(gravity*hL)+math.sqrt(gravity*hR)):
+        raise ValueError("interacting wet waves require solve_riemann")
+
+
+def dry_riemann_state(x, t: float, hL: float, uL: float, hR: float, uR: float,
+                      gravity: float = 9.81, x0: float = 0.0):
+    """Sample depth and velocity for initial or generated vacuum on a flat bed.
+
+    A wet left state ends at speed uL+2*cL, and a wet right state starts at
+    uR-2*cR. When both are wet these fronts must separate or just touch.
+    Velocity is reported as zero wherever depth vanishes.
+    """
+    _validate_dry_riemann(t, hL, uL, hR, uR, gravity, x0)
+    offset = np.asarray(x, dtype=float) - x0
+    if t == 0:
+        left = offset <= 0
+        depth = np.where(left, hL, hR)
+        return depth, np.where(depth > 0, np.where(left, uL, uR), 0.)
+    left_h, left_u = ritter_state(offset-uL*t, t, hL, gravity)
+    right_h, right_u = ritter_state(uR*t-offset, t, hR, gravity)
+    velocity = np.where(left_h > 0, uL+left_u, np.where(right_h > 0, uR-right_u, 0.))
+    return left_h+right_h, velocity
+
+
+def dry_riemann_integrated_flux(x, t: float, hL: float, uL: float, hR: float,
+                                uR: float, gravity: float = 9.81, x0: float = 0.0,
+                                *, face_speed: float = 0.0):
+    """Cumulative rightward mass and lab-frame momentum crossing each face.
+
+    A face starts at x and moves at constant face_speed. Integrates from
+    time zero through wetting or drying, including hydrostatic pressure.
+    """
+    if not math.isfinite(face_speed):
+        raise ValueError("face_speed must be finite")
+    x = np.asarray(x, dtype=float)
+    h, u = dry_riemann_state(x+t*face_speed, t, hL, uL, hR, uR, gravity, x0)
+    h0, u0 = dry_riemann_state(x, 0., hL, uL, hR, uR, gravity, x0)
+    return _similarity_flux_integral(x-x0, t, gravity, h0, u0, h, u, face_speed)
+
+
+def _similarity_flux_integral(offset, t, gravity, h0, u0, h, u, face_speed):
+    """Primitive along a straight face, with offset measured at time zero."""
+    q = h*u
+    relative_speed = u-face_speed
+    return (t*(h*relative_speed)-offset*(h-h0),
+            t*(q*relative_speed+.5*gravity*h*h)-offset*(q-h0*u0))
+
+
+def _dry_wave_speeds(hL, uL, hR, uR, gravity):
+    speeds = []
+    if hL:
+        c = math.sqrt(gravity*hL)
+        speeds.extend((uL-c, uL+2*c))
+    if hR:
+        c = math.sqrt(gravity*hR)
+        speeds.extend((uR-2*c, uR+c))
+    return speeds
+
+
+def dry_riemann_cell_averages(edges, t: float, hL: float, uL: float,
+                             hR: float, uR: float, gravity: float = 9.81,
+                             x0: float = 0.0):
+    """Return exact cell means of depth h and discharge hu for dry Riemann data.
+
+    Edges may be nonuniform. Split each cell at fan heads and dry fronts,
+    then integrate each piece with the two-point Gauss rule, exact for the
+    quadratic depth and cubic discharge of a Ritter fan.
+    """
+    _validate_dry_riemann(t, hL, uL, hR, uR, gravity, x0)
+    speeds = _dry_wave_speeds(hL, uL, hR, uR, gravity)
+    def sample(offset):
+        return dry_riemann_state(offset, t, hL, uL, hR, uR, gravity)
+    return _riemann_cell_means(edges, t, x0, speeds, sample, hL, uL, hR, uR)
+
+
+def _riemann_cell_means(edges, t, x0, speeds, sample, hL, uL, hR, uR):
+    """Integrate piecewise polynomial states sampled relative to the dam."""
+    edges = np.asarray(edges, dtype=float)
+    if (edges.ndim != 1 or edges.size < 2 or not np.isfinite(edges).all()
+            or not np.all(np.diff(edges) > 0)):
+        raise ValueError("provide at least two finite, strictly increasing edges")
+    lo, hi = edges[:-1]-x0, edges[1:]-x0
+    widths = np.diff(edges)
+    if t == 0:
+        fraction = np.clip(-lo/widths, 0., 1.)
+        return (fraction*hL + (1-fraction)*hR,
+                fraction*(hL*uL) + (1-fraction)*(hR*uR))
+    mass = np.zeros_like(lo)
+    momentum = np.zeros_like(lo)
+    start = lo
+    segment_ends = [np.clip(t*speed, lo, hi) for speed in sorted(speeds)]
+    segment_ends.append(hi)
+    for end in segment_ends:
+        half = .5*(end-start)
+        mid = start+half
+        nodes = mid + np.array([[-1.], [1.]])*half/math.sqrt(3)
+        h, u = sample(nodes)
+        mass += half*h.sum(axis=0)
+        momentum += half*(h*u).sum(axis=0)
+        start = end
+    return mass/widths, momentum/widths
 
 
 # --------------------------------------------------------------------------- #

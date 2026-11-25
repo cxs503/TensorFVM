@@ -246,3 +246,453 @@ def test_metrics_are_finite_for_every_case():
             assert math.isfinite(metrics[key])
         assert metrics["h_min"] > 0.0
         assert metrics["h_max_over_href"] < 1.5
+
+@pytest.mark.parametrize("boost", [-12., 12.])
+def test_boosted_wet_wave_profiles(boost, record_property):
+    error = 0.
+    for case in DEFAULT_CASES:
+        base = case.solution()
+        moved = solve_riemann(base.hL, base.uL+boost, base.hR, base.uR+boost, base.gravity)
+        x = np.linspace(base.span[0]-1, base.span[1]+1, 511)
+        h, u = sample_exact(base, x, 1.)
+        hm, um = sample_exact(moved, x+boost, 1.)
+        error = max(error, np.max(abs(h-hm)), np.max(abs(u+boost-um)))
+    assert error < 1e-12
+    record_property("max_galilean_discrepancy", float(error))
+
+
+def test_generated_dry_interval_and_finite_volume_refinement(record_property):
+    from tensorfvm.shallow_water import ShallowWater1D, dry_riemann_state
+
+    # g=1, cL=1, cR=1/2. Tail speeds are -1 and +1, heads -4 and +2.5.
+    data = (1., -3., .25, 2.)
+    xi = np.array([-4., -2.5, -1., 0., 1., 1.75, 2.5])
+    h, u = dry_riemann_state(xi, 1., *data, gravity=1.)
+    np.testing.assert_allclose(h, [1., .25, 0., 0., 0., .0625, .25])
+    np.testing.assert_allclose(u, [-3., -2., 0., 0., 0., 1.5, 2.])
+    errors = []
+    cell_depth_errors = []
+    discharge_errors = []
+    for n in (200, 400, 800):
+        solver = ShallowWater1D(n, -2., 2., gravity=1., cfl=.4, order=2)
+        solver.set_state(*dry_riemann_state(solver.x, 0., *data, gravity=1.))
+        volume = solver.total_volume()
+        solver.advance(.25)
+        h, u = solver.primitive()
+        href, _ = dry_riemann_state(solver.x, solver.time, *data, gravity=1.)
+        errors.append(float(np.mean(abs(h-href))))
+        edges = np.linspace(-2., 2., n+1)
+        havg, qavg = exact.dry_riemann_cell_averages(edges, solver.time, *data, gravity=1.)
+        discharge_errors.append(float(np.mean(abs(h*u-qavg))))
+        cell_depth_errors.append(float(np.mean(abs(h-havg))))
+        record_property(f"cell_mean_depth_error_{n}", cell_depth_errors[-1])
+        record_property(f"cell_mean_discharge_error_{n}", discharge_errors[-1])
+        budget = abs(solver.total_volume()-volume - solver.time*(-3.-.5))
+        record_property(f"mean_depth_error_{n}", errors[-1])
+        record_property(f"mass_budget_error_{n}", float(budget))
+        assert h.min() >= 0 and budget < 1e-11
+    for series in (errors, cell_depth_errors, discharge_errors):
+        assert all(fine < .8*coarse for coarse,fine in zip(series, series[1:]))
+
+
+def test_dry_reference_moving_one_sided_beds_and_touching_fronts():
+    from tensorfvm.shallow_water import dry_riemann_state
+
+    x = np.linspace(-2, 2, 129)
+    h, u = dry_riemann_state(x, .5, 1., .5, 0., -8., gravity=1., x0=.25)
+    base_h, base_u = exact.ritter_state(x-.25, .5, 1., gravity=1., x_dam=.25)
+    np.testing.assert_allclose(h, base_h)
+    np.testing.assert_allclose(u, np.where(h>0, .5+base_u, 0.))
+    right_h, right_u = dry_riemann_state(-x, .5, 0., 8., 1., -.5, gravity=1., x0=-.25)
+    np.testing.assert_allclose(right_h, h)
+    np.testing.assert_allclose(right_u, -u)
+    assert dry_riemann_state(0., 1., 1., -2., 1., 2., gravity=1.) == (0., 0.)
+    with pytest.raises(ValueError, match="interacting wet waves"):
+        dry_riemann_state(0., 1., 1., 0., 1., 0.)
+
+
+@pytest.mark.parametrize("data", [(1., -3., .25, 2.), (1., .3, 0., 0.),
+                                  (0., 0., 1., -.3), (1., -2., 1., 2.)])
+def test_dry_cell_means_integrate_boundary_fluxes(data, record_property):
+    # Shifted discontinuity falls inside a nonuniform cell. All waves remain
+    # inside the domain, so the two unchanged exterior states fix both budgets.
+    edges = np.array([-4., -1.2, -.41, -.11, .02, .33, .55, 1.1, 3.])
+    x0, t = .07, .24
+    hL, uL, hR, uR = data
+    h, q = exact.dry_riemann_cell_averages(edges, t, *data, gravity=1., x0=x0)
+    left, right = x0-edges[0], edges[-1]-x0
+    mass = left*hL + right*hR + t*(hL*uL-hR*uR)
+    momentum = left*hL*uL + right*hR*uR + t*(hL*uL**2+.5*hL**2-hR*uR**2-.5*hR**2)
+    widths = np.diff(edges)
+    error = max(abs(widths@h-mass), abs(widths@q-momentum))
+    record_property("maximum_integral_discrepancy", float(error))
+    assert error < 5e-14
+    h0, q0 = exact.dry_riemann_cell_averages(edges, 0., *data, gravity=1., x0=x0)
+    fraction = (x0-.02)/(.33-.02)
+    assert h0[4] == pytest.approx(fraction*hL + (1-fraction)*hR)
+    assert q0[4] == pytest.approx(fraction*hL*uL + (1-fraction)*hR*uR)
+
+
+def test_dry_cell_means_resolve_partial_fan_and_vacuum():
+    # For Ritter with g=hL=1 at t=1, h=(2-x)^2/9 and
+    # hu=2*(1+x)*(2-x)^2/27 in the fan. The second cell straddles x=2.
+    h, q = exact.dry_riemann_cell_averages([0., 1., 3., 4.], 1., 1., 0., 0., 0., gravity=1.)
+    np.testing.assert_allclose(h, [7/27, 1/54, 0.], atol=1e-15, rtol=0)
+    np.testing.assert_allclose(q, [13/54, 1/36, 0.], atol=1e-15, rtol=0)
+
+
+@pytest.mark.parametrize("case", DEFAULT_CASES, ids=lambda case: case.name)
+def test_wet_control_volume_budgets_and_refinement(case, record_property):
+    from tensorfvm.shallow_water import riemann_cell_averages
+
+    x0, t = .23, .2
+    sol = solve_riemann(case.hL, case.uL, case.hR, case.uR, case.gravity, x0)
+    lo, hi = sol.span
+    edges = x0+t*np.array([lo-2, lo-.4, lo+.31*(hi-lo), hi+.2, hi+2])
+    h, q = riemann_cell_averages(sol, edges, t)
+    h0, q0 = riemann_cell_averages(sol, edges, 0.)
+    widths = np.diff(edges)
+    mass_flux = sol.hL*sol.uL - sol.hR*sol.uR
+    force = sol.hL*sol.uL**2-sol.hR*sol.uR**2 + .5*sol.gravity*(sol.hL**2-sol.hR**2)
+    balance = max(abs(widths@(h-h0)-t*mass_flux), abs(widths@(q-q0)-t*force))
+    record_property("integral_balance_error", float(balance))
+    assert balance < 2e-13
+    errors = []
+    for n in (200, 400, 800):
+        metrics = run_case(case, n=n)["metrics"]
+        row = [metrics["cell_mean_depth_l1"], metrics["cell_mean_discharge_l1"]]
+        for name, value in zip(("depth", "discharge"), row):
+            record_property(f"normalized_{name}_error_{n}", value)
+        errors.append(row)
+    for coarse, fine in zip(errors, errors[1:]):
+        assert all(f < c for c, f in zip(coarse, fine))
+
+
+def test_wet_cell_cut_by_moving_shock_has_volume_weighted_jump():
+    from tensorfvm.shallow_water import riemann_cell_averages
+
+    sol = solve_riemann(1., 1., .7, -1., gravity=1., x0=.25)
+    assert sol.right_kind == "shock"
+    t = .125
+    position = sol.x0+t*sol.right_shock_speed
+    width = .4*t*(sol.right_head-sol.left_tail)
+    edges = [position-.3*width, position+.7*width]
+    h, hu = riemann_cell_averages(sol, edges, t)
+    assert h[0] == pytest.approx(.3*sol.h_star+.7*sol.hR, abs=1e-14, rel=0.)
+    assert hu[0] == pytest.approx(.3*sol.h_star*sol.u_star+.7*sol.hR*sol.uR, abs=1e-14, rel=0.)
+
+
+@pytest.mark.parametrize("boost", [-8., 8.])
+def test_shifted_moving_star_and_wave_metrics(boost, record_property):
+    from dataclasses import replace
+
+    case = replace(DEFAULT_CASES[1], x0=1.17, uL=-1.+boost, uR=1.+boost)
+    t = .2
+    xs = np.linspace(-3, 5, 4001)
+    h, u = case.exact(xs,t)
+    m = profile_metrics(case, xs, h, u, t)
+    assert m["plateau"]["resolved"] and m["plateau"]["depth_rel_error"] == 0
+    worst = max(m[f"wave_{side}"]["rel_error"] for side in ("left","right"))
+    assert worst < 1e-5
+    record_property("maximum_relative_wave_error", worst)
+    u += .2
+    m = profile_metrics(case, xs, h, u, t)
+    assert m["plateau"]["velocity_rel_error"] == pytest.approx(.2/abs(case.solution().u_star))
+
+
+def test_off_center_dam_initialization_and_stationary_shock(record_property):
+    from dataclasses import replace
+
+    base = DEFAULT_CASES[0]
+    speed = base.solution().right_shock_speed
+    case = replace(base, x0=.37, uL=-speed, uR=-speed, t_end=.25)
+    h0, u0 = case.initial_cell_state(np.array([0.,1.]))
+    assert h0[0] == pytest.approx(.37*base.hL + .63*base.hR)
+    assert h0[0]*u0[0] == pytest.approx(-speed*h0[0])
+    m = run_case(case, n=800)["metrics"]
+    shock = m["wave_right"]
+    assert shock["x_exact"] == pytest.approx(case.x0)
+    assert shock["position_error_scale"] == pytest.approx(case.c_ref*case.t_end)
+    assert shock["rel_error"] < .05
+    record_property("stationary_shock_position_error", abs(shock["x_measured"]-case.x0))
+    record_property("relative_volume_budget_error", m["volume_budget_relative"])
+    record_property("relative_momentum_budget_error", m["momentum_budget_relative"])
+    assert m["momentum_budget_relative"] < 1e-12
+    assert m["volume_budget_relative"] < 1e-12
+
+
+def test_unresolved_star_plateau_fails_grading():
+    case = DEFAULT_CASES[2]
+    x = np.array([-10., 10.])
+    h, u = case.exact(x, .2)
+    metrics = profile_metrics(case, x, h, u, .2)
+    assert not metrics["plateau"]["resolved"]
+    assert "plateau_velocity" in verdict(metrics)["failed"]
+
+
+def test_integrated_flux_across_shock_agrees_with_arrival_time(record_property):
+    from tensorfvm.shallow_water import riemann_integrated_flux
+
+    sol = solve_riemann(1., 0., .5, 0., x0=.37)
+    t, arrival = .75, .45
+    x = sol.x0 + arrival*sol.right_shock_speed
+    def flux(h, u):
+        return np.array([h*u, h*u*u + .5*sol.gravity*h*h])
+    expected = arrival*flux(sol.hR, sol.uR) + (t-arrival)*flux(sol.h_star, sol.u_star)
+    actual = riemann_integrated_flux(sol, x, t)
+    error = np.max(abs(actual-expected))
+    record_property("maximum_integrated_flux_error", float(error))
+    assert error < 1e-14
+
+
+@pytest.mark.parametrize("case", DEFAULT_CASES, ids=lambda c: c.name)
+def test_integrated_flux_balances_cells_cut_by_waves(case, record_property):
+    from tensorfvm.shallow_water import riemann_cell_averages, riemann_integrated_flux
+
+    sol = case.solution()
+    edges = np.linspace(-.9, 1.12, 18)
+    t = .25
+    initial = riemann_cell_averages(sol, edges, 0.)
+    final = riemann_cell_averages(sol, edges, t)
+    fluxes = riemann_integrated_flux(sol, edges, t)
+    for name, start, end, flux in zip(("mass", "momentum"), initial, final, fluxes):
+        residual = float(np.max(abs((end-start)*np.diff(edges) + np.diff(flux))))
+        record_property(f"max_cell_{name}_residual", residual)
+        assert residual < 1e-13
+    budget = run_case(case, n=400)["metrics"]["momentum_budget_relative"]
+    record_property("normalized_numerical_momentum_residual", budget)
+    assert budget < 1e-12
+
+
+def test_ritter_integrated_flux_during_first_wetting(record_property):
+    from tensorfvm.shallow_water import dry_riemann_integrated_flux
+    from scipy.integrate import quad
+
+    # Unit Ritter problem. At x=1 the dry front arrives at t=1/2.
+    x, end = 1., 1.3
+    data = (1., 0., 0., 0.)
+    for t in (0., .4, .5):
+        assert dry_riemann_integrated_flux(x, t, *data, gravity=1.) == (0., 0.)
+    def flux(t):
+        h = (2-x/t)**2/9
+        u = 2*(1+x/t)/3
+        return h*u, h*u**2+h**2/2
+    reference = [quad(lambda t: flux(t)[i], .5, end)[0] for i in (0,1)]
+    actual = dry_riemann_integrated_flux(x, end, *data, gravity=1.)
+    error = float(np.max(np.abs(actual-np.asarray(reference))))
+    record_property("maximum_time_quadrature_error", error)
+    assert error < 2e-14
+    reflected = dry_riemann_integrated_flux(-x, end, 0., 0., 1., 0., gravity=1.)
+    np.testing.assert_allclose(reflected, (-actual[0], actual[1]), rtol=0., atol=1e-15)
+
+
+def test_generated_vacuum_flux_after_drying_and_subdomain_budget(record_property):
+    from tensorfvm.shallow_water import ShallowWater1D, dry_riemann_cell_averages, dry_riemann_integrated_flux
+
+    data = (1., -3., .25, 2.)
+    end = .25
+    positions = np.array([-.125, .125])
+    # After the fronts at x=-t,+t pass, local flux stops; the cumulative
+    # impulse still includes what crossed each face before it dried.
+    at_front = dry_riemann_integrated_flux(positions, .125, *data, gravity=1.)
+    after = dry_riemann_integrated_flux(positions, end, *data, gravity=1.)
+    np.testing.assert_allclose(after, at_front, atol=1e-15, rtol=0)
+    np.testing.assert_allclose(after, [[-.125,.03125],[.375,.0625]], atol=1e-15, rtol=0)
+    cuts = [-.625, .375]
+    mass, impulse = dry_riemann_integrated_flux(cuts, end, *data, gravity=1.)
+    errors = []
+    for n in (128, 256, 512):
+        solver = ShallowWater1D(n, -2., 2., gravity=1., cfl=.4, order=2)
+        edges = np.linspace(-2., 2., n+1)
+        h0, q0 = dry_riemann_cell_averages(edges, 0., *data, gravity=1.)
+        solver.set_state(h0, q0/h0)
+        solver.advance(end)
+        h, u = solver.primitive()
+        inside = (solver.x>cuts[0]) & (solver.x<cuts[1])
+        row = []
+        for name, change, transport in (("mass",h-h0,mass), ("momentum",h*u-q0,impulse)):
+            error = abs(solver.dx*change[inside].sum() - (transport[0]-transport[1]))
+            record_property(f"{name}_subdomain_error_{n}", float(error))
+            row.append(error)
+        errors.append(row)
+    for coarse, fine in zip(errors, errors[1:]):
+        assert all(b < a for a,b in zip(coarse, fine))
+
+
+@pytest.mark.parametrize("case", DEFAULT_CASES, ids=lambda c: c.name)
+def test_wet_riemann_mechanical_energy_balance_and_refinement(case, record_property):
+    from tensorfvm.shallow_water import riemann_energy, riemann_shock_losses
+
+    sol = case.solution()
+    rates = riemann_shock_losses(sol)
+    def energy_flux(h, u):
+        return h*u*(.5*u*u+sol.gravity*h)
+    net_flux = energy_flux(sol.hL, sol.uL)-energy_flux(sol.hR, sol.uR)
+    initial = riemann_energy(sol, case.x_min, case.x_max, 0.)
+    final = riemann_energy(sol, case.x_min, case.x_max, case.t_end)
+    residual = abs(final-initial-case.t_end*(net_flux-sum(rates.values())))
+    record_property("exact_energy_balance_error", residual)
+    assert residual < 1e-12
+    for side, rate in rates.items():
+        record_property(f"{side}_shock_loss_rate", rate)
+        assert (rate > 0) == (getattr(sol, side+"_kind") == "shock")
+    errors = []
+    for n in (200, 400, 800):
+        error = run_case(case, n=n)["metrics"]["energy_relative_error"]
+        errors.append(error)
+        record_property(f"relative_energy_error_{n}", error)
+    assert errors[2] < errors[1] < errors[0]
+
+
+def test_two_shock_energy_losses_match_each_moving_jump(record_property):
+    from tensorfvm.shallow_water import riemann_shock_losses
+
+    discrep = []
+    for boost in (-7., 0., 7.):
+        sol = solve_riemann(1., 1.5+boost, .6, -1.+boost)
+        losses = riemann_shock_losses(sol)
+        for side in ("left", "right"):
+            speed = getattr(sol, side+"_shock_speed")
+            def relative_energy_flux(h, u):
+                e = .5*h*(u*u+sol.gravity*h)
+                return (e+.5*sol.gravity*h*h)*u-speed*e
+            star_flux = relative_energy_flux(sol.h_star, sol.u_star)
+            jump = (relative_energy_flux(sol.hL, sol.uL)-star_flux if side == "left" else
+                    star_flux-relative_energy_flux(sol.hR, sol.uR))
+            discrep.append(abs(losses[side]-jump))
+    record_property("max_single_shock_energy_jump_error", max(discrep))
+    assert max(discrep) < 3e-13
+
+
+@pytest.mark.parametrize("case", DEFAULT_CASES, ids=lambda c: c.name)
+def test_local_energy_balance_during_wave_crossings(case, record_property):
+    from scipy.integrate import quad
+    from tensorfvm.shallow_water import riemann_energy_budget
+
+    sol = case.solution()
+    end = .75
+    worst_flux = worst_balance = 0.
+    for left, right in [(-.6,-.2), (-.2,.35), (.35,.7)]:
+        budget = riemann_energy_budget(sol, left, right, end)
+        worst_balance = max(worst_balance, abs(budget["residual"]))
+        for face, name in ((left,"left_transport"), (right,"right_transport")):
+            def power(t):
+                h, u = sample_exact(sol, face, t)
+                return h*u*(.5*u*u+sol.gravity*h)
+            arrivals = [face/s for s in sol.wave_speeds if s and 0 < face/s < end]
+            reference = quad(power, 0, end, points=arrivals, epsabs=1e-13)[0]
+            worst_flux = max(worst_flux, abs(reference-budget[name]))
+    record_property("maximum_transport_error", worst_flux)
+    record_property("maximum_interval_energy_residual", worst_balance)
+    assert worst_flux < 1e-12 and worst_balance < 1e-12
+
+
+@pytest.mark.parametrize("reverse", [False, True])
+def test_stationary_shock_at_shared_face_counts_loss_once(reverse):
+    from tensorfvm.shallow_water import riemann_energy_budget
+
+    # With g=3 and depths 1 and 2, the stationary jump has discharge ±3.
+    data = (2., -1.5, 1., -3.) if reverse else (1., 3., 2., 1.5)
+    sol = solve_riemann(*data, gravity=3.)
+    side = "right" if reverse else "left"
+    assert getattr(sol, side+"_shock_speed") == 0.
+    west = riemann_energy_budget(sol, -1., 0., .3)
+    east = riemann_energy_budget(sol, 0., 1., .3)
+    assert west["right_transport"] == east["left_transport"]
+    assert west["shock_losses"][side] == 0
+    assert east["shock_losses"][side] == pytest.approx(.3*9/8)
+    assert max(abs(west["residual"]), abs(east["residual"])) < 1e-12
+
+
+@pytest.mark.parametrize("dry", [False, True])
+def test_moving_faces_close_deforming_volume_balance(dry, record_property):
+    from tensorfvm.shallow_water import (
+        dry_riemann_cell_averages, dry_riemann_integrated_flux,
+        riemann_cell_averages, riemann_integrated_flux,
+    )
+
+    x0, end = .4, .7
+    data = (1., .2, 0. if dry else .3, 0.)
+    if dry:
+        def means(edges, t):
+            return dry_riemann_cell_averages(edges, t, *data, gravity=1., x0=x0)
+        def flux(x, speed):
+            return dry_riemann_integrated_flux(x, end, *data, gravity=1., x0=x0,
+                                               face_speed=speed)
+    else:
+        sol = solve_riemann(*data, gravity=1., x0=x0)
+        def means(edges, t):
+            return riemann_cell_averages(sol, edges, t)
+        def flux(x, speed):
+            return riemann_integrated_flux(sol, x, end, face_speed=speed)
+
+    # Both boundaries start to the right of the dam. The left one moves into
+    # the fan. The right one is overtaken by the wet shock or the dry front.
+    edges = np.array([x0+.1, x0+.5])
+    speeds = np.array([-.5, .15])
+    final_edges = edges + end*speeds
+    initial = np.asarray(means(edges, 0.)).ravel()*np.diff(edges)
+    final = np.asarray(means(final_edges, end)).ravel()*np.diff(final_edges)
+    expected = np.asarray(flux(edges[0], speeds[0])) - flux(edges[1], speeds[1])
+    errors = np.abs((final-initial)-expected)
+    record_property("mass_balance_error", errors[0])
+    record_property("momentum_balance_error", errors[1])
+    assert max(errors) < 1e-13
+    with pytest.raises(ValueError, match="face_speed"):
+        flux(x0, float("nan"))
+
+
+def test_face_on_traveling_bore_matches_downstream_transport(record_property):
+    from tensorfvm.shallow_water import riemann_integrated_flux
+
+    sol = solve_riemann(1., .2, .3, 0., gravity=1., x0=.4)
+    speed = sol.right_shock_speed
+    end = .7
+    assert speed > .15+.5/end
+    # Rankine-Hugoniot gives the same moving-face flux from either trace.
+    # The quiescent downstream state transports mass relative to the bore
+    # while its only lab-frame momentum flux is the pressure force.
+    actual = riemann_integrated_flux(sol, sol.x0, end, face_speed=speed)
+    expected = end*np.array([-speed*sol.hR, .5*sol.gravity*sol.hR**2])
+    error = np.max(np.abs(actual-expected))
+    record_property("max_bore_transport_error", error)
+    assert error < 2e-14
+
+
+@pytest.mark.parametrize("case", DEFAULT_CASES, ids=lambda c: c.name)
+def test_moving_energy_budget_against_time_quadrature(case, record_property):
+    from scipy.integrate import quad
+    from tensorfvm.shallow_water import riemann_energy_budget
+
+    sol = case.solution()
+    end = .65
+    faces, speeds = (.18, .52), (-.65, .35)
+    budget = riemann_energy_budget(sol, *faces, end, face_speeds=speeds)
+    errors = []
+    for x, w, name in zip(faces, speeds, ("left_transport", "right_transport")):
+        def power(t):
+            h,u = sample_exact(sol, x+w*t, t)
+            return h*u*(.5*u*u+sol.gravity*h) - w*.5*h*(u*u+sol.gravity*h)
+        crossings = [(x-sol.x0)/(s-w) for s in sol.wave_speeds if s != w]
+        reference = quad(power, 0., end, points=[t for t in crossings if 0<t<end])[0]
+        errors.append(abs(reference-budget[name]))
+    record_property("max_transport_error", max(errors))
+    record_property("balance_error", abs(budget["residual"]))
+    assert max(errors) < 1e-12 and abs(budget["residual"]) < 1e-12
+
+
+def test_energy_shock_following_boundary_and_collapsing_interval():
+    from tensorfvm.shallow_water import riemann_energy_budget
+
+    # Boost a stationary jump by +0.5; its loss remains 9/8 per unit time.
+    sol = solve_riemann(1., 3.5, 2., 2., gravity=3.)
+    w = sol.left_shock_speed
+    assert w == pytest.approx(.5)
+    west = riemann_energy_budget(sol, -1., 0., .4, face_speeds=(0., w))
+    east = riemann_energy_budget(sol, 0., 1., .4, face_speeds=(w, 0.))
+    assert west["right_transport"] == east["left_transport"]
+    assert west["shock_losses"]["left"] == 0.
+    assert east["shock_losses"]["left"] == pytest.approx(.4*9/8)
+    assert max(abs(west["residual"]), abs(east["residual"])) < 1e-13
+    with pytest.raises(ValueError, match="interval"):
+        riemann_energy_budget(sol, 0., 1., .5, face_speeds=(2., 0.))

@@ -53,11 +53,12 @@ from .dam_break import (
     TOLERANCE,
     _relative,
 )
-from .exact import stoker_constant_state, t_star_to_time
+from .exact import _dry_wave_speeds, dry_riemann_state, stoker_constant_state, t_star_to_time
 from .swe1d import ShallowWater1D
 
 __all__ = [
     "cell_energy",
+    "dry_riemann_energy_budget",
     "total_energy",
     "exact_energy",
     "bore_dissipation_rate",
@@ -95,6 +96,49 @@ def total_energy(h, hu, gravity: float = 9.81, dx: float = 1.0) -> dict:
 # --------------------------------------------------------------------------- #
 # closed-form reference energy
 # --------------------------------------------------------------------------- #
+def _integrate_fan_energy(x_min, x_max, fronts, gravity, sample):
+    """Three-point Gauss integration is exact for quartic fan energy."""
+    edges = np.array([x_min, *sorted(x for x in set(fronts) if x_min < x < x_max), x_max])
+    half = np.diff(edges)/2
+    # Mechanical energy density is quartic inside each rarefaction.
+    nodes = np.array([-math.sqrt(.6), 0., math.sqrt(.6)])
+    weights = np.array([5/9, 8/9, 5/9])
+    h, u = sample(edges[:-1,None]+half[:,None]*(1+nodes))
+    return float(half @ (cell_energy(h,h*u,gravity)["total"] @ weights))
+
+
+def dry_riemann_energy_budget(x_min, x_max, t, hL, uL, hR, uR, gravity=9.81, x0=0.,
+                              *, face_speeds=(0., 0.)):
+    """Energy per unit width and density in a moving interval with dry Riemann data.
+
+    The faces start at x_min and x_max and move at their respective constant
+    speeds. Rightward lab-frame energy transport through a moving face has
+    rate F-wE. A wetting or drying front contributes zero energy loss.
+    """
+    speeds = np.asarray(face_speeds, dtype=float)
+    if speeds.shape != (2,) or not np.isfinite(speeds).all():
+        raise ValueError("provide two finite face speeds")
+    faces = np.array([x_min, x_max])
+    final_faces = faces + t*speeds
+    for endpoints in (faces, final_faces):
+        if not np.isfinite(endpoints).all() or endpoints[0] >= endpoints[1]:
+            raise ValueError("require a finite increasing interval")
+
+    def state(x, time):
+        return dry_riemann_state(x, time, hL, uL, hR, uR, gravity, x0)
+
+    h, u = state(final_faces, t)
+    h0, u0 = state(faces, 0.)
+    e = cell_energy(h, h*u, gravity)["total"]
+    e0 = cell_energy(h0, h0*u0, gravity)["total"]
+    west, east = t*((u-speeds)*e+u*.5*gravity*h*h) - (faces-x0)*(e-e0)
+    initial = _integrate_fan_energy(x_min, x_max, [x0], gravity, lambda x: state(x, 0.))
+    fronts = [x0+t*s for s in _dry_wave_speeds(hL, uL, hR, uR, gravity)]
+    final = _integrate_fan_energy(*final_faces, fronts, gravity, lambda x: state(x, t))
+    return {"initial": initial, "final": final, "left_transport": float(west),
+            "right_transport": float(east), "residual": float(final-initial-west+east)}
+
+
 def exact_breakpoints(case: DamBreakCase, t: float) -> list:
     """Locations where the closed-form solution is non-smooth at time ``t``.
 
@@ -147,6 +191,11 @@ def exact_energy(case: DamBreakCase, t: float, n_quad: int = 200_000) -> dict:
     }
 
 
+def _hydraulic_jump_loss(gravity, discharge_in_shock_frame, h1, h2):
+    """Mechanical energy lost per time and width across a compressive jump."""
+    return float(gravity * abs(discharge_in_shock_frame) * abs(h2-h1)**3 / (4*h1*h2))
+
+
 def bore_dissipation_rate(case: DamBreakCase) -> float:
     """Constant energy dissipation rate of the Stoker bore (per unit width).
 
@@ -159,7 +208,7 @@ def bore_dissipation_rate(case: DamBreakCase) -> float:
     sol = stoker_constant_state(case.h0, case.h1, case.gravity)
     h1, h2 = case.h1, sol["h2"]
     q_rel = h1 * sol["shock_speed"]
-    return float(case.gravity * q_rel * (h2 - h1) ** 3 / (4.0 * h1 * h2))
+    return _hydraulic_jump_loss(case.gravity, q_rel, h1, h2)
 
 
 def certify_bore_dissipation(case: DamBreakCase = STOKER_WET,

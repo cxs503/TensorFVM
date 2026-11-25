@@ -69,10 +69,8 @@ Known limitation (stated, not hidden)
 A Riemann problem whose solution contains a **dry middle region** (two
 rarefactions pulling the water apart until ``h`` reaches zero: diverging streams
 with ``-2(cL + cR) + (uR - uL) >= 0``) is *not* solved here; the constructor
-raises ``ValueError`` naming that limit.  The dry bed is covered by the Ritter
-dam-break reference in ``exact.py``, and a second dry-bed path here would
-duplicate it.  Refusing explicitly keeps a ``ValueError`` from being mistaken
-for a converged answer.
+raises ``ValueError`` naming that limit.  Use :func:`exact.dry_riemann_state` to sample a dry middle region
+or an initially dry bed, including moving wet states.
 
 References
 ----------
@@ -89,7 +87,9 @@ import math
 
 import numpy as np
 
-from .exact import ritter_front_position, ritter_state, stoker_constant_state
+from .energy import _hydraulic_jump_loss, _integrate_fan_energy, cell_energy
+from .exact import (_riemann_cell_means, _similarity_flux_integral, ritter_front_position,
+                    ritter_state, stoker_constant_state)
 
 __all__ = [
     "DEFAULT_CASES",
@@ -103,6 +103,11 @@ __all__ = [
     "riemann_residuals",
     "run_case",
     "sample_exact",
+    "riemann_cell_averages",
+    "riemann_integrated_flux",
+    "riemann_energy",
+    "riemann_energy_budget",
+    "riemann_shock_losses",
     "smooth_region_ode_residuals",
     "solve_riemann",
     "verdict",
@@ -221,7 +226,7 @@ def solve_riemann(hL: float, uL: float, hR: float, uR: float,
         raise ValueError(
             "the solution contains a dry middle region (diverging streams with "
             f"f(0)={f_zero:.6e} >= 0); this solver covers wet Riemann problems "
-            "only -- use exact.ritter_state for the dry-bed dam break")
+            "only -- use exact.dry_riemann_state for generated vacuum")
 
     lo = 0.0
     hi = max(hL, hR)
@@ -295,7 +300,7 @@ def sample_exact(sol: RiemannSolution, x, t: float):
         c_fan = (sol.uL + 2.0 * cL - xi) / 3.0
         u_fan = xi + c_fan
         h_fan = c_fan * c_fan / g
-        in_fan_l = (xi > sol.left_head) & (xi < sol.left_tail)
+        in_fan_l = (xi >= sol.left_head) & (xi < sol.left_tail)
     else:
         h_fan = np.zeros_like(xi)
         u_fan = np.zeros_like(xi)
@@ -310,7 +315,7 @@ def sample_exact(sol: RiemannSolution, x, t: float):
         c_fan_r = (xi - sol.uR + 2.0 * cR) / 3.0
         u_fan_r = xi - c_fan_r
         h_fan_r = c_fan_r * c_fan_r / g
-        in_fan_r = (xi > sol.right_tail) & (xi < sol.right_head)
+        in_fan_r = (xi > sol.right_tail) & (xi <= sol.right_head)
     else:
         h_fan_r = np.zeros_like(xi)
         u_fan_r = np.zeros_like(xi)
@@ -320,7 +325,140 @@ def sample_exact(sol: RiemannSolution, x, t: float):
     u_r = np.where(xi > sol.right_head, sol.uR,
                    np.where(in_fan_r, u_fan_r, sol.u_star))
 
-    return np.where(xi <= 0.0, h_l, h_r), np.where(xi <= 0.0, u_l, u_r)
+    # The star-state velocity lies between the two waves in every inertial frame.
+    return np.where(xi <= sol.u_star, h_l, h_r), np.where(xi <= sol.u_star, u_l, u_r)
+
+
+def riemann_energy(sol: RiemannSolution, x_min: float, x_max: float, t: float):
+    """Integrate exact wet-solution mechanical energy per width on a finite interval."""
+    if not all(map(math.isfinite, (x_min, x_max, t))) or x_min >= x_max or t < 0:
+        raise ValueError("require a finite increasing interval and nonnegative finite time")
+    fronts = [sol.x0+t*speed for speed in sol.wave_speeds]
+    return _integrate_fan_energy(x_min, x_max, fronts, sol.gravity,
+                                 lambda x: sample_exact(sol, x, t))
+
+
+def riemann_shock_losses(sol: RiemannSolution):
+    """Return mechanical-energy loss per time and width on each wave.
+
+    A rarefaction contributes zero. Each shock contributes its rate while
+    inside the chosen control volume, regardless of its propagation direction.
+    The returned rates describe the waves on the full line.
+    """
+    losses = {}
+    for side, h, u, speed in (("left", sol.hL, sol.uL, sol.left_shock_speed),
+                              ("right", sol.hR, sol.uR, sol.right_shock_speed)):
+        losses[side] = (0. if speed is None else
+                        _hydraulic_jump_loss(sol.gravity, h*(u-speed), h, sol.h_star))
+    return losses
+
+
+def _wave_crossings(offset, relative_speeds, t):
+    times = {0., t}
+    for speed in relative_speeds:
+        if min(0., t*speed) < offset < max(0., t*speed):
+            times.add(offset/speed)
+    return times
+
+
+def _face_energy_transport(sol, x, t, face_speed):
+    """Rightward lab-frame energy crossing a face, using its left shock trace."""
+    offset = x-sol.x0
+    ends = sorted(_wave_crossings(offset, (s-face_speed for s in sol.wave_speeds), t))
+    total = 0.
+    for start, stop in zip(ends, ends[1:]):
+        middle = .5*(start+stop)
+        xi = face_speed + offset/middle
+        in_fan = (sol.left_head < xi < sol.left_tail or sol.right_tail < xi < sol.right_head)
+        if in_fan and offset != 0:
+            # In a smooth fan the primitive along the face has derivative F-wE.
+            times_pair = np.array([start, stop])
+            xi_pair = face_speed + offset/times_pair
+            if sol.left_head < xi < sol.left_tail:
+                c = (sol.uL+2*math.sqrt(sol.gravity*sol.hL)-xi_pair)/3
+                u = xi_pair+c
+            else:
+                c = (xi_pair-sol.uR+2*math.sqrt(sol.gravity*sol.hR))/3
+                u = xi_pair-c
+            h = c*c/sol.gravity
+            e = cell_energy(h,h*u,sol.gravity)["total"]
+            primitive = times_pair*((u-face_speed)*e+u*.5*sol.gravity*h*h)-offset*e
+            total += primitive[1]-primitive[0]
+        else:
+            h, u = sample_exact(sol, x+middle*face_speed, middle)
+            if offset == 0 and sol.left_shock_speed == face_speed:
+                h, u = sol.hL, sol.uL
+            elif offset == 0 and sol.right_shock_speed == face_speed:
+                h, u = sol.h_star, sol.u_star
+            e = .5*h*(u*u+sol.gravity*h)
+            total += (stop-start)*((u-face_speed)*e+u*.5*sol.gravity*h*h)
+    return float(total)
+
+
+def riemann_energy_budget(sol: RiemannSolution, x_min: float, x_max: float, t: float,
+                          *, face_speeds=(0., 0.)):
+    """Lab-frame energy balance per unit width on a moving half-open interval.
+
+    x_min and x_max are initial positions. Each boundary moves uniformly at
+    its respective face speed. Transports are positive rightwards. A shock
+    following a shared boundary belongs to the interval on its right, and
+    both adjacent intervals use its left trace for boundary transport.
+    """
+    west_speed, east_speed = face_speeds
+    if not all(map(math.isfinite, (west_speed, east_speed))):
+        raise ValueError("face speeds must be finite")
+    initial = riemann_energy(sol, x_min, x_max, 0.)
+    final = riemann_energy(sol, x_min+t*west_speed, x_max+t*east_speed, t)
+    west = _face_energy_transport(sol, x_min, t, west_speed)
+    east = _face_energy_transport(sol, x_max, t, east_speed)
+    rates = riemann_shock_losses(sol)
+    losses = {}
+    for side, speed in (("left", sol.left_shock_speed), ("right", sol.right_shock_speed)):
+        duration = 0.
+        if speed is not None:
+            rel_west, rel_east = speed-west_speed, speed-east_speed
+            west_offset, east_offset = x_min-sol.x0, x_max-sol.x0
+            ends = sorted(_wave_crossings(west_offset, (rel_west,), t)
+                          | _wave_crossings(east_offset, (rel_east,), t))
+            for start, stop in zip(ends, ends[1:]):
+                middle = .5*(start+stop)
+                if west_offset <= middle*rel_west and middle*rel_east < east_offset:
+                    duration += stop-start
+        losses[side] = duration*rates[side]
+    return {"initial": initial, "final": final, "left_transport": west,
+            "right_transport": east, "shock_losses": losses,
+            "residual": final-initial-west+east+sum(losses.values())}
+
+
+def riemann_integrated_flux(sol: RiemannSolution, x, t: float, *, face_speed: float = 0.0):
+    """Cumulative rightward mass and lab-frame momentum crossing a moving face.
+
+    Each face starts at x and travels at constant speed w=face_speed. Along
+    its trajectory the self-similar primitive t*F(U) - (x(t)-x0)*U has
+    derivative F(U)-w*U and is continuous across shocks by Rankine-Hugoniot.
+    """
+    if not math.isfinite(face_speed):
+        raise ValueError("face_speed must be finite")
+    if not math.isfinite(t) or t < 0:
+        raise ValueError("time must be finite and nonnegative")
+    x = np.asarray(x, dtype=float)
+    h0, u0 = sample_exact(sol, x, 0.)
+    h, u = sample_exact(sol, x+t*face_speed, t)
+    return _similarity_flux_integral(x-sol.x0, t, sol.gravity, h0, u0, h, u, face_speed)
+
+
+def riemann_cell_averages(sol: RiemannSolution, edges, t: float):
+    """Return control-volume means of h and hu for a wet Riemann solution.
+
+    Split nonuniform cells at every shock and rarefaction edge before exact
+    polynomial quadrature. At zero time split the initial jump at sol.x0.
+    """
+    if not math.isfinite(t) or t < 0:
+        raise ValueError("time must be finite and nonnegative")
+    relative = dataclasses.replace(sol, x0=0.)
+    return _riemann_cell_means(edges, t, sol.x0, sol.wave_speeds,
+                               lambda offset: sample_exact(relative, offset, t),
+                               sol.hL, sol.uL, sol.hR, sol.uR)
 
 
 # --------------------------------------------------------------------------- #
@@ -507,6 +645,7 @@ class RiemannCase:
     t_end: float = 1.0
     gravity: float = 9.81
     note: str = ""
+    x0: float = 0.0
 
     @property
     def h_ref(self) -> float:
@@ -518,12 +657,17 @@ class RiemannCase:
 
     def solution(self) -> RiemannSolution:
         return solve_riemann(self.hL, self.uL, self.hR, self.uR,
-                             self.gravity)
+                             self.gravity, x0=self.x0)
 
     def initial_state(self, x) -> tuple[np.ndarray, np.ndarray]:
         xs = np.asarray(x, dtype=float)
-        left = xs <= 0.0
+        left = xs <= self.x0
         return (np.where(left, self.hL, self.hR), np.where(left, self.uL, self.uR))
+
+    def initial_cell_state(self, edges):
+        """Primitive variables from cell-averaged initial mass and momentum."""
+        h, hu = riemann_cell_averages(self.solution(), edges, 0.)
+        return h, hu/h
 
     def exact(self, x, t: float):
         return sample_exact(self.solution(), x, t)
@@ -534,7 +678,7 @@ class RiemannCase:
             "name": self.name,
             "hL": self.hL, "uL": self.uL, "hR": self.hR, "uR": self.uR,
             "gravity": self.gravity, "x_min": self.x_min, "x_max": self.x_max,
-            "t_end": self.t_end, "note": self.note,
+            "x0": self.x0, "t_end": self.t_end, "note": self.note,
             "pattern": sol.pattern,
             "h_star": sol.h_star, "u_star": sol.u_star,
             "wave_speeds": list(sol.wave_speeds),
@@ -657,56 +801,49 @@ def profile_metrics(case: RiemannCase, x, h, u, t: float) -> dict:
     out["extremum_amplitude"] = amp
 
     g = case.gravity
-    waves = {}
     for side in ("left", "right"):
         kind = sol.left_kind if side == "left" else sol.right_kind
-        exact_speed = sol.left_head if side == "left" else sol.right_head
+        h_out = sol.hL if side == "left" else sol.hR
         if kind == "shock":
-            h_out = sol.hL if side == "left" else sol.hR
-            u_out = sol.uL if side == "left" else sol.uR
             level = 0.5 * (h_out + sol.h_star)
-            x_meas, n_cross = _wave_crossing(xs, h, level, side)
-            waves[side] = {"kind": "shock", "level": level,
-                           "x_exact": exact_speed * t, "x_measured": x_meas,
-                           "crossings": n_cross}
+            speed = sol.left_head if side == "left" else sol.right_head
         else:
-            # a fixed fraction of the fan's depth drop, measured from the outer
-            # state: the crossing sits at xi = u_K +- 2 c_K - 3 sqrt(g h_p)
-            frac = 0.25
-            h_out = sol.hL if side == "left" else sol.hR
-            u_out = sol.uL if side == "left" else sol.uR
+            # Track the level one quarter of the way from the outer depth to
+            # the star depth. Its similarity speed follows from the invariant.
+            level = h_out - 0.25 * (h_out - sol.h_star)
             c_out = math.sqrt(g * h_out)
-            level = h_out - frac * (h_out - sol.h_star)
             c_p = math.sqrt(g * level)
-            xi = (u_out + 2.0 * c_out - 3.0 * c_p) if side == "left" else (
-                u_out - 2.0 * c_out + 3.0 * c_p)
-            x_meas, n_cross = _wave_crossing(xs, h, level, side)
-            waves[side] = {"kind": "rarefaction", "level": level,
-                           "x_exact": xi * t, "x_measured": x_meas,
-                           "crossings": n_cross}
-        entry = waves[side]
-        entry["rel_error"] = (
-            abs(entry["x_measured"] - entry["x_exact"]) / abs(entry["x_exact"])
-            if entry["x_exact"] != 0.0 and np.isfinite(entry["x_measured"])
-            else float("nan"))
+            speed = (sol.uL + 2*c_out - 3*c_p if side == "left" else
+                     sol.uR - 2*c_out + 3*c_p)
+        x_meas, n_cross = _wave_crossing(xs, h, level, side)
+        displacement = speed * t
+        entry = {"kind": kind, "level": level, "x_exact": sol.x0 + displacement,
+                 "x_measured": x_meas, "crossings": n_cross}
+        scale = abs(displacement)
+        # A stationary wave has no travel distance. Use the acoustic travel
+        # distance for that limit and record the denominator with the error.
+        if scale <= 16*np.finfo(float).eps*case.c_ref*abs(t):
+            scale = case.c_ref*abs(t)
+        entry["position_error_scale"] = scale
+        entry["rel_error"] = (abs(entry["x_measured"]-entry["x_exact"])/scale
+                              if scale > 0 else float("nan"))
         out[f"wave_{side}"] = entry
 
     # star plateau: sample the exact star region between the two waves
-    lo, hi = sol.span
-    x_star = 0.5 * (lo + hi) * t
-    if lo <= 0.0 <= hi:
-        x_star = 0.0
+    left_edge = sol.x0 + sol.left_tail*t
+    right_edge = sol.x0 + sol.right_tail*t
+    x_star = .5*(left_edge + right_edge)
     idx = int(np.argmin(np.abs(xs - x_star)))
+    resolved = left_edge < xs[idx] < right_edge
     out["plateau"] = {
-        "x": float(xs[idx]),
+        "x": float(xs[idx]), "resolved": bool(resolved),
         "depth_measured": float(h[idx]),
         "depth_exact": float(sol.h_star),
-        "depth_rel_error": float(abs(h[idx] - sol.h_star) / sol.h_star),
+        "depth_rel_error": float(abs(h[idx] - sol.h_star) / sol.h_star) if resolved else float("nan"),
         "velocity_measured": float(u[idx]),
         "velocity_exact": float(sol.u_star),
-        "velocity_rel_error": (float(abs(u[idx] - sol.u_star) / sol.u_star)
-                               if sol.u_star != 0.0
-                               else float(abs(u[idx] - sol.u_star))),
+        "velocity_rel_error": (float(abs(u[idx]-sol.u_star) / (abs(sol.u_star) or 1.))
+                               if resolved else float("nan")),
     }
     return out
 
@@ -737,25 +874,40 @@ def run_case(case: RiemannCase, n: int = 1600, cfl: float = 0.4,
 
     solver = ShallowWater1D(n, case.x_min, case.x_max, gravity=case.gravity,
                             cfl=cfl, order=order)
-    h0, u0 = case.initial_state(solver.x)
+    edges = np.linspace(case.x_min, case.x_max, n+1)
+    h0, u0 = case.initial_cell_state(edges)
     solver.set_state(h0, u0)
     volume0 = solver.total_volume()
     momentum0 = solver.momentum()
     steps = solver.advance(case.t_end)
     h, u = solver.primitive()
     metrics = profile_metrics(case, solver.x, h, u, solver.time)
+    sol = case.solution()
+    h_mean, hu_mean = riemann_cell_averages(sol, edges, solver.time)
+    metrics["cell_mean_depth_l1"] = float(np.mean(np.abs(h-h_mean)) / case.h_ref)
+    metrics["cell_mean_discharge_l1"] = float(np.mean(np.abs(h*u-hu_mean)) / (case.h_ref*case.c_ref))
+    metrics["energy_budget"] = riemann_energy_budget(sol, case.x_min, case.x_max, solver.time)
+    energy_exact = metrics["energy_budget"]["final"]
+    metrics["energy_exact"] = energy_exact
+    metrics["energy_numerical"] = solver.kinetic_energy()
+    metrics["energy_relative_error"] = abs(metrics["energy_numerical"]-energy_exact)/energy_exact
+    metrics["shock_energy_loss_rates"] = riemann_shock_losses(sol)
     metrics["volume_initial"] = float(volume0)
     metrics["volume_drift"] = (float(abs(solver.total_volume() - volume0)
                                      / volume0) if volume0 > 0 else float("nan"))
-    # The ends are transmissive, so the total volume is *not* conserved: it must
-    # change at exactly the analytic net boundary flux hL uL - hR uR (the states
-    # at the ends stay at their initial values because no wave reaches them,
-    # which the case definitions guarantee and ``test_..._budget`` asserts).
-    expected_drift = case.t_end * (case.hL * case.uL - case.hR * case.uR)
-    metrics["volume_change"] = float(solver.total_volume() - volume0)
-    metrics["volume_change_expected"] = float(expected_drift)
-    metrics["volume_budget_relative"] = float(
-        abs((solver.total_volume() - volume0) - expected_drift) / volume0)
+    # The analytic boundary flux includes waves passing either domain end.
+    mass_flux, impulse = riemann_integrated_flux(sol, edges[[0, -1]], solver.time)
+    expected_mass = mass_flux[0]-mass_flux[1]
+    expected_momentum = impulse[0]-impulse[1]
+    volume_change = solver.total_volume()-volume0
+    momentum_change = solver.momentum()-momentum0
+    metrics["volume_change"] = float(volume_change)
+    metrics["volume_change_expected"] = float(expected_mass)
+    metrics["volume_budget_relative"] = float(abs(volume_change-expected_mass)/volume0)
+    metrics["momentum_change"] = float(momentum_change)
+    metrics["momentum_change_expected"] = float(expected_momentum)
+    # Initial momentum may be zero for a dam break at rest.
+    metrics["momentum_budget_relative"] = float(abs(momentum_change-expected_momentum)/(volume0*case.c_ref))
     metrics["momentum_initial"] = float(momentum0)
     metrics["momentum_drift"] = (float(abs(solver.momentum() - momentum0)
                                        / abs(momentum0))
@@ -784,6 +936,8 @@ def convergence_series(case: RiemannCase, resolutions=(200, 400, 800, 1600),
             "dx": record["discretisation"]["dx"],
             "steps": record["discretisation"]["steps"],
             "depth_l1": metrics["depth_l1"],
+            "cell_mean_depth_l1": metrics["cell_mean_depth_l1"],
+            "cell_mean_discharge_l1": metrics["cell_mean_discharge_l1"],
             "velocity_l1": metrics["velocity_l1"],
             "wave_left": metrics["wave_left"]["rel_error"],
             "wave_right": metrics["wave_right"]["rel_error"],
@@ -791,6 +945,9 @@ def convergence_series(case: RiemannCase, resolutions=(200, 400, 800, 1600),
             "plateau_velocity": metrics["plateau"]["velocity_rel_error"],
             "extremum_count": metrics["extremum_count"],
             "volume_drift": metrics["volume_drift"],
+            "energy_relative_error": metrics["energy_relative_error"],
+            "volume_budget_relative": metrics["volume_budget_relative"],
+            "momentum_budget_relative": metrics["momentum_budget_relative"],
             "pass": record["verdict"]["pass"],
         })
     l1 = [row["depth_l1"] for row in rows]
@@ -884,7 +1041,7 @@ def write_artifacts(out_dir, resolutions=(400, 800, 1600, 3200),
 
         solver = ShallowWater1D(n, case.x_min, case.x_max, gravity=case.gravity,
                                 cfl=cfl, order=order)
-        h0, u0 = case.initial_state(solver.x)
+        h0, u0 = case.initial_cell_state(np.linspace(case.x_min, case.x_max, n+1))
         solver.set_state(h0, u0)
         solver.advance(case.t_end)
         h, _ = solver.primitive()
@@ -894,7 +1051,7 @@ def write_artifacts(out_dir, resolutions=(400, 800, 1600, 3200),
         ax.plot(solver.x, h, "--", color="tab:blue", lw=1.0,
                 label=f"FVM n={n}")
         for speed in case.solution().wave_speeds:
-            ax.axvline(speed * solver.time, color="tab:red", lw=0.6, alpha=0.5)
+            ax.axvline(case.x0 + speed * solver.time, color="tab:red", lw=0.6, alpha=0.5)
         ax.set_title(f"{case.name}: {case.solution().pattern}", fontsize=9)
         ax.set_xlabel("x [m]")
         ax.set_ylabel("h [m]")
