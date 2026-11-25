@@ -168,3 +168,19 @@ def test_floating_double_flux_preserves_heat_rates_under_large_datum_shift():
         np.testing.assert_array_equal(shifted[i], base[i]+1e9)
     with pytest.raises(ValueError, match="incompatible"):
         solve_storing_rings(*args, **options, wall_fluxes=q, source=.1, bore_temperature_reference=0.)
+
+
+def test_volume_mean_reference_uses_shell_volumes_and_resists_conflicting_data():
+    edges = np.array([.4, .5, .8, 1.2])
+    volumes = np.diff(edges**2)
+    centers = (2/3)*np.diff(edges**3)/volumes
+    flux = (.6+.2j, -edges[0]/edges[-1]*(.6+.2j))
+    slope = -edges[0]*flux[0]/2.
+    mean = .7+.3j
+    bore = mean - np.average(slope*np.log(centers/edges[0]), weights=volumes)
+    args = (edges, 2., [1, 2], (None, None), 0.)
+    options = dict(sheet_capacities=(0.,0.), contact_resistances=(0.,0.), wall_fluxes=flux)
+    _, _, _, wall = solve_storing_rings(*args, **options, mean_temperature=mean, return_wall_temperatures=True)
+    np.testing.assert_allclose(wall, bore+slope*np.log(edges[[0,-1]]/edges[0]), rtol=0., atol=1e-13)
+    with pytest.raises(ValueError, match="exactly one"):
+        solve_storing_rings(*args, **options, mean_temperature=mean, bore_temperature_reference=bore)

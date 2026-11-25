@@ -8,7 +8,7 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
                         contact_resistances, sheet_capacities, sheet_generation=(0., 0.), source=0.,
                         sheet_film_coefficients=(0., 0.), sheet_ambient_temperatures=(0., 0.),
                         azimuthal_mode=0, volumetric_heat_capacity=None, film_coefficients=(None, None), wall_fluxes=(None, None),
-                        bore_temperature_reference=None,
+                        bore_temperature_reference=None, mean_temperature=None,
                         inner_resistance_fractions=(.5, .5), sheet_conductivities=(0., 0.),
                         return_wall_rates=False, return_bulk_storage=False, return_angular_conduction=False,
                         return_wall_temperatures=False, return_contact_temperatures=False):
@@ -25,7 +25,9 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
     fluxes the axisymmetric mode requires active harmonic storage or a sheet
     film coupled to a reservoir to determine the absolute temperature. Otherwise,
     provide bore_temperature_reference (K) and compatible wall, sheet and bulk
-    heat inputs whose net sum is zero. The reference sets only the additive constant.
+    heat inputs whose net sum is zero. Alternatively, mean_temperature specifies the
+    cell-volume-weighted mean of the bulk temperatures (K), excluding the sheets.
+    Either reference sets only the additive constant.
     A nonnegative scalar or per-cell capacity (J/(m³ K)) enables harmonic bulk storage.
     Zero-capacity cells conduct without storing heat, even beside cells with positive capacity.
     inner_resistance_fractions specifies the fraction of each contact resistance
@@ -104,22 +106,26 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
         raise ValueError("a flux wall cannot also have a film")
     has_storage = omega > 0 and (capacity.any() or (volumetric_heat_capacity is not None and cv.any()))
     floating = len(flux_sides) == 2 and azimuthal_mode == 0 and not sheet_h.any() and not has_storage
+    references = [value for value in (bore_temperature_reference, mean_temperature) if value is not None]
     if floating:
-        if (bore_temperature_reference is None or np.ndim(bore_temperature_reference) != 0
-                or not np.isfinite(bore_temperature_reference)):
-            raise ValueError("two unanchored flux walls need a finite bore temperature reference")
+        if len(references) != 1 or np.ndim(references[0]) != 0 or not np.isfinite(references[0]):
+            raise ValueError("supply exactly one finite bore or bulk mean temperature reference")
+        cell_volume = np.pi*np.diff(r)*(r[:-1]+r[1:])
         inputs = np.r_[2*np.pi*r[[0,-1]]*wall_fluxes, 2*np.pi*r[faces]*generation,
-                       np.pi*np.diff(r)*(r[:-1]+r[1:])*volume_source]
+                       cell_volume*volume_source]
         if abs(inputs.sum()) > 1e-12*np.abs(inputs).sum():
             raise ValueError("incompatible wall fluxes, sheet and volume generation")
-    elif bore_temperature_reference is not None:
-        raise ValueError("a bore temperature reference applies only to an unanchored double-flux mode")
+    elif references:
+        raise ValueError("a temperature reference applies only to an unanchored double-flux mode")
     inner_film = [1/value if value else None for value in inner]
     outer_film = [1/value if value else None for value in outer]
     layer_films = [(film_coefficients[0], inner_film[0]), (outer_film[0], inner_film[1]),
                    (outer_film[1], film_coefficients[1])]
     ends = [0, *faces, len(r)-1]
     domains = []
+    if mean_temperature is not None:
+        mean_maps = np.zeros((3, 3), dtype=complex)
+        weights = cell_volume/cell_volume.sum()
     if return_bulk_storage:
         cell_storage = 1j*bulk_frequency*cv*np.pi*np.diff(r)*(r[:-1]+r[1:])
         storage_maps = np.zeros((3, 3), dtype=complex)
@@ -138,6 +144,8 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
                 source=volume_source[a:b] if column == 2 else 0.,
                 azimuthal_mode=azimuthal_mode, cell_location="volume_centroid", distributed_source=True)
             response[:, column] = rate[[0, -1]]
+            if mean_temperature is not None:
+                mean_maps[layer, column] = weights[a:b] @ field
             if return_bulk_storage:
                 storage_maps[layer, column] = cell_storage[a:b] @ field
             if return_angular_conduction:
@@ -183,12 +191,14 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
     outer_rates = c @ [sheet[1], walls[1], 1.]
     incoming = np.array([inner_rates[1], middle[1]]) / area
     outgoing = np.array([middle[0], outer_rates[0]]) / area
-    datum = bore_temperature_reference if floating else 0.
+    if return_bulk_storage or return_angular_conduction or mean_temperature is not None:
+        nodes = np.r_[walls[0], sheet, walls[1]]
+    datum = references[0] if floating else 0.
+    if mean_temperature is not None:
+        datum = mean_temperature - np.sum(mean_maps[:, 0]*nodes[:-1] + mean_maps[:, 1]*nodes[1:] + mean_maps[:, 2])
     result = (sheet + datum, incoming, outgoing)
     if return_wall_rates:
         result += (np.array([inner_rates[0], outer_rates[1]]),)
-    if return_bulk_storage or return_angular_conduction:
-        nodes = np.r_[walls[0], sheet, walls[1]]
     if return_bulk_storage:
         result += (storage_maps[:, 0]*nodes[:-1] + storage_maps[:, 1]*nodes[1:] + storage_maps[:, 2],)
     if return_angular_conduction:
