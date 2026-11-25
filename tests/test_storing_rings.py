@@ -125,8 +125,8 @@ def test_uniform_sheet_temperature_under_balanced_reservoir_loading():
     np.testing.assert_allclose(rates, 0., atol=1e-12)
 
 
-@pytest.mark.parametrize("side", [0, 1])
-def test_mixed_flux_reconstructs_generated_dirichlet_solution(side):
+@pytest.mark.parametrize("sides", [(0,), (1,), (0, 1)])
+def test_flux_reconstructs_generated_dirichlet_solution(sides):
     r = np.geomspace(.4, 1.1, 13)
     original = [1.+.2j, -.3j]
     props = dict(contact_resistances=(.5, .9), sheet_capacities=(.25, .8), source=.7+.2j,
@@ -134,9 +134,21 @@ def test_mixed_flux_reconstructs_generated_dirichlet_solution(side):
                  return_bulk_storage=True, return_angular_conduction=True, return_wall_temperatures=True)
     expected = solve_storing_rings(r, 2., [4, 8], original, 8., **props)
     inward = [None, None]
-    inward[side] = (1 if side == 0 else -1)*expected[3][side]/(2*np.pi*r[[0,-1]][side])
     walls = list(original)
-    walls[side] = None
+    for side in sides:
+        inward[side] = (1 if side == 0 else -1)*expected[3][side]/(2*np.pi*r[[0,-1]][side])
+        walls[side] = None
     actual = solve_storing_rings(r, 2., [4, 8], walls, 8., wall_fluxes=inward, **props)
     for result, target in zip(actual, expected):
         np.testing.assert_allclose(result, target, atol=1e-11)
+
+
+def test_double_flux_requires_a_temperature_anchor_in_static_zero_mode():
+    args = ([.4,.55,.9,1.1], 2., [1,2], (None,None), 0.)
+    options = dict(contact_resistances=(.2,.5), sheet_capacities=(.4,.8), wall_fluxes=(0.,0.))
+    with pytest.raises(ValueError, match="temperature reference"):
+        solve_storing_rings(*args, **options)
+    sheet, qi, qo, wall = solve_storing_rings(*args, **options, sheet_film_coefficients=(2.,0.),
+        sheet_ambient_temperatures=(.3+.4j,0.), return_wall_temperatures=True)
+    np.testing.assert_allclose(np.r_[sheet,wall], .3+.4j)
+    np.testing.assert_allclose(np.r_[qi,qo], 0., atol=1e-12)
