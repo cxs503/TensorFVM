@@ -5,7 +5,7 @@ from scipy.linalg import solve_banded
 
 def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall_temperatures,
                              angular_frequency, *, contact_resistance=0., source=0., azimuthal_mode=0,
-                             film_coefficients=(None, None)):
+                             film_coefficients=(None, None), cell_location="midpoint"):
     """Return cell phasors and radial face heat rates per unit axial length.
 
     Boundary, temperature and volumetric source amplitudes multiply
@@ -15,6 +15,9 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
     is areal (m² K/W) on internal faces. For each wall, a None film coefficient
     prescribes surface temperature; a finite nonnegative film coefficient
     (W/m²/K) uses the supplied temperature as ambient. Zero insulates.
+    With cell_location="volume_centroid", each temperature is located at
+    integral(r² dr)/integral(r dr) and both half-cell resistances use that
+    radius. The default "midpoint" uses the arithmetic radial midpoint.
 
     """
     r = np.asarray(radii, dtype=float)
@@ -38,9 +41,14 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
         raise ValueError("supply two finite wall temperatures and finite heat generation")
 
     width = np.diff(r)
-    center = r[:-1]+.5*width
-    left = np.log1p(.5*width/r[:-1])/(2*np.pi*k)
-    right = np.log1p(.5*width/center)/(2*np.pi*k)
+    midpoint = r[:-1]+.5*width
+    if cell_location not in ("midpoint", "volume_centroid"):
+        raise ValueError("cell_location must be midpoint or volume_centroid")
+    # r-weighted centroid minus midpoint, without subtracting powers of radii.
+    shift = width*(width/midpoint)/12 if cell_location == "volume_centroid" else 0.
+    center = midpoint + shift
+    left = np.log1p((.5*width+shift)/r[:-1])/(2*np.pi*k)
+    right = np.log1p((.5*width-shift)/center)/(2*np.pi*k)
     conductance = 1/np.r_[left[0], right[:-1]+contact/(2*np.pi*r[1:-1])+left[1:], right[-1]]
     if len(film_coefficients) != 2:
         raise ValueError("supply one film coefficient per wall")

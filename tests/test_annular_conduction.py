@@ -37,3 +37,14 @@ def test_steady_film_annulus_matches_series_resistance_and_insulation():
     np.testing.assert_allclose(rate, 0., atol=1e-13)
     with pytest.raises(ValueError, match="reference"):
         solve_annular_conduction(r, 2., 1., [0.,0.], 0., film_coefficients=(0.,0.))
+
+
+def test_volume_centroid_recovers_steady_log_profile_on_graded_cells():
+    radii = np.array([.1,.15,.6,.68,1.])
+    field, rate = solve_annular_conduction(radii, 2., 1., np.log(radii[[0,-1]]), 0.,
+                                           cell_location="volume_centroid")
+    centroid = (2./3)*np.diff(radii**3)/np.diff(radii**2)
+    np.testing.assert_allclose(field, np.log(centroid), rtol=0., atol=1e-14)
+    np.testing.assert_allclose(rate, -4*np.pi, atol=1e-13, rtol=0.)
+    with pytest.raises(ValueError, match="cell_location"):
+        solve_annular_conduction(radii, 2., 1., [0.,1.], 0., cell_location="unknown")
