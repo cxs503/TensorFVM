@@ -528,7 +528,8 @@ def solve_harmonic_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc
 def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc,
                                time, initial_temperature, *, source=0.0,
                                contact_resistance_x=0.0, contact_resistance_y=0.0,
-                               theta=0.5, conductivity_y=None, return_wall_power=False, periodic_y=False):
+                               theta=0.5, conductivity_y=None, return_wall_power=False, periodic_y=False,
+                               wall_flux_order=1):
     """Advance cell-centred conduction with fixed material data and boundary types.
 
     Return temperature at each requested time with shape (nt, ny, nx). Cell
@@ -550,11 +551,17 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
     On Robin faces, wall_areal_heat_capacity in J/(m² K) adds wall storage.
     initial_wall_temperature defaults to the adjacent initial cell temperature.
     Both accept scalar or per-face values. Reported power enters the material.
+    wall_flux_order=2 uses two adjacent cell means to reconstruct a linearly
+    varying normal flux on storing faces, accounting for both cells' widths,
+    conductivities and any intervening contact. It needs two cells along the
+    normal. The default uses the boundary half-cell conductance.
     theta=0.5 selects Crank-Nicolson and theta=1 selects backward Euler.
     """
     dx, dy, time = (np.asarray(v, dtype=float) for v in (dx, dy, time))
     if time.ndim != 1 or len(time) < 2 or not np.isfinite(time).all() or np.any(np.diff(time) <= 0):
         raise ValueError("time must be a strictly increasing finite vector")
+    if wall_flux_order not in (1,2):
+        raise ValueError("wall_flux_order must be 1 or 2")
     if not .5 <= theta <= 1:
         raise ValueError("theta must lie in [0.5, 1]")
     k, capacity = _conduction_materials(dx, dy, conductivity, volumetric_heat_capacity)
@@ -630,9 +637,36 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
             cells, g, area = cells[mask], conductance[mask], area[mask]
             film = h*area
             ids = np.arange(len(cells))+len(mass)
-            for cell, node, link, conv in zip(cells, ids, g, film):
-                A[cell,cell] -= link
-                A[cell,node] = A[node,cell] = link
+            inner = cells
+            correction = np.zeros_like(g)
+            if wall_flux_order == 2:
+                x_side = side in ("west","east")
+                widths = dx if x_side else dy
+                if widths.size < 2:
+                    raise ValueError("second-order wall flux requires two cells along the wall normal")
+                forward = side in ("west","south")
+                d1,d2 = widths[:2] if forward else widths[-2:][::-1]
+                inner = cells + (1 if x_side else nx)*(1 if forward else -1)
+                normal_k = k if x_side or conductivity_y is None else np.broadcast_to(conductivity_y, shape)
+                k1,k2 = normal_k.ravel()[cells], normal_k.ravel()[inner]
+                near = 1 if forward else -2
+                interface = (faces[0][:,near] if x_side else faces[1][near,:])[mask]
+                # For q(x)=q0+b*x, cell averages satisfy T_wall-T_j=a_j*q0+b_j*b.
+                a1 = d1/(2*k1)
+                a2 = a1 + area/interface
+                contact = area/interface-a1-d2/(2*k2)
+                b1 = d1**2/(6*k1)
+                b2 = d1**2/(2*k1)+d1*contact+(d1*d2/2+d2**2/6)/k2
+                scale = area/(a1*b2-a2*b1)
+                correction = scale*b1
+                g = scale*(b2-b1)
+            for cell, node, other, link, extra, conv in zip(cells, ids, inner, g, correction, film):
+                A[cell,cell] -= link+extra
+                A[cell,node] = link
+                A[node,cell] = link+extra
+                if extra:
+                    A[cell,other] += extra
+                    A[node,other] = -extra
                 A[node,node] = -link-conv
             mass = np.r_[mass, cw*area]
             spec = bc[side]
@@ -645,7 +679,7 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
             b = np.r_[b, -film*values[side][mask]]
             if side in signals:
                 varying_loads.append((ids, signals[side][:,mask], film))
-            wall_links[side] = (mask, ids, cells, g)
+            wall_links[side] = (mask, ids, cells, g, inner, correction)
         A = A.tocsc()
     M = sp.diags(mass, format="csc")
     states = np.empty((len(time), len(mass)))
@@ -670,8 +704,9 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
         powers = {side: _conductive_wall_power(types[side], signals.get(side, values[side]), conductance,
                                                area, state[:, cells])
                   for side, cells, conductance, _, _, area in side_specs}
-        for side, (mask, ids, cells, g) in wall_links.items():
-            powers[side][:,mask] = g*(states[:,ids]-states[:,cells])
+        for side, (mask, ids, cells, g, inner, correction) in wall_links.items():
+            powers[side][:,mask] = (g*(states[:,ids]-states[:,cells])
+                                     +correction*(states[:,inner]-states[:,cells]))
         if periodic_y:
             powers["south"] = seam*(history[:, -1]-history[:, 0])
             powers["north"] = -powers["south"]

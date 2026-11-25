@@ -173,3 +173,34 @@ def test_mixed_wall_storage_tracks_nonuniform_steps_and_forcing(theta):
     np.testing.assert_allclose(incoming[:,1],q[:,1],atol=1e-12)
     energy = 3*(u*volume).sum(axis=(1,2))
     np.testing.assert_allclose(np.diff(energy),integral(q.sum(axis=1)+source(time)),atol=1e-12)
+
+
+@pytest.mark.parametrize("side", ["west","east","south","north"])
+def test_second_order_dynamic_wall_with_adjacent_material_contact(side):
+    # Prescribe an initial linear inward flux across two unequal, dissimilar cells.
+    d1,d2,k1,k2,contact = .2,.63,1.7,4.3,.28
+    wall, q0, slope = 2.,1.8,-.7
+    mean1 = wall-(q0*d1/2+slope*d1**2/6)/k1
+    interface = wall-(q0*d1+slope*d1**2/2)/k1-contact*(q0+slope*d1)
+    mean2 = interface-((q0+slope*d1)*d2/2+slope*d2**2/6)/k2
+    widths,k,u = np.array([d1,d2]), np.array([k1,k2]), np.array([mean1,mean2])
+    if side in ("east","north"):
+        widths,k,u = widths[::-1],k[::-1],u[::-1]
+    area = .8
+    if side in ("west","east"):
+        dx,dy = widths,[area]
+        opts = dict(contact_resistance_x=contact)
+    else:
+        dx,dy = [area],widths
+        u = u[:,None]
+        opts = dict(contact_resistance_y=contact,conductivity_y=k[:,None])
+        k = 1.
+    times = np.array([0., .002, .008, .02])
+    bc = {side:dict(type="robin",values=0.,film_coefficient=0.,wall_areal_heat_capacity=3.,
+                    initial_wall_temperature=wall)}
+    t,power = solve_transient_conduction(dx,dy,k,1.,bc,times,u,wall_flux_order=2,
+                                         return_wall_power=True,**opts)
+    q = power[side][:,0]
+    np.testing.assert_allclose(q[0],area*q0,atol=1e-13)
+    net = (t*np.outer(dy,dx)).sum(axis=(1,2))
+    np.testing.assert_allclose(np.diff(net),np.diff(times)*(q[:-1]+q[1:])/2,atol=1e-13)
