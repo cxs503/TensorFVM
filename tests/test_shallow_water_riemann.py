@@ -271,6 +271,8 @@ def test_generated_dry_interval_and_finite_volume_refinement(record_property):
     np.testing.assert_allclose(h, [1., .25, 0., 0., 0., .0625, .25])
     np.testing.assert_allclose(u, [-3., -2., 0., 0., 0., 1.5, 2.])
     errors = []
+    cell_depth_errors = []
+    discharge_errors = []
     for n in (200, 400, 800):
         solver = ShallowWater1D(n, -2., 2., gravity=1., cfl=.4, order=2)
         solver.set_state(*dry_riemann_state(solver.x, 0., *data, gravity=1.))
@@ -279,11 +281,18 @@ def test_generated_dry_interval_and_finite_volume_refinement(record_property):
         h, u = solver.primitive()
         href, _ = dry_riemann_state(solver.x, solver.time, *data, gravity=1.)
         errors.append(float(np.mean(abs(h-href))))
+        edges = np.linspace(-2., 2., n+1)
+        havg, qavg = exact.dry_riemann_cell_averages(edges, solver.time, *data, gravity=1.)
+        discharge_errors.append(float(np.mean(abs(h*u-qavg))))
+        cell_depth_errors.append(float(np.mean(abs(h-havg))))
+        record_property(f"cell_mean_depth_error_{n}", cell_depth_errors[-1])
+        record_property(f"cell_mean_discharge_error_{n}", discharge_errors[-1])
         budget = abs(solver.total_volume()-volume - solver.time*(-3.-.5))
         record_property(f"mean_depth_error_{n}", errors[-1])
         record_property(f"mass_budget_error_{n}", float(budget))
         assert h.min() >= 0 and budget < 1e-11
-    assert all(fine < .8*coarse for coarse,fine in zip(errors, errors[1:]))
+    for series in (errors, cell_depth_errors, discharge_errors):
+        assert all(fine < .8*coarse for coarse,fine in zip(series, series[1:]))
 
 
 def test_dry_reference_moving_one_sided_beds_and_touching_fronts():
@@ -300,3 +309,33 @@ def test_dry_reference_moving_one_sided_beds_and_touching_fronts():
     assert dry_riemann_state(0., 1., 1., -2., 1., 2., gravity=1.) == (0., 0.)
     with pytest.raises(ValueError, match="interacting wet waves"):
         dry_riemann_state(0., 1., 1., 0., 1., 0.)
+
+
+@pytest.mark.parametrize("data", [(1., -3., .25, 2.), (1., .3, 0., 0.),
+                                  (0., 0., 1., -.3), (1., -2., 1., 2.)])
+def test_dry_cell_means_integrate_boundary_fluxes(data, record_property):
+    # Shifted discontinuity falls inside a nonuniform cell. All waves remain
+    # inside the domain, so the two unchanged exterior states fix both budgets.
+    edges = np.array([-4., -1.2, -.41, -.11, .02, .33, .55, 1.1, 3.])
+    x0, t = .07, .24
+    hL, uL, hR, uR = data
+    h, q = exact.dry_riemann_cell_averages(edges, t, *data, gravity=1., x0=x0)
+    left, right = x0-edges[0], edges[-1]-x0
+    mass = left*hL + right*hR + t*(hL*uL-hR*uR)
+    momentum = left*hL*uL + right*hR*uR + t*(hL*uL**2+.5*hL**2-hR*uR**2-.5*hR**2)
+    widths = np.diff(edges)
+    error = max(abs(widths@h-mass), abs(widths@q-momentum))
+    record_property("maximum_integral_discrepancy", float(error))
+    assert error < 5e-14
+    h0, q0 = exact.dry_riemann_cell_averages(edges, 0., *data, gravity=1., x0=x0)
+    fraction = (x0-.02)/(.33-.02)
+    assert h0[4] == pytest.approx(fraction*hL + (1-fraction)*hR)
+    assert q0[4] == pytest.approx(fraction*hL*uL + (1-fraction)*hR*uR)
+
+
+def test_dry_cell_means_resolve_partial_fan_and_vacuum():
+    # For Ritter with g=hL=1 at t=1, h=(2-x)^2/9 and
+    # hu=2*(1+x)*(2-x)^2/27 in the fan. The second cell straddles x=2.
+    h, q = exact.dry_riemann_cell_averages([0., 1., 3., 4.], 1., 1., 0., 0., 0., gravity=1.)
+    np.testing.assert_allclose(h, [7/27, 1/54, 0.], atol=1e-15, rtol=0)
+    np.testing.assert_allclose(q, [13/54, 1/36, 0.], atol=1e-15, rtol=0)
