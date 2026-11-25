@@ -102,6 +102,7 @@ __all__ = [
     "run_case",
     "sample_exact",
     "riemann_cell_averages",
+    "riemann_integrated_flux",
     "smooth_region_ode_residuals",
     "solve_riemann",
     "verdict",
@@ -321,6 +322,25 @@ def sample_exact(sol: RiemannSolution, x, t: float):
 
     # The star-state velocity lies between the two waves in every inertial frame.
     return np.where(xi <= sol.u_star, h_l, h_r), np.where(xi <= sol.u_star, u_l, u_r)
+
+
+def riemann_integrated_flux(sol: RiemannSolution, x, t: float):
+    """Time integrals of rightward mass and momentum flux at fixed positions.
+
+    For a self-similar conservation law, the time derivative of
+    t*F(U) - (x-x0)*U equals F(U). This primitive is continuous at a
+    moving shock by Rankine-Hugoniot. Subtract its initial value to obtain
+    the flux since time zero, including any wave crossings at the face.
+    """
+    if not math.isfinite(t) or t < 0:
+        raise ValueError("time must be finite and nonnegative")
+    x = np.asarray(x, dtype=float)
+    h0, u0 = sample_exact(sol, x, 0.)
+    h, u = sample_exact(sol, x, t)
+    q = h*u
+    offset = x-sol.x0
+    return (t*q-offset*(h-h0),
+            t*(q*u+.5*sol.gravity*h*h)-offset*(q-h0*u0))
 
 
 def riemann_cell_averages(sol: RiemannSolution, edges, t: float):
@@ -764,15 +784,19 @@ def run_case(case: RiemannCase, n: int = 1600, cfl: float = 0.4,
     metrics["volume_initial"] = float(volume0)
     metrics["volume_drift"] = (float(abs(solver.total_volume() - volume0)
                                      / volume0) if volume0 > 0 else float("nan"))
-    # The ends are transmissive, so the total volume is *not* conserved: it must
-    # change at exactly the analytic net boundary flux hL uL - hR uR (the states
-    # at the ends stay at their initial values because no wave reaches them,
-    # which the case definitions guarantee and ``test_..._budget`` asserts).
-    expected_drift = case.t_end * (case.hL * case.uL - case.hR * case.uR)
-    metrics["volume_change"] = float(solver.total_volume() - volume0)
-    metrics["volume_change_expected"] = float(expected_drift)
-    metrics["volume_budget_relative"] = float(
-        abs((solver.total_volume() - volume0) - expected_drift) / volume0)
+    # The analytic boundary flux includes waves passing either domain end.
+    mass_flux, impulse = riemann_integrated_flux(case.solution(), edges[[0, -1]], solver.time)
+    expected_mass = mass_flux[0]-mass_flux[1]
+    expected_momentum = impulse[0]-impulse[1]
+    volume_change = solver.total_volume()-volume0
+    momentum_change = solver.momentum()-momentum0
+    metrics["volume_change"] = float(volume_change)
+    metrics["volume_change_expected"] = float(expected_mass)
+    metrics["volume_budget_relative"] = float(abs(volume_change-expected_mass)/volume0)
+    metrics["momentum_change"] = float(momentum_change)
+    metrics["momentum_change_expected"] = float(expected_momentum)
+    # Initial momentum may be zero for a dam break at rest.
+    metrics["momentum_budget_relative"] = float(abs(momentum_change-expected_momentum)/(volume0*case.c_ref))
     metrics["momentum_initial"] = float(momentum0)
     metrics["momentum_drift"] = (float(abs(solver.momentum() - momentum0)
                                        / abs(momentum0))
@@ -810,6 +834,8 @@ def convergence_series(case: RiemannCase, resolutions=(200, 400, 800, 1600),
             "plateau_velocity": metrics["plateau"]["velocity_rel_error"],
             "extremum_count": metrics["extremum_count"],
             "volume_drift": metrics["volume_drift"],
+            "volume_budget_relative": metrics["volume_budget_relative"],
+            "momentum_budget_relative": metrics["momentum_budget_relative"],
             "pass": record["verdict"]["pass"],
         })
     l1 = [row["depth_l1"] for row in rows]

@@ -78,6 +78,7 @@ from .riemann import (
     run_case as run_riemann_case,
     solve_riemann,
     riemann_cell_averages,
+    riemann_integrated_flux,
     wave_pattern,
 )
 from .exact import (
@@ -184,7 +185,7 @@ __all__ = [
     "reference_selfcheck",
     "ritter_front_position",
     "ritter_state", "dry_riemann_state", "dry_riemann_cell_averages",
-    "riemann_cell_averages",
+    "riemann_cell_averages", "riemann_integrated_flux",
     "run_case",
     "sensitivity_study",
     "similarity_probes",

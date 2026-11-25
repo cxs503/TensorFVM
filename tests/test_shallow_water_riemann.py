@@ -416,6 +416,8 @@ def test_off_center_dam_initialization_and_stationary_shock(record_property):
     assert shock["rel_error"] < .05
     record_property("stationary_shock_position_error", abs(shock["x_measured"]-case.x0))
     record_property("relative_volume_budget_error", m["volume_budget_relative"])
+    record_property("relative_momentum_budget_error", m["momentum_budget_relative"])
+    assert m["momentum_budget_relative"] < 1e-12
     assert m["volume_budget_relative"] < 1e-12
 
 
@@ -426,3 +428,37 @@ def test_unresolved_star_plateau_fails_grading():
     metrics = profile_metrics(case, x, h, u, .2)
     assert not metrics["plateau"]["resolved"]
     assert "plateau_velocity" in verdict(metrics)["failed"]
+
+
+def test_integrated_flux_across_shock_agrees_with_arrival_time(record_property):
+    from tensorfvm.shallow_water import riemann_integrated_flux
+
+    sol = solve_riemann(1., 0., .5, 0., x0=.37)
+    t, arrival = .75, .45
+    x = sol.x0 + arrival*sol.right_shock_speed
+    def flux(h, u):
+        return np.array([h*u, h*u*u + .5*sol.gravity*h*h])
+    expected = arrival*flux(sol.hR, sol.uR) + (t-arrival)*flux(sol.h_star, sol.u_star)
+    actual = riemann_integrated_flux(sol, x, t)
+    error = np.max(abs(actual-expected))
+    record_property("maximum_integrated_flux_error", float(error))
+    assert error < 1e-14
+
+
+@pytest.mark.parametrize("case", DEFAULT_CASES, ids=lambda c: c.name)
+def test_integrated_flux_balances_cells_cut_by_waves(case, record_property):
+    from tensorfvm.shallow_water import riemann_cell_averages, riemann_integrated_flux
+
+    sol = case.solution()
+    edges = np.linspace(-.9, 1.12, 18)
+    t = .25
+    initial = riemann_cell_averages(sol, edges, 0.)
+    final = riemann_cell_averages(sol, edges, t)
+    fluxes = riemann_integrated_flux(sol, edges, t)
+    for name, start, end, flux in zip(("mass", "momentum"), initial, final, fluxes):
+        residual = float(np.max(abs((end-start)*np.diff(edges) + np.diff(flux))))
+        record_property(f"max_cell_{name}_residual", residual)
+        assert residual < 1e-13
+    budget = run_case(case, n=400)["metrics"]["momentum_budget_relative"]
+    record_property("normalized_numerical_momentum_residual", budget)
+    assert budget < 1e-12
