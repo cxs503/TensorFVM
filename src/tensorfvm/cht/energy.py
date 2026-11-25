@@ -438,6 +438,21 @@ def _validate_conduction_bc(bc, sides, dtype):
             raise ValueError(f"nonfinite boundary value on {side}")
 
 
+def _join_periodic_y(operator, conductance_y, bc):
+    if "north" in bc or "south" in bc:
+        raise ValueError("periodic_y requires omitting north and south boundary conditions")
+    # Each incidence row takes the last-minus-first temperature. The two
+    # boundary half-cell resistances are in series across the periodic seam.
+    seam = 1/(1/conductance_y[-1] + 1/conductance_y[0])
+    nx = len(seam)
+    columns = np.arange(nx)
+    last = operator.shape[0]-nx+columns
+    incidence = sp.coo_matrix((np.r_[np.ones(nx), -np.ones(nx)],
+                              (np.tile(columns, 2), np.r_[last, columns])),
+                              shape=(nx, operator.shape[0])).tocsc()
+    return operator - incidence.T @ sp.diags(seam) @ incidence, seam
+
+
 def solve_harmonic_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc,
                               angular_frequency, *, source=0., conductivity_y=None,
                               contact_resistance_x=0., contact_resistance_y=0.,
@@ -464,17 +479,7 @@ def solve_harmonic_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc
                                   bc, source, contact_resistance_x, contact_resistance_y,
                                   conductivity_y, load_dtype=complex)
     if periodic_y:
-        if "north" in bc or "south" in bc:
-            raise ValueError("periodic_y requires omitting north and south boundary conditions")
-        # Combine the two boundary half-cell resistances in series. Each row
-        # of the incidence matrix takes the last-minus-first temperature.
-        cond_n = faces[1]
-        seam = 1/(1/cond_n[-1] + 1/cond_n[0])
-        columns = np.arange(nx)
-        incidence = sp.coo_matrix((np.r_[np.ones(nx), -np.ones(nx)],
-                                  (np.tile(columns, 2), np.r_[columns+(ny-1)*nx, columns])),
-                                  shape=(nx, nx*ny)).tocsc()
-        A = A - incidence.T @ sp.diags(seam) @ incidence
+        A, seam = _join_periodic_y(A, faces[1], bc)
     mass = (capacity*np.outer(dy, dx)).ravel()
     state = spla.spsolve(sp.diags(1j*angular_frequency*mass, format="csc") - A, -b)
     _, _, side_specs, types, values, _ = faces
@@ -495,7 +500,7 @@ def solve_harmonic_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc
 def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc,
                                time, initial_temperature, *, source=0.0,
                                contact_resistance_x=0.0, contact_resistance_y=0.0,
-                               theta=0.5, conductivity_y=None, return_wall_power=False):
+                               theta=0.5, conductivity_y=None, return_wall_power=False, periodic_y=False):
     """Advance cell-centred conduction with fixed material data and boundary types.
 
     Return temperature at each requested time with shape (nt, ny, nx). Cell
@@ -510,6 +515,9 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
     With return_wall_power=True return (temperature, wall_power). For each
     side, wall_power[side] has shape (nt, number_of_faces) and gives inward
     watts per face for unit depth. To integrate use the same theta as the solve.
+    With periodic_y=True omit the north and south BCs. Those two face powers
+    then report opposite inward transfers across a perfectly conducting contact
+    between the last and first rows. Interior contact resistances are unchanged.
     theta=0.5 selects Crank-Nicolson and theta=1 selects backward Euler.
     """
     dx, dy, time = (np.asarray(v, dtype=float) for v in (dx, dy, time))
@@ -540,6 +548,8 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
     _validate_conduction_bc(static_bc, sides, float)
     A, b, faces = _assemble_energy(dx, dy, k, np.zeros((ny, nx+1)), np.zeros((ny+1, nx)),
                                static_bc, source, contact_resistance_x, contact_resistance_y, conductivity_y)
+    if periodic_y:
+        A, seam = _join_periodic_y(A, faces[1], bc)
     _, _, side_specs, types, values, _ = faces
     varying_loads = []
     for side, cells, conductance, _, _, area in side_specs:
@@ -565,6 +575,9 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
         powers = {side: _conductive_wall_power(types[side], signals.get(side, values[side]), conductance,
                                                area, state[:, cells])
                   for side, cells, conductance, _, _, area in side_specs}
+        if periodic_y:
+            powers["south"] = seam*(history[:, -1]-history[:, 0])
+            powers["north"] = -powers["south"]
         return history, powers
     return history
 

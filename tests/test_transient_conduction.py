@@ -93,3 +93,23 @@ def test_time_dependent_face_signals_match_each_step_storage(theta):
     net = sum(side.sum(axis=1) for side in power.values())
     stored = 2*np.diff(t[:,0], axis=0) @ np.array([.4,.6])
     np.testing.assert_allclose(stored, np.diff(time)*((1-theta)*net[:-1]+theta*net[1:]), atol=1e-14)
+
+
+@pytest.mark.parametrize("theta", [.5, 1.])
+def test_periodic_two_rows_integrate_seam_and_interior_separately(theta):
+    time = np.array([0., .01, .03, .1])
+    dy = np.array([.3, .7])
+    ky = np.array([[1.], [4.]])
+    capacity = np.array([[2.], [3.]])
+    source = np.array([[2.], [-1.]])
+    t, wall = solve_transient_conduction([1.], dy, 1., capacity, {}, time, [[1.], [3.]],
+                    theta=theta, conductivity_y=ky, contact_resistance_y=.4,
+                    source=source, periodic_y=True, return_wall_power=True)
+    resistance = .15+.35/4
+    delta = t[:, 1, 0]-t[:, 0, 0]
+    np.testing.assert_allclose(wall["south"][:, 0], delta/resistance)
+    np.testing.assert_array_equal(wall["north"], -wall["south"])
+    into_lower = wall["south"][:, 0]+delta/(resistance+.4)
+    power = np.column_stack((into_lower, -into_lower))+source.ravel()*dy
+    stored = np.diff(t[:, :, 0], axis=0)*(dy*capacity.ravel())
+    np.testing.assert_allclose(stored, np.diff(time)[:, None]*((1-theta)*power[:-1]+theta*power[1:]))
