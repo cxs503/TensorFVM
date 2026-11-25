@@ -453,3 +453,24 @@ def test_shared_storing_trace_requires_consistent_initial_value():
                     interface_heat_capacity=1.,initial_trace_temperatures=(.2,.8))
     with pytest.raises(ValueError,match="interface capacity left fraction"):
         solve_harmonic_stepped_rod([.4,.6],1.,2.,1.,[0.,0.],2.,interface_capacity_left_fraction=-.1)
+
+
+@pytest.mark.parametrize("resistance",[0.,.18])
+def test_opposed_pulses_transfer_heat_between_contact_traces(resistance):
+    from tensorfvm.cht.rod import solve_transient_stepped_rod
+
+    time = np.array([0.,.035,.08])
+    def drive(t):
+        p = 3.*(.015<=t<.052)
+        return p,-p
+    _,_,_,_,(west,east),heat = solve_transient_stepped_rod(
+        [.4,.6],[1.,2.],2.,1.,[0.,0.],time,0.,method="sdirk2",trace_power=drive,
+        load_jump_times=(.015,.052),contact_resistance=resistance,interface_power=1.,
+        interface_left_fraction=.6,interface_heat_capacity=.8,interface_capacity_left_fraction=.25,
+        initial_trace_temperatures=(0.,0.),return_traces=True,return_step_heat=True)
+    pulse = 3*np.array([.02,.017])
+    dt = np.diff(time)
+    np.testing.assert_allclose(heat["interface"][:,0],dt,atol=1e-14)
+    q = heat["contact"][:,0]
+    np.testing.assert_allclose(.2*np.diff(west[:,0]),heat["right"][:,0]+.6*dt+pulse-q,atol=1e-14)
+    np.testing.assert_allclose(.6*np.diff(east[:,0]),q+.4*dt-pulse-heat["left"][:,1],atol=1e-14)
