@@ -372,3 +372,22 @@ def test_pulsed_interface_power_conserves_energy(method):
     energy = u @ np.array([1.6,1.2])+.3*f[:,1]
     np.testing.assert_allclose(np.diff(energy),supplied,atol=1e-13)
     np.testing.assert_allclose(.3*np.diff(f[:,1]),heat["right"][:,0]-heat["left"][:,1]+supplied,atol=1e-13)
+
+
+def test_lumped_interface_storage_sets_steady_energy_gauge():
+    from tensorfvm.cht.rod import solve_steady_stepped_rod
+
+    opts = dict(end_types=("power","power"),mean_temperature=2.,flux_order=2)
+    cell,face,left,right = solve_steady_stepped_rod([.2,.8],1.,1.,1.,[1.,-1.],
+                                    interface_heat_capacity=.6,**opts)
+    np.testing.assert_allclose((cell @ [.2,.8]+.6*face[1])/1.6,2.,atol=1e-14)
+    np.testing.assert_allclose([left,right],1.,atol=1e-14)
+    with pytest.raises(ValueError, match="interface heat capacity"):
+        solve_steady_stepped_rod([.2,.8],1.,1.,1.,[1.,-1.],interface_heat_capacity=-.1,**opts)
+
+
+def test_equal_area_harmonic_interface_can_store_heat():
+    capacity,omega,power = .6,2.,3.+1j
+    _,face,left,right = solve_harmonic_stepped_rod([.3,.7],1.,2.,1.,[0.,0.],omega,
+                                    interface_power=power,interface_heat_capacity=capacity)
+    np.testing.assert_allclose(left[1]-right[0]+1j*omega*capacity*face[1],power,atol=1e-13)
