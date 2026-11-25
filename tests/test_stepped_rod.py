@@ -781,3 +781,29 @@ def test_quartic_source_stencil_matches_cell_averages_on_a_nonuniform_grid():
     gradient,curvature = estimate_rod_source_derivatives(dx,np.diff(p.integ()(x))/dx)
     np.testing.assert_allclose(gradient,p.deriv()(mid),atol=2e-12,rtol=0.)
     np.testing.assert_allclose(curvature,p.deriv(2)(mid),atol=2e-12,rtol=0.)
+
+
+@pytest.mark.parametrize("bulk", [False, True])
+def test_steady_estimated_derivatives_with_prescribed_gauge_or_exchange(bulk):
+    from numpy.polynomial import Polynomial
+    from tensorfvm.cht.rod import solve_steady_stepped_rod
+
+    x = np.array([0.,.09,.19,.45,.63,.83,1.])
+    dx,mid = np.diff(x),(x[1:]+x[:-1])/2
+    # With exchange, a linear reference and nonuniform reservoir cancel
+    # pointwise in the cell balance. Without it use quartic T and a mean gauge.
+    t = Polynomial([.8,-.3]) if bulk else Polynomial([.8,-.3,.1,.7,-.2])
+    p = -2*t.deriv()
+    cell = np.diff(t.integ()(x))/dx
+    h = .9+mid if bulk else np.zeros_like(dx)
+    reservoir = np.sin(mid)
+    applied = np.diff(p(x))/dx-h*(reservoir-cell)
+    u,_,west,east,(gradient,curvature) = solve_steady_stepped_rod(dx,1.,2.,1.,[p(0.),-p(1.)],
+        source=applied,flux_order=2,end_types=("power","power"),heat_loss_coefficient=h,
+        bulk_ambient_temperature=reservoir,mean_temperature=None if bulk else dx@cell,
+        source_derivative_breaks=[],return_source_derivatives=True)
+    for observed,expected in ((u,cell),(west,p(x[:-1])),(east,p(x[1:])),
+                              (gradient,p.deriv(2)(mid)),(curvature,p.deriv(3)(mid))):
+        np.testing.assert_allclose(observed,expected,rtol=0.,atol=3e-11)
+    with pytest.raises(ValueError,match="estimated or prescribed"):
+        solve_steady_stepped_rod(dx,1.,2.,1.,[0.,1.],flux_order=2,source_derivative_breaks=[],source_gradient=0.)

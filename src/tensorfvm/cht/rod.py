@@ -251,13 +251,21 @@ def solve_steady_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
                              ambient_temperature=0., shoulder_areal_heat_capacity=0.,
                              flux_order=1, contact_resistance=0., return_traces=False,
                              end_types=("temperature","temperature"), end_film_coefficient=0., end_areal_heat_capacity=0., mean_temperature=None, interface_power=0., interface_heat_capacity=0., interface_left_fraction=None, interface_capacity_left_fraction=None, trace_power=(0.,0.),
-                             heat_loss_coefficient=0., bulk_ambient_temperature=0.):
+                             heat_loss_coefficient=0., bulk_ambient_temperature=0.,
+                             source_derivative_breaks=None, return_source_derivatives=False):
     """Steady temperatures and rightward powers with the harmonic solver's conventions.
 
     source gives the cell mean in W/m³. With flux_order=2, source_gradient
     and source_curvature optionally specify the first and second spatial
     derivatives at each cell midpoint (W/m⁴ and W/m⁵). The resulting steady
-    reconstruction integrates a cellwise quadratic generation profile.
+    reconstruction integrates a cellwise quadratic net generation profile.
+    With source_derivative_breaks set to a sequence of interior face indices,
+    estimate both derivatives from the cell means of source + H*(Tb-Tmean).
+    Split the reconstruction at material boundaries and source jumps; an
+    empty sequence selects a single region. When H is nonzero a predictor
+    supplies Tmean, using the same factorization as the corrected solve.
+    return_source_derivatives appends (gradient, curvature) for interior
+    sampling. These arrays are zero if no correction is requested.
     Cellwise exchange H*(Tb-Tmean) uses the same W/(m³ K) coefficient and
     reservoir temperature in K as the harmonic and transient paths. Any
     positive H anchors the steady temperature. When H is zero throughout,
@@ -271,16 +279,28 @@ def solve_steady_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
         shoulder_areal_heat_capacity,flux_order,contact_resistance,end_types,end_film_coefficient,end_areal_heat_capacity,interface_heat_capacity,interface_left_fraction,interface_capacity_left_fraction)
     rhs, ends, _ = _load(volume,end_load,layout,film,end_temperatures,source,ambient_temperature,interface_power,trace_power,float)
     operator,bulk_g = _bulk_exchange_operator(operator,mass,volume,layout.cells,heat_loss_coefficient)
-    rhs[layout.cells] += bulk_g*_profile(bulk_ambient_temperature,len(volume),"bulk ambient temperature")
-    offsets = None
-    if source_gradient is not None or source_curvature is not None:
-        if flux_order != 2:
-            raise ValueError("source derivatives require flux_order=2")
-        n = len(volume)
-        width = np.asarray(dx)
+    n = len(volume)
+    reservoir = _profile(bulk_ambient_temperature,n,"bulk ambient temperature")
+    rhs[layout.cells] += bulk_g*reservoir
+    estimated = source_derivative_breaks is not None
+    supplied = source_gradient is not None or source_curvature is not None
+    if (estimated or supplied) and flux_order!=2:
+        raise ValueError("source derivatives require flux_order=2")
+    if estimated and supplied:
+        raise ValueError("choose estimated or prescribed source derivatives")
+    offsets = factors = None
+    if estimated:
+        net = _profile(source,n,"source")
+        if np.any(bulk_g):
+            factors = splu(operator.tocsc())
+            predicted = factors.solve(rhs)[layout.cells]
+            net = net+bulk_g/volume*(reservoir-predicted)
+        slope,curvature = estimate_rod_source_derivatives(dx,net,break_faces=source_derivative_breaks)
+    elif supplied or return_source_derivatives:
         slope = _profile(0. if source_gradient is None else source_gradient,n,"source gradient")
         curvature = _profile(0. if source_curvature is None else source_curvature,n,"source curvature")
-        offsets = _apply_source_derivatives(rhs,layout,volume,width,slope,curvature)
+    if estimated or supplied:
+        offsets = _apply_source_derivatives(rhs,layout,volume,np.asarray(dx),slope,curvature)
     if not layout.anchored and not np.any(bulk_g):
         if mean_temperature is None or not np.isscalar(mean_temperature) or not np.isfinite(mean_temperature):
             raise ValueError("unanchored ends without film exchange require a finite mean_temperature")
@@ -295,8 +315,9 @@ def solve_steady_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
     else:
         if mean_temperature is not None:
             raise ValueError("mean_temperature only applies to an unanchored steady rod")
-        state = spsolve(operator,rhs)
-    return layout.output(state,ends,g,flux_order,return_traces,offsets)
+        state = spsolve(operator,rhs) if factors is None else factors.solve(rhs)
+    result = layout.output(state,ends,g,flux_order,return_traces,offsets)
+    return result+((slope,curvature),) if return_source_derivatives else result
 
 
 def reconstruct_steady_rod_field(dx, area, conductivity, cell_temperature, left_power, right_power,
