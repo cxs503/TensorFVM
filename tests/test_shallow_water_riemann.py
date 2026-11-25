@@ -602,3 +602,58 @@ def test_stationary_shock_at_shared_face_counts_loss_once(reverse):
     assert west["shock_losses"][side] == 0
     assert east["shock_losses"][side] == pytest.approx(.3*9/8)
     assert max(abs(west["residual"]), abs(east["residual"])) < 1e-12
+
+
+@pytest.mark.parametrize("dry", [False, True])
+def test_moving_faces_close_deforming_volume_balance(dry, record_property):
+    from tensorfvm.shallow_water import (
+        dry_riemann_cell_averages, dry_riemann_integrated_flux,
+        riemann_cell_averages, riemann_integrated_flux,
+    )
+
+    x0, end = .4, .7
+    data = (1., .2, 0. if dry else .3, 0.)
+    if dry:
+        def means(edges, t):
+            return dry_riemann_cell_averages(edges, t, *data, gravity=1., x0=x0)
+        def flux(x, speed):
+            return dry_riemann_integrated_flux(x, end, *data, gravity=1., x0=x0,
+                                               face_speed=speed)
+    else:
+        sol = solve_riemann(*data, gravity=1., x0=x0)
+        def means(edges, t):
+            return riemann_cell_averages(sol, edges, t)
+        def flux(x, speed):
+            return riemann_integrated_flux(sol, x, end, face_speed=speed)
+
+    # Both boundaries start to the right of the dam. The left one moves into
+    # the fan. The right one is overtaken by the wet shock or the dry front.
+    edges = np.array([x0+.1, x0+.5])
+    speeds = np.array([-.5, .15])
+    final_edges = edges + end*speeds
+    initial = np.asarray(means(edges, 0.)).ravel()*np.diff(edges)
+    final = np.asarray(means(final_edges, end)).ravel()*np.diff(final_edges)
+    expected = np.asarray(flux(edges[0], speeds[0])) - flux(edges[1], speeds[1])
+    errors = np.abs((final-initial)-expected)
+    record_property("mass_balance_error", errors[0])
+    record_property("momentum_balance_error", errors[1])
+    assert max(errors) < 1e-13
+    with pytest.raises(ValueError, match="face_speed"):
+        flux(x0, float("nan"))
+
+
+def test_face_on_traveling_bore_matches_downstream_transport(record_property):
+    from tensorfvm.shallow_water import riemann_integrated_flux
+
+    sol = solve_riemann(1., .2, .3, 0., gravity=1., x0=.4)
+    speed = sol.right_shock_speed
+    end = .7
+    assert speed > .15+.5/end
+    # Rankine-Hugoniot gives the same moving-face flux from either trace.
+    # The quiescent downstream state transports mass relative to the bore
+    # while its only lab-frame momentum flux is the pressure force.
+    actual = riemann_integrated_flux(sol, sol.x0, end, face_speed=speed)
+    expected = end*np.array([-speed*sol.hR, .5*sol.gravity*sol.hR**2])
+    error = np.max(np.abs(actual-expected))
+    record_property("max_bore_transport_error", error)
+    assert error < 2e-14

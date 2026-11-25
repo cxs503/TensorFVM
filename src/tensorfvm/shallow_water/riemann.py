@@ -417,20 +417,21 @@ def riemann_energy_budget(sol: RiemannSolution, x_min: float, x_max: float, t: f
             "residual": final-initial-west+east+sum(losses.values())}
 
 
-def riemann_integrated_flux(sol: RiemannSolution, x, t: float):
-    """Time integrals of rightward mass and momentum flux at fixed positions.
+def riemann_integrated_flux(sol: RiemannSolution, x, t: float, *, face_speed: float = 0.0):
+    """Cumulative rightward mass and lab-frame momentum crossing a moving face.
 
-    For a self-similar conservation law, the time derivative of
-    t*F(U) - (x-x0)*U equals F(U). This primitive is continuous at a
-    moving shock by Rankine-Hugoniot. Subtract its initial value to obtain
-    the flux since time zero, including any wave crossings at the face.
+    Each face starts at x and travels at constant speed w=face_speed. Along
+    its trajectory the self-similar primitive t*F(U) - (x(t)-x0)*U has
+    derivative F(U)-w*U and is continuous across shocks by Rankine-Hugoniot.
     """
+    if not math.isfinite(face_speed):
+        raise ValueError("face_speed must be finite")
     if not math.isfinite(t) or t < 0:
         raise ValueError("time must be finite and nonnegative")
     x = np.asarray(x, dtype=float)
     h0, u0 = sample_exact(sol, x, 0.)
-    h, u = sample_exact(sol, x, t)
-    return _similarity_flux_integral(x-sol.x0, t, sol.gravity, h0, u0, h, u)
+    h, u = sample_exact(sol, x+t*face_speed, t)
+    return _similarity_flux_integral(x-sol.x0, t, sol.gravity, h0, u0, h, u, face_speed)
 
 
 def riemann_cell_averages(sol: RiemannSolution, edges, t: float):

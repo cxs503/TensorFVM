@@ -191,23 +191,27 @@ def dry_riemann_state(x, t: float, hL: float, uL: float, hR: float, uR: float,
 
 
 def dry_riemann_integrated_flux(x, t: float, hL: float, uL: float, hR: float,
-                                uR: float, gravity: float = 9.81, x0: float = 0.0):
-    """Cumulative rightward mass and momentum flux through each fixed face.
+                                uR: float, gravity: float = 9.81, x0: float = 0.0,
+                                *, face_speed: float = 0.0):
+    """Cumulative rightward mass and lab-frame momentum crossing each face.
 
-    Integrates from time zero through first wetting or subsequent drying.
-    The momentum flux includes the hydrostatic pressure term g*h²/2.
+    A face starts at x and moves at constant face_speed. Integrates from
+    time zero through wetting or drying, including hydrostatic pressure.
     """
+    if not math.isfinite(face_speed):
+        raise ValueError("face_speed must be finite")
     x = np.asarray(x, dtype=float)
-    h, u = dry_riemann_state(x, t, hL, uL, hR, uR, gravity, x0)
+    h, u = dry_riemann_state(x+t*face_speed, t, hL, uL, hR, uR, gravity, x0)
     h0, u0 = dry_riemann_state(x, 0., hL, uL, hR, uR, gravity, x0)
-    return _similarity_flux_integral(x-x0, t, gravity, h0, u0, h, u)
+    return _similarity_flux_integral(x-x0, t, gravity, h0, u0, h, u, face_speed)
 
 
-def _similarity_flux_integral(offset, t, gravity, h0, u0, h, u):
-    """Evaluate the self-similar flux primitive relative to its initial value."""
+def _similarity_flux_integral(offset, t, gravity, h0, u0, h, u, face_speed):
+    """Primitive along a straight face, with offset measured at time zero."""
     q = h*u
-    return (t*q-offset*(h-h0),
-            t*(q*u+.5*gravity*h*h)-offset*(q-h0*u0))
+    relative_speed = u-face_speed
+    return (t*(h*relative_speed)-offset*(h-h0),
+            t*(q*relative_speed+.5*gravity*h*h)-offset*(q-h0*u0))
 
 
 def _dry_wave_speeds(hL, uL, hR, uR, gravity):
