@@ -17,3 +17,21 @@ def test_dc_flux_and_sheet_location(resistance):
     np.testing.assert_allclose(sheet, expected, atol=1e-12)
     np.testing.assert_allclose(incoming, rate_over_tau/sheets, atol=1e-12)
     np.testing.assert_allclose(outgoing, incoming, atol=1e-12)
+
+
+def test_transparent_sheets_preserve_harmonic_bulk_flux():
+    from tensorfvm.cht.annulus import solve_annular_conduction
+
+    r = np.geomspace(.4, 1.1, 25)
+    k = np.repeat([1., 2.5, .8], 8)
+    cv = np.linspace(.7, 2.3, 24)
+    walls = [1.+.4j, -.2j]
+    faces = [8, 16]
+    _, whole_rates = solve_annular_conduction(
+        r, k, cv, walls, 8., azimuthal_mode=2, distributed_source=True, cell_location="volume_centroid")
+    _, incoming, outgoing = solve_storing_rings(
+        r, k, faces, walls, 8., volumetric_heat_capacity=cv, azimuthal_mode=2,
+        sheet_capacities=(0., 0.), contact_resistances=(0., 0.))
+    expected = whole_rates[faces]/(2*np.pi*r[faces])
+    np.testing.assert_allclose(incoming, expected, rtol=1e-11)
+    np.testing.assert_allclose(outgoing, expected, rtol=1e-11)

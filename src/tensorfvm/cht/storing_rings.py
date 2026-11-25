@@ -1,4 +1,4 @@
-"""Finite-volume response of two storing interfaces in a quasi-steady annulus."""
+"""Finite-volume response of two storing interfaces in a conducting annulus."""
 import numpy as np
 
 from .annulus import solve_annular_conduction
@@ -6,12 +6,14 @@ from .annulus import solve_annular_conduction
 
 def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, omega, *,
                         contact_resistances, sheet_capacities, sheet_generation=(0., 0.),
-                        azimuthal_mode=0):
+                        azimuthal_mode=0, volumetric_heat_capacity=None):
     """Return two sheet temperatures and their incoming and outgoing radial fluxes.
 
     The cell faces include both sheets. Conductivity is scalar or per cell.
     Wall temperatures and areal heat generation (W/m²) are complex amplitudes of
-    cos(mθ) exp(iωt). The bulk is quasi-steady. Each contact resistance (m² K/W)
+    cos(mθ) exp(iωt). Omitting volumetric_heat_capacity gives quasi-steady bulk conduction.
+    A positive scalar or per-cell capacity (J/(m³ K)) enables harmonic bulk storage.
+    Each contact resistance (m² K/W)
     is split equally about the storing sheet (capacity in J/(m² K)).
     Each output has one entry per sheet ordered from the bore outwards. Fluxes
     (W/m²) are positive towards increasing radius on both sides.
@@ -25,6 +27,8 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
     if not np.isscalar(omega) or not np.isrealobj(omega) or not np.isfinite(omega) or omega < 0:
         raise ValueError("omega must be finite and nonnegative")
     k = np.broadcast_to(np.asarray(conductivity, dtype=float), (len(r)-1,))
+    bulk_frequency = 0. if volumetric_heat_capacity is None else omega
+    cv = np.broadcast_to(1. if volumetric_heat_capacity is None else volumetric_heat_capacity, k.shape)
     walls = np.asarray(wall_temperatures, dtype=complex)
     generation = np.asarray(sheet_generation, dtype=complex)
     capacity = np.asarray(sheet_capacities, dtype=float)
@@ -40,12 +44,11 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
     domains = []
     for layer, (a, b) in enumerate(zip(ends, ends[1:])):
         film = boundary_films[layer:layer+2]
-        # With zero bulk frequency only the conductive and angular terms survive.
         # The two unit Dirichlet responses map end temperatures to radial rates.
         columns = []
         for boundary in np.eye(2):
             _, rate = solve_annular_conduction(
-                r[a:b+1], k[a:b], 1., boundary, 0., film_coefficients=film,
+                r[a:b+1], k[a:b], cv[a:b], boundary, bulk_frequency, film_coefficients=film,
                 azimuthal_mode=azimuthal_mode, cell_location="volume_centroid", distributed_source=True)
             columns.append(rate[[0, -1]])
         domains.append(np.column_stack(columns))
