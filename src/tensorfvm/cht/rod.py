@@ -282,7 +282,9 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
     (toward increasing x across the overlap, for each internal face).
     trace_power may be a callable returning the pair at time t.
     interface_power may also be callable. The total signed interface input in joules
-    is recorded per face in step_heat["interface"]. end_input gives external
+    is recorded per face in step_heat["interface"]. trace_left and trace_right
+    give the portions deposited on each trace, including split interface_power.
+    end_input gives external
     heat entering each end, including surface storage.
     """
     time = np.asarray(time,dtype=float)
@@ -344,7 +346,7 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
     previous_dt = None
     if return_step_heat:
         step_heat = {key:np.zeros((len(time)-1,size)) for key,size in
-                     (("left",n),("right",n),("source",n),("ambient",n-1),("interface",n-1),("contact",n-1),("end_input",2))}
+                     (("left",n),("right",n),("source",n),("ambient",n-1),("interface",n-1),("trace_left",n-1),("trace_right",n-1),("contact",n-1),("end_input",2))}
         types = np.asarray(end_types)
         area_values = _profile(area,n,"area")
         larger_left = area_values[:-1]>=area_values[1:]
@@ -401,6 +403,8 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
                 step_heat["source"][step] += dt*volume*((1-weight)*np.asarray(src)+weight*np.asarray(next_src))
                 step_heat["ambient"][step] += dt*film*((1-weight)*np.asarray(air)+weight*np.asarray(next_air)-faces[1:-1])
                 mean_power = (1-weight)*face_power+weight*next_power
+                step_heat["trace_left"][step] += dt*mean_power[0]
+                step_heat["trace_right"][step] += dt*mean_power[1]
                 step_heat["interface"][step] += dt*mean_power.sum(axis=0)
                 # Remove power deposited on the smaller branch itself when
                 # inferring the transfer across an ideal (unsplit) overlap.

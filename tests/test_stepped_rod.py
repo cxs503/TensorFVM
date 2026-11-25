@@ -470,6 +470,8 @@ def test_opposed_pulses_transfer_heat_between_contact_traces(resistance):
         initial_trace_temperatures=(0.,0.),return_traces=True,return_step_heat=True)
     pulse = 3*np.array([.02,.017])
     dt = np.diff(time)
+    np.testing.assert_allclose(heat["trace_left"][:,0],.6*dt+pulse,atol=1e-14)
+    np.testing.assert_allclose(heat["trace_right"][:,0],.4*dt-pulse,atol=1e-14)
     np.testing.assert_allclose(heat["interface"][:,0],dt,atol=1e-14)
     q = heat["contact"][:,0]
     np.testing.assert_allclose(.2*np.diff(west[:,0]),heat["right"][:,0]+.6*dt+pulse-q,atol=1e-14)
