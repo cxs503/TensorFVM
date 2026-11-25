@@ -888,3 +888,15 @@ def test_steady_rod_free_ends_preserve_uniform_reservoir_equilibrium(anchor):
         np.testing.assert_allclose(profile, 305., atol=1e-12, rtol=0)
     for current in (left, right):
         np.testing.assert_allclose(current, 0., atol=1e-12)
+
+
+def test_steady_free_rod_current_is_independent_of_prescribed_mean():
+    from tensorfvm.cht.rod import solve_steady_stepped_rod
+
+    n = 128
+    current = 1e-5
+    _, _, west, east = solve_steady_stepped_rod(
+        np.full(n, 1/n), 1., 1.7, 1., [current, -current],
+        end_types=("power", "power"), mean_temperature=305., flux_order=2,
+    )
+    np.testing.assert_allclose([west, east], current, atol=1e-13, rtol=0)

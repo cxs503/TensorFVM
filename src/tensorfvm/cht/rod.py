@@ -330,7 +330,9 @@ def solve_steady_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
         state = np.zeros(len(mass))
         if len(state)>1:
             state[1:] = spsolve(operator[1:,1:],rhs[1:])
-        state += mean_temperature-(mass @ state)/mass.sum()
+        # Extract currents from relative temperatures before restoring the
+        # absolute energy-weighted mean on the returned fields.
+        datum = mean_temperature-(mass @ state)/mass.sum()
     else:
         if mean_temperature is not None:
             raise ValueError("mean_temperature only applies to an unanchored steady rod")
