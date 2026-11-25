@@ -61,3 +61,15 @@ def test_layer_storage_matches_single_domain_with_spatial_capacity():
         return_bulk_storage=True)
     expected = (8j*cv*np.pi*np.diff(r**2)*field).reshape(3, 8).sum(axis=1)
     np.testing.assert_allclose(storage, expected, rtol=1e-12)
+
+
+@pytest.mark.parametrize("mode", [0, 2])
+def test_integrated_angular_conduction_against_power_law(mode):
+    edges = np.array([.5, .7, .9, 1.2])
+    mesh = np.r_[np.concatenate([np.geomspace(a, b, 33)[:-1] for a, b in zip(edges, edges[1:])]), edges[-1]]
+    k = 1.8
+    # T=r^m is harmonic in a homogeneous annulus with transparent sheets.
+    _, _, _, angular = solve_storing_rings(
+        mesh, k, [32, 64], edges[[0, -1]]**mode, 0., azimuthal_mode=mode,
+        sheet_capacities=(0., 0.), contact_resistances=(0., 0.), return_angular_conduction=True)
+    np.testing.assert_allclose(angular, 2*np.pi*k*mode*np.diff(edges**mode), rtol=1e-4, atol=0.)

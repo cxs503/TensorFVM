@@ -8,7 +8,7 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
                         contact_resistances, sheet_capacities, sheet_generation=(0., 0.),
                         azimuthal_mode=0, volumetric_heat_capacity=None,
                         inner_resistance_fractions=(.5, .5), sheet_conductivities=(0., 0.),
-                        return_wall_rates=False, return_bulk_storage=False):
+                        return_wall_rates=False, return_bulk_storage=False, return_angular_conduction=False):
     """Return two sheet temperatures and their incoming and outgoing radial fluxes.
 
     The cell faces include both sheets. Conductivity is scalar or per cell.
@@ -27,6 +27,9 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
     With return_bulk_storage, append three modal storage rates in W/m, ordered
     by radius, after any wall rates. Each equals iω times the radial integral
     of 2πr times capacity and temperature amplitude. Quasi-steady layers give zero.
+    With return_angular_conduction, append three circumferential divergence
+    amplitudes, integral(2π k m² T/r dr) per layer in W/m. They vanish for
+    mode zero and enter each modal balance as radial input minus output minus storage.
     """
     r = np.asarray(radii, dtype=float)
     faces = np.asarray(sheet_faces)
@@ -62,6 +65,9 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
     if return_bulk_storage:
         cell_storage = 1j*bulk_frequency*cv*np.pi*np.diff(r)*(r[:-1]+r[1:])
         storage_maps = np.empty((3, 2), dtype=complex)
+    if return_angular_conduction:
+        cell_angular = 2*np.pi*k*azimuthal_mode**2*np.log1p(np.diff(r)/r[:-1])
+        angular_maps = np.empty((3, 2), dtype=complex)
     for layer, (a, b) in enumerate(zip(ends, ends[1:])):
         film = tuple(1/value if value else None for value in layer_resistances[layer])
         # The two unit Dirichlet responses map end temperatures to radial rates.
@@ -73,6 +79,8 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
             columns.append(rate[[0, -1]])
             if return_bulk_storage:
                 storage_maps[layer, column] = cell_storage[a:b] @ field
+            if return_angular_conduction:
+                angular_maps[layer, column] = cell_angular[a:b] @ field
         domains.append(np.column_stack(columns))
 
     area = 2*np.pi*r[faces]
@@ -91,7 +99,10 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
     result = (sheet, incoming, outgoing)
     if return_wall_rates:
         result += (np.array([inner_rates[0], outer_rates[1]]),)
-    if return_bulk_storage:
+    if return_bulk_storage or return_angular_conduction:
         nodes = np.r_[walls[0], sheet, walls[1]]
+    if return_bulk_storage:
         result += (storage_maps[:, 0]*nodes[:-1] + storage_maps[:, 1]*nodes[1:],)
+    if return_angular_conduction:
+        result += (angular_maps[:, 0]*nodes[:-1] + angular_maps[:, 1]*nodes[1:],)
     return result
