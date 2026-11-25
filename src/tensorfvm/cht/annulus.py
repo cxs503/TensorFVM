@@ -138,3 +138,76 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
     rates[1:] += outward*field
     rates[:-1] -= inward_coefficient*field
     return field, rates
+
+
+def solve_annular_sheet(radii, conductivity, volumetric_heat_capacity, wall_temperatures, angular_frequency,
+                        sheet_face, *, resistance=0., inner_resistance_fraction=.5, sheet_capacity=0.,
+                        sheet_conductivity=0., sheet_film=0., ambient=0., sheet_source=0.,
+                        source=0., azimuthal_mode=0, wall_fluxes=(None,None), film_coefficients=(None,None),
+                        cell_location="midpoint", distributed_source=False, mean_temperature=None):
+    """Harmonic conduction with one storing sheet at internal face index sheet_face.
+
+    Return cell temperatures, radial rates on the inner and outer domains
+    (each including its two boundary faces, outward positive, W/m), and sheet
+    temperature. The sheet has areal heat capacity (J/m²/K), circumferential
+    conductivity times thickness (W/K), reservoir film (W/m²/K) and applied
+    generation (W/m²). Sheet properties are uniform in angle; loads are the
+    selected complex modal amplitudes. The mean datum for a floating steady
+    zero mode is the volume-weighted temperature of the material cells.
+    """
+    edges = np.asarray(radii,dtype=float)
+    if edges.ndim!=1 or not isinstance(sheet_face,(int,np.integer)) or not 0<sheet_face<len(edges)-1:
+        raise ValueError("sheet_face must index an internal radius")
+    if not np.isfinite([resistance,inner_resistance_fraction,sheet_capacity,sheet_conductivity,sheet_film]).all():
+        raise ValueError("sheet properties must be finite")
+    if min(resistance,sheet_capacity,sheet_conductivity,sheet_film)<0 or not 0<=inner_resistance_fraction<=1:
+        raise ValueError("sheet properties must be nonnegative and resistance fraction in [0,1]")
+    if not np.isfinite([ambient,sheet_source]).all():
+        raise ValueError("sheet load and ambient must be finite")
+    n = edges.size-1
+    k,c,p = (np.broadcast_to(np.asarray(x),(n,)) for x in (conductivity,volumetric_heat_capacity,source))
+    if any(len(pair)!=2 for pair in (wall_temperatures,film_coefficients,wall_fluxes)):
+        raise ValueError("supply one boundary condition per wall")
+    j = sheet_face
+    radius = edges[j]
+    circum = 2*np.pi*radius
+    impedance = sheet_film+1j*angular_frequency*sheet_capacity+sheet_conductivity*(azimuthal_mode/radius)**2
+    load = sheet_source+sheet_film*ambient
+    options = dict(azimuthal_mode=azimuthal_mode,cell_location=cell_location,distributed_source=distributed_source)
+    ri,ro = resistance*inner_resistance_fraction,resistance*(1-inner_resistance_fraction)
+
+    def response(unit):
+        # Unit sheet-temperature response uses homogeneous exterior and body loads.
+        w = tuple(0. if unit and v is not None else v for v in wall_temperatures)
+        q = tuple(0. if unit and v is not None else v for v in wall_fluxes)
+        inner,qi = solve_annular_conduction(edges[:j+1],k[:j],c[:j],(w[0],float(unit)),angular_frequency,
+                wall_fluxes=(q[0],None),film_coefficients=(film_coefficients[0],1/ri if ri else None),
+                source=0. if unit else p[:j],**options)
+        outer,qo = solve_annular_conduction(edges[j:],k[j:],c[j:],(float(unit),w[1]),angular_frequency,
+                wall_fluxes=(None,q[1]),film_coefficients=(1/ro if ro else None,film_coefficients[1]),
+                source=0. if unit else p[j:],**options)
+        return np.r_[inner,outer],qi,qo
+
+    base,bi,bo = response(False)
+    unit,ui,uo = response(True)
+    closed = (not angular_frequency and not azimuthal_mode and not sheet_film and
+              all(q is not None or h==0 for q,h in zip(wall_fluxes,film_coefficients)))
+    volume = np.pi*np.diff(edges)*(edges[1:]+edges[:-1])
+    if closed:
+        if mean_temperature is None or np.ndim(mean_temperature)!=0 or not np.isfinite(mean_temperature):
+            raise ValueError("an unanchored sheet requires a finite mean temperature")
+        inputs = np.r_[p*volume,circum*sheet_source,bi[0],-bo[-1]]
+        if abs(inputs.sum())>1e-12*np.abs(inputs).sum():
+            raise ValueError("incompatible wall inputs, sheet and volume generation")
+        sheet = mean_temperature-np.average(base,weights=volume)
+        return base+sheet,bi,bo,sheet
+    if mean_temperature is not None:
+        raise ValueError("mean_temperature applies only to a floating steady zero mode")
+    # Integrate the two bulk balances to evaluate their net response.
+    # This preserves the small storage admittance near zero frequency under
+    # insulated end conditions, where differences of radial rates cancel.
+    sink = 1j*angular_frequency*c*volume+2*np.pi*k*azimuthal_mode**2*np.log1p(np.diff(edges)/edges[:-1])
+    forcing = circum*load+bi[0]-bo[-1]+np.sum(volume*p-sink*base)
+    admittance = circum*impedance+uo[-1]-ui[0]+sink@unit
+    sheet = forcing/admittance
+    return base+unit*sheet,bi+ui*sheet,bo+uo*sheet,sheet

@@ -132,3 +132,34 @@ def test_steady_flux_driven_annulus_sets_mean_and_rejects_net_heating():
                                        wall_fluxes=(0.,0.), mean_temperature=3.)
     np.testing.assert_allclose(t, 3.)
     np.testing.assert_array_equal(rate, [0.,0.])
+
+
+@pytest.mark.parametrize("fraction",[0.,.37,1.])
+def test_storing_sheet_uniform_harmonic_temperature(fraction):
+    from tensorfvm.cht.annulus import solve_annular_sheet
+    edges = np.array([.3,.42,.58,.73,1.])
+    omega,temperature = 4.7,.6+.3j
+    cv = np.array([1.,1.,2.,2.])
+    ambient,h,capacity = .2-.1j,1.1,.4
+    sheet_load = 1j*omega*capacity*temperature+h*(temperature-ambient)
+    field,inner,outer,sheet = solve_annular_sheet(edges,[1.,1.,3.,3.],cv,(None,None),omega,2,
+               wall_fluxes=(0.,0.),resistance=.3,inner_resistance_fraction=fraction,sheet_capacity=capacity,
+               sheet_film=h,ambient=ambient,sheet_source=sheet_load,source=1j*omega*cv*temperature,
+               distributed_source=True)
+    np.testing.assert_allclose(field,temperature,atol=2e-14,rtol=0.)
+    np.testing.assert_allclose(sheet,temperature,atol=2e-14,rtol=0.)
+    np.testing.assert_allclose(np.r_[inner,outer],0.,atol=5e-14)
+
+
+def test_floating_annular_sheet_generation_and_compatibility():
+    from tensorfvm.cht.annulus import solve_annular_sheet
+    edges = np.array([.3,.4,.6,.8,1.])
+    opts = dict(wall_fluxes=(0.,-.6),mean_temperature=1.8,sheet_source=1.,resistance=.3)
+    u,qi,qo,s = solve_annular_sheet(edges,1.,1.,(None,None),0.,2,**opts)
+    np.testing.assert_allclose(qi,0.,atol=1e-14)
+    np.testing.assert_allclose(qo,2*np.pi*.6,atol=1e-14)
+    np.testing.assert_allclose(s,u[0],atol=1e-14)
+    np.testing.assert_allclose(np.average(u,weights=np.diff(edges**2)),1.8)
+    opts["sheet_source"] = .9
+    with pytest.raises(ValueError,match="incompatible"):
+        solve_annular_sheet(edges,1.,1.,(None,None),0.,2,**opts)
