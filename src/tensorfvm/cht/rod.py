@@ -575,8 +575,13 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
                                 method="theta", return_step_heat=False, end_types=("temperature","temperature"), end_film_coefficient=0.,
                                end_areal_heat_capacity=0., initial_end_temperature=None, initial_trace_temperatures=(None,None), load_jump_times=(), interface_power=0., interface_heat_capacity=0., interface_left_fraction=None, interface_capacity_left_fraction=None, trace_power=(0.,0.),
                                heat_loss_coefficient=0., bulk_ambient_temperature=0., return_interval_temperatures=False,
-                               net_source_gradient=None, net_source_curvature=None):
+                               net_source_gradient=None, net_source_curvature=None, temperature_reference=0.):
     """Advance the stepped rod with theta-weighted cell and shoulder storage.
+
+    Supply absolute initial, wall and reservoir temperatures. temperature_reference
+    (K) is subtracted before assembling the equations. Instantaneous and interval
+    temperatures are returned relative to that reference; powers and heats retain
+    their physical units and signs.
 
     Uses the geometry, units, power signs and four outputs of the harmonic solve,
     each output now indexed first by time. End temperatures, ambient and source
@@ -631,6 +636,8 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
     reconstruct_interval_rod_field. The source parameter remains the
     applied volumetric heating, averaged over each cell.
     """
+    if not np.isscalar(temperature_reference) or not np.isrealobj(temperature_reference) or not np.isfinite(temperature_reference):
+        raise ValueError("temperature_reference must be a finite real temperature")
     time = np.asarray(time,dtype=float)
     if time.ndim != 1 or len(time)<2 or not np.isfinite(time).all() or np.any(np.diff(time)<=0):
         raise ValueError("time must be a finite strictly increasing vector")
@@ -659,9 +666,16 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
                          ((net_source_gradient,"net source gradient"),(net_source_curvature,"net source curvature"))]
     def forcing(t):
         values = [v(float(t)) if callable(v) else v for v in (end_temperatures,source,ambient_temperature,interface_power,trace_power)]
+        if temperature_reference:
+            if np.shape(values[0]) != (2,):
+                raise ValueError("provide left and right end boundary values")
+            end_values = _profile(values[0],2,"end boundary values")
+            values[0] = np.where(np.asarray(end_types) == "power", end_values, end_values-temperature_reference)
+            values[2] = _profile(values[2],n-1,"ambient temperature") - temperature_reference
         load, boundary, deposited = _load(volume,end_load,layout,film,*values,float)
         reservoir = (_profile(bulk_ambient_temperature(float(t)),n,"bulk ambient temperature")
                      if callable(bulk_ambient_temperature) else fixed_reservoir)
+        reservoir = reservoir - temperature_reference
         load[layout.cells] += bulk_g*reservoir
         derivatives = offsets = None
         if graded:
@@ -676,7 +690,7 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
     if graded:
         power_offsets = np.empty((len(time),2,n))
         power_offsets[0] = offsets
-    initial = _profile(initial_temperature,n,"initial temperature")
+    initial = _profile(initial_temperature,n,"initial temperature") - temperature_reference
     states[0,layout.cells] = initial
     # At t0 a supplied storing-face temperature is a constraint on adjacent
     # massless faces, because quadratic reconstructions couple the face traces.
@@ -688,7 +702,7 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
                             (initial_east,layout.left[1:]-1,"initial right trace temperature")):
         if values is None:
             continue
-        supplied = _profile(values,n-1,name)
+        supplied = _profile(values,n-1,name) - temperature_reference
         storing = mass[ids]>0
         fixed = ids[storing]
         overlap = known[fixed]
@@ -697,7 +711,7 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
         states[0,fixed] = supplied[storing]
         known[fixed] = True
     if initial_end_temperature is not None:
-        supplied = _profile(initial_end_temperature,2,"initial end temperature")
+        supplied = _profile(initial_end_temperature,2,"initial end temperature") - temperature_reference
         ids = np.arange(len(mass)-layout.free_ends.size,len(mass))
         storing = mass[ids]>0
         states[0,ids[storing]] = supplied[layout.free_ends[storing]]

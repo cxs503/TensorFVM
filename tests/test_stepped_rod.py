@@ -900,3 +900,27 @@ def test_steady_free_rod_current_is_independent_of_prescribed_mean():
         end_types=("power", "power"), mean_temperature=305., flux_order=2,
     )
     np.testing.assert_allclose([west, east], current, atol=1e-13, rtol=0)
+
+
+def test_transient_reference_shifts_temperatures_and_preserves_power_inputs():
+    from tensorfvm.cht.rod import solve_transient_stepped_rod
+
+    def run(base):
+        return solve_transient_stepped_rod(
+            [.4,.6], [1.,2.], 1., 1., lambda t: [0.25,base+2*t], [0.,.05,.1], base,
+            end_types=("power","robin"), end_film_coefficient=2., initial_end_temperature=base,
+            end_areal_heat_capacity=[.2,.3], interface_heat_capacity=.5, contact_resistance=.1,
+            initial_trace_temperatures=(base,base), interface_capacity_left_fraction=.5,
+            heat_loss_coefficient=.4, bulk_ambient_temperature=lambda t: base+1.,
+            film_coefficient=.3, ambient_temperature=base-.5, temperature_reference=base,
+            return_traces=True, return_step_heat=True, return_interval_temperatures=True,
+        )
+
+    expected, shifted = run(0.), run(305.)
+    for a,b in zip(expected[:4], shifted[:4]):
+        np.testing.assert_allclose(a,b,rtol=0,atol=1e-12)
+    for a,b in zip(expected[4],shifted[4]):
+        np.testing.assert_allclose(a,b,rtol=0,atol=1e-12)
+    for left,right in zip(expected[5:],shifted[5:]):
+        for key in left:
+            np.testing.assert_allclose(left[key],right[key],rtol=0,atol=1e-12)
