@@ -421,7 +421,7 @@ def solve_harmonic_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
                                end_areal_heat_capacity=0., interface_power=0., interface_heat_capacity=0., interface_left_fraction=None, interface_capacity_left_fraction=None, trace_power=(0.,0.),
                                heat_loss_coefficient=0., bulk_ambient_temperature=0.,
                                net_source_gradient=None, net_source_curvature=None,
-                               source_derivative_breaks=None, return_source_derivatives=False):
+                               source_derivative_breaks=None, return_source_derivatives=False, separate_mean=False):
     """Solve a rod with concentric sections and prescribed end phasors.
 
     end_types selects "temperature" (K), "power" (inward W), or "robin"
@@ -469,6 +469,11 @@ def solve_harmonic_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
     The larger section owns the exposed shoulder, whose temperature is reported
     at each split face (left trace for equal areas). With return_traces=True,
     append a pair of arrays giving left and right material traces at internal faces.
+    When no wall temperature is fixed and film and bulk conductances vanish,
+    total power fixes the capacity-weighted mean. With separate_mean=True,
+    return temperatures relative to this mean and append the complex mean in
+    K after any traces and derivative arrays. Powers are always computed from
+    relative temperatures in this closed case.
     """
     if not np.isfinite(angular_frequency) or angular_frequency <= 0:
         raise ValueError("angular_frequency must be finite and positive")
@@ -486,21 +491,46 @@ def solve_harmonic_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
         raise ValueError("net source derivatives require flux_order=2")
     if estimated and supplied:
         raise ValueError("choose estimated or prescribed net source derivatives")
+    closed = not layout.anchored and not np.any(bulk_g)
+    if separate_mean and not closed:
+        raise ValueError("separate_mean requires a rod without temperature or exchange anchors")
+    rate = 0j
+    if closed:
+        rate = rhs.sum()/mass.sum()
+        rhs -= rate*mass
+        # A Lagrange multiplier enforces zero stored-energy mean without
+        # subtracting two large absolute temperatures at adjacent faces.
+        weights = sp.csc_matrix((mass/mass.sum())[:, None])
+        matrix = sp.bmat([[matrix, weights], [weights.T, None]], format="csc")
+    factors = splu(matrix) if estimated else None
+
+    def solve_state(load):
+        augmented = np.r_[load, 0j] if closed else load
+        answer = factors.solve(augmented) if factors is not None else spsolve(matrix, augmented)
+        return answer[:-1] if closed else answer
+
     offsets = None
     if estimated:
-        factors = splu(matrix)
-        predicted = factors.solve(rhs)[layout.cells]
+        predicted = solve_state(rhs)[layout.cells]
         net = (_profile(source,n,"source",complex)+bulk_g/volume*(reservoir-predicted)
-               -1j*angular_frequency*(mass[layout.cells]/volume)*predicted)
+               -(1j*angular_frequency*predicted+rate)*(mass[layout.cells]/volume))
         slope,curvature = estimate_rod_source_derivatives(dx,net,break_faces=source_derivative_breaks)
     elif supplied or return_source_derivatives:
         slope = _profile(0. if net_source_gradient is None else net_source_gradient,n,"net source gradient",complex)
         curvature = _profile(0. if net_source_curvature is None else net_source_curvature,n,"net source curvature",complex)
     if estimated or supplied:
         offsets = _apply_source_derivatives(rhs,layout,volume,np.asarray(dx),slope,curvature)
-    state = factors.solve(rhs) if estimated else spsolve(matrix,rhs)
+    state = solve_state(rhs)
     result = layout.output(state,ends,g,flux_order,return_traces,offsets)
-    return result+((slope,curvature),) if return_source_derivatives else result
+    if closed:
+        mean = rate/(1j*angular_frequency)
+        if not separate_mean:
+            temperatures = (result[0]+mean, result[1]+mean)
+            traces = (tuple(t+mean for t in result[4]),) if return_traces else ()
+            result = temperatures+result[2:4]+traces
+    if return_source_derivatives:
+        result += ((slope,curvature),)
+    return (*result, mean) if separate_mean else result
 
 
 def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,

@@ -807,3 +807,26 @@ def test_steady_estimated_derivatives_with_prescribed_gauge_or_exchange(bulk):
         np.testing.assert_allclose(observed,expected,rtol=0.,atol=3e-11)
     with pytest.raises(ValueError,match="estimated or prescribed"):
         solve_steady_stepped_rod(dx,1.,2.,1.,[0.,1.],flux_order=2,source_derivative_breaks=[],source_gradient=0.)
+
+
+@pytest.mark.parametrize("omega", [1e-12, 1., 1e3])
+def test_separated_uniform_rod_keeps_section_powers_and_derivatives_zero(omega):
+    n = 32
+    width = np.full(n, 1/n)
+    c = np.linspace(.9, 2., n)
+    end_capacity = np.array([.3, .75])
+    rate = .27+.34j
+    args = (width, 1., 1., c, end_capacity*rate, omega)
+    opts = dict(source=c*rate, end_types=("power","power"), end_areal_heat_capacity=end_capacity,
+                flux_order=2, return_traces=True, source_derivative_breaks=[], return_source_derivatives=True)
+    cells, faces, west, east, traces, derivatives, mean = solve_harmonic_stepped_rod(
+        *args, separate_mean=True, **opts)
+    assert abs(1j*omega*mean-rate) < 1e-14
+    for values in (cells, faces, west, east, *traces, *derivatives):
+        np.testing.assert_allclose(values, 0., atol=1e-11, rtol=0)
+    full = solve_harmonic_stepped_rod(*args, **opts)
+    for relative, absolute in zip((cells, faces, *traces), (*full[:2], *full[4])):
+        np.testing.assert_allclose(absolute, relative+mean)
+    np.testing.assert_array_equal(full[2:4], (west, east))
+    with pytest.raises(ValueError, match="without temperature or exchange anchors"):
+        solve_harmonic_stepped_rod(*args, separate_mean=True, heat_loss_coefficient=1., **opts)
