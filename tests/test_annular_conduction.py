@@ -339,3 +339,39 @@ def test_contact_traces_recover_logarithmic_steady_state(fraction):
     np.testing.assert_allclose(observed,np.broadcast_to(traces,observed.shape),atol=1e-14,rtol=0.)
     np.testing.assert_allclose(hi[:,-1],np.diff(times)*rates[0],atol=1e-14)
     np.testing.assert_allclose(ho[:,0],np.diff(times)*rates[1],atol=1e-14)
+
+
+def test_sdirk2_annulus_stiff_decay_and_uniform_insulated_limit():
+    from tensorfvm.cht.annulus import solve_transient_annular_sheet
+    # Uniform cooling mode: all masses receive linear losses proportional
+    # to capacity using m=1. Choose cell capacities to make that rate 1.
+    r = np.array([.4,.55,.7,1.])
+    c = 2*np.log(r[1:]/r[:-1])/np.diff(r**2)
+    opts = dict(azimuthal_mode=1,wall_fluxes=(0.,0.),initial_sheet_temperature=1.,
+                sheet_capacity=.23,sheet_film=.23,resistance=.3,method="sdirk2")
+    for dt in (.02,.1,1000.):
+        u,s,_,_,_ = solve_transient_annular_sheet(r,1.,c,(None,None),[0.,dt],1.,1,**opts)
+        gamma = 1-1/np.sqrt(2)
+        exact_step = (1-(1-2*gamma)*dt)/(1+gamma*dt)**2
+        np.testing.assert_allclose(u[-1],exact_step,rtol=0.,atol=2e-14)
+        np.testing.assert_allclose(s[-1],exact_step,rtol=0.,atol=2e-14)
+        if dt==1000.:
+            assert abs(s[-1])<.005
+
+
+def test_sdirk2_damps_fast_mode_of_a_light_contact_sheet():
+    from scipy.linalg import eigh
+    from tensorfvm.cht.annulus import solve_transient_annular_sheet
+    r = np.array([.4,.7,1.])
+    center = (2/3)*np.diff(r**3)/np.diff(r**2)
+    g = 2*np.pi/np.array([np.log(r[1]/center[0]),np.log(center[1]/r[1])])
+    mass = np.diag([np.pi*(r[1]**2-r[0]**2),2*np.pi*r[1]*1e-4,np.pi*(r[2]**2-r[1]**2)])
+    incidence = np.diff(np.eye(3),axis=0)
+    rates,modes = eigh(incidence.T@np.diag(g)@incidence,mass)
+    initial = modes[:,-1]/modes[1,-1]
+    dt = 1000/rates[-1]
+    u,s,qi,qo,_ = solve_transient_annular_sheet(r,1.,1.,(None,None),[0.,dt],initial[[0,2]],1,
+                 initial_sheet_temperature=1.,sheet_capacity=1e-4,wall_fluxes=(0.,0.),method="sdirk2")
+    assert max(abs(np.r_[u[-1],s[-1]]))<.005
+    np.testing.assert_allclose(np.diag(mass)*(np.r_[u[-1,0],s[-1],u[-1,1]]-initial),
+                               -np.diff(np.r_[qi[0],qo[0]]),atol=1e-15)

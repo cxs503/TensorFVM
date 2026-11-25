@@ -234,7 +234,7 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
                                   sheet_conductivity=0., azimuthal_mode=0, sheet_film=0., ambient=0.,
                                   sheet_source_intervals=0., theta=.5, wall_fluxes=(None,None), source_intervals=0.,
                                   film_coefficients=(None,None), return_wall_temperatures=False,
-                                  return_contact_temperatures=False):
+                                  return_contact_temperatures=False, method="theta"):
     """Advance one real azimuthal mode with a storing sheet and Dirichlet walls.
 
     Walls and reservoir ambient accept constants or one sample per output time.
@@ -255,6 +255,8 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
     directed toward increasing radius, with all faces including the walls),
     and interval sheet-to-reservoir heat (J/m). Rates use the 2πr modal
     normalization of solve_annular_conduction. theta=.5 gives Crank–Nicolson.
+    method="sdirk2" selects a two-stage L-stable method with linearly
+    interpolated loads and consistent stage quadrature for all heats.
     return_wall_temperatures appends instantaneous material surface temperatures
     at the bore and exterior (shape time × 2), using the radial half-cell resistances.
     return_contact_temperatures appends the inner and outer material traces at
@@ -276,6 +278,8 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
         raise ValueError("sheet properties and theta must be finite")
     if min(sheet_capacity,resistance,sheet_conductivity,sheet_film)<0 or not 0<=inner_resistance_fraction<=1 or not .5<=theta<=1:
         raise ValueError("require nonnegative sheet properties, fraction in [0,1] and theta in [.5,1]")
+    if method not in ("theta","sdirk2") or (method=="sdirk2" and theta!=.5):
+        raise ValueError("use theta or sdirk2; sdirk2 does not accept a theta override")
     n = len(r)-1
     k,c,u = (np.broadcast_to(np.asarray(v,dtype=float),(n,)) for v in (conductivity,volumetric_heat_capacity,initial_temperature))
     if np.any(k<=0) or np.any(c<=0) or not all(np.isfinite(v).all() for v in (k,c,u)):
@@ -332,28 +336,43 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
     heat = np.empty((len(t)-1,n+2))
     reservoir = np.empty(len(t)-1)
     bands = np.zeros((3,n+1))
-    bands[0,1:] = bands[2,:-1] = -theta*g[1:-1]
+    sdirk = method=="sdirk2"
+    weight = 1-1/np.sqrt(2) if sdirk else theta
+    bands[0,1:] = bands[2,:-1] = -weight*g[1:-1]
+
+    def loads(i,fraction):
+        w,e,a = ((1-fraction)*v[i]+fraction*v[i+1] for v in (west,east,fluid))
+        wall_input = np.array([west_factor*w,east_factor*e])
+        power = volume*((1-fraction)*body[i,0]+fraction*body[i,1])
+        supply = (1-fraction)*drive[i,0]+fraction*drive[i,1]
+        applied = np.insert(power,j,circum*(supply+sheet_film*a))
+        applied[0] += wall_input[0]
+        applied[-1] -= wall_input[1]
+        return applied,wall_input,a
+
+    def internal_power(temperature):
+        return np.diff(g*np.diff(np.r_[0.,temperature,0.]))-sink*temperature
+
     for i,dt in enumerate(np.diff(t)):
-        avg_w,avg_e,avg_a = ((1-theta)*v[i]+theta*v[i+1] for v in (west,east,fluid))
-        supply = (1-theta)*drive[i,0]+theta*drive[i,1]
         old = state[i]
         if sheet_capacity==0:
             # A source jump changes a massless trace before the next step.
             # Use its right limit for quadrature while retaining cell storage.
             old[j] = (g[j]*old[j-1]+g[j+1]*old[j+1]+circum*(drive[i,0]+sheet_film*fluid[i]))/diagonal[j]
         # Increment form avoids subtracting two large storage terms.
-        wall_input = np.array([west_factor*avg_w,east_factor*avg_e])
-        flux = -g*np.diff(np.r_[0.,old,0.])
-        flux[[0,-1]] += wall_input
-        rhs = -np.diff(flux)-sink*old
-        material_power = volume*((1-theta)*body[i,0]+theta*body[i,1])
-        rhs[:j] += material_power[:j]
-        rhs[j+1:] += material_power[j:]
-        rhs[j] += circum*(supply+sheet_film*avg_a)
-        bands[1] = capacity/dt+theta*diagonal
+        bands[1] = capacity/dt+weight*diagonal
+        # For affine forcing SDIRK's weighted load equals its midpoint value.
+        applied,wall_input,avg_a = loads(i,.5 if sdirk else theta)
+        rhs = applied+internal_power(old)
+        if sdirk:
+            stage_load,_,_ = loads(i,weight)
+            first_delta = solve_banded((1,1),bands,weight*(stage_load+internal_power(old)))
+            rhs += (1-weight)*internal_power(first_delta)
         delta = solve_banded((1,1),bands,rhs)
         state[i+1] = old+delta
-        stage = old+theta*delta
+        stage = old+weight*delta
+        if sdirk:
+            stage += (1-weight)*first_delta
         heat[i] = -dt*g*np.diff(np.r_[0.,stage,0.])
         heat[i,[0,-1]] += dt*wall_input
         reservoir[i] = dt*circum*sheet_film*(stage[j]-avg_a)
