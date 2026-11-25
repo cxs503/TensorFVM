@@ -924,3 +924,21 @@ def test_transient_reference_shifts_temperatures_and_preserves_power_inputs():
     for left,right in zip(expected[5:],shifted[5:]):
         for key in left:
             np.testing.assert_allclose(left[key],right[key],rtol=0,atol=1e-12)
+
+
+def test_anchored_zero_frequency_complex_resistive_rod():
+    dx = np.array([.25, .75])
+    conductivity = np.array([2., 1.])
+    walls = np.array([.7+.2j, -.3+.4j])
+    resistance = .125
+    flux = (walls[0]-walls[1])/(sum(dx/conductivity)+resistance)
+    _, _, left, right, traces = solve_harmonic_stepped_rod(
+        dx, np.ones(2), conductivity, [3., 5.], walls, 0.,
+        contact_resistance=resistance, return_traces=True)
+    np.testing.assert_allclose(left, flux, atol=1e-13)
+    np.testing.assert_allclose(right, flux, atol=1e-13)
+    np.testing.assert_allclose(traces[0], walls[0]-flux*dx[0]/conductivity[0], atol=1e-13)
+    np.testing.assert_allclose(traces[0]-traces[1], resistance*flux, atol=1e-13)
+    with pytest.raises(ValueError, match="return_mean_rate"):
+        solve_harmonic_stepped_rod(dx, np.ones(2), conductivity, 1., (0.,0.), 0.,
+                                   end_types=("power","power"))

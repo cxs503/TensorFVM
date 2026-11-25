@@ -496,6 +496,8 @@ def solve_harmonic_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
     The larger section owns the exposed shoulder, whose temperature is reported
     at each split face (left trace for equal areas). With return_traces=True,
     append a pair of arrays giving left and right material traces at internal faces.
+    Zero frequency gives the steady complex response when a temperature or exchange
+    anchor fixes the absolute temperature.
     When no wall temperature is fixed and film and bulk conductances vanish,
     total power fixes the capacity-weighted mean. With separate_mean=True,
     return temperatures relative to this mean and append the complex mean in
@@ -507,8 +509,8 @@ def solve_harmonic_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
     """
     if separate_mean and return_mean_rate:
         raise ValueError("select either separate_mean or return_mean_rate")
-    if not np.isfinite(angular_frequency) or angular_frequency < 0 or (angular_frequency == 0 and not return_mean_rate):
-        raise ValueError("angular_frequency must be finite and positive, or zero with return_mean_rate")
+    if not np.isfinite(angular_frequency) or angular_frequency < 0:
+        raise ValueError("angular_frequency must be finite and nonnegative")
     operator,mass,volume,g,film,end_load,layout = _rod_operator(dx,area,conductivity,volumetric_heat_capacity,
                                                film_coefficient,shoulder_areal_heat_capacity,flux_order,contact_resistance,end_types,end_film_coefficient,end_areal_heat_capacity,interface_heat_capacity,interface_left_fraction,interface_capacity_left_fraction)
     rhs, ends, _ = _load(volume,end_load,layout,film,end_temperatures,source,ambient_temperature,interface_power,trace_power,complex)
@@ -524,6 +526,8 @@ def solve_harmonic_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
     if estimated and supplied:
         raise ValueError("choose estimated or prescribed net source derivatives")
     closed = not layout.anchored and not np.any(bulk_g)
+    if angular_frequency == 0 and closed and not return_mean_rate:
+        raise ValueError("an unanchored zero-frequency rod requires return_mean_rate")
     if (separate_mean or return_mean_rate) and not closed:
         raise ValueError("separate_mean and return_mean_rate require a rod without temperature or exchange anchors")
     rate = 0j
