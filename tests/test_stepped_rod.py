@@ -476,3 +476,28 @@ def test_opposed_pulses_transfer_heat_between_contact_traces(resistance):
     q = heat["contact"][:,0]
     np.testing.assert_allclose(.2*np.diff(west[:,0]),heat["right"][:,0]+.6*dt+pulse-q,atol=1e-14)
     np.testing.assert_allclose(.6*np.diff(east[:,0]),q+.4*dt-pulse-heat["left"][:,1],atol=1e-14)
+
+
+@pytest.mark.parametrize("types", [("power","power"), ("power","robin"), ("robin","temperature")])
+def test_steady_quartic_means_and_face_powers(types):
+    from tensorfvm.cht.rod import solve_steady_stepped_rod
+
+    x = np.array([-.7,-.54,-.1,.31,.85])
+    dx = np.diff(x)
+    mid = x[:-1]+dx/2
+    area, k, h = 1.4, 2.1, 3.2
+    temp = 1.+.2*x-.4*x**3+x**4
+    power = -k*area*(.2-1.2*x**2+4*x**3)
+    primitive = x+.1*x**2-.1*x**4+x**5/5
+    means = np.diff(primitive)/dx
+    source = np.diff(power)/(area*dx)
+    ends = []
+    for kind, t, inward in zip(types, temp[[0,-1]], [power[0],-power[-1]]):
+        ends.append(inward if kind=="power" else t+inward/(h*area) if kind=="robin" else t)
+    gauge = dx@means/dx.sum() if types==("power","power") else None
+    cell,face,left,right = solve_steady_stepped_rod(dx,area,k,1.,ends,source=source,
+        source_gradient=-k*(24*mid-2.4),source_curvature=-24*k,flux_order=2,
+        end_types=types,end_film_coefficient=h,mean_temperature=gauge)
+    for actual, exact in ((cell,means),(face,temp),(left,power[:-1]),(right,power[1:]),
+                          (right-left,source*area*dx)):
+        np.testing.assert_allclose(actual,exact,atol=1e-12,rtol=0.)

@@ -162,12 +162,16 @@ def _load(volume, end_load, layout, film, ends, source, ambient, interface_power
 
 
 def solve_steady_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
-                             end_temperatures, *, source=0., film_coefficient=0.,
+                             end_temperatures, *, source=0., source_gradient=None, source_curvature=None, film_coefficient=0.,
                              ambient_temperature=0., shoulder_areal_heat_capacity=0.,
                              flux_order=1, contact_resistance=0., return_traces=False,
                              end_types=("temperature","temperature"), end_film_coefficient=0., end_areal_heat_capacity=0., mean_temperature=None, interface_power=0., interface_heat_capacity=0., interface_left_fraction=None, interface_capacity_left_fraction=None, trace_power=(0.,0.)):
     """Steady temperatures and rightward powers with the harmonic solver's conventions.
 
+    source gives the cell mean in W/m³. With flux_order=2, source_gradient
+    and source_curvature optionally specify the first and second spatial
+    derivatives at each cell midpoint (W/m⁴ and W/m⁵). The resulting steady
+    reconstruction integrates a cellwise quadratic generation profile.
     When neither end fixes temperature and all films are insulating, the
     inward end powers, interface power and volumetric heating must sum to zero. In this case
     mean_temperature fixes the heat-capacity-weighted mean of cells and storing
@@ -177,6 +181,26 @@ def solve_steady_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
         dx,area,conductivity,volumetric_heat_capacity,film_coefficient,
         shoulder_areal_heat_capacity,flux_order,contact_resistance,end_types,end_film_coefficient,end_areal_heat_capacity,interface_heat_capacity,interface_left_fraction,interface_capacity_left_fraction)
     rhs, ends, _ = _load(volume,end_load,layout,film,end_temperatures,source,ambient_temperature,interface_power,trace_power,float)
+    offsets = None
+    if source_gradient is not None or source_curvature is not None:
+        if flux_order != 2:
+            raise ValueError("source derivatives require flux_order=2")
+        n = len(volume)
+        width = np.asarray(dx)
+        slope = _profile(0. if source_gradient is None else source_gradient,n,"source gradient")
+        curvature = _profile(0. if source_curvature is None else source_curvature,n,"source curvature")
+        # For z measured from the midpoint, remove the cell mean from
+        # slope*z + curvature*z²/2. Integrating -k*T'' twice gives cubic
+        # and quartic corrections to the two rightward face powers.
+        odd = volume*width*slope/12
+        even = volume*width**2*curvature/120
+        west, east = odd-even, odd+even
+        offsets = west, east
+        rhs[layout.cells] += west-east
+        rhs[layout.left[1:]-1] -= west[1:]
+        rhs[layout.right[:-1]-1] += east[:-1]
+        if layout.free_ends.size:
+            rhs[-len(layout.free_ends):] += np.array([-west[0],east[-1]])[layout.free_ends]
     if not layout.anchored:
         if mean_temperature is None or not np.isscalar(mean_temperature) or not np.isfinite(mean_temperature):
             raise ValueError("unanchored ends without film exchange require a finite mean_temperature")
@@ -192,7 +216,11 @@ def solve_steady_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
         if mean_temperature is not None:
             raise ValueError("mean_temperature only applies to an unanchored steady rod")
         state = spsolve(operator,rhs)
-    return layout.output(state,ends,g,flux_order,return_traces)
+    result = layout.output(state,ends,g,flux_order,return_traces)
+    if offsets is None:
+        return result
+    cell, faces, left, right, *traces = result
+    return (cell, faces, left+offsets[0], right+offsets[1], *traces)
 
 
 def solve_harmonic_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
