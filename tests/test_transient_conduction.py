@@ -274,3 +274,26 @@ def test_offgrid_source_and_flux_jumps(theta):
 def test_invalid_conduction_jump_times(jumps):
     with pytest.raises(ValueError,match="load_jump_times"):
         solve_transient_conduction([1.],[1.],1.,1.,{},[0.,1.],0.,load_jump_times=jumps)
+
+
+@pytest.mark.parametrize("theta",[.5,1.])
+def test_interval_face_heat_balances_cells_across_unreported_jumps(theta):
+    dx,dy = np.array([.2,.3,.5]),np.array([.35,.65])
+    c = np.array([1.,2.,.7])
+    times = np.array([0.,.05,.12])
+    jumps = [.018,.037,.09]
+    flux = lambda t: 1.2 if t<jumps[0] else -.3
+    source = lambda t: .8 if t<jumps[1] else -.2
+    bc = {"west":dict(type="robin",values=lambda t:1. if t<jumps[2] else 2.,
+                      film_coefficient=[1.,2.],wall_areal_heat_capacity=[0.,.6]),
+          "east":dict(type="neumann",values=flux)}
+    field,heat = solve_transient_conduction(dx,dy,1.,c,bc,times,.4,theta=theta,periodic_y=True,
+            source=source,load_jump_times=jumps,return_face_heat=True)
+    w,q = heat["wall"],heat["interior"]
+    x = np.concatenate((w["west"][:,:,None],q["x"],-w["east"][:,:,None]),axis=2)
+    y = np.concatenate((w["south"][:,None,:],q["y"],-w["north"][:,None,:]),axis=1)
+    generated = .8*np.minimum(times,jumps[1])-.2*np.maximum(times-jumps[1],0.)
+    volume = np.outer(dy,dx)
+    np.testing.assert_allclose(np.diff(field,axis=0)*volume*c+np.diff(x,axis=2)+np.diff(y,axis=1),
+               np.diff(generated)[:,None,None]*volume,atol=1e-14)
+    np.testing.assert_allclose(w["east"],np.diff(1.2*np.minimum(times,jumps[0])-.3*np.maximum(times-jumps[0],0.))[:,None]*dy)

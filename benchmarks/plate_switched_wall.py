@@ -26,27 +26,36 @@ def measure(steps,theta):
                       initial_wall_temperature=.4),"east":dict(type="neumann",values=east)}
     times = np.linspace(0.,.35,steps+1)
     start = [.8,-.6]
-    field,walls,inner = solve_transient_conduction(dx,[1.],k,c,bc,times,start,source=source,theta=theta,
-                contact_resistance_x=contact,load_jump_times=jumps,return_wall_power=True,return_interior_power=True)
+    field,walls,inner,heat = solve_transient_conduction(dx,[1.],k,c,bc,times,start,source=source,theta=theta,
+                contact_resistance_x=contact,load_jump_times=jumps,return_wall_power=True,return_interior_power=True,
+                return_face_heat=True)
     # The three storage nodes are connected by two series thermal resistances.
     g = 2*k[0]/dx[0]
     link = 1/(contact+sum(dx/(2*k)))
     mass = np.r_[cw,c*dx]
-    matrix = np.zeros((4,4))
+    matrix = np.zeros((7,7))
     matrix[:3,:3] = np.array([[-film-g,g,0.],[g,-g-link,link],[0.,link,-link]])/mass[:,None]
-    state = np.array([.4,*start,1.])
-    ref = [state[:3]]
+    # Integrate powers at west wall (into cell), contact (rightward),
+    # and east wall (into cell) directly in the reference system.
+    matrix[3,:2] = [g,-g]
+    matrix[4,1:3] = [link,-link]
+    state = np.array([.4,*start,0.,0.,0.,1.])
+    ref = [state[:-1]]
     segments = np.union1d(times,jumps)
     for a,b in zip(segments,segments[1:]):
         power = dx*source(a)
         matrix[:3,-1] = np.r_[film*ambient(a),power[0],power[1]+east(a)]/mass
+        matrix[5,-1] = east(a)
         state = expm((b-a)*matrix) @ state
         if b==times[len(ref)]:
-            ref.append(state[:3])
+            ref.append(state[:-1])
     ref = np.array(ref)
     numerical_wall = field[:,0,0]+walls["west"][:,0]/g
     exact_contact = link*(ref[:,1]-ref[:,2])
-    return dict(temperature=float(abs(field[:,0]-ref[:,1:]).max()),
+    transferred = np.column_stack((heat["wall"]["west"][:,0],heat["interior"]["x"][:,0,0],
+                                   heat["wall"]["east"][:,0]))
+    return dict(temperature=float(abs(field[:,0]-ref[:,1:3]).max()),
+                cumulative_face_heat=float(abs(transferred.cumsum(axis=0)-ref[1:,3:]).max()),
                 wall_temperature=float(abs(numerical_wall-ref[:,0]).max()),
                 contact_power=float(abs(inner["x"][:,0,0]-exact_contact).max()))
 

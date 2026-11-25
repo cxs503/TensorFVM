@@ -549,7 +549,7 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
                                contact_resistance_x=0.0, contact_resistance_y=0.0,
                                theta=0.5, conductivity_y=None, return_wall_power=False, periodic_y=False,
                                wall_flux_order=1, heat_loss_coefficient=0., return_interior_power=False,
-                               load_jump_times=()):
+                               load_jump_times=(), return_face_heat=False):
     """Advance cell-centred conduction with fixed material data and boundary types.
 
     Return temperature at each requested time with shape (nt, ny, nx). Cell
@@ -573,7 +573,10 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
     watts per face for unit depth. return_interior_power=True appends a dict
     of instantaneous powers in W, oriented towards increasing x or y. Its x
     and y arrays have shapes (nt,ny,nx-1) and (nt,ny-1,nx). With both flags
-    the output is (temperature, wall_power, interior_power). To integrate use the same theta as the solve.
+    the output is (temperature, wall_power, interior_power).
+    return_face_heat appends a dict containing "wall" and "interior" face
+    heats in joules. Their leading index is the requested output interval.
+    They integrate the theta-stage powers including internal steps at jumps.
     With periodic_y=True omit the north and south BCs. Those two face powers
     then report opposite inward transfers across a perfectly conducting contact
     between the last and first rows. Interior contact resistances are unchanged.
@@ -741,10 +744,10 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
         for cells, samples, weights in varying_loads:
             rhs[cells] += dt * weights * ((1-theta)*samples[step] + theta*samples[end_samples[step]])
         states[step + 1] = lu.solve(rhs)
-    def wall_powers(selected_states,sample_indices):
+    def wall_powers(selected_states,boundary_values):
         state = selected_states[:,:cell_count]
         field = state.reshape(-1,ny,nx)
-        powers = {side: _conductive_wall_power(types[side], signals[side][sample_indices] if side in signals else values[side],
+        powers = {side: _conductive_wall_power(types[side], boundary_values.get(side,values[side]),
                                                conductance,area,state[:,cells])
                   for side,cells,conductance,_,_,area in side_specs}
         for side,(mask,ids,cells,g,inner,correction) in wall_links.items():
@@ -755,15 +758,23 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
             powers["north"] = -powers["south"]
         return powers
 
-    history = history[outputs]
+    result = [history[outputs]]
     if return_wall_power:
-        powers = wall_powers(states[outputs],outputs)
-        if return_interior_power:
-            return history,powers,_interior_conduction_power(history,faces)
-        return history, powers
+        result.append(wall_powers(states[outputs],{s:v[outputs] for s,v in signals.items()}))
     if return_interior_power:
-        return history,_interior_conduction_power(history,faces)
-    return history
+        result.append(_interior_conduction_power(result[0],faces))
+    if return_face_heat:
+        durations = np.diff(time)
+        def integrate(power):
+            step_heat = power*durations.reshape((-1,)+(1,)*(power.ndim-1))
+            return np.add.reduceat(step_heat,outputs[:-1],axis=0) if jumps.size else step_heat
+
+        stage = (1-theta)*states[:-1]+theta*states[1:]
+        stage_bc = {s:(1-theta)*v[:len(time)-1]+theta*v[end_samples] for s,v in signals.items()}
+        walls = {s:integrate(v) for s,v in wall_powers(stage,stage_bc).items()}
+        integrated_cells = integrate(stage[:,:cell_count].reshape(-1,ny,nx))
+        result.append({"wall":walls,"interior":_interior_conduction_power(integrated_cells,faces)})
+    return tuple(result) if len(result)>1 else result[0]
 
 
 def _conductive_wall_power(types, values, conductance, area, temperature):
