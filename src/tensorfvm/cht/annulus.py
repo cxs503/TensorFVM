@@ -17,7 +17,7 @@ def _half_shell_source_drop(distance, face_radius, conductivity):
 def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall_temperatures,
                              angular_frequency, *, contact_resistance=0., source=0., azimuthal_mode=0,
                              film_coefficients=(None, None), cell_location="midpoint",
-                             wall_fluxes=(None, None), distributed_source=False):
+                             wall_fluxes=(None, None), distributed_source=False, mean_temperature=None):
     """Return cell phasors and radial face heat rates per unit axial length.
 
     Boundary, temperature and volumetric source amplitudes multiply
@@ -34,7 +34,9 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
     radius. The default "midpoint" uses the arithmetic radial midpoint.
     distributed_source=True integrates a uniform net generation density
     (applied source minus storage and angular loss) across each half-shell
-    when relating cell temperatures to face power.
+    when relating cell temperatures to face power. For the steady axisymmetric
+    case with no temperature anchor, supply the desired volume-weighted mean
+    cell temperature. Wall inputs and integrated generation must sum to zero.
 
     """
     r = np.asarray(radii, dtype=float)
@@ -88,8 +90,12 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
             raise ValueError("film coefficients must be finite and nonnegative")
         conductance[index] = (0. if h == 0 else
                               1/(1/conductance[index] + 1/(2*np.pi*r[index]*h)))
-    if angular_frequency == 0 and azimuthal_mode == 0 and not conductance[[0,-1]].any():
-        raise ValueError("a steady axisymmetric insulated annulus needs a temperature reference")
+    needs_mean = angular_frequency == 0 and azimuthal_mode == 0 and not conductance[[0,-1]].any()
+    if needs_mean and mean_temperature is None:
+        raise ValueError("a steady axisymmetric flux-driven annulus needs a temperature reference")
+    if mean_temperature is not None:
+        if not needs_mean or np.ndim(mean_temperature) != 0 or not np.isfinite(mean_temperature):
+            raise ValueError("a finite mean temperature applies only to an unanchored steady axisymmetric mode")
     volume = np.pi*width*(r[1:]+r[:-1])
     lateral = 2*np.pi*k*azimuthal_mode**2*np.log1p(width/r[:-1])
     sink = lateral + 1j*angular_frequency*cv*volume
@@ -114,7 +120,20 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
     bands[2,:-1] = -outward[:-1]
     bands[1] = outward+inward_coefficient+sink
     load = density*volume - np.diff(offset)
+    if needs_mean:
+        generation = density*volume
+        net = generation.sum()+inward.sum()
+        throughput = np.abs(generation).sum()+np.abs(inward).sum()
+        if abs(net) > 1e-12*throughput:
+            raise ValueError("incompatible wall inputs and volume generation for steady conduction")
+        # Pin the first cell temporarily. Compatibility supplies the omitted
+        # first balance equation; shifting the solution then fixes its mean.
+        bands[1,0], load[0] = 1., 0.
+        if n > 1:
+            bands[0,1] = 0.
     field = solve_banded((1,1), bands, load)
+    if needs_mean:
+        field += mean_temperature - volume @ field / volume.sum()
     rates = offset.copy()
     rates[1:] += outward*field
     rates[:-1] -= inward_coefficient*field

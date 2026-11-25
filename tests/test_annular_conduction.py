@@ -108,3 +108,27 @@ def test_distributed_balance_recovers_forced_log_quadratic_field(location, omega
                                           cell_location=location, distributed_source=True)
     np.testing.assert_allclose(temp, field(center), rtol=0., atol=1e-13)
     np.testing.assert_allclose(rate, exact_rate, rtol=0., atol=2e-12)
+
+
+def test_steady_flux_driven_annulus_sets_mean_and_rejects_net_heating():
+    r = np.array([.2,.3,.56,.65,.95,1.2])
+    cv, k = 2., 3.
+    centers = .5*(r[:-1]+r[1:])
+    volume = np.pi*np.diff(r**2)
+    # T=r² + 0.4 log(r) + constant. Both walls impose the exact flux.
+    reference = centers**2 + .4*np.log(centers)
+    exact_rate = -2*np.pi*k*(2*r**2+.4)
+    flux = exact_rate[[0,-1]]*[1,-1]/(2*np.pi*r[[0,-1]])
+    def solve(mean, source):
+        return solve_annular_conduction(r, k, cv, [None,None], 0., wall_fluxes=flux, source=source,
+                                        distributed_source=True, mean_temperature=mean)
+    for mean in (0., 17.-.5j):
+        t, rate = solve(mean, -4*k)
+        np.testing.assert_allclose(t, reference + mean - np.average(reference,weights=volume), atol=1e-13)
+        np.testing.assert_allclose(rate, exact_rate, rtol=0., atol=1e-12)
+    with pytest.raises(ValueError, match="incompatible"):
+        solve(0., -4*k+.01)
+    t, rate = solve_annular_conduction([1.,2.], 1., 1., (None,None), 0.,
+                                       wall_fluxes=(0.,0.), mean_temperature=3.)
+    np.testing.assert_allclose(t, 3.)
+    np.testing.assert_array_equal(rate, [0.,0.])
