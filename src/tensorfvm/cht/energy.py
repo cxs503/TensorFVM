@@ -549,7 +549,8 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
                                contact_resistance_x=0.0, contact_resistance_y=0.0,
                                theta=0.5, conductivity_y=None, return_wall_power=False, periodic_y=False,
                                wall_flux_order=1, heat_loss_coefficient=0., return_interior_power=False,
-                               load_jump_times=(), return_face_heat=False, rannacher=False):
+                               load_jump_times=(), return_face_heat=False, rannacher=False,
+                               monotone_theta=False):
     """Advance cell-centred conduction with fixed material data and boundary types.
 
     Return temperature at each requested time with shape (nt, ny, nx). Cell
@@ -565,7 +566,12 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
     List jumps of source or wall values in load_jump_times. A callable gives
     the new value at the jump; the preceding step samples its left limit.
     With rannacher=True replace the first Crank–Nicolson step at startup and
-    after each declared jump by two backward Euler half steps.
+    after each declared jump by two backward Euler half steps. monotone_theta
+    raises each step's implicit weight as needed to keep the explicit update
+    coefficients nonnegative. It requires nonnegative off-diagonal thermal
+    couplings. Nonnegative initial data and loads then preserve nonnegative
+    temperatures. Stiff steps can lose Crank–Nicolson time accuracy; interval
+    heat is integrated with the adjusted weights.
     Internal steps at jumps preserve the requested output grid. Instantaneous
     power at an output jump uses the new boundary values.
     For grid-aligned anisotropy, conductivity supplies the x component and
@@ -741,6 +747,17 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
                 varying_loads.append((ids, signals[side][:,mask], film))
             wall_links[side] = (mask, ids, cells, g, inner, correction)
         A = A.tocsc()
+    if monotone_theta:
+        entries = A.tocoo()
+        if np.any(entries.data[entries.row!=entries.col]<0.):
+            raise ValueError("monotone_theta requires nonnegative off-diagonal thermal couplings")
+        outgoing = -A.diagonal()
+        active = outgoing>0.
+        if np.any(active):
+            # M+(1-weight)*dt*A must be entrywise nonnegative. The implicit
+            # conduction matrix is an M-matrix for this conservative stencil.
+            explicit_limit = np.min(mass[active]/outgoing[active])
+            stage_weights = np.maximum(stage_weights,1.-explicit_limit/np.diff(time))
     M = sp.diags(mass, format="csc")
     states = np.empty((len(time), len(mass)))
     states[0] = state

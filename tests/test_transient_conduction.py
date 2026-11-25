@@ -321,3 +321,20 @@ def test_rannacher_rejects_incompatible_theta_and_collapsed_midpoint():
     for times,theta,reason in (([0.,1.],1.,"theta"),([1.,np.nextafter(1.,2.)],.5,"midpoint")):
         with pytest.raises(ValueError,match=reason):
             solve_transient_conduction([1.],[1.],1.,1.,{},times,0.,theta=theta,rannacher=True)
+
+
+def test_monotone_theta_single_cell_stiff_cooling_uses_consistent_heat():
+    opts = dict(dx=[1.],dy=[1.],conductivity=5.,volumetric_heat_capacity=1.,
+                bc={"west":dict(type="dirichlet",values=0.)},time=[0.,.01,1.],initial_temperature=1.,
+                return_face_heat=True)
+    raw,_ = solve_transient_conduction(**opts)
+    safe,heat = solve_transient_conduction(**opts,monotone_theta=True)
+    assert raw[-1,0,0]<0.
+    np.testing.assert_allclose(safe[:,0,0],[1.,.95/1.05,0.],atol=2e-15)
+    np.testing.assert_allclose(safe[1:,0,0]-safe[:-1,0,0],heat["wall"]["west"][:,0],atol=2e-15)
+
+
+def test_monotone_theta_rejects_negative_storing_wall_coupling():
+    bc = {"west":dict(type="robin",values=0.,film_coefficient=2.,wall_areal_heat_capacity=1.)}
+    with pytest.raises(ValueError,match="off-diagonal"):
+        solve_transient_conduction([.5,.5],[1.],1.,1.,bc,[0.,.01],1.,wall_flux_order=2,monotone_theta=True)
