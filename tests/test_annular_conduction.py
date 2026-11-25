@@ -71,3 +71,20 @@ def test_prescribed_wall_flux_on_either_end_matches_steady_log_profile(driven):
     field, rates = solve_annular_conduction(radii, 2., 1., walls, 0., wall_fluxes=fluxes)
     np.testing.assert_allclose(field, np.log(.5*(radii[:-1]+radii[1:])), atol=1e-14)
     np.testing.assert_allclose(rates, -4*np.pi, atol=1e-13)
+
+
+@pytest.mark.parametrize("omega", [0., 7.])
+def test_source_driven_angular_mode_with_zero_radial_flux(omega):
+    # T=(1+2i)*cos(3 angle) is continuous through the material interface.
+    # Its forcing contains both harmonic storage and k*m²*T/r². Integrate
+    # the latter over each cylindrical shell before passing its cell average.
+    r = np.array([.2,.34,.5,.83,1.])
+    k, capacity = np.array([1.,1.,3.,3.]), np.array([2.,2.,1.5,1.5])
+    exact, mode = 1.+2j, 3
+    inverse_r2_average = 2*np.log(r[1:]/r[:-1])/np.diff(r**2)
+    source = exact*(1j*omega*capacity + mode**2*k*inverse_r2_average)
+    t, rate = solve_annular_conduction(r, k, capacity, (None,None), omega, azimuthal_mode=mode,
+                                       source=source, contact_resistance=[0.,.3,0.],
+                                       wall_fluxes=(0.,0.), cell_location="volume_centroid")
+    np.testing.assert_allclose(t, exact, rtol=0., atol=3e-14)
+    np.testing.assert_allclose(rate, 0., rtol=0., atol=1e-12)
