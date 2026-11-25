@@ -277,21 +277,29 @@ def solve_steady_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
     operator,mass,volume,g,film,end_load,layout = _rod_operator(
         dx,area,conductivity,volumetric_heat_capacity,film_coefficient,
         shoulder_areal_heat_capacity,flux_order,contact_resistance,end_types,end_film_coefficient,end_areal_heat_capacity,interface_heat_capacity,interface_left_fraction,interface_capacity_left_fraction)
-    # With a prescribed temperature, use that wall as the datum before
-    # assembling loads. This also keeps the predictor and end-current
-    # differences well conditioned when the absolute temperature is large.
-    datum = 0.
-    fixed_walls = np.flatnonzero(np.asarray(end_types) == "temperature")
-    if fixed_walls.size and np.shape(end_temperatures) == (2,):
-        wall_values = _profile(end_temperatures, 2, "end boundary values")
-        datum = wall_values[fixed_walls[0]]
-        # Robin inputs are ambient temperatures; Neumann inputs are powers.
-        end_temperatures = np.where(np.asarray(end_types) == "power", wall_values, wall_values - datum)
-        ambient_temperature = _profile(ambient_temperature, len(volume)-1, "ambient temperature") - datum
-    rhs, ends, _ = _load(volume,end_load,layout,film,end_temperatures,source,ambient_temperature,interface_power,trace_power,float)
     operator,bulk_g = _bulk_exchange_operator(operator,mass,volume,layout.cells,heat_loss_coefficient)
     n = len(volume)
-    reservoir = _profile(bulk_ambient_temperature,n,"bulk ambient temperature") - datum
+    if np.shape(end_temperatures) != (2,):
+        raise ValueError("provide left and right end boundary values")
+    wall_values = _profile(end_temperatures,2,"end boundary values")
+    ambient = _profile(ambient_temperature,n-1,"ambient temperature")
+    reservoir = _profile(bulk_ambient_temperature,n,"bulk ambient temperature")
+    types = np.asarray(end_types)
+    fixed_walls = np.flatnonzero(types == "temperature")
+    # Use a physically coupled temperature as the reference before forming
+    # loads and extracting currents. Insulated surfaces impose no temperature.
+    datum = 0.
+    if fixed_walls.size:
+        datum = wall_values[fixed_walls[0]]
+    elif np.any(bulk_g):
+        datum = reservoir[np.argmax(bulk_g)]
+    elif np.any(layout.end_film):
+        datum = wall_values[np.argmax(layout.end_film)]
+    elif np.any(film):
+        datum = ambient[np.argmax(film)]
+    end_values = np.where(types == "power", wall_values, wall_values - datum)
+    rhs, ends, _ = _load(volume,end_load,layout,film,end_values,source,ambient-datum,interface_power,trace_power,float)
+    reservoir = reservoir - datum
     rhs[layout.cells] += bulk_g*reservoir
     estimated = source_derivative_breaks is not None
     supplied = source_gradient is not None or source_curvature is not None

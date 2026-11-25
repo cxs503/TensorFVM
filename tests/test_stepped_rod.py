@@ -867,3 +867,24 @@ def test_absolute_temperature_rod_balances_signed_bulk_heat_exchange():
     )
     loss = dx * film * (cell - reservoir)
     assert abs(left[0] - right[-1] - loss.sum()) < 1e-8
+
+
+@pytest.mark.parametrize("anchor", ["bulk", "end", "shoulder"])
+def test_steady_rod_free_ends_preserve_uniform_reservoir_equilibrium(anchor):
+    from tensorfvm.cht.rod import solve_steady_stepped_rod
+
+    n = 128
+    options = {
+        "bulk": dict(heat_loss_coefficient=4., bulk_ambient_temperature=305.),
+        "end": dict(end_film_coefficient=[0., 2.]),
+        "shoulder": dict(film_coefficient=3., ambient_temperature=305.),
+    }[anchor]
+    end_types = ("power", "robin" if anchor == "end" else "power")
+    cells, faces, left, right = solve_steady_stepped_rod(
+        np.full(n, 1/n), np.where(np.arange(n) < n//2, 1., 0.5), 1.7, 1.,
+        [0., 305. if anchor == "end" else 0.], end_types=end_types, flux_order=2, **options,
+    )
+    for profile in (cells, faces):
+        np.testing.assert_allclose(profile, 305., atol=1e-12, rtol=0)
+    for current in (left, right):
+        np.testing.assert_allclose(current, 0., atol=1e-12)
