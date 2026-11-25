@@ -170,3 +170,31 @@ def test_rannacher_start_matches_two_implicit_half_steps_including_wall_heat():
     for key,heat in combined[-1].items():
         np.testing.assert_allclose(heat[0],first[-1][key].sum(axis=0),atol=1e-13)
         np.testing.assert_allclose(heat[1],second[-1][key][0],atol=1e-13)
+
+
+def test_positive_cn_substeps_are_nonnegative_and_aggregate_interval_heat():
+    from tensorfvm.cht.rod import solve_transient_stepped_rod
+    sampled = []
+    times = [.1,.13,.2]
+    def ends(t):
+        sampled.append(t)
+        return [.02*t,0.]
+    opts = dict(contact_resistance=[.15,.2],film_coefficient=1.5,
+                shoulder_areal_heat_capacity=.015,initial_shoulder_temperature=[1.,.4],
+                ambient_temperature=lambda t:t*t,source=lambda t:[t,0.,.1],
+                return_step_heat=True)
+    def run(method,boundary,grid):
+        return solve_transient_stepped_rod([.2,.3,.4],[.4,1.6,.8],2.,1.,boundary,grid,0.,
+                                           method=method,**opts)
+    coarse = run("positive_cn",ends,times)
+    assert len(sampled)>len(times)
+    fine = run("theta",lambda t:[.02*t,0.],sampled)
+    indices = [sampled.index(t) for t in times]
+    for i in range(4):
+        np.testing.assert_allclose(coarse[i],fine[i][indices],atol=2e-13)
+    assert min(fine[0].min(),fine[1].min())>=-1e-14
+    for i,(a,b) in enumerate(zip(indices,indices[1:])):
+        for key,val in coarse[-1].items():
+            np.testing.assert_allclose(val[i],fine[-1][key][a:b].sum(axis=0),atol=1e-13)
+    with pytest.raises(ValueError,match="flux_order=1"):
+        solve_transient_stepped_rod([1.],1.,1.,1.,[0.,0.],[0.,1.],1.,method="positive_cn",flux_order=2)
