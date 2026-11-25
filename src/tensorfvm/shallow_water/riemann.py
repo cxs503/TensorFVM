@@ -353,24 +353,27 @@ def riemann_shock_losses(sol: RiemannSolution):
     return losses
 
 
-def _face_energy_transport(sol, x, t):
-    """Rightward energy through a face, taking its left trace at a stationary shock."""
-    offset = x-sol.x0
+def _wave_crossings(offset, relative_speeds, t):
     times = {0., t}
-    for speed in sol.wave_speeds:
-        if speed and min(0., t*speed) < offset < max(0., t*speed):
+    for speed in relative_speeds:
+        if min(0., t*speed) < offset < max(0., t*speed):
             times.add(offset/speed)
-    ends = sorted(times)
+    return times
+
+
+def _face_energy_transport(sol, x, t, face_speed):
+    """Rightward lab-frame energy crossing a face, using its left shock trace."""
+    offset = x-sol.x0
+    ends = sorted(_wave_crossings(offset, (s-face_speed for s in sol.wave_speeds), t))
     total = 0.
     for start, stop in zip(ends, ends[1:]):
         middle = .5*(start+stop)
-        xi = offset/middle
+        xi = face_speed + offset/middle
         in_fan = (sol.left_head < xi < sol.left_tail or sol.right_tail < xi < sol.right_head)
         if in_fan and offset != 0:
-            # In a smooth fan, d/dt [t*F - (x-x0)*E] = F. A fixed face
-            # away from the initial dam enters the fan at a positive time.
+            # In a smooth fan the primitive along the face has derivative F-wE.
             times_pair = np.array([start, stop])
-            xi_pair = offset/times_pair
+            xi_pair = face_speed + offset/times_pair
             if sol.left_head < xi < sol.left_tail:
                 c = (sol.uL+2*math.sqrt(sol.gravity*sol.hL)-xi_pair)/3
                 u = xi_pair+c
@@ -379,38 +382,48 @@ def _face_energy_transport(sol, x, t):
                 u = xi_pair-c
             h = c*c/sol.gravity
             e = cell_energy(h,h*u,sol.gravity)["total"]
-            primitive = times_pair*u*(e+.5*sol.gravity*h*h)-offset*e
+            primitive = times_pair*((u-face_speed)*e+u*.5*sol.gravity*h*h)-offset*e
             total += primitive[1]-primitive[0]
         else:
-            h, u = sample_exact(sol, x, middle)
-            if offset == 0 and sol.left_shock_speed == 0:
+            h, u = sample_exact(sol, x+middle*face_speed, middle)
+            if offset == 0 and sol.left_shock_speed == face_speed:
                 h, u = sol.hL, sol.uL
-            elif offset == 0 and sol.right_shock_speed == 0:
+            elif offset == 0 and sol.right_shock_speed == face_speed:
                 h, u = sol.h_star, sol.u_star
-            total += (stop-start)*u*h*(.5*u*u+sol.gravity*h)
+            e = .5*h*(u*u+sol.gravity*h)
+            total += (stop-start)*((u-face_speed)*e+u*.5*sol.gravity*h*h)
     return float(total)
 
 
-def riemann_energy_budget(sol: RiemannSolution, x_min: float, x_max: float, t: float):
-    """Exact cumulative energy balance per unit width over [x_min, x_max).
+def riemann_energy_budget(sol: RiemannSolution, x_min: float, x_max: float, t: float,
+                          *, face_speeds=(0., 0.)):
+    """Lab-frame energy balance per unit width on a moving half-open interval.
 
-    Fluxes are positive rightwards. Shock losses accrue only during residence
-    in the interval. A stationary shock on a boundary belongs to the interval
-    on its right, and both face fluxes use the left trace.
+    x_min and x_max are initial positions. Each boundary moves uniformly at
+    its respective face speed. Transports are positive rightwards. A shock
+    following a shared boundary belongs to the interval on its right, and
+    both adjacent intervals use its left trace for boundary transport.
     """
-    final = riemann_energy(sol, x_min, x_max, t)
+    west_speed, east_speed = face_speeds
+    if not all(map(math.isfinite, (west_speed, east_speed))):
+        raise ValueError("face speeds must be finite")
     initial = riemann_energy(sol, x_min, x_max, 0.)
-    west = _face_energy_transport(sol, x_min, t)
-    east = _face_energy_transport(sol, x_max, t)
+    final = riemann_energy(sol, x_min+t*west_speed, x_max+t*east_speed, t)
+    west = _face_energy_transport(sol, x_min, t, west_speed)
+    east = _face_energy_transport(sol, x_max, t, east_speed)
     rates = riemann_shock_losses(sol)
     losses = {}
     for side, speed in (("left", sol.left_shock_speed), ("right", sol.right_shock_speed)):
         duration = 0.
-        if speed == 0:
-            duration = t if x_min <= sol.x0 < x_max else 0.
-        elif speed is not None:
-            entry, exit_time = sorted(((x_min-sol.x0)/speed, (x_max-sol.x0)/speed))
-            duration = max(0., min(t, exit_time)-max(0., entry))
+        if speed is not None:
+            rel_west, rel_east = speed-west_speed, speed-east_speed
+            west_offset, east_offset = x_min-sol.x0, x_max-sol.x0
+            ends = sorted(_wave_crossings(west_offset, (rel_west,), t)
+                          | _wave_crossings(east_offset, (rel_east,), t))
+            for start, stop in zip(ends, ends[1:]):
+                middle = .5*(start+stop)
+                if west_offset <= middle*rel_west and middle*rel_east < east_offset:
+                    duration += stop-start
         losses[side] = duration*rates[side]
     return {"initial": initial, "final": final, "left_transport": west,
             "right_transport": east, "shock_losses": losses,

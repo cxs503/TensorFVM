@@ -657,3 +657,42 @@ def test_face_on_traveling_bore_matches_downstream_transport(record_property):
     error = np.max(np.abs(actual-expected))
     record_property("max_bore_transport_error", error)
     assert error < 2e-14
+
+
+@pytest.mark.parametrize("case", DEFAULT_CASES, ids=lambda c: c.name)
+def test_moving_energy_budget_against_time_quadrature(case, record_property):
+    from scipy.integrate import quad
+    from tensorfvm.shallow_water import riemann_energy_budget
+
+    sol = case.solution()
+    end = .65
+    faces, speeds = (.18, .52), (-.65, .35)
+    budget = riemann_energy_budget(sol, *faces, end, face_speeds=speeds)
+    errors = []
+    for x, w, name in zip(faces, speeds, ("left_transport", "right_transport")):
+        def power(t):
+            h,u = sample_exact(sol, x+w*t, t)
+            return h*u*(.5*u*u+sol.gravity*h) - w*.5*h*(u*u+sol.gravity*h)
+        crossings = [(x-sol.x0)/(s-w) for s in sol.wave_speeds if s != w]
+        reference = quad(power, 0., end, points=[t for t in crossings if 0<t<end])[0]
+        errors.append(abs(reference-budget[name]))
+    record_property("max_transport_error", max(errors))
+    record_property("balance_error", abs(budget["residual"]))
+    assert max(errors) < 1e-12 and abs(budget["residual"]) < 1e-12
+
+
+def test_energy_shock_following_boundary_and_collapsing_interval():
+    from tensorfvm.shallow_water import riemann_energy_budget
+
+    # Boost a stationary jump by +0.5; its loss remains 9/8 per unit time.
+    sol = solve_riemann(1., 3.5, 2., 2., gravity=3.)
+    w = sol.left_shock_speed
+    assert w == pytest.approx(.5)
+    west = riemann_energy_budget(sol, -1., 0., .4, face_speeds=(0., w))
+    east = riemann_energy_budget(sol, 0., 1., .4, face_speeds=(w, 0.))
+    assert west["right_transport"] == east["left_transport"]
+    assert west["shock_losses"]["left"] == 0.
+    assert east["shock_losses"]["left"] == pytest.approx(.4*9/8)
+    assert max(abs(west["residual"]), abs(east["residual"])) < 1e-13
+    with pytest.raises(ValueError, match="interval"):
+        riemann_energy_budget(sol, 0., 1., .5, face_speeds=(2., 0.))
