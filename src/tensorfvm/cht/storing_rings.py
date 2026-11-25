@@ -8,6 +8,7 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
                         contact_resistances, sheet_capacities, sheet_generation=(0., 0.), source=0.,
                         sheet_film_coefficients=(0., 0.), sheet_ambient_temperatures=(0., 0.),
                         azimuthal_mode=0, volumetric_heat_capacity=None, film_coefficients=(None, None), wall_fluxes=(None, None),
+                        bore_temperature_reference=None,
                         inner_resistance_fractions=(.5, .5), sheet_conductivities=(0., 0.),
                         return_wall_rates=False, return_bulk_storage=False, return_angular_conduction=False,
                         return_wall_temperatures=False, return_contact_temperatures=False):
@@ -22,7 +23,9 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
     wall_fluxes can prescribe inward heat flux (W/m²) at either or both walls.
     Set the corresponding temperature and film to None. For two prescribed
     fluxes the axisymmetric mode requires active harmonic storage or a sheet
-    film coupled to a reservoir to determine the absolute temperature.
+    film coupled to a reservoir to determine the absolute temperature. Otherwise,
+    provide bore_temperature_reference (K) and compatible wall, sheet and bulk
+    heat inputs whose net sum is zero. The reference sets only the additive constant.
     A nonnegative scalar or per-cell capacity (J/(m³ K)) enables harmonic bulk storage.
     Zero-capacity cells conduct without storing heat, even beside cells with positive capacity.
     inner_resistance_fractions specifies the fraction of each contact resistance
@@ -99,10 +102,18 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
         raise ValueError("supply a positive finite film coefficient or None for each physical wall")
     if any(film_coefficients[side] is not None for side in flux_sides):
         raise ValueError("a flux wall cannot also have a film")
-    if len(flux_sides) == 2 and azimuthal_mode == 0 and not sheet_h.any():
-        has_storage = omega > 0 and (capacity.any() or (volumetric_heat_capacity is not None and cv.any()))
-        if not has_storage:
-            raise ValueError("two flux walls with no active storage or reservoir need a temperature reference")
+    has_storage = omega > 0 and (capacity.any() or (volumetric_heat_capacity is not None and cv.any()))
+    floating = len(flux_sides) == 2 and azimuthal_mode == 0 and not sheet_h.any() and not has_storage
+    if floating:
+        if (bore_temperature_reference is None or np.ndim(bore_temperature_reference) != 0
+                or not np.isfinite(bore_temperature_reference)):
+            raise ValueError("two unanchored flux walls need a finite bore temperature reference")
+        inputs = np.r_[2*np.pi*r[[0,-1]]*wall_fluxes, 2*np.pi*r[faces]*generation,
+                       np.pi*np.diff(r)*(r[:-1]+r[1:])*volume_source]
+        if abs(inputs.sum()) > 1e-12*np.abs(inputs).sum():
+            raise ValueError("incompatible wall fluxes, sheet and volume generation")
+    elif bore_temperature_reference is not None:
+        raise ValueError("a bore temperature reference applies only to an unanchored double-flux mode")
     inner_film = [1/value if value else None for value in inner]
     outer_film = [1/value if value else None for value in outer]
     layer_films = [(film_coefficients[0], inner_film[0]), (outer_film[0], inner_film[1]),
@@ -157,6 +168,12 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
                 coupled[1, j] = c[0, 1]
                 coupled[j, [1, j]] = c[1, :2]
                 load[j] = -2*np.pi*r[-1]*wall_fluxes[1] - c[1, 2]
+        if floating:
+            # Compatibility supplies the bore flux equation. Solve relative to
+            # the bore datum to avoid injecting its roundoff into fluxes.
+            coupled[2] = 0.
+            coupled[2, 2] = 1.
+            load[2] = 0.
         solution = np.linalg.solve(coupled, load)
         sheet, walls[flux_sides] = solution[:2], solution[2:]
     else:
@@ -166,7 +183,8 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
     outer_rates = c @ [sheet[1], walls[1], 1.]
     incoming = np.array([inner_rates[1], middle[1]]) / area
     outgoing = np.array([middle[0], outer_rates[0]]) / area
-    result = (sheet, incoming, outgoing)
+    datum = bore_temperature_reference if floating else 0.
+    result = (sheet + datum, incoming, outgoing)
     if return_wall_rates:
         result += (np.array([inner_rates[0], outer_rates[1]]),)
     if return_bulk_storage or return_angular_conduction:
@@ -181,7 +199,7 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
             surface[0] -= inner_rates[0]/(2*np.pi*r[0]*film_coefficients[0])
         if film_coefficients[1] is not None:
             surface[1] += outer_rates[1]/(2*np.pi*r[-1]*film_coefficients[1])
-        result += (surface,)
+        result += (surface + datum,)
     if return_contact_temperatures:
-        result += (np.column_stack((sheet + inner*incoming, sheet - outer*outgoing)),)
+        result += (np.column_stack((sheet + inner*incoming, sheet - outer*outgoing)) + datum,)
     return result
