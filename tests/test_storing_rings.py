@@ -87,3 +87,21 @@ def test_dc_wall_films_against_radial_resistances(films):
     film_resistance = sum(1/(r*h) for r, h in zip(edges[[0, -1]], films) if h is not None)
     resistance = sum(np.diff(np.log(edges))/k) + sum(contacts/edges[1:-1]) + film_resistance
     np.testing.assert_allclose(rates, 2*np.pi*(ambient[0]-ambient[1])/resistance, rtol=1e-12)
+
+
+@pytest.mark.parametrize("heated_layer", [0, 1, 2])
+def test_local_bulk_heater_with_transparent_sheets(heated_layer):
+    from tensorfvm.cht.annulus import solve_annular_conduction
+
+    mesh = np.geomspace(.5, 1.2, 25)
+    source = np.zeros(24, dtype=complex)
+    source[8*heated_layer:8*(heated_layer+1)] = .8+.35j
+    _, rates = solve_annular_conduction(mesh, 2., 1.4, (0., 0.), 4., source=source,
+        azimuthal_mode=2, cell_location="volume_centroid", distributed_source=True)
+    _, incoming, outgoing, walls = solve_storing_rings(
+        mesh, 2., [8, 16], (0., 0.), 4., contact_resistances=(0., 0.), sheet_capacities=(0., 0.),
+        source=source, volumetric_heat_capacity=1.4, azimuthal_mode=2, return_wall_rates=True)
+    expected = rates[[8, 16]]/(2*np.pi*mesh[[8, 16]])
+    np.testing.assert_allclose(incoming, expected, rtol=1e-11)
+    np.testing.assert_allclose(outgoing, expected, rtol=1e-11)
+    np.testing.assert_allclose(walls, rates[[0, -1]], rtol=1e-11)

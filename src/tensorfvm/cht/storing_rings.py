@@ -5,7 +5,7 @@ from .annulus import solve_annular_conduction
 
 
 def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, omega, *,
-                        contact_resistances, sheet_capacities, sheet_generation=(0., 0.),
+                        contact_resistances, sheet_capacities, sheet_generation=(0., 0.), source=0.,
                         azimuthal_mode=0, volumetric_heat_capacity=None, film_coefficients=(None, None),
                         inner_resistance_fractions=(.5, .5), sheet_conductivities=(0., 0.),
                         return_wall_rates=False, return_bulk_storage=False, return_angular_conduction=False):
@@ -14,6 +14,7 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
     The cell faces include both sheets. Conductivity is scalar or per cell.
     Wall temperatures and areal heat generation (W/m²) are complex amplitudes of
     cos(mθ) exp(iωt). Omitting volumetric_heat_capacity gives quasi-steady bulk conduction.
+    source is scalar or per-cell volumetric heat generation (W/m³), in the same mode.
     At either physical wall a positive film coefficient (W/m²/K) makes the supplied
     temperature an ambient phasor. None prescribes the surface temperature.
     A positive scalar or per-cell capacity (J/(m³ K)) enables harmonic bulk storage.
@@ -31,7 +32,7 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
     of 2πr times capacity and temperature amplitude. Quasi-steady layers give zero.
     With return_angular_conduction, append three circumferential divergence
     amplitudes, integral(2π k m² T/r dr) per layer in W/m. They vanish for
-    mode zero and enter each modal balance as radial input minus output minus storage.
+    mode zero and enter each modal balance as radial input plus volume generation minus output and storage.
     """
     r = np.asarray(radii, dtype=float)
     faces = np.asarray(sheet_faces)
@@ -44,6 +45,9 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
     k = np.broadcast_to(np.asarray(conductivity, dtype=float), (len(r)-1,))
     bulk_frequency = 0. if volumetric_heat_capacity is None else omega
     cv = np.broadcast_to(1. if volumetric_heat_capacity is None else volumetric_heat_capacity, k.shape)
+    volume_source = np.broadcast_to(np.asarray(source, dtype=complex), k.shape)
+    if not np.isfinite(volume_source).all():
+        raise ValueError("volumetric heat generation must be finite")
     walls = np.asarray(wall_temperatures, dtype=complex)
     generation = np.asarray(sheet_generation, dtype=complex)
     capacity = np.asarray(sheet_capacities, dtype=float)
@@ -73,24 +77,27 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
     domains = []
     if return_bulk_storage:
         cell_storage = 1j*bulk_frequency*cv*np.pi*np.diff(r)*(r[:-1]+r[1:])
-        storage_maps = np.empty((3, 2), dtype=complex)
+        storage_maps = np.zeros((3, 3), dtype=complex)
     if return_angular_conduction:
         cell_angular = 2*np.pi*k*azimuthal_mode**2*np.log1p(np.diff(r)/r[:-1])
-        angular_maps = np.empty((3, 2), dtype=complex)
+        angular_maps = np.zeros((3, 3), dtype=complex)
     for layer, (a, b) in enumerate(zip(ends, ends[1:])):
         film = layer_films[layer]
         # The two unit temperature responses map end temperatures to radial rates.
-        columns = []
-        for column, boundary in enumerate(np.eye(2)):
+        # The third column is the forced solution with homogeneous end data.
+        response = np.zeros((2, 3), dtype=complex)
+        for column in range(3 if np.any(volume_source[a:b]) else 2):
+            boundary = (float(column == 0), float(column == 1))
             field, rate = solve_annular_conduction(
                 r[a:b+1], k[a:b], cv[a:b], boundary, bulk_frequency, film_coefficients=film,
+                source=volume_source[a:b] if column == 2 else 0.,
                 azimuthal_mode=azimuthal_mode, cell_location="volume_centroid", distributed_source=True)
-            columns.append(rate[[0, -1]])
+            response[:, column] = rate[[0, -1]]
             if return_bulk_storage:
                 storage_maps[layer, column] = cell_storage[a:b] @ field
             if return_angular_conduction:
                 angular_maps[layer, column] = cell_angular[a:b] @ field
-        domains.append(np.column_stack(columns))
+        domains.append(response)
 
     area = 2*np.pi*r[faces]
     a, b, c = domains
@@ -99,10 +106,11 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
     admittance = 1j*omega*capacity + sheet_k*(azimuthal_mode/r[faces])**2
     matrix += np.diag(admittance*area)
     forcing = area*generation + [a[1, 0]*walls[0], -c[0, 1]*walls[1]]
+    forcing += [a[1, 2]-b[0, 2], b[1, 2]-c[0, 2]]
     sheet = np.linalg.solve(matrix, forcing)
-    middle = b @ sheet
-    inner_rates = a @ [walls[0], sheet[0]]
-    outer_rates = c @ [sheet[1], walls[1]]
+    middle = b @ [*sheet, 1.]
+    inner_rates = a @ [walls[0], sheet[0], 1.]
+    outer_rates = c @ [sheet[1], walls[1], 1.]
     incoming = np.array([inner_rates[1], middle[1]]) / area
     outgoing = np.array([middle[0], outer_rates[0]]) / area
     result = (sheet, incoming, outgoing)
@@ -111,7 +119,7 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
     if return_bulk_storage or return_angular_conduction:
         nodes = np.r_[walls[0], sheet, walls[1]]
     if return_bulk_storage:
-        result += (storage_maps[:, 0]*nodes[:-1] + storage_maps[:, 1]*nodes[1:],)
+        result += (storage_maps[:, 0]*nodes[:-1] + storage_maps[:, 1]*nodes[1:] + storage_maps[:, 2],)
     if return_angular_conduction:
-        result += (angular_maps[:, 0]*nodes[:-1] + angular_maps[:, 1]*nodes[1:],)
+        result += (angular_maps[:, 0]*nodes[:-1] + angular_maps[:, 1]*nodes[1:] + angular_maps[:, 2],)
     return result
