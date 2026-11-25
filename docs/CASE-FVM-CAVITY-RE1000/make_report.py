@@ -29,6 +29,42 @@ FIGS = HERE / "figures"
 RE = 1000.0
 
 
+def _decomposition() -> dict | None:
+    """Reference-floor decomposition (``REFERENCE_FLOOR.md`` + ``decompose_reference_floor.py``).
+
+    Optional: when the study has been run its caveat is injected here, because a
+    report that shows agreement but hides the fact that most of the 3 % band is
+    eaten by the reference itself would over-state the solver.
+    """
+    path = RUNS / "decomposition.json"
+    return json.loads(path.read_text()) if path.is_file() else None
+
+
+def dropped_lines(previous: str, rendered: str, *, min_prefix: int = 10) -> list[str]:
+    """Lines of the published report that a re-rendering would silently delete.
+
+    Companion studies (``REFERENCE_FLOOR.md``, ``WALL-SHEAR-BUDGET.md``, ...) feed
+    this file, and some of them were folded in by hand.  Rendering over the top
+    would drop their prose without a word — that is how the reference-floor caveat
+    ("agreement is not accuracy") disappeared once.  Reworded lines are tolerated
+    (they keep a common prefix); whole vanishing passages are not.
+    """
+    fresh = [ln.strip() for ln in rendered.splitlines() if ln.strip()]
+    fresh_set = set(fresh)
+    prefixes = {ln[:min_prefix] for ln in fresh}
+    out: list[str] = []
+    for line in previous.splitlines():
+        text_ = line.strip()
+        if not text_ or text_ in fresh_set:
+            continue
+        if text_.startswith("> 本文件与全部数字"):
+            continue  # generated timestamp header
+        if len(text_) >= min_prefix and text_[:min_prefix] in prefixes:
+            continue  # same line, updated content
+        out.append(text_)
+    return out
+
+
 def pct(x: float) -> str:
     return f"{100.0 * x:.2f}%"
 
@@ -245,7 +281,18 @@ def render(summary: dict, bench: dict, fields) -> str:
                      f"{o['p_linf_u']:.2f}", f"{o['p_linf_v']:.2f}",
                      f"{o['p_l2_u']:.2f}", f"{o['p_l2_v']:.2f}"] for o in orders]))
         a("")
-    if cont:
+    if cont and (cont.get("kind") == "repeat_run" or cont.get("same_steady_state") is None):
+        # degenerate case: the control grid was itself started from rest, so the
+        # two runs are the same computation and the comparison proves nothing
+        a(f"续算对照（n = {cont['grid']}）：主运行 {cont['steps_continued']} 步 / "
+          f"{cont['wall_seconds_continued']:.0f} s 与冷启动重复 {cont['steps_cold']} 步 / "
+          f"{cont['wall_seconds_cold']:.0f} s，中心线最大差 "
+          f"`max|Δu| = {cont['max_abs_du_centreline']:.2e}`、"
+          f"`max|Δv| = {cont['max_abs_dv_centreline']:.2e}`。**该网格本轮由静止启动**，"
+          f"因此这只是同一算例的确定性重复，**不足以**判定延拓是否保持不动点"
+          f"（同解判定 = 未评估）。")
+        a("")
+    elif cont:
         a(f"续算对照（n = {cont['grid']}）：冷启动 {cont['steps_cold']} 步 / "
           f"{cont['wall_seconds_cold']:.0f} s 与延拓启动 {cont['steps_continued']} 步 / "
           f"{cont['wall_seconds_continued']:.0f} s 收敛到同一解："
@@ -279,6 +326,23 @@ def render(summary: dict, bench: dict, fields) -> str:
       "因此续算没有筛选出某个解。")
     a("* **适用范围**：二维、层流、定常；Re = 1000 有角涡但无需湍流模型。三维、非定常脉动、"
       "更高 Re（需亚格子/湍流模型）不在本案例覆盖范围内。")
+    dec = _decomposition()
+    if dec is not None:
+        u128 = dec["u"]["by_grid"]["128"]
+        v128 = dec["v"]["by_grid"]["128"]
+        band = dec["reference_floor_fraction_of_band"]["v"]["registered"]
+        n64 = dec["verdict"]["extrema_judge_truth_rel"]["64"]
+        a("* **「吻合」不等于「精度」**：n = 128 的 "
+          f"`max|Δu| = {u128['judge_ghia_max_abs'] * 1e3:.2f}e-3` 里有参考解自身的贡献。"
+          f"与存档谱极限（真解）对比，本解的真实离散误差是 "
+          f"`max|Δu| = {u128['judge_truth_max_abs'] * 1e3:.2f}e-3`、"
+          f"`max|Δv| = {v128['judge_truth_max_abs'] * 1e3:.2f}e-3`；"
+          f"Ghia 表自身相对真解的偏移是 `{u128['reference_offset_max_abs'] * 1e3:.2f}e-3`（u）/ "
+          f"`{v128['reference_offset_max_abs'] * 1e3:.2f}e-3`（v），即 C2 的 3 % 带宽有 "
+          f"{100 * band:.0f} % 被参考解吃掉。n = 64 那一行在本口径下 u_min/v_max 为 "
+          f"{100 * n64['u']:.2f} %/{100 * n64['v']:.2f} %（越 3 % 带），只能作诊断。"
+          "逐点分解与判据带宽核算见 `REFERENCE_FLOOR.md`（`runs/decomposition.json`，"
+          "机检门 `tests/test_case_cavity_reference_floor.py`）。")
     a("* **散度**：纯 Neumann 闭腔要求 `Σ div u* = 0` 精确满足，本实现按此扣除均值；"
       f"最细网格 `max|div u| = {finest['max_divergence']:.1e}`。")
     a("")
@@ -318,8 +382,9 @@ def render(summary: dict, bench: dict, fields) -> str:
     a("```")
     a("# 全流程（网格序列 32→64→128 + 冷启动对照），约 30 min 单核")
     a(f"{summary.get('command')}")
-    a("# 机检门：从工件重算判据与剖面")
-    a("PYTHONPATH=src python -m pytest tests/test_case_cavity_re1000.py -q")
+    a("# 机检门：从工件重算判据与剖面，并核对本包出处（网格序列/对照网格/续算数字）")
+    a("PYTHONPATH=src python -m pytest tests/test_case_cavity_re1000.py \\")
+    a("    tests/test_case_cavity_re1000_continuation_control.py -q")
     a("# 报告与图")
     a("PYTHONPATH=src python docs/CASE-FVM-CAVITY-RE1000/make_report.py")
     a("```")
@@ -391,6 +456,15 @@ def main() -> None:
     f3 = fig_fields(fields, int(summary["finest"]))
     text = render(summary, bench, fields)
     out = HERE / "REPORT.md"
+    if out.is_file():
+        dropped = dropped_lines(out.read_text(encoding="utf-8"), text)
+        if dropped:
+            raise SystemExit(
+                f"refusing to overwrite {out.name}: this rendering would drop "
+                f"{len(dropped)} published line(s) it does not produce, e.g.\n  "
+                + "\n  ".join(dropped[:3])
+                + "\nintegrate the contributing study into render() first "
+                  "(or remove the passage deliberately).")
     out.write_text(text, encoding="utf-8")
     print(f"wrote {out} ({len(text)} chars)")
     for f in (f1, f2, f3):
