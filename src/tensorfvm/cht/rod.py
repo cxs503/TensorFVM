@@ -21,6 +21,7 @@ class _Layout:
     left: np.ndarray
     right: np.ndarray
     shoulders: np.ndarray
+    power_ends: np.ndarray
 
     @property
     def cells(self):
@@ -28,6 +29,11 @@ class _Layout:
         return self.left
 
     def output(self, state, ends, g, flux_order, return_traces):
+        if self.power_ends.size:
+            # Appended unknowns are temperatures at ends with specified power.
+            ends = ends.copy()
+            ends[...,self.power_ends] = state[...,-self.power_ends.size:]
+            state = state[...,:-self.power_ends.size]
         full = np.concatenate((ends[..., :1],state,ends[..., 1:]),axis=-1)
         cell = state[...,self.cells]
         west, east = full[...,self.left], full[...,self.right]
@@ -44,7 +50,7 @@ class _Layout:
         return result
 
 
-def _rod_operator(dx, area, conductivity, capacity, film_coefficient, shoulder_areal_heat_capacity, flux_order, contact_resistance):
+def _rod_operator(dx, area, conductivity, capacity, film_coefficient, shoulder_areal_heat_capacity, flux_order, contact_resistance, end_types):
     dx = np.asarray(dx, dtype=float)
     if dx.ndim != 1 or not dx.size or not np.isfinite(dx).all() or np.any(dx <= 0):
         raise ValueError("dx must be a nonempty vector of finite positive widths")
@@ -74,7 +80,11 @@ def _rod_operator(dx, area, conductivity, capacity, film_coefficient, shoulder_a
     right = left+2
     count = right[-1]+1
     shoulders = np.where(area[:-1]>=area[1:],right[:-1],left[1:])
-    layout = _Layout(left,right,shoulders)
+    types = np.asarray(end_types)
+    if types.shape != (2,) or not np.isin(types,["temperature","power"]).all():
+        raise ValueError("end_types must specify temperature or power for each end")
+    power_ends = np.flatnonzero(types == "power")
+    layout = _Layout(left,right,shoulders,power_ends)
     links = np.empty(count-1)
     links[left] = links[left+1] = g
     links[right[:-1][split]] = np.minimum(area[:-1],area[1:])[split]/resistance[split]
@@ -86,9 +96,18 @@ def _rod_operator(dx, area, conductivity, capacity, film_coefficient, shoulder_a
         curvature = sp.csr_matrix((np.tile([1.,-2.,1.],n),indices.ravel(),3*np.arange(n+1)),
                                   shape=(n,count))
         full = full + curvature.T @ sp.diags(g) @ curvature
-    operator = full[1:-1,1:-1].tocsc()
-    end_load = -full[1:-1,[0,count-1]].tocsc()
-    mass = np.zeros(count-2)
+    endpoints = np.array([0,count-1])
+    unknown = np.r_[np.arange(1,count-1),endpoints[power_ends]]
+    operator = full[unknown][:,unknown].tocsc()
+    end_load = -full[unknown][:,endpoints]
+    if power_ends.size:
+        # Dirichlet values enter through eliminated conductances, Neumann
+        # powers enter their own massless endpoint energy balances.
+        end_load = end_load @ sp.diags((types=="temperature").astype(float))
+        end_load += sp.csc_matrix((np.ones(power_ends.size),
+                                  (np.arange(count-2,len(unknown)),power_ends)),
+                                  shape=(len(unknown),2))
+    mass = np.zeros(len(unknown))
     mass[layout.cells] = c*volume
     mass[shoulders-1] = cw*exposed
     return operator,mass,volume,g,film,end_load,layout
@@ -98,7 +117,7 @@ def _load(volume, end_load, layout, film, ends, source, ambient, dtype):
     n = len(volume)
     if np.shape(ends) != (2,):
         raise ValueError("provide left and right end temperatures")
-    ends = _profile(ends,2,"end temperatures",dtype)
+    ends = _profile(ends,2,"end boundary values",dtype)
     rhs = np.zeros(end_load.shape[0],dtype=dtype)
     rhs[layout.cells] = volume*_profile(source,n,"source",dtype)
     rhs[layout.shoulders-1] = film*_profile(ambient,n-1,"ambient temperature",dtype)
@@ -109,9 +128,13 @@ def _load(volume, end_load, layout, film, ends, source, ambient, dtype):
 def solve_harmonic_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
                                end_temperatures, angular_frequency, *, source=0.,
                                film_coefficient=0., ambient_temperature=0.,
-                               shoulder_areal_heat_capacity=0., flux_order=1, contact_resistance=0., return_traces=False):
+                               shoulder_areal_heat_capacity=0., flux_order=1, contact_resistance=0., return_traces=False,
+                               end_types=("temperature","temperature")):
     """Solve a rod with concentric sections and prescribed end phasors.
 
+    end_types specifies "temperature" (K) or "power" (inward W) for each
+    value of end_temperatures. Zero power insulates an end. Both reported
+    cell powers point right, so inward power at the right end changes sign.
     Cell inputs are width (m), area (m²), conductivity (W/(m K)), volumetric
     capacity (J/(m³ K)) and source (W/m³). At each internal face the absolute
     area change exposes a shoulder to a film (W/(m² K)) with surface storage
@@ -128,7 +151,7 @@ def solve_harmonic_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
     if not np.isfinite(angular_frequency) or angular_frequency <= 0:
         raise ValueError("angular_frequency must be finite and positive")
     operator,mass,volume,g,film,end_load,layout = _rod_operator(dx,area,conductivity,volumetric_heat_capacity,
-                                               film_coefficient,shoulder_areal_heat_capacity,flux_order,contact_resistance)
+                                               film_coefficient,shoulder_areal_heat_capacity,flux_order,contact_resistance,end_types)
     rhs, ends = _load(volume,end_load,layout,film,end_temperatures,source,ambient_temperature,complex)
     state = spsolve(operator+sp.diags(1j*angular_frequency*mass),rhs)
     return layout.output(state,ends,g,flux_order,return_traces)
@@ -139,7 +162,7 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
                                 film_coefficient=0., ambient_temperature=0.,
                                 shoulder_areal_heat_capacity=0., initial_shoulder_temperature=None,
                                 theta=.5, flux_order=1, contact_resistance=0., return_traces=False,
-                                method="theta", return_step_heat=False):
+                                method="theta", return_step_heat=False, end_types=("temperature","temperature")):
     """Advance the stepped rod with theta-weighted cell and shoulder storage.
 
     Uses the geometry, units, power signs and four outputs of the harmonic solve,
@@ -172,7 +195,7 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
         raise ValueError("positive_cn requires flux_order=1")
     weight = 1.-1./np.sqrt(2.) if method == "sdirk2" else theta
     operator,mass,volume,g,film,end_load,layout = _rod_operator(dx,area,conductivity,volumetric_heat_capacity,
-                                                film_coefficient,shoulder_areal_heat_capacity,flux_order,contact_resistance)
+                                                film_coefficient,shoulder_areal_heat_capacity,flux_order,contact_resistance,end_types)
     n = len(g)
     def forcing(t):
         values = [v(float(t)) if callable(v) else v for v in (end_temperatures,source,ambient_temperature)]

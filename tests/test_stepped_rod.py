@@ -198,3 +198,35 @@ def test_positive_cn_substeps_are_nonnegative_and_aggregate_interval_heat():
             np.testing.assert_allclose(val[i],fine[-1][key][a:b].sum(axis=0),atol=1e-13)
     with pytest.raises(ValueError,match="flux_order=1"):
         solve_transient_stepped_rod([1.],1.,1.,1.,[0.,0.],[0.,1.],1.,method="positive_cn",flux_order=2)
+
+
+@pytest.mark.parametrize("order",[1,2])
+@pytest.mark.parametrize("n",[1,5])
+def test_harmonic_power_ends_match_discrete_temperature_solution(order,n):
+    from tensorfvm.cht.rod import solve_harmonic_stepped_rod
+    dx = np.linspace(.15,.3,n)
+    area = 1.+np.arange(n)%2
+    opts = dict(flux_order=order,source=.3-.2j,film_coefficient=3.,
+                shoulder_areal_heat_capacity=.8,contact_resistance=.2,return_traces=True)
+    ends = [1.+.3j,-.5+.1j]
+    ref = solve_harmonic_stepped_rod(dx,area,2.,3.,ends,4.,**opts)
+    power = [ref[2][0],-ref[3][-1]]
+    for kinds in (("temperature","power"),("power","temperature"),("power","power")):
+        values = [p if kind=="power" else t for kind,t,p in zip(kinds,ends,power)]
+        obs = solve_harmonic_stepped_rod(dx,area,2.,3.,values,4.,end_types=kinds,**opts)
+        for a,b in zip(obs,ref):
+            np.testing.assert_allclose(a,b,rtol=1e-11,atol=2e-12)
+
+
+@pytest.mark.parametrize("method",["theta","sdirk2","rannacher","positive_cn"])
+def test_power_ends_account_for_each_joule_of_heating(method):
+    from tensorfvm.cht.rod import solve_transient_stepped_rod
+    times = np.array([0.,.01,.05,.18])
+    dx,area = np.array([.25,.5]),np.array([1.,3.])
+    cell,face,left,right,heat = solve_transient_stepped_rod(
+        dx,area,2.,4.,lambda t:[1+t,.3],times,1.,shoulder_areal_heat_capacity=.2,
+        contact_resistance=.12,return_step_heat=True,method=method,end_types=("power","power"))
+    np.testing.assert_allclose(left[:,0],1.+times,atol=1e-12)
+    np.testing.assert_allclose(right[:,-1],-.3,atol=1e-12)
+    stored = cell @ (4*dx*area)+.4*face[:,1]
+    np.testing.assert_allclose(np.diff(stored),heat["left"][:,0]-heat["right"][:,-1],atol=1e-12)
