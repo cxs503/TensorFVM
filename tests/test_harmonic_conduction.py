@@ -61,3 +61,33 @@ def test_periodic_y_seam_material_resistance_and_cell_balance(dy):
     with pytest.raises(ValueError, match="periodic_y"):
         solve_harmonic_conduction(dx, dy, 1., 1., {"north": {"type":"neumann", "values":0.}},
                                   4., periodic_y=True)
+
+
+@pytest.mark.parametrize("h", [0., 3.])
+def test_dynamic_wall_matches_explicit_two_temperature_system(h):
+    omega, cw, ambient, src = 4., .7, .3+.2j, 1.-.1j
+    # Unit cube, unit depth: G_half=4, cell capacity=3.
+    matrix = [[4+3j*omega,-4],[-4,4+h+1j*omega*cw]]
+    cell, wall = np.linalg.solve(matrix,[src,h*ambient])
+    data = dict(type="robin",values=ambient,film_coefficient=h,wall_areal_heat_capacity=cw)
+    u, powers = solve_harmonic_conduction([1.],[1.],2.,3.,{"west":data},omega,source=src)
+    np.testing.assert_allclose(u, cell)
+    np.testing.assert_allclose(powers["west"], 4*(wall-cell))
+    np.testing.assert_allclose(powers["west"], h*(ambient-wall)-1j*omega*cw*wall)
+
+
+def test_mixed_face_storage_closes_individual_wall_balances():
+    h, cw = np.array([2., 4., 0.]), np.array([1., 0., 0.])
+    ambient = np.array([.5+.8j, -.2, .7j])
+    dy = np.array([.2,.3,.5])
+    west = dict(types=["robin","robin","neumann"], values=ambient,
+                film_coefficient=h, wall_areal_heat_capacity=cw)
+    u, powers = solve_harmonic_conduction([.4],dy,3.,2.,{"west":west},5.)
+    flux = powers["west"]/dy
+    surface = u[:,0]+flux*(.2/3.)
+    np.testing.assert_allclose(flux[:2],(h*(ambient-surface)-5j*cw*surface)[:2])
+    np.testing.assert_allclose(flux[2],ambient[2])
+    np.testing.assert_allclose(5j*2.*.4*(dy @ u[:,0]),powers["west"].sum())
+    west["wall_areal_heat_capacity"] = [0., 0., 1.]
+    with pytest.raises(ValueError,match="Robin faces"):
+        solve_harmonic_conduction([.4],dy,3.,2.,{"west":west},5.)

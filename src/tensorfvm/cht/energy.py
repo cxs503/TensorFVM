@@ -258,7 +258,7 @@ def _conv_net_out(face_x, face_y, flux_e, flux_n):
             + face_y[1:, :] * flux_n[1:, :] - face_y[:-1, :] * flux_n[:-1, :])
 
 
-def _assemble_energy(dx, dy, kappa, flux_e, flux_n, bc, source, contact_resistance_x, contact_resistance_y, conductivity_y=None, *, load_dtype=float):
+def _assemble_energy(dx, dy, kappa, flux_e, flux_n, bc, source, contact_resistance_x, contact_resistance_y, conductivity_y=None, *, load_dtype=float, angular_frequency=None):
     """Assemble net entering heat as A @ T - b, plus the ledger inputs."""
     ny, nx = kappa.shape
     cond_e, cond_n = _face_conductance(dx, dy, kappa, contact_resistance_x, contact_resistance_y, conductivity_y)
@@ -271,7 +271,12 @@ def _assemble_energy(dx, dy, kappa, flux_e, flux_n, bc, source, contact_resistan
         cols.append(np.asarray(c).ravel())
         vals.append(np.asarray(v).ravel())
 
-    diag = np.zeros(ny * nx)
+    dynamic_walls = any("wall_areal_heat_capacity" in (spec or {}) for spec in bc.values())
+    if dynamic_walls:
+        if angular_frequency is None:
+            raise ValueError("wall_areal_heat_capacity requires harmonic conduction")
+        cond_e, cond_n = cond_e.astype(complex), cond_n.astype(complex)
+    diag = np.zeros(ny * nx, dtype=cond_e.dtype)
     rates = np.broadcast_to(np.asarray(source, dtype=load_dtype), (ny, nx)) * np.outer(dy, dx)
     if not np.isfinite(rates).all():
         raise ValueError("source must be finite")
@@ -322,14 +327,27 @@ def _assemble_energy(dx, dy, kappa, flux_e, flux_n, bc, source, contact_resistan
         btype[side] = types
         bval[side] = values
         robin = types == "robin"
+        spec = bc.get(side) or {}
+        if "wall_areal_heat_capacity" in spec:
+            wall_capacity = np.broadcast_to(np.asarray(spec["wall_areal_heat_capacity"], dtype=float), cells.shape)
+            if (not np.isfinite(wall_capacity).all() or np.any(wall_capacity < 0)
+                    or np.any(wall_capacity[~robin] != 0)):
+                raise ValueError("wall areal heat capacity must be finite, nonnegative and confined to Robin faces")
         if np.any(robin):
-            spec = bc[side]
             if "film_coefficient" not in spec:
                 raise ValueError(f"Robin boundary on {side} needs film_coefficient")
             h = np.broadcast_to(np.asarray(spec["film_coefficient"], dtype=float), cells.shape)[robin]
             if not np.isfinite(h).all() or np.any(h < 0):
                 raise ValueError("film coefficient must be finite and nonnegative")
-            film = h * area[robin]
+            if "wall_areal_heat_capacity" in spec:
+                # Eliminate the wall temperature from the film and storage balance.
+                admittance = h + 1j*angular_frequency*wall_capacity[robin]
+                values = values.copy()
+                values[robin] *= np.divide(h, admittance, out=np.zeros_like(admittance), where=admittance != 0)
+                bval[side] = values
+                film = admittance * area[robin]
+            else:
+                film = h * area[robin]
             # Replace the boundary face conductance in-place for the ledger too.
             # The half-cell and ambient film are in series; zero film insulates.
             cf[robin] *= film / (cf[robin] + film)
@@ -470,6 +488,8 @@ def solve_harmonic_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc
     Use Re(phasor * exp(iωt)), with positive angular frequency in rad/s.
     Wall values and volumetric sources may be complex amplitudes. Real
     materials, contact resistances and Robin films use the transient units.
+    Robin specs may include wall_areal_heat_capacity (J/(m² K)), scalar or
+    per face. The returned wall power enters the material after wall storage.
     With return_interior_power=True also return a third item, a dictionary
     of interior face powers (W). Its x and y arrays have shapes (ny,nx-1)
     and (ny-1,nx), positive toward increasing coordinates. periodic_y joins
@@ -485,7 +505,7 @@ def solve_harmonic_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc
     _validate_conduction_bc(bc, {"west": ny, "east": ny, "south": nx, "north": nx}, complex)
     A, b, faces = _assemble_energy(dx, dy, k, np.zeros((ny, nx+1)), np.zeros((ny+1, nx)),
                                   bc, source, contact_resistance_x, contact_resistance_y,
-                                  conductivity_y, load_dtype=complex)
+                                  conductivity_y, load_dtype=complex, angular_frequency=angular_frequency)
     if periodic_y:
         A, seam = _join_periodic_y(A, faces[1], bc)
     mass = (capacity*np.outer(dy, dx)).ravel()
