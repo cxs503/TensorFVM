@@ -358,7 +358,9 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
     are sampled at the internal stage and step end. method="rannacher" takes
     two backward Euler half steps on the first interval and Crank-Nicolson
     steps thereafter. Both half steps contribute to the reported heat for
-    the first interval. method="positive_cn" uses internal Crank-Nicolson
+    the first interval. method="sdirk2_start" takes one L-stable SDIRK2 step
+    on the first segment and immediately after each declared load jump,
+    then uses Crank-Nicolson until the next jump. method="positive_cn" uses internal Crank-Nicolson
     substeps with dt <= min(2*C_i/K_ii) over positive-capacity nodes. For
     flux_order=1 this preserves nonnegative temperatures with nonnegative
     initial and sampled boundary/source data. Returned times remain the
@@ -395,11 +397,11 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
         raise ValueError("load_jump_times must contain distinct finite interior times")
     if not .5 <= theta <= 1.:
         raise ValueError("theta must be in [0.5,1]")
-    if method not in ("theta","sdirk2","rannacher","positive_cn") or (method != "theta" and theta != .5):
+    if method not in ("theta","sdirk2","sdirk2_start","rannacher","positive_cn") or (method != "theta" and theta != .5):
         raise ValueError("choose a supported method; only theta integration accepts a theta override")
     if method == "positive_cn" and flux_order != 1:
         raise ValueError("positive_cn requires flux_order=1")
-    weight = 1.-1./np.sqrt(2.) if method == "sdirk2" else theta
+    gamma = 1.-1./np.sqrt(2.)
     operator,mass,volume,g,film,end_load,layout = _rod_operator(dx,area,conductivity,volumetric_heat_capacity,
                                                 film_coefficient,shoulder_areal_heat_capacity,flux_order,contact_resistance,end_types,end_film_coefficient,end_areal_heat_capacity,interface_heat_capacity,interface_left_fraction,interface_capacity_left_fraction)
     n = len(g)
@@ -448,7 +450,7 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
         load = rhs[free] - operator[free][:,known] @ states[0,known]
         states[0,free] = spsolve(operator[free][:,free],load)
     M = sp.diags(mass,format="csc")
-    previous_dt = None
+    previous_shift = None
     if return_interval_temperatures:
         temperatures = {key:np.zeros((len(time)-1,size)) for key,size in
                         (("cell",n),("face",n+1),("trace_left",n-1),("trace_right",n-1))}
@@ -480,16 +482,20 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
         interval = end-begin
         subdivisions = max(1,int(np.ceil(interval/max_dt)))
         start = begin
-        damp = method=="rannacher" and (begin==time[0] or begin in events)
+        restart = begin==time[0] or begin in events
+        sdirk = method=="sdirk2" or (method=="sdirk2_start" and restart)
+        two_stages = sdirk or (method=="rannacher" and restart)
+        weight = gamma if sdirk else theta
         for part in range(1,subdivisions+1):
             stop = end if part==subdivisions else begin+part*interval/subdivisions
             dt = stop-start
-            if dt != previous_dt:
-                lu = splu(M+weight*dt*operator)
-                previous_dt = dt
+            shift = weight*dt
+            if shift != previous_shift:
+                lu = splu(M+shift*operator)
+                previous_shift = shift
             stage = u
             stage_ends = boundary_start
-            if method == "sdirk2" or damp:
+            if two_stages:
                 stage_time = start+weight*dt
                 if not start<stage_time<stop:
                     raise ValueError("internal stage has no representable time")

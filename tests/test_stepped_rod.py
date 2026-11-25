@@ -218,7 +218,7 @@ def test_harmonic_power_ends_match_discrete_temperature_solution(order,n):
             np.testing.assert_allclose(a,b,rtol=1e-11,atol=2e-12)
 
 
-@pytest.mark.parametrize("method",["theta","sdirk2","rannacher","positive_cn"])
+@pytest.mark.parametrize("method",["theta","sdirk2","sdirk2_start","rannacher","positive_cn"])
 def test_power_ends_account_for_each_joule_of_heating(method):
     from tensorfvm.cht.rod import solve_transient_stepped_rod
     times = np.array([0.,.01,.05,.18])
@@ -281,7 +281,7 @@ def test_insulating_robin_end_needs_gauge_with_power_end():
     np.testing.assert_allclose(faces,290.)
 
 
-@pytest.mark.parametrize("method",["theta","rannacher","sdirk2","positive_cn"])
+@pytest.mark.parametrize("method",["theta","rannacher","sdirk2","sdirk2_start","positive_cn"])
 def test_storing_end_heat_matches_time_dependent_inputs(method):
     from tensorfvm.cht.rod import solve_transient_stepped_rod
     area = 2.
@@ -314,7 +314,7 @@ def test_steady_gauge_includes_end_storage():
         solve_steady_stepped_rod([.4],2.,1.5,3.,[2.,3.],end_areal_heat_capacity=1.)
 
 
-@pytest.mark.parametrize("method",["theta","sdirk2","rannacher","positive_cn"])
+@pytest.mark.parametrize("method",["theta","sdirk2","sdirk2_start","rannacher","positive_cn"])
 def test_mixed_power_jump_matches_segment_restarts_and_aggregates_heat(method):
     from tensorfvm.cht.rod import solve_transient_stepped_rod
     times = [0.,.03,.1]
@@ -429,7 +429,7 @@ def test_steady_power_partition_matches_two_trace_network():
 
 @pytest.mark.parametrize("area", [[2.,1.],[1.,2.]])
 @pytest.mark.parametrize("resistance", [0.,.24])
-@pytest.mark.parametrize("method", ["theta","sdirk2","rannacher","positive_cn"])
+@pytest.mark.parametrize("method", ["theta","sdirk2","sdirk2_start","rannacher","positive_cn"])
 def test_interface_heat_with_storage_on_each_material(area,resistance,method):
     from tensorfvm.cht.rod import solve_transient_stepped_rod
 
@@ -551,7 +551,7 @@ def test_harmonic_graded_reservoir_and_stepped_area_conserve_material_power():
     assert abs(defect).max()<1e-13
 
 
-@pytest.mark.parametrize("method", ["theta","sdirk2","rannacher","positive_cn"])
+@pytest.mark.parametrize("method", ["theta","sdirk2","sdirk2_start","rannacher","positive_cn"])
 def test_transient_bulk_reservoir_switch_balances_each_stepped_cell(method):
     from tensorfvm.cht.rod import solve_transient_stepped_rod
 
@@ -587,7 +587,7 @@ def test_local_steady_exchange_anchors_insulated_rod_with_remote_heating():
                                  heat_loss_coefficient=loss,mean_temperature=1.)
 
 
-@pytest.mark.parametrize("method", ["theta","sdirk2","positive_cn"])
+@pytest.mark.parametrize("method", ["theta","sdirk2","sdirk2_start","positive_cn"])
 def test_insulated_rod_interval_means_across_heating_switch(method):
     from tensorfvm.cht.rod import solve_transient_stepped_rod
 
@@ -603,7 +603,7 @@ def test_insulated_rod_interval_means_across_heating_switch(method):
         np.testing.assert_allclose(values,np.broadcast_to(exact[:,None],values.shape),atol=3e-14,rtol=0.)
 
 
-@pytest.mark.parametrize("method", ["theta","sdirk2","rannacher","positive_cn"])
+@pytest.mark.parametrize("method", ["theta","sdirk2","sdirk2_start","rannacher","positive_cn"])
 def test_interval_traces_reproduce_split_contact_heat(method):
     from tensorfvm.cht.rod import solve_transient_stepped_rod
 
@@ -617,3 +617,27 @@ def test_interval_traces_reproduce_split_contact_heat(method):
     transfer = np.diff(time)[:,None]*(means["trace_left"]-means["trace_right"])/.3
     np.testing.assert_allclose(transfer,heat["contact"],atol=1e-14,rtol=0.)
     assert transfer.min()>0.
+
+def test_sdirk2_start_switches_stage_weights_at_fixed_step_size():
+    from tensorfvm.cht.rod import solve_transient_stepped_rod
+
+    # A single unit cell with two fixed ends follows u'=-4(u-Twall).
+    # Use exactly representable equal steps to exercise the factorization
+    # change whenever the integrator switches between SDIRK2 and CN.
+    time = np.arange(6)/8
+    wall = lambda t: np.full(2,1. if t>=.25 else 0.)
+    u,_,_,_,heat,means = solve_transient_stepped_rod([1.],1.,1.,1.,wall,time,2.,
+        load_jump_times=[.25],method="sdirk2_start",return_step_heat=True,
+        return_interval_temperatures=True)
+    z = -4/8
+    gamma = 1.-1./np.sqrt(2.)
+    stiff = (1+(1-2*gamma)*z)/(1-gamma*z)**2
+    cn = (1+z/2)/(1-z/2)
+    expected = [2.]
+    for start,factor in zip(time[:-1],[stiff,cn,stiff,cn,cn]):
+        ambient = wall(start)[0]
+        expected.append(ambient+factor*(expected[-1]-ambient))
+    np.testing.assert_allclose(u[:,0],expected,atol=2e-15,rtol=0.)
+    np.testing.assert_allclose(np.diff(expected),heat["left"][:,0]-heat["right"][:,0],atol=2e-15,rtol=0.)
+    target_mean = np.array([wall(t)[0] for t in time[:-1]])+np.diff(expected)/z
+    np.testing.assert_allclose(means["cell"][:,0],target_mean,atol=2e-15,rtol=0.)
