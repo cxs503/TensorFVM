@@ -725,3 +725,59 @@ def test_graded_harmonic_flux_through_power_and_storing_film_ends():
         np.testing.assert_allclose(v,ref,atol=6e-14,rtol=0.)
     with pytest.raises(ValueError,match="flux_order"):
         solve_harmonic_stepped_rod(dx,area,k,c,[0.,0.],w,net_source_gradient=1j)
+
+
+def test_source_derivatives_of_batched_complex_piecewise_cell_means():
+    from tensorfvm.cht.rod import estimate_rod_source_derivatives
+    from numpy.polynomial import Polynomial
+
+    dx = np.array([.1,.14,.21,.17,.33,.27,.08,.11,.19,.2])
+    expected,first,second = [],[],[]
+    for widths,poly in ((dx[:1],Polynomial([3.])),(dx[1:3],Polynomial([-.5,1.2j])),
+                        (dx[3:6],Polynomial([2.,-.7,.4j])),
+                        (dx[6:],Polynomial([.7,.9j,.25,-1+.3j]))):
+        x = np.r_[0.,widths.cumsum()]
+        mid = (x[:-1]+x[1:])/2
+        expected.extend(np.diff(poly.integ()(x))/widths)
+        first.extend(poly.deriv()(mid))
+        second.extend(poly.deriv(2)(mid))
+    means = np.array(expected)
+    slopes,curves = estimate_rod_source_derivatives(dx,np.stack([means,2*means]),break_faces=[6,1,3])
+    for actual,ref in ((slopes,np.array(first)),(curves,np.array(second))):
+        np.testing.assert_allclose(actual,np.stack([ref,2*ref]),atol=2e-12,rtol=0.)
+    with pytest.raises(ValueError,match="break_faces"):
+        estimate_rod_source_derivatives(dx,means,break_faces=[1.5])
+
+
+def test_source_estimator_removes_bulk_exchange_and_harmonic_storage():
+    dx = np.array([.07,.11,.15,.2,.22,.25])
+    mid = dx.cumsum()-dx/2
+    omega = 3.
+    reservoir = .2-.3j+(.8j+1)*mid**2
+    loss = 1.+mid
+    capacity = 2.-mid
+    # Linear temperature has constant Fourier power and zero net source.
+    exact = 1.+.2j+(.3-.7j)*mid
+    ends = [1.+.2j,1.3-.5j]
+    source = 1j*omega*capacity*exact-loss*(reservoir-exact)
+    field,_,west,east,(slope,curve) = solve_harmonic_stepped_rod(dx,1.,2.,capacity,ends,omega,
+        source=source,bulk_ambient_temperature=reservoir,heat_loss_coefficient=loss,flux_order=2,
+        source_derivative_breaks=[],return_source_derivatives=True)
+    np.testing.assert_allclose(field,exact,atol=1e-13,rtol=0.)
+    for q in (west,east):
+        np.testing.assert_allclose(q,-2*(.3-.7j),atol=1e-13,rtol=0.)
+    for derivative in (slope,curve):
+        np.testing.assert_allclose(derivative,0.,atol=5e-11,rtol=0.)
+
+
+def test_quartic_source_stencil_matches_cell_averages_on_a_nonuniform_grid():
+    from numpy.polynomial import Polynomial
+    from tensorfvm.cht.rod import estimate_rod_source_derivatives
+
+    dx = np.array([.11,.17,.05,.23,.14,.18,.12])
+    x = np.r_[0.,dx.cumsum()]
+    mid = x[:-1]+dx/2
+    p = Polynomial([-.5,.8,-.6j,.23+.3j,-.7j])
+    gradient,curvature = estimate_rod_source_derivatives(dx,np.diff(p.integ()(x))/dx)
+    np.testing.assert_allclose(gradient,p.deriv()(mid),atol=2e-12,rtol=0.)
+    np.testing.assert_allclose(curvature,p.deriv(2)(mid),atol=2e-12,rtol=0.)

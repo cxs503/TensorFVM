@@ -176,6 +176,61 @@ def _bulk_exchange_operator(operator, mass, volume, cells, coefficient):
     return operator,conductance
 
 
+def estimate_rod_source_derivatives(dx, cell_source, *, break_faces=()):
+    """Estimate midpoint gradient and curvature from volume-source cell means.
+
+    dx gives positive axial widths. cell_source has shape (..., cell) and
+    may be real or complex. Each listed interior face j lies between cells
+    j-1 and j; the reconstruction stays on its own side of that face.
+    Supply material boundaries and any jumps in the source profile.
+
+    Match the averages of a local polynomial on up to five consecutive cells.
+    The degree is one less than the number of cells in the stencil. For source means in W/m³ the outputs are W/m⁴ and
+    W/m⁵. A cell has constant area across its own width.
+    """
+    width = np.asarray(dx,dtype=float)
+    values = np.asarray(cell_source)
+    if width.ndim!=1 or not width.size or not np.isfinite(width).all() or np.any(width<=0):
+        raise ValueError("dx must be a nonempty vector of finite positive widths")
+    if values.ndim<1 or values.shape[-1]!=width.size or not np.isfinite(values).all():
+        raise ValueError("source needs finite cell means on its last axis")
+    breaks = np.asarray(break_faces)
+    if (breaks.ndim!=1 or (breaks.size and not np.issubdtype(breaks.dtype,np.integer))
+            or np.any(breaks<=0) or np.any(breaks>=width.size) or np.unique(breaks).size!=breaks.size):
+        raise ValueError("break_faces must contain distinct interior face indices")
+    limits = np.r_[0,np.sort(breaks.astype(int)),width.size]
+    values = values.astype(np.result_type(values,float),copy=False)
+    gradient = np.zeros_like(values)
+    curvature = np.zeros_like(gradient)
+    for begin,end in zip(limits,limits[1:]):
+        count = min(5,end-begin)
+        if count==1:
+            continue
+        for i in range(begin,end):
+            first = min(max(i-(count-1)//2,begin),end-count)
+            cells = slice(first,first+count)
+            # Local coordinates avoid subtracting large global positions.
+            spacing = width[cells]/width[i]
+            faces = np.r_[0.,np.cumsum(spacing)]
+            center = faces[i-first]+.5
+            mid = .5*(faces[:-1]+faces[1:])-center
+            moments = [np.ones(count),mid]
+            if count>=3:
+                moments.append(mid**2+spacing**2/12)
+            if count>=4:
+                moments.append(mid**3+mid*spacing**2/4)
+            if count==5:
+                moments.append(mid**4+mid**2*spacing**2/2+spacing**4/80)
+            # Subtract the reference mean so constant fields differentiate to zero.
+            local = values[...,cells]-values[...,i,None]
+            # Fit any leading batch dimensions with one solve for this stencil.
+            coeff = np.linalg.solve(np.column_stack(moments),local.reshape(-1,count).T)
+            gradient[...,i] = (coeff[1]/width[i]).reshape(values.shape[:-1])
+            if count>=3:
+                curvature[...,i] = (2*coeff[2]/width[i]**2).reshape(values.shape[:-1])
+    return gradient,curvature
+
+
 def _apply_source_derivatives(rhs,layout,volume,width,slope,curvature):
     # For z measured from the midpoint, remove the cell mean from
     # slope*z + curvature*z²/2. Integrating -k*T'' twice gives cubic
@@ -344,7 +399,8 @@ def solve_harmonic_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
                                end_types=("temperature","temperature"), end_film_coefficient=0.,
                                end_areal_heat_capacity=0., interface_power=0., interface_heat_capacity=0., interface_left_fraction=None, interface_capacity_left_fraction=None, trace_power=(0.,0.),
                                heat_loss_coefficient=0., bulk_ambient_temperature=0.,
-                               net_source_gradient=None, net_source_curvature=None):
+                               net_source_gradient=None, net_source_curvature=None,
+                               source_derivative_breaks=None, return_source_derivatives=False):
     """Solve a rod with concentric sections and prescribed end phasors.
 
     end_types selects "temperature" (K), "power" (inward W), or "robin"
@@ -380,6 +436,12 @@ def solve_harmonic_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
     net input: generation plus bulk exchange minus iω times stored energy
     density. They require flux_order=2. Use the same derivatives to sample
     the interior phasor with reconstruct_steady_rod_field.
+    Alternatively set source_derivative_breaks to a list of interior faces
+    separating smooth source regions (empty for a single region). A predictor
+    solve estimates cell-mean net input from generation, exchange and storage;
+    a corrected solve uses its reconstructed derivatives and the same LU.
+    return_source_derivatives appends (gradient, curvature) for use in field
+    reconstruction; the arrays are zero when no correction is requested.
     Under exp(+iωt), return cell temperatures, all n+1 face temperatures,
     power entering each cell from its left and power leaving its right (W).
     contact_resistance in m² K/W applies to the overlapping (smaller) area.
@@ -393,16 +455,31 @@ def solve_harmonic_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
                                                film_coefficient,shoulder_areal_heat_capacity,flux_order,contact_resistance,end_types,end_film_coefficient,end_areal_heat_capacity,interface_heat_capacity,interface_left_fraction,interface_capacity_left_fraction)
     rhs, ends, _ = _load(volume,end_load,layout,film,end_temperatures,source,ambient_temperature,interface_power,trace_power,complex)
     operator,bulk_g = _bulk_exchange_operator(operator,mass,volume,layout.cells,heat_loss_coefficient)
-    rhs[layout.cells] += bulk_g*_profile(bulk_ambient_temperature,len(volume),"bulk ambient temperature",complex)
+    n = len(volume)
+    reservoir = _profile(bulk_ambient_temperature,n,"bulk ambient temperature",complex)
+    rhs[layout.cells] += bulk_g*reservoir
+    matrix = (operator+sp.diags(1j*angular_frequency*mass)).tocsc()
+    estimated = source_derivative_breaks is not None
+    supplied = net_source_gradient is not None or net_source_curvature is not None
+    if (estimated or supplied) and flux_order!=2:
+        raise ValueError("net source derivatives require flux_order=2")
+    if estimated and supplied:
+        raise ValueError("choose estimated or prescribed net source derivatives")
     offsets = None
-    if net_source_gradient is not None or net_source_curvature is not None:
-        if flux_order != 2:
-            raise ValueError("net source derivatives require flux_order=2")
-        slope = _profile(0. if net_source_gradient is None else net_source_gradient,len(volume),"net source gradient",complex)
-        curvature = _profile(0. if net_source_curvature is None else net_source_curvature,len(volume),"net source curvature",complex)
+    if estimated:
+        factors = splu(matrix)
+        predicted = factors.solve(rhs)[layout.cells]
+        net = (_profile(source,n,"source",complex)+bulk_g/volume*(reservoir-predicted)
+               -1j*angular_frequency*(mass[layout.cells]/volume)*predicted)
+        slope,curvature = estimate_rod_source_derivatives(dx,net,break_faces=source_derivative_breaks)
+    elif supplied or return_source_derivatives:
+        slope = _profile(0. if net_source_gradient is None else net_source_gradient,n,"net source gradient",complex)
+        curvature = _profile(0. if net_source_curvature is None else net_source_curvature,n,"net source curvature",complex)
+    if estimated or supplied:
         offsets = _apply_source_derivatives(rhs,layout,volume,np.asarray(dx),slope,curvature)
-    state = spsolve(operator+sp.diags(1j*angular_frequency*mass),rhs)
-    return layout.output(state,ends,g,flux_order,return_traces,offsets)
+    state = factors.solve(rhs) if estimated else spsolve(matrix,rhs)
+    result = layout.output(state,ends,g,flux_order,return_traces,offsets)
+    return result+((slope,curvature),) if return_source_derivatives else result
 
 
 def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
