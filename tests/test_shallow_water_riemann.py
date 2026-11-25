@@ -462,3 +462,58 @@ def test_integrated_flux_balances_cells_cut_by_waves(case, record_property):
     budget = run_case(case, n=400)["metrics"]["momentum_budget_relative"]
     record_property("normalized_numerical_momentum_residual", budget)
     assert budget < 1e-12
+
+
+def test_ritter_integrated_flux_during_first_wetting(record_property):
+    from tensorfvm.shallow_water import dry_riemann_integrated_flux
+    from scipy.integrate import quad
+
+    # Unit Ritter problem. At x=1 the dry front arrives at t=1/2.
+    x, end = 1., 1.3
+    data = (1., 0., 0., 0.)
+    for t in (0., .4, .5):
+        assert dry_riemann_integrated_flux(x, t, *data, gravity=1.) == (0., 0.)
+    def flux(t):
+        h = (2-x/t)**2/9
+        u = 2*(1+x/t)/3
+        return h*u, h*u**2+h**2/2
+    reference = [quad(lambda t: flux(t)[i], .5, end)[0] for i in (0,1)]
+    actual = dry_riemann_integrated_flux(x, end, *data, gravity=1.)
+    error = float(np.max(np.abs(actual-np.asarray(reference))))
+    record_property("maximum_time_quadrature_error", error)
+    assert error < 2e-14
+    reflected = dry_riemann_integrated_flux(-x, end, 0., 0., 1., 0., gravity=1.)
+    np.testing.assert_allclose(reflected, (-actual[0], actual[1]), rtol=0., atol=1e-15)
+
+
+def test_generated_vacuum_flux_after_drying_and_subdomain_budget(record_property):
+    from tensorfvm.shallow_water import ShallowWater1D, dry_riemann_cell_averages, dry_riemann_integrated_flux
+
+    data = (1., -3., .25, 2.)
+    end = .25
+    positions = np.array([-.125, .125])
+    # After the fronts at x=-t,+t pass, local flux stops; the cumulative
+    # impulse still includes what crossed each face before it dried.
+    at_front = dry_riemann_integrated_flux(positions, .125, *data, gravity=1.)
+    after = dry_riemann_integrated_flux(positions, end, *data, gravity=1.)
+    np.testing.assert_allclose(after, at_front, atol=1e-15, rtol=0)
+    np.testing.assert_allclose(after, [[-.125,.03125],[.375,.0625]], atol=1e-15, rtol=0)
+    cuts = [-.625, .375]
+    mass, impulse = dry_riemann_integrated_flux(cuts, end, *data, gravity=1.)
+    errors = []
+    for n in (128, 256, 512):
+        solver = ShallowWater1D(n, -2., 2., gravity=1., cfl=.4, order=2)
+        edges = np.linspace(-2., 2., n+1)
+        h0, q0 = dry_riemann_cell_averages(edges, 0., *data, gravity=1.)
+        solver.set_state(h0, q0/h0)
+        solver.advance(end)
+        h, u = solver.primitive()
+        inside = (solver.x>cuts[0]) & (solver.x<cuts[1])
+        row = []
+        for name, change, transport in (("mass",h-h0,mass), ("momentum",h*u-q0,impulse)):
+            error = abs(solver.dx*change[inside].sum() - (transport[0]-transport[1]))
+            record_property(f"{name}_subdomain_error_{n}", float(error))
+            row.append(error)
+        errors.append(row)
+    for coarse, fine in zip(errors, errors[1:]):
+        assert all(b < a for a,b in zip(coarse, fine))

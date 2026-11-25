@@ -87,7 +87,8 @@ import math
 
 import numpy as np
 
-from .exact import _riemann_cell_means, ritter_front_position, ritter_state, stoker_constant_state
+from .exact import (_riemann_cell_means, _similarity_flux_integral, ritter_front_position,
+                    ritter_state, stoker_constant_state)
 
 __all__ = [
     "DEFAULT_CASES",
@@ -337,10 +338,7 @@ def riemann_integrated_flux(sol: RiemannSolution, x, t: float):
     x = np.asarray(x, dtype=float)
     h0, u0 = sample_exact(sol, x, 0.)
     h, u = sample_exact(sol, x, t)
-    q = h*u
-    offset = x-sol.x0
-    return (t*q-offset*(h-h0),
-            t*(q*u+.5*sol.gravity*h*h)-offset*(q-h0*u0))
+    return _similarity_flux_integral(x-sol.x0, t, sol.gravity, h0, u0, h, u)
 
 
 def riemann_cell_averages(sol: RiemannSolution, edges, t: float):

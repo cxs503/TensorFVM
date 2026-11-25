@@ -53,6 +53,7 @@ __all__ = [
     "ritter_level_position",
     "ritter_state",
     "dry_riemann_state",
+    "dry_riemann_integrated_flux",
     "dry_riemann_cell_averages",
     "stoker_constant_state",
     "stoker_region_bounds",
@@ -187,6 +188,26 @@ def dry_riemann_state(x, t: float, hL: float, uL: float, hR: float, uR: float,
     right_h, right_u = ritter_state(uR*t-offset, t, hR, gravity)
     velocity = np.where(left_h > 0, uL+left_u, np.where(right_h > 0, uR-right_u, 0.))
     return left_h+right_h, velocity
+
+
+def dry_riemann_integrated_flux(x, t: float, hL: float, uL: float, hR: float,
+                                uR: float, gravity: float = 9.81, x0: float = 0.0):
+    """Cumulative rightward mass and momentum flux through each fixed face.
+
+    Integrates from time zero through first wetting or subsequent drying.
+    The momentum flux includes the hydrostatic pressure term g*h²/2.
+    """
+    x = np.asarray(x, dtype=float)
+    h, u = dry_riemann_state(x, t, hL, uL, hR, uR, gravity, x0)
+    h0, u0 = dry_riemann_state(x, 0., hL, uL, hR, uR, gravity, x0)
+    return _similarity_flux_integral(x-x0, t, gravity, h0, u0, h, u)
+
+
+def _similarity_flux_integral(offset, t, gravity, h0, u0, h, u):
+    """Evaluate the self-similar flux primitive relative to its initial value."""
+    q = h*u
+    return (t*q-offset*(h-h0),
+            t*(q*u+.5*gravity*h*h)-offset*(q-h0*u0))
 
 
 def dry_riemann_cell_averages(edges, t: float, hL: float, uL: float,
