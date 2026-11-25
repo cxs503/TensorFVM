@@ -37,3 +37,11 @@ def test_transparent_sheets_preserve_harmonic_bulk_flux():
     expected = whole_rates[faces]/(2*np.pi*r[faces])
     np.testing.assert_allclose(incoming, expected, rtol=1e-11)
     np.testing.assert_allclose(outgoing, expected, rtol=1e-11)
+
+
+def test_uniform_angular_mode_is_invariant_to_sheet_conductivity():
+    args = ([.3, .4, .6, .85, 1.], 2., [1, 3], [1.+.2j, -.1j], 4.)
+    options = dict(contact_resistances=(.3, .7), sheet_capacities=(.2, .4), sheet_generation=(1., .6j))
+    baseline = solve_storing_rings(*args, **options)
+    actual = solve_storing_rings(*args, **options, sheet_conductivities=(10., .3))
+    np.testing.assert_array_equal(actual, baseline)

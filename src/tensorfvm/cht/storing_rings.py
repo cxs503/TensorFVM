@@ -7,7 +7,7 @@ from .annulus import solve_annular_conduction
 def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, omega, *,
                         contact_resistances, sheet_capacities, sheet_generation=(0., 0.),
                         azimuthal_mode=0, volumetric_heat_capacity=None,
-                        inner_resistance_fractions=(.5, .5)):
+                        inner_resistance_fractions=(.5, .5), sheet_conductivities=(0., 0.)):
     """Return two sheet temperatures and their incoming and outgoing radial fluxes.
 
     The cell faces include both sheets. Conductivity is scalar or per cell.
@@ -16,6 +16,8 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
     A positive scalar or per-cell capacity (J/(m³ K)) enables harmonic bulk storage.
     inner_resistance_fractions specifies the fraction of each contact resistance
     (m² K/W) on the smaller-radius side of its storing sheet (capacity in J/(m² K)).
+    sheet_conductivities are circumferential conductivities times thickness (W/K),
+    uniform around each sheet. They contribute Ks*(m/r)² to the modal admittance.
     Each output has one entry per sheet ordered from the bore outwards. Fluxes
     (W/m²) are positive towards increasing radius on both sides.
     """
@@ -39,6 +41,9 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
     if np.any(capacity < 0) or np.any(resistance < 0):
         raise ValueError("sheet capacities and contact resistances must be nonnegative")
 
+    sheet_k = np.asarray(sheet_conductivities, dtype=float)
+    if sheet_k.shape != (2,) or not np.isfinite(sheet_k).all() or np.any(sheet_k < 0):
+        raise ValueError("two finite nonnegative sheet conductivities required")
     fractions = np.asarray(inner_resistance_fractions, dtype=float)
     if fractions.shape != (2,) or not np.all((0 <= fractions) & (fractions <= 1)):
         raise ValueError("two inner resistance fractions in [0, 1] required")
@@ -60,9 +65,10 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
 
     area = 2*np.pi*r[faces]
     a, b, c = domains
-    # Area times (generation - iωCT) equals outgoing minus incoming power.
+    # Sheet generation supplies radial flux, storage, and circumferential conduction.
     matrix = np.array([[b[0, 0]-a[1, 1], b[0, 1]], [-b[1, 0], c[0, 0]-b[1, 1]]])
-    matrix += np.diag(1j*omega*capacity*area)
+    admittance = 1j*omega*capacity + sheet_k*(azimuthal_mode/r[faces])**2
+    matrix += np.diag(admittance*area)
     forcing = area*generation + [a[1, 0]*walls[0], -c[0, 1]*walls[1]]
     sheet = np.linalg.solve(matrix, forcing)
     middle = b @ sheet
