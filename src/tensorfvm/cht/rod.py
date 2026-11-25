@@ -149,7 +149,10 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
     initial_shoulder_temperature (scalar or n-1 values) overrides only faces
     carrying positive heat capacity. Massless faces always satisfy their balance.
     method="sdirk2" uses a two-stage second-order L-stable method. Its inputs
-    are sampled at the internal stage and step end. With return_step_heat=True,
+    are sampled at the internal stage and step end. method="rannacher" takes
+    two backward Euler half steps on the first interval and Crank-Nicolson
+    steps thereafter. Both half steps contribute to the reported heat for
+    the first interval. With return_step_heat=True,
     append a dictionary of integrated joules per interval: left/right (positive
     toward increasing x), source, ambient (entering the shoulder), and contact
     (toward increasing x across the overlap, for each internal face).
@@ -159,9 +162,9 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
         raise ValueError("time must be a finite strictly increasing vector")
     if not .5 <= theta <= 1.:
         raise ValueError("theta must be in [0.5,1]")
-    if method not in ("theta","sdirk2") or (method == "sdirk2" and theta != .5):
-        raise ValueError("choose theta integration or sdirk2 without a theta override")
-    weight = theta if method == "theta" else 1.-1./np.sqrt(2.)
+    if method not in ("theta","sdirk2","rannacher") or (method != "theta" and theta != .5):
+        raise ValueError("choose theta integration or use sdirk2/rannacher without a theta override")
+    weight = 1.-1./np.sqrt(2.) if method == "sdirk2" else theta
     operator,mass,volume,g,film,end_load,layout = _rod_operator(dx,area,conductivity,volumetric_heat_capacity,
                                                 film_coefficient,shoulder_areal_heat_capacity,flux_order,contact_resistance)
     n = len(g)
@@ -206,7 +209,7 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
         u = states[step]
         stage = u
         stage_ends = ends[step]
-        if method == "sdirk2":
+        if method == "sdirk2" or (method == "rannacher" and step == 0):
             rhs,stage_ends,src,air = forcing(time[step]+weight*dt)
             stage = lu.solve(mass*u+weight*dt*rhs)
         next_rhs, ends[step+1],next_src,next_air = forcing(time[step+1])

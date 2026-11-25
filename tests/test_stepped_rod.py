@@ -150,3 +150,23 @@ def test_sdirk2_stiff_mode_damping_and_temporal_order():
     errors = [abs(run(np.linspace(0.,.25,n+1))-np.exp(-1)) for n in (8,16,32)]
     assert all(e/f>3.9 for e,f in zip(errors,errors[1:]))
     assert abs(run([0.,1e6])) < 2e-6
+
+
+def test_rannacher_start_matches_two_implicit_half_steps_including_wall_heat():
+    from tensorfvm.cht.rod import solve_transient_stepped_rod
+    dx,area = [.2,.3,.4],[.5,2.,.8]
+    opts = dict(source=lambda t:1.-3*t,film_coefficient=1.2,ambient_temperature=lambda t:3*t,
+                contact_resistance=[.2,.15],shoulder_areal_heat_capacity=.4,
+                return_step_heat=True,return_traces=True,flux_order=2)
+    def advance(time,initial,wall,**kwargs):
+        return solve_transient_stepped_rod(dx,area,2.,1.,lambda t:[t,t*t],
+                       time,initial,initial_shoulder_temperature=wall,**kwargs,**opts)
+    combined = advance([.2,.26,.3],0.,[1.,.5],method="rannacher")
+    first = advance([.2,.23,.26],0.,[1.,.5],theta=1.)
+    second = advance([.26,.3],first[0][-1],first[1][-1,1:-1],theta=.5)
+    for i in range(4):
+        np.testing.assert_allclose(combined[i][1],first[i][-1],atol=2e-12)
+        np.testing.assert_allclose(combined[i][2],second[i][-1],atol=2e-12)
+    for key,heat in combined[-1].items():
+        np.testing.assert_allclose(heat[0],first[-1][key].sum(axis=0),atol=1e-13)
+        np.testing.assert_allclose(heat[1],second[-1][key][0],atol=1e-13)
