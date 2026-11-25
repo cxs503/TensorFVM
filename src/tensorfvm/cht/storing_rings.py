@@ -7,7 +7,7 @@ from .annulus import solve_annular_conduction
 def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, omega, *,
                         contact_resistances, sheet_capacities, sheet_generation=(0., 0.), source=0.,
                         sheet_film_coefficients=(0., 0.), sheet_ambient_temperatures=(0., 0.),
-                        azimuthal_mode=0, volumetric_heat_capacity=None, film_coefficients=(None, None),
+                        azimuthal_mode=0, volumetric_heat_capacity=None, film_coefficients=(None, None), wall_fluxes=(None, None),
                         inner_resistance_fractions=(.5, .5), sheet_conductivities=(0., 0.),
                         return_wall_rates=False, return_bulk_storage=False, return_angular_conduction=False,
                         return_wall_temperatures=False, return_contact_temperatures=False):
@@ -19,6 +19,9 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
     source is scalar or per-cell volumetric heat generation (W/m³), in the same mode.
     At either physical wall a positive film coefficient (W/m²/K) makes the supplied
     temperature an ambient phasor. None prescribes the surface temperature.
+    Alternatively prescribe one inward heat-flux phasor (W/m²) in wall_fluxes,
+    with None for both temperature and film at that wall. The other wall remains
+    temperature- or film-controlled. Positive flux enters the material at either wall.
     A nonnegative scalar or per-cell capacity (J/(m³ K)) enables harmonic bulk storage.
     Zero-capacity cells conduct without storing heat, even beside cells with positive capacity.
     inner_resistance_fractions specifies the fraction of each contact resistance
@@ -58,7 +61,17 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
     volume_source = np.broadcast_to(np.asarray(source, dtype=complex), k.shape)
     if not np.isfinite(volume_source).all():
         raise ValueError("volumetric heat generation must be finite")
-    walls = np.asarray(wall_temperatures, dtype=complex)
+    if np.shape(wall_fluxes) != (2,) or np.shape(wall_temperatures) != (2,):
+        raise ValueError("supply one temperature or flux per wall")
+    flux_sides = [i for i, q in enumerate(wall_fluxes) if q is not None]
+    if len(flux_sides) > 1:
+        raise ValueError("the other wall must have a prescribed temperature or film")
+    walls = np.array(wall_temperatures, dtype=complex)
+    if flux_sides:
+        side = flux_sides[0]
+        if wall_temperatures[side] is not None or not np.isfinite(wall_fluxes[side]):
+            raise ValueError("a flux wall requires a finite flux and None for temperature")
+        walls[side] = 0.  # Its unknown temperature enters the augmented system below.
     generation = np.asarray(sheet_generation, dtype=complex)
     sheet_h = np.asarray(sheet_film_coefficients)
     if (sheet_h.shape != (2,) or not np.isrealobj(sheet_h) or
@@ -86,6 +99,8 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
             h is not None and (not np.isrealobj(h) or not np.isfinite(h) or h <= 0)
             for h in film_coefficients):
         raise ValueError("supply a positive finite film coefficient or None for each physical wall")
+    if flux_sides and film_coefficients[side] is not None:
+        raise ValueError("a flux wall cannot also have a film")
     inner_film = [1/value if value else None for value in inner]
     outer_film = [1/value if value else None for value in outer]
     layer_films = [(film_coefficients[0], inner_film[0]), (outer_film[0], inner_film[1]),
@@ -124,7 +139,23 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
     matrix += np.diag(admittance*area)
     forcing = area*(generation + sheet_h*ambient) + [a[1, 0]*walls[0], -c[0, 1]*walls[1]]
     forcing += [a[1, 2]-b[0, 2], b[1, 2]-c[0, 2]]
-    sheet = np.linalg.solve(matrix, forcing)
+    if flux_sides:
+        # Add the physical wall temperature as a third unknown. The last
+        # equation imposes its radial rate, including the bulk source offset.
+        coupled = np.zeros((3, 3), dtype=complex)
+        coupled[:2, :2] = matrix
+        if side == 0:
+            coupled[0, 2] = -a[1, 0]
+            coupled[2, [0, 2]] = a[0, [1, 0]]
+            wall_load = 2*np.pi*r[0]*wall_fluxes[0] - a[0, 2]
+        else:
+            coupled[1, 2] = c[0, 1]
+            coupled[2, [1, 2]] = c[1, :2]
+            wall_load = -2*np.pi*r[-1]*wall_fluxes[1] - c[1, 2]
+        solution = np.linalg.solve(coupled, np.r_[forcing, wall_load])
+        sheet, walls[side] = solution[:2], solution[2]
+    else:
+        sheet = np.linalg.solve(matrix, forcing)
     middle = b @ [*sheet, 1.]
     inner_rates = a @ [walls[0], sheet[0], 1.]
     outer_rates = c @ [sheet[1], walls[1], 1.]

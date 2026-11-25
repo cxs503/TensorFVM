@@ -123,3 +123,20 @@ def test_uniform_sheet_temperature_under_balanced_reservoir_loading():
         sheet_film_coefficients=h, sheet_ambient_temperatures=ambient, return_wall_rates=True)
     np.testing.assert_allclose(sheets, t, atol=1e-12)
     np.testing.assert_allclose(rates, 0., atol=1e-12)
+
+
+@pytest.mark.parametrize("side", [0, 1])
+def test_mixed_flux_reconstructs_generated_dirichlet_solution(side):
+    r = np.geomspace(.4, 1.1, 13)
+    original = [1.+.2j, -.3j]
+    props = dict(contact_resistances=(.5, .9), sheet_capacities=(.25, .8), source=.7+.2j,
+                 azimuthal_mode=1, volumetric_heat_capacity=1.3, return_wall_rates=True,
+                 return_bulk_storage=True, return_angular_conduction=True, return_wall_temperatures=True)
+    expected = solve_storing_rings(r, 2., [4, 8], original, 8., **props)
+    inward = [None, None]
+    inward[side] = (1 if side == 0 else -1)*expected[3][side]/(2*np.pi*r[[0,-1]][side])
+    walls = list(original)
+    walls[side] = None
+    actual = solve_storing_rings(r, 2., [4, 8], walls, 8., wall_fluxes=inward, **props)
+    for result, target in zip(actual, expected):
+        np.testing.assert_allclose(result, target, atol=1e-11)
