@@ -359,7 +359,7 @@ def _assemble_energy(dx, dy, kappa, flux_e, flux_n, bc, source, contact_resistan
 def solve_steady_energy(dx, dy, kappa, flux_e, flux_n, bc, *,
                         t_init=None, tol=1e-13, max_picard=500, dc_relax=1.0,
                         high_order=True, source=0.0, contact_resistance_x=0.0,
-                        contact_resistance_y=0.0, conductivity_y=None):
+                        contact_resistance_y=0.0, conductivity_y=None, return_wall_power=False):
     """Solve ``div(u T) = div(kappa grad T) + source`` with the CHT face conductance.
 
     Parameters
@@ -384,6 +384,9 @@ def solve_steady_energy(dx, dy, kappa, flux_e, flux_n, bc, *,
     Returns
     -------
     ``(T, info)`` where ``info`` holds the Picard history and the ledger.
+    With return_wall_power=True, info["wall_power"] maps each wall to the
+    inward conductive power per face (W for unit depth). Advective energy
+    transport is reported separately in the ledger.
     """
     ny, nx = kappa.shape
     A, b, faces = _assemble_energy(dx, dy, kappa, flux_e, flux_n, bc, source,
@@ -413,6 +416,11 @@ def solve_steady_energy(dx, dy, kappa, flux_e, flux_n, bc, *,
             "high_order": high_order}
     info["ledger"] = _ledger(dx, dy, kappa, cond_e, cond_n, flux_e, flux_n,
                             side_specs, btype, bval, T, high_order, rates)
+    if return_wall_power:
+        state = T.ravel()
+        info["wall_power"] = {
+            side: _conductive_wall_power(btype[side], bval[side], conductance, area, state[cells])
+            for side, cells, conductance, _, _, area in side_specs}
     return T, info
 
 

@@ -63,3 +63,19 @@ def test_mixed_per_face_films_and_zero_film_balance():
     bc = {"west": {"type": "robin", "values": 25., "film_coefficient": 0.}}
     result = solve_transient_conduction(dx, dy, 1., 1., bc, [0., 1.], 7.)
     np.testing.assert_allclose(result, 7., atol=1e-13)
+
+
+def test_steady_face_powers_obey_film_and_signed_generation_balance():
+    n = 6
+    widths = np.full(n, 1/n)
+    x = (np.arange(n)+.5)/n
+    # T=x*y. West/south have negative inward power, east/north positive.
+    bc = {s: {"type":"robin", "film_coefficient":2.,
+              "values":-x/2 if s in ("west","south") else 1.5*x}
+          for s in ("west","east","south","north")}
+    _, info = solve_steady_energy(widths,widths,np.ones((n,n)),np.zeros((n,n+1)),np.zeros((n+1,n)),
+                                  bc,high_order=False,return_wall_power=True)
+    for s, face in info["wall_power"].items():
+        expected = -x/n if s in ("west","south") else x/n
+        np.testing.assert_allclose(face, expected, rtol=0, atol=1e-14)
+        assert abs(face.sum()-info["ledger"].boundary[s]) < 1e-14
