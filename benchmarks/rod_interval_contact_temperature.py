@@ -4,7 +4,7 @@ from pathlib import Path
 import subprocess
 
 import numpy as np
-from tensorfvm.cht.rod import solve_transient_stepped_rod
+from tensorfvm.cht.rod import reconstruct_interval_rod_field, solve_transient_stepped_rod
 
 
 def measure(n, order, method):
@@ -44,6 +44,14 @@ def measure(n, order, method):
     for key,base in (("trace_left",1.),("trace_right",1.-contact_jump)):
         errors["contact_"+key+"_K"] = float(abs(means[key][:,n-1]-base-mean_rise).max())
     errors["contact_heat_J"] = float(abs(heat["contact"][:,n-1]-power*np.diff(time)).max())
+    if order==2:
+        fractions = np.array([0.,.13,.38,.73,1.])
+        distance = (faces[:-1,None]-split)+dx[:,None]*fractions
+        temperature,powers = reconstruct_interval_rod_field(dx,area,k,means,fractions)
+        reference = offset[:,None]+distance*(slope[:,None]+curve[:,None]*distance)
+        rightward = -(area*k)[:,None]*(slope[:,None]+2*curve[:,None]*distance)
+        errors["interior_temperature_K"] = float(abs(temperature-reference-mean_rise[:,None,None]).max())
+        errors["interior_power_W"] = float(abs(powers-rightward).max())
     return errors
 
 

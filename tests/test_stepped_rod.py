@@ -641,3 +641,26 @@ def test_sdirk2_start_switches_stage_weights_at_fixed_step_size():
     np.testing.assert_allclose(np.diff(expected),heat["left"][:,0]-heat["right"][:,0],atol=2e-15,rtol=0.)
     target_mean = np.array([wall(t)[0] for t in time[:-1]])+np.diff(expected)/z
     np.testing.assert_allclose(means["cell"][:,0],target_mean,atol=2e-15,rtol=0.)
+
+
+@pytest.mark.parametrize("dx", [[.9],[.17,.32,.51]])
+def test_interval_rod_polynomial_preserves_energy_and_one_sided_powers(dx):
+    from tensorfvm.cht.rod import reconstruct_interval_rod_field, solve_transient_stepped_rod
+
+    n = len(dx)
+    k,area = np.linspace(1.,2.,n),np.linspace(.8,1.4,n)
+    time = np.array([0.,.14,.37])
+    *_,heat,means = solve_transient_stepped_rod(dx,area,k,1.,lambda t:[1+t*t,.2],time,.3,
+        source=lambda t: -.8 if t<.08 else 1.3,load_jump_times=[.08],
+        method="sdirk2_start",flux_order=2,contact_resistance=.3,
+        return_interval_temperatures=True,return_step_heat=True)
+    # Three-point Gauss integration also checks the polynomial away from the faces.
+    nodes,weights = np.polynomial.legendre.leggauss(3)
+    field,power = reconstruct_interval_rod_field(dx,area,k,means,np.r_[0.,(nodes+1)/2,1.])
+    np.testing.assert_allclose(field[:,:,1:-1] @ (weights/2),means["cell"],rtol=0.,atol=2e-14)
+    for values,key in ((field[:,:-1,-1],"trace_left"),(field[:,1:,0],"trace_right")):
+        np.testing.assert_allclose(values,means[key],rtol=0.,atol=2e-14)
+    for i,key in ((0,"left"),(-1,"right")):
+        np.testing.assert_allclose(power[:,:,i]*np.diff(time)[:,None],heat[key],rtol=0.,atol=2e-14)
+    with pytest.raises(ValueError,match="fractions"):
+        reconstruct_interval_rod_field(dx,area,k,means,[-.1])

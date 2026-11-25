@@ -278,6 +278,48 @@ def reconstruct_steady_rod_field(dx, area, conductivity, cell_temperature, left_
     return mean + (mean_drop-drop)/k, power
 
 
+def reconstruct_interval_rod_field(dx, area, conductivity, temperatures, fractions):
+    """Sample interval-mean temperature (K) and rightward power (W) within cells.
+
+    Use the dictionary returned by solve_transient_stepped_rod with
+    flux_order=2 and return_interval_temperatures=True. The cell mean and its
+    own two material traces determine a quadratic temperature profile. Its
+    Fourier power is linear and matches the solver's stage-integrated face
+    powers divided by interval duration. The reconstruction assumes constant
+    conductivity and area inside each cell.
+
+    fractions are local positions from 0 (west) to 1 (east), common to every
+    cell. Both results have shape (interval, cell, sample).
+    """
+    width = np.asarray(dx, dtype=float)
+    if width.ndim!=1 or not width.size or not np.isfinite(width).all() or np.any(width<=0):
+        raise ValueError("dx must be a nonempty vector of finite positive widths")
+    n = width.size
+    k = _profile(conductivity,n,"conductivity")
+    section = _profile(area,n,"area")
+    if np.any(k<=0) or np.any(section<=0):
+        raise ValueError("area and conductivity must be positive")
+    f = np.atleast_1d(np.asarray(fractions,dtype=float))
+    if f.ndim!=1 or not np.isfinite(f).all() or np.any((f<0)|(f>1)):
+        raise ValueError("fractions must be finite local positions in [0,1]")
+
+    mean,faces,left,right = (np.asarray(temperatures[key]) for key in
+                             ("cell","face","trace_left","trace_right"))
+    if mean.ndim!=2 or mean.shape[1]!=n:
+        raise ValueError("cell temperature must have shape (interval,cell)")
+    for values,count in ((mean,n),(faces,n+1),(left,n-1),(right,n-1)):
+        if values.shape!=(len(mean),count) or np.iscomplexobj(values) or not np.isfinite(values).all():
+            raise ValueError("expected finite real interval temperatures at all cells and traces")
+    west = np.column_stack((faces[:,0],right))
+    east = np.column_stack((left,faces[:,-1]))
+    # f*(1-f) vanishes at the endpoints and has cell mean 1/6.
+    bend = 3*((mean-west)+(mean-east))
+    jump = east-west
+    field = west[:,:,None]+jump[:,:,None]*f+bend[:,:,None]*(f*(1-f))
+    power = -(section*k/width)[None,:,None]*(jump[:,:,None]+bend[:,:,None]*(1-2*f))
+    return field,power
+
+
 def solve_harmonic_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
                                end_temperatures, angular_frequency, *, source=0.,
                                film_coefficient=0., ambient_temperature=0.,
