@@ -229,3 +229,28 @@ def test_invalid_bulk_loss(loss):
         solve_transient_conduction([1.],[1.],1.,1.,{},[0.,1.],0.,heat_loss_coefficient=loss)
     with pytest.raises(ValueError,match="heat_loss_coefficient"):
         solve_harmonic_conduction([1.],[1.],1.,1.,{},3.,heat_loss_coefficient=loss)
+
+
+@pytest.mark.parametrize("theta",[.5,1.])
+def test_interior_power_closes_each_graded_periodic_cell(theta):
+    dx,dy = np.array([.2,.3,.5]),np.array([.35,.65])
+    volume = np.outer(dy,dx)
+    c = np.array([[1.,2.,1.5],[2.,.5,1.]])
+    times = np.array([0.,.01,.05,.12])
+    initial = np.array([[1.,0.,2.],[-.4,1.3,.7]])
+    source = lambda t: np.array([1.,2.,-1.])*t
+    fields,walls,power = solve_transient_conduction(dx,dy,2.,c,
+            {"west":dict(type="neumann",values=.3)},times,initial,source=source,
+            contact_resistance_x=.17,contact_resistance_y=.12,theta=theta,conductivity_y=3.,
+            periodic_y=True,heat_loss_coefficient=.4,return_wall_power=True,return_interior_power=True)
+    qx = np.concatenate((walls["west"][:,:,None],power["x"],-walls["east"][:,:,None]),axis=2)
+    qy = np.concatenate((walls["south"][:,None,:],power["y"],-walls["north"][:,None,:]),axis=1)
+    net = -np.diff(qx,axis=2)-np.diff(qy,axis=1)+volume*(np.stack([source(t) for t in times])[:,None,:]-.4*fields)
+    np.testing.assert_allclose(c*volume*np.diff(fields,axis=0),np.diff(times)[:,None,None]*
+                               ((1-theta)*net[:-1]+theta*net[1:]),rtol=0.,atol=1e-14)
+
+
+def test_single_cell_optional_interior_output():
+    u,power = solve_transient_conduction([.3],[.8],1.,1.,{},[0.,1.],2.,return_interior_power=True)
+    np.testing.assert_allclose(u,2.)
+    assert power["x"].shape==(2,1,0) and power["y"].shape==(2,0,1)

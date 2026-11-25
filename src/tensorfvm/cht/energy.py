@@ -491,6 +491,12 @@ def _bulk_loss_operator(operator, coefficient, volume):
     return operator
 
 
+def _interior_conduction_power(temperature, faces):
+    conductance_x,conductance_y = faces[:2]
+    return {"x": -conductance_x[:,1:-1]*np.diff(temperature,axis=-1),
+            "y": -conductance_y[1:-1,:]*np.diff(temperature,axis=-2)}
+
+
 def solve_harmonic_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc,
                               angular_frequency, *, source=0., conductivity_y=None,
                               contact_resistance_x=0., contact_resistance_y=0.,
@@ -534,10 +540,7 @@ def solve_harmonic_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc
         powers["south"] = seam*(temperature[-1]-temperature[0])
         powers["north"] = -powers["south"]
     if return_interior_power:
-        conductance_x, conductance_y = faces[:2]
-        interior = {"x": -conductance_x[:,1:-1] * np.diff(temperature, axis=1),
-                    "y": -conductance_y[1:-1,:] * np.diff(temperature, axis=0)}
-        return temperature, powers, interior
+        return temperature, powers, _interior_conduction_power(temperature,faces)
     return temperature, powers
 
 
@@ -545,7 +548,7 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
                                time, initial_temperature, *, source=0.0,
                                contact_resistance_x=0.0, contact_resistance_y=0.0,
                                theta=0.5, conductivity_y=None, return_wall_power=False, periodic_y=False,
-                               wall_flux_order=1, heat_loss_coefficient=0.):
+                               wall_flux_order=1, heat_loss_coefficient=0., return_interior_power=False):
     """Advance cell-centred conduction with fixed material data and boundary types.
 
     Return temperature at each requested time with shape (nt, ny, nx). Cell
@@ -563,7 +566,10 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
     conductivity_y supplies the y component. Both broadcast to (ny, nx).
     With return_wall_power=True return (temperature, wall_power). For each
     side, wall_power[side] has shape (nt, number_of_faces) and gives inward
-    watts per face for unit depth. To integrate use the same theta as the solve.
+    watts per face for unit depth. return_interior_power=True appends a dict
+    of instantaneous powers in W, oriented towards increasing x or y. Its x
+    and y arrays have shapes (nt,ny,nx-1) and (nt,ny-1,nx). With both flags
+    the output is (temperature, wall_power, interior_power). To integrate use the same theta as the solve.
     With periodic_y=True omit the north and south BCs. Those two face powers
     then report opposite inward transfers across a perfectly conducting contact
     between the last and first rows. Interior contact resistances are unchanged.
@@ -730,7 +736,11 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
         if periodic_y:
             powers["south"] = seam*(history[:, -1]-history[:, 0])
             powers["north"] = -powers["south"]
+        if return_interior_power:
+            return history,powers,_interior_conduction_power(history,faces)
         return history, powers
+    if return_interior_power:
+        return history,_interior_conduction_power(history,faces)
     return history
 
 

@@ -31,12 +31,18 @@ def measure(n):
     qy *= np.sinc(.5/n)
     time = np.linspace(0.,.25,n+1)
     static = (loss-2*c)*profile+diffusion
-    fields = solve_transient_conduction(widths,widths,kx,c,{},time,profile,
-                                         source=lambda t:math.exp(-2*t)*static,**opts)
+    fields,power = solve_transient_conduction(widths,widths,kx,c,{},time,profile,
+                                         source=lambda t:math.exp(-2*t)*static,return_interior_power=True,**opts)
     amplitude = np.exp(-2*time[:,None,None])
     net = amplitude*static-loss*fields
     residual = (np.diff(fields,axis=0)*c-.5*np.diff(time)[:,None,None]*(net[:-1]+net[1:])).mean(axis=(1,2))
-    return dict(transient_temperature=float(abs(fields-amplitude*profile).max()),
+    interval = np.diff(time)[:,None,None]
+    exact_duration = amplitude[:-1]*(-np.expm1(-2*interval))/2
+    section_error = 0.
+    for direction,flux in (("x",qx),("y",qy)):
+        integral = interval*(power[direction][:-1]+power[direction][1:])/2
+        section_error = max(section_error,float(abs((integral*n-exact_duration*flux).cumsum(axis=0)).max()))
+    return dict(cumulative_section_heat=section_error,transient_temperature=float(abs(fields-amplitude*profile).max()),
                 harmonic_temperature=float(abs(harmonic-phase*profile).max()),
                 harmonic_flux=float(max(abs(interior["x"]*n-phase*qx).max(),abs(interior["y"]*n-phase*qy).max())),
                 heat_balance=float(abs(residual).max()))
