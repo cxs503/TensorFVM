@@ -549,3 +549,22 @@ def test_harmonic_graded_reservoir_and_stepped_area_conserve_material_power():
         np.testing.assert_allclose(actual,exact,atol=2e-13,rtol=0.)
     defect = outgoing-incoming+a*dx*(1j*omega*c*field-source-coeff*(reservoir-field))
     assert abs(defect).max()<1e-13
+
+
+@pytest.mark.parametrize("method", ["theta","sdirk2","rannacher","positive_cn"])
+def test_transient_bulk_reservoir_switch_balances_each_stepped_cell(method):
+    from tensorfvm.cht.rod import solve_transient_stepped_rod
+
+    dx,area,c = np.array([.2,.35,.45]), np.array([1.,.8,1.7]), np.array([2.,1.,3.])
+    jump, rate = .083, 4.
+    time = np.linspace(0.,.2,21)
+    reservoir = lambda t: 2. if t<jump else -.5
+    u,_,_,_,heat = solve_transient_stepped_rod(dx,area,[1.,2.,1.],c,[0.,0.],time,np.zeros(3),
+        method=method, end_types=("power","power"), heat_loss_coefficient=rate*c,
+        bulk_ambient_temperature=reservoir, load_jump_times=[jump],return_step_heat=True)
+    first = -2*np.expm1(-rate*np.minimum(time,jump))
+    exact = np.where(time<=jump,first,-.5+(first+.5)*np.exp(-rate*(time-jump)))
+    np.testing.assert_allclose(u,np.broadcast_to(exact[:,None],u.shape),atol=2e-3,rtol=0.)
+    defect = np.diff(u,axis=0)*(dx*area*c)-heat["left"]+heat["right"]-heat["bulk_exchange"]
+    np.testing.assert_allclose(defect,0.,atol=1e-14,rtol=0.)
+    assert heat["bulk_exchange"][0].min()>0 and heat["bulk_exchange"][-1].max()<0
