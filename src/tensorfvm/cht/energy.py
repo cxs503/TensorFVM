@@ -497,6 +497,37 @@ def _interior_conduction_power(temperature, faces):
             "y": -conductance_y[1:-1,:]*np.diff(temperature,axis=-2)}
 
 
+def _frequency_system(dx,dy,conductivity,volumetric_heat_capacity,bc,angular_frequency,source,
+                      conductivity_y,contact_resistance_x,contact_resistance_y,periodic_y,heat_loss_coefficient):
+    dx, dy = np.asarray(dx, dtype=float), np.asarray(dy, dtype=float)
+    k, capacity = _conduction_materials(dx, dy, conductivity, volumetric_heat_capacity)
+    ny, nx = k.shape
+    _validate_conduction_bc(bc, {"west": ny, "east": ny, "south": nx, "north": nx}, complex)
+    A, b, faces = _assemble_energy(dx, dy, k, np.zeros((ny, nx+1)), np.zeros((ny+1, nx)),
+                                  bc, source, contact_resistance_x, contact_resistance_y,
+                                  conductivity_y, load_dtype=complex, angular_frequency=angular_frequency)
+    seam = None
+    if periodic_y:
+        A, seam = _join_periodic_y(A, faces[1], bc)
+    volume = np.outer(dy, dx)
+    A = _bulk_loss_operator(A,heat_loss_coefficient,volume)
+    mass = (capacity*volume).ravel()
+    return A,b,faces,mass,seam
+
+
+def _frequency_output(state,faces,seam,return_interior_power):
+    _, _, side_specs, types, values, _ = faces
+    powers = {side: _conductive_wall_power(types[side], values[side], conductance, area, state[cells])
+              for side, cells, conductance, _, _, area in side_specs}
+    temperature = state.reshape(faces[0].shape[0],-1)
+    if seam is not None:
+        powers["south"] = seam*(temperature[-1]-temperature[0])
+        powers["north"] = -powers["south"]
+    if return_interior_power:
+        return temperature, powers, _interior_conduction_power(temperature,faces)
+    return temperature, powers
+
+
 def solve_harmonic_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc,
                               angular_frequency, *, source=0., conductivity_y=None,
                               contact_resistance_x=0., contact_resistance_y=0.,
@@ -519,29 +550,64 @@ def solve_harmonic_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc
     """
     if not np.isfinite(angular_frequency) or angular_frequency <= 0:
         raise ValueError("angular_frequency must be finite and positive")
-    dx, dy = np.asarray(dx, dtype=float), np.asarray(dy, dtype=float)
-    k, capacity = _conduction_materials(dx, dy, conductivity, volumetric_heat_capacity)
-    ny, nx = k.shape
-    _validate_conduction_bc(bc, {"west": ny, "east": ny, "south": nx, "north": nx}, complex)
-    A, b, faces = _assemble_energy(dx, dy, k, np.zeros((ny, nx+1)), np.zeros((ny+1, nx)),
-                                  bc, source, contact_resistance_x, contact_resistance_y,
-                                  conductivity_y, load_dtype=complex, angular_frequency=angular_frequency)
-    if periodic_y:
-        A, seam = _join_periodic_y(A, faces[1], bc)
-    volume = np.outer(dy, dx)
-    A = _bulk_loss_operator(A,heat_loss_coefficient,volume)
-    mass = (capacity*volume).ravel()
+    A,b,faces,mass,seam = _frequency_system(dx,dy,conductivity,volumetric_heat_capacity,bc,
+        angular_frequency,source,conductivity_y,contact_resistance_x,contact_resistance_y,periodic_y,heat_loss_coefficient)
     state = spla.spsolve(sp.diags(1j*angular_frequency*mass, format="csc") - A, -b)
-    _, _, side_specs, types, values, _ = faces
-    powers = {side: _conductive_wall_power(types[side], values[side], conductance, area, state[cells])
-              for side, cells, conductance, _, _, area in side_specs}
-    temperature = state.reshape(ny, nx)
-    if periodic_y:
-        powers["south"] = seam*(temperature[-1]-temperature[0])
+    return _frequency_output(state,faces,seam,return_interior_power)
+
+
+def solve_low_frequency_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc, *,
+                                   source=0., conductivity_y=None, contact_resistance_x=0.,
+                                   contact_resistance_y=0., periodic_y=False, heat_loss_coefficient=0.,
+                                   return_interior_power=False):
+    """Return steady and first-order coefficients for the exp(+i*omega*t) response.
+
+    Both outputs follow solve_harmonic_conduction's temperature and face-power
+    convention. First-order units are K s and W s. Loads and prescribed data
+    are independent of frequency; the steady problem needs a temperature
+    anchor (Dirichlet, positive film or bulk loss). Includes storage at Robin
+    walls and its contribution to power entering the material.
+    """
+    A,b,faces,mass,seam = _frequency_system(dx,dy,conductivity,volumetric_heat_capacity,bc,0.,
+        source,conductivity_y,contact_resistance_x,contact_resistance_y,periodic_y,heat_loss_coefficient)
+    _,_,sides,types,_,_ = faces
+    anchored = any(np.any((g.real>0)&np.isin(types[side],["dirichlet","robin"]))
+                   for side,_,g,_,_,_ in sides)
+    if not anchored and not np.any(heat_loss_coefficient):
+        raise ValueError("low-frequency conduction requires a steady temperature anchor")
+    factor = spla.splu((-A).astype(complex).tocsc())
+    state = factor.solve(-b)
+    steady = _frequency_output(state,faces,seam,return_interior_power)
+    rhs = -mass*state
+    correction = {}
+    dx,dy = np.asarray(dx),np.asarray(dy)
+    shape = steady[0].shape
+    for side,cells,g,_,_,area in sides:
+        spec = bc.get(side) or {}
+        if "wall_areal_heat_capacity" not in spec:
+            continue
+        # At DC Tw = Tcell + Q/G, where G is the half-cell conductance.
+        # Eliminating the wall's first-order unknown transmits a fraction
+        # G/(G+h*area) of its storage load to the cell equation.
+        horizontal = side in ("west","east")
+        widths = dx if horizontal else dy
+        material = conductivity if horizontal or conductivity_y is None else conductivity_y
+        half_resistance = .5*widths[0 if side in ("west","south") else -1]/(
+            area*np.broadcast_to(material,shape).ravel()[cells])
+        wall = state[cells]+steady[1][side]*half_resistance
+        correction[side] = -np.asarray(spec["wall_areal_heat_capacity"])*area*wall*(1-g*half_resistance)
+        rhs[cells] += correction[side]
+    lag = factor.solve(rhs)
+    cells_lag = lag.reshape(shape)
+    powers = {side:_conductive_wall_power(types[side],0.,g,area,lag[cells])+correction.get(side,0.)
+              for side,cells,g,_,_,area in sides}
+    if seam is not None:
+        powers["south"] = seam*(cells_lag[-1]-cells_lag[0])
         powers["north"] = -powers["south"]
+    first = (cells_lag,powers)
     if return_interior_power:
-        return temperature, powers, _interior_conduction_power(temperature,faces)
-    return temperature, powers
+        first += (_interior_conduction_power(cells_lag,faces),)
+    return steady,first
 
 
 def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc,

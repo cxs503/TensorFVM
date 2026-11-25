@@ -91,3 +91,22 @@ def test_mixed_face_storage_closes_individual_wall_balances():
     west["wall_areal_heat_capacity"] = [0., 0., 1.]
     with pytest.raises(ValueError,match="Robin faces"):
         solve_harmonic_conduction([.4],dy,3.,2.,{"west":west},5.)
+
+
+def test_low_frequency_storage_power_with_insulated_surface_capacity():
+    from tensorfvm.cht.energy import solve_low_frequency_conduction
+    dx = np.array([.2,.3,.5])
+    drive = .7+.4j
+    bc = {"west":dict(type="dirichlet",values=drive),
+          "east":dict(type="robin",film_coefficient=0.,wall_areal_heat_capacity=.8,values=3.)}
+    steady,lag = solve_low_frequency_conduction(dx,[1.],2.,3.,bc,return_interior_power=True)
+    np.testing.assert_allclose(steady[0],drive)
+    np.testing.assert_allclose(lag[1]["west"],drive*3.8)
+    np.testing.assert_allclose(lag[1]["east"],-drive*.8)
+    np.testing.assert_allclose(lag[2]["x"][0],drive*(.8+3*(1-np.cumsum(dx)[:-1])))
+
+
+def test_unanchored_low_frequency_conduction_rejected():
+    from tensorfvm.cht.energy import solve_low_frequency_conduction
+    with pytest.raises(ValueError,match="anchor"):
+        solve_low_frequency_conduction([.3,.7],[1.],1.,1.,{},periodic_y=True)
