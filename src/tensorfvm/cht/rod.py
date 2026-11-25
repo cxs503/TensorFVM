@@ -164,6 +164,15 @@ def _load(volume, end_load, layout, film, ends, source, ambient, interface_power
     return rhs, ends, deposited
 
 
+def _apply_end_power(rhs, layout, end_types, end_applied_power, dtype):
+    applied = _profile(end_applied_power, 2, "end applied power", dtype)
+    if np.any(applied[np.asarray(end_types) == "temperature"]):
+        raise ValueError("end applied power must be zero on fixed-temperature ends")
+    if layout.free_ends.size:
+        rhs[-layout.free_ends.size:] += applied[layout.free_ends]
+    return applied
+
+
 def _bulk_exchange_operator(operator, mass, volume, cells, coefficient):
     loss = _profile(coefficient,len(volume),"heat loss coefficient")
     if np.any(loss < 0):
@@ -515,11 +524,7 @@ def solve_harmonic_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
     operator,mass,volume,g,film,end_load,layout = _rod_operator(dx,area,conductivity,volumetric_heat_capacity,
                                                film_coefficient,shoulder_areal_heat_capacity,flux_order,contact_resistance,end_types,end_film_coefficient,end_areal_heat_capacity,interface_heat_capacity,interface_left_fraction,interface_capacity_left_fraction)
     rhs, ends, _ = _load(volume,end_load,layout,film,end_temperatures,source,ambient_temperature,interface_power,trace_power,complex)
-    applied = _profile(end_applied_power, 2, "end applied power", complex)
-    if np.any(applied[np.asarray(end_types) == "temperature"]):
-        raise ValueError("end applied power must be zero on fixed-temperature ends")
-    if layout.free_ends.size:
-        rhs[-layout.free_ends.size:] += applied[layout.free_ends]
+    _apply_end_power(rhs, layout, end_types, end_applied_power, complex)
     operator,bulk_g = _bulk_exchange_operator(operator,mass,volume,layout.cells,heat_loss_coefficient)
     n = len(volume)
     reservoir = _profile(bulk_ambient_temperature,n,"bulk ambient temperature",complex)
@@ -583,7 +588,7 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
                                 shoulder_areal_heat_capacity=0., initial_shoulder_temperature=None,
                                 theta=.5, flux_order=1, contact_resistance=0., return_traces=False,
                                 method="theta", return_step_heat=False, end_types=("temperature","temperature"), end_film_coefficient=0.,
-                               end_areal_heat_capacity=0., initial_end_temperature=None, initial_trace_temperatures=(None,None), load_jump_times=(), interface_power=0., interface_heat_capacity=0., interface_left_fraction=None, interface_capacity_left_fraction=None, trace_power=(0.,0.),
+                               end_areal_heat_capacity=0., end_applied_power=0., initial_end_temperature=None, initial_trace_temperatures=(None,None), load_jump_times=(), interface_power=0., interface_heat_capacity=0., interface_left_fraction=None, interface_capacity_left_fraction=None, trace_power=(0.,0.),
                                heat_loss_coefficient=0., bulk_ambient_temperature=0., return_interval_temperatures=False,
                                net_source_gradient=None, net_source_curvature=None, temperature_reference=0.):
     """Advance the stepped rod with theta-weighted cell and shoulder storage.
@@ -630,6 +635,8 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
     per output interval. Supply stationary heat_loss_coefficient values H in
     W/(m³ K) and scalar or cellwise bulk_ambient_temperature Tb in K. Tb may
     be callable; declare its jumps through load_jump_times.
+    end_applied_power is a scalar, west/east pair, or callable of time supplying
+    independent inward W at power or Robin ends. Include its jumps in load_jump_times.
     end_input gives external
     heat entering each end, including surface storage.
     return_interval_temperatures appends a dictionary of stage-weighted
@@ -683,6 +690,8 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
             values[0] = np.where(np.asarray(end_types) == "power", end_values, end_values-temperature_reference)
             values[2] = _profile(values[2],n-1,"ambient temperature") - temperature_reference
         load, boundary, deposited = _load(volume,end_load,layout,film,*values,float)
+        power = end_applied_power(float(t)) if callable(end_applied_power) else end_applied_power
+        applied = _apply_end_power(load, layout, end_types, power, float)
         reservoir = (_profile(bulk_ambient_temperature(float(t)),n,"bulk ambient temperature")
                      if callable(bulk_ambient_temperature) else fixed_reservoir)
         reservoir = reservoir - temperature_reference
@@ -692,11 +701,11 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
             derivatives = np.stack([_profile(v(float(t)) if callable(v) else v,n,name)
                                     for v,name in derivative_inputs])
             offsets = _apply_source_derivatives(load,layout,volume,width,*derivatives)
-        return load, boundary, values[1], values[2], deposited, reservoir, derivatives, offsets
+        return load, boundary, values[1], values[2], deposited, reservoir, derivatives, offsets, applied
 
     states = np.empty((len(time),len(mass)))
     ends = np.empty((len(time),2))
-    rhs,ends[0],src,air,face_power,reservoir,derivatives,offsets = forcing(time[0])
+    rhs,ends[0],src,air,face_power,reservoir,derivatives,offsets,applied = forcing(time[0])
     if graded:
         power_offsets = np.empty((len(time),2,n))
         power_offsets[0] = offsets
@@ -783,9 +792,9 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
                 stage_time = start+weight*dt
                 if not start<stage_time<stop:
                     raise ValueError("internal stage has no representable time")
-                rhs,stage_ends,src,air,face_power,reservoir,derivatives,offsets = forcing(stage_time)
+                rhs,stage_ends,src,air,face_power,reservoir,derivatives,offsets,applied = forcing(stage_time)
                 stage = lu.solve(mass*u+weight*dt*rhs)
-            next_rhs,next_ends,next_src,next_air,next_power,next_reservoir,next_derivatives,next_offsets = forcing(np.nextafter(stop,start) if stop in events else stop)
+            next_rhs,next_ends,next_src,next_air,next_power,next_reservoir,next_derivatives,next_offsets,next_applied = forcing(np.nextafter(stop,start) if stop in events else stop)
             next_u = lu.solve(mass*u+dt*((1-weight)*(rhs-operator@stage)+weight*next_rhs))
             if return_step_heat or return_interval_temperatures:
                 # Flux, storage and film operators are linear, so their time
@@ -809,7 +818,7 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
                 step_heat["right"][step] += dt*right
                 external = np.where(types=="power",boundary,[left[0],-right[-1]])
                 external = np.where(types=="robin",layout.end_film*(boundary-faces[[0,-1]]),external)
-                step_heat["end_input"][step] += dt*external
+                step_heat["end_input"][step] += dt*(external + (1-weight)*applied + weight*next_applied)
                 step_heat["source"][step] += dt*volume*((1-weight)*np.asarray(src)+weight*np.asarray(next_src))
                 step_heat["bulk_exchange"][step] += dt*bulk_g*((1-weight)*reservoir+weight*next_reservoir-mean[layout.cells])
                 step_heat["ambient"][step] += dt*film*((1-weight)*np.asarray(air)+weight*np.asarray(next_air)-faces[1:-1])
@@ -828,10 +837,10 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
                 contact[split] = contact_g*(up[split]-down[split])
                 step_heat["contact"][step] += dt*contact+contact_heat
             rhs,src,air,face_power,reservoir = next_rhs,next_src,next_air,next_power,next_reservoir
-            derivatives,offsets = next_derivatives,next_offsets
+            derivatives,offsets,applied = next_derivatives,next_offsets,next_applied
             u,boundary_start,start = next_u,next_ends,stop
         if end in events:
-            rhs,boundary_start,src,air,face_power,reservoir,derivatives,offsets = forcing(end)
+            rhs,boundary_start,src,air,face_power,reservoir,derivatives,offsets,applied = forcing(end)
             if np.any(massless):
                 u[massless] = trace_factor.solve(rhs[massless]-coupling @ u[~massless])
         if end==time[step+1]:

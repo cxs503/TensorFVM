@@ -958,3 +958,23 @@ def test_independent_robin_power_and_wall_storage():
     np.testing.assert_allclose(inward, applied+2*films*(ambient-surface)-8j*2*np.array([.2,.5])*surface, atol=1e-13)
     with pytest.raises(ValueError, match="fixed-temperature"):
         solve_harmonic_stepped_rod(*args, ambient, 8., end_applied_power=applied)
+
+
+@pytest.mark.parametrize("method", ["theta", "sdirk2", "sdirk2_start", "rannacher", "positive_cn"])
+def test_transient_independent_power_jump_is_integrated_at_both_ends(method):
+    from tensorfvm.cht.rod import solve_transient_stepped_rod
+
+    switch = .037
+    def power(t):
+        return np.array([.7, -.2]) if t < switch else np.array([-.4, .8])
+    times = np.array([0., .02, .07, .1])
+    states, faces, _, _, heats = solve_transient_stepped_rod(
+        [.5, .5], [1., 1.], 2., 1., (0., 0.), times, 0., end_types=("power", "power"),
+        end_applied_power=power, end_areal_heat_capacity=(.25,.75), initial_end_temperature=0.,
+        method=method, load_jump_times=[switch], return_step_heat=True)
+    before = np.diff(np.minimum(times, switch))
+    after = np.diff(times)-before
+    expected = before[:, None]*power(0.) + after[:, None]*power(switch)
+    np.testing.assert_allclose(heats["end_input"], expected, atol=1e-14)
+    energy = states.mean(1) + faces[:, [0,-1]] @ [.25,.75]
+    np.testing.assert_allclose(np.diff(energy), expected.sum(1), atol=1e-13)
