@@ -421,7 +421,7 @@ def solve_harmonic_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
                                end_areal_heat_capacity=0., interface_power=0., interface_heat_capacity=0., interface_left_fraction=None, interface_capacity_left_fraction=None, trace_power=(0.,0.),
                                heat_loss_coefficient=0., bulk_ambient_temperature=0.,
                                net_source_gradient=None, net_source_curvature=None,
-                               source_derivative_breaks=None, return_source_derivatives=False, separate_mean=False):
+                               source_derivative_breaks=None, return_source_derivatives=False, separate_mean=False, return_mean_rate=False):
     """Solve a rod with concentric sections and prescribed end phasors.
 
     end_types selects "temperature" (K), "power" (inward W), or "robin"
@@ -473,10 +473,15 @@ def solve_harmonic_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
     total power fixes the capacity-weighted mean. With separate_mean=True,
     return temperatures relative to this mean and append the complex mean in
     K after any traces and derivative arrays. Powers are always computed from
-    relative temperatures in this closed case.
+    relative temperatures in this closed case. Alternatively, return_mean_rate=True
+    appends the mean heating rate (K/s) and returns the same relative temperatures.
+    This form also supports zero frequency: temperatures settle to the relative
+    profile while their common mean drifts at the returned rate.
     """
-    if not np.isfinite(angular_frequency) or angular_frequency <= 0:
-        raise ValueError("angular_frequency must be finite and positive")
+    if separate_mean and return_mean_rate:
+        raise ValueError("select either separate_mean or return_mean_rate")
+    if not np.isfinite(angular_frequency) or angular_frequency < 0 or (angular_frequency == 0 and not return_mean_rate):
+        raise ValueError("angular_frequency must be finite and positive, or zero with return_mean_rate")
     operator,mass,volume,g,film,end_load,layout = _rod_operator(dx,area,conductivity,volumetric_heat_capacity,
                                                film_coefficient,shoulder_areal_heat_capacity,flux_order,contact_resistance,end_types,end_film_coefficient,end_areal_heat_capacity,interface_heat_capacity,interface_left_fraction,interface_capacity_left_fraction)
     rhs, ends, _ = _load(volume,end_load,layout,film,end_temperatures,source,ambient_temperature,interface_power,trace_power,complex)
@@ -492,8 +497,8 @@ def solve_harmonic_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
     if estimated and supplied:
         raise ValueError("choose estimated or prescribed net source derivatives")
     closed = not layout.anchored and not np.any(bulk_g)
-    if separate_mean and not closed:
-        raise ValueError("separate_mean requires a rod without temperature or exchange anchors")
+    if (separate_mean or return_mean_rate) and not closed:
+        raise ValueError("separate_mean and return_mean_rate require a rod without temperature or exchange anchors")
     rate = 0j
     if closed:
         rate = rhs.sum()/mass.sum()
@@ -522,7 +527,7 @@ def solve_harmonic_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
         offsets = _apply_source_derivatives(rhs,layout,volume,np.asarray(dx),slope,curvature)
     state = solve_state(rhs)
     result = layout.output(state,ends,g,flux_order,return_traces,offsets)
-    if closed:
+    if closed and not return_mean_rate:
         mean = rate/(1j*angular_frequency)
         if not separate_mean:
             temperatures = (result[0]+mean, result[1]+mean)
@@ -530,6 +535,8 @@ def solve_harmonic_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
             result = temperatures+result[2:4]+traces
     if return_source_derivatives:
         result += ((slope,curvature),)
+    if return_mean_rate:
+        return (*result, rate)
     return (*result, mean) if separate_mean else result
 
 

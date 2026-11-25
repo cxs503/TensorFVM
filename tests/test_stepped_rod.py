@@ -830,3 +830,23 @@ def test_separated_uniform_rod_keeps_section_powers_and_derivatives_zero(omega):
     np.testing.assert_array_equal(full[2:4], (west, east))
     with pytest.raises(ValueError, match="without temperature or exchange anchors"):
         solve_harmonic_stepped_rod(*args, separate_mean=True, heat_loss_coefficient=1., **opts)
+
+
+@pytest.mark.parametrize("omega", [0., 1e-12, 2.])
+def test_rod_mean_rate_preserves_uniform_heating_with_storage(omega):
+    width = np.array([.2,.3,.5])
+    c = np.array([3.,1.,2.])
+    rate = .7-.2j
+    opts = dict(end_types=("power", "power"), end_areal_heat_capacity=(.5,.2),
+                interface_heat_capacity=[.3,0.], interface_power=[.3*rate,0.], source=c*rate,
+                flux_order=2, source_derivative_breaks=[], return_source_derivatives=True)
+    args = (width, 1., 2., c, np.array([.5,.2])*rate, omega)
+    cells, faces, west, east, derivatives, computed = solve_harmonic_stepped_rod(
+        *args, return_mean_rate=True, **opts)
+    np.testing.assert_allclose(computed, rate, atol=1e-14)
+    for profile in (cells, faces, west, east, *derivatives):
+        np.testing.assert_allclose(profile, 0., atol=1e-12)
+    with pytest.raises(ValueError, match="either"):
+        solve_harmonic_stepped_rod(*args, return_mean_rate=True, separate_mean=True, **opts)
+    with pytest.raises(ValueError, match="without temperature or exchange anchors"):
+        solve_harmonic_stepped_rod(*args, return_mean_rate=True, heat_loss_coefficient=2., **opts)
