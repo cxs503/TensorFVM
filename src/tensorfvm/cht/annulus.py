@@ -229,7 +229,7 @@ def solve_annular_sheet(radii, conductivity, volumetric_heat_capacity, wall_temp
 
 
 def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity, wall_temperatures,
-                                  times, initial_temperature, sheet_face, *, initial_sheet_temperature,
+                                  times, initial_temperature, sheet_face, *, initial_sheet_temperature=None,
                                   sheet_capacity, resistance=0., inner_resistance_fraction=.5,
                                   sheet_conductivity=0., azimuthal_mode=0, sheet_film=0., ambient=0.,
                                   sheet_source_intervals=0., theta=.5, wall_fluxes=(None,None)):
@@ -240,7 +240,10 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
     entry (W/m²), either constant or sampled at the output times.
     Sheet generation in W/m² is constant or has shape (interval,2), giving its
     one-sided start and end values. Times must include each source switch.
-    Cell temperatures refer to radial volume centroids. Returns cell and sheet
+    With zero sheet capacity, its algebraic temperature follows the current
+    source and adjacent cells. At a switch the sheet trace is right-continuous
+    (the final output uses the last interval end). Positive capacity requires
+    an initial sheet temperature. Cell temperatures refer to radial volume centroids. Returns cell and sheet
     temperature histories (K), interval radial heats on each side (J/m, both
     directed toward increasing radius, with all faces including the walls),
     and interval sheet-to-reservoir heat (J/m). Rates use the 2πr modal
@@ -259,14 +262,20 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
         raise ValueError("azimuthal_mode must be a nonnegative integer")
     if not np.isfinite([sheet_capacity,resistance,inner_resistance_fraction,sheet_conductivity,sheet_film,theta]).all():
         raise ValueError("sheet properties and theta must be finite")
-    if sheet_capacity<=0 or min(resistance,sheet_conductivity,sheet_film)<0 or not 0<=inner_resistance_fraction<=1 or not .5<=theta<=1:
-        raise ValueError("require positive sheet capacity, nonnegative properties, fraction in [0,1] and theta in [.5,1]")
+    if min(sheet_capacity,resistance,sheet_conductivity,sheet_film)<0 or not 0<=inner_resistance_fraction<=1 or not .5<=theta<=1:
+        raise ValueError("require nonnegative sheet properties, fraction in [0,1] and theta in [.5,1]")
     n = len(r)-1
     k,c,u = (np.broadcast_to(np.asarray(v,dtype=float),(n,)) for v in (conductivity,volumetric_heat_capacity,initial_temperature))
     if np.any(k<=0) or np.any(c<=0) or not all(np.isfinite(v).all() for v in (k,c,u)):
         raise ValueError("material properties must be positive and initial temperatures finite")
-    if len(wall_temperatures)!=2 or len(wall_fluxes)!=2 or np.ndim(initial_sheet_temperature)!=0 or not np.isfinite(initial_sheet_temperature):
-        raise ValueError("supply two wall histories and a finite initial sheet temperature")
+    if len(wall_temperatures)!=2 or len(wall_fluxes)!=2:
+        raise ValueError("supply two wall conditions")
+    if initial_sheet_temperature is None:
+        if sheet_capacity>0:
+            raise ValueError("a storing sheet requires a finite initial sheet temperature")
+        initial_sheet_temperature = 0.
+    if np.ndim(initial_sheet_temperature)!=0 or not np.isfinite(initial_sheet_temperature):
+        raise ValueError("initial sheet temperature must be finite")
     for temp,flux in zip(wall_temperatures,wall_fluxes):
         if (temp is None)==(flux is None):
             raise ValueError("supply either temperature or inward heat flux for each wall")
@@ -306,6 +315,10 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
         avg_w,avg_e,avg_a = ((1-theta)*v[i]+theta*v[i+1] for v in (west,east,fluid))
         supply = (1-theta)*drive[i,0]+theta*drive[i,1]
         old = state[i]
+        if sheet_capacity==0:
+            # A source jump changes a massless trace before the next step.
+            # Use its right limit for quadrature while retaining cell storage.
+            old[j] = (g[j]*old[j-1]+g[j+1]*old[j+1]+circum*(drive[i,0]+sheet_film*fluid[i]))/diagonal[j]
         # Increment form avoids subtracting two large storage terms.
         wall_input = np.array([west_factor*avg_w,east_factor*avg_e])
         flux = -g*np.diff(np.r_[0.,old,0.])

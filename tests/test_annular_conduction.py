@@ -233,3 +233,26 @@ def test_annular_sheet_flux_wall_global_energy(theta):
     total = u@(1.3*np.pi*np.diff(edges**2))+2*np.pi*edges[1]*cs*s
     generation = ((1-theta)*drive[:,0]+theta*drive[:,1])*dt*2*np.pi*edges[1]
     np.testing.assert_allclose(np.diff(total),hi[:,0]-ho[:,-1]+generation-external,atol=2e-14)
+
+
+@pytest.mark.parametrize("theta",[.5,.75,1.])
+def test_massless_sheet_jump_right_trace_and_integrated_heat(theta):
+    from tensorfvm.cht.annulus import solve_transient_annular_sheet
+    edges = np.array([.4,.7,1.2])
+    times = np.array([0.,.1,.28,.36])
+    drive = np.array([[0.,0.],[1.4,.2],[-.8,-.3]])
+    k = np.array([1.5,2.1])
+    fluid,h = -.4,.7
+    opts = dict(sheet_capacity=0.,resistance=.3,inner_resistance_fraction=.4,theta=theta,
+                ambient=fluid,sheet_film=h,wall_fluxes=(0.,0.))
+    u,s,qi,qo,external = solve_transient_annular_sheet(edges,k,1.,(None,None),times,[.2,.5],1,
+                                                         sheet_source_intervals=drive,**opts)
+    center = (2/3)*np.diff(edges**3)/np.diff(edges**2)
+    gi,go = 2*np.pi/np.array([np.log(.7/center[0])/k[0]+.12/.7,np.log(center[1]/.7)/k[1]+.18/.7])
+    circum = 2*np.pi*.7
+    target = (u[:,0]*gi+u[:,1]*go+circum*(np.r_[drive[:,0],drive[-1,1]]+h*fluid))/(gi+go+circum*h)
+    np.testing.assert_allclose(s,target,atol=2e-14,rtol=0.)
+    applied = np.diff(times)*circum*((1-theta)*drive[:,0]+theta*drive[:,1])
+    np.testing.assert_allclose(qo[:,0]-qi[:,-1]+external,applied,atol=2e-14)
+    np.testing.assert_allclose(np.diff(u,axis=0)*np.pi*np.diff(edges**2),
+                               np.column_stack((-qi[:,-1],qo[:,0])),atol=2e-14)
