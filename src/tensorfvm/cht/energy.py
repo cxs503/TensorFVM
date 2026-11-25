@@ -497,8 +497,57 @@ def _interior_conduction_power(temperature, faces):
             "y": -conductance_y[1:-1,:]*np.diff(temperature,axis=-2)}
 
 
+def _second_order_wall(side, cells, mask, area, dx, dy, k, conductivity_y, faces):
+    ny, nx = k.shape
+    x_side = side in ("west","east")
+    widths = dx if x_side else dy
+    if widths.size < 2:
+        raise ValueError("second-order wall flux requires two cells along the wall normal")
+    forward = side in ("west","south")
+    d1,d2 = widths[:2] if forward else widths[-2:][::-1]
+    inner = cells + (1 if x_side else nx)*(1 if forward else -1)
+    normal_k = k if x_side or conductivity_y is None else np.broadcast_to(conductivity_y, k.shape)
+    k1,k2 = normal_k.ravel()[cells], normal_k.ravel()[inner]
+    near = 1 if forward else -2
+    interface = (faces[0][:,near] if x_side else faces[1][near,:])[mask]
+    # For q(x)=q0+b*x, cell averages satisfy T_wall-T_j=a_j*q0+b_j*b.
+    a1 = d1/(2*k1)
+    a2 = a1 + area/interface
+    contact = area/interface-a1-d2/(2*k2)
+    b1 = d1**2/(6*k1)
+    b2 = d1**2/(2*k1)+d1*contact+(d1*d2/2+d2**2/6)/k2
+    scale = area/(a1*b2-a2*b1)
+    correction = scale*b1
+    g = scale*(b2-b1)
+    return inner, g, correction
+
+
+def _fixed_wall_operator(A, b, faces, dx, dy, k, conductivity_y, order):
+    if order not in (1,2):
+        raise ValueError("dirichlet_flux_order must be 1 or 2")
+    _, _, side_specs, types, values, _ = faces
+    fixed_wall_links = {}
+    if order == 2:
+        A = A.tolil()
+        for side, cells, conductance, _, _, area in side_specs:
+            mask = types[side] == "dirichlet"
+            if not mask.any():
+                continue
+            cells = cells[mask]
+            inner, g, extra = _second_order_wall(side,cells,mask,area[mask],dx,dy,k,conductivity_y,faces)
+            delta = g-conductance[mask]
+            for cell, other, change, correction in zip(cells,inner,delta,extra):
+                A[cell,cell] -= change+correction
+                A[cell,other] += correction
+            b[cells] -= delta*values[side][mask]
+            conductance[mask] = g
+            fixed_wall_links[side] = mask,cells,inner,extra
+        A = A.tocsc()
+    return A, fixed_wall_links
+
+
 def _frequency_system(dx,dy,conductivity,volumetric_heat_capacity,bc,angular_frequency,source,
-                      conductivity_y,contact_resistance_x,contact_resistance_y,periodic_y,heat_loss_coefficient):
+                      conductivity_y,contact_resistance_x,contact_resistance_y,periodic_y,heat_loss_coefficient,dirichlet_flux_order):
     dx, dy = np.asarray(dx, dtype=float), np.asarray(dy, dtype=float)
     k, capacity = _conduction_materials(dx, dy, conductivity, volumetric_heat_capacity)
     ny, nx = k.shape
@@ -512,13 +561,16 @@ def _frequency_system(dx,dy,conductivity,volumetric_heat_capacity,bc,angular_fre
     volume = np.outer(dy, dx)
     A = _bulk_loss_operator(A,heat_loss_coefficient,volume)
     mass = (capacity*volume).ravel()
-    return A,b,faces,mass,seam
+    A, fixed_wall_links = _fixed_wall_operator(A,b,faces,dx,dy,k,conductivity_y,dirichlet_flux_order)
+    return A,b,faces,mass,seam,fixed_wall_links
 
 
-def _frequency_output(state,faces,seam,return_interior_power):
+def _frequency_output(state,faces,seam,return_interior_power,fixed_wall_links):
     _, _, side_specs, types, values, _ = faces
     powers = {side: _conductive_wall_power(types[side], values[side], conductance, area, state[cells])
               for side, cells, conductance, _, _, area in side_specs}
+    for side,(mask,cells,inner,extra) in fixed_wall_links.items():
+        powers[side][mask] += extra*(state[inner]-state[cells])
     temperature = state.reshape(faces[0].shape[0],-1)
     if seam is not None:
         powers["south"] = seam*(temperature[-1]-temperature[0])
@@ -531,7 +583,8 @@ def _frequency_output(state,faces,seam,return_interior_power):
 def solve_harmonic_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc,
                               angular_frequency, *, source=0., conductivity_y=None,
                               contact_resistance_x=0., contact_resistance_y=0.,
-                              return_interior_power=False, periodic_y=False, heat_loss_coefficient=0.):
+                              return_interior_power=False, periodic_y=False, heat_loss_coefficient=0.,
+                              dirichlet_flux_order=1):
     """Return cell temperature and inward power per wall face for unit depth.
 
     Use Re(phasor * exp(iωt)), with positive angular frequency in rad/s.
@@ -547,19 +600,20 @@ def solve_harmonic_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc
     north to south with perfect thermal contact. Omit those two wall BCs.
     Their reported face powers are then opposite inward seam transfers.
     contact_resistance_y continues to describe the ny-1 interior faces.
+    dirichlet_flux_order=2 reconstructs fixed-wall flux from two normal cell means.
     """
     if not np.isfinite(angular_frequency) or angular_frequency <= 0:
         raise ValueError("angular_frequency must be finite and positive")
-    A,b,faces,mass,seam = _frequency_system(dx,dy,conductivity,volumetric_heat_capacity,bc,
-        angular_frequency,source,conductivity_y,contact_resistance_x,contact_resistance_y,periodic_y,heat_loss_coefficient)
+    A,b,faces,mass,seam,fixed_wall_links = _frequency_system(dx,dy,conductivity,volumetric_heat_capacity,bc,
+        angular_frequency,source,conductivity_y,contact_resistance_x,contact_resistance_y,periodic_y,heat_loss_coefficient,dirichlet_flux_order)
     state = spla.spsolve(sp.diags(1j*angular_frequency*mass, format="csc") - A, -b)
-    return _frequency_output(state,faces,seam,return_interior_power)
+    return _frequency_output(state,faces,seam,return_interior_power,fixed_wall_links)
 
 
 def solve_low_frequency_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc, *,
                                    source=0., conductivity_y=None, contact_resistance_x=0.,
                                    contact_resistance_y=0., periodic_y=False, heat_loss_coefficient=0.,
-                                   return_interior_power=False):
+                                   return_interior_power=False, dirichlet_flux_order=1):
     """Return steady and first-order coefficients for the exp(+i*omega*t) response.
 
     Both outputs follow solve_harmonic_conduction's temperature and face-power
@@ -567,9 +621,10 @@ def solve_low_frequency_conduction(dx, dy, conductivity, volumetric_heat_capacit
     are independent of frequency. An unanchored lossless body requires zero
     net power. The harmonic limit then has zero total stored energy at both
     orders, including any heat capacity on insulated Robin surfaces.
+    dirichlet_flux_order selects the same fixed-wall reconstruction as in the harmonic solve.
     """
-    A,b,faces,mass,seam = _frequency_system(dx,dy,conductivity,volumetric_heat_capacity,bc,0.,
-        source,conductivity_y,contact_resistance_x,contact_resistance_y,periodic_y,heat_loss_coefficient)
+    A,b,faces,mass,seam,fixed_wall_links = _frequency_system(dx,dy,conductivity,volumetric_heat_capacity,bc,0.,
+        source,conductivity_y,contact_resistance_x,contact_resistance_y,periodic_y,heat_loss_coefficient,dirichlet_flux_order)
     _,_,sides,types,_,_ = faces
     anchored = any(np.any((g.real>0)&np.isin(types[side],["dirichlet","robin"]))
                    for side,_,g,_,_,_ in sides)
@@ -588,7 +643,7 @@ def solve_low_frequency_conduction(dx, dy, conductivity, volumetric_heat_capacit
     state = factor.solve(-b)
     if closed:
         state -= (energy_weight@state)/energy_weight.sum()
-    steady = _frequency_output(state,faces,seam,return_interior_power)
+    steady = _frequency_output(state,faces,seam,return_interior_power,fixed_wall_links)
     rhs = -mass*state
     correction = {}
     dx,dy = np.asarray(dx),np.asarray(dy)
@@ -618,6 +673,8 @@ def solve_low_frequency_conduction(dx, dy, conductivity, volumetric_heat_capacit
     cells_lag = lag.reshape(shape)
     powers = {side:_conductive_wall_power(types[side],0.,g,area,lag[cells])+correction.get(side,0.)
               for side,cells,g,_,_,area in sides}
+    for side,(mask,cells,inner,extra) in fixed_wall_links.items():
+        powers[side][mask] += extra*(lag[inner]-lag[cells])
     if seam is not None:
         powers["south"] = seam*(cells_lag[-1]-cells_lag[0])
         powers["north"] = -powers["south"]
@@ -710,8 +767,6 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
     sample_times = np.r_[time,np.nextafter(time[jump_indices],time[jump_indices-1])]
     end_samples = np.arange(1,len(time))
     end_samples[jump_indices-1] = np.arange(len(jumps))+len(time)
-    if dirichlet_flux_order not in (1,2):
-        raise ValueError("dirichlet_flux_order must be 1 or 2")
     if wall_flux_order not in (1,2):
         raise ValueError("wall_flux_order must be 1 or 2")
     if not .5 <= theta <= 1:
@@ -771,46 +826,7 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
         A, seam = _join_periodic_y(A, faces[1], bc)
     _, _, side_specs, types, values, _ = faces
     A = _bulk_loss_operator(A,heat_loss_coefficient,volume)
-    def second_order_wall(side, cells, mask, area):
-        x_side = side in ("west","east")
-        widths = dx if x_side else dy
-        if widths.size < 2:
-            raise ValueError("second-order wall flux requires two cells along the wall normal")
-        forward = side in ("west","south")
-        d1,d2 = widths[:2] if forward else widths[-2:][::-1]
-        inner = cells + (1 if x_side else nx)*(1 if forward else -1)
-        normal_k = k if x_side or conductivity_y is None else np.broadcast_to(conductivity_y, shape)
-        k1,k2 = normal_k.ravel()[cells], normal_k.ravel()[inner]
-        near = 1 if forward else -2
-        interface = (faces[0][:,near] if x_side else faces[1][near,:])[mask]
-        # For q(x)=q0+b*x, cell averages satisfy T_wall-T_j=a_j*q0+b_j*b.
-        a1 = d1/(2*k1)
-        a2 = a1 + area/interface
-        contact = area/interface-a1-d2/(2*k2)
-        b1 = d1**2/(6*k1)
-        b2 = d1**2/(2*k1)+d1*contact+(d1*d2/2+d2**2/6)/k2
-        scale = area/(a1*b2-a2*b1)
-        correction = scale*b1
-        g = scale*(b2-b1)
-        return inner, g, correction
-
-    fixed_wall_links = {}
-    if dirichlet_flux_order == 2:
-        A = A.tolil()
-        for side, cells, conductance, _, _, area in side_specs:
-            mask = types[side] == "dirichlet"
-            if not mask.any():
-                continue
-            cells = cells[mask]
-            inner, g, extra = second_order_wall(side,cells,mask,area[mask])
-            delta = g-conductance[mask]
-            for cell, other, change, correction in zip(cells,inner,delta,extra):
-                A[cell,cell] -= change+correction
-                A[cell,other] += correction
-            b[cells] -= delta*values[side][mask]
-            conductance[mask] = g
-            fixed_wall_links[side] = mask,cells,inner,extra
-        A = A.tocsc()
+    A, fixed_wall_links = _fixed_wall_operator(A,b,faces,dx,dy,k,conductivity_y,dirichlet_flux_order)
     varying_loads = []
     for side, cells, conductance, _, _, area in side_specs:
         if side in signals:
@@ -833,7 +849,7 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
             inner = cells
             correction = np.zeros_like(g)
             if wall_flux_order == 2:
-                inner, g, correction = second_order_wall(side,cells,mask,area)
+                inner, g, correction = _second_order_wall(side,cells,mask,area,dx,dy,k,conductivity_y,faces)
             for cell, node, other, link, extra, conv in zip(cells, ids, inner, g, correction, film):
                 A[cell,cell] -= link+extra
                 A[cell,node] = link

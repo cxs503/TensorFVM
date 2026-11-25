@@ -125,3 +125,51 @@ def test_closed_slab_storing_surface_has_zero_energy_at_both_orders():
         assert abs((capacity*dx)@field[0]+surface*wall)<1e-13
     actual,_ = solve_harmonic_conduction(dx,[1.],2.,capacity,bc,.01,source=source)
     np.testing.assert_allclose(actual,steady[0]+.01j*lag[0],rtol=0,atol=3e-7)
+
+
+@pytest.mark.parametrize("vertical",[False,True])
+def test_two_cell_wall_and_contact_complex_manufactured_solution(vertical):
+    # Equal d²/k makes the two quadratic cell-mean corrections cancel at
+    # the interior face even with a contact jump and unequal cell widths.
+    widths = np.array([.25,.5])
+    k = np.array([1.,4.])
+    area, resistance, omega = .8,.27,3.
+    west, q0, slope = 1.+.3j, .7-.4j, .35+.2j
+    means, face_flux = [], [q0]
+    surface = west
+    for i,(d,material) in enumerate(zip(widths,k)):
+        q = face_flux[-1]
+        means.append(surface-(q*d/2+slope*d*d/6)/material)
+        surface -= (q*d+slope*d*d/2)/material
+        face_flux.append(q+slope*d)
+        if i == 0:
+            surface -= resistance*face_flux[-1]
+    axis = "y" if vertical else "x"
+    lo,hi = ("south","north") if vertical else ("west","east")
+    bc = {lo:dict(type="dirichlet",values=west),hi:dict(type="dirichlet",values=surface)}
+    shape = (2,1) if vertical else (1,2)
+    expected = np.array(means).reshape(shape)
+    dx,dy = ([area],widths) if vertical else (widths,[area])
+    opts = {"contact_resistance_"+axis:resistance}
+    temperature,powers,interior = solve_harmonic_conduction(dx,dy,1. if vertical else k,2.,bc,
+        omega,source=slope+1j*omega*2*expected,conductivity_y=k[:,None] if vertical else None,
+        dirichlet_flux_order=2,return_interior_power=True,**opts)
+    np.testing.assert_allclose(temperature,expected,rtol=0.,atol=2e-14)
+    np.testing.assert_allclose([powers[lo].item(),interior[axis].item(),-powers[hi].item()],
+                               area*np.array(face_flux),rtol=0.,atol=2e-14)
+
+
+def test_wall_flux_lag_matches_integrated_storage_across_contact():
+    from tensorfvm.cht.energy import solve_low_frequency_conduction
+
+    widths, k, resistance = np.array([.25,.5]),np.array([1.,4.]),.27
+    bc = {side:dict(type="dirichlet",values=1.) for side in ("west","east")}
+    dc,lag = solve_low_frequency_conduction(widths,[1.],k,1.,bc,
+        contact_resistance_x=resistance,dirichlet_flux_order=2,return_interior_power=True)
+    # At DC the field is 1 K. At first order q'=-1 and the two prescribed
+    # wall temperatures have zero lag, so integral(q/k) + R*q(contact)=0.
+    edges = np.r_[0.,np.cumsum(widths)]
+    q0 = (np.sum(np.diff(edges**2)/(2*k))+resistance*edges[1])/(sum(widths/k)+resistance)
+    np.testing.assert_allclose(dc[0],1.,atol=2e-14)
+    np.testing.assert_allclose([lag[1]["west"].item(),lag[2]["x"].item(),-lag[1]["east"].item()],
+                               q0-edges,rtol=0.,atol=2e-14)
