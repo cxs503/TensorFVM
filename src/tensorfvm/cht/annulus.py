@@ -3,10 +3,21 @@ import numpy as np
 from scipy.linalg import solve_banded
 
 
+def _half_shell_source_drop(distance, face_radius, conductivity):
+    """Temperature drop from a face to a cell center per unit generation."""
+    x = distance/face_radius
+    # (x - log1p(x))/x² loses precision for thin shells.
+    ratio = np.empty_like(x)
+    thin = abs(x) < 1e-4
+    ratio[thin] = .5 - x[thin]/3 + x[thin]**2/4
+    ratio[~thin] = (x[~thin]-np.log1p(x[~thin]))/x[~thin]**2
+    return distance**2*(.5+ratio)/(2*conductivity)
+
+
 def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall_temperatures,
                              angular_frequency, *, contact_resistance=0., source=0., azimuthal_mode=0,
                              film_coefficients=(None, None), cell_location="midpoint",
-                             wall_fluxes=(None, None)):
+                             wall_fluxes=(None, None), distributed_source=False):
     """Return cell phasors and radial face heat rates per unit axial length.
 
     Boundary, temperature and volumetric source amplitudes multiply
@@ -21,6 +32,9 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
     With cell_location="volume_centroid", each temperature is located at
     integral(r² dr)/integral(r dr) and both half-cell resistances use that
     radius. The default "midpoint" uses the arithmetic radial midpoint.
+    distributed_source=True integrates a uniform net generation density
+    (applied source minus storage and angular loss) across each half-shell
+    when relating cell temperatures to face power.
 
     """
     r = np.asarray(radii, dtype=float)
@@ -78,14 +92,30 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
         raise ValueError("a steady axisymmetric insulated annulus needs a temperature reference")
     volume = np.pi*width*(r[1:]+r[:-1])
     lateral = 2*np.pi*k*azimuthal_mode**2*np.log1p(width/r[:-1])
+    sink = lateral + 1j*angular_frequency*cv*volume
+    # Face power = offset + outward*T_inner - inward_coefficient*T_outer.
+    outward = conductance[1:].astype(complex)
+    inward_coefficient = conductance[:-1].astype(complex)
+    offset = np.zeros(n+1, dtype=complex)
+    offset[0] = conductance[0]*walls[0]+inward[0]
+    offset[-1] = -conductance[-1]*walls[-1]-inward[-1]
+    if distributed_source:
+        # Integrating dQ/dr=2πr*g and dT/dr=-Q/(2πkr) gives these
+        # temperature-drop coefficients for unit net generation g.
+        dl, dr = .5*width+shift, .5*width-shift
+        factor_l = _half_shell_source_drop(dl, r[:-1], k)
+        factor_r = -_half_shell_source_drop(-dr, r[1:], k)
+        offset[:-1] -= conductance[:-1]*factor_l*density
+        offset[1:] -= conductance[1:]*factor_r*density
+        outward += conductance[1:]*factor_r*(sink/volume)
+        inward_coefficient -= conductance[:-1]*factor_l*(sink/volume)
     bands = np.zeros((3,n), dtype=complex)
-    bands[0,1:] = bands[2,:-1] = -conductance[1:-1]
-    bands[1] = conductance[:-1]+conductance[1:]+lateral+1j*angular_frequency*cv*volume
-    load = density*volume
-    load[0] += conductance[0]*walls[0]+inward[0]
-    load[-1] += conductance[-1]*walls[-1]+inward[-1]
+    bands[0,1:] = -inward_coefficient[1:]
+    bands[2,:-1] = -outward[:-1]
+    bands[1] = outward+inward_coefficient+sink
+    load = density*volume - np.diff(offset)
     field = solve_banded((1,1), bands, load)
-    rates = -conductance*np.diff(np.r_[walls[0], field, walls[1]])
-    rates[0] += inward[0]
-    rates[-1] -= inward[-1]
+    rates = offset.copy()
+    rates[1:] += outward*field
+    rates[:-1] -= inward_coefficient*field
     return field, rates

@@ -88,3 +88,23 @@ def test_source_driven_angular_mode_with_zero_radial_flux(omega):
                                        wall_fluxes=(0.,0.), cell_location="volume_centroid")
     np.testing.assert_allclose(t, exact, rtol=0., atol=3e-14)
     np.testing.assert_allclose(rate, 0., rtol=0., atol=1e-12)
+
+
+@pytest.mark.parametrize("location", ["midpoint", "volume_centroid"])
+@pytest.mark.parametrize("omega", [0., 5.])
+def test_distributed_balance_recovers_forced_log_quadratic_field(location, omega):
+    r = np.array([.2,.23,.31,.55,.67,.9,1.])
+    k, cv = 2.5, 1.7
+    center = .5*(r[:-1]+r[1:])
+    if location == "volume_centroid":
+        center = (2./3)*np.diff(r**3)/np.diff(r**2)
+    quadratic, logarithmic = 1.-.2j, -.3+.4j
+    def field(x):
+        return 2.+quadratic*x**2+logarithmic*np.log(x)
+    # The discrete storage term is collocated at the declared cell radius.
+    generation = -4*k*quadratic + 1j*omega*cv*field(center)
+    exact_rate = -2*np.pi*k*(2*quadratic*r**2+logarithmic)
+    temp, rate = solve_annular_conduction(r, k, cv, field(r[[0,-1]]), omega, source=generation,
+                                          cell_location=location, distributed_source=True)
+    np.testing.assert_allclose(temp, field(center), rtol=0., atol=1e-13)
+    np.testing.assert_allclose(rate, exact_rate, rtol=0., atol=2e-12)
