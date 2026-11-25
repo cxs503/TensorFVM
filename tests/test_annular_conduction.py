@@ -375,3 +375,29 @@ def test_sdirk2_damps_fast_mode_of_a_light_contact_sheet():
     assert max(abs(np.r_[u[-1],s[-1]]))<.005
     np.testing.assert_allclose(np.diag(mass)*(np.r_[u[-1,0],s[-1],u[-1,1]]-initial),
                                -np.diff(np.r_[qi[0],qo[0]]),atol=1e-15)
+
+
+@pytest.mark.parametrize("method",["theta","sdirk2"])
+@pytest.mark.parametrize("capacity",[0.,.27])
+def test_interval_temperatures_close_each_modal_balance_at_switch(method,capacity):
+    from tensorfvm.cht.annulus import solve_transient_annular_sheet
+    r = np.array([.4,.52,.7,.96])
+    k = np.array([1.2,1.6,2.3])
+    t = np.array([0.,.033,.12,.17])
+    source = np.array([[0.,1.],[2.,2.],[-1.,.3]])
+    ambient = .3+.6*t
+    mode,h,ks,res,frac = 2,.9,.3,.27,.4
+    u,s,qi,qo,ext,avg = solve_transient_annular_sheet(r,k,1.,(None,None),t,[.3,.5,-.2],2,
+                 wall_fluxes=(0.,0.),sheet_capacity=capacity,initial_sheet_temperature=.7,
+                 sheet_film=h,ambient=ambient,sheet_conductivity=ks,azimuthal_mode=mode,resistance=res,
+                 inner_resistance_fraction=frac,sheet_source_intervals=source,method=method,return_interval_temperatures=True)
+    dt = np.diff(t)
+    circum = 2*np.pi*r[2]
+    angular = 2*np.pi*k*mode**2*np.log(r[1:]/r[:-1])
+    np.testing.assert_allclose(np.diff(u,axis=0)*np.pi*np.diff(r**2)+dt[:,None]*avg["cell"]*angular,
+                               -np.column_stack((np.diff(qi),np.diff(qo))),atol=3e-14)
+    np.testing.assert_allclose(ext,dt*circum*h*(avg["sheet"]-(ambient[:-1]+ambient[1:])/2),atol=3e-14)
+    np.testing.assert_allclose(circum*(capacity*np.diff(s)+dt*(ks*(mode/r[2])**2*avg["sheet"]-source.mean(1))),
+                               qi[:,-1]-qo[:,0]-ext,atol=3e-14)
+    np.testing.assert_allclose(avg["contact"][:,0]-avg["contact"][:,1],
+                               res*(frac*qi[:,-1]+(1-frac)*qo[:,0])/(dt*circum),atol=2e-14)

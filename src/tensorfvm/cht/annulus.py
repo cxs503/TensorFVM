@@ -234,7 +234,7 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
                                   sheet_conductivity=0., azimuthal_mode=0, sheet_film=0., ambient=0.,
                                   sheet_source_intervals=0., theta=.5, wall_fluxes=(None,None), source_intervals=0.,
                                   film_coefficients=(None,None), return_wall_temperatures=False,
-                                  return_contact_temperatures=False, method="theta"):
+                                  return_contact_temperatures=False, method="theta", return_interval_temperatures=False):
     """Advance one real azimuthal mode with a storing sheet and Dirichlet walls.
 
     Walls and reservoir ambient accept constants or one sample per output time.
@@ -262,6 +262,8 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
     return_contact_temperatures appends the inner and outer material traces at
     the sheet (shape time × 2), after optional wall temperatures. Massless
     contact traces use the same one-sided convention as sheet temperatures.
+    return_interval_temperatures appends a dict of cell, sheet and contact
+    temperatures in K, averaged with the actual interval heat quadrature.
     """
     r = np.asarray(radii,dtype=float)
     t = np.asarray(times,dtype=float)
@@ -334,6 +336,8 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
     state = np.empty((len(t),n+1))
     state[0] = np.insert(u,j,initial_sheet_temperature)
     heat = np.empty((len(t)-1,n+2))
+    if return_interval_temperatures:
+        interval_state = np.empty((len(t)-1,n+1))
     reservoir = np.empty(len(t)-1)
     bands = np.zeros((3,n+1))
     sdirk = method=="sdirk2"
@@ -373,6 +377,8 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
         stage = old+weight*delta
         if sdirk:
             stage += (1-weight)*first_delta
+        if return_interval_temperatures:
+            interval_state[i] = stage
         heat[i] = -dt*g*np.diff(np.r_[0.,stage,0.])
         heat[i,[0,-1]] += dt*wall_input
         reservoir[i] = dt*circum*sheet_film*(stage[j]-avg_a)
@@ -394,4 +400,12 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
         outer_flux = g[j+1]*(state[:,j]-state[:,j+1])/circum
         result += (np.column_stack((state[:,j]+inner_resistance_fraction*resistance*inner_flux,
                                     state[:,j]-(1-inner_resistance_fraction)*resistance*outer_flux)),)
+    if return_interval_temperatures:
+        dt = np.diff(t)
+        inner_flux = heat[:,j]/(circum*dt)
+        outer_flux = heat[:,j+1]/(circum*dt)
+        mean_sheet = interval_state[:,j]
+        mean_contact = np.column_stack((mean_sheet+inner_resistance_fraction*resistance*inner_flux,
+                                        mean_sheet-(1-inner_resistance_fraction)*resistance*outer_flux))
+        result += (dict(cell=np.delete(interval_state,j,axis=1),sheet=mean_sheet,contact=mean_contact),)
     return result
