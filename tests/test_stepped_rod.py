@@ -279,3 +279,36 @@ def test_insulating_robin_end_needs_gauge_with_power_end():
     cell,faces,*_ = solve_steady_stepped_rod(*args,mean_temperature=290.,**opts)
     np.testing.assert_allclose(cell,290.)
     np.testing.assert_allclose(faces,290.)
+
+
+@pytest.mark.parametrize("method",["theta","rannacher","sdirk2","positive_cn"])
+def test_storing_end_heat_matches_time_dependent_inputs(method):
+    from tensorfvm.cht.rod import solve_transient_stepped_rod
+    area = 2.
+    wall_mass = np.array([.2,.5])*area
+    times = np.array([0.,.03,.07,.2])
+    cell,wall,_,_,heat = solve_transient_stepped_rod(
+        [.4],area,1.5,3.,lambda t:[.3+t,2.-t],times,.8,
+        initial_end_temperature=[1.5,.4],end_types=("power","robin"),
+        end_film_coefficient=[0.,4.],end_areal_heat_capacity=wall_mass/area,
+        method=method,return_step_heat=True)
+    np.testing.assert_allclose(wall[0],[1.5,.4])
+    inward = np.column_stack((heat["left"][:,0],-heat["right"][:,-1]))
+    np.testing.assert_allclose(np.diff(wall,axis=0)*wall_mass,heat["end_input"]-inward,atol=1e-13)
+    total = cell[:,0]*(3.*.4*area)+wall@wall_mass
+    np.testing.assert_allclose(np.diff(total),heat["end_input"].sum(axis=1),atol=1e-13)
+    # Rannacher starts with two backward Euler half steps.
+    expected = np.diff(times)*(.3+(times[:-1]+times[1:])/2)
+    if method=="rannacher":
+        expected[0] += np.diff(times)[0]**2/4
+    np.testing.assert_allclose(heat["end_input"][:,0],expected,atol=1e-13)
+
+
+def test_steady_gauge_includes_end_storage():
+    from tensorfvm.cht.rod import solve_steady_stepped_rod
+    cell,wall,*_ = solve_steady_stepped_rod(
+        [.4],2.,1.5,3.,[2.,-2.],end_types=("power","power"),
+        end_areal_heat_capacity=[.3,.8],mean_temperature=5.)
+    assert (cell[0]*2.4+wall@np.array([.6,1.6]))/4.6 == pytest.approx(5.)
+    with pytest.raises(ValueError,match="fixed-temperature"):
+        solve_steady_stepped_rod([.4],2.,1.5,3.,[2.,3.],end_areal_heat_capacity=1.)
