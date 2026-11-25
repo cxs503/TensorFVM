@@ -6,7 +6,7 @@ from .annulus import solve_annular_conduction
 
 def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, omega, *,
                         contact_resistances, sheet_capacities, sheet_generation=(0., 0.),
-                        azimuthal_mode=0, volumetric_heat_capacity=None,
+                        azimuthal_mode=0, volumetric_heat_capacity=None, film_coefficients=(None, None),
                         inner_resistance_fractions=(.5, .5), sheet_conductivities=(0., 0.),
                         return_wall_rates=False, return_bulk_storage=False, return_angular_conduction=False):
     """Return two sheet temperatures and their incoming and outgoing radial fluxes.
@@ -14,6 +14,8 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
     The cell faces include both sheets. Conductivity is scalar or per cell.
     Wall temperatures and areal heat generation (W/m²) are complex amplitudes of
     cos(mθ) exp(iωt). Omitting volumetric_heat_capacity gives quasi-steady bulk conduction.
+    At either physical wall a positive film coefficient (W/m²/K) makes the supplied
+    temperature an ambient phasor. None prescribes the surface temperature.
     A positive scalar or per-cell capacity (J/(m³ K)) enables harmonic bulk storage.
     inner_resistance_fractions specifies the fraction of each contact resistance
     (m² K/W) on the smaller-radius side of its storing sheet (capacity in J/(m² K)).
@@ -59,7 +61,14 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
         raise ValueError("two inner resistance fractions in [0, 1] required")
     inner = resistance*fractions
     outer = resistance*(1-fractions)
-    layer_resistances = [(0., inner[0]), (outer[0], inner[1]), (outer[1], 0.)]
+    if np.shape(film_coefficients) != (2,) or any(
+            h is not None and (not np.isrealobj(h) or not np.isfinite(h) or h <= 0)
+            for h in film_coefficients):
+        raise ValueError("supply a positive finite film coefficient or None for each physical wall")
+    inner_film = [1/value if value else None for value in inner]
+    outer_film = [1/value if value else None for value in outer]
+    layer_films = [(film_coefficients[0], inner_film[0]), (outer_film[0], inner_film[1]),
+                   (outer_film[1], film_coefficients[1])]
     ends = [0, *faces, len(r)-1]
     domains = []
     if return_bulk_storage:
@@ -69,8 +78,8 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
         cell_angular = 2*np.pi*k*azimuthal_mode**2*np.log1p(np.diff(r)/r[:-1])
         angular_maps = np.empty((3, 2), dtype=complex)
     for layer, (a, b) in enumerate(zip(ends, ends[1:])):
-        film = tuple(1/value if value else None for value in layer_resistances[layer])
-        # The two unit Dirichlet responses map end temperatures to radial rates.
+        film = layer_films[layer]
+        # The two unit temperature responses map end temperatures to radial rates.
         columns = []
         for column, boundary in enumerate(np.eye(2)):
             field, rate = solve_annular_conduction(

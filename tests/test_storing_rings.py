@@ -73,3 +73,17 @@ def test_integrated_angular_conduction_against_power_law(mode):
         mesh, k, [32, 64], edges[[0, -1]]**mode, 0., azimuthal_mode=mode,
         sheet_capacities=(0., 0.), contact_resistances=(0., 0.), return_angular_conduction=True)
     np.testing.assert_allclose(angular, 2*np.pi*k*mode*np.diff(edges**mode), rtol=1e-4, atol=0.)
+
+
+@pytest.mark.parametrize("films", [(7., None), (None, 3.), (7., 3.)])
+def test_dc_wall_films_against_radial_resistances(films):
+    edges = np.array([.4, .55, .9, 1.1])
+    k = [1., 2.5, .8]
+    contacts = np.array([.5, .9])
+    ambient = np.array([1.+.2j, -.3j])
+    _, _, _, rates = solve_storing_rings(
+        edges, k, [1, 2], ambient, 0., contact_resistances=contacts, sheet_capacities=(.25, .8),
+        film_coefficients=films, return_wall_rates=True)
+    film_resistance = sum(1/(r*h) for r, h in zip(edges[[0, -1]], films) if h is not None)
+    resistance = sum(np.diff(np.log(edges))/k) + sum(contacts/edges[1:-1]) + film_resistance
+    np.testing.assert_allclose(rates, 2*np.pi*(ambient[0]-ambient[1])/resistance, rtol=1e-12)
