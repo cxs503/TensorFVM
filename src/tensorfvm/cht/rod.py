@@ -445,7 +445,7 @@ def solve_harmonic_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
                                film_coefficient=0., ambient_temperature=0.,
                                shoulder_areal_heat_capacity=0., flux_order=1, contact_resistance=0., return_traces=False,
                                end_types=("temperature","temperature"), end_film_coefficient=0.,
-                               end_areal_heat_capacity=0., interface_power=0., interface_heat_capacity=0., interface_left_fraction=None, interface_capacity_left_fraction=None, trace_power=(0.,0.),
+                               end_areal_heat_capacity=0., end_applied_power=0., interface_power=0., interface_heat_capacity=0., interface_left_fraction=None, interface_capacity_left_fraction=None, trace_power=(0.,0.),
                                heat_loss_coefficient=0., bulk_ambient_temperature=0.,
                                net_source_gradient=None, net_source_curvature=None,
                                source_derivative_breaks=None, return_source_derivatives=False, separate_mean=False, return_mean_rate=False):
@@ -457,7 +457,8 @@ def solve_harmonic_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
     temperature, h*A*(Tamb-Twall). Supply a scalar h or a west/east pair
     in W/(m² K). Only Robin ends use their coefficient. end_areal_heat_capacity
     (J/(m² K), scalar or pair) adds surface storage to power or Robin ends.
-    External input then supplies both storage and conduction. Both reported
+    end_applied_power adds independent inward power (W, scalar or west/east pair)
+    at power or Robin ends. External input then supplies both storage and conduction. Both reported
     cell powers point right, so inward power at the right end changes sign.
     Cell inputs are width (m), area (m²), conductivity (W/(m K)), volumetric
     capacity (J/(m³ K)) and source (W/m³). At each internal face the absolute
@@ -514,6 +515,11 @@ def solve_harmonic_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
     operator,mass,volume,g,film,end_load,layout = _rod_operator(dx,area,conductivity,volumetric_heat_capacity,
                                                film_coefficient,shoulder_areal_heat_capacity,flux_order,contact_resistance,end_types,end_film_coefficient,end_areal_heat_capacity,interface_heat_capacity,interface_left_fraction,interface_capacity_left_fraction)
     rhs, ends, _ = _load(volume,end_load,layout,film,end_temperatures,source,ambient_temperature,interface_power,trace_power,complex)
+    applied = _profile(end_applied_power, 2, "end applied power", complex)
+    if np.any(applied[np.asarray(end_types) == "temperature"]):
+        raise ValueError("end applied power must be zero on fixed-temperature ends")
+    if layout.free_ends.size:
+        rhs[-layout.free_ends.size:] += applied[layout.free_ends]
     operator,bulk_g = _bulk_exchange_operator(operator,mass,volume,layout.cells,heat_loss_coefficient)
     n = len(volume)
     reservoir = _profile(bulk_ambient_temperature,n,"bulk ambient temperature",complex)

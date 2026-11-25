@@ -942,3 +942,19 @@ def test_anchored_zero_frequency_complex_resistive_rod():
     with pytest.raises(ValueError, match="return_mean_rate"):
         solve_harmonic_stepped_rod(dx, np.ones(2), conductivity, 1., (0.,0.), 0.,
                                    end_types=("power","power"))
+
+
+def test_independent_robin_power_and_wall_storage():
+    args = ([.25, .75], [2., 2.], 1.2, .8)
+    ambient = np.array([.2+.1j, -.3j])
+    applied = np.array([.5j, .7-.1j])
+    films = np.array([3., 4.])
+    opts = dict(end_types=("robin", "robin"), end_film_coefficient=films, end_areal_heat_capacity=(.2, .5))
+    result = solve_harmonic_stepped_rod(*args, ambient, 8., end_applied_power=applied, **opts)
+    reference = solve_harmonic_stepped_rod(*args, ambient + applied/(2*films), 8., **opts)
+    np.testing.assert_allclose(result[0], reference[0], atol=1e-13)
+    surface = result[1][[0, -1]]
+    inward = np.array([result[2][0], -result[3][-1]])
+    np.testing.assert_allclose(inward, applied+2*films*(ambient-surface)-8j*2*np.array([.2,.5])*surface, atol=1e-13)
+    with pytest.raises(ValueError, match="fixed-temperature"):
+        solve_harmonic_stepped_rod(*args, ambient, 8., end_applied_power=applied)
