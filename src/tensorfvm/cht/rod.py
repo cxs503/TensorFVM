@@ -138,7 +138,8 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
                                 end_temperatures, time, initial_temperature, *, source=0.,
                                 film_coefficient=0., ambient_temperature=0.,
                                 shoulder_areal_heat_capacity=0., initial_shoulder_temperature=None,
-                                theta=.5, flux_order=1, contact_resistance=0., return_traces=False):
+                                theta=.5, flux_order=1, contact_resistance=0., return_traces=False,
+                                method="theta", return_step_heat=False):
     """Advance the stepped rod with theta-weighted cell and shoulder storage.
 
     Uses the geometry, units, power signs and four outputs of the harmonic solve,
@@ -147,22 +148,31 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
     temperature balances its two neighbouring cells and its film instantaneously.
     initial_shoulder_temperature (scalar or n-1 values) overrides only faces
     carrying positive heat capacity. Massless faces always satisfy their balance.
+    method="sdirk2" uses a two-stage second-order L-stable method. Its inputs
+    are sampled at the internal stage and step end. With return_step_heat=True,
+    append a dictionary of integrated joules per interval: left/right (positive
+    toward increasing x), source, ambient (entering the shoulder), and contact
+    (toward increasing x across the overlap, for each internal face).
     """
     time = np.asarray(time,dtype=float)
     if time.ndim != 1 or len(time)<2 or not np.isfinite(time).all() or np.any(np.diff(time)<=0):
         raise ValueError("time must be a finite strictly increasing vector")
     if not .5 <= theta <= 1.:
         raise ValueError("theta must be in [0.5,1]")
+    if method not in ("theta","sdirk2") or (method == "sdirk2" and theta != .5):
+        raise ValueError("choose theta integration or sdirk2 without a theta override")
+    weight = theta if method == "theta" else 1.-1./np.sqrt(2.)
     operator,mass,volume,g,film,end_load,layout = _rod_operator(dx,area,conductivity,volumetric_heat_capacity,
                                                 film_coefficient,shoulder_areal_heat_capacity,flux_order,contact_resistance)
     n = len(g)
     def forcing(t):
         values = [v(float(t)) if callable(v) else v for v in (end_temperatures,source,ambient_temperature)]
-        return _load(volume,end_load,layout,film,*values,float)
+        load, boundary = _load(volume,end_load,layout,film,*values,float)
+        return load, boundary, values[1], values[2]
 
     states = np.empty((len(time),len(mass)))
     ends = np.empty((len(time),2))
-    rhs,ends[0] = forcing(time[0])
+    rhs,ends[0],src,air = forcing(time[0])
     initial = _profile(initial_temperature,n,"initial temperature")
     states[0,layout.cells] = initial
     # At t0 a supplied storing-face temperature is a constraint on adjacent
@@ -181,12 +191,39 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
         states[0,free] = spsolve(operator[free][:,free],load)
     M = sp.diags(mass,format="csc")
     previous_dt = None
+    if return_step_heat:
+        step_heat = {key:np.empty((len(time)-1,size)) for key,size in
+                     (("left",n),("right",n),("source",n),("ambient",n-1),("contact",n-1))}
+        area_values = _profile(area,n,"area")
+        larger_left = area_values[:-1]>=area_values[1:]
+        resistance = _profile(contact_resistance,n-1,"contact resistance")
+        split = resistance>0
+        contact_g = np.minimum(area_values[:-1],area_values[1:])[split]/resistance[split]
     for step, dt in enumerate(np.diff(time)):
         if dt != previous_dt:
-            lu = splu(M+theta*dt*operator)
+            lu = splu(M+weight*dt*operator)
             previous_dt = dt
-        next_rhs, ends[step+1] = forcing(time[step+1])
         u = states[step]
-        states[step+1] = lu.solve(mass*u+dt*((1-theta)*(rhs-operator@u)+theta*next_rhs))
-        rhs = next_rhs
-    return layout.output(states,ends,g,flux_order,return_traces)
+        stage = u
+        stage_ends = ends[step]
+        if method == "sdirk2":
+            rhs,stage_ends,src,air = forcing(time[step]+weight*dt)
+            stage = lu.solve(mass*u+weight*dt*rhs)
+        next_rhs, ends[step+1],next_src,next_air = forcing(time[step+1])
+        states[step+1] = lu.solve(mass*u+dt*((1-weight)*(rhs-operator@stage)+weight*next_rhs))
+        if return_step_heat:
+            # Flux, storage and film operators are linear, so their time
+            # integrals can be evaluated on the stage-weighted state.
+            mean = (1-weight)*stage+weight*states[step+1]
+            boundary = (1-weight)*stage_ends+weight*ends[step+1]
+            _,faces,left,right,(up,down) = layout.output(mean,boundary,g,flux_order,True)
+            step_heat["left"][step] = dt*left
+            step_heat["right"][step] = dt*right
+            step_heat["source"][step] = dt*volume*((1-weight)*np.asarray(src)+weight*np.asarray(next_src))
+            step_heat["ambient"][step] = dt*film*((1-weight)*np.asarray(air)+weight*np.asarray(next_air)-faces[1:-1])
+            contact = np.where(larger_left,left[1:],right[:-1])
+            contact[split] = contact_g*(up[split]-down[split])
+            step_heat["contact"][step] = dt*contact
+        rhs,src,air = next_rhs,next_src,next_air
+    output = layout.output(states,ends,g,flux_order,return_traces)
+    return output+(step_heat,) if return_step_heat else output

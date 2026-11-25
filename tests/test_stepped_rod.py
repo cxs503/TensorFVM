@@ -117,3 +117,36 @@ def test_resistive_shoulder_transient_temperature_and_power_paths(order):
     net = leave[:,:-1]-enter[:,1:]+2*exposed*(1.-faces[:,1:-1])
     np.testing.assert_allclose(.5*exposed*np.diff(faces[:,1:-1],axis=0),
                                np.diff(times)[:,None]*(.4*net[:-1]+.6*net[1:]),atol=1e-12)
+
+
+@pytest.mark.parametrize("method",["theta","sdirk2"])
+def test_reported_step_heats_track_storage_on_nonuniform_intervals(method):
+    from tensorfvm.cht.rod import solve_transient_stepped_rod
+    dx,area = np.array([.2,.4,.3]),np.array([1.,2.,.5])
+    exposed = abs(np.diff(area))
+    times = np.array([.2,.207,.24,.31,.46])
+    cell,face,_,_,heat = solve_transient_stepped_rod(dx,area,2.,3.,lambda t:[1.+t,t*t],times,0.,
+                   source=lambda t:np.array([1.,2.,3.])*t*t,film_coefficient=2.,
+                   ambient_temperature=lambda t:[t,1.-2*t],shoulder_areal_heat_capacity=.7,
+                   initial_shoulder_temperature=1.,contact_resistance=[.13,.22],method=method,
+                   return_step_heat=True,flux_order=2)
+    np.testing.assert_allclose(3*area*dx*np.diff(cell,axis=0),
+                               heat["left"]-heat["right"]+heat["source"],atol=1e-12)
+    np.testing.assert_allclose(.7*exposed*np.diff(face[:,1:-1],axis=0),
+                               heat["right"][:,:-1]-heat["left"][:,1:]+heat["ambient"],atol=1e-12)
+    np.testing.assert_allclose(heat["contact"],np.column_stack((heat["right"][:,0],heat["left"][:,2])),atol=1e-12)
+    gamma = 1.-1./np.sqrt(2.) if method=="sdirk2" else 0.
+    last_weight = gamma if method=="sdirk2" else .5
+    sample = times[:-1]+gamma*np.diff(times)
+    integral = np.diff(times)*((1-last_weight)*sample**2+last_weight*times[1:]**2)
+    np.testing.assert_allclose(heat["source"],integral[:,None]*area*dx*[1.,2.,3.])
+
+
+def test_sdirk2_stiff_mode_damping_and_temporal_order():
+    from tensorfvm.cht.rod import solve_transient_stepped_rod
+    # One unit cell between zero-temperature ends obeys dT/dt=-4T.
+    def run(times):
+        return solve_transient_stepped_rod([1.],1.,1.,1.,[0.,0.],times,1.,method="sdirk2")[0][-1,0]
+    errors = [abs(run(np.linspace(0.,.25,n+1))-np.exp(-1)) for n in (8,16,32)]
+    assert all(e/f>3.9 for e,f in zip(errors,errors[1:]))
+    assert abs(run([0.,1e6])) < 2e-6
