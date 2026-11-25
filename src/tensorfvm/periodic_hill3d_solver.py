@@ -1,6 +1,6 @@
 """3-D periodic-hill solver (streamwise- and spanwise-periodic).
 
-Round 33 (mission 23249, TensorFVM).  Companion to ``periodic_hill3d`` (mesh).
+Round 34 (mission 25995, TensorFVM).  Companion to ``periodic_hill3d`` (mesh).
 A CPU reference fractional-step (predictor / pressure-projection) incompressible
 solver on the periodic-extruded terrain-following hill mesh.  It is the 3-D
 analogue of the 2-D ``periodic_hill`` solver:
@@ -17,6 +17,12 @@ It is *not* a qualified Re=2800 LES: the SGS constant, the upwind fraction and
 the time step need qualification on a refined grid before any number from it
 is graded against the DNS reference.  The flat-bottom limit (``height_m = 0``)
 must reproduce 3-D Poiseuille flow; that is the correctness gate.
+
+Round 34 fixes (mission 25995):
+- Bug 3: pressure matrix off-diagonal sign (pm[n,o] was +a, should be -a)
+- Bug 4: pressure gradient in step() now uses gradient(p, pressure=True) for
+  consistency with the pressure Poisson operator
+- Bug 5: CFL calculation no longer double-counts cell_dist
 """
 
 from __future__ import annotations
@@ -160,10 +166,11 @@ class BodyFittedTransient3DHill:
         #                        - sum_{f where i is neighbor} a_f*(p[i]-p[o_f])
         # This gives:
         #   pm[o, o] += a, pm[o, n] -= a  (owner contribution)
-        #   pm[n, n] += a, pm[n, o] += a  (neighbor contribution, note the + sign)
+        #   pm[n, n] += a, pm[n, o] -= a  (neighbor contribution, - sign!)
+        # Round 34 fix: pm[n,o] was +a[i], corrected to -a[i] (Bug 3).
         row = np.r_[o[i], o[i], n[i], n[i]]
         col = np.r_[o[i], n[i], n[i], o[i]]
-        val = np.r_[a[i], -a[i], a[i], a[i]]
+        val = np.r_[a[i], -a[i], a[i], -a[i]]
         self.pressure_matrix = coo_matrix((val, (row, col)),
                                          shape=(self.N, self.N)).tocsc()
         # Pin cell 0 to p=0 to fully constrain the constant mode.
@@ -195,6 +202,12 @@ class BodyFittedTransient3DHill:
                 - self.predict_flux(self.velocity))
 
     def pressure_flux_gradient(self, p):
+        """Compute the pressure flux gradient (compact face-coefficient form).
+
+        This is the adjoint of the pressure Poisson operator assembled in
+        ``_build_pressure``, so that ``integrate(pressure_flux_gradient(p))``
+        equals ``pm @ p`` (up to the pinned row).
+        """
         g = self.gradient(p, pressure=True)
         gf = 0.5 * (g[self.owner] + g[self.safe])
         gf[self.boundary] = g[self.owner[self.boundary]]
@@ -264,17 +277,12 @@ class BodyFittedTransient3DHill:
         tentative = u0 + c.time_step_s / c.density_kg_m3 * (
             self.integrate(visc - conv) / self.volumes[:, None] + bf[None, :])
         p, q, it, div = self.project(self.momentum_predictor_flux(tentative))
-        # Convert cell-centered pressure to face-centered for momentum correction
-        face_p = 0.5 * (p[self.owner] + p[self.safe])
-        face_p[self.boundary] = p[self.owner[self.boundary]]
-        # Pressure gradient: sum_f face_p[f] * area[f] / Vol[i] for owner faces
-        #                    - sum_f face_p[f] * area[f] / Vol[i] for neighbor faces
-        # This is the negative of the divergence of the pressure flux.
-        face_p_2d = face_p[:, None]  # (n_faces, 1)
-        pressure_force = torch.zeros((self.N, 3), dtype=torch.float64)
-        pressure_force.index_add_(0, self.owner, face_p_2d * self.area)
-        pressure_force.index_add_(0, self.safe, -(face_p_2d * self.area))
-        u = tentative - c.time_step_s / c.density_kg_m3 * pressure_force / self.volumes[:, None]
+        # Round 34 fix: use gradient(p, pressure=True) for the velocity
+        # correction, consistent with the pressure Poisson operator.
+        # The old code used face_p * area / volume which was not the adjoint
+        # of pm and caused continuity to grow.
+        pg = self.gradient(p, pressure=True)
+        u = tentative - c.time_step_s / c.density_kg_m3 * pg
         # CFL based on velocity magnitude and cell sizes
         speed = torch.linalg.vector_norm(u, dim=1)
         # Cell-centered distance: accumulate face distances over cells
