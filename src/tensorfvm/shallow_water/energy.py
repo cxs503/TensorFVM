@@ -147,6 +147,11 @@ def exact_energy(case: DamBreakCase, t: float, n_quad: int = 200_000) -> dict:
     }
 
 
+def _hydraulic_jump_loss(gravity, discharge_in_shock_frame, h1, h2):
+    """Mechanical energy lost per time and width across a compressive jump."""
+    return float(gravity * abs(discharge_in_shock_frame) * abs(h2-h1)**3 / (4*h1*h2))
+
+
 def bore_dissipation_rate(case: DamBreakCase) -> float:
     """Constant energy dissipation rate of the Stoker bore (per unit width).
 
@@ -159,7 +164,7 @@ def bore_dissipation_rate(case: DamBreakCase) -> float:
     sol = stoker_constant_state(case.h0, case.h1, case.gravity)
     h1, h2 = case.h1, sol["h2"]
     q_rel = h1 * sol["shock_speed"]
-    return float(case.gravity * q_rel * (h2 - h1) ** 3 / (4.0 * h1 * h2))
+    return _hydraulic_jump_loss(case.gravity, q_rel, h1, h2)
 
 
 def certify_bore_dissipation(case: DamBreakCase = STOKER_WET,

@@ -79,6 +79,8 @@ from .riemann import (
     solve_riemann,
     riemann_cell_averages,
     riemann_integrated_flux,
+    riemann_energy,
+    riemann_shock_losses,
     wave_pattern,
 )
 from .exact import (
@@ -187,7 +189,7 @@ __all__ = [
     "ritter_front_position",
     "dry_riemann_integrated_flux",
     "ritter_state", "dry_riemann_state", "dry_riemann_cell_averages",
-    "riemann_cell_averages", "riemann_integrated_flux",
+    "riemann_cell_averages", "riemann_integrated_flux", "riemann_energy", "riemann_shock_losses",
     "run_case",
     "sensitivity_study",
     "similarity_probes",

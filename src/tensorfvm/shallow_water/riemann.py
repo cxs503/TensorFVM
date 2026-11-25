@@ -87,6 +87,7 @@ import math
 
 import numpy as np
 
+from .energy import _hydraulic_jump_loss, cell_energy
 from .exact import (_riemann_cell_means, _similarity_flux_integral, ritter_front_position,
                     ritter_state, stoker_constant_state)
 
@@ -104,6 +105,8 @@ __all__ = [
     "sample_exact",
     "riemann_cell_averages",
     "riemann_integrated_flux",
+    "riemann_energy",
+    "riemann_shock_losses",
     "smooth_region_ode_residuals",
     "solve_riemann",
     "verdict",
@@ -323,6 +326,35 @@ def sample_exact(sol: RiemannSolution, x, t: float):
 
     # The star-state velocity lies between the two waves in every inertial frame.
     return np.where(xi <= sol.u_star, h_l, h_r), np.where(xi <= sol.u_star, u_l, u_r)
+
+
+def riemann_energy(sol: RiemannSolution, x_min: float, x_max: float, t: float):
+    """Integrate exact wet-solution mechanical energy per width on a finite interval."""
+    if not all(map(math.isfinite, (x_min, x_max, t))) or x_min >= x_max or t < 0:
+        raise ValueError("require a finite increasing interval and nonnegative finite time")
+    fronts = {sol.x0+t*speed for speed in sol.wave_speeds}
+    edges = np.array([x_min, *sorted(x for x in fronts if x_min < x < x_max), x_max])
+    half = np.diff(edges)/2
+    # Mechanical energy density is quartic inside each rarefaction.
+    nodes = np.array([-math.sqrt(.6), 0., math.sqrt(.6)])
+    weights = np.array([5/9, 8/9, 5/9])
+    h, u = sample_exact(sol, edges[:-1,None]+half[:,None]*(1+nodes), t)
+    return float(half @ (cell_energy(h,h*u,sol.gravity)["total"] @ weights))
+
+
+def riemann_shock_losses(sol: RiemannSolution):
+    """Return mechanical-energy loss per time and width on each wave.
+
+    A rarefaction contributes zero. Each shock contributes its rate while
+    inside the chosen control volume, regardless of its propagation direction.
+    The returned rates describe the waves on the full line.
+    """
+    losses = {}
+    for side, h, u, speed in (("left", sol.hL, sol.uL, sol.left_shock_speed),
+                              ("right", sol.hR, sol.uR, sol.right_shock_speed)):
+        losses[side] = (0. if speed is None else
+                        _hydraulic_jump_loss(sol.gravity, h*(u-speed), h, sol.h_star))
+    return losses
 
 
 def riemann_integrated_flux(sol: RiemannSolution, x, t: float):
@@ -776,14 +808,20 @@ def run_case(case: RiemannCase, n: int = 1600, cfl: float = 0.4,
     steps = solver.advance(case.t_end)
     h, u = solver.primitive()
     metrics = profile_metrics(case, solver.x, h, u, solver.time)
-    h_mean, hu_mean = riemann_cell_averages(case.solution(), edges, solver.time)
+    sol = case.solution()
+    h_mean, hu_mean = riemann_cell_averages(sol, edges, solver.time)
     metrics["cell_mean_depth_l1"] = float(np.mean(np.abs(h-h_mean)) / case.h_ref)
     metrics["cell_mean_discharge_l1"] = float(np.mean(np.abs(h*u-hu_mean)) / (case.h_ref*case.c_ref))
+    energy_exact = riemann_energy(sol, case.x_min, case.x_max, solver.time)
+    metrics["energy_exact"] = energy_exact
+    metrics["energy_numerical"] = solver.kinetic_energy()
+    metrics["energy_relative_error"] = abs(metrics["energy_numerical"]-energy_exact)/energy_exact
+    metrics["shock_energy_loss_rates"] = riemann_shock_losses(sol)
     metrics["volume_initial"] = float(volume0)
     metrics["volume_drift"] = (float(abs(solver.total_volume() - volume0)
                                      / volume0) if volume0 > 0 else float("nan"))
     # The analytic boundary flux includes waves passing either domain end.
-    mass_flux, impulse = riemann_integrated_flux(case.solution(), edges[[0, -1]], solver.time)
+    mass_flux, impulse = riemann_integrated_flux(sol, edges[[0, -1]], solver.time)
     expected_mass = mass_flux[0]-mass_flux[1]
     expected_momentum = impulse[0]-impulse[1]
     volume_change = solver.total_volume()-volume0
@@ -832,6 +870,7 @@ def convergence_series(case: RiemannCase, resolutions=(200, 400, 800, 1600),
             "plateau_velocity": metrics["plateau"]["velocity_rel_error"],
             "extremum_count": metrics["extremum_count"],
             "volume_drift": metrics["volume_drift"],
+            "energy_relative_error": metrics["energy_relative_error"],
             "volume_budget_relative": metrics["volume_budget_relative"],
             "momentum_budget_relative": metrics["momentum_budget_relative"],
             "pass": record["verdict"]["pass"],

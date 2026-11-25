@@ -517,3 +517,48 @@ def test_generated_vacuum_flux_after_drying_and_subdomain_budget(record_property
         errors.append(row)
     for coarse, fine in zip(errors, errors[1:]):
         assert all(b < a for a,b in zip(coarse, fine))
+
+
+@pytest.mark.parametrize("case", DEFAULT_CASES, ids=lambda c: c.name)
+def test_wet_riemann_mechanical_energy_balance_and_refinement(case, record_property):
+    from tensorfvm.shallow_water import riemann_energy, riemann_shock_losses
+
+    sol = case.solution()
+    rates = riemann_shock_losses(sol)
+    def energy_flux(h, u):
+        return h*u*(.5*u*u+sol.gravity*h)
+    net_flux = energy_flux(sol.hL, sol.uL)-energy_flux(sol.hR, sol.uR)
+    initial = riemann_energy(sol, case.x_min, case.x_max, 0.)
+    final = riemann_energy(sol, case.x_min, case.x_max, case.t_end)
+    residual = abs(final-initial-case.t_end*(net_flux-sum(rates.values())))
+    record_property("exact_energy_balance_error", residual)
+    assert residual < 1e-12
+    for side, rate in rates.items():
+        record_property(f"{side}_shock_loss_rate", rate)
+        assert (rate > 0) == (getattr(sol, side+"_kind") == "shock")
+    errors = []
+    for n in (200, 400, 800):
+        error = run_case(case, n=n)["metrics"]["energy_relative_error"]
+        errors.append(error)
+        record_property(f"relative_energy_error_{n}", error)
+    assert errors[2] < errors[1] < errors[0]
+
+
+def test_two_shock_energy_losses_match_each_moving_jump(record_property):
+    from tensorfvm.shallow_water import riemann_shock_losses
+
+    discrep = []
+    for boost in (-7., 0., 7.):
+        sol = solve_riemann(1., 1.5+boost, .6, -1.+boost)
+        losses = riemann_shock_losses(sol)
+        for side in ("left", "right"):
+            speed = getattr(sol, side+"_shock_speed")
+            def relative_energy_flux(h, u):
+                e = .5*h*(u*u+sol.gravity*h)
+                return (e+.5*sol.gravity*h*h)*u-speed*e
+            star_flux = relative_energy_flux(sol.h_star, sol.u_star)
+            jump = (relative_energy_flux(sol.hL, sol.uL)-star_flux if side == "left" else
+                    star_flux-relative_energy_flux(sol.hR, sol.uR))
+            discrep.append(abs(losses[side]-jump))
+    record_property("max_single_shock_energy_jump_error", max(discrep))
+    assert max(discrep) < 3e-13
