@@ -232,10 +232,12 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
                                   times, initial_temperature, sheet_face, *, initial_sheet_temperature,
                                   sheet_capacity, resistance=0., inner_resistance_fraction=.5,
                                   sheet_conductivity=0., azimuthal_mode=0, sheet_film=0., ambient=0.,
-                                  sheet_source_intervals=0., theta=.5):
+                                  sheet_source_intervals=0., theta=.5, wall_fluxes=(None,None)):
     """Advance one real azimuthal mode with a storing sheet and Dirichlet walls.
 
     Walls and reservoir ambient accept constants or one sample per output time.
+    A None wall temperature instead takes a prescribed inward wall_fluxes
+    entry (W/m²), either constant or sampled at the output times.
     Sheet generation in W/m² is constant or has shape (interval,2), giving its
     one-sided start and end values. Times must include each source switch.
     Cell temperatures refer to radial volume centroids. Returns cell and sheet
@@ -263,9 +265,14 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
     k,c,u = (np.broadcast_to(np.asarray(v,dtype=float),(n,)) for v in (conductivity,volumetric_heat_capacity,initial_temperature))
     if np.any(k<=0) or np.any(c<=0) or not all(np.isfinite(v).all() for v in (k,c,u)):
         raise ValueError("material properties must be positive and initial temperatures finite")
-    if len(wall_temperatures)!=2 or np.ndim(initial_sheet_temperature)!=0 or not np.isfinite(initial_sheet_temperature):
+    if len(wall_temperatures)!=2 or len(wall_fluxes)!=2 or np.ndim(initial_sheet_temperature)!=0 or not np.isfinite(initial_sheet_temperature):
         raise ValueError("supply two wall histories and a finite initial sheet temperature")
-    west,east,fluid = (np.broadcast_to(np.asarray(v,dtype=float),t.shape) for v in (*wall_temperatures,ambient))
+    for temp,flux in zip(wall_temperatures,wall_fluxes):
+        if (temp is None)==(flux is None):
+            raise ValueError("supply either temperature or inward heat flux for each wall")
+    west,east = (np.broadcast_to(np.asarray(v if v is not None else q,dtype=float),t.shape)
+                 for v,q in zip(wall_temperatures,wall_fluxes))
+    fluid = np.broadcast_to(np.asarray(ambient,dtype=float),t.shape)
     drive = np.asarray(sheet_source_intervals,dtype=float)
     if drive.shape not in ((),(len(t)-1,2)):
         raise ValueError("sheet source must be constant or shaped (interval,2)")
@@ -279,6 +286,12 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
     links = np.r_[links[:j],right[j-1]+inner_resistance_fraction*resistance/circum,
                   left[j]+(1-inner_resistance_fraction)*resistance/circum,links[j+1:]]
     g = 1/links
+    # Write each boundary power as a known load plus its cell coefficient.
+    west_factor,east_factor = g[0],-g[-1]
+    if wall_fluxes[0] is not None:
+        g[0],west_factor = 0.,2*np.pi*r[0]
+    if wall_fluxes[1] is not None:
+        g[-1],east_factor = 0.,-2*np.pi*r[-1]
     capacity = np.insert(c*np.pi*width*(r[:-1]+r[1:]),j,circum*sheet_capacity)
     sink = np.insert(2*np.pi*k*azimuthal_mode**2*np.log1p(width/r[:-1]),j,
                      circum*(sheet_film+sheet_conductivity*(azimuthal_mode/r[j])**2))
@@ -294,13 +307,16 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
         supply = (1-theta)*drive[i,0]+theta*drive[i,1]
         old = state[i]
         # Increment form avoids subtracting two large storage terms.
-        flux = -g*np.diff(np.r_[avg_w,old,avg_e])
+        wall_input = np.array([west_factor*avg_w,east_factor*avg_e])
+        flux = -g*np.diff(np.r_[0.,old,0.])
+        flux[[0,-1]] += wall_input
         rhs = -np.diff(flux)-sink*old
         rhs[j] += circum*(supply+sheet_film*avg_a)
         bands[1] = capacity/dt+theta*diagonal
         delta = solve_banded((1,1),bands,rhs)
         state[i+1] = old+delta
         stage = old+theta*delta
-        heat[i] = -dt*g*np.diff(np.r_[avg_w,stage,avg_e])
+        heat[i] = -dt*g*np.diff(np.r_[0.,stage,0.])
+        heat[i,[0,-1]] += dt*wall_input
         reservoir[i] = dt*circum*sheet_film*(stage[j]-avg_a)
     return np.delete(state,j,axis=1),state[:,j],heat[:,:j+1],heat[:,j+1:],reservoir

@@ -212,3 +212,24 @@ def test_transient_annular_sheet_switched_pulse_matches_three_store_exponential(
         if previous is not None:
             assert error < previous/3.8
         previous = error
+
+
+@pytest.mark.parametrize("theta",[.5,1.])
+def test_annular_sheet_flux_wall_global_energy(theta):
+    from tensorfvm.cht.annulus import solve_transient_annular_sheet
+    edges = np.array([.3,.5,.64,.92])
+    t = np.array([0.,.01,.13,.3])
+    west,east = 2.-t,.3+2*t
+    drive = np.array([[.7,.8],[-1.,-.2],[.1,.3]])
+    h,cs = .3,.5
+    u,s,hi,ho,external = solve_transient_annular_sheet(edges,[1.,2.,2.],1.3,(None,None),
+               t,[.3,.1,-.2],1,initial_sheet_temperature=.2,sheet_capacity=cs,sheet_film=h,
+               ambient=.6,sheet_source_intervals=drive,wall_fluxes=(west,east),theta=theta)
+    dt = np.diff(t)
+    def stage(x):
+        return (1-theta)*x[:-1]+theta*x[1:]
+    np.testing.assert_allclose(hi[:,0],dt*2*np.pi*edges[0]*stage(west))
+    np.testing.assert_allclose(ho[:,-1],-dt*2*np.pi*edges[-1]*stage(east))
+    total = u@(1.3*np.pi*np.diff(edges**2))+2*np.pi*edges[1]*cs*s
+    generation = ((1-theta)*drive[:,0]+theta*drive[:,1])*dt*2*np.pi*edges[1]
+    np.testing.assert_allclose(np.diff(total),hi[:,0]-ho[:,-1]+generation-external,atol=2e-14)
