@@ -338,3 +338,18 @@ def test_monotone_theta_rejects_negative_storing_wall_coupling():
     bc = {"west":dict(type="robin",values=0.,film_coefficient=2.,wall_areal_heat_capacity=1.)}
     with pytest.raises(ValueError,match="off-diagonal"):
         solve_transient_conduction([.5,.5],[1.],1.,1.,bc,[0.,.01],1.,wall_flux_order=2,monotone_theta=True)
+
+
+def test_fixed_temperature_quadratic_flux_uses_graded_cell_means_on_each_side():
+    dx, dy = np.array([.1,.3,.6]), np.array([.2,.45,.35])
+    x, y = np.cumsum(dx)-dx/2, np.cumsum(dy)-dy/2
+    mean_x = x**2+dx**2/12
+    mean_y = y**2+dy**2/12
+    initial = mean_x+mean_y[:,None]+x+2*y[:,None]
+    west, south = mean_y+2*y, mean_x+x
+    bc = {side:dict(type="dirichlet",values=values) for side,values in
+          (("west",west),("east",west+2),("south",south),("north",south+3))}
+    _,power = solve_transient_conduction(dx,dy,2.,1.,bc,[0.,.001],initial,
+        conductivity_y=3.,dirichlet_flux_order=2,return_wall_power=True)
+    for side,exact in (("west",-2*dy),("east",6*dy),("south",-6*dx),("north",12*dx)):
+        np.testing.assert_allclose(power[side][0],exact,atol=2e-14)

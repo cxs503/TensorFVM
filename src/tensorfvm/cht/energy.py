@@ -633,7 +633,7 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
                                theta=0.5, conductivity_y=None, return_wall_power=False, periodic_y=False,
                                wall_flux_order=1, heat_loss_coefficient=0., return_interior_power=False,
                                load_jump_times=(), return_face_heat=False, rannacher=False,
-                               monotone_theta=False):
+                               monotone_theta=False, dirichlet_flux_order=1):
     """Advance cell-centred conduction with fixed material data and boundary types.
 
     Return temperature at each requested time with shape (nt, ny, nx). Cell
@@ -677,7 +677,9 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
     wall_flux_order=2 uses two adjacent cell means to reconstruct a linearly
     varying normal flux on storing faces, accounting for both cells' widths,
     conductivities and any intervening contact. It needs two cells along the
-    normal. The default uses the boundary half-cell conductance.
+    normal. dirichlet_flux_order=2 applies the same cell-mean reconstruction
+    to fixed-temperature faces, including the flux used to advance the cells.
+    Both default to the boundary half-cell conductance.
     theta=0.5 selects Crank-Nicolson and theta=1 selects backward Euler.
     """
     dx, dy, time = (np.asarray(v, dtype=float) for v in (dx, dy, time))
@@ -708,6 +710,8 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
     sample_times = np.r_[time,np.nextafter(time[jump_indices],time[jump_indices-1])]
     end_samples = np.arange(1,len(time))
     end_samples[jump_indices-1] = np.arange(len(jumps))+len(time)
+    if dirichlet_flux_order not in (1,2):
+        raise ValueError("dirichlet_flux_order must be 1 or 2")
     if wall_flux_order not in (1,2):
         raise ValueError("wall_flux_order must be 1 or 2")
     if not .5 <= theta <= 1:
@@ -767,6 +771,46 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
         A, seam = _join_periodic_y(A, faces[1], bc)
     _, _, side_specs, types, values, _ = faces
     A = _bulk_loss_operator(A,heat_loss_coefficient,volume)
+    def second_order_wall(side, cells, mask, area):
+        x_side = side in ("west","east")
+        widths = dx if x_side else dy
+        if widths.size < 2:
+            raise ValueError("second-order wall flux requires two cells along the wall normal")
+        forward = side in ("west","south")
+        d1,d2 = widths[:2] if forward else widths[-2:][::-1]
+        inner = cells + (1 if x_side else nx)*(1 if forward else -1)
+        normal_k = k if x_side or conductivity_y is None else np.broadcast_to(conductivity_y, shape)
+        k1,k2 = normal_k.ravel()[cells], normal_k.ravel()[inner]
+        near = 1 if forward else -2
+        interface = (faces[0][:,near] if x_side else faces[1][near,:])[mask]
+        # For q(x)=q0+b*x, cell averages satisfy T_wall-T_j=a_j*q0+b_j*b.
+        a1 = d1/(2*k1)
+        a2 = a1 + area/interface
+        contact = area/interface-a1-d2/(2*k2)
+        b1 = d1**2/(6*k1)
+        b2 = d1**2/(2*k1)+d1*contact+(d1*d2/2+d2**2/6)/k2
+        scale = area/(a1*b2-a2*b1)
+        correction = scale*b1
+        g = scale*(b2-b1)
+        return inner, g, correction
+
+    fixed_wall_links = {}
+    if dirichlet_flux_order == 2:
+        A = A.tolil()
+        for side, cells, conductance, _, _, area in side_specs:
+            mask = types[side] == "dirichlet"
+            if not mask.any():
+                continue
+            cells = cells[mask]
+            inner, g, extra = second_order_wall(side,cells,mask,area[mask])
+            delta = g-conductance[mask]
+            for cell, other, change, correction in zip(cells,inner,delta,extra):
+                A[cell,cell] -= change+correction
+                A[cell,other] += correction
+            b[cells] -= delta*values[side][mask]
+            conductance[mask] = g
+            fixed_wall_links[side] = mask,cells,inner,extra
+        A = A.tocsc()
     varying_loads = []
     for side, cells, conductance, _, _, area in side_specs:
         if side in signals:
@@ -789,26 +833,7 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
             inner = cells
             correction = np.zeros_like(g)
             if wall_flux_order == 2:
-                x_side = side in ("west","east")
-                widths = dx if x_side else dy
-                if widths.size < 2:
-                    raise ValueError("second-order wall flux requires two cells along the wall normal")
-                forward = side in ("west","south")
-                d1,d2 = widths[:2] if forward else widths[-2:][::-1]
-                inner = cells + (1 if x_side else nx)*(1 if forward else -1)
-                normal_k = k if x_side or conductivity_y is None else np.broadcast_to(conductivity_y, shape)
-                k1,k2 = normal_k.ravel()[cells], normal_k.ravel()[inner]
-                near = 1 if forward else -2
-                interface = (faces[0][:,near] if x_side else faces[1][near,:])[mask]
-                # For q(x)=q0+b*x, cell averages satisfy T_wall-T_j=a_j*q0+b_j*b.
-                a1 = d1/(2*k1)
-                a2 = a1 + area/interface
-                contact = area/interface-a1-d2/(2*k2)
-                b1 = d1**2/(6*k1)
-                b2 = d1**2/(2*k1)+d1*contact+(d1*d2/2+d2**2/6)/k2
-                scale = area/(a1*b2-a2*b1)
-                correction = scale*b1
-                g = scale*(b2-b1)
+                inner, g, correction = second_order_wall(side,cells,mask,area)
             for cell, node, other, link, extra, conv in zip(cells, ids, inner, g, correction, film):
                 A[cell,cell] -= link+extra
                 A[cell,node] = link
@@ -867,6 +892,8 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
         powers = {side: _conductive_wall_power(types[side], boundary_values.get(side,values[side]),
                                                conductance,area,state[:,cells])
                   for side,cells,conductance,_,_,area in side_specs}
+        for side,(mask,cells,inner,extra) in fixed_wall_links.items():
+            powers[side][:,mask] += extra*(state[:,inner]-state[:,cells])
         for side,(mask,ids,cells,g,inner,correction) in wall_links.items():
             powers[side][:,mask] = (g*(selected_states[:,ids]-state[:,cells])
                                      +correction*(state[:,inner]-state[:,cells]))
