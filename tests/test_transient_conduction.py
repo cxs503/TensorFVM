@@ -134,3 +134,42 @@ def test_varying_generation_integrates_over_nonuniform_steps(theta):
     np.testing.assert_allclose(stored, np.diff(time)*((1-theta)*power[:-1]+theta*power[1:]))
     with pytest.raises(ValueError, match="source must be finite"):
         solve_transient_conduction([1.], [1.], 1., 1., {}, time, 0., source=lambda t: np.nan)
+
+
+def test_initial_wall_heat_pulse_with_insulated_ambient():
+    # Cell capacity 3, wall capacity 1, half-cell conductance 4.
+    time = np.linspace(0., .6, 601)
+    bc = {"west":dict(type="robin", values=0., film_coefficient=0.,
+                      wall_areal_heat_capacity=1., initial_wall_temperature=4.)}
+    u, powers = solve_transient_conduction([1.],[1.],2.,3.,bc,time,0.,return_wall_power=True)
+    cell = u[:,0,0]
+    flux = powers["west"][:,0]
+    wall = cell + flux/4
+    decay = np.exp(-16*time/3)
+    np.testing.assert_allclose(cell, 1-decay, atol=1e-6)
+    np.testing.assert_allclose(wall, 1+3*decay, atol=3e-6)
+    np.testing.assert_allclose(3*cell+wall, 4., atol=1e-12)
+    np.testing.assert_allclose(3*np.diff(cell), np.diff(time)*(flux[:-1]+flux[1:])/2, atol=1e-13)
+
+
+@pytest.mark.parametrize("theta", [.5,1.])
+def test_mixed_wall_storage_tracks_nonuniform_steps_and_forcing(theta):
+    dx, dy = np.array([.25,.75]), np.array([.4,.6])
+    time = np.array([0.,.01,.03,.08,.11])
+    volume = np.outer(dy, dx)
+    ambient = lambda t: np.array([2.+t, 4.-t])
+    source = lambda t: 1.-2*t
+    spec = dict(types=["robin","robin"], values=ambient, film_coefficient=[2.,5.],
+                wall_areal_heat_capacity=[3.,0.], initial_wall_temperature=[4.,0.])
+    u, power = solve_transient_conduction(dx,dy,2.,3.,{"west":spec},time,0.,source=source,
+                                          theta=theta,return_wall_power=True,periodic_y=True)
+    q = power["west"]
+    wall = u[:,:,0]+q*dx[0]/(4*dy)
+    air = np.array([ambient(t) for t in time])
+    incoming = (air-wall)*np.array([2.,5.])*dy
+    def integral(rate):
+        return np.diff(time)*((1-theta)*rate[:-1]+theta*rate[1:])
+    np.testing.assert_allclose(3*dy[0]*np.diff(wall[:,0]),integral((incoming-q)[:,0]),atol=1e-12)
+    np.testing.assert_allclose(incoming[:,1],q[:,1],atol=1e-12)
+    energy = 3*(u*volume).sum(axis=(1,2))
+    np.testing.assert_allclose(np.diff(energy),integral(q.sum(axis=1)+source(time)),atol=1e-12)

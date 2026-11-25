@@ -547,6 +547,9 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
     With periodic_y=True omit the north and south BCs. Those two face powers
     then report opposite inward transfers across a perfectly conducting contact
     between the last and first rows. Interior contact resistances are unchanged.
+    On Robin faces, wall_areal_heat_capacity in J/(m² K) adds wall storage.
+    initial_wall_temperature defaults to the adjacent initial cell temperature.
+    Both accept scalar or per-face values. Reported power enters the material.
     theta=0.5 selects Crank-Nicolson and theta=1 selects backward Euler.
     """
     dx, dy, time = (np.asarray(v, dtype=float) for v in (dx, dy, time))
@@ -575,6 +578,24 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
             signals[side] = samples
             static_bc[side] = dict(spec, values=0.)
     _validate_conduction_bc(static_bc, sides, float)
+    wall_data = {}
+    for side, spec in list(static_bc.items()):
+        if not spec or "wall_areal_heat_capacity" not in spec:
+            continue
+        spec = dict(spec)
+        types_on_side, _ = _bc_arrays(static_bc, side, sides[side])
+        cw = np.broadcast_to(np.asarray(spec.pop("wall_areal_heat_capacity"), dtype=float), (sides[side],))
+        active = cw > 0
+        if not np.isfinite(cw).all() or np.any(cw < 0) or np.any(active & (types_on_side != "robin")):
+            raise ValueError("wall areal heat capacity must be finite, nonnegative and confined to Robin faces")
+        if active.any():
+            h = np.broadcast_to(np.asarray(spec.get("film_coefficient", np.nan), dtype=float), cw.shape)[active]
+            if not np.all(np.isfinite(h) & (h >= 0)):
+                raise ValueError("dynamic Robin faces require finite nonnegative film coefficients")
+            # Assemble the cell operator first, then connect each wall as a storage node.
+            spec["types"] = np.where(active, "adiabatic", types_on_side)
+            wall_data[side] = (active, cw[active], h)
+        static_bc[side] = spec
     volume = np.outer(dy, dx)
     def source_power(instant):
         field = np.broadcast_to(np.asarray(source(float(instant)), dtype=float), shape)
@@ -596,28 +617,61 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
             weights = _conductive_wall_power(types[side], 1., conductance, area, 0.)
             varying_loads.append((cells, signals[side], weights))
     mass = (capacity * volume).ravel()
+    cell_count = mass.size
+    state = initial.ravel()
+    wall_links = {}
+    if wall_data:
+        wall_count = sum(len(cw) for _,cw,_ in wall_data.values())
+        A = sp.block_diag((A, sp.csc_matrix((wall_count, wall_count))), format="lil")
+        for side, cells, conductance, _, _, area in side_specs:
+            if side not in wall_data:
+                continue
+            mask, cw, h = wall_data[side]
+            cells, g, area = cells[mask], conductance[mask], area[mask]
+            film = h*area
+            ids = np.arange(len(cells))+len(mass)
+            for cell, node, link, conv in zip(cells, ids, g, film):
+                A[cell,cell] -= link
+                A[cell,node] = A[node,cell] = link
+                A[node,node] = -link-conv
+            mass = np.r_[mass, cw*area]
+            spec = bc[side]
+            init_wall = initial.ravel()[cells]
+            if "initial_wall_temperature" in spec:
+                init_wall = np.broadcast_to(np.asarray(spec["initial_wall_temperature"], dtype=float), mask.shape)[mask]
+            if not np.isfinite(init_wall).all():
+                raise ValueError("initial wall temperature must be finite")
+            state = np.r_[state, init_wall]
+            b = np.r_[b, -film*values[side][mask]]
+            if side in signals:
+                varying_loads.append((ids, signals[side][:,mask], film))
+            wall_links[side] = (mask, ids, cells, g)
+        A = A.tocsc()
     M = sp.diags(mass, format="csc")
-    history = np.empty((len(time), ny, nx))
-    history[0] = initial
+    states = np.empty((len(time), len(mass)))
+    states[0] = state
+    history = states[:, :cell_count].reshape(len(time), ny, nx)
     previous_dt = None
     for step, dt in enumerate(np.diff(time)):
         if dt != previous_dt:
             lu = spla.splu(M - (theta * dt) * A)
             previous_dt = dt
-        state = history[step].ravel()
+        state = states[step]
         rhs = mass * state + dt * ((1 - theta) * (A @ state) - b)
         if varying_source:
             next_power = source_power(time[step+1])
-            rhs += dt*((1-theta)*previous_power+theta*next_power)
+            rhs[:cell_count] += dt*((1-theta)*previous_power+theta*next_power)
             previous_power = next_power
         for cells, samples, weights in varying_loads:
             rhs[cells] += dt * weights * ((1-theta)*samples[step] + theta*samples[step+1])
-        history[step + 1] = lu.solve(rhs).reshape(shape)
+        states[step + 1] = lu.solve(rhs)
     if return_wall_power:
         state = history.reshape(len(time), ny*nx)
         powers = {side: _conductive_wall_power(types[side], signals.get(side, values[side]), conductance,
                                                area, state[:, cells])
                   for side, cells, conductance, _, _, area in side_specs}
+        for side, (mask, ids, cells, g) in wall_links.items():
+            powers[side][:,mask] = g*(states[:,ids]-states[:,cells])
         if periodic_y:
             powers["south"] = seam*(history[:, -1]-history[:, 0])
             powers["north"] = -powers["south"]
