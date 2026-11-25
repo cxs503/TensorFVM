@@ -521,3 +521,31 @@ def test_steady_field_reconstruction_keeps_contact_traces():
     np.testing.assert_allclose(t,2-target**4-np.array([0.,jump,jump])[:,None],atol=1e-13,rtol=0.)
     np.testing.assert_allclose(p,4*target**3,atol=1e-13,rtol=0.)
     np.testing.assert_allclose([t[0,-1],t[1,0]],[hot[0],cold[0]],atol=1e-13,rtol=0.)
+
+
+def test_harmonic_graded_reservoir_and_stepped_area_conserve_material_power():
+    # Choose a linear temperature per section, with analytic constant power,
+    # then balance volumetric exchange and storage with an independent source.
+    x = np.array([0.,.2,.5,.63,1.])
+    dx = np.diff(x)
+    a,k,c = np.array([1.,1.,2.,2.]),np.array([3.,3.,2.,2.]),np.array([2.,2.,.8,.8])
+    current, omega = .7-.4j, 2.3
+    resistance = .3
+    left_temp = 1+.5j
+    west = []
+    for i in range(len(dx)):
+        west.append(left_temp)
+        left_temp -= current*dx[i]/(k[i]*a[i])
+        if i == 1:
+            left_temp -= current*resistance
+    mean = np.asarray(west)-current*dx/(2*k*a)
+    coeff = 1.+np.arange(4)
+    reservoir = np.array([1j,.4+.2j,-.1+.3j,.2])
+    source = 1j*omega*c*mean+coeff*(mean-reservoir)
+    field,_,incoming,outgoing = solve_harmonic_stepped_rod(dx,a,k,c,[west[0],left_temp],omega,
+        contact_resistance=[0.,resistance,0.],flux_order=2,source=source,
+        heat_loss_coefficient=coeff,bulk_ambient_temperature=reservoir)
+    for actual,exact in ((field,mean),(incoming,current),(outgoing,current)):
+        np.testing.assert_allclose(actual,exact,atol=2e-13,rtol=0.)
+    defect = outgoing-incoming+a*dx*(1j*omega*c*field-source-coeff*(reservoir-field))
+    assert abs(defect).max()<1e-13

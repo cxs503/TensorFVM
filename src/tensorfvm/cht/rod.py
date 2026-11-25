@@ -265,7 +265,8 @@ def solve_harmonic_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
                                film_coefficient=0., ambient_temperature=0.,
                                shoulder_areal_heat_capacity=0., flux_order=1, contact_resistance=0., return_traces=False,
                                end_types=("temperature","temperature"), end_film_coefficient=0.,
-                               end_areal_heat_capacity=0., interface_power=0., interface_heat_capacity=0., interface_left_fraction=None, interface_capacity_left_fraction=None, trace_power=(0.,0.)):
+                               end_areal_heat_capacity=0., interface_power=0., interface_heat_capacity=0., interface_left_fraction=None, interface_capacity_left_fraction=None, trace_power=(0.,0.),
+                               heat_loss_coefficient=0., bulk_ambient_temperature=0.):
     """Solve a rod with concentric sections and prescribed end phasors.
 
     end_types selects "temperature" (K), "power" (inward W), or "robin"
@@ -280,6 +281,9 @@ def solve_harmonic_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
     capacity (J/(m³ K)) and source (W/m³). At each internal face the absolute
     area change exposes a shoulder to a film (W/(m² K)) with surface storage
     (J/(m² K)). Film, capacity and ambient accept scalars or n-1 values.
+    Bulk exchange H*(Tb-T) acts on cell means. heat_loss_coefficient (H) in
+    W/(m³ K) and bulk_ambient_temperature (Tb) in K accept scalars or cell
+    profiles. Tb may be complex and H must be real and nonnegative.
     interface_power supplies W at each internal face (scalar or n-1 values).
     interface_heat_capacity adds lumped J/K at the same face (scalar or n-1
     values), in addition to the capacity on its exposed area. With a contact
@@ -305,6 +309,15 @@ def solve_harmonic_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
     operator,mass,volume,g,film,end_load,layout = _rod_operator(dx,area,conductivity,volumetric_heat_capacity,
                                                film_coefficient,shoulder_areal_heat_capacity,flux_order,contact_resistance,end_types,end_film_coefficient,end_areal_heat_capacity,interface_heat_capacity,interface_left_fraction,interface_capacity_left_fraction)
     rhs, ends, _ = _load(volume,end_load,layout,film,end_temperatures,source,ambient_temperature,interface_power,trace_power,complex)
+    loss = _profile(heat_loss_coefficient,len(volume),"heat loss coefficient")
+    if np.any(loss < 0):
+        raise ValueError("heat loss coefficient must be nonnegative")
+    reservoir = _profile(bulk_ambient_temperature,len(volume),"bulk ambient temperature",complex)
+    if np.any(loss):
+        conductance = np.zeros_like(mass)
+        conductance[layout.cells] = loss*volume
+        operator = operator+sp.diags(conductance)
+        rhs[layout.cells] += loss*volume*reservoir
     state = spsolve(operator+sp.diags(1j*angular_frequency*mass),rhs)
     return layout.output(state,ends,g,flux_order,return_traces)
 
