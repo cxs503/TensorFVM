@@ -234,7 +234,8 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
                                   sheet_conductivity=0., azimuthal_mode=0, sheet_film=0., ambient=0.,
                                   sheet_source_intervals=0., theta=.5, wall_fluxes=(None,None), source_intervals=0.,
                                   film_coefficients=(None,None), return_wall_temperatures=False,
-                                  return_contact_temperatures=False, method="theta", return_interval_temperatures=False):
+                                  return_contact_temperatures=False, method="theta", return_interval_temperatures=False,
+                                  source_times=None):
     """Advance one real azimuthal mode with a storing sheet and Dirichlet walls.
 
     Walls and reservoir ambient accept constants or one sample per output time.
@@ -243,7 +244,10 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
     nonnegative film_coefficients entry (W/m²/K) treats the corresponding
     wall temperature as a fluid temperature; zero insulates that wall.
     Sheet generation in W/m² is constant or has shape (interval,2), giving its
-    one-sided start and end values. Times must include each source switch.
+    one-sided start and end values. Optional source_times defines the sheet and
+    material source intervals independently of output times, with the same
+    first and last instant. Integrate on the union of both grids; return
+    interval heats and weighted means on the requested output grid.
     Material generation source_intervals (W/m³) accepts a constant, a static
     per-cell profile, or start/end profiles shaped (interval,2,cell). A final
     dimension of one broadcasts a time-varying source across all cells.
@@ -302,17 +306,32 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
     west,east = (np.broadcast_to(np.asarray(v if v is not None else q,dtype=float),t.shape)
                  for v,q in zip(wall_temperatures,wall_fluxes))
     fluid = np.broadcast_to(np.asarray(ambient,dtype=float),t.shape)
+    output_times = t
+    source_grid = t if source_times is None else np.asarray(source_times,dtype=float)
+    if (source_grid.ndim!=1 or len(source_grid)<2 or not np.isfinite(source_grid).all()
+            or np.any(np.diff(source_grid)<=0) or source_grid[0]!=t[0] or source_grid[-1]!=t[-1]):
+        raise ValueError("source_times must increase strictly and span the requested output times")
     drive = np.asarray(sheet_source_intervals,dtype=float)
-    if drive.shape not in ((),(len(t)-1,2)):
+    if drive.shape not in ((),(len(source_grid)-1,2)):
         raise ValueError("sheet source must be constant or shaped (interval,2)")
-    drive = np.broadcast_to(drive,(len(t)-1,2))
+    drive = np.broadcast_to(drive,(len(source_grid)-1,2))
     if not all(np.isfinite(v).all() for v in (west,east,fluid,drive)):
         raise ValueError("wall, ambient and source histories must be finite")
 
     body = np.asarray(source_intervals,dtype=float)
-    if body.shape not in ((),(n,),(len(t)-1,2,1),(len(t)-1,2,n)) or not np.isfinite(body).all():
+    if body.shape not in ((),(n,),(len(source_grid)-1,2,1),(len(source_grid)-1,2,n)) or not np.isfinite(body).all():
         raise ValueError("material source must be finite and scalar, per cell or shaped (interval,2,cell)")
-    body = np.broadcast_to(body,(len(t)-1,2,n))
+    body = np.broadcast_to(body,(len(source_grid)-1,2,n))
+    if source_times is not None and not np.array_equal(t,source_grid):
+        t = np.union1d(output_times,source_grid)
+        west,east,fluid = (np.interp(t,output_times,v) for v in (west,east,fluid))
+        # Pick the source interval by its left endpoint, preserving both
+        # one-sided limits when an output time coincides with a switch.
+        source_index = np.searchsorted(source_grid,t[:-1],side="right")-1
+        endpoints = np.column_stack((t[:-1],t[1:]))
+        f = (endpoints-source_grid[source_index,None])/np.diff(source_grid)[source_index,None]
+        drive = (1-f)*drive[source_index,:1]+f*drive[source_index,1:]
+        body = (1-f[:,:,None])*body[source_index,:1]+f[:,:,None]*body[source_index,1:]
     width,_,left,right = _half_shell_resistances(r,k,"volume_centroid")
     circum = 2*np.pi*r[j]
     links = np.r_[left[0],right[:-1]+left[1:],right[-1]]
@@ -382,6 +401,15 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
         heat[i] = -dt*g*np.diff(np.r_[0.,stage,0.])
         heat[i,[0,-1]] += dt*wall_input
         reservoir[i] = dt*circum*sheet_film*(stage[j]-avg_a)
+    if len(t)!=len(output_times):
+        keep = np.searchsorted(t,output_times)
+        heat = np.add.reduceat(heat,keep[:-1],axis=0)
+        reservoir = np.add.reduceat(reservoir,keep[:-1])
+        if return_interval_temperatures:
+            integral = np.add.reduceat(interval_state*np.diff(t)[:,None],keep[:-1],axis=0)
+            interval_state = integral/np.diff(output_times)[:,None]
+        state,west,east = state[keep],west[keep],east[keep]
+        t = output_times
     result = np.delete(state,j,axis=1),state[:,j],heat[:,:j+1],heat[:,j+1:],reservoir
     if return_wall_temperatures:
         surfaces = np.empty((len(t),2))

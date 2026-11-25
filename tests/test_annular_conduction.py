@@ -401,3 +401,35 @@ def test_interval_temperatures_close_each_modal_balance_at_switch(method,capacit
                                qi[:,-1]-qo[:,0]-ext,atol=3e-14)
     np.testing.assert_allclose(avg["contact"][:,0]-avg["contact"][:,1],
                                res*(frac*qi[:,-1]+(1-frac)*qo[:,0])/(dt*circum),atol=2e-14)
+
+
+@pytest.mark.parametrize("method",["theta","sdirk2"])
+@pytest.mark.parametrize("cs",[0.,.43])
+def test_independent_annular_source_clock_keeps_one_sided_powers(method,cs):
+    from tensorfvm.cht.annulus import solve_transient_annular_sheet
+    times = np.array([0.,.1,.2,.4])
+    clock = np.array([0.,.045,.1,.32,.4])
+    full = np.union1d(times,clock)
+    source = np.array([[.5,.7],[-.3,.1],[1.,.2],[-.4,-.6]])
+    body = source[:,:,None]*np.array([1.,-2.,.3])
+    options = dict(method=method,sheet_capacity=cs,initial_sheet_temperature=.6,return_contact_temperatures=True,
+                   return_interval_temperatures=True,return_wall_temperatures=True,resistance=.25,sheet_film=.7)
+    def run(t,drive,bulk,grid=None):
+        return solve_transient_annular_sheet([.4,.5,.7,.93],[1.,3.,2.],1.2,(.4+t,-.3*t),t,.5,2,
+                    sheet_source_intervals=drive,source_intervals=bulk,ambient=.3+t,
+                    source_times=grid,**options)
+    result = run(times,source,body,clock)
+    explicit = []
+    for left,right in zip(full,full[1:]):
+        i = np.searchsorted(clock,(left+right)/2)-1
+        explicit.append(np.interp([left,right],clock[i:i+2],source[i]))
+    explicit = np.array(explicit)
+    reference = run(full,explicit,explicit[:,:,None]*np.array([1.,-2.,.3]))
+    keep = np.searchsorted(full,times)
+    for i in (0,1,5,6):
+        np.testing.assert_allclose(result[i],reference[i][keep],rtol=0.,atol=2e-14)
+    for i in (2,3,4):
+        np.testing.assert_allclose(result[i],np.add.reduceat(reference[i],keep[:-1],axis=0),atol=2e-14)
+    for key,field in reference[-1].items():
+        means = [np.average(field[i:j],axis=0,weights=np.diff(full)[i:j]) for i,j in zip(keep,keep[1:])]
+        np.testing.assert_allclose(result[-1][key],means,atol=2e-14)
