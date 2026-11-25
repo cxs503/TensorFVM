@@ -235,10 +235,12 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
                                   sheet_source_intervals=0., theta=.5, wall_fluxes=(None,None), source_intervals=0.,
                                   film_coefficients=(None,None), return_wall_temperatures=False,
                                   return_contact_temperatures=False, method="theta", return_interval_temperatures=False,
-                                  source_times=None):
+                                  source_times=None, wall_times=None):
     """Advance one real azimuthal mode with a storing sheet and Dirichlet walls.
 
-    Walls and reservoir ambient accept constants or one sample per output time.
+    Walls and reservoir ambient accept constants, nodal samples or one-sided
+    (interval,2) samples. wall_times optionally supplies their time grid
+    (default: output times). Wall traces at a switch use the right limit.
     A None wall temperature instead takes a prescribed inward wall_fluxes
     entry (W/m²), either constant or sampled at the output times. A finite
     nonnegative film_coefficients entry (W/m²/K) treats the corresponding
@@ -303,14 +305,26 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
             raise ValueError("a wall film needs a finite nonnegative coefficient and an ambient temperature")
         if (temp is None)==(flux is None):
             raise ValueError("supply either temperature or inward heat flux for each wall")
-    west,east = (np.broadcast_to(np.asarray(v if v is not None else q,dtype=float),t.shape)
-                 for v,q in zip(wall_temperatures,wall_fluxes))
-    fluid = np.broadcast_to(np.asarray(ambient,dtype=float),t.shape)
     output_times = t
-    source_grid = t if source_times is None else np.asarray(source_times,dtype=float)
-    if (source_grid.ndim!=1 or len(source_grid)<2 or not np.isfinite(source_grid).all()
-            or np.any(np.diff(source_grid)<=0) or source_grid[0]!=t[0] or source_grid[-1]!=t[-1]):
-        raise ValueError("source_times must increase strictly and span the requested output times")
+    def load_grid(values,name):
+        grid = t if values is None else np.asarray(values,dtype=float)
+        if (grid.ndim!=1 or len(grid)<2 or not np.isfinite(grid).all()
+                or np.any(np.diff(grid)<=0) or grid[0]!=t[0] or grid[-1]!=t[-1]):
+            raise ValueError(f"{name} must increase strictly and span the requested output times")
+        return grid
+
+    source_grid = load_grid(source_times,"source_times")
+    wall_grid = load_grid(wall_times,"wall_times")
+
+    def wall_history(value):
+        v = np.asarray(value,dtype=float)
+        if v.shape==wall_grid.shape:
+            v = np.column_stack((v[:-1],v[1:]))
+        if v.shape not in ((),(len(wall_grid)-1,2)) or not np.isfinite(v).all():
+            raise ValueError("wall histories must be finite and scalar, nodal or shaped (interval,2)")
+        return np.broadcast_to(v,(len(wall_grid)-1,2))
+    west,east = (wall_history(v if v is not None else q) for v,q in zip(wall_temperatures,wall_fluxes))
+    fluid = wall_history(ambient)
     drive = np.asarray(sheet_source_intervals,dtype=float)
     if drive.shape not in ((),(len(source_grid)-1,2)):
         raise ValueError("sheet source must be constant or shaped (interval,2)")
@@ -322,16 +336,18 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
     if body.shape not in ((),(n,),(len(source_grid)-1,2,1),(len(source_grid)-1,2,n)) or not np.isfinite(body).all():
         raise ValueError("material source must be finite and scalar, per cell or shaped (interval,2,cell)")
     body = np.broadcast_to(body,(len(source_grid)-1,2,n))
-    if source_times is not None and not np.array_equal(t,source_grid):
-        t = np.union1d(output_times,source_grid)
-        west,east,fluid = (np.interp(t,output_times,v) for v in (west,east,fluid))
-        # Pick the source interval by its left endpoint, preserving both
-        # one-sided limits when an output time coincides with a switch.
-        source_index = np.searchsorted(source_grid,t[:-1],side="right")-1
-        endpoints = np.column_stack((t[:-1],t[1:]))
-        f = (endpoints-source_grid[source_index,None])/np.diff(source_grid)[source_index,None]
-        drive = (1-f)*drive[source_index,:1]+f*drive[source_index,1:]
-        body = (1-f[:,:,None])*body[source_index,:1]+f[:,:,None]*body[source_index,1:]
+    t = np.union1d(np.union1d(output_times,source_grid),wall_grid)
+    def subdivide(grid,history):
+        if np.array_equal(t,grid):
+            return history
+        # The subinterval starts on the right of a possible discontinuity.
+        idx = np.searchsorted(grid,t[:-1],side="right")-1
+        f = (np.column_stack((t[:-1],t[1:]))-grid[idx,None])/np.diff(grid)[idx,None]
+        if history.ndim==3:
+            f = f[:,:,None]
+        return (1-f)*history[idx,:1]+f*history[idx,1:]
+    drive,body = subdivide(source_grid,drive),subdivide(source_grid,body)
+    west,east,fluid = (subdivide(wall_grid,v) for v in (west,east,fluid))
     width,_,left,right = _half_shell_resistances(r,k,"volume_centroid")
     circum = 2*np.pi*r[j]
     links = np.r_[left[0],right[:-1]+left[1:],right[-1]]
@@ -364,7 +380,7 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
     bands[0,1:] = bands[2,:-1] = -weight*g[1:-1]
 
     def loads(i,fraction):
-        w,e,a = ((1-fraction)*v[i]+fraction*v[i+1] for v in (west,east,fluid))
+        w,e,a = ((1-fraction)*v[i,0]+fraction*v[i,1] for v in (west,east,fluid))
         wall_input = np.array([west_factor*w,east_factor*e])
         power = volume*((1-fraction)*body[i,0]+fraction*body[i,1])
         supply = (1-fraction)*drive[i,0]+fraction*drive[i,1]
@@ -381,7 +397,7 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
         if sheet_capacity==0:
             # A source jump changes a massless trace before the next step.
             # Use its right limit for quadrature while retaining cell storage.
-            old[j] = (g[j]*old[j-1]+g[j+1]*old[j+1]+circum*(drive[i,0]+sheet_film*fluid[i]))/diagonal[j]
+            old[j] = (g[j]*old[j-1]+g[j+1]*old[j+1]+circum*(drive[i,0]+sheet_film*fluid[i,0]))/diagonal[j]
         # Increment form avoids subtracting two large storage terms.
         bands[1] = capacity/dt+weight*diagonal
         # For affine forcing SDIRK's weighted load equals its midpoint value.
@@ -401,19 +417,20 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
         heat[i] = -dt*g*np.diff(np.r_[0.,stage,0.])
         heat[i,[0,-1]] += dt*wall_input
         reservoir[i] = dt*circum*sheet_film*(stage[j]-avg_a)
+    keep = np.searchsorted(t,output_times)
     if len(t)!=len(output_times):
-        keep = np.searchsorted(t,output_times)
         heat = np.add.reduceat(heat,keep[:-1],axis=0)
         reservoir = np.add.reduceat(reservoir,keep[:-1])
         if return_interval_temperatures:
             integral = np.add.reduceat(interval_state*np.diff(t)[:,None],keep[:-1],axis=0)
             interval_state = integral/np.diff(output_times)[:,None]
-        state,west,east = state[keep],west[keep],east[keep]
+        state = state[keep]
         t = output_times
     result = np.delete(state,j,axis=1),state[:,j],heat[:,:j+1],heat[:,j+1:],reservoir
     if return_wall_temperatures:
         surfaces = np.empty((len(t),2))
         for column,index,data in ((0,0,west),(1,-1,east)):
+            data = np.r_[data[:,0],data[-1,1]][keep]
             if wall_fluxes[column] is not None:
                 inward = 2*np.pi*r[index]*data
             elif film_coefficients[column] is None:

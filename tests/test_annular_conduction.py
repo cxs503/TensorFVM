@@ -433,3 +433,24 @@ def test_independent_annular_source_clock_keeps_one_sided_powers(method,cs):
     for key,field in reference[-1].items():
         means = [np.average(field[i:j],axis=0,weights=np.diff(full)[i:j]) for i,j in zip(keep,keep[1:])]
         np.testing.assert_allclose(result[-1][key],means,atol=2e-14)
+
+
+def test_wall_power_pulse_inside_output_interval_and_right_limit_surface():
+    from tensorfvm.cht.annulus import solve_transient_annular_sheet
+    edges = np.array([.4,.6,.8,1.1])
+    times = np.array([0.,.12,.3])
+    clock = np.array([0.,.035,.12,.2,.3])
+    powers = np.array([0.,1.3,-.7,0.])
+    cap = .45
+    u,s,qi,qo,external,surface = solve_transient_annular_sheet(edges,1.7,1.2,(None,None),times,.2,1,
+        wall_fluxes=(np.repeat(powers[:,None],2,axis=1),0.),wall_times=clock,
+        initial_sheet_temperature=.2,sheet_capacity=cap,resistance=.2,return_wall_temperatures=True,
+        method="sdirk2")
+    exact_heat = 2*np.pi*.4*np.array([1.3*(.12-.035),-.7*(.2-.12)])
+    total = u@(1.2*np.pi*np.diff(edges**2))+s*2*np.pi*.6*cap
+    np.testing.assert_allclose(qi[:,0],exact_heat,atol=1e-14)
+    np.testing.assert_allclose(np.diff(total),exact_heat,atol=2e-14)
+    np.testing.assert_array_equal(qo[:,-1],0.)
+    np.testing.assert_array_equal(external,0.)
+    center = (2/3)*(.6**3-.4**3)/(.6**2-.4**2)
+    np.testing.assert_allclose(surface[:,0]-u[:,0],.4*np.log(center/.4)/1.7*np.array([0.,-.7,0.]),atol=2e-14)
