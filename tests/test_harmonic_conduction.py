@@ -41,3 +41,23 @@ def test_harmonic_cell_storage_matches_every_oriented_face_and_source():
     y = np.vstack((walls["south"],power["y"],-walls["north"]))
     stored = 2j*3.*volume*t
     np.testing.assert_allclose(stored, source*volume-np.diff(x,axis=1)-np.diff(y,axis=0), atol=1e-13)
+
+
+@pytest.mark.parametrize("dy", [[.7], [.3, .7], [.2, .3, .5]])
+def test_periodic_y_seam_material_resistance_and_cell_balance(dy):
+    nx, ny = 2, len(dy)
+    dx = np.array([.2, .8])
+    ky = 1+np.arange(ny*nx).reshape(ny, nx)
+    volume = np.outer(dy, dx)
+    source = 1j*ky+.3
+    t, wall, interior = solve_harmonic_conduction(dx, dy, 3., 2., {}, 4., conductivity_y=ky,
+                            source=source, return_interior_power=True, periodic_y=True)
+    expected = dx*(t[-1]-t[0])/(.5*dy[-1]/ky[-1]+.5*dy[0]/ky[0])
+    np.testing.assert_allclose(wall["south"], expected)
+    np.testing.assert_array_equal(wall["south"], -wall["north"])
+    qy = np.vstack((wall["south"], interior["y"], -wall["north"]))
+    qx = np.column_stack((wall["west"], interior["x"], -wall["east"]))
+    np.testing.assert_allclose(8j*volume*t, source*volume-np.diff(qy,axis=0)-np.diff(qx,axis=1))
+    with pytest.raises(ValueError, match="periodic_y"):
+        solve_harmonic_conduction(dx, dy, 1., 1., {"north": {"type":"neumann", "values":0.}},
+                                  4., periodic_y=True)

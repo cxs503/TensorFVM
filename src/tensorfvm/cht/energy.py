@@ -441,7 +441,7 @@ def _validate_conduction_bc(bc, sides, dtype):
 def solve_harmonic_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc,
                               angular_frequency, *, source=0., conductivity_y=None,
                               contact_resistance_x=0., contact_resistance_y=0.,
-                              return_interior_power=False):
+                              return_interior_power=False, periodic_y=False):
     """Return cell temperature and inward power per wall face for unit depth.
 
     Use Re(phasor * exp(iωt)), with positive angular frequency in rad/s.
@@ -449,7 +449,10 @@ def solve_harmonic_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc
     materials, contact resistances and Robin films use the transient units.
     With return_interior_power=True also return a third item, a dictionary
     of interior face powers (W). Its x and y arrays have shapes (ny,nx-1)
-    and (ny-1,nx), positive toward increasing coordinates.
+    and (ny-1,nx), positive toward increasing coordinates. periodic_y joins
+    north to south with perfect thermal contact. Omit those two wall BCs.
+    Their reported face powers are then opposite inward seam transfers.
+    contact_resistance_y continues to describe the ny-1 interior faces.
     """
     if not np.isfinite(angular_frequency) or angular_frequency <= 0:
         raise ValueError("angular_frequency must be finite and positive")
@@ -460,12 +463,27 @@ def solve_harmonic_conduction(dx, dy, conductivity, volumetric_heat_capacity, bc
     A, b, faces = _assemble_energy(dx, dy, k, np.zeros((ny, nx+1)), np.zeros((ny+1, nx)),
                                   bc, source, contact_resistance_x, contact_resistance_y,
                                   conductivity_y, load_dtype=complex)
+    if periodic_y:
+        if "north" in bc or "south" in bc:
+            raise ValueError("periodic_y requires omitting north and south boundary conditions")
+        # Combine the two boundary half-cell resistances in series. Each row
+        # of the incidence matrix takes the last-minus-first temperature.
+        cond_n = faces[1]
+        seam = 1/(1/cond_n[-1] + 1/cond_n[0])
+        columns = np.arange(nx)
+        incidence = sp.coo_matrix((np.r_[np.ones(nx), -np.ones(nx)],
+                                  (np.tile(columns, 2), np.r_[columns+(ny-1)*nx, columns])),
+                                  shape=(nx, nx*ny)).tocsc()
+        A = A - incidence.T @ sp.diags(seam) @ incidence
     mass = (capacity*np.outer(dy, dx)).ravel()
     state = spla.spsolve(sp.diags(1j*angular_frequency*mass, format="csc") - A, -b)
     _, _, side_specs, types, values, _ = faces
     powers = {side: _conductive_wall_power(types[side], values[side], conductance, area, state[cells])
               for side, cells, conductance, _, _, area in side_specs}
     temperature = state.reshape(ny, nx)
+    if periodic_y:
+        powers["south"] = seam*(temperature[-1]-temperature[0])
+        powers["north"] = -powers["south"]
     if return_interior_power:
         conductance_x, conductance_y = faces[:2]
         interior = {"x": -conductance_x[:,1:-1] * np.diff(temperature, axis=1),
