@@ -277,10 +277,19 @@ def solve_steady_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
     operator,mass,volume,g,film,end_load,layout = _rod_operator(
         dx,area,conductivity,volumetric_heat_capacity,film_coefficient,
         shoulder_areal_heat_capacity,flux_order,contact_resistance,end_types,end_film_coefficient,end_areal_heat_capacity,interface_heat_capacity,interface_left_fraction,interface_capacity_left_fraction)
+    # With two prescribed temperatures, use a wall as the datum before
+    # assembling loads. This also keeps the predictor and end-current
+    # differences well conditioned when the absolute temperature is large.
+    datum = 0.
+    if tuple(end_types) == ("temperature", "temperature") and np.shape(end_temperatures) == (2,):
+        wall_values = _profile(end_temperatures, 2, "end boundary values")
+        datum = wall_values[0]
+        end_temperatures = wall_values - datum
+        ambient_temperature = _profile(ambient_temperature, len(volume)-1, "ambient temperature") - datum
     rhs, ends, _ = _load(volume,end_load,layout,film,end_temperatures,source,ambient_temperature,interface_power,trace_power,float)
     operator,bulk_g = _bulk_exchange_operator(operator,mass,volume,layout.cells,heat_loss_coefficient)
     n = len(volume)
-    reservoir = _profile(bulk_ambient_temperature,n,"bulk ambient temperature")
+    reservoir = _profile(bulk_ambient_temperature,n,"bulk ambient temperature") - datum
     rhs[layout.cells] += bulk_g*reservoir
     estimated = source_derivative_breaks is not None
     supplied = source_gradient is not None or source_curvature is not None
@@ -317,6 +326,12 @@ def solve_steady_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
             raise ValueError("mean_temperature only applies to an unanchored steady rod")
         state = spsolve(operator,rhs) if factors is None else factors.solve(rhs)
     result = layout.output(state,ends,g,flux_order,return_traces,offsets)
+    if datum:
+        cell, faces, left_power, right_power = result[:4]
+        faces = faces + datum
+        faces[[0, -1]] = wall_values
+        traces = (tuple(trace + datum for trace in result[4]),) if return_traces else ()
+        result = (cell + datum, faces, left_power, right_power) + traces
     return result+((slope,curvature),) if return_source_derivatives else result
 
 

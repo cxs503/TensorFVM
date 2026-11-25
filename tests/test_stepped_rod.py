@@ -850,3 +850,20 @@ def test_rod_mean_rate_preserves_uniform_heating_with_storage(omega):
         solve_harmonic_stepped_rod(*args, return_mean_rate=True, separate_mean=True, **opts)
     with pytest.raises(ValueError, match="without temperature or exchange anchors"):
         solve_harmonic_stepped_rod(*args, return_mean_rate=True, heat_loss_coefficient=2., **opts)
+
+
+def test_absolute_temperature_rod_balances_signed_bulk_heat_exchange():
+    from tensorfvm.cht.rod import solve_steady_stepped_rod
+
+    n = 256
+    dx = np.full(n, 1/n)
+    hot = np.arange(n) < n//2
+    film = np.where(hot, 4., 7.)
+    reservoir = np.where(hot, 321., 283.)
+    cell, _, left, right = solve_steady_stepped_rod(
+        dx, 1., 1.7, 1., [305., 303.], flux_order=2,
+        heat_loss_coefficient=film, bulk_ambient_temperature=reservoir,
+        source_derivative_breaks=[n//2],
+    )
+    loss = dx * film * (cell - reservoir)
+    assert abs(left[0] - right[-1] - loss.sum()) < 1e-8
