@@ -163,3 +163,19 @@ def test_floating_annular_sheet_generation_and_compatibility():
     opts["sheet_source"] = .9
     with pytest.raises(ValueError,match="incompatible"):
         solve_annular_sheet(edges,1.,1.,(None,None),0.,2,**opts)
+
+
+def test_low_frequency_insulated_sheet_total_capacity_and_radial_flux():
+    from tensorfvm.cht.annulus import solve_annular_sheet
+    edges = np.linspace(.4,1.1,31)
+    j = 13
+    circum = 2*np.pi*edges[j]
+    c = np.linspace(1.,2.,30)*np.pi*np.diff(edges**2)
+    sheet_c = .35
+    omega = 1e-10
+    field,inner,outer,sheet = solve_annular_sheet(edges,2.,np.linspace(1.,2.,30),(None,None),omega,j,
+                       wall_fluxes=(0.,0.),resistance=.3,sheet_capacity=sheet_c,sheet_source=1.)
+    rise = circum/(c.sum()+circum*sheet_c)
+    np.testing.assert_allclose(1j*omega*np.r_[field,sheet],rise,rtol=1e-10,atol=1e-10)
+    np.testing.assert_allclose(inner,-rise*np.r_[0.,np.cumsum(c[:j])],atol=1e-10,rtol=1e-10)
+    np.testing.assert_allclose(outer,rise*np.r_[np.cumsum(c[j:][::-1])[::-1],0.],atol=1e-10,rtol=1e-10)

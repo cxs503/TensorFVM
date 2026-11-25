@@ -210,4 +210,14 @@ def solve_annular_sheet(radii, conductivity, volumetric_heat_capacity, wall_temp
     forcing = circum*load+bi[0]-bo[-1]+np.sum(volume*p-sink*base)
     admittance = circum*impedance+uo[-1]-ui[0]+sink@unit
     sheet = forcing/admittance
-    return base+unit*sheet,bi+ui*sheet,bo+uo*sheet,sheet
+    field = base+unit*sheet
+    inner_rates,outer_rates = bi+ui*sheet,bo+uo*sheet
+    # Under a prescribed wall power the boundary rate is known exactly.
+    # Integrate the cell balances from that end to avoid multiplying tiny
+    # roundoff in unit-response fluxes by a large low-frequency temperature.
+    net = volume*p-sink*field
+    if wall_fluxes[0] is not None or film_coefficients[0]==0:
+        inner_rates[1:] = bi[0]+np.cumsum(net[:j])
+    if wall_fluxes[1] is not None or film_coefficients[1]==0:
+        outer_rates[:-1] = bo[-1]-np.cumsum(net[j:][::-1])[::-1]
+    return field,inner_rates,outer_rates,sheet
