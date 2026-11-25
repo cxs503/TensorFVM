@@ -495,3 +495,53 @@ def test_harmonic_flux_and_film_annulus_against_bessel_solution(mode, flux_side,
         errors.append((field_error, rate_error))
     for coarse, fine in zip(errors, errors[1:]):
         assert all(a/b > 3.7 for a, b in zip(coarse, fine))
+
+
+def test_harmonic_two_material_sheet_traces_against_bessel_modes(record_property):
+    from scipy.special import iv, ivp, kv, kvp
+    from tensorfvm.cht.annulus import solve_annular_sheet
+
+    radius, omega, mode = 0.8, 3.2, 2
+    k = np.array([1.4, 2.3])
+    capacity = np.array([1.8, 1.1])
+    wave = np.sqrt(1j*omega*capacity/k)
+    sheet = 0.65 + 0.2j
+    q = np.array([1.1-0.4j, -0.25+0.5j])  # Increasing-r heat flux on each side.
+    resistance, fraction, surface_capacity = 0.25, 0.3, 0.4
+    traces = sheet + resistance*np.array([fraction, -(1-fraction)])*q
+    generation = 1j*omega*surface_capacity*sheet + q[1] - q[0]
+
+    def basis(side, r):
+        z = wave[side]*r
+        return np.stack((iv(mode, z), kv(mode, z)), axis=-1)
+
+    def flux_basis(side, r):
+        z = wave[side]*r
+        return -k[side]*wave[side]*np.stack((ivp(mode, z), kvp(mode, z)), axis=-1)
+
+    coeff = [np.linalg.solve([basis(i, radius), flux_basis(i, radius)], [traces[i], q[i]])
+             for i in range(2)]
+    walls = [basis(i, r) @ coeff[i] for i, r in enumerate((0.5, 1.2))]
+    errors = []
+    for n in (12, 24, 48):
+        parts = (np.geomspace(0.5, radius, n+1), np.geomspace(radius, 1.2, n+1))
+        edges = np.r_[parts[0], parts[1][1:]]
+        field, inner, outer, bulk_sheet, observed = solve_annular_sheet(
+            edges, np.repeat(k, n), np.repeat(capacity, n), walls, omega, n,
+            azimuthal_mode=mode, resistance=resistance, inner_resistance_fraction=fraction,
+            sheet_capacity=surface_capacity, sheet_source=generation, distributed_source=True,
+            cell_location="volume_centroid", return_contact_temperatures=True)
+        exact_field, exact_rates = [], []
+        for side, r in enumerate(parts):
+            centers = (2/3)*np.diff(r**3)/np.diff(r**2)
+            exact_field.extend(basis(side, centers) @ coeff[side])
+            exact_rates.extend(2*np.pi*r*(flux_basis(side, r) @ coeff[side]))
+        row = [max(abs(field-exact_field)), max(abs(np.r_[inner, outer]-exact_rates)),
+               max(abs(observed-traces)), abs(bulk_sheet-sheet)]
+        for name, error in zip(("field_K", "radial_rate_W_per_m", "trace_K", "sheet_K"), row):
+            record_property(f"max_error_{n}_{name}", float(error))
+        residual = inner[-1]-outer[0]+2*np.pi*radius*(generation-1j*omega*surface_capacity*bulk_sheet)
+        assert abs(residual) < 1e-11
+        errors.append(row)
+    for coarse, fine in zip(errors, errors[1:]):
+        assert all(a/b > 3.7 for a, b in zip(coarse, fine))

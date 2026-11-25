@@ -149,12 +149,14 @@ def solve_annular_sheet(radii, conductivity, volumetric_heat_capacity, wall_temp
                         sheet_face, *, resistance=0., inner_resistance_fraction=.5, sheet_capacity=0.,
                         sheet_conductivity=0., sheet_film=0., ambient=0., sheet_source=0.,
                         source=0., azimuthal_mode=0, wall_fluxes=(None,None), film_coefficients=(None,None),
-                        cell_location="midpoint", distributed_source=False, mean_temperature=None):
+                        cell_location="midpoint", distributed_source=False, mean_temperature=None,
+                        return_contact_temperatures=False):
     """Harmonic conduction with one storing sheet at internal face index sheet_face.
 
     Return cell temperatures, radial rates on the inner and outer domains
     (each including its two boundary faces, outward positive, W/m), and sheet
-    temperature. The sheet has areal heat capacity (J/m²/K), circumferential
+    temperature. With return_contact_temperatures, append the two material-side
+    temperature phasors (inner, outer) at the contact radius. The sheet has areal heat capacity (J/m²/K), circumferential
     conductivity times thickness (W/K), reservoir film (W/m²/K) and applied
     generation (W/m²). Sheet properties are uniform in angle; loads are the
     selected complex modal amplitudes. The mean datum for a floating steady
@@ -181,6 +183,13 @@ def solve_annular_sheet(radii, conductivity, volumetric_heat_capacity, wall_temp
     options = dict(azimuthal_mode=azimuthal_mode,cell_location=cell_location,distributed_source=distributed_source)
     ri,ro = resistance*inner_resistance_fraction,resistance*(1-inner_resistance_fraction)
 
+    def result(field, inner_rates, outer_rates, sheet):
+        values = (field, inner_rates, outer_rates, sheet)
+        if return_contact_temperatures:
+            traces = sheet + np.array([ri*inner_rates[-1], -ro*outer_rates[0]])/circum
+            return (*values, traces)
+        return values
+
     def response(unit):
         # Unit sheet-temperature response uses homogeneous exterior and body loads.
         w = tuple(0. if unit and v is not None else v for v in wall_temperatures)
@@ -205,7 +214,7 @@ def solve_annular_sheet(radii, conductivity, volumetric_heat_capacity, wall_temp
         if abs(inputs.sum())>1e-12*np.abs(inputs).sum():
             raise ValueError("incompatible wall inputs, sheet and volume generation")
         sheet = mean_temperature-np.average(base,weights=volume)
-        return base+sheet,bi,bo,sheet
+        return result(base+sheet, bi, bo, sheet)
     if mean_temperature is not None:
         raise ValueError("mean_temperature applies only to a floating steady zero mode")
     # Integrate the two bulk balances to evaluate their net response.
@@ -225,7 +234,7 @@ def solve_annular_sheet(radii, conductivity, volumetric_heat_capacity, wall_temp
         inner_rates[1:] = bi[0]+np.cumsum(net[:j])
     if wall_fluxes[1] is not None or film_coefficients[1]==0:
         outer_rates[:-1] = bo[-1]-np.cumsum(net[j:][::-1])[::-1]
-    return field,inner_rates,outer_rates,sheet
+    return result(field, inner_rates, outer_rates, sheet)
 
 
 def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity, wall_temperatures,
