@@ -1286,6 +1286,8 @@
  ],
  "continuation_check": {
   "grid": 64,
+  "kind": "continuation",
+  "warm_started": true,
   "same_steady_state": true,
   "max_abs_du_centreline": 3.339638149357782e-08,
   "max_abs_dv_centreline": 2.8807286001075738e-08,
