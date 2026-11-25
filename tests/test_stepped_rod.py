@@ -585,3 +585,35 @@ def test_local_steady_exchange_anchors_insulated_rod_with_remote_heating():
     with pytest.raises(ValueError,match="mean_temperature"):
         solve_steady_stepped_rod(dx,area,k,1.,[0.,0.],end_types=("power","power"),
                                  heat_loss_coefficient=loss,mean_temperature=1.)
+
+
+@pytest.mark.parametrize("method", ["theta","sdirk2","positive_cn"])
+def test_insulated_rod_interval_means_across_heating_switch(method):
+    from tensorfvm.cht.rod import solve_transient_stepped_rod
+
+    time = np.array([0.,.15,.32])
+    jump = .09
+    rate = lambda t: 2. if t<jump else -1.
+    primitive = time+time**2-1.5*np.maximum(time-jump,0.)**2
+    *_,means = solve_transient_stepped_rod([.2,.3,.5],1.,[1.,2.,1.],1.,[0.,0.],
+        time,1.,source=rate,method=method,end_types=("power","power"),contact_resistance=[0.,.3],
+        load_jump_times=[jump],return_interval_temperatures=True)
+    exact = np.diff(primitive)/np.diff(time)
+    for values in means.values():
+        np.testing.assert_allclose(values,np.broadcast_to(exact[:,None],values.shape),atol=3e-14,rtol=0.)
+
+
+@pytest.mark.parametrize("method", ["theta","sdirk2","rannacher","positive_cn"])
+def test_interval_traces_reproduce_split_contact_heat(method):
+    from tensorfvm.cht.rod import solve_transient_stepped_rod
+
+    time = np.array([0.,.04,.11])
+    jump = .04
+    boundary = lambda t: [1. if t<jump else 2.,0.]
+    *_,heat,means = solve_transient_stepped_rod([.25,.75],[1.,2.],[2.,1.],1.,boundary,
+        time,0.,contact_resistance=.3,load_jump_times=[jump],method=method,
+        return_step_heat=True,return_interval_temperatures=True)
+    np.testing.assert_allclose(means["face"][:,0],[1.,2.],atol=1e-14,rtol=0.)
+    transfer = np.diff(time)[:,None]*(means["trace_left"]-means["trace_right"])/.3
+    np.testing.assert_allclose(transfer,heat["contact"],atol=1e-14,rtol=0.)
+    assert transfer.min()>0.

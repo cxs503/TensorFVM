@@ -340,7 +340,7 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
                                 theta=.5, flux_order=1, contact_resistance=0., return_traces=False,
                                 method="theta", return_step_heat=False, end_types=("temperature","temperature"), end_film_coefficient=0.,
                                end_areal_heat_capacity=0., initial_end_temperature=None, initial_trace_temperatures=(None,None), load_jump_times=(), interface_power=0., interface_heat_capacity=0., interface_left_fraction=None, interface_capacity_left_fraction=None, trace_power=(0.,0.),
-                               heat_loss_coefficient=0., bulk_ambient_temperature=0.):
+                               heat_loss_coefficient=0., bulk_ambient_temperature=0., return_interval_temperatures=False):
     """Advance the stepped rod with theta-weighted cell and shoulder storage.
 
     Uses the geometry, units, power signs and four outputs of the harmonic solve,
@@ -380,6 +380,11 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
     be callable; declare its jumps through load_jump_times.
     end_input gives external
     heat entering each end, including surface storage.
+    return_interval_temperatures appends a dictionary of stage-weighted
+    temperatures in K, after any requested step heats. cell and face follow
+    the instantaneous output locations; trace_left and trace_right are the
+    two material temperatures on each interior face. Each row averages all
+    internal time steps across one requested output interval.
     """
     time = np.asarray(time,dtype=float)
     if time.ndim != 1 or len(time)<2 or not np.isfinite(time).all() or np.any(np.diff(time)<=0):
@@ -444,6 +449,9 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
         states[0,free] = spsolve(operator[free][:,free],load)
     M = sp.diags(mass,format="csc")
     previous_dt = None
+    if return_interval_temperatures:
+        temperatures = {key:np.zeros((len(time)-1,size)) for key,size in
+                        (("cell",n),("face",n+1),("trace_left",n-1),("trace_right",n-1))}
     if return_step_heat:
         step_heat = {key:np.zeros((len(time)-1,size)) for key,size in
                      (("left",n),("right",n),("source",n),("bulk_exchange",n),("ambient",n-1),("interface",n-1),("trace_left",n-1),("trace_right",n-1),("contact",n-1),("end_input",2))}
@@ -489,12 +497,16 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
                 stage = lu.solve(mass*u+weight*dt*rhs)
             next_rhs,next_ends,next_src,next_air,next_power,next_reservoir = forcing(np.nextafter(stop,start) if stop in events else stop)
             next_u = lu.solve(mass*u+dt*((1-weight)*(rhs-operator@stage)+weight*next_rhs))
-            if return_step_heat:
+            if return_step_heat or return_interval_temperatures:
                 # Flux, storage and film operators are linear, so their time
                 # integrals can be evaluated on the stage-weighted state.
                 mean = (1-weight)*stage+weight*next_u
                 boundary = (1-weight)*stage_ends+weight*next_ends
-                _,faces,left,right,(up,down) = layout.output(mean,boundary,g,flux_order,True)
+                cells,faces,left,right,(up,down) = layout.output(mean,boundary,g,flux_order,True)
+            if return_interval_temperatures:
+                for key,values in (("cell",cells),("face",faces),("trace_left",up),("trace_right",down)):
+                    temperatures[key][step] += dt*values
+            if return_step_heat:
                 step_heat["left"][step] += dt*left
                 step_heat["right"][step] += dt*right
                 external = np.where(types=="power",boundary,[left[0],-right[-1]])
@@ -527,4 +539,11 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
             step += 1
             states[step],ends[step] = u,boundary_start
     output = layout.output(states,ends,g,flux_order,return_traces)
-    return output+(step_heat,) if return_step_heat else output
+    if return_step_heat:
+        output += (step_heat,)
+    if return_interval_temperatures:
+        widths = np.diff(time)[:,None]
+        for values in temperatures.values():
+            values /= widths
+        output += (temperatures,)
+    return output
