@@ -106,7 +106,22 @@ def test_low_frequency_storage_power_with_insulated_surface_capacity():
     np.testing.assert_allclose(lag[2]["x"][0],drive*(.8+3*(1-np.cumsum(dx)[:-1])))
 
 
-def test_unanchored_low_frequency_conduction_rejected():
+def test_unanchored_low_frequency_unbalanced_power_rejected():
     from tensorfvm.cht.energy import solve_low_frequency_conduction
-    with pytest.raises(ValueError,match="anchor"):
-        solve_low_frequency_conduction([.3,.7],[1.],1.,1.,{},periodic_y=True)
+    with pytest.raises(ValueError,match="zero net power"):
+        solve_low_frequency_conduction([.3,.7],[1.],1.,1.,{},source=1.,periodic_y=True)
+
+
+def test_closed_slab_storing_surface_has_zero_energy_at_both_orders():
+    from tensorfvm.cht.energy import solve_low_frequency_conduction
+    dx = np.array([.25,.25,.5])
+    capacity = np.array([1.,3.,1.5])
+    source = np.array([2.,0.,-1.])
+    surface = .7
+    bc = {"east":dict(type="robin",film_coefficient=0.,wall_areal_heat_capacity=surface,values=0.)}
+    steady,lag = solve_low_frequency_conduction(dx,[1.],2.,capacity,bc,source=source)
+    for field,power in (steady,lag):
+        wall = field[0,-1]+power["east"][0]*dx[-1]/4.
+        assert abs((capacity*dx)@field[0]+surface*wall)<1e-13
+    actual,_ = solve_harmonic_conduction(dx,[1.],2.,capacity,bc,.01,source=source)
+    np.testing.assert_allclose(actual,steady[0]+.01j*lag[0],rtol=0,atol=3e-7)

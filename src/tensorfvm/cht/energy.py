@@ -564,24 +564,36 @@ def solve_low_frequency_conduction(dx, dy, conductivity, volumetric_heat_capacit
 
     Both outputs follow solve_harmonic_conduction's temperature and face-power
     convention. First-order units are K s and W s. Loads and prescribed data
-    are independent of frequency; the steady problem needs a temperature
-    anchor (Dirichlet, positive film or bulk loss). Includes storage at Robin
-    walls and its contribution to power entering the material.
+    are independent of frequency. An unanchored lossless body requires zero
+    net power. The harmonic limit then has zero total stored energy at both
+    orders, including any heat capacity on insulated Robin surfaces.
     """
     A,b,faces,mass,seam = _frequency_system(dx,dy,conductivity,volumetric_heat_capacity,bc,0.,
         source,conductivity_y,contact_resistance_x,contact_resistance_y,periodic_y,heat_loss_coefficient)
     _,_,sides,types,_,_ = faces
     anchored = any(np.any((g.real>0)&np.isin(types[side],["dirichlet","robin"]))
                    for side,_,g,_,_,_ in sides)
-    if not anchored and not np.any(heat_loss_coefficient):
-        raise ValueError("low-frequency conduction requires a steady temperature anchor")
-    factor = spla.splu((-A).astype(complex).tocsc())
+    closed = not anchored and not np.any(heat_loss_coefficient)
+    matrix = (-A).astype(complex).tocsc()
+    energy_weight = mass.copy()
+    if closed:
+        if abs(b.sum())>64*np.finfo(float).eps*np.abs(b).sum():
+            raise ValueError("unanchored low-frequency conduction requires zero net power")
+        for side,cells,_,_,_,area in sides:
+            spec = bc.get(side) or {}
+            energy_weight[cells] += area*np.asarray(spec.get("wall_areal_heat_capacity",0.))
+        # For a compatible load, one added diagonal fixes the additive constant.
+        matrix[0,0] += max(1.,abs(matrix[0,0]))
+    factor = spla.splu(matrix)
     state = factor.solve(-b)
+    if closed:
+        state -= (energy_weight@state)/energy_weight.sum()
     steady = _frequency_output(state,faces,seam,return_interior_power)
     rhs = -mass*state
     correction = {}
     dx,dy = np.asarray(dx),np.asarray(dy)
     shape = steady[0].shape
+    surface_energy_lag = 0.
     for side,cells,g,_,_,area in sides:
         spec = bc.get(side) or {}
         if "wall_areal_heat_capacity" not in spec:
@@ -597,7 +609,12 @@ def solve_low_frequency_conduction(dx, dy, conductivity, volumetric_heat_capacit
         wall = state[cells]+steady[1][side]*half_resistance
         correction[side] = -np.asarray(spec["wall_areal_heat_capacity"])*area*wall*(1-g*half_resistance)
         rhs[cells] += correction[side]
+        if closed:
+            surface_energy_lag += np.sum(area*np.asarray(spec["wall_areal_heat_capacity"])*
+                                         half_resistance*correction[side])
     lag = factor.solve(rhs)
+    if closed:
+        lag -= (energy_weight@lag+surface_energy_lag)/energy_weight.sum()
     cells_lag = lag.reshape(shape)
     powers = {side:_conductive_wall_power(types[side],0.,g,area,lag[cells])+correction.get(side,0.)
               for side,cells,g,_,_,area in sides}
