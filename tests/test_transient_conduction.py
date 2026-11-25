@@ -297,3 +297,27 @@ def test_interval_face_heat_balances_cells_across_unreported_jumps(theta):
     np.testing.assert_allclose(np.diff(field,axis=0)*volume*c+np.diff(x,axis=2)+np.diff(y,axis=1),
                np.diff(generated)[:,None,None]*volume,atol=1e-14)
     np.testing.assert_allclose(w["east"],np.diff(1.2*np.minimum(times,jumps[0])-.3*np.maximum(times-jumps[0],0.))[:,None]*dy)
+
+
+def test_rannacher_after_jump_matches_explicit_restarts_and_heat():
+    times = [0.,.06,.12]
+    jump = .025
+    opts = dict(source=lambda t:1+t,heat_loss_coefficient=.8,return_face_heat=True)
+    def solve(grid,init,west,**kw):
+        return solve_transient_conduction([.4,.6],[1.],2.,1.3,
+            {"west":dict(type="dirichlet",values=west)},grid,init,**opts,**kw)
+    fields,heat = solve(times,0.,lambda t:1. if t<jump else -.3,rannacher=True,load_jump_times=[jump])
+    a,qa = solve([0.,jump/2,jump],0.,1.,theta=1.)
+    b,qb = solve([jump,(jump+.06)/2,.06],a[-1],-.3,theta=1.)
+    c,qc = solve([.06,.12],b[-1],-.3)
+    np.testing.assert_allclose(fields[1:],c,atol=1e-14)
+    for group in heat:
+        for key,v in heat[group].items():
+            np.testing.assert_allclose(v[0],qa[group][key].sum(0)+qb[group][key].sum(0),atol=1e-14)
+            np.testing.assert_allclose(v[1],qc[group][key][0],atol=1e-14)
+
+
+def test_rannacher_rejects_incompatible_theta_and_collapsed_midpoint():
+    for times,theta,reason in (([0.,1.],1.,"theta"),([1.,np.nextafter(1.,2.)],.5,"midpoint")):
+        with pytest.raises(ValueError,match=reason):
+            solve_transient_conduction([1.],[1.],1.,1.,{},times,0.,theta=theta,rannacher=True)

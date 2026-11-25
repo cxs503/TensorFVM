@@ -549,7 +549,7 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
                                contact_resistance_x=0.0, contact_resistance_y=0.0,
                                theta=0.5, conductivity_y=None, return_wall_power=False, periodic_y=False,
                                wall_flux_order=1, heat_loss_coefficient=0., return_interior_power=False,
-                               load_jump_times=(), return_face_heat=False):
+                               load_jump_times=(), return_face_heat=False, rannacher=False):
     """Advance cell-centred conduction with fixed material data and boundary types.
 
     Return temperature at each requested time with shape (nt, ny, nx). Cell
@@ -564,6 +564,8 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
     H*Ta in source to exchange with a prescribed ambient temperature Ta.
     List jumps of source or wall values in load_jump_times. A callable gives
     the new value at the jump; the preceding step samples its left limit.
+    With rannacher=True replace the first Crank–Nicolson step at startup and
+    after each declared jump by two backward Euler half steps.
     Internal steps at jumps preserve the requested output grid. Instantaneous
     power at an output jump uses the new boundary values.
     For grid-aligned anisotropy, conductivity supplies the x component and
@@ -599,7 +601,20 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
     requested = time
     if jumps.size:
         time = np.union1d(time,jumps)
-    outputs = np.searchsorted(time,requested) if jumps.size else slice(None)
+    if rannacher:
+        if theta!=.5:
+            raise ValueError("Rannacher damping requires theta=.5")
+        start = np.searchsorted(time,np.r_[time[0],jumps])
+        mid = time[start]+.5*(time[start+1]-time[start])
+        if np.any((mid<=time[start]) | (mid>=time[start+1])):
+            raise ValueError("Rannacher half step needs a representable midpoint")
+        backward_starts = np.r_[time[start],mid]
+        time = np.union1d(time,mid)
+        stage_weights = np.where(np.isin(time[:-1],backward_starts),1.,theta)
+    else:
+        stage_weights = np.full(len(time)-1,theta)
+    subdivided = bool(jumps.size or rannacher)
+    outputs = np.searchsorted(time,requested) if subdivided else slice(None)
     jump_indices = np.searchsorted(time,jumps)
     sample_times = np.r_[time,np.nextafter(time[jump_indices],time[jump_indices-1])]
     end_samples = np.arange(1,len(time))
@@ -730,19 +745,21 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
     states = np.empty((len(time), len(mass)))
     states[0] = state
     history = states[:, :cell_count].reshape(len(time), ny, nx)
-    previous_dt = None
+    previous_shift = None
     for step, dt in enumerate(np.diff(time)):
-        if dt != previous_dt:
-            lu = spla.splu(M - (theta * dt) * A)
-            previous_dt = dt
+        weight = stage_weights[step]
+        shift = weight*dt
+        if shift != previous_shift:
+            lu = spla.splu(M - shift * A)
+            previous_shift = shift
         state = states[step]
-        rhs = mass * state + dt * ((1 - theta) * (A @ state) - b)
+        rhs = mass * state + dt * ((1 - weight) * (A @ state) - b)
         if varying_source:
             next_power = source_power(sample_times[end_samples[step]])
-            rhs[:cell_count] += dt*((1-theta)*previous_power+theta*next_power)
+            rhs[:cell_count] += dt*((1-weight)*previous_power+weight*next_power)
             previous_power = source_power(time[step+1]) if end_samples[step]!=step+1 else next_power
         for cells, samples, weights in varying_loads:
-            rhs[cells] += dt * weights * ((1-theta)*samples[step] + theta*samples[end_samples[step]])
+            rhs[cells] += dt * weights * ((1-weight)*samples[step] + weight*samples[end_samples[step]])
         states[step + 1] = lu.solve(rhs)
     def wall_powers(selected_states,boundary_values):
         state = selected_states[:,:cell_count]
@@ -767,10 +784,11 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
         durations = np.diff(time)
         def integrate(power):
             step_heat = power*durations.reshape((-1,)+(1,)*(power.ndim-1))
-            return np.add.reduceat(step_heat,outputs[:-1],axis=0) if jumps.size else step_heat
+            return np.add.reduceat(step_heat,outputs[:-1],axis=0) if subdivided else step_heat
 
-        stage = (1-theta)*states[:-1]+theta*states[1:]
-        stage_bc = {s:(1-theta)*v[:len(time)-1]+theta*v[end_samples] for s,v in signals.items()}
+        weights = stage_weights[:,None]
+        stage = (1-weights)*states[:-1]+weights*states[1:]
+        stage_bc = {s:(1-weights)*v[:len(time)-1]+weights*v[end_samples] for s,v in signals.items()}
         walls = {s:integrate(v) for s,v in wall_powers(stage,stage_bc).items()}
         integrated_cells = integrate(stage[:,:cell_count].reshape(-1,ny,nx))
         result.append({"wall":walls,"interior":_interior_conduction_power(integrated_cells,faces)})
