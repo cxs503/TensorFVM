@@ -36,7 +36,8 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
     Boundary, temperature and volumetric source amplitudes multiply
     cos(m*angle)*exp(i*omega*time). Face rates are 2πr times the local
     radial flux amplitude, positive outward (W/m). For m=0 they are the
-    circumferential integrals. Radii are cell faces in m, contact resistance
+    circumferential integrals. Volumetric heat capacity may vanish in any cell;
+    it then conducts without storing heat. Radii are cell faces in m, contact resistance
     is areal (m² K/W) on internal faces. For each wall, a None film coefficient
     prescribes surface temperature; a finite nonnegative film coefficient
     (W/m²/K) uses the supplied temperature as ambient. Zero insulates.
@@ -47,8 +48,8 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
     radius. The default "midpoint" uses the arithmetic radial midpoint.
     distributed_source=True integrates a uniform net generation density
     (applied source minus storage and angular loss) across each half-shell
-    when relating cell temperatures to face power. For the steady axisymmetric
-    case with no temperature anchor, supply the desired volume-weighted mean
+    when relating cell temperatures to face power. For an unanchored axisymmetric
+    problem with zero frequency or all capacities zero, supply the volume-weighted mean
     cell temperature. Wall inputs and integrated generation must sum to zero.
 
     """
@@ -62,8 +63,8 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
     n = len(r)-1
     k, cv = (np.broadcast_to(np.asarray(v, dtype=float), (n,)) for v in
              (conductivity, volumetric_heat_capacity))
-    if any(not np.isfinite(v).all() or np.any(v <= 0) for v in (k,cv)):
-        raise ValueError("material properties must be finite and positive")
+    if not np.isfinite(k).all() or np.any(k <= 0) or not np.isfinite(cv).all() or np.any(cv < 0):
+        raise ValueError("conductivity must be positive and volumetric capacity nonnegative, both finite")
     contact = np.broadcast_to(np.asarray(contact_resistance, dtype=float), (n-1,))
     if len(wall_temperatures) != 2 or len(wall_fluxes) != 2:
         raise ValueError("supply one boundary condition per wall")
@@ -95,7 +96,7 @@ def solve_annular_conduction(radii, conductivity, volumetric_heat_capacity, wall
             raise ValueError("film coefficients must be finite and nonnegative")
         conductance[index] = (0. if h == 0 else
                               1/(1/conductance[index] + 1/(2*np.pi*r[index]*h)))
-    needs_mean = angular_frequency == 0 and azimuthal_mode == 0 and not conductance[[0,-1]].any()
+    needs_mean = (angular_frequency == 0 or not cv.any()) and azimuthal_mode == 0 and not conductance[[0,-1]].any()
     if needs_mean and mean_temperature is None:
         raise ValueError("a steady axisymmetric flux-driven annulus needs a temperature reference")
     if mean_temperature is not None:
@@ -204,7 +205,8 @@ def solve_annular_sheet(radii, conductivity, volumetric_heat_capacity, wall_temp
 
     base,bi,bo = response(False)
     unit,ui,uo = response(True)
-    closed = (not angular_frequency and not azimuthal_mode and not sheet_film and
+    closed = ((not angular_frequency or (not c.any() and not sheet_capacity))
+              and not azimuthal_mode and not sheet_film and
               all(q is not None or h==0 for q,h in zip(wall_fluxes,film_coefficients)))
     volume = np.pi*np.diff(edges)*(edges[1:]+edges[:-1])
     if closed:

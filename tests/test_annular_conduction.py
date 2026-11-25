@@ -545,3 +545,32 @@ def test_harmonic_two_material_sheet_traces_against_bessel_modes(record_property
         errors.append(row)
     for coarse, fine in zip(errors, errors[1:]):
         assert all(a/b > 3.7 for a, b in zip(coarse, fine))
+
+
+def test_massless_insulated_shell_requires_datum_at_nonzero_frequency():
+    from tensorfvm.cht.annulus import solve_annular_sheet
+
+    r = [.3, .5, .7, .9]
+    walls = (None, None)
+    opts = dict(wall_fluxes=(0., 0.))
+    with pytest.raises(ValueError, match="reference"):
+        solve_annular_conduction(r, 1., 0., walls, 4., **opts)
+    with pytest.raises(ValueError, match="mean temperature"):
+        solve_annular_sheet(r, 1., 0., walls, 4., 1, **opts)
+    field, rates = solve_annular_conduction(r, 1., 0., walls, 4., mean_temperature=.4j, **opts)
+    np.testing.assert_allclose(field, .4j)
+    np.testing.assert_allclose(rates, 0., atol=1e-13)
+    # One storing sheet anchors the harmonic zero mode even with all bulk cells massless.
+    field, _, _, sheet = solve_annular_sheet(r, 1., 0., walls, 4., 1, sheet_capacity=.5, sheet_source=1., **opts)
+    np.testing.assert_allclose(field, -.5j, atol=1e-13)
+    np.testing.assert_allclose(sheet, -.5j, atol=1e-13)
+
+
+def test_mixed_cell_storage_in_unanchored_material():
+    edges = np.geomspace(.4, 1.1, 9)
+    cv = np.array([0., .7, 0., 1.4, 0., .6, 1.2, 0.])
+    exact = .3+.6j
+    field, rates = solve_annular_conduction(edges, 2., cv, (None, None), 8.,
+        wall_fluxes=(0., 0.), source=8j*cv*exact, distributed_source=True)
+    np.testing.assert_allclose(field, exact, atol=1e-13)
+    np.testing.assert_allclose(rates, 0., atol=1e-13)

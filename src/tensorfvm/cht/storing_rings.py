@@ -19,7 +19,8 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
     source is scalar or per-cell volumetric heat generation (W/m³), in the same mode.
     At either physical wall a positive film coefficient (W/m²/K) makes the supplied
     temperature an ambient phasor. None prescribes the surface temperature.
-    A positive scalar or per-cell capacity (J/(m³ K)) enables harmonic bulk storage.
+    A nonnegative scalar or per-cell capacity (J/(m³ K)) enables harmonic bulk storage.
+    Zero-capacity cells conduct without storing heat, even beside cells with positive capacity.
     inner_resistance_fractions specifies the fraction of each contact resistance
     (m² K/W) on the smaller-radius side of its storing sheet (capacity in J/(m² K)).
     sheet_conductivities are circumferential conductivities times thickness (W/K),
