@@ -48,3 +48,26 @@ def test_volume_centroid_recovers_steady_log_profile_on_graded_cells():
     np.testing.assert_allclose(rate, -4*np.pi, atol=1e-13, rtol=0.)
     with pytest.raises(ValueError, match="cell_location"):
         solve_annular_conduction(radii, 2., 1., [0.,1.], 0., cell_location="unknown")
+
+
+def test_two_flux_phasors_drive_single_shell_storage():
+    r = [.25, 1.]
+    q = np.array([3.+2j, -.7j])
+    t, rates = solve_annular_conduction(r, 2., 3., (None,None), 4., wall_fluxes=q)
+    inward = 2*np.pi*np.array(r)*q
+    np.testing.assert_allclose(rates, inward*[1,-1])
+    np.testing.assert_allclose(t[0], inward.sum()/(12j*np.pi*(1.-.25**2)))
+    with pytest.raises(ValueError, match="wall flux"):
+        solve_annular_conduction(r, 2., 1., (1.,0.), 2., wall_fluxes=(1.,None))
+
+
+@pytest.mark.parametrize("driven", [0,1])
+def test_prescribed_wall_flux_on_either_end_matches_steady_log_profile(driven):
+    radii = np.array([.25,.4,.7,1.])
+    walls = list(np.log(radii[[0,-1]]))
+    walls[driven] = None
+    fluxes = [None,None]
+    fluxes[driven] = (-1 if driven == 0 else 1)*2./radii[[0,-1]][driven]
+    field, rates = solve_annular_conduction(radii, 2., 1., walls, 0., wall_fluxes=fluxes)
+    np.testing.assert_allclose(field, np.log(.5*(radii[:-1]+radii[1:])), atol=1e-14)
+    np.testing.assert_allclose(rates, -4*np.pi, atol=1e-13)
