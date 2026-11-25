@@ -246,3 +246,57 @@ def test_metrics_are_finite_for_every_case():
             assert math.isfinite(metrics[key])
         assert metrics["h_min"] > 0.0
         assert metrics["h_max_over_href"] < 1.5
+
+@pytest.mark.parametrize("boost", [-12., 12.])
+def test_boosted_wet_wave_profiles(boost, record_property):
+    error = 0.
+    for case in DEFAULT_CASES:
+        base = case.solution()
+        moved = solve_riemann(base.hL, base.uL+boost, base.hR, base.uR+boost, base.gravity)
+        x = np.linspace(base.span[0]-1, base.span[1]+1, 511)
+        h, u = sample_exact(base, x, 1.)
+        hm, um = sample_exact(moved, x+boost, 1.)
+        error = max(error, np.max(abs(h-hm)), np.max(abs(u+boost-um)))
+    assert error < 1e-12
+    record_property("max_galilean_discrepancy", float(error))
+
+
+def test_generated_dry_interval_and_finite_volume_refinement(record_property):
+    from tensorfvm.shallow_water import ShallowWater1D, dry_riemann_state
+
+    # g=1, cL=1, cR=1/2. Tail speeds are -1 and +1, heads -4 and +2.5.
+    data = (1., -3., .25, 2.)
+    xi = np.array([-4., -2.5, -1., 0., 1., 1.75, 2.5])
+    h, u = dry_riemann_state(xi, 1., *data, gravity=1.)
+    np.testing.assert_allclose(h, [1., .25, 0., 0., 0., .0625, .25])
+    np.testing.assert_allclose(u, [-3., -2., 0., 0., 0., 1.5, 2.])
+    errors = []
+    for n in (200, 400, 800):
+        solver = ShallowWater1D(n, -2., 2., gravity=1., cfl=.4, order=2)
+        solver.set_state(*dry_riemann_state(solver.x, 0., *data, gravity=1.))
+        volume = solver.total_volume()
+        solver.advance(.25)
+        h, u = solver.primitive()
+        href, _ = dry_riemann_state(solver.x, solver.time, *data, gravity=1.)
+        errors.append(float(np.mean(abs(h-href))))
+        budget = abs(solver.total_volume()-volume - solver.time*(-3.-.5))
+        record_property(f"mean_depth_error_{n}", errors[-1])
+        record_property(f"mass_budget_error_{n}", float(budget))
+        assert h.min() >= 0 and budget < 1e-11
+    assert all(fine < .8*coarse for coarse,fine in zip(errors, errors[1:]))
+
+
+def test_dry_reference_moving_one_sided_beds_and_touching_fronts():
+    from tensorfvm.shallow_water import dry_riemann_state
+
+    x = np.linspace(-2, 2, 129)
+    h, u = dry_riemann_state(x, .5, 1., .5, 0., -8., gravity=1., x0=.25)
+    base_h, base_u = exact.ritter_state(x-.25, .5, 1., gravity=1., x_dam=.25)
+    np.testing.assert_allclose(h, base_h)
+    np.testing.assert_allclose(u, np.where(h>0, .5+base_u, 0.))
+    right_h, right_u = dry_riemann_state(-x, .5, 0., 8., 1., -.5, gravity=1., x0=-.25)
+    np.testing.assert_allclose(right_h, h)
+    np.testing.assert_allclose(right_u, -u)
+    assert dry_riemann_state(0., 1., 1., -2., 1., 2., gravity=1.) == (0., 0.)
+    with pytest.raises(ValueError, match="interacting wet waves"):
+        dry_riemann_state(0., 1., 1., 0., 1., 0.)

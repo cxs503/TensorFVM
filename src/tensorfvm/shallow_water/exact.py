@@ -52,6 +52,7 @@ __all__ = [
     "ritter_head_position",
     "ritter_level_position",
     "ritter_state",
+    "dry_riemann_state",
     "stoker_constant_state",
     "stoker_region_bounds",
     "stoker_state",
@@ -156,6 +157,31 @@ def ritter_state(x, t: float, h0: float, gravity: float = 9.81,
     depth = np.where(xi <= -c0, h0, depth)
     vel = np.where(fan, (2.0 / 3.0) * (c0 + xi), 0.0)
     return np.clip(depth, 0.0, h0), vel
+
+
+def dry_riemann_state(x, t: float, hL: float, uL: float, hR: float, uR: float,
+                      gravity: float = 9.81, x0: float = 0.0):
+    """Sample depth and velocity for initial or generated vacuum on a flat bed.
+
+    A wet left state ends at speed uL+2*cL, and a wet right state starts at
+    uR-2*cR. When both are wet these fronts must separate or just touch.
+    Velocity is reported as zero wherever depth vanishes.
+    """
+    if not all(math.isfinite(v) for v in (t, hL, uL, hR, uR, gravity, x0)):
+        raise ValueError("Riemann data must be finite")
+    if t < 0 or min(hL, hR) < 0 or gravity <= 0:
+        raise ValueError("require nonnegative depths and time and positive gravity")
+    if hL and hR and uR-uL < 2*(math.sqrt(gravity*hL)+math.sqrt(gravity*hR)):
+        raise ValueError("interacting wet waves require solve_riemann")
+    offset = np.asarray(x, dtype=float) - x0
+    if t == 0:
+        left = offset <= 0
+        depth = np.where(left, hL, hR)
+        return depth, np.where(depth > 0, np.where(left, uL, uR), 0.)
+    left_h, left_u = ritter_state(offset-uL*t, t, hL, gravity)
+    right_h, right_u = ritter_state(uR*t-offset, t, hR, gravity)
+    velocity = np.where(left_h > 0, uL+left_u, np.where(right_h > 0, uR-right_u, 0.))
+    return left_h+right_h, velocity
 
 
 # --------------------------------------------------------------------------- #

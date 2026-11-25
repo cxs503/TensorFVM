@@ -69,10 +69,8 @@ Known limitation (stated, not hidden)
 A Riemann problem whose solution contains a **dry middle region** (two
 rarefactions pulling the water apart until ``h`` reaches zero: diverging streams
 with ``-2(cL + cR) + (uR - uL) >= 0``) is *not* solved here; the constructor
-raises ``ValueError`` naming that limit.  The dry bed is covered by the Ritter
-dam-break reference in ``exact.py``, and a second dry-bed path here would
-duplicate it.  Refusing explicitly keeps a ``ValueError`` from being mistaken
-for a converged answer.
+raises ``ValueError`` naming that limit.  Use :func:`exact.dry_riemann_state` to sample a dry middle region
+or an initially dry bed, including moving wet states.
 
 References
 ----------
@@ -221,7 +219,7 @@ def solve_riemann(hL: float, uL: float, hR: float, uR: float,
         raise ValueError(
             "the solution contains a dry middle region (diverging streams with "
             f"f(0)={f_zero:.6e} >= 0); this solver covers wet Riemann problems "
-            "only -- use exact.ritter_state for the dry-bed dam break")
+            "only -- use exact.dry_riemann_state for generated vacuum")
 
     lo = 0.0
     hi = max(hL, hR)
@@ -295,7 +293,7 @@ def sample_exact(sol: RiemannSolution, x, t: float):
         c_fan = (sol.uL + 2.0 * cL - xi) / 3.0
         u_fan = xi + c_fan
         h_fan = c_fan * c_fan / g
-        in_fan_l = (xi > sol.left_head) & (xi < sol.left_tail)
+        in_fan_l = (xi >= sol.left_head) & (xi < sol.left_tail)
     else:
         h_fan = np.zeros_like(xi)
         u_fan = np.zeros_like(xi)
@@ -310,7 +308,7 @@ def sample_exact(sol: RiemannSolution, x, t: float):
         c_fan_r = (xi - sol.uR + 2.0 * cR) / 3.0
         u_fan_r = xi - c_fan_r
         h_fan_r = c_fan_r * c_fan_r / g
-        in_fan_r = (xi > sol.right_tail) & (xi < sol.right_head)
+        in_fan_r = (xi > sol.right_tail) & (xi <= sol.right_head)
     else:
         h_fan_r = np.zeros_like(xi)
         u_fan_r = np.zeros_like(xi)
@@ -320,7 +318,8 @@ def sample_exact(sol: RiemannSolution, x, t: float):
     u_r = np.where(xi > sol.right_head, sol.uR,
                    np.where(in_fan_r, u_fan_r, sol.u_star))
 
-    return np.where(xi <= 0.0, h_l, h_r), np.where(xi <= 0.0, u_l, u_r)
+    # The star-state velocity lies between the two waves in every inertial frame.
+    return np.where(xi <= sol.u_star, h_l, h_r), np.where(xi <= sol.u_star, u_l, u_r)
 
 
 # --------------------------------------------------------------------------- #
