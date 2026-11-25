@@ -292,3 +292,29 @@ def test_transient_annular_films_preserve_logarithmic_contact_solution():
     np.testing.assert_allclose(s,sheet,atol=1e-14,rtol=0.)
     for heat in (qi,qo):
         np.testing.assert_allclose(heat,np.broadcast_to(rate*np.diff(t)[:,None],heat.shape),rtol=0.,atol=1e-14)
+
+
+@pytest.mark.parametrize("bc",["temperature","flux","film"])
+def test_annulus_surface_temperature_at_each_output(bc):
+    from tensorfvm.cht.annulus import solve_transient_annular_sheet
+    edges = np.array([.35,.6,.79,1.])
+    t = np.array([0.,.014,.087])
+    walls = np.stack((.2+t,.7-.5*t),axis=1)
+    fluxes,films = (None,None),(None,None)
+    if bc=="flux":
+        fluxes = walls.T
+    if bc=="film":
+        films = (0.,2.3)
+    u,_,qi,qo,_,surface = solve_transient_annular_sheet(edges,1.3,2.1,(None,None) if bc=="flux" else walls.T,
+              t,[.1,.5,.4],1,sheet_capacity=.4,initial_sheet_temperature=.3,wall_fluxes=fluxes,
+              film_coefficients=films,return_wall_temperatures=True)
+    centers = (2/3)*np.diff(edges**3)/np.diff(edges**2)
+    half = abs(np.log(centers[[0,-1]]/edges[[0,-1]]))/(2*np.pi*1.3)
+    inward = (surface-u[:,[0,-1]])/half
+    np.testing.assert_allclose(np.column_stack((qi[:,0],-qo[:,-1])),np.diff(t)[:,None]*(inward[:-1]+inward[1:])/2,atol=2e-14)
+    if bc=="temperature":
+        np.testing.assert_array_equal(surface,walls)
+    elif bc=="flux":
+        np.testing.assert_allclose(inward,2*np.pi*edges[[0,-1]]*walls)
+    else:
+        np.testing.assert_allclose(inward,2*np.pi*edges[[0,-1]]*films*(walls-surface),atol=1e-14)

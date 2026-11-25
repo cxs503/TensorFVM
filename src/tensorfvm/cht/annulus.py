@@ -233,7 +233,7 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
                                   sheet_capacity, resistance=0., inner_resistance_fraction=.5,
                                   sheet_conductivity=0., azimuthal_mode=0, sheet_film=0., ambient=0.,
                                   sheet_source_intervals=0., theta=.5, wall_fluxes=(None,None), source_intervals=0.,
-                                  film_coefficients=(None,None)):
+                                  film_coefficients=(None,None), return_wall_temperatures=False):
     """Advance one real azimuthal mode with a storing sheet and Dirichlet walls.
 
     Walls and reservoir ambient accept constants or one sample per output time.
@@ -254,6 +254,8 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
     directed toward increasing radius, with all faces including the walls),
     and interval sheet-to-reservoir heat (J/m). Rates use the 2πr modal
     normalization of solve_annular_conduction. theta=.5 gives Crank–Nicolson.
+    return_wall_temperatures appends instantaneous material surface temperatures
+    at the bore and exterior (shape time × 2), using the radial half-cell resistances.
     """
     r = np.asarray(radii,dtype=float)
     t = np.asarray(times,dtype=float)
@@ -351,4 +353,17 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
         heat[i] = -dt*g*np.diff(np.r_[0.,stage,0.])
         heat[i,[0,-1]] += dt*wall_input
         reservoir[i] = dt*circum*sheet_film*(stage[j]-avg_a)
-    return np.delete(state,j,axis=1),state[:,j],heat[:,:j+1],heat[:,j+1:],reservoir
+    result = np.delete(state,j,axis=1),state[:,j],heat[:,:j+1],heat[:,j+1:],reservoir
+    if return_wall_temperatures:
+        surfaces = np.empty((len(t),2))
+        for column,index,data in ((0,0,west),(1,-1,east)):
+            if wall_fluxes[column] is not None:
+                inward = 2*np.pi*r[index]*data
+            elif film_coefficients[column] is None:
+                surfaces[:,column] = data
+                continue
+            else:
+                inward = g[index]*(data-state[:,index])
+            surfaces[:,column] = state[:,index]+links[index]*inward
+        return (*result,surfaces)
+    return result
