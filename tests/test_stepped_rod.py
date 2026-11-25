@@ -425,3 +425,31 @@ def test_steady_power_partition_matches_two_trace_network():
                 contact_resistance=.24,interface_power=power,interface_left_fraction=frac,return_traces=True)
     np.testing.assert_allclose([west[0],east[0]],exact,atol=1e-14)
     np.testing.assert_allclose([-left[0],right[-1]],exact*np.array([gw,ge]),atol=1e-14)
+
+
+@pytest.mark.parametrize("area", [[2.,1.],[1.,2.]])
+@pytest.mark.parametrize("resistance", [0.,.24])
+@pytest.mark.parametrize("method", ["theta","sdirk2","rannacher","positive_cn"])
+def test_interface_heat_with_storage_on_each_material(area,resistance,method):
+    from tensorfvm.cht.rod import solve_transient_stepped_rod
+
+    temps = (1.,.4 if resistance else 1.)
+    _,_,_,_,(left,right),heat = solve_transient_stepped_rod(
+        [.4,.6],area,2.,1.,[0.,0.],[0.,.03,.08],0.,method=method,
+        interface_heat_capacity=2.,interface_capacity_left_fraction=.25,
+        interface_power=lambda t: 3.*(t<.045),interface_left_fraction=.7,load_jump_times=[.045],
+        contact_resistance=resistance,initial_trace_temperatures=temps,return_step_heat=True,return_traces=True)
+    np.testing.assert_allclose([left[0,0],right[0,0]],temps)
+    q,p = heat["contact"][:,0],heat["interface"][:,0]
+    np.testing.assert_allclose(.5*np.diff(left[:,0]),heat["right"][:,0]+.7*p-q,atol=1e-13)
+    np.testing.assert_allclose(1.5*np.diff(right[:,0]),q+.3*p-heat["left"][:,1],atol=1e-13)
+
+
+def test_shared_storing_trace_requires_consistent_initial_value():
+    from tensorfvm.cht.rod import solve_transient_stepped_rod
+
+    with pytest.raises(ValueError,match="conflicting"):
+        solve_transient_stepped_rod([.4,.6],1.,2.,1.,[0.,0.],[0.,.1],0.,
+                    interface_heat_capacity=1.,initial_trace_temperatures=(.2,.8))
+    with pytest.raises(ValueError,match="interface capacity left fraction"):
+        solve_harmonic_stepped_rod([.4,.6],1.,2.,1.,[0.,0.],2.,interface_capacity_left_fraction=-.1)
