@@ -81,12 +81,15 @@ def test_dc_wall_films_against_radial_resistances(films):
     k = [1., 2.5, .8]
     contacts = np.array([.5, .9])
     ambient = np.array([1.+.2j, -.3j])
-    _, _, _, rates = solve_storing_rings(
+    _, _, _, rates, surface = solve_storing_rings(
         edges, k, [1, 2], ambient, 0., contact_resistances=contacts, sheet_capacities=(.25, .8),
-        film_coefficients=films, return_wall_rates=True)
+        film_coefficients=films, return_wall_rates=True, return_wall_temperatures=True)
     film_resistance = sum(1/(r*h) for r, h in zip(edges[[0, -1]], films) if h is not None)
     resistance = sum(np.diff(np.log(edges))/k) + sum(contacts/edges[1:-1]) + film_resistance
     np.testing.assert_allclose(rates, 2*np.pi*(ambient[0]-ambient[1])/resistance, rtol=1e-12)
+    film_drops = np.array([0. if h is None else 1/(r*h) for h, r in zip(films, edges[[0, -1]])])
+    expected_surface = ambient + np.array([-1., 1.])*film_drops*(ambient[0]-ambient[1])/resistance
+    np.testing.assert_allclose(surface, expected_surface, rtol=1e-11)
 
 
 @pytest.mark.parametrize("heated_layer", [0, 1, 2])

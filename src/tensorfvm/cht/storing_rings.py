@@ -8,7 +8,8 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
                         contact_resistances, sheet_capacities, sheet_generation=(0., 0.), source=0.,
                         azimuthal_mode=0, volumetric_heat_capacity=None, film_coefficients=(None, None),
                         inner_resistance_fractions=(.5, .5), sheet_conductivities=(0., 0.),
-                        return_wall_rates=False, return_bulk_storage=False, return_angular_conduction=False):
+                        return_wall_rates=False, return_bulk_storage=False, return_angular_conduction=False,
+                        return_wall_temperatures=False):
     """Return two sheet temperatures and their incoming and outgoing radial fluxes.
 
     The cell faces include both sheets. Conductivity is scalar or per cell.
@@ -33,6 +34,8 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
     With return_angular_conduction, append three circumferential divergence
     amplitudes, integral(2π k m² T/r dr) per layer in W/m. They vanish for
     mode zero and enter each modal balance as radial input plus volume generation minus output and storage.
+    With return_wall_temperatures, append the physical bore and exterior surface
+    temperature phasors (K) after all other requested outputs.
     """
     r = np.asarray(radii, dtype=float)
     faces = np.asarray(sheet_faces)
@@ -122,4 +125,11 @@ def solve_storing_rings(radii, conductivity, sheet_faces, wall_temperatures, ome
         result += (storage_maps[:, 0]*nodes[:-1] + storage_maps[:, 1]*nodes[1:] + storage_maps[:, 2],)
     if return_angular_conduction:
         result += (angular_maps[:, 0]*nodes[:-1] + angular_maps[:, 1]*nodes[1:] + angular_maps[:, 2],)
+    if return_wall_temperatures:
+        surface = walls.copy()
+        if film_coefficients[0] is not None:
+            surface[0] -= inner_rates[0]/(2*np.pi*r[0]*film_coefficients[0])
+        if film_coefficients[1] is not None:
+            surface[1] += outer_rates[1]/(2*np.pi*r[-1]*film_coefficients[1])
+        result += (surface,)
     return result
