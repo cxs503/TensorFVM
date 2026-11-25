@@ -391,3 +391,37 @@ def test_equal_area_harmonic_interface_can_store_heat():
     _,face,left,right = solve_harmonic_stepped_rod([.3,.7],1.,2.,1.,[0.,0.],omega,
                                     interface_power=power,interface_heat_capacity=capacity)
     np.testing.assert_allclose(left[1]-right[0]+1j*omega*capacity*face[1],power,atol=1e-13)
+
+
+@pytest.mark.parametrize("area",[[1.,2.],[2.,1.]])
+@pytest.mark.parametrize("resistance",[0.,.24])
+def test_partitioned_interface_heating_closes_both_material_traces(area,resistance):
+    from tensorfvm.cht.rod import solve_transient_stepped_rod
+
+    frac,power = .35,3.
+    times = np.linspace(0.,.4,17)
+    _,_,_,_,heat = solve_transient_stepped_rod([.4,.6],area,2.,1.,[0.,0.],times,0.,
+            interface_power=power,contact_resistance=resistance,interface_left_fraction=frac,
+            return_step_heat=True)
+    q = heat["contact"][:,0]
+    np.testing.assert_allclose(q-heat["right"][:,0],frac*power*np.diff(times),atol=1e-14)
+    np.testing.assert_allclose(heat["left"][:,1]-q,(1-frac)*power*np.diff(times),atol=1e-14)
+
+
+@pytest.mark.parametrize("fraction",[-.01,1.01,np.nan])
+def test_invalid_interface_power_partition(fraction):
+    with pytest.raises(ValueError,match="interface left fraction"):
+        solve_harmonic_stepped_rod([.4,.6],1.,2.,1.,[0.,0.],2.,interface_left_fraction=fraction)
+
+
+def test_steady_power_partition_matches_two_trace_network():
+    from tensorfvm.cht.rod import solve_steady_stepped_rod
+
+    # Two branch conductances (k*A/L) and one overlap conductance (A/R).
+    power,frac = 3.,.35
+    gw,ge,g = 2/.4,4/.6,1/.24
+    exact = np.linalg.solve([[gw+g,-g],[-g,ge+g]],power*np.array([frac,1-frac]))
+    _,_,left,right,(west,east) = solve_steady_stepped_rod([.4,.6],[1.,2.],2.,1.,[0.,0.],
+                contact_resistance=.24,interface_power=power,interface_left_fraction=frac,return_traces=True)
+    np.testing.assert_allclose([west[0],east[0]],exact,atol=1e-14)
+    np.testing.assert_allclose([-left[0],right[-1]],exact*np.array([gw,ge]),atol=1e-14)
