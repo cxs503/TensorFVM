@@ -21,7 +21,8 @@ class _Layout:
     left: np.ndarray
     right: np.ndarray
     shoulders: np.ndarray
-    power_ends: np.ndarray
+    free_ends: np.ndarray
+    anchored: bool
 
     @property
     def cells(self):
@@ -29,11 +30,11 @@ class _Layout:
         return self.left
 
     def output(self, state, ends, g, flux_order, return_traces):
-        if self.power_ends.size:
-            # Appended unknowns are temperatures at ends with specified power.
+        if self.free_ends.size:
+            # Appended unknowns are temperatures at power and convection boundaries.
             ends = ends.copy()
-            ends[...,self.power_ends] = state[...,-self.power_ends.size:]
-            state = state[...,:-self.power_ends.size]
+            ends[...,self.free_ends] = state[...,-self.free_ends.size:]
+            state = state[...,:-self.free_ends.size]
         full = np.concatenate((ends[..., :1],state,ends[..., 1:]),axis=-1)
         cell = state[...,self.cells]
         west, east = full[...,self.left], full[...,self.right]
@@ -50,7 +51,7 @@ class _Layout:
         return result
 
 
-def _rod_operator(dx, area, conductivity, capacity, film_coefficient, shoulder_areal_heat_capacity, flux_order, contact_resistance, end_types):
+def _rod_operator(dx, area, conductivity, capacity, film_coefficient, shoulder_areal_heat_capacity, flux_order, contact_resistance, end_types, end_film_coefficient):
     dx = np.asarray(dx, dtype=float)
     if dx.ndim != 1 or not dx.size or not np.isfinite(dx).all() or np.any(dx <= 0):
         raise ValueError("dx must be a nonempty vector of finite positive widths")
@@ -81,14 +82,20 @@ def _rod_operator(dx, area, conductivity, capacity, film_coefficient, shoulder_a
     count = right[-1]+1
     shoulders = np.where(area[:-1]>=area[1:],right[:-1],left[1:])
     types = np.asarray(end_types)
-    if types.shape != (2,) or not np.isin(types,["temperature","power"]).all():
-        raise ValueError("end_types must specify temperature or power for each end")
-    power_ends = np.flatnonzero(types == "power")
-    layout = _Layout(left,right,shoulders,power_ends)
+    if types.shape != (2,) or not np.isin(types,["temperature","power","robin"]).all():
+        raise ValueError("end_types must specify temperature, power or robin for each end")
+    free_ends = np.flatnonzero(types != "temperature")
+    h_end = _profile(end_film_coefficient,2,"end film coefficient")
+    if np.any(h_end < 0):
+        raise ValueError("end film coefficient must be nonnegative")
+    end_film = h_end*area[[0,-1]]*(types=="robin")
+    anchored = free_ends.size < 2 or np.any(end_film) or np.any(film)
+    layout = _Layout(left,right,shoulders,free_ends,anchored)
     links = np.empty(count-1)
     links[left] = links[left+1] = g
     links[right[:-1][split]] = np.minimum(area[:-1],area[1:])[split]/resistance[split]
     diagonal = np.r_[links,0.] + np.r_[0.,links]
+    diagonal[[0,-1]] += end_film
     diagonal[shoulders] += film
     full = sp.diags((-links, diagonal, -links), (-1,0,1),format="csc")
     if flux_order == 2:
@@ -97,15 +104,15 @@ def _rod_operator(dx, area, conductivity, capacity, film_coefficient, shoulder_a
                                   shape=(n,count))
         full = full + curvature.T @ sp.diags(g) @ curvature
     endpoints = np.array([0,count-1])
-    unknown = np.r_[np.arange(1,count-1),endpoints[power_ends]]
+    unknown = np.r_[np.arange(1,count-1),endpoints[free_ends]]
     operator = full[unknown][:,unknown].tocsc()
     end_load = -full[unknown][:,endpoints]
-    if power_ends.size:
+    if free_ends.size:
         # Dirichlet values enter through eliminated conductances, Neumann
         # powers enter their own massless endpoint energy balances.
         end_load = end_load @ sp.diags((types=="temperature").astype(float))
-        end_load += sp.csc_matrix((np.ones(power_ends.size),
-                                  (np.arange(count-2,len(unknown)),power_ends)),
+        end_load += sp.csc_matrix((np.where(types=="power",1.,end_film)[free_ends],
+                                  (np.arange(count-2,len(unknown)),free_ends)),
                                   shape=(len(unknown),2))
     mass = np.zeros(len(unknown))
     mass[layout.cells] = c*volume
@@ -116,7 +123,7 @@ def _rod_operator(dx, area, conductivity, capacity, film_coefficient, shoulder_a
 def _load(volume, end_load, layout, film, ends, source, ambient, dtype):
     n = len(volume)
     if np.shape(ends) != (2,):
-        raise ValueError("provide left and right end temperatures")
+        raise ValueError("provide left and right end boundary values")
     ends = _profile(ends,2,"end boundary values",dtype)
     rhs = np.zeros(end_load.shape[0],dtype=dtype)
     rhs[layout.cells] = volume*_profile(source,n,"source",dtype)
@@ -129,21 +136,21 @@ def solve_steady_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
                              end_temperatures, *, source=0., film_coefficient=0.,
                              ambient_temperature=0., shoulder_areal_heat_capacity=0.,
                              flux_order=1, contact_resistance=0., return_traces=False,
-                             end_types=("temperature","temperature"), mean_temperature=None):
+                             end_types=("temperature","temperature"), end_film_coefficient=0., mean_temperature=None):
     """Steady temperatures and rightward powers with the harmonic solver's conventions.
 
-    When both ends prescribe power and every exposed film is insulating, the
+    When neither end fixes temperature and all films are insulating, the
     inward end powers plus volumetric heating must sum to zero. In this case
     mean_temperature fixes the heat-capacity-weighted mean of cells and storing
     shoulders, in K. Other boundary combinations determine the absolute level.
     """
     operator,mass,volume,g,film,end_load,layout = _rod_operator(
         dx,area,conductivity,volumetric_heat_capacity,film_coefficient,
-        shoulder_areal_heat_capacity,flux_order,contact_resistance,end_types)
+        shoulder_areal_heat_capacity,flux_order,contact_resistance,end_types,end_film_coefficient)
     rhs, ends = _load(volume,end_load,layout,film,end_temperatures,source,ambient_temperature,float)
-    if layout.power_ends.size==2 and not np.any(film):
+    if not layout.anchored:
         if mean_temperature is None or not np.isscalar(mean_temperature) or not np.isfinite(mean_temperature):
-            raise ValueError("two power ends without film exchange require a finite mean_temperature")
+            raise ValueError("unanchored ends without film exchange require a finite mean_temperature")
         if abs(np.sum(rhs)) > 64*np.finfo(float).eps*np.sum(abs(rhs)):
             raise ValueError("incompatible steady load: net inward end power plus source must vanish")
         # Pin one cell during the solve and then shift every trace by the
@@ -163,11 +170,14 @@ def solve_harmonic_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
                                end_temperatures, angular_frequency, *, source=0.,
                                film_coefficient=0., ambient_temperature=0.,
                                shoulder_areal_heat_capacity=0., flux_order=1, contact_resistance=0., return_traces=False,
-                               end_types=("temperature","temperature")):
+                               end_types=("temperature","temperature"), end_film_coefficient=0.):
     """Solve a rod with concentric sections and prescribed end phasors.
 
-    end_types specifies "temperature" (K) or "power" (inward W) for each
-    value of end_temperatures. Zero power insulates an end. Both reported
+    end_types selects "temperature" (K), "power" (inward W), or "robin"
+    (ambient K) for each value of end_temperatures. At a Robin end the inward
+    power equals end_film_coefficient times end area times ambient minus wall
+    temperature, h*A*(Tamb-Twall). Supply a scalar h or a west/east pair
+    in W/(m² K). Only Robin ends use their coefficient. Zero power insulates an end. Both reported
     cell powers point right, so inward power at the right end changes sign.
     Cell inputs are width (m), area (m²), conductivity (W/(m K)), volumetric
     capacity (J/(m³ K)) and source (W/m³). At each internal face the absolute
@@ -185,7 +195,7 @@ def solve_harmonic_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
     if not np.isfinite(angular_frequency) or angular_frequency <= 0:
         raise ValueError("angular_frequency must be finite and positive")
     operator,mass,volume,g,film,end_load,layout = _rod_operator(dx,area,conductivity,volumetric_heat_capacity,
-                                               film_coefficient,shoulder_areal_heat_capacity,flux_order,contact_resistance,end_types)
+                                               film_coefficient,shoulder_areal_heat_capacity,flux_order,contact_resistance,end_types,end_film_coefficient)
     rhs, ends = _load(volume,end_load,layout,film,end_temperatures,source,ambient_temperature,complex)
     state = spsolve(operator+sp.diags(1j*angular_frequency*mass),rhs)
     return layout.output(state,ends,g,flux_order,return_traces)
@@ -196,7 +206,7 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
                                 film_coefficient=0., ambient_temperature=0.,
                                 shoulder_areal_heat_capacity=0., initial_shoulder_temperature=None,
                                 theta=.5, flux_order=1, contact_resistance=0., return_traces=False,
-                                method="theta", return_step_heat=False, end_types=("temperature","temperature")):
+                                method="theta", return_step_heat=False, end_types=("temperature","temperature"), end_film_coefficient=0.):
     """Advance the stepped rod with theta-weighted cell and shoulder storage.
 
     Uses the geometry, units, power signs and four outputs of the harmonic solve,
@@ -229,7 +239,7 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
         raise ValueError("positive_cn requires flux_order=1")
     weight = 1.-1./np.sqrt(2.) if method == "sdirk2" else theta
     operator,mass,volume,g,film,end_load,layout = _rod_operator(dx,area,conductivity,volumetric_heat_capacity,
-                                                film_coefficient,shoulder_areal_heat_capacity,flux_order,contact_resistance,end_types)
+                                                film_coefficient,shoulder_areal_heat_capacity,flux_order,contact_resistance,end_types,end_film_coefficient)
     n = len(g)
     def forcing(t):
         values = [v(float(t)) if callable(v) else v for v in (end_temperatures,source,ambient_temperature)]

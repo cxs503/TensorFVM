@@ -252,3 +252,30 @@ def test_steady_balanced_end_powers_preserve_contact_jump_and_energy_gauge(order
         solve_steady_stepped_rod(dx,a,k,c,[0.,0.],**opts)
     _,_,qin,qout,_ = solve_steady_stepped_rod(dx,a,k,c,[.8,.8],film_coefficient=2.,**opts)
     np.testing.assert_allclose([qin[0],qout[-1]],[.8,-.8])
+
+
+@pytest.mark.parametrize("order",[1,2])
+def test_robin_ends_match_series_resistance(order):
+    from tensorfvm.cht.rod import solve_steady_stepped_rod
+    dx,a,k = np.array([.25,.75]),np.array([.7,1.4]),np.array([1.6,.8])
+    h,air = np.array([2.,5.]),np.array([315.,283.])
+    resistance = .13
+    q = (air[0]-air[1])/(sum(1/(h*a))+sum(dx/(k*a))+resistance/min(a))
+    _,faces,left,right,(up,down) = solve_steady_stepped_rod(
+        dx,a,k,1.,air,end_types=("robin","robin"),end_film_coefficient=h,
+        contact_resistance=resistance,flux_order=order,return_traces=True)
+    np.testing.assert_allclose(left,q)
+    np.testing.assert_allclose(right,q)
+    np.testing.assert_allclose(h*a*(air-faces[[0,-1]]),[q,-q])
+    np.testing.assert_allclose(up-down,q*resistance/min(a))
+
+
+def test_insulating_robin_end_needs_gauge_with_power_end():
+    from tensorfvm.cht.rod import solve_steady_stepped_rod
+    opts = dict(end_types=("power","robin"))
+    args = ([.4],2.,3.,4.,[0.,380.])
+    with pytest.raises(ValueError,match="mean_temperature"):
+        solve_steady_stepped_rod(*args,**opts)
+    cell,faces,*_ = solve_steady_stepped_rod(*args,mean_temperature=290.,**opts)
+    np.testing.assert_allclose(cell,290.)
+    np.testing.assert_allclose(faces,290.)
