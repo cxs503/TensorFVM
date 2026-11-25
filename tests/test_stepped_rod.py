@@ -698,3 +698,30 @@ def test_transient_quartic_temperature_and_cubic_power_across_switch(method):
     np.testing.assert_allclose(flux,average[:,None,None]*power(z),atol=3e-13,rtol=0.)
     for key,index in (("left",0),("right",-1)):
         np.testing.assert_allclose(heat[key],np.diff(time)[:,None]*flux[:,:,index],atol=3e-14,rtol=0.)
+
+
+def test_graded_harmonic_flux_through_power_and_storing_film_ends():
+    from numpy.polynomial import Polynomial
+    from tensorfvm.cht.rod import reconstruct_steady_rod_field
+
+    x = np.array([0.,.13,.56,1.])
+    dx,mid = np.diff(x),(x[:-1]+x[1:])/2
+    k,area,c,w,h,wall_c = 2.1,1.3,1.8,2.7,1.4,.7
+    t = Polynomial([1.+.3j,-.4j,.6,.2-.3j,-.1+.24j])
+    power = -area*k*t.deriv()
+    net = power.deriv()/area
+    cell = np.diff(t.integ()(x))/dx
+    source = np.diff(power(x))/(area*dx)+1j*w*c*cell
+    air = t(1.)+(-power(1.)/area+1j*w*wall_c*t(1.))/h
+    u,faces,left,right = solve_harmonic_stepped_rod(dx,area,k,c,[power(0.),air],w,source=source,
+        flux_order=2,end_types=("power","robin"),end_film_coefficient=[0.,h],
+        end_areal_heat_capacity=[0.,wall_c],net_source_gradient=net.deriv()(mid),
+        net_source_curvature=net.deriv(2)(mid))
+    f = np.array([0.,.12,.5,.79,1.])
+    field,section = reconstruct_steady_rod_field(dx,area,k,u,left,right,f,
+        source_gradient=net.deriv()(mid),source_curvature=net.deriv(2)(mid))
+    samples = x[:-1,None]+dx[:,None]*f
+    for v,ref in ((u,cell),(faces,t(x)),(field,t(samples)),(section,power(samples))):
+        np.testing.assert_allclose(v,ref,atol=6e-14,rtol=0.)
+    with pytest.raises(ValueError,match="flux_order"):
+        solve_harmonic_stepped_rod(dx,area,k,c,[0.,0.],w,net_source_gradient=1j)

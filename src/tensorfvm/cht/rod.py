@@ -33,7 +33,7 @@ class _Layout:
         # Indices in the system after the two prescribed ends are removed.
         return self.left
 
-    def output(self, state, ends, g, flux_order, return_traces):
+    def output(self, state, ends, g, flux_order, return_traces, offsets=None):
         if self.free_ends.size:
             # Appended unknowns are temperatures at power and convection boundaries.
             ends = ends.copy()
@@ -49,6 +49,9 @@ class _Layout:
             correction = left-right
             left = left+correction
             right = right-correction
+        if offsets is not None:
+            left = left+offsets[0]
+            right = right+offsets[1]
         result = (cell,faces,left,right)
         if return_traces:
             result += ((east[..., :-1],west[..., 1:]),)
@@ -238,21 +241,17 @@ def solve_steady_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
         if mean_temperature is not None:
             raise ValueError("mean_temperature only applies to an unanchored steady rod")
         state = spsolve(operator,rhs)
-    result = layout.output(state,ends,g,flux_order,return_traces)
-    if offsets is None:
-        return result
-    cell, faces, left, right, *traces = result
-    return (cell, faces, left+offsets[0], right+offsets[1], *traces)
+    return layout.output(state,ends,g,flux_order,return_traces,offsets)
 
 
 def reconstruct_steady_rod_field(dx, area, conductivity, cell_temperature, left_power, right_power,
                                  fractions, *, source_gradient=0., source_curvature=0.):
-    """Sample the flux_order=2 steady solution inside every homogeneous cell.
+    """Sample a real steady or complex harmonic flux_order=2 solution inside every homogeneous cell.
 
     fractions are local positions from 0 (west) to 1 (east), common to all
     cells. Returns temperature in K and rightward power in W, both shaped
     (number of cells, number of samples). Supply the same source derivatives
-    as in the steady solve. Each cell retains its own temperature at a contact.
+    as in the solve (net volumetric input derivatives for phasors). Each cell retains its own temperature at a contact.
     """
     width = np.asarray(dx, dtype=float)
     if width.ndim != 1 or not width.size or not np.isfinite(width).all() or np.any(width <= 0):
@@ -266,11 +265,12 @@ def reconstruct_steady_rod_field(dx, area, conductivity, cell_temperature, left_
     k = _profile(conductivity,n,"conductivity")[:, None]
     if np.any(area <= 0) or np.any(k <= 0):
         raise ValueError("area and conductivity must be positive")
-    mean = _profile(cell_temperature,n,"cell temperature")[:, None]
-    west = _profile(left_power,n,"left power")[:, None]
-    east = _profile(right_power,n,"right power")[:, None]
-    slope = _profile(source_gradient,n,"source gradient")[:, None]
-    curvature = _profile(source_curvature,n,"source curvature")[:, None]
+    dtype = complex if any(np.iscomplexobj(v) for v in (cell_temperature,left_power,right_power,source_gradient,source_curvature)) else float
+    mean = _profile(cell_temperature,n,"cell temperature",dtype)[:, None]
+    west = _profile(left_power,n,"left power",dtype)[:, None]
+    east = _profile(right_power,n,"right power",dtype)[:, None]
+    slope = _profile(source_gradient,n,"source gradient",dtype)[:, None]
+    curvature = _profile(source_curvature,n,"source curvature",dtype)[:, None]
     # Express the source as a+b*z+c*z²/2 measured from the west face.
     a = (east-west)/(area*width) - slope*width/2 + curvature*width**2/12
     b = slope-curvature*width/2
@@ -343,7 +343,8 @@ def solve_harmonic_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
                                shoulder_areal_heat_capacity=0., flux_order=1, contact_resistance=0., return_traces=False,
                                end_types=("temperature","temperature"), end_film_coefficient=0.,
                                end_areal_heat_capacity=0., interface_power=0., interface_heat_capacity=0., interface_left_fraction=None, interface_capacity_left_fraction=None, trace_power=(0.,0.),
-                               heat_loss_coefficient=0., bulk_ambient_temperature=0.):
+                               heat_loss_coefficient=0., bulk_ambient_temperature=0.,
+                               net_source_gradient=None, net_source_curvature=None):
     """Solve a rod with concentric sections and prescribed end phasors.
 
     end_types selects "temperature" (K), "power" (inward W), or "robin"
@@ -374,6 +375,11 @@ def solve_harmonic_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
     scalar or one value per interface, with independent phases in harmonic runs.
     flux_order=2 reconstructs each face power from a quadratic matching the
     cell mean and its two faces. The default uses half-cell differences.
+    Optional net_source_gradient (W/m⁴) and net_source_curvature (W/m⁵)
+    are complex spatial derivatives at each cell midpoint of the volumetric
+    net input: generation plus bulk exchange minus iω times stored energy
+    density. They require flux_order=2. Use the same derivatives to sample
+    the interior phasor with reconstruct_steady_rod_field.
     Under exp(+iωt), return cell temperatures, all n+1 face temperatures,
     power entering each cell from its left and power leaving its right (W).
     contact_resistance in m² K/W applies to the overlapping (smaller) area.
@@ -388,8 +394,15 @@ def solve_harmonic_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
     rhs, ends, _ = _load(volume,end_load,layout,film,end_temperatures,source,ambient_temperature,interface_power,trace_power,complex)
     operator,bulk_g = _bulk_exchange_operator(operator,mass,volume,layout.cells,heat_loss_coefficient)
     rhs[layout.cells] += bulk_g*_profile(bulk_ambient_temperature,len(volume),"bulk ambient temperature",complex)
+    offsets = None
+    if net_source_gradient is not None or net_source_curvature is not None:
+        if flux_order != 2:
+            raise ValueError("net source derivatives require flux_order=2")
+        slope = _profile(0. if net_source_gradient is None else net_source_gradient,len(volume),"net source gradient",complex)
+        curvature = _profile(0. if net_source_curvature is None else net_source_curvature,len(volume),"net source curvature",complex)
+        offsets = _apply_source_derivatives(rhs,layout,volume,np.asarray(dx),slope,curvature)
     state = spsolve(operator+sp.diags(1j*angular_frequency*mass),rhs)
-    return layout.output(state,ends,g,flux_order,return_traces)
+    return layout.output(state,ends,g,flux_order,return_traces,offsets)
 
 
 def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
