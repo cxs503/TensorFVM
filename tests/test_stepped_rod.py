@@ -501,3 +501,23 @@ def test_steady_quartic_means_and_face_powers(types):
     for actual, exact in ((cell,means),(face,temp),(left,power[:-1]),(right,power[1:]),
                           (right-left,source*area*dx)):
         np.testing.assert_allclose(actual,exact,atol=1e-12,rtol=0.)
+
+
+def test_steady_field_reconstruction_keeps_contact_traces():
+    from tensorfvm.cht.rod import reconstruct_steady_rod_field, solve_steady_stepped_rod
+
+    x = np.array([0.,.2,.45,1.])
+    dx = np.diff(x)
+    mid = x[:-1]+dx/2
+    resistance = .3
+    # T = 2-x⁴ in each region, with an additional jump R*4*x³ at contact.
+    jump = resistance*4*x[1]**3
+    args = dict(source_gradient=24*mid,source_curvature=24.)
+    cell,_,west,east,(hot,cold) = solve_steady_stepped_rod(dx,1.,1.,1.,[2.,1.-jump],
+        source=4*np.diff(x**3)/dx,contact_resistance=[resistance,0.],return_traces=True,flux_order=2,**args)
+    samples = np.array([0., .17, .64, 1.])
+    t,p = reconstruct_steady_rod_field(dx,1.,1.,cell,west,east,samples,**args)
+    target = x[:-1,None]+dx[:,None]*samples
+    np.testing.assert_allclose(t,2-target**4-np.array([0.,jump,jump])[:,None],atol=1e-13,rtol=0.)
+    np.testing.assert_allclose(p,4*target**3,atol=1e-13,rtol=0.)
+    np.testing.assert_allclose([t[0,-1],t[1,0]],[hot[0],cold[0]],atol=1e-13,rtol=0.)

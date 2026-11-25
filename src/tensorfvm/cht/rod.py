@@ -223,6 +223,43 @@ def solve_steady_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
     return (cell, faces, left+offsets[0], right+offsets[1], *traces)
 
 
+def reconstruct_steady_rod_field(dx, area, conductivity, cell_temperature, left_power, right_power,
+                                 fractions, *, source_gradient=0., source_curvature=0.):
+    """Sample the flux_order=2 steady solution inside every homogeneous cell.
+
+    fractions are local positions from 0 (west) to 1 (east), common to all
+    cells. Returns temperature in K and rightward power in W, both shaped
+    (number of cells, number of samples). Supply the same source derivatives
+    as in the steady solve. Each cell retains its own temperature at a contact.
+    """
+    width = np.asarray(dx, dtype=float)
+    if width.ndim != 1 or not width.size or not np.isfinite(width).all() or np.any(width <= 0):
+        raise ValueError("dx must be a nonempty vector of finite positive widths")
+    n = width.size
+    width = width[:, None]
+    positions = np.atleast_1d(np.asarray(fractions, dtype=float))
+    if positions.ndim != 1 or not np.isfinite(positions).all() or np.any((positions<0) | (positions>1)):
+        raise ValueError("fractions must be finite local positions in [0,1]")
+    area = _profile(area,n,"area")[:, None]
+    k = _profile(conductivity,n,"conductivity")[:, None]
+    if np.any(area <= 0) or np.any(k <= 0):
+        raise ValueError("area and conductivity must be positive")
+    mean = _profile(cell_temperature,n,"cell temperature")[:, None]
+    west = _profile(left_power,n,"left power")[:, None]
+    east = _profile(right_power,n,"right power")[:, None]
+    slope = _profile(source_gradient,n,"source gradient")[:, None]
+    curvature = _profile(source_curvature,n,"source curvature")[:, None]
+    # Express the source as a+b*z+c*z²/2 measured from the west face.
+    a = (east-west)/(area*width) - slope*width/2 + curvature*width**2/12
+    b = slope-curvature*width/2
+    z = positions*width
+    power = west + area*z*(a + z*(b/2 + z*curvature/6))
+    # Integrate -P/(k*A) and choose the temperature offset by its cell mean.
+    mean_drop = width*(west/(2*area) + width*(a/6 + width*(b/24 + width*curvature/120)))
+    drop = z*(west/area + z*(a/2 + z*(b/6 + z*curvature/24)))
+    return mean + (mean_drop-drop)/k, power
+
+
 def solve_harmonic_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
                                end_temperatures, angular_frequency, *, source=0.,
                                film_coefficient=0., ambient_temperature=0.,
