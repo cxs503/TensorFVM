@@ -177,14 +177,18 @@ def solve_steady_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
                              end_temperatures, *, source=0., source_gradient=None, source_curvature=None, film_coefficient=0.,
                              ambient_temperature=0., shoulder_areal_heat_capacity=0.,
                              flux_order=1, contact_resistance=0., return_traces=False,
-                             end_types=("temperature","temperature"), end_film_coefficient=0., end_areal_heat_capacity=0., mean_temperature=None, interface_power=0., interface_heat_capacity=0., interface_left_fraction=None, interface_capacity_left_fraction=None, trace_power=(0.,0.)):
+                             end_types=("temperature","temperature"), end_film_coefficient=0., end_areal_heat_capacity=0., mean_temperature=None, interface_power=0., interface_heat_capacity=0., interface_left_fraction=None, interface_capacity_left_fraction=None, trace_power=(0.,0.),
+                             heat_loss_coefficient=0., bulk_ambient_temperature=0.):
     """Steady temperatures and rightward powers with the harmonic solver's conventions.
 
     source gives the cell mean in W/m³. With flux_order=2, source_gradient
     and source_curvature optionally specify the first and second spatial
     derivatives at each cell midpoint (W/m⁴ and W/m⁵). The resulting steady
     reconstruction integrates a cellwise quadratic generation profile.
-    When neither end fixes temperature and all films are insulating, the
+    Cellwise exchange H*(Tb-Tmean) uses the same W/(m³ K) coefficient and
+    reservoir temperature in K as the harmonic and transient paths. Any
+    positive H anchors the steady temperature. When H is zero throughout,
+    neither end fixes temperature and all films are insulating, the
     inward end powers, interface power and volumetric heating must sum to zero. In this case
     mean_temperature fixes the heat-capacity-weighted mean of cells and storing
     shoulders and ends, in K. Other boundary combinations determine the absolute level.
@@ -193,6 +197,8 @@ def solve_steady_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
         dx,area,conductivity,volumetric_heat_capacity,film_coefficient,
         shoulder_areal_heat_capacity,flux_order,contact_resistance,end_types,end_film_coefficient,end_areal_heat_capacity,interface_heat_capacity,interface_left_fraction,interface_capacity_left_fraction)
     rhs, ends, _ = _load(volume,end_load,layout,film,end_temperatures,source,ambient_temperature,interface_power,trace_power,float)
+    operator,bulk_g = _bulk_exchange_operator(operator,mass,volume,layout.cells,heat_loss_coefficient)
+    rhs[layout.cells] += bulk_g*_profile(bulk_ambient_temperature,len(volume),"bulk ambient temperature")
     offsets = None
     if source_gradient is not None or source_curvature is not None:
         if flux_order != 2:
@@ -213,7 +219,7 @@ def solve_steady_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
         rhs[layout.right[:-1]-1] += east[:-1]
         if layout.free_ends.size:
             rhs[-len(layout.free_ends):] += np.array([-west[0],east[-1]])[layout.free_ends]
-    if not layout.anchored:
+    if not layout.anchored and not np.any(bulk_g):
         if mean_temperature is None or not np.isscalar(mean_temperature) or not np.isfinite(mean_temperature):
             raise ValueError("unanchored ends without film exchange require a finite mean_temperature")
         if abs(np.sum(rhs)) > 64*np.finfo(float).eps*np.sum(abs(rhs)):

@@ -568,3 +568,20 @@ def test_transient_bulk_reservoir_switch_balances_each_stepped_cell(method):
     defect = np.diff(u,axis=0)*(dx*area*c)-heat["left"]+heat["right"]-heat["bulk_exchange"]
     np.testing.assert_allclose(defect,0.,atol=1e-14,rtol=0.)
     assert heat["bulk_exchange"][0].min()>0 and heat["bulk_exchange"][-1].max()<0
+
+
+def test_local_steady_exchange_anchors_insulated_rod_with_remote_heating():
+    from tensorfvm.cht.rod import solve_steady_stepped_rod
+
+    dx = np.array([.25,.25,.5])
+    area,k = np.array([1.,1.,2.]),np.array([2.,2.,1.])
+    source = np.array([4.,4.,0.])
+    loss = [0.,0.,3.]
+    cells,_,left,right = solve_steady_stepped_rod(dx,area,k,1.,[0.,0.],source=source,
+        end_types=("power","power"),flux_order=2,heat_loss_coefficient=loss,bulk_ambient_temperature=5.)
+    np.testing.assert_allclose(left,[0.,1.,2.],rtol=0.,atol=1e-12)
+    np.testing.assert_allclose(right,[1.,2.,0.],rtol=0.,atol=1e-12)
+    np.testing.assert_allclose(cells[-1],5+2/3,rtol=0.,atol=1e-12)
+    with pytest.raises(ValueError,match="mean_temperature"):
+        solve_steady_stepped_rod(dx,area,k,1.,[0.,0.],end_types=("power","power"),
+                                 heat_loss_coefficient=loss,mean_temperature=1.)
