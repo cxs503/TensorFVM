@@ -230,3 +230,25 @@ def test_power_ends_account_for_each_joule_of_heating(method):
     np.testing.assert_allclose(right[:,-1],-.3,atol=1e-12)
     stored = cell @ (4*dx*area)+.4*face[:,1]
     np.testing.assert_allclose(np.diff(stored),heat["left"][:,0]-heat["right"][:,-1],atol=1e-12)
+
+
+@pytest.mark.parametrize("order",[1,2])
+def test_steady_balanced_end_powers_preserve_contact_jump_and_energy_gauge(order):
+    from tensorfvm.cht.rod import solve_steady_stepped_rod
+    dx,a,k,c = np.array([.2,.5,.3]),np.array([1.,3.,.8]),np.array([2.,3.,1.]),np.array([2.,1.,4.])
+    resistance = np.array([.13,.2])
+    opts = dict(end_types=("power","power"),contact_resistance=resistance,flux_order=order,
+                shoulder_areal_heat_capacity=.4,return_traces=True)
+    cell,faces,left,right,(up,down) = solve_steady_stepped_rod(dx,a,k,c,[.8,-.8],mean_temperature=5.,**opts)
+    np.testing.assert_allclose(left,.8,atol=1e-12)
+    np.testing.assert_allclose(right,.8,atol=1e-12)
+    np.testing.assert_allclose(up-down,.8*resistance/np.minimum(a[1:],a[:-1]),atol=1e-13)
+    cm = dx*a*c
+    wm = .4*abs(np.diff(a))
+    assert (cell@cm+faces[1:-1]@wm)/(cm.sum()+wm.sum()) == pytest.approx(5.)
+    with pytest.raises(ValueError,match="incompatible"):
+        solve_steady_stepped_rod(dx,a,k,c,[.8,.8],mean_temperature=5.,**opts)
+    with pytest.raises(ValueError,match="mean_temperature"):
+        solve_steady_stepped_rod(dx,a,k,c,[0.,0.],**opts)
+    _,_,qin,qout,_ = solve_steady_stepped_rod(dx,a,k,c,[.8,.8],film_coefficient=2.,**opts)
+    np.testing.assert_allclose([qin[0],qout[-1]],[.8,-.8])

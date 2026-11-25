@@ -125,6 +125,40 @@ def _load(volume, end_load, layout, film, ends, source, ambient, dtype):
     return rhs, ends
 
 
+def solve_steady_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
+                             end_temperatures, *, source=0., film_coefficient=0.,
+                             ambient_temperature=0., shoulder_areal_heat_capacity=0.,
+                             flux_order=1, contact_resistance=0., return_traces=False,
+                             end_types=("temperature","temperature"), mean_temperature=None):
+    """Steady temperatures and rightward powers with the harmonic solver's conventions.
+
+    When both ends prescribe power and every exposed film is insulating, the
+    inward end powers plus volumetric heating must sum to zero. In this case
+    mean_temperature fixes the heat-capacity-weighted mean of cells and storing
+    shoulders, in K. Other boundary combinations determine the absolute level.
+    """
+    operator,mass,volume,g,film,end_load,layout = _rod_operator(
+        dx,area,conductivity,volumetric_heat_capacity,film_coefficient,
+        shoulder_areal_heat_capacity,flux_order,contact_resistance,end_types)
+    rhs, ends = _load(volume,end_load,layout,film,end_temperatures,source,ambient_temperature,float)
+    if layout.power_ends.size==2 and not np.any(film):
+        if mean_temperature is None or not np.isscalar(mean_temperature) or not np.isfinite(mean_temperature):
+            raise ValueError("two power ends without film exchange require a finite mean_temperature")
+        if abs(np.sum(rhs)) > 64*np.finfo(float).eps*np.sum(abs(rhs)):
+            raise ValueError("incompatible steady load: net inward end power plus source must vanish")
+        # Pin one cell during the solve and then shift every trace by the
+        # same constant to impose the prescribed total stored energy.
+        state = np.zeros(len(mass))
+        if len(state)>1:
+            state[1:] = spsolve(operator[1:,1:],rhs[1:])
+        state += mean_temperature-(mass @ state)/mass.sum()
+    else:
+        if mean_temperature is not None:
+            raise ValueError("mean_temperature only applies to an unanchored steady rod")
+        state = spsolve(operator,rhs)
+    return layout.output(state,ends,g,flux_order,return_traces)
+
+
 def solve_harmonic_stepped_rod(dx, area, conductivity, volumetric_heat_capacity,
                                end_temperatures, angular_frequency, *, source=0.,
                                film_coefficient=0., ambient_temperature=0.,
