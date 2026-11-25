@@ -509,6 +509,7 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
     wall temperatures and prescribed inward flux use the steady BC format.
     A side's values may also be a callable of time, returning a scalar or
     one value per face (temperature, inward flux or Robin ambient temperature).
+    source may also be a function of time returning a scalar or a cell field.
     Callables are sampled at the supplied times and theta-weighted per step.
     For grid-aligned anisotropy, conductivity supplies the x component and
     conductivity_y supplies the y component. Both broadcast to (ny, nx).
@@ -546,8 +547,18 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
             signals[side] = samples
             static_bc[side] = dict(spec, values=0.)
     _validate_conduction_bc(static_bc, sides, float)
+    volume = np.outer(dy, dx)
+    def source_power(instant):
+        field = np.broadcast_to(np.asarray(source(float(instant)), dtype=float), shape)
+        if not np.isfinite(field).all():
+            raise ValueError("source must be finite")
+        return (field*volume).ravel()
+
+    varying_source = callable(source)
+    if varying_source:
+        previous_power = source_power(time[0])
     A, b, faces = _assemble_energy(dx, dy, k, np.zeros((ny, nx+1)), np.zeros((ny+1, nx)),
-                               static_bc, source, contact_resistance_x, contact_resistance_y, conductivity_y)
+                               static_bc, 0. if varying_source else source, contact_resistance_x, contact_resistance_y, conductivity_y)
     if periodic_y:
         A, seam = _join_periodic_y(A, faces[1], bc)
     _, _, side_specs, types, values, _ = faces
@@ -556,7 +567,7 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
         if side in signals:
             weights = _conductive_wall_power(types[side], 1., conductance, area, 0.)
             varying_loads.append((cells, signals[side], weights))
-    mass = (capacity * np.outer(dy, dx)).ravel()
+    mass = (capacity * volume).ravel()
     M = sp.diags(mass, format="csc")
     history = np.empty((len(time), ny, nx))
     history[0] = initial
@@ -567,6 +578,10 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
             previous_dt = dt
         state = history[step].ravel()
         rhs = mass * state + dt * ((1 - theta) * (A @ state) - b)
+        if varying_source:
+            next_power = source_power(time[step+1])
+            rhs += dt*((1-theta)*previous_power+theta*next_power)
+            previous_power = next_power
         for cells, samples, weights in varying_loads:
             rhs[cells] += dt * weights * ((1-theta)*samples[step] + theta*samples[step+1])
         history[step + 1] = lu.solve(rhs).reshape(shape)

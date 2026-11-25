@@ -113,3 +113,24 @@ def test_periodic_two_rows_integrate_seam_and_interior_separately(theta):
     power = np.column_stack((into_lower, -into_lower))+source.ravel()*dy
     stored = np.diff(t[:, :, 0], axis=0)*(dy*capacity.ravel())
     np.testing.assert_allclose(stored, np.diff(time)[:, None]*((1-theta)*power[:-1]+theta*power[1:]))
+
+
+@pytest.mark.parametrize("theta", [.5, 1.])
+def test_varying_generation_integrates_over_nonuniform_steps(theta):
+    time = np.array([.1, .11, .15, .4])
+    volume = np.outer([.3, .7], [.25, .75])
+    capacity = np.array([[3., 1.], [2., 4.]])
+    pattern = np.array([[1., 3.], [-4., 2.]])
+    samples = []
+    def heating(t):
+        samples.append(t)
+        return (1+t**2)*pattern
+
+    history = solve_transient_conduction([.25,.75], [.3,.7], 2., capacity, {}, time, 0.,
+                        source=heating, periodic_y=True, theta=theta)
+    np.testing.assert_array_equal(samples, time)
+    stored = np.sum(np.diff(history, axis=0)*capacity*volume, axis=(1,2))
+    power = (1+time**2)*(pattern*volume).sum()
+    np.testing.assert_allclose(stored, np.diff(time)*((1-theta)*power[:-1]+theta*power[1:]))
+    with pytest.raises(ValueError, match="source must be finite"):
+        solve_transient_conduction([1.], [1.], 1., 1., {}, time, 0., source=lambda t: np.nan)
