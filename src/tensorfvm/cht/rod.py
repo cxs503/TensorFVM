@@ -637,8 +637,10 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
     be callable; declare its jumps through load_jump_times.
     end_applied_power is a scalar, west/east pair, or callable of time supplying
     independent inward W at power or Robin ends. Include its jumps in load_jump_times.
-    end_input gives external
-    heat entering each end, including surface storage.
+    end_input gives total external heat entering each end, including surface storage.
+    end_applied integrates end_applied_power alone. end_film integrates Robin
+    exchange h*A*(Tamb-Twall) and is zero at other ends. All three arrays
+    are in J, ordered west/east, with positive values entering the rod.
     return_interval_temperatures appends a dictionary of stage-weighted
     temperatures in K, after any requested step heats. cell and face follow
     the instantaneous output locations; trace_left and trace_right are the
@@ -749,7 +751,7 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
                 temperatures[key] = np.zeros((len(time)-1,n))
     if return_step_heat:
         step_heat = {key:np.zeros((len(time)-1,size)) for key,size in
-                     (("left",n),("right",n),("source",n),("bulk_exchange",n),("ambient",n-1),("interface",n-1),("trace_left",n-1),("trace_right",n-1),("contact",n-1),("end_input",2))}
+                     (("left",n),("right",n),("source",n),("bulk_exchange",n),("ambient",n-1),("interface",n-1),("trace_left",n-1),("trace_right",n-1),("contact",n-1),("end_input",2),("end_applied",2),("end_film",2))}
         types = np.asarray(end_types)
         area_values = _profile(area,n,"area")
         larger_left = area_values[:-1]>=area_values[1:]
@@ -817,7 +819,10 @@ def solve_transient_stepped_rod(dx, area, conductivity, volumetric_heat_capacity
                 step_heat["left"][step] += dt*left
                 step_heat["right"][step] += dt*right
                 external = np.where(types=="power",boundary,[left[0],-right[-1]])
-                external = np.where(types=="robin",layout.end_film*(boundary-faces[[0,-1]]),external)
+                film_power = layout.end_film*(boundary-faces[[0,-1]])
+                external = np.where(types=="robin",film_power,external)
+                step_heat["end_film"][step] += dt*film_power
+                step_heat["end_applied"][step] += dt*((1-weight)*applied + weight*next_applied)
                 step_heat["end_input"][step] += dt*(external + (1-weight)*applied + weight*next_applied)
                 step_heat["source"][step] += dt*volume*((1-weight)*np.asarray(src)+weight*np.asarray(next_src))
                 step_heat["bulk_exchange"][step] += dt*bulk_g*((1-weight)*reservoir+weight*next_reservoir-mean[layout.cells])

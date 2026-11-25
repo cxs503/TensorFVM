@@ -976,5 +976,23 @@ def test_transient_independent_power_jump_is_integrated_at_both_ends(method):
     after = np.diff(times)-before
     expected = before[:, None]*power(0.) + after[:, None]*power(switch)
     np.testing.assert_allclose(heats["end_input"], expected, atol=1e-14)
+    np.testing.assert_allclose(heats["end_applied"], expected, atol=1e-14)
+    np.testing.assert_array_equal(heats["end_film"], np.zeros_like(expected))
     energy = states.mean(1) + faces[:, [0,-1]] @ [.25,.75]
     np.testing.assert_allclose(np.diff(energy), expected.sum(1), atol=1e-13)
+
+
+def test_end_heat_components_keep_primary_power_separate_from_extra_heater():
+    from tensorfvm.cht.rod import solve_transient_stepped_rod
+
+    time = np.array([0., .03, .09])
+    _, _, _, _, heat, mean = solve_transient_stepped_rod(
+        [.5,.5], [2.,2.], 1., 1., (1.5, 4.), time, 0.,
+        end_types=("power", "robin"), end_film_coefficient=(0., 3.),
+        end_applied_power=(.25, -.5), return_step_heat=True, return_interval_temperatures=True)
+    dt = np.diff(time)
+    np.testing.assert_allclose(heat["end_applied"], dt[:, None]*[.25, -.5])
+    np.testing.assert_allclose(heat["end_film"][:, 1], dt*6*(4.-mean["face"][:, -1]))
+    np.testing.assert_array_equal(heat["end_film"][:, 0], np.zeros_like(dt))
+    other = heat["end_input"]-heat["end_film"]-heat["end_applied"]
+    np.testing.assert_allclose(other, dt[:, None]*[1.5, 0.], atol=1e-14)
