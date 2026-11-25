@@ -232,12 +232,15 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
                                   times, initial_temperature, sheet_face, *, initial_sheet_temperature=None,
                                   sheet_capacity, resistance=0., inner_resistance_fraction=.5,
                                   sheet_conductivity=0., azimuthal_mode=0, sheet_film=0., ambient=0.,
-                                  sheet_source_intervals=0., theta=.5, wall_fluxes=(None,None), source_intervals=0.):
+                                  sheet_source_intervals=0., theta=.5, wall_fluxes=(None,None), source_intervals=0.,
+                                  film_coefficients=(None,None)):
     """Advance one real azimuthal mode with a storing sheet and Dirichlet walls.
 
     Walls and reservoir ambient accept constants or one sample per output time.
     A None wall temperature instead takes a prescribed inward wall_fluxes
-    entry (W/m²), either constant or sampled at the output times.
+    entry (W/m²), either constant or sampled at the output times. A finite
+    nonnegative film_coefficients entry (W/m²/K) treats the corresponding
+    wall temperature as a fluid temperature; zero insulates that wall.
     Sheet generation in W/m² is constant or has shape (interval,2), giving its
     one-sided start and end values. Times must include each source switch.
     Material generation source_intervals (W/m³) accepts a constant, a static
@@ -271,7 +274,7 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
     k,c,u = (np.broadcast_to(np.asarray(v,dtype=float),(n,)) for v in (conductivity,volumetric_heat_capacity,initial_temperature))
     if np.any(k<=0) or np.any(c<=0) or not all(np.isfinite(v).all() for v in (k,c,u)):
         raise ValueError("material properties must be positive and initial temperatures finite")
-    if len(wall_temperatures)!=2 or len(wall_fluxes)!=2:
+    if any(len(pair)!=2 for pair in (wall_temperatures,wall_fluxes,film_coefficients)):
         raise ValueError("supply two wall conditions")
     if initial_sheet_temperature is None:
         if sheet_capacity>0:
@@ -279,7 +282,9 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
         initial_sheet_temperature = 0.
     if np.ndim(initial_sheet_temperature)!=0 or not np.isfinite(initial_sheet_temperature):
         raise ValueError("initial sheet temperature must be finite")
-    for temp,flux in zip(wall_temperatures,wall_fluxes):
+    for temp,flux,h in zip(wall_temperatures,wall_fluxes,film_coefficients):
+        if h is not None and (np.ndim(h)!=0 or not np.isfinite(h) or h<0 or flux is not None):
+            raise ValueError("a wall film needs a finite nonnegative coefficient and an ambient temperature")
         if (temp is None)==(flux is None):
             raise ValueError("supply either temperature or inward heat flux for each wall")
     west,east = (np.broadcast_to(np.asarray(v if v is not None else q,dtype=float),t.shape)
@@ -303,6 +308,9 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
                   left[j]+(1-inner_resistance_fraction)*resistance/circum,links[j+1:]]
     g = 1/links
     # Write each boundary power as a known load plus its cell coefficient.
+    for side,h in zip((0,-1),film_coefficients):
+        if h is not None:
+            g[side] = 0. if h==0 else 1/(links[side]+1/(2*np.pi*r[side]*h))
     west_factor,east_factor = g[0],-g[-1]
     if wall_fluxes[0] is not None:
         g[0],west_factor = 0.,2*np.pi*r[0]

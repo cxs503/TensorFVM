@@ -272,3 +272,23 @@ def test_transient_volume_heating_one_sided_pulse_and_uniform_storage():
     np.testing.assert_allclose(s,expected,rtol=0.,atol=3e-14)
     for heat in (qi,qo,external):
         np.testing.assert_allclose(heat,0.,atol=3e-14)
+
+
+def test_transient_annular_films_preserve_logarithmic_contact_solution():
+    from tensorfvm.cht.annulus import solve_transient_annular_sheet
+    edges = np.array([.4,.48,.7,.92,1.1])
+    k = np.array([1.3,1.3,2.1,2.1])
+    rate = 1.4
+    b = edges[2]
+    sheet = .55
+    face = np.array([sheet+.4*.2*rate/(2*np.pi*b),sheet-.6*.2*rate/(2*np.pi*b)])
+    center = (2/3)*np.diff(edges**3)/np.diff(edges**2)
+    initial = np.repeat(face,2)-rate*np.log(center/b)/(2*np.pi*k)
+    fluid = face-rate*np.log(edges[[0,-1]]/b)/(2*np.pi*k[[0,-1]])+rate/(2*np.pi*edges[[0,-1]]*np.array([1.4,-2.3]))
+    t = np.array([0.,.02,.14,.39])
+    u,s,qi,qo,_ = solve_transient_annular_sheet(edges,k,1.,fluid,t,initial,2,sheet_capacity=.3,
+             initial_sheet_temperature=sheet,resistance=.2,inner_resistance_fraction=.4,film_coefficients=(1.4,2.3))
+    np.testing.assert_allclose(u,np.broadcast_to(initial,u.shape),rtol=0.,atol=1e-14)
+    np.testing.assert_allclose(s,sheet,atol=1e-14,rtol=0.)
+    for heat in (qi,qo):
+        np.testing.assert_allclose(heat,np.broadcast_to(rate*np.diff(t)[:,None],heat.shape),rtol=0.,atol=1e-14)
