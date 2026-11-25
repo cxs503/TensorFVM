@@ -256,3 +256,19 @@ def test_massless_sheet_jump_right_trace_and_integrated_heat(theta):
     np.testing.assert_allclose(qo[:,0]-qi[:,-1]+external,applied,atol=2e-14)
     np.testing.assert_allclose(np.diff(u,axis=0)*np.pi*np.diff(edges**2),
                                np.column_stack((-qi[:,-1],qo[:,0])),atol=2e-14)
+
+
+def test_transient_volume_heating_one_sided_pulse_and_uniform_storage():
+    from tensorfvm.cht.annulus import solve_transient_annular_sheet
+    edges = np.array([.4,.52,.7,.9,1.1])
+    cv = np.array([1.3,1.3,2.1,2.1])
+    t = np.array([0.,.04,.19,.26])
+    rate = np.array([[.3,1.1],[-.4,-.4],[1.,.2]])
+    expected = .6+np.r_[0.,np.cumsum(np.diff(t)*rate.mean(1))]
+    u,s,qi,qo,external = solve_transient_annular_sheet(edges,[2.,2.,3.,3.],cv,(None,None),t,.6,2,
+             wall_fluxes=(0.,0.),sheet_capacity=.41,initial_sheet_temperature=.6,resistance=.2,
+             sheet_source_intervals=.41*rate,source_intervals=rate[:,:,None]*cv)
+    np.testing.assert_allclose(u,np.broadcast_to(expected[:,None],u.shape),rtol=0.,atol=3e-14)
+    np.testing.assert_allclose(s,expected,rtol=0.,atol=3e-14)
+    for heat in (qi,qo,external):
+        np.testing.assert_allclose(heat,0.,atol=3e-14)

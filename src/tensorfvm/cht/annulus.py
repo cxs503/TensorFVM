@@ -232,7 +232,7 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
                                   times, initial_temperature, sheet_face, *, initial_sheet_temperature=None,
                                   sheet_capacity, resistance=0., inner_resistance_fraction=.5,
                                   sheet_conductivity=0., azimuthal_mode=0, sheet_film=0., ambient=0.,
-                                  sheet_source_intervals=0., theta=.5, wall_fluxes=(None,None)):
+                                  sheet_source_intervals=0., theta=.5, wall_fluxes=(None,None), source_intervals=0.):
     """Advance one real azimuthal mode with a storing sheet and Dirichlet walls.
 
     Walls and reservoir ambient accept constants or one sample per output time.
@@ -240,6 +240,9 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
     entry (W/m²), either constant or sampled at the output times.
     Sheet generation in W/m² is constant or has shape (interval,2), giving its
     one-sided start and end values. Times must include each source switch.
+    Material generation source_intervals (W/m³) accepts a constant, a static
+    per-cell profile, or start/end profiles shaped (interval,2,cell). A final
+    dimension of one broadcasts a time-varying source across all cells.
     With zero sheet capacity, its algebraic temperature follows the current
     source and adjacent cells. At a switch the sheet trace is right-continuous
     (the final output uses the last interval end). Positive capacity requires
@@ -289,6 +292,10 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
     if not all(np.isfinite(v).all() for v in (west,east,fluid,drive)):
         raise ValueError("wall, ambient and source histories must be finite")
 
+    body = np.asarray(source_intervals,dtype=float)
+    if body.shape not in ((),(n,),(len(t)-1,2,1),(len(t)-1,2,n)) or not np.isfinite(body).all():
+        raise ValueError("material source must be finite and scalar, per cell or shaped (interval,2,cell)")
+    body = np.broadcast_to(body,(len(t)-1,2,n))
     width,_,left,right = _half_shell_resistances(r,k,"volume_centroid")
     circum = 2*np.pi*r[j]
     links = np.r_[left[0],right[:-1]+left[1:],right[-1]]
@@ -301,7 +308,8 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
         g[0],west_factor = 0.,2*np.pi*r[0]
     if wall_fluxes[1] is not None:
         g[-1],east_factor = 0.,-2*np.pi*r[-1]
-    capacity = np.insert(c*np.pi*width*(r[:-1]+r[1:]),j,circum*sheet_capacity)
+    volume = np.pi*width*(r[:-1]+r[1:])
+    capacity = np.insert(c*volume,j,circum*sheet_capacity)
     sink = np.insert(2*np.pi*k*azimuthal_mode**2*np.log1p(width/r[:-1]),j,
                      circum*(sheet_film+sheet_conductivity*(azimuthal_mode/r[j])**2))
     diagonal = g[:-1]+g[1:]+sink
@@ -324,6 +332,9 @@ def solve_transient_annular_sheet(radii, conductivity, volumetric_heat_capacity,
         flux = -g*np.diff(np.r_[0.,old,0.])
         flux[[0,-1]] += wall_input
         rhs = -np.diff(flux)-sink*old
+        material_power = volume*((1-theta)*body[i,0]+theta*body[i,1])
+        rhs[:j] += material_power[:j]
+        rhs[j+1:] += material_power[j:]
         rhs[j] += circum*(supply+sheet_film*avg_a)
         bands[1] = capacity/dt+theta*diagonal
         delta = solve_banded((1,1),bands,rhs)
