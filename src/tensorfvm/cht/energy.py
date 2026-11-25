@@ -548,7 +548,8 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
                                time, initial_temperature, *, source=0.0,
                                contact_resistance_x=0.0, contact_resistance_y=0.0,
                                theta=0.5, conductivity_y=None, return_wall_power=False, periodic_y=False,
-                               wall_flux_order=1, heat_loss_coefficient=0., return_interior_power=False):
+                               wall_flux_order=1, heat_loss_coefficient=0., return_interior_power=False,
+                               load_jump_times=()):
     """Advance cell-centred conduction with fixed material data and boundary types.
 
     Return temperature at each requested time with shape (nt, ny, nx). Cell
@@ -561,7 +562,10 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
     heat_loss_coefficient is a nonnegative scalar or cell field H in W/(m³ K).
     The bulk sink H*T is implicit with the same theta as conduction. Include
     H*Ta in source to exchange with a prescribed ambient temperature Ta.
-    Callables are sampled at the supplied times and theta-weighted per step.
+    List jumps of source or wall values in load_jump_times. A callable gives
+    the new value at the jump; the preceding step samples its left limit.
+    Internal steps at jumps preserve the requested output grid. Instantaneous
+    power at an output jump uses the new boundary values.
     For grid-aligned anisotropy, conductivity supplies the x component and
     conductivity_y supplies the y component. Both broadcast to (ny, nx).
     With return_wall_power=True return (temperature, wall_power). For each
@@ -585,6 +589,18 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
     dx, dy, time = (np.asarray(v, dtype=float) for v in (dx, dy, time))
     if time.ndim != 1 or len(time) < 2 or not np.isfinite(time).all() or np.any(np.diff(time) <= 0):
         raise ValueError("time must be a strictly increasing finite vector")
+    jumps = np.asarray(load_jump_times,dtype=float)
+    if (jumps.ndim!=1 or not np.isfinite(jumps).all() or len(np.unique(jumps))!=len(jumps)
+            or np.any(jumps<=time[0]) or np.any(jumps>=time[-1])):
+        raise ValueError("load_jump_times must contain distinct finite interior times")
+    requested = time
+    if jumps.size:
+        time = np.union1d(time,jumps)
+    outputs = np.searchsorted(time,requested) if jumps.size else slice(None)
+    jump_indices = np.searchsorted(time,jumps)
+    sample_times = np.r_[time,np.nextafter(time[jump_indices],time[jump_indices-1])]
+    end_samples = np.arange(1,len(time))
+    end_samples[jump_indices-1] = np.arange(len(jumps))+len(time)
     if wall_flux_order not in (1,2):
         raise ValueError("wall_flux_order must be 1 or 2")
     if not .5 <= theta <= 1:
@@ -602,8 +618,8 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
     for side, count in sides.items():
         spec = bc.get(side)
         if spec is not None and callable(spec.get("values")):
-            samples = np.empty((len(time), count))
-            for index, instant in enumerate(time):
+            samples = np.empty((len(sample_times), count))
+            for index, instant in enumerate(sample_times):
                 samples[index] = np.broadcast_to(np.asarray(spec["values"](float(instant)), dtype=float), (count,))
             if not np.isfinite(samples).all():
                 raise ValueError(f"nonfinite boundary value on {side}")
@@ -719,23 +735,29 @@ def solve_transient_conduction(dx, dy, conductivity, volumetric_heat_capacity, b
         state = states[step]
         rhs = mass * state + dt * ((1 - theta) * (A @ state) - b)
         if varying_source:
-            next_power = source_power(time[step+1])
+            next_power = source_power(sample_times[end_samples[step]])
             rhs[:cell_count] += dt*((1-theta)*previous_power+theta*next_power)
-            previous_power = next_power
+            previous_power = source_power(time[step+1]) if end_samples[step]!=step+1 else next_power
         for cells, samples, weights in varying_loads:
-            rhs[cells] += dt * weights * ((1-theta)*samples[step] + theta*samples[step+1])
+            rhs[cells] += dt * weights * ((1-theta)*samples[step] + theta*samples[end_samples[step]])
         states[step + 1] = lu.solve(rhs)
-    if return_wall_power:
-        state = history.reshape(len(time), ny*nx)
-        powers = {side: _conductive_wall_power(types[side], signals.get(side, values[side]), conductance,
-                                               area, state[:, cells])
-                  for side, cells, conductance, _, _, area in side_specs}
-        for side, (mask, ids, cells, g, inner, correction) in wall_links.items():
-            powers[side][:,mask] = (g*(states[:,ids]-states[:,cells])
-                                     +correction*(states[:,inner]-states[:,cells]))
+    def wall_powers(selected_states,sample_indices):
+        state = selected_states[:,:cell_count]
+        field = state.reshape(-1,ny,nx)
+        powers = {side: _conductive_wall_power(types[side], signals[side][sample_indices] if side in signals else values[side],
+                                               conductance,area,state[:,cells])
+                  for side,cells,conductance,_,_,area in side_specs}
+        for side,(mask,ids,cells,g,inner,correction) in wall_links.items():
+            powers[side][:,mask] = (g*(selected_states[:,ids]-state[:,cells])
+                                     +correction*(state[:,inner]-state[:,cells]))
         if periodic_y:
-            powers["south"] = seam*(history[:, -1]-history[:, 0])
+            powers["south"] = seam*(field[:,-1]-field[:,0])
             powers["north"] = -powers["south"]
+        return powers
+
+    history = history[outputs]
+    if return_wall_power:
+        powers = wall_powers(states[outputs],outputs)
         if return_interior_power:
             return history,powers,_interior_conduction_power(history,faces)
         return history, powers

@@ -254,3 +254,23 @@ def test_single_cell_optional_interior_output():
     u,power = solve_transient_conduction([.3],[.8],1.,1.,{},[0.,1.],2.,return_interior_power=True)
     np.testing.assert_allclose(u,2.)
     assert power["x"].shape==(2,1,0) and power["y"].shape==(2,0,1)
+
+
+@pytest.mark.parametrize("theta",[.5,1.])
+def test_offgrid_source_and_flux_jumps(theta):
+    times = np.array([0.,.04,.09,.13])
+    jumps = [.031,.09]
+    flux = lambda t: 1.4 if t<jumps[0] else -.3
+    source = lambda t: .5 if t<jumps[1] else 2.
+    field,walls = solve_transient_conduction([1.],[1.],1.,2.,{"east":dict(type="neumann",values=flux)},
+            times,.3,theta=theta,source=source,load_jump_times=jumps,return_wall_power=True)
+    heat = (1.4*np.minimum(times,jumps[0])-.3*np.maximum(times-jumps[0],0.)
+            +.5*np.minimum(times,jumps[1])+2*np.maximum(times-jumps[1],0.))
+    np.testing.assert_allclose(field[:,0,0],.3+.5*heat,atol=1e-14)
+    np.testing.assert_allclose(walls["east"][:,0],[flux(t) for t in times])
+
+
+@pytest.mark.parametrize("jumps",[[0.],[1.],[.3,.3],[np.nan]])
+def test_invalid_conduction_jump_times(jumps):
+    with pytest.raises(ValueError,match="load_jump_times"):
+        solve_transient_conduction([1.],[1.],1.,1.,{},[0.,1.],0.,load_jump_times=jumps)
