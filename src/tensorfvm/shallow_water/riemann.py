@@ -106,6 +106,7 @@ __all__ = [
     "riemann_cell_averages",
     "riemann_integrated_flux",
     "riemann_energy",
+    "riemann_energy_budget",
     "riemann_shock_losses",
     "smooth_region_ode_residuals",
     "solve_riemann",
@@ -355,6 +356,70 @@ def riemann_shock_losses(sol: RiemannSolution):
         losses[side] = (0. if speed is None else
                         _hydraulic_jump_loss(sol.gravity, h*(u-speed), h, sol.h_star))
     return losses
+
+
+def _face_energy_transport(sol, x, t):
+    """Rightward energy through a face, taking its left trace at a stationary shock."""
+    offset = x-sol.x0
+    times = {0., t}
+    for speed in sol.wave_speeds:
+        if speed and min(0., t*speed) < offset < max(0., t*speed):
+            times.add(offset/speed)
+    ends = sorted(times)
+    total = 0.
+    for start, stop in zip(ends, ends[1:]):
+        middle = .5*(start+stop)
+        xi = offset/middle
+        in_fan = (sol.left_head < xi < sol.left_tail or sol.right_tail < xi < sol.right_head)
+        if in_fan and offset != 0:
+            # In a smooth fan, d/dt [t*F - (x-x0)*E] = F. A fixed face
+            # away from the initial dam enters the fan at a positive time.
+            times_pair = np.array([start, stop])
+            xi_pair = offset/times_pair
+            if sol.left_head < xi < sol.left_tail:
+                c = (sol.uL+2*math.sqrt(sol.gravity*sol.hL)-xi_pair)/3
+                u = xi_pair+c
+            else:
+                c = (xi_pair-sol.uR+2*math.sqrt(sol.gravity*sol.hR))/3
+                u = xi_pair-c
+            h = c*c/sol.gravity
+            e = cell_energy(h,h*u,sol.gravity)["total"]
+            primitive = times_pair*u*(e+.5*sol.gravity*h*h)-offset*e
+            total += primitive[1]-primitive[0]
+        else:
+            h, u = sample_exact(sol, x, middle)
+            if offset == 0 and sol.left_shock_speed == 0:
+                h, u = sol.hL, sol.uL
+            elif offset == 0 and sol.right_shock_speed == 0:
+                h, u = sol.h_star, sol.u_star
+            total += (stop-start)*u*h*(.5*u*u+sol.gravity*h)
+    return float(total)
+
+
+def riemann_energy_budget(sol: RiemannSolution, x_min: float, x_max: float, t: float):
+    """Exact cumulative energy balance per unit width over [x_min, x_max).
+
+    Fluxes are positive rightwards. Shock losses accrue only during residence
+    in the interval. A stationary shock on a boundary belongs to the interval
+    on its right, and both face fluxes use the left trace.
+    """
+    final = riemann_energy(sol, x_min, x_max, t)
+    initial = riemann_energy(sol, x_min, x_max, 0.)
+    west = _face_energy_transport(sol, x_min, t)
+    east = _face_energy_transport(sol, x_max, t)
+    rates = riemann_shock_losses(sol)
+    losses = {}
+    for side, speed in (("left", sol.left_shock_speed), ("right", sol.right_shock_speed)):
+        duration = 0.
+        if speed == 0:
+            duration = t if x_min <= sol.x0 < x_max else 0.
+        elif speed is not None:
+            entry, exit_time = sorted(((x_min-sol.x0)/speed, (x_max-sol.x0)/speed))
+            duration = max(0., min(t, exit_time)-max(0., entry))
+        losses[side] = duration*rates[side]
+    return {"initial": initial, "final": final, "left_transport": west,
+            "right_transport": east, "shock_losses": losses,
+            "residual": final-initial-west+east+sum(losses.values())}
 
 
 def riemann_integrated_flux(sol: RiemannSolution, x, t: float):
@@ -812,7 +877,8 @@ def run_case(case: RiemannCase, n: int = 1600, cfl: float = 0.4,
     h_mean, hu_mean = riemann_cell_averages(sol, edges, solver.time)
     metrics["cell_mean_depth_l1"] = float(np.mean(np.abs(h-h_mean)) / case.h_ref)
     metrics["cell_mean_discharge_l1"] = float(np.mean(np.abs(h*u-hu_mean)) / (case.h_ref*case.c_ref))
-    energy_exact = riemann_energy(sol, case.x_min, case.x_max, solver.time)
+    metrics["energy_budget"] = riemann_energy_budget(sol, case.x_min, case.x_max, solver.time)
+    energy_exact = metrics["energy_budget"]["final"]
     metrics["energy_exact"] = energy_exact
     metrics["energy_numerical"] = solver.kinetic_energy()
     metrics["energy_relative_error"] = abs(metrics["energy_numerical"]-energy_exact)/energy_exact

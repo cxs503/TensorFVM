@@ -562,3 +562,43 @@ def test_two_shock_energy_losses_match_each_moving_jump(record_property):
             discrep.append(abs(losses[side]-jump))
     record_property("max_single_shock_energy_jump_error", max(discrep))
     assert max(discrep) < 3e-13
+
+
+@pytest.mark.parametrize("case", DEFAULT_CASES, ids=lambda c: c.name)
+def test_local_energy_balance_during_wave_crossings(case, record_property):
+    from scipy.integrate import quad
+    from tensorfvm.shallow_water import riemann_energy_budget
+
+    sol = case.solution()
+    end = .75
+    worst_flux = worst_balance = 0.
+    for left, right in [(-.6,-.2), (-.2,.35), (.35,.7)]:
+        budget = riemann_energy_budget(sol, left, right, end)
+        worst_balance = max(worst_balance, abs(budget["residual"]))
+        for face, name in ((left,"left_transport"), (right,"right_transport")):
+            def power(t):
+                h, u = sample_exact(sol, face, t)
+                return h*u*(.5*u*u+sol.gravity*h)
+            arrivals = [face/s for s in sol.wave_speeds if s and 0 < face/s < end]
+            reference = quad(power, 0, end, points=arrivals, epsabs=1e-13)[0]
+            worst_flux = max(worst_flux, abs(reference-budget[name]))
+    record_property("maximum_transport_error", worst_flux)
+    record_property("maximum_interval_energy_residual", worst_balance)
+    assert worst_flux < 1e-12 and worst_balance < 1e-12
+
+
+@pytest.mark.parametrize("reverse", [False, True])
+def test_stationary_shock_at_shared_face_counts_loss_once(reverse):
+    from tensorfvm.shallow_water import riemann_energy_budget
+
+    # With g=3 and depths 1 and 2, the stationary jump has discharge ±3.
+    data = (2., -1.5, 1., -3.) if reverse else (1., 3., 2., 1.5)
+    sol = solve_riemann(*data, gravity=3.)
+    side = "right" if reverse else "left"
+    assert getattr(sol, side+"_shock_speed") == 0.
+    west = riemann_energy_budget(sol, -1., 0., .3)
+    east = riemann_energy_budget(sol, 0., 1., .3)
+    assert west["right_transport"] == east["left_transport"]
+    assert west["shock_losses"][side] == 0
+    assert east["shock_losses"][side] == pytest.approx(.3*9/8)
+    assert max(abs(west["residual"]), abs(east["residual"])) < 1e-12
